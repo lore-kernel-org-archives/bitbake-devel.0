@@ -1,86 +1,88 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
- by mx.groups.io with SMTP id smtpd.web11.1348.1598396906395384975
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web11.26932.1598556341048570475
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 25 Aug 2020 16:08:26 -0700
+ Thu, 27 Aug 2020 12:25:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CJ4xgmfE;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.68, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f68.google.com with SMTP id u18so726180wmc.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2020 16:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=C+pXzkpMqI7iLcj0D5RkIisYTH5bj4Y0vuMpU9wnzZk=;
-        b=CJ4xgmfEKPUCmnuwFC/4Hii+Y4Rh5GZroH30A7sjAyqGMW+TABMmDzdtubp17i1pp2
-         98PDMbVx3ZcMT9Z4tob6EqJ0hddWQP2p8O9A3ccMMuDGdBW6VKFLsh1rVoch7A5FiORl
-         dI7WrNs/wQq4uKN2fkKrxB37soWSuvshLSJck=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=C+pXzkpMqI7iLcj0D5RkIisYTH5bj4Y0vuMpU9wnzZk=;
-        b=dVAAZw2NXuLj0DXgHMQpftQviV+1s6RqadVyDn9Gf9TA0kNtFRPpd1pKMnldpNrht7
-         CgjaFkbrcKuZ0ZcovYrcq1VkK011aYJhnt2qBaFUX8XzFjvUZjoml6ZPM5JnZU0sGzqu
-         w3kEV8K8ym9E6elYjiaZP2qJzXqN3F5x/2Ga2xE00o3YQ2wS/BHtTtCCBfTeUPq9XRCx
-         wC3xK1SfZ7BdUdphH1Yz6wVIAqq3+EEFK4EM3zyPn5Wyoo9brh4xjQELh4B14GefhZaE
-         oVoL2zforXNx4hv5V415zN5qB6KDhJyoiqpJFK4Q8mpqX2pijfbJZ4oDNPefN7cYsPPB
-         q5Cg==
-X-Gm-Message-State: AOAM532iKRkrdSPKdU0EOd/Bq1l+04ztoEX3TjzTIllJ/nE4dSWH5zyn
-	lEhydMWGDzlGQZuTMSmZgy83dYcSGagDUemO
-X-Google-Smtp-Source: ABdhPJzj7r3/DPKETTaRRAwd0GwawSepL+e61ftvgV2mQQQghiQYgfbmuFG7o7S8WRmAj7Lui8AE0Q==
-X-Received: by 2002:a7b:c197:: with SMTP id y23mr4009806wmi.48.1598396904279;
-        Tue, 25 Aug 2020 16:08:24 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (d.9.b.8.7.0.d.0.8.3.5.0.7.0.4.c.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:c407:538:d07:8b9d])
-        by smtp.gmail.com with ESMTPSA id q6sm451710wmq.19.2020.08.25.16.08.22
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 16:08:22 -0700 (PDT)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+ dkim=missing; spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: sandra.tobajas@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2F9BC9C06A2
+	for <bitbake-devel@lists.openembedded.org>; Thu, 27 Aug 2020 15:25:40 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id DlWck4xD61VM; Thu, 27 Aug 2020 15:25:39 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id A7AF89C06A0;
+	Thu, 27 Aug 2020 15:25:39 -0400 (EDT)
+X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 1QGZg4fn39LQ; Thu, 27 Aug 2020 15:25:39 -0400 (EDT)
+Received: from localhost.localdomain (modemcable244.108-163-184.mc.videotron.ca [184.163.108.244])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 806B09C0545;
+	Thu, 27 Aug 2020 15:25:39 -0400 (EDT)
+From: "Sandra Tobajas" <sandra.tobajas@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] utils: Drop broken timeout function
-Date: Wed, 26 Aug 2020 00:08:19 +0100
-Message-Id: <20200825230819.1448746-2-richard.purdie@linuxfoundation.org>
+Cc: Sandra Tobajas <sandra.tobajas@savoirfairelinux.com>
+Subject: [bitbake-devel][PATCH] bitbake: fetch2/npm: allow to build npm package with no dependency
+Date: Thu, 27 Aug 2020 15:25:37 -0400
+Message-Id: <20200827192537.3091416-1-sandra.tobajas@savoirfairelinux.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200825230819.1448746-1-richard.purdie@linuxfoundation.org>
-References: <20200825230819.1448746-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-I strongly suspect this function doesn't work with modern python so
-and its unused now, drop it.
+In the case of an empty npm-shrinkwrap.json file (with no dependency),
+the npmsw fetcher was causing a RecursionError reported in [1].
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+It also happened if the package has only "dev" dependencies and was built
+without --npm-dev option.
+
+Add sanity checks to ensure that the dependency list is not empty and set
+the urldata proxy attribute to None if no dependency is found.
+
+[1] https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D13901.
+
+Signed-off-by: Sandra Tobajas <sandra.tobajas@savoirfairelinux.com>
 ---
- lib/bb/utils.py | 14 --------------
- 1 file changed, 14 deletions(-)
+ bitbake/lib/bb/fetch2/npmsw.py | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 50032e50c2..e51b8ca508 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -433,20 +433,6 @@ def fileslocked(files):
-         for lock in locks:
-             bb.utils.unlockfile(lock)
- 
--@contextmanager
--def timeout(seconds):
--    def timeout_handler(signum, frame):
--        pass
--
--    original_handler = signal.signal(signal.SIGALRM, timeout_handler)
--
--    try:
--        signal.alarm(seconds)
--        yield
--    finally:
--        signal.alarm(0)
--        signal.signal(signal.SIGALRM, original_handler)
--
- def lockfile(name, shared=False, retry=True, block=False):
-     """
-     Use the specified file as a lock file, return when the lock has
--- 
+diff --git a/bitbake/lib/bb/fetch2/npmsw.py b/bitbake/lib/bb/fetch2/npmsw=
+.py
+index 0c3511d8ab..e06719f45b 100644
+--- a/bitbake/lib/bb/fetch2/npmsw.py
++++ b/bitbake/lib/bb/fetch2/npmsw.py
+@@ -177,17 +177,21 @@ class NpmShrinkWrap(FetchMethod):
+         # This fetcher resolves multiple URIs from a shrinkwrap file and=
+ then
+         # forwards it to a proxy fetcher. The management of the donestam=
+p file,
+         # the lockfile and the checksums are forwarded to the proxy fetc=
+her.
+-        ud.proxy =3D Fetch([dep["url"] for dep in ud.deps], data)
++        if ud.deps:
++            ud.proxy =3D Fetch([dep["url"] for dep in ud.deps], data)
++        else:
++            ud.proxy =3D None
+         ud.needdonestamp =3D False
+=20
+     @staticmethod
+     def _foreach_proxy_method(ud, handle):
+         returns =3D []
+-        for proxy_url in ud.proxy.urls:
+-            proxy_ud =3D ud.proxy.ud[proxy_url]
+-            proxy_d =3D ud.proxy.d
+-            proxy_ud.setup_localpath(proxy_d)
+-            returns.append(handle(proxy_ud.method, proxy_ud, proxy_d))
++        if ud and ud.proxy:
++            for proxy_url in ud.proxy.urls:
++                proxy_ud =3D ud.proxy.ud[proxy_url]
++                proxy_d =3D ud.proxy.d
++                proxy_ud.setup_localpath(proxy_d)
++                returns.append(handle(proxy_ud.method, proxy_ud, proxy_d=
+))
+         return returns
+=20
+     def verify_donestamp(self, ud, d):
+--=20
 2.25.1
 
