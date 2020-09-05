@@ -1,84 +1,72 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web11.15770.1599301770295315700
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web11.15916.1599302680017453851
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 05 Sep 2020 03:29:30 -0700
+ Sat, 05 Sep 2020 03:44:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=HiZzAVeS;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f51.google.com with SMTP id c18so9830163wrm.9
-        for <bitbake-devel@lists.openembedded.org>; Sat, 05 Sep 2020 03:29:30 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZwqE3AzX;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f52.google.com with SMTP id t10so9925602wrv.1
+        for <bitbake-devel@lists.openembedded.org>; Sat, 05 Sep 2020 03:44:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=1EWb/NNIf3SAEBtPx9B8faqU1fRD2ozWvc6lN6NHc80=;
-        b=HiZzAVeSLJZ27dSBGumL87zw61yQBoea265dTIONmhmDGvM7YVR0NjBMumuQhMBNq1
-         rBqCCoMTbNn3hH6XzvxJwNZDWBzrorCuCLRx/yGhvAXiQDdelx6ewU73VBrEARh7fUiJ
-         e76/stZA0lyM9p2w9+Ah+iYJIJAElbg5wjHoA=
+        bh=QoJe7PlH39j0zs2kuHiHOo6Q8MUEInOZAZKIln0BHpA=;
+        b=ZwqE3AzXdaa3wZXUl15e/XLoNNcAHFvjnR5wniP1c1OBqzpot/zCLOaVLmnnqib7S4
+         C3qBFH0mJX7tmZYLWnK3vbEDMQP4mAzFaVwttMbOArEBt+8U90mqvvyF6RnMtbJubXPL
+         uS06AqoDNXMt2H9oYsZnSbarRpd9xEOIGjHeE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1EWb/NNIf3SAEBtPx9B8faqU1fRD2ozWvc6lN6NHc80=;
-        b=QY7HGbr++ZMOCZkGYRQyXqV4f+1PcJM1iryZR6ljfeo7Tt9ERZRpARMNLsaFHozego
-         93gIHyEBsVAhYNZD1yRP/4h+Ypx9/y86wMLEm6MRpS5eh0vARpzylGDkvc/g9To0tI9k
-         n7MHnWikA2l5FgoK7ii7j9UqAExfWvZt/p8kyEBBfJEESZr7nGFSK4XIyuL+07ATH3bb
-         raU/MU7MpAFgGt3vRWgFs/P1c+Y+V7zSIMMe4fQQVp34YmoKCujqvNKBnaK6RIBhRW74
-         sw3OqCu8f2BLvLf0OwIOyoB2ggqOiARfvn6FU1cS9VCd/YSu/P0OhPXqaKuVHq7S18mG
-         v98g==
-X-Gm-Message-State: AOAM532J0Asf5bqTcMwYwqZPx6DwyNrA5x3xIxRAxw+bxAK5D03hwbJ+
-	ZCzTN+tnc+Bg0sJhz0t7ZEaSJ+Wx5rpQiw==
-X-Google-Smtp-Source: ABdhPJwJ8F8EtT7/0yKG2cL/e8dYeu+3DXHKAB/Ys72J3VdUZ+Njx+qPFYy7UI9cEdaMhLzSWtsMSg==
-X-Received: by 2002:a05:6000:124d:: with SMTP id j13mr12518487wrx.182.1599301768282;
-        Sat, 05 Sep 2020 03:29:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QoJe7PlH39j0zs2kuHiHOo6Q8MUEInOZAZKIln0BHpA=;
+        b=Eme1eXk/C5JeaAtPr2sXLvNyaTKIF9gh2soaZbYB0Rb0sgeNHIhOFFtevwQGgpuJcn
+         ypW4l4eoBHbp6cgfplN2Anqq622sS9lq/OFG1kfB+FBeX6q2ITP7eNFFGRv1bXQLhj9b
+         WOROkW8UML+r5vzSCdXy5nYlMw1Kye2yLBs5QCNNbIt6j/0NJxU264wI0NpvYigq4Soa
+         pV8Tuowxr+QNrtKv9D4pTMRKTP5nxVcZ+oFODWxMlj9sVsjTVqBp63o8ATWlh3yh99MG
+         RQFgOBRIeg9CwYJhHnhB10FnS86z2C4NKQc6DbukOHhSwAf8TpkD2abBHCbz9f7Q28G+
+         reUw==
+X-Gm-Message-State: AOAM530At4I06W/Pqvb7IUpaRLg6YirGuxt6q3Z/kyxPMPRKg6N0sfxE
+	aw9jvjYzYogtg4Y6SLtd4FPv+A2OdbJj7g==
+X-Google-Smtp-Source: ABdhPJyMwSIhOHRSvodey4ZEKNqOn+wPuxVK7QbzlKC31zM/pXeHj84UO28hv7FyofhUSR5hiqUJAg==
+X-Received: by 2002:a5d:4a4b:: with SMTP id v11mr11548879wrs.36.1599302677930;
+        Sat, 05 Sep 2020 03:44:37 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:7cb6:1620:605:fdfd])
-        by smtp.gmail.com with ESMTPSA id o2sm17079713wmo.37.2020.09.05.03.29.27
+Received: from hex.int.rpsys.net (d.f.d.f.5.0.6.0.0.2.6.1.6.b.c.7.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:7cb6:1620:605:fdfd])
+        by smtp.gmail.com with ESMTPSA id k24sm16425084wmj.19.2020.09.05.03.44.37
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 03:29:27 -0700 (PDT)
+        Sat, 05 Sep 2020 03:44:37 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] server/process: Prefix the log data with pid/time information
-Date: Sat,  5 Sep 2020 11:29:22 +0100
-Message-Id: <20200905102922.1847453-2-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] server/process: Note when commands complete in logs
+Date: Sat,  5 Sep 2020 11:44:36 +0100
+Message-Id: <20200905104436.1847814-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200905102922.1847453-1-richard.purdie@linuxfoundation.org>
-References: <20200905102922.1847453-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Knowing which process printed which messages and the timestamp of the
-message is useful for debugging, so add this. Ensure the log parsing
-isn't affected by using search() instead of match().
+Its hard to tell from the server logs whether commands complete or not
+(or how long they take). Add extra info to allow more debugging of
+server timeouts.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/server/process.py | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 83c3e6b444..21f95cb61e 100644
+index 21f95cb61e..c7cb34f0cc 100644
 --- a/lib/bb/server/process.py
 +++ b/lib/bb/server/process.py
-@@ -36,7 +36,7 @@ class ProcessTimeout(SystemExit):
-     pass
+@@ -215,6 +215,7 @@ class ProcessServer():
+                 try:
+                     serverlog("Running command %s" % command)
+                     self.command_channel_reply.send(self.cooker.command.runCommand(command))
++                    serverlog("Command Completed")
+                 except Exception as e:
+                    logger.exception('Exception in server main event loop running command %s (%s)' % (command, str(e)))
  
- def serverlog(msg):
--    print(msg)
-+    print(str(os.getpid()) + " " +  datetime.datetime.now().strftime('%H:%M:%S.%f') + " " + msg)
-     sys.stdout.flush()
- 
- class ProcessServer():
-@@ -480,7 +480,7 @@ class BitBakeServer(object):
-                             lines.append(line)
-                         else:
-                             lastlines.append(line)
--                            res = logstart_re.match(line.rstrip())
-+                            res = logstart_re.search(line.rstrip())
-                             if res:
-                                 ldatetime = datetime.datetime.strptime(res.group(2), start_log_datetime_format)
-                                 if ldatetime >= startdatetime:
 -- 
 2.25.1
 
