@@ -1,72 +1,72 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web11.15916.1599302680017453851
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+ by mx.groups.io with SMTP id smtpd.web11.16016.1599303297051919257
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 05 Sep 2020 03:44:40 -0700
+ Sat, 05 Sep 2020 03:54:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZwqE3AzX;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f52.google.com with SMTP id t10so9925602wrv.1
-        for <bitbake-devel@lists.openembedded.org>; Sat, 05 Sep 2020 03:44:39 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JeIVATu3;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.68, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f68.google.com with SMTP id e17so9034601wme.0
+        for <bitbake-devel@lists.openembedded.org>; Sat, 05 Sep 2020 03:54:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QoJe7PlH39j0zs2kuHiHOo6Q8MUEInOZAZKIln0BHpA=;
-        b=ZwqE3AzXdaa3wZXUl15e/XLoNNcAHFvjnR5wniP1c1OBqzpot/zCLOaVLmnnqib7S4
-         C3qBFH0mJX7tmZYLWnK3vbEDMQP4mAzFaVwttMbOArEBt+8U90mqvvyF6RnMtbJubXPL
-         uS06AqoDNXMt2H9oYsZnSbarRpd9xEOIGjHeE=
+        bh=UV5jHE/qT+EK4dFV33t2TJFl4y/KsR90oMIix6UHwFI=;
+        b=JeIVATu3cUbKOmLI1fHBG6097Ndzb+bQL0lnOgfm4et4SeWROlAO6NVabcgUhPlV/F
+         S6+3izYmO+lSXFSi7kGTKka+MxgHsPI5/Pgb1JBy8DBR32WKdwh0oszqY4wii3C7F/12
+         L8lzfbLAJWpDvugzuLUHEt9DT7QR8GLyhghLw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QoJe7PlH39j0zs2kuHiHOo6Q8MUEInOZAZKIln0BHpA=;
-        b=Eme1eXk/C5JeaAtPr2sXLvNyaTKIF9gh2soaZbYB0Rb0sgeNHIhOFFtevwQGgpuJcn
-         ypW4l4eoBHbp6cgfplN2Anqq622sS9lq/OFG1kfB+FBeX6q2ITP7eNFFGRv1bXQLhj9b
-         WOROkW8UML+r5vzSCdXy5nYlMw1Kye2yLBs5QCNNbIt6j/0NJxU264wI0NpvYigq4Soa
-         pV8Tuowxr+QNrtKv9D4pTMRKTP5nxVcZ+oFODWxMlj9sVsjTVqBp63o8ATWlh3yh99MG
-         RQFgOBRIeg9CwYJhHnhB10FnS86z2C4NKQc6DbukOHhSwAf8TpkD2abBHCbz9f7Q28G+
-         reUw==
-X-Gm-Message-State: AOAM530At4I06W/Pqvb7IUpaRLg6YirGuxt6q3Z/kyxPMPRKg6N0sfxE
-	aw9jvjYzYogtg4Y6SLtd4FPv+A2OdbJj7g==
-X-Google-Smtp-Source: ABdhPJyMwSIhOHRSvodey4ZEKNqOn+wPuxVK7QbzlKC31zM/pXeHj84UO28hv7FyofhUSR5hiqUJAg==
-X-Received: by 2002:a5d:4a4b:: with SMTP id v11mr11548879wrs.36.1599302677930;
-        Sat, 05 Sep 2020 03:44:37 -0700 (PDT)
+        bh=UV5jHE/qT+EK4dFV33t2TJFl4y/KsR90oMIix6UHwFI=;
+        b=Xd5X5yOiWR3IIUCbMQW2dlY7ZpCWpey1cvjSMVCs5Pvh1TaVbxaAwPm+dLHOo2SlTJ
+         whpD9dnKq/zTehnEgz0KdQmHhKSMshdd3TknUFANyFnr0B1CLi6PPGGyjBWeqL7bHU06
+         q4pcK01d3eqWZjS/6kZVSm1QZMQ9gDC/9JuECzsV3Rlha35JbDmxgCU5NTGVhGucR3vB
+         UgYHmQszAOhVW0ygiHHdfc/zYWmo0UUa6jwfJgjVcp/070sSxWlUIQ56WgRwFVsbWuAT
+         SSa79Fd9nGuwjXpcBeasm8IUeEQW+tJQK0MwL+K794PSOgWRj6rXyZKu4ppIPK0kfED+
+         r+xg==
+X-Gm-Message-State: AOAM533faXMH9/5UKsbuRGOJ0tTc25DQvCrOXNGkXCj7NUgWLunwv8Sj
+	wBI9R25ySxL4nAAEKbBckYiboImGbNRFOA==
+X-Google-Smtp-Source: ABdhPJxwk2BPBgqcEsrMXCKN7hSfg67GaKcUr3v/6KOPAE6Uqg/JHVykjSi8gZxaibbV/G3q59uGJg==
+X-Received: by 2002:a7b:c958:: with SMTP id i24mr12225172wml.50.1599303295018;
+        Sat, 05 Sep 2020 03:54:55 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net (d.f.d.f.5.0.6.0.0.2.6.1.6.b.c.7.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:7cb6:1620:605:fdfd])
-        by smtp.gmail.com with ESMTPSA id k24sm16425084wmj.19.2020.09.05.03.44.37
+        by smtp.gmail.com with ESMTPSA id o4sm16630809wrv.86.2020.09.05.03.54.54
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 03:44:37 -0700 (PDT)
+        Sat, 05 Sep 2020 03:54:54 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] server/process: Note when commands complete in logs
-Date: Sat,  5 Sep 2020 11:44:36 +0100
-Message-Id: <20200905104436.1847814-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] cooker: Ensure parser is cleaned up
+Date: Sat,  5 Sep 2020 11:54:53 +0100
+Message-Id: <20200905105453.1849187-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Its hard to tell from the server logs whether commands complete or not
-(or how long they take). Add extra info to allow more debugging of
-server timeouts.
+During cooker shutdown, its possible the parser isn't cleaned up. Fix
+this (which may partially explain why threads were left hanging around
+at exit).
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 1 +
+ lib/bb/cooker.py | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 21f95cb61e..c7cb34f0cc 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -215,6 +215,7 @@ class ProcessServer():
-                 try:
-                     serverlog("Running command %s" % command)
-                     self.command_channel_reply.send(self.cooker.command.runCommand(command))
-+                    serverlog("Command Completed")
-                 except Exception as e:
-                    logger.exception('Exception in server main event loop running command %s (%s)' % (command, str(e)))
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 30d7278505..d6c8e21570 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1674,6 +1674,7 @@ class BBCooker:
+         return
  
+     def post_serve(self):
++        self.shutdown(force=True)
+         prserv.serv.auto_shutdown()
+         if self.hashserv:
+             self.hashserv.process.terminate()
 -- 
 2.25.1
 
