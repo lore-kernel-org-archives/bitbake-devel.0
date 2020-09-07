@@ -1,100 +1,71 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web11.38572.1599474636321600707
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web12.58.1599493779358249868
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Sep 2020 03:30:36 -0700
+ Mon, 07 Sep 2020 08:49:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YVaYgyJw;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.68, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f68.google.com with SMTP id t10so15293375wrv.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2020 03:30:36 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fB3pJpkj;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f54.google.com with SMTP id q9so14791340wmj.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2020 08:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=tNkPgaeVU9eCGhZIj1P/82iaB68x2o9U0d/JinrcUWk=;
-        b=YVaYgyJwgkFVMc6yT8AAbqf/TJmfj5Coikbxi4chVt6w+WXobc40msEZJSzBOKqTJb
-         zVOyyhaAGMLPbeAjUZqgxZgwPHpWnjjGkHope9A1vFOnZ5tggROZueH2/FVN8F4Xvdon
-         p9IxXbsBUARj8crzrXDTe0G4w4vRgk4O/mJsg=
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3KnK1xrafawFf1Y5c1ufh79lTwmg4lSwMeZyVP8wyrY=;
+        b=fB3pJpkjmNcOmdpoGzXOSLGySS0S29NWeFq0eUz75y0vFXh/DOrIHnvNFf0vo1tVKv
+         G47DdzMyy2RLS+RlL2FW9G78J3qMAHSa8vbp00POJ7NyB6DhAM7unK3K1jtEuw0O6CdQ
+         mvNf6uAvsC0oelJXIbKmz8EbVI6Ml2JjChXD0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=tNkPgaeVU9eCGhZIj1P/82iaB68x2o9U0d/JinrcUWk=;
-        b=TYDh+ivJ8uDPQsK5JpoV3XHd9ByaNUBE0PS9S2eAoHsyKAiUGqbHqCJv7+2WaA1iio
-         FNJTPJSYmB72OlsqFustuiJHJEE8wRKbJKgbNpOvnoBsRiKeYZckdyUsadiq9QKQ+/VN
-         qvtZs0hX18OybsoaLcaNW30AZ79Uidfeqg0NP8/WXWCfAKIwziV4u8VHVxSmOGpqPRAt
-         P3JQ+It5c7illUWtxv2wJywqlSdd1g38kFmlUzyzePlewXGgAddXZcLWdit3H5oVKoPR
-         csThnOUlYvfHvDM++nz7oUz7o7RmpDgQkwFDaG2uyNaSLIErO3M/+/sL8yCG6JR7b88k
-         0zEw==
-X-Gm-Message-State: AOAM531wa6JiaKx6nOUUjFOWtbqtIG4zlv3BAKWA4REuFxVqgp+emu0r
-	owVGQK0dEcBXGjQx+c3D0yIrRg==
-X-Google-Smtp-Source: ABdhPJwwcnvFOX8bkkgO9K5LRN0XBb41h+dPEoMNYcugXmdmpkq7XSBcINVh6MCZ7U/Od7d6Jp2PlQ==
-X-Received: by 2002:adf:ec87:: with SMTP id z7mr22478620wrn.57.1599474634675;
-        Mon, 07 Sep 2020 03:30:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3KnK1xrafawFf1Y5c1ufh79lTwmg4lSwMeZyVP8wyrY=;
+        b=tY6rC9GX3Myeu/Gy5fvhfsqOLTkF5JuZ8VATr/BlZ8Ldj5rqkY1gHEsZVp6VdujB63
+         7rk2YGOI5AHj7DwZ7Npy5MHuLsAtURbbtP63pjSd6RlJPPWBKyqqyzSExBkzi2q66I4O
+         kMrkB43USwRqwzYQSh+UsLRdyyIWkkXdn6VgIGK4dyuEUJWra9LxVDKJXPhxLdXUxrzc
+         xPCMTxrJdOljSytJ1wgO1hFsv/OIfcs61xlE3UIrVuAkqv/NQlauWAPQHFtdvOvaQ1bm
+         LXI8PMBf//mNcGLH0mzEzJSRUhSHhtiZMoc5RjRSVw56AWMEhuFK7SC3eBgajnAYFvIq
+         UKHQ==
+X-Gm-Message-State: AOAM530t3pwNwiOMCGaG2RQ3lAK0wi9+Os0OfjGE/S6u+H/BHUasL1xe
+	r2QKNycFXSDC4KN94nm7sEl0iyEb/R1zZA==
+X-Google-Smtp-Source: ABdhPJx5j1A8LWLgusC/ULeOAW+SAjqNjh8ouT75iu/Z1tZYtHaMMD2Caguq8mdBcbj7W+7w/v4r3w==
+X-Received: by 2002:a7b:c5c1:: with SMTP id n1mr20347113wmk.125.1599493777325;
+        Mon, 07 Sep 2020 08:49:37 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from d.f.d.f.5.0.6.0.0.2.6.1.6.b.c.7.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (d.f.d.f.5.0.6.0.0.2.6.1.6.b.c.7.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:7cb6:1620:605:fdfd])
-        by smtp.gmail.com with ESMTPSA id u66sm1188543wme.1.2020.09.07.03.30.33
+Received: from hex.int.rpsys.net (d.f.d.f.5.0.6.0.0.2.6.1.6.b.c.7.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:7cb6:1620:605:fdfd])
+        by smtp.gmail.com with ESMTPSA id h5sm29534503wrt.31.2020.09.07.08.49.36
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 03:30:34 -0700 (PDT)
-Message-ID: <a61fd29432c52915aa8f680e02b05f1a19ded580.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] an idea about parallel doing do_patch
+        Mon, 07 Sep 2020 08:49:36 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Mikko Rapeli <mikko.rapeli@bmw.de>, zhangyifan46@huawei.com
-Cc: bitbake-devel@lists.openembedded.org
-Date: Mon, 07 Sep 2020 11:30:33 +0100
-In-Reply-To: <20200907085816.GO2026@korppu>
-References: <20200907083711.GL2026@korppu>
-	 <20610.1599468217725892636@lists.openembedded.org>
-	 <20200907085816.GO2026@korppu>
-User-Agent: Evolution 3.36.4-0ubuntu1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] cooker: Ensure parser worker signal handlers are default
+Date: Mon,  7 Sep 2020 16:49:36 +0100
+Message-Id: <20200907154936.1928698-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2020-09-07 at 08:58 +0000, Mikko Rapeli wrote:
-> Hi, please reply to mailing list too.
-> 
-> On Mon, Sep 07, 2020 at 01:43:37AM -0700, zhangyifan46@huawei.com
-> wrote:
-> > Sure using git repo is best solution.
-> > But I am working in a company  and we use local codes(tar +
-> > patches).
-> > right or wrong, I think if we can improve the efficiency of
-> > patching, it is better than nothing.
-> 
-> Well, here I would really move away from tar + patches approach and
-> move things to git.
-> I've been there and forced BSP vendors to provide full git trees with
-> proper commit messages
-> and history linked to upstream kernel.org stable point releases. We
-> have these
-> in our project and product requirements. I suggest talking to the
-> vendors and moving
-> to git.
-> 
-> Tar and patches was ok in the 90's but not anymore large change sets.
-> 
-> Parallelizing do_patch() could be a nice addition but needs serious
-> testing and validation because bugs could have really serious
-> effects.
+Otherwise this can interfer with multiprocessing exit handling.
 
-I agree with Mikko, that do_patch isn't really designed to handle 3000
-item queues of patches.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-If you really want to do what you're doing, I'd write it as a
-replacement for quilt which has parallelism. You'd then perhaps be able
-to swap that in with fewer changes to OE-Core. I'd also want to very
-carefully analyse where the time bottlebeck is in do_patch as I suspect
-it may be on process execution overhead rather than in the patch tool
-itself.
-
-I'm not really very interested in changing do_patch in the core to do
-parallelism since this is a very specific corner case where you really
-should be doing something else entirely (use git).
-
-Cheers,
-
-Richard
-
-
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 7de3df018d..f3ff4274ad 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -2090,6 +2090,8 @@ class CookerParser(object):
+         if self.toparse:
+             bb.event.fire(bb.event.ParseStarted(self.toparse), self.cfgdata)
+             def init():
++                signal.signal(signal.SIGTERM, signal.SIG_DFL)
++                signal.signal(signal.SIGHUP, signal.SIG_DFL)
+                 bb.utils.set_process_name(multiprocessing.current_process().name)
+                 multiprocessing.util.Finalize(None, bb.codeparser.parser_cache_save, exitpriority=1)
+                 multiprocessing.util.Finalize(None, bb.fetch.fetcher_parse_save, exitpriority=1)
+-- 
+2.25.1
 
