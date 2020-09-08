@@ -1,64 +1,107 @@
 Received: from mail5.wrs.com (mail5.wrs.com [192.103.53.11])
- by mx.groups.io with SMTP id smtpd.web12.17254.1599560541404452163
+ by mx.groups.io with SMTP id smtpd.web10.17132.1599560551836168781
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 08 Sep 2020 03:22:21 -0700
+ Tue, 08 Sep 2020 03:22:31 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: windriver.com, ip: 192.103.53.11, mailfrom: liezhi.yang@windriver.com)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 088AM0Ak026921
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 088AM0As026921
 	(version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 8 Sep 2020 03:22:10 -0700
+	for <bitbake-devel@lists.openembedded.org>; Tue, 8 Sep 2020 03:22:21 -0700
 Received: from ala-lpggp3.wrs.com (147.11.105.124) by ALA-HCA.corp.ad.wrs.com
  (147.11.189.50) with Microsoft SMTP Server id 14.3.487.0; Tue, 8 Sep 2020
- 03:21:49 -0700
+ 03:22:10 -0700
 From: "Robert Yang" <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH v2 2/3] utils.py: get_file_layer(): Exit the loop when file is matched
-Date: Tue, 8 Sep 2020 03:21:46 -0700
-Message-ID: <63718406751e3727dceae45aafd19dac448a836f.1599560025.git.liezhi.yang@windriver.com>
+Subject: [PATCH v2 3/3] utils.py: get_file_layer(): Improve performance
+Date: Tue, 8 Sep 2020 03:21:47 -0700
+Message-ID: <49db075be9d5cc6f01c076c2380d152fac254786.1599560025.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1599560025.git.liezhi.yang@windriver.com>
 References: <cover.1599560025.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-This can make "$ bitbake-layers show-recipes" save about 60% time (14min ->
-6min) in my build (more than 3000 recipes)
+The following code costs a lot of time when there are lot of layers and recipes:
 
-The command "bitbake-layers show-recipes" calls bb.utils.get_file_layer() with
-each recipe, and get_file_layer() compare the file with each item in BBFILES
-which makes it very time consuming when there are a lot of recipes and items in
-BBFILES. So use BBFILES_PRIORITIZED and exit when file is matched, it doesn't
-make sense to go on the loop when file is matched.
+     for collection in collections:
+         collection_res[collection] = d.getVar('BBFILE_PATTERN_%s' % collection) or ''
 
-And use fnmatchcase to replace of fnmatch since the comparison should be
-case-sensitive.
+My build has more than 100 layers and 3000 recipes, which calls d.getVar() 300K
+(3000 * 100) times and makes 'bitbake-layers show-recipes' very slow, add a
+keyword argument to get_file_layer() can fix the problem, it can save about 90%
+time in my build (6min -> 40s).
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- bitbake/lib/bb/utils.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/utils.py       | 12 +++++++++---
+ bitbake/lib/bblayers/query.py | 10 ++++++++--
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
 diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-index e51b8ca508..5722fced97 100644
+index 5722fced97..fc78c5436b 100644
 --- a/bitbake/lib/bb/utils.py
 +++ b/bitbake/lib/bb/utils.py
-@@ -1477,12 +1477,13 @@ def get_file_layer(filename, d):
-         return match
+@@ -1458,14 +1458,20 @@ def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=None):
  
-     result = None
--    bbfiles = (d.getVar('BBFILES') or '').split()
-+    bbfiles = (d.getVar('BBFILES_PRIORITIZED') or '').split()
-     bbfilesmatch = False
-     for bbfilesentry in bbfiles:
--        if fnmatch.fnmatch(filename, bbfilesentry):
-+        if fnmatch.fnmatchcase(filename, bbfilesentry):
-             bbfilesmatch = True
-             result = path_to_layer(bbfilesentry)
-+            break
+     return (notadded, notremoved)
  
-     if not bbfilesmatch:
-         # Probably a bbclass
+-
+-def get_file_layer(filename, d):
+-    """Determine the collection (as defined by a layer's layer.conf file) containing the specified file"""
++def get_collection_res(d):
+     collections = (d.getVar('BBFILE_COLLECTIONS') or '').split()
+     collection_res = {}
+     for collection in collections:
+         collection_res[collection] = d.getVar('BBFILE_PATTERN_%s' % collection) or ''
+ 
++    return collection_res
++
++
++def get_file_layer(filename, d, collection_res={}):
++    """Determine the collection (as defined by a layer's layer.conf file) containing the specified file"""
++    if not collection_res:
++        collection_res = get_collection_res(d)
++
+     def path_to_layer(path):
+         # Use longest path so we handle nested layers
+         matchlen = 0
+diff --git a/bitbake/lib/bblayers/query.py b/bitbake/lib/bblayers/query.py
+index ee2db0efed..be2d84c351 100644
+--- a/bitbake/lib/bblayers/query.py
++++ b/bitbake/lib/bblayers/query.py
+@@ -107,6 +107,8 @@ pnspec to match a specified recipe name (supports wildcards). Note that
+ skipped recipes will also be listed, with a " (skipped)" suffix.
+ """
+ 
++        self.collection_res = {}
++
+         inheritlist = args.inherits.split(',') if args.inherits else []
+         if inheritlist or args.pnspec or args.multiple:
+             title = 'Matching recipes:'
+@@ -222,7 +224,6 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
+                             multilayer = True
+                         if prov[0] != pref[0]:
+                             same_ver = False
+-
+                     if (multilayer or not show_overlayed_only) and (same_ver or not show_same_ver_only):
+                         if not items_listed:
+                             logger.plain('=== %s ===' % title)
+@@ -243,8 +244,13 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
+         else:
+             return '?'
+ 
++    def get_collection_res(self):
++        if not self.collection_res:
++            self.collection_res = bb.utils.get_collection_res(self.tinfoil.config_data)
++        return self.collection_res
++
+     def get_file_layerdir(self, filename):
+-        layer = bb.utils.get_file_layer(filename, self.tinfoil.config_data)
++        layer = bb.utils.get_file_layer(filename, self.tinfoil.config_data, self.get_collection_res())
+         return self.bbfile_collections.get(layer, None)
+ 
+     def remove_layer_prefix(self, f):
 -- 
 2.17.1
 
