@@ -1,59 +1,53 @@
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
- by mx.groups.io with SMTP id smtpd.web12.17247.1599560510105436687
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+ by mx.groups.io with SMTP id smtpd.web11.17120.1599560510518417476
  for <bitbake-devel@lists.openembedded.org>;
  Tue, 08 Sep 2020 03:21:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: windriver.com, ip: 147.11.1.11, mailfrom: liezhi.yang@windriver.com)
+ dkim=missing; spf=pass (domain: windriver.com, ip: 147.11.146.13, mailfrom: liezhi.yang@windriver.com)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 088ALmvd016568
+	by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 088ALnF4008354
 	(version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 8 Sep 2020 03:21:48 -0700 (PDT)
+	for <bitbake-devel@lists.openembedded.org>; Tue, 8 Sep 2020 03:21:49 -0700 (PDT)
 Received: from ala-lpggp3.wrs.com (147.11.105.124) by ALA-HCA.corp.ad.wrs.com
  (147.11.189.50) with Microsoft SMTP Server id 14.3.487.0; Tue, 8 Sep 2020
- 03:21:47 -0700
+ 03:21:48 -0700
 From: "Robert Yang" <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH v2 0/3] Fix performance issues for bitbake-layers show-recipes (Saves 95% time)
-Date: Tue, 8 Sep 2020 03:21:44 -0700
-Message-ID: <cover.1599560025.git.liezhi.yang@windriver.com>
+Subject: [PATCH v2 1/3] cooker.py: Save prioritized BBFILES to BBFILES_PRIORITIZED
+Date: Tue, 8 Sep 2020 03:21:45 -0700
+Message-ID: <39bfa5aed67c182e030d1fc275d2b1b1d29e8e54.1599560025.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1599560025.git.liezhi.yang@windriver.com>
+References: <cover.1599560025.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-* V2
-  - Save prioritized BBFILES to BBFILES_PRIORITIZED
+The original code saved BBFILES back to BBFILES without any changes which isn't
+usefule, so remove that line. Now save prioritized BBFILES to
+BBFILES_PRIORITIZED which can accelerate the query a lot for the one which
+relies on it such as bb.utils.get_file_layer().
 
-  - "bitbake-layers show-recipes" requires 14 min to run which was too slow,
-    these 3 patches can make it run in 40s which can save 95% time.
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ bitbake/lib/bb/cooker.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  - It becomes slow since the following commit:
-    (85e03a64: tinfoil: Simplify remote datastore connections)
-
-* V1
-  - Initial version
-
-// Robert
-
-
-The following changes since commit c25309ecde4e7ff81fb74a74fe06991dcdbbbfc8:
-
-  bitbake: cooker: Ensure parser worker signal handlers are default (2020-09-08 10:18:02 +0100)
-
-are available in the Git repository at:
-
-  git://git.yoctoproject.org/poky-contrib rbt/bblayers
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=rbt/bblayers
-
-Robert Yang (3):
-  cooker.py: Save prioritized BBFILES to BBFILES_PRIORITIZED
-  utils.py: get_file_layer(): Exit the loop when file is matched
-  utils.py: get_file_layer(): Improve performance
-
- bitbake/lib/bb/cooker.py      |  2 +-
- bitbake/lib/bb/utils.py       | 17 ++++++++++++-----
- bitbake/lib/bblayers/query.py | 10 ++++++++--
- 3 files changed, 21 insertions(+), 8 deletions(-)
-
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index f3ff4274ad..e45755206e 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1761,10 +1761,10 @@ class CookerCollectFiles(object):
+         collectlog.debug(1, "collecting .bb files")
+ 
+         files = (config.getVar( "BBFILES") or "").split()
+-        config.setVar("BBFILES", " ".join(files))
+ 
+         # Sort files by priority
+         files.sort( key=lambda fileitem: self.calc_bbfile_priority(fileitem)[0] )
++        config.setVar("BBFILES_PRIORITIZED", " ".join(files))
+ 
+         if not len(files):
+             files = self.get_bbfiles()
 -- 
 2.17.1
 
