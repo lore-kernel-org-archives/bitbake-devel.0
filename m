@@ -1,51 +1,50 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
- by mx.groups.io with SMTP id smtpd.web11.6518.1599626370391365402
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+ by mx.groups.io with SMTP id smtpd.web12.7034.1599628533503094888
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 08 Sep 2020 21:39:30 -0700
+ Tue, 08 Sep 2020 22:15:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=FACEj0gP;
- spf=pass (domain: gmail.com, ip: 209.85.210.169, mailfrom: akuster808@gmail.com)
-Received: by mail-pf1-f169.google.com with SMTP id o20so1033058pfp.11;
-        Tue, 08 Sep 2020 21:39:30 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=tQXY/Okb;
+ spf=pass (domain: gmail.com, ip: 209.85.210.175, mailfrom: akuster808@gmail.com)
+Received: by mail-pf1-f175.google.com with SMTP id x123so1112154pfc.7;
+        Tue, 08 Sep 2020 22:15:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=to:from:subject:autocrypt:message-id:date:user-agent:mime-version
          :content-transfer-encoding:content-language;
-        bh=0DiRblMDZxOr4A9Z741EOS5B1g3HBhrUCYYxV5rRtF4=;
-        b=FACEj0gP13YRnk2S8mAlI/1xtpXU4D7yMiC36gnm3wdVYZFSgB5Zg22l7dYlLPtTCg
-         NEonXwrGw+/RgDPm7WgdRlzNeoZpd209Dzx/oEKsSOcToO7uPseNeyhLcrUvWvzCV0er
-         WryHLoprmzZg+tLe0k2oED96ush0uq46SqLYt0VQzwssDG6gEsldQxlWQpa0pa4zqVRm
-         F+pUNW7HagdeffU0GCXlDmJJW4C5yBwP5BQRixLoBaxVoQJF1uGJrPMr2q9a0CebshP8
-         O62Z0IuirAyOE5oTDrTUUpOwTJ2D41+xAKWd4fAHZi8N5cuO37mpt78XOyzs1ZLbHBIH
-         j/Lg==
+        bh=dyeS0aLX9EEf/2b5r0cgtIAKSTZXZGCGj+z5HNzXsb4=;
+        b=tQXY/Okbl8qEQA3gt93N+pQ4T9/+qvJgrUATBN5bz7vinfdo0MZ1MMTlZESzSvfSvV
+         bwku8MpRJqKMi1BMdzF8z3jbKiJhz4Z79bmXcr41Ailcas0m255TTgNWIcYUzI5FLvsC
+         G5fuTP1AR8gqnlQr4BWAaK7MHfJsEoFfkyiZEyWho3m/cbjtigVaKlcydtnJZIREhUDm
+         1mBLoOyOKZzgW3eHHuC0Ys7trCzXbrFePMZCIbaoYuVThNDaPoVfZc3dCbAT6R+JYvaz
+         Ld0UHxAmQAkxH54hhiBbw1cV1+qNFrqiM6DCsTqyksqJ8zVwS8aEMT/srGOJRBoQcb8s
+         nxIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:to:from:subject:autocrypt:message-id:date
          :user-agent:mime-version:content-transfer-encoding:content-language;
-        bh=0DiRblMDZxOr4A9Z741EOS5B1g3HBhrUCYYxV5rRtF4=;
-        b=MKBkkX/d1XGytKVOK7Bnt/tM1xJVTvA7DRFH9vm2u8juUo4yuCIUKHe/xJv58MBmCL
-         RFHaxXs62qMNo34Z7yfCFacQRyCcboW9visJHWcOW1lPNS2ArufCqVKGEjHMQEs/RDvu
-         YJ7D1K1PEsaZkuWEQsphi7R2gNTqbYPNpycZy/mMwAhAT5nnrzqufy1Ib6mMliE1a4Il
-         8+OYjkVkKJVuwc7UEHsDccJqac6EN1ZH5MCX+ol2EpsHk0O2JNPMZLOI3VKIhz0etj3o
-         xs2/nTot5aaaptro0KRDAmnyX0XGcs35/qC9Sg88N3WpcfCtS+AqPk7aZ/4p6CzAvWkk
-         r+1w==
-X-Gm-Message-State: AOAM532R1F1GRyDdq/GpNmiElny40u0taVPE+71e8O1FEE9KtVV08R79
-	ua7OgUn1ulrT/8MP05T0XLvB6MJ+VjA=
-X-Google-Smtp-Source: ABdhPJwwCllM9EzNQRdLI25HtJ06lkELpK5xT6Qk0BrKc0SCEsQ/59Dp1mBK6paF7wl7TXgm/ko76Q==
-X-Received: by 2002:a63:f606:: with SMTP id m6mr1624527pgh.193.1599626369614;
-        Tue, 08 Sep 2020 21:39:29 -0700 (PDT)
+        bh=dyeS0aLX9EEf/2b5r0cgtIAKSTZXZGCGj+z5HNzXsb4=;
+        b=TJrcMnOnDvVIModjZVzop9srPO/J4ahEaEM/Y/bddOazKSp3SKujpLsQDNIMOzOuf8
+         GASJWbZTGYD2qKPMIn2qOsZ9nOAVZy9uWW1Q3c6WjUNWrCirfpBCBKbzhfzB4pmL2P2X
+         YAOGzYE3/iiScFAvUAc7HpTPmjwZhmxldRw+mnWwhawHae5BbEPC4bC/qS6Rp0OZhUq4
+         XWe9zsXH8EtlhGTCnHHmRTmyIIIhLHiFrH8rx9Du4S25uHcAO5n5XgqHebw7GzfSbu9X
+         N/WJZTQk22f7lgIl60Mo7DGxqCqaljlaYGiOKCEleCTxlzXynWUIB4pJyzQDJy1XsHnZ
+         XeHw==
+X-Gm-Message-State: AOAM530LXA9fcvFcMFQZiQ2TDJMNWfnyEJWzZUChwtl/wUZLs7WfWrq9
+	F0et0dWWh0/sbEHTHIXZTvEzVSqZ6rw=
+X-Google-Smtp-Source: ABdhPJyjOYZB1RRLaxxcYNnzB2k8rDSFKr6YfrEIbeWXPdkvEml/YnTUu/BqUydfgrhC5CmJWL50Dg==
+X-Received: by 2002:a17:902:d203:b029:d0:cbe1:e715 with SMTP id t3-20020a170902d203b02900d0cbe1e715mr2489743ply.35.1599628532626;
+        Tue, 08 Sep 2020 22:15:32 -0700 (PDT)
 Return-Path: <akuster808@gmail.com>
 Received: from ?IPv6:2601:202:4180:a5c0:812e:2d2f:a669:186f? ([2601:202:4180:a5c0:812e:2d2f:a669:186f])
-        by smtp.gmail.com with ESMTPSA id z23sm957244pfg.220.2020.09.08.21.39.28
+        by smtp.gmail.com with ESMTPSA id d17sm898283pgn.56.2020.09.08.22.15.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 21:39:29 -0700 (PDT)
-To: "openembedded-core@openembedded.org"
- <openembedded-core@openembedded.org>,
- "yocto@yoctoproject.org" <yocto@yoctoproject.org>,
- OpenEmbedded Devel List <openembedded-devel@lists.openembedded.org>,
+        Tue, 08 Sep 2020 22:15:32 -0700 (PDT)
+To: Yocto-mailing-list <yocto@lists.yoctoproject.org>,
+ Patches and discussions about the oe-core layer
+ <openembedded-core@lists.openembedded.org>,
  "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
 From: "akuster" <akuster808@gmail.com>
-Subject: Warrior and Thud stable branches
+Subject: Yocto Zeus stable branch
 Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
  xsFNBFnlUP4BEADpKf+FQdLykenQXKk8i6xJNxDow+ypFeVAy8iFJp7Dsev+BtwUFo8VG7hx
  Jmd71vHMw+coBetWC3lk+IKjX815Ox0puYXQVRRtI+yMCgd6ib3oGxoQ8tCMwhf9c9/aKjaz
@@ -89,8 +88,8 @@ Autocrypt: addr=akuster808@gmail.com; prefer-encrypt=mutual; keydata=
  PNHndk8VBTpzrmOaJxrebNL/W6C8JCmbLM11TAUMmHYi9JDytN8Au78hWpDbIdKwg1LeSxpw
  ZZD/OqOc0DBvHOpQhzkSrtR1lVlDV/+9E8J1T4uDhrGmZwYV+4xQetypHax8aAHisYbjXdVa
  8CS2NxU=
-Message-ID: <da499e18-c719-1164-dc86-782da15a9c4b@gmail.com>
-Date: Tue, 8 Sep 2020 21:39:28 -0700
+Message-ID: <d6e3e4e1-f26d-fea9-b0fe-5de02f0390e2@gmail.com>
+Date: Tue, 8 Sep 2020 22:15:31 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
@@ -100,14 +99,18 @@ Content-Language: en-US
 
 Hello,
 
-A few words regarding the older stable releases, Thud and Warrior.
+The Zeus branch was defined as a transitional branch with a 9 month
+stable cycle since LTS was created. The 3.0.4 was the last Zeus dot
+release. We have since added several Build stabilization changes and
+last minute backports . We intend on doing on last formal build cycle
+but no QA so no formal dot release. After this action is complete, =C2=A0=
 
-Thud no longer has an active Community Maintainer so this release with
-be move to the=C2=A0 EOL state.=C2=A0 Warrior did have a volunteer but no=
- activity
-to date and this branch will also move to the EOL state. This will take
-affect tomorrow (Wednesday PST).
+this branch will most like transition to Community Support and we will
+see where it goes from there.
 
 regards,
 Armin
+( On behalf of the Yocto Project=C2=AE TSC)
+
+Yocto Project=C2=AE are registered trademark of the Linux Foundation.
 
