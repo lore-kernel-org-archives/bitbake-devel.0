@@ -1,74 +1,78 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.web10.63641.1600098426985391606
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+ by mx.groups.io with SMTP id smtpd.web11.71973.1600118260001657225
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 14 Sep 2020 08:47:07 -0700
+ Mon, 14 Sep 2020 14:17:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aOgAK6DI;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f43.google.com with SMTP id o5so118112wrn.13
-        for <bitbake-devel@lists.openembedded.org>; Mon, 14 Sep 2020 08:47:06 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=lJGY2Wc3;
+ spf=pass (domain: gmail.com, ip: 209.85.167.174, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oi1-f174.google.com with SMTP id n2so1444525oij.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 14 Sep 2020 14:17:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=eZk2bzBFU/stxEmS/AS/ZfDk62bs5+MAGl93lbbLIxI=;
-        b=aOgAK6DIex0vUIjEhQPVbwyT3F68kj8Tc6szX2/J/8tQSlwA3QIFfK8UWsFtA2ylvG
-         9RL1/tMeGl2nO8uimUhOFlWK3K/06Xb4JZaZxuc9LX6ZmiFOMIXrRPAdNzI87TRpYPAk
-         JCFwtdEh8AH7EzJpOVz83mXpjiGZpMuHuFZv0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AqQdk9sddcjLShMZHnrdsFs7D5P26M+CRM/+4zFOl5c=;
+        b=lJGY2Wc3E5tUWfmWKvHHqgiLboXxTYB1ng1SOuPqLLCPVY1KFgCbFsncm2UlslsuLX
+         UzL6VDjJ3HjTjaVnganHTYZyfpl0sUzwK4AfGXpqGmn+Tv2UPwvXOW7bZ67e9GPKUYkA
+         LEu7YsofR0pgh45iR6od4o9HY5tmSfxlNOBQTKtdrSBff6fC+m0dEBfLTtTRTY8VIZPu
+         /Ux/crwcJ4uVVRdZ2cq5SUCHkaFSMgCTORz5fONfzhVjhuI/TpBiuc7zfspe4LY1GqiT
+         ct8YW7KI0ybuYYX6ar3wcECQ+LRO82UH0XBp7tLWuywpn7U+P+j4cCckBRwKGq1fDax+
+         8oMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=eZk2bzBFU/stxEmS/AS/ZfDk62bs5+MAGl93lbbLIxI=;
-        b=tP/9pORWFBlWinELbYn6CrjaUYpRSyrPR0IkayOZ4Ob64Ww4pD6BWACIy81R0mF4ff
-         ZqMfrIjOOjh2vLG+ok08zDgQ/GdZSIXagYhjvcZUUuwu9GIcBlfWI7Yti+SMvw7PJXIC
-         jQw1/5mDHiCxCMeQvcd93yu/p4KLUjLEKykyfcn17iurWXekW6cytoNTHaYmi8elmE3k
-         ADG2EhkmpqArEOBXu5OXbuRr1i6ebMq1XX5sK2fmVTLXwpsQmBLZGvztZtAbwt/jclHw
-         qSZhh42qge3fNXaJvn+rO6SNL14DmYbZmPcKGWxyIzEQyqtvMgImXevPqa7RT4RwFzxr
-         p4+A==
-X-Gm-Message-State: AOAM531yewgeLnMv23HRdwClUdxKTtlgNtuBK6SsmFFkB2sZOTPUs26t
-	Dq82O1edmyqzZ09AAs922j/QGQ==
-X-Google-Smtp-Source: ABdhPJxp6NmBhXLrFqMgdRnwf6V3akLTDPj7mkzPhklQldm9h4ZJtMTOY0rQjVJuH4af1GB9TupwEg==
-X-Received: by 2002:a5d:4247:: with SMTP id s7mr16401318wrr.167.1600098425352;
-        Mon, 14 Sep 2020 08:47:05 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from f.c.d.b.6.2.6.c.c.0.f.a.1.a.4.d.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (f.c.d.b.6.2.6.c.c.0.f.a.1.a.4.d.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:d4a1:af0c:c626:bdcf])
-        by smtp.gmail.com with ESMTPSA id a83sm19988578wmh.48.2020.09.14.08.47.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AqQdk9sddcjLShMZHnrdsFs7D5P26M+CRM/+4zFOl5c=;
+        b=mbQhvn/xfUgG5M2no+Jm7IXn8Met6b9l0IXUHIS7h+hFgJHCa/lOu3VXsK4wnsiILh
+         SLNjldnkR4mKL1NgGUs/UJb6qx+D+x/iRscuNxPz7/XYnssnIqBFbgGJ+tFFr6F2IuzQ
+         GLf/1sIyDcVZELvJal+QoRUSlCVj0a5UepkspoTc91a2hAsEtIbLagc17GHFNOld5K+Q
+         f7XxUUWB4k5eMZZsZBJIE3F1MWJ14xnVGWR0cVNN/riPzYF6RhZ5zWIY9B/kSxfgl21f
+         ueQJKxVJCD3ZaI1de3RAcagHU8GCUu8zvYuY3gCHZHLoLUkB1bC0B6g49S7CEh5//HNw
+         PTxQ==
+X-Gm-Message-State: AOAM531v2pun3YAmmitxe+dHxjZh9VQvLiOyB+3Ndu5vIyzCSGsL35m0
+	a911VpEjc/0Al7z9YUzbz1FIBgfq8pI=
+X-Google-Smtp-Source: ABdhPJyd1i2gctnSwQfA5W2PLsItkIdK8JZ2UXVr+a+aoR8h1K4RRlHrOVJCkIM7AcypADyz7BwCOw==
+X-Received: by 2002:aca:f545:: with SMTP id t66mr894937oih.112.1600118258994;
+        Mon, 14 Sep 2020 14:17:38 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from localhost.localdomain ([2605:a601:ac3d:c100:7282:816:6ef9:8e8c])
+        by smtp.gmail.com with ESMTPSA id z16sm3986235oth.43.2020.09.14.14.17.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Sep 2020 08:47:04 -0700 (PDT)
-Message-ID: <b2a4d93c9c635940e30b11fcd56da9e58d83f0db.camel@linuxfoundation.org>
-Subject: Re: 'lockfiles', 'dirs' and 'cleandirs' order of processing
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>, "BitBake
-	Development (bitbake-devel@lists.openembedded.org)"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Mon, 14 Sep 2020 16:47:03 +0100
-In-Reply-To: <MW2PR12MB2474F256CC7B7B3A415148CC8B230@MW2PR12MB2474.namprd12.prod.outlook.com>
-References: 
-	<MW2PR12MB2474F256CC7B7B3A415148CC8B230@MW2PR12MB2474.namprd12.prod.outlook.com>
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Mon, 14 Sep 2020 14:17:38 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] bitbake: cooker: Block SIGINT in worker processes
+Date: Mon, 14 Sep 2020 16:17:35 -0500
+Message-Id: <20200914211735.10512-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-On Mon, 2020-09-14 at 15:39 +0000, chris.laplante@agilent.com wrote:
-> Hi all,
->  
-> While I was debugging ‘cve-check’ failures under multiconfig, I
-> noticed something a bit worrying in build.py. The processing of
-> ‘dirs’ and ‘cleandirs’ varflags takes place before ‘lockfiles’ are
-> acquired. While it was not responsible for any of the ‘cve-check’
-> races I found, I think it has the possibility to cause nasty failures
-> if a task uses both ‘cleandirs’ and ‘lockfiles’.  
->  
-> I’m planning on sending a patch to delay ‘dirs’ and ‘cleandirs’
-> processing until after the ‘lockfiles’ are acquired. Does anyone see
-> a problem with this?
+Blocks SIGINT in the worker processes to prevent them from running the
+parent process signal handler, which causes them to deadlock under
+certain circumstances.
 
-That seems obvious in hindsight. The dirs element probably doesn't
-matter so much, cleandirs could though.
+[YOCTO #14034]
 
-Cheers,
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/cooker.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-Richard
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 58c223c1ca..5442f7d225 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -2093,6 +2093,7 @@ class CookerParser(object):
+             def init():
+                 signal.signal(signal.SIGTERM, signal.SIG_DFL)
+                 signal.signal(signal.SIGHUP, signal.SIG_DFL)
++                signal.signal(signal.SIGINT, signal.SIG_IGN)
+                 bb.utils.set_process_name(multiprocessing.current_process().name)
+                 multiprocessing.util.Finalize(None, bb.codeparser.parser_cache_save, exitpriority=1)
+                 multiprocessing.util.Finalize(None, bb.fetch.fetcher_parse_save, exitpriority=1)
+-- 
+2.28.0
 
