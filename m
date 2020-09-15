@@ -1,78 +1,107 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
- by mx.groups.io with SMTP id smtpd.web11.71973.1600118260001657225
+Received: from MTA-14-4.privateemail.com (MTA-14-4.privateemail.com [198.54.118.206])
+ by mx.groups.io with SMTP id smtpd.web11.7316.1600204370534671685
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 14 Sep 2020 14:17:40 -0700
+ Tue, 15 Sep 2020 14:12:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=lJGY2Wc3;
- spf=pass (domain: gmail.com, ip: 209.85.167.174, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f174.google.com with SMTP id n2so1444525oij.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 14 Sep 2020 14:17:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AqQdk9sddcjLShMZHnrdsFs7D5P26M+CRM/+4zFOl5c=;
-        b=lJGY2Wc3E5tUWfmWKvHHqgiLboXxTYB1ng1SOuPqLLCPVY1KFgCbFsncm2UlslsuLX
-         UzL6VDjJ3HjTjaVnganHTYZyfpl0sUzwK4AfGXpqGmn+Tv2UPwvXOW7bZ67e9GPKUYkA
-         LEu7YsofR0pgh45iR6od4o9HY5tmSfxlNOBQTKtdrSBff6fC+m0dEBfLTtTRTY8VIZPu
-         /Ux/crwcJ4uVVRdZ2cq5SUCHkaFSMgCTORz5fONfzhVjhuI/TpBiuc7zfspe4LY1GqiT
-         ct8YW7KI0ybuYYX6ar3wcECQ+LRO82UH0XBp7tLWuywpn7U+P+j4cCckBRwKGq1fDax+
-         8oMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AqQdk9sddcjLShMZHnrdsFs7D5P26M+CRM/+4zFOl5c=;
-        b=mbQhvn/xfUgG5M2no+Jm7IXn8Met6b9l0IXUHIS7h+hFgJHCa/lOu3VXsK4wnsiILh
-         SLNjldnkR4mKL1NgGUs/UJb6qx+D+x/iRscuNxPz7/XYnssnIqBFbgGJ+tFFr6F2IuzQ
-         GLf/1sIyDcVZELvJal+QoRUSlCVj0a5UepkspoTc91a2hAsEtIbLagc17GHFNOld5K+Q
-         f7XxUUWB4k5eMZZsZBJIE3F1MWJ14xnVGWR0cVNN/riPzYF6RhZ5zWIY9B/kSxfgl21f
-         ueQJKxVJCD3ZaI1de3RAcagHU8GCUu8zvYuY3gCHZHLoLUkB1bC0B6g49S7CEh5//HNw
-         PTxQ==
-X-Gm-Message-State: AOAM531v2pun3YAmmitxe+dHxjZh9VQvLiOyB+3Ndu5vIyzCSGsL35m0
-	a911VpEjc/0Al7z9YUzbz1FIBgfq8pI=
-X-Google-Smtp-Source: ABdhPJyd1i2gctnSwQfA5W2PLsItkIdK8JZ2UXVr+a+aoR8h1K4RRlHrOVJCkIM7AcypADyz7BwCOw==
-X-Received: by 2002:aca:f545:: with SMTP id t66mr894937oih.112.1600118258994;
-        Mon, 14 Sep 2020 14:17:38 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:7282:816:6ef9:8e8c])
-        by smtp.gmail.com with ESMTPSA id z16sm3986235oth.43.2020.09.14.14.17.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Sep 2020 14:17:38 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+ dkim=missing; spf=pass (domain: whitetree.xyz, ip: 198.54.118.206, mailfrom: charles.davies@whitetree.xyz)
+Received: from mta-14.privateemail.com (localhost [127.0.0.1])
+	by mta-14.privateemail.com (Postfix) with ESMTP id 1497680062;
+	Tue, 15 Sep 2020 17:12:50 -0400 (EDT)
+Received: from localhost.localdomain (unknown [10.20.151.210])
+	by mta-14.privateemail.com (Postfix) with ESMTPA id 050828005C;
+	Tue, 15 Sep 2020 21:12:48 +0000 (UTC)
+From: "Charlie Davies" <charles.davies@whitetree.xyz>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bitbake: cooker: Block SIGINT in worker processes
-Date: Mon, 14 Sep 2020 16:17:35 -0500
-Message-Id: <20200914211735.10512-1-JPEWhacker@gmail.com>
+Cc: Charlie Davies <charles.davies@whitetree.xyz>
+Subject: [PATCH] bitbake: fetch/git: add support for SRC_URI containing spaces in url
+Date: Tue, 15 Sep 2020 22:12:14 +0100
+Message-Id: <20200915211214.140434-1-charles.davies@whitetree.xyz>
 X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: quoted-printable
 
-Blocks SIGINT in the worker processes to prevent them from running the
-parent process signal handler, which causes them to deadlock under
-certain circumstances.
+Microsoft's TFS VCS system allows for spaces in a git repository url.
+An example of a valid url is:
 
-[YOCTO #14034]
+ssh://tfs-my-company.org:22/tfs/My Projects/FooBar
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+This commit adds support for such urls by implementing two changes.
+Firstly, when bitbake makes a git command line call the url is
+surrounded by quotes so that the url, regardless of spaces, is
+treated as one argument. Secondly, additional parsing of various
+filepath variables, which are based off of the url, are now
+completed with any spaces in the url replaced with underscores.
+
+Signed-off-by: Charlie Davies <charles.davies@whitetree.xyz>
 ---
- bitbake/lib/bb/cooker.py | 1 +
- 1 file changed, 1 insertion(+)
+ bitbake/lib/bb/fetch2/git.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 58c223c1ca..5442f7d225 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -2093,6 +2093,7 @@ class CookerParser(object):
-             def init():
-                 signal.signal(signal.SIGTERM, signal.SIG_DFL)
-                 signal.signal(signal.SIGHUP, signal.SIG_DFL)
-+                signal.signal(signal.SIGINT, signal.SIG_IGN)
-                 bb.utils.set_process_name(multiprocessing.current_process().name)
-                 multiprocessing.util.Finalize(None, bb.codeparser.parser_cache_save, exitpriority=1)
-                 multiprocessing.util.Finalize(None, bb.fetch.fetcher_parse_save, exitpriority=1)
--- 
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 644ba9238b..07064c694f 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -236,7 +236,7 @@ class Git(FetchMethod):
+                     ud.unresolvedrev[name] =3D ud.revisions[name]
+                 ud.revisions[name] =3D self.latest_revision(ud, d, name)
+=20
+-        gitsrcname =3D '%s%s' % (ud.host.replace(':', '.'), ud.path.repl=
+ace('/', '.').replace('*', '.'))
++        gitsrcname =3D '%s%s' % (ud.host.replace(':', '.'), ud.path.repl=
+ace('/', '.').replace('*', '.').replace(' ','_'))
+         if gitsrcname.startswith('.'):
+             gitsrcname =3D gitsrcname[1:]
+=20
+@@ -342,7 +342,7 @@ class Git(FetchMethod):
+             # We do this since git will use a "-l" option automatically =
+for local urls where possible
+             if repourl.startswith("file://"):
+                 repourl =3D repourl[7:]
+-            clone_cmd =3D "LANG=3DC %s clone --bare --mirror %s %s --pro=
+gress" % (ud.basecmd, repourl, ud.clonedir)
++            clone_cmd =3D "LANG=3DC %s clone --bare --mirror \"%s\" %s -=
+-progress" % (ud.basecmd, repourl, ud.clonedir)
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, clone_cmd, ud.url)
+             progresshandler =3D GitProgressHandler(d)
+@@ -354,8 +354,8 @@ class Git(FetchMethod):
+             if "origin" in output:
+               runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=
+=3Dud.clonedir)
+=20
+-            runfetchcmd("%s remote add --mirror=3Dfetch origin %s" % (ud=
+.basecmd, repourl), d, workdir=3Dud.clonedir)
+-            fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/*:ref=
+s/*" % (ud.basecmd, repourl)
++            runfetchcmd("%s remote add --mirror=3Dfetch origin \"%s\"" %=
+ (ud.basecmd, repourl), d, workdir=3Dud.clonedir)
++            fetch_cmd =3D "LANG=3DC %s fetch -f --progress \"%s\" refs/*=
+:refs/*" % (ud.basecmd, repourl)
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
+             progresshandler =3D GitProgressHandler(d)
+@@ -504,7 +504,7 @@ class Git(FetchMethod):
+             raise bb.fetch2.UnpackError("No up to date source found: " +=
+ "; ".join(source_error), ud.url)
+=20
+         repourl =3D self._get_repo_url(ud)
+-        runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, repourl=
+), d, workdir=3Ddestdir)
++        runfetchcmd("%s remote set-url origin \"%s\"" % (ud.basecmd, rep=
+ourl), d, workdir=3Ddestdir)
+=20
+         if self._contains_lfs(ud, d, destdir):
+             if need_lfs and not self._find_git_lfs(d):
+@@ -623,7 +623,7 @@ class Git(FetchMethod):
+         d.setVar('_BB_GIT_IN_LSREMOTE', '1')
+         try:
+             repourl =3D self._get_repo_url(ud)
+-            cmd =3D "%s ls-remote %s %s" % \
++            cmd =3D "%s ls-remote \"%s\" %s" % \
+                 (ud.basecmd, repourl, search)
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, cmd, repourl)
+--=20
 2.28.0
 
