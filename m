@@ -1,112 +1,57 @@
-Received: from MTA-13-4.privateemail.com (MTA-13-4.privateemail.com [198.54.127.109])
- by mx.groups.io with SMTP id smtpd.web12.293.1600290815570500707
- for <bitbake-devel@lists.openembedded.org>;
- Wed, 16 Sep 2020 14:13:35 -0700
-Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: whitetree.xyz, ip: 198.54.127.109, mailfrom: charles.davies@whitetree.xyz)
-Received: from mta-13.privateemail.com (localhost [127.0.0.1])
-	by mta-13.privateemail.com (Postfix) with ESMTP id DDB0E80053;
-	Wed, 16 Sep 2020 17:13:34 -0400 (EDT)
-Received: from localhost.localdomain (unknown [10.20.151.222])
-	by mta-13.privateemail.com (Postfix) with ESMTPA id DB6BF8004B;
-	Wed, 16 Sep 2020 21:13:33 +0000 (UTC)
-From: "Charlie Davies" <charles.davies@whitetree.xyz>
+Subject: Re: [PATCH] bitbake: fetch/git: add support for SRC_URI containing spaces in url
 To: bitbake-devel@lists.openembedded.org
-Cc: Charlie Davies <charles.davies@whitetree.xyz>
-Subject: [v2][PATCH 2/2] bitbake: tests/fetch: add unit tests for SRC_URI with spaces in url
-Date: Wed, 16 Sep 2020 22:12:41 +0100
-Message-Id: <20200916211241.206838-2-charles.davies@whitetree.xyz>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200916211241.206838-1-charles.davies@whitetree.xyz>
-References: <20200916211241.206838-1-charles.davies@whitetree.xyz>
+From: "Charlie Davies" <charles.davies@whitetree.xyz>
+X-Originating-Location: London, England, GB (185.192.70.189)
+X-Originating-Platform: Linux Chrome 85
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+Date: Wed, 16 Sep 2020 14:28:14 -0700
+References: <075098f5e21fc34a925187c6114206af92bbfd78.camel@linuxfoundation.org>
+In-Reply-To: <075098f5e21fc34a925187c6114206af92bbfd78.camel@linuxfoundation.org>
+Message-ID: <18836.1600291694255569397@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="An8lGA9JX0rkpetXdCWR"
+
+--An8lGA9JX0rkpetXdCWR
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Charlie Davies <charles.davies@whitetree.xyz>
----
- bitbake/lib/bb/tests/fetch.py | 47 +++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+Hi,
 
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.p=
-y
-index 0ecf044f38..5f24918a96 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -223,6 +223,21 @@ class URITest(unittest.TestCase):
-             'query': {},
-             'relative': False
-         },
-+        "git://tfs-example.org:22/tfs/example%20path/example.git": {
-+            'uri': 'git://tfs-example.org:22/tfs/example%20path/example.=
-git',
-+            'scheme': 'git',
-+            'hostname': 'tfs-example.org',
-+            'port': 22,
-+            'hostport': 'tfs-example.org:22',
-+            'path': '/tfs/example path/example.git',
-+            'userinfo': '',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {},
-+            'query': {},
-+            'relative': False
-+        },
-         "http://somesite.net;someparam=3D1": {
-             'uri': 'http://somesite.net;someparam=3D1',
-             'scheme': 'http',
-@@ -2080,6 +2095,38 @@ class GitLfsTest(FetcherTest):
-         shutil.rmtree(self.gitdir, ignore_errors=3DTrue)
-         fetcher.unpack(self.d.getVar('WORKDIR'))
-=20
-+class GitURLWithSpacesTest(FetcherTest):
-+    test_git_urls =3D {
-+        "git://tfs-example.org:22/tfs/example%20path/example.git" : {
-+            'url': 'git://tfs-example.org:22/tfs/example%20path/example.=
-git',
-+            'gitsrcname': 'tfs-example.org.22.tfs.example_path.example.g=
-it',
-+            'path': '/tfs/example path/example.git'
-+        },
-+        "git://tfs-example.org:22/tfs/example%20path/example%20repo.git"=
- : {
-+            'url': 'git://tfs-example.org:22/tfs/example%20path/example%=
-20repo.git',
-+            'gitsrcname': 'tfs-example.org.22.tfs.example_path.example_r=
-epo.git',
-+            'path': '/tfs/example path/example repo.git'
-+        }
-+    }
-+
-+    def test_urls(self):
-+
-+        # Set fake SRCREV to stop git fetcher from trying to contact non=
--existent git repo
-+        self.d.setVar('SRCREV', '82ea737a0b42a8b53e11c9cde141e9e9c0bd8c4=
-0')
-+
-+        for test_git_url, ref in self.test_git_urls.items():
-+
-+            fetcher =3D bb.fetch.Fetch([test_git_url], self.d)
-+            ud =3D fetcher.ud[fetcher.urls[0]]
-+
-+            self.assertEqual(ud.url, ref['url'])
-+            self.assertEqual(ud.path, ref['path'])
-+            self.assertEqual(ud.localfile, os.path.join(self.dldir, "git=
-2", ref['gitsrcname']))
-+            self.assertEqual(ud.localpath, os.path.join(self.dldir, "git=
-2", ref['gitsrcname']))
-+            self.assertEqual(ud.lockfile, os.path.join(self.dldir, "git2=
-", ref['gitsrcname'] + '.lock'))
-+            self.assertEqual(ud.clonedir, os.path.join(self.dldir, "git2=
-", ref['gitsrcname']))
-+            self.assertEqual(ud.fullmirror, os.path.join(self.dldir, "gi=
-t2_" + ref['gitsrcname'] + '.tar.gz'))
-+
- class NPMTest(FetcherTest):
-     def skipIfNoNpm():
-         import shutil
---=20
-2.28.0
+I have added some unit tests and submitted v2 of the patch for your consid=
+eration.
 
+I added unit tests to test the uri parsing and the removal of spaces in th=
+e filepaths. I didn't add a test for the addition of quotes in the git comm=
+ands. The only method to test this that I could think of is to mock the run=
+fetchmd. This seemed very invasive and looking at the rest of the tests not=
+ in keeping with what has been done before. However, I ran a full build of =
+my project overnight and there weren't any issues with the patch applied.
+
+Yes, I agree the purpose of this patch would only be to cope with spaces i=
+n the url of a repository.
+
+Do I have to do anything else to have the patch merged into dunfell - if i=
+t is accepted - as this is the branch of poky I am working from?
+
+Many Thanks,
+
+Charlie
+
+--An8lGA9JX0rkpetXdCWR
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,<br /><br />I have added some unit tests and submitted v2 of the patch f=
+or your consideration.<br /><br />I added unit tests to test the uri parsin=
+g and the removal of spaces in the filepaths. I didn't add a test for the a=
+ddition of quotes in the git commands. The only method to test this that I =
+could think of is to mock the runfetchmd. This seemed very invasive and loo=
+king at the rest of the tests not in keeping with what has been done before=
+. However, I ran a full build of my project overnight and there weren't any=
+ issues with the patch applied.<br /><br />Yes, I agree the purpose of this=
+ patch would only be to cope with spaces in the url of a repository.<br /><=
+br />Do I have to do anything else to have the patch merged into dunfell - =
+if it is accepted - as this is the branch of poky I am working from?<br /><=
+br />Many Thanks,<br /><br />Charlie
+
+--An8lGA9JX0rkpetXdCWR--
