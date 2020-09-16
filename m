@@ -1,99 +1,107 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web11.318.1600286744055204364
+Received: from MTA-13-4.privateemail.com (MTA-13-4.privateemail.com [198.54.127.109])
+ by mx.groups.io with SMTP id smtpd.web11.339.1600290803846153913
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 16 Sep 2020 13:05:44 -0700
+ Wed, 16 Sep 2020 14:13:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=c6sB25qc;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.66, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f66.google.com with SMTP id w5so8154188wrp.8
-        for <bitbake-devel@lists.openembedded.org>; Wed, 16 Sep 2020 13:05:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=QiNeuNzcfFk5u15zqH3ch0cdiHa5s9oE6IK79bD81g4=;
-        b=c6sB25qcbI9on2ooF7NApAWNpkgGoVkE2sERVm/H+ty9ucgBzAWQqHD6BXQ3ndqDMR
-         g8tUHFn2v4i3oNKMZQmwAmkcs2q9CAgyx2NffHifJ1p7vpgVfH9bvftEZQRB6JI/zdKY
-         Xc2Ro6Ec/zgexIEmfB4ZZCLiAsjFqrbLaRFWs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=QiNeuNzcfFk5u15zqH3ch0cdiHa5s9oE6IK79bD81g4=;
-        b=bKA/W6xLITzB2Su7De28txymD8MSyObZrzziDUjFuOwsVvMz/9DJM12eA3UIvUa7FY
-         Y759glAyWGPSVaPKWZcqZUxZAISXDOOTA679urUkUhzDgPuRzfZ4PK4yqLtTaHDa9kmw
-         Fr0dI0pxV4G673T96xOvYS5JGe0RaoeGdgqwZTli9lb3yYjiAfdV5AziYgm4mHkIjVw5
-         U9Wue53+0Ctpk+/bgcW0c8NYJabsGefantMrYOL8wwnnUTFNj3WwhTeVxHa3/SlysXZ0
-         Wq7QwcX4prLwlvhjrHHr/1L/qsjuTXD+UmL3CMHC54s7jMexxA/SlXK+LE5H5ltBUioT
-         w7UQ==
-X-Gm-Message-State: AOAM533jhHcqZNk8jQ8/A+UH2FFzHVj7ZmWzqTXX9dje1917svBJStF/
-	cLlq9uFQ/x35WvImFRtQ3blxoNrpaJD8tQ==
-X-Google-Smtp-Source: ABdhPJzQqu8nbZ441NeqNZEohPoEUmqsiz3ewq/luc8v0bQzgOA7P3AMowe2527vCYP/MnLPFhnzLw==
-X-Received: by 2002:a5d:4591:: with SMTP id p17mr28180233wrq.408.1600286742058;
-        Wed, 16 Sep 2020 13:05:42 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from c.6.3.c.1.5.9.4.8.7.9.7.2.3.5.0.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (c.6.3.c.1.5.9.4.8.7.9.7.2.3.5.0.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:532:7978:4951:c36c])
-        by smtp.gmail.com with ESMTPSA id k6sm6613427wmf.30.2020.09.16.13.05.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2020 13:05:40 -0700 (PDT)
-Message-ID: <8519545833ac58a1221fa9d34d509217c775e3af.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] SyncThread exit issues
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Cc: Joshua Watt <jpewhacker@gmail.com>
-Date: Wed, 16 Sep 2020 21:05:37 +0100
-In-Reply-To: <16341DF9BC4EF512.16354@lists.openembedded.org>
-References: <16341DF9BC4EF512.16354@lists.openembedded.org>
-User-Agent: Evolution 3.36.4-0ubuntu1 
+ dkim=missing; spf=pass (domain: whitetree.xyz, ip: 198.54.127.109, mailfrom: charles.davies@whitetree.xyz)
+Received: from mta-13.privateemail.com (localhost [127.0.0.1])
+	by mta-13.privateemail.com (Postfix) with ESMTP id B84BE80055;
+	Wed, 16 Sep 2020 17:13:21 -0400 (EDT)
+Received: from localhost.localdomain (unknown [10.20.151.222])
+	by mta-13.privateemail.com (Postfix) with ESMTPA id 827AA8004B;
+	Wed, 16 Sep 2020 21:13:20 +0000 (UTC)
+From: "Charlie Davies" <charles.davies@whitetree.xyz>
+To: bitbake-devel@lists.openembedded.org
+Cc: Charlie Davies <charles.davies@whitetree.xyz>
+Subject: [v2][PATCH 1/2] bitbake: fetch/git: add support for SRC_URI containing spaces in url
+Date: Wed, 16 Sep 2020 22:12:40 +0100
+Message-Id: <20200916211241.206838-1-charles.davies@whitetree.xyz>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2020-09-12 at 19:52 +0100, Richard Purdie via lists.openembedded.org wrote:
-> Hi All,
-> 
-> Its taken quite a bit of debugging and going around in circles but I'm
-> now 99% sure the remaining "hung" bitbake issues are related to the
-> SyncThread. It is exiting correctly but taking far too long to do so.
-> The bitbake-cookerdaemon log for a recent failure is shown below but
-> the key section is this:
-> 
-> 622524 16:21:48.768140 Exiting
-> 622524 16:23:22.923871 Original lockfile
-> contents: ['622524\n']
-> 
-> i.e. at exit bitbake went AWOL for 94s. This is longer than the 60s 
-> connection timeout so this is why other tests failed. Earlier lines in the log clearly show the SyncThread had not finished.
-> 
-> I'm not really sure what to do about this, presumably its due to high 
-> IO load on on the autobuilders.
-> 
-> I wanted to mention it to show that we are at least able to clearly 
-> identify the cause of the rare test failures and the logs are doing a 
-> better job of capturing what is going on.
-> 
-> (https://autobuilder.yoctoproject.org/typhoon/#/builders/86/builds/1352 was the build that failed this corresponds to)
+Microsoft's TFS VCS system allows for spaces in a git repository url.
+An example of a valid url is:
 
-For the purposes of the archives, I think the problem is happening
-particularly on the Fedora workers which are using ext4 partitions with
-normal journals. On some other machines we use ext4 partitions with
-writeback journals.
+ssh://tfs-my-company.org:22/tfs/My Projects/FooBar
 
-The journal runs in its own process which has be/3 priority, so even if
-we have file deletion running at idle or compiles at be/7, they will
-end up writing to the journal which can stall out be/4 process I/O.
+This commit adds support for such urls by implementing two changes.
+Firstly, when bitbake makes a git command line call the url is
+surrounded by quotes so that the url, regardless of spaces, is
+treated as one argument. Secondly, additional parsing of various
+filepath variables, which are based off of the url, are now
+completed with any spaces in the url replaced with underscores.
 
-The solution here may be to mount these ext4 partitions as writeback
-journals. This will mean fewer writes through the journal, letting the
-I/O scheduler do the right thing.
+Signed-off-by: Charlie Davies <charles.davies@whitetree.xyz>
+---
+ bitbake/lib/bb/fetch2/git.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Hopefully :)
-
-This also explains an observation I've had where a build with an
-"ionice -c 3 rm" runs much more slowly than a build without
-'background' deletion.
-
-Cheers,
-
-Richard
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 644ba9238b..07064c694f 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -236,7 +236,7 @@ class Git(FetchMethod):
+                     ud.unresolvedrev[name] =3D ud.revisions[name]
+                 ud.revisions[name] =3D self.latest_revision(ud, d, name)
+=20
+-        gitsrcname =3D '%s%s' % (ud.host.replace(':', '.'), ud.path.repl=
+ace('/', '.').replace('*', '.'))
++        gitsrcname =3D '%s%s' % (ud.host.replace(':', '.'), ud.path.repl=
+ace('/', '.').replace('*', '.').replace(' ','_'))
+         if gitsrcname.startswith('.'):
+             gitsrcname =3D gitsrcname[1:]
+=20
+@@ -342,7 +342,7 @@ class Git(FetchMethod):
+             # We do this since git will use a "-l" option automatically =
+for local urls where possible
+             if repourl.startswith("file://"):
+                 repourl =3D repourl[7:]
+-            clone_cmd =3D "LANG=3DC %s clone --bare --mirror %s %s --pro=
+gress" % (ud.basecmd, repourl, ud.clonedir)
++            clone_cmd =3D "LANG=3DC %s clone --bare --mirror \"%s\" %s -=
+-progress" % (ud.basecmd, repourl, ud.clonedir)
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, clone_cmd, ud.url)
+             progresshandler =3D GitProgressHandler(d)
+@@ -354,8 +354,8 @@ class Git(FetchMethod):
+             if "origin" in output:
+               runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=
+=3Dud.clonedir)
+=20
+-            runfetchcmd("%s remote add --mirror=3Dfetch origin %s" % (ud=
+.basecmd, repourl), d, workdir=3Dud.clonedir)
+-            fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/*:ref=
+s/*" % (ud.basecmd, repourl)
++            runfetchcmd("%s remote add --mirror=3Dfetch origin \"%s\"" %=
+ (ud.basecmd, repourl), d, workdir=3Dud.clonedir)
++            fetch_cmd =3D "LANG=3DC %s fetch -f --progress \"%s\" refs/*=
+:refs/*" % (ud.basecmd, repourl)
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
+             progresshandler =3D GitProgressHandler(d)
+@@ -504,7 +504,7 @@ class Git(FetchMethod):
+             raise bb.fetch2.UnpackError("No up to date source found: " +=
+ "; ".join(source_error), ud.url)
+=20
+         repourl =3D self._get_repo_url(ud)
+-        runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, repourl=
+), d, workdir=3Ddestdir)
++        runfetchcmd("%s remote set-url origin \"%s\"" % (ud.basecmd, rep=
+ourl), d, workdir=3Ddestdir)
+=20
+         if self._contains_lfs(ud, d, destdir):
+             if need_lfs and not self._find_git_lfs(d):
+@@ -623,7 +623,7 @@ class Git(FetchMethod):
+         d.setVar('_BB_GIT_IN_LSREMOTE', '1')
+         try:
+             repourl =3D self._get_repo_url(ud)
+-            cmd =3D "%s ls-remote %s %s" % \
++            cmd =3D "%s ls-remote \"%s\" %s" % \
+                 (ud.basecmd, repourl, search)
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, cmd, repourl)
+--=20
+2.28.0
 
