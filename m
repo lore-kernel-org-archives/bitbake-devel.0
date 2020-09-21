@@ -1,235 +1,91 @@
-Received: from mxh1.animate.de (mxh1.animate.de [83.246.66.188])
- by mx.groups.io with SMTP id smtpd.web11.39614.1600686763687918699
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.47806.1600711416140248895
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 21 Sep 2020 04:12:45 -0700
+ Mon, 21 Sep 2020 11:03:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@uib.de header.s=uib20190118 header.b=VSoTe/b5;
- spf=pass (domain: uib.de, ip: 83.246.66.188, mailfrom: m.radtke@uib.de)
-Received: from localhost (localhost [127.0.0.1])
-	by mxh1.animate.de (Postfix) with ESMTP id 21E21A009E
-	for <bitbake-devel@lists.openembedded.org>; Mon, 21 Sep 2020 13:12:41 +0200 (CEST)
-Authentication-Results: mxh1.animate.de (amavisd-new);
-	dkim=pass (1024-bit key) reason="pass (just generated, assumed good)"
-	header.d=uib.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=uib.de; h=
-	message-id:x-mailer:content-type:content-type:mime-version:date
-	:date:from:from:subject:subject:received:received:received
-	:received; s=uib20190118; t=1600686760; x=1602501161; bh=E3Kr7Lv
-	2ANuyic3I2dPRKMFwirblmMNl7MNC0hfoAjk=; b=VSoTe/b5C9wwMs9mMFDzm1c
-	uemMVXcgkE4kQIW6iLgryGKbqTGgAah2GFzk+YQgqJaDIVjm5DM19KSVsC9te4w1
-	MR72HsjMUVvQbsKKa2/dyWvudR6OuhYSePpdHgdOEMaTNqUB9Ms+sI/2x38zZ94U
-	JungyMNUdhVrwE3MFZJk=
-X-Virus-Scanned: Debian amavisd-new at animate.de
-X-Spam-Flag: NO
-X-Spam-Score: 0
-X-Spam-Level: 
-X-Spam-Status: No, score=x tagged_above=-9999 required=5 WHITELISTED tests=[]
-	autolearn=unavailable
-Received: from mxh1.animate.de ([127.0.0.1])
-	by localhost (mxh1.animate.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id V9hAc5CrKoI8 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Sep 2020 13:12:40 +0200 (CEST)
-Received: from mail.uib.gmbh (unknown [217.19.180.154])
-	by mxh1.animate.de (Postfix) with ESMTP id C62ABA009B
-	for <bitbake-devel@lists.openembedded.org>; Mon, 21 Sep 2020 13:12:40 +0200 (CEST)
-Received: from groupware.mz.uib.gmbh (localhost [127.0.0.1])
-	by mail.uib.gmbh (Postfix) with ESMTP id A13DF1000A5
-	for <bitbake-devel@lists.openembedded.org>; Mon, 21 Sep 2020 13:12:40 +0200 (CEST)
-Received: by groupware (kopano-spooler) with MAPI; Mon, 21 Sep 2020 13:12:40
- +0200
-Subject: Downgrade util-linux
-From: m.radtke@uib.de
-To: =?us-ascii?Q?bitbake-devel=40lists=2Eopenembedded=2Eorg?=
-  <bitbake-devel@lists.openembedded.org>
-Date: Mon, 21 Sep 2020 11:12:40 +0000
-Mime-Version: 1.0
-X-Priority: 3 (Normal)
-X-Mailer: Kopano 8.7.16
-Message-Id: <kcEE.5s8ZgDnjR+m5TxjkKS3lEQ.AESCHgiQ1gE@groupware.mz.uib.gmbh>
-Content-Type: multipart/alternative; 
- boundary="=_EG8qKAGa3IgOR7vYjL0hBC4pz-K7lpH1Pp8H6wKHH7K0eJwf"
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gzrLvLAh;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f52.google.com with SMTP id k18so377166wmj.5
+        for <bitbake-devel@lists.openembedded.org>; Mon, 21 Sep 2020 11:03:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=+M9aNwR3q/DWHnr39/jHvSxOpovmKcbEV9PReFtFLOI=;
+        b=gzrLvLAh2nDDRRjv3HQlzKzkpYY1VPKDkoXncgIA2a00t1Ke9jycW7IyTJilq+gaEs
+         S/gWBX+QSnLEnOCNuQMIL0wKjPUNEQg1NYDjt2PLkVkYUBm2fQht5mw5PJcAhcbEb2gu
+         XNg546GP6qY/V8a0SlfOeVtKpkLBFOe7BrWAY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=+M9aNwR3q/DWHnr39/jHvSxOpovmKcbEV9PReFtFLOI=;
+        b=iZX/znrjwSaP4y6wkNCnetTFDuiA/Dwdtc1UcA8BN4e3NEkIxqKJRabD3SH/UCHlU+
+         U5B5n29sZvDbxQz5KCF5fOSdZKoVWxpLnXBt3T30hOKsddvB2MQQoqLEAo8Aoh2CFiQN
+         00DccI7Q4+sL6cKpJ6McCSAGfKoSJayZ4ZpjQT9Ip7UCFiYEdq9dy4cFK1yxo6U/j/6c
+         zXU/tRv1Ey75Ov9/dXNTuLA0wQsABAkR7+U+2maSJPHsuCs2G+R7PEIm5lRutWlcMIFj
+         gzdsmtTph9XITfmbceVwvwYui5QuI0N+38aV+u3JfctUDOJjQhTQHVT5BOndQXcQfCNp
+         Pl+w==
+X-Gm-Message-State: AOAM531COhj8+2/syJgpNa+kd1imhSEEeCuIasVdu2WQFUTXj47kP5QD
+	7FFccxnLihGhdDHCvRDAk/X+ZA==
+X-Google-Smtp-Source: ABdhPJwmnblCyYZXSOtyiRdEWpq9JSI9y6DwJCuZVNS2eFLFZiQRVgO9Rrd38tlaXD3OYzKIdwac0g==
+X-Received: by 2002:a1c:6341:: with SMTP id x62mr589347wmb.70.1600711414356;
+        Mon, 21 Sep 2020 11:03:34 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from 4.0.c.9.a.6.a.b.7.4.d.7.f.b.8.3.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (4.0.c.9.a.6.a.b.7.4.d.7.f.b.8.3.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:38bf:7d47:ba6a:9c04])
+        by smtp.gmail.com with ESMTPSA id y1sm457537wmi.36.2020.09.21.11.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Sep 2020 11:03:33 -0700 (PDT)
+Message-ID: <f74b7cc1ca622231e5570807873dade8b257b18b.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] Downgrade util-linux
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Mathias Radtke <m.radtke@uib.de>, "bitbake-devel@lists.openembedded.org"
+	 <bitbake-devel@lists.openembedded.org>
+Date: Mon, 21 Sep 2020 19:03:30 +0100
+In-Reply-To: <kcEE.5s8ZgDnjR+m5TxjkKS3lEQ.AESCHgiQ1gE@groupware.mz.uib.gmbh>
+References: <kcEE.5s8ZgDnjR+m5TxjkKS3lEQ.AESCHgiQ1gE@groupware.mz.uib.gmbh>
+User-Agent: Evolution 3.36.4-0ubuntu1 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---=_EG8qKAGa3IgOR7vYjL0hBC4pz-K7lpH1Pp8H6wKHH7K0eJwf
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Mon, 2020-09-21 at 11:12 +0000, Mathias Radtke wrote:
+> Hi
+> I am currently experimenting with yocto and I was having a good start
+> until now.
+> I want to rebuild a bootimage we have with yocto.
+> Currently the bootimage uses sfdisk 2.25.2 as later on the outputs
+> changed and I didn't have time to adapt I always downgraded util-
+> linux on the old bootimage.
+> To get quick results with a yocto based bootimage I wanted to do the
+> same. I found a receive for a util-linux 2.25.2 package and added it
+> to my recipes.
+> In my local.conf I added:
+> 
+> # downgrade util-linux
+> PREFERRED_VERSION_util-linux = "2.25.2"
+>  
+> However this seems to work partially as the output of bitbake is now
+> the following
+>  
+> ERROR: Multiple versions of util-linux are due to be built
+> (/home/user/opsi-linux-bootimage-yocto/poky/build/../meta-opsi-
+> bootimage/recipes-opsi-bootimage/util-linux/util-linux_2.25.2.bb
+> /home/user/opsi-linux-bootimage-yocto/poky/build/../meta/recipes-
+> core/util-linux/util-linux_2.35.1.bb). Only one version of a given PN
+> should be built in any given build. You likely need to set
+> PREFERRED_VERSION_util-linux to select the correct version or don't
+> depend on multiple versions.
+> 
+> How can I build a bootimage with a downgraded util-linux package?
 
-Hi
+I'd suggest you move the old recipe out the way and that should quickly
+give a clear idea on why its trying to build it.
 
-I am currently experimenting with yocto and I was having a good start unt=
-il now.
+I appreciate that isn't an ideal way to debug this but it is usually
+effective...
 
-I want to rebuild a bootimage we have with yocto.
-Currently the bootimage uses sfdisk 2.25.2 as later on the outputs change=
-d and I didn't have time to adapt I always downgraded util-linux on the o=
-ld bootimage.
-To get quick results with a yocto based bootimage I wanted to do the same=
-=2E I found a receive for a util-linux 2.25.2 package and added it to my =
-recipes.
+Cheers,
 
-In my local.conf I added:
+Richard
 
-
-
-# downgrade util-linux
-PREFERRED_VERSION_util-linux =3D "2.25.2"
-=C2=A0However this seems to work partially as the output of bitbake is no=
-w the following
-=C2=A0ERROR: Multiple versions of util-linux are due to be built (/home/u=
-ser/opsi-linux-bootimage-yocto/poky/build/../meta-opsi-bootimage/recipes-=
-opsi-bootimage/util-linux/util-linux_2.25.2.bb /home/user/opsi-linux-boot=
-image-yocto/poky/build/../meta/recipes-core/util-linux/util-linux_2.35.1.=
-bb). Only one version of a given PN should be built in any given build. Y=
-ou likely need to set PREFERRED_VERSION_util-linux to select the correct =
-version or don't depend on multiple versions.
-
-
-
-How can I build a bootimage with a downgraded util-linux package=3F
-
-Regards
-
-Mathias
-
-
-
---
-opsi - Open PC-Server-Integration
-das Open Source Client-Management-System von uib gmbh
-
-
-Mathias Radtke
-Entwicklung
-eMail: m.radtke@uib.de
-Tel. +49 6131 / 27561-16
-Fax=C2=A0 +49 6131 / 27561-22
-
-
-uib gmbh
-Bonifaziusplatz 1B
-55118 Mainz
-
-Internet:
-https://uib.de
-https://opsi.org
-
-
-Geschftsfhrer: Dr. Detlef Oertel, Erol =C3=9Cl=C3=BCkmen
-Handelsregister: Amtsgericht Mainz HRB 6942
-
---=_EG8qKAGa3IgOR7vYjL0hBC4pz-K7lpH1Pp8H6wKHH7K0eJwf
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://ww=
-w.w3.org/TR/html4/loose.dtd"><html>
-<head>
-  <meta name=3D"Generator" content=3D"Kopano WebApp v4.2.2878+128.1">
-  <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8=
-">
-  <title>Downgrade util-linux</title>
-</head>
-<body>
-<p style=3D"font-family: arial,helvetica,sans-serif; font-size: 11pt; pad=
-ding: 0; margin: 0;">Hi</p>
-<p style=3D"font-family: arial,helvetica,sans-serif; font-size: 11pt; pad=
-ding: 0; margin: 0;"><span style=3D"font-size: 11pt; font-family: arial, =
-helvetica, sans-serif;">I am currently experimenting with yocto and I was=
- having a good start until now.<br /></span></p>
-<p style=3D"font-family: arial,helvetica,sans-serif; font-size: 11pt; pad=
-ding: 0; margin: 0;"><span style=3D"font-size: 11pt; font-family: arial, =
-helvetica, sans-serif;">I want to rebuild a bootimage we have with yocto.=
-<br />Currently the bootimage uses sfdisk 2.25.2 as later on the outputs =
-changed and I didn't have time to adapt I always downgraded util-linux on=
- the old bootimage.<br />To get quick results with a yocto based bootimag=
-e I wanted to do the same. I found a receive for a util-linux 2.25.2 pack=
-age and added it to my recipes.</span></p>
-<p style=3D"font-family: arial,helvetica,sans-serif; font-size: 11pt; pad=
-ding: 0; margin: 0;"><span style=3D"font-size: 11pt; font-family: arial, =
-helvetica, sans-serif;">In my local.conf I added:</span></p>
-<p style=3D"font-family: arial,helvetica,sans-serif; font-size: 11pt; pad=
-ding: 0; margin: 0;"><span style=3D"font-size: 11pt; font-family: arial, =
-helvetica, sans-serif;"><br /></span></p>
-<div style=3D"padding-left: 30px;"># downgrade util-linux</div>
-<div style=3D"padding-left: 30px;">PREFERRED_VERSION_util-linux =3D "2.25=
-=2E2"</div>
-<div style=3D"padding-left: 30px;">&nbsp;</div>
-<div>However this seems to work partially as the output of bitbake is now=
- the following</div>
-<div>&nbsp;</div>
-<p style=3D"font-family: arial, helvetica, sans-serif; font-size: 11pt; p=
-adding: 0px 0px 0px 30px; margin: 0px;"><span style=3D"font-size: 11pt; f=
-ont-family: arial, helvetica, sans-serif;">ERROR: Multiple versions of ut=
-il-linux are due to be built (/home/user/opsi-linux-bootimage-yocto/poky/=
-build/../meta-opsi-bootimage/recipes-opsi-bootimage/util-linux/util-linux=
-_2.25.2.bb /home/user/opsi-linux-bootimage-yocto/poky/build/../meta/recip=
-es-core/util-linux/util-linux_2.35.1.bb). Only one version of a given PN =
-should be built in any given build. You likely need to set PREFERRED_VERS=
-ION_util-linux to select the correct version or don't depend on multiple =
-versions.</span></p>
-<p style=3D"font-family: arial, helvetica, sans-serif; font-size: 11pt; p=
-adding-top: 0px; padding-right: 0px; padding-bottom: 0px; margin: 0px;"><=
-span style=3D"font-size: 11pt; font-family: arial, helvetica, sans-serif;=
-"><br /></span></p>
-<p style=3D"font-family: arial, helvetica, sans-serif; font-size: 11pt; p=
-adding-top: 0px; padding-right: 0px; padding-bottom: 0px; margin: 0px;"><=
-span style=3D"font-size: 11pt; font-family: arial, helvetica, sans-serif;=
-">How can I build a bootimage with a downgraded util-linux package=3F<br =
-/><br />Regards</span></p>
-<p style=3D"font-family: arial, helvetica, sans-serif; font-size: 11pt; p=
-adding-top: 0px; padding-right: 0px; padding-bottom: 0px; margin: 0px;"><=
-span style=3D"font-size: 11pt; font-family: arial, helvetica, sans-serif;=
-">Mathias</span></p>
-<p style=3D"font-family: arial,helvetica,sans-serif; font-size: 11pt; pad=
-ding: 0; margin: 0;"><br /></p>
-<p style=3D"padding: 0; margin: 0;"><span style=3D"font-size: 10pt; font-=
-family: tahoma, arial, helvetica, sans-serif;"><span style=3D"font-family=
-: courier; font-size: small;">--</span><br style=3D"font-family: courier;=
- font-size: small;" /><span style=3D"font-family: courier; font-size: sma=
-ll;">opsi - Open PC-Server-Integration</span><br style=3D"font-family: co=
-urier; font-size: small;" /><span style=3D"font-family: courier; font-siz=
-e: small;">das Open Source Client-Management-System von uib gmbh</span></=
-span></p>
-<p style=3D"padding: 0; margin: 0;"><span style=3D"font-size: 10pt; font-=
-family: tahoma, arial, helvetica, sans-serif;"><br style=3D"font-family: =
-courier; font-size: small;" /><span style=3D"font-family: courier; font-s=
-ize: small;">Mathias Radtke</span><br style=3D"font-family: courier; font=
--size: small;" /><span style=3D"font-family: courier; font-size: small;">=
-Entwicklung</span><br style=3D"font-family: courier; font-size: small;" /=
-><span style=3D"font-family: courier; font-size: small;">eMail: m.radtke@=
-uib.de</span><br style=3D"font-family: courier; font-size: small;" /><spa=
-n style=3D"font-family: courier; font-size: small;">Tel. +49 6131 / 27561=
--16</span><br style=3D"font-family: courier; font-size: small;" /><span s=
-tyle=3D"font-family: courier; font-size: small;">Fax&nbsp; +49 6131 / 275=
-61-22</span><br style=3D"font-family: courier; font-size: small;" /><span=
- style=3D"font-family: courier; font-size: small;"></span></span></p>
-<p style=3D"padding: 0; margin: 0;"><span style=3D"font-size: 10pt; font-=
-family: tahoma, arial, helvetica, sans-serif;"><span style=3D"font-family=
-: courier; font-size: small;"></span></span></p>
-<p style=3D"padding: 0; margin: 0;"><span style=3D"font-size: 10pt; font-=
-family: tahoma, arial, helvetica, sans-serif;"><span style=3D"font-family=
-: courier; font-size: small;">uib gmbh</span><br style=3D"font-family: co=
-urier; font-size: small;" /><span style=3D"font-family: courier; font-siz=
-e: small;">Bonifaziusplatz 1B</span><br style=3D"font-family: courier; fo=
-nt-size: small;" /><span style=3D"font-family: courier; font-size: small;=
-">55118 Mainz</span><br style=3D"font-family: courier; font-size: small;"=
- /><br style=3D"font-family: courier; font-size: small;" /><span style=3D=
-"font-family: courier; font-size: small;">Internet:</span><br style=3D"fo=
-nt-family: courier; font-size: small;" /><a href=3D"https://uib.de/" targ=
-et=3D"_blank" rel=3D"noopener">https://uib.de</a><br style=3D"font-family=
-: courier; font-size: small;" /><a href=3D"https://opsi.org/" target=3D"_=
-blank" rel=3D"noopener">https://opsi.org</a><br style=3D"font-family: cou=
-rier; font-size: small;" /><span style=3D"font-family: courier; font-size=
-: small;"></span></span></p>
-<p style=3D"padding: 0; margin: 0;"><span style=3D"font-size: 10pt; font-=
-family: tahoma, arial, helvetica, sans-serif;"><span style=3D"font-family=
-: courier; font-size: small;"></span></span></p>
-<p style=3D"padding: 0; margin: 0;"><span style=3D"font-size: 10pt; font-=
-family: tahoma, arial, helvetica, sans-serif;"><span style=3D"font-family=
-: courier; font-size: small;">Geschftsfhrer: Dr. Detlef Oertel, Erol &Uum=
-l;l&uuml;kmen</span><br style=3D"font-family: courier; font-size: small;"=
- /><span style=3D"font-family: courier; font-size: small;">Handelsregiste=
-r: Amtsgericht Mainz HRB 6942</span><br /></span></p>
-</body>
-</html>
-
---=_EG8qKAGa3IgOR7vYjL0hBC4pz-K7lpH1Pp8H6wKHH7K0eJwf--
