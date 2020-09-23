@@ -1,123 +1,182 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.129])
- by mx.groups.io with SMTP id smtpd.web12.13827.1600868030244371196
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+ by mx.groups.io with SMTP id smtpd.web11.14281.1600868802763796147
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Sep 2020 06:33:50 -0700
+ Wed, 23 Sep 2020 06:46:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@klsmartin.com header.s=selector1 header.b=MvkpI5Je;
- spf=pass (domain: klsmartin.com, ip: 40.107.8.129, mailfrom: leif.middelschulte@klsmartin.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PVwVvd5qEPv5kXPPHVnIbSaDVTSXNqU9Ijp9UgqJptlwDxHxKoiwuWMQ8OE7bolnBhTXSZsvwa//QFDkd1GOTACtGDsTcUZSaDf0a/Hj81XAIYZGcmwZIH9UI2avrnSqqqorqipBfWxJbSksn4a7SViQVngULdkh1H4VypbaOJ0MKulSk9KJTyX1wpTIhhIz6J77+tdcSe1Jos3nd4gtE4001H2yTk2v6TME9AooFiP0MZq6LxFx1Ori1xZEF1yWabkQPZxgw/ie50OJoZ0A06iIpOqRnv0yc9xtqfDqsU0qvCDihIjVgwax0jkeEbbtLsxGadGx6qM8SQDx2KL2Kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/ImK48lArv9BfdlRUqfAy6gJ7Vk6rRGH4jUvgKVDc6A=;
- b=Uhl5tzHVn6XmUOpKY9Isgt6fQFDVkWaKKm8gSElR8oQRjIfwPBPqr7UFgxCLrHKltrYryi8OxcmJkt8igADyZKRlmNSyiRHccIZkjO4Wto8Qx7dVQe1A5ujR2YrF/tdyXr8bgZCsd/gJaeBak1eavCwwMm+rZI1AW42vN3u31Hfso+W84cKLQihzKNS11PV8W5CeiOJdH7JSC1rYfg+zNy/vnDTuhFBJ0KQFaq7+6OZSW1pZ5L1+DvDqIwirxmnZiuuozx61gynTsENoZgbqtfcTiNo+qFfQGWLQIyMzWUT5B+tfVmYpM3/mZt4gsrezxriXO6NjDsRgcwg2v7gp1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 212.211.189.60) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=klsmartin.com; dmarc=pass (p=none sp=none pct=100) action=none
- header.from=klsmartin.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=klsmartin.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/ImK48lArv9BfdlRUqfAy6gJ7Vk6rRGH4jUvgKVDc6A=;
- b=MvkpI5JemP3p3/lAUzjvsDLbJoA/4DriQ3L9nxsohHxZfZuXRJeE6U4G3gqgorpC0L87ksaXlF6BBOtCtIjciensFdPSHRM7hDxeDvxhMPhtYWjk+N8tgsjJgfEAFzEVkJAJWLmHz3nG+oABSc0gJpWipdZuJw5YUjV5uwE6PKlxuTof7xn23izpEp6vTA2V7Iw7yNiUpaMzXm1ohtOiY9PH+RwuNfpQDyVK7O0npMRjjFUXba9zJD6ZJU9Z8A7n2Gd4cAnmvcLsMNOFNoSdHKZCPdByiLM5e/dR5rlljegrSzBDW4I/VR/nHgqP7Q/Tn84moro6DZvgAVnJR3+jLg==
-Received: from DB6PR0801CA0062.eurprd08.prod.outlook.com (2603:10a6:4:2b::30)
- by HE1PR0202MB2619.eurprd02.prod.outlook.com (2603:10a6:3:91::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.11; Wed, 23 Sep
- 2020 13:33:46 +0000
-Received: from DB5EUR01FT020.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:4:2b:cafe::40) by DB6PR0801CA0062.outlook.office365.com
- (2603:10a6:4:2b::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20 via Frontend
- Transport; Wed, 23 Sep 2020 13:33:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 212.211.189.60)
- smtp.mailfrom=klsmartin.com; lists.openembedded.org; dkim=none (message not
- signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
- header.from=klsmartin.com;
-Received-SPF: Pass (protection.outlook.com: domain of klsmartin.com designates
- 212.211.189.60 as permitted sender) receiver=protection.outlook.com;
- client-ip=212.211.189.60; helo=mail.klsmartin.com;
-Received: from mail.klsmartin.com (212.211.189.60) by
- DB5EUR01FT020.mail.protection.outlook.com (10.152.4.247) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3412.21 via Frontend Transport; Wed, 23 Sep 2020 13:33:45 +0000
-Received: from SKLSExchange01.KLS.zentral (172.20.10.199) by
- SKLSExchange01.KLS.zentral (172.20.10.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Wed, 23 Sep 2020 15:33:45 +0200
-Received: from SUMMAIL01.UMK.KLS.zentral (172.25.1.63) by
- SKLSExchange01.KLS.zentral (172.20.10.199) with Microsoft SMTP Server
- (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.1913.5
- via Frontend Transport; Wed, 23 Sep 2020 15:33:45 +0200
-Received: from UML026.UMK.KLS.zentral (172.25.2.103) by
- SUMMAIL01.UMK.KLS.zentral (172.25.1.63) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Wed, 23 Sep 2020 15:33:44 +0200
-From: "Leif Middelschulte" <leif.middelschulte@klsmartin.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Leif Middelschulte <leif.middelschulte@klsmartin.com>
-Subject: [PATCH] fetch2: fix handling of `\` in file:// SRC_URI
-Date: Wed, 23 Sep 2020 15:32:54 +0200
-Message-ID: <20200923133253.187115-1-leif.middelschulte@klsmartin.com>
-X-Mailer: git-send-email 2.26.2
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=nk2Rkf4Z;
+ spf=pass (domain: gmail.com, ip: 209.85.160.180, mailfrom: jeff.dagenais@gmail.com)
+Received: by mail-qt1-f180.google.com with SMTP id b2so18633255qtp.8
+        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Sep 2020 06:46:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gOkF8reEWm+EellrMzVk4YWqMMPo7fXJIwspy2NPTVk=;
+        b=nk2Rkf4ZH74ZsthwIqPp3BewI5EyqpMXNF120M+eT16dp97ZekfnLvSJsxvNgi5eTZ
+         1jbP55FBbR18Pgr057yIzC5U6vKPUfhbPwm7SPxFLCtXAb+CEybP9KzXsbvJsukAl21w
+         uV+cYy2wFoVYHzLX8kDkvwCzA4Vfnc9pPzQbzaFvlHTdWMIDHOxxlb1iJWUyV9G7o7vL
+         KV5DApmUR8MF5jnsJzp1pYusEF5uO28W1Eqi/qwUJ9Vb8BgRDtPnjLojoOtTqe/x58GA
+         WczV2ztUSVDWCYVfxfoEcHtGtHW9dx/VTvGxe+kPR7N1UKSRiGMhDaF/Rww25tsI3W1F
+         i+YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gOkF8reEWm+EellrMzVk4YWqMMPo7fXJIwspy2NPTVk=;
+        b=k4QuPP/PMO/nrbfMVGmPhmXdtliA02uPPVAo00ZKjkk/t8fOUxTH1UjkYGznZRD1DV
+         zhhtblEi53EqpeWU2cEyWEaFOgPkXDpzf3UVyr5puhLQk9WI/lZ2hv8VYcEU82PtExck
+         wfw/BiBKmAdAEgfLEayEX+bvQHUtgtWl7a6u+kEHuUbp1iDzOf6KOkV/43oy/FANwa3N
+         N97WKpRpig0CjL7uzyRvNuV0QmokaExvsRf54tNxjd2iwEHQjVRxr7H1LjQnOHda2xLB
+         AApxT1Oy8J0zx7jCSdKd6TH90h/LYGbLCk1Vp4NtHwcWnjTlNcx/YuyRBlL48fh2+f9O
+         cYYA==
+X-Gm-Message-State: AOAM530L5Pnq8gWLzFNO3BdSoxwKaQWeFm0kG2h5hM0k4TEwGiQk2iN4
+	Sp6IWMZRqTRzhgjtVKV2RE2/gdZ7W44Tag==
+X-Google-Smtp-Source: ABdhPJyoPRLaei/cGH9pRNrxOvftexoeAvJHH6hwn0BLXTwKQJA8deYNZjU8xXrNho5k3Y8+kjJJ7w==
+X-Received: by 2002:ac8:7388:: with SMTP id t8mr33811qtp.187.1600868801547;
+        Wed, 23 Sep 2020 06:46:41 -0700 (PDT)
+Return-Path: <jeff.dagenais@gmail.com>
+Received: from jfddesk.Sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
+        by smtp.gmail.com with ESMTPSA id z7sm4948885qtc.10.2020.09.23.06.46.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Sep 2020 06:46:40 -0700 (PDT)
+From: "Jean-Francois Dagenais" <jeff.dagenais@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: richard.purdie@linuxfoundation.org,
+	Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Subject: [PATCH 1/2] bitbake: tests/siggen: introduce clean_basepath testcases
+Date: Wed, 23 Sep 2020 09:44:05 -0400
+Message-Id: <20200923134406.19362-1-jeff.dagenais@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <376560ff987c4585f7f21c2cae4c8f50451ad743.camel@linuxfoundation.org>
+References: <376560ff987c4585f7f21c2cae4c8f50451ad743.camel@linuxfoundation.org>
 MIME-Version: 1.0
-Return-Path: Leif.Middelschulte@klsmartin.com
-X-Originating-IP: [172.25.2.103]
-X-KSE-ServerInfo: SUMMAIL01.UMK.KLS.zentral, 9
-X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 23.09.2020 08:35:00
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8d5ef78d-051e-45c7-2707-08d85fc54bc6
-X-MS-TrafficTypeDiagnostic: HE1PR0202MB2619:
-X-Microsoft-Antispam-PRVS: 
-	<HE1PR0202MB2619E7CE22D56B0B3DA1E7B899380@HE1PR0202MB2619.eurprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:843;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	WdhVRdt//DVUZYLEaw5u1movbd+IHx7gsvf0psvec7kqs9cTese0w7bFQirUR3tcmYj1wdYX3gFESXdnk/wLB02KgeuKFJNWbsnbiQkrNGZ/cAckQfa88OsQrYPL15X8yYGv+NB0X9fXWR179hCqLaTkW+mDZRwiKAFcBTYuSfvVhYY5rytYW1zbfggQn4UnBf1Ec2T/bY+A4Odi0kNS8PT5+jPsn25E13ewY190hI0rwKsJBfCZgK5XtGtFfMG4yDdu7ZIjefkktvuJMGtLJ+nZRyvTbIyK3OjLR2YJLLUIvE7lPrmqAbPEal4JYo9U+uHNtwaKf1IAuf5qPFjLIL3yClfYY9Imt8IFCv565SnPLGhAPBaS+sZEQgf5MPvK014J/OkQ0BDuWNNgDlqwoQyZlMUSS8AsQAxOJ1R7J9O+SfDK87hXZ/+SOxgqwDdOuQ8+uKqYMbk8SqGwg+/bh+czhKAACTOLk7UrW4VANk0YGC2D+89ydeW/zY8HARsq
-X-Forefront-Antispam-Report: 
-	CIP:212.211.189.60;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.klsmartin.com;PTR:asav10-372.outside.spxs.net;CAT:NONE;SFS:(4636009)(39850400004)(376002)(346002)(396003)(136003)(46966005)(36906005)(316002)(966005)(47076004)(356005)(44832011)(2616005)(81166007)(83380400001)(336012)(82310400003)(36756003)(33310700002)(5660300002)(26005)(186003)(16526019)(70586007)(70206006)(86362001)(8676002)(2906002)(6916009)(82740400003)(478600001)(4326008)(6666004)(1076003)(4744005)(8936002)(107886003);DIR:OUT;SFP:1102;
-X-OriginatorOrg: klsmartin.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2020 13:33:45.6478
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d5ef78d-051e-45c7-2707-08d85fc54bc6
-X-MS-Exchange-CrossTenant-Id: 9d29fdbf-9c75-430e-86f5-ebe1ff5a5223
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=9d29fdbf-9c75-430e-86f5-ebe1ff5a5223;Ip=[212.211.189.60];Helo=[mail.klsmartin.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DB5EUR01FT020.eop-EUR01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0202MB2619
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Using backslashes in file:// URIs was broken.
-Either the resolver would fail or the subsequent `cp` command.
-Try to avoid this by putting the filenames into quotes.
+While discussing with Richard we thought these might help document
+and safeguard the basic requirements of clean_basepath.
 
-Fixes https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D8161
+A 'bonus' performance testcase is added but commented out since its
+runtime is long and test machine specific. It is intended for developers
+to test before and after their changes to the target function as a due
+diligence verification.
 
-Signed-off-by: Leif Middelschulte <leif.middelschulte@klsmartin.com>
+Signed-off-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
 ---
- lib/bb/fetch2/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bin/bitbake-selftest   |  1 +
+ lib/bb/tests/siggen.py | 91 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 92 insertions(+)
+ create mode 100644 lib/bb/tests/siggen.py
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 7ec1fea5..1911ecd3 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1520,7 +1520,7 @@ class FetchMethod(object):
-                     if urlpath.find("/") !=3D -1:
-                         destdir =3D urlpath.rsplit("/", 1)[0] + '/'
-                         bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir))
--                cmd =3D 'cp -fpPRH %s %s' % (file, destdir)
-+                cmd =3D "cp -fpPRH '%s' '%s'" % (file, destdir)
-=20
-         if not cmd:
-             return
---=20
-2.26.2
+diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
+index e84d6a55..6c073741 100755
+--- a/bin/bitbake-selftest
++++ b/bin/bitbake-selftest
+@@ -27,6 +27,7 @@ tests = ["bb.tests.codeparser",
+          "bb.tests.parse",
+          "bb.tests.persist_data",
+          "bb.tests.runqueue",
++         "bb.tests.siggen",
+          "bb.tests.utils",
+          "hashserv.tests",
+          "layerindexlib.tests.layerindexobj",
+diff --git a/lib/bb/tests/siggen.py b/lib/bb/tests/siggen.py
+new file mode 100644
+index 00000000..c21ab4e4
+--- /dev/null
++++ b/lib/bb/tests/siggen.py
+@@ -0,0 +1,91 @@
++#
++# BitBake Test for lib/bb/siggen.py
++#
++# Copyright (C) 2020 Jean-François Dagenais
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++
++import unittest
++import logging
++import bb
++import time
++
++logger = logging.getLogger('BitBake.TestSiggen')
++
++import bb.siggen
++
++class SiggenTest(unittest.TestCase):
++
++    def test_clean_basepath_simple_target_basepath(self):
++        basepath = '/full/path/to/poky/meta/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask'
++        expected_cleaned = 'helloworld/helloworld_1.2.3.bb:do_sometask'
++
++        actual_cleaned = bb.siggen.clean_basepath(basepath)
++
++        self.assertEqual(actual_cleaned, expected_cleaned)
++
++    def test_clean_basepath_basic_virtual_basepath(self):
++        basepath = 'virtual:something:/full/path/to/poky/meta/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask'
++        expected_cleaned = 'helloworld/helloworld_1.2.3.bb:do_sometask:virtual:something'
++
++        actual_cleaned = bb.siggen.clean_basepath(basepath)
++
++        self.assertEqual(actual_cleaned, expected_cleaned)
++
++    def test_clean_basepath_mc_basepath(self):
++        basepath = 'mc:somemachine:/full/path/to/poky/meta/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask'
++        expected_cleaned = 'helloworld/helloworld_1.2.3.bb:do_sometask:mc:somemachine'
++
++        actual_cleaned = bb.siggen.clean_basepath(basepath)
++
++        self.assertEqual(actual_cleaned, expected_cleaned)
++
++    def test_clean_basepath_virtual_long_prefix_basepath(self):
++        basepath = 'virtual:something:A:B:C:/full/path/to/poky/meta/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask'
++        expected_cleaned = 'helloworld/helloworld_1.2.3.bb:do_sometask:virtual:something:A:B:C'
++
++        actual_cleaned = bb.siggen.clean_basepath(basepath)
++
++        self.assertEqual(actual_cleaned, expected_cleaned)
++
++    def test_clean_basepath_mc_virtual_basepath(self):
++        basepath = 'mc:somemachine:virtual:something:/full/path/to/poky/meta/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask'
++        expected_cleaned = 'helloworld/helloworld_1.2.3.bb:do_sometask:virtual:something:mc:somemachine'
++
++        actual_cleaned = bb.siggen.clean_basepath(basepath)
++
++        self.assertEqual(actual_cleaned, expected_cleaned)
++
++    def test_clean_basepath_mc_virtual_long_prefix_basepath(self):
++        basepath = 'mc:X:virtual:something:C:B:A:/full/path/to/poky/meta/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask'
++        expected_cleaned = 'helloworld/helloworld_1.2.3.bb:do_sometask:virtual:something:C:B:A:mc:X'
++
++        actual_cleaned = bb.siggen.clean_basepath(basepath)
++
++        self.assertEqual(actual_cleaned, expected_cleaned)
++
++
++    # def test_clean_basepath_performance(self):
++    #     input_basepaths = [
++    #         'mc:X:/full/path/to/poky/meta/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask',
++    #         'mc:X:virtual:something:C:B:A:/full/path/to/poky/meta/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask',
++    #         'virtual:something:C:B:A:/different/path/to/poky/meta/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask',
++    #         'virtual:something:A:/full/path/to/poky/meta/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask',
++    #         '/this/is/most/common/input/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask',
++    #         '/and/should/be/tested/with/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask',
++    #         '/more/weight/recipes-whatever/helloworld/helloworld_1.2.3.bb:do_sometask',
++    #     ]
++
++    #     time_start = time.time()
++
++    #     i = 2000000
++    #     while i >= 0:
++    #         for basepath in input_basepaths:
++    #             bb.siggen.clean_basepath(basepath)
++    #         i -= 1
++
++    #     elapsed = time.time() - time_start
++    #     print('{} ({}s)'.format(self.id(), round(elapsed, 3)))
++
++    #     self.assertTrue(False)
+-- 
+2.28.0
 
