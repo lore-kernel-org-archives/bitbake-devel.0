@@ -1,114 +1,85 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
- by mx.groups.io with SMTP id smtpd.web12.14164.1600868804020762066
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web11.16207.1600873621953138683
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Sep 2020 06:46:44 -0700
+ Wed, 23 Sep 2020 08:07:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=NsxSp/U9;
- spf=pass (domain: gmail.com, ip: 209.85.222.170, mailfrom: jeff.dagenais@gmail.com)
-Received: by mail-qk1-f170.google.com with SMTP id 16so22821226qkf.4
-        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Sep 2020 06:46:43 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=IzlWeAnS;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.65, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f65.google.com with SMTP id l15so4740792wmh.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Sep 2020 08:07:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
          :mime-version:content-transfer-encoding;
-        bh=9X6gipvf2rIx0GOdw+0XgFxQePZVnZ7O6nvM+0OFIuY=;
-        b=NsxSp/U9iqQkbj6AV2U2Jli/Ny0qq+zzSWdpZilBGNbCbBcnQC9gdQyixaiffA4NkA
-         aNRoPWdyicqBEDB0J50l7a1uS6G86m+MeQ7Lbn9hnkYDBKNsKtcC7kO4d3+L5UJW4PxA
-         iL0bff2HCzrjU2bfVBP/h65+kkqyE9hVm6qkKq7Ni2skOTc/vGem9oQd1bMLXBw1Vtim
-         lDrBJBw9ypRAV1Y7QKJTrfXdtPsIQJyW7OjJcUhTZqRhmKUA33gsVXil51rcS/oa0cPt
-         YAocpgBaA2w3C/Z8CS7WeU2dirGWcuOZbFzmI0l6JEumqGkYfQwM/Ikv+4BEKjACNmw/
-         wzKw==
+        bh=THO5xlUZRo0CJjR4DlS3WbzI1gBeh5Wsw3UszDZr/0M=;
+        b=IzlWeAnSoLVQv/EYkERQGcrhunPgRrsgCZfwFhheOt/Hantjnzmgi2BGmmj+kNCQL5
+         t4gdzX/lfgeAxvSTIGZJAGvGLeGvgdZYBNb0hV1XXNCT5dKibuWuZcEIwVojCc11OskR
+         1X09YwB8SapfU8I2xzUqKRSe9F5JheMQiyiXo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9X6gipvf2rIx0GOdw+0XgFxQePZVnZ7O6nvM+0OFIuY=;
-        b=el2dDCsJLygac7TTcYasTRkAcnlEYjt76AY2ZRTRY5i70+lMtUL3N4Lquqes9QMguW
-         UnhTezVu7rLnxltUz3dgc8x6qtKFrT1rnLEvC3bzwFydYkYsk6bVcvcu2Ik2zEoRwGxh
-         n16Qw7zdMFlSlDrYVegNKHXQx9e4OAsXUE37+g/LLQ1FXDtoL1BnbJX3nO00EtJPOV8r
-         YA9/Mdx3pE6OXvLEgHuXs/oa0QrdsbcEJ0xiRBquE9jsFLlMgO1gWzRG+/hLpnH4mrzX
-         aXDdgnm+MpcEJMlFyVIKd5WY11ztlLlLHvX8/XatQGPQ0ZsuORVOCY3d5vuumxj6tlro
-         0V+Q==
-X-Gm-Message-State: AOAM530mzJRs7VmZ9sosGFDpW9GzjnZ/YiWXSDdUq8tY5z6WR5jhPtI+
-	jbdY8IqQGPxM9r8ICso4snMTeF5t/pDglA==
-X-Google-Smtp-Source: ABdhPJypdgjbh30zKiO+dfChNL5oBXaWUnGGTzU4YEV+wEZif2A1jowFofB1MIiq6vB9oG4LXTkniQ==
-X-Received: by 2002:a05:620a:15ac:: with SMTP id f12mr8222172qkk.19.1600868802622;
-        Wed, 23 Sep 2020 06:46:42 -0700 (PDT)
-Return-Path: <jeff.dagenais@gmail.com>
-Received: from jfddesk.Sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
-        by smtp.gmail.com with ESMTPSA id z7sm4948885qtc.10.2020.09.23.06.46.41
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=THO5xlUZRo0CJjR4DlS3WbzI1gBeh5Wsw3UszDZr/0M=;
+        b=g2X5Wq9mxgY13daZ/tclZRosMo4sF6hEDtPShVnNRWjwRPCJ6BvnieX1k6+gHdO1/D
+         1ahWZDR42mgXzQUMupD+VJbYg1zo8W9rPd3/dcnJjayJWGe7I3ZkMeyI8UfHvHIZqang
+         E38ZeWaIcb2OLIOfcB9GOtp10bwSsS4SfN4WU9ShOKy6mAIpxxh9O5/O/i6HhOjcpCVj
+         mknySm7lit6HgmymhkWJoSWy8Ge/tjCytf3bAtovZGv0fnxZOhbgwkS1h36VbbcJDhj7
+         iTWXUfIOsVsfcg03sQguKvhejHSwiKICnopMXyifDOwoFTOm7oXScvLEKeEgrr6ASeKM
+         KC2Q==
+X-Gm-Message-State: AOAM532tfmOVS7Is6w/3Me1RQcucouRidkmf4sbzqPp0ak8xTBfsDtPm
+	h6alMoSuchtqyvZME07V4oY7sMfE5Pg0vA==
+X-Google-Smtp-Source: ABdhPJwriTi9Woo8tIdpG9ppAASJagLFID23uCYXOKhPYVTlO17qwsiH9fm7zGhly1KSfyFzQgzcSg==
+X-Received: by 2002:a1c:6607:: with SMTP id a7mr22081wmc.142.1600873620451;
+        Wed, 23 Sep 2020 08:07:00 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from 3.5.b.6.d.4.1.e.4.a.2.6.1.0.d.4.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (3.5.b.6.d.4.1.e.4.a.2.6.1.0.d.4.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:4d01:62a4:e14d:6b53])
+        by smtp.gmail.com with ESMTPSA id u126sm142838wmu.9.2020.09.23.08.06.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2020 06:46:41 -0700 (PDT)
-From: "Jean-Francois Dagenais" <jeff.dagenais@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: richard.purdie@linuxfoundation.org,
-	Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
-	=?UTF-8?q?Maxime=20Roussin-B=C3=A9langer?= <maxime.roussinbelanger@gmail.com>
-Subject: [PATCH 2/2] bitbake: siggen: clean_basepath: improve perfo and readability
-Date: Wed, 23 Sep 2020 09:44:06 -0400
-Message-Id: <20200923134406.19362-2-jeff.dagenais@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200923134406.19362-1-jeff.dagenais@gmail.com>
-References: <376560ff987c4585f7f21c2cae4c8f50451ad743.camel@linuxfoundation.org>
- <20200923134406.19362-1-jeff.dagenais@gmail.com>
+        Wed, 23 Sep 2020 08:06:56 -0700 (PDT)
+Message-ID: <ed36fb9b7d921afaeee3f83e84d2a521e028dc09.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] fetch2: fix handling of `\` in file:// SRC_URI
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Leif Middelschulte <leif.middelschulte@klsmartin.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Wed, 23 Sep 2020 16:06:54 +0100
+In-Reply-To: <20200923133253.187115-1-leif.middelschulte@klsmartin.com>
+References: <20200923133253.187115-1-leif.middelschulte@klsmartin.com>
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-This change improves performance by reducing runtime about 33% for typical
-inputs. (using test_clean_basepath_performance)
+On Wed, 2020-09-23 at 15:32 +0200, Leif Middelschulte wrote:
+> Using backslashes in file:// URIs was broken.
+> Either the resolver would fail or the subsequent `cp` command.
+> Try to avoid this by putting the filenames into quotes.
+> 
+> Fixes https://bugzilla.yoctoproject.org/show_bug.cgi?id=8161
+> 
+> Signed-off-by: Leif Middelschulte <leif.middelschulte@klsmartin.com>
+> ---
+>  lib/bb/fetch2/__init__.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index 7ec1fea5..1911ecd3 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -1520,7 +1520,7 @@ class FetchMethod(object):
+>                      if urlpath.find("/") != -1:
+>                          destdir = urlpath.rsplit("/", 1)[0] + '/'
+>                          bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir))
+> -                cmd = 'cp -fpPRH %s %s' % (file, destdir)
+> +                cmd = "cp -fpPRH '%s' '%s'" % (file, destdir)
+>  
+>          if not cmd:
+>              return
 
-It is also easier to read, and slightly more resilient to future changes since it doesn't
-mention 'virtual' anymore.
+Thanks for the fix. Would you mind adding a test to
+lib/bb/tests/fetch.py (run with bitbake-selftest) so we can catch this
+issue in future please?
 
-Signed-off-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Co-Developed-by: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
-Signed-off-by: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
----
- lib/bb/siggen.py | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+Cheers,
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index ad49d1e2..1456324a 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -746,16 +746,26 @@ def list_inline_diff(oldlist, newlist, colors=None):
-             ret.append(item)
-     return '[%s]' % (', '.join(ret))
- 
--def clean_basepath(a):
--    mc = None
--    if a.startswith("mc:"):
--        _, mc, a = a.split(":", 2)
--    b = a.rsplit("/", 2)[1] + '/' + a.rsplit("/", 2)[2]
--    if a.startswith("virtual:"):
--        b = b + ":" + a.rsplit(":", 2)[0]
--    if mc:
--        b = b + ":mc:" + mc
--    return b
-+def clean_basepath(basepath):
-+    basepath, dir, recipe_task = basepath.rsplit("/", 2)
-+    cleaned = dir + '/' + recipe_task
-+
-+    if basepath[0] == '/':
-+        return cleaned
-+
-+    if basepath.startswith("mc:"):
-+        mc, mc_name, basepath = basepath.split(":", 2)
-+        mc_suffix = ':mc:' + mc_name
-+    else:
-+        mc_suffix = ''
-+
-+    # mc stuff now removed from basepath. Whatever was next, if present will be the first
-+    # suffix. ':/', recipe path start, marks the end of this. Something like
-+    # 'virtual:a[:b[:c]]:/path...' (b and c being optional)
-+    if basepath[0] != '/':
-+        cleaned += ':' + basepath.split(':/', 1)[0]
-+
-+    return cleaned + mc_suffix
- 
- def clean_basepaths(a):
-     b = {}
--- 
-2.28.0
+Richard
 
