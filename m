@@ -1,56 +1,65 @@
-Received: from m15113.mail.126.com (m15113.mail.126.com [220.181.15.113])
- by mx.groups.io with SMTP id smtpd.web12.7034.1601435564810995953
- for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Sep 2020 20:12:45 -0700
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@126.com header.s=s110527 header.b=CJW6iS4+;
- spf=pass (domain: 126.com, ip: 220.181.15.113, mailfrom: zzs213@126.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=U9DFN
-	YTnBHwYKfX/Nh2HMexo8BFtDJK8arkbw5ckpss=; b=CJW6iS4+RlSD/dplZvvqX
-	ahjHwiZv0qiU+wLGMqkPQr3M0TKgbJctIGtMmRDdVwR6tYd760QCYUPqyv5AaiDq
-	c44xXZVifZufo725MPTJ1up+dvZF6YIzuNbGXJCmWQTyv0AtdmBdREexxp88RFuZ
-	makg5ZXqFxtsMZSDYq9/o8=
-Received: from localhost.localdomain (unknown [171.221.71.152])
-	by smtp3 (Coremail) with SMTP id DcmowAA3rAB193NfVgjvKA--.11238S4;
-	Wed, 30 Sep 2020 11:11:51 +0800 (CST)
-From: "zzs" <zzs213@126.com>
+Subject: Rebuild fails on with below error when "core-image-minimal is retriggered from the same work space
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] using same logic for overrides
-Date: Wed, 30 Sep 2020 11:11:29 +0800
-Message-Id: <20200930031129.9934-1-zzs213@126.com>
-X-Mailer: git-send-email 2.28.0
+From: "Virendra Kumar" <coolveer07@gmail.com>
+X-Originating-Location: Chennai, Tamil Nadu, IN (106.208.106.112)
+X-Originating-Platform: Windows Chrome 85
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-X-CM-TRANSID: DcmowAA3rAB193NfVgjvKA--.11238S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7JF4DAr47trWkXry3XF4xWFg_yoWxtFX_JF
-	40y3y3ZrsaqFWxXa1ruFs5tr18Kr4DuF18AF1UArZaqa4Utrs8WryxtryktrsxuFyqqF9r
-	Wr9xXF9xGws5XjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0gtxDUUUUU==
-X-Originating-IP: [171.221.71.152]
-X-CM-SenderInfo: x22vjiat6rjloofrz/1tbiZhevGVpD-cxyNwAAsq
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Thu, 01 Oct 2020 00:51:19 -0700
+Message-ID: <HJNo.1601538679572857394.FwMe@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="mBMi048NT91QcXm7hEtC"
 
-From: 张忠山 <zzs213@126.com>
+--mBMi048NT91QcXm7hEtC
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: 张忠山 <zzs213@126.com>
----
- bitbake/lib/bb/data_smart.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Loaded 4863 entries from dependency cache.
+ERROR: Command execution failed: Traceback (most recent call last):
+File "openembedded-core/bitbake/lib/bb/command.py", line 103, in runAsyncC=
+ommand
+self.cooker.updateCache()
+File "openembedded-core/bitbake/lib/bb/cooker.py", line 1562, in updateCac=
+he
+self.parser =3D CookerParser(self, filelist, masked)
+File "openembedded-core/bitbake/lib/bb/cooker.py", line 2006, in __init__
+if not self.bb_cache.cacheValid(filename, appends):
+File "openembedded-core/bitbake/lib/bb/cache.py", line 551, in cacheValid
+self.cacheValidUpdate(fn, appends)
+File "openembedded-core/bitbake/lib/bb/cache.py", line 619, in cacheValidU=
+pdate
+f, exist =3D f.split(":")
+ValueError: too many values to unpack (expected 2)
 
-diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
-index 7f1b6dcb4f..7689987f05 100644
---- a/bitbake/lib/bb/data_smart.py
-+++ b/bitbake/lib/bb/data_smart.py
-@@ -648,7 +648,7 @@ class DataSmart(MutableMapping):
-         if '_' in var:
-             override = var[var.rfind('_')+1:]
-             shortvar = var[:var.rfind('_')]
--            while override and override.islower():
-+            while override and __override_regexp__.match(override):
-                 try:
-                     if shortvar in self.overridedata:
-                         # Force CoW by recreating the list first
--- 
-2.28.0
+Summary: There were 5 WARNING messages shown.
+Summary: There was 1 ERROR message shown, returning a non-zero exit code.
 
+--mBMi048NT91QcXm7hEtC
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div>Loaded 4863 entries from dependency cache.</div>
+<div>ERROR: Command execution failed: Traceback (most recent call last):</=
+div>
+<div>&nbsp;File "openembedded-core/bitbake/lib/bb/command.py", line 103, i=
+n runAsyncCommand</div>
+<div>&nbsp;self.cooker.updateCache()</div>
+<div>&nbsp;File "openembedded-core/bitbake/lib/bb/cooker.py", line 1562, i=
+n updateCache</div>
+<div>&nbsp;self.parser =3D CookerParser(self, filelist, masked)</div>
+<div>&nbsp;File "openembedded-core/bitbake/lib/bb/cooker.py", line 2006, i=
+n __init__</div>
+<div>&nbsp;if not self.bb_cache.cacheValid(filename, appends):</div>
+<div>&nbsp;File "openembedded-core/bitbake/lib/bb/cache.py", line 551, in =
+cacheValid</div>
+<div>&nbsp;self.cacheValidUpdate(fn, appends)</div>
+<div>&nbsp;File "openembedded-core/bitbake/lib/bb/cache.py", line 619, in =
+cacheValidUpdate</div>
+<div>&nbsp;f, exist =3D f.split(":")</div>
+<div>ValueError: too many values to unpack (expected 2)</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>Summary: There were 5 WARNING messages shown.</div>
+<div>Summary: There was 1 ERROR message shown, returning a non-zero exit c=
+ode.</div>
+
+--mBMi048NT91QcXm7hEtC--
