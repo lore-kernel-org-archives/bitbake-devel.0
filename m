@@ -1,65 +1,72 @@
-Subject: Rebuild fails on with below error when "core-image-minimal is retriggered from the same work space
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web10.3361.1601583403641929487
+ for <bitbake-devel@lists.openembedded.org>;
+ Thu, 01 Oct 2020 13:16:44 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cL9xRTte;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id j2so122421wrx.7
+        for <bitbake-devel@lists.openembedded.org>; Thu, 01 Oct 2020 13:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6GXoyIqUTG4JHaa5f/MednVVgLcedMICApNkohfkUNo=;
+        b=cL9xRTte1DJFlHG4EmfICIYPHAEOuEuNEOrfvst+a3C47KY9gdRFgB7cES/sBOaLNq
+         /SzcU79D1HWQAUecD6SzYwZl7BSFvHk9/SM2Djd1XFwqLlrs4aXjorRXC2vbSbMCX01v
+         uPji4bhYwWEEiA+SFE9pmnDjQfprgCS0J9nwg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6GXoyIqUTG4JHaa5f/MednVVgLcedMICApNkohfkUNo=;
+        b=aGJZerUBAGMh++pYUi7iFVHWagXJgXYlPAducStNqSslHtQfJvA9Y9pNcE+/fKaOd7
+         zn8XfC0O5WGx+R5++dWSyl5voxNR8iyVnBsJfFbRqKOe6FHfOL3B/d5rA+EGtR+Sh6sw
+         w5MyANy1O6/u4RtNxDPpJbbFwKrt7HNoX8XGXpQBZHHUPixy6usDe1J0E7XbsJ3I8wg7
+         G2emRfnSaA6ckWRHz4iEKDfM9Uv95BeKK3QHmI1LKoUiitwiaaZ0eHw8G6SNeAs6UQor
+         NWUeTbOrocVXyU6sXz1hqXReWNLnjXPN4Sd95kJrN/+8vlI86wtINTl2ELNSfL+icaPe
+         2zHQ==
+X-Gm-Message-State: AOAM533DISWSGpqkmHuDJhNHBXUM77jqbXExwGTSepStcdSLQ+kTN/v4
+	rnWnZ1IjQI7diMEDN74HLSV6t/8YMHceEw==
+X-Google-Smtp-Source: ABdhPJx9sQlA5NyqZr7cPBCLJNvRJD+rfsDAv42dZXVDpnDdY6f6Y4rdlxjqmVykNaLSfYTbxHsIhw==
+X-Received: by 2002:adf:f885:: with SMTP id u5mr10566079wrp.382.1601583401805;
+        Thu, 01 Oct 2020 13:16:41 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net (7.f.c.3.4.0.2.3.2.2.3.7.e.3.c.9.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:9c3e:7322:3204:3cf7])
+        by smtp.gmail.com with ESMTPSA id w15sm10241676wro.46.2020.10.01.13.16.40
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Oct 2020 13:16:41 -0700 (PDT)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-From: "Virendra Kumar" <coolveer07@gmail.com>
-X-Originating-Location: Chennai, Tamil Nadu, IN (106.208.106.112)
-X-Originating-Platform: Windows Chrome 85
-User-Agent: GROUPS.IO Web Poster
+Subject: [PATCH] cooker: Avoid tracebacks if data was never setup
+Date: Thu,  1 Oct 2020 21:16:40 +0100
+Message-Id: <20201001201640.2871368-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Date: Thu, 01 Oct 2020 00:51:19 -0700
-Message-ID: <HJNo.1601538679572857394.FwMe@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="mBMi048NT91QcXm7hEtC"
+Content-Transfer-Encoding: 8bit
 
---mBMi048NT91QcXm7hEtC
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Recent changes mean data might not be setup. If its not, avoid tracebacks.
 
-Loaded 4863 entries from dependency cache.
-ERROR: Command execution failed: Traceback (most recent call last):
-File "openembedded-core/bitbake/lib/bb/command.py", line 103, in runAsyncC=
-ommand
-self.cooker.updateCache()
-File "openembedded-core/bitbake/lib/bb/cooker.py", line 1562, in updateCac=
-he
-self.parser =3D CookerParser(self, filelist, masked)
-File "openembedded-core/bitbake/lib/bb/cooker.py", line 2006, in __init__
-if not self.bb_cache.cacheValid(filename, appends):
-File "openembedded-core/bitbake/lib/bb/cache.py", line 551, in cacheValid
-self.cacheValidUpdate(fn, appends)
-File "openembedded-core/bitbake/lib/bb/cache.py", line 619, in cacheValidU=
-pdate
-f, exist =3D f.split(":")
-ValueError: too many values to unpack (expected 2)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Summary: There were 5 WARNING messages shown.
-Summary: There was 1 ERROR message shown, returning a non-zero exit code.
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 5442f7d225..1f4cc1e96d 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1679,7 +1679,8 @@ class BBCooker:
+         if self.hashserv:
+             self.hashserv.process.terminate()
+             self.hashserv.process.join()
+-        bb.event.fire(CookerExit(), self.data)
++        if hasattr(self, "data"):
++            bb.event.fire(CookerExit(), self.data)
+ 
+     def shutdown(self, force = False):
+         if force:
+-- 
+2.25.1
 
---mBMi048NT91QcXm7hEtC
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div>Loaded 4863 entries from dependency cache.</div>
-<div>ERROR: Command execution failed: Traceback (most recent call last):</=
-div>
-<div>&nbsp;File "openembedded-core/bitbake/lib/bb/command.py", line 103, i=
-n runAsyncCommand</div>
-<div>&nbsp;self.cooker.updateCache()</div>
-<div>&nbsp;File "openembedded-core/bitbake/lib/bb/cooker.py", line 1562, i=
-n updateCache</div>
-<div>&nbsp;self.parser =3D CookerParser(self, filelist, masked)</div>
-<div>&nbsp;File "openembedded-core/bitbake/lib/bb/cooker.py", line 2006, i=
-n __init__</div>
-<div>&nbsp;if not self.bb_cache.cacheValid(filename, appends):</div>
-<div>&nbsp;File "openembedded-core/bitbake/lib/bb/cache.py", line 551, in =
-cacheValid</div>
-<div>&nbsp;self.cacheValidUpdate(fn, appends)</div>
-<div>&nbsp;File "openembedded-core/bitbake/lib/bb/cache.py", line 619, in =
-cacheValidUpdate</div>
-<div>&nbsp;f, exist =3D f.split(":")</div>
-<div>ValueError: too many values to unpack (expected 2)</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>Summary: There were 5 WARNING messages shown.</div>
-<div>Summary: There was 1 ERROR message shown, returning a non-zero exit c=
-ode.</div>
-
---mBMi048NT91QcXm7hEtC--
