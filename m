@@ -1,72 +1,78 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web10.3361.1601583403641929487
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web11.33448.1601900832326121706
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 01 Oct 2020 13:16:44 -0700
+ Mon, 05 Oct 2020 05:27:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cL9xRTte;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f47.google.com with SMTP id j2so122421wrx.7
-        for <bitbake-devel@lists.openembedded.org>; Thu, 01 Oct 2020 13:16:43 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=ft1xOxm1;
+ spf=pass (domain: linaro.org, ip: 209.85.221.41, mailfrom: nicolas.dechesne@linaro.org)
+Received: by mail-wr1-f41.google.com with SMTP id n18so1520301wrs.5
+        for <bitbake-devel@lists.openembedded.org>; Mon, 05 Oct 2020 05:27:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=6GXoyIqUTG4JHaa5f/MednVVgLcedMICApNkohfkUNo=;
-        b=cL9xRTte1DJFlHG4EmfICIYPHAEOuEuNEOrfvst+a3C47KY9gdRFgB7cES/sBOaLNq
-         /SzcU79D1HWQAUecD6SzYwZl7BSFvHk9/SM2Djd1XFwqLlrs4aXjorRXC2vbSbMCX01v
-         uPji4bhYwWEEiA+SFE9pmnDjQfprgCS0J9nwg=
+        bh=4x3zcuYyKEaqK9SfZFX3zJOTWlH3lrmYPqnQ4vYNTFM=;
+        b=ft1xOxm1vIreueIVswOiBBhO5A8jRbWp0uhouYn9umIKbQcsTYfn7nTZf8vI1IFDcR
+         XxTeHfsjyoHqq27wDxdkUS0e8/U7Da9ZV8EpusqzWWUT0bM8CWGZ4Hxee1wvITVOxGX+
+         slaWwmBzBVFDnIem5T/7Apjn3D82PGJaOCEgLO2iBn5VS57L5wy4Y0YTa339jqf7tsnY
+         oUA+2Kigw4gc9JIiUM2p7NJlKIS2fcDblRxydoKxUAjWRK5Nh+insMkHALmSgbPnRWxx
+         d0LQhYEG/XTgumSTeYQWBl4ydMeyQhORopCm4ABPxxdueG8hwOCp7R1qY2aa0jqEudi5
+         CHMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=6GXoyIqUTG4JHaa5f/MednVVgLcedMICApNkohfkUNo=;
-        b=aGJZerUBAGMh++pYUi7iFVHWagXJgXYlPAducStNqSslHtQfJvA9Y9pNcE+/fKaOd7
-         zn8XfC0O5WGx+R5++dWSyl5voxNR8iyVnBsJfFbRqKOe6FHfOL3B/d5rA+EGtR+Sh6sw
-         w5MyANy1O6/u4RtNxDPpJbbFwKrt7HNoX8XGXpQBZHHUPixy6usDe1J0E7XbsJ3I8wg7
-         G2emRfnSaA6ckWRHz4iEKDfM9Uv95BeKK3QHmI1LKoUiitwiaaZ0eHw8G6SNeAs6UQor
-         NWUeTbOrocVXyU6sXz1hqXReWNLnjXPN4Sd95kJrN/+8vlI86wtINTl2ELNSfL+icaPe
-         2zHQ==
-X-Gm-Message-State: AOAM533DISWSGpqkmHuDJhNHBXUM77jqbXExwGTSepStcdSLQ+kTN/v4
-	rnWnZ1IjQI7diMEDN74HLSV6t/8YMHceEw==
-X-Google-Smtp-Source: ABdhPJx9sQlA5NyqZr7cPBCLJNvRJD+rfsDAv42dZXVDpnDdY6f6Y4rdlxjqmVykNaLSfYTbxHsIhw==
-X-Received: by 2002:adf:f885:: with SMTP id u5mr10566079wrp.382.1601583401805;
-        Thu, 01 Oct 2020 13:16:41 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (7.f.c.3.4.0.2.3.2.2.3.7.e.3.c.9.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:9c3e:7322:3204:3cf7])
-        by smtp.gmail.com with ESMTPSA id w15sm10241676wro.46.2020.10.01.13.16.40
-        for <bitbake-devel@lists.openembedded.org>
+        bh=4x3zcuYyKEaqK9SfZFX3zJOTWlH3lrmYPqnQ4vYNTFM=;
+        b=AaakdkZjmo484jOXnoAl6I77DbnpRyCT3iLBGsiiqjaQ9KyW7mBfdKlqF2r1NpS5sy
+         T9/Fhhf1i2DVGqgrUTexvO8yvcaKJh5qstB/8cascuEY7m5ah2QrYm0AH4iQT1I/hI/I
+         eo/rQ9p+8+4v0x+o0hVE+1jQoBWtHiRNYnxyGUo3CteTTmDEdK3dh98PgPcbnbfamYaG
+         DXjY13W2lwVFHYRzLl2bgtLsV/Ie5UhkDXp/UnL/FyyUjfhDLF++lpBJeeEKOY3XXafF
+         HjhMGOM0Ynl9Jqx4mgAPIy3Qap5xcJjSh1yu7rRQhj0GvHloFXVVxlIng1pVCv3LYYBf
+         TW5w==
+X-Gm-Message-State: AOAM530VY04c7fCyw0SXt0Su4zX3OA/ZLB2gb/UNRK+3Xq/UgXC2FTXL
+	PzeyB9lDoD9nsGKv+CuTK7338aY3JlSTIQ==
+X-Google-Smtp-Source: ABdhPJxSnR+yOdWI2jGqKz55+9FrUkKmzUGuyPcZvReoF/MKGp2mdNNZPhMqPI79yJBwrwB0kDG6Yg==
+X-Received: by 2002:adf:f74e:: with SMTP id z14mr5685733wrp.312.1601900830102;
+        Mon, 05 Oct 2020 05:27:10 -0700 (PDT)
+Return-Path: <nicolas.dechesne@linaro.org>
+Received: from localhost.localdomain (82-64-249-211.subs.proxad.net. [82.64.249.211])
+        by smtp.gmail.com with ESMTPSA id c130sm1953628wma.17.2020.10.05.05.27.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Oct 2020 13:16:41 -0700 (PDT)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+        Mon, 05 Oct 2020 05:27:09 -0700 (PDT)
+From: "Nicolas Dechesne" <nicolas.dechesne@linaro.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] cooker: Avoid tracebacks if data was never setup
-Date: Thu,  1 Oct 2020 21:16:40 +0100
-Message-Id: <20201001201640.2871368-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
+Cc: foss@0leil.net,
+	Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Subject: [PATCH 0/5] A few sphinx docs cleanup
+Date: Mon,  5 Oct 2020 14:26:47 +0200
+Message-Id: <20201005122652.392528-1-nicolas.dechesne@linaro.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Recent changes mean data might not be setup. If its not, avoid tracebacks.
+Mostly inherited or inspired from yocto-docs.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Nicolas Dechesne (4):
+  docs: ref-variables: add links to terms in glossary
+  docs: sphinx: replace special quotes with double quotes
+  docs: update README file after migrationg to Sphinx
+  docs: sphinx: report errors when dependencies are not met
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 5442f7d225..1f4cc1e96d 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1679,7 +1679,8 @@ class BBCooker:
-         if self.hashserv:
-             self.hashserv.process.terminate()
-             self.hashserv.process.join()
--        bb.event.fire(CookerExit(), self.data)
-+        if hasattr(self, "data"):
-+            bb.event.fire(CookerExit(), self.data)
- 
-     def shutdown(self, force = False):
-         if force:
+Quentin Schulz (1):
+  docs: static: theme_overrides.css: fix responsive design on <640px
+    screens
+
+ doc/Makefile.sphinx                           |   4 +
+ doc/README                                    |  50 ++--
+ .../bitbake-user-manual-execution.rst         |   4 +-
+ .../bitbake-user-manual-fetching.rst          |   2 +-
+ .../bitbake-user-manual-intro.rst             |   2 +-
+ .../bitbake-user-manual-metadata.rst          |   8 +-
+ .../bitbake-user-manual-ref-variables.rst     | 246 +++++++++---------
+ doc/conf.py                                   |   8 +-
+ doc/sphinx-static/theme_overrides.css         |   2 -
+ 9 files changed, 175 insertions(+), 151 deletions(-)
+
 -- 
-2.25.1
+2.28.0
 
