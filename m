@@ -1,81 +1,107 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
- by mx.groups.io with SMTP id smtpd.web10.36970.1601909004014938636
+Received: from MTA-05-4.privateemail.com (MTA-05-4.privateemail.com [198.54.127.60])
+ by mx.groups.io with SMTP id smtpd.web12.37917.1601911513294935915
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 05 Oct 2020 07:43:24 -0700
+ Mon, 05 Oct 2020 08:25:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=T8OTEtTZ;
- spf=softfail (domain: sakoman.com, ip: 209.85.208.44, mailfrom: steve@sakoman.com)
-Received: by mail-ed1-f44.google.com with SMTP id t21so6880029eds.6
-        for <bitbake-devel@lists.openembedded.org>; Mon, 05 Oct 2020 07:43:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fzlJ1lEI4beXxIe1HcVOI390JQ9rHn3P5I9dPaFja6o=;
-        b=T8OTEtTZ/ALUCbxWFv2ZkUiXOF2sxWnh2QPeR+Nct1QH3yOVzII6o8MQhnRerXXqm4
-         eFcBOv9oE0WDkt+sO3c2UG+OevzZDbbYxUitsaHtIGdsMYAcURXHoYfF+/+4H7p7/ngh
-         uhOCdlUVgWZ9/1HCo2ZMMrGxMMj7XFKpZNzRa1htrxcVdlDA4f3eaETz3q50CBxTyKeX
-         0Md3dRZvwjfXTLHrlPfYbKBNCq7hXyWkq71oFxpsP3/WMSbOduMIVaEeGfRiwk3BHQmq
-         i+rIyGh0r18ITtr8XXSCFJY9OD48gI2ySzE0LMAFdY8WQkTO1nrARjExBf11mrCnYWkj
-         EIoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fzlJ1lEI4beXxIe1HcVOI390JQ9rHn3P5I9dPaFja6o=;
-        b=skuRfL2gLKmkec3xFI5GDp7gS8Bp8XDFsf+DewIcYTiqcU5RkvOictA/5AyuVRnGvL
-         YC3KqjDJFohbbuZDfAiHCFo4YduqjQLgQmtfkW61DFpDRlNi5UrY7zj2TQL7fo0jgiFk
-         qe1yKntT2wENHRqaheTL9ko47JT50wC0YP1gdDWPQ9eURTJmOjO6WOapU8hJmIZ0hICL
-         aMOHfgYSwHRIsTRiq92HqBGSOLb6Kb4ulZllvErYgVLLIZPlMsFq3VUBCqCuKxVf2mvu
-         6ALqNAwN0nIMILL+/NXgt02DaMW3dkKmfXKFijzG/9wJk65PD0u3mgfPyfCw1v1vXkhE
-         lVHw==
-X-Gm-Message-State: AOAM533ENk+each3YKZmTayMLq4Uu+2UZAvZTfc9s8QGiSHjHFlKXl/l
-	DBefRK+iofFmHICVXbGrcQkKw3VioBcRwQwAdjSgDQ==
-X-Google-Smtp-Source: ABdhPJxyZ/5vR1CJPWfrjtwzV0/FFFXBuw2hNGuuDVpq5CTipmyihLZbpCyBKPrDeK3qBm9eL5F5vGcHnrMVs4pfZoM=
-X-Received: by 2002:a05:6402:2076:: with SMTP id bd22mr18202332edb.197.1601909002345;
- Mon, 05 Oct 2020 07:43:22 -0700 (PDT)
+ dkim=missing; spf=pass (domain: whitetree.xyz, ip: 198.54.127.60, mailfrom: charles.davies@whitetree.xyz)
+Received: from MTA-05.privateemail.com (localhost [127.0.0.1])
+	by MTA-05.privateemail.com (Postfix) with ESMTP id 0104B6004C;
+	Mon,  5 Oct 2020 11:25:12 -0400 (EDT)
+Received: from localhost.localdomain (unknown [10.20.151.216])
+	by MTA-05.privateemail.com (Postfix) with ESMTPA id 1F7426004B;
+	Mon,  5 Oct 2020 15:25:10 +0000 (UTC)
+From: "Charlie Davies" <charles.davies@whitetree.xyz>
+To: bitbake-devel@lists.openembedded.org
+Cc: Charlie Davies <charles.davies@whitetree.xyz>
+Subject: [dunfell][1.46][PATCH 1/2] bitbake: fetch/git: add support for SRC_URI containing spaces in url
+Date: Mon,  5 Oct 2020 16:24:31 +0100
+Message-Id: <20201005152432.205556-1-charles.davies@whitetree.xyz>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <f2871b0f-a30e-aaa5-ddfa-3cdf5d67a6e1@whitetree.xyz>
-In-Reply-To: <f2871b0f-a30e-aaa5-ddfa-3cdf5d67a6e1@whitetree.xyz>
-From: "Steve Sakoman" <steve@sakoman.com>
-Date: Mon, 5 Oct 2020 04:43:11 -1000
-Message-ID: <CAOSpxdaf+bFtGXkeD0khMUjwa_3+2B+Z7aFz01g--ow6W3S6XA@mail.gmail.com>
-Subject: Re: [bitbake-devel] Dunfell Patch Merging?
-To: Charlie Davies <charles.davies@whitetree.xyz>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 5, 2020 at 4:22 AM Charlie Davies
-<charles.davies@whitetree.xyz> wrote:
->
-> Hi,
->
-> A while ago I implemented the following patch set:
->
-> bitbake: fetch/git: add support for SRC_URI containing spaces in url
->
-> bitbake: tests/fetch: add unit tests for SRC_URI with spaces in url
->
-> The patch set was accepted into master branch:
->
-> 9ef2bc360d9cfc017a510f4d6ce811e6895672b4
->
-> 005f2951e2118c79d99665ce66d5bc9220f4a0b1
->
-> In my day to day work I use dunfell so was hoping that this patch set would be included in the dunfell branch. Will this happen?
->
-> Out of interest what is the general merging strategy and release cycle?
+Microsoft's TFS VCS system allows for spaces in a git repository url.
+An example of a valid url is:
 
-The process is similar to oe-core for dunfell: submit your patches to
-the appropriate mailing list tagged with [dunfell] for oe-core or
-[1.46] for bitbake.
+ssh://tfs-my-company.org:22/tfs/My Projects/FooBar
 
-If you want patches to be considered for both, then tag with both
-master and dunfell/1.46
+This commit adds support for such urls by implementing two changes.
+Firstly, when bitbake makes a git command line call the url is
+surrounded by quotes so that the url, regardless of spaces, is
+treated as one argument. Secondly, additional parsing of various
+filepath variables, which are based off of the url, are now
+completed with any spaces in the url replaced with underscores.
 
-If there are no objections after a couple of days I'll pull in the
-patches and begin testing.
+Signed-off-by: Charlie Davies <charles.davies@whitetree.xyz>
+---
+ bitbake/lib/bb/fetch2/git.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-I try to do a release every couple of months-ish when things are feeling stable.
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 644ba9238b..07064c694f 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -236,7 +236,7 @@ class Git(FetchMethod):
+                     ud.unresolvedrev[name] =3D ud.revisions[name]
+                 ud.revisions[name] =3D self.latest_revision(ud, d, name)
+=20
+-        gitsrcname =3D '%s%s' % (ud.host.replace(':', '.'), ud.path.repl=
+ace('/', '.').replace('*', '.'))
++        gitsrcname =3D '%s%s' % (ud.host.replace(':', '.'), ud.path.repl=
+ace('/', '.').replace('*', '.').replace(' ','_'))
+         if gitsrcname.startswith('.'):
+             gitsrcname =3D gitsrcname[1:]
+=20
+@@ -342,7 +342,7 @@ class Git(FetchMethod):
+             # We do this since git will use a "-l" option automatically =
+for local urls where possible
+             if repourl.startswith("file://"):
+                 repourl =3D repourl[7:]
+-            clone_cmd =3D "LANG=3DC %s clone --bare --mirror %s %s --pro=
+gress" % (ud.basecmd, repourl, ud.clonedir)
++            clone_cmd =3D "LANG=3DC %s clone --bare --mirror \"%s\" %s -=
+-progress" % (ud.basecmd, repourl, ud.clonedir)
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, clone_cmd, ud.url)
+             progresshandler =3D GitProgressHandler(d)
+@@ -354,8 +354,8 @@ class Git(FetchMethod):
+             if "origin" in output:
+               runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=
+=3Dud.clonedir)
+=20
+-            runfetchcmd("%s remote add --mirror=3Dfetch origin %s" % (ud=
+.basecmd, repourl), d, workdir=3Dud.clonedir)
+-            fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/*:ref=
+s/*" % (ud.basecmd, repourl)
++            runfetchcmd("%s remote add --mirror=3Dfetch origin \"%s\"" %=
+ (ud.basecmd, repourl), d, workdir=3Dud.clonedir)
++            fetch_cmd =3D "LANG=3DC %s fetch -f --progress \"%s\" refs/*=
+:refs/*" % (ud.basecmd, repourl)
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
+             progresshandler =3D GitProgressHandler(d)
+@@ -504,7 +504,7 @@ class Git(FetchMethod):
+             raise bb.fetch2.UnpackError("No up to date source found: " +=
+ "; ".join(source_error), ud.url)
+=20
+         repourl =3D self._get_repo_url(ud)
+-        runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, repourl=
+), d, workdir=3Ddestdir)
++        runfetchcmd("%s remote set-url origin \"%s\"" % (ud.basecmd, rep=
+ourl), d, workdir=3Ddestdir)
+=20
+         if self._contains_lfs(ud, d, destdir):
+             if need_lfs and not self._find_git_lfs(d):
+@@ -623,7 +623,7 @@ class Git(FetchMethod):
+         d.setVar('_BB_GIT_IN_LSREMOTE', '1')
+         try:
+             repourl =3D self._get_repo_url(ud)
+-            cmd =3D "%s ls-remote %s %s" % \
++            cmd =3D "%s ls-remote \"%s\" %s" % \
+                 (ud.basecmd, repourl, search)
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, cmd, repourl)
+--=20
+2.28.0
 
-Steve
