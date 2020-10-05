@@ -1,89 +1,120 @@
-Received: from smtpout.cvg.de (smtpout.cvg.de [87.128.211.67])
- by mx.groups.io with SMTP id smtpd.web11.35811.1601907311757756082
+Received: from MTA-11-4.privateemail.com (MTA-11-4.privateemail.com [198.54.127.104])
+ by mx.groups.io with SMTP id smtpd.web12.36370.1601907732167986853
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 05 Oct 2020 07:15:13 -0700
+ Mon, 05 Oct 2020 07:22:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sigma-chemnitz.de header.s=v2012061000 header.b=UZh2t9ko;
- spf=pass (domain: sigma-chemnitz.de, ip: 87.128.211.67, mailfrom: enrico.scholz@sigma-chemnitz.de)
-Received: from mail-mta-3.intern.sigma-chemnitz.de (mail-mta-3.intern.sigma-chemnitz.de [192.168.12.71])
-	by mail-out-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 095EF9Kw408792
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>; Mon, 5 Oct 2020 16:15:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
-	s=v2012061000; t=1601907309;
-	bh=CFth+edhoVjPgj3iVav8umMQ1WxQppWeQPhZcelA/Y4=; l=1308;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To;
-	b=UZh2t9koZFPMARl4Fc3RjONSaswQiTax18o/29UCJXDvbyWru5t8Q7ZdrIXkU7t3N
-	 usgY6u9RbZFJ2h/IqwpvxTGUNRPfWNu1Ql/UCYniRgzJjAqM9+pkQKBv0+I05HltT9
-	 ZZ2kjQZMZd96kreaBcwagbWzNWTYxZwtdZryXz1c=
-Received: from reddoxx.intern.sigma-chemnitz.de (reddoxx.intern.sigma-chemnitz.de [192.168.0.193])
-	by mail-mta-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 095EF6bi1170919
-	for <bitbake-devel@lists.openembedded.org> from enrico.scholz@sigma-chemnitz.de; Mon, 5 Oct 2020 16:15:07 +0200
-Received: from mail-msa-3.intern.sigma-chemnitz.de ( [192.168.12.77]) by reddoxx.intern.sigma-chemnitz.de
-	(Reddoxx engine) with SMTP id 132FB452059; Mon, 5 Oct 2020 16:15:05 +0200
-Received: from ensc-virt.intern.sigma-chemnitz.de (ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail-msa-3.intern.sigma-chemnitz.de (8.15.2/8.15.2) with ESMTPS id 095EF5ua466030
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Mon, 5 Oct 2020 16:15:05 +0200
-Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim 4.94)
-	(envelope-from <ensc@sigma-chemnitz.de>)
-	id 1kPRGb-001Qth-8R; Mon, 05 Oct 2020 16:15:05 +0200
-From: "Enrico Scholz" <enrico.scholz@sigma-chemnitz.de>
-To: "Middelschulte, Leif" <Leif.Middelschulte@klsmartin.com>
-Cc: "bitbake-devel@lists.openembedded.org"
- <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH v2 1/2] fetch2: fix handling of `\` in file:// SRC_URI
-References: <ed36fb9b7d921afaeee3f83e84d2a521e028dc09.camel@linuxfoundation.org>
-	<20200923161832.235619-1-leif.middelschulte@klsmartin.com>
-	<lyd01wby2e.fsf@ensc-virt.intern.sigma-chemnitz.de>
-	<3c1dfb2c2535dcb98bd82a6c1405a1d378b79270.camel@klsmartin.com>
-Date: Mon, 05 Oct 2020 16:15:05 +0200
-In-Reply-To: <3c1dfb2c2535dcb98bd82a6c1405a1d378b79270.camel@klsmartin.com>
-	(Leif Middelschulte's message of "Mon, 5 Oct 2020 13:42:06 +0000")
-Message-ID: <ly7ds4bvyu.fsf@ensc-virt.intern.sigma-chemnitz.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+ dkim=missing; spf=pass (domain: whitetree.xyz, ip: 198.54.127.104, mailfrom: charles.davies@whitetree.xyz)
+Received: from mta-11.privateemail.com (localhost [127.0.0.1])
+	by mta-11.privateemail.com (Postfix) with ESMTP id E7DDF80051
+	for <bitbake-devel@lists.openembedded.org>; Mon,  5 Oct 2020 10:22:10 -0400 (EDT)
+Received: from [10.105.0.186] (unknown [10.20.151.236])
+	by mta-11.privateemail.com (Postfix) with ESMTPA id 7543680050
+	for <bitbake-devel@lists.openembedded.org>; Mon,  5 Oct 2020 14:22:10 +0000 (UTC)
+To: bitbake-devel@lists.openembedded.org
+From: "Charlie Davies" <charles.davies@whitetree.xyz>
+Subject: Dunfell Patch Merging?
+Message-ID: <f2871b0f-a30e-aaa5-ddfa-3cdf5d67a6e1@whitetree.xyz>
+Date: Mon, 5 Oct 2020 15:21:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Content-Type: text/plain
+X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: multipart/alternative;
+ boundary="------------C1ED735336BE9E5CCE9DC436"
+Content-Language: en-US
 
-"Middelschulte, Leif" <Leif.Middelschulte@klsmartin.com> writes:
-
->> > +                file = ' '.join("'{}'".format(file_path) for file_path in glob.glob(file))
->> > +                cmd = 'cp -fpPRH %s "%s"' % (file, destdir)
->> 
->> Why single quotes in "file" but double quotes in the cmd?
->
-> You are correct. It should be double quotes too, to allow variable
-> expansion by the shell.
-
-Is it really allowed/expected to have environment variables in SRC_URI?
-E.g. is it expected that
-
-| SRC_URI = "file://$HOME/foo"
-
-works?  This fails here because other parts of bitbake (lookup in
-${FILESPATH} or in MIRRORS) use this string directly.
+--------------C1ED735336BE9E5CCE9DC436
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
->> Would it make sense to implement this correctly from the beginning.  E.g.
->> 
->> - avoid manual quoting but use "pipes.quote()"
-> I assume this would be shlex.quotes?
+        Hi,
 
-ok; yes.  It is shlex in python3
+A while ago I implemented the following patch set:
 
 
->> - do not use a shell command string but an array which is given directly
->>   to execve()?
->
-> AFAII it's desired to be able to reuse other environment variables in
-> `SRC_URI`s.  What's more is that once https://bugs.python.org/issue38893
-> is fixed, one might want to use python
+        bitbake: fetch/git: add support for SRC_URI containing spaces in url
 
-But native python operations do not expand environment variables
-either.  Resp. expansion must be done manually which is possible with
-the "execve([])" way too.
+
+        bitbake: tests/fetch: add unit tests for SRC_URI with spaces in url
+
+The patch set was accepted into master branch:
+
+9ef2bc360d9cfc017a510f4d6ce811e6895672b4
+
+005f2951e2118c79d99665ce66d5bc9220f4a0b1
+
+In my day to day work I use dunfell so was hoping that this patch set 
+would be included in the dunfell branch. Will this happen?
+
+Out of interest what is the general merging strategy and release cycle?
+
+Many Thanks,
+
+Charlie
 
 
 
-Enrico
+
+--------------C1ED735336BE9E5CCE9DC436
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <h4 style="box-sizing: border-box; font-family: &quot;Helvetica
+      Neue&quot;, Helvetica, Arial, sans-serif; font-weight: 500;
+      line-height: 1.1; color: rgb(51, 51, 51); margin-top: 10px;
+      margin-bottom: 10px; font-size: 18px; font-style: normal;
+      font-variant-ligatures: normal; font-variant-caps: normal;
+      letter-spacing: normal; orphans: 2; text-align: start;
+      text-indent: 0px; text-transform: none; white-space: normal;
+      widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial;">Hi,</h4>
+    <p>A while ago I implemented the following patch set:<br>
+    </p>
+    <h4 style="box-sizing: border-box; font-family: &quot;Helvetica
+      Neue&quot;, Helvetica, Arial, sans-serif; font-weight: 500;
+      line-height: 1.1; color: rgb(51, 51, 51); margin-top: 10px;
+      margin-bottom: 10px; font-size: 18px; font-style: normal;
+      font-variant-ligatures: normal; font-variant-caps: normal;
+      letter-spacing: normal; orphans: 2; text-align: start;
+      text-indent: 0px; text-transform: none; white-space: normal;
+      widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial;">bitbake: fetch/git: add
+      support for SRC_URI containing spaces in url</h4>
+    <h4 style="box-sizing: border-box; font-family: &quot;Helvetica
+      Neue&quot;, Helvetica, Arial, sans-serif; font-weight: 500;
+      line-height: 1.1; color: rgb(51, 51, 51); margin-top: 10px;
+      margin-bottom: 10px; font-size: 18px; font-style: normal;
+      font-variant-ligatures: normal; font-variant-caps: normal;
+      letter-spacing: normal; orphans: 2; text-align: start;
+      text-indent: 0px; text-transform: none; white-space: normal;
+      widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial;">bitbake: tests/fetch:
+      add unit tests for SRC_URI with spaces in url</h4>
+    <p>The patch set was accepted into master branch:</p>
+    <p>9ef2bc360d9cfc017a510f4d6ce811e6895672b4</p>
+    <p>005f2951e2118c79d99665ce66d5bc9220f4a0b1</p>
+    <p>In my day to day work I use dunfell so was hoping that this patch
+      set would be included in the dunfell branch. Will this happen?</p>
+    <p>Out of interest what is the general merging strategy and release
+      cycle?</p>
+    <p>Many Thanks,</p>
+    <p>Charlie<br>
+    </p>
+    <p><br>
+    </p>
+    <p><br>
+    </p>
+  </body>
+</html>
+
+--------------C1ED735336BE9E5CCE9DC436--
