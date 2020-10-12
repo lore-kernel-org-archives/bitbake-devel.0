@@ -1,74 +1,126 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
- by mx.groups.io with SMTP id smtpd.web12.667.1602515289214525737
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+ by mx.groups.io with SMTP id smtpd.web10.678.1602515296214936036
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 12 Oct 2020 08:08:09 -0700
+ Mon, 12 Oct 2020 08:08:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=cTSHbsVF;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.193, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f193.google.com with SMTP id n14so13748779pff.6
-        for <bitbake-devel@lists.openembedded.org>; Mon, 12 Oct 2020 08:08:09 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=OybeGtIW;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.172, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f172.google.com with SMTP id w21so5977268plq.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 12 Oct 2020 08:08:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id;
-        bh=jDbXH9E9M/eXU1cbx3BTBTLxEwAm0QQZhMcRDPZaBSc=;
-        b=cTSHbsVFw01EG3ESNO+rIkdahgG3AB6Nw2O1JCcO1/37H8z+Eoh1j+IGgr163ENGUM
-         +fqGgknt0FP5x04rw9jsxWj9f48SS2HC69pytjdfRNIF6VHS5ORvmBVgW8jAsHXKb+ie
-         ivlBgPjauUfAP6UKE5KVUYc9mC4HMOuHxSRS21nUTUHzjesZ63131i936+p7tFWiyRFD
-         XGBUF0gfawef75H7xMxnGw0zbUtcU6KsFmsHeBFpNiBIIx2rR97pIpf+2PdYg0In87CH
-         XgJCHNJMCU0ynEoPrK4rK7sc64sdGR5t+TPzOScTa/iv+IRWnca3vvqBhqJEmC5zRuD3
-         FuTg==
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=Y/Rp6UtquiyznC4OrRTchZ5Xo3a76p6n26GAqTWTPmo=;
+        b=OybeGtIWtQhdyH6l9/oNJQCm9P1ANyGJV1RegG37wBfOMw1MzMafmZra3mWqaqO5jI
+         rLrtv36cVeEkDoUbCACQQbr3s6iNLZl92ztI3N0b1AcLl29F4JIcLIU+DySaVd2DPg3y
+         dX9C7JZRC5IQkvzGyUxEveoFQ1/iYrn2LWe4WWv4kg96zbEV6F9l6FkyEexohy0m3Y5t
+         dELl5g3dFs4Ktz6Q1mSVhXRH/0jyRyN/Gxd8uM8rVAi5Vt7Nc93LqkzpV+zBfa2Kihxf
+         AHTVoBCdVhN2ovVD6DCzC+8K0QXUiOPPhvq0pCzUcBqSmZTfPmC8onsQdhQChw8+ihbM
+         SQ9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=jDbXH9E9M/eXU1cbx3BTBTLxEwAm0QQZhMcRDPZaBSc=;
-        b=fyRC1Cq+ClQQ7Pt601jZmRQiNVJ4LJwyurgUuWk+LBbeN/pRoVihykwioXEMseFZJH
-         r0TtRcvfP6jqbueGJ++tzY7ImHqAFOM4tirP8UaE5/AohhhKNBiyUt0yzOE006JSgh//
-         WuI4mSX9C9bLwg3OhAkvukhJh0CRyKNBOUVLCicGc9Alf7nbAB4Ia4FX8PBDx/65Zhme
-         38jPHInk1elybgq5bZKPtp7zoINuGLM0PWp+OD707ZqPzlNXCIltNDBzDhOYzKarkhCk
-         dfiwr2YGuen2iAVSSzW05/mU9DgmaltgU8T5lJdkJlLL0Uu94ojF+K2Eljck/Ga9zC1o
-         kTvQ==
-X-Gm-Message-State: AOAM530Fw5ZjpETQe+z0B+gaLpJB/b8NOuy8cp7cT2UiqpD7oDXHb89K
-	JzRUHCIKZY07BsBqjH6uXfsfDJq2tGUBI0lm
-X-Google-Smtp-Source: ABdhPJxxLisUP+TP3YITAvtcwiXdA5UnCMB2W1w6RhALgGC5L7tz/69vVhVdwP709Nz/lVHY0N1XKA==
-X-Received: by 2002:a17:90b:310a:: with SMTP id gc10mr20085018pjb.164.1602515287983;
-        Mon, 12 Oct 2020 08:08:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=Y/Rp6UtquiyznC4OrRTchZ5Xo3a76p6n26GAqTWTPmo=;
+        b=InrK5gVqCqADR28pgAtLmtJT8a7/8gL3CsBhQupYACugMsN447SsiuSBpsxXY1HSeJ
+         2YvhAu1foO5Rv1sJY5eEseySaRNTcJKXQOsSBP2KJeXn/NhEl4q5aan1L4VyyCdCnW+Z
+         2/ixnfUKnLyQGsBRW5cJnyihWUjYFOH2p4Cw+B9ZJWcU0Va/S4FSB6TZV7x3ytq2kwP+
+         Rp8wKqsOVsMo4yFH93Dz4bzLcqwMLEp3IzL9sD1pMZvsNhPRhQ1sCjB2VAnS5LO+PbRk
+         yB+8I+QHWd2QO83DRb5y1QnHP6pxuJjWHSs5xBlfdTaV0h9QGC92eZycGXB61YBqoBOK
+         uRDA==
+X-Gm-Message-State: AOAM530xS0y7bHw6GQ2XS1hUFIv7j+9ZqA684hy3dQzPMeIsJ+QCKxq6
+	ppfj8ENwFizMELElUHSeWU63vcuq37HYyMP3
+X-Google-Smtp-Source: ABdhPJy3nfqdDsxIGrog9FQo6zGDH/UTfOah4sOz9TOIZQzMB9GVKNyFhMzqPImkhjtV1883okwgIA==
+X-Received: by 2002:a17:902:d213:b029:d4:d273:d40a with SMTP id t19-20020a170902d213b02900d4d273d40amr9004921ply.76.1602515295054;
+        Mon, 12 Oct 2020 08:08:15 -0700 (PDT)
 Return-Path: <steve@sakoman.com>
 Received: from octo.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id f9sm24009246pjq.26.2020.10.12.08.08.05
+        by smtp.gmail.com with ESMTPSA id f9sm24009246pjq.26.2020.10.12.08.08.13
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2020 08:08:06 -0700 (PDT)
+        Mon, 12 Oct 2020 08:08:14 -0700 (PDT)
 From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 0/2] Patch review
-Date: Mon, 12 Oct 2020 05:07:51 -1000
-Message-Id: <cover.1602515077.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 1/2] bitbake: fetch/git: add support for SRC_URI containing spaces in url
+Date: Mon, 12 Oct 2020 05:07:52 -1000
+Message-Id: <0a8a13131b2d520a405877cb9d39f3eae7d6882a.1602515077.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1602515077.git.steve@sakoman.com>
+References: <cover.1602515077.git.steve@sakoman.com>
 
-Please review this next set of patches for 1.46 (dunfell) and have comments
-back by end of day Wednesday.
+From: Charlie Davies <charles.davies@whitetree.xyz>
 
-Passed a-full on autobuilder:
+Microsoft's TFS VCS system allows for spaces in a git repository url.
+An example of a valid url is:
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/1466
+ssh://tfs-my-company.org:22/tfs/My Projects/FooBar
 
-The following changes since commit 18e1957337fd9f06bc673d28dd4f8277321d07bc:
+This commit adds support for such urls by implementing two changes.
+Firstly, when bitbake makes a git command line call the url is
+surrounded by quotes so that the url, regardless of spaces, is
+treated as one argument. Secondly, additional parsing of various
+filepath variables, which are based off of the url, are now
+completed with any spaces in the url replaced with underscores.
 
-  tests/fetch: Move away from problematic freedesktop.org urls (2020-09-17 09:13:32 -1000)
+Signed-off-by: Charlie Davies <charles.davies@whitetree.xyz>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit eb38b6f0935763f7ba19e5618f376fcae1dac41a)
+Signed-off-by: Steve Sakoman <steve@sakoman.com>
+---
+ lib/bb/fetch2/git.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-are available in the Git repository at:
-
-  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
-
-Charlie Davies (2):
-  bitbake: fetch/git: add support for SRC_URI containing spaces in url
-  bitbake: tests/fetch: add unit tests for SRC_URI with spaces in url
-
- lib/bb/fetch2/git.py  | 12 +++++------
- lib/bb/tests/fetch.py | 47 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+), 6 deletions(-)
-
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 2ce9395f..dcecff5d 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -236,7 +236,7 @@ class Git(FetchMethod):
+                     ud.unresolvedrev[name] = ud.revisions[name]
+                 ud.revisions[name] = self.latest_revision(ud, d, name)
+ 
+-        gitsrcname = '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.'))
++        gitsrcname = '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.').replace(' ','_'))
+         if gitsrcname.startswith('.'):
+             gitsrcname = gitsrcname[1:]
+ 
+@@ -342,7 +342,7 @@ class Git(FetchMethod):
+             # We do this since git will use a "-l" option automatically for local urls where possible
+             if repourl.startswith("file://"):
+                 repourl = repourl[7:]
+-            clone_cmd = "LANG=C %s clone --bare --mirror %s %s --progress" % (ud.basecmd, repourl, ud.clonedir)
++            clone_cmd = "LANG=C %s clone --bare --mirror \"%s\" %s --progress" % (ud.basecmd, repourl, ud.clonedir)
+             if ud.proto.lower() != 'file':
+                 bb.fetch2.check_network_access(d, clone_cmd, ud.url)
+             progresshandler = GitProgressHandler(d)
+@@ -354,8 +354,8 @@ class Git(FetchMethod):
+             if "origin" in output:
+               runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=ud.clonedir)
+ 
+-            runfetchcmd("%s remote add --mirror=fetch origin %s" % (ud.basecmd, repourl), d, workdir=ud.clonedir)
+-            fetch_cmd = "LANG=C %s fetch -f --progress %s refs/*:refs/*" % (ud.basecmd, repourl)
++            runfetchcmd("%s remote add --mirror=fetch origin \"%s\"" % (ud.basecmd, repourl), d, workdir=ud.clonedir)
++            fetch_cmd = "LANG=C %s fetch -f --progress \"%s\" refs/*:refs/*" % (ud.basecmd, repourl)
+             if ud.proto.lower() != 'file':
+                 bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
+             progresshandler = GitProgressHandler(d)
+@@ -501,7 +501,7 @@ class Git(FetchMethod):
+             raise bb.fetch2.UnpackError("No up to date source found: " + "; ".join(source_error), ud.url)
+ 
+         repourl = self._get_repo_url(ud)
+-        runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, repourl), d, workdir=destdir)
++        runfetchcmd("%s remote set-url origin \"%s\"" % (ud.basecmd, repourl), d, workdir=destdir)
+ 
+         if self._contains_lfs(ud, d, destdir):
+             if need_lfs and not self._find_git_lfs(d):
+@@ -613,7 +613,7 @@ class Git(FetchMethod):
+         d.setVar('_BB_GIT_IN_LSREMOTE', '1')
+         try:
+             repourl = self._get_repo_url(ud)
+-            cmd = "%s ls-remote %s %s" % \
++            cmd = "%s ls-remote \"%s\" %s" % \
+                 (ud.basecmd, repourl, search)
+             if ud.proto.lower() != 'file':
+                 bb.fetch2.check_network_access(d, cmd, repourl)
 -- 
 2.17.1
 
