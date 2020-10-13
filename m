@@ -1,62 +1,74 @@
-Received: from smtpout.cvg.de (smtpout.cvg.de [87.128.211.67])
- by mx.groups.io with SMTP id smtpd.web11.9155.1602586297917257072
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
+ by mx.groups.io with SMTP id smtpd.web10.1979.1602613236491399260
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 13 Oct 2020 03:51:40 -0700
+ Tue, 13 Oct 2020 11:20:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sigma-chemnitz.de header.s=v2012061000 header.b=nVV3e6ib;
- spf=pass (domain: sigma-chemnitz.de, ip: 87.128.211.67, mailfrom: enrico.scholz@sigma-chemnitz.de)
-Received: from mail-mta-3.intern.sigma-chemnitz.de (mail-mta-3.intern.sigma-chemnitz.de [192.168.12.71])
-	by mail-out-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 09DApYLW485550
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 13 Oct 2020 12:51:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
-	s=v2012061000; t=1602586295;
-	bh=nEPN7aw+6cIR124wzurcg2beuNglNcfzqrDQHOk5gZA=; l=818;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To;
-	b=nVV3e6ibSKbVsyi3pr+cTxR+5oVQimr6MiPVkNSf9d9vVtiU5rZdRACpo9CAVVDnl
-	 QCJXFzjIhn+SiX9nF6iCZ2MXdQ9rWs/3q01ryRT87lWzV5IBHyFs0NmMfaJG0duvp1
-	 5VMyAoOxllWFyHBdvYuFd9O0K3Zp49esDLhGDtX4=
-Received: from reddoxx.intern.sigma-chemnitz.de (reddoxx.intern.sigma-chemnitz.de [192.168.0.193])
-	by mail-mta-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 09DApWOC1382182
-	for <bitbake-devel@lists.openembedded.org> from enrico.scholz@sigma-chemnitz.de; Tue, 13 Oct 2020 12:51:33 +0200
-Received: from mail-msa-3.intern.sigma-chemnitz.de ( [192.168.12.77]) by reddoxx.intern.sigma-chemnitz.de
-	(Reddoxx engine) with SMTP id 5BEB2314FB4; Tue, 13 Oct 2020 12:51:28 +0200
-Received: from ensc-virt.intern.sigma-chemnitz.de (ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail-msa-3.intern.sigma-chemnitz.de (8.15.2/8.15.2) with ESMTPS id 09DApRVg554592
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Tue, 13 Oct 2020 12:51:27 +0200
-Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim 4.94)
-	(envelope-from <ensc@sigma-chemnitz.de>)
-	id 1kSHtv-008zmH-9g; Tue, 13 Oct 2020 12:51:27 +0200
-From: "Enrico Scholz" <enrico.scholz@sigma-chemnitz.de>
-To: "Steve Sakoman" <steve@sakoman.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [bitbake][dunfell][1.46][PATCH 1/2] bitbake: fetch/git: add support for SRC_URI containing spaces in url
-References: <cover.1602515077.git.steve@sakoman.com>
-	<0a8a13131b2d520a405877cb9d39f3eae7d6882a.1602515077.git.steve@sakoman.com>
-Date: Tue, 13 Oct 2020 12:51:27 +0200
-In-Reply-To: <0a8a13131b2d520a405877cb9d39f3eae7d6882a.1602515077.git.steve@sakoman.com>
-	(Steve Sakoman's message of "Mon, 12 Oct 2020 05:07:52 -1000")
-Message-ID: <lyo8l69z68.fsf@ensc-virt.intern.sigma-chemnitz.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=Al+pqloo;
+ spf=softfail (domain: sakoman.com, ip: 209.85.218.68, mailfrom: steve@sakoman.com)
+Received: by mail-ej1-f68.google.com with SMTP id ce10so1141647ejc.5
+        for <bitbake-devel@lists.openembedded.org>; Tue, 13 Oct 2020 11:20:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cs9j+IkH+MX8f00S5akkQkZbiTPk8snOpKME/OSS2ko=;
+        b=Al+pqloowqvJa8DdUe6ApJ2qP75Q2hfHibUcm3u6gjaCMrU4ZnFvncPkqI3bktNur+
+         rPxiFbcfcBDIuer9QtqgmINdCFoput+EmLFzU6Yr/MITh7qy0YjzfJSF6aYtZMSdxCAa
+         xkTCcYnz7T21rL/7wFjQmoY16A4fqKyUrMEG6RncGRd8RRBCHWH8dtMG8cn2Vqbdmpy/
+         mtMa0RTGRJA9J1JGu616sIS+hilovm4bIl+mxLUl/eUnqa2PQ5LLsUmEzj9/fAbXrh4t
+         JJF7ZM3DntfQFvVsVYddc4c0T7Jq0wPBLUY+wFw5S4ZpZODzH+n3JGtKTZQTbD8ukgy4
+         +t2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cs9j+IkH+MX8f00S5akkQkZbiTPk8snOpKME/OSS2ko=;
+        b=bt2Kt0d19Ttxrvp63VEJMYzMmlLlLu0HE7ET6eIVL2s5stvEyMKoOeEkw9gPQLECF0
+         g1N8kXDd9Jg+7sOPsHmEDWPLuU8y2x9AYesg5n3Zt+pwpWMyA8DdmyMwfEoa9LR6jSTd
+         pCDaoFUidxsQMdS1ktlBfo3mcKQqFBYB+0k3rJol/WW+4+P5W+6iEiyD7QZJsoliJM4z
+         ddhjWhpGJZvOM1I9GaIFYcvxQ82DgURwYHppMPWxNibBaYUjB0KtVXgkrTM0rxb45Tyf
+         9orOEVZQujvcJprr3holJxKh/IUD4QFuaXJhxWukZ++R4pkT88EQDMRbbHy30BHCPrWd
+         Qu5w==
+X-Gm-Message-State: AOAM531g8uN9xQPplp3heUedWOHDFFN40PMd6D4CLnMQb4Kpy1+2Yu4s
+	MrN5xEW3/2Y6xDTrJC0bNbmE9kt2dK7k4t8U0iSEVQ==
+X-Google-Smtp-Source: ABdhPJwP56m2klNBejtJSmea4Iei/PP5vrSZpv8BO1HnRiFVFKajPYlYdzMAhmX8ZRqsWRf+aOEuHaqxbASwdgE7VGU=
+X-Received: by 2002:a17:906:4811:: with SMTP id w17mr976883ejq.431.1602613234902;
+ Tue, 13 Oct 2020 11:20:34 -0700 (PDT)
 MIME-Version: 1.0
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Content-Type: text/plain
+References: <cover.1602515077.git.steve@sakoman.com> <0a8a13131b2d520a405877cb9d39f3eae7d6882a.1602515077.git.steve@sakoman.com>
+ <lyo8l69z68.fsf@ensc-virt.intern.sigma-chemnitz.de>
+In-Reply-To: <lyo8l69z68.fsf@ensc-virt.intern.sigma-chemnitz.de>
+From: "Steve Sakoman" <steve@sakoman.com>
+Date: Tue, 13 Oct 2020 08:20:23 -1000
+Message-ID: <CAOSpxdZ-L_YBuB+urokrTuLNKdLBhnrc7xY41ubh_p03ZVxzSw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [bitbake][dunfell][1.46][PATCH 1/2] bitbake: fetch/git: add support for SRC_URI containing spaces in url
+To: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+	Charlie Davies <charles.davies@whitetree.xyz>
+Content-Type: text/plain; charset="UTF-8"
 
-"Steve Sakoman" <steve@sakoman.com> writes:
-
-> This commit adds support for such urls by implementing two changes.
-> Firstly, when bitbake makes a git command line call the url is
-> surrounded by quotes so that the url, regardless of spaces, is
-> treated as one argument. Secondly, additional parsing of various
-> filepath variables, which are based off of the url, are now
-> completed with any spaces in the url replaced with underscores.
+On Tue, Oct 13, 2020 at 12:51 AM Enrico Scholz
+<enrico.scholz@sigma-chemnitz.de> wrote:
 >
-> -            clone_cmd = "LANG=C %s clone --bare --mirror %s %s --progress" % (ud.basecmd, repourl, ud.clonedir)
-> +            clone_cmd = "LANG=C %s clone --bare --mirror \"%s\" %s --progress" % (ud.basecmd, repourl, ud.clonedir)
+> "Steve Sakoman" <steve@sakoman.com> writes:
+>
+> > This commit adds support for such urls by implementing two changes.
+> > Firstly, when bitbake makes a git command line call the url is
+> > surrounded by quotes so that the url, regardless of spaces, is
+> > treated as one argument. Secondly, additional parsing of various
+> > filepath variables, which are based off of the url, are now
+> > completed with any spaces in the url replaced with underscores.
+> >
+> > -            clone_cmd = "LANG=C %s clone --bare --mirror %s %s --progress" % (ud.basecmd, repourl, ud.clonedir)
+> > +            clone_cmd = "LANG=C %s clone --bare --mirror \"%s\" %s --progress" % (ud.basecmd, repourl, ud.clonedir)
+>
+> Why do you quote it manually (and with double instead of single quote))
+> instead of using shlex.quote() or making the clone_cmd an array?
 
-Why do you quote it manually (and with double instead of single quote))
-instead of using shlex.quote() or making the clone_cmd an array?
+This question is best addressed to the patch author (copied)
 
+Note that this patch has already been accepted into the master branch,
+and my request for comment was just for cherry-picking the commit into
+the dunfell branch.
 
-Enrico
+Steve
