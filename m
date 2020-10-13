@@ -1,128 +1,142 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
- by mx.groups.io with SMTP id smtpd.web11.584.1602515298874792175
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+ by mx.groups.io with SMTP id smtpd.web12.6711.1602575154524021315
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 12 Oct 2020 08:08:18 -0700
+ Tue, 13 Oct 2020 00:45:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=hBR3tzmC;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.170, mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f170.google.com with SMTP id h2so8729908pll.11
-        for <bitbake-devel@lists.openembedded.org>; Mon, 12 Oct 2020 08:08:18 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=dfHdZVow;
+ spf=pass (domain: linaro.org, ip: 209.85.210.53, mailfrom: nicolas.dechesne@linaro.org)
+Received: by mail-ot1-f53.google.com with SMTP id m13so18181653otl.9
+        for <bitbake-devel@lists.openembedded.org>; Tue, 13 Oct 2020 00:45:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=gEplYJSRlEj+FPBB60mtZJ6bLO4hZl/Mo5q5s25Quns=;
-        b=hBR3tzmC6ZQLu/yObdQ1Z5MQHhg8zWJSO4Ynx8mCpbveCpIaSBlUgoMGWZgOfHi2CM
-         0AjcxG69rxEVHNdMjVMTMmeGjbuWuuEOIeNBn3T3XBUNaOvl9e3UadjSaXAL4zLbcwkn
-         6uoHUoFbXUXCamFsmOG7nrQuhc5wndDdVqXgPGvc1SThMjZTx7iCikLz8ZUhGTdDpNBA
-         1h8dI04mdX1SJhzARHJB7rTZX6KKK50R+pew4LCCqoYYClGpvG7XnPp+de0Y5u0zsv7f
-         P4+6gWrZnyjmbBjKxTOvIO5ek3TEk6fGOhPR+pS5oLJE2Y1tELR2nA+lUAZX3dgwLYny
-         GKyw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I6pZWOzXqE8nK7AMwjvBMBfe4mJC2dWELU/h4o9155U=;
+        b=dfHdZVowioSl8l30nQ1Aodtx03SXWFmZjrtqPNfLDVYxitBtTcexxy1xmypJhvkzFn
+         tWY8rX4EnNi3BDNoFZJCx3DtmcPKNd60VBXQdQUa7Eo/6wgVYdmKX9qQf+CLLjFVPOG9
+         cmJrKp+mRzc+CvVecWDLW6rufUC0VY44a/19C2yPv0aDuUI8C0wb3Sl2qL1Xq3Dl6Xfw
+         E3cb0Auidery4zkodCVMvljYJUcxqNx+tUQntC2czwk0aYCEIN0NYMUlgaq3mdvVnsEG
+         Sh4F6t+z6p9ipHjcQF+WUIOlCnUs9T221mcO+9/8569teBj4joG/f9vd+OVNCgFjVbnW
+         gTAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=gEplYJSRlEj+FPBB60mtZJ6bLO4hZl/Mo5q5s25Quns=;
-        b=A2moeXxOgXPcZFLW+JNqJAnM4VW8vCKEwlGHW0ut8mNT+GmRk8eVrU2FMNLKWwBFY6
-         XTdZzb+JqV6B3H61MFvzlIblYljLGd3dtqriozJnvnFVlSkkzu597gfsJ/jolIaWk+yV
-         M720Zltb88cejwFSpQ3rDxDd3QZ3rzp0KdANfNjr4IqGBqBOBgkCcq0WbgkNvkCY3dCa
-         SXu8kgAJVgEOx2V785bveyhwCjqTFctvTeuZufpfYejS7LfYKe9u694oXiOPBMb0aNix
-         4jQItAM916Rqxpxz2dXEV6jT8W4I+0OYuaBrADeHlnliBAhUpN/WLVCYRgu5YfA/y5/z
-         n7BA==
-X-Gm-Message-State: AOAM5313OzI4lBS0ikPHVbcd/v2tP4QXzLTVpvYTrguJov7g5n4HKXvc
-	fCvgu4yY/kejYgi2zApOXKb76nvEnGkd3puq
-X-Google-Smtp-Source: ABdhPJwEuNzEsqwfM1rsNIlr8EqmYK6MF0QgPYmuYnmv9FJQ9X811CdvfHpmE9TiPgY51nvl5X3ZrA==
-X-Received: by 2002:a17:902:c1d2:b029:d3:ea72:cdec with SMTP id c18-20020a170902c1d2b02900d3ea72cdecmr24541918plc.47.1602515297913;
-        Mon, 12 Oct 2020 08:08:17 -0700 (PDT)
-Return-Path: <steve@sakoman.com>
-Received: from octo.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id f9sm24009246pjq.26.2020.10.12.08.08.16
-        for <bitbake-devel@lists.openembedded.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I6pZWOzXqE8nK7AMwjvBMBfe4mJC2dWELU/h4o9155U=;
+        b=b/zwReTanaDyuQ1gI319JQ5O+6gAEHpCyWg4FLH13obvyrRyFAQm7pVqwGLoPOvUKY
+         VYtUW9y6t0nPKS/g99bL2FdJf95oxM+ZdmzKqIFzCM4MPX6v9A0ifuB8oAv3Y2AdphxP
+         YfTLhd4wdGtlkbimd3RvELdu3kwMrurXW7Yf92yC95YRxb91UEaZgm4w6xJk/npmEGks
+         /ayqT7tLBXgKrbCBU9kdaefH0FctlEOc2UX0l2etLHNAK2QZ3wzNUJUFB+DDLmIdE7R5
+         A/h60Ay9AN79cRRfIEzQTicEAtC1cvzz5IeRVwVmQ/glxcvVOFdb+c7JDIxVAnBYPwpR
+         Mi9w==
+X-Gm-Message-State: AOAM530QcBqcuU9+hqpaPtu9VIYI4Py6r8XJjIgJdGv5csM0gZoBjLUn
+	b9rEGUzgsvpFXzMsrU5WmM/jiw==
+X-Google-Smtp-Source: ABdhPJxtipcVNoesTKKUqmHy35+ZMg8OSDXr+6oIVjGEAKUxzHoBL0fKXiNpUna45OT6ZrWKmooiAA==
+X-Received: by 2002:a9d:7a9:: with SMTP id 38mr23023589oto.280.1602575153609;
+        Tue, 13 Oct 2020 00:45:53 -0700 (PDT)
+Return-Path: <nicolas.dechesne@linaro.org>
+Received: from nikaia.localdomain ([2a01:e0a:1b9:3e10:d6af:c5d9:8b6e:b994])
+        by smtp.gmail.com with ESMTPSA id o2sm10613206oia.42.2020.10.13.00.45.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2020 08:08:17 -0700 (PDT)
-From: "Steve Sakoman" <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 2/2] bitbake: tests/fetch: add unit tests for SRC_URI with spaces in url
-Date: Mon, 12 Oct 2020 05:07:53 -1000
-Message-Id: <1c2a787d2b70b81a8d2adbbbb2eba726297b841b.1602515077.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1602515077.git.steve@sakoman.com>
-References: <cover.1602515077.git.steve@sakoman.com>
+        Tue, 13 Oct 2020 00:45:52 -0700 (PDT)
+From: "Nicolas Dechesne" <nicolas.dechesne@linaro.org>
+To: steve@sakoman.com,
+	bitbake-devel@lists.openembedded.org
+Cc: Konrad Weihmann <kweihmann@outlook.com>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Subject: [dunfell][1.46][PATCH] bitbake-user-manual: Add BBFILES_DYNAMIC
+Date: Tue, 13 Oct 2020 09:45:37 +0200
+Message-Id: <20201013074537.41846-1-nicolas.dechesne@linaro.org>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Charlie Davies <charles.davies@whitetree.xyz>
+From: Konrad Weihmann <kweihmann@outlook.com>
 
-Signed-off-by: Charlie Davies <charles.davies@whitetree.xyz>
+- add missing entry for BBFILES_DYNAMIC, ported from yocto-docs
+- add description for the new inverse mode
+
+Signed-off-by: Konrad Weihmann <kweihmann@outlook.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit e7dab75c8d1923abcbbc7c9ac7de215d720ccf26)
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
+(cherry picked from commit 9186ca47ce73b4d1c87eb69163698a04679fb55c)
+Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
 ---
- lib/bb/tests/fetch.py | 47 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ .../bitbake-user-manual-ref-variables.xml     | 61 +++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index b1883541..f7fe78b4 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -223,6 +223,21 @@ class URITest(unittest.TestCase):
-             'query': {},
-             'relative': False
-         },
-+        "git://tfs-example.org:22/tfs/example%20path/example.git": {
-+            'uri': 'git://tfs-example.org:22/tfs/example%20path/example.git',
-+            'scheme': 'git',
-+            'hostname': 'tfs-example.org',
-+            'port': 22,
-+            'hostport': 'tfs-example.org:22',
-+            'path': '/tfs/example path/example.git',
-+            'userinfo': '',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {},
-+            'query': {},
-+            'relative': False
-+        },
-         "http://somesite.net;someparam=1": {
-             'uri': 'http://somesite.net;someparam=1',
-             'scheme': 'http',
-@@ -2080,6 +2095,38 @@ class GitLfsTest(FetcherTest):
-         shutil.rmtree(self.gitdir, ignore_errors=True)
-         fetcher.unpack(self.d.getVar('WORKDIR'))
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+index c4bd1f25..4c29b246 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+@@ -1124,6 +1124,67 @@
+             </glossdef>
+         </glossentry>
  
-+class GitURLWithSpacesTest(FetcherTest):
-+    test_git_urls = {
-+        "git://tfs-example.org:22/tfs/example%20path/example.git" : {
-+            'url': 'git://tfs-example.org:22/tfs/example%20path/example.git',
-+            'gitsrcname': 'tfs-example.org.22.tfs.example_path.example.git',
-+            'path': '/tfs/example path/example.git'
-+        },
-+        "git://tfs-example.org:22/tfs/example%20path/example%20repo.git" : {
-+            'url': 'git://tfs-example.org:22/tfs/example%20path/example%20repo.git',
-+            'gitsrcname': 'tfs-example.org.22.tfs.example_path.example_repo.git',
-+            'path': '/tfs/example path/example repo.git'
-+        }
-+    }
++        <glossentry id='var-BBFILES_DYNAMIC'><glossterm>BBFILES_DYNAMIC</glossterm>
++            <info>
++                BBFILES_DYNAMIC[doc] = "Activates content depending on presence of identified layers."
++            </info>
++            <glossdef>
++                <para role="glossdeffirst">
++                    Activates content depending on presence of identified layers.
++                    You identify the layers by the collections that the layers
++                    define.
++                </para>
 +
-+    def test_urls(self):
++                <para>
++                    Use the <filename>BBFILES_DYNAMIC</filename> variable to
++                    avoid <filename>.bbappend</filename> files whose
++                    corresponding <filename>.bb</filename> file is in a layer
++                    that attempts to modify other layers through
++                    <filename>.bbappend</filename> but does not want to
++                    introduce a hard dependency on those other layers.
++                </para>
 +
-+        # Set fake SRCREV to stop git fetcher from trying to contact non-existent git repo
-+        self.d.setVar('SRCREV', '82ea737a0b42a8b53e11c9cde141e9e9c0bd8c40')
++                <para>
++                    Additionally you can prefix the rule with "!" to add 
++                    <filename>.bbappend</filename> and <filename>.bb</filename> files
++                    in case a layer is not present.
++                    Use this avoid hard dependency on those other layers.
++                </para>
 +
-+        for test_git_url, ref in self.test_git_urls.items():
++                <para>
++                    Use the following form for
++                    <filename>BBFILES_DYNAMIC</filename>:
++                    <literallayout class='monospaced'>
++                        <replaceable>collection_name</replaceable>:<replaceable>filename_pattern</replaceable>
++                    </literallayout>
++                    The following example identifies two collection names and
++                    two filename patterns:
++                    <literallayout class='monospaced'>
++                        BBFILES_DYNAMIC += "\
++                            clang-layer:${LAYERDIR}/bbappends/meta-clang/*/*/*.bbappend \
++                            core:${LAYERDIR}/bbappends/openembedded-core/meta/*/*/*.bbappend \
++                        "
++                    </literallayout>
++                    When the collection name is prefixed with "!" it will add the file pattern in case
++                    the layer is absent:
++                    <literallayout class='monospaced'>
++                        BBFILES_DYNAMIC += "\
++                            !clang-layer:${LAYERDIR}/backfill/meta-clang/*/*/*.bb \
++                        "
++                    </literallayout>
++                    
++                    This next example shows an error message that occurs
++                    because invalid entries are found, which cause parsing to
++                    abort:
++                    <literallayout class='monospaced'>
++                    ERROR: BBFILES_DYNAMIC entries must be of the form {!}&lt;collection name&gt;:&lt;filename pattern&gt;, not:
++                        /work/my-layer/bbappends/meta-security-isafw/*/*/*.bbappend
++                        /work/my-layer/bbappends/openembedded-core/meta/*/*/*.bbappend
++                    </literallayout>
++                </para>
++            </glossdef>
++        </glossentry>
 +
-+            fetcher = bb.fetch.Fetch([test_git_url], self.d)
-+            ud = fetcher.ud[fetcher.urls[0]]
-+
-+            self.assertEqual(ud.url, ref['url'])
-+            self.assertEqual(ud.path, ref['path'])
-+            self.assertEqual(ud.localfile, os.path.join(self.dldir, "git2", ref['gitsrcname']))
-+            self.assertEqual(ud.localpath, os.path.join(self.dldir, "git2", ref['gitsrcname']))
-+            self.assertEqual(ud.lockfile, os.path.join(self.dldir, "git2", ref['gitsrcname'] + '.lock'))
-+            self.assertEqual(ud.clonedir, os.path.join(self.dldir, "git2", ref['gitsrcname']))
-+            self.assertEqual(ud.fullmirror, os.path.join(self.dldir, "git2_" + ref['gitsrcname'] + '.tar.gz'))
-+
- class NPMTest(FetcherTest):
-     def skipIfNoNpm():
-         import shutil
+         <glossentry id='var-bb-BBINCLUDED'><glossterm>BBINCLUDED</glossterm>
+             <glossdef>
+                 <para>
 -- 
-2.17.1
+2.28.0
 
