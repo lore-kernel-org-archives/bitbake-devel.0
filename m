@@ -1,98 +1,78 @@
-Received: from MTA-05-4.privateemail.com (MTA-05-4.privateemail.com [198.54.127.60])
- by mx.groups.io with SMTP id smtpd.web10.8319.1602668965205536120
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+ by mx.groups.io with SMTP id smtpd.web12.1930.1602699656620685290
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 14 Oct 2020 02:49:25 -0700
+ Wed, 14 Oct 2020 11:20:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: whitetree.xyz, ip: 198.54.127.60, mailfrom: charles.davies@whitetree.xyz)
-Received: from MTA-05.privateemail.com (localhost [127.0.0.1])
-	by MTA-05.privateemail.com (Postfix) with ESMTP id 236566004E;
-	Wed, 14 Oct 2020 05:49:24 -0400 (EDT)
-Received: from localhost.localdomain (unknown [10.20.151.217])
-	by MTA-05.privateemail.com (Postfix) with ESMTPA id 2A83F6004B;
-	Wed, 14 Oct 2020 09:49:22 +0000 (UTC)
-From: "Charlie Davies" <charles.davies@whitetree.xyz>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=IxoNl6XU;
+ spf=pass (domain: gmail.com, ip: 209.85.214.182, mailfrom: ticotimo@gmail.com)
+Received: by mail-pl1-f182.google.com with SMTP id w21so148533plq.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 14 Oct 2020 11:20:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ke3FoJekGFJ6Ztoo4BuJAdxKGzG+I05fsTq39fpUOf4=;
+        b=IxoNl6XUlDm46A7Os93iyUlRP8OMMI463wOTooacdFTZDjK2BOtIHU0KPwo9tAvRg4
+         lC4aBo1V9DQK8aKDEhSMjP+C3OGYOQBmWh6Xea3RiyJjBQjkIHRnD83vtclymC/1qNNX
+         Tod8hPsCsLhty12eeDiwZCKv2ZYzmX8/mRlY6ZFTu0zDD/yGrv5PMulkzMj5PYr2qdA/
+         O5U1LKCCMB6Cf8BWEgUCvrEnfuttFf2uYAbsOkxn1sqQA/0StRop9e1sjFy1yHK0776O
+         gpkNnKHycutkxE436xIYYXWMJpslhLp84YhQMCSPJf3t2ju/MDipLxSv+pZ1VoiSSwBM
+         DSuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ke3FoJekGFJ6Ztoo4BuJAdxKGzG+I05fsTq39fpUOf4=;
+        b=IiiRwWojyqIC2A7xAEaqv4iL/wEYt1qNPVYqn6fN7RKztJauQJ9Fqau6xT0A1dyQpM
+         jcyec3BpR0Wg73DKAdkJGsDKfrFaQDu6PX7nd9ohIXfuatV4vodvEyc0Sb7m1M2xbWL7
+         +93hCLcslWcUlcUigdP25S6X6TF4QSr/m2DKt/9W6XbwGd+IqYCse0iVkvVcbWeLOw1Y
+         fhbYNwxcU8h/FikY5ybJOT8wosLeu5Y4wWoBp830+v6OvQa5ZIRsEif32Lm7YJIrHzk1
+         nbP4Dmp8FtDkHH7jk3FELXtEJrpJixQnXEU8QNDnpgIANDYUUCd1FkctQ0x2qU394r88
+         Vcxw==
+X-Gm-Message-State: AOAM533FUvbygO8vS1rxAStiq2Lv33gB5rsKYa3TfFP2kf2mLe9VJJFU
+	EzzAYJtCRY2BR/cVZGk1089CKrzMkKaz7g==
+X-Google-Smtp-Source: ABdhPJyfEwL4QJDNvjSmuGPkkdbUs9eU8bpXYAsGWWc8jpDTOffzRiQRo/+M2itbxeLDvIfEHpzymQ==
+X-Received: by 2002:a17:902:6b45:b029:d3:df34:3222 with SMTP id g5-20020a1709026b45b02900d3df343222mr352300plt.68.1602699655679;
+        Wed, 14 Oct 2020 11:20:55 -0700 (PDT)
+Return-Path: <ticotimo@gmail.com>
+Received: from thetis.hsd1.or.comcast.net ([2601:1c0:6000:9640:59d8:4931:5c26:e5c7])
+        by smtp.gmail.com with ESMTPSA id fa12sm198188pjb.25.2020.10.14.11.20.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2020 11:20:55 -0700 (PDT)
+From: "Tim Orling" <ticotimo@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Charlie Davies <charles.davies@whitetree.xyz>
-Subject: [master][dunfell][1.46][PATCH] bitbake: fetch/git: use shlex.quote() to support spaces in SRC_URI url
-Date: Wed, 14 Oct 2020 10:48:38 +0100
-Message-Id: <20201014094838.5570-1-charles.davies@whitetree.xyz>
-X-Mailer: git-send-email 2.28.0
+Cc: Tim Orling <timothy.t.orling@linux.intel.com>
+Subject: [PATCH] lib/bb/ui/knotty: fix typo in parseprogress
+Date: Wed, 14 Oct 2020 11:20:52 -0700
+Message-Id: <20201014182052.36766-1-ticotimo@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-This commit replaces the instances where escaped double quotes
-are used to support SRC_URI url containing spaces with the more
-pythonic shlex.quote().
+From: Tim Orling <timothy.t.orling@linux.intel.com>
 
-Signed-off-by: Charlie Davies <charles.davies@whitetree.xyz>
+After parseprogress.finish() it was intended to
+set parseprogress to None, but a typo means this
+is not happening.
+
+Signed-off-by: Tim Orling <timothy.t.orling@linux.intel.com>
 ---
- bitbake/lib/bb/fetch2/git.py | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ lib/bb/ui/knotty.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 07064c694f..b97967b487 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -63,6 +63,7 @@ import errno
- import fnmatch
- import os
- import re
-+import shlex
- import subprocess
- import tempfile
- import bb
-@@ -342,7 +343,7 @@ class Git(FetchMethod):
-             # We do this since git will use a "-l" option automatically =
-for local urls where possible
-             if repourl.startswith("file://"):
-                 repourl =3D repourl[7:]
--            clone_cmd =3D "LANG=3DC %s clone --bare --mirror \"%s\" %s -=
--progress" % (ud.basecmd, repourl, ud.clonedir)
-+            clone_cmd =3D "LANG=3DC %s clone --bare --mirror %s %s --pro=
-gress" % (ud.basecmd, shlex.quote(repourl), ud.clonedir)
-             if ud.proto.lower() !=3D 'file':
-                 bb.fetch2.check_network_access(d, clone_cmd, ud.url)
-             progresshandler =3D GitProgressHandler(d)
-@@ -354,8 +355,8 @@ class Git(FetchMethod):
-             if "origin" in output:
-               runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=
-=3Dud.clonedir)
-=20
--            runfetchcmd("%s remote add --mirror=3Dfetch origin \"%s\"" %=
- (ud.basecmd, repourl), d, workdir=3Dud.clonedir)
--            fetch_cmd =3D "LANG=3DC %s fetch -f --progress \"%s\" refs/*=
-:refs/*" % (ud.basecmd, repourl)
-+            runfetchcmd("%s remote add --mirror=3Dfetch origin %s" % (ud=
-.basecmd, shlex.quote(repourl)), d, workdir=3Dud.clonedir)
-+            fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/*:ref=
-s/*" % (ud.basecmd, shlex.quote(repourl))
-             if ud.proto.lower() !=3D 'file':
-                 bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
-             progresshandler =3D GitProgressHandler(d)
-@@ -504,7 +505,7 @@ class Git(FetchMethod):
-             raise bb.fetch2.UnpackError("No up to date source found: " +=
- "; ".join(source_error), ud.url)
-=20
-         repourl =3D self._get_repo_url(ud)
--        runfetchcmd("%s remote set-url origin \"%s\"" % (ud.basecmd, rep=
-ourl), d, workdir=3Ddestdir)
-+        runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, shlex.q=
-uote(repourl)), d, workdir=3Ddestdir)
-=20
-         if self._contains_lfs(ud, d, destdir):
-             if need_lfs and not self._find_git_lfs(d):
-@@ -623,8 +624,8 @@ class Git(FetchMethod):
-         d.setVar('_BB_GIT_IN_LSREMOTE', '1')
-         try:
-             repourl =3D self._get_repo_url(ud)
--            cmd =3D "%s ls-remote \"%s\" %s" % \
--                (ud.basecmd, repourl, search)
-+            cmd =3D "%s ls-remote %s %s" % \
-+                (ud.basecmd, shlex.quote(repourl), search)
-             if ud.proto.lower() !=3D 'file':
-                 bb.fetch2.check_network_access(d, cmd, repourl)
-             output =3D runfetchcmd(cmd, d, True)
---=20
-2.28.0
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index a91e4fd1..0efa614d 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -692,7 +692,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                 if not parseprogress:
+                     continue
+                 parseprogress.finish()
+-                pasreprogress = None
++                parseprogress = None
+                 if params.options.quiet == 0:
+                     print(("Parsing of %d .bb files complete (%d cached, %d parsed). %d targets, %d skipped, %d masked, %d errors."
+                         % ( event.total, event.cached, event.parsed, event.virtuals, event.skipped, event.masked, event.errors)))
+-- 
+2.25.0
 
