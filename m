@@ -1,285 +1,131 @@
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (NAM04-BN3-obe.outbound.protection.outlook.com [40.107.68.87])
- by mx.groups.io with SMTP id smtpd.web12.10980.1602983363746303883
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.134])
+ by mx.groups.io with SMTP id smtpd.web12.1837.1603056844234856105
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 17 Oct 2020 18:09:24 -0700
+ Sun, 18 Oct 2020 14:34:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=oMdYlD4F;
- spf=pass (domain: windriver.com, ip: 40.107.68.87, mailfrom: david.reyna@windriver.com)
+ dkim=fail reason="body hash did not verify" header.i=@prevas.dk header.s=selector1 header.b=GoeynRb4;
+ spf=pass (domain: prevas.dk, ip: 40.107.20.134, mailfrom: rasmus.villemoes@prevas.dk)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gQ5DazBGJMg6o3jJrIlLWsrQ90YvR9aj/wFGkLwiKt8ZGKa+XsobVIsDNNal0jH5MXkTZs+2BqOJTzXl+VXf5HQZ8PwXCLW4QIV2l1Bu8lzr/MceEPaYRG7eiBTw5UxMAib6atSKrLcrAZmb0CgAmkF6zduZVyFTXtziXKAANihUk6EQnmQhuWcVoCAi32Htyyxm/wBLLEraBPsKoe3I5oODPgWsSDIsFg163gtR0mMIcwM3gBrDjQQRALCOaXG7xfjNhSj9ek621rpXOXIbgjhLyYpp814Bya3Qu15ogIvX7tLlRJVRAVGxuqRNK+24F+Y2Njih+TvYql2lnYLp8w==
+ b=jaXrFPEdDVKdm6N+UxYiZYLdLJ3D2q7M6cu+x210zEdaLKb221g2ZMJGZDN45oI/ZOHPeZ+E30AHJuh9uGa6RMkg9FXQ/av2sh36c9x24EzcQb1NonUw+G0f9dmkAaWK3aWED2E44eSALENIoXOBkWpVCbX0oIUkHdlHWhTlb+sjL7GWIYyqpRlMBrYvf9aHHAApJ141xjB7u0aH4si+zEI2xsOsZY26UPnICNpxDCcNuTczm95qT45DCJ4EDh8q1iADtzJS5+7ENs/P7SYMPiCzfFsdD9B/Z+h1GLZ1u2nwDDw8p20mJ3+HmWspO0WTl9yRClCU2BgWAybkXDKpjw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5tMGs485+84HsliE5Lz7mtMgaBFtp5xXTc07+WTx2Q8=;
- b=SCfAVLi50xK8MhR5iBFo2MpajUya9kEkq6lAME3yaij1ruWoqTJbfRYCjnu0qgftPU96ASr8WwKVU2aUJlboU1mbA2B3B2Q6aureSRwQOk+bHt3glR5Bdth+ORYVm7j6aVV1lbxEEH/T0BXKQETvs37Yvmid5t5GwAyCIYIjdrrtdzFyhmHbuFaINewBJMQh54COz/OtZd54qvjf3x+n3qJM1UJJn2kPkdZHmRQD616ensZ9vOgo/IyZxw3MIW7npGO+Y//EzD3Lc+J+dI62o+sVMgUCi1ekbgpwY6glepH4M83NGmp9g2X+6KRcNqnIKDBsByn2HeU9RLz+VIcwbA==
+ bh=FcmgWcc5xKq5T6TE3CLLcRvdUx5DELkQ1ZyuEv8GXsM=;
+ b=XPhZan8usK02whWLh+f43j1o5w38nUR7mxulTDo84Ix1JfIeKoCcimEvVnEnt7yFC6cfRcSKDyqEWRZHvv5VxxCTPs4flDBXZ9FK3OhWPf6zIG62pmrS0lQQG1cX1/7JxrvNcVSCuD0AaIfM76ORqGBrKBPWcxB7y8T7KmKPl340MDYK4UjPqPEnNSvjqcOA9bR6L7nSTRWvXqBCcQYniEQZFpBg89JvXp0OGMUCkFKASf5dKqwOxgS+YztcmLecdu3HAqa/QG1/s/aBuANnvD7MVXLpaZPgNcygz2Zv9xi4l+C48xl6E5aEbgLTaj45aVYcJ2gQO5K+nxLzcboZwA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5tMGs485+84HsliE5Lz7mtMgaBFtp5xXTc07+WTx2Q8=;
- b=oMdYlD4Fzqaw9P3nXl8/ydiFmmDpk+YzUkdDrt9gKixjxy5H1aDrKUOKPG7FOnZ9GIY76e0qX6SfBe5j83KR0CgBKRzAg4SMtWj2QpulBhcflHOMumHHxguklpdh/qcO8xv17RgvUuARsF+KSyVyPrnFxwXVlJay0DZM8rGSChQ=
-Received: from BY5PR11MB4167.namprd11.prod.outlook.com (2603:10b6:a03:185::28)
- by BYAPR11MB3141.namprd11.prod.outlook.com (2603:10b6:a03:8d::13) with
+ bh=FcmgWcc5xKq5T6TE3CLLcRvdUx5DELkQ1ZyuEv8GXsM=;
+ b=GoeynRb4HHAvcSOdN9QHewpg283c9FvEVBsmxAd+GXqDIBS9XhU4cM3XrJPSPtxYea8VYdOn/YHpnn6UvDflITqnx1Or4DrPE0SuUN+Ug6QbQg6q+/J3OrTQ74B92fqwfNWJeXCqnhkswDS3BS9N2udSdSICsb59oBvoTwa9ykI=
+Authentication-Results: lists.openembedded.org; dkim=none (message not signed)
+ header.d=none;lists.openembedded.org; dmarc=none action=none
+ header.from=prevas.dk;
+Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:3f::10)
+ by AM0PR10MB2241.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:dd::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.20; Sun, 18 Oct
- 2020 01:09:20 +0000
-Received: from BY5PR11MB4167.namprd11.prod.outlook.com
- ([fe80::a567:83cb:6eae:d661]) by BY5PR11MB4167.namprd11.prod.outlook.com
- ([fe80::a567:83cb:6eae:d661%6]) with mapi id 15.20.3477.028; Sun, 18 Oct 2020
- 01:09:20 +0000
-From: "Reyna, David" <david.reyna@windriver.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-CC: Tim Orling <ticotimo@gmail.com>
-Subject: [bitbake-devel] [PATCH] toaster: Update documentation links to new URLs
-Thread-Topic: [bitbake-devel] [PATCH] toaster: Update documentation links to
- new URLs
-Thread-Index: Adak6wrepBjevnpxS2KqnwcnChhEwg==
-Date: Sun, 18 Oct 2020 01:09:20 +0000
-Message-ID: 
- <BY5PR11MB4167C3D24982FAC243C80942EA010@BY5PR11MB4167.namprd11.prod.outlook.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lists.openembedded.org; dkim=none (message not signed)
- header.d=none;lists.openembedded.org; dmarc=none action=none
- header.from=windriver.com;
-x-originating-ip: [2601:646:4201:e280:c9a:908f:b687:7754]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4c12ba56-63a7-4f8e-a65f-08d8730271cb
-x-ms-traffictypediagnostic: BYAPR11MB3141:
-x-microsoft-antispam-prvs: 
- <BYAPR11MB3141408CE5F0B9E7D07E714AEA010@BYAPR11MB3141.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- ZmHt4fR0CQtRWaw2pAdOOUm6NGCju3oziUbo278bpPvCdHZn+s7lndQLMT+kGVr6tFMzog0CoFahPZNvlc5IAM5ZV7SkWLZ7C3L//Kxos7V0DXrYC6WAN6KvN/WvzzWaLCK+9qf3l3rPjU9I6w3OCTr/RY50po4xVAZhLQf5EWTQEmBcutNW7wq32m4+Ide1ZoWk6sKzjeMUIcP8eUXjs3BIh9oJx+qENRqKZOSLAxYQRq+l00FKMvl1pp+iA3O2c2YRrZHJ4acn8VAAFWmFey0QxKOgI2r70L/rBRAVPzQXZBsQEtz5cm6jqOx9ZZUJSbBewOARcmE27ZTZhcar5F4pE+61XJlpos8k8XZiZHhhGRXuIAct4QvhVMAIN7cQsGs3HJ//DyFnMWj2A6GTeA==
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4167.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(366004)(39830400003)(136003)(396003)(7696005)(166002)(316002)(4326008)(478600001)(86362001)(21615005)(55016002)(52536014)(71200400001)(66446008)(33656002)(2906002)(66556008)(66476007)(9686003)(6506007)(186003)(64756008)(66946007)(7066003)(83380400001)(76116006)(8676002)(15650500001)(8936002)(5660300002)(6916009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 
- qQCyb4E8D5rBXlpIqJW1f4uyB4y3BX2xpmRBAnBCAxpjnIBDGfzj65Eq9knKLGq/ZAjQmQ75WcwppG5oYxK5oloHU28ZCTwe7PDYyLGCapNJZVGPcmdAk9opmPeT7+nTFU+DgQ85pnH0ZFDHyBnSCNOBzQw6hkXVg+Q9A9O/SZxY3E7ocYvVAaI7NuEtKc0ldM9MXpomEPKj0sm3meAevmz7KMa+VL52i04kVUE3xVUI9cmfKk0+uG9yQRVFW+1gYEC4Upau56TA66MTmV0SvQDFhQj1x3aBr4mPxVK03CRoVQQQNchqzpIojabmAjmI9DNL6Q95cIo5s0w5AjTvT7m7Alu8h9wVYw4E7xXIyqEyGe2KFkSqryt2/rME3c4+4s7ECrb+jqIvRh3nI015uXUEHZ9buo1bUqN1P/izEldHgXOrleyp/DCiM8WxlSzTVHsCga313KgzTDxpZ5U59J7sc/xUvLoizHN/5ebSVfTDiu32Gjco5R3y0N2HUFjKMRJ0IUCV/bwt6W6+uPWpN98Q5QowvUkddx80YWNqKkqKTFRCVNWYDbwAYaIX8lG8tFEuhNko3k/Crkxaq+PeTpOFD9FE3mMVLZ2xa3usqlt92FEFEv6UasxeBEDZ2qU5DXumaQb+Xzf6gYtS5ZsYZjj6cQac+18jqmoM6htipMJ6NvpcYQtNzTfg/iw0AQ+OcxS1I369C7PouMyPkJu/vA==
-x-ms-exchange-transport-forked: True
+ 2020 21:34:01 +0000
+Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9dc3:9785:dc4e:ad62]) by AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9dc3:9785:dc4e:ad62%6]) with mapi id 15.20.3477.028; Sun, 18 Oct 2020
+ 21:34:01 +0000
+From: "Rasmus Villemoes" <rasmus.villemoes@prevas.dk>
+To: bitbake-devel@lists.openembedded.org
+CC: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: [PATCH] fetch: git: add reference parameter
+Date: Sun, 18 Oct 2020 23:33:52 +0200
+Message-ID: <20201018213352.32692-1-rasmus.villemoes@prevas.dk>
+X-Mailer: git-send-email 2.23.0
+X-Originating-IP: [5.186.115.188]
+X-ClientProxiedBy: AM6P195CA0041.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:209:87::18) To AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:3f::10)
+Return-Path: rasmus.villemoes@prevas.dk
 MIME-Version: 1.0
-X-OriginatorOrg: windriver.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from prevas-ravi.aaad.autarch.net (5.186.115.188) by AM6P195CA0041.EURP195.PROD.OUTLOOK.COM (2603:10a6:209:87::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.20 via Frontend Transport; Sun, 18 Oct 2020 21:34:00 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6babab6f-be42-463a-ec8a-08d873ad8734
+X-MS-TrafficTypeDiagnostic: AM0PR10MB2241:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<AM0PR10MB2241D6F58209C08BF67AEE9893010@AM0PR10MB2241.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2043;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	LUQD2FWynLeyceFEOwFVWmPkgvbjgorrGAKcCbtG6t6tN+I/r8I59KvJiZRy4hMrq7NNyBbAU1r7e4oAfEsh8Tw6wvrJgsVIGfYe/kbmkBKNkce526FD1H7GyaZ80cGN3Xfoz2nFEir+luBrV+W7C3nH7Zlvr7SXH4twFFOf1PJisoFKmi0e1c+3FoxMA1tjam5zrog1WGW3NCGg14y5tkLPVR94ygjuAyc2Y3CW+Y4m3NNqrkolwoVsmrZRwcl+a99Ju453qoxVH8t9yBMZLK6aYHwYkXAl8kyonv9n/UyQgPqsYbRh+ZZWvlJaij8rJYTijgDiQ0m8Vi9p3VV93A==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(136003)(346002)(396003)(39840400004)(376002)(366004)(6916009)(4326008)(107886003)(6486002)(8936002)(8676002)(54906003)(26005)(36756003)(83380400001)(186003)(16526019)(86362001)(478600001)(6512007)(44832011)(2906002)(52116002)(66476007)(316002)(66946007)(66556008)(2616005)(956004)(8976002)(5660300002)(1076003)(6666004)(6506007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 
+	ZG92sRlVFmDR0xsptfSjmReWbcARKWeBBDUVbHJ+PcHhmBJ4PzgXQ1xtNqNjnYbfb2Yzs9wyH957mB6em64e7rLkGRTLRhyWqG4awTlVRIszEF/7AwolvPXoJD6I/WlueAn8Gnlk7E+PHojp5nLwzWIL68gM02sLi5ayqQbacMAryUx3lBkiLdK0eCNt0IHXzh4qwaXC42i2NoEl3zqlintT59vKBUu1FOwHmfwS491iILXjPVMFoKirUcyF9RgbOOi8Ja+ya0XuOFG5rljT6aOU8BD4Le3qr6mMJVBZxTBQDJAC8IW6Rn0AU11zImzN1T9RU6MBv+mdSSU0lCFwEGQvTa7ZX0Yf8FK2gc4ji36Xse8qlONRdQ/SkOzQhaeT7WCt1qAQax01JKyslPk5XDjsZmlZI5Rnsq726ftNNzrsvP8g26vA2+Bi98HOctOVuAXgABdUxWDUJWfY81w303zx+HE74mjQKaOPWW1tn/z9hKSY2MSKnNNpf4AMjquYM3dzyGVuawf2kqKl9/NtS9lZdoowdgqg0+Pp+Jorwm6IX0rLlJDkH04sDTZnwBfpDJcitH9/tyw8fBeBspsIG8lKPSDdQa1UPQOJRpxs1+JADtxQJCa4VVub1JUMUC566RRsXGY+pAdGQykxXAqOfQ==
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6babab6f-be42-463a-ec8a-08d873ad8734
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4167.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c12ba56-63a7-4f8e-a65f-08d8730271cb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2020 01:09:20.8336
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2020 21:34:00.9963
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gdqM++nqmkjuM9cJsORuNfF3r6mtU3tvJRQ8g1y/MKoC40Q0YetNSKbEPJ0B7vMCye73HfGTWEqj5aEDsst7K+Y4g5ODpQOYqKekqThCXe0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3141
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CZmhjI3oeLHbzbF+e7js54lYboP/EAjce33btXMnA1Ozfqu2Vdb5Oqpm+ts80nU5CHTKem1KIr6et+YsRlw0RXlwoOo2Uu3WZjprSw/fTnY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2241
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Update the Toaster documentation links to the new
-Yocto Project URLs.
+The --reference(-if-able) option to git clone can significantly speed
+up the initial do_fetch if one is able to point git at a local
+repository containing a large number of the objects that would
+otherwise need to be downloaded.
 
-[YOCTO #14092]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 ---
- lib/toaster/toastergui/templates/base.html                | 2 +-
- lib/toaster/toastergui/templates/configvars.html          | 2 +-
- lib/toaster/toastergui/templates/landing.html             | 8 ++++----
- lib/toaster/toastergui/templates/landing_not_managed.html | 2 +-
- lib/toaster/toastergui/templates/project.html             | 2 +-
- lib/toaster/toastergui/templates/project_specific.html    | 2 +-
- lib/toaster/toastergui/templates/projectconf.html         | 8 ++++----
- 7 files changed, 13 insertions(+), 13 deletions(-)
+ lib/bb/fetch2/git.py | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toast=
-ergui/templates/base.html
-index 4f7206489b..9e19cc33ca 100644
---- a/lib/toaster/toastergui/templates/base.html
-+++ b/lib/toaster/toastergui/templates/base.html
-@@ -123,7 +123,7 @@
-               {% endif %}
-             {% endif %}
-               <li id=3D"navbar-docs">
--              <a target=3D"_blank" href=3D"http://www.yoctoproject.org/doc=
-s/latest/toaster-manual/toaster-manual.html">
-+              <a target=3D"_blank" href=3D"https://www.yoctoproject.org/do=
-cs/latest/toaster-manual/toaster-manual.html">
-                 <i class=3D"glyphicon glyphicon-book"></i>
-                 Documentation
-               </a>
-diff --git a/lib/toaster/toastergui/templates/configvars.html b/lib/toaster=
-/toastergui/templates/configvars.html
-index ca2e1eab39..33fef9316d 100644
---- a/lib/toaster/toastergui/templates/configvars.html
-+++ b/lib/toaster/toastergui/templates/configvars.html
-@@ -66,7 +66,7 @@
-         <td class=3D"description">
-             {% if variable.description %}
-                 {{variable.description}}
--                <a href=3D"http://www.yoctoproject.org/docs/current/ref-ma=
-nual/ref-manual.html#var-{{variable.variable_name|variable_parent_name}}" t=
-arget=3D"_blank">
-+                <a href=3D"https://www.yoctoproject.org/docs/current/ref-m=
-anual/ref-manual.html#var-{{variable.variable_name|variable_parent_name}}" =
-target=3D"_blank">
-                 <span class=3D"glyphicon glyphicon-new-window get-info"></=
-span></a>
-             {% endif %}
-         </td>
-diff --git a/lib/toaster/toastergui/templates/landing.html b/lib/toaster/to=
-astergui/templates/landing.html
-index 70c7359fad..bfaaf6fc83 100644
---- a/lib/toaster/toastergui/templates/landing.html
-+++ b/lib/toaster/toastergui/templates/landing.html
-@@ -12,10 +12,10 @@
-             <div class=3D"col-md-6">
-               <h1>This is Toaster</h1>
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index b97967b4..c8837816 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -51,6 +51,13 @@ Supported SRC_URI options are:
+    For local git:// urls to use the current branch HEAD as the revision fo=
+r use with
+    AUTOREV. Implies nobranch.
 =20
--              <p>A web interface to <a href=3D"http://www.openembedded.org=
-">OpenEmbedded</a> and <a href=3D"http://www.yoctoproject.org/tools-resourc=
-es/projects/bitbake">BitBake</a>, the <a href=3D"http://www.yoctoproject.or=
-g">Yocto Project</a> build system.</p>
-+              <p>A web interface to <a href=3D"https://www.openembedded.or=
-g">OpenEmbedded</a> and <a href=3D"https://www.yoctoproject.org/tools-resou=
-rces/projects/bitbake">BitBake</a>, the <a href=3D"https://www.yoctoproject=
-.org">Yocto Project</a> build system.</p>
++- reference
++   This can be set to the path to a local repository expected to
++   contain many of the objects that would otherwise need to be
++   downloaded. It will be passed as the argument to the
++   '--reference-if-able' option of 'git clone', along with the
++   '--dissociate' option.
++
+ """
 =20
- 		          <p class=3D"top-air">
--		            <a class=3D"btn btn-info btn-lg" href=3D"http://www.yoctopro=
-ject.org/docs/latest/toaster-manual/toaster-manual.html#toaster-manual-setu=
-p-and-use">
-+		            <a class=3D"btn btn-info btn-lg" href=3D"https://www.yoctopr=
-oject.org/docs/latest/toaster-manual/toaster-manual.html#toaster-manual-set=
-up-and-use">
- 			            Toaster is ready to capture your command line builds
- 		            </a>
- 		          </p>
-@@ -33,7 +33,7 @@
-                   Toaster has no layer information. Without layer informat=
-ion, you cannot run builds. To generate layer information you can:
-                   <ul>
-                     <li>
--                      <a href=3D"http://www.yoctoproject.org/docs/latest/t=
-oaster-manual/toaster-manual.html#layer-source">Configure a layer source</a=
->
-+                      <a href=3D"https://www.yoctoproject.org/docs/latest/=
-toaster-manual/toaster-manual.html#layer-source">Configure a layer source</=
-a>
-                     </li>
-                     <li>
- 			                <a href=3D"{% url 'newproject' %}">Create a project</a>=
-, then import layers
-@@ -44,7 +44,7 @@
+ # Copyright (C) 2005 Richard Purdie
+@@ -151,6 +158,8 @@ class Git(FetchMethod):
 =20
-               <ul class=3D"list-unstyled lead">
-                 <li>
--                  <a href=3D"http://www.yoctoproject.org/docs/latest/toast=
-er-manual/toaster-manual.html">
-+                  <a href=3D"https://www.yoctoproject.org/docs/latest/toas=
-ter-manual/toaster-manual.html">
-                     Read the Toaster manual
-                   </a>
-                 </li>
-diff --git a/lib/toaster/toastergui/templates/landing_not_managed.html b/li=
-b/toaster/toastergui/templates/landing_not_managed.html
-index baa4b72c14..e7200b8412 100644
---- a/lib/toaster/toastergui/templates/landing_not_managed.html
-+++ b/lib/toaster/toastergui/templates/landing_not_managed.html
-@@ -20,7 +20,7 @@
-      <p">
-      The 'Build' mode allows you to configure and run your Yocto Project b=
-uilds from Toaster.
-      <ul>
--       <li><a href=3D"http://www.yoctoproject.org/docs/latest/toaster-manu=
-al/toaster-manual.html#intro-modes">
-+       <li><a href=3D"https://www.yoctoproject.org/docs/latest/toaster-man=
-ual/toaster-manual.html#intro-modes">
-        Read about the 'Build' mode
-        </a></li>
-        <li><a href=3D"/">
-diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/to=
-astergui/templates/project.html
-index fa41e3c909..d8ad2c79dc 100644
---- a/lib/toaster/toastergui/templates/project.html
-+++ b/lib/toaster/toastergui/templates/project.html
-@@ -139,7 +139,7 @@
-         <ul>
-           <li><a href=3D"{% url 'projectlayers' project.id %}">Choose from=
- the layers compatible with this project</a></li>
-           <li><a href=3D"{% url 'importlayer' project.id %}">Import a laye=
-r</a></li>
--          <li><a href=3D"http://www.yoctoproject.org/docs/current/dev-manu=
-al/dev-manual.html#understanding-and-creating-layers" target=3D"_blank">Rea=
-d about layers in the documentation</a></li>
-+          <li><a href=3D"https://www.yoctoproject.org/docs/current/dev-man=
-ual/dev-manual.html#understanding-and-creating-layers" target=3D"_blank">Re=
-ad about layers in the documentation</a></li>
-           <li>Or type a layer name below</li>
-         </ul>
-       </div>
-diff --git a/lib/toaster/toastergui/templates/project_specific.html b/lib/t=
-oaster/toastergui/templates/project_specific.html
-index f625d18baf..42725c0dba 100644
---- a/lib/toaster/toastergui/templates/project_specific.html
-+++ b/lib/toaster/toastergui/templates/project_specific.html
-@@ -137,7 +137,7 @@
-         <ul>
-           <li><a href=3D"{% url 'projectlayers' project.id %}">Choose from=
- the layers compatible with this project</a></li>
-           <li><a href=3D"{% url 'importlayer' project.id %}">Import a laye=
-r</a></li>
--          <li><a href=3D"http://www.yoctoproject.org/docs/current/dev-manu=
-al/dev-manual.html#understanding-and-creating-layers" target=3D"_blank">Rea=
-d about layers in the documentation</a></li>
-+          <li><a href=3D"https://www.yoctoproject.org/docs/current/dev-man=
-ual/dev-manual.html#understanding-and-creating-layers" target=3D"_blank">Re=
-ad about layers in the documentation</a></li>
-           <li>Or type a layer name below</li>
-         </ul>
-       </div>
-diff --git a/lib/toaster/toastergui/templates/projectconf.html b/lib/toaste=
-r/toastergui/templates/projectconf.html
-index fb20b26f22..bd49f1f585 100644
---- a/lib/toaster/toastergui/templates/projectconf.html
-+++ b/lib/toaster/toastergui/templates/projectconf.html
-@@ -201,12 +201,12 @@
-           <p>Toaster cannot set any variables that impact 1) the configura=
-tion of the build servers,
-           or 2) where artifacts produced by the build are stored. Such var=
-iables include: </p>
-           <p>
--          <code><a href=3D"http://www.yoctoproject.org/docs/1.6.1/ref-manu=
-al/ref-manual.html#var-BB_DISKMON_DIRS" target=3D"_blank">BB_DISKMON_DIRS</=
-a></code>
--          <code><a href=3D"http://www.yoctoproject.org/docs/1.6.1/ref-manu=
-al/ref-manual.html#var-BB_NUMBER_THREADS" target=3D"_blank">BB_NUMBER_THREA=
-DS</a></code>
-+          <code><a href=3D"https://www.yoctoproject.org/docs/current/ref-m=
-anual/ref-manual.html#var-BB_DISKMON_DIRS" target=3D"_blank">BB_DISKMON_DIR=
-S</a></code>
-+          <code><a href=3D"https://www.yoctoproject.org/docs/current/ref-m=
-anual/ref-manual.html#var-BB_NUMBER_THREADS" target=3D"_blank">BB_NUMBER_TH=
-READS</a></code>
-           <code>CVS_PROXY_HOST</code>
-           <code>CVS_PROXY_PORT</code>
--          <code><a href=3D"http://www.yoctoproject.org/docs/1.6.1/ref-manu=
-al/ref-manual.html#var-PARALLEL_MAKE" target=3D"_blank">PARALLEL_MAKE</a></=
-code>
--          <code><a href=3D"http://www.yoctoproject.org/docs/1.6.1/ref-manu=
-al/ref-manual.html#var-TMPDIR" target=3D"_blank">TMPDIR</a></code></p>
-+          <code><a href=3D"https://www.yoctoproject.org/docs/current/ref-m=
-anual/ref-manual.html#var-PARALLEL_MAKE" target=3D"_blank">PARALLEL_MAKE</a=
-></code>
-+          <code><a href=3D"https://www.yoctoproject.org/docs/current/ref-m=
-anual/ref-manual.html#var-TMPDIR" target=3D"_blank">TMPDIR</a></code></p>
-           <p>Plus the following standard shell environment variables:</p>
-           <p><code>http_proxy</code> <code>ftp_proxy</code> <code>https_pr=
-oxy</code> <code>all_proxy</code></p>
-         </div>
+         ud.nobranch =3D ud.parm.get("nobranch","0") =3D=3D "1"
+=20
++        ud.reference =3D ud.parm.get("reference", "")
++
+         # usehead implies nobranch
+         ud.usehead =3D ud.parm.get("usehead","0") =3D=3D "1"
+         if ud.usehead:
+@@ -344,6 +353,8 @@ class Git(FetchMethod):
+             if repourl.startswith("file://"):
+                 repourl =3D repourl[7:]
+             clone_cmd =3D "LANG=3DC %s clone --bare --mirror %s %s --progr=
+ess" % (ud.basecmd, shlex.quote(repourl), ud.clonedir)
++            if ud.reference:
++                clone_cmd +=3D " --reference-if-able %s --dissociate" % sh=
+lex.quote(ud.reference)
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, clone_cmd, ud.url)
+             progresshandler =3D GitProgressHandler(d)
 --=20
-2.17.1
+2.23.0
 
