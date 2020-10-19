@@ -1,206 +1,128 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
- by mx.groups.io with SMTP id smtpd.web12.11176.1603107478485118608
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.96])
+ by mx.groups.io with SMTP id smtpd.web10.11820.1603109523272659888
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 19 Oct 2020 04:37:58 -0700
+ Mon, 19 Oct 2020 05:12:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZmNIKZfH;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.65, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f65.google.com with SMTP id 13so9966827wmf.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 19 Oct 2020 04:37:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=q7tI01hTxnZntZpayt3FC+nN44Hz65MzuyM5LxQQOmU=;
-        b=ZmNIKZfHaBD8rqfu/2qAJmA5m4fONZSTL1EZGIISAzh6d6zvbsMxi+56LcToGWNiUi
-         +4YTJbjU3sNqgDZiPQupPrx+3X5mkK8hP0oXFC94JxCekLzXksW1Ay98DWslTQglm07B
-         3NpzwRHqK36pS3v0DZAJH0a8O1Qjlj0+ha8xQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=q7tI01hTxnZntZpayt3FC+nN44Hz65MzuyM5LxQQOmU=;
-        b=svh+jQ+6LRBJDYkggAcsdz/nljPVop7uNxXqQ1S8LplLN6wQw9LcHipgWTqElYT2W1
-         unGQ81sYp3mp2SMZA8JDTvLWrdHZuj4fCfmcF6UHYUwhn86lANFlAAbyUZSuusGmlkFw
-         rM9OzmLmMKNtRfz2YGhv6WgUGJ3HyZF+AZ8wDgWw5jpxb7gSG3TRzxKRdsCLO/heqKUp
-         PN8OGOennfosWmnd74NiItPoSkmLn9gJP5gnMur0HpdUiixdr7n3F8YlecKhznwepLXm
-         ctOapQE9375wahEv8SQdy1B42f9GX9maiB/6E3eRMNaf+e/F5HmEsqGrFM+hLwTa6Oxj
-         G9+w==
-X-Gm-Message-State: AOAM533MHIDcNlAjCi0rJYNrwilW9w9EcwBijWO0cip27UHLdFjzX8wp
-	9VmRXNybW1Kl+4h1FemqaR/yYA==
-X-Google-Smtp-Source: ABdhPJwAggIsREFZ2KRZ1udPOuuijbykpLumdFexA7QW7xez04SdhD1Sho2rpPA4Tr5Kcp2whEIOcw==
-X-Received: by 2002:a05:600c:228a:: with SMTP id 10mr17238555wmf.123.1603107476876;
-        Mon, 19 Oct 2020 04:37:56 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from e.c.4.c.b.d.d.d.d.1.e.7.a.1.c.1.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (e.c.4.c.b.d.d.d.d.1.e.7.a.1.c.1.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:1c1a:7e1d:dddb:c4ce])
-        by smtp.gmail.com with ESMTPSA id 10sm15743719wmn.9.2020.10.19.04.37.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2020 04:37:56 -0700 (PDT)
-Message-ID: <0b4b27c9446be03e2bc6f9df61345b34bafc8721.camel@linuxfoundation.org>
+ dkim=pass header.i=@prevas.dk header.s=selector1 header.b=iO/ByHfO;
+ spf=pass (domain: prevas.dk, ip: 40.107.6.96, mailfrom: rasmus.villemoes@prevas.dk)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dz3Av7YRTYpqbn3R5v8P9AV8I/LyPtJzS2BmL6U/g0yQ8FmSIuyKWk+Y9J+GB/N0hhrXsssz3OZOIPQLHW0KolTNX4GvDZh9vrHX/KlYbYrx9otThtlMO8/7jQ9VHWXt0AS9rHpH1yfDhK6hq13eJs40/hyXNGXuB57k2rbDtJZ6lGv5CcqDylLgQl/uzVYsoiB+BNmJ4N1RSOckHEgU2FkwZqEPcJGB0DIDzAoKI8/fg6H/M/zSgrvS2ezujdPzEEljdF36nBbGcK1U0fMAzoYEjvPnZn2qjZIWdvNkbMohTWIV/zE06Z06dd9e4lUZwkjRyNOoM7eO8gUgnPubAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K1ssLD8x+Mhw92ygdKKsYJ0yR1U4ZoOlXj95CgO9FZc=;
+ b=f77zEXEWAsT7t83rR+bv2gAzSMxRD8zMM9sFWnfYP8CbT67yw6eF335pG0z3+vu5KUJsM758u6NgSBCLrvghh6EnH1ZEjUqDCp8WRDhkbgqf34P+iiNfDMjfZXhreqIbkOdTnm97iCxpeZQmf1gGihZmWkYfDkudpridOORnsutLKuZo/m4+wuCYhCjbllXTmCQ5oKJ3kEwzzPf7JosczdExzgpPX9iDG33/eHvn3kqRVe/1vA4m3eDXOsDzyBHsRLTEd3zemhFo883dDZ/G77CTkNKKT5nv3vh3/ILN90qcTBReISZOIjP+fzXDQUDbbaa+fGQGYqaFos+YQzn/cA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K1ssLD8x+Mhw92ygdKKsYJ0yR1U4ZoOlXj95CgO9FZc=;
+ b=iO/ByHfOQVGvKanUw+MpBYBi+WATqNIa6uxfdmtRxJsy5eaYqrA5NGdaiXTjavldOlo//30taZJSJl6E6SWUT2vyow1yRxQQZVaRZsd7JOuKEE6IAdM/zfZ6lKsGNbCo7awltuZJBqbx49zCdvc44pwQUhTTuNahUfu1TgKEBNg=
+Authentication-Results: lists.openembedded.org; dkim=none (message not signed)
+ header.d=none;lists.openembedded.org; dmarc=none action=none
+ header.from=prevas.dk;
+Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:3f::10)
+ by AM0PR10MB2355.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:d4::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.28; Mon, 19 Oct
+ 2020 12:12:00 +0000
+Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9dc3:9785:dc4e:ad62]) by AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9dc3:9785:dc4e:ad62%6]) with mapi id 15.20.3477.028; Mon, 19 Oct 2020
+ 12:12:00 +0000
 Subject: Re: [PATCH] fetch: git: add reference parameter
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>, 
-	bitbake-devel@lists.openembedded.org
-Date: Mon, 19 Oct 2020 12:37:55 +0100
-In-Reply-To: <194b0b91-dad8-e355-b290-e27141995d6b@prevas.dk>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+ bitbake-devel@lists.openembedded.org
 References: <20201018213352.32692-1-rasmus.villemoes@prevas.dk>
-	 <5654d90cef29064a898f279d73c6deb6f6f91052.camel@linuxfoundation.org>
-	 <419c5a91-a38b-5b87-31c9-b1dc72adf1be@prevas.dk>
-	 <5db6530fb6bf4bb39c9e5bbe4b44e57fb30c02e9.camel@linuxfoundation.org>
-	 <194b0b91-dad8-e355-b290-e27141995d6b@prevas.dk>
-User-Agent: Evolution 3.36.4-0ubuntu1 
+ <5654d90cef29064a898f279d73c6deb6f6f91052.camel@linuxfoundation.org>
+ <419c5a91-a38b-5b87-31c9-b1dc72adf1be@prevas.dk>
+ <5db6530fb6bf4bb39c9e5bbe4b44e57fb30c02e9.camel@linuxfoundation.org>
+ <194b0b91-dad8-e355-b290-e27141995d6b@prevas.dk>
+ <0b4b27c9446be03e2bc6f9df61345b34bafc8721.camel@linuxfoundation.org>
+From: "Rasmus Villemoes" <rasmus.villemoes@prevas.dk>
+Message-ID: <7190c343-b802-8f3d-4e38-7441a917ff0b@prevas.dk>
+Date: Mon, 19 Oct 2020 14:11:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <0b4b27c9446be03e2bc6f9df61345b34bafc8721.camel@linuxfoundation.org>
+X-Originating-IP: [81.216.59.226]
+X-ClientProxiedBy: AM3PR05CA0090.eurprd05.prod.outlook.com
+ (2603:10a6:207:1::16) To AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:3f::10)
+Return-Path: rasmus.villemoes@prevas.dk
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.16.11.132] (81.216.59.226) by AM3PR05CA0090.eurprd05.prod.outlook.com (2603:10a6:207:1::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.27 via Frontend Transport; Mon, 19 Oct 2020 12:12:00 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5818cd5a-d7b1-478e-a2eb-08d874282ec6
+X-MS-TrafficTypeDiagnostic: AM0PR10MB2355:
+X-Microsoft-Antispam-PRVS: 
+	<AM0PR10MB23555694FAE3EC4AA76074F8931E0@AM0PR10MB2355.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	jdM+pQHgeUmCpc6ZKtDiZXCj0l6dTS4n9/o4vAYsCoGK+jQdrzHlN2enpht7Aeaut8qvoAack/jSjqaSOCj1oHd/GBxYe425fxf0GgHm+vGVurwvIjn3GW0ttbmgljkQqH1Wfu6f4V1KEGlype6qRofHCK1wDIc8cXylJMtu8GEmMqVnrCAfb6yUBRgXcjAF9Uyj7SS5fJO7j2rr4qjODgezsTVqKzm6wiWCHBxoy62AH1+Y8+UG3Q35lrq5EsOshMpKXQLa+VtUnirUbt6aM80IB2NnEpNw5oS+CfKWjddEKR5sScs/OKXyknyx2lSN8b1Qmpy1qBC61zAUaqjAoJjSyBzE/3wk16hk3BB4D+vUv/5+z0tseWolcSfuPLBP
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(396003)(136003)(366004)(376002)(346002)(39850400004)(4001150100001)(66946007)(66476007)(66556008)(31696002)(16576012)(44832011)(2906002)(6486002)(86362001)(316002)(52116002)(478600001)(5660300002)(2616005)(956004)(26005)(186003)(16526019)(8936002)(31686004)(36756003)(8676002)(8976002)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 
+	KsIJ++eX+CHaufxIuTCZG9n9wm3aGabWYIlJ0gJ0Gqy1vRgMs0SJLsMpowh1yIXcAIxGalnqHYbbvz8tot9wu1HlB9WPu5yq48HB335QU53km5bJzB49ArP54OiPdlKvNwZEpdi/OYD+PEnvrA2ysdgDMymTylKDelCkfhMzmTXUqEveUSPyAvR8lo8YYcNsh6Yx0MJGWLk8ICamuaBt/hMSJA1/l4VSFqMR41TBotpjSdRBcB0XARMnyw2luhAp5fkEEkgJfRGS158AqlQEyKWzPaNgYKr9cYCoFAcdTvgT9dLgJpFAo1Z5OGBxBL51C0VbNuK2samJ8R2/rEWyIRo3NYdLH2xURuyUBR2+YKnc4als3UxWvB2La2sqjCJrcCX/hT025HfTuXrmMXw/Imy4yvF9z9Aq5HezRKmlD2ldxskhdiy2ogdxNUMFl/cddLyC7l8UT8rQMfM3r12F42dmS7j1UhRvCPky5nIRVJEPsiAPHixwBhSN7FmSsNU5Mq8aoumSnjzRazE2/8+zDFwKzV3lcl/HYXAY/uMRfjGSQ8qygBvX0xQNk2gdbMBqRH9iPDhIwtVbmSDdC9yYUsOQAC79MJz03aY3hfd6vQ1x9gDt9If4pRnwolcl1rkRelzAXMSG5Wa/IlzNMy/vXw==
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5818cd5a-d7b1-478e-a2eb-08d874282ec6
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2020 12:12:00.6558
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /aqnc9YfigrmuyB7IXTWY04+P9+LmBug22Foz7TZQZNQ0/hu5j9dEhGGvbKVDP06mFGthAJM8DyxDUkWCXPM0Uj/sPL5Tp+vWmqqBgu8gUw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2355
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 
-On Mon, 2020-10-19 at 13:25 +0200, Rasmus Villemoes wrote:
-> On 19/10/2020 12.43, Richard Purdie wrote:
-> > On Mon, 2020-10-19 at 12:25 +0200, Rasmus Villemoes wrote:
-> > > On 19/10/2020 11.09, Richard Purdie wrote:
-> > > > On Sun, 2020-10-18 at 23:33 +0200, Rasmus Villemoes wrote:
-> > > > > The --reference(-if-able) option to git clone can
-> > > > > significantly
-> > > > > speed
-> > > > > up the initial do_fetch if one is able to point git at a
-> > > > > local
-> > > > > repository containing a large number of the objects that
-> > > > > would
-> > > > > otherwise need to be downloaded.
-> > > > > 
-> > > > > Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> > > > > ---
-> > > > >  lib/bb/fetch2/git.py | 11 +++++++++++
-> > > > >  1 file changed, 11 insertions(+)
-> > > > 
-> > > > Whilst I can see why this is useful, it is going to end up
-> > > > causing
-> > > > problems when you share that recipe using this term with others
-> > > > :(.
-> > > > I
-> > > > don't think we should add API which will cause scaling issues
-> > > > end
-> > > > "encourage" behaviour which leads to problems.
-> > > > 
-> > > > Clone by reference also causes problems for the archiver.
-> > > 
-> > > How? Note that I unconditionally add the --dissociate, so that
-> > > after
-> > > the download, there's absolutely no link between the referenced
-> > > and
-> > > the cloned repository. Also, I use the -if-able variant which
-> > > will
-> > > just silently ignore the given repo if it cannot be used (often,
-> > > because it doesn't exist). So I don't think the presence of
-> > > absence
-> > > of ;reference= can ever affect the correctness or end result. But
-> > > see
-> > > below;
-> > 
-> > Ok, I'd missed that dissociate was available. I think that is new
-> > since
-> > the last time I looked at this (its been a while) and that helps
-> > simplify things.
+On 19/10/2020 13.37, Richard Purdie wrote:
+> On Mon, 2020-10-19 at 13:25 +0200, Rasmus Villemoes wrote:
+
+>> I'll have to respin for the git version issue anyway I think, so what
+>> do you prefer?
 > 
-> Well, yes, I glossed over the git version requirements. --dissociate
-> is from v2.3 (Feb 2015, fb1d6dab), while the -if-able variant
-> requires 2.11
-> (Nov 2016, f7415b4d711). It would probably be nice if this was all
-> just
-> silently ignored when git is too old. Do we have some way to get the
-> git
-> version? I suppose a simple "git --version" subprocess isn't really
-> that
-> costly given that we're about to spawn a "git clone" anyway. And we'd
-> only have to do it in the case where a reference is actually given.
-> But
-> then, since the developer must have opted in by providing some path
-> (through whichever means we can agree on), perhaps the documentation
-> should just mention that requirement.
-
-sanity.bbclass documents the current minimum git version as 1.8.3.1.
-
-We could make the check conditional upon whether
-BBFETCH_GIT_REFERENCEDIR is set (see below).
-
-> Competely agreed, and I oversimplified. I'd expect the
-> LINUX_SRC_URI_REF
-> to have a vardepvalue of "". But yeah, it's easy to forget to add
-> that.
-
-I think we can do something simpler.
-
->  My counter-proposal of an
-> > identifier in SRC_URI like ";reference=linux-kernel" won't cause a
-> > problem with checksums.
+> How about we just have the user set:
 > 
-> Perhaps, but where would you get the information on what linux-kernel
-> should result in? I guess one could have the user set
+> BBFETCH_GIT_REFERENCEDIR = "${DL_DIR}/git-reference-mirrors/"
 > 
-> SRC_URI_GIT_REFERENCE[linux-kernel] = "/some/path"
+> and then unconditionally mark up recipes with:
 > 
-> and then in urldata_init() do d.getVarFlag() to get the path. With
-> SRC_URI_GIT_REFERENCE having whatever appropriate magic necessary to
-> avoid its flags affecting checksums.
+> ;reference=linux-kernel
 > 
-> But, do we even need that indirection through a keyword? What if
-> bitbake.conf (or whatever more appropriate place there might be) grew
-> a
+> then the fetcher code looks in ${BBFETCH_GIT_REFERENCEDIR}/<reference>
+> for reference clones if and only if BBFETCH_GIT_REFERENCEDIR is set?
+
+Works for me, as long as there's no requirement that
+BBFETCH_GIT_REFERENCEDIR is located below DL_DIR (but I assume that was
+just an example). In fact, at least for our CI setup (where everything
+runs in docker containers and we map in appropriate host dirs), setting
+up that directory is rather easy, adding
+
+  -v /hosts/linux-repo:/git-refs/linux-kernel:ro
+
+to the docker run command and set BBFETCH_GIT_REFERENCEDIR = "/git-refs".
+
+But, uh, how does this avoid the checksum/sstate issue?
+BBFETCH_GIT_REFERENCEDIR will need to be exempt somehow, right? I mean,
+I do want to be able to use sstate artifacts generated by our CI, but
+not setting up BBFETCH_GIT_REFERENCEDIR (at least not necessarily
+setting it up in exactly the same way).
+
+> This avoids all the messing with vardeps, keeps the SRC_URIs simple and
+> should generally be much more usable/scalable?
 > 
-> SRC_URI_GIT_REFERENCE ?= ""
-> SRC_URI_GIT_REFERENCE[vardepvalue] = ""
-> 
-> Recipes where one wants to support this could then just be written
-> 
->   SRC_URI +=
-> "git://:some.where/foo/bar;protocol=https;reference=${SRC_URI_GIT_REF
-> ERENCE}"
-> 
-> [an empty reference= parameter is equivalent to none at all],
-> and the way for a developer to opt-in and specify a reference would
-> be
-> the usual pn overrides
-> 
-> SRC_URI_GIT_REFERENCE_pn-the-kernel-recipe = "/my/local/path"
-> 
-> ?
-> 
-> > As I said, I totally understand the need/usage. I just don't think
-> > the
-> > implementation can be merged as is for various reasons, we need
-> > something more generic. I've tried to give some hints on a better
-> > "interface" which would allow something to be merged.
-> 
-> I can certainly try doing it with the keyword approach, but could you
-> put a few more words on what you were thinking? I.e., am I right
-> about
-> how you thought the path should be stored and retrieved?
-> 
-> I'll have to respin for the git version issue anyway I think, so what
-> do you prefer?
+> If BBFETCH_GIT_REFERENCEDIR is set, we'd also probably want to make
+> successful clones push references into that directory to cache them?
 
-How about we just have the user set:
+Absolutely not, the referenced repository is not to be modified in any way.
 
-BBFETCH_GIT_REFERENCEDIR = "${DL_DIR}/git-reference-mirrors/"
-
-and then unconditionally mark up recipes with:
-
-;reference=linux-kernel
-
-then the fetcher code looks in ${BBFETCH_GIT_REFERENCEDIR}/<reference>
-for reference clones if and only if BBFETCH_GIT_REFERENCEDIR is set?
-
-This avoids all the messing with vardeps, keeps the SRC_URIs simple and
-should generally be much more usable/scalable?
-
-If BBFETCH_GIT_REFERENCEDIR is set, we'd also probably want to make
-successful clones push references into that directory to cache them?
-
-In general you'd set this globally but if you do really need do
-something specific to a recipe, a recipe specific override would also
-happen to work.
-
-Cheers,
-
-Richard
-
-
+Rasmus
