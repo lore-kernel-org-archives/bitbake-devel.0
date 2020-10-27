@@ -1,69 +1,74 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.web08.4967.1603749987936464902
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+ by mx.groups.io with SMTP id smtpd.web12.9364.1603773405152054306
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 26 Oct 2020 15:06:28 -0700
+ Mon, 26 Oct 2020 21:36:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Uk1h5O8A;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f43.google.com with SMTP id n6so14620005wrm.13
-        for <bitbake-devel@lists.openembedded.org>; Mon, 26 Oct 2020 15:06:27 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=sCWkfdLd;
+ spf=pass (domain: gmail.com, ip: 209.85.222.179, mailfrom: maxime.roussinbelanger@gmail.com)
+Received: by mail-qk1-f179.google.com with SMTP id x20so134324qkn.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 26 Oct 2020 21:36:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=x8mWAbKth21RiAkR69KfIUwu/SqypdZZkqLza0HvIaE=;
-        b=Uk1h5O8ADTfhzJS9yjf9ilGhyl0Ou/JyuVeoEQ1z3qqERsCphyEGLNULpP+qyMPilV
-         N4tGAeZQrb2tiK6UqBGlFdHV2U0xLuZ47jHwHpejvJZd3e7P+nauggSL0SOEY1UwLNbX
-         WpK1iDZBaMhyYsXjsIobijFRFyPE7hlQw5+uk=
+        bh=0fSRmZ9XzNKJmS3Dao6rcJeDut/jNB9RUQqvzbbjJeY=;
+        b=sCWkfdLdCdtavljOLjCN05noYszxAmVsqs8QFIG9F3NuCwPMA0bwMIWf3S4nLsldNy
+         XjKXk97o+sHBfHPYjTnLaCY4fuFMU5wjTrdNQ4HEmwzzxLVp8ZM5nGIZ01eBX2jNzLJ9
+         gHA9ZeNb4MYhk082XKdsFWFFiBDKNTemJSNWqJ/Bc3ONKIVR+0FBFWwtgk1VAcfRh3ZH
+         CLbXPO1uVXZyJtXZGQWyw8DL2sCOJrMu/XjI8TEWk/TIpCgeP0fzTELyMc0vsqlzvz1s
+         DxQWizY82VR/uGoZa+u6ROVLQPglgnM7KA3D5ohBNKYj8TV7Eif5n/AdFtxDcLAUSR3W
+         C6Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=x8mWAbKth21RiAkR69KfIUwu/SqypdZZkqLza0HvIaE=;
-        b=E7q0N7zZqPS9gOIHnpwjJZLJJkK0kL1PSrV2RqABAjehBfOu9n1gL3zIdlODxEG8qe
-         I+tTrQ3TMT3kKdGj7BLl/xxFbf09w2uXexj1h1mGgIXO1gINvUp4iqtIhktEjoP7h5lg
-         VK1tVfgLXn8d/DJLZC9I46l37Vsm+I8bnkCd165ZoCfVhqhL7BYACLBPcAIodTPnCJQe
-         jUQQTjkT9kPNcAHKazTKBkDYsMaakxz8gRBfmHYi98xGM4/kXzgl4cdB8yOlDfB2WNxH
-         xEBXzSvr7Cl9FyvjR21AHu5Q99h+IlR/nfdmNl4UxDr1bjDLrloDNZjnRHduCYWJMMjL
-         7Jkw==
-X-Gm-Message-State: AOAM533xBM+gbNjTPT/ymU5+z2S175nG1itM+K+oNMrB3rWQsVaKhvNq
-	qYW/l3UZBkufnY5uYDSq09jJRCNAC2OXaQ==
-X-Google-Smtp-Source: ABdhPJyXzzFwvtGK2z7/qeiFK0ZUddrDAazsUIYI2eC78PKSenuFi4mHVFfHPGcpJ7h0ZihrMb1PIg==
-X-Received: by 2002:adf:82e5:: with SMTP id 92mr19343685wrc.192.1603749986290;
-        Mon, 26 Oct 2020 15:06:26 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net (d.0.2.3.2.a.1.a.7.6.b.c.7.6.8.1.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:1867:cb67:a1a2:320d])
-        by smtp.gmail.com with ESMTPSA id y10sm24754505wrq.73.2020.10.26.15.06.25
-        for <bitbake-devel@lists.openembedded.org>
+        bh=0fSRmZ9XzNKJmS3Dao6rcJeDut/jNB9RUQqvzbbjJeY=;
+        b=UpiKTsmLoxN4+IgjFJJ96+JcyaA4dGx/ShExWMj12eKTp9pRVIYKPUq7LSAWR5kKln
+         9JEgjqvq8p54I+rrNplxbtSP1K4yTV7Rb+W3ELOitj8zZDf4ysviXAl6A41/b5wFW4E0
+         FDKDjQoJx1JeYEGE/vxXxBqisrVtTvChsMhqWQmzR6zU6XVmegeSRHwa8JNDxYmqRua5
+         Ikd30KBUNSXZc7RzPTfEJC8l6/feB4i89aSU7tscILwhs5h+UlCafWHBPenIoxe4UF2o
+         aE7YyK3s1N6pT3XEwoS5b6M70RNF1mnyqY2Aet+uCQZRY/blJneF7urxmVewMGK9AGg9
+         /RWg==
+X-Gm-Message-State: AOAM532wQo8u029TfoBRB9BdFQXV0QEVd7vrXRdknA1ny3lf3aBQijVM
+	LXMH7OnuyGlBGfDQWO7znV4PJYxEqaA=
+X-Google-Smtp-Source: ABdhPJwVzck/3+BT03SQQ6/jefL+7kcBF3wPkEx8NFwElYRFPJ+cjtkDS8Bondj/JWD1fKNj2bMTbQ==
+X-Received: by 2002:a37:b5c4:: with SMTP id e187mr397138qkf.253.1603773403997;
+        Mon, 26 Oct 2020 21:36:43 -0700 (PDT)
+Return-Path: <maxime.roussinbelanger@gmail.com>
+Received: from mbedesk.sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
+        by smtp.gmail.com with ESMTPSA id o2sm110158qkk.121.2020.10.26.21.36.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2020 15:06:25 -0700 (PDT)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+        Mon, 26 Oct 2020 21:36:43 -0700 (PDT)
+From: =?UTF-8?B?TWF4aW1lIFJvdXNzaW4tQsOpbGFuZ2Vy?= <maxime.roussinbelanger@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] tests/fetch: Update upstream master->main branchname transition
-Date: Mon, 26 Oct 2020 22:06:25 +0000
-Message-Id: <20201026220625.112834-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
+Cc: =?UTF-8?q?Maxime=20Roussin-B=C3=A9langer?= <maxime.roussinbelanger@gmail.com>
+Subject: [PATCH 1/2] bitbake: cache: remove unused variables.
+Date: Tue, 27 Oct 2020 00:36:39 -0400
+Message-Id: <20201027043640.12167-1-maxime.roussinbelanger@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
 ---
- lib/bb/tests/fetch.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/cache.py | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 5a4db9ca4c..da17d7f281 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -923,7 +923,7 @@ class FetcherNetworkTest(FetcherTest):
-     def test_git_submodule_dbus_broker(self):
-         # The following external repositories have show failures in fetch and unpack operations
-         # We want to avoid regressions!
--        url = "gitsm://github.com/bus1/dbus-broker;protocol=git;rev=fc874afa0992d0c75ec25acb43d344679f0ee7d2"
-+        url = "gitsm://github.com/bus1/dbus-broker;protocol=git;rev=fc874afa0992d0c75ec25acb43d344679f0ee7d2;branch=main"
-         fetcher = bb.fetch.Fetch([url], self.d)
-         fetcher.download()
-         # Previous cwd has been deleted
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index 9e0c931a07..ebb2422496 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -449,9 +449,7 @@ class Cache(NoCache):
+         return cachesize
+ 
+     def load_cachefile(self, progress):
+-        cachesize = self.cachesize()
+         previous_progress = 0
+-        previous_percent = 0
+ 
+         for cache_class in self.caches_array:
+             cachefile = self.getCacheFile(cache_class.cachefile)
 -- 
-2.25.1
+2.28.0
 
