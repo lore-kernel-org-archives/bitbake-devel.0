@@ -1,74 +1,84 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
- by mx.groups.io with SMTP id smtpd.web12.9364.1603773405152054306
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.web08.9184.1603773408121176028
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 26 Oct 2020 21:36:45 -0700
+ Mon, 26 Oct 2020 21:36:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=sCWkfdLd;
- spf=pass (domain: gmail.com, ip: 209.85.222.179, mailfrom: maxime.roussinbelanger@gmail.com)
-Received: by mail-qk1-f179.google.com with SMTP id x20so134324qkn.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 26 Oct 2020 21:36:45 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=WXROCHGd;
+ spf=pass (domain: gmail.com, ip: 209.85.219.41, mailfrom: maxime.roussinbelanger@gmail.com)
+Received: by mail-qv1-f41.google.com with SMTP id 63so111195qva.7
+        for <bitbake-devel@lists.openembedded.org>; Mon, 26 Oct 2020 21:36:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0fSRmZ9XzNKJmS3Dao6rcJeDut/jNB9RUQqvzbbjJeY=;
-        b=sCWkfdLdCdtavljOLjCN05noYszxAmVsqs8QFIG9F3NuCwPMA0bwMIWf3S4nLsldNy
-         XjKXk97o+sHBfHPYjTnLaCY4fuFMU5wjTrdNQ4HEmwzzxLVp8ZM5nGIZ01eBX2jNzLJ9
-         gHA9ZeNb4MYhk082XKdsFWFFiBDKNTemJSNWqJ/Bc3ONKIVR+0FBFWwtgk1VAcfRh3ZH
-         CLbXPO1uVXZyJtXZGQWyw8DL2sCOJrMu/XjI8TEWk/TIpCgeP0fzTELyMc0vsqlzvz1s
-         DxQWizY82VR/uGoZa+u6ROVLQPglgnM7KA3D5ohBNKYj8TV7Eif5n/AdFtxDcLAUSR3W
-         C6Wg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/LhItoFNTu0Jwexaexo+xyiS35TPga3MAUCGm25+NII=;
+        b=WXROCHGdBSa4G/tTEfImEQNYxye9pPzOOcxrK7/c6dOAmN0oe3nn/YLdjgCSnSkG9Z
+         sWDuWG+TQhvMRJAL4eCtAZHJO/PBe0QOKEGLoTQ3+fhWH0c8IUzG7RWdA6FPJmC2q1WY
+         tdYkkEF7KJthBcF1JEOAY2re9dyQEGOlD2IW17odm918MRrz0l5bOqhcKU3+hORcRqOk
+         h6OMqwwGZAApK2XJp64xknTM8Yr4LN2Fl7o5SQXesJHINfLTkInlAQXkhKPKbDpnPGnc
+         geRnnLS+oOoPKs+prclDvrxr1UVnO4gPIeVNUvG4X42YYacFA/kHy812uh4kf/euuZqh
+         nEsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0fSRmZ9XzNKJmS3Dao6rcJeDut/jNB9RUQqvzbbjJeY=;
-        b=UpiKTsmLoxN4+IgjFJJ96+JcyaA4dGx/ShExWMj12eKTp9pRVIYKPUq7LSAWR5kKln
-         9JEgjqvq8p54I+rrNplxbtSP1K4yTV7Rb+W3ELOitj8zZDf4ysviXAl6A41/b5wFW4E0
-         FDKDjQoJx1JeYEGE/vxXxBqisrVtTvChsMhqWQmzR6zU6XVmegeSRHwa8JNDxYmqRua5
-         Ikd30KBUNSXZc7RzPTfEJC8l6/feB4i89aSU7tscILwhs5h+UlCafWHBPenIoxe4UF2o
-         aE7YyK3s1N6pT3XEwoS5b6M70RNF1mnyqY2Aet+uCQZRY/blJneF7urxmVewMGK9AGg9
-         /RWg==
-X-Gm-Message-State: AOAM532wQo8u029TfoBRB9BdFQXV0QEVd7vrXRdknA1ny3lf3aBQijVM
-	LXMH7OnuyGlBGfDQWO7znV4PJYxEqaA=
-X-Google-Smtp-Source: ABdhPJwVzck/3+BT03SQQ6/jefL+7kcBF3wPkEx8NFwElYRFPJ+cjtkDS8Bondj/JWD1fKNj2bMTbQ==
-X-Received: by 2002:a37:b5c4:: with SMTP id e187mr397138qkf.253.1603773403997;
-        Mon, 26 Oct 2020 21:36:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/LhItoFNTu0Jwexaexo+xyiS35TPga3MAUCGm25+NII=;
+        b=Qmxskh79kkdLP3LGS2UkSkABNdqSGUpUuKQd2g0FpgKF+Mx6R0FeX1FUNYmjSUy0Jh
+         Ud/hd9fG5p0IQvSfQ7mIzuAlnCm8MkvB4RBtD748Vx/12b67Tth8rpa84wGcCYWqPuKF
+         2wJKnjUdJTm8A5sf2DLbgD2MMCXQEH1yeKwS+p8cSXGZl6kRtMype6K+55+h7TAuG0/0
+         y5D5SgTG63AKSkymsvxxLyh5XELTQsA4jSyKdQk7tk1fKiZ3RYPsQS0lHQUNoDxkdqVf
+         zTNCL8W++jL6ebtZbNjveMXUmgnfFnwC7wB++yu9ZFBZOctNk+/1w/SGyLWRYBXiUByt
+         s8Lw==
+X-Gm-Message-State: AOAM53068gpAfj5mrrhOwC3VUj/jRiE+FsfCqC7su95dN1ohGqPHyyZo
+	CzyTqovBZ+E94yPNmfOQKzwjIuF4hvs=
+X-Google-Smtp-Source: ABdhPJyh7l57/oOgiiPwdFevIVYa0eG4d2NMbqkCElWO+quv42E1v1yMpHVgXRdUvD9+PGlvGUhB2A==
+X-Received: by 2002:a0c:9e53:: with SMTP id z19mr511138qve.23.1603773406982;
+        Mon, 26 Oct 2020 21:36:46 -0700 (PDT)
 Return-Path: <maxime.roussinbelanger@gmail.com>
 Received: from mbedesk.sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
-        by smtp.gmail.com with ESMTPSA id o2sm110158qkk.121.2020.10.26.21.36.43
+        by smtp.gmail.com with ESMTPSA id o2sm110158qkk.121.2020.10.26.21.36.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2020 21:36:43 -0700 (PDT)
+        Mon, 26 Oct 2020 21:36:46 -0700 (PDT)
 From: =?UTF-8?B?TWF4aW1lIFJvdXNzaW4tQsOpbGFuZ2Vy?= <maxime.roussinbelanger@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: =?UTF-8?q?Maxime=20Roussin-B=C3=A9langer?= <maxime.roussinbelanger@gmail.com>
-Subject: [PATCH 1/2] bitbake: cache: remove unused variables.
-Date: Tue, 27 Oct 2020 00:36:39 -0400
-Message-Id: <20201027043640.12167-1-maxime.roussinbelanger@gmail.com>
+Subject: [PATCH 2/2] bitbake: monitordisk: remove unused function parameter
+Date: Tue, 27 Oct 2020 00:36:40 -0400
+Message-Id: <20201027043640.12167-2-maxime.roussinbelanger@gmail.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201027043640.12167-1-maxime.roussinbelanger@gmail.com>
+References: <20201027043640.12167-1-maxime.roussinbelanger@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
 ---
- bitbake/lib/bb/cache.py | 2 --
- 1 file changed, 2 deletions(-)
+ bitbake/lib/bb/monitordisk.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index 9e0c931a07..ebb2422496 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -449,9 +449,7 @@ class Cache(NoCache):
-         return cachesize
+diff --git a/bitbake/lib/bb/monitordisk.py b/bitbake/lib/bb/monitordisk.py
+index e7c07264a8..98f2109ed2 100644
+--- a/bitbake/lib/bb/monitordisk.py
++++ b/bitbake/lib/bb/monitordisk.py
+@@ -59,7 +59,7 @@ def getMountedDev(path):
+         pass
+     return None
  
-     def load_cachefile(self, progress):
--        cachesize = self.cachesize()
-         previous_progress = 0
--        previous_percent = 0
+-def getDiskData(BBDirs, configuration):
++def getDiskData(BBDirs):
  
-         for cache_class in self.caches_array:
-             cachefile = self.getCacheFile(cache_class.cachefile)
+     """Prepare disk data for disk space monitor"""
+ 
+@@ -168,7 +168,7 @@ class diskMonitor:
+ 
+         BBDirs = configuration.getVar("BB_DISKMON_DIRS") or None
+         if BBDirs:
+-            self.devDict = getDiskData(BBDirs, configuration)
++            self.devDict = getDiskData(BBDirs)
+             if self.devDict:
+                 self.spaceInterval, self.inodeInterval = getInterval(configuration)
+                 if self.spaceInterval and self.inodeInterval:
 -- 
 2.28.0
 
