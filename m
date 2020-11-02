@@ -1,347 +1,106 @@
-Received: from IND01-MA1-obe.outbound.protection.outlook.com (IND01-MA1-obe.outbound.protection.outlook.com [40.107.138.112])
- by mx.groups.io with SMTP id smtpd.web09.28277.1604307125264946511
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (EUR04-HE1-obe.outbound.protection.outlook.com [40.107.7.75])
+ by mx.groups.io with SMTP id smtpd.web08.29066.1604312714053585638
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 02 Nov 2020 00:52:06 -0800
+ Mon, 02 Nov 2020 02:25:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@jasmin-infotech.com header.s=selector2 header.b=Qsr8Uwze;
- spf=permerror, err=parse error for token &{10 18 mail.jasmin-infotech.com}: permanent DNS error (domain: jasmin-infotech.com, ip: 40.107.138.112, mailfrom: daniel.selvan@jasmin-infotech.com)
+ dkim=fail reason="body hash did not verify" header.i=@technokrat.ch header.s=selector2 header.b=bpCIjI9x;
+ spf=pass (domain: technokrat.ch, ip: 40.107.7.75, mailfrom: ds@technokrat.ch)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eV6FxNNUivFxWSKPqHEDZcpQOeoCeavkwuD1NRsuRvHuqmgPHUxhq9KMsBP/jgkSXpUh5uAFOextuqogOaDOYqLiaMpmsEEtN/dsaGHUx0S+BPaRTLuMLQWv5tYJ2bVRwcZWTMxWxNnCP7fmD05i48Ra90wNOVMkxH3CRpSPwPT7bf1a40CDjd2X77WA88qPFoYplc9LeepBBBfPBXEay5pnM+hMoZbUV3BIew8wA70nRAAgS6EkJmSlW53n7zLzBpe++mCLqrwo9j867w1OYOiR/5HT3K4iwc0x1EXXea1tV7+hJMZis8OHr+tUXVhvugj2DMqJMmM5sKh3AbymKA==
+ b=DFRxPyazsvhAazOXo446Q00Q5WLsjvLjzv6CXZoaj0gLTZf5N30FxLMfBPI69NzBr8U3R5ycFdI1O+bTU+vqGba2PtfOCp6ijvS1S3bAH282h2gMisTpoOUIHFOxAijka1hw5P+9ka5KtXEJrWhTZ0Ff76mjQHKjeVMY4KdRc2W71kVB9k+yfJ1Xb13EOQdBY9yHG/dFTmk9q3dEEue1dJjh6mrXCKfLJ+2Ne+j3/wJFkfvvd29Kyj+mBvXYSJv3slKdiy/UJGBPMQT8um34Beud3aQ7Lk0bu4pXE3+6D2pzde+wiVgTOqbgY/yOwDqGPtu0h0ONt8L5qf0c0/mMBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3FloiNvc0mAOfy88ZyWrMszPmUEjr5xkr59oUr2Rp1w=;
- b=Uleso99Txl/7w3G/VKSwThPCthPgXCGU0k/OzaoUGoACSd/bOXoMNcn7SORrLsPyiOJdYs9cwcGYMsRWUWC2ONVc5X09GekUTgVMiYkddFaRUm28wo3k3lVAM78Dt2zH5ZXx/uhmMfK0gj2YVGndKcPnQd1DLUzTIuiyCxU3TlKp8q0yYPLYNGzxPIuwewb1PC5YnWRp0P05MgDoZ7EkoTgdwodQB0frKVDB/uA3wvYA+r7qFSrnKtl4uM8ZqtxbRCKtk/+/koJCTJLDk3WlCtlTsu+TbEbAKeWu9eylsPxRJeqfSa0VpPY8JBzagC+3LUmHFsgdcm/S3s3HnfvkvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=permerror (sender ip
- is 61.16.140.213) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=jasmin-infotech.com; dmarc=fail (p=none sp=none pct=100)
- action=none header.from=jasmin-infotech.com; dkim=none (message not signed);
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jasmin-infotech.com;
+ bh=4GRXiWef0bAV6ZbgHebBHuTOr3ajqR1Jf1iMb45jEmI=;
+ b=ksN9ZL6nJaJ2RuJTLrHwkJihAJWyRl6fUmR9wSslEfmnagfAmCM4FFB+MRhnlc7mKoHP/ocP04o91q7BtmWxUhpsZmGDaWhEDweu0bte11hrd9HhJgmgNUM2rERSpZY8ceKjSaPOXlIfZmZ/WbJ87VvoTxwKu1QZ4R6ONM6HsNlKm/rgUutobSHH35akmN7fBJTUMTfWFyAtGSlFMJj9L3fomqm/9lyHmqaHw0+88z9iKfBvThI53QpQTXxfynbwvE4Yuy1PMHmHg111423Rq1+UwfwdDXriP2YCvLDPza4cqd/pVCtsH39YPD6r54fZ2K9H4sE/RgqwZDVmoP8uWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=technokrat.ch; dmarc=pass action=none
+ header.from=technokrat.ch; dkim=pass header.d=technokrat.ch; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=technokrat.ch;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3FloiNvc0mAOfy88ZyWrMszPmUEjr5xkr59oUr2Rp1w=;
- b=Qsr8UwzeX11VoH1qsNHzfFmFcJf1rRxvdoRtRc6Ks5ACzI+EPWytCtfyycuZhgk6g32c5Ay5Jb6gG38W9nStW19YwaPqODc6v+WD9gZX4Nt2E5rmwb55s1dQk3+FwP2jRSdUITMek/t1GPVVvkCAIVU/CysdssXuhxZI1iROOBo=
-Received: from PN1PR0101CA0011.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:e::21)
- by MAXPR0101MB1210.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:1d::21) with
+ bh=4GRXiWef0bAV6ZbgHebBHuTOr3ajqR1Jf1iMb45jEmI=;
+ b=bpCIjI9xGeCqd+1rwuZns7ocFYTfDF1Zi+UP7L33OAEfEQiAQgpCAXjyFRpj1nkGZIv4nJZkd14OjrFw9/0lzocsVYR0LCI1kOPwlkJ2yVHuOTmyMZuzsmULKmW0BUvnyf9XYx9QPZK0CmmuUZ3BGhnBxYn1yG0DHerCPwJ+lpE=
+Authentication-Results: lists.openembedded.org; dkim=none (message not signed)
+ header.d=none;lists.openembedded.org; dmarc=none action=none
+ header.from=technokrat.ch;
+Received: from VI1PR05MB6941.eurprd05.prod.outlook.com (2603:10a6:800:18b::24)
+ by VI1PR0501MB2479.eurprd05.prod.outlook.com (2603:10a6:800:6b::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.28; Mon, 2 Nov
- 2020 08:52:01 +0000
-Received: from BO1IND01FT004.eop-IND01.prod.protection.outlook.com
- (2603:1096:c00:e:cafe::3c) by PN1PR0101CA0011.outlook.office365.com
- (2603:1096:c00:e::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend
- Transport; Mon, 2 Nov 2020 08:52:01 +0000
-X-MS-Exchange-Authentication-Results: spf=permerror (sender IP is
- 61.16.140.213) smtp.mailfrom=jasmin-infotech.com; lists.openembedded.org;
- dkim=none (message not signed) header.d=none;lists.openembedded.org;
- dmarc=fail action=none header.from=jasmin-infotech.com;
-Received-SPF: PermError (protection.outlook.com: domain of jasmin-infotech.com
- used an invalid SPF mechanism)
-Received: from mail.jasmin-infotech.com (61.16.140.213) by
- BO1IND01FT004.mail.protection.outlook.com (10.152.202.115) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3520.15 via Frontend Transport; Mon, 2 Nov 2020 08:51:59 +0000
-Received: from localhost (localhost [127.0.0.1])
-	by mail.jasmin-infotech.com (Postfix) with ESMTP id 7499514019BD;
-	Mon,  2 Nov 2020 14:21:26 +0530 (IST)
-Received: from mail.jasmin-infotech.com ([127.0.0.1])
-	by localhost (mail.jasmin-infotech.com [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id OCZ6iuRddlow; Mon,  2 Nov 2020 14:21:25 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.jasmin-infotech.com (Postfix) with ESMTP id 410BC14019BC;
-	Mon,  2 Nov 2020 14:21:25 +0530 (IST)
-X-Amavis-Modified: Mail body modified (using disclaimer) -
-	mail.jasmin-infotech.com
-X-Virus-Scanned: amavisd-new at jasmin-infotech.com
-Received: from mail.jasmin-infotech.com ([127.0.0.1])
-	by localhost (mail.jasmin-infotech.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id fIilHfCmojgE; Mon,  2 Nov 2020 14:21:25 +0530 (IST)
-Received: from mail.jasmin-infotech.com (mail.jasmin-infotech.com [172.16.4.153])
-	by mail.jasmin-infotech.com (Postfix) with ESMTP id 1D1FE14019B5;
-	Mon,  2 Nov 2020 14:21:25 +0530 (IST)
-Date: Mon, 2 Nov 2020 14:21:25 +0530 (IST)
-From: "Daniel Selvan" <daniel.selvan@jasmin-infotech.com>
-To: yocto <yocto@lists.yoctoproject.org>, bitbake-devel@lists.openembedded.org
-Message-ID: <204888768.121393313.1604307085037.JavaMail.zimbra@jasmin-infotech.com>
-Subject: How can I perform arithmetic operations in bitbake file?
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.29; Mon, 2 Nov
+ 2020 10:25:09 +0000
+Received: from VI1PR05MB6941.eurprd05.prod.outlook.com
+ ([fe80::394c:c4fb:7512:6240]) by VI1PR05MB6941.eurprd05.prod.outlook.com
+ ([fe80::394c:c4fb:7512:6240%5]) with mapi id 15.20.3499.030; Mon, 2 Nov 2020
+ 10:25:09 +0000
+From: ds@technokrat.ch
+To: bitbake-devel@lists.openembedded.org
+CC: Dominik Schmidt <ds@technokrat.ch>
+Subject: [PATCH] Append the password to the username on git URI reassembling.
+Date: Mon,  2 Nov 2020 11:24:52 +0100
+Message-ID: <20201102102452.777-1-ds@technokrat.ch>
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [212.51.148.26]
+X-ClientProxiedBy: ZR0P278CA0103.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:23::18) To VI1PR05MB6941.eurprd05.prod.outlook.com
+ (2603:10a6:800:18b::24)
+Return-Path: ds@technokrat.ch
 MIME-Version: 1.0
-X-Originating-IP: [49.207.131.149]
-X-Mailer: Zimbra 8.6.0_GA_1242 (ZimbraWebClient - GC86 (Linux)/8.6.0_GA_1242)
-Thread-Topic: How can I perform arithmetic operations in bitbake file?
-Thread-Index: OcHjHn8sxn9amDW02BeXiPBNpmraYw==
-Return-Path: daniel.selvan@jasmin-infotech.com
-X-EOPAttributedMessage: 0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from TKRT-DS-DESKTOP.tkrt (212.51.148.26) by ZR0P278CA0103.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:23::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend Transport; Mon, 2 Nov 2020 10:25:09 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2b1ad1b7-b144-4ec2-d0ac-08d87f0c8f86
-X-MS-TrafficTypeDiagnostic: MAXPR0101MB1210:
+X-MS-Office365-Filtering-Correlation-Id: b186e516-4115-405c-f28c-08d87f199340
+X-MS-TrafficTypeDiagnostic: VI1PR0501MB2479:
+X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<MAXPR0101MB12100D430D5FF1F62D0A44EEB8100@MAXPR0101MB1210.INDPRD01.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+	<VI1PR0501MB24793DF61F625CAFD8972EDCDF100@VI1PR0501MB2479.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:849;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	h6mGP60xO5VBKfwLt8G000u+ABeiDgrBKq84rOV8W2rRnZE5lzr5pZcmkExZqRG5gZLxC98YpIUAwJpZ0Rhk+PIciuer6iz5SLEJlESUh69HI/U4QgmMsl8qmHERsdonZQdpOPj4j0fU4UGx0yi1PIqpS0PWEivT2u0Y7xIXhUBc0Qx1VrWD10JaFJzDBPzYFJMOjCGhUj4yQTreKnSJRwUD1BtpCQPQfipqldjSGdVdyJrlsN8E4VH6c90+INCBWV7lRvX7eGbxvmEvyWoWAT2lbHqvxVT5mE2L0e7+UMeViamPmwWi8QXJHMRaaUbWuJJ4vKeuIJaLcfEbP5R/qFIyznN8+BldBB48XsT6SUtOtTMmzwnv4OoXL0T8VeIUjFjtiuwFN9W7NSaUL94Tcu1/QiBJtEM1YbCrzVCbGO/UNqmNhcd31jCnlnIVFNfaUNszeDQiT0aEl4c5Syi7cJxqFbx3Y/PDPIv67Y5c4hVO364FdHbVzXZq25DnLhm/
+	VViXUBXhRYJMp4oVJUL8HfSqSrIyZhJvakQAuu9Ri9pvJjS3dKIxsJxp3QjyT8NfbJePf7oyOQPPcLiSgVCM6QU9zdh1SUC1ZfQX0RBptkrrPxreON6r0sXcs6csuQFsABVcleFrfqAUwlAfZqxsMQa0iStrtU27UEbM9C+lhjhH4RXbLFlkKN3+q0tJW8V+Z3L7hQ5fyYc7qT/F+GsvUcYZqNZd974T48kAW5B2GMhPsVx6/0vWpFHHU8qJDwop8Sz3z578M9zp0pg+ab7ExW5TP3Wtk+EGsPzGqSjMVAeOOB93CPTIHr5IJFxbr4uc1LJTxgB4JTjF8+XWnidUig==
 X-Forefront-Antispam-Report: 
-	CIP:61.16.140.213;CTRY:IN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.jasmin-infotech.com;PTR:mail.jasmin-infotech.com;CAT:NONE;SFS:(396003)(39840400004)(376002)(136003)(346002)(46966005)(82310400003)(5660300002)(83380400001)(186003)(2906002)(316002)(26005)(33310700002)(2616005)(426003)(36906005)(8676002)(478600001)(36756003)(70586007)(966005)(55236004)(336012)(8936002)(70206006)(86362001)(6266002)(47076004)(7696005)(33964004)(166002)(7636003)(7066003)(356005)(7596003);DIR:OUT;SFP:1102;
-X-OriginatorOrg: jasmin-infotech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2020 08:51:59.6277
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB6941.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(39830400003)(136003)(376002)(346002)(396003)(366004)(186003)(6506007)(36756003)(956004)(4744005)(107886003)(478600001)(86362001)(5660300002)(2906002)(66476007)(66556008)(316002)(26005)(66946007)(4326008)(8936002)(1076003)(16526019)(2616005)(8676002)(6512007)(6916009)(8886007)(52116002)(6666004)(83380400001)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 
+	3jJFDMQQJzDgVwMxbjLgT+/CGQfk3y3t84Bsl8d98HdqZ0bsUk4sjC4fqLZIvyxyED1DKwAFJtwYuE47ZrE/KFK2Ip3+sgrdUHxPLNg5geH4eodD8EHmjcpmTqHRcRBkMHMfRr7HDGfEyiUmolNBeNvC3ikqjecBgHWQZVTHcjx6yzjzLjPdHw7qBZC2xyZd0jxYPtV3VVsNR4U7hf1h85KmFnqps4i9DVAeTZv8xwnzoj2ctDwCFRj2y0/w3nx61Ukuci4xOqjTKA96M9wQB2CP4swhnBOorlJ6nGQYi8pOKBUoMbLLibyagOJFDjv5T232XMR9hkwM4kHt69zXBWz77FRFRUzpD7r2Ooevz3HXLxw4/S9aGamDIJMFRSEyL2E2s5Hx64CeB5Zo6JW3AjfOf6aLjH4r4wU5meMG9w8sb6FDTpRmbsTB4+cN7bNzqB2+wHR2thNwBoFDJHBUZvQCjX3z3n1ngSkTP+Tx3VcKOBkQqLuAK2S9OvypYMSpxIYgmYvui/Z4OH+0+KgAaa4NIkwSP3Cx4hVabNSDaLq40RpHgv2IYavafi+hLCav2XPSiRhXkXon732WxvGCol3o6nlAn6pBtd9aYjlRBrCZjdVfPyqnfF7+vid1r6gN8WucA/m+cUVbTgApTIMoaA==
+X-OriginatorOrg: technokrat.ch
+X-MS-Exchange-CrossTenant-Network-Message-Id: b186e516-4115-405c-f28c-08d87f199340
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB6941.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2020 10:25:09.6582
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b1ad1b7-b144-4ec2-d0ac-08d87f0c8f86
-X-MS-Exchange-CrossTenant-Id: 5379b76d-5476-4c9f-a04c-fefa48abc331
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5379b76d-5476-4c9f-a04c-fefa48abc331;Ip=[61.16.140.213];Helo=[mail.jasmin-infotech.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	BO1IND01FT004.eop-IND01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAXPR0101MB1210
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_121393312_1169650705.1604307085037"
-
-------=_Part_121393312_1169650705.1604307085037
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-
-Hi, 
-
-
-
-Greetings of the day! 
-
-
-
-I would like to get the size of binary generated and pad it to the next number divisible by 0x10 in a .bbappend file. 
-
-
-    1. Can someone help me achieving this? 
-    2. How can I perform arithmetic operations in bitbake file? 
-
-I've raised this query in stackoverflow as well, have a look at it here: https://stackoverflow.com/q/64641596/10773894 
-
-Thanks in advance, 
-
-
-Daniel Selvan D. 
-
-
-Systems Engineer | Jasmin Infotech 
-
--- 
-
-
-P Please consider the environment before printing this email. 
-
-
-
-------=_Part_121393312_1169650705.1604307085037
-Content-Type: text/html; charset=utf-8
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 64080179-9a04-4263-af11-c40cf91ee504
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HdCpMqG0NEHurD6lwSfcHrrbg69l418dmj3iNIViDJ8FzP/IgwPpG1uzrDlPjHuxZKol5PJqll1pvDzBqBRgfQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2479
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-<html><body><div style=3D"font-family: times new roman,new york,times,serif=
-; font-size: 12pt; color: #000000"><div style=3D"color: #000000; font-famil=
-y: 'times new roman', 'new york', times, serif; font-size: 16px; font-style=
-: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-w=
-eight: 400; letter-spacing: normal; orphans: 2; text-indent: 0px; text-tran=
-sform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-tex=
-t-stroke-width: 0px; background-color: #ffffff; text-decoration-style: init=
-ial; text-decoration-color: initial; text-align: justify;" data-mce-style=
-=3D"color: #000000; font-family: 'times new roman', 'new york', times, seri=
-f; font-size: 16px; font-style: normal; font-variant-ligatures: normal; fon=
-t-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: =
-2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; =
-word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #fffff=
-f; text-decoration-style: initial; text-decoration-color: initial; text-ali=
-gn: justify;"><span style=3D"font-size: 13pt;" data-mce-style=3D"font-size:=
- 13pt;">Hi,</span></div><blockquote style=3D"color: #000000; font-family: '=
-times new roman', 'new york', times, serif; font-size: 16px; font-style: no=
-rmal; font-variant-ligatures: normal; font-variant-caps: normal; font-weigh=
-t: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent:=
- 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0=
-px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decorat=
-ion-style: initial; text-decoration-color: initial;" data-mce-style=3D"colo=
-r: #000000; font-family: 'times new roman', 'new york', times, serif; font-=
-size: 16px; font-style: normal; font-variant-ligatures: normal; font-varian=
-t-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-=
-align: start; text-indent: 0px; text-transform: none; white-space: normal; =
-widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-co=
-lor: #ffffff; text-decoration-style: initial; text-decoration-color: initia=
-l;"><div style=3D"text-align: justify;" data-mce-style=3D"text-align: justi=
-fy;"><span style=3D"font-size: 13pt; font-family: 'comic sans ms', 'comic s=
-ans', sans-serif;" data-mce-style=3D"font-size: 13pt; font-family: 'comic s=
-ans ms', 'comic sans', sans-serif;">Greetings of the day!</span></div></blo=
-ckquote><div style=3D"color: #000000; font-family: 'times new roman', 'new =
-york', times, serif; font-size: 16px; font-style: normal; font-variant-liga=
-tures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing:=
- normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: n=
-ormal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; backgr=
-ound-color: #ffffff; text-decoration-style: initial; text-decoration-color:=
- initial; text-align: justify;" data-mce-style=3D"color: #000000; font-fami=
-ly: 'times new roman', 'new york', times, serif; font-size: 16px; font-styl=
-e: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-=
-weight: 400; letter-spacing: normal; orphans: 2; text-indent: 0px; text-tra=
-nsform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-te=
-xt-stroke-width: 0px; background-color: #ffffff; text-decoration-style: ini=
-tial; text-decoration-color: initial; text-align: justify;"><span style=3D"=
-font-size: 13pt; font-family: garamond, 'new york', times, serif;" data-mce=
--style=3D"font-size: 13pt; font-family: garamond, 'new york', times, serif;=
-">I would like to get the size of&nbsp;binary generated and pad it to the n=
-ext number divisible by 0x10 in a<span>&nbsp;</span><span style=3D"font-fam=
-ily: 'lucida console', sans-serif;" data-mce-style=3D"font-family: 'lucida =
-console', sans-serif;">.bbappend</span><span>&nbsp;</span>file.</span><br><=
-/div><ol style=3D"color: #000000; font-family: 'times new roman', 'new york=
-', times, serif; font-size: 16px; font-style: normal; font-variant-ligature=
-s: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: nor=
-mal; orphans: 2; text-indent: 0px; text-transform: none; white-space: norma=
-l; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background=
--color: #ffffff; text-decoration-style: initial; text-decoration-color: ini=
-tial; text-align: justify;" data-mce-style=3D"color: #000000; font-family: =
-'times new roman', 'new york', times, serif; font-size: 16px; font-style: n=
-ormal; font-variant-ligatures: normal; font-variant-caps: normal; font-weig=
-ht: 400; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transfo=
-rm: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-s=
-troke-width: 0px; background-color: #ffffff; text-decoration-style: initial=
-; text-decoration-color: initial; text-align: justify;"><li><span style=3D"=
-font-size: 13pt; font-family: garamond, 'new york', times, serif;" data-mce=
--style=3D"font-size: 13pt; font-family: garamond, 'new york', times, serif;=
-">Can someone help me achieving this?</span></li><li><span style=3D"font-si=
-ze: 13pt; font-family: garamond, 'new york', times, serif;" data-mce-style=
-=3D"font-size: 13pt; font-family: garamond, 'new york', times, serif;">How =
-can I perform arithmetic operations in bitbake file?</span></li></ol><div s=
-tyle=3D"color: #000000; font-family: 'times new roman', 'new york', times, =
-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal;=
- font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orpha=
-ns: 2; text-indent: 0px; text-transform: none; white-space: normal; widows:=
- 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #f=
-fffff; text-decoration-style: initial; text-decoration-color: initial; text=
--align: justify;" data-mce-style=3D"color: #000000; font-family: 'times new=
- roman', 'new york', times, serif; font-size: 16px; font-style: normal; fon=
-t-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; l=
-etter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; =
-white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-widt=
-h: 0px; background-color: #ffffff; text-decoration-style: initial; text-dec=
-oration-color: initial; text-align: justify;"><span style=3D"font-size: 13p=
-t; font-family: garamond, 'new york', times, serif;" data-mce-style=3D"font=
--size: 13pt; font-family: garamond, 'new york', times, serif;">I've raised =
-this query in stackoverflow as well, have a look at it here:&nbsp;<span cla=
-ss=3D"Object" role=3D"link" id=3D"OBJ_PREFIX_DWT566_com_zimbra_url" style=
-=3D"color: #005a95; text-decoration: none; cursor: pointer;" data-mce-style=
-=3D"color: #005a95; text-decoration: none; cursor: pointer;"><a href=3D"htt=
-ps://stackoverflow.com/q/64641596/10773894" target=3D"_blank" style=3D"colo=
-r: #005a95; text-decoration: none; cursor: pointer;" data-mce-href=3D"https=
-://stackoverflow.com/q/64641596/10773894" data-mce-style=3D"color: #005a95;=
- text-decoration: none; cursor: pointer;">https://stackoverflow.com/q/64641=
-596/10773894</a></span></span></div><div style=3D"color: #000000; font-fami=
-ly: 'times new roman', 'new york', times, serif; font-size: 16px; font-styl=
-e: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-=
-weight: 400; letter-spacing: normal; orphans: 2; text-indent: 0px; text-tra=
-nsform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-te=
-xt-stroke-width: 0px; background-color: #ffffff; text-decoration-style: ini=
-tial; text-decoration-color: initial; text-align: justify;" data-mce-style=
-=3D"color: #000000; font-family: 'times new roman', 'new york', times, seri=
-f; font-size: 16px; font-style: normal; font-variant-ligatures: normal; fon=
-t-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: =
-2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; =
-word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #fffff=
-f; text-decoration-style: initial; text-decoration-color: initial; text-ali=
-gn: justify;"><br></div><div style=3D"color: #000000; font-family: 'times n=
-ew roman', 'new york', times, serif; font-size: 16px; font-style: normal; f=
-ont-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400;=
- letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none=
-; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-wi=
-dth: 0px; background-color: #ffffff; text-decoration-style: initial; text-d=
-ecoration-color: initial; text-align: justify;" data-mce-style=3D"color: #0=
-00000; font-family: 'times new roman', 'new york', times, serif; font-size:=
- 16px; font-style: normal; font-variant-ligatures: normal; font-variant-cap=
-s: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-inden=
-t: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing:=
- 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decor=
-ation-style: initial; text-decoration-color: initial; text-align: justify;"=
-><span style=3D"font-size: 13pt;" data-mce-style=3D"font-size: 13pt;">Thank=
-s in advance,</span></div><div style=3D"color: #000000; font-family: 'times=
- new roman', 'new york', times, serif; font-size: 16px; font-style: normal;=
- font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 40=
-0; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px;=
- text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -=
-webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-s=
-tyle: initial; text-decoration-color: initial;" data-mce-style=3D"color: #0=
-00000; font-family: 'times new roman', 'new york', times, serif; font-size:=
- 16px; font-style: normal; font-variant-ligatures: normal; font-variant-cap=
-s: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align=
-: start; text-indent: 0px; text-transform: none; white-space: normal; widow=
-s: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: =
-#ffffff; text-decoration-style: initial; text-decoration-color: initial;"><=
-p style=3D"caret-color: #000000; color: #000000; font-family: arial, helvet=
-ica, sans-serif; font-size: 16px; font-style: normal; font-variant-caps: no=
-rmal; font-weight: normal; letter-spacing: normal; text-align: justify; tex=
-t-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px=
-; text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: =
-none; margin: 0px;" data-mce-style=3D"caret-color: #000000; color: #000000;=
- font-family: arial, helvetica, sans-serif; font-size: 16px; font-style: no=
-rmal; font-variant-caps: normal; font-weight: normal; letter-spacing: norma=
-l; text-align: justify; text-indent: 0px; text-transform: none; white-space=
-: normal; word-spacing: 0px; text-size-adjust: auto; -webkit-text-stroke-wi=
-dth: 0px; text-decoration: none; margin: 0px;"><span style=3D"font-family: =
-georgia, serif;" data-mce-style=3D"font-family: georgia, serif;"><span styl=
-e=3D"font-size: 13pt; color: #3366ff;" data-mce-style=3D"font-size: 13pt; c=
-olor: #3366ff;">Daniel Selvan D.</span></span><br></p><p style=3D"caret-col=
-or: #000000; color: #000000; font-family: arial, helvetica, sans-serif; fon=
-t-size: 16px; font-style: normal; font-variant-caps: normal; font-weight: n=
-ormal; letter-spacing: normal; text-align: justify; text-indent: 0px; text-=
-transform: none; white-space: normal; word-spacing: 0px; text-size-adjust: =
-auto; -webkit-text-stroke-width: 0px; text-decoration: none; margin: 0px;" =
-data-mce-style=3D"caret-color: #000000; color: #000000; font-family: arial,=
- helvetica, sans-serif; font-size: 16px; font-style: normal; font-variant-c=
-aps: normal; font-weight: normal; letter-spacing: normal; text-align: justi=
-fy; text-indent: 0px; text-transform: none; white-space: normal; word-spaci=
-ng: 0px; text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decor=
-ation: none; margin: 0px;"><span style=3D"font-family: georgia, serif; colo=
-r: #999999; font-size: 11pt;" data-mce-style=3D"font-family: georgia, serif=
-; color: #999999; font-size: 11pt;">Systems Engineer<span>&nbsp;</span><str=
-ong>|</strong>&nbsp;<span class=3D"Object" role=3D"link" id=3D"OBJ_PREFIX_D=
-WT567_com_zimbra_url" style=3D"color: #005a95; text-decoration: none; curso=
-r: pointer;" data-mce-style=3D"color: #005a95; text-decoration: none; curso=
-r: pointer;"><a href=3D"http://www.jasmin-infotech.com/the-company/contact-=
-us/" title=3D"Jasmin Infotech Chennai" target=3D"_blank" style=3D"color: #9=
-99999; text-decoration: none; cursor: pointer;" data-mce-href=3D"http://www=
-.jasmin-infotech.com/the-company/contact-us/" data-mce-style=3D"color: #999=
-999; text-decoration: none; cursor: pointer;">Jasmin Infotech</a></span></s=
-pan></p><p style=3D"caret-color: #000000; color: #000000; font-style: norma=
-l; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; =
-text-align: justify; text-indent: 0px; text-transform: none; white-space: n=
-ormal; word-spacing: 0px; text-size-adjust: auto; -webkit-text-stroke-width=
-: 0px; text-decoration: none; margin: 0px; font-size: 11pt; font-family: ca=
-libri, sans-serif;" data-mce-style=3D"caret-color: #000000; color: #000000;=
- font-style: normal; font-variant-caps: normal; font-weight: normal; letter=
--spacing: normal; text-align: justify; text-indent: 0px; text-transform: no=
-ne; white-space: normal; word-spacing: 0px; text-size-adjust: auto; -webkit=
--text-stroke-width: 0px; text-decoration: none; margin: 0px; font-size: 11p=
-t; font-family: calibri, sans-serif;"><span style=3D"font-size: 11pt; font-=
-family: 'times new roman', 'new york', times, serif;" data-mce-style=3D"fon=
-t-size: 11pt; font-family: 'times new roman', 'new york', times, serif;"><s=
-pan style=3D"color: green;" data-mce-style=3D"color: green;"><span id=3D"_m=
-ce_caret"><span style=3D"font-family: arial, helvetica, sans-serif; color: =
-#000000;" data-mce-style=3D"font-family: arial, helvetica, sans-serif; colo=
-r: #000000;">=EF=BB=BF--</span></span><br></span></span></p><p style=3D"car=
-et-color: #000000; color: #000000; font-style: normal; font-variant-caps: n=
-ormal; font-weight: normal; letter-spacing: normal; text-align: justify; te=
-xt-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0p=
-x; text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration:=
- none; margin: 0px; font-size: 11pt; font-family: calibri, sans-serif;" dat=
-a-mce-style=3D"caret-color: #000000; color: #000000; font-style: normal; fo=
-nt-variant-caps: normal; font-weight: normal; letter-spacing: normal; text-=
-align: justify; text-indent: 0px; text-transform: none; white-space: normal=
-; word-spacing: 0px; text-size-adjust: auto; -webkit-text-stroke-width: 0px=
-; text-decoration: none; margin: 0px; font-size: 11pt; font-family: calibri=
-, sans-serif;"><span style=3D"font-size: 18pt; font-family: webdings; color=
-: green;" data-mce-style=3D"font-size: 18pt; font-family: webdings; color: =
-green;">P</span><span>&nbsp;</span><span style=3D"font-size: 10pt; font-fam=
-ily: 'iskoola pota', sans-serif; color: green;" data-mce-style=3D"font-size=
-: 10pt; font-family: 'iskoola pota', sans-serif; color: green;">Please cons=
-ider the environment before printing this email.</span></p></div><div><br><=
-/div></div>
-<br>=
-<html><body>Information in this email is proprietary and Confidential to Jasmin Infotech Pvt. Ltd. Any use, copying or dissemination of the information in any manner without prior approval, is strictly prohibited. If you are not the intended recipient, please destroy the message and please inform to us..</body></html>=0A
-<br>=
-</body></html>
+This allows the users to specify SRC_URIs of the form
 
-------=_Part_121393312_1169650705.1604307085037--
+	git://user:password@host.tld/path/to/repo.git
+
+which allows pulling in private repositories.
+---
+ lib/bb/fetch2/git.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index b97967b4..090fa173 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -596,7 +596,10 @@ class Git(FetchMethod):
+         Return the repository URL
+         """
+         if ud.user:
+-            username =3D ud.user + '@'
++            username =3D ud.user
++            if ud.pswd:
++                username +=3D ":" + ud.pswd
++            username +=3D "@"
+         else:
+             username =3D ""
+         return "%s://%s%s%s" % (ud.proto, username, ud.host, ud.path)
+--=20
+2.25.1
+
