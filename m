@@ -1,128 +1,70 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (NAM11-BN8-obe.outbound.protection.outlook.com [40.107.236.79])
- by mx.groups.io with SMTP id smtpd.web10.6756.1604715679477722393
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web09.10701.1604789495953431130
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 06 Nov 2020 18:21:19 -0800
+ Sat, 07 Nov 2020 14:51:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=iW7e98fB;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.236.79, mailfrom: chris.laplante@agilent.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HwSLjsVH3raY37JdcLlkvJfN+Fune5vuZni1/xqsgzdtHwVyud4d7/Nd4y44R1TqhIEORJm/vKyl+ACqt75UPnxro12EpqsRpv9uPiP2jU9ijP4Bp2GN9XE4gOJfyecd5OjEr9veQcHgaas9qBRKv1f67NeY1n26ZZW0K7h29wnQ7hlMJ8grYDrbLBeU3WPaUAB6Wr8S9lFU2/VsEOOdmxfRnNJQ28jm+mbsSfPld0PK3nnwu3foxvknIPhv19tg2QTqa6EJZHqaSaJCorAcjmz8CM976Sg/+P/kc6R2vfFeToodDNkhYG3JB5lvtEMYp1Zp/3jYSBsrb+MyEdEzQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4eABP2U/kxTMedTqfwSt09dSdT1dHyxwbA8+BeUsYJ0=;
- b=CRknCwg27zZGg8WiIe89qbz7dXP68e2GrYdvm2gUunpvT0Zhk/k8jxe2bzcydxc+GXtzypbgkGmNqJJ1uMwtwJB5mq8xdaikWKs5lRbPr98vwMntHoATNWcM2bPRiQuhuLgMI/baTIZuthFD+fqJBNTgwC8EahLZwc8mPjRiUW7TQMe1YfP04w/UXZ8ts3r+0TLplL3+0bc0y5iJmIAd3+2DdjeLdmJh1wY5Ku9lj3V08rlXB8cLBn+slR5MeDtmTPoLylAMxcCfCefr6LGYcRnAIvqqWr6ZXxuFGaoB6Hph9JyJr95QE8aOdMZsbVdRiiy/QIewM6ILrnczQnSGag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=agilent.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4eABP2U/kxTMedTqfwSt09dSdT1dHyxwbA8+BeUsYJ0=;
- b=iW7e98fB/pRfbUy87iB0QS9hVgeeSrFvR6jAs4aKfm2O0YZ12Tp/8PrQ39KJ2h7dDph4tFZYcPeFcTRn4xKjJ4/EWsyFVMhumQ1kFVIwaM8y44B2f91eLLAcymUAMlmwveT2Qp9CJnJyq+hT8+uSlomgEA9KZZYXDFc9oFfxdC2GOSQv7LPdXhQeyUXitWpEJWVsjfkYuwW9cfjwAJdxFMen9cTo3VYjSdGgl6pYmX1E5VDXyijFNgNmtwghhzzP4WNUXLS68+1XFKgi+PFcTNUavMjBMWi/YX+3jxf8aI4KSp6vF8kLSHNP7mjMRyg9EheQdrNHUo+q4TfGTBR5Pg==
-Received: from DM6PR21CA0027.namprd21.prod.outlook.com (2603:10b6:5:174::37)
- by DM6PR12MB2907.namprd12.prod.outlook.com (2603:10b6:5:183::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Sat, 7 Nov
- 2020 02:21:18 +0000
-Received: from DM6NAM12FT058.eop-nam12.prod.protection.outlook.com
- (2603:10b6:5:174:cafe::71) by DM6PR21CA0027.outlook.office365.com
- (2603:10b6:5:174::37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.6 via Frontend
- Transport; Sat, 7 Nov 2020 02:21:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
- smtp.mailfrom=agilent.com; lists.openembedded.org; dkim=none (message not
- signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
- header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
- 192.25.218.41 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.25.218.41; helo=edgeappmail.agilent.com;
-Received: from edgeappmail.agilent.com (192.25.218.41) by
- DM6NAM12FT058.mail.protection.outlook.com (10.13.179.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3541.7 via Frontend Transport; Sat, 7 Nov 2020 02:21:17 +0000
-Received: from laplante-lm-19.localdomain (10.46.38.234) by
- edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server id
- 15.1.2044.4; Fri, 6 Nov 2020 19:21:13 -0700
-From: "Chris Laplante" <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH v2 5/5] main: fix parsing of intermixed arguments
-Date: Fri, 6 Nov 2020 21:21:06 -0500
-Message-ID: <20201107022106.84056-6-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201107022106.84056-1-chris.laplante@agilent.com>
-References: <20201107022106.84056-1-chris.laplante@agilent.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cHu/WoaH;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.68, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f68.google.com with SMTP id c17so4951494wrc.11
+        for <bitbake-devel@lists.openembedded.org>; Sat, 07 Nov 2020 14:51:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=XVMRfXAlVr9IaCpzOQwM8W0FFOtkeWcEqBWLOegXctE=;
+        b=cHu/WoaH4fL8RoTKzHHAlewVlNWEr/x+Yp6m58jAAz5eU692d6uL9ji+fRLpgzgvTA
+         juR/R1yZyv1qeGdjPQOjU3MmziaPEQRMfRWoH9QmePCzKG8gT15vm0MBP8F+84J6ir63
+         I7TxCIjpA3q3iGUj4/aFauzi6ZWPlIEZhP3OI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=XVMRfXAlVr9IaCpzOQwM8W0FFOtkeWcEqBWLOegXctE=;
+        b=UmPEy3Eo4J05gMDsN4I2GjH/br2mtrft0t/3XXGIaL05102DC15wFIpgiye9DQmHZ8
+         OeErFoaNY5sXYdltHIWM8srI338i5KD1QdzpUFUckj42kAbT1VFG1EMQjx+1o56wZHK9
+         EF8pE/j36nhPfHP3okoQBD3LinDiA53ITnAz60M7b0ljsCrSMSg+UoxhVqyePMs8SQXD
+         ylaYf5Ywdu1m+mo+k4aWPx0aEc7RCFl3LdHogZu6OHc1PI0GKD9m0E7we6t4GacHWA1k
+         eZRGon8RlAClHaAuyfkt1n0nK3HgGgfBY7Q7ujX9C957cKt4wWqBgDoK3zh64vw+sZQn
+         MUew==
+X-Gm-Message-State: AOAM530b1cGj+xXcVJzzZgh6z2tkbZnfW5fJnfk3BfU/kFl8LCZOf1zl
+	MZo0benjho5w3Tb6t2r3wADg4g==
+X-Google-Smtp-Source: ABdhPJzyhp1yBJnLmo1b7VszUmHreFB9TvlyxEV0Zl/X19ar7ELM1v0UBZxQ06UQ+S8w6YRiTM2aBg==
+X-Received: by 2002:a05:6000:1006:: with SMTP id a6mr1225329wrx.367.1604789494443;
+        Sat, 07 Nov 2020 14:51:34 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from 7.e.4.c.9.7.4.3.c.6.2.9.7.2.8.5.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (7.e.4.c.9.7.4.3.c.6.2.9.7.2.8.5.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:5827:926c:3479:c4e7])
+        by smtp.gmail.com with ESMTPSA id o10sm7764885wma.47.2020.11.07.14.51.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Nov 2020 14:51:33 -0800 (PST)
+Message-ID: <940c12c0b27567eab634098ac0de1c7dbffaed65.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] build: defer processing of cleandirs until after lockfiles are acquired
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: chris.laplante@agilent.com, bitbake-devel@lists.openembedded.org
+Date: Sat, 07 Nov 2020 22:51:33 +0000
+In-Reply-To: <20201103151537.19348-1-chris.laplante@agilent.com>
+References: <20201103151537.19348-1-chris.laplante@agilent.com>
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Return-Path: chris.laplante@agilent.com
-Received-SPF: SoftFail (wpcosapexchedg2.windmz.agilent.com: domain of
- transitioning chris.laplante@agilent.com discourages use of 10.46.38.234 as
- permitted sender)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8aa0de84-65a5-4476-fa94-08d882c3cf1a
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2907:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: 
-	<DM6PR12MB29078C63BF5EDE273297E5A38BEC0@DM6PR12MB2907.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	LqHpAm+sbAF6pGYa7kDfuWO24DQHo5a0ZZ+s1xB8YvHykKamB54qhZAtS8UVG8rgKp7SJAunlgjzPW/5SEmTRW0so3oMd6srmruhf0z9xm3duHDQBLtpV+AevxGL0tK7BLB+BGIFtxivYMfMWLoHUpIBmxAOc2M/HE2aRRI6iu25L8o6Xbg3VXV1Jbece6Pf6g0Dcd4kxXHFWJA3Fpg05TH4H9KXh7ldEPjXvGrn1vvCFnkGL9l7BoA8SU5gTmi1NB/a+4mdZ7IzuKdLrzFYEAHoNkoaJsC2sN909sbIsxav7ICA6MieroKedY224ANrTu1aiFVBmgIE9Ty9pAEuVsotWtDXU6qDmcVGoL+JT5EwuWdZnv4kdOGXRQTqgFEpNC0MJMebaA6SJs9cjHZet9GU5zSWaTXtb07lK/425Cg=
-X-Forefront-Antispam-Report: 
-	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:exch.smtp.agilent.com;CAT:NONE;SFS:(4636009)(376002)(136003)(346002)(39860400002)(396003)(29502001)(46966005)(8676002)(1076003)(336012)(7636003)(86362001)(6916009)(2616005)(8936002)(426003)(107886003)(2906002)(6666004)(36906005)(316002)(82310400003)(478600001)(186003)(26005)(70206006)(82740400003)(36756003)(83380400001)(44832011)(4326008)(47076004)(5660300002)(356005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2020 02:21:17.6501
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8aa0de84-65a5-4476-fa94-08d882c3cf1a
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.41];Helo=[edgeappmail.agilent.com]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-DM6NAM12FT058.eop-nam12.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2907
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-use parse_known_args instead of parse_args. Otherwise, argparse
-incorreclty interprets (for example) 'bitbake -S none world'.
+On Tue, 2020-11-03 at 10:15 -0500, Chris Laplante via
+lists.openembedded.org wrote:
+> This is to avoid potential races for tasks that use both [cleandirs]
+> and
+> [lockfiles].
+> 
+> It is currently believed that normal [dirs] handling is fine as-is.
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
----
- lib/bb/main.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Unfortunately this caused all kinds of weird build failures in testing:
 
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index 16ff6e59..4648a8ea 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -132,7 +132,6 @@ def create_bitbake_parser():
-     It is assumed there is a conf/bblayers.conf available in cwd or in BBPATH which
-     will provide the layer, BBFILES and other configuration information.
-     """, add_help=False)
--    parser.add_argument("targets", nargs="*")
- 
-     # List options that the user is most likely to use first
-     frequent_group = parser.add_argument_group("frequently used")
-@@ -304,7 +303,7 @@ def create_bitbake_parser():
- class BitBakeConfigParameters(cookerdata.ConfigParameters):
-     def parseCommandLine(self, argv=None):
-         parser = create_bitbake_parser()
--        args = parser.parse_args(argv or sys.argv)
-+        args, targets = parser.parse_known_args(argv or sys.argv)
- 
-         if args.quiet and args.verbose:
-             parser.error("options --quiet and --verbose are mutually exclusive")
-@@ -336,7 +335,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-         else:
-             args.xmlrpcinterface = (None, 0)
- 
--        return args, args.targets[1:]
-+        return args, targets[1:]
- 
- 
- def bitbake_main(configParams, configuration):
--- 
-2.17.1
+See the builds triggered by:
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/1550
+
+I reverted this commit and things started working so there is something
+wrong.
+
+Cheers,
+
+Richard
 
