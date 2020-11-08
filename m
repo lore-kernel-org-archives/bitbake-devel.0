@@ -1,17 +1,17 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (NAM10-BN7-obe.outbound.protection.outlook.com [40.107.92.42])
- by mx.groups.io with SMTP id smtpd.web12.3224.1604873537607307292
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (NAM12-BN8-obe.outbound.protection.outlook.com [40.107.237.73])
+ by mx.groups.io with SMTP id smtpd.web09.3148.1604873538416410811
  for <bitbake-devel@lists.openembedded.org>;
  Sun, 08 Nov 2020 14:12:18 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=vNQ0SQms;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.92.42, mailfrom: chris.laplante@agilent.com)
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=C8yydYRg;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.237.73, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NWnlIt+ZLNrY2UwidEJeOw7765DIP3v5O9U/Fo7sP5bFP9MO7FGCP4i98sKsV4OeKqZGE15Rc2/G3ZBgIs815Xrk/Wq9IDsyIPQgFCNXZc9Fiq4BxhHKkkF8GLPbG3bqLdgq9Bn4+3EPZ+hHqh03mQMc3awJq67PC6nSNCucP9q0Cxboc57R1CNmEpiZIG98cun8D8O18SzGQJRJb2XSkKbTQNHA75Gh7sZJlHC8yTd+E1VQPD2tVNU/+YADunrrR5WK4bxYRXTQ9imWlaNeBaGaucaMPVcsaEtGufsYeuMMEiJqGwFY+oXaBGL/N1Jk218bLcQ198IStpKfnNSn9A==
+ b=cwmX4iwBxnQDrfkNOMD66FIelnNmuwgIBANohTQBT60o7s+XJQ4DE+Z+8s0cwBw4y10RSGxOpd9Bw+Oc4rIIRfGueDevxphc1qFTSdRSDVO22WOlsH7ZnywCUnVJIVS7SEJYtcySqkGPJpDBh1LZkbcZXFt0JgbxOjP8ctC6UBdeh2nOaS9Qvg9QlE62nvxC1j5mvZU48poJHKZ0FiOKl4Vn6gqOu+OwksGKGKMhfC9UrfOrr0YO5nXeVuAk1zbY5CDpBdd4CUNT8KKzBgoOGV3Y1ThpVxTUAmAAFDON39xncUTwSPken1CibTMGHasr9tSCXWHs0CwCuFU9gQT4XA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pXUN86A7057LGt5iT60mpVloA0EjNcJiIibDeH2pTBY=;
- b=oPTj8n0kN3tVQJi4bVl8hhJZJyrbFkKHvMaUXxFvHhljE9lMKAuQIDjDHj8fKUHfUySKDBONNG5PKxk+Pk+t/jAdM4RNhURvvRebtJW4O1UohstiBbN7JNu0nrITs1FMaTmpjLI3APX4Q5Kps5C2Fq1WEheGuFs5sdJphYr7PdYwOYaVVpENMGkrEQY3SRpqZsQJQZshhrbAnAR3U/jfDDBmG3c2XLVA6JwCiSJlVXsh8kPd9ZUDFg2s6fo+8X3CL9Xf9h2S7aRWgkU8Kj4CUKVtZcKrdNxTtGVLe/nHXEnUuwviKP/hNBEfM7jQAFI8+su8b48IOPDvWmM4XpsnXg==
+ bh=6Gn3OYV/ecYduf8PpF3iUBZOqX1hm7pYbYDLJY+kiro=;
+ b=f04pBKodnkZRSsEahxbVPPPw0zvmA05TTCi3/T4xmUjSn5dkfA9OMaZ66H0usFZpWH6jqaSbXei7mm3Gyxmeg+FlbJdAupfgP5Se/roWJaOKrHmayISYplZ56xdVxyodhH34mTOqSwqz1Lyr8CSNk1vz/5vrS5Lxn0XtVWz6bIN+13EvmYIVPLQH4VXbKVrdBiGwKLRphQiCqPWc7MxkE7VU74BeSq4qrOSc8Eua3AABQRO2VEiPkgIZNri7UxTkyFontESfPil0GyZ/bfqWFBcN+71XK4+G5b1ePA4ZlIKymz1TD7lv6flc432bqcVgHcJFdoVjhkt7SRwSXd/tKg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
@@ -19,18 +19,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pXUN86A7057LGt5iT60mpVloA0EjNcJiIibDeH2pTBY=;
- b=vNQ0SQmsl96THk5ScmlE6z6Ysbwx4DLIRitEOQc5+UxZWXlcbzG07fmy2mPe56OlrkOf4fdl7AwXm7Nt/v+aN+wE+kcAgYuA5Tj6GotWIyw6v+611NkiW8lKkirppf+NMEZUvdjHZvWk+ZvRZaUbRH0XkRGFxPA0FDGhCS2NNggaAWwg2X3fR9Wq5t+4kFPxGlqQXuSxUpX0Gu/WV36P9iZ5jmqU0YezUdGc4Z7s61YE4JbtE7H6ORRO1r2esItz5T+1MY3uApCdZ3lHaoEntlq5GFDPdb4AxNG3SjfIQChI7357TxzCgakja0Z5BN26rmetrhqRxfCVIzfrAIXDpQ==
-Received: from CO2PR04CA0053.namprd04.prod.outlook.com (2603:10b6:102:1::21)
- by BY5PR12MB4097.namprd12.prod.outlook.com (2603:10b6:a03:213::20) with
+ bh=6Gn3OYV/ecYduf8PpF3iUBZOqX1hm7pYbYDLJY+kiro=;
+ b=C8yydYRgizvndp++ZUEBZZyGIIPdYhsNBdU2XMwXk2OVydCAZz7W7MlsR7DIqErKvH2nIoru6xlOPiqaJPHAVkVoKNMY6QV+h9/ou8sZ/Ha5zImEkzbYo2kmdtg8DcR313PjA94h/+YHl4Qc8FtuXHx3xxaX9u1oPJhOz+PYYBAMgBljCDhBEZb7gG0HYCJLW6kuvnwz+m3eblOQN5suFDQnwMC0WuasfUz+wOSYrCqSknecN03TVcbPv62Iau7OFv3D0Szaug3Mpvllk50vQj8grg6nI6Agu5RqWrh8Nny1721kRDuSN3k7kfUxy/bWDkvJ5qYrK9zLQzGJqCFQRg==
+Received: from CO2PR04CA0064.namprd04.prod.outlook.com (2603:10b6:102:1::32)
+ by BYAPR12MB3414.namprd12.prod.outlook.com (2603:10b6:a03:aa::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Sun, 8 Nov
  2020 22:12:16 +0000
 Received: from MW2NAM12FT060.eop-nam12.prod.protection.outlook.com
- (2603:10b6:102:1:cafe::dc) by CO2PR04CA0053.outlook.office365.com
- (2603:10b6:102:1::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21 via Frontend
- Transport; Sun, 8 Nov 2020 22:12:15 +0000
+ (2603:10b6:102:1:cafe::94) by CO2PR04CA0064.outlook.office365.com
+ (2603:10b6:102:1::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.32 via Frontend
+ Transport; Sun, 8 Nov 2020 22:12:16 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
  smtp.mailfrom=agilent.com; lists.openembedded.org; dkim=none (message not
  signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
@@ -41,17 +41,19 @@ Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
 Received: from edgeappmail.agilent.com (192.25.218.41) by
  MW2NAM12FT060.mail.protection.outlook.com (10.13.181.67) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3564.19 via Frontend Transport; Sun, 8 Nov 2020 22:12:15 +0000
+ 15.20.3564.19 via Frontend Transport; Sun, 8 Nov 2020 22:12:16 +0000
 Received: from laplante-lm-19.localdomain (10.46.38.234) by
  edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server id
- 15.1.2044.4; Sun, 8 Nov 2020 15:12:14 -0700
+ 15.1.2044.4; Sun, 8 Nov 2020 15:12:15 -0700
 From: "Chris Laplante" <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH v3 00/10] optparse => argparse
-Date: Sun, 8 Nov 2020 17:10:49 -0500
-Message-ID: <20201108221059.16854-1-chris.laplante@agilent.com>
+Subject: [PATCH v3 01/10] cookerdata: tweak to avoid mutable default argument
+Date: Sun, 8 Nov 2020 17:10:50 -0500
+Message-ID: <20201108221059.16854-2-chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20201108221059.16854-1-chris.laplante@agilent.com>
+References: <20201108221059.16854-1-chris.laplante@agilent.com>
 MIME-Version: 1.0
 Return-Path: chris.laplante@agilent.com
 Received-SPF: SoftFail (wpcosapexchedg2.windmz.agilent.com: domain of
@@ -59,57 +61,59 @@ Received-SPF: SoftFail (wpcosapexchedg2.windmz.agilent.com: domain of
  permitted sender)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: bfd5a159-eeef-43b8-859c-08d8843359b6
-X-MS-TrafficTypeDiagnostic: BY5PR12MB4097:
+X-MS-Office365-Filtering-Correlation-Id: 9042db20-d5e1-489f-fca1-08d884335a5b
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3414:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<BY5PR12MB4097ECE29E66FD8AEA820D4A8BEB0@BY5PR12MB4097.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+	<BYAPR12MB3414DF3EA0C538E17BB703168BEB0@BYAPR12MB3414.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	zCpHhbZIHZu0v8lyJM/M+jCHEs7KVC7lkMljnMCV0P0FbkSeuNGJi8FiWYUR+8nCtUnDCQSvJIbWQKWkhl6h9BIbMYn5ebM32bF1/63EFgwyvBo0lpqapT4s9PMfCikVWEEDuCaVOZS984pAQk8DYaWyXIcobU2R++hYwy3IKE8SrEXGbY5wXMyZv0Cqr+ZNQNTcYkfi+rFNQNbreDxnEJZzGaN2v5f1CaMSE61bHRQmfkuJSOto5YfDlLpdT8NFlt1LW6PoQRffvIXVKCBlepf+wpXzphaZj/YvUdglb68XGSBInJDWjA2dnIRvyz89H05vjdXIvZ0D1v+LDTipC2RCgIHvnED0JWUPmLV/esUyvwGSKmzobM/ms5DH79WExJjXbD/9cKu+o58tKqwBO3oOmKmoA0HdzrkdHaor/uw=
+	xHlm1168Xdr22YtLRZSkXtoYkzkECa4uz9BAwf0sS6AxqTYbA6oOgAv/BbPqM0joctZj24SXIr+OXABNM16/nMVj17U3TZeADzQ9BoLvqUd8fR6YDf8Kytv644uq6D6cQsm/yoFSnpDePv+QNjx34gNJ6NbYyzNq+vQQ8ORZBMaFiR2ndvlEJcNxnjHzP1rUiOCRl6K9iq1c/kZeDqlJIH46xWdkCRNhSqcKIpiOn0ZEHFUwIpRmnmpRzz9grwU/IUShn0sKdJ1hh0StBm8qWpDAla4v8G6o72Z0iTpsOyg3Z2s2snzFaMoXFP/FFKtpwuVrUcDop/V/J5BM4I1/xcwPmduDJu6GVy3lFUIWfZtEQc+pafIZYjN1u0sL6ILIoUyNI9WaE6O/fDhaG1+Uqex7oNsUyarS1paDqhISLFg=
 X-Forefront-Antispam-Report: 
-	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:cos.smtp.agilent.com;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(29502001)(46966005)(70206006)(4326008)(1076003)(82310400003)(107886003)(2616005)(6666004)(36756003)(426003)(7636003)(8676002)(47076004)(82740400003)(478600001)(336012)(86362001)(36906005)(6916009)(316002)(186003)(2906002)(5660300002)(26005)(44832011)(8936002)(356005)(83380400001);DIR:OUT;SFP:1101;
+	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:cos.smtp.agilent.com;CAT:NONE;SFS:(4636009)(376002)(136003)(346002)(39860400002)(396003)(29502001)(46966005)(8676002)(36756003)(7636003)(336012)(82740400003)(6916009)(316002)(2616005)(8936002)(2906002)(107886003)(426003)(6666004)(36906005)(82310400003)(478600001)(186003)(26005)(1076003)(70206006)(356005)(44832011)(83380400001)(47076004)(4326008)(86362001)(5660300002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2020 22:12:15.4948
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2020 22:12:16.5842
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfd5a159-eeef-43b8-859c-08d8843359b6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9042db20-d5e1-489f-fca1-08d884335a5b
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.41];Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-MW2NAM12FT060.eop-nam12.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4097
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3414
 Content-Type: text/plain
 
-v1: initial
-v2: fix intermixed argument parsing
-v3: fix TinfoilConfigParameters defaulting of 'ui' with string, reorder
-    patches
+Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
+---
+ lib/bb/cookerdata.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Chris Laplante (10):
-  cookerdata: tweak to avoid mutable default argument
-  tests/arg_parser: add stub for testing arg parsing
-  tests/arg_parser: add test for 'bitbake -S none world'
-  main: migrate from optparse to argparse
-  main: group --help options to make them easier to read
-  main: rename list_extension_modules => load_extension_modules to
-    clarify its function
-  tests/arg_parser: add test for lazy loading of bb.ui modules
-  main: fix parsing of intermixed arguments
-  tinfoil: use knotty module itself as default 'ui' arg to keep up with
-    changes in setup_bitbake
-  tests/arg_parser: add test for default TinfoilConfigParameters 'ui'
-
- bin/bitbake-selftest       |   3 +-
- lib/bb/cookerdata.py       |   6 +-
- lib/bb/main.py             | 327 +++++++++++++++++++------------------
- lib/bb/tests/arg_parser.py |  62 +++++++
- lib/bb/tinfoil.py          |   9 +-
- 5 files changed, 240 insertions(+), 167 deletions(-)
- create mode 100644 lib/bb/tests/arg_parser.py
-
---
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 91cc4347..c39b5681 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -23,8 +23,8 @@ logger      = logging.getLogger("BitBake")
+ parselog    = logging.getLogger("BitBake.Parsing")
+ 
+ class ConfigParameters(object):
+-    def __init__(self, argv=sys.argv):
+-        self.options, targets = self.parseCommandLine(argv)
++    def __init__(self, argv=None):
++        self.options, targets = self.parseCommandLine(argv or sys.argv)
+         self.environment = self.parseEnvironment()
+ 
+         self.options.pkgs_to_build = targets or []
+@@ -209,7 +209,7 @@ def findConfigFile(configfile, data):
+     return None
+ 
+ #
+-# We search for a conf/bblayers.conf under an entry in BBPATH or in cwd working 
++# We search for a conf/bblayers.conf under an entry in BBPATH or in cwd working
+ # up to /. If that fails, we search for a conf/bitbake.conf in BBPATH.
+ #
+ 
+-- 
 2.17.1
 
