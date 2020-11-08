@@ -1,17 +1,17 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (NAM11-BN8-obe.outbound.protection.outlook.com [40.107.236.49])
- by mx.groups.io with SMTP id smtpd.web11.3245.1604873543625623330
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (NAM02-CY1-obe.outbound.protection.outlook.com [40.107.76.41])
+ by mx.groups.io with SMTP id smtpd.web08.3131.1604873544701218474
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 08 Nov 2020 14:12:23 -0800
+ Sun, 08 Nov 2020 14:12:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=Sfz7OXiy;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.236.49, mailfrom: chris.laplante@agilent.com)
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=a4sh98kB;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.76.41, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G4Wz8Cqkp802f+ogLRtPAFRmdQON/51u6eZUt9iVBD+lPDeUiN6V57kZdMVIaLJAaZWX/NvlBvzpj/jEP9Zb7cU9BoIZrUMe0pIR6DH3oDygaNI7nsi1tzm3ZSOpW43Klod9+F0njG8u6FtZxlDGwtPlSUlZCd0ELzf6DxUaZ6N2aO1Smlm1yfsypvi/wM31JaQ7FH68bnQXJf+3nSM+cOVR002QksCzPm0eVnvWYGXKu81zmzyOQIvtRbTOwknHVp+PVWyCQHIHV0C8p0nWD9bi8EpqjexonRrtZ9+PdDW4ucW0O0BDyp0Nw56tSVusynhOmiSgINIvvNW3sJ1k6Q==
+ b=JKxgGLII/aj+IKEcsNlbjfG32tNaGR1Hgf32YE0ULt05Kxn3jhKvgqV3uEoYpqyZjjMe0Akraa1pplZH1R7LcL1zF+P932PHC3IiTNjb6C8RPJMYrcUOCuii1ycUWbB2BWzXogTTLXZDDvPs4Mqfxxq0e/PkLN2zrSbA1RBPCR7eWRfAz/CS1xeBtl7WpJZh69nimjTag3uvA2JeYRWsgBNoPbAPCcURVUcjSXwi8AetFQIuJXdSTF0hBjPO4WMfz7K5DTcXg75qdE4mhmNfe+5MX4HsnJ9UlhmMyeEWoMw62gj2HzAqX8MJ1mIpbWJlURfu4LNF2T1BUyiGgEjP5g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QeX1u0oz9pdtYfSkKC2+jFS3fmnjHFYX4+H8RuZwFHM=;
- b=HEmboPqawnhc+KA2XUwy7GNXTPPqWTMuW9KL6tldKn5BWt5WjhvD6ehFiqG2KxY6sGK/XS4BHf34lNOqdpqx9xDLrW0JkyOg5rF87OpYcvoT/lETdqOX+ShR/uHBxcNDx1hSQDRs8tea5xZvXTY7J/adE4RJjcTjoKdnWIRL7SCi/qxKoJCPtjU07t3AXyVx+z8e/jYHnx96+msBQHzWMRlyCGsbzzjxtPd3MEuNQyB/8s7cZ+6oqYpYpqG1G5GQOi6SzvCTNbx+SujDQKt7XCg/jhpK+ETJxyGAf2vIhPYHbCSIej92BGOyWNJcUdOTtIwsqiOHnAc1HUntdkY9DQ==
+ bh=FaJ3fDXtlaZLx6aN/9UqPES5X0gBsRBy1m2tQ9gJXLs=;
+ b=dGMBK7vsfB4Sg4Jp6aGwZSaiV7dmPn/FCQZY35ZJ5DLnT0isfhMa3AR1X9cHfd88IngJcL5FlwqGMU3+wCKv2lGH1jcxKCWRN0JdyUkr1Aa8dPVUicILxRBPVUEOL+Vwsgjupk9VMNnFmjeXlKnNaIS8gWOIMRTE7RORzrAgHQbTt+fENik4JYO0gfcO2TGZxPE0rukgI/QYMLOeoONDTgnxQiGrsCV/74FbMoaOUysaUvzL7t535JSkU7HxD9HO8qd49wd0lfOyzTYDFAyAa3LAi5KyqSyygMHO/A465cTyDpdIsVgIQHImYDJ3xv2LqAg8RPYHZo+xBmoThoslBw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
@@ -19,18 +19,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QeX1u0oz9pdtYfSkKC2+jFS3fmnjHFYX4+H8RuZwFHM=;
- b=Sfz7OXiyjgv6ZeIfxwCxDx+EKcs07Nyt1A6jODIZQLNG/THt6IWZcC0TFQDv2xhkwPbIhdNxUxW46pePaACasu+SPyavmBU7qxVqnJusXfJGABI5JyA2cDRBRsq+sZWbViZAO45/J4vKkSz+zy7L+tKMB3Hu/WdJD7efiNlOvwAmyH8FgC1o7QK1zH/Vcc1ikDNsQthhIYKVz7ImEga94U9aTsoI1mDLpQ6oOakwinkMCJFvkyP7NrxhWhZGShy+nEwURikmio8V191deVdsOJp+PrP+8oEWazfoOSmzThZLjiTV4cRn+FHyYUyls52iuf5sA1B/tr193g0MvzfR0Q==
-Received: from MWHPR18CA0056.namprd18.prod.outlook.com (2603:10b6:300:39::18)
- by BY5PR12MB4114.namprd12.prod.outlook.com (2603:10b6:a03:20c::12) with
+ bh=FaJ3fDXtlaZLx6aN/9UqPES5X0gBsRBy1m2tQ9gJXLs=;
+ b=a4sh98kBK7UT9KUYNZ5Ts8BBNat4v3RPE2UFSaRLfDKaRCs4rRgWw9fh8+O+lwicUssqYgWF1lVpHZKx6mxh+ZSTqjdMlUZfqv+cj1ww5SRAzoLuX2BE5xSsyM8gbhVUmlPTHf3Q7lmnDmb/pF3bz5E3TZm/c0+NBHReEvHlI7bFwe2wY2YhPEfS1qt1lqbHeSCmAfB1qSuLAqXaGNVW6KW7Z4Nu8cFbkYOAWvCdLNTFS5FM+E3fz45rvvtlCjg3YGWzwf1D69OhEwBp7xNyB3LgCwZHmcJn23jf4zLmH4kyY7F/8IMU9hLJ5IPsLkS0OVEDduqzJV0KabvSGzMKZw==
+Received: from MWHPR18CA0032.namprd18.prod.outlook.com (2603:10b6:320:31::18)
+ by MN2PR12MB3646.namprd12.prod.outlook.com (2603:10b6:208:c5::33) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Sun, 8 Nov
- 2020 22:12:21 +0000
-Received: from MW2NAM12FT042.eop-nam12.prod.protection.outlook.com
- (2603:10b6:300:39:cafe::fa) by MWHPR18CA0056.outlook.office365.com
- (2603:10b6:300:39::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.19 via Frontend
- Transport; Sun, 8 Nov 2020 22:12:21 +0000
+ 2020 22:12:23 +0000
+Received: from MW2NAM12FT062.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:320:31:cafe::ea) by MWHPR18CA0032.outlook.office365.com
+ (2603:10b6:320:31::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.32 via Frontend
+ Transport; Sun, 8 Nov 2020 22:12:23 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
  smtp.mailfrom=agilent.com; lists.openembedded.org; dkim=none (message not
  signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
@@ -39,18 +39,18 @@ Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
  192.25.218.41 as permitted sender) receiver=protection.outlook.com;
  client-ip=192.25.218.41; helo=edgeappmail.agilent.com;
 Received: from edgeappmail.agilent.com (192.25.218.41) by
- MW2NAM12FT042.mail.protection.outlook.com (10.13.180.237) with Microsoft SMTP
+ MW2NAM12FT062.mail.protection.outlook.com (10.13.181.114) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.3564.19 via Frontend Transport; Sun, 8 Nov 2020 22:12:21 +0000
 Received: from laplante-lm-19.localdomain (10.46.38.234) by
  edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server id
- 15.1.2044.4; Sun, 8 Nov 2020 15:12:17 -0700
+ 15.1.2044.4; Sun, 8 Nov 2020 15:12:18 -0700
 From: "Chris Laplante" <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH v3 05/10] main: group --help options to make them easier to read
-Date: Sun, 8 Nov 2020 17:10:54 -0500
-Message-ID: <20201108221059.16854-6-chris.laplante@agilent.com>
+Subject: [PATCH v3 06/10] main: rename list_extension_modules => load_extension_modules to clarify its function
+Date: Sun, 8 Nov 2020 17:10:55 -0500
+Message-ID: <20201108221059.16854-7-chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201108221059.16854-1-chris.laplante@agilent.com>
 References: <20201108221059.16854-1-chris.laplante@agilent.com>
@@ -61,291 +61,71 @@ Received-SPF: SoftFail (wpcosapexchedg2.windmz.agilent.com: domain of
  permitted sender)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ff4bf355-a752-4540-901a-08d884335d08
-X-MS-TrafficTypeDiagnostic: BY5PR12MB4114:
+X-MS-Office365-Filtering-Correlation-Id: ae0c940b-b834-4920-f3b2-08d884335d89
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3646:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<BY5PR12MB41145063171913824E8491468BEB0@BY5PR12MB4114.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1060;
+	<MN2PR12MB364646755191C65F812B5B1B8BEB0@MN2PR12MB3646.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	MOJ2KWYmauoO9VjBBceXpzBQ0cV7osmEUwBufSM909wriun67QbIJCcOEQ98/ZqJ+JuuTnhofNmznDS/EA1AQbJUP6gnU/yaQohllN7dRbpv4VQLXvmpO8LJPAJ3nd1T88J101ns5LXl82rGsaoVT92M0qCy4Is79X+vAF0rdHpmDkf67YyWxaTjO47HeUqeddbaaYgshd74GegsyP5rIESyyqauZl8tO2n6R8mSue60dMjC1NAZpJrIGHYhCezqDcwwd/+emHaGEOEjfKVPHQdQzN+FVi6TgEbDkWCw+JrEt4KZIsgYOzu5WlX0JRQAhHtoFmtbEaRg4r6ioYvAbYzlRJSLgmL4KD2RRAzDJDE4A5IfKxiRaQ1kq8Gw0lL1k0qX0PahiMgQphuFRumR9WAxkc2PicvnbL1O8pwN7h0=
+	icPPDug+skwMYktcsEq0JynqFLmYHzoY8odlU/HTcD+y8GMipK18xGcTPhaqvdrZVDH5wfPPR59ODdBbwtSM+Ruh87FYNsfTd5MQsI5kE3UU1JxgfB6sQKUamZVTMqLigx9Oi6RRsIw5dNaOQb+scD0G9omdzJegAPLlwkRMCIuaggDVFtAGBETsySf3+nkyzF5JTAFx5PKuyjbomHuwmtjgyDY182oJAVEa+oZgE7yzU3iUpwcWtBPq7gxiv29XqDvufqdlOgToKUEV0KALFZYmW3Q69Xck4A+snqgi3yj4w47IrbUGuyIEXwHGIUFo69jJdHC3ef0QsiGm8MNGUYz5g6WzRL0NZjaAw+V0XgnJhEPH0fbpMWxJc7/bvf8eBQnXs+fRxfV2RIHwuhy0stY0mPA+A6w/HA5pUxLgaLY=
 X-Forefront-Antispam-Report: 
-	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:cos.smtp.agilent.com;CAT:NONE;SFS:(4636009)(346002)(136003)(376002)(396003)(39860400002)(29502001)(46966005)(6916009)(70206006)(107886003)(356005)(47076004)(86362001)(36906005)(316002)(8676002)(1076003)(5660300002)(30864003)(8936002)(6666004)(478600001)(4326008)(2616005)(186003)(26005)(2906002)(44832011)(36756003)(426003)(82310400003)(82740400003)(336012)(83380400001)(7636003);DIR:OUT;SFP:1101;
+	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:cos.smtp.agilent.com;CAT:NONE;SFS:(4636009)(346002)(39860400002)(376002)(396003)(136003)(29502001)(46966005)(478600001)(8936002)(70206006)(36906005)(8676002)(44832011)(83380400001)(316002)(107886003)(1076003)(6666004)(2906002)(4326008)(5660300002)(6916009)(26005)(186003)(86362001)(426003)(7636003)(356005)(36756003)(2616005)(82310400003)(47076004)(82740400003)(336012);DIR:OUT;SFP:1101;
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2020 22:12:21.0766
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2020 22:12:21.9196
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff4bf355-a752-4540-901a-08d884335d08
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae0c940b-b834-4920-f3b2-08d884335d89
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.41];Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-MW2NAM12FT042.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-MW2NAM12FT062.eop-nam12.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4114
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3646
 Content-Type: text/plain
 
-(YOCTO #12018)
+Also clearly document in docstring that it is the modules themselves
+that are returned.
 
 Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 ---
- lib/bb/main.py | 175 +++++++++++++++++++++++++++----------------------
- 1 file changed, 95 insertions(+), 80 deletions(-)
+ lib/bb/main.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/lib/bb/main.py b/lib/bb/main.py
-index 5bd41b1c..e211768f 100755
+index e211768f..ccb844bb 100755
 --- a/lib/bb/main.py
 +++ b/lib/bb/main.py
-@@ -127,28 +127,56 @@ def create_bitbake_parser():
-     Executes the specified task (default is 'build') for a given set of target recipes (.bb files).
-     It is assumed there is a conf/bblayers.conf available in cwd or in BBPATH which
-     will provide the layer, BBFILES and other configuration information.
--    """)
-+    """, add_help=False)
-     parser.add_argument("targets", nargs="*")
--    parser.add_argument("--version",
--                        action="version",
--                        version="BitBake Build Tool Core version {0}".format(bb.__version__))
- 
-+    # List options that the user is most likely to use first
-+    frequent_group = parser.add_argument_group("frequently used")
-+    frequent_group.add_argument("-c", "--cmd", dest="cmd",
-+                                help="Specify the task to execute. The exact options available "
-+                                     "depend on the metadata. Some examples might be 'compile'"
-+                                     " or 'populate_sysroot' or 'listtasks' may give a list of "
-+                                     "the tasks available.")
-+
-+    frequent_group.add_argument("-k", "--continue", action="store_false", dest="abort",
-+                                help="Continue as much as possible after an error. While the target that "
-+                                     "failed and anything depending on it cannot be built, as much as "
-+                                     "possible will be built before stopping.")
-+
-+    frequent_group.add_argument("-C", "--clear-stamp", dest="invalidate_stamp",
-+                                help="Invalidate the stamp for the specified task such as 'compile' "
-+                                     "and then run the default task for the specified target(s).")
-+
-+    frequent_group.add_argument("--runall", action="append", dest="runall", default=[],
-+                                help="Run the specified task for any recipe in the taskgraph of the specified target (even if "
-+                                     "it wouldn't otherwise have run).")
-+
-+    frequent_group.add_argument("--runonly", action="append", dest="runonly", default=[],
-+                                help="Run only the specified task within the taskgraph of the specified targets (and any task "
-+                                     "dependencies those tasks may have).")
-+
-+    frequent_group.add_argument("-f", "--force", action="store_true", dest="force",
-+                            help="Force the specified targets/task to run (invalidating any "
-+                                 "existing stamp file).")
-+
-+    # Options having to do with UI or verbosity/debug reporting
-+    output_control_group = parser.add_argument_group("output control")
-     ui_choices = LazyUiChoices()
-     # Setting metavar="" is necessary otherwise argparse will immediately try to expand the choices
--    parser.add_argument("-u", "--ui",
-+    output_control_group.add_argument("-u", "--ui",
-                         default=os.environ.get('BITBAKE_UI', 'knotty'),
-                         help="The user interface to use (%(choices)s) - default: %(default)s",
-                         choices=ui_choices, metavar="", type=ui_choices)
- 
--    parser.add_argument("-v", "--verbose", action="store_true", dest="verbose",
-+    output_control_group.add_argument("-v", "--verbose", action="store_true", dest="verbose",
-                       help="Enable tracing of shell tasks (with 'set -x'). "
-                            "Also print bb.note(...) messages to stdout (in "
-                            "addition to writing them to ${T}/log.do_<task>).")
- 
--    parser.add_argument("-q", "--quiet", action="count", dest="quiet", default=0,
-+    output_control_group.add_argument("-q", "--quiet", action="count", dest="quiet", default=0,
-                       help="Output less log message data to the terminal. You can specify this more than once.")
- 
--    parser.add_argument("-D", "--debug", action="count", dest="debug", default=0,
-+    output_control_group.add_argument("-D", "--debug", action="count", dest="debug", default=0,
-                       help="Increase the debug level. You can specify this "
-                            "more than once. -D sets the debug level to 1, "
-                            "where only bb.debug(1, ...) messages are printed "
-@@ -160,125 +188,112 @@ def create_bitbake_parser():
-                            "to ${T}/log.do_taskname, regardless of the debug "
-                            "level.")
- 
--    parser.add_argument("-b", "--buildfile", dest="buildfile",
--                      help="Execute tasks from a specific .bb recipe directly. WARNING: Does "
--                           "not handle any dependencies from other recipes.")
-+    output_control_group.add_argument("-w", "--write-log", dest="writeeventlog", default=os.environ.get("BBEVENTLOG"),
-+                        help="Writes the event log of the build to a bitbake event json file. "
-+                             "Use '' (empty string) to assign the name automatically.")
- 
--    parser.add_argument("-k", "--continue", action="store_false", dest="abort",
--                      help="Continue as much as possible after an error. While the target that "
--                           "failed and anything depending on it cannot be built, as much as "
--                           "possible will be built before stopping.")
-+    output_control_group.add_argument("-l", "--log-domains", action="append", dest="debug_domains", default=[],
-+                        help="Show debug logging for the specified logging domains")
- 
--    parser.add_argument("-f", "--force", action="store_true", dest="force",
--                      help="Force the specified targets/task to run (invalidating any "
--                           "existing stamp file).")
-+    # Debugging options
-+    debugging_group = parser.add_argument_group("debugging and introspection")
-+    debugging_group.add_argument("-e", "--environment", action="store_true", dest="show_environment",
-+                                 help="Show the global or per-recipe environment complete with information"
-+                                      " about where variables were set/changed.")
- 
--    parser.add_argument("-c", "--cmd", dest="cmd",
--                      help="Specify the task to execute. The exact options available "
--                           "depend on the metadata. Some examples might be 'compile'"
--                           " or 'populate_sysroot' or 'listtasks' may give a list of "
--                           "the tasks available.")
--
--    parser.add_argument("-C", "--clear-stamp", dest="invalidate_stamp",
--                      help="Invalidate the stamp for the specified task such as 'compile' "
--                           "and then run the default task for the specified target(s).")
--
--    parser.add_argument("-r", "--read", action="append", dest="prefile", default=[],
--                      help="Read the specified file before bitbake.conf.")
--
--    parser.add_argument("-R", "--postread", action="append", dest="postfile", default=[],
--                      help="Read the specified file after bitbake.conf.")
--
--    parser.add_argument("-n", "--dry-run", action="store_true", dest="dry_run", default=[],
-+    debugging_group.add_argument("-n", "--dry-run", action="store_true", dest="dry_run", default=[],
-                       help="Don't execute, just go through the motions.")
- 
--    parser.add_argument("-S", "--dump-signatures", action="append", dest="dump_signatures", metavar="SIGNATURE_HANDLER",
-+    debugging_group.add_argument("-S", "--dump-signatures", action="append", dest="dump_signatures", metavar="SIGNATURE_HANDLER",
-                         default=[], help="Dump out the signature construction information, with no task "
-                            "execution. The SIGNATURE_HANDLER parameter is passed to the "
-                            "handler. Two common values are none and printdiff but the handler "
-                            "may define more/less. none means only dump the signature, printdiff"
-                            " means compare the dumped signature with the cached one.")
- 
--    parser.add_argument("-p", "--parse-only", action="store_true", dest="parse_only",
-+    debugging_group.add_argument("-p", "--parse-only", action="store_true", dest="parse_only",
-                       help="Quit after parsing the BB recipes.")
- 
--    parser.add_argument("-s", "--show-versions", action="store_true", dest="show_versions",
-+    debugging_group.add_argument("-s", "--show-versions", action="store_true", dest="show_versions",
-                       help="Show current and preferred versions of all recipes.")
- 
--    parser.add_argument("-e", "--environment", action="store_true", dest="show_environment",
--                      help="Show the global or per-recipe environment complete with information"
--                           " about where variables were set/changed.")
--
--    parser.add_argument("-g", "--graphviz", action="store_true", dest="dot_graph",
-+    debugging_group.add_argument("-g", "--graphviz", action="store_true", dest="dot_graph",
-                       help="Save dependency tree information for the specified "
-                            "targets in the dot syntax.")
- 
--    parser.add_argument("-I", "--ignore-deps", action="append", default=[], dest="extra_assume_provided",
-+    debugging_group.add_argument("--revisions-changed", action="store_true", dest="revisions_changed",
-+                        help="Set the exit code depending on whether upstream floating "
-+                             "revisions have changed or not.")
-+
-+    debugging_group.add_argument("-P", "--profile", action="store_true", dest="profile", default=[],
-+                                              help="Profile the command and save reports.")
-+
-+    # Developer options that aren't commonly used by normal users
-+    developer_group = parser.add_argument_group("developer")
-+    developer_group.add_argument("-r", "--read", action="append", dest="prefile", default=[],
-+                                   help="Read the specified file before bitbake.conf.")
-+
-+    developer_group.add_argument("-R", "--postread", action="append", dest="postfile", default=[],
-+                                   help="Read the specified file after bitbake.conf.")
-+
-+    developer_group.add_argument("-I", "--ignore-deps", action="append", default=[], dest="extra_assume_provided",
-                       help="Assume these dependencies don't exist and are already provided "
-                            "(equivalent to ASSUME_PROVIDED). Useful to make dependency "
-                            "graphs more appealing")
- 
--    parser.add_argument("-l", "--log-domains", action="append", dest="debug_domains", default=[],
--                      help="Show debug logging for the specified logging domains")
-+    developer_group.add_argument("--no-setscene", action="store_true", dest="nosetscene",
-+                        help="Do not run any setscene tasks. sstate will be ignored and "
-+                             "everything needed, built.")
- 
--    parser.add_argument("-P", "--profile", action="store_true", dest="profile", default=[],
--                      help="Profile the command and save reports.")
-+    developer_group.add_argument("--skip-setscene", action="store_true", dest="skipsetscene",
-+                        help="Skip setscene tasks if they would be executed. Tasks previously "
-+                             "restored from sstate will be kept, unlike --no-setscene")
- 
--    parser.add_argument("--token", dest="xmlrpctoken", default=os.environ.get("BBTOKEN"),
-+    developer_group.add_argument("--setscene-only", action="store_true", dest="setsceneonly",
-+                        help="Only run setscene tasks, don't run any real tasks.")
-+
-+    developer_group.add_argument("-b", "--buildfile", dest="buildfile",
-+                               help="Execute tasks from a specific .bb recipe directly. WARNING: Does "
-+                                    "not handle any dependencies from other recipes.")
-+    # Server control options
-+    server_control_group = parser.add_argument_group("server control")
-+    server_control_group.add_argument("--token", dest="xmlrpctoken", default=os.environ.get("BBTOKEN"),
-                       help="Specify the connection token to be used when connecting "
-                            "to a remote server.")
- 
--    parser.add_argument("--revisions-changed", action="store_true", dest="revisions_changed",
--                      help="Set the exit code depending on whether upstream floating "
--                           "revisions have changed or not.")
--
--    parser.add_argument("--server-only", action="store_true", dest="server_only",
-+    server_control_group.add_argument("--server-only", action="store_true", dest="server_only",
-                       help="Run bitbake without a UI, only starting a server "
-                            "(cooker) process.")
- 
--    parser.add_argument("-B", "--bind", dest="bind",
-+    server_control_group.add_argument("-B", "--bind", dest="bind",
-                       help="The name/address for the bitbake xmlrpc server to bind to.")
- 
--    parser.add_argument("-T", "--idle-timeout", type=float, dest="server_timeout",
-+    server_control_group.add_argument("-T", "--idle-timeout", type=float, dest="server_timeout",
-                       default=os.getenv("BB_SERVER_TIMEOUT"),
-                       help="Set timeout to unload bitbake server due to inactivity, "
-                            "set to -1 means no unload, "
-                            "default: Environment variable BB_SERVER_TIMEOUT.")
- 
--    parser.add_argument("--no-setscene", action="store_true", dest="nosetscene",
--                      help="Do not run any setscene tasks. sstate will be ignored and "
--                           "everything needed, built.")
--
--    parser.add_argument("--skip-setscene", action="store_true", dest="skipsetscene",
--                      help="Skip setscene tasks if they would be executed. Tasks previously "
--                           "restored from sstate will be kept, unlike --no-setscene")
--
--    parser.add_argument("--setscene-only", action="store_true", dest="setsceneonly",
--                      help="Only run setscene tasks, don't run any real tasks.")
--
--    parser.add_argument("--remote-server", dest="remote_server", default=os.environ.get("BBSERVER"),
-+    server_control_group.add_argument("--remote-server", dest="remote_server", default=os.environ.get("BBSERVER"),
-                       help="Connect to the specified server.")
- 
--    parser.add_argument("-m", "--kill-server", action="store_true", dest="kill_server",
-+    server_control_group.add_argument("-m", "--kill-server", action="store_true", dest="kill_server",
-                       help="Terminate any running bitbake server.")
- 
--    parser.add_argument("--observe-only", action="store_true", dest="observe_only",
-+    server_control_group.add_argument("--observe-only", action="store_true", dest="observe_only",
-                       help="Connect to a server as an observing-only client.")
- 
--    parser.add_argument("--status-only", action="store_true", dest="status_only",
-+    server_control_group.add_argument("--status-only", action="store_true", dest="status_only",
-                       help="Check the status of the remote bitbake server.")
- 
--    parser.add_argument("-w", "--write-log", dest="writeeventlog", default=os.environ.get("BBEVENTLOG"),
--                      help="Writes the event log of the build to a bitbake event json file. "
--                           "Use '' (empty string) to assign the name automatically.")
-+    # Options that don't really fit elsewhere
-+    other_options = parser.add_argument_group("other")
-+    other_options.add_argument("--version",
-+                    action="version",
-+                    version="BitBake Build Tool Core version {0}".format(bb.__version__))
- 
--    parser.add_argument("--runall", action="append", dest="runall", default=[],
--                      help="Run the specified task for any recipe in the taskgraph of the specified target (even if "
--                           "it wouldn't otherwise have run).")
-+    other_options.add_argument("-h", "--help", action="help", help="show this help message and exit")
- 
--    parser.add_argument("--runonly", action="append", dest="runonly", default=[],
--                      help="Run only the specified task within the taskgraph of the specified targets (and any task "
--                           "dependencies those tasks may have).")
-     return parser
+@@ -40,9 +40,9 @@ class BBMainFatal(bb.BBHandledException):
+     pass
  
  
+-def list_extension_modules(pkg, checkattr):
++def load_extension_modules(pkg, checkattr):
+     """
+-    Lists extension modules in a specific Python package
++    Loads extension modules in a specific Python namespace package.
+     (e.g. UIs, servers). NOTE: Calling this function will import all of the
+     submodules of the specified module in order to check for the specified
+     attribute; this can have unusual side-effects. As a result, this should
+@@ -51,6 +51,7 @@ def list_extension_modules(pkg, checkattr):
+         pkg: previously imported Python package to list
+         checkattr: attribute to look for in module to determine if it's valid
+             as the type of extension you are looking for
++    Returns: list of modules (imported via importlib)
+     """
+     import pkgutil
+     import importlib
+@@ -101,7 +102,7 @@ class LazyUiChoices:
+ 
+     def _lazy_load_modules(self):
+         if not self._modules:
+-            self._modules = {module.__name__.split(".")[-1]: module for module in list_extension_modules(bb.ui, "main")}
++            self._modules = {module.__name__.split(".")[-1]: module for module in load_extension_modules(bb.ui, "main")}
+ 
+     def __iter__(self):
+         self._lazy_load_modules()
 -- 
 2.17.1
 
