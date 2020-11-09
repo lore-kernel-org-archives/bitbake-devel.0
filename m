@@ -1,111 +1,184 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (NAM11-CO1-obe.outbound.protection.outlook.com [40.107.220.41])
- by mx.groups.io with SMTP id smtpd.web08.15642.1604945339686235625
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (NAM11-BN8-obe.outbound.protection.outlook.com [40.107.236.41])
+ by mx.groups.io with SMTP id smtpd.web10.16246.1604948205969378589
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 09 Nov 2020 10:09:00 -0800
+ Mon, 09 Nov 2020 10:56:46 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=zz/vxk02;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.220.41, mailfrom: chris.laplante@agilent.com)
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=Kr0ig5l1;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.236.41, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=krsfSma/pjMtSuaiVNWSj5DfCkKegUZvceJFCPy7HwZwLd0JefSSNaEW0Ldvl6eF60Y3txNALlKrjdzBKIox/ejqmHg8wlFcpHdF0SOEntnvoFqOEDnWzLIzcImpKFUlkn3X+fWMaTVmaHheLG1GSA7Gh6RH95iB0FXsnk3hC/7l0y4pynQdhdaYntFUMaGgTJRaie1NJMGMSdD66ADBs57qDVCXH2BEk6UnzRGaqVFwZ1N88CoZXcr1ox1kterOp/PQ97vwQ+wL1qDLMTkLLZXfctsX+ciRAJMVSb/NkIwFyNzIZpReGs5ymvbZYTS7vY/JPrdoP5NP3o+z7ET3Ww==
+ b=hDdy9MQE6cftjtWahtD4GrCAZVy3Q+VDbAw4oO1QzDCUCWZknEVttMws+v2V12EhEPicP/y4RkOaIBt1M472KDi++rLsMFnxnueqXTEqsO/qJLK+SHPMBcSI+GbEbjwvX3OIRXEDLxuJIzv10yMvGjfEhB0vdJaoDm7tGj3g2V7XWicq7aFS+nCjn2SVeLWoUQ5cPKKCZbfudgL5+aBgHXaQ5g1j6ewjUKhaaU1a9+rAQGX3SaV5JQJtLzubITGtOwkX3VpAitWVUNlT07HXXWNYzqAaG7t78nvEPTUXnFPik0K4t+AAQwKC9+2TApSCqvORWt2u0NGTx3hNSlEc/A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QJZSiG32y4c4vkXUSi40Pq9QJLL0gvZnlo2G1m2DUpI=;
- b=RWhNJb2VQvAQR5vZegd3lRJNtLOZwY4PGhl8nPmVIL2zteTyEkSNnhxBgukUqcb1ozkS72Puxc/0MzG/8fmr7/0viFk1RURwKVaugx5AZt3J8P9jUH3pnaeFnuVA8/yIqQFYwU/IS65K/DDCaHljjgatoWoWFu+e7JJvmWAZdkfTM6B1HdnqJ2yssdwWOQJ46csE9atoGBo6wukfvTL0uafMMoGf3Jd0ssQ9r5zaXHVSeVqGQRGW40nJBmaDWyf1WA/eEjNax+5OhGksZH05lErpyv0/38dTFT3vw2SAcRmE3SSklEw1Ac5h3ukABbA/urQrDt2lnUiZfEYjAzacsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
- dkim=pass header.d=agilent.com; arc=none
+ bh=aTuBFPmLqmWmAfrlWXpYMf1i8PP/N6G8eC5imnuso18=;
+ b=fZhlj/Wic9LYtylFHBdChcLePmV2fSMDJGRJr/vx0zIoB/QxwG+YAw6mZIrwjwmBnWh6iGcIlHgCI81VC1HmGzadcJTM5ICDTCed/ptBESvcRNzzLfNxYUDtwcOsajW6iU8NcJ9k4kqYFNg1k3sMRYpbkklQOjwYNkVcWoSQqxZXB8n2p1jHenJd7uxgm+1svPpJ5xp/UdHUJoXXymKWNYSsScyOfWR6Y+R85ddLm+OicqnNpz1frf0OlQr371Fnd6r7gRlmb5TxtJfKPBduV1K8F7cVSy5r1hiCwz8n1UAQVyl9GPFSi4B+26jtbas6BISXIGPgJCe+r19/WC4Yfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 192.25.218.37) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
+ action=none header.from=agilent.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QJZSiG32y4c4vkXUSi40Pq9QJLL0gvZnlo2G1m2DUpI=;
- b=zz/vxk02cPAq3lttVHaMG4GFphTDwHzO8peMD6QESWZs6miPY/zrAdv/QehDJMEMag3oLVf03DB+YjfzBLCR3QNmxtxlpRZCAtIATuLGVj4WvBqIvex/p08AqljWFj13138ISf0wBl3WXa8VAacL1AUKSeKyWWkBRcwGrOJnQpbXtm3ddVFk//CgfesAun5hjtcju8AItbxcUQiRcJ3RipSkFrxfKslqgmNEbstfaYrUAW/eYAjzUTCTCCez24TGNYSv4n/sxS8kGkS68ykg0mEVf/Lh/m26830Tgw0/LarO9wFQ1yv8e1+eS46iGJNe1NcSvRh9LS+H8GOjXTzMHw==
-Received: from SN1PR12MB2480.namprd12.prod.outlook.com (2603:10b6:802:22::21)
- by SA0PR12MB4541.namprd12.prod.outlook.com (2603:10b6:806:9e::14) with
+ bh=aTuBFPmLqmWmAfrlWXpYMf1i8PP/N6G8eC5imnuso18=;
+ b=Kr0ig5l1yQxL5ia3Apfqzvfips0k2kyFaG2eN5Sr3RETNLbgH4tL7g4Rtmw8gjbD9ugB0B5i6UGOckV3TC2yaIf3YCuet09keVagV9ok8OwgDDI2g96gDHOwAvQcRPlro4BxM1Uwjg9GqyivfJ/hCNOmVO/TBapx5e9WuqeiQLeo8XaCdrGEWmK1T4LfA/Kaf28TR1by0x/TRMJYWXJrjvGDGMDhNm/tcQN2OAs6ITxrzRShfI1IhHgbbttXe3e7GNhJ/JQKbfswofm8IiEOPqW04hAdXnJcOulh6OwuGyHN7a1SmGVgM8ME7HkZLIvlwqwlaQMEWSDIN5AoZFuUaw==
+Received: from BN6PR13CA0015.namprd13.prod.outlook.com (2603:10b6:404:10a::25)
+ by BL0PR12MB4660.namprd12.prod.outlook.com (2603:10b6:207:34::30) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.24; Mon, 9 Nov
- 2020 18:08:58 +0000
-Received: from SN1PR12MB2480.namprd12.prod.outlook.com
- ([fe80::5dc7:be80:e39f:5be1]) by SN1PR12MB2480.namprd12.prod.outlook.com
- ([fe80::5dc7:be80:e39f:5be1%3]) with mapi id 15.20.3541.025; Mon, 9 Nov 2020
- 18:08:58 +0000
-From: "Chris Laplante" <chris.laplante@agilent.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] build: defer processing of cleandirs until after lockfiles are acquired
-Thread-Topic: [bitbake-devel] [PATCH] build: defer processing of cleandirs
- until after lockfiles are acquired
-Thread-Index: AQHWsfRoMhm/XIzvH0aYJAycu5GxLqm9TSuAgALUscA=
-Date: Mon, 9 Nov 2020 18:08:58 +0000
-Message-ID: 
- <SN1PR12MB248037DDEABD10624D2924C78BEA0@SN1PR12MB2480.namprd12.prod.outlook.com>
-References: <20201103151537.19348-1-chris.laplante@agilent.com>
- <940c12c0b27567eab634098ac0de1c7dbffaed65.camel@linuxfoundation.org>
-In-Reply-To: 
- <940c12c0b27567eab634098ac0de1c7dbffaed65.camel@linuxfoundation.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.23; Mon, 9 Nov
+ 2020 18:56:44 +0000
+Received: from BN8NAM12FT059.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:404:10a:cafe::1f) by BN6PR13CA0015.outlook.office365.com
+ (2603:10b6:404:10a::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.21 via Frontend
+ Transport; Mon, 9 Nov 2020 18:56:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.37)
+ smtp.mailfrom=agilent.com; lists.openembedded.org; dkim=none (message not
+ signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
  header.from=agilent.com;
-x-originating-ip: [76.99.179.205]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: edb55750-a9e9-40bf-ddf9-08d884da878a
-x-ms-traffictypediagnostic: SA0PR12MB4541:
-x-microsoft-antispam-prvs: 
- <SA0PR12MB454116D8639E875372CAC1EE8BEA0@SA0PR12MB4541.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- wS/OWxl1JEv99WQEXnbkdMfnx/tACP/qilChJo1jspjIr54/ARp3WRH+XtE7b1IRIDYkr5t9X9r3M0nBrateDzpg7yqD4r40Bnb3WNwy+K/+q8xup1ELZM8tqkYjDOIgwfeXgj0S0Ff6thgOCzoEa3VQRzMtuJZ3bXuCU01n/+VInu53+TXjNOiI8sFiyWvDKBGDWjubc6nDaxMCNdBYUTd/udksSmd6ylLAejZhQJvdFYLKLZRMURXOcQG7SASln2XAyUIoqpnSs1rVJjz0ssXyGY6pdNlghzbCANawxS6VPb9VsuiORxG6R/IPbrC36OmLx1fTjfOqdzJXalR4JTby3xTCh3BSTPsXwRTaraw1WUPj+KKIfEkcG0BgBSNle8I1XwuByZVvxkCnDdxBy0TcOxwPjXpE4HKMjz5mAv/EnUImyOzvzYacL43uQAtrYDFcGT/vAyO/SmI6c60LYQ==
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2480.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(366004)(29502001)(478600001)(316002)(110136005)(55016002)(52536014)(64756008)(66446008)(6506007)(26005)(66556008)(66476007)(8676002)(83380400001)(2906002)(8936002)(7696005)(966005)(86362001)(33656002)(66946007)(5660300002)(9686003)(71200400001)(76116006)(45080400002)(186003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 
- +eE1XGBRocywWpuVquHVEm5LE1YIUjAvoZD3CBko5S960tfgtpaCwnlpj3cRcCxyN8DNLJWGXTaahh3PPLBIboZJkmGNDBNgu/vnToIGEXH6adFiA2xRc8f+veclq6GWVm+slnKg8YmnoM6bbG66oQZvxAUIEFi4YWzzNV/pTvKl+++16WChq9pab91yqdDj2zbYsxjZrBQWARUlEb4Ivv0dHdb06VmnbInkqmvlRlw+wBWwLltavSoaHjkdoT88BsPQAP0kuG3Kgy0UzYqokVVvynOy0ughYYrnE6xTVo6CM4H3oTL3FJ1SGqeN+qa0jW0cMoBDv/Q1QTDNlH0KvGhSqIDyGHEZ3/7Trq0NgHac4ui7oZjCawst2X//vXt0izTb6ObiCHtcbZPYJaWdSesp53r0NS4QhhcHugNr4/lXBUaa6MnL+KLAjNcQbFb4b5m1knmruLjimL31tQCqtLwnlfJvp8vsGjzGMPt2tbnDMwO1nL9wiOC7hRikISr/e8zKX3hvIVaRwitk5P8MrOi0LkylzLE/qvJTpL6iAf9a2dKdEmslC9D9xtlCk1JN8zJqcNopsK7FHKbAk8BJRwAblpdjrkG8h4KdNoXwWdcWoj3PCJ5cku1cxf07nGKODQZzGasxGm9xMfIFCp81+w==
-x-ms-exchange-transport-forked: True
+Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
+ 192.25.218.37 as permitted sender) receiver=protection.outlook.com;
+ client-ip=192.25.218.37; helo=edgeappmail.agilent.com;
+Received: from edgeappmail.agilent.com (192.25.218.37) by
+ BN8NAM12FT059.mail.protection.outlook.com (10.13.183.55) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3564.19 via Frontend Transport; Mon, 9 Nov 2020 18:56:44 +0000
+Received: from laplante-lm-19.localdomain (10.46.38.234) by
+ edgeappmail.agilent.com (192.25.218.37) with Microsoft SMTP Server id
+ 15.1.2044.4; Mon, 9 Nov 2020 11:56:36 -0700
+From: "Chris Laplante" <chris.laplante@agilent.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: Chris Laplante <chris.laplante@agilent.com>
+Subject: [PATCH v2] build: defer processing of [dirs] and [cleandirs] until after lockfiles are acquired
+Date: Mon, 9 Nov 2020 13:56:38 -0500
+Message-ID: <20201109185638.59226-1-chris.laplante@agilent.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Return-Path: chris.laplante@agilent.com
+Received-SPF: SoftFail (wpcosapexchedg1.windmz.agilent.com: domain of
+ transitioning chris.laplante@agilent.com discourages use of 10.46.38.234 as
+ permitted sender)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ebede198-1b68-40ce-f53c-08d884e133ff
+X-MS-TrafficTypeDiagnostic: BL0PR12MB4660:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<BL0PR12MB46602BADE67FEEC0102981598BEA0@BL0PR12MB4660.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	wP3WcdNZ8RHb9HlpLtz8WX1IVm850RjVHkPjeAv4uYgvAnqLh+pTaIwXoG8y5w/BNSOSJkTXX+4SeJ4N7rzsNeWLgU/mdKwqboNG/ht/uyolnGLuEHyETj5GeAplStm/ZFtw6G7G+rQB0eZufKfUhV2wQJFGW+q6FNrTk7AvLwSqtaTxvyDzeiexfiWZqxCRfZhRoqBnPUa2rch4k5YwRPAw6pcuKuPwn+KwN0hc3A8+0j82rBon6Yf3LElCw3hyf9wqnYVOCQcp+GaLI+KkFriG9fgdCV04TEvYhm4my+Yph2dYfo9QqamzDFo0OsH0St/d29i4WdKyNBaafRV2o6mzQodVjWp4vEyrzskbGdbmJ22kX7tcA7cxdQGNfpe/UGEFL3agNr6X7KeRRHkhQmIPGYvEuq4A3kRAqke6Etc=
+X-Forefront-Antispam-Report: 
+	CIP:192.25.218.37;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:cos.smtp.agilent.com;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(29502001)(46966005)(478600001)(356005)(86362001)(316002)(26005)(8936002)(7636003)(83380400001)(5660300002)(1076003)(2906002)(82310400003)(82740400003)(47076004)(44832011)(426003)(8676002)(186003)(2616005)(36756003)(6916009)(4326008)(107886003)(70206006)(336012);DIR:OUT;SFP:1101;
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2480.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: edb55750-a9e9-40bf-ddf9-08d884da878a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Nov 2020 18:08:58.4107
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2020 18:56:44.6266
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7zXZXtYRdynICMAnz9fyHEvXP8y32in74ekjN2bt37jc9szGg/tHDemjAtxouAqiLh7lCvC/9rRY1//AOYHgMlsY0+37k1gwYz2A1LDtsFQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4541
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebede198-1b68-40ce-f53c-08d884e133ff
+X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.37];Helo=[edgeappmail.agilent.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BN8NAM12FT059.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB4660
+Content-Type: text/plain
 
-PiA+IEl0IGlzIGN1cnJlbnRseSBiZWxpZXZlZCB0aGF0IG5vcm1hbCBbZGlyc10gaGFuZGxpbmcg
-aXMgZmluZSBhcy1pcy4NCj4gDQo+IFVuZm9ydHVuYXRlbHkgdGhpcyBjYXVzZWQgYWxsIGtpbmRz
-IG9mIHdlaXJkIGJ1aWxkIGZhaWx1cmVzIGluIHRlc3Rpbmc6DQo+IA0KPiBTZWUgdGhlIGJ1aWxk
-cyB0cmlnZ2VyZWQgYnk6DQo+IGh0dHBzOi8vbmFtMTIuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0
-bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmF1dG8NCj4gYnVpbGRlci55b2N0b3Byb2plY3Qu
-b3JnJTJGdHlwaG9vbiUyRiUyMyUyRmJ1aWxkZXJzJTJGODMlMkZidWlsZHMlMg0KPiBGMTU1MCZh
-bXA7ZGF0YT0wNCU3QzAxJTdDY2hyaXMubGFwbGFudGUlNDBhZ2lsZW50LmNvbSU3Q2VlOTQ3NTY5
-DQo+IGUxMDA0NmU2ZmFkYzA4ZDg4MzZmYWRkOCU3Q2E5YzBiYzA5OGI0NjQyMDY5MzUxMmJhMTJm
-YjRhNWMwJTdDDQo+IDAlN0MwJTdDNjM3NDAzODYyOTcyMjk3MDMyJTdDVW5rbm93biU3Q1RXRnBi
-R1pzYjNkOGV5SldJam9pDQo+IE1DNHdMakF3TURBaUxDSlFJam9pVjJsdU16SWlMQ0pCVGlJNklr
-MWhhV3dpTENKWFZDSTZNbjAlM0QlN0MxMA0KPiAwMCZhbXA7c2RhdGE9bzBhRGkxeTM5SFpWRW12
-alNNUmN3YjRDWEk2aWdzU3JwYWFROGVmR0pyWSUzRCZhbQ0KPiBwO3Jlc2VydmVkPTANCj4gDQo+
-IEkgcmV2ZXJ0ZWQgdGhpcyBjb21taXQgYW5kIHRoaW5ncyBzdGFydGVkIHdvcmtpbmcgc28gdGhl
-cmUgaXMgc29tZXRoaW5nDQo+IHdyb25nLg0KDQpJJ3ZlIGdvdHRlbiB0byB0aGUgYm90dG9tIG9m
-IHdoeSBhdCBsZWFzdCBzb21lIG9mIHRoZXNlIGZhaWxlZC4gSXQgdHVybnMgb3V0IHdlIGRvIG5l
-ZWQgdG8gbW92ZSBbZGlyc10gcHJvY2Vzc2luZyBhZnRlciBbY2xlYW5kaXJzXSwgc2luY2UgdGhl
-cmUgbWlnaHQgYmUgc29tZXRoaW5nIGxpa2U6DQoNCmRvX3Rhc2tbY2xlYW5kaXJzXSA9ICIke01Z
-X0RJUn0iDQpkb190YXNrW2RpcnNdICs9ICIke01ZX0RJUn0vc3ViZGlyIg0KDQpXaGVuIFtkaXJz
-XSBoYXBwZW5zIGJlZm9yZSBbY2xlYW5kaXJzXSwgdGhlbiAke01ZX0RJUn0vc3ViZGlyIGlzIGNy
-ZWF0ZWQsIGJ1dCB0aGVuIHRoZSBlbnRpcmUgZGlyZWN0b3J5IGlzIHdpcGVkIGJ5IFtjbGVhbmRp
-cnNdIGhhbmRsaW5nIGxlYXZpbmcganVzdCAke01ZX0RJUn0uIA0KDQpJIGFtIHdvcmtpbmcgb24g
-YSB2MiBvZiB0aGUgcGF0Y2ggdG8gZml4IHRoaXMuIEkgYW0gYWxzbyBnb2luZyB0byBhZGQgYSBz
-YW5pdHkgY2hlY2sgdG8gZW5zdXJlIHRoYXQgW2xvY2tmaWxlc10gZG9uJ3QgaW50ZXJzZWN0IHdp
-dGggW2NsZWFuZGlyc10sIHNpbmNlIG90aGVyd2lzZSBwcm9jZXNzaW5nIG9mIFtjbGVhbmRpcnNd
-IHdvdWxkIHJlc3VsdCBpbiB0aGUgZGVsZXRpb24gb2YgbG9ja2ZpbGVzIHRoYXQgYXJlIGFjdGl2
-ZWx5IGJlaW5nIHVzZWQuIEkgaGF2ZSBubyByZWFzb24gdG8gYmVsaWV2ZSB0aGF0IHRoaXMgaXMg
-Y3VycmVudGx5IGEgcHJvYmxlbSBpbiBwb2t5LCBidXQgSSB0aGluayBpdCdzIGEgZ29vZCBpZGVh
-IHRvIGNhdGNoIHRoaXMuDQoNCkNocmlzDQoNCg==
+This is to avoid potential races for tasks that use both [cleandirs] and
+[lockfiles].
+
+Note that [dirs] cannot be processed until after [cleandirs], since
+the two may intersect, e.g.:
+
+    do_task[cleandirs] += "${WORKDIR}/my_clean_dir"
+    do_task[dirs] =+ "${WORKDIR}/my_clean_dir/subdir"
+
+This patch also adds sanity checking to detect attempts to create
+lockfiles under directories listed in [cleandirs] which, as of this
+patch, would make no sense.
+
+Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
+---
+ lib/bb/build.py | 47 +++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 33 insertions(+), 14 deletions(-)
+
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 974d2ff0..d3a43778 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -179,7 +179,7 @@ class StdoutNoopContextManager:
+         return sys.stdout.name
+ 
+ 
+-def exec_func(func, d, dirs = None):
++def exec_func(func, d, dirs=None):
+     """Execute a BB 'function'"""
+ 
+     try:
+@@ -188,24 +188,11 @@ def exec_func(func, d, dirs = None):
+         oldcwd = None
+ 
+     flags = d.getVarFlags(func)
+-    cleandirs = flags.get('cleandirs') if flags else None
+-    if cleandirs:
+-        for cdir in d.expand(cleandirs).split():
+-            bb.utils.remove(cdir, True)
+-            bb.utils.mkdirhier(cdir)
+-
+     if flags and dirs is None:
+         dirs = flags.get('dirs')
+         if dirs:
+             dirs = d.expand(dirs).split()
+ 
+-    if dirs:
+-        for adir in dirs:
+-            bb.utils.mkdirhier(adir)
+-        adir = dirs[-1]
+-    else:
+-        adir = None
+-
+     body = d.getVar(func, False)
+     if not body:
+         if body is None:
+@@ -249,7 +236,39 @@ def exec_func(func, d, dirs = None):
+             except OSError:
+                 pass
+ 
++    cleandirs = flags.get('cleandirs') if flags else None
++    cleandirs = d.expand(cleandirs).split() if cleandirs else []
++
++    if cleandirs and lockfiles:
++        # Sanity check that no lockfiles are under any of the cleandirs.
++        # Since cleandirs is processed after taking the lockfiles, we want to guard against deleting the lockfile's
++        # enclosing directories.
++        import pathlib
++        for lockfile in lockfiles:
++            lockfile_path = pathlib.PosixPath(lockfile).resolve()
++            for cleandir in cleandirs:
++                cleandir_path = pathlib.PosixPath(cleandir).resolve()
++                try:
++                    lockfile_path.relative_to(cleandir_path)
++                except ValueError:
++                    continue
++                bb.fatal("Lockfile {0} cannot be placed inside {1} because that directory is set to be cleaned (see "
++                         "[cleandirs] flag)".format(lockfile_path, cleandir_path))
++
+     with bb.utils.fileslocked(lockfiles):
++        # Process [cleandirs] varflag
++        for cdir in cleandirs:
++            bb.utils.remove(cdir, True)
++            bb.utils.mkdirhier(cdir)
++
++        # Now process [dirs] varflag
++        if dirs:
++            for adir in dirs:
++                bb.utils.mkdirhier(adir)
++            adir = dirs[-1]
++        else:
++            adir = None
++
+         if ispython:
+             exec_func_python(func, d, runfile, cwd=adir)
+         else:
+-- 
+2.17.1
+
