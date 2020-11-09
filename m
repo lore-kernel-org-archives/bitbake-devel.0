@@ -1,120 +1,111 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (NAM10-MW2-obe.outbound.protection.outlook.com [40.107.94.53])
- by mx.groups.io with SMTP id smtpd.web12.3230.1604873548077024011
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (NAM11-CO1-obe.outbound.protection.outlook.com [40.107.220.41])
+ by mx.groups.io with SMTP id smtpd.web08.15642.1604945339686235625
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 08 Nov 2020 14:12:28 -0800
+ Mon, 09 Nov 2020 10:09:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=uUqW8xUS;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.94.53, mailfrom: chris.laplante@agilent.com)
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=zz/vxk02;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.220.41, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kq9YyzwtM+MHu0miMvgtDU8ulJjt9IGzQiheKweQkqd4EhZpKOCX4MKQsh8WLGGmYuWGGYVhEwrjQ+gRK0oEJ25w5Ufx5Bi9nANVq+v4BTsuuxadduSYI9w9yvChU/6RmwME7AIGGsAAs/iwqCbXn5fUsPKgTiXd1+cBc+wbxu9jFrKXjSUanzWY0ln7a7sqNqnKvAttZ8rqTqLCg6k/Zc6B7sltLePLk8Ko3rJu90pqs8NRMeSCgUwGXtwGoOHNaMPuN9DL2BgycDi10Bq2rL0p+0c3KQFQGh2Li+3tv0w+uQUYvpqSbqsD2ODzz7fkF1gx0rhMd5zufbtVGGPAQQ==
+ b=krsfSma/pjMtSuaiVNWSj5DfCkKegUZvceJFCPy7HwZwLd0JefSSNaEW0Ldvl6eF60Y3txNALlKrjdzBKIox/ejqmHg8wlFcpHdF0SOEntnvoFqOEDnWzLIzcImpKFUlkn3X+fWMaTVmaHheLG1GSA7Gh6RH95iB0FXsnk3hC/7l0y4pynQdhdaYntFUMaGgTJRaie1NJMGMSdD66ADBs57qDVCXH2BEk6UnzRGaqVFwZ1N88CoZXcr1ox1kterOp/PQ97vwQ+wL1qDLMTkLLZXfctsX+ciRAJMVSb/NkIwFyNzIZpReGs5ymvbZYTS7vY/JPrdoP5NP3o+z7ET3Ww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KK/fdHHB3RJxQBXEHHfmL+ZT3DywGXV6M/w2rVLKd3E=;
- b=mPDWtGP5jqMGJcMOZ95d38z3nS/WuIyhdY6r7rV3WfB0xczh4whK+t0xdk2tdlPceyoT6ifjYIif7m1R8XAVBsBqgIl0POWl1i8qQU0YqXdX37CVd/cMNHqpRcuEbmMBSpcqwHJS/l0cmgq8Gcagn3OEUoM7Gn5IM1EuBlq0GZb8DsWnPKgbn//LAY9iwaXpAfrx15uhshXGvRtGGDoMGfP3J3kb4diQlqmXjfmkE1CImYvVJ6ad4rbJBiUDBp4tpFNiW+kkjCLraMnPBaaVM/QB6W3H8VCcPaqKk/m1tc1U+laIIlhy9Z1BRODnhrjFGXBIv79A4OQUew1DF3Wciw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=agilent.com; dkim=none (message not signed); arc=none
+ bh=QJZSiG32y4c4vkXUSi40Pq9QJLL0gvZnlo2G1m2DUpI=;
+ b=RWhNJb2VQvAQR5vZegd3lRJNtLOZwY4PGhl8nPmVIL2zteTyEkSNnhxBgukUqcb1ozkS72Puxc/0MzG/8fmr7/0viFk1RURwKVaugx5AZt3J8P9jUH3pnaeFnuVA8/yIqQFYwU/IS65K/DDCaHljjgatoWoWFu+e7JJvmWAZdkfTM6B1HdnqJ2yssdwWOQJ46csE9atoGBo6wukfvTL0uafMMoGf3Jd0ssQ9r5zaXHVSeVqGQRGW40nJBmaDWyf1WA/eEjNax+5OhGksZH05lErpyv0/38dTFT3vw2SAcRmE3SSklEw1Ac5h3ukABbA/urQrDt2lnUiZfEYjAzacsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
+ dkim=pass header.d=agilent.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KK/fdHHB3RJxQBXEHHfmL+ZT3DywGXV6M/w2rVLKd3E=;
- b=uUqW8xUSOrOglnHbTzGQoEVu/iInjyWjzvrz21Vt6SZloVkJWhGX8AlkK1RDQ2wl7RdGCVY+vToDFd32rsPQh5YOSF6/pe+M4EWL0LzZgxs0ytcXD1gmfELyn4kSwBqwT6v9hm5CEoBIwHf7EvAX4kAsqdF0AoUKJ3nFlzaJFYzHnRVmduj5ZUSD7TtZmztpLSoJcDD2MB/fwf8X0KgLeSuttPbv7jTNyLSQRFNLgA8n81JMTxh89jnReqhtBPh1VaXvgAdNvpCMGdhlCKR5vPguq1UQtu2caIkiultgLbdR9gPJRzyonatMZOHqfsXWYuemEf4bW1oM8JcWi+R25Q==
-Received: from CO2PR04CA0157.namprd04.prod.outlook.com (2603:10b6:104:4::11)
- by MN2PR12MB2863.namprd12.prod.outlook.com (2603:10b6:208:103::12) with
+ bh=QJZSiG32y4c4vkXUSi40Pq9QJLL0gvZnlo2G1m2DUpI=;
+ b=zz/vxk02cPAq3lttVHaMG4GFphTDwHzO8peMD6QESWZs6miPY/zrAdv/QehDJMEMag3oLVf03DB+YjfzBLCR3QNmxtxlpRZCAtIATuLGVj4WvBqIvex/p08AqljWFj13138ISf0wBl3WXa8VAacL1AUKSeKyWWkBRcwGrOJnQpbXtm3ddVFk//CgfesAun5hjtcju8AItbxcUQiRcJ3RipSkFrxfKslqgmNEbstfaYrUAW/eYAjzUTCTCCez24TGNYSv4n/sxS8kGkS68ykg0mEVf/Lh/m26830Tgw0/LarO9wFQ1yv8e1+eS46iGJNe1NcSvRh9LS+H8GOjXTzMHw==
+Received: from SN1PR12MB2480.namprd12.prod.outlook.com (2603:10b6:802:22::21)
+ by SA0PR12MB4541.namprd12.prod.outlook.com (2603:10b6:806:9e::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.23; Sun, 8 Nov
- 2020 22:12:26 +0000
-Received: from MW2NAM12FT004.eop-nam12.prod.protection.outlook.com
- (2603:10b6:104:4:cafe::aa) by CO2PR04CA0157.outlook.office365.com
- (2603:10b6:104:4::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend
- Transport; Sun, 8 Nov 2020 22:12:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
- smtp.mailfrom=agilent.com; lists.openembedded.org; dkim=none (message not
- signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
- header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
- 192.25.218.41 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.25.218.41; helo=edgeappmail.agilent.com;
-Received: from edgeappmail.agilent.com (192.25.218.41) by
- MW2NAM12FT004.mail.protection.outlook.com (10.13.180.71) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3564.19 via Frontend Transport; Sun, 8 Nov 2020 22:12:25 +0000
-Received: from laplante-lm-19.localdomain (10.46.38.234) by
- edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server id
- 15.1.2044.4; Sun, 8 Nov 2020 15:12:20 -0700
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.24; Mon, 9 Nov
+ 2020 18:08:58 +0000
+Received: from SN1PR12MB2480.namprd12.prod.outlook.com
+ ([fe80::5dc7:be80:e39f:5be1]) by SN1PR12MB2480.namprd12.prod.outlook.com
+ ([fe80::5dc7:be80:e39f:5be1%3]) with mapi id 15.20.3541.025; Mon, 9 Nov 2020
+ 18:08:58 +0000
 From: "Chris Laplante" <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH v3 10/10] tests/arg_parser: add test for default TinfoilConfigParameters 'ui'
-Date: Sun, 8 Nov 2020 17:10:59 -0500
-Message-ID: <20201108221059.16854-11-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201108221059.16854-1-chris.laplante@agilent.com>
-References: <20201108221059.16854-1-chris.laplante@agilent.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] build: defer processing of cleandirs until after lockfiles are acquired
+Thread-Topic: [bitbake-devel] [PATCH] build: defer processing of cleandirs
+ until after lockfiles are acquired
+Thread-Index: AQHWsfRoMhm/XIzvH0aYJAycu5GxLqm9TSuAgALUscA=
+Date: Mon, 9 Nov 2020 18:08:58 +0000
+Message-ID: 
+ <SN1PR12MB248037DDEABD10624D2924C78BEA0@SN1PR12MB2480.namprd12.prod.outlook.com>
+References: <20201103151537.19348-1-chris.laplante@agilent.com>
+ <940c12c0b27567eab634098ac0de1c7dbffaed65.camel@linuxfoundation.org>
+In-Reply-To: 
+ <940c12c0b27567eab634098ac0de1c7dbffaed65.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=agilent.com;
+x-originating-ip: [76.99.179.205]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: edb55750-a9e9-40bf-ddf9-08d884da878a
+x-ms-traffictypediagnostic: SA0PR12MB4541:
+x-microsoft-antispam-prvs: 
+ <SA0PR12MB454116D8639E875372CAC1EE8BEA0@SA0PR12MB4541.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ wS/OWxl1JEv99WQEXnbkdMfnx/tACP/qilChJo1jspjIr54/ARp3WRH+XtE7b1IRIDYkr5t9X9r3M0nBrateDzpg7yqD4r40Bnb3WNwy+K/+q8xup1ELZM8tqkYjDOIgwfeXgj0S0Ff6thgOCzoEa3VQRzMtuJZ3bXuCU01n/+VInu53+TXjNOiI8sFiyWvDKBGDWjubc6nDaxMCNdBYUTd/udksSmd6ylLAejZhQJvdFYLKLZRMURXOcQG7SASln2XAyUIoqpnSs1rVJjz0ssXyGY6pdNlghzbCANawxS6VPb9VsuiORxG6R/IPbrC36OmLx1fTjfOqdzJXalR4JTby3xTCh3BSTPsXwRTaraw1WUPj+KKIfEkcG0BgBSNle8I1XwuByZVvxkCnDdxBy0TcOxwPjXpE4HKMjz5mAv/EnUImyOzvzYacL43uQAtrYDFcGT/vAyO/SmI6c60LYQ==
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2480.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(366004)(29502001)(478600001)(316002)(110136005)(55016002)(52536014)(64756008)(66446008)(6506007)(26005)(66556008)(66476007)(8676002)(83380400001)(2906002)(8936002)(7696005)(966005)(86362001)(33656002)(66946007)(5660300002)(9686003)(71200400001)(76116006)(45080400002)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 
+ +eE1XGBRocywWpuVquHVEm5LE1YIUjAvoZD3CBko5S960tfgtpaCwnlpj3cRcCxyN8DNLJWGXTaahh3PPLBIboZJkmGNDBNgu/vnToIGEXH6adFiA2xRc8f+veclq6GWVm+slnKg8YmnoM6bbG66oQZvxAUIEFi4YWzzNV/pTvKl+++16WChq9pab91yqdDj2zbYsxjZrBQWARUlEb4Ivv0dHdb06VmnbInkqmvlRlw+wBWwLltavSoaHjkdoT88BsPQAP0kuG3Kgy0UzYqokVVvynOy0ughYYrnE6xTVo6CM4H3oTL3FJ1SGqeN+qa0jW0cMoBDv/Q1QTDNlH0KvGhSqIDyGHEZ3/7Trq0NgHac4ui7oZjCawst2X//vXt0izTb6ObiCHtcbZPYJaWdSesp53r0NS4QhhcHugNr4/lXBUaa6MnL+KLAjNcQbFb4b5m1knmruLjimL31tQCqtLwnlfJvp8vsGjzGMPt2tbnDMwO1nL9wiOC7hRikISr/e8zKX3hvIVaRwitk5P8MrOi0LkylzLE/qvJTpL6iAf9a2dKdEmslC9D9xtlCk1JN8zJqcNopsK7FHKbAk8BJRwAblpdjrkG8h4KdNoXwWdcWoj3PCJ5cku1cxf07nGKODQZzGasxGm9xMfIFCp81+w==
+x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-Return-Path: chris.laplante@agilent.com
-Received-SPF: SoftFail (wpcosapexchedg2.windmz.agilent.com: domain of
- transitioning chris.laplante@agilent.com discourages use of 10.46.38.234 as
- permitted sender)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3b36ec8b-9de5-43bb-5396-08d884335fe7
-X-MS-TrafficTypeDiagnostic: MN2PR12MB2863:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: 
-	<MN2PR12MB2863435FA7396A11A28EC29C8BEB0@MN2PR12MB2863.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	JVo09CGnr3MtifvxyMU+3QTsNw9rKg6w2AAmxPwowGP1WjrxMMsAdYs5AYvjTszEVmqKTGzF8QcZmPOzeI0OQ6vvglmJYbgRSR3kQVjd9bXKoFVqTqR3QhzTKjqyLwf9sDlOovC7HnJiWZOtlWZl1xqPpn0bARVa0e2LJ1ajI83ZDg2E9x+jyxvOyZAcgpS50IPnC1LyH78cVfIpCetO8PcDNpmF1ZCDXB0g2rBDiV0rJKh/vS/6QA1VcdYdKBohR/P4IbGiFdUNdgsGVU+knX2/bqYMZsFS0cD9JxMYU1A/PQSaojLhyKY3m4vXO5UNOhRw+QHCo4NxA6pFCGMGpCsjDJxcWQaUd0cdsfJQxXqV6yt5uAr68oTRQTd0AEAu5T7tifd4HVNpUuvq0G2zpJCbTdDDCU16NLtl4tja+Gw=
-X-Forefront-Antispam-Report: 
-	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:exch.smtp.agilent.com;CAT:NONE;SFS:(4636009)(346002)(136003)(376002)(39860400002)(396003)(29502001)(46966005)(5660300002)(8676002)(82310400003)(86362001)(356005)(6666004)(2906002)(1076003)(47076004)(4326008)(8936002)(107886003)(6916009)(7636003)(82740400003)(36756003)(36906005)(316002)(70206006)(426003)(2616005)(186003)(26005)(44832011)(478600001)(336012);DIR:OUT;SFP:1101;
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2020 22:12:25.8900
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b36ec8b-9de5-43bb-5396-08d884335fe7
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.41];Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-MW2NAM12FT004.eop-nam12.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2863
-Content-Type: text/plain
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2480.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: edb55750-a9e9-40bf-ddf9-08d884da878a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Nov 2020 18:08:58.4107
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7zXZXtYRdynICMAnz9fyHEvXP8y32in74ekjN2bt37jc9szGg/tHDemjAtxouAqiLh7lCvC/9rRY1//AOYHgMlsY0+37k1gwYz2A1LDtsFQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4541
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
----
- lib/bb/tests/arg_parser.py | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/lib/bb/tests/arg_parser.py b/lib/bb/tests/arg_parser.py
-index be2d86fa..73264066 100644
---- a/lib/bb/tests/arg_parser.py
-+++ b/lib/bb/tests/arg_parser.py
-@@ -9,9 +9,11 @@
- 
- import collections
- import shlex
-+import types
- import unittest
- 
- from bb.main import create_bitbake_parser, BitBakeConfigParameters, LazyUiChoices
-+from bb.tinfoil import TinfoilConfigParameters
- 
- ParseResult = collections.namedtuple("ParseResult", ("options", "targets"))
- 
-@@ -53,3 +55,8 @@ class ArgParserTests(unittest.TestCase):
-         ui_action = ui_actions[0]
-         self.assertIs(type(ui_action.type), LazyUiChoices, "'ui' action has wrong type")
-         self.assertFalse(ui_action.type.has_loaded_modules, "Creation of the arg parser loaded the bb.ui modules")
-+
-+    def test_tinfoil_default_ui_arg(self):
-+        # Ensure the default 'ui' parameter is a module, not a str
-+        params = TinfoilConfigParameters(config_only=True)
-+        self.assertIs(type(params.ui), types.ModuleType)
--- 
-2.17.1
-
+PiA+IEl0IGlzIGN1cnJlbnRseSBiZWxpZXZlZCB0aGF0IG5vcm1hbCBbZGlyc10gaGFuZGxpbmcg
+aXMgZmluZSBhcy1pcy4NCj4gDQo+IFVuZm9ydHVuYXRlbHkgdGhpcyBjYXVzZWQgYWxsIGtpbmRz
+IG9mIHdlaXJkIGJ1aWxkIGZhaWx1cmVzIGluIHRlc3Rpbmc6DQo+IA0KPiBTZWUgdGhlIGJ1aWxk
+cyB0cmlnZ2VyZWQgYnk6DQo+IGh0dHBzOi8vbmFtMTIuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0
+bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmF1dG8NCj4gYnVpbGRlci55b2N0b3Byb2plY3Qu
+b3JnJTJGdHlwaG9vbiUyRiUyMyUyRmJ1aWxkZXJzJTJGODMlMkZidWlsZHMlMg0KPiBGMTU1MCZh
+bXA7ZGF0YT0wNCU3QzAxJTdDY2hyaXMubGFwbGFudGUlNDBhZ2lsZW50LmNvbSU3Q2VlOTQ3NTY5
+DQo+IGUxMDA0NmU2ZmFkYzA4ZDg4MzZmYWRkOCU3Q2E5YzBiYzA5OGI0NjQyMDY5MzUxMmJhMTJm
+YjRhNWMwJTdDDQo+IDAlN0MwJTdDNjM3NDAzODYyOTcyMjk3MDMyJTdDVW5rbm93biU3Q1RXRnBi
+R1pzYjNkOGV5SldJam9pDQo+IE1DNHdMakF3TURBaUxDSlFJam9pVjJsdU16SWlMQ0pCVGlJNklr
+MWhhV3dpTENKWFZDSTZNbjAlM0QlN0MxMA0KPiAwMCZhbXA7c2RhdGE9bzBhRGkxeTM5SFpWRW12
+alNNUmN3YjRDWEk2aWdzU3JwYWFROGVmR0pyWSUzRCZhbQ0KPiBwO3Jlc2VydmVkPTANCj4gDQo+
+IEkgcmV2ZXJ0ZWQgdGhpcyBjb21taXQgYW5kIHRoaW5ncyBzdGFydGVkIHdvcmtpbmcgc28gdGhl
+cmUgaXMgc29tZXRoaW5nDQo+IHdyb25nLg0KDQpJJ3ZlIGdvdHRlbiB0byB0aGUgYm90dG9tIG9m
+IHdoeSBhdCBsZWFzdCBzb21lIG9mIHRoZXNlIGZhaWxlZC4gSXQgdHVybnMgb3V0IHdlIGRvIG5l
+ZWQgdG8gbW92ZSBbZGlyc10gcHJvY2Vzc2luZyBhZnRlciBbY2xlYW5kaXJzXSwgc2luY2UgdGhl
+cmUgbWlnaHQgYmUgc29tZXRoaW5nIGxpa2U6DQoNCmRvX3Rhc2tbY2xlYW5kaXJzXSA9ICIke01Z
+X0RJUn0iDQpkb190YXNrW2RpcnNdICs9ICIke01ZX0RJUn0vc3ViZGlyIg0KDQpXaGVuIFtkaXJz
+XSBoYXBwZW5zIGJlZm9yZSBbY2xlYW5kaXJzXSwgdGhlbiAke01ZX0RJUn0vc3ViZGlyIGlzIGNy
+ZWF0ZWQsIGJ1dCB0aGVuIHRoZSBlbnRpcmUgZGlyZWN0b3J5IGlzIHdpcGVkIGJ5IFtjbGVhbmRp
+cnNdIGhhbmRsaW5nIGxlYXZpbmcganVzdCAke01ZX0RJUn0uIA0KDQpJIGFtIHdvcmtpbmcgb24g
+YSB2MiBvZiB0aGUgcGF0Y2ggdG8gZml4IHRoaXMuIEkgYW0gYWxzbyBnb2luZyB0byBhZGQgYSBz
+YW5pdHkgY2hlY2sgdG8gZW5zdXJlIHRoYXQgW2xvY2tmaWxlc10gZG9uJ3QgaW50ZXJzZWN0IHdp
+dGggW2NsZWFuZGlyc10sIHNpbmNlIG90aGVyd2lzZSBwcm9jZXNzaW5nIG9mIFtjbGVhbmRpcnNd
+IHdvdWxkIHJlc3VsdCBpbiB0aGUgZGVsZXRpb24gb2YgbG9ja2ZpbGVzIHRoYXQgYXJlIGFjdGl2
+ZWx5IGJlaW5nIHVzZWQuIEkgaGF2ZSBubyByZWFzb24gdG8gYmVsaWV2ZSB0aGF0IHRoaXMgaXMg
+Y3VycmVudGx5IGEgcHJvYmxlbSBpbiBwb2t5LCBidXQgSSB0aGluayBpdCdzIGEgZ29vZCBpZGVh
+IHRvIGNhdGNoIHRoaXMuDQoNCkNocmlzDQoNCg==
