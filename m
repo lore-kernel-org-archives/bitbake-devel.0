@@ -1,79 +1,70 @@
-Received: from mail-ot1-f65.google.com (mail-ot1-f65.google.com [209.85.210.65])
- by mx.groups.io with SMTP id smtpd.web09.28957.1605020529803795951
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+ by mx.groups.io with SMTP id smtpd.web09.34751.1605044009953845864
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 Nov 2020 07:02:09 -0800
+ Tue, 10 Nov 2020 13:33:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=eg8WCLij;
- spf=pass (domain: gmail.com, ip: 209.85.210.65, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f65.google.com with SMTP id n11so12789024ota.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 10 Nov 2020 07:02:09 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=iELuaT0F;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.65, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f65.google.com with SMTP id o15so6477828wru.6
+        for <bitbake-devel@lists.openembedded.org>; Tue, 10 Nov 2020 13:33:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZWHblobLeSfdZLpZ6+cEA86VF3BxpT0EFQgagovRtKs=;
-        b=eg8WCLijEZV+KSG3Q06Qn87CXSe1fCi5lDFckUDPGjeKuQBQr3zjmgTJkRMmQNedrR
-         nK/0vN0DFjVhO8XyUDp0Z/Gcuq5qO/dDlBf6giqjBLO3Gd08pFXTmxcS7OrWmTUyyrnL
-         C9zXNbq6nCg4BUKkznYcXfmDQ0U7a2x4SE4EtciH9O3yxzYrgTOA0nh1r/hR7+1XdLQT
-         WUZbHw26kfgAJacMi20Ae9cj5YtzjFAnBGZTUxgdzA/tMsm78PFKbVTIuBvBMZaG53hA
-         mXnxu9L2yiDdackdhf5iMzS/mauKiTG1k2uQ5kYaD/0gYAvj0sQjor0PN9Yp7n+Omsoq
-         ScFw==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=7v+V6GLmEsSK6jy98Ihi0cYys/gawgJZ5DIxggxZ/CE=;
+        b=iELuaT0FEqu6xZ5Aee1mgzvhjITNm0L8uM/S49XZI+DgZuwYg8+ZXunTu+jqDciVFW
+         MK0z2GTnRytdd8Vca1x3X9FU2Eqcar//gET8/03LQELr2/U4ptfbHE2yfjW+VyEB9Ehj
+         c6AfJgY8KgRblz9CeTTBCqCsm4irhCf1z6C44=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZWHblobLeSfdZLpZ6+cEA86VF3BxpT0EFQgagovRtKs=;
-        b=P8C8tB3pg25qULsuq5p043jsrnMZghdajMQXZsvx9/tq+mvWZUrf4tYI4Qmzog82Rr
-         BY3Kk3mUntqOhmHabWj3lA3yNko7h4/UafyH/HeGx6kGfyByvUIpTDkqRZxGJpUcPwkS
-         JK9LtBfz0dCKTZnzShaiXW5OR2x5AE6p/XdA0Dq+k39KA+m7oPjY738enqAfjij673Ll
-         No/iRixNWoczRu8DoHU5NweZ1W7LoCih99BaZgpV4fSVYRnp6CLLcLchEgVZGLpEcdkI
-         B8QFvyGNeda6yUlLA7rFpGj5vcclqHn9l3MFx4cteJ1bXIN74OcDfScExymbYQE/ZaMJ
-         Xyzg==
-X-Gm-Message-State: AOAM533Rf8bzbkQwz8hPGJzy2tnbp+j+70XZMNYLfOMMj2bM8QZ9tQ2y
-	8GK6PGa6qflEghZIHp+lyNz2OUAZSEEZ4w==
-X-Google-Smtp-Source: ABdhPJyuC/GOEqciA/JJdHp0V8Ilw8r6u/eDc0a6NN82W9J4wjibUhIiuMkUkBZvu9arT0WpCScISA==
-X-Received: by 2002:a05:6830:1047:: with SMTP id b7mr5064318otp.175.1605020528799;
-        Tue, 10 Nov 2020 07:02:08 -0800 (PST)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id d13sm2429188oth.59.2020.11.10.07.02.07
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=7v+V6GLmEsSK6jy98Ihi0cYys/gawgJZ5DIxggxZ/CE=;
+        b=Xy0ca0gzFgh0ev0whUWPFs/naxMV2UDKhhp/pt8anIWHQEEAWO1J9YnRS6gYEKmS8s
+         QyJsT5iOduPG15bOeiO/6VWf3fZxB4/RBmEFyBuu65pv6ZSpaHFca5roJP6tLhMfP80H
+         G9fCawAiXmGY/9I+HlfS2TQRNw5iVIVb0nVwo1IbJRTTMrs3/ZuG3mFOwv5BPtD9erol
+         dRV+rIrb5LNvHuXsWofUAPLX/RkKa111ttAb359sO2l66SVIiSE/KJlzy454L4FSj6zb
+         Tagh1O3ZsQ2nn32dZc6yfH131xhDJDscRwONRPBKUNRrc02RwvZDyGVN1Vg2BxUE5FZY
+         S11Q==
+X-Gm-Message-State: AOAM532Z2eL4yQpnzQfNdac0ywhVF+C45rqzj4OOB+blzpN/4+z0Qf97
+	t2RaueYLKzWY9oBlZ/MwGyccZA==
+X-Google-Smtp-Source: ABdhPJxuC/ZmXoWPEM4HzP4cr7s57bvFeo8Dyum/NCUiLiEBzg6V5SxuV+8UX7EoysO1C9hORrXL+Q==
+X-Received: by 2002:a5d:51c5:: with SMTP id n5mr5014734wrv.83.1605044008365;
+        Tue, 10 Nov 2020 13:33:28 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from 2.f.3.d.1.3.3.a.9.f.d.f.a.e.5.a.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (2.f.3.d.1.3.3.a.9.f.d.f.a.e.5.a.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:a5ea:fdf9:a331:d3f2])
+        by smtp.gmail.com with ESMTPSA id z5sm591wrw.87.2020.11.10.13.33.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2020 07:02:08 -0800 (PST)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bitbake: cache: Remove bad keys() function
-Date: Tue, 10 Nov 2020 09:02:03 -0600
-Message-Id: <20201110150203.1519739-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.29.2
+        Tue, 10 Nov 2020 13:33:27 -0800 (PST)
+Message-ID: <6e2971889629724071065f7011efab293a4bd546.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v3 00/10] optparse => argparse
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: chris.laplante@agilent.com, bitbake-devel@lists.openembedded.org
+Date: Tue, 10 Nov 2020 21:33:27 +0000
+In-Reply-To: <20201108221059.16854-1-chris.laplante@agilent.com>
+References: <20201108221059.16854-1-chris.laplante@agilent.com>
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Removes the keys() function from the MulticonfigCache. This appears to
-be a leftover from before the class inherited from collections.Mapping,
-is now unnecessary, and was outright incorrect.
+On Sun, 2020-11-08 at 17:10 -0500, Chris Laplante via
+lists.openembedded.org wrote:
+> v1: initial
+> v2: fix intermixed argument parsing
+> v3: fix TinfoilConfigParameters defaulting of 'ui' with string,
+> reorder
+>     patches
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/bb/cache.py | 4 ----
- 1 file changed, 4 deletions(-)
+Unfortunately oe-selftest is still throwing a few issues. In
+particular, "oe-selftest -r tinfoil" is relatively fast but other
+tinfoil users such as recipe tool and oe-pkgdata-util are failing.
 
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index ebb2422496..b8054e028b 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -814,10 +814,6 @@ class MulticonfigCache(Mapping):
-         for k in self.__caches:
-             yield k
- 
--    def keys(self):
--        return self.__caches[key]
--
--
- def init(cooker):
-     """
-     The Objective: Cache the minimum amount of data possible yet get to the
--- 
-2.29.2
+https://autobuilder.yoctoproject.org/typhoon/#/builders/80/builds/1533/steps/8/logs/step2d
+
+Cheers,
+
+Richard
+
+
 
