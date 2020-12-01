@@ -1,68 +1,61 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
- by mx.groups.io with SMTP id smtpd.web11.12749.1606840291556428454
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+ by mx.groups.io with SMTP id smtpd.web12.12779.1606840333086756616
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 01 Dec 2020 08:31:31 -0800
+ Tue, 01 Dec 2020 08:32:13 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=L32WoLfh;
- spf=pass (domain: gmail.com, ip: 209.85.218.45, mailfrom: martin.jansa@gmail.com)
-Received: by mail-ej1-f45.google.com with SMTP id lt17so5399517ejb.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 01 Dec 2020 08:31:31 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=ddrLyZvT;
+ spf=pass (domain: gmail.com, ip: 209.85.218.41, mailfrom: ernstp@gmail.com)
+Received: by mail-ej1-f41.google.com with SMTP id 7so5433445ejm.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 01 Dec 2020 08:32:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=drGcfDxZEdOKaR78Cd5Iu/Sf2IItI8lVli5Sqt6NQWs=;
-        b=L32WoLfht77LYuc++7dSzrY1lqmE0t48/sSfBwkVx/Y/DkaMeKb7iHaaFmqVsZ6bwy
-         cd1Gp5NidSvrxOBMdOzsajUKc3+aP68/VNIkq6tz0ONnLwuDcQn6AuuMAiEiVWcH6Ufq
-         W0+kc45qgcEsZvWRzNrOr0EsEbvZ232YP3zdG/vaeJFgu9v9yabEuRsqbHHRojrIfTnb
-         837ikg/9Dt5RQbGTeSQ3AYr8+XcW03xW55l3FYvClErauv8gUX0rjR+PD6JsOlyZjIf/
-         JEIUtciD3Wg60q3ZrwYqpBC7tNCDR3Xl3GBlqzD1NQVFrsHsy3ub2+vTdHYbVex3b+w/
-         4VNg==
+        bh=AOBYLFgn8+lXOPkN6y2deJKZ3NXRmhvHueOoJUMfrPA=;
+        b=ddrLyZvTwB3gM3tvFYngwAc6gF4UtcBunY6kBvVpvh4dDfGO3Zf5+M2EW8yYW6Z3ga
+         qv1wixFG1bzBGPQ409WZwTpPgmZTlidkcicRPJyI8cCcGuxe23M1X2NRPfZSxC8w/cum
+         1xvBJMTuv6G+FYlYgFdRFw0eE+9ZWUisxrnbUymhcKnJpYPmgafn/gL88w+uQLR5O0MM
+         /6v9YTChz3coMLBf/R+e2yYGzSWlIRSigbi6k/f1d3rPFR+i/PLHVuTlwYLI8Hn6MPeZ
+         w1pCnunNsD+GuZvsD5kF0MtDrn38KD7fYX6C2GdMme8VWcinSUxoDFlkde+xdx5W4sz+
+         aaig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=drGcfDxZEdOKaR78Cd5Iu/Sf2IItI8lVli5Sqt6NQWs=;
-        b=LKsXO+szXGKLVaGmCUh+VbiXXVZh0a0BurQ/yLGMtRgo5Zsy7yl5OSFPURRa2RfvKC
-         a/tMKKtLRsH5RMHFmSMvs0Av9ePlCEgLDF62tCOKYjXT5Crw8EEjtqcaF4Kb5wJEYk86
-         wuug7fNADunfgl9RTpVwJyHGeHxWQNj1OvnmMXiDvh9uJko9GbpY7Q8DXVIAQXU4lp1b
-         mrdRs4YoHMzP+laQLj6aWB4FK6+bDD6VmGjf7glFwLz+ChStfVuKobLjvgMcu9FIeQjJ
-         V4Dr+GDOy5N+MpybQl/UL1EiDQUczgVPkYpGj6YSlVDtNOW8KeqVF0xkH2swhKEHuKOM
-         iyiA==
-X-Gm-Message-State: AOAM533d3MHZOUYhxMzJB6dEtl8F//JXH/ZmcUDnom+N9z+HG8jM1mGk
-	Qwcv+qbbq3gzy7fzUnAHn5u/dq7IeiGDmyz0XEE=
-X-Google-Smtp-Source: ABdhPJxAHiP0PYB0qVjhqnMmYlE39FB8gYHwYiHB0PcWOjXtxRGun+zvuZ5cATSEgJU+Z2l/BdkGB7PezQOC6kL9zPA=
-X-Received: by 2002:a17:906:fa8b:: with SMTP id lt11mr3801763ejb.94.1606840290056;
- Tue, 01 Dec 2020 08:31:30 -0800 (PST)
+        bh=AOBYLFgn8+lXOPkN6y2deJKZ3NXRmhvHueOoJUMfrPA=;
+        b=iSOy382n9t3z2qQbZVoeg7mnQGGlpEOwvgl88YyM5fpPnmgpJGW5KsoXMos9RIBzFU
+         rncK0SYEPtQFdTb4hRvMTPm8D+FXlXPWn/CPjURyI+4I1mmFDILbwXH8sJg+P9uiopOm
+         SvpIBGo/8OF0dyyhXKcYe3f5r7ail1jZRQs6sSunj0DhPZySnHHaGqcVUcMMoP6GIjSd
+         jETsqfRYpbN462gFWkb/UkHym3XcfTXtxbvHIFuVvaakUdw6/QB+JJ5aFaEqjBpEFv0l
+         FtAZ7r01jKEkmpNqAspQ36E//PSynb+imVQkglbsAjnmMYwokfjnXDKb0H3xz1V9gese
+         Niww==
+X-Gm-Message-State: AOAM533IQ/45iQfnAJy1dhNtEdmps3vmnOt5NoRtGJe2KlTuz4lYolc7
+	CXgZGpCjETIFPJAEPa6p1HX9TsCadGPXp4m7fBM=
+X-Google-Smtp-Source: ABdhPJxFBydcL3OgrcVH+zaDnpp7cITNKM7ADaOZn39YOZAlusIUFjq25XMnxy0APshW9qjGvJHkMVJeig6G3lt8oko=
+X-Received: by 2002:a17:906:b79a:: with SMTP id dt26mr3681091ejb.337.1606840331630;
+ Tue, 01 Dec 2020 08:32:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20201201162627.47760-1-ernstp@gmail.com>
-In-Reply-To: <20201201162627.47760-1-ernstp@gmail.com>
-From: "Martin Jansa" <Martin.Jansa@gmail.com>
-Date: Tue, 1 Dec 2020 17:31:19 +0100
-Message-ID: <CA+chaQdG44jXECKPzUS+YBxvdBXrZg56rY+jWRXc69+GdR=HTw@mail.gmail.com>
+References: <164CA47CCEEF7F59.8361@lists.openembedded.org>
+In-Reply-To: <164CA47CCEEF7F59.8361@lists.openembedded.org>
+From: =?UTF-8?B?RXJuc3QgU2rDtnN0cmFuZA==?= <ernstp@gmail.com>
+Date: Tue, 1 Dec 2020 17:32:00 +0100
+Message-ID: <CAD=4a=Vd6buw73iN=HqMpuJp_BNwVm6+0KvQTuJir-UQryHaZg@mail.gmail.com>
 Subject: Re: [bitbake-devel] [dunfell 1/5] python3: split python target configuration into own class
 To: =?UTF-8?Q?Ernst_Sj=C3=B6strand?= <ernstp@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+Cc: bitbake-devel@lists.openembedded.org, 
 	Alexander Kanavin <alex.kanavin@gmail.com>, 
 	Richard Purdie <richard.purdie@linuxfoundation.org>
-Content-Type: multipart/alternative; boundary="000000000000b31f9405b569a8fa"
+Content-Type: multipart/alternative; boundary="0000000000002d7c3805b569abdc"
 
---000000000000b31f9405b569a8fa
+--0000000000002d7c3805b569abdc
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Not sure if this is worth backport (it's very useful, but requires changes
-in other layers - and these changes aren't backwards compatible so they
-would need to be applied only in dunfell and not gatesgarth branches of
-these layers or the same patchset would need to land in oe-core/gatesgarth
-first).
+Doh, wrong list! Sorry for the spam.
+//E
 
-But you're definitely missing this fix from master:
-https://git.openembedded.org/openembedded-core/commit/?id=3Dc99bb79087e74a=
-967286469e1d8888a546ebec83
-
-On Tue, Dec 1, 2020 at 5:27 PM Ernst Sj=C3=B6strand <ernstp@gmail.com> wro=
-te:
+Den tis 1 dec. 2020 kl 17:27 skrev Ernst Sj=C3=B6strand via
+lists.openembedded.org <ernstp=3Dgmail.com@lists.openembedded.org>:
 
 > From: Alexander Kanavin <alex.kanavin@gmail.com>
 >
@@ -138,24 +131,20 @@ I}"
 >
 >
 
---000000000000b31f9405b569a8fa
+--0000000000002d7c3805b569abdc
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Not sure if this is worth backport (it&#39;s very useful, =
-but requires changes in other layers - and these changes aren&#39;t backwar=
-ds compatible so they would need to be applied only in dunfell and not gate=
-sgarth branches of these layers or the same patchset would need to land in =
-oe-core/gatesgarth first).<div><br></div><div>But you&#39;re definitely mis=
-sing this fix from master:</div><div><a href=3D"https://git.openembedded.or=
-g/openembedded-core/commit/?id=3Dc99bb79087e74a967286469e1d8888a546ebec83">=
-https://git.openembedded.org/openembedded-core/commit/?id=3Dc99bb79087e74a9=
-67286469e1d8888a546ebec83</a><br></div></div><br><div class=3D"gmail_quote"=
-><div dir=3D"ltr" class=3D"gmail_attr">On Tue, Dec 1, 2020 at 5:27 PM Ernst=
- Sj=C3=B6strand &lt;<a href=3D"mailto:ernstp@gmail.com">ernstp@gmail.com</a=
->&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px=
- 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">Fro=
-m: Alexander Kanavin &lt;<a href=3D"mailto:alex.kanavin@gmail.com" target=
+<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:arial,he=
+lvetica,sans-serif">Doh, wrong list! Sorry for the spam.</div><div class=3D=
+"gmail_default" style=3D"font-family:arial,helvetica,sans-serif">//E<br></d=
+iv></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_att=
+r">Den tis 1 dec. 2020 kl 17:27 skrev Ernst Sj=C3=B6strand via <a href=3D"h=
+ttp://lists.openembedded.org">lists.openembedded.org</a> &lt;ernstp=3D<a hr=
+ef=3D"mailto:gmail.com@lists.openembedded.org">gmail.com@lists.openembedded=
+.org</a>&gt;:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0p=
+x 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">Fr=
+om: Alexander Kanavin &lt;<a href=3D"mailto:alex.kanavin@gmail.com" target=
 =3D"_blank">alex.kanavin@gmail.com</a>&gt;<br>
 <br>
 Setting _PYTHON_SYSCONFIGDATA_NAME in python3native class globally was<br>
@@ -237,4 +226,4 @@ sconfigdata&quot;<br>
 <br>
 </blockquote></div>
 
---000000000000b31f9405b569a8fa--
+--0000000000002d7c3805b569abdc--
