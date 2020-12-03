@@ -1,117 +1,78 @@
-Received: from mail-oi1-f195.google.com (mail-oi1-f195.google.com [209.85.167.195])
- by mx.groups.io with SMTP id smtpd.web11.988.1606939096602536777
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web12.5879.1607036962707521070
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 02 Dec 2020 11:58:16 -0800
+ Thu, 03 Dec 2020 15:09:23 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=g0Fe6+2H;
- spf=pass (domain: gmail.com, ip: 209.85.167.195, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f195.google.com with SMTP id x16so2915917oic.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 02 Dec 2020 11:58:16 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=X81HAACu;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f41.google.com with SMTP id r3so3550975wrt.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 03 Dec 2020 15:09:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NlEyaef5FTBG3DIzsoT5P2rz0Nf18EFOQtHTRL/PZvY=;
-        b=g0Fe6+2HtbgtdT3nZwfApdkq3ziIVKAmNw3HdOeAhsOYO+iuIiARLhf/2X6og/zb11
-         zx2oTYHPsVfsxjPMMcj+aPN33oq4J+57hq8bMidhb+js4XP4dLQqTzipyuPntr/G8g/X
-         BV448MyFdaFQhFPE663Vg4q/k9Ev9k7svqFxGjNwF95HakSep5EbHPxY8c00sHxfb3q3
-         0Z/zv/8zqoEiNAgvAQO4VOmfEdYvquvlaCLlzbu7q2S2VeHxJ/9fRVsROZDL/2xzNuBj
-         sTQbnsPyvvRyfuvyg3FS857Q1rIkbRbH09/mTzV4gMxlH8T1ehvln2hzufdNilpRlTKJ
-         15Dg==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=ihj4A58qF8xq080BoRfi5XDgzYbeFbmvwDsIws1fvZg=;
+        b=X81HAACuy+RE/enxYUzMlYwEdGX48lsSqfQym2ScJaWqvLqWTgOxF6lz1hitpZIEJe
+         CqL0MWdJx5nzHqaQDA7p08sQZb+fs03E6y06C1uXszM5iMZkJ0tU/2OiVf/bMk6zJER6
+         Olr9wF1Tmarkcn7ylEDWSZOzHkcvDqXsgwkds=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NlEyaef5FTBG3DIzsoT5P2rz0Nf18EFOQtHTRL/PZvY=;
-        b=I+DCdM+LPvUCtx1f+90WPX5A1KMlMWnVwa4FWRLGfeSR9APhYLU54Cg5vno3/0gknB
-         ShCNGLQZVC5I/BLIZeboID5+nT0gcdeZ1Vn7LBzLGihJ4ofEZLnL5pLGjCqGisFrihh4
-         hqLsx1R/89SJJ5wJMMiy/2MSgF9AjdUmixkxcuupnQMBd3AQ1n5yAE6dZiXX3aNCrpqW
-         vukhYJpEv4rgLBpXJtoEfHjYHJhOICPRoYW21w3X1ZeTd96H7vW2hUQ5J5dN7vrFUl/0
-         hvxsrYh9BJHnroy3ornOR6VQywpxLN1UDKhRLG+7CNd3siYxf+58zVvLAdgRx1RocoU7
-         AS8A==
-X-Gm-Message-State: AOAM531+YVVnbJlHvuNV4jbbuK8dHIXltyKdoBPEVXcJIugc+P2BFOTy
-	vlpQkbCDFOzSz29A0mxaQejJzmmG+opV7A==
-X-Google-Smtp-Source: ABdhPJz52NbYIYeWT0DlEotQ/E50UOYaZ2GaRSVkWGLwQ5ymHrkE/DtOsAwB41+VU24dEZXyjZCj7w==
-X-Received: by 2002:aca:5052:: with SMTP id e79mr2783456oib.58.1606939095695;
-        Wed, 02 Dec 2020 11:58:15 -0800 (PST)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id 6sm598424otc.19.2020.12.02.11.58.14
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=ihj4A58qF8xq080BoRfi5XDgzYbeFbmvwDsIws1fvZg=;
+        b=aOib1Nm9D8btwnXEBzlwUAjXJ1crJK7UkcwtKbhfWh6pJuaW8hyEgXeOTxZBN90NsC
+         DNlAEraLwmS8ojzIhdVg0vYSxnRvMZQ71LNbeODHXmFD/RMDicmtKu5r7vJH5bT4MQ+Z
+         i2gnEaOl9u9ZCiipaFOj2vq1r2778It/3+ucfTUwg6syWQqd9CVeMaIqmwwgVMB4ZMvN
+         RfXIVJ1VnDkhT46yZNbwal3man+xuI6LmWQfdZkaMmmGeU3sCbEBEXr0UHI6zVKlaOBm
+         NLo/sSEdSZ3aQisd0roz+Vsx7V8b6FdbQSBvevQOO+reN/A1U6I9pMLhnTlUum7LvmbB
+         mfmQ==
+X-Gm-Message-State: AOAM533YYD0HjWY9bApWxH4liFTFcJlYL7pvyHztJyDuTvI/tpitrF/3
+	6RcHTQ2nHzOOL7Z03GjXlXtcLw==
+X-Google-Smtp-Source: ABdhPJxJtGkfsBmV4OlD0NnRiwAETTwvQiLPTiimtQXToBqzdjW1eWJwve8yjTmNYgE6IaUMuSX/hg==
+X-Received: by 2002:a5d:56cb:: with SMTP id m11mr1632595wrw.346.1607036961227;
+        Thu, 03 Dec 2020 15:09:21 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from 9.2.d.8.e.2.1.e.1.8.2.c.7.a.4.c.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (9.2.d.8.e.2.1.e.1.8.2.c.7.a.4.c.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:c4a7:c281:e12e:8d29])
+        by smtp.gmail.com with ESMTPSA id f16sm1175706wrp.66.2020.12.03.15.09.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Dec 2020 11:58:14 -0800 (PST)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: anuj.mittal@intel.com,
-	Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] hashserv: client: Fix AF_UNIX path length limits
-Date: Wed,  2 Dec 2020 13:58:10 -0600
-Message-Id: <20201202195810.20800-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.29.2
+        Thu, 03 Dec 2020 15:09:20 -0800 (PST)
+Message-ID: <abb376b42320bb2b3f7f2980caa060b9c09f9d3d.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [RFC][PATCH] fetch2.wget: add support for per-source download flags
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Yann Dirson <yann.dirson@blade-group.com>, 
+	bitbake-devel@lists.openembedded.org
+Cc: Yann Dirson <yann@blade-group.com>
+Date: Thu, 03 Dec 2020 23:09:19 +0000
+In-Reply-To: <CA+4=imaDYQ0XT=04cOrymvBeia=qYB2-PuWAfTYCdtRpqGKEhA@mail.gmail.com>
+References: <20201202095020.1439530-1-yann@blade-group.com>
+	 <CA+4=imaDYQ0XT=04cOrymvBeia=qYB2-PuWAfTYCdtRpqGKEhA@mail.gmail.com>
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Restores a fix for unix domain socket path length limits when using the
-synchronous hash equivalence client that was accidentally removed when
-the async client was added.
+On Wed, 2020-12-02 at 11:50 +0100, Yann Dirson wrote:
+> An alternative I thought about would be to:
+> 
+> 1. expose all the FETCHCMD_$method vars with their default values
+> through setVar,
+> so we can _append them, as today it is only possible to fully
+> override them
+> 
+> 2. use something like FETCHCMD_$method_append_srcuri-$name="--foo". 
+> However that
+> would require to add "srcuri-$name" to overrides temporarily for each
+> file fetched, and I don't
+> quite see how that could fit in the current codebase
 
-Unfortunately, it's much more difficult to fix the same problem when
-using the async client directly due to the interaction of chdir() and
-async code, but this will at least restore the old behavior in the
-synchronous case.
+FETCHCMD was never a nice fit and we've tried to back away from using
+that. That is particularly true give you want to do it on a per url
+basis. The hope was we could add things to the urls as parameters if/as
+needed. The strings you're trying to add are fairly complex to encode
+into urls though, I'm not sure if there is a good way we could make
+that work, could we encode it somehow?
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/hashserv/client.py | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+Cheers,
 
-diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
-index ae5875d1b3..7bbf0865d5 100644
---- a/bitbake/lib/hashserv/client.py
-+++ b/bitbake/lib/hashserv/client.py
-@@ -40,7 +40,7 @@ class AsyncClient(object):
- 
-         self._connect_sock = connect_sock
- 
--    async def _connect(self):
-+    async def connect(self):
-         if self.reader is None or self.writer is None:
-             (self.reader, self.writer) = await self._connect_sock()
- 
-@@ -62,7 +62,7 @@ class AsyncClient(object):
-         count = 0
-         while True:
-             try:
--                await self._connect()
-+                await self.connect()
-                 return await proc()
-             except (
-                 OSError,
-@@ -190,7 +190,6 @@ class Client(object):
- 
-         for call in (
-             "connect_tcp",
--            "connect_unix",
-             "close",
-             "get_unihash",
-             "report_unihash",
-@@ -209,6 +208,16 @@ class Client(object):
- 
-         return wrapper
- 
-+    def connect_unix(self, path):
-+        # AF_UNIX has path length issues so chdir here to workaround
-+        cwd = os.getcwd()
-+        try:
-+            os.chdir(os.path.dirname(path))
-+            self.loop.run_until_complete(self.client.connect_unix(path))
-+            self.loop.run_until_complete(self.client.connect())
-+        finally:
-+            os.chdir(cwd)
-+
-     @property
-     def max_chunk(self):
-         return self.client.max_chunk
--- 
-2.29.2
+Richard
 
