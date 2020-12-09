@@ -1,67 +1,71 @@
-Received: from smtp2.axis.com (smtp2.axis.com [])
- by mx.groups.io with SMTP id smtpd.web12.1496.1607377161300151649
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+ by mx.groups.io with SMTP id smtpd.web08.6010.1607518790516219163
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Dec 2020 13:39:23 -0800
+ Wed, 09 Dec 2020 04:59:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=FKHs7nGU;
- spf=fail (domain: axis.com, ip: <nil>, mailfrom: peter.kjellerstedt@axis.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1607377163;
-  x=1638913163;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=90z22c9+nQCUUIctu5vtW8gYzvRx+3ZDrnSnZLcUAt8=;
-  b=FKHs7nGUpBC9BgDm9UMV+VOqdustQYGoYYP3MgoXxmgLLdYxK9UAih0q
-   fMHklTK0qQlSlMf69wldl0ZnUpFRCLgFtJGAbjXqbzKZGaZ2qErV23lHz
-   80oSEJSN9SK1bZFmqXhTxIvFJ8kz7bZRA1ywmdo9AGqPi90cotbtJS7MQ
-   CT9HSUfI34+ryRO6n/eWGftelQYIaSy1OG3UVHDear2C0jJhTUaEieL5I
-   /3WkS1aH9C1oP9wqkdXhOsIzjgSPIdk/ypX2htBb2a1YI2zvr+y3Dq/ru
-   gGDlWeWLSQbm/m+ksLliAkbnyIv9kndQIvz0bonKKxbS1zOJxVwyMyRDr
-   g==;
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH 2/2] cooker: Include all packages a recipe provides in SkippedPackage.rprovides
-Date: Mon, 7 Dec 2020 22:38:51 +0100
-Message-ID: <20201207213851.3485-2-pkj@axis.com>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20201207213851.3485-1-pkj@axis.com>
-References: <20201207213851.3485-1-pkj@axis.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JZpJHNpi;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.66, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f66.google.com with SMTP id 3so1575233wmg.4
+        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Dec 2020 04:59:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=3Le/YNdNvSxZEuObHk3KOx8cS1s7/mm01QFfb2TBPWA=;
+        b=JZpJHNpiXAWfenyEmzT8Y7tLVoKfL+PdNykG14j/F93HC9uEfg6tegfDtLByUh2gbL
+         hH7LAmbR8VQUqHqv+rPnYQA1B1eq3ThR7NE2y5qK8L/hemL+8y5HuKXPaO+J9GJVn0r4
+         SHWofWql4H75BO29/UZRApZViT5bpspGRxr5c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=3Le/YNdNvSxZEuObHk3KOx8cS1s7/mm01QFfb2TBPWA=;
+        b=Bte0DoDqvZiUdPiDdtijY9YJxqh6ZdLjxASH/ZwK5Inc6koEF8y0Yb8FN3Wj9h8VGk
+         UtqMuZsjASs2bnrOMLmg7eGtxWK5a25v6kbwXGtSEgXBXAMY7/AVA3uQpkrsedsDfGn5
+         VNyxOS8CbZyoH9lN+oJqTTryf+7b1AHKVpdcy8WmIqsrPNPCxJk11yW1LQ3bdJi2fWCU
+         jti17Ay5GAFIFLAjFDGS/ZOleoi3Od0Mv5fz5aalDioZEUcfmfoan3WqOQaAto7/4Bln
+         cumhRBQqT4o3suWSem++dareLhbn5XPiH+BUmUdpyBq1D1cw1MHo7wm/03t9GlCPTNZO
+         /Arw==
+X-Gm-Message-State: AOAM530zuzkHj9ZgO9Ei+2m6f4oiusXWOhON3kj5xmdkkKPNt1n4O35m
+	cMQOrNCNF2tq5XFyd/t1cDuqLQ==
+X-Google-Smtp-Source: ABdhPJwGwhnJTSwyiugzz2C9EXV38qGWQdOoM7gEHVlN6Qw/khjTQSK0FNAJHyrUDv08xioXZlTu4w==
+X-Received: by 2002:a1c:a9c4:: with SMTP id s187mr2692568wme.116.1607518788707;
+        Wed, 09 Dec 2020 04:59:48 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from 9.8.c.0.f.4.1.5.6.b.7.5.c.c.0.c.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (9.8.c.0.f.4.1.5.6.b.7.5.c.c.0.c.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:c0cc:57b6:514f:c89])
+        by smtp.gmail.com with ESMTPSA id p3sm3224470wrs.50.2020.12.09.04.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Dec 2020 04:59:48 -0800 (PST)
+Message-ID: <87c837bcb27d2e4e761c806cec0d150462a462bf.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] fetch2: use relative symlinks for anything pulled from PREMIRRORS
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: "Hombourger, Cedric" <Cedric_Hombourger@mentor.com>, Martin Jansa
+	 <Martin.Jansa@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, Chris Larson
+	 <Chris_Larson@mentor.com>
+Date: Wed, 09 Dec 2020 12:59:45 +0000
+In-Reply-To: <92262695-8578-94cc-939b-fcc49af7b428@mentor.com>
+References: <20201118153613.811-1-Cedric_Hombourger@mentor.com>
+	 <CA+chaQez30Xyf-e+PDMOa5G-Phb9L8HiEuqhhAHSCJPgudhKdQ@mail.gmail.com>
+	 <92262695-8578-94cc-939b-fcc49af7b428@mentor.com>
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Return-Path: pkj@axis.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The provided packages by a skipped recipe are supposed to be listed in
-SkippedPackage.rprovides, which is used when generating a meaningful
-error message when a build fails because of a skipped package.
-Previously this variable only contained the contents of ${RPROVIDES}.
-However, most recipes don't define RPROVIDES, they define
-RPROVIDES_<pkg> for each package they provide. Additionally, the recipe
-provides the packages in PACKAGES without them being included in
-${RPROVIDES}.
+On Fri, 2020-11-27 at 15:04 +0100, Hombourger, Cedric wrote:
+> 
+> On 11/27/20 2:54 PM, Martin Jansa wrote:
+> > Unfortunately this seems to completely break SSTATE_MIRROR handling
+> > file:// at least in some setups.
+>  thank you so much for the feedback. I will check what's wrong there.
+> > All setscene tasks are failing, because there is a symlink in
+> > sstate-cache, but when trying to use it, it points to relative path
+> > into wrong directory.
 
-Before this change, having a runtime dependency on a skipped non-recipe
-package would result in a build error stating that the build failed
-because the package was skipped, but without providing any reason for
-why it was skipped.
+I've reverted this for now until we can figure out what was wrong.
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
- bitbake/lib/bb/cooker.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Cheers,
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 1f4cc1e96d..83cfee7fb4 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -73,7 +73,9 @@ class SkippedPackage:
-             self.pn = info.pn
-             self.skipreason = info.skipreason
-             self.provides = info.provides
--            self.rprovides = info.rprovides
-+            self.rprovides = info.packages + info.rprovides
-+            for package in info.packages:
-+                self.rprovides += info.rprovides_pkg[package]
-         elif reason:
-             self.skipreason = reason
- 
+Richard
+
