@@ -1,71 +1,140 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
- by mx.groups.io with SMTP id smtpd.web08.6010.1607518790516219163
+Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
+ by mx.groups.io with SMTP id smtpd.web09.2889.1607547854873386586
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 09 Dec 2020 04:59:50 -0800
+ Wed, 09 Dec 2020 13:04:15 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JZpJHNpi;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.66, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f66.google.com with SMTP id 3so1575233wmg.4
-        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Dec 2020 04:59:50 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=eNZ1wYIj;
+ spf=pass (domain: linaro.org, ip: 209.85.219.194, mailfrom: nicolas.dechesne@linaro.org)
+Received: by mail-yb1-f194.google.com with SMTP id w127so2631754ybw.8
+        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Dec 2020 13:04:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=3Le/YNdNvSxZEuObHk3KOx8cS1s7/mm01QFfb2TBPWA=;
-        b=JZpJHNpiXAWfenyEmzT8Y7tLVoKfL+PdNykG14j/F93HC9uEfg6tegfDtLByUh2gbL
-         hH7LAmbR8VQUqHqv+rPnYQA1B1eq3ThR7NE2y5qK8L/hemL+8y5HuKXPaO+J9GJVn0r4
-         SHWofWql4H75BO29/UZRApZViT5bpspGRxr5c=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WJ/TO5OO+QTqf2gDVgXS4+vwLXNJ9yOGfSaQWrdOdGE=;
+        b=eNZ1wYIj77Aqt98scD/gZKJGm6eLHKvLE1/BgaEFZzsoggZjq+Gudg7Diw/Ydc2uO8
+         eJLtyrWdj8LAa5D7vt+nJb2Y//mXzIvnChZlER3DjEozQmf/6p2txD3GezGgHHAXauEX
+         wig0g/r0BuHkYqozRVJTBLj8DNs76Cazucm3DGuFTwET6ayOoGW67TM/Bnt5EEJWQtJo
+         s83l/12qBEo29vz+Gw1XYdUSywCugKE4+B6+E1DERff3s+qmJvoL62ryn+vgl/Y1/wZo
+         qspFkdyxVzwUvzcamOpN7n1qJp75nP9Bl+/sb7NdWmsSNq+TSRM5zY+jJYEOmQPoeHp5
+         7NGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=3Le/YNdNvSxZEuObHk3KOx8cS1s7/mm01QFfb2TBPWA=;
-        b=Bte0DoDqvZiUdPiDdtijY9YJxqh6ZdLjxASH/ZwK5Inc6koEF8y0Yb8FN3Wj9h8VGk
-         UtqMuZsjASs2bnrOMLmg7eGtxWK5a25v6kbwXGtSEgXBXAMY7/AVA3uQpkrsedsDfGn5
-         VNyxOS8CbZyoH9lN+oJqTTryf+7b1AHKVpdcy8WmIqsrPNPCxJk11yW1LQ3bdJi2fWCU
-         jti17Ay5GAFIFLAjFDGS/ZOleoi3Od0Mv5fz5aalDioZEUcfmfoan3WqOQaAto7/4Bln
-         cumhRBQqT4o3suWSem++dareLhbn5XPiH+BUmUdpyBq1D1cw1MHo7wm/03t9GlCPTNZO
-         /Arw==
-X-Gm-Message-State: AOAM530zuzkHj9ZgO9Ei+2m6f4oiusXWOhON3kj5xmdkkKPNt1n4O35m
-	cMQOrNCNF2tq5XFyd/t1cDuqLQ==
-X-Google-Smtp-Source: ABdhPJwGwhnJTSwyiugzz2C9EXV38qGWQdOoM7gEHVlN6Qw/khjTQSK0FNAJHyrUDv08xioXZlTu4w==
-X-Received: by 2002:a1c:a9c4:: with SMTP id s187mr2692568wme.116.1607518788707;
-        Wed, 09 Dec 2020 04:59:48 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from 9.8.c.0.f.4.1.5.6.b.7.5.c.c.0.c.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa (9.8.c.0.f.4.1.5.6.b.7.5.c.c.0.c.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:c0cc:57b6:514f:c89])
-        by smtp.gmail.com with ESMTPSA id p3sm3224470wrs.50.2020.12.09.04.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 04:59:48 -0800 (PST)
-Message-ID: <87c837bcb27d2e4e761c806cec0d150462a462bf.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch2: use relative symlinks for anything pulled from PREMIRRORS
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: "Hombourger, Cedric" <Cedric_Hombourger@mentor.com>, Martin Jansa
-	 <Martin.Jansa@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, Chris Larson
-	 <Chris_Larson@mentor.com>
-Date: Wed, 09 Dec 2020 12:59:45 +0000
-In-Reply-To: <92262695-8578-94cc-939b-fcc49af7b428@mentor.com>
-References: <20201118153613.811-1-Cedric_Hombourger@mentor.com>
-	 <CA+chaQez30Xyf-e+PDMOa5G-Phb9L8HiEuqhhAHSCJPgudhKdQ@mail.gmail.com>
-	 <92262695-8578-94cc-939b-fcc49af7b428@mentor.com>
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WJ/TO5OO+QTqf2gDVgXS4+vwLXNJ9yOGfSaQWrdOdGE=;
+        b=LH+DV61jVcEfp+zuM05vzJHoqs3hf13ET5+Lqp4uDgziuUSQnspln4aq5fTdPww91r
+         iqZki5Z3l6/sZd27p6Rkh3wKDAPNJslCKI/agczMR91wYxiItKAUUaWT4ZXmLlN043rv
+         ixqvknPoU70xYe0qUQEydKFfkYC6dRa2MINoOZKKijS9CC4U9Jsth5hQl6/nk64mOckw
+         SM1eYURnxCSzrZBOv6iHt8lOpOb5ANyXbuqfsMkummL5s1lALVVfDKE/D7WNz0p0mCa2
+         QnrjvWJ5h0aepBBdze1X0oTfhwaTuRKg2DMk9J6HJv04jQK4cb9Dd3pkHLNYdYyGQ2LE
+         Z13g==
+X-Gm-Message-State: AOAM5334wQtE2OOj9/qJi7GEY/aFvlK5czay4lolGiF4Sapw1MUwcxZM
+	h5oFP3RIgXKmkZUXEgmOlFaPmlvv3NCq1jlX4v4seg==
+X-Google-Smtp-Source: ABdhPJwoHS3Q9f2+buO6xZoUP30JE9iUzmgsYdkE7n1z+M5M8ANtpM6MAwlHFSmpIYvcs49/++2Q/SFB2u3VFuBJxh0=
+X-Received: by 2002:a25:b19d:: with SMTP id h29mr6258176ybj.133.1607547853941;
+ Wed, 09 Dec 2020 13:04:13 -0800 (PST)
 MIME-Version: 1.0
+References: <20201202195810.20800-1-JPEWhacker@gmail.com>
+In-Reply-To: <20201202195810.20800-1-JPEWhacker@gmail.com>
+From: "Nicolas Dechesne" <nicolas.dechesne@linaro.org>
+Date: Wed, 9 Dec 2020 22:04:03 +0100
+Message-ID: <CAP71Wjx9bCo++6ppp925_vd9fDZZ+N9DgJKuMcE_oK9Oi6LLmQ@mail.gmail.com>
+Subject: Re: [bitbake-devel][PATCH] hashserv: client: Fix AF_UNIX path length limits
+To: Joshua Watt <JPEWhacker@gmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+	Anuj Mittal <anuj.mittal@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Fri, 2020-11-27 at 15:04 +0100, Hombourger, Cedric wrote:
+hi Joshua,
+
+
+On Wed, Dec 2, 2020 at 8:58 PM Joshua Watt <JPEWhacker@gmail.com> wrote:
+>
+> Restores a fix for unix domain socket path length limits when using the
+> synchronous hash equivalence client that was accidentally removed when
+> the async client was added.
+>
+> Unfortunately, it's much more difficult to fix the same problem when
+> using the async client directly due to the interaction of chdir() and
+> async code, but this will at least restore the old behavior in the
+> synchronous case.
+>
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+
+the meta-qcom CI started failing.. and I have the feeling this is
+because of this change. I am now seeing many errors, and this:
+00:02:31.320 OSError: AF_UNIX path too long
+
+Here is the link to the full Jenkins log:
+https://ci.linaro.org/job/lt-qcom-openembedded-meta-qcom-master-premerge/136/MACHINE=dragonboard-410c,TCLIBC=glibc,label=docker-buster-amd64/console
+
+This is a test build we do for each Github PR. This build is using
+this commit from Poky/master:
+982688103619 (build-appliance-image: Update to master head revision)
+
+We tested another PR 2 days ago, and it went fine:
+https://ci.linaro.org/job/lt-qcom-openembedded-meta-qcom-master-premerge/134/MACHINE=dragonboard-410c,TCLIBC=glibc,label=docker-buster-amd64/consoleFull
+This build was based on this commit:
+982688103619 (build-appliance-image: Update to master head revision)
+
+Looking at the error log, and this commit, it looks related to me..
+though I am not sure I understand the details ;)
+
+> ---
+>  bitbake/lib/hashserv/client.py | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
+> index ae5875d1b3..7bbf0865d5 100644
+> --- a/bitbake/lib/hashserv/client.py
+> +++ b/bitbake/lib/hashserv/client.py
+> @@ -40,7 +40,7 @@ class AsyncClient(object):
+>
+>          self._connect_sock = connect_sock
+>
+> -    async def _connect(self):
+> +    async def connect(self):
+>          if self.reader is None or self.writer is None:
+>              (self.reader, self.writer) = await self._connect_sock()
+>
+> @@ -62,7 +62,7 @@ class AsyncClient(object):
+>          count = 0
+>          while True:
+>              try:
+> -                await self._connect()
+> +                await self.connect()
+>                  return await proc()
+>              except (
+>                  OSError,
+> @@ -190,7 +190,6 @@ class Client(object):
+>
+>          for call in (
+>              "connect_tcp",
+> -            "connect_unix",
+>              "close",
+>              "get_unihash",
+>              "report_unihash",
+> @@ -209,6 +208,16 @@ class Client(object):
+>
+>          return wrapper
+>
+> +    def connect_unix(self, path):
+> +        # AF_UNIX has path length issues so chdir here to workaround
+> +        cwd = os.getcwd()
+> +        try:
+> +            os.chdir(os.path.dirname(path))
+> +            self.loop.run_until_complete(self.client.connect_unix(path))
+> +            self.loop.run_until_complete(self.client.connect())
+> +        finally:
+> +            os.chdir(cwd)
+> +
+>      @property
+>      def max_chunk(self):
+>          return self.client.max_chunk
+> --
+> 2.29.2
+>
+>
 > 
-> On 11/27/20 2:54 PM, Martin Jansa wrote:
-> > Unfortunately this seems to completely break SSTATE_MIRROR handling
-> > file:// at least in some setups.
->  thank you so much for the feedback. I will check what's wrong there.
-> > All setscene tasks are failing, because there is a symlink in
-> > sstate-cache, but when trying to use it, it points to relative path
-> > into wrong directory.
-
-I've reverted this for now until we can figure out what was wrong.
-
-Cheers,
-
-Richard
-
+>
