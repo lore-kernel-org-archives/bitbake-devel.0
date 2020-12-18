@@ -1,163 +1,89 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
- by mx.groups.io with SMTP id smtpd.web11.8940.1608130366334618646
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.web10.10810.1608301589304999412
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 16 Dec 2020 06:52:46 -0800
+ Fri, 18 Dec 2020 06:26:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=u8FOFAxc;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.170, mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f170.google.com with SMTP id j1so13071264pld.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 16 Dec 2020 06:52:46 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=RzIuMudv;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.51, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f51.google.com with SMTP id n16so6043711wmc.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 18 Dec 2020 06:26:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id;
-        bh=RLhcRzFyYrS5SAoXQM8AZtTgjqC91XYhg2nq38kVwEM=;
-        b=u8FOFAxckhodBfkEed/q3DcXxu0WEZbv+r319hsAOuXRVz0I1JOKJLevjw+fSoW23P
-         YHSZzTXnm3/uBWOMzGnd39ZOsqPZ03kcP1LdLMLnLpq/lg8ucGCotMDiHe2wfleCqsJF
-         tCWrTZtLEk0AFKaNOmi3ojoQjZtVHDfG6htjlLkTaAua+TfN/wMFk4nFDMWbm0Tup50X
-         qCH8O+pezljK0mbtiftnvjb53oh4/bbHs1YugrSrJMahYQwvB1+Rtb22gGo5Gq4jfWRN
-         MZzDzoH+p0nT+3c3vXadAV3qCP5PWPdjMXX7lvJYWytAOOfZy3tikRfZyHMkf8rEu+uL
-         Op3A==
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uasLUQWI1Oibjz5sxZIOKNIuPWmFUUoVGn2yRpCDZbI=;
+        b=RzIuMudv5cSIIqN+vpCnagCHwNWKxcg9UPQgRJGZibrUl15kdFoYxIBfQft3BL8tOp
+         eKlmL2hvc3otULIJ51uLTPXcPmGtIiHmCa9iy5qExNDpX2u3yNgfemAPgG+OhCmucQc8
+         pfZxNf2YC0MJT876WAyA0+WUl0bSWUY5PyPEA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=RLhcRzFyYrS5SAoXQM8AZtTgjqC91XYhg2nq38kVwEM=;
-        b=iFHALX3Mf12jEYmoPe+Lx7vQKPBHpJ3P2pepaEN5CLJYsevI5s3dzX+2joGjxOT1vo
-         lZMD4Fwubk+TMBFQVBBE8HeZo3NbYrJT25UZx4ZF2iUVvVB1AKrLYG/Z3xjgnfKH1Ptj
-         lOzY7+cenfdnQq9uNZMV3wmazpp4LoS+6pckANIQN5xPl1oxiaomEuQJX4PsvguQoNV4
-         BGX+G2x/SiaDQSdHIf3Bgz+0uRSHK/UERKXVUQTJ3/FvDnhCXyYMew9sagjqriOWVBqd
-         Vk/ud9UxuIuVzOnsqSML9MlhX3D41jbHI82hJ7586dp1GkFqKt/n/NllWyOJqqzn9QVs
-         0OWw==
-X-Gm-Message-State: AOAM530wjQIKNTMdknCSaf7zzCYM+sfb6WtAo9K/71E+RoboJwN43VpE
-	6ZR1qEvglUp2F+oKXTjdihBVaWfgvt5Hb0In
-X-Google-Smtp-Source: ABdhPJxJ8HmAa6dznPcGHj1/2SVTfa6yaqzwksg1XvyVJSII+l2jRFgtzdF5aQlijtdMbZ/tDzesJA==
-X-Received: by 2002:a17:902:c395:b029:da:9aca:c972 with SMTP id g21-20020a170902c395b02900da9acac972mr32211434plg.32.1608130365224;
-        Wed, 16 Dec 2020 06:52:45 -0800 (PST)
-Return-Path: <steve@sakoman.com>
-Received: from octo.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id 197sm2984024pgg.43.2020.12.16.06.52.43
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uasLUQWI1Oibjz5sxZIOKNIuPWmFUUoVGn2yRpCDZbI=;
+        b=KQC15XGRZdmyp07pymRhFnxn/jAIb53Qr0Ke+TW+lTGC1mwjby8MLC0cC2gwD/uwwq
+         8FtINX78p4QYTBGxC2Y9MzmdwDGjTW0gZPZXHROfm0B+LYjaqCdtRdh7Ik1VgJU2xI28
+         MkTBjj5oyPKBMCCZFvQSmd3h8SKfqSyHirYS0iqfrC0DDy9mJ7FQcVOM0kUQQgjCNd1l
+         MfAVIRNv6gihb33qOJU5RqNL1/J88C+6w6hIKyRiS93a8pTa6C8bj48qCJeUrgwMGSar
+         gzGu7K/bUFMZ5M4rwiIqTc0Ymw7+RU5X4RgZpfFd2vRaOf4t/VMmZtjlwvyHkPbuBjYW
+         KTSA==
+X-Gm-Message-State: AOAM530VlGpt7IIyEbC256v78OGQbUgMv71++yFnyQUnkjMeV6lIasO2
+	wMaqrSfKRkhU3JpOlgdnXh9IgVXGSzg3vw==
+X-Google-Smtp-Source: ABdhPJxyi2b8GNUDneKwDT0MnFTpxSz6UqWXOQIAVObYuSdaTkKdRKtFEjX+K+mwSaTGwEl22x/Qiw==
+X-Received: by 2002:a7b:c7d8:: with SMTP id z24mr4527861wmk.1.1608301587544;
+        Fri, 18 Dec 2020 06:26:27 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net (4.4.0.a.d.7.7.1.7.c.4.b.2.1.9.0.c.3.f.5.a.b.a.0.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:aba:5f3c:912:b4c7:177d:a044])
+        by smtp.gmail.com with ESMTPSA id w3sm12714741wma.3.2020.12.18.06.26.27
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Dec 2020 06:52:44 -0800 (PST)
-From: "Steve Sakoman" <steve@sakoman.com>
+        Fri, 18 Dec 2020 06:26:27 -0800 (PST)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 0/5] Patch review (cover letter only)
-Date: Wed, 16 Dec 2020 04:52:31 -1000
-Message-Id: <cover.1608130045.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH] data_smart: Ensure hash reflects vardepvalue flags correctly
+Date: Fri, 18 Dec 2020 14:26:26 +0000
+Message-Id: <20201218142626.3960223-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Please review this set of patches that switches the 1.46 (dunfell) documentation
-to use sphinx.  Have comments back by end of day Friday.
+The get_hash() function is used to decide if the base configuration has changed
+and hence whether a reparse is required. The vardepvalue flag's value was not
+expanded but it is often used in contexts like:
 
-Since this patch set is extremely large I am sending only this cover
-letter. Please refer to the git repo link below to reviw the changes.
+METADATA_REVISION = "${@base_detect_revision(d)}"
+METADATA_REVISION[vardepvalue] = "${METADATA_REVISION}"
 
-Many thanks to Nicolas Dechesne for assembling this patch series for dunfell!
+which in it's unexpanded form means reparsing doesn't happen when it should
+as the data appears unchanged. Update get_hash to expand the values of
+vardepvalue so reparsing works as expected. This avoids basehash mismatch
+errors such as the one recently caused by using METADATA_REVISION in poky.conf's
+DISTRO_VERSION variable. The issue there could be exposed by a recipe using
+DISTRO_VERSION with the sequence:
 
-The following changes since commit d171188cf966852326916f726cbd3ca9627b831c:
+bitbake os-release
+<change the revision of the metadata with a dummy commit>
+bitbake os-release -C install
 
-  taskexp: update for GTK API changes (2020-12-01 04:05:42 -1000)
+which was caused because METADATA_REVISION changed but the metadata didn't reparse.
 
-are available in the Git repository at:
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/data_smart.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
-
-Jacob Kroon (1):
-  lib/bb/utils.py: Do not preserve TERM in the environment
-
-Mert Kirpici (1):
-  doc/conf.py: add missing import sys
-
-Nicolas Dechesne (3):
-  sphinx: import sphinx docs
-  sphinx: undo (bitbake-user-manual: Remove TERM from
-    BB_HASHBASE_WHITELIST example)
-  sphinx: partial undo (bitbake-user-manual: update perforce fetcher
-    docs)
-
- doc/.gitignore                                |    1 +
- doc/Makefile                                  |  108 +-
- doc/README                                    |   50 +-
- doc/_templates/breadcrumbs.html               |   14 +
- doc/_templates/layout.html                    |    7 +
- .../bitbake-user-manual-customization.xsl     |   29 -
- .../bitbake-user-manual-execution.rst         |  733 +++++
- .../bitbake-user-manual-execution.xml         | 1029 ------
- .../bitbake-user-manual-fetching.rst          |  621 ++++
- .../bitbake-user-manual-fetching.xml          |  868 -----
- .../bitbake-user-manual-hello.rst             |  415 +++
- .../bitbake-user-manual-hello.xml             |  513 ---
- .../bitbake-user-manual-intro.rst             |  651 ++++
- .../bitbake-user-manual-intro.xml             |  891 -----
- .../bitbake-user-manual-metadata.rst          | 1969 ++++++++++++
- .../bitbake-user-manual-metadata.xml          | 2862 -----------------
- .../bitbake-user-manual-ref-variables.rst     | 1372 ++++++++
- .../bitbake-user-manual-ref-variables.xml     | 2537 ---------------
- .../bitbake-user-manual-style.css             |  984 ------
- .../bitbake-user-manual.xml                   |   88 -
- doc/bitbake-user-manual/html.css              |  281 --
- doc/conf.py                                   |  101 +
- doc/genindex.rst                              |    3 +
- doc/index.rst                                 |   38 +
- doc/poky.ent                                  |   51 -
- doc/releases.rst                              |  130 +
- doc/sphinx-static/switchers.js                |  233 ++
- doc/sphinx-static/theme_overrides.css         |  162 +
- doc/template/Vera.xml                         |    1 -
- doc/template/VeraMoBd.xml                     |    1 -
- doc/template/VeraMono.xml                     |    1 -
- doc/template/component.title.xsl              |   39 -
- doc/template/db-pdf.xsl                       |   64 -
- doc/template/division.title.xsl               |   25 -
- doc/template/fop-config.xml                   |   58 -
- doc/template/formal.object.heading.xsl        |   21 -
- doc/template/gloss-permalinks.xsl             |   14 -
- doc/template/permalinks.xsl                   |   25 -
- doc/template/section.title.xsl                |   55 -
- doc/template/titlepage.templates.xml          | 1259 --------
- doc/tools/docbook-to-pdf                      |   51 -
- lib/bb/utils.py                               |    1 -
- 42 files changed, 6509 insertions(+), 11847 deletions(-)
- create mode 100644 doc/.gitignore
- create mode 100644 doc/_templates/breadcrumbs.html
- create mode 100644 doc/_templates/layout.html
- delete mode 100644 doc/bitbake-user-manual/bitbake-user-manual-customization.xsl
- create mode 100644 doc/bitbake-user-manual/bitbake-user-manual-execution.rst
- delete mode 100644 doc/bitbake-user-manual/bitbake-user-manual-execution.xml
- create mode 100644 doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
- delete mode 100644 doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
- create mode 100644 doc/bitbake-user-manual/bitbake-user-manual-hello.rst
- delete mode 100644 doc/bitbake-user-manual/bitbake-user-manual-hello.xml
- create mode 100644 doc/bitbake-user-manual/bitbake-user-manual-intro.rst
- delete mode 100644 doc/bitbake-user-manual/bitbake-user-manual-intro.xml
- create mode 100644 doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
- delete mode 100644 doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
- create mode 100644 doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
- delete mode 100644 doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
- delete mode 100644 doc/bitbake-user-manual/bitbake-user-manual-style.css
- delete mode 100644 doc/bitbake-user-manual/bitbake-user-manual.xml
- delete mode 100644 doc/bitbake-user-manual/html.css
- create mode 100644 doc/conf.py
- create mode 100644 doc/genindex.rst
- create mode 100644 doc/index.rst
- delete mode 100644 doc/poky.ent
- create mode 100644 doc/releases.rst
- create mode 100644 doc/sphinx-static/switchers.js
- create mode 100644 doc/sphinx-static/theme_overrides.css
- delete mode 100644 doc/template/Vera.xml
- delete mode 100644 doc/template/VeraMoBd.xml
- delete mode 100644 doc/template/VeraMono.xml
- delete mode 100644 doc/template/component.title.xsl
- delete mode 100644 doc/template/db-pdf.xsl
- delete mode 100644 doc/template/division.title.xsl
- delete mode 100644 doc/template/fop-config.xml
- delete mode 100644 doc/template/formal.object.heading.xsl
- delete mode 100644 doc/template/gloss-permalinks.xsl
- delete mode 100644 doc/template/permalinks.xsl
- delete mode 100644 doc/template/section.title.xsl
- delete mode 100644 doc/template/titlepage.templates.xml
- delete mode 100755 doc/tools/docbook-to-pdf
-
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index c559102cf5..2328c334ac 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -1005,7 +1005,7 @@ class DataSmart(MutableMapping):
+             else:
+                 data.update({key:value})
+ 
+-            varflags = d.getVarFlags(key, internalflags = True)
++            varflags = d.getVarFlags(key, internalflags = True, expand=["vardepvalue"])
+             if not varflags:
+                 continue
+             for f in varflags:
 -- 
-2.17.1
+2.25.1
 
