@@ -1,39 +1,39 @@
 Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
- by mx.groups.io with SMTP id smtpd.web10.17699.1609276649790628022
+ by mx.groups.io with SMTP id smtpd.web08.18642.1609279070727137773
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Dec 2020 13:17:30 -0800
+ Tue, 29 Dec 2020 13:57:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@stwcx.xyz header.s=fm3 header.b=Sqw0X7dT;
+ dkim=pass header.i=@stwcx.xyz header.s=fm3 header.b=kJ70xpfo;
  spf=pass (domain: stwcx.xyz, ip: 66.111.4.27, mailfrom: patrick@stwcx.xyz)
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.nyi.internal (Postfix) with ESMTP id 127C45C0156;
-	Tue, 29 Dec 2020 16:17:29 -0500 (EST)
+	by mailout.nyi.internal (Postfix) with ESMTP id 115805C012F;
+	Tue, 29 Dec 2020 16:57:50 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 29 Dec 2020 16:17:29 -0500
+  by compute4.internal (MEProxy); Tue, 29 Dec 2020 16:57:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=fm3; bh=t/5bF8aJzBhDL
-	wp2aArZRKIDfYUAXSTSXP81R3C08Fg=; b=Sqw0X7dTIPNZPwblVPQpUcsP8+IyF
-	azOP5R2EUpoFsUovV8WRDXiv2wzUEyBZAV66johfTM8FWPLwGYXU9rhZctL2ZDT0
-	4/n56mrZhErqbH9kMYpB5xinx7/gEkJoJg0AodEqutt7SXz/kj2v2Zyr5f7BKXf3
-	3GIqgdAGHAUgZmjPLW6wyw+WYKDC33q8Nt3Oyb/lBguVH5Hzo0IIhFUihxMGuxua
-	Hndnqa43EKsxHMhxIQKWjgPyYaJNv7Ehk+L64dDofwSLt9vsprLBSM5t8XmTiTtr
-	bGlIJQh74p8+k9KTKDOZKeUOpC9oo9UNod6dqsK31JYety+Ku8DrQFLXQ==
+	:mime-version:content-transfer-encoding; s=fm3; bh=BSJFgJkRypEh9
+	ZrslIQmNWAUsRZEOIXywTuvV8WpyDo=; b=kJ70xpfo5f/2m/OHIZMZgot54XjzF
+	5ki00Cv9euXGS9nZ/NBoKFBvo/q4qChp7pcGLdY5QIDV/SjTulA2lkxM5x1yxga2
+	0AUZj3rIwd6wiJf77LQzRA7zaDIISEC01V8MqJg2zuPbk4n99x2yo5zVHGRp59A3
+	1mXnYeOAHpk29v08hvlEyM2gXMHY/jBbRRgDx8UTp8xaPFNB8jVtLGA8UEeP3rig
+	0s1OBpC05LyPXyHOjivMlXTCYW4uRB8fFi0XFlev/LZxsiQzWfRdoa8NTYTfqFSQ
+	JUe2EugIC6oodv03QbAyDHPJWUfc8gZKJ00Q/lrWPZyaJbQnq/vCkY/Tg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-transfer-encoding:date:from
 	:in-reply-to:message-id:mime-version:references:subject:to
 	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; bh=t/5bF8aJzBhDLwp2aArZRKIDfYUAXSTSXP81R3C08Fg=; b=DLU0WguM
-	rmomLb7/rCH1iYyD2gGL5zv9xmbXOMJjtLQ8DP1miIPkvramUJotCmRFG2H6RAYa
-	RFl13fgr2BF7JEMH7Z+SgTGj4rhvHcLKIwV8L4XXibz6VNVw4ts4u+ZMW+bhqfaU
-	2G/JMYyFG7IXbDiSxWpWnONDlevewfI1+OTlY6jgj2RI0cfsFW2gpA+otn9dWTCa
-	PG26jnWBuzbuKXvpx6RHoBYi9cb2hxFl+oWcdqf8U0D6MarUAa1Azui6WAuFF/no
-	9wt52w3jqDtz758aVGaL7enhNb+NL/xyqzD3QeMN1kOwOPXrwlpnmJvYCA2yID3D
-	MAdL6/U5kwuwEA==
-X-ME-Sender: <xms:6JzrX1bO2ydCQX4mXOMoko5vN2eQJwxOG-ZAjkSGJlUnQaaFziYHCg>
-    <xme:6JzrX8Y6NoeRr5Kd-knnrEtNK3Y4IZvd3kfyxjqW1iLriDgsH3iVXyzvyzCah9vDq
-    ycYjsuXe6OuqRNPiEo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvddvuddgudegkecutefuodetggdotefrod
+	fm1; bh=BSJFgJkRypEh9ZrslIQmNWAUsRZEOIXywTuvV8WpyDo=; b=n5nr3Z1T
+	xHoprtPU+gfeofebWjlxIG4ANJm+k2ofg+S8MsqVyKfUQQFRnWSf5EmZ1x7WMMXb
+	UxTPtK1WNtln/JgG6T8+OaCynAad7o12pANXc8tfJC70zi96WZLuHK0YZQ/ErGgP
+	tx/3mtzdBFxLBBb7gmGNS2WPu6UAYMe8eF3KV1ds9W5CO9U4O6UFT3vC41Oml5T6
+	zfxlJKMmCKoOyPC7ogqRo0Kh8sJSfM8W7yCsMKey0s17nzAcOWanX8F8oM/tw1yV
+	60jK2QHVCUcWK2DLw8v6LlrRHE2X6e8POczD/QRDGO1huVvZ5zNvcDrF7Lpw7aQ/
+	ut61eAQZOE3yGQ==
+X-ME-Sender: <xms:XabrXyaZGFYX0d3W-yvPeBKlkSKxszpe1l22DBcvruZbt4hkgIzkyg>
+    <xme:XabrX1Z1Dy2ptZ9R88WtVbwE7vfh3Jr9D3s8UOOe3AFM0TLkNUQUdyMJcZHhhf4o6
+    XGSR5YJ4X3UtpXpMW8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvddvuddgudehiecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephf
     fvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefrrghtrhhitghkucghihhl
@@ -41,19 +41,19 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvddvuddgudegkecutefuodetgg
     hnpeduhfdvieejffeuvedvveetkeeltedvffeuhffhgeduhfdvieetudfgheeivedvieen
     ucfkphepudeiiedrudejiedruddvuddrudefleenucevlhhushhtvghrufhiiigvpedtne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehprghtrhhitghksehsthiftgigrdighiii
-X-ME-Proxy: <xmx:6JzrX39CzSR2BPRkrJj1rJgW2LyBPxYLAa0PKhtWH1saeoa5bSNiSw>
-    <xmx:6JzrXzrWGsmqmsBZCxL4IZ364JjebGx_bg5Gznb35212FYXnvoX1qw>
-    <xmx:6JzrXwoXocKw2nBK3yHQDTjEdD6TWG-gDBzWdYki3M1LAGsQoBvADQ>
-    <xmx:6ZzrX2HA4AT4WPQ015BAfUWgUde29SERYN9cwjQIApZkcKWj-dgCMQ>
+X-ME-Proxy: <xmx:XabrX8-RqMnfV1hxDwEhNQuJp8DlaEANv2HyIrbMBSwyIaZ0ztkYMA>
+    <xmx:XabrX0p7fYEDKp6wKQeVVU_jqFzU4K2FiUwy6cYgkA79x2XI1w96pQ>
+    <xmx:XabrX9q-re-hzfs0nHJIWt4CuiytmK7PHrK6OCDieZbjTNCtIAt_5w>
+    <xmx:XqbrX_G8EDj2njCMhXReS9pZ6JVEWWRFnTVzmuv3cRFA3Bu42ONVMw>
 Received: from localhost (mobile-166-176-121-139.mycingular.net [166.176.121.139])
-	by mail.messagingengine.com (Postfix) with ESMTPA id 562AD1080059;
-	Tue, 29 Dec 2020 16:17:28 -0500 (EST)
+	by mail.messagingengine.com (Postfix) with ESMTPA id 682331080064;
+	Tue, 29 Dec 2020 16:57:49 -0500 (EST)
 From: "Patrick Williams" <patrick@stwcx.xyz>
 To: bitbake-devel@lists.openembedded.org
 Cc: Patrick Williams <patrick@stwcx.xyz>
-Subject: [PATCH v2] fetch2/wget: include parameters in URL
-Date: Tue, 29 Dec 2020 15:16:57 -0600
-Message-Id: <20201229211657.32034-1-patrick@stwcx.xyz>
+Subject: [PATCH v3] fetch2/wget: include parameters in URL
+Date: Tue, 29 Dec 2020 15:57:46 -0600
+Message-Id: <20201229215746.69819-1-patrick@stwcx.xyz>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20201229151316.165171-1-patrick@stwcx.xyz>
 References: <20201229151316.165171-1-patrick@stwcx.xyz>
@@ -71,7 +71,7 @@ Signed-off-by: Patrick Williams <patrick@stwcx.xyz>
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index e6d9f528..d9432c5b 100644
+index e6d9f528..80baf04a 100644
 --- a/lib/bb/fetch2/wget.py
 +++ b/lib/bb/fetch2/wget.py
 @@ -99,7 +99,14 @@ class Wget(FetchMethod):
@@ -85,7 +85,7 @@ index e6d9f528..d9432c5b 100644
 +            uri = urls[0]
 +        else:
 +            uri = urls[0] + "?" + "&".join(urls[1:])
-+            fetchcmd += " -O '%s'" % urls[0].split("/")[-1]
++            fetchcmd += " -O '%s/%s'" % (d.getVar("DL_DIR"), urls[0].split("/")[-1])
 +
          if os.path.exists(ud.localpath):
              # file exists, but we didnt complete it.. trying again..
