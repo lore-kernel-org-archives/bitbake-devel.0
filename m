@@ -1,141 +1,112 @@
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
- by mx.groups.io with SMTP id smtpd.web09.18670.1609279338384533824
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+ by mx.groups.io with SMTP id smtpd.web08.13336.1609365809514827333
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Dec 2020 14:02:18 -0800
+ Wed, 30 Dec 2020 14:03:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@stwcx.xyz header.s=fm3 header.b=B9rqweCN;
- spf=pass (domain: stwcx.xyz, ip: 66.111.4.27, mailfrom: patrick@stwcx.xyz)
+ dkim=pass header.i=@stwcx.xyz header.s=fm3 header.b=tSylMsLx;
+ spf=pass (domain: stwcx.xyz, ip: 64.147.123.25, mailfrom: patrick@stwcx.xyz)
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.nyi.internal (Postfix) with ESMTP id AEA545C0062
-	for <bitbake-devel@lists.openembedded.org>; Tue, 29 Dec 2020 17:02:17 -0500 (EST)
+	by mailout.west.internal (Postfix) with ESMTP id CEBA5906;
+	Wed, 30 Dec 2020 17:03:27 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 29 Dec 2020 17:02:17 -0500
+  by compute4.internal (MEProxy); Wed, 30 Dec 2020 17:03:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=
-	date:from:to:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=fm3; bh=vDkvi32Vq47UQUNzKEme0F81YhV
-	ZgVf85CXdhRSKeOs=; b=B9rqweCNreTzPwrsx+oue95GKGjFwidH+Kn91E4ppMv
-	Ix5EtWAddK16+Oqst5sKXedNsc+2yX9nAM/7Bex/UlyBzVSEMjDspushxVN9/K4N
-	DWHdDxxxtHGL/i9RXS06Jul9TyV6cPUl30FG23QtAz2wjBAiK92HviqFE1AR/QwU
-	3ZJ/Fn2jqjeXxLUO4jng9ddp3XhIEwY3M2sQOXqfx1liPj74EgerbvhUcbpjN6B3
-	TolED8DvaBLWlMSb8hVjYZjotR2gJs3kKYhrtLpYJlFM8ZGZT6CCPBxV5+Bmy+rz
-	1fRWZkR8cKUTd7QUwN6gPWhFbX2Qqb+sgDdJPy12fxQ==
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=fm3; bh=vj2c6Q6NHhgGe
+	hkcwVhtV0Bm+moPTtKTYpTbIEQZV6I=; b=tSylMsLxII9QEuFTjTaTft6rh09VQ
+	lmiWDGxo2K91JoRMNF5z8Uy9TDkAjKKx55TPf/aeEoZpvni8YLk1BCdJbzTT0igO
+	GtDA2jpwrCfxufM8NocijTAbZsSQwMXEAqs+S14UW54QFEahBpVfdG8ux1WQlhca
+	F7IFrY7NhcVjSJCEPU+8ebju9YXf/AZTeP0PNi/KFzBvHKC0m2gTlaCxg2WY7Nz1
+	3N86TdLXGmXreGCNemvVcXbSyO6ZiUSd8fkZHcuxq7BG0eJRvpLyPlZ3t6oG+zxl
+	4IPrXkO7STLjb2Qsgcxh8hEXAuxAaWckrvwL3U/DvM06ZkNwvOFehZXVg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=vDkvi3
-	2Vq47UQUNzKEme0F81YhVZgVf85CXdhRSKeOs=; b=jpah77+F5paq19pljHRL6A
-	5QSZC6uXs/iMNXedlmG0CYsW3rRLfLdjvbvi59BcT8jVqpG7W+Vs57slW6mdwG6g
-	PwFxCFoZHoGPfjh+wukhLzu7mZNwSPDwznc4euJ3bIAXWwB7UiMRlHO9w9ycnncv
-	FjIhlTLwQNDBbUV4t5SVL3sBSOujfDPA6pcaaZwmba9TxHhTeYbJjPqNlYkDKxIJ
-	wwzr/Srvahzu592i6Tp4nzC3xM+74HdYt3caUujPAqotKSFj//U19YMIQYBd/Ntz
-	RBNoRaa/YdaRdmex0HIIQHTFtQwujU+XWUsotb//9QxKRT99J0WSuf626/ft5zhw
-	==
-X-ME-Sender: <xms:aafrX61nww_Aqq065ChMovGuDP5wEcxVEz6aXHQnLQSkO0dHDQX69w>
-    <xme:aafrX9Guyia2lfXwj4Ag_n8B4RoU5b0RMFHlFRbpY-xwgk90lavvk5rldrEiwxMlQ
-    Ty0whUuIz9FDPqStBE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvddvuddgudehjecutefuodetggdotefrod
+	messagingengine.com; h=cc:content-transfer-encoding:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; bh=vj2c6Q6NHhgGehkcwVhtV0Bm+moPTtKTYpTbIEQZV6I=; b=HDCjRxpZ
+	o1HvI4OKuG0UMrUM0PHSvaPN5O7XwYfg57e2TqqsE4yNPs+5kwhaH8nRGYX/pJzX
+	D2SJYZLjG4Ri0JD8MiaumBIdYXYL+wa3u8oD3oywXR+onUu41lBcqoN2dNxtxo0X
+	Cde73mmTgw9fUtl3Oc8ZTLCzlo8KvOgnP4rX+RnoPl7lNAHblEKm93ozSmQtyOxH
+	dVHXKlJTypfef/jkyJgp/5RcFopvL+9fBRFA31yxxSvchYitdTBtkq2ddtwyDTbb
+	PawiZLWLuOF5Fg604+R06aTSs2IQnhEo4TDKpWnS9QzcUjWV/7TSNFjsq9jAoZSL
+	XwjmTScwk5sojw==
+X-ME-Sender: <xms:LvnsXyhMdkC3o-1x-Zt4cNrt7m3Sh6RGPQ8Bxt34ebsBk0YZ-QrnMQ>
+    <xme:LvnsXzB5oOde_k6eafP0X3QYcBaXTIclesWYFheC5L9aFWlFZ-yjuEC3CBitAjLGU
+    jv5yeWkg-v8iB0GwJ4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvddvfedgudehiecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhepff
-    fhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpefrrghtrhhitghkucghihhl
+    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephf
+    fvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefrrghtrhhitghkucghihhl
     lhhirghmshcuoehprghtrhhitghksehsthiftgigrdighiiiqeenucggtffrrghtthgvrh
-    hnpeegheehfeffgeekveehtdfhgfduhfegfefgtdehhfektdelffevkefgueffhedtieen
-    ucfkphepudeiiedrudejiedruddvuddrudefleenucevlhhushhtvghrufhiiigvpedtne
+    hnpeduhfdvieejffeuvedvveetkeeltedvffeuhffhgeduhfdvieetudfgheeivedvieen
+    ucfkphepudeiiedrudejiedruddvfedrudejkeenucevlhhushhtvghrufhiiigvpedtne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehprghtrhhitghksehsthiftgigrdighiii
-X-ME-Proxy: <xmx:aafrXy6NaPtQfFXPEkRXzPw0PAdTUfe_Uz7FVT81tdB8Lp6pk6AptQ>
-    <xmx:aafrX73cpknh7r1y2Cqz_yJ3t6g6h1BdKBn3AW8qxZhImKF_ABcRZA>
-    <xmx:aafrX9GO3eZMoKSGe6Zb2bWG9JZPDkAAMjhuT9RsGJu5JhEPi2NPNg>
-    <xmx:aafrXxQ75mAQ63dwA5SkMM0yKPV1hp8-PWY_lf6MbMJ8DOnWSj10NA>
-Received: from localhost (mobile-166-176-121-139.mycingular.net [166.176.121.139])
-	by mail.messagingengine.com (Postfix) with ESMTPA id 07542240057
-	for <bitbake-devel@lists.openembedded.org>; Tue, 29 Dec 2020 17:02:16 -0500 (EST)
-Date: Tue, 29 Dec 2020 16:02:16 -0600
+X-ME-Proxy: <xmx:LvnsX6ER1Ru8b0J5pbNCrHF3OZjA3fF8nlQMVgDOUeMGpVK2yKreQA>
+    <xmx:LvnsX7ST3mo4TeCTszsIIP3K2pY_j922y2u09-XBJhcbqNfGoe0UaA>
+    <xmx:LvnsX_xfrPfGWEXhaK-G_6zIlqYX0eaMLB96pNeHecre-E1Ac7PH1A>
+    <xmx:L_nsXwuiqEqgs1U63-znxFOk9cPjQEv08ZNAc4p9taAW6Mu-6B--vg>
+Received: from localhost (mobile-166-176-123-178.mycingular.net [166.176.123.178])
+	by mail.messagingengine.com (Postfix) with ESMTPA id 780AF24005B;
+	Wed, 30 Dec 2020 17:03:26 -0500 (EST)
 From: "Patrick Williams" <patrick@stwcx.xyz>
 To: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH v3] fetch2/wget: include parameters in URL
-Message-ID: <X+unaFkdA9kAEFza@heinlein>
+Cc: Patrick Williams <patrick@stwcx.xyz>
+Subject: [PATCH v4] fetch2/wget: include parameters in URL
+Date: Wed, 30 Dec 2020 16:03:23 -0600
+Message-Id: <20201230220323.727622-1-patrick@stwcx.xyz>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20201229151316.165171-1-patrick@stwcx.xyz>
 References: <20201229151316.165171-1-patrick@stwcx.xyz>
- <20201229215746.69819-1-patrick@stwcx.xyz>
 MIME-Version: 1.0
-In-Reply-To: <20201229215746.69819-1-patrick@stwcx.xyz>
-X-Groupsio-MsgNum: 11891
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="RhvCx8hr7YYLJQ0X"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
---RhvCx8hr7YYLJQ0X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The wget fetcher currently silently drops all parameters and has
+been that way since it was originally introduced in fetch via 080eb8764.
+This prevents use in SOURCE_MIRROR_URL and SRC_URI which require
+additional parameters.
 
-On Tue, Dec 29, 2020 at 03:57:46PM -0600, Patrick Williams wrote:
-> The wget fetcher currently silently drops all parameters and has
-> been that way since it was originally introduced in fetch via 080eb8764.
-> This prevents use in SOURCE_MIRROR_URL and SRC_URI which require
-> additional parameters.
->=20
-> Signed-off-by: Patrick Williams <patrick@stwcx.xyz>
-> ---
->  lib/bb/fetch2/wget.py | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->=20
-> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-> index e6d9f528..80baf04a 100644
-> --- a/lib/bb/fetch2/wget.py
-> +++ b/lib/bb/fetch2/wget.py
-> @@ -99,7 +99,14 @@ class Wget(FetchMethod):
->          if ud.user and ud.pswd:
->              fetchcmd +=3D " --user=3D%s --password=3D%s --auth-no-challe=
-nge" % (ud.user, ud.pswd)
-> =20
-> -        uri =3D ud.url.split(";")[0]
-> +        # Join the URL components together.
-> +        urls =3D ud.url.split(";")
-> +        if len(urls) =3D=3D 1:
-> +            uri =3D urls[0]
-> +        else:
-> +            uri =3D urls[0] + "?" + "&".join(urls[1:])
-> +            fetchcmd +=3D " -O '%s/%s'" % (d.getVar("DL_DIR"), urls[0].s=
-plit("/")[-1])
-> +
+Signed-off-by: Patrick Williams <patrick@stwcx.xyz>
+---
+ lib/bb/fetch2/wget.py | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-I've now tested this with a `bitbake <image> --runall=3Dfetch` for one of
-my machine images and was successful.  The `-O` above feels a little
-fragile but it is required for the uninative blob because that ends up
-in a `uninative/<checksum>` subdirectory.
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index e6d9f528..0019f10c 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -91,7 +91,14 @@ class Wget(FetchMethod):
+ 
+         fetchcmd = self.basecmd
+ 
+-        if 'downloadfilename' in ud.parm:
++        # Join the URL components together.
++        url_parts = ud.url.split(";")
++        if len(url_parts) == 1:
++            uri = url_parts[0]
++        else:
++            uri = url_parts[0] + "?" + "&".join(url_parts[1:])
++
++        if 'downloadfilename' in ud.parm or len(url_parts) != 1:
+             localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile)
+             bb.utils.mkdirhier(os.path.dirname(localpath))
+             fetchcmd += " -O %s" % shlex.quote(localpath)
+@@ -99,7 +106,6 @@ class Wget(FetchMethod):
+         if ud.user and ud.pswd:
+             fetchcmd += " --user=%s --password=%s --auth-no-challenge" % (ud.user, ud.pswd)
+ 
+-        uri = ud.url.split(";")[0]
+         if os.path.exists(ud.localpath):
+             # file exists, but we didnt complete it.. trying again..
+             fetchcmd += d.expand(" -c -P ${DL_DIR} '%s'" % uri)
+@@ -441,7 +447,7 @@ class Wget(FetchMethod):
+                     valid = 1
+                 elif self._vercmp(version, newver) < 0:
+                     version = newver
+-                
++
+         pupver = re.sub('_', '.', version[1])
+ 
+         bb.debug(3, "*** %s -> UpstreamVersion = %s (CurrentVersion = %s)" %
+-- 
+2.26.2
 
-In uninative.bbclass there is:
-            localdata.setVar('DL_DIR', tarballdir)
-
-The `-P ${DL_DIR}` below seems to not take effect if `-O` is given.
-
->          if os.path.exists(ud.localpath):
->              # file exists, but we didnt complete it.. trying again..
->              fetchcmd +=3D d.expand(" -c -P ${DL_DIR} '%s'" % uri)
-> --=20
-> 2.26.2
->=20
-
---=20
-Patrick Williams
-
---RhvCx8hr7YYLJQ0X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAl/rp2YACgkQqwNHzC0A
-wRkxLBAAhayjOg0VH5Hqi/hKnGLKkT/AQrPRamlURfnjA1/3nd+JES62eITmg67t
-tekQTOM0pg8qxvjMy/xa4yNFqMguLO0U0tnjMyj8uGdt4udrRD/Zqml32q9hlJVA
-GXoHaz4jp5PhfBnEE7pGmH/HlcNX8tjxh4m4/8q3idq/UBs0k7JueucRGo92YkfB
-StyyHRvONqrnFTDHpe98hQw+PfP2D+nb0NVw7G5H3QZWK/cJJXZbIo7AL6AutMse
-pP3FuV+tDJsfXn5/nSvbyaWUBTKKFSkQbQDIJZqlxZQVZHuhfZaYjg5EqNFJ8lQM
-ibeWeVv1pAHKX1vhBizIIEhAzjff7yunRzfgQmjOkmePAXdtgcFVsKcvChWge8c0
-qKAatKFQxjNtIK/2maiEHv92yzRPWU1oSz2jr//nNKrPLX3737lQfO0FuZJUL1JI
-qWk9lwCEHIbmKwv/6Qqeuvd+sMX/Qg7xDKL5quxCVBQG0eO1cA6cLtyrs1CZ845e
-dQuWbcdBXIXL6YmkmeY+G+7Vn+K9T2uIzNPYHWbojdI5IrLvwHWe7E7cwC5v3yaf
-5o2RMSXGu3/9VyJwBXtd8u2BdMln+jKZ1ensUwowVfW14QmR2mRSlFa4CjYBy/zV
-bL2/Nz39HY6QseOEINxXHm2VHYsf2iI6qfp8EzJOriOOsWDzqUc=
-=0zNt
------END PGP SIGNATURE-----
-
---RhvCx8hr7YYLJQ0X--
