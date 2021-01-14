@@ -1,121 +1,96 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
- by mx.groups.io with SMTP id smtpd.web10.33270.1610368965308005551
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web08.5606.1610646612780043062
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 11 Jan 2021 04:42:45 -0800
+ Thu, 14 Jan 2021 09:50:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@mvista-com.20150623.gappssmtp.com header.s=20150623 header.b=lwwTV3Fq;
- spf=permerror, err=parse error for token &{10 18 websitewelcome.com}: parse error for token &{10 18 _spf.google.com}: limit exceeded (domain: mvista.com, ip: 209.85.218.51, mailfrom: mshah@mvista.com)
-Received: by mail-ej1-f51.google.com with SMTP id lt17so24559682ejb.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 11 Jan 2021 04:42:45 -0800 (PST)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=QNgYpiH6;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G+y3BfU9d4iBekgX98bQwokf5K0O3wsvxgfYrjIH8TY=;
-        b=lwwTV3FqWpDAyYogG/7l1XJw/BAjmtklLrNlw2qL8k9zVkmfckzGxfj9A2fOUXmJhg
-         BUGw+L85G1CpVKnm+twD5L9UJ/Kzoug/BoMqxVyzypkC/jFAK+ZMt8VsddHr5FUnmX+q
-         bCS1jRc26vD9ea6ykVbWa9LepjQbo8e4aTOQa2j3+L/y4qFD+eJW+xCCyNaGochI4VEH
-         7Io6Mulm8Bo1jHUGZ27EylfRk6Jx/5MzzIYYBj+L7KIFnJ0x/fa8glstniSPZcf4h/Dx
-         GbloBIqpy+Km1f230AsSOBR/Vt3N8n/7xupzwTxGy91Y/nUIOiKBpDx5+4/pPsJERrY3
-         uZZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G+y3BfU9d4iBekgX98bQwokf5K0O3wsvxgfYrjIH8TY=;
-        b=OV9T3/sBXeAA1tyZqZ9vOPor9LAZAyjwy5nPMJ25YWvgzAfszppxABlUYvfo00L3Mt
-         pS7q89R/GC2sfXDExUh0wC8mDERqHchvluzzdFpz2XtI/l7DqY8vJtgu+LvcUn/cqVno
-         MKookPaZyJ+a6vvAmGnpO/AKwqxaHsN8Qcde2EiuPqX8OIkvms1NFQU6+unA9Z3QijUP
-         Ox7iYAPLg3IPv058EGbyox+oi9S0w9o+Fjcs7tBObNZBei/lGgmQoDUlP6ULx2i783Fm
-         gl7tSs+y6QWt9MYlvDN+oQkdPv+JKVFZtfD6EWOnjL3zDcegIq53AhUuHFYeeJJ8jim9
-         HnwA==
-X-Gm-Message-State: AOAM530ihG8+c8E9NX/RvABfszHKUFQ7u7k4e6TK7s9vjlA9IJ5x97vd
-	4u9VOnKXNsYPJtCzFX8YjU6tJeLkj17+OpjiTHXoqg==
-X-Google-Smtp-Source: ABdhPJzASUevI3GgipBvDJsb2iBRRDOpX7TbaOqDPR510ZMMurswCr3hP17DvIxOUHS63ZeifPy44IV+qeuIWFKNjpc=
-X-Received: by 2002:a17:907:6e9:: with SMTP id yh9mr10531875ejb.131.1610368963919;
- Mon, 11 Jan 2021 04:42:43 -0800 (PST)
+  d=axis.com; q=dns/txt; s=axis-central1; t=1610646613;
+  x=1642182613;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=R38bq4yB0FFjTr9WJw7jc6eWPDLN8vI9kOcVtiIN5J0=;
+  b=QNgYpiH6ZnyY8ETTgjUmHFJjKNyTs8SwMIMUHw2zn5aJq2mSdpUh5YcH
+   Yzy7hmBFsDS8gsWbLvvwAI3rQFcI3xI5S92NO1Ml8AgWsrjRcK/QOx2fa
+   1yVFSE+7h03diKgl0PlN/6lw+61GC9UlM1B05JQlJMdMRuhE/RXPH7T15
+   JnI3moQq+ltX80048nOSV9AqZd9wOXxbr77Zu5eeJS9kvAJF7hmw9da9K
+   VooPr96MJiLTU0C027ARXzHRevq2VSTVwIgEGSu0ZQkCInVKg3ImNalLo
+   FTTBGhod9yf3TDx7Ek9e+h7V5AxZsr8hHczkcK56hYJQ+CZ5DIaqu8jhU
+   w==;
+From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
+To: Steve Sakoman <steve@sakoman.com>, "Mittal, Anuj" <anuj.mittal@intel.com>,
+	Armin Kuster <akuster808@gmail.com>
+CC: "OE Core (openembedded-core@lists.openembedded.org)"
+	<openembedded-core@lists.openembedded.org>, "OE Development
+ (openembedded-devel@lists.openembedded.org)"
+	<openembedded-devel@lists.openembedded.org>, "BitBake Development
+ (bitbake-devel@lists.openembedded.org)"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Backport changes for _PYTHON_SYSCONFIGDATA_NAME to Gatesgarth and Dunfell
+Thread-Topic: Backport changes for _PYTHON_SYSCONFIGDATA_NAME to Gatesgarth
+ and Dunfell
+Thread-Index: AdbqluypjM9qGzPGT4u0xlyyjXAnKg==
+Date: Thu, 14 Jan 2021 17:50:10 +0000
+Message-ID: <17b543581ffb421b812323891405dcfb@XBOX03.axis.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.20.13.13]
 MIME-Version: 1.0
-References: <1609839118-2342-1-git-send-email-mshah@mvista.com>
- <CA+=qD9NuCZ7KeAU3YDDnK=kLa8UVeucOMAyPi6CB+wxTf79Mbg@mail.gmail.com> <CAM9ZRVuUY41jaHqMmpnXamQ399g5JepSGJ21_8twHhPUyFE-wQ@mail.gmail.com>
-In-Reply-To: <CAM9ZRVuUY41jaHqMmpnXamQ399g5JepSGJ21_8twHhPUyFE-wQ@mail.gmail.com>
-From: "Milan Shah" <mshah@mvista.com>
-Date: Mon, 11 Jan 2021 18:12:07 +0530
-Message-ID: <CA+=qD9OUc+Gr6vMCPd4s9Nfais-kh=-Pasvi71g2RYtZDcBJJw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] bitbake: utils: add docstrings to functions
-To: Paul Barker <pbarker@konsulko.com>
-Cc: bitbake-devel@lists.openembedded.org, 
-	Randy MacLeod <randy.macleod@windriver.com>
-Content-Type: multipart/alternative; boundary="0000000000000d5aca05b89f3e74"
-
---0000000000000d5aca05b89f3e74
-Content-Type: text/plain; charset="UTF-8"
-
-Thanks, Paul for responding.
-
-I didn't know that it is accepted. Should I close the bug now?
-
------------------------
-Thanks & Regards,
-*Milan Shah*
-MontaVista Software, Bangalore, India
-
-
-On Mon, Jan 11, 2021 at 6:08 PM Paul Barker <pbarker@konsulko.com> wrote:
-
-> On Mon, 11 Jan 2021 at 12:15, Milan Shah <mshah@mvista.com> wrote:
-> >
-> > Hi All,
-> >
-> > This is a gentle reminder to review this patch.
->
-> Looks like this has already been accepted into master:
->
-> https://git.openembedded.org/bitbake/commit/?id=b61ba4a18693a9e553d2a93161feb0bcc1c82384
->
-> --
-> Paul Barker
-> Konsulko Group
->
-
---0000000000000d5aca05b89f3e74
-Content-Type: text/html; charset="UTF-8"
+Return-Path: peter.kjellerstedt@axis.com
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>Thanks, Paul for responding. <br></div><div><br></div=
-><div>I didn&#39;t know that it is accepted. Should I close the bug now?<br=
-></div><div><div><div dir=3D"ltr" class=3D"gmail_signature" data-smartmail=
-=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr"><font face=3D"t=
-imes new roman, serif"><br></font></div><div dir=3D"ltr"><font face=3D"time=
-s new roman, serif">-----------------------<br></font></div><div dir=3D"ltr=
-"><font face=3D"times new roman, serif">Thanks &amp; Regards,</font><div><f=
-ont face=3D"times new roman, serif"><b>Milan Shah</b></font></div><div><spa=
-n style=3D"background-color:rgb(255,255,255)"><font color=3D"#ff0000"><font=
- face=3D"times new roman, serif">MontaVista Software, </font></font></span>=
-<span style=3D"background-color:rgb(255,255,255)"><font color=3D"#ff0000"><=
-font face=3D"times new roman, serif"><span style=3D"font-family:&quot;times=
- new roman&quot;,serif">Bangalore</span></font><span style=3D"font-family:&=
-quot;times new roman&quot;,serif">, India</span></font></span><br></div></d=
-iv></div></div></div></div><br></div></div><br><div class=3D"gmail_quote"><=
-div dir=3D"ltr" class=3D"gmail_attr">On Mon, Jan 11, 2021 at 6:08 PM Paul B=
-arker &lt;<a href=3D"mailto:pbarker@konsulko.com">pbarker@konsulko.com</a>&=
-gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0=
-px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On Mo=
-n, 11 Jan 2021 at 12:15, Milan Shah &lt;<a href=3D"mailto:mshah@mvista.com"=
- target=3D"_blank">mshah@mvista.com</a>&gt; wrote:<br>
-&gt;<br>
-&gt; Hi All,<br>
-&gt;<br>
-&gt; This is a gentle reminder to review this patch.<br>
-<br>
-Looks like this has already been accepted into master:<br>
-<a href=3D"https://git.openembedded.org/bitbake/commit/?id=3Db61ba4a18693a9=
-e553d2a93161feb0bcc1c82384" rel=3D"noreferrer" target=3D"_blank">https://gi=
-t.openembedded.org/bitbake/commit/?id=3Db61ba4a18693a9e553d2a93161feb0bcc1c=
-82384</a><br>
-<br>
--- <br>
-Paul Barker<br>
-Konsulko Group<br>
-</blockquote></div>
+[ Cross-posting since these changes affect all of bitbake, openembedded-cor=
+e=20
+  and meta-openembedded and need to be made (at least somewhat) in sync. ]
 
---0000000000000d5aca05b89f3e74--
+Can the solution for _PYTHON_SYSCONFIGDATA_NAME please be backported to=20
+Gatesgarth and Dunfell? We are seeing problems for developers who have=20
+updated the python3 version on their hosts when they try to do devtool=20
+modify on recipes that inherit python3native. The following relevant=20
+changes should cherry-pick cleanly to the respective repositories for=20
+both gatesgarth and dunfell:
+
+openembedded-core:
+5a118d4e python3: split python target configuration into own class
+dadf001c python3-pycairo: use python3targetconfig
+9c8f6660 distutils3-base.bbclass: use python3targetconfig
+d3a81dd0 meta: drop _PYTHON_SYSCONFIGDATA_NAME hacks
+38ecb83c gpgme: use python3targetconfig
+c99bb790 python3targetconfig.bbclass: Make py3 dep and tasks only for targe=
+t recipes
+
+bitbake:
+47b64cfa lib/bb/fetch2/__init__.py: drop _PYTHON_SYSCONFIGDATA_NAME unsetti=
+ng
+
+meta-openembedded:
+a06cdf5a gedit: Inherit python3targetconfig
+59f817bb openipmi: Inherit python3targetconfig
+be7d2286 libplist: Inherit python3targetconfig
+c499aaee postgresql: Inherit python3targetconfig
+
+I guess there may be some controversy regarding whether these changes shoul=
+d=20
+be backported to the stable branches since they modify what python3native=20
+does and may require existing recipes to be modified to inherit the new=20
+python3targetconfig class. However, I believe that having devtool modify=20
+fail on random recipes without an easy solution for the user is much worse=
+=20
+than having to update a recipe or two once due to a build failure after=20
+upgrading to a new version of OE-Core (in my book that is pretty normal and=
+=20
+something I always have to do anyway when we update OE-Core). And based on=
+=20
+the number of recipes in openembedded-core and meta-openembedded that neede=
+d=20
+to be updated (2+4), I do not expect there to be many other recipes in the=
+=20
+first place that actually need to be updated.
+
+//Peter
+
