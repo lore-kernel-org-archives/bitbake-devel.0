@@ -1,77 +1,193 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web09.91.1610733945334421381
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+ by mx.groups.io with SMTP id smtpd.web09.7317.1610819076202394309
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 15 Jan 2021 10:05:45 -0800
+ Sat, 16 Jan 2021 09:44:37 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fhs4Ie5G;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f47.google.com with SMTP id d26so10163503wrb.12
-        for <bitbake-devel@lists.openembedded.org>; Fri, 15 Jan 2021 10:05:45 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=QNLnpIWv;
+ spf=pass (domain: gmail.com, ip: 209.85.218.53, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ej1-f53.google.com with SMTP id l9so12151232ejx.3;
+        Sat, 16 Jan 2021 09:44:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=OG03ubsSglpaoWmYPiKuHJ9fEBxBKQAmInEZYmFn8Y4=;
-        b=fhs4Ie5GJstX/1y4A0BoGtyko3br/RmpN2xHC4GistcPiu3zZLwTjX1NeEdWRSyqO8
-         sPDfSBdmkmm1rDjdwG6egRK4KS9tEOYB6kRt743x+0m2eZ36O7pILW/zGTTKA8O0Ijm5
-         qYSJnkUQkbFRbViNl2f+AGHH95ZS4zrFXzPjM=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8iU+ufHHyPSENGTa9HZFTXWeJirjmXY7vfAwSLg1uh8=;
+        b=QNLnpIWvsfx5wE9Db0h2OCTTGEjqZUcJP1Ob2Xc5LAj/smDeKk6Iyzo6j3Trs7mwas
+         vgp/amdkPt3Q2TZGehqVob19Ic3xgghibYaVMdUEQF+/FXdCgUMobEmVEMYZhJNUTUfJ
+         /sO7/j54cnIeisWJpcx/SAmlIk6vK6y67qHCiS8L6HtcDrNPM6gbcyDL4rCBtxhIz1fO
+         ev8+DMnpaKhFWRGooxh9JB0pLJAFWi6KJC1cAUB7BhpTpsXL+a8zg2xVYrd3CKi5310g
+         UvVzdD0AAnJTRpcW2rMmDTvOH+agR95qpe07wzx+GMxaO1llpowlkC35NiyJJgbmAY53
+         /Hcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=OG03ubsSglpaoWmYPiKuHJ9fEBxBKQAmInEZYmFn8Y4=;
-        b=MZD/O6Jyp56nOT3tKD9mUPSOI53OK9tENztyQ4nwVP2nk9q6jwwnyL7IRRj2chVdNr
-         h/oJwkNIJP93eKLORsU/dsW0dysNNI2XLnGns8YeGazrEr3zf4GuwojgrsLB0xGZPI5J
-         PqkWFwwnM7nKYAMYwsXDpgKblR6/A55goEw0GSjMCz4o9GLtXki9NEhp9DVH+QcBFLgK
-         rpA0QYAmnaOG0L6tDh/DV5GkcmLB++hltt8Dq0pteWAm3I0S1epqS6aonbOPM2OunRPI
-         4fmiiPniXNNOXmRHfsk7C7VjyxAF/FSx+jYIolQWVly4NnhJfUUKfA5wxmVEnTU93wED
-         +iZw==
-X-Gm-Message-State: AOAM531SYx4CKSd4ipIZqbKQ5g7r/B+g/KgS2E2I+IYpv+dp2Qyw6AAH
-	ihRZ4i08OLefsr23+9XD8I6t+w==
-X-Google-Smtp-Source: ABdhPJwgi9KDLbGltfqomEcOi9GbO66zy/tH1tBAGLKHfHuAEq1yF9LiOenciRmH4+tcEoNsG+ot/w==
-X-Received: by 2002:a5d:4f90:: with SMTP id d16mr14162991wru.120.1610733943964;
-        Fri, 15 Jan 2021 10:05:43 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:974a:2423:c71:b423? ([2001:8b0:aba:5f3c:974a:2423:c71:b423])
-        by smtp.gmail.com with ESMTPSA id c13sm12097930wml.44.2021.01.15.10.05.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Jan 2021 10:05:43 -0800 (PST)
-Message-ID: <1965f946aa345b7a820c94194c8011de0cd64bdc.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Perforce.py tar filename
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Katu Txakur <katutxakurra@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jan 2021 18:05:40 +0000
-In-Reply-To: <CAM1ZcoWA6pT9iVunDREWGNMCY8DbbF_diUB_O_epnDLQsQspbg@mail.gmail.com>
-References: 
-	<CAM1ZcoWA6pT9iVunDREWGNMCY8DbbF_diUB_O_epnDLQsQspbg@mail.gmail.com>
-User-Agent: Evolution 3.38.1-1 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8iU+ufHHyPSENGTa9HZFTXWeJirjmXY7vfAwSLg1uh8=;
+        b=phK1LloczMs/V6xRwUgx6fyqkEp1tM1AsOylGE/THvlfLvfW2kTaOVIUo8Xl6hN6Sq
+         S24/NAskMU1w329m3UxBtG0/NIgMFf82jI0KrRq1u6Jw8P5/TvAWFj3agzV9m+rIy+Wa
+         CKNAhm8XH+3xQGibXT5KKSWiiYrWSYFjPapHXLjADnE28gEfuD/L549U22X9YO4pKVmj
+         XnnAovPcUAkyhgZNSdwRkU2Oz/J4FUNRaXGMm7kC/bqbd34LfBfk4Sxp3NnsC+mzuoX8
+         q7sS9EXkRhcS9nOqZblEIMPcxSrqO6HjUQISEQugjNngU4kCrGm1rqKrBmkUSlnzih/+
+         p2wg==
+X-Gm-Message-State: AOAM531aYuEYXahgZg9GNTqX/sX86WAyCfAzvACdVNd9PKJbNJOPdEpK
+	MY36uwap5QlDgkcdvXKJtN3eP+HOt3FyZGdKZEE=
+X-Google-Smtp-Source: ABdhPJw1LI5YFET8O702Oy2yJnOJoY9TnMdtffSHr9GaRkTPWDOqXtXKyPHSwCubm4unnHGAOTG65qomTjn7V/79rzY=
+X-Received: by 2002:a17:906:94d2:: with SMTP id d18mr12513976ejy.94.1610819074603;
+ Sat, 16 Jan 2021 09:44:34 -0800 (PST)
 MIME-Version: 1.0
+References: <17b543581ffb421b812323891405dcfb@XBOX03.axis.com>
+In-Reply-To: <17b543581ffb421b812323891405dcfb@XBOX03.axis.com>
+From: "Martin Jansa" <Martin.Jansa@gmail.com>
+Date: Sat, 16 Jan 2021 18:44:23 +0100
+Message-ID: <CA+chaQc0anOg2E=o1ouEca-QJDGqKxDoXm6aPVXzsc8TELW3zA@mail.gmail.com>
+Subject: Re: [bitbake-devel] Backport changes for _PYTHON_SYSCONFIGDATA_NAME to Gatesgarth and Dunfell
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Cc: Steve Sakoman <steve@sakoman.com>, "Mittal, Anuj" <anuj.mittal@intel.com>, 
+	Armin Kuster <akuster808@gmail.com>, 
+	"OE Core (openembedded-core@lists.openembedded.org)" <openembedded-core@lists.openembedded.org>, 
+	"OE Development (openembedded-devel@lists.openembedded.org)" <openembedded-devel@lists.openembedded.org>, 
+	"BitBake Development (bitbake-devel@lists.openembedded.org)" <bitbake-devel@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="000000000000bd3c6d05b9080acb"
+
+--000000000000bd3c6d05b9080acb
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 
-On Fri, 2021-01-15 at 15:38 +0000, Katu Txakur wrote:
-> Hi,
+Aren't the missing spaces in appends fixes also needed for meta-oe recipes?
+
+I think at least top 5 commits from:
+https://git.openembedded.org/meta-openembedded/log/?qt=grep&q=space.*append
+were also follow-up from these changes in oe-core.
+
+On Thu, Jan 14, 2021 at 6:50 PM Peter Kjellerstedt <
+peter.kjellerstedt@axis.com> wrote:
+
+> [ Cross-posting since these changes affect all of bitbake,
+> openembedded-core
+>   and meta-openembedded and need to be made (at least somewhat) in sync. ]
+>
+> Can the solution for _PYTHON_SYSCONFIGDATA_NAME please be backported to
+> Gatesgarth and Dunfell? We are seeing problems for developers who have
+> updated the python3 version on their hosts when they try to do devtool
+> modify on recipes that inherit python3native. The following relevant
+> changes should cherry-pick cleanly to the respective repositories for
+> both gatesgarth and dunfell:
+>
+> openembedded-core:
+> 5a118d4e python3: split python target configuration into own class
+> dadf001c python3-pycairo: use python3targetconfig
+> 9c8f6660 distutils3-base.bbclass: use python3targetconfig
+> d3a81dd0 meta: drop _PYTHON_SYSCONFIGDATA_NAME hacks
+> 38ecb83c gpgme: use python3targetconfig
+> c99bb790 python3targetconfig.bbclass: Make py3 dep and tasks only for
+> target recipes
+>
+> bitbake:
+> 47b64cfa lib/bb/fetch2/__init__.py: drop _PYTHON_SYSCONFIGDATA_NAME
+> unsetting
+>
+> meta-openembedded:
+> a06cdf5a gedit: Inherit python3targetconfig
+> 59f817bb openipmi: Inherit python3targetconfig
+> be7d2286 libplist: Inherit python3targetconfig
+> c499aaee postgresql: Inherit python3targetconfig
+>
+> I guess there may be some controversy regarding whether these changes
+> should
+> be backported to the stable branches since they modify what python3native
+> does and may require existing recipes to be modified to inherit the new
+> python3targetconfig class. However, I believe that having devtool modify
+> fail on random recipes without an easy solution for the user is much worse
+> than having to update a recipe or two once due to a build failure after
+> upgrading to a new version of OE-Core (in my book that is pretty normal
+> and
+> something I always have to do anyway when we update OE-Core). And based on
+> the number of recipes in openembedded-core and meta-openembedded that
+> needed
+> to be updated (2+4), I do not expect there to be many other recipes in the
+> first place that actually need to be updated.
+>
+> //Peter
+>
+>
 > 
-> The file 
-> https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbake/lib/bb/fetch2/perforce.py
-> that fetches code from Perforce repositories sets the name of the tar
-> file stored in the downloads folder in line 136:
->     ud.localfile = d.expand('%s_%s_%s.tar.gz' % (cleanedhost,
-> cleanedpath, ud.revision))
-> It only cares about the path but not the 'module' where it will be
-> mapped. I had two recipes that map the same folder, but each had a
-> destination folder with a different name. When building an image
-> containing both recipes, the second one took the tar file in the
-> downloads folder created by the first one. As a consequence, the
-> mapping was wrong and the image failed to build.
-> 
-> I fixed it by adding the module to the name of the path. Is this a
-> bug or a design decision?
+>
+>
 
-Sounds like a bug to me, a patch to fix it would be welcome.
+--000000000000bd3c6d05b9080acb
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
+<div dir=3D"ltr">Aren&#39;t the missing spaces in appends fixes also needed=
+ for meta-oe recipes?<div><br></div><div>I think at least top 5 commits fro=
+m:</div><div><a href=3D"https://git.openembedded.org/meta-openembedded/log/=
+?qt=3Dgrep&amp;q=3Dspace.*append">https://git.openembedded.org/meta-openemb=
+edded/log/?qt=3Dgrep&amp;q=3Dspace.*append</a><br></div><div>were also foll=
+ow-up from these changes in oe-core.</div></div><br><div class=3D"gmail_quo=
+te"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, Jan 14, 2021 at 6:50 PM P=
+eter Kjellerstedt &lt;<a href=3D"mailto:peter.kjellerstedt@axis.com">peter.=
+kjellerstedt@axis.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_qu=
+ote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,20=
+4);padding-left:1ex">[ Cross-posting since these changes affect all of bitb=
+ake, openembedded-core <br>
+=C2=A0 and meta-openembedded and need to be made (at least somewhat) in sy=
+nc. ]<br>
+<br>
+Can the solution for _PYTHON_SYSCONFIGDATA_NAME please be backported to <b=
+r>
+Gatesgarth and Dunfell? We are seeing problems for developers who have <br=
+>
+updated the python3 version on their hosts when they try to do devtool <br=
+>
+modify on recipes that inherit python3native. The following relevant <br>
+changes should cherry-pick cleanly to the respective repositories for <br>
+both gatesgarth and dunfell:<br>
+<br>
+openembedded-core:<br>
+5a118d4e python3: split python target configuration into own class<br>
+dadf001c python3-pycairo: use python3targetconfig<br>
+9c8f6660 distutils3-base.bbclass: use python3targetconfig<br>
+d3a81dd0 meta: drop _PYTHON_SYSCONFIGDATA_NAME hacks<br>
+38ecb83c gpgme: use python3targetconfig<br>
+c99bb790 python3targetconfig.bbclass: Make py3 dep and tasks only for targ=
+et recipes<br>
+<br>
+bitbake:<br>
+47b64cfa lib/bb/fetch2/__init__.py: drop _PYTHON_SYSCONFIGDATA_NAME unsett=
+ing<br>
+<br>
+meta-openembedded:<br>
+a06cdf5a gedit: Inherit python3targetconfig<br>
+59f817bb openipmi: Inherit python3targetconfig<br>
+be7d2286 libplist: Inherit python3targetconfig<br>
+c499aaee postgresql: Inherit python3targetconfig<br>
+<br>
+I guess there may be some controversy regarding whether these changes shou=
+ld <br>
+be backported to the stable branches since they modify what python3native =
+<br>
+does and may require existing recipes to be modified to inherit the new <b=
+r>
+python3targetconfig class. However, I believe that having devtool modify <=
+br>
+fail on random recipes without an easy solution for the user is much worse=
+ <br>
+than having to update a recipe or two once due to a build failure after <b=
+r>
+upgrading to a new version of OE-Core (in my book that is pretty normal an=
+d <br>
+something I always have to do anyway when we update OE-Core). And based on=
+ <br>
+the number of recipes in openembedded-core and meta-openembedded that need=
+ed <br>
+to be updated (2+4), I do not expect there to be many other recipes in the=
+ <br>
+first place that actually need to be updated.<br>
+<br>
+//Peter<br>
+<br>
+<br>
+<br>
+<br>
+</blockquote></div>
 
-Richard
-
+--000000000000bd3c6d05b9080acb--
