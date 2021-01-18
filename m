@@ -1,67 +1,71 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
- by mx.groups.io with SMTP id smtpd.web10.18800.1610893513516519014
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+ by mx.groups.io with SMTP id smtpd.web12.29101.1610943670786243419
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 17 Jan 2021 06:25:13 -0800
+ Sun, 17 Jan 2021 20:21:11 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@linux.microsoft.com header.s=default header.b=YNNq66fw;
- spf=pass (domain: linux.microsoft.com, ip: 13.77.154.182, mailfrom: anbelski@linux.microsoft.com)
-Received: from dom0.fritz.box (unknown [87.123.119.238])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2C5E520B7192;
-	Sun, 17 Jan 2021 06:25:09 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2C5E520B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1610893512;
-	bh=vj87AgXkd2OE9xqGVrRiu4VEcZR0Id/KPHXR2GbSuTA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YNNq66fws0Ku5Uot6EcZhzhajDCAy7mXo+OC52KiRI2HkXxLTCe2h/XLgUYEcISst
-	 VGFpVoFKTJon4JNWm6iifhDNk1ChHA7KwOWkXWXneMSEwt2dlgGG53hFm/rdSp8blk
-	 pM+c1jnkNQYBmCmXHSfkf6x1ffY1Ea4HNRf/l5fQ=
-From: "Anatol Belski" <anbelski@linux.microsoft.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Sinan Kaya <okaya@kernel.org>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Paul Barker <pbarker@konsulko.com>
-Subject: [bitbake-devel][PATCH v2] toaster: Support vhd/vhdx image suffix
-Date: Sun, 17 Jan 2021 15:24:52 +0100
-Message-Id: <20210117142452.21238-1-anbelski@linux.microsoft.com>
-X-Mailer: git-send-email 2.29.2
+ dkim=missing; spf=pass (domain: intel.com, ip: 134.134.136.100, mailfrom: anuj.mittal@intel.com)
+IronPort-SDR: gWmxQtkzUFrYuG8GstdmNeP44TAO4SWfUobE5sXAI/M9cA+L4NdDlDbQIKKvoS78rrzA78M79n
+ wPv9iGUDE6XQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9867"; a="242827826"
+X-IronPort-AV: E=Sophos;i="5.79,355,1602572400"; 
+   d="scan'208";a="242827826"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2021 20:21:09 -0800
+IronPort-SDR: lmV7IRUHYvFVEQ0bJPpe6GNyE8AFugTV8L2dmqdpQxgeschqBQrJuhn+M549umhBvb/OQzEIsG
+ W2LVKrsBMHtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,355,1602572400"; 
+   d="scan'208";a="573160735"
+Received: from pgsmsx601.gar.corp.intel.com ([10.108.199.136])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Jan 2021 20:21:08 -0800
+Received: from pgsmsx601.gar.corp.intel.com (10.108.199.136) by
+ pgsmsx601.gar.corp.intel.com (10.108.199.136) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 18 Jan 2021 12:21:07 +0800
+Received: from pgsmsx601.gar.corp.intel.com ([10.108.199.136]) by
+ pgsmsx601.gar.corp.intel.com ([10.108.199.136]) with mapi id 15.01.1713.004;
+ Mon, 18 Jan 2021 12:21:07 +0800
+From: "Anuj Mittal" <anuj.mittal@intel.com>
+To: "steve@sakoman.com" <steve@sakoman.com>, "peter.kjellerstedt@axis.com"
+	<peter.kjellerstedt@axis.com>, "akuster808@gmail.com" <akuster808@gmail.com>
+CC: "openembedded-core@lists.openembedded.org"
+	<openembedded-core@lists.openembedded.org>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>,
+	"openembedded-devel@lists.openembedded.org"
+	<openembedded-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] Backport changes for _PYTHON_SYSCONFIGDATA_NAME to Gatesgarth and Dunfell
+Thread-Topic: [bitbake-devel] Backport changes for _PYTHON_SYSCONFIGDATA_NAME
+ to Gatesgarth and Dunfell
+Thread-Index: AdbqluypjM9qGzPGT4u0xlyyjXAnKgCd1wYA
+Date: Mon, 18 Jan 2021 04:21:07 +0000
+Message-ID: <31cbf5fec18960f2bd5c1c0082f89c45f83ee6c0.camel@intel.com>
+References: <17b543581ffb421b812323891405dcfb@XBOX03.axis.com>
+In-Reply-To: <17b543581ffb421b812323891405dcfb@XBOX03.axis.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.108.32.68]
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A479CCA312FC8E4CBDF01C1A7355CE17@intel.com>
+Content-Transfer-Encoding: base64
 
-From: Sinan Kaya <okaya@kernel.org>
-
-Signed-off-by: Sinan Kaya <okaya@kernel.org>
-Signed-off-by: Anatol Belski <anbelski@linux.microsoft.com>
----
- lib/toaster/orm/models.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 7f7e922a..49dc7dae 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -583,7 +583,7 @@ class Build(models.Model):
-         note that this is the actual list of extensions stored on Target=
- objects
-         for this build, and not the value of IMAGE_FSTYPES.
-=20
--        Returns comma-separated string, e.g. "vmdk, ext4"
-+        Returns comma-separated string, e.g. "vmdk, vhd, vhdx, ext4"
-         """
-         extensions =3D []
-=20
-@@ -970,7 +970,7 @@ class Target_Image_File(models.Model):
-         'ext3', 'ext3.gz', 'ext4', 'ext4.gz', 'f2fs', 'hddimg', 'iso', '=
-jffs2',
-         'jffs2.sum', 'multiubi', 'squashfs', 'squashfs-lz4', 'squashfs-l=
-zo',
-         'squashfs-xz', 'tar', 'tar.bz2', 'tar.gz', 'tar.lz4', 'tar.xz', =
-'ubi',
--        'ubifs', 'wic', 'wic.bz2', 'wic.gz', 'wic.lzma'
-+        'ubifs', "vhd", 'vhdx', 'wic', 'wic.bz2', 'wic.gz', 'wic.lzma'
-     }
-=20
-     target =3D models.ForeignKey(Target, on_delete=3Dmodels.CASCADE)
---=20
-2.29.2
-
+T24gVGh1LCAyMDIxLTAxLTE0IGF0IDE3OjUwICswMDAwLCBQZXRlciBLamVsbGVyc3RlZHQgd3Jv
+dGU6DQo+IEkgZ3Vlc3MgdGhlcmUgbWF5IGJlIHNvbWUgY29udHJvdmVyc3kgcmVnYXJkaW5nIHdo
+ZXRoZXIgdGhlc2UgY2hhbmdlcw0KPiBzaG91bGQgDQo+IGJlIGJhY2twb3J0ZWQgdG8gdGhlIHN0
+YWJsZSBicmFuY2hlcyBzaW5jZSB0aGV5IG1vZGlmeSB3aGF0DQo+IHB5dGhvbjNuYXRpdmUgDQo+
+IGRvZXMgYW5kIG1heSByZXF1aXJlIGV4aXN0aW5nIHJlY2lwZXMgdG8gYmUgbW9kaWZpZWQgdG8g
+aW5oZXJpdCB0aGUNCj4gbmV3IA0KPiBweXRob24zdGFyZ2V0Y29uZmlnIGNsYXNzLiBIb3dldmVy
+LCBJIGJlbGlldmUgdGhhdCBoYXZpbmcgZGV2dG9vbA0KPiBtb2RpZnkgDQo+IGZhaWwgb24gcmFu
+ZG9tIHJlY2lwZXMgd2l0aG91dCBhbiBlYXN5IHNvbHV0aW9uIGZvciB0aGUgdXNlciBpcyBtdWNo
+DQo+IHdvcnNlIA0KPiB0aGFuIGhhdmluZyB0byB1cGRhdGUgYSByZWNpcGUgb3IgdHdvIG9uY2Ug
+ZHVlIHRvIGEgYnVpbGQgZmFpbHVyZQ0KPiBhZnRlciANCj4gdXBncmFkaW5nIHRvIGEgbmV3IHZl
+cnNpb24gb2YgT0UtQ29yZSAoaW4gbXkgYm9vayB0aGF0IGlzIHByZXR0eQ0KPiBub3JtYWwgYW5k
+IA0KPiBzb21ldGhpbmcgSSBhbHdheXMgaGF2ZSB0byBkbyBhbnl3YXkgd2hlbiB3ZSB1cGRhdGUg
+T0UtQ29yZSkuDQoNCkkgYWdyZWUgdGhhdCBkZXZ0b29sIGZhaWxpbmcgaXMgbm90IGdvb2QgZXNw
+ZWNpYWxseSB3aGVuIHdlIHJlY29tbWVuZA0KdGhhdCBwZW9wbGUgcnVuIGl0IGluIHNvbWUgaGVs
+cCBtZXNzYWdlcy4NCg0KSXMgdGhlcmUgYSB3YXkgd2UgY2FuIHNob3cgYSBoZWxwZnVsIG1lc3Nh
+Z2UgZm9yIHN0YWJsZSBicmFuY2hlcyB3aGVuDQpzdWNoIGEgY2hhbmdlIG1pZ2h0IGJlIG5lZWRl
+ZD8NCg0KVGhhbmtzLA0KDQpBbnVqDQo=
