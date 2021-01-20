@@ -1,87 +1,122 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
- by mx.groups.io with SMTP id smtpd.web08.26208.1611140033075349004
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+ by mx.groups.io with SMTP id smtpd.web10.26326.1611141193233444808
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 20 Jan 2021 02:53:53 -0800
+ Wed, 20 Jan 2021 03:13:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=KBuCNajo;
- spf=pass (domain: burtonini.com, ip: 209.85.208.181, mailfrom: ross@burtonini.com)
-Received: by mail-lj1-f181.google.com with SMTP id f17so25488735ljg.12
-        for <bitbake-devel@lists.openembedded.org>; Wed, 20 Jan 2021 02:53:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S6wCuN43+9vjPf3pY4EvjsWFNoMeq1T8OjXXRadabJE=;
-        b=KBuCNajo2CwXS/SNvjprFDe5JsXhVcnZ0LKRH+TIETpPHPK7ToIrG5V8voKv/DEqtB
-         K2Mo9D0xYJuok85Hu9XCsKvc27+bCU7Wm6zRMXXQ7UpZNuZ1Jv0M7IUiFLakRAwFsxUG
-         8i1qlMM2orEPS02dAHIcpK3ZiAI8MazDMEPuCFPPAs8U37VQRs84aXcC7I9SRvYSB+1I
-         UYCx83o+ugHbBSh50Rs9pShAA+/AKRafyqLEv0Fk9X01qp+UJVEOztv4xVHW8phw7yYf
-         KWhI0pUwQvieN97OWKQR1v5cGZ9hlniRZ7+V/+spm3bdDPxAt/xSQGFdmbs/61iZActt
-         tocw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S6wCuN43+9vjPf3pY4EvjsWFNoMeq1T8OjXXRadabJE=;
-        b=pnbUXn8ZzrIsi8NuTrBDXioaAjeF03G+rt70rNCXc5IH4Dfji8y231QIQaJ5lQJX/5
-         tzqd6P7yN4F25akyq2VBya1DX5jtUhqw//JvPWcUaGrjrNiVW64sY4nl+YUo4tHqta83
-         YfINTgUJXO66FmymViyVOezYMVlMVEjVTOMejEturfORzxUhXXuU9f7hL39+whfgmZoZ
-         XKYu06NCo2/CW6qvkrBsFMLJFSz9ZS8qgb9gXdvxpF65a1LXROmcXrKcvu2nT7xGqOUf
-         /tl8DGd6RZPxk39qbjEnPE+i2+TiczBMGjZ2x4XIfxU+mKtAREc/agF+H6JjORlMolNz
-         DdCg==
-X-Gm-Message-State: AOAM530omV8zFGBdempA7YfaqXUEqFedjVompT9+a01tYUa02KdGEt3Y
-	w5TndS/APs9wCyrGMzbtxQR5yGNkx0qxVH3yb1oIsQ==
-X-Google-Smtp-Source: ABdhPJwgN3/I+CRwsw3y67jmEZqVOCcZbxavZd7Ql2d6Ivv4P3KpkjZvvcT1HsUe95eKH+tlHNpOzyqc3sxoXnLux2U=
-X-Received: by 2002:a2e:3807:: with SMTP id f7mr4116114lja.24.1611140031315;
- Wed, 20 Jan 2021 02:53:51 -0800 (PST)
+ dkim=pass header.i=@st.com header.s=stmicroelectronics header.b=FT/7Fn9M;
+ spf=pass (domain: st.com, ip: 185.132.182.106, mailfrom: christophe.priouzeau@st.com)
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 10KBCaaA012769;
+	Wed, 20 Jan 2021 12:13:07 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=STMicroelectronics;
+ bh=ryU66iGQUGPrBh3kBUf87Na8HyaKLSBr/XmG+AC3MOI=;
+ b=FT/7Fn9MlrhWJwVy5Ciff2hTAubffJM3B+9XQlzpyCxTWZWmf3HGn+iNVXJKE01cC7xZ
+ 2Ap+Hr1Zh8hTtvuIKUC0bW1Up2X1Xn8afc+qptk+DV0MAkpz3TiKSedqKYEgqL3w+9yL
+ jPu+HT7caBff5VLmwAnJpoWBij996oOMIpLliTtg2JdCxSF0UhYYYwXh+25/EWeAdjDl
+ MjSCp2BU0u4Ftu6GEKLRZEw3REOvd5+9p8wLLYWq7eoFg451FB68+7BFg8GeYyKpWtCP
+ lgxUN9XvB88XM7/S+jcCJJOfEM8cUtDsQGHWarM5yZUgtnlwblBE5paAOFEjm/Zqgafq aw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com with ESMTP id 3668p4ux81-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Jan 2021 12:13:07 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F32EE10002A;
+	Wed, 20 Jan 2021 12:13:06 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E965A232737;
+	Wed, 20 Jan 2021 12:13:06 +0100 (CET)
+Received: from SFHDAG2NODE2.st.com (10.75.127.5) by SFHDAG2NODE2.st.com
+ (10.75.127.5) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Jan
+ 2021 12:13:06 +0100
+Received: from SFHDAG2NODE2.st.com ([fe80::14c2:73ff:db87:a27b]) by
+ SFHDAG2NODE2.st.com ([fe80::14c2:73ff:db87:a27b%20]) with mapi id
+ 15.00.1473.003; Wed, 20 Jan 2021 12:13:06 +0100
+From: "cpriouzeau" <christophe.priouzeau@st.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+CC: Christophe PRIOUZEAU <christophe.priouzeau@st.com>,
+        Ross Burton
+	<ross.burton@arm.com>
+Subject: [PATCH] WGET: update user-agent
+Thread-Topic: [PATCH] WGET: update user-agent
+Thread-Index: AQHW7x06PowD+XKEXUeBHVe3cFjOKQ==
+Date: Wed, 20 Jan 2021 11:13:06 +0000
+Message-ID: <20210120111304.3689-1-christophe.priouzeau@st.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
 MIME-Version: 1.0
-References: <20210120095046.31357-1-christophe.priouzeau@st.com>
-In-Reply-To: <20210120095046.31357-1-christophe.priouzeau@st.com>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Wed, 20 Jan 2021 10:53:40 +0000
-Message-ID: <CAAnfSTuFRJWaouXNz3DsFsXnT+ShNA5RYQx=S2zFs4FhT3WDgA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [MASTER][1.46][PATCH] WGET: update user-agent
-To: christophe.priouzeau@st.com
-Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-20_02:2021-01-18,2021-01-20 signatures=0
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-There are two instances of the User-Agent in that code.  A quick patch
-I came up with during the call yesterday is as follows:
+With the usage of enterprise proxy, the user-agent defined are
+too old and refused by proxy configuration.
 
-http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/commit/?h=ross/mut&id=16b98ea3e0d01f1c71073d135301c6db315b0ac8
+Signed-off-by: Christophe Priouzeau <christophe.priouzeau@st.com>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+V2:
+ - update of Two User-agent (integration of comment of Ross Burton
+ - Test passed under STMicroelectronics enterprise proxy
 
-If you can come up with a patch that incorporates the fixes in mine,
-feel free to post it with your authorship as there's no way I can test
-it.
+ lib/bb/fetch2/wget.py | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-Ross
-
-On Wed, 20 Jan 2021 at 09:50, cpriouzeau via lists.openembedded.org
-<christophe.priouzeau=st.com@lists.openembedded.org> wrote:
->
-> With the usage of enterprise proxy, the user-agent defined are
-> too old and refused by proxy configuration.
->
-> Signed-off-by: Christophe Priouzeau <christophe.priouzeau@st.com>
-> ---
->  lib/bb/fetch2/wget.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-> index e6d9f528..98c6635d 100644
-> --- a/lib/bb/fetch2/wget.py
-> +++ b/lib/bb/fetch2/wget.py
-> @@ -297,7 +297,7 @@ class Wget(FetchMethod):
->              # Some servers (FusionForge, as used on Alioth) require that the
->              # optional Accept header is set.
->              r.add_header("Accept", "*/*")
-> -            r.add_header("User-Agent", "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12")
-> +            r.add_header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0")
->              def add_basic_auth(login_str, request):
->                  '''Adds Basic auth to http request, pass in login:password as string'''
->                  import base64
-> --
-> 2.17.1
->
-> 
->
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index e6d9f528..e952f411 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -52,6 +52,12 @@ class WgetProgressHandler(bb.progress.LineFilterProgress=
+Handler):
+=20
+=20
+ class Wget(FetchMethod):
++
++    # CDNs like CloudFlare may do a 'browser integrity test' which can fai=
+l
++    # with the standard wget/urllib User-Agent, so pretend to be a modern
++    # browser.
++    user_agent =3D "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko=
+/20100101 Firefox/84.0"
++
+     """Class to fetch urls via 'wget'"""
+     def supports(self, ud, d):
+         """
+@@ -297,7 +303,7 @@ class Wget(FetchMethod):
+             # Some servers (FusionForge, as used on Alioth) require that t=
+he
+             # optional Accept header is set.
+             r.add_header("Accept", "*/*")
+-            r.add_header("User-Agent", "Mozilla/5.0 (X11; U; Linux i686; e=
+n-US; rv:1.9.2.12) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12")
++            r.add_header("User-Agent", self.user_agent)
+             def add_basic_auth(login_str, request):
+                 '''Adds Basic auth to http request, pass in login:password=
+ as string'''
+                 import base64
+@@ -401,9 +407,8 @@ class Wget(FetchMethod):
+         """
+         f =3D tempfile.NamedTemporaryFile()
+         with tempfile.TemporaryDirectory(prefix=3D"wget-index-") as workdi=
+r, tempfile.NamedTemporaryFile(dir=3Dworkdir, prefix=3D"wget-listing-") as =
+f:
+-            agent =3D "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12=
+) Gecko/20101027 Ubuntu/9.10 (karmic) Firefox/3.6.12"
+             fetchcmd =3D self.basecmd
+-            fetchcmd +=3D " -O " + f.name + " --user-agent=3D'" + agent + =
+"' '" + uri + "'"
++            fetchcmd +=3D " -O " + f.name + " --user-agent=3D'" + self.use=
+r_agent + "' '" + uri + "'"
+             try:
+                 self._runwget(ud, d, fetchcmd, True, workdir=3Dworkdir)
+                 fetchresult =3D f.read()
+--=20
+2.17.1
