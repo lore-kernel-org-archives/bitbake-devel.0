@@ -1,97 +1,134 @@
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web09.14598.1611344317237703930
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+ by mx.groups.io with SMTP id smtpd.web08.17895.1611357572506062411
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 22 Jan 2021 11:38:38 -0800
+ Fri, 22 Jan 2021 15:19:32 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@axis.com header.s=axis-central1 header.b=KN75zvaz;
- spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=QzzW8G7c;
+ spf=pass (domain: gmail.com, ip: 209.85.167.46, mailfrom: katutxakurra@gmail.com)
+Received: by mail-lf1-f46.google.com with SMTP id a8so9822969lfi.8
+        for <bitbake-devel@lists.openembedded.org>; Fri, 22 Jan 2021 15:19:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1611344317;
-  x=1642880317;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=bALjND22NaY2HTxuXIgFGkql5qaQ6qJ7gCESAlkx6UE=;
-  b=KN75zvazz4auusJ1GrCpGBhwZ+qeYPcDLGfzY8GTVLCZHy5cE99tuKoN
-   xgPdb3n3EhXvVFEwcAQaI4WSuf1UoK4N95CpXhMxW2+wyVmeSWjfP4s9M
-   QWF9+k8+jN+/LBuVPvfnw/C+4BKTEeLbIUAIz6UER27IV9y1d4PQKyarH
-   flpLLh6xgEo/pejOueJQrfS2C7CeYTR4U0h2mazCTfuBNcXI4Jxiucwxc
-   a0HBtPS3A0tJviIEwBOh9bxkJXThACrkBcqGVWLVt5JXhYYh+m0Ob3XDx
-   1YnspnAHnkGIEYWIYcFgG/bF2c5c4rZzMmbPu/nnmGhVDKmyvV7ZRDOFq
-   w==;
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: Steve Sakoman <steve@sakoman.com>, "Mittal, Anuj" <anuj.mittal@intel.com>
-CC: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH 2/2] cooker: Include all packages a recipe provides in SkippedPackage.rprovides
-Thread-Topic: [bitbake-devel] [PATCH 2/2] cooker: Include all packages a
- recipe provides in SkippedPackage.rprovides
-Thread-Index: AQHWzOFya8GdC6IY70Ko6Uu+l3RaBao0UIyQ
-Date: Fri, 22 Jan 2021 19:38:34 +0000
-Message-ID: <988a93ff67e74345881df1bbb3990a17@XBOX03.axis.com>
-References: <20201207213851.3485-1-pkj@axis.com>
- <164E8D0394A02FDA.16914@lists.openembedded.org>
-In-Reply-To: <164E8D0394A02FDA.16914@lists.openembedded.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xKwbcm6ilMCDX6um8ZDrU8qqW6XRzIUsAWX25HW/Xbs=;
+        b=QzzW8G7cAnoG7QchqFv99wWOkga+feXrv/rRSEbAGWqK4QwuLSEn/vRanrvQ2n2C37
+         rnFKARe8n3wAmTJgQyBok9MVKHNRGtAqXxMCtWTch05JYNTX+j7qGUsGEL22dr+LMzDL
+         4x0zvBWGPcwk/nofiwIp3W3s40Q8w01VSlYNr7DOi5+bFvpOvmnSvdEo18m2zXjKK+IC
+         Ort4En3CJfpLS/BxKd/YoyPW+LDH+zawUWBXe9Wi0R8DpNx1/EKLoVESnHP7uRvmzR9I
+         6fDhbsiXOhS/CB0BDFaDhw0r4uqd7xngvT36f/NMghcKRqLm5JWvEs+jP5UHFtfVNM4A
+         4Umw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xKwbcm6ilMCDX6um8ZDrU8qqW6XRzIUsAWX25HW/Xbs=;
+        b=qF/fLsAuDoEWxBjR5Lqz+56DymbT1BWFM+wx0TSCayk0Cq4hutqarhwCEtc2S8iXsK
+         x/JbNgwTPyXdJVLtsd6yeVl1Av187S5TwkPz+4XH95GVkpiYBp3/TgWh1ym9i6H2V22D
+         gAJKksKDgQRViXlcurDdqO+iOBmaYexExn62ZiRCBThcIOTVJugv+L6mfqPPsaoy4oSr
+         a3v2Yq/inj4rUC3Cv2clcVnpM4tyL8HKtJJ2dLltwTmLW4FU1gszvnf5EXMuMAa/z8Pi
+         XbbI1FgyeWJMNgXBydvmcpxEeMTWBSOKiWiAA+8oN0VgU8xyjj6q1BEamMjBe+KssubY
+         MkPw==
+X-Gm-Message-State: AOAM531Tp3XT2NuFiYICPgfkvH3K46KhbU9selSwwUXipCaBmjKmqIIV
+	j/BYUW+klktLQVwIUqitFLz++kqw8MgsUdIt7M4=
+X-Google-Smtp-Source: ABdhPJwh5ZANxg1nALyLUpQeqHLfm42aIfK6eWJaJihQgeUUrJS9P7chsJXHUJ2gYgRUDK0jLH8/2kdfiW4jmMlYuK0=
+X-Received: by 2002:a05:6512:3090:: with SMTP id z16mr68029lfd.44.1611357570675;
+ Fri, 22 Jan 2021 15:19:30 -0800 (PST)
 MIME-Version: 1.0
-Return-Path: peter.kjellerstedt@axis.com
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+References: <CAM1ZcoWA6pT9iVunDREWGNMCY8DbbF_diUB_O_epnDLQsQspbg@mail.gmail.com>
+ <1965f946aa345b7a820c94194c8011de0cd64bdc.camel@linuxfoundation.org>
+In-Reply-To: <1965f946aa345b7a820c94194c8011de0cd64bdc.camel@linuxfoundation.org>
+From: "Katu Txakur" <katutxakurra@gmail.com>
+Date: Fri, 22 Jan 2021 23:19:19 +0000
+Message-ID: <CAM1ZcoVB1FnY+fDyw53iPSWhaFduwH8G-1R7U-EU+pCqNuFQFQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] Perforce.py tar filename
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="0000000000009b371b05b9856b7b"
+
+--0000000000009b371b05b9856b7b
+Content-Type: text/plain; charset="UTF-8"
+
+Sorry for the late reply Richard, I should have sent a patch with my first
+email. I've seen that you've fixed it. Thank you!
+
+Cheers,
+Katu
+
+On Fri, 15 Jan 2021 at 18:05, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> On Fri, 2021-01-15 at 15:38 +0000, Katu Txakur wrote:
+> > Hi,
+> >
+> > The file
+> >
+> https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbake/lib/bb/fetch2/perforce.py
+> > that fetches code from Perforce repositories sets the name of the tar
+> > file stored in the downloads folder in line 136:
+> >     ud.localfile = d.expand('%s_%s_%s.tar.gz' % (cleanedhost,
+> > cleanedpath, ud.revision))
+> > It only cares about the path but not the 'module' where it will be
+> > mapped. I had two recipes that map the same folder, but each had a
+> > destination folder with a different name. When building an image
+> > containing both recipes, the second one took the tar file in the
+> > downloads folder created by the first one. As a consequence, the
+> > mapping was wrong and the image failed to build.
+> >
+> > I fixed it by adding the module to the name of the path. Is this a
+> > bug or a design decision?
+>
+> Sounds like a bug to me, a patch to fix it would be welcome.
+>
+> Cheers,
+>
+> Richard
+>
+>
+
+--0000000000009b371b05b9856b7b
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Can these two bitbake patches be backported to Dunfell and Gatesgarth?
+<div dir=3D"ltr"><div>Sorry for=C2=A0the late reply Richard, I should have =
+sent a patch with my first email. I&#39;ve seen that you&#39;ve fixed it. T=
+hank you!</div><div><br></div><div>Cheers,</div><div>Katu<br></div><br><div=
+ class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, 15 Jan=
+ 2021 at 18:05, Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfo=
+undation.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><b=
+lockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-le=
+ft:1px solid rgb(204,204,204);padding-left:1ex">On Fri, 2021-01-15 at 15:38=
+ +0000, Katu Txakur wrote:<br>
+&gt; Hi,<br>
+&gt; <br>
+&gt; The file <br>
+&gt; <a href=3D"https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbak=
+e/lib/bb/fetch2/perforce.py" rel=3D"noreferrer" target=3D"_blank">https://g=
+it.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbake/lib/bb/fetch2/perforce.=
+py</a><br>
+&gt; that fetches code from Perforce repositories sets the name of the tar<=
+br>
+&gt; file stored in the downloads folder in line 136:<br>
+&gt; =C2=A0=C2=A0=C2=A0 ud.localfile =3D d.expand(&#39;%s_%s_%s.tar.gz&#39;=
+ % (cleanedhost,<br>
+&gt; cleanedpath, ud.revision))<br>
+&gt; It only cares about the path but not the &#39;module&#39; where it wil=
+l be<br>
+&gt; mapped. I had two recipes that map the same folder, but each had a<br>
+&gt; destination folder with a different name. When building an image<br>
+&gt; containing both recipes, the second one took the tar file in the<br>
+&gt; downloads folder created by the first one. As a consequence, the<br>
+&gt; mapping was wrong and the image failed to build.<br>
+&gt; <br>
+&gt; I fixed it by adding the module to the name of the path. Is this a<br>
+&gt; bug or a design decision?<br>
+<br>
+Sounds like a bug to me, a patch to fix it would be welcome.<br>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+<br>
+</blockquote></div></div>
 
-93d01614565bd540d05fbc1791dd66e46723d683
-efd026c26a377b826a49b945a8212bf7de8a480a
-
-For Gatesgarth they should apply without any conflicts.
-For Dunfell there is a conflict in bitbake/lib/bb/cache.py due=20
-to __cache_version__ having changed.
-
-//Peter
-
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Peter Kjellerstedt
-> Sent: den 7 december 2020 22:39
-> To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [PATCH 2/2] cooker: Include all packages a
-> recipe provides in SkippedPackage.rprovides
->=20
-> The provided packages by a skipped recipe are supposed to be listed in
-> SkippedPackage.rprovides, which is used when generating a meaningful
-> error message when a build fails because of a skipped package.
-> Previously this variable only contained the contents of ${RPROVIDES}.
-> However, most recipes don't define RPROVIDES, they define
-> RPROVIDES_<pkg> for each package they provide. Additionally, the recipe
-> provides the packages in PACKAGES without them being included in
-> ${RPROVIDES}.
->=20
-> Before this change, having a runtime dependency on a skipped non-recipe
-> package would result in a build error stating that the build failed
-> because the package was skipped, but without providing any reason for
-> why it was skipped.
->=20
-> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> ---
->  bitbake/lib/bb/cooker.py | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-> index 1f4cc1e96d..83cfee7fb4 100644
-> --- a/bitbake/lib/bb/cooker.py
-> +++ b/bitbake/lib/bb/cooker.py
-> @@ -73,7 +73,9 @@ class SkippedPackage:
->              self.pn =3D info.pn
->              self.skipreason =3D info.skipreason
->              self.provides =3D info.provides
-> -            self.rprovides =3D info.rprovides
-> +            self.rprovides =3D info.packages + info.rprovides
-> +            for package in info.packages:
-> +                self.rprovides +=3D info.rprovides_pkg[package]
->          elif reason:
->              self.skipreason =3D reason
->=20
+--0000000000009b371b05b9856b7b--
