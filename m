@@ -1,72 +1,61 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web10.689.1611602082706753203
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+ by mx.groups.io with SMTP id smtpd.web11.2479.1611713850090730076
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 25 Jan 2021 11:14:43 -0800
+ Tue, 26 Jan 2021 18:17:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=jD69/0Xh;
- spf=softfail (domain: sakoman.com, ip: 209.85.128.51, mailfrom: steve@sakoman.com)
-Received: by mail-wm1-f51.google.com with SMTP id c127so530667wmf.5
-        for <bitbake-devel@lists.openembedded.org>; Mon, 25 Jan 2021 11:14:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AUXgAV4mvAWtalwBRPeyBndOX5RsC3fX48+bspl5awc=;
-        b=jD69/0Xhb2KeRqHvb12HRPN+BLZPwKoynheUCJtC21ZVh9++sSCWi0OLJA/RSZQfo3
-         VxF19f65pxATcmL6mmNGI2HApIlWeyAbg53htMQVQIZ2b5eHaVZ72ZdGfloT6hlxt2xs
-         TeGSboZRnEuQI6WCyA6go3eiC5gVxwu5IEYipwagQ7JT0R6x1XTSYA0vXTxyA+UXWTR4
-         /F/b/4XclgAB+fzJYJNPl2NywCPs509e+nUoYCpSqnFQj2qoMfM1zlj+fDVx+W0dFsWz
-         DgI8Zbt0t/EBR0E2193se9xe0j13zb1dLTTMZn3oEzAB0k06YJh8k5Mat+D693Kng+Sw
-         btGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AUXgAV4mvAWtalwBRPeyBndOX5RsC3fX48+bspl5awc=;
-        b=WDnc0O4Bt64GrlOQTUm//CVuOPvjOxbDYgIThLKWvxK9rRBRU2RT2Qr31UBngwmocZ
-         4u7dpo5cKpJdvpOyindeDsVgkDDA/hEtp1VLrDe34mriv3U26mlWyBwBktqkv3LSYdhZ
-         gjbkZ071Evlv+GuALf+iBLE0VfmnBs+CEIo2cbonyvfYRKB9iWBYAUSMjk6l9TBPmrD/
-         4ThZUAncjLnrSC8XCZx97XCW+ZQMq4/PJoVehV9gCxWzw/uPzxthUpasawXJrLLZMdtD
-         FyiIGhS2RxJoL0tOqMknwzy8Vnf5MOYtB67uBVhoIGfMx7+yNIEBECsqFHFzZ7/oJ+us
-         cuQQ==
-X-Gm-Message-State: AOAM531IP02TlGbfk2I971ELfwnVsNOvK1M/U8eFiPBXAQpe5pApogtW
-	QYQXwB8wz2bejGU5aOIVxHSOY4fvbCkjkyB0/+YTjA==
-X-Google-Smtp-Source: ABdhPJyVz0AM+ztTmTUBA9gdQ7SnBvKQ7AJgLTNxXP/C2CpjhoVBSmYFC6CI/GJs3IJ2JG8IhlLHmc2DOpAr5pFbR3w=
-X-Received: by 2002:a7b:c0d8:: with SMTP id s24mr1532416wmh.4.1611602081110;
- Mon, 25 Jan 2021 11:14:41 -0800 (PST)
-MIME-Version: 1.0
+ dkim=missing; spf=pass (domain: intel.com, ip: 134.134.136.20, mailfrom: anuj.mittal@intel.com)
+IronPort-SDR: fYqFJMQrutwj4Gsc79sWzl0vUwiTO+s+YOujjelQLH6JJA7i92vq+cGIQ9/OSU7NXOX0amUyP+
+ Qu1RFz9swVsQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9876"; a="167101770"
+X-IronPort-AV: E=Sophos;i="5.79,378,1602572400"; 
+   d="scan'208";a="167101770"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2021 18:17:28 -0800
+IronPort-SDR: Q/umDpgqa1HY7XMDm57WiqWderRGpbUq9j0bEHEKmIec1kfxDkX524S6O8UKGU7YZ0nCJixwl0
+ ZuOzolTkMrEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,378,1602572400"; 
+   d="scan'208";a="350851377"
+Received: from pgsmsx603.gar.corp.intel.com ([10.108.199.138])
+  by fmsmga007.fm.intel.com with ESMTP; 26 Jan 2021 18:17:27 -0800
+Received: from pgsmsx601.gar.corp.intel.com (10.108.199.136) by
+ pgsmsx603.gar.corp.intel.com (10.108.199.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 27 Jan 2021 10:17:27 +0800
+Received: from pgsmsx601.gar.corp.intel.com ([10.108.199.136]) by
+ pgsmsx601.gar.corp.intel.com ([10.108.199.136]) with mapi id 15.01.1713.004;
+ Wed, 27 Jan 2021 10:17:27 +0800
+From: "Anuj Mittal" <anuj.mittal@intel.com>
+To: "steve@sakoman.com" <steve@sakoman.com>, "peter.kjellerstedt@axis.com"
+	<peter.kjellerstedt@axis.com>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: Backport fix to ensure hash reflects vardepvalue flags correctly
+Thread-Topic: Backport fix to ensure hash reflects vardepvalue flags correctly
+Thread-Index: AdbzSs9iIwSRISEBSdmT28Djb0vF7gAxLBsA
+Date: Wed, 27 Jan 2021 02:17:26 +0000
+Message-ID: <0c8d88d78b54493a64b67fad737a0aed0ca18437.camel@intel.com>
 References: <d5882aa4c29d4f268dd9312d597538ce@XBOX03.axis.com>
 In-Reply-To: <d5882aa4c29d4f268dd9312d597538ce@XBOX03.axis.com>
-From: "Steve Sakoman" <steve@sakoman.com>
-Date: Mon, 25 Jan 2021 09:14:30 -1000
-Message-ID: <CAOSpxdZwYAyQpch8Yy-E2zt_wE4_k9p6GQOVapfC_U4r-AbEMQ@mail.gmail.com>
-Subject: Re: Backport fix to ensure hash reflects vardepvalue flags correctly
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Cc: "Mittal, Anuj" <anuj.mittal@intel.com>, 
-	"BitBake Development (bitbake-devel@lists.openembedded.org)" <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.108.32.68]
+MIME-Version: 1.0
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5161DC59158E02439E62288A1F2D4A5A@intel.com>
+Content-Transfer-Encoding: base64
 
-Thanks for catching this Peter!
-
-I've submitted the dunfell backport patch to the list for comment, and
-have also staged it in stable/1.46-next on bitbake-contrib.
-
-If there are no objections in the next day or so I'll send a pull request.
-
-Steve
-
-On Mon, Jan 25, 2021 at 8:54 AM Peter Kjellerstedt
-<peter.kjellerstedt@axis.com> wrote:
->
-> Can you please backport 26ccf1575aef2d6e2d7717d3bd10b1ed0d5a777d
-> (data_smart: Ensure hash reflects vardepvalue flags correctly) to
-> Dunfell and Gatesgarth?
->
-> I am seeing errors when building an SDK with 3.1.5 because commit
-> cc2e2c2d065530a5ab33fed139d16fe1dcdca4d9 (metadata_scm: Fix signature
-> handling of METADATA_REVISION and METADATA_BRANCH) was backported
-> to Dunfell in OE-Core. For Gatesgarth, the latter commit should also
-> be backported (once the commit in bitbake has been backported).
->
-> //Peter
->
+T24gTW9uLCAyMDIxLTAxLTI1IGF0IDE4OjU0ICswMDAwLCBQZXRlciBLamVsbGVyc3RlZHQgd3Jv
+dGU6DQo+IENhbiB5b3UgcGxlYXNlIGJhY2twb3J0IDI2Y2NmMTU3NWFlZjJkNmUyZDc3MTdkM2Jk
+MTBiMWVkMGQ1YTc3N2QNCj4gKGRhdGFfc21hcnQ6IEVuc3VyZSBoYXNoIHJlZmxlY3RzIHZhcmRl
+cHZhbHVlIGZsYWdzIGNvcnJlY3RseSkgdG8gDQo+IER1bmZlbGwgYW5kIEdhdGVzZ2FydGg/DQo+
+IA0KPiBJIGFtIHNlZWluZyBlcnJvcnMgd2hlbiBidWlsZGluZyBhbiBTREsgd2l0aCAzLjEuNSBi
+ZWNhdXNlIGNvbW1pdCANCj4gY2MyZTJjMmQwNjU1MzBhNWFiMzNmZWQxMzlkMTZmZTFkY2RjYTRk
+OSAobWV0YWRhdGFfc2NtOiBGaXggc2lnbmF0dXJlDQo+IGhhbmRsaW5nIG9mIE1FVEFEQVRBX1JF
+VklTSU9OIGFuZCBNRVRBREFUQV9CUkFOQ0gpIHdhcyBiYWNrcG9ydGVkIA0KPiB0byBEdW5mZWxs
+IGluIE9FLUNvcmUuIEZvciBHYXRlc2dhcnRoLCB0aGUgbGF0dGVyIGNvbW1pdCBzaG91bGQgYWxz
+byANCj4gYmUgYmFja3BvcnRlZCAob25jZSB0aGUgY29tbWl0IGluIGJpdGJha2UgaGFzIGJlZW4g
+YmFja3BvcnRlZCkuDQoNCkxvb2tzIGxpa2UgUmljaGFyZCBoYXMgYWxyZWFkeSBtZXJnZWQgaXQg
+aW4gMS40OCBhbmQgMS40Ni4gVGhhbmtzDQpSaWNoYXJkIQ0KDQpUaGFua3MsDQoNCkFudWoNCg==
