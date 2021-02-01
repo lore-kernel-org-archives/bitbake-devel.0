@@ -1,69 +1,121 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
- by mx.groups.io with SMTP id smtpd.web11.17196.1612092590598524661
+Received: from tortoise.home.b5net.uk (tortoise.home.b5net.uk [80.7.160.81])
+ by mx.groups.io with SMTP id smtpd.web09.32411.1612179954059778543
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 31 Jan 2021 03:29:50 -0800
+ Mon, 01 Feb 2021 03:45:55 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hnJ2n/Eu;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.218.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-ej1-f51.google.com with SMTP id a10so19737691ejg.10
-        for <bitbake-devel@lists.openembedded.org>; Sun, 31 Jan 2021 03:29:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=H6udSY8U+G2oFgW56Tw0EI6OKFiT0VYL4NRdk6xKXWM=;
-        b=hnJ2n/Eu0bQV+AoNx70mBUVX0BOqikTsk4WypvlnszBq6FrljvtaCm316PuLxcWPcY
-         DaEcRhjp9rY6Ey138p8BNJRbArcKYeUTdT+NYPZJx1S7UV+DvO1ACxaCOGTprRp/f6Nb
-         0DhWjNM/MIBRcirkyWRsV8hadhyddyJec6G8g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=H6udSY8U+G2oFgW56Tw0EI6OKFiT0VYL4NRdk6xKXWM=;
-        b=BXjHMF0MlOCud46fgwkYqCAfVL/l/4z6p8mP7DisDojAZUq1X+R7UxxV+iDdYLAjVr
-         ozfLAMy2Hp1YXuPxoU7gz25SwqMOQYrYqpGHzh3WdVxBIEN7ojUFPttgQK4fM70/ZMg5
-         ImAUPAqXk48icOrBnezjNDnTJTywGrHHSzhSZc5OXgFEDNMUJwgzgzX0BhWAc0sYUAUS
-         V9dihUN08KqEcfOo+o5aGD9SGhS7Imc0etFbmbvyi2PGLAs5avZOoc8fqvCwXJtPMgxN
-         wDilHAJSd71hmM1FugwIdAFrpHB+7rUfsQ3fwmEiZjNNsub4oPpGdRAygqGzuwXI8bga
-         vb5Q==
-X-Gm-Message-State: AOAM533aYgy/TSqL2dMt1W3IHC3f1zV5R2U85DiV9SY3wZIycGcmlQhR
-	IHrT6pR0UR8K6jX9/LUZTWw3DQ==
-X-Google-Smtp-Source: ABdhPJzXqHScnxwYqk07i0iJBDS4PVMzaueV3kbWuQukaeaUwL8OwMMsr6a+byyyPIM9EqCsFkmINQ==
-X-Received: by 2002:a17:906:4050:: with SMTP id y16mr12568561ejj.43.1612092589035;
-        Sun, 31 Jan 2021 03:29:49 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:29f7:5a4e:c660:258e? ([2001:8b0:aba:5f3c:29f7:5a4e:c660:258e])
-        by smtp.gmail.com with ESMTPSA id o13sm6556742ejb.10.2021.01.31.03.29.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Jan 2021 03:29:48 -0800 (PST)
-Message-ID: <45a46d525340ff82ce3fc6165fc68913eea4ef1e.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Backport fix for os.errno references in fetch2 (Thud)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Daniel Dragomir <Daniel.Dragomir@windriver.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Sun, 31 Jan 2021 11:29:47 +0000
-In-Reply-To: <H2US.1611877713506764273.o6hn@lists.openembedded.org>
-References: <H2US.1611877713506764273.o6hn@lists.openembedded.org>
-User-Agent: Evolution 3.38.1-1 
+ dkim=missing; spf=none, err=permanent DNS error (domain: tortoise.home.b5net.uk, ip: 80.7.160.81, mailfrom: pbarker@tortoise.home.b5net.uk)
+Received: by tortoise.home.b5net.uk (Postfix, from userid 1000)
+	id E9A135BB4; Mon,  1 Feb 2021 11:45:51 +0000 (GMT)
+From: "Paul Barker" <pbarker@konsulko.com>
+To: bitbake-devel@lists.openembedded.org,
+	Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Joshua Watt <JPEWhacker@gmail.com>
+Cc: Paul Barker <pbarker@konsulko.com>
+Subject: [RFC PATCH 0/8] hashserv read-only mode & upstream fixes
+Date: Mon,  1 Feb 2021 11:45:43 +0000
+Message-Id: <20210201114551.11475-1-pbarker@konsulko.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2021-01-28 at 15:48 -0800, Daniel Dragomir wrote:
-> Hello maintainers!
-> 
-> Can you please backport commit
-> e74f80433e9a7e7ae7ec1472eb7387301d2dc816 ("bitbake: fetch2: Fix
-> os.errno references") on Thud branch?
-> 
-> Don't know if Thud is still supported, but I see intermittent fetch
-> failures on Thud which were fixed with this patch (present starting
-> with Warrior branch):
+* Implement a read-only mode for the hash equivalence server. This mode i=
+s
+  useful when you wish to populate a hash equivalence database from CI or=
+ other
+  internal builds (via a read-write server instance) and also allow exter=
+nal
+  clients to query this database (via a read-only server instance). Exter=
+nal
+  clients can therefore be prevented from adding hash equivalences to the
+  server which correspond to sstate artifacts which would be missing in a
+  primary sstate cache. This mode is enabled using the -r/--read-only
+  argument to bitbake-hashserv.
 
-bitbake 1.40 (used by thud) is well outside its maintenance window but
-I have backported that one.
+* Expose the existing upstream server support via a -u/--upstream argumen=
+t to
+  bitbake-hashserv.
 
-Cheers,
+* Support querying an upstream server using the new `get-outhash` message=
+ when
+  the server handles a `report` message from a client and a match is not =
+found
+  in the server's own database. This is important as the `report` message=
+ is
+  used by bitbake when a task finishes executing to check if the task out=
+hash
+  matches the outhash for any previous execution. With this support such
+  matches can now be found in a local (read-write) hash equivalence db as
+  well as in an upstream (potentially read-only and/or remote) db.
 
-Richard
+* Other minor hashserv fixes.
+
+These changes have been tested locally using the following setup:
+
+1) Build core-image-base with BB_HASHSERVE =3D "auto". Additional logging=
+ was
+   also enabled following the instructions in=20
+   https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user=
+-manual-execution.html#logging.
+
+2) Move the hashserv.db file into a new 'upstream-hashserv' directory. St=
+art
+   the upstream server in read-only mode using the following command in t=
+hat
+   directory:
+
+    bitbake-hashserv -r -l DEBUG
+
+3) Create an empty 'downstream-hashserv' directory. Start the downstream
+   (local) server with an empty db using the following command in that
+   directory:
+
+    bitbake-hashserv -u "unix://../upstream-hashserv/hashserve.sock" -l D=
+EBUG
+
+4) Modify local.conf to set=20
+   BB_HASHSERVE =3D "unix://${TOPDIR}/downstream-hashserv/hashserve.sock"=
+.
+
+5) Add an 'echo hello' command to do_configure for glibc to force a rebui=
+ld
+   which should result in a matching hash equivalence.
+
+6) Build core-image-base again, confirm that glibc is rebuilt but then a =
+hash
+   equivalence is found (copied from the upstream server into the downstr=
+eam
+   server) and dependent tasks are pulled from the sstate cache instead o=
+f
+   being rebuilt.
+
+This is an RFC series as it still needs documentation to be written and
+selftest cases to be added. However it'd be great to get some feedback at
+this stage before moving on to that work.
+
+These changes can also be pulled from:
+
+  https://gitlab.com/pbarker.dev/staging/bitbake.git
+  tag: hashserv_2020-02-01
+
+Let me know if you have any questions/feedback :)
+
+Paul Barker (8):
+  bitbake-hashclient: Remove obsolete call to client.connect
+  hashserv: client: Fix handling of null responses
+  hashserv: server: Fix logger.debug calls
+  hashserv: Support read-only server
+  hashserv: Support upstream command line argument
+  hashserv: Add short forms of remaining command line arguments
+  hashserv: Add get-outhash message
+  hashserv: server: Support searching upstream for outhash
+
+ bin/bitbake-hashclient   |  3 --
+ bin/bitbake-hashserv     | 10 +++--
+ lib/hashserv/__init__.py |  4 +-
+ lib/hashserv/client.py   |  8 +++-
+ lib/hashserv/server.py   | 85 ++++++++++++++++++++++++++++++++++------
+ 5 files changed, 88 insertions(+), 22 deletions(-)
+
+--=20
+2.26.2
 
