@@ -1,78 +1,128 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web08.32677.1612180421974846746
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web12.32702.1612180423073648819
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 Feb 2021 03:53:42 -0800
+ Mon, 01 Feb 2021 03:53:43 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=VzDhsSpg;
- spf=pass (domain: konsulko.com, ip: 209.85.221.54, mailfrom: pbarker@konsulko.com)
-Received: by mail-wr1-f54.google.com with SMTP id q7so16218439wre.13
-        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Feb 2021 03:53:41 -0800 (PST)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=bL//TsQe;
+ spf=pass (domain: konsulko.com, ip: 209.85.128.53, mailfrom: pbarker@konsulko.com)
+Received: by mail-wm1-f53.google.com with SMTP id j18so12394580wmi.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Feb 2021 03:53:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1VqSPtjbeqfF4JpYG8hgAAZO1GvEWZLUre6XlG336zc=;
-        b=VzDhsSpgBl8uQOiBGr05rwzh07m0Qme1s0bJwLY/0nKvLKaqAHM455X8H/PFaevrHh
-         OGtzlL6otMM6zkw8YmIrRSYevcMbmKlEJhtnzIdR1qWFZCzrv7L3oaQo6oH/M7ASRs2L
-         4ia+6GJEGWGfe68HMBelJOZD1A4gPKlbX6ASE=
+        bh=C8SKEECUOeqw7+ywgSD4dqMAqdFJS5q5rY/4H6DMLbc=;
+        b=bL//TsQeTOTwQs7OSycGNGMpUn+wYnNsjrOJN3S5Xf9NUxW0terIMD0UpcBaujfeRI
+         647rK91jtleCAaZBJi8VJcGhkfU3p0/B7PKowALZ02QpkFoI+HIBl3nErBRq02LQt2VM
+         TuYu3u2ZIDbwAgPe8ofLY/Ol0tj04M844c6WY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1VqSPtjbeqfF4JpYG8hgAAZO1GvEWZLUre6XlG336zc=;
-        b=fwJr2INQDhNHGkc26LoG+JFD2852H+qNMst0XqA3WRKmgc5vvneSLWwlfd3//Y4jry
-         SP1UYGODpobZiBJv2rX76zQ2mEKyjB8RtllBjoV7TFwgi0Hb4tsj4OrkYHxWX06rhZQg
-         3QYXTFIR/KlOK3lLYkhxnc4QSYb0YqHC475Dt6I0bH6+NQt+qjEPd34tW1oQX6MitGJa
-         pfTu0NFMkUYBCZAKrF5hvRHv0SRIfJoFDZGhigywdcly+h8GJmTCXjt4cqEvKZC10txM
-         7rqFDi1C+ye1Go79LQaXLikZpRj6/LyViZwsTz4VbGtjbRheqVXTv2p8mMaSH9Lt2ea+
-         m6MQ==
-X-Gm-Message-State: AOAM533Vnku3WwRdIwFCAZkPMqneHRZW6tWK/LmNm7lIatcNMx/3xDvA
-	lc+CIRQT6sghoQfHTLEmIfayHoOrFKzymWTi
-X-Google-Smtp-Source: ABdhPJxD4DCRV/OHkyTPT5jJA8tdna/pM2cT2qG6pVVWXOppccocOpu2UFyAxQKr8/nvrTFeMrGWnw==
-X-Received: by 2002:a5d:4e47:: with SMTP id r7mr17691822wrt.312.1612180420403;
-        Mon, 01 Feb 2021 03:53:40 -0800 (PST)
+        bh=C8SKEECUOeqw7+ywgSD4dqMAqdFJS5q5rY/4H6DMLbc=;
+        b=dI7REdezmjsfkN1btPYEvE/TdlEpRPCTkHk/r61v2JkiodMxbZssTvlnw8nKB12gCu
+         gvv3wuybfmcRRdaz1XiULcp2uhiwZqsQ+TgJVUZPmMbBJx4NEQq/8BqTuDvmDJaebMdd
+         +fWFXN78NGY8C5bMTPDHIYEu6dNVUaNpnTfyBtG+Cgp4uMW6WjO5MYHRBPS7dNTsxTrv
+         12LteJsew2jtPryQ6m/vujhnoPwZI/WO/O60roOK61Nn5166cy1RhrItcaHCnfBRU6lp
+         It90wR/nwA3dqsYEAHL8KRqU7XcMryvOZLKNAHVUWX01NQtcpct81H5KAhtA1PoRqGFU
+         eO/Q==
+X-Gm-Message-State: AOAM530r8DZ9e/ype1OGVrzhAKn7MpFthM7qOwVaCXL4jKcrFLj/k7Rp
+	Ejzy7tPdtLS/j+GDFNPK5sy+v9onJptw2L6d
+X-Google-Smtp-Source: ABdhPJw6bwK8OftC23pqvNMPIL/FYKnxFF0H7TLIrnwFS+s1kouuZvDTdaAuBGzDfVqSYY1I0wVoGw==
+X-Received: by 2002:a1c:7413:: with SMTP id p19mr14401648wmc.39.1612180421389;
+        Mon, 01 Feb 2021 03:53:41 -0800 (PST)
 Return-Path: <pbarker@konsulko.com>
 Received: from tortoise.home.b5net.uk (cpc76132-clif11-2-0-cust80.12-4.cable.virginm.net. [80.7.160.81])
-        by smtp.gmail.com with ESMTPSA id u6sm28120514wro.75.2021.02.01.03.53.39
+        by smtp.gmail.com with ESMTPSA id u6sm28120514wro.75.2021.02.01.03.53.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Feb 2021 03:53:39 -0800 (PST)
+        Mon, 01 Feb 2021 03:53:40 -0800 (PST)
 From: "Paul Barker" <pbarker@konsulko.com>
 To: bitbake-devel@lists.openembedded.org,
 	Richard Purdie <richard.purdie@linuxfoundation.org>,
 	Joshua Watt <JPEWhacker@gmail.com>
 Cc: Paul Barker <pbarker@konsulko.com>
-Subject: [RFC PATCH 6/8] hashserv: Add short forms of remaining command line arguments
-Date: Mon,  1 Feb 2021 11:53:29 +0000
-Message-Id: <20210201115331.13510-7-pbarker@konsulko.com>
+Subject: [RFC PATCH 7/8] hashserv: Add get-outhash message
+Date: Mon,  1 Feb 2021 11:53:30 +0000
+Message-Id: <20210201115331.13510-8-pbarker@konsulko.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20210201115331.13510-1-pbarker@konsulko.com>
 References: <20210201115331.13510-1-pbarker@konsulko.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Short form arguments are added for convenience.
+The get-outhash message can be sent via the get_outhash client method.
+This works in a similar way to the get message but looks up a db entry
+by outhash rather than by taskhash. It is intended to be used as a
+read-only form of the report message.
 
 Signed-off-by: Paul Barker <pbarker@konsulko.com>
 ---
- bin/bitbake-hashserv | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/hashserv/client.py |  6 ++++++
+ lib/hashserv/server.py | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/bin/bitbake-hashserv b/bin/bitbake-hashserv
-index ab71f4e6c..153f65a37 100755
---- a/bin/bitbake-hashserv
-+++ b/bin/bitbake-hashserv
-@@ -30,9 +30,9 @@ def main():
-                                                "--bind [::1]:8686"'''
-                                      )
+diff --git a/lib/hashserv/client.py b/lib/hashserv/client.py
+index 0b7f4e42e..e05c1eb56 100644
+--- a/lib/hashserv/client.py
++++ b/lib/hashserv/client.py
+@@ -170,6 +170,12 @@ class AsyncClient(object):
+             {"get": {"taskhash": taskhash, "method": method, "all": all_properties}}
+         )
  
--    parser.add_argument('--bind', default=DEFAULT_BIND, help='Bind address (default "%(default)s")')
--    parser.add_argument('--database', default='./hashserv.db', help='Database file (default "%(default)s")')
--    parser.add_argument('--log', default='WARNING', help='Set logging level')
-+    parser.add_argument('-b', '--bind', default=DEFAULT_BIND, help='Bind address (default "%(default)s")')
-+    parser.add_argument('-d', '--database', default='./hashserv.db', help='Database file (default "%(default)s")')
-+    parser.add_argument('-l', '--log', default='WARNING', help='Set logging level')
-     parser.add_argument('-u', '--upstream', help='Upstream hashserv to pull hashes from')
-     parser.add_argument('-r', '--read-only', action='store_true', help='Disallow write operations from clients')
++    async def get_outhash(self, method, outhash, taskhash):
++        await self._set_mode(self.MODE_NORMAL)
++        return await self.send_message(
++            {"get-outhash": {"outhash": outhash, "taskhash": taskhash, "method": method}}
++        )
++
+     async def get_stats(self):
+         await self._set_mode(self.MODE_NORMAL)
+         return await self.send_message({"get-stats": None})
+diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
+index b1e8b2f89..054791b8b 100644
+--- a/lib/hashserv/server.py
++++ b/lib/hashserv/server.py
+@@ -152,6 +152,7 @@ class ServerClient(object):
+ 
+         self.handlers = {
+             'get': self.handle_get,
++            'get-outhash': self.handle_get_outhash,
+             'get-stream': self.handle_get_stream,
+             'get-stats': self.handle_get_stats,
+             'chunk-stream': self.handle_chunk,
+@@ -289,6 +290,33 @@ class ServerClient(object):
+ 
+         self.write_message(d)
+ 
++    async def handle_get_outhash(self, request):
++        with closing(self.db.cursor()) as cursor:
++            cursor.execute('''
++                -- Find tasks with a matching outhash (that is, tasks that
++                -- are equivalent)
++                SELECT * FROM tasks_v2 WHERE method=:method AND outhash=:outhash
++
++                -- If there is an exact match on the taskhash, return it.
++                -- Otherwise return the oldest matching outhash of any
++                -- taskhash
++                ORDER BY CASE WHEN taskhash=:taskhash THEN 1 ELSE 2 END,
++                    created ASC
++
++                -- Only return one row
++                LIMIT 1
++                ''', {k: request[k] for k in ('method', 'outhash', 'taskhash')})
++
++            row = cursor.fetchone()
++
++        if row is not None:
++            logger.debug(1, 'Found equivalent outhash %s -> %s', (row['outhash'], row['unihash']))
++            d = {k: row[k] for k in row.keys()}
++        else:
++            d = None
++
++        self.write_message(d)
++
+     async def handle_get_stream(self, request):
+         self.write_message('ok')
  
 -- 
 2.26.2
