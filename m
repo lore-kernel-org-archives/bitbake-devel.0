@@ -1,193 +1,131 @@
-Received: from mga06.intel.com (mga06.intel.com [])
- by mx.groups.io with SMTP id smtpd.web10.48180.1612244307043948624
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web08.50416.1612262940550775595
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 Feb 2021 21:38:27 -0800
+ Tue, 02 Feb 2021 02:49:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=fail (domain: intel.com, ip: <nil>, mailfrom: anuj.mittal@intel.com)
-IronPort-SDR: GCo9FG/1FqVMNQGvg0lar4/Q3HASa0cCJ4BP2SBoQ1iJ2waD6vDWdwRf8sHdWBUnbkR9Ugvv4x
- 5Litwq4DHqVw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9882"; a="242317834"
-X-IronPort-AV: E=Sophos;i="5.79,394,1602572400"; 
-   d="scan'208";a="242317834"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 21:38:27 -0800
-IronPort-SDR: l6+2TXl6y4QOq2KHtmw4AmPz6Md/g61elCDm8r6K5aX+OS856PbXzEpihaf94CbpO8pUQz9J0L
- McC7/sDfRpgw==
-X-IronPort-AV: E=Sophos;i="5.79,394,1602572400"; 
-   d="scan'208";a="391296096"
-Received: from ajayap1x-mobl1.gar.corp.intel.com (HELO anmitta2-mobl1.gar.corp.intel.com) ([10.255.184.137])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 21:38:26 -0800
-From: "Anuj Mittal" <anuj.mittal@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [gatesgarth][PATCH 1/1] fetch/git: download LFS content too during do_fetch
-Date: Tue,  2 Feb 2021 13:38:19 +0800
-Message-Id: <517accf8c333f007bb9baaa12d6009e286ea6a18.1612244174.git.anuj.mittal@intel.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <cover.1612244174.git.anuj.mittal@intel.com>
-References: <cover.1612244174.git.anuj.mittal@intel.com>
+ dkim=pass header.i=@konsulko.com header.s=google header.b=iIeux1Pz;
+ spf=pass (domain: konsulko.com, ip: 209.85.128.54, mailfrom: pbarker@konsulko.com)
+Received: by mail-wm1-f54.google.com with SMTP id l12so877057wmq.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 02 Feb 2021 02:49:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=bzr+q6EepaUHnj5lncXCxLWh2JijU9HA+orByrB6BzE=;
+        b=iIeux1Pz9iwXHv9/Yyp3snN5QM1dY6F96VRuXqzMxs5GvQOrhRnjbmyPP5dtJcogrb
+         hxVYRRcyQ7Dz0u5XgzTkLRVp7sIkrmuetpgB7FT5N6STOvu/gwv1AxCAHBV7Th6bioXE
+         KuN2hghHHYhB4xr9lFhsF2yxCIZmUNjfuGIzQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=bzr+q6EepaUHnj5lncXCxLWh2JijU9HA+orByrB6BzE=;
+        b=okUAZQ+YB0bbyyF8Jk3c1VKqRLbBGJ1t9aRMxPboOrZyUpCX6XDtSdQN2YTctSboJg
+         sxiyVT755u/SaLU+voFZbwYqJTkTGpoGX44KDO6aPNvZhWNs76lZToBEUPcBmiijGNVd
+         BBmNhhN/EXzZ0toucyB18o2ssPpRcUN46ex1crHx/Z1MyghczyGSVqzLfrFue2NOp60f
+         /TCjYj09R8gs+3oDROMVhc9/cSrzyiQWAbCMavnWTF58+RJaLhedfAdSUCi4t8Y2OSXP
+         RLBHuHTAzVSWstRcNbNCBWn5JCCc+q4qCKS/Kp3uhVRfg49/obzMUHT+zuYyp+2F4C+2
+         pXng==
+X-Gm-Message-State: AOAM532LSojCHNlstiK6coYxYBLElunXKDCShJkJVIH45Kwspw7Oe+AV
+	BsKUb465DjpaAthZivTbmHCk1A==
+X-Google-Smtp-Source: ABdhPJyg02cj6dRyhIrgJ46R+DznvS4JHAsrCvekiUzEEoqvapCtKkY7caO5lZnhYEmpQ1AE9fImTw==
+X-Received: by 2002:a1c:678a:: with SMTP id b132mr2916910wmc.35.1612262938831;
+        Tue, 02 Feb 2021 02:48:58 -0800 (PST)
+Return-Path: <pbarker@konsulko.com>
+Received: from localhost (cpc76132-clif11-2-0-cust80.12-4.cable.virginm.net. [80.7.160.81])
+        by smtp.gmail.com with ESMTPSA id y24sm2334203wmi.47.2021.02.02.02.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Feb 2021 02:48:58 -0800 (PST)
+Date: Tue, 2 Feb 2021 10:48:55 +0000
+From: "Paul Barker" <pbarker@konsulko.com>
+To: Joshua Watt <jpewhacker@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org, Richard Purdie
+ <richard.purdie@linuxfoundation.org>
+Subject: Re: [RFC PATCH 8/8] hashserv: server: Support searching upstream for outhash
+Message-ID: <20210202104855.00005b94@konsulko.com>
+In-Reply-To: <8452c958-3f0d-a685-3a0a-75abd88ab539@gmail.com>
+References: <20210201115331.13510-1-pbarker@konsulko.com>
+	<20210201115331.13510-9-pbarker@konsulko.com>
+	<8452c958-3f0d-a685-3a0a-75abd88ab539@gmail.com>
+Organization: Konsulko Group
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Matt Hoosier <matt.hoosier@garmin.com>
+On Mon, 1 Feb 2021 08:06:39 -0600
+Joshua Watt <jpewhacker@gmail.com> wrote:
 
-Insert an explicit pass to fetch all blobs needed by Git LFS, during the
-fetch() function. This avoids the default behavior of Git LFS to wait
-until 'git checkout' to begin downloading the blobs pointed to by LFS records.
-Network access is not allowed at that point in the recipe's lifecycle.
+> On 2/1/21 5:53 AM, Paul Barker wrote:
+> > Use the new get-outhash message to perform a read-only query
+> > against an upstream server (if present) when a reported
+> > taskhash/outhash combination is not found in the current database.
+> > If a matching entry is found upstream it is copied into the current
+> > database so it can be found by future queries.
+> >
+> > Signed-off-by: Paul Barker <pbarker@konsulko.com>
+> > ---
+> >   lib/hashserv/server.py | 22 ++++++++++++++++++++++
+> >   1 file changed, 22 insertions(+)
+> >
+> > diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
+> > index 054791b8b..5fb562b52 100644
+> > --- a/lib/hashserv/server.py
+> > +++ b/lib/hashserv/server.py
+> > @@ -131,6 +131,20 @@ async def copy_from_upstream(client, db,
+> > method, taskhash): keys = sorted(d.keys())
+> >   
+> >   
+> > +        with closing(db.cursor()) as cursor:
+> > +            insert_task(cursor, d)
+> > +            db.commit()
+> > +
+> > +    return d
+> > +
+> > +async def copy_outhash_from_upstream(client, db, method, outhash,
+> > taskhash):
+> > +    d = await client.get_outhash(method, outhash, taskhash)
+> > +    if d is not None:
+> > +        # Filter out unknown columns
+> > +        d = {k: v for k, v in d.items() if k in TABLE_COLUMNS}
+> > +        keys = sorted(d.keys())
+> > +
+> > +
+> >           with closing(db.cursor()) as cursor:
+> >               insert_task(cursor, d)
+> >               db.commit()
+> > @@ -387,6 +401,14 @@ class ServerClient(object):
+> >   
+> >               row = cursor.fetchone()
+> >   
+> > +            if row is None:  
+> 
+> 
+> if believe you need to add "and self.upstream_client is not None"
+> here to validate that the there is an upstream server.
 
-[YOCTO #14191]
+You're right, that is needed. I'll include it in the next version of
+the series.
 
-Signed-off-by: Matt Hoosier <matt.hoosier@garmin.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 0efac66043662e7a2027192f50e92e982db2ba1c)
-Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
----
- lib/bb/fetch2/git.py  | 44 ++++++++++++++++++++++++++++++++++++++++---
- lib/bb/tests/fetch.py | 28 +++++++++++++++++++--------
- 2 files changed, 61 insertions(+), 11 deletions(-)
+> 
+> 
+> > +                # Try upstream
+> > +                row = await
+> > copy_outhash_from_upstream(self.upstream_client,
+> > +                                                       self.db,
+> > +
+> > data['method'],
+> > +
+> > data['outhash'],
+> > +
+> > data['taskhash']) +
+> >               # If no matching outhash was found, or one *was*
+> > found but it # wasn't an exact match on the taskhash, a new entry
+> > for this # taskhash should be added  
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index b97967b48..b59a7cdc8 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -379,6 +379,35 @@ class Git(FetchMethod):
-             if missing_rev:
-                 raise bb.fetch2.FetchError("Unable to find revision %s even from upstream" % missing_rev)
- 
-+        if self._contains_lfs(ud, d, ud.clonedir) and self._need_lfs(ud):
-+            # Unpack temporary working copy, use it to run 'git checkout' to force pre-fetching
-+            # of all LFS blobs needed at the the srcrev.
-+            #
-+            # It would be nice to just do this inline here by running 'git-lfs fetch'
-+            # on the bare clonedir, but that operation requires a working copy on some
-+            # releases of Git LFS.
-+            tmpdir = tempfile.mkdtemp(dir=d.getVar('DL_DIR'))
-+            try:
-+                # Do the checkout. This implicitly involves a Git LFS fetch.
-+                self.unpack(ud, tmpdir, d)
-+
-+                # Scoop up a copy of any stuff that Git LFS downloaded. Merge them into
-+                # the bare clonedir.
-+                #
-+                # As this procedure is invoked repeatedly on incremental fetches as
-+                # a recipe's SRCREV is bumped throughout its lifetime, this will
-+                # result in a gradual accumulation of LFS blobs in <ud.clonedir>/lfs
-+                # corresponding to all the blobs reachable from the different revs
-+                # fetched across time.
-+                #
-+                # Only do this if the unpack resulted in a .git/lfs directory being
-+                # created; this only happens if at least one blob needed to be
-+                # downloaded.
-+                if os.path.exists(os.path.join(tmpdir, "git", ".git", "lfs")):
-+                    runfetchcmd("tar -cf - lfs | tar -xf - -C %s" % ud.clonedir, d, workdir="%s/git/.git" % tmpdir)
-+            finally:
-+                bb.utils.remove(tmpdir, recurse=True)
-+
-     def build_mirror_data(self, ud, d):
-         if ud.shallow and ud.write_shallow_tarballs:
-             if not os.path.exists(ud.fullshallow):
-@@ -474,7 +503,7 @@ class Git(FetchMethod):
-         if os.path.exists(destdir):
-             bb.utils.prunedir(destdir)
- 
--        need_lfs = ud.parm.get("lfs", "1") == "1"
-+        need_lfs = self._need_lfs(ud)
- 
-         if not need_lfs:
-             ud.basecmd = "GIT_LFS_SKIP_SMUDGE=1 " + ud.basecmd
-@@ -563,6 +592,9 @@ class Git(FetchMethod):
-             raise bb.fetch2.FetchError("The command '%s' gave output with more then 1 line unexpectedly, output: '%s'" % (cmd, output))
-         return output.split()[0] != "0"
- 
-+    def _need_lfs(self, ud):
-+        return ud.parm.get("lfs", "1") == "1"
-+
-     def _contains_lfs(self, ud, d, wd):
-         """
-         Check if the repository has 'lfs' (large file) content
-@@ -573,8 +605,14 @@ class Git(FetchMethod):
-         else:
-             branchname = "master"
- 
--        cmd = "%s grep lfs origin/%s:.gitattributes | wc -l" % (
--            ud.basecmd, ud.branches[ud.names[0]])
-+        # The bare clonedir doesn't use the remote names; it has the branch immediately.
-+        if wd == ud.clonedir:
-+            refname = ud.branches[ud.names[0]]
-+        else:
-+            refname = "origin/%s" % ud.branches[ud.names[0]]
-+
-+        cmd = "%s grep lfs %s:.gitattributes | wc -l" % (
-+            ud.basecmd, refname)
- 
-         try:
-             output = runfetchcmd(cmd, d, quiet=True, workdir=wd)
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index da17d7f28..5b70ee810 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2051,13 +2051,14 @@ class GitLfsTest(FetcherTest):
-             cwd = self.gitdir
-         return bb.process.run(cmd, cwd=cwd)[0]
- 
--    def fetch(self, uri=None):
-+    def fetch(self, uri=None, download=True):
-         uris = self.d.getVar('SRC_URI').split()
-         uri = uris[0]
-         d = self.d
- 
-         fetcher = bb.fetch2.Fetch(uris, d)
--        fetcher.download()
-+        if download:
-+            fetcher.download()
-         ud = fetcher.ud[uri]
-         return fetcher, ud
- 
-@@ -2067,16 +2068,21 @@ class GitLfsTest(FetcherTest):
-         uri = 'git://%s;protocol=file;subdir=${S};lfs=1' % self.srcdir
-         self.d.setVar('SRC_URI', uri)
- 
--        fetcher, ud = self.fetch()
-+        # Careful: suppress initial attempt at downloading until
-+        # we know whether git-lfs is installed.
-+        fetcher, ud = self.fetch(uri=None, download=False)
-         self.assertIsNotNone(ud.method._find_git_lfs)
- 
--        # If git-lfs can be found, the unpack should be successful
--        ud.method._find_git_lfs = lambda d: True
--        shutil.rmtree(self.gitdir, ignore_errors=True)
--        fetcher.unpack(self.d.getVar('WORKDIR'))
-+        # If git-lfs can be found, the unpack should be successful. Only
-+        # attempt this with the real live copy of git-lfs installed.
-+        if ud.method._find_git_lfs(self.d):
-+            fetcher.download()
-+            shutil.rmtree(self.gitdir, ignore_errors=True)
-+            fetcher.unpack(self.d.getVar('WORKDIR'))
- 
-         # If git-lfs cannot be found, the unpack should throw an error
-         with self.assertRaises(bb.fetch2.FetchError):
-+            fetcher.download()
-             ud.method._find_git_lfs = lambda d: False
-             shutil.rmtree(self.gitdir, ignore_errors=True)
-             fetcher.unpack(self.d.getVar('WORKDIR'))
-@@ -2087,10 +2093,16 @@ class GitLfsTest(FetcherTest):
-         uri = 'git://%s;protocol=file;subdir=${S};lfs=0' % self.srcdir
-         self.d.setVar('SRC_URI', uri)
- 
-+        # In contrast to test_lfs_enabled(), allow the implicit download
-+        # done by self.fetch() to occur here. The point of this test case
-+        # is to verify that the fetcher can survive even if the source
-+        # repository has Git LFS usage configured.
-         fetcher, ud = self.fetch()
-         self.assertIsNotNone(ud.method._find_git_lfs)
- 
--        # If git-lfs can be found, the unpack should be successful
-+        # If git-lfs can be found, the unpack should be successful. A
-+        # live copy of git-lfs is not required for this case, so
-+        # unconditionally forge its presence.
-         ud.method._find_git_lfs = lambda d: True
-         shutil.rmtree(self.gitdir, ignore_errors=True)
-         fetcher.unpack(self.d.getVar('WORKDIR'))
+
+
 -- 
-2.29.2
-
+Paul Barker
+Principal Software Engineer
+Konsulko Group
