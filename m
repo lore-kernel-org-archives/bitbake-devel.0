@@ -1,50 +1,50 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
- by mx.groups.io with SMTP id smtpd.web09.9800.1612362165324887586
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+ by mx.groups.io with SMTP id smtpd.web09.9803.1612362170633084694
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Feb 2021 06:22:45 -0800
+ Wed, 03 Feb 2021 06:22:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=U2oaHdFG;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.48, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f48.google.com with SMTP id nm1so4459153pjb.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Feb 2021 06:22:45 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=WFfVXt6l;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.176, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f176.google.com with SMTP id q131so16706967pfq.10
+        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Feb 2021 06:22:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=COeyGI6czC8zczjsXJWL+/SqbNmMXGc3A5Nv9ZzRVBs=;
-        b=U2oaHdFGzCCjCQEiJEFJHQ7GSOkoEWsl1o6zOVK0n8xTRyd3mu8MybHKiWBt2+ikj7
-         LZBfLsHXbuQRUUbXtkQlwYNYRuTvVDIQLNl6auMU703bH4Mru1O1loA2YIb2G7QcqxfB
-         06Y99IMOw7NRM5pPMGWe7tcJAb5Dvh2Zxq2HnMNgYmk+0T59dg82vyH93ivLC6YZPIWq
-         oRkzZhxNHI2ExczWivkhVcTlXaj6LG4z2mEl3afNt+uiQc0khOVSRTEKEa0hq30wYaSD
-         mgq15tIfUXD9MS/dzdHcKJtIjAhfsyS+XerUGKW9wYxdwSoqrIjmFMMR27/joaZRP7t1
-         LmLw==
+        bh=QlR8acgDD0m+un2+KiWyRjB/nKY6WpVwHlCaJlhH8u0=;
+        b=WFfVXt6lOGFiFVdbJy0mivvIg104qFfTBW+mY3lFmsh2HIulzd9E+ocszmPAXZnXDA
+         fGYPm05FPtfywv3im9kTrM+IxVjyQ4PnE558fU9wN1IMbqSBtfznoRHy2QPycSzd4MSP
+         QyFa76iGLeUOZqQJkabGOgbZtmCefkvTowoOe/Gf3IMOdeJ6/y48HpwHhRlUVotqa1GQ
+         RnK2J9LLa8Rd+iRt0WVAu6IHpOrMzB2HB3YtEx9jD01/qU3Tyo7M+11d1UTif2D50KKB
+         uMPVVy4aKiOLk1y7GPxWBHKspAFmbZyT0KjR4RO32evMFIHIVE61ziTB3dCTR4Lddz+7
+         FUpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=COeyGI6czC8zczjsXJWL+/SqbNmMXGc3A5Nv9ZzRVBs=;
-        b=J/+Lbr4K/sebOBLMAA5AT4FMeEe5pENoKH1Pjs1nOu04FN46EYgniEOItSw0T1LKBS
-         eOmGU6/5LOuHCQ9IrK7iPjL7ftgAicQ/iHvrKNnmBFRVD7KpPGn+85m/mbkNhvNdKMdc
-         9QoZsVIezT88b0LolGLh3YCqt6PHDesMO2BC6mo940gCprQQzTKdQVo8iX+L3SY11O3+
-         EbEsuKZ6rV9Be4YuyMu0Mnv191K+QUzm67RZtGvkFn3vjh/cFUs6Drgphyp3hbsZzG/9
-         DyyhfQsM6GhoECtWkJeIC7/uoOYCiTFx4EKrV0Ye778gxc+z/KNoX9Io/ojxvB5fHatQ
-         otlg==
-X-Gm-Message-State: AOAM531j3Thhp+LPuB8JhoPEDBtkMOM5GUtJFRRpI+hwyS+Nk6HKB5AB
-	XulAmJLwDtatjR9dNwnfOfcZNi2dN2eOM8AmC8I=
-X-Google-Smtp-Source: ABdhPJyLPLKHgcGgD3LkeO3oOCo1JI6jNObRbrAfYQESY0P0OvcdjO1VdpADqu0y2MP0wQd+TgQXOA==
-X-Received: by 2002:a17:902:7c88:b029:e1:c7d:c26f with SMTP id y8-20020a1709027c88b02900e10c7dc26fmr3300581pll.36.1612362164362;
-        Wed, 03 Feb 2021 06:22:44 -0800 (PST)
+        bh=QlR8acgDD0m+un2+KiWyRjB/nKY6WpVwHlCaJlhH8u0=;
+        b=tE8ZYKquS8a+ucW8pq6Sqiopg9p1zBg1x/Lg1WzFfPYDWxFszJYdoacNqw32ShXmiB
+         SgUYpGSaqaB8BkLEquF/wNPIu4bfoZmwo8fhHIVP1RHKcc2fycKkCZKcDt0w5BQr+M4R
+         mdMzWJxCP0l54srUvxPPNMInFJhuM1sf2v6y/w94HqBrvAey1kL1mbaM4BvYzHL14/jJ
+         O2dkPXxfdmB619pi5yAijw8uyuOEfoyw4sTrWx0ayXWon2Udj2IfBqBTQy1JYklyGaXL
+         OSQRrDKAtGocs4WnbJIaymCivbSDh1CkveeHujXwmKwD7CPO/tKURz24Dag6s81vv+qg
+         A1Kw==
+X-Gm-Message-State: AOAM533HPD3mkW/PwRPkUynOlMkOSUwUzPZ+I7Vc/yWZUkjN6l1eX5OY
+	z51adAXxbxsdvEb/J7k1tmq6C4qBzhMW2Vj7CbA=
+X-Google-Smtp-Source: ABdhPJwC7lIkm3csexjwnJSJ71xYueNnryZNt2XvbC9mqOw08DdaKQVLC0w6ES+/ZqjFnmrUwJeHxA==
+X-Received: by 2002:a63:da46:: with SMTP id l6mr4025447pgj.134.1612362169751;
+        Wed, 03 Feb 2021 06:22:49 -0800 (PST)
 Return-Path: <steve@sakoman.com>
 Received: from hexa.router0800d9.com ([72.173.249.164])
-        by smtp.gmail.com with ESMTPSA id t129sm2882713pfc.16.2021.02.03.06.22.40
+        by smtp.gmail.com with ESMTPSA id t129sm2882713pfc.16.2021.02.03.06.22.46
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Feb 2021 06:22:43 -0800 (PST)
+        Wed, 03 Feb 2021 06:22:49 -0800 (PST)
 From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 2/4] git.py: LFS bitbake note should not be printed if need_lfs is not set.
-Date: Wed,  3 Feb 2021 04:22:07 -1000
-Message-Id: <4a4dd06aa061e827c161430e963c812d50bb3585.1612361853.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 3/4] git.py: Use the correct branch to check if the repository has LFS objects.
+Date: Wed,  3 Feb 2021 04:22:08 -1000
+Message-Id: <9b916a7f98fd9970d4a81546e454b1a00bc6ecb7.1612361853.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1612361853.git.steve@sakoman.com>
 References: <cover.1612361853.git.steve@sakoman.com>
@@ -54,31 +54,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Mauro Queirós <maurofrqueiros@gmail.com>
 
-The message "Repository %s has LFS content but it is not being fetched" was
-being printed, even when Git-LFS was available and "lfs=1" was set. In those
-situations, we want to fetch LFS content, so that message would not make sense.
+Function "contains_lfs" was only looking at the master branch when searching for LFS
+content. LFS may be configured in specific branches only, so we need to use the
+correct branch.
 
 Signed-off-by: Mauro Queiros <maurofrqueiros@gmail.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 45028dfda5a29a34ab408cb3f11d72ae17963340)
+(cherry picked from commit 4fa67c2af830035a1ddedc14592ee25a15ebff22)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/fetch2/git.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/fetch2/git.py | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 59afc32d..bdbfe5c0 100644
+index bdbfe5c0..07064c69 100644
 --- a/lib/bb/fetch2/git.py
 +++ b/lib/bb/fetch2/git.py
-@@ -509,7 +509,7 @@ class Git(FetchMethod):
-         if self._contains_lfs(ud, d, destdir):
-             if need_lfs and not self._find_git_lfs(d):
-                 raise bb.fetch2.FetchError("Repository %s has LFS content, install git-lfs on host to download (or set lfs=0 to ignore it)" % (repourl))
--            else:
-+            elif not need_lfs:
-                 bb.note("Repository %s has LFS content but it is not being fetched" % (repourl))
- 
-         if not ud.nocheckout:
+@@ -566,8 +566,15 @@ class Git(FetchMethod):
+         """
+         Check if the repository has 'lfs' (large file) content
+         """
+-        cmd = "%s grep lfs HEAD:.gitattributes | wc -l" % (
+-                ud.basecmd)
++
++        if not ud.nobranch:
++            branchname = ud.branches[ud.names[0]]
++        else:
++            branchname = "master"
++
++        cmd = "%s grep lfs origin/%s:.gitattributes | wc -l" % (
++            ud.basecmd, ud.branches[ud.names[0]])
++
+         try:
+             output = runfetchcmd(cmd, d, quiet=True, workdir=wd)
+             if int(output) > 0:
 -- 
 2.25.1
 
