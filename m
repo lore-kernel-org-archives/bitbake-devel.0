@@ -1,97 +1,83 @@
-Received: from esa2.hc324-48.eu.iphmx.com (esa2.hc324-48.eu.iphmx.com [207.54.68.120])
- by mx.groups.io with SMTP id smtpd.web12.11014.1612366566795936783
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+ by mx.groups.io with SMTP id smtpd.web10.1685.1612381653093184001
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Feb 2021 07:36:08 -0800
+ Wed, 03 Feb 2021 11:47:33 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@bmw.de header.s=mailing1 header.b=E4+YBaS6;
- spf=pass (domain: bmw.de, ip: 207.54.68.120, mailfrom: prvs=661aacca0=mikko.rapeli@bmw.de)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=OD6L/IKO;
+ spf=pass (domain: gmail.com, ip: 209.85.167.51, mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-lf1-f51.google.com with SMTP id u25so958636lfc.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Feb 2021 11:47:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-  t=1612366566; x=1643902566;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=PDJrKsOg+BUHEpf5+On3/13ibj2VUiu3tQErPdI4Yco=;
-  b=E4+YBaS6bFWD6cOFXfAAzhLKbPbZH7t0Ifcv1FUUPHxHnSyDtMfPLRQt
-   mWY1gnRLI9gLlMGlkYeN034RZLyx444Kx/1wQgE/46GM21ijC/9oLTGuJ
-   gFSWbcTHm6b5yWPFhfDmu3rw1qPsG7/V43o8nbTBvDEl8fxvcnt3u1voG
-   g=;
-Received: from esagw4.bmwgroup.com (HELO esagw4.muc) ([160.46.252.39]) by
- esa2.hc324-48.eu.iphmx.com with ESMTP/TLS; 03 Feb 2021 16:36:04 +0100
-Received: from esabb6.muc ([160.50.100.50])  by esagw4.muc with ESMTP/TLS;
- 03 Feb 2021 16:36:01 +0100
-Received: from smucm33k.bmwgroup.net (HELO smucm33k.europe.bmw.corp) ([160.46.167.67])
- by esabb6.muc with ESMTP/TLS; 03 Feb 2021 16:36:01 +0100
-Received: from smucm33l.europe.bmw.corp (160.46.167.68) by smucm33k.europe.bmw.corp
- (160.46.167.67) with Microsoft SMTP Server (TLS;
- Wed, 3 Feb 2021 16:36:00 +0100
-Received: from smucm33l.europe.bmw.corp ([160.46.167.68]) by
- smucm33l.europe.bmw.corp ([160.46.167.68]) with mapi id 15.00.1497.010; Wed,
- 3 Feb 2021 16:36:00 +0100
-From: "Mikko Rapeli" <mikko.rapeli@bmw.de>
-To: <steve@sakoman.com>
-CC: <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [bitbake][dunfell][1.46][PATCH 0/4] Patch review
-Thread-Topic: [bitbake-devel] [bitbake][dunfell][1.46][PATCH 0/4] Patch review
-Thread-Index: AQHW+jgO++g+gW85rUel15YZkuTDQKpGf1SA
-Date: Wed, 3 Feb 2021 15:36:00 +0000
-Message-ID: <YBrC3TDqXZ9bdllo@korppu>
-References: <cover.1612361853.git.steve@sakoman.com>
-In-Reply-To: <cover.1612361853.git.steve@sakoman.com>
-Accept-Language: en-US, de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u3iEJKKa/mEOvQZYZ0FYuc5XJzBAiQW3CITOdUw88e0=;
+        b=OD6L/IKOyuX6tegLmI/Q1P5OdBxsfoaZewoEPByS02Zai8mrTRTYblUZ57k8l4oMjz
+         e9EtqTAmwhuZJDT3gAmxrblBfO9/T0pUXyn1sY+lLasXSQyWYIFDUOpELMFZpONLtX0L
+         AjG25G5QNclaErxP8RWrUg0E5cyTnHb5I8GWrZIGK8dot/t+8kA/T0GZ+qzWfWfzJsrT
+         EnIJwmE4zSM9WQXPbbH/rq4tDxvp4eeHityMb2SpTt2vJJJx4j0/aV34vwaTaXYukFbq
+         zatdlvvu/88a8bWWMAfzkTGVAk0LmyIfUCMw1zG1csAgltPa0YITu9DHu3V+B/l7pVbs
+         SnbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u3iEJKKa/mEOvQZYZ0FYuc5XJzBAiQW3CITOdUw88e0=;
+        b=VMVJjidBk1ns/7fDTnXwqzWN0sB91pn//aHnSI05yXTK0lJpKMha74u6tAmoGmZzA8
+         Zc2c1/i3DXoI8erPOEiqzK0CCVwhJaX/mYUVKIaayBhiCdNvS5NqCNgZzS+/atnYnAvm
+         vocE9mrcBY4i3z6eeJWkhpjgbVoaBa8LuXF5KAE/MUIpFKt8w5e0Vo3oqG0eTPOMux98
+         PuXEGkIRAt7OOTSJkGwaTmgFRlGf+bOHhTfKx6tVbEO70Cn7Wzd6/keoOrM7+DN5wIsi
+         ZzJibT4/y3ZJPRir7SvTUzlW0gjZsck5dIZZbfdYvrh8gx3AvT5HtC3NBG/ufkP0vBbd
+         wsew==
+X-Gm-Message-State: AOAM532NIFBMU+NplW2fdUjfWfnKX8xnn+d+qu7evAlZsBjNZu+keNf8
+	V0D4W72I+r+JPOih4oxA++vdCHfHHLI=
+X-Google-Smtp-Source: ABdhPJzneTxWnRBN0WWRJh9dgPU7dYvLrrxZy65JeS6I6m4mtvT0i8Elp5cq41JQ/edH6s05kqrVzA==
+X-Received: by 2002:a19:6c3:: with SMTP id 186mr2546007lfg.500.1612381650704;
+        Wed, 03 Feb 2021 11:47:30 -0800 (PST)
+Return-Path: <tomasz.dziendzielski@gmail.com>
+Received: from localhost.localdomain (h124200.man.tk-internet.pl. [93.175.124.200])
+        by smtp.gmail.com with ESMTPSA id 24sm333684lfy.32.2021.02.03.11.47.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Feb 2021 11:47:29 -0800 (PST)
+From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Subject: [PATCH] event: Prevent bitbake from executing events that don't exist for multiconfig target
+Date: Wed,  3 Feb 2021 20:49:54 +0100
+Message-Id: <20210203194954.13029-1-tomasz.dziendzielski@gmail.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <AD23DFDDD46A1541BF7917B3C42D2EAB@bmwmail.corp>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+When multiconfig is used bitbake might try to run events that don't
+exist for specific mc target. In cooker.py we pass
+`self.databuilder.mcdata[mc]` data that contains names of events'
+handlers per mc target, but fire_class_handlers uses global _handlers
+variable that is created during parsing of all the targets.
 
-On Wed, Feb 03, 2021 at 04:22:05AM -1000, Steve Sakoman wrote:
-> Please review this set of patches for dunfell/1.46 and have comments back=
- by
-> end of day Friday.
->=20
-> Passed a-full on autobuilder:
->=20
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/1815
->=20
-> The following changes since commit 418c00c570a60845556204b4f52de047b284dd=
-8e:
->=20
->   data_smart: Ensure hash reflects vardepvalue flags correctly (2021-01-2=
-6 15:45:01 +0000)
->=20
-> are available in the Git repository at:
->=20
->   git://git.openembedded.org/bitbake-contrib stable/1.46-nut
->   http://cgit.openembedded.org/bitbake-contrib/log/?h=3Dstable/1.46-nut
->=20
-> Matt Hoosier (1):
->   fetch/git: download LFS content too during do_fetch
->=20
-> Mauro Queir=F3s (3):
->   git.py: skip smudging if lfs=3D0 is set
->   git.py: LFS bitbake note should not be printed if need_lfs is not set.
->   git.py: Use the correct branch to check if the repository has LFS
->     objects.
+See [YOCTO #13071] for detailed bug information.
 
-Acked-by: Mikko Rapeli <mikko.rapeli@bmw.de>
+I added a condition to check if the handler exists for target using
+__BBHANDLERS variable.
 
-FWIW, I'm using git lfs on dunfell with only patches:
+Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+---
+ lib/bb/event.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-git.py: Search for LFS objects on the correct branch.
-git.py: skip smudging if lfs=3D0 is set
-bitbake: fetch2/svn: Fix SVN repository concurrent update race
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 694b4705..bfc1e67c 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -114,7 +114,7 @@ def fire_class_handlers(event, d):
+     eid = str(event.__class__)[8:-2]
+     evt_hmap = _event_handler_map.get(eid, {})
+     for name, handler in list(_handlers.items()):
+-        if name in _catchall_handlers or name in evt_hmap:
++        if name in d.getVar("__BBHANDLERS") and (name in _catchall_handlers or name in evt_hmap):
+             if _eventfilter:
+                 if not _eventfilter(name, handler, event, d):
+                     continue
+-- 
+2.30.0
 
-but I don't see any harm in adding the fourth patch:
-
-bitbake: git.py: LFS bitbake note should not be printed if need_lfs is not =
-set.
-
-Cheers,
-
--Mikko=
