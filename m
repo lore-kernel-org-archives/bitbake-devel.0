@@ -1,125 +1,70 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
- by mx.groups.io with SMTP id smtpd.web12.3562.1612476733764909479
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+ by mx.groups.io with SMTP id smtpd.web12.3628.1612477008779889655
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 04 Feb 2021 14:12:14 -0800
+ Thu, 04 Feb 2021 14:16:48 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=kcwPATwF;
- spf=pass (domain: gmail.com, ip: 209.85.208.171, mailfrom: tomasz.dziendzielski@gmail.com)
-Received: by mail-lj1-f171.google.com with SMTP id t8so5311477ljk.10
-        for <bitbake-devel@lists.openembedded.org>; Thu, 04 Feb 2021 14:12:13 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Qt9Pa94s;
+ spf=pass (domain: gmail.com, ip: 209.85.166.169, mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-il1-f169.google.com with SMTP id g9so4123241ilc.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 04 Feb 2021 14:16:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PKl5Yc3sTef11qlsjUbwQ6Ape5m79/YjDiwBUcU0xbc=;
-        b=kcwPATwFnVPs8K9ZDq1XjSSH/WpHh9QJyDizD8ipNi9a/HeQBt8zpFlZCY5PIVbBtz
-         dijESuwSB1kXSoLX1bWcQoifbYcMeb7wZboSyJ+gliJojhBD9YLrrUZQ4Gde8PfxlXdf
-         reFdOJT4XEkgTjWh2oSaccuuaWrSP3ULqKsMhUxlve0sdaqh/vXnTuXc19vnOSllASX0
-         wfI9NBWwhGy3K6BAwWaE6xoIKDviBeDx1MnpRs/f6dlEUnfKAg8E9M9Ew4Ufi/3i0QIl
-         QcyRIlnbD9I0SrLYmP16/nJsmbYN+TvW0xRNju3wYRk4jFa3NQZBVmy4pAKpXFaxOZ6O
-         Mh9w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cmesEy+f5+dMtLFl8UC6C1mNsha0eCRda9XguOecx6g=;
+        b=Qt9Pa94sXC2rHhglLVO0lZYIylq3GC1rGSM3DwwzkQ0nsrVIxp0DJxiTb7LtkWX+D5
+         Bs9todLJ8V+4lhLvTqq99XSQU3je68Y9BEkVp7Gpiv2ZoHP2wOpuS4imiR7kXgdU8jGW
+         lmrg5S9vFSLJDtpPUEVGhH7ZAllzIEOwN/61wRnq9PeQ7BT0+VkAl8jn5Q5gLkzuPEvg
+         GKfhuTqbedPQbTSA/KpS1LFwBMAK2u6eE86zCW3SUP8YEtnTcIu6iCSeNHhgiafe0hjX
+         1abjyf4a1HRQ7oXIhMFVjHpZ3mpJE5x6FDSE33tqaGPpWZzbbxmotD61Rhu6qmSTGtBf
+         +c+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PKl5Yc3sTef11qlsjUbwQ6Ape5m79/YjDiwBUcU0xbc=;
-        b=nLGtqFcsKGqGDm2+09WWtmxVbs9R3OBdD05fuBVVnkhlYezRM9vH2wd+swdyAT/by7
-         Uxg2nQ3DMWWIYENQD0xQy1KLlwyS/r6ZI7yR903L+MJ1IkBLvEJZPG1RnavryNlGshiG
-         0S04xALKDfvoTpedG3tppap9LkamwiisM8qELOsKQj/xPMfoieqydU7z3GdL+stl6zQx
-         HlhRqZCcGFtNT1aGWtdKeVWMGROyRnIRGrVbjkF8M1V09R2l+D0ZB7k74Q5RcCt7FxK4
-         ZKIhc3hj88HN1Jh1FkwNJmTg0gkwoUBeOI9ECjohmtgXtvZemfXP8pTReGqkcLVEoys9
-         nIdg==
-X-Gm-Message-State: AOAM532Y0shXwkK7DZAKYl0GUUWRasGghY1aGGJ5qYP2loZXJ/47eEu2
-	xYyJJB6KGC8IMsZmbQcsEqz9K5sxV9JkRA==
-X-Google-Smtp-Source: ABdhPJxbU+22yg9cDxdpR/HRPLUwuD/Ho5JNCeK/vMuGLYRvJ6d5KtC9XlUiK5C3cYg9UXoFux8Lmg==
-X-Received: by 2002:a2e:a406:: with SMTP id p6mr863695ljn.30.1612476731542;
-        Thu, 04 Feb 2021 14:12:11 -0800 (PST)
-Return-Path: <tomasz.dziendzielski@gmail.com>
-Received: from localhost.localdomain (h124200.man.tk-internet.pl. [93.175.124.200])
-        by smtp.gmail.com with ESMTPSA id l9sm754890lfk.76.2021.02.04.14.12.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Feb 2021 14:12:10 -0800 (PST)
-From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-Subject: [PATCH] event: Prevent bitbake from executing event handler for wrong multiconfig target
-Date: Thu,  4 Feb 2021 23:14:22 +0100
-Message-Id: <20210204221422.16042-1-tomasz.dziendzielski@gmail.com>
-X-Mailer: git-send-email 2.30.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cmesEy+f5+dMtLFl8UC6C1mNsha0eCRda9XguOecx6g=;
+        b=eoQpU2JQhIQXCp+eB63H1uMzPU2Z5/7mzshOjJNX9In4VLyRaDO6uXeoTa4moK392s
+         pt7t2yaSetKTUnfB/gMIwWAE9R7qCBGQY3EX2ZPaULO7n84zWRXUdJpPPFQbqXOpkopz
+         sRJIONi+oDEz+qi3vbbcP2ELvLG9fbDkbS4tOc8lXEVv7X/qMJ2r4NtwIUZ/1/NJYjRQ
+         xTR2WMEhfVVQP9TxTVO+vPY3YqQUZu5RPRYC7z5jRn5SWs3wegSIPX2OwOq5JWv1FF9C
+         /yPThjop7DhI45NTVTTxGOKfqUeaHh1rugxKKyduxsMxSnIDZvHzs6Qhpt3JQ61Hi+u9
+         srMg==
+X-Gm-Message-State: AOAM530B5kprM8KPssuPMEq4ykodqxrLP5BkEyODQzq+gNR9Cs6GBvd9
+	lelHoLbCekOvHw/uajSvw6EW3LIYr5jzeFgzKDQ=
+X-Google-Smtp-Source: ABdhPJxNZdBGae7g02jwEKWp2aMJcFmRwKu8+Jz5pFcZUjIrhVjr8Dxs5DEkUycDuap/K6KdY7gA0g7tU7+jF/vf6zk=
+X-Received: by 2002:a92:6f12:: with SMTP id k18mr1188804ilc.66.1612477008228;
+ Thu, 04 Feb 2021 14:16:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210204010231.1380-1-tomasz.dziendzielski@gmail.com>
+ <c4a343366f873c3b1deee2f83bdc38638b98a677.camel@linuxfoundation.org> <1660975EC3653C7D.8308@lists.openembedded.org>
+In-Reply-To: <1660975EC3653C7D.8308@lists.openembedded.org>
+From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
+Date: Thu, 4 Feb 2021 23:18:08 +0100
+Message-ID: <CAJkqNs36Fp47DM4GpgcBtj=yObjOxjF77Xt3j4v70VAHrsuhow@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2] event: Prevent bitbake from executing events that don't exist for multiconfig target
+To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="00000000000048b58405ba8a0f7d"
 
-When multiconfig is used bitbake might try to run events that don't
-exist for specific mc target. In cooker.py we pass
-`self.databuilder.mcdata[mc]` data that contains names of events'
-handlers per mc target, but fire_class_handlers uses global _handlers
-variable that is created during parsing of all the targets.
+--00000000000048b58405ba8a0f7d
+Content-Type: text/plain; charset="UTF-8"
 
-This leads to a problem where bitbake runs event handler that don't
-exist for a target or even overrides them - if multiple targets use
-event handler with the same name but different code then only one
-version will be executed for all targets.
+I submitted a new patch with different subject (because it's content is
+different). Please check:
+https://lists.openembedded.org/g/bitbake-devel/message/11965
 
-See [YOCTO #13071] for detailed bug information.
+Best regards,
+Tomasz Dziendzielski
 
-I added a mc target name as a prefix to event handler name so there
-won't be two different handlers with the same name.
+--00000000000048b58405ba8a0f7d
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
----
- lib/bb/cookerdata.py | 3 ++-
- lib/bb/event.py      | 5 +++++
- lib/bb/parse/ast.py  | 7 ++++++-
- 3 files changed, 13 insertions(+), 2 deletions(-)
+<div dir=3D"ltr"><div dir=3D"ltr">I submitted a new patch with different su=
+bject (because it&#39;s content is different). Please check:<br><a href=3D"=
+https://lists.openembedded.org/g/bitbake-devel/message/11965">https://lists=
+.openembedded.org/g/bitbake-devel/message/11965</a></div><div><br></div><di=
+v>Best regards,</div><div>Tomasz Dziendzielski</div></div>
 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index c39b5681..108346ce 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -429,7 +429,8 @@ class CookerDataBuilder(object):
-                 parselog.critical("Undefined event handler function '%s'" % var)
-                 raise bb.BBHandledException()
-             handlerln = int(data.getVarFlag(var, "lineno", False))
--            bb.event.register(var, data.getVar(var, False),  (data.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln)
-+            nvar = mc + var
-+            bb.event.register(nvar, data.getVar(var, False),  (data.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln)
- 
-         data.setVar('BBINCLUDED',bb.parse.get_file_depends(data))
- 
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 694b4705..d0ddac23 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -118,6 +118,11 @@ def fire_class_handlers(event, d):
-             if _eventfilter:
-                 if not _eventfilter(name, handler, event, d):
-                     continue
-+
-+            mc_prefix = d.getVar('BB_CURRENT_MC') or ""
-+            if mc_prefix and not name[len(mc_prefix):] in (d.getVar("__BBHANDLERS") or []):
-+                continue
-+
-             execute_handler(name, handler, event, d)
- 
- ui_queue = []
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 0714296a..202cbffb 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -335,7 +335,12 @@ def finalize(fn, d, variant = None):
-             if not handlerfn:
-                 bb.fatal("Undefined event handler function '%s'" % var)
-             handlerln = int(d.getVarFlag(var, "lineno", False))
--            bb.event.register(var, d.getVar(var, False), (d.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln)
-+
-+            nvar = var
-+            if d.getVar('BB_CURRENT_MC', False):
-+                nvar = d.getVar('BB_CURRENT_MC', False) + var
-+
-+            bb.event.register(nvar, d.getVar(var, False), (d.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln)
- 
-         bb.event.fire(bb.event.RecipePreFinalise(fn), d)
- 
--- 
-2.30.0
-
+--00000000000048b58405ba8a0f7d--
