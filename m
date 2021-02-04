@@ -1,92 +1,91 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
- by mx.groups.io with SMTP id smtpd.web11.5594.1612430718509117264
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+ by mx.groups.io with SMTP id smtpd.web08.10152.1612455099595787292
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 04 Feb 2021 01:25:18 -0800
+ Thu, 04 Feb 2021 08:11:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=E72L4T2w;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f42.google.com with SMTP id z6so2583697wrq.10
-        for <bitbake-devel@lists.openembedded.org>; Thu, 04 Feb 2021 01:25:18 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=n39gM6ad;
+ spf=pass (domain: gmail.com, ip: 209.85.166.182, mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-il1-f182.google.com with SMTP id d6so3065934ilo.6
+        for <bitbake-devel@lists.openembedded.org>; Thu, 04 Feb 2021 08:11:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=Kqt5b8A8scWFqchn/JZdyr6Rn7sWqE1oO1uNwyAU0So=;
-        b=E72L4T2wuuIti0hNYkQnFq+oZcnTeS1yKuZ6ec7rqYGTSn7/CdvussbUPPIKhROtQL
-         ULTQG9bnEGB6FwvxzgUyD+2bhzhx2wG7HMXv3VjRm+gFnf6v7PfwAXhpSzPUlUJxGXGT
-         TSYosqgh/ov5hdtIOk0sgInzHGQ/JNL8z4QmQ=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MbXWV2mVoexJFsu63w0i+o6Muvum0sWV8iN2/ES7yyg=;
+        b=n39gM6adnpP8gXsry5M24DKri/YWwUIOoztuIB83glWuywCmd3IAfu1Iun1aaSpM0P
+         Vg+88a52aJL7yJjAw2l1MAbfUqq8hbXGqscCU/wkxcE1nOn0T7ncgFz/W8si2sqOwV/n
+         a1lAZdqzQSo3TttLh7wBOTpCqBVeRltqgjAg03NIVyzrt0jghFXLsnIR2tn0rLIOVKd5
+         kkfcp+nEToNQ4SiIJv1hhJg68ozkBBXEp/s6yuKg0FuRIQ10qKPn2/mL1Btw7SKMUK/5
+         id97A367JeO5NhlyHKpq/eRN0iNP3xOKTADcumwTVrMU+vTKjZnX9RKUIAgf+oBDTtC6
+         mG/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Kqt5b8A8scWFqchn/JZdyr6Rn7sWqE1oO1uNwyAU0So=;
-        b=tgUa8g0jvYn4KUyl2+roUip+sevy9nqYQv4xy6djuxNVdFgid41lT7oOmTUyZPC+Jf
-         BlNQFEzMrIoKl3xdmARZGzGkZK8lYPQvsyflv1DEU19gjDCjIkmFv8BOYLXV7ML93Q0P
-         mO8jjzZxCUHfJiEpU56NdZe1wjc3ZzB9BMjqAJXiTYn0r+eET7OXpwVntF3wAzWV+f/X
-         4ZQ6+RIvKYBsvinxGzXuodcKGgQX2zyfhzKAkkZ3085goLTF3mwAqTvr/qLSRg19anpX
-         RxlSHaCrGNGZ2bGuqoFdvPI66PpBfMe7jbp+m9mWkgFBLHgq6cziAKr5snv1nZYApTYz
-         1V2A==
-X-Gm-Message-State: AOAM531yPh6TXhAycx/uUOIDguBK3EcAljO3m0yG1rhZUJDdWh8CZTB+
-	+H4kL6K2z5nALw+y0+l0/yVnFA==
-X-Google-Smtp-Source: ABdhPJwfVqE44HkUh28q260u6zkuUA2esLelA9ahdyBMn5/aswtGxC0uOTNqZK8H9X85Va9J+UAcjw==
-X-Received: by 2002:adf:d1cb:: with SMTP id b11mr8365709wrd.118.1612430716991;
-        Thu, 04 Feb 2021 01:25:16 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:62ae:a739:5537:66d9? ([2001:8b0:aba:5f3c:62ae:a739:5537:66d9])
-        by smtp.gmail.com with ESMTPSA id b4sm7013661wrn.12.2021.02.04.01.25.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Feb 2021 01:25:16 -0800 (PST)
-Message-ID: <c4a343366f873c3b1deee2f83bdc38638b98a677.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v2] event: Prevent bitbake from executing events that don't exist for multiconfig target
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Thu, 04 Feb 2021 09:25:12 +0000
-In-Reply-To: <20210204010231.1380-1-tomasz.dziendzielski@gmail.com>
-References: <20210204010231.1380-1-tomasz.dziendzielski@gmail.com>
-User-Agent: Evolution 3.38.1-1 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MbXWV2mVoexJFsu63w0i+o6Muvum0sWV8iN2/ES7yyg=;
+        b=gJxinl3r50kPUXkLbqRaUCD3vOfq5bQ9osIrWAwp3hQ5mIHs5AGSMa4XgmnTwVPF7V
+         p9j6FJk0ZDLMhY3JaANSLVyA2hAtZVa70K70/PHNv1R2lAjKKeY8EsQGbrZUgx9vKPbF
+         y7XtcpmVIKKHYntywD3uOGlk8vQxlPvb793TNs4DIPz1DK6ND+ScZd3XwjKtfnGFeoPA
+         OHieuXm2cldx699FFH/ONydyYu/iRAGfAn7XBrXDbQVbfbDOb63MxET1M2mRyUwsfWqL
+         FhhYi6mW311lqWQ87EeElKriRMb9hSrNRwr/aPUaXEIqV+NSKpoq1QwxoRb7B2C2HG1a
+         pl6g==
+X-Gm-Message-State: AOAM5306GwMZge+LHAbX2A7kivvQp5tp4fcQMBBZrfeMaIl3Dxc4ibmB
+	j/lojhxzvd5oJs0BRoH1qd2ZDYdJd9qoKWLZLZE=
+X-Google-Smtp-Source: ABdhPJwuuQ3/DeAu0W2t7FGtUmioK0zwyyJ+GtZRImHKlTlzLsr7aAnnL7lJnvwnudZBHybbf1Dn8oaV8DYx6e4NeU8=
+X-Received: by 2002:a05:6e02:5c3:: with SMTP id l3mr7136908ils.292.1612455099037;
+ Thu, 04 Feb 2021 08:11:39 -0800 (PST)
 MIME-Version: 1.0
+References: <20210204010231.1380-1-tomasz.dziendzielski@gmail.com> <c4a343366f873c3b1deee2f83bdc38638b98a677.camel@linuxfoundation.org>
+In-Reply-To: <c4a343366f873c3b1deee2f83bdc38638b98a677.camel@linuxfoundation.org>
+From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
+Date: Thu, 4 Feb 2021 17:14:13 +0100
+Message-ID: <CAJkqNs0gA1GZDDAEoeJRjejOd_6jKNV4kbCy21NOXYKge5Mu6g@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2] event: Prevent bitbake from executing events that don't exist for multiconfig target
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="00000000000064fb9605ba84f581"
+
+--00000000000064fb9605ba84f581
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 
-On Thu, 2021-02-04 at 02:02 +0100, Tomasz Dziendzielski wrote:
-> When multiconfig is used bitbake might try to run events that don't
-> exist for specific mc target. In cooker.py we pass
-> `self.databuilder.mcdata[mc]` data that contains names of events'
-> handlers per mc target, but fire_class_handlers uses global _handlers
-> variable that is created during parsing of all the targets.
-> 
-> See [YOCTO #13071] for detailed bug information.
-> 
-> I added a condition to check if the handler exists for target using
-> __BBHANDLERS variable.
-> 
-> Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-> 
-> --- changed the order of conditions, it should be faster than previous patch, since first condition will give False more often
-> ---
->  lib/bb/event.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/lib/bb/event.py b/lib/bb/event.py
-> index 694b4705..ad119bbb 100644
-> --- a/lib/bb/event.py
-> +++ b/lib/bb/event.py
-> @@ -114,7 +114,7 @@ def fire_class_handlers(event, d):
->      eid = str(event.__class__)[8:-2]
->      evt_hmap = _event_handler_map.get(eid, {})
->      for name, handler in list(_handlers.items()):
-> -        if name in _catchall_handlers or name in evt_hmap:
-> +        if (name in _catchall_handlers or name in evt_hmap) and name in d.getVar("__BBHANDLERS"):
->              if _eventfilter:
->                  if not _eventfilter(name, handler, event, d):
->                      continue
+> This looks interesting. It does make me wonder what happens if the
+>different multiconfigs have a handler with slightly different code but
+>the same name though?
 
-This looks interesting. It does make me wonder what happens if the
-different multiconfigs have a handler with slightly different code but
-the same name though?
+Hi Richard,
+I created two .bbclasses that add event handlers with the same name
+printing "default" in eventdefault.bbclass and "arm" in eventarm.bbclass.
+Both are triggered on BuildStarted and BuildCompleted.
+If I put INHERIT += "eventdefault" to local.conf then "default" is printed
+4 times (which is correct). If instead I put INHERIT += "eventarm" to
+multiconfig/arm.conf then "arm" is printed 2 times (also correct). But when
+I put INHERIT += "eventdefault" in local.conf and INHERIT+= "eventarm" in
+multiconfig/arm.conf then "default" is printed 4 times and "arm" is not
+printed at all - in this case both "default" and "arm" should be printed
+twice.
 
-Cheers,
+Best regards,
+Tomasz Dziendzielski
 
-Richard
+--00000000000064fb9605ba84f581
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div>&gt;
+This looks interesting. It does make me wonder what happens if the<br>&gt;d=
+ifferent multiconfigs have a handler with slightly different code but<br>
+&gt;the same name though?<br><br>Hi Richard,<br>I created two .bbclasses th=
+at add event handlers with the same name printing  &quot;default&quot; in e=
+ventdefault.bbclass and &quot;arm&quot; in eventarm.bbclass. Both are trigg=
+ered on BuildStarted and BuildCompleted.</div><div>If I put INHERIT +=3D &q=
+uot;eventdefault&quot; to local.conf then &quot;default&quot; is printed 4 =
+times (which is correct). If instead I put INHERIT +=3D &quot;eventarm&quot=
+; to multiconfig/arm.conf then &quot;arm&quot; is printed 2 times (also cor=
+rect). But when I put INHERIT +=3D &quot;eventdefault&quot; in local.conf a=
+nd INHERIT+=3D &quot;eventarm&quot; in multiconfig/arm.conf then &quot;defa=
+ult&quot; is printed 4 times and &quot;arm&quot; is not printed at all - in=
+ this case both &quot;default&quot; and &quot;arm&quot; should be printed t=
+wice.<br></div><div><br></div><div>Best regards,</div><div>Tomasz Dziendzie=
+lski<br></div></div>
+
+--00000000000064fb9605ba84f581--
