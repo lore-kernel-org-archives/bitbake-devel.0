@@ -1,70 +1,133 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
- by mx.groups.io with SMTP id smtpd.web12.3628.1612477008779889655
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web11.6847.1612524377292209802
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 04 Feb 2021 14:16:48 -0800
+ Fri, 05 Feb 2021 03:26:17 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Qt9Pa94s;
- spf=pass (domain: gmail.com, ip: 209.85.166.169, mailfrom: tomasz.dziendzielski@gmail.com)
-Received: by mail-il1-f169.google.com with SMTP id g9so4123241ilc.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 04 Feb 2021 14:16:48 -0800 (PST)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=s67OVYBg;
+ spf=pass (domain: konsulko.com, ip: 209.85.221.43, mailfrom: pbarker@konsulko.com)
+Received: by mail-wr1-f43.google.com with SMTP id g10so7321231wrx.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 05 Feb 2021 03:26:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cmesEy+f5+dMtLFl8UC6C1mNsha0eCRda9XguOecx6g=;
-        b=Qt9Pa94sXC2rHhglLVO0lZYIylq3GC1rGSM3DwwzkQ0nsrVIxp0DJxiTb7LtkWX+D5
-         Bs9todLJ8V+4lhLvTqq99XSQU3je68Y9BEkVp7Gpiv2ZoHP2wOpuS4imiR7kXgdU8jGW
-         lmrg5S9vFSLJDtpPUEVGhH7ZAllzIEOwN/61wRnq9PeQ7BT0+VkAl8jn5Q5gLkzuPEvg
-         GKfhuTqbedPQbTSA/KpS1LFwBMAK2u6eE86zCW3SUP8YEtnTcIu6iCSeNHhgiafe0hjX
-         1abjyf4a1HRQ7oXIhMFVjHpZ3mpJE5x6FDSE33tqaGPpWZzbbxmotD61Rhu6qmSTGtBf
-         +c+w==
+        d=konsulko.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qXcsdgC/N/mumSWL6wP/kQvR3/mdr4rOrHKs90qyl48=;
+        b=s67OVYBgddLC8PHSwFw/rEpB0bs8D2K9yE2zhfod2ygG5o9Aal41C3y/BoozpLkj0C
+         ip6BOAuOAMhi6IsDrjbqgisjqwf/gZRopP0yHX647xy1/tJ9efvWJL+HzZ9BnaOB5S9e
+         ONn9s6YEmKUk2yOUTxGGNm3ULBfyZkXtv4z8g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cmesEy+f5+dMtLFl8UC6C1mNsha0eCRda9XguOecx6g=;
-        b=eoQpU2JQhIQXCp+eB63H1uMzPU2Z5/7mzshOjJNX9In4VLyRaDO6uXeoTa4moK392s
-         pt7t2yaSetKTUnfB/gMIwWAE9R7qCBGQY3EX2ZPaULO7n84zWRXUdJpPPFQbqXOpkopz
-         sRJIONi+oDEz+qi3vbbcP2ELvLG9fbDkbS4tOc8lXEVv7X/qMJ2r4NtwIUZ/1/NJYjRQ
-         xTR2WMEhfVVQP9TxTVO+vPY3YqQUZu5RPRYC7z5jRn5SWs3wegSIPX2OwOq5JWv1FF9C
-         /yPThjop7DhI45NTVTTxGOKfqUeaHh1rugxKKyduxsMxSnIDZvHzs6Qhpt3JQ61Hi+u9
-         srMg==
-X-Gm-Message-State: AOAM530B5kprM8KPssuPMEq4ykodqxrLP5BkEyODQzq+gNR9Cs6GBvd9
-	lelHoLbCekOvHw/uajSvw6EW3LIYr5jzeFgzKDQ=
-X-Google-Smtp-Source: ABdhPJxNZdBGae7g02jwEKWp2aMJcFmRwKu8+Jz5pFcZUjIrhVjr8Dxs5DEkUycDuap/K6KdY7gA0g7tU7+jF/vf6zk=
-X-Received: by 2002:a92:6f12:: with SMTP id k18mr1188804ilc.66.1612477008228;
- Thu, 04 Feb 2021 14:16:48 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qXcsdgC/N/mumSWL6wP/kQvR3/mdr4rOrHKs90qyl48=;
+        b=btNKP5Fv5OfpFfTwBHBo/yEKBLcu2sYULBOFctH56V/t4dCILZ5TqMeax+AyaUiSyE
+         vXh6g/L36e1oIlgnML+MR0GH/7BivVOmotV/M/eLFyxkDoHi7m0x6fDVEB2wi0kefwoq
+         34PGCrn49i+IUPOSWjru5lZVYgs2QMdVwbM0Wu2Zo+yA77Ysi71Iv+AVYKYX2R9IqeHv
+         SOloLF5QkqL1wSnXsUb/X+239qqv7dfqceXcyVrb60wb0UAnbCLk2x6KfniRY7561NDf
+         alhc+ARBQTPaTf8DQWZdeHZ8VC3H1cGUrV1SgphAV7gYQdWgXHhksUmFpXh6ppxMYrW5
+         BGZQ==
+X-Gm-Message-State: AOAM531IE3KImoan3naMx/yLJYG/kAMa/xVe4gJsmj1QvzUorlf6j12n
+	VGn7s11GnG6e50NoQ/pOMPAt1o/0m6PYZvh0
+X-Google-Smtp-Source: ABdhPJwN9ON8wrgP9GamGtf9NtoaRFtkS7wY1hhLN7VEW3eTRWLi77OWaSjkVMad7r0rSzA0fF1FHA==
+X-Received: by 2002:adf:df84:: with SMTP id z4mr4424055wrl.339.1612524375459;
+        Fri, 05 Feb 2021 03:26:15 -0800 (PST)
+Return-Path: <pbarker@konsulko.com>
+Received: from tortoise.home.b5net.uk (cpc76132-clif11-2-0-cust80.12-4.cable.virginm.net. [80.7.160.81])
+        by smtp.gmail.com with ESMTPSA id y18sm11881716wrt.19.2021.02.05.03.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Feb 2021 03:26:14 -0800 (PST)
+From: "Paul Barker" <pbarker@konsulko.com>
+To: bitbake-devel@lists.openembedded.org,
+	Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Joshua Watt <JPEWhacker@gmail.com>
+Cc: Paul Barker <pbarker@konsulko.com>
+Subject: [PATCH v2 0/8] hashserv read-only mode & upstream fixes
+Date: Fri,  5 Feb 2021 11:26:03 +0000
+Message-Id: <20210205112611.17167-1-pbarker@konsulko.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20210204010231.1380-1-tomasz.dziendzielski@gmail.com>
- <c4a343366f873c3b1deee2f83bdc38638b98a677.camel@linuxfoundation.org> <1660975EC3653C7D.8308@lists.openembedded.org>
-In-Reply-To: <1660975EC3653C7D.8308@lists.openembedded.org>
-From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
-Date: Thu, 4 Feb 2021 23:18:08 +0100
-Message-ID: <CAJkqNs36Fp47DM4GpgcBtj=yObjOxjF77Xt3j4v70VAHrsuhow@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH v2] event: Prevent bitbake from executing events that don't exist for multiconfig target
-To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="00000000000048b58405ba8a0f7d"
+Content-Transfer-Encoding: 8bit
 
---00000000000048b58405ba8a0f7d
-Content-Type: text/plain; charset="UTF-8"
+* Implement a read-only mode for the hash equivalence server. This mode is
+  useful when you wish to populate a hash equivalence database from CI or other
+  internal builds (via a read-write server instance) and also allow external
+  clients to query this database (via a read-only server instance). External
+  clients can therefore be prevented from adding hash equivalences to the
+  server which correspond to sstate artifacts which would be missing in a
+  primary sstate cache. This mode is enabled using the -r/--read-only
+  argument to bitbake-hashserv.
 
-I submitted a new patch with different subject (because it's content is
-different). Please check:
-https://lists.openembedded.org/g/bitbake-devel/message/11965
+* Expose the existing upstream server support via a -u/--upstream argument to
+  bitbake-hashserv.
 
-Best regards,
-Tomasz Dziendzielski
+* Support querying an upstream server using the new `get-outhash` message when
+  the server handles a `report` message from a client and a match is not found
+  in the server's own database. This is important as the `report` message is
+  used by bitbake when a task finishes executing to check if the task outhash
+  matches the outhash for any previous execution. With this support such
+  matches can now be found in a local (read-write) hash equivalence db as
+  well as in an upstream (potentially read-only and/or remote) db.
 
---00000000000048b58405ba8a0f7d
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+* Other minor hashserv fixes.
 
-<div dir=3D"ltr"><div dir=3D"ltr">I submitted a new patch with different su=
-bject (because it&#39;s content is different). Please check:<br><a href=3D"=
-https://lists.openembedded.org/g/bitbake-devel/message/11965">https://lists=
-.openembedded.org/g/bitbake-devel/message/11965</a></div><div><br></div><di=
-v>Best regards,</div><div>Tomasz Dziendzielski</div></div>
+These changes have been tested locally using the following setup:
 
---00000000000048b58405ba8a0f7d--
+1) Build core-image-base with BB_HASHSERVE = "auto". Additional logging was
+   also enabled following the instructions in 
+   https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-execution.html#logging.
+
+2) Move the hashserv.db file into a new 'upstream-hashserv' directory. Start
+   the upstream server in read-only mode using the following command in that
+   directory:
+
+    bitbake-hashserv -r -l DEBUG
+
+3) Create an empty 'downstream-hashserv' directory. Start the downstream
+   (local) server with an empty db using the following command in that
+   directory:
+
+    bitbake-hashserv -u "unix://../upstream-hashserv/hashserve.sock" -l DEBUG
+
+4) Modify local.conf to set 
+   BB_HASHSERVE = "unix://${TOPDIR}/downstream-hashserv/hashserve.sock".
+
+5) Add an 'echo hello' command to do_configure for glibc to force a rebuild
+   which should result in a matching hash equivalence.
+
+6) Build core-image-base again, confirm that glibc is rebuilt but then a hash
+   equivalence is found (copied from the upstream server into the downstream
+   server) and dependent tasks are pulled from the sstate cache instead of
+   being rebuilt.
+
+Changes from RFC series:
+
+  * Fixed issues identified by JPEW.
+
+  * Added selftest cases.
+
+These changes can also be pulled from:
+
+  https://gitlab.com/pbarker.dev/staging/bitbake.git
+  tag: hashserv_v2_2021-02-05
+
+Paul Barker (8):
+  bitbake-hashclient: Remove obsolete call to client.connect
+  hashserv: client: Fix handling of null responses
+  hashserv: server: Fix logger.debug calls
+  hashserv: Support read-only server
+  hashserv: Support upstream command line argument
+  hashserv: Add short forms of remaining command line arguments
+  hashserv: Add get-outhash message
+  hashserv: server: Support searching upstream for outhash
+
+ bin/bitbake-hashclient   |   3 --
+ bin/bitbake-hashserv     |  10 ++--
+ lib/hashserv/__init__.py |   4 +-
+ lib/hashserv/client.py   |   8 ++-
+ lib/hashserv/server.py   | 103 +++++++++++++++++++++++++++++----------
+ lib/hashserv/tests.py    |  45 ++++++++++++++++-
+ 6 files changed, 134 insertions(+), 39 deletions(-)
+
+-- 
+2.26.2
+
