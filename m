@@ -1,90 +1,81 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web09.10322.1612637018761132570
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+ by mx.groups.io with SMTP id smtpd.web09.11855.1612644016370530661
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 06 Feb 2021 10:43:39 -0800
+ Sat, 06 Feb 2021 12:40:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gH8SMkyR;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id 7so11865899wrz.0
-        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Feb 2021 10:43:38 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=AkFupcXr;
+ spf=pass (domain: gmail.com, ip: 209.85.208.178, mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-lj1-f178.google.com with SMTP id a17so11718473ljq.2
+        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Feb 2021 12:40:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=FSQZgjAIK/K3dr6nyI8X0HfE+6WqiO1yeU76iCfExow=;
-        b=gH8SMkyRLOgQy/d24klEcd5M7dwPjI7ysYdyoW9x1ugvkltxbcD2+ro+wreWqL0NfI
-         NuSLlGUwF6ncOa1cHeBF784RL1YtZhxmecJcttCD5ZQTVoNiGORnI9uVaK+ryMgRENP3
-         AFPetKpzsRBLqcFQBayL8UUW4K4JwVIas9jVM=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aiR1Va55ELvRNdOO5FNck1/XZGOq99eXMUsLhQg25S4=;
+        b=AkFupcXrlM/ks1FObLhbUoz/L5b6MrwMY89B8Wrk+FcdONn/Up4voN6zSuwnf2Tnfl
+         a5IeXC43nm37Cz6X+9LyGeyHvudtwPq2wXIxVS/xs9wV4Me+Bh0CnfduCyDYDXQYDDE+
+         NdyoJNDbktlkzRrT1hq+ULHFPQiPg+hmCDsJqUgN+2rTYsM58xCFkNyOqGp2hOE/ebNA
+         /82Lq939PWohU4vmRwQyKfPM/9Ta969KIne/4SjcPmPqNYRc/bk6gBFHabmEVAH4aezG
+         NqGUiDHTIkF0luFMqKu3exsnddPOIIoyA/ZrcFdGX28qyepnfIK2ICKuUJBfZXvF0Wi1
+         a4CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=FSQZgjAIK/K3dr6nyI8X0HfE+6WqiO1yeU76iCfExow=;
-        b=P2LWUUpfoE1IcBPvMn2792W3Y9MleW+LN8GJQQqEO5xyOlX2vYQ7SfHCT+iNTEHNIH
-         vCkfCGcuexNBRLPbuR3R6EpEkAu63tfK13K7hxBP09TNC8FtRHH3uCrgKQBN2u3LHdsD
-         sCAFelL3wfFUfnKiKzEVRVpRjJ/cp0QlC4Qg/AWjAQvnMdO5zMxwMzonVm9kGal+N7/0
-         nykkaFbHU/TvGQz5grE1N78rOQTJZzGc4V81pjJD51n4bHXOGmJ1yvUIZdkGniswlcYL
-         hxhC2I33MXZ20M4+e8DlaxbUpfg8o+/62AHrKIXLxqCnJPzsxiJO+pHNDZKssvdYe7p9
-         rn9A==
-X-Gm-Message-State: AOAM5302sAP05kLpFF9az0/eaAxQo0YNmazUXBdEmhCIFEctkLGNcLdX
-	9UNbRSBVlHN2K5Zlrbs/yaxBpQ==
-X-Google-Smtp-Source: ABdhPJy3S4HB6++KiIPEJcbP1SA+NXuhEAD/4FvbKef7ROLDkFe5Cn1F7/bodL6cyqvifhrv9ArkzQ==
-X-Received: by 2002:a05:6000:108b:: with SMTP id y11mr11157404wrw.379.1612637017263;
-        Sat, 06 Feb 2021 10:43:37 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.config (5751ab90.skybroadband.com. [87.81.171.144])
-        by smtp.gmail.com with ESMTPSA id c9sm12753398wmb.33.2021.02.06.10.43.36
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aiR1Va55ELvRNdOO5FNck1/XZGOq99eXMUsLhQg25S4=;
+        b=GXsSelYzmCaaqX0RGwj6n/yEjhIKJNXOTKanlFwpwx5g2rLMPQyx7WNs0VFHO8vjxk
+         S6/CbqInQJ6LMTcRsCcNLN6Vj+M9qHvzbv6Q8GOsPbifiIviL5NKqjsDEYIAXsIZf/9u
+         I1rcNRNSV4GMTiAjVyGC1bbeSVBcyN49/9iThSNDywZq9BEiXbUg/N8y0Nva3gIcc1ii
+         WR9ZgE29ZN82/Fy91S7Ffba0FFusi31/Dbl0HNxLW55tqM3W7kJgt+Pl85Ss9MNApwid
+         Nl7TWziP8cUOpwm1jWmvCq659G+YHkZcFwWbYNqi7gDw12/5zNBekfhklaHxtuv2zKRp
+         8nyA==
+X-Gm-Message-State: AOAM533L3EByl0X1J0SrNjuMZKgHNuzy2je0SfHOnCDWZvL0Tm7uEcCH
+	bUKD+DDw65ekIKdLump9cdzk4kYHfUk=
+X-Google-Smtp-Source: ABdhPJxQLC/nVY3gNhiowyJnc6k3pDATSDMxVJBX/097x9rWYapTu6943KfL+3sj25SS4ZosEBaSSQ==
+X-Received: by 2002:a2e:b165:: with SMTP id a5mr2008755ljm.81.1612644014236;
+        Sat, 06 Feb 2021 12:40:14 -0800 (PST)
+Return-Path: <tomasz.dziendzielski@gmail.com>
+Received: from localhost.localdomain (h124200.man.tk-internet.pl. [93.175.124.200])
+        by smtp.gmail.com with ESMTPSA id l14sm1417109lja.46.2021.02.06.12.40.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Feb 2021 10:43:36 -0800 (PST)
-Message-ID: <aca5e0448eba4292867e1dbb76e68f75f2a90f9c.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v2] event: Prevent bitbake from executing event handler for wrong multiconfig target
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Sat, 06 Feb 2021 18:43:35 +0000
-In-Reply-To: <20210205182141.753810-1-tomasz.dziendzielski@gmail.com>
-References: <20210205182141.753810-1-tomasz.dziendzielski@gmail.com>
-User-Agent: Evolution 3.38.1-1 
+        Sat, 06 Feb 2021 12:40:13 -0800 (PST)
+From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Subject: [PATCH] BBHandler: Don't classify shell functions that names start with "python*" as python function
+Date: Sat,  6 Feb 2021 21:42:38 +0100
+Message-Id: <20210206204238.293144-1-tomasz.dziendzielski@gmail.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-On Fri, 2021-02-05 at 19:21 +0100, Tomasz Dziendzielski wrote:
-> When multiconfig is used bitbake might try to run events that don't
-> exist for specific mc target. In cooker.py we pass
-> `self.databuilder.mcdata[mc]` data that contains names of events'
-> handlers per mc target, but fire_class_handlers uses global _handlers
-> variable that is created during parsing of all the targets.
-> 
-> This leads to a problem where bitbake runs event handler that don't
-> exist for a target or even overrides them - if multiple targets use
-> event handler with the same name but different code then only one
-> version will be executed for all targets.
-> 
-> See [YOCTO #13071] for detailed bug information.
-> 
-> I added a mc target name as a prefix to event handler name so there
-> won't be two different handlers with the same name.
-> 
-> Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-> 
-> --- compared to previous patch I added mc prefix before putting to __BBHANDLERS, so hashes are not changed during the build and oe-selftest paseses
-> ---
->  lib/bb/cookerdata.py | 5 ++++-
->  lib/bb/event.py      | 2 ++
->  lib/bb/parse/ast.py  | 7 ++++++-
->  3 files changed, 12 insertions(+), 2 deletions(-)
+If shell function name starts with 'python' or 'fakeroot' parser wrongly
+assumes it's python/fakeroot function.
 
-This is doing better in testing but there is still a selftest failure
-showing:
+[YOCTO #14204]
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/79/builds/1804
+Use regex lookahead assertions to check if 'python' expression is
+followed by whitespace or '(' and if 'fakeroot' is followed by
+whitespace.
 
-oe-selftest -r buildoptions.DiskMonTest.test_stoptask_behavior
+Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+---
+ lib/bb/parse/parse_py/BBHandler.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-should reproduce.
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
+index 8a520e30..7fc16299 100644
+--- a/lib/bb/parse/parse_py/BBHandler.py
++++ b/lib/bb/parse/parse_py/BBHandler.py
+@@ -22,7 +22,7 @@ from .ConfHandler import include, init
+ # For compatibility
+ bb.deprecate_import(__name__, "bb.parse", ["vars_from_file"])
+ 
+-__func_start_regexp__    = re.compile(r"(((?P<py>python)|(?P<fr>fakeroot))\s*)*(?P<func>[\w\.\-\+\{\}\$]+)?\s*\(\s*\)\s*{$" )
++__func_start_regexp__    = re.compile(r"(((?P<py>python(?=(\s|\()))|(?P<fr>fakeroot(?=\s)))\s*)*(?P<func>[\w\.\-\+\{\}\$]+)?\s*\(\s*\)\s*{$" )
+ __inherit_regexp__       = re.compile(r"inherit\s+(.+)" )
+ __export_func_regexp__   = re.compile(r"EXPORT_FUNCTIONS\s+(.+)" )
+ __addtask_regexp__       = re.compile(r"addtask\s+(?P<func>\w+)\s*((before\s*(?P<before>((.*(?=after))|(.*))))|(after\s*(?P<after>((.*(?=before))|(.*)))))*")
+-- 
+2.30.0
 
