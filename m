@@ -1,80 +1,91 @@
 Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
- by mx.groups.io with SMTP id smtpd.web10.13665.1612652942022812479
+ by mx.groups.io with SMTP id smtpd.web08.13831.1612652942929338693
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 06 Feb 2021 15:09:02 -0800
+ Sat, 06 Feb 2021 15:09:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=lfbED8jz;
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Tc9mjdJB;
  spf=pass (domain: gmail.com, ip: 209.85.214.181, mailfrom: akuster808@gmail.com)
-Received: by mail-pl1-f181.google.com with SMTP id b8so5475276plh.12
-        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Feb 2021 15:09:01 -0800 (PST)
+Received: by mail-pl1-f181.google.com with SMTP id k22so1120743pll.6
+        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Feb 2021 15:09:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=Zbz5lqDrLY7Nkfz/rbDcbcZ8YzpAw3bx+T/785DIfj0=;
-        b=lfbED8jz1WB2OYSxO4Pn7H9ZNtyNG2TW9TwUY9Ll5CdcCBN7KM3thUXnq/HuH0ns9i
-         0lfwlK+SbfCniqrmlqm9lkyKnoUClhHy++61Uj3kw8T5KicBVNmBlw5RCn0jrEoWtsBV
-         9r8SvjaHhCtGEq3jMv50FTs7GkkDcbL32lJpwn3rtlwki5pfU/gBp8mdb/hlxuWm3hoL
-         KAao6aozvQYTUf+mYy2p/r5KDZuYcNTvgHdMiiGR388Q9N28FgjA+3TGos8+RAVvQX5q
-         YVB70tXxOJxxi5OkFKsq6mCM+tNA5IrS56X5L0FAOyz0L//LAkPIysY8H8kQGqSHr1nu
-         Q2pw==
+        bh=H2WMZBIiCsIhSwxroWBCwuhgh2Vbc+Rzy8gCiQVXnFs=;
+        b=Tc9mjdJBpYWeMTse+V4IqOemWlXV1BfiJ4GUzUz+dtgqrcSu9xMPs4o2Y4ZHxgH1u0
+         OcPWIpJ5iUhqH4LzfNoG90W2mqdLd2g7S/jkQIZu7S26mKzaVlS+LnePJGXiK1XiHVzv
+         8wIkC3qn1IVBf9gAJQ6JiUD/vgcrQ57eTz6dzkI+iKhGaGqGgcvH+3y0EPbJ864iPd2W
+         E1vqsuUz4MqyLKs/y/KJL7k8WmUKm9K/0APBGADmMFVVtCxPJ+viAxEOMyDs7/PR1WAt
+         pw6AsFm9NrHxe/PW8XbsT9E6yip2YdZcqSRiiuSPRPfXOYXLAQbiDkUvgJqhG1JtAU0T
+         ZdoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=Zbz5lqDrLY7Nkfz/rbDcbcZ8YzpAw3bx+T/785DIfj0=;
-        b=BP3sbxiIJ7BXiBflgz9N2J7tfI9YBkSQMpkbx6amKbp7IjOtK5PinIdM0b5ANIOmx5
-         hjddgwmxXnFhjiL9n+mtm+FLtxf76cWo0G9snCNnb63MV+gb8ljOF0OdUwQMCqDECoNw
-         X6dU6UdNxL7WVHxZHOoAlHpgS7WDRfyMdGIb7Y1GWKyqnS3G56Gaypxc2T0+zuwwcQ5n
-         9n4yZIWa+GX0/DPNOvDxSnsMyWFR7JAdx9oA1PvUGcuWPttX08vLiXl77d28+PE6OXeP
-         O8vc8Ktfd/rAzEJCb5MtH35/6YV+aqMCgtaKA1IDCOB+HJkjRAVqQDsIgBRlVczMg4nD
-         6eMg==
-X-Gm-Message-State: AOAM532z7Jv2rFBVnxj/W85nrxWhs9qWGod/o6dqTDh8fxdPGAV6lRkT
-	QLZ76XqXQ3H7t30VWGNhn2bYyeupTdtTmQ==
-X-Google-Smtp-Source: ABdhPJyNKcvaf+9IL+3dUttj0VrJit3X3/lZbXONqaXOAqCLgWEqhVWHYD55N28Z7cBrnBAz0B9YdA==
-X-Received: by 2002:a17:902:cecc:b029:e1:268e:2286 with SMTP id d12-20020a170902ceccb02900e1268e2286mr10407499plg.62.1612652941440;
-        Sat, 06 Feb 2021 15:09:01 -0800 (PST)
+        bh=H2WMZBIiCsIhSwxroWBCwuhgh2Vbc+Rzy8gCiQVXnFs=;
+        b=Iu6pp9l7ZzBZlfmjwAYXO66CRqYpYeLzkFa/re1cot0XYUJNKr/Qi98gx95fijWHsp
+         202BeWtzCg5hQmU5f4Hig/bUK8tdYzOBHoiRvH54OUbG0RYgDRWC7dx2uN4z3QJNYENR
+         pl1lNJaU6i5sxltlfaVOfbz/YRak9tN0jHuSkyiKMCttXzNs/v2nBIlDnOdXlGheFTKn
+         Fs6fm2VmNi8Eawk0h4XcjFPjM6zNxg8GCdIT+nXwHIG3Q/EdQcTIHedqGYnHih9l1WZD
+         dhFBu0q4jV7di1LLRI8KYZsx0lOrk8Jz+DLF/5l8rrARL06AValXDhJM8sdL0uboU+/Y
+         QWHQ==
+X-Gm-Message-State: AOAM532Tp+VcIUNEVe5DotCmxWnLOwbR/64xARYL6w/C1Ct8gwz7U5Ya
+	MY95jxw7djCwgOTlxYqImSLN2O4YpqXEFg==
+X-Google-Smtp-Source: ABdhPJyQmgE12G6rtYsPK3zlJwjGQFpP6a8W//+tyvLwsql82UC6dDUyqKmZVT3r4Nf+3Fy4LsUtyw==
+X-Received: by 2002:a17:902:8643:b029:da:d5f9:28f6 with SMTP id y3-20020a1709028643b02900dad5f928f6mr9834377plt.8.1612652942327;
+        Sat, 06 Feb 2021 15:09:02 -0800 (PST)
 Return-Path: <akuster808@gmail.com>
 Received: from akuster-ThinkPad-T460s.mvista.com ([2601:202:4180:a5c0:c5c4:f80e:4f44:b02e])
-        by smtp.gmail.com with ESMTPSA id k10sm14492489pfk.0.2021.02.06.15.09.00
+        by smtp.gmail.com with ESMTPSA id k10sm14492489pfk.0.2021.02.06.15.09.01
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Feb 2021 15:09:01 -0800 (PST)
+        Sat, 06 Feb 2021 15:09:02 -0800 (PST)
 From: "akuster" <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [gatesgargh 09/10] openldap: upgrade 2.4.51 -> 2.4.56
-Date: Sat,  6 Feb 2021 15:08:46 -0800
-Message-Id: <e615c6fceff7275d93e462f4cd4a14cc55b2d656.1612652802.git.akuster808@gmail.com>
+Subject: [gatesgargh 10/10] openldap: upgrade 2.4.56 -> 2.4.57
+Date: Sat,  6 Feb 2021 15:08:47 -0800
+Message-Id: <cef93b7b00e620d90a610112ee574fa60b691cf8.1612652802.git.akuster808@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1612652802.git.akuster808@gmail.com>
 References: <cover.1612652802.git.akuster808@gmail.com>
 
-From: zangrc <zangrc.fnst@cn.fujitsu.com>
+From: zhengruoqin <zhengrq.fnst@cn.fujitsu.com>
 
-Signed-off-by: Zang Ruochen <zangrc.fnst@cn.fujitsu.com>
+-License-Update: Copyright year updated to 2021.
+
+Signed-off-by: Zheng Ruoqin <zhengrq.fnst@cn.fujitsu.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
-(cherry picked from commit 768345053e83623e286ce3140756036e75c023bc)
-[Maintenance update only]
+(cherry picked from commit 0282b8ce6a5a5f082a37cb0863b3e62ad8e56a5a)
+[Maintance update only]
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- .../openldap/{openldap_2.4.51.bb => openldap_2.4.56.bb}       | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
- rename meta-oe/recipes-support/openldap/{openldap_2.4.51.bb => openldap_2.4.56.bb} (98%)
+ .../openldap/{openldap_2.4.56.bb => openldap_2.4.57.bb}     | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+ rename meta-oe/recipes-support/openldap/{openldap_2.4.56.bb => openldap_2.4.57.bb} (97%)
 
-diff --git a/meta-oe/recipes-support/openldap/openldap_2.4.51.bb b/meta-oe/recipes-support/openldap/openldap_2.4.56.bb
-similarity index 98%
-rename from meta-oe/recipes-support/openldap/openldap_2.4.51.bb
-rename to meta-oe/recipes-support/openldap/openldap_2.4.56.bb
-index d2c5746080..4c0f179cb0 100644
---- a/meta-oe/recipes-support/openldap/openldap_2.4.51.bb
-+++ b/meta-oe/recipes-support/openldap/openldap_2.4.56.bb
+diff --git a/meta-oe/recipes-support/openldap/openldap_2.4.56.bb b/meta-oe/recipes-support/openldap/openldap_2.4.57.bb
+similarity index 97%
+rename from meta-oe/recipes-support/openldap/openldap_2.4.56.bb
+rename to meta-oe/recipes-support/openldap/openldap_2.4.57.bb
+index 4c0f179cb0..a282523a3c 100644
+--- a/meta-oe/recipes-support/openldap/openldap_2.4.56.bb
++++ b/meta-oe/recipes-support/openldap/openldap_2.4.57.bb
+@@ -7,7 +7,7 @@ HOMEPAGE = "http://www.OpenLDAP.org/license.html"
+ # basically BSD.  opensource.org does not record this license
+ # at present (so it is apparently not OSI certified).
+ LICENSE = "OpenLDAP"
+-LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=5391b559d23a2237bdb21e7a62dae7c3 \
++LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=b6dea6c170362fc46381fe3690c722cb \
+                     file://LICENSE;md5=153d07ef052c4a37a8fac23bc6031972 \
+                     "
+ SECTION = "libs"
 @@ -25,8 +25,8 @@ SRC_URI = "http://www.openldap.org/software/download/OpenLDAP/openldap-release/$
      file://remove-user-host-pwd-from-version.patch \
  "
  
--SRC_URI[md5sum] = "0d2025896cf1c17af7304ecc57ec9531"
--SRC_URI[sha256sum] = "f490775ea4c6506b7210ee55a102c8f4aacfe9d1c8eaa633c7316d33a714be62"
-+SRC_URI[md5sum] = "82a7dcf7aeaf95fdad16017c0ed9983a"
-+SRC_URI[sha256sum] = "25520e0363c93f3bcb89802a4aa3db33046206039436e0c7c9262db5a61115e0"
+-SRC_URI[md5sum] = "82a7dcf7aeaf95fdad16017c0ed9983a"
+-SRC_URI[sha256sum] = "25520e0363c93f3bcb89802a4aa3db33046206039436e0c7c9262db5a61115e0"
++SRC_URI[md5sum] = "e3349456c3a66e5e6155be7ddc3f042c"
++SRC_URI[sha256sum] = "c7ba47e1e6ecb5b436f3d43281df57abeffa99262141aec822628bc220f6b45a"
  
  DEPENDS = "util-linux groff-native"
  
