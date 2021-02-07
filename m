@@ -1,176 +1,132 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
- by mx.groups.io with SMTP id smtpd.web10.19110.1612698261918659505
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web12.21109.1612710120188392091
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 07 Feb 2021 03:44:22 -0800
+ Sun, 07 Feb 2021 07:02:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=MrTs+lvC;
- spf=pass (domain: gmail.com, ip: 209.85.208.175, mailfrom: tomasz.dziendzielski@gmail.com)
-Received: by mail-lj1-f175.google.com with SMTP id e18so13106639lja.12
-        for <bitbake-devel@lists.openembedded.org>; Sun, 07 Feb 2021 03:44:21 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=COfiE0SO;
+ spf=pass (domain: gmail.com, ip: 209.85.128.47, mailfrom: schnitzeltony@gmail.com)
+Received: by mail-wm1-f47.google.com with SMTP id y134so2447167wmd.3
+        for <bitbake-devel@lists.openembedded.org>; Sun, 07 Feb 2021 07:01:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=PDj0/iepm2zlYNlbCeEAe5WzwB+6DcNkKieLehQSgO4=;
-        b=MrTs+lvCijOMawGFfMDjBZGuR1/k8rg6RboW+WunCbaVegCKdRIaHTz1Q1BPf6y1HR
-         raOuUGDPzRH7p55HXYoMXBscx2zlg/C6KZyqUvDxMxAbWIxSetF5EDeocu++H5CUfOLZ
-         ZpVa6vhmoJG9u51PPTAc/XYYK89TuYJ7kd9ddI02Qubaqa3A+xqRSO3ISdcWJo7jTipX
-         RONOWQcWMy9pbiZG02woccA1qkc1JXZOfKGWHtVyFneSun7B+5Mu7+YlPw3nQ3uuKTW3
-         VMpzI/2DQCGLV7LvVRqpf4iqUhMgwdhE0qkI+4HYQqbLBC1gxEjjWt2King1N16Y0CcO
-         ntNA==
+        bh=fetbHraXmCrorOWvOEmyr/1XNAc+IHQAuQNhrBEdQUE=;
+        b=COfiE0SOViDygQUwB+op9W6D6mP4ntPh39dS8rB4NZ2ju+4tbBOyYahtpwm7tPSYn2
+         hu7R3I7NUyHA268XPdXBh9QDFeA8rgrV0reFoK/SartGFT2sdWVuwWhTsBQsxgt44LlI
+         bIWBs7t5ckSewIkKDZptmYLdxea5bucfpMsPo68P2gerbgkcF2b3JxnLpV6i5dvRO9iU
+         OtT9zXcvYeoSQllf76qzef4wnPnMNmO+ZzO7MkkNCtRkZ7yts55wI53zUrR8b7shhUfn
+         8uo5dFhVa7Uf8OkWjyrPlaDr0ng2cs2G95tQIdkxkYPwa+3EOW56YQIvgCcdGzPO/pko
+         s59g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=PDj0/iepm2zlYNlbCeEAe5WzwB+6DcNkKieLehQSgO4=;
-        b=h1HqSXmCBrDQLKWKL+lGO7bqXyg9VTMvp0HFx9kpiCE/tB9t0nHXnRCwrcNbUw7BgM
-         yDrxHTOfxYKyXFeIAFJAYDls1WxTWpfYZ4DNn3XymCtDkBL5zoiP/XZPUO+5lOqE9YWu
-         4mb1qkgbMn+V4qy+hifiCaiCamp492U4mkGAe6kuojx+rFIK+H2+otHU/jwbQG2Lmc4z
-         Y39D0mfTEDab1DNFEtrFffDgyDKlt7Epin9iNyAd+IhKejHIEVTTSx/TmVCorX1BRyln
-         uA4ClFpvZ28gkflUKpkoyXk31epUBueX5KhuGEBlBIlii0CcT2BvNaOy5/ubnMBMKTrk
-         6A9Q==
-X-Gm-Message-State: AOAM531J4NPfK1eKB5L1Xj8gNkan29vgLr9YExTReRXtSv/frYfJySBw
-	D+NpxWgfUWdNurjH2VPcjPDpAOHyvFQ=
-X-Google-Smtp-Source: ABdhPJy33cbV4jE6rFBtRsHII+9KDwYG8tg434jJ8yv0xcWGxm+Nyqt895CrJqg61Qhqwh99ytLVQw==
-X-Received: by 2002:a2e:9610:: with SMTP id v16mr7574021ljh.374.1612698259684;
-        Sun, 07 Feb 2021 03:44:19 -0800 (PST)
-Return-Path: <tomasz.dziendzielski@gmail.com>
-Received: from localhost.localdomain (h124200.man.tk-internet.pl. [93.175.124.200])
-        by smtp.gmail.com with ESMTPSA id y10sm1670294lfy.57.2021.02.07.03.44.18
+        bh=fetbHraXmCrorOWvOEmyr/1XNAc+IHQAuQNhrBEdQUE=;
+        b=eNBkRGZfKufmFmTV9JkUMZdCCgV4mxjLT3aKFS89pTIC2R3wwEPpgJvcUbAJk4JwSN
+         /RBTzlAirfycr8ezxw2e79sbcaYDcXZotCGS7jwvzA/AUe9R3/m+lRQm8zMl08wTe6Pn
+         rPakun+5ONJoUnAvcdyIErF3ksm0SFqmL5DFCQbj5rpiSDXwpWpLxpeGGpNFo3Vnsxww
+         nzQMwf4V/yhI6EDCtARuwpkX4qnnK3pFh0+uIvUW5NgmCJ71ECNCzJV66dWvsR8WJs3F
+         ndtcRy01s7kPWSzmPUimesQmVLPLgUcY/bZbi18WZ3LCG12XclJ+LNmY2+rS3PwkuKWr
+         kagA==
+X-Gm-Message-State: AOAM533SQ2oraUS2TawBlcEseySCdSIbKufbeV7KcEQETrIsFYEQpCrb
+	6P0NOsCL0aY8rqRa2+E05HMe5viW3rM=
+X-Google-Smtp-Source: ABdhPJw1Uf3yp7uFps83YBs/DOWTdPbkW9tKmy9ZD1ZUljA4DRSgcgNO7XTDW9t7fCIehB4wndoMvA==
+X-Received: by 2002:a7b:ca57:: with SMTP id m23mr11288409wml.116.1612710118624;
+        Sun, 07 Feb 2021 07:01:58 -0800 (PST)
+Return-Path: <schnitzeltony@gmail.com>
+Received: from superandy.speedport.ip (p200300f07f44b13017fa725760fbfa73.dip0.t-ipconnect.de. [2003:f0:7f44:b130:17fa:7257:60fb:fa73])
+        by smtp.gmail.com with ESMTPSA id 9sm24229114wra.80.2021.02.07.07.01.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Feb 2021 03:44:19 -0800 (PST)
-From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
+        Sun, 07 Feb 2021 07:01:57 -0800 (PST)
+From: =?UTF-8?B?QW5kcmVhcyBNw7xsbGVy?= <schnitzeltony@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-Subject: [PATCH v4] event: Prevent bitbake from executing event handler for wrong multiconfig target
-Date: Sun,  7 Feb 2021 12:46:59 +0100
-Message-Id: <20210207114659.148514-1-tomasz.dziendzielski@gmail.com>
-X-Mailer: git-send-email 2.30.0
+Cc: alex.kanavin@gmail.com,
+	randy.macleod@windriver.com,
+	ross.burton@arm.com
+Subject: [RFC-cargo-fetcher 0/3] Suggest a first step
+Date: Sun,  7 Feb 2021 16:01:44 +0100
+Message-Id: <20210207150147.31011-1-schnitzeltony@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When multiconfig is used bitbake might try to run events that don't
-exist for specific mc target. In cooker.py we pass
-`self.databuilder.mcdata[mc]` data that contains names of events'
-handlers per mc target, but fire_class_handlers uses global _handlers
-variable that is created during parsing of all the targets.
+This is a first version of a cargo fetcher. It mimics cargo fetch means
+it creates cargo cache in ${DL_DIR}/cargo. As mentioned in comments the
+proxy-thingy was stolen from npmsw for shrinkwrap files.
 
-This leads to a problem where bitbake runs event handler that don't
-exist for a target or even overrides them - if multiple targets use
-event handler with the same name but different code then only one
-version will be executed for all targets.
+First approach was to parse Cargo.toml for projects that don't ship a
+Cargo.lock (crates for rustlibs should do this) but that was skipped:
+An unknown magic inside cargo detects which libs are avaiable: Blindly
+followin -> download explodedc [1]
 
-See [YOCTO #13071] for detailed bug information.
+As proof of concept I did (no meta-rust in layers to avoid surprises):
 
-Add mc target name as a prefix to event handler name so there
-won't be two different handlers with the same name.
+* add a simple cargo-fetch.bbclass to oe-core [2]
+* adapt a pure rust recipe 'spotifyd' to new fetcher [3-4]
+* moved console to source of spotifyd and did
+  > export CARGO_HOME="<DL_DIR>/cargo"
+  > export CARGO_TARGET_DIR="<B>"
+  > cargo build --frozen
+  --> project was build without issues
 
-Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Please review carefully because I am aware that:
 
---- v4 add mc prefix to _bb_diskmonitor event handler to fix build, both build and test_stoptask_behavior should be working now
----
- lib/bb/cookerdata.py |  5 ++++-
- lib/bb/event.py      |  2 ++
- lib/bb/parse/ast.py  |  7 ++++++-
- lib/bb/runqueue.py   | 15 +++++++++++++--
- 4 files changed, 25 insertions(+), 4 deletions(-)
+* my python could be better
+* the 'one cache for all in download area thingy' might cause issues I do not
+  see yet
 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index c39b5681..02995c8f 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -424,12 +424,15 @@ class CookerDataBuilder(object):
-         # Nomally we only register event handlers at the end of parsing .bb files
-         # We register any handlers we've found so far here...
-         for var in data.getVar('__BBHANDLERS', False) or []:
-+            nvar=var
-+            if mc:
-+                var = nvar[len(mc):]
-             handlerfn = data.getVarFlag(var, "filename", False)
-             if not handlerfn:
-                 parselog.critical("Undefined event handler function '%s'" % var)
-                 raise bb.BBHandledException()
-             handlerln = int(data.getVarFlag(var, "lineno", False))
--            bb.event.register(var, data.getVar(var, False),  (data.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln)
-+            bb.event.register(nvar, data.getVar(var, False),  (data.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln)
- 
-         data.setVar('BBINCLUDED',bb.parse.get_file_depends(data))
- 
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 694b4705..afef7dbe 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -118,6 +118,8 @@ def fire_class_handlers(event, d):
-             if _eventfilter:
-                 if not _eventfilter(name, handler, event, d):
-                     continue
-+            if d and name not in (d.getVar("__BBHANDLERS") or []):
-+                    continue
-             execute_handler(name, handler, event, d)
- 
- ui_queue = []
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 0714296a..b38978d3 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -261,6 +261,8 @@ class BBHandlerNode(AstNode):
-     def eval(self, data):
-         bbhands = data.getVar('__BBHANDLERS', False) or []
-         for h in self.hs:
-+            if data.getVar('BB_CURRENT_MC', False):
-+                h = data.getVar('BB_CURRENT_MC', False) + h
-             bbhands.append(h)
-             data.setVarFlag(h, "handler", 1)
-         data.setVar('__BBHANDLERS', bbhands)
-@@ -331,11 +333,14 @@ def finalize(fn, d, variant = None):
-     try:
-         for var in d.getVar('__BBHANDLERS', False) or []:
-             # try to add the handler
-+            nvar=var
-+            if d.getVar('BB_CURRENT_MC', False):
-+                var = nvar[len(d.getVar('BB_CURRENT_MC', False)):]
-             handlerfn = d.getVarFlag(var, "filename", False)
-             if not handlerfn:
-                 bb.fatal("Undefined event handler function '%s'" % var)
-             handlerln = int(d.getVarFlag(var, "lineno", False))
--            bb.event.register(var, d.getVar(var, False), (d.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln)
-+            bb.event.register(nvar, d.getVar(var, False), (d.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln)
- 
-         bb.event.fire(bb.event.RecipePreFinalise(fn), d)
- 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 28bdadb4..ce14e111 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1464,7 +1464,14 @@ class RunQueue:
-             bb.event.fire(bb.event.DepTreeGenerated(depgraph), self.cooker.data)
- 
-             if not self.dm_event_handler_registered:
--                 res = bb.event.register(self.dm_event_handler_name,
-+                 bbhands = self.cfgData.getVar('__BBHANDLERS', False) or []
-+                 nvar = self.dm_event_handler_name
-+                 if self.cfgData.getVar('BB_CURRENT_MC', False):
-+                     nvar = self.cfgData.getVar('BB_CURRENT_MC', False) + nvar
-+
-+                 bbhands.append(nvar)
-+                 self.cfgData.setVar('__BBHANDLERS', bbhands)
-+                 res = bb.event.register(nvar,
-                                          lambda x: self.dm.check(self) if self.state in [runQueueRunning, runQueueCleanUp] else False,
-                                          ('bb.event.HeartbeatEvent',))
-                  self.dm_event_handler_registered = True
-@@ -1505,7 +1512,11 @@ class RunQueue:
-         build_done = self.state is runQueueComplete or self.state is runQueueFailed
- 
-         if build_done and self.dm_event_handler_registered:
--            bb.event.remove(self.dm_event_handler_name, None)
-+            nvar = self.dm_event_handler_name
-+            if self.cfgData.getVar('BB_CURRENT_MC', False):
-+                nvar = self.cfgData.getVar('BB_CURRENT_MC', False) + nvar
-+
-+            bb.event.remove(nvar, None)
-             self.dm_event_handler_registered = False
- 
-         if build_done and self.rqexe:
+Am also aware that this is not more than a first step. Once this makes it in,
+further TODOs are:
+
+* Merge latest meta-rust -> oe-core (latest: There were some riscv adjustments
+  recently - and I am not sure if these are in the poky-contrib of Alex/Ross)
+* Add documentation / tests / devtool-support / ??
+
+[1] https://github.com/schnitzeltony/mimic-cargo-fetcher/blob/master/test.py
+[2] https://github.com/schnitzeltony/openembedded-core/blob/cargo-fetcher/meta/classes/cargo-fetch.bbclass
+[3] https://github.com/schnitzeltony/meta-musicians/blob/cargo-fetcher/recipes-streaming/spotify/spotifyd.bb
+[4] https://github.com/schnitzeltony/meta-musicians/blob/cargo-fetcher/recipes-streaming/spotify/spotifyd/Cargo.lock
+
+Andreas Müller (3):
+  Add a fetcher for cargo crate index
+  Add parser for toml configuration files
+  Add a fetcher for cargo crates
+
+ lib/bb/fetch2/__init__.py   |    4 +
+ lib/bb/fetch2/crateindex.py |  155 +++++
+ lib/bb/fetch2/cratelock.py  |  268 +++++++++
+ lib/toml/LICENSE            |   27 +
+ lib/toml/README             |    8 +
+ lib/toml/__init__.py        |   25 +
+ lib/toml/__init__.pyi       |   15 +
+ lib/toml/decoder.py         | 1057 +++++++++++++++++++++++++++++++++++
+ lib/toml/decoder.pyi        |   52 ++
+ lib/toml/encoder.py         |  304 ++++++++++
+ lib/toml/encoder.pyi        |   34 ++
+ lib/toml/ordered.py         |   15 +
+ lib/toml/ordered.pyi        |    7 +
+ lib/toml/source-origin      |    1 +
+ lib/toml/tz.py              |   24 +
+ lib/toml/tz.pyi             |    9 +
+ 16 files changed, 2005 insertions(+)
+ create mode 100644 lib/bb/fetch2/crateindex.py
+ create mode 100644 lib/bb/fetch2/cratelock.py
+ create mode 100644 lib/toml/LICENSE
+ create mode 100644 lib/toml/README
+ create mode 100644 lib/toml/__init__.py
+ create mode 100644 lib/toml/__init__.pyi
+ create mode 100644 lib/toml/decoder.py
+ create mode 100644 lib/toml/decoder.pyi
+ create mode 100644 lib/toml/encoder.py
+ create mode 100644 lib/toml/encoder.pyi
+ create mode 100644 lib/toml/ordered.py
+ create mode 100644 lib/toml/ordered.pyi
+ create mode 100644 lib/toml/source-origin
+ create mode 100644 lib/toml/tz.py
+ create mode 100644 lib/toml/tz.pyi
+
 -- 
-2.30.0
+2.26.2
 
