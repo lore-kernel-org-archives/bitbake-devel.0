@@ -1,52 +1,52 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web09.20902.1612710123011511171
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web08.21058.1612710123677792361
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 07 Feb 2021 07:02:03 -0800
+ Sun, 07 Feb 2021 07:02:04 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=CezRNZ56;
- spf=pass (domain: gmail.com, ip: 209.85.128.41, mailfrom: schnitzeltony@gmail.com)
-Received: by mail-wm1-f41.google.com with SMTP id a16so10701489wmm.0
-        for <bitbake-devel@lists.openembedded.org>; Sun, 07 Feb 2021 07:02:02 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=E+iyWiZz;
+ spf=pass (domain: gmail.com, ip: 209.85.128.48, mailfrom: schnitzeltony@gmail.com)
+Received: by mail-wm1-f48.google.com with SMTP id u14so10768839wmq.4
+        for <bitbake-devel@lists.openembedded.org>; Sun, 07 Feb 2021 07:02:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=j3GykVOGBNdV5aLoR80u3ncmDGabrkNEmS4h27eL6H4=;
-        b=CezRNZ5638Q9u8nTg1iPkMUhEUOvb9hj16kmdQYYJ2gXh+bQ3t3w+GpAgU1tsh3/WZ
-         pJOZpItK0OJGV735XemS0k3WW9Fef9rj0xY87KD2P+aDpyiBaqIy5u8tJoEvKM2N64Md
-         vcb6cuS0X/9yrtAEu99SzWe4+5iu+JnUamp8TlUCO5kV44ZeoLnMYQ56zBTgSPpZg20Y
-         4VdXLgKBhJmWlCOHfU32rm//ueq0v0+1ZI73dZQeSjoCmhVYLDmUXpDUxskXgM0oJJ2b
-         jtp8UdD5EiKbVXKOgbHKO6+JmNy09Gg55wjhq/s2wxqjF9Vx3OUa0jMYMrUbyZLk3jd3
-         wKug==
+        bh=iGiRaOYdP6d5BYYUdYrr2f3uk/Mp9wsPB3aTlBNJuGc=;
+        b=E+iyWiZzwVxCnyhWjIwqaDZcg8aravB7YKvR9GXGCfWu2OVLqtgyPnHfQ/Rqp5Ehyv
+         ej8pu9WjduXunqpQrCZNlYEoCdcSLrIAjcZPIdhHZX9bQfXOgEK8SfYrL+8Vn+Xwta2I
+         YHoZV07+EJ/WZR6s/2aWMri/T2vEU3JgA8e9f9vPBRgcS4cl28DOFiZ5EAHO0BdsemEr
+         hBrG5JpqBTggY3pLZ+Sev+VDwfZKmV2YY+Hbg/6T4zroIQJ3E6LecRuZRfkNXdiZAtIT
+         H74QdR/pm0k2gD78OMt4Fb8acqhwFaqDjK2AByH4MTtNeRBD//EwO6DJid1ELwjGKZoh
+         1n+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=j3GykVOGBNdV5aLoR80u3ncmDGabrkNEmS4h27eL6H4=;
-        b=ge24MR3rT7hcgs7fM6wwpqGEDTh5ykkVQruAGpSzzsOGAFXBHN5sGfaBRlG0Cya/cB
-         RGd9DlRFDemb5X8z/ydtDakGPhTi9M7V+LCIeDYpoE4/djPTIP1eC/czQLlXlZ34snY8
-         LaxaWgdXPEI5gNDer9bKLbFDM3iWbUoPOATRrizm1j2dvhDf9BFp+R2kKAapo3cUZ5sV
-         27PneJuOHzXpk3EFNzY88RmK9Z2mhJ70VieIzuTb7GB79TbHR4NpGHpHO4eRkjM3kwcs
-         l+nDPuNpJL6S/MmLPcU8OwhDcYgWgjksCHpH7Ycvm+RkzOSJdERevxUf+WUqgOu3oGHW
-         jHPg==
-X-Gm-Message-State: AOAM531Btu+xPMxRY976ojUjCQSJHFUoeTtGWF3VhdV37fNAKTQ/M/F2
-	mp5u9m9kSQkEURhJHQDeUrjyAAwMqaU=
-X-Google-Smtp-Source: ABdhPJxfmoksEGRJ1zlAOwNwL8XpFZQNVh6gIYAYjafIese9IGZg7KqpLAZL2q7eMmoTGRj5ABE5PQ==
-X-Received: by 2002:a05:600c:3515:: with SMTP id h21mr11202448wmq.179.1612710121115;
-        Sun, 07 Feb 2021 07:02:01 -0800 (PST)
+        bh=iGiRaOYdP6d5BYYUdYrr2f3uk/Mp9wsPB3aTlBNJuGc=;
+        b=JraFMXNszhsknmS0M6RuU6zC0JcrKWHeJg8yY0Vj46buvP9JV0EHwngQ/n/o2IrbdS
+         Fu/37Yc94U8PY3msCRVRMPEYLswTCrTlcu3vgQSub1DHR/kZyiJi19w8/MyShDILRIza
+         F59qvGRk2HH/i7ev6GJwvQa1YU5zUkeh12bajcUChQuXapY0WVJVK6N+oGcaAy6sWe5R
+         JIhJweMXyT9m6Q6JYo+f9N/mmhvlb9s3p7G+fa11k+yq3t1LKd+52boU5OW3kaGZ5oEf
+         FpxNUKugUvJDxVINmIAIrYOyqoDyo7zYJlPQifPD5hQs1KwBdqqnAnept8cKxNmNcCfM
+         yWRw==
+X-Gm-Message-State: AOAM5335YW0Yef7nOCMFlELAuWd+aMN2+hYiusnohelfE7leGqyP78tK
+	gB7gQLvzrbCKDp1hjd80VIJTpNWEvvQ=
+X-Google-Smtp-Source: ABdhPJxQ5QvUTCE0sCWNUARfRD2aqaPN1Z8Cljz7Ye7/plWPP922tCGE8z5w4Nh6dWZbN171/OOm4A==
+X-Received: by 2002:a05:600c:4242:: with SMTP id r2mr2785783wmm.109.1612710122240;
+        Sun, 07 Feb 2021 07:02:02 -0800 (PST)
 Return-Path: <schnitzeltony@gmail.com>
 Received: from superandy.speedport.ip (p200300f07f44b13017fa725760fbfa73.dip0.t-ipconnect.de. [2003:f0:7f44:b130:17fa:7257:60fb:fa73])
-        by smtp.gmail.com with ESMTPSA id 9sm24229114wra.80.2021.02.07.07.01.59
+        by smtp.gmail.com with ESMTPSA id 9sm24229114wra.80.2021.02.07.07.02.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Feb 2021 07:02:00 -0800 (PST)
+        Sun, 07 Feb 2021 07:02:01 -0800 (PST)
 From: =?UTF-8?B?QW5kcmVhcyBNw7xsbGVy?= <schnitzeltony@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: alex.kanavin@gmail.com,
 	randy.macleod@windriver.com,
 	ross.burton@arm.com
-Subject: [RFC-cargo-fetcher 2/3] Add parser for toml configuration files
-Date: Sun,  7 Feb 2021 16:01:46 +0100
-Message-Id: <20210207150147.31011-3-schnitzeltony@gmail.com>
+Subject: [RFC-cargo-fetcher 3/3] Add a fetcher for cargo crates
+Date: Sun,  7 Feb 2021 16:01:47 +0100
+Message-Id: <20210207150147.31011-4-schnitzeltony@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20210207150147.31011-1-schnitzeltony@gmail.com>
 References: <20210207150147.31011-1-schnitzeltony@gmail.com>
@@ -54,1697 +54,307 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-* Cargo.lock files follow toml specification
-* Add a README to explain why and where this code was stolen and explain that
-  this can possibly go in the far future
+Parse Cargo.lock, download crates and generate cargo cache as 'cargo fetch'
+would do.
 
 Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
 ---
- lib/toml/LICENSE       |   27 +
- lib/toml/README        |    8 +
- lib/toml/__init__.py   |   25 +
- lib/toml/__init__.pyi  |   15 +
- lib/toml/decoder.py    | 1057 ++++++++++++++++++++++++++++++++++++++++
- lib/toml/decoder.pyi   |   52 ++
- lib/toml/encoder.py    |  304 ++++++++++++
- lib/toml/encoder.pyi   |   34 ++
- lib/toml/ordered.py    |   15 +
- lib/toml/ordered.pyi   |    7 +
- lib/toml/source-origin |    1 +
- lib/toml/tz.py         |   24 +
- lib/toml/tz.pyi        |    9 +
- 13 files changed, 1578 insertions(+)
- create mode 100644 lib/toml/LICENSE
- create mode 100644 lib/toml/README
- create mode 100644 lib/toml/__init__.py
- create mode 100644 lib/toml/__init__.pyi
- create mode 100644 lib/toml/decoder.py
- create mode 100644 lib/toml/decoder.pyi
- create mode 100644 lib/toml/encoder.py
- create mode 100644 lib/toml/encoder.pyi
- create mode 100644 lib/toml/ordered.py
- create mode 100644 lib/toml/ordered.pyi
- create mode 100644 lib/toml/source-origin
- create mode 100644 lib/toml/tz.py
- create mode 100644 lib/toml/tz.pyi
+ lib/bb/fetch2/__init__.py  |   2 +
+ lib/bb/fetch2/cratelock.py | 268 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 270 insertions(+)
+ create mode 100644 lib/bb/fetch2/cratelock.py
 
-diff --git a/lib/toml/LICENSE b/lib/toml/LICENSE
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 8f535b61..43c07a58 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1909,6 +1909,7 @@ from . import clearcase
+ from . import npm
+ from . import npmsw
+ from . import crateindex
++from . import cratelock
+ 
+ methods.append(local.Local())
+ methods.append(wget.Wget())
+@@ -1929,3 +1930,4 @@ methods.append(clearcase.ClearCase())
+ methods.append(npm.Npm())
+ methods.append(npmsw.NpmShrinkWrap())
+ methods.append(crateindex.CrateIndex())
++methods.append(cratelock.CrateLock())
+diff --git a/lib/bb/fetch2/cratelock.py b/lib/bb/fetch2/cratelock.py
 new file mode 100644
-index 00000000..5010e307
+index 00000000..19f71363
 --- /dev/null
-+++ b/lib/toml/LICENSE
-@@ -0,0 +1,27 @@
-+The MIT License
++++ b/lib/bb/fetch2/cratelock.py
+@@ -0,0 +1,268 @@
++"""
++BitBake 'Fetch' cratelock implementation
 +
-+Copyright 2013-2019 William Pearson
-+Copyright 2015-2016 Julien Enselme
-+Copyright 2016 Google Inc.
-+Copyright 2017 Samuel Vasko
-+Copyright 2017 Nate Prewitt
-+Copyright 2017 Jack Evans
-+Copyright 2019 Filippo Broggini
++cratelock downloads crates based upon information found in Cargo.lock (or any
++other file with Cargo.lock toml format). It mimics cargo fetch so all further
++calls of cargo can be done as:
 +
-+Permission is hereby granted, free of charge, to any person obtaining a copy
-+of this software and associated documentation files (the "Software"), to deal
-+in the Software without restriction, including without limitation the rights
-+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-+copies of the Software, and to permit persons to whom the Software is
-+furnished to do so, subject to the following conditions:
++export CARGO_HOME="${DL_DIR}/cargo"
++export CARGO_TARGET_DIR="${B}"
++cargo build --frozen
 +
-+The above copyright notice and this permission notice shall be included in
-+all copies or substantial portions of the Software.
++The crate-fetch part can be found in cratelock.py.
 +
-+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-+THE SOFTWARE.
-\ No newline at end of file
-diff --git a/lib/toml/README b/lib/toml/README
-new file mode 100644
-index 00000000..863cc56f
---- /dev/null
-+++ b/lib/toml/README
-@@ -0,0 +1,8 @@
-+TOML parser is not part of python core and there are open discussions which
-+implementation (toml, pytoml..) and when TOML parser will be added [1]. As long
-+as toml parrser is not included, use a copy of [2]. FWIW: If pytoml will be
-+included python core, the only changes required here is changing imports (tested
-+at the time of writing)
++SRC_URI = "cratelock://Cargo.lock"
 +
-+[1] https://discuss.python.org/t/adopting-recommending-a-toml-parser/4068/17
-+[2] https://github.com/uiri/toml
-diff --git a/lib/toml/__init__.py b/lib/toml/__init__.py
-new file mode 100644
-index 00000000..7719ac23
---- /dev/null
-+++ b/lib/toml/__init__.py
-@@ -0,0 +1,25 @@
-+"""Python module which parses and emits TOML.
++Supported SRC_URI options are:
 +
-+Released under the MIT license.
++- destsuffix
++    Specifies the directory to install Cargo lock (default: ${S}).
++- cargoindexhash
++    Cargo generates hash from download location of index [1]. So as long
++    as we use the official index at github.com/rust-lang/crates.io-index
++    the hash can be considered constant: 'github.com-1ecc6299db9ec823'
++    which is used as default when not set.
++    [1] https://gitlab.com/kornelski/LTS/-/blob/master/src/hash.rs
++
 +"""
 +
-+from toml import encoder
-+from toml import decoder
++# Copyright (C) 2021 Andreas Müller
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
 +
-+__version__ = "0.10.2"
-+_spec_ = "0.5.0"
-+
-+load = decoder.load
-+loads = decoder.loads
-+TomlDecoder = decoder.TomlDecoder
-+TomlDecodeError = decoder.TomlDecodeError
-+TomlPreserveCommentDecoder = decoder.TomlPreserveCommentDecoder
-+
-+dump = encoder.dump
-+dumps = encoder.dumps
-+TomlEncoder = encoder.TomlEncoder
-+TomlArraySeparatorEncoder = encoder.TomlArraySeparatorEncoder
-+TomlPreserveInlineDictEncoder = encoder.TomlPreserveInlineDictEncoder
-+TomlNumpyEncoder = encoder.TomlNumpyEncoder
-+TomlPreserveCommentEncoder = encoder.TomlPreserveCommentEncoder
-+TomlPathlibEncoder = encoder.TomlPathlibEncoder
-diff --git a/lib/toml/__init__.pyi b/lib/toml/__init__.pyi
-new file mode 100644
-index 00000000..94c20f44
---- /dev/null
-+++ b/lib/toml/__init__.pyi
-@@ -0,0 +1,15 @@
-+from toml import decoder as decoder, encoder as encoder
-+
-+load = decoder.load
-+loads = decoder.loads
-+TomlDecoder = decoder.TomlDecoder
-+TomlDecodeError = decoder.TomlDecodeError
-+TomlPreserveCommentDecoder = decoder.TomlPreserveCommentDecoder
-+dump = encoder.dump
-+dumps = encoder.dumps
-+TomlEncoder = encoder.TomlEncoder
-+TomlArraySeparatorEncoder = encoder.TomlArraySeparatorEncoder
-+TomlPreserveInlineDictEncoder = encoder.TomlPreserveInlineDictEncoder
-+TomlNumpyEncoder = encoder.TomlNumpyEncoder
-+TomlPreserveCommentEncoder = encoder.TomlPreserveCommentEncoder
-+TomlPathlibEncoder = encoder.TomlPathlibEncoder
-diff --git a/lib/toml/decoder.py b/lib/toml/decoder.py
-new file mode 100644
-index 00000000..bf400e97
---- /dev/null
-+++ b/lib/toml/decoder.py
-@@ -0,0 +1,1057 @@
-+import datetime
-+import io
-+from os import linesep
++import collections
++import errno
++import os
 +import re
-+import sys
++import shlex
++import tempfile
++import json
++import toml
++import bb
++import subprocess
++from bb.fetch2 import Fetch
++from bb.fetch2 import FetchError
++from bb.fetch2 import FetchMethod
++from bb.fetch2 import UnpackError
++from bb.fetch2 import MissingParameterError
++from bb.fetch2 import ParameterError
++from bb.fetch2 import URI
++from bb.fetch2 import runfetchcmd
++from bb.fetch2 import subprocess_setup
++from . import git
 +
-+from toml.tz import TomlTz
++import toml # see toml/README for further details
++#import pytoml as toml
 +
-+if sys.version_info < (3,):
-+    _range = xrange  # noqa: F821
-+else:
-+    unicode = str
-+    _range = range
-+    basestring = str
-+    unichr = chr
++class CrateLock(FetchMethod):
++    """Class to fetch all crates from a Cargo.lock file"""
 +
++    def supports(self, ud, d):
++        """Check if a given url can be fetched with cratelock"""
++        return ud.type in ["cratelock"]
 +
-+def _detect_pathlib_path(p):
-+    if (3, 4) <= sys.version_info:
-+        import pathlib
-+        if isinstance(p, pathlib.PurePath):
-+            return True
-+    return False
++    def urldata_init(self, ud, d):
++        """Init cratelock specific variables within url data"""
 +
++        def _append_crate(crate_dict):
++            name = crate_dict["name"]
++            version = crate_dict["version"]
++            source = crate_dict["source"]
++            sourcelist = source.split('+')
++            # fetch from standard registry
++            if len(sourcelist) == 2 and \
++                    "registry" in sourcelist and \
++                    "https://github.com/rust-lang/crates.io-index" in sourcelist:
++                checksum = crate_dict["checksum"]
++                # Crate cache part 1:
++                # Fetch crate from crates.io directly into cargo cache
++                localfile = os.path.join('cargo/registry/cache', ud.cargoindexhash, '%s-%s.crate' % (name, version))
++                uri = URI('https://crates.io/api/v1/crates/%s/%s/download' % (name, version))
++                uri.params["downloadfilename"] = localfile
++                uri.params["sha256sum"] = checksum
++                url = str(uri)
 +
-+def _ispath(p):
-+    if isinstance(p, (bytes, basestring)):
-+        return True
-+    return _detect_pathlib_path(p)
-+
-+
-+def _getpath(p):
-+    if (3, 6) <= sys.version_info:
-+        import os
-+        return os.fspath(p)
-+    if _detect_pathlib_path(p):
-+        return str(p)
-+    return p
-+
-+
-+try:
-+    FNFError = FileNotFoundError
-+except NameError:
-+    FNFError = IOError
-+
-+
-+TIME_RE = re.compile(r"([0-9]{2}):([0-9]{2}):([0-9]{2})(\.([0-9]{3,6}))?")
-+
-+
-+class TomlDecodeError(ValueError):
-+    """Base toml Exception / Error."""
-+
-+    def __init__(self, msg, doc, pos):
-+        lineno = doc.count('\n', 0, pos) + 1
-+        colno = pos - doc.rfind('\n', 0, pos)
-+        emsg = '{} (line {} column {} char {})'.format(msg, lineno, colno, pos)
-+        ValueError.__init__(self, emsg)
-+        self.msg = msg
-+        self.doc = doc
-+        self.pos = pos
-+        self.lineno = lineno
-+        self.colno = colno
-+
-+
-+# Matches a TOML number, which allows underscores for readability
-+_number_with_underscores = re.compile('([0-9])(_([0-9]))*')
-+
-+
-+class CommentValue(object):
-+    def __init__(self, val, comment, beginline, _dict):
-+        self.val = val
-+        separator = "\n" if beginline else " "
-+        self.comment = separator + comment
-+        self._dict = _dict
-+
-+    def __getitem__(self, key):
-+        return self.val[key]
-+
-+    def __setitem__(self, key, value):
-+        self.val[key] = value
-+
-+    def dump(self, dump_value_func):
-+        retstr = dump_value_func(self.val)
-+        if isinstance(self.val, self._dict):
-+            return self.comment + "\n" + unicode(retstr)
-+        else:
-+            return unicode(retstr) + self.comment
-+
-+
-+def _strictly_valid_num(n):
-+    n = n.strip()
-+    if not n:
-+        return False
-+    if n[0] == '_':
-+        return False
-+    if n[-1] == '_':
-+        return False
-+    if "_." in n or "._" in n:
-+        return False
-+    if len(n) == 1:
-+        return True
-+    if n[0] == '0' and n[1] not in ['.', 'o', 'b', 'x']:
-+        return False
-+    if n[0] == '+' or n[0] == '-':
-+        n = n[1:]
-+        if len(n) > 1 and n[0] == '0' and n[1] != '.':
-+            return False
-+    if '__' in n:
-+        return False
-+    return True
-+
-+
-+def load(f, _dict=dict, decoder=None):
-+    """Parses named file or files as toml and returns a dictionary
-+
-+    Args:
-+        f: Path to the file to open, array of files to read into single dict
-+           or a file descriptor
-+        _dict: (optional) Specifies the class of the returned toml dictionary
-+        decoder: The decoder to use
-+
-+    Returns:
-+        Parsed toml file represented as a dictionary
-+
-+    Raises:
-+        TypeError -- When f is invalid type
-+        TomlDecodeError: Error while decoding toml
-+        IOError / FileNotFoundError -- When an array with no valid (existing)
-+        (Python 2 / Python 3)          file paths is passed
-+    """
-+
-+    if _ispath(f):
-+        with io.open(_getpath(f), encoding='utf-8') as ffile:
-+            return loads(ffile.read(), _dict, decoder)
-+    elif isinstance(f, list):
-+        from os import path as op
-+        from warnings import warn
-+        if not [path for path in f if op.exists(path)]:
-+            error_msg = "Load expects a list to contain filenames only."
-+            error_msg += linesep
-+            error_msg += ("The list needs to contain the path of at least one "
-+                          "existing file.")
-+            raise FNFError(error_msg)
-+        if decoder is None:
-+            decoder = TomlDecoder(_dict)
-+        d = decoder.get_empty_table()
-+        for l in f:  # noqa: E741
-+            if op.exists(l):
-+                d.update(load(l, _dict, decoder))
++                localpath = os.path.join(d.getVar("DL_DIR"), localfile)
++                ud.crates.append({
++                    "name": name,
++                    "version": version,
++                    "url": url,
++                    "localpath": localpath
++                })
 +            else:
-+                warn("Non-existent filename in list with at least one valid "
-+                     "filename")
-+        return d
-+    else:
++                raise Exception("Unsupported crate download type for %s" % name)
++
++        # Get the 'cratelock' parameter
++        ud.cratelock_file = re.sub(r"^cratelock://", "", ud.url.split(";")[0])
++
++        # get cargoindexhash param or set default for
++        # github.com/rust-lang/crates.io-index
++        ud.cargoindexhash = ud.parm.get("cargoindexhash")
++        if ud.cargoindexhash == None:
++            ud.cargoindexhash = 'github.com-1ecc6299db9ec823'
++
++        # parse cratelock for crates to download
++        ud.crates = []
++        ud.crates_ignored = [] # for debug
 +        try:
-+            return loads(f.read(), _dict, decoder)
-+        except AttributeError:
-+            raise TypeError("You can only load a file descriptor, filename or "
-+                            "list")
++            with open(ud.cratelock_file, 'r') as file:
++                toml_string = file.read()
++            toml_dict = toml.loads(toml_string)
++            if not "package" in toml_dict:
++                raise Exception("No 'package' found")
++            # Add the crates we need
++            for crate_dict in toml_dict["package"]:
++                if not "name" in crate_dict or not "version" in crate_dict:
++                    raise Exception("Missing mandatory entries in %s" % json.dumps(crate_dict))
++                # Notes:
++                # * In Cargo.lock dependency entries without 'source' are in-tree
++                #   and must be ignored on fetch/unpack
++                # * 1. It seems the 'dependency' list is an information for cargo to
++                #      build crates in correct order.
++                #   2. All crates are contained in Cargo.lock
++                #   => For fetch/unpack we can ignore 'dependency' and don't need to
++                #      walk down
++                if not "source" in crate_dict:
++                    ud.crates_ignored.append({
++                        "name": crate_dict["name"],
++                        "version": crate_dict["version"]
++                    })
++                else:
++                    _append_crate(crate_dict)
 +
++        except Exception as e:
++            raise ParameterError("Invalid cratelock file: %s" % str(e), ud.url)
 +
-+_groupname_re = re.compile(r'^[A-Za-z0-9_-]+$')
++        # Much of the following was stolen from npmsw.py
 +
++        # Avoid conflicts between the environment data and:
++        # - the proxy url revision
++        # - the proxy url checksum
++        data = bb.data.createCopy(d)
++        data.delVar("SRCREV")
++        data.delVarFlags("SRC_URI")
 +
-+def loads(s, _dict=dict, decoder=None):
-+    """Parses string as toml
++        # This fetcher resolves multiple URIs from a Cargo.lock file and then
++        # forwards it to a proxy fetcher. The management of the donestamp file,
++        # the lockfile and the checksums are forwarded to the proxy fetcher.
++        ud.proxy = Fetch([crate["url"] for crate in ud.crates], data)
++ 
++        # keep done/lock-file out of cargo's cache to avoid confusion
++        ud.bbcachepath = os.path.join(d.getVar("DL_DIR"), 'cargo/bb', ud.cargoindexhash)
++        for proxy_url in ud.proxy.urls:
++            proxy_ud = ud.proxy.ud[proxy_url]
++            basename = os.path.basename(proxy_ud.localpath) # ?? proxy_ud.basename does not work here
++            proxy_ud.donestamp = os.path.join(ud.bbcachepath, basename + '.done')
++            proxy_ud.lockfile = os.path.join(ud.bbcachepath, basename + '.lock')
 +
-+    Args:
-+        s: String to be parsed
-+        _dict: (optional) Specifies the class of the returned toml dictionary
++        ud.needdonestamp = False
 +
-+    Returns:
-+        Parsed toml file represented as a dictionary
++    @staticmethod
++    def _foreach_proxy_method(ud, handle):
++        returns = []
++        for proxy_url in ud.proxy.urls:
++            proxy_ud = ud.proxy.ud[proxy_url]
++            proxy_d = ud.proxy.d
++            proxy_ud.setup_localpath(proxy_d)
++            returns.append(handle(proxy_ud.method, proxy_ud, proxy_d))
++        return returns
 +
-+    Raises:
-+        TypeError: When a non-string is passed
-+        TomlDecodeError: Error while decoding toml
-+    """
++    def verify_donestamp(self, ud, d):
++        """Verify the donestamp file"""
++        def _handle(m, ud, d):
++            return m.verify_donestamp(ud, d)
++        return all(self._foreach_proxy_method(ud, _handle))
 +
-+    implicitgroups = []
-+    if decoder is None:
-+        decoder = TomlDecoder(_dict)
-+    retval = decoder.get_empty_table()
-+    currentlevel = retval
-+    if not isinstance(s, basestring):
-+        raise TypeError("Expecting something like a string")
++    def update_donestamp(self, ud, d):
++        """Update the donestamp file"""
++        def _handle(m, ud, d):
++            m.update_donestamp(ud, d)
++        self._foreach_proxy_method(ud, _handle)
 +
-+    if not isinstance(s, unicode):
-+        s = s.decode('utf8')
++    def need_update(self, ud, d):
++        """Force a fetch, even if localpath exists ?"""
++        def _handle(m, ud, d):
++            return m.need_update(ud, d)
++        return all(self._foreach_proxy_method(ud, _handle))
 +
-+    original = s
-+    sl = list(s)
-+    openarr = 0
-+    openstring = False
-+    openstrchar = ""
-+    multilinestr = False
-+    arrayoftables = False
-+    beginline = True
-+    keygroup = False
-+    dottedkey = False
-+    keyname = 0
-+    key = ''
-+    prev_key = ''
-+    line_no = 1
++    def try_mirrors(self, fetch, ud, d, mirrors):
++        """Try to use a mirror"""
++        def _handle(m, ud, d):
++            return m.try_mirrors(fetch, ud, d, mirrors)
++        return all(self._foreach_proxy_method(ud, _handle))
 +
-+    for i, item in enumerate(sl):
-+        if item == '\r' and sl[i + 1] == '\n':
-+            sl[i] = ' '
-+            continue
-+        if keyname:
-+            key += item
-+            if item == '\n':
-+                raise TomlDecodeError("Key name found without value."
-+                                      " Reached end of line.", original, i)
-+            if openstring:
-+                if item == openstrchar:
-+                    oddbackslash = False
-+                    k = 1
-+                    while i >= k and sl[i - k] == '\\':
-+                        oddbackslash = not oddbackslash
-+                        k += 1
-+                    if not oddbackslash:
-+                        keyname = 2
-+                        openstring = False
-+                        openstrchar = ""
-+                continue
-+            elif keyname == 1:
-+                if item.isspace():
-+                    keyname = 2
-+                    continue
-+                elif item == '.':
-+                    dottedkey = True
-+                    continue
-+                elif item.isalnum() or item == '_' or item == '-':
-+                    continue
-+                elif (dottedkey and sl[i - 1] == '.' and
-+                      (item == '"' or item == "'")):
-+                    openstring = True
-+                    openstrchar = item
-+                    continue
-+            elif keyname == 2:
-+                if item.isspace():
-+                    if dottedkey:
-+                        nextitem = sl[i + 1]
-+                        if not nextitem.isspace() and nextitem != '.':
-+                            keyname = 1
-+                    continue
-+                if item == '.':
-+                    dottedkey = True
-+                    nextitem = sl[i + 1]
-+                    if not nextitem.isspace() and nextitem != '.':
-+                        keyname = 1
-+                    continue
-+            if item == '=':
-+                keyname = 0
-+                prev_key = key[:-1].rstrip()
-+                key = ''
-+                dottedkey = False
-+            else:
-+                raise TomlDecodeError("Found invalid character in key name: '" +
-+                                      item + "'. Try quoting the key name.",
-+                                      original, i)
-+        if item == "'" and openstrchar != '"':
-+            k = 1
++    def _crate_src_basepath(self, cargoindexhash, d):
++        return os.path.join(d.getVar("DL_DIR"), 'cargo/registry/src', cargoindexhash)
++
++    def _crate_src_path(self, cargoindexhash, crate, d):
++        return os.path.join(d.getVar("DL_DIR"), 'cargo/registry/src', cargoindexhash, '%s-%s' % (crate['name'], crate['version']))
++
++    def download(self, ud, d):
++        """Fetch url"""
++        ud.proxy.download()
++        # Crate cache part 2:
++        # cached sources
++        basepath = self._crate_src_basepath(ud.cargoindexhash, d)
++        if not os.path.exists(basepath):
++            bb.utils.mkdirhier(basepath)
++        for crate in ud.crates:
++            sourcepath = crate['localpath']
++            targetpath = self._crate_src_path(ud.cargoindexhash, crate, d)
++
++            lockfile = os.path.join(ud.bbcachepath, crate['name'] + '-' + crate['version'] + '-src.lock')
++            lf = bb.utils.lockfile(lockfile)
 +            try:
-+                while sl[i - k] == "'":
-+                    k += 1
-+                    if k == 3:
-+                        break
-+            except IndexError:
-+                pass
-+            if k == 3:
-+                multilinestr = not multilinestr
-+                openstring = multilinestr
-+            else:
-+                openstring = not openstring
-+            if openstring:
-+                openstrchar = "'"
-+            else:
-+                openstrchar = ""
-+        if item == '"' and openstrchar != "'":
-+            oddbackslash = False
-+            k = 1
-+            tripquote = False
-+            try:
-+                while sl[i - k] == '"':
-+                    k += 1
-+                    if k == 3:
-+                        tripquote = True
-+                        break
-+                if k == 1 or (k == 3 and tripquote):
-+                    while sl[i - k] == '\\':
-+                        oddbackslash = not oddbackslash
-+                        k += 1
-+            except IndexError:
-+                pass
-+            if not oddbackslash:
-+                if tripquote:
-+                    multilinestr = not multilinestr
-+                    openstring = multilinestr
-+                else:
-+                    openstring = not openstring
-+            if openstring:
-+                openstrchar = '"'
-+            else:
-+                openstrchar = ""
-+        if item == '#' and (not openstring and not keygroup and
-+                            not arrayoftables):
-+            j = i
-+            comment = ""
-+            try:
-+                while sl[j] != '\n':
-+                    comment += s[j]
-+                    sl[j] = ' '
-+                    j += 1
-+            except IndexError:
-+                break
-+            if not openarr:
-+                decoder.preserve_comment(line_no, prev_key, comment, beginline)
-+        if item == '[' and (not openstring and not keygroup and
-+                            not arrayoftables):
-+            if beginline:
-+                if len(sl) > i + 1 and sl[i + 1] == '[':
-+                    arrayoftables = True
-+                else:
-+                    keygroup = True
-+            else:
-+                openarr += 1
-+        if item == ']' and not openstring:
-+            if keygroup:
-+                keygroup = False
-+            elif arrayoftables:
-+                if sl[i - 1] == ']':
-+                    arrayoftables = False
-+            else:
-+                openarr -= 1
-+        if item == '\n':
-+            if openstring or multilinestr:
-+                if not multilinestr:
-+                    raise TomlDecodeError("Unbalanced quotes", original, i)
-+                if ((sl[i - 1] == "'" or sl[i - 1] == '"') and (
-+                        sl[i - 2] == sl[i - 1])):
-+                    sl[i] = sl[i - 1]
-+                    if sl[i - 3] == sl[i - 1]:
-+                        sl[i - 3] = ' '
-+            elif openarr:
-+                sl[i] = ' '
-+            else:
-+                beginline = True
-+            line_no += 1
-+        elif beginline and sl[i] != ' ' and sl[i] != '\t':
-+            beginline = False
-+            if not keygroup and not arrayoftables:
-+                if sl[i] == '=':
-+                    raise TomlDecodeError("Found empty keyname. ", original, i)
-+                keyname = 1
-+                key += item
-+    if keyname:
-+        raise TomlDecodeError("Key name found without value."
-+                              " Reached end of file.", original, len(s))
-+    if openstring:  # reached EOF and have an unterminated string
-+        raise TomlDecodeError("Unterminated string found."
-+                              " Reached end of file.", original, len(s))
-+    s = ''.join(sl)
-+    s = s.split('\n')
-+    multikey = None
-+    multilinestr = ""
-+    multibackslash = False
-+    pos = 0
-+    for idx, line in enumerate(s):
-+        if idx > 0:
-+            pos += len(s[idx - 1]) + 1
-+
-+        decoder.embed_comments(idx, currentlevel)
-+
-+        if not multilinestr or multibackslash or '\n' not in multilinestr:
-+            line = line.strip()
-+        if line == "" and (not multikey or multibackslash):
-+            continue
-+        if multikey:
-+            if multibackslash:
-+                multilinestr += line
-+            else:
-+                multilinestr += line
-+            multibackslash = False
-+            closed = False
-+            if multilinestr[0] == '[':
-+                closed = line[-1] == ']'
-+            elif len(line) > 2:
-+                closed = (line[-1] == multilinestr[0] and
-+                          line[-2] == multilinestr[0] and
-+                          line[-3] == multilinestr[0])
-+            if closed:
-+                try:
-+                    value, vtype = decoder.load_value(multilinestr)
-+                except ValueError as err:
-+                    raise TomlDecodeError(str(err), original, pos)
-+                currentlevel[multikey] = value
-+                multikey = None
-+                multilinestr = ""
-+            else:
-+                k = len(multilinestr) - 1
-+                while k > -1 and multilinestr[k] == '\\':
-+                    multibackslash = not multibackslash
-+                    k -= 1
-+                if multibackslash:
-+                    multilinestr = multilinestr[:-1]
-+                else:
-+                    multilinestr += "\n"
-+            continue
-+        if line[0] == '[':
-+            arrayoftables = False
-+            if len(line) == 1:
-+                raise TomlDecodeError("Opening key group bracket on line by "
-+                                      "itself.", original, pos)
-+            if line[1] == '[':
-+                arrayoftables = True
-+                line = line[2:]
-+                splitstr = ']]'
-+            else:
-+                line = line[1:]
-+                splitstr = ']'
-+            i = 1
-+            quotesplits = decoder._get_split_on_quotes(line)
-+            quoted = False
-+            for quotesplit in quotesplits:
-+                if not quoted and splitstr in quotesplit:
-+                    break
-+                i += quotesplit.count(splitstr)
-+                quoted = not quoted
-+            line = line.split(splitstr, i)
-+            if len(line) < i + 1 or line[-1].strip() != "":
-+                raise TomlDecodeError("Key group not on a line by itself.",
-+                                      original, pos)
-+            groups = splitstr.join(line[:-1]).split('.')
-+            i = 0
-+            while i < len(groups):
-+                groups[i] = groups[i].strip()
-+                if len(groups[i]) > 0 and (groups[i][0] == '"' or
-+                                           groups[i][0] == "'"):
-+                    groupstr = groups[i]
-+                    j = i + 1
-+                    while ((not groupstr[0] == groupstr[-1]) or
-+                           len(groupstr) == 1):
-+                        j += 1
-+                        if j > len(groups) + 2:
-+                            raise TomlDecodeError("Invalid group name '" +
-+                                                  groupstr + "' Something " +
-+                                                  "went wrong.", original, pos)
-+                        groupstr = '.'.join(groups[i:j]).strip()
-+                    groups[i] = groupstr[1:-1]
-+                    groups[i + 1:j] = []
-+                else:
-+                    if not _groupname_re.match(groups[i]):
-+                        raise TomlDecodeError("Invalid group name '" +
-+                                              groups[i] + "'. Try quoting it.",
-+                                              original, pos)
-+                i += 1
-+            currentlevel = retval
-+            for i in _range(len(groups)):
-+                group = groups[i]
-+                if group == "":
-+                    raise TomlDecodeError("Can't have a keygroup with an empty "
-+                                          "name", original, pos)
-+                try:
-+                    currentlevel[group]
-+                    if i == len(groups) - 1:
-+                        if group in implicitgroups:
-+                            implicitgroups.remove(group)
-+                            if arrayoftables:
-+                                raise TomlDecodeError("An implicitly defined "
-+                                                      "table can't be an array",
-+                                                      original, pos)
-+                        elif arrayoftables:
-+                            currentlevel[group].append(decoder.get_empty_table()
-+                                                       )
-+                        else:
-+                            raise TomlDecodeError("What? " + group +
-+                                                  " already exists?" +
-+                                                  str(currentlevel),
-+                                                  original, pos)
-+                except TypeError:
-+                    currentlevel = currentlevel[-1]
-+                    if group not in currentlevel:
-+                        currentlevel[group] = decoder.get_empty_table()
-+                        if i == len(groups) - 1 and arrayoftables:
-+                            currentlevel[group] = [decoder.get_empty_table()]
-+                except KeyError:
-+                    if i != len(groups) - 1:
-+                        implicitgroups.append(group)
-+                    currentlevel[group] = decoder.get_empty_table()
-+                    if i == len(groups) - 1 and arrayoftables:
-+                        currentlevel[group] = [decoder.get_empty_table()]
-+                currentlevel = currentlevel[group]
-+                if arrayoftables:
-+                    try:
-+                        currentlevel = currentlevel[-1]
-+                    except KeyError:
-+                        pass
-+        elif line[0] == "{":
-+            if line[-1] != "}":
-+                raise TomlDecodeError("Line breaks are not allowed in inline"
-+                                      "objects", original, pos)
-+            try:
-+                decoder.load_inline_object(line, currentlevel, multikey,
-+                                           multibackslash)
-+            except ValueError as err:
-+                raise TomlDecodeError(str(err), original, pos)
-+        elif "=" in line:
-+            try:
-+                ret = decoder.load_line(line, currentlevel, multikey,
-+                                        multibackslash)
-+            except ValueError as err:
-+                raise TomlDecodeError(str(err), original, pos)
-+            if ret is not None:
-+                multikey, multilinestr, multibackslash = ret
-+    return retval
-+
-+
-+def _load_date(val):
-+    microsecond = 0
-+    tz = None
-+    try:
-+        if len(val) > 19:
-+            if val[19] == '.':
-+                if val[-1].upper() == 'Z':
-+                    subsecondval = val[20:-1]
-+                    tzval = "Z"
-+                else:
-+                    subsecondvalandtz = val[20:]
-+                    if '+' in subsecondvalandtz:
-+                        splitpoint = subsecondvalandtz.index('+')
-+                        subsecondval = subsecondvalandtz[:splitpoint]
-+                        tzval = subsecondvalandtz[splitpoint:]
-+                    elif '-' in subsecondvalandtz:
-+                        splitpoint = subsecondvalandtz.index('-')
-+                        subsecondval = subsecondvalandtz[:splitpoint]
-+                        tzval = subsecondvalandtz[splitpoint:]
-+                    else:
-+                        tzval = None
-+                        subsecondval = subsecondvalandtz
-+                if tzval is not None:
-+                    tz = TomlTz(tzval)
-+                microsecond = int(int(subsecondval) *
-+                                  (10 ** (6 - len(subsecondval))))
-+            else:
-+                tz = TomlTz(val[19:])
-+    except ValueError:
-+        tz = None
-+    if "-" not in val[1:]:
-+        return None
-+    try:
-+        if len(val) == 10:
-+            d = datetime.date(
-+                int(val[:4]), int(val[5:7]),
-+                int(val[8:10]))
++                if not os.path.exists(targetpath):
++                    cmd = 'tar xz --no-same-owner -f %s' % sourcepath
++                    bb.note("Unpacking %s to %s/" % (sourcepath, basepath))
++                    ret = subprocess.call(cmd, preexec_fn=subprocess_setup, shell=True, cwd=basepath)
++                    if ret != 0:
++                        raise UnpackError("Unpack command %s failed with return value %s" % (cmd, ret), ud.url)
++            finally:
++                bb.utils.unlockfile(lf)
++      
++    def unpack(self, ud, rootdir, d):
++        """ Unpack Cargo.lock """
++        lock_forcargo_build = ud.cratelock_file.endswith('Cargo.lock')
++        if lock_forcargo_build:
++            destdir = d.getVar("S")
 +        else:
-+            d = datetime.datetime(
-+                int(val[:4]), int(val[5:7]),
-+                int(val[8:10]), int(val[11:13]),
-+                int(val[14:16]), int(val[17:19]), microsecond, tz)
-+    except ValueError:
-+        return None
-+    return d
-+
-+
-+def _load_unicode_escapes(v, hexbytes, prefix):
-+    skip = False
-+    i = len(v) - 1
-+    while i > -1 and v[i] == '\\':
-+        skip = not skip
-+        i -= 1
-+    for hx in hexbytes:
-+        if skip:
-+            skip = False
-+            i = len(hx) - 1
-+            while i > -1 and hx[i] == '\\':
-+                skip = not skip
-+                i -= 1
-+            v += prefix
-+            v += hx
-+            continue
-+        hxb = ""
-+        i = 0
-+        hxblen = 4
-+        if prefix == "\\U":
-+            hxblen = 8
-+        hxb = ''.join(hx[i:i + hxblen]).lower()
-+        if hxb.strip('0123456789abcdef'):
-+            raise ValueError("Invalid escape sequence: " + hxb)
-+        if hxb[0] == "d" and hxb[1].strip('01234567'):
-+            raise ValueError("Invalid escape sequence: " + hxb +
-+                             ". Only scalar unicode points are allowed.")
-+        v += unichr(int(hxb, 16))
-+        v += unicode(hx[len(hxb):])
-+    return v
-+
-+
-+# Unescape TOML string values.
-+
-+# content after the \
-+_escapes = ['0', 'b', 'f', 'n', 'r', 't', '"']
-+# What it should be replaced by
-+_escapedchars = ['\0', '\b', '\f', '\n', '\r', '\t', '\"']
-+# Used for substitution
-+_escape_to_escapedchars = dict(zip(_escapes, _escapedchars))
-+
-+
-+def _unescape(v):
-+    """Unescape characters in a TOML string."""
-+    i = 0
-+    backslash = False
-+    while i < len(v):
-+        if backslash:
-+            backslash = False
-+            if v[i] in _escapes:
-+                v = v[:i - 1] + _escape_to_escapedchars[v[i]] + v[i + 1:]
-+            elif v[i] == '\\':
-+                v = v[:i - 1] + v[i:]
-+            elif v[i] == 'u' or v[i] == 'U':
-+                i += 1
-+            else:
-+                raise ValueError("Reserved escape sequence used")
-+            continue
-+        elif v[i] == '\\':
-+            backslash = True
-+        i += 1
-+    return v
-+
-+
-+class InlineTableDict(object):
-+    """Sentinel subclass of dict for inline tables."""
-+
-+
-+class TomlDecoder(object):
-+
-+    def __init__(self, _dict=dict):
-+        self._dict = _dict
-+
-+    def get_empty_table(self):
-+        return self._dict()
-+
-+    def get_empty_inline_table(self):
-+        class DynamicInlineTableDict(self._dict, InlineTableDict):
-+            """Concrete sentinel subclass for inline tables.
-+            It is a subclass of _dict which is passed in dynamically at load
-+            time
-+
-+            It is also a subclass of InlineTableDict
-+            """
-+
-+        return DynamicInlineTableDict()
-+
-+    def load_inline_object(self, line, currentlevel, multikey=False,
-+                           multibackslash=False):
-+        candidate_groups = line[1:-1].split(",")
-+        groups = []
-+        if len(candidate_groups) == 1 and not candidate_groups[0].strip():
-+            candidate_groups.pop()
-+        while len(candidate_groups) > 0:
-+            candidate_group = candidate_groups.pop(0)
-+            try:
-+                _, value = candidate_group.split('=', 1)
-+            except ValueError:
-+                raise ValueError("Invalid inline table encountered")
-+            value = value.strip()
-+            if ((value[0] == value[-1] and value[0] in ('"', "'")) or (
-+                    value[0] in '-0123456789' or
-+                    value in ('true', 'false') or
-+                    (value[0] == "[" and value[-1] == "]") or
-+                    (value[0] == '{' and value[-1] == '}'))):
-+                groups.append(candidate_group)
-+            elif len(candidate_groups) > 0:
-+                candidate_groups[0] = (candidate_group + "," +
-+                                       candidate_groups[0])
-+            else:
-+                raise ValueError("Invalid inline table value encountered")
-+        for group in groups:
-+            status = self.load_line(group, currentlevel, multikey,
-+                                    multibackslash)
-+            if status is not None:
-+                break
-+
-+    def _get_split_on_quotes(self, line):
-+        doublequotesplits = line.split('"')
-+        quoted = False
-+        quotesplits = []
-+        if len(doublequotesplits) > 1 and "'" in doublequotesplits[0]:
-+            singlequotesplits = doublequotesplits[0].split("'")
-+            doublequotesplits = doublequotesplits[1:]
-+            while len(singlequotesplits) % 2 == 0 and len(doublequotesplits):
-+                singlequotesplits[-1] += '"' + doublequotesplits[0]
-+                doublequotesplits = doublequotesplits[1:]
-+                if "'" in singlequotesplits[-1]:
-+                    singlequotesplits = (singlequotesplits[:-1] +
-+                                         singlequotesplits[-1].split("'"))
-+            quotesplits += singlequotesplits
-+        for doublequotesplit in doublequotesplits:
-+            if quoted:
-+                quotesplits.append(doublequotesplit)
-+            else:
-+                quotesplits += doublequotesplit.split("'")
-+                quoted = not quoted
-+        return quotesplits
-+
-+    def load_line(self, line, currentlevel, multikey, multibackslash):
-+        i = 1
-+        quotesplits = self._get_split_on_quotes(line)
-+        quoted = False
-+        for quotesplit in quotesplits:
-+            if not quoted and '=' in quotesplit:
-+                break
-+            i += quotesplit.count('=')
-+            quoted = not quoted
-+        pair = line.split('=', i)
-+        strictly_valid = _strictly_valid_num(pair[-1])
-+        if _number_with_underscores.match(pair[-1]):
-+            pair[-1] = pair[-1].replace('_', '')
-+        while len(pair[-1]) and (pair[-1][0] != ' ' and pair[-1][0] != '\t' and
-+                                 pair[-1][0] != "'" and pair[-1][0] != '"' and
-+                                 pair[-1][0] != '[' and pair[-1][0] != '{' and
-+                                 pair[-1].strip() != 'true' and
-+                                 pair[-1].strip() != 'false'):
-+            try:
-+                float(pair[-1])
-+                break
-+            except ValueError:
-+                pass
-+            if _load_date(pair[-1]) is not None:
-+                break
-+            if TIME_RE.match(pair[-1]):
-+                break
-+            i += 1
-+            prev_val = pair[-1]
-+            pair = line.split('=', i)
-+            if prev_val == pair[-1]:
-+                raise ValueError("Invalid date or number")
-+            if strictly_valid:
-+                strictly_valid = _strictly_valid_num(pair[-1])
-+        pair = ['='.join(pair[:-1]).strip(), pair[-1].strip()]
-+        if '.' in pair[0]:
-+            if '"' in pair[0] or "'" in pair[0]:
-+                quotesplits = self._get_split_on_quotes(pair[0])
-+                quoted = False
-+                levels = []
-+                for quotesplit in quotesplits:
-+                    if quoted:
-+                        levels.append(quotesplit)
-+                    else:
-+                        levels += [level.strip() for level in
-+                                   quotesplit.split('.')]
-+                    quoted = not quoted
-+            else:
-+                levels = pair[0].split('.')
-+            while levels[-1] == "":
-+                levels = levels[:-1]
-+            for level in levels[:-1]:
-+                if level == "":
-+                    continue
-+                if level not in currentlevel:
-+                    currentlevel[level] = self.get_empty_table()
-+                currentlevel = currentlevel[level]
-+            pair[0] = levels[-1].strip()
-+        elif (pair[0][0] == '"' or pair[0][0] == "'") and \
-+                (pair[0][-1] == pair[0][0]):
-+            pair[0] = _unescape(pair[0][1:-1])
-+        k, koffset = self._load_line_multiline_str(pair[1])
-+        if k > -1:
-+            while k > -1 and pair[1][k + koffset] == '\\':
-+                multibackslash = not multibackslash
-+                k -= 1
-+            if multibackslash:
-+                multilinestr = pair[1][:-1]
-+            else:
-+                multilinestr = pair[1] + "\n"
-+            multikey = pair[0]
-+        else:
-+            value, vtype = self.load_value(pair[1], strictly_valid)
-+        try:
-+            currentlevel[pair[0]]
-+            raise ValueError("Duplicate keys!")
-+        except TypeError:
-+            raise ValueError("Duplicate keys!")
-+        except KeyError:
-+            if multikey:
-+                return multikey, multilinestr, multibackslash
-+            else:
-+                currentlevel[pair[0]] = value
-+
-+    def _load_line_multiline_str(self, p):
-+        poffset = 0
-+        if len(p) < 3:
-+            return -1, poffset
-+        if p[0] == '[' and (p.strip()[-1] != ']' and
-+                            self._load_array_isstrarray(p)):
-+            newp = p[1:].strip().split(',')
-+            while len(newp) > 1 and newp[-1][0] != '"' and newp[-1][0] != "'":
-+                newp = newp[:-2] + [newp[-2] + ',' + newp[-1]]
-+            newp = newp[-1]
-+            poffset = len(p) - len(newp)
-+            p = newp
-+        if p[0] != '"' and p[0] != "'":
-+            return -1, poffset
-+        if p[1] != p[0] or p[2] != p[0]:
-+            return -1, poffset
-+        if len(p) > 5 and p[-1] == p[0] and p[-2] == p[0] and p[-3] == p[0]:
-+            return -1, poffset
-+        return len(p) - 1, poffset
-+
-+    def load_value(self, v, strictly_valid=True):
-+        if not v:
-+            raise ValueError("Empty value is invalid")
-+        if v == 'true':
-+            return (True, "bool")
-+        elif v.lower() == 'true':
-+            raise ValueError("Only all lowercase booleans allowed")
-+        elif v == 'false':
-+            return (False, "bool")
-+        elif v.lower() == 'false':
-+            raise ValueError("Only all lowercase booleans allowed")
-+        elif v[0] == '"' or v[0] == "'":
-+            quotechar = v[0]
-+            testv = v[1:].split(quotechar)
-+            triplequote = False
-+            triplequotecount = 0
-+            if len(testv) > 1 and testv[0] == '' and testv[1] == '':
-+                testv = testv[2:]
-+                triplequote = True
-+            closed = False
-+            for tv in testv:
-+                if tv == '':
-+                    if triplequote:
-+                        triplequotecount += 1
-+                    else:
-+                        closed = True
-+                else:
-+                    oddbackslash = False
-+                    try:
-+                        i = -1
-+                        j = tv[i]
-+                        while j == '\\':
-+                            oddbackslash = not oddbackslash
-+                            i -= 1
-+                            j = tv[i]
-+                    except IndexError:
-+                        pass
-+                    if not oddbackslash:
-+                        if closed:
-+                            raise ValueError("Found tokens after a closed " +
-+                                             "string. Invalid TOML.")
-+                        else:
-+                            if not triplequote or triplequotecount > 1:
-+                                closed = True
-+                            else:
-+                                triplequotecount = 0
-+            if quotechar == '"':
-+                escapeseqs = v.split('\\')[1:]
-+                backslash = False
-+                for i in escapeseqs:
-+                    if i == '':
-+                        backslash = not backslash
-+                    else:
-+                        if i[0] not in _escapes and (i[0] != 'u' and
-+                                                     i[0] != 'U' and
-+                                                     not backslash):
-+                            raise ValueError("Reserved escape sequence used")
-+                        if backslash:
-+                            backslash = False
-+                for prefix in ["\\u", "\\U"]:
-+                    if prefix in v:
-+                        hexbytes = v.split(prefix)
-+                        v = _load_unicode_escapes(hexbytes[0], hexbytes[1:],
-+                                                  prefix)
-+                v = _unescape(v)
-+            if len(v) > 1 and v[1] == quotechar and (len(v) < 3 or
-+                                                     v[1] == v[2]):
-+                v = v[2:-2]
-+            return (v[1:-1], "str")
-+        elif v[0] == '[':
-+            return (self.load_array(v), "array")
-+        elif v[0] == '{':
-+            inline_object = self.get_empty_inline_table()
-+            self.load_inline_object(v, inline_object)
-+            return (inline_object, "inline_object")
-+        elif TIME_RE.match(v):
-+            h, m, s, _, ms = TIME_RE.match(v).groups()
-+            time = datetime.time(int(h), int(m), int(s), int(ms) if ms else 0)
-+            return (time, "time")
-+        else:
-+            parsed_date = _load_date(v)
-+            if parsed_date is not None:
-+                return (parsed_date, "date")
-+            if not strictly_valid:
-+                raise ValueError("Weirdness with leading zeroes or "
-+                                 "underscores in your number.")
-+            itype = "int"
-+            neg = False
-+            if v[0] == '-':
-+                neg = True
-+                v = v[1:]
-+            elif v[0] == '+':
-+                v = v[1:]
-+            v = v.replace('_', '')
-+            lowerv = v.lower()
-+            if '.' in v or ('x' not in v and ('e' in v or 'E' in v)):
-+                if '.' in v and v.split('.', 1)[1] == '':
-+                    raise ValueError("This float is missing digits after "
-+                                     "the point")
-+                if v[0] not in '0123456789':
-+                    raise ValueError("This float doesn't have a leading "
-+                                     "digit")
-+                v = float(v)
-+                itype = "float"
-+            elif len(lowerv) == 3 and (lowerv == 'inf' or lowerv == 'nan'):
-+                v = float(v)
-+                itype = "float"
-+            if itype == "int":
-+                v = int(v, 0)
-+            if neg:
-+                return (0 - v, itype)
-+            return (v, itype)
-+
-+    def bounded_string(self, s):
-+        if len(s) == 0:
-+            return True
-+        if s[-1] != s[0]:
-+            return False
-+        i = -2
-+        backslash = False
-+        while len(s) + i > 0:
-+            if s[i] == "\\":
-+                backslash = not backslash
-+                i -= 1
-+            else:
-+                break
-+        return not backslash
-+
-+    def _load_array_isstrarray(self, a):
-+        a = a[1:-1].strip()
-+        if a != '' and (a[0] == '"' or a[0] == "'"):
-+            return True
-+        return False
-+
-+    def load_array(self, a):
-+        atype = None
-+        retval = []
-+        a = a.strip()
-+        if '[' not in a[1:-1] or "" != a[1:-1].split('[')[0].strip():
-+            strarray = self._load_array_isstrarray(a)
-+            if not a[1:-1].strip().startswith('{'):
-+                a = a[1:-1].split(',')
-+            else:
-+                # a is an inline object, we must find the matching parenthesis
-+                # to define groups
-+                new_a = []
-+                start_group_index = 1
-+                end_group_index = 2
-+                open_bracket_count = 1 if a[start_group_index] == '{' else 0
-+                in_str = False
-+                while end_group_index < len(a[1:]):
-+                    if a[end_group_index] == '"' or a[end_group_index] == "'":
-+                        if in_str:
-+                            backslash_index = end_group_index - 1
-+                            while (backslash_index > -1 and
-+                                   a[backslash_index] == '\\'):
-+                                in_str = not in_str
-+                                backslash_index -= 1
-+                        in_str = not in_str
-+                    if not in_str and a[end_group_index] == '{':
-+                        open_bracket_count += 1
-+                    if in_str or a[end_group_index] != '}':
-+                        end_group_index += 1
-+                        continue
-+                    elif a[end_group_index] == '}' and open_bracket_count > 1:
-+                        open_bracket_count -= 1
-+                        end_group_index += 1
-+                        continue
-+
-+                    # Increase end_group_index by 1 to get the closing bracket
-+                    end_group_index += 1
-+
-+                    new_a.append(a[start_group_index:end_group_index])
-+
-+                    # The next start index is at least after the closing
-+                    # bracket, a closing bracket can be followed by a comma
-+                    # since we are in an array.
-+                    start_group_index = end_group_index + 1
-+                    while (start_group_index < len(a[1:]) and
-+                           a[start_group_index] != '{'):
-+                        start_group_index += 1
-+                    end_group_index = start_group_index + 1
-+                a = new_a
-+            b = 0
-+            if strarray:
-+                while b < len(a) - 1:
-+                    ab = a[b].strip()
-+                    while (not self.bounded_string(ab) or
-+                           (len(ab) > 2 and
-+                            ab[0] == ab[1] == ab[2] and
-+                            ab[-2] != ab[0] and
-+                            ab[-3] != ab[0])):
-+                        a[b] = a[b] + ',' + a[b + 1]
-+                        ab = a[b].strip()
-+                        if b < len(a) - 2:
-+                            a = a[:b + 1] + a[b + 2:]
-+                        else:
-+                            a = a[:b + 1]
-+                    b += 1
-+        else:
-+            al = list(a[1:-1])
-+            a = []
-+            openarr = 0
-+            j = 0
-+            for i in _range(len(al)):
-+                if al[i] == '[':
-+                    openarr += 1
-+                elif al[i] == ']':
-+                    openarr -= 1
-+                elif al[i] == ',' and not openarr:
-+                    a.append(''.join(al[j:i]))
-+                    j = i + 1
-+            a.append(''.join(al[j:]))
-+        for i in _range(len(a)):
-+            a[i] = a[i].strip()
-+            if a[i] != '':
-+                nval, ntype = self.load_value(a[i])
-+                if atype:
-+                    if ntype != atype:
-+                        raise ValueError("Not a homogeneous array")
-+                else:
-+                    atype = ntype
-+                retval.append(nval)
-+        return retval
-+
-+    def preserve_comment(self, line_no, key, comment, beginline):
-+        pass
-+
-+    def embed_comments(self, idx, currentlevel):
-+        pass
-+
-+
-+class TomlPreserveCommentDecoder(TomlDecoder):
-+
-+    def __init__(self, _dict=dict):
-+        self.saved_comments = {}
-+        super(TomlPreserveCommentDecoder, self).__init__(_dict)
-+
-+    def preserve_comment(self, line_no, key, comment, beginline):
-+        self.saved_comments[line_no] = (key, comment, beginline)
-+
-+    def embed_comments(self, idx, currentlevel):
-+        if idx not in self.saved_comments:
-+            return
-+
-+        key, comment, beginline = self.saved_comments[idx]
-+        currentlevel[key] = CommentValue(currentlevel[key], comment, beginline,
-+                                         self._dict)
-diff --git a/lib/toml/decoder.pyi b/lib/toml/decoder.pyi
-new file mode 100644
-index 00000000..967d3dd1
---- /dev/null
-+++ b/lib/toml/decoder.pyi
-@@ -0,0 +1,52 @@
-+from toml.tz import TomlTz as TomlTz
-+from typing import Any, Optional
-+
-+unicode = str
-+basestring = str
-+unichr = chr
-+FNFError = FileNotFoundError
-+FNFError = IOError
-+TIME_RE: Any
-+
-+class TomlDecodeError(ValueError):
-+    msg: Any = ...
-+    doc: Any = ...
-+    pos: Any = ...
-+    lineno: Any = ...
-+    colno: Any = ...
-+    def __init__(self, msg: Any, doc: Any, pos: Any) -> None: ...
-+
-+class CommentValue:
-+    val: Any = ...
-+    comment: Any = ...
-+    def __init__(self, val: Any, comment: Any, beginline: Any, _dict: Any) -> None: ...
-+    def __getitem__(self, key: Any): ...
-+    def __setitem__(self, key: Any, value: Any) -> None: ...
-+    def dump(self, dump_value_func: Any): ...
-+
-+def load(f: Union[str, list, IO[str]],
-+         _dict: Type[MutableMapping[str, Any]] = ...,
-+         decoder: TomlDecoder = ...) \
-+         -> MutableMapping[str, Any]: ...
-+def loads(s: str, _dict: Type[MutableMapping[str, Any]] = ..., decoder: TomlDecoder = ...) \
-+         -> MutableMapping[str, Any]: ...
-+
-+class InlineTableDict: ...
-+
-+class TomlDecoder:
-+    def __init__(self, _dict: Any = ...) -> None: ...
-+    def get_empty_table(self): ...
-+    def get_empty_inline_table(self): ...
-+    def load_inline_object(self, line: Any, currentlevel: Any, multikey: bool = ..., multibackslash: bool = ...) -> None: ...
-+    def load_line(self, line: Any, currentlevel: Any, multikey: Any, multibackslash: Any): ...
-+    def load_value(self, v: Any, strictly_valid: bool = ...): ...
-+    def bounded_string(self, s: Any): ...
-+    def load_array(self, a: Any): ...
-+    def preserve_comment(self, line_no: Any, key: Any, comment: Any, beginline: Any) -> None: ...
-+    def embed_comments(self, idx: Any, currentlevel: Any) -> None: ...
-+
-+class TomlPreserveCommentDecoder(TomlDecoder):
-+    saved_comments: Any = ...
-+    def __init__(self, _dict: Any = ...) -> None: ...
-+    def preserve_comment(self, line_no: Any, key: Any, comment: Any, beginline: Any) -> None: ...
-+    def embed_comments(self, idx: Any, currentlevel: Any) -> None: ...
-diff --git a/lib/toml/encoder.py b/lib/toml/encoder.py
-new file mode 100644
-index 00000000..bf17a72b
---- /dev/null
-+++ b/lib/toml/encoder.py
-@@ -0,0 +1,304 @@
-+import datetime
-+import re
-+import sys
-+from decimal import Decimal
-+
-+from toml.decoder import InlineTableDict
-+
-+if sys.version_info >= (3,):
-+    unicode = str
-+
-+
-+def dump(o, f, encoder=None):
-+    """Writes out dict as toml to a file
-+
-+    Args:
-+        o: Object to dump into toml
-+        f: File descriptor where the toml should be stored
-+        encoder: The ``TomlEncoder`` to use for constructing the output string
-+
-+    Returns:
-+        String containing the toml corresponding to dictionary
-+
-+    Raises:
-+        TypeError: When anything other than file descriptor is passed
-+    """
-+
-+    if not f.write:
-+        raise TypeError("You can only dump an object to a file descriptor")
-+    d = dumps(o, encoder=encoder)
-+    f.write(d)
-+    return d
-+
-+
-+def dumps(o, encoder=None):
-+    """Stringifies input dict as toml
-+
-+    Args:
-+        o: Object to dump into toml
-+        encoder: The ``TomlEncoder`` to use for constructing the output string
-+
-+    Returns:
-+        String containing the toml corresponding to dict
-+
-+    Examples:
-+        ```python
-+        >>> import toml
-+        >>> output = {
-+        ... 'a': "I'm a string",
-+        ... 'b': ["I'm", "a", "list"],
-+        ... 'c': 2400
-+        ... }
-+        >>> toml.dumps(output)
-+        'a = "I\'m a string"\nb = [ "I\'m", "a", "list",]\nc = 2400\n'
-+        ```
-+    """
-+
-+    retval = ""
-+    if encoder is None:
-+        encoder = TomlEncoder(o.__class__)
-+    addtoretval, sections = encoder.dump_sections(o, "")
-+    retval += addtoretval
-+    outer_objs = [id(o)]
-+    while sections:
-+        section_ids = [id(section) for section in sections.values()]
-+        for outer_obj in outer_objs:
-+            if outer_obj in section_ids:
-+                raise ValueError("Circular reference detected")
-+        outer_objs += section_ids
-+        newsections = encoder.get_empty_table()
-+        for section in sections:
-+            addtoretval, addtosections = encoder.dump_sections(
-+                sections[section], section)
-+
-+            if addtoretval or (not addtoretval and not addtosections):
-+                if retval and retval[-2:] != "\n\n":
-+                    retval += "\n"
-+                retval += "[" + section + "]\n"
-+                if addtoretval:
-+                    retval += addtoretval
-+            for s in addtosections:
-+                newsections[section + "." + s] = addtosections[s]
-+        sections = newsections
-+    return retval
-+
-+
-+def _dump_str(v):
-+    if sys.version_info < (3,) and hasattr(v, 'decode') and isinstance(v, str):
-+        v = v.decode('utf-8')
-+    v = "%r" % v
-+    if v[0] == 'u':
-+        v = v[1:]
-+    singlequote = v.startswith("'")
-+    if singlequote or v.startswith('"'):
-+        v = v[1:-1]
-+    if singlequote:
-+        v = v.replace("\\'", "'")
-+        v = v.replace('"', '\\"')
-+    v = v.split("\\x")
-+    while len(v) > 1:
-+        i = -1
-+        if not v[0]:
-+            v = v[1:]
-+        v[0] = v[0].replace("\\\\", "\\")
-+        # No, I don't know why != works and == breaks
-+        joinx = v[0][i] != "\\"
-+        while v[0][:i] and v[0][i] == "\\":
-+            joinx = not joinx
-+            i -= 1
-+        if joinx:
-+            joiner = "x"
-+        else:
-+            joiner = "u00"
-+        v = [v[0] + joiner + v[1]] + v[2:]
-+    return unicode('"' + v[0] + '"')
-+
-+
-+def _dump_float(v):
-+    return "{}".format(v).replace("e+0", "e+").replace("e-0", "e-")
-+
-+
-+def _dump_time(v):
-+    utcoffset = v.utcoffset()
-+    if utcoffset is None:
-+        return v.isoformat()
-+    # The TOML norm specifies that it's local time thus we drop the offset
-+    return v.isoformat()[:-6]
-+
-+
-+class TomlEncoder(object):
-+
-+    def __init__(self, _dict=dict, preserve=False):
-+        self._dict = _dict
-+        self.preserve = preserve
-+        self.dump_funcs = {
-+            str: _dump_str,
-+            unicode: _dump_str,
-+            list: self.dump_list,
-+            bool: lambda v: unicode(v).lower(),
-+            int: lambda v: v,
-+            float: _dump_float,
-+            Decimal: _dump_float,
-+            datetime.datetime: lambda v: v.isoformat().replace('+00:00', 'Z'),
-+            datetime.time: _dump_time,
-+            datetime.date: lambda v: v.isoformat()
-+        }
-+
-+    def get_empty_table(self):
-+        return self._dict()
-+
-+    def dump_list(self, v):
-+        retval = "["
-+        for u in v:
-+            retval += " " + unicode(self.dump_value(u)) + ","
-+        retval += "]"
-+        return retval
-+
-+    def dump_inline_table(self, section):
-+        """Preserve inline table in its compact syntax instead of expanding
-+        into subsection.
-+
-+        https://github.com/toml-lang/toml#user-content-inline-table
-+        """
-+        retval = ""
-+        if isinstance(section, dict):
-+            val_list = []
-+            for k, v in section.items():
-+                val = self.dump_inline_table(v)
-+                val_list.append(k + " = " + val)
-+            retval += "{ " + ", ".join(val_list) + " }\n"
-+            return retval
-+        else:
-+            return unicode(self.dump_value(section))
-+
-+    def dump_value(self, v):
-+        # Lookup function corresponding to v's type
-+        dump_fn = self.dump_funcs.get(type(v))
-+        if dump_fn is None and hasattr(v, '__iter__'):
-+            dump_fn = self.dump_funcs[list]
-+        # Evaluate function (if it exists) else return v
-+        return dump_fn(v) if dump_fn is not None else self.dump_funcs[str](v)
-+
-+    def dump_sections(self, o, sup):
-+        retstr = ""
-+        if sup != "" and sup[-1] != ".":
-+            sup += '.'
-+        retdict = self._dict()
-+        arraystr = ""
-+        for section in o:
-+            section = unicode(section)
-+            qsection = section
-+            if not re.match(r'^[A-Za-z0-9_-]+$', section):
-+                qsection = _dump_str(section)
-+            if not isinstance(o[section], dict):
-+                arrayoftables = False
-+                if isinstance(o[section], list):
-+                    for a in o[section]:
-+                        if isinstance(a, dict):
-+                            arrayoftables = True
-+                if arrayoftables:
-+                    for a in o[section]:
-+                        arraytabstr = "\n"
-+                        arraystr += "[[" + sup + qsection + "]]\n"
-+                        s, d = self.dump_sections(a, sup + qsection)
-+                        if s:
-+                            if s[0] == "[":
-+                                arraytabstr += s
-+                            else:
-+                                arraystr += s
-+                        while d:
-+                            newd = self._dict()
-+                            for dsec in d:
-+                                s1, d1 = self.dump_sections(d[dsec], sup +
-+                                                            qsection + "." +
-+                                                            dsec)
-+                                if s1:
-+                                    arraytabstr += ("[" + sup + qsection +
-+                                                    "." + dsec + "]\n")
-+                                    arraytabstr += s1
-+                                for s1 in d1:
-+                                    newd[dsec + "." + s1] = d1[s1]
-+                            d = newd
-+                        arraystr += arraytabstr
-+                else:
-+                    if o[section] is not None:
-+                        retstr += (qsection + " = " +
-+                                   unicode(self.dump_value(o[section])) + '\n')
-+            elif self.preserve and isinstance(o[section], InlineTableDict):
-+                retstr += (qsection + " = " +
-+                           self.dump_inline_table(o[section]))
-+            else:
-+                retdict[qsection] = o[section]
-+        retstr += arraystr
-+        return (retstr, retdict)
-+
-+
-+class TomlPreserveInlineDictEncoder(TomlEncoder):
-+
-+    def __init__(self, _dict=dict):
-+        super(TomlPreserveInlineDictEncoder, self).__init__(_dict, True)
-+
-+
-+class TomlArraySeparatorEncoder(TomlEncoder):
-+
-+    def __init__(self, _dict=dict, preserve=False, separator=","):
-+        super(TomlArraySeparatorEncoder, self).__init__(_dict, preserve)
-+        if separator.strip() == "":
-+            separator = "," + separator
-+        elif separator.strip(' \t\n\r,'):
-+            raise ValueError("Invalid separator for arrays")
-+        self.separator = separator
-+
-+    def dump_list(self, v):
-+        t = []
-+        retval = "["
-+        for u in v:
-+            t.append(self.dump_value(u))
-+        while t != []:
-+            s = []
-+            for u in t:
-+                if isinstance(u, list):
-+                    for r in u:
-+                        s.append(r)
-+                else:
-+                    retval += " " + unicode(u) + self.separator
-+            t = s
-+        retval += "]"
-+        return retval
-+
-+
-+class TomlNumpyEncoder(TomlEncoder):
-+
-+    def __init__(self, _dict=dict, preserve=False):
-+        import numpy as np
-+        super(TomlNumpyEncoder, self).__init__(_dict, preserve)
-+        self.dump_funcs[np.float16] = _dump_float
-+        self.dump_funcs[np.float32] = _dump_float
-+        self.dump_funcs[np.float64] = _dump_float
-+        self.dump_funcs[np.int16] = self._dump_int
-+        self.dump_funcs[np.int32] = self._dump_int
-+        self.dump_funcs[np.int64] = self._dump_int
-+
-+    def _dump_int(self, v):
-+        return "{}".format(int(v))
-+
-+
-+class TomlPreserveCommentEncoder(TomlEncoder):
-+
-+    def __init__(self, _dict=dict, preserve=False):
-+        from toml.decoder import CommentValue
-+        super(TomlPreserveCommentEncoder, self).__init__(_dict, preserve)
-+        self.dump_funcs[CommentValue] = lambda v: v.dump(self.dump_value)
-+
-+
-+class TomlPathlibEncoder(TomlEncoder):
-+
-+    def _dump_pathlib_path(self, v):
-+        return _dump_str(str(v))
-+
-+    def dump_value(self, v):
-+        if (3, 4) <= sys.version_info:
-+            import pathlib
-+            if isinstance(v, pathlib.PurePath):
-+                v = str(v)
-+        return super(TomlPathlibEncoder, self).dump_value(v)
-diff --git a/lib/toml/encoder.pyi b/lib/toml/encoder.pyi
-new file mode 100644
-index 00000000..194a3583
---- /dev/null
-+++ b/lib/toml/encoder.pyi
-@@ -0,0 +1,34 @@
-+from toml.decoder import InlineTableDict as InlineTableDict
-+from typing import Any, Optional
-+
-+unicode = str
-+
-+def dump(o: Mapping[str, Any], f: IO[str], encoder: TomlEncoder = ...) -> str: ...
-+def dumps(o: Mapping[str, Any], encoder: TomlEncoder = ...) -> str: ...
-+
-+class TomlEncoder:
-+    preserve: Any = ...
-+    dump_funcs: Any = ...
-+    def __init__(self, _dict: Any = ..., preserve: bool = ...): ...
-+    def get_empty_table(self): ...
-+    def dump_list(self, v: Any): ...
-+    def dump_inline_table(self, section: Any): ...
-+    def dump_value(self, v: Any): ...
-+    def dump_sections(self, o: Any, sup: Any): ...
-+
-+class TomlPreserveInlineDictEncoder(TomlEncoder):
-+    def __init__(self, _dict: Any = ...) -> None: ...
-+
-+class TomlArraySeparatorEncoder(TomlEncoder):
-+    separator: Any = ...
-+    def __init__(self, _dict: Any = ..., preserve: bool = ..., separator: str = ...) -> None: ...
-+    def dump_list(self, v: Any): ...
-+
-+class TomlNumpyEncoder(TomlEncoder):
-+    def __init__(self, _dict: Any = ..., preserve: bool = ...) -> None: ...
-+
-+class TomlPreserveCommentEncoder(TomlEncoder):
-+    def __init__(self, _dict: Any = ..., preserve: bool = ...): ...
-+
-+class TomlPathlibEncoder(TomlEncoder):
-+    def dump_value(self, v: Any): ...
-diff --git a/lib/toml/ordered.py b/lib/toml/ordered.py
-new file mode 100644
-index 00000000..9c20c41a
---- /dev/null
-+++ b/lib/toml/ordered.py
-@@ -0,0 +1,15 @@
-+from collections import OrderedDict
-+from toml import TomlEncoder
-+from toml import TomlDecoder
-+
-+
-+class TomlOrderedDecoder(TomlDecoder):
-+
-+    def __init__(self):
-+        super(self.__class__, self).__init__(_dict=OrderedDict)
-+
-+
-+class TomlOrderedEncoder(TomlEncoder):
-+
-+    def __init__(self):
-+        super(self.__class__, self).__init__(_dict=OrderedDict)
-diff --git a/lib/toml/ordered.pyi b/lib/toml/ordered.pyi
-new file mode 100644
-index 00000000..0f4292dc
---- /dev/null
-+++ b/lib/toml/ordered.pyi
-@@ -0,0 +1,7 @@
-+from toml import TomlDecoder as TomlDecoder, TomlEncoder as TomlEncoder
-+
-+class TomlOrderedDecoder(TomlDecoder):
-+    def __init__(self) -> None: ...
-+
-+class TomlOrderedEncoder(TomlEncoder):
-+    def __init__(self) -> None: ...
-diff --git a/lib/toml/source-origin b/lib/toml/source-origin
-new file mode 100644
-index 00000000..8459b43f
---- /dev/null
-+++ b/lib/toml/source-origin
-@@ -0,0 +1 @@
-+https://github.com/uiri/toml
-diff --git a/lib/toml/tz.py b/lib/toml/tz.py
-new file mode 100644
-index 00000000..bf20593a
---- /dev/null
-+++ b/lib/toml/tz.py
-@@ -0,0 +1,24 @@
-+from datetime import tzinfo, timedelta
-+
-+
-+class TomlTz(tzinfo):
-+    def __init__(self, toml_offset):
-+        if toml_offset == "Z":
-+            self._raw_offset = "+00:00"
-+        else:
-+            self._raw_offset = toml_offset
-+        self._sign = -1 if self._raw_offset[0] == '-' else 1
-+        self._hours = int(self._raw_offset[1:3])
-+        self._minutes = int(self._raw_offset[4:6])
-+
-+    def __deepcopy__(self, memo):
-+        return self.__class__(self._raw_offset)
-+
-+    def tzname(self, dt):
-+        return "UTC" + self._raw_offset
-+
-+    def utcoffset(self, dt):
-+        return self._sign * timedelta(hours=self._hours, minutes=self._minutes)
-+
-+    def dst(self, dt):
-+        return timedelta(0)
-diff --git a/lib/toml/tz.pyi b/lib/toml/tz.pyi
-new file mode 100644
-index 00000000..fe37aead
---- /dev/null
-+++ b/lib/toml/tz.pyi
-@@ -0,0 +1,9 @@
-+from datetime import tzinfo
-+from typing import Any
-+
-+class TomlTz(tzinfo):
-+    def __init__(self, toml_offset: Any) -> None: ...
-+    def __deepcopy__(self, memo: Any): ...
-+    def tzname(self, dt: Any): ...
-+    def utcoffset(self, dt: Any): ...
-+    def dst(self, dt: Any): ...
++            destdir = rootdir
++        destsuffix = ud.parm.get("destsuffix")
++        if destsuffix:
++            destdir = os.path.join(rootdir, destsuffix)
++        targetfile = os.path.join(destdir, os.path.basename(ud.cratelock_file))
++
++        # Compare our Cargo.lock with the one shipped by project's sources
++        # and spawn a warning in case they are not same
++        if lock_forcargo_build and os.path.exists(targetfile):
++            with open(ud.cratelock_file, 'r') as file:
++                toml_string = file.read()
++            dict_cargo_lock_bb = toml.loads(toml_string)
++            with open(targetfile, 'r') as file:
++                toml_string = file.read()
++            dict_cargo_lock_shipped = toml.loads(toml_string)
++            if dict_cargo_lock_bb != dict_cargo_lock_shipped:
++                bb.warn("Recipe's Cargo.lock requires update because it has different content than project's Cargo.lock - see %s" % targetfile)
++                # We keep project's Cargo.lock and copy recipe's to WORKDIR so
++                # close to each other - jsut makes it a bit easier to check
++                targetfile = os.path.join(rootdir, os.path.basename(ud.cratelock_file))
++        bb.utils.copyfile(ud.cratelock_file, targetfile)
++        return True
++        
++    def clean(self, ud, d):
++        """Clean any existing full or partial download"""
++        ud.proxy.clean()
++
++        # Clean cached sources
++        for crate in ud.crates:
++            srcpath = self._crate_src_path(ud.cargoindexhash, crate, d)
++            if os.path.exists(srcpath):
++                bb.utils.remove(srcpath, True)
++
++    def done(self, ud, d):
++        """Is the download done ?"""
++        def _handle(m, ud, d):
++            return m.done(ud, d)
++        return all(self._foreach_proxy_method(ud, _handle))
 -- 
 2.26.2
 
