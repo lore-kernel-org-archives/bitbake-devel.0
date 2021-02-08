@@ -1,278 +1,425 @@
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web09.3006.1612827954538625120
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+ by mx.groups.io with SMTP id smtpd.web10.3110.1612828495935477502
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Feb 2021 15:45:56 -0800
+ Mon, 08 Feb 2021 15:54:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=h+nqLZlD;
- spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=ZRDlREoR;
+ spf=pass (domain: gmail.com, ip: 209.85.218.46, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ej1-f46.google.com with SMTP id p20so28492533ejb.6;
+        Mon, 08 Feb 2021 15:54:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1612827956;
-  x=1644363956;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:mime-version;
-  bh=zYXP7h89o5Lm0uYGtEtG7xH/Uhv4PsFqqmmFfNs/b0w=;
-  b=h+nqLZlD40i1Et8IbM9WgeguNBg+JeJeRYrTFshUA8odbmk9gRsDYMDU
-   6MWiUSKUix5JFq8DR0zaBZkuhktazpBP9yAKxXmm7ODRcISR7LqAOjUey
-   1K/X8Hr6EavEfQZmkkBVM+xHTxsj8L+JivNOZK2PTZ3eKM/IZeaPufVSe
-   lXexBpX8lidjzv2ockVQ+LhCNEdU3ND3dxXXHiN2YZ+cgtx9FrFNWJIoe
-   PDmlYM7co4iM5QJCm7xBcLjZbair9vhTE6B2MgRDVVpB2qyNuAtJCUiOS
-   BLBbIUlNWoxVY8BNpE1smBPCrsHbZGh+S5L0GTGRguzARk6M+at2YzNYq
-   w==;
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: Martin Jansa <martin.jansa@gmail.com>, akuster808 <akuster808@gmail.com>,
-	Steve Sakoman <steve@sakoman.com>, "Mittal, Anuj" <anuj.mittal@intel.com>
-CC: "OE Core (openembedded-core@lists.openembedded.org)"
-	<openembedded-core@lists.openembedded.org>, "OE Development
- (openembedded-devel@lists.openembedded.org)"
-	<openembedded-devel@lists.openembedded.org>, "BitBake Development
- (bitbake-devel@lists.openembedded.org)"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [oe] [bitbake-devel] Backport changes for _PYTHON_SYSCONFIGDATA_NAME to Gatesgarth and Dunfell
-Thread-Topic: [oe] [bitbake-devel] Backport changes for
- _PYTHON_SYSCONFIGDATA_NAME to Gatesgarth and Dunfell
-Thread-Index: AdbqluypjM9qGzPGT4u0xlyyjXAnKgBj+tKAAABKXAAERp6YLABJjZfQ
-Date: Mon, 8 Feb 2021 23:45:51 +0000
-Message-ID: <f190d3e175a9413994caf1c73a9f9125@XBOX03.axis.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HnXXVPT2TA3uY+mdqfRn5YguOMM5H71OxLi0uWiDbhw=;
+        b=ZRDlREoReHW88MLip1qSNqgblHhOj4WHsIEa+7L7210cPZpw8mn9O4LByYMvcpzdPc
+         QOdrJbLSF5qL7PUqIBH7GBgeV2PAw08pSJd9spG99ubH2/kVAbhIllQwWP/CShh3SAuM
+         VOPLE/afUHB4BTNZEB2Nb7UiNw23F38Wzz8MMS5WZD3hp6BSrKoiOsh15kMVIXIahFuE
+         wwsaOYHW33Xqr2cKhGw0IiYZOKdhZvevowCY5VZVpgK3BZNXgWW5vhgs9UwTrLpJqpID
+         rd/jmCFTAIjKZ9eggr/mitLuGLVhAa3mofBKJ/9Yea51EZcges1zkGSmQfhuWrJXWhkC
+         R9Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HnXXVPT2TA3uY+mdqfRn5YguOMM5H71OxLi0uWiDbhw=;
+        b=JZGPzQU9Lv6vaBt4pU54nnNWOSBuYBi8DMajSIAKu6PGpM7to0b015uTFkWwQIPy7a
+         4K3p+G9OgmQitWQaOVysUKSaJhzOilzRS1j8uhJZzbRfbukTANAUMRsGaNEg0u2WerQo
+         BPUeTRYWhTViQLRTNmxYtbkVVHnJpHSmvaT/hlcIFz51PzxpIWgE9Xwz10mR6I8dyCng
+         Ttdbd3IL+iPT1R+oaqdEDYBq7DWWyPRIjDGZwQAygQucNXu/XZ4twC53mDMh++NwGSPi
+         O18sGSmSHy7iygkGdnzqFrTuJfDVxOi+nnpyKnZG1GN0tWhxmN8giIM16ShD0BnNyRtk
+         z2Dg==
+X-Gm-Message-State: AOAM533wYaUYAFHXxk/YIT1kLSTnMACMEk+F2jjUP5vyYW+48r1+gs8q
+	C1bvYKb2dw237PUwe24AqcaMTdd6zOFmsYZ9+9E=
+X-Google-Smtp-Source: ABdhPJxP6LSpr5URhM00hKNLqDD+54QcPLdL/KqeLlzgD8/V+W04ri15lOZ6uWWbFWS63vMRUtJf5mCAbCJvGjIqtw4=
+X-Received: by 2002:a17:906:da0b:: with SMTP id fi11mr19867483ejb.392.1612828494329;
+ Mon, 08 Feb 2021 15:54:54 -0800 (PST)
+MIME-Version: 1.0
 References: <17b543581ffb421b812323891405dcfb@XBOX03.axis.com>
  <CA+chaQc0anOg2E=o1ouEca-QJDGqKxDoXm6aPVXzsc8TELW3zA@mail.gmail.com>
- <d9185d19-1f09-a1b6-2926-f54309190b24@gmail.com>
- <16614BA6A53B3779.25597@lists.openembedded.org>
- <CA+chaQdbZwyBTbyctEh_y8x_p=txiwqy8gjmkwDrh6rqX_ztng@mail.gmail.com>
-In-Reply-To: <CA+chaQdbZwyBTbyctEh_y8x_p=txiwqy8gjmkwDrh6rqX_ztng@mail.gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
-MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_f190d3e175a9413994caf1c73a9f9125XBOX03axiscom_"
+ <d9185d19-1f09-a1b6-2926-f54309190b24@gmail.com> <16614BA6A53B3779.25597@lists.openembedded.org>
+ <CA+chaQdbZwyBTbyctEh_y8x_p=txiwqy8gjmkwDrh6rqX_ztng@mail.gmail.com> <f190d3e175a9413994caf1c73a9f9125@XBOX03.axis.com>
+In-Reply-To: <f190d3e175a9413994caf1c73a9f9125@XBOX03.axis.com>
+From: "Martin Jansa" <Martin.Jansa@gmail.com>
+Date: Tue, 9 Feb 2021 00:54:43 +0100
+Message-ID: <CA+chaQcneQg2M7obLb-ucgGu95a8muoXDkeKa8W3iDrts1F5QA@mail.gmail.com>
+Subject: Re: [oe] [bitbake-devel] Backport changes for _PYTHON_SYSCONFIGDATA_NAME to Gatesgarth and Dunfell
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Cc: akuster808 <akuster808@gmail.com>, Steve Sakoman <steve@sakoman.com>, 
+	"Mittal, Anuj" <anuj.mittal@intel.com>, 
+	"OE Core (openembedded-core@lists.openembedded.org)" <openembedded-core@lists.openembedded.org>, 
+	"OE Development (openembedded-devel@lists.openembedded.org)" <openembedded-devel@lists.openembedded.org>, 
+	"BitBake Development (bitbake-devel@lists.openembedded.org)" <bitbake-devel@lists.openembedded.org>, 
+	Bruce Ashfield <bruce.ashfield@gmail.com>
+Content-Type: multipart/alternative; boundary="0000000000007cf9e105badbe501"
 
---_000_f190d3e175a9413994caf1c73a9f9125XBOX03axiscom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+--0000000000007cf9e105badbe501
+Content-Type: text/plain; charset="UTF-8"
 
-QXMgYWdyZWVkIHVwb24gb24gdGhlIFlvY3RvIFByb2plY3QgVGVjaG5pY2FsIFRlYW0gTWVldGlu
-ZyBhIHdlZWsgYWdvLCBJIGhhdmUgY3JlYXRlZCBicmFuY2hlcyBmb3IgYm90aCBHYXRlc2dhcnRo
-IGFuZCBEdW5mZWxsIGluIG9wZW5lbWJlZGRlZC1jb3JlLWNvbnRyaWIgYW5kIG1ldGEtb3BlbmVt
-YmVkZGVkLWNvbnRyaWIgd2l0aCB0aGUgcmVxdWlyZWQgcGF0Y2hlcy4gVGhlIGJyYW5jaGVzIGFy
-ZSBjYWxsZWQgcGtqL19QWVRIT05fU1lTQ09ORklHREFUQV9OQU1FLWdhdGVzZ2FydGggYW5kIHBr
-ai9fUFlUSE9OX1NZU0NPTkZJR0RBVEFfTkFNRS1kdW5mZWxsIChvaywgaG9ycmlibGUgbmFtZXMs
-IGJ1dCB0aGV5IHNob3VsZCBiZSBlYXN5IHRvIHNwb3QpLiBUaGVyZSBpcyBvbmUgYWRkaXRpb25h
-bCBwYXRjaCBmb3IgYml0YmFrZSwgYnV0IEkgZm9yZ290IHRvIGFzayBmb3IgYWNjZXNzIHRvIGJp
-dGJha2UtY29udHJpYiwgc28geW91IHdpbGwgaGF2ZSB0byBjaGVycnktcGljayBpdCBmcm9tIGNv
-bW1pdCA0N2I2NGNmYSAoaXQgaXMgbm90IHN0cmljdGx5IG5lY2Vzc2FyeSBhcyBpdCBpcyBqdXN0
-IGNsZWFuIHVwIG1hZGUgcG9zc2libGUgYWZ0ZXIgdGhlIGNoYW5nZXMgaW4gT0UtQ29yZSkuDQoN
-CkBqYW5zYSwgQGFrdXN0ZXI6IEkgaGF2ZSBpbmNsdWRlZCB0aGUgdHdvIGV4dHJhIHBhdGNoZXMg
-aW4gbWV0YS1vcGVuZW1iZWRkZWQgdGhhdCBNYXJ0aW4gbWVudGlvbmVkLCB3aGljaCB3ZXJlIGxh
-Y2tpbmcgZnJvbSBteSBvcmlnaW5hbCBtYWlsLiBUaGVyZSB3ZXJlIG90aGVyIHBhdGNoZXMgbWVu
-dGlvbmVkLCB3aGljaCBmaXhlZCBtaXNzaW5nIHNwYWNlcyByZWxhdGVkIHRvIHRoZSB1c2Ugb2Yg
-X2FwcGVuZC4gSG93ZXZlciwgYXMgdGhleSB3ZXJlIG5vdCBuZWNlc3NhcnkgKHRoZXkgY2hhbmdl
-ZCBvdGhlciB2YXJpYWJsZXMgdGhhbiBERVBFTkRTIGZvciB0YXJnZXQpLCBJIGRpZCBub3QgaW5j
-bHVkZSB0aGVtLg0KDQpJIGhhdmUgbm90IGRvbmUgYW55IGV4Y2Vzc2l2ZSB0ZXN0aW5nIG9mIHRo
-ZXNlIGJyYW5jaGVzLiBJIGhhdmUgdmVyaWZpZWQgdGhhdCBJIGNhbiBydW4gYGRldnRvb2wgbW9k
-aWZ5IGxpYnhtbDJgLCB3aGljaCBJIGNvdWxkIG5vdCBkbyBiZWZvcmUsIGFuZCBJIGhhdmUgcnVu
-IGBiaXRiYWtlIGNvcmUtaW1hZ2UtbWluaW1hbGAuDQoNCi8vUGV0ZXINCg0KRnJvbTogTWFydGlu
-IEphbnNhIDxtYXJ0aW4uamFuc2FAZ21haWwuY29tPg0KU2VudDogZGVuIDcgZmVicnVhcmkgMjAy
-MSAxMjoxNQ0KVG86IE1hcnRpbiBKYW5zYSA8TWFydGluLkphbnNhQGdtYWlsLmNvbT4NCkNjOiBh
-a3VzdGVyODA4IDxha3VzdGVyODA4QGdtYWlsLmNvbT47IFBldGVyIEtqZWxsZXJzdGVkdCA8cGV0
-ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPjsgU3RldmUgU2Frb21hbiA8c3RldmVAc2Frb21hbi5j
-b20+OyBNaXR0YWwsIEFudWogPGFudWoubWl0dGFsQGludGVsLmNvbT47IE9FIENvcmUgKG9wZW5l
-bWJlZGRlZC1jb3JlQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcpIDxvcGVuZW1iZWRkZWQtY29yZUBs
-aXN0cy5vcGVuZW1iZWRkZWQub3JnPjsgT0UgRGV2ZWxvcG1lbnQgKG9wZW5lbWJlZGRlZC1kZXZl
-bEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnKSA8b3BlbmVtYmVkZGVkLWRldmVsQGxpc3RzLm9wZW5l
-bWJlZGRlZC5vcmc+OyBCaXRCYWtlIERldmVsb3BtZW50IChiaXRiYWtlLWRldmVsQGxpc3RzLm9w
-ZW5lbWJlZGRlZC5vcmcpIDxiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc+DQpT
-dWJqZWN0OiBSZTogW29lXSBbYml0YmFrZS1kZXZlbF0gQmFja3BvcnQgY2hhbmdlcyBmb3IgX1BZ
-VEhPTl9TWVNDT05GSUdEQVRBX05BTUUgdG8gR2F0ZXNnYXJ0aCBhbmQgRHVuZmVsbA0KDQpPbiBT
-dW4sIEZlYiA3LCAyMDIxIGF0IDEyOjE1IEFNIE1hcnRpbiBKYW5zYSB2aWEgbGlzdHMub3BlbmVt
-YmVkZGVkLm9yZzxodHRwOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4gPE1hcnRpbi5KYW5zYT1n
-bWFpbC5jb21AbGlzdHMub3BlbmVtYmVkZGVkLm9yZzxtYWlsdG86Z21haWwuY29tQGxpc3RzLm9w
-ZW5lbWJlZGRlZC5vcmc+PiB3cm90ZToNCk9uIFNhdCwgSmFuIDE2LCAyMDIxIGF0IDY6NTIgUE0g
-YWt1c3RlcjgwOCA8YWt1c3RlcjgwOEBnbWFpbC5jb208bWFpbHRvOmFrdXN0ZXI4MDhAZ21haWwu
-Y29tPj4gd3JvdGU6DQoNCg0KT24gMS8xNi8yMSA5OjQ0IEFNLCBNYXJ0aW4gSmFuc2Egd3JvdGU6
-DQo+IEFyZW4ndCB0aGUgbWlzc2luZyBzcGFjZXMgaW4gYXBwZW5kcyBmaXhlcyBhbHNvIG5lZWRl
-ZCBmb3IgbWV0YS1vZQ0KPiByZWNpcGVzPw0KDQoNCj4NCj4gSSB0aGluayBhdCBsZWFzdCB0b3Ag
-NSBjb21taXRzIGZyb206DQo+IGh0dHBzOi8vZ2l0Lm9wZW5lbWJlZGRlZC5vcmcvbWV0YS1vcGVu
-ZW1iZWRkZWQvbG9nLz9xdD1ncmVwJnE9c3BhY2UuKmFwcGVuZA0KPiB3ZXJlIGFsc28gZm9sbG93
-LXVwIGZyb20gdGhlc2UgY2hhbmdlcyBpbiBvZS1jb3JlLg0KPg0KRG8geW91IG1lYW4gc29tZXRo
-aW5nIGJleW9uZCB0aGUgbWV0YS1vcGVuZW1iZWRkZWQgY29tbWl0cyBtZW50aW9uZWQNCm5lYXIg
-dGhlIGJvdHRvbSBvZiB0aGUgZW1haWw/DQoNClllcyBJIG1lYW4gdGhlc2UgNSBjb21taXRzIGF0
-IGxlYXN0Lg0KDQo1MGJiZjgwYWJmIHB5dGhvbjMtcHlrd2FsaWZ5OiBEbyBub3QgdW5zZXQgX1BZ
-VEhPTl9TWVNDT05GSUdEQVRBX05BTUUNCjZiM2UzYmRhZjggcHl0aG9uLWdycGNpby10b29sczog
-QWRkIG1pc3Npbmcgc3BhY2UgZm9yIGFwcGVuZA0KDQpUaGUgZmlyc3Qgb25lIGlzIGp1c3QgYW4g
-YWRkaXRpb25hbCBjbGVhbnVwLCBidXQgd2l0aG91dCB0aGUgMm5kIG9uZSBhbmQgd2l0aCB0aGUg
-Y2hlcnJ5LXBpY2tzIGZyb20gdGhlIGZpcnN0IGUtbWFpbCBhcHBsaWVkIHlvdSB3b3VsZCBnZXQ6
-DQpFUlJPUjogTm90aGluZyBQUk9WSURFUyAncHl0aG9uM3B5dGhvbjMtZ3JwY2lvJyAoYnV0IG1l
-dGEtb2UvbWV0YS1weXRob24vcmVjaXBlcy1kZXZ0b29scy9weXRob24vcHl0aG9uMy1ncnBjaW8t
-dG9vbHNfMS4xNC4xLmJiPGh0dHA6Ly9weXRob24zLWdycGNpby10b29sc18xLjE0LjEuYmI+IERF
-UEVORFMgb24gb3Igb3RoZXJ3aXNlIHJlcXVpcmVzIGl0KS4gQ2xvc2UgbWF0Y2hlczoNCiAgcHl0
-aG9uLWdycGNpbw0KICBweXRob24zLWdycGNpbw0KDQpteSB3b3JsZCBidWlsZCBpcyBzdGlsbCBy
-dW5uaW5nLi4NCg0KDQp3aXRoIGM5OWJiNzkwIERFUEVORFMgdmFyaWFibGUgZG9lc24ndCBlbmQg
-d2l0aCBhIHNwYWNlLCBzbyB0aGUgbWlzc2luZyBsZWFkaW5nIHNwYWNlIGluIHRoZXNlIGFwcGVu
-ZHMgKHdoaWNoIHdhcyBmaW5lIHVudGlsIG5vdyBiZWNhdXNlIG9mIHRyYWlsaW5nIHNwYWNlIGZy
-b20gREVQRU5EUyBzZXQgaW4gYmJjbGFzcykgaXMgbm93IGNhdXNpbmcgd3JvbmcgZGVwZW5kZW5j
-eSAoc2hvdWxkIGJlIGVhc2lseSByZXByb2R1Y2libGUgd2l0aCB0aGUgcGF0Y2hlcyBiYWNrcG9y
-dGVkLCBqdXN0IGJ5IHBhcnNpbmcgdGhlIHJlY2lwZXMpLg0KDQpJIG5lZWQgY2xhcml0eSBzbyBJ
-IGNhbiBvcGVuIGFuIGlzc3VlIGluIGdpdGxhYiBmb3IgdHJhY2tpbmcgcHVycG9zZXMgYXMNCkkg
-YW0gc3VyZSBJIHdpbGwgZm9yZ2V0IHRoaXMNCg0Kd2UncmUgdXNpbmcgZ2l0bGFiPw0KDQoNCg==
+Hi,
 
---_000_f190d3e175a9413994caf1c73a9f9125XBOX03axiscom_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+I believe I have the same set of patches in jansa/dunfell and
+jansa/gatesgarth branchesand bitbake world passed OK with them (with my set
+of layers).
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
-Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
-OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
-cjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0Kc3Bhbi5FbWFpbFN0eWxlMTgN
-Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtcmVwbHk7DQoJZm9udC1mYW1pbHk6IkNhbGlicmki
-LHNhbnMtc2VyaWY7DQoJY29sb3I6Izk0MzYzNDsNCglmb250LXdlaWdodDpub3JtYWw7DQoJZm9u
-dC1zdHlsZTpub3JtYWw7fQ0KLk1zb0NocERlZmF1bHQNCgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0
-LW9ubHk7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7DQoJbXNvLWZhcmVhc3Qt
-bGFuZ3VhZ2U6RU4tVVM7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3NpemU6NjEyLjBwdCA3OTIu
-MHB0Ow0KCW1hcmdpbjo3MC44NXB0IDcwLjg1cHQgNzAuODVwdCA3MC44NXB0O30NCmRpdi5Xb3Jk
-U2VjdGlvbjENCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQ0KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4NCjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYi
-IC8+DQo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBl
-bGF5b3V0IHY6ZXh0PSJlZGl0Ij4NCjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPg0K
-PC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPg0KPC9oZWFkPg0KPGJvZHkgbGFuZz0i
-U1YiIGxpbms9ImJsdWUiIHZsaW5rPSJwdXJwbGUiPg0KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24x
-Ij4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iY29sb3I6
-Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+QXMgYWdyZWVkIHVwb24gb24gdGhl
-IFlvY3RvIFByb2plY3QgVGVjaG5pY2FsIFRlYW0gTWVldGluZyBhIHdlZWsgYWdvLCBJIGhhdmUg
-Y3JlYXRlZCBicmFuY2hlcyBmb3IgYm90aCBHYXRlc2dhcnRoIGFuZCBEdW5mZWxsIGluIG9wZW5l
-bWJlZGRlZC1jb3JlLWNvbnRyaWIgYW5kIG1ldGEtb3BlbmVtYmVkZGVkLWNvbnRyaWINCiB3aXRo
-IHRoZSByZXF1aXJlZCBwYXRjaGVzLiBUaGUgYnJhbmNoZXMgYXJlIGNhbGxlZCBwa2ovX1BZVEhP
-Tl9TWVNDT05GSUdEQVRBX05BTUUtZ2F0ZXNnYXJ0aCBhbmQgcGtqL19QWVRIT05fU1lTQ09ORklH
-REFUQV9OQU1FLWR1bmZlbGwgKG9rLCBob3JyaWJsZSBuYW1lcywgYnV0IHRoZXkgc2hvdWxkIGJl
-IGVhc3kgdG8gc3BvdCkuIFRoZXJlIGlzIG9uZSBhZGRpdGlvbmFsIHBhdGNoIGZvciBiaXRiYWtl
-LCBidXQgSSBmb3Jnb3QgdG8gYXNrIGZvcg0KIGFjY2VzcyB0byBiaXRiYWtlLWNvbnRyaWIsIHNv
-IHlvdSB3aWxsIGhhdmUgdG8gY2hlcnJ5LXBpY2sgaXQgZnJvbSBjb21taXQgNDdiNjRjZmEgKGl0
-IGlzIG5vdCBzdHJpY3RseSBuZWNlc3NhcnkgYXMgaXQgaXMganVzdCBjbGVhbiB1cCBtYWRlIHBv
-c3NpYmxlIGFmdGVyIHRoZSBjaGFuZ2VzIGluIE9FLUNvcmUpLjxvOnA+PC9vOnA+PC9zcGFuPjwv
-cD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iY29sb3I6
-Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3Nw
-YW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJj
-b2xvcjojOTQzNjM0O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5AamFuc2EsIEBha3VzdGVy
-OiBJIGhhdmUgaW5jbHVkZWQgdGhlIHR3byBleHRyYSBwYXRjaGVzIGluIG1ldGEtb3BlbmVtYmVk
-ZGVkIHRoYXQgTWFydGluIG1lbnRpb25lZCwgd2hpY2ggd2VyZSBsYWNraW5nIGZyb20gbXkgb3Jp
-Z2luYWwgbWFpbC4gVGhlcmUgd2VyZSBvdGhlciBwYXRjaGVzIG1lbnRpb25lZCwNCiB3aGljaCBm
-aXhlZCBtaXNzaW5nIHNwYWNlcyByZWxhdGVkIHRvIHRoZSB1c2Ugb2YgX2FwcGVuZC4gSG93ZXZl
-ciwgYXMgdGhleSB3ZXJlIG5vdCBuZWNlc3NhcnkgKHRoZXkgY2hhbmdlZCBvdGhlciB2YXJpYWJs
-ZXMgdGhhbiBERVBFTkRTIGZvciB0YXJnZXQpLCBJIGRpZCBub3QgaW5jbHVkZSB0aGVtLg0KPG86
-cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4t
-VVMiIHN0eWxlPSJjb2xvcjojOTQzNjM0O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpw
-PiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5n
-PSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5NDM2MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMi
-PkkgaGF2ZSBub3QgZG9uZSBhbnkgZXhjZXNzaXZlIHRlc3Rpbmcgb2YgdGhlc2UgYnJhbmNoZXMu
-IEkgaGF2ZSB2ZXJpZmllZCB0aGF0IEkgY2FuIHJ1biBgZGV2dG9vbCBtb2RpZnkgbGlieG1sMmAs
-IHdoaWNoIEkgY291bGQgbm90IGRvIGJlZm9yZSwgYW5kIEkgaGF2ZSBydW4gYGJpdGJha2UgY29y
-ZS1pbWFnZS1taW5pbWFsYC48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5NDM2MzQ7bXNvLWZhcmVhc3Qt
-bGFuZ3VhZ2U6RU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iY29sb3I6Izk0MzYzNDttc28tZmFy
-ZWFzdC1sYW5ndWFnZTpFTi1VUyI+Ly9QZXRlcjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iY29sb3I6Izk0MzYzNDtt
-c28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0K
-PGRpdiBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLWxlZnQ6c29saWQgYmx1ZSAxLjVwdDtwYWRk
-aW5nOjBjbSAwY20gMGNtIDQuMHB0Ij4NCjxkaXY+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTti
-b3JkZXItdG9wOnNvbGlkICNFMUUxRTEgMS4wcHQ7cGFkZGluZzozLjBwdCAwY20gMGNtIDBjbSI+
-DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48Yj48c3BhbiBsYW5nPSJFTi1VUyI+RnJvbTo8L3NwYW4+
-PC9iPjxzcGFuIGxhbmc9IkVOLVVTIj4gTWFydGluIEphbnNhICZsdDttYXJ0aW4uamFuc2FAZ21h
-aWwuY29tJmd0Ow0KPGJyPg0KPGI+U2VudDo8L2I+IGRlbiA3IGZlYnJ1YXJpIDIwMjEgMTI6MTU8
-YnI+DQo8Yj5Ubzo8L2I+IE1hcnRpbiBKYW5zYSAmbHQ7TWFydGluLkphbnNhQGdtYWlsLmNvbSZn
-dDs8YnI+DQo8Yj5DYzo8L2I+IGFrdXN0ZXI4MDggJmx0O2FrdXN0ZXI4MDhAZ21haWwuY29tJmd0
-OzsgUGV0ZXIgS2plbGxlcnN0ZWR0ICZsdDtwZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb20mZ3Q7
-OyBTdGV2ZSBTYWtvbWFuICZsdDtzdGV2ZUBzYWtvbWFuLmNvbSZndDs7IE1pdHRhbCwgQW51aiAm
-bHQ7YW51ai5taXR0YWxAaW50ZWwuY29tJmd0OzsgT0UgQ29yZSAob3BlbmVtYmVkZGVkLWNvcmVA
-bGlzdHMub3BlbmVtYmVkZGVkLm9yZykgJmx0O29wZW5lbWJlZGRlZC1jb3JlQGxpc3RzLm9wZW5l
-bWJlZGRlZC5vcmcmZ3Q7Ow0KIE9FIERldmVsb3BtZW50IChvcGVuZW1iZWRkZWQtZGV2ZWxAbGlz
-dHMub3BlbmVtYmVkZGVkLm9yZykgJmx0O29wZW5lbWJlZGRlZC1kZXZlbEBsaXN0cy5vcGVuZW1i
-ZWRkZWQub3JnJmd0OzsgQml0QmFrZSBEZXZlbG9wbWVudCAoYml0YmFrZS1kZXZlbEBsaXN0cy5v
-cGVuZW1iZWRkZWQub3JnKSAmbHQ7Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
-Jmd0Ozxicj4NCjxiPlN1YmplY3Q6PC9iPiBSZTogW29lXSBbYml0YmFrZS1kZXZlbF0gQmFja3Bv
-cnQgY2hhbmdlcyBmb3IgX1BZVEhPTl9TWVNDT05GSUdEQVRBX05BTUUgdG8gR2F0ZXNnYXJ0aCBh
-bmQgRHVuZmVsbDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxkaXY+DQo8ZGl2Pg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+T24gU3VuLCBGZWIgNywgMjAyMSBhdCAxMjoxNSBBTSBNYXJ0aW4gSmFu
-c2EgdmlhIDxhIGhyZWY9Imh0dHA6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnIj4NCmxpc3RzLm9w
-ZW5lbWJlZGRlZC5vcmc8L2E+ICZsdDtNYXJ0aW4uSmFuc2E9PGEgaHJlZj0ibWFpbHRvOmdtYWls
-LmNvbUBsaXN0cy5vcGVuZW1iZWRkZWQub3JnIj5nbWFpbC5jb21AbGlzdHMub3BlbmVtYmVkZGVk
-Lm9yZzwvYT4mZ3Q7IHdyb3RlOjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPGJsb2Nr
-cXVvdGUgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlkICNDQ0NDQ0MgMS4wcHQ7
-cGFkZGluZzowY20gMGNtIDBjbSA2LjBwdDttYXJnaW4tbGVmdDo0LjhwdDttYXJnaW4tcmlnaHQ6
-MGNtIj4NCjxkaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+T24gU2F0LCBKYW4gMTYs
-IDIwMjEgYXQgNjo1MiBQTSBha3VzdGVyODA4ICZsdDs8YSBocmVmPSJtYWlsdG86YWt1c3Rlcjgw
-OEBnbWFpbC5jb20iIHRhcmdldD0iX2JsYW5rIj5ha3VzdGVyODA4QGdtYWlsLmNvbTwvYT4mZ3Q7
-IHdyb3RlOjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPGJsb2NrcXVvdGUgc3R5bGU9
-ImJvcmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlkICNDQ0NDQ0MgMS4wcHQ7cGFkZGluZzowY20g
-MGNtIDBjbSA2LjBwdDttYXJnaW4tbGVmdDo0LjhwdDttYXJnaW4tcmlnaHQ6MGNtIj4NCjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPjxicj4NCjxicj4NCk9uIDEvMTYvMjEgOTo0NCBBTSwgTWFydGluIEph
-bnNhIHdyb3RlOjxicj4NCiZndDsgQXJlbid0IHRoZSBtaXNzaW5nIHNwYWNlcyBpbiBhcHBlbmRz
-IGZpeGVzIGFsc28gbmVlZGVkIGZvciBtZXRhLW9lPGJyPg0KJmd0OyByZWNpcGVzPzxicj4NCjxi
-cj4NCjxicj4NCiZndDs8YnI+DQomZ3Q7IEkgdGhpbmsgYXQgbGVhc3QgdG9wIDUgY29tbWl0cyBm
-cm9tOjxicj4NCiZndDsgPGEgaHJlZj0iaHR0cHM6Ly9naXQub3BlbmVtYmVkZGVkLm9yZy9tZXRh
-LW9wZW5lbWJlZGRlZC9sb2cvP3F0PWdyZXAmYW1wO3E9c3BhY2UuKmFwcGVuZCIgdGFyZ2V0PSJf
-YmxhbmsiPg0KaHR0cHM6Ly9naXQub3BlbmVtYmVkZGVkLm9yZy9tZXRhLW9wZW5lbWJlZGRlZC9s
-b2cvP3F0PWdyZXAmYW1wO3E9c3BhY2UuKmFwcGVuZDwvYT48YnI+DQomZ3Q7IHdlcmUgYWxzbyBm
-b2xsb3ctdXAgZnJvbSB0aGVzZSBjaGFuZ2VzIGluIG9lLWNvcmUuPGJyPg0KJmd0Ozxicj4NCkRv
-IHlvdSBtZWFuIHNvbWV0aGluZyBiZXlvbmQgdGhlIG1ldGEtb3BlbmVtYmVkZGVkIGNvbW1pdHMg
-bWVudGlvbmVkPGJyPg0KbmVhciB0aGUgYm90dG9tIG9mIHRoZSBlbWFpbD88bzpwPjwvbzpwPjwv
-cD4NCjwvYmxvY2txdW90ZT4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
-OzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlllcyBJIG1l
-YW4gdGhlc2UgNSBjb21taXRzIGF0IGxlYXN0LjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rp
-dj4NCjwvZGl2Pg0KPC9ibG9ja3F1b3RlPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxv
-OnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-NTBiYmY4MGFiZiBweXRob24zLXB5a3dhbGlmeTogRG8gbm90IHVuc2V0IF9QWVRIT05fU1lTQ09O
-RklHREFUQV9OQU1FPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjZiM2UzYmRhZjggcHl0aG9uLWdycGNpby10b29sczogQWRkIG1pc3Npbmcgc3BhY2UgZm9yIGFw
-cGVuZDxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PG86cD4mbmJzcDs8L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij5UaGUgZmlyc3Qgb25lIGlzIGp1c3QgYW4gYWRkaXRpb25hbCBjbGVhbnVwLCBidXQgd2l0aG91
-dCB0aGUgMm5kIG9uZSBhbmQgd2l0aCB0aGUgY2hlcnJ5LXBpY2tzIGZyb20gdGhlIGZpcnN0IGUt
-bWFpbCBhcHBsaWVkIHlvdSB3b3VsZCBnZXQ6PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+
-DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5FUlJPUjogTm90aGluZyBQUk9WSURFUyAncHl0aG9uM3B5
-dGhvbjMtZ3JwY2lvJyAoYnV0IG1ldGEtb2UvbWV0YS1weXRob24vcmVjaXBlcy1kZXZ0b29scy9w
-eXRob24vPGEgaHJlZj0iaHR0cDovL3B5dGhvbjMtZ3JwY2lvLXRvb2xzXzEuMTQuMS5iYiI+cHl0
-aG9uMy1ncnBjaW8tdG9vbHNfMS4xNC4xLmJiPC9hPiBERVBFTkRTIG9uIG9yIG90aGVyd2lzZSBy
-ZXF1aXJlcyBpdCkuIENsb3NlIG1hdGNoZXM6PGJyPg0KJm5ic3A7IHB5dGhvbi1ncnBjaW88YnI+
-DQombmJzcDsgcHl0aG9uMy1ncnBjaW88bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+bXkgd29ybGQgYnVpbGQgaXMgc3RpbGwgcnVubmluZy4uPG86
-cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZu
-YnNwOzwvbzpwPjwvcD4NCjxibG9ja3F1b3RlIHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItbGVm
-dDpzb2xpZCAjQ0NDQ0NDIDEuMHB0O3BhZGRpbmc6MGNtIDBjbSAwY20gNi4wcHQ7bWFyZ2luLWxl
-ZnQ6NC44cHQ7bWFyZ2luLXJpZ2h0OjBjbSI+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPndpdGggYzk5YmI3OTAgREVQRU5EUyB2YXJpYWJsZSBkb2Vzbid0IGVu
-ZCB3aXRoIGEgc3BhY2UsIHNvIHRoZSBtaXNzaW5nIGxlYWRpbmcgc3BhY2UgaW4gdGhlc2UgYXBw
-ZW5kcyAod2hpY2ggd2FzIGZpbmUgdW50aWwgbm93IGJlY2F1c2Ugb2YgdHJhaWxpbmcgc3BhY2Ug
-ZnJvbSBERVBFTkRTIHNldCBpbiBiYmNsYXNzKSBpcyBub3cgY2F1c2luZyB3cm9uZyBkZXBlbmRl
-bmN5IChzaG91bGQgYmUgZWFzaWx5IHJlcHJvZHVjaWJsZQ0KIHdpdGggdGhlIHBhdGNoZXMgYmFj
-a3BvcnRlZCwganVzdCBieSBwYXJzaW5nIHRoZSByZWNpcGVzKS48bzpwPjwvbzpwPjwvcD4NCjwv
-ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOzxvOnA+PC9vOnA+PC9wPg0K
-PC9kaXY+DQo8YmxvY2txdW90ZSBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLWxlZnQ6c29saWQg
-I0NDQ0NDQyAxLjBwdDtwYWRkaW5nOjBjbSAwY20gMGNtIDYuMHB0O21hcmdpbi1sZWZ0OjQuOHB0
-O21hcmdpbi1yaWdodDowY20iPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSBuZWVkIGNsYXJpdHkg
-c28gSSBjYW4gb3BlbiBhbiBpc3N1ZSBpbiBnaXRsYWIgZm9yIHRyYWNraW5nIHB1cnBvc2VzIGFz
-PGJyPg0KSSBhbSBzdXJlIEkgd2lsbCBmb3JnZXQgdGhpczxvOnA+PC9vOnA+PC9wPg0KPC9ibG9j
-a3F1b3RlPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9w
-Pg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+d2UncmUgdXNpbmcgZ2l0bGFi
-PyZuYnNwOzxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPHAgY2xhc3M9
-Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIuMHB0Ij48YnI+DQo8bzpwPjwvbzpw
-PjwvcD4NCjwvYmxvY2txdW90ZT4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9i
-b2R5Pg0KPC9odG1sPg0K
+The only new issue I see in dunfell is libvirt from meta-virtualization
+failing, because it uses hosts gcc to build python module, from quick look
+I guess it shouldn't be using host's gcc and instead it should inherit
+python3targetconfig or something to keep the old behavior. In the
+meta-virtualization master branch there is this patch:
+https://git.yoctoproject.org/cgit/cgit.cgi/meta-virtualization/commit/?id=08b5de42f9216a10bb2f83263b7e6789686b4c3d
+which works for dunfell, but before backporting it I will double check if
+this is really caused by these changes.
 
---_000_f190d3e175a9413994caf1c73a9f9125XBOX03axiscom_--
+Cheers,
+
+On Tue, Feb 9, 2021 at 12:45 AM Peter Kjellerstedt <
+peter.kjellerstedt@axis.com> wrote:
+
+> As agreed upon on the Yocto Project Technical Team Meeting a week ago, I
+> have created branches for both Gatesgarth and Dunfell in
+> openembedded-core-contrib and meta-openembedded-contrib with the required
+> patches. The branches are called pkj/_PYTHON_SYSCONFIGDATA_NAME-gatesgarth
+> and pkj/_PYTHON_SYSCONFIGDATA_NAME-dunfell (ok, horrible names, but they
+> should be easy to spot). There is one additional patch for bitbake, but I
+> forgot to ask for access to bitbake-contrib, so you will have to
+> cherry-pick it from commit 47b64cfa (it is not strictly necessary as it is
+> just clean up made possible after the changes in OE-Core).
+>
+>
+>
+> @jansa, @akuster: I have included the two extra patches in
+> meta-openembedded that Martin mentioned, which were lacking from my
+> original mail. There were other patches mentioned, which fixed missing
+> spaces related to the use of _append. However, as they were not necessary
+> (they changed other variables than DEPENDS for target), I did not include
+> them.
+>
+>
+>
+> I have not done any excessive testing of these branches. I have verified
+> that I can run `devtool modify libxml2`, which I could not do before, and I
+> have run `bitbake core-image-minimal`.
+>
+>
+>
+> //Peter
+>
+>
+>
+> *From:* Martin Jansa <martin.jansa@gmail.com>
+> *Sent:* den 7 februari 2021 12:15
+> *To:* Martin Jansa <Martin.Jansa@gmail.com>
+> *Cc:* akuster808 <akuster808@gmail.com>; Peter Kjellerstedt <
+> peter.kjellerstedt@axis.com>; Steve Sakoman <steve@sakoman.com>; Mittal,
+> Anuj <anuj.mittal@intel.com>; OE Core (
+> openembedded-core@lists.openembedded.org) <
+> openembedded-core@lists.openembedded.org>; OE Development (
+> openembedded-devel@lists.openembedded.org) <
+> openembedded-devel@lists.openembedded.org>; BitBake Development (
+> bitbake-devel@lists.openembedded.org) <
+> bitbake-devel@lists.openembedded.org>
+> *Subject:* Re: [oe] [bitbake-devel] Backport changes for
+> _PYTHON_SYSCONFIGDATA_NAME to Gatesgarth and Dunfell
+>
+>
+>
+> On Sun, Feb 7, 2021 at 12:15 AM Martin Jansa via lists.openembedded.org
+> <Martin.Jansa=gmail.com@lists.openembedded.org> wrote:
+>
+> On Sat, Jan 16, 2021 at 6:52 PM akuster808 <akuster808@gmail.com> wrote:
+>
+>
+>
+> On 1/16/21 9:44 AM, Martin Jansa wrote:
+> > Aren't the missing spaces in appends fixes also needed for meta-oe
+> > recipes?
+>
+>
+> >
+> > I think at least top 5 commits from:
+> >
+> https://git.openembedded.org/meta-openembedded/log/?qt=grep&q=space.*append
+> > were also follow-up from these changes in oe-core.
+> >
+> Do you mean something beyond the meta-openembedded commits mentioned
+> near the bottom of the email?
+>
+>
+>
+> Yes I mean these 5 commits at least.
+>
+>
+>
+> 50bbf80abf python3-pykwalify: Do not unset _PYTHON_SYSCONFIGDATA_NAME
+>
+> 6b3e3bdaf8 python-grpcio-tools: Add missing space for append
+>
+>
+>
+> The first one is just an additional cleanup, but without the 2nd one and
+> with the cherry-picks from the first e-mail applied you would get:
+>
+> ERROR: Nothing PROVIDES 'python3python3-grpcio' (but
+> meta-oe/meta-python/recipes-devtools/python/python3-grpcio-tools_1.14.1.bb
+> DEPENDS on or otherwise requires it). Close matches:
+>   python-grpcio
+>   python3-grpcio
+>
+>
+>
+> my world build is still running..
+>
+>
+>
+>
+>
+> with c99bb790 DEPENDS variable doesn't end with a space, so the missing
+> leading space in these appends (which was fine until now because of
+> trailing space from DEPENDS set in bbclass) is now causing wrong dependency
+> (should be easily reproducible with the patches backported, just by parsing
+> the recipes).
+>
+>
+>
+> I need clarity so I can open an issue in gitlab for tracking purposes as
+> I am sure I will forget this
+>
+>
+>
+> we're using gitlab?
+>
+>
+> 
+>
+>
+
+--0000000000007cf9e105badbe501
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi,<div><br></div><div>I believe I have the same set of pa=
+tches in jansa/dunfell and jansa/gatesgarth branchesand bitbake world passe=
+d OK with them (with my set of layers).</div><div><br></div><div>The only n=
+ew issue I see in dunfell is libvirt from meta-virtualization failing, beca=
+use it uses hosts gcc to build python module, from quick look I guess it sh=
+ouldn&#39;t be using host&#39;s gcc and instead it should inherit python3ta=
+rgetconfig or something to keep the old behavior. In the meta-virtualizatio=
+n master branch there is this patch:</div><div><a href=3D"https://git.yocto=
+project.org/cgit/cgit.cgi/meta-virtualization/commit/?id=3D08b5de42f9216a10=
+bb2f83263b7e6789686b4c3d">https://git.yoctoproject.org/cgit/cgit.cgi/meta-v=
+irtualization/commit/?id=3D08b5de42f9216a10bb2f83263b7e6789686b4c3d</a><br>=
+</div><div>which works for dunfell, but before backporting it I will double=
+ check if this is really caused by these changes.</div><div><br></div><div>=
+Cheers,</div></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D=
+"gmail_attr">On Tue, Feb 9, 2021 at 12:45 AM Peter Kjellerstedt &lt;<a href=
+=
+=3D"mailto:peter.kjellerstedt@axis.com">peter.kjellerstedt@axis.com</a>&gt=
+; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px=
+ 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+
+
+
+
+
+<div lang=3D"SV">
+<div class=3D"gmail-m_608887548665860737WordSection1">
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:rgb(148,54,52)"=
+>As agreed upon on the Yocto Project Technical Team Meeting a week ago, I h=
+ave created branches for both Gatesgarth and Dunfell in openembedded-core-c=
+ontrib and meta-openembedded-contrib
+ with the required patches. The branches are called pkj/_PYTHON_SYSCONFIGD=
+ATA_NAME-gatesgarth and pkj/_PYTHON_SYSCONFIGDATA_NAME-dunfell (ok, horribl=
+e names, but they should be easy to spot). There is one additional patch fo=
+r bitbake, but I forgot to ask for
+ access to bitbake-contrib, so you will have to cherry-pick it from commit=
+ 47b64cfa (it is not strictly necessary as it is just clean up made possibl=
+e after the changes in OE-Core).<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:rgb(148,54,52)"=
+><u></u>=C2=A0<u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:rgb(148,54,52)"=
+>@jansa, @akuster: I have included the two extra patches in meta-openembedd=
+ed that Martin mentioned, which were lacking from my original mail. There w=
+ere other patches mentioned,
+ which fixed missing spaces related to the use of _append. However, as the=
+y were not necessary (they changed other variables than DEPENDS for target)=
+, I did not include them.
+<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:rgb(148,54,52)"=
+><u></u>=C2=A0<u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:rgb(148,54,52)"=
+>I have not done any excessive testing of these branches. I have verified t=
+hat I can run `devtool modify libxml2`, which I could not do before, and I =
+have run `bitbake core-image-minimal`.<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:rgb(148,54,52)"=
+><u></u>=C2=A0<u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:rgb(148,54,52)"=
+>//Peter<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:rgb(148,54,52)"=
+><u></u>=C2=A0<u></u></span></p>
+<div style=3D"border-top:none;border-right:none;border-bottom:none;border-=
+left:1.5pt solid blue;padding:0cm 0cm 0cm 4pt">
+<div>
+<div style=3D"border-right:none;border-bottom:none;border-left:none;border=
+-top:1pt solid rgb(225,225,225);padding:3pt 0cm 0cm">
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US">From:</span></b><span lang=
+=3D"EN-US"> Martin Jansa &lt;<a href=3D"mailto:martin.jansa@gmail.com" tar=
+get=3D"_blank">martin.jansa@gmail.com</a>&gt;
+<br>
+<b>Sent:</b> den 7 februari 2021 12:15<br>
+<b>To:</b> Martin Jansa &lt;<a href=3D"mailto:Martin.Jansa@gmail.com" targ=
+et=3D"_blank">Martin.Jansa@gmail.com</a>&gt;<br>
+<b>Cc:</b> akuster808 &lt;<a href=3D"mailto:akuster808@gmail.com" target=
+=3D"_blank">akuster808@gmail.com</a>&gt;; Peter Kjellerstedt &lt;<a href=
+=3D"mailto:peter.kjellerstedt@axis.com" target=3D"_blank">peter.kjellerste=
+dt@axis.com</a>&gt;; Steve Sakoman &lt;<a href=3D"mailto:steve@sakoman.com"=
+ target=3D"_blank">steve@sakoman.com</a>&gt;; Mittal, Anuj &lt;<a href=3D"m=
+ailto:anuj.mittal@intel.com" target=3D"_blank">anuj.mittal@intel.com</a>&gt=
+;; OE Core (<a href=3D"mailto:openembedded-core@lists.openembedded.org" tar=
+get=3D"_blank">openembedded-core@lists.openembedded.org</a>) &lt;<a href=3D=
+"mailto:openembedded-core@lists.openembedded.org" target=3D"_blank">openemb=
+edded-core@lists.openembedded.org</a>&gt;;
+ OE Development (<a href=3D"mailto:openembedded-devel@lists.openembedded.o=
+rg" target=3D"_blank">openembedded-devel@lists.openembedded.org</a>) &lt;<a=
+ href=3D"mailto:openembedded-devel@lists.openembedded.org" target=3D"_blank=
+">openembedded-devel@lists.openembedded.org</a>&gt;; BitBake Development (<=
+a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_blank">bi=
+tbake-devel@lists.openembedded.org</a>) &lt;<a href=3D"mailto:bitbake-devel=
+@lists.openembedded.org" target=3D"_blank">bitbake-devel@lists.openembedded=
+.org</a>&gt;<br>
+<b>Subject:</b> Re: [oe] [bitbake-devel] Backport changes for _PYTHON_SYSC=
+ONFIGDATA_NAME to Gatesgarth and Dunfell<u></u><u></u></span></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+<div>
+<div>
+<p class=3D"MsoNormal">On Sun, Feb 7, 2021 at 12:15 AM Martin Jansa via <a=
+ href=3D"http://lists.openembedded.org" target=3D"_blank">
+lists.openembedded.org</a> &lt;Martin.Jansa=3D<a href=3D"mailto:gmail.com@=
+lists.openembedded.org" target=3D"_blank">gmail.com@lists.openembedded.org<=
+/a>&gt; wrote:<u></u><u></u></p>
+</div>
+<div>
+<blockquote style=3D"border-top:none;border-right:none;border-bottom:none;=
+border-left:1pt solid rgb(204,204,204);padding:0cm 0cm 0cm 6pt;margin-left:=
+4.8pt;margin-right:0cm">
+<div>
+<div>
+<p class=3D"MsoNormal">On Sat, Jan 16, 2021 at 6:52 PM akuster808 &lt;<a h=
+ref=3D"mailto:akuster808@gmail.com" target=3D"_blank">akuster808@gmail.com<=
+/a>&gt; wrote:<u></u><u></u></p>
+</div>
+<div>
+<blockquote style=3D"border-top:none;border-right:none;border-bottom:none;=
+border-left:1pt solid rgb(204,204,204);padding:0cm 0cm 0cm 6pt;margin-left:=
+4.8pt;margin-right:0cm">
+<p class=3D"MsoNormal"><br>
+<br>
+On 1/16/21 9:44 AM, Martin Jansa wrote:<br>
+&gt; Aren&#39;t the missing spaces in appends fixes also needed for meta-o=
+e<br>
+&gt; recipes?<br>
+<br>
+<br>
+&gt;<br>
+&gt; I think at least top 5 commits from:<br>
+&gt; <a href=3D"https://git.openembedded.org/meta-openembedded/log/?qt=3Dg=
+rep&amp;q=3Dspace.*append" target=3D"_blank">
+https://git.openembedded.org/meta-openembedded/log/?qt=3Dgrep&amp;q=3Dspac=
+e.*append</a><br>
+&gt; were also follow-up from these changes in oe-core.<br>
+&gt;<br>
+Do you mean something beyond the meta-openembedded commits mentioned<br>
+near the bottom of the email?<u></u><u></u></p>
+</blockquote>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal">Yes I mean these 5 commits at least.<u></u><u></u><=
+/p>
+</div>
+</div>
+</div>
+</blockquote>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal">50bbf80abf python3-pykwalify: Do not unset _PYTHON_=
+SYSCONFIGDATA_NAME<u></u><u></u></p>
+</div>
+<p class=3D"MsoNormal">6b3e3bdaf8 python-grpcio-tools: Add missing space f=
+or append<u></u><u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal">The first one is just an additional cleanup, but wi=
+thout the 2nd one and with the cherry-picks from the first e-mail applied y=
+ou would get:<u></u><u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal">ERROR: Nothing PROVIDES &#39;python3python3-grpcio&=
+#39; (but meta-oe/meta-python/recipes-devtools/python/<a href=3D"http://pyt=
+hon3-grpcio-tools_1.14.1.bb" target=3D"_blank">python3-grpcio-tools_1.14.1.=
+bb</a> DEPENDS on or otherwise requires it). Close matches:<br>
+=C2=A0 python-grpcio<br>
+=C2=A0 python3-grpcio<u></u><u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal">my world build is still running..<u></u><u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+<blockquote style=3D"border-top:none;border-right:none;border-bottom:none;=
+border-left:1pt solid rgb(204,204,204);padding:0cm 0cm 0cm 6pt;margin-left:=
+4.8pt;margin-right:0cm">
+<div>
+<div>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal">with c99bb790 DEPENDS variable doesn&#39;t end with=
+ a space, so the missing leading space in these appends (which was fine unt=
+il now because of trailing space from DEPENDS set in bbclass) is now causin=
+g wrong dependency (should be easily reproducible
+ with the patches backported, just by parsing the recipes).<u></u><u></u><=
+/p>
+</div>
+<div>
+<p class=3D"MsoNormal">=C2=A0<u></u><u></u></p>
+</div>
+<blockquote style=3D"border-top:none;border-right:none;border-bottom:none;=
+border-left:1pt solid rgb(204,204,204);padding:0cm 0cm 0cm 6pt;margin-left:=
+4.8pt;margin-right:0cm">
+<p class=3D"MsoNormal">I need clarity so I can open an issue in gitlab for=
+ tracking purposes as<br>
+I am sure I will forget this<u></u><u></u></p>
+</blockquote>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal">we&#39;re using gitlab?=C2=A0<u></u><u></u></p>
+</div>
+</div>
+</div>
+<p class=3D"MsoNormal" style=3D"margin-bottom:12pt"><br>
+<u></u><u></u></p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</blockquote></div>
+
+--0000000000007cf9e105badbe501--
