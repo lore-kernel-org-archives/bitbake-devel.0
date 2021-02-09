@@ -1,170 +1,78 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
- by mx.groups.io with SMTP id smtpd.web09.10548.1612879900798979532
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web10.11673.1612883318727980538
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Feb 2021 06:11:41 -0800
+ Tue, 09 Feb 2021 07:08:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=TjmVdwPf;
- spf=pass (domain: gmail.com, ip: 209.85.219.182, mailfrom: sakoman@gmail.com)
-Received: by mail-yb1-f182.google.com with SMTP id k4so18296418ybp.6;
-        Tue, 09 Feb 2021 06:11:40 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=O0Ac/ZGa;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f43.google.com with SMTP id b3so22320310wrj.5
+        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Feb 2021 07:08:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ObcJyBBJMKqlx81OijHxPFs3fphrH2Hcw/sEE6/WxaA=;
-        b=TjmVdwPfXy8q164cVE0meuRrnRo1XiB8b1b+BXXbmsuTcxswFDdhySpuBXaNHnclT+
-         1uHxwtY3wwl6w+Qy60O2RjAC0Gjhv2sNXtQwF7CMB6QSPSRjU8n+octyVUb+BeDKI94r
-         IvxXGtsEYOuy0Chce/IxF/mFhFX8L+Z1aIEFXJm2zu3vT5wfcthD8yExX82qpsG2Hliz
-         f0qXTfuvrDC4b6YR2wJNxA9MJKnjwyUF5qzKawfbUfgQ8fs3v1gHXqQZdWTYrVJ1eg3S
-         CRUoSaNRF0a2gkrznRXCLmJN2+zkGB4U3Fjvfj7hO0ayseb+e0aVCEZK+qHZ4bRv5CiY
-         T35Q==
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tFqe2eMRZNE5liqNbfhCsRWde5oxzxE9RVMhSnDnGzI=;
+        b=O0Ac/ZGaX2mNIZeMdPs/SE2JRK+uiU6EMHVqguyWiMInTyo0N6HtK5BejLpxbi472N
+         mrxkkY9cFehyO7kM+5wI9Mzd+AI1x6S1mpnxqeHHeezjr6ZM4uyBScJmFDemxyopLzvZ
+         u/fZHzNYLhJDlZmtlLZEqddoIE5FSQDEqu4+g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ObcJyBBJMKqlx81OijHxPFs3fphrH2Hcw/sEE6/WxaA=;
-        b=PwozWUbwLX6kSBwccj1m47/maMS/1SxMD4LYK7BrsNyJusApHrOoEnZBV9ybqs5Z5H
-         Vi0XSzKY08FjFRe4AMKiUKXfnAFhuoFf0CsBKzMCXuZPfaisoFN6fgwgHsdZfdSnncun
-         UuE1ZI7ch0UGukQZ8utJJDn+olM14FWzEbwCyV+Wu4D5lIsvXvTWTE4iKw968TU8M5ev
-         mSiDXrjThKdi2jmbBz8jcPMsjJatkJyexjufqYrfk3fMZvqwbfmS7JfXbRy9D0fm4VL5
-         Z/r6uuQetvmr5V0lr7FuD+ZRatAmNh/UOgGeCsc18Uq73y/yK501pzuU00jqKAoogLJz
-         pF7g==
-X-Gm-Message-State: AOAM532pmO1HQX6dZIzggQu/wwKevYnJ/PtJbmZReKb/842tGVY2uMv6
-	IfnlxYcHFU25EyVebRKMrAuDNBsMWTKxLS2Kr9Y=
-X-Google-Smtp-Source: ABdhPJwlelkpPrT2D0xOCiyHyi3YnSL5OYNWPbSF6CiMVczj2vKJVUE/y5IzKrSD+Y4AAB9QFDrEoe0xvyg8bz00Pdc=
-X-Received: by 2002:a25:5557:: with SMTP id j84mr33333955ybb.472.1612879899944;
- Tue, 09 Feb 2021 06:11:39 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tFqe2eMRZNE5liqNbfhCsRWde5oxzxE9RVMhSnDnGzI=;
+        b=iVWwlqCd7swI5Ph0aYEfPBx0Q/or4lWBqH3rC4FT+Zl23KOmLZw1uz/eLnSDXDTx9O
+         06X8vSrkQMbHJYgcg2gLjpG8EdU7AW0kKiZ/xeQvxDa+7AauxXxzmLwLyoKBjFPIOUB1
+         KB0+8DHXSlop1lLyuD+dOnQ2tE4VqNf2clzV4rc5XL3S6upP4USpamyJU1Tw0PpGJi20
+         Iv/AR+rCfK+sEG4Sn7onlQ0xDP+dQtSO1t8edPwK1JormRnKKX300POhZ/sdikAf5elv
+         z0iC/L9zEmpOM+9As0mutgznwNQ+4p3GtmlxVS5O0i09DW2VDuY6uPfU4hjfgiQLD7uO
+         IXOQ==
+X-Gm-Message-State: AOAM532G/Nm0kaNsTjEXaod9RfVqv+yMw2zTLTnwPTSxcHydFfj7PP03
+	NohnN6p+J6XncKJJ/eyG/+8Jw0CNdwEg8g==
+X-Google-Smtp-Source: ABdhPJzOZL1epN5mruxh3luxFOJBvQvz/ayNC+FACLEO65LEQQpLixIoswPEsgMfdW0Srpg5LXVmcQ==
+X-Received: by 2002:adf:e3cd:: with SMTP id k13mr4860883wrm.289.1612883317037;
+        Tue, 09 Feb 2021 07:08:37 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:6e64:a4a9:6e48:217c])
+        by smtp.gmail.com with ESMTPSA id 67sm5236280wmz.46.2021.02.09.07.08.36
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Feb 2021 07:08:36 -0800 (PST)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 1/2] cooker: Ensure reparsing is handled correctly
+Date: Tue,  9 Feb 2021 15:08:35 +0000
+Message-Id: <20210209150836.1809879-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <17b543581ffb421b812323891405dcfb@XBOX03.axis.com>
- <CA+chaQc0anOg2E=o1ouEca-QJDGqKxDoXm6aPVXzsc8TELW3zA@mail.gmail.com>
- <d9185d19-1f09-a1b6-2926-f54309190b24@gmail.com> <16614BA6A53B3779.25597@lists.openembedded.org>
- <CA+chaQdbZwyBTbyctEh_y8x_p=txiwqy8gjmkwDrh6rqX_ztng@mail.gmail.com> <f190d3e175a9413994caf1c73a9f9125@XBOX03.axis.com>
-In-Reply-To: <f190d3e175a9413994caf1c73a9f9125@XBOX03.axis.com>
-From: "Steve Sakoman" <sakoman@gmail.com>
-Date: Tue, 9 Feb 2021 04:11:26 -1000
-Message-ID: <CAGDS+n=fBJad4LPWfpA3A-S3_aHfNKXbZQTpsaw56MtQ3miTRQ@mail.gmail.com>
-Subject: Re: [oe] [bitbake-devel] Backport changes for _PYTHON_SYSCONFIGDATA_NAME to Gatesgarth and Dunfell
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Cc: Martin Jansa <martin.jansa@gmail.com>, akuster808 <akuster808@gmail.com>, 
-	"Mittal, Anuj" <anuj.mittal@intel.com>, 
-	"OE Core (openembedded-core@lists.openembedded.org)" <openembedded-core@lists.openembedded.org>, 
-	"OE Development (openembedded-devel@lists.openembedded.org)" <openembedded-devel@lists.openembedded.org>, 
-	"BitBake Development (bitbake-devel@lists.openembedded.org)" <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 8, 2021 at 1:45 PM Peter Kjellerstedt
-<peter.kjellerstedt@axis.com> wrote:
->
-> As agreed upon on the Yocto Project Technical Team Meeting a week ago, I=
- have created branches for both Gatesgarth and Dunfell in openembedded-core=
--contrib and meta-openembedded-contrib with the required patches. The branc=
-hes are called pkj/_PYTHON_SYSCONFIGDATA_NAME-gatesgarth and pkj/_PYTHON_SY=
-SCONFIGDATA_NAME-dunfell (ok, horrible names, but they should be easy to sp=
-ot). There is one additional patch for bitbake, but I forgot to ask for acc=
-ess to bitbake-contrib, so you will have to cherry-pick it from commit 47b6=
-4cfa (it is not strictly necessary as it is just clean up made possible aft=
-er the changes in OE-Core).
->
->
->
-> @jansa, @akuster: I have included the two extra patches in meta-openembe=
-dded that Martin mentioned, which were lacking from my original mail. There=
- were other patches mentioned, which fixed missing spaces related to the us=
-e of _append. However, as they were not necessary (they changed other varia=
-bles than DEPENDS for target), I did not include them.
->
->
->
-> I have not done any excessive testing of these branches. I have verified=
- that I can run `devtool modify libxml2`, which I could not do before, and =
-I have run `bitbake core-image-minimal`.
+From tinfoil, if you edit bblayers.conf and break it, then call
+parseConfiguration (e.g. by adding a bad layer with bitbake-layers),
+the system doens't show any parse error yet it should.
 
-Thanks Peter!  I'll start testing with dunfell this morning.
+Add in a call to the updateCache function so that things really
+are reparsed when requested.
 
-Steve
+Partially fixes [YOCTO #14054]
 
-> From: Martin Jansa <martin.jansa@gmail.com>
-> Sent: den 7 februari 2021 12:15
-> To: Martin Jansa <Martin.Jansa@gmail.com>
-> Cc: akuster808 <akuster808@gmail.com>; Peter Kjellerstedt <peter.kjeller=
-stedt@axis.com>; Steve Sakoman <steve@sakoman.com>; Mittal, Anuj <anuj.mitt=
-al@intel.com>; OE Core (openembedded-core@lists.openembedded.org) <openembe=
-dded-core@lists.openembedded.org>; OE Development (openembedded-devel@lists=
-.openembedded.org) <openembedded-devel@lists.openembedded.org>; BitBake Dev=
-elopment (bitbake-devel@lists.openembedded.org) <bitbake-devel@lists.openem=
-bedded.org>
-> Subject: Re: [oe] [bitbake-devel] Backport changes for _PYTHON_SYSCONFIG=
-DATA_NAME to Gatesgarth and Dunfell
->
->
->
-> On Sun, Feb 7, 2021 at 12:15 AM Martin Jansa via lists.openembedded.org =
-<Martin.Jansa=3Dgmail.com@lists.openembedded.org> wrote:
->
-> On Sat, Jan 16, 2021 at 6:52 PM akuster808 <akuster808@gmail.com> wrote:
->
->
->
-> On 1/16/21 9:44 AM, Martin Jansa wrote:
-> > Aren't the missing spaces in appends fixes also needed for meta-oe
-> > recipes?
->
->
-> >
-> > I think at least top 5 commits from:
-> > https://git.openembedded.org/meta-openembedded/log/?qt=3Dgrep&q=3Dspac=
-e.*append
-> > were also follow-up from these changes in oe-core.
-> >
-> Do you mean something beyond the meta-openembedded commits mentioned
-> near the bottom of the email?
->
->
->
-> Yes I mean these 5 commits at least.
->
->
->
-> 50bbf80abf python3-pykwalify: Do not unset _PYTHON_SYSCONFIGDATA_NAME
->
-> 6b3e3bdaf8 python-grpcio-tools: Add missing space for append
->
->
->
-> The first one is just an additional cleanup, but without the 2nd one and=
- with the cherry-picks from the first e-mail applied you would get:
->
-> ERROR: Nothing PROVIDES 'python3python3-grpcio' (but meta-oe/meta-python=
-/recipes-devtools/python/python3-grpcio-tools_1.14.1.bb DEPENDS on or other=
-wise requires it). Close matches:
->   python-grpcio
->   python3-grpcio
->
->
->
-> my world build is still running..
->
->
->
->
->
-> with c99bb790 DEPENDS variable doesn't end with a space, so the missing =
-leading space in these appends (which was fine until now because of trailin=
-g space from DEPENDS set in bbclass) is now causing wrong dependency (shoul=
-d be easily reproducible with the patches backported, just by parsing the r=
-ecipes).
->
->
->
-> I need clarity so I can open an issue in gitlab for tracking purposes as
-> I am sure I will forget this
->
->
->
-> we're using gitlab?
->
->
->
->=20
->
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 4446addc77..67bf925441 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -411,6 +411,8 @@ class BBCooker:
+             self.data.disableTracking()
+ 
+     def parseConfiguration(self):
++        self.updateCacheSync()
++
+         # Change nice level if we're asked to
+         nice = self.data.getVar("BB_NICE_LEVEL")
+         if nice:
+-- 
+2.27.0
+
