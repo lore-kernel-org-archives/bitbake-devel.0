@@ -1,193 +1,192 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web11.279.1612909905139433876
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+ by mx.groups.io with SMTP id smtpd.web12.3961.1612955560744871394
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Feb 2021 14:31:45 -0800
+ Wed, 10 Feb 2021 03:12:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=nsLfagEV;
- spf=softfail (domain: sakoman.com, ip: 209.85.221.53, mailfrom: steve@sakoman.com)
-Received: by mail-wr1-f53.google.com with SMTP id g6so11703wrs.11
-        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Feb 2021 14:31:44 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=fg8Fmzf/;
+ spf=pass (domain: gmail.com, ip: 209.85.167.47, mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-lf1-f47.google.com with SMTP id w36so2236591lfu.4
+        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Feb 2021 03:12:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GABZi787Wp8y2jP5j911R8ypXUTd8yW4lOUQBM0rSuo=;
-        b=nsLfagEVjvElOOjNxBfZ9x0hWi+YF3hzqpfwKgG8aSDVg4/T9U+oRoqSfImxtUsIKm
-         8IQTwY4qO8HLk3cuQJYm5F+NWmERP+7cn8XYwxq7WZsGW8QYJlHuFMxvnZv/JEvalPuC
-         nhJtPttLD0BV5YexLqhPp/4sy9XYVtlJSRX30TVU4oxZ+XcG3bndP6p1cZxUO+0l32C9
-         zTC9HawK+mWLuiJYaASfiaIp/bF+28LA9qGQP8kPax52jIf2dXSZ7ptHKx8I7pbXmWWz
-         zSmAgwrTopdK6+79j63o02dE8mkshi16/pGILDW9QvfNAy+45mrubdWEVaru7uA4nyG8
-         d1zw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yeWdTyoyoSW6dvPkZY3qUHIJ0/Zz5QmHLdkj2tyxLIQ=;
+        b=fg8Fmzf/8QubU34fUTYJVRheA9hkCR5zECqa6KFnhXqXp6IncHuzpqSWTvzlGKMh0p
+         o0/Xm6Novktkw13DXlsCrjKIjq2fJEqdPU8pN7wdjngVworPqWd7wAGcFkvvVXd5KqBN
+         5wOEnt+RmmwINN/zCDMxr2Mk2XqrTicEDHS4mglqeNL0Fau0qh6h/bsRXaouG+ssljzL
+         TDOXWBi3tCxRYdacBElW0D0xmXsr7fdVf5yWJhpMr2M9M6cQzEJ4JAGDKfhnaeEZ77e9
+         puu7isMP18F1j6sKB6EHTY1Gkfkm+0iXzohb6SpBVJDA2YJX1aSEoaVMZUjP7i1dmzD9
+         eabw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GABZi787Wp8y2jP5j911R8ypXUTd8yW4lOUQBM0rSuo=;
-        b=WwxBodmYcP7HUbuW3qvZI/P8HB8+H8iQ5jaYUt4D4wMX4iqQiGeikQ5VdXuRrasbvl
-         jei4BhNWzXTjSvuGKq0kEx26MVKlgLqFJkjgvCBzIj1+9CC1TgBXMmvv8SG8/L0X7pmb
-         34bVpoPhNZdW4vLn/bFBr6SeGM/krbYebKxAVf/y8xleHPQ0MSDR5Hfi5MrFFj+77n3l
-         t9lBJqBxk1qh8dK/bhBxGDIWJkl9jM7kOyQjXXaOqVEhZuydtbesF0sd4xJaUWPWV1bL
-         u7KJ10MgKNSIujV0Cr0NwjlSXXx2cLnr773zOvumWKVqVyjSQ0X862sPP6gs6T7Yqr/X
-         qsMQ==
-X-Gm-Message-State: AOAM531iyZPNA/Ws26GDdstWfDST5Xw3NgxiWYT4UAu6zhgKgC6b7hQR
-	K39c2DYjgXOK8kolqHEhrkunzs7QGT9hDS9AeJ8zkw==
-X-Google-Smtp-Source: ABdhPJy3+rp+dpriLNC0waxWLbZV8faXasxrqie99CRHKokdk44M0FSKRLUuCR8PdQtt2Fq3YftS7BovSw2eoPZNHlk=
-X-Received: by 2002:a05:6000:1815:: with SMTP id m21mr271920wrh.350.1612909903610;
- Tue, 09 Feb 2021 14:31:43 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yeWdTyoyoSW6dvPkZY3qUHIJ0/Zz5QmHLdkj2tyxLIQ=;
+        b=KNbxNq+LxF7Bmz0AKWKB73v+dr+xoJ/xlz1nT2HxjnTHWLybge6if5YBLcWEzgvWFT
+         L1KP6ZbBohZS7OCXkXwA/lybfCm+IHLu4A5TyZuONQByKaigvCHyckDHsxM1Bvl6ApwU
+         mYyQE94iwTTxD7zC5PQb99szjcCFiiRG4MywfvKcMW7lUd/Dhezvdo3Dj7yuzIQDMSMX
+         hBCKXR0fyOCnkYVi1fWRTaXQ3oC0rpdfij7CZgf1t8RQpb6EVDn4PUhSuLU1CWaniHfQ
+         OWBrD+D5wKWYgiFkn+HJfIkirP2305CGW4/aHNTxvBIP6ARkUQ2LOZLBA3ddg2GfrqmU
+         7lEw==
+X-Gm-Message-State: AOAM531j6bByGUnB+yLVzcmzf/a2tcddUAp0gdEFYBsnT4HRdqBmcP4a
+	dN4PZapV225wid2wM8l4xuEtYGDrNAo=
+X-Google-Smtp-Source: ABdhPJyASaBG5Hwjuiq3wQoeYBIHtL19uvOuTNklKd6rhu2R6OmrVp/gA+vQ3MGHP0e3rZrshj9jew==
+X-Received: by 2002:a05:6512:3194:: with SMTP id i20mr1447401lfe.283.1612955558466;
+        Wed, 10 Feb 2021 03:12:38 -0800 (PST)
+Return-Path: <tomasz.dziendzielski@gmail.com>
+Received: from localhost.localdomain (h124200.man.tk-internet.pl. [93.175.124.200])
+        by smtp.gmail.com with ESMTPSA id w21sm270195lfu.132.2021.02.10.03.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Feb 2021 03:12:37 -0800 (PST)
+From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Subject: [PATCH v5] event: Prevent bitbake from executing event handler for wrong multiconfig target
+Date: Wed, 10 Feb 2021 12:15:15 +0100
+Message-Id: <20210210111515.1189896-1-tomasz.dziendzielski@gmail.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-References: <17b543581ffb421b812323891405dcfb@XBOX03.axis.com>
- <CA+chaQc0anOg2E=o1ouEca-QJDGqKxDoXm6aPVXzsc8TELW3zA@mail.gmail.com>
- <d9185d19-1f09-a1b6-2926-f54309190b24@gmail.com> <16614BA6A53B3779.25597@lists.openembedded.org>
- <CA+chaQdbZwyBTbyctEh_y8x_p=txiwqy8gjmkwDrh6rqX_ztng@mail.gmail.com>
- <f190d3e175a9413994caf1c73a9f9125@XBOX03.axis.com> <CAGDS+n=fBJad4LPWfpA3A-S3_aHfNKXbZQTpsaw56MtQ3miTRQ@mail.gmail.com>
-In-Reply-To: <CAGDS+n=fBJad4LPWfpA3A-S3_aHfNKXbZQTpsaw56MtQ3miTRQ@mail.gmail.com>
-From: "Steve Sakoman" <steve@sakoman.com>
-Date: Tue, 9 Feb 2021 12:31:31 -1000
-Message-ID: <CAOSpxdZsU9vPHLPnc6ZCnJXZBURp3FqKLxnUQ9UbXTqPqtU23w@mail.gmail.com>
-Subject: Re: [oe] [bitbake-devel] Backport changes for _PYTHON_SYSCONFIGDATA_NAME to Gatesgarth and Dunfell
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Cc: Martin Jansa <martin.jansa@gmail.com>, akuster808 <akuster808@gmail.com>, 
-	"Mittal, Anuj" <anuj.mittal@intel.com>, 
-	"OE Core (openembedded-core@lists.openembedded.org)" <openembedded-core@lists.openembedded.org>, 
-	"OE Development (openembedded-devel@lists.openembedded.org)" <openembedded-devel@lists.openembedded.org>, 
-	"BitBake Development (bitbake-devel@lists.openembedded.org)" <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 9, 2021 at 4:11 AM Steve Sakoman <sakoman@gmail.com> wrote:
->
-> On Mon, Feb 8, 2021 at 1:45 PM Peter Kjellerstedt
-> <peter.kjellerstedt@axis.com> wrote:
-> >
-> > As agreed upon on the Yocto Project Technical Team Meeting a week ago,=
- I have created branches for both Gatesgarth and Dunfell in openembedded-co=
-re-contrib and meta-openembedded-contrib with the required patches. The bra=
-nches are called pkj/_PYTHON_SYSCONFIGDATA_NAME-gatesgarth and pkj/_PYTHON_=
-SYSCONFIGDATA_NAME-dunfell (ok, horrible names, but they should be easy to =
-spot). There is one additional patch for bitbake, but I forgot to ask for a=
-ccess to bitbake-contrib, so you will have to cherry-pick it from commit 47=
-b64cfa (it is not strictly necessary as it is just clean up made possible a=
-fter the changes in OE-Core).
-> >
-> >
-> >
-> > @jansa, @akuster: I have included the two extra patches in meta-openem=
-bedded that Martin mentioned, which were lacking from my original mail. The=
-re were other patches mentioned, which fixed missing spaces related to the =
-use of _append. However, as they were not necessary (they changed other var=
-iables than DEPENDS for target), I did not include them.
-> >
-> >
-> >
-> > I have not done any excessive testing of these branches. I have verifi=
-ed that I can run `devtool modify libxml2`, which I could not do before, an=
-d I have run `bitbake core-image-minimal`.
->
-> Thanks Peter!  I'll start testing with dunfell this morning.
+When multiconfig is used bitbake might try to run events that don't
+exist for specific mc target. In cooker.py we pass
+`self.databuilder.mcdata[mc]` data that contains names of events'
+handlers per mc target, but fire_class_handlers uses global _handlers
+variable that is created during parsing of all the targets.
 
-I did an autobuilder run with your meta-openembedded branch, my
-stable/dunfell-nut branch with the 6 patches, and my bitbake
-stable/1.46-nut branch with the single patch:
+This leads to a problem where bitbake runs event handler that don't
+exist for a target or even overrides them - if multiple targets use
+event handler with the same name but different code then only one
+version will be executed for all targets.
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/88/builds/921
+See [YOCTO #13071] for detailed bug information.
 
-All was fine except for an error in sysdig: do_compile, which doesn't
-appear to be related:
+Add mc target name as a prefix to event handler name so there won't be
+two different handlers with the same name. Add internal __BBHANDLERS_MC
+variable to have the handlers lists per machine.
 
-https://errors.yoctoproject.org/Errors/Details/570303/
+Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
 
-Unless someone has an objection I'll add the oe-core and bitbake
-patches to my next set of review patches.
+--- v5 move the whole logic to event.bb, fix tests
+---
+ lib/bb/cookerdata.py |  2 +-
+ lib/bb/event.py      | 26 ++++++++++++++++++++++++--
+ lib/bb/parse/ast.py  |  2 +-
+ lib/bb/runqueue.py   |  4 ++--
+ 4 files changed, 28 insertions(+), 6 deletions(-)
 
-Steve
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index c39b5681..1c1e008c 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -429,7 +429,7 @@ class CookerDataBuilder(object):
+                 parselog.critical("Undefined event handler function '%s'" % var)
+                 raise bb.BBHandledException()
+             handlerln = int(data.getVarFlag(var, "lineno", False))
+-            bb.event.register(var, data.getVar(var, False),  (data.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln)
++            bb.event.register(var, data.getVar(var, False),  (data.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln, data)
+ 
+         data.setVar('BBINCLUDED',bb.parse.get_file_depends(data))
+ 
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 694b4705..ff899594 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -118,6 +118,8 @@ def fire_class_handlers(event, d):
+             if _eventfilter:
+                 if not _eventfilter(name, handler, event, d):
+                     continue
++            if d and not name in (d.getVar("__BBHANDLERS_MC") or []):
++                continue
+             execute_handler(name, handler, event, d)
+ 
+ ui_queue = []
+@@ -227,9 +229,13 @@ def fire_from_worker(event, d):
+     fire_ui_handlers(event, d)
+ 
+ noop = lambda _: None
+-def register(name, handler, mask=None, filename=None, lineno=None):
++def register(name, handler, mask=None, filename=None, lineno=None, data=None):
+     """Register an Event handler"""
+ 
++    if data and data.getVar("BB_CURRENT_MC"):
++        mc = data.getVar("BB_CURRENT_MC")
++        name = '%s%s' % (mc, name)
++
+     # already registered
+     if name in _handlers:
+         return AlreadyRegistered
+@@ -268,10 +274,20 @@ def register(name, handler, mask=None, filename=None, lineno=None):
+                     _event_handler_map[m] = {}
+                 _event_handler_map[m][name] = True
+ 
++        if data:
++            bbhands_mc = (data.getVar("__BBHANDLERS_MC") or [])
++            bbhands_mc.append(name)
++            data.setVar("__BBHANDLERS_MC", bbhands_mc)
++
+         return Registered
+ 
+-def remove(name, handler):
++def remove(name, handler, data=None):
+     """Remove an Event handler"""
++    if data:
++        if data.getVar("BB_CURRENT_MC"):
++            mc = data.getVar("BB_CURRENT_MC")
++            name = '%s%s' % (mc, name)
++
+     _handlers.pop(name)
+     if name in _catchall_handlers:
+         _catchall_handlers.pop(name)
+@@ -279,6 +295,12 @@ def remove(name, handler):
+         if name in _event_handler_map[event]:
+             _event_handler_map[event].pop(name)
+ 
++    if data:
++        bbhands_mc = (data.getVar("__BBHANDLERS_MC") or [])
++        if name in bbhands_mc:
++            bbhands_mc.remove(name)
++            data.setVar("__BBHANDLERS_MC", bbhands_mc)
++
+ def get_handlers():
+     return _handlers
+ 
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 0714296a..dc1d7643 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -335,7 +335,7 @@ def finalize(fn, d, variant = None):
+             if not handlerfn:
+                 bb.fatal("Undefined event handler function '%s'" % var)
+             handlerln = int(d.getVarFlag(var, "lineno", False))
+-            bb.event.register(var, d.getVar(var, False), (d.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln)
++            bb.event.register(var, d.getVar(var, False), (d.getVarFlag(var, "eventmask") or "").split(), handlerfn, handlerln, data=d)
+ 
+         bb.event.fire(bb.event.RecipePreFinalise(fn), d)
+ 
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 7d493eb4..fe4deb19 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1466,7 +1466,7 @@ class RunQueue:
+             if not self.dm_event_handler_registered:
+                  res = bb.event.register(self.dm_event_handler_name,
+                                          lambda x: self.dm.check(self) if self.state in [runQueueRunning, runQueueCleanUp] else False,
+-                                         ('bb.event.HeartbeatEvent',))
++                                         ('bb.event.HeartbeatEvent',), data=self.cfgData)
+                  self.dm_event_handler_registered = True
+ 
+             dump = self.cooker.configuration.dump_signatures
+@@ -1505,7 +1505,7 @@ class RunQueue:
+         build_done = self.state is runQueueComplete or self.state is runQueueFailed
+ 
+         if build_done and self.dm_event_handler_registered:
+-            bb.event.remove(self.dm_event_handler_name, None)
++            bb.event.remove(self.dm_event_handler_name, None, data=self.cfgData)
+             self.dm_event_handler_registered = False
+ 
+         if build_done and self.rqexe:
+-- 
+2.30.0
 
-
-> > From: Martin Jansa <martin.jansa@gmail.com>
-> > Sent: den 7 februari 2021 12:15
-> > To: Martin Jansa <Martin.Jansa@gmail.com>
-> > Cc: akuster808 <akuster808@gmail.com>; Peter Kjellerstedt <peter.kjell=
-erstedt@axis.com>; Steve Sakoman <steve@sakoman.com>; Mittal, Anuj <anuj.mi=
-ttal@intel.com>; OE Core (openembedded-core@lists.openembedded.org) <openem=
-bedded-core@lists.openembedded.org>; OE Development (openembedded-devel@lis=
-ts.openembedded.org) <openembedded-devel@lists.openembedded.org>; BitBake D=
-evelopment (bitbake-devel@lists.openembedded.org) <bitbake-devel@lists.open=
-embedded.org>
-> > Subject: Re: [oe] [bitbake-devel] Backport changes for _PYTHON_SYSCONF=
-IGDATA_NAME to Gatesgarth and Dunfell
-> >
-> >
-> >
-> > On Sun, Feb 7, 2021 at 12:15 AM Martin Jansa via lists.openembedded.or=
-g <Martin.Jansa=3Dgmail.com@lists.openembedded.org> wrote:
-> >
-> > On Sat, Jan 16, 2021 at 6:52 PM akuster808 <akuster808@gmail.com> wrot=
-e:
-> >
-> >
-> >
-> > On 1/16/21 9:44 AM, Martin Jansa wrote:
-> > > Aren't the missing spaces in appends fixes also needed for meta-oe
-> > > recipes?
-> >
-> >
-> > >
-> > > I think at least top 5 commits from:
-> > > https://git.openembedded.org/meta-openembedded/log/?qt=3Dgrep&q=3Dsp=
-ace.*append
-> > > were also follow-up from these changes in oe-core.
-> > >
-> > Do you mean something beyond the meta-openembedded commits mentioned
-> > near the bottom of the email?
-> >
-> >
-> >
-> > Yes I mean these 5 commits at least.
-> >
-> >
-> >
-> > 50bbf80abf python3-pykwalify: Do not unset _PYTHON_SYSCONFIGDATA_NAME
-> >
-> > 6b3e3bdaf8 python-grpcio-tools: Add missing space for append
-> >
-> >
-> >
-> > The first one is just an additional cleanup, but without the 2nd one a=
-nd with the cherry-picks from the first e-mail applied you would get:
-> >
-> > ERROR: Nothing PROVIDES 'python3python3-grpcio' (but meta-oe/meta-pyth=
-on/recipes-devtools/python/python3-grpcio-tools_1.14.1.bb DEPENDS on or oth=
-erwise requires it). Close matches:
-> >   python-grpcio
-> >   python3-grpcio
-> >
-> >
-> >
-> > my world build is still running..
-> >
-> >
-> >
-> >
-> >
-> > with c99bb790 DEPENDS variable doesn't end with a space, so the missin=
-g leading space in these appends (which was fine until now because of trail=
-ing space from DEPENDS set in bbclass) is now causing wrong dependency (sho=
-uld be easily reproducible with the patches backported, just by parsing the=
- recipes).
-> >
-> >
-> >
-> > I need clarity so I can open an issue in gitlab for tracking purposes =
-as
-> > I am sure I will forget this
-> >
-> >
-> >
-> > we're using gitlab?
-> >
-> >
-> >
-> >
-> >
->
->=20
->
