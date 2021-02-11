@@ -1,97 +1,102 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
- by mx.groups.io with SMTP id smtpd.web10.4036.1612955638360667525
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web12.125.1613065884147684798
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Feb 2021 03:13:58 -0800
+ Thu, 11 Feb 2021 09:51:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=K1s3El1C;
- spf=pass (domain: gmail.com, ip: 209.85.166.48, mailfrom: tomasz.dziendzielski@gmail.com)
-Received: by mail-io1-f48.google.com with SMTP id p132so1426686iod.11
-        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Feb 2021 03:13:58 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bzZZUG9B;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f51.google.com with SMTP id u14so5073585wri.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Feb 2021 09:51:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=myoUmBlBkdJgsvgyXiBm0NVcsflz9/3HOd/OEXS+Tkg=;
-        b=K1s3El1CV60tC8AVBbp7k6QtsRQ4palRGqwdbVkEv00UrJBQ8R6d28sODZXi/yKotS
-         XDajT1t+R0jnr96NRuRd+1I1OTg4X+C3NJpvq9qaDvdmxyvRoqltX+px/KtqDr+OAVdl
-         tDr7tmU8cbDC+pKJyo3M6AEl8OJqqGqn3grQ2BRUnApOp2z4AOCzaFwntW3XJWH4DOFl
-         RKGYyn8w2T38J4DtF7nKzf8NsqE2aNj8gnSM+28x2y+LLysyx2dTBmIhnlvYQwiLH3ap
-         zgUpwO9q5Lu+/zV44GH/XTSz4qvjjtdMkHq5vFlXVN3Qtvah9yw/GYx7r3mMf4peF64m
-         pKsA==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=M0n5XSHoHuZrqVLOZKkzBdFbCjl4a0dHwmw4uHwGbRI=;
+        b=bzZZUG9B4Rcfyopdf/t9/IgDu1jJjypdbRJrU7ArGG8TSuEV8movvGq+Kp0YP4s4b7
+         w1cGzT/OtI5mD+XErDHl6dIz80YKIj25EGwQvA/DgZMSCqJjD+lpSJfQFG8LmLRf8ZR8
+         itGHf+RKUU9CELp3W77suHS+UcI6TdPA/pF7o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=myoUmBlBkdJgsvgyXiBm0NVcsflz9/3HOd/OEXS+Tkg=;
-        b=jbXGOMfnf4yDbckpihMWetlsr00W6GuvrkBoEiClmcu+R0m9UitegQKwlRtAGclUsa
-         6mHN8K3fV0KIDBxJU1kwhodpyaHbgPOhkpmpoFY81oD3LW2WX4y3lKBasJmnQQefL+hA
-         LeoV/Qt/Tjh2Y64nfPtoN0nmt8E8IRxRL4yhjKLVcLfc/vwus3+LF6RqD3pxg1ls6y21
-         E3dDOZL7L3h2fQY3PbyrkgWpA5Coz/Bi7+JRpo8zfUrI1tU2yQSBSMnhDZJgK3Z/X8k9
-         mbU2wR3jZl6LrFJTydFIv+d/gEX5Vdb7+toK87pJjj3T/+vCLk7G0vQcRGScTVvURCdz
-         U8VQ==
-X-Gm-Message-State: AOAM531GjMQ0Dj9CYYbzK9FMN8Ods5VwOULphkg0/x5Ek0Lh6jbhN9gL
-	nwSHD0nmK6EfYBocLgFYWGo31PNE22ezgYDRozM=
-X-Google-Smtp-Source: ABdhPJzYUJkfKAIwmgU7Lc0NkTI4MzaltPqaV8aTvqJw8PrKygH0zYhfb238COYzfOlr3hXoNuzlHLkyrT3wsRAUJ80=
-X-Received: by 2002:a05:6602:cc:: with SMTP id z12mr470352ioe.190.1612955637692;
- Wed, 10 Feb 2021 03:13:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20210207114659.148514-1-tomasz.dziendzielski@gmail.com>
- <9a9ad16dbe9d6540fb375d8419fbb569334c1757.camel@linuxfoundation.org> <16621F570CFF73B9.16853@lists.openembedded.org>
-In-Reply-To: <16621F570CFF73B9.16853@lists.openembedded.org>
-From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
-Date: Wed, 10 Feb 2021 12:15:23 +0100
-Message-ID: <CAJkqNs1JZWCvBmKfA9bqZRcz7WPtOYPEjXEBMYpfwdFhx8HNDg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH v4] event: Prevent bitbake from executing event handler for wrong multiconfig target
-To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=M0n5XSHoHuZrqVLOZKkzBdFbCjl4a0dHwmw4uHwGbRI=;
+        b=SAyxRaC9FFNkXKWBk7DL5Lqo+3lYS3Ai2VpA/28gQA+kEm47Z76/f2JW76UtgENold
+         VK1ntVGlbh17/J7SU9KzfPeEHfF0LM3z8pY/jS+EBlNG0SneqfCnPICo6oYdNpjFCAgX
+         3+LTU9f6qBMEsNy65qWhHGqZN+W6rvN22ENx8O73zTLhIAqdRY9ss2ce4lS2JvLfiKiu
+         I9OcgDKifoWmwghYEuVPSll7rqqd2kSbkU3rauK6zWW8Xm9tpzvDhT1BsYXlhk2EgXFX
+         GTrbkDHe0Ge3Rh/aWM8yAs1+inJ0MovwF7KHRegqzu96afU7A5Ov2Jc3Eg9+8qMzv8lE
+         +wTQ==
+X-Gm-Message-State: AOAM530FI2y8BccFS9MJRoWnDPGmwJLDFbuTV+9wWwNpBgZ603+WaVO5
+	MiQrOGkW5lDeh7gFEVjuWGg5KQ==
+X-Google-Smtp-Source: ABdhPJw/7Ill7A4265eIYd69boInRTSiHGf70wWUFN3LBV+X6SQSwUV7godvR6Cg2w2iSWw/9j9riQ==
+X-Received: by 2002:a5d:65ca:: with SMTP id e10mr6927401wrw.166.1613065882671;
+        Thu, 11 Feb 2021 09:51:22 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:1f44:6379:818:1e61? ([2001:8b0:aba:5f3c:1f44:6379:818:1e61])
+        by smtp.gmail.com with ESMTPSA id l1sm5988409wrp.40.2021.02.11.09.51.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Feb 2021 09:51:22 -0800 (PST)
+Message-ID: <133107bffad3c5bbaab27aa1b2aa8a9a93778f2f.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [RFC-cargo-fetcher 0/3] Suggest a first step
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Andreas =?ISO-8859-1?Q?M=FCller?= <schnitzeltony@gmail.com>, 
 	bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000d2bbb605baf97f67"
-
---000000000000d2bbb605baf97f67
+Cc: alex.kanavin@gmail.com, randy.macleod@windriver.com,
+ ross.burton@arm.com,  Paul Barker <pbarker@konsulko.com>
+Date: Thu, 11 Feb 2021 17:51:21 +0000
+In-Reply-To: <20210207150147.31011-1-schnitzeltony@gmail.com>
+References: <20210207150147.31011-1-schnitzeltony@gmail.com>
+User-Agent: Evolution 3.38.1-1 
+MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
->>I did also wonder if we should be changing each of the event register
->>callers, or doing something inside the event register function instead?
-Thanks again for your suggestion, it was the right way to go that solved
-the inconsistency with bb_diskmonitor event handler (and any other that
-would be registered manually, without addhandler statement). I prepared the
-change and it does not trigger any errors. I tested it with:
-$ bitbake-selftest
-$ oe-selftest -r multiconfig,
-$ oe-selftest -r buildoptions.DiskMonTest.test_stoptask_behavior
-$ yocto-check-layer-wrapper ../meta-mingw
-$ bitbake core-image-sato:do_testsdkext core-image-minimal:do_testsdkext
-core-image-sato:do_testsdkext (only for qemux86-64, one of the machines
-that was failing)
-which are the tests that failed with previous patches and now all tests
-passed.
+On Sun, 2021-02-07 at 16:01 +0100, Andreas Müller wrote:
+> This is a first version of a cargo fetcher. It mimics cargo fetch means
+> it creates cargo cache in ${DL_DIR}/cargo. As mentioned in comments the
+> proxy-thingy was stolen from npmsw for shrinkwrap files.
+> 
+> First approach was to parse Cargo.toml for projects that don't ship a
+> Cargo.lock (crates for rustlibs should do this) but that was skipped:
+> An unknown magic inside cargo detects which libs are avaiable: Blindly
+> followin -> download explodedc [1]
+> 
+> As proof of concept I did (no meta-rust in layers to avoid surprises):
+> 
+> * add a simple cargo-fetch.bbclass to oe-core [2]
+> * adapt a pure rust recipe 'spotifyd' to new fetcher [3-4]
+> * moved console to source of spotifyd and did
+>   > export CARGO_HOME="<DL_DIR>/cargo"
+>   > export CARGO_TARGET_DIR="<B>"
+>   > cargo build --frozen
+>   --> project was build without issues
+> 
+> Please review carefully because I am aware that:
+> 
+> * my python could be better
+> * the 'one cache for all in download area thingy' might cause issues I do not
+>   see yet
+> 
+> Am also aware that this is not more than a first step. Once this makes it in,
+> further TODOs are:
+> 
+> * Merge latest meta-rust -> oe-core (latest: There were some riscv adjustments
+>   recently - and I am not sure if these are in the poky-contrib of Alex/Ross)
+> * Add documentation / tests / devtool-support / ??
+> 
+> [1] https://github.com/schnitzeltony/mimic-cargo-fetcher/blob/master/test.py
+> [2] https://github.com/schnitzeltony/openembedded-core/blob/cargo-fetcher/meta/classes/cargo-fetch.bbclass
+> [3] https://github.com/schnitzeltony/meta-musicians/blob/cargo-fetcher/recipes-streaming/spotify/spotifyd.bb
+> [4] https://github.com/schnitzeltony/meta-musicians/blob/cargo-fetcher/recipes-streaming/spotify/spotifyd/Cargo.lock
 
-Please check the next patch:
-https://lists.openembedded.org/g/bitbake-devel/message/12020
 
-Best regards,
-Tomasz Dziendzielski
+Thanks for putting this together. Out of interest how does it compare
+to the code in meta-rust?
 
---000000000000d2bbb605baf97f67
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I'm hoping Paul Barker and Randy MacLeod can take a look at this as
+they've done a lot more work in the area than I have.
 
-<div dir=3D"ltr"><div dir=3D"ltr"><span class=3D"gmail-im">&gt;&gt;I did al=
-so wonder if we should be changing each of the event register<br><div>
-&gt;&gt;callers, or doing something inside the event register function inst=
-ead?<br></div><div>Thanks again for your suggestion, it was the right way t=
-o go that solved the inconsistency with bb_diskmonitor event handler (and a=
-ny other that would be registered manually, without addhandler statement). =
-I prepared the change and it does not trigger any errors. I tested it with:=
-<br>$ bitbake-selftest<br>$ oe-selftest -r multiconfig,<br>$ oe-selftest -r=
- buildoptions.DiskMonTest.test_stoptask_behavior<br>$ yocto-check-layer-wra=
-pper ../meta-mingw<br></div><div>$ bitbake core-image-sato:do_testsdkext co=
-re-image-minimal:do_testsdkext core-image-sato:do_testsdkext (only for qemu=
-x86-64, one of the machines that was failing)</div><div>which are the tests=
- that failed with previous patches and now all tests passed.</div><div><br>=
-</div><div>Please check the next patch:<br><a href=3D"https://lists.openemb=
-edded.org/g/bitbake-devel/message/12020">https://lists.openembedded.org/g/b=
-itbake-devel/message/12020</a></div><div><br></div><div>Best regards,</div>=
-<div>Tomasz Dziendzielski<br></div></span></div></div>
+Cheers,
 
---000000000000d2bbb605baf97f67--
+Richard
+
