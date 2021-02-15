@@ -1,85 +1,127 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
- by mx.groups.io with SMTP id smtpd.web11.32081.1613400440396262847
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web10.35455.1613413894744331168
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 15 Feb 2021 06:47:20 -0800
+ Mon, 15 Feb 2021 10:31:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=ahn2J3jo;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.54, mailfrom: steve@sakoman.com)
-Received: by mail-ot1-f54.google.com with SMTP id b8so1602424oti.7
-        for <bitbake-devel@lists.openembedded.org>; Mon, 15 Feb 2021 06:47:20 -0800 (PST)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=AdDesPBG;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=dd1FJS9O5RIWIFSiWQiDvy6kdkv0cu1i84aHrv1qUME=;
-        b=ahn2J3jo+NxhUbFkuXSyvkwXoy0bny9EBFt9ZCIDenuBDclBZ9TnFHUIFqWuTkYdUI
-         rAGm7C+gJxCV5022D01BYQW4a0X+aiSQuntZrHl8knMzeBsy0cRlK6299p/xAOOeem5m
-         dJXtj0GAaL578hp7Qz7ue1zZsygr1PKSnleZGHYqrvH1odbj2NM/O2ZgEzK9iiJoxkSf
-         pCJ7fmtgbsHsjXwKZHd2e9j5GixWvLAnLT6JIcNkzcvS671+Gm25xna1QzVNKe+ItDtM
-         W8MRgsIjtj09dUbyJJUmoxvghBKftmSb3tuc8XHdge3wEA+XV2IuV5NYkuAW4Yv/S3P4
-         eFvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dd1FJS9O5RIWIFSiWQiDvy6kdkv0cu1i84aHrv1qUME=;
-        b=sHSTu+JHP7S0JbEd5hbZ4rM0bsyqIOd7aK0e1j8ZrNwu68WRuh78c0Vu0g0WzBW9Rt
-         rm2Vx+EB+52CkAzUb9CQ5rkKebGk2RInrX3S3SMbWNHOtaJjfJfHVM6MyNfrLpsZaD1m
-         j3z3ghinO6nZMHdff1v+Ed2k4mtru10sFQbCuQdwGfx+ss16MfbxZbHbtpKoU+lHq50U
-         WZow0/FU7Ym1tZr1JUc9RZcKdlmdlvnJnyOHLA6idBJASvo23eAv1Hkx0y0UE7C9IbOE
-         +ztN+jnExhUiJKUQVTaNlRGWl4G00O9dYp2WaJ+8qfs0m9s0c1h3BGpNzQAkQZBCzZic
-         Hr4A==
-X-Gm-Message-State: AOAM533vnzioC4Fsg7RshWv/I6JS5Rrztc6CWU4nCREkF1x+6/w5pdON
-	iu6LoS5SetTGxARc9K5gA38lCQP8375BSdpV
-X-Google-Smtp-Source: ABdhPJyWU2pmEJha3Guq9zEBB6SGNhlRN4gSSJyTPnSbjlIClJ4F1vUgFtbSrR2BKEowA090Mlw52w==
-X-Received: by 2002:a05:6830:2106:: with SMTP id i6mr11451234otc.260.1613400439351;
-        Mon, 15 Feb 2021 06:47:19 -0800 (PST)
-Return-Path: <steve@sakoman.com>
-Received: from hexa.router0800d9.com ([72.173.249.164])
-        by smtp.gmail.com with ESMTPSA id i23sm3785995oik.10.2021.02.15.06.47.16
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Feb 2021 06:47:18 -0800 (PST)
-From: "Steve Sakoman" <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 1/1] lib/bb/fetch2/__init__.py: drop _PYTHON_SYSCONFIGDATA_NAME unsetting
-Date: Mon, 15 Feb 2021 04:46:52 -1000
-Message-Id: <4a6057d4c0462b0e7acf5d25d3c2026fb81f2ede.1613400108.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1613400108.git.steve@sakoman.com>
-References: <cover.1613400108.git.steve@sakoman.com>
+  d=axis.com; q=dns/txt; s=axis-central1; t=1613413895;
+  x=1644949895;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=VMh8wFcQsqNyO0/OOJ1djcMfnKlxVdG8XnjP/foJxBI=;
+  b=AdDesPBG7Up0uiU8HmwPpjD430MsTSlCW79tq37VJZqD4iq2yKR2hp1M
+   DRmMGz6rKyJ2+4HNogJii7UckKgCVlVtmwYimSkjavgpNVniF3Q+pKFN/
+   atEgBN+3y5/+aMpvKbQmPU6eGShx1Hsi2OhJaGhy5Y/X4aaUDa9MI5XP9
+   OFKt/GdIEm/IIi6xoBpm2ETrw81vg7r4VNyMoljFm1/8Jb2k3LYhsndVx
+   R7q/xq1hthCvuoeeVIaL11zySfH+zTQo8Ik2XJ2Z8H8GrqyoVYT0uLxjs
+   tcHcMh+SxCf1s52LLflppOQledrPK7eLGKTYZ4Sc1JMW+LQCJ7TAdQumP
+   g==;
+From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] bitbake-worker/runqueue: Add support for BB_DEFAULT_UMASK
+Thread-Topic: [bitbake-devel] [PATCH] bitbake-worker/runqueue: Add support for
+ BB_DEFAULT_UMASK
+Thread-Index: AQHXAsYXLl/jI6ZjpE+akKfA4b9bNapZixxw
+Date: Mon, 15 Feb 2021 18:31:31 +0000
+Message-ID: <a0140273172a4572acf7ce865011a59a@XBOX03.axis.com>
+References: <20210214113913.1960305-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20210214113913.1960305-1-richard.purdie@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-From: Alexander Kanavin <alex.kanavin@gmail.com>
+> -----Original Message-----
+> From: bitbake-devel@lists.openembedded.org <bitbake-devel@lists.openembed=
+ded.org> On Behalf Of Richard Purdie
+> Sent: den 14 februari 2021 12:39
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH] bitbake-worker/runqueue: Add support for=
+ BB_DEFAULT_UMASK
+>=20
+> Currently each task has to have a umask specified individually. This
+> is leading to determinism issues since it is easy to miss specifying
+> this for an extra task.
+>=20
+> Add support for specifing the default task umask globally which
+> simplifies the problem.
+>=20
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  bin/bitbake-worker                                        | 8 ++++++--
+>  .../bitbake-user-manual-ref-variables.rst                 | 4 ++++
+>  lib/bb/runqueue.py                                        | 1 +
+>  3 files changed, 11 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+> index 6c37967513..7765b9368b 100755
+> --- a/bin/bitbake-worker
+> +++ b/bin/bitbake-worker
+> @@ -150,11 +150,15 @@ def fork_off_task(cfg, data, databuilder, workerdat=
+a, fn, task, taskname, taskha
+>=20
+>      taskdep =3D workerdata["taskdeps"][fn]
+>      if 'umask' in taskdep and taskname in taskdep['umask']:
+> +        umask =3D taskdep['umask'][taskname]
+> +    elif workerdata["umask"]:
+> +        umask =3D workerdata["umask"]
+> +    if umask:
+>          # umask might come in as a number or text string..
+>          try:
+> -             umask =3D int(taskdep['umask'][taskname],8)
+> +             umask =3D int(umask, 8)
+>          except TypeError:
+> -             umask =3D taskdep['umask'][taskname]
+> +             pass
+>=20
+>      dry_run =3D cfg.dry_run or dry_run_exec
+>=20
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rs=
+t b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> index 74a3eb8095..a0c56a4bc3 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> @@ -108,6 +108,10 @@ overview of their function and contents.
+>        command line option). The task name specified should not include
+> the
+>        ``do_`` prefix.
+>=20
+> +   :term:`BB_DEFAULT_UMASK`
+> +      The default umask to apply to tasks if specified and no task speci=
+fic
+> +      umask flasg is set.
 
-With introduction of python3targetconfig class in core this is no longer
-needed.
 
-Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 47b64cfacd7c498ef9ed5486d117f2d69a39f225)
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
----
- lib/bb/fetch2/__init__.py | 5 -----
- 1 file changed, 5 deletions(-)
+Correct "flasg" to "flag".
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index eb112f06..dc99914c 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -853,11 +853,6 @@ def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None, workdir=None):
-         if val:
-             cmd = 'export ' + var + '=\"%s\"; %s' % (val, cmd)
- 
--    # Ensure that a _PYTHON_SYSCONFIGDATA_NAME value set by a recipe
--    # (for example via python3native.bbclass since warrior) is not set for
--    # host Python (otherwise tools like git-make-shallow will fail)
--    cmd = 'unset _PYTHON_SYSCONFIGDATA_NAME; ' + cmd
--
-     # Disable pseudo as it may affect ssh, potentially causing it to hang.
-     cmd = 'export PSEUDO_DISABLED=1; ' + cmd
- 
--- 
-2.25.1
+> +
+>     :term:`BB_DISKMON_DIRS`
+>        Monitors disk space and available inodes during the build and allo=
+ws
+>        you to control the build based on these parameters.
+> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+> index b8b217c64a..54ef245a63 100644
+> --- a/lib/bb/runqueue.py
+> +++ b/lib/bb/runqueue.py
+> @@ -1271,6 +1271,7 @@ class RunQueue:
+>              "date" : self.cfgData.getVar("DATE"),
+>              "time" : self.cfgData.getVar("TIME"),
+>              "hashservaddr" : self.cooker.hashservaddr,
+> +            "umask" : self.cfgData.getVar("BB_DEFAULT_UMASK"),
+>          }
+>=20
+>          worker.stdin.write(b"<cookerconfig>" + pickle.dumps(self.cooker.=
+configuration) + b"</cookerconfig>")
+> --
+> 2.27.0
+
+//Peter
 
