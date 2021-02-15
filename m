@@ -1,90 +1,76 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
- by mx.groups.io with SMTP id smtpd.web12.21422.1613331374161630474
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+ by mx.groups.io with SMTP id smtpd.web10.31953.1613400433406457569
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 14 Feb 2021 11:36:14 -0800
+ Mon, 15 Feb 2021 06:47:13 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=X9tnxZGk;
- spf=pass (domain: gmail.com, ip: 209.85.210.52, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f52.google.com with SMTP id e4so4274805ote.5
-        for <bitbake-devel@lists.openembedded.org>; Sun, 14 Feb 2021 11:36:14 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=XKWzpxAL;
+ spf=softfail (domain: sakoman.com, ip: 209.85.161.42, mailfrom: steve@sakoman.com)
+Received: by mail-oo1-f42.google.com with SMTP id z36so1582242ooi.6
+        for <bitbake-devel@lists.openembedded.org>; Mon, 15 Feb 2021 06:47:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=jIAqRNyZFIENOLaDn0TQAPdDAIsjKS3Fp1pcUe0neVU=;
-        b=X9tnxZGkJhsksPNAB4L8V2DVLAiX3MLCeftmvcNXoYDRUqpwo3Kfu2e9qSAimGdBBO
-         UVdiXCAr7vgPczFLtuvI724QcEMt2qM+dxO5E2+8zkgEu58yHmbecWwCyxw9oGw5Dv52
-         ykvLGd5V2lgnj0SycMX3yH2IBzyWC/4XuutZDxsTnyBqp4Aj9AIXBriyO5QAqhumgs3r
-         7IlPgq8hxGIwbo/udUfU3nXlA21ZGkQ64KIcai/gsdu5O4/mHtKOuJsQQqPnZEbAHAa7
-         RjZ240lyh4omQizgW28h0zT4V3t00PSx7rnvq2L4QEvxR72AlMExYeVOl27n7x9R6it4
-         9+eA==
+        bh=iE6uNk2tW7qmAouBX90Nkmv0Uwbc+ZgQMq9xKKGEvkI=;
+        b=XKWzpxALFeKaSAHyoMGBNYLxu4f0InYkgssSEvFMr1WzKCkDOkGyXZLIF+uam+I+7s
+         c5Ku0xToxRrFAUd2TEFFgoaho+h66cPuDJ2jYDrqstoijXZHrrXiyFhZFoPMSr+UQpQx
+         /pqFhfhLnwZK2MLol2mxKVs/PcqIyuL+LOCCcaJ8xGjrFULzGZkp4lLaf7JgJzan48ZQ
+         IXWVRbpEzggnq4r5eAwVi1SttKXrDoRfO6RPdwFexvvzQunP0Drlr+eC23txgw7vUSI7
+         02GO8vyshYMS+L9BfijHrvbH0Jw1hvqPPz5CEgcy5oE1yTFbPPjYoHWDaUepfelwsmDA
+         N89w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=jIAqRNyZFIENOLaDn0TQAPdDAIsjKS3Fp1pcUe0neVU=;
-        b=Y6MAyHZwMNuCGBIxKPt2/YcXtg4mn+CLvITm1iDWTdQ5ezvz2kSiOBBi8yFPvrrJJ2
-         hXpz6ttlX5+wFqoPQUgCmUXwtBoceJoJASBr1XU0oWRD6yMWUJtpsD7KAiqSnNSlMzMv
-         L1hAQ3ES2JjQ3MKDV93CcWBkzfc3QdCQoJo8HOfjKiZMByQhbiyp65rWw0VQw/0HBY/g
-         B+XygNGg95+vJI+R89U1lP/zxoW2+PJbi8NSrMrf6F1wrcgLC5qDqzclDRgE922/3TpP
-         l9axYMvLuafRQnkW2qL0kg6qh2kF7t2yaC05jx4KTI8JsypV1vypJzCuEbgC1rIyBMAE
-         66dg==
-X-Gm-Message-State: AOAM530MIfMc2IYToeIHL5Nj+hG/y0+2DHN5qjhVqy+4LaNjaaeSx2WD
-	elrCVr2CApBNpyZrfVKdPbyA1nhB/q4=
-X-Google-Smtp-Source: ABdhPJxdEWmh2bX/7aoRWxJmiFqXLHSXgOR1cViTSFxccZ1jDoWKtcPusff/rnpDRJprxZLXm+1U8g==
-X-Received: by 2002:a05:6830:3152:: with SMTP id c18mr9215937ots.191.1613331373365;
-        Sun, 14 Feb 2021 11:36:13 -0800 (PST)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id r1sm521553oic.23.2021.02.14.11.36.12
+        bh=iE6uNk2tW7qmAouBX90Nkmv0Uwbc+ZgQMq9xKKGEvkI=;
+        b=jcJJYcFlsU7rJnYAlf68WhJb20sYmnodDHK7x8XuCt4XJwKP+tJ1upwljG7JFuod9D
+         jfEHz5lsTUJeZpsk1M/oapmy9wdMsO4Hsp38HVJcod7nCOb+j1V2zhHiEGQGZ4qV0qFd
+         Rw8l31AEn1w1VZOpK4v9nm0mJEYFj9yjkCrkQTxII8B5DSVzgDYoDslNtZAnoSk8KpAQ
+         lAsALbFSNr7H3XsfmtMBBs31hebUFfYktZ/WRPoCQOEz81IDrTRCgPRHemqhN8RnMaTn
+         j4HZTlWwRhrvTIWV/1t8UAuY6wZpB+XP8+8iHSWHUZXYxR8LKQoX0Qg5403Z1gMyNxHL
+         lbuQ==
+X-Gm-Message-State: AOAM532O72tTrS9xrramPa9oRDQuJNLe/atyyrg/noJrhWMUGpd8q1jL
+	mGthKFRtblqu8Y8kGCQGJpWv0Z+Zpi7s4F/3
+X-Google-Smtp-Source: ABdhPJyl930c6ZQ7HPaCBRTXAb8r1HxCak5C3WEIPI/8Ac3P+9Y9CYfoCXresPmW2Ch1JfIhPYgpkw==
+X-Received: by 2002:a4a:e978:: with SMTP id i24mr5664207ooe.89.1613400432361;
+        Mon, 15 Feb 2021 06:47:12 -0800 (PST)
+Return-Path: <steve@sakoman.com>
+Received: from hexa.router0800d9.com ([72.173.249.164])
+        by smtp.gmail.com with ESMTPSA id i23sm3785995oik.10.2021.02.15.06.47.09
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Feb 2021 11:36:12 -0800 (PST)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+        Mon, 15 Feb 2021 06:47:11 -0800 (PST)
+From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: ticotimo@gmail.com,
-	Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] contrib: Add Dockerfile for building hash server
-Date: Sun, 14 Feb 2021 13:36:07 -0600
-Message-Id: <20210214193607.22974-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.30.0
+Subject: [bitbake][dunfell][1.46][PATCH 0/1] Patch review
+Date: Mon, 15 Feb 2021 04:46:51 -1000
+Message-Id: <cover.1613400108.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adds a Dockerfile for build the reference hash equivalence server in a
-container
+This patch is associated with the python3targetconfig patches currently being
+reviewed for oe-core.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- contrib/hashserv/Dockerfile | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 contrib/hashserv/Dockerfile
+Passed a-full when tested with those patches on autobuilder:
 
-diff --git a/contrib/hashserv/Dockerfile b/contrib/hashserv/Dockerfile
-new file mode 100644
-index 00000000..d6fc728f
---- /dev/null
-+++ b/contrib/hashserv/Dockerfile
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: MIT
-+#
-+# Copyright (c) 2021 Joshua Watt <JPEWhacker@gmail.com>
-+# 
-+# Dockerfile to build a bitbake hash equivalence server container
-+#
-+# From the root of the bitbake repository, run:
-+#
-+#   docker build -f contrib/hashserv/Dockerfile .
-+#
-+
-+FROM alpine:3.13.1
-+
-+RUN apk add --no-cache python3
-+
-+COPY bin/bitbake-hashserv /opt/bbhashserv/bin/
-+COPY lib/hashserv /opt/bbhashserv/lib/hashserv/
-+
-+ENTRYPOINT ["/opt/bbhashserv/bin/bitbake-hashserv"]
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/1852
+
+The following changes since commit 2351b496bb63b96920d4ae67bec816f00d510df2:
+
+  fetch/git: download LFS content too during do_fetch (2021-02-05 12:18:26 +0000)
+
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
+
+Alexander Kanavin (1):
+  lib/bb/fetch2/__init__.py: drop _PYTHON_SYSCONFIGDATA_NAME unsetting
+
+ lib/bb/fetch2/__init__.py | 5 -----
+ 1 file changed, 5 deletions(-)
+
 -- 
-2.30.0
+2.25.1
 
