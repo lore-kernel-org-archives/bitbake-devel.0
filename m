@@ -1,86 +1,89 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web10.7106.1613479157843573778
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+ by mx.groups.io with SMTP id smtpd.web09.1898.1613617673947860227
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 16 Feb 2021 04:39:18 -0800
+ Wed, 17 Feb 2021 19:07:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LIjWFKuX;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f53.google.com with SMTP id b3so12764013wrj.5
-        for <bitbake-devel@lists.openembedded.org>; Tue, 16 Feb 2021 04:39:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=tNuftDFlNMs72M9oNarkf/7pM8Vuo2EsNJ54uwPQ+RQ=;
-        b=LIjWFKuXCjTi2Bedefa+3kkjFmWOjxk96QmlPyOgDa185TyrHpb82BFzfJkConRM20
-         QrCCimBAPliOAJBlIsdqtsICCZ0NrVnHRHhegY28CADvF+QnekOZktpaDZGK5PBXRDUa
-         zEJhlNkFB7hcUWIdyVsYur6LclVRrXXaMJeD4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=tNuftDFlNMs72M9oNarkf/7pM8Vuo2EsNJ54uwPQ+RQ=;
-        b=SAUqlHjSMX+kd3N0a+TgwEmJdNh8YKM7mh3m2obUoS10rOQxBXEhkbYhItDnISTSLE
-         /uXrQ2Ua4zRGqxRBXvd0sBECOWvW7z68C9iAN/3k3PA/WJjA2ma2SpLTS8MwD3elxfw8
-         NMNlFo57/DEspvpCmw35ekvHE80XlR/9TFXJ73SQgRIpm0XJ9bHbkGpGLNNnA/edecCK
-         EYdJgcbqtbQqjTFf+KwntyeLbnjwYbLsAVjMXVR7PjGIfq8m+Gfq1UCYP4A64eGxCzd+
-         3am28ASsn5G/ybHfLcMNpIrSC18200YOrDtOfAWOjeWFhGBcwFXztItJxufMIHZu855j
-         3HmA==
-X-Gm-Message-State: AOAM531bhoDvoZDckF4/ElI/7yGcFgnfTaGBqDcsp4pvyjnVFJu/En5p
-	OKrFxnmrhhHueqWOTkLeTHDMMA==
-X-Google-Smtp-Source: ABdhPJwvbNIjRW4hENaMnFxq/Vsn2STRMf6AJFu7pm0DrdW6P0ALfWbfsBoJ/mxWikw8YciFBjpt6g==
-X-Received: by 2002:adf:e3cd:: with SMTP id k13mr22921245wrm.289.1613479156071;
-        Tue, 16 Feb 2021 04:39:16 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:3cdf:51ac:3008:b3cc? ([2001:8b0:aba:5f3c:3cdf:51ac:3008:b3cc])
-        by smtp.gmail.com with ESMTPSA id f7sm28617212wrm.92.2021.02.16.04.39.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Feb 2021 04:39:15 -0800 (PST)
-Message-ID: <7e12f6331ca23f8fac9038bd65609cd4e8aae383.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v5] event: Prevent bitbake from executing event handler for wrong multiconfig target
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 16 Feb 2021 12:39:15 +0000
-In-Reply-To: <20210210111515.1189896-1-tomasz.dziendzielski@gmail.com>
-References: <20210210111515.1189896-1-tomasz.dziendzielski@gmail.com>
-User-Agent: Evolution 3.38.1-1 
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+ dkim=pass header.i=@qq.com header.s=s201512 header.b=DLQMvPVY;
+ spf=pass (domain: qq.com, ip: 52.59.177.22, mailfrom: ideamark@qq.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1613617668; bh=D/rSS/eaTYXz9fz2BUdxuboivkEEsGMUDM2fo3rvxAM=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=DLQMvPVYXzBL3QHbMlLWM0x7TPDdffiaerPbD5iCvTlx36j4l+SHHNYvbfQ0O2TAu
+	 V3MzbhVbLZeXtgA45OhGX1MsvcwbIu5f9gVER6duSsEZEafsembXzcpZ06b6UpKe9f
+	 J/4Rb0r3tIGsCtlsY+ajriGjUoLmJmnPeJT2YjVk=
+X-QQ-FEAT: YuwbzFVdD1jUdotILI7UMbjEXHGobE/uj8nCoO7ejEidQSxQsKO7c4WqNGdSE
+	ZJ8ZjSeoQ/S8X+Oj07Ez6XsNrTbZuEGe4/dOnqPNfrR36mXUCaPSmuB2XGs5eUNVpPwia6Q
+	5meiyAs3NnlCzP4CTSorq9Fk5RpAfWJPQG23xn9oicwXhZtgAMvR5e8oTJb5crfD431u61a
+	J7AyZ1sfwqAwR4uiN8vOK2EWX43M0KmSTvk+UZRPqZZU/K/4izyQ1jYC/P1usZ9canJEvIq
+	4KasNvKeTJ26w83/9co46s364=
+X-QQ-SSF: 00000000000000F0
+X-QQ-XMAILINFO: Oah5jeaK2MF3D8yQ9kdu1qciTpnRDM3KevRc6GqpgJvfgKeMXSRFlpkB8VsdD1
+	 +kTsCBW5UlcBxp1FwTN/EC9eO0P4oXtBml/2Z+ecGG8S5birqmFhb8mHMJF+cucpjgwQdsOj6QXSQ
+	 CfGvjW3TwT9o5X1zTmcO2KDxCCL2twX8CbwvHCH/PTzQ+P2zy/RVf5f7Nh9JgAIsz+x/UA+L42NRU
+	 MaOjmi2A+8ZW8qmGxlWOQwSHg8ZTYBqjC2QOTe+S0OD/0GpEJ1ffjEY5hIzhJSIHZlAhJKYLxGrUC
+	 FfCNzBLZGUSgJQ9i7BXKvsVmdquHmJdnRdDR0b+sT0bbqwfSqsT+2+LrJ0IYMwtpZrqVXcafWTxwa
+	 ddYG5eI6SVE2e0s7gso5/g7btejvitNAHU30bQNQAL6Qb4eitr1Le3DKtDDeawaXlebd9gGl/bIll
+	 rHUQfs/DKojVjtKZA+7w/xOllNOmDvkAcmHW4z+agdlVEsGIbh5RnchbGmBqfuVgEvcq2qbRNmML3
+	 N7zGzIUJDiAbhkiN/8EdPSeLOSDaxM3mo1X2/fBDfSi/NJFWyMAuRQj2m1LUw1zIs2ntQiFUut798
+	 wQ1NUm4lFaNY+iJRL481KDebvokQC8ph3vjpNYf/u7E3BKC5yKkLGsrQ8y15ncqQ6o0McUD1F5P9d
+	 CrmEM41DAwPAaDAkotjltV7KKT/EdM/+wDZBhbPfHVB9qlM1lpHZcE6aEVlG0tf8E4DOZh5JKGKlr
+	 zFGDIN/FjPS7KQQ==
+X-QQ-WAPMAIL: 1
+X-QQ-BUSINESS-ORIGIN: 2
+X-Originating-IP: 221.12.147.114
+References: <tencent_F9A9D7345356CA6F9BEFD1A3CC9C89212808@qq.com>
+X-QQ-STYLE: 
+X-QQ-mid: riamail30t1613617667t2961208
+From: ideamark@qq.com
+To: "=?utf-8?B?Yml0YmFrZS1kZXZlbA==?=" <bitbake-devel@lists.openembedded.org>
+Subject: Re: How to use AUTOREV
+Mime-Version: 1.0
+Date: Thu, 18 Feb 2021 11:07:46 +0800
+X-Priority: 3
+Message-ID: <tencent_DC6A44B97FB3251A859926910785FBDA6F05@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+X-QQ-ReplyHash: 23405415
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Thu, 18 Feb 2021 11:07:48 +0800 (CST)
+Feedback-ID: riamail:qq.com:bgforeign:bgforeign12
+X-QQ-Bgrelay: 1
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_602DDA02_1053A740_3D478D6E"
+Content-Transfer-Encoding: 8Bit
 
-On Wed, 2021-02-10 at 12:15 +0100, Tomasz Dziendzielski wrote:
-> When multiconfig is used bitbake might try to run events that don't
-> exist for specific mc target. In cooker.py we pass
-> `self.databuilder.mcdata[mc]` data that contains names of events'
-> handlers per mc target, but fire_class_handlers uses global _handlers
-> variable that is created during parsing of all the targets.
-> 
-> This leads to a problem where bitbake runs event handler that don't
-> exist for a target or even overrides them - if multiple targets use
-> event handler with the same name but different code then only one
-> version will be executed for all targets.
-> 
-> See [YOCTO #13071] for detailed bug information.
-> 
-> Add mc target name as a prefix to event handler name so there won't be
-> two different handlers with the same name. Add internal __BBHANDLERS_MC
-> variable to have the handlers lists per machine.
-> 
-> Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-> 
-> --- v5 move the whole logic to event.bb, fix tests
-> ---
->  lib/bb/cookerdata.py |  2 +-
->  lib/bb/event.py      | 26 ++++++++++++++++++++++++--
->  lib/bb/parse/ast.py  |  2 +-
->  lib/bb/runqueue.py   |  4 ++--
->  4 files changed, 28 insertions(+), 6 deletions(-)
+------=_NextPart_602DDA02_1053A740_3D478D6E
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Thanks for persevering with this one, its a great fix to get in! It
-passed testing and has now merged.
+SGksDQoNCg0KQ291bGQgeW91IGhlbHAgdG8gdGVhY2ggaG93IHRvIHVzZSB0aGUgQVVUT1JF
+ViBwYXJhbWV0ZXIgaW4gYml0YmFrZSBiYiBmaWxlPw0KSSB0cmllZCBzb21lIGZvcm1hdHMg
+ZnJvbSB0aGUgZG9jdW1lbnQgYnV0IGZhaWxlZC4NClRoYW5rIHlvdS4NCg0KDQpCUnMNCk1h
+cms=
 
-Cheers,
+------=_NextPart_602DDA02_1053A740_3D478D6E
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Richard
+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNo
+YXJzZXQ9VVRGLTgiPjxkaXYgc3R5bGU9Im1pbi1oZWlnaHQ6MjJweDttYXJnaW4tYm90dG9t
+OjhweDsiPkhpLDwvZGl2PjxkaXYgaWQ9Im9yaWdpbmFsLWNvbnRlbnQiPjxkaXYgc3R5bGU9
+Im1pbi1oZWlnaHQ6MjJweDttYXJnaW4tYm90dG9tOjhweDsiPjxicj48L2Rpdj48ZGl2IHN0
+eWxlPSJtaW4taGVpZ2h0OjIycHg7bWFyZ2luLWJvdHRvbTo4cHg7Ij5Db3VsZCB5b3UgaGVs
+cCB0byB0ZWFjaCBob3cgdG8gdXNlIHRoZSBBVVRPUkVWIHBhcmFtZXRlciBpbiBiaXRiYWtl
+IGJiIGZpbGU/PC9kaXY+PGRpdiBzdHlsZT0ibWluLWhlaWdodDoyMnB4O21hcmdpbi1ib3R0
+b206OHB4OyI+SSB0cmllZCBzb21lIGZvcm1hdHMgZnJvbSB0aGUgZG9jdW1lbnQgYnV0IGZh
+aWxlZC48L2Rpdj48ZGl2IHN0eWxlPSJtaW4taGVpZ2h0OjIycHg7bWFyZ2luLWJvdHRvbTo4
+cHg7Ij5UaGFuayB5b3UuPC9kaXY+PGRpdiBzdHlsZT0ibWluLWhlaWdodDoyMnB4O21hcmdp
+bi1ib3R0b206OHB4OyI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9Im1pbi1oZWlnaHQ6MjJweDtt
+YXJnaW4tYm90dG9tOjhweDsiPkJSczwvZGl2PjxkaXYgc3R5bGU9Im1pbi1oZWlnaHQ6MjJw
+eDttYXJnaW4tYm90dG9tOjhweDsiPk1hcms8L2Rpdj48ZGl2IHN0eWxlPSJtaW4taGVpZ2h0
+OjIycHg7bWFyZ2luLWJvdHRvbTo4cHg7Ij48YnI+PC9kaXY+PGRpdiBpZD0ib3JpZ2luYWwt
+Y29udGVudCI+PC9kaXY+PC9kaXY+
 
+------=_NextPart_602DDA02_1053A740_3D478D6E--
