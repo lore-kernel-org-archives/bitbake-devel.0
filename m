@@ -1,44 +1,44 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
- by mx.groups.io with SMTP id smtpd.web10.32511.1613986682331572989
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+ by mx.groups.io with SMTP id smtpd.web12.33461.1613992878410318637
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Feb 2021 01:38:02 -0800
+ Mon, 22 Feb 2021 03:21:18 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=YFBsR8tK;
- spf=pass (domain: gmail.com, ip: 209.85.208.170, mailfrom: tomasz.dziendzielski@gmail.com)
-Received: by mail-lj1-f170.google.com with SMTP id g1so50096938ljj.13
-        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Feb 2021 01:38:02 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=OR4U0ybI;
+ spf=pass (domain: gmail.com, ip: 209.85.208.177, mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-lj1-f177.google.com with SMTP id y7so54726207lji.7
+        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Feb 2021 03:21:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=LZwJUkIjIKzpgKBSkpnoPT127T5k/mVq2WbsWcz/AGc=;
-        b=YFBsR8tKyNV3c5jMx2IBTXStNYhVJBc43xoHDOfWrxhxVEeWQSV/bRRCogaMa/hgmH
-         YM3i6Pq4XmLNzap/X611puvBomZ+m1XvXi2ikC3r6GXa9tU56pghuAW2JpysE/X5lDrN
-         DaTHutgEBEmTaRCZqjQ2GeIhpw+t3t2qWBdS7rvHBuH8Rr1gL2wOrwrVStHLwE1NWqBb
-         uvQxZoq254WeDaYNOz4MLwRg1ECRsIvDTOF3cmFk7U73FSsb627f3kLNKvfWS0fpSkcn
-         Ps1ZMAEW6oVpYL1AmmeHNziE2PyJSizuDFAO3C3AGrxGb6SAiubdfcnDs5bzHR6wlYHz
-         G/Zg==
+        bh=rt5vbO+UEq92Wy/pQnYh+ZkvI1vGfmE5AuNsDOvS0Cg=;
+        b=OR4U0ybIRKHd4qHl69kmy+IgxTMKmC6hf9v2fXpxPpmctsAjXi/hlqNua/em+PZc6S
+         uENXnBiylKTi84uRL4lOXGWeaC2hV6ZQ1s+mSIjoee+G+XcMf0LUWzxU+LlmcG4UivXn
+         WPd5wiyGFGrsY/zHTOXHAvoT/0VvzjRCVsijyp9Wpy6b6JW9Rl3OIhTR+J+3msli7xtc
+         U68xZCaox8kc5IkWtklxDefGgHgkOp5r5GiDSriDIGHOd/ladfHu6UjiDxCKfqIN7emH
+         KNCixY2AN9upknUIX+SI2C3z7WtzVmcADMXcMkehIUSL+n41yu28vhjoJ+oU8UfsDajf
+         AsMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=LZwJUkIjIKzpgKBSkpnoPT127T5k/mVq2WbsWcz/AGc=;
-        b=n06Mz45d55K4J5IR/Sz2heEVlRfcwQsg1Utsk+3MWFqkuEaQOzmm6EfBx9A+Pn0Sjw
-         OhoU1M2yb7LgyINJdcdnmvlULetB12pf0w9xtgbDIdQAxma5k6r9RjBzfHzgXgxQ8FWR
-         ZPSeI5cBc/syiafVLPs+zVN0sZCUztKIN4g9HbcfcinIZTXfA3PIVPSznA2Lp7+CP+aP
-         aAMN8DaBSVvKaLp8icXY7yvZOEc2Pv03ol2WIcZMtnFB4LcUFkpG3PCBmLIG8RTVP9rE
-         dcKnHEMaom+lnHnEBiJksZS153aRR7Hg4SFjEZMDIZ9KRpLeRqTrU8vtOwdqI8pATbm+
-         XPiw==
-X-Gm-Message-State: AOAM531gzPkCpz+E7811cMgyNxqWrcxdBHG31FtE20PVMteMGvag7KDZ
-	8jCi4zZ9CauGW9rfD+skJvl5U+ICGTk=
-X-Google-Smtp-Source: ABdhPJy0M459YpM1AacRxT0E5R2IuTkCDTmZp8Qmndyc8oAqPeZEgPhe3FzKmH7zFBF1RIMlE8OmlQ==
-X-Received: by 2002:a2e:9b0e:: with SMTP id u14mr1387405lji.327.1613986680121;
-        Mon, 22 Feb 2021 01:38:00 -0800 (PST)
+        bh=rt5vbO+UEq92Wy/pQnYh+ZkvI1vGfmE5AuNsDOvS0Cg=;
+        b=NHWqjFlmdfp93uVAFutLGHwex9F+Ehy8LTJBFqDzMGvUQqplwN1ZrMBtPwI5A7FVXE
+         P1fygoHrTiW6fKpxRIOzNqGzjoU3yUclZ92hKWd+gUFIM9aQi9ERKcQtMrw/5phhhOJW
+         Tn0tXbJAHd3fXTBBQMZBRa5nd6lezCgnbpMiI8my/msqiCqCPShIBCXstdU8hJ9Gqcst
+         gCDJzqu9EFNxvEwCe4TJZJWPbisVaNgE3Gw5HnvQJH9c61u3jwXNjggvE26rvLklTZ++
+         z7EFqx7V2BSgvA3QiUAHvCdQCo5CtCzQJWaQ0bJPH23PLick3yDx1UNWEHL5Ivi+ye8T
+         RB+g==
+X-Gm-Message-State: AOAM530jpMth94N6D7gN4+KLe24Bj2Z2HR89IoxlcksQBVSQJku/iNsD
+	lBbYuTSnP5+dskq7gMGRBwRCMaHqKCt04A==
+X-Google-Smtp-Source: ABdhPJyTO1YQkD4QFJ6J8M3S60iadqvV9mJOh/D80Wuu4/2j9RUxtxE++2kU84ZL3JAB0NTxENrchA==
+X-Received: by 2002:a19:810c:: with SMTP id c12mr14040697lfd.244.1613992876155;
+        Mon, 22 Feb 2021 03:21:16 -0800 (PST)
 Return-Path: <tomasz.dziendzielski@gmail.com>
 Received: from localhost.localdomain (h124200.man.tk-internet.pl. [93.175.124.200])
-        by smtp.gmail.com with ESMTPSA id b16sm1866681lfs.101.2021.02.22.01.37.58
+        by smtp.gmail.com with ESMTPSA id v2sm1006253lfd.111.2021.02.22.03.21.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Feb 2021 01:37:59 -0800 (PST)
+        Mon, 22 Feb 2021 03:21:15 -0800 (PST)
 From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>,
@@ -47,9 +47,9 @@ Cc: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>,
 	Mikolaj Lasota <mikolaj.lasota@protonmail.com>,
 	Wiktor Baura <wbaura@gmail.com>,
 	Kamil Kwiek <kamil.kwiek@gmail.com>
-Subject: [PATCH] runqueue: Print pseudo.log if fakeroot task failed
-Date: Mon, 22 Feb 2021 10:40:19 +0100
-Message-Id: <20210222094019.1671-1-tomasz.dziendzielski@gmail.com>
+Subject: [PATCH v2] runqueue: Print pseudo.log if fakeroot task failed
+Date: Mon, 22 Feb 2021 12:24:00 +0100
+Message-Id: <20210222112400.1961-1-tomasz.dziendzielski@gmail.com>
 X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,12 +72,14 @@ Signed-off-by: Paulo Neves <ptsneves@gmail.com>
 Signed-off-by: Mikolaj Lasota <mikolaj.lasota@protonmail.com>
 Signed-off-by: Wiktor Baura <wbaura@gmail.com>
 Signed-off-by: Kamil Kwiek <kamil.kwiek@gmail.com>
+
+--- v2 Pass taskfn in all start_fakeworker execution
 ---
- lib/bb/runqueue.py | 52 ++++++++++++++++++++++++++++++++++------------
- 1 file changed, 39 insertions(+), 13 deletions(-)
+ lib/bb/runqueue.py | 54 ++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 40 insertions(+), 14 deletions(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 54ef245a..ce09aecf 100644
+index 54ef245a..aa06d706 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
 @@ -1237,11 +1237,12 @@ class RunQueue:
@@ -173,6 +175,15 @@ index 54ef245a..ce09aecf 100644
          if self.rqdata.taskData[''].abort:
              self.rq.state = runQueueCleanUp
  
+@@ -2050,7 +2071,7 @@ class RunQueueExecute:
+             unihash = self.rqdata.get_task_unihash(task)
+             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not self.cooker.configuration.dry_run:
+                 if not mc in self.rq.fakeworker:
+-                    self.rq.start_fakeworker(self, mc)
++                    self.rq.start_fakeworker(self, mc, taskfn=taskfn)
+                 self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, unihash, True, self.cooker.collections[mc].get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
+                 self.rq.fakeworker[mc].process.stdin.flush()
+             else:
 @@ -2132,7 +2153,7 @@ class RunQueueExecute:
              if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not (self.cooker.configuration.dry_run or self.rqdata.setscene_enforce):
                  if not mc in self.rq.fakeworker:
