@@ -1,281 +1,295 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
- by mx.groups.io with SMTP id smtpd.web08.38105.1614012002627880442
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+ by mx.groups.io with SMTP id smtpd.web09.37996.1614012038434438378
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Feb 2021 08:40:03 -0800
+ Mon, 22 Feb 2021 08:40:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=DY0obsKj;
- spf=pass (domain: gmail.com, ip: 209.85.218.47, mailfrom: kergoth@gmail.com)
-Received: by mail-ej1-f47.google.com with SMTP id t11so30437231ejx.6
-        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Feb 2021 08:40:02 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=b08ekaNS;
+ spf=pass (domain: gmail.com, ip: 209.85.208.48, mailfrom: kergoth@gmail.com)
+Received: by mail-ed1-f48.google.com with SMTP id p2so22792783edm.12
+        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Feb 2021 08:40:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cRGnZ387FLYJDa8NOsbckuEsqfcqWXCduFuRImDn6oE=;
-        b=DY0obsKjiqYcljSJWNdD8RMWFbbicSKQt5Rnec/4CQlO5OqmqrwYXrnD3fCxD1xiMN
-         1ZEz9ERZZXjU43fJGDA6WVBIpIqW5MrQ0BD25qWaR2oTIuYjUao6OCzGOWIMjW5OZ9cO
-         Z0lMh9UYTGh5ycDKiFwtKPOcQK77BMF+ZseJ0n8ckFNF6QroxO+nmnyRAWQmCFJuHOF+
-         z/Bxk9FLVxWlmXVZg4mSZ64u99H0fzcD10pfrUeq6RIUd2s/ksDTY6Mv/Pczon0pm8bx
-         jaVuZayaEUQJkhb/jeVl/NdC9gI5KZl513XheR2TodmqM5rNd2j27UGFCreHVO7rfL5D
-         3V5A==
+        bh=xgdUr7aMHvzUpQEQhyTvXz5ybV4h1NJoT/UAseohrD8=;
+        b=b08ekaNSO+glYToTjZ13j+1niFa94d27+mqBTEqAD5oGcXQw1JwBD67mRhiO2RsYwz
+         FpLI8ZXl5CZD4jCbXnevcmnIx2dZl2bduZLtuOWl4loJIATV4/eTGI6qib39zUk7+z5Y
+         3yZ2CelyGtNSqFd1hOtpj4FlXc9oZOAPaBbJk4Or4DM6kYbE3h/6qzfPzcBElxT1cZUd
+         ZeEgkCF4O8WDmFPS+Q+8k0lTTL4aV2Vl5DOToW1SNHQL4/i8/Ae6hS2fwx272OqCJqER
+         gZwfUdmaFV5JvTOKPNjFRX9J169c39gVtk13VMdCCk5sRChCFiRx9ugc61iX5lNvPYL4
+         gZ8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cRGnZ387FLYJDa8NOsbckuEsqfcqWXCduFuRImDn6oE=;
-        b=quzgYl+vkJ9aY5WWOsbkAU1nezUL0YQ+iZKGMGUcFe16YpjOk0y5RqlIXuS9isTbi+
-         UJveAVqgMvwTuXyXgExCARVHwF1fHFMgNyCq/PG3eIC0hTc4TWaCsP3dTIqYqfF9zqH4
-         p2d1BZm6CLnwhO48+DNiMFJIjJvONohcQJLx9sYgZJaV7u2/wyIBvig9YEJzCplDUSO6
-         hdm+AnsqYJQDvnB2QfMqiU4rW3GFY8dRQhJaPgAlcU6TNF+cnAnWWZNpXoE5Ui1wiKDu
-         CDDpQnDhj4XvMcoo7q4LwiD9RYB4/03gxVbs2+Yd6P13inNYHzRi9SjMb1kmNjNGiXp1
-         AJYg==
-X-Gm-Message-State: AOAM533BV+uT8u/FeNgqUfoYB3Oq6LIulVHBXW676IstlFZtpy3dAJqX
-	e8n7XCUPxCTM20xitlO0inF342zbuqlz+d+xGas=
-X-Google-Smtp-Source: ABdhPJxxucTHn1zKKwM9qJgCHW8tJAzZkhLDQvv1OuyDUQdGH4iXx6mAlo8Uo5zylhgM/4QrJ1uU4aijUyAg6qCx2FQ=
-X-Received: by 2002:a17:907:77cb:: with SMTP id kz11mr21101644ejc.12.1614012001209;
- Mon, 22 Feb 2021 08:40:01 -0800 (PST)
+        bh=xgdUr7aMHvzUpQEQhyTvXz5ybV4h1NJoT/UAseohrD8=;
+        b=n/Xrn1S2p0INYE509bECnx2QURgO3SlDA+dVYFXBgWPskXM6aJBhAVn6AB7rlz+AgQ
+         lLTiEX11OcbWHtxAz5dvjgGwjAjuqSo899yAqynPcnwMDEf6oFILOIG/FjzUZxkL/ejD
+         8XZYpQplHuKM1cVGuk49Xc46g4CN+th7jg/MXB069yeF9AnccH5Bd2KxBnFHMiPrbax3
+         ALzS464rrqxxo/s983c7Zupxtp/DXpKRpMAuxwUxLvRONEyR5CPiJt5R/FK9VE9J4zuV
+         l0TS8Vlaw0a9BLZsyusSbtR65evK23h1RkDi6ETM5ZBRVKYtzAqdXu6DYmJSJ9SxBvvv
+         f1qA==
+X-Gm-Message-State: AOAM532gSNBqGQMb6ZEdfnzEBKKulYe7bniO8BNFjPPTUNtNWklu3EaN
+	3uOYtgZOEKaowMNIVnKlBj+hhOffKuplovcqFU0=
+X-Google-Smtp-Source: ABdhPJwUooO2o97ZfaoKkJycD4To6hcTSRyWhNNZ94v6aRHKgMO3JvfQv5xlW3PC9wlH76jn+/vwDwku7S/wiGLhEx0=
+X-Received: by 2002:aa7:de8f:: with SMTP id j15mr23797378edv.268.1614012037049;
+ Mon, 22 Feb 2021 08:40:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20210222112400.1961-1-tomasz.dziendzielski@gmail.com>
-In-Reply-To: <20210222112400.1961-1-tomasz.dziendzielski@gmail.com>
+References: <20210222112400.1961-1-tomasz.dziendzielski@gmail.com> <CABcZANk4CBmtfxHdRAKsrbgHfJ8krWWvuKP2MnPnyHu8+j6VTQ@mail.gmail.com>
+In-Reply-To: <CABcZANk4CBmtfxHdRAKsrbgHfJ8krWWvuKP2MnPnyHu8+j6VTQ@mail.gmail.com>
 From: "Christopher Larson" <kergoth@gmail.com>
-Date: Mon, 22 Feb 2021 09:39:49 -0700
-Message-ID: <CABcZANk4CBmtfxHdRAKsrbgHfJ8krWWvuKP2MnPnyHu8+j6VTQ@mail.gmail.com>
+Date: Mon, 22 Feb 2021 09:40:26 -0700
+Message-ID: <CABcZANnThm0WvX3pFRT+o=G6kAzgftaEGB0kW7ovVqcJk5pV7g@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH v2] runqueue: Print pseudo.log if fakeroot task failed
 To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org, 
 	Jan Brzezanski <jan.brzezanski@gmail.com>, Paulo Neves <ptsneves@gmail.com>, 
 	Mikolaj Lasota <mikolaj.lasota@protonmail.com>, Wiktor Baura <wbaura@gmail.com>, 
 	Kamil Kwiek <kamil.kwiek@gmail.com>
-Content-Type: multipart/alternative; boundary="000000000000fecfa905bbef73b7"
+Content-Type: multipart/alternative; boundary="00000000000021af0305bbef760a"
 
---000000000000fecfa905bbef73b7
+--00000000000021af0305bbef760a
 Content-Type: text/plain; charset="UTF-8"
 
-I can see the usability value here, but this violates a bitbake/oe-core
-boundary. bitbake doesn't hardcode knowledge of use of pseudo anywhere else
-but tests and bitbake.conf example currently, the fakeroot cmd used is
-defined in the *metadata*, not bitbake itself.
+I'd suggest making this more generic via a new variable specifying a
+fakeroot cmd logfile, or something along those lines.
 
-On Mon, Feb 22, 2021 at 4:21 AM Tomasz Dziendzielski <
-tomasz.dziendzielski@gmail.com> wrote:
+On Mon, Feb 22, 2021 at 9:39 AM Christopher Larson <kergoth@gmail.com>
+wrote:
 
-> Currently if pseudo fails we can only see the path to pseudo.log. If we
-> have no access to server and can only rely on bitbake log then debugging
-> becomes impossible. This printing needs to be added in runqueue level,
-> not inside task execution, because in some cases task fails with pseudo
-> abort really early and we don't even see any log.
+> I can see the usability value here, but this violates a bitbake/oe-core
+> boundary. bitbake doesn't hardcode knowledge of use of pseudo anywhere else
+> but tests and bitbake.conf example currently, the fakeroot cmd used is
+> defined in the *metadata*, not bitbake itself.
 >
-> In this change I'm adding pseudo log printing in every fakeroot task
-> failure that logged `mismatch`, `error` or `fatal` to logfile, because
-> we have no other way to communicate with pseudo if it failed or not.
-> Only lines from last pseudo server execution will be printed.
+> On Mon, Feb 22, 2021 at 4:21 AM Tomasz Dziendzielski <
+> tomasz.dziendzielski@gmail.com> wrote:
 >
-> Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-> Signed-off-by: Jan Brzezanski <jan.brzezanski@gmail.com>
-> Signed-off-by: Adrian Walag
-> Signed-off-by: Paulo Neves <ptsneves@gmail.com>
-> Signed-off-by: Mikolaj Lasota <mikolaj.lasota@protonmail.com>
-> Signed-off-by: Wiktor Baura <wbaura@gmail.com>
-> Signed-off-by: Kamil Kwiek <kamil.kwiek@gmail.com>
+>> Currently if pseudo fails we can only see the path to pseudo.log. If we
+>> have no access to server and can only rely on bitbake log then debugging
+>> becomes impossible. This printing needs to be added in runqueue level,
+>> not inside task execution, because in some cases task fails with pseudo
+>> abort really early and we don't even see any log.
+>>
+>> In this change I'm adding pseudo log printing in every fakeroot task
+>> failure that logged `mismatch`, `error` or `fatal` to logfile, because
+>> we have no other way to communicate with pseudo if it failed or not.
+>> Only lines from last pseudo server execution will be printed.
+>>
+>> Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+>> Signed-off-by: Jan Brzezanski <jan.brzezanski@gmail.com>
+>> Signed-off-by: Adrian Walag
+>> Signed-off-by: Paulo Neves <ptsneves@gmail.com>
+>> Signed-off-by: Mikolaj Lasota <mikolaj.lasota@protonmail.com>
+>> Signed-off-by: Wiktor Baura <wbaura@gmail.com>
+>> Signed-off-by: Kamil Kwiek <kamil.kwiek@gmail.com>
+>>
+>> --- v2 Pass taskfn in all start_fakeworker execution
+>> ---
+>>  lib/bb/runqueue.py | 54 ++++++++++++++++++++++++++++++++++------------
+>>  1 file changed, 40 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+>> index 54ef245a..aa06d706 100644
+>> --- a/lib/bb/runqueue.py
+>> +++ b/lib/bb/runqueue.py
+>> @@ -1237,11 +1237,12 @@ class RunQueue:
+>>          self.worker = {}
+>>          self.fakeworker = {}
+>>
+>> -    def _start_worker(self, mc, fakeroot = False, rqexec = None):
+>> +    def _start_worker(self, mc, fakeroot = False, rqexec = None,
+>> taskfn=None):
+>>          logger.debug("Starting bitbake-worker")
+>>          magic = "decafbad"
+>>          if self.cooker.configuration.profile:
+>>              magic = "decafbadbad"
+>> +        fakerootdir = None
+>>          if fakeroot:
+>>              magic = magic + "beef"
+>>              mcdata = self.cooker.databuilder.mcdata[mc]
+>> @@ -1251,10 +1252,12 @@ class RunQueue:
+>>              for key, value in (var.split('=') for var in fakerootenv):
+>>                  env[key] = value
+>>              worker = subprocess.Popen(fakerootcmd + ["bitbake-worker",
+>> magic], stdout=subprocess.PIPE, stdin=subprocess.PIPE, env=env)
+>> +            if taskfn and taskfn in
+>> self.rqdata.dataCaches[mc].fakerootdirs:
+>> +                fakerootdir =
+>> self.rqdata.dataCaches[mc].fakerootdirs[taskfn]
+>>          else:
+>>              worker = subprocess.Popen(["bitbake-worker", magic],
+>> stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+>>          bb.utils.nonblockingfd(worker.stdout)
+>> -        workerpipe = runQueuePipe(worker.stdout, None, self.cfgData,
+>> self, rqexec)
+>> +        workerpipe = runQueuePipe(worker.stdout, None, self.cfgData,
+>> self, rqexec, fakerootdir=fakerootdir)
+>>
+>>          workerdata = {
+>>              "taskdeps" : self.rqdata.dataCaches[mc].task_deps,
+>> @@ -1305,9 +1308,9 @@ class RunQueue:
+>>          for mc in self.rqdata.dataCaches:
+>>              self.worker[mc] = self._start_worker(mc)
+>>
+>> -    def start_fakeworker(self, rqexec, mc):
+>> +    def start_fakeworker(self, rqexec, mc, taskfn=None):
+>>          if not mc in self.fakeworker:
+>> -            self.fakeworker[mc] = self._start_worker(mc, True, rqexec)
+>> +            self.fakeworker[mc] = self._start_worker(mc, True, rqexec,
+>> taskfn=taskfn)
+>>
+>>      def teardown_workers(self):
+>>          self.teardown = True
+>> @@ -1772,7 +1775,7 @@ class RunQueueExecute:
+>>          self.sqdata = SQData()
+>>          build_scenequeue_data(self.sqdata, self.rqdata, self.rq,
+>> self.cooker, self.stampcache, self)
+>>
+>> -    def runqueue_process_waitpid(self, task, status):
+>> +    def runqueue_process_waitpid(self, task, status, fakerootdir=None):
+>>
+>>          # self.build_stamps[pid] may not exist when use shared work
+>> directory.
+>>          if task in self.build_stamps:
+>> @@ -1787,7 +1790,7 @@ class RunQueueExecute:
+>>              self.sq_live.remove(task)
+>>          else:
+>>              if status != 0:
+>> -                self.task_fail(task, status)
+>> +                self.task_fail(task, status, fakerootdir=fakerootdir)
+>>              else:
+>>                  self.task_complete(task)
+>>          return True
+>> @@ -1908,14 +1911,32 @@ class RunQueueExecute:
+>>          self.task_completeoutright(task)
+>>          self.runq_tasksrun.add(task)
+>>
+>> -    def task_fail(self, task, exitcode):
+>> +    def task_fail(self, task, exitcode, fakerootdir=None):
+>>          """
+>>          Called when a task has failed
+>>          Updates the state engine with the failure
+>>          """
+>>          self.stats.taskFailed()
+>>          self.failed_tids.append(task)
+>> -        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode,
+>> self.rq), self.cfgData)
+>> +
+>> +        pseudo_log = ""
+>> +        if fakerootdir and os.path.exists(os.path.join(fakerootdir,
+>> "pseudo.log")):
+>> +            with open(os.path.join(fakerootdir, "pseudo.log")) as
+>> pseudo_log_file:
+>> +
+>> +                pseudo_failed = False
+>> +                for line in reversed(pseudo_log_file.readlines()):
+>> +                    for pseudo_error in ['mismatch', 'error', 'fatal']:
+>> +                        if pseudo_error in line.lower():
+>> +                            pseudo_failed = True
+>> +                    if 'doing new pid setup and server start' in line:
+>> +                        break
+>> +                    pseudo_log = line + pseudo_log
+>> +
+>> +            if not pseudo_failed:
+>> +                pseudo_log = None
+>> +
+>> +        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode,
+>> self.rq, pseudo_log=pseudo_log), self.cfgData)
+>> +
+>>          if self.rqdata.taskData[''].abort:
+>>              self.rq.state = runQueueCleanUp
+>>
+>> @@ -2050,7 +2071,7 @@ class RunQueueExecute:
+>>              unihash = self.rqdata.get_task_unihash(task)
+>>              if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']
+>> and not self.cooker.configuration.dry_run:
+>>                  if not mc in self.rq.fakeworker:
+>> -                    self.rq.start_fakeworker(self, mc)
+>> +                    self.rq.start_fakeworker(self, mc, taskfn=taskfn)
+>>                  self.rq.fakeworker[mc].process.stdin.write(b"<runtask>"
+>> + pickle.dumps((taskfn, task, taskname, taskhash, unihash, True,
+>> self.cooker.collections[mc].get_file_appends(taskfn), taskdepdata, False))
+>> + b"</runtask>")
+>>                  self.rq.fakeworker[mc].process.stdin.flush()
+>>              else:
+>> @@ -2132,7 +2153,7 @@ class RunQueueExecute:
+>>              if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']
+>> and not (self.cooker.configuration.dry_run or self.rqdata.setscene_enforce):
+>>                  if not mc in self.rq.fakeworker:
+>>                      try:
+>> -                        self.rq.start_fakeworker(self, mc)
+>> +                        self.rq.start_fakeworker(self, mc, taskfn=taskfn)
+>>                      except OSError as exc:
+>>                          logger.critical("Failed to spawn fakeroot worker
+>> to run %s: %s" % (task, str(exc)))
+>>                          self.rq.state = runQueueFailed
+>> @@ -2876,12 +2897,16 @@ class runQueueTaskFailed(runQueueEvent):
+>>      """
+>>      Event notifying a task failed
+>>      """
+>> -    def __init__(self, task, stats, exitcode, rq):
+>> +    def __init__(self, task, stats, exitcode, rq, pseudo_log=None):
+>>          runQueueEvent.__init__(self, task, stats, rq)
+>>          self.exitcode = exitcode
+>> +        self.pseudo_log = pseudo_log
+>>
+>>      def __str__(self):
+>> -        return "Task (%s) failed with exit code '%s'" %
+>> (self.taskstring, self.exitcode)
+>> +        if self.pseudo_log:
+>> +            return "Task (%s) failed with exit code '%s' \nPseudo
+>> log:\n%s" % (self.taskstring, self.exitcode, self.pseudo_log)
+>> +        else:
+>> +            return "Task (%s) failed with exit code '%s'" %
+>> (self.taskstring, self.exitcode)
+>>
+>>  class sceneQueueTaskFailed(sceneQueueEvent):
+>>      """
+>> @@ -2933,7 +2958,7 @@ class runQueuePipe():
+>>      """
+>>      Abstraction for a pipe between a worker thread and the server
+>>      """
+>> -    def __init__(self, pipein, pipeout, d, rq, rqexec):
+>> +    def __init__(self, pipein, pipeout, d, rq, rqexec, fakerootdir=None):
+>>          self.input = pipein
+>>          if pipeout:
+>>              pipeout.close()
+>> @@ -2942,6 +2967,7 @@ class runQueuePipe():
+>>          self.d = d
+>>          self.rq = rq
+>>          self.rqexec = rqexec
+>> +        self.fakerootdir = fakerootdir
+>>
+>>      def setrunqueueexec(self, rqexec):
+>>          self.rqexec = rqexec
+>> @@ -2987,7 +3013,7 @@ class runQueuePipe():
+>>                      task, status = pickle.loads(self.queue[10:index])
+>>                  except (ValueError, pickle.UnpicklingError,
+>> AttributeError, IndexError) as e:
+>>                      bb.msg.fatal("RunQueue", "failed load pickle '%s':
+>> '%s'" % (e, self.queue[10:index]))
+>> -                self.rqexec.runqueue_process_waitpid(task, status)
+>> +                self.rqexec.runqueue_process_waitpid(task, status,
+>> fakerootdir=self.fakerootdir)
+>>                  found = True
+>>                  self.queue = self.queue[index+11:]
+>>                  index = self.queue.find(b"</exitcode>")
+>> --
+>> 2.30.1
+>>
+>>
+>> 
+>>
+>>
 >
-> --- v2 Pass taskfn in all start_fakeworker execution
-> ---
->  lib/bb/runqueue.py | 54 ++++++++++++++++++++++++++++++++++------------
->  1 file changed, 40 insertions(+), 14 deletions(-)
->
-> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-> index 54ef245a..aa06d706 100644
-> --- a/lib/bb/runqueue.py
-> +++ b/lib/bb/runqueue.py
-> @@ -1237,11 +1237,12 @@ class RunQueue:
->          self.worker = {}
->          self.fakeworker = {}
->
-> -    def _start_worker(self, mc, fakeroot = False, rqexec = None):
-> +    def _start_worker(self, mc, fakeroot = False, rqexec = None,
-> taskfn=None):
->          logger.debug("Starting bitbake-worker")
->          magic = "decafbad"
->          if self.cooker.configuration.profile:
->              magic = "decafbadbad"
-> +        fakerootdir = None
->          if fakeroot:
->              magic = magic + "beef"
->              mcdata = self.cooker.databuilder.mcdata[mc]
-> @@ -1251,10 +1252,12 @@ class RunQueue:
->              for key, value in (var.split('=') for var in fakerootenv):
->                  env[key] = value
->              worker = subprocess.Popen(fakerootcmd + ["bitbake-worker",
-> magic], stdout=subprocess.PIPE, stdin=subprocess.PIPE, env=env)
-> +            if taskfn and taskfn in
-> self.rqdata.dataCaches[mc].fakerootdirs:
-> +                fakerootdir =
-> self.rqdata.dataCaches[mc].fakerootdirs[taskfn]
->          else:
->              worker = subprocess.Popen(["bitbake-worker", magic],
-> stdout=subprocess.PIPE, stdin=subprocess.PIPE)
->          bb.utils.nonblockingfd(worker.stdout)
-> -        workerpipe = runQueuePipe(worker.stdout, None, self.cfgData,
-> self, rqexec)
-> +        workerpipe = runQueuePipe(worker.stdout, None, self.cfgData,
-> self, rqexec, fakerootdir=fakerootdir)
->
->          workerdata = {
->              "taskdeps" : self.rqdata.dataCaches[mc].task_deps,
-> @@ -1305,9 +1308,9 @@ class RunQueue:
->          for mc in self.rqdata.dataCaches:
->              self.worker[mc] = self._start_worker(mc)
->
-> -    def start_fakeworker(self, rqexec, mc):
-> +    def start_fakeworker(self, rqexec, mc, taskfn=None):
->          if not mc in self.fakeworker:
-> -            self.fakeworker[mc] = self._start_worker(mc, True, rqexec)
-> +            self.fakeworker[mc] = self._start_worker(mc, True, rqexec,
-> taskfn=taskfn)
->
->      def teardown_workers(self):
->          self.teardown = True
-> @@ -1772,7 +1775,7 @@ class RunQueueExecute:
->          self.sqdata = SQData()
->          build_scenequeue_data(self.sqdata, self.rqdata, self.rq,
-> self.cooker, self.stampcache, self)
->
-> -    def runqueue_process_waitpid(self, task, status):
-> +    def runqueue_process_waitpid(self, task, status, fakerootdir=None):
->
->          # self.build_stamps[pid] may not exist when use shared work
-> directory.
->          if task in self.build_stamps:
-> @@ -1787,7 +1790,7 @@ class RunQueueExecute:
->              self.sq_live.remove(task)
->          else:
->              if status != 0:
-> -                self.task_fail(task, status)
-> +                self.task_fail(task, status, fakerootdir=fakerootdir)
->              else:
->                  self.task_complete(task)
->          return True
-> @@ -1908,14 +1911,32 @@ class RunQueueExecute:
->          self.task_completeoutright(task)
->          self.runq_tasksrun.add(task)
->
-> -    def task_fail(self, task, exitcode):
-> +    def task_fail(self, task, exitcode, fakerootdir=None):
->          """
->          Called when a task has failed
->          Updates the state engine with the failure
->          """
->          self.stats.taskFailed()
->          self.failed_tids.append(task)
-> -        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode,
-> self.rq), self.cfgData)
-> +
-> +        pseudo_log = ""
-> +        if fakerootdir and os.path.exists(os.path.join(fakerootdir,
-> "pseudo.log")):
-> +            with open(os.path.join(fakerootdir, "pseudo.log")) as
-> pseudo_log_file:
-> +
-> +                pseudo_failed = False
-> +                for line in reversed(pseudo_log_file.readlines()):
-> +                    for pseudo_error in ['mismatch', 'error', 'fatal']:
-> +                        if pseudo_error in line.lower():
-> +                            pseudo_failed = True
-> +                    if 'doing new pid setup and server start' in line:
-> +                        break
-> +                    pseudo_log = line + pseudo_log
-> +
-> +            if not pseudo_failed:
-> +                pseudo_log = None
-> +
-> +        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode,
-> self.rq, pseudo_log=pseudo_log), self.cfgData)
-> +
->          if self.rqdata.taskData[''].abort:
->              self.rq.state = runQueueCleanUp
->
-> @@ -2050,7 +2071,7 @@ class RunQueueExecute:
->              unihash = self.rqdata.get_task_unihash(task)
->              if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']
-> and not self.cooker.configuration.dry_run:
->                  if not mc in self.rq.fakeworker:
-> -                    self.rq.start_fakeworker(self, mc)
-> +                    self.rq.start_fakeworker(self, mc, taskfn=taskfn)
->                  self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" +
-> pickle.dumps((taskfn, task, taskname, taskhash, unihash, True,
-> self.cooker.collections[mc].get_file_appends(taskfn), taskdepdata, False))
-> + b"</runtask>")
->                  self.rq.fakeworker[mc].process.stdin.flush()
->              else:
-> @@ -2132,7 +2153,7 @@ class RunQueueExecute:
->              if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']
-> and not (self.cooker.configuration.dry_run or self.rqdata.setscene_enforce):
->                  if not mc in self.rq.fakeworker:
->                      try:
-> -                        self.rq.start_fakeworker(self, mc)
-> +                        self.rq.start_fakeworker(self, mc, taskfn=taskfn)
->                      except OSError as exc:
->                          logger.critical("Failed to spawn fakeroot worker
-> to run %s: %s" % (task, str(exc)))
->                          self.rq.state = runQueueFailed
-> @@ -2876,12 +2897,16 @@ class runQueueTaskFailed(runQueueEvent):
->      """
->      Event notifying a task failed
->      """
-> -    def __init__(self, task, stats, exitcode, rq):
-> +    def __init__(self, task, stats, exitcode, rq, pseudo_log=None):
->          runQueueEvent.__init__(self, task, stats, rq)
->          self.exitcode = exitcode
-> +        self.pseudo_log = pseudo_log
->
->      def __str__(self):
-> -        return "Task (%s) failed with exit code '%s'" % (self.taskstring,
-> self.exitcode)
-> +        if self.pseudo_log:
-> +            return "Task (%s) failed with exit code '%s' \nPseudo
-> log:\n%s" % (self.taskstring, self.exitcode, self.pseudo_log)
-> +        else:
-> +            return "Task (%s) failed with exit code '%s'" %
-> (self.taskstring, self.exitcode)
->
->  class sceneQueueTaskFailed(sceneQueueEvent):
->      """
-> @@ -2933,7 +2958,7 @@ class runQueuePipe():
->      """
->      Abstraction for a pipe between a worker thread and the server
->      """
-> -    def __init__(self, pipein, pipeout, d, rq, rqexec):
-> +    def __init__(self, pipein, pipeout, d, rq, rqexec, fakerootdir=None):
->          self.input = pipein
->          if pipeout:
->              pipeout.close()
-> @@ -2942,6 +2967,7 @@ class runQueuePipe():
->          self.d = d
->          self.rq = rq
->          self.rqexec = rqexec
-> +        self.fakerootdir = fakerootdir
->
->      def setrunqueueexec(self, rqexec):
->          self.rqexec = rqexec
-> @@ -2987,7 +3013,7 @@ class runQueuePipe():
->                      task, status = pickle.loads(self.queue[10:index])
->                  except (ValueError, pickle.UnpicklingError,
-> AttributeError, IndexError) as e:
->                      bb.msg.fatal("RunQueue", "failed load pickle '%s':
-> '%s'" % (e, self.queue[10:index]))
-> -                self.rqexec.runqueue_process_waitpid(task, status)
-> +                self.rqexec.runqueue_process_waitpid(task, status,
-> fakerootdir=self.fakerootdir)
->                  found = True
->                  self.queue = self.queue[index+11:]
->                  index = self.queue.find(b"</exitcode>")
 > --
-> 2.30.1
+> Christopher Larson
+> kergoth at gmail dot com
+> Founder - BitBake, OpenEmbedded, OpenZaurus
+> Senior Software Engineer, Mentor Graphics
 >
->
-> 
->
->
+
 
 -- 
 Christopher Larson
@@ -283,20 +297,27 @@ kergoth at gmail dot com
 Founder - BitBake, OpenEmbedded, OpenZaurus
 Senior Software Engineer, Mentor Graphics
 
---000000000000fecfa905bbef73b7
+--00000000000021af0305bbef760a
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">I can see the usability value here, but this violates a bi=
-tbake/oe-core boundary. bitbake doesn&#39;t hardcode knowledge of use of ps=
-eudo anywhere else but tests and bitbake.conf example currently, the fakero=
-ot cmd used is defined in the *metadata*, not bitbake itself.</div><br><div=
- class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Mon, Feb 22=
-, 2021 at 4:21 AM Tomasz Dziendzielski &lt;<a href=3D"mailto:tomasz.dziendz=
-ielski@gmail.com">tomasz.dziendzielski@gmail.com</a>&gt; wrote:<br></div><b=
-lockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-le=
-ft:1px solid rgb(204,204,204);padding-left:1ex">Currently if pseudo fails w=
-e can only see the path to pseudo.log. If we<br>
+<div dir=3D"ltr">I&#39;d suggest making this more generic via a new variabl=
+e specifying a fakeroot cmd logfile, or something along those lines.</div><=
+br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Mon,=
+ Feb 22, 2021 at 9:39 AM Christopher Larson &lt;<a href=3D"mailto:kergoth@g=
+mail.com">kergoth@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gm=
+ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
+204,204);padding-left:1ex"><div dir=3D"ltr">I can see the usability value h=
+ere, but this violates a bitbake/oe-core boundary. bitbake doesn&#39;t hard=
+code knowledge of use of pseudo anywhere else but tests and bitbake.conf ex=
+ample currently, the fakeroot cmd used is defined in the *metadata*, not bi=
+tbake itself.</div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D=
+"gmail_attr">On Mon, Feb 22, 2021 at 4:21 AM Tomasz Dziendzielski &lt;<a hr=
+ef=3D"mailto:tomasz.dziendzielski@gmail.com" target=3D"_blank">tomasz.dzien=
+dzielski@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote=
+" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);=
+padding-left:1ex">Currently if pseudo fails we can only see the path to pse=
+udo.log. If we<br>
 have no access to server and can only rely on bitbake log then debugging<b=
 r>
 becomes impossible. This printing needs to be added in runqueue level,<br>
@@ -589,9 +610,13 @@ lf.queue.find(b&quot;&lt;/exitcode&gt;&quot;)<br>
 <br>
 <br>
 </blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr=
+"><div dir=3D"ltr"><div><div dir=3D"ltr">Christopher Larson<br>kergoth at g=
+mail dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Senior Softw=
+are Engineer, Mentor Graphics</div></div></div></div>
+</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr=
 " class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christop=
 her Larson<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, =
 OpenZaurus<br>Senior Software Engineer, Mentor Graphics</div></div></div></=
 div>
 
---000000000000fecfa905bbef73b7--
+--00000000000021af0305bbef760a--
