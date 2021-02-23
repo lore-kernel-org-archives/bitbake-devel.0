@@ -1,272 +1,127 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
- by mx.groups.io with SMTP id smtpd.web10.2860.1614026046835161220
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (NAM12-MW2-obe.outbound.protection.outlook.com [40.107.244.45])
+ by mx.groups.io with SMTP id smtpd.web10.4701.1614048098832722299
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Feb 2021 12:34:07 -0800
+ Mon, 22 Feb 2021 18:41:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=DTdijKHe;
- spf=pass (domain: gmail.com, ip: 209.85.208.182, mailfrom: tomasz.dziendzielski@gmail.com)
-Received: by mail-lj1-f182.google.com with SMTP id u4so60560405ljh.6
-        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Feb 2021 12:34:06 -0800 (PST)
+ dkim=pass header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=eKEkA6tK;
+ spf=pass (domain: windriver.com, ip: 40.107.244.45, mailfrom: qi.chen@windriver.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hd4FuZtTE7VXf0XTikBsyS1Tgg8LhaD8EMOsPBe0trHaFPWczINL0/5z5RSlrJ0zhJyu3tuyQZ4b2nq4+nft8+6F34K2HqortJDmWNHlLAigufCNlpy0/2JkaDUdPOxFK93Y4zJaQeTZ1GnJ/mpMwHkRSX3VUfxU+GOV8PePjNf2YK1dG6O6zt0th7cCLkcZGxZ/tq0ZFvFyN85z95g2MIjgCN7lAznRWeJe+KZaRXQ+NzBIVqsHM/H8QCkPLwPJWIpoQZ4RfQlaf7gYldxmqOLHTXokBaFIRFgEzVJn8368hFN4G2BQnI0FuCgLXJE76+YNkm4E5Ycj5UIKlouOqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kP/dS0qR56YtPUh56XwpIBNX/iKmtArt3HR02dZORxg=;
+ b=fypItw78wcCtCsaWC6gyrU29ViRK09TYqOhD7aRs6SsD0GqGZ9OHKGsznJ9HvFErR4tYJYEhD9dgWcv/gpMengUOo6qwRFBXL4r1mpxVfgNohNydDBHA2ysE1gg5nnYq4bTtgmojrJ1aUy7X5XOnQQcrhi/8uBBKex+jeRF3PJfX4tB3lO0WzNawfysKsEMSN0cJxokCYDFh4me0gtP4tkRpFPKBwRbim1qiTbK0A5MWNHgUQR7U5BNLlqspM8Ec7jKUG5RYNnYNwMyTjTHZkz84qKGUyf82DMD79A0EqcCRzrJn2UsVsp8t2tPvfahYy9EcBPqbOwDnj0dPtdnNgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iVitNBKTYqjnG6eGa2kDbX3H4fvGCSGtALPel5var0k=;
-        b=DTdijKHeqlJm2NTWHofiyzX2zclS/m9lP3yKlt6MbMjyrNlK3VmzIuL1sv3FqozUCW
-         wy+7Yw2k+hjqfj0mlgMe0fDvXztaHPVZOr844Y0YE8ZuVmdD+iNxYbkka3TZh6I2jLUB
-         G6bgDrJ25wDb8XLBoM84rotjkZfAJJttf4pG9laqkUXihcxMEn0w4Z7/hcasRczB3Gdc
-         Y3f4JqpoeJ1kwcn4bQ5Ir8OSUr3oHXvX3TZ8NkcIemdKR+m1ePbgKJM5dnT0QwqCJdKj
-         S55J4uLBxAwrfESgLJaLypIGZBzMp0mq69gcf3a42Nfpsj7CvMm8U/vhjcCdem3E4+3x
-         emdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iVitNBKTYqjnG6eGa2kDbX3H4fvGCSGtALPel5var0k=;
-        b=UKFTyFiQnhTt0NKZxU5rwUv9q55kBPPRqfTdKbA4nBdJRR9PIjHhjWK3bek5hBQItq
-         7DEkeSxRE/W0dBvN+ak6sYZVzvHwb8WsXqNkxxL0mT0eWObq74EqkdjLoyzgBhyNckw+
-         usxy1owPrFOTtS6Abs+kr+jYSI8229+SdZYhdJJwHiF1Huxpj7Y1x5XK1+T2B8rs5CaP
-         KBnKpN0Bqek1dWf8LP3ItL9iW1KoQIZz0kjznTSwm5lOL0kowVFCikVKNyGg4f5udcN2
-         pf4i01ky6qLgjx+HG0uhE2qAgXFehw5TLgcY0g1iZqtTsswMAQq0Kiv544C1pAcrhPlV
-         u9ew==
-X-Gm-Message-State: AOAM532emmXq+x4r1eBqdNqbQP2Hjbe1Uqi/N90F9EYnBWczCZyjnzo1
-	n1PB9KApxnJpSep6pilkFkyIbf8u0d4exA==
-X-Google-Smtp-Source: ABdhPJwZm06ynXp6aI7suwTkak/vuoQK3hsMdPkag41CYTtCreFrExeDWLapJczHZV7Sc3N8J86xDg==
-X-Received: by 2002:a2e:9e0b:: with SMTP id e11mr251913ljk.138.1614026044483;
-        Mon, 22 Feb 2021 12:34:04 -0800 (PST)
-Return-Path: <tomasz.dziendzielski@gmail.com>
-Received: from localhost.localdomain (h124200.man.tk-internet.pl. [93.175.124.200])
-        by smtp.gmail.com with ESMTPSA id h15sm2147842lfj.230.2021.02.22.12.34.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Feb 2021 12:34:03 -0800 (PST)
-From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kP/dS0qR56YtPUh56XwpIBNX/iKmtArt3HR02dZORxg=;
+ b=eKEkA6tKC3cvqGAVxH7o9QSmDRWqmwmj9UNSlnp8Y/7aLpzPITAbbKcdee2tEWECEyJinTdRSAhbLZqk8JTKqEhqJvyYwr/YXZy6/7tgyWv5D7BP8LnkuhBhqSgwa5cSviL3PgyREqZNQYV604oPbVcduDW2+9tjYIF51J1T2Mg=
+Authentication-Results: lists.openembedded.org; dkim=none (message not signed)
+ header.d=none;lists.openembedded.org; dmarc=none action=none
+ header.from=windriver.com;
+Received: from BYAPR11MB3480.namprd11.prod.outlook.com (2603:10b6:a03:79::27)
+ by SJ0PR11MB5085.namprd11.prod.outlook.com (2603:10b6:a03:2db::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.29; Tue, 23 Feb
+ 2021 02:41:36 +0000
+Received: from BYAPR11MB3480.namprd11.prod.outlook.com
+ ([fe80::d9b:3f7c:136d:e60]) by BYAPR11MB3480.namprd11.prod.outlook.com
+ ([fe80::d9b:3f7c:136d:e60%7]) with mapi id 15.20.3868.033; Tue, 23 Feb 2021
+ 02:41:36 +0000
+From: "Chen Qi" <Qi.Chen@windriver.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: kergoth@gmail.com,
-	Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>,
-	Jan Brzezanski <jan.brzezanski@gmail.com>,
-	Paulo Neves <ptsneves@gmail.com>,
-	Mikolaj Lasota <mikolaj.lasota@protonmail.com>,
-	Wiktor Baura <wbaura@gmail.com>,
-	Kamil Kwiek <kamil.kwiek@gmail.com>
-Subject: [PATCH v3] runqueue: Print pseudo.log if fakeroot task failed
-Date: Mon, 22 Feb 2021 21:36:30 +0100
-Message-Id: <20210222203630.9686-1-tomasz.dziendzielski@gmail.com>
-X-Mailer: git-send-email 2.30.1
+Subject: [PATCH] event.py: fix regression about INVALIDCONF
+Date: Tue, 23 Feb 2021 10:41:20 +0800
+Message-Id: <20210223024120.10982-1-Qi.Chen@windriver.com>
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [60.247.85.82]
+X-ClientProxiedBy: HKAPR03CA0003.apcprd03.prod.outlook.com
+ (2603:1096:203:c8::8) To BYAPR11MB3480.namprd11.prod.outlook.com
+ (2603:10b6:a03:79::27)
+Return-Path: Qi.Chen@windriver.com
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pek-lpg-core3.wrs.com (60.247.85.82) by HKAPR03CA0003.apcprd03.prod.outlook.com (2603:1096:203:c8::8) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.8 via Frontend Transport; Tue, 23 Feb 2021 02:41:35 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 442ee80b-d6de-4268-32b6-08d8d7a489fe
+X-MS-TrafficTypeDiagnostic: SJ0PR11MB5085:
+X-Microsoft-Antispam-PRVS: 
+	<SJ0PR11MB50858C088E9680BA9F6E9626ED809@SJ0PR11MB5085.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:510;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	luWA/XTjERbac4OXtxI5Vobpm2IZpkHqLuB+xgiMn+IhboxSN1tdbBsVvzc/Slc6p+OXUblu51a7PA/wN6Kx3/M2BoH/OslAHhVLp76CP9ARFI7I967zQBXnzzvdW/Rz7zvxVH0XDPs38C6YnbrBkdGgc/0YALcqXzbq7k3LE1mDjE2CoSRjs2PerkrdOBATfzYaYxpl1Ixq5IjXqmlTD/h4q+WVpmAtiRUtFXVFx1TontJOSWuuYqF7ZZpLr4uzKIorgKk/OOMCiw1I8HS1kcSIGEqdmd85TSsl6HOIGHZWbTB2xPw90R9ZkD5AhgTcevm6OsM14lwooRkBrh7QsKnWdSGqIeuSwPB3nW7D58fdt4mBMHR0kOL05GOt2JmCF+qK7htM7UUIkpNDVLlMFQPOV7oa6Wu836WCXBJ+pC2D1Pu6gCwo3z5GoKtA4CW+iKQ00/pZcnv40QvKwwKHly3AVPKWjSf8asBOUTXPetM/DLJiGsfkSWKLioU2Z6Mwqb/lPB5MzzVpIfPV1ynAWw==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3480.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(376002)(136003)(346002)(39850400004)(36756003)(16526019)(66476007)(1076003)(316002)(52116002)(8936002)(6506007)(6486002)(86362001)(6916009)(66556008)(26005)(5660300002)(956004)(2616005)(6666004)(186003)(66946007)(8676002)(478600001)(6512007)(2906002)(4744005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 
+	=?us-ascii?Q?+hh2bDSTFweCbdPBGdSvkYNGzz+iqD6+5bK1jUcgbdFEPLQTslc2JfVDmaKV?=
+ =?us-ascii?Q?u/OpVAUkxg4qibDhBulf8emNMeY84d+pCn4AvgcXjnnBQpS6FiBYLQSAzhka?=
+ =?us-ascii?Q?pPHK5aoq41eeS3g1jZ6P0HvC7WeeDqgOZZ5XcLeav5SCUbqJ5svCtdqTjdRR?=
+ =?us-ascii?Q?STbSOLum+ML5CAMY/ncHxLgsQtPcOFY3pioKrXIwBaRT/xegKuFzxBNSdbPC?=
+ =?us-ascii?Q?3grKLGf4n+L8SDwQm+GqSqsy+/rupat8nihkbL5dDdRSEtR4tIVV9irmhAeM?=
+ =?us-ascii?Q?fAblKRJLZ3lUxbB6uOLOFHG5EcTKwbtVdqjrnJn1L8nZorKcw1+PRQ24Lroc?=
+ =?us-ascii?Q?7gSiWPGZDfTyoeHiLHsA4G4DHeMvqke1MOxpRdVsJe4lzkHCKevLbwRPjRXc?=
+ =?us-ascii?Q?JElzqOMQxz4XxJIGZjTWFU8XiyQFPxLGcd/Hvj8NAS47fDFrff2xEYnkA5EC?=
+ =?us-ascii?Q?m3ALJyAb79obua1h9foqFnXyMRBxvfAtXGdWLM9E3c98roqt1MDehHr+oXfQ?=
+ =?us-ascii?Q?QT6c7PUJc7hWnSgMKnNBcGLd2XV6hciNLALh7QWtFUT/NlSnBcYI0ARBsaOx?=
+ =?us-ascii?Q?V108lsxqia55BkNR00jFceSXaNl2e0Zp3IhzBuu1QoMpmEZ1MykcdyvNXKJl?=
+ =?us-ascii?Q?fOtmTjbUBXL9j4zLMEP+I07MTASUvwWgz2/EKs+X6Qeh8QybuylOFfyBjC3W?=
+ =?us-ascii?Q?Cf/HlTBF8gyThePHukaR+U2Ty6FbmpBp4MkQrmJj0Ii4tZ2h8WKPTCIMtD4z?=
+ =?us-ascii?Q?uriU4bYp9wbUF8Gs63A9xmjya5kLJTN0nrJ9Pxb3Cee+00m4QrNpwJL1TnPe?=
+ =?us-ascii?Q?hxubQsucOVG6SzTVsSB/xI+VwSFOL4NNITAy9Ryz9ElHv1UgNLh7RYRfCvRu?=
+ =?us-ascii?Q?exC/uu4kO14+BhC3tCCZJx2EB790lod8Jll9Qte3t1HjQ/34At/NbWE1Dqpq?=
+ =?us-ascii?Q?H1WrDfNSq7D+LR1VV9/8Yq5GmxtQ6ooxpAgwNN7BGt2NYjx/wvDlGpqYKwL5?=
+ =?us-ascii?Q?s55YRqpPUh+jAE+vkqF6MBrsCW6HnQAf4rfxllDPDOHMaX8FHwdNzV2KDNCM?=
+ =?us-ascii?Q?OmiAWKQOuQVLC6New6W/fA2ZQdqCXoOzu77Q/RzCGwOq63kWrO4Nc43qTkTD?=
+ =?us-ascii?Q?5YAfpPKTvlUpZpSZTRAtSRXvLRSHwTrv6R24j/momwxCFlZBik+gNbBeICGu?=
+ =?us-ascii?Q?HZwyFTStrLDjZF+1O3svv/iSvBnTqk/ltA/5aWhzpE+o7eWpooollCD2HLdx?=
+ =?us-ascii?Q?qQU6jty59auaQXTII0BIfO6MDOZxtGafV/CTmqJ3EGko1JodT5eJJKbSMK7F?=
+ =?us-ascii?Q?PGHi7KrxwDU9s+zkKsg3d4E0?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 442ee80b-d6de-4268-32b6-08d8d7a489fe
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3480.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2021 02:41:36.6249
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tVnFhfD2hkMUMA+pMjuVhK81T8bDnjKdv7dZzo11mRmZbNbU+fy5kWU3wxOvd9yZ1mMA/e01jMTYGQxHYRGPtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5085
+Content-Type: text/plain
 
-Currently if pseudo fails we can only see the path to pseudo.log. If we
-have no access to server and can only rely on bitbake log then debugging
-becomes impossible. This printing needs to be added in runqueue level,
-not inside task execution, because in some cases task fails with pseudo
-abort really early and we don't even see any log.
+A previous commit uses __BBHANDLERS_MC to record all handlers, but
+it does not take into consideration of INVALIDCONF, thus causing regression.
 
-In this change I'm adding pseudo log printing in every fakeroot task
-failure that logged `mismatch`, `error` or `fatal` to logfile, because
-we have no other way to communicate with pseudo if it failed or not.
-Only lines from last pseudo server execution will be printed.
+We need to record the name before returned AlreadyRegistered, otherwise, when
+reparsing due to INVALIDCONF, bascially all handlers are not called.
 
-Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-Signed-off-by: Jan Brzezanski <jan.brzezanski@gmail.com>
-Signed-off-by: Adrian Walag
-Signed-off-by: Paulo Neves <ptsneves@gmail.com>
-Signed-off-by: Mikolaj Lasota <mikolaj.lasota@protonmail.com>
-Signed-off-by: Wiktor Baura <wbaura@gmail.com>
-Signed-off-by: Kamil Kwiek <kamil.kwiek@gmail.com>
-
---- v3 use separate FAKEROOTLOGS variable with pseudo.log path from meta/conf/bitbake.conf, change var names from pseudo to fakeroot
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 ---
- lib/bb/cache.py    |  3 +++
- lib/bb/runqueue.py | 53 ++++++++++++++++++++++++++++++++++------------
- 2 files changed, 42 insertions(+), 14 deletions(-)
+ bitbake/lib/bb/event.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index aea2b8bc..27eb2717 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -126,6 +126,7 @@ class CoreRecipeInfo(RecipeInfoCommon):
-         self.inherits         = self.getvar('__inherit_cache', metadata, expand=False)
-         self.fakerootenv      = self.getvar('FAKEROOTENV', metadata)
-         self.fakerootdirs     = self.getvar('FAKEROOTDIRS', metadata)
-+        self.fakerootlogs     = self.getvar('FAKEROOTLOGS', metadata)
-         self.fakerootnoenv    = self.getvar('FAKEROOTNOENV', metadata)
-         self.extradepsfunc    = self.getvar('calculate_extra_depends', metadata)
+diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+index 23e1f3187b..3e5718395b 100644
+--- a/bitbake/lib/bb/event.py
++++ b/bitbake/lib/bb/event.py
+@@ -238,6 +238,10 @@ def register(name, handler, mask=None, filename=None, lineno=None, data=None):
  
-@@ -163,6 +164,7 @@ class CoreRecipeInfo(RecipeInfoCommon):
-         cachedata.fakerootenv = {}
-         cachedata.fakerootnoenv = {}
-         cachedata.fakerootdirs = {}
-+        cachedata.fakerootlogs = {}
-         cachedata.extradepsfunc = {}
+     # already registered
+     if name in _handlers:
++        if data:
++            bbhands_mc = (data.getVar("__BBHANDLERS_MC") or [])
++            bbhands_mc.append(name)
++            data.setVar("__BBHANDLERS_MC", bbhands_mc)
+         return AlreadyRegistered
  
-     def add_cacheData(self, cachedata, fn):
-@@ -231,6 +233,7 @@ class CoreRecipeInfo(RecipeInfoCommon):
-         cachedata.fakerootenv[fn] = self.fakerootenv
-         cachedata.fakerootnoenv[fn] = self.fakerootnoenv
-         cachedata.fakerootdirs[fn] = self.fakerootdirs
-+        cachedata.fakerootlogs[fn] = self.fakerootlogs
-         cachedata.extradepsfunc[fn] = self.extradepsfunc
- 
- def virtualfn2realfn(virtualfn):
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 54ef245a..0e67253b 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1237,11 +1237,12 @@ class RunQueue:
-         self.worker = {}
-         self.fakeworker = {}
- 
--    def _start_worker(self, mc, fakeroot = False, rqexec = None):
-+    def _start_worker(self, mc, fakeroot = False, rqexec = None, taskfn=None):
-         logger.debug("Starting bitbake-worker")
-         magic = "decafbad"
-         if self.cooker.configuration.profile:
-             magic = "decafbadbad"
-+        fakerootlog = None
-         if fakeroot:
-             magic = magic + "beef"
-             mcdata = self.cooker.databuilder.mcdata[mc]
-@@ -1251,10 +1252,12 @@ class RunQueue:
-             for key, value in (var.split('=') for var in fakerootenv):
-                 env[key] = value
-             worker = subprocess.Popen(fakerootcmd + ["bitbake-worker", magic], stdout=subprocess.PIPE, stdin=subprocess.PIPE, env=env)
-+            if taskfn and taskfn in self.rqdata.dataCaches[mc].fakerootlogs:
-+                fakerootlog = self.rqdata.dataCaches[mc].fakerootlogs[taskfn]
-         else:
-             worker = subprocess.Popen(["bitbake-worker", magic], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-         bb.utils.nonblockingfd(worker.stdout)
--        workerpipe = runQueuePipe(worker.stdout, None, self.cfgData, self, rqexec)
-+        workerpipe = runQueuePipe(worker.stdout, None, self.cfgData, self, rqexec, fakerootlog=fakerootlog)
- 
-         workerdata = {
-             "taskdeps" : self.rqdata.dataCaches[mc].task_deps,
-@@ -1305,9 +1308,9 @@ class RunQueue:
-         for mc in self.rqdata.dataCaches:
-             self.worker[mc] = self._start_worker(mc)
- 
--    def start_fakeworker(self, rqexec, mc):
-+    def start_fakeworker(self, rqexec, mc, taskfn=None):
-         if not mc in self.fakeworker:
--            self.fakeworker[mc] = self._start_worker(mc, True, rqexec)
-+            self.fakeworker[mc] = self._start_worker(mc, True, rqexec, taskfn=taskfn)
- 
-     def teardown_workers(self):
-         self.teardown = True
-@@ -1772,7 +1775,7 @@ class RunQueueExecute:
-         self.sqdata = SQData()
-         build_scenequeue_data(self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self)
- 
--    def runqueue_process_waitpid(self, task, status):
-+    def runqueue_process_waitpid(self, task, status, fakerootlog=None):
- 
-         # self.build_stamps[pid] may not exist when use shared work directory.
-         if task in self.build_stamps:
-@@ -1787,7 +1790,7 @@ class RunQueueExecute:
-             self.sq_live.remove(task)
-         else:
-             if status != 0:
--                self.task_fail(task, status)
-+                self.task_fail(task, status, fakerootlog=fakerootlog)
-             else:
-                 self.task_complete(task)
-         return True
-@@ -1908,14 +1911,31 @@ class RunQueueExecute:
-         self.task_completeoutright(task)
-         self.runq_tasksrun.add(task)
- 
--    def task_fail(self, task, exitcode):
-+    def task_fail(self, task, exitcode, fakerootlog=None):
-         """
-         Called when a task has failed
-         Updates the state engine with the failure
-         """
-         self.stats.taskFailed()
-         self.failed_tids.append(task)
--        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode, self.rq), self.cfgData)
-+
-+        fakeroot_log = ""
-+        if fakerootlog and os.path.exists(fakerootlog):
-+            with open(fakerootlog) as fakeroot_log_file:
-+                fakeroot_failed = False
-+                for line in reversed(fakeroot_log_file.readlines()):
-+                    for fakeroot_error in ['mismatch', 'error', 'fatal']:
-+                        if fakeroot_error in line.lower():
-+                            fakeroot_failed = True
-+                    if 'doing new pid setup and server start' in line:
-+                        break
-+                    fakeroot_log = line + fakeroot_log
-+
-+            if not fakeroot_failed:
-+                fakeroot_log = None
-+
-+        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode, self.rq, fakeroot_log=fakeroot_log), self.cfgData)
-+
-         if self.rqdata.taskData[''].abort:
-             self.rq.state = runQueueCleanUp
- 
-@@ -2050,7 +2070,7 @@ class RunQueueExecute:
-             unihash = self.rqdata.get_task_unihash(task)
-             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not self.cooker.configuration.dry_run:
-                 if not mc in self.rq.fakeworker:
--                    self.rq.start_fakeworker(self, mc)
-+                    self.rq.start_fakeworker(self, mc, taskfn=taskfn)
-                 self.rq.fakeworker[mc].process.stdin.write(b"<runtask>" + pickle.dumps((taskfn, task, taskname, taskhash, unihash, True, self.cooker.collections[mc].get_file_appends(taskfn), taskdepdata, False)) + b"</runtask>")
-                 self.rq.fakeworker[mc].process.stdin.flush()
-             else:
-@@ -2132,7 +2152,7 @@ class RunQueueExecute:
-             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not (self.cooker.configuration.dry_run or self.rqdata.setscene_enforce):
-                 if not mc in self.rq.fakeworker:
-                     try:
--                        self.rq.start_fakeworker(self, mc)
-+                        self.rq.start_fakeworker(self, mc, taskfn=taskfn)
-                     except OSError as exc:
-                         logger.critical("Failed to spawn fakeroot worker to run %s: %s" % (task, str(exc)))
-                         self.rq.state = runQueueFailed
-@@ -2876,12 +2896,16 @@ class runQueueTaskFailed(runQueueEvent):
-     """
-     Event notifying a task failed
-     """
--    def __init__(self, task, stats, exitcode, rq):
-+    def __init__(self, task, stats, exitcode, rq, fakeroot_log=None):
-         runQueueEvent.__init__(self, task, stats, rq)
-         self.exitcode = exitcode
-+        self.fakeroot_log = fakeroot_log
- 
-     def __str__(self):
--        return "Task (%s) failed with exit code '%s'" % (self.taskstring, self.exitcode)
-+        if self.fakeroot_log:
-+            return "Task (%s) failed with exit code '%s' \nPseudo log:\n%s" % (self.taskstring, self.exitcode, self.fakeroot_log)
-+        else:
-+            return "Task (%s) failed with exit code '%s'" % (self.taskstring, self.exitcode)
- 
- class sceneQueueTaskFailed(sceneQueueEvent):
-     """
-@@ -2933,7 +2957,7 @@ class runQueuePipe():
-     """
-     Abstraction for a pipe between a worker thread and the server
-     """
--    def __init__(self, pipein, pipeout, d, rq, rqexec):
-+    def __init__(self, pipein, pipeout, d, rq, rqexec, fakerootlog=None):
-         self.input = pipein
-         if pipeout:
-             pipeout.close()
-@@ -2942,6 +2966,7 @@ class runQueuePipe():
-         self.d = d
-         self.rq = rq
-         self.rqexec = rqexec
-+        self.fakerootlog = fakerootlog
- 
-     def setrunqueueexec(self, rqexec):
-         self.rqexec = rqexec
-@@ -2987,7 +3012,7 @@ class runQueuePipe():
-                     task, status = pickle.loads(self.queue[10:index])
-                 except (ValueError, pickle.UnpicklingError, AttributeError, IndexError) as e:
-                     bb.msg.fatal("RunQueue", "failed load pickle '%s': '%s'" % (e, self.queue[10:index]))
--                self.rqexec.runqueue_process_waitpid(task, status)
-+                self.rqexec.runqueue_process_waitpid(task, status, fakerootlog=self.fakerootlog)
-                 found = True
-                 self.queue = self.queue[index+11:]
-                 index = self.queue.find(b"</exitcode>")
+     if handler is not None:
 -- 
-2.30.1
+2.17.1
 
