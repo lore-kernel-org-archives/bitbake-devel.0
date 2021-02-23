@@ -1,127 +1,155 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (NAM12-BN8-obe.outbound.protection.outlook.com [40.107.237.76])
- by mx.groups.io with SMTP id smtpd.web12.5148.1614050333476747266
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+ by mx.groups.io with SMTP id smtpd.web08.1.1614101083830006399
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Feb 2021 19:18:53 -0800
+ Tue, 23 Feb 2021 09:24:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=HVKmgqDl;
- spf=pass (domain: windriver.com, ip: 40.107.237.76, mailfrom: qi.chen@windriver.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bJOv2G1XIpKZh8HOjLz8vT6OlXd1sFfoHd20ujlTcAmgiRmwHJPm+I9wCEN1ZM7Ito2fRKq9D9jW7QONFclyNjKrYARtICciTxWBYNClAWYfDIDd1NB1O+sQrz/Cc7UQPPnix5vsgtJyNTBkRVXAAh5sA7FppB1iYr959/PKuCdXG68LarK5sMsIsIQvTWaqGXk9+B23IyvwPqcS2XZnVTXTcU8tKsxOHHa4P02gx9qpsr815qXOe2IyUvTavzQEM3epkHAigNYsCXcPxuvFd+Zb8ua0vrLDMnL0l3kxRd/ebW+Qmw7B0qFBf3hMmMETPU3sCo3B0whe2gF9FXxMSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wqHICUan2iNkiIiKV56vlDk5QGbPIhA2T++M9j2HIyA=;
- b=B8eSnoudye66my+trWlLIrIx9VOGZdDP1OrPzbM3z2B6H7zGrCXH9gb2NMJJ5ccpaJM48jnx/LxTEgTvqx3Vs+DSRhvrZcosyQAg1vceyQOMEPVZG4MUlpVCNHwnzThN2uNzOideOHVkO9T4OZZyvU8hIxy/GbNLe8d8mh/nYOgDlTSDc2HZRQTlMJVqCr5L6G238IC7VejhAtpcwkx9BYFBiaazDTqSBqEWkyOfWTHBxfuJyom0WuM4QkYD2UTu00hinMyontPzUEgKUWWRbn+IaM7oYjcI7nEvhsReSO+1+8hm2IvS4d+o02EFe2jvyFlcwjytUrop2z2IJ+obBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=NvODqSdb;
+ spf=pass (domain: gmail.com, ip: 209.85.217.48, mailfrom: christian.betz@gmail.com)
+Received: by mail-vs1-f48.google.com with SMTP id g4so251907vsb.11
+        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Feb 2021 09:24:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wqHICUan2iNkiIiKV56vlDk5QGbPIhA2T++M9j2HIyA=;
- b=HVKmgqDlqM5ceX/GScIedQyUj8R/6pny/S/8JpC8keCkn9uARSkg0l3doIx4ahzHGjLrHRO+ET6Fhuedkao+/tG1/sM7iGyPChW0KhL1M9I+LIiT7Lut9nW91HXXqAMh9EUKpHcLKWLKtbp0fezqTgtaKqJ/JvKY44JsZm/26eU=
-Authentication-Results: lists.openembedded.org; dkim=none (message not signed)
- header.d=none;lists.openembedded.org; dmarc=none action=none
- header.from=windriver.com;
-Received: from BYAPR11MB3480.namprd11.prod.outlook.com (2603:10b6:a03:79::27)
- by BYAPR11MB3256.namprd11.prod.outlook.com (2603:10b6:a03:76::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.29; Tue, 23 Feb
- 2021 03:18:51 +0000
-Received: from BYAPR11MB3480.namprd11.prod.outlook.com
- ([fe80::d9b:3f7c:136d:e60]) by BYAPR11MB3480.namprd11.prod.outlook.com
- ([fe80::d9b:3f7c:136d:e60%7]) with mapi id 15.20.3868.033; Tue, 23 Feb 2021
- 03:18:51 +0000
-From: "Chen Qi" <Qi.Chen@windriver.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake-devel][PATCH V2] event.py: fix regression about INVALIDCONF
-Date: Tue, 23 Feb 2021 11:18:28 +0800
-Message-Id: <20210223031828.17763-1-Qi.Chen@windriver.com>
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [60.247.85.82]
-X-ClientProxiedBy: HK2PR0401CA0018.apcprd04.prod.outlook.com
- (2603:1096:202:2::28) To BYAPR11MB3480.namprd11.prod.outlook.com
- (2603:10b6:a03:79::27)
-Return-Path: Qi.Chen@windriver.com
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=QS5BmJJWVcOtPfhvWfq3oEavEbGkUESc+K7z+0jcm9Y=;
+        b=NvODqSdbSwU5rvQqnXHeGPPmZtM05bcvzVbhCD4V+n2joZFaqEZ1822n7pm5jbHlGm
+         A8/U25SRBsOGG3Rc5qWJjviZaY5F9oxVBTsqlL3q1cb3S+Mgg3Xy9JRzYPOia346hZdx
+         v7L+FmdN4E4Sxgph2h37yjd/9QEMsBu2oCeIEN0B4jjmsiHFPr2hcQ8WaYQc0OHRySnR
+         I4We6m67vuVfpmcsZ2GoXjOTr05zYSrzmsMo3YPQ9fJYrqjiUsz2koSULzlAIFBRoV+r
+         axDmenh12DW8qjT8AYLgFLoFavMXq4YWrqYWtDHOHZWOX9pOliSSfa2LF4TqnsbcArI0
+         tBhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=QS5BmJJWVcOtPfhvWfq3oEavEbGkUESc+K7z+0jcm9Y=;
+        b=sfnQoz47+BK9eRUsBIk2aE0wmBObSrFd36yyDEelaAE9AqOLuXYs5Ei+q/RA7a3kjy
+         4TXcc/ePdjF8mWG8o54nZZSoL/kSWP+rNHCMl8T6s7UNQ/B9kt7miwqMjRlrCGIxxGnl
+         UntqBBOdepVj6VOf1pJgG4FFEuSjvmTlxAHLbJddSHfweMvaZknFgl1NwgX3B1pd7dZ8
+         bCo5AlZReUQ56Nq45pjwaiNmC9wS7OPwSwJ3zfnyHYAYg882kV/W9PAy8PBX2iWqZreB
+         oVXKvPt2ABu0YYyL8SCXYvoQtZnAcJbqI+IivchO8kaZV8SJTpkZbbOycTEBPqP0g/iz
+         O0Qw==
+X-Gm-Message-State: AOAM533HbNv9Fprjal9lm9O4WNJZuSWPfen/zriPqC1nQtqB6Ao6BhUP
+	jl4JsNbPidHPHLYT8KjvUsYOJvQYvSO65N37z8fUSRq+dcc=
+X-Google-Smtp-Source: ABdhPJzVI12fZnmr+/S24xqZUu4I2GcljnnA6efiRhgtuqRn9euWvQXWgT07/Vk3GaoZ5shE/x2Gnl7kKkWCQOPmsfA=
+X-Received: by 2002:a67:69c7:: with SMTP id e190mr16944516vsc.20.1614101082615;
+ Tue, 23 Feb 2021 09:24:42 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pek-lpg-core3.wrs.com (60.247.85.82) by HK2PR0401CA0018.apcprd04.prod.outlook.com (2603:1096:202:2::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27 via Frontend Transport; Tue, 23 Feb 2021 03:18:50 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 40281c3c-0f86-4aff-1e10-08d8d7a9bde0
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3256:
-X-Microsoft-Antispam-PRVS: 
-	<BYAPR11MB3256F7AD74F65B10A978BA97ED809@BYAPR11MB3256.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:510;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	Fxpu99kh6wSqiEMWFhdq2E4x84mV4yddBVuqKVONFnMWj2JUhCdX+FOJ8t6WA5Teyq7tPFXVJCKw9ObOI09uecFAgYlhfRqYYj9zVVYibkhj8Qmt9t4Y6GLQ8spde0AXMIytIfZz+dwlywegxLI+5K8AehDqzbRJny/QqaQtqIr5OhvMngdhp+Z0OF42IVCj45eRMzf6eJ8CbgY5vNZw/3oj95Yr+GMvzcTaI2AUKNnRcdrRE8u6K59Ck+KcehmLiy6B9ZRi+0HR1Mnz2YcabQhZnflsHxypDifWWJyTXp9a++xjCY1jimMFW/aHn1tYF7Fi5oXMjgEAqew4gLsEH0ZXCsQxUJ8e/wUj2YnLOLNIUT4DIRB30OliACfkPCoWCMWhjSkCJbmY0xa2k6LXgv23oGeVoxANOLAJG1SAPWE+ej1VeojJ6XOHb47Fp5zrO2593k14CZWsrFif5Kk+wncFeM1IuFphqk+lZJ79Yz1C1kx5Y3xhNgl3KqavScZamP3jFcl0QWkMbBSZdQoaCg==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3480.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(366004)(376002)(396003)(39850400004)(186003)(16526019)(956004)(26005)(478600001)(6506007)(86362001)(2616005)(316002)(52116002)(8676002)(8936002)(6916009)(6486002)(6666004)(4744005)(1076003)(36756003)(6512007)(2906002)(66556008)(66476007)(5660300002)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
-	=?us-ascii?Q?dUBxdgTNdNM1CcLGxd83MbuHy0i5NNX7py3uPAzl4HST3jZt37QAWx5CS3eo?=
- =?us-ascii?Q?MWWaKtq1hY3LPvhhuTkFiNbvelqo53dSwUoLOqfXZTBqX3eNQzsoXEEoIjfV?=
- =?us-ascii?Q?RicElSQHcniaKTO34q1aXzMr7GjXjGEzz2h3LsUyQTTLuUAVNFGYHM5K+d4A?=
- =?us-ascii?Q?SzHp5Ve7/f5TOysy9RAZWrsAC3L86Iat62OCDQgNOhLeDJMQr4ybSoBv9BVU?=
- =?us-ascii?Q?dtriB/nYEKIs0YsNxB+cjsGGiW/skQeWbWp+gfHDjPE3ROz5W/Kd94StJbSh?=
- =?us-ascii?Q?C8ya0VYapJDgJA2s94cMqW6ClGukSRjSicxDSpXU1QGrIP4t54M9CLlFKpSh?=
- =?us-ascii?Q?cTtbXcuOcWipY2vFBhZXpQzDicZxsk33fVsBJnfdLW3vkwr2jdmYGW15xgul?=
- =?us-ascii?Q?B9g19vMHZuFKDDRZeHgrGCOyS3kVEmDtMHJZ3267vqpmsi4/rp2nFUBXI6yp?=
- =?us-ascii?Q?/dLTkGXlspEZSYKyT3tQ8HgA1nb0DvbsKhNrGBiFo6pvzoGMKShXXlAIll1d?=
- =?us-ascii?Q?4r7Jw77twRUNyf1JcMEd8ZwRCF6ZOsiPccTW7lG+noyM149+IexMnZw/gtXT?=
- =?us-ascii?Q?uLWtETEX9wuVxnatLUxgAGHrmwM2BwZC5x+o65WQMUvNXqzsIj8jd0KI0ScL?=
- =?us-ascii?Q?3v58PfimMutlwq57WW6pKnxzs6WtyOXRHi8jO3/cRyGHDAdfTfvOP+ETrSEz?=
- =?us-ascii?Q?i5OUWsO3JHK/D/VNwrPZ7giBfPeaq6YkEkI/4HldJqFazq7xoTj8cjGIO3BA?=
- =?us-ascii?Q?WtLC5IKWF3JupB8HTLDXsH+oxqI6Gq53BQVtf2HyD+ZH07fVqgYE8pnG7puu?=
- =?us-ascii?Q?H73K2GjUQ0035pq81h6yFbPfLkXKKAEDRTR3CHI9OtbCDmoImnJpFsx+Twgs?=
- =?us-ascii?Q?tkU8UGl5d0duGgqAF1FLgp18EXqAvH02u4igMC0/WH8Yw1Q7MOvPsrQmnYfd?=
- =?us-ascii?Q?6BTE0j/vqTS4AhiGMmyRm/s/wPbgxx7jYKbbXJqLofU/gc4zmD7rqx4YH9f/?=
- =?us-ascii?Q?d7235UdI/904OzQMf5srdCT+QhubcMyUkgwSyX292ia8JoCcAjIUjimlPPiB?=
- =?us-ascii?Q?wHq5GqnNmDo0XE57mNAmglsbi8pK4ORwfVOhjtarZS7p+htCN5YTgBuxKXol?=
- =?us-ascii?Q?dR3zhVV0GZwNVbTV8v8Q7HTfn+bqbCJlDPy/pdUjojJRLcpYaF0zOaUhFsxh?=
- =?us-ascii?Q?JY2gCiCitmLQYhoFTGiVA81+BaVbjRjuNCnfPrPtFuQapyja1zRLHpAiyy4W?=
- =?us-ascii?Q?lI3zSRR6P6LmhBVo8nQZ8svwW+KC5ZlzbWAQnYOC/M86E3UVLb5jkNvPJUj4?=
- =?us-ascii?Q?X2lc7d1sQNb9qPpCcFxqPe/U?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40281c3c-0f86-4aff-1e10-08d8d7a9bde0
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3480.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2021 03:18:51.1175
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3GklNpisDq+XNndBGsW/NJ5WqAEidQIYLeSIThL2GYie2/CSmSWf0zAYX9W3ySImP/Ax5mn1ulnaAn1kMe6U9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3256
-Content-Type: text/plain
+From: "Christian Betz" <christian.betz@gmail.com>
+Date: Tue, 23 Feb 2021 12:24:31 -0500
+Message-ID: <CAC9ffDEuZL-k8199bUyN+8frjw6bg-g=vrumxxtvt+RVParQ8Q@mail.gmail.com>
+Subject: HTTP basic auth handling in wget.py and redirects
+To: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000a9342c05bc0431de"
 
-A previous commit uses __BBHANDLERS_MC to record all handlers, but
-it does not take into consideration of INVALIDCONF, thus causing regression.
+--000000000000a9342c05bc0431de
+Content-Type: text/plain; charset="UTF-8"
 
-We need to record the name before returned AlreadyRegistered, otherwise, when
-reparsing due to INVALIDCONF, bascially all handlers are not called.
+hi everyone,
 
-Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
----
- lib/bb/event.py | 4 ++++
- 1 file changed, 4 insertions(+)
+handling of user/pass (HTTP basic auth) in wget.py currently works like
+this, by adding params to the wget CLI:
 
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 23e1f318..3e571839 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -238,6 +238,10 @@ def register(name, handler, mask=None, filename=None, lineno=None, data=None):
- 
-     # already registered
-     if name in _handlers:
-+        if data:
-+            bbhands_mc = (data.getVar("__BBHANDLERS_MC") or [])
-+            bbhands_mc.append(name)
-+            data.setVar("__BBHANDLERS_MC", bbhands_mc)
-         return AlreadyRegistered
- 
-     if handler is not None:
--- 
-2.17.1
+ fetchcmd += " --user=%s --password=%s --auth-no-challenge" % (ud.user,
+ud.pswd)
 
+my SRC_URI is something like "https://someuser:somepassword@bitbucket.org/...".
+
+
+in this case we are authing against the bitbucket API using the
+username/password. the initial request to bitbucket.org works fine.
+
+however the actual download was failing due a redirect being followed to
+what looks like a temporary, AWS-signed URL. AWS *rejects* the basic auth
+and refuses the download.
+
+i discovered that when using the --user and --pass params, wget will use
+basic auth for the initial request AND all subsequent requests.
+
+the good news is that wget is smart enough to pick up the
+someuser/somepassword from the URI alone, and this does NOT cause redirects
+to use basic auth!
+
+(note: afaict this is undocumented behavior in wget.)
+
+the "auth-no-challenge" seems to still be required, though. ultimately I
+changed wget.py as follows:
+
+ fetchcmd += " --auth-no-challenge"
+
+i have patched our own wget.py for the time being. from a security point of
+view, this also seems like the correct thing to do (it seems curl does NOT
+include auth headers when following redirects, unless you ask for it).
+
+however, this change would probably NOT work for anyone that *does* need
+basic auth on the redirected request!
+
+is the "correct" fix to add an additional fetcher option like
+'authredirects'? would y'all take a patch for this feature?
+
+christian
+
+p.s. *in my opinion*, the --no-check-certificate in wget.py should be
+turned off when using HTTP basic auth, since sensitive information may be
+sent to an attacker-controlled host (in other cases i guess it is OK since
+bitbake will verify checksums). i could try to make a patch for this too if
+anyone agrees.
+
+--000000000000a9342c05bc0431de
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><table class=3D"gmail-diff-table gmail-js-diff-table gmail=
+-tab-size gmail-file-diff-split gmail-js-file-diff-split"><tbody><tr><td cl=
+ass=3D"gmail-code-review gmail-blob-code gmail-blob-code-addition"><span cl=
+ass=3D"gmail-blob-code-inner gmail-blob-code-marker">        <span class=3D=
+"gmail-pl-c">hi everyone,<br><br>handling of user/pass (HTTP basic auth) in=
+ wget.py currently works like this, by adding params to the wget CLI:<br><b=
+r>=C2=A0fetchcmd +=3D &quot; --user=3D%s --password=3D%s --auth-no-challeng=
+e&quot; % (ud.user, ud.pswd)</span></span>
+
+    </td>
+</tr>
+
+
+
+
+    <tr>
+    </tr></tbody></table>
+        <table class=3D"gmail-diff-table gmail-js-diff-table gmail-tab-size=
+ gmail-file-diff-split gmail-js-file-diff-split"><tbody><tr><td class=3D"gm=
+ail-code-review gmail-blob-code gmail-blob-code-context">
+
+      <span class=3D"gmail-blob-code-inner gmail-blob-code-marker">        =
+<span class=3D"gmail-pl-k"></span></span><br>my SRC_URI is something like &=
+quot;<a href=3D"https://someuser:somepassword@bitbucket.org/..">https://som=
+euser:somepassword@bitbucket.org/..</a>.&quot;. <br><br>in this case we are=
+ authing against the bitbucket API using the username/password. the initial=
+ request to <a href=3D"http://bitbucket.org">bitbucket.org</a> works fine.<=
+/td></tr></tbody></table><div><br></div><div>however the actual download wa=
+s failing due a redirect being followed to what looks like a temporary, AWS=
+-signed URL. AWS *rejects* the basic auth and refuses the download.<br></di=
+v><div><br></div><div>i discovered that when using the --user and --pass pa=
+rams, wget will use basic auth for the initial request AND all subsequent r=
+equests. <br></div><div><br></div><div>the good news is that wget is smart =
+enough to pick up the someuser/somepassword from the URI alone, and this do=
+es NOT cause redirects to use basic auth!<br></div><div><br></div><div>(not=
+e: afaict this is undocumented behavior in wget.)</div><div><br></div><div>=
+the &quot;auth-no-challenge&quot; seems to still be required, though. ultim=
+ately I changed wget.py as follows:</div><div><br></div><div><span class=3D=
+"gmail-blob-code-inner gmail-blob-code-marker"><span class=3D"gmail-pl-s1">=
+=C2=A0fetchcmd</span> <span class=3D"gmail-pl-c1">+=3D</span> <span class=
+=3D"gmail-pl-s">&quot; --auth-no-challenge&quot;</span></span></div><div><b=
+r></div><div>i have patched our own wget.py for the time being. from a secu=
+rity point of view, this also seems like the correct thing to do (it seems =
+curl does NOT include auth headers when following redirects, unless you ask=
+ for it). <br></div><div><br></div><div>however, this change would probably=
+ NOT work for anyone that *does* need basic auth on the redirected request!=
+<br></div><div><br></div><div>is the &quot;correct&quot; fix to add an addi=
+tional fetcher option like &#39;authredirects&#39;? would y&#39;all take a =
+patch for this feature?<br></div><div><br></div><div>christian<br></div><di=
+v><br></div><div>p.s. *in my opinion*, the --no-check-certificate in wget.p=
+y should be turned off when using HTTP basic auth, since sensitive informat=
+ion may be sent to an attacker-controlled host (in other cases i guess it i=
+s OK since bitbake will verify checksums). i could try to make a patch for =
+this too if anyone agrees.<br></div><div><br></div><br></div>
+
+--000000000000a9342c05bc0431de--
