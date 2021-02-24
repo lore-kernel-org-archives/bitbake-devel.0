@@ -1,51 +1,51 @@
 Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
- by mx.groups.io with SMTP id smtpd.web08.819.1614187621170254340
+ by mx.groups.io with SMTP id smtpd.web12.794.1614187621970483062
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 24 Feb 2021 09:27:01 -0800
+ Wed, 24 Feb 2021 09:27:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=nhpfrrQt;
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Zet8QjoI;
  spf=pass (domain: gmail.com, ip: 209.85.210.48, mailfrom: aehs29@gmail.com)
-Received: by mail-ot1-f48.google.com with SMTP id v12so1771363ott.10
-        for <bitbake-devel@lists.openembedded.org>; Wed, 24 Feb 2021 09:27:00 -0800 (PST)
+Received: by mail-ot1-f48.google.com with SMTP id s3so2901578otg.5
+        for <bitbake-devel@lists.openembedded.org>; Wed, 24 Feb 2021 09:27:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rPyU3zUd43PSituBLKsJRvXEqqe1atX4BiZYcTdjLhI=;
-        b=nhpfrrQt8eSAOIXpKEB+toAo4pDu9vmKR9LZC18nZHlMXqwBUDBwTMGh67rrzFYVon
-         zWTPMl0dCXVC7yZRsrK5dTf6Q8r0rBOZbkCn5MDhT2DA+Q6nn0ww5U+7nLE6ce0K+vg8
-         YGzDIG5VQ9+yzpQku0k/vBxVFvoWf73zxmMa7xJ/PpgivT1dvnWXAV285gSU/U0SK0L0
-         I+xM3+08puhGvXwyXZ63HIqcyybE5tiTxZOMZPz00Ai3okS1F7ZTzBCvMYY4HVf3uok6
-         s1TZpDYNJgvfkKrxZP4jXmateqNbqKQSIJ8jQMSdW2Dsiza7TBsXLfvEhql5MtE0JNAV
-         kjHg==
+        bh=PoZjCz5dhLtPPz2YqQCYKL6pWhZPwz4JbwUHBCZ/vek=;
+        b=Zet8QjoIoA1pq5Jd6R/PgTbwUrYnnlU8ADyb0Ozp5sU54LfSpx0ipfFZOU+WGCkuaS
+         wBk6lKqQworf195gVmjAGTWWn+QeoDS2rc21OWcBMcEqtLjSNzbvKZRg5XeS96cxQwhO
+         4u8ATZlE7UTQO3mC7ZJbMo7CTp+6GeQLFV4jhlKThkessGiqn2eB9huzRU9LWQGSz4tN
+         LdHQbX3BJXF7+QemNH1S/H9CIoLmyEkkbrUd3Cxjh5KoB+bnXz63N0UCfUSozvpnOC/f
+         Oy1uXLb1qsVG3fIIBqFh33s0FATEjfU3onu825G2ni8Xcpx4za+Y0Mu86oVI0YZEfkqc
+         cdsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rPyU3zUd43PSituBLKsJRvXEqqe1atX4BiZYcTdjLhI=;
-        b=Zrc05H425j1g/pveLYOkiFfi7c2vwB8GvTESsBrjdJSgsk1RJcE8co/oN3u3ARPQ44
-         XVtAvzZBqRvLpUlUNvA6SZuUbcHtBdbvfwbrvQR6vCPgaLmuhLjmicJX6VamwY8hlNST
-         x1v8TS2Xj65nDqYL7r6odwzMCZZMSTBzK4iROtJ5q4Rvc8YQv+hfhXi7a441RjE7eXkX
-         XT1234CBYca1d4LXJk3Zej7qlBTX1I0MJVzFQvNT1k0jo6eE008hKDYTg2w0M4HVsRAU
-         pUmZtnplrpWdtKP2EhuaV5y37PlZCiMBLjxceP2k0BLXKpC6MbL6n94qkAxd0MIe7ZLz
-         4IdQ==
-X-Gm-Message-State: AOAM531k2rhJR5XQJgKoPYsA6jxUxXO9pdRzWPki15PVJ21dYziQ+mbw
-	+1rH2dFKet3zeQXC3WOBsyGmtNt7Fnl6CQ==
-X-Google-Smtp-Source: ABdhPJw3qW3PMQEMH+xind6OLI8kJOXuYiEZnx5x8tqFRyEMUEhbG2/5VbrfwcOjFKB9IBI9u2A7Eg==
-X-Received: by 2002:a9d:7e87:: with SMTP id m7mr26281851otp.128.1614187620066;
+        bh=PoZjCz5dhLtPPz2YqQCYKL6pWhZPwz4JbwUHBCZ/vek=;
+        b=POvp/rELw1cbiWcYEa2ATBEG2Kent+3moSHz63i2MGVBdfnaclcumWr0LaEpgMYGxL
+         61AaooRxfa8cgKHxPRbzrJKT1Fuh3rGyliSbWSP9xgajnNuHHQZXc2aUyL5PLVD8zwQ2
+         UWFXO/ozSoKjz5GQfC3Z7Y7PsGpSMi+WsvNZmNNtNY8ikgvYQ47LMKHJwPjdcGrkneZ7
+         AlWXEMI72gi5WaiHO6TzMwbOrT7h6ThZKpXwyyWuTS69BcfM4B/lQ/Qzf4Xb1Ek3gIjB
+         ZkAessKb4/2rUVupc75IJgszwo/iluSASchDHEmcOv7WwoH2raAPLt/OwPxtF4ucLS8q
+         umfQ==
+X-Gm-Message-State: AOAM533+jascMglEG0/KUDa1y7pW0RXPxkNJveoIBkzuhuEEw5D3jF6m
+	q27BO/kB0N8jayJZ0wjVXlrIKVg4SVmRVA==
+X-Google-Smtp-Source: ABdhPJzf/JFmSW47U7nQjwA+1ZRhNSbxrVSkATwblIlw2/xKy3bknD3p/4N7AwCJx6qbLjv5Pjh0KA==
+X-Received: by 2002:a05:6830:1d43:: with SMTP id p3mr21566335oth.184.1614187620924;
         Wed, 24 Feb 2021 09:27:00 -0800 (PST)
 Return-Path: <aehs29@gmail.com>
 Received: from alsamon-xub.lan (cpe-68-201-52-49.elp.res.rr.com. [68.201.52.49])
-        by smtp.gmail.com with ESMTPSA id 2sm463590oip.3.2021.02.24.09.26.59
+        by smtp.gmail.com with ESMTPSA id 2sm463590oip.3.2021.02.24.09.27.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Feb 2021 09:26:59 -0800 (PST)
+        Wed, 24 Feb 2021 09:27:00 -0800 (PST)
 From: "Alejandro Hernandez Samaniego" <alejandro@enedino.org>
 X-Google-Original-From: Alejandro Enedino Hernandez Samaniego <alhe@linux.microsoft.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alejandro Enedino Hernandez Samaniego <alhe@linux.microsoft.com>
-Subject: [PATCH 2/3] docs: Add Az fetcher documentation
-Date: Wed, 24 Feb 2021 10:26:33 -0700
-Message-Id: <20210224172634.2127610-2-alhe@linux.microsoft.com>
+Subject: [PATCH 3/3] docs: Add AZ_SAS definition to glossary
+Date: Wed, 24 Feb 2021 10:26:34 -0700
+Message-Id: <20210224172634.2127610-3-alhe@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210224172634.2127610-1-alhe@linux.microsoft.com>
 References: <20210224172634.2127610-1-alhe@linux.microsoft.com>
@@ -54,62 +54,33 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Alejandro Enedino Hernandez Samaniego <alhe@linux.microsoft.com>
 ---
- .../bitbake-user-manual-fetching.rst          | 28 +++++++++++++++++++
- .../bitbake-user-manual-ref-variables.rst     |  2 ++
- 2 files changed, 30 insertions(+)
+ .../bitbake-user-manual-ref-variables.rst           | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index 6760b108..e9a5f336 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -624,6 +624,34 @@ Here are some example URLs: ::
-    SRC_URI = "repo://REPOROOT;protocol=git;branch=some_branch;manifest=my_manifest.xml"
-    SRC_URI = "repo://REPOROOT;protocol=file;branch=some_branch;manifest=my_manifest.xml"
- 
-+.. _az-fetcher:
-+
-+Az Fetcher (``az://``)
-+--------------------------
-+
-+This submodule fetches data from an
-+`Azure Storage account <https://docs.microsoft.com/en-us/azure/storage/>`__ ,
-+it inherits its functionality from the HTTP wget fetcher, but modifies its
-+behavior to accomodate the usage of a
-+`Shared Access Signature (SAS) <https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview>`__
-+for non-public data.
-+
-+Such functionality is set by the variable:
-+
-+-  :term:`AZ_SAS`: The Azure Storage Shared Access Signature provides secure
-+   delegate access to resources, if this variable is set, the Az Fetcher will
-+   use it when fetching artifacts from the cloud.
-+
-+You can specify the AZ_SAS variable as shown below: ::
-+
-+   AZ_SAS = "se=2021-01-01&sp=r&sv=2018-11-09&sr=c&skoid=<skoid>&sig=<signature>"
-+
-+Here is an example URL: ::
-+
-+   SRC_URI = "az://<azure-storage-account>.blob.core.windows.net/<foo_container>/<bar_file>"
-+
-+It can also be used when setting mirrors definitions using the :term:`PREMIRRORS` variable.
-+
- Other Fetchers
- --------------
- 
 diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 6469f9d1..1cb4b1d6 100644
+index 1cb4b1d6..d8c88c61 100644
 --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
 +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -1303,6 +1303,8 @@ overview of their function and contents.
-       -  ``svn://`` : Fetches files from a Subversion (``svn``) revision
-          control repository.
+@@ -39,6 +39,19 @@ overview of their function and contents.
+       when specified allows for the Git binary from the host to be used
+       rather than building ``git-native``.
  
-+      -  ``az://`` : Fetches files from an Azure Storage account using HTTPS.
++   :term:`AZ_SAS`
++      Azure Storage Shared Access Signature, when using the
++      :ref:`Azure Storage fetcher <bitbake-user-manual/bitbake-user-manual-fetching:fetchers>`
++      This variable can be defined to be used by the fetcher to authenticate
++      and gain access to non-public artifacts.
++      ::
 +
-       Here are some additional options worth mentioning:
- 
-       -  ``unpack`` : Controls whether or not to unpack the file if it is
++         AZ_SAS = ""se=2021-01-01&sp=r&sv=2018-11-09&sr=c&skoid=<skoid>&sig=<signature>""
++
++      For more information see Microsoft's Azure Storage documentation at
++      https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview
++
++
+    :term:`B`
+       The directory in which BitBake executes functions during a recipe's
+       build process.
 -- 
 2.25.1
 
