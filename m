@@ -1,187 +1,215 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
- by mx.groups.io with SMTP id smtpd.web08.15.1614101416369945403
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+ by mx.groups.io with SMTP id smtpd.web11.805.1614187620836932780
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 23 Feb 2021 09:30:16 -0800
+ Wed, 24 Feb 2021 09:27:01 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=dwJ/HprA;
- spf=pass (domain: gmail.com, ip: 209.85.208.52, mailfrom: kergoth@gmail.com)
-Received: by mail-ed1-f52.google.com with SMTP id d2so26733198edq.10
-        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Feb 2021 09:30:16 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=mYjhnpN6;
+ spf=pass (domain: gmail.com, ip: 209.85.210.53, mailfrom: aehs29@gmail.com)
+Received: by mail-ot1-f53.google.com with SMTP id d9so2855515ote.12
+        for <bitbake-devel@lists.openembedded.org>; Wed, 24 Feb 2021 09:27:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M+2ed8H8DPTGAAgcurUsSrvJct2F5ELAgyIBMj4I5j4=;
-        b=dwJ/HprAKWZwJ1VpDL5WYyBrJuqzfL8nSC5CjXSfI8f74+9+u59ektQjcJAu21LBPT
-         kUWQEdkqf4SMdXZiNwkNv50Cbxn9ZxOquYYn/FVHRXcrrd/KRSnkI2BXmIs4CfwQ6nSC
-         FcKt/wTBUgvyUkDDpF+u+RfBu+OHLchcCnkg9WNmj4qnCT4M4qC5Y+KMaD+CMjTl1If/
-         VwB4b+QS/0vwiPn095HBurdeAriLv9z9xTbfNLNaIPDG5m784k24wNLrtjhgyTFzo5uk
-         uOv1EXPPdSoi6VPAQyKv0rpmwsWZf7A/bb+Ql4X7JRckra4WKULJSkKaHzxfMaCO1u7w
-         LW+A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X42NJwL4CCfZmAuUmyX313UzBrJjTyAlwW/08sXMQ90=;
+        b=mYjhnpN602t0YKwGNqH9cfThuZXUiOmbWgoDCj+xe4I55xQCs/MR48Xc5XheUa1AtQ
+         SSNUJtM8EZ8Z6jKwUvYYN/+n6Ldx5csZ2PgPE8NUNlvRBQ24AbKcN1Qc1d2y9D5Yx9CO
+         3yDMJ3oN7H0R9notgOcKMlWr4QlocEyORitQUBZrzhvjcLRC4+MkU3x82Pxh6lb5W/E1
+         bRBzhS07+2gvwlp+xNULRFJ0vl/y4re25ClWwLLxCcpB/PtZBI2LaEm4OiRX5Dj8plP/
+         GcyrQZx3rQM8erI7e2RI7LUp5bB4bTryFoSXvIvEC8R9A3XEBysspbfjwcDUErQ/KriD
+         xSMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M+2ed8H8DPTGAAgcurUsSrvJct2F5ELAgyIBMj4I5j4=;
-        b=Z3OA5V1neRkmM1+01eqxeT6MPTabWRyzzw0hz97riSJCxlzsgUh85+toweLAcZliTr
-         yrWv3E+0AyF2INKnKP94IZ6VfHj5cTC2FhWy6f0sEBYr6UCzZzrdo3+8o8SSwIIv/rJu
-         iZHFNoMmnS/Nn2Yl+FfsV6c4f5N1VD7cYL24PBL67zyA42BEDFrChw7yrEP7l0sErZgu
-         l3p06pP1ucZBrKz91XOfAbPxWGzIyourEZ92nsDvVmwyJUSGKoD+kavK8XF/hnXB7bNS
-         CjG9Rw9RKg4V0ZCZyUoaS/21SEVLMZGb2qtiQY079UQ1mRRl+jwCTW83kfm2iTFB/LAF
-         /CBg==
-X-Gm-Message-State: AOAM532GKkFoJ2MXomiRlmWx082gpi9jY50tIbZs6aYfA2GSIKVga/C3
-	2lIm0lcKcMBNr7Spt7jeOaLoXKkO2SgDVFNPvFM=
-X-Google-Smtp-Source: ABdhPJznVjyCux3yNWW0yzNNKg32KxphCmqpCjSKm2eoELrbLcCDEPOXNG+z89pmqeREoN7zqexAmhLlwTJCc6bcZIw=
-X-Received: by 2002:aa7:de8f:: with SMTP id j15mr29704517edv.268.1614101414787;
- Tue, 23 Feb 2021 09:30:14 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X42NJwL4CCfZmAuUmyX313UzBrJjTyAlwW/08sXMQ90=;
+        b=reiyPXxyLmm7+bUdUwQBDi9LnHS1T/kV80EigDH6QDglImugXT71YiihTy908XIJPv
+         uZUoxZiiPYBsqCKDMGTb/LRgE3xdgGok1YZfP1PodNoBaWTwCnNb0BZrJ7WQobSmZkU/
+         ZkMab06+I+nO97PAeZxZZCAvBjICo8CthZHQudMS1Qo2cx+AlkJHCda6Hn+F9u7NjYEo
+         LXpGhPkMGhWzFaM+T3GP1OJ5kEyfQTQ32Oh7anIFfow70kryIITn5BflyOKN7dl98mSf
+         e41nlOytWooEv5cjO1jnSecq7sHMGcai3lYWGVqB1nSK3NGL6v/JDPJop6+EZKcX7w7e
+         N6cg==
+X-Gm-Message-State: AOAM530zcv1cgyWy1H6vj+7VanQMaZ42xsKDGO85/bd8fljcGLHGoXx3
+	EbhChQT64MPtb/F5RVspS8cgCHChiZp90g==
+X-Google-Smtp-Source: ABdhPJwcbY/XXJaHheeUjKzgDyCvQSy7VhqI+KruWfSe+ZQryN7zc8/OswGnfOAwC9WKfEQWU8FJow==
+X-Received: by 2002:a05:6830:2150:: with SMTP id r16mr2497478otd.27.1614187619189;
+        Wed, 24 Feb 2021 09:26:59 -0800 (PST)
+Return-Path: <aehs29@gmail.com>
+Received: from alsamon-xub.lan (cpe-68-201-52-49.elp.res.rr.com. [68.201.52.49])
+        by smtp.gmail.com with ESMTPSA id 2sm463590oip.3.2021.02.24.09.26.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Feb 2021 09:26:58 -0800 (PST)
+From: "Alejandro Hernandez Samaniego" <alejandro@enedino.org>
+X-Google-Original-From: Alejandro Enedino Hernandez Samaniego <alhe@linux.microsoft.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alejandro Enedino Hernandez Samaniego <alhe@linux.microsoft.com>
+Subject: [PATCH 1/3] bitbake: Add Azure Storage fetcher implementation
+Date: Wed, 24 Feb 2021 10:26:32 -0700
+Message-Id: <20210224172634.2127610-1-alhe@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CAC9ffDEuZL-k8199bUyN+8frjw6bg-g=vrumxxtvt+RVParQ8Q@mail.gmail.com>
-In-Reply-To: <CAC9ffDEuZL-k8199bUyN+8frjw6bg-g=vrumxxtvt+RVParQ8Q@mail.gmail.com>
-From: "Christopher Larson" <kergoth@gmail.com>
-Date: Tue, 23 Feb 2021 10:30:03 -0700
-Message-ID: <CABcZANmg95WWFgS9Ddjsh-sWzbOEaBhtcJ3QzezFZhndJvN5uQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] HTTP basic auth handling in wget.py and redirects
-To: Christian Betz <christian.betz@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="00000000000075bfa105bc044557"
+Content-Transfer-Encoding: 8bit
 
---00000000000075bfa105bc044557
-Content-Type: text/plain; charset="UTF-8"
+        Allows bitbake to fetch from an Azure Storage account.
 
-I would suggest a url parameter to control whether the auth is passed to
-the redirects, then it's isolated to a single uri without needing a new url
-scheme.
+        The fetcher submodule is compatible with the az:// URI protocol, its
+        functionality is based on bitbakes wget fetcher, superior in performance
+        to using a propietary tool like azcopy which can handle cloud storage
+        account operations with more functionality (that we dont need in a fetcher)
+	but less compatibility.
 
-On Tue, Feb 23, 2021 at 10:25 AM Christian Betz <christian.betz@gmail.com>
-wrote:
+        A sample URI uses can be defined in the following way:
+	SRC_URI = "az://<azure-storage-account>.blob.core.windows.net/<container>/foo.tar.xz"
 
-> hi everyone,
->
-> handling of user/pass (HTTP basic auth) in wget.py currently works like
-> this, by adding params to the wget CLI:
->
->  fetchcmd += " --user=%s --password=%s --auth-no-challenge" % (ud.user,
-> ud.pswd)
->
-> my SRC_URI is something like "
-> https://someuser:somepassword@bitbucket.org/...".
->
-> in this case we are authing against the bitbucket API using the
-> username/password. the initial request to bitbucket.org works fine.
->
-> however the actual download was failing due a redirect being followed to
-> what looks like a temporary, AWS-signed URL. AWS *rejects* the basic auth
-> and refuses the download.
->
-> i discovered that when using the --user and --pass params, wget will use
-> basic auth for the initial request AND all subsequent requests.
->
-> the good news is that wget is smart enough to pick up the
-> someuser/somepassword from the URI alone, and this does NOT cause redirects
-> to use basic auth!
->
-> (note: afaict this is undocumented behavior in wget.)
->
-> the "auth-no-challenge" seems to still be required, though. ultimately I
-> changed wget.py as follows:
->
->  fetchcmd += " --auth-no-challenge"
->
-> i have patched our own wget.py for the time being. from a security point
-> of view, this also seems like the correct thing to do (it seems curl does
-> NOT include auth headers when following redirects, unless you ask for it).
->
-> however, this change would probably NOT work for anyone that *does* need
-> basic auth on the redirected request!
->
-> is the "correct" fix to add an additional fetcher option like
-> 'authredirects'? would y'all take a patch for this feature?
->
-> christian
->
-> p.s. *in my opinion*, the --no-check-certificate in wget.py should be
-> turned off when using HTTP basic auth, since sensitive information may be
-> sent to an attacker-controlled host (in other cases i guess it is OK since
-> bitbake will verify checksums). i could try to make a patch for this too if
-> anyone agrees.
->
->
->
-> 
->
->
+        This fetcher can easily be used with PREMIRRORS and SSTATE_MIRRORS, e.g.:
 
+        SSTATE_MIRRORS = "file://.* az://<azure-storage-account>.blob.core.windows.net/sstate-cache/PATH;downloadfilename=PATH \n"
+
+        PREMIRRORS_prepend = "\
+            git://.*/.* az://<azure-storage-account>.blob.core.windows.net/downloads/ \n \
+            ftp://.*/.* az://<azure-storage-account>.blob.core.windows.net/downloads/ \n \
+            http://.*/.* az://<azure-storage-account>.blob.core.windows.net/downloads/ \n \
+            https://.*/.* az://<azure-storage-account>.blob.core.windows.net/downloads/ \n \
+        "
+
+        Can also be used with non-public access Azure Storage accounts/containers via a
+        Shared Access Signature by declaring the AZ_SAS variable which will be
+        automatically used by the fetcher:
+
+        AZ_SAS="?sv=2000-01-01&ss=...&sig=somesignature"
+
+Signed-off-by: Alejandro Enedino Hernandez Samaniego <alhe@linux.microsoft.com>
+---
+ lib/bb/fetch2/__init__.py |  4 +-
+ lib/bb/fetch2/az.py       | 93 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 96 insertions(+), 1 deletion(-)
+ create mode 100644 lib/bb/fetch2/az.py
+
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 19169d78..cf0201c4 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1243,7 +1243,7 @@ class FetchData(object):
+ 
+             if checksum_name in self.parm:
+                 checksum_expected = self.parm[checksum_name]
+-            elif self.type not in ["http", "https", "ftp", "ftps", "sftp", "s3"]:
++            elif self.type not in ["http", "https", "ftp", "ftps", "sftp", "s3", "az"]:
+                 checksum_expected = None
+             else:
+                 checksum_expected = d.getVarFlag("SRC_URI", checksum_name)
+@@ -1908,6 +1908,7 @@ from . import repo
+ from . import clearcase
+ from . import npm
+ from . import npmsw
++from . import az
+ 
+ methods.append(local.Local())
+ methods.append(wget.Wget())
+@@ -1927,3 +1928,4 @@ methods.append(repo.Repo())
+ methods.append(clearcase.ClearCase())
+ methods.append(npm.Npm())
+ methods.append(npmsw.NpmShrinkWrap())
++methods.append(az.Az())
+diff --git a/lib/bb/fetch2/az.py b/lib/bb/fetch2/az.py
+new file mode 100644
+index 00000000..3ccc594c
+--- /dev/null
++++ b/lib/bb/fetch2/az.py
+@@ -0,0 +1,93 @@
++"""
++BitBake 'Fetch' Azure Storage implementation
++
++"""
++
++# Copyright (C) 2021 Alejandro Hernandez Samaniego
++#
++# Based on bb.fetch2.wget:
++# Copyright (C) 2003, 2004  Chris Larson
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Based on functions from the base bb module, Copyright 2003 Holger Schurig
++
++import shlex
++import os
++import bb
++from   bb.fetch2 import FetchError
++from   bb.fetch2 import logger
++from   bb.fetch2.wget import Wget
++
++
++class Az(Wget):
++
++    def supports(self, ud, d):
++        """
++        Check to see if a given url can be fetched from Azure Storage
++        """
++        return ud.type in ['az']
++
++
++    def checkstatus(self, fetch, ud, d, try_again=True):
++
++        # checkstatus discards parameters either way, we need to do this before adding the SAS
++        ud.url = ud.url.replace('az://','https://').split(';')[0]
++
++        az_sas = d.getVar('AZ_SAS')
++        if az_sas and az_sas not in ud.url:
++            ud.url += az_sas
++
++        return Wget.checkstatus(self, fetch, ud, d, try_again)
++
++    # Override download method, include retries
++    def download(self, ud, d, retries=3):
++        """Fetch urls"""
++
++        # If were reaching the account transaction limit we might be refused a connection,
++        # retrying allows us to avoid false negatives since the limit changes over time
++        fetchcmd = self.basecmd + ' --retry-connrefused --waitretry=5'
++
++        # We need to provide a localpath to avoid wget using the SAS
++        # ud.localfile either has the downloadfilename or ud.path
++        localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile)
++        bb.utils.mkdirhier(os.path.dirname(localpath))
++        fetchcmd += " -O %s" % shlex.quote(localpath)
++
++
++        if ud.user and ud.pswd:
++            fetchcmd += " --user=%s --password=%s --auth-no-challenge" % (ud.user, ud.pswd)
++
++        # Check if a Shared Access Signature was given and use it
++        az_sas = d.getVar('AZ_SAS')
++
++        if az_sas:
++            azuri = '%s%s%s%s' % ('https://', ud.host, ud.path, az_sas)
++        else:
++            azuri = '%s%s%s' % ('https://', ud.host, ud.path)
++
++        if os.path.exists(ud.localpath):
++            # file exists, but we didnt complete it.. trying again.
++            fetchcmd += d.expand(" -c -P ${DL_DIR} '%s'" % azuri)
++        else:
++            fetchcmd += d.expand(" -P ${DL_DIR} '%s'" % azuri)
++
++        try:
++            self._runwget(ud, d, fetchcmd, False)
++        except FetchError as e:
++            # Azure fails on handshake sometimes when using wget after some stress, producing a
++            # FetchError from the fetcher, if the artifact exists retyring should succeed
++            if 'Unable to establish SSL connection' in str(e):
++                logger.debug2('Unable to establish SSL connection: Retries remaining: %s, Retrying...' % retries)
++                self.download(ud, d, retries -1)
++
++        # Sanity check since wget can pretend it succeed when it didn't
++        # Also, this used to happen if sourceforge sent us to the mirror page
++        if not os.path.exists(ud.localpath):
++            raise FetchError("The fetch command returned success for url %s but %s doesn't exist?!" % (azuri, ud.localpath), azuri)
++
++        if os.path.getsize(ud.localpath) == 0:
++            os.remove(ud.localpath)
++            raise FetchError("The fetch of %s resulted in a zero size file?! Deleting and failing since this isn't right." % (azuri), azuri)
++
++        return True
 -- 
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Senior Software Engineer, Mentor Graphics
+2.25.1
 
---00000000000075bfa105bc044557
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">I would suggest a url parameter to control whether the aut=
-h is passed to the redirects, then it&#39;s isolated to a single uri withou=
-t needing a new url scheme.</div><br><div class=3D"gmail_quote"><div dir=3D=
-"ltr" class=3D"gmail_attr">On Tue, Feb 23, 2021 at 10:25 AM Christian Betz =
-&lt;<a href=3D"mailto:christian.betz@gmail.com">christian.betz@gmail.com</a=
->&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px=
- 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><di=
-v dir=3D"ltr"><table><tbody><tr><td><span>        <span>hi everyone,<br><br=
->handling of user/pass (HTTP basic auth) in wget.py currently works like th=
-is, by adding params to the wget CLI:<br><br>=C2=A0fetchcmd +=3D &quot; --u=
-ser=3D%s --password=3D%s --auth-no-challenge&quot; % (ud.user, ud.pswd)</sp=
-an></span>
-
-    </td>
-</tr>
-
-
-
-
-    <tr>
-    </tr></tbody></table>
-        <table><tbody><tr><td>
-
-      <span>        <span></span></span><br>my SRC_URI is something like &=
-quot;<a href=3D"https://someuser:somepassword@bitbucket.org/.." target=3D"_=
-blank">https://someuser:somepassword@bitbucket.org/..</a>.&quot;. <br><br>i=
-n this case we are authing against the bitbucket API using the username/pas=
-sword. the initial request to <a href=3D"http://bitbucket.org" target=3D"_b=
-lank">bitbucket.org</a> works fine.</td></tr></tbody></table><div><br></div=
-><div>however the actual download was failing due a redirect being followed=
- to what looks like a temporary, AWS-signed URL. AWS *rejects* the basic au=
-th and refuses the download.<br></div><div><br></div><div>i discovered that=
- when using the --user and --pass params, wget will use basic auth for the =
-initial request AND all subsequent requests. <br></div><div><br></div><div>=
-the good news is that wget is smart enough to pick up the someuser/somepass=
-word from the URI alone, and this does NOT cause redirects to use basic aut=
-h!<br></div><div><br></div><div>(note: afaict this is undocumented behavior=
- in wget.)</div><div><br></div><div>the &quot;auth-no-challenge&quot; seems=
- to still be required, though. ultimately I changed wget.py as follows:</di=
-v><div><br></div><div><span><span>=C2=A0fetchcmd</span> <span>+=3D</span> <=
-span>&quot; --auth-no-challenge&quot;</span></span></div><div><br></div><di=
-v>i have patched our own wget.py for the time being. from a security point =
-of view, this also seems like the correct thing to do (it seems curl does N=
-OT include auth headers when following redirects, unless you ask for it). <=
-br></div><div><br></div><div>however, this change would probably NOT work f=
-or anyone that *does* need basic auth on the redirected request!<br></div><=
-div><br></div><div>is the &quot;correct&quot; fix to add an additional fetc=
-her option like &#39;authredirects&#39;? would y&#39;all take a patch for t=
-his feature?<br></div><div><br></div><div>christian<br></div><div><br></div=
-><div>p.s. *in my opinion*, the --no-check-certificate in wget.py should be=
- turned off when using HTTP basic auth, since sensitive information may be =
-sent to an attacker-controlled host (in other cases i guess it is OK since =
-bitbake will verify checksums). i could try to make a patch for this too if=
- anyone agrees.<br></div><div><br></div><br></div>
-<br>
-<br>
-<br>
-</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr=
-" class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christop=
-her Larson<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, =
-OpenZaurus<br>Senior Software Engineer, Mentor Graphics</div></div></div></=
-div>
-
---00000000000075bfa105bc044557--
