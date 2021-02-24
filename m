@@ -1,215 +1,115 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
- by mx.groups.io with SMTP id smtpd.web11.805.1614187620836932780
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+ by mx.groups.io with SMTP id smtpd.web08.819.1614187621170254340
  for <bitbake-devel@lists.openembedded.org>;
  Wed, 24 Feb 2021 09:27:01 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=mYjhnpN6;
- spf=pass (domain: gmail.com, ip: 209.85.210.53, mailfrom: aehs29@gmail.com)
-Received: by mail-ot1-f53.google.com with SMTP id d9so2855515ote.12
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=nhpfrrQt;
+ spf=pass (domain: gmail.com, ip: 209.85.210.48, mailfrom: aehs29@gmail.com)
+Received: by mail-ot1-f48.google.com with SMTP id v12so1771363ott.10
         for <bitbake-devel@lists.openembedded.org>; Wed, 24 Feb 2021 09:27:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X42NJwL4CCfZmAuUmyX313UzBrJjTyAlwW/08sXMQ90=;
-        b=mYjhnpN602t0YKwGNqH9cfThuZXUiOmbWgoDCj+xe4I55xQCs/MR48Xc5XheUa1AtQ
-         SSNUJtM8EZ8Z6jKwUvYYN/+n6Ldx5csZ2PgPE8NUNlvRBQ24AbKcN1Qc1d2y9D5Yx9CO
-         3yDMJ3oN7H0R9notgOcKMlWr4QlocEyORitQUBZrzhvjcLRC4+MkU3x82Pxh6lb5W/E1
-         bRBzhS07+2gvwlp+xNULRFJ0vl/y4re25ClWwLLxCcpB/PtZBI2LaEm4OiRX5Dj8plP/
-         GcyrQZx3rQM8erI7e2RI7LUp5bB4bTryFoSXvIvEC8R9A3XEBysspbfjwcDUErQ/KriD
-         xSMw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rPyU3zUd43PSituBLKsJRvXEqqe1atX4BiZYcTdjLhI=;
+        b=nhpfrrQt8eSAOIXpKEB+toAo4pDu9vmKR9LZC18nZHlMXqwBUDBwTMGh67rrzFYVon
+         zWTPMl0dCXVC7yZRsrK5dTf6Q8r0rBOZbkCn5MDhT2DA+Q6nn0ww5U+7nLE6ce0K+vg8
+         YGzDIG5VQ9+yzpQku0k/vBxVFvoWf73zxmMa7xJ/PpgivT1dvnWXAV285gSU/U0SK0L0
+         I+xM3+08puhGvXwyXZ63HIqcyybE5tiTxZOMZPz00Ai3okS1F7ZTzBCvMYY4HVf3uok6
+         s1TZpDYNJgvfkKrxZP4jXmateqNbqKQSIJ8jQMSdW2Dsiza7TBsXLfvEhql5MtE0JNAV
+         kjHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X42NJwL4CCfZmAuUmyX313UzBrJjTyAlwW/08sXMQ90=;
-        b=reiyPXxyLmm7+bUdUwQBDi9LnHS1T/kV80EigDH6QDglImugXT71YiihTy908XIJPv
-         uZUoxZiiPYBsqCKDMGTb/LRgE3xdgGok1YZfP1PodNoBaWTwCnNb0BZrJ7WQobSmZkU/
-         ZkMab06+I+nO97PAeZxZZCAvBjICo8CthZHQudMS1Qo2cx+AlkJHCda6Hn+F9u7NjYEo
-         LXpGhPkMGhWzFaM+T3GP1OJ5kEyfQTQ32Oh7anIFfow70kryIITn5BflyOKN7dl98mSf
-         e41nlOytWooEv5cjO1jnSecq7sHMGcai3lYWGVqB1nSK3NGL6v/JDPJop6+EZKcX7w7e
-         N6cg==
-X-Gm-Message-State: AOAM530zcv1cgyWy1H6vj+7VanQMaZ42xsKDGO85/bd8fljcGLHGoXx3
-	EbhChQT64MPtb/F5RVspS8cgCHChiZp90g==
-X-Google-Smtp-Source: ABdhPJwcbY/XXJaHheeUjKzgDyCvQSy7VhqI+KruWfSe+ZQryN7zc8/OswGnfOAwC9WKfEQWU8FJow==
-X-Received: by 2002:a05:6830:2150:: with SMTP id r16mr2497478otd.27.1614187619189;
-        Wed, 24 Feb 2021 09:26:59 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rPyU3zUd43PSituBLKsJRvXEqqe1atX4BiZYcTdjLhI=;
+        b=Zrc05H425j1g/pveLYOkiFfi7c2vwB8GvTESsBrjdJSgsk1RJcE8co/oN3u3ARPQ44
+         XVtAvzZBqRvLpUlUNvA6SZuUbcHtBdbvfwbrvQR6vCPgaLmuhLjmicJX6VamwY8hlNST
+         x1v8TS2Xj65nDqYL7r6odwzMCZZMSTBzK4iROtJ5q4Rvc8YQv+hfhXi7a441RjE7eXkX
+         XT1234CBYca1d4LXJk3Zej7qlBTX1I0MJVzFQvNT1k0jo6eE008hKDYTg2w0M4HVsRAU
+         pUmZtnplrpWdtKP2EhuaV5y37PlZCiMBLjxceP2k0BLXKpC6MbL6n94qkAxd0MIe7ZLz
+         4IdQ==
+X-Gm-Message-State: AOAM531k2rhJR5XQJgKoPYsA6jxUxXO9pdRzWPki15PVJ21dYziQ+mbw
+	+1rH2dFKet3zeQXC3WOBsyGmtNt7Fnl6CQ==
+X-Google-Smtp-Source: ABdhPJw3qW3PMQEMH+xind6OLI8kJOXuYiEZnx5x8tqFRyEMUEhbG2/5VbrfwcOjFKB9IBI9u2A7Eg==
+X-Received: by 2002:a9d:7e87:: with SMTP id m7mr26281851otp.128.1614187620066;
+        Wed, 24 Feb 2021 09:27:00 -0800 (PST)
 Return-Path: <aehs29@gmail.com>
 Received: from alsamon-xub.lan (cpe-68-201-52-49.elp.res.rr.com. [68.201.52.49])
-        by smtp.gmail.com with ESMTPSA id 2sm463590oip.3.2021.02.24.09.26.58
+        by smtp.gmail.com with ESMTPSA id 2sm463590oip.3.2021.02.24.09.26.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Feb 2021 09:26:58 -0800 (PST)
+        Wed, 24 Feb 2021 09:26:59 -0800 (PST)
 From: "Alejandro Hernandez Samaniego" <alejandro@enedino.org>
 X-Google-Original-From: Alejandro Enedino Hernandez Samaniego <alhe@linux.microsoft.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alejandro Enedino Hernandez Samaniego <alhe@linux.microsoft.com>
-Subject: [PATCH 1/3] bitbake: Add Azure Storage fetcher implementation
-Date: Wed, 24 Feb 2021 10:26:32 -0700
-Message-Id: <20210224172634.2127610-1-alhe@linux.microsoft.com>
+Subject: [PATCH 2/3] docs: Add Az fetcher documentation
+Date: Wed, 24 Feb 2021 10:26:33 -0700
+Message-Id: <20210224172634.2127610-2-alhe@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210224172634.2127610-1-alhe@linux.microsoft.com>
+References: <20210224172634.2127610-1-alhe@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-        Allows bitbake to fetch from an Azure Storage account.
-
-        The fetcher submodule is compatible with the az:// URI protocol, its
-        functionality is based on bitbakes wget fetcher, superior in performance
-        to using a propietary tool like azcopy which can handle cloud storage
-        account operations with more functionality (that we dont need in a fetcher)
-	but less compatibility.
-
-        A sample URI uses can be defined in the following way:
-	SRC_URI = "az://<azure-storage-account>.blob.core.windows.net/<container>/foo.tar.xz"
-
-        This fetcher can easily be used with PREMIRRORS and SSTATE_MIRRORS, e.g.:
-
-        SSTATE_MIRRORS = "file://.* az://<azure-storage-account>.blob.core.windows.net/sstate-cache/PATH;downloadfilename=PATH \n"
-
-        PREMIRRORS_prepend = "\
-            git://.*/.* az://<azure-storage-account>.blob.core.windows.net/downloads/ \n \
-            ftp://.*/.* az://<azure-storage-account>.blob.core.windows.net/downloads/ \n \
-            http://.*/.* az://<azure-storage-account>.blob.core.windows.net/downloads/ \n \
-            https://.*/.* az://<azure-storage-account>.blob.core.windows.net/downloads/ \n \
-        "
-
-        Can also be used with non-public access Azure Storage accounts/containers via a
-        Shared Access Signature by declaring the AZ_SAS variable which will be
-        automatically used by the fetcher:
-
-        AZ_SAS="?sv=2000-01-01&ss=...&sig=somesignature"
-
 Signed-off-by: Alejandro Enedino Hernandez Samaniego <alhe@linux.microsoft.com>
 ---
- lib/bb/fetch2/__init__.py |  4 +-
- lib/bb/fetch2/az.py       | 93 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 96 insertions(+), 1 deletion(-)
- create mode 100644 lib/bb/fetch2/az.py
+ .../bitbake-user-manual-fetching.rst          | 28 +++++++++++++++++++
+ .../bitbake-user-manual-ref-variables.rst     |  2 ++
+ 2 files changed, 30 insertions(+)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 19169d78..cf0201c4 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1243,7 +1243,7 @@ class FetchData(object):
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index 6760b108..e9a5f336 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -624,6 +624,34 @@ Here are some example URLs: ::
+    SRC_URI = "repo://REPOROOT;protocol=git;branch=some_branch;manifest=my_manifest.xml"
+    SRC_URI = "repo://REPOROOT;protocol=file;branch=some_branch;manifest=my_manifest.xml"
  
-             if checksum_name in self.parm:
-                 checksum_expected = self.parm[checksum_name]
--            elif self.type not in ["http", "https", "ftp", "ftps", "sftp", "s3"]:
-+            elif self.type not in ["http", "https", "ftp", "ftps", "sftp", "s3", "az"]:
-                 checksum_expected = None
-             else:
-                 checksum_expected = d.getVarFlag("SRC_URI", checksum_name)
-@@ -1908,6 +1908,7 @@ from . import repo
- from . import clearcase
- from . import npm
- from . import npmsw
-+from . import az
++.. _az-fetcher:
++
++Az Fetcher (``az://``)
++--------------------------
++
++This submodule fetches data from an
++`Azure Storage account <https://docs.microsoft.com/en-us/azure/storage/>`__ ,
++it inherits its functionality from the HTTP wget fetcher, but modifies its
++behavior to accomodate the usage of a
++`Shared Access Signature (SAS) <https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview>`__
++for non-public data.
++
++Such functionality is set by the variable:
++
++-  :term:`AZ_SAS`: The Azure Storage Shared Access Signature provides secure
++   delegate access to resources, if this variable is set, the Az Fetcher will
++   use it when fetching artifacts from the cloud.
++
++You can specify the AZ_SAS variable as shown below: ::
++
++   AZ_SAS = "se=2021-01-01&sp=r&sv=2018-11-09&sr=c&skoid=<skoid>&sig=<signature>"
++
++Here is an example URL: ::
++
++   SRC_URI = "az://<azure-storage-account>.blob.core.windows.net/<foo_container>/<bar_file>"
++
++It can also be used when setting mirrors definitions using the :term:`PREMIRRORS` variable.
++
+ Other Fetchers
+ --------------
  
- methods.append(local.Local())
- methods.append(wget.Wget())
-@@ -1927,3 +1928,4 @@ methods.append(repo.Repo())
- methods.append(clearcase.ClearCase())
- methods.append(npm.Npm())
- methods.append(npmsw.NpmShrinkWrap())
-+methods.append(az.Az())
-diff --git a/lib/bb/fetch2/az.py b/lib/bb/fetch2/az.py
-new file mode 100644
-index 00000000..3ccc594c
---- /dev/null
-+++ b/lib/bb/fetch2/az.py
-@@ -0,0 +1,93 @@
-+"""
-+BitBake 'Fetch' Azure Storage implementation
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 6469f9d1..1cb4b1d6 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -1303,6 +1303,8 @@ overview of their function and contents.
+       -  ``svn://`` : Fetches files from a Subversion (``svn``) revision
+          control repository.
+ 
++      -  ``az://`` : Fetches files from an Azure Storage account using HTTPS.
 +
-+"""
-+
-+# Copyright (C) 2021 Alejandro Hernandez Samaniego
-+#
-+# Based on bb.fetch2.wget:
-+# Copyright (C) 2003, 2004  Chris Larson
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Based on functions from the base bb module, Copyright 2003 Holger Schurig
-+
-+import shlex
-+import os
-+import bb
-+from   bb.fetch2 import FetchError
-+from   bb.fetch2 import logger
-+from   bb.fetch2.wget import Wget
-+
-+
-+class Az(Wget):
-+
-+    def supports(self, ud, d):
-+        """
-+        Check to see if a given url can be fetched from Azure Storage
-+        """
-+        return ud.type in ['az']
-+
-+
-+    def checkstatus(self, fetch, ud, d, try_again=True):
-+
-+        # checkstatus discards parameters either way, we need to do this before adding the SAS
-+        ud.url = ud.url.replace('az://','https://').split(';')[0]
-+
-+        az_sas = d.getVar('AZ_SAS')
-+        if az_sas and az_sas not in ud.url:
-+            ud.url += az_sas
-+
-+        return Wget.checkstatus(self, fetch, ud, d, try_again)
-+
-+    # Override download method, include retries
-+    def download(self, ud, d, retries=3):
-+        """Fetch urls"""
-+
-+        # If were reaching the account transaction limit we might be refused a connection,
-+        # retrying allows us to avoid false negatives since the limit changes over time
-+        fetchcmd = self.basecmd + ' --retry-connrefused --waitretry=5'
-+
-+        # We need to provide a localpath to avoid wget using the SAS
-+        # ud.localfile either has the downloadfilename or ud.path
-+        localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile)
-+        bb.utils.mkdirhier(os.path.dirname(localpath))
-+        fetchcmd += " -O %s" % shlex.quote(localpath)
-+
-+
-+        if ud.user and ud.pswd:
-+            fetchcmd += " --user=%s --password=%s --auth-no-challenge" % (ud.user, ud.pswd)
-+
-+        # Check if a Shared Access Signature was given and use it
-+        az_sas = d.getVar('AZ_SAS')
-+
-+        if az_sas:
-+            azuri = '%s%s%s%s' % ('https://', ud.host, ud.path, az_sas)
-+        else:
-+            azuri = '%s%s%s' % ('https://', ud.host, ud.path)
-+
-+        if os.path.exists(ud.localpath):
-+            # file exists, but we didnt complete it.. trying again.
-+            fetchcmd += d.expand(" -c -P ${DL_DIR} '%s'" % azuri)
-+        else:
-+            fetchcmd += d.expand(" -P ${DL_DIR} '%s'" % azuri)
-+
-+        try:
-+            self._runwget(ud, d, fetchcmd, False)
-+        except FetchError as e:
-+            # Azure fails on handshake sometimes when using wget after some stress, producing a
-+            # FetchError from the fetcher, if the artifact exists retyring should succeed
-+            if 'Unable to establish SSL connection' in str(e):
-+                logger.debug2('Unable to establish SSL connection: Retries remaining: %s, Retrying...' % retries)
-+                self.download(ud, d, retries -1)
-+
-+        # Sanity check since wget can pretend it succeed when it didn't
-+        # Also, this used to happen if sourceforge sent us to the mirror page
-+        if not os.path.exists(ud.localpath):
-+            raise FetchError("The fetch command returned success for url %s but %s doesn't exist?!" % (azuri, ud.localpath), azuri)
-+
-+        if os.path.getsize(ud.localpath) == 0:
-+            os.remove(ud.localpath)
-+            raise FetchError("The fetch of %s resulted in a zero size file?! Deleting and failing since this isn't right." % (azuri), azuri)
-+
-+        return True
+       Here are some additional options worth mentioning:
+ 
+       -  ``unpack`` : Controls whether or not to unpack the file if it is
 -- 
 2.25.1
 
