@@ -1,85 +1,75 @@
-Received: from mx0b-00010702.pphosted.com (mx0b-00010702.pphosted.com [148.163.156.75])
- by mx.groups.io with SMTP id smtpd.web11.1357.1614721933374029203
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web09.1805.1614724037987597014
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 02 Mar 2021 13:52:13 -0800
+ Tue, 02 Mar 2021 14:27:18 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@ni.com header.s=pps11062020 header.b=ovBQsUp0;
- spf=pass (domain: ni.com, ip: 148.163.156.75, mailfrom: prvs=869528ad88=chaitanya.vadrevu@ni.com)
-Received: from pps.filterd (m0098780.ppops.net [127.0.0.1])
-	by mx0a-00010702.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 122LnKq3024715
-	for <bitbake-devel@lists.openembedded.org>; Tue, 2 Mar 2021 15:52:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ni.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=PPS11062020;
- bh=s2b8netGoY2t6uuy5YcbwblhxQDaXc/s+z6GqYee/GU=;
- b=ovBQsUp0yjGgWFD7aG+/vR32XQUryNmWBq3Yh+aOuiOXsYaD7oyF5T+DnSR4MZUgIaCV
- yLm0nC7hGvumtvmTc64cyaEmlqjQCCJydxJCd+aJhFj92sIVT7RltCu4cptkXVdx28d8
- IoZFdR1RkbtJeh3+hC+qZuhIoRrr7M0gjCKYcuH/9eM4PkdFjo5ict4FdlCJ/Cf8GZa+
- kTHYVQxacDfrBgHy20oJe6m9VgQoVPVlEAkgcGTH7tycwgsm/fvA5z+GYaQEoDkygV1U
- s8oQpaSHLZ3lHtpJKTHP9mH2On2TlkiLJX+OmfJprxbWDDWf3JrEbuweYTDn8H/uCB4M TA== 
-Received: from ni.com (skprod3.natinst.com [130.164.80.24])
-	by mx0a-00010702.pphosted.com with ESMTP id 36ymfx6671-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 02 Mar 2021 15:52:12 -0600
-Received: from us-aus-exhub2.ni.corp.natinst.com (us-aus-exhub2.ni.corp.natinst.com [130.164.68.32])
-	by us-aus-skprod3.natinst.com (8.16.0.43/8.16.0.43) with ESMTPS id 122LqBEl018445
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 2 Mar 2021 15:52:11 -0600
-Received: from us-aus-exhub1.ni.corp.natinst.com (130.164.68.41) by
- us-aus-exhub2.ni.corp.natinst.com (130.164.68.32) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Tue, 2 Mar 2021 15:52:11 -0600
-Received: from cvadrevu-linux.natinst.com (172.18.68.32) by
- us-aus-exhub1.ni.corp.natinst.com (130.164.68.41) with Microsoft SMTP Server
- id 15.0.1395.4 via Frontend Transport; Tue, 2 Mar 2021 15:52:11 -0600
-From: "Chaitanya Vadrevu" <chaitanya.vadrevu@ni.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Chaitanya Vadrevu <chaitanya.vadrevu@ni.com>
-Subject: [PATCH] process.py: Increase bitbake timeout and add logs
-Date: Tue, 2 Mar 2021 15:51:34 -0600
-Message-ID: <20210302215134.11881-1-chaitanya.vadrevu@ni.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TrsNiuCX;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f49.google.com with SMTP id w7so3507087wmb.5
+        for <bitbake-devel@lists.openembedded.org>; Tue, 02 Mar 2021 14:27:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2Js7R3H9NaAHV/Hy0l4a0CII3v4bZJPLzml05MPTPrY=;
+        b=TrsNiuCXSFtkMdbJgwkkC8c3nwF9TL1QQqv+kMeGjUe+spzixuYu/8UaVTWMfDT2du
+         Bsd7sjWzCPizGDr9oBTEBgZraC8O+HZQ6s/uby8Ru8MQxhe4fc8sZDCiURqkbEVJ/NnA
+         4/SiflevUrGFD7QfNs/5rkCCcNec8i4BvmTrM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2Js7R3H9NaAHV/Hy0l4a0CII3v4bZJPLzml05MPTPrY=;
+        b=NQvMbgTgZ5lXI3U1ZXFSV+k/JOOh0MoG3LGPuG/JUS4bUuIjLihT0QOgqj+7MtVRyH
+         CQ4tr6A5+uuVVxdBYn/sdL9XVGLOMTPL/aO5TD7Yx4IM+IJDUw3MoQcoEsPD6CMxuErA
+         qtnia0MoWkLtuWxcWG95EFL4+c1uaskyqutQkOdgHy1+96BAEoVl4MFHtOfcyKGNDrdx
+         RCIVuk+qNYKJx45xF9gVSbKeDzIJ64cR9iwp1jYEIMUWLFhPxnZYcBb7TW1ffrm3Ehxg
+         ayAp/qKLQVX32pMCY1E/s76fn/Ph9AGjkyYzhCduoBQOV6qpWJB5VxdjUQPrzGTCiZfG
+         dPOw==
+X-Gm-Message-State: AOAM532KDfJnlBJMUnuljovOn9bb5NTzFPjcPWJROt+oxJKnoyayYi8I
+	7E7+4NK85njpvcIybCQdMFCjGHX9bJXUnA==
+X-Google-Smtp-Source: ABdhPJy+5Oja/Y0zPJ/UkNYj3KL//a19ZpUYYfHzYVSKrNrVTf7JhstiESIMXen5WsRxkMjkM4T7+Q==
+X-Received: by 2002:a1c:bac2:: with SMTP id k185mr6140532wmf.148.1614724036084;
+        Tue, 02 Mar 2021 14:27:16 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:fd4c:95a0:62b1:7d53])
+        by smtp.gmail.com with ESMTPSA id v5sm3910388wmh.2.2021.03.02.14.27.15
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Mar 2021 14:27:15 -0800 (PST)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] __init__.py: Fix bitbake debug log handling
+Date: Tue,  2 Mar 2021 22:27:14 +0000
+Message-Id: <20210302222714.2249345-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-02_08:2021-03-01,2021-03-02 signatures=0
-X-Proofpoint-Spam-Reason: orgsafe
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-We have started seeing "Unable to connect to bitbake server ..." errors on
-our build farm consistently with 60s timeout. Increasing the timeout to
-300s and logging every 10s.
+For a while I've been puzzled as to why debug logging from runqueue wouldn't
+appear on the console with -DD. The logic in the bbdebug handling is inverted
+so fix it and now we see the expected messages from runqueue with -D and -DD.
 
-Signed-off-by: Chaitanya Vadrevu <chaitanya.vadrevu@ni.com>
+This should then let us debug other issues using those log messages.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ lib/bb/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index b27b4aef..d5571c36 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -390,12 +390,19 @@ class ServerCommunicator():
-         self.connection = connection
-         self.recv = recv
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index 84a9051c13..afce5ccb87 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -58,7 +58,7 @@ class BBLoggerMixin(object):
+         if not bb.event.worker_pid:
+             if self.name in bb.msg.loggerDefaultDomains and loglevel > (bb.msg.loggerDefaultDomains[self.name]):
+                 return
+-            if loglevel > bb.msg.loggerDefaultLogLevel:
++            if loglevel < bb.msg.loggerDefaultLogLevel:
+                 return
+         return self.log(loglevel, msg, *args, **kwargs)
  
-+        self.reply_wait = 10
-+        self.max_reply_wait = 300
-+
-     def runCommand(self, command):
-         self.connection.send(command)
--        if not self.recv.poll(30):
--            logger.info("No reply from server in 30s")
--            if not self.recv.poll(30):
--                raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server (60s)")
-+        total_reply_wait = self.reply_wait
-+
-+        while not self.recv.poll(self.reply_wait):
-+            logger.info("No reply from server in %ds" % total_reply_wait)
-+            total_reply_wait += self.reply_wait
-+            if total_reply_wait > self.max_reply_wait:
-+                raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server (%ds)" % (total_reply_wait - self.reply_wait))
-+
-         ret, exc = self.recv.get()
-         # Should probably turn all exceptions in exc back into exceptions?
-         # For now, at least handle BBHandledException
 -- 
-2.17.1
+2.27.0
 
