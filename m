@@ -1,110 +1,87 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
- by mx.groups.io with SMTP id smtpd.web12.9461.1614934926417899872
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web08.9786.1614937249585806370
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Mar 2021 01:02:06 -0800
+ Fri, 05 Mar 2021 01:40:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Pzv3cGgN;
- spf=pass (domain: gmail.com, ip: 209.85.166.50, mailfrom: tomasz.dziendzielski@gmail.com)
-Received: by mail-io1-f50.google.com with SMTP id a7so1179041iok.12
-        for <bitbake-devel@lists.openembedded.org>; Fri, 05 Mar 2021 01:02:06 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hRVLocKe;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f44.google.com with SMTP id 7so1356079wrz.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 05 Mar 2021 01:40:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7uwl8Tgbd18UyFFdBfGMjXJcNR7j1sbTsz1W3X2EuK8=;
-        b=Pzv3cGgNGov/j2Gpo/yATrKTVYDHC/4RjbEd2UWbiEbDIFG8g/SbKkDidyVsoNHXXL
-         rnn0ERfE64HCOIa4leT7CuabOKp7xhiPO27L8jeRRPRCA7E57F0Kq7yTIqF7NnLeLk/K
-         oSEyQmZeRuS9pAGfc32/uprFpfG+Hz9L4L1qrgRTb9T3fWf34Wd/GPWJpp20kJUSHn40
-         OwfmsHBHwx8yPDHkzs1jQbBx/dYY+vIHG/o9ptwQKNAFffB6l1D7u/yuDqq9PBUukl5q
-         tHQUjwMBOdXTgr2Nzr+9wv/5C4QSfqCg8RGVRkeSTKKxoz96EozByRIo7NM7W1bcVlEg
-         p0+A==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=PZQ+mR1jaiwDlc1Lh3mvpDGD/iGi0YSnU6t9+nsLKV0=;
+        b=hRVLocKeZ9z3zlvNsHG8G6LUf7hzO3kMOwGBUVriWlEb2Ghl/QIE0QzGOnsofISlKk
+         PR21qr9BrzQqKQGBhYSoaAyt4Tf8zoOdBtgqIWSgl4JiC6OquI3ws/OdXIjdPzwH/WXv
+         fQXRa0rGpD2PBZyMuoTbjbEEnbXjDKZ+Dh8/w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7uwl8Tgbd18UyFFdBfGMjXJcNR7j1sbTsz1W3X2EuK8=;
-        b=YALg9giBAF69+wqGeikC/XAwnYPgoN3GnCGnSvL+vhEj5Q4LtxFvHP14epJkTiu5Dk
-         p60+K1QTBQtP8ZnOxGee1qNLIxnM9W0M34VVJaikVQHNHDm/xJ0ca5Jp7OGdg33qq811
-         wkrLiUizFNKZW4pVNreHPB/T49ya4+OsAz/H6YqTcMl6EOADLQowWvqgHcXZZSjOqX6n
-         GbndbTNfwvo44YWE2fysxCuo3+gdl2J2r4HeRK/PdX2Fm8G3MJlmKM3mLkkhadc9qIkL
-         DPjcPSFsBkANBTPDNoBrj9NupuTXEDLdWaiIVZGTuQ7sHhSmj3+SVK2w9H2NK4dPyhWm
-         rwWw==
-X-Gm-Message-State: AOAM5322WIGaX2U5q/9DsNj3p+SFMbtd7igsMkW4n52va0iRBQp1C134
-	/X64EE9dZWse5o40g7ErlYNawfOf0TmOF42Z+zNQ0M2M3zI=
-X-Google-Smtp-Source: ABdhPJzYJgr8A1FBd7dk+zDjy7jDw9k+GrQsEKOu0eh1mnUeZv76c66EfMIIUZ+P6PseXgPX4CJWkK4ECGhVEt/PzX8=
-X-Received: by 2002:a5d:9418:: with SMTP id v24mr7310968ion.61.1614934925559;
- Fri, 05 Mar 2021 01:02:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20210222203630.9686-1-tomasz.dziendzielski@gmail.com>
-In-Reply-To: <20210222203630.9686-1-tomasz.dziendzielski@gmail.com>
-From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
-Date: Fri, 5 Mar 2021 10:03:49 +0100
-Message-ID: <CAJkqNs3JqXTh9R3BEqz3AV2cSi5L93OD+pk_byiu-K8AqUykng@mail.gmail.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=PZQ+mR1jaiwDlc1Lh3mvpDGD/iGi0YSnU6t9+nsLKV0=;
+        b=bIDCdkTdyzSmRB/6GAFe/9T92NC/SCAjooIGeAQLKUSixZ8tk8a7p6cfJw5ly6gmrz
+         veUhW3LIMbN6AasrGPxRVE00PfdnJfD0D8JQ47rZc6mNbl/WW5WUurlwLu/agVFOE5T/
+         sIxLZgZwnZBJ7a2fNIVxhmPr/PxYMMIc1mcp4sZBYf1bTHodv9dlh1ekuDmoxpsll+fq
+         /f05KeEcXep+8BYrTKn7+rcMngy6xWmD8adqSsRN5aVxFbI42Rq4tOIIScqPvk+6zltL
+         tGd3J+RGzeVM3FN8y29EtLGJKag590EHXruzNs2zvA16lv6yZe14USgO0g4F+z2Bi7+9
+         6odA==
+X-Gm-Message-State: AOAM533m1IeThbF2LPqOAIlKpkFt5CWlajRP0ASHqGgOty3+D6RWQRdG
+	JLI9+gX3wxo73itXEbp2dfmQXw==
+X-Google-Smtp-Source: ABdhPJzh1CZKwx814TB59Gy0/nq4JzQ+ZEpUzo9M/Svmqypc4YnXoxEqi/HuaiOTwahgb9RUXrztNg==
+X-Received: by 2002:a5d:42cb:: with SMTP id t11mr8386931wrr.280.1614937247953;
+        Fri, 05 Mar 2021 01:40:47 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:a6be:e9e5:bd97:feaa? ([2001:8b0:aba:5f3c:a6be:e9e5:bd97:feaa])
+        by smtp.gmail.com with ESMTPSA id 75sm4037353wma.23.2021.03.05.01.40.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Mar 2021 01:40:47 -0800 (PST)
+Message-ID: <eb67b43dfc87005748f21eaf052c2fa3fc82ca8c.camel@linuxfoundation.org>
 Subject: Re: [PATCH v3] runqueue: Print pseudo.log if fakeroot task failed
-To: bitbake-devel@lists.openembedded.org
-Cc: kergoth@gmail.com, Jan Brzezanski <jan.brzezanski@gmail.com>, 
-	Paulo Neves <ptsneves@gmail.com>, Mikolaj Lasota <mikolaj.lasota@protonmail.com>, 
-	Wiktor Baura <wbaura@gmail.com>, Kamil Kwiek <kamil.kwiek@gmail.com>, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Content-Type: multipart/alternative; boundary="00000000000092ce1805bcc6561e"
-
---00000000000092ce1805bcc6561e
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Cc: kergoth@gmail.com, Jan Brzezanski <jan.brzezanski@gmail.com>, Paulo
+ Neves <ptsneves@gmail.com>, Mikolaj Lasota <mikolaj.lasota@protonmail.com>,
+ Wiktor Baura <wbaura@gmail.com>, Kamil Kwiek <kamil.kwiek@gmail.com>
+Date: Fri, 05 Mar 2021 09:40:45 +0000
+In-Reply-To: <CAJkqNs3JqXTh9R3BEqz3AV2cSi5L93OD+pk_byiu-K8AqUykng@mail.gmail.com>
+References: <20210222203630.9686-1-tomasz.dziendzielski@gmail.com>
+	 <CAJkqNs3JqXTh9R3BEqz3AV2cSi5L93OD+pk_byiu-K8AqUykng@mail.gmail.com>
+User-Agent: Evolution 3.38.1-1 
+MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
-I found a worrying issue in runqueue.py exposed by this patch. Lately I
-encountered a few cases where pseudo.log was not printed on pseudo abort. I
-added some debug prints and it seems in some cases (where we build the
-whole image, not single recipe) taskfn is set incorrectly.
-The recipe X failed with task log:
-|  Check logfile: X_WORKDIR/pseudo//pseudo.log
-| ...
-| ERROR: Logfile of failure stored in: X_WORKDIR/temp/log.do_install.34470
-but the debug line printing taskfn value and pseudo.log path taken from
-dictionary (based on taskfn) showed:
-| WARNING: taskfn: PATH/Y.bb pseudo_log: Y_WORKDIR/pseudo/pseudo.log
-And since there were no pseudo abort in Y recipe the log was not printed.
-(Please note that this warning comes from the failed task from X recipe)
+On Fri, 2021-03-05 at 10:03 +0100, Tomasz Dziendzielski wrote:
+> Hello,
+> I found a worrying issue in runqueue.py exposed by this patch. Lately I encountered a few cases where
+> pseudo.log was not printed on pseudo abort. I added some debug prints and it seems in some cases (where we
+> build the whole image, not single recipe) taskfn is set incorrectly.
+> The recipe X failed with task log:
+> |  Check logfile: X_WORKDIR/pseudo//pseudo.log
+> | ...
+> | ERROR: Logfile of failure stored in: X_WORKDIR/temp/log.do_install.34470
+> but the debug line printing taskfn value and pseudo.log path taken from dictionary (based on taskfn) showed:
+> | WARNING: taskfn: PATH/Y.bb pseudo_log: Y_WORKDIR/pseudo/pseudo.log
+> And since there were no pseudo abort in Y recipe the log was not printed. (Please note that this warning
+> comes from the failed task from X recipe)
+> 
+> The important note is that I don't change the value of taskfn with a patch sent
+> under this subject, so it's unlikely that my patch introduced this behaviour. In
+> this patch I just pass current taskfn value to start_fakeworker(), so in fact 
+> it's value is already wrong in the execute() method. It means something else 
+> might also be broken and not yet detected. Please correct me if I made some 
+> wrong assumption. Maybe taskfn is expected to have some different value and I 
+> just shouldn't depend on it? I can't be 100% sure it's not related to my 
+> changes, that's why I'm writing in this thread, instead of submitting a bug.
 
-The important note is that I don't change the value of taskfn with a patch
-sent under this subject, so it's unlikely that my patch introduced this
-behaviour. In this patch I just pass current taskfn value to
-start_fakeworker(), so in fact it's value is already wrong in the execute()
-method. It means something else might also be broken and not yet detected.
-Please correct me if I made some wrong assumption. Maybe taskfn is expected
-to have some different value and I just shouldn't depend on it? I can't be
-100% sure it's not related to my changes, that's why I'm writing in this
-thread, instead of submitting a bug.
+I'm afraid it is your patch. There is only one fake worker started per multiconfig
+and therefore the taskfn is being set to the value of the first task run on that
+worker, it doesn't get updated as other tasks start. This is the wrong place to
+be passing in that value.
 
-Best regards,
-Tomasz Dziendzielski
+Cheers,
 
---00000000000092ce1805bcc6561e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Richard
 
-<div dir=3D"ltr"><div>Hello,<br></div><div>I found a worrying issue in runq=
-ueue.py exposed by this patch. Lately I encountered a few cases where pseud=
-o.log was not printed on pseudo abort. I added some debug prints and it see=
-ms in some cases (where we build the whole image, not single recipe) taskfn=
- is set incorrectly.<br></div><div></div><div>The recipe X failed with task=
- log:<br></div><div>|=C2=A0 Check logfile: X_WORKDIR/pseudo//pseudo.log<br>=
-| ...<br>| ERROR: Logfile of failure stored in: X_WORKDIR/temp/log.do_insta=
-ll.34470<br>but the debug line printing taskfn value and pseudo.log path ta=
-ken from dictionary (based on taskfn) showed:<br>| WARNING: taskfn: PATH/Y.=
-bb pseudo_log: Y_WORKDIR/pseudo/pseudo.log<br></div><div>And since there we=
-re no pseudo abort in Y recipe the log was not printed. (Please note that t=
-his warning comes from the failed task from X recipe)<br></div><div><br></d=
-iv><div>The important note is that I don&#39;t change the value of taskfn w=
-ith a patch sent under this subject, so it&#39;s unlikely that my patch int=
-roduced this behaviour. In this patch I just pass current taskfn value to s=
-tart_fakeworker(), so in fact it&#39;s value is already wrong in the execut=
-e() method. It means something else might also be broken and not yet detect=
-ed.  Please correct me if I made some wrong assumption. Maybe taskfn is exp=
-ected to have some different value and I just shouldn&#39;t depend on it? I=
- can&#39;t be 100% sure it&#39;s not related to my changes, that&#39;s why =
-I&#39;m writing in this thread, instead of submitting a bug.<br></div><div>=
-<br></div><div>Best regards,</div><div>Tomasz Dziendzielski<br></div><div><=
-br></div></div>
-
---00000000000092ce1805bcc6561e--
