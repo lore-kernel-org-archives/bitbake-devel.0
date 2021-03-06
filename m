@@ -1,154 +1,119 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web11.6625.1615033145870339594
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+ by mx.groups.io with SMTP id smtpd.web12.6902.1615034887249821420
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 06 Mar 2021 04:19:06 -0800
+ Sat, 06 Mar 2021 04:48:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=azrqkomL;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f41.google.com with SMTP id f12so5384980wrx.8
-        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Mar 2021 04:19:05 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=DwcFmX9j;
+ spf=pass (domain: gmail.com, ip: 209.85.166.170, mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-il1-f170.google.com with SMTP id h18so4601149ils.2
+        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Mar 2021 04:48:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=PGhUbiGAhpiBzP88sfw/bZIK0fdpS++bcD7DCn86Dyc=;
-        b=azrqkomLIQlWraLyfpBryrhTEpTZBjkSY4BhjztDA7aZiRG4xyHlelkikJSvK9A/nq
-         ig9HbHo6tts4F9bF4kOJg8Eek5KkXfzY4Ya1q6h2cqIRwK9po6sA5V0oJS808IioCR5d
-         VqsqusFq5PxxBs4QcQAOPkGJ6aj4OfnpDA7bM=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=39JkXIoN1x/79202q0Hffxx8UFNBUCoYSPEi+fuf7B8=;
+        b=DwcFmX9jupQKM6u9ahPOpBAJYgdKv1V4M+o7bEDJ4PfGWXuMbnz9XJLSi2Dw70iEPS
+         LWGXjFS4+RCX3/ebjCBg9W5FzrSm3X7qmn/NVi2BRbfslmacEGDTz098nnq9d1SgG5zk
+         ZrlFor9Xy9IZEJE65UWuuzi6hSwpf+14Iiwg6RV7Y160f86nSNphOLYbX3qN7Xt1J6+b
+         MZJZobpg0BaeSzOXNS0cPOyDnJpDhokGxn2EbLYTKO8FJNucAmMG+6Zpuicu1iQ+viFd
+         22za5Jk3kcvLjIJT5q5HWAs5bmclo5gxmqwcwqtjMleT4j7QiGabmzQ0KhooGYTe+TRU
+         EpSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=PGhUbiGAhpiBzP88sfw/bZIK0fdpS++bcD7DCn86Dyc=;
-        b=L1eaOqhMmC42/BYOuGCP4B4MBXqhDy++eUd7jVAxoMuQ9JaeoKMMZpzH0pYskkr3oS
-         noqfD3FtoE1TrrjJtzKdRvBr/9mQEWHV0AwBKRrueS0wkLcoNuUwqDh9tKwKZM25SiK/
-         9ItG+EklKEoCIdZoXjnRiE/FHl1efXcBjmuVQSU+1oGOyL5+N16XOv0myQkNuj+Klxjm
-         VMySU1CKC2oi81aT4Mk2C/70eQAK+V1VOSBhXJvzjD/b1olVRESWmHtMEPXUDBzQ9AcK
-         1qovbIkEYXM/AufhAdxzYhOK/O1KDNGWIXoQmfhcX6V+JRIu2cWoA+MGS3ZfB+QFxf/K
-         Fbdw==
-X-Gm-Message-State: AOAM532z4G8li5xlWYM+ErYgn+iejsjhD5azejyZ1WZsKm8IpqwBV94h
-	NenrkMXnpqOsrMNGtIjTbs5yfw==
-X-Google-Smtp-Source: ABdhPJxj33wQKzedWDJ9f4CDnLJdG/ssusZ5kcqyrzMV+mXH8G4lqnmNJYby4lVGIEfMB6NW6tYPwg==
-X-Received: by 2002:a5d:5082:: with SMTP id a2mr13477694wrt.289.1615033144239;
-        Sat, 06 Mar 2021 04:19:04 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:8791:d573:be1c:dfe9? ([2001:8b0:aba:5f3c:8791:d573:be1c:dfe9])
-        by smtp.gmail.com with ESMTPSA id u23sm8734436wmn.26.2021.03.06.04.19.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Mar 2021 04:19:04 -0800 (PST)
-Message-ID: <157fb732bdede18804680bee71296e802faad63e.camel@linuxfoundation.org>
-Subject: runqueue task race debugging notes
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Steve Sakoman <steve@sakoman.com>, bitbake-devel
-	 <bitbake-devel@lists.openembedded.org>
-Date: Sat, 06 Mar 2021 12:19:03 +0000
-User-Agent: Evolution 3.38.1-1 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=39JkXIoN1x/79202q0Hffxx8UFNBUCoYSPEi+fuf7B8=;
+        b=hvChmt5gCsA5luiN/nuE93TPkxvk/T1FrD4KD8qsHx/8w1hK1Lvcjy8AEGm5B/SjWi
+         wqEJ8xmJuD/EJWq1g0oDDvxoOy8rP8cYM1LYQ5dnzOJlkNIB0pMxrxDqSiAZgefzdo85
+         w5rObWqOcGqweRQT4KEXH2YskJYE458JpC8EZkJCpoLZC76rwxYrM3foGazg7meQHdm1
+         pZDJtRW1QQTd4L1NWUgyrJlFTnrwIEUz6LCUTM21aEMD3Om0DUpuGLRWm1WoloC1M/DD
+         KSxXC5pPimnCikuP9D3SmKdjaPGBCc/GfThEZjXQ8BFFldDb94vrDBiQOrqsLizFDcdH
+         YDmQ==
+X-Gm-Message-State: AOAM532CXVlkqqFqRUu5+5zSRdXjpxXcJL5IG73gsYi7BIjvc8mCLAGI
+	ghnJQW20FwJtIuPAp9jDEFmtWD0J3TohpxdK4Vg=
+X-Google-Smtp-Source: ABdhPJz9m5sOpo6G3lxoUL4OXT3A0DDUgxSg4J0BfL6dw+HNUfKOdpK5Inc3385Wapz84SKeUkLJnr8Vd9pyS7Z4Y2s=
+X-Received: by 2002:a92:b08:: with SMTP id b8mr13032875ilf.13.1615034886572;
+ Sat, 06 Mar 2021 04:48:06 -0800 (PST)
 MIME-Version: 1.0
+References: <20210210111515.1189896-1-tomasz.dziendzielski@gmail.com> <ede980db00b9924e73ce83cfcdfa0a734f426dd4.camel@linuxfoundation.org>
+In-Reply-To: <ede980db00b9924e73ce83cfcdfa0a734f426dd4.camel@linuxfoundation.org>
+From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
+Date: Sat, 6 Mar 2021 13:50:50 +0100
+Message-ID: <CAJkqNs1_oXuRtGNXH5meVY+Lw-O5bjEq1TivksnkXE4SmR5-1A@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v5] event: Prevent bitbake from executing event handler for wrong multiconfig target
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org, 
+	Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Content-Type: multipart/alternative; boundary="000000000000b6ce3605bcdd9cd6"
+
+--000000000000b6ce3605bcdd9cd6
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 
-Hi All,
+>Somehow I suspect this patch is causing a parsing speed regression:
+>
+>
+https://autobuilder.yocto.io/pub/non-release/20210305-7/testresults/buildperf-ubuntu1604/perf-ubuntu1604_master_20210305150036_c8075ed8f1.html
+>
+>See the "test3: Bitbake parsing (bitbake -p)" where you see bitbake -p
+>goes from 19s to 22-23s. With more layers the issue becomes more
+>pronounced.
+>
+>I haven't 100% confirmed this yet or looked into it but we need to find
+>out what cause the parsing speed regression from around this time...
 
-I wanted to write down a few notes about debugging the weird kernel 
-do_shared_workdir issue Steve and I have been chasing after seeing it 
-occasionally in master and dunfell. Sending it publicly so there is a
-record and someone may find it interesting.
+It's possible this patch is causing the regression, since in
+fire_class_handlers we iterate over the _BBHANDLERS_MC list multiple times
+to check if it contains an event name.
 
-The symptom of the bug is that linux-yocto:do_compile_kernelmodules 
-gets run, as does make-mod-scripts:do_configure yet linux-yocto:do_shared_workdir
-does not. There are very clear dependencies between the tasks so the 
-question is why the dependencies are "ignored".
+def fire_class_handlers(event, d):
+...
++ if d and not name in (d.getVar("__BBHANDLERS_MC") or []):
++ continue
 
-In runqueue there are effectively two dependency trees, "setscene"
-dependencies and normal task dependencies. The setscene dependencies
-are run first and can "cover" normal tasks meaning they don't need to
-run. For added fun, hash-equivalence means that dependencies can become
-available during a build do the whole thing has to dynamically adapt
-to a changing situation, where for example "real" tasks might be running
-which a newly available setscene could "cover".
+I've sent a patch changing this structure into a set that is faster than
+list in checking if an item is present in the structure. Anyway, I can't
+confirm if it is the case, since the difference in parsing time is not
+significant in my environment. If not, then it's still good to merge it.
+https://lists.openembedded.org/g/bitbake-devel/message/12072
 
-do_shared_workdir is an odd task in that it is a setscene task but it
-never has any sstate object so it is never available. Why?
-http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=f5f2467e4bdd1a3fda9b443712d32502645ebe3e
+Please note that this patch might conflict with:
+https://lists.openembedded.org/g/bitbake-devel/message/12053
+so one of them will require adaptation depending on the order of merging.
 
-Anyhow, the basic problem is how to debug why this is breaking. We
-do have an autobuilder test target which fails about 50% of the time.
-It looks very much like some kind of timing window where there is
-an opportunity for things to break if they happen at the right time.
+Best regards,
+Tomasz Dziendzielski
 
-I've spent several days trying to reproduce and staring at the code
-trying to guess what was wrong. In the end the way I found of 
-"reproducing" signs of the problem was:
+--000000000000b6ce3605bcdd9cd6
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-a) Change the self.holdoff_need_update = True call sites to call 
-   update_holdofftasks() directly. 
+<div dir=3D"ltr"><div><div dir=3D"ltr">&gt;Somehow I suspect this patch is =
+causing a parsing speed regression:<br>&gt;<br>&gt;<a href=3D"https://autob=
+uilder.yocto.io/pub/non-release/20210305-7/testresults/buildperf-ubuntu1604=
+/perf-ubuntu1604_master_20210305150036_c8075ed8f1.html">https://autobuilder=
+.yocto.io/pub/non-release/20210305-7/testresults/buildperf-ubuntu1604/perf-=
+ubuntu1604_master_20210305150036_c8075ed8f1.html</a><br>&gt;<br>&gt;See the=
+ &quot;test3: Bitbake parsing (bitbake -p)&quot; where you see bitbake -p<b=
+r>&gt;goes from 19s to 22-23s. With more layers the issue becomes more<br>&=
+gt;pronounced.<br>&gt;<br>&gt;I haven&#39;t 100% confirmed this yet or look=
+ed into it but we need to find<br>&gt;out what cause the parsing speed regr=
+ession from around this time...</div><br></div><div>It&#39;s possible this =
+patch is causing the regression, since in fire_class_handlers we iterate  o=
+ver the _BBHANDLERS_MC list multiple times to check if it contains an event=
+ name.<br></div><div><br></div><div> def fire_class_handlers(event, d):</di=
+v>...<br>+            if d and not name in (d.getVar(&quot;__BBHANDLERS_MC&=
+quot;) or []):<br><div>+                continue</div><div><br></div><div>I=
+&#39;ve sent a patch changing this structure into a set that is faster than=
+ list in checking if an item is present in the structure. Anyway, I can&#39=
+;t confirm if it is the case, since the difference in parsing time is not s=
+ignificant in my environment. If not, then it&#39;s still good to merge it.=
+</div><div><a href=3D"https://lists.openembedded.org/g/bitbake-devel/messag=
+e/12072">https://lists.openembedded.org/g/bitbake-devel/message/12072</a></=
+div><div><br></div><div>Please note that this patch might conflict with:<br=
+><a href=3D"https://lists.openembedded.org/g/bitbake-devel/message/12053">h=
+ttps://lists.openembedded.org/g/bitbake-devel/message/12053</a></div><div>s=
+o one of them will require adaptation depending on the order of merging.</d=
+iv><div><br></div><div>Best regards,</div><div>Tomasz Dziendzielski<br></di=
+v></div>
 
-The code knows that call is (was?) expensive so only runs it when needed. 
-Running it directly helps ensure all the data structures are up to
-date and aids debugging. It made no difference to the bug.
-
-b) Add debugging to update_holdofftasks() to spot a "race":
-
-if "XXX/linux-yocto_5.10.bb:do_shared_workdir" in covered and \
-        "XXX/linux-yocto_5.10.bb:do_compile_kernelmodules" not in covered:
-    logger.warn("Bingo, race")
-    for a in ['XXX/kernel-devsrc.bb:do_package', 'XXX/linux-yocto_5.10.bb:do_package', 
-              'XXX/make-mod-scripts_1.0.bb:do_populate_sysroot', 
-              'XXX/linux-yocto_5.10.bb:do_populate_sysroot', 
-              'XXX/linux-yocto_5.10.bb:do_deploy',
-              'XXX/make-mod-scripts_1.0.bb:do_package', 
-              'XXX/build-appliance-image_15.0.0.bb:do_package']:
-        if a not in covered:
-             logger.warn(a
-
-If you run that with "bitbake build-appliance-image", even on a build directory
-where the build had already completed, there is a small period where it prints
-the "Bingo, race" message.
-
-There never should be any point where do_compile_kernelmodules can run
-without do_shared_workdir having run first so the fact it prints the
-message at all is a clear bug and would explain our race and build failure.
-In the real world, the task timing would have to execute at the right moment
-to trigger the failure.
-
-Above, you can see more debugging I added to prove why it was breaking. I'd
-hacked:
-
-    sqdata.multiconfigs = set()
-    for tid in sqdata.sq_revdeps:
-        if tid == "XXX/linux-yocto_5.10.bb:do_shared_workdir":
-            bb.warn(str(sqdata.sq_revdeps[tid]))
-        sqdata.multiconfigs.add(mc_from_tid(tid))
-        if len(sqdata.sq_revdeps[tid]) == 0:
-            sqrq.sq_buildable.add(tid)
-
-into the code which shows the setcene tasks which would have to "cover"
-before linux-yocto:do_shared_workdir can be covered itself. The
-fact it prints messages:
-
-WARNING: Bingo, race
-WARNING: XXX/make-mod-scripts_1.0.bb:do_populate_sysroot
-WARNING: XXX/make-mod-scripts_1.0.bb:do_package
-
-shows that it is not working correctly and it is the task we're
-seeing failures which which is promising.
-
-The fix should be to check sqdata.sq_revdeps before marking
-tasks as covered. I'm working on fixes in this area although its
-not entirely straightforward.
-
-Ironically, the module-base inherit and usage of KERNEL_VERSION in
-the build-appliance image recipe should be removed anyway, it doesn't
-even work properly, isn't needed and has a race of its own, the 
-dependency on the right task is missing.
-
-Cheers,
-
-Richard
-
-
-
-
-
-
-
+--000000000000b6ce3605bcdd9cd6--
