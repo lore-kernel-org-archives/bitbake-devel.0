@@ -1,77 +1,90 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web08.38298.1615219083158931655
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web12.38163.1615219083151182423
  for <bitbake-devel@lists.openembedded.org>;
  Mon, 08 Mar 2021 07:58:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dstesXlv;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f41.google.com with SMTP id u14so12013271wri.3
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZvQLoqK4;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f45.google.com with SMTP id w11so11982773wrr.10
         for <bitbake-devel@lists.openembedded.org>; Mon, 08 Mar 2021 07:58:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=THyT2cTcSXXJeiKzBzXpXMC0cJ2I608P2ShL45+9NM4=;
-        b=dstesXlvWkh+i7x82M+lRNwEQB47jqHu39SSrNju1GxbFcyCm2wGGcGLSOROJYy24/
-         ggxhuSZaDQ28Q/5R/NabPEkrgwmwSNuqYZVpRmiSDJNLDxAhhdJtp4/tdjefe8qyUbil
-         uAxRTenwFLKKDx5ezG0W6anssMYkvE6KhpvwA=
+        bh=ZuDtNLgpgD0lawru1H18oe+DzYuONrLxgj538REo5r0=;
+        b=ZvQLoqK49nvHQK7Ocqn/XD+2fFSC4jRLG3aR69Q0n+DVNhiOFwrjj8pEWF/ANnhin+
+         v0tu94y07jPQLdJ9agsUR1XPGVW3PecYjimJlSJ33LnLndzZG8uP+V+9eSnIE6PQbMMF
+         8Hrj1ms/HDqfooQZm4LtntYT6jF53a7OxM5Qs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=THyT2cTcSXXJeiKzBzXpXMC0cJ2I608P2ShL45+9NM4=;
-        b=fZthw7R2vzm1yhLArOp3ECV4EJZz6xmc0spjvxw74LIMYx1IbM/u/UI7pD7vkvtT9d
-         /zlw6MnLb+123C40aTTGoulJxcU9DCDUmhIjp4jxTx16JP8bBBcwzbMZ1RPYw0ChaQCP
-         03xQZegDwFiXKAN9vjW12DixFyvdg2opjRkDbR4Q3/xnEQyfEv83eQj+dtg33r8j/5eo
-         2n35wWDfpJO7iseYlgnn2DHyhayTbgddjpxh/1R1+/QUSMgM2bDHtMiC+MO2djhsmEKq
-         uuEbkNEIk7qiFXhfdjzIQTXG+mHmSgzujae+n6aKnJvwyHQepYajl8DHeFW4NlpHpwKu
-         EyIw==
-X-Gm-Message-State: AOAM5337RtsHslsIl5+4yGClGcOlq9lFG8pto1TFZW+M6nF5j31TisFB
-	S1x4/nHlSoO/LItpyLL/a1JLyaZ2QAgXZQ==
-X-Google-Smtp-Source: ABdhPJxeQd+DmSi/13QZ1K3W9qwh2EEzAVgOujWYVHUZ2Dtxu1y2lcQ7gE0qkcDA6NLVNE1QUaWY4A==
-X-Received: by 2002:adf:e805:: with SMTP id o5mr12262108wrm.196.1615219081666;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZuDtNLgpgD0lawru1H18oe+DzYuONrLxgj538REo5r0=;
+        b=eQLIhAoMLJ7Pv1wO37Oj+fw+kB/bcXj6n3mjL0FOvlGAd+CtIeRdD/VWvvpJpWdH1h
+         yBPX2KjTkVK6FY6YvwtUflNViZAnBgHQ/u6kp/zcCeB8kM1l4sdGdL0LoH7Q1QPWntAG
+         pM9teoN+gieocv+upDdwjqw0u6KkHyp7/GzM00utXh41/8rLK8gdX2FozAKAZDEGjhs8
+         YWIE0dPsHSHI88Nd+IlOhi8UlfClNKd0hJk+VI7Wn96Q2+k3DFTHt9F3Zn5YvlXzJ09a
+         4hZSEPrSAmef1CTdurLFErGq+mUzVrL80/laO+3IwvOXRDAUZrCD7Vmq0X7pEQQazi2s
+         FryA==
+X-Gm-Message-State: AOAM533ovlVnJJYDNXAXynfIpsFMZ1S7POUe4ZMju+MHAoorDiiGbK9J
+	yiI/BOkVCmRmFuUHUKmEJqKwU4Rg2L2Qlw==
+X-Google-Smtp-Source: ABdhPJzBJsCPYgwFCeuQhRO5RPRV5qSJKpWii93xqWyxdi2qq1VMUsll7op23HbWFQHoZ7KLPMmzBQ==
+X-Received: by 2002:adf:c401:: with SMTP id v1mr14819750wrf.242.1615219081344;
         Mon, 08 Mar 2021 07:58:01 -0800 (PST)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:3242:e265:217d:9509])
-        by smtp.gmail.com with ESMTPSA id f7sm21711709wrm.36.2021.03.08.07.58.01
+        by smtp.gmail.com with ESMTPSA id f7sm21711709wrm.36.2021.03.08.07.58.00
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 08 Mar 2021 07:58:01 -0800 (PST)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] runqueue: Add setscene task overlap sanity check
-Date: Mon,  8 Mar 2021 15:58:00 +0000
-Message-Id: <20210308155800.2410990-2-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 1/2] runqueue: Fix task execution corruption issue
+Date: Mon,  8 Mar 2021 15:57:59 +0000
+Message-Id: <20210308155800.2410990-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210308155800.2410990-1-richard.purdie@linuxfoundation.org>
-References: <20210308155800.2410990-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We've seen hard to debug issues where a task ends up in both the
-covered and notcovered list. Add a sanity check to ensure if this
-happens in future, we see it in the logs.
+We've seen occasional issues where linux-yocto:do_compile_kernelmodules would
+run without do_shared_workdir running before it. do_shared_workdir is an
+setscene task but never has an sstate object generated so it will always
+rerun. This should not happen since compile_kernemodules should only
+execute if a setscene that depends on it didn't run and that should trigger
+do_shared_workdir not to be marked as covered.
+
+The issue is that build-appliance-image:do_package is one of the tasks which
+covers linux-yocto:do_compile_kernelmodules but it is also a noexec task
+and has a dependecy on pseudo-native:do_populate_sysroot.
+
+In the problem case, pseudo-native:do_populate_sysroot is unavailable but
+marked as covered since it is noexec. The "harddeps" code then also marks it
+as notcovered. No task should ever be both covered and notcovered and this
+is where the problems come from.
+
+The solution is for the harddeps code only to to fail tasks if they've not
+already been handled in some way. The code is assuming code couldn't have
+handled revdeps at this point but we now have clear evidence they can.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/bb/runqueue.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 9934708664..714f6949e7 100644
+index b54f514f92..9934708664 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -1961,6 +1961,10 @@ class RunQueueExecute:
-             logger.error("Scenequeue had holdoff tasks: %s" % pprint.pformat(self.holdoff_tasks))
-             err = True
+@@ -2444,6 +2444,9 @@ class RunQueueExecute:
  
-+        for tid in self.scenequeue_covered.intersection(self.scenequeue_notcovered):
-+            # No task should end up in both covered and uncovered, that is a bug.
-+            logger.error("Setscene task %s in both covered and notcovered." % tid)
-+
-         for tid in self.rqdata.runq_setscene_tids:
-             if tid not in self.scenequeue_covered and tid not in self.scenequeue_notcovered:
-                 err = True
+         for dep in sorted(self.sqdata.sq_deps[task]):
+             if fail and task in self.sqdata.sq_harddeps and dep in self.sqdata.sq_harddeps[task]:
++                if dep in self.scenequeue_covered or dep in self.scenequeue_notcovered:
++                    # dependency could be already processed, e.g. noexec setscene task
++                    continue
+                 logger.debug2("%s was unavailable and is a hard dependency of %s so skipping" % (task, dep))
+                 self.sq_task_failoutright(dep)
+                 continue
 -- 
 2.27.0
 
