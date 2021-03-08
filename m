@@ -1,65 +1,77 @@
-Received: from cpanel8.indieserve.net (cpanel8.indieserve.net [199.212.143.3])
- by mx.groups.io with SMTP id smtpd.web12.13538.1615066544430853288
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web08.38298.1615219083158931655
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 06 Mar 2021 13:35:44 -0800
+ Mon, 08 Mar 2021 07:58:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: crashcourse.ca, ip: 199.212.143.3, mailfrom: rpjday@crashcourse.ca)
-Received: from cpef81d0f814063-cmf81d0f814060.cpe.net.cable.rogers.com ([174.114.57.56]:33150 helo=fedora)
-	by cpanel8.indieserve.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1lIeaM-0006PC-ER
-	for bitbake-devel@lists.openembedded.org; Sat, 06 Mar 2021 16:35:43 -0500
-Date: Sat, 6 Mar 2021 16:35:39 -0500 (EST)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH] clarify the mechanics of "?=" assignment
-Message-ID: <d17b1aed-3520-59d4-8242-3c60e1c871c2@crashcourse.ca>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dstesXlv;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f41.google.com with SMTP id u14so12013271wri.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 08 Mar 2021 07:58:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=THyT2cTcSXXJeiKzBzXpXMC0cJ2I608P2ShL45+9NM4=;
+        b=dstesXlvWkh+i7x82M+lRNwEQB47jqHu39SSrNju1GxbFcyCm2wGGcGLSOROJYy24/
+         ggxhuSZaDQ28Q/5R/NabPEkrgwmwSNuqYZVpRmiSDJNLDxAhhdJtp4/tdjefe8qyUbil
+         uAxRTenwFLKKDx5ezG0W6anssMYkvE6KhpvwA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=THyT2cTcSXXJeiKzBzXpXMC0cJ2I608P2ShL45+9NM4=;
+        b=fZthw7R2vzm1yhLArOp3ECV4EJZz6xmc0spjvxw74LIMYx1IbM/u/UI7pD7vkvtT9d
+         /zlw6MnLb+123C40aTTGoulJxcU9DCDUmhIjp4jxTx16JP8bBBcwzbMZ1RPYw0ChaQCP
+         03xQZegDwFiXKAN9vjW12DixFyvdg2opjRkDbR4Q3/xnEQyfEv83eQj+dtg33r8j/5eo
+         2n35wWDfpJO7iseYlgnn2DHyhayTbgddjpxh/1R1+/QUSMgM2bDHtMiC+MO2djhsmEKq
+         uuEbkNEIk7qiFXhfdjzIQTXG+mHmSgzujae+n6aKnJvwyHQepYajl8DHeFW4NlpHpwKu
+         EyIw==
+X-Gm-Message-State: AOAM5337RtsHslsIl5+4yGClGcOlq9lFG8pto1TFZW+M6nF5j31TisFB
+	S1x4/nHlSoO/LItpyLL/a1JLyaZ2QAgXZQ==
+X-Google-Smtp-Source: ABdhPJxeQd+DmSi/13QZ1K3W9qwh2EEzAVgOujWYVHUZ2Dtxu1y2lcQ7gE0qkcDA6NLVNE1QUaWY4A==
+X-Received: by 2002:adf:e805:: with SMTP id o5mr12262108wrm.196.1615219081666;
+        Mon, 08 Mar 2021 07:58:01 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:3242:e265:217d:9509])
+        by smtp.gmail.com with ESMTPSA id f7sm21711709wrm.36.2021.03.08.07.58.01
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Mar 2021 07:58:01 -0800 (PST)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 2/2] runqueue: Add setscene task overlap sanity check
+Date: Mon,  8 Mar 2021 15:58:00 +0000
+Message-Id: <20210308155800.2410990-2-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20210308155800.2410990-1-richard.purdie@linuxfoundation.org>
+References: <20210308155800.2410990-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-X-OutGoing-Spam-Status: No, score=-0.2
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel8.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel8.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel8.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
+We've seen hard to debug issues where a task ends up in both the
+covered and notcovered list. Add a sanity check to ensure if this
+happens in future, we see it in the logs.
 
-The current explanation of "?=" assignment seems a bit ambiguous, so
-re-word it.
-
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
-
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
+ lib/bb/runqueue.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-index 7ea68ade..441ebdfd 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-@@ -187,9 +187,9 @@ value. However, if ``A`` is not set, the variable is set to "aval".
-
- .. note::
-
--   This assignment is immediate. Consequently, if multiple "?="
--   assignments to a single variable exist, the first of those ends up
--   getting used.
-+   This "?=" assignment is immediate. Consequently, if there are
-+   subsequent "?=" assignments to the same variable, they have no effect,
-+   since the first one will have priority.
-
- Setting a weak default value (??=)
- ----------------------------------
-
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 9934708664..714f6949e7 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1961,6 +1961,10 @@ class RunQueueExecute:
+             logger.error("Scenequeue had holdoff tasks: %s" % pprint.pformat(self.holdoff_tasks))
+             err = True
+ 
++        for tid in self.scenequeue_covered.intersection(self.scenequeue_notcovered):
++            # No task should end up in both covered and uncovered, that is a bug.
++            logger.error("Setscene task %s in both covered and notcovered." % tid)
++
+         for tid in self.rqdata.runq_setscene_tids:
+             if tid not in self.scenequeue_covered and tid not in self.scenequeue_notcovered:
+                 err = True
 -- 
+2.27.0
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                         http://crashcourse.ca
-
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
