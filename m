@@ -1,129 +1,96 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web08.6164.1615470364774574070
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web12.6302.1615470520884191421
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Mar 2021 05:46:05 -0800
+ Thu, 11 Mar 2021 05:48:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=G16p1ae/;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f49.google.com with SMTP id b18so1929122wrn.6
-        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Mar 2021 05:46:04 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ihprLvZX;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f48.google.com with SMTP id 124-20020a1c00820000b029010b871409cfso13232022wma.4
+        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Mar 2021 05:48:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s16Dszo+/i/OEYVTnMz/MaFKGA2ZruPUKLxgNyzpQAI=;
-        b=G16p1ae/Zwt3+V+jK7dihYgp5pKn9QqcJG/WgI7kO4ZWLmL7GDViTn2BAGq1Oy8FLK
-         fA/2g6kdwu60UI7BbfEnYrvp7ZSbvsRIdld5bZZtzUga6NMyy5/0oKHwKaMnjSp9EyMI
-         Ri0Q3Tt3n4J8v+EPpIOpE9l1UwPMQI962aKc4=
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=lMUE3BivfwCKp80gq627lihSr3y6PR24aseSPqm41Rc=;
+        b=ihprLvZXCX3gF7snv08fwj8pKBClKc3azAxs+x4uA/HlYQ8bXapSKCsz6Hncwt1mgd
+         6Gwn0pTPMFYbmpnVhFrmQlrPB12zWcmjlA3sHThv4xSjUgfHJtHUh92AnFsTg4o42icl
+         0A6Hin68yll/oOW/eyJ63A7LFvg/lsCUNEOJA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s16Dszo+/i/OEYVTnMz/MaFKGA2ZruPUKLxgNyzpQAI=;
-        b=K96w73h5cf2rScIxxFT3Zf0N8/BNvMPEapnCrjnDmf0eVvkzuwKnjnSVycHznFjG9p
-         UTfJmrOEScQYD1ysALezZIyBkWDG+/u0Z3VBzshS0Tv2OtPWtxeD5uCM3kmFRuD4oRWU
-         ozh7pRweHbaTtxJogv+bc+prhBof2aYfV6Y5daNeWWQD5EHig5JmJ6BbCNEh04L4F9gq
-         jeu7IMDLh8vGhQV+xVfYJKKvfssV9i7KcpokNfwwd1/zlNTebe25tCxnTv1HDpcDgyAW
-         17Hz/wE5BRvByuIV5DSab7RFPkI1Oo6SRoSqgTF+LJ7424TcHV5XNzbkWhifA5aWelZl
-         ho9w==
-X-Gm-Message-State: AOAM532H8GW6H2h6vIaWFMO+mzAk3MeYuQAyk6lKLZM8AcaDE2T6cb8d
-	PNtyvR1vGGYceFNY8yfQ8xSGyxIBY1GV/g==
-X-Google-Smtp-Source: ABdhPJw9gaZADnWhDcTvONfWy7gcztFGobdDPJFsBUjI9TAF3Wh36/4wZruQo2630/hF18DTe4kYKw==
-X-Received: by 2002:a5d:58c9:: with SMTP id o9mr8848304wrf.181.1615470362678;
-        Thu, 11 Mar 2021 05:46:02 -0800 (PST)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=lMUE3BivfwCKp80gq627lihSr3y6PR24aseSPqm41Rc=;
+        b=owclZBvvabqjW2UyBFHtY2aMrTdk93Wa+phKIs2gHthf4heOamtqjFQJQCoLHKtvVx
+         UTujAdbPTpbmA/PjL2DP2r43/1k+WbCegj3hX0bgMSovK9Ra0+dENxin3YSR8Y5ola5f
+         rfmf/T/clZGl0WR+Pg/p0PprqOFX+TZ7A9yXqLYB3K12BReBC9cJGd41GJvjXJL3Iapt
+         dhixcFnjcCssThRx/4NhhvtqRwGweahpWt0VJ1Adzrel4yNvNtAE6O7L6Uzeqf7m5UPq
+         3Uvm1j0a/Om041/Blhr3eHw2LqZ783xMfsyeWYbuTr3J+Qmc9NGD3pVTh7xANu5UYJdB
+         tT0A==
+X-Gm-Message-State: AOAM530lHmWi7KfDKAul9N2hJIsHm5GQi6uSu3uu8jIQgzQYqMv/7m3k
+	iS34UHgg0iXSB8w/bqse6n5ZEQ==
+X-Google-Smtp-Source: ABdhPJxeE7g8qeLzdYzL8ZAVp3Zz/nwvDtegijJZ58VV/7FSL3aHMUXf37/+lcBdR9hMx49bK0ubww==
+X-Received: by 2002:a1c:22c2:: with SMTP id i185mr8324586wmi.99.1615470519436;
+        Thu, 11 Mar 2021 05:48:39 -0800 (PST)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:79d1:e29:deac:3ff5])
-        by smtp.gmail.com with ESMTPSA id g11sm3924796wrw.89.2021.03.11.05.46.02
-        for <bitbake-devel@lists.openembedded.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:79d1:e29:deac:3ff5? ([2001:8b0:aba:5f3c:79d1:e29:deac:3ff5])
+        by smtp.gmail.com with ESMTPSA id c26sm4161424wrb.87.2021.03.11.05.48.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Mar 2021 05:46:02 -0800 (PST)
+        Thu, 11 Mar 2021 05:48:39 -0800 (PST)
+Message-ID: <9560f525dfaaf50ec1a50dd43f71807556e68e5f.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v5] event: Prevent bitbake from executing event handler for wrong multiconfig target
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] event: Fix multiconfig event handler change performance regressions
-Date: Thu, 11 Mar 2021 13:46:01 +0000
-Message-Id: <20210311134601.2544696-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
+To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org, Peter Kjellerstedt
+	 <peter.kjellerstedt@axis.com>
+Date: Thu, 11 Mar 2021 13:48:36 +0000
+In-Reply-To: <CAJkqNs1_oXuRtGNXH5meVY+Lw-O5bjEq1TivksnkXE4SmR5-1A@mail.gmail.com>
+References: <20210210111515.1189896-1-tomasz.dziendzielski@gmail.com>
+	 <ede980db00b9924e73ce83cfcdfa0a734f426dd4.camel@linuxfoundation.org>
+	 <CAJkqNs1_oXuRtGNXH5meVY+Lw-O5bjEq1TivksnkXE4SmR5-1A@mail.gmail.com>
+User-Agent: Evolution 3.38.1-1 
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-There were two issues in this code, firstly the code could stack duplicates
-in the variable, secondly, calling "if data" caused the datastore to compute
-len(data) which is comparitively expensive. Checking "if data is not None"
-is much much faster/cheaper.
+On Sat, 2021-03-06 at 13:50 +0100, Tomasz Dziendzielski wrote:
+> > Somehow I suspect this patch is causing a parsing speed regression:
+> > 
+> > https://autobuilder.yocto.io/pub/non-release/20210305-7/testresults/buildperf-ubuntu1604/perf-ubuntu1604_master_20210305150036_c8075ed8f1.html
+> > 
+> > See the "test3: Bitbake parsing (bitbake -p)" where you see bitbake -p
+> > goes from 19s to 22-23s. With more layers the issue becomes more
+> > pronounced.
+> > 
+> > I haven't 100% confirmed this yet or looked into it but we need to find
+> > out what cause the parsing speed regression from around this time...
+> 
+> It's possible this patch is causing the regression, since in fire_class_handlers we iterate over the
+> _BBHANDLERS_MC list multiple times to check if it contains an event name.
+> 
+>  def fire_class_handlers(event, d):
+> ...
+> + if d and not name in (d.getVar("__BBHANDLERS_MC") or []):
+> + continue
+> 
+> I've sent a patch changing this structure into a set that is faster than list in checking if an item is
+> present in the structure. Anyway, I can't confirm if it is the case, since the difference in parsing time is
+> not significant in my environment. If not, then it's still good to merge it.
+> https://lists.openembedded.org/g/bitbake-devel/message/12072
+> 
+> Please note that this patch might conflict with:
+> https://lists.openembedded.org/g/bitbake-devel/message/12053
+> so one of them will require adaptation depending on the order of merging.
 
-The issue was clear from "bitbake -p -P" output where the time in register()
-showed large amounts of time in the __len__ function of the datastore.
+I firstly confirmed this was the patch causing the regression which it 
+was. I then ran it under bitbake -p -P with an empty cache and you can
+see a lot of time is spent in register(). Through the call traces, it was
+spending the time in __len__ of the datastore. From there you can realise
+that calling "if data is not None" is much more efficient than "if data".
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/event.py | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+I've sent out a patch for this and the set() fix.
 
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 3e5718395b..22171a9ca5 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -118,7 +118,7 @@ def fire_class_handlers(event, d):
-             if _eventfilter:
-                 if not _eventfilter(name, handler, event, d):
-                     continue
--            if d and not name in (d.getVar("__BBHANDLERS_MC") or []):
-+            if d and not name in (d.getVar("__BBHANDLERS_MC") or set()):
-                 continue
-             execute_handler(name, handler, event, d)
- 
-@@ -232,15 +232,15 @@ noop = lambda _: None
- def register(name, handler, mask=None, filename=None, lineno=None, data=None):
-     """Register an Event handler"""
- 
--    if data and data.getVar("BB_CURRENT_MC"):
-+    if data is not None and data.getVar("BB_CURRENT_MC"):
-         mc = data.getVar("BB_CURRENT_MC")
-         name = '%s%s' % (mc.replace('-', '_'), name)
- 
-     # already registered
-     if name in _handlers:
--        if data:
--            bbhands_mc = (data.getVar("__BBHANDLERS_MC") or [])
--            bbhands_mc.append(name)
-+        if data is not None:
-+            bbhands_mc = (data.getVar("__BBHANDLERS_MC") or set())
-+            bbhands_mc.add(name)
-             data.setVar("__BBHANDLERS_MC", bbhands_mc)
-         return AlreadyRegistered
- 
-@@ -278,16 +278,16 @@ def register(name, handler, mask=None, filename=None, lineno=None, data=None):
-                     _event_handler_map[m] = {}
-                 _event_handler_map[m][name] = True
- 
--        if data:
--            bbhands_mc = (data.getVar("__BBHANDLERS_MC") or [])
--            bbhands_mc.append(name)
-+        if data is not None:
-+            bbhands_mc = (data.getVar("__BBHANDLERS_MC") or set())
-+            bbhands_mc.add(name)
-             data.setVar("__BBHANDLERS_MC", bbhands_mc)
- 
-         return Registered
- 
- def remove(name, handler, data=None):
-     """Remove an Event handler"""
--    if data:
-+    if data is not None:
-         if data.getVar("BB_CURRENT_MC"):
-             mc = data.getVar("BB_CURRENT_MC")
-             name = '%s%s' % (mc.replace('-', '_'), name)
-@@ -299,8 +299,8 @@ def remove(name, handler, data=None):
-         if name in _event_handler_map[event]:
-             _event_handler_map[event].pop(name)
- 
--    if data:
--        bbhands_mc = (data.getVar("__BBHANDLERS_MC") or [])
-+    if data is not None:
-+        bbhands_mc = (data.getVar("__BBHANDLERS_MC") or set())
-         if name in bbhands_mc:
-             bbhands_mc.remove(name)
-             data.setVar("__BBHANDLERS_MC", bbhands_mc)
--- 
-2.27.0
+Cheers,
+
+Richard
+
 
