@@ -1,103 +1,96 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web09.312.1615502955989402802
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web10.565.1615503854818539346
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Mar 2021 14:49:16 -0800
+ Thu, 11 Mar 2021 15:04:15 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bAHLQa/a;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id g20so2685474wmk.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Mar 2021 14:49:15 -0800 (PST)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=HCIhYhDV;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=nuoDlku1CD7OlvXW0PT5FgeEEPcFnh3Uuajf2U8r1RA=;
-        b=bAHLQa/agBLJAUcZ8evGWSyizt0bL9RytaFB2JXUcDgvBx9uDh+7Ql4wcNT1fI1nnv
-         lfvlyNl5w1gp1Fcihq5JOHgQNimdIU4c88kfbG6f6cwmyBHpZWpvTV070TSBuUEamBKj
-         v+Q3l16z7H+q8Cj3FQkcCvbbjm5GaFMOnQjlo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=nuoDlku1CD7OlvXW0PT5FgeEEPcFnh3Uuajf2U8r1RA=;
-        b=SK0fOAAjw1A/2q9iFgtYF6gsUTM9fJJ2FFWz553soSNJYdhQJWqJYqs1dSG4/Wgxv2
-         ftoEQk+AuqDkJpxBvb8ocXm0YCaxlwsKpGIB5p5+8mSUSpAY3wEU6fH0sayoJzGoHUNE
-         eHAMHOZKFLsXrFSJ4bARj0mEpeesq+IwEj6peNwu+5Pic/jGg+yUFNlfaWSKCZ+tywfP
-         rJK/2OF7NpkWbwbtkdh2Mcr3dEqsU3zHh9XF4wi3gXQ+XMo0FHZZ6vUW/CX6/qoAiDmD
-         a51QvpawZZ/4iDR8Cbm7OXc5DGjbEdNUlFYQqlJ+OpZdugSuhPmWm/WfZzPrekffUUJQ
-         rHEw==
-X-Gm-Message-State: AOAM530qRVsLbjDBkh75olG8C+ncxTvCk1JhAvJpVtFjzpVSZdnMJ2P2
-	6+j5QjL6fiRYcSXp6bqi7jHfnw==
-X-Google-Smtp-Source: ABdhPJxnh0POCBSbKNGptAdKe3uTt6zD2QU32GdLCon9hQ6qpuCFBV7G7zkSGH0bcC75WHmcFSEPeg==
-X-Received: by 2002:a05:600c:2945:: with SMTP id n5mr10259765wmd.78.1615502954466;
-        Thu, 11 Mar 2021 14:49:14 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:7cc6:73c3:839f:86be? ([2001:8b0:aba:5f3c:7cc6:73c3:839f:86be])
-        by smtp.gmail.com with ESMTPSA id m17sm5906596wrx.92.2021.03.11.14.49.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Mar 2021 14:49:14 -0800 (PST)
-Message-ID: <06120a8293bdb7a251fb7fb71f253f42e50aa3ff.camel@linuxfoundation.org>
+  d=axis.com; q=dns/txt; s=axis-central1; t=1615503855;
+  x=1647039855;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=bb+tt7I/vCYNTacBsPWJ+tQ0EM3jjDt3/jRto0WnjCk=;
+  b=HCIhYhDVspRBJoesHOjdwIeO52bqQ6KJOBJ/hCmR60MZghkYuO9BRV0y
+   dKThOOI0Tq6N0mZ4vcrkqb405VmP+hyxV1C8zYAN6sGjB+roSr3neq2K5
+   Px6eS+oJnW9qTBsy/7/w4eN3zoyDKiRrXWjdPBwaSRQwwVSDdqkEaL1K2
+   7HpMKj6VxuHZIu5P2G2v+iwdrorYP7rFHsV99NgPOEwo0vxZIlX3NLKl1
+   OFiXUyhfh/hi33hjXnC2EnfOvMJFNYM+zQ4Xp6uCzdUEaSKcwg5ktQBbT
+   oVDZsH7LfoCnIewHxC8c2Jb3i/JYTvuUBG+ajaTJI8JIVU2Z5qJ//I05G
+   Q==;
+From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
 Subject: Re: [bitbake-devel] [PATCH] event: Fix multiconfig event handler change performance regressions
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Thu, 11 Mar 2021 22:49:13 +0000
-In-Reply-To: <ea3cf67c8b174f3eab75d68d14e72440@XBOX03.axis.com>
+Thread-Topic: [bitbake-devel] [PATCH] event: Fix multiconfig event handler
+ change performance regressions
+Thread-Index: AQHXFnzk55L6+7WgvUS8g8a2FurUnKp/P5ZwgAAUMICAABKpkA==
+Date: Thu, 11 Mar 2021 23:04:12 +0000
+Message-ID: <dd8d9659f53a49c2b90e3ed6e689c4eb@XBOX03.axis.com>
 References: <20210311134601.2544696-1-richard.purdie@linuxfoundation.org>
 	 <ea3cf67c8b174f3eab75d68d14e72440@XBOX03.axis.com>
-User-Agent: Evolution 3.38.1-1 
+ <06120a8293bdb7a251fb7fb71f253f42e50aa3ff.camel@linuxfoundation.org>
+In-Reply-To: <06120a8293bdb7a251fb7fb71f253f42e50aa3ff.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Return-Path: peter.kjellerstedt@axis.com
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Thu, 2021-03-11 at 22:14 +0000, Peter Kjellerstedt wrote:
-> 
-> While this greatly improves the situation, it is still not good. Here are some 
-> numbers for me when parsing poky + openembedded + our layers:
-> 
-> poky + openembedded + axis dunfell
-> Parsing recipes: 100% |###############################| Time: 0:00:39
-> Parsing of 3935 .bb files complete (0 cached, 3935 parsed). 
-> 5767 targets, 711 skipped, 0 masked, 0 errors.
-> 
-> poky + openembedded + axis gatesgarth
-> Parsing recipes: 100% |###############################| Time: 0:00:39
-> Parsing of 4051 .bb files complete (0 cached, 4051 parsed). 
-> 5490 targets, 726 skipped, 0 masked, 0 errors.
-> 
-> poky + openembedded + axis master
-> Parsing recipes: 100% |###############################| Time: 0:01:07
-> Parsing of 4111 .bb files complete (0 cached, 4111 parsed). 
-> 5607 targets, 732 skipped, 12 masked, 0 errors.
-> 
-> And here are similar measurements with only the poky and openembedded layers 
-> (meta, meta-poky, meta-gplv2, meta-oe, meta-filesystems, meta-networking, 
-> meta-python and meta-webserver):
-> 
-> poky + openembedded gatesgarth
-> Parsing recipes: 100% |###############################| Time: 0:00:17
-> Parsing of 2289 .bb files complete (0 cached, 2289 parsed). 
-> 3537 targets, 91 skipped, 0 masked, 0 errors.
-> 
-> poky + openembedded master
-> Parsing recipes: 100% |###############################| Time: 0:00:27
-> Parsing of 2354 .bb files complete (0 cached, 2354 parsed). 
-> 3659 targets, 64 skipped, 0 masked, 0 errors.
-> 
-> I have attached profiling logs (first 40 lines) for a gatesgarth run and a 
-> master run. If I read the data correctly, it seems that during the master 
-> parsing, there are a lot of calls to fnmatch.translate, posix.read and 
-> _posixsubprocess.fork_exec that are not there during the gatesgarth parsing.
-
-Was this with or without c3f6fee42bfa23f23f167cb29f0cfa05ac2fa197 from bitbake
-master?
-
-If with, please send those full profiles to me offlist. You're right about the
-increased re.Pattern objects, there should be information further down about
-where those calls came from too.
-
-Cheers,
-
-Richard
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmlj
+aGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gU2VudDogZGVuIDExIG1hcnMgMjAy
+MSAyMzo0OQ0KPiBUbzogUGV0ZXIgS2plbGxlcnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhp
+cy5jb20+OyBiaXRiYWtlLQ0KPiBkZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQo+IFN1Ympl
+Y3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENIXSBldmVudDogRml4IG11bHRpY29uZmlnIGV2
+ZW50IGhhbmRsZXINCj4gY2hhbmdlIHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb25zDQo+IA0KPiBPbiBU
+aHUsIDIwMjEtMDMtMTEgYXQgMjI6MTQgKzAwMDAsIFBldGVyIEtqZWxsZXJzdGVkdCB3cm90ZToN
+Cj4gPg0KPiA+IFdoaWxlIHRoaXMgZ3JlYXRseSBpbXByb3ZlcyB0aGUgc2l0dWF0aW9uLCBpdCBp
+cyBzdGlsbCBub3QgZ29vZC4gSGVyZQ0KPiBhcmUgc29tZQ0KPiA+IG51bWJlcnMgZm9yIG1lIHdo
+ZW4gcGFyc2luZyBwb2t5ICsgb3BlbmVtYmVkZGVkICsgb3VyIGxheWVyczoNCj4gPg0KPiA+IHBv
+a3kgKyBvcGVuZW1iZWRkZWQgKyBheGlzIGR1bmZlbGwNCj4gPiBQYXJzaW5nIHJlY2lwZXM6IDEw
+MCUgfCMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyN8IFRpbWU6IDA6MDA6MzkNCj4gPiBQ
+YXJzaW5nIG9mIDM5MzUgLmJiIGZpbGVzIGNvbXBsZXRlICgwIGNhY2hlZCwgMzkzNSBwYXJzZWQp
+Lg0KPiA+IDU3NjcgdGFyZ2V0cywgNzExIHNraXBwZWQsIDAgbWFza2VkLCAwIGVycm9ycy4NCj4g
+Pg0KPiA+IHBva3kgKyBvcGVuZW1iZWRkZWQgKyBheGlzIGdhdGVzZ2FydGgNCj4gPiBQYXJzaW5n
+IHJlY2lwZXM6IDEwMCUgfCMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyN8IFRpbWU6IDA6
+MDA6MzkNCj4gPiBQYXJzaW5nIG9mIDQwNTEgLmJiIGZpbGVzIGNvbXBsZXRlICgwIGNhY2hlZCwg
+NDA1MSBwYXJzZWQpLg0KPiA+IDU0OTAgdGFyZ2V0cywgNzI2IHNraXBwZWQsIDAgbWFza2VkLCAw
+IGVycm9ycy4NCj4gPg0KPiA+IHBva3kgKyBvcGVuZW1iZWRkZWQgKyBheGlzIG1hc3Rlcg0KPiA+
+IFBhcnNpbmcgcmVjaXBlczogMTAwJSB8IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjI3wg
+VGltZTogMDowMTowNw0KPiA+IFBhcnNpbmcgb2YgNDExMSAuYmIgZmlsZXMgY29tcGxldGUgKDAg
+Y2FjaGVkLCA0MTExIHBhcnNlZCkuDQo+ID4gNTYwNyB0YXJnZXRzLCA3MzIgc2tpcHBlZCwgMTIg
+bWFza2VkLCAwIGVycm9ycy4NCj4gPg0KPiA+IEFuZCBoZXJlIGFyZSBzaW1pbGFyIG1lYXN1cmVt
+ZW50cyB3aXRoIG9ubHkgdGhlIHBva3kgYW5kIG9wZW5lbWJlZGRlZA0KPiBsYXllcnMNCj4gPiAo
+bWV0YSwgbWV0YS1wb2t5LCBtZXRhLWdwbHYyLCBtZXRhLW9lLCBtZXRhLWZpbGVzeXN0ZW1zLCBt
+ZXRhLQ0KPiBuZXR3b3JraW5nLA0KPiA+IG1ldGEtcHl0aG9uIGFuZCBtZXRhLXdlYnNlcnZlcik6
+DQo+ID4NCj4gPiBwb2t5ICsgb3BlbmVtYmVkZGVkIGdhdGVzZ2FydGgNCj4gPiBQYXJzaW5nIHJl
+Y2lwZXM6IDEwMCUgfCMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyN8IFRpbWU6IDA6MDA6
+MTcNCj4gPiBQYXJzaW5nIG9mIDIyODkgLmJiIGZpbGVzIGNvbXBsZXRlICgwIGNhY2hlZCwgMjI4
+OSBwYXJzZWQpLg0KPiA+IDM1MzcgdGFyZ2V0cywgOTEgc2tpcHBlZCwgMCBtYXNrZWQsIDAgZXJy
+b3JzLg0KPiA+DQo+ID4gcG9reSArIG9wZW5lbWJlZGRlZCBtYXN0ZXINCj4gPiBQYXJzaW5nIHJl
+Y2lwZXM6IDEwMCUgfCMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyN8IFRpbWU6IDA6MDA6
+MjcNCj4gPiBQYXJzaW5nIG9mIDIzNTQgLmJiIGZpbGVzIGNvbXBsZXRlICgwIGNhY2hlZCwgMjM1
+NCBwYXJzZWQpLg0KPiA+IDM2NTkgdGFyZ2V0cywgNjQgc2tpcHBlZCwgMCBtYXNrZWQsIDAgZXJy
+b3JzLg0KPiA+DQo+ID4gSSBoYXZlIGF0dGFjaGVkIHByb2ZpbGluZyBsb2dzIChmaXJzdCA0MCBs
+aW5lcykgZm9yIGEgZ2F0ZXNnYXJ0aCBydW4gYW5kIGENCj4gPiBtYXN0ZXIgcnVuLiBJZiBJIHJl
+YWQgdGhlIGRhdGEgY29ycmVjdGx5LCBpdCBzZWVtcyB0aGF0IGR1cmluZyB0aGUgbWFzdGVyDQo+
+ID4gcGFyc2luZywgdGhlcmUgYXJlIGEgbG90IG9mIGNhbGxzIHRvIGZubWF0Y2gudHJhbnNsYXRl
+LCBwb3NpeC5yZWFkIGFuZA0KPiA+IF9wb3NpeHN1YnByb2Nlc3MuZm9ya19leGVjIHRoYXQgYXJl
+IG5vdCB0aGVyZSBkdXJpbmcgdGhlIGdhdGVzZ2FydGggcGFyc2luZy4NCj4gDQo+IFdhcyB0aGlz
+IHdpdGggb3Igd2l0aG91dCBjM2Y2ZmVlNDJiZmEyM2YyM2YxNjdjYjI5ZjBjZmEwNWFjMmZhMTk3
+IGZyb20gYml0YmFrZQ0KPiBtYXN0ZXI/DQoNClRoZSB0aW1lIG1lYXN1cmVtZW50cyB3ZXJlIHdp
+dGhvdXQgaXQsIGJ1dCB0aGUgcHJvZmlsZSBsb2cgd2FzIHdpdGggaXQuIEFkZGluZyANCml0IHNl
+ZW1zIHRvIHNoYXZlIG9mZiBhbm90aGVyIDUgc2Vjb25kcyB3aGVuIEkgcGFyc2UgYWxsIG91ciBs
+YXllcnMuDQoNCj4gSWYgd2l0aCwgcGxlYXNlIHNlbmQgdGhvc2UgZnVsbCBwcm9maWxlcyB0byBt
+ZSBvZmZsaXN0LiBZb3UncmUgcmlnaHQgYWJvdXQgdGhlDQo+IGluY3JlYXNlZCByZS5QYXR0ZXJu
+IG9iamVjdHMsIHRoZXJlIHNob3VsZCBiZSBpbmZvcm1hdGlvbiBmdXJ0aGVyIGRvd24gYWJvdXQN
+Cj4gd2hlcmUgdGhvc2UgY2FsbHMgY2FtZSBmcm9tIHRvby4NCg0KV2lsbCBkby4gDQoNCkkgYWxz
+byBkaWQgc29tZSB0cmFjaW5nIG9mIGFjdGl2ZSBwcm9jZXNzZXMgd2hpbGUgdGhlIHBhcnNpbmcg
+d2FzIHJ1bm5pbmcsIGFuZCBpdCANCnNlZW1zIHRoZSBwcm9jZXNzIHRoYXQgaXMgZm9ya2VkIGR1
+cmluZyB0aGUgbWFzdGVyIHBhcnNpbmcgaXMgYGdpdCByZXYtcGFyc2UgSEVBRGAuDQoNCj4gQ2hl
+ZXJzLA0KPiANCj4gUmljaGFyZA0KDQovL1BldGVyDQoNCg==
