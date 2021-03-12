@@ -1,107 +1,40 @@
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web09.10042.1615563523765070806
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+ by mx.groups.io with SMTP id smtpd.web10.201.1615565598932428515
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Mar 2021 07:38:44 -0800
+ Fri, 12 Mar 2021 08:13:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=mPB2xN8G;
- spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1615563524;
-  x=1647099524;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=I+0sa1K+nLhaSuYOdmLvJ+HE5T5fMA7Z7mWn4B4feaI=;
-  b=mPB2xN8GF9y4Zk01UKrW0UTjb0ug6wPTjFl3bVlBXgboYnfJ+Kkoj/DM
-   KQlstaMJQ4x8o5Q4WoEwvtcdvAwGoeSRWlGxXAcfLRcYyEqMwT8H8QQ2T
-   6kg8TEczUlkUSGpES12ALNJqxAdGdTQSIrxFH87Ncp5m9S2Pu0b6U9i3i
-   ANY7+GPC20xEs4G4qy7vW2qc/HDzLW9kZ13+rS4wi7SRpyMBwDrUntjui
-   oNLVfpQLOIBUJ5RrLrGklGzKkPMdSJ6/+W2pOg+gFIFVmV5yHC1ny9xfG
-   hLMylzkNasy77+4mL8+htLd+4sTTR0ge4aFHFJoO+4lsT/wZDyPuh64M/
-   g==;
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH 1/2] license.bbclass: Improve parsing time when INCOMPATIBLE_LICENSES is big
-Thread-Topic: [bitbake-devel] [PATCH 1/2] license.bbclass: Improve parsing
- time when INCOMPATIBLE_LICENSES is big
-Thread-Index: AQHXFyHw864VymBza06ajm8SQDgxkqqAZzsA
-Date: Fri, 12 Mar 2021 15:38:41 +0000
-Message-ID: <406384512ee84c379a3dd5c8746384c6@XBOX03.axis.com>
-References: <20210312032022.7783-1-pkj@axis.com>
- <32cb4fa991ed76b6cdaf145894af6921b8c9e17e.camel@linuxfoundation.org>
-In-Reply-To: <32cb4fa991ed76b6cdaf145894af6921b8c9e17e.camel@linuxfoundation.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
+ dkim=missing; spf=pass (domain: windriver.com, ip: 147.11.146.13, mailfrom: paul.gortmaker@windriver.com)
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.corp.ad.wrs.com [147.11.82.252])
+	by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 12CGD2MQ012244
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>; Fri, 12 Mar 2021 08:13:12 -0800 (PST)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Fri, 12 Mar 2021 08:13:01 -0800
+Received: from yow-pgortmak-d1.corp.ad.wrs.com (128.224.56.57) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2106.2 via Frontend Transport; Fri, 12 Mar 2021 08:13:01 -0800
+From: "Paul Gortmaker" <paul.gortmaker@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] gitignore: ignore runqueue-tests/bitbake-cookerdaemon.log
+Date: Fri, 12 Mar 2021 11:13:00 -0500
+Message-ID: <20210312161300.15854-1-paul.gortmaker@windriver.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmlj
-aGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gU2VudDogZGVuIDEyIG1hcnMgMjAy
-MSAxMDoyOA0KPiBUbzogUGV0ZXIgS2plbGxlcnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhp
-cy5jb20+OyBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4gU3ViamVjdDog
-UmU6IFtiaXRiYWtlLWRldmVsXSBbUEFUQ0ggMS8yXSBsaWNlbnNlLmJiY2xhc3M6IEltcHJvdmUg
-cGFyc2luZyB0aW1lIHdoZW4gSU5DT01QQVRJQkxFX0xJQ0VOU0VTIGlzIGJpZw0KPiANCj4gT24g
-RnJpLCAyMDIxLTAzLTEyIGF0IDA0OjIwICswMTAwLCBQZXRlciBLamVsbGVyc3RlZHQgd3JvdGU6
-DQo+ID4gVGhlIGNvbW1pdCAwOGNiZjE3NDggKGxpY2Vuc2VzOiBVcGRhdGUgSU5DT01QQVRJQkxF
-X0xJQ0VOU0UgZm9yDQo+ID4gJ29yLWxhdGVyJyBoYW5kbGluZykgaW5jcmVhc2VkIHRoZSBwYXJz
-aW5nIHRpbWUgY29uc2lkZXJhYmx5IGlmIHRoZXJlDQo+ID4gYXJlIG1hbnkgbGljZW5zZXMgaW4g
-SU5DT01QQVRJQkxFX0xJQ0VOU0UuIFJlb3JnYW5pemUgdGhlIGNvZGUgdG8gZ2V0DQo+ID4gYWxt
-b3N0IGFsbCB0aGUgdGltZSBiYWNrLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgS2pl
-bGxlcnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb20+DQo+ID4gLS0tDQo+ID4gwqBt
-ZXRhL2NsYXNzZXMvbGljZW5zZS5iYmNsYXNzIHwgOSArKysrLS0tLS0NCj4gPiDCoDEgZmlsZSBj
-aGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0t
-Z2l0IGEvbWV0YS9jbGFzc2VzL2xpY2Vuc2UuYmJjbGFzcyBiL21ldGEvY2xhc3Nlcy9saWNlbnNl
-LmJiY2xhc3MNCj4gPiBpbmRleCBiY2VhMGIzY2I1Li5mNzk3OGUyNjZiIDEwMDY0NA0KPiA+IC0t
-LSBhL21ldGEvY2xhc3Nlcy9saWNlbnNlLmJiY2xhc3MNCj4gPiArKysgYi9tZXRhL2NsYXNzZXMv
-bGljZW5zZS5iYmNsYXNzDQo+ID4gQEAgLTI4MiwxNiArMjgyLDE1IEBAIGRlZiBleHBhbmRfd2ls
-ZGNhcmRfbGljZW5zZXMoZCwgd2lsZGNhcmRfbGljZW5zZXMpOg0KPiA+IMKgwqDCoMKgwqAiIiIN
-Cj4gPiDCoMKgwqDCoMKgaW1wb3J0IGZubWF0Y2gNCj4gPg0KPiA+IC0gICAgIyBBc3N1bWUgaWYg
-d2UncmUgcGFzc2VkICJHUEx2MyIgb3IgIipHUEx2MyIgaXQgbWVhbnMgLW9yLWxhdGVyIGFzIHdl
-bGwNCj4gPiAtICAgIGZvciBsaWMgaW4gd2lsZGNhcmRfbGljZW5zZXNbOl06DQo+ID4gLSAgICAg
-ICAgaWYgbm90IGxpYy5lbmRzd2l0aCgoIi1vci1sYXRlciIsICItb25seSIsICIqIikpOg0KPiA+
-IC0gICAgICAgICAgICB3aWxkY2FyZF9saWNlbnNlcy5hcHBlbmQobGljICsgIisiKQ0KPiA+IC0N
-Cj4gPiDCoMKgwqDCoMKgbGljZW5zZXMgPSB3aWxkY2FyZF9saWNlbnNlc1s6XQ0KPiA+IMKgwqDC
-oMKgwqBzcGR4bWFwa2V5cyA9IGQuZ2V0VmFyRmxhZ3MoJ1NQRFhMSUNFTlNFTUFQJykua2V5cygp
-DQo+ID4gwqDCoMKgwqDCoGZvciB3bGRfbGljIGluIHdpbGRjYXJkX2xpY2Vuc2VzOg0KPiA+IMKg
-wqDCoMKgwqDCoMKgwqDCoHNwZHhmbGFncyA9IGZubWF0Y2guZmlsdGVyKHNwZHhtYXBrZXlzLCB3
-bGRfbGljKQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoGxpY2Vuc2VzICs9IFtkLmdldFZhckZsYWco
-J1NQRFhMSUNFTlNFTUFQJywgZmxhZykgZm9yIGZsYWcgaW4gc3BkeGZsYWdzXQ0KPiA+ICsgICAg
-ICAgICMgQXNzdW1lIGlmIHdlJ3JlIHBhc3NlZCAiR1BMdjMiIG9yICIqR1BMdjMiIGl0IG1lYW5z
-IC1vci1sYXRlciBhcyB3ZWxsDQo+ID4gKyAgICAgICAgaWYgbm90IHdsZF9saWMuZW5kc3dpdGgo
-KCItb3ItbGF0ZXIiLCAiLW9ubHkiLCAiKiIsICIrIikpOg0KPiA+ICsgICAgICAgICAgICBzcGR4
-ZmxhZ3MgPSBmbm1hdGNoLmZpbHRlcihzcGR4bWFwa2V5cywgd2xkX2xpYyArICIrIikNCj4gPiAr
-ICAgICAgICAgICAgbGljZW5zZXMgKz0gW2QuZ2V0VmFyRmxhZygnU1BEWExJQ0VOU0VNQVAnLCBm
-bGFnKSBmb3IgZmxhZyBpbiBzcGR4ZmxhZ3NdDQo+ID4NCj4gPiDCoMKgwqDCoMKgc3BkeF9saWNz
-ID0gZC5nZXRWYXIoJ0FWQUlMQUJMRV9MSUNFTlNFUycpLnNwbGl0KCkNCj4gPiDCoMKgwqDCoMKg
-Zm9yIHdsZF9saWMgaW4gd2lsZGNhcmRfbGljZW5zZXM6DQo+IA0KPiBBcyBmYXIgYXMgSSBjYW4g
-dGVsbCwgdGhpcyBjaGFuZ2VzIGJlaGF2aW91ciBzaW5jZSB0aGUgdmFyaWFudHMgYXJlIG5vDQo+
-IGxvbmdlciBhZGRlZCB0byBsaWNlbnNlcyBpbiB0aGlzIHNlY29uZCBsb29wIG92ZXIgd2lsZGNh
-cmRfbGljZW5zZXMuIEkNCj4gdGhpbmsgdGhpcyBtZWFucyB5b3UgZ2V0IHRoZSBsaWNlbmNlcyBt
-YXRjaGluZyBmcm9tIFNQRFhMSUNFTlNFTUFQDQo+IGJ1dCBub3QgdGhlIG1hdGNoaW5nIGxpY2Vu
-c2VzIGZyb20gQVZBSUxBQkxFX0xJQ0VOU0VTPw0KDQpUaGF0IGlzIGNvcnJlY3QuIE15IGFzc3Vt
-cHRpb24gaXMgdGhhdCB0aGVyZSBhcmUgbm8gImZvbysiIGxpY2Vuc2VzIGluIA0KQVZBSUxBQkxF
-X0xJQ0VOU0VTLiBBdCBsZWFzdCB0aGlzIGlzIHRoZSBjYXNlIGZvciBwb2t5IGFuZCBtZXRhLW9w
-ZW5lbWJlZGRlZCwgDQphbmQgSSBkbyBub3Qgc2VlIHdoeSBvbmUgd291bGQgYWRkIHN1Y2ggYSBs
-aWNlbnNlIGZpbGUsIHdoZW4gdGhlICIrIiBpcyANCnVzZWQgdG8gcmVmZXIgdG8gYW5vdGhlciBs
-aWNlbnNlLCB3aGljaCB0eXBpY2FsbHkgbWVhbnMgdGhhdCBldmVuIGlmIHlvdSANCmFkZCBzb21l
-IG90aGVyIGxpY2Vuc2UgdGhhbiB0aGUgYWxyZWFkeSBleGlzdGluZyBHUEwgbGljZW5zZXMgdGhh
-dCBoYXMgYSANCnNpbWlsYXIgIm9yIGxhdGVyIiB1c2UgY2FzZSwgeW91IHdvdWxkIGFkZCBpdCB0
-byB0aGUgU1BEWExJQ0VOU0VNQVAgdG8gDQpub3QgaGF2ZSB0byBkdXBsaWNhdGUgdGhlIGxpY2Vu
-c2UgdGV4dHMuDQoNCkFueXdheXMsIEkgaGF2ZSBub3cgdHJpZWQgYWRkaW5nIGNvZGUgdG8gdGhl
-IHNlY29uZCBsb29wIGFzIHdlbGwgdG8gDQpoYW5kbGUgdGhlICcrJywgYW5kIGl0IGlzIHN0aWxs
-IGJldHRlciB0aGFuIGhhdmluZyBhIHNlcGFyYXRlIGxvb3AgDQpiZWZvcmUgdGhlIHR3byB3ZSBo
-YXZlIG5vdy4NCg0KSGVyZSBhcmUgc29tZSB0aW1pbmdzIGZvciB0aGUgZGlmZmVyZW50IGNhc2Vz
-Og0KDQpEdW5mZWxsL0dhdGVzZ2FydGg6CQkJCQkzOCBzDQpTdXBwb3J0IGZvciAnKycgaW4gdGhl
-IFNQRFhMSUNFTlNFTUFQIGxvb3A6CQkJNDEgcw0KU3VwcG9ydCBmb3IgJysnIGFsc28gaW4gdGhl
-IEFWQUlMQUJMRV9MSUNFTlNFUyBsb29wOgkJNDUgcw0KU2VwYXJhdGUgbG9vcCBiZWZvcmUgdGhl
-IG90aGVyIHR3byAob3JpZ2luYWwgc29sdXRpb24pOgk1NiBzDQoNCihUaGlzIGFzc3VtZXMgdGhl
-IHBhdGNoIHRvIGRlZmluZSBNRVRBREFUQV9SRVZJU0lPTiB1c2luZyBpbW1lZGlhdGUgDQpleHBh
-bnNpb24gaGFzIGFsc28gYmVlbiBhcHBsaWVkLikNCg0KU28sIGJhc2VkIG9uIHRoZSBudW1iZXJz
-IGFib3ZlIGFuZCB0aGUgZXhwZWN0ZWQgbGFjayBvZiBuZWVkIGZvciANCnN1cHBvcnQgaW4gdGhl
-IHNlY29uZCBsb29wLCBJIHdvdWxkIHByZWZlciB0aGUgc29sdXRpb24gYXMgc3VnZ2VzdGVkIA0K
-aW4gdGhpcyBwYXRjaC4NCg0KPiBDaGVlcnMsDQo+IA0KPiBSaWNoYXJkDQoNCi8vUGV0ZXINCg0K
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+
+diff --git a/.gitignore b/.gitignore
+index 8ca4b5d15cfb..fbf9eb2031c8 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -15,3 +15,4 @@ doc/bitbake-user-manual/bitbake-user-manual.tgz
+ lib/toaster/contrib/tts/backlog.txt
+ lib/toaster/contrib/tts/log/*
+ lib/toaster/contrib/tts/.cache/*
++lib/bb/tests/runqueue-tests/bitbake-cookerdaemon.log
+-- 
+2.15.0
+
