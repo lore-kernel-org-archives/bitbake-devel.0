@@ -1,137 +1,120 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web08.643.1615504354631761475
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web10.1786.1615509770687202171
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Mar 2021 15:12:35 -0800
+ Thu, 11 Mar 2021 16:42:51 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WHmU+bJO;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f45.google.com with SMTP id d15so3769006wrv.5
-        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Mar 2021 15:12:34 -0800 (PST)
+ dkim=fail reason="signature has expired" header.i=@axis.com header.s=axis-central1 header.b=ISSPh16O;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=QYO+q9DYzvJ9g18gcoWDNHoc70tyJIl26cYpqq5kKWk=;
-        b=WHmU+bJOpDgyC5iVkHBVNCJsxd90uS+PNXoeRSesnmY28ush5GhJFHwtS2OACVYLMv
-         eq1xmow0Y1HzxAywgzsGhJHvGx7P2iD/5IbaXcQQVTMFhw2XCDYNJK8I4RgeJIyzNewq
-         0GQRHEz0EaEBg0bZ7Uor139B06ObVkgs3TjFU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=QYO+q9DYzvJ9g18gcoWDNHoc70tyJIl26cYpqq5kKWk=;
-        b=GT/VwsDw+tBUBGScZgFA8oh6QUbeAp4oa4rZDQRDNM90Xru7A0KYygDAzZDGOkxBi1
-         iLoOweE29eSM9akSkYyldSC2ZZUI2FcgSIIPF+KckIqh2W+hFKv8KvugmGKKrCNjedC1
-         GOtrFoSVHcLPpyZuCHwPJzGTeT1BJfSZF3EU67eIIO9UuRiVta9CpcTsLEqnD+cui5vk
-         m1/wUemQIhabS0nLONOfIgWng2EMxiD2wgJU4w08baWTtRbcKGiwrSvE8PVf/7dftzSx
-         RRhawc/oig5s00XHBdVSaFHhRpV3DFDA9fNZIElUX4gSQ7v/9SUSuFAq/0Lqut6eOBiu
-         /IdA==
-X-Gm-Message-State: AOAM530RHnkDrKmjTIueNKLOAtwYaXGiYA1aeGVN8h5vDaAM9PQQ3udY
-	ptxsrXQsf1SY4YMk1e8vN3aOBg==
-X-Google-Smtp-Source: ABdhPJz6dGDxh97luGKVfWflWhKC2FqUda5atpXVnmUBmmnQo5VpCSTPWJias1qLZvgXzcm5afxOCQ==
-X-Received: by 2002:adf:ea0e:: with SMTP id q14mr11286211wrm.389.1615504353026;
-        Thu, 11 Mar 2021 15:12:33 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:7cc6:73c3:839f:86be? ([2001:8b0:aba:5f3c:7cc6:73c3:839f:86be])
-        by smtp.gmail.com with ESMTPSA id r10sm294112wmh.45.2021.03.11.15.12.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Mar 2021 15:12:32 -0800 (PST)
-Message-ID: <c7d3048f54c45b782f2a867f37bf34b311be8347.camel@linuxfoundation.org>
+  d=axis.com; q=dns/txt; s=axis-central1; t=1615509770;
+  x=1647045770;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=J91M68W/7cwQ2DttTqa0xpLjQD9LDL0uLoXQGpAMHMI=;
+  b=ISSPh16OVC4rKCxDe8fupSV3TYZfihjHgtkuQk1XtoaRM8wcXJer0OzH
+   oWsS89f+oCwOpoJr05G2BzVWfIyU2I5wp0vW0Qgly8ZGLznW5CuXNHBAv
+   ncLfGmHzJKj7YfLq+pxwiDqBLYzSyEjDRDWne0HfqzX5bjEdhm5jHVdYW
+   9+DnjeZkzpq6GusahjtEybP/zVama4MWvzNi/VdcxcDmcHcHIqD1b7Dry
+   AkUwErHfU2LaBRzscNjq3H+2wzMS2jUffHSmvbpayPqwy1hWFFMg93Ghh
+   /DexInjzJd0S/ds9+MKdOR9PJngXb1E84zvBSGMgYUwkD9RMKLbQ82bsw
+   A==;
+From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
 Subject: Re: [bitbake-devel] [PATCH] event: Fix multiconfig event handler change performance regressions
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Thu, 11 Mar 2021 23:12:32 +0000
-In-Reply-To: <dd8d9659f53a49c2b90e3ed6e689c4eb@XBOX03.axis.com>
+Thread-Topic: [bitbake-devel] [PATCH] event: Fix multiconfig event handler
+ change performance regressions
+Thread-Index: AQHXFnzk55L6+7WgvUS8g8a2FurUnKp/P5ZwgAAUMICAABKpkP//89oAgAAgkbA=
+Date: Fri, 12 Mar 2021 00:42:48 +0000
+Message-ID: <3a3bc68a6e90492295c8f11d5c98908e@XBOX03.axis.com>
 References: <20210311134601.2544696-1-richard.purdie@linuxfoundation.org>
 	 <ea3cf67c8b174f3eab75d68d14e72440@XBOX03.axis.com>
 	 <06120a8293bdb7a251fb7fb71f253f42e50aa3ff.camel@linuxfoundation.org>
 	 <dd8d9659f53a49c2b90e3ed6e689c4eb@XBOX03.axis.com>
-User-Agent: Evolution 3.38.1-1 
+ <c7d3048f54c45b782f2a867f37bf34b311be8347.camel@linuxfoundation.org>
+In-Reply-To: <c7d3048f54c45b782f2a867f37bf34b311be8347.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Return-Path: peter.kjellerstedt@axis.com
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Thu, 2021-03-11 at 23:04 +0000, Peter Kjellerstedt wrote:
-> > -----Original Message-----
-> > From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > Sent: den 11 mars 2021 23:49
-> > To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>; bitbake-
-> > devel@lists.openembedded.org
-> > Subject: Re: [bitbake-devel] [PATCH] event: Fix multiconfig event handler
-> > change performance regressions
-> > 
-> > On Thu, 2021-03-11 at 22:14 +0000, Peter Kjellerstedt wrote:
-> > > 
-> > > While this greatly improves the situation, it is still not good. Here
-> > are some
-> > > numbers for me when parsing poky + openembedded + our layers:
-> > > 
-> > > poky + openembedded + axis dunfell
-> > > Parsing recipes: 100% |###############################| Time: 0:00:39
-> > > Parsing of 3935 .bb files complete (0 cached, 3935 parsed).
-> > > 5767 targets, 711 skipped, 0 masked, 0 errors.
-> > > 
-> > > poky + openembedded + axis gatesgarth
-> > > Parsing recipes: 100% |###############################| Time: 0:00:39
-> > > Parsing of 4051 .bb files complete (0 cached, 4051 parsed).
-> > > 5490 targets, 726 skipped, 0 masked, 0 errors.
-> > > 
-> > > poky + openembedded + axis master
-> > > Parsing recipes: 100% |###############################| Time: 0:01:07
-> > > Parsing of 4111 .bb files complete (0 cached, 4111 parsed).
-> > > 5607 targets, 732 skipped, 12 masked, 0 errors.
-> > > 
-> > > And here are similar measurements with only the poky and openembedded
-> > layers
-> > > (meta, meta-poky, meta-gplv2, meta-oe, meta-filesystems, meta-
-> > networking,
-> > > meta-python and meta-webserver):
-> > > 
-> > > poky + openembedded gatesgarth
-> > > Parsing recipes: 100% |###############################| Time: 0:00:17
-> > > Parsing of 2289 .bb files complete (0 cached, 2289 parsed).
-> > > 3537 targets, 91 skipped, 0 masked, 0 errors.
-> > > 
-> > > poky + openembedded master
-> > > Parsing recipes: 100% |###############################| Time: 0:00:27
-> > > Parsing of 2354 .bb files complete (0 cached, 2354 parsed).
-> > > 3659 targets, 64 skipped, 0 masked, 0 errors.
-> > > 
-> > > I have attached profiling logs (first 40 lines) for a gatesgarth run and a
-> > > master run. If I read the data correctly, it seems that during the master
-> > > parsing, there are a lot of calls to fnmatch.translate, posix.read and
-> > > _posixsubprocess.fork_exec that are not there during the gatesgarth parsing.
-> > 
-> > Was this with or without c3f6fee42bfa23f23f167cb29f0cfa05ac2fa197 from bitbake
-> > master?
-> 
-> The time measurements were without it, but the profile log was with it. Adding 
-> it seems to shave off another 5 seconds when I parse all our layers.
-> 
-> > If with, please send those full profiles to me offlist. You're right about the
-> > increased re.Pattern objects, there should be information further down about
-> > where those calls came from too.
-> 
-> Will do. 
-> 
-> I also did some tracing of active processes while the parsing was running, and it 
-> seems the process that is forked during the master parsing is `git rev-parse HEAD`.
-
-Hmm, that makes me think of:
-
-commit bd6b25f9a3416ce63e26d763cce7ed1ad4fd816d
-Author: Alexander Kanavin <alex.kanavin@gmail.com>
-Date:   Thu Dec 3 16:07:29 2020 +0100
-poky.conf: do not write current date into distro version, use git hash instead
-
-An immediate expansion of METADATA_REVISION may help.
-
-Cheers,
-
-Richard
-
-
-
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmlj
+aGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gU2VudDogZGVuIDEyIG1hcnMgMjAy
+MSAwMDoxMw0KPiBUbzogUGV0ZXIgS2plbGxlcnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhp
+cy5jb20+OyBiaXRiYWtlLQ0KPiBkZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQo+IFN1Ympl
+Y3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENIXSBldmVudDogRml4IG11bHRpY29uZmlnIGV2
+ZW50IGhhbmRsZXINCj4gY2hhbmdlIHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb25zDQo+IA0KPiBPbiBU
+aHUsIDIwMjEtMDMtMTEgYXQgMjM6MDQgKzAwMDAsIFBldGVyIEtqZWxsZXJzdGVkdCB3cm90ZToN
+Cj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBSaWNoYXJkIFB1
+cmRpZSA8cmljaGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gPiA+IFNlbnQ6IGRl
+biAxMSBtYXJzIDIwMjEgMjM6NDkNCj4gPiA+IFRvOiBQZXRlciBLamVsbGVyc3RlZHQgPHBldGVy
+LmtqZWxsZXJzdGVkdEBheGlzLmNvbT47IGJpdGJha2UtDQo+ID4gPiBkZXZlbEBsaXN0cy5vcGVu
+ZW1iZWRkZWQub3JnDQo+ID4gPiBTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFtQQVRDSF0g
+ZXZlbnQ6IEZpeCBtdWx0aWNvbmZpZyBldmVudA0KPiBoYW5kbGVyDQo+ID4gPiBjaGFuZ2UgcGVy
+Zm9ybWFuY2UgcmVncmVzc2lvbnMNCj4gPiA+DQo+ID4gPiBPbiBUaHUsIDIwMjEtMDMtMTEgYXQg
+MjI6MTQgKzAwMDAsIFBldGVyIEtqZWxsZXJzdGVkdCB3cm90ZToNCj4gPiA+ID4NCj4gPiA+ID4g
+V2hpbGUgdGhpcyBncmVhdGx5IGltcHJvdmVzIHRoZSBzaXR1YXRpb24sIGl0IGlzIHN0aWxsIG5v
+dCBnb29kLg0KPiBIZXJlDQo+ID4gPiBhcmUgc29tZQ0KPiA+ID4gPiBudW1iZXJzIGZvciBtZSB3
+aGVuIHBhcnNpbmcgcG9reSArIG9wZW5lbWJlZGRlZCArIG91ciBsYXllcnM6DQo+ID4gPiA+DQo+
+ID4gPiA+IHBva3kgKyBvcGVuZW1iZWRkZWQgKyBheGlzIGR1bmZlbGwNCj4gPiA+ID4gUGFyc2lu
+ZyByZWNpcGVzOiAxMDAlIHwjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjfCBUaW1lOg0K
+PiAwOjAwOjM5DQo+ID4gPiA+IFBhcnNpbmcgb2YgMzkzNSAuYmIgZmlsZXMgY29tcGxldGUgKDAg
+Y2FjaGVkLCAzOTM1IHBhcnNlZCkuDQo+ID4gPiA+IDU3NjcgdGFyZ2V0cywgNzExIHNraXBwZWQs
+IDAgbWFza2VkLCAwIGVycm9ycy4NCj4gPiA+ID4NCj4gPiA+ID4gcG9reSArIG9wZW5lbWJlZGRl
+ZCArIGF4aXMgZ2F0ZXNnYXJ0aA0KPiA+ID4gPiBQYXJzaW5nIHJlY2lwZXM6IDEwMCUgfCMjIyMj
+IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyN8IFRpbWU6DQo+IDA6MDA6MzkNCj4gPiA+ID4gUGFy
+c2luZyBvZiA0MDUxIC5iYiBmaWxlcyBjb21wbGV0ZSAoMCBjYWNoZWQsIDQwNTEgcGFyc2VkKS4N
+Cj4gPiA+ID4gNTQ5MCB0YXJnZXRzLCA3MjYgc2tpcHBlZCwgMCBtYXNrZWQsIDAgZXJyb3JzLg0K
+PiA+ID4gPg0KPiA+ID4gPiBwb2t5ICsgb3BlbmVtYmVkZGVkICsgYXhpcyBtYXN0ZXINCj4gPiA+
+ID4gUGFyc2luZyByZWNpcGVzOiAxMDAlIHwjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
+fCBUaW1lOg0KPiAwOjAxOjA3DQo+ID4gPiA+IFBhcnNpbmcgb2YgNDExMSAuYmIgZmlsZXMgY29t
+cGxldGUgKDAgY2FjaGVkLCA0MTExIHBhcnNlZCkuDQo+ID4gPiA+IDU2MDcgdGFyZ2V0cywgNzMy
+IHNraXBwZWQsIDEyIG1hc2tlZCwgMCBlcnJvcnMuDQo+ID4gPiA+DQo+ID4gPiA+IEFuZCBoZXJl
+IGFyZSBzaW1pbGFyIG1lYXN1cmVtZW50cyB3aXRoIG9ubHkgdGhlIHBva3kgYW5kDQo+IG9wZW5l
+bWJlZGRlZA0KPiA+ID4gbGF5ZXJzDQo+ID4gPiA+IChtZXRhLCBtZXRhLXBva3ksIG1ldGEtZ3Bs
+djIsIG1ldGEtb2UsIG1ldGEtZmlsZXN5c3RlbXMsIG1ldGEtDQo+ID4gPiBuZXR3b3JraW5nLA0K
+PiA+ID4gPiBtZXRhLXB5dGhvbiBhbmQgbWV0YS13ZWJzZXJ2ZXIpOg0KPiA+ID4gPg0KPiA+ID4g
+PiBwb2t5ICsgb3BlbmVtYmVkZGVkIGdhdGVzZ2FydGgNCj4gPiA+ID4gUGFyc2luZyByZWNpcGVz
+OiAxMDAlIHwjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjfCBUaW1lOg0KPiAwOjAwOjE3
+DQo+ID4gPiA+IFBhcnNpbmcgb2YgMjI4OSAuYmIgZmlsZXMgY29tcGxldGUgKDAgY2FjaGVkLCAy
+Mjg5IHBhcnNlZCkuDQo+ID4gPiA+IDM1MzcgdGFyZ2V0cywgOTEgc2tpcHBlZCwgMCBtYXNrZWQs
+IDAgZXJyb3JzLg0KPiA+ID4gPg0KPiA+ID4gPiBwb2t5ICsgb3BlbmVtYmVkZGVkIG1hc3Rlcg0K
+PiA+ID4gPiBQYXJzaW5nIHJlY2lwZXM6IDEwMCUgfCMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
+IyMjIyN8IFRpbWU6DQo+IDA6MDA6MjcNCj4gPiA+ID4gUGFyc2luZyBvZiAyMzU0IC5iYiBmaWxl
+cyBjb21wbGV0ZSAoMCBjYWNoZWQsIDIzNTQgcGFyc2VkKS4NCj4gPiA+ID4gMzY1OSB0YXJnZXRz
+LCA2NCBza2lwcGVkLCAwIG1hc2tlZCwgMCBlcnJvcnMuDQo+ID4gPiA+DQo+ID4gPiA+IEkgaGF2
+ZSBhdHRhY2hlZCBwcm9maWxpbmcgbG9ncyAoZmlyc3QgNDAgbGluZXMpIGZvciBhIGdhdGVzZ2Fy
+dGggcnVuDQo+IGFuZCBhDQo+ID4gPiA+IG1hc3RlciBydW4uIElmIEkgcmVhZCB0aGUgZGF0YSBj
+b3JyZWN0bHksIGl0IHNlZW1zIHRoYXQgZHVyaW5nIHRoZQ0KPiBtYXN0ZXINCj4gPiA+ID4gcGFy
+c2luZywgdGhlcmUgYXJlIGEgbG90IG9mIGNhbGxzIHRvIGZubWF0Y2gudHJhbnNsYXRlLCBwb3Np
+eC5yZWFkDQo+IGFuZA0KPiA+ID4gPiBfcG9zaXhzdWJwcm9jZXNzLmZvcmtfZXhlYyB0aGF0IGFy
+ZSBub3QgdGhlcmUgZHVyaW5nIHRoZSBnYXRlc2dhcnRoDQo+IHBhcnNpbmcuDQo+ID4gPg0KPiA+
+ID4gV2FzIHRoaXMgd2l0aCBvciB3aXRob3V0IGMzZjZmZWU0MmJmYTIzZjIzZjE2N2NiMjlmMGNm
+YTA1YWMyZmExOTcgZnJvbQ0KPiBiaXRiYWtlDQo+ID4gPiBtYXN0ZXI/DQo+ID4NCj4gPiBUaGUg
+dGltZSBtZWFzdXJlbWVudHMgd2VyZSB3aXRob3V0IGl0LCBidXQgdGhlIHByb2ZpbGUgbG9nIHdh
+cyB3aXRoIGl0Lg0KPiBBZGRpbmcNCj4gPiBpdCBzZWVtcyB0byBzaGF2ZSBvZmYgYW5vdGhlciA1
+IHNlY29uZHMgd2hlbiBJIHBhcnNlIGFsbCBvdXIgbGF5ZXJzLg0KPiA+DQo+ID4gPiBJZiB3aXRo
+LCBwbGVhc2Ugc2VuZCB0aG9zZSBmdWxsIHByb2ZpbGVzIHRvIG1lIG9mZmxpc3QuIFlvdSdyZSBy
+aWdodA0KPiBhYm91dCB0aGUNCj4gPiA+IGluY3JlYXNlZCByZS5QYXR0ZXJuIG9iamVjdHMsIHRo
+ZXJlIHNob3VsZCBiZSBpbmZvcm1hdGlvbiBmdXJ0aGVyIGRvd24NCj4gYWJvdXQNCj4gPiA+IHdo
+ZXJlIHRob3NlIGNhbGxzIGNhbWUgZnJvbSB0b28uDQo+ID4NCj4gPiBXaWxsIGRvLg0KPiA+DQo+
+ID4gSSBhbHNvIGRpZCBzb21lIHRyYWNpbmcgb2YgYWN0aXZlIHByb2Nlc3NlcyB3aGlsZSB0aGUg
+cGFyc2luZyB3YXMNCj4gcnVubmluZywgYW5kIGl0DQo+ID4gc2VlbXMgdGhlIHByb2Nlc3MgdGhh
+dCBpcyBmb3JrZWQgZHVyaW5nIHRoZSBtYXN0ZXIgcGFyc2luZyBpcyBgZ2l0IHJldi0NCj4gcGFy
+c2UgSEVBRGAuDQo+IA0KPiBIbW0sIHRoYXQgbWFrZXMgbWUgdGhpbmsgb2Y6DQo+IA0KPiBjb21t
+aXQgYmQ2YjI1ZjlhMzQxNmNlNjNlMjZkNzYzY2NlN2VkMWFkNGZkODE2ZA0KPiBBdXRob3I6IEFs
+ZXhhbmRlciBLYW5hdmluIDxhbGV4LmthbmF2aW5AZ21haWwuY29tPg0KPiBEYXRlOiAgIFRodSBE
+ZWMgMyAxNjowNzoyOSAyMDIwICswMTAwDQo+IHBva3kuY29uZjogZG8gbm90IHdyaXRlIGN1cnJl
+bnQgZGF0ZSBpbnRvIGRpc3RybyB2ZXJzaW9uLCB1c2UgZ2l0IGhhc2gNCj4gaW5zdGVhZA0KPiAN
+Cj4gQW4gaW1tZWRpYXRlIGV4cGFuc2lvbiBvZiBNRVRBREFUQV9SRVZJU0lPTiBtYXkgaGVscC4N
+Cj4gDQo+IENoZWVycywNCj4gDQo+IFJpY2hhcmQNCg0KQ2hhbmdpbmcgbWV0YWRhdGFfc2NtLmJi
+Y2xhc3Mgc28gdGhhdCBNRVRBREFUQV9SRVZJU0lPTiAoYW5kIE1FVEFEQVRBX0JSQU5DSCkgDQph
+cmUgZGVmaW5lZCB1c2luZyA6PSBpbnN0ZWFkIG9mID89IGRvZXMgZ2V0IHJpZCBvZiB0aGUgZm9y
+a19leGVjIGNhbGxzLiBCdXQgDQp1bmZvcnR1bmF0ZWx5IGl0IGRvZXMgbm90IHNlZW0gdG8gYWZm
+ZWN0IHRoZSBwYXJzaW5nIHRpbWUuDQoNCi8vUGV0ZXINCg0K
