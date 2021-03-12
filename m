@@ -1,161 +1,64 @@
 Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web10.3223.1615517375263474155
+ by mx.groups.io with SMTP id smtpd.web12.3595.1615519226133168481
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Mar 2021 18:49:36 -0800
+ Thu, 11 Mar 2021 19:20:26 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@axis.com header.s=axis-central1 header.b=VhdLfNdA;
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=ltks2GOj;
  spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1615517375;
-  x=1647053375;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=6GdopzfGViWIUprM34lT9225lzuh8R4I5+CVHkJktEs=;
-  b=VhdLfNdAvGuQOAUnfLVdrd8KaYXcjuHD/Qx7ChyrzG4FYWkDhrML6nXW
-   KH2dCiw1WVSzYNQINFDuyAqDM76RUqk136fXLZmESUFxqFqsSbjebJAOz
-   0arRo1L9//WqsOEUFti2wY/KSlG7Fg6xuVQhKCs4YjVBmXYFu7Wlz0CHA
-   xWq9WMyrKfMnlFgVSeDws7hmYYOisBVpG4PL4CGcTFcQusqNcphBByTvc
-   Tfnk9nESj6FmmFWMvn0LUc7Pr8OBU+2myUj3dUtgV6Eyj5u/FOjhrlzoC
-   KFV9CPUrPuhjllyLulTPgOLeTlCAbOLRya4fbs7CKmWtsrAgURkfYVhH1
-   w==;
+  d=axis.com; q=dns/txt; s=axis-central1; t=1615519226;
+  x=1647055226;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=BqZEBDg8HuLUVComrQWsRokaEEfgFzSrPNx9gcWuHzw=;
+  b=ltks2GOj/2VkbCwu0twS4pLRbrLYRBmLx1HxWIGDQj6yOE1ha51FKG54
+   YVk40g7vF4gcbnP2XQaq71EN04UYdX0oymGsq7iWHmiQlbJ/7Do/rrbJM
+   8VtL9F1TOj/ggrV9BM3nXO7Uav34psMTgurveEU99K8abeqss3f4x9NZj
+   HH5WLY9HxrOnbjAva3fsYsbkMDzdyBpe4ryvk8WU4lIkXy8mBDL0Dv1qb
+   nSQBChC4M1IQKwOCarS8EW/vZzPLrpLn0OsqHByzcrHPT1A33maZaMw5s
+   Nj9S0CM6s6mONRplzUeKGodw5kV0faHye5yhaVNQeczsl6fTp3MGhxz+N
+   A==;
 From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] event: Fix multiconfig event handler change performance regressions
-Thread-Topic: [bitbake-devel] [PATCH] event: Fix multiconfig event handler
- change performance regressions
-Thread-Index: AQHXFnzk55L6+7WgvUS8g8a2FurUnKp/P5ZwgAAUMICAABKpkP//89oAgAAgkbCAAA7YIA==
-Date: Fri, 12 Mar 2021 02:49:23 +0000
-Message-ID: <c14b5391bd6c4ef4b9528f4a49a76754@XBOX03.axis.com>
-References: <20210311134601.2544696-1-richard.purdie@linuxfoundation.org>
-	 <ea3cf67c8b174f3eab75d68d14e72440@XBOX03.axis.com>
-	 <06120a8293bdb7a251fb7fb71f253f42e50aa3ff.camel@linuxfoundation.org>
-	 <dd8d9659f53a49c2b90e3ed6e689c4eb@XBOX03.axis.com>
- <c7d3048f54c45b782f2a867f37bf34b311be8347.camel@linuxfoundation.org>
- <166B7193EB4BBEA9.31346@lists.openembedded.org>
-In-Reply-To: <166B7193EB4BBEA9.31346@lists.openembedded.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH 2/2] metadata_scm.bbclass: Use immediate expansion for the METADATA_* variables
+Date: Fri, 12 Mar 2021 04:20:22 +0100
+Message-ID: <20210312032022.7783-2-pkj@axis.com>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20210312032022.7783-1-pkj@axis.com>
+References: <20210312032022.7783-1-pkj@axis.com>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: pkj@axis.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBiaXRiYWtlLWRldmVsQGxpc3Rz
-Lm9wZW5lbWJlZGRlZC5vcmcgPGJpdGJha2UtDQo+IGRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5v
-cmc+IE9uIEJlaGFsZiBPZiBQZXRlciBLamVsbGVyc3RlZHQNCj4gU2VudDogZGVuIDEyIG1hcnMg
-MjAyMSAwMTo0Mw0KPiBUbzogUmljaGFyZCBQdXJkaWUgPHJpY2hhcmQucHVyZGllQGxpbnV4Zm91
-bmRhdGlvbi5vcmc+OyBiaXRiYWtlLQ0KPiBkZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQo+
-IFN1YmplY3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENIXSBldmVudDogRml4IG11bHRpY29u
-ZmlnIGV2ZW50IGhhbmRsZXINCj4gY2hhbmdlIHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb25zDQo+IA0K
-PiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogUmljaGFyZCBQdXJkaWUg
-PHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+ID4gU2VudDogZGVuIDEyIG1h
-cnMgMjAyMSAwMDoxMw0KPiA+IFRvOiBQZXRlciBLamVsbGVyc3RlZHQgPHBldGVyLmtqZWxsZXJz
-dGVkdEBheGlzLmNvbT47IGJpdGJha2UtDQo+ID4gZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9y
-Zw0KPiA+IFN1YmplY3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENIXSBldmVudDogRml4IG11
-bHRpY29uZmlnIGV2ZW50DQo+IGhhbmRsZXINCj4gPiBjaGFuZ2UgcGVyZm9ybWFuY2UgcmVncmVz
-c2lvbnMNCj4gPg0KPiA+IE9uIFRodSwgMjAyMS0wMy0xMSBhdCAyMzowNCArMDAwMCwgUGV0ZXIg
-S2plbGxlcnN0ZWR0IHdyb3RlOg0KPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-PiA+ID4gPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmljaGFyZC5wdXJkaWVAbGludXhmb3VuZGF0
-aW9uLm9yZz4NCj4gPiA+ID4gU2VudDogZGVuIDExIG1hcnMgMjAyMSAyMzo0OQ0KPiA+ID4gPiBU
-bzogUGV0ZXIgS2plbGxlcnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb20+OyBiaXRi
-YWtlLQ0KPiA+ID4gPiBkZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQo+ID4gPiA+IFN1Ympl
-Y3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENIXSBldmVudDogRml4IG11bHRpY29uZmlnIGV2
-ZW50DQo+ID4gaGFuZGxlcg0KPiA+ID4gPiBjaGFuZ2UgcGVyZm9ybWFuY2UgcmVncmVzc2lvbnMN
-Cj4gPiA+ID4NCj4gPiA+ID4gT24gVGh1LCAyMDIxLTAzLTExIGF0IDIyOjE0ICswMDAwLCBQZXRl
-ciBLamVsbGVyc3RlZHQgd3JvdGU6DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBXaGlsZSB0aGlzIGdy
-ZWF0bHkgaW1wcm92ZXMgdGhlIHNpdHVhdGlvbiwgaXQgaXMgc3RpbGwgbm90IGdvb2QuDQo+ID4g
-SGVyZQ0KPiA+ID4gPiBhcmUgc29tZQ0KPiA+ID4gPiA+IG51bWJlcnMgZm9yIG1lIHdoZW4gcGFy
-c2luZyBwb2t5ICsgb3BlbmVtYmVkZGVkICsgb3VyIGxheWVyczoNCj4gPiA+ID4gPg0KPiA+ID4g
-PiA+IHBva3kgKyBvcGVuZW1iZWRkZWQgKyBheGlzIGR1bmZlbGwNCj4gPiA+ID4gPiBQYXJzaW5n
-IHJlY2lwZXM6IDEwMCUgfCMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyN8IFRpbWU6DQo+
-ID4gMDowMDozOQ0KPiA+ID4gPiA+IFBhcnNpbmcgb2YgMzkzNSAuYmIgZmlsZXMgY29tcGxldGUg
-KDAgY2FjaGVkLCAzOTM1IHBhcnNlZCkuDQo+ID4gPiA+ID4gNTc2NyB0YXJnZXRzLCA3MTEgc2tp
-cHBlZCwgMCBtYXNrZWQsIDAgZXJyb3JzLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gcG9reSArIG9w
-ZW5lbWJlZGRlZCArIGF4aXMgZ2F0ZXNnYXJ0aA0KPiA+ID4gPiA+IFBhcnNpbmcgcmVjaXBlczog
-MTAwJSB8IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjI3wgVGltZToNCj4gPiAwOjAwOjM5
-DQo+ID4gPiA+ID4gUGFyc2luZyBvZiA0MDUxIC5iYiBmaWxlcyBjb21wbGV0ZSAoMCBjYWNoZWQs
-IDQwNTEgcGFyc2VkKS4NCj4gPiA+ID4gPiA1NDkwIHRhcmdldHMsIDcyNiBza2lwcGVkLCAwIG1h
-c2tlZCwgMCBlcnJvcnMuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBwb2t5ICsgb3BlbmVtYmVkZGVk
-ICsgYXhpcyBtYXN0ZXINCj4gPiA+ID4gPiBQYXJzaW5nIHJlY2lwZXM6IDEwMCUgfCMjIyMjIyMj
-IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyN8IFRpbWU6DQo+ID4gMDowMTowNw0KPiA+ID4gPiA+IFBh
-cnNpbmcgb2YgNDExMSAuYmIgZmlsZXMgY29tcGxldGUgKDAgY2FjaGVkLCA0MTExIHBhcnNlZCku
-DQo+ID4gPiA+ID4gNTYwNyB0YXJnZXRzLCA3MzIgc2tpcHBlZCwgMTIgbWFza2VkLCAwIGVycm9y
-cy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEFuZCBoZXJlIGFyZSBzaW1pbGFyIG1lYXN1cmVtZW50
-cyB3aXRoIG9ubHkgdGhlIHBva3kgYW5kDQo+ID4gb3BlbmVtYmVkZGVkDQo+ID4gPiA+IGxheWVy
-cw0KPiA+ID4gPiA+IChtZXRhLCBtZXRhLXBva3ksIG1ldGEtZ3BsdjIsIG1ldGEtb2UsIG1ldGEt
-ZmlsZXN5c3RlbXMsIG1ldGEtDQo+ID4gPiA+IG5ldHdvcmtpbmcsDQo+ID4gPiA+ID4gbWV0YS1w
-eXRob24gYW5kIG1ldGEtd2Vic2VydmVyKToNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IHBva3kgKyBv
-cGVuZW1iZWRkZWQgZ2F0ZXNnYXJ0aA0KPiA+ID4gPiA+IFBhcnNpbmcgcmVjaXBlczogMTAwJSB8
-IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjI3wgVGltZToNCj4gPiAwOjAwOjE3DQo+ID4g
-PiA+ID4gUGFyc2luZyBvZiAyMjg5IC5iYiBmaWxlcyBjb21wbGV0ZSAoMCBjYWNoZWQsIDIyODkg
-cGFyc2VkKS4NCj4gPiA+ID4gPiAzNTM3IHRhcmdldHMsIDkxIHNraXBwZWQsIDAgbWFza2VkLCAw
-IGVycm9ycy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IHBva3kgKyBvcGVuZW1iZWRkZWQgbWFzdGVy
-DQo+ID4gPiA+ID4gUGFyc2luZyByZWNpcGVzOiAxMDAlIHwjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
-IyMjIyMjIyMjfCBUaW1lOg0KPiA+IDA6MDA6MjcNCj4gPiA+ID4gPiBQYXJzaW5nIG9mIDIzNTQg
-LmJiIGZpbGVzIGNvbXBsZXRlICgwIGNhY2hlZCwgMjM1NCBwYXJzZWQpLg0KPiA+ID4gPiA+IDM2
-NTkgdGFyZ2V0cywgNjQgc2tpcHBlZCwgMCBtYXNrZWQsIDAgZXJyb3JzLg0KPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gSSBoYXZlIGF0dGFjaGVkIHByb2ZpbGluZyBsb2dzIChmaXJzdCA0MCBsaW5lcykg
-Zm9yIGEgZ2F0ZXNnYXJ0aA0KPiBydW4NCj4gPiBhbmQgYQ0KPiA+ID4gPiA+IG1hc3RlciBydW4u
-IElmIEkgcmVhZCB0aGUgZGF0YSBjb3JyZWN0bHksIGl0IHNlZW1zIHRoYXQgZHVyaW5nIHRoZQ0K
-PiA+IG1hc3Rlcg0KPiA+ID4gPiA+IHBhcnNpbmcsIHRoZXJlIGFyZSBhIGxvdCBvZiBjYWxscyB0
-byBmbm1hdGNoLnRyYW5zbGF0ZSwgcG9zaXgucmVhZA0KPiA+IGFuZA0KPiA+ID4gPiA+IF9wb3Np
-eHN1YnByb2Nlc3MuZm9ya19leGVjIHRoYXQgYXJlIG5vdCB0aGVyZSBkdXJpbmcgdGhlDQo+IGdh
-dGVzZ2FydGgNCj4gPiBwYXJzaW5nLg0KPiA+ID4gPg0KPiA+ID4gPiBXYXMgdGhpcyB3aXRoIG9y
-IHdpdGhvdXQgYzNmNmZlZTQyYmZhMjNmMjNmMTY3Y2IyOWYwY2ZhMDVhYzJmYTE5Nw0KPiBmcm9t
-DQo+ID4gYml0YmFrZQ0KPiA+ID4gPiBtYXN0ZXI/DQo+ID4gPg0KPiA+ID4gVGhlIHRpbWUgbWVh
-c3VyZW1lbnRzIHdlcmUgd2l0aG91dCBpdCwgYnV0IHRoZSBwcm9maWxlIGxvZyB3YXMgd2l0aA0K
-PiBpdC4NCj4gPiBBZGRpbmcNCj4gPiA+IGl0IHNlZW1zIHRvIHNoYXZlIG9mZiBhbm90aGVyIDUg
-c2Vjb25kcyB3aGVuIEkgcGFyc2UgYWxsIG91ciBsYXllcnMuDQo+ID4gPg0KPiA+ID4gPiBJZiB3
-aXRoLCBwbGVhc2Ugc2VuZCB0aG9zZSBmdWxsIHByb2ZpbGVzIHRvIG1lIG9mZmxpc3QuIFlvdSdy
-ZSByaWdodA0KPiA+IGFib3V0IHRoZQ0KPiA+ID4gPiBpbmNyZWFzZWQgcmUuUGF0dGVybiBvYmpl
-Y3RzLCB0aGVyZSBzaG91bGQgYmUgaW5mb3JtYXRpb24gZnVydGhlcg0KPiBkb3duDQo+ID4gYWJv
-dXQNCj4gPiA+ID4gd2hlcmUgdGhvc2UgY2FsbHMgY2FtZSBmcm9tIHRvby4NCj4gPiA+DQo+ID4g
-PiBXaWxsIGRvLg0KPiA+ID4NCj4gPiA+IEkgYWxzbyBkaWQgc29tZSB0cmFjaW5nIG9mIGFjdGl2
-ZSBwcm9jZXNzZXMgd2hpbGUgdGhlIHBhcnNpbmcgd2FzDQo+ID4gcnVubmluZywgYW5kIGl0DQo+
-ID4gPiBzZWVtcyB0aGUgcHJvY2VzcyB0aGF0IGlzIGZvcmtlZCBkdXJpbmcgdGhlIG1hc3RlciBw
-YXJzaW5nIGlzIGBnaXQNCj4gcmV2LQ0KPiA+IHBhcnNlIEhFQURgLg0KPiA+DQo+ID4gSG1tLCB0
-aGF0IG1ha2VzIG1lIHRoaW5rIG9mOg0KPiA+DQo+ID4gY29tbWl0IGJkNmIyNWY5YTM0MTZjZTYz
-ZTI2ZDc2M2NjZTdlZDFhZDRmZDgxNmQNCj4gPiBBdXRob3I6IEFsZXhhbmRlciBLYW5hdmluIDxh
-bGV4LmthbmF2aW5AZ21haWwuY29tPg0KPiA+IERhdGU6ICAgVGh1IERlYyAzIDE2OjA3OjI5IDIw
-MjAgKzAxMDANCj4gPiBwb2t5LmNvbmY6IGRvIG5vdCB3cml0ZSBjdXJyZW50IGRhdGUgaW50byBk
-aXN0cm8gdmVyc2lvbiwgdXNlIGdpdCBoYXNoDQo+ID4gaW5zdGVhZA0KPiA+DQo+ID4gQW4gaW1t
-ZWRpYXRlIGV4cGFuc2lvbiBvZiBNRVRBREFUQV9SRVZJU0lPTiBtYXkgaGVscC4NCj4gPg0KPiA+
-IENoZWVycywNCj4gPg0KPiA+IFJpY2hhcmQNCj4gDQo+IENoYW5naW5nIG1ldGFkYXRhX3NjbS5i
-YmNsYXNzIHNvIHRoYXQgTUVUQURBVEFfUkVWSVNJT04gKGFuZA0KPiBNRVRBREFUQV9CUkFOQ0gp
-DQo+IGFyZSBkZWZpbmVkIHVzaW5nIDo9IGluc3RlYWQgb2YgPz0gZG9lcyBnZXQgcmlkIG9mIHRo
-ZSBmb3JrX2V4ZWMgY2FsbHMuDQo+IEJ1dCB1bmZvcnR1bmF0ZWx5IGl0IGRvZXMgbm90IHNlZW0g
-dG8gYWZmZWN0IHRoZSBwYXJzaW5nIHRpbWUuDQoNCkFjdHVhbGx5LCBpdCBkb2VzLiBXaXRoIGlt
-bWVkaWF0ZSBleHBhbnNpb24gb2YgTUVUQURBVEFfUkVWSVNJT04gYW5kIHRoZSANCmMzZjZmZWU0
-MiBjb21taXQsIHRoZSBwYXJzaW5nIHRpbWUgZm9yIHBva3kgKyBvcGVuZW1iZWRkZWQgYXJlIGJh
-Y2sgdG8gdGhlIA0Kc2FtZSBhcyB3aXRoIGdhdGVzZ2FydGguDQoNCkkgaGFkIGEgZnVydGhlciBs
-b29rIGF0IHRoZSBwcm9maWxpbmcgZGF0YSwgYW5kIEkgZmlndXJlZCBvdXQgdGhlIGNhdXNlIG9m
-IA0KdGhlIHJlc3Qgb2YgdGhlIGluY3JlYXNlZCBwYXJzaW5nIHRpbWUuIEl0IGlzIHRoaXMgY29t
-bWl0IHRoYXQgY2F1c2VzIGl0Og0KDQpjb21taXQgMDhjYmYxNzQ4NWI2NDQzYTYxMThhY2ZhYzgy
-MDBlYjZjNjE0NDVhMw0KQXV0aG9yOiBSaWNoYXJkIFB1cmRpZSA8cmljaGFyZC5wdXJkaWVAbGlu
-dXhmb3VuZGF0aW9uLm9yZz4NCkRhdGU6ICAgVGh1IEZlYiAxOCAxNTowNzoxMSAyMDIxICswMDAw
-DQpsaWNlbnNlczogVXBkYXRlIElOQ09NUEFUSUJMRV9MSUNFTlNFIGZvciAnb3ItbGF0ZXInIGhh
-bmRsaW5nDQoNCkl0IGRvZXMgbm90IGFmZmVjdCB0aGUgcGFyc2luZyB0aW1lIHdpdGggb25seSB0
-aGUgcG9reSBhbmQgb3BlbmVtYmVkZGVkIA0KbGF5ZXJzLCBidXQgd2hlbiB3ZSBhZGQgb3VyIGxh
-eWVycyB0aGF0IGhhcyBhbiBJTkNPTVBBVElCTEVfTElDRU5TRSB0aGF0IA0KY29udGFpbnMgMTkw
-IGxpY2Vuc2VzLCB0aGUgZWZmZWN0IGlzIHNpZ25pZmljYW50Lg0KDQpIb3dldmVyLCB3aGF0IEkg
-ZG9uJ3QgdW5kZXJzdGFuZCBpcyB3aHkgdGhhdCBjaGFuZ2UgaGFzIHN1Y2ggYSANCnNpZ25pZmlj
-YW50IGVmZmVjdC4gQmVjYXVzZSBzcG9udGFuZW91c2x5IGl0IGxvb2tzIGFzIGl0IHNob3VsZCBv
-bmx5IA0KYXBwcm94aW1hdGVseSBkb3VibGUgdGhlIG51bWJlciBvZiBpbmNvbXBhdGlibGUgbGlj
-ZW5zZXMgKGluIG91ciBjYXNlIA0KZnJvbSAxOTAgdG8gMzc0KSwgYnV0IGlmIEkgcmVtb3ZlIGl0
-IChzbyBJIGFtIGJhY2sgdG8gdGhlIHBhcnNpbmcgdGltZSANCndpdGggR2F0ZXNnYXJ0aCksIGFu
-ZCB0aGVuIGFsc28gZHJvcCBhbG1vc3QgYWxsIGxpY2Vuc2VzIGZyb20gb3VyIA0KSU5DT01QQVRJ
-QkxFX0xJQ0VOU0UgKG9ubHkga2VlcGluZyB0aGUgR1BMMyBvbmVzKSwgdGhlIHBhcnNpbmcgdGlt
-ZSBpcyANCm9ubHkgZnVydGhlciBpbXByb3ZlZCBieSBhYm91dCB0d28gc2Vjb25kcy4NCg0KVGhh
-dCBzYWlkLCBJIG5vdyBoYXZlIGEgcGF0Y2ggdGhhdCBhdm9pZHMgdGhlIHByb2JsZW0gYnkgb25s
-eSBhZGRpbmcgDQoiZm9vKyIgdG8gdGhlIGxpc3Qgb2YgaW5jb21wYXRpYmxlIGxpY2Vuc2VzIGlm
-ICJmb28rIiBleGlzdHMgaW4gDQpTUERYTElDRU5TRU1BUC4gVGhhdCB3YXkgdGhlIGxpc3QgZG9l
-c24ndCBpbmNyZWFzZSBhdCBhbGwgZm9yIHVzIA0KKHdlIGFscmVhZHkgdXNlIHRoZSAiZm9vLW9u
-bHkiIGFuZCAiZm9vLW9yLWxhdGVyIiBsaWNlbnNlcyBpbiANCklOQ09NUEFUSUJMRV9MSUNFTlNF
-KSwgYW5kIGl0IHdvbid0IGNvbnRhaW4gbm9uc2Vuc2UgImZvbysiIGxpY2Vuc2VzIA0KZm9yIG90
-aGVycy4gSSB3aWxsIHNlbmQgdGhhdCBwYXRjaCBhbG9uZyBzaG9ydGx5Lg0KDQpJIHdpbGwgYWxz
-byBzZW5kIHRoZSBwYXRjaCB0byBkZWZpbmUgTUVUQURBVEFfUkVWSVNJT04gdXNpbmcgaW1tZWRp
-YXRlIA0KZXhwYW5zaW9uLg0KDQo+IC8vUGV0ZXINCg0KLy9QZXRlcg0KDQo=
+Define METADATA_BRANCH and METADATA_REVISION using immediate expansion.
+This avoids running `git rev-parse HEAD` multiple times during recipe
+parsing.
+
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---
+ meta/classes/metadata_scm.bbclass | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/meta/classes/metadata_scm.bbclass b/meta/classes/metadata_scm.bbclass
+index 2608a7ef7b..47cb969b8d 100644
+--- a/meta/classes/metadata_scm.bbclass
++++ b/meta/classes/metadata_scm.bbclass
+@@ -1,8 +1,3 @@
+-METADATA_BRANCH ?= "${@base_detect_branch(d)}"
+-METADATA_BRANCH[vardepvalue] = "${METADATA_BRANCH}"
+-METADATA_REVISION ?= "${@base_detect_revision(d)}"
+-METADATA_REVISION[vardepvalue] = "${METADATA_REVISION}"
+-
+ def base_detect_revision(d):
+     path = base_get_scmbasepath(d)
+     return base_get_metadata_git_revision(path, d)
+@@ -42,3 +37,8 @@ def base_get_metadata_git_revision(path, d):
+     except bb.process.ExecutionError:
+         rev = '<unknown>'
+     return rev.strip()
++
++METADATA_BRANCH := "${@base_detect_branch(d)}"
++METADATA_BRANCH[vardepvalue] = "${METADATA_BRANCH}"
++METADATA_REVISION := "${@base_detect_revision(d)}"
++METADATA_REVISION[vardepvalue] = "${METADATA_REVISION}"
