@@ -1,64 +1,66 @@
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web12.3595.1615519226133168481
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web12.3596.1615519226617343685
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Mar 2021 19:20:26 -0800
+ Thu, 11 Mar 2021 19:20:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=ltks2GOj;
- spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=V9uRMMDm;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1615519226;
-  x=1647055226;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=BqZEBDg8HuLUVComrQWsRokaEEfgFzSrPNx9gcWuHzw=;
-  b=ltks2GOj/2VkbCwu0twS4pLRbrLYRBmLx1HxWIGDQj6yOE1ha51FKG54
-   YVk40g7vF4gcbnP2XQaq71EN04UYdX0oymGsq7iWHmiQlbJ/7Do/rrbJM
-   8VtL9F1TOj/ggrV9BM3nXO7Uav34psMTgurveEU99K8abeqss3f4x9NZj
-   HH5WLY9HxrOnbjAva3fsYsbkMDzdyBpe4ryvk8WU4lIkXy8mBDL0Dv1qb
-   nSQBChC4M1IQKwOCarS8EW/vZzPLrpLn0OsqHByzcrHPT1A33maZaMw5s
-   Nj9S0CM6s6mONRplzUeKGodw5kV0faHye5yhaVNQeczsl6fTp3MGhxz+N
+  d=axis.com; q=dns/txt; s=axis-central1; t=1615519227;
+  x=1647055227;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MJwoabNU5kXe8l6MiM589WVxXJKsGuaHdz+N6gpIYBE=;
+  b=V9uRMMDmekMObmatUc6sdh6FmQTYY4Uod9KGR7XosqV0JU82kOGyfx+S
+   XgIkFXN4yDyE8OUbvPDLaDnGGaUu3DCKdCdA6tseQeex9ZbM8Vx6sDH+x
+   RQD4RbiWJIzFhzEXSfiORPQ98Vzx9N2266WZ/jMIt3ZcvvhYE2JKtSAGJ
+   +9oxBRqdDWyDNaCtonTdwx9R7+DgPULZ7nfKdhhkXm1xcCYPm+QZBTwbd
+   6BZ6OBdt1QBGUO3hZ0aRaBdR06OymdDqbD4r/m0hnw1uo9cImi9lsSVfP
+   l/dlEvBuIH7f8S5AsGpnggZoOQpBHoRKEgjAdyup1/r8ruN0kNiAKN6VA
    A==;
 From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
 To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH 2/2] metadata_scm.bbclass: Use immediate expansion for the METADATA_* variables
-Date: Fri, 12 Mar 2021 04:20:22 +0100
-Message-ID: <20210312032022.7783-2-pkj@axis.com>
+Subject: [PATCH 1/2] license.bbclass: Improve parsing time when INCOMPATIBLE_LICENSES is big
+Date: Fri, 12 Mar 2021 04:20:21 +0100
+Message-ID: <20210312032022.7783-1-pkj@axis.com>
 X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20210312032022.7783-1-pkj@axis.com>
-References: <20210312032022.7783-1-pkj@axis.com>
 MIME-Version: 1.0
 Return-Path: pkj@axis.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Define METADATA_BRANCH and METADATA_REVISION using immediate expansion.
-This avoids running `git rev-parse HEAD` multiple times during recipe
-parsing.
+The commit 08cbf1748 (licenses: Update INCOMPATIBLE_LICENSE for
+'or-later' handling) increased the parsing time considerably if there
+are many licenses in INCOMPATIBLE_LICENSE. Reorganize the code to get
+almost all the time back.
 
 Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- meta/classes/metadata_scm.bbclass | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ meta/classes/license.bbclass | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/meta/classes/metadata_scm.bbclass b/meta/classes/metadata_scm.bbclass
-index 2608a7ef7b..47cb969b8d 100644
---- a/meta/classes/metadata_scm.bbclass
-+++ b/meta/classes/metadata_scm.bbclass
-@@ -1,8 +1,3 @@
--METADATA_BRANCH ?= "${@base_detect_branch(d)}"
--METADATA_BRANCH[vardepvalue] = "${METADATA_BRANCH}"
--METADATA_REVISION ?= "${@base_detect_revision(d)}"
--METADATA_REVISION[vardepvalue] = "${METADATA_REVISION}"
+diff --git a/meta/classes/license.bbclass b/meta/classes/license.bbclass
+index bcea0b3cb5..f7978e266b 100644
+--- a/meta/classes/license.bbclass
++++ b/meta/classes/license.bbclass
+@@ -282,16 +282,15 @@ def expand_wildcard_licenses(d, wildcard_licenses):
+     """
+     import fnmatch
+ 
+-    # Assume if we're passed "GPLv3" or "*GPLv3" it means -or-later as well
+-    for lic in wildcard_licenses[:]:
+-        if not lic.endswith(("-or-later", "-only", "*")):
+-            wildcard_licenses.append(lic + "+")
 -
- def base_detect_revision(d):
-     path = base_get_scmbasepath(d)
-     return base_get_metadata_git_revision(path, d)
-@@ -42,3 +37,8 @@ def base_get_metadata_git_revision(path, d):
-     except bb.process.ExecutionError:
-         rev = '<unknown>'
-     return rev.strip()
-+
-+METADATA_BRANCH := "${@base_detect_branch(d)}"
-+METADATA_BRANCH[vardepvalue] = "${METADATA_BRANCH}"
-+METADATA_REVISION := "${@base_detect_revision(d)}"
-+METADATA_REVISION[vardepvalue] = "${METADATA_REVISION}"
+     licenses = wildcard_licenses[:]
+     spdxmapkeys = d.getVarFlags('SPDXLICENSEMAP').keys()
+     for wld_lic in wildcard_licenses:
+         spdxflags = fnmatch.filter(spdxmapkeys, wld_lic)
+         licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
++        # Assume if we're passed "GPLv3" or "*GPLv3" it means -or-later as well
++        if not wld_lic.endswith(("-or-later", "-only", "*", "+")):
++            spdxflags = fnmatch.filter(spdxmapkeys, wld_lic + "+")
++            licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
+ 
+     spdx_lics = d.getVar('AVAILABLE_LICENSES').split()
+     for wld_lic in wildcard_licenses:
