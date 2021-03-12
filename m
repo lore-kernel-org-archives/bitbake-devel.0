@@ -1,77 +1,107 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web09.9882.1615562919825513741
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web09.10042.1615563523765070806
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Mar 2021 07:28:40 -0800
+ Fri, 12 Mar 2021 07:38:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hX1kupjw;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f45.google.com with SMTP id x16so2005245wrn.4
-        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Mar 2021 07:28:39 -0800 (PST)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=mPB2xN8G;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sP51AdiVP4FrrxLaGyCRZ+4BTQGweHpreIrWUeYYPKo=;
-        b=hX1kupjwfeA1YJmtdsU2kdBMp8qs8/0ijWX9DR8Cz3z5t/j2XiYs5I6yjdHTUkR3uV
-         ObzqqTlzxBDk7TrUA/1nlPGlYmvBxNz3uZmGuRue3mke+sRbodf7xnoAelpxXD5ErtEo
-         h/QZv4rrXqV8sai5cUJ5LIcXvYOYO+bJfTYlg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sP51AdiVP4FrrxLaGyCRZ+4BTQGweHpreIrWUeYYPKo=;
-        b=gcyBo6qMnD0OmYRbVfVCuX8ldNwQbOf91Ddg+6MnXDahHFSeksCO64qCFnwUO7DzSw
-         BT7/AnIC2IEyRxcP2wev/QdgtqiiaW3rA4W86uFt93TLtlL86EkDSqfzDSnpQPB2/h5p
-         4VHapdXfNoX1IwJM1JqdEu8EdkXo40ewSc3oTfu64CPElRC2KJoAfjEYqUn72vIwHob/
-         dwnWs1lz+Qkcy/gpyfw1EPNRLqPlr5M4hp5zkanMw/ze2mPV487AYas2DKu6N/lDngNx
-         NO0J+s+RfgseRkzKVO94cgMJL7GnqNoLNXuQmfXOdueuG8EgohDTQXY/078b5FfHA+HK
-         Rl2A==
-X-Gm-Message-State: AOAM532YNfLWjGAbUrZZkPEeP+9dCvKr57IO9ngxa8z5NsNDKDDjbdvo
-	pQ+Tbwec9RHEj0ylnyS+4/oft7sa6EgJlg==
-X-Google-Smtp-Source: ABdhPJwcQ7e8HsBKURWk+rgG0ZX0yjc3aYuH7fBvATUFIiY+vRUuwx34K10aS63NpkamtnrwBSK2ww==
-X-Received: by 2002:adf:c101:: with SMTP id r1mr14769225wre.38.1615562918096;
-        Fri, 12 Mar 2021 07:28:38 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:7cc6:73c3:839f:86be])
-        by smtp.gmail.com with ESMTPSA id i3sm8528620wra.66.2021.03.12.07.28.37
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 07:28:37 -0800 (PST)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] tests/color: Fix event register to pass the datastore
-Date: Fri, 12 Mar 2021 15:28:37 +0000
-Message-Id: <20210312152837.2585667-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
+  d=axis.com; q=dns/txt; s=axis-central1; t=1615563524;
+  x=1647099524;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=I+0sa1K+nLhaSuYOdmLvJ+HE5T5fMA7Z7mWn4B4feaI=;
+  b=mPB2xN8GF9y4Zk01UKrW0UTjb0ug6wPTjFl3bVlBXgboYnfJ+Kkoj/DM
+   KQlstaMJQ4x8o5Q4WoEwvtcdvAwGoeSRWlGxXAcfLRcYyEqMwT8H8QQ2T
+   6kg8TEczUlkUSGpES12ALNJqxAdGdTQSIrxFH87Ncp5m9S2Pu0b6U9i3i
+   ANY7+GPC20xEs4G4qy7vW2qc/HDzLW9kZ13+rS4wi7SRpyMBwDrUntjui
+   oNLVfpQLOIBUJ5RrLrGklGzKkPMdSJ6/+W2pOg+gFIFVmV5yHC1ny9xfG
+   hLMylzkNasy77+4mL8+htLd+4sTTR0ge4aFHFJoO+4lsT/wZDyPuh64M/
+   g==;
+From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH 1/2] license.bbclass: Improve parsing time when INCOMPATIBLE_LICENSES is big
+Thread-Topic: [bitbake-devel] [PATCH 1/2] license.bbclass: Improve parsing
+ time when INCOMPATIBLE_LICENSES is big
+Thread-Index: AQHXFyHw864VymBza06ajm8SQDgxkqqAZzsA
+Date: Fri, 12 Mar 2021 15:38:41 +0000
+Message-ID: <406384512ee84c379a3dd5c8746384c6@XBOX03.axis.com>
+References: <20210312032022.7783-1-pkj@axis.com>
+ <32cb4fa991ed76b6cdaf145894af6921b8c9e17e.camel@linuxfoundation.org>
+In-Reply-To: <32cb4fa991ed76b6cdaf145894af6921b8c9e17e.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.0.5.60]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Adding the "if d is None" to the event handling code meant some of
-these tests stopped working. The reason is that len(d) was zero but
-not equal to None.
-
-Passing the data object to the register() function in the test
-correctly registers the event handler and avoids the problem, it
-just happened to work previously, incorrectly.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/tests/color.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/bb/tests/color.py b/lib/bb/tests/color.py
-index bf03750c69..88dd278006 100644
---- a/lib/bb/tests/color.py
-+++ b/lib/bb/tests/color.py
-@@ -31,7 +31,7 @@ class ColorCodeTests(unittest.TestCase):
-     def setUp(self):
-         self.d = bb.data.init()
-         self._progress_watcher = ProgressWatcher()
--        bb.event.register("bb.build.TaskProgress", self._progress_watcher.handle_event)
-+        bb.event.register("bb.build.TaskProgress", self._progress_watcher.handle_event, data=self.d)
- 
-     def tearDown(self):
-         bb.event.remove("bb.build.TaskProgress", None)
--- 
-2.27.0
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmlj
+aGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gU2VudDogZGVuIDEyIG1hcnMgMjAy
+MSAxMDoyOA0KPiBUbzogUGV0ZXIgS2plbGxlcnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhp
+cy5jb20+OyBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4gU3ViamVjdDog
+UmU6IFtiaXRiYWtlLWRldmVsXSBbUEFUQ0ggMS8yXSBsaWNlbnNlLmJiY2xhc3M6IEltcHJvdmUg
+cGFyc2luZyB0aW1lIHdoZW4gSU5DT01QQVRJQkxFX0xJQ0VOU0VTIGlzIGJpZw0KPiANCj4gT24g
+RnJpLCAyMDIxLTAzLTEyIGF0IDA0OjIwICswMTAwLCBQZXRlciBLamVsbGVyc3RlZHQgd3JvdGU6
+DQo+ID4gVGhlIGNvbW1pdCAwOGNiZjE3NDggKGxpY2Vuc2VzOiBVcGRhdGUgSU5DT01QQVRJQkxF
+X0xJQ0VOU0UgZm9yDQo+ID4gJ29yLWxhdGVyJyBoYW5kbGluZykgaW5jcmVhc2VkIHRoZSBwYXJz
+aW5nIHRpbWUgY29uc2lkZXJhYmx5IGlmIHRoZXJlDQo+ID4gYXJlIG1hbnkgbGljZW5zZXMgaW4g
+SU5DT01QQVRJQkxFX0xJQ0VOU0UuIFJlb3JnYW5pemUgdGhlIGNvZGUgdG8gZ2V0DQo+ID4gYWxt
+b3N0IGFsbCB0aGUgdGltZSBiYWNrLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgS2pl
+bGxlcnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb20+DQo+ID4gLS0tDQo+ID4gwqBt
+ZXRhL2NsYXNzZXMvbGljZW5zZS5iYmNsYXNzIHwgOSArKysrLS0tLS0NCj4gPiDCoDEgZmlsZSBj
+aGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0t
+Z2l0IGEvbWV0YS9jbGFzc2VzL2xpY2Vuc2UuYmJjbGFzcyBiL21ldGEvY2xhc3Nlcy9saWNlbnNl
+LmJiY2xhc3MNCj4gPiBpbmRleCBiY2VhMGIzY2I1Li5mNzk3OGUyNjZiIDEwMDY0NA0KPiA+IC0t
+LSBhL21ldGEvY2xhc3Nlcy9saWNlbnNlLmJiY2xhc3MNCj4gPiArKysgYi9tZXRhL2NsYXNzZXMv
+bGljZW5zZS5iYmNsYXNzDQo+ID4gQEAgLTI4MiwxNiArMjgyLDE1IEBAIGRlZiBleHBhbmRfd2ls
+ZGNhcmRfbGljZW5zZXMoZCwgd2lsZGNhcmRfbGljZW5zZXMpOg0KPiA+IMKgwqDCoMKgwqAiIiIN
+Cj4gPiDCoMKgwqDCoMKgaW1wb3J0IGZubWF0Y2gNCj4gPg0KPiA+IC0gICAgIyBBc3N1bWUgaWYg
+d2UncmUgcGFzc2VkICJHUEx2MyIgb3IgIipHUEx2MyIgaXQgbWVhbnMgLW9yLWxhdGVyIGFzIHdl
+bGwNCj4gPiAtICAgIGZvciBsaWMgaW4gd2lsZGNhcmRfbGljZW5zZXNbOl06DQo+ID4gLSAgICAg
+ICAgaWYgbm90IGxpYy5lbmRzd2l0aCgoIi1vci1sYXRlciIsICItb25seSIsICIqIikpOg0KPiA+
+IC0gICAgICAgICAgICB3aWxkY2FyZF9saWNlbnNlcy5hcHBlbmQobGljICsgIisiKQ0KPiA+IC0N
+Cj4gPiDCoMKgwqDCoMKgbGljZW5zZXMgPSB3aWxkY2FyZF9saWNlbnNlc1s6XQ0KPiA+IMKgwqDC
+oMKgwqBzcGR4bWFwa2V5cyA9IGQuZ2V0VmFyRmxhZ3MoJ1NQRFhMSUNFTlNFTUFQJykua2V5cygp
+DQo+ID4gwqDCoMKgwqDCoGZvciB3bGRfbGljIGluIHdpbGRjYXJkX2xpY2Vuc2VzOg0KPiA+IMKg
+wqDCoMKgwqDCoMKgwqDCoHNwZHhmbGFncyA9IGZubWF0Y2guZmlsdGVyKHNwZHhtYXBrZXlzLCB3
+bGRfbGljKQ0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoGxpY2Vuc2VzICs9IFtkLmdldFZhckZsYWco
+J1NQRFhMSUNFTlNFTUFQJywgZmxhZykgZm9yIGZsYWcgaW4gc3BkeGZsYWdzXQ0KPiA+ICsgICAg
+ICAgICMgQXNzdW1lIGlmIHdlJ3JlIHBhc3NlZCAiR1BMdjMiIG9yICIqR1BMdjMiIGl0IG1lYW5z
+IC1vci1sYXRlciBhcyB3ZWxsDQo+ID4gKyAgICAgICAgaWYgbm90IHdsZF9saWMuZW5kc3dpdGgo
+KCItb3ItbGF0ZXIiLCAiLW9ubHkiLCAiKiIsICIrIikpOg0KPiA+ICsgICAgICAgICAgICBzcGR4
+ZmxhZ3MgPSBmbm1hdGNoLmZpbHRlcihzcGR4bWFwa2V5cywgd2xkX2xpYyArICIrIikNCj4gPiAr
+ICAgICAgICAgICAgbGljZW5zZXMgKz0gW2QuZ2V0VmFyRmxhZygnU1BEWExJQ0VOU0VNQVAnLCBm
+bGFnKSBmb3IgZmxhZyBpbiBzcGR4ZmxhZ3NdDQo+ID4NCj4gPiDCoMKgwqDCoMKgc3BkeF9saWNz
+ID0gZC5nZXRWYXIoJ0FWQUlMQUJMRV9MSUNFTlNFUycpLnNwbGl0KCkNCj4gPiDCoMKgwqDCoMKg
+Zm9yIHdsZF9saWMgaW4gd2lsZGNhcmRfbGljZW5zZXM6DQo+IA0KPiBBcyBmYXIgYXMgSSBjYW4g
+dGVsbCwgdGhpcyBjaGFuZ2VzIGJlaGF2aW91ciBzaW5jZSB0aGUgdmFyaWFudHMgYXJlIG5vDQo+
+IGxvbmdlciBhZGRlZCB0byBsaWNlbnNlcyBpbiB0aGlzIHNlY29uZCBsb29wIG92ZXIgd2lsZGNh
+cmRfbGljZW5zZXMuIEkNCj4gdGhpbmsgdGhpcyBtZWFucyB5b3UgZ2V0IHRoZSBsaWNlbmNlcyBt
+YXRjaGluZyBmcm9tIFNQRFhMSUNFTlNFTUFQDQo+IGJ1dCBub3QgdGhlIG1hdGNoaW5nIGxpY2Vu
+c2VzIGZyb20gQVZBSUxBQkxFX0xJQ0VOU0VTPw0KDQpUaGF0IGlzIGNvcnJlY3QuIE15IGFzc3Vt
+cHRpb24gaXMgdGhhdCB0aGVyZSBhcmUgbm8gImZvbysiIGxpY2Vuc2VzIGluIA0KQVZBSUxBQkxF
+X0xJQ0VOU0VTLiBBdCBsZWFzdCB0aGlzIGlzIHRoZSBjYXNlIGZvciBwb2t5IGFuZCBtZXRhLW9w
+ZW5lbWJlZGRlZCwgDQphbmQgSSBkbyBub3Qgc2VlIHdoeSBvbmUgd291bGQgYWRkIHN1Y2ggYSBs
+aWNlbnNlIGZpbGUsIHdoZW4gdGhlICIrIiBpcyANCnVzZWQgdG8gcmVmZXIgdG8gYW5vdGhlciBs
+aWNlbnNlLCB3aGljaCB0eXBpY2FsbHkgbWVhbnMgdGhhdCBldmVuIGlmIHlvdSANCmFkZCBzb21l
+IG90aGVyIGxpY2Vuc2UgdGhhbiB0aGUgYWxyZWFkeSBleGlzdGluZyBHUEwgbGljZW5zZXMgdGhh
+dCBoYXMgYSANCnNpbWlsYXIgIm9yIGxhdGVyIiB1c2UgY2FzZSwgeW91IHdvdWxkIGFkZCBpdCB0
+byB0aGUgU1BEWExJQ0VOU0VNQVAgdG8gDQpub3QgaGF2ZSB0byBkdXBsaWNhdGUgdGhlIGxpY2Vu
+c2UgdGV4dHMuDQoNCkFueXdheXMsIEkgaGF2ZSBub3cgdHJpZWQgYWRkaW5nIGNvZGUgdG8gdGhl
+IHNlY29uZCBsb29wIGFzIHdlbGwgdG8gDQpoYW5kbGUgdGhlICcrJywgYW5kIGl0IGlzIHN0aWxs
+IGJldHRlciB0aGFuIGhhdmluZyBhIHNlcGFyYXRlIGxvb3AgDQpiZWZvcmUgdGhlIHR3byB3ZSBo
+YXZlIG5vdy4NCg0KSGVyZSBhcmUgc29tZSB0aW1pbmdzIGZvciB0aGUgZGlmZmVyZW50IGNhc2Vz
+Og0KDQpEdW5mZWxsL0dhdGVzZ2FydGg6CQkJCQkzOCBzDQpTdXBwb3J0IGZvciAnKycgaW4gdGhl
+IFNQRFhMSUNFTlNFTUFQIGxvb3A6CQkJNDEgcw0KU3VwcG9ydCBmb3IgJysnIGFsc28gaW4gdGhl
+IEFWQUlMQUJMRV9MSUNFTlNFUyBsb29wOgkJNDUgcw0KU2VwYXJhdGUgbG9vcCBiZWZvcmUgdGhl
+IG90aGVyIHR3byAob3JpZ2luYWwgc29sdXRpb24pOgk1NiBzDQoNCihUaGlzIGFzc3VtZXMgdGhl
+IHBhdGNoIHRvIGRlZmluZSBNRVRBREFUQV9SRVZJU0lPTiB1c2luZyBpbW1lZGlhdGUgDQpleHBh
+bnNpb24gaGFzIGFsc28gYmVlbiBhcHBsaWVkLikNCg0KU28sIGJhc2VkIG9uIHRoZSBudW1iZXJz
+IGFib3ZlIGFuZCB0aGUgZXhwZWN0ZWQgbGFjayBvZiBuZWVkIGZvciANCnN1cHBvcnQgaW4gdGhl
+IHNlY29uZCBsb29wLCBJIHdvdWxkIHByZWZlciB0aGUgc29sdXRpb24gYXMgc3VnZ2VzdGVkIA0K
+aW4gdGhpcyBwYXRjaC4NCg0KPiBDaGVlcnMsDQo+IA0KPiBSaWNoYXJkDQoNCi8vUGV0ZXINCg0K
