@@ -1,50 +1,50 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
- by mx.groups.io with SMTP id smtpd.web10.2783.1615662320298606708
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+ by mx.groups.io with SMTP id smtpd.web08.2744.1615662325555120487
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 13 Mar 2021 11:05:20 -0800
+ Sat, 13 Mar 2021 11:05:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=fBK3PIPR;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.51, mailfrom: steve@sakoman.com)
-Received: by mail-ot1-f51.google.com with SMTP id t16so5192692ott.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 13 Mar 2021 11:05:20 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=ayl45mFw;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.50, mailfrom: steve@sakoman.com)
+Received: by mail-ot1-f50.google.com with SMTP id t23-20020a0568301e37b02901b65ab30024so3151212otr.4
+        for <bitbake-devel@lists.openembedded.org>; Sat, 13 Mar 2021 11:05:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=LU6iA9SqJQJLISGECj9GSMR/BmQnLRRrdComnDF9d+E=;
-        b=fBK3PIPRJsT7N0GT11v3GvllaEgSdI1Q77q2vZlaRE6g86vxz0Li3TU+pS05FJWQUf
-         kHalFqEw7u2yDrSZOd5BFFmPB3ODXeWbWt1kDPJ5J1kwST0zt5NbF/XwagP8KIHHz282
-         teS/Z9KkVQRNPt67RtJW2S8PaUiDLxHKIPIw40aKW0EyoUXC7Y3EbQnR2YWwV6oPExGV
-         zLVIwdAMPnMdEXgGb9w8Giq5zgElgaXZ8ebCdZOMFPArnqAgCvow2kTRa5R45L4J0zud
-         TVHDDyy4aiBOg33c8vrQGpJQ3Lma1+mITlis+tdCooZwPA12ZDaFYu3F3qnpcK2T+QyM
-         Znuw==
+        bh=uFIy2SrsHmXovvrZo6ZHBFtZGVFdDsmDNfcxUmeNR+Q=;
+        b=ayl45mFwKzD/mneGzKFoXWjsIHLsbRoKPYWvaKFG4xCwG77ZakwMdcyRCgTBTHhQd4
+         Y0NL1i7czyKMNcTQDv8RjNo6i40HPHnM2uSqXd5VMDHU00L+cy6ZdGKAANvXphgM59Fn
+         tgx1NyEfdycHBuaVUw3KBQYDtFLCUXGG37hTQOe1r4VOu6F4sEJlecpj2buc1hNr22if
+         LJ1Cs/U7pIUpUD+NsMShvDWjKb0aJConMZqlXPXaAXropQ2oXqvd4lNT5Vymgq/NHcrU
+         fv/HG2Bcu9YQvWq1uRgwZ+oUOj9doL8I9m4pMUPL1HnnBP42Nx4ywD+0SXSEFzN74ja0
+         qRsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LU6iA9SqJQJLISGECj9GSMR/BmQnLRRrdComnDF9d+E=;
-        b=CvYQZ7v3tDnV43CMc+ifT34ciWdEfCxXkemz3rZUC4GVwygfO3G9mU82PZQG68FlTN
-         bh1w/X5T7ZnSwNewCyGgwRE6Y6FLFQNdDUjRaeSzWPs1TE/cX+vxyIzlODXz0BupF9RM
-         /tW13CqMNCgaRXfSDAtBSkk1tfwxxPSyQA4QBBNgpQ4oFGs4wK5lvIyYEIj6EJDbXOck
-         c8OI8wrSKO4189b36wZxmyG3oXsfhrOUwhp1h5bpQFS6+jV4F1TahxMtbQr/1CHAfy7N
-         dt13IuqgKNR5q4gdvi++oZxMqgbhYFCTSBPE47C7gmtVcdQhnblG/yXzQK80gVU8p/jb
-         A89Q==
-X-Gm-Message-State: AOAM530OlwWSK2t/lV2lEMTf3adLr1NzNIFtXOR+6O5R35I8kFKpu0GS
-	ttNmj1kT5wiJ7vr6ieYdATfyALrbdbHOlTHb
-X-Google-Smtp-Source: ABdhPJzEoA8gten3sgen32C/fjRNYK8Tx541OAivB+Ojjyx8RhNPccteOgLIr7dzRYIqdXW/SgW5sA==
-X-Received: by 2002:a9d:7f1a:: with SMTP id j26mr7954388otq.244.1615662319206;
-        Sat, 13 Mar 2021 11:05:19 -0800 (PST)
+        bh=uFIy2SrsHmXovvrZo6ZHBFtZGVFdDsmDNfcxUmeNR+Q=;
+        b=YErBU/SLDS/reYFiTwiSZngbYsQKleEoGebDoWcKenSbf2KxQ+cGdVZ4CpzsHOtBNb
+         +97wLEnekAkNad79s5ahqjTVNgmdgg8h5yWHyn3SCtWxu6L1MzB8MjmENo9SPay+8Mui
+         zC90iIdH6s608nVcJTbEJuC867QHigzKs+ohlLh/zL98YN4i6khJ8cMYUynBecgw9wK2
+         GCF1QpN0jI6Wu1TulqwzM/+npQjsffnOVVrmVv1GRVn5WiZZEnM5iezg825DWfZG74Q4
+         jmueAjIbdL9OO1MJN0Cn+FXa/hTcGu8f29lPrQwq5FFhgaNLdQj+rmZkkGtUAJvDC149
+         bRZw==
+X-Gm-Message-State: AOAM532lPvMuqQxnzVbV/dpXUGV7vcOqt4PacEx6yo0EHA8z5kjeIdPs
+	3fd2j9Sp0GCcuL+ntGt7hmabs4+Wv7gewHvn
+X-Google-Smtp-Source: ABdhPJzkOg+O7GPXK7I7hzvb2B5lv4thu1/xNTacniRWm6Qu99rCrmuXwvtKBZhbxCEg2U1uxxLa7A==
+X-Received: by 2002:a05:6830:1ad1:: with SMTP id r17mr7992546otc.171.1615662324440;
+        Sat, 13 Mar 2021 11:05:24 -0800 (PST)
 Return-Path: <steve@sakoman.com>
 Received: from localhost.localdomain ([72.173.249.164])
-        by smtp.gmail.com with ESMTPSA id o63sm4056160ota.6.2021.03.13.11.05.15
+        by smtp.gmail.com with ESMTPSA id o63sm4056160ota.6.2021.03.13.11.05.21
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Mar 2021 11:05:18 -0800 (PST)
+        Sat, 13 Mar 2021 11:05:24 -0800 (PST)
 From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 1/2] runqueue: Fix task execution corruption issue
-Date: Sat, 13 Mar 2021 09:04:51 -1000
-Message-Id: <cd74cd9b9131cbc2d0271de385834b2ef0c6c473.1615662134.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 2/2] runqueue: Add setscene task overlap sanity check
+Date: Sat, 13 Mar 2021 09:04:52 -1000
+Message-Id: <7c88ab063fc7a06da482c2cddb91507ced244d3b.1615662134.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1615662134.git.steve@sakoman.com>
 References: <cover.1615662134.git.steve@sakoman.com>
@@ -53,47 +53,32 @@ Content-Transfer-Encoding: 8bit
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-We've seen occasional issues where linux-yocto:do_compile_kernelmodules would
-run without do_shared_workdir running before it. do_shared_workdir is an
-setscene task but never has an sstate object generated so it will always
-rerun. This should not happen since compile_kernemodules should only
-execute if a setscene that depends on it didn't run and that should trigger
-do_shared_workdir not to be marked as covered.
-
-The issue is that build-appliance-image:do_package is one of the tasks which
-covers linux-yocto:do_compile_kernelmodules but it is also a noexec task
-and has a dependecy on pseudo-native:do_populate_sysroot.
-
-In the problem case, pseudo-native:do_populate_sysroot is unavailable but
-marked as covered since it is noexec. The "harddeps" code then also marks it
-as notcovered. No task should ever be both covered and notcovered and this
-is where the problems come from.
-
-The solution is for the harddeps code only to to fail tasks if they've not
-already been handled in some way. The code is assuming code couldn't have
-handled revdeps at this point but we now have clear evidence they can.
+We've seen hard to debug issues where a task ends up in both the
+covered and notcovered list. Add a sanity check to ensure if this
+happens in future, we see it in the logs.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit f66556bbb38449789ceea2fd105e9f68df7fb660)
+(cherry picked from commit 6e001410854792f9bb66a0409a2ac176171b0507)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/runqueue.py | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/bb/runqueue.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 30cab537..6186a83f 100644
+index 6186a83f..2bb97b6e 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -2421,6 +2421,9 @@ class RunQueueExecute:
+@@ -1934,6 +1934,10 @@ class RunQueueExecute:
+             logger.error("Scenequeue had holdoff tasks: %s" % pprint.pformat(self.holdoff_tasks))
+             err = True
  
-         for dep in sorted(self.sqdata.sq_deps[task]):
-             if fail and task in self.sqdata.sq_harddeps and dep in self.sqdata.sq_harddeps[task]:
-+                if dep in self.scenequeue_covered or dep in self.scenequeue_notcovered:
-+                    # dependency could be already processed, e.g. noexec setscene task
-+                    continue
-                 logger.debug(2, "%s was unavailable and is a hard dependency of %s so skipping" % (task, dep))
-                 self.sq_task_failoutright(dep)
-                 continue
++        for tid in self.scenequeue_covered.intersection(self.scenequeue_notcovered):
++            # No task should end up in both covered and uncovered, that is a bug.
++            logger.error("Setscene task %s in both covered and notcovered." % tid)
++
+         for tid in self.rqdata.runq_setscene_tids:
+             if tid not in self.scenequeue_covered and tid not in self.scenequeue_notcovered:
+                 err = True
 -- 
 2.25.1
 
