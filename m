@@ -1,124 +1,95 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web12.3137.1615663114747346311
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+ by mx.groups.io with SMTP id smtpd.web12.8250.1615739431773177432
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 13 Mar 2021 11:18:35 -0800
+ Sun, 14 Mar 2021 09:30:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=ZHTUowoB;
- spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f45.google.com with SMTP id j4-20020a05600c4104b029010c62bc1e20so17106816wmi.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 13 Mar 2021 11:18:34 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Sed0VDpH;
+ spf=pass (domain: gmail.com, ip: 209.85.167.53, mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-lf1-f53.google.com with SMTP id r3so44984081lfc.13
+        for <bitbake-devel@lists.openembedded.org>; Sun, 14 Mar 2021 09:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qQLxTzoCcGQzJr2swH4IP9BoKLPvu5vy4Xy/t9Gv9Tc=;
-        b=ZHTUowoB5S7mapcFIFAzzqYLWUOkX+7JI5l/+No230hs51EiQbVXI51I0TDkZjaC8c
-         Fm5JHH9B96hb8kuYMlNCAIG3NK+/wnaTX70z143bKxm8dyvgeE9Ro7zCCLGUJl5rjhPN
-         TCDE9Hi9PO2RN8EPojWpWTP/utqeC+5HEvlAR1uNiMtbOrjoradSsGUNkto2IDfNJmae
-         DqcYG+o+LWXMfbd+aP4FipeTng047iTKnVuM2FA9HHbeYnNZ3vw/eik2QKE0pHOVhf8r
-         KcG4UYcgJOoPBPDU5048vWpele9suEb4oPYjMBaGHjlxc5S6S+ZcHsTD98ZSBuPCBCxw
-         LzuA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lECFJUOYSgTuf8FtixVaTESMz77rTgShN3tI1+eK1TI=;
+        b=Sed0VDpHSUdp+9Bd43rIzMLBP9WBiH0sAO1hgKObE4KdUwl3pVoS99RyH7aWBB3bN2
+         PS1HjRaXZGJsxG2PC4A5vqBLfwRT8/oNJDp25XjxgcNlChJOcOdWYfW2fKzjl1G20g6Y
+         9QWE2BPmmyVRs2hgv3xh3jIVwWJL7JcDGFROJ2zo59ewdl6ggJMOZWf3KIzSEDt0hjjG
+         fgl6Q0bciem3Bngw6gM+y6dhllkHRWEJVPuHSZy5ap8S4O0kuWBpwOWWjdL24WIuueHb
+         uO+76O2dHN+6IXRgSNVIYXojpQN3c/o753TQcJpRFGumolzp0ZIb+1B5S84RILLMUf3u
+         Z9og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qQLxTzoCcGQzJr2swH4IP9BoKLPvu5vy4Xy/t9Gv9Tc=;
-        b=VmyXQLgdPIMeC17h2FWkAVHpifJvVY3Nsgk/WudTfoKSGoMTSFvmWBic1gQCWWoYrf
-         7f/SXZ6FG1GvuuaoDyyyV7NxkfyUR6LWHujisvuYCZzdpGSKF6MbOsgm5fS/256O3H9l
-         NcNSFLIdXbvfy4ho7VOghub66Glo8rj+OlGn/zigETE9mvCBJqkRoeSGcSAgj528YCOJ
-         yXbIV4g03L2Snrk5qht9QY5yNey8YIeEHhKYypNAS+Em+mlZOzQWl5KhdXmtBsUxDA5v
-         /U66Gc5eD6XkqkZrTFGWg2NJWUDHqRQ+RoS50WiTbswW18TrIFCaCz5laYvoxez2191L
-         gQ9Q==
-X-Gm-Message-State: AOAM5318AzM24x3gyFyZL84u9duZa+jI9PRkJXA6UFQQMEdZSJ16DOKb
-	cpb+dJHpVUYBORBMqp7x4KI=
-X-Google-Smtp-Source: ABdhPJyguS7KYCaKj2QIrzR08ekUtT9CzbwFCjTOoRkkvcbo6xXYtuYuEfT97vciHSOG7ZHQHKDaJQ==
-X-Received: by 2002:a05:600c:2d42:: with SMTP id a2mr19124066wmg.77.1615663113125;
-        Sat, 13 Mar 2021 11:18:33 -0800 (PST)
-Return-Path: <martin.jansa@gmail.com>
-Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
-        by smtp.gmail.com with ESMTPSA id f14sm7344991wmf.7.2021.03.13.11.18.32
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lECFJUOYSgTuf8FtixVaTESMz77rTgShN3tI1+eK1TI=;
+        b=AjLuV4JxAwcM6dP15Oi32K8+h48ciwgm/fpWUH+nzsHxu1xrk8odL6eIV3/TEfU71k
+         /jOWXnJQKJilrA1HliVAzdt9mRwUNVqMFMcHbqpYJr6T0oWBrXJ0n09xnBJufV2MyVQm
+         4LMl7SiGnPZRquhVvVR1ZPitYdO1znMCVBpybp63pXh0YJNNo4leejByKJ9ln2kJ35tn
+         OzfWdsPapKrHBOTk3OFBYIQCW2DFGZgBiCTJ8NMbvFdiGdeUoOqUy1sBbT8TbVgZdIhh
+         LbnGY86RY1tlwEHO/LohVI9mzX2CoTn9cwbJepbn4MdvGmdmmNXpl5dkuz08jsWMNzkU
+         efZQ==
+X-Gm-Message-State: AOAM5323qvUpKWw2Vs1N8E8JlPV0nmhbHjZM+WFPcyKUFEyxu50guzwS
+	UgeMNkPnjq+5JAohv6iMuGdUbDMFFtGlSA==
+X-Google-Smtp-Source: ABdhPJytWLExQ2tG8sv5h1CHmGH/fxQZd7Dpkf1422CcbvitnJ5gYyLmtbP4fsDC1wYCpjEqU3jXaw==
+X-Received: by 2002:ac2:5973:: with SMTP id h19mr5386636lfp.120.1615739429503;
+        Sun, 14 Mar 2021 09:30:29 -0700 (PDT)
+Return-Path: <tomasz.dziendzielski@gmail.com>
+Received: from localhost.localdomain (h124200.man.tk-internet.pl. [93.175.124.200])
+        by smtp.gmail.com with ESMTPSA id d8sm2406459lfm.160.2021.03.14.09.30.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Mar 2021 11:18:32 -0800 (PST)
-From: "Martin Jansa" <Martin.Jansa@gmail.com>
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
-Date: Sat, 13 Mar 2021 20:18:31 +0100
-To: Steve Sakoman <steve@sakoman.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [bitbake][dunfell][1.46][PATCH 0/2] Patch review
-Message-ID: <20210313191831.zii2a432aws6y6lq@jama>
-References: <cover.1615662134.git.steve@sakoman.com>
+        Sun, 14 Mar 2021 09:30:29 -0700 (PDT)
+From: "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: JPEWhacker@gmail.com,
+	Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Subject: [PATCH] codeparser: Fix TypeError in bitbake debug mode
+Date: Sun, 14 Mar 2021 17:33:13 +0100
+Message-Id: <20210314163313.9983-1-tomasz.dziendzielski@gmail.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <cover.1615662134.git.steve@sakoman.com>
-X-Groupsio-MsgNum: 12105
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xjmorhtmqsc5cp2j"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
---xjmorhtmqsc5cp2j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit 75f87db413 fixed the confusion between bitbake and python logger
+but in codeparser still old method of setting debug level was used
+causing TypeError, because debug level value was incorrectly returned
+and assigned to event.msg.
+| File "./bitbake/lib/bb/ui/knotty.py", line 660, in main
+|   event.msg = event.fn + ': ' + event.msg
+| TypeError: can only concatenate str (not "int") to str
 
-On Sat, Mar 13, 2021 at 09:04:50AM -1000, Steve Sakoman wrote:
-> Please review this next set of patches for dunfell/1.46 and have comments=
- back
-> by end of day Tuesday.
->=20
-> Passed a-full on autobuilder:
->=20
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/1962
->=20
-> The following changes since commit e0dd20a006ce6fdc656e6be6ac581e93e2ed4a=
-95:
->=20
->   __init__.py: Fix bitbake debug log handling (2021-03-09 00:03:26 +0000)
->=20
-> are available in the Git repository at:
->=20
->   git://git.openembedded.org/bitbake-contrib stable/1.46-nut
->   http://cgit.openembedded.org/bitbake-contrib/log/?h=3Dstable/1.46-nut
->=20
-> Richard Purdie (2):
->   runqueue: Fix task execution corruption issue
->   runqueue: Add setscene task overlap sanity check
->=20
->  lib/bb/runqueue.py | 7 +++++++
->  1 file changed, 7 insertions(+)
+[YOCTO #14298]
 
-Following fix from master might be useful for 1.46 and 1.48 as well.
+Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+---
+ lib/bb/codeparser.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-The bebef58b21bdff7a3ee1fa2449b7df19144f26fd mentioned in commit message wa=
-s introduced in 1.40 and I've included this
-change to all my builds since it was sent to ML and haven't seen any issues=
- caused by that (but cannot confirm that
-it _completely_ resolve the hangs I was seeing after parsing issues).
+diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
+index 25a7ac69..0cec452c 100644
+--- a/lib/bb/codeparser.py
++++ b/lib/bb/codeparser.py
+@@ -212,9 +212,9 @@ class PythonParser():
+             funcstr = codegen.to_source(func)
+             argstr = codegen.to_source(arg)
+         except TypeError:
+-            self.log.debug(2, 'Failed to convert function and argument to source form')
++            self.log.debug2('Failed to convert function and argument to source form')
+         else:
+-            self.log.debug(1, self.unhandled_message % (funcstr, argstr))
++            self.log.debug(self.unhandled_message % (funcstr, argstr))
+ 
+     def visit_Call(self, node):
+         name = self.called_node_name(node.func)
+@@ -450,7 +450,7 @@ class ShellParser():
+ 
+                 cmd = word[1]
+                 if cmd.startswith("$"):
+-                    self.log.debug(1, self.unhandled_template % cmd)
++                    self.log.debug(self.unhandled_template % cmd)
+                 elif cmd == "eval":
+                     command = " ".join(word for _, word in words[1:])
+                     self._parse_shell(command)
+-- 
+2.30.2
 
-commit 915330e1dbae1ee8fd9a0358decf2c294f771961
-Author: Jan Brzezanski <jan.brzezanski@gmail.com>
-Date:   Thu Feb 18 17:53:32 2021 +0100
-
-    Force parser shutdown after catching an exception
-
-    Commit bebef58b21bdff7a3ee1fa2449b7df19144f26fd introduced forcing
-    parser shutdown as default in case of build abort.
-
-    In this case bitbake sometimes hangs after facing error during parsing,
-    waiting for child processes to finish. Killing it then will spawn zombie
-    processes.
-
-    Thus we force the shutdown after catching an exception.
-
-    Signed-off-by: Jan Brzezanski <jan.brzezanski@gmail.com>
-    Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
---xjmorhtmqsc5cp2j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRU+ejDffEzV2Je2oc3VSO3ZXaAHAUCYE0QBQAKCRA3VSO3ZXaA
-HLdUAKCTG5O3HVaXuch1GGTK6TdAm8kYvACfZ/+FVybaETRWa+ikEgy4Kf/3rqg=
-=bMhj
------END PGP SIGNATURE-----
-
---xjmorhtmqsc5cp2j--
