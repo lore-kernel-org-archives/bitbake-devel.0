@@ -1,20 +1,20 @@
 Received: from cpanel8.indieserve.net (cpanel8.indieserve.net [199.212.143.3])
- by mx.groups.io with SMTP id smtpd.web12.4248.1615975817653921188
+ by mx.groups.io with SMTP id smtpd.web11.4505.1615977290249163074
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 17 Mar 2021 03:10:17 -0700
+ Wed, 17 Mar 2021 03:34:50 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: crashcourse.ca, ip: 199.212.143.3, mailfrom: rpjday@crashcourse.ca)
-Received: from bras-base-otwaon0916w-grc-29-64-229-255-220.dsl.bell.ca ([64.229.255.220]:47052 helo=fedora)
+Received: from cpeac202e043973-cmac202e043970.sdns.net.rogers.com ([174.114.107.13]:47116 helo=fedora)
 	by cpanel8.indieserve.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94)
 	(envelope-from <rpjday@crashcourse.ca>)
-	id 1lMT83-003IxP-UI
-	for bitbake-devel@lists.openembedded.org; Wed, 17 Mar 2021 06:10:16 -0400
-Date: Wed, 17 Mar 2021 06:10:14 -0400 (EDT)
+	id 1lMTVo-003Ngo-FD
+	for bitbake-devel@lists.openembedded.org; Wed, 17 Mar 2021 06:34:49 -0400
+Date: Wed, 17 Mar 2021 06:34:46 -0400 (EDT)
 From: "Robert P. J. Day" <rpjday@crashcourse.ca>
 To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH] doc: Ch 1, render options in monospaced for clarity
-Message-ID: <9c8573c-16cd-d88e-ccce-3a93749a2e1@crashcourse.ca>
+Subject: [PATCH] doc: Mention OE routine for setting BB_NUMBER_THREADS
+Message-ID: <9914cbb9-eb88-c215-4fec-185762583ed@crashcourse.ca>
 MIME-Version: 1.0
 X-OutGoing-Spam-Status: No, score=-0.2
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -29,53 +29,31 @@ X-Source-Args:
 X-Source-Dir: 
 Content-Type: text/plain; charset=US-ASCII
 
-
-Options are more visually obvious when rendered as monospaced.
+Given the discussion of BB_NUMBER_THREADS, what it means and how to
+set it, it seems only fair to mention that it's probably already set.
 
 Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
 
 ---
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-index 6f9d3929..f850c166 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-@@ -479,7 +479,7 @@ The following command runs the clean task on the ``foo.bb`` recipe file: ::
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
+index d74e768f..a2003997 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
+@@ -45,6 +45,13 @@ the BitBake command and its options, see ":ref:`The BitBake Command
+    A possibly simpler solution is that some Linux distributions (e.g.
+    Debian and Ubuntu) provide the ``ncpus`` command.
 
- .. note::
++   If you're using a relatively recent version of Poky or Openembedded,
++   the provided ``bitbake.conf`` file already comes with a call to an OE
++   utility routine that does this calculation for you::
++
++     # Default to setting automatically based on cpu count
++     BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
++
+ Parsing the Base Configuration Metadata
+ =======================================
 
--   The "-b" option explicitly does not handle recipe dependencies. Other
-+   The ``-b`` option explicitly does not handle recipe dependencies. Other
-    than for debugging purposes, it is instead recommended that you use
-    the syntax presented in the next section.
-
-@@ -494,7 +494,7 @@ dependencies, both for build-time and runtime. There must be a way for
- you to express recipe preferences when multiple recipes provide the same
- functionality, or when there are multiple versions of a recipe.
-
--The ``bitbake`` command, when not using "--buildfile" or "-b" only
-+The ``bitbake`` command, when not using ``--buildfile`` or ``-b`` only
- accepts a "PROVIDES". You cannot provide anything else. By default, a
- recipe file generally "PROVIDES" its "packagename" as shown in the
- following example: ::
-@@ -502,7 +502,7 @@ following example: ::
-   $ bitbake foo
-
- This next example "PROVIDES" the
--package name and also uses the "-c" option to tell BitBake to just
-+package name and also uses the ``-c`` option to tell BitBake to just
- execute the ``do_clean`` task: ::
-
-   $ bitbake -c clean foo
-@@ -534,7 +534,7 @@ current working directory:
- -  ``pn-buildlist``: Shows a simple list of targets that are to be
-    built.
-
--To stop depending on common depends, use the "-I" depend option and
-+To stop depending on common depends, use the ``-I`` depend option and
- BitBake omits them from the graph. Leaving this information out can
- produce more readable graphs. This way, you can remove from the graph
- ``DEPENDS`` from inherited classes such as ``base.bbclass``.
 
 -- 
 
