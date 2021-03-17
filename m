@@ -1,70 +1,87 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
- by mx.groups.io with SMTP id smtpd.web09.42.1615937702580153642
+Received: from cpanel8.indieserve.net (cpanel8.indieserve.net [199.212.143.3])
+ by mx.groups.io with SMTP id smtpd.web12.4248.1615975817653921188
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 16 Mar 2021 16:35:02 -0700
+ Wed, 17 Mar 2021 03:10:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=Cyl3wKbm;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.172, mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f172.google.com with SMTP id c16so17726999ply.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 16 Mar 2021 16:35:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6ZvpWkGdHx+YPc3gwiWdW5qUZ40g2zylMgPjgnC2xAM=;
-        b=Cyl3wKbmMD/w+dEpMKhv/t64oBbYC/PxEH4cQx8YFhvIBsRQZfiO/MgAscmDDwKA0v
-         vZt5OnlR0xVYucN2z3yyywkBEcH6mnCMlN/KaDC42Fw0/W114DvG4MA3h6QQTsQok39z
-         VG+SjqvM0P0h+GMpdH8uKTWjSUxbCA8cRjGeNluyz0w15WQStPAa3LcWvL6LUukOg0lP
-         DQM8+KCXyez8yiAv17U2mquU5aEAea21CkxWcv3n07gQn5c4cSTc9EMka6skoj7o7RjW
-         FEpwZQYFh2FvI+TDn8eeiw6ZYhguWmqvyMlX91rjFGGwe6tn5HxHf21PrhjUBLhzc6Df
-         vVcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6ZvpWkGdHx+YPc3gwiWdW5qUZ40g2zylMgPjgnC2xAM=;
-        b=iop4X1JwtC3Un6Dtv/lth8fZPPWTrLvbkDuPmkDq4QhCtTVLe1ls88f7T6+afEvgvM
-         3paPi3DqYYhnPtw0dG/HjkV3krCIjX2HXPKLO4FUbUcULFyOHu/kZuSyAuQRg5ru7gmU
-         7/lzR2IN0fhLkzV2Bf7vKN0s37o9STzuBLnk35B6XBBY60KPy2o+L1Q9TY+KbIcvGQHU
-         TyCBUfYjXsIHy1XGxJU1gM6Cw7Qtxy7KPLv7gH2xGhNTkzM8Ogyh6RicX+v4VANn7jKA
-         NCGU71kM0xt95w+zIWPHyiBCFgAdPLtLNeKu7M+nKjIwgelKvCWRi3eOqfjA5Bc+RFeR
-         VH7w==
-X-Gm-Message-State: AOAM533EiXrL5UoLQ/6PetTXEsG7lKhesy9hZbwvceEOp6eP4dg4YSlN
-	6RuXM2bafPG2Awx6Wy8cUu4zhZn6Ev0Aphms
-X-Google-Smtp-Source: ABdhPJw6oejsnHvRXJQbjeD1WRqgGyt6UzIDwUhRbeAVDklVg3JbWjIIJnhUAUuD/XnwxW1BJb2YoA==
-X-Received: by 2002:a17:90a:2c09:: with SMTP id m9mr1469298pjd.3.1615937701585;
-        Tue, 16 Mar 2021 16:35:01 -0700 (PDT)
-Return-Path: <steve@sakoman.com>
-Received: from localhost.localdomain ([72.173.249.164])
-        by smtp.gmail.com with ESMTPSA id c12sm18766610pfp.17.2021.03.16.16.34.58
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Mar 2021 16:35:01 -0700 (PDT)
-From: "Steve Sakoman" <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 0/2] Pull request (cover letter only)
-Date: Tue, 16 Mar 2021 13:34:40 -1000
-Message-Id: <cover.1615937623.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=missing; spf=pass (domain: crashcourse.ca, ip: 199.212.143.3, mailfrom: rpjday@crashcourse.ca)
+Received: from bras-base-otwaon0916w-grc-29-64-229-255-220.dsl.bell.ca ([64.229.255.220]:47052 helo=fedora)
+	by cpanel8.indieserve.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94)
+	(envelope-from <rpjday@crashcourse.ca>)
+	id 1lMT83-003IxP-UI
+	for bitbake-devel@lists.openembedded.org; Wed, 17 Mar 2021 06:10:16 -0400
+Date: Wed, 17 Mar 2021 06:10:14 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] doc: Ch 1, render options in monospaced for clarity
+Message-ID: <9c8573c-16cd-d88e-ccce-3a93749a2e1@crashcourse.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OutGoing-Spam-Status: No, score=-0.2
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel8.indieserve.net
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Get-Message-Sender-Via: cpanel8.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: cpanel8.indieserve.net: rpjday@crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Content-Type: text/plain; charset=US-ASCII
 
-The following changes since commit e0dd20a006ce6fdc656e6be6ac581e93e2ed4a95:
 
-  __init__.py: Fix bitbake debug log handling (2021-03-09 00:03:26 +0000)
+Options are more visually obvious when rendered as monospaced.
 
-are available in the Git repository at:
+Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
 
-  git://git.openembedded.org/bitbake-contrib stable/1.46-next
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-next
+---
 
-Richard Purdie (2):
-  runqueue: Fix task execution corruption issue
-  runqueue: Add setscene task overlap sanity check
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+index 6f9d3929..f850c166 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+@@ -479,7 +479,7 @@ The following command runs the clean task on the ``foo.bb`` recipe file: ::
 
- lib/bb/runqueue.py | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .. note::
+
+-   The "-b" option explicitly does not handle recipe dependencies. Other
++   The ``-b`` option explicitly does not handle recipe dependencies. Other
+    than for debugging purposes, it is instead recommended that you use
+    the syntax presented in the next section.
+
+@@ -494,7 +494,7 @@ dependencies, both for build-time and runtime. There must be a way for
+ you to express recipe preferences when multiple recipes provide the same
+ functionality, or when there are multiple versions of a recipe.
+
+-The ``bitbake`` command, when not using "--buildfile" or "-b" only
++The ``bitbake`` command, when not using ``--buildfile`` or ``-b`` only
+ accepts a "PROVIDES". You cannot provide anything else. By default, a
+ recipe file generally "PROVIDES" its "packagename" as shown in the
+ following example: ::
+@@ -502,7 +502,7 @@ following example: ::
+   $ bitbake foo
+
+ This next example "PROVIDES" the
+-package name and also uses the "-c" option to tell BitBake to just
++package name and also uses the ``-c`` option to tell BitBake to just
+ execute the ``do_clean`` task: ::
+
+   $ bitbake -c clean foo
+@@ -534,7 +534,7 @@ current working directory:
+ -  ``pn-buildlist``: Shows a simple list of targets that are to be
+    built.
+
+-To stop depending on common depends, use the "-I" depend option and
++To stop depending on common depends, use the ``-I`` depend option and
+ BitBake omits them from the graph. Leaving this information out can
+ produce more readable graphs. This way, you can remove from the graph
+ ``DEPENDS`` from inherited classes such as ``base.bbclass``.
 
 -- 
-2.25.1
 
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                         http://crashcourse.ca
+
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
