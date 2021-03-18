@@ -1,66 +1,57 @@
-Received: from cpanel8.indieserve.net (cpanel8.indieserve.net [199.212.143.3])
- by mx.groups.io with SMTP id smtpd.web10.328.1616014463407926914
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web09.841.1616100021374018433
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 17 Mar 2021 13:54:23 -0700
+ Thu, 18 Mar 2021 13:40:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: crashcourse.ca, ip: 199.212.143.3, mailfrom: rpjday@crashcourse.ca)
-Received: from cpef81d0f814063-cmf81d0f814060.cpe.net.cable.rogers.com ([174.114.57.56]:36174 helo=fedora)
-	by cpanel8.indieserve.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1lMdBN-005S1U-Qb
-	for bitbake-devel@lists.openembedded.org; Wed, 17 Mar 2021 16:54:22 -0400
-Date: Wed, 17 Mar 2021 16:54:18 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH v2] doc: Mention OE routine for setting BB_NUMBER_THREADS
-Message-ID: <64a44bc8-9a3b-7b6d-c6e5-9f3724868@crashcourse.ca>
-MIME-Version: 1.0
-X-OutGoing-Spam-Status: No, score=-0.2
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel8.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel8.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel8.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Content-Type: text/plain; charset=US-ASCII
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 8B03840BE9
+	for <bitbake-devel@lists.openembedded.org>; Thu, 18 Mar 2021 20:40:19 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id apjn3P2q0G38 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 18 Mar 2021 20:40:19 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 7D3F840A47
+	for <bitbake-devel@lists.openembedded.org>; Thu, 18 Mar 2021 20:40:19 +0000 (UTC)
+Received: from gimli.denix (unknown [192.168.30.6])
+	by mail.denix.org (Postfix) with ESMTP id BFE6517454E;
+	Thu, 18 Mar 2021 16:40:18 -0400 (EDT)
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: bitbake-devel@lists.openembedded.org
+Cc: Denys Dmytriyenko <denis@denix.org>
+Subject: [PATCH] fetch2/git: make sure clonedir is empty when trying next fullmirror
+Date: Thu, 18 Mar 2021 16:39:59 -0400
+Message-Id: <1616099999-47367-1-git-send-email-denis@denix.org>
+X-Mailer: git-send-email 2.7.4
 
-Given the discussion of BB_NUMBER_THREADS, what it means and how to
-set it, it seems only fair to mention that it's probably already set.
+When first mirror returns an outdated fullmirror tarball, its clonedir stays
+behind for successive mirror tries. Even when latest tarball gets fetched
+next, it doesn't get unpacked, as clonedir already exists. Cleanup old
+clonedir and unpack the new fullmirror tarball, when the old clonedir is
+no good and requires update.
 
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
-
+Signed-off-by: Denys Dmytriyenko <denis@denix.org>
 ---
+ lib/bb/fetch2/git.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-index d74e768f..ac8a57e1 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-@@ -45,6 +45,14 @@ the BitBake command and its options, see ":ref:`The BitBake Command
-    A possibly simpler solution is that some Linux distributions (e.g.
-    Debian and Ubuntu) provide the ``ncpus`` command.
-
-+   If you're using a relatively recent version of OpenEmbedded, the
-+   provided ``bitbake.conf`` file already comes with a call to an
-+   OE utility that does this calculation for you so you don't need
-+   to worry about it::
-+
-+     # Default to setting automatically based on cpu count
-+     BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
-+
- Parsing the Base Configuration Metadata
- =======================================
-
-
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index e3ba80a..cb62dcc 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -337,7 +337,8 @@ class Git(FetchMethod):
+         if ud.shallow and os.path.exists(ud.fullshallow) and self.need_update(ud, d):
+             ud.localpath = ud.fullshallow
+             return
+-        elif os.path.exists(ud.fullmirror) and not os.path.exists(ud.clonedir):
++        elif os.path.exists(ud.fullmirror) and (not os.path.exists(ud.clonedir) or self.clonedir_need_update(ud, d)):
++            bb.utils.remove(ud.clonedir, recurse=True)
+             bb.utils.mkdirhier(ud.clonedir)
+             runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir)
+ 
 -- 
+2.7.4
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                         http://crashcourse.ca
-
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
