@@ -1,80 +1,152 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web08.897.1616176927993503179
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web09.930.1616287136395713829
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 19 Mar 2021 11:02:08 -0700
+ Sat, 20 Mar 2021 17:38:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dBy653pQ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f45.google.com with SMTP id k8so9977218wrc.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 19 Mar 2021 11:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=klHFPKJBrzo+FgJyLTLXw4IodFNQTsfa+Vk2Q6TNygE=;
-        b=dBy653pQlmzjw1FWCOmMEuFo8mh22Ei5HDkMZx+po88WhnJPW4fvde6mLX9VjBKd2F
-         ZIKVfmRiV6UzHgcRB2J/xn3Kp4FjOjUUpNojAG+HvaJmqkzfbYV17uMiIruJBG5EO9+6
-         NotpqcXGyOR2B/f96TpqtvquRswM+62nkXmlY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=klHFPKJBrzo+FgJyLTLXw4IodFNQTsfa+Vk2Q6TNygE=;
-        b=mboU2aHD0rMcFIPR7oYNbtldiWSj+n6AdwXLuC3kCcYQEHyDfeTmOdY1qixoSSmx4P
-         41ta+Paw+DyI2hxfTBARVpf0v8IQtm/hry/y48wk9Noa/9sKtl9badPXguThTbwdHxKl
-         R7s1GSZDVVlaw940ZONMfIxuR0+571QulCw8g2lYCJoqzDWHzM5yD3CzqqLGff7m+n0/
-         Ta+hz+GGFAf56FRtzCbzEQEyZ6GIGtCcYNa+uzF424g6QwtXUxvWlz1Viq5msCrOD2Yp
-         BXdV58jp6SxnzmO42oYFwpbl4Zv8bUNGJqEcQXeYaoH+LOOzvT4bXKgtk0Zv1oKnG0wl
-         96+Q==
-X-Gm-Message-State: AOAM532IATfKBYoAx7PC7bKeEddAKJ/F5Rl2kHk2X1wuAYZ2eqzeftNF
-	OkXsHnSlu2YMTU4cIC6hg1LJJbs/A/L+eg==
-X-Google-Smtp-Source: ABdhPJyipdeOsR06PyytFDJNRDg/SWQhA6I+gV+24eSOMYY6J4NUA/BRTKG46BtYws3aNQDt8nExgw==
-X-Received: by 2002:a5d:628c:: with SMTP id k12mr5706199wru.316.1616176926388;
-        Fri, 19 Mar 2021 11:02:06 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:5808:8e52:d330:3893? ([2001:8b0:aba:5f3c:5808:8e52:d330:3893])
-        by smtp.gmail.com with ESMTPSA id 9sm7251700wmf.13.2021.03.19.11.02.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Mar 2021 11:02:05 -0700 (PDT)
-Message-ID: <60ba2039bd9e47638e9bd5d467a4ee151a4b5a9d.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/2] build: Add file_stale_stamps function
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Fri, 19 Mar 2021 18:02:05 +0000
-In-Reply-To: <6398f1e1-5ac-e659-a468-9fa73fdbdd66@crashcourse.ca>
-References: <20210319173012.229109-1-richard.purdie@linuxfoundation.org>
-	 <6398f1e1-5ac-e659-a468-9fa73fdbdd66@crashcourse.ca>
-User-Agent: Evolution 3.39.2-1 
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 0C4D340BEC;
+	Sun, 21 Mar 2021 00:38:55 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 5FgKA2oAjCzr; Sun, 21 Mar 2021 00:38:54 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id D05AA40BA8;
+	Sun, 21 Mar 2021 00:38:52 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 396BF174557; Sat, 20 Mar 2021 20:38:52 -0400 (EDT)
+Date: Sat, 20 Mar 2021 20:38:52 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: Christopher Larson <kergoth@gmail.com>,
+	bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH] fetch2/git: make sure clonedir is empty when trying next fullmirror
+Message-ID: <20210321003852.GG18041@denix.org>
+References: <1616099999-47367-1-git-send-email-denis@denix.org>
+ <336663df14ccfcaddd49f5ae3345ffef5a44d658.camel@linuxfoundation.org>
+ <CABcZANnicqNdbiV-mkDsChRp=sT2_PA_Y+YS5CEoxU3adAdpig@mail.gmail.com>
+ <19e8629424d911ac9aa6f53f4825834e694c6ddd.camel@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <19e8629424d911ac9aa6f53f4825834e694c6ddd.camel@linuxfoundation.org>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2021-03-19 at 13:47 -0400, Robert P. J. Day wrote:
-> On Fri, 19 Mar 2021, Richard Purdie wrote:
-> 
-> > Add a new function which compares the stamp filename we want (including
-> > taskhash) with what is in the stamp directory (using the clean mask).
-> > This tells us which stamp files are stale and are due to be rerun.
-> > 
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > ---
-> >  lib/bb/build.py | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> > 
-> > diff --git a/lib/bb/build.py b/lib/bb/build.py
-> > index f4f897e41a..b2715fc530 100644
-> > --- a/lib/bb/build.py
-> > +++ b/lib/bb/build.py
-> > @@ -854,6 +854,23 @@ def make_stamp(task, d, file_name = None):
-> >          file_name = d.getVar('BB_FILENAME')
-> >          bb.parse.siggen.dump_sigtask(file_name, task, stampbase, True)
-> > 
-> > +def find_stale_stamps(task, d, file_name=None):
-> 
->   subject does not match function name.
+On Thu, Mar 18, 2021 at 10:32:34PM +0000, Richard Purdie wrote:
+> On Thu, 2021-03-18 at 15:28 -0700, Christopher Larson wrote:
+> >=20
+> >=20
+> > On Thu, Mar 18, 2021 at 3:23 PM Richard Purdie <richard.purdie@linuxf=
+oundation.org> wrote:
+> > > On Thu, 2021-03-18 at 16:39 -0400, Denys Dmytriyenko wrote:
+> > > > When first mirror returns an outdated fullmirror tarball, its clo=
+nedir stays
+> > > > behind for successive mirror tries. Even when latest tarball gets=
+ fetched
+> > > > next, it doesn't get unpacked, as clonedir already exists. Cleanu=
+p old
+> > > > clonedir and unpack the new fullmirror tarball, when the old clon=
+edir is
+> > > > no good and requires update.
+> > > >=20
+> > > > Signed-off-by: Denys Dmytriyenko <denis@denix.org>
+> > > > ---
+> > > > =A0lib/bb/fetch2/git.py | 3 ++-
+> > > > =A01 file changed, 2 insertions(+), 1 deletion(-)
+> > > >=20
+> > > > diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> > > > index e3ba80a..cb62dcc 100644
+> > > > --- a/lib/bb/fetch2/git.py
+> > > > +++ b/lib/bb/fetch2/git.py
+> > > > @@ -337,7 +337,8 @@ class Git(FetchMethod):
+> > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0if ud.shallow and os.path.exists(ud.fu=
+llshallow) and self.need_update(ud, d):
+> > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0ud.localpath =3D ud.fullsh=
+allow
+> > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0return
+> > > > -=A0 =A0 =A0 =A0 elif os.path.exists(ud.fullmirror) and not os.pa=
+th.exists(ud.clonedir):
+> > > > +=A0 =A0 =A0 =A0 elif os.path.exists(ud.fullmirror) and (not os.p=
+ath.exists(ud.clonedir) or
+> > > self.clonedir_need_update(ud, d)):
+> > > > +=A0 =A0 =A0 =A0 =A0 =A0 bb.utils.remove(ud.clonedir, recurse=3DT=
+rue)
+> > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0bb.utils.mkdirhier(ud.clon=
+edir)
+> > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0runfetchcmd("tar -xzf %s" =
+% ud.fullmirror, d, workdir=3Dud.clonedir)
+> > >=20
+> > > I talked a little with Denys about this. I'm worried that if you sp=
+ecify=A0
+> > > SRCREV incorrectly it will start blowing away clone directories and
+> > > for large ones like linux-yocto, the failure mode is *really* annoy=
+ing=20
+> > > and has the potential for data loss (you shouldn't be putting impor=
+tant data
+> > > here, but...).
+> > >=20
+> > > I agree that we do need a test case. We can put artefacts on yp.org=
+ urls
+> > > if needed.
+> > >=20
+> > > I also wonder if we can't check the new mirror tarball is any bette=
+r before
+> > > we blow away the existing directory.
+> > >=20
+> >=20
+> >=20
+> > I'm assuming this is for the case where the clonedir can't be updated
+> > directly, ie premirrorsonly?
+>=20
+> Effectively. If I understand Denys' case, the upstream is down, the fir=
+st mirror
+> tarball it out of date and the second mirror tarball found is not.
 
-Fixed, thanks.
+Yes, that was exactly my case.
 
-Richard
 
+> > That's a good idea, unpack the new one to a temporary location, see i=
+f=A0
+> > that one is good enough first. It makes me wonder if there's a way to=
+=A0
+> > use git bundles or something that can be interacted with more directl=
+y.=A0
+> > I'm assuming this is for the case where the clonedir=A0can't be direc=
+tly=A0
+> > updated, i.e. premirrorsonly?
+>=20
+> Right, yes. For whatever reason the original source is unavailable and =
+we=A0
+> have multiple conflicting mirror data sources we can't immediately insp=
+ect.
+
+Shouldn't need_update() be sufficient indication that clonedir doesn't ha=
+ve=20
+the required SRCREV we are looking for?
+
+I believe you also mentioned cases of locally-modified clonedir that we d=
+on't=20
+want to blow away here. Is there an execution path that would come here t=
+o=20
+do_fetch() with fullmirror? E.g. you got it previously fetched and unpack=
+ed=20
+successfully, modified the recipe with new (potentially bad) SRCREV, and =
+now=20
+bitbake while trying to fetch that, ends up blowing away good clonedir an=
+d=20
+replace it with potentially outdated mirror clone, correct?
+
+So, how about we always untar fullmirror into a new clonedir2, then run=20
+need_update() on it and if False, replace clonedir with clonedir2, otherw=
+ise=20
+wipe out bad clonedir2. Would that work?
+
+Are there any other checks besides need_update() that determine if cloned=
+ir=20
+is good or not?
+
+--=20
+Denys
