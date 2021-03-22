@@ -1,69 +1,77 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
- by mx.groups.io with SMTP id smtpd.web10.603.1616426431056292137
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+ by mx.groups.io with SMTP id smtpd.web11.836.1616448878713996137
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Mar 2021 08:20:31 -0700
+ Mon, 22 Mar 2021 14:34:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: bootlin.com, ip: 217.70.183.193, mailfrom: michael.opdenacker@bootlin.com)
-X-Originating-IP: 92.150.42.106
-Received: from [10.0.0.8] (lfbn-mar-1-834-106.w92-150.abo.wanadoo.fr [92.150.42.106])
-	(Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BAECC24000B;
-	Mon, 22 Mar 2021 15:20:28 +0000 (UTC)
-Cc: michael.opdenacker@bootlin.com
-Subject: Re: [bitbake-devel] [PATCH] doc: mention that addtask handles multiple dependencies
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>,
- BitBake developer list <bitbake-devel@lists.openembedded.org>
-References: <169a106e-fd23-64de-fcf3-e06afb421ac6@crashcourse.ca>
-From: "Michael Opdenacker" <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-Message-ID: <0fba9cce-66f6-86a1-2bc2-7b437851d709@bootlin.com>
-Date: Mon, 22 Mar 2021 16:20:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=MnG/8UZy;
+ spf=pass (domain: gmail.com, ip: 209.85.160.176, mailfrom: paulswirhun@gmail.com)
+Received: by mail-qt1-f176.google.com with SMTP id c6so13529067qtc.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Mar 2021 14:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=WT0byxElzqovRQJhU5V2IrXOsFztCIDOObaNOdTN5d4=;
+        b=MnG/8UZyygWv/5H4HyBB6ph4uNcIaZnZ4f5OHS2E1L9230GdFVg31d2DpZzdv/bFLT
+         atqkO3UqUDA92fmfPb1BTG27Sk+zm79siFDt8r5RDegItlW9jcQRhQfXbH2/Q8TFiwgU
+         eLXcWrn3W7NaXzuhz41/UOITdOLekrFoo0p11Jds9EFcqGItab/uQqAqJcOUNjycl1XA
+         /fBiFhcWonxdsZ30nE8yx8OaFVIO11EsYjEhec3NwP+RDdfF4h8AcwHVDg4QUGn9kUXl
+         pvairE/DpwY7+5HXyUgemWLDlbrGc+JbxcFTKcpLW0pdsM3sxmIgcmF/tjrPHvHy1pnq
+         qJcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=WT0byxElzqovRQJhU5V2IrXOsFztCIDOObaNOdTN5d4=;
+        b=onjzsIcL8nHSnOv+nW5lQNDFoYi3Mpr5AjtfH6NK8WWyb8f470F8vQ97WtgHwWh+0n
+         UiKM7DOU7WjQ/JkX8NaT+Uqk5MoWGtV1vWuuvWiF2YmR812aoZU1Xxcz1EMnY/2iATjc
+         XtB049SJjlDuiuNHWuCZhiPodeXhO4Vj3/rjIezxKWTMgJnFm7WOezuzSIXTHKr0rc/+
+         ha/xNLPhpkYZb8CTmGNJaryxpmhG5WobSV28zWsKAjAdUgXM+n0dfeIqAfPFJbxQd89S
+         YchuZmqCTQv4Pk0+8hxGCzahY4B+MOoog6dOwbaL71zsYH4yv84DGJu6bhxuDczHou8Q
+         xqxA==
+X-Gm-Message-State: AOAM532fiuzgDEZtzd4/+hvFQolQzKKXZSVAIM02YmAGjJx4W9D0mXP9
+	JyzJ3dpegxmOmd+xUvfrBp8EFzh2vpYBT3kkZRLL014YweE=
+X-Google-Smtp-Source: ABdhPJwmHytcvR8eASOuYZfqcZR7Ale2oxcQx5J96Z5gLmDjbT0FnqhN2tdjF1QYo5WFYvO+G4RJj5jRwpgYZi2MMSw=
+X-Received: by 2002:a05:622a:9:: with SMTP id x9mr1807639qtw.189.1616448877569;
+ Mon, 22 Mar 2021 14:34:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <169a106e-fd23-64de-fcf3-e06afb421ac6@crashcourse.ca>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+From: paulswirhun@gmail.com
+Date: Mon, 22 Mar 2021 14:34:27 -0700
+Message-ID: <CADOqROysGx1rYW3fccwLM8yf11kknp1kXSriwayY6XChE2Jf+g@mail.gmail.com>
+Subject: Patching recipe from pypi
+To: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000252b7f05be26d5be"
 
+--000000000000252b7f05be26d5be
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/22/21 11:19 AM, Robert P. J. Day wrote:
-> Add a note explaining that "addtask" can accept multiple dependencies,
-> just in case someone runs across such an example and is confused.
->
-> Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
->
-> ---
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> index 7ea68ade..5ecda744 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> @@ -1296,6 +1296,17 @@ For more information on task dependencies, see the
->  See the ":ref:`bitbake-user-manual/bitbake-user-manual-metadata:variable flags`" section for information
->  on variable flags you can use with tasks.
->
-> +.. note::
-> +
-> +   While it's infrequent, it's possible to define multiple tasks as
-> +   dependencies when calling ``addtask``. For example, here's a snippet
-> +   from the OpenEmbedded class file ``package_tar.bbclass``::
-> +
-> +     addtask package_write_tar before do_build after do_packagedata do_package
-> +
-> +   Note how the ``package_write_tar`` task has to wait until both of
-> +   ``do_packagedata`` and ``do_package`` complete.
-> +
->  Deleting a Task
->  ---------------
->
+Hello,
 
-Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+This is my first visit to this group, so my apologies if this is not the
+appropriate way to ask a question.
 
-Thanks!
+I would like to patch or overwrite a .py file from a pypi library which had
+a bug. The problem has been fixed at its source but I need the fixed
+version integrated into our version of Yocto (Zeus). Can someone point me
+to an example .bbappend recipe to replace a file populated by pip / pypi?
+Specifically, devtools/python/python-periphery/mmio.py has a bug which has
+been fixed in its top of tree but the old version remains and probably will
+remain in Zeus for some time.
 
--- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Paul
 
+--000000000000252b7f05be26d5be
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hello,<div><br></div><div>This is my first visit to this g=
+roup, so my apologies=C2=A0if this is not the appropriate way to ask a ques=
+tion.</div><div><br></div><div>I would like to patch or overwrite a .py fil=
+e from a pypi library which had a bug. The problem has been fixed at its so=
+urce but I need the fixed version integrated into our version of Yocto (Zeu=
+s). Can someone point me to an example .bbappend recipe to replace a file p=
+opulated by pip / pypi? Specifically, devtools/python/python-periphery/mmio=
+.py has a bug which has been fixed in its top of tree but the old version r=
+emains and probably will remain in Zeus for some time.</div><div><br></div>=
+<div>Thanks,</div><div>Paul</div></div>
+
+--000000000000252b7f05be26d5be--
