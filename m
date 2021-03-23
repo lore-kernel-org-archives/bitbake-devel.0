@@ -1,77 +1,104 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
- by mx.groups.io with SMTP id smtpd.web11.836.1616448878713996137
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+ by mx.groups.io with SMTP id smtpd.web08.2006.1616459147401352315
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Mar 2021 14:34:38 -0700
+ Mon, 22 Mar 2021 17:25:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=MnG/8UZy;
- spf=pass (domain: gmail.com, ip: 209.85.160.176, mailfrom: paulswirhun@gmail.com)
-Received: by mail-qt1-f176.google.com with SMTP id c6so13529067qtc.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Mar 2021 14:34:38 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=eqovWw7c;
+ spf=pass (domain: gmail.com, ip: 209.85.222.171, mailfrom: paulswirhun@gmail.com)
+Received: by mail-qk1-f171.google.com with SMTP id q26so7431383qkm.6
+        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Mar 2021 17:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=WT0byxElzqovRQJhU5V2IrXOsFztCIDOObaNOdTN5d4=;
-        b=MnG/8UZyygWv/5H4HyBB6ph4uNcIaZnZ4f5OHS2E1L9230GdFVg31d2DpZzdv/bFLT
-         atqkO3UqUDA92fmfPb1BTG27Sk+zm79siFDt8r5RDegItlW9jcQRhQfXbH2/Q8TFiwgU
-         eLXcWrn3W7NaXzuhz41/UOITdOLekrFoo0p11Jds9EFcqGItab/uQqAqJcOUNjycl1XA
-         /fBiFhcWonxdsZ30nE8yx8OaFVIO11EsYjEhec3NwP+RDdfF4h8AcwHVDg4QUGn9kUXl
-         pvairE/DpwY7+5HXyUgemWLDlbrGc+JbxcFTKcpLW0pdsM3sxmIgcmF/tjrPHvHy1pnq
-         qJcA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=TP93x72e8NjDwlgMHoVtV+EcBak2D9T7/QmUOFFonk0=;
+        b=eqovWw7cWvTTddGALYTgCddAb8h7k392B3pd6CvNxWHhEwxn/PnVjgdV7DjW53nCme
+         AFBrNpphoODupIxFER5+WvcK24s52xlTNhaGSRwslzwl2dNgGX+NbRRhxr5XFKDRzzkJ
+         9HyA19GKnesSW9VLyLBSjj4+KGtwxIG0Gku3GOmdl+QJLXj6w+IktVblMoFoAR2oWNwn
+         Dnpw0MuQ0NWTmXO9VVIXyk82w3wZRA6uYpcKOLET8j/BUgeEvV8X+2lBIe+OOBUrsr2k
+         kaqVbRvf0+EaWcRd8VzA93SaeGepZ0H/I/0UnPFH+8buxz/9yRXs3JQgRWHgYes98avX
+         uNrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=WT0byxElzqovRQJhU5V2IrXOsFztCIDOObaNOdTN5d4=;
-        b=onjzsIcL8nHSnOv+nW5lQNDFoYi3Mpr5AjtfH6NK8WWyb8f470F8vQ97WtgHwWh+0n
-         UiKM7DOU7WjQ/JkX8NaT+Uqk5MoWGtV1vWuuvWiF2YmR812aoZU1Xxcz1EMnY/2iATjc
-         XtB049SJjlDuiuNHWuCZhiPodeXhO4Vj3/rjIezxKWTMgJnFm7WOezuzSIXTHKr0rc/+
-         ha/xNLPhpkYZb8CTmGNJaryxpmhG5WobSV28zWsKAjAdUgXM+n0dfeIqAfPFJbxQd89S
-         YchuZmqCTQv4Pk0+8hxGCzahY4B+MOoog6dOwbaL71zsYH4yv84DGJu6bhxuDczHou8Q
-         xqxA==
-X-Gm-Message-State: AOAM532fiuzgDEZtzd4/+hvFQolQzKKXZSVAIM02YmAGjJx4W9D0mXP9
-	JyzJ3dpegxmOmd+xUvfrBp8EFzh2vpYBT3kkZRLL014YweE=
-X-Google-Smtp-Source: ABdhPJwmHytcvR8eASOuYZfqcZR7Ale2oxcQx5J96Z5gLmDjbT0FnqhN2tdjF1QYo5WFYvO+G4RJj5jRwpgYZi2MMSw=
-X-Received: by 2002:a05:622a:9:: with SMTP id x9mr1807639qtw.189.1616448877569;
- Mon, 22 Mar 2021 14:34:37 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=TP93x72e8NjDwlgMHoVtV+EcBak2D9T7/QmUOFFonk0=;
+        b=k8+j30bWfwecct93WjKcvl7qgssIEU3fRaqeZQCXuKNvjzZkWtKdGItarVuLoDP8Js
+         tYG72cxk9m/pyF6rbyH4lPEG/ZPYADSoor7wJ2vKDPwxitiT9YSu8mSIw8nH6YCV64yA
+         FfqEDY5I4AUpg3l1GgNlgNgqQur0dEkjDmkcKl5D3GY4mclMjtmFytP59n6mPZGV5PVf
+         UwHMKKHXwiPw4hUGB+nhqNMfjBjs/PQarPdMiwis+5MPF34bgLuW84+JrVLTdCChnEsP
+         oqN3XR3fUBFZPDi4SH+oipaSb5HRcNU0LWhZfX/bnIjV0oL5YsV3BmQP2jV2epoij3Ay
+         iu/Q==
+X-Gm-Message-State: AOAM531sK5ewtzGmF9Ouf0Xp/FP1FvnxgstgIrDPcSz8UVy3c7AHY/vS
+	lgVvlgXk7VPazBdNLQa59nO0UGZsD5NhzvuU5GnaPDuqbwc=
+X-Google-Smtp-Source: ABdhPJx2aod+Wc2BfTDYvAyWVmcwAFyOhSRE0fKTogtQCY1SVClsX1aWO6Rkhdg7ADmHBG9RRY9Bm433nQvkPbpl0ns=
+X-Received: by 2002:a37:a016:: with SMTP id j22mr2924227qke.486.1616459146308;
+ Mon, 22 Mar 2021 17:25:46 -0700 (PDT)
 MIME-Version: 1.0
-From: paulswirhun@gmail.com
-Date: Mon, 22 Mar 2021 14:34:27 -0700
-Message-ID: <CADOqROysGx1rYW3fccwLM8yf11kknp1kXSriwayY6XChE2Jf+g@mail.gmail.com>
-Subject: Patching recipe from pypi
+References: <166EC7B0F4B394EE.24466@lists.openembedded.org>
+In-Reply-To: <166EC7B0F4B394EE.24466@lists.openembedded.org>
+From: "Paul Swirhun" <paulswirhun@gmail.com>
+Date: Mon, 22 Mar 2021 17:25:35 -0700
+Message-ID: <CADOqROxW9BvdcNpmcg6UDYjGMH9ejTauEVqE=eYOMwYurvmwAw@mail.gmail.com>
+Subject: Re: [bitbake-devel] Patching recipe from pypi
 To: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000252b7f05be26d5be"
+Content-Type: multipart/alternative; boundary="00000000000035b0ef05be29390f"
 
---000000000000252b7f05be26d5be
+--00000000000035b0ef05be29390f
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Update: I found instructions on page 146 of Xilinx UG1144 which worked.
+This is for Petalinux and may not be directly applicable to bitbake but is
+probably just some wrapper around bitbake commands.
 
-This is my first visit to this group, so my apologies if this is not the
-appropriate way to ask a question.
+On Mon, Mar 22, 2021 at 2:34 PM Paul Swirhun via lists.openembedded.org
+<paulswirhun=gmail.com@lists.openembedded.org> wrote:
 
-I would like to patch or overwrite a .py file from a pypi library which had
-a bug. The problem has been fixed at its source but I need the fixed
-version integrated into our version of Yocto (Zeus). Can someone point me
-to an example .bbappend recipe to replace a file populated by pip / pypi?
-Specifically, devtools/python/python-periphery/mmio.py has a bug which has
-been fixed in its top of tree but the old version remains and probably will
-remain in Zeus for some time.
+> Hello,
+>
+> This is my first visit to this group, so my apologies if this is not the
+> appropriate way to ask a question.
+>
+> I would like to patch or overwrite a .py file from a pypi library which
+> had a bug. The problem has been fixed at its source but I need the fixed
+> version integrated into our version of Yocto (Zeus). Can someone point me
+> to an example .bbappend recipe to replace a file populated by pip / pypi?
+> Specifically, devtools/python/python-periphery/mmio.py has a bug which has
+> been fixed in its top of tree but the old version remains and probably will
+> remain in Zeus for some time.
+>
+> Thanks,
+> Paul
+>
+> 
+>
+>
 
-Thanks,
-Paul
-
---000000000000252b7f05be26d5be
+--00000000000035b0ef05be29390f
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Hello,<div><br></div><div>This is my first visit to this g=
-roup, so my apologies=C2=A0if this is not the appropriate way to ask a ques=
-tion.</div><div><br></div><div>I would like to patch or overwrite a .py fil=
-e from a pypi library which had a bug. The problem has been fixed at its so=
-urce but I need the fixed version integrated into our version of Yocto (Zeu=
-s). Can someone point me to an example .bbappend recipe to replace a file p=
-opulated by pip / pypi? Specifically, devtools/python/python-periphery/mmio=
-.py has a bug which has been fixed in its top of tree but the old version r=
-emains and probably will remain in Zeus for some time.</div><div><br></div>=
-<div>Thanks,</div><div>Paul</div></div>
+<div dir=3D"ltr">Update: I found instructions on page 146 of Xilinx UG1144 =
+which worked. This is for Petalinux and may not be directly applicable to b=
+itbake but is probably just some wrapper around bitbake commands.</div><br>=
+<div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Mon, Ma=
+r 22, 2021 at 2:34 PM Paul Swirhun via <a href=3D"http://lists.openembedded=
+.org">lists.openembedded.org</a> &lt;paulswirhun=3D<a href=3D"mailto:gmail.=
+com@lists.openembedded.org">gmail.com@lists.openembedded.org</a>&gt; wrote:=
+<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
+ex;border-left-width:1px;border-left-style:solid;border-left-color:rgb(204,=
+204,204);padding-left:1ex"><div dir=3D"ltr">Hello,<div><br></div><div>This =
+is my first visit to this group, so my apologies=C2=A0if this is not the ap=
+propriate way to ask a question.</div><div><br></div><div>I would like to p=
+atch or overwrite a .py file from a pypi library which had a bug. The probl=
+em has been fixed at its source but I need the fixed version integrated int=
+o our version of Yocto (Zeus). Can someone point me to an example .bbappend=
+ recipe to replace a file populated by pip / pypi? Specifically, devtools/p=
+ython/python-periphery/mmio.py has a bug which has been fixed in its top of=
+ tree but the old version remains and probably will remain in Zeus for some=
+ time.</div><div><br></div><div>Thanks,</div><div>Paul</div></div>
+<br>
+<br>
+<br>
+</blockquote></div>
 
---000000000000252b7f05be26d5be--
+--00000000000035b0ef05be29390f--
