@@ -1,57 +1,76 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from mga14.intel.com (mga14.intel.com [])
  by mx.groups.io with SMTP id smtpd.web11.55.1616596422209368700
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 24 Mar 2021 07:33:42 -0700
+ Wed, 24 Mar 2021 07:33:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: intel.com, ip: 192.55.52.115, mailfrom: anuj.mittal@intel.com)
-IronPort-SDR: Apg3/1b2w5PrTw7noYnqSNtpxDN/fkbMzxoCU89GCDvay7kqf98S9vP/HUlRjPvUToLM266Ktt
- 7X/Px7y0B65w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9933"; a="190132803"
+ dkim=missing; spf=fail (domain: intel.com, ip: <nil>, mailfrom: anuj.mittal@intel.com)
+IronPort-SDR: D4o7+Ex1+5VR4ijw/UelHJjjROfPO4ycMG7O6g+J/wqwj4I0YFrxDUiXvlu5Yu3I5Fm0Oxn+wc
+ nEnDhJ3UUqJw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9933"; a="190132808"
 X-IronPort-AV: E=Sophos;i="5.81,274,1610438400"; 
-   d="scan'208";a="190132803"
+   d="scan'208";a="190132808"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 07:33:41 -0700
-IronPort-SDR: H1TpQo3Ty8uBTXRpSOK48yDGZ5MWogYXFeaQ1r7NNTm9GNfRGYQHmVEblMUBBQiV7ii7KWkoN/
- TX3A+qos+T+A==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 07:33:42 -0700
+IronPort-SDR: J4lpT5+Km+ErAkuKeaJ/jmW1ABVI4ZCN2BLqEoH5FkTW0ugx+Jtkb0PYS0NzFCKLjilNirIVy5
+ PQKHtkC1sOOA==
 X-IronPort-AV: E=Sophos;i="5.81,274,1610438400"; 
-   d="scan'208";a="514213815"
+   d="scan'208";a="514213823"
 Received: from alianabi-mobl1.gar.corp.intel.com (HELO anmitta2-mobl1.gar.corp.intel.com) ([10.215.167.51])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 07:33:39 -0700
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2021 07:33:41 -0700
 From: "Anuj Mittal" <anuj.mittal@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.48][PATCH 0/3] Patch review request
-Date: Wed, 24 Mar 2021 22:33:04 +0800
-Message-Id: <cover.1616596112.git.anuj.mittal@intel.com>
+Subject: [1.48][PATCH 1/3] runqueue: Fix task execution corruption issue
+Date: Wed, 24 Mar 2021 22:33:05 +0800
+Message-Id: <5a9e0e20f8acde52ecafce2055b1941ca77e3ca8.1616596112.git.anuj.mittal@intel.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <cover.1616596112.git.anuj.mittal@intel.com>
+References: <cover.1616596112.git.anuj.mittal@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Please review these next set of changes for 1.48. Clean a-full on
-autobuilder.
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Thanks,
+We've seen occasional issues where linux-yocto:do_compile_kernelmodules would
+run without do_shared_workdir running before it. do_shared_workdir is an
+setscene task but never has an sstate object generated so it will always
+rerun. This should not happen since compile_kernemodules should only
+execute if a setscene that depends on it didn't run and that should trigger
+do_shared_workdir not to be marked as covered.
 
-Anuj
+The issue is that build-appliance-image:do_package is one of the tasks which
+covers linux-yocto:do_compile_kernelmodules but it is also a noexec task
+and has a dependecy on pseudo-native:do_populate_sysroot.
 
-The following changes since commit 7a6517243dbfecfd78f82f6709fbeaab2fb03e2c:
+In the problem case, pseudo-native:do_populate_sysroot is unavailable but
+marked as covered since it is noexec. The "harddeps" code then also marks it
+as notcovered. No task should ever be both covered and notcovered and this
+is where the problems come from.
 
-  __init__.py: Fix bitbake debug log handling (2021-03-09 00:03:19 +0000)
+The solution is for the harddeps code only to to fail tasks if they've not
+already been handled in some way. The code is assuming code couldn't have
+handled revdeps at this point but we now have clear evidence they can.
 
-are available in the Git repository at:
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit f66556bbb38449789ceea2fd105e9f68df7fb660)
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ lib/bb/runqueue.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-  git://push.openembedded.org/bitbake-contrib stable/1.48-next
-
-Jan Brzezanski (1):
-  Force parser shutdown after catching an exception
-
-Richard Purdie (2):
-  runqueue: Fix task execution corruption issue
-  runqueue: Add setscene task overlap sanity check
-
- lib/bb/cooker.py   | 10 +++++-----
- lib/bb/runqueue.py |  7 +++++++
- 2 files changed, 12 insertions(+), 5 deletions(-)
-
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 28bdadb45..e22ca72ce 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2430,6 +2430,9 @@ class RunQueueExecute:
+ 
+         for dep in sorted(self.sqdata.sq_deps[task]):
+             if fail and task in self.sqdata.sq_harddeps and dep in self.sqdata.sq_harddeps[task]:
++                if dep in self.scenequeue_covered or dep in self.scenequeue_notcovered:
++                    # dependency could be already processed, e.g. noexec setscene task
++                    continue
+                 logger.debug(2, "%s was unavailable and is a hard dependency of %s so skipping" % (task, dep))
+                 self.sq_task_failoutright(dep)
+                 continue
 -- 
 2.30.2
 
