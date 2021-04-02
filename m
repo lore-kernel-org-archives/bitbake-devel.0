@@ -1,17 +1,17 @@
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (NAM02-CY1-obe.outbound.protection.outlook.com [40.107.76.43])
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (NAM02-CY1-obe.outbound.protection.outlook.com [])
  by mx.groups.io with SMTP id smtpd.web11.19933.1617383776013302542
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 02 Apr 2021 10:16:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=V5PKQFb3;
- spf=pass (domain: windriver.com, ip: 40.107.76.43, mailfrom: paul.gortmaker@windriver.com)
+ dkim=fail reason="body hash did not verify" header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=WZKo5PeW;
+ spf=softfail (domain: windriver.com, ip: <nil>, mailfrom: paul.gortmaker@windriver.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kihnQcbYA+uWtF4NiBxVQjWfK4M4IIxG1oZoE6Syx7pgnO8sfgq7fHsgl05rq+EwtiKJJygbs2v0DKUe7ZvhTXVbecQsDcCJkIIdCr5510Wmik58ToJn98kRDZQl3aQ965y8yzt3BrTVaiu6tQhZs9GugbM8gA2t8+6itb5j/ce8F+SOeIlV3FtRBn0/vBosbZ1HKNZdjHI6uIC0qG/hZi2RLoCMPRQRGcVhMzLH4eXfEx5TDGBeIjekNOiAXfHG1C24ubYhvgNBh1wyM/CqjZ5EVkm58fS/6MtdrE7A9kivJl5LCstOHvxmBCP2sJpEVOoYqrzUx1+uHS2unZ47UA==
+ b=DPbWpSNIOUZHlW1TJjE/3V04LPxa4gwOZrnWAPLDwsemcIyTp2gTy7iHkrp7iUfcKiXkB/JYGqEZahID4FnHO/uj9cs9ur/LdnHJnEh/FaVSPmJ5UOGHo0f0MSVqGTfpu+NeC+v2YiT3T+fGRjTLVIlX8odRH5JKwqn8Rvaa4RRR69mLwEbgwsav7pQ2U0Q+8lnEsnIHMMjORWayD3G3cnqmcf4IiwozzIlpyeHzadhawgiDfpveWkBxOECYEtN+TUR695aIVkbybuEtJf/rGmb95sTIUfjHyqLaPdG+miXQJDy4bOtcMxwyMQifIQA3k6EEjvdRjyz9e2hnE7tulw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EciHTmKYEnWB4pHN9voGaVfL2ho2vo8WhbxHio2wKcI=;
- b=jsb7ciypB6POhn4t3cb2bhTK7ffu5AWNnizCqdC8FxmUrYJYEp8xBGUezEZETZCWWT53jRQUNKWNW9KBFhTEFn8/AoXwKWoCwHD66znSesGvhwlIKy9d+6O1Z3BzSh9/D8SJ5+lT8KxTzYO+SXSoIvaZSahA3bppw7GRsEZBjgPdfIoF0l/bY3COvO8KhY0RejJ+189leUFG7iNyyDWdPU187XLWyJ1FzQn/xW4+0JNRT7vF4AvaRiY1VN4PyXkixzSUPPzPNSi2XmbeMISlcDGhvtWrPjfrjxDP/+AI7C4QWTX2BG4VWznupWSMI/vb0tZVVan2Pt/psJNStTpskA==
+ bh=4YSA4v+J210hftRPPx01Vz6QHRT1T9BsTSldFSgBTvQ=;
+ b=bfBbe9HfUGVttVepa86lLySLXLPBclUq8QDDPBFdHZg3hv6ZTOpqeDqS6RV0C1N5gEOoarHbNlQD4tRTx3af1i6xW3OiTBl3tqAu210RdUsaLCyaH+gSj/l9wpqKjxr/ZBhtjwp5Ao3zdyh8xBGALVnI//TE1aoJdNChtNY4YQuU32Uc4NlnbrJ+UwZzscZhG9UZYUOTFJ+Rgz5hRtQ9oew2sZYFbXi85WBe5Kamu7/lvPqLJIUaOemwwvGqL7OcXYYpf8ryKKw0r9ZBG+s9RsD80mrvugFMj8MP/8hNAGEHo3QahirlMUyJzIBxdi9eKDjkqqW8Ft2PDhHiKZI2ag==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=windriver.com; dmarc=pass action=none
  header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
@@ -19,8 +19,8 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=windriversystems.onmicrosoft.com;
  s=selector2-windriversystems-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EciHTmKYEnWB4pHN9voGaVfL2ho2vo8WhbxHio2wKcI=;
- b=V5PKQFb3YaIEKdwan6ENiPEJKJIReESzbKbdSoEDVY+uyrL2KKoeJXEMd7Wi+GycnOPzsEr9NlQag5XClae8iEMRQdhPpGw9lrucAavMiurt+GMlh7gsDULrS7AHTkQ3pOLSLbr9ZrIMrxQqX/zZXDmB6ptDcTXvIYfMiIELlVA=
+ bh=4YSA4v+J210hftRPPx01Vz6QHRT1T9BsTSldFSgBTvQ=;
+ b=WZKo5PeWAHkWM/9eEnnV1R84WfIHR44+/maCZLgGHunZ+PSi8TcAY04K1/jBLq78bR6an8AoRf4+OQeOQ8hS8sCQbjWBUMULgqAEdxdxbDbkDevSIfQZUrKJghqupvpBEMnSArVxlkFLTpWuDDNtYrVIQ0Y754s+1yQCuHvEBh0=
 Authentication-Results: gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=none action=none header.from=windriver.com;
 Received: from DM6PR11MB4545.namprd11.prod.outlook.com (2603:10b6:5:2ae::14)
@@ -37,9 +37,9 @@ To: Bruce Ashfield <bruce.ashfield@gmail.com>,
 	Richard Purdie <richard.purdie@linuxfoundation.org>
 CC: linux-yocto@lists.yoctoproject.org,
 	bitbake-devel@lists.openembedded.org
-Subject: [PATCH 04/21] bitbake: fetch2/git: allow specifying repos as static/unchanging
-Date: Fri,  2 Apr 2021 13:15:40 -0400
-Message-ID: <20210402171557.981599-5-paul.gortmaker@windriver.com>
+Subject: [PATCH 05/21] bitbake: fetch2/git: ensure static repos have at least one refs/heads
+Date: Fri,  2 Apr 2021 13:15:41 -0400
+Message-ID: <20210402171557.981599-6-paul.gortmaker@windriver.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210402171557.981599-1-paul.gortmaker@windriver.com>
 References: <20210402171557.981599-1-paul.gortmaker@windriver.com>
@@ -50,183 +50,102 @@ X-ClientProxiedBy: MN2PR16CA0026.namprd16.prod.outlook.com
 Return-Path: paul.gortmaker@windriver.com
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from yow-cube1.wrs.com (128.224.252.2) by MN2PR16CA0026.namprd16.prod.outlook.com (2603:10b6:208:134::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.27 via Frontend Transport; Fri, 2 Apr 2021 17:16:14 +0000
+Received: from yow-cube1.wrs.com (128.224.252.2) by MN2PR16CA0026.namprd16.prod.outlook.com (2603:10b6:208:134::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.27 via Frontend Transport; Fri, 2 Apr 2021 17:16:15 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fd8c9d3e-9bc7-4092-6d4d-08d8f5fb0550
+X-MS-Office365-Filtering-Correlation-Id: f6929105-2ef0-4ae9-5dc1-08d8f5fb05b6
 X-MS-TrafficTypeDiagnostic: DM5PR1101MB2249:
 X-Microsoft-Antispam-PRVS: 
-	<DM5PR1101MB2249488118008C7BFAEBEACF837A9@DM5PR1101MB2249.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:765;
+	<DM5PR1101MB2249200CCEF058CE66A52F68837A9@DM5PR1101MB2249.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	BOdWjw8prnVjlaMHcGpNzJKc15n5Ujq87a2GfEMZXRlL/Ta6jT+2NnyrIacBT1X+5e06GvP9PUON3uxiop+jw/LhDW7WZdrDqVmaIQL/Hlo4WjmGpXNHM48JoYXz/iWRjWM84Dl94wGmFcHaAFfKw3tj3FwiRkfXqWaTJbzj632jj7v6gigoO9Acs7fpqMJu1vD0rQrTI4KNGCD4CpO+Dsvo/9S+RmPxD9VsWTrkj4/rWIgkPLS+oaWnpVJBlYP5U+flTSResbVXiGCl2OpQnKrNoDf6JJW9Y6lptO5KwXMjSNtLHl72hhIO3vRQEpx8qbhrQaQovur7KKk1jeGQsknWH+/e4FGu7nqINn6Wa3mGt3N3v79BNcVnEln31JU5F9UDXs/UhpR7OsWJEVGXFTn4Z3I/bELzW1NgzPAkLlYdHpUiEjA2ENwz8YLtp9vL988Fr/Xpyzr0/wlXyr778YJzZIH9l7Nt31c2CriwfhDglxp3e1P7/kKW1c1tiT6guHsOQzbRQ5dA2MYSUb960iM7nE3M6Y27GHlRMwKrxqQ15acnk7ZHvVByAbygGMTS83o0ZS7vs+UpqGElUUjmqfNzNtRuOHJQMoD44j/cezFimLftDzAg93ampChDYOpgy43jGTjMs4inbPrhElG/ng==
+	ic0pbdaYmHJVChQVaSptxBVH4bF9hRrIKclR4F7+nuQ6XJVHR4gynk6biKTvoSY1wH34/I9NTjGvYz+mXHfO8nfsR8YxiKi2CZN4N9paURxKTFtemPZ5Qa+5gd/JF7RjGYOvpE9RcVbYdnxyttaaev0Ras2umVA+p1x1+EUOUGAekPdR+xu5xZFsRX4JG4txM2lOtnfkhXNa90cJLehPu6EyHhp/knxY6+NZuAHD/wOe4rKClXl87aE5N9/wXBFs0JwbdrlP/ulAs3L5nuIXjeFDtoLSsvSibHdgar27LobDxCK8QM3ueDIABAUFeT+xeQOZ+0AViIIGq1G+VnX0I+Gj+cVCsAQ+RrbRZQTU/6sH4CcC+4MO6XheTVvoTz7HFRZuhzb/oh1GPnde4/760QcCyvaSsmMZujYaCSga81yMTKNPIQX8rpnpTxrP7ggbXDy+G9+1c88MVFMEd1dX2DwebcN82WsW70OP7mIA3HUBCMcoeRbA+gvQvHXzMBLKVdXJAyVPpjXaBl4zWuHq1td555DszStjDXSHUAxfP8gl+Ic6SeO1tElf6WvC05RTZG+ZY1a2HHHR2U3BbAxg4O7Xs2znoBqRlBtUrZikGyHAtl75u5DmUL9Ni96Xg6PbtimTYA/xyVnr1fapsI+pMg==
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4545.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(136003)(346002)(396003)(366004)(39850400004)(316002)(110136005)(6486002)(66946007)(38100700001)(8676002)(86362001)(956004)(2616005)(16526019)(186003)(26005)(2906002)(4326008)(44832011)(6506007)(5660300002)(478600001)(83380400001)(36756003)(52116002)(1076003)(66476007)(66556008)(6512007)(8936002)(6666004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
-	=?us-ascii?Q?3VvKHwGJgO+gzOyFKEe9/UuakDkMLpKnM4fO6blL9gIbBQb3TYZZaSctMqNO?=
- =?us-ascii?Q?J4O5F9E4MjtlQruFb6EnIf157ZYbIliv0KdKn5kmjw1Da6LmC/pniPD6rQma?=
- =?us-ascii?Q?XmaGjyvrtrc2hpcPF5FUnRFRL1sD2yFYWajvxQTUFw9YiIVDvMhiYdr4uaS7?=
- =?us-ascii?Q?nOaYw4IKHbzQSF61zKNoE1Dr4Yh8L5e2I4vfNGg45Pado0mbN8A9o/FKp8ZF?=
- =?us-ascii?Q?wC9DBsAhsVNjvWvzPG9PY1O7m32fq/V5StEn+oFePyjJoeS9ykC97giMC2lQ?=
- =?us-ascii?Q?S8qV9WIds6m+BBidG5D+mrLLdSaoK3rD2JtbBj/jBAdSEFr/gaFrL+/wyZwn?=
- =?us-ascii?Q?kejjrdwWFwbCl85QkxmRn6kW3jWut/AJ+5q7tvcsJn0HFUnONMfY6lYrkiPz?=
- =?us-ascii?Q?/BmdE/oSfmQVlin85JyHqAn7dU7OgIdruOZRUojWIaShQNnL1HwiRqWXzUc8?=
- =?us-ascii?Q?iYhU/LDu89cDUCKWBlSdjoVcW+EML6xJXinHfafJoRx5/9jiyMSbzAFs1S+j?=
- =?us-ascii?Q?zg6D6YlT1qe5MB101KA8yyGgnyIy0x/AwLNyC+50EG/2z0NKIGkzcdDhWzHp?=
- =?us-ascii?Q?DyDv7dZLHkkzhr3IN/FPos0fEjRb+cxHfPcIPuHT/ab9pqRxmkR0JU7bDzgH?=
- =?us-ascii?Q?HpmsV02zv9pfbJoyYkjB9IAPpOt4h+Dt3jYl46dH39Qof1gbqB9EBvcs5DR3?=
- =?us-ascii?Q?wQxqoJiUrshBl8vTFDpNk/bIlDFNVkiyrL9oRMAlKnQVH87dzH4+Y3wNypmN?=
- =?us-ascii?Q?9yQzgx1ExK+iLAciTQuArwFux4Gg46tr+dy4ExVWdlREujZ1nFRizx/DWAhp?=
- =?us-ascii?Q?OHfRY8oFW9rS4b+YXlLZbnPc66ZgkNEZjYIYW5jd49oqranuuCcQwZmCmeZ0?=
- =?us-ascii?Q?kG1hjIugVSVuLi7fzIVjcwvxL98mOTb8o4hkViusWsXoG9grN7Pd8uL1t+G5?=
- =?us-ascii?Q?0OYlnVD5Sly1ntzkRWQJOQfKIPafNFSTygriVdwc560LYPQLFWTZlfgSk4oc?=
- =?us-ascii?Q?y3pMnrUuosMNrC+OM+Ac4791FBF1dsvKc+L4gpMcTgaB1MZJro9uFLd8NtUz?=
- =?us-ascii?Q?bAAe5R0nuiz0fm8eZHdYcnxq/noq555N/dJmDbQSlKFmksjvAHTP5GEIgca1?=
- =?us-ascii?Q?Ap3pIO1H5fYFkSzZn52ie+QYQqvqyCb+I+iiVZ79VZ/AefDSv5gbACfgMQNy?=
- =?us-ascii?Q?H9LCw/eiUhx5IjeBxq+Jm4E2DGpHzO93IHBcNQg7fjxKi4bwj4WWPNCvF0X5?=
- =?us-ascii?Q?TXzyWX/HYfBj7OPpB/fzwScbgO0JeNZZJEVBa46rpP9Tc2b4b/Ikl3IEKnFj?=
- =?us-ascii?Q?02i/0ts5MlWAzUUGCf+8aHvJ?=
+	=?us-ascii?Q?3gKizCjCbgN/oC0s8DhnVJkbMm7eQEqtyUTu8VN96oFTCk5qmblGSJX4cZ4Q?=
+ =?us-ascii?Q?4NxPBldTFQVRtZrb5TPw3laOrOK7GMxCW9+pRqhw0qyjTE6Ci+t8+eS7UGy9?=
+ =?us-ascii?Q?mNfKHaFhtAaOqHVR3k3ie6EpGDTIwW6pT4ZUAO+NbrDUpKiU8OFnvgW18J5w?=
+ =?us-ascii?Q?DGNOwtBpcAxrZofyzqznWY97ZljAdQLjp60ZLPFpjg6FEcCq9SqOluICNWS1?=
+ =?us-ascii?Q?z7HiLGcPtpdwU8bnBtCnIBKecE7UYB3dtQDdSlwfq3GG3nAIrVeNdko+TbfS?=
+ =?us-ascii?Q?l0lxYX2u9WIEnYMAMulGEwMed0FJB/hot044bl9zNx18FU+YVxb96pYOGEg1?=
+ =?us-ascii?Q?3P7L/YVMkEuUEHj7KzMs4Yu4Gjf6GJtVKzhUqUugf2sadMYSJTmd35zKW/Y5?=
+ =?us-ascii?Q?FrNST6BnySDXRdTJ8O0l2mZupIU6WMcXPfUOJM9ZWj4C73IdeuGCPCVOAKei?=
+ =?us-ascii?Q?cIQNKi6nNgp9rd3Im6KiRkb40Ld2cLSjskORNVwsMkVyWzzdId+axzIPG1Rc?=
+ =?us-ascii?Q?FTylgqKDYnFOdP1u1j7hGPvd3tTN4heaJu41O8oAuNxUJsPEHO9ydovOdE1U?=
+ =?us-ascii?Q?4fqenSAvzVtv1X4ZuoRWYZstXFRKFUZd5qR/Xx3zJ9/HgNOCQCgGy8bB8nx2?=
+ =?us-ascii?Q?PnKJPIYMBT0wmRvntLWRlt9W+Pgg8FiR+oytfjAPmB4ihvAQ/WOt6D5IJM/a?=
+ =?us-ascii?Q?YFTx9x6tdENx3I6aJogaUOaxaLHyfnCst7FNv180MNSHtP5O4/yzfHSiDfBS?=
+ =?us-ascii?Q?xjGe6EkqvgwqL7vLE7BBKu84AZfZjpWFbtv6nvcx/xotEiwtuzMA09s3Iueo?=
+ =?us-ascii?Q?4V1hx2qcMTmCC0HbE9r1yS3Lja8XT2rRRfFhlGU7Z7N2rR3lIhjCorl6JWQR?=
+ =?us-ascii?Q?BLVL1TFACefhibAQqXKOSoaBx3/oV3TGg9Fcu7QjMeGShq/jlHsUUErTcUZA?=
+ =?us-ascii?Q?MS0hO59k5OQdJhNmhrZibaIU8ezlR2r4VtHyRLRhZGZ75IomYu+C8MjlT49P?=
+ =?us-ascii?Q?o1aE+MCPS+u9g7DNkNIx5e7m35WCcj/Ki3iGvRzIE54fkcFAs5Q2B/+IpAE+?=
+ =?us-ascii?Q?zJJUHXFoD2xPrMkxsfIDW1xlse7EiyC9vXOjyl1oliW4eufiuwxpHRbpQs9l?=
+ =?us-ascii?Q?4CCkTXbvRlFfb5n2fML7dueWn51rgAYwiHh7cuxELTHDIJLEemrNGz4mWVVx?=
+ =?us-ascii?Q?wB8EB8NFxH7K/bUZzSjQ9VV+IoNEZWvd8ZQrYDxUAFT+blZ4h5bdGJtaZwDC?=
+ =?us-ascii?Q?H7Ir526JqGUGeIlzW2yHt2tAO47hoEEZmWXDActPJHv0KWp+XcBgUIbJTfp5?=
+ =?us-ascii?Q?33hCMC/HkYdPjkb3dh9WfFn9?=
 X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd8c9d3e-9bc7-4092-6d4d-08d8f5fb0550
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6929105-2ef0-4ae9-5dc1-08d8f5fb05b6
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4545.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2021 17:16:14.9704
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2021 17:16:15.6235
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Mxd/fwLN+8kFXON6mXLSqsJWT/OeiDmdM7SEdcDFxuGm3M8O8cXfoapPE9xn8jW+mBRzE8SdDU3FNpME8z3xIXuXSfw3LD56qiNaRFUkgVc=
+X-MS-Exchange-CrossTenant-UserPrincipalName: O3HgJju3hTdi9gidQTxBJkG4gaOC8FRfrs54DJWsIntum00lp6n5Q0Ynm7YY6ofVWtVOp1Iw7DcgMdqhHemWZpRPrAbbXS5hh6h+L2/qOgM=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2249
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 
-If we know a repository content has what we need, we can flag it as
-static and then optimize accordingly for the future, by not trying to do
-any fetch operations against it.  In a way, this can be thought of as
-the special case of GITFETCHREFS =3D None.
+When you clone with "--single-branch --branch foo" one of two things
+will happen:
 
-There are multiple advantages to having this.  We can skip trying any
-updates and speed things up for a project we know is EOL.  We can avoid
-doing "ls-remote" operations against servers, easing use for
-mirror/no-network users.  We can open the door to accepting tags in
-SRC_URI more often as absolute references, instead of the less humanly
-readable SHA.  Archives that change upstream in incompatible ways, or
-have simply vanished, can exist as a snapshot in time after initial
-creation via mirror tarball or manually.
+If foo is a branch upstream you will get a local branch foo and HEAD
+will contain "ref: refs/heads/foo".  Output from "git branch" will be:
+	* foo
 
-Finally, we use the flexibility of git-config to store that static
-information in the cloned repo itself, so we can tell at any time,
-independent of the SRC_URI, that the repo has static content.
+If foo is a tag upstream, you won't get any local branch, and HEAD
+will contain the SHA of the tag foo.  Output from "git branch" will be:
+	* (no branch)
 
-This will be used for reference purposes, but might also be used in the
-download dir itself outside of BB recipes -- for example a script could
-easily spot any static content and hence prioritize it as a possible
-mirroring candidate.
+In the latter case, people tend to assume it is some kind of indication
+progress was interrupted and an error happened.
+
+While not strictly necessary, in static repos, we point master at the
+tag that was fetched if no branches are present, to avoid confusion.
 
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
- .../bitbake-user-manual-fetching.rst          |  5 ++++
- bitbake/lib/bb/fetch2/git.py                  | 27 +++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ bitbake/lib/bb/fetch2/git.py | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.r=
-st b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index 0f12eaa3a81f..94f4cf3363f6 100644
---- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -426,6 +426,11 @@ This fetcher supports the following parameters:
- -  *"rev":* The revision to use for the checkout. The default is
-    "master".
-=20
-+-  *"static":* The repository is a "one and done" - clone/untar and the
-+   content is static and unchanging.  This allows optimizations like
-+   skipping fetch/pull and doing "ls-remote" on servers.  Typically used
-+   for repositories that will act as a commit library for other repos.
-+
- -  *"tag":* Specifies a tag to use for the checkout. To correctly
-    resolve tags, BitBake must access the network. For that reason, tags
-    are often not used. As far as Git is concerned, the "tag" parameter
 diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index de698a3d9f24..7cba990c3be7 100644
+index 7cba990c3be7..6cd5d09b2ded 100644
 --- a/bitbake/lib/bb/fetch2/git.py
 +++ b/bitbake/lib/bb/fetch2/git.py
-@@ -54,6 +54,11 @@ Supported SRC_URI options are:
-    referring to commit which is valid in tag instead of branch.
-    The default is "0", set nobranch=3D1 if needed.
+@@ -417,6 +417,15 @@ class Git(FetchMethod):
+                 if exc.errno !=3D errno.ENOENT:
+                     raise
 =20
-+- static
-+   Repository is of fixed/static content with no active/new development.
-+   Once cloned, nothing will change, so optimize accordingly.  The default
-+   is "0", set static=3D1 when appropriate.
-+
- - usehead
-    For local git:// urls to use the current branch HEAD as the revision fo=
-r use with
-    AUTOREV. Implies nobranch.
-@@ -158,6 +163,8 @@ class Git(FetchMethod):
-=20
-         ud.nobranch =3D ud.parm.get("nobranch","0") =3D=3D "1"
-=20
-+        ud.static =3D ud.parm.get("static","0") =3D=3D "1"
-+
-         ud.dlname =3D ud.parm.get("dlname","")
-=20
-         # usehead implies nobranch
-@@ -167,6 +174,10 @@ class Git(FetchMethod):
-                  raise bb.fetch2.ParameterError("The usehead option is onl=
-y for use with local ('protocol=3Dfile') git repositories", ud.url)
-             ud.nobranch =3D 1
-=20
++        # fixup "* (no branch)" from "--single-branch --branch <tag>"
 +        if ud.static:
-+            if ud.rebaseable:
-+                 raise bb.fetch2.ParameterError("The rebaseable option is =
-incompatible with the static option", ud.url)
++            output =3D runfetchcmd("%s show-ref --heads | wc -l" % ud.base=
+cmd, d, workdir=3Dud.clonedir)
++            headless =3D output.split()[0] =3D=3D "0"
++            if headless:
++                runfetchcmd("%s update-ref refs/heads/master HEAD" % ud.ba=
+secmd, d, workdir=3Dud.clonedir)
++                with open(os.path.join(ud.clonedir, "HEAD"), "w") as f:
++                    f.write('ref: refs/heads/master\n')
 +
-         # bareclone implies nocheckout
-         ud.bareclone =3D ud.parm.get("bareclone","0") =3D=3D "1"
-         if ud.bareclone:
-@@ -311,6 +322,8 @@ class Git(FetchMethod):
-     def clonedir_need_update(self, ud, d):
-         if not os.path.exists(ud.clonedir):
-             return True
-+        if ud.static:
-+            return False
-         if ud.shallow and ud.write_shallow_tarballs and self.clonedir_need=
-_shallow_revs(ud, d):
-             return True
          for name in ud.names:
-@@ -341,6 +354,17 @@ class Git(FetchMethod):
-             return False
-         return True
-=20
-+    def get_git_config(self, ud, d, repo, cfgvar):
-+        try:
-+            output =3D runfetchcmd("%s config --get %s" % (ud.basecmd, cfg=
-var), d, workdir=3Drepo)
-+        except (bb.fetch2.FetchError,ValueError):
-+            return ""
-+        return output.split()[0]
-+
-+    def repo_is_static(self, ud, d, repo):
-+        static =3D self.get_git_config(ud, d, repo, "bitbake.static")
-+        return (static =3D=3D "true")
-+
-     def download(self, ud, d):
-         """Fetch url"""
-=20
-@@ -368,6 +392,9 @@ class Git(FetchMethod):
-             progresshandler =3D GitProgressHandler(d)
-             runfetchcmd(clone_cmd, d, log=3Dprogresshandler)
-=20
-+            if ud.static:
-+                runfetchcmd("%s config --bool --add bitbake.static 1" % ud=
-.basecmd, d, workdir=3Dud.clonedir)
-+
-         # Update the checkout if needed
-         if self.clonedir_need_update(ud, d):
-             output =3D runfetchcmd("%s remote" % ud.basecmd, d, quiet=3DTr=
-ue, workdir=3Dud.clonedir)
+             if not self._contains_ref(ud, d, name, ud.clonedir):
+                 raise bb.fetch2.FetchError("Unable to find revision %s in =
+branch %s even from upstream" % (ud.revisions[name], ud.branches[name]))
 --=20
 2.25.1
 
