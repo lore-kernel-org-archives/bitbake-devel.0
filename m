@@ -1,17 +1,17 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (NAM12-MW2-obe.outbound.protection.outlook.com [40.107.244.56])
- by mx.groups.io with SMTP id smtpd.web10.19480.1617383784768231124
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (NAM02-CY1-obe.outbound.protection.outlook.com [40.107.76.50])
+ by mx.groups.io with SMTP id smtpd.web12.19633.1617383786141419869
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 02 Apr 2021 10:16:25 -0700
+ Fri, 02 Apr 2021 10:16:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=N/4ugfbV;
- spf=pass (domain: windriver.com, ip: 40.107.244.56, mailfrom: paul.gortmaker@windriver.com)
+ dkim=fail reason="body hash did not verify" header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=DboUz//L;
+ spf=pass (domain: windriver.com, ip: 40.107.76.50, mailfrom: paul.gortmaker@windriver.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IMwDzZlKRR4SGM5np7tpQQwb/f9Zdr/UbAGeNofTK/ZZTELvTKbJksFVddjxH9Qh3O8c8Qd/OuqCYjNNw0bKyPdMh1IQtbZA8Dzo+UloeVM4Cq0hnGFidJvWyMwfkEudCUXIlD0psUx3k06FU0AXNM+VRfVgo2EMswXlugLatWcXSJeeFD/IjwPfk5eg8yWgTnIpAOEbDjne7IyYIR5LYsJxNm7+WMlpc95CUWGxk76f70xTvgtdi52Vq9qY1yiSFE0Zp37tZhDcesHDdqYeCe/yvVvQbjtkL23VJ1ZCEOErvNb0TC768R3yxRjkcLZ2klvkfaZ+LsalJZHzTMkzGA==
+ b=cokRiGXT2UI1sl40tCmIDBXcr5y8QazEbk9JBmSebyyAAKiRmO05pvqLCOrdAPIuxSRTbFWswi9VVZPzmFjw44s491IT9oFQbgdlBCHIzwdyE1ECRiNHaxCONRdgxZtkDN2fZy95i7F9A3bapyvxV7IrZrm8rwhP9m68Y3WBsab2fWwwO7XgAEmKdCGvZRA9gxYaTDYF6qyP+Kex7i9WwphNOKMKOChekfTX1jhBb7v1WwXBfkUaxCCEg5LEMrrkxjDeLtdSVCRsT2alBDT9FXiZ/Yd0Dsd88eVrBtjFfXUlFkYVLPXhkniIgvv/b8ejrQHev1yTN0JF7dFjBqP/MA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b45Wss75KrWwVoT65ENN7IV333TH0LYP3BZDrHgFM6Y=;
- b=NSIgLYlyOTrEVuG2vnF++Lgy3dHnsBi6PiA0VcPqfevro0cw98NbXBwdTXKsdOaD0HuEviMuKHODROA8HDOc3XembW1uxdUG6tgdcx6H/QAryA+/OgR00wyt5zfpxC113FnnFWssgppQtsvVOjJhwy3Vu6UjawVtZtcDdTpqpz5pNolJr/s2ESyfaYRaiSW+4ByhONnA8sEHamaraJd0Fmz/fcOpvMKflWlpa+eZUb4GKlJ6XiaTZvQ/RuKNwo8FTOFFG2YLNHSBU+KsCYBMiMXA1gdzA6527aGAPai/a9ncvqLITSU4yrJldXzchNCrdaTDI2kvmtHLaACX9eJXGg==
+ bh=jKISuIDXa4Oy0gQiEvTPoEoztuw5+BPitBcBiKDy2d4=;
+ b=SUtoRBp39W+xcmFHM9Z/XaIpgyh8izAyxfz7lOBaEubos2l07jaq+jsF8cRAPMnF4f7PDfqyT6Wvb00kx3pUs4rrUdCzn9I/LqqEcJilXbJHF8U2cjQ5/oDacKpmG9wOKhs6ysP7+LlnwR3pAsIdjBJZ8xnUzNAzKIe7h6SDmoN0LIm7u3M0sAipddGCyuFsKD7NvMmaJ7OK4euC1ySHNaNUMkbgexW5x4es6PtVP4ZqBWxIsaKeSEtd/4+YN/81oePAh/oqFXDPqrvLaKfbwGHxfwFNjLccRn3+vM1p3MsmC3/8OQC/PQQ4bveYGUKNEIzz4eo9X0I2aaMYja8K6A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=windriver.com; dmarc=pass action=none
  header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
@@ -19,27 +19,27 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=windriversystems.onmicrosoft.com;
  s=selector2-windriversystems-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b45Wss75KrWwVoT65ENN7IV333TH0LYP3BZDrHgFM6Y=;
- b=N/4ugfbVd2BpWbuTXrdDdsl2RC/YtUVFCAEuQmzmJeaKMnqUAegLogUO/mIsZq/u0m+NQm3YVu701mLJANMYCQkQCwmfALESKZoNsz12T/jVs4Uw6ZNZ3e1zlhp8qecfQwaImhu4OQZ0PgoI0P+T2wQhq8S5A2JbRey0tgEeJug=
+ bh=jKISuIDXa4Oy0gQiEvTPoEoztuw5+BPitBcBiKDy2d4=;
+ b=DboUz//L3JDdnmXhFIq9D3UapM5bHAKe8WZxY7KTLM0tIKwt5EjNkFqwg+UWOOa5goNCJYZ0z/FxSqS5Pom85BJ9IWXn/F7j0ko4oCB82MGhJ/CKS90KN8PxHqGzRsPuKc5NRiF5PJyGbNGy9x9ICroWSYHmpWDrDe+xzDH68Og=
 Authentication-Results: gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=none action=none header.from=windriver.com;
 Received: from DM6PR11MB4545.namprd11.prod.outlook.com (2603:10b6:5:2ae::14)
- by DM6PR11MB3532.namprd11.prod.outlook.com (2603:10b6:5:70::25) with
+ by DM5PR1101MB2249.namprd11.prod.outlook.com (2603:10b6:4:5a::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.27; Fri, 2 Apr
- 2021 17:16:22 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.29; Fri, 2 Apr
+ 2021 17:16:20 +0000
 Received: from DM6PR11MB4545.namprd11.prod.outlook.com
  ([fe80::3d20:ed37:cfec:4ad3]) by DM6PR11MB4545.namprd11.prod.outlook.com
  ([fe80::3d20:ed37:cfec:4ad3%7]) with mapi id 15.20.3999.029; Fri, 2 Apr 2021
- 17:16:22 +0000
+ 17:16:20 +0000
 From: "Paul Gortmaker" <paul.gortmaker@windriver.com>
 To: Bruce Ashfield <bruce.ashfield@gmail.com>,
 	Richard Purdie <richard.purdie@linuxfoundation.org>
 CC: linux-yocto@lists.yoctoproject.org,
 	bitbake-devel@lists.openembedded.org
-Subject: [PATCH 15/21] kernel: add recipe for linux-master (mainline latest)
-Date: Fri,  2 Apr 2021 13:15:51 -0400
-Message-ID: <20210402171557.981599-16-paul.gortmaker@windriver.com>
+Subject: [PATCH 12/21] kernel: allow splitting mainline v5.10 source download in two
+Date: Fri,  2 Apr 2021 13:15:48 -0400
+Message-ID: <20210402171557.981599-13-paul.gortmaker@windriver.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210402171557.981599-1-paul.gortmaker@windriver.com>
 References: <20210402171557.981599-1-paul.gortmaker@windriver.com>
@@ -50,95 +50,167 @@ X-ClientProxiedBy: MN2PR16CA0026.namprd16.prod.outlook.com
 Return-Path: paul.gortmaker@windriver.com
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from yow-cube1.wrs.com (128.224.252.2) by MN2PR16CA0026.namprd16.prod.outlook.com (2603:10b6:208:134::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.27 via Frontend Transport; Fri, 2 Apr 2021 17:16:21 +0000
+Received: from yow-cube1.wrs.com (128.224.252.2) by MN2PR16CA0026.namprd16.prod.outlook.com (2603:10b6:208:134::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.27 via Frontend Transport; Fri, 2 Apr 2021 17:16:19 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: de8d87db-e39d-4845-7374-08d8f5fb0999
-X-MS-TrafficTypeDiagnostic: DM6PR11MB3532:
+X-MS-Office365-Filtering-Correlation-Id: 81e3ae1a-9794-461d-1a02-08d8f5fb0867
+X-MS-TrafficTypeDiagnostic: DM5PR1101MB2249:
 X-Microsoft-Antispam-PRVS: 
-	<DM6PR11MB35322D9E475290DC613EE3BC837A9@DM6PR11MB3532.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+	<DM5PR1101MB2249CA951B6680848E1BA3D7837A9@DM5PR1101MB2249.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	s0z8UsVNazcBS0TJCfkYJuLVEveDZEMjfSf+JoF0gVTezsBEXVTE4N1OLY6Ys7v5VkWdyRywDJtYSy1fAL5IKlJNC03V1C/tK9mnG+rxu6ETOvMF4sybbiUAS+ZzYP+a6uZTewQgaap9KupIN2HoCLKOHEyz9tlGse5YWKB3efzC7T7iLLfzOTQ/DV6tv9xcR/s2QqqCu8GU9KHvcmzAfsSl9bNaftTBXcsDqYl9fhAR9Ghe3YUjbxnWZm7YkYBVPa3TcxJ/7Oh+y0gdGnO+5mRjrF5jkUxec0xNZA0zWcJJliuL9NYtWvR601SKH7WH57/Mqv6pGYpkp0EphRGOTQtSoZSm/Xi+2MwIXKyEAGpCcSIDYc7F09uP9whmjq6IKa1a7yYBMevcz/5y8ktKkdTep0Ww4vG8ahvl+uZ4U09FE9nCiA9cSQv2GpWWWZeykChwGjbVt9xTQLcRjtoQMmxVykl5Jqrlw7RGuYZ37xOTv+EgCk8d8BgKT7OAvKaQCSTJiIAhfPLQOez8k8EGpBlaNr4D/6I4H4pKAQG0pt7HjL3ymQ/F9L/XDyKzrclVokgVsD1HZ6Y6AjhtSmAeBL/PbH/HtnlqwQOUOMs9lqBvFpGxLK1E9dOOIIjXhCZ5cyUZ8drDLJvWRfZsAVMbnw==
+	qVNHGFOzxkoX0xI3djMM5oyq6jW4lVWw7ECdNdSVeO5Ll+nrX859/nTVn7x3hUrrJLtkWXIPfbxtdsqZxGwYV7KLDFy6w8FMRGyvRG0mah29TPPQM4y6U2Gfk4WiV4aj/4/eYSYrHa5CZZAJYOBJK8ES6RVJSat0XHJrFw7HvWnjaPzR18KXV1Qe45j+04F+NDQJ6a4lyyT38L09mTBPemCg+C9YDFAXllSM/LfYkC83yy55kYNc+BhFF9fEQJLecpZOiUddjAu2uCH5kRjF4BkJKB8iYrpfnND951RxdbRknGjSnwLE1GRcOxks316zFH9FxNG1hjZmaHPsBiM6T84wXKQNe8Z4JURKxe5rUA3afQlUzKtU68u3Hj/F4Ci0v8RFMmKPekN/CnqV3sj2s1dy/lIEWiWxbJH9cGWAQushemcupmMhia+bUHs9eTZwCWXTY0G7hTN8P9bOsTyYxBHwwyYr3Pm0sN64Xwsl+UHy2V5GB9pSOzByaR3HnZfLmtD129NHQyPMyiey48GuKkXmXVi+FGbP55x9InlI1yrYqwIFMJfls2iNIFTkV5CjKy02gKATz4gM4V0pzjViaaQxVavlfiWFWbb2uItKFDSLDyqWm2pJIJntpmGIK9Wdlb5DljchGItV0+DUMBA+HA==
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4545.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39850400004)(346002)(136003)(396003)(366004)(376002)(186003)(38100700001)(956004)(2616005)(6512007)(16526019)(66946007)(66476007)(66556008)(1076003)(316002)(8936002)(110136005)(478600001)(36756003)(5660300002)(44832011)(2906002)(52116002)(6486002)(26005)(8676002)(86362001)(4326008)(6506007)(6666004);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4545.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39850400004)(366004)(346002)(136003)(376002)(5660300002)(83380400001)(478600001)(44832011)(6506007)(6512007)(66556008)(66476007)(6666004)(8936002)(36756003)(52116002)(1076003)(956004)(86362001)(2616005)(66946007)(38100700001)(8676002)(316002)(110136005)(6486002)(4326008)(16526019)(186003)(26005)(2906002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
-	=?us-ascii?Q?sdmO0mIs/o4C9P9XKZLOGQiatoQAMkm60gJ1i/5CQJd4o77lM5p8I5zXsqHw?=
- =?us-ascii?Q?mAqa/0ckalMnmUAdxTjQVUf0QxCbd0rRpZZ3ClqZ4MeBFw0z9ff58igFF3qO?=
- =?us-ascii?Q?EzZAXD6nYn56PkxYOR/PlCwOarwsGBpg7/rTUTQycTmE/xNs5wJksonPsU0h?=
- =?us-ascii?Q?jAE3owH3fKZ/xiJViuyS+r5COakrABy0OG8CQ1Kh0z0/HgnXeuzpC2bEFGL3?=
- =?us-ascii?Q?KfaYlbPAOa2WbhPUVL0RJEEAaJhUvnUh/VIrq4ZU5yHYzz+3XSMNyAEUNEh7?=
- =?us-ascii?Q?anCnmHaB6Fuby8CFMH3zfEnhBf1mcy0J9QYYhF8ynwt6n2pevngwSuq9236T?=
- =?us-ascii?Q?Y6rKI2RUUwSC84Nzf872qgzyvpOLwt0zmYBqZxy9RxQf+eSuNXfNORZQwHcC?=
- =?us-ascii?Q?rkhmSEjVSMH2fFyVwzt9AGYUI6P4HAQjdywty5yfGA5SfrD/63TOg0rm4D/U?=
- =?us-ascii?Q?amfo1ZAuKTAjd0G6giECOKNQNWjHMMk7CAdISpfsQmzoto1B4nwJ/ZPpPhhn?=
- =?us-ascii?Q?DJoqa3vXcVCOA3Uvhiv0eT2yJKJSX06+gRfqbWegd5mrHeNVfcE4mo9BceZh?=
- =?us-ascii?Q?OoQh8iB1QFkvNV+EGztjZhdM0L/QdFzOwxVz72mnXMLmI4tKyMYybUa5ddes?=
- =?us-ascii?Q?YNF5iZtkRmFrSPBsrtyv9Ap0PBQInNsgeK0catRcI9YjkzLlspJN9bJlaCwI?=
- =?us-ascii?Q?ESclbi3CRstu864taDU4KD/OBDdjUwTLl/+CwLv22fVRVeahXXjnEnfgY/x/?=
- =?us-ascii?Q?rrUsfaHnGO9ekZXagrzTLOC/Y3Im4R+7/OM4Lrt9mMYAdTT4x7thQSJTuJLy?=
- =?us-ascii?Q?qbmooZUaJzHz6Ct1YJ4mjC0iIry4VP57N5B43aaIvX+qNLWhgy5hhz7fhb+E?=
- =?us-ascii?Q?rHNdQbLwF8pGtUT/zz/ZtDGYg18yFZa6csmTdeb+4Cjc4IOxdYzb9Nf2Q44O?=
- =?us-ascii?Q?rOZulDaEFZbD4Vjihdj1RtRkzPvWSxuF5VZC8MDlvnIhshWCatZnlFtHD3yZ?=
- =?us-ascii?Q?+a2f0v2WEzkGG7MRMI1g01A9rKYaaN5qHOM6sL/fXP3g1diM69Cb6CX6tH97?=
- =?us-ascii?Q?D2EUgzN8MqqySvnoNcGQaLmQ5uwuxS2TmazvdZHG2KaW+JeM6CK2eFGbBSi/?=
- =?us-ascii?Q?hDYSwz2aOIUe/C9WqHDXMvTwhnvJ9+PHbL48vrd8Bl/SBHxiykVtgra+vFsh?=
- =?us-ascii?Q?/tvk4kR/6v727shXZcvG1EYtWYpdVnSc4eZymErSnfruAwUEeoL2yNTwwslU?=
- =?us-ascii?Q?EI40vxJymZGQlhvomP0b0dpZ10twe25OFpatp6G+OHTWFM2DDy6czb/4X0X6?=
- =?us-ascii?Q?vwZd8hNk7QDVh5YSk3tY+moY?=
+	=?us-ascii?Q?2zpBDD6yLxS0mLJ1frZJriu3/FmTln4IdQffpxA+7e5Oxi6vI38fxN5HnCvK?=
+ =?us-ascii?Q?g6H4TULfNuukNYiKQh3PWpcQY0/PsNM7wQ8Zop2U3+fhfHnj/ydKE3q3WVc+?=
+ =?us-ascii?Q?+BmlrgXjjaVmkp97XEXaNE/Wvl0H75wLAVanHWfAM1m45dDNWV+9Fx/HJpW1?=
+ =?us-ascii?Q?EBDG0tQ7g952PUjASCd0sBhOhkBN7jSrYEiISalvFJaV+KdEjr5osVwqOBys?=
+ =?us-ascii?Q?Y+KJ9U0vLPgbxcPQHSmbMkSugurG95f9XR3GbEgwhk7vshB6r3bMoC99B8BW?=
+ =?us-ascii?Q?uPFMKIGy07ATcsK3CFEkVziQmkbpyQvjo4bxCX9yYVwfEhRWb8dgPl+2jWLe?=
+ =?us-ascii?Q?kVz9ksNqiShd+eXrn7vQj+lKTbT8DiQ3FEC7uqCF7mSJeHQhwWoWV6OfCyW0?=
+ =?us-ascii?Q?nEkqsaYh1x4N0Uf7H7tsBPfjKLh+Wu30nRIYx+9bE3Qsx5ofVgltm4fZtXTP?=
+ =?us-ascii?Q?HBpyjA7w2+S7DbqhKK7MglttmZqVVnoYCFEVLp+gpXjR4Zu3UWjfLOt4rEr9?=
+ =?us-ascii?Q?fG12+0xL6B5pJCvFlEOv+2T0RNN7JTp5lnZoBtTArcv2cN7JttnnrSKKWUM1?=
+ =?us-ascii?Q?0nTh0e5NrzCC0wVB+lMhCHpUwrfK5HTdvqOKUX93E9Tlgvz4PQ5GGbhK15Dq?=
+ =?us-ascii?Q?mjMZdGzNTdMij53i3Ca9NwCj4jHkxpLuEJGZ0SrtDU6p0h/QM+gj1o063uEn?=
+ =?us-ascii?Q?cLrk5knfCAXHJioOYf8ibHOw2HNY34S1u91Hj6tdLHONSFuDu707FSnmDBOy?=
+ =?us-ascii?Q?Ql30zzuWTiAPbXzpOOsufz5+Y9j4SUth5LKByRDZNVbZpB1leghE7VmL2OOy?=
+ =?us-ascii?Q?WTvsG4YS/+vM2lr6WETuf+INfvPO5vyx+pKekU8CQKQ6uTqB4eCYNZwh7nIH?=
+ =?us-ascii?Q?1Zo5S5i5fYOdoRzybVzngKUJrFoCWXIhyZNg1I17fNXoFbOZryJciZ/wLaJd?=
+ =?us-ascii?Q?5jIbY2PbY+8Rj3hQvHUnVYrvRxWEYrDp/G54eLrFL0hQ5W5rNxi6WhM9Hu6+?=
+ =?us-ascii?Q?SsTAHVCRj4EuI0TbNPfZBzQDVua4niXCQe/WwhoLqaywj2rgCl8U9ibYb7+r?=
+ =?us-ascii?Q?thP1/Zeet5ObGpuAKb1BlvC6UmI5M1szB5IMzrySKbhIzgQ3V4xw2Xz5b4wk?=
+ =?us-ascii?Q?LBwHrbeSTvokOspIC9s/jWm01YZjY6ojPR/Gu5bFntfaOX9X5yFNt0jCINyX?=
+ =?us-ascii?Q?GDqH4PPLIL4mtdNrrHUZOQlrycjZAzVuYHmiadC7y4Zh8UxV+n3/J5KwAgii?=
+ =?us-ascii?Q?hGrtDTjsj3JNRtuQw/erQ7PUPeXIxZ11sb5VI40/jHRGVprtSWP+KBiYGtl/?=
+ =?us-ascii?Q?ztCmUc+aa82wD4STabh3z4Ej?=
 X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de8d87db-e39d-4845-7374-08d8f5fb0999
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81e3ae1a-9794-461d-1a02-08d8f5fb0867
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4545.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2021 17:16:22.1728
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2021 17:16:20.0875
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 29xyUC5t2V32TvNvAdyC1XetbMfkjwxEaVIuj4J7rz5+pE3vBGkTNR3fdoIShvh8OIl0jaYS+Pe3nmHZC0tQBAckAsMlw3bGb2sDCb3SdW8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3532
+X-MS-Exchange-CrossTenant-UserPrincipalName: fU2nHRfLniq/d+zzd8VgxvTr2ekux7t0Hor+PqiVCv2i8o8gHjh3q1gX56ZOICtg74wEgQxxZsg02s/l3yi3JRcwI+Qgza0IEW9hF+ZFD3Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2249
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 
-The idea for this recipe is to have a name "linux-master" that people
-can depend on as a reference for mainline; today and ideally for as long
-as we are maintaining it.  While the recipe is there for everybody,
-the obvious user we are creating this for is the linux-yocto-dev repo.
+With support for sharing packs, we can now optionally split the larger
+mainline kernel content up to v5.10 (approx 1.5G) into two.  This may be
+advantageous to people with release media constraints or unreliable
+connections.
 
-At some point in the future, we'll carve off another chunk of post-v5.10
-work, mark it static and put it alongside of v5.10 and let this mainline
-recipe reference that.  But use of this "linux-master" will be 100%
-transparent to the underlying backing store changes.
+By setting "INITIAL_KERNEL_SPLIT =3D 1" in your configuration, you will
+get a linux-4.0 clone and then the linux-5.10 clone in your downloads
+directory.  From a size perspective, v4.0 is roughly the half way point
+between when git use started in 2005, and v5.10 from 2020.
+
+This split is achieved by manually selecting the midpoint tag and cloning
+that portion 1st, and then cloning the 2nd 1/2, while using the packs in
+the 1st 1/2 as a reference.
+
+Packs deploy both zlib and delta compression - and as with all
+compression technologies, splitting the input comes at a cost in terms
+of reducing the compression.  So two packs will be bigger than one,
+three packs bigger than two, and so on.  Representative numbers are
+listed alongside the implementation in the change itself.
+
+The 2nd 1/2 includes a fetch dependency on the 1st 1/2, so that things
+will be serialiazed properly.  The dependency also links it into the
+chain of events, so no other mentions of v4.0 are required.
 
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
- meta/recipes-kernel/linux/linux-master.bb | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
- create mode 100644 meta/recipes-kernel/linux/linux-master.bb
+ meta/recipes-kernel/linux/fetch-linux.inc | 15 ++++++++++++++-
+ meta/recipes-kernel/linux/linux-4.0.bb    |  9 +++++++++
+ meta/recipes-kernel/linux/linux-5.10.bb   | 20 ++++++++++++++++++++
+ 3 files changed, 43 insertions(+), 1 deletion(-)
+ create mode 100644 meta/recipes-kernel/linux/linux-4.0.bb
 
-diff --git a/meta/recipes-kernel/linux/linux-master.bb b/meta/recipes-kerne=
-l/linux/linux-master.bb
+diff --git a/meta/recipes-kernel/linux/fetch-linux.inc b/meta/recipes-kerne=
+l/linux/fetch-linux.inc
+index e3fdd0bb36c2..96653a2bea06 100644
+--- a/meta/recipes-kernel/linux/fetch-linux.inc
++++ b/meta/recipes-kernel/linux/fetch-linux.inc
+@@ -2,6 +2,19 @@
+=20
+ require recipes-kernel/linux/fetch-only.inc
+=20
++python __anonymous () {
++    kref =3D d.getVar("KREF")
++    if not kref:
++        d.setVar("KORG_REF", "")
++        d.setVar("KORG_REFDEP", "")
++        return;
++    clonehost =3D d.getVar("KORG_SERVER")
++    d.setVar("KORG_REF", ";packref=3D%s.torvalds.linux-%s" % (clonehost, k=
+ref))
++    d.setVar("KORG_REFDEP", "linux-%s:do_fetch"% kref)
++}
++
++do_fetch[depends] +=3D "${KORG_REFDEP}"
++
+ GITCLONEARGS =3D "--bare --single-branch --branch v${KTAG}"
+ DL_NAME =3D ".torvalds.linux-${KTAG}"
+-SRC_URI =3D "${KORG_URLBASE}/torvalds/linux;tag=3Dv${KTAG};nobranch=3D1;st=
+atic=3D1;dlname=3D${DL_NAME}"
++SRC_URI =3D "${KORG_URLBASE}/torvalds/linux;tag=3Dv${KTAG};nobranch=3D1;st=
+atic=3D1;dlname=3D${DL_NAME}${KORG_REF}"
+diff --git a/meta/recipes-kernel/linux/linux-4.0.bb b/meta/recipes-kernel/l=
+inux/linux-4.0.bb
 new file mode 100644
-index 000000000000..f674c2562e81
+index 000000000000..68dd054970ca
 --- /dev/null
-+++ b/meta/recipes-kernel/linux/linux-master.bb
-@@ -0,0 +1,13 @@
-+SUMMARY =3D "Linux kernel mainline source"
-+DESCRIPTION =3D "Fetch source of the latest linux mainline kernel"
++++ b/meta/recipes-kernel/linux/linux-4.0.bb
+@@ -0,0 +1,9 @@
++SUMMARY =3D "Linux kernel v4.0 source"
++DESCRIPTION =3D "Fetch source of the linux kernel up to the v4.0 tag"
 +
 +LICENSE =3D "GPLv2"
-+LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D6bc538ed5bd9a7fc9398086aedcd7e4=
-6"
++LIC_FILES_CHKSUM =3D "file://COPYING;md5=3Dd7810fab7487fb0aad327b76f1be7cd=
+7"
 +
-+DL_NAME =3D ".torvalds.linux-master"
-+KORG_REF =3D "git.kernel.org.torvalds.linux-5.10"
-+SRC_URI =3D "${KORG_URLBASE}/torvalds/linux;rev=3Dmaster;nobranch=3D1;dlna=
-me=3D${DL_NAME};packref=3D${KORG_REF}"
++KTAG =3D "4.0"
 +
-+do_fetch[depends] +=3D "linux-5.10:do_fetch"
++require recipes-kernel/linux/fetch-linux.inc
+diff --git a/meta/recipes-kernel/linux/linux-5.10.bb b/meta/recipes-kernel/=
+linux/linux-5.10.bb
+index 7f8a27bcb1f0..73e33d405376 100644
+--- a/meta/recipes-kernel/linux/linux-5.10.bb
++++ b/meta/recipes-kernel/linux/linux-5.10.bb
+@@ -6,4 +6,24 @@ LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D6bc538ed5bd9a7f=
+c9398086aedcd7e46"
+=20
+ KTAG =3D "5.10"
+=20
++# We optionally split the v5.10 download via adding refs and depends.
++# Fragmented downloads can be less apt to timeout, but delta compression
++# will lead to object duplication for > 1 objects/pack/*pack file and
++# an increase in overall on-disk totals.  The du -hsm for bare repos:
++#
++# No split:	1521	epoch->5.10
++# One split:	1730	epoch->4.0, 4.0->5.10 (854+877)
++#
++# Download sizes will vary depending on server compression settings.
 +
-+require recipes-kernel/linux/fetch-only.inc
++python __anonymous () {
++    splits =3D int(d.getVar("INITIAL_KERNEL_SPLIT") or 0)
++    if not splits:
++        return
++    if splits =3D=3D 1:
++        d.setVar("KREF", "4.0")
++        return
++    bb.fatal("Unsupported number of v5.10 kernel content splits (%s)." % s=
+plits)
++}
++
+ require recipes-kernel/linux/fetch-linux.inc
 --=20
 2.25.1
 
