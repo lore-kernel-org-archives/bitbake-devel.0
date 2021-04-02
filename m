@@ -1,46 +1,46 @@
 Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
- by mx.groups.io with SMTP id smtpd.web11.22376.1617394438891600072
+ by mx.groups.io with SMTP id smtpd.web09.22384.1617394615210394597
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 02 Apr 2021 13:13:59 -0700
+ Fri, 02 Apr 2021 13:16:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=B88I9yqq;
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Kfs9pixv;
  spf=pass (domain: gmail.com, ip: 209.85.218.50, mailfrom: bruce.ashfield@gmail.com)
-Received: by mail-ej1-f50.google.com with SMTP id hq27so8750950ejc.9
-        for <bitbake-devel@lists.openembedded.org>; Fri, 02 Apr 2021 13:13:58 -0700 (PDT)
+Received: by mail-ej1-f50.google.com with SMTP id u5so8775700ejn.8
+        for <bitbake-devel@lists.openembedded.org>; Fri, 02 Apr 2021 13:16:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OeYWIWmBNu39xulAvtxOj6zpTpP4b/tFV/CNxsg0pEg=;
-        b=B88I9yqqoQzba2hOm3RJGH5AIvtIA/dCqAbN1llCgXYBTKG+02Tm+zh91ahapCazUf
-         nnpldCEWI4f3Fsnmij+tfiDUNfvtwwogZr62H8CVFkUJ7T9p2LrxdPHw1s/RT55vBliE
-         8o6zu35MZT50mFrwM/h3EN8IjOk5hNy4U3jlrf68MZarUL+aNBdiJ9BvkXYd1OcQHbOb
-         ojoX94ToSYTw55RruFZzbluoeAowG6fxQbOSPgbKxYexr3o7VFW2UoUWJugLi0ahSaiE
-         UcgZCAW7tG970hxt4XlGP7j9gmgcoaXvq1VveXt+8cTioRCMPomuosEk9EbaDlY7F9YC
-         ZO1Q==
+        bh=LliHztjkW5cOlgoFUesrBiuvkKZgMSEYDA0zJ/NIYYU=;
+        b=Kfs9pixvuX2aSIGOJADxucJIaAlbfDY6lPHcfYsS9FWPn4qg6sNIRM+BxbjW9idpUw
+         9VA8rkv27ZjmBYnDvC5zIsES1jBjMx4wQbvwTqky3vhfGzqcOtxfGuNQPjIkrUOZ/3sO
+         10dShBGMId8Sv3ObpuUjIWgnVVQhgUxUyc2oKkC2PfwpIFi8LNiYAcjJf+E+d2eAIFSy
+         U2cLoZFhvZAEYUOk9LpO+bUJsfdJwCumbBy9WlqPZo2Ak9IKYYEs20TTrb+cC+2M/qyW
+         RhJK2EOnBXrB0IRfH1Tm5DY9+noySAI5sVRYZXPrqI8S2o+H62ep6slmYkBs2o1a5Wi/
+         4nKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OeYWIWmBNu39xulAvtxOj6zpTpP4b/tFV/CNxsg0pEg=;
-        b=OTP+vPKt2q/LxLK4ub0ohGURnVTxJMnn8LmIt5fJ955mGbclxTnXDG6mjU3OCdlsN0
-         7YkwBvDVx+CLuxy45zyZthIDqc6ONVbVp2RVSuwFLzryPsjeAPJPYp0qU+V6jHGVYNYf
-         25RpE1/3rJD8e5DZEOmjgCp+J9RTap6H356BItxATg1g0kF9fQxl8/93VOHR9QoVy2uu
-         syPS5yVjch9l62wiIlMJKQUu46US2BnDXbBpBY0dCraTR1TVRvrRfN5x14IiAKrmMC0f
-         paw6OZs3IppLitbOFSRshc8MKY49+HGaUWS9OFt60lEfM4lz3p+TYKQWn3Pbpt8lxj77
-         uvHw==
-X-Gm-Message-State: AOAM530mK7ZSD5TVPsR2w0djirR6HL4KdgOdRouJOuy00w/MDYf+A066
-	uLSRbcLhqtRsWQoqoKA5jG0HLhQmKhIOYn6ydMw=
-X-Google-Smtp-Source: ABdhPJyR0RoS96a3CxPHOUsg8FNQ1azOI9Qg1Cpwt+dLKwjQ8X8bRyrqdxCEFjZU/N3DEQhHDuG5pUGOTPLKJ0Mth/c=
-X-Received: by 2002:a17:906:75a:: with SMTP id z26mr15493007ejb.22.1617394437288;
- Fri, 02 Apr 2021 13:13:57 -0700 (PDT)
+        bh=LliHztjkW5cOlgoFUesrBiuvkKZgMSEYDA0zJ/NIYYU=;
+        b=O1X32l/EhyPgs9QtQihaCQv8t97oEh0YOkehppB8+9mpTmHpf4h0aBDpZO61jC4USu
+         hASf8kWiHKs7iaMz/0SQJHIokslsS+r9xhrzJA/2UmAZvAYGIzI0xEGSSMKIWvMXgXaR
+         ZNs9al5enVIV4e5dzYJKmeyn6xcVBt+6+H8jVG8CNsPqhO6CsZEE1aiuYYBQePfVhOUQ
+         +4qCbVZYk2k3lYcjtPhs+O72Zxwm/rnIPaIzhJ1f21RfvvpLUj5H/jzyYRgajwXz5LfG
+         WMjsWrGrBMH9XcppsLvpkkTUDpa0D56Gj2W4SEUsnvmAR1CNRWo7DNLQhQovuq7nxmUc
+         DSwg==
+X-Gm-Message-State: AOAM532GKhEA77+L0UaXxaKrC2WhtdSwLsGVBMh4xoyLkFNovJCNTSLN
+	OfiR598b2bGUcMaSdtzbJxgIm2N5/3+n3ZAlGZg=
+X-Google-Smtp-Source: ABdhPJxbUtamCB6watc+DcM3nmB8K9XgNhENBP7p14PrbG3BIvEFMNSMZbTTd5UpcZT4vXTY4CXGc6l+amuC5uxV7vQ=
+X-Received: by 2002:a17:906:2a16:: with SMTP id j22mr15819602eje.247.1617394613678;
+ Fri, 02 Apr 2021 13:16:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210402171557.981599-1-paul.gortmaker@windriver.com> <20210402171557.981599-12-paul.gortmaker@windriver.com>
-In-Reply-To: <20210402171557.981599-12-paul.gortmaker@windriver.com>
+References: <20210402171557.981599-1-paul.gortmaker@windriver.com> <20210402171557.981599-16-paul.gortmaker@windriver.com>
+In-Reply-To: <20210402171557.981599-16-paul.gortmaker@windriver.com>
 From: "Bruce Ashfield" <bruce.ashfield@gmail.com>
-Date: Fri, 2 Apr 2021 16:13:46 -0400
-Message-ID: <CADkTA4OiUnnQDfY+vXgBFkaC-P=zPH0xWO3Z8v8aOJY0T2Es8g@mail.gmail.com>
-Subject: Re: [PATCH 11/21] kernel: add a fetch-only recipe for mainline v5.10 source
+Date: Fri, 2 Apr 2021 16:16:42 -0400
+Message-ID: <CADkTA4Mu3YYU7U2zegaGmfnL_Omeozb1nAHfRn59sfOZyw8n=Q@mail.gmail.com>
+Subject: Re: [PATCH 15/21] kernel: add recipe for linux-master (mainline latest)
 To: Paul Gortmaker <paul.gortmaker@windriver.com>
 Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
 	Linux Yocto <linux-yocto@lists.yoctoproject.org>, 
@@ -50,74 +50,59 @@ Content-Type: text/plain; charset="UTF-8"
 On Fri, Apr 2, 2021 at 1:16 PM Paul Gortmaker
 <paul.gortmaker@windriver.com> wrote:
 >
-> With v5.10 being the newest baseline currently in use by linux-yocto and
-> with the download size being 1/2 the size of current linux-yocto itself,
-> the v5.10 makes a good initial line in the sand for blocking out the
-> source in a way to optimize sharing.
+> The idea for this recipe is to have a name "linux-master" that people
+> can depend on as a reference for mainline; today and ideally for as long
+> as we are maintaining it.  While the recipe is there for everybody,
+> the obvious user we are creating this for is the linux-yocto-dev repo.
 >
-> With this commit present, one can test via "bitbake -c fetch linux-5.10".
->
-> Pending recipes who will want this source present will add:
->         do_fetch[depends] += "linux-5.10:do_fetch"
+> At some point in the future, we'll carve off another chunk of post-v5.10
+> work, mark it static and put it alongside of v5.10 and let this mainline
+> recipe reference that.  But use of this "linux-master" will be 100%
+> transparent to the underlying backing store changes.
 >
 > Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 > ---
->  meta/recipes-kernel/linux/fetch-linux.inc | 7 +++++++
->  meta/recipes-kernel/linux/linux-5.10.bb   | 9 +++++++++
->  2 files changed, 16 insertions(+)
->  create mode 100644 meta/recipes-kernel/linux/fetch-linux.inc
->  create mode 100644 meta/recipes-kernel/linux/linux-5.10.bb
+>  meta/recipes-kernel/linux/linux-master.bb | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>  create mode 100644 meta/recipes-kernel/linux/linux-master.bb
 >
-> diff --git a/meta/recipes-kernel/linux/fetch-linux.inc b/meta/recipes-kernel/linux/fetch-linux.inc
+> diff --git a/meta/recipes-kernel/linux/linux-master.bb b/meta/recipes-kernel/linux/linux-master.bb
 > new file mode 100644
-> index 000000000000..e3fdd0bb36c2
+> index 000000000000..f674c2562e81
 > --- /dev/null
-> +++ b/meta/recipes-kernel/linux/fetch-linux.inc
-> @@ -0,0 +1,7 @@
-> +# Boilerplate to fetch up to a single tag of mainline
-> +
-> +require recipes-kernel/linux/fetch-only.inc
-> +
-> +GITCLONEARGS = "--bare --single-branch --branch v${KTAG}"
-> +DL_NAME = ".torvalds.linux-${KTAG}"
-> +SRC_URI = "${KORG_URLBASE}/torvalds/linux;tag=v${KTAG};nobranch=1;static=1;dlname=${DL_NAME}"
-> diff --git a/meta/recipes-kernel/linux/linux-5.10.bb b/meta/recipes-kernel/linux/linux-5.10.bb
-> new file mode 100644
-> index 000000000000..7f8a27bcb1f0
-> --- /dev/null
-> +++ b/meta/recipes-kernel/linux/linux-5.10.bb
+> +++ b/meta/recipes-kernel/linux/linux-master.bb
 
-A specific comment is that this should actually have "fetch-only" in
-the name of the recipe.
+I won't reply to all of these fetch only naming patches (maybe this is
+the last one,
+I didn't check), so this is my last one.
 
-We want to avoid any confusion about this being buildable, and that it
-is not a jumping point
-for kernel builds.
+My same namespace comment applies here
 
-Trust me, someone will ask.
+Actually, thinking of it more, we could even have these both with fetch-only in
+the recipe name AND in a directory structure that implies the same thing.
 
-linux-yocto has v5.10/base which is vanilla -stable, and simply
-because the name is
-linux-yocto, people never realize that they can build a completely
-stock greg-kh kernel
-until they turn blue :D
+And thirdly, maybe we could taint the tasks in some way to prevent that jumping
+point to building.
 
-Otherwise, I like the concept and can take it for a spin.
+Since yes, you'll get someone trying to ask for support using this to build
+version 'x' of mainline. I have the battle scars to prove it :D
 
 Bruce
 
-
-
-> @@ -0,0 +1,9 @@
-> +SUMMARY = "Linux kernel v5.10 source"
-> +DESCRIPTION = "Fetch source of the linux kernel up to the v5.10 tag"
+> @@ -0,0 +1,13 @@
+> +SUMMARY = "Linux kernel mainline source"
+> +DESCRIPTION = "Fetch source of the latest linux mainline kernel"
 > +
 > +LICENSE = "GPLv2"
 > +LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 > +
-> +KTAG = "5.10"
+> +DL_NAME = ".torvalds.linux-master"
+> +KORG_REF = "git.kernel.org.torvalds.linux-5.10"
+> +SRC_URI = "${KORG_URLBASE}/torvalds/linux;rev=master;nobranch=1;dlname=${DL_NAME};packref=${KORG_REF}"
 > +
-> +require recipes-kernel/linux/fetch-linux.inc
+> +do_fetch[depends] += "linux-5.10:do_fetch"
+> +
+> +require recipes-kernel/linux/fetch-only.inc
 > --
 > 2.25.1
 >
