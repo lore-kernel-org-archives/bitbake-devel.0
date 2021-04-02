@@ -3,15 +3,15 @@ Received: from NAM02-CY1-obe.outbound.protection.outlook.com (NAM02-CY1-obe.outb
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 02 Apr 2021 10:16:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=KVWs1M/L;
+ dkim=fail reason="body hash did not verify" header.i=@windriversystems.onmicrosoft.com header.s=selector2-windriversystems-onmicrosoft-com header.b=pEmJcO4E;
  spf=softfail (domain: windriver.com, ip: <nil>, mailfrom: paul.gortmaker@windriver.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WRPSaIUDjBnhvp+LcM5zFoReiy5zPZF26qLDmOD9nqUi8JEfaPY6MHmuTWnAIRZGAPnO902Hjg4D8dvxtmALcW1QXFdVC5/Szz47EbttikVWOT0CBBhodZB1AUf8Lo8Bi4wUha+aWNFOYOsFsn5v2tlyW47wKXkWdHLDhDFatv1TR+ISmJNjY6Ne9jLNOSE4nnTwsP5RnH4HoldSthLrIJRjcIPVZQaUgU11WS+Axy/HQvbOZYxCBH3+t4CQ6N3UzXhS4LF2s7hzbkMIUCPoF9jCPIeSoF6an0S4QHrGEkaANwxuDGWp4dXBrNMTlG8ZqJEI8+VBGxgV6hFfQaZpJg==
+ b=JGJ/KGZh+Fa1GUkinvXw4xinhEhsS29ym2u1oOo1jPI+Rrk2fNat9A5A5pcHqPSSvS1IzO4ewFPVVkqEtgcVxB+MH2SLq/iIWtfadI0UfUNI2Jv3we3DheHl7Wh4ikBXBQ3xdvwrEic9ntOg+jt/3VZSdJMWb/3ALknORR5ptpgRrqZTTTrwL0jNeS+imbPLxcJQnmpDyKAnXDSoA7Vq3T+py3vqJwEZ1Rqu1GFkGnQdcX5pzbrZigFZiohIZc6QWLv/Hk33o/ivZXha7K8Z7ELoBpbb6CVGISvRRoh6Eo3TYl+wgnq/NTSL/uD8HN7sKJKJDJJ3hwEK2Qs0Ju45Ww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tfBe7U1ZqL7aJ2eRKH1+JellMzRmdarsvZfn0IOCzPI=;
- b=bVGAh5i0nrY8fdX5VcJaceRL7EyqeJAYY2z4iD28/Ae4uJtdNXmoYgDgMKg3KOzod1sopt1YsFQ8ekwD6yGLdp5XBcA9SCIp1TNYr4x3oCdQeNiVeEormaH3yiutdRtdgbGnn7QQgbx4Jeo1y9gB9F8xCeN7yRmJyr4RnSpKRXjfy6pVIZKRGYNXI+6mi48RD5gryiE5lE67ZxV4YUJE0ETFnUAuKiOQTSOADx2sdLwR69mYvRFG/jYzY8e+EtK8IXWJhjC+2u6x5e4fJeVqHCJVy1/regJer00pWJegIVoeon34HdhgwF4AUnr0QtGIaJhV2bFLOweEHlh63ea6Ww==
+ bh=OHNaUovvR9XwQFh/2UtPo0Xy1g7ab3hUxyxNcmpPYvo=;
+ b=PC43bG6iS4oL+yDGGexD7oEDTsYPRjGyX5ynGCEAMC6MeCpwHS+ZdmKIcsKAE5sHatJF8Qs8H8ZBdC/5bv6+1n4i3LWg+4xXswr/VY/mpSg2rvrhyXCM4vgBbW8dCasAlg4Qm2d4a+HZ6c+n2UnFXTayIJ1IynUsyokzmzpBkrzqBLDftbfEItD0TuD7ZIDObLjhtygAQ2KjS19fwv1jyPBnX76gXia7WD8GxV8rb3iN4kHV1NVu3PvHV9G1iSE7S1nOmTkWWt6YH/J89pmwCnHRbJ73n1Iy33WIAzjtSjVeDdCJbLvnvoJ/Ze1RqhtxZ+gg9q2qyBBSBknp5HoDKw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=windriver.com; dmarc=pass action=none
  header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
@@ -19,8 +19,8 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=windriversystems.onmicrosoft.com;
  s=selector2-windriversystems-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tfBe7U1ZqL7aJ2eRKH1+JellMzRmdarsvZfn0IOCzPI=;
- b=KVWs1M/LF1uFtmv53wq8+9j9LkaQFSH7zu3jygxvhlQGeEQAnz+4WtFeYz6GI1IotZWDwsbhhnbYC/VAudScluMtbBaAPxkOkCrgvj0WZv7lWZIjPylGVrSnyhbSD1+rcWpTHFkERPOq+cVAW0IAQt9VLvNrCv0UteSYi2l5tbY=
+ bh=OHNaUovvR9XwQFh/2UtPo0Xy1g7ab3hUxyxNcmpPYvo=;
+ b=pEmJcO4El8XtB+QxvAep19NFldx4/VWSOj5ye0nahIstDPgo5DFYQ0ZfbaUWrp1WYp+5vWXGfdkx+k89CdQsTRNu905J2P98aRvPoEdNnRpKX8FhCFuQ3Z4cILK7O4t4nDKvx/tujFMT9bYjKwkMvBfTP7bNnpEgjEgfUhQr28w=
 Authentication-Results: gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=none action=none header.from=windriver.com;
 Received: from DM6PR11MB4545.namprd11.prod.outlook.com (2603:10b6:5:2ae::14)
@@ -37,9 +37,9 @@ To: Bruce Ashfield <bruce.ashfield@gmail.com>,
 	Richard Purdie <richard.purdie@linuxfoundation.org>
 CC: linux-yocto@lists.yoctoproject.org,
 	bitbake-devel@lists.openembedded.org
-Subject: [PATCH 01/21] bitbake: fetch2/git: allow override of clone args with GITCLONEARGS
-Date: Fri,  2 Apr 2021 13:15:37 -0400
-Message-ID: <20210402171557.981599-2-paul.gortmaker@windriver.com>
+Subject: [PATCH 02/21] bitbake: fetch2/git: allow limiting upstream fetch refs to a subset
+Date: Fri,  2 Apr 2021 13:15:38 -0400
+Message-ID: <20210402171557.981599-3-paul.gortmaker@windriver.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210402171557.981599-1-paul.gortmaker@windriver.com>
 References: <20210402171557.981599-1-paul.gortmaker@windriver.com>
@@ -50,97 +50,68 @@ X-ClientProxiedBy: MN2PR16CA0026.namprd16.prod.outlook.com
 Return-Path: paul.gortmaker@windriver.com
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from yow-cube1.wrs.com (128.224.252.2) by MN2PR16CA0026.namprd16.prod.outlook.com (2603:10b6:208:134::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.27 via Frontend Transport; Fri, 2 Apr 2021 17:16:12 +0000
+Received: from yow-cube1.wrs.com (128.224.252.2) by MN2PR16CA0026.namprd16.prod.outlook.com (2603:10b6:208:134::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.27 via Frontend Transport; Fri, 2 Apr 2021 17:16:13 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a3177bdd-7a61-4d4c-bc78-08d8f5fb0420
+X-MS-Office365-Filtering-Correlation-Id: 4a60e418-d03c-40d8-bd99-08d8f5fb0493
 X-MS-TrafficTypeDiagnostic: DM5PR1101MB2249:
 X-Microsoft-Antispam-PRVS: 
-	<DM5PR1101MB22497EA12650E22D04110082837A9@DM5PR1101MB2249.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:913;
+	<DM5PR1101MB22495A396C2AC5B27C7B0E4D837A9@DM5PR1101MB2249.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	Cjr/Kh+ykKlQJzHnu/UlFr/hzsT9LzKzGVSqxMMj2tK4bDynLmGV2mZfr2qo0mPVqCuPs7FNAXpKyo+ZhcOjT1PtRR0g2Q+AHA+YoU7rcOWjUTYM77Yh1ZzEmMSfFq5p5qJMkgtonFztN363OYwVg9v4ipGHc3FwCqv4h4VrG7pCXfVvjMrwfoCKM2tK66eX5h03JLahqKtUODPwCHdOzSm7KLaIBq0iSehkKjEuYNbkBD2DkxzgR7pHaybzqIb6lPrpntb4dDBlWDEBXXKoY3xOJEcSyVeFrUOXKA0HbppDF3AaJXVyXHNhQSisG7pvrRB4FMDkZM6hA88OJg4A/HX7A/QutCRqkHhtD5hvfrLyu1C5gT1l2cdXh9tIKTNhjAg/7m3JwqPptfJzrSHj4lPbciyRoDOF6GN9tf3pLdzM2YUQDKqOeWnVbp0dhC1AQksjiSo3JdijdmejQP/ANcbBqYO7HA+MU5JVrbq6ffPBePQMz40ZQ3BAcCgn25L8zz1ST5rWE/uU3kZzaz4eKp0g6DsFVgpt50sCaezdpLzaUurThIDCRTm6u7CyYfUqSNxOZCLeKWkAtguppMwUWKObRdkZkrFNeBxzm87T14KXXQBSHpIOXivqheH4XnEMecpb3EwD09jxoOYOzJ9Caw==
+	rqOSMwV6Wxd2yXHpxs6YaaPhjkD7ixVVEd34tJvyoKlIP0agpbOBbGUUNhFw3V8E/I1qbzIPiHK5Rgzuj3fctggTmV2Y9ZByKvQLQ06M/k6mMrpOnfu0B+1RXtUFYwIyFwDA876LJWZ0hN6JwO2IKP5/xAl+LePTEiXTrilUH8KtrWS41tb308HqubdTodflC1YjNvF8lROJPYjhqrHWOWxHDZ2R8l+jbvBadclTakch5kf7ChWFxDcFqeliIjoZkUc6izMdBv3z1XBbaCtp9DorxrSldL+2AkmuXyxU+5Ifms4X1/ndIji8VXxqombfJHrKCo3aEBycWnwP8O3ZkhT2jvE50PNseOlPe0yqPu7wpuDrfGCMYuS8h29eIYJA0zrYlkoj2gLYfeVCWSnzxBA177LCWkStAUISIbEpxsNjJx5sgVGrRXSlpR0hNCvwpxM2ol18g4cK3JB7GkQ7uPFIPECvwZ7wSFHXQLxKr5WxzjHExYpjXWg4N/cvBQaS0qsec/N4vc68EE9ZeaDR6UG9ysAhDqoyVSmG8tZpsxGuS/ODQqERZGR67Cw65nQ4roe7bIMfZXqO5bkl+ZQ/mbDGk3aV7biL1LVKRGlGMWvoytDLMCduP1FQPXtT9k/fGXpqL4ViqaeJvGA7lfCwTg==
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4545.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(136003)(346002)(396003)(366004)(39850400004)(316002)(110136005)(6486002)(66946007)(38100700001)(8676002)(86362001)(956004)(2616005)(16526019)(186003)(26005)(2906002)(4326008)(44832011)(6506007)(5660300002)(478600001)(83380400001)(36756003)(52116002)(1076003)(66476007)(66556008)(6512007)(8936002)(6666004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
-	=?us-ascii?Q?CxHIJR4GEb8cuCBEQQQFPH2mn++ZM7ox7Ta9WWqytwI82PWrK54ZU9AlPuKN?=
- =?us-ascii?Q?Df/hENEuGWSCXV4lgjFLb+4SiPg2Q5Fqzf9ID9wboIUFJWmwRtl7ZA23eN6Q?=
- =?us-ascii?Q?t0UrV7g5zHtQz5g6ia0NKyh+zZmWNhiTKX+gb+UgClt1c1wPh6HEmJenc42g?=
- =?us-ascii?Q?RRvw55IvAE0L7Ira8l1zahfa9NskCVn33z2qiG+5R7onD8C0C+s2cTkYbxyD?=
- =?us-ascii?Q?q8xIowzGBtgsf1Vp8PVaLh4I9kEg++HL2ueRGhFZAFtQYzIf5AV8DsAXvLbD?=
- =?us-ascii?Q?gTOHwzGOvj75+4PC07oHR53Cep/F8gq8TyDMIVrK8bx2uq8Bc3sMzXuq6aU2?=
- =?us-ascii?Q?qA4dJj1D4MoL6FzSMYZUBFnDSwT6AO0sEdVB/TXizmXSokmyIU7sBkYygAIv?=
- =?us-ascii?Q?joSzClJJZN87bfZx/kNdGcVgvTv/QB4h4pI08FI+TWt+o2odsVdXkcbtwJ2d?=
- =?us-ascii?Q?412LhPty+u7OpR5SAOLURJHgY8Fs18xQf2DVHxFH6LP8oi38sNcS3T+aQpUX?=
- =?us-ascii?Q?f7VO01hswzudORsB9Elez3BScX0h4VPEvq59fSUgAm3MU+J89e+PNZ0/tmdR?=
- =?us-ascii?Q?dn0NDXphI3lmo5TyuloFjK3XpfYj4rBcxlVEmYfp/gaqLHfJeYELvbpYSMxU?=
- =?us-ascii?Q?7iMlGQoUEFrTc9k/T7u2uedzNO1fouITQDjVXf3nBCY3WktwTg3W+qDG03+G?=
- =?us-ascii?Q?JEuXMEHOBq+3prH0X/27qZ+BnrwIg8NDwJ+huaMZ3Ib1SCil8BzCWHcKvSkz?=
- =?us-ascii?Q?om6l42p24wwfyHZhMmuAxnXtBHyIbu9o9IXjP0jfXoulu272lzaIjOe9uvQx?=
- =?us-ascii?Q?vV8erRcRIjaR/FCI6G39eAOox06Bxj+qndDwQr60a+GKnuEzRdmUtJTNiaYz?=
- =?us-ascii?Q?ZCo03TqBbW3cH3CanwUNqDc/JnbxOtPbt72Ytso0v926jL4smrjkJWB1j5QK?=
- =?us-ascii?Q?z/Asbvxo1kNHRtyeLUbr8I4eRFFwaJDXfwexqbz9rdk7K2jihg8gLafbiG2d?=
- =?us-ascii?Q?qkDrFq86UyBksoWFJpQ5HmppAHxZbPPhYrV36zW78YzzRg/dJRRF+M8BWBwu?=
- =?us-ascii?Q?9ToT2RSh2zIn+kwYpVTv/MvPDGdhSAr8E4l71usgoLuVV5sEFt3oVcrYkqrh?=
- =?us-ascii?Q?r9zMgy5b5RDS9Fzglmwezoj9l4/mmhO6w7gQ40XNEFF6LSTHwm29Oieb8Dg3?=
- =?us-ascii?Q?28UdLYv5/EP96jya5FD0t8VVpOcPughzuNmlY1mtNxEhJvOspMYGHg7VumZi?=
- =?us-ascii?Q?m/txKnG3AjOySqoqXSdedH30UrFO5yw5s++UkRdTpZyZtlhRN1oFShR+2/Ds?=
- =?us-ascii?Q?3Jl8e85GUlzyPQxOofM5GZad?=
+	=?us-ascii?Q?3658WAgZKBzBd5nXAQDyaUrSZ015TeXj8xH7Eio/uhNru7Rn5xUkgkedg4BN?=
+ =?us-ascii?Q?cNWvV2z9a95re1NBbGCSgHj/hKY6WIz4swqfO6bdBC3tPG1w/xZNmUav6Tpu?=
+ =?us-ascii?Q?grazCCdyFCeKgtppJvj32ae3Ownz1XptNnCCl0LN9jRGT0Y2DvWmDgvgkEJg?=
+ =?us-ascii?Q?ikI+y65qthCIdrQpm+zhwxeK8uo9gBKxl9AOYlQGCgr6a7r5XLbU9U/8uLEv?=
+ =?us-ascii?Q?ZurPqLI2vMiia/4x6twfk59NrVZp4uFTddyOgBfcrmi4pCKob+Y5Us1lTPx1?=
+ =?us-ascii?Q?k3sds4rSeB9KknVqLci/mMtLx8Yq2JBsKD7vqlbOYmcESm5iXIfgDVtglhDu?=
+ =?us-ascii?Q?R9s9pLpHtksSpri8Z+wRJaBuRYP1oHBhxez70gEG/oKG87VwOIT0bpj+JN7w?=
+ =?us-ascii?Q?F8KIsM3nwiym1walOtWB9XbVLObVPk9VbgMQINf59BZGPVMG3m1O5E5dZBoz?=
+ =?us-ascii?Q?SWD1vKFTf2MuYyRCFM9W9Wg8GKZSXPtm38fvyYSORfvU9aweIz8NPGV+ug7L?=
+ =?us-ascii?Q?Hpq0i6lsrxJg0W4gDPz8wyLEf6piEnT4GghqiKnAgd2wI5Lw95pf0fOdrxFs?=
+ =?us-ascii?Q?Nk1Tt8YReZa1ADfRNc0O9CBmNlpAqbH15PcWivOoWBH3OrsfWfkpiKsklPLE?=
+ =?us-ascii?Q?Zkl96ByPayDF1MG7elL6ZT0/U6cZR1iC2+XQx+sGHfLsf+0/UTWw4iDcsOV/?=
+ =?us-ascii?Q?CoJQGN8DOaAjYOGyfnuiQPEtGOddSatFqmr6EsqUiBQL8aWttHSgUBMb9PMx?=
+ =?us-ascii?Q?MkfNe3p4JZZhNtgSRg3emLa2Nwuwwyrg9iU9Dvl3pD005e2musHHe9giPi/w?=
+ =?us-ascii?Q?IacBweNN4DRDMDHo5+YD0XQJgwUjI0S7fFqvkjX5MWH6ktmCMoNlIUMwKypA?=
+ =?us-ascii?Q?+IakYnw8kmYR9d+SHldUGY87J+N2JtSXKESStKRTOCIdiAISTZryt4+Ub3wf?=
+ =?us-ascii?Q?W0xIYCctbTbf57Va24lDVTrHO0Eb9f95SSdMA+kLGJAJiEjf2bfIgWTskTjp?=
+ =?us-ascii?Q?lQFIEKuER3gsHhvAM23jaauB/aoBkCaqQ/aIFyEH3t/uayzgcIxjUJiUVaTY?=
+ =?us-ascii?Q?a3EAgqRvVnBEPFL0vAfYc5oHKka5ftQWzamqxbGeDM4rMw6QZyPDm7g3HFwa?=
+ =?us-ascii?Q?1l5VxNWCIBE0aw0UlOy3fn8atixrG60BYI+i42gMVHB3htRoDdQVdkUcTriV?=
+ =?us-ascii?Q?0ZnZbwV/k5kxdZ98YIQd00M5QmKOosIGMAFCHvsY4PDfWWlSE/g9T5s+w5S0?=
+ =?us-ascii?Q?Qb1Qf3isXWVZcuvagswZrgE4zmIc0zVSVs+fdIZCh8xjNGXc6t6/0lanXWCL?=
+ =?us-ascii?Q?hK12r7pDkWQ6wXaJXC5IwbDW?=
 X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3177bdd-7a61-4d4c-bc78-08d8f5fb0420
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a60e418-d03c-40d8-bd99-08d8f5fb0493
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4545.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2021 17:16:13.0359
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2021 17:16:13.6851
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W+m61qjnptK2pjIxhar9bEY3XIlKYW1o6EOf9XaiHMnTswWsfxHSA0Rxi5y9TwQ1AFLGiAnKlNKbbyen3hCuSjWIa2STZAuUN5MY44SKQWY=
+X-MS-Exchange-CrossTenant-UserPrincipalName: IEMKj0lQI8qM6iOm2BUAnWMTPRRlLh8D/7cSC+61Sl5NwRNCF+XHaJA/u14upGEk20jWQfPS4MBY4UZSNDsbAw+fYIs00tiAQO0YwOkKS+c=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2249
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 
-Currently there is no way to avoid the "--mirror" argument when doing an
-initial clone.  This is problematic in that there are now a significant
-number of repos out there for which we want the content, but creating a
-full mirror clone isn't practical or efficient.
+If a clone in the download directory is not static, and was created with
+single-branch to avoid additonal unwanted content, then the fetcher will
+come along and spoil that effort by unconditonally getting refs/* from
+the server and downloading everything available at the server.
 
-The two most common examples are:
+To that end, allow a companion variable that can optionally be used to
+limit the fetch to a subset of references that are in line with the
+desired content for the recipe in question, and so that large unwanted
+downloads aren't inadvertently triggered during an update.
 
-1) Repos that have "ingested" another repo with no common ancestors - we
-see this in "stable-queue" and "linux-rt-devel" repos[1] which started
-as repos of queued format-patch output, but then also added the baseline
-so the patches could be obtained "pre-applied" for easier automated testing=
-.
-Obviously, ingesting all of the linux history grows a repo by gigabytes.
-
-2) Repos that have gone forward in time in a direction we don't care about,
-say for example a flag day event, where everything was rewritten from C int=
-o
-rust in one massive commit, or where a merge of a giant wad of orthogonal
-history and/or binary/proprietary content "pollutes" the repo.
-
-In both cases, we can solve the problem by using "--single-branch"
-optionally in conjunction with "--branch <goodstuff>" in order to limit
-the cloned content to a specific branch or tag.  We will only get
-content up to that point, and any commits/ancestors leading up to that
-point.  The clone is fully functional and without any of the limitatons
-imposed by shallow clones.
-
-So, in case #1 we simply choose the branch we want - raw unapplied
-content, or applied and tagged (and perhaps signed) - but we aren't
-subjected to downloading both branches.   In case #2 we simply specify
-the last known "good" tag before the upstream went off in a direction
-that we don't care about.
-
-Note that default behaviour is unchanged - so this is an opt-in feature
-which won't impact any existing recipes.  We also leave the door open
-for it being URL specific via <name> since we know we have multi repo
-SRC_URI in recipes-kernel already.
-
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git
-    git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+If not specified, the existing "fetch everything" behaviour remains.
 
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
@@ -149,47 +120,46 @@ Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
  2 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index e3ba80a3f52a..22281e2cfb98 100644
+index 22281e2cfb98..b54ec76d7174 100644
 --- a/bitbake/lib/bb/fetch2/git.py
 +++ b/bitbake/lib/bb/fetch2/git.py
-@@ -345,10 +345,11 @@ class Git(FetchMethod):
+@@ -362,7 +362,8 @@ class Git(FetchMethod):
+               runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=
+=3Dud.clonedir)
 =20
-         # If the repo still doesn't exist, fallback to cloning it
-         if not os.path.exists(ud.clonedir):
-+            extcloneargs =3D d.getVar('GITCLONEARGS_' + ud.names[0]) or d.=
-getVar('GITCLONEARGS') or "--bare --mirror"
-             # We do this since git will use a "-l" option automatically fo=
-r local urls where possible
-             if repourl.startswith("file://"):
-                 repourl =3D repourl[7:]
--            clone_cmd =3D "LANG=3DC %s clone --bare --mirror %s %s --progr=
-ess" % (ud.basecmd, shlex.quote(repourl), ud.clonedir)
-+            clone_cmd =3D "LANG=3DC %s clone %s %s %s --progress" % (ud.ba=
-secmd, extcloneargs, shlex.quote(repourl), ud.clonedir)
+             runfetchcmd("%s remote add --mirror=3Dfetch origin %s" % (ud.b=
+asecmd, shlex.quote(repourl)), d, workdir=3Dud.clonedir)
+-            fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/*:refs/=
+*" % (ud.basecmd, shlex.quote(repourl))
++            fetchrefs =3D d.getVar('GITFETCHREFS_' + ud.names[0]) or d.get=
+Var('GITFETCHREFS') or "refs/*:refs/*"
++            fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s %s" % (ud.ba=
+secmd, shlex.quote(repourl), fetchrefs)
              if ud.proto.lower() !=3D 'file':
-                 bb.fetch2.check_network_access(d, clone_cmd, ud.url)
+                 bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
              progresshandler =3D GitProgressHandler(d)
 diff --git a/documentation/ref-manual/variables.rst b/documentation/ref-man=
 ual/variables.rst
-index 0310429bdcab..cd2b77604e87 100644
+index cd2b77604e87..55028987c08a 100644
 --- a/documentation/ref-manual/variables.rst
 +++ b/documentation/ref-manual/variables.rst
-@@ -2649,6 +2649,14 @@ system and gives an overview of their function and c=
+@@ -2661,6 +2661,14 @@ system and gives an overview of their function and c=
 ontents.
-    :term:`GDB`
-       The minimal command and arguments to run the GNU Debugger.
-=20
-+   :term:`GITCLONEARGS`
-+      The arguments used to "git clone" when cloning a repo from an
-+      an external server into the local download area.  The default is
-+      "--bare --mirror".  Use of "--bare --single-branch --branch foo"
-+      will limit what is cloned/downloaded just to the branch/tag "foo".
-+      An URL specific GITCLONEARGS_<name> will take precedence over a
-+      recipe wide GITCLONEARGS setting, if both are present.
-+
-    :term:`GITDIR`
        The directory in which a local copy of a Git repository is stored
        when it is cloned.
+=20
++   :term:`GITFETCHREFS`
++      The refs requested during a "git fetch" when updating a repo from
++      an external server into the local download area.  The default is
++      "refs/*:refs/*".  Used in conjunction with GITCLONEARGS to limit wha=
+t
++      is cloned/fetched from a repo otherwise dense with branches.  Note
++      that an URL specific GITFETCHREFS_<name> will take precedence over
++      a recipe wide GITFETCHREFS setting, if both are present.
++
+    :term:`GLIBC_GENERATE_LOCALES`
+       Specifies the list of GLIBC locales to generate should you not wish
+       to generate all LIBC locals, which can be time consuming.
 --=20
 2.25.1
 
