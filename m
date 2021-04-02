@@ -1,99 +1,118 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
- by mx.groups.io with SMTP id smtpd.web09.22433.1617394802711189746
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web08.23459.1617401674705826866
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 02 Apr 2021 13:20:03 -0700
+ Fri, 02 Apr 2021 15:14:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Sb9tSNhS;
- spf=pass (domain: gmail.com, ip: 209.85.218.41, mailfrom: bruce.ashfield@gmail.com)
-Received: by mail-ej1-f41.google.com with SMTP id e14so8756991ejz.11
-        for <bitbake-devel@lists.openembedded.org>; Fri, 02 Apr 2021 13:20:02 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cwSmUivr;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f45.google.com with SMTP id j7so5777561wrd.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 02 Apr 2021 15:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fyYSrNdG95YoUlQP/jFV4nhZkJD5supwlHI3yjEEUDA=;
-        b=Sb9tSNhS0EfHwdqkZ6phx/LWXzwrXgcMH5DdBQLW1Qh/2ENHX1T94ckdn7JkS1l6NY
-         EBKt49T1jN9Zhp9gL282dlPXHXf8lKxqMSVa1qBVUN3/UNUImVawMznen/5HZbkdQ//p
-         Nt+W/zKNsM3PsBx+GylrV2vs/islnoKc0joZGCn8ZZA7mCEXBrGUOpAVyWHcaeVrVa1L
-         Fu/x3JAwNQ3LFBpEn+2gEeHBB1BAFTUxZ4/SY/xkCsIVGxiAV6KMcFEqqocdnf3h0qns
-         ANOsjU9pWiRM+lxNXI2Gv18KQbPPXRNQnLVY+qnstLAFb+5UHU0wViBxXo7qQcbpqy2m
-         WhXg==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=MudKZTiiIxGo3tQ5qr7uHeBkGEZWUKhVx/cRZKXLK6Q=;
+        b=cwSmUivrqsKh7laRtY2jWUpT3p9nOHVbtD6Z1wcLaAnkg6biOBk21yPHY58Ei7ME+i
+         n+fCuBvfRZLDDW0SYRDnCyuUl+BpLqwlj+hC1/vPa+iECLVghtCNClSuZQC7dejbwtDs
+         xdy3aIFy59fey8VDhTYZUWM8yEAMhVZ2q5W0E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fyYSrNdG95YoUlQP/jFV4nhZkJD5supwlHI3yjEEUDA=;
-        b=QKwKfL2mfYhh+FRxA+PB3xR9ZPDBoKF/mr+bdQ/Vm2hEUCyqE7efqPkuo+T6q8SuCM
-         FBQtgKvyrcZWZCvt7MhMlEnnR+SHOx3MniW4hX4RLlqkr7niCQHjUV/TXFe0KcRhSkE2
-         lk6UInh+oSVWIL86LcuNRskDVwQC6/IZPS3uw3+627gzxezYFGxO7k/AluxRUvPc0jzH
-         SU9EDypa9oApxKB1Rj9INnFlWLdsb+BrwntUo0SBSeI3lI3v/5Xt49sgA2J3eZhOiCd3
-         v3GE5RwuAlfCHZelErFkP7xxmmfjqKcrMovbpZgXQigFFa5+JyQaW4HY3oXn4QgTQ0X7
-         hCUA==
-X-Gm-Message-State: AOAM533reNAHIcwiUr/ME6E/lOcw9XC20+8BBFvgSPmSwtlh+SpJgYla
-	eY11giLoCLmzT32DBnSh+pLVNGZcVXaMXCPBmto=
-X-Google-Smtp-Source: ABdhPJz3leqb1h8CllLXKS3uVBZG3pxbgbDwxagXeRt6fGSEr/MTUYwnpFc6TSvcP6bZSPTfqi/yv3Om7VFGf23P7R8=
-X-Received: by 2002:a17:906:5689:: with SMTP id am9mr15212518ejc.298.1617394801121;
- Fri, 02 Apr 2021 13:20:01 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=MudKZTiiIxGo3tQ5qr7uHeBkGEZWUKhVx/cRZKXLK6Q=;
+        b=NZoOkv54msnJSJAqPo815bbknNBpvyISJXE4/VeXsg9TmpKhKqgexZ5J3wghAPszK7
+         hEuXsO8PEm3/JxFcq1bgllZkX28YQiiM8rDBbBX4z0f//gkSx3lscXIw3R9I1y6q77Oo
+         KWnWDNiwKGRuiY+by66oBwmlLymw1FOVi5DUrOnGssuc1JVDYQy4UUu06o+fx++ZGBiC
+         EEjTehyaA0Y+MCY8dgQCr4k9NFH7XY5sPjRk5bbuT8OWFaSjdM9EQGlrl2AGSlHV5Uca
+         klvc3LnvHdBBIntEfgHubhdTXfQD3HDTwTUN9zUAAzJoyTV8TDO2fFPtI1cnYZVBY7eZ
+         zK5g==
+X-Gm-Message-State: AOAM5336gBa0jWCyVuKaBlA3E0Fcou6OrVlaMZ6X5oeG63oOmphVlIPc
+	wy9rOYhEUSXy1ljzN51uWaHJ9A==
+X-Google-Smtp-Source: ABdhPJy49nf0C96L5zsPHP1WLSAV7gDHO+UtdNEBWeBi/PqNabl0raw5tkhSd2+21xiIouv/qygXTg==
+X-Received: by 2002:adf:d1cd:: with SMTP id b13mr17066330wrd.47.1617401673184;
+        Fri, 02 Apr 2021 15:14:33 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:a3bb:8f94:1e3d:b6? ([2001:8b0:aba:5f3c:a3bb:8f94:1e3d:b6])
+        by smtp.gmail.com with ESMTPSA id u17sm15804972wrw.51.2021.04.02.15.14.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Apr 2021 15:14:32 -0700 (PDT)
+Message-ID: <929dcfb2b10aba2ca29d0b1cba44dbc148e0643a.camel@linuxfoundation.org>
+Subject: Re: [PATCH RFC 00/21] Git repository sharing for kernel (and other) repos
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Paul Gortmaker <paul.gortmaker@windriver.com>, Bruce Ashfield
+	 <bruce.ashfield@gmail.com>
+Cc: linux-yocto@lists.yoctoproject.org, bitbake-devel@lists.openembedded.org
+Date: Fri, 02 Apr 2021 23:14:31 +0100
+In-Reply-To: <20210402171557.981599-1-paul.gortmaker@windriver.com>
+References: <20210402171557.981599-1-paul.gortmaker@windriver.com>
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
-References: <20210402171557.981599-1-paul.gortmaker@windriver.com> <20210402171557.981599-22-paul.gortmaker@windriver.com>
-In-Reply-To: <20210402171557.981599-22-paul.gortmaker@windriver.com>
-From: "Bruce Ashfield" <bruce.ashfield@gmail.com>
-Date: Fri, 2 Apr 2021 16:19:50 -0400
-Message-ID: <CADkTA4NknKAiejYwJwYzj=F5FW-xDGZz0QTmYyOezCoevkNh3Q@mail.gmail.com>
-Subject: Re: [PATCH 21/21] kernel: disable (pre)mirror for linux-yocto and linux-yocto-dev
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	Linux Yocto <linux-yocto@lists.yoctoproject.org>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 2, 2021 at 1:16 PM Paul Gortmaker
-<paul.gortmaker@windriver.com> wrote:
->
-> As per the comment in the file itself, we have to explicitly disable
-> (pre)mirror support for both kernel repositories, or else the fetcher
-> will unhelpfully volunteer to wget gigs of what amounts to largely
-> useless content that we don't want.
->
-> Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
-> ---
->  meta/recipes-kernel/linux/linux-yocto.inc | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/meta/recipes-kernel/linux/linux-yocto.inc b/meta/recipes-kernel/linux/linux-yocto.inc
-> index a85280990b43..5ec1b1ba7023 100644
-> --- a/meta/recipes-kernel/linux/linux-yocto.inc
-> +++ b/meta/recipes-kernel/linux/linux-yocto.inc
-> @@ -56,3 +56,13 @@ do_install_append(){
->
->  # enable kernel-sample for oeqa/runtime/cases's ksample.py test
->  KERNEL_FEATURES_append_qemuall=" features/kernel-sample/kernel-sample.scc"
-> +
-> +# For linux-yocto-dev, the existing v3.17 based premirror tarball is of no
-> +# value, and for the non-dev variants, we don't want to be going off and
-> +# w-getting the 3+ gigabyte (!!!) mirror tarball either, when we've got
-> +# a shared v5.10 repository already.  We can delete this in the future once
-> +# these old tarballs are gone.  But really we may never bother to mirror
-> +# either of them ever again, since they are (a) now small, and (b) leaf
-> +# nodes at the end of the chain where the content is regularly changing.
-> +PREMIRRORS = ""
-> +MIRRORS = ""
+On Fri, 2021-04-02 at 13:15 -0400, Paul Gortmaker wrote:
+> Next Steps:
+> -----------
+> With this being a functional implementation, it seems like a good time to
+> get other people looking at it.  Ideally step #1 will be getting general
+> agreement that this is something we need, something that is overdue,
+> and that the implementation as shown here makes sense in the absence of
+> any similar effort from anyone that does the same but in a better way.
+> 
+> From there, we'll want more people not just looking at it, but testing it
+> as well.   I know I want to write a commit (script?) that will avoid any
+> "transition tax" by prepopulating new repos with "old" already downloaded
+> git objects where we can.  And to add/do tests with my own popluated mirror
+> and NO_NETWORK, and also try to ensure nothing in BB_SHALLOW gets upset,
+> but I wasn't going to hold up starting a review of this any longer.
+> 
+> I suspect I can get some co-workers using/testing it too, but Yocto gets
+> used in a bunch of different ways by different groups, so we'll no doubt
+> have to do some additional fixups to ensure everybody gets the benefits of
+> this sharing.  But I'm hopeful that when people see the benefits above,
+> they'll pitch in to help take this the final mile by ensuring it works for
+> their use case as well.
+> 
+> I'm not too worried about pontificating out beyond that until we get past
+> the acceptance/testing hurdles outlined above.  So, please do have a read
+> of the commits, kick the tires, put on your bikeshedding clothes and grab
+> a brush, and lets see where it goes from here...
+> 
+> https://github.com/paulgortmaker/poky/compare/reference-RC1
 
-I suppose these are already set somewhere else, so a ?= won't actually
-override the defaults.
+I've only briefly looked through this but the more I look, the more worried
+I'm getting which is never a good sign.
 
-I was just trying to think of a way that someone might want to turn it
-back on, and they'd have to use an override in a bbappend to do it ..
-but I suppose that isn't any nastier than would be required with ?=
+I totally agree with the use case and agree we need to do something in this 
+area. I'm not sure the implementation looks right though, its clever but I
+don't think its very usable to end users.
 
-Bruce
+The warning signs to me are:
 
-> --
-> 2.25.1
->
+a) Needing new/confusing "fetch only" recipes
+b) A large number of new options and variables to the fetcher
+c) Needing recipes to change and people to migrate, potentially with scripts
+   between old and new
+d) Variable namespacing needs work
 
+I'm very worried this confuses up the git fetcher code and nobody will be able
+to tell what is going on any more :/.
 
--- 
-- Thou shalt not follow the NULL pointer, for chaos and madness await
-thee at its end
-- "Use the force Harry" - Gandalf, Star Trek II
+What I'd envisaged was git urls having something like a "mainline-linux-kernel"
+tag added in the url as a parameter and a table somewhere which meant the checkout
+for this would share git objects in a common pool. There would be a variable 
+mapping that name to git.kernel.org/pub/scm/linux/kernel/git somewhere but that
+should be all that is needed.
+
+No, this wouldn't cover 100% of artefacts but it should cover a majority of them
+and be much simpler for users to comprehend. I haven't gone into this in detail
+and perhaps I'm missing some problem that prevents it? :/
+
+The other issue here is there are no tests. The bitbake fetcher code is one of
+the few pieces of the project where we do have a fairly complete test suite and
+we don't add things there without tests (see bitbake-selftest and lib/bb/tests/).
+
+Cheers,
+
+Richard
+
