@@ -1,131 +1,88 @@
-Received: from avasout03.plus.net (avasout03.plus.net [84.93.230.244])
- by mx.groups.io with SMTP id smtpd.web09.22.1617720476014684367
+Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
+ by mx.groups.io with SMTP id smtpd.web09.1175.1617724646159645180
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 06 Apr 2021 07:47:57 -0700
+ Tue, 06 Apr 2021 08:57:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@mcrowe.com header.s=20191005 header.b=qpJ8TZlT;
- spf=pass (domain: mcrowe.com, ip: 84.93.230.244, mailfrom: mac@mcrowe.com)
-Received: from deneb.mcrowe.com ([80.229.24.9])
-	by smtp with ESMTP
-	id TmzYlrTjOutR5TmzZlBz1o; Tue, 06 Apr 2021 15:47:54 +0100
-X-Clacks-Overhead: "GNU Terry Pratchett"
-X-CM-Score: 0.00
-X-CNFS-Analysis: v=2.3 cv=KZJJTTQD c=1 sm=1 tr=0
- a=E/9URZZQ5L3bK/voZ0g0HQ==:117 a=E/9URZZQ5L3bK/voZ0g0HQ==:17
- a=8nJEP1OIZ-IA:10 a=3YhXtTcJ-WEA:10 a=Q4-j1AaZAAAA:8 a=vKhG7OXEa5ScEUDNqAwA:9
- a=wPNLvfGTeEIA:10 a=9H3Qd4_ONW2Ztcrla5EB:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mcrowe.com;
-	 s=20191005; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-ID:Content-Description;
-	bh=0aTwk9Jj+rojuALJg1Kd6u1bjUVp6VEf+HQf8l73lyc=; b=qpJ8TZlTLUhgQh19N5a+DtUc5P
-	KmFsAnn184fg/0a0hxjSwZ62bBfpGZZOjuOcXgY3l9lUWJbPz45Q1ohR2Z7o/X+qX/qswkxmtDlGq
-	Ob1xITV/8YaPpBgcCxESXP20xkXXMY68nftFDKiBphgr6guuAyWYk2U6sKKJroaTwx9t3BWXuI2uF
-	Z4Gyzc3IoOPYhDqm5nCfK21zHU9Q8uhBTdyl0zlb4V3tr02sFngSmhe/GPO0/ZN+H1JsIPBJvPVeJ
-	0bnjeZLuKwIDEHyfkjeXRXFFq2ook2hn8/G0mLMTqaG0yld5NjoK2XntOe90k/LIKTPuGuzhUYiQ0
-	oAjeYNRg==;
-Received: from mac by deneb.mcrowe.com with local (Exim 4.92)
-	(envelope-from <mac@mcrowe.com>)
-	id 1lTmzY-0003P5-GO; Tue, 06 Apr 2021 15:47:44 +0100
-Date: Tue, 6 Apr 2021 15:47:44 +0100
-From: "Mike Crowe" <yocto@mac.mcrowe.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] Three copies of output from failing task
-Message-ID: <20210406144744.GA12232@mcrowe.com>
-References: <20210330143049.GA23723@mcrowe.com>
- <91a330cddbd20f81fa40d5f3ce6a3f582f91d200.camel@linuxfoundation.org>
+ dkim=missing; spf=permerror, err=syntax error for token:  (domain: kernel.crashing.org, ip: 76.164.61.194, mailfrom: mark.hatle@kernel.crashing.org)
+Received: from Marks-MacBook-Pro-16.local ([76.164.61.198])
+	(authenticated bits=0)
+	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 136FufNj009261
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+	Tue, 6 Apr 2021 10:56:42 -0500
+Subject: Re: [bitbake-devel] still confused about valid wildcarding for bbappend files
+To: "Robert P. J. Day" <rpjday@crashcourse.ca>,
+        BitBake developer list <bitbake-devel@lists.openembedded.org>
+References: <e66c2878-5f82-394b-e6a-ccd45dc44c73@crashcourse.ca>
+From: "Mark Hatle" <mark.hatle@kernel.crashing.org>
+Message-ID: <4d45946c-442a-53eb-53e9-b480a2b83112@kernel.crashing.org>
+Date: Tue, 6 Apr 2021 10:56:41 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.9.0
 MIME-Version: 1.0
-In-Reply-To: <91a330cddbd20f81fa40d5f3ce6a3f582f91d200.camel@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Envelope: MS4wfMPKJEWQvKFfc/CFjZKsOsqTczF7xh/g9zWgUL0oi3QyQnZAmcvSWbYtCLfBVkuYhatlCnVoFeX62wgyy7z9foGu+PwsZCz30Q7D447hG+liaWupfCv/
- ncPOAOepPLHRITwXVtYWt7cH5PTHVHgt8eVL6jU4anb+nR6Bw6dlbSWA0o0+Jeg+WxShMi5GXqw+qA==
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e66c2878-5f82-394b-e6a-ccd45dc44c73@crashcourse.ca>
+X-MIME-Autoconverted: from 8bit to quoted-printable by kernel.crashing.org id 136FufNj009261
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-On Tuesday 06 April 2021 at 15:26:02 +0100, Richard Purdie wrote:
-> On Tue, 2021-03-30 at 15:30 +0100, Mike Crowe via lists.openembedded.org wrote:
-> > After upgrading from oe-core Warrior (Bitbake 1.42) to Dunfell (Bitbake
-> > 1.46), I'm seeing _three_ copies of the log output for every build failure.
-> > I see similar when using the current state of oe-core master (along with
-> > the new backtraces.)
-> > 
-> > To reproduce the problem, I hacked openssl_1.1.1k.bb:do_configure to insert:
-> > 
-> >  echo "an error"
-> >  false
-> > 
-> > and ran bitbake openssl-native. The output was:
-> > 
-> > --8<--
-> > NOTE: Executing Tasks
-> > ERROR: openssl-native-1.1.1k-r0 do_configure: Execution of '/overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031' failed with exit code 1:
-> > an error
-> > WARNING: /overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031:143 exit 1 from 'false'
-> > WARNING: Backtrace (BB generated script):
-> >         #1: do_configure, /overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031, line 143
-> >         #2: main, /overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031, line 221
-> > 
-> > Backtrace (metadata-relative locations):
-> >         #1: do_configure, /overflow/mac/nobackup/git/oe-core/meta/recipes-connectivity/openssl/openssl_1.1.1k.bb, line 78
-> > ERROR: Logfile of failure stored in: /overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/log.do_configure.32031
-> > Log data follows:
-> > > DEBUG: Executing python function extend_recipe_sysroot
-> > > NOTE: Direct dependencies are ['/overflow/mac/nobackup/git/oe-core/meta/recipes-devtools/quilt/quilt-native_0.66.bb:do_populate_sysroot']
-> > > NOTE: Installed into sysroot: []
-> > > NOTE: Skipping as already exists in sysroot: ['quilt-native']
-> > > DEBUG: Python function extend_recipe_sysroot finished
-> > > DEBUG: Executing shell function do_configure
-> > > an error
-> > > WARNING: /overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031:143 exit 1 from 'false'
-> > > WARNING: Backtrace (BB generated script):
-> > >       #1: do_configure, /overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031, line 143
-> > >       #2: main, /overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031, line 221
-> > > ERROR: Execution of '/overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031' failed with exit code 1:
-> > > an error
-> > > WARNING: /overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031:143 exit 1 from 'false'
-> > > WARNING: Backtrace (BB generated script):
-> > >       #1: do_configure, /overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031, line 143
-> > >       #2: main, /overflow/mac/nobackup/git/oe-core/build/tmp-glibc/work/x86_64-linux/openssl-native/1.1.1k-r0/temp/run.do_configure.32031, line 221
-> > > 
-> > > Backtrace (metadata-relative locations):
-> > >       #1: do_configure, /overflow/mac/nobackup/git/oe-core/meta/recipes-connectivity/openssl/openssl_1.1.1k.bb, line 78
-> > ERROR: Task (virtual:native:/overflow/mac/nobackup/git/oe-core/meta/recipes-connectivity/openssl/openssl_1.1.1k.bb:do_configure) failed with exit code '1'
-> > NOTE: Tasks Summary: Attempted 14 tasks of which 13 didn't need to be rerun and 1 failed.
-> > -->8--
-> > 
-> > Even if I set BBINCLUDELOGS="no", I still get these three copies.
-> > 
-> > The first one (without the leading "|" characters) appears to come from
-> > _build.py:_exec_task (around line 702) executing logger.error(str(exc)).
-> > This line dates from 2011.
-> > 
-> > The second and third ones (with the leading "|") come from knotty.py around
-> > line 767. They are both in log.do_configure.32031. It looks like the third
-> > copy is coming from the same place as the first copy, but has been written
-> > to both the console and the log file.
-> > 
-> > If I comment out the previously-mentioned call to logger.error(str(exc)) in
-> > _build.py:_exec_task then I get the single copy of the task output as I
-> > would expect.
-> > 
-> > Does anyone know what the proper fix for this might be?
-> 
-> Thanks for the report and analysis. I think we should do something about it
-> but having stared at the code a bit, I'm still not entirely sure what. I think
-> the trouble is the error is being reported at mutliple levels in the code
-> and we;re a bit paranoid about doing that as there is nothing worse than
-> a failure where the traceback isn't shown.
-> 
-> I'll have to stare at it a bit more but wanted you to know I've at least
-> looked at it and agree we should try and do something...
 
-Thanks for looking at it. I did plan to try to dig further into it after
-Ross's response, but haven't had a chance yet. If even you're not sure what
-the right thing to do is then I don't have any great hopes that I'll be
-able to solve it!
 
-Thanks.
+On 4/4/21 2:51 PM, Robert P. J. Day wrote:
+>=20
+> from current bitbake manual:
+>=20
+> https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-m=
+anual-intro.html?highlight=3Dwildcard#append-files
+>=20
+> "The use of the =E2=80=9D % =E2=80=9D character is limited in that it on=
+ly works
+> directly in front of the .bbappend portion of the append file=E2=80=99s =
+name.
+> You cannot use the wildcard character in any other location of the
+> name."
 
-Mike.
+The filename is broken up into: name_version.bbappend  I believe the inten=
+tion
+is that only "version" can contain wild cards.
+
+>   that *appears* to suggest that you can have one (and exactly one)
+> "%" before the ".bbappend" suffix. so how does that explanation cover
+> examples in some of the OE layers like:
+>=20
+>   meta-security/recipes-kernel/linux/linux-%_5.%.bbappend
+>   meta-anaconda/recipes-gnome/gtk+/gtk+3_%.%.%.bbappend
+
+"%" is a wildcard for the _version_ only.
+
+It is my understanding it can be used in any part of the version string, b=
+ut can
+NOT be used in the name.  The above example shows it being used in the lin=
+ux-
+recipe name.  So perhaps that has changed.
+
+The later example (gtk+3) it's being used in the versioning, but looks
+unnecessary as it's just patching all of the version elements anyway.
+
+The general case is:
+
+recipe_1.0.3.bb
+
+recipe_%.bbappend - match all versions
+
+recipe_1.%.bbappend - match all 1.x versions
+
+recipe_1.0.%.bbappend - match all 1.0.x versions
+
+Any other usage might work, but I doubt has been seriously tested.  (And t=
+he key
+isn't that the '%' be right before the bbappend!  It just happens to be th=
+ere.)
+
+--Mark
+
+> rday
+>=20
+>=20
+>=20
+>=20
+>=20
