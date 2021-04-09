@@ -1,106 +1,163 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web10.9600.1617811555037261674
+Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
+ by mx.groups.io with SMTP id smtpd.web09.9748.1617977179855279057
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 07 Apr 2021 09:05:55 -0700
+ Fri, 09 Apr 2021 07:06:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DvLPQZHD;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id k128so9313684wmk.4
-        for <bitbake-devel@lists.openembedded.org>; Wed, 07 Apr 2021 09:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=fhe5nis+6BH77bIZGblxSwXNHCZ4hhLVBXuFfI7w1nc=;
-        b=DvLPQZHDciFQp8SHLgi2a+3/qqU7tJ1U50hVXXXaplc6RI7K37DYfz3WgYuxn+dQ8o
-         DIwZtGWO4tGEkn3y6GROWZCJstkAXtOaGdlXUvd9dUswxbQYyqv1Rn1tEDRSTr/bwg4k
-         jXGMiyYBYYwzwjf49vg9+SKPDfSl0d/W7BYJs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=fhe5nis+6BH77bIZGblxSwXNHCZ4hhLVBXuFfI7w1nc=;
-        b=KJUes4JKeQ4p3NTAPTq9IgSzy88s8iSzKCbOR+NbKH6JrJrMWqug+kWWG3S/nK/UC3
-         JfEjca+I/hWkvlgaabDkdSRhxslA6vqvMz4babFusL7mpuH4nXIhS7lMDM4h0F832fRB
-         RFED+VdU1NWWFPNFis+KozhnL2A6BGIrqektEu6pKCKbwOZvGY0e+CbpldPNz3dWzYQA
-         1eoxIr7Kbc5J2bwekqE7cY9ALV9tU6mwqoOcTDWlPst4en4Z+pXB8o6n4mWOBSsmTL4q
-         wB9F0e2DtiCdT3uT1joAGwbU0NZ4z9LQn+iOymneMMvsrDLl4qra+RewYZ1E46niicsn
-         5G7w==
-X-Gm-Message-State: AOAM531Hw9S4Aqrq2fq1W1Ar5OUq0EYLujZNiMcg4HLal5gwMUjk4jZd
-	fw3ZjvN/SfZksE0rl1eYvKZZyQ==
-X-Google-Smtp-Source: ABdhPJy4QnI7g1KKz6hFUC4uO4fXNlnwZlvSgwkWQhIGHe1fufitqXH+v55JWYQLie8ZKzGqBvB5ZA==
-X-Received: by 2002:a05:600c:3325:: with SMTP id q37mr3964213wmp.45.1617811553524;
-        Wed, 07 Apr 2021 09:05:53 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:82e4:10af:e1ba:c8de? ([2001:8b0:aba:5f3c:82e4:10af:e1ba:c8de])
-        by smtp.gmail.com with ESMTPSA id d123sm9337857wmd.26.2021.04.07.09.05.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Apr 2021 09:05:53 -0700 (PDT)
-Message-ID: <53c07da6cd95fdf97d86e64efb888a16b57e2c61.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] still confused about valid wildcarding for bbappend files
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Cc: Mark Hatle <mark.hatle@kernel.crashing.org>, BitBake developer list
-	 <bitbake-devel@lists.openembedded.org>
-Date: Wed, 07 Apr 2021 17:05:52 +0100
-In-Reply-To: <e6ccc6d4-ebb-22e4-ca87-e1cf328a2ed6@crashcourse.ca>
-References: <e66c2878-5f82-394b-e6a-ccd45dc44c73@crashcourse.ca>
-	  <4d45946c-442a-53eb-53e9-b480a2b83112@kernel.crashing.org>
-	  <5166362-3350-5421-72c5-3eea3ca947fe@crashcourse.ca>
-	 <3984862b382b08d5da05f740d86075d8f2acd322.camel@linuxfoundation.org>
-	 <e6ccc6d4-ebb-22e4-ca87-e1cf328a2ed6@crashcourse.ca>
-User-Agent: Evolution 3.40.0-1 
+ dkim=missing; spf=none, err=permanent DNS error (domain: lakka.kapsi.fi, ip: 91.232.154.25, mailfrom: mcfrisk@lakka.kapsi.fi)
+Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
+	by mail.kapsi.fi with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.89)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1lUrm2-0007Bc-SF; Fri, 09 Apr 2021 17:06:16 +0300
+Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.92)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1lUrm2-0002kf-Q8; Fri, 09 Apr 2021 17:06:14 +0300
+From: "Mikko Rapeli" <mikko.rapeli@bmw.de>
+To: bitbake-devel@lists.openembedded.org
+Cc: Mikko Rapeli <mikko.rapeli@bmw.de>
+Subject: [PATCH 1/2] bitbake: tests/fetch: fix test execution without .gitconfig
+Date: Fri,  9 Apr 2021 17:06:02 +0300
+Message-Id: <20210409140603.9017-1-mikko.rapeli@bmw.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+X-Rspam-Score: 2.3 (++)
+X-Rspam-Report: Action: no action
+ Symbol: RCVD_TLS_LAST(0.00)
+ Symbol: ARC_NA(0.00)
+ Symbol: DMARC_POLICY_SOFTFAIL(0.10)
+ Symbol: FROM_HAS_DN(0.00)
+ Symbol: TO_DN_SOME(0.00)
+ Symbol: R_MISSING_CHARSET(2.50)
+ Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
+ Symbol: MIME_GOOD(-0.10)
+ Symbol: BROKEN_CONTENT_TYPE(1.50)
+ Symbol: RCPT_COUNT_TWO(0.00)
+ Symbol: MID_CONTAINS_FROM(1.00)
+ Symbol: R_SPF_NA(0.00)
+ Symbol: FORGED_SENDER(0.30)
+ Symbol: R_DKIM_NA(0.00)
+ Symbol: MIME_TRACE(0.00)
+ Symbol: ASN(0.00)
+ Symbol: FROM_NEQ_ENVFROM(0.00)
+ Symbol: BAYES_HAM(-3.00)
+ Symbol: RCVD_COUNT_TWO(0.00)
+ Message-ID: 20210409140603.9017-1-mikko.rapeli@bmw.de
+X-SA-Exim-Connect-IP: 2001:67c:1be8::11
+X-SA-Exim-Mail-From: mcfrisk@lakka.kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Content-Transfer-Encoding: 8bit
 
-On Wed, 2021-04-07 at 05:02 -0400, Robert P. J. Day wrote:
-> On Tue, 6 Apr 2021, Richard Purdie wrote:
-> 
-> > On Tue, 2021-04-06 at 12:34 -0400, Robert P. J. Day wrote:
-> > > On Tue, 6 Apr 2021, Mark Hatle wrote:
-> > 
-> > As Mark says, the above is what is documented and meant to work. 
-> > Easiest way to figure this out is to check what the code actually
-> > implements to handle it. The code (from cooker.py) says:
-> > 
-> >     def get_file_appends(self, fn):
-> >         """
-> >         Returns a list of .bbappend files to apply to fn
-> >         """
-> >         filelist = []
-> >         f = os.path.basename(fn)
-> >         for b in self.bbappends:
-> >             (bbappend, filename) = b
-> >             if (bbappend == f) or ('%' in bbappend and bbappend.startswith(f[:bbappend.index('%')])):
-> >                 filelist.append(filename)
-> >         return tuple(filelist)
-> > 
-> > so it actually truncates the expression at the first % and ignores 
-> > anything after the first one. That is there to chop the bbappend off
-> > but can obviously chop off more.
-> > 
-> > meta-security/recipes-kernel/linux/linux-%_5.%.bbappend
-> > may as well be:
-> > meta-security/recipes-kernel/linux/linux-%.bbappend
-> > 
-> > so matches a bit more than expected and
-> > 
-> > meta-anaconda/recipes-gnome/gtk+/gtk+3_%.%.%.bbappend
-> > is effectively
-> > meta-anaconda/recipes-gnome/gtk+/gtk+3_%.bbappend
-> 
->   ok, i can submit a patch to clarify that in the bitbake user manual,
-> with the understanding that it's *strongly* encouraged to use this
-> feature for wildcarding the version number only.
+A CI user validating changes does not have any git push rights or
+even a .gitconfig file so fix tests so that they run
+by setting the user.name and user.email for the repo before
+committing changes.
 
-The only guarantee we're making is the one we've documented, the rest is an 
-implementation detail. It answers your question about what those bbappends
-actually do but I really don't want to document the implementation details
-as that then becomes the required behaviour.
+Fixes errors like:
 
-Cheers,
+ERROR: test_that_unpack_throws_an_error_when_the_git_clone_nor_shallow_tarball_exist (bb.tests.fetch.GitShallowTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/builder/src/base/poky/bitbake/lib/bb/tests/fetch.py", line 2055, in test_that_unpack_throws_an_error_when_the_git_clone_nor_shallow_tarball_exist
+    self.add_empty_file('a')
+  File "/home/builder/src/base/poky/bitbake/lib/bb/tests/fetch.py", line 1562, in add_empty_file
+    self.git(['commit', '-m', msg, path], cwd)
+  File "/home/builder/src/base/poky/bitbake/lib/bb/tests/fetch.py", line 1553, in git
+    return bb.process.run(cmd, cwd=cwd)[0]
+  File "/home/builder/src/base/poky/bitbake/lib/bb/process.py", line 184, in run
+    raise ExecutionError(cmd, pipe.returncode, stdout, stderr)
+bb.process.ExecutionError: Execution of 'git commit -m a a' failed with exit code 128:
 
-Richard
+*** Please tell me who you are.
 
+Run
+
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+
+Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
+---
+ bitbake/lib/bb/tests/fetch.py | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index ddf6e97439..c156168151 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -679,6 +679,8 @@ class FetcherLocalTest(FetcherTest):
+                                    prefix='gitfetch_localusehead_')
+         src_dir = os.path.abspath(src_dir)
+         bb.process.run("git init", cwd=src_dir)
++        bb.process.run("git config user.email 'you@example.com'", cwd=src_dir)
++        bb.process.run("git config user.name 'Your Name'", cwd=src_dir)
+         bb.process.run("git commit --allow-empty -m'Dummy commit'",
+                        cwd=src_dir)
+         # Use other branch than master
+@@ -705,6 +707,8 @@ class FetcherLocalTest(FetcherTest):
+                                    prefix='gitfetch_localusehead_')
+         src_dir = os.path.abspath(src_dir)
+         bb.process.run("git init", cwd=src_dir)
++        bb.process.run("git config user.email 'you@example.com'", cwd=src_dir)
++        bb.process.run("git config user.name 'Your Name'", cwd=src_dir)
+         bb.process.run("git commit --allow-empty -m'Dummy commit'",
+                        cwd=src_dir)
+         # Use other branch than master
+@@ -1390,6 +1394,8 @@ class GitMakeShallowTest(FetcherTest):
+         self.gitdir = os.path.join(self.tempdir, 'gitshallow')
+         bb.utils.mkdirhier(self.gitdir)
+         bb.process.run('git init', cwd=self.gitdir)
++        bb.process.run('git config user.email "you@example.com"', cwd=self.gitdir)
++        bb.process.run('git config user.name "Your Name"', cwd=self.gitdir)
+ 
+     def assertRefs(self, expected_refs):
+         actual_refs = self.git(['for-each-ref', '--format=%(refname)']).splitlines()
+@@ -1513,6 +1519,8 @@ class GitShallowTest(FetcherTest):
+ 
+         bb.utils.mkdirhier(self.srcdir)
+         self.git('init', cwd=self.srcdir)
++        self.git('config user.email "you@example.com"', cwd=self.srcdir)
++        self.git('config user.name "Your Name"', cwd=self.srcdir)
+         self.d.setVar('WORKDIR', self.tempdir)
+         self.d.setVar('S', self.gitdir)
+         self.d.delVar('PREMIRRORS')
+@@ -1746,6 +1754,8 @@ class GitShallowTest(FetcherTest):
+         smdir = os.path.join(self.tempdir, 'gitsubmodule')
+         bb.utils.mkdirhier(smdir)
+         self.git('init', cwd=smdir)
++        self.git('config user.email "you@example.com"', cwd=smdir)
++        self.git('config user.name "Your Name"', cwd=smdir)
+         # Make this look like it was cloned from a remote...
+         self.git('config --add remote.origin.url "%s"' % smdir, cwd=smdir)
+         self.git('config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"', cwd=smdir)
+@@ -1776,6 +1786,8 @@ class GitShallowTest(FetcherTest):
+         smdir = os.path.join(self.tempdir, 'gitsubmodule')
+         bb.utils.mkdirhier(smdir)
+         self.git('init', cwd=smdir)
++        self.git('config user.email "you@example.com"', cwd=smdir)
++        self.git('config user.name "Your Name"', cwd=smdir)
+         # Make this look like it was cloned from a remote...
+         self.git('config --add remote.origin.url "%s"' % smdir, cwd=smdir)
+         self.git('config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"', cwd=smdir)
+@@ -1818,7 +1830,7 @@ class GitShallowTest(FetcherTest):
+             self.git('annex init', cwd=self.srcdir)
+             open(os.path.join(self.srcdir, 'c'), 'w').close()
+             self.git('annex add c', cwd=self.srcdir)
+-            self.git('commit -m annex-c -a', cwd=self.srcdir)
++            self.git('commit --author "Foo Bar <foo@bar>" -m annex-c -a', cwd=self.srcdir)
+             bb.process.run('chmod u+w -R %s' % os.path.join(self.srcdir, '.git', 'annex'))
+ 
+             uri = 'gitannex://%s;protocol=file;subdir=${S}' % self.srcdir
+@@ -2094,6 +2106,8 @@ class GitLfsTest(FetcherTest):
+ 
+         bb.utils.mkdirhier(self.srcdir)
+         self.git('init', cwd=self.srcdir)
++        self.git('config user.email "you@example.com"', cwd=self.srcdir)
++        self.git('config user.name "Your Name"', cwd=self.srcdir)
+         with open(os.path.join(self.srcdir, '.gitattributes'), 'wt') as attrs:
+             attrs.write('*.mp3 filter=lfs -text')
+         self.git(['add', '.gitattributes'], cwd=self.srcdir)
+-- 
+2.20.1
 
