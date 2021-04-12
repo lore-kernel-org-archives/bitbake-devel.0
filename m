@@ -1,111 +1,114 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web09.30747.1618227722221298843
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web12.31213.1618227723078556335
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 12 Apr 2021 04:42:02 -0700
+ Mon, 12 Apr 2021 04:42:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=ZenHuqSU;
- spf=pass (domain: konsulko.com, ip: 209.85.128.45, mailfrom: pbarker@konsulko.com)
-Received: by mail-wm1-f45.google.com with SMTP id w7-20020a1cdf070000b0290125f388fb34so6002348wmg.0
+ dkim=pass header.i=@konsulko.com header.s=google header.b=lF4e8IeR;
+ spf=pass (domain: konsulko.com, ip: 209.85.128.42, mailfrom: pbarker@konsulko.com)
+Received: by mail-wm1-f42.google.com with SMTP id k128so6609083wmk.4
         for <bitbake-devel@lists.openembedded.org>; Mon, 12 Apr 2021 04:42:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ItZvSAd5O2IYbjQ7E6a5lc01k6WOOb/gdBtxAkwunBo=;
-        b=ZenHuqSUCf4I+kjZ70I1casiFkXVYF4nUOYcghLE5b0P2JyGYIZ95FheoyIQKzyDmn
-         9iZ6O/23oEDGLjqW16O/9Bd4VdGAmTRuL58bsbTS0W/eAXchvjwV5+dgL+BebfFVJrW/
-         pssRROHvEKRwSGSfaWSLmzt/i4buLh2RWTzXc=
+        bh=r01aWa9994X8fWktihsK75f8b+9wTBxbyF57VOvNDC4=;
+        b=lF4e8IeRhivcpasiMpuDXW3jgZsQRYWYoQMCx8Gs0AZpWbbEeSmcdzYSmU+wg2taT6
+         l2aEqlOfYShB1iJUd8ZcspIaACY9j2IwgljK+lDBjHdCQm9KxX3n8MhZjfbUTted4RS2
+         jwG6/JzM6hmKjxMKPDi2YPRcNHgeK9FILek78=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ItZvSAd5O2IYbjQ7E6a5lc01k6WOOb/gdBtxAkwunBo=;
-        b=N97YfvWjQXXFoRRaY7WDjAnMD03VKy1GJk92i5/bBsdVBbbefxi9EdpZddt+GD58Pu
-         4p/k7jEqhEZrPnYdM0cmJWlpcZXfmchZey2yrAFx1t7BSstTYOK0c1dko4kksO1+o0GL
-         iGtDtQwCR6jTCTDPL3OousyJYJD3D2cpS1KFx3R/X0rsu+h2ICs6xR5qJVZ0p2k+du3i
-         CEBEa/eJRybTcktW9/Kc0lzYi21kV2S2Ddx5b0Sj4StXItHdYjuRIiH2862F52lCMj9P
-         4I+n2Hb9HTqp3ep29tAZAGmmY1hV+DbgagegPxdXghOAwB96h9ItC0Wv7DWBrUTaLTY3
-         e2OA==
-X-Gm-Message-State: AOAM530D7kvU6M9ZR3Ucq6RW59re/oweuojAn9Bjj/i152WiPH+wwHj1
-	oo09T+urZdDJDPOyGaC+ncszkZta/vetaw==
-X-Google-Smtp-Source: ABdhPJy7N8nPGC4gqykKzEGrlNujQNoWw5tpsYg2aACniygXbVG+QblWjN2q0lJuLaE67kdGLfbFGg==
-X-Received: by 2002:a05:600c:987:: with SMTP id w7mr7887015wmp.64.1618227720666;
-        Mon, 12 Apr 2021 04:42:00 -0700 (PDT)
+        bh=r01aWa9994X8fWktihsK75f8b+9wTBxbyF57VOvNDC4=;
+        b=ICm4kRN7oa4QhuNnctLjon32Y9/kQlh6YqbPGWS2aKzAyVXiNb7duO6hgfz6LTt+Pe
+         iVXoxIQvyx3yGsKaqs9l1rT8DOVw+jY4Zw0uaQ0AlY53ZkXkO/KyKkarAM8xiKV+1pUZ
+         2pca3b8uNSGInopnNbzSvcxbtMYhOnPBsDyAZO8Y8U9woKfmLQ/n4DQmq2sOtZa260TC
+         3gT6Ft3ERySU5Id8cpAkKAlPVMZVgJWi0v9gwTc9TCYWxvMOY+zCSl4PMYoKWz4MNRN3
+         DTZo+BdYNNrfSCIC6zeHLhMFp4o8PAhL4IRxX2Xa5+SzZdOQXMcw2r7OiFTHZtmZMVxY
+         0EKQ==
+X-Gm-Message-State: AOAM533RQo3WRo+xqrqKLu+K3YeA/GAwlUUTZBHircE4joP/DubBYrDN
+	Rkm6TlnBqBlpy8vHmFtKLNsp99j25S5Dxg==
+X-Google-Smtp-Source: ABdhPJxbikQKvZanG2lFI24oG8ethndctlhezGyZY1Ig/OP9UlleVP+zmQNR8lz8KSABYiPa1PxI5A==
+X-Received: by 2002:a05:600c:224e:: with SMTP id a14mr26176674wmm.57.1618227721499;
+        Mon, 12 Apr 2021 04:42:01 -0700 (PDT)
 Return-Path: <pbarker@konsulko.com>
 Received: from alpha.home.b5net.uk (cpc76132-clif11-2-0-cust80.12-4.cable.virginm.net. [80.7.160.81])
-        by smtp.gmail.com with ESMTPSA id 3sm17931294wma.45.2021.04.12.04.41.59
+        by smtp.gmail.com with ESMTPSA id 3sm17931294wma.45.2021.04.12.04.42.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Apr 2021 04:42:00 -0700 (PDT)
+        Mon, 12 Apr 2021 04:42:01 -0700 (PDT)
 From: "Paul Barker" <pbarker@konsulko.com>
 To: bitbake-devel@lists.openembedded.org,
 	Richard Purdie <richard.purdie@linuxfoundation.org>,
 	Joshua Watt <JPEWhacker@gmail.com>
 Cc: Paul Barker <pbarker@konsulko.com>
-Subject: [RFC PATCH 05/11] asyncrpc: Add ping method
-Date: Mon, 12 Apr 2021 12:41:43 +0100
-Message-Id: <20210412114149.4750-6-pbarker@konsulko.com>
+Subject: [RFC PATCH 06/11] prserv: Use multiprocessing to auto start prserver
+Date: Mon, 12 Apr 2021 12:41:44 +0100
+Message-Id: <20210412114149.4750-7-pbarker@konsulko.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20210412114149.4750-1-pbarker@konsulko.com>
 References: <20210412114149.4750-1-pbarker@konsulko.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This method is needed to support startup of the prservice. As it is so
-generic we can add it to the common asyncrpc module.
+We can use the modern multiprocessing support in Python instead of
+manually using fork to start the prserver process. To do this we need
+to set up the signal handlers for the prserver process in the
+work_forever function (which is now used as the main function for this
+process).
+
+The old code to start the prserver process using fork is not removed in
+this commit as it is tightly intertwined with the daemonization code
+which will be refactored in a following commit.
 
 Signed-off-by: Paul Barker <pbarker@konsulko.com>
 ---
- lib/bb/asyncrpc/client.py | 7 ++++++-
- lib/bb/asyncrpc/serv.py   | 5 +++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ lib/prserv/serv.py | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-index 4cdad9ac3..79919c5be 100644
---- a/lib/bb/asyncrpc/client.py
-+++ b/lib/bb/asyncrpc/client.py
-@@ -103,13 +103,18 @@ class AsyncClient(object):
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index 1cfbba864..d58b859d8 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -15,6 +15,7 @@ import prserv
+ import prserv.db
+ import errno
+ import select
++import multiprocessing
  
-         return await self._send_wrapper(proc)
+ logger = logging.getLogger("BitBake.PRserv")
  
-+    async def ping(self):
-+        return await self.send_message(
-+            {'ping': {}}
-+        )
+@@ -170,6 +171,9 @@ class PRServer(SimpleXMLRPCServer):
+         # if there is data there.
+         self.timeout = 0.01
+ 
++        signal.signal(signal.SIGINT, self.sigint_handler)
++        signal.signal(signal.SIGTERM, self.sigterm_handler)
 +
+         bb.utils.set_process_name("PRServ")
  
- class Client(object):
-     def __init__(self):
-         self.client = self._get_async_client()
-         self.loop = asyncio.new_event_loop()
+         # DB connection must be created after all forks
+@@ -249,8 +253,6 @@ class PRServer(SimpleXMLRPCServer):
+         os._exit(0)
  
--        self._add_methods('connect_tcp', 'close')
-+        self._add_methods('connect_tcp', 'close', 'ping')
+     def cleanup_handles(self):
+-        signal.signal(signal.SIGINT, self.sigint_handler)
+-        signal.signal(signal.SIGTERM, self.sigterm_handler)
+         os.chdir("/")
  
-     @abc.abstractmethod
-     def _get_async_client(self):
-diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
-index cb3384639..fd91aa71a 100644
---- a/lib/bb/asyncrpc/serv.py
-+++ b/lib/bb/asyncrpc/serv.py
-@@ -28,6 +28,7 @@ class AsyncServerConnection(object):
-         self.max_chunk = DEFAULT_MAX_CHUNK
-         self.handlers = {
-             'chunk-stream': self.handle_chunk,
-+            'ping': self.handle_ping,
-         }
-         self.logger = logger
+         sys.stdout.flush()
+@@ -304,8 +306,10 @@ class PRServSingleton(object):
+         self.port = None
  
-@@ -123,6 +124,10 @@ class AsyncServerConnection(object):
- 
-         await self.dispatch_message(msg)
- 
-+    async def handle_ping(self, request):
-+        response = {'alive': True}
-+        self.write_message(response)
+     def start(self):
+-        self.prserv = PRServer(self.dbfile, self.logfile, self.interface, daemon=False)
+-        self.prserv.start()
++        self.prserv = PRServer(self.dbfile, self.logfile, self.interface)
++        self.process = multiprocessing.Process(target=self.prserv.work_forever)
++        self.process.start()
 +
+         self.host, self.port = self.prserv.getinfo()
  
- class AsyncServer(object):
-     def __init__(self, logger, loop=None):
+     def getinfo(self):
 -- 
 2.26.2
 
