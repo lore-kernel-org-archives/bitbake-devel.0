@@ -1,83 +1,136 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.31092.1618227726806811508
+Received: from gecko.sbs.de (gecko.sbs.de [194.138.37.40])
+ by mx.groups.io with SMTP id smtpd.web09.33839.1618240362879920026
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 12 Apr 2021 04:42:07 -0700
+ Mon, 12 Apr 2021 08:12:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=Iw9e4a8/;
- spf=pass (domain: konsulko.com, ip: 209.85.221.54, mailfrom: pbarker@konsulko.com)
-Received: by mail-wr1-f54.google.com with SMTP id a6so12591660wrw.8
-        for <bitbake-devel@lists.openembedded.org>; Mon, 12 Apr 2021 04:42:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=u68nok4DvsdaBQxWiDiZKXMYun0l5wGq9Zk7Qhj3Wlg=;
-        b=Iw9e4a8/NxG/m8Uc3mGWbBLWkDXCWbN7qmE1r4ximnjtjFh4hwGMOcJGU9A4uNh8Um
-         PmA1AypWX5ylamHyS5YevTgUt5Ncl7WeTuLJwC6twvWhgpXQ8zm0YS4wvuwJXxC9RHuE
-         XtF/hJ0Jx0AFe31axlKGSYaty3Z3pcY3twn+Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=u68nok4DvsdaBQxWiDiZKXMYun0l5wGq9Zk7Qhj3Wlg=;
-        b=bxUFT9FKj5ExcGuvs+1kO8KK+WNALfrkfvEr3N45ETOkMaETY3bseMF+X/LyRa00+L
-         +p1uxnp2J6NgOgoxiFIKIX8D7VYuKh77ZzAKGGeRXYrJoiCYkdTNK/Pb0QpUtFBqd7ax
-         mWwYoxDozScmwKNgwIrbiXJGGR4YhTbopANFshgDvcB2TvCtUFUL9Jy2PXDJjdeDqRmP
-         Biypef2xSemNJMIhitOV10LpkSwWg/BldzMQormxu7hlurX0ZTbDiCT3ytif64YQoHg+
-         grnO7SvwXX/PAOJjVOn49mEoE0W2gCJ2zAkFPd5RlUKm0l1oVkxKOqFTHU57cEoxPuMs
-         wcrw==
-X-Gm-Message-State: AOAM531IQveQVr2HooAfzPjTqGO2IsnNzbwWYWl5GVznxDMURHI48/lv
-	44H62YdYiozlIjx4TbkBfHKdrtI3vsVUZA==
-X-Google-Smtp-Source: ABdhPJx8OMCoVYcYcZ8yC+JNyL9+qU7wrmyu6txxP8R46OJr1t6gpY3ecCYM5aCdi0C3tH+ueZyS+w==
-X-Received: by 2002:a5d:5607:: with SMTP id l7mr30809480wrv.220.1618227725228;
-        Mon, 12 Apr 2021 04:42:05 -0700 (PDT)
-Return-Path: <pbarker@konsulko.com>
-Received: from alpha.home.b5net.uk (cpc76132-clif11-2-0-cust80.12-4.cable.virginm.net. [80.7.160.81])
-        by smtp.gmail.com with ESMTPSA id 3sm17931294wma.45.2021.04.12.04.42.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Apr 2021 04:42:04 -0700 (PDT)
-From: "Paul Barker" <pbarker@konsulko.com>
-To: bitbake-devel@lists.openembedded.org,
-	Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Joshua Watt <JPEWhacker@gmail.com>
-Cc: Paul Barker <pbarker@konsulko.com>
-Subject: [RFC PATCH 11/11] prserv: Add connect function
-Date: Mon, 12 Apr 2021 12:41:49 +0100
-Message-Id: <20210412114149.4750-12-pbarker@konsulko.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210412114149.4750-1-pbarker@konsulko.com>
-References: <20210412114149.4750-1-pbarker@konsulko.com>
+ dkim=missing; spf=pass (domain: siemens.com, ip: 194.138.37.40, mailfrom: henning.schild@siemens.com)
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+	by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 13CFCdvl009582
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 Apr 2021 17:12:39 +0200
+Received: from md1za8fc.ad001.siemens.net ([139.22.41.180])
+	by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 13CF5KQO004576;
+	Mon, 12 Apr 2021 17:05:20 +0200
+Date: Mon, 12 Apr 2021 17:05:19 +0200
+From: henning.schild@siemens.com
+To: <bitbake-devel@lists.openembedded.org>,
+        Richard Purdie
+ <richard.purdie@linuxfoundation.org>
+Cc: <isar-users@googlegroups.com>
+Subject: Re: [bitbake-devel] [PATCH] fetch/git: add support for disabling shared clones on unpack
+Message-ID: <20210412170519.53612c01@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20180130131805.4725ccf3@mmd1pvb1c.ad001.siemens.net>
+References: <20171220164209.9609-1-henning.schild@siemens.com>
+	<20171220174538.441d517f@mmd1pvb1c.ad001.siemens.net>
+	<20180130131805.4725ccf3@mmd1pvb1c.ad001.siemens.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This function abstracts the setup of a PR service client connection so
-that openembedded-core doesn't need to be updated any time the details
-are changed.
+Hey,
 
-Signed-off-by: Paul Barker <pbarker@konsulko.com>
----
- lib/prserv/serv.py | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+this is still pretty much relevant to Isar, where an unpack with git
+goes into a chroot. Having a way not clone "shared" would really help
+us in Isar.
 
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index 70bb2b2fc..055b18bd2 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -371,3 +371,14 @@ def ping(host, port):
-     conn=PRClient()
-     conn.connect_tcp(host, port)
-     return conn.ping()
-+
-+def connect(host, port):
-+    global singleton
-+
-+    if host.strip().lower() == 'localhost' and not port:
-+        host = 'localhost'
-+        port = singleton.port
-+
-+    conn = PRClient()
-+    conn.connect_tcp(host, port)
-+    return conn
--- 
-2.26.2
+Any comments? Except for this one maybe not applying anymore, did not
+try.
+
+regards,
+Henning
+
+Am Tue, 30 Jan 2018 13:18:05 +0100
+schrieb "[ext] Henning Schild" <henning.schild@siemens.com>:
+
+> Bump! Could i please get a review on this patch?
+> 
+> regards,
+> Henning
+> 
+> Am Wed, 20 Dec 2017 17:45:38 +0100
+> schrieb Henning Schild <henning.schild@siemens.com>:
+> 
+> > We actually ran into that issue on a build system called Isar.
+> > 
+> > https://github.com/ilbers/isar
+> > 
+> > This build system executes some tasks in a chroot. In this chroot a
+> > "shared" clone will not work because it expects its "alternate" to
+> > be at the very same location it was outside the chroot. We
+> > considered several hacks in Isar
+> > - patching the alternates before and after chroot
+> > - mounting the "alternate" to the exact location in chroot
+> > None of this is really nice, so we decided to try and do something
+> > about it upstream.
+> > 
+> > regards,
+> > Henning
+> > 
+> > Am Wed, 20 Dec 2017 17:42:09 +0100
+> > schrieb Henning Schild <henning.schild@siemens.com>:
+> >   
+> > > By default the unpacker will create a "shared" clone when cloning
+> > > from the DL_DIR to the WORKDIR. This patch introduces an option to
+> > > control that behaviour. Probably something that hardly anyone
+> > > would want to do.
+> > > 
+> > > Imagine some recipe steps are executed in a namespace that is
+> > > different from the one your downloader and unpacker ran in.
+> > > (chroot) Because a "shared" clone has an absolute reference to its
+> > > "alternate" you now have to make that "alternate" visible in that
+> > > new namespace (chroot) at the exact place.
+> > > 
+> > > With this patch you can unpack "noshared" and get a stand-alone
+> > > copy. This copy will also work if the "alternate" is not visible
+> > > or existant.
+> > > 
+> > > Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> > > ---
+> > >  lib/bb/fetch2/git.py | 13 ++++++++++++-
+> > >  1 file changed, 12 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> > > index 5ef8cd69..7b7f02b2 100644
+> > > --- a/lib/bb/fetch2/git.py
+> > > +++ b/lib/bb/fetch2/git.py
+> > > @@ -53,6 +53,13 @@ Supported SRC_URI options are:
+> > >     For local git:// urls to use the current branch HEAD as the
+> > > revision for use with AUTOREV. Implies nobranch.
+> > >  
+> > > +- noshared
+> > > +   When unpacking do not clone with the parameter "--shared".
+> > > This option will
+> > > +   allow the unpacked copy to work stand-alone i.e. if your
+> > > recipe runs in a
+> > > +   chroot where the "alternate" can not be found. Setting this
+> > > will increase
+> > > +   the unpack-time and the disk-usage.
+> > > +   The default is "0", set noshared=1 if needed.
+> > > +
+> > >  """
+> > >  
+> > >  #Copyright (C) 2005 Richard Purdie
+> > > @@ -159,6 +166,8 @@ class Git(FetchMethod):
+> > >  
+> > >          ud.nobranch = ud.parm.get("nobranch","0") == "1"
+> > >  
+> > > +        ud.noshared = ud.parm.get("noshared","0") == "1"
+> > > +
+> > >          # usehead implies nobranch
+> > >          ud.usehead = ud.parm.get("usehead","0") == "1"
+> > >          if ud.usehead:
+> > > @@ -176,7 +185,9 @@ class Git(FetchMethod):
+> > >          if len(branches) != len(ud.names):
+> > >              raise bb.fetch2.ParameterError("The number of name
+> > > and branch parameters is not balanced", ud.url) 
+> > > -        ud.cloneflags = "-s -n"
+> > > +        ud.cloneflags = "-n"
+> > > +        if not ud.noshared:
+> > > +            ud.cloneflags += " -s"
+> > >          if ud.bareclone:
+> > >              ud.cloneflags += " --mirror"
+> > >      
+> >   
+> 
 
