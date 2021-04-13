@@ -1,80 +1,69 @@
 Received: from gecko.sbs.de (gecko.sbs.de [194.138.37.40])
- by mx.groups.io with SMTP id smtpd.web10.8503.1618317847529423261
+ by mx.groups.io with SMTP id smtpd.web10.362.1618326177856302340
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 13 Apr 2021 05:44:08 -0700
+ Tue, 13 Apr 2021 08:02:58 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: siemens.com, ip: 194.138.37.40, mailfrom: henning.schild@siemens.com)
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-	by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 13DCi18t016559
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+	by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 13DF2sX5008165
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 Apr 2021 14:44:01 +0200
-Received: from md1za8fc.ad001.siemens.net ([167.87.48.83])
-	by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 13DCeJnT013759;
-	Tue, 13 Apr 2021 14:40:19 +0200
-Date: Tue, 13 Apr 2021 14:40:18 +0200
+	Tue, 13 Apr 2021 17:02:54 +0200
+Received: from localhost.localdomain ([167.87.48.83])
+	by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 13DF2rM2021528;
+	Tue, 13 Apr 2021 17:02:53 +0200
 From: henning.schild@siemens.com
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org, isar-users@googlegroups.com,
-        "Hombourger, Cedric" <Cedric_Hombourger@mentor.com>,
-        "Larson, Chris"
- <Chris_Larson@mentor.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch/git: add support for disabling shared clones on unpack
-Message-ID: <20210413144018.1be69c07@md1za8fc.ad001.siemens.net>
-In-Reply-To: <65bf5f7ea9041131d5106cd45cf19e709f468d2d.camel@linuxfoundation.org>
-References: <20171220164209.9609-1-henning.schild@siemens.com>
-	<20171220174538.441d517f@mmd1pvb1c.ad001.siemens.net>
-	<20180130131805.4725ccf3@mmd1pvb1c.ad001.siemens.net>
-	<20210412170519.53612c01@md1za8fc.ad001.siemens.net>
-	<65bf5f7ea9041131d5106cd45cf19e709f468d2d.camel@linuxfoundation.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+To: bitbake-devel@lists.openembedded.org
+Cc: isar-users@googlegroups.com,
+        Richard Purdie <richard.purdie@linuxfoundation.org>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Chris Larson <Chris_Larson@mentor.com>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: [PATCH v2 1/3] fetch/git: add support for disabling shared clones on unpack
+Date: Tue, 13 Apr 2021 17:02:49 +0200
+Message-Id: <20210413150251.1969-1-henning.schild@siemens.com>
+X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Am Tue, 13 Apr 2021 11:23:00 +0100
-schrieb Richard Purdie <richard.purdie@linuxfoundation.org>:
+By default the unpacker will create a "shared" clone when cloning from
+the DL_DIR to the WORKDIR. This patch introduces an option to control
+that behaviour.
 
-> Hi,
->=20
-> On Mon, 2021-04-12 at 17:05 +0200, Henning Schild wrote:
-> > this is still pretty much relevant to Isar, where an unpack with git
-> > goes into a chroot. Having a way not clone "shared" would really
-> > help us in Isar.
-> >=20
-> > Any comments? Except for this one maybe not applying anymore, did
-> > not try. =20
->=20
-> I'm torn on this, I can see the use case but it isn't one we've
-> typically run into. I can see how it is Isar specific.
->=20
-> I'm hesitant as the more "forks" in codepath we add to the fetcher,
-> the harder it becomes to test and maintain.
+Imagine some recipe steps are executed in a namespace that is different
+from the one your downloader and unpacker ran in. (chroot) Because a
+"shared" clone has an absolute reference to its "alternate" you now
+have to make that "alternate" visible in that new namespace (chroot) at
+the exact place.
 
-That is clear, but thanks for considering Isar even though it is not
-the biggest user of bitbake.
+With this patch you can unpack "noshared" and get a stand-alone copy.
+This copy will also work if the "alternate" is not visible or existant.
 
-> Would you be able to add some tests for this to the testsuite=C2=A0
-> (bitbake-selftest)? If we have some tests we could probably add
-> something.
+The switch is a global bitbake switch and will affect all git urls.
+Build systems that need "noshared" most likely need it for everything
+they do with git.
 
-Sure thing, if that increases the chance of a merge.
+Signed-off-by: Henning Schild <henning.schild@siemens.com>
+---
+ lib/bb/fetch2/git.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> I did also wonder whether this should be a per url parmeter or a
-> global fetcher behaviour option? You'd end up adding this to all urls
-> in your usecase?
-
-That is a good point, yes we would be forced to set that per url. I
-think i will go for=20
-  d.getVar("BB_GIT_NOSHARE") =3D=3D "1"
-in v2. A variable isar can set in its bitbake.conf.
-
-Thanks,
-Henning
-
->=20
-> Cheers,
->=20
-> Richard
->=20
->=20
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index e3ba80a3f52a..3e25b4b6047c 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -168,7 +168,11 @@ class Git(FetchMethod):
+         if len(branches) != len(ud.names):
+             raise bb.fetch2.ParameterError("The number of name and branch parameters is not balanced", ud.url)
+ 
+-        ud.cloneflags = "-s -n"
++        ud.noshared = d.getVar("BB_GIT_NOSHARED") == "1"
++
++        ud.cloneflags = "-n"
++        if not ud.noshared:
++            ud.cloneflags += " -s"
+         if ud.bareclone:
+             ud.cloneflags += " --mirror"
+ 
+-- 
+2.26.3
 
