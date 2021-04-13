@@ -1,16 +1,16 @@
-Received: from gecko.sbs.de (gecko.sbs.de [194.138.37.40])
- by mx.groups.io with SMTP id smtpd.web10.362.1618326177856302340
+Received: from lizzard.sbs.de (lizzard.sbs.de [194.138.37.39])
+ by mx.groups.io with SMTP id smtpd.web09.468.1618326394856814354
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 13 Apr 2021 08:02:58 -0700
+ Tue, 13 Apr 2021 08:06:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: siemens.com, ip: 194.138.37.40, mailfrom: henning.schild@siemens.com)
+ dkim=missing; spf=pass (domain: siemens.com, ip: 194.138.37.39, mailfrom: henning.schild@siemens.com)
 Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-	by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 13DF2sX5008165
+	by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 13DF6Wo5012254
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 Apr 2021 17:02:54 +0200
+	Tue, 13 Apr 2021 17:06:32 +0200
 Received: from localhost.localdomain ([167.87.48.83])
-	by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 13DF2rM2021528;
-	Tue, 13 Apr 2021 17:02:53 +0200
+	by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 13DF2rM3021528;
+	Tue, 13 Apr 2021 17:02:54 +0200
 From: henning.schild@siemens.com
 To: bitbake-devel@lists.openembedded.org
 Cc: isar-users@googlegroups.com,
@@ -18,52 +18,81 @@ Cc: isar-users@googlegroups.com,
         Cedric Hombourger <Cedric_Hombourger@mentor.com>,
         Chris Larson <Chris_Larson@mentor.com>,
         Henning Schild <henning.schild@siemens.com>
-Subject: [PATCH v2 1/3] fetch/git: add support for disabling shared clones on unpack
-Date: Tue, 13 Apr 2021 17:02:49 +0200
-Message-Id: <20210413150251.1969-1-henning.schild@siemens.com>
+Subject: [PATCH v2 2/3] tests/fetch: deduplicate local git testing code
+Date: Tue, 13 Apr 2021 17:02:50 +0200
+Message-Id: <20210413150251.1969-2-henning.schild@siemens.com>
 X-Mailer: git-send-email 2.26.3
+In-Reply-To: <20210413150251.1969-1-henning.schild@siemens.com>
+References: <20210413150251.1969-1-henning.schild@siemens.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-By default the unpacker will create a "shared" clone when cloning from
-the DL_DIR to the WORKDIR. This patch introduces an option to control
-that behaviour.
-
-Imagine some recipe steps are executed in a namespace that is different
-from the one your downloader and unpacker ran in. (chroot) Because a
-"shared" clone has an absolute reference to its "alternate" you now
-have to make that "alternate" visible in that new namespace (chroot) at
-the exact place.
-
-With this patch you can unpack "noshared" and get a stand-alone copy.
-This copy will also work if the "alternate" is not visible or existant.
-
-The switch is a global bitbake switch and will affect all git urls.
-Build systems that need "noshared" most likely need it for everything
-they do with git.
+Purely cosmetic change that probably improves the code.
 
 Signed-off-by: Henning Schild <henning.schild@siemens.com>
 ---
- lib/bb/fetch2/git.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/bb/tests/fetch.py | 33 +++++++--------------------------
+ 1 file changed, 7 insertions(+), 26 deletions(-)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index e3ba80a3f52a..3e25b4b6047c 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -168,7 +168,11 @@ class Git(FetchMethod):
-         if len(branches) != len(ud.names):
-             raise bb.fetch2.ParameterError("The number of name and branch parameters is not balanced", ud.url)
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index ddf6e97439b5..76797473db8a 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -673,7 +673,7 @@ class FetcherLocalTest(FetcherTest):
+         with self.assertRaises(bb.fetch2.UnpackError):
+             self.fetchUnpack(['file://a;subdir=/bin/sh'])
  
--        ud.cloneflags = "-s -n"
-+        ud.noshared = d.getVar("BB_GIT_NOSHARED") == "1"
+-    def test_local_gitfetch_usehead(self):
++    def dummyGitTest(self, suffix):
+         # Create dummy local Git repo
+         src_dir = tempfile.mkdtemp(dir=self.tempdir,
+                                    prefix='gitfetch_localusehead_')
+@@ -690,7 +690,7 @@ class FetcherLocalTest(FetcherTest):
+ 
+         # Fetch and check revision
+         self.d.setVar("SRCREV", "AUTOINC")
+-        url = "git://" + src_dir + ";protocol=file;usehead=1"
++        url = "git://" + src_dir + ";protocol=file;" + suffix
+         fetcher = bb.fetch.Fetch([url], self.d)
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+@@ -699,31 +699,12 @@ class FetcherLocalTest(FetcherTest):
+         unpack_rev = stdout[0].strip()
+         self.assertEqual(orig_rev, unpack_rev)
+ 
+-    def test_local_gitfetch_usehead_withname(self):
+-        # Create dummy local Git repo
+-        src_dir = tempfile.mkdtemp(dir=self.tempdir,
+-                                   prefix='gitfetch_localusehead_')
+-        src_dir = os.path.abspath(src_dir)
+-        bb.process.run("git init", cwd=src_dir)
+-        bb.process.run("git commit --allow-empty -m'Dummy commit'",
+-                       cwd=src_dir)
+-        # Use other branch than master
+-        bb.process.run("git checkout -b my-devel", cwd=src_dir)
+-        bb.process.run("git commit --allow-empty -m'Dummy commit 2'",
+-                       cwd=src_dir)
+-        stdout = bb.process.run("git rev-parse HEAD", cwd=src_dir)
+-        orig_rev = stdout[0].strip()
+ 
+-        # Fetch and check revision
+-        self.d.setVar("SRCREV", "AUTOINC")
+-        url = "git://" + src_dir + ";protocol=file;usehead=1;name=newName"
+-        fetcher = bb.fetch.Fetch([url], self.d)
+-        fetcher.download()
+-        fetcher.unpack(self.unpackdir)
+-        stdout = bb.process.run("git rev-parse HEAD",
+-                                cwd=os.path.join(self.unpackdir, 'git'))
+-        unpack_rev = stdout[0].strip()
+-        self.assertEqual(orig_rev, unpack_rev)
++    def test_local_gitfetch_usehead(self):
++        self.dummyGitTest("usehead=1")
 +
-+        ud.cloneflags = "-n"
-+        if not ud.noshared:
-+            ud.cloneflags += " -s"
-         if ud.bareclone:
-             ud.cloneflags += " --mirror"
++    def test_local_gitfetch_usehead_withname(self):
++        self.dummyGitTest("usehead=1;name=newName")
  
+ class FetcherNoNetworkTest(FetcherTest):
+     def setUp(self):
 -- 
 2.26.3
 
