@@ -1,133 +1,189 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web09.68.1618505321515729826
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.46])
+ by mx.groups.io with SMTP id smtpd.web09.11220.1618589267379601708
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 15 Apr 2021 09:48:41 -0700
+ Fri, 16 Apr 2021 09:07:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QZhg3kca;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id p19so12834831wmq.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 15 Apr 2021 09:48:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=Q0VIG2sqeXiXknncagaC9Rtk+AYI34uslVFpouxh2sU=;
-        b=QZhg3kcaaeAQnuD3EdyWD1ID0vyNbyW3MH4GSxoNCa6VaYM5rGKgywH7dFj7zVzvtC
-         U8V7bD6G7BAP/RY8QqNYuy72O9ody6X5HHvliMb8EHzJzYy9/FjEl8xUOjtYmty3eYIq
-         FbBMizwhL1ErKbdVhNgHX067ilxcuqSLonHYY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Q0VIG2sqeXiXknncagaC9Rtk+AYI34uslVFpouxh2sU=;
-        b=LEZA4hBhjRm9gxnfqa2qoqCZm0NITldztNs3ful/ypwinu3+vogujYRQ4Cmk401n91
-         ALnmz9BcXjn/bBs14ZWnvbRwylFdd/KDhM+s6NsA7JK8RfB+kj1Q2ZE8bY6H+005FnRz
-         n/SYNDdQTQmPjKj0k6JM40MkVqHxTak1xkqNzXYAnIKIIfvJMVIQNh8ftSDq1qPr4rSB
-         9176RDRG9gNWkE8iIJd0ZDAgg3TZlaNY06M9GEG7L+eaBbnc1bMYniOq9wY8jUAM0tCc
-         nmVrwbWlK11B087NngWLzBim3mVBsuon2IRfpuSyiBCRfjCPK3doEZ/cUKElMUManJdR
-         +/sw==
-X-Gm-Message-State: AOAM532LEomshkKP4Ejb4cuchIBsUhJ4YtjeCRB9dwDUmgCUH6z1hW+W
-	4ZnVuknALqQ+SNGK5wp0r0SLng==
-X-Google-Smtp-Source: ABdhPJwVyN2qBW8PdecQSVc7WlrKl2EYitUoiG3E/z36EbT5Pdt3Zbrls1SJn+XEt0QL+Bf8fAC2TQ==
-X-Received: by 2002:a05:600c:4f4f:: with SMTP id m15mr4030680wmq.29.1618505319946;
-        Thu, 15 Apr 2021 09:48:39 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:b9e0:fe1a:1091:177b? ([2001:8b0:aba:5f3c:b9e0:fe1a:1091:177b])
-        by smtp.gmail.com with ESMTPSA id b14sm4497085wrf.75.2021.04.15.09.48.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Apr 2021 09:48:39 -0700 (PDT)
-Message-ID: <0420d0fbac5ddd0201a24905f7e9371df6e7e055.camel@linuxfoundation.org>
-Subject: Re: [RFC PATCH 00/11] Modernise prserv
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Paul Barker <pbarker@konsulko.com>,
- bitbake-devel@lists.openembedded.org,  Joshua Watt <JPEWhacker@gmail.com>
-Date: Thu, 15 Apr 2021 17:48:29 +0100
-In-Reply-To: <20210412114149.4750-1-pbarker@konsulko.com>
-References: <20210412114149.4750-1-pbarker@konsulko.com>
-User-Agent: Evolution 3.40.0-1 
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=LGYVA0Lu;
+ spf=pass (domain: arm.com, ip: 40.107.21.46, mailfrom: diego.sueiro@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FRI/B+FwlJFt1Jiy+pWz74WhJaQ7It+BSIQgB2K7rJY=;
+ b=LGYVA0Lu+/FXH1tKYk6LI/ESoZW9h3Ml2AT98Z1L/yUEZe5RJ375yxf4JWRKq5+Jnw9vdcoiOubVGrZsNKFCid2ad/b8OB+4BjL4KpIz+Ze/5xdTmzDOnN+I1zEtv/2K4Ke64aRMZ4v0TprcxzWwms1Oe9GIXAejIdRktDuWNzs=
+Received: from AM6P195CA0086.EURP195.PROD.OUTLOOK.COM (2603:10a6:209:86::27)
+ by AM9PR08MB6161.eurprd08.prod.outlook.com (2603:10a6:20b:280::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16; Fri, 16 Apr
+ 2021 16:07:42 +0000
+Received: from VE1EUR03FT062.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:209:86:cafe::8b) by AM6P195CA0086.outlook.office365.com
+ (2603:10a6:209:86::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16 via Frontend
+ Transport; Fri, 16 Apr 2021 16:07:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.openembedded.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.openembedded.org; dmarc=pass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT062.mail.protection.outlook.com (10.152.18.252) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4042.16 via Frontend Transport; Fri, 16 Apr 2021 16:07:42 +0000
+Received: ("Tessian outbound 82c2d58b350b:v90"); Fri, 16 Apr 2021 16:07:41 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: af6323f3ef4ead99
+X-CR-MTA-TID: 64aa7808
+Received: from 072485cd90f3.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id A8515EE5-8A56-461C-8B74-8090C868852A.1;
+	Fri, 16 Apr 2021 16:07:35 +0000
+Received: from EUR02-HE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 072485cd90f3.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 16 Apr 2021 16:07:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e8JfB+HdWCp984YZMZ6HPN7oWKduGOSZmiAakwldYbsyzyqpVC/CE9hq/UESfPuFxIi9FwxWTpYWbvDG0ip5y2cCGtu1EKQlfZV1b7t86fncSkbl5hF4WwmKQvZQl0V5f6cWOt7xKOJAlapUCahtzvm4gwcX+/Qf6WnKf/x34kXh6TYzhFUTHXYKtQq1OKhiQwvkijrr+KVNR57s/ktODf8eoCH1Mz0ObpP+R6pVn3BdkIMGGyl3VAAZYhVLcJ4UevwB0nqcClwUrmUkCPHDH13gf8m4v+ysLK7eDzTeZpKgISV+ebZvaA8rqBV6M+vise1S4tPYhfyE014FRljg7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FRI/B+FwlJFt1Jiy+pWz74WhJaQ7It+BSIQgB2K7rJY=;
+ b=WrFvjfwAgAZzik73UHWJUn+wLgSzL5s0nroNXQLfNxSRucQN8c5E5Bk+JJnMOSLzkkRx6WBK0Nqku4vpcP5LEaxqSOqkmUN2XEWay51278WBwWnIMhAnoqtAXZxQ+y9HhL/5V6Q+/W7aDqnF9tcDuvapBsIt7M+kKwQ+Nd6VfbfHmz21wKVAfGe1cRV5EKE8ml95pa8l9ELjl5XmlxQZS4G1bwFveDQOkpg9sZAu0eack3of4GpE28cN0tWSpxAuIhR0UXd0A/xek0uZp/T1mePQJdab2RgmiR0bIcy8Yczz/cjXble7DBoZs5oW3dbxSBlTRMhrxpWphTaMii20Aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FRI/B+FwlJFt1Jiy+pWz74WhJaQ7It+BSIQgB2K7rJY=;
+ b=LGYVA0Lu+/FXH1tKYk6LI/ESoZW9h3Ml2AT98Z1L/yUEZe5RJ375yxf4JWRKq5+Jnw9vdcoiOubVGrZsNKFCid2ad/b8OB+4BjL4KpIz+Ze/5xdTmzDOnN+I1zEtv/2K4Ke64aRMZ4v0TprcxzWwms1Oe9GIXAejIdRktDuWNzs=
+Authentication-Results-Original: lists.openembedded.org; dkim=none (message
+ not signed) header.d=none;lists.openembedded.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
+ by AM5PR0801MB1747.eurprd08.prod.outlook.com (2603:10a6:203:36::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16; Fri, 16 Apr
+ 2021 16:07:33 +0000
+Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
+ ([fe80::185d:c3b0:a5c8:de4b]) by AM6PR08MB3461.eurprd08.prod.outlook.com
+ ([fe80::185d:c3b0:a5c8:de4b%4]) with mapi id 15.20.4042.019; Fri, 16 Apr 2021
+ 16:07:33 +0000
+From: "Diego Sueiro" <diego.sueiro@arm.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: nd@arm.com,
+	Diego Sueiro <diego.sueiro@arm.com>
+Subject: [PATCH 1/2] bitbake: layerindex: Fix bitbake-layers layerindex-show-depends command
+Date: Fri, 16 Apr 2021 17:07:10 +0100
+Message-Id: <e810a80d2aa60cbfbca64abd52101a8c856c80c5.1618588951.git.diego.sueiro@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.140.106.53]
+X-ClientProxiedBy: LO2P265CA0314.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a4::14) To AM6PR08MB3461.eurprd08.prod.outlook.com
+ (2603:10a6:20b:47::28)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from e120809.cambridge.arm.com (217.140.106.53) by LO2P265CA0314.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a4::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.21 via Frontend Transport; Fri, 16 Apr 2021 16:07:32 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c0a94836-ff2f-4b33-df3c-08d900f1c3ce
+X-MS-TrafficTypeDiagnostic: AM5PR0801MB1747:|AM9PR08MB6161:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<AM9PR08MB616114B80DF03E0D6964BC2D924C9@AM9PR08MB6161.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;OLM:3513;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ +1ADSPZbt7xgsm/3Sd7HWGIQ/tR4nmid6nmhR20apwzZoRdYnGqd6AZ4GP6uijwYp3IvTzpajya+qKiUW56DIo0maaMAZ3tzcszf6fEE6bC0Lui/32PHVM7primPuo+KzA26kGpc3o0ArQ+vX+4AsIEmun8QYWq2Z9/1oFpYw0COVYkqRec45tc4URnWDCYCWUiU59TrJD01uNL5vwdqIk6O8/LaYitOPLhyJDoVe766bm4/Fs1hLPNo255GeF5AuHZu0xnDF/a3qZa6YbpSGYOFGOpY+CKYr8o5MFFrlpjI+mUGiXK8gLAom8VUV6f+2CJ/YYIWEdVF/xTNHckbQxqGZoqzisavn58+Eu6zGBf8TKw1J0C5bk6+ZY43KtPa+1BLF82+V2rPhOQju/5weQYl4ulhQMZvkQB85V80+PoMkR/0n86USNBBXk0sDywXt4Q4O7BJ9hkHi4I9mrgxll7BwGmRbOkIVVF/6/bHUQFLJJjsI+5cjk0wBnjnv1ebDIk5RjYtU/I++JPPVM37fOn7vXe/BZqp24qNxpdsHE/C8TjkEwZfUbhfr8t8tDltkikmGxwllzLgXBRoUSG0fjSCE5RPbLFe7nRtuNx0Y+eN3zBGmBiF+OAa+Jg49epYX1Bao8gwlIQUwBnEl6jOcO+UFkJq8WXbJSaZBV3p5Ek=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(7696005)(2906002)(316002)(8936002)(52116002)(26005)(5660300002)(86362001)(36756003)(2616005)(956004)(4326008)(6486002)(8676002)(478600001)(38350700002)(16526019)(186003)(38100700002)(66556008)(66946007)(6916009)(66476007)(6666004)(44832011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 
+ =?us-ascii?Q?hc0pnlYLh5n6BzgPvPKJGZiI0bDxqXWi8YGfUks8jKz9MiEjPn/Oms/eA02L?=
+ =?us-ascii?Q?6+zNGOVvKBbng56Eabh102oZtxeCF65NPw8eiGbOEs0KEyJxi3feLjvWjv1w?=
+ =?us-ascii?Q?cmF2ivMs3xVXqw9AHl+RbzeW7dnlYkKd0fw8rtPvg6TklNAEfmBc6oO7d3Xy?=
+ =?us-ascii?Q?R9dkEwWkzID0wUP92D2ce0P5v45xg1Mg9Fzff9HJcJ3ckvZ/E9LkVe+aZpxr?=
+ =?us-ascii?Q?M/TsGNLs+Jk3ihLMDV8gl5QL929GpUx3hFgt6vRXGnU3nyO4a/Yi9Ud3zkn/?=
+ =?us-ascii?Q?Ym0w0Oka2NTNJCVYdz/wNuBsiX4Ban9m+cyGOU+45Xr+vo1GbAh/n4v01InJ?=
+ =?us-ascii?Q?T3+uxsdJhd3DUkf2bjTRpftbLSJeMYwC+kqupej9vySVU9LWTyHzWe2b1bQr?=
+ =?us-ascii?Q?ok1XLfNaeH2ruRnpQ3RULc1OgN992AL33il0tyaAj+GyogXPv5rsf4TvJ0EQ?=
+ =?us-ascii?Q?JCNAhZvGUkcj2e1KJ3S41jfF4B23MFVE6S1rblKkE7Wb6U4DoS1LMDYEbCvt?=
+ =?us-ascii?Q?XJvSNLhs+DrdG0GLnHPmXBs6xLCkpISDaXOeIuhHYMZe4YayiaASVy5660gj?=
+ =?us-ascii?Q?J0JKhiCAZE38ACFa5B4n1cHK8M1KKsncxC4JJDH/Pt5t7p4rPyjoeBTClsdQ?=
+ =?us-ascii?Q?XLmuz376hYOOHswZRe+HPA0jaeqc2D42P7Lp/I7ufvYoLreitG22sD6PuZqC?=
+ =?us-ascii?Q?OuipJlYlNWOI2liEhZGQgX8R7sPW62O4EQjTlHDK1msJXqkMPsyfh0qbPF76?=
+ =?us-ascii?Q?TqHm8vp+aBfm4iizX8TH7h1VbzHPqLhwQXZn34R8apgC6APAvI1Z2imKnP5d?=
+ =?us-ascii?Q?0Bm+dWyfDHDhtVLDaBn0tfOAV0Q55qUH92ndeX3HkrXv00MqMOUEx25iVRNI?=
+ =?us-ascii?Q?w4ZMsRNQdQettNC/Sj/jEzEZdNji8PjBv1PSxoErJCWqln/aBNLBSyKJWeeo?=
+ =?us-ascii?Q?8dB8YUn3PH+V8aeJo+B3O9+q9c87XGE7n9/Htx9zsMkEoQ4OO5zLfrkKxHD8?=
+ =?us-ascii?Q?AxaCo1L4H4RlZZeovEXWb/482ynyIj4g/MkmyIRjpMVWVMQHwEtAqcEXRhEU?=
+ =?us-ascii?Q?Dbn3iZ/sw3gdvkm1N9MeHsG68xzQfb2JpkMIR6DtWZpqnwLGaG/arElMRoHV?=
+ =?us-ascii?Q?y/6e63je0NNsNB1nZE0cAY4amnf6ObF7U0BTgKTvs88Sz+1BKP4je1lNJaqJ?=
+ =?us-ascii?Q?d605aiKcQ9iqD9bQd5br2XzBvGZ5oTFMGKCs3I1ca4QpDWKr5odU2LLWrcAZ?=
+ =?us-ascii?Q?V0EyZW0XInGca4Jk/U5MlRH9bLHdnZYaD1YPAXk59IHMehEEghzWfXfwVELW?=
+ =?us-ascii?Q?CUZMy+LG1TvlmJPxXeozPk2S?=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0801MB1747
+Original-Authentication-Results: lists.openembedded.org; dkim=none (message not signed)
+ header.d=none;lists.openembedded.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Diego.Sueiro@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ VE1EUR03FT062.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	2edd0f11-bffe-4102-f682-08d900f1bdef
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	PvWtOi89qTqkIIye226LcO+NgOmGce2WSCLaCvaCIdS9kzLEQ/iogRFUwDy+RbXUN7MffY+js2GFK2rhqKZRkdcmqlq1QCxb13PDIBEyG/+Qd1ix9Md3upNc6TLbYVFQ/dfgVwt6bvFQc5KHqoVoN2GQW94ro3QX79jZ57CmnPOZPFf4HhxOYNSX5ypn3eqBN1xD4hyTAphUg8i6yZbylpOeiZ9PmWub9c973mWRRc9zT3jTbMRrCPTyKEG8UYEo5cfIe7ZOi+nHDVgOej10DTRzKjmqAQ10GE9YwDBPUsc6aRPX0JzDCanAy0Alo9m3PC5PCNcaYPl07HVUdXnJI6SnpWvBDgzj02+uKmVy5el4bu/Io+sYSnpsajQW/voy4RwMUuEtxQPAWpdvIbPc5A+ssOiKghLhG+tKHmUrU8ZzdL0NwZfMwtqWdkyKbPYqZWln+SU1rn8PjbZZGEQktkJ9V5swYqOq2ALddG2N5/aZJfPxHK6FcCvO3L+O2j7xcTFNpfjk11Mzr3u0NtElkbqJTJJBwvQWn2Dr4jqEqpMJ7FDedUxYQAQMExtXhIOPBBhisrcxa7tz9ksb/Pxdr3ml3WtOTB96S1LkOsW3Mnpcrt9dlRpYe6BniouDfC+RBVboJyF+8B6MsbkVGGgT/azZ6RNyDV/f6okgJhp36f0=
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(346002)(396003)(46966006)(36840700001)(44832011)(186003)(16526019)(2616005)(336012)(356005)(956004)(6666004)(6916009)(7696005)(8936002)(36756003)(2906002)(82740400003)(81166007)(82310400003)(47076005)(36860700001)(4326008)(70206006)(316002)(86362001)(8676002)(6486002)(70586007)(478600001)(26005)(5660300002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2021 16:07:42.0529
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0a94836-ff2f-4b33-df3c-08d900f1c3ce
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	VE1EUR03FT062.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR08MB6161
+Content-Type: text/plain
 
-On Mon, 2021-04-12 at 12:41 +0100, Paul Barker wrote:
-> The prserv module is converted from the old XML RPC mechinism to the more
-> modern json + asyncio RPC system used by hashserv. The common code now
-> shared between hashserv and prserv is moved to a new asyncrpc module. The
-> startup and shutdown code within prserv is also refactored and modernised,
-> using the Python multiprocessing module where possible.
-> 
-> These changes are not expected to land in the upcoming 3.3 release, they're
-> currently submitted as an RFC to get some early review.
-> 
-> The following change is needed in oe-core when testing these patches, this
-> can be submitted separately once these changes are past the RFC stage:
-> 
->     diff --git a/meta/lib/oe/prservice.py b/meta/lib/oe/prservice.py
->     index fcdbe66c19..15ce060ff6 100644
->     --- a/meta/lib/oe/prservice.py
->     +++ b/meta/lib/oe/prservice.py
->     @@ -7,7 +7,7 @@ def prserv_make_conn(d, check = False):
->         host_params = list([_f for _f in (d.getVar("PRSERV_HOST") or '').split(':') if _f])
->         try:
->             conn = None
->     -        conn = prserv.serv.PRServerConnection(host_params[0], int(host_params[1]))
->     +        conn = prserv.serv.connect(host_params[0], int(host_params[1]))
->             if check:
->                 if not conn.ping():
->                     raise Exception('service not available')
-> 
-> I'm also currently working on a follow-up patch which will add a read-only
-> mode to prserv.
-> 
-> Let me know if there are any other questions :)
+Running 'bitbake-layers layerindex-show-depends meta-filesystems' fails with:
+```
+Traceback (most recent call last):
+  File "<...>/poky/bitbake/bin/bitbake-layers", line 93, in <module>
+    ret = main()
+  File "<...>/poky/bitbake/bin/bitbake-layers", line 86, in main
+    return args.func(args)
+  File "<...>/poky/bitbake/lib/bblayers/layerindex.py", line 209, in do_layerindex_show_depends
+    self.do_layerindex_fetch(args)
+  File "<...>/poky/bitbake/lib/bblayers/layerindex.py", line 182, in do_layerindex_fetch
+    args.shallow)
+AttributeError: 'Namespace' object has no attribute 'shallow'
+```
 
-These looked reasonable to me, I thought I'd try some testing. I can't
-prove it yet but there were three hanging oe-selftest runs in the build
-where these were included:
+Initialize the shallow attribute to fix it.
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/79/builds/2009
-https://autobuilder.yoctoproject.org/typhoon/#/builders/86/builds/1994
-https://autobuilder.yoctoproject.org/typhoon/#/builders/87/builds/2026
-(all running for 2+ days)
+Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+---
+ bitbake/lib/bblayers/layerindex.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-and one that failed in runtime_test.TestImage.test_testimage_dnf:
-
-https://autobuilder.yoctoproject.org/typhoon/#/builders/87/builds/2026
-
-I did a process trace on the centos8-ty-2 worker in case it hinted where
-it was stuck and I see:
-
-2161691 ?        S      0:00 bash /home/pokybuild/yocto-worker/oe-selftest-centos/build/scripts/bitbake-prserv-tool export /home/pokybuild/yocto-worker/oe-selftest-centos/build/build-st-1454506/export.inc
-2167336 ?        Sl     0:37 python3 /home/pokybuild/yocto-worker/oe-selftest-centos/build/bitbake/bin/bitbake -R conf/prexport.conf -p
-
-the other things I could see in ps, I'd have expected. On fedora, I
-saw:
-
-2676512 ?        S      0:00 bash /home/pokybuild/yocto-worker/oe-selftest-fedora/build/scripts/bitbake-prserv-tool export /home/pokybuild/yocto-worker/oe-selftest-fedora/build/build-st-765595/export.inc
-2679599 ?        Sl     0:19 python3 /home/pokybuild/yocto-worker/oe-selftest-fedora/build/bitbake/bin/bitbake -R conf/prexport.conf -p
-
-and on ubuntu too:
-
- 743847 ?        S      0:00 /bin/sh -c bitbake-prserv-tool export /home/pokybuild/yocto-worker/oe-selftest-ubuntu/build/build-st-3944061/export.inc
- 743851 ?        S      0:00 bash /home/pokybuild/yocto-worker/oe-selftest-ubuntu/build/scripts/bitbake-prserv-tool export /home/pokybuild/yocto-worker/oe-selftest-ubuntu/build/build-st-3944061/export.inc
- 748863 ?        Sl     0:46 python3 /home/pokybuild/yocto-worker/oe-selftest-ubuntu/build/bitbake/bin/bitbake -R conf/prexport.conf -p
-
-For 'fun' I killed the above ubuntu processes which leads to the log output in:
-
-https://autobuilder.yoctoproject.org/typhoon/#/builders/87/builds/2026/steps/14/logs/stdio
-
-which shows it was in prservice.BitbakePrTests.test_import_export_replace_db
-and the build has now made more progress failing a few other tests. Not quite
-sure what it will do from here but it seems related to this series.
-
-Cheers,
-
-Richard
-
-
-
-
-
-
-
+diff --git a/bitbake/lib/bblayers/layerindex.py b/bitbake/lib/bblayers/layerindex.py
+index b2f27b21ee..17dfc9874d 100644
+--- a/bitbake/lib/bblayers/layerindex.py
++++ b/bitbake/lib/bblayers/layerindex.py
+@@ -206,6 +206,7 @@ class LayerIndexPlugin(ActionPlugin):
+ """
+         args.show_only = True
+         args.ignore = []
++        args.shallow = True
+         self.do_layerindex_fetch(args)
+ 
+     def register_commands(self, sp):
+-- 
+2.17.1
 
