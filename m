@@ -1,74 +1,63 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
- by mx.groups.io with SMTP id smtpd.web10.22.1619200809850425236
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web12.73.1619201003311041129
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 23 Apr 2021 11:00:10 -0700
+ Fri, 23 Apr 2021 11:03:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: michael.opdenacker@bootlin.com)
-X-Originating-IP: 109.210.254.211
-Received: from [192.168.1.25] (amontpellier-552-1-199-211.w109-210.abo.wanadoo.fr [109.210.254.211])
-	(Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C4FF51BF203;
-	Fri, 23 Apr 2021 18:00:07 +0000 (UTC)
-Subject: Re: [bitbake-devel] [PATCH] README: update/fix contribution guidelines
-To: Martin Jansa <martin.jansa@gmail.com>,
- bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
-References: <20210423163108.338904-1-michael.opdenacker@bootlin.com>
- <167889E551A803AE.3436@lists.openembedded.org>
- <20210423164117.xf4qafojdrqrezll@jama>
-From: "Michael Opdenacker" <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-Message-ID: <5d9240f6-d837-609b-5344-6f1bcf038d7b@bootlin.com>
-Date: Fri, 23 Apr 2021 20:00:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+ dkim=fail reason="signature has expired" header.i=@axis.com header.s=axis-central1 header.b=iOaWbXtY;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: ola.x.nilsson@axis.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; q=dns/txt; s=axis-central1; t=1619201003;
+  x=1650737003;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=MZBjwRwSZtrRHLLoUkdILwFu0d+LXUEoymeOqCm3Pm8=;
+  b=iOaWbXtY6HV/bfy16euB3uoYQ56aeoCUt1fWcYY3QuA7MEsu50de2uos
+   GkQJOEGr3skMSKMxSN5u7oZE7zK3sC0k7Xh9ZQ+ZoRhpTAi2SX+Pa2h5X
+   y/YeK12kpETdGZLj7xDVi0n+qfRnQsXesg60/BfpSmHuBUuwdV/k7zPZP
+   4WODXJqwqVuVoXmANfJS10yvhYGsOxeRfibuiIDkrOtAP6lHPNv8DIC9k
+   AV/tYumcBBpQ5UUZo6zcWA8vRaljhmVyHC7bTFxNqotZ8Ti1w16A8H3FG
+   jnpkVAQvInIeZbaX9hB85irJc2J0/wh2syaoJXjUeZayQRAhlZycDF9M2
+   g==;
+References: <20210416171126.1373752-1-richard.purdie@linuxfoundation.org>
+ <20210416171126.1373752-2-richard.purdie@linuxfoundation.org>
+User-agent: mu4e 1.4.8; emacs 28.0.50
+From: "Ola x Nilsson" <ola.x.nilsson@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+CC: <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH 2/2] bin/bitbake-getvar: Add a new command to query a variable value (with history)
+In-Reply-To: <20210416171126.1373752-2-richard.purdie@linuxfoundation.org>
+Date: Fri, 23 Apr 2021 20:03:10 +0200
+Message-ID: <jwqv98cri8x.fsf@axis.com>
 MIME-Version: 1.0
-In-Reply-To: <20210423164117.xf4qafojdrqrezll@jama>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Return-Path: ola.x.nilsson@axis.com
+Content-Type: text/plain
 
-Hi Martin,
 
-On 4/23/21 6:41 PM, Martin Jansa wrote:
-> On Fri, Apr 23, 2021 at 06:34:41PM +0200, Martin Jansa via lists.openembedded.org wrote:
->> On Fri, Apr 23, 2021 at 06:31:08PM +0200, Michael Opdenacker wrote:
->>> - Ask to CC the docs@lists.yoctoproject.org mailing list
->> it adds 2nd --to
->>
->> which is probably fine, just doesn't match with commit message
-> And more surprisingly this e-mail to docs@lists.yoctoproject.org was
-> rejected with:
+On fri, apr 16 2021, Richard Purdie wrote:
+
+> We've talked about having this for long enough. Add a command which queries a single
+> variable value with history. This saves "bitbake -e | grep" and avoids the
+> various pitfalls that has.
 >
+> It also provides a neat example of using tinfoil to make such a query.
 >
-> Message not delivered
-> Your message couldn't be delivered to docs@lists.yoctoproject.org
-> because the remote server is misconfigured. See technical details below
-> for more information.
-> LEARN MORE
-> WarningThis link will take you to a third-party site
+> Parameters to limit the output to just the value, to limit to a variable flag
+> and to not expand the output are provided.
 
-Oops, that's ugly indeed.  Unfortunately, our lists are hosted on
-Groups.io, so our ability to fix this is limited.
+I think this will be a very useful tool.  I have hacked (as in I really
+don't want to show anyone the code) something similar together on top of
+bitbake -e and I've found this commandline very useful
 
->
-> The response from the remote server was:
-> 510 5.1.1 Your email address, martin.jansa@gmail.com, is not subscribed
-> to that group. To subscribe, send an email to
-> docs+subscribe@lists.yoctoproject.org, or visit
-> https://lists.yoctoproject.org/g/docs
+bitbake-getvar RECIPE VARIABLE [VARIABLE...]
 
+so that I do not have to repeat the command when I want to examine more
+than one variable.  Expanding with VARIABLE[FLAG] syntax would be nice.
+Of course, if you want to examine several flags for a variable that will
+mean a lot of extra typing.
 
-This is also a bit uncomfortable to ask people to do us a favor and CC a
-list that only accepts post from members...
+I chose to add a -g flag for --global, as in no specific recipe so it is
+kind of reverse of this command's options.
 
-Thoughts anyone?
+Just my 2 cents
 
-Cheers,
-
-Michael.
-
--- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+/Ola
