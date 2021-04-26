@@ -1,102 +1,81 @@
 Received: from mga14.intel.com (mga14.intel.com [])
  by mx.groups.io with SMTP id smtpd.web11.2273.1619407679873857581
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 25 Apr 2021 20:28:03 -0700
+ Sun, 25 Apr 2021 20:28:05 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=fail (domain: intel.com, ip: <nil>, mailfrom: anuj.mittal@intel.com)
-IronPort-SDR: VAppJtPRBfb7NiuMrz7YNjyGfVkCTn6gZBHz8qDbCZC+vSs7F2EDAHQPH1qlGwljJ1Tqidz8+7
- FlJLkw5CrPsg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9965"; a="195828058"
+IronPort-SDR: hiqYjeeUnbsiWGw6BLc0+2yg5RFrBc3LqIy7W5ymyr1e6lrijhSnQN4SmmMBdgjOBSdl5t/wJn
+ AvLWen6sLskw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9965"; a="195828062"
 X-IronPort-AV: E=Sophos;i="5.82,251,1613462400"; 
-   d="scan'208";a="195828058"
+   d="scan'208";a="195828062"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2021 20:28:03 -0700
-IronPort-SDR: eOaZZ9TSEeEi7qzYMhmFIiC25dfAt834URZervpWQm/+BM9M7iF0aIoTpLV3cBvLg1I+X0FVZv
- dGTXcxMKiKmw==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2021 20:28:04 -0700
+IronPort-SDR: zElOVpdrqeOqQR6W+Ml2qahs1G6ZJNkmsaldyDd+x+R7Zc+swJt3YDkwEmIV6vcx4fOFmPS2AJ
+ /W2heUsdmtaw==
 X-IronPort-AV: E=Sophos;i="5.82,251,1613462400"; 
-   d="scan'208";a="464923235"
+   d="scan'208";a="464923241"
 Received: from wsan-mobl1.ccr.corp.intel.com (HELO anmitta2-mobl1.gar.corp.intel.com) ([10.213.45.138])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2021 20:28:01 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2021 20:28:03 -0700
 From: "Anuj Mittal" <anuj.mittal@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.50][PATCH 3/5] bitbake: tests/fetch: remove write protected files too
-Date: Mon, 26 Apr 2021 11:27:50 +0800
-Message-Id: <9a271a4f4dc87ecb7c36956d7e0f0643727524fe.1619407547.git.anuj.mittal@intel.com>
+Subject: [1.50][PATCH 4/5] bitbake-server: ensure server timeout is a float
+Date: Mon, 26 Apr 2021 11:27:51 +0800
+Message-Id: <a439513399a9da04b45b265ed24bb4be95360c97.1619407547.git.anuj.mittal@intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <cover.1619407547.git.anuj.mittal@intel.com>
 References: <cover.1619407547.git.anuj.mittal@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Mikko Rapeli <mikko.rapeli@bmw.de>
+From: Ross Burton <ross@burtonini.com>
 
-For some reason several git-annex files in Debian 10 buster
-are read-only and removing them with "rm -rf" fails.
+bitbake-server is spawned by process.py and passes the arguments it is
+given to ProcessServer.  There's some type confusion here:
 
-Fixes test failures like:
+bitbake-server is called with a string representation of the timeout,
+which may be None.  If the timeout is not set, pass 0 instead of None.
 
-$ bitbake-selftest
-...
-rm: cannot remove '/tmp/tmpwmfn4w64/download/git2/tmp.tmpwmfn4w64.gitsource/annex/objects/f87/4d5/SHA256E-s0--e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855/SHA256E-s0--e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': Permission denied
-rm: cannot remove '/tmp/tmpwmfn4w64/download/git2/tmp.tmpwmfn4w64.gitsource/annex/objects/f87/4d5/SHA256E-s0--e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855/SHA256E-s0--e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': Permission denied
-EE..................................ssss.sssssssssssssss.sssss.......................................................................................................
-======================================================================
-ERROR: test_shallow_annex (bb.tests.fetch.GitShallowTest)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/builder/src/base/poky/bitbake/lib/bb/tests/fetch.py", line 1773, in test_shallow_annex
-    fetcher, ud = self.fetch_shallow(uri)
-  File "/home/builder/src/base/poky/bitbake/lib/bb/tests/fetch.py", line 1541, in fetch_shallow
-    bb.utils.remove(ud.clonedir, recurse=True)
-  File "/home/builder/src/base/poky/bitbake/lib/bb/utils.py", line 700, in remove
-    subprocess.check_call(cmd + ['rm', '-rf'] + glob.glob(path))
-  File "/usr/lib/python3.7/subprocess.py", line 347, in check_call
-    raise CalledProcessError(retcode, cmd)
-subprocess.CalledProcessError: Command '['rm', '-rf', '/tmp/tmpwmfn4w64/download/git2/tmp.tmpwmfn4w64.gitsource']' returned non-zero exit status 1.
+Inside bitbake-server a ProcessServer is created which expects the
+timeout to be a float not a string, so always float() the value.
 
-Also, one "chmod" call was failing since the .git/annex subdirectory doesn't exist so just chmod
-the whole temporary directory which should cover any directory name differences between
-different git-annex versions. Fixes tests failing after chmod call:
+[ YOCTO #14350 ]
 
-Running 'export PSEUDO_DISABLED=1; unset _PYTHON_SYSCONFIGDATA_NAME; chmod u+w -R /tmp/tmpwmfn4w64/git//.git/annex' in /tmp/tmpwmfn4w64/git/
-
-Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 7729ef2983c72867e99fad82d671069ba5cb32b2)
+(cherry picked from commit c93ae1f861208f6d39fd15c84fbcd0e2b54331f5)
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- lib/bb/tests/fetch.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ bin/bitbake-server       | 2 +-
+ lib/bb/server/process.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index c15616815..b921a952e 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -390,6 +390,7 @@ class FetcherTest(unittest.TestCase):
-         if os.environ.get("BB_TMPDIR_NOCLEAN") == "yes":
-             print("Not cleaning up %s. Please remove manually." % self.tempdir)
-         else:
-+            bb.process.run('chmod u+rw -R %s' % self.tempdir)
-             bb.utils.prunedir(self.tempdir)
+diff --git a/bin/bitbake-server b/bin/bitbake-server
+index ffbc7894e..65796be74 100755
+--- a/bin/bitbake-server
++++ b/bin/bitbake-server
+@@ -26,7 +26,7 @@ readypipeinfd = int(sys.argv[3])
+ logfile = sys.argv[4]
+ lockname = sys.argv[5]
+ sockname = sys.argv[6]
+-timeout = sys.argv[7]
++timeout = float(sys.argv[7])
+ xmlrpcinterface = (sys.argv[8], int(sys.argv[9]))
+ if xmlrpcinterface[0] == "None":
+     xmlrpcinterface = (None, xmlrpcinterface[1])
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index b27b4aefe..3e99bcef8 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -509,7 +509,7 @@ class BitBakeServer(object):
+         os.set_inheritable(self.bitbake_lock.fileno(), True)
+         os.set_inheritable(self.readypipein, True)
+         serverscript = os.path.realpath(os.path.dirname(__file__) + "/../../../bin/bitbake-server")
+-        os.execl(sys.executable, "bitbake-server", serverscript, "decafbad", str(self.bitbake_lock.fileno()), str(self.readypipein), self.logfile, self.bitbake_lock.name, self.sockname,  str(self.server_timeout), str(self.xmlrpcinterface[0]), str(self.xmlrpcinterface[1]))
++        os.execl(sys.executable, "bitbake-server", serverscript, "decafbad", str(self.bitbake_lock.fileno()), str(self.readypipein), self.logfile, self.bitbake_lock.name, self.sockname,  str(self.server_timeout or 0), str(self.xmlrpcinterface[0]), str(self.xmlrpcinterface[1]))
  
- class MirrorUriTest(FetcherTest):
-@@ -1602,6 +1603,7 @@ class GitShallowTest(FetcherTest):
+ def execServer(lockfd, readypipeinfd, lockname, sockname, server_timeout, xmlrpcinterface):
  
-         # fetch and unpack, from the shallow tarball
-         bb.utils.remove(self.gitdir, recurse=True)
-+        bb.process.run('chmod u+w -R "%s"' % ud.clonedir)
-         bb.utils.remove(ud.clonedir, recurse=True)
-         bb.utils.remove(ud.clonedir.replace('gitsource', 'gitsubmodule'), recurse=True)
- 
-@@ -1831,7 +1833,7 @@ class GitShallowTest(FetcherTest):
-             open(os.path.join(self.srcdir, 'c'), 'w').close()
-             self.git('annex add c', cwd=self.srcdir)
-             self.git('commit --author "Foo Bar <foo@bar>" -m annex-c -a', cwd=self.srcdir)
--            bb.process.run('chmod u+w -R %s' % os.path.join(self.srcdir, '.git', 'annex'))
-+            bb.process.run('chmod u+w -R %s' % self.srcdir)
- 
-             uri = 'gitannex://%s;protocol=file;subdir=${S}' % self.srcdir
-             fetcher, ud = self.fetch_shallow(uri)
 -- 
 2.30.2
 
