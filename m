@@ -1,75 +1,40 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web08.4094.1619425011681530720
+Received: from bsmtp.bon.at (bsmtp.bon.at [213.33.87.14])
+ by mx.groups.io with SMTP id smtpd.web10.4334.1619426597840176020
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 26 Apr 2021 01:16:52 -0700
+ Mon, 26 Apr 2021 01:43:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=B6KrHRcR;
- spf=pass (domain: konsulko.com, ip: 209.85.128.51, mailfrom: pbarker@konsulko.com)
-Received: by mail-wm1-f51.google.com with SMTP id 82-20020a1c01550000b0290142562ff7c9so452987wmb.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 26 Apr 2021 01:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7VIEpnMdSIVCReugVZnvS4P5gLTz5C21EOFyJ4cbB/0=;
-        b=B6KrHRcRM5n4Mk2GOrlNmhxZS5hG9Y/Pp/+H2dn2HAXOwhI9G/dZJ0Zuvw6Dw4dAyB
-         +XZpDIktBTmjl8Z6YJNbkci4YPyQM5sNDUBInahCj/4uPnJQU5SjT5BgwFBo9pqEl5uq
-         4Y6e6mQkd1mUhqNh3tes9TfOT2A882BnTmTLc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7VIEpnMdSIVCReugVZnvS4P5gLTz5C21EOFyJ4cbB/0=;
-        b=h2QS09EZ2UX2bT0iCM0cqiwiz31/cwnoyovbdsV7oHVerpuPNBSqkmmdPtiifgOU9+
-         ssqL4Tgd7nIUASyNJK+89Ea1Zo3+Mub1Zi09207qz36h6I3OAGRrYUpxgUp+DfayEPDI
-         SdaK1EjUT6cLWXL7g0XxFVKDcKHOJQNq/4Va83aafvO/IT+MU1qL2AM7xONw/TY0a5mI
-         FZg2Qq37L1G2GYTq8j+hMi7Guhkdsp4RbVzRVJt3B0zSVsPbM+TP69xl/lXP1+B3xWVi
-         PRuuDU1IJ+Br+QobNzSf9VT8DI9yyZqt7yh+UOKHhKqfu3hw7nVlencmD3jghe0nkAhv
-         r/vw==
-X-Gm-Message-State: AOAM5322PoVRIk/IjKRIoz2OHHVAHIE8tzaDi1A5Gk6L+lf6GmBhYUmT
-	CAVKK7Mb8IICnUs45bTCxR8QIhTieynJrw==
-X-Google-Smtp-Source: ABdhPJwun5/kYVP2PW00B6+KM7K9+dr0Ua1TSd/5HxPh9OQl3Pf0dCblzgPPPvFqnqp9TQ85B4xLRA==
-X-Received: by 2002:a1c:ed0d:: with SMTP id l13mr19799756wmh.78.1619425009803;
-        Mon, 26 Apr 2021 01:16:49 -0700 (PDT)
-Return-Path: <pbarker@konsulko.com>
-Received: from alpha.home.b5net.uk (cpc76132-clif11-2-0-cust80.12-4.cable.virginm.net. [80.7.160.81])
-        by smtp.gmail.com with ESMTPSA id a9sm4631320wrw.26.2021.04.26.01.16.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Apr 2021 01:16:49 -0700 (PDT)
-From: "Paul Barker" <pbarker@konsulko.com>
-To: bitbake-devel@lists.openembedded.org,
-	Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Joshua Watt <JPEWhacker@gmail.com>
-Cc: Paul Barker <pbarker@konsulko.com>
-Subject: [PATCH 6/6] prserv: Add connect function
-Date: Mon, 26 Apr 2021 09:16:33 +0100
-Message-Id: <20210426081633.5020-7-pbarker@konsulko.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210426081633.5020-1-pbarker@konsulko.com>
-References: <20210426081633.5020-1-pbarker@konsulko.com>
+ dkim=missing; spf=pass (domain: streamunlimited.com, ip: 213.33.87.14, mailfrom: quentin.schulz@streamunlimited.com)
+Received: from qschulz (vpn.streamunlimited.com [91.114.0.140])
+	by bsmtp.bon.at (Postfix) with ESMTPSA id 4FTJM72Dnqz5tlC;
+	Mon, 26 Apr 2021 10:43:15 +0200 (CEST)
+Date: Mon, 26 Apr 2021 10:43:13 +0200
+From: "Quentin Schulz" <quentin.schulz@streamunlimited.com>
+To: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
+Subject: Re: [docs] [PATCH v2] README: update/fix contribution guidelines
+Message-ID: <20210426084313.v3ulmf3xk7euu2lm@qschulz>
+References: <16788A2044914AF0.27757@lists.openembedded.org>
+ <20210423175429.340205-1-michael.opdenacker@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210423175429.340205-1-michael.opdenacker@bootlin.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This function abstracts the setup of a PR service client connection so
-that openembedded-core doesn't need to be updated any time the details
-are changed.
+Hi Michael,
 
-Signed-off-by: Paul Barker <pbarker@konsulko.com>
----
- lib/prserv/serv.py | 3 +++
- 1 file changed, 3 insertions(+)
+On Fri, Apr 23, 2021 at 07:54:29PM +0200, Michael Opdenacker wrote:
+> - Ask to CC the docs@lists.yoctoproject.org mailing list
+> - doc/README: fix the command to generate the manual
+> 
 
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index 6ccc7ee9e..4375d3e59 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -482,3 +482,6 @@ def auto_shutdown():
- def ping(host, port):
-     conn=PRServerConnection(host, port)
-     return conn.ping()
-+
-+def connect(host, port):
-+    return PRServerConnection(host, port)
--- 
-2.26.2
+Usually, when you have to make a list in a commit log of things you did,
+it's telling you that there should be multiple commits. Here you two
+changes are not related.
 
+Anyway, that's just me picking nits, I wouldn't have replied if it wasn't
+to give my
+
+Reviewed-by: Quentin Schulz <foss@0leil.net>
+
+Thanks,
+Quentin
