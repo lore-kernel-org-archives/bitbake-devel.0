@@ -1,29 +1,31 @@
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web10.3888.1619422215543542574
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web12.3761.1619422216549913694
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 26 Apr 2021 00:30:16 -0700
+ Mon, 26 Apr 2021 00:30:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=TpQrGZLl;
- spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=ewRyLC4I;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1619422216;
-  x=1650958216;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=6OXIwfJfuxJROkWf/G6fJvvax6dyJeqSP4I4fwRu4AM=;
-  b=TpQrGZLlDxXnG0O5vr7PsU8YH1yyFnPe3PGMHVwk4t7f3FOLnTN4w/PC
-   URLwqzBTIZmFsIfkycGvaxNQQIMrJHnhHX/6lo7nNchLITJcE2YEua0YX
-   Cme7A2Zxz/Y0Vt/Ga78kktoHC+QhjqetS17k0MaAZtCotVHR1DAb5SAmN
-   OWbhRHFPBj1/7/vlwx2yyLsNCSCf4bo4soBuTel7x1UX6TVBLykp84wlU
-   1JL1v08mhTtaAUg8yAvX1lR01BK2s1bFpHyxh/JVnFA0ivvGpM+7R3UTg
-   KOX4tsz1FqqxWM29/wYqvXnvrigp32tnqeO4Fi6LIoyOUXyUHqgS2uMV1
-   g==;
+  d=axis.com; q=dns/txt; s=axis-central1; t=1619422217;
+  x=1650958217;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=ULY+vI3sxHRxEnNy+lFgLJ3spXoizyIGKOoS+FLkLfk=;
+  b=ewRyLC4IeQXieQND/gzpxNAfYHmM3JoplGDmy8KHFfSgLSj41vW8c3Dj
+   cZae7U7rpkeoXsbvcua5gCkh5ddmqmk2GnZf+phrgGpWeJGVuf3cW0/e4
+   bOqFCWGVR2XR4rm66x3FTsuy8RYBqVla5geKx7OiEcsYX7RqzqiTvHKV1
+   0lNnuOVzsfJUB9dAqqdyGrSg+Nx2UNXGe8hr1ojkit/NaKskJPr8gtD8H
+   m7dweqt7yp6AVk2qPzUAeH4uVVKBFIXg/1ztyb/+2mHrOIwLHqhYMgzRm
+   mu+3OC0jrHrnpIPt9yEEXNkAmBPTpdylAKwU4LuEkl3Qg8626h7pK1e8J
+   Q==;
 From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
 To: <bitbake-devel@lists.openembedded.org>
-Subject: [gatesgarth][PATCH 1/2] cache: Make CoreRecipeInfo include rprovides_pkg for skipped recipes
-Date: Mon, 26 Apr 2021 09:30:02 +0200
-Message-ID: <20210426073003.30489-1-pkj@axis.com>
+Subject: [gatesgarth][PATCH 2/2] cooker: Include all packages a recipe provides in SkippedPackage.rprovides
+Date: Mon, 26 Apr 2021 09:30:03 +0200
+Message-ID: <20210426073003.30489-2-pkj@axis.com>
 X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20210426073003.30489-1-pkj@axis.com>
+References: <20210426073003.30489-1-pkj@axis.com>
 MIME-Version: 1.0
 Return-Path: pkj@axis.com
 Content-Transfer-Encoding: 8bit
@@ -31,40 +33,38 @@ Content-Type: text/plain
 
 From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 
-This will be needed by SkippedPackage in the cooker.
+The provided packages by a skipped recipe are supposed to be listed in
+SkippedPackage.rprovides, which is used when generating a meaningful
+error message when a build fails because of a skipped package.
+Previously this variable only contained the contents of ${RPROVIDES}.
+However, most recipes don't define RPROVIDES, they define
+RPROVIDES_<pkg> for each package they provide. Additionally, the recipe
+provides the packages in PACKAGES without them being included in
+${RPROVIDES}.
+
+Before this change, having a runtime dependency on a skipped non-recipe
+package would result in a build error stating that the build failed
+because the package was skipped, but without providing any reason for
+why it was skipped.
 
 Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cache.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/cooker.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 9e0c931a..029753fe 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -26,7 +26,7 @@ import re
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 7ed0b802..4b5ef07e 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -73,7 +73,9 @@ class SkippedPackage:
+             self.pn = info.pn
+             self.skipreason = info.skipreason
+             self.provides = info.provides
+-            self.rprovides = info.rprovides
++            self.rprovides = info.packages + info.rprovides
++            for package in info.packages:
++                self.rprovides += info.rprovides_pkg[package]
+         elif reason:
+             self.skipreason = reason
  
- logger = logging.getLogger("BitBake.Cache")
- 
--__cache_version__ = "153"
-+__cache_version__ = "154"
- 
- def getCacheFile(path, filename, mc, data_hash):
-     mcspec = ''
-@@ -94,6 +94,7 @@ class CoreRecipeInfo(RecipeInfoCommon):
-         if not self.packages:
-             self.packages.append(self.pn)
-         self.packages_dynamic = self.listvar('PACKAGES_DYNAMIC', metadata)
-+        self.rprovides_pkg = self.pkgvar('RPROVIDES', self.packages, metadata)
- 
-         self.skipreason = self.getvar('__SKIPPED', metadata)
-         if self.skipreason:
-@@ -120,7 +121,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
-         self.depends          = self.depvar('DEPENDS', metadata)
-         self.rdepends         = self.depvar('RDEPENDS', metadata)
-         self.rrecommends      = self.depvar('RRECOMMENDS', metadata)
--        self.rprovides_pkg    = self.pkgvar('RPROVIDES', self.packages, metadata)
-         self.rdepends_pkg     = self.pkgvar('RDEPENDS', self.packages, metadata)
-         self.rrecommends_pkg  = self.pkgvar('RRECOMMENDS', self.packages, metadata)
-         self.inherits         = self.getvar('__inherit_cache', metadata, expand=False)
