@@ -1,84 +1,80 @@
-Subject: Re: [PATCH] S3 fetcher: add progress handler for S3 cp command
-To: bitbake-devel@lists.openembedded.org
-From: "Przemyslaw Gorszkowski" <pgorszkowski@gmail.com>
-X-Originating-Location: Wroclaw, Lower Silesia, PL (5.39.192.133)
-X-Originating-Platform: Linux Firefox 88
-User-Agent: GROUPS.IO Web Poster
-MIME-Version: 1.0
-Date: Tue, 27 Apr 2021 00:11:07 -0700
-References: <CAExyXVSe-0nJL3XTTXzG2DQ65KVBzOOyMvpFzB357P7ykU7HdA@mail.gmail.com>
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.web10.8968.1619533237753916730
+ for <bitbake-devel@lists.openembedded.org>;
+ Tue, 27 Apr 2021 07:20:38 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DeJfzbH8;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f42.google.com with SMTP id n2so6502339wrm.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 27 Apr 2021 07:20:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=z+G+IopedqP0ggbNVDDrhVD9P5dBymAgeeZ9H1wtNzE=;
+        b=DeJfzbH87K13+WUvGhzj1mXbzKjXnzJIxV2MBXlwljaoXFbxT8upu/BwRPnzPCyt3I
+         KrNODx93VLohDFbSzkP4gH8FH5ifGlwc7fe+jbSwTxjM76gBmB2HJaOjLu85/Fe1Bvn7
+         oxwyPMwY6fS23yhqv85NS7OMs2z048qVcmCVc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=z+G+IopedqP0ggbNVDDrhVD9P5dBymAgeeZ9H1wtNzE=;
+        b=TPlG2M4W+UZCmN5hJPF0HdR8TRkEPehAUldhbG9MK260IrVl3/wCb8e1S9Nef534cB
+         cQ2uWBmluGvtnqy6eayiE1n5nuhrKOF4gFMsHYZOh6XQpYTZztBcDtu9AnYMcesayfX3
+         Xxn8TYcd/KqQ0zp6Rb17BYhQvBKpXd3h2UcVA1IHkIWtsvv7ZCx5zEKTSv8C7f9lTQD+
+         XD7oYPjSJo5H2H0zojiF2JyFSTyZjhI01hzqTHpeul/cSWQYKml64FjUTN2SaQLIfoZv
+         ZFu0jqJM4EWVr6toHml7EjuqX4xltkWZ7QRqKWQ+qXG5oPAQvMZLUyvf/WAY+TJnQt3y
+         PSJg==
+X-Gm-Message-State: AOAM531piHi0k17azN/mMMCbbxZBVuHcNtB593lTfYdr1PIW/9skPxMn
+	kBtjkVO5hq6NguUZ7hAFAftBCA==
+X-Google-Smtp-Source: ABdhPJz4D88xJ6tgZEzdXrbXjuHuFd9EwI/FGa+dvcnlZ3pyJXRYd8ncSds0F1nHA9L4W/K1qVyQLg==
+X-Received: by 2002:adf:eb92:: with SMTP id t18mr30434678wrn.409.1619533236184;
+        Tue, 27 Apr 2021 07:20:36 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:dc22:3d8d:56cd:9dcb? ([2001:8b0:aba:5f3c:dc22:3d8d:56cd:9dcb])
+        by smtp.gmail.com with ESMTPSA id 2sm2637725wmi.19.2021.04.27.07.20.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Apr 2021 07:20:35 -0700 (PDT)
+Message-ID: <fcbceb5b62675b9a4ca21b080acdd7ac07b010b4.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] S3 fetcher: add progress handler for S3 cp command
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Przemyslaw Gorszkowski <pgorszkowski@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 27 Apr 2021 15:20:22 +0100
 In-Reply-To: <CAExyXVSe-0nJL3XTTXzG2DQ65KVBzOOyMvpFzB357P7ykU7HdA@mail.gmail.com>
-Message-ID: <1187.1619507467506682923@lists.openembedded.org>
-X-Groupsio-MsgNum: 12268
-Content-Type: multipart/mixed; boundary="FyGXi1XHqUNNxRiGSEoo"
+References: 
+	<CAExyXVSe-0nJL3XTTXzG2DQ65KVBzOOyMvpFzB357P7ykU7HdA@mail.gmail.com>
+User-Agent: Evolution 3.40.0-1 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
---FyGXi1XHqUNNxRiGSEoo
-Content-Type: multipart/alternative; boundary="yi7ULsAda7703eJXFDgm"
+On Tue, 2021-04-27 at 09:02 +0200, Przemyslaw Gorszkowski wrote:
+> Hi,
+> 
+> This is my first patch here so forgive me if I am doing it wrong.
+> 
+> Regarding to my patch:
+> In case of fetching source from the AWS there is no progress available. This change provides a progress by
+> extracting the needed values from logs of the aws-cli cp command.
 
---yi7ULsAda7703eJXFDgm
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks for the patches. Ideally the patches should be in the main message
+rather than as attachments and the subject lines (short log) needs tweaking
+to match our patch formatting guidelines.
 
-and my patch in attachments
+Also, the full log messages for the changes is missing and the patches
+do not have Signed-off-by: entries.
 
---yi7ULsAda7703eJXFDgm
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+I have tweaked the patches a little to fix the above (I can't add a 
+Signed-off-by line for you though) and added to master-next for testing.
+The content of patches themselves look ok, it is just a question of the
+commit message logs/formatting/signed off by.
 
-and my patch in attachments
+Cheers,
 
---yi7ULsAda7703eJXFDgm--
+Richard
 
---FyGXi1XHqUNNxRiGSEoo
-Content-Type: text/x-patch; name="0001-S3-fetcher-add-progress-handler-for-S3-cp-command.patch"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="0001-S3-fetcher-add-progress-handler-for-S3-cp-command.patch"
 
-RnJvbSBhMzM1YTlkYmJjODIzNDEzOTdhZTEyMDEzYzk4YWQzN2NmNTIxMDdiIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBQcnplbXlzbGF3IEdvcnN6a293c2tpIDxwcnplbWVrLmdvcnN6
-a293c2tpQHJlZGVtYmVkZGVkLmNvbT4KRGF0ZTogTW9uLCAyNiBBcHIgMjAyMSAxMDoxOToyMSAr
-MDIwMApTdWJqZWN0OiBbUEFUQ0hdIFMzIGZldGNoZXI6IGFkZCBwcm9ncmVzcyBoYW5kbGVyIGZv
-ciBTMyBjcCBjb21tYW5kCgotLS0KIGxpYi9iYi9mZXRjaDIvczMucHkgfCA0MSArKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQogMSBmaWxlIGNoYW5nZWQsIDQwIGluc2Vy
-dGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9saWIvYmIvZmV0Y2gyL3MzLnB5
-IGIvbGliL2JiL2ZldGNoMi9zMy5weQppbmRleCBmZmNhNzNjOC4uNmI4ZmZkNTMgMTAwNjQ0Ci0t
-LSBhL2xpYi9iYi9mZXRjaDIvczMucHkKKysrIGIvbGliL2JiL2ZldGNoMi9zMy5weQpAQCAtMTgs
-MTAgKzE4LDQ3IEBAIFRoZSBhd3MgdG9vbCBtdXN0IGJlIGNvcnJlY3RseSBpbnN0YWxsZWQgYW5k
-IGNvbmZpZ3VyZWQgcHJpb3IgdG8gdXNlLgogaW1wb3J0IG9zCiBpbXBvcnQgYmIKIGltcG9ydCB1
-cmxsaWIucmVxdWVzdCwgdXJsbGliLnBhcnNlLCB1cmxsaWIuZXJyb3IKK2ltcG9ydCByZQogZnJv
-bSBiYi5mZXRjaDIgaW1wb3J0IEZldGNoTWV0aG9kCiBmcm9tIGJiLmZldGNoMiBpbXBvcnQgRmV0
-Y2hFcnJvcgogZnJvbSBiYi5mZXRjaDIgaW1wb3J0IHJ1bmZldGNoY21kCiAKK2RlZiBjb252ZXJ0
-VG9CeXRlcyh2YWx1ZSwgdW5pdCk6CisgICAgdmFsdWUgPSBmbG9hdCh2YWx1ZSkKKyAgICBpZiAo
-dW5pdCA9PSAiS2lCIik6CisgICAgICAgIHZhbHVlID0gdmFsdWUqMTAyNC4wOworICAgIGVsaWYg
-KHVuaXQgPT0gIk1pQiIpOgorICAgICAgICB2YWx1ZSA9IHZhbHVlKjEwMjQuMCoxMDI0LjA7Cisg
-ICAgZWxpZiAodW5pdCA9PSAiR2lCIik6CisgICAgICAgIHZhbHVlID0gdmFsdWUqMTAyNC4wKjEw
-MjQuMCoxMDI0LjA7CisgICAgcmV0dXJuIHZhbHVlCisKK2NsYXNzIFMzUHJvZ3Jlc3NIYW5kbGVy
-KGJiLnByb2dyZXNzLkxpbmVGaWx0ZXJQcm9ncmVzc0hhbmRsZXIpOgorICAgICIiIgorICAgIEV4
-dHJhY3QgcHJvZ3Jlc3MgaW5mb3JtYXRpb24gZnJvbSBzMyBjcCBvdXRwdXQsIGUuZy46CisgICAg
-Q29tcGxldGVkIDUuMSBLaUIvOC44IEdpQiAoMTIuMCBNaUIvcykgd2l0aCAxIGZpbGUocykgcmVt
-YWluaW5nCisgICAgIiIiCisgICAgZGVmIF9faW5pdF9fKHNlbGYsIGQpOgorICAgICAgICBzdXBl
-cihTM1Byb2dyZXNzSGFuZGxlciwgc2VsZikuX19pbml0X18oZCkKKyAgICAgICAgIyBTZW5kIGFu
-IGluaXRpYWwgcHJvZ3Jlc3MgZXZlbnQgc28gdGhlIGJhciBnZXRzIHNob3duCisgICAgICAgIHNl
-bGYuX2ZpcmVfcHJvZ3Jlc3MoMCkKKworICAgIGRlZiB3cml0ZWxpbmUoc2VsZiwgbGluZSk6Cisg
-ICAgICAgIHBlcmNzID0gcmUuZmluZGFsbChyJ15Db21wbGV0ZWQgKFxkKy57MCwxfVxkKikgKFx3
-KylcLyhcZCsuezAsMX1cZCopIChcdyspIChcKC4rXCkpIHdpdGhccysnLCBsaW5lKQorICAgICAg
-ICBpZiBwZXJjczoKKyAgICAgICAgICAgIGNvbXBsZXRlZCA9IChwZXJjc1stMV1bMF0pCisgICAg
-ICAgICAgICBjb21wbGV0ZWRVbml0ID0gKHBlcmNzWy0xXVsxXSkKKyAgICAgICAgICAgIHRvdGFs
-ID0gKHBlcmNzWy0xXVsyXSkKKyAgICAgICAgICAgIHRvdGFsVW5pdCA9IChwZXJjc1stMV1bM10p
-CisgICAgICAgICAgICBjb21wbGV0ZWQgPSBjb252ZXJ0VG9CeXRlcyhjb21wbGV0ZWQsIGNvbXBs
-ZXRlZFVuaXQpCisgICAgICAgICAgICB0b3RhbCA9IGNvbnZlcnRUb0J5dGVzKHRvdGFsLCB0b3Rh
-bFVuaXQpCisgICAgICAgICAgICBwcm9ncmVzcyA9IChjb21wbGV0ZWQvdG90YWwpKjEwMC4wCisg
-ICAgICAgICAgICByYXRlID0gcGVyY3NbLTFdWzRdCisgICAgICAgICAgICBzZWxmLnVwZGF0ZShw
-cm9ncmVzcywgcmF0ZSkKKyAgICAgICAgICAgIHJldHVybiBGYWxzZQorICAgICAgICByZXR1cm4g
-VHJ1ZQorCisKIGNsYXNzIFMzKEZldGNoTWV0aG9kKToKICAgICAiIiJDbGFzcyB0byBmZXRjaCB1
-cmxzIHZpYSAnYXdzIHMzJyIiIgogCkBAIC01Miw3ICs4OSw5IEBAIGNsYXNzIFMzKEZldGNoTWV0
-aG9kKToKIAogICAgICAgICBjbWQgPSAnJXMgY3AgczM6Ly8lcyVzICVzJyAlICh1ZC5iYXNlY21k
-LCB1ZC5ob3N0LCB1ZC5wYXRoLCB1ZC5sb2NhbHBhdGgpCiAgICAgICAgIGJiLmZldGNoMi5jaGVj
-a19uZXR3b3JrX2FjY2VzcyhkLCBjbWQsIHVkLnVybCkKLSAgICAgICAgcnVuZmV0Y2hjbWQoY21k
-LCBkKQorCisgICAgICAgIHByb2dyZXNzaGFuZGxlciA9IFMzUHJvZ3Jlc3NIYW5kbGVyKGQpCisg
-ICAgICAgIHJ1bmZldGNoY21kKGNtZCwgZCwgRmFsc2UsIGxvZz1wcm9ncmVzc2hhbmRsZXIpCiAK
-ICAgICAgICAgIyBBZGRpdGlvbmFsIHNhbml0eSBjaGVja3MgY29waWVkIGZyb20gdGhlIHdnZXQg
-Y2xhc3MgKGFsdGhvdWdoIHRoZXJlCiAgICAgICAgICMgYXJlIG5vIGtub3duIGlzc3VlcyB3aGlj
-aCBtZWFuIHRoZXNlIGFyZSByZXF1aXJlZCwgdHJlYXQgdGhlIGF3cyBjbGkKLS0gCjIuMzEuMQoK
 
---FyGXi1XHqUNNxRiGSEoo--
+
