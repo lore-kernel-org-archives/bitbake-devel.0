@@ -1,80 +1,83 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
- by mx.groups.io with SMTP id smtpd.web10.8968.1619533237753916730
+Received: from gecko.sbs.de (gecko.sbs.de [194.138.37.40])
+ by mx.groups.io with SMTP id smtpd.web09.11104.1619542385534923877
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 27 Apr 2021 07:20:38 -0700
+ Tue, 27 Apr 2021 09:53:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DeJfzbH8;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f42.google.com with SMTP id n2so6502339wrm.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 27 Apr 2021 07:20:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=z+G+IopedqP0ggbNVDDrhVD9P5dBymAgeeZ9H1wtNzE=;
-        b=DeJfzbH87K13+WUvGhzj1mXbzKjXnzJIxV2MBXlwljaoXFbxT8upu/BwRPnzPCyt3I
-         KrNODx93VLohDFbSzkP4gH8FH5ifGlwc7fe+jbSwTxjM76gBmB2HJaOjLu85/Fe1Bvn7
-         oxwyPMwY6fS23yhqv85NS7OMs2z048qVcmCVc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=z+G+IopedqP0ggbNVDDrhVD9P5dBymAgeeZ9H1wtNzE=;
-        b=TPlG2M4W+UZCmN5hJPF0HdR8TRkEPehAUldhbG9MK260IrVl3/wCb8e1S9Nef534cB
-         cQ2uWBmluGvtnqy6eayiE1n5nuhrKOF4gFMsHYZOh6XQpYTZztBcDtu9AnYMcesayfX3
-         Xxn8TYcd/KqQ0zp6Rb17BYhQvBKpXd3h2UcVA1IHkIWtsvv7ZCx5zEKTSv8C7f9lTQD+
-         XD7oYPjSJo5H2H0zojiF2JyFSTyZjhI01hzqTHpeul/cSWQYKml64FjUTN2SaQLIfoZv
-         ZFu0jqJM4EWVr6toHml7EjuqX4xltkWZ7QRqKWQ+qXG5oPAQvMZLUyvf/WAY+TJnQt3y
-         PSJg==
-X-Gm-Message-State: AOAM531piHi0k17azN/mMMCbbxZBVuHcNtB593lTfYdr1PIW/9skPxMn
-	kBtjkVO5hq6NguUZ7hAFAftBCA==
-X-Google-Smtp-Source: ABdhPJz4D88xJ6tgZEzdXrbXjuHuFd9EwI/FGa+dvcnlZ3pyJXRYd8ncSds0F1nHA9L4W/K1qVyQLg==
-X-Received: by 2002:adf:eb92:: with SMTP id t18mr30434678wrn.409.1619533236184;
-        Tue, 27 Apr 2021 07:20:36 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:dc22:3d8d:56cd:9dcb? ([2001:8b0:aba:5f3c:dc22:3d8d:56cd:9dcb])
-        by smtp.gmail.com with ESMTPSA id 2sm2637725wmi.19.2021.04.27.07.20.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Apr 2021 07:20:35 -0700 (PDT)
-Message-ID: <fcbceb5b62675b9a4ca21b080acdd7ac07b010b4.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] S3 fetcher: add progress handler for S3 cp command
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Przemyslaw Gorszkowski <pgorszkowski@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 27 Apr 2021 15:20:22 +0100
-In-Reply-To: <CAExyXVSe-0nJL3XTTXzG2DQ65KVBzOOyMvpFzB357P7ykU7HdA@mail.gmail.com>
-References: 
-	<CAExyXVSe-0nJL3XTTXzG2DQ65KVBzOOyMvpFzB357P7ykU7HdA@mail.gmail.com>
-User-Agent: Evolution 3.40.0-1 
+ dkim=missing; spf=pass (domain: siemens.com, ip: 194.138.37.40, mailfrom: henning.schild@siemens.com)
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+	by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 13RGr2kg021150
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 Apr 2021 18:53:02 +0200
+Received: from md1za8fc.ad001.siemens.net ([167.87.26.73])
+	by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 13RGr165002869;
+	Tue, 27 Apr 2021 18:53:02 +0200
+Date: Tue, 27 Apr 2021 18:53:00 +0200
+From: henning.schild@siemens.com
+To: <isar-users@googlegroups.com>
+Cc: <bitbake-devel@lists.openembedded.org>,
+        Richard Purdie
+ <richard.purdie@linuxfoundation.org>,
+        Cedric Hombourger
+ <Cedric_Hombourger@mentor.com>,
+        Chris Larson <Chris_Larson@mentor.com>
+Subject: Re: [PATCH v3 1/3] fetch/git: add support for disabling shared clones on unpack
+Message-ID: <20210427185300.5f4357ea@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20210414063241.18528-1-henning.schild@siemens.com>
+References: <20210414063241.18528-1-henning.schild@siemens.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2021-04-27 at 09:02 +0200, Przemyslaw Gorszkowski wrote:
-> Hi,
+Note mainly to isar-users, this is now merged in upstream bitbake. Once
+we update our bitbake we can set "BB_GIT_NOSHARED = 1" in our
+bitbake.conf and drop the git adjust task. That should allow use of git
+outside the chroot and hopefully does not have a too negative impact on
+unpack performance ... for big things like the kernel
+
+Henning
+
+Am Wed, 14 Apr 2021 08:32:39 +0200
+schrieb Henning Schild <henning.schild@siemens.com>:
+
+> By default the unpacker will create a "shared" clone when cloning from
+> the DL_DIR to the WORKDIR. This patch introduces an option to control
+> that behaviour.
 > 
-> This is my first patch here so forgive me if I am doing it wrong.
+> Imagine some recipe steps are executed in a namespace that is
+> different from the one your downloader and unpacker ran in. (chroot)
+> Because a "shared" clone has an absolute reference to its "alternate"
+> you now have to make that "alternate" visible in that new namespace
+> (chroot) at the exact place.
 > 
-> Regarding to my patch:
-> In case of fetching source from the AWS there is no progress available. This change provides a progress by
-> extracting the needed values from logs of the aws-cli cp command.
-
-Thanks for the patches. Ideally the patches should be in the main message
-rather than as attachments and the subject lines (short log) needs tweaking
-to match our patch formatting guidelines.
-
-Also, the full log messages for the changes is missing and the patches
-do not have Signed-off-by: entries.
-
-I have tweaked the patches a little to fix the above (I can't add a 
-Signed-off-by line for you though) and added to master-next for testing.
-The content of patches themselves look ok, it is just a question of the
-commit message logs/formatting/signed off by.
-
-Cheers,
-
-Richard
-
-
-
+> With this patch you can unpack "noshared" and get a stand-alone copy.
+> This copy will also work if the "alternate" is not visible or
+> existant.
+> 
+> The switch is a global bitbake switch and will affect all git urls.
+> Build systems that need "noshared" most likely need it for everything
+> they do with git.
+> 
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> ---
+>  lib/bb/fetch2/git.py | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> index e3ba80a3f52a..3e25b4b6047c 100644
+> --- a/lib/bb/fetch2/git.py
+> +++ b/lib/bb/fetch2/git.py
+> @@ -168,7 +168,11 @@ class Git(FetchMethod):
+>          if len(branches) != len(ud.names):
+>              raise bb.fetch2.ParameterError("The number of name and
+> branch parameters is not balanced", ud.url) 
+> -        ud.cloneflags = "-s -n"
+> +        ud.noshared = d.getVar("BB_GIT_NOSHARED") == "1"
+> +
+> +        ud.cloneflags = "-n"
+> +        if not ud.noshared:
+> +            ud.cloneflags += " -s"
+>          if ud.bareclone:
+>              ud.cloneflags += " --mirror"
+>  
 
