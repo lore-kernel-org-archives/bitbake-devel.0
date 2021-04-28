@@ -1,89 +1,56 @@
-Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
- by mx.groups.io with SMTP id smtpd.web10.11275.1619542639685811923
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+ by mx.groups.io with SMTP id smtpd.web10.5876.1619573412880915305
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 27 Apr 2021 09:57:20 -0700
+ Tue, 27 Apr 2021 18:30:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=permerror, err=syntax error for token:  (domain: kernel.crashing.org, ip: 76.164.61.194, mailfrom: mark.hatle@kernel.crashing.org)
-Received: from Marks-MacBook-Pro-16.local ([76.164.61.198])
-	(authenticated bits=0)
-	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 13RGv4nD001293
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-	Tue, 27 Apr 2021 11:57:15 -0500
+ dkim=missing; spf=pass (domain: intel.com, ip: 134.134.136.100, mailfrom: anuj.mittal@intel.com)
+IronPort-SDR: tXPMglTtl4mSsmbUDfAzaW7CJXknr8tVmONHaN4S4AlG2AP8dhKQSdzR9ZGNrIX/VgNKE74ScQ
+ vgKUdK7N3ZHw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9967"; a="260582779"
+X-IronPort-AV: E=Sophos;i="5.82,256,1613462400"; 
+   d="scan'208";a="260582779"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2021 18:30:11 -0700
+IronPort-SDR: CD4pKqF6fxjoCdXneDmjnhNQROIEXtQcSRFi6+6o9RJq6NatOsvHh2yruca0L2SlR0uVWP12/j
+ bVoY03zx4vsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,256,1613462400"; 
+   d="scan'208";a="403482226"
+Received: from pgsmsx603.gar.corp.intel.com ([10.108.199.138])
+  by orsmga002.jf.intel.com with ESMTP; 27 Apr 2021 18:30:10 -0700
+Received: from pgsmsx601.gar.corp.intel.com (10.108.199.136) by
+ pgsmsx603.gar.corp.intel.com (10.108.199.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Wed, 28 Apr 2021 09:30:09 +0800
+Received: from pgsmsx601.gar.corp.intel.com ([10.108.199.136]) by
+ pgsmsx601.gar.corp.intel.com ([10.108.199.136]) with mapi id 15.01.2106.013;
+ Wed, 28 Apr 2021 09:30:09 +0800
+From: "Anuj Mittal" <anuj.mittal@intel.com>
+To: "mark.hatle@kernel.crashing.org" <mark.hatle@kernel.crashing.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
 Subject: Re: [bitbake-devel] [1.50][PATCH 1/5] runqueue: Fix deferred task issues
-To: Anuj Mittal <anuj.mittal@intel.com>, bitbake-devel@lists.openembedded.org
+Thread-Topic: [bitbake-devel] [1.50][PATCH 1/5] runqueue: Fix deferred task
+ issues
+Thread-Index: AQHXO4ZYP2QEuZnj/0+E7pZI05H+XarInuSA
+Date: Wed, 28 Apr 2021 01:30:09 +0000
+Message-ID: <67fe3ac5c9e2e836880a57f31abdbad3d58f9b24.camel@intel.com>
 References: <cover.1619407547.git.anuj.mittal@intel.com>
- <c09436f7c719c4341611bb4df91524738d272440.1619407547.git.anuj.mittal@intel.com>
-From: "Mark Hatle" <mark.hatle@kernel.crashing.org>
-Message-ID: <d773e5f2-947b-c1a6-f015-f465f42e207c@kernel.crashing.org>
-Date: Tue, 27 Apr 2021 11:57:03 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.10.0
+	 <c09436f7c719c4341611bb4df91524738d272440.1619407547.git.anuj.mittal@intel.com>
+	 <d773e5f2-947b-c1a6-f015-f465f42e207c@kernel.crashing.org>
+In-Reply-To: <d773e5f2-947b-c1a6-f015-f465f42e207c@kernel.crashing.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.108.32.68]
 MIME-Version: 1.0
-In-Reply-To: <c09436f7c719c4341611bb4df91524738d272440.1619407547.git.anuj.mittal@intel.com>
-Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D580FE9089F335429FD14062705CBD4F@intel.com>
+Content-Transfer-Encoding: base64
 
-This change also fixes the same issue in 'gatesgarth' work as well.  Can we get
-this added there as well.  (I'm happy to submit something, just wanted to check
-if it was already in plan.)
-
-On 4/25/21 10:27 PM, Anuj Mittal wrote:
-> From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> 
-> In a multiconfig situation there are circumstances where firstly, tasks
-> are deferred when they shouldn't be, then later, tasks can end up as
-> both covered and not covered.
-> 
-> This patch fixes two related issues. Firstly, the stamp validity checking
-> is done up front in the build and not reevaulated. When rebuilding the
-> deferred task list after scenequeue hash change updates, we need therefore
-> need to check if a task was in notcovered *or* covered when deciding to
-> defer it. This avoids strange logs like:
-> 
-> NOTE: Running setscene task X of Y (mc:initrfs_guest:/A/alsa-state.bb:do_deploy_source_date_epoch_setscene)
-> NOTE: Deferring mc:initrfs_guest:/A/alsa-state.bb:do_deploy_source_date_epoch after mc:host:/A/alsa-state.bb:do_deploy_source_date_epoch
-> 
-> where tasks have run but are then deferred.
-> 
-> Since we're recalculating the whole list, we also need to clear it before
-> iterating to rebuild it. By ensuring covered tasks aren't added to the
-> deferred queue, the covered + notcovered issue should also be avoided.
-> in the task deadlock forcing code.
-> 
-> [YOCTO #14342]
-> 
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> (cherry picked from commit 3c8717fb9ee1114dd80fc1ad22ee6c9e312bdac7)
-> Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
-> ---
->  lib/bb/runqueue.py | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-> index cd56a5547..feb42d3e6 100644
-> --- a/lib/bb/runqueue.py
-> +++ b/lib/bb/runqueue.py
-> @@ -2845,6 +2845,7 @@ def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq, s
->      sqdata.valid |= rq.validate_hashes(tocheck, cooker.data, len(sqdata.stamppresent), False, summary=summary)
->  
->      sqdata.hashes = {}
-> +    sqrq.sq_deferred = {}
->      for mc in sorted(sqdata.multiconfigs):
->          for tid in sorted(sqdata.sq_revdeps):
->              if mc_from_tid(tid) != mc:
-> @@ -2857,6 +2858,9 @@ def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq, s
->                  continue
->              if tid in sqrq.scenequeue_notcovered:
->                  continue
-> +            if tid in sqrq.scenequeue_covered:
-> +                continue
-> +
->              sqdata.outrightfail.add(tid)
->  
->              h = pending_hash_index(tid, rqdata)
-> 
-> 
-> 
-> 
-> 
+T24gVHVlLCAyMDIxLTA0LTI3IGF0IDExOjU3IC0wNTAwLCBNYXJrIEhhdGxlIHdyb3RlOg0KPiBU
+aGlzIGNoYW5nZSBhbHNvIGZpeGVzIHRoZSBzYW1lIGlzc3VlIGluICdnYXRlc2dhcnRoJyB3b3Jr
+IGFzIHdlbGwuwqANCj4gQ2FuIHdlIGdldA0KPiB0aGlzIGFkZGVkIHRoZXJlIGFzIHdlbGwuwqAg
+KEknbSBoYXBweSB0byBzdWJtaXQgc29tZXRoaW5nLCBqdXN0DQo+IHdhbnRlZCB0byBjaGVjaw0K
+PiBpZiBpdCB3YXMgYWxyZWFkeSBpbiBwbGFuLikNCg0KWWVzLCB3aWxsIGluY2x1ZGUgaXQgaW4g
+bmV4dCBwdWxsIHJlcXVlc3QuDQoNClRoYW5rcywNCg0KQW51ag0KDQo=
