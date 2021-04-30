@@ -1,91 +1,106 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
- by mx.groups.io with SMTP id smtpd.web12.5515.1619744661040041814
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.web09.11360.1619788130391692534
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 29 Apr 2021 18:04:21 -0700
+ Fri, 30 Apr 2021 06:08:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=IC7MEzA8;
- spf=pass (domain: gmail.com, ip: 209.85.210.46, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f46.google.com with SMTP id d3-20020a9d29030000b029027e8019067fso61193317otb.13
-        for <bitbake-devel@lists.openembedded.org>; Thu, 29 Apr 2021 18:04:20 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=boXytBYo;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f42.google.com with SMTP id x7so70476822wrw.10
+        for <bitbake-devel@lists.openembedded.org>; Fri, 30 Apr 2021 06:08:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QNE0E9lFlwD6UUVenMyUZOoH2IW7oJqtcXfTATdh7JI=;
-        b=IC7MEzA8G6JsH51dIMnRSc4Et6O3CBRHoOTdpnPs3deoiSZbWnPHWGqcC8sliA6wKX
-         daMRla5Tz+0JlubeZtnlp9GaZCQ7oRHYo3dPiBd3aGAwfWoxQQbF6bN3Gi129IGGkW12
-         zdRhJXsV9F/drfmhYNOUDVq/1JWCyMqqEQzz+/kLRSQFfQ6uVhpscXtM4KJhH0xqiX1y
-         u6Cyc3c5EdlfkfjmxysEc0zRuYrihokI9K5agT4Bx6PirK5eq45XqzoKsfj/fBJdEn1S
-         Iri+QOXp1KKgn+heCJLICQMngFP3GgGH48x07Oh6KaLGXzfpIG3nurH6X87MgEY/0zD/
-         4JnA==
+        bh=XFk9Xet2NbVznMoEJkV9gFgcEfGGiAysZurT3ZYP1kY=;
+        b=boXytBYoAQlIzmlyofHpTB/7myfXTuU2ts7j4epxXLG/esiMgTPVVOFZrrN/IZIfhG
+         aPssq9U6BeP5XdhfGgtNRQzLy21liQe1/ZSeaGUpzNUUJuThrqk+eRDEPrtCeHeZg72c
+         +yFGM28IRYS7/Njr4bVrukH1CTSCeEvMKgZ1M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QNE0E9lFlwD6UUVenMyUZOoH2IW7oJqtcXfTATdh7JI=;
-        b=qOkpkXJRL3uvfoLRa1NJx161YGWcXzejhvJOvIv946I8qTb/wGWy4OgWkZUi5w77h8
-         YQUVr7UaUbi+dmsycufU2UeMTmV+KguufRR4NjSErIdrHrx61isJbkzjPyMEN9Ze7dhU
-         z2ayuFqptd0odi926a2BxT/knq6evQvrO4611R/QK9jkCpS2eFU90W+QgvL0duy9Q3Q6
-         Rm1cXcV+Sq2AfslnQ6w0GhETo0gQ5VGZsyRXnugw5nVhi7debPbD+4xJxhvZUa81bcEO
-         64N7DXO2NF/f8FoQlbm7Mz7M4v0xYVBD2dJT3EN0+GYd5Toqo2n2GLesDWY6kc8Gz4i7
-         P9ng==
-X-Gm-Message-State: AOAM530yXqkxjUFZXGlah0KRTePtVYSEq1wxB2fyaM0Mzxpwr6CNeqx8
-	LiKgHPd78+rqqSw6rkVHccE1q+WQtLA=
-X-Google-Smtp-Source: ABdhPJyHIAvXEVCFclMU5dFVc0rROJHnUx1hniICKPxwKIjCHwSos/YYnnvMol69NISIg+EJ/qmEeg==
-X-Received: by 2002:a9d:a4e:: with SMTP id 72mr1590030otg.229.1619744660177;
-        Thu, 29 Apr 2021 18:04:20 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id x24sm361882otk.16.2021.04.29.18.04.19
+        bh=XFk9Xet2NbVznMoEJkV9gFgcEfGGiAysZurT3ZYP1kY=;
+        b=kk7v+JTGfv76Y8MLBGmGLgphc38bbA7Yeo5/B73BeVasNCAqMRypipDsdTXEy8b2cM
+         dOVtRrgu2JQwJxMUV0xhJr6QDUzPve6m1P4VYXsM49pMAS33sC+8kNP4W7mhFuxlwpCb
+         Nm+NxNEjhlV6xTEjJcdDxB5HjWZTSLdz4KTMqoC+EvFDItHUAWm02iDLn5WnVy9APYeQ
+         XtPDZUwggvf8UEkcqlM5Ypa/Odm+XhSCc+NxtQUs/eXNhTkY6ssSaVs6TQFUHl+UyV8T
+         w16cweURuzFYFEopL+4j1nBnL8hwJ/dHDbFBTZHhPlabiNi7k5QleM3FNhuoncR1rtRv
+         QmGQ==
+X-Gm-Message-State: AOAM530vmg5suzOSfmZJdFk1E5o/ltXiZWyZ4LN6qJCe6/PWZuNqSSZ9
+	srscoxHWODxWRqEb8VvNQJOXfIBDvJKgcg==
+X-Google-Smtp-Source: ABdhPJyBVbx68SEXM+wbxov/ofBv8/8QLpxIezmcUtIkl6wcqVFCDVSv2Z8F5heoTtcUAUhB+GVn1g==
+X-Received: by 2002:adf:f508:: with SMTP id q8mr6885413wro.109.1619788128870;
+        Fri, 30 Apr 2021 06:08:48 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:38ed:4baa:ed1c:e489])
+        by smtp.gmail.com with ESMTPSA id r13sm2418740wrn.2.2021.04.30.06.08.48
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Apr 2021 18:04:19 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+        Fri, 30 Apr 2021 06:08:48 -0700 (PDT)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bitbake: knotty: Re-enable command line logging levels
-Date: Thu, 29 Apr 2021 20:04:13 -0500
-Message-Id: <20210430010413.935-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.31.1
+Subject: [PATCH 1/2] runqueue: Fix multiconfig deferred task sstate validity caching issue
+Date: Fri, 30 Apr 2021 14:08:47 +0100
+Message-Id: <20210430130848.1801762-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The "-l" command line options to enable specific logging domains wasn't
-working with the switch to structured logging because they were only
-being used to set the legacy logging domains. Fix this by implementing
-the logic to parse the user options into the logging configuration.
+We were testing the validity of deferred tasks setscene status "up front" which
+is very unlikely to succeed and leads to cache invalidation issues. With the
+change to rebuild the deferred task list, this status becomes out of sync. The
+result was tasks being executed when they should not have been leading to extra
+work for the build unnecessarily.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Instead, don't process validity status for deferred tasks and assume their
+data will become available. If it doesn't, this will now result in a build
+error as the setscene task will fail and the main task will run instead.
+
+In theory we could try and track the state changes in the deferred list and
+re-test validity then but I'm not sure it is worth the effort when the other
+code path and errors in setscene tasks will give a pretty good idea of what
+is happening anyway.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/ui/knotty.py | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ lib/bb/runqueue.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 0efa614dfc..65ff2727dc 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -21,6 +21,7 @@ import fcntl
- import struct
- import copy
- import atexit
-+from itertools import groupby
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index feb42d3e6b..78e576eb2c 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2030,8 +2030,6 @@ class RunQueueExecute:
+                             logger.debug("%s didn't become valid, skipping setscene" % nexttask)
+                             self.sq_task_failoutright(nexttask)
+                             return True
+-                        else:
+-                            self.sqdata.outrightfail.remove(nexttask)
+                     if nexttask in self.sqdata.outrightfail:
+                         logger.debug2('No package found, so skipping setscene task %s', nexttask)
+                         self.sq_task_failoutright(nexttask)
+@@ -2827,6 +2825,8 @@ def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq, s
+             sqdata.stamppresent.remove(tid)
+         if tid in sqdata.valid:
+             sqdata.valid.remove(tid)
++        if tid in sqdata.outrightfail:
++            sqdata.outrightfail.remove(tid)
  
- from bb.ui import uihelper
+         noexec, stamppresent = check_setscene_stamps(tid, rqdata, rq, stampcache, noexecstamp=True)
  
-@@ -539,6 +540,13 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-         except OSError:
-            pass
+@@ -2861,10 +2861,10 @@ def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq, s
+             if tid in sqrq.scenequeue_covered:
+                 continue
  
-+    # Add the logging domains specified by the user on the command line
-+    for (domainarg, iterator) in groupby(params.debug_domains):
-+        dlevel = len(tuple(iterator))
-+        l = logconfig["loggers"].setdefault("BitBake.%s" % domainarg, {})
-+        l["level"] = logging.DEBUG - dlevel + 1
-+        l.setdefault("handlers", []).extend(["BitBake.verbconsole"])
-+
-     conf = bb.msg.setLoggingConfig(logconfig, logconfigfile)
- 
-     if sys.stdin.isatty() and sys.stdout.isatty():
+-            sqdata.outrightfail.add(tid)
+-
+             h = pending_hash_index(tid, rqdata)
+             if h not in sqdata.hashes:
++                if tid in tids:
++                    sqdata.outrightfail.add(tid)
+                 sqdata.hashes[h] = tid
+             else:
+                 sqrq.sq_deferred[tid] = sqdata.hashes[h]
 -- 
-2.31.1
+2.30.2
 
