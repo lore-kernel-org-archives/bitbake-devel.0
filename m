@@ -1,89 +1,60 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web08.11226.1619788130658871419
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+ by mx.groups.io with SMTP id smtpd.web12.34540.1620052567273085602
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Apr 2021 06:08:51 -0700
+ Mon, 03 May 2021 07:36:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=agJcVXkh;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f52.google.com with SMTP id x7so70476841wrw.10
-        for <bitbake-devel@lists.openembedded.org>; Fri, 30 Apr 2021 06:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=1y6F/I+AZ/0LHk9nTTAJgv2jP6UzWkpVUhwZJmXquqQ=;
-        b=agJcVXkhZvvhTq0CTCq6Rdp5iu900RLTiyhMGVHSO08cQgws1npcKCaN4L5r7SpDuL
-         lO77ix7vNSePz4wqt+j6wtw3Z257I1JcanW9cAjknfhmjUr9nDNfMUYgJmhhk04H2laC
-         npYwe72YKTKpmESKvyt8/ukejKOZP2ZqmXVSs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1y6F/I+AZ/0LHk9nTTAJgv2jP6UzWkpVUhwZJmXquqQ=;
-        b=XygizS+q/vEtTZPZ4nHN7thyCsExs4rnIDbo84mFc7FPySJldZKH156+ilBxyEm2yL
-         bzbe9bTe6fxnCggDVa3Fph3Dr1tIIAB2ZrKAHyQYicbRs3S8CzgjCIv6/bY564A5YvJM
-         yFv9DFJaDPnNZ+ib2bed1OMNUXJuhWVLkzxHqPA7+f4SCPFtNxnl4UsLT1eVBx8H4UYF
-         k/rFZzBtHo5RsABryhhoRSAFTTtG+zC0AfsXUmmMuJh1mUiIT3m2aYqXvqe3xxQ8a54+
-         ESyyxGE1aNcEYhtMX5QCmNTGxt+WnbdwegF8OJzxhfCi3+H2+gyYzvmRXSto/5hjk7gG
-         IhgA==
-X-Gm-Message-State: AOAM533rWfpWvghW/vrSFTT/CKaHqgFGIlvQa73qj6/bj00OMVUEBbGH
-	p6gBr6HYp07dimlqa2ZmXyi8G6Yz7SIrDA==
-X-Google-Smtp-Source: ABdhPJyUFyfvqdRzs2MuCJBai3KyOv6aAonRYQzOh2rK5sTS32n5x+vS3K35ow63sPCzaK2Xb+vRxw==
-X-Received: by 2002:adf:f80f:: with SMTP id s15mr6729800wrp.341.1619788129251;
-        Fri, 30 Apr 2021 06:08:49 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:38ed:4baa:ed1c:e489])
-        by smtp.gmail.com with ESMTPSA id r13sm2418740wrn.2.2021.04.30.06.08.48
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Apr 2021 06:08:49 -0700 (PDT)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+ dkim=missing; spf=pass (domain: intel.com, ip: 134.134.136.24, mailfrom: anuj.mittal@intel.com)
+IronPort-SDR: a0dYggiCGSPm3ozLcum6z9r1zB4/NdpR/+2erd1p5rKe9QZoFU5OkpGHZDWxKuFHs1H8wsToZq
+ Lq7cRNRX7tKg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9973"; a="197849329"
+X-IronPort-AV: E=Sophos;i="5.82,270,1613462400"; 
+   d="scan'208";a="197849329"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2021 07:36:04 -0700
+IronPort-SDR: caFP0C4mM4HFv5ubWjwdoD00JmbzIhpv/M3Q3e7CtnewNDYIBUdchgZSNqd4MBNqiu2dFfXUEb
+ ttKOyOi1fNJg==
+X-IronPort-AV: E=Sophos;i="5.82,270,1613462400"; 
+   d="scan'208";a="405696735"
+Received: from semohdyu-mobl1.gar.corp.intel.com (HELO anmitta2-mobl1.gar.corp.intel.com) ([10.249.72.206])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2021 07:36:03 -0700
+From: "Anuj Mittal" <anuj.mittal@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] runqueue: Handle deferred task rehashing in multiconfig builds
-Date: Fri, 30 Apr 2021 14:08:48 +0100
-Message-Id: <20210430130848.1801762-2-richard.purdie@linuxfoundation.org>
+Subject: [1.48][PATCH 0/3] review request
+Date: Mon,  3 May 2021 22:35:51 +0800
+Message-Id: <cover.1620052467.git.anuj.mittal@intel.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210430130848.1801762-1-richard.purdie@linuxfoundation.org>
-References: <20210430130848.1801762-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If the hash of a task changes and that hash is a deferred task (e.g. a multiconfig
-build), we need to ensure that the hash change propagates through to all the tasks
-else the build will run multiple copies of the task, sometimes with oddly differing
-results as the outhashes of native tasks built in differing locations can confuse
-things.
+Please review these changes for 1.48/gatesgarth.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/runqueue.py | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+Thanks,
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 78e576eb2c..6c41fe6d43 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2294,10 +2294,16 @@ class RunQueueExecute:
-             self.updated_taskhash_queue.remove((tid, unihash))
- 
-             if unihash != self.rqdata.runtaskentries[tid].unihash:
--                hashequiv_logger.verbose("Task %s unihash changed to %s" % (tid, unihash))
--                self.rqdata.runtaskentries[tid].unihash = unihash
--                bb.parse.siggen.set_unihash(tid, unihash)
--                toprocess.add(tid)
-+                # Make sure we rehash any other tasks with the same task hash that we're deferred against.
-+                torehash = [tid]
-+                for deftid in self.sq_deferred:
-+                    if self.sq_deferred[deftid] == tid:
-+                        torehash.append(deftid)
-+                for hashtid in torehash:
-+                    hashequiv_logger.verbose("Task %s unihash changed to %s" % (hashtid, unihash))
-+                    self.rqdata.runtaskentries[hashtid].unihash = unihash
-+                    bb.parse.siggen.set_unihash(hashtid, unihash)
-+                    toprocess.add(hashtid)
- 
-         # Work out all tasks which depend upon these
-         total = set()
+Anuj
+
+The following changes since commit 7b7d7b02faedb603d81144a134e80027e4019ab0:
+
+  cooker: Include all packages a recipe provides in SkippedPackage.rprovides (2021-04-27 15:22:14 +0100)
+
+are available in the Git repository at:
+
+  git://push.openembedded.org/bitbake-contrib stable/1.48-next
+
+Niels Avonds (1):
+  fetch/gitsm: Fix crash when using git LFS and submodules
+
+Richard Purdie (1):
+  runqueue: Fix deferred task issues
+
+Ross Burton (1):
+  bitbake-server: ensure server timeout is a float
+
+ bin/bitbake-server       | 2 +-
+ lib/bb/fetch2/git.py     | 2 +-
+ lib/bb/runqueue.py       | 4 ++++
+ lib/bb/server/process.py | 2 +-
+ 4 files changed, 7 insertions(+), 3 deletions(-)
+
 -- 
 2.30.2
 
