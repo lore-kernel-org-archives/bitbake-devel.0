@@ -1,91 +1,96 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
- by mx.groups.io with SMTP id smtpd.web12.32474.1620656220017093363
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web12.3677.1620681083483427790
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 10 May 2021 07:17:00 -0700
+ Mon, 10 May 2021 14:11:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=D1pRl2t5;
- spf=softfail (domain: sakoman.com, ip: 209.85.167.169, mailfrom: steve@sakoman.com)
-Received: by mail-oi1-f169.google.com with SMTP id w16so7744426oiv.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 10 May 2021 07:16:59 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=S9KLeQ3l;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f54.google.com with SMTP id h4so17998589wrt.12
+        for <bitbake-devel@lists.openembedded.org>; Mon, 10 May 2021 14:11:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=U2ZMWJsNROuSpCbPX78QI5CdtqYlVQJV0e6SSA3zRuw=;
-        b=D1pRl2t5zHnhl8cX4AcPBCrK7U4CMPEGS2O+8q3Ljgn9Oll/tlj9Lwt3Z14HccqnFz
-         R3lGU6C5iS1oKLgGCTpQAJIm2m/PDyumlWr27qHEyCO9llZmzeTKdQfFB8zG9BHLwjdf
-         USpSHMSM/tgACyQApIBYYDQrUSi/lf2fwISESRPirUXUKLbA/bt3gCpS5gE916Oe/wdK
-         uPrgOe9gIwPEreFcxn6kWfO1QBsLbXrSF2pKOBG6MrB4UCV4gODLCyLpezBVc/WiSteC
-         1DwXrtXxojX3+OHzfzMEl5x8Q/1mRuz9jTyv4gMm0qFASMtWO5WlI7btEvkwuwbDNR9O
-         qcjA==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=oe0hJYgL6sq9OnqNtxzHjZaqjLDePax2HcXzxUq2Fuw=;
+        b=S9KLeQ3lQ9PJYNWRYMMioKMRRDXKkb4863/I3opBhtbh6vBmJPexi7tcf+XW0OIsiG
+         vEUyhRhKnvRZYvmd6XqP9uYa6jiAicgN8tlyjJPwVq3jlyusplu2UR15XTeOIB/8sf5g
+         EsjP8rR/RAzLk7MkxC5ulMN7oq9LRPutLjqz8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=U2ZMWJsNROuSpCbPX78QI5CdtqYlVQJV0e6SSA3zRuw=;
-        b=XS954xC8UjGebQ3UoLBNKBN3k5MxjssscWxivu+Nk6KF18loDbQ4yMEluq8EQZK4AG
-         vwN6E93FKG/ANROcUVeTEnB+MfQ6J4VgyW/r0iljXkp2WnNDVUtm/SaTtSTBnv0TH9GP
-         jno5UdpHtaiJF5GTXlWr8vmErcjyGjV27fr+GEd+FgPy3Y8/Q6JNaaRXk9Z/vkwxbIzX
-         RkX2qG898IZYmnJIzs1ECdhqgGy3bFCCI5vkFsUTCGv5IkAaDeGqYngMJ0LfQw80HjMw
-         ubgXU+aNdfztQK2tvnYxpSO3ec11M6waJIFkJU4xjsqyoFKAP+XHji+iraaM+zi2qhLJ
-         XpDQ==
-X-Gm-Message-State: AOAM533xd8ufPdR5lel3HpS/9//ZfWJBLtckS9ha3bAbdEFCFiaIErGB
-	SQfY9FyoWJC79YsiGliBVxS09SIu6+qOZnKbtPA=
-X-Google-Smtp-Source: ABdhPJx0/0CcEN/dwnzJsycpLeCm9qwMtMhYkPrgihUIqRib2aHmjzfmRCaMe2GTZkwk77enYA5aFA==
-X-Received: by 2002:aca:dfc1:: with SMTP id w184mr18479448oig.79.1620656218912;
-        Mon, 10 May 2021 07:16:58 -0700 (PDT)
-Return-Path: <steve@sakoman.com>
-Received: from localhost.localdomain ([172.243.4.16])
-        by smtp.gmail.com with ESMTPSA id g106sm2401303otg.77.2021.05.10.07.16.55
-        for <bitbake-devel@lists.openembedded.org>
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=oe0hJYgL6sq9OnqNtxzHjZaqjLDePax2HcXzxUq2Fuw=;
+        b=sWKc4g34lzFWLr9fQrqj3XR6SMLEU+7p+6iwGEJaCtqYJ32ywZTOzbDyQSfa98TQN4
+         G+a14pmtk8NfSxAHAcRFUhm8mCHFDQ2qnf3cGWCLTtqEcqH7Tv5RHSN2eONwNGe/V0sB
+         LlVoQ7ZCGOJq7SCessEkctmrTi8FnvJFdI/hsqmtntmSLkOwrD51BIMiEiAc3owYbNXs
+         al4ID1TBRDQDlnIIF3MxJVnYE9W8PTYR0Wm6d5ONOH9Eea6oC5E4TRZ8ky4cnNl9fly7
+         jaevzlnuWsJ3qA7lV12g7h/+6QuRWG7b3j2TQntegq8Gwdh2OUV8zXlY+S7xU9UBdjz+
+         Wqbg==
+X-Gm-Message-State: AOAM5338KpJa5LK5vroml5i0pasyI9Tc+5pAYFG0ZRkRSzJbqAxJ226a
+	UgzHopQQSQlrOtQuakW7dSb51z9b/SWzNg==
+X-Google-Smtp-Source: ABdhPJxXxQRhwsKG3ApJMY0OmgJz0eL5JQjKpKfFqVOWRvN8EplOkCHGN9CaHUJoG5GnnXTLK7K9Lg==
+X-Received: by 2002:adf:aa9a:: with SMTP id h26mr33164329wrc.419.1620681081948;
+        Mon, 10 May 2021 14:11:21 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:29c0:3873:464b:b647? ([2001:8b0:aba:5f3c:29c0:3873:464b:b647])
+        by smtp.gmail.com with ESMTPSA id k6sm815058wmi.42.2021.05.10.14.11.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 May 2021 07:16:58 -0700 (PDT)
-From: "Steve Sakoman" <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 4/4] fetch/gitsm: Fix crash when using git LFS and submodules
-Date: Mon, 10 May 2021 04:15:19 -1000
-Message-Id: <631c0fa02c12cb48bcee4fa602c1ee4693ed689b.1620655927.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1620655927.git.steve@sakoman.com>
+        Mon, 10 May 2021 14:11:21 -0700 (PDT)
+Message-ID: <008ee8e752e12b71edeb2b59062bec7a32a22bac.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [bitbake][dunfell][1.46][PATCH 3/4] runqueue: Fix deferred task issues
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Steve Sakoman <steve@sakoman.com>, bitbake-devel@lists.openembedded.org
+Date: Mon, 10 May 2021 22:11:20 +0100
+In-Reply-To: <99fa63415cabf3129f149c2cdb557ec18b06b98a.1620655927.git.steve@sakoman.com>
 References: <cover.1620655927.git.steve@sakoman.com>
+	 <99fa63415cabf3129f149c2cdb557ec18b06b98a.1620655927.git.steve@sakoman.com>
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-From: Niels Avonds <niels@codebits.be>
+On Mon, 2021-05-10 at 04:15 -1000, Steve Sakoman wrote:
+> From: Richard Purdie <richard.purdie@linuxfoundation.org>
+> 
+> In a multiconfig situation there are circumstances where firstly, tasks
+> are deferred when they shouldn't be, then later, tasks can end up as
+> both covered and not covered.
+> 
+> This patch fixes two related issues. Firstly, the stamp validity checking
+> is done up front in the build and not reevaulated. When rebuilding the
+> deferred task list after scenequeue hash change updates, we need therefore
+> need to check if a task was in notcovered *or* covered when deciding to
+> defer it. This avoids strange logs like:
+> 
+> NOTE: Running setscene task X of Y (mc:initrfs_guest:/A/alsa-state.bb:do_deploy_source_date_epoch_setscene)
+> NOTE: Deferring mc:initrfs_guest:/A/alsa-state.bb:do_deploy_source_date_epoch after mc:host:/A/alsa-state.bb:do_deploy_source_date_epoch
+> 
+> where tasks have run but are then deferred.
+> 
+> Since we're recalculating the whole list, we also need to clear it before
+> iterating to rebuild it. By ensuring covered tasks aren't added to the
+> deferred queue, the covered + notcovered issue should also be avoided.
+> in the task deadlock forcing code.
+> 
+> [YOCTO #14342]
+> 
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> (cherry picked from commit 3c8717fb9ee1114dd80fc1ad22ee6c9e312bdac7)
+> Signed-off-by: Steve Sakoman <steve@sakoman.com>
+> ---
+>  lib/bb/runqueue.py | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Gitsm fetcher crashes when cloning a repository that contains LFS files.
-This happens because the unpack method is called during download, but the
-submodules have not been downloaded yet at this point.
+I've now got mixed feelings on this one. We are seeing problems in master
+and this change isn't 100% right.
 
-This issue was introduced in this
-commit: 977b7268bf4fd425cb86d4a57500350c9b829162
+Sadly I don't have a patch which is working in all cases either. I'll aim
+to try and work on it further this week. There is a better patch in master-next
+but it isn't right.
 
-[YOCTO #14283]
+Equally, the behaviour in dunfell isn't right either :(
 
-Signed-off-by: Niels Avonds <niels@codebits.be>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 26caedc4d2e9b5a0f1d57f9291754a7f6c5e437e)
-Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit e05d79a6ed92c9ce17b90fd5fb6186898a7b3bf8)
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
----
- lib/bb/fetch2/git.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cheers,
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 8740e9c0..112b833f 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -388,7 +388,7 @@ class Git(FetchMethod):
-             tmpdir = tempfile.mkdtemp(dir=d.getVar('DL_DIR'))
-             try:
-                 # Do the checkout. This implicitly involves a Git LFS fetch.
--                self.unpack(ud, tmpdir, d)
-+                Git.unpack(self, ud, tmpdir, d)
- 
-                 # Scoop up a copy of any stuff that Git LFS downloaded. Merge them into
-                 # the bare clonedir.
--- 
-2.25.1
+Richard
 
