@@ -1,123 +1,109 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
- by mx.groups.io with SMTP id smtpd.web12.32470.1620656206364133825
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+ by mx.groups.io with SMTP id smtpd.web09.32337.1620656212122152697
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 10 May 2021 07:16:46 -0700
+ Mon, 10 May 2021 07:16:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=sIGhiD5P;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.47, mailfrom: steve@sakoman.com)
-Received: by mail-ot1-f47.google.com with SMTP id 69-20020a9d0a4b0000b02902ed42f141e1so4361754otg.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 10 May 2021 07:16:46 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=gMYYsB2u;
+ spf=softfail (domain: sakoman.com, ip: 209.85.167.169, mailfrom: steve@sakoman.com)
+Received: by mail-oi1-f169.google.com with SMTP id w16so7744012oiv.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 10 May 2021 07:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=ZNBHZHYM/SMcOyZ7WO26UsVq+Z5Gm3hpFoSJLSgMQJ0=;
-        b=sIGhiD5PnJD8ikVZrcAwk4bsXJP7QytZGJ0OxxwDn6GmpX6Un5JXwWn9uQAmQjheXe
-         F9RZnNQ6OfN9bXQaJqU4wwwNBhf4mze5YtofZNY51oWzW3uZJAXhscLxV0imeI18SxwP
-         ++NMgYf0gZTpAFhjiAHNjZVeb8S7ezWKNG5InnGNCkuzbEML1JThyQ/io2JhnqBoGtfg
-         Az72Rk51FdVH3F3Q5jFugxHBjZDbMVx/LjkRMVlQRlAkHxdPMcW9nhb/O7eyA1Q8E6eq
-         u4rTBO2cFftVDjT9r/r3LubqYW8Akp4piZ/G5A2lz57f37TU94UlJKDD4DFxVqawY8ji
-         ajcg==
+        bh=iNOk6XF4utpm6fGbAyAeLnJFmasw8KfvK8Hlh+3KSyQ=;
+        b=gMYYsB2u7HwX1AzheIt57NEjId4JD1KEndWzjA4BfqGWM1Gh0mvwGxQk8tXm30hJ1/
+         d9EuUJurIBZJ0dI2rdxztDv0SGjvq/ewqzk5hQ13N2h2/JxrkyjswCeimavwtbgjNwpD
+         DFRY3SROXrT3YdvOJAkDXVbDeHS2CGm5oYeXwY9ihjbow/jJvB9d2mQL8XSILEwLyVJJ
+         RriVgvZiQe1nDt3MgWIzMC4JEXu5Vi0sLtfyQCSYCKcexpe7oiZm4lMMiKQAdEeIFqW7
+         ZbqEjsx24mIYYIvnucx2sm1VStrfxvHHBEXXDSyN8W16V6Inq5IMgr6rwiXnRa5eBPAE
+         i5jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZNBHZHYM/SMcOyZ7WO26UsVq+Z5Gm3hpFoSJLSgMQJ0=;
-        b=rbWowUcg6hSVDA5zmrv7LOq86c0XSuumrX6EWRXyaFDHhqPMn+Zy8Bc87D7Rve62Op
-         a9wbcPRxKx42bfGTxMivhWL05yqdSwDFUotL6wAs4MK0vl1YKx64mzgtxbjH4rqGoJPG
-         /sfoCKjJwdCqfmNbm7FmQINrj8MFLiTH6/WTRWgY/dyVsND5/SFNXCxrTq9uV2oPp1O+
-         nsWH2gTE9joA5LKO8WFprILI3XuToMjXiAE4a5gDaEcydwan+9SWHJxSXgtLGgMxoNz2
-         LYkeh3Lb/JlUJG4TiAnvOvfl/RDPn3q8Pd81jGGBEKjXU9R9C9VEEyaM/+MFD6tN4dFw
-         1/YA==
-X-Gm-Message-State: AOAM530xrjb7toV9IonO2qyy/jG5PkbA/XR4hoGtZ1oQUNg9d7r9Wwzn
-	m2QMe3cvfDjpKmvMRw3vVyuD48xqQ+jhFYvvItc=
-X-Google-Smtp-Source: ABdhPJy8yRv0Ki9aB0vLyUl5i+mXxFIRfkvWT94TD90LgRZmzWi1PkqdpvHpvvAFIyImn3+5C/CH6g==
-X-Received: by 2002:a9d:3424:: with SMTP id v33mr21116231otb.137.1620656205225;
-        Mon, 10 May 2021 07:16:45 -0700 (PDT)
+        bh=iNOk6XF4utpm6fGbAyAeLnJFmasw8KfvK8Hlh+3KSyQ=;
+        b=k1ISesYAv/sr14PJajxE5t6vpuM186AShk3cCIgUVFT2HZ8+3sIr5ucJsxDQ0cpAFT
+         7Gq1C0k2Tu+/+h4orzejNpr71/J+YkD/JZTpCXgjJInIBLhdvH2HYZ+bHTGCvrSIsHSj
+         J3+HFWinKGtgo+z87Waz/Cql4e+WHnpEF1mKinpcrbSlVzlxGgEJZLfFZ1Hbh3W1roo6
+         4WxUTD+rOhtYrmtmkRrV3yRXeZSpcnRBCM9NJaOSthuYaeU1zyETt4Fr1aZaGBialFNz
+         ufu3b/nHHhDeMbBEEnKa0c6ZbkjJlxNiI8a9BVYfaYkp7f8rICfDUbTBQVwpbM99Exoe
+         D8yw==
+X-Gm-Message-State: AOAM532ZJTmOmXcSkh/M2s9v4g3DAQSuJxeoiTdjJoIoS/Ug7P4hprOm
+	NootrAE/TXk5ijEpAHX67xFSoCrmp+Yk2uaNMpg=
+X-Google-Smtp-Source: ABdhPJwI5lg0wHHdORGOijF0SsUlUjWkaSeMh1Gj2Lh8DpP6B/F6yahHwEjpjoHBKCB/K6vYe5u+OA==
+X-Received: by 2002:aca:ad48:: with SMTP id w69mr17741793oie.21.1620656211048;
+        Mon, 10 May 2021 07:16:51 -0700 (PDT)
 Return-Path: <steve@sakoman.com>
 Received: from localhost.localdomain ([172.243.4.16])
-        by smtp.gmail.com with ESMTPSA id g106sm2401303otg.77.2021.05.10.07.16.41
+        by smtp.gmail.com with ESMTPSA id g106sm2401303otg.77.2021.05.10.07.16.47
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 May 2021 07:16:44 -0700 (PDT)
+        Mon, 10 May 2021 07:16:50 -0700 (PDT)
 From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 2/4] bitbake: tests/fetch: remove write protected files too
-Date: Mon, 10 May 2021 04:15:17 -1000
-Message-Id: <5e6e34543938db7ba890a5355aca08e21613037c.1620655927.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 3/4] runqueue: Fix deferred task issues
+Date: Mon, 10 May 2021 04:15:18 -1000
+Message-Id: <99fa63415cabf3129f149c2cdb557ec18b06b98a.1620655927.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1620655927.git.steve@sakoman.com>
 References: <cover.1620655927.git.steve@sakoman.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Mikko Rapeli <mikko.rapeli@bmw.de>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-For some reason several git-annex files in Debian 10 buster
-are read-only and removing them with "rm -rf" fails.
+In a multiconfig situation there are circumstances where firstly, tasks
+are deferred when they shouldn't be, then later, tasks can end up as
+both covered and not covered.
 
-Fixes test failures like:
+This patch fixes two related issues. Firstly, the stamp validity checking
+is done up front in the build and not reevaulated. When rebuilding the
+deferred task list after scenequeue hash change updates, we need therefore
+need to check if a task was in notcovered *or* covered when deciding to
+defer it. This avoids strange logs like:
 
-$ bitbake-selftest
-...
-rm: cannot remove '/tmp/tmpwmfn4w64/download/git2/tmp.tmpwmfn4w64.gitsource/annex/objects/f87/4d5/SHA256E-s0--e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855/SHA256E-s0--e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': Permission denied
-rm: cannot remove '/tmp/tmpwmfn4w64/download/git2/tmp.tmpwmfn4w64.gitsource/annex/objects/f87/4d5/SHA256E-s0--e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855/SHA256E-s0--e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855': Permission denied
-EE..................................ssss.sssssssssssssss.sssss.......................................................................................................
-======================================================================
-ERROR: test_shallow_annex (bb.tests.fetch.GitShallowTest)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/builder/src/base/poky/bitbake/lib/bb/tests/fetch.py", line 1773, in test_shallow_annex
-    fetcher, ud = self.fetch_shallow(uri)
-  File "/home/builder/src/base/poky/bitbake/lib/bb/tests/fetch.py", line 1541, in fetch_shallow
-    bb.utils.remove(ud.clonedir, recurse=True)
-  File "/home/builder/src/base/poky/bitbake/lib/bb/utils.py", line 700, in remove
-    subprocess.check_call(cmd + ['rm', '-rf'] + glob.glob(path))
-  File "/usr/lib/python3.7/subprocess.py", line 347, in check_call
-    raise CalledProcessError(retcode, cmd)
-subprocess.CalledProcessError: Command '['rm', '-rf', '/tmp/tmpwmfn4w64/download/git2/tmp.tmpwmfn4w64.gitsource']' returned non-zero exit status 1.
+NOTE: Running setscene task X of Y (mc:initrfs_guest:/A/alsa-state.bb:do_deploy_source_date_epoch_setscene)
+NOTE: Deferring mc:initrfs_guest:/A/alsa-state.bb:do_deploy_source_date_epoch after mc:host:/A/alsa-state.bb:do_deploy_source_date_epoch
 
-Also, one "chmod" call was failing since the .git/annex subdirectory doesn't exist so just chmod
-the whole temporary directory which should cover any directory name differences between
-different git-annex versions. Fixes tests failing after chmod call:
+where tasks have run but are then deferred.
 
-Running 'export PSEUDO_DISABLED=1; unset _PYTHON_SYSCONFIGDATA_NAME; chmod u+w -R /tmp/tmpwmfn4w64/git//.git/annex' in /tmp/tmpwmfn4w64/git/
+Since we're recalculating the whole list, we also need to clear it before
+iterating to rebuild it. By ensuring covered tasks aren't added to the
+deferred queue, the covered + notcovered issue should also be avoided.
+in the task deadlock forcing code.
 
-Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
+[YOCTO #14342]
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 3c8717fb9ee1114dd80fc1ad22ee6c9e312bdac7)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/tests/fetch.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/bb/runqueue.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 9a4f5f11..6300f563 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -371,6 +371,7 @@ class FetcherTest(unittest.TestCase):
-         if os.environ.get("BB_TMPDIR_NOCLEAN") == "yes":
-             print("Not cleaning up %s. Please remove manually." % self.tempdir)
-         else:
-+            bb.process.run('chmod u+rw -R %s' % self.tempdir)
-             bb.utils.prunedir(self.tempdir)
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 2bb97b6e..2d35d478 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2789,6 +2789,7 @@ def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq, s
+     sqdata.valid |= rq.validate_hashes(tocheck, cooker.data, len(sqdata.stamppresent), False, summary=summary)
  
- class MirrorUriTest(FetcherTest):
-@@ -1538,6 +1539,7 @@ class GitShallowTest(FetcherTest):
+     sqdata.hashes = {}
++    sqrq.sq_deferred = {}
+     for mc in sorted(sqdata.multiconfigs):
+         for tid in sorted(sqdata.sq_revdeps):
+             if mc_from_tid(tid) != mc:
+@@ -2801,6 +2802,9 @@ def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq, s
+                 continue
+             if tid in sqrq.scenequeue_notcovered:
+                 continue
++            if tid in sqrq.scenequeue_covered:
++                continue
++
+             sqdata.outrightfail.add(tid)
  
-         # fetch and unpack, from the shallow tarball
-         bb.utils.remove(self.gitdir, recurse=True)
-+        bb.process.run('chmod u+w -R "%s"' % ud.clonedir)
-         bb.utils.remove(ud.clonedir, recurse=True)
-         bb.utils.remove(ud.clonedir.replace('gitsource', 'gitsubmodule'), recurse=True)
- 
-@@ -1767,7 +1769,7 @@ class GitShallowTest(FetcherTest):
-             open(os.path.join(self.srcdir, 'c'), 'w').close()
-             self.git('annex add c', cwd=self.srcdir)
-             self.git('commit --author "Foo Bar <foo@bar>" -m annex-c -a', cwd=self.srcdir)
--            bb.process.run('chmod u+w -R %s' % os.path.join(self.srcdir, '.git', 'annex'))
-+            bb.process.run('chmod u+w -R %s' % self.srcdir)
- 
-             uri = 'gitannex://%s;protocol=file;subdir=${S}' % self.srcdir
-             fetcher, ud = self.fetch_shallow(uri)
+             h = pending_hash_index(tid, rqdata)
 -- 
 2.25.1
 
