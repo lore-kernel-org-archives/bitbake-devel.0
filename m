@@ -1,66 +1,77 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.10423.1620725250415797006
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+ by mx.groups.io with SMTP id smtpd.web12.11975.1620736464898044727
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 May 2021 02:27:30 -0700
+ Tue, 11 May 2021 05:34:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40A251692
-	for <bitbake-devel@lists.openembedded.org>; Tue, 11 May 2021 02:27:29 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE71F3F719
-	for <bitbake-devel@lists.openembedded.org>; Tue, 11 May 2021 02:27:28 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=oOe9mJjT;
+ spf=pass (domain: gmail.com, ip: 209.85.218.45, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ej1-f45.google.com with SMTP id w3so29521221ejc.4
+        for <bitbake-devel@lists.openembedded.org>; Tue, 11 May 2021 05:34:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/54Xvv0g31UHyNrv+mDQlgQHH33G8UdcrDFunn+Ry7M=;
+        b=oOe9mJjTKb/x3h8WFXDsstGqalfuOqnet9gwtiKlDOtUj6Nb2DrJ2jdkA1xGOi/EvJ
+         ZVQ0++ZyLtM4HQ7+ztHDdE2xBohfr/Lo2sVg6ytYNqZtNPBLqEWRm7Xxsyc7K5myMR7i
+         lVWVZiLbYBQEcXSDhz6XXxPpKzQnsvuSlM/DgGwJ3G7wdW75Kc0tZpQKw0IjVIOGJyHL
+         2kt84s4e5R/4wu5yQx88t95vbU0wDFTGWHHNAE6rcJiyA62iTvb/TD3eqp4O06DjcYj0
+         4zMXJlonjE/XGNwLdQnJSmKlF7icEOSgVhHKbTe6wC2O0w+Xgj39YJz2fvWHGXdu9Jte
+         gx1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/54Xvv0g31UHyNrv+mDQlgQHH33G8UdcrDFunn+Ry7M=;
+        b=Vi0ySO4Ks12lTVWu9XraGrv+YE4XNkCauCsQfg+uxrISgu3x8i7J7I1mCnddUZJVem
+         vMs9dFiqmLdcOLf615LRj3WX8Zy9ZABkz3q9DaKF7PRZ5opC6pR25GB6IUpzdXmvvZpN
+         E5jgZzSwPFQF2BBQc/+I+AwOJF4tWtcRvR06kfwfG/h51lUGmHiJteYFbQ44pY+ST5W1
+         wHFBulVDU8M91OzyqhP1PvT7yv05sMXcboRucudocA+q3yRfHxnnmy79zaFhECfK4iqc
+         gJrFv9U1fIzmW5U96aBUQPwmTCyE3OL/ugP3Z9s5QSY53rhv+x18YfFs/idjmNZqfYlE
+         0ajg==
+X-Gm-Message-State: AOAM530JnV6VSBI2gr1piiFuosxmxI3rgKBhav+7yZElUDpRnXqOt6VF
+	TmBlL0XY7bKq23bPIqVbPf4z43Y91mk=
+X-Google-Smtp-Source: ABdhPJwrig4tXfxViVOQKMg2B3ecGJrUPjDeqFNjqadi+qqSO+147zonWiOWxMdE7SL8y281XyfbIw==
+X-Received: by 2002:a17:906:6bd2:: with SMTP id t18mr30352697ejs.98.1620736463548;
+        Tue, 11 May 2021 05:34:23 -0700 (PDT)
+Return-Path: <alex.kanavin@gmail.com>
+Received: from localhost.localdomain ([2a02:2454:2a0:cb00:eb83:2e01:3dda:5d46])
+        by smtp.gmail.com with ESMTPSA id o3sm14651420edr.84.2021.05.11.05.34.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 May 2021 05:34:22 -0700 (PDT)
+From: "Alexander Kanavin" <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH][1.48] bitbake: providers: selected version not available should be a warning
-Date: Tue, 11 May 2021 10:27:23 +0100
-Message-Id: <20210511092723.3916148-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
+Cc: Alexander Kanavin <alex.kanavin@gmail.com>
+Subject: [PATCH] fetch2/wget: when checking latest versions, consider all numerical directories
+Date: Tue, 11 May 2021 14:34:16 +0200
+Message-Id: <20210511123416.976156-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-From: Ross Burton <ross@burtonini.com>
+Previously the regex was maching x.y, but wasn't matching x, which is a problem
+e.g. here:
+https://download.gnome.org/sources/epiphany/
+(the new gnome version scheme adds 40-series at the end).
 
-If the selected version if not available, bitbake will happily attempt
-to build something else. This should be a loud warning not a small note.
-
-(Bitbake rev: 78cd63285713fde59506eb2e71a7b7ee59a594ff)
-
-Signed-off-by: Ross Burton <ross.burton@arm.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
- bitbake/lib/bb/providers.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/fetch2/wget.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py
-index 81459c36d56..3f66a3d99fa 100644
---- a/bitbake/lib/bb/providers.py
-+++ b/bitbake/lib/bb/providers.py
-@@ -151,7 +151,7 @@ def findPreferredProvider(pn, cfgData, dataCache, pkg=
-_pn =3D None, item =3D None):
-         if item:
-             itemstr =3D " (for item %s)" % item
-         if preferred_file is None:
--            logger.info("preferred version %s of %s not available%s", pv=
-_str, pn, itemstr)
-+            logger.warn("preferred version %s of %s not available%s", pv=
-_str, pn, itemstr)
-             available_vers =3D []
-             for file_set in pkg_pn:
-                 for f in file_set:
-@@ -163,7 +163,7 @@ def findPreferredProvider(pn, cfgData, dataCache, pkg=
-_pn =3D None, item =3D None):
-                         available_vers.append(ver_str)
-             if available_vers:
-                 available_vers.sort()
--                logger.info("versions of %s available: %s", pn, ' '.join=
-(available_vers))
-+                logger.warn("versions of %s available: %s", pn, ' '.join=
-(available_vers))
-         else:
-             logger.debug(1, "selecting %s as PREFERRED_VERSION %s of pac=
-kage %s%s", preferred_file, pv_str, pn, itemstr)
-=20
---=20
-2.25.1
+diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+index 6d82f3af07..784df70c9f 100644
+--- a/bitbake/lib/bb/fetch2/wget.py
++++ b/bitbake/lib/bb/fetch2/wget.py
+@@ -472,7 +472,7 @@ class Wget(FetchMethod):
+         version_dir = ['', '', '']
+         version = ['', '', '']
+ 
+-        dirver_regex = re.compile(r"(?P<pfx>\D*)(?P<ver>(\d+[\.\-_])+(\d+))")
++        dirver_regex = re.compile(r"(?P<pfx>\D*)(?P<ver>(\d+[\.\-_])*(\d+))")
+         s = dirver_regex.search(dirver)
+         if s:
+             version_dir[1] = s.group('ver')
+-- 
+2.31.1
 
