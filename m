@@ -1,77 +1,95 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
- by mx.groups.io with SMTP id smtpd.web12.11975.1620736464898044727
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+ by mx.groups.io with SMTP id smtpd.web10.11830.1620736850898038124
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 May 2021 05:34:25 -0700
+ Tue, 11 May 2021 05:40:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=oOe9mJjT;
- spf=pass (domain: gmail.com, ip: 209.85.218.45, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ej1-f45.google.com with SMTP id w3so29521221ejc.4
-        for <bitbake-devel@lists.openembedded.org>; Tue, 11 May 2021 05:34:24 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=PXa784Dy;
+ spf=pass (domain: gmail.com, ip: 209.85.214.178, mailfrom: akuster808@gmail.com)
+Received: by mail-pl1-f178.google.com with SMTP id b21so10793057plz.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 11 May 2021 05:40:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=/54Xvv0g31UHyNrv+mDQlgQHH33G8UdcrDFunn+Ry7M=;
-        b=oOe9mJjTKb/x3h8WFXDsstGqalfuOqnet9gwtiKlDOtUj6Nb2DrJ2jdkA1xGOi/EvJ
-         ZVQ0++ZyLtM4HQ7+ztHDdE2xBohfr/Lo2sVg6ytYNqZtNPBLqEWRm7Xxsyc7K5myMR7i
-         lVWVZiLbYBQEcXSDhz6XXxPpKzQnsvuSlM/DgGwJ3G7wdW75Kc0tZpQKw0IjVIOGJyHL
-         2kt84s4e5R/4wu5yQx88t95vbU0wDFTGWHHNAE6rcJiyA62iTvb/TD3eqp4O06DjcYj0
-         4zMXJlonjE/XGNwLdQnJSmKlF7icEOSgVhHKbTe6wC2O0w+Xgj39YJz2fvWHGXdu9Jte
-         gx1A==
+        bh=ZJNrquMOQRhxN5DpankgRU+6czyPbaLJ8AZc5aRdRD0=;
+        b=PXa784Dy/BYzQQeNsUtrCBYd1k8/AUaN9Jik6zsfoZ+mtHn7QAQrgPH5EA+dBDQua1
+         xvYD8HwMGTj0Tok5wkJUZm+JUqT/wPxoMM7coeHvSFXXYqomPPE1iSm1yjAZ2EzrFrvy
+         Ae1Qbcqq4lYg3Q6/pTYQ9D/VRW7iw1Trca0tRx/CvqURWktj9Pn0yvaEnJ+tYUlqicP9
+         Jzn2ijxyYc9KJgi94BpisvTv0h+V5qIwTGA47PkSxRYIr7C6ZF2Hi50gKFbs/x7/ppG8
+         hCOr5BcMhQAFWMFuuGuTKSfoGLlFcXDluoQBjQrgPNM1D6vRLrutj+dahVrAGmjbZwfi
+         zxyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=/54Xvv0g31UHyNrv+mDQlgQHH33G8UdcrDFunn+Ry7M=;
-        b=Vi0ySO4Ks12lTVWu9XraGrv+YE4XNkCauCsQfg+uxrISgu3x8i7J7I1mCnddUZJVem
-         vMs9dFiqmLdcOLf615LRj3WX8Zy9ZABkz3q9DaKF7PRZ5opC6pR25GB6IUpzdXmvvZpN
-         E5jgZzSwPFQF2BBQc/+I+AwOJF4tWtcRvR06kfwfG/h51lUGmHiJteYFbQ44pY+ST5W1
-         wHFBulVDU8M91OzyqhP1PvT7yv05sMXcboRucudocA+q3yRfHxnnmy79zaFhECfK4iqc
-         gJrFv9U1fIzmW5U96aBUQPwmTCyE3OL/ugP3Z9s5QSY53rhv+x18YfFs/idjmNZqfYlE
-         0ajg==
-X-Gm-Message-State: AOAM530JnV6VSBI2gr1piiFuosxmxI3rgKBhav+7yZElUDpRnXqOt6VF
-	TmBlL0XY7bKq23bPIqVbPf4z43Y91mk=
-X-Google-Smtp-Source: ABdhPJwrig4tXfxViVOQKMg2B3ecGJrUPjDeqFNjqadi+qqSO+147zonWiOWxMdE7SL8y281XyfbIw==
-X-Received: by 2002:a17:906:6bd2:: with SMTP id t18mr30352697ejs.98.1620736463548;
-        Tue, 11 May 2021 05:34:23 -0700 (PDT)
-Return-Path: <alex.kanavin@gmail.com>
-Received: from localhost.localdomain ([2a02:2454:2a0:cb00:eb83:2e01:3dda:5d46])
-        by smtp.gmail.com with ESMTPSA id o3sm14651420edr.84.2021.05.11.05.34.22
+        bh=ZJNrquMOQRhxN5DpankgRU+6czyPbaLJ8AZc5aRdRD0=;
+        b=MOEk+EVu+j/OKzfASfp6lxprOL3vOELFnvlZ8lmhfCmJUKLFnsj4rFYnhKUQecZhnP
+         oMBfl3jE7jzQ/tozAfyP5AwB03+9tyxWjNLa+zoUt5nVfZmryHAhSsEB7/ZHqRGxfJ+U
+         JQSp5RFc1+GeiOc1SFc2VyTJ8D9jJFcHXPGJtfhVSS3Xq2epdjUdsCWltq5u+sTTMCLh
+         3JvgX1KllHONIH+B4tLKGrm9kiQiwudw0FmMXsibdDMEKSa6+9nUD06ca4ImtB5W+rtF
+         2qh8/jw4HJMXi9gV0rHQDOIZCbPhARG51+ohhRqZMKfF/FRSdY1pvIHcAxp+403JPLcK
+         pwPA==
+X-Gm-Message-State: AOAM531Ts6/Pr2lo6I0PfCABD7ijEuSEqdwS444DqapB5/zXnRwJDnJT
+	6OmIN6wqQ4Ld/htpw8qhVLn5gauX1PM=
+X-Google-Smtp-Source: ABdhPJwNUNIDRVdJ0BqdhXW17+e1PH3L+rzVMq79y9nTXHuYaKzoSb7eUHNn3hpig9mhGnO9nhrqUA==
+X-Received: by 2002:a17:90b:8d5:: with SMTP id ds21mr4864774pjb.65.1620736849911;
+        Tue, 11 May 2021 05:40:49 -0700 (PDT)
+Return-Path: <akuster808@gmail.com>
+Received: from hilo.hsdl.ca.comcast.net (c-67-181-203-136.hsd1.ca.comcast.net. [67.181.203.136])
+        by smtp.gmail.com with ESMTPSA id x133sm14439043pfc.19.2021.05.11.05.40.48
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 May 2021 05:34:22 -0700 (PDT)
-From: "Alexander Kanavin" <alex.kanavin@gmail.com>
+        Tue, 11 May 2021 05:40:49 -0700 (PDT)
+From: "Armin Kuster" <akuster808@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex.kanavin@gmail.com>
-Subject: [PATCH] fetch2/wget: when checking latest versions, consider all numerical directories
-Date: Tue, 11 May 2021 14:34:16 +0200
-Message-Id: <20210511123416.976156-1-alex.kanavin@gmail.com>
-X-Mailer: git-send-email 2.31.1
+Subject: [PATCH 1/2] hashserv/server.py: drop unused imports
+Date: Tue, 11 May 2021 12:40:46 +0000
+Message-Id: <20210511124047.2342984-1-akuster808@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Previously the regex was maching x.y, but wasn't matching x, which is a problem
-e.g. here:
-https://download.gnome.org/sources/epiphany/
-(the new gnome version scheme adds 40-series at the end).
+remove unused vars.
 
-Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+Signed-off-by: Armin Kuster <akuster808@gmail.com>
 ---
- bitbake/lib/bb/fetch2/wget.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/hashserv/server.py | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 6d82f3af07..784df70c9f 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -472,7 +472,7 @@ class Wget(FetchMethod):
-         version_dir = ['', '', '']
-         version = ['', '', '']
+diff --git a/bitbake/lib/hashserv/server.py b/bitbake/lib/hashserv/server.py
+index c941c0e9dde..8e849897371 100644
+--- a/bitbake/lib/hashserv/server.py
++++ b/bitbake/lib/hashserv/server.py
+@@ -6,13 +6,8 @@
+ from contextlib import closing, contextmanager
+ from datetime import datetime
+ import asyncio
+-import json
+ import logging
+ import math
+-import os
+-import signal
+-import socket
+-import sys
+ import time
+ from . import create_async_client, TABLE_COLUMNS
+ import bb.asyncrpc
+@@ -124,7 +119,6 @@ async def copy_from_upstream(client, db, method, taskhash):
+     if d is not None:
+         # Filter out unknown columns
+         d = {k: v for k, v in d.items() if k in TABLE_COLUMNS}
+-        keys = sorted(d.keys())
  
--        dirver_regex = re.compile(r"(?P<pfx>\D*)(?P<ver>(\d+[\.\-_])+(\d+))")
-+        dirver_regex = re.compile(r"(?P<pfx>\D*)(?P<ver>(\d+[\.\-_])*(\d+))")
-         s = dirver_regex.search(dirver)
-         if s:
-             version_dir[1] = s.group('ver')
+         with closing(db.cursor()) as cursor:
+             insert_task(cursor, d)
+@@ -137,7 +131,6 @@ async def copy_outhash_from_upstream(client, db, method, outhash, taskhash):
+     if d is not None:
+         # Filter out unknown columns
+         d = {k: v for k, v in d.items() if k in TABLE_COLUMNS}
+-        keys = sorted(d.keys())
+ 
+         with closing(db.cursor()) as cursor:
+             insert_task(cursor, d)
 -- 
-2.31.1
+2.25.1
 
