@@ -1,125 +1,122 @@
-Received: from EUR06-VI1-obe.outbound.protection.outlook.com (EUR06-VI1-obe.outbound.protection.outlook.com [40.92.17.62])
- by mx.groups.io with SMTP id smtpd.web08.7055.1620826729756919243
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+ by mx.groups.io with SMTP id smtpd.web12.7304.1620827340601287370
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 May 2021 06:38:50 -0700
+ Wed, 12 May 2021 06:49:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@outlook.com header.s=selector1 header.b=RyZZxpl3;
- spf=pass (domain: outlook.com, ip: 40.92.17.62, mailfrom: kweihmann@outlook.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eiaO/N2KK8G9migzdT4Ksmp96LMDTAcE3F8Jm3Q45Sf/Yq8LfqaU+pjtK92WLXoF+Ql+HjqKQU/9EvfsnD+BtcnjD0fvQQEFZg6go03emm292oDkfS56fx0FnJF739rpddBgc0dglOrklweBF61NtoHWcJ8axgryDyEZf0uU9MQ5VirbddQoWGcUhv++F0xZaG18bjif+zfFIEr0H8hqs6DFnhE0DlJtF2naCoG8V/UbwoPjKqnWM5hnw+iBVN3OAywC2/5IIgtS8K6Ja0zw1xCh2wDwUWbKmcGwK3HTVUHzIQo4yFTpLl8EpUFooJArZlqcKYVDgZHKMHfhZr/TIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E11o0vLUysRJ/d37t+CClc1xLXFz8LDCfbdefLJy3Ic=;
- b=PfF+IEcAToO7iNulVc/c1jfE7fDGF7bHLuosbU7wpltA15lw9ZFiUAzwtFlptQRVQ79tmAGteYkt24DAoPqvuO/FRG494r9wuphUtTNRMnc+poVoeiy5QAD92HSgRPrcxfJ9q4susxKnIRD/WCdQkYsS3J5fj4OIqqC6v5UUEMqG2EdLPx+Y1AumM6hazjQXSnG1Uvp7vZkNgZfaDeeD9fZw7/4cld2TL1WVe+xMy1apfrc++O1BJW/N3Gwx0AWU2Mxfith/6l188xPl4rAmq28Wlz1ln5WwigMr56tCbWZ3/DDNAViulWSzRlt4FvNJNJtq3odDlR2b0YeZ1JsQeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E11o0vLUysRJ/d37t+CClc1xLXFz8LDCfbdefLJy3Ic=;
- b=RyZZxpl3BEJ582dKxmPG2cmCl05kz0TSGks2PjfcLXszm3aA3muUYNOg0MslxYzZ5Kh8ybo3VAl2FfSrPvBWsnPCtal3XNWP3nyNsycrQjDdyMdrEme6F2MatuusX2f30mxkxlfhiSXofLGR5k4cl6MEp8xMfJfMZGSmhOfFly+kfm9zDjQD0tDxxe2I540WzLdeRxEDotIipeqeamwB25rpvltb0+pX74SmVt2/h4RAK8/lc086KL0bkYFlu21m8xrjfNR5LOVk2KzUS1yOSoBls98bC+ggXtCVuk8Kb42nsRd+zeNWHF+k2pExKa0P/4wglm2iahS9bJ9njfFaxQ==
-Received: from VI1EUR06FT031.eop-eur06.prod.protection.outlook.com
- (2a01:111:e400:fc37::49) by
- VI1EUR06HT098.eop-eur06.prod.protection.outlook.com (2a01:111:e400:fc37::286)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25; Wed, 12 May
- 2021 13:38:46 +0000
-Received: from AM9PR09MB4642.eurprd09.prod.outlook.com
- (2a01:111:e400:fc37::42) by VI1EUR06FT031.mail.protection.outlook.com
- (2a01:111:e400:fc37::198) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.25 via Frontend
- Transport; Wed, 12 May 2021 13:38:46 +0000
-X-IncomingTopHeaderMarker: 
- OriginalChecksum:4FCFB3F248569DC803ACC0E353C3832DAA9C550ECADF9FD8603B5305F06F9919;UpperCasedChecksum:5968BD6ECDAB61BAD7ADB6BAB57FBE31FB6504BFF2BC0FAB32FCCC9FFC7AB3E9;SizeAsReceived:8619;Count:46
-Received: from AM9PR09MB4642.eurprd09.prod.outlook.com
- ([fe80::9c9b:9858:17df:de84]) by AM9PR09MB4642.eurprd09.prod.outlook.com
- ([fe80::9c9b:9858:17df:de84%6]) with mapi id 15.20.4129.026; Wed, 12 May 2021
- 13:38:46 +0000
-Date: Wed, 12 May 2021 15:38:37 +0200
-Subject: Re: [bitbake-devel] Git Fetcher Branch Default
-Message-ID: 
- <AM9PR09MB46424BF3FA7F32E36D5E3C91A8529@AM9PR09MB4642.eurprd09.prod.outlook.com>
-X-Android-Message-ID: <ffdb3f13-13a1-4eb7-935e-260dd3e4646e@email.android.com>
-In-Reply-To: <CAB=6tBSrVooUvS4G_NDPUHrHTLjxoHqJ269AVHA2K+4guYzerw@mail.gmail.com>
-From: "Konrad Weihmann" <kweihmann@outlook.com>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=m2pdbFXl;
+ spf=pass (domain: gmail.com, ip: 209.85.208.50, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ed1-f50.google.com with SMTP id j26so23489822edf.9
+        for <bitbake-devel@lists.openembedded.org>; Wed, 12 May 2021 06:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+eDFX7Hg29FxaV3l5z1pi1PqeEydAWV19F5nUp79Hmk=;
+        b=m2pdbFXlkcBKIPKEcCMQs3zCLq6eimYUbAdlj2JXSBwPo4Xv9fChJN1HVucZRezFOZ
+         Vn27RzgGZWDORmQOTQ6HxpgYV3RcZnRWh0XMiAxvXrO0p1AslQlgHVhWyWghtCs+/Gil
+         USZ8rSYPnbG0vxhO2nJqJ5aB+IfsaZ5fyRTh99d2OOjwtQFTeAFW75ybJPQ9WHu4Bwbv
+         e1iAjFnX3wUbZ0ryCD4b++fKCPmDJeySJD7KR0HSAiHxD8wOTZTqaDgKu7+jS7jP/7oi
+         ZqFoIcSzQSeDsf4NkTgvYdgfESQ5MbrZ2QSi/n6/ufj0NpXvrDNHx4RmULkA89Qt9jG4
+         mgKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+eDFX7Hg29FxaV3l5z1pi1PqeEydAWV19F5nUp79Hmk=;
+        b=Bb+VGYGQGttNabTiwraiwH+z7SDe315jUuAmuyJ5z4x+msji7ytXwkXMYr5SXuA+DC
+         yS1XL7Wj27EY+8b/pbzMeg1wKtclZETA/TTJaslr7bJ6dFPX4NYvW2IYT3I1yrUDT3Ev
+         o8cyNV9dPO056a1gNN+XuEcS0Yj82GMjmSvK20CA5haA4oGzu1lw47+C9TnB0dcTWMOG
+         rfj5eb8ZGWSzfTrwsSoh15zZCcDQEO0n+kegrCUQQb7uF3+TTVeFMniVj8TCGjUEpbzL
+         ZLBh9qYckBuJ7gNHxNp0TtW3/HKd/lJweVEHY8HI99NDV1UpXBBXyIvBZ03aUf3bNN3I
+         slMg==
+X-Gm-Message-State: AOAM5302lvww5rSwlMhF7QyWctwEv3mPXTc55IqUs/A11sIfhLnMDpvN
+	TVGgCWvC8YAvJzBxeh7onBM=
+X-Google-Smtp-Source: ABdhPJyky8rKpaA5QDMtBaREHKPBG1oM7+2QKJhYX6ZwK3NXe4Mq9pRGCpf/cCn5Qk8Bs+6f/+JGlw==
+X-Received: by 2002:a05:6402:30bc:: with SMTP id df28mr43367088edb.67.1620827339002;
+        Wed, 12 May 2021 06:48:59 -0700 (PDT)
+Return-Path: <martin.jansa@gmail.com>
+Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
+        by smtp.gmail.com with ESMTPSA id a24sm17781141edr.74.2021.05.12.06.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 May 2021 06:48:58 -0700 (PDT)
+From: "Martin Jansa" <Martin.Jansa@gmail.com>
+X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Wed, 12 May 2021 15:48:57 +0200
 To: Chuck Wolber <chuckwolber@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org, Yocto-mailing-list
- <yocto@yoctoproject.org>
-X-TMN: [dONENyr/P8hQN/dg+ZghR9qdGr8vs2hY]
-X-ClientProxiedBy: AM0PR10CA0092.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:15::45) To AM9PR09MB4642.eurprd09.prod.outlook.com
- (2603:10a6:20b:284::24)
-Return-Path: kweihmann@outlook.com
-X-Microsoft-Original-Message-ID: 
- <ffdb3f13-13a1-4eb7-935e-260dd3e4646e@email.android.com>
+Cc: bitbake-devel@lists.openembedded.org,
+	Yocto-mailing-list <yocto@yoctoproject.org>
+Subject: Re: [bitbake-devel] Git Fetcher Branch Default
+Message-ID: <20210512134857.nmxnmr5si6anlqbt@jama>
+References: <CAB=6tBSrVooUvS4G_NDPUHrHTLjxoHqJ269AVHA2K+4guYzerw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.162.148.82] (46.114.36.82) by AM0PR10CA0092.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend Transport; Wed, 12 May 2021 13:38:45 +0000
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 46
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 776eae02-305e-4212-dd16-08d9154b4442
-X-MS-TrafficTypeDiagnostic: VI1EUR06HT098:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	O0Br1W40XQB5Al2GrS7DV4X0GdSVTzSPb2swapxSfIyGJixphX/pXOkaUF3K6PMngs9lGjK/lnQbXVtuBtL7kunLlYDwXRBc1ILrcgdwCzigZtp3g+yFywjof8jZ1QaSYNdmx/zOvdvJoX5vt/e0y03ZEKkJfORp6tEl5nYBPJAq0UAnnApohvhzLI6NlfrRbnnEI8bTIccOxGf6CJNmHc1GaD5VJI5vxQlc2Ukp4hrJ5BeHbCHZyu49ELTraFYKvFTCU9vHigI9fle9rfTTLL3IreBXyLTSGcaXVTRA7pkhWrSr286lEkvaPv+ozEwTx/ER4RtkbNZbHXu7Kv+lKK08b/dDfHjKlkmvqRRRnWQKJNEG/W0PJos31CJNiMydh83HZCEH1rTKqprj/ZhZBmzppI1u9kLGsZYLVpVuv0/Z8j2R7hByr6ryvKWemFGKisIo08Uc3UTD7sKH5E0qFA==
-X-MS-Exchange-AntiSpam-MessageData: 
-	GGMgo65bcjC+XrvQb89mYgJg0yywDLoOrbUeWs5btXbLyc8eo9AWRfMBBTDBQfjAlFTCTilFK5JFkTm07hI7+wiJ2YtnTXbgqFU8ZsXJb9/9YE/sjJcpkR3dAL3r03Vfefcg6VKOBdJctKq6XbgR0Q==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 776eae02-305e-4212-dd16-08d9154b4442
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2021 13:38:46.4914
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: 
-	VI1EUR06FT031.eop-eur06.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1EUR06HT098
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAB=6tBSrVooUvS4G_NDPUHrHTLjxoHqJ269AVHA2K+4guYzerw@mail.gmail.com>
+X-Groupsio-MsgNum: 12311
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ei5vvdtmrs55e3ed"
+Content-Disposition: inline
 
-PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJz
-ZXQ9dXRmLTgiPjxkaXYgZGlyPSJhdXRvIj48ZGl2Pjxicj48ZGl2IGNsYXNzPSJnbWFpbF9leHRy
-YSI+PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj5PbiAxMiBNYXkgMjAyMSAxNDo1MSwgQ2h1
-Y2sgV29sYmVyICZsdDtjaHVja3dvbGJlckBnbWFpbC5jb20mZ3Q7IHdyb3RlOjxiciB0eXBlPSJh
-dHRyaWJ1dGlvbiI+PGJsb2NrcXVvdGUgY2xhc3M9InF1b3RlIiBzdHlsZT0ibWFyZ2luOjAgMCAw
-IC44ZXg7Ym9yZGVyLWxlZnQ6MXB4ICNjY2Mgc29saWQ7cGFkZGluZy1sZWZ0OjFleCI+PHAgZGly
-PSJsdHIiPkkgZ290IGEgZmV0Y2hlciBmYWlsdXJlIG9uIGdvLXN5c3RlbWQgdG9kYXksIHdoaWNo
-IHB1enpsZWQgbWUuIFRoYXQKPGJyPgpyZWNpcGUgaGFzIG5vdCBjaGFuZ2VkIGluIGFnZXMsIGFu
-ZCB0aGUgU1JDUFYgaGFzaCBpcyBjbGVhcmx5IHZpc2libGUKPGJyPgppbiB0aGUgcmVwb3NpdG9y
-eS4KPGJyPgoKPGJyPgpBZnRlciBsb29raW5nIGF0IGl0IGNsb3NlciwgaXQgc2VlbXMgdGhhdCBn
-aXRodWIuY29tL2NvcmVvcy9nby1zeXN0ZW1kCjxicj4KaGFzIGNoYW5nZWQgaXRzIGRlZmF1bHQg
-YnJhbmNoIGZyb20gbWFzdGVyIHRvIG1haW4gYWJvdXQgc2l4IGRheXMgYWdvLgo8YnI+ClRoaXMg
-YXBwZWFycyB0byBicmVhayBhIGZ1bmRhbWVudGFsIGFzc3VtcHRpb24gb24gdGhlIHBhcnQgb2Yg
-dGhlCjxicj4KZmV0Y2hlciB3aGVuIGxvb2tpbmcgZm9yIFNSQ1JFViBhbmQgU1JDUFYgaGFzaGVz
-Lgo8YnI+Cgo8YnI+Ckxvb2tpbmcgYXQgbGliL2JiL2ZldGNoMi9naXQucHkgbWFrZXMgaXQgZXZp
-ZGVudCB0aGF0IHRoaXMgaXMgdGhlCjxicj4KY2FzZS4gSSBjYW4gdHJpdmlhbGx5IGZpeCB0aGlz
-IHdpdGggYSAuYmJhcHBlbmQsIGJ1dCBpdCBzZWVtcyB0byBtZQo8YnI+CnRoYXQgdGhlIGZ1bmRh
-bWVudGFsIGRlZmF1bHQgYnJhbmNoIGFzc3VtcHRpb24gbmVlZHMgdG8gYmUgdXBkYXRlZC48L3A+
-PC9ibG9ja3F1b3RlPjwvZGl2PjwvZGl2PjwvZGl2PjxkaXYgZGlyPSJhdXRvIj5JaXJjIHRoZXJl
-IGhhcyBiZWVuIHRoZSBzYW1lIGRpc2N1c3Npb24gYWxyZWFkeSBsYXN0IHllYXIgb3IgdGhlIHll
-YXIgYmVmb3JlLi4uIGFuZCB0aGUgYWdyZWVtZW50IHdhcyB0byBsZWF2ZSBpdCBhcyBpdCBpcy4g
-SU1ITyBtb3N0IG9mIHRoZSB1c2VkIHByb2plY3RzIHN0aWxsIGdvIHdpdGggbWFzdGVyIGluc3Rl
-YWQgb2YgbWFpbiwgc28gYSBwYXRjaCBvZiB5b3VycyB3b3VsZCBjcmVhdGUgYSBsb3Qgb2Ygd29y
-ayBmb3IgdGhlIG1ham9yaXR5IG9mIHRoZSByZWNpcGVzLjwvZGl2PjxkaXYgZGlyPSJhdXRvIj5B
-bmQgYXMgdGhlcmUgaXMgdGhlIGJyYW5jaCBhdHRyaWJ1dGUgZm9yIHRoZSBnaXQgZmV0Y2hlciBh
-bHJlYWR5IGF2YWlsYWJsZSAoYW5kIHdpZGVseSB1c2VkIGZvciBlc3BlY2lhbGx5IHRoZXNlIGNh
-c2VzKSBJIHBlcnNvbmFsbHkgZG9uJ3Qgc2VlIHRoZSBuZWVkIGZvciBzdWNoIGEgcGF0Y2gsIHVu
-bGVzcyBpdCBwcm92aWRlcyBmdWxsIGJhY2t3YXJkIGNvbXBhdGliaWxpdHk8L2Rpdj48ZGl2IGRp
-cj0iYXV0byI+PGRpdiBjbGFzcz0iZ21haWxfZXh0cmEiPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3Rl
-Ij48YmxvY2txdW90ZSBjbGFzcz0icXVvdGUiIHN0eWxlPSJtYXJnaW46MCAwIDAgLjhleDtib3Jk
-ZXItbGVmdDoxcHggI2NjYyBzb2xpZDtwYWRkaW5nLWxlZnQ6MWV4Ij48cCBkaXI9Imx0ciI+Cjxi
-cj4KCjxicj4KSGFzIGFueW9uZSBkaXNjdXNzZWQgYWRkaW5nIG1haW4gdG8gdGhlIGxpc3Qgb2Yg
-ZGVmYXVsdCBicmFuY2hlcyB0bwo8YnI+CnRyeT8gSWYgbm90LCBJIG1heSBiZSBhYmxlIHRvIGNv
-bWUgdXAgd2l0aCBhIHBhdGNoLCBidXQgdGhlIGNvZGUgZG9lcwo8YnI+CnByb2Nlc3MgZGVmYXVs
-dCBicmFuY2hlcyBhcyBhIGxpc3QsIHNvIEkgd2lsbCBuZWVkIHRvIHRoaW5rIGEgYml0IG9uCjxi
-cj4KdGhlIGJlc3Qgd2F5IHRvIGFwcHJvYWNoIHRoaXMuIEFueSBndWlkYW5jZSB3b3VsZCBiZSBh
-cHByZWNpYXRlZC4KPGJyPgoKPGJyPgouLkNoOlcuLgo8YnI+Cgo8YnI+Cgo8YnI+Ci0tIAo8YnI+
-CiZxdW90O1BlcmZlY3Rpb24gbXVzdCBiZSByZWFjaGVkIGJ5IGRlZ3JlZXM7IHNoZSByZXF1aXJl
-cyB0aGUgc2xvdyBoYW5kIG9mCjxicj4KdGltZS4mcXVvdDsgLSBWb2x0YWlyZQo8L3A+CjxwIGRp
-cj0ibHRyIj4KPGJyPgoKPGJyPgoKPGJyPgo8L3A+CjwvYmxvY2txdW90ZT48L2Rpdj48YnI+PC9k
-aXY+PC9kaXY+PC9kaXY+
+--ei5vvdtmrs55e3ed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, May 12, 2021 at 05:51:24AM -0700, Chuck Wolber wrote:
+> I got a fetcher failure on go-systemd today, which puzzled me. That
+> recipe has not changed in ages, and the SRCPV hash is clearly visible
+> in the repository.
+>=20
+> After looking at it closer, it seems that github.com/coreos/go-systemd
+> has changed its default branch from master to main about six days ago.
+> This appears to break a fundamental assumption on the part of the
+> fetcher when looking for SRCREV and SRCPV hashes.
+>=20
+> Looking at lib/bb/fetch2/git.py makes it evident that this is the
+> case. I can trivially fix this with a .bbappend, but it seems to me
+> that the fundamental default branch assumption needs to be updated.
+>=20
+> Has anyone discussed adding main to the list of default branches to
+> try? If not, I may be able to come up with a patch, but the code does
+> process default branches as a list, so I will need to think a bit on
+> the best way to approach this. Any guidance would be appreciated.
+
+I agree it's a bit annoying that some projects have chosen to rename the
+existing branches instead of just adopting "main" to be the default
+branch only for new projects (as the defaults changed e.g. on github).
+
+I've already added explicit branch=3Dmain in 10+ recipes in various layers
+for dunfell and newer branches (ostree in meta-oe just today or e.g.
+https://github.com/ros/meta-ros/pull/846 yesterday).
+
+Luckily it's easy to fix with local bbappend, so even people using
+unsupported release (zeus and older) can do so or finally upgrade to
+some supported release which might have this fix already.
+
+It was also discussed shortly in #yocto yeasterday:
+
+22:38 < zeddii> RP: did we come up with a policy on anything we can do
+with the fetcher to make "main" be a fallback default to master. Or was
+the end decision to just add explicit branch statements everywhere ?
+23:21 < RP> zeddii: I'm open to patch proposals or we just set the
+branch on urls
+23:23 < RP> zeddii: being explicit is perhaps the better option that
+magic in the fetcher
+
+And I agree with RP, especially because fetcher magic won't get
+backported to old bitbake used in zeus and older anyway, so it won't
+help there and backporting fetcher change locally will be more risky
+than backporting simple SRC_URI change for individual recipes which need
+it.
+
+Regards,
+
+--ei5vvdtmrs55e3ed
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRU+ejDffEzV2Je2oc3VSO3ZXaAHAUCYJvcyQAKCRA3VSO3ZXaA
+HBcRAJ4maeZv6jYu5vKNz1JFEU44m2VYHQCaAjPBB2JlhcnUTtqXbfMu917oKGE=
+=GwxG
+-----END PGP SIGNATURE-----
+
+--ei5vvdtmrs55e3ed--
