@@ -1,134 +1,69 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web11.7428.1621338963461136435
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+ by mx.groups.io with SMTP id smtpd.web09.9121.1621347311188430104
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 18 May 2021 04:56:04 -0700
+ Tue, 18 May 2021 07:15:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=kNmiEgKe;
- spf=pass (domain: burtonini.com, ip: 209.85.128.53, mailfrom: ross@burtonini.com)
-Received: by mail-wm1-f53.google.com with SMTP id z137-20020a1c7e8f0000b02901774f2a7dc4so1457269wmc.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 18 May 2021 04:56:03 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=Tja1F7DW;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.177, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f177.google.com with SMTP id v13so5145852ple.9
+        for <bitbake-devel@lists.openembedded.org>; Tue, 18 May 2021 07:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OMDwkWGazpgJ+F7r8FOQA4po9m/Cxbz11OaIztojnho=;
-        b=kNmiEgKexdPvzj0+TzzYmEPybZFjWVURLGFsgSEzUzRv6sM6wWm24pNHUNrdFjPEJ4
-         I4P/Z/TSxgYEMTpe5heOnwdVuXg50vgGXR34EtNBv4pOKO6C8trsXJXlDAIRbEzxRyEh
-         oHjKCjOjSosVJn+1jjexN8ysasX+L+iW47LRnDZEOMaemvtMZEt7XUYminlFYJV8afV0
-         lAvTncI/T9/sh2IiG15Wf0gyQhLk2D9cxhfUWvCh2YW8a/mlSKRp3tcjf3DrZDDD+NvD
-         RMgXuEnEsyNwEVlimnX3+woIzU/VHKWNwoEU6ZHJJ9kIsF1nZ4hgnSeQuuAcguLOwkJ+
-         8lXA==
+        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q7wq75tjrYjFirFQ74uk4J5adNLKuR7GIvypCoUjFLM=;
+        b=Tja1F7DWkrnOXR/+jH0xJS7efyrpPVz8dTaMkbc+8OxHTkLANuW8Vss/cUv8CBcoHm
+         6GYqMjO7mNcsSkDkuj5eXl42McQMICB7Q6sit4PuhT3ueRxm954CJmBozewf3lzgUMRz
+         KHaXzB7KmmoJM4ZDxf1wDZ6zTJN/VIaaq6NgZGzePt3TXHs9JzA05KLY/mxvMDaCMeR+
+         /Kpq979I55Icq8sZV/ewIhyxwWl+rBe6ca1cNzYYdsqPwe7Q4kApQwQEujgRjYVSoB7W
+         0fpFt9Sao9t+HiStDZHPF+T+EoVVjy7pINrknfVTMz6mZKFoWprQNdOi86omJaQ5ng2f
+         m3/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OMDwkWGazpgJ+F7r8FOQA4po9m/Cxbz11OaIztojnho=;
-        b=o+zsUuppI0jTqZLZjjq2/mwkkjfQHalFH8Xh6VpFqI2wB9nDxrZ8jdUx87J26l6fpy
-         +dbnDPBP7GQkCxMBzZ0GN01Kv25t1tUjxPO23A08eAS2l3nD0KxqrqVq9nPsRL9sDwmz
-         DqTVy5XR32W7mfP4YSspwQ+XWmL64CDINbd0J5L4yuUD5ulRHEtQxmEE5vfkyP/aRLy5
-         dUINubJ8VfIv2rnFbuxS2T34gKXqzmVkSEyfuD0Qroj9/RYHrQT8g35EQETyLysaJxYs
-         1J/2KInvqSZOAzpnGOpc+zHnt+0R72jkvVUa9GPPiByb5Ykue2etPpAcoCRBA/JTpGQk
-         5g8g==
-X-Gm-Message-State: AOAM531fIHGLnVCbmXPW+466l7CL1UxyzWoSnyR4qKdToG/5nOnB0OAf
-	HHGswNPtXHoQtczpgii0vOrlwAycKPHcizeSKcIkgg==
-X-Google-Smtp-Source: ABdhPJxWklu12g7nO3ABAboU5qLrmGANSrbZ3U9rJvOLxdvgcAJkPwFKqlZfoQtCat9QbAW5IG9zbjLHm0sZ6l+DiTM=
-X-Received: by 2002:a7b:cc83:: with SMTP id p3mr5185579wma.169.1621338961919;
- Tue, 18 May 2021 04:56:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q7wq75tjrYjFirFQ74uk4J5adNLKuR7GIvypCoUjFLM=;
+        b=I/BwIDGSSvD6XO0lgpELm5NDLUHn997P3XO6NKaG3mfsa5zZbqpB/WrmfF5Y756VLW
+         GbaYIoA7ariZ1sB3B9HoJ0h9w1SPDWjUrPFQOuyongPEaatH1aZkYbzA8OEwQ7IoSaER
+         hiOu8YqZIw1ktzTBxf1Ik/wem0Yu5BOQP3Z+SCbZb4Sy6g2ANiW3EE44yJoQdG9E8RMA
+         jv7vxCd421LMcW1xXXdWnhIfc1+8xFW7XWKV4NdcIe4Mxgd3e4K43a/3gXPlhT2dmqlH
+         yXcSkXqEhiOcx2Bc5Kuf0A799u+fQ2/db4A9hLXf348F9yu+FbuhCMnSQ1Z8fCWRsvbk
+         0mug==
+X-Gm-Message-State: AOAM530c2DF1S72JHdfn3UfOCKDqLKTgLTe2VSf1PGMeUNbAWhPvT1M8
+	M/7Qn3HcOePOoC0cAEoL/oX7+44CuF3is8ay6XQ=
+X-Google-Smtp-Source: ABdhPJwFk/SDWlg+gkQslqaEmF8VCFPjqc54LKBsRr/o3IGIWqqfmkMgXRdqzdyIc0kBAUt6ieVuTw==
+X-Received: by 2002:a17:902:7403:b029:f3:519f:21e with SMTP id g3-20020a1709027403b02900f3519f021emr3217744pll.39.1621347310249;
+        Tue, 18 May 2021 07:15:10 -0700 (PDT)
+Return-Path: <steve@sakoman.com>
+Received: from localhost.localdomain (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
+        by smtp.gmail.com with ESMTPSA id a190sm11632898pfb.185.2021.05.18.07.15.09
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 May 2021 07:15:09 -0700 (PDT)
+From: "Steve Sakoman" <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][dunfell][1.46][PATCH 0/1] Pull request (cover letter only)
+Date: Tue, 18 May 2021 04:14:40 -1000
+Message-Id: <cover.1621347239.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <141358386.90607893.1621323974188.JavaMail.zimbra@jasmin-infotech.com>
- <1180155480.90839930.1621324248815.JavaMail.zimbra@jasmin-infotech.com>
- <AM9PR09MB46424A47140676C11DAD16D2A82C9@AM9PR09MB4642.eurprd09.prod.outlook.com>
- <1263831117.91201115.1621324764469.JavaMail.zimbra@jasmin-infotech.com>
-In-Reply-To: <1263831117.91201115.1621324764469.JavaMail.zimbra@jasmin-infotech.com>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Tue, 18 May 2021 12:55:51 +0100
-Message-ID: <CAAnfSTvHC0OjXmXoXVqewG_vvaS-6oLfshdOcgZu1L42YCMb4Q@mail.gmail.com>
-Subject: Re: [bitbake-devel] Disable Reproducible Build - reg
-To: Daniel Selvan <daniel.selvan@jasmin-infotech.com>
-Cc: Konrad Weihmann <kweihmann@outlook.com>, poky <poky@lists.yoctoproject.org>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-That error isn't caused by Yocto, so you'll have to work on the source
-of the recipe that is failing.
+The following changes since commit b4acaa314cd8bc86c50e14464ff01c2d110122c4:
 
-Ross
+  fetch/gitsm: Fix crash when using git LFS and submodules (2021-05-13 13:11:46 +0100)
 
-On Tue, 18 May 2021 at 08:59, Daniel Selvan
-<daniel.selvan@jasmin-infotech.com> wrote:
->
-> Hi,
->
-> I already added the line "BUILD_REPRODUCIBLE_BINARIES =3D '0'" in by loc=
-al.conf yet if I try to add __DATE__ I get the following error: "error: mac=
-ro "__DATE__" might prevent reproducible builds [-Werror=3Ddate-time]"
->
-> Can you comment on this?
->
-> Kind regards,
->
->
-> Daniel Selvan D.
->
->
-> --
->
->
-> P Please consider the environment before printing this email.
->
-> ----- Original Message -----
-> From: "Konrad Weihmann" <kweihmann@outlook.com>
-> To: "Daniel D" <daniel.selvan@jasmin-infotech.com>, "poky" <poky@lists.y=
-octoproject.org>, "bitbake-devel" <bitbake-devel@lists.openembedded.org>
-> Sent: Tuesday, 18 May, 2021 13:26:19
-> Subject: Re: [bitbake-devel] Disable Reproducible Build - reg
->
-> You could either create a distro configuration of your own (one that
-> doesn't inherit the poky.conf) or set `BUILD_REPRODUCIBLE_BINARIES` to
-> `0` to reduce the impact of the inherited reproducible_build class
->
-> On 18.05.21 09:50, Daniel Selvan wrote:
-> > Hi,
-> >
-> > I wonder how to disable the Yocto reproducible builds, since it is
-> > enabled by default now
-> > (https://www.yoctoproject.org/docs/latest/ref-manual/ref-manual.html#m=
-igration-3.1-reproducible-builds
-> > <https://www.yoctoproject.org/docs/latest/ref-manual/ref-manual.html#m=
-igration-3.1-reproducible-builds>).
-> >
-> > Thanks in advance.
-> >
-> > Kind regards,
-> >
-> > Daniel Selvan D.
-> >
-> > Senior Systems Engineer*|* Jasmin Infotech
-> > <http://www.jasmin-infotech.com/the-company/contact-us/>
-> >
-> > *+91 9445556596 <callto:9445556596>*
-> >
-> > =EF=BB=BF--
-> >
-> > P Please consider the environment before printing this email.
-> >
-> >
-> >
-> > Information in this email is proprietary and Confidential to Jasmin
-> > Infotech Pvt. Ltd. Any use, copying or dissemination of the informatio=
-n
-> > in any manner without prior approval, is strictly prohibited. If you a=
-re
-> > not the intended recipient, please destroy the message and please info=
-rm
-> > to us..
-> >
-> >
-> >
-> >
->
->
->
->=20
->
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.46-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-next
+
+Ross Burton (1):
+  providers: selected version not available should be a warning
+
+ lib/bb/providers.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.25.1
+
