@@ -1,177 +1,110 @@
-Received: from IND01-MA1-obe.outbound.protection.outlook.com (IND01-MA1-obe.outbound.protection.outlook.com [40.107.138.133])
- by mx.groups.io with SMTP id smtpd.web09.5499.1621324783927009088
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.92.90.20])
+ by mx.groups.io with SMTP id smtpd.web11.5643.1621325133018931657
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 18 May 2021 00:59:44 -0700
+ Tue, 18 May 2021 01:05:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@jasmin-infotech.com header.s=selector2 header.b=mT0tuYrx;
- spf=permerror, err=parse error for token &{10 18 mail.jasmin-infotech.com}: permanent DNS error (domain: jasmin-infotech.com, ip: 40.107.138.133, mailfrom: daniel.selvan@jasmin-infotech.com)
+ dkim=pass header.i=@outlook.com header.s=selector1 header.b=Y5pQxJT2;
+ spf=pass (domain: outlook.com, ip: 40.92.90.20, mailfrom: kweihmann@outlook.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GeI0JOez9tkmr+EVXsN7bOWvwZY0nR/RRN6EMbEpCAdc5F6Q9QKJmsHRuGqnwelxIRKmU677H1EOBM/4ybTnfZyZWjkB7xdza5Cc75dpKFe1McWBukoEo9NgDZKWY/N/DF8ofrGlO+OyZ1BQP1tpAW/G+pHK2rOo51S7LwscMlOilc+B5sKxHx5JHc8UkWvwZ1D6966tHE89E0KHIezpRxSzjhmeWiN71HOyptOsL3KNno4i491BAmRQbOfy7MpXFOu+gviYDHNDUy66+ciIVnWpbcWXlSbEp2Qys7Jsu7UkMrC2b2kaO7AQDMeo9tnOK5R0zcwvVFCeYRYbOTE6ig==
+ b=nbYBDmUPjUzhKMTSagSbAleorHkXq7Smr1P5XF+ZEJJThwPWMR2oK3zV6kBWb1G91u646kk3CrR1DUq/sk/3ykBksTLBJQl50MrWz2SLrFlQz0WOkMUWYJYlzOE3hLYeToVtwLrdAwTr9PwMP612eWXcjlomp3vgrEWuIFwDay5EA+4We3cavvRXvE2WHBm7AJL7DhCo31fuMZ94Kn47b9+46Bo64RpbXM/uFTnfHvjDQd2zHuSkFaj/8WTY9U8B+XoVNVwEqjag1J/14Facit5Gm5Om7LghldYWk6GhSt4AqMX5jHevroTbCCSMPFkvPI7ZWZhElP/GYnHh3DHxzQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xa8WoFbRE57lo2RydB3LUcng2iNQg+ZN4LpqxqxaPsA=;
- b=PmAEfAi+/be4Q1hrg4gfTVtdYnQa9J+RhM2gAzNPiv2C+C/pVdt3Bm7xhff4ALS6qh6UFYh5X0c7qWllsUsIad8wpySyi7ZiMJyNdTgSptp/t81e2fga8c4DwnRPHQvIIAIDUkI/fYEE1QaL9Zx96CeiuoZGpSR0idSIjK3j4Hk+Ny7DT4A19lSDMxKfUy1bsrdHtwT0NQQHK8s7QSHCj27ciGLVtC7arRG/RhPbg/SSq6VBqqGHfnateLvUncJB1wq2fC9pYohyabR3uekEvHoR7v6b+g61TWBXBNTnQ31idozDZ2/kkQP3aOi27d70DBlWylGrxCsF6H8I8qQvpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=permerror (sender ip
- is 61.16.140.213) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=jasmin-infotech.com; dmarc=fail (p=none sp=none pct=100)
- action=none header.from=jasmin-infotech.com; dkim=none (message not signed);
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jasmin-infotech.com;
- s=selector2;
+ bh=ZB1FxgqFSCJo4fCaKCyOdreGmg6kSx107/ZOd/crpN0=;
+ b=OxEMnUIAeVGSAtR8lSg1I2401PIcBwM+scZneUT4CULSHD3JsRkkIp6Ek8i6sZMyHjGfouxSNAKTJGPh4aGkfU9IsRUDPp7fVs4fGH7mHLiQkm26vSfmrxA1ZBwgED4jdlnRBOCPv48HwzZ7e0sPyvVm/ApWcKRWmgJDO+bDsAjlFtMzy45AGey/1HF+jD6MPLznHU61Bw+Hs/VRWXms5YXfPNyBBAk7TdMw/jsqbunh9G3gmQwfUQPU8fH0jLAMLBefBp7Ija71agrDoEZXcrNkbNcoL4zGChU7WEO9JS6NglHZux/HpcTUEnPabecejj1HuRERPdD2rFF9fNXcOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xa8WoFbRE57lo2RydB3LUcng2iNQg+ZN4LpqxqxaPsA=;
- b=mT0tuYrx2R7sMrN9wtEFei5HVYBObtjrrbzPlclMfBMCYFTVqD5/Y1y17sQ0FUm/3nrwGjgdCMEOPHbRQSEx3yzrw9R1exVCDWaR243w6wZLXGs5r37K3zRNr99naINj2jXmHpUA13eUbOAnrBzZ/yFgNYHrsiD5bZL9C4T9Tag=
-Received: from BM1PR0101CA0061.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:19::23) by MAXPR01MB3597.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:6a::17) with Microsoft SMTP Server (version=TLS1_2,
+ bh=ZB1FxgqFSCJo4fCaKCyOdreGmg6kSx107/ZOd/crpN0=;
+ b=Y5pQxJT2PfvS56nidGNDEl1ATWSjFiYPoPm5W0kl4M1a4rwKe7ImPWJU0E9Ap6jedUeX1jl1LOZ5jQN2XItowlnRnCuAPjBuZHgDJZv1cTqmxX+C23RZa8aVcDqoV4fwOxHrUVgp+viMMNxDJDjatfF9E0GVvS9loiT2fvKP9Zvbis5fABfWARYGwVATX9gZPyqexw46uHyPyNDUFdpVe20D2nBtayh3412HGe6wdD5FNCRLXDBgxYV6shtXmOM1F8cHBn0JyIrX9j2rWVSXncW7F8ngA8Uibb4cEdfHA3vvF6m/9ZOumUzMo9HCVMN3Po9lRjbkrqIUohkOm9tFDQ==
+Received: from AM6EUR05FT035.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc11::4e) by
+ AM6EUR05HT188.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc11::295)
+ with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.25; Tue, 18 May
- 2021 07:59:39 +0000
-Received: from BO1IND01FT005.eop-IND01.prod.protection.outlook.com
- (2603:1096:b00:19:cafe::ac) by BM1PR0101CA0061.outlook.office365.com
- (2603:1096:b00:19::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend
- Transport; Tue, 18 May 2021 07:59:39 +0000
-X-MS-Exchange-Authentication-Results: spf=permerror (sender IP is
- 61.16.140.213) smtp.mailfrom=jasmin-infotech.com; lists.openembedded.org;
- dkim=none (message not signed) header.d=none;lists.openembedded.org;
- dmarc=fail action=none header.from=jasmin-infotech.com;
-Received-SPF: PermError (protection.outlook.com: domain of jasmin-infotech.com
- used an invalid SPF mechanism)
-Received: from mail.jasmin-infotech.com (61.16.140.213) by
- BO1IND01FT005.mail.protection.outlook.com (10.152.202.120) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4129.25 via Frontend Transport; Tue, 18 May 2021 07:59:37 +0000
-Received: from localhost (localhost [127.0.0.1])
-	by mail.jasmin-infotech.com (Postfix) with ESMTP id 494371401A51;
-	Tue, 18 May 2021 13:29:25 +0530 (IST)
-Received: from mail.jasmin-infotech.com ([127.0.0.1])
-	by localhost (mail.jasmin-infotech.com [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id u6dZTfFXvkSb; Tue, 18 May 2021 13:29:24 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.jasmin-infotech.com (Postfix) with ESMTP id AE5281401A50;
-	Tue, 18 May 2021 13:29:24 +0530 (IST)
-X-Amavis-Modified: Mail body modified (using disclaimer) -
-	mail.jasmin-infotech.com
-X-Virus-Scanned: amavisd-new at jasmin-infotech.com
-Received: from mail.jasmin-infotech.com ([127.0.0.1])
-	by localhost (mail.jasmin-infotech.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zlMwWjmBM3CR; Tue, 18 May 2021 13:29:24 +0530 (IST)
-Received: from mail.jasmin-infotech.com (mail.jasmin-infotech.com [172.16.4.153])
-	by mail.jasmin-infotech.com (Postfix) with ESMTP id 8A16C1401A4F;
-	Tue, 18 May 2021 13:29:24 +0530 (IST)
-Date: Tue, 18 May 2021 13:29:24 +0530 (IST)
-From: "Daniel Selvan" <daniel.selvan@jasmin-infotech.com>
-To: Konrad Weihmann <kweihmann@outlook.com>
-Cc: poky <poky@lists.yoctoproject.org>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Message-ID: <1263831117.91201115.1621324764469.JavaMail.zimbra@jasmin-infotech.com>
-In-Reply-To: <AM9PR09MB46424A47140676C11DAD16D2A82C9@AM9PR09MB4642.eurprd09.prod.outlook.com>
-References: <141358386.90607893.1621323974188.JavaMail.zimbra@jasmin-infotech.com> <1180155480.90839930.1621324248815.JavaMail.zimbra@jasmin-infotech.com> <AM9PR09MB46424A47140676C11DAD16D2A82C9@AM9PR09MB4642.eurprd09.prod.outlook.com>
+ 2021 08:05:30 +0000
+Received: from AM9PR09MB4642.eurprd09.prod.outlook.com
+ (2a01:111:e400:fc11::49) by AM6EUR05FT035.mail.protection.outlook.com
+ (2a01:111:e400:fc11::422) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.25 via Frontend
+ Transport; Tue, 18 May 2021 08:05:30 +0000
+X-IncomingTopHeaderMarker: 
+ OriginalChecksum:4A4CA08F7991325F5D5862C6E9AC0751D323637FD4B0E7319A8581F89B09E557;UpperCasedChecksum:681B2C98CBBA2C0D6326554BA6E4830D3E0402D40D3F473558752F574FE461A2;SizeAsReceived:8996;Count:48
+Received: from AM9PR09MB4642.eurprd09.prod.outlook.com
+ ([fe80::9c9b:9858:17df:de84]) by AM9PR09MB4642.eurprd09.prod.outlook.com
+ ([fe80::9c9b:9858:17df:de84%6]) with mapi id 15.20.4129.032; Tue, 18 May 2021
+ 08:05:30 +0000
 Subject: Re: [bitbake-devel] Disable Reproducible Build - reg
+To: Daniel D <daniel.selvan@jasmin-infotech.com>
+Cc: poky <poky@lists.yoctoproject.org>,
+ bitbake-devel <bitbake-devel@lists.openembedded.org>
+References: <141358386.90607893.1621323974188.JavaMail.zimbra@jasmin-infotech.com>
+ <1180155480.90839930.1621324248815.JavaMail.zimbra@jasmin-infotech.com>
+ <AM9PR09MB46424A47140676C11DAD16D2A82C9@AM9PR09MB4642.eurprd09.prod.outlook.com>
+ <1263831117.91201115.1621324764469.JavaMail.zimbra@jasmin-infotech.com>
+From: "Konrad Weihmann" <kweihmann@outlook.com>
+Message-ID: 
+ <AM9PR09MB4642528B702DA9C6EF07A543A82C9@AM9PR09MB4642.eurprd09.prod.outlook.com>
+Date: Tue, 18 May 2021 10:05:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
+In-Reply-To: <1263831117.91201115.1621324764469.JavaMail.zimbra@jasmin-infotech.com>
+X-TMN: [d5Em1b7x9b4+s5QWcn9Xm0guV80ZY0zi]
+X-ClientProxiedBy: AM6PR10CA0066.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:209:80::43) To AM9PR09MB4642.eurprd09.prod.outlook.com
+ (2603:10a6:20b:284::24)
+Return-Path: kweihmann@outlook.com
+X-Microsoft-Original-Message-ID: 
+ <6b8fff78-65f6-2a96-c854-a1fa6b463cd0@outlook.com>
 MIME-Version: 1.0
-X-Originating-IP: [49.207.142.66]
-X-Mailer: Zimbra 8.6.0_GA_1242 (ZimbraWebClient - GC91 (Linux)/8.6.0_GA_1242)
-Thread-Topic: Disable Reproducible Build - reg
-Thread-Index: MbzsJx5wHf12aK6epU4jtbq/pe4PZw==
-Return-Path: daniel.selvan@jasmin-infotech.com
-X-EOPAttributedMessage: 0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.188.23] (87.141.92.134) by AM6PR10CA0066.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:80::43) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend Transport; Tue, 18 May 2021 08:05:30 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 04f4d386-93b8-4d64-a05a-08d919d2e254
-X-MS-TrafficTypeDiagnostic: MAXPR01MB3597:
-X-Microsoft-Antispam-PRVS: 
-	<MAXPR01MB3597DD51B7AF42D8B4F4ED9FB82C9@MAXPR01MB3597.INDPRD01.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
-X-MS-Exchange-SenderADCheck: 1
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: d765fa31-8e07-419a-724b-08d919d3b478
+X-MS-TrafficTypeDiagnostic: AM6EUR05HT188:
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	fAhKrUcklvLDZyjAJD0/qGA1065CmbVAglFD6QY8Lok0IkE8IQLga4UK7k4EgO9OP9JAPog9wyS+5NueYGpYkI40SCIPcQ+sDDbHIkbPXtzdNAeRDT5Zph/re/9HcE1KVsCx057H9FffjKvdm7MM/RrRTsQ5TPo7RelPdDv8nu2nfjpxAXBZ44VNH9tkjQyqjZHlC9iv24kBDsmVNjO381uj1yy94/R2tP+vh8KTbySnMjTjYhhVgYe6m0agTFazZKU3vVrJmKD/ODBbDoQQqCg3Dmef0NDrRhq8j0lgXtwZG2keXqTFdDPV4g8sRD0BMA9QfG65beHTA69942+6qv+5V0UGScMlQwSPAr1RgLmghu1zKdFQ86q6kK/zDT7xI8gGj+xOTYlpUCC9PGWolRHX0VekP6s5Cb2q65oLqEHJWZ70quWTlZdYnRHQgmc36mC9U/LY1jiYXp4Kyv1a2nO5Al+qKPjy38LYptcOJqGtlt8Ba9GnfFnpqCyATAi8cUvKiEF+VLbsn1O4owbxUmq9XE8BaQrRU4e7o7XVHt4ZGRELwW/xH9Ymc6TbDIHl9GIxspr4kwJQvFPGoCye3EAXZdMwaiVn98z1UWNtXtJzq3BaWiKp5Xh3F6n/jIOS7z0/iV89NcvM8TvEX0A/HT8PRaMa7tfYvb/ftQxvEF4ReZpLVtNcfrW/3hYnt95mjI6mK9dC8444nubhyBxpIOVJrNlIK2MWYONiuOqRIuw=
-X-Forefront-Antispam-Report: 
-	CIP:61.16.140.213;CTRY:IN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.jasmin-infotech.com;PTR:mail.jasmin-infotech.com;CAT:NONE;SFS:(346002)(376002)(39840400004)(136003)(396003)(36840700001)(2906002)(4326008)(316002)(36756003)(54906003)(36906005)(186003)(82310400003)(32650700002)(6916009)(36860700001)(6266002)(83380400001)(356005)(5660300002)(7596003)(966005)(8936002)(336012)(86362001)(7696005)(7636003)(426003)(2616005)(53546011)(26005)(70206006)(8676002)(478600001)(70586007)(55236004)(45080400002);DIR:OUT;SFP:1102;
-X-OriginatorOrg: jasmin-infotech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2021 07:59:37.9581
+	nKBrIDDfH50Id6/+kASSx3ixrpAeZU1h4kkYOtf9d5z0rW1PuEogipQ2qjuoK3hjTWS+7RzNaT6AABF8j5MIaD4RPhqTbK48iZqsJbfqWgO9Yvav7lit28a+R5e/7D+yK219tVPHZvC/TXwPqPdKtvwOvMO2qyLUUN9zq80m7UzoIQc3iuQ4+Dw8/CXOS1HpjaMDhpxCxXwYHI8vb1n/fJPHJJLVAiWk0W4g5h8oyiSmzqz1btFK+lC4IVZzgwxwSwGc3FX0x1RVdMTZQ+MVXUEhDCadkb9wrB8181ZkwbLylYFezf1MCJFrdsypmv41cgYC+2nBNqMlJtMbJHZ93zHPRnbn4AAuNjdUAa4xg0Gw721aMCcpQSWykLXOMYC2GbwvU0dzx/xO6BwucntsQw==
+X-MS-Exchange-AntiSpam-MessageData: 
+	jZJtloQjEBr7XNmsZRuycrkLwlJUoMqvZ0TTk0f3efsXWsifdeBocn1k5bbEV6oRezI4RRS6VhJB23UqAwF9tJ0gEQb/cnucmymhphqlCP7ucUdI4TyJ30BNA0GgIU6UorrgtAjnZnSzIIEtQM2byw==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d765fa31-8e07-419a-724b-08d919d3b478
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2021 08:05:30.9398
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04f4d386-93b8-4d64-a05a-08d919d2e254
-X-MS-Exchange-CrossTenant-Id: 5379b76d-5476-4c9f-a04c-fefa48abc331
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5379b76d-5476-4c9f-a04c-fefa48abc331;Ip=[61.16.140.213];Helo=[mail.jasmin-infotech.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-AuthSource: 
-	BO1IND01FT005.eop-IND01.prod.protection.outlook.com
+	AM6EUR05FT035.eop-eur05.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAXPR01MB3597
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-I already added the line "BUILD_REPRODUCIBLE_BINARIES =3D '0'" in by local=
-.conf yet if I try to add __DATE__ I get the following error: "error: macro=
- "__DATE__" might prevent reproducible builds [-Werror=3Ddate-time]"
-
-Can you comment on this?
-
-Kind regards,=20
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6EUR05HT188
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
 
-Daniel Selvan D.=20
 
-
---=20
-
-
-P Please consider the environment before printing this email.
-
------ Original Message -----
-From: "Konrad Weihmann" <kweihmann@outlook.com>
-To: "Daniel D" <daniel.selvan@jasmin-infotech.com>, "poky" <poky@lists.yoc=
-toproject.org>, "bitbake-devel" <bitbake-devel@lists.openembedded.org>
-Sent: Tuesday, 18 May, 2021 13:26:19
-Subject: Re: [bitbake-devel] Disable Reproducible Build - reg
-
-You could either create a distro configuration of your own (one that=20
-doesn't inherit the poky.conf) or set `BUILD_REPRODUCIBLE_BINARIES` to=20
-`0` to reduce the impact of the inherited reproducible_build class
-
-On 18.05.21 09:50, Daniel Selvan wrote:
+On 18.05.21 09:59, Daniel D wrote:
 > Hi,
->=20
-> I wonder how to disable the Yocto reproducible builds, since it is=20
-> enabled by default now=20
-> (https://www.yoctoproject.org/docs/latest/ref-manual/ref-manual.html#mig=
-ration-3.1-reproducible-builds=20
-> <https://www.yoctoproject.org/docs/latest/ref-manual/ref-manual.html#mig=
-ration-3.1-reproducible-builds>).
->=20
-> Thanks in advance.
->=20
+> 
+> I already added the line "BUILD_REPRODUCIBLE_BINARIES = '0'" in by local.conf yet if I try to add __DATE__ I get the following error: "error: macro "__DATE__" might prevent reproducible builds [-Werror=date-time]"
+> 
+> Can you comment on this?
+
+That should be handled in the recipe scope I think, by adding something 
+like `CFLAGS += "-Wno-error=date-time"` (assuming this is C code we are 
+talking about)
+
+> 
 > Kind regards,
->=20
+> 
+> 
 > Daniel Selvan D.
->=20
-> Senior Systems Engineer*|* Jasmin Infotech=20
-> <http://www.jasmin-infotech.com/the-company/contact-us/>
->=20
-> *+91 9445556596 <callto:9445556596>*
->=20
-> =EF=BB=BF--
->=20
-> P Please consider the environment before printing this email.
->=20
->=20
->=20
-> Information in this email is proprietary and Confidential to Jasmin=20
-> Infotech Pvt. Ltd. Any use, copying or dissemination of the information=
-=20
-> in any manner without prior approval, is strictly prohibited. If you are=
-=
-=20
-> not the intended recipient, please destroy the message and please inform=
-=
-=20
-> to us..
->=20
->=20
->=20
->
-
-
+> 
+> 
