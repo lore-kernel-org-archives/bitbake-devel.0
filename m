@@ -1,97 +1,80 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
- by mx.groups.io with SMTP id smtpd.web08.9178.1621946241934336373
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+ by mx.groups.io with SMTP id smtpd.web09.4105.1621977758792279907
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 25 May 2021 05:37:22 -0700
+ Tue, 25 May 2021 14:22:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Anl2VevE;
- spf=pass (domain: gmail.com, ip: 209.85.222.170, mailfrom: weaverjs@gmail.com)
-Received: by mail-qk1-f170.google.com with SMTP id j189so9357094qkf.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 25 May 2021 05:37:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qJjUyDIKnYb6Z9DqnxSjUBbyEUBgibeNY+iqKmd573w=;
-        b=Anl2VevEet4GIibYkJ6WScR/VPhaqsWohjmKbn/KDFtDyJEOuQIBYEdp8E71uLIAZd
-         9u//Aj5y+8TOMNGb6Z2MUCflgFTRnqt1r+gYBFaApkUzaB+aWEBt9d8AMqmVbzNfqWdn
-         +ezSQHkRA+QYeNSqgzBfm8Gh7OzW9EvFKfvZ5kaRrGmpR+UUGt5jCZJrcJH/ntPHOfu3
-         Pc9DHBr2hwaJgD+fuM2He2EoYonSJFxhtPWR8RWRuzX3kHxGb4Ji/MMU5LKn5nivf5Wq
-         NWHboR9uXba67CXg65GpIQyPTur5f/6oUEbScJ7pyCjaktTi/Kh4t4NxSJ3dVyQhx0J8
-         YjwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qJjUyDIKnYb6Z9DqnxSjUBbyEUBgibeNY+iqKmd573w=;
-        b=tqYOb+mJvjkmSoS0LZu/wXHoRSN02g3v1+mXM+JIOxsVZ7P4FF8e9RdKz5x/c/Mfch
-         0QOMwu1WCC65tlGxkAxJMEZ9DSc2IRctcZpTaSPhQEPCmbBsKf4QaAHUlO+SIxjIQsQ7
-         TZrZA0OZwIwk7wbef89Hb3ySnHT0fV10naa2C/vsMZ6t123SmcVTKGmwybcMGili/+1y
-         gHnjY7sanHuvA9ZWQBxTFRNKt5yYjT5EAp/sGeGhMdPQZymxNUMaZG559OXeO8+bHnB3
-         fqR65V7NNAvSVryYZiQd3TFHBnrEU4ejirnmVpXUsgmrnhuHB5v3b1yxESdAoghbcb95
-         Tw0w==
-X-Gm-Message-State: AOAM533QI5woMFtGwn0KcU1Mf5d55bgUNuH2T5ewriDc2i3coxFHBqWt
-	9Zd/IcKIUp2d2H6sF8EMVIDDtiU5Hup3XuATWw==
-X-Google-Smtp-Source: ABdhPJx+IE33Czgx5YM5SBO4CUuxS8M443KmPCHzQEw8FBP46FLBp9YRH0ou9VjshywYesemnWOxLw==
-X-Received: by 2002:ae9:eb93:: with SMTP id b141mr35604320qkg.151.1621946241003;
-        Tue, 25 May 2021 05:37:21 -0700 (PDT)
-Return-Path: <weaverjs@gmail.com>
-Received: from p-impout009.msg.pkvw.co.charter.net (cpe-69-133-48-66.cinci.res.rr.com. [69.133.48.66])
-        by smtp.gmail.com with ESMTPSA id i10sm13138194qko.68.2021.05.25.05.37.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 May 2021 05:37:20 -0700 (PDT)
-From: weaverjs@gmail.com
-To: bitbake-devel@lists.openembedded.org
-Cc: Scott Weaver <weaverjs@gmail.com>
-Subject: [bitbake][PATCH] fetch2: add check for empty SRC_URI hash string
-Date: Tue, 25 May 2021 08:37:02 -0400
-Message-Id: <20210525123702.3061487-1-weaverjs@gmail.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=missing; spf=permerror, err=syntax error for token:  (domain: nod.at, ip: 195.201.40.130, mailfrom: richard@nod.at)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 0BBB3616B582;
+	Tue, 25 May 2021 23:22:37 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id KBdM4SAMNl3n; Tue, 25 May 2021 23:22:36 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 6C2A7606BA3F;
+	Tue, 25 May 2021 23:22:36 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id x355FojlK5TO; Tue, 25 May 2021 23:22:36 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 475BB606BA3A;
+	Tue, 25 May 2021 23:22:36 +0200 (CEST)
+Date: Tue, 25 May 2021 23:22:36 +0200 (CEST)
+From: "Richard Weinberger" <richard@nod.at>
+To: Quentin Schulz <foss@0leil.net>
+Cc: docs <docs@lists.yoctoproject.org>, 
+	openembedded-core <openembedded-core@lists.openembedded.org>, 
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Message-ID: <952941855.40427.1621977756153.JavaMail.zimbra@nod.at>
+In-Reply-To: <34B9CE63-084A-48A5-9386-862E48760070@0leil.net>
+References: <20210525110429.738-1-richard@nod.at> <34B9CE63-084A-48A5-9386-862E48760070@0leil.net>
+Subject: Re: [docs] [OE-core][PATCH] Add support for erofs filesystems
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF78 (Linux)/8.8.12_GA_3809)
+Thread-Topic: Add support for erofs filesystems
+Thread-Index: oVZaG82W2Un0V1PKMZ3hp6vJelhsfQ==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-No error was being reported when the hash string was set to empty.
-For example: SRC_URI[md5sum] = ""
+Quentin,
 
-On a related note (not a bug):
-Because whitespace in the string will result in a checksum mismatch, the error
-message was updated to make it a little clearer why the error was thrown.
-For example: SRC_URI[md5sum] = " " or
-SRC_URI[md5sum] = " 209f8326f5137d8817a6276d9577a2f1"
+----- Urspr=C3=BCngliche Mail -----
+> Von: "Quentin Schulz" <foss@0leil.net>
+>> IMAGE_TYPES =3D " \
+>>@@ -261,6 +269,7 @@ IMAGE_TYPES =3D " \
+>>     wic wic.gz wic.bz2 wic.lzma wic.zst \
+>>     container \
+>>     f2fs \
+>>+    erofs \
+>=20
+> I think you're supposed to have erofs erofs-lz4 erofs-lz4hc here.
 
-Now creates a message like this:
-File: '/home/scott/yocto-cache/downloads/rsync-3.2.3.tar.gz' has md5
-checksum '209f8326f5137d8817a6276d9577a2f1' when ' 209f8326f5137d8817a6276d9577a2f1' was expected
+Oh yes. You're right.
+=20
+>> "
+>>=20
+>> # Compression is a special case of conversion. The old variable
+>>diff --git a/meta/recipes-devtools/erofs-utils/erofs-utils_git.bb
+>>b/meta/recipes-devtools/erofs-utils/erofs-utils_git.bb
+>>new file mode 100644
+>>index 000000000000..6d35d3f2fa6d
+>>--- /dev/null
+>>+++ b/meta/recipes-devtools/erofs-utils/erofs-utils_git.bb
+>=20
+> Any reason for using _git over _1.2.1?
 
-[YOCTO #14232]
+TBH, I used meta/recipes-devtools/squashfs-tools/squashfs-tools_git.bb as t=
+emplate. :-)
+It fetches also via git and sets PV.
 
-Signed-off-by: Scott Weaver <weaverjs@gmail.com>
----
- bitbake/lib/bb/fetch2/__init__.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+>>@@ -0,0 +1,18 @@
+>>+SUMMARY =3D "Tools for erofs filesystems"
+>>+LICENSE =3D "GPLv2"
+>=20
+> GPL-2.0-or-later actually.
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index cf0201c490..c8e91262a9 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -562,6 +562,9 @@ def verify_checksum(ud, d, precomputed={}):
- 
-         checksum_expected = getattr(ud, "%s_expected" % checksum_id)
- 
-+        if checksum_expected == '':
-+            checksum_expected = None
-+
-         return {
-             "id": checksum_id,
-             "name": checksum_name,
-@@ -612,7 +615,7 @@ def verify_checksum(ud, d, precomputed={}):
- 
-     for ci in checksum_infos:
-         if ci["expected"] and ci["expected"] != ci["data"]:
--            messages.append("File: '%s' has %s checksum %s when %s was " \
-+            messages.append("File: '%s' has %s checksum '%s' when '%s' was " \
-                             "expected" % (ud.localpath, ci["id"], ci["data"], ci["expected"]))
-             bad_checksum = ci["data"]
- 
--- 
-2.25.1
+Will fix!
 
+Thanks,
+//richard
