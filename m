@@ -1,61 +1,83 @@
-Received: from mail.hatina.eu (mail.hatina.eu [194.182.66.63])
- by mx.groups.io with SMTP id smtpd.web10.7024.1622033989345429828
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+ by mx.groups.io with SMTP id smtpd.web11.4236.1622066962226124047
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 26 May 2021 05:59:50 -0700
+ Wed, 26 May 2021 15:09:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@hatina.eu header.s=dkim header.b=tdCgL43n;
- spf=pass (domain: hatina.eu, ip: 194.182.66.63, mailfrom: peter@hatina.eu)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 832F58288B
-	for <bitbake-devel@lists.openembedded.org>; Wed, 26 May 2021 14:59:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hatina.eu; s=dkim;
-	t=1622033984; h=from:subject:date:message-id:to:mime-version:content-type:
-	 content-transfer-encoding; bh=fakSYCzqp306Jfk8PLkx+/R5dUNGNvhWHYvS7Iae6FQ=;
-	b=tdCgL43nr+YAYpGUdfuSrpFh7VZc7+TslTw0vLJgwM22OaGnK1E9fM6Tp6qgl8GGnpD/ME
-	6IXrzftuYqsMa/i0TO25sV7PFjw2cUDH7yHziLcnZcqqsf5YNq39fx7HKqNsjpfnS2VwO1
-	uyPF4k1xktzzIqI1aruMafgjRaznHQFk7Yu6Fua80WBeOvSnIUt65Fxf4NAbd07R3ODbXc
-	D9PFqQuapwdJogkLuQEXmn5oVEUYLyJWHXiLUbwwQwrNo25Gzgnx8Qmxa3H7IrsXvNuUor
-	pDtu3rnO4dydYcYBr+uUDLmksnPGqBzr4mwhbA0J7utiutjA30lWYqtFLJ7cog==
-From: peter@hatina.eu
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=JXCzOyNg;
+ spf=pass (domain: gmail.com, ip: 209.85.210.42, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f42.google.com with SMTP id h24-20020a9d64180000b029036edcf8f9a6so2514013otl.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 26 May 2021 15:09:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8IFgRQ1dBUauudluo/LxvF+atEluKKDyq7TUT5riDXo=;
+        b=JXCzOyNgiElQefjrwt/57IW7g3A6sGgq92J4Z8CtipT/z4kdudsXR7XBs6HFCW8jn1
+         wXR3pn0K/jTYfElMjFrMO+Bdagd3jSK7F719fMYWQmHMbe7DasXrGzFfJTirackIXoJy
+         vLnH86lADFO4FC089mpgmAYIHrnak/Z8kNEgdnihJrum4IEovWMHx4fu0Wd+YcCi5Zxx
+         iW7A7oTf6M0lHP1w5Wb0ajGeuDrEpEjJ4BaymJ9s8dfKhNpzYGHoI2ckd35sIkrn8ZE8
+         oc1jpSV/5k9JsJ8NJae+CdczTE7XiU7otu2PAqdzUzMqMFEdrZVtt8Od2CJjlyZ8qIWR
+         eSWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8IFgRQ1dBUauudluo/LxvF+atEluKKDyq7TUT5riDXo=;
+        b=d6Mb8RrmIdYiEaMOd7ENP11+ETQqDiD0PJRQmS6EIE3MC2l9OUFgx92/WUwJdIg+lP
+         DhZXeJwlYn6xNC+AZtsk/jT5P+s+Bwr4xRCuaMSEikKI/JQk/Ioq2BiskGtfjTzuQ5Z6
+         udBYvw3PrOUMop1uEDUfjclb5G+8t9W+cVjJ8iJnRLsNZqGAIXJBtw/TMjAUUrwum5aK
+         rI2oSVcy9yyRV/qPKLmFUoWiupycbyJvjvqbPA9/WB+DWaG7RUMyciph0kbXaRbnojqo
+         mn37RlZQiZEXlKX20En4ApJCu2zmBJCqe/0xmpfqhDcDMJZMI4pYcAa7rpg7mAL9rV6o
+         l2Kw==
+X-Gm-Message-State: AOAM533RZMPFVTonNIRIy8GSsPIKcoZqyMl9NwAU4BpqVsFTFsaJESwn
+	HodkZSIwvd7R7l5BHMyJGNY5Sx+qsiY=
+X-Google-Smtp-Source: ABdhPJzgkQDLSzNVHcDZUNX/OTixOov9qNhtgAjuS0kNBDAdwCIYsYWSJ6PAYcgRWr6LevxPcTMEHw==
+X-Received: by 2002:a9d:600d:: with SMTP id h13mr352160otj.259.1622066961326;
+        Wed, 26 May 2021 15:09:21 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
+        by smtp.gmail.com with ESMTPSA id r7sm65204oom.46.2021.05.26.15.09.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 May 2021 15:09:20 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: devtool does not apply patches from esdk
-Date: Wed, 26 May 2021 14:59:43 +0200
-Message-ID: <2544941.lGaqSPkdTl@xps13.hatina.eu>
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] server: Fix early parsing errors preventing zombie bitbake
+Date: Wed, 26 May 2021 17:09:02 -0500
+Message-Id: <20210526220902.35029-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+If the client process never sends cooker data, the server timeout will
+be 0.0, not None. This will prevent the server from exiting, as it is
+waiting for a new client. In particular, the client will disconnect with
+a bad "INHERIT" line, such as:
 
-I generated and installed Extensible SDK for my core-image-minimal and would 
-like to use it for kernel development. Having sourced the environment-setup-* 
-script I first ran `devtool modify linux-yocto` to fetch the sources. During 
-this step, I got a warning:
+    INHERIT += "this-class-does-not-exist"
 
-WARNING: SRC_URI is conditionally overridden in this recipe, thus several 
-devtool-override-* branches have been created, one for each override that 
-makes changes to SRC_URI. It is recommended that you make changes to the 
-devtool branch first, then checkout and rebase each devtool-override-* branch 
-and update any unique patches there (duplicates on those branches will be 
-ignored by devtool finish/update-recipe).
+Instead of checking explicitly for None, check for a false value, which
+means either 0.0 or None.
 
-Okay, I have `SRC_URI_append_mymachine = ...`.
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/server/process.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I compared `devtool-override-*` branch (there's only one) with the target one 
-5.10.21 of the kernel; and there are no modifications.
-
-Then I ran `devtool build linux-yocto` which failed to compile the kernel, 
-because all of my patches are not applied. Actually, dtb was not generated, 
-since I do add a custom device tree sources by patch. I observed the directory 
-`workspace/sources/linux-yocto` and found `.kernel-meta/unused.patch.queue` 
-which contains all of my patches. A do_unpack_and_patch task actually does 
-nothing; the log file for it is rather empty.
-
-Can you provide me with any hint how to apply the patches and compile the 
-kernel, please?
-
+diff --git a/bitbake/lib/bb/server/process.py b/bitbake/lib/bb/server/process.py
+index 155e8d131f..a0955722e3 100644
+--- a/bitbake/lib/bb/server/process.py
++++ b/bitbake/lib/bb/server/process.py
+@@ -147,7 +147,7 @@ class ProcessServer():
+                 conn = newconnections.pop(-1)
+                 fds.append(conn)
+                 self.controllersock = conn
+-            elif self.timeout is None and not ready:
++            elif not self.timeout and not ready:
+                 serverlog("No timeout, exiting.")
+                 self.quit = True
+ 
 -- 
-regards,
-Peter Hatina
-
+2.31.1
 
