@@ -1,79 +1,61 @@
-Received: from relay12.mail.gandi.net (relay12.mail.gandi.net [217.70.178.232])
- by mx.groups.io with SMTP id smtpd.web12.4091.1621977437091483587
+Received: from mail.hatina.eu (mail.hatina.eu [194.182.66.63])
+ by mx.groups.io with SMTP id smtpd.web10.7024.1622033989345429828
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 25 May 2021 14:17:17 -0700
+ Wed, 26 May 2021 05:59:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: 0leil.net, ip: 217.70.178.232, mailfrom: foss@0leil.net)
-Received: (Authenticated sender: foss@0leil.net)
-	by relay12.mail.gandi.net (Postfix) with ESMTPSA id E157D200004;
-	Tue, 25 May 2021 21:17:13 +0000 (UTC)
-Date: Tue, 25 May 2021 21:17:11 +0000
-From: "Quentin Schulz" <foss@0leil.net>
-To: docs@lists.yoctoproject.org, Richard Weinberger <richard@nod.at>,
- openembedded-core@lists.openembedded.org,
- bitbake-devel@lists.openembedded.org
-Subject: Re: [docs] [yocto-docs][PATCH] Document erofs filesystem targets
-In-Reply-To: <20210525110429.738-3-richard@nod.at>
-References: <20210525110429.738-1-richard@nod.at> <20210525110429.738-3-richard@nod.at>
-Message-ID: <749C5928-6F5C-4E97-B643-A939A31B393D@0leil.net>
+ dkim=pass header.i=@hatina.eu header.s=dkim header.b=tdCgL43n;
+ spf=pass (domain: hatina.eu, ip: 194.182.66.63, mailfrom: peter@hatina.eu)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 832F58288B
+	for <bitbake-devel@lists.openembedded.org>; Wed, 26 May 2021 14:59:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hatina.eu; s=dkim;
+	t=1622033984; h=from:subject:date:message-id:to:mime-version:content-type:
+	 content-transfer-encoding; bh=fakSYCzqp306Jfk8PLkx+/R5dUNGNvhWHYvS7Iae6FQ=;
+	b=tdCgL43nr+YAYpGUdfuSrpFh7VZc7+TslTw0vLJgwM22OaGnK1E9fM6Tp6qgl8GGnpD/ME
+	6IXrzftuYqsMa/i0TO25sV7PFjw2cUDH7yHziLcnZcqqsf5YNq39fx7HKqNsjpfnS2VwO1
+	uyPF4k1xktzzIqI1aruMafgjRaznHQFk7Yu6Fua80WBeOvSnIUt65Fxf4NAbd07R3ODbXc
+	D9PFqQuapwdJogkLuQEXmn5oVEUYLyJWHXiLUbwwQwrNo25Gzgnx8Qmxa3H7IrsXvNuUor
+	pDtu3rnO4dydYcYBr+uUDLmksnPGqBzr4mwhbA0J7utiutjA30lWYqtFLJ7cog==
+From: peter@hatina.eu
+To: bitbake-devel@lists.openembedded.org
+Subject: devtool does not apply patches from esdk
+Date: Wed, 26 May 2021 14:59:43 +0200
+Message-ID: <2544941.lGaqSPkdTl@xps13.hatina.eu>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Richard,
+Hi all,
 
-On May 25, 2021 11:04:29 AM UTC, Richard Weinberger <richard@nod=2Eat> wro=
-te:
->Signed-off-by: Richard Weinberger <richard@nod=2Eat>
->---
-> documentation/ref-manual/kickstart=2Erst | 2 ++
-> documentation/ref-manual/variables=2Erst | 3 +++
-> 2 files changed, 5 insertions(+)
->
->diff --git a/documentation/ref-manual/kickstart=2Erst b/documentation/ref=
--manual/kickstart=2Erst
->index 8308ffff5b72=2E=2E2c8b724ff9ac 100644
->--- a/documentation/ref-manual/kickstart=2Erst
->+++ b/documentation/ref-manual/kickstart=2Erst
->@@ -116,6 +116,8 @@ the ``part`` and ``partition`` commands:
->=20
->    -  ``squashfs``
->=20
->+   -  ``erofs``
->+
->    -  ``swap``
->=20
+I generated and installed Extensible SDK for my core-image-minimal and would 
+like to use it for kernel development. Having sourced the environment-setup-* 
+script I first ran `devtool modify linux-yocto` to fetch the sources. During 
+this step, I got a warning:
 
-Please order alphabetically=2E
+WARNING: SRC_URI is conditionally overridden in this recipe, thus several 
+devtool-override-* branches have been created, one for each override that 
+makes changes to SRC_URI. It is recommended that you make changes to the 
+devtool branch first, then checkout and rebase each devtool-override-* branch 
+and update any unique patches there (duplicates on those branches will be 
+ignored by devtool finish/update-recipe).
 
-> -  ``--fsoptions``: Specifies a free-form string of options to be used
->diff --git a/documentation/ref-manual/variables=2Erst b/documentation/ref=
--manual/variables=2Erst
->index df6413b68ae9=2E=2Ed4ea4f399921 100644
->--- a/documentation/ref-manual/variables=2Erst
->+++ b/documentation/ref-manual/variables=2Erst
->@@ -3293,6 +3293,9 @@ system and gives an overview of their function and =
-contents=2E
->       - jffs2
->       - jffs2=2Esum
->       - multiubi
->+      - erofs
->+      - erofs-lz4
->+      - erofs-lz4hc
+Okay, I have `SRC_URI_append_mymachine = ...`.
 
-Ditto=2E
+I compared `devtool-override-*` branch (there's only one) with the target one 
+5.10.21 of the kernel; and there are no modifications.
 
-Thanks for the patch,
-Cheers,
-Quentin
+Then I ran `devtool build linux-yocto` which failed to compile the kernel, 
+because all of my patches are not applied. Actually, dtb was not generated, 
+since I do add a custom device tree sources by patch. I observed the directory 
+`workspace/sources/linux-yocto` and found `.kernel-meta/unused.patch.queue` 
+which contains all of my patches. A do_unpack_and_patch task actually does 
+nothing; the log file for it is rather empty.
 
->       - squashfs
->       - squashfs-lz4
->       - squashfs-lzo
->--=20
->2=2E26=2E2
->
+Can you provide me with any hint how to apply the patches and compile the 
+kernel, please?
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+-- 
+regards,
+Peter Hatina
+
+
