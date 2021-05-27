@@ -1,83 +1,109 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
- by mx.groups.io with SMTP id smtpd.web11.4236.1622066962226124047
+Received: from mail5.wrs.com (mail5.wrs.com [192.103.53.11])
+ by mx.groups.io with SMTP id smtpd.web10.3657.1622099164092591252
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 26 May 2021 15:09:22 -0700
+ Thu, 27 May 2021 00:06:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=JXCzOyNg;
- spf=pass (domain: gmail.com, ip: 209.85.210.42, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f42.google.com with SMTP id h24-20020a9d64180000b029036edcf8f9a6so2514013otl.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 26 May 2021 15:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8IFgRQ1dBUauudluo/LxvF+atEluKKDyq7TUT5riDXo=;
-        b=JXCzOyNgiElQefjrwt/57IW7g3A6sGgq92J4Z8CtipT/z4kdudsXR7XBs6HFCW8jn1
-         wXR3pn0K/jTYfElMjFrMO+Bdagd3jSK7F719fMYWQmHMbe7DasXrGzFfJTirackIXoJy
-         vLnH86lADFO4FC089mpgmAYIHrnak/Z8kNEgdnihJrum4IEovWMHx4fu0Wd+YcCi5Zxx
-         iW7A7oTf6M0lHP1w5Wb0ajGeuDrEpEjJ4BaymJ9s8dfKhNpzYGHoI2ckd35sIkrn8ZE8
-         oc1jpSV/5k9JsJ8NJae+CdczTE7XiU7otu2PAqdzUzMqMFEdrZVtt8Od2CJjlyZ8qIWR
-         eSWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8IFgRQ1dBUauudluo/LxvF+atEluKKDyq7TUT5riDXo=;
-        b=d6Mb8RrmIdYiEaMOd7ENP11+ETQqDiD0PJRQmS6EIE3MC2l9OUFgx92/WUwJdIg+lP
-         DhZXeJwlYn6xNC+AZtsk/jT5P+s+Bwr4xRCuaMSEikKI/JQk/Ioq2BiskGtfjTzuQ5Z6
-         udBYvw3PrOUMop1uEDUfjclb5G+8t9W+cVjJ8iJnRLsNZqGAIXJBtw/TMjAUUrwum5aK
-         rI2oSVcy9yyRV/qPKLmFUoWiupycbyJvjvqbPA9/WB+DWaG7RUMyciph0kbXaRbnojqo
-         mn37RlZQiZEXlKX20En4ApJCu2zmBJCqe/0xmpfqhDcDMJZMI4pYcAa7rpg7mAL9rV6o
-         l2Kw==
-X-Gm-Message-State: AOAM533RZMPFVTonNIRIy8GSsPIKcoZqyMl9NwAU4BpqVsFTFsaJESwn
-	HodkZSIwvd7R7l5BHMyJGNY5Sx+qsiY=
-X-Google-Smtp-Source: ABdhPJzgkQDLSzNVHcDZUNX/OTixOov9qNhtgAjuS0kNBDAdwCIYsYWSJ6PAYcgRWr6LevxPcTMEHw==
-X-Received: by 2002:a9d:600d:: with SMTP id h13mr352160otj.259.1622066961326;
-        Wed, 26 May 2021 15:09:21 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id r7sm65204oom.46.2021.05.26.15.09.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 May 2021 15:09:20 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] server: Fix early parsing errors preventing zombie bitbake
-Date: Wed, 26 May 2021 17:09:02 -0500
-Message-Id: <20210526220902.35029-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.31.1
+ dkim=missing; spf=pass (domain: windriver.com, ip: 192.103.53.11, mailfrom: mingli.yu@windriver.com)
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.corp.ad.wrs.com [147.11.82.252])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 14R760CK031369
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 27 May 2021 00:06:00 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.10; Thu, 27 May 2021 00:06:00 -0700
+Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2242.10 via Frontend Transport; Thu, 27 May 2021 00:05:59 -0700
+From: "Yu, Mingli" <mingli.yu@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>,
+        <richard.purdie@linuxfoundation.org>
+Subject: [PATCH v2] fetch2: make sure the uri added as expected
+Date: Thu, 27 May 2021 15:04:25 +0800
+Message-ID: <20210527070425.35230-1-mingli.yu@windriver.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <16806B6C2D8F7DAB.5504@lists.openembedded.org>
+References: <16806B6C2D8F7DAB.5504@lists.openembedded.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-If the client process never sends cooker data, the server timeout will
-be 0.0, not None. This will prevent the server from exiting, as it is
-waiting for a new client. In particular, the client will disconnect with
-a bad "INHERIT" line, such as:
+From: Mingli Yu <mingli.yu@windriver.com>
 
-    INHERIT += "this-class-does-not-exist"
+When call uri_replace to get the new uris, we should guarantee the
+new uri is added when the replace uri begins with file if the find
+uri begin with wildcard which mapped as below.
+PREMIRRORS_append = " \
+     .*://.*/.*  git://somewhere.org/somedir/MIRRORNAME;protocol=http \n \
+"      |         |
+       |         |
+       |         |
+       find      replace
 
-Instead of checking explicitly for None, check for a false value, which
-means either 0.0 or None.
+Before the patch:
+the original uri
+gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+PREMIRRORS_append = " \
+     .*://.*/.*  git://somewhere.org/somedir/MIRRORNAME;protocol=http \n \
+"
+The new uri is git://somewhere.org/somedir/github.com.tianocore.edk2.git/git2_github.com.tianocore.edk2.git.tar.gz;protocol=http
+
+After the patch:
+the original uri
+gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https
+
+PREMIRRORS_append = " \
+     .*://.*/.*  git://somewhere.org/somedir/MIRRORNAME;protocol=http \n \
+"
+The new uri is None as the find begins with wildcard but the replace
+doesn't begin with file.
+
+Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
 ---
- bitbake/lib/bb/server/process.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/fetch2/__init__.py | 2 ++
+ lib/bb/tests/fetch.py     | 8 +++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/server/process.py b/bitbake/lib/bb/server/process.py
-index 155e8d131f..a0955722e3 100644
---- a/bitbake/lib/bb/server/process.py
-+++ b/bitbake/lib/bb/server/process.py
-@@ -147,7 +147,7 @@ class ProcessServer():
-                 conn = newconnections.pop(-1)
-                 fds.append(conn)
-                 self.controllersock = conn
--            elif self.timeout is None and not ready:
-+            elif not self.timeout and not ready:
-                 serverlog("No timeout, exiting.")
-                 self.quit = True
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index cf0201c4..6701654b 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -430,6 +430,8 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
+     uri_replace_decoded = list(decodeurl(uri_replace))
+     logger.debug2("For url %s comparing %s to %s" % (uri_decoded, uri_find_decoded, uri_replace_decoded))
+     result_decoded = ['', '', '', '', '', {}]
++    if uri_find_decoded[0] == '.*' and uri_replace_decoded[0] != 'file':
++        uri_find_decoded[0] = uri_replace_decoded[0]
+     for loc, i in enumerate(uri_find_decoded):
+         result_decoded[loc] = uri_decoded[loc]
+         regexp = i
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 9291ce4a..85a14301 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -406,6 +406,8 @@ class MirrorUriTest(FetcherTest):
+             : "git://somewhere.org/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
+         ("git://someserver.org/bitbake;tag=1234567890123456789012345678901234567890", "git://someserver.org/bitbake", "git://git.openembedded.org/bitbake")
+             : "git://git.openembedded.org/bitbake;tag=1234567890123456789012345678901234567890",
++        ("gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https", ".*://.*/.*", "git://somewhere.org/somedir/MIRRORNAME;protocol=http")
++            : None,
+         ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sstate-cache") 
+             : "file:///somewhere/1234/sstate-cache/sstate-xyz.tgz",
+         ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sstate-cache/") 
+@@ -447,7 +449,11 @@ class MirrorUriTest(FetcherTest):
+             ud.setup_localpath(self.d)
+             mirrors = bb.fetch2.mirror_from_string("%s %s" % (k[1], k[2]))
+             newuris, uds = bb.fetch2.build_mirroruris(ud, mirrors, self.d)
+-            self.assertEqual([v], newuris)
++            if not v:
++                 self.assertEqual([v], newuris)
++            else:
++                 self.assertEqual([], newuris)
++
  
+     def test_urilist1(self):
+         fetcher = bb.fetch.FetchData("http://downloads.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz", self.d)
 -- 
-2.31.1
+2.29.2
 
