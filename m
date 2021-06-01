@@ -1,105 +1,122 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
- by mx.groups.io with SMTP id smtpd.web11.45067.1622472360398799380
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+ by mx.groups.io with SMTP id smtpd.web09.2641.1622575341191913398
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 31 May 2021 07:46:00 -0700
+ Tue, 01 Jun 2021 12:22:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=okiULPll;
- spf=pass (domain: konsulko.com, ip: 209.85.161.51, mailfrom: paul.barker@konsulko.com)
-Received: by mail-oo1-f51.google.com with SMTP id w20-20020a4a35540000b02902458551c0d6so1010979oog.7
-        for <bitbake-devel@lists.openembedded.org>; Mon, 31 May 2021 07:46:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=j8eGsIGy1fv6KwRrqLo9l8d6PXrbVDZMLlSsh0kqoEM=;
-        b=okiULPllgjQMl+W22tt+LK2DKfzJKv6lLt5ZjK08efE0jrFNxDreDfma3Irwo97M1N
-         pzpPk6204KdtPJChTrB2GumocDIYTHH+MArMZkXpI5n/2ZJyCraRM4HCYWveT5qeMhQA
-         PgLWjWcVebMhWfKCtqDwaUY6D23pUNuwCMC14=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=j8eGsIGy1fv6KwRrqLo9l8d6PXrbVDZMLlSsh0kqoEM=;
-        b=bZbI9uVDAcMOIp2WULDhX1/qUuNS/zgM8MTnb2UE4WLW4+C8WwhDZFs6z0GBpjTgKJ
-         VnZt1iQPqFRJUQRfB4/tUlgabMJrl054zANjMexyuQDnlSxFNo6Vh80t4HENC4T4wrGC
-         oFz1s2I/7AS2ccwTNh1aqB1CgN07eq4+gCx8MVO7Cd6nIIAHQez7mR1Dweh83tib/OPo
-         pp+L46jlv/ajaIMxNs7W3BsxwP1KTkJGe+BshZokQg8+aGWeEp02XR1+R34XBSOgcAqm
-         VzOkwPTnr5vQLtfqBL5N2aiC/QUtQBTxEforpkY0TuSq6MlqZDqHMUubRgxdN+hvpVFl
-         BSGw==
-X-Gm-Message-State: AOAM533yWfOnSNyGou89Bzj03PvZgh3M3vFsrfHZkPCLatCSR76uFoww
-	/vjkHJWgXPZH80s2TQSRA+Yj/Lk2RiDiElFqaJlzvQ==
-X-Google-Smtp-Source: ABdhPJyq/YZ80sTnn45LIZ+RhuOq8F/+PeqTq5WVVf+xStU6vctzRZzXz42b2162c1gZRaKPCvzTUWMClB1NXLxxxzA=
-X-Received: by 2002:a4a:3f53:: with SMTP id x19mr16847693ooe.88.1622472359746;
- Mon, 31 May 2021 07:45:59 -0700 (PDT)
+ dkim=missing; spf=none, err=permanent DNS error (domain: 0leil.net, ip: 217.70.183.201, mailfrom: foss@0leil.net)
+Received: (Authenticated sender: foss@0leil.net)
+	by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 2F0091BF206;
+	Tue,  1 Jun 2021 19:22:18 +0000 (UTC)
+From: "Quentin Schulz" <foss@0leil.net>
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	Quentin Schulz <foss@0leil.net>
+Subject: [PATCH] doc: user-manual: remove mentions to BBVERSIONS
+Date: Tue,  1 Jun 2021 21:22:06 +0200
+Message-Id: <20210601192206.9251-1-foss@0leil.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20210528084209.8408-1-pbarker@konsulko.com> <b258e09be64468dcdf685cb9f7f26a011cb7f2af.camel@linuxfoundation.org>
-In-Reply-To: <b258e09be64468dcdf685cb9f7f26a011cb7f2af.camel@linuxfoundation.org>
-From: "Paul Barker" <pbarker@konsulko.com>
-Date: Mon, 31 May 2021 15:45:49 +0100
-Message-ID: <CAM9ZRVuYgsQXPSYRR8ZJYQJsPKGpQGU8P2O_VMcFK6q=rdt8NA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Re-implement prserv on top of asyncrpc
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org, Joshua Watt <JPEWhacker@gmail.com>, 
-	swat <swat@lists.yoctoproject.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 31 May 2021 at 12:25, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> Hi Paul,
->
-> On Fri, 2021-05-28 at 09:42 +0100, Paul Barker wrote:
-> > These changes replace the old XML-based RPC system in prserv with the
-> > new asyncrpc implementation originally used by hashserv. A couple of
-> > improvments are required in asyncrpc to support this.
-> >
-> > I finally stumbled across the issue which led to the hanging builds
-> > seen on the autobuilder when testing the initial RFC series.
-> > It was a fairly dumb mistake on my behalf and I'm not sure how it
-> > didn't trigger in my initial testing! The
-> > `PRServerClient.handle_export()` function was missing a call to
-> > `self.write_message()` so the client just ended up stuck waiting for a
-> > response that was never to come. This issue is fixed here.
-> >
-> > I've ran these changes through both `bitbake-selftest` and
-> > `oe-selftest -a` and all looks good on my end. A couple of failures
-> > were seen in oe-selftest but these are related to my host system
-> > configuration (socat not installed, firewall blocking ports, etc) so
-> > I'm fairly confident they aren't caused by this patch series.
->
-> Thanks for these. Unfortunately I think there is still a gremlin somewher=
-e
-> as this was included in an autobuilder test build that is showing as this=
-:
->
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/2203
->
-> i.e. all four selftests have not finished and I'd have expected them to
-> by now.
+BBVERSIONS support was dropped in November 2016 in commit
+0bb188f01e39 "ast: remove BBVERSIONS support".
 
-(=E2=95=AF=C2=B0=E2=96=A1=C2=B0=EF=BC=89=E2=95=AF=EF=B8=B5 =E2=94=BB=E2=94=
-=81=E2=94=BB
+Let's update the documentation to reflect this.
 
->
-> I'm trying not to work today so I haven't debugged them or confirmed wher=
-e
-> they are hanging but it seems likely related.
+This was found by running:
 
-If you're planning to take the day off don't worry about investigating
-these. I'll take a look at the patches again on Wednesday. I think the
-best approach may be to add some timeouts and maybe more error
-handling to the asyncrpc code I extracted from hashserv - if we can
-turn these hangs into a proper error then we can reduce the amount of
-autobuilder time they take to test and hopefully we'll get a better
-insight into what is actually going wrong. My guess is that there's
-something in the autobuilder config or just the level of load on the
-machines which is aggravating this as the tests finish successfully on
-my build machine (with a few expected test failures as noted
-previously).
+git grep -hoP '^   :term:`\K\w+(?=`)' doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | \
+  xargs -I{} sh -c \
+    "grep -Rq --include='*.py' --include='*.conf' --include='*.bbclass' --include='*.bb' --include='*.bbappend' --include='*.inc' \
+      -w -E {}'_*(_[a-z]+[0-9a-z]*[a-z]+)*' || \
+     echo {}"
 
-Thanks,
+Signed-off-by: Quentin Schulz <foss@0leil.net>
+---
+ .../bitbake-user-manual-metadata.rst          | 41 ++++---------------
+ .../bitbake-user-manual-ref-variables.rst     | 10 -----
+ 2 files changed, 9 insertions(+), 42 deletions(-)
 
---=20
-Paul Barker
-Konsulko Group
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index 615c9f9c..77c107af 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -1650,10 +1650,15 @@ user interfaces:
+ Variants - Class Extension Mechanism
+ ====================================
+ 
+-BitBake supports two features that facilitate creating from a single
+-recipe file multiple incarnations of that recipe file where all
+-incarnations are buildable. These features are enabled through the
+-:term:`BBCLASSEXTEND` and :term:`BBVERSIONS` variables.
++BitBake supports multiple incarnations of a recipe file via the
++:term:`BBCLASSEXTEND` variable.
++
++The :term:`BBCLASSEXTEND` variable is a space separated list of classes used
++to "extend" the recipe for each variant. Here is an example that results in a
++second incarnation of the current recipe being available. This second
++incarnation will have the "native" class inherited. ::
++
++      BBCLASSEXTEND = "native"
+ 
+ .. note::
+ 
+@@ -1663,34 +1668,6 @@ incarnations are buildable. These features are enabled through the
+    class. For specific examples, see the OE-Core native , nativesdk , and
+    multilib classes.
+ 
+--  ``BBCLASSEXTEND``: This variable is a space separated list of
+-   classes used to "extend" the recipe for each variant. Here is an
+-   example that results in a second incarnation of the current recipe
+-   being available. This second incarnation will have the "native" class
+-   inherited. ::
+-
+-      BBCLASSEXTEND = "native"
+-
+--  ``BBVERSIONS``: This variable allows a single recipe to build
+-   multiple versions of a project from a single recipe file. You can
+-   also specify conditional metadata (using the
+-   :term:`OVERRIDES` mechanism) for a single
+-   version, or an optionally named range of versions. Here is an
+-   example::
+-
+-      BBVERSIONS = "1.0 2.0 git"
+-      SRC_URI_git = "git://someurl/somepath.git"
+-
+-      BBVERSIONS = "1.0.[0-6]:1.0.0+ 1.0.[7-9]:1.0.7+"
+-      SRC_URI_append_1.0.7+ = "file://some_patch_which_the_new_versions_need.patch;patch=1"
+-
+-   The name of the range defaults to the original version of the recipe. For
+-   example, in OpenEmbedded, the recipe file ``foo_1.0.0+.bb`` creates a default
+-   name range of ``1.0.0+``. This is useful because the range name is not only
+-   placed into overrides, but it is also made available for the metadata to use
+-   in the variable that defines the base recipe versions for use in ``file://``
+-   search paths (:term:`FILESPATH`).
+-
+ Dependencies
+ ============
+ 
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index e1b640e2..adb311ab 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -797,16 +797,6 @@ overview of their function and contents.
+       Allows you to use a configuration file to add to the list of
+       command-line target recipes you want to build.
+ 
+-   :term:`BBVERSIONS`
+-      Allows a single recipe to build multiple versions of a project from a
+-      single recipe file. You also able to specify conditional metadata
+-      using the :term:`OVERRIDES` mechanism for a
+-      single version or for an optionally named range of versions.
+-
+-      For more information on ``BBVERSIONS``, see the
+-      ":ref:`bitbake-user-manual/bitbake-user-manual-metadata:variants - class extension mechanism`"
+-      section.
+-
+    :term:`BITBAKE_UI`
+       Used to specify the UI module to use when running BitBake. Using this
+       variable is equivalent to using the ``-u`` command-line option.
+-- 
+2.20.1
+
