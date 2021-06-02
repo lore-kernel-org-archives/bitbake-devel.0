@@ -1,109 +1,93 @@
-Received: from relay10.mail.gandi.net (relay10.mail.gandi.net [217.70.178.230])
- by mx.groups.io with SMTP id smtpd.web10.12917.1622640210711148514
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+ by mx.groups.io with SMTP id smtpd.web09.14120.1622644711368302721
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 02 Jun 2021 06:23:31 -0700
+ Wed, 02 Jun 2021 07:38:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: bootlin.com, ip: 217.70.178.230, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay10.mail.gandi.net (Postfix) with ESMTPSA id C4BC9240012;
-	Wed,  2 Jun 2021 13:23:28 +0000 (UTC)
-Cc: docs@lists.yoctoproject.org
-Subject: Re: [bitbake-devel] [PATCH] doc: user-manual: ref-manual: remove mentions to BB_SETSCENE_VERIFY_FUNCTION2
-To: Quentin Schulz <foss@0leil.net>, bitbake-devel@lists.openembedded.org
-References: <20210601192235.9371-1-foss@0leil.net>
-From: "Michael Opdenacker" <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-Message-ID: <bb36e2b1-bc7b-3efd-b8b2-dc2718eb51d8@bootlin.com>
-Date: Wed, 2 Jun 2021 15:23:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=SclTtdOG;
+ spf=pass (domain: gmail.com, ip: 209.85.210.46, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f46.google.com with SMTP id q9-20020a9d66490000b02903c741e5b703so1488348otm.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 02 Jun 2021 07:38:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=XvxEOLwMhZ82wCcHK9mAwR4q+NMfFDzySlKWNccDkuk=;
+        b=SclTtdOGGaP+4MtZX+eNoI///NvfDJjOW6Yy0hX/ZnIeegGPpmE2fnDhE1AEHTa4E3
+         H1xGvpZYUeQRMwr0nvPfBkJQexrU9WOMMQqITSAhX+IzNfH5zWnAeN+gTTX1qLg9a9Vg
+         bpK1Ks9aZVpOQYwDS8+uIyNuNqknpnxsq4DoHWK8udactmCaL9EXcAdKgx/dWbcuO7VI
+         ye+4PHZUmVXMUPbtmcYq35SIEvckTq9ijsQSPjyhsgiAYKRchs4rVeFg0b4hz5kmjVmt
+         Qn8To+4jnpvd2SGy57/APS5eZRRNSk1Wy972pgs47fW9WMVO/hajuicQxUew5zQPOSie
+         1vJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=XvxEOLwMhZ82wCcHK9mAwR4q+NMfFDzySlKWNccDkuk=;
+        b=IsLwGRR1OzumYGaGsiSHd1PomQSX/74HWbhxyr9YLQdXjcIpsJRC+Yu9DCpfZRJwgH
+         H03vhM+Ijtv4sXsYcw+LLVFpnWjEPFaDJQ6KRsvD1cYn8+3ulPS1PU+2+tGGV7OFtcxR
+         tvdiruVlvRhJmxmzkVC5fB+cKK9nfKSU1kec8bqq03dpYxykMtDOewEq5wZZZ+rR/KXV
+         hDHI5RHa8gpWY5YxHmr2xN46SRZnC3Eng93SIgQ3JDRiPmhdAJ4O75YhkSSEuN/xdOKZ
+         jbyBDl8AWlt4vcsM5bQAVr8ZZ7o0MiSTyvZM1dE8FhHd6JcpVMsrythh2inmZRAXLO4N
+         gn4g==
+X-Gm-Message-State: AOAM530NuqVU6S31uRKT+l9Jkz78pCQYZE7wLEcWYeV9/6PdTAt2mFkB
+	eIBCt5DiysSeufrrgbg9wmI=
+X-Google-Smtp-Source: ABdhPJyJXwUMNjZbD33F2bjM/hXNwFiYIFFMfLTIK2axqUpa1cWwEd9gK6P9ppNht2VMhNjkwymCUQ==
+X-Received: by 2002:a05:6830:12c6:: with SMTP id a6mr26507440otq.43.1622644710676;
+        Wed, 02 Jun 2021 07:38:30 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from ?IPv6:2605:a601:ac3d:c100:e3e8:d9:3a56:e27d? ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
+        by smtp.gmail.com with ESMTPSA id l27sm171655oof.35.2021.06.02.07.38.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jun 2021 07:38:30 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+Subject: Re: [PATCH 2/4] asyncrpc: Avoid duplicate sockets in TCP server
+To: Paul Barker <pbarker@konsulko.com>, bitbake-devel@lists.openembedded.org,
+ Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <20210528084209.8408-1-pbarker@konsulko.com>
+ <20210528084209.8408-3-pbarker@konsulko.com>
+Message-ID: <458972f1-0f01-76f3-9f88-d00291f13544@gmail.com>
+Date: Wed, 2 Jun 2021 09:38:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210601192235.9371-1-foss@0leil.net>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20210528084209.8408-3-pbarker@konsulko.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 
-Hi Quentin,
 
-On 6/1/21 9:22 PM, Quentin Schulz wrote:
-> This variable was removed in July 2019 with commit
-> 5deaa5df730a "runqueue: Drop unused BB_SETSCENE_VERIFY_FUNCTION2".
+On 5/28/21 3:42 AM, Paul Barker wrote:
+> Calling asyncio.start_server with host='localhost' results in two
+> sockets being opened with different port numbers (one for IPv4 and one
+> for IPv6):
 >
-> There's no replacement, so let's update the documentation to not mention
-> this variable anymore.
+>      NOTE: Listening on ('127.0.0.1', 38833)
+>      NOTE: Listening on ('::1', 42029, 0, 0)
 >
-> This was found by running:
-> git grep -hoP '^   :term:`\K\w+(?=`)' doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | \
->   xargs -I{} sh -c \
->     "grep -Rq --include='*.py' --include='*.conf' --include='*.bbclass' --include='*.bb' --include='*.bbappend' --include='*.inc' \
->       -w -E {}'_*(_[a-z]+[0-9a-z]*[a-z]+)*' || \
->     echo {}"
+> This is unnecessary and can be avoided by passing host='127.0.0.1'.
+
+Is this causing some sort of bug? I think it would be better to do the 
+expected default python behavior than try to work around it.
+
 >
-> Signed-off-by: Quentin Schulz <foss@0leil.net>
+> Signed-off-by: Paul Barker <pbarker@konsulko.com>
 > ---
->  .../bitbake-user-manual-execution.rst                 |  7 -------
->  .../bitbake-user-manual-metadata.rst                  |  4 ----
->  .../bitbake-user-manual-ref-variables.rst             | 11 -----------
->  3 files changed, 22 deletions(-)
+>   lib/bb/asyncrpc/serv.py | 3 +++
+>   1 file changed, 3 insertions(+)
 >
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-> index 14c342a6..84d65fa9 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-> @@ -648,13 +648,6 @@ compiled binary. To handle this, BitBake calls the
->  each successful setscene task to know whether or not it needs to obtain
->  the dependencies of that task.
->  
-> -Finally, after all the setscene tasks have executed, BitBake calls the
-> -function listed in
-> -:term:`BB_SETSCENE_VERIFY_FUNCTION2`
-> -with the list of tasks BitBake thinks has been "covered". The metadata
-> -can then ensure that this list is correct and can inform BitBake that it
-> -wants specific tasks to be run regardless of the setscene result.
-> -
->  You can find more information on setscene metadata in the
->  :ref:`bitbake-user-manual/bitbake-user-manual-metadata:task checksums and setscene`
->  section.
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> index 77c107af..20c330e6 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> @@ -1920,10 +1920,6 @@ The following list describes related variables:
->     Specifies a function BitBake calls that determines whether BitBake
->     requires a setscene dependency to be met.
->  
-> --  :term:`BB_SETSCENE_VERIFY_FUNCTION2`:
-> -   Specifies a function to call that verifies the list of planned task
-> -   execution before the main task execution happens.
-> -
->  -  :term:`BB_STAMP_POLICY`: Defines the mode
->     for comparing timestamps of stamp files.
->  
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> index adb311ab..a1e2440b 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> @@ -426,17 +426,6 @@ overview of their function and contents.
->        The function specified by this variable returns a "True" or "False"
->        depending on whether the dependency needs to be met.
->  
-> -   :term:`BB_SETSCENE_VERIFY_FUNCTION2`
-> -      Specifies a function to call that verifies the list of planned task
-> -      execution before the main task execution happens. The function is
-> -      called once BitBake has a list of setscene tasks that have run and
-> -      either succeeded or failed.
-> -
-> -      The function allows for a task list check to see if they make sense.
-> -      Even if BitBake was planning to skip a task, the returned value of
-> -      the function can force BitBake to run the task, which is necessary
-> -      under certain metadata defined circumstances.
-> -
->     :term:`BB_SIGNATURE_EXCLUDE_FLAGS`
->        Lists variable flags (varflags) that can be safely excluded from
->        checksum and dependency data for keys in the datastore. When
-
-Thanks for the patch!
-
-Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Tested-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-
+> diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
+> index fd91aa71a..003a118b7 100644
+> --- a/lib/bb/asyncrpc/serv.py
+> +++ b/lib/bb/asyncrpc/serv.py
+> @@ -142,6 +142,9 @@ class AsyncServer(object):
+>           self.logger = logger
+>   
+>       def start_tcp_server(self, host, port):
+> +        if host == 'localhost':
+> +            host = '127.0.0.1'
+> +
+>           self.server = self.loop.run_until_complete(
+>               asyncio.start_server(self.handle_client, host, port, loop=self.loop)
+>           )
