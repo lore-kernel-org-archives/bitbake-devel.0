@@ -1,49 +1,71 @@
-Received: from relay12.mail.gandi.net (relay12.mail.gandi.net [217.70.178.232])
- by mx.groups.io with SMTP id smtpd.web09.1508.1622824021386678777
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+ by mx.groups.io with SMTP id smtpd.web09.36103.1623073898285084360
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 04 Jun 2021 09:27:02 -0700
+ Mon, 07 Jun 2021 06:51:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: bootlin.com, ip: 217.70.178.232, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay12.mail.gandi.net (Postfix) with ESMTPSA id 00D10200002;
-	Fri,  4 Jun 2021 16:26:58 +0000 (UTC)
-From: "Michael Opdenacker" <michael.opdenacker@bootlin.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH] docs: Add BB_HASHSERVE definition to glossary
-Date: Fri,  4 Jun 2021 18:26:47 +0200
-Message-Id: <20210604162647.661888-1-michael.opdenacker@bootlin.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@konsulko.com header.s=google header.b=hNEUASQT;
+ spf=pass (domain: konsulko.com, ip: 209.85.167.180, mailfrom: paul.barker@konsulko.com)
+Received: by mail-oi1-f180.google.com with SMTP id z3so18091531oib.5
+        for <bitbake-devel@lists.openembedded.org>; Mon, 07 Jun 2021 06:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+w39TIn8f3GprYzbG1yti++yADgsq8bAI5hj5Kff1rc=;
+        b=hNEUASQTf0z+8TCvyE1vtn4CxS7lX2ivMNIEnwNXpviNCkDe+qJQJc03fXNVzQx66l
+         2plzVoDPl2Eu9u/KBntNGumN+K2bKf5CKkuaAUNSagJZqVM6reotSp29BGOO/NnI1kvp
+         Y9+8hR+VspbjoLwL0O4K/kV6AKff/KgHlklD8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+w39TIn8f3GprYzbG1yti++yADgsq8bAI5hj5Kff1rc=;
+        b=dlXYKwFFUPvyz/6BKIcdGrNtADb+lswZoCn1mKg/capkRMsOVqlsYin9Xce4z9IbvJ
+         O7/UFueWb8u2y7LGw1ZzSMCbUd3aoiGsGC/sKlJzAySaKhymTrFoVfvbXAqLSOrvtqgV
+         xzLbeuOjxn001xqgosieGyMtT6h/SVO7PajTfnfPKupNM6EFjJx4yYBGUj8UYgEW9UWY
+         ABpezTC+QS9hTr2znMqUPKRIGV5SE+2Xnn/FrTEn+9Vb017cKy6NdLCJUHJawe9EmzEe
+         EBECCppqCAifN69xRHXy7SGUHArTme8ZK4W0S+nXNKWUgjxl9Z4ug0GUpEvGth9A7g96
+         xd7Q==
+X-Gm-Message-State: AOAM530MoMbJzj8occb1HaE+iGfGJxVpH2A5/5soQhIBZ2BgPnMFNqG5
+	pQW9HhlNMe0rFc4plov/Sv6WetjohdMcZDLpPgBnAQ==
+X-Google-Smtp-Source: ABdhPJw5YAViSX7zw4158qCby2e3G+iWHsuXc9EFR8nrDhw6MZrp9pISKXZHl16KVHzZ5JmJhU9yGqJmUM0fIRplIu4=
+X-Received: by 2002:aca:4554:: with SMTP id s81mr8361530oia.152.1623073897675;
+ Mon, 07 Jun 2021 06:51:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210528084209.8408-1-pbarker@konsulko.com> <20210528084209.8408-3-pbarker@konsulko.com>
+ <458972f1-0f01-76f3-9f88-d00291f13544@gmail.com>
+In-Reply-To: <458972f1-0f01-76f3-9f88-d00291f13544@gmail.com>
+From: "Paul Barker" <pbarker@konsulko.com>
+Date: Mon, 7 Jun 2021 14:51:27 +0100
+Message-ID: <CAM9ZRVtV1v5J5C6hNoPGZRRi2tTH-7=ih0au27C4pqNLOBoVVg@mail.gmail.com>
+Subject: Re: [PATCH 2/4] asyncrpc: Avoid duplicate sockets in TCP server
+To: Joshua Watt <jpewhacker@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org, 
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
----
- .../bitbake-user-manual-ref-variables.rst              | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On Wed, 2 Jun 2021 at 15:38, Joshua Watt <jpewhacker@gmail.com> wrote:
+>
+>
+> On 5/28/21 3:42 AM, Paul Barker wrote:
+> > Calling asyncio.start_server with host='localhost' results in two
+> > sockets being opened with different port numbers (one for IPv4 and one
+> > for IPv6):
+> >
+> >      NOTE: Listening on ('127.0.0.1', 38833)
+> >      NOTE: Listening on ('::1', 42029, 0, 0)
+> >
+> > This is unnecessary and can be avoided by passing host='127.0.0.1'.
+>
+> Is this causing some sort of bug? I think it would be better to do the
+> expected default python behavior than try to work around it.
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index e1b640e2..bfb74c11 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -313,6 +313,16 @@ overview of their function and contents.
-       However, the more accurate the data returned, the more efficient the
-       build will be.
- 
-+   :term:`BB_HASHSERVE`
-+      Specifies the Hash Equivalence server to use.
-+
-+      If set to ``auto``, BitBake automatically starts its own server
-+      over a UNIX domain socket.
-+
-+      If set to ``host:port``, BitBake will use a remote server on the
-+      specified host. This allows multiple clients to share the same
-+      hash equivalence data.
-+
-    :term:`BB_INVALIDCONF`
-       Used in combination with the ``ConfigParsed`` event to trigger
-       re-parsing the base metadata (i.e. all the recipes). The
--- 
-2.25.1
+The default behaviour confuses me but I guess if it doesn't break
+builds then this patch can be dropped.
 
+Thanks,
+
+
+--
+Paul Barker
+Konsulko Group
