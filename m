@@ -1,78 +1,415 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web09.37053.1623078222235956519
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web08.36991.1623078223200027340
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Jun 2021 08:03:42 -0700
+ Mon, 07 Jun 2021 08:03:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=O0P0mt+2;
- spf=pass (domain: konsulko.com, ip: 209.85.128.54, mailfrom: pbarker@konsulko.com)
-Received: by mail-wm1-f54.google.com with SMTP id 3-20020a05600c0243b029019f2f9b2b8aso206959wmj.2
+ dkim=pass header.i=@konsulko.com header.s=google header.b=jnffX4+7;
+ spf=pass (domain: konsulko.com, ip: 209.85.221.47, mailfrom: pbarker@konsulko.com)
+Received: by mail-wr1-f47.google.com with SMTP id i94so12962024wri.4
         for <bitbake-devel@lists.openembedded.org>; Mon, 07 Jun 2021 08:03:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8xxjT7d94j+WCj0QLGcmhg1uRaBp4Bt8HiJLHWxNSn0=;
-        b=O0P0mt+289Wk2/PIq6v1JTLhH7s8AU/jtRJTDZbIEeKhc1ShOnOP7GxcqfFJPY7W+t
-         tIL0dENutClVmAbj9DQ2SootFSTNm6lKU6gtPsgcG+ccMrt0O0NifgK6OwEyin2q8l5w
-         nIx1wAcrAa2tUUn2BcTZOkzf8YM5MMQ7zndP0=
+        bh=H/3AxTZRBY2LA800Lw75Q1nRWfdOv7xiRfXyWbvpye8=;
+        b=jnffX4+7xLub0KKWqBa4nHQZorKUTWSKpMPINxaqr08msznDb9B359bPatlNZ8Exqn
+         iZ0DX1dRZCyouDTmZplegivl6bmY3B8nGc9YhtWWhxESRdF852TG8UhWrjDgiqeqqusK
+         rXAO3KdaRiqLIoj1TLnAlRVM2tL11w2RVUM5Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8xxjT7d94j+WCj0QLGcmhg1uRaBp4Bt8HiJLHWxNSn0=;
-        b=rcwtWletxQ117Ppl4JET5+qUXuTSQ60o45XFB5+0XYeN16Ja95cizJPLKO6VJxpnrJ
-         4H89KtsheJTkCPgmoGwdyNxnUMNhcjA24IP6wD/5oSki4BFrnYpS8V5B7zubBn5jWzxM
-         iMbiKDGVgULppz1SjhghiVdrdDxotsZgzKV8OjjatWPYY1NQ0iGqBVQYExaNTUFFaSrF
-         v8i5p3mqkjBntHFPFLWGxOWqZT9SH8PhWICt85TScoF5mCgpj2IUHsYq45p4cLTscKmC
-         9v/9rZh5btr7cUJleti20lZasl0lroGDeOPyW4iaqo3jFgrQ/8zzc1YZ+krL3pstS0YE
-         tHHw==
-X-Gm-Message-State: AOAM531CZCWF9D9ex7PvgKIVCET6nPlP4iqACbkb9mqKqR9csfrF2W6i
-	rsUTPeJrIfsAUl9j2DZebqg5EzJ301ugYQ==
-X-Google-Smtp-Source: ABdhPJyuGtfvzGykCSjtjH0BCZDVAUDdvn+z829zOoIWumsuy++QpJ2jL7tPLZM44zvt96lNBOEGMg==
-X-Received: by 2002:a1c:9807:: with SMTP id a7mr17088073wme.10.1623078220536;
-        Mon, 07 Jun 2021 08:03:40 -0700 (PDT)
+        bh=H/3AxTZRBY2LA800Lw75Q1nRWfdOv7xiRfXyWbvpye8=;
+        b=IYJhODhOLytt1m+H1IlY1sriLzfsxYFxBtIs3ag0rpM280bdxP0nkWLpaT4XXEBP2R
+         yOhDKvImIejlBNf2WTB798o9OoOpRfz0dvFSl+XseEeRk56h18ki5ZaoA0/tYm9BvYpy
+         C1WWsyz9gK1qq2QP3Gnk0VcUhIU8PCBJ/qzhBn8Xbl+1+yBOwyWmlikaMU4fM9xfZYJn
+         TfEMADwX6HNfNyEX3tJgb71W9lpYUA0a7PPbGP88P32w7Gm7yZ4gFt/v4Xo+na1Mr1dH
+         3xqu5FlkCXM96onWahGlqQ6OGJPfiG7TCUT8ZBerJ9Zy9Epxp8X9zibVzq72q/VIdCp/
+         JW1Q==
+X-Gm-Message-State: AOAM5314joWJDtMqHn3pqMxoL2IrPHYmvGQHjvvxAgwwQHL1ck5Bes+S
+	lSRB5MXo9fjZVI7D+I5oAxqwGuLX6trtIA==
+X-Google-Smtp-Source: ABdhPJzmkvJULkldleI39/JkDd5mmuZ78qCNAH102O/CK8aVOB+HLuZTXQve7LhuD7r4BtLVPFW/rw==
+X-Received: by 2002:a5d:6109:: with SMTP id v9mr17819765wrt.0.1623078221442;
+        Mon, 07 Jun 2021 08:03:41 -0700 (PDT)
 Return-Path: <pbarker@konsulko.com>
 Received: from alpha.home.b5net.uk (cpc76132-clif11-2-0-cust80.12-4.cable.virginm.net. [80.7.160.81])
-        by smtp.gmail.com with ESMTPSA id l2sm15995488wrp.21.2021.06.07.08.03.39
+        by smtp.gmail.com with ESMTPSA id l2sm15995488wrp.21.2021.06.07.08.03.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jun 2021 08:03:39 -0700 (PDT)
+        Mon, 07 Jun 2021 08:03:41 -0700 (PDT)
 From: "Paul Barker" <pbarker@konsulko.com>
 To: bitbake-devel@lists.openembedded.org,
 	Richard Purdie <richard.purdie@linuxfoundation.org>,
 	Joshua Watt <JPEWhacker@gmail.com>
 Cc: Paul Barker <pbarker@konsulko.com>
-Subject: [PATCH v2 3/4] prserv: Add 15s timeout to auto shutdown
-Date: Mon,  7 Jun 2021 16:03:34 +0100
-Message-Id: <20210607150335.32326-4-pbarker@konsulko.com>
+Subject: [PATCH v2 4/4] prserv: Replace XML RPC with modern asyncrpc implementation
+Date: Mon,  7 Jun 2021 16:03:35 +0100
+Message-Id: <20210607150335.32326-5-pbarker@konsulko.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20210607150335.32326-1-pbarker@konsulko.com>
 References: <20210607150335.32326-1-pbarker@konsulko.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This timeout prevents bitbake from hanging if the prservice process
-fails to terminate within a reasonable time period.
+Update the prserv client and server classes to use the modern json and
+asyncio based RPC system implemented by the asyncrpc module.
 
 Signed-off-by: Paul Barker <pbarker@konsulko.com>
 ---
- lib/prserv/serv.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/prserv/serv.py | 263 +++++++++++++++++++++++----------------------
+ 1 file changed, 136 insertions(+), 127 deletions(-)
 
 diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index 5e322bf83..50d7cb694 100644
+index 50d7cb694..106040556 100644
 --- a/lib/prserv/serv.py
 +++ b/lib/prserv/serv.py
-@@ -362,7 +362,9 @@ def auto_shutdown():
-     global singleton
-     if singleton and singleton.process:
-         singleton.process.terminate()
--        singleton.process.join()
-+        singleton.process.join(15)
-+        if singleton.process.exitcode is None:
-+            logger.error("PRservice shutdown timed out")
+@@ -4,157 +4,160 @@
+ 
+ import os,sys,logging
+ import signal, time
+-from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
+ import socket
+ import io
+ import sqlite3
+-import bb.server.xmlrpcclient
+ import prserv
+ import prserv.db
+ import errno
+ import multiprocessing
++import bb.asyncrpc
+ 
+ logger = logging.getLogger("BitBake.PRserv")
+ 
+-class Handler(SimpleXMLRPCRequestHandler):
+-    def _dispatch(self,method,params):
+-        try:
+-            value=self.server.funcs[method](*params)
+-        except:
+-            import traceback
+-            traceback.print_exc()
+-            raise
+-        return value
+-
+ PIDPREFIX = "/tmp/PRServer_%s_%s.pid"
+ singleton = None
+ 
++class PRServerClient(bb.asyncrpc.AsyncServerConnection):
++    def __init__(self, reader, writer, table):
++        super().__init__(reader, writer, 'PRSERVICE', logger)
++        self.handlers.update({
++            'get-pr': self.handle_get_pr,
++            'import-one': self.handle_import_one,
++            'export': self.handle_export,
++        })
++        self.table = table
+ 
+-class PRServer(SimpleXMLRPCServer):
+-    def __init__(self, dbfile, logfile, interface):
+-        ''' constructor '''
+-        try:
+-            SimpleXMLRPCServer.__init__(self, interface,
+-                                        logRequests=False, allow_none=True)
+-        except socket.error:
+-            ip=socket.gethostbyname(interface[0])
+-            port=interface[1]
+-            msg="PR Server unable to bind to %s:%s\n" % (ip, port)
+-            sys.stderr.write(msg)
+-            raise PRServiceConfigError
+-
+-        self.dbfile=dbfile
+-        self.logfile=logfile
+-        self.host, self.port = self.socket.getsockname()
+-
+-        self.register_function(self.getPR, "getPR")
+-        self.register_function(self.ping, "ping")
+-        self.register_function(self.export, "export")
+-        self.register_function(self.importone, "importone")
+-        self.register_introspection_functions()
+-
+-        self.iter_count = 0
+-        # 60 iterations between syncs or sync if dirty every ~30 seconds
+-        self.iterations_between_sync = 60
+-
+-    def sigint_handler(self, signum, stack):
+-        if self.table:
+-            self.table.sync()
+-
+-    def sigterm_handler(self, signum, stack):
+-        if self.table:
+-            self.table.sync()
+-        raise(SystemExit)
++    def validate_proto_version(self):
++        return (self.proto_version == (1, 0))
+ 
+-    def process_request(self, request, client_address):
+-        if request is None:
+-            return
++    async def dispatch_message(self, msg):
+         try:
+-            self.finish_request(request, client_address)
+-            self.shutdown_request(request)
+-            self.iter_count = (self.iter_count + 1) % self.iterations_between_sync
+-            if self.iter_count == 0:
+-                self.table.sync_if_dirty()
++            await super().dispatch_message(msg)
+         except:
+-            self.handle_error(request, client_address)
+-            self.shutdown_request(request)
+             self.table.sync()
+-        self.table.sync_if_dirty()
++            raise
+ 
+-    def serve_forever(self, poll_interval=0.5):
+-        signal.signal(signal.SIGINT, self.sigint_handler)
+-        signal.signal(signal.SIGTERM, self.sigterm_handler)
++        self.table.sync_if_dirty()
+ 
+-        self.db = prserv.db.PRData(self.dbfile)
+-        self.table = self.db["PRMAIN"]
+-        return super().serve_forever(poll_interval)
++    async def handle_get_pr(self, request):
++        version = request['version']
++        pkgarch = request['pkgarch']
++        checksum = request['checksum']
+ 
+-    def export(self, version=None, pkgarch=None, checksum=None, colinfo=True):
++        response = None
+         try:
+-            return self.table.export(version, pkgarch, checksum, colinfo)
++            value = self.table.getValue(version, pkgarch, checksum)
++            response = {'value': value}
++        except prserv.NotFoundError:
++            logger.error("can not find value for (%s, %s)",version, checksum)
+         except sqlite3.Error as exc:
+             logger.error(str(exc))
+-            return None
+ 
+-    def importone(self, version, pkgarch, checksum, value):
+-        return self.table.importone(version, pkgarch, checksum, value)
++        self.write_message(response)
+ 
+-    def ping(self):
+-        return True
++    async def handle_import_one(self, request):
++        version = request['version']
++        pkgarch = request['pkgarch']
++        checksum = request['checksum']
++        value = request['value']
+ 
+-    def getinfo(self):
+-        return (self.host, self.port)
++        value = self.table.importone(version, pkgarch, checksum, value)
++        if value is not None:
++            response = {'value': value}
++        else:
++            response = None
++        self.write_message(response)
++
++    async def handle_export(self, request):
++        version = request['version']
++        pkgarch = request['pkgarch']
++        checksum = request['checksum']
++        colinfo = request['colinfo']
+ 
+-    def getPR(self, version, pkgarch, checksum):
+         try:
+-            return self.table.getValue(version, pkgarch, checksum)
+-        except prserv.NotFoundError:
+-            logger.error("can not find value for (%s, %s)",version, checksum)
+-            return None
++            (metainfo, datainfo) = self.table.export(version, pkgarch, checksum, colinfo)
+         except sqlite3.Error as exc:
+             logger.error(str(exc))
+-            return None
++            metainfo = datainfo = None
+ 
+-class PRServSingleton(object):
+-    def __init__(self, dbfile, logfile, interface):
++        response = {'metainfo': metainfo, 'datainfo': datainfo}
++        self.write_message(response)
++
++class PRServer(bb.asyncrpc.AsyncServer):
++    def __init__(self, dbfile, loop=None):
++        super().__init__(logger, loop)
+         self.dbfile = dbfile
+-        self.logfile = logfile
+-        self.interface = interface
+-        self.host = None
+-        self.port = None
++        self.table = None
+ 
+-    def start(self):
+-        self.prserv = PRServer(self.dbfile, self.logfile, self.interface)
+-        self.process = multiprocessing.Process(target=self.prserv.serve_forever)
+-        self.process.start()
++    def accept_client(self, reader, writer):
++        return PRServerClient(reader, writer, self.table)
+ 
+-        self.host, self.port = self.prserv.getinfo()
++    def serve_forever(self):
++        self.db = prserv.db.PRData(self.dbfile)
++        self.table = self.db["PRMAIN"]
+ 
+-    def getinfo(self):
+-        return (self.host, self.port)
++        logger.debug("Started PRServer with DBfile: %s, Address: %s, PID: %s" %
++                     (self.dbfile, self.address, str(os.getpid())))
+ 
+-class PRServerConnection(object):
+-    def __init__(self, host, port):
+-        if is_local_special(host, port):
+-            host, port = singleton.getinfo()
+-        self.host = host
+-        self.port = port
+-        self.connection, self.transport = bb.server.xmlrpcclient._create_server(self.host, self.port)
++        super().serve_forever()
+ 
+-    def getPR(self, version, pkgarch, checksum):
+-        return self.connection.getPR(version, pkgarch, checksum)
++        self.table.sync_if_dirty()
++        self.db.disconnect()
+ 
+-    def ping(self):
+-        return self.connection.ping()
++    def signal_handler(self):
++        super().signal_handler()
++        if self.table:
++            self.table.sync()
+ 
+-    def export(self,version=None, pkgarch=None, checksum=None, colinfo=True):
+-        return self.connection.export(version, pkgarch, checksum, colinfo)
++class PRServSingleton(object):
++    def __init__(self, dbfile, logfile, host, port):
++        self.dbfile = dbfile
++        self.logfile = logfile
++        self.host = host
++        self.port = port
+ 
+-    def importone(self, version, pkgarch, checksum, value):
+-        return self.connection.importone(version, pkgarch, checksum, value)
++    def start(self):
++        self.prserv = PRServer(self.dbfile)
++        self.prserv.start_tcp_server(self.host, self.port)
++        self.process = multiprocessing.Process(target=self.prserv.serve_forever)
++        self.process.start()
+ 
+-    def getinfo(self):
+-        return self.host, self.port
++        if not self.port:
++            self.port = int(self.prserv.address.rsplit(':', 1)[1])
++
++class PRAsyncClient(bb.asyncrpc.AsyncClient):
++    def __init__(self):
++        super().__init__('PRSERVICE', '1.0', logger)
++
++    async def getPR(self, version, pkgarch, checksum):
++        response = await self.send_message(
++            {'get-pr': {'version': version, 'pkgarch': pkgarch, 'checksum': checksum}}
++        )
++        if response:
++            return response['value']
++
++    async def importone(self, version, pkgarch, checksum, value):
++        response = await self.send_message(
++            {'import-one': {'version': version, 'pkgarch': pkgarch, 'checksum': checksum, 'value': value}}
++        )
++        if response:
++            return response['value']
++
++    async def export(self, version, pkgarch, checksum, colinfo):
++        response = await self.send_message(
++            {'export': {'version': version, 'pkgarch': pkgarch, 'checksum': checksum, 'colinfo': colinfo}}
++        )
++        if response:
++            return (response['metainfo'], response['datainfo'])
++
++class PRClient(bb.asyncrpc.Client):
++    def __init__(self):
++        super().__init__()
++        self._add_methods('getPR', 'importone', 'export')
++
++    def _get_async_client(self):
++        return PRAsyncClient()
+ 
+ def run_as_daemon(func, pidfile, logfile):
+     """
+@@ -240,15 +243,13 @@ def start_daemon(dbfile, host, port, logfile):
+                             % pidfile)
+         return 1
+ 
+-    server = PRServer(os.path.abspath(dbfile), os.path.abspath(logfile), (ip,port))
+-    run_as_daemon(server.serve_forever, pidfile, os.path.abspath(logfile))
++    dbfile = os.path.abspath(dbfile)
++    def daemon_main():
++        server = PRServer(dbfile)
++        server.start_tcp_server(host, port)
++        server.serve_forever()
+ 
+-    # Sometimes, the port (i.e. localhost:0) indicated by the user does not match with
+-    # the one the server actually is listening, so at least warn the user about it
+-    _,rport = server.getinfo()
+-    if port != rport:
+-        sys.stdout.write("Server is listening at port %s instead of %s\n"
+-                         % (rport,port))
++    run_as_daemon(daemon_main, pidfile, os.path.abspath(logfile))
+     return 0
+ 
+ def stop_daemon(host, port):
+@@ -302,7 +303,7 @@ def is_running(pid):
+     return True
+ 
+ def is_local_special(host, port):
+-    if host.strip().upper() == 'localhost'.upper() and (not port):
++    if host.strip().lower() == 'localhost' and not port:
+         return True
+     else:
+         return False
+@@ -340,20 +341,19 @@ def auto_start(d):
+                auto_shutdown()
+         if not singleton:
+             bb.utils.mkdirhier(cachedir)
+-            singleton = PRServSingleton(os.path.abspath(dbfile), os.path.abspath(logfile), ("localhost",0))
++            singleton = PRServSingleton(os.path.abspath(dbfile), os.path.abspath(logfile), "localhost", 0)
+             singleton.start()
+     if singleton:
+-        host, port = singleton.getinfo()
++        host = singleton.host
++        port = singleton.port
+     else:
+         host = host_params[0]
+         port = int(host_params[1])
+ 
+     try:
+-        connection = PRServerConnection(host,port)
+-        connection.ping()
+-        realhost, realport = connection.getinfo()
+-        return str(realhost) + ":" + str(realport)
+-        
++        ping(host, port)
++        return str(host) + ":" + str(port)
++
+     except Exception:
+         logger.critical("PRservice %s:%d not available" % (host, port))
+         raise PRServiceConfigError
+@@ -368,8 +368,17 @@ def auto_shutdown():
          singleton = None
  
  def ping(host, port):
+-    conn=PRServerConnection(host, port)
++    conn=PRClient()
++    conn.connect_tcp(host, port)
+     return conn.ping()
+ 
+ def connect(host, port):
+-    return PRServerConnection(host, port)
++    global singleton
++
++    if host.strip().lower() == 'localhost' and not port:
++        host = 'localhost'
++        port = singleton.port
++
++    conn = PRClient()
++    conn.connect_tcp(host, port)
++    return conn
 -- 
 2.26.2
 
