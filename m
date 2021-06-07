@@ -1,71 +1,75 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
- by mx.groups.io with SMTP id smtpd.web09.36103.1623073898285084360
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web09.37052.1623078219615421790
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Jun 2021 06:51:38 -0700
+ Mon, 07 Jun 2021 08:03:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=hNEUASQT;
- spf=pass (domain: konsulko.com, ip: 209.85.167.180, mailfrom: paul.barker@konsulko.com)
-Received: by mail-oi1-f180.google.com with SMTP id z3so18091531oib.5
-        for <bitbake-devel@lists.openembedded.org>; Mon, 07 Jun 2021 06:51:38 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=evx0sBjS;
+ spf=pass (domain: konsulko.com, ip: 209.85.221.47, mailfrom: pbarker@konsulko.com)
+Received: by mail-wr1-f47.google.com with SMTP id r9so1300261wrz.10
+        for <bitbake-devel@lists.openembedded.org>; Mon, 07 Jun 2021 08:03:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+w39TIn8f3GprYzbG1yti++yADgsq8bAI5hj5Kff1rc=;
-        b=hNEUASQTf0z+8TCvyE1vtn4CxS7lX2ivMNIEnwNXpviNCkDe+qJQJc03fXNVzQx66l
-         2plzVoDPl2Eu9u/KBntNGumN+K2bKf5CKkuaAUNSagJZqVM6reotSp29BGOO/NnI1kvp
-         Y9+8hR+VspbjoLwL0O4K/kV6AKff/KgHlklD8=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ds9v/e1exBc3UoKz6VapmgKaMC5+YRbXd+m9M1a2K5E=;
+        b=evx0sBjSMKfXvFhqGFKLZrgZqkx6EgNF47Upjq0LsWevOlBKl/ObmRW/Y1PqI1a2tc
+         M1xDkOrT20ki/Jro/w4s7PD32Y0BgYeRI1b07Nxs2glvNfFKV2JU0qjLm6snMTZwlQVA
+         m7pzoDNB1O/P8JFW8j5r0V5i9T2jZMXhxVcQ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+w39TIn8f3GprYzbG1yti++yADgsq8bAI5hj5Kff1rc=;
-        b=dlXYKwFFUPvyz/6BKIcdGrNtADb+lswZoCn1mKg/capkRMsOVqlsYin9Xce4z9IbvJ
-         O7/UFueWb8u2y7LGw1ZzSMCbUd3aoiGsGC/sKlJzAySaKhymTrFoVfvbXAqLSOrvtqgV
-         xzLbeuOjxn001xqgosieGyMtT6h/SVO7PajTfnfPKupNM6EFjJx4yYBGUj8UYgEW9UWY
-         ABpezTC+QS9hTr2znMqUPKRIGV5SE+2Xnn/FrTEn+9Vb017cKy6NdLCJUHJawe9EmzEe
-         EBECCppqCAifN69xRHXy7SGUHArTme8ZK4W0S+nXNKWUgjxl9Z4ug0GUpEvGth9A7g96
-         xd7Q==
-X-Gm-Message-State: AOAM530MoMbJzj8occb1HaE+iGfGJxVpH2A5/5soQhIBZ2BgPnMFNqG5
-	pQW9HhlNMe0rFc4plov/Sv6WetjohdMcZDLpPgBnAQ==
-X-Google-Smtp-Source: ABdhPJw5YAViSX7zw4158qCby2e3G+iWHsuXc9EFR8nrDhw6MZrp9pISKXZHl16KVHzZ5JmJhU9yGqJmUM0fIRplIu4=
-X-Received: by 2002:aca:4554:: with SMTP id s81mr8361530oia.152.1623073897675;
- Mon, 07 Jun 2021 06:51:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210528084209.8408-1-pbarker@konsulko.com> <20210528084209.8408-3-pbarker@konsulko.com>
- <458972f1-0f01-76f3-9f88-d00291f13544@gmail.com>
-In-Reply-To: <458972f1-0f01-76f3-9f88-d00291f13544@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ds9v/e1exBc3UoKz6VapmgKaMC5+YRbXd+m9M1a2K5E=;
+        b=EyjBQjxFVS9im4N1fLM9zp5CIJK8tTmxOrP/W3p66YScN0Rc18PBmaPS1nJgrA2lMd
+         XGvT4AExZ6mcmj/U1PnBPxBt7/UIlKMedw3+fd0x8YnnXY3SMyPgaDDaw5oCJR6aBnEp
+         glpLtmdsQxjRDUxTlDZ0mUK1EEc7VYHnUAr1S8OsP/ydAsEg+f+MLNXYd7vF3s7BhL42
+         uiF0Sp5H01+CsHf/VQ0Wg73+k0z8N+9i5Di80St//nCCzeGef+1YUrftIOWAlcWF209b
+         +x/wqLkIFB6fTES1XmwUR3CPTuumQ3616bQ7vEpiTsZ4egZBlNtHJRjplJAKiZzsuW39
+         k4WQ==
+X-Gm-Message-State: AOAM5327mP9j/hDDjAB6KLedWM0e6cLHL4ahCNGyH1gE1Ktil/i5euIM
+	Jkb3nP5k5P3eOENhDXe0+Bx9wuGPhVgeUg==
+X-Google-Smtp-Source: ABdhPJzRGWk4e9nLTue5zUOyMHKRpkMo0W0eSXJ7qYRvxFWHK3OeyhHj1NeUZYwyEF+7FK1Wx4/GNg==
+X-Received: by 2002:adf:a441:: with SMTP id e1mr17522606wra.227.1623078217715;
+        Mon, 07 Jun 2021 08:03:37 -0700 (PDT)
+Return-Path: <pbarker@konsulko.com>
+Received: from alpha.home.b5net.uk (cpc76132-clif11-2-0-cust80.12-4.cable.virginm.net. [80.7.160.81])
+        by smtp.gmail.com with ESMTPSA id l2sm15995488wrp.21.2021.06.07.08.03.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jun 2021 08:03:37 -0700 (PDT)
 From: "Paul Barker" <pbarker@konsulko.com>
-Date: Mon, 7 Jun 2021 14:51:27 +0100
-Message-ID: <CAM9ZRVtV1v5J5C6hNoPGZRRi2tTH-7=ih0au27C4pqNLOBoVVg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] asyncrpc: Avoid duplicate sockets in TCP server
-To: Joshua Watt <jpewhacker@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+To: bitbake-devel@lists.openembedded.org,
+	Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Joshua Watt <JPEWhacker@gmail.com>
+Cc: Paul Barker <pbarker@konsulko.com>
+Subject: [PATCH v2 0/4] Re-implement prserv on top of asyncrpc
+Date: Mon,  7 Jun 2021 16:03:31 +0100
+Message-Id: <20210607150335.32326-1-pbarker@konsulko.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2 Jun 2021 at 15:38, Joshua Watt <jpewhacker@gmail.com> wrote:
->
->
-> On 5/28/21 3:42 AM, Paul Barker wrote:
-> > Calling asyncio.start_server with host='localhost' results in two
-> > sockets being opened with different port numbers (one for IPv4 and one
-> > for IPv6):
-> >
-> >      NOTE: Listening on ('127.0.0.1', 38833)
-> >      NOTE: Listening on ('::1', 42029, 0, 0)
-> >
-> > This is unnecessary and can be avoided by passing host='127.0.0.1'.
->
-> Is this causing some sort of bug? I think it would be better to do the
-> expected default python behavior than try to work around it.
+These changes replace the old XML-based RPC system in prserv with the
+new asyncrpc implementation originally used by hashserv.
 
-The default behaviour confuses me but I guess if it doesn't break
-builds then this patch can be dropped.
+Changes from v1:
+  * Drop obsolete getPR function in PRServer, this was replaced by
+    handle_get_pr()
 
-Thanks,
+  * Add timeouts to catch bitbake hangs seen on the autobuilder. This should
+    turn these hangs into errors which can be more reasonably investigated.
 
+  * Add a minor error message fix I spotted.
 
---
-Paul Barker
-Konsulko Group
+Paul Barker (4):
+  asyncrpc: Fix bad message error in client
+  asyncrpc: Set timeout when waiting for reply from server
+  prserv: Add 15s timeout to auto shutdown
+  prserv: Replace XML RPC with modern asyncrpc implementation
+
+ lib/bb/asyncrpc/client.py |  11 +-
+ lib/prserv/serv.py        | 267 ++++++++++++++++++++------------------
+ 2 files changed, 147 insertions(+), 131 deletions(-)
+
+-- 
+2.26.2
+
