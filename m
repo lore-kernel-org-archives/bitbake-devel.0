@@ -1,52 +1,54 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
- by mx.groups.io with SMTP id smtpd.web12.3324.1623952584665214474
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+ by mx.groups.io with SMTP id smtpd.web12.4634.1623958694361965982
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Jun 2021 10:56:24 -0700
+ Thu, 17 Jun 2021 12:38:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Spd4ye+6;
- spf=pass (domain: gmail.com, ip: 209.85.210.46, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f46.google.com with SMTP id b18-20020a0568301052b0290449ba7eff3cso5193037otp.7
-        for <bitbake-devel@lists.openembedded.org>; Thu, 17 Jun 2021 10:56:24 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=rqk2a7wz;
+ spf=pass (domain: gmail.com, ip: 209.85.210.51, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f51.google.com with SMTP id 66-20020a9d02c80000b02903615edf7c1aso7254952otl.13
+        for <bitbake-devel@lists.openembedded.org>; Thu, 17 Jun 2021 12:38:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=djqCepZpYLgvDRN7eIErDpN284j4dEbxxjwWs+DBJLE=;
-        b=Spd4ye+69mblyh22kzz791u0UnWQZXWfhKcRRaf20uctAxa6gFYUYv0bdbr3FTJJCw
-         2u2CWir9tMnmWjoC9ras52v5YnqWFN+ELJyByeNTE8zHZZY6zMsnTN4IgdE7D5HVezi6
-         1ED895PGusf/hGTbnDcqGkZHSxSdA7ugdSoM/9QQ1LvlfCLMemfIdXYMGx77GVllFKwP
-         /aUiCZyjprH2XZNXRe7pBp7BpV/KlACfMtBwoq1JbMUgU8IxbNt+BAY/FdMoBAdt46Mo
-         6zxGoEidhA1voV3VK9qaZfswH5PLeFtuFBbYP9kgIvh+swQwlQoeJ8tA0yVxwUuHKrE8
-         qijQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RwGlpnpV8xP+ugUSSF6Pq5+SCFI3PxuAsIcby3QHZNU=;
+        b=rqk2a7wzBWirOjDNFykELfdPRGYESQ47fCeeiZz7xq1XjnS0lpKZUpDagfR0a4zD8a
+         lsuQb3MRAnBLpRmEuoOg7PHqmGnhkt61J38TLcOE89tUeHwfYqhRYE26zgcgDCjkfMu1
+         RVdFTRJaAtD3aYYq4642VVfYnfYPMqjh0aBSMqCiluvAIB+OkDklUxwgqGiDwCLaXkLi
+         RAKqV7vSYE/GYffeueY4V1r7rdOrTAN2yZZdK6P/7aQCdXXHUj2qfCn+UGPI3ARUR2vw
+         gsPdLDkV8r4WTMTkcmSYZuvk9go02v/IKnkp2JwG1yAxiEliKfXHyBEgQaXNz+c7mnM0
+         9Fkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=djqCepZpYLgvDRN7eIErDpN284j4dEbxxjwWs+DBJLE=;
-        b=TtKXxYpFLGU1l6ILSGzQPggawKKjLcsyj4v5FcfYDpjGz/aOQb/ZwR8FwYxvFEucw1
-         putTrIHj9H0OQvAuiWiMb6IBO1kuHBRUjHugV7pfVLCY4mobC9WuWwbdi3Rup04YIUaZ
-         Xwshoc3YYgE+QnCZSXLrP8tpF/luxe71SyO1On3rmGBttNj1CJXNUppmFSpmLDzbny6v
-         NOsy23upt4GDPQLZAzmO4oBBCp5KH0TChRij2hNgb7z138J+oQGISctq15Yz8rEOkap2
-         U+Pi4WRFSv4QadLbhDxivHRhpMLq8QOQvhFq79DsO4T4RzDjSl8LdvIMHqOMEOf4pgGz
-         77Yg==
-X-Gm-Message-State: AOAM533O+G6ZLfeuqeX2quc7/V6PztogEnjxzMR4VCtjSxpMNp3YThzf
-	hCcugtItCmJbvdRGfVfdbewrTPfHuQ4=
-X-Google-Smtp-Source: ABdhPJwc6b+0h+B0ELTuoQDIGp8FU2a+jBWP91EBPjdmcOadYPpE8vc3kJT5ROQ5TLwyfxBC4NDUAA==
-X-Received: by 2002:a9d:6c91:: with SMTP id c17mr5655995otr.48.1623952583727;
-        Thu, 17 Jun 2021 10:56:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RwGlpnpV8xP+ugUSSF6Pq5+SCFI3PxuAsIcby3QHZNU=;
+        b=GPP4nE/yC0fmFWw8t74msZy7kH/L3O3tWaUEEqa5cUu1VzB5z1KBHPkqCQ7BfKQj9v
+         qvtZAuXTy3EcG6KZcIQQuILP2xWowcscRjRVrxZzQp5ryLv7uDEtZSyYknwd3aE9m6Dq
+         ZmiJlsZzjDeLIplPKpVoagMWnCogrDLSixEiZUpCSkDa7ADWEN3WM8UjrVzwqQg5YiqK
+         lhgkpXs1zZEBYbqyVTLRhKjnYaO8juCATgWJARxLfjuVjHOzLkewxvTAfe4SMSvRwe4V
+         tRU0bbQR6j2ZU7gC9y5YDz+YFWIn5Xx16F0/WaDrfnXUMoffmGhDc0uTrOowFw+6kIS9
+         yNig==
+X-Gm-Message-State: AOAM532Ox8Uueg+pKFMnW7XicVxBdOmE7BNkpC9MQPfxko1qjzR0u6t5
+	LC6xXpcMhED/p5/aeGC53xwnfKBgOm4=
+X-Google-Smtp-Source: ABdhPJy1zHCZcROKaZ7as6YPTVL/pPOpzCc92j7kcQdsrV1/26Sm9/NX6v1ij3UISMSQzM/KsgnoHA==
+X-Received: by 2002:a9d:3e15:: with SMTP id a21mr6117071otd.366.1623958693433;
+        Thu, 17 Jun 2021 12:38:13 -0700 (PDT)
 Return-Path: <jpewhacker@gmail.com>
 Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id n8sm1105892oij.38.2021.06.17.10.56.23
+        by smtp.gmail.com with ESMTPSA id l28sm1450123otd.66.2021.06.17.12.38.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jun 2021 10:56:23 -0700 (PDT)
+        Thu, 17 Jun 2021 12:38:13 -0700 (PDT)
 From: "Joshua Watt" <JPEWhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bitbake: Add piping compression library
-Date: Thu, 17 Jun 2021 12:56:17 -0500
-Message-Id: <20210617175617.2731-1-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v2] bitbake: Add piping compression library
+Date: Thu, 17 Jun 2021 14:38:09 -0500
+Message-Id: <20210617193809.33714-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210617175617.2731-1-JPEWhacker@gmail.com>
+References: <20210617175617.2731-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
@@ -56,20 +58,37 @@ is utilized to implement a LZ4 and zstd compression API.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/_pipecompress.py | 170 ++++++++++++++++++++++++++++++++
- bitbake/lib/bb/lz4.py           |  17 ++++
- bitbake/lib/bb/zstd.py          |  27 +++++
- 3 files changed, 214 insertions(+)
+V2: Now with tests!
+
+ bitbake/bin/bitbake-selftest        |   1 +
+ bitbake/lib/bb/_pipecompress.py     | 194 ++++++++++++++++++++++++++++
+ bitbake/lib/bb/lz4.py               |  17 +++
+ bitbake/lib/bb/tests/compression.py |  82 ++++++++++++
+ bitbake/lib/bb/zstd.py              |  27 ++++
+ 5 files changed, 321 insertions(+)
  create mode 100644 bitbake/lib/bb/_pipecompress.py
  create mode 100644 bitbake/lib/bb/lz4.py
+ create mode 100644 bitbake/lib/bb/tests/compression.py
  create mode 100644 bitbake/lib/bb/zstd.py
 
+diff --git a/bitbake/bin/bitbake-selftest b/bitbake/bin/bitbake-selftest
+index 757441c754..63762fe794 100755
+--- a/bitbake/bin/bitbake-selftest
++++ b/bitbake/bin/bitbake-selftest
+@@ -29,6 +29,7 @@ tests = ["bb.tests.codeparser",
+          "bb.tests.runqueue",
+          "bb.tests.siggen",
+          "bb.tests.utils",
++         "bb.tests.compression",
+          "hashserv.tests",
+          "layerindexlib.tests.layerindexobj",
+          "layerindexlib.tests.restapi",
 diff --git a/bitbake/lib/bb/_pipecompress.py b/bitbake/lib/bb/_pipecompress.py
 new file mode 100644
-index 0000000000..3404be98d6
+index 0000000000..4b9f662143
 --- /dev/null
 +++ b/bitbake/lib/bb/_pipecompress.py
-@@ -0,0 +1,170 @@
+@@ -0,0 +1,194 @@
 +#
 +# SPDX-License-Identifier: GPL-2.0-only
 +#
@@ -136,6 +155,10 @@ index 0000000000..3404be98d6
 +        return binary_file
 +
 +
++class CompressionError(OSError):
++    pass
++
++
 +class PipeFile(io.RawIOBase):
 +    """
 +    Class that implements generically piping to/from a compression program
@@ -156,7 +179,7 @@ index 0000000000..3404be98d6
 +    READ = 0
 +    WRITE = 1
 +
-+    def __init__(self, filename=None, mode="rb", *, fileobj=None):
++    def __init__(self, filename=None, mode="rb", *, stderr=None, fileobj=None):
 +        if "t" in mode or "U" in mode:
 +            raise ValueError("Invalid mode: {!r}".format(mode))
 +
@@ -180,6 +203,7 @@ index 0000000000..3404be98d6
 +                self.get_decompress(),
 +                stdin=self.fileobj,
 +                stdout=subprocess.PIPE,
++                stderr=stderr,
 +                close_fds=True,
 +            )
 +            self.pipe = self.p.stdout
@@ -188,18 +212,29 @@ index 0000000000..3404be98d6
 +                self.get_compress(),
 +                stdin=subprocess.PIPE,
 +                stdout=self.fileobj,
++                stderr=stderr,
 +                close_fds=True,
 +            )
 +            self.pipe = self.p.stdin
 +
 +        self.__closed = False
 +
++    def _check_process(self):
++        if self.p is None:
++            return
++
++        returncode = self.p.wait()
++        if returncode:
++            raise CompressionError("Process died with %d" % returncode)
++        self.p = None
++
 +    def close(self):
 +        if self.closed:
 +            return
 +
 +        self.pipe.close()
-+        self.p.wait()
++        if self.p is not None:
++            self._check_process()
 +        self.fileobj.close()
 +
 +        self.__closed = True
@@ -230,7 +265,10 @@ index 0000000000..3404be98d6
 +            raise OSError(
 +                errno.EBADF, "read() on write-only %s object" % self.__class__.__name__
 +            )
-+        return self.pipe.readinto(b)
++        size = self.pipe.readinto(b)
++        if size == 0:
++            self._check_process()
++        return size
 +
 +    def write(self, data):
 +        if self.mode != self.WRITE:
@@ -239,7 +277,12 @@ index 0000000000..3404be98d6
 +            raise OSError(
 +                errno.EBADF, "write() on read-only %s object" % self.__class__.__name__
 +            )
-+        return self.pipe.write(data)
++        data = self.pipe.write(data)
++
++        if not data:
++            self._check_process()
++
++        return data
 diff --git a/bitbake/lib/bb/lz4.py b/bitbake/lib/bb/lz4.py
 new file mode 100644
 index 0000000000..c2bda291d3
@@ -263,6 +306,94 @@ index 0000000000..c2bda291d3
 +
 +    def get_decompress(self):
 +        return ["lz4c", "-d", "-c"]
+diff --git a/bitbake/lib/bb/tests/compression.py b/bitbake/lib/bb/tests/compression.py
+new file mode 100644
+index 0000000000..f663853901
+--- /dev/null
++++ b/bitbake/lib/bb/tests/compression.py
+@@ -0,0 +1,82 @@
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++
++from pathlib import Path
++import bb.lz4
++import bb.zstd
++import contextlib
++import os
++import shutil
++import tempfile
++import unittest
++import subprocess
++
++
++class CompressionTests(object):
++    def setUp(self):
++        self._t = tempfile.TemporaryDirectory()
++        self.tmpdir = Path(self._t.name)
++        self.addCleanup(self._t.cleanup)
++
++    def _file_helper(self, mode_suffix, data):
++        tmp_file = self.tmpdir / "compressed"
++
++        with self.do_open(tmp_file, mode="w" + mode_suffix) as f:
++            f.write(data)
++
++        with self.do_open(tmp_file, mode="r" + mode_suffix) as f:
++            read_data = f.read()
++
++        self.assertEqual(read_data, data)
++
++    def test_text_file(self):
++        self._file_helper("t", "Hello")
++
++    def test_binary_file(self):
++        self._file_helper("b", "Hello".encode("utf-8"))
++
++    def _pipe_helper(self, mode_suffix, data):
++        rfd, wfd = os.pipe()
++        with open(rfd, "rb") as r, open(wfd, "wb") as w:
++            with self.do_open(r, mode="r" + mode_suffix) as decompress:
++                with self.do_open(w, mode="w" + mode_suffix) as compress:
++                    compress.write(data)
++                read_data = decompress.read()
++
++        self.assertEqual(read_data, data)
++
++    def test_text_pipe(self):
++        self._pipe_helper("t", "Hello")
++
++    def test_binary_pipe(self):
++        self._pipe_helper("b", "Hello".encode("utf-8"))
++
++    def test_bad_decompress(self):
++        tmp_file = self.tmpdir / "compressed"
++        with tmp_file.open("wb") as f:
++            f.write(b"\x00")
++
++        with self.assertRaises(OSError):
++            with self.do_open(tmp_file, mode="rb", stderr=subprocess.DEVNULL) as f:
++                data = f.read()
++
++
++class LZ4Tests(CompressionTests, unittest.TestCase):
++    def get_cls(self):
++        return bb.lz4.LZ4File
++
++    @contextlib.contextmanager
++    def do_open(self, *args, **kwargs):
++        with bb.lz4.open(*args, **kwargs) as f:
++            yield f
++
++
++class ZStdTests(CompressionTests, unittest.TestCase):
++    def get_cls(self):
++        return bb.zstd.ZstdFile
++
++    @contextlib.contextmanager
++    def do_open(self, *args, **kwargs):
++        with bb.zstd.open(*args, **kwargs) as f:
++            yield f
 diff --git a/bitbake/lib/bb/zstd.py b/bitbake/lib/bb/zstd.py
 new file mode 100644
 index 0000000000..1f46087ec9
