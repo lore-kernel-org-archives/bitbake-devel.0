@@ -1,72 +1,424 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
- by mx.groups.io with SMTP id smtpd.web12.1519.1623975487382704199
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+ by mx.groups.io with SMTP id smtpd.web11.7824.1624456202744106734
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Jun 2021 17:18:07 -0700
+ Wed, 23 Jun 2021 06:50:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=kH5G28Af;
- spf=softfail (domain: sakoman.com, ip: 209.85.167.181, mailfrom: steve@sakoman.com)
-Received: by mail-oi1-f181.google.com with SMTP id d19so8521337oic.7
-        for <bitbake-devel@lists.openembedded.org>; Thu, 17 Jun 2021 17:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UPpGtZpiaCO6Ea8ywZJcDMU3D6yOKXchSPO0tAokkRk=;
-        b=kH5G28AfOQfEBQFd73bwNWif3+L6uqEeh5F8PIdwdlIdGKVYLP+s3EvvXm0behn2aT
-         kh/0+fB1KIPHA7sajhmtli1tSa26j2dqAL2YQboY6wao+yFZ1+TMnDt486HJshujVVlN
-         OV0QC9YnToJBGXwY7oZ7TWdtAddoNIpZFL6iCmlYAHM8v1poUrvn11pg7pAwA35A5hIB
-         8SETTc3xTJLm0/BvHDZBCF7iWbRhRaQ8l4A1aXhSHHR+vpU6XUeoGpzdMWLgWppgpa1f
-         T3bIXn2yC1yL/d9sprnzPPGkPOyG9aZPtzHE+7ECMDXkREK+S1OoKxPxpIA8nhgDTJzG
-         06HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UPpGtZpiaCO6Ea8ywZJcDMU3D6yOKXchSPO0tAokkRk=;
-        b=YhJbIxBC+geF+xk/mP4BVkvS8xfy2uUKZiv2XHbi6jIIMMWB16bDeW5B6Zr1wvVfTt
-         mq1oCWDKIvoLpxwBzQesGB/0RaC6qjuo6rB8rXhBqQ9A/DbmpEGdrRDZidei48b91fxo
-         qpVQr6UCcvzho/uhujpCvqV7abxb0dwF4/lbTnGdSANJuL8FVNkww1L1+009+ro8B3BO
-         KQRzKiXmvf+3pZGbB3rC+PHVaFWO3137aTlJoo8iJ59c7ev0fDdyrTeYG1yQH3pxMlZP
-         GkCY3oD0B38BHvsmPv3gaTlnLT34p6hwFc+RaQkXchRwmk9VvP/HmrPyvE/HhX2m4RFW
-         ofFA==
-X-Gm-Message-State: AOAM532NtjLeKhkVqtfMzQOk/NU6IALeZq2TMQ+/cvJwJSKN6TT/BBlt
-	CkpanoHK59N8twL4iqBwwlRBhgYzCCASImOF5/4=
-X-Google-Smtp-Source: ABdhPJwIl2jmlMUL/sGtcGJw1CNL+mLMHs/geYxzVldScj06R+QcfAWu9Cn1hyUXpRPXxuY4cvBW+g==
-X-Received: by 2002:a05:6808:692:: with SMTP id k18mr12414298oig.148.1623975486256;
-        Thu, 17 Jun 2021 17:18:06 -0700 (PDT)
-Return-Path: <steve@sakoman.com>
-Received: from localhost.localdomain ([172.243.4.16])
-        by smtp.gmail.com with ESMTPSA id f36sm1430681otf.12.2021.06.17.17.18.03
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jun 2021 17:18:05 -0700 (PDT)
-From: "Steve Sakoman" <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 0/4] Pull request (cover letter only)
-Date: Thu, 17 Jun 2021 14:17:45 -1000
-Message-Id: <cover.1623975328.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=missing; spf=pass (domain: bootlin.com, ip: 217.70.183.196, mailfrom: alexandre.belloni@bootlin.com)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+	by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 9BBE9E0004;
+	Wed, 23 Jun 2021 13:50:00 +0000 (UTC)
+Date: Wed, 23 Jun 2021 15:50:00 +0200
+From: "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+To: Joshua Watt <JPEWhacker@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel][PATCH v2] bitbake: Add piping compression library
+Message-ID: <YNM8CKXIURDi8PHL@piout.net>
+References: <20210617175617.2731-1-JPEWhacker@gmail.com>
+ <20210617193809.33714-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210617193809.33714-1-JPEWhacker@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The following changes since commit 078f3164dcb1de7a141bec3a8fd52631d0362631:
+Hello Joshua,
 
-  providers: selected version not available should be a warning (2021-05-13 04:26:15 -1000)
+On 17/06/2021 14:38:09-0500, Joshua Watt wrote:
+> Adds a library that implements file-like objects (similar to
+> gzip.GzipFile) that can stream to arbitrary compression programs. This
+> is utilized to implement a LZ4 and zstd compression API.
+> 
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+> V2: Now with tests!
+> 
+>  bitbake/bin/bitbake-selftest        |   1 +
+>  bitbake/lib/bb/_pipecompress.py     | 194 ++++++++++++++++++++++++++++
+>  bitbake/lib/bb/lz4.py               |  17 +++
+>  bitbake/lib/bb/tests/compression.py |  82 ++++++++++++
+>  bitbake/lib/bb/zstd.py              |  27 ++++
 
-are available in the Git repository at:
+Note that this does apply on the poky git repository but not the bitbake
+repo unless patch -p2 is used.
 
-  git://git.openembedded.org/bitbake-contrib stable/1.46-next
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-next
+>  5 files changed, 321 insertions(+)
+>  create mode 100644 bitbake/lib/bb/_pipecompress.py
+>  create mode 100644 bitbake/lib/bb/lz4.py
+>  create mode 100644 bitbake/lib/bb/tests/compression.py
+>  create mode 100644 bitbake/lib/bb/zstd.py
+> 
 
-Richard Purdie (4):
-  cooker: Ensure parse_quit thread is closed down
-  cooker: Explictly shut down the sync thread
-  cooker: Ensure parser is cleaned up
-  cooker: Avoid parser deadlocks
+I believe I have applied the patch correctly and this fails on the
+autobuilders with:
 
- lib/bb/cooker.py | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+FileNotFoundError: [Errno 2] No such file or directory: 'zstd': 'zstd'
+
+https://autobuilder.yoctoproject.org/typhoon/#/builders/79/builds/2234
+https://autobuilder.yoctoproject.org/typhoon/#/builders/80/builds/2210
+https://autobuilder.yoctoproject.org/typhoon/#/builders/86/builds/2213
+https://autobuilder.yoctoproject.org/typhoon/#/builders/87/builds/2248
+
+
+> diff --git a/bitbake/bin/bitbake-selftest b/bitbake/bin/bitbake-selftest
+> index 757441c754..63762fe794 100755
+> --- a/bitbake/bin/bitbake-selftest
+> +++ b/bitbake/bin/bitbake-selftest
+> @@ -29,6 +29,7 @@ tests = ["bb.tests.codeparser",
+>           "bb.tests.runqueue",
+>           "bb.tests.siggen",
+>           "bb.tests.utils",
+> +         "bb.tests.compression",
+>           "hashserv.tests",
+>           "layerindexlib.tests.layerindexobj",
+>           "layerindexlib.tests.restapi",
+> diff --git a/bitbake/lib/bb/_pipecompress.py b/bitbake/lib/bb/_pipecompress.py
+> new file mode 100644
+> index 0000000000..4b9f662143
+> --- /dev/null
+> +++ b/bitbake/lib/bb/_pipecompress.py
+> @@ -0,0 +1,194 @@
+> +#
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Helper library to implement streaming compression and decompression using an
+> +# external process
+> +#
+> +# This library should be used directly by end users; a wrapper library for the
+> +# specific compression tool should be created
+> +
+> +import builtins
+> +import io
+> +import os
+> +import subprocess
+> +
+> +
+> +def open_wrap(
+> +    cls, filename, mode="rb", *, encoding=None, errors=None, newline=None, **kwargs
+> +):
+> +    """
+> +    Open a compressed file in binary or text mode.
+> +
+> +    Users should not call this directly. A specific compression library can use
+> +    this helper to provide it's own "open" command
+> +
+> +    The filename argument can be an actual filename (a str or bytes object), or
+> +    an existing file object to read from or write to.
+> +
+> +    The mode argument can be "r", "rb", "w", "wb", "x", "xb", "a" or "ab" for
+> +    binary mode, or "rt", "wt", "xt" or "at" for text mode. The default mode is
+> +    "rb".
+> +
+> +    For binary mode, this function is equivalent to the cls constructor:
+> +    cls(filename, mode). In this case, the encoding, errors and newline
+> +    arguments must not be provided.
+> +
+> +    For text mode, a cls object is created, and wrapped in an
+> +    io.TextIOWrapper instance with the specified encoding, error handling
+> +    behavior, and line ending(s).
+> +    """
+> +    if "t" in mode:
+> +        if "b" in mode:
+> +            raise ValueError("Invalid mode: %r" % (mode,))
+> +    else:
+> +        if encoding is not None:
+> +            raise ValueError("Argument 'encoding' not supported in binary mode")
+> +        if errors is not None:
+> +            raise ValueError("Argument 'errors' not supported in binary mode")
+> +        if newline is not None:
+> +            raise ValueError("Argument 'newline' not supported in binary mode")
+> +
+> +    file_mode = mode.replace("t", "")
+> +    if isinstance(filename, (str, bytes, os.PathLike)):
+> +        binary_file = cls(filename, file_mode, **kwargs)
+> +    elif hasattr(filename, "read") or hasattr(filename, "write"):
+> +        binary_file = cls(None, file_mode, fileobj=filename, **kwargs)
+> +    else:
+> +        raise TypeError("filename must be a str or bytes object, or a file")
+> +
+> +    if "t" in mode:
+> +        return io.TextIOWrapper(
+> +            binary_file, encoding, errors, newline, write_through=True
+> +        )
+> +    else:
+> +        return binary_file
+> +
+> +
+> +class CompressionError(OSError):
+> +    pass
+> +
+> +
+> +class PipeFile(io.RawIOBase):
+> +    """
+> +    Class that implements generically piping to/from a compression program
+> +
+> +    Derived classes should add the function get_compress() and get_decompress()
+> +    that return the required commands. Input will be piped into stdin and the
+> +    (de)compressed output should be written to stdout, e.g.:
+> +
+> +        class FooFile(PipeCompressionFile):
+> +            def get_decompress(self):
+> +                return ["fooc", "--decompress", "--stdout"]
+> +
+> +            def get_compress(self):
+> +                return ["fooc", "--compress", "--stdout"]
+> +
+> +    """
+> +
+> +    READ = 0
+> +    WRITE = 1
+> +
+> +    def __init__(self, filename=None, mode="rb", *, stderr=None, fileobj=None):
+> +        if "t" in mode or "U" in mode:
+> +            raise ValueError("Invalid mode: {!r}".format(mode))
+> +
+> +        if not "b" in mode:
+> +            mode += "b"
+> +
+> +        if mode.startswith("r"):
+> +            self.mode = self.READ
+> +        elif mode.startswith("w"):
+> +            self.mode = self.WRITE
+> +        else:
+> +            raise ValueError("Invalid mode %r" % mode)
+> +
+> +        if fileobj is not None:
+> +            self.fileobj = fileobj
+> +        else:
+> +            self.fileobj = builtins.open(filename, mode or "rb")
+> +
+> +        if self.mode == self.READ:
+> +            self.p = subprocess.Popen(
+> +                self.get_decompress(),
+> +                stdin=self.fileobj,
+> +                stdout=subprocess.PIPE,
+> +                stderr=stderr,
+> +                close_fds=True,
+> +            )
+> +            self.pipe = self.p.stdout
+> +        else:
+> +            self.p = subprocess.Popen(
+> +                self.get_compress(),
+> +                stdin=subprocess.PIPE,
+> +                stdout=self.fileobj,
+> +                stderr=stderr,
+> +                close_fds=True,
+> +            )
+> +            self.pipe = self.p.stdin
+> +
+> +        self.__closed = False
+> +
+> +    def _check_process(self):
+> +        if self.p is None:
+> +            return
+> +
+> +        returncode = self.p.wait()
+> +        if returncode:
+> +            raise CompressionError("Process died with %d" % returncode)
+> +        self.p = None
+> +
+> +    def close(self):
+> +        if self.closed:
+> +            return
+> +
+> +        self.pipe.close()
+> +        if self.p is not None:
+> +            self._check_process()
+> +        self.fileobj.close()
+> +
+> +        self.__closed = True
+> +
+> +    @property
+> +    def closed(self):
+> +        return self.__closed
+> +
+> +    def fileno(self):
+> +        return self.pipe.fileno()
+> +
+> +    def flush(self):
+> +        self.pipe.flush()
+> +
+> +    def isatty(self):
+> +        return self.pipe.isatty()
+> +
+> +    def readable(self):
+> +        return self.mode == self.READ
+> +
+> +    def writable(self):
+> +        return self.mode == self.WRITE
+> +
+> +    def readinto(self, b):
+> +        if self.mode != self.READ:
+> +            import errno
+> +
+> +            raise OSError(
+> +                errno.EBADF, "read() on write-only %s object" % self.__class__.__name__
+> +            )
+> +        size = self.pipe.readinto(b)
+> +        if size == 0:
+> +            self._check_process()
+> +        return size
+> +
+> +    def write(self, data):
+> +        if self.mode != self.WRITE:
+> +            import errno
+> +
+> +            raise OSError(
+> +                errno.EBADF, "write() on read-only %s object" % self.__class__.__name__
+> +            )
+> +        data = self.pipe.write(data)
+> +
+> +        if not data:
+> +            self._check_process()
+> +
+> +        return data
+> diff --git a/bitbake/lib/bb/lz4.py b/bitbake/lib/bb/lz4.py
+> new file mode 100644
+> index 0000000000..c2bda291d3
+> --- /dev/null
+> +++ b/bitbake/lib/bb/lz4.py
+> @@ -0,0 +1,17 @@
+> +#
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +
+> +import bb._pipecompress
+> +
+> +
+> +def open(*args, **kwargs):
+> +    return bb._pipecompress.open_wrap(LZ4File, *args, **kwargs)
+> +
+> +
+> +class LZ4File(bb._pipecompress.PipeFile):
+> +    def get_compress(self):
+> +        return ["lz4c", "-z", "-c"]
+> +
+> +    def get_decompress(self):
+> +        return ["lz4c", "-d", "-c"]
+> diff --git a/bitbake/lib/bb/tests/compression.py b/bitbake/lib/bb/tests/compression.py
+> new file mode 100644
+> index 0000000000..f663853901
+> --- /dev/null
+> +++ b/bitbake/lib/bb/tests/compression.py
+> @@ -0,0 +1,82 @@
+> +#
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +
+> +from pathlib import Path
+> +import bb.lz4
+> +import bb.zstd
+> +import contextlib
+> +import os
+> +import shutil
+> +import tempfile
+> +import unittest
+> +import subprocess
+> +
+> +
+> +class CompressionTests(object):
+> +    def setUp(self):
+> +        self._t = tempfile.TemporaryDirectory()
+> +        self.tmpdir = Path(self._t.name)
+> +        self.addCleanup(self._t.cleanup)
+> +
+> +    def _file_helper(self, mode_suffix, data):
+> +        tmp_file = self.tmpdir / "compressed"
+> +
+> +        with self.do_open(tmp_file, mode="w" + mode_suffix) as f:
+> +            f.write(data)
+> +
+> +        with self.do_open(tmp_file, mode="r" + mode_suffix) as f:
+> +            read_data = f.read()
+> +
+> +        self.assertEqual(read_data, data)
+> +
+> +    def test_text_file(self):
+> +        self._file_helper("t", "Hello")
+> +
+> +    def test_binary_file(self):
+> +        self._file_helper("b", "Hello".encode("utf-8"))
+> +
+> +    def _pipe_helper(self, mode_suffix, data):
+> +        rfd, wfd = os.pipe()
+> +        with open(rfd, "rb") as r, open(wfd, "wb") as w:
+> +            with self.do_open(r, mode="r" + mode_suffix) as decompress:
+> +                with self.do_open(w, mode="w" + mode_suffix) as compress:
+> +                    compress.write(data)
+> +                read_data = decompress.read()
+> +
+> +        self.assertEqual(read_data, data)
+> +
+> +    def test_text_pipe(self):
+> +        self._pipe_helper("t", "Hello")
+> +
+> +    def test_binary_pipe(self):
+> +        self._pipe_helper("b", "Hello".encode("utf-8"))
+> +
+> +    def test_bad_decompress(self):
+> +        tmp_file = self.tmpdir / "compressed"
+> +        with tmp_file.open("wb") as f:
+> +            f.write(b"\x00")
+> +
+> +        with self.assertRaises(OSError):
+> +            with self.do_open(tmp_file, mode="rb", stderr=subprocess.DEVNULL) as f:
+> +                data = f.read()
+> +
+> +
+> +class LZ4Tests(CompressionTests, unittest.TestCase):
+> +    def get_cls(self):
+> +        return bb.lz4.LZ4File
+> +
+> +    @contextlib.contextmanager
+> +    def do_open(self, *args, **kwargs):
+> +        with bb.lz4.open(*args, **kwargs) as f:
+> +            yield f
+> +
+> +
+> +class ZStdTests(CompressionTests, unittest.TestCase):
+> +    def get_cls(self):
+> +        return bb.zstd.ZstdFile
+> +
+> +    @contextlib.contextmanager
+> +    def do_open(self, *args, **kwargs):
+> +        with bb.zstd.open(*args, **kwargs) as f:
+> +            yield f
+> diff --git a/bitbake/lib/bb/zstd.py b/bitbake/lib/bb/zstd.py
+> new file mode 100644
+> index 0000000000..1f46087ec9
+> --- /dev/null
+> +++ b/bitbake/lib/bb/zstd.py
+> @@ -0,0 +1,27 @@
+> +#
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +
+> +import bb._pipecompress
+> +import shutil
+> +
+> +
+> +def open(*args, **kwargs):
+> +    return bb._pipecompress.open_wrap(ZstdFile, *args, **kwargs)
+> +
+> +
+> +class ZstdFile(bb._pipecompress.PipeFile):
+> +    def __init__(self, *args, num_threads=1, **kwargs):
+> +        self.num_threads = num_threads
+> +        super().__init__(*args, **kwargs)
+> +
+> +    def _get_zstd(self):
+> +        if self.num_threads == 1 or not shutil.which("pzstd"):
+> +            return ["zstd"]
+> +        return ["pzstd", "-p", "%d" % self.num_threads]
+> +
+> +    def get_compress(self):
+> +        return self._get_zstd() + ["-c"]
+> +
+> +    def get_decompress(self):
+> +        return self._get_zstd() + ["-d", "-c"]
+> -- 
+> 2.31.1
+> 
 
 -- 
-2.25.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
