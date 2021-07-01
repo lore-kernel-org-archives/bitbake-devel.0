@@ -1,86 +1,125 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web08.14618.1625002054162376779
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+ by mx.groups.io with SMTP id smtpd.web10.9367.1625155167917758042
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Jun 2021 14:27:34 -0700
+ Thu, 01 Jul 2021 08:59:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Dpn4lwM4;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id a5-20020a7bc1c50000b02901e3bbe0939bso3447897wmj.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 29 Jun 2021 14:27:33 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=WU6y4bla;
+ spf=pass (domain: gmail.com, ip: 209.85.167.182, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oi1-f182.google.com with SMTP id b2so7813017oiy.6
+        for <bitbake-devel@lists.openembedded.org>; Thu, 01 Jul 2021 08:59:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=65W1iEfCsQffxnYoDfQQIqx4dQ8P841SHIMRDJo5nms=;
-        b=Dpn4lwM4tleoZE80lyVrBYoo2WZ3Tv5N0G9C5CQ/gP+hPzPYW0QsQF57sknY7g7S1U
-         x3EgAzOxWh+LrubscYR41GV7x9D+JDXOI5QFAX+fajvam8QCtqyvw9Xmjxxhk+iFEL1o
-         MxvRFbe0QaxdE4ZcEHohfbQZfeGQdRwyabaV8=
+        d=gmail.com; s=20161025;
+        h=from:subject:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=Z1rvkr45+SERUVXypz/hFx5i82vIDElCOKLmtYYebmg=;
+        b=WU6y4blaBi9xACCOvVXQOcYCbEqrpAOwCwNJK6jAi1xrWP4GS/Bk8jpW0nQxumKLGC
+         vHUwS8agXudSQemU2zt1Q19uJ1p4ZdtqGcUT6ZQrQxx6e+Gw4pkfoA+pFftFitvZHDGc
+         9ATNsBNld3sJxA2GgY+/wMhz0vvNOGCIgs3VCgYY5ObfCcXlQLvlm6a+5Kc4xyj5+6xs
+         0TI6ITGVpp/6VPiXHWGGyTqysOBx2jhfWOZQzvEc6EUCnEHwWjwVG3dEq7zsmLDsuWV1
+         87BRcjdEZ8dff+WZ55vDLiczbzZT1dHI9UJTAY+ijFCsu7FSscM+OSBq2mutODnNvl3X
+         7ffQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=65W1iEfCsQffxnYoDfQQIqx4dQ8P841SHIMRDJo5nms=;
-        b=TN4iEhXfWVf4PDJzBrkxv60qX8ED9tIqw7HW8jl26ZpIvSoAJS8GlC50uDOnpUrieS
-         tiK0tXJyFd5gnFNBuPqVK4Q9vy5GvP7oOUNl8hLxaDJvmZ/G9Srm1uiYtZrh8H3o2lBx
-         rCEbKrEeCygKDrdPnVtT89EMtpaxfYXOYSlt82Rvs+D0na71teexXQCcVDiTHcgfnuUj
-         ciD9ncUt7dG09SijfegqV4PwbUUAH/VaDc3vIEDu0oM/V86Jcfr71VA3Pcp/9wY1FgPp
-         jYsOxCAjQY9EUNq7d85Krea+rUDeJ7hAC437QtNjIe1JCXR9r8qy0DBWOrZGoTy3T4sp
-         5eiw==
-X-Gm-Message-State: AOAM533Q7wiqx2MEVEx7V85r5qXAWtq/+iTDIM4MMcsmbdvy1sy87EWK
-	AfZo9whJhj+XgPupsvUki4U8fw==
-X-Google-Smtp-Source: ABdhPJzClevvfwmnG65jWwBHPXrlRE2u5C47Rg7MwG/KBt157eNae1CuQHbLvCmuB0/biDJJ0n+u6A==
-X-Received: by 2002:a7b:c3ca:: with SMTP id t10mr866637wmj.74.1625002052430;
-        Tue, 29 Jun 2021 14:27:32 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:fa9c:ff43:b5c6:d04f? ([2001:8b0:aba:5f3c:fa9c:ff43:b5c6:d04f])
-        by smtp.gmail.com with ESMTPSA id f9sm6339677wrm.48.2021.06.29.14.27.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Jun 2021 14:27:32 -0700 (PDT)
-Message-ID: <ccc5b774fa3ff509fdd51036b9cc0fa2a855a992.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v2] fetch2/wget: fetch securely by default
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Ross Burton <ross@burtonini.com>, bitbake-devel@lists.openembedded.org
-Date: Tue, 29 Jun 2021 22:27:29 +0100
-In-Reply-To: <20210628171240.950640-1-ross.burton@arm.com>
-References: <20210628171240.950640-1-ross.burton@arm.com>
-User-Agent: Evolution 3.40.0-1 
+        h=x-gm-message-state:from:subject:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Z1rvkr45+SERUVXypz/hFx5i82vIDElCOKLmtYYebmg=;
+        b=XjT8tXPwSJbvD9ii/lGugqbeUMk2/Wj/cf1rwIe3mRavfRe46JPZ9GtbQKuLZnNj4T
+         cSuX10PyfaDVIKfbPeEonaL0gJFLiN7kISM+Es2hTiqUfhUCrq+EIwku9YMnXfcZY4X/
+         rfcfQ7/yR34vCSx8bvIGKbF7e1bN2t1yVkFIle8e5495JfnxKT9GpmWjdaET4t0b2xqI
+         dQp0gQcLySQ6OmOixgFnqEPk5mHwX0zLP5nODlWKD+cUIjzH7DXLD7+QRrbE98mCiITm
+         n2BA/G2SR7rqlH2inuHyw/fohn7tWJXuPxg1Xs6GZ3dxtLyQi3psuTxEX0r5LNxi1u8S
+         5NsQ==
+X-Gm-Message-State: AOAM532Zy1KY+a1NgP7byyZ70YCR+p/6USw2niRorQPtrObNFoVREL1Z
+	w6vdeD0DguJrQO1aV4iv8os=
+X-Google-Smtp-Source: ABdhPJw27cTkCrxxjFEAbTqf5mngqovKIGjjs1vgKBQYpqKzONrhtVs5MG3SwZ0+7MfB3SnIa9HEQQ==
+X-Received: by 2002:a05:6808:13c5:: with SMTP id d5mr166617oiw.164.1625155167304;
+        Thu, 01 Jul 2021 08:59:27 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from ?IPv6:2605:a601:ac3d:c100:e3e8:d9:3a56:e27d? ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
+        by smtp.gmail.com with ESMTPSA id r186sm70745oia.6.2021.07.01.08.59.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Jul 2021 08:59:26 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+Subject: Re: [PATCH v3 2/4] asyncrpc: Ensure that asyncio shutdown is clean
+To: Paul Barker <pbarker@konsulko.com>, bitbake-devel@lists.openembedded.org,
+ Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <20210628041356.2676-1-pbarker@konsulko.com>
+ <20210628041356.2676-3-pbarker@konsulko.com>
+Message-ID: <996945f9-27a7-9fd8-3bd1-70d7b78c29a4@gmail.com>
+Date: Thu, 1 Jul 2021 10:59:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210628041356.2676-3-pbarker@konsulko.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-On Mon, 2021-06-28 at 18:12 +0100, Ross Burton wrote:
-> The days of broken certificates are behind us now, so instead of always
-> passing --no-check-certificate to wget, don't pass it by default and
-> instead only pass it BB_CHECK_SSL_CERTS = "0".
-> 
-> [ YOCTO #14108 ]
-> 
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
+
+On 6/27/21 11:13 PM, Paul Barker wrote:
+> We should ensure that all async tasks are cancelled and then allowed to
+> finish gracefully before closing the asyncio loop.
+>
+> Signed-off-by: Paul Barker <pbarker@konsulko.com>
 > ---
->  .../bitbake-user-manual-fetching.rst            |  4 ++++
->  .../bitbake-user-manual-ref-variables.rst       |  4 ++++
->  bitbake/lib/bb/fetch2/wget.py                   | 17 ++++++++++++++---
->  3 files changed, 22 insertions(+), 3 deletions(-)
-> 
-[...]
-> @@ -288,12 +297,14 @@ class Wget(FetchMethod):
->          if exported_proxies:
->              handlers.append(urllib.request.ProxyHandler())
->          handlers.append(CacheHTTPHandler())
+>   lib/bb/asyncrpc/serv.py | 33 +++++++++++++++++++++------------
+>   1 file changed, 21 insertions(+), 12 deletions(-)
+>
+> diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
+> index d6e3df2c5..0cdae5327 100644
+> --- a/lib/bb/asyncrpc/serv.py
+> +++ b/lib/bb/asyncrpc/serv.py
+> @@ -198,25 +198,34 @@ class AsyncServer(object):
+>                   await writer.wait_closed()
+>           self.logger.debug('Client disconnected')
+>   
+> -    def run_loop_forever(self):
+> -        try:
+> -            self.loop.run_forever()
+> -        except KeyboardInterrupt:
+> -            pass
+> -
+> -    def signal_handler(self):
+> +    def handle_signal(self):
+> +        self.loop.create_task(self.shutdown())
 > +
->          # Since Python 2.7.9 ssl cert validation is enabled by default
->          # see PEP-0476, this causes verification errors on some https servers
->          # so disable by default.
->          import ssl
-> -        if hasattr(ssl, '_create_unverified_context'):
-> +        if not self.check_certs(d) and hasattr(ssl, '_create_unverified_context'):
->              handlers.append(urllib.request.HTTPSHandler(context=ssl._create_unverified_context()))
+> +    async def shutdown(self):
+> +        self.logger.debug('Server shutting down')
 > +
->          opener = urllib.request.build_opener(*handlers)
+> +        # Stop accepting connections
+> +        self.server.close()
+> +        await self.server.wait_closed()
+> +
+> +        # Cancel all active tasks
+> +        tasks = [t for t in asyncio.Task.all_tasks(self.loop)
+> +                 if t is not asyncio.Task.current_task(self.loop)]
+> +        for task in tasks:
+> +            task.cancel()
+> +        await asyncio.gather(*tasks, return_exceptions=True)
 
-The comment here is now incorrect. I tweaked it in the version I queued in -next.
+Do we need to clean up all the client sockets here with .close() 
+.wait_closed() like we do with the server socket?
 
-Cheers,
 
-Richard
-
+>           self.loop.stop()
+>   
+> +    def run_loop_forever(self):
+> +        self.loop.run_forever()
+> +
+>       def serve_forever(self):
+>           asyncio.set_event_loop(self.loop)
+>           try:
+> -            self.loop.add_signal_handler(signal.SIGTERM, self.signal_handler)
+> +            self.loop.add_signal_handler(signal.SIGTERM, self.handle_signal)
+> +            self.loop.add_signal_handler(signal.SIGINT, self.handle_signal)
+>   
+>               self.run_loop_forever()
+> -            self.server.close()
+> -
+> -            self.loop.run_until_complete(self.server.wait_closed())
+> -            self.logger.debug('Server shutting down')
+>           finally:
+>               if self.close_loop:
+>                   if sys.version_info >= (3, 6):
