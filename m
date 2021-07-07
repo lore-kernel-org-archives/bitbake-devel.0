@@ -1,65 +1,55 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web09.14891.1625617234643080659
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.20189.1625660435860794099
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 06 Jul 2021 17:20:34 -0700
+ Wed, 07 Jul 2021 05:20:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 2233040C52
-	for <bitbake-devel@lists.openembedded.org>; Wed,  7 Jul 2021 00:20:34 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id gVtht-nT4Bw7 for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Jul 2021 00:20:34 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 1707C40A47
-	for <bitbake-devel@lists.openembedded.org>; Wed,  7 Jul 2021 00:20:34 +0000 (UTC)
-Received: from gimli.denix (unknown [192.168.30.6])
-	by mail.denix.org (Postfix) with ESMTP id D010F174619;
-	Tue,  6 Jul 2021 20:20:33 -0400 (EDT)
-From: "Denys Dmytriyenko" <denis@denix.org>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 666296D
+	for <bitbake-devel@lists.openembedded.org>; Wed,  7 Jul 2021 05:20:25 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 087E23F73B
+	for <bitbake-devel@lists.openembedded.org>; Wed,  7 Jul 2021 05:20:24 -0700 (PDT)
+From: "Ross Burton" <ross@burtonini.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Denys Dmytriyenko <denis@denix.org>
-Subject: [PATCH][1.46/1.48] providers: replace newly added logger.warn() with logger.warning()
-Date: Tue,  6 Jul 2021 20:20:27 -0400
-Message-Id: <1625617227-7586-1-git-send-email-denis@denix.org>
-X-Mailer: git-send-email 2.7.4
+Subject: [PATCH] bb/utils: add layer_path() function
+Date: Wed,  7 Jul 2021 13:20:21 +0100
+Message-Id: <20210707122021.2924476-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-Commit https://git.openembedded.org/bitbake/commit/?id=78cd63285713fde59506eb2e71a7b7ee59a594ff
-converted logger.info() to logger.warn(), which is deprecated and instead
-should use logger.warning():
+Add layer_path() which will return the path to a layer. Useful to
+programatically find other layers at build time, or from tinfoil.
 
-https://lists.openembedded.org/g/bitbake-devel/topic/82742194#12377
-
-Signed-off-by: Denys Dmytriyenko <denis@denix.org>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- lib/bb/providers.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/utils.py | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/lib/bb/providers.py b/lib/bb/providers.py
-index 3f66a3d..484e1ea 100644
---- a/lib/bb/providers.py
-+++ b/lib/bb/providers.py
-@@ -151,7 +151,7 @@ def findPreferredProvider(pn, cfgData, dataCache, pkg_pn = None, item = None):
-         if item:
-             itemstr = " (for item %s)" % item
-         if preferred_file is None:
--            logger.warn("preferred version %s of %s not available%s", pv_str, pn, itemstr)
-+            logger.warning("preferred version %s of %s not available%s", pv_str, pn, itemstr)
-             available_vers = []
-             for file_set in pkg_pn:
-                 for f in file_set:
-@@ -163,7 +163,7 @@ def findPreferredProvider(pn, cfgData, dataCache, pkg_pn = None, item = None):
-                         available_vers.append(ver_str)
-             if available_vers:
-                 available_vers.sort()
--                logger.warn("versions of %s available: %s", pn, ' '.join(available_vers))
-+                logger.warning("versions of %s available: %s", pn, ' '.join(available_vers))
-         else:
-             logger.debug(1, "selecting %s as PREFERRED_VERSION %s of package %s%s", preferred_file, pv_str, pn, itemstr)
- 
--- 
-2.7.4
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 6ba1d2a3766..951fa3cb0e4 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -1537,6 +1537,16 @@ def get_file_layer(filename, d, collection_res=3D{=
+}):
+=20
+     return result
+=20
++def layer_path(layername, d):
++    """
++    Return the path to the specified layer, or None if the layer isn't p=
+resent.
++    """
++    bbpath =3D d.getVar("BBPATH").split(":")
++    pattern =3D d.getVar('BBFILE_PATTERN_' + layername)
++    for path in reversed(sorted(bbpath)):
++        if re.match(pattern, path + "/"):
++            return path
++    return None
+=20
+ # Constant taken from http://linux.die.net/include/linux/prctl.h
+ PR_SET_PDEATHSIG =3D 1
+--=20
+2.25.1
 
