@@ -1,74 +1,78 @@
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
- by mx.groups.io with SMTP id smtpd.web10.20473.1625661768824105468
+Received: from kernel.crashing.org (kernel.crashing.org [76.164.61.194])
+ by mx.groups.io with SMTP id smtpd.web09.22881.1625672657996390347
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 07 Jul 2021 05:42:49 -0700
+ Wed, 07 Jul 2021 08:44:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=dwrobel@ertelnet.rybnik.pl header.s=ertelnet header.b=Vr9kM0f+;
- spf=pass (domain: ertelnet.rybnik.pl, ip: 136.143.188.14, mailfrom: dwrobel@ertelnet.rybnik.pl)
-ARC-Seal: i=1; a=rsa-sha256; t=1625661767; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=eCj2jyXtLIe5RFugoHSGH2lAty1tlGi7hhIUfeb26N7BJPXJm+1pz0L7m2C4yi9DoWqwTy9GxW8egzhFR5ytcrCemZFl/RMQ6Zlpz9ChfdDlWuizeT0hT6vbX+l/cWb8H5AMpIbctbb4SYW/3BCfMqApejkALz9ZKzcotIAs8d8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1625661767; h=Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-	bh=t5POo/wnQMbUkNE4cKCgPU8QLWLqUplg67uS/T+OeeQ=; 
-	b=H1cfcZ2UJKydAJB0IT9eyvyeB5Z90nu3z2I7S0MFRfMao2kIFpMTDRtPGZ63MhLu6+U/DbqcP8p/OXDLRKMTeOjfT8gEyNWX+KF9+o4EDFYXcvLSF0/fdz6wOrQ9gcuDxFPxgH3329omToaDPiKtzEF+DzawxAI/PteRGms3vxc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=ertelnet.rybnik.pl;
-	spf=pass  smtp.mailfrom=dwrobel@ertelnet.rybnik.pl;
-	dmarc=pass header.from=<dwrobel@ertelnet.rybnik.pl>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1625661767;
-	s=ertelnet; d=ertelnet.rybnik.pl; i=dwrobel@ertelnet.rybnik.pl;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
-	bh=t5POo/wnQMbUkNE4cKCgPU8QLWLqUplg67uS/T+OeeQ=;
-	b=Vr9kM0f+5uHPPCzKJ/PF+vDZhx1TJCqBMu/mF9zONDrXT3oeRkg5uNTApIFxwsnf
-	RTV+neA9D9Zf3IVQ28A60uJKW+kLwUuyBXmmAxxBl/9eRwfAB5jpYDyEC6utLknqyF8
-	mD2UjJwQd2foNP0WrJnjy1DVBJk1CKzakQdi4rM0=
-Received: from dell.adbgroup.pl (178.217.216.129 [178.217.216.129]) by mx.zohomail.com
-	with SMTPS id 162566176425362.19493646989304; Wed, 7 Jul 2021 05:42:44 -0700 (PDT)
-From: "Damian Wrobel" <dwrobel@ertelnet.rybnik.pl>
-To: bitbake-devel@lists.openembedded.org
-Cc: Adam Romanek <romanek.adam@gmail.com>
-Subject: [PATCH] bitbake: fetch2/git: run gc in foreground to avoid race with tar
-Date: Wed,  7 Jul 2021 14:42:30 +0200
-Message-Id: <20210707124230.2499371-1-dwrobel@ertelnet.rybnik.pl>
-X-Mailer: git-send-email 2.31.1
+ dkim=missing; spf=permerror, err=syntax error for token:  (domain: kernel.crashing.org, ip: 76.164.61.194, mailfrom: mark.hatle@kernel.crashing.org)
+Received: from Marks-MacBook-Pro-16.local ([76.164.61.198])
+	(authenticated bits=0)
+	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 167FiEY5019194
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+	Wed, 7 Jul 2021 10:44:15 -0500
+Subject: Re: [bitbake-devel] [PATCH] bb/utils: add layer_path() function
+To: Ross Burton <ross@burtonini.com>, bitbake-devel@lists.openembedded.org
+References: <20210707122021.2924476-1-ross.burton@arm.com>
+From: "Mark Hatle" <mark.hatle@kernel.crashing.org>
+Message-ID: <823c8e6f-d161-c7d9-21d1-054fc9bcca48@kernel.crashing.org>
+Date: Wed, 7 Jul 2021 10:44:12 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.11.0
 MIME-Version: 1.0
-X-ZohoMailClient: External
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210707122021.2924476-1-ross.burton@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-From: Adam Romanek <romanek.adam@gmail.com>
 
-It looks like git gc can interrupts the package creation when
-BB_GENERATE_MIRRORS_TARBALL is in use.
 
-Log excerpts:
+On 7/7/21 7:20 AM, Ross Burton wrote:
+> Add layer_path() which will return the path to a layer. Useful to
+> programatically find other layers at build time, or from tinfoil.
+> 
+> Signed-off-by: Ross Burton <ross.burton@arm.com>
+> ---
+>  bitbake/lib/bb/utils.py | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+> index 6ba1d2a3766..951fa3cb0e4 100644
+> --- a/bitbake/lib/bb/utils.py
+> +++ b/bitbake/lib/bb/utils.py
+> @@ -1537,6 +1537,16 @@ def get_file_layer(filename, d, collection_res={}):
+>  
+>      return result
+>  
+> +def layer_path(layername, d):
+> +    """
+> +    Return the path to the specified layer, or None if the layer isn't present.
+> +    """
+> +    bbpath = d.getVar("BBPATH").split(":")
+> +    pattern = d.getVar('BBFILE_PATTERN_' + layername)
+> +    for path in reversed(sorted(bbpath)):
+> +        if re.match(pattern, path + "/"):
+> +            return path
+> +    return None
+>  
+>  # Constant taken from http://linux.die.net/include/linux/prctl.h
+>  PR_SET_PDEATHSIG = 1
+> 
 
-tar -czf TOPDIR/../downloads/git2_bitbucket.name-hidden.git.tar.gz . failed with exit code 1, output:
-tar: ./objects/pack/pack-89a1d76f6c08f53172ef1d02ff851d90564362c4.pack: file changed as we read it
-tar: ./objects/pack/pack-b4a48ada355d333630fdf6b4f67205b7c264dc2c.idx: File removed before we read it
+Would it be easier to capture the layer path while processing the layers, since
+at that point there is a LAYERDIR available?
 
-Auto packing the repository in background for optimum performance.
-See "git help gc" for manual housekeeping.
+Something like BB_LAYERDIR_<collection>, then we can use that directly in any
+users.  This could replace the few layers people have that manually set their
+own layer paths?
 
-Signed-off-by: Adam Romanek <romanek.adam@gmail.com>
-Signed-off-by: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
----
- lib/bb/fetch2/git.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm not sure where the processing for the layer.conf happens, but that would
+seem like the place to put it and that would also avoid having to guess based on
+the BBFILE_PATTERN and BBPATH.
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 5e65c83c..488f4c74 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -231,7 +231,7 @@ class Git(FetchMethod):
-             for name in ud.names:
-                 ud.unresolvedrev[name] = 'HEAD'
- 
--        ud.basecmd = d.getVar("FETCHCMD_git") or "git -c core.fsyncobjectfiles=0"
-+        ud.basecmd = d.getVar("FETCHCMD_git") or "git -c core.fsyncobjectfiles=0 -c gc.autoDetach=false"
- 
-         write_tarballs = d.getVar("BB_GENERATE_MIRROR_TARBALLS") or "0"
-         ud.write_tarballs = write_tarballs != "0" or ud.rebaseable
--- 
-2.31.1
+I've definitely seen layers where BBPATH does NOT include a specific layer's
+path.  They are extremely rare, but I've seen it before.
 
+--Mark
+
+> 
+> 
+> 
