@@ -1,124 +1,99 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
- by mx.groups.io with SMTP id smtpd.web08.5378.1625795074416550370
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web09.8430.1625820627468943543
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 08 Jul 2021 18:44:34 -0700
+ Fri, 09 Jul 2021 01:50:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Ij/d5lVT;
- spf=pass (domain: gmail.com, ip: 209.85.210.179, mailfrom: jiladahe1997@gmail.com)
-Received: by mail-pf1-f179.google.com with SMTP id x3so3668153pfc.11
-        for <bitbake-devel@lists.openembedded.org>; Thu, 08 Jul 2021 18:44:34 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=N8HtlAJo;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f46.google.com with SMTP id f9so5434373wrq.11
+        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Jul 2021 01:50:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:mime-version:message-id
-         :content-transfer-encoding;
-        bh=986k9kzy5zpIRV96+BuuBYLH8nPkHxwFlZq374CDqrQ=;
-        b=Ij/d5lVTW34VBjoIqC8jCayW4RNwRx0p9IOuLjDCF9TdGH8DYLc4C+5gTK8xVuBr+W
-         7laAccXNyMoigln/E7MiOBOEG/a5C4++4d72lWYgVL6N+uLhbJ+RAGqR11ZcGpAv4PzD
-         R7kOED/eP1SS/fL+fl/RhacR2OLbbyno8kdXpoKF7yHdNezoWXT6s4ovhe8/dfm1qBES
-         X1PrXOBbuBIdARI0odz7bRMt+0dPIRbdamzdmLVn4dogpbeH/ePtWHSgNTfA2p82RhIJ
-         YElA0NbExvA8ZEAhEhR+9vHQPN1DjLYnWhGux2nEOCWSmj0SG3ufgMY/VER6sQmYO+dB
-         h+oA==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=ZWoLDnLTtrg6pWhETeNkcu/zFDj9J4Hie8243zUmLcs=;
+        b=N8HtlAJoCF+m13xGbi0+qBLmGbFYXAah86euDZkgnwiTd55hyVWAFA/jbDPTMahZXl
+         g7Uc5Aemy4YLhbWbjh/VXyatpq6Tlj/U/6kvBGRQCq58x1aR/dVtRrTEpaojgLW50WpQ
+         bZGdcW5HprHuVjyvI9wjeBvz7ON9LsHJuLBDY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:mime-version:message-id
-         :content-transfer-encoding;
-        bh=986k9kzy5zpIRV96+BuuBYLH8nPkHxwFlZq374CDqrQ=;
-        b=Fh9QAiPF8W+ixU9gbPiwKj2PVToC1Wp306SaeMROdsPzk8Bs0bbZ2wAwyD8em11Q6x
-         w8c5ZxD/tVq7GdFV/vPcaRY86NbKwU9sTyYp4HSl05qcMj2MdBJwq/PUzcooCgrOgDcI
-         Opba3/X1Nv8iiHPrYUh0ifRnhwnZG7EgeDirV2YVinys2VDd0IXmJsqVNTq5RHZOXwSl
-         9opkGwNifk9KSlbxnODd+oAhf0TYKviDsdN5K3MBKjj21XUrjsA23kh7/y8sNxewOGg0
-         +2Gfk2jlGjpHTzun7V1IMw+2buZhJGkZUFV5CcLXZhl8joY32s5oLh4I4ohLZsNWYmmI
-         fX9A==
-X-Gm-Message-State: AOAM530cxhudysG/HbArLgv67sWx2KMK0FfH56fA7RD46siPka8iJQko
-	XU828eX0foFb5rILxOZ/QsCboJR1v1rlyMUNApQ=
-X-Google-Smtp-Source: ABdhPJxbDu/QAKMIgQGEPOJvOgSw/DeXKZS/uQ3/gmMT8UukBxg38ZuEkAhxbZzQX2Tt71oNTVYXCg==
-X-Received: by 2002:a62:a102:0:b029:2f4:a8e:cc44 with SMTP id b2-20020a62a1020000b02902f40a8ecc44mr34214302pff.38.1625795073799;
-        Thu, 08 Jul 2021 18:44:33 -0700 (PDT)
-Return-Path: <jiladahe1997@gmail.com>
-Received: from DESKTOP-6448JS8 (n11923637190.netvigator.com. [119.236.37.190])
-        by smtp.gmail.com with ESMTPSA id e2sm4984967pgh.5.2021.07.08.18.44.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Jul 2021 18:44:33 -0700 (PDT)
-Date: Fri, 9 Jul 2021 09:44:17 +0800
-From: "Mingrui Ren" <jiladahe1997@gmail.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Cc: richard.purdie <richard.purdie@linuxfoundation.org>
-Subject: [PATCH] Add a new variable:'FETCH_ENV_WHITELIST'
-X-Priority: 3
-X-GUID: FF102490-B123-4C8F-8BD2-F575F6D520AB
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.21.453[cn]
-Mime-Version: 1.0
-Message-ID: <202107090944160361815@gmail.com>
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: base64
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=ZWoLDnLTtrg6pWhETeNkcu/zFDj9J4Hie8243zUmLcs=;
+        b=ufivUALPKpazCbX0dvBpyEUQMrsDYnUas+DtOmRcJSKN/bS/vu6EUry3sC6BLOHu0k
+         keXTSOIaaRqtZHdPBa6grg81P/mTRfuIHXOmr2rB+kDCvojFW7TRLuot20QSkykNk8e6
+         8bItHwKS/ocBF4g4uhO+a2HQQBIkVmNl+E4m8NWb2jM4ORLNGIJ3vi59Eu3msx39w09g
+         1orle+jSS5aD4wge8hRjLJeLXQbFL9ES97gjT7EJmQLIxbWCRL1S6t0Pq+kie9C8Knti
+         lFGayiIyFO4Tsx5P70w22lWRjswbrcomxK9ERlrIxuTocJ7p1/RB1gh8y/NkPVbp/GSC
+         e0Tw==
+X-Gm-Message-State: AOAM533GVf3WPozzuMUmdMY+IxlWQtSWRhP7LoKhJvRv5HMP+798oiaa
+	rKkwwjPjkvftzbi6WlXw+az/nA==
+X-Google-Smtp-Source: ABdhPJwveYBXTGvecs7Ou5C7ijq44znqViCeomXWhWLl03CQZmIOXcxxLUpRpFAE7XIzVUSt2YwYNA==
+X-Received: by 2002:a5d:640d:: with SMTP id z13mr52010wru.24.1625820625972;
+        Fri, 09 Jul 2021 01:50:25 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:8784:9f68:1c6d:5aac? ([2001:8b0:aba:5f3c:8784:9f68:1c6d:5aac])
+        by smtp.gmail.com with ESMTPSA id r18sm5008585wmh.23.2021.07.09.01.50.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jul 2021 01:50:25 -0700 (PDT)
+Message-ID: <d72c3eafc5e4327d97ab16382b66dc6b97b51a2c.camel@linuxfoundation.org>
+Subject: Re: [PATCH] Add a new variable:'FETCH_ENV_WHITELIST'
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: "jiladahe1997@gmail.com" <jiladahe1997@gmail.com>, bitbake-devel
+	 <bitbake-devel@lists.openembedded.org>
+Date: Fri, 09 Jul 2021 09:50:25 +0100
+In-Reply-To: <202107090944160361815@gmail.com>
+References: <202107090944160361815@gmail.com>
+User-Agent: Evolution 3.40.0-1 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-RnJvbSBkMjI4MTAwYjc1NTFiMjMyN2Q2NjA3MmIwM2YyYTgwOTc0NGU4ZjUyIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBNaW5ncnVpIFJlbiA8amlsYWRhaGUxOTk3QGdtYWlsLmNvbT4K
-RGF0ZTogVGh1LCA4IEp1bCAyMDIxIDIzOjQ0OjUzICswODAwClN1YmplY3Q6IFtQQVRDSF0gQWRk
-IGEgbmV3IHZhcmlhYmxlOidGRVRDSF9FTlZfV0hJVEVMSVNUJwoKVGhlIGVudmlyb21lbnQgdmFy
-aWFibGVzIHVzZWQgYnkgRmV0Y2hlciBhcmUgaGFyZC1jb2RlZCwgYW5kIGFyZSBvYnRhaW5lZApm
-cm9tIEhPU1QgZW52IGluc3RlYWQgb2YgYml0YmFrZSBkYXRhc3RvcmUuClRoaXMgcGF0Y2ggYWRk
-cyBhIG5ldyB2YXJpYWJsZSAnRkVUQ0hfRU5WX1dISVRFTElTVCcgc2ltaWxhciB0byAKJ0JCX0VO
-Vl9FWFRSQVdISVRFJywgdHJ5aW5nIHRvIGZpeCB0aGUgcHJvYmxlbXMgYWJvdmUuCgpTaWduZWQt
-b2ZmLWJ5OiBNaW5ncnVpIFJlbiA8amlsYWRhaGUxOTk3QGdtYWlsLmNvbT4KLS0tClRoZSBzaXR1
-YXRpb24gSSBlbmNvdW50ZXJlZCB3YXMgdGhhdCBJIHRyaWVkIHRvIHVzZSBhIGN1c3RvbSBnaXQt
-cHJveHkgYnkKc2V0dGluZyBHSVRfUFJPWFlfQ09NTUFORCBhbmQgU09DS19QUk9YWSBlbnZpcm9t
-ZW50IHZhcmlhYmxlcy4gSG93ZXZlciwgCkkgZm91bmQgdGhhdCBldmVuIGlmIEkgc2V0IEJCX0VO
-Vl9FWFRSQVdISVRFLCB0aGUgU09DS19QUk9YWSB2YXJpYWJsZSBkb2VzCm5vdCB3b3JrLgoKIGJp
-dGJha2UvbGliL2JiL2ZldGNoMi9fX2luaXRfXy5weSB8IDE2ICstLS0tLS0tLS0tLS0tLS0KIGJp
-dGJha2UvbGliL2JiL3V0aWxzLnB5ICAgICAgICAgICB8ICA1ICsrKysrCiBzY3JpcHRzL29lLWJ1
-aWxkZW52LWludGVybmFsICAgICAgfCAgNyArKysrKysrCiAzIGZpbGVzIGNoYW5nZWQsIDEzIGlu
-c2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2JpdGJha2UvbGliL2Ji
-L2ZldGNoMi9fX2luaXRfXy5weSBiL2JpdGJha2UvbGliL2JiL2ZldGNoMi9fX2luaXRfXy5weQpp
-bmRleCBjOGU5MTI2MmE5Li43Y2RjNmM1ZWU4IDEwMDY0NAotLS0gYS9iaXRiYWtlL2xpYi9iYi9m
-ZXRjaDIvX19pbml0X18ucHkKKysrIGIvYml0YmFrZS9saWIvYmIvZmV0Y2gyL19faW5pdF9fLnB5
-CkBAIC04MjAsMjEgKzgyMCw3IEBAIGRlZiBydW5mZXRjaGNtZChjbWQsIGQsIHF1aWV0PUZhbHNl
-LCBjbGVhbnVwPU5vbmUsIGxvZz1Ob25lLCB3b3JrZGlyPU5vbmUpOgogICAgICMgcmF0aGVyIHRo
-YW4gaG9zdCBwcm92aWRlZAogICAgICMgQWxzbyBpbmNsdWRlIHNvbWUgb3RoZXIgdmFyaWFibGVz
-LgogICAgICMgRklYTUU6IFNob3VsZCByZWFsbHkgaW5jbHVkZSBhbGwgZXhwb3J0IHZhcmFpYWJs
-ZXM/Ci0gICAgZXhwb3J0dmFycyA9IFsnSE9NRScsICdQQVRIJywKLSAgICAgICAgICAgICAgICAg
-ICdIVFRQX1BST1hZJywgJ2h0dHBfcHJveHknLAotICAgICAgICAgICAgICAgICAgJ0hUVFBTX1BS
-T1hZJywgJ2h0dHBzX3Byb3h5JywKLSAgICAgICAgICAgICAgICAgICdGVFBfUFJPWFknLCAnZnRw
-X3Byb3h5JywKLSAgICAgICAgICAgICAgICAgICdGVFBTX1BST1hZJywgJ2Z0cHNfcHJveHknLAot
-ICAgICAgICAgICAgICAgICAgJ05PX1BST1hZJywgJ25vX3Byb3h5JywKLSAgICAgICAgICAgICAg
-ICAgICdBTExfUFJPWFknLCAnYWxsX3Byb3h5JywKLSAgICAgICAgICAgICAgICAgICdHSVRfUFJP
-WFlfQ09NTUFORCcsCi0gICAgICAgICAgICAgICAgICAnR0lUX1NTSCcsCi0gICAgICAgICAgICAg
-ICAgICAnR0lUX1NTTF9DQUlORk8nLAotICAgICAgICAgICAgICAgICAgJ0dJVF9TTUFSVF9IVFRQ
-JywKLSAgICAgICAgICAgICAgICAgICdTU0hfQVVUSF9TT0NLJywgJ1NTSF9BR0VOVF9QSUQnLAot
-ICAgICAgICAgICAgICAgICAgJ1NPQ0tTNV9VU0VSJywgJ1NPQ0tTNV9QQVNTV0QnLAotICAgICAg
-ICAgICAgICAgICAgJ0RCVVNfU0VTU0lPTl9CVVNfQUREUkVTUycsCi0gICAgICAgICAgICAgICAg
-ICAnUDRDT05GSUcnXQorICAgIGV4cG9ydHZhcnMgPSAoZC5nZXRWYXIoIkZFVENIX0VOVl9XSElU
-RUxJU1QiKSBvciAiIikuc3BsaXQoKQoKICAgICBpZiBub3QgY2xlYW51cDoKICAgICAgICAgY2xl
-YW51cCA9IFtdCmRpZmYgLS1naXQgYS9iaXRiYWtlL2xpYi9iYi91dGlscy5weSBiL2JpdGJha2Uv
-bGliL2JiL3V0aWxzLnB5CmluZGV4IDZiYTFkMmEzNzYuLjY2NzY1ODQ4NDUgMTAwNjQ0Ci0tLSBh
-L2JpdGJha2UvbGliL2JiL3V0aWxzLnB5CisrKyBiL2JpdGJha2UvbGliL2JiL3V0aWxzLnB5CkBA
-IC01ODUsNiArNTg1LDcgQEAgZGVmIHByZXNlcnZlZF9lbnZ2YXJzKCk6CiAgICAgICAgICdCQl9Q
-UkVTRVJWRV9FTlYnLAogICAgICAgICAnQkJfRU5WX1dISVRFTElTVCcsCiAgICAgICAgICdCQl9F
-TlZfRVhUUkFXSElURScsCisgICAgICAgICdGRVRDSF9FTlZfV0hJVEVMSVNUJywKICAgICBdCiAg
-ICAgcmV0dXJuIHYgKyBwcmVzZXJ2ZWRfZW52dmFyc19leHBvcnRlZCgpCgpAQCAtNjMwLDYgKzYz
-MSwxMCBAQCBkZWYgYXBwcm92ZWRfdmFyaWFibGVzKCk6CiAgICAgICAgIGFwcHJvdmVkLmV4dGVu
-ZChvcy5lbnZpcm9uWydCQl9FTlZfRVhUUkFXSElURSddLnNwbGl0KCkpCiAgICAgICAgIGlmICdC
-Ql9FTlZfRVhUUkFXSElURScgbm90IGluIGFwcHJvdmVkOgogICAgICAgICAgICAgYXBwcm92ZWQu
-ZXh0ZW5kKFsnQkJfRU5WX0VYVFJBV0hJVEUnXSkKKyAgICBpZiAnRkVUQ0hfRU5WX1dISVRFTElT
-VCcgaW4gb3MuZW52aXJvbjoKKyAgICAgICAgYXBwcm92ZWQuZXh0ZW5kKG9zLmVudmlyb25bJ0ZF
-VENIX0VOVl9XSElURUxJU1QnXS5zcGxpdCgpKQorICAgICAgICBpZiAnRkVUQ0hfRU5WX1dISVRF
-TElTVCcgbm90IGluIGFwcHJvdmVkOgorICAgICAgICAgICAgYXBwcm92ZWQuZXh0ZW5kKFsnRkVU
-Q0hfRU5WX1dISVRFTElTVCddKQogICAgIHJldHVybiBhcHByb3ZlZAoKIGRlZiBjbGVhbl9lbnZp
-cm9ubWVudCgpOgpkaWZmIC0tZ2l0IGEvc2NyaXB0cy9vZS1idWlsZGVudi1pbnRlcm5hbCBiL3Nj
-cmlwdHMvb2UtYnVpbGRlbnYtaW50ZXJuYWwKaW5kZXggZTBkOTIwZjJmYy4uMzlhYTJmMjQ0NCAx
-MDA3NTUKLS0tIGEvc2NyaXB0cy9vZS1idWlsZGVudi1pbnRlcm5hbAorKysgYi9zY3JpcHRzL29l
-LWJ1aWxkZW52LWludGVybmFsCkBAIC0xMDYsNiArMTA2LDEzIEBAIHVuc2V0IEJJVEJBS0VESVIg
-bmV3cGF0aAogZXhwb3J0IEJVSUxERElSCiBleHBvcnQgUEFUSAoKK0ZFVENIX0VOVl9XSElURUxJ
-U1Q9IkhPTUUgUEFUSCBIVFRQX1BST1hZIGh0dHBfcHJveHkgSFRUUFNfUFJPWFkgaHR0cHNfcHJv
-eHkgXAorRlRQX1BST1hZIGZ0cF9wcm94eSBGVFBTX1BST1hZIGZ0cHNfcHJveHkgTk9fUFJPWFkg
-bm9fcHJveHkgQUxMX1BST1hZIGFsbF9wcm94eSBcCitHSVRfUFJPWFlfQ09NTUFORCBHSVRfU1NI
-IEdJVF9TU0xfQ0FJTkZPIEdJVF9TTUFSVF9IVFRQIFNTSF9BVVRIX1NPQ0sgU1NIX0FHRU5UX1BJ
-RCBcCitTT0NLUzVfVVNFUiBTT0NLUzVfUEFTU1dEIERCVVNfU0VTU0lPTl9CVVNfQUREUkVTUyBQ
-NENPTkZJRyIKKworZXhwb3J0IEZFVENIX0VOVl9XSElURUxJU1QKKwogQkJfRU5WX0VYVFJBV0hJ
-VEVfT0U9Ik1BQ0hJTkUgRElTVFJPIFRDTU9ERSBUQ0xJQkMgSFRUUF9QUk9YWSBodHRwX3Byb3h5
-IFwKIEhUVFBTX1BST1hZIGh0dHBzX3Byb3h5IEZUUF9QUk9YWSBmdHBfcHJveHkgRlRQU19QUk9Y
-WSBmdHBzX3Byb3h5IEFMTF9QUk9YWSBcCiBhbGxfcHJveHkgTk9fUFJPWFkgbm9fcHJveHkgU1NI
-X0FHRU5UX1BJRCBTU0hfQVVUSF9TT0NLIEJCX1NSQ1JFVl9QT0xJQ1kgXAotLQoyLjIwLjEK
+On Fri, 2021-07-09 at 09:44 +0800, jiladahe1997@gmail.com wrote:
+> From d228100b7551b2327d66072b03f2a809744e8f52 Mon Sep 17 00:00:00 2001
+> From: Mingrui Ren <jiladahe1997@gmail.com>
+> Date: Thu, 8 Jul 2021 23:44:53 +0800
+> Subject: [PATCH] Add a new variable:'FETCH_ENV_WHITELIST'
+> 
+> The enviroment variables used by Fetcher are hard-coded, and are obtained
+> from HOST env instead of bitbake datastore.
+> This patch adds a new variable 'FETCH_ENV_WHITELIST' similar to 
+> 'BB_ENV_EXTRAWHITE', trying to fix the problems above.
+> 
+> Signed-off-by: Mingrui Ren <jiladahe1997@gmail.com>
+> ---
+> The situation I encountered was that I tried to use a custom git-proxy by
+> setting GIT_PROXY_COMMAND and SOCK_PROXY enviroment variables. However, 
+> I found that even if I set BB_ENV_EXTRAWHITE, the SOCK_PROXY variable does
+> not work.
+> 
+>  bitbake/lib/bb/fetch2/__init__.py | 16 +---------------
+>  bitbake/lib/bb/utils.py           |  5 +++++
+>  scripts/oe-buildenv-internal      |  7 +++++++
+>  3 files changed, 13 insertions(+), 15 deletions(-)
+
+The patch looks like it was generated against poky since that script is in
+openembedded-core, not bitbake.
+
+For the patch itself, I'd much rather add something to extend the list
+rather than replace it entirely which would make backwards compatibility
+easier.
+
+There is also an issue with the variable naming. We have adopted a policy
+around inclusive langauage so new variables need to be mindful of that.
+We're in the process of trying to work out what to do with some of our
+older variables names.
+
+https://wiki.yoctoproject.org/wiki/Inclusive_language
+
+Whatever we do to address this issue really needs to match how we fix the
+existing BB_ENV_EXTRAWHITE.
+
+Also, since fetching happens much later, we should be able to set this
+variable from config such as bitbake.conf or local.conf and there shouldn't
+be any need to export it to the environment.
+
+Cheers,
+
+Richard
 
