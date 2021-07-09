@@ -1,74 +1,124 @@
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
- by mx.groups.io with SMTP id smtpd.web09.11133.1625747700908558942
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+ by mx.groups.io with SMTP id smtpd.web08.5378.1625795074416550370
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 08 Jul 2021 05:35:01 -0700
+ Thu, 08 Jul 2021 18:44:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=dwrobel@ertelnet.rybnik.pl header.s=ertelnet header.b=PXYHesX4;
- spf=pass (domain: ertelnet.rybnik.pl, ip: 136.143.188.14, mailfrom: dwrobel@ertelnet.rybnik.pl)
-ARC-Seal: i=1; a=rsa-sha256; t=1625747698; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=n0JtHtUMI/EER1dsJwstpFAFw+4We7ETX5UiTXv51W0cQQ3PhkCLZKWjvD+5CsZ5DGrNT5+vAid7vHnCP99fU8v5WaOd0U5e/cYIhBnTlYPwHFgyKMc0jWWxISkpoqLeXYigr1QXiZTVlY/ImJ+svB1ADg2J9JnAR2ZD1AYw+fQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1625747698; h=Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-	bh=b9b7zhGfzLvgPy8YRNZltsOJ/Q84jltiSfn4LVEMQcw=; 
-	b=jNMXZFegnhX/oTkQKfLlUvKtA1M8w2mXcbOe3u17kfmOCB4WkfSeHu7SRtVZYUN0vwtdCKry2Qk95vlSJgLtDiXF/o729BygAUk4hilUeUYsHiYxd1hZhk7/j2QRIAlX2A1R+cHVQo3J/c9t/XsuUHtuZ0eJb/+9seZhn2fcqlQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=ertelnet.rybnik.pl;
-	spf=pass  smtp.mailfrom=dwrobel@ertelnet.rybnik.pl;
-	dmarc=pass header.from=<dwrobel@ertelnet.rybnik.pl>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1625747698;
-	s=ertelnet; d=ertelnet.rybnik.pl; i=dwrobel@ertelnet.rybnik.pl;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
-	bh=b9b7zhGfzLvgPy8YRNZltsOJ/Q84jltiSfn4LVEMQcw=;
-	b=PXYHesX4AAJUtmVgdruDWPYdvEF5oGbMVrhO8xI1BydyhqzXt0zGxffTeP7KJdy6
-	HhhOxIj+o99IWydlChuRHMRIuUesZiMIQpSjO3weXhIvjYHuRBq/emnbOKGSvvXpVn2
-	4lwc9MlDJj8o++xz1aYAClVn9lDvsGSW4zj+C3Cc=
-Received: from localhost.localdomain.pl (91.230.58.69 [91.230.58.69]) by mx.zohomail.com
-	with SMTPS id 1625747696443809.1143299903215; Thu, 8 Jul 2021 05:34:56 -0700 (PDT)
-From: "Damian Wrobel" <dwrobel@ertelnet.rybnik.pl>
-To: bitbake-devel@lists.openembedded.org
-Cc: Adam Romanek <romanek.adam@gmail.com>
-Subject: [PATCH] fetch2/s3: allow to use credentials from environment variables
-Date: Thu,  8 Jul 2021 14:34:52 +0200
-Message-Id: <20210708123452.568860-1-dwrobel@ertelnet.rybnik.pl>
-X-Mailer: git-send-email 2.31.1
-MIME-Version: 1.0
-X-ZohoMailClient: External
-Content-Transfer-Encoding: 8bit
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Ij/d5lVT;
+ spf=pass (domain: gmail.com, ip: 209.85.210.179, mailfrom: jiladahe1997@gmail.com)
+Received: by mail-pf1-f179.google.com with SMTP id x3so3668153pfc.11
+        for <bitbake-devel@lists.openembedded.org>; Thu, 08 Jul 2021 18:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:mime-version:message-id
+         :content-transfer-encoding;
+        bh=986k9kzy5zpIRV96+BuuBYLH8nPkHxwFlZq374CDqrQ=;
+        b=Ij/d5lVTW34VBjoIqC8jCayW4RNwRx0p9IOuLjDCF9TdGH8DYLc4C+5gTK8xVuBr+W
+         7laAccXNyMoigln/E7MiOBOEG/a5C4++4d72lWYgVL6N+uLhbJ+RAGqR11ZcGpAv4PzD
+         R7kOED/eP1SS/fL+fl/RhacR2OLbbyno8kdXpoKF7yHdNezoWXT6s4ovhe8/dfm1qBES
+         X1PrXOBbuBIdARI0odz7bRMt+0dPIRbdamzdmLVn4dogpbeH/ePtWHSgNTfA2p82RhIJ
+         YElA0NbExvA8ZEAhEhR+9vHQPN1DjLYnWhGux2nEOCWSmj0SG3ufgMY/VER6sQmYO+dB
+         h+oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:mime-version:message-id
+         :content-transfer-encoding;
+        bh=986k9kzy5zpIRV96+BuuBYLH8nPkHxwFlZq374CDqrQ=;
+        b=Fh9QAiPF8W+ixU9gbPiwKj2PVToC1Wp306SaeMROdsPzk8Bs0bbZ2wAwyD8em11Q6x
+         w8c5ZxD/tVq7GdFV/vPcaRY86NbKwU9sTyYp4HSl05qcMj2MdBJwq/PUzcooCgrOgDcI
+         Opba3/X1Nv8iiHPrYUh0ifRnhwnZG7EgeDirV2YVinys2VDd0IXmJsqVNTq5RHZOXwSl
+         9opkGwNifk9KSlbxnODd+oAhf0TYKviDsdN5K3MBKjj21XUrjsA23kh7/y8sNxewOGg0
+         +2Gfk2jlGjpHTzun7V1IMw+2buZhJGkZUFV5CcLXZhl8joY32s5oLh4I4ohLZsNWYmmI
+         fX9A==
+X-Gm-Message-State: AOAM530cxhudysG/HbArLgv67sWx2KMK0FfH56fA7RD46siPka8iJQko
+	XU828eX0foFb5rILxOZ/QsCboJR1v1rlyMUNApQ=
+X-Google-Smtp-Source: ABdhPJxbDu/QAKMIgQGEPOJvOgSw/DeXKZS/uQ3/gmMT8UukBxg38ZuEkAhxbZzQX2Tt71oNTVYXCg==
+X-Received: by 2002:a62:a102:0:b029:2f4:a8e:cc44 with SMTP id b2-20020a62a1020000b02902f40a8ecc44mr34214302pff.38.1625795073799;
+        Thu, 08 Jul 2021 18:44:33 -0700 (PDT)
+Return-Path: <jiladahe1997@gmail.com>
+Received: from DESKTOP-6448JS8 (n11923637190.netvigator.com. [119.236.37.190])
+        by smtp.gmail.com with ESMTPSA id e2sm4984967pgh.5.2021.07.08.18.44.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Jul 2021 18:44:33 -0700 (PDT)
+Date: Fri, 9 Jul 2021 09:44:17 +0800
+From: "Mingrui Ren" <jiladahe1997@gmail.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Cc: richard.purdie <richard.purdie@linuxfoundation.org>
+Subject: [PATCH] Add a new variable:'FETCH_ENV_WHITELIST'
+X-Priority: 3
+X-GUID: FF102490-B123-4C8F-8BD2-F575F6D520AB
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.21.453[cn]
+Mime-Version: 1.0
+Message-ID: <202107090944160361815@gmail.com>
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: base64
 
-From: Adam Romanek <romanek.adam@gmail.com>
-
-Previously access to AWS S3 was expected to be preconfigured and
-credentials to be stored in ~/.aws/credentials. With this change
-one can use Bitbake s3 fetcher without AWS credentials stored
-permanently as above, just with them exported as the following
-environment variables:
- - AWS_ACCESS_KEY_ID,
- - AWS_SECRET_ACCESS_KEY.
- - AWS_DEFAULT_REGION.
-
-Signed-off-by: Adam Romanek <romanek.adam@gmail.com>
-Signed-off-by: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
----
- lib/bb/fetch2/__init__.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index c8e91262..0d49e1da 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -834,7 +834,10 @@ def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None, workdir=None):
-                   'SSH_AUTH_SOCK', 'SSH_AGENT_PID',
-                   'SOCKS5_USER', 'SOCKS5_PASSWD',
-                   'DBUS_SESSION_BUS_ADDRESS',
--                  'P4CONFIG']
-+                  'P4CONFIG',
-+                  'AWS_ACCESS_KEY_ID',
-+                  'AWS_SECRET_ACCESS_KEY',
-+                  'AWS_DEFAULT_REGION']
- 
-     if not cleanup:
-         cleanup = []
--- 
-2.31.1
+RnJvbSBkMjI4MTAwYjc1NTFiMjMyN2Q2NjA3MmIwM2YyYTgwOTc0NGU4ZjUyIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBNaW5ncnVpIFJlbiA8amlsYWRhaGUxOTk3QGdtYWlsLmNvbT4K
+RGF0ZTogVGh1LCA4IEp1bCAyMDIxIDIzOjQ0OjUzICswODAwClN1YmplY3Q6IFtQQVRDSF0gQWRk
+IGEgbmV3IHZhcmlhYmxlOidGRVRDSF9FTlZfV0hJVEVMSVNUJwoKVGhlIGVudmlyb21lbnQgdmFy
+aWFibGVzIHVzZWQgYnkgRmV0Y2hlciBhcmUgaGFyZC1jb2RlZCwgYW5kIGFyZSBvYnRhaW5lZApm
+cm9tIEhPU1QgZW52IGluc3RlYWQgb2YgYml0YmFrZSBkYXRhc3RvcmUuClRoaXMgcGF0Y2ggYWRk
+cyBhIG5ldyB2YXJpYWJsZSAnRkVUQ0hfRU5WX1dISVRFTElTVCcgc2ltaWxhciB0byAKJ0JCX0VO
+Vl9FWFRSQVdISVRFJywgdHJ5aW5nIHRvIGZpeCB0aGUgcHJvYmxlbXMgYWJvdmUuCgpTaWduZWQt
+b2ZmLWJ5OiBNaW5ncnVpIFJlbiA8amlsYWRhaGUxOTk3QGdtYWlsLmNvbT4KLS0tClRoZSBzaXR1
+YXRpb24gSSBlbmNvdW50ZXJlZCB3YXMgdGhhdCBJIHRyaWVkIHRvIHVzZSBhIGN1c3RvbSBnaXQt
+cHJveHkgYnkKc2V0dGluZyBHSVRfUFJPWFlfQ09NTUFORCBhbmQgU09DS19QUk9YWSBlbnZpcm9t
+ZW50IHZhcmlhYmxlcy4gSG93ZXZlciwgCkkgZm91bmQgdGhhdCBldmVuIGlmIEkgc2V0IEJCX0VO
+Vl9FWFRSQVdISVRFLCB0aGUgU09DS19QUk9YWSB2YXJpYWJsZSBkb2VzCm5vdCB3b3JrLgoKIGJp
+dGJha2UvbGliL2JiL2ZldGNoMi9fX2luaXRfXy5weSB8IDE2ICstLS0tLS0tLS0tLS0tLS0KIGJp
+dGJha2UvbGliL2JiL3V0aWxzLnB5ICAgICAgICAgICB8ICA1ICsrKysrCiBzY3JpcHRzL29lLWJ1
+aWxkZW52LWludGVybmFsICAgICAgfCAgNyArKysrKysrCiAzIGZpbGVzIGNoYW5nZWQsIDEzIGlu
+c2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2JpdGJha2UvbGliL2Ji
+L2ZldGNoMi9fX2luaXRfXy5weSBiL2JpdGJha2UvbGliL2JiL2ZldGNoMi9fX2luaXRfXy5weQpp
+bmRleCBjOGU5MTI2MmE5Li43Y2RjNmM1ZWU4IDEwMDY0NAotLS0gYS9iaXRiYWtlL2xpYi9iYi9m
+ZXRjaDIvX19pbml0X18ucHkKKysrIGIvYml0YmFrZS9saWIvYmIvZmV0Y2gyL19faW5pdF9fLnB5
+CkBAIC04MjAsMjEgKzgyMCw3IEBAIGRlZiBydW5mZXRjaGNtZChjbWQsIGQsIHF1aWV0PUZhbHNl
+LCBjbGVhbnVwPU5vbmUsIGxvZz1Ob25lLCB3b3JrZGlyPU5vbmUpOgogICAgICMgcmF0aGVyIHRo
+YW4gaG9zdCBwcm92aWRlZAogICAgICMgQWxzbyBpbmNsdWRlIHNvbWUgb3RoZXIgdmFyaWFibGVz
+LgogICAgICMgRklYTUU6IFNob3VsZCByZWFsbHkgaW5jbHVkZSBhbGwgZXhwb3J0IHZhcmFpYWJs
+ZXM/Ci0gICAgZXhwb3J0dmFycyA9IFsnSE9NRScsICdQQVRIJywKLSAgICAgICAgICAgICAgICAg
+ICdIVFRQX1BST1hZJywgJ2h0dHBfcHJveHknLAotICAgICAgICAgICAgICAgICAgJ0hUVFBTX1BS
+T1hZJywgJ2h0dHBzX3Byb3h5JywKLSAgICAgICAgICAgICAgICAgICdGVFBfUFJPWFknLCAnZnRw
+X3Byb3h5JywKLSAgICAgICAgICAgICAgICAgICdGVFBTX1BST1hZJywgJ2Z0cHNfcHJveHknLAot
+ICAgICAgICAgICAgICAgICAgJ05PX1BST1hZJywgJ25vX3Byb3h5JywKLSAgICAgICAgICAgICAg
+ICAgICdBTExfUFJPWFknLCAnYWxsX3Byb3h5JywKLSAgICAgICAgICAgICAgICAgICdHSVRfUFJP
+WFlfQ09NTUFORCcsCi0gICAgICAgICAgICAgICAgICAnR0lUX1NTSCcsCi0gICAgICAgICAgICAg
+ICAgICAnR0lUX1NTTF9DQUlORk8nLAotICAgICAgICAgICAgICAgICAgJ0dJVF9TTUFSVF9IVFRQ
+JywKLSAgICAgICAgICAgICAgICAgICdTU0hfQVVUSF9TT0NLJywgJ1NTSF9BR0VOVF9QSUQnLAot
+ICAgICAgICAgICAgICAgICAgJ1NPQ0tTNV9VU0VSJywgJ1NPQ0tTNV9QQVNTV0QnLAotICAgICAg
+ICAgICAgICAgICAgJ0RCVVNfU0VTU0lPTl9CVVNfQUREUkVTUycsCi0gICAgICAgICAgICAgICAg
+ICAnUDRDT05GSUcnXQorICAgIGV4cG9ydHZhcnMgPSAoZC5nZXRWYXIoIkZFVENIX0VOVl9XSElU
+RUxJU1QiKSBvciAiIikuc3BsaXQoKQoKICAgICBpZiBub3QgY2xlYW51cDoKICAgICAgICAgY2xl
+YW51cCA9IFtdCmRpZmYgLS1naXQgYS9iaXRiYWtlL2xpYi9iYi91dGlscy5weSBiL2JpdGJha2Uv
+bGliL2JiL3V0aWxzLnB5CmluZGV4IDZiYTFkMmEzNzYuLjY2NzY1ODQ4NDUgMTAwNjQ0Ci0tLSBh
+L2JpdGJha2UvbGliL2JiL3V0aWxzLnB5CisrKyBiL2JpdGJha2UvbGliL2JiL3V0aWxzLnB5CkBA
+IC01ODUsNiArNTg1LDcgQEAgZGVmIHByZXNlcnZlZF9lbnZ2YXJzKCk6CiAgICAgICAgICdCQl9Q
+UkVTRVJWRV9FTlYnLAogICAgICAgICAnQkJfRU5WX1dISVRFTElTVCcsCiAgICAgICAgICdCQl9F
+TlZfRVhUUkFXSElURScsCisgICAgICAgICdGRVRDSF9FTlZfV0hJVEVMSVNUJywKICAgICBdCiAg
+ICAgcmV0dXJuIHYgKyBwcmVzZXJ2ZWRfZW52dmFyc19leHBvcnRlZCgpCgpAQCAtNjMwLDYgKzYz
+MSwxMCBAQCBkZWYgYXBwcm92ZWRfdmFyaWFibGVzKCk6CiAgICAgICAgIGFwcHJvdmVkLmV4dGVu
+ZChvcy5lbnZpcm9uWydCQl9FTlZfRVhUUkFXSElURSddLnNwbGl0KCkpCiAgICAgICAgIGlmICdC
+Ql9FTlZfRVhUUkFXSElURScgbm90IGluIGFwcHJvdmVkOgogICAgICAgICAgICAgYXBwcm92ZWQu
+ZXh0ZW5kKFsnQkJfRU5WX0VYVFJBV0hJVEUnXSkKKyAgICBpZiAnRkVUQ0hfRU5WX1dISVRFTElT
+VCcgaW4gb3MuZW52aXJvbjoKKyAgICAgICAgYXBwcm92ZWQuZXh0ZW5kKG9zLmVudmlyb25bJ0ZF
+VENIX0VOVl9XSElURUxJU1QnXS5zcGxpdCgpKQorICAgICAgICBpZiAnRkVUQ0hfRU5WX1dISVRF
+TElTVCcgbm90IGluIGFwcHJvdmVkOgorICAgICAgICAgICAgYXBwcm92ZWQuZXh0ZW5kKFsnRkVU
+Q0hfRU5WX1dISVRFTElTVCddKQogICAgIHJldHVybiBhcHByb3ZlZAoKIGRlZiBjbGVhbl9lbnZp
+cm9ubWVudCgpOgpkaWZmIC0tZ2l0IGEvc2NyaXB0cy9vZS1idWlsZGVudi1pbnRlcm5hbCBiL3Nj
+cmlwdHMvb2UtYnVpbGRlbnYtaW50ZXJuYWwKaW5kZXggZTBkOTIwZjJmYy4uMzlhYTJmMjQ0NCAx
+MDA3NTUKLS0tIGEvc2NyaXB0cy9vZS1idWlsZGVudi1pbnRlcm5hbAorKysgYi9zY3JpcHRzL29l
+LWJ1aWxkZW52LWludGVybmFsCkBAIC0xMDYsNiArMTA2LDEzIEBAIHVuc2V0IEJJVEJBS0VESVIg
+bmV3cGF0aAogZXhwb3J0IEJVSUxERElSCiBleHBvcnQgUEFUSAoKK0ZFVENIX0VOVl9XSElURUxJ
+U1Q9IkhPTUUgUEFUSCBIVFRQX1BST1hZIGh0dHBfcHJveHkgSFRUUFNfUFJPWFkgaHR0cHNfcHJv
+eHkgXAorRlRQX1BST1hZIGZ0cF9wcm94eSBGVFBTX1BST1hZIGZ0cHNfcHJveHkgTk9fUFJPWFkg
+bm9fcHJveHkgQUxMX1BST1hZIGFsbF9wcm94eSBcCitHSVRfUFJPWFlfQ09NTUFORCBHSVRfU1NI
+IEdJVF9TU0xfQ0FJTkZPIEdJVF9TTUFSVF9IVFRQIFNTSF9BVVRIX1NPQ0sgU1NIX0FHRU5UX1BJ
+RCBcCitTT0NLUzVfVVNFUiBTT0NLUzVfUEFTU1dEIERCVVNfU0VTU0lPTl9CVVNfQUREUkVTUyBQ
+NENPTkZJRyIKKworZXhwb3J0IEZFVENIX0VOVl9XSElURUxJU1QKKwogQkJfRU5WX0VYVFJBV0hJ
+VEVfT0U9Ik1BQ0hJTkUgRElTVFJPIFRDTU9ERSBUQ0xJQkMgSFRUUF9QUk9YWSBodHRwX3Byb3h5
+IFwKIEhUVFBTX1BST1hZIGh0dHBzX3Byb3h5IEZUUF9QUk9YWSBmdHBfcHJveHkgRlRQU19QUk9Y
+WSBmdHBzX3Byb3h5IEFMTF9QUk9YWSBcCiBhbGxfcHJveHkgTk9fUFJPWFkgbm9fcHJveHkgU1NI
+X0FHRU5UX1BJRCBTU0hfQVVUSF9TT0NLIEJCX1NSQ1JFVl9QT0xJQ1kgXAotLQoyLjIwLjEK
 
