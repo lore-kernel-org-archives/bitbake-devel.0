@@ -1,110 +1,93 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
- by mx.groups.io with SMTP id smtpd.web09.20344.1625885310100911731
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web11.5314.1625996884131310234
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 09 Jul 2021 19:48:30 -0700
+ Sun, 11 Jul 2021 02:48:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=jN78LwyP;
- spf=pass (domain: gmail.com, ip: 209.85.215.175, mailfrom: jiladahe1997@gmail.com)
-Received: by mail-pg1-f175.google.com with SMTP id h4so11792781pgp.5
-        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Jul 2021 19:48:30 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fFmLTDk8;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f49.google.com with SMTP id i94so19928936wri.4
+        for <bitbake-devel@lists.openembedded.org>; Sun, 11 Jul 2021 02:48:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding;
-        bh=VabalatMFqyUnba0c42rDlwOiZGEXlqBV9Ruk5CRRZk=;
-        b=jN78LwyPqpaiT5YzRdBAk0/PBsKCFnlfjzTEtHc9lPDEgj/9EjvMFacXOYL7qcl27Z
-         q2ZY8VeXzHKcH3U4H6HUQV+IX5c8ltOwpdHFuV43Jaf+hlFcfn0z9FTwh1snCCHzdpoN
-         DxauFyb+hmZJGd+QsZB8fOuViP5g9+mHwJ0DVO4bOI9bn8tKJzWjeauAks6zqeq38F8/
-         H/kQaMiz410eHNSy5jZbAOc4Tr6ek6nZOZ9YqPyHu2+Ab+3GnD3RGgF6+TIhejLQQ6GH
-         AOrUcYUHCUMue5IQ/9SflgqnXWqPu5n5Fks/7j35SxUdRpCfVqb6EqI9IyH5SLCWU5fz
-         XpVg==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=I6LY7CJeTeba7+rDkJxp2pZi5VyYZ7Itr1Z6J5ophN0=;
+        b=fFmLTDk8dUF0Cx8IQq2pStb2dmRJ5rS649r08dr7YPrg447OHYDmj1bD5+8TRVTEgt
+         zZkBT/LQPGGBRTdul3L1SIjuBB88cxcpzAKRBO9wT2IH7+SHSRK0Lq33lELyvK5e8gwg
+         bKkWcVzqUAeASWJ1SMwvEnmlTnMgLGQi/yJG8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=VabalatMFqyUnba0c42rDlwOiZGEXlqBV9Ruk5CRRZk=;
-        b=oCgjX7RHkug59dfTQP+ZHneQ0ARZKKUJV0hlAwKfAJVmwqhl8BvLFWenRhjquTKutN
-         YaVZ92uvu4mMNsr2iwQDNbWPGtn/Ry6R/YjlGRHEfCBldeKIMMR5A9ycNM2aomr4vSy0
-         kLrHIlDPKRUERPLuB47QbyU2CYtB7QEFy2gpHZWydrvNfKfoPQ4KpnTbxMxJcnAF5wRD
-         zKyWgyB+pmUljkRMboL4ZX3G5nSDmv5sqMm+VwE4eS6C/viiqmz142kcE2jWN1cJmtsv
-         88bVwznSGc3isUTRiIZ+tYhs6UWVLqvFTG5nHrcYiDSLpVMZVNgEhfYhzNveh4DU1G2F
-         j2iQ==
-X-Gm-Message-State: AOAM530uxoR9xcEk9Jp3pmD9Xxq4zPxIrWQahG1Xb/MNq7A4cLvYO0zu
-	KqbaLAr99sr72Huu2wZExKh1//1ULb6CNVDae7M=
-X-Google-Smtp-Source: ABdhPJx5oyLbebWhcuiL2Osc+ay3FhkvliK0Pzt00nm8UQDAjDpEhnIL9NYsZw12jQo5p/bSKFUexQ==
-X-Received: by 2002:a63:5414:: with SMTP id i20mr42049485pgb.5.1625885309417;
-        Fri, 09 Jul 2021 19:48:29 -0700 (PDT)
-Return-Path: <jiladahe1997@gmail.com>
-Received: from [127.0.0.1] (n11923637190.netvigator.com. [119.236.37.190])
-        by smtp.gmail.com with ESMTPSA id s20sm14738972pjn.23.2021.07.09.19.48.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jul 2021 19:48:29 -0700 (PDT)
-From: "Mingrui Ren" <jiladahe1997@gmail.com>
-Subject: Re: [PATCH] Add a new variable:'FETCH_ENV_WHITELIST'
-To: richard.purdie@linuxfoundation.org,
- bitbake-devel <bitbake-devel@lists.openembedded.org>
-References: <202107090944160361815@gmail.com>
- <d72c3eafc5e4327d97ab16382b66dc6b97b51a2c.camel@linuxfoundation.org>
-Message-ID: <86779697-b733-4074-1ea9-465db33f3a5c@gmail.com>
-Date: Sat, 10 Jul 2021 10:48:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=I6LY7CJeTeba7+rDkJxp2pZi5VyYZ7Itr1Z6J5ophN0=;
+        b=ZmMxa7jaa/xvXd5JDdIN9WJCU27lQsOQkbE8XRY5rzv2i3d2Vf9tQkKSELKyqfGyzF
+         yVBd6vo8Mylm+KVf+IRtrll9PATjU4+ee4Die3Az4o84tyB7yfdidLImmp9P8xx0Tzht
+         u7DhezU8kI+IXQHUXVIVUdhkAQVdFwOnm7USvtcFN2V1yChGhd/+t+jJf262DgFa9a9q
+         0/aNP8culZsNmOn20jRrwm13KfswdQOF5V1i8/tB0Xo+tcOdjO1Uzgp22Q9sorWnDh3Q
+         NmtVZ0c9bxiCcdLYoGeQ60931qRKZYFYnqJHwkbBBufeAGICArJVQSqK53oxxBmBYBXa
+         bqUg==
+X-Gm-Message-State: AOAM5323qwOJCJDw75HHE17BQsoaYcTUyyxBSYUjcu0bs5eZZnCDX5JH
+	WuGxOyKngIvToVxkvdrYHAylvw==
+X-Google-Smtp-Source: ABdhPJy0cbzxEmoq6AD2+qVviRSywGXpGwQmCaxCU3vRIC4o0Jk7rUVb80grXeighitk/mr+zw7+zw==
+X-Received: by 2002:a05:6000:1c4:: with SMTP id t4mr7246843wrx.181.1625996882469;
+        Sun, 11 Jul 2021 02:48:02 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:5e67:1ea9:260d:3e7f? ([2001:8b0:aba:5f3c:5e67:1ea9:260d:3e7f])
+        by smtp.gmail.com with ESMTPSA id h10sm11827065wmb.46.2021.07.11.02.48.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Jul 2021 02:48:02 -0700 (PDT)
+Message-ID: <3cb191b83c3a9223ad76dff397d6d3c0dd8b755a.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] fetch2/s3: improve checking if object exists in s3 by using botocore
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>, 
+	bitbake-devel@lists.openembedded.org
+Cc: Adam Romanek <romanek.adam@gmail.com>
+Date: Sun, 11 Jul 2021 10:47:58 +0100
+In-Reply-To: <20210708123021.568443-1-dwrobel@ertelnet.rybnik.pl>
+References: <20210708123021.568443-1-dwrobel@ertelnet.rybnik.pl>
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
-In-Reply-To: <d72c3eafc5e4327d97ab16382b66dc6b97b51a2c.camel@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-Thanks for you reply,
+On Thu, 2021-07-08 at 14:30 +0200, Damian Wrobel wrote:
+> From: Adam Romanek <romanek.adam@gmail.com>
+> 
+> Botocore uses urllib3 which in turn uses a connection pool to issue HTTP
+> requests. Keeping the S3 client obtained from botocore library allows
+> one to reuse that connection pool.
+> 
+> The S3 client obtained from botocore is now kept in a connection
+> cache, which in case of sstate-cache checks is set up in
+> openembedded-core/classes/sstate.bbclass.
+> 
+> On Python 3.5+ a ResourceWarning on unclosed SSL socket is issued when
+> dropping the reference to botocore S3 client, which is a known issue but
+> apparently a false positive: https://github.com/boto/boto3/issues/454
+> 
+> Initial results show the time to check ~2700 objects is cut by 85%
+> (4 mins -> 35 secs).
+> 
+> With this change setting SSTATE_MIRRORS directly to S3 could now be the
+> preferred method for using sstate-cache from S3 (no need to sync
+> sstate-cache from S3 prior running the build), especially when the cache
+> grows significantly over time (e.g. from 4GB to 30GB during the day).
+> 
+> Signed-off-by: Adam Romanek <romanek.adam@gmail.com>
+> Signed-off-by: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
 
+With this change all the builds on the autobuilder and my local builds 
+start showing:
 
-在 2021/7/9 16:50, Richard Purdie 写道:
+WARNING: S3 FetchMethod: consider installing botocore to speed up S3 access
 
-> On Fri, 2021-07-09 at 09:44 +0800, jiladahe1997@gmail.com wrote:
-> The patch looks like it was generated against poky since that script is in
-> openembedded-core, not bitbake.
-> Whatever we do to address this issue really needs to match how we fix the
-> existing BB_ENV_EXTRAWHITE.
->
-> Also, since fetching happens much later, we should be able to set this
-> variable from config such as bitbake.conf or local.conf and there 
-> shouldn't
-> be any need to export it to the environment.
-Yes, BB_ENV_EXTRAWHITE must be modified to solve this problem gracefully, it
-seems that needs patching both of poky and bitbake.
-Should I send an e-mail to both poky and bitbake mailling list?
+which isn't really appropriate for users not using S3.
 
+I'm also a little worried that the changes in this patch appear to effectively
+totally change the fetcher type to effectively different code, I'm torn on that
+and whether it is nearly a different fetcher type.
 
-> For the patch itself, I'd much rather add something to extend the list
-> rather than replace it entirely which would make backwards compatibility
-> easier.
-About backwards compatibility, I have considered it, But I'm not sure if you
-prefer cleaner code or backward compatibility.
+Cheers,
 
-For example:
-
-FETCH_ENV_WHITELIST = "HOME PATH HTTP_PROXY http_proxy ..."
-exportvars = (d.getVar("FETCH_ENV_WHITELIST") or "").split()
-
-This code is cleaner, and better for forwards compatibility.
-
-FETCH_ENV_WHITELIST = ""
-exportvars = (d.getVar("FETCH_ENV_WHITELIST") or "").split().extend 
-"HOME PATH
-HTTP_PROXY http_proxy ..."
-
-This code is better for backwards compatibility.
-
-
-> There is also an issue with the variable naming. We have adopted a policy
-> around inclusive langauage so new variables need to be mindful of that.
-> We're in the process of trying to work out what to do with some of our
-> older variables names.
->
-> https://wiki.yoctoproject.org/wiki/Inclusive_language
-I'll fix it.
-
-
-thanks,
-Mingrui Ren
-
+Richard
 
