@@ -1,59 +1,75 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web09.4294.1626430014117552879
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+ by mx.groups.io with SMTP id smtpd.web11.4863.1626434197421747134
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 16 Jul 2021 03:06:54 -0700
+ Fri, 16 Jul 2021 04:16:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=HUZV8oBR;
- spf=pass (domain: burtonini.com, ip: 209.85.221.45, mailfrom: ross@burtonini.com)
-Received: by mail-wr1-f45.google.com with SMTP id u1so11474256wrs.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 16 Jul 2021 03:06:53 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=hT8ruErz;
+ spf=pass (domain: gmail.com, ip: 209.85.219.179, mailfrom: mayank77fromindia@gmail.com)
+Received: by mail-yb1-f179.google.com with SMTP id b13so14264362ybk.4
+        for <bitbake-devel@lists.openembedded.org>; Fri, 16 Jul 2021 04:16:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SKzn0S/ekmnJrhEjut+crUCerkPI9ie8ENtDLJQptTo=;
-        b=HUZV8oBRF2sSeV4c7mWucyRjnWXXZI2r/aVwVEyGLXmIwdEWNv/7QwXZtGaAJE5PqU
-         cjJEG45/mGSU4btgH5Gs+xQBi5JKJIEP45MxAMFn+vFec7TvSUSwteuvkm+gBBIGjUnO
-         OvSAtoEoIywUmX3r14YyE+/bcDVilQ5g92SrzOaJsr134k9QM2XbPuv3XKW/XR338kba
-         m4Ab7P3ob5D4z3zD/3xdni2iFz99F/cgtZXzupmbHKsLmlMqf/L8OpUu0XWoHzQkqScc
-         LksjO4rcV9GKbXd70UChKck0qBaArPW7m/XlXiSXmzblSAoCZ0nFUDKcBtompm4GYNzM
-         hrfA==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=2NPZCc0UXMrNwyjgAqC37Zs6EvJBwbOe3IGbyoEXDLU=;
+        b=hT8ruErzyVbapbD60wcFximwKhQFz4LmH0HcVnbZ07Rvzibq9Dzpv0zSF48x8A35QO
+         7wK4vMLVLpe4SLnPVbZiwbnQcdZbOnwswkU5bNSVuwMdhr3gFfl1eczAU7E9SPgB57Kq
+         xlBrYWd2MwlrLwHmEmWXm9R8LeFyeUAT0NN5jkPXINzjluRjsz7GJjOd9Bc1z/MTVgPR
+         5UChh1ouLlwaR4qS/ZvkOH1hgSc0J/rCoUEkYb7B9ogl/+578qXOksC5AQ45kXRQ5s8g
+         cVjPW1tI93l/gFxzP6INK7vYu/oAOmu6MHvsE0hUzWZ53z5TUIjggGWzMSSwuW2zUagr
+         Pl6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SKzn0S/ekmnJrhEjut+crUCerkPI9ie8ENtDLJQptTo=;
-        b=otxg7m3Zm8njejS53SskfMnDozWLNxzqNScDV57zqnbirHld2DMCJGw1j2uQLUaNCE
-         evu8wcCn5s0eO9jii+AHa2axEyn8/V6IJWxTEQVOqX6bDipVVkj1hSKv6yCwbsvSBS2+
-         IUzBfB0Gg7pkyNhFDl396JobJ+kySPx1fOm3LhX+oPfZHsLv6ISu1S0PCoj7CSToI3eg
-         UX4ix5BTHgnLYe7FBsdXcVdrUrq7+C1TLKuwZBU8WMf8aq6JuVnRbEL9nHfRzwLUuerf
-         lFdr/PUWkR+W4ybRZdc2aqF+Gvbe4uHDjI4Zn/5XjMcp4f/5G9Gm5BZ2gM9TGgKSTkNB
-         3mPw==
-X-Gm-Message-State: AOAM533dRUVGzZ9dM0JtZ0yBVXoIF32cXxkmyL3tWuw8bRqb7bnMhu5h
-	5VPj4ngXdEfRNnoBr+Trhx6Ci+04w+bwUWFtqpF1tw==
-X-Google-Smtp-Source: ABdhPJwgaT+fuad+lK5WhJgBy0msVa+/WdD+fq+mqDPisMQdL6w82yNsIhOatNzR9sEQYzwFOoPCUG9ggSADKSpuUbM=
-X-Received: by 2002:a5d:6d86:: with SMTP id l6mr11319853wrs.260.1626430012424;
- Fri, 16 Jul 2021 03:06:52 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=2NPZCc0UXMrNwyjgAqC37Zs6EvJBwbOe3IGbyoEXDLU=;
+        b=GRXOnEWMVzLCD1h4lxnkY7of0WgWmPYZSZWBirLpWunMF/uiqU9o3Z520pEC7tnWRg
+         Tc0/SEzASGxssFiZbjs6bXG26iiWLKGrNnKyMQRyk7Ve+ex5lRbYF2eHKqqetxs2siZk
+         WzLJvlGakoyLhg9ODVLO4MfiXrRj/nOcpEyhsK6QqSHTicrh17DOVCXLiXb1KqTR+L8P
+         i4GWkwREOcVw3s9mA5tUFqRNtLwetFL0UJkpTabjQ6dCDYnZIYFKxMlQNAQdF1bFdSyq
+         GtyBnfrC3eRlN9+aNZFaPgBVqFZE2Ic37vQOOGkCWuh0F/G/Yba+mcX7X4eHtzk1H7Gd
+         x/CA==
+X-Gm-Message-State: AOAM532LGuQGvxqrhZyl4df8g8ZbdCRVXorMdmtsISaFtGY2qnnb0Xmm
+	ObF0aUmZIbkOjQtYV9z5eQ6kjwSqLW8DYkB+jcrLk5jDUfQ=
+X-Google-Smtp-Source: ABdhPJyr6SzV9IY4XJATg1ma3IqOyMPAhM1VhK1wsv64PriQL5F5/2G++MW7rd6r7MO4HuIiC0Xv+TshiQeNtH1E+yg=
+X-Received: by 2002:a25:ab8b:: with SMTP id v11mr12263585ybi.375.1626434196496;
+ Fri, 16 Jul 2021 04:16:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <89xC.1626390228088042584.TYTM@lists.openembedded.org>
-In-Reply-To: <89xC.1626390228088042584.TYTM@lists.openembedded.org>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Fri, 16 Jul 2021 11:06:41 +0100
-Message-ID: <CAAnfSTs2CMqk0JvWeMaqKcCSYFnvqC0z43Wg=HUT9GWSsGBB0w@mail.gmail.com>
-Subject: Re: [bitbake-devel] bbappend SRC_URI restriction request
-To: jared_terry@dell.com
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+From: "Mayank Agarwal" <mayank77fromindia@gmail.com>
+Date: Fri, 16 Jul 2021 16:46:26 +0530
+Message-ID: <CAKjpqyKztYNU8Suaq-PgC=A=VWLGGezYm3OzErSLbRVLZ7QNhQ@mail.gmail.com>
+Subject: Bitbake rootfs issue
+To: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="00000000000088652b05c73bb82e"
+
+--00000000000088652b05c73bb82e
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 16 Jul 2021 at 00:03, <jared_terry@dell.com> wrote:
-> is it possible to set it up so this throws a warning?  This is something I would think would be very bad in a bbappend file
+Hi all,
 
-Apart from when it's exactly what you want to do, of course. I've
-definitely written appends which replace a tarball+patches with a git
-repository.
+I am getting the issue that binaries are not installed in the final rootfs
+after executing the build
+using bitbake.The do_install function executes successfully but i am not
+seeing the binaries
+in rootfs.How can i debug this.
+Also is there any sanity check or dependency  performs before putting the
+binaries in rootfs
+or generating the final image,if that how can we know because of which
+dependency binaries are not installed in rootfs.
 
-> and basically bypasses the bitbake-layers show-overlayed I've been using to detect who has forced an override of whats in poky.
+Best Regards
+Mayank
 
-How does that bypass show-overlayed?
+--00000000000088652b05c73bb82e
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ross
+<div dir=3D"ltr">Hi all,<div><br></div><div>I am getting the issue that bin=
+aries are not installed in the final rootfs after executing the build</div>=
+<div>using bitbake.The do_install function executes successfully but i am n=
+ot seeing the binaries</div><div>in rootfs.How can i debug this.</div><div>=
+Also is there any sanity=C2=A0check or dependency=C2=A0 performs before put=
+ting the binaries=C2=A0in rootfs</div><div>or generating the final image,if=
+ that how can we know because of which dependency=C2=A0binaries=C2=A0are no=
+t installed in rootfs.</div><div><br></div><div>Best Regards</div><div>Maya=
+nk</div></div>
+
+--00000000000088652b05c73bb82e--
