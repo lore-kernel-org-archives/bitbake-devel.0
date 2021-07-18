@@ -1,196 +1,222 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
- by mx.groups.io with SMTP id smtpd.web11.7653.1626551835553577279
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web10.14397.1626611384877197897
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 17 Jul 2021 12:57:15 -0700
+ Sun, 18 Jul 2021 05:29:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=Fo+CuccX;
- spf=pass (domain: gmail.com, ip: 209.85.216.52, mailfrom: chuckwolber@gmail.com)
-Received: by mail-pj1-f52.google.com with SMTP id p9so8850110pjl.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 17 Jul 2021 12:57:15 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TbBFzltT;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id i94so18018696wri.4
+        for <bitbake-devel@lists.openembedded.org>; Sun, 18 Jul 2021 05:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H7nC28WLWArSWaiSqF63PgVmvjWgHu+7q1VlcY8/NcI=;
-        b=Fo+CuccXGpmkuM4J9caCai8exkpTiYD77k6oJNFsinKcp0N6str658jQukhoK2r5Ra
-         dEaU6Ghi8kKzW15qZzCrjub5b9NQS3WE7q7e9BScqD2G0omQ0wVFq+zfFaQ8C+giGZqN
-         wPVpAApCaWUC8fsgM+epD4eTPhp7hDCDMyYTLJDhV6q+JLnEnfD6DkDB4YjvsjOT49Hz
-         jY9PRfitWN+UnIQmgs3nXTK/W9ld/VnoD8CJJgES+sheUrRmcng+FLIAe2OdxtEJkA6B
-         zoNKj8ybwOBkIbtnp0OTJuoVX42Sf9eZO5aJbbYmW5b9rX6SQBWo9k0tcQj2QHpNnGJ3
-         d0uQ==
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J+0AyZ8Ul6vzmrGZgKwxPHden32gwmOaes3qSaaNzf0=;
+        b=TbBFzltTPixNbtU8dWQ2wpWXDfV2dGO0e5blQKRWJLUISVLOEvn+nAxWFoNkP1pZzK
+         mPK6IqZXiw6Gac1JDZz2OVVB24PBFDKWBsyFg9YVpD7KOd/2isq8Sdgou++7T+Jn1c6A
+         Sr+rbXaYd+hihfji3FbkPeOCIu6/bJgEOUGxA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H7nC28WLWArSWaiSqF63PgVmvjWgHu+7q1VlcY8/NcI=;
-        b=at2aPXhaz7k90tfXGUoDBNlQMoLh0UCprXNQUbjffug5ns9wj34bnBp6zrL96pGU5L
-         GTzxHmEO0+epQDS72aO7CuECLPNpspe2u3RZoSf71z8A6PUX2Ik6WnX6Tsvk5cHamavC
-         yC+9IjOkOqBYr/jyF0+FRDLHyPws01uW1Aqp2iC9iqHibQc3eZxKQHQk0p8SHa+iha3o
-         /cs/H6l86Ss+8/wpXXWTbdMf6ZqSwjBK3gJ5iRQA9sOaSJGGl8TkLrMeMtAg0uZxDnky
-         VhLv0oWke4bEYqpuKxECtWUj5mVF3uBqzViVZFeLDVSUWM9LqjeEHlUyEAwmCkyfsPT4
-         Sn5A==
-X-Gm-Message-State: AOAM53051zMW5MNCGOmTCP40m94dOKcf8Df277lJlPw/WfeIOq6ymG1Q
-	nAlzEJUgAlyjH4vjNYYsMslg+2YIclOUolLaCuA=
-X-Google-Smtp-Source: ABdhPJxJeXcjmBzItCjrWiyYQL1zyv0Bv5dfPS7EiTfHVVcom0QtIPSjVm0KDZ+/hkOFiU9NL4NMvYElo+w5ERs+G5Q=
-X-Received: by 2002:a17:902:76cb:b029:12b:2fb8:7c35 with SMTP id
- j11-20020a17090276cbb029012b2fb87c35mr12788741plt.16.1626551834744; Sat, 17
- Jul 2021 12:57:14 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J+0AyZ8Ul6vzmrGZgKwxPHden32gwmOaes3qSaaNzf0=;
+        b=rDoy+vK0vNoG31XTZEbu90+LOv4hFUrEik6tNO9j0OsX+fdrSK/DgUj6Qk4BHLi5UI
+         8lCHKVT3JaxgqIiFDLoQGXW1mo44dr5N5up2x7VUfMpanegu2n6+xBlOG3jJJF0amSmi
+         utamfVA60I0zNgfvrE6tnLQh/MLG52/A55qtJE8wX/biQ2GbI1BrVXaKvx3hWIUhSb5J
+         GUWFCpd0jPHBtLvtZK9tY/RW9TfaWzI0dhK294yz6mzreKVnscQ9iGCCOtXMbLItzylt
+         +EdsmBL+N5orUh/mx9YCWhHX2+/OBktQ4IX4jHAJlIUU3A/Ia/lmayymZ1Ar1iiV12py
+         Nuyg==
+X-Gm-Message-State: AOAM531VcZovCVGTxlME7p2AdfnSTAIQOJSbAO2Xatnew79ZEOQPkUcc
+	u8DDsaxomptDoFznlmwu4mkavd6DSV3jKg==
+X-Google-Smtp-Source: ABdhPJyAS+TIuxxh50KxJrjEW+mkslv0TD3ViM3wrM0Xh3/ek1j6PEfKYKeaUQ/QaI5+9Ia3Ntxr0g==
+X-Received: by 2002:adf:a2c3:: with SMTP id t3mr23748614wra.223.1626611383171;
+        Sun, 18 Jul 2021 05:29:43 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:5ff5:ebf1:b0ff:a94a])
+        by smtp.gmail.com with ESMTPSA id h130sm6894486wmh.1.2021.07.18.05.29.42
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Jul 2021 05:29:42 -0700 (PDT)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] data_smart/parse: Allow ':' characters in variable/function names
+Date: Sun, 18 Jul 2021 13:29:42 +0100
+Message-Id: <20210718122942.2975363-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <CAKjpqyJ3NOLfgPQpuRqh6gwBJRZebW5sEPkEOT5bW6=Y_ZzkCA@mail.gmail.com>
-In-Reply-To: <CAKjpqyJ3NOLfgPQpuRqh6gwBJRZebW5sEPkEOT5bW6=Y_ZzkCA@mail.gmail.com>
-From: "Chuck Wolber" <chuckwolber@gmail.com>
-Date: Sat, 17 Jul 2021 12:57:03 -0700
-Message-ID: <CAB=6tBRfyCnAVOX3JsjLcM4qy+n15g2ov63V-ZkKvCqovxXAbQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] how bitbake works
-To: Mayank Agarwal <mayank77fromindia@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000519f0405c7571cca"
+Content-Transfer-Encoding: 8bit
 
---000000000000519f0405c7571cca
-Content-Type: text/plain; charset="UTF-8"
+It is becomming increasingly clear we need to find a way to show what
+is/is not an override in our syntax. We need to do this in a way which
+is clear to users, readable and in a way we can transition to.
 
-On Sat, Jul 17, 2021 at 2:12 AM Mayank Agarwal <mayank77fromindia@gmail.com>
-wrote:
+The most effective way I've found to this is to use the ":" charater
+to directly replace "_" where an override is being specified. This
+includes "append", "prepend" and "remove" which are effectively special
+override directives.
 
->
-> a) How bitbake decides the order of  compiling and executing modules.
->
+This patch simply adds the character to the parser so bitbake accepts
+the value but maps it back to "_" internally so there is no behaviour
+change.
 
-You generally build images. Images have dependencies. If you map out the
-dependencies as a big giant graph, the dependencies with no child nodes get
-built first. The build continues from there as all dependencies are met and
-then the core image can be assembled.
+This change is simple enough it could potentially be backported to older
+version of bitbake meaning layers using the new syntax/markup could
+work with older releases. Even if other no other changes are accepted
+at this time and we don't backport, it does set us on a path where at
+some point in future we could
+require a more explict syntax.
 
-There are also some intrinsic dependencies like the sysroot compiler, etc
-that always have to be built first. Bitbake caches dependencies and reuses
-them in subsequent builds if it does not detect any changes to them.
+I've tested this patch by converting oe-core/meta-yocto to the new
+syntax for overrides (9000+ changes) and then seeing that builds
+continue to work with this patch.
 
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/data_smart.py                 | 12 ++++++++++++
+ lib/bb/parse/ast.py                  |  2 ++
+ lib/bb/parse/parse_py/BBHandler.py   |  2 +-
+ lib/bb/parse/parse_py/ConfHandler.py |  2 +-
+ 4 files changed, 16 insertions(+), 2 deletions(-)
 
-> b) Is it possible to compile 1 module before or after another one
->
-
-Think of it in terms of dependencies. If A depends on B, then B gets built
-first. You would use the DEPENDS (build time dependency) and the
-RDEPDENDS_${PN} (runtime dependencies) variables for this.
-
-
-
-> c) Is there any file where we can see the complete list of all tasks that
-> bitbake executes in the order of execution.
->
-
-Yes, you can generate a graph of the entire execution with the --graphviz
-argument, e.g. "bitbake core-image-sato --graphviz". This generates a build
-graph document in the build directory.
-
-
-
-> d) How can we use logging mechanism in bitbake.Is it possible to put log
-> statements in recipe files and see the logs on terminal during compilation
-> and execution.
->
-
-Yes, but that is out of scope for a quick email reply like this.
-
-You should read the manuals at https://docs.yoctoproject.org. They are a
-very rich source of information. The more you read them, the smarter your
-questions will get, and the more likely you are to get help when you
-experience complex problems.
-
-You might also want to take a look at the FAQ (
-https://wiki.yoctoproject.org/wiki/FAQ) and the Technical FAQ (
-https://wiki.yoctoproject.org/wiki/Technical_FAQ).
-
-
-e) Optmization of bitbake steps.Is there any guide that tells how can we
-> optimize.For me 1 module takes close to 3 hrs in executing
-> Is there any method that i can reduce build time by pre compiling that
-> module.
->
-
-Faster hardware? It really depends on the specifics of what you are
-building. There is no magic formula.
-
-I have one build that takes 28 hours on a 2 core machine. It builds in 2-3
-hours now on a 20 Core machine. My developers only require a subset of that
-build so they can cache an initial build on their 4 core laptops in about 8
-hours. There is also an option to use shared cache if that works for your
-particular situation.
-
-Also, I normally dedicate about 2.5 gigs of RAM per core to avoid crashes
-due to RAM starvation. Otherwise you may experience random "difficult to
-explain" build crashes.
-
-..Ch:W..
-
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 2328c334ac..f48726a348 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -481,6 +481,7 @@ class DataSmart(MutableMapping):
+ 
+     def setVar(self, var, value, **loginfo):
+         #print("var=" + str(var) + "  val=" + str(value))
++        var = var.replace(":", "_")
+         self.expand_cache = {}
+         parsing=False
+         if 'parsing' in loginfo:
+@@ -589,6 +590,8 @@ class DataSmart(MutableMapping):
+         """
+         Rename the variable key to newkey
+         """
++        key = key.replace(":", "_")
++        newkey = newkey.replace(":", "_")
+         if key == newkey:
+             bb.warn("Calling renameVar with equivalent keys (%s) is invalid" % key)
+             return
+@@ -637,6 +640,7 @@ class DataSmart(MutableMapping):
+         self.setVar(var + "_prepend", value, ignore=True, parsing=True)
+ 
+     def delVar(self, var, **loginfo):
++        var = var.replace(":", "_")
+         self.expand_cache = {}
+ 
+         loginfo['detail'] = ""
+@@ -664,6 +668,7 @@ class DataSmart(MutableMapping):
+                          override = None
+ 
+     def setVarFlag(self, var, flag, value, **loginfo):
++        var = var.replace(":", "_")
+         self.expand_cache = {}
+ 
+         if 'op' not in loginfo:
+@@ -687,6 +692,7 @@ class DataSmart(MutableMapping):
+             self.dict["__exportlist"]["_content"].add(var)
+ 
+     def getVarFlag(self, var, flag, expand=True, noweakdefault=False, parsing=False, retparser=False):
++        var = var.replace(":", "_")
+         if flag == "_content":
+             cachename = var
+         else:
+@@ -814,6 +820,7 @@ class DataSmart(MutableMapping):
+         return value
+ 
+     def delVarFlag(self, var, flag, **loginfo):
++        var = var.replace(":", "_")
+         self.expand_cache = {}
+ 
+         local_var, _ = self._findVar(var)
+@@ -831,6 +838,7 @@ class DataSmart(MutableMapping):
+             del self.dict[var][flag]
+ 
+     def appendVarFlag(self, var, flag, value, **loginfo):
++        var = var.replace(":", "_")
+         loginfo['op'] = 'append'
+         loginfo['flag'] = flag
+         self.varhistory.record(**loginfo)
+@@ -838,6 +846,7 @@ class DataSmart(MutableMapping):
+         self.setVarFlag(var, flag, newvalue, ignore=True)
+ 
+     def prependVarFlag(self, var, flag, value, **loginfo):
++        var = var.replace(":", "_")
+         loginfo['op'] = 'prepend'
+         loginfo['flag'] = flag
+         self.varhistory.record(**loginfo)
+@@ -845,6 +854,7 @@ class DataSmart(MutableMapping):
+         self.setVarFlag(var, flag, newvalue, ignore=True)
+ 
+     def setVarFlags(self, var, flags, **loginfo):
++        var = var.replace(":", "_")
+         self.expand_cache = {}
+         infer_caller_details(loginfo)
+         if not var in self.dict:
+@@ -859,6 +869,7 @@ class DataSmart(MutableMapping):
+             self.dict[var][i] = flags[i]
+ 
+     def getVarFlags(self, var, expand = False, internalflags=False):
++        var = var.replace(":", "_")
+         local_var, _ = self._findVar(var)
+         flags = {}
+ 
+@@ -875,6 +886,7 @@ class DataSmart(MutableMapping):
+ 
+ 
+     def delVarFlags(self, var, **loginfo):
++        var = var.replace(":", "_")
+         self.expand_cache = {}
+         if not var in self.dict:
+             self._makeShadowCopy(var)
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 50a88f7da7..db2bdc35ec 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -97,6 +97,7 @@ class DataNode(AstNode):
+     def eval(self, data):
+         groupd = self.groupd
+         key = groupd["var"]
++        key = key.replace(":", "_")
+         loginfo = {
+             'variable': key,
+             'file': self.filename,
+@@ -207,6 +208,7 @@ class ExportFuncsNode(AstNode):
+     def eval(self, data):
+ 
+         for func in self.n:
++            func = func.replace(":", "_")
+             calledfunc = self.classname + "_" + func
+ 
+             if data.getVar(func, False) and not data.getVarFlag(func, 'export_func', False):
+diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
+index f8988b8631..152ef6ab72 100644
+--- a/lib/bb/parse/parse_py/BBHandler.py
++++ b/lib/bb/parse/parse_py/BBHandler.py
+@@ -22,7 +22,7 @@ from .ConfHandler import include, init
+ # For compatibility
+ bb.deprecate_import(__name__, "bb.parse", ["vars_from_file"])
+ 
+-__func_start_regexp__    = re.compile(r"(((?P<py>python(?=(\s|\()))|(?P<fr>fakeroot(?=\s)))\s*)*(?P<func>[\w\.\-\+\{\}\$]+)?\s*\(\s*\)\s*{$" )
++__func_start_regexp__    = re.compile(r"(((?P<py>python(?=(\s|\()))|(?P<fr>fakeroot(?=\s)))\s*)*(?P<func>[\w\.\-\+\{\}\$:]+)?\s*\(\s*\)\s*{$" )
+ __inherit_regexp__       = re.compile(r"inherit\s+(.+)" )
+ __export_func_regexp__   = re.compile(r"EXPORT_FUNCTIONS\s+(.+)" )
+ __addtask_regexp__       = re.compile(r"addtask\s+(?P<func>\w+)\s*((before\s*(?P<before>((.*(?=after))|(.*))))|(after\s*(?P<after>((.*(?=before))|(.*)))))*")
+diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
+index f171c5c932..0834fe3f9b 100644
+--- a/lib/bb/parse/parse_py/ConfHandler.py
++++ b/lib/bb/parse/parse_py/ConfHandler.py
+@@ -20,7 +20,7 @@ from bb.parse import ParseError, resolve_file, ast, logger, handle
+ __config_regexp__  = re.compile( r"""
+     ^
+     (?P<exp>export\s+)?
+-    (?P<var>[a-zA-Z0-9\-_+.${}/~]+?)
++    (?P<var>[a-zA-Z0-9\-_+.${}/~:]+?)
+     (\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?
+ 
+     \s* (
 -- 
-*"Perfection must be reached by degrees; she requires the slow hand of
-time." - Voltaire*
+2.30.2
 
---000000000000519f0405c7571cca
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr">On Sat, Jul 17, 2021 at 2:12 AM Mayank Ag=
-arwal &lt;<a href=3D"mailto:mayank77fromindia@gmail.com">mayank77fromindia@=
-gmail.com</a>&gt; wrote:<br></div><div class=3D"gmail_quote"><blockquote cl=
-ass=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid=
- rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr"><br><div>a) How bitbak=
-e decides the order of=C2=A0 compiling and executing modules.</div></div></=
-blockquote><div><br></div><div>You generally build images. Images have depe=
-ndencies. If you map out the dependencies as a big giant graph, the depende=
-ncies with no child nodes get built first. The build continues from there a=
-s all dependencies are met and then the core image can be assembled. <br></=
-div><div><br></div><div>There are also some intrinsic dependencies like the=
- sysroot compiler, etc that always have to be built first. Bitbake caches d=
-ependencies and reuses them in subsequent builds if it does not detect any =
-changes to them.<br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote=
-" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);=
-padding-left:1ex"><div dir=3D"ltr"><div>b) Is it possible to compile 1 modu=
-le before or after another=C2=A0one</div></div></blockquote><div><br></div>=
-<div>Think of it in terms of dependencies. If A depends on B, then B gets b=
-uilt first. You would use the DEPENDS (build time dependency) and the RDEPD=
-ENDS_${PN} (runtime dependencies) variables for this.</div><div><br></div><=
-div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0=
-px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div dir=
-=3D"ltr"><div>c) Is there any file where we can see the complete list of al=
-l tasks that bitbake executes in the order of execution.</div></div></block=
-quote><div><br></div><div>Yes, you can generate a graph of the entire execu=
-tion with the --graphviz argument, e.g. &quot;bitbake core-image-sato --gra=
-phviz&quot;. This generates a build graph document in the build directory.<=
-br></div><div><br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" =
-style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pa=
-dding-left:1ex"><div dir=3D"ltr"><div>d) How can we use logging mechanism i=
-n bitbake.Is it possible to put log statements in recipe files and see the =
-logs on terminal during compilation and execution.</div></div></blockquote>=
-<div><br></div><div>Yes, but that is out of scope for a quick email reply l=
-ike this.</div><div><br></div><div>You should read the manuals at <a href=
-=3D"https://docs.yoctoproject.org">https://docs.yoctoproject.org</a>. They =
-are a very rich source of information. The more you read them, the smarter =
-your questions will get, and the more likely you are to get help when you e=
-xperience complex problems. <br></div><div><br></div><div>You might also wa=
-nt to take a look at the FAQ (<a href=3D"https://wiki.yoctoproject.org/wiki=
-/FAQ">https://wiki.yoctoproject.org/wiki/FAQ</a>) and the Technical FAQ (<a=
- href=3D"https://wiki.yoctoproject.org/wiki/Technical_FAQ">https://wiki.yoc=
-toproject.org/wiki/Technical_FAQ</a>).</div><div>=C2=A0</div><div><br></div=
-><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border=
--left:1px solid rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr"><div>e)=
- Optmization of bitbake steps.Is there any guide that tells how can we opti=
-mize.For me 1 module takes close to 3 hrs in executing</div><div>Is there a=
-ny method that i can reduce build time by pre compiling that module.</div><=
-/div></blockquote><div><br></div><div>Faster hardware? It really depends on=
- the specifics of what you are building. There is no magic formula.</div><d=
-iv><br></div><div>I have one build that takes 28 hours on a 2 core machine.=
- It builds in 2-3 hours now on a 20 Core machine. My developers only requir=
-e a subset of that build so they can cache an initial build on their 4 core=
- laptops in about 8 hours. There is also an option to use shared cache if t=
-hat works for your particular situation.<br></div><div><br></div><div>Also,=
- I normally dedicate about 2.5 gigs of RAM per core to avoid crashes due to=
- RAM starvation. Otherwise you may experience random &quot;difficult to exp=
-lain&quot; build crashes.<br></div></div><div><br></div><div>..Ch:W..<br></=
-div><div><br></div>-- <br><div dir=3D"ltr" class=3D"gmail_signature"><div d=
-ir=3D"ltr"><div><b><span style=3D"font-family:monospace">&quot;Perfection m=
-ust be reached by degrees; she requires the slow hand of time.&quot; - Volt=
-aire</span></b></div></div></div></div>
-
---000000000000519f0405c7571cca--
