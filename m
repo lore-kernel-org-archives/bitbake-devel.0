@@ -1,108 +1,136 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web08.14591.1626612435968849316
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+ by mx.groups.io with SMTP id smtpd.web11.29430.1626709246317824776
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 18 Jul 2021 05:47:16 -0700
+ Mon, 19 Jul 2021 08:40:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JkX2kIko;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f52.google.com with SMTP id l7so18047059wrv.7
-        for <bitbake-devel@lists.openembedded.org>; Sun, 18 Jul 2021 05:47:15 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=L3MOJz4X;
+ spf=pass (domain: gmail.com, ip: 209.85.216.43, mailfrom: jiladahe1997@gmail.com)
+Received: by mail-pj1-f43.google.com with SMTP id d9-20020a17090ae289b0290172f971883bso14417266pjz.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 19 Jul 2021 08:40:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:user-agent:mime-version
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:mime-version:message-id
          :content-transfer-encoding;
-        bh=eq4VdezEVjNCVF65FyCQGD6Wio5POWbkhQZAYiZYL60=;
-        b=JkX2kIko1RWuy84zZhtgTkfvYA1LcXpu1DF/fd9fMrwBejSRfaOQ7pVulwEBdoOh+7
-         k9lWfMcgNUw3EA9PYaVBqzmWV6f0L+SENPgRoN+5UPo4e4Jwg2MklweP/NfiyF7tu1CD
-         /Ouw/u56Zywe6KMY2GAR3EvGrbuC28tGazsQs=
+        bh=uPLVSU1wHwfEGGm0SoaDN/LNZ24K5z6rUAh4v4ajmTI=;
+        b=L3MOJz4Xr/G+IxIcPqcncA2DZrRD3ICsf6mdFuawA1Y+HeZ3LUePow0qwjMR4ULG1R
+         I4AiYHRd/5Y3mJfXTcjX+3jyE3yteoOyPhIZaImjFUpyymMX0zmIMtRBjoEKTw7NYX//
+         /6gqBgb9suwM+XYUMp6jKk+RfzQWYN/vJb7iSLLzN1vfr9Xj3wFgqWtKlmmM06+kkvqh
+         Odnd1usj1hTfmwih9hsSTIIetogPSIeDWSDS5Mv/RMn3i/3m+eaK8RhLSsolU2LJn2JS
+         4aEPQ2nFsxzhWpNtuURIwgtYcBWAWwNcCtA3Tw7Hkgof/6xvc/IS0VYcnRffPaylGTxl
+         xaTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=eq4VdezEVjNCVF65FyCQGD6Wio5POWbkhQZAYiZYL60=;
-        b=g4SlbAmDKf4XEP/ARr6gN8LY3ijx4izemzyDaw5S7E8bObk9K6+SGntvk/KcuHVSzj
-         VCTM/ntNYeoPlQoV8kwE6D2uErq0ZGrVTS4NaacFj2lbOrF/IkXczMVoXxb0nBYW408G
-         amIVvvC6+XkKrjI088nNnvgZpD+yM5jRXik/og8ivY+BG1VE8waCDmWBgVqHO2qckz/3
-         NtfZcVwn4lAYayeAmoHAcA5PDwfxbtrsCf1/0z9yYLFp5wj8VgKF8tF26jbqYtJ9BqOk
-         ykAH6DHjqIptMVJbs8WhmO77DDlC8VexDiC6i+kdCJQIqIwRBxSvquFMNBPY+Ha0fVp5
-         PrSg==
-X-Gm-Message-State: AOAM531rH5uUeun1cplDsWDjmAiEgmMuAo4EljQNI34xwFdo7OU48ilT
-	nfmWTpIfIGqkxAUmSpgrb/u0DWt7exTETQ==
-X-Google-Smtp-Source: ABdhPJxacGRUorkhQUh8tO2bk/RXYC7Bui38C8ZRKWgYQ0OahOR8rjz3xm42N54XXqWwSniIbhkUnA==
-X-Received: by 2002:adf:a2c3:: with SMTP id t3mr23812549wra.223.1626612434386;
-        Sun, 18 Jul 2021 05:47:14 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:5ff5:ebf1:b0ff:a94a? ([2001:8b0:aba:5f3c:5ff5:ebf1:b0ff:a94a])
-        by smtp.gmail.com with ESMTPSA id 12sm17699943wme.28.2021.07.18.05.47.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Jul 2021 05:47:14 -0700 (PDT)
-Message-ID: <e0aef0bd428729d70c5b1ee4bb5df3fcadcfd02d.camel@linuxfoundation.org>
-Subject: Override syntax change proposal
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: openembedded-architecture
-	 <openembedded-architecture@lists.openembedded.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sun, 18 Jul 2021 13:47:11 +0100
-User-Agent: Evolution 3.40.0-1 
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:from:to:subject:mime-version:message-id
+         :content-transfer-encoding;
+        bh=uPLVSU1wHwfEGGm0SoaDN/LNZ24K5z6rUAh4v4ajmTI=;
+        b=R/zXOw6UcLmghHcodFi9xqgN06UoS/hnZAlXrvkqZAl28i/Idrgm6l09Stby54wa6M
+         RRj2sKO3CH+mu+91vBqudB+bwLBvqPU1u0wk0H+/lQjb037t8Ij6tinyFmoKTjkvydty
+         pqSGalar7a5rOmV6x5GVAdoL9YO3djdPe0faB4io/FAAnzXgjYnhxGE3iToSTWRHojgj
+         wFwpFIUgncCwDSkqoaBKRtSJbrrLw4Yfp0kBKHgd2/NVMKLknDM26KYnQAM3BP0gY94I
+         g0G0t+J/EPOyNz/uvYxngk0JtqTC3uYwcqAI7jV220ej9+6GRKRzTVeoej0Ha0XdefEx
+         mBgg==
+X-Gm-Message-State: AOAM5328m/upUSonTXnAgFOXDWKEGVK5KisdN4yhiHqRhWg3kYsDCb5L
+	e1MP68ZkTYZRxafeLkgrIrg=
+X-Google-Smtp-Source: ABdhPJyMAqS9mQJiZ/bbyMTY27h2tPFyQAjYbDwqT6RxMJlj0xnIDc+nSVECgp9GsnUiD2T4nTS96w==
+X-Received: by 2002:a17:90a:3e0f:: with SMTP id j15mr25631446pjc.178.1626709245833;
+        Mon, 19 Jul 2021 08:40:45 -0700 (PDT)
+Return-Path: <jiladahe1997@gmail.com>
+Received: from Foxmail (n11923637190.netvigator.com. [119.236.37.190])
+        by smtp.gmail.com with ESMTPSA id k16sm19547127pfu.83.2021.07.19.08.40.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Jul 2021 08:40:45 -0700 (PDT)
+Date: Mon, 19 Jul 2021 23:40:43 +0800
+From: "Mingrui Ren" <jiladahe1997@gmail.com>
+To: yocto <yocto@lists.yoctoproject.org>, 
+	bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+	richard.purdie <richard.purdie@linuxfoundation.org>
+Subject: [PATCH v2] Add a new variable:'BB_FETCH_ENV' to export Fetcher env
+X-Priority: 3
+X-GUID: 63167E63-E469-44F5-BD5A-02AB85BC1BFD
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.21.453[cn]
+Mime-Version: 1.0
+Message-ID: <202107192340416243166@gmail.com>
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: base64
 
-Hi All,
-
-I now have an actual proposed plan for changing override syntax which I hope
-will mitigate the issues raised in the previous discussion as far a is possible
-whilst still letting the project move forward.
-
-Firstly, I'd like to merge a patch I sent to the bitbake list:
-
-https://lists.openembedded.org/g/bitbake-devel/topic/patch_data_smart_parse/84285770
-
-This patch allows bitbake to accept ":" in variable/function names. It is designed
-to be simple and could be easily backported to previous bitbake versions. At the
-very least I'd like to do that for master, allowing at least OE-Core master branch 
-to start using an explicit override syntax.
-
-I'd like to go further and suggest we backport to older bitbake versions (back to 
-dunfell?) so that anyone using metadata over multiple versions could continue to
-do so.
-
-I'm hoping the above isn't too controversial and would at least let us move forward
-to trying to improve.
-
-The next steps beyond that are a little trickier as they start to require the change.
-The next logical move is to require ":" as the separator for current master branches.
-I believe it is reasonable to do this if we can show how layers can be converted and 
-have a way for older layers to continue to work with master.
-
-There is a script I wrote and linked to (~100 lines of python) which with some
-priming about the overrides in use in a layer (which a layer maintainer should know), 
-is able to automatically convert a layer. For oe-core+meta-yocto+docs+bitbake, that
-is 9000+ changes but the script seems reliable if not very nice code. I did end up
-adding a handful of manual fixes but that was for python code manipulating variables
-which most layers wouldn't have, in general the core is way more complex than most
-layers.
-
-This means that people with older layers trying to work with master now have two
-options:
-
-a) they convert to use ":" and update to a version of bitbake with the above tweak
-   to allow it to accept that (no behaviour change)
-b) they dynamically translate their layer with a script when testing with master
-
-Given those options two options both being shown to be viable, I think this
-is enough to allow us to proceed and update the syntax on shorter timescales such
-as during this release, ready for the next LTS.
-
-In working out compatibility pieces, I don't have any optimisations using the 
-new syntax yet, or a plan worked out for what we can do beyond this other that ideas
-and my previous experiments. Some changes "feel" right and this one definitely does 
-as a good move in it's own right regardless of whether we ultimately can improve 
-syntax or not. I'm therefore keen to proceed.
-
-Cheers.
-
-Richard
-
-
+RnJvbSA1OWVkNDY0MTYyMTdlMGMwYjQ0MjAzYmM1OGU0NzJlNDA2OGRiYTgzIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBNaW5ncnVpIFJlbiA8amlsYWRhaGUxOTk3QGdtYWlsLmNvbT4K
+RGF0ZTogTW9uLCAxOSBKdWwgMjAyMSAyMzowMjoxOSArMDgwMApTdWJqZWN0OiBbUEFUQ0ggdjJd
+IEFkZCBhIG5ldyB2YXJpYWJsZTonQkJfRkVUQ0hfRU5WJyB0byBleHBvcnQgRmV0Y2hlciBlbnYK
+ClRoZSBlbnZpcm9ubWVudCB2YXJpYWJsZXMgdXNlZCBieSBGZXRjaGVyIGFyZSBoYXJkLWNvZGVk
+LCBhbmQgYXJlIG9idGFpbmVkCmZyb20gSE9TVCBlbnYgaW5zdGVhZCBvZiBiaXRiYWtlIGRhdGFz
+dG9yZQpUaGlzIHBhdGNoIGFkZCBhIG5ldyB2YXJpYWJsZSAnQkJfRkVUQ0hfRU5WJyxhbmQgbW9k
+aWZ5IHRoZSBkZWZhdWx0CkJCX0VOVl9FWFRSQVdISVRFX09FIGZvciBiYWNrd2FyZHMgY29tcGF0
+aWJpbGl0eSwgdHJ5aW5nIHRvIGZpeCB0aGUKcHJvYmxlbXMgYWJvdmUuCgpTaWduZWQtb2ZmLWJ5
+OiBNaW5ncnVpIFJlbiA8amlsYWRhaGUxOTk3QGdtYWlsLmNvbT4KLS0tCmNoYW5nZXMgaW4gdjI6
+CiAgICAgYS5jaGFuZ2VzIHRoZSB2YXJpYWJsZSBuYW1lIGZyb20gJ0ZFVENIX0VOVl9XSElURUxJ
+U1QnIHRvICdCQl9GRVRDSF9FTlYnLgogICAgIGIuYWRkICdCQl9GRVRDSF9FTlYnIGluIGxvY2Fs
+LmNvbmYsIHJhdGhlciB0aGFuIGV4cG9ydCBpdCBpbiBob3N0IAogICAgICAgZW52aXJvbWVudC4K
+ICAgICBjLm1vZGlmeSBleGlzdGluZyBCQl9FTlZfRVhUUkFXSElURV9PRSBmb3IgYmFja3dhcmRz
+IGNvbXBhdGliaWxpdHkuCgogYml0YmFrZS9saWIvYmIvZmV0Y2gyL19faW5pdF9fLnB5IHwgMTkg
+KystLS0tLS0tLS0tLS0tLS0tLQogbWV0YS1wb2t5L2NvbmYvbG9jYWwuY29uZi5zYW1wbGUgIHwg
+MTEgKysrKysrKysrKysKIHNjcmlwdHMvb2UtYnVpbGRlbnYtaW50ZXJuYWwgICAgICB8ICAzICsr
+LQogMyBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMoLSkKCmRp
+ZmYgLS1naXQgYS9iaXRiYWtlL2xpYi9iYi9mZXRjaDIvX19pbml0X18ucHkgYi9iaXRiYWtlL2xp
+Yi9iYi9mZXRjaDIvX19pbml0X18ucHkKaW5kZXggYzhlOTEyNjJhOS4uM2U3NzlmYTc4ZCAxMDA2
+NDQKLS0tIGEvYml0YmFrZS9saWIvYmIvZmV0Y2gyL19faW5pdF9fLnB5CisrKyBiL2JpdGJha2Uv
+bGliL2JiL2ZldGNoMi9fX2luaXRfXy5weQpAQCAtODIwLDIxICs4MjAsNyBAQCBkZWYgcnVuZmV0
+Y2hjbWQoY21kLCBkLCBxdWlldD1GYWxzZSwgY2xlYW51cD1Ob25lLCBsb2c9Tm9uZSwgd29ya2Rp
+cj1Ob25lKToKICAgICAjIHJhdGhlciB0aGFuIGhvc3QgcHJvdmlkZWQKICAgICAjIEFsc28gaW5j
+bHVkZSBzb21lIG90aGVyIHZhcmlhYmxlcy4KICAgICAjIEZJWE1FOiBTaG91bGQgcmVhbGx5IGlu
+Y2x1ZGUgYWxsIGV4cG9ydCB2YXJhaWFibGVzPwotICAgIGV4cG9ydHZhcnMgPSBbJ0hPTUUnLCAn
+UEFUSCcsCi0gICAgICAgICAgICAgICAgICAnSFRUUF9QUk9YWScsICdodHRwX3Byb3h5JywKLSAg
+ICAgICAgICAgICAgICAgICdIVFRQU19QUk9YWScsICdodHRwc19wcm94eScsCi0gICAgICAgICAg
+ICAgICAgICAnRlRQX1BST1hZJywgJ2Z0cF9wcm94eScsCi0gICAgICAgICAgICAgICAgICAnRlRQ
+U19QUk9YWScsICdmdHBzX3Byb3h5JywKLSAgICAgICAgICAgICAgICAgICdOT19QUk9YWScsICdu
+b19wcm94eScsCi0gICAgICAgICAgICAgICAgICAnQUxMX1BST1hZJywgJ2FsbF9wcm94eScsCi0g
+ICAgICAgICAgICAgICAgICAnR0lUX1BST1hZX0NPTU1BTkQnLAotICAgICAgICAgICAgICAgICAg
+J0dJVF9TU0gnLAotICAgICAgICAgICAgICAgICAgJ0dJVF9TU0xfQ0FJTkZPJywKLSAgICAgICAg
+ICAgICAgICAgICdHSVRfU01BUlRfSFRUUCcsCi0gICAgICAgICAgICAgICAgICAnU1NIX0FVVEhf
+U09DSycsICdTU0hfQUdFTlRfUElEJywKLSAgICAgICAgICAgICAgICAgICdTT0NLUzVfVVNFUics
+ICdTT0NLUzVfUEFTU1dEJywKLSAgICAgICAgICAgICAgICAgICdEQlVTX1NFU1NJT05fQlVTX0FE
+RFJFU1MnLAotICAgICAgICAgICAgICAgICAgJ1A0Q09ORklHJ10KKyAgICBleHBvcnR2YXJzID0g
+KGQuZ2V0VmFyKCJCQl9GRVRDSF9FTlYiKSBvciAiIikuc3BsaXQoKQogCiAgICAgaWYgbm90IGNs
+ZWFudXA6CiAgICAgICAgIGNsZWFudXAgPSBbXQpAQCAtODUwLDkgKzgzNiw4IEBAIGRlZiBydW5m
+ZXRjaGNtZChjbWQsIGQsIHF1aWV0PUZhbHNlLCBjbGVhbnVwPU5vbmUsIGxvZz1Ob25lLCB3b3Jr
+ZGlyPU5vbmUpOgogICAgICAgICBkLnNldFZhcigiUFYiLCAiZmV0Y2hlcmF2b2lkcmVjdXJzZSIp
+CiAgICAgICAgIGQuc2V0VmFyKCJQUiIsICJmZXRjaGVyYXZvaWRyZWN1cnNlIikKIAotICAgIG9y
+aWdlbnYgPSBkLmdldFZhcigiQkJfT1JJR0VOViIsIEZhbHNlKQogICAgIGZvciB2YXIgaW4gZXhw
+b3J0dmFyczoKLSAgICAgICAgdmFsID0gZC5nZXRWYXIodmFyKSBvciAob3JpZ2VudiBhbmQgb3Jp
+Z2Vudi5nZXRWYXIodmFyKSkKKyAgICAgICAgdmFsID0gZC5nZXRWYXIodmFyKQogICAgICAgICBp
+ZiB2YWw6CiAgICAgICAgICAgICBjbWQgPSAnZXhwb3J0ICcgKyB2YXIgKyAnPVwiJXNcIjsgJXMn
+ICUgKHZhbCwgY21kKQogCmRpZmYgLS1naXQgYS9tZXRhLXBva3kvY29uZi9sb2NhbC5jb25mLnNh
+bXBsZSBiL21ldGEtcG9reS9jb25mL2xvY2FsLmNvbmYuc2FtcGxlCmluZGV4IGZiMTQzNzlkMjgu
+LmIwMWEwNGExYTYgMTAwNjQ0Ci0tLSBhL21ldGEtcG9reS9jb25mL2xvY2FsLmNvbmYuc2FtcGxl
+CisrKyBiL21ldGEtcG9reS9jb25mL2xvY2FsLmNvbmYuc2FtcGxlCkBAIC0yNzIsMyArMjcyLDE0
+IEBAIFBBQ0tBR0VDT05GSUdfYXBwZW5kX3BuLXFlbXUtc3lzdGVtLW5hdGl2ZSA9ICIgc2RsIgog
+IyB0cmFjayB0aGUgdmVyc2lvbiBvZiB0aGlzIGZpbGUgd2hlbiBpdCB3YXMgZ2VuZXJhdGVkLiBU
+aGlzIGNhbiBzYWZlbHkgYmUgaWdub3JlZCBpZgogIyB0aGlzIGRvZXNuJ3QgbWVhbiBhbnl0aGlu
+ZyB0byB5b3UuCiBDT05GX1ZFUlNJT04gPSAiMSIKKworIyBCaXRiYWtlIEZldGNoZXIgRW52aXJv
+bm1lbnQgVmFyaWFibGVzCisjCisjIFNwZWNpZmljIHdoaWNoIGVudmlyb25tZW50IHZhcmlhYmxl
+cyBpbiBiaXRiYWtlIGRhdGFzdG9yZSB1c2VkIGJ5IGZldGNoZXIgd2hlbgorIyBleGVjdXRpbmcg
+ZmV0Y2ggdGFzay4KKyMgTk9URTogWW91IG1heSBuZWVkIHRvIG1vZGlmeSBCQl9FTlZfRVhUUkFX
+SElURSwgaW4gb3JkZXIgdG8gYWRkIGVudmlyb25tZW50CisjIHZhcmlhYmxlIGludG8gYml0YmFr
+ZSBkYXRhc3RvcmUgZmlyc3QuCitCQl9GRVRDSF9FTlYgPz0gIkhPTUUgUEFUSCBIVFRQX1BST1hZ
+IGh0dHBfcHJveHkgSFRUUFNfUFJPWFkgaHR0cHNfcHJveHkgXAorRlRQX1BST1hZIGZ0cF9wcm94
+eSBGVFBTX1BST1hZIGZ0cHNfcHJveHkgTk9fUFJPWFkgbm9fcHJveHkgQUxMX1BST1hZIGFsbF9w
+cm94eSBcCitHSVRfUFJPWFlfQ09NTUFORCBHSVRfU1NIIEdJVF9TU0xfQ0FJTkZPIEdJVF9TTUFS
+VF9IVFRQIFNTSF9BVVRIX1NPQ0sgU1NIX0FHRU5UX1BJRCBcCitTT0NLUzVfVVNFUiBTT0NLUzVf
+UEFTU1dEIERCVVNfU0VTU0lPTl9CVVNfQUREUkVTUyBQNENPTkZJRyIKXCBObyBuZXdsaW5lIGF0
+IGVuZCBvZiBmaWxlCmRpZmYgLS1naXQgYS9zY3JpcHRzL29lLWJ1aWxkZW52LWludGVybmFsIGIv
+c2NyaXB0cy9vZS1idWlsZGVudi1pbnRlcm5hbAppbmRleCBlMGQ5MjBmMmZjLi43YWJiNGFmNTkz
+IDEwMDc1NQotLS0gYS9zY3JpcHRzL29lLWJ1aWxkZW52LWludGVybmFsCisrKyBiL3NjcmlwdHMv
+b2UtYnVpbGRlbnYtaW50ZXJuYWwKQEAgLTExMSw3ICsxMTEsOCBAQCBIVFRQU19QUk9YWSBodHRw
+c19wcm94eSBGVFBfUFJPWFkgZnRwX3Byb3h5IEZUUFNfUFJPWFkgZnRwc19wcm94eSBBTExfUFJP
+WFkgXAogYWxsX3Byb3h5IE5PX1BST1hZIG5vX3Byb3h5IFNTSF9BR0VOVF9QSUQgU1NIX0FVVEhf
+U09DSyBCQl9TUkNSRVZfUE9MSUNZIFwKIFNES01BQ0hJTkUgQkJfTlVNQkVSX1RIUkVBRFMgQkJf
+Tk9fTkVUV09SSyBQQVJBTExFTF9NQUtFIEdJVF9QUk9YWV9DT01NQU5EIFwKIFNPQ0tTNV9QQVNT
+V0QgU09DS1M1X1VTRVIgU0NSRUVORElSIFNUQU1QU19ESVIgQkJQQVRIX0VYVFJBIEJCX1NFVFND
+RU5FX0VORk9SQ0UgXAotQkJfTE9HQ09ORklHIgorQkJfTE9HQ09ORklHIEhPTUUgUEFUSCBHSVRf
+U1NIIEdJVF9TU0xfQ0FJTkZPIEdJVF9TTUFSVF9IVFRQIERCVVNfU0VTU0lPTl9CVVNfQUREUkVT
+UyBcCitQNENPTkZJRyIKIAogQkJfRU5WX0VYVFJBV0hJVEU9IiQoZWNobyAkQkJfRU5WX0VYVFJB
+V0hJVEUgJEJCX0VOVl9FWFRSQVdISVRFX09FIHwgdHIgJyAnICdcbicgfCBMQ19BTEw9QyBzb3J0
+IC0tdW5pcXVlIHwgdHIgJ1xuJyAnICcpIgogCi0tIAoyLjIwLjEKCgo=
 
