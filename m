@@ -1,136 +1,119 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
- by mx.groups.io with SMTP id smtpd.web11.29430.1626709246317824776
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.web09.5182.1626770705127017612
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 19 Jul 2021 08:40:46 -0700
+ Tue, 20 Jul 2021 01:45:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=L3MOJz4X;
- spf=pass (domain: gmail.com, ip: 209.85.216.43, mailfrom: jiladahe1997@gmail.com)
-Received: by mail-pj1-f43.google.com with SMTP id d9-20020a17090ae289b0290172f971883bso14417266pjz.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 19 Jul 2021 08:40:46 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=iNwhTvq2;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f42.google.com with SMTP id l7so25090215wrv.7
+        for <bitbake-devel@lists.openembedded.org>; Tue, 20 Jul 2021 01:45:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:mime-version:message-id
-         :content-transfer-encoding;
-        bh=uPLVSU1wHwfEGGm0SoaDN/LNZ24K5z6rUAh4v4ajmTI=;
-        b=L3MOJz4Xr/G+IxIcPqcncA2DZrRD3ICsf6mdFuawA1Y+HeZ3LUePow0qwjMR4ULG1R
-         I4AiYHRd/5Y3mJfXTcjX+3jyE3yteoOyPhIZaImjFUpyymMX0zmIMtRBjoEKTw7NYX//
-         /6gqBgb9suwM+XYUMp6jKk+RfzQWYN/vJb7iSLLzN1vfr9Xj3wFgqWtKlmmM06+kkvqh
-         Odnd1usj1hTfmwih9hsSTIIetogPSIeDWSDS5Mv/RMn3i/3m+eaK8RhLSsolU2LJn2JS
-         4aEPQ2nFsxzhWpNtuURIwgtYcBWAWwNcCtA3Tw7Hkgof/6xvc/IS0VYcnRffPaylGTxl
-         xaTw==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=AOEjQ+E9uNNM3kBQaWlGCkXluUzyyUNZfO0FxmMifOc=;
+        b=iNwhTvq2Kuvha9VkOT4w6Xjqo8DiJZIXJA8EbM8b+E4LW3t7VC305PMR3+5KPMy8n2
+         tKzEWqmLcXnlwHL9qMFEf0igonM+0kJ7W7riD9yNxN2PHnk5dTCEcKxixPSBFfwThOEE
+         X8BP7ETwEC83t5oac0ak4tJyHLNCZ8qxaWmmI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:mime-version:message-id
-         :content-transfer-encoding;
-        bh=uPLVSU1wHwfEGGm0SoaDN/LNZ24K5z6rUAh4v4ajmTI=;
-        b=R/zXOw6UcLmghHcodFi9xqgN06UoS/hnZAlXrvkqZAl28i/Idrgm6l09Stby54wa6M
-         RRj2sKO3CH+mu+91vBqudB+bwLBvqPU1u0wk0H+/lQjb037t8Ij6tinyFmoKTjkvydty
-         pqSGalar7a5rOmV6x5GVAdoL9YO3djdPe0faB4io/FAAnzXgjYnhxGE3iToSTWRHojgj
-         wFwpFIUgncCwDSkqoaBKRtSJbrrLw4Yfp0kBKHgd2/NVMKLknDM26KYnQAM3BP0gY94I
-         g0G0t+J/EPOyNz/uvYxngk0JtqTC3uYwcqAI7jV220ej9+6GRKRzTVeoej0Ha0XdefEx
-         mBgg==
-X-Gm-Message-State: AOAM5328m/upUSonTXnAgFOXDWKEGVK5KisdN4yhiHqRhWg3kYsDCb5L
-	e1MP68ZkTYZRxafeLkgrIrg=
-X-Google-Smtp-Source: ABdhPJyMAqS9mQJiZ/bbyMTY27h2tPFyQAjYbDwqT6RxMJlj0xnIDc+nSVECgp9GsnUiD2T4nTS96w==
-X-Received: by 2002:a17:90a:3e0f:: with SMTP id j15mr25631446pjc.178.1626709245833;
-        Mon, 19 Jul 2021 08:40:45 -0700 (PDT)
-Return-Path: <jiladahe1997@gmail.com>
-Received: from Foxmail (n11923637190.netvigator.com. [119.236.37.190])
-        by smtp.gmail.com with ESMTPSA id k16sm19547127pfu.83.2021.07.19.08.40.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Jul 2021 08:40:45 -0700 (PDT)
-Date: Mon, 19 Jul 2021 23:40:43 +0800
-From: "Mingrui Ren" <jiladahe1997@gmail.com>
-To: yocto <yocto@lists.yoctoproject.org>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>, 
-	richard.purdie <richard.purdie@linuxfoundation.org>
-Subject: [PATCH v2] Add a new variable:'BB_FETCH_ENV' to export Fetcher env
-X-Priority: 3
-X-GUID: 63167E63-E469-44F5-BD5A-02AB85BC1BFD
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.21.453[cn]
-Mime-Version: 1.0
-Message-ID: <202107192340416243166@gmail.com>
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: base64
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=AOEjQ+E9uNNM3kBQaWlGCkXluUzyyUNZfO0FxmMifOc=;
+        b=KfvFbzCeLJrB/nigoM7cbt06xaJEJXEYCXQ7WyEYjJLWw+lKXeFqlFRmMBMUt0BPGx
+         CuL3BMt/kov4jNJEsveifw29HTJv+ZZSizjMLHyoizzXSylQ8Ul9yzx+Ur01H2cpswIe
+         AfKfAfjAhKzHBb8TZLBGn57zT/gTbFRZiU7RaD0K0GsWbEkfEdhkEXxrNaDCuLkMX4LK
+         JcZ8U0+H+AVc4DKiLifSGYKXy5srGo4uioJhP2i4nNmV4aPaQY5UgJ+/0ewfLzgMcys1
+         exxe/0j8O/kjOakxTUvhQw6SqByArSP+ZrEnhcSP6tTM26Fkfp5qNn5OKBvdGEkc/YVz
+         mOpQ==
+X-Gm-Message-State: AOAM530YOVaOWd1+7lSrKaUKU2qvVU5PNmaE585Q+V+Sh/Jdm7vWkL+S
+	ILgCmsPOHPMlZx1Xdp11bZooqgiNGOPg0A==
+X-Google-Smtp-Source: ABdhPJygTYd8bcZVZ9/XxKqdI8gQJJbu2NjgGkze1kVOtB5E/9W4avMiu05/qPQS9e+VwST8DxI5Ig==
+X-Received: by 2002:adf:f109:: with SMTP id r9mr16008233wro.370.1626770703812;
+        Tue, 20 Jul 2021 01:45:03 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:2cd8:e78f:29a5:f753? ([2001:8b0:aba:5f3c:2cd8:e78f:29a5:f753])
+        by smtp.gmail.com with ESMTPSA id p8sm1831584wmc.24.2021.07.20.01.45.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jul 2021 01:45:03 -0700 (PDT)
+Message-ID: <b4dffb095fd69a67cf4f1e9386e013fb912f0fcd.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel][PATCH v3] bitbake: Add piping compression library
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Joshua Watt <JPEWhacker@gmail.com>, bitbake-devel@lists.openembedded.org
+Date: Tue, 20 Jul 2021 09:45:02 +0100
+In-Reply-To: <20210714150157.33191-1-JPEWhacker@gmail.com>
+References: <20210617193809.33714-1-JPEWhacker@gmail.com>
+	 <20210714150157.33191-1-JPEWhacker@gmail.com>
+User-Agent: Evolution 3.40.0-1 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-RnJvbSA1OWVkNDY0MTYyMTdlMGMwYjQ0MjAzYmM1OGU0NzJlNDA2OGRiYTgzIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBNaW5ncnVpIFJlbiA8amlsYWRhaGUxOTk3QGdtYWlsLmNvbT4K
-RGF0ZTogTW9uLCAxOSBKdWwgMjAyMSAyMzowMjoxOSArMDgwMApTdWJqZWN0OiBbUEFUQ0ggdjJd
-IEFkZCBhIG5ldyB2YXJpYWJsZTonQkJfRkVUQ0hfRU5WJyB0byBleHBvcnQgRmV0Y2hlciBlbnYK
-ClRoZSBlbnZpcm9ubWVudCB2YXJpYWJsZXMgdXNlZCBieSBGZXRjaGVyIGFyZSBoYXJkLWNvZGVk
-LCBhbmQgYXJlIG9idGFpbmVkCmZyb20gSE9TVCBlbnYgaW5zdGVhZCBvZiBiaXRiYWtlIGRhdGFz
-dG9yZQpUaGlzIHBhdGNoIGFkZCBhIG5ldyB2YXJpYWJsZSAnQkJfRkVUQ0hfRU5WJyxhbmQgbW9k
-aWZ5IHRoZSBkZWZhdWx0CkJCX0VOVl9FWFRSQVdISVRFX09FIGZvciBiYWNrd2FyZHMgY29tcGF0
-aWJpbGl0eSwgdHJ5aW5nIHRvIGZpeCB0aGUKcHJvYmxlbXMgYWJvdmUuCgpTaWduZWQtb2ZmLWJ5
-OiBNaW5ncnVpIFJlbiA8amlsYWRhaGUxOTk3QGdtYWlsLmNvbT4KLS0tCmNoYW5nZXMgaW4gdjI6
-CiAgICAgYS5jaGFuZ2VzIHRoZSB2YXJpYWJsZSBuYW1lIGZyb20gJ0ZFVENIX0VOVl9XSElURUxJ
-U1QnIHRvICdCQl9GRVRDSF9FTlYnLgogICAgIGIuYWRkICdCQl9GRVRDSF9FTlYnIGluIGxvY2Fs
-LmNvbmYsIHJhdGhlciB0aGFuIGV4cG9ydCBpdCBpbiBob3N0IAogICAgICAgZW52aXJvbWVudC4K
-ICAgICBjLm1vZGlmeSBleGlzdGluZyBCQl9FTlZfRVhUUkFXSElURV9PRSBmb3IgYmFja3dhcmRz
-IGNvbXBhdGliaWxpdHkuCgogYml0YmFrZS9saWIvYmIvZmV0Y2gyL19faW5pdF9fLnB5IHwgMTkg
-KystLS0tLS0tLS0tLS0tLS0tLQogbWV0YS1wb2t5L2NvbmYvbG9jYWwuY29uZi5zYW1wbGUgIHwg
-MTEgKysrKysrKysrKysKIHNjcmlwdHMvb2UtYnVpbGRlbnYtaW50ZXJuYWwgICAgICB8ICAzICsr
-LQogMyBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMoLSkKCmRp
-ZmYgLS1naXQgYS9iaXRiYWtlL2xpYi9iYi9mZXRjaDIvX19pbml0X18ucHkgYi9iaXRiYWtlL2xp
-Yi9iYi9mZXRjaDIvX19pbml0X18ucHkKaW5kZXggYzhlOTEyNjJhOS4uM2U3NzlmYTc4ZCAxMDA2
-NDQKLS0tIGEvYml0YmFrZS9saWIvYmIvZmV0Y2gyL19faW5pdF9fLnB5CisrKyBiL2JpdGJha2Uv
-bGliL2JiL2ZldGNoMi9fX2luaXRfXy5weQpAQCAtODIwLDIxICs4MjAsNyBAQCBkZWYgcnVuZmV0
-Y2hjbWQoY21kLCBkLCBxdWlldD1GYWxzZSwgY2xlYW51cD1Ob25lLCBsb2c9Tm9uZSwgd29ya2Rp
-cj1Ob25lKToKICAgICAjIHJhdGhlciB0aGFuIGhvc3QgcHJvdmlkZWQKICAgICAjIEFsc28gaW5j
-bHVkZSBzb21lIG90aGVyIHZhcmlhYmxlcy4KICAgICAjIEZJWE1FOiBTaG91bGQgcmVhbGx5IGlu
-Y2x1ZGUgYWxsIGV4cG9ydCB2YXJhaWFibGVzPwotICAgIGV4cG9ydHZhcnMgPSBbJ0hPTUUnLCAn
-UEFUSCcsCi0gICAgICAgICAgICAgICAgICAnSFRUUF9QUk9YWScsICdodHRwX3Byb3h5JywKLSAg
-ICAgICAgICAgICAgICAgICdIVFRQU19QUk9YWScsICdodHRwc19wcm94eScsCi0gICAgICAgICAg
-ICAgICAgICAnRlRQX1BST1hZJywgJ2Z0cF9wcm94eScsCi0gICAgICAgICAgICAgICAgICAnRlRQ
-U19QUk9YWScsICdmdHBzX3Byb3h5JywKLSAgICAgICAgICAgICAgICAgICdOT19QUk9YWScsICdu
-b19wcm94eScsCi0gICAgICAgICAgICAgICAgICAnQUxMX1BST1hZJywgJ2FsbF9wcm94eScsCi0g
-ICAgICAgICAgICAgICAgICAnR0lUX1BST1hZX0NPTU1BTkQnLAotICAgICAgICAgICAgICAgICAg
-J0dJVF9TU0gnLAotICAgICAgICAgICAgICAgICAgJ0dJVF9TU0xfQ0FJTkZPJywKLSAgICAgICAg
-ICAgICAgICAgICdHSVRfU01BUlRfSFRUUCcsCi0gICAgICAgICAgICAgICAgICAnU1NIX0FVVEhf
-U09DSycsICdTU0hfQUdFTlRfUElEJywKLSAgICAgICAgICAgICAgICAgICdTT0NLUzVfVVNFUics
-ICdTT0NLUzVfUEFTU1dEJywKLSAgICAgICAgICAgICAgICAgICdEQlVTX1NFU1NJT05fQlVTX0FE
-RFJFU1MnLAotICAgICAgICAgICAgICAgICAgJ1A0Q09ORklHJ10KKyAgICBleHBvcnR2YXJzID0g
-KGQuZ2V0VmFyKCJCQl9GRVRDSF9FTlYiKSBvciAiIikuc3BsaXQoKQogCiAgICAgaWYgbm90IGNs
-ZWFudXA6CiAgICAgICAgIGNsZWFudXAgPSBbXQpAQCAtODUwLDkgKzgzNiw4IEBAIGRlZiBydW5m
-ZXRjaGNtZChjbWQsIGQsIHF1aWV0PUZhbHNlLCBjbGVhbnVwPU5vbmUsIGxvZz1Ob25lLCB3b3Jr
-ZGlyPU5vbmUpOgogICAgICAgICBkLnNldFZhcigiUFYiLCAiZmV0Y2hlcmF2b2lkcmVjdXJzZSIp
-CiAgICAgICAgIGQuc2V0VmFyKCJQUiIsICJmZXRjaGVyYXZvaWRyZWN1cnNlIikKIAotICAgIG9y
-aWdlbnYgPSBkLmdldFZhcigiQkJfT1JJR0VOViIsIEZhbHNlKQogICAgIGZvciB2YXIgaW4gZXhw
-b3J0dmFyczoKLSAgICAgICAgdmFsID0gZC5nZXRWYXIodmFyKSBvciAob3JpZ2VudiBhbmQgb3Jp
-Z2Vudi5nZXRWYXIodmFyKSkKKyAgICAgICAgdmFsID0gZC5nZXRWYXIodmFyKQogICAgICAgICBp
-ZiB2YWw6CiAgICAgICAgICAgICBjbWQgPSAnZXhwb3J0ICcgKyB2YXIgKyAnPVwiJXNcIjsgJXMn
-ICUgKHZhbCwgY21kKQogCmRpZmYgLS1naXQgYS9tZXRhLXBva3kvY29uZi9sb2NhbC5jb25mLnNh
-bXBsZSBiL21ldGEtcG9reS9jb25mL2xvY2FsLmNvbmYuc2FtcGxlCmluZGV4IGZiMTQzNzlkMjgu
-LmIwMWEwNGExYTYgMTAwNjQ0Ci0tLSBhL21ldGEtcG9reS9jb25mL2xvY2FsLmNvbmYuc2FtcGxl
-CisrKyBiL21ldGEtcG9reS9jb25mL2xvY2FsLmNvbmYuc2FtcGxlCkBAIC0yNzIsMyArMjcyLDE0
-IEBAIFBBQ0tBR0VDT05GSUdfYXBwZW5kX3BuLXFlbXUtc3lzdGVtLW5hdGl2ZSA9ICIgc2RsIgog
-IyB0cmFjayB0aGUgdmVyc2lvbiBvZiB0aGlzIGZpbGUgd2hlbiBpdCB3YXMgZ2VuZXJhdGVkLiBU
-aGlzIGNhbiBzYWZlbHkgYmUgaWdub3JlZCBpZgogIyB0aGlzIGRvZXNuJ3QgbWVhbiBhbnl0aGlu
-ZyB0byB5b3UuCiBDT05GX1ZFUlNJT04gPSAiMSIKKworIyBCaXRiYWtlIEZldGNoZXIgRW52aXJv
-bm1lbnQgVmFyaWFibGVzCisjCisjIFNwZWNpZmljIHdoaWNoIGVudmlyb25tZW50IHZhcmlhYmxl
-cyBpbiBiaXRiYWtlIGRhdGFzdG9yZSB1c2VkIGJ5IGZldGNoZXIgd2hlbgorIyBleGVjdXRpbmcg
-ZmV0Y2ggdGFzay4KKyMgTk9URTogWW91IG1heSBuZWVkIHRvIG1vZGlmeSBCQl9FTlZfRVhUUkFX
-SElURSwgaW4gb3JkZXIgdG8gYWRkIGVudmlyb25tZW50CisjIHZhcmlhYmxlIGludG8gYml0YmFr
-ZSBkYXRhc3RvcmUgZmlyc3QuCitCQl9GRVRDSF9FTlYgPz0gIkhPTUUgUEFUSCBIVFRQX1BST1hZ
-IGh0dHBfcHJveHkgSFRUUFNfUFJPWFkgaHR0cHNfcHJveHkgXAorRlRQX1BST1hZIGZ0cF9wcm94
-eSBGVFBTX1BST1hZIGZ0cHNfcHJveHkgTk9fUFJPWFkgbm9fcHJveHkgQUxMX1BST1hZIGFsbF9w
-cm94eSBcCitHSVRfUFJPWFlfQ09NTUFORCBHSVRfU1NIIEdJVF9TU0xfQ0FJTkZPIEdJVF9TTUFS
-VF9IVFRQIFNTSF9BVVRIX1NPQ0sgU1NIX0FHRU5UX1BJRCBcCitTT0NLUzVfVVNFUiBTT0NLUzVf
-UEFTU1dEIERCVVNfU0VTU0lPTl9CVVNfQUREUkVTUyBQNENPTkZJRyIKXCBObyBuZXdsaW5lIGF0
-IGVuZCBvZiBmaWxlCmRpZmYgLS1naXQgYS9zY3JpcHRzL29lLWJ1aWxkZW52LWludGVybmFsIGIv
-c2NyaXB0cy9vZS1idWlsZGVudi1pbnRlcm5hbAppbmRleCBlMGQ5MjBmMmZjLi43YWJiNGFmNTkz
-IDEwMDc1NQotLS0gYS9zY3JpcHRzL29lLWJ1aWxkZW52LWludGVybmFsCisrKyBiL3NjcmlwdHMv
-b2UtYnVpbGRlbnYtaW50ZXJuYWwKQEAgLTExMSw3ICsxMTEsOCBAQCBIVFRQU19QUk9YWSBodHRw
-c19wcm94eSBGVFBfUFJPWFkgZnRwX3Byb3h5IEZUUFNfUFJPWFkgZnRwc19wcm94eSBBTExfUFJP
-WFkgXAogYWxsX3Byb3h5IE5PX1BST1hZIG5vX3Byb3h5IFNTSF9BR0VOVF9QSUQgU1NIX0FVVEhf
-U09DSyBCQl9TUkNSRVZfUE9MSUNZIFwKIFNES01BQ0hJTkUgQkJfTlVNQkVSX1RIUkVBRFMgQkJf
-Tk9fTkVUV09SSyBQQVJBTExFTF9NQUtFIEdJVF9QUk9YWV9DT01NQU5EIFwKIFNPQ0tTNV9QQVNT
-V0QgU09DS1M1X1VTRVIgU0NSRUVORElSIFNUQU1QU19ESVIgQkJQQVRIX0VYVFJBIEJCX1NFVFND
-RU5FX0VORk9SQ0UgXAotQkJfTE9HQ09ORklHIgorQkJfTE9HQ09ORklHIEhPTUUgUEFUSCBHSVRf
-U1NIIEdJVF9TU0xfQ0FJTkZPIEdJVF9TTUFSVF9IVFRQIERCVVNfU0VTU0lPTl9CVVNfQUREUkVT
-UyBcCitQNENPTkZJRyIKIAogQkJfRU5WX0VYVFJBV0hJVEU9IiQoZWNobyAkQkJfRU5WX0VYVFJB
-V0hJVEUgJEJCX0VOVl9FWFRSQVdISVRFX09FIHwgdHIgJyAnICdcbicgfCBMQ19BTEw9QyBzb3J0
-IC0tdW5pcXVlIHwgdHIgJ1xuJyAnICcpIgogCi0tIAoyLjIwLjEKCgo=
+On Wed, 2021-07-14 at 10:01 -0500, Joshua Watt wrote:
+> Adds a library that implements file-like objects (similar to
+> gzip.GzipFile) that can stream to arbitrary compression programs. This
+> is utilized to implement a LZ4 and zstd compression API.
+> 
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+> V2: Now with tests!
+> V3: Added compression level for zstd
+>     Tests are skipped if command line programs are missing, which should
+>     prevent needing to update bitbake and oe-core in lock-step.
+>     
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+>  bitbake/bin/bitbake-selftest        |   1 +
+>  bitbake/lib/bb/_pipecompress.py     | 194 ++++++++++++++++++++++++++++
+>  bitbake/lib/bb/lz4.py               |  17 +++
+>  bitbake/lib/bb/tests/compression.py |  98 ++++++++++++++
+>  bitbake/lib/bb/zstd.py              |  28 ++++
+>  5 files changed, 338 insertions(+)
+>  create mode 100644 bitbake/lib/bb/_pipecompress.py
+>  create mode 100644 bitbake/lib/bb/lz4.py
+>  create mode 100644 bitbake/lib/bb/tests/compression.py
+>  create mode 100644 bitbake/lib/bb/zstd.py
+> 
+> diff --git a/bitbake/bin/bitbake-selftest b/bitbake/bin/bitbake-selftest
+> index 757441c754..63762fe794 100755
+> --- a/bitbake/bin/bitbake-selftest
+> +++ b/bitbake/bin/bitbake-selftest
+> @@ -29,6 +29,7 @@ tests = ["bb.tests.codeparser",
+>           "bb.tests.runqueue",
+>           "bb.tests.siggen",
+>           "bb.tests.utils",
+> +         "bb.tests.compression",
+>           "hashserv.tests",
+>           "layerindexlib.tests.layerindexobj",
+>           "layerindexlib.tests.restapi",
+> diff --git a/bitbake/lib/bb/_pipecompress.py b/bitbake/lib/bb/_pipecompress.py
+> new file mode 100644
+> index 0000000000..4b9f662143
+> --- /dev/null
+> +++ b/bitbake/lib/bb/_pipecompress.py
+> @@ -0,0 +1,194 @@
+> +#
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Helper library to implement streaming compression and decompression using an
+> +# external process
+> +#
+> +# This library should be used directly by end users; a wrapper library for the
+> +# specific compression tool should be created
+
+Should or should not? :)
+
+I'm fine with adding this but I think it should be under a bb.compress. namespace
+rather than directly in bb. I tweaked that patch in master-next to test that.
+
+Cheers,
+
+Richard
+
 
