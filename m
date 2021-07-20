@@ -1,80 +1,88 @@
 Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
- by mx.groups.io with SMTP id smtpd.web08.150.1626801396226289670
+ by mx.groups.io with SMTP id smtpd.web10.158.1626801397184502275
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 20 Jul 2021 10:16:36 -0700
+ Tue, 20 Jul 2021 10:16:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm1 header.b=LAFBVxIS;
+ dkim=pass header.i=@pbarker.dev header.s=fm1 header.b=NR7nTCSo;
  spf=pass (domain: pbarker.dev, ip: 64.147.123.24, mailfrom: paul@pbarker.dev)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.west.internal (Postfix) with ESMTP id 5A02B3200932;
-	Tue, 20 Jul 2021 13:16:35 -0400 (EDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+	by mailout.west.internal (Postfix) with ESMTP id AFB783200932;
+	Tue, 20 Jul 2021 13:16:36 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 20 Jul 2021 13:16:35 -0400
+  by compute6.internal (MEProxy); Tue, 20 Jul 2021 13:16:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=fm1; bh=rhs76dq+A1WOwUhWMCkrEMmyrK
-	xjMu3xBnzcBWuZquU=; b=LAFBVxISvnBOeY+Z9QOB+QILEJhJ2aDSQ/255u11PZ
-	D2dEywVWaJZuGCzvKW66J/ELJjBvlkSqmHJ81vqxBYFE3tyPKMUXrF4h3tY1yyBC
-	8MNoFS9tSSm6yQRJYdqxwWCTN/MLIa5jpAbuHUurYFkkfdH68o/WTkjbdaj9INLe
-	jUkWtkSuzqU7Lq9T/yEEqa3zMPaYIoGN/ixEY+r3FZyEKY1sgj6YY3qmepRGuErP
-	0ioA6QNicy50F6ruWh60NZbQ8Qnr5r38p0U9WCbUgFpgj/gppyBuysCPajCJhjYl
-	KJGs4WiDOl3zwI9K1KdwJN2uHzGI9KGgcKQVunquRNKw==
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=fm1; bh=ZSET/zc88suPg
+	2ZnTfmPaYT1jlePH4P2Ep/lV7Kwibs=; b=NR7nTCSoNjlRbtHGNjaIJp42cYGwh
+	Kb/+6Y/knKWOYvbDmD+nTrB+1UDp8AFkWNSyZBAAL3QvcCoS8mypZVNppG4qMxRe
+	ZKz+x9+NX/i160qFRiAyug69/Ved154Fy2HrtDOheB9sTJEyIOERvhIqtiAs7Ymf
+	2Le2+9MqJEy6vszKi+S6/eeFOVorwHISIg6VtO7/eANrPzsQiAFsw6u3hVVoiojY
+	7cO9U9l57ywvhgwClLtm+gly4ZnAiyqskR8iZt6GWYm0gtXz1YPTQWyEzl+Ar2ga
+	Id6mW9qp6tHD6ML61p7hIKzezBfZBzib9w3qy0vs0VnsDg6akPpBag1dA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-transfer-encoding:date:from
-	:message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=rhs76dq+A1WOwUhWM
-	CkrEMmyrKxjMu3xBnzcBWuZquU=; b=saX8Ze0+T67YbD72a7g/GGo0yDMrzhPlx
-	DexYG9yJD+9suAx9iQUJtK5jIcePkaTKlUVdgZ/fSvgj0RaEQlF2zY/89mRqmopH
-	UKackppl51qvk0Y6ZfimBWnMt5udzWY9wua42D8Es8Ju0Y8bTQbp16TlSD7h4qt5
-	riuaUXKakz8soLld9iFYUw4sQjLwSG1zGgbRA1ZY/Hy0FjrmBwP05wqP1SUxO0Cj
-	pLp3r+pl3m5WsCgwRDd/w9wT7wU9g8gKLKRTQgUthi9PPlXksglkKfso/gCsJ0AB
-	w4UN05vRrg8b0aa4dcwbwQ7+OML97INbD1NBqtr879N6Qnb+zugug==
-X-ME-Sender: <xms:8gT3YLAeqR-kA2fuvgnz79Orw6keb_OqRJ9eq6h7oByWU32n6vwpZQ>
-    <xme:8gT3YBhNyp56mJpENe4pgupinzQdjB0YLiI4UGmLSI9P6mNcerMyBSHeTTKGGfGdK
-    jPGMDJLsff9h8Ei4Hs>
-X-ME-Received: <xmr:8gT3YGm75jbbNFXsaEkTLYHXrh59J6i3S2A2HGR5hYoZWCcVDOj84jd-ng0Mro83U1xwNNSS4yoedJHeM6Rl6yK496CpgWU0fnYL1Z39YKIm5WbxvK-s5rA0ZaA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfedvgddutdelucetufdoteggodetrfdotf
+	:in-reply-to:message-id:mime-version:references:subject:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; bh=ZSET/zc88suPg2ZnTfmPaYT1jlePH4P2Ep/lV7Kwibs=; b=n0vnXefq
+	52K/AlUASTLf/VS7clITuOPFRER70SjUMdvkB3rnifNhs/DC8SW4iomW5nijvQcD
+	Jy38uwGm43u+AQu/PbVnA8ka6kAlafwi7RDkJ32cmYmevHJ9pgsG4CemYPM882fy
+	39nrX/CI9XQVEXBTSKevaQiL3QsdQDZ3JIj1ponw4AuMIJwFq598m3AbkgVo37P4
+	lHlwDvobAbmE3fRYrzXjhA+PEx7Mc64J65tGl1LMDYD/CB/WV3FPETD8cCFWVBH0
+	jCKo+Q/v3/k1eIMnFR7TJ7J5Cm+KMeY2P5Q/UeINeuvlEdw6j3CGMb8pj3fVQV+6
+	+b+upnajUbmKJw==
+X-ME-Sender: <xms:9AT3YPMFhdTHXQZbHMN7K3qeZ51_nnZcZiEkGjUELsCv_RvF3DTPng>
+    <xme:9AT3YJ_29X3YUw5qgZBjUWNcijMUnxo42VP0QhyTMhiF0rpmTbZjC6WLSWe17ZfYj
+    qObnS7X8Kg6ux9mtvk>
+X-ME-Received: <xmr:9AT3YOQzQdHFPvo3M-ccBjJoGDANqnaQBn8zg0ROJLe6qbHcJcvlX30yxv4_qNgcxG7tQCv2u_SHIwvasMSXbRAabS-Xc_i1yzzNFlTaWpePMHibpXwmWB4coPo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfedvgddutdekucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomheprfgruhhluceurghrkhgvrhcuoehprghulhesphgsrghrkhgvrhdr
-    uggvvheqnecuggftrfgrthhtvghrnhepteefleelheeugeejudegiedttddvffdvleefgf
-    dvudegkeduleegudeihfeijedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
-    pehmrghilhhfrhhomhepphgruhhlsehpsggrrhhkvghrrdguvghv
-X-ME-Proxy: <xmx:8gT3YNyNTcS2yPZYjrmfVfr3jdea0CK1pIU5tahS26rXy7mzDl4CIw>
-    <xmx:8gT3YATTjA1jBUwwInkoHLLZz_SWF5f7r0fAgAHnwUb9l09EQmcNpA>
-    <xmx:8gT3YAYNIsv8EgV7T5G6QUxs9gM3FwBIJap3IhdwgwgWMg2vyJkpGw>
-    <xmx:8gT3YJ58ntctWFUuNDhHQY3pIZiWcxm1CR1hTRGefoFarQzy64HkKw>
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
+    dtredttdenucfhrhhomheprfgruhhluceurghrkhgvrhcuoehprghulhesphgsrghrkhgv
+    rhdruggvvheqnecuggftrfgrthhtvghrnhephfelvedvudejtdehgfdutdefkeffffduvd
+    eiueelteetfeeltedtfeegteejfeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepphgruhhlsehpsggrrhhkvghrrdguvghv
+X-ME-Proxy: <xmx:9AT3YDtcdYDs8x3RgrQhXJUkvDerdOZNyK3qyjGxAe2mHDRXw4cytg>
+    <xmx:9AT3YHcLfY8rDJ_Nb2X4VmXPRR5NUKjm749M-8pJUhLgGlQcJ55dNg>
+    <xmx:9AT3YP1nJbWCiy4QqcNtZhLn5pDw0zGcU9JmQjmUmHM4kJEg_OfpWg>
+    <xmx:9AT3YHlp47x1oAiH8z1ZqE7O805R3OTCWqVRgdO-CsaSsIM_SkgWtA>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 20 Jul 2021 13:16:34 -0400 (EDT)
+ 20 Jul 2021 13:16:35 -0400 (EDT)
 From: "Paul Barker" <paul@pbarker.dev>
 To: bitbake-devel@lists.openembedded.org
 Cc: Paul Barker <paul@pbarker.dev>
-Subject: [PATCH 0/1] Substitute '~' when naming anonymous functions
-Date: Tue, 20 Jul 2021 18:16:27 +0100
-Message-Id: <20210720171628.23394-1-paul@pbarker.dev>
+Subject: [PATCH 1/1] parse/ast: Substitute '~' when naming anonymous functions
+Date: Tue, 20 Jul 2021 18:16:28 +0100
+Message-Id: <20210720171628.23394-2-paul@pbarker.dev>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20210720171628.23394-1-paul@pbarker.dev>
+References: <20210720171628.23394-1-paul@pbarker.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When looking at meta-linux-mainline in the layer index I realised that the
-recipe version shown were out-of-date. The most recent update log [1] showed
-that the layer had failed to parse. Looking at the log it was obvious that this
-was due to the path in which the layer had been cloned, not due to any issue in
-the layer itself. As git repositories on sourcehut use '~' as a prefix to the
-username in the URL, this character ended up in the local path to the layer.
-When bitbake parsed the recipes in this layer, the '~' character ended up in the
-function name generated for an anonymous Python function. Since '~' isn't a
-valid character in a Python function name we got a pile of errors.
+When parsing an anonymous python function, bitbake generates a name for
+the function based on the full path to the file in which it was found.
+As not all characters which are valid in file paths are valid in Python
+function names we have a translation table. However, this translation
+table was missing an entry for '~'.
 
-We already have a translation table to handle characters which aren't valid in
-Python function names, we just need to add '~' to the table.
-
-Paul Barker (1):
-  parse/ast: Substitute '~' when naming anonymous functions
-
+Signed-off-by: Paul Barker <paul@pbarker.dev>
+---
  lib/bb/parse/ast.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 50a88f7da7..743ea0dfc0 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -145,7 +145,7 @@ class DataNode(AstNode):
+             data.setVar(key, val, parsing=True, **loginfo)
+ 
+ class MethodNode(AstNode):
+-    tr_tbl = str.maketrans('/.+-@%&', '_______')
++    tr_tbl = str.maketrans('/.+-@%&~', '________')
+ 
+     def __init__(self, filename, lineno, func_name, body, python, fakeroot):
+         AstNode.__init__(self, filename, lineno)
 -- 
 2.26.2
 
