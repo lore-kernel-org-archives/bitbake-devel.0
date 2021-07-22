@@ -1,53 +1,42 @@
-Received: from relay10.mail.gandi.net (relay10.mail.gandi.net [217.70.178.230])
- by mx.groups.io with SMTP id smtpd.web12.2098.1626889030935222760
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+ by mx.groups.io with SMTP id smtpd.web12.5334.1626944139186350035
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 21 Jul 2021 10:37:11 -0700
+ Thu, 22 Jul 2021 01:55:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: bootlin.com, ip: 217.70.178.230, mailfrom: michael.opdenacker@bootlin.com)
+ dkim=missing; spf=pass (domain: bootlin.com, ip: 217.70.183.193, mailfrom: michael.opdenacker@bootlin.com)
 Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay10.mail.gandi.net (Postfix) with ESMTPSA id E8297240005;
-	Wed, 21 Jul 2021 17:37:08 +0000 (UTC)
+	by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id C532F240018;
+	Thu, 22 Jul 2021 08:55:36 +0000 (UTC)
+Cc: YP docs mailing list <docs@lists.yoctoproject.org>
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
 From: "Michael Opdenacker" <michael.opdenacker@bootlin.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH] doc: bitbake-user-manual: update bitbake option help
-Date: Wed, 21 Jul 2021 19:36:57 +0200
-Message-Id: <20210721173657.26846-1-michael.opdenacker@bootlin.com>
-X-Mailer: git-send-email 2.25.1
+Subject: DEFAULT_PREFERENCE no longer used?
+Organization: Bootlin
+Message-ID: <53a7dab9-2c9c-ce0b-b363-543c33959e62@bootlin.com>
+Date: Thu, 22 Jul 2021 10:55:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
----
- doc/bitbake-user-manual/bitbake-user-manual-intro.rst | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Greetings,
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-index b3cea61f..7c29c8c0 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-@@ -417,8 +417,8 @@ Following is the usage and syntax for BitBake::
-      -l DEBUG_DOMAINS, --log-domains=DEBUG_DOMAINS
-                            Show debug logging for the specified logging domains
-      -P, --profile         Profile the command and save reports.
--     -u UI, --ui=UI        The user interface to use (knotty, ncurses or taskexp
--                           - default knotty).
-+     -u UI, --ui=UI        The user interface to use (knotty, ncurses, taskexp or
-+                           teamcity - default knotty).
-      --token=XMLRPCTOKEN   Specify the connection token to be used when
-                            connecting to a remote server.
-      --revisions-changed   Set the exit code depending on whether upstream
-@@ -433,6 +433,9 @@ Following is the usage and syntax for BitBake::
-                            Environment variable BB_SERVER_TIMEOUT.
-      --no-setscene         Do not run any setscene tasks. sstate will be ignored
-                            and everything needed, built.
-+     --skip-setscene       Skip setscene tasks if they would be executed. Tasks
-+                           previously restored from sstate will be kept, unlike
-+                           --no-setscene
-      --setscene-only       Only run setscene tasks, don't run any real tasks.
-      --remote-server=REMOTE_SERVER
-                            Connect to the specified server.
+Looking at the code, it seems that the DEFAULT_PREFERENCE variable is no
+longer in use. Unless I missed something, the variable is still read,
+but not taken into account any more, and there are just two recipes that
+set it.
+
+The BitBake documentation still refers to it though.
+
+May I propose documentation and code patches to remove it for good?
+
+Cheers
+Michael.
+
 -- 
-2.25.1
+Michael Opdenacker, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
