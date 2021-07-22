@@ -1,72 +1,116 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
- by mx.groups.io with SMTP id smtpd.web08.7680.1626960487997826790
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web10.876.1626992085985218086
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 22 Jul 2021 06:28:08 -0700
+ Thu, 22 Jul 2021 15:14:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=uZ7bFkD9;
- spf=pass (domain: gmail.com, ip: 209.85.219.177, mailfrom: mayank77fromindia@gmail.com)
-Received: by mail-yb1-f177.google.com with SMTP id k184so8259306ybf.12
-        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Jul 2021 06:28:07 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Ahh4TNjd;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f46.google.com with SMTP id 9-20020a05600c26c9b02901e44e9caa2aso484333wmv.4
+        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Jul 2021 15:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=6+H4lAOxBGDFn60LGUXrdyFd4k4NEg0Omaebbad32RA=;
-        b=uZ7bFkD90yCGQ19kABS+7jzIhxK30MBdHoUToMXsHQnwVGu2KixiCZ2xt9OI19zbws
-         N7i0yNP0iIVTadVZK/JpY8o3ZlrpVzrxuEcTtCU9YPwhfuCCr3IDnWMRpVxiYgWRj0ky
-         Tr33Y6jGWa/Z6hQ+Na9HRQqqJNahzk/+jtkON+Yof6WZyMJ+DgNLqFxl/JbJ45jYZAZQ
-         JWq7eCKoC4C7m7ad6HZcRm0C45UUKoMjpYnoM7Br6omKdKLBtHg5JaRZbs34WGPKUz5k
-         0AL9QxtzeK52ThP1clzSMQNTxeGbIVTwlhjcBATVh2zvEyyCOQciuqBcW4uHg5+dFLe2
-         vyzw==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=5ASO2MCLxnwincIOMIdR2QcScM/ynfA7MGtd4eB3c0Q=;
+        b=Ahh4TNjdKbccWnpbZsKbjOC5FWFeqczO3jiYxkCP1J5pLe0xbHo27VVZ7VOq/zHOWt
+         uidj38CNSj7NKj7rnjRDIHLGqKQAkWCwMqP5an38hs+0nzrOSzg5P+paHmaU9MoOGULD
+         iEuwLxGE5qinGFzZLooVe0rGCEshilxO81Hic=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=6+H4lAOxBGDFn60LGUXrdyFd4k4NEg0Omaebbad32RA=;
-        b=awLYC0/MbAsuLONgO3nQCpepIAOk2PIvj5rTf0bE3ApLzBjxzKZgSQUZrePvLLjlAT
-         OFXm6ffxUV7mnXtU0B2Iohi4WJOsIVIF1XJahWwILKbCnI/m0un0N05lqjzXIoeH3P8G
-         DGFleyVI8eX42Qp28XLAU4dtGXLhpGTYIFGjWM7LbMtPrI2w8NRERDPWucG0S7TEqJdR
-         D2UhpZ5B5D2CPykPwGPpLQYLmlQ5bdalQwfWwOMWNSYH9xg9h4Hl+udFIpnqRiyF6S9r
-         9Ps1G94Aoejp+YSZeav16tm6UU/j5/gRXKGkuXgKTr/Bh3TU7/5/Y1AnJQFiajPC23Z3
-         +tVg==
-X-Gm-Message-State: AOAM5338mqsbP9P686es24juWKH1H8rvGBUrx6CMY9X2pInt90hZBw93
-	kQy5UKX6IOyx/CfBQuRtthW1p2tQ6T2KZw8QU3nHBKAatqg=
-X-Google-Smtp-Source: ABdhPJwWLDyPlXtLMl2q/KCjZlg7dPawRFqYHQ7uYPYj1zC0JPuaMwdKd/UKi7xvSmy7lmaTbi6OLkXc06Ytozx28EM=
-X-Received: by 2002:a5b:d4a:: with SMTP id f10mr51162028ybr.413.1626960487011;
- Thu, 22 Jul 2021 06:28:07 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=5ASO2MCLxnwincIOMIdR2QcScM/ynfA7MGtd4eB3c0Q=;
+        b=t8VPEdeX7QsobU4ALZ5L62UsO4MMBrcbk2S6r/M7FPlRH2ts4y92u0F/+wHv2Wxjcu
+         H3IyKeKlLH0cyo0C59le+eh+Re5JtbjH42jaWF7IifH/dvU6+gRBDrsmqX0DceqPBurU
+         uSPLIp48+hGJLmXNEkm7RdFtW4YZq+Gpdyn+2qzbcgOC2Hy7vAMdnDylsb1HpFEJb6TU
+         ZShKkdJ+VA6MVMWtyewPAJUev2tvdBp+i3Sn8Nib4YZ39jKHKk58vYo+lJ/Weejwbgh6
+         zPoEXNW6LXYrPoIrlzFiE8W3ifmDHU2WnyWXoNpFY6oQZjNGUokf8V1tyBqtx054Iz4c
+         8OSQ==
+X-Gm-Message-State: AOAM5336EHQZINewFKBYl99LCt69Ag1xtmOTA574Uu7ifxvFm8Emhpq1
+	cOOL0SuCRUbEEIXgYF2uLboBnQ==
+X-Google-Smtp-Source: ABdhPJx4iBClhKz2U+pWIboAJOEbJACwMyrfuV66JtqDQEcHOAk/JpNM8BzBtd5akqjDBo3M7YaFqw==
+X-Received: by 2002:a05:600c:4f08:: with SMTP id l8mr1628301wmq.22.1626992084450;
+        Thu, 22 Jul 2021 15:14:44 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:e1dd:b42c:9243:6ba8? ([2001:8b0:aba:5f3c:e1dd:b42c:9243:6ba8])
+        by smtp.gmail.com with ESMTPSA id z11sm30830722wru.65.2021.07.22.15.14.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jul 2021 15:14:44 -0700 (PDT)
+Message-ID: <a7519c3f91a397c4e4259be88c0ccd76c3b2f037.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] doc: bitbake-user-manual: fix syntax in example and improve description
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Michael Opdenacker <michael.opdenacker@bootlin.com>, 
+	bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org
+Date: Thu, 22 Jul 2021 23:14:42 +0100
+In-Reply-To: <20210722171021.69225-1-michael.opdenacker@bootlin.com>
+References: <20210722171021.69225-1-michael.opdenacker@bootlin.com>
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
-From: "Mayank Agarwal" <mayank77fromindia@gmail.com>
-Date: Thu, 22 Jul 2021 18:57:55 +0530
-Message-ID: <CAKjpqyKE2teAWB5wc=6RU5_CASExfA2oXpyHNWJ5TRw2kxwntQ@mail.gmail.com>
-Subject: disable do_fetch
-To: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000e45b9205c7b641a9"
-
---000000000000e45b9205c7b641a9
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+Hi Michael,
 
-I am compiling simple c file given in file folder using simple recipe that
-has do_compil() and do_install functions.
-But i am getting fetcher failure error:
+On Thu, 2021-07-22 at 19:10 +0200, Michael Opdenacker wrote:
+> The previous syntax of the example was clearly incorrect
+> The example and description were also ambiguous, one could think that
+> it was "bitbake recipe" instead of "bitbake <recipename>"
+> 
+> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+> ---
+>  doc/bitbake-user-manual/bitbake-user-manual-metadata.rst | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+> index 20c330e6..01ac4d5e 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+> @@ -91,9 +91,10 @@ level changes:
+>        Variables that are exported to the environment are preceded by the
+>        string "export" in the command's output.
+>  
+> 
+> 
+> 
+> --  For recipe changes, use the following::
+> +-  To find changes to a given variable in a specific recipe, use the
+> +   following::
+>  
+> 
+> 
+> 
+> -      $ bitbake recipe -e \| grep VARIABLE="
+> +      $ bitbake recipename -e | grep VARIABLENAME=\"
+>  
+> 
+> 
+> 
+>     This command checks to see if the variable actually makes
+>     it into a specific recipe.
 
-I don't want to execute do_fetch(),for that i am giving
-do_fetch[noexec] = "1"
 
-but it is not taking affect.
 
-Best Regards
-Mayank
+I should probably highlight there is a new command, "bitbake-getvar":
 
---000000000000e45b9205c7b641a9
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=7bbeddeee1992d8c8fb71ba2dd49b03d0ae1ce86
 
-<div dir=3D"ltr">Hi all,<div><br></div><div>I am compiling simple c file gi=
-ven in file folder using simple recipe that</div><div>has do_compil() and d=
-o_install functions.</div><div>But i am getting fetcher failure error:</div=
-><div><br></div><div>I don&#39;t want to execute do_fetch(),for that i am g=
-iving=C2=A0</div><div>do_fetch[noexec] =3D &quot;1&quot;</div><div><br></di=
-v><div>but it is not taking affect.</div><div><br></div><div>Best Regards</=
-div><div>Mayank</div><div><br></div></div>
+We probably want to document that.
 
---000000000000e45b9205c7b641a9--
+Whilst I'm thinking about it, the override discussions on the architecture list
+are going to have implications for documentation too.
+
+http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=75fad23fc06c008a03414a1fc288a8614c6af9ca
+
+An example of my scripted conversion run against the manuals is included
+in this commit:
+
+http://git.yoctoproject.org/cgit.cgi/poky-contrib/diff/documentation/ref-manual/variables.rst?h=rpurdie/overrides-convert&id=9ac22a64a4c0ac4640552e90674e6459f0fece9a
+
+
+
+Cheers,
+
+Richard
+
+
