@@ -1,96 +1,83 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
- by mx.groups.io with SMTP id smtpd.web08.33045.1627319683861829372
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web09.3207.1627335311509212254
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 26 Jul 2021 10:14:44 -0700
+ Mon, 26 Jul 2021 14:35:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B4F4DFF806;
-	Mon, 26 Jul 2021 17:14:41 +0000 (UTC)
-Cc: docs@lists.yoctoproject.org, Quentin Schulz <foss@0leil.net>,
- BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: Re: [docs] [PATCH] doc: bitbake-user-manual: replace ``FOO`` by :term:`FOO` where possible
-To: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-References: <20210726153357.2502731-1-quentin.schulz@theobroma-systems.com>
-From: "Michael Opdenacker" <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-Message-ID: <2f5171f2-b4bd-2f8b-a00e-eccf583faa95@bootlin.com>
-Date: Mon, 26 Jul 2021 19:14:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Md6e+dkn;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f53.google.com with SMTP id l11-20020a7bcf0b0000b0290253545c2997so911687wmg.4
+        for <bitbake-devel@lists.openembedded.org>; Mon, 26 Jul 2021 14:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=xeZm9/Ns43e9FkXYAbUELLP5nH9hmZXj+lhNbyHlbBA=;
+        b=Md6e+dknYEm65NK0VeKen3Yt7icm4S6671uny1RvEBAyM2grk4t2akfkrHRbzU7oXt
+         /mHFbBa0LDbYxLHazWGrxBYp6uZO+lZNTpXugepVHJvLj0YDtbZ2Y5cx8/6+CTTJP+Pq
+         /yHSUXkAWJnqFBjeMahxhxxd01QqXpQ2749mg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=xeZm9/Ns43e9FkXYAbUELLP5nH9hmZXj+lhNbyHlbBA=;
+        b=BdHnJ/zX8gU5uZTtdp22pJi53fHwE1wukdXMaalRC022WDCyv2cX54Pl+c7hRp13Uj
+         w+MvuXAc8NQDu/MNfHTdvbOVc2fGVZ5bZBgV+D3Ht66zefQj4sXJ/VKtkwFdiHwRKEdr
+         ODkoy7/NTMMJEoNky5R02vgWXZSjyxv9Pu8RQuWud1KjN2QOyKhwtsOMVn/VyqU01vN0
+         Qa1K/8xlk0xLfguMwjDTAHQq+nC2dZfr/5+uuCvtx7cuQZ5Yz4anCpeRUQjKhMnRp5Wr
+         hnp+lb9za2AK578Gj7RTkr4jvdI3sMuGfgl2RGznhwavkBmPGySbfQrZ3bEplImJ/SY5
+         MkOw==
+X-Gm-Message-State: AOAM533nY7FWW1r0q3KbEj4TLxxurVgziRzoQNjmypyn5Ez36UFlx1sg
+	+I/t3k4rKELtKLu43h7PSyjMTg==
+X-Google-Smtp-Source: ABdhPJwVC0STuc5NRtlLyt61Fh3DqJzMaurRECU8iUXuUI4P0VS/YSxUKz+YPSf7IpR+19tlgxaiFg==
+X-Received: by 2002:a1c:a74f:: with SMTP id q76mr16153161wme.112.1627335309872;
+        Mon, 26 Jul 2021 14:35:09 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:8722:e8c0:4ebc:1cd4? ([2001:8b0:aba:5f3c:8722:e8c0:4ebc:1cd4])
+        by smtp.gmail.com with ESMTPSA id z17sm947879wrr.35.2021.07.26.14.35.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jul 2021 14:35:09 -0700 (PDT)
+Message-ID: <3ceaefa5cac22edb1825a24444daf50e1cdd295c.camel@linuxfoundation.org>
+Subject: Re: [docs] [PATCH 1/2] doc: bitbake-user-manual: ref-variables: order alphabetically the glossary sources
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Michael Opdenacker <michael.opdenacker@bootlin.com>, Quentin Schulz
+	 <quentin.schulz@theobroma-systems.com>
+Cc: docs@lists.yoctoproject.org, Quentin Schulz <foss@0leil.net>, BitBake
+	developer list <bitbake-devel@lists.openembedded.org>
+Date: Mon, 26 Jul 2021 22:35:06 +0100
+In-Reply-To: <b3975308-cf7b-b7da-184a-a8b37af6f006@bootlin.com>
+References: <20210726153523.2503355-1-quentin.schulz@theobroma-systems.com>
+	 <b3975308-cf7b-b7da-184a-a8b37af6f006@bootlin.com>
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
-In-Reply-To: <20210726153357.2502731-1-quentin.schulz@theobroma-systems.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello again Quentin,
+On Mon, 2021-07-26 at 18:02 +0200, Michael Opdenacker wrote:
+> Hi Quentin,
+> 
+> Thanks for the patch. Oops, you forgot to CC the "bitbake-devel" mailing
+> list (done now). That's where Richard is supposed to take the BitBake
+> documentation patches from.
+> 
+> On 7/26/21 5:35 PM, Quentin Schulz wrote:
+> > This reorders a few entry so that they are alphabetically sorted.
+> > 
+> > Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+> > Signed-off-by: Quentin Schulz <foss@0leil.net>
+> > ---
+> > 
+[...]
 
-Thanks for the new patch!
+> > 
+> >     :term:`BB_ORIGENV`
+> >        Contains a copy of the original external environment in which BitBake
+> >        was run. The copy is taken before any whitelisted variable values are
+> 
+> 
+> Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+> Richard, can you merge this patch as it was sent to the [docs] mailing list?
 
-On 7/26/21 5:33 PM, Quentin Schulz wrote:
-> If a variable has a glossary entry and some rST files write about those
-> variables, it's better to point to the glossary entry instead of just
-> highlighting it by surrounding it with two tick quotes.
->
-> The script that is used to do the replacement of ``FOO`` by :term:`FOO`
-> is the following Python code:
->
-> import re
-> from pathlib import Path
-> from runpy import run_module
-> import contextlib
-> import io
-> import sys
->
-> re_term = re.compile(r'variables.html#term-([a-zA-Z_0-9]*)')
-> terms = []
-> new_terms = set()
->
-> with contextlib.redirect_stdout(io.StringIO()) as f:
->     run_module('sphinx.ext.intersphinx', run_name='__main__')
->
-> objects = f.getvalue()
->
-> match = re_term.search(objects)
-> while match:
->     if match.group(1):
->         terms.append(match.group(1))
->     match = re_term.search(objects, match.end())
->
-> for rst in Path('.').rglob('*.rst'):
->     with open(rst, 'r') as f:
->         content = "".join(f.readlines())
->     for term in terms:
->         content = re.sub(r'``({})``(?!.*\s+[~=-]{{{:d},}})'.format(term, len(term)), r':term:`\1`', content)
->
->     with open(rst, 'w') as f:
->         f.write(content)
->
-> This script takes one argument as input: an objects.inv which can be
-> gotten from doc/_build/html/objetcs.inv after running `make html`.
->
-> Note that this excludes from replacement terms that appear in section
-> titles as it requires refs to be changed too. This can be automated too
-> if need be but right now it looks a bit confusing to have an anchor link
-> (for sections) also have a term/reference link in it. I am not sure this
-> is desired today.
->
-> Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-> Signed-off-by: Quentin Schulz <foss@0leil.net>
+Merged, thanks.
 
-Tested-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-
-Richard, could you merge it from the patch that was sent to the [docs]
-mailing list, please? Given the size of it, it would be great if you
-could apply it pretty quickly, so that we can have it when proposing
-further updates to the BitBake user manual.
-
-Thanks in advance,
-Michael.
-
--- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Richard
 
