@@ -1,49 +1,49 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
- by mx.groups.io with SMTP id smtpd.web08.4413.1627406518975937341
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+ by mx.groups.io with SMTP id smtpd.web12.4617.1627406519951626856
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 27 Jul 2021 10:21:59 -0700
+ Tue, 27 Jul 2021 10:22:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=JGe0slnz;
- spf=pass (domain: konsulko.com, ip: 209.85.160.176, mailfrom: scott.murray@konsulko.com)
-Received: by mail-qt1-f176.google.com with SMTP id b1so10135963qtx.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 27 Jul 2021 10:21:58 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=KBAN+uaf;
+ spf=pass (domain: konsulko.com, ip: 209.85.160.179, mailfrom: scott.murray@konsulko.com)
+Received: by mail-qt1-f179.google.com with SMTP id d9so10021581qty.12
+        for <bitbake-devel@lists.openembedded.org>; Tue, 27 Jul 2021 10:21:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=2Zk1CLgIaQu23jNuiQv2DkbeeXsAyHpUu5vV7TGTR04=;
-        b=JGe0slnzvX/tXbOMYjEXYxM5qXh/sd1ySLH14vXOSd+AOFjJBURvKc8J39SmAMfjvY
-         U1REG4R6WSn49eEDVXZfQa4+FfWpzut2jxmJr068OwoN7NIb34OjwrmhTqjjHDzm+r8Z
-         qBvPWuLXJ52KfOYQZJ5gCZqein8b12I4kNa/c=
+        bh=ju7/wL0RMYtOeHsQZamvObd3vp9kwvNCknXAEx5iPd8=;
+        b=KBAN+uafgJ5rNR6b/RPAWBFf60ivab8vDr9UT1C0YZqhAtejlFv7SXC6ojnPvy8r+b
+         f7Gd09amjinytkLvIXaXdhtCUN+3Neje+ABb72sPtANA0zNmxc35Z9ldAeN8jdAUHkHo
+         RttmZl6x0IOVerFbv8UtC4/oOsfyZRYwEPMUI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2Zk1CLgIaQu23jNuiQv2DkbeeXsAyHpUu5vV7TGTR04=;
-        b=c7KkOu7dM+Z5K9BdGnzxGThACTp/1olHntq7SgLgb1E2iBM9niWf3CDbTZ3fYVfHKS
-         bWUC9n5ZuLQOcRLgZEp1/oOAYUWzNa9MXRC+0RAnSg16YQyyejZGKyGv3ynzr7flOQLM
-         RuRG5r6w2ZJ3AOuzYLVnYfGCJYr4SfmiI42aV8pZzr3/lZuRsNcr9Yt7aT2NjE4hxE5r
-         RPPiYo7iwCd62JwMq/jSlSTxEECmm+8U5ZxDAgaGtWTENOuWdtvywjCUf6b1hvKMJFiA
-         P03XfxlFEgptjM+EeGpeof5hgwBe3Tyz55+Bash35QgZ+RcS0JBfX2sfICqtDpx/1AW7
-         2EbQ==
-X-Gm-Message-State: AOAM532HVICCxD6FE/hFofMx0rFuRhwSmapXf2gTCGrqYzutUZ13s/Ny
-	MOUwaPSCO0nC9mIHKVxj+7ofhQKesbnUMw==
-X-Google-Smtp-Source: ABdhPJxwobmutub8GDRP/P0NSKPwFbZXeKDEaU5du2AY3rFJLwVovmmT8zfjf5vrnI7M6xKvlXkJIA==
-X-Received: by 2002:a05:622a:183:: with SMTP id s3mr19997680qtw.169.1627406517885;
-        Tue, 27 Jul 2021 10:21:57 -0700 (PDT)
+        bh=ju7/wL0RMYtOeHsQZamvObd3vp9kwvNCknXAEx5iPd8=;
+        b=CWnTgDXAcg35JoL7XNV9jW0SP8uRLWNwGA/hOlsqjxfj4MfALZ4OR/TJLAc4cSXiI3
+         RdVL5GjhW2pR1BorTMfwkBRXKUs8jPA974WKDyHUPWsVGHmaEWAxpU/GoEejnbGIknIA
+         /lgHrdxRM7lYrlYOIEQejgx31JBRXq56LLrNKis/n+vXgniyy3NrNXNciIs44L2By1bF
+         5BrdemWrCAhcCP8vvi9AT1UuKI/vsTZCmGGXBbj6aOzzPipdWFYqPS9qFA382Cc3Fo5H
+         mR17e1rqroDQvHYu1PpZVUFAtMnMcHqBHB6sN7iTYyVJ6Vti1fIRszBvchBlLwIwsxRP
+         t1IA==
+X-Gm-Message-State: AOAM530eQH21DmK8ByKgMoaix0H4oIksT0Bdduao6zim5F69kxurORLj
+	5spunll282BDMFo637CqcDB9J+f8v4Xg9w==
+X-Google-Smtp-Source: ABdhPJwsEwW9eg7/0tdHPCPJnK0eHUhmvE5kS5eVGyq0mt4qBzKOKRbh+mW7tgmab66NMByBaTwnbw==
+X-Received: by 2002:ac8:6705:: with SMTP id e5mr271959qtp.282.1627406518892;
+        Tue, 27 Jul 2021 10:21:58 -0700 (PDT)
 Return-Path: <scott.murray@konsulko.com>
 Received: from ghidorah.spiteful.org (198-84-179-103.cpe.teksavvy.com. [198.84.179.103])
-        by smtp.gmail.com with ESMTPSA id f2sm1648719qth.11.2021.07.27.10.21.56
+        by smtp.gmail.com with ESMTPSA id f2sm1648719qth.11.2021.07.27.10.21.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jul 2021 10:21:57 -0700 (PDT)
+        Tue, 27 Jul 2021 10:21:58 -0700 (PDT)
 From: "Scott Murray" <scott.murray@konsulko.com>
 To: bitbake-devel@lists.openembedded.org,
 	Richard Purdie <richard.purdie@linuxfoundation.org>,
 	Joshua Watt <JPEWhacker@gmail.com>,
 	Paul Barker <paul@pbarker.dev>
-Subject: [PATCH v5 1/5] asyncrpc: Wait on writers to close with Python 3.7+
-Date: Tue, 27 Jul 2021 13:21:41 -0400
-Message-Id: <7fbe0a840ad544ec0f4e84a376bae3423da1c7a5.1627405824.git.scott.murray@konsulko.com>
+Subject: [PATCH v5 2/5] asyncrpc: Ensure that asyncio shutdown is clean
+Date: Tue, 27 Jul 2021 13:21:42 -0400
+Message-Id: <9e7d39f0a8ea9a747188fbef2ff08a84818a1bb1.1627405824.git.scott.murray@konsulko.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1627405824.git.scott.murray@konsulko.com>
 References: <cover.1627405824.git.scott.murray@konsulko.com>
@@ -52,62 +52,64 @@ Content-Transfer-Encoding: 8bit
 
 From: Paul Barker <pbarker@konsulko.com>
 
-The close() method of an asyncio stream writer is not synchronous and so
-may return before the writer has finished closing. In Python 3.7 the
-wait_closed() method was added which can be used to ensure that a writer
-has finished closing before continuing. Sadly in Python 3.6 and earlier
-there is no way to guarantee that a writer has finished closing before
-moving on.
+We should ensure that all async tasks are cancelled and then allowed to
+finish gracefully before closing the asyncio loop.
 
 Signed-off-by: Paul Barker <pbarker@konsulko.com>
+[updated for asyncrpc SIGTERM handling changes]
+Signed-off-by: Scott Murray <scott.murray@konsulko.com>
 ---
- lib/bb/asyncrpc/client.py | 3 +++
- lib/bb/asyncrpc/serv.py   | 4 ++++
- 2 files changed, 7 insertions(+)
+ lib/bb/asyncrpc/serv.py | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-index 3eb4fdde..82b6068a 100644
---- a/lib/bb/asyncrpc/client.py
-+++ b/lib/bb/asyncrpc/client.py
-@@ -7,6 +7,7 @@ import asyncio
- import json
- import os
- import socket
-+import sys
- from . import chunkify, DEFAULT_MAX_CHUNK
- 
- 
-@@ -47,6 +48,8 @@ class AsyncClient(object):
- 
-         if self.writer is not None:
-             self.writer.close()
-+            if sys.version_info >= (3, 7):
-+                await self.writer.wait_closed()
-             self.writer = None
- 
-     async def _send_wrapper(self, proc):
 diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
-index 4084f300..2c219c1e 100644
+index 2c219c1e..87d142c1 100644
 --- a/lib/bb/asyncrpc/serv.py
 +++ b/lib/bb/asyncrpc/serv.py
-@@ -75,6 +75,8 @@ class AsyncServerConnection(object):
-             self.logger.error(str(e))
+@@ -205,21 +205,37 @@ class AsyncServer(object):
+         except KeyboardInterrupt:
+             pass
+ 
+-    def signal_handler(self):
++    def handle_signal(self):
+         self.logger.debug("Got exit signal")
++        self.loop.create_task(self.shutdown())
++
++    async def shutdown(self):
++        self.logger.debug('Server shutting down')
++
++        # Stop accepting connections
++        self.server.close()
++        await self.server.wait_closed()
++
++        # Cancel all active tasks
++        if sys.version_info >= (3, 7):
++            tasks = [t for t in asyncio.all_tasks(self.loop)
++                     if t is not asyncio.current_task(self.loop)]
++        else:
++            tasks = [t for t in asyncio.Task.all_tasks(self.loop)
++                     if t is not asyncio.Task.current_task(self.loop)]
++        for task in tasks:
++            task.cancel()
++        await asyncio.gather(*tasks, return_exceptions=True)
+         self.loop.stop()
+ 
+     def serve_forever(self):
+         asyncio.set_event_loop(self.loop)
+         try:
+-            self.loop.add_signal_handler(signal.SIGTERM, self.signal_handler)
++            self.loop.add_signal_handler(signal.SIGTERM, self.handle_signal)
+             signal.pthread_sigmask(signal.SIG_UNBLOCK, [signal.SIGTERM])
++            self.loop.add_signal_handler(signal.SIGINT, self.handle_signal)
+ 
+             self.run_loop_forever()
+-            self.server.close()
+-
+-            self.loop.run_until_complete(self.server.wait_closed())
+-            self.logger.debug('Server shutting down')
          finally:
-             self.writer.close()
-+            if sys.version_info >= (3, 7):
-+                await self.writer.wait_closed()
- 
-     async def dispatch_message(self, msg):
-         for k in self.handlers.keys():
-@@ -193,6 +195,8 @@ class AsyncServer(object):
-             self.logger.error('Error from client: %s' % str(e), exc_info=True)
-             traceback.print_exc()
-             writer.close()
-+            if sys.version_info >= (3, 7):
-+                await writer.wait_closed()
-         self.logger.debug('Client disconnected')
- 
-     def run_loop_forever(self):
+             if self.close_loop:
+                 if sys.version_info >= (3, 6):
 -- 
 2.20.1
 
