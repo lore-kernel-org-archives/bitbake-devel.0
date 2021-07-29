@@ -1,67 +1,55 @@
-Received: from relay12.mail.gandi.net (relay12.mail.gandi.net [217.70.178.232])
- by mx.groups.io with SMTP id smtpd.web12.6260.1627484673645238127
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+ by mx.groups.io with SMTP id smtpd.web11.9101.1627563705604444906
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 28 Jul 2021 08:04:34 -0700
+ Thu, 29 Jul 2021 06:01:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: bootlin.com, ip: 217.70.178.232, mailfrom: michael.opdenacker@bootlin.com)
+ dkim=missing; spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: michael.opdenacker@bootlin.com)
 Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay12.mail.gandi.net (Postfix) with ESMTPSA id 12578200008;
-	Wed, 28 Jul 2021 15:04:30 +0000 (UTC)
-Cc: docs@lists.yoctoproject.org
-Subject: Re: [bitbake-devel] [PATCH] doc: bitbake-user-manual: update bitbake option help
-To: bitbake-devel@lists.openembedded.org
-References: <1693DEF4612E3029.18576@lists.openembedded.org>
+	by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9F012FF80E;
+	Thu, 29 Jul 2021 13:01:43 +0000 (UTC)
 From: "Michael Opdenacker" <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-Message-ID: <6395f36d-e688-9556-565e-95333e525ef0@bootlin.com>
-Date: Wed, 28 Jul 2021 17:04:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	Michael Opdenacker <michael.opdenacker@bootlin.com>
+Subject: [PATCH] doc: bitbake-user-manual: grammar fix for the number of "metadata"
+Date: Thu, 29 Jul 2021 15:01:33 +0200
+Message-Id: <20210729130133.163787-1-michael.opdenacker@bootlin.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <9aebdc2ca149587d39cd23628c392423148f22ba.camel@linuxfoundation.org>
+References: <9aebdc2ca149587d39cd23628c392423148f22ba.camel@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <1693DEF4612E3029.18576@lists.openembedded.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
+"metadata" is used both as singular and as plural.
+The first change fixes a case in which the verbs have a singular conjugation
+but articles that indicate a plural case.
 
-On 7/21/21 7:36 PM, Michael Opdenacker wrote:
-> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-> ---
->  doc/bitbake-user-manual/bitbake-user-manual-intro.rst | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-> index b3cea61f..7c29c8c0 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-> @@ -417,8 +417,8 @@ Following is the usage and syntax for BitBake::
->       -l DEBUG_DOMAINS, --log-domains=DEBUG_DOMAINS
->                             Show debug logging for the specified logging domains
->       -P, --profile         Profile the command and save reports.
-> -     -u UI, --ui=UI        The user interface to use (knotty, ncurses or taskexp
-> -                           - default knotty).
-> +     -u UI, --ui=UI        The user interface to use (knotty, ncurses, taskexp or
-> +                           teamcity - default knotty).
->       --token=XMLRPCTOKEN   Specify the connection token to be used when
->                             connecting to a remote server.
->       --revisions-changed   Set the exit code depending on whether upstream
-> @@ -433,6 +433,9 @@ Following is the usage and syntax for BitBake::
->                             Environment variable BB_SERVER_TIMEOUT.
->       --no-setscene         Do not run any setscene tasks. sstate will be ignored
->                             and everything needed, built.
-> +     --skip-setscene       Skip setscene tasks if they would be executed. Tasks
-> +                           previously restored from sstate will be kept, unlike
-> +                           --no-setscene
->       --setscene-only       Only run setscene tasks, don't run any real tasks.
->       --remote-server=REMOTE_SERVER
->                             Connect to the specified server.
+The second change is for consistency with the first one inside
+the same paragraph.
 
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+---
+ doc/bitbake-user-manual/bitbake-user-manual-intro.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Ping ;-)
-Michael.
-
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+index eb140665..64e7305d 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+@@ -27,11 +27,11 @@ Linux software stacks using a task-oriented approach.
+ Conceptually, BitBake is similar to GNU Make in some regards but has
+ significant differences:
+ 
+--  BitBake executes tasks according to provided metadata that builds up
++-  BitBake executes tasks according to provided metadata that build up
+    the tasks. Metadata is stored in recipe (``.bb``) and related recipe
+    "append" (``.bbappend``) files, configuration (``.conf``) and
+    underlying include (``.inc``) files, and in class (``.bbclass``)
+-   files. The metadata provides BitBake with instructions on what tasks
++   files. The metadata provide BitBake with instructions on what tasks
+    to run and the dependencies between those tasks.
+ 
+ -  BitBake includes a fetcher library for obtaining source code from
 -- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.25.1
 
