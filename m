@@ -1,35 +1,35 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web10.24117.1627652829314324963
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web11.24082.1627652829782901450
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Jul 2021 06:47:09 -0700
+ Fri, 30 Jul 2021 06:47:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=VxLgvebB;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id l4-20020a05600c1d04b02902506f89ad2dso7778449wms.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ISlGEJoV;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f46.google.com with SMTP id n12so11430016wrr.2
         for <bitbake-devel@lists.openembedded.org>; Fri, 30 Jul 2021 06:47:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=QB8+sd3s9H2Nstr14ze/nWpq3JfZQ9rKVrDHY7QmahM=;
-        b=VxLgvebBXQVa5VMiV0vTut2GasC5fZEP2fCM20xhCN+iZue5nmoJGWWdpbabAjr2Jx
-         V2ged8M8Qb0yKa9Hw8pkA70ijkqWeUyjdVkdQnFRw7PqSOOdksDODHjS/E02NweNGoKC
-         llcu6TT0BIwgCOhnFDc1cJvCHLfkzSSqE1HoA=
+        bh=T09KQk3KmYPueeZ+Qq7l48J0tH26fP2luDjcs/jJLdw=;
+        b=ISlGEJoV+4DC4kUSoDAQRfXmR/yqQHG40JL/Cm6KCB1FHqlfbYh4ei2/KG/e+iMTp0
+         yK7Z5P3OXDOMcQOm4q05eNkmhoAWtVgRrCFbq8BuRQpV2E9IsrX2bGkUJJh2CzfSgkn/
+         ZovOflnbJ8WWqWyeWbNfz6kQeOoNEzrb9Oz70=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QB8+sd3s9H2Nstr14ze/nWpq3JfZQ9rKVrDHY7QmahM=;
-        b=al2UjPho3ySgjyvJWCVWR32+i3kRjgQwV3hav/BIR76MCqDRE1j1/fN/oZYdaULYuP
-         2snihB131ODWRWk/cBd+9eo7hJ9vSBxdcaABDgzji0EPgtOCEGUHoHLTUx+fdTvuNe8w
-         yrkvxvMS37HN/fl4M2+XduBvYE3GMDzt8NSwq/5v9gnDjmS+K0ex06uXpDAsmceJUjN4
-         McB/tLwTAnWsj75HD2HaKpg2feSF0rDrueZ9mNNt+NVmV4yvvkqJQ+cTjD8zQvKYMAsy
-         QL4mQMXXWdC9tl79X8COd0DnkCauyshja+Q+SzziEmoiz6vCENxzjgHB2L3OuSZiiVVv
-         6jxg==
-X-Gm-Message-State: AOAM531h/266DR9a1xfWR4kkU4Q7DOYHq+cOpUUblsB3963k3Wu66oVT
-	eiAmE6ULd/ePC3GfouOpPH/tqFQPdI5nEQ==
-X-Google-Smtp-Source: ABdhPJyWycSDQSkwu9XBJHdPFyul+QZmYJJayByExbEOE3ijXl1YjGTJ5t7Eu+42K8wLFcl4y0hs7w==
-X-Received: by 2002:a05:600c:17d8:: with SMTP id y24mr3145692wmo.91.1627652827514;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=T09KQk3KmYPueeZ+Qq7l48J0tH26fP2luDjcs/jJLdw=;
+        b=KXFuR0NTpCXUdvKqgd5WhC9dECPnHid26vbEBFRpW/N8eYsR2KA3Ajhs2ch3xtKGLl
+         BS84lgu4woFYE/78ZiK+PJEFHzYHL4sLJ7EyXY+s18C2VoGVY7PsdyYDaAd1jC0JmXCq
+         YkmieIG1TsJOxPT4Uj94GnJnPKzb6KqisRe06+UIl3atgdaGsxFkTaRMQcWhdsqY17By
+         RKxb2gcsZKOhA7q90kM3rSG8pkyyc+gB5AQycSDyjfj3ihiE3W5Kjo6C7pgVLQs7ABmD
+         QlG65Ip0xbkENILZ4u8o7YTQWY+vxivr387TcV2b1DWmQw30oeZ75E4g3w0daxDumplb
+         7i9g==
+X-Gm-Message-State: AOAM533OaQ1Ia+8LnBk9nCUxeBb/oY6zO3Y5mGFtYM4ZRkIjFiW7zXan
+	0RaY+3ssH0+QSuuMyAUS4N4KEzx/JlTAsw==
+X-Google-Smtp-Source: ABdhPJw0Iy9a1cRtqDvdQXFUJPdnVTloxlwR80et3rjo2UsFiBoKoIKbLmcEYwJTA7txZXYE4P3XDg==
+X-Received: by 2002:adf:ed51:: with SMTP id u17mr3144181wro.416.1627652827987;
         Fri, 30 Jul 2021 06:47:07 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:47e7:2d3d:e4c2:218b])
@@ -39,442 +39,581 @@ Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:47e7:2d3d:e4c2:218b])
         Fri, 30 Jul 2021 06:47:07 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/4] bitbake: Switch to using new override syntax
-Date: Fri, 30 Jul 2021 14:47:03 +0100
-Message-Id: <20210730134706.3360651-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/4] doc/lib: Update to use new override syntax containing colons
+Date: Fri, 30 Jul 2021 14:47:04 +0100
+Message-Id: <20210730134706.3360651-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210730134706.3360651-1-richard.purdie@linuxfoundation.org>
+References: <20210730134706.3360651-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This change updates the datastore to use the new override syntax using
-colons instead of underscores exclusively. It is expected layers would
-have to be converted to work with bitbake after this change.
-
-Supporting mixed syntax isn't possible, it is only feasible to have
-one internal representation of overrides.
-
-Whilst we can't warn for every possible override that may be set in the
-old format, show errors for _append/_prepend/_remove since those should
-never be present.
+This runs the overrides conversion script in OE-Core over the bitbake code
+base including the docs. A handful of things were excluded in toaster
+and for the Changelog file.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cache.py      |   4 +-
- lib/bb/data_smart.py | 113 +++++++++++++++++++++----------------------
- lib/bb/parse/ast.py  |   2 -
- lib/bb/siggen.py     |   4 +-
- 4 files changed, 59 insertions(+), 64 deletions(-)
+ contrib/vim/plugin/newbbappend.vim            |  2 +-
+ .../bitbake-user-manual-metadata.rst          | 64 +++++++++----------
+ .../bitbake-user-manual-ref-variables.rst     | 14 ++--
+ lib/bb/fetch2/__init__.py                     |  2 +-
+ lib/bb/tests/data.py                          | 52 +++++++--------
+ lib/bb/tests/parse.py                         | 16 ++---
+ lib/toaster/orm/models.py                     |  2 +-
+ lib/toaster/toastergui/views.py               |  6 +-
+ .../management/commands/buildimport.py        |  2 +-
+ 9 files changed, 80 insertions(+), 80 deletions(-)
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 27eb271798..73bc6e9665 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -53,12 +53,12 @@ class RecipeInfoCommon(object):
+diff --git a/contrib/vim/plugin/newbbappend.vim b/contrib/vim/plugin/newbbappend.vim
+index e04174cf62..3f65f79cdc 100644
+--- a/contrib/vim/plugin/newbbappend.vim
++++ b/contrib/vim/plugin/newbbappend.vim
+@@ -20,7 +20,7 @@ fun! NewBBAppendTemplate()
+     set nopaste
  
-     @classmethod
-     def pkgvar(cls, var, packages, metadata):
--        return dict((pkg, cls.depvar("%s_%s" % (var, pkg), metadata))
-+        return dict((pkg, cls.depvar("%s:%s" % (var, pkg), metadata))
-                     for pkg in packages)
+     " New bbappend template
+-    0 put ='FILESEXTRAPATHS_prepend := \"${THISDIR}/${PN}:\"'
++    0 put ='FILESEXTRAPATHS:prepend := \"${THISDIR}/${PN}:\"'
+     2
  
-     @classmethod
-     def taskvar(cls, var, tasks, metadata):
--        return dict((task, cls.getvar("%s_task-%s" % (var, task), metadata))
-+        return dict((task, cls.getvar("%s:task-%s" % (var, task), metadata))
-                     for task in tasks)
+     if paste == 1
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index 3e14163ebe..db44e26fbd 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -281,11 +281,11 @@ operators in that their effects are applied at variable expansion time
+ rather than being immediately applied. Here are some examples::
  
-     @classmethod
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index b4ed62a4e5..43e9e78555 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -26,8 +26,8 @@ from bb.COW  import COWDictBase
+    B = "bval"
+-   B_append = " additional data"
++   B:append = " additional data"
+    C = "cval"
+-   C_prepend = "additional data "
++   C:prepend = "additional data "
+    D = "dval"
+-   D_append = "additional data"
++   D:append = "additional data"
  
- logger = logging.getLogger("BitBake.Data")
+ The variable :term:`B`
+ becomes "bval additional data" and ``C`` becomes "additional data cval".
+@@ -312,10 +312,10 @@ When you use this syntax, BitBake expects one or more strings.
+ Surrounding spaces and spacing are preserved. Here is an example::
  
--__setvar_keyword__ = ["_append", "_prepend", "_remove"]
--__setvar_regexp__ = re.compile(r'(?P<base>.*?)(?P<keyword>_append|_prepend|_remove)(_(?P<add>[^A-Z]*))?$')
-+__setvar_keyword__ = [":append", ":prepend", ":remove"]
-+__setvar_regexp__ = re.compile(r'(?P<base>.*?)(?P<keyword>:append|:prepend|:remove)(:(?P<add>[^A-Z]*))?$')
- __expand_var_regexp__ = re.compile(r"\${[a-zA-Z0-9\-_+./~:]+?}")
- __expand_python_regexp__ = re.compile(r"\${@.+?}")
- __whitespace_split__ = re.compile(r'(\s)')
-@@ -277,7 +277,7 @@ class VariableHistory(object):
-             for (r, override) in d.overridedata[var]:
-                 for event in self.variable(r):
-                     loginfo = event.copy()
--                    if 'flag' in loginfo and not loginfo['flag'].startswith("_"):
-+                    if 'flag' in loginfo and not loginfo['flag'].startswith(("_", ":")):
-                         continue
-                     loginfo['variable'] = var
-                     loginfo['op'] = 'override[%s]:%s' % (override, loginfo['op'])
-@@ -342,7 +342,7 @@ class VariableHistory(object):
-         for event in history:
-             if 'flag' in event:
-                 continue
--            if event['op'] == '_remove':
-+            if event['op'] == ':remove':
-                 continue
-             if isset and event['op'] == 'set?':
-                 continue
-@@ -481,7 +481,15 @@ class DataSmart(MutableMapping):
+    FOO = "123 456 789 123456 123 456 123 456"
+-   FOO_remove = "123"
+-   FOO_remove = "456"
++   FOO:remove = "123"
++   FOO:remove = "456"
+    FOO2 = " abc def ghi abcdef abc def abc def def"
+-   FOO2_remove = "\
++   FOO2:remove = "\
+        def \
+        abc \
+        ghi \
+@@ -349,15 +349,15 @@ If, on the other hand, ``foo.bbclass``
+ uses the "_append" operator, then the final value of ``FOO`` will be
+ "initial val", as intended::
  
-     def setVar(self, var, value, **loginfo):
-         #print("var=" + str(var) + "  val=" + str(value))
--        var = var.replace(":", "_")
-+
-+        if "_append" in var or "_prepend" in var or "_remove" in var:
-+            info = "%s" % var
-+            if "filename" in loginfo:
-+                info += " file: %s" % loginfo[filename]
-+            if "lineno" in loginfo:
-+                info += " line: %s" % loginfo[lineno]
-+            bb.fatal("Variable %s contains an operation using the old override syntax. Please convert this layer/metadata before attempting to use with a newer bitbake." % info)
-+
-         self.expand_cache = {}
-         parsing=False
-         if 'parsing' in loginfo:
-@@ -510,7 +518,7 @@ class DataSmart(MutableMapping):
-             # pay the cookie monster
+-   FOO_append = " val"
++   FOO:append = " val"
  
-             # more cookies for the cookie monster
--            if '_' in var:
-+            if ':' in var:
-                 self._setvar_update_overrides(base, **loginfo)
+ .. note::
  
-             if base in self.overridevars:
-@@ -521,27 +529,27 @@ class DataSmart(MutableMapping):
-             self._makeShadowCopy(var)
+    It is never necessary to use "+=" together with "_append". The following
+    sequence of assignments appends "barbaz" to FOO::
  
-         if not parsing:
--            if "_append" in self.dict[var]:
--                del self.dict[var]["_append"]
--            if "_prepend" in self.dict[var]:
--                del self.dict[var]["_prepend"]
--            if "_remove" in self.dict[var]:
--                del self.dict[var]["_remove"]
-+            if ":append" in self.dict[var]:
-+                del self.dict[var][":append"]
-+            if ":prepend" in self.dict[var]:
-+                del self.dict[var][":prepend"]
-+            if ":remove" in self.dict[var]:
-+                del self.dict[var][":remove"]
-             if var in self.overridedata:
-                 active = []
-                 self.need_overrides()
-                 for (r, o) in self.overridedata[var]:
-                     if o in self.overridesset:
-                         active.append(r)
--                    elif "_" in o:
--                        if set(o.split("_")).issubset(self.overridesset):
-+                    elif ":" in o:
-+                        if set(o.split(":")).issubset(self.overridesset):
-                             active.append(r)
-                 for a in active:
-                     self.delVar(a)
-                 del self.overridedata[var]
- 
-         # more cookies for the cookie monster
--        if '_' in var:
-+        if ':' in var:
-             self._setvar_update_overrides(var, **loginfo)
- 
-         # setting var
-@@ -567,8 +575,8 @@ class DataSmart(MutableMapping):
- 
-     def _setvar_update_overrides(self, var, **loginfo):
-         # aka pay the cookie monster
--        override = var[var.rfind('_')+1:]
--        shortvar = var[:var.rfind('_')]
-+        override = var[var.rfind(':')+1:]
-+        shortvar = var[:var.rfind(':')]
-         while override and __override_regexp__.match(override):
-             if shortvar not in self.overridedata:
-                 self.overridedata[shortvar] = []
-@@ -577,9 +585,9 @@ class DataSmart(MutableMapping):
-                 self.overridedata[shortvar] = list(self.overridedata[shortvar])
-                 self.overridedata[shortvar].append([var, override])
-             override = None
--            if "_" in shortvar:
--                override = var[shortvar.rfind('_')+1:]
--                shortvar = var[:shortvar.rfind('_')]
-+            if ":" in shortvar:
-+                override = var[shortvar.rfind(':')+1:]
-+                shortvar = var[:shortvar.rfind(':')]
-                 if len(shortvar) == 0:
-                     override = None
- 
-@@ -590,8 +598,6 @@ class DataSmart(MutableMapping):
-         """
-         Rename the variable key to newkey
-         """
--        key = key.replace(":", "_")
--        newkey = newkey.replace(":", "_")
-         if key == newkey:
-             bb.warn("Calling renameVar with equivalent keys (%s) is invalid" % key)
-             return
-@@ -620,7 +626,7 @@ class DataSmart(MutableMapping):
-                 self.overridedata[newkey].append([v.replace(key, newkey), o])
-                 self.renameVar(v, v.replace(key, newkey))
- 
--        if '_' in newkey and val is None:
-+        if ':' in newkey and val is None:
-             self._setvar_update_overrides(newkey, **loginfo)
- 
-         loginfo['variable'] = key
-@@ -632,15 +638,14 @@ class DataSmart(MutableMapping):
-     def appendVar(self, var, value, **loginfo):
-         loginfo['op'] = 'append'
-         self.varhistory.record(**loginfo)
--        self.setVar(var + "_append", value, ignore=True, parsing=True)
-+        self.setVar(var + ":append", value, ignore=True, parsing=True)
- 
-     def prependVar(self, var, value, **loginfo):
-         loginfo['op'] = 'prepend'
-         self.varhistory.record(**loginfo)
--        self.setVar(var + "_prepend", value, ignore=True, parsing=True)
-+        self.setVar(var + ":prepend", value, ignore=True, parsing=True)
- 
-     def delVar(self, var, **loginfo):
--        var = var.replace(":", "_")
-         self.expand_cache = {}
- 
-         loginfo['detail'] = ""
-@@ -649,9 +654,9 @@ class DataSmart(MutableMapping):
-         self.dict[var] = {}
-         if var in self.overridedata:
-             del self.overridedata[var]
--        if '_' in var:
--            override = var[var.rfind('_')+1:]
--            shortvar = var[:var.rfind('_')]
-+        if ':' in var:
-+            override = var[var.rfind(':')+1:]
-+            shortvar = var[:var.rfind(':')]
-             while override and override.islower():
-                 try:
-                     if shortvar in self.overridedata:
-@@ -661,14 +666,13 @@ class DataSmart(MutableMapping):
-                 except ValueError as e:
-                     pass
-                 override = None
--                if "_" in shortvar:
--                    override = var[shortvar.rfind('_')+1:]
--                    shortvar = var[:shortvar.rfind('_')]
-+                if ":" in shortvar:
-+                    override = var[shortvar.rfind(':')+1:]
-+                    shortvar = var[:shortvar.rfind(':')]
-                     if len(shortvar) == 0:
-                          override = None
- 
-     def setVarFlag(self, var, flag, value, **loginfo):
--        var = var.replace(":", "_")
-         self.expand_cache = {}
- 
-         if 'op' not in loginfo:
-@@ -679,7 +683,7 @@ class DataSmart(MutableMapping):
-             self._makeShadowCopy(var)
-         self.dict[var][flag] = value
- 
--        if flag == "_defaultval" and '_' in var:
-+        if flag == "_defaultval" and ':' in var:
-             self._setvar_update_overrides(var, **loginfo)
-         if flag == "_defaultval" and var in self.overridevars:
-             self._setvar_update_overridevars(var, value)
-@@ -692,7 +696,6 @@ class DataSmart(MutableMapping):
-             self.dict["__exportlist"]["_content"].add(var)
- 
-     def getVarFlag(self, var, flag, expand=True, noweakdefault=False, parsing=False, retparser=False):
--        var = var.replace(":", "_")
-         if flag == "_content":
-             cachename = var
-         else:
-@@ -712,11 +715,11 @@ class DataSmart(MutableMapping):
-             active = {}
-             self.need_overrides()
-             for (r, o) in overridedata:
--                # What about double overrides both with "_" in the name?
-+                # FIXME What about double overrides both with "_" in the name?
-                 if o in self.overridesset:
-                     active[o] = r
--                elif "_" in o:
--                    if set(o.split("_")).issubset(self.overridesset):
-+                elif ":" in o:
-+                    if set(o.split(":")).issubset(self.overridesset):
-                         active[o] = r
- 
-             mod = True
-@@ -724,10 +727,10 @@ class DataSmart(MutableMapping):
-                 mod = False
-                 for o in self.overrides:
-                     for a in active.copy():
--                        if a.endswith("_" + o):
-+                        if a.endswith(":" + o):
-                             t = active[a]
-                             del active[a]
--                            active[a.replace("_" + o, "")] = t
-+                            active[a.replace(":" + o, "")] = t
-                             mod = True
-                         elif a == o:
-                             match = active[a]
-@@ -746,28 +749,28 @@ class DataSmart(MutableMapping):
-                 value = copy.copy(local_var["_defaultval"])
+-       FOO_append = "bar"
+-       FOO_append = "baz"
++       FOO:append = "bar"
++       FOO:append = "baz"
  
  
--        if flag == "_content" and local_var is not None and "_append" in local_var and not parsing:
-+        if flag == "_content" and local_var is not None and ":append" in local_var and not parsing:
-             if not value:
-                 value = ""
-             self.need_overrides()
--            for (r, o) in local_var["_append"]:
-+            for (r, o) in local_var[":append"]:
-                 match = True
-                 if o:
--                    for o2 in o.split("_"):
-+                    for o2 in o.split(":"):
-                         if not o2 in self.overrides:
-                             match = False                            
-                 if match:
-                     value = value + r
+    The only effect of changing the second assignment in the previous
+@@ -538,12 +538,12 @@ variable.
+    that value based on the architecture of the build::
  
--        if flag == "_content" and local_var is not None and "_prepend" in local_var and not parsing:
-+        if flag == "_content" and local_var is not None and ":prepend" in local_var and not parsing:
-             if not value:
-                 value = ""
-             self.need_overrides()
--            for (r, o) in local_var["_prepend"]:
-+            for (r, o) in local_var[":prepend"]:
+       KBRANCH = "standard/base"
+-      KBRANCH_qemuarm = "standard/arm-versatile-926ejs"
+-      KBRANCH_qemumips = "standard/mti-malta32"
+-      KBRANCH_qemuppc = "standard/qemuppc"
+-      KBRANCH_qemux86 = "standard/common-pc/base"
+-      KBRANCH_qemux86-64 = "standard/common-pc-64/base"
+-      KBRANCH_qemumips64 = "standard/mti-malta64"
++      KBRANCH:qemuarm = "standard/arm-versatile-926ejs"
++      KBRANCH:qemumips = "standard/mti-malta32"
++      KBRANCH:qemuppc = "standard/qemuppc"
++      KBRANCH:qemux86 = "standard/common-pc/base"
++      KBRANCH:qemux86-64 = "standard/common-pc-64/base"
++      KBRANCH:qemumips64 = "standard/mti-malta64"
  
-                 match = True
-                 if o:
--                    for o2 in o.split("_"):
-+                    for o2 in o.split(":"):
-                         if not o2 in self.overrides:
-                             match = False                            
-                 if match:
-@@ -779,12 +782,12 @@ class DataSmart(MutableMapping):
-         if expand:
-             value = parser.value
+ -  *Appending and Prepending:* BitBake also supports append and prepend
+    operations to variable values based on whether a specific item is
+@@ -551,7 +551,7 @@ variable.
  
--        if value and flag == "_content" and local_var is not None and "_remove" in local_var and not parsing:
-+        if value and flag == "_content" and local_var is not None and ":remove" in local_var and not parsing:
-             self.need_overrides()
--            for (r, o) in local_var["_remove"]:
-+            for (r, o) in local_var[":remove"]:
-                 match = True
-                 if o:
--                    for o2 in o.split("_"):
-+                    for o2 in o.split(":"):
-                         if not o2 in self.overrides:
-                             match = False                            
-                 if match:
-@@ -820,7 +823,6 @@ class DataSmart(MutableMapping):
-         return value
+       DEPENDS = "glibc ncurses"
+       OVERRIDES = "machine:local"
+-      DEPENDS_append_machine = "libmad"
++      DEPENDS:append_machine = "libmad"
  
-     def delVarFlag(self, var, flag, **loginfo):
--        var = var.replace(":", "_")
-         self.expand_cache = {}
+    In this example, :term:`DEPENDS` becomes "glibc ncurses libmad".
  
-         local_var, _ = self._findVar(var)
-@@ -838,7 +840,6 @@ class DataSmart(MutableMapping):
-             del self.dict[var][flag]
+@@ -559,15 +559,15 @@ variable.
+    example, the following lines will conditionally append to the
+    ``KERNEL_FEATURES`` variable based on the architecture::
  
-     def appendVarFlag(self, var, flag, value, **loginfo):
--        var = var.replace(":", "_")
-         loginfo['op'] = 'append'
-         loginfo['flag'] = flag
-         self.varhistory.record(**loginfo)
-@@ -846,7 +847,6 @@ class DataSmart(MutableMapping):
-         self.setVarFlag(var, flag, newvalue, ignore=True)
+-      KERNEL_FEATURES_append = " ${KERNEL_EXTRA_FEATURES}"
+-      KERNEL_FEATURES_append_qemux86=" cfg/sound.scc cfg/paravirt_kvm.scc"
+-      KERNEL_FEATURES_append_qemux86-64=" cfg/sound.scc cfg/paravirt_kvm.scc"
++      KERNEL_FEATURES:append = " ${KERNEL_EXTRA_FEATURES}"
++      KERNEL_FEATURES:append:qemux86=" cfg/sound.scc cfg/paravirt_kvm.scc"
++      KERNEL_FEATURES:append:qemux86-64=" cfg/sound.scc cfg/paravirt_kvm.scc"
  
-     def prependVarFlag(self, var, flag, value, **loginfo):
--        var = var.replace(":", "_")
-         loginfo['op'] = 'prepend'
-         loginfo['flag'] = flag
-         self.varhistory.record(**loginfo)
-@@ -854,7 +854,6 @@ class DataSmart(MutableMapping):
-         self.setVarFlag(var, flag, newvalue, ignore=True)
+ -  *Setting a Variable for a Single Task:* BitBake supports setting a
+    variable just for the duration of a single task. Here is an example::
  
-     def setVarFlags(self, var, flags, **loginfo):
--        var = var.replace(":", "_")
-         self.expand_cache = {}
-         infer_caller_details(loginfo)
-         if not var in self.dict:
-@@ -869,13 +868,12 @@ class DataSmart(MutableMapping):
-             self.dict[var][i] = flags[i]
+       FOO_task-configure = "val 1"
+-      FOO_task-compile = "val 2"
++      FOO:task-compile = "val 2"
  
-     def getVarFlags(self, var, expand = False, internalflags=False):
--        var = var.replace(":", "_")
-         local_var, _ = self._findVar(var)
-         flags = {}
+    In the
+    previous example, ``FOO`` has the value "val 1" while the
+@@ -582,7 +582,7 @@ variable.
+    You can also use this syntax with other combinations (e.g.
+    "``_prepend``") as shown in the following example::
  
-         if local_var:
-             for i in local_var:
--                if i.startswith("_") and not internalflags:
-+                if i.startswith(("_", ":")) and not internalflags:
-                     continue
-                 flags[i] = local_var[i]
-                 if expand and i in expand:
-@@ -886,7 +884,6 @@ class DataSmart(MutableMapping):
+-      EXTRA_OEMAKE_prepend_task-compile = "${PARALLEL_MAKE} "
++      EXTRA_OEMAKE:prepend:task-compile = "${PARALLEL_MAKE} "
+ 
+ Key Expansion
+ -------------
+@@ -618,7 +618,7 @@ example::
+ 
+    OVERRIDES = "foo"
+    A = "Z"
+-   A_foo_append = "X"
++   A_foo:append = "X"
+ 
+ For this case,
+ ``A`` is unconditionally set to "Z" and "X" is unconditionally and
+@@ -635,7 +635,7 @@ This next example changes the order of the override and the append::
+ 
+    OVERRIDES = "foo"
+    A = "Z"
+-   A_append_foo = "X"
++   A:append_foo = "X"
+ 
+ For this case, before
+ overrides are handled, ``A`` is set to "Z" and ``A_append_foo`` is set
+@@ -648,8 +648,8 @@ back as in the first example::
+ 
+    OVERRIDES = "foo"
+    A = "Y"
+-   A_foo_append = "Z"
+-   A_foo_append = "X"
++   A_foo:append = "Z"
++   A_foo:append = "X"
+ 
+ For this case, before any overrides are resolved,
+ ``A`` is set to "Y" using an immediate assignment. After this immediate
+@@ -661,8 +661,8 @@ leaving the variable set to "ZX". Finally, applying the override for
+ This final example mixes in some varying operators::
+ 
+    A = "1"
+-   A_append = "2"
+-   A_append = "3"
++   A:append = "2"
++   A:append = "3"
+    A += "4"
+    A .= "5"
+ 
+@@ -919,7 +919,7 @@ As an example, consider the following::
+        fn
+    }
+ 
+-   fn_prepend() {
++   fn:prepend() {
+        bbplain second
+    }
+ 
+@@ -927,7 +927,7 @@ As an example, consider the following::
+        bbplain third
+    }
+ 
+-   do_foo_append() {
++   do_foo:append() {
+        bbplain fourth
+    }
+ 
+@@ -977,7 +977,7 @@ override-style operators to BitBake-style Python functions.
+ 
+ As an example, consider the following::
+ 
+-   python do_foo_prepend() {
++   python do_foo:prepend() {
+        bb.plain("first")
+    }
+ 
+@@ -985,7 +985,7 @@ As an example, consider the following::
+        bb.plain("second")
+    }
+ 
+-   python do_foo_append() {
++   python do_foo:append() {
+        bb.plain("third")
+    }
+ 
+@@ -1139,7 +1139,7 @@ before anonymous functions run. In the following example, ``FOO`` ends
+ up with the value "foo from anonymous"::
+ 
+    FOO = "foo"
+-   FOO_append = " from outside"
++   FOO:append = " from outside"
+ 
+    python () {
+        d.setVar("FOO", "foo from anonymous")
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 797e2a00cc..6283c2654c 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -1118,7 +1118,7 @@ overview of their function and contents.
+       attempt before any others by adding something like the following to
+       your configuration::
+ 
+-         PREMIRRORS_prepend = "\
++         PREMIRRORS:prepend = "\
+          git://.*/.* http://www.yoctoproject.org/sources/ \n \
+          ftp://.*/.* http://www.yoctoproject.org/sources/ \n \
+          http://.*/.* http://www.yoctoproject.org/sources/ \n \
+@@ -1184,7 +1184,7 @@ overview of their function and contents.
+       that depends on the ``perl`` package. In this case, you would use the
+       following :term:`RDEPENDS` statement::
+ 
+-         RDEPENDS_${PN}-dev += "perl"
++         RDEPENDS:${PN}-dev += "perl"
+ 
+       In the example, the development package depends on the ``perl`` package.
+       Thus, the :term:`RDEPENDS` variable has the ``${PN}-dev`` package name as part
+@@ -1195,7 +1195,7 @@ overview of their function and contents.
+       differences from you. Here is the general syntax to specify versions
+       with the :term:`RDEPENDS` variable::
+ 
+-         RDEPENDS_${PN} = "package (operator version)"
++         RDEPENDS:${PN} = "package (operator version)"
+ 
+       For ``operator``, you can specify the following::
+ 
+@@ -1208,7 +1208,7 @@ overview of their function and contents.
+       For example, the following sets up a dependency on version 1.2 or
+       greater of the package ``foo``::
+ 
+-         RDEPENDS_${PN} = "foo (>= 1.2)"
++         RDEPENDS:${PN} = "foo (>= 1.2)"
+ 
+       For information on build-time dependencies, see the :term:`DEPENDS`
+       variable.
+@@ -1237,7 +1237,7 @@ overview of their function and contents.
+       variable in conjunction with a package name override. Here is an
+       example::
+ 
+-         RPROVIDES_${PN} = "widget-abi-2"
++         RPROVIDES:${PN} = "widget-abi-2"
+ 
+    :term:`RRECOMMENDS`
+       A list of packages that extends the usability of a package being
+@@ -1251,7 +1251,7 @@ overview of their function and contents.
+       differences from you. Here is the general syntax to specify versions
+       with the :term:`RRECOMMENDS` variable::
+ 
+-         RRECOMMENDS_${PN} = "package (operator version)"
++         RRECOMMENDS:${PN} = "package (operator version)"
+ 
+       For ``operator``, you can specify the following::
+ 
+@@ -1264,7 +1264,7 @@ overview of their function and contents.
+       For example, the following sets up a recommend on version
+       1.2 or greater of the package ``foo``::
+ 
+-         RRECOMMENDS_${PN} = "foo (>= 1.2)"
++         RRECOMMENDS:${PN} = "foo (>= 1.2)"
+ 
+    :term:`SECTION`
+       The section in which packages should be categorized.
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 0d49e1da37..60aaf3902a 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1150,7 +1150,7 @@ def srcrev_internal_helper(ud, d, name):
+     if name != '':
+         attempts.append("SRCREV_%s" % name)
+     if pn:
+-        attempts.append("SRCREV_pn-%s" % pn)
++        attempts.append("SRCREV:pn-%s" % pn)
+     attempts.append("SRCREV")
+ 
+     for a in attempts:
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index 1d4a64b109..add1b13600 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -245,35 +245,35 @@ class TestConcatOverride(unittest.TestCase):
+ 
+     def test_prepend(self):
+         self.d.setVar("TEST", "${VAL}")
+-        self.d.setVar("TEST_prepend", "${FOO}:")
++        self.d.setVar("TEST:prepend", "${FOO}:")
+         self.assertEqual(self.d.getVar("TEST"), "foo:val")
+ 
+     def test_append(self):
+         self.d.setVar("TEST", "${VAL}")
+-        self.d.setVar("TEST_append", ":${BAR}")
++        self.d.setVar("TEST:append", ":${BAR}")
+         self.assertEqual(self.d.getVar("TEST"), "val:bar")
+ 
+     def test_multiple_append(self):
+         self.d.setVar("TEST", "${VAL}")
+-        self.d.setVar("TEST_prepend", "${FOO}:")
+-        self.d.setVar("TEST_append", ":val2")
+-        self.d.setVar("TEST_append", ":${BAR}")
++        self.d.setVar("TEST:prepend", "${FOO}:")
++        self.d.setVar("TEST:append", ":val2")
++        self.d.setVar("TEST:append", ":${BAR}")
+         self.assertEqual(self.d.getVar("TEST"), "foo:val:val2:bar")
+ 
+     def test_append_unset(self):
+-        self.d.setVar("TEST_prepend", "${FOO}:")
+-        self.d.setVar("TEST_append", ":val2")
+-        self.d.setVar("TEST_append", ":${BAR}")
++        self.d.setVar("TEST:prepend", "${FOO}:")
++        self.d.setVar("TEST:append", ":val2")
++        self.d.setVar("TEST:append", ":${BAR}")
+         self.assertEqual(self.d.getVar("TEST"), "foo::val2:bar")
+ 
+     def test_remove(self):
+         self.d.setVar("TEST", "${VAL} ${BAR}")
+-        self.d.setVar("TEST_remove", "val")
++        self.d.setVar("TEST:remove", "val")
+         self.assertEqual(self.d.getVar("TEST"), " bar")
+ 
+     def test_remove_cleared(self):
+         self.d.setVar("TEST", "${VAL} ${BAR}")
+-        self.d.setVar("TEST_remove", "val")
++        self.d.setVar("TEST:remove", "val")
+         self.d.setVar("TEST", "${VAL} ${BAR}")
+         self.assertEqual(self.d.getVar("TEST"), "val bar")
+ 
+@@ -281,42 +281,42 @@ class TestConcatOverride(unittest.TestCase):
+     # (including that whitespace is preserved)
+     def test_remove_inactive_override(self):
+         self.d.setVar("TEST", "${VAL} ${BAR}    123")
+-        self.d.setVar("TEST_remove_inactiveoverride", "val")
++        self.d.setVar("TEST:remove_inactiveoverride", "val")
+         self.assertEqual(self.d.getVar("TEST"), "val bar    123")
+ 
+     def test_doubleref_remove(self):
+         self.d.setVar("TEST", "${VAL} ${BAR}")
+-        self.d.setVar("TEST_remove", "val")
++        self.d.setVar("TEST:remove", "val")
+         self.d.setVar("TEST_TEST", "${TEST} ${TEST}")
+         self.assertEqual(self.d.getVar("TEST_TEST"), " bar  bar")
+ 
+     def test_empty_remove(self):
+         self.d.setVar("TEST", "")
+-        self.d.setVar("TEST_remove", "val")
++        self.d.setVar("TEST:remove", "val")
+         self.assertEqual(self.d.getVar("TEST"), "")
+ 
+     def test_remove_expansion(self):
+         self.d.setVar("BAR", "Z")
+         self.d.setVar("TEST", "${BAR}/X Y")
+-        self.d.setVar("TEST_remove", "${BAR}/X")
++        self.d.setVar("TEST:remove", "${BAR}/X")
+         self.assertEqual(self.d.getVar("TEST"), " Y")
+ 
+     def test_remove_expansion_items(self):
+         self.d.setVar("TEST", "A B C D")
+         self.d.setVar("BAR", "B D")
+-        self.d.setVar("TEST_remove", "${BAR}")
++        self.d.setVar("TEST:remove", "${BAR}")
+         self.assertEqual(self.d.getVar("TEST"), "A  C ")
+ 
+     def test_remove_preserve_whitespace(self):
+         # When the removal isn't active, the original value should be preserved
+         self.d.setVar("TEST", " A B")
+-        self.d.setVar("TEST_remove", "C")
++        self.d.setVar("TEST:remove", "C")
+         self.assertEqual(self.d.getVar("TEST"), " A B")
+ 
+     def test_remove_preserve_whitespace2(self):
+         # When the removal is active preserve the whitespace
+         self.d.setVar("TEST", " A B")
+-        self.d.setVar("TEST_remove", "B")
++        self.d.setVar("TEST:remove", "B")
+         self.assertEqual(self.d.getVar("TEST"), " A ")
+ 
+ class TestOverrides(unittest.TestCase):
+@@ -362,10 +362,10 @@ class TestOverrides(unittest.TestCase):
+         self.assertEqual(self.d.getVar("TEST"), "testvalue3")
+ 
+     def test_rename_override(self):
+-        self.d.setVar("ALTERNATIVE_ncurses-tools_class-target", "a")
++        self.d.setVar("ALTERNATIVE:ncurses-tools:class-target", "a")
+         self.d.setVar("OVERRIDES", "class-target")
+-        self.d.renameVar("ALTERNATIVE_ncurses-tools", "ALTERNATIVE_lib32-ncurses-tools")
+-        self.assertEqual(self.d.getVar("ALTERNATIVE_lib32-ncurses-tools"), "a")
++        self.d.renameVar("ALTERNATIVE:ncurses-tools", "ALTERNATIVE:lib32-ncurses-tools")
++        self.assertEqual(self.d.getVar("ALTERNATIVE:lib32-ncurses-tools"), "a")
+ 
+     def test_underscore_override(self):
+         self.d.setVar("TEST_bar", "testvalue2")
+@@ -377,22 +377,22 @@ class TestOverrides(unittest.TestCase):
+     def test_remove_with_override(self):
+         self.d.setVar("TEST_bar", "testvalue2")
+         self.d.setVar("TEST_some_val", "testvalue3 testvalue5")
+-        self.d.setVar("TEST_some_val_remove", "testvalue3")
++        self.d.setVar("TEST_some_val:remove", "testvalue3")
+         self.d.setVar("TEST_foo", "testvalue4")
+         self.d.setVar("OVERRIDES", "foo:bar:some_val")
+         self.assertEqual(self.d.getVar("TEST"), " testvalue5")
+ 
+     def test_append_and_override_1(self):
+-        self.d.setVar("TEST_append", "testvalue2")
++        self.d.setVar("TEST:append", "testvalue2")
+         self.d.setVar("TEST_bar", "testvalue3")
+         self.assertEqual(self.d.getVar("TEST"), "testvalue3testvalue2")
+ 
+     def test_append_and_override_2(self):
+-        self.d.setVar("TEST_append_bar", "testvalue2")
++        self.d.setVar("TEST:append_bar", "testvalue2")
+         self.assertEqual(self.d.getVar("TEST"), "testvaluetestvalue2")
+ 
+     def test_append_and_override_3(self):
+-        self.d.setVar("TEST_bar_append", "testvalue2")
++        self.d.setVar("TEST_bar:append", "testvalue2")
+         self.assertEqual(self.d.getVar("TEST"), "testvalue2")
+ 
+     # Test an override with _<numeric> in it based on a real world OE issue
+@@ -400,7 +400,7 @@ class TestOverrides(unittest.TestCase):
+         self.d.setVar("TARGET_ARCH", "x86_64")
+         self.d.setVar("PN", "test-${TARGET_ARCH}")
+         self.d.setVar("VERSION", "1")
+-        self.d.setVar("VERSION_pn-test-${TARGET_ARCH}", "2")
++        self.d.setVar("VERSION:pn-test-${TARGET_ARCH}", "2")
+         self.d.setVar("OVERRIDES", "pn-${PN}")
+         bb.data.expandKeys(self.d)
+         self.assertEqual(self.d.getVar("VERSION"), "2")
+@@ -498,7 +498,7 @@ class TaskHash(unittest.TestCase):
+         d.setVar("VAR", "val")
+         # Adding an inactive removal shouldn't change the hash
+         d.setVar("BAR", "notbar")
+-        d.setVar("MYCOMMAND_remove", "${BAR}")
++        d.setVar("MYCOMMAND:remove", "${BAR}")
+         nexthash = gettask_bashhash("mytask", d)
+         self.assertEqual(orighash, nexthash)
+ 
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index 9e21e18425..02a5c4952a 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -98,8 +98,8 @@ exportD = "d"
  
  
-     def delVarFlags(self, var, **loginfo):
--        var = var.replace(":", "_")
-         self.expand_cache = {}
-         if not var in self.dict:
-             self._makeShadowCopy(var)
-@@ -974,8 +971,8 @@ class DataSmart(MutableMapping):
-             for (r, o) in self.overridedata[var]:
-                 if o in self.overridesset:
-                     overrides.add(var)
--                elif "_" in o:
--                    if set(o.split("_")).issubset(self.overridesset):
-+                elif ":" in o:
-+                    if set(o.split(":")).issubset(self.overridesset):
-                         overrides.add(var)
+     overridetest = """
+-RRECOMMENDS_${PN} = "a"
+-RRECOMMENDS_${PN}_libc = "b"
++RRECOMMENDS:${PN} = "a"
++RRECOMMENDS:${PN}_libc = "b"
+ OVERRIDES = "libc:${PN}"
+ PN = "gtk+"
+ """
+@@ -110,13 +110,13 @@ PN = "gtk+"
+         self.assertEqual(d.getVar("RRECOMMENDS"), "b")
+         bb.data.expandKeys(d)
+         self.assertEqual(d.getVar("RRECOMMENDS"), "b")
+-        d.setVar("RRECOMMENDS_gtk+", "c")
++        d.setVar("RRECOMMENDS:gtk+", "c")
+         self.assertEqual(d.getVar("RRECOMMENDS"), "c")
  
-         for k in keylist(self.dict):
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 977ba375bf..743ea0dfc0 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -97,7 +97,6 @@ class DataNode(AstNode):
-     def eval(self, data):
-         groupd = self.groupd
-         key = groupd["var"]
--        key = key.replace(":", "_")
-         loginfo = {
-             'variable': key,
-             'file': self.filename,
-@@ -208,7 +207,6 @@ class ExportFuncsNode(AstNode):
-     def eval(self, data):
+     overridetest2 = """
+ EXTRA_OECONF = ""
+-EXTRA_OECONF_class-target = "b"
+-EXTRA_OECONF_append = " c"
++EXTRA_OECONF:class-target = "b"
++EXTRA_OECONF:append = " c"
+ """
  
-         for func in self.n:
--            func = func.replace(":", "_")
-             calledfunc = self.classname + "_" + func
+     def test_parse_overrides(self):
+@@ -128,7 +128,7 @@ EXTRA_OECONF_append = " c"
  
-             if data.getVar(func, False) and not data.getVarFlag(func, 'export_func', False):
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 07692e673c..3f9fe50642 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -228,7 +228,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         #    self.dump_sigtask(fn, task, d.getVar("STAMP"), False)
+     overridetest3 = """
+ DESCRIPTION = "A"
+-DESCRIPTION_${PN}-dev = "${DESCRIPTION} B"
++DESCRIPTION:${PN}-dev = "${DESCRIPTION} B"
+ PN = "bc"
+ """
  
-         for task in taskdeps:
--            d.setVar("BB_BASEHASH_task-%s" % task, self.basehash[fn + ":" + task])
-+            d.setVar("BB_BASEHASH:task-%s" % task, self.basehash[fn + ":" + task])
+@@ -136,9 +136,9 @@ PN = "bc"
+         f = self.parsehelper(self.overridetest3)
+         d = bb.parse.handle(f.name, self.d)['']
+         bb.data.expandKeys(d)
+-        self.assertEqual(d.getVar("DESCRIPTION_bc-dev"), "A B")
++        self.assertEqual(d.getVar("DESCRIPTION:bc-dev"), "A B")
+         d.setVar("DESCRIPTION", "E")
+-        d.setVar("DESCRIPTION_bc-dev", "C D")
++        d.setVar("DESCRIPTION:bc-dev", "C D")
+         d.setVar("OVERRIDES", "bc-dev")
+         self.assertEqual(d.getVar("DESCRIPTION"), "C D")
  
-     def postparsing_clean_cache(self):
-         #
-@@ -325,7 +325,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 7f7e922ade..4c94b407d7 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -1719,7 +1719,7 @@ class CustomImageRecipe(Recipe):
+         """Generate the contents for the recipe file."""
+         # If we have no excluded packages we only need to _append
+         if self.excludes_set.count() == 0:
+-            packages_conf = "IMAGE_INSTALL_append = \" "
++            packages_conf = "IMAGE_INSTALL:append = \" "
  
-         h = hashlib.sha256(data.encode("utf-8")).hexdigest()
-         self.taskhash[tid] = h
--        #d.setVar("BB_TASKHASH_task-%s" % task, taskhash[task])
-+        #d.setVar("BB_TASKHASH:task-%s" % task, taskhash[task])
-         return h
- 
-     def writeout_file_checksum_cache(self):
+             for pkg in self.appends_set.all():
+                 packages_conf += pkg.name+' '
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 9a5e48e3bb..04ab8bcb04 100644
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -1708,7 +1708,7 @@ if True:
+             except ProjectVariable.DoesNotExist:
+                 pass
+             try:
+-                return_data['image_install_append'] = ProjectVariable.objects.get(project = prj, name = "IMAGE_INSTALL_append").value,
++                return_data['image_install:append'] = ProjectVariable.objects.get(project = prj, name = "IMAGE_INSTALL:append").value,
+             except ProjectVariable.DoesNotExist:
+                 pass
+             try:
+@@ -1839,8 +1839,8 @@ if True:
+         except ProjectVariable.DoesNotExist:
+             pass
+         try:
+-            context['image_install_append'] =  ProjectVariable.objects.get(project = prj, name = "IMAGE_INSTALL_append").value
+-            context['image_install_append_defined'] = "1"
++            context['image_install:append'] =  ProjectVariable.objects.get(project = prj, name = "IMAGE_INSTALL:append").value
++            context['image_install:append_defined'] = "1"
+         except ProjectVariable.DoesNotExist:
+             pass
+         try:
+diff --git a/lib/toaster/toastermain/management/commands/buildimport.py b/lib/toaster/toastermain/management/commands/buildimport.py
+index 59da6ff7ac..e25b55e5ab 100644
+--- a/lib/toaster/toastermain/management/commands/buildimport.py
++++ b/lib/toaster/toastermain/management/commands/buildimport.py
+@@ -451,7 +451,7 @@ class Command(BaseCommand):
+             # Catch vars relevant to Toaster (in case no Toaster section)
+             self.update_project_vars(project,'DISTRO')
+             self.update_project_vars(project,'MACHINE')
+-            self.update_project_vars(project,'IMAGE_INSTALL_append')
++            self.update_project_vars(project,'IMAGE_INSTALL:append')
+             self.update_project_vars(project,'IMAGE_FSTYPES')
+             self.update_project_vars(project,'PACKAGE_CLASSES')
+             # These vars are typically only assigned by Toaster
 -- 
 2.30.2
 
