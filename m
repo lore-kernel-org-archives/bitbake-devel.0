@@ -1,111 +1,135 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web10.2095.1627945989548606513
+Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
+ by mx.groups.io with SMTP id smtpd.web08.2490.1627979985890008976
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 02 Aug 2021 16:13:09 -0700
+ Tue, 03 Aug 2021 01:39:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20150623.gappssmtp.com header.s=20150623 header.b=cRJjJ65G;
- spf=softfail (domain: sakoman.com, ip: 209.85.128.41, mailfrom: steve@sakoman.com)
-Received: by mail-wm1-f41.google.com with SMTP id n12-20020a05600c3b8cb029025a67bbd40aso520613wms.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 02 Aug 2021 16:13:09 -0700 (PDT)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=LCVStmY8;
+ spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B6bcyMBztNejfInVdV18u2m+b926aVBnzeVt5zt5e9c=;
-        b=cRJjJ65GfGrdUNT31jynyyHEYNknA1S8y1+ps73U4v+cB5Y+w/D4n0hWHbh1OZvg1l
-         P4nReShIXwEFxiAEeE9fGWX2XVebzst/nJUJPIYK1SK2T+zX9ltgiU4ZVGPTlxR6YZHy
-         fJFNbh0/ne/g2wgmL3ygmPu/+ZNjkpGFolzwKfudDciQOyhYvn56YsvJHMpk9C6JknwI
-         yEgx6RYn7HQxMSiYw7J1I0Bd5yhrVPpKg5+rkxCa5mNBS4mfj32yj5OTDAkkn9rZqSqu
-         v5M17/7LBI3XHR3+F+CVbbKtQJxsMqqQwYz9LAPLAKGJV8BLfww+djUtyTrD+zOmDc4c
-         lbxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B6bcyMBztNejfInVdV18u2m+b926aVBnzeVt5zt5e9c=;
-        b=DYNBDSBLLEIayLHvT0aYQHQj+AQC6/3uoqahKGxXSRYnQGcinpxImAtzpSARYP5u19
-         HjiK7vThxgev4vAAMmmt47JnOKpGtpjAEmlMhE26ZzI6CqQkVzEeHSWwgPQqadWwtu5/
-         4aXJExyZd7Re9WzR2gizC2l3Vzp5a39TLLvJT8M89jrAt4lZrr/ePQRqUhABfaT5SdHH
-         QhFvE5UuEoBqJkKlnpYFT0XMHWppyMeAncz6+1Q394QvpiDFWxt9iFVnwMGCa25n7tpb
-         0t1TYjhHR0IMpmaEX/ftQK4gld8TjuCD3S1L1Au0+ELdOxAX17TqIf8qNfeySXOs4Aud
-         cJqA==
-X-Gm-Message-State: AOAM531aQ2m1ctgnxWqN8S/1umdYrALXUFJ7i+zH98/WpJQj4wBuuRAa
-	BnJ1O7KSgqJlc3pdXt719ECP2rQgowaBz0CJO7AY0A==
-X-Google-Smtp-Source: ABdhPJwf8FIhrgg8wS/amRGIFwVfNBPrnYwkUgVtBhcGgL/zVxQm0a+9+jLGpMprwjxs2ggPpK72kIaNMZQtioitdUM=
-X-Received: by 2002:a7b:cc98:: with SMTP id p24mr1175912wma.118.1627945987846;
- Mon, 02 Aug 2021 16:13:07 -0700 (PDT)
+  d=axis.com; q=dns/txt; s=axis-central1; t=1627979986;
+  x=1659515986;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=GEhGLqkAg23/bI2NngSvkzbeBmfzikpA20ac5RdfVL0=;
+  b=LCVStmY81fMuQHnhIDRriRgKqjxyiAVnQl6ggkS3d5Tz1mmk0PZGEgKU
+   Fb/6orCViABuV1m9ZXTlzwVasdke11txjecxI0lwchP8ZmSBaFfSvHzQl
+   hkjw+PSPzs/m21StWZ/MhDaBSrVo0FEF7k7bkabQ36m2gffudx/LM6KZR
+   RAmso2EnC1t3wYp3GctJuqQ5VaLAaPb6LxA1b7PCydeLEpaCu/a1oU4sz
+   nTahY2KL7wJe3m5q3diXHbILAr7AVN9ht5KZczfIaJakcEtogvOijsbeM
+   vL29Vfo12pzAPRAsnxcbqL0n1YupaRGbLrNAifttGv+fETjioIiIYHkgt
+   Q==;
+From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] data_smart: Fix inactive overide accidental variable value corruption
+Thread-Topic: [bitbake-devel] [PATCH] data_smart: Fix inactive overide
+ accidental variable value corruption
+Thread-Index: AQHXh7T8NU+jS8JzFEu0qoxkOW/tfathdjYg
+Date: Tue, 3 Aug 2021 08:39:42 +0000
+Message-ID: <4331c60640d446eaba8788dd4fcf3009@axis.com>
+References: <20210802154212.3453639-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20210802154212.3453639-1-richard.purdie@linuxfoundation.org>
+Accept-Language: en-US, sv-SE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.20.13.13]
 MIME-Version: 1.0
-References: <168F5A432E4959C7.26257@lists.openembedded.org>
- <20210802194545.GM1528@denix.org> <16979F7767E2872E.11217@lists.openembedded.org>
-In-Reply-To: <16979F7767E2872E.11217@lists.openembedded.org>
-From: "Steve Sakoman" <steve@sakoman.com>
-Date: Mon, 2 Aug 2021 13:12:56 -1000
-Message-ID: <CAOSpxdZmdpkW=4s7QcW-sPb31wWsFS+-Fym1Bo5BOByrUiXv7A@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH][1.46/1.48] providers: replace newly added logger.warn() with logger.warning()
-To: Steve Sakoman <steve@sakoman.com>
-Cc: Denys Dmytriyenko <denis@denix.org>, bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
+Return-Path: peter.kjellerstedt@axis.com
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 2, 2021 at 12:58 PM Steve Sakoman via
-lists.openembedded.org <steve=sakoman.com@lists.openembedded.org>
-wrote:
->
-> On Mon, Aug 2, 2021 at 9:45 AM Denys Dmytriyenko <denis@denix.org> wrote:
-> >
-> > Ping.
->
-> Hmmm . . . I thought I had grabbed this, but clearly not!
->
-> I'm on it!
+> -----Original Message-----
+> From: bitbake-devel@lists.openembedded.org <bitbake-
+> devel@lists.openembedded.org> On Behalf Of Richard Purdie
+> Sent: den 2 augusti 2021 17:42
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH] data_smart: Fix inactive overide
+> accidental variable value corruption
+>=20
+> Setting something like:
+>=20
+>   BAR:append:unusedoverride
+>=20
+> should cause BAR to be None, not "" which was what the datastore was
+> returning. This caused problems when mixing variables like:
+>=20
+>   RDEPENDS:${PN}:inactiveoverride
+>   RDEPENDS:${BPN}
+>=20
+> since key expansion would report key overlap when there was none. This
+> is a bug in the datastore. Fix it and add a test too.
+>=20
+> [YOCTO #14088]
+>=20
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/data_smart.py | 8 ++++----
+>  lib/bb/tests/data.py | 5 +++++
+>  2 files changed, 9 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+> index 43e9e78555..65528c6ae6 100644
+> --- a/lib/bb/data_smart.py
+> +++ b/lib/bb/data_smart.py
+> @@ -750,8 +750,6 @@ class DataSmart(MutableMapping):
+>=20
+>=20
+>          if flag =3D=3D "_content" and local_var is not None and ":append=
+" in local_var and not parsing:
+> -            if not value:
+> -                value =3D ""
+>              self.need_overrides()
+>              for (r, o) in local_var[":append"]:
+>                  match =3D True
+> @@ -760,11 +758,11 @@ class DataSmart(MutableMapping):
+>                          if not o2 in self.overrides:
+>                              match =3D False
+>                  if match:
+> +                    if value is None:
+> +                        value =3D ""
+>                      value =3D value + r
 
-And I see Richard beat me to it :-)
+Minor detail, but at least I find this more readable:
 
-Steve
+                     value =3D (value or "") + r
 
-> >
-> > On Tue, Jul 06, 2021 at 08:20:27PM -0400, Denys Dmytriyenko wrote:
-> > > Commit https://git.openembedded.org/bitbake/commit/?id=78cd63285713fde59506eb2e71a7b7ee59a594ff
-> > > converted logger.info() to logger.warn(), which is deprecated and instead
-> > > should use logger.warning():
-> > >
-> > > https://lists.openembedded.org/g/bitbake-devel/topic/82742194#12377
-> > >
-> > > Signed-off-by: Denys Dmytriyenko <denis@denix.org>
-> > > ---
-> > >  lib/bb/providers.py | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/lib/bb/providers.py b/lib/bb/providers.py
-> > > index 3f66a3d..484e1ea 100644
-> > > --- a/lib/bb/providers.py
-> > > +++ b/lib/bb/providers.py
-> > > @@ -151,7 +151,7 @@ def findPreferredProvider(pn, cfgData, dataCache, pkg_pn = None, item = None):
-> > >          if item:
-> > >              itemstr = " (for item %s)" % item
-> > >          if preferred_file is None:
-> > > -            logger.warn("preferred version %s of %s not available%s", pv_str, pn, itemstr)
-> > > +            logger.warning("preferred version %s of %s not available%s", pv_str, pn, itemstr)
-> > >              available_vers = []
-> > >              for file_set in pkg_pn:
-> > >                  for f in file_set:
-> > > @@ -163,7 +163,7 @@ def findPreferredProvider(pn, cfgData, dataCache, pkg_pn = None, item = None):
-> > >                          available_vers.append(ver_str)
-> > >              if available_vers:
-> > >                  available_vers.sort()
-> > > -                logger.warn("versions of %s available: %s", pn, ' '.join(available_vers))
-> > > +                logger.warning("versions of %s available: %s", pn, ' '.join(available_vers))
-> > >          else:
-> > >              logger.debug(1, "selecting %s as PREFERRED_VERSION %s of package %s%s", preferred_file, pv_str, pn, itemstr)
-> > >
-> > > --
-> > > 2.7.4
-> > >
-> >
-> > --
-> > Regards,
-> > Denys Dmytriyenko <denis@denix.org>
-> > PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
-> > Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
->
-> 
->
+>=20
+>          if flag =3D=3D "_content" and local_var is not None and ":prepen=
+d" in local_var and not parsing:
+> -            if not value:
+> -                value =3D ""
+>              self.need_overrides()
+>              for (r, o) in local_var[":prepend"]:
+>=20
+> @@ -774,6 +772,8 @@ class DataSmart(MutableMapping):
+>                          if not o2 in self.overrides:
+>                              match =3D False
+>                  if match:
+> +                    if value is None:
+> +                        value =3D ""
+>                      value =3D r + value
+>=20
+>          parser =3D None
+> diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+> index 7f1d3ffbbc..e667c7c7d3 100644
+> --- a/lib/bb/tests/data.py
+> +++ b/lib/bb/tests/data.py
+> @@ -405,6 +405,11 @@ class TestOverrides(unittest.TestCase):
+>          bb.data.expandKeys(self.d)
+>          self.assertEqual(self.d.getVar("VERSION"), "2")
+>=20
+> +    def test_append_and_unused_override(self):
+> +        # Had a bug where an unused override append could return "" inst=
+ead of None
+> +        self.d.setVar("BAR:append:unusedoverride", "testvalue2")
+> +        self.assertEqual(self.d.getVar("BAR"), None)
+> +
+>  class TestKeyExpansion(unittest.TestCase):
+>      def setUp(self):
+>          self.d =3D bb.data.init()
+> --
+> 2.30.2
+
+//Peter
+
