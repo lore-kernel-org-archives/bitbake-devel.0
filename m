@@ -1,163 +1,116 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web09.6872.1628070946930441442
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web08.6784.1628070946973544726
  for <bitbake-devel@lists.openembedded.org>;
  Wed, 04 Aug 2021 02:55:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Yq/cayx3;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id d8so1549161wrm.4
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KReWSZy6;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id p5so1541442wro.7
         for <bitbake-devel@lists.openembedded.org>; Wed, 04 Aug 2021 02:55:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=F3F3iSYqHovW9gpX+9sp8l/3MPLvxjtvTBHEJG6N4No=;
-        b=Yq/cayx3llJmt1SsZqWBU9tPHV3g4SRIjw38+150rL+YhS9hX8S8woWZX+21ygaGgT
-         uCR7Nh/jrIYG4tiGo7UabKzhQuGhibMAJGtiD3+xf5DFNd86nWEDwzqmHjmhZlRh7ANO
-         d/qxwu1VFrIx2CPEy1xHip3Vl/YkFLiO0f/fw=
+        bh=ddfk0y+EzefXZQh1UtseV4mSSc1BqgTBMQ3a/Bc9TPg=;
+        b=KReWSZy6TkjC6BkOhCOrubW0fK0As6DiOy1Mnd1yALGmV5nv4h1kSs00Zwd5S2RdYk
+         TiNsBE9C/rMJ12djnrEe8kCdVoHERGEtV5tsC0JVBw6k16/4/LiGtKPt4nEYDDQ1ggw7
+         2ZepxtQG5lqMORJ7wF4gwK7XVv1FR/SBNGDTo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F3F3iSYqHovW9gpX+9sp8l/3MPLvxjtvTBHEJG6N4No=;
-        b=IiUwhxjycGhQbugrbkbJzkS6k+ZIbpMcZ+agQ6nXsiaf768do38tnjrDboXFUKA0mQ
-         i50I/QOOkLfeJWw7IgrvtjxWoewAJ8CB6pioc9x+8Xw0bGHdrKSMa/8H3KtO7VWAjvvZ
-         XYxBCk/C1Q6K1jyE3alAPbXfbxULWv/o22TZX28MHLZCRiYul2rlZzfob2VwJ/YGm9KR
-         bNclvy3K7TqB3rW+SF7ztHSBH9Y6qk0o/0OOMfvUiCDztq3V9/oIs/D7Alexb/qZvmbL
-         IOGCLlWIm2YAmlvOSzBa4Xw+/Li3H0yjp3YhPb/e+YEGgvinmBrf3dRkLXe4bi7jkTgr
-         B1TA==
-X-Gm-Message-State: AOAM530GdUM7lFmOQkjwajavrENC1iyIM/poJy7Fz/W/DjAPovWqKzEr
-	kEMd1blq6cNUE+wjRXm2Y2vXsdTx0MAwJg==
-X-Google-Smtp-Source: ABdhPJx4PTHjTN8wdcjtKmQjp36IhJSI13vxT7aIDRWh+4uhWRdNpTevhjnQ23AeP8de5Owk6EMvEA==
-X-Received: by 2002:a5d:55cb:: with SMTP id i11mr27649835wrw.158.1628070945166;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ddfk0y+EzefXZQh1UtseV4mSSc1BqgTBMQ3a/Bc9TPg=;
+        b=XK2QJZ9jGzsCPzDF226nJ/9ssiP6QKziO0roWU6vkJAtJINa7e3iWuG0NDqM0V7LEL
+         MGMGCPWqlVZq8t4eDeYMJq67zGmZKuQ6p4w4uMQYPIUwV7UeTNaduIbn/Vg8pdw0/Rdb
+         BP8tNCiwzWS3Nvoz3jTr5C9h83BlXl5f/1cqyGYYV22npLPh6Az3HdNJDD4zhKKJ8lYh
+         fA1stjoCATs8Uw4O7sV8R/9VL3mChEG61M5r+NZZ/Po99DjDL4LxKQrmDKMkJt/o1sCl
+         CxxTbcpHiTg7uC38Vy9Wtw5mY0vxh7jKCSMPVV/Ya8pg2ASSJUJJS/56SyQFtJkckX6d
+         MR0A==
+X-Gm-Message-State: AOAM533UyVEi9T7RDtuHvmNTDph+zMQW/4xXd47tBHFS16HjQQ+Ze+Up
+	e9ePskTDkyxCJCjeHjH0LaNdYSAlDzAWhA==
+X-Google-Smtp-Source: ABdhPJwTQGWQNS3HGY6gQR+neUsweRIVlcVztPTgVCHKmgxNX3xiLUyajH06P2e7O//jTEQ4GUyJkw==
+X-Received: by 2002:a5d:44cb:: with SMTP id z11mr27828384wrr.100.1628070945552;
         Wed, 04 Aug 2021 02:55:45 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:895b:15d0:6c2e:72fa])
-        by smtp.gmail.com with ESMTPSA id k17sm1855512wrw.53.2021.08.04.02.55.44
+        by smtp.gmail.com with ESMTPSA id k17sm1855512wrw.53.2021.08.04.02.55.45
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 02:55:44 -0700 (PDT)
+        Wed, 04 Aug 2021 02:55:45 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/2] doc: Fix append/prepend/remove references
-Date: Wed,  4 Aug 2021 10:55:43 +0100
-Message-Id: <20210804095544.3500614-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/2] fetch/tests/toaster: Override conversion fixups
+Date: Wed,  4 Aug 2021 10:55:44 +0100
+Message-Id: <20210804095544.3500614-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210804095544.3500614-1-richard.purdie@linuxfoundation.org>
+References: <20210804095544.3500614-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix some references missed during the overrides syntax migration.
-Thanks to Quentin Schulz <foss@0leil.net> for the patch.
+Fix some references that missed during the overrides syntax migration or
+were incorrect. Thanks to Quentin Schulz <foss@0leil.net> for the patch.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- .../bitbake-user-manual-metadata.rst          | 26 +++++++++----------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ lib/bb/fetch2/__init__.py       | 2 +-
+ lib/bb/tests/parse.py           | 2 +-
+ lib/bb/utils.py                 | 2 +-
+ lib/toaster/toastergui/views.py | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-index 6b88fd11e0..b0494d0809 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-@@ -325,14 +325,14 @@ Surrounding spaces and spacing are preserved. Here is an example::
- The variable ``FOO`` becomes
- "  789 123456    " and ``FOO2`` becomes "    abcdef     ".
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 60aaf3902a..ad898680ff 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1146,7 +1146,7 @@ def srcrev_internal_helper(ud, d, name):
+     pn = d.getVar("PN")
+     attempts = []
+     if name != '' and pn:
+-        attempts.append("SRCREV_%s_pn-%s" % (name, pn))
++        attempts.append("SRCREV_%s:pn-%s" % (name, pn))
+     if name != '':
+         attempts.append("SRCREV_%s" % name)
+     if pn:
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index 1b6b6d412e..4d17f82edc 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -99,7 +99,7 @@ exportD = "d"
  
--Like "_append" and "_prepend", "_remove" is applied at variable
-+Like ":append" and ":prepend", ":remove" is applied at variable
- expansion time.
- 
- Override Style Operation Advantages
- -----------------------------------
- 
--An advantage of the override style operations "_append", "_prepend", and
--"_remove" as compared to the "+=" and "=+" operators is that the
-+An advantage of the override style operations ":append", ":prepend", and
-+":remove" as compared to the "+=" and "=+" operators is that the
- override style operators provide guaranteed operations. For example,
- consider a class ``foo.bbclass`` that needs to add the value "val" to
- the variable ``FOO``, and a recipe that uses ``foo.bbclass`` as follows::
-@@ -347,14 +347,14 @@ not what is desired::
-    FOO += "val"
- 
- If, on the other hand, ``foo.bbclass``
--uses the "_append" operator, then the final value of ``FOO`` will be
-+uses the ":append" operator, then the final value of ``FOO`` will be
- "initial val", as intended::
- 
-    FOO:append = " val"
- 
- .. note::
- 
--   It is never necessary to use "+=" together with "_append". The following
-+   It is never necessary to use "+=" together with ":append". The following
-    sequence of assignments appends "barbaz" to FOO::
- 
-        FOO:append = "bar"
-@@ -379,8 +379,8 @@ You can find more out about variable flags in general in the
- 
- You can define, append, and prepend values to variable flags. All the
- standard syntax operations previously mentioned work for variable flags
--except for override style syntax (i.e. "_prepend", "_append", and
--"_remove").
-+except for override style syntax (i.e. ":prepend", ":append", and
-+":remove").
- 
- Here are some examples showing how to set variable flags::
- 
-@@ -581,7 +581,7 @@ variable.
-    ``do_compile`` task.
- 
-    You can also use this syntax with other combinations (e.g.
--   "``_prepend``") as shown in the following example::
-+   "``:prepend``") as shown in the following example::
- 
-       EXTRA_OEMAKE:prepend:task-compile = "${PARALLEL_MAKE} "
- 
-@@ -613,7 +613,7 @@ users.
- 
- There is often confusion concerning the order in which overrides and
- various "append" operators take effect. Recall that an append or prepend
--operation using "_append" and "_prepend" does not result in an immediate
-+operation using ":append" and ":prepend" does not result in an immediate
- assignment as would "+=", ".=", "=+", or "=.". Consider the following
- example::
- 
-@@ -671,7 +671,7 @@ For this case, the type of append
- operators are affecting the order of assignments as BitBake passes
- through the code multiple times. Initially, ``A`` is set to "1 45"
- because of the three statements that use immediate operators. After
--these assignments are made, BitBake applies the "_append" operations.
-+these assignments are made, BitBake applies the ":append" operations.
- Those operations result in ``A`` becoming "1 4523".
- 
- Sharing Functionality
-@@ -908,7 +908,7 @@ rules. The scripts are executed by ``/bin/sh``, which may not be a bash
- shell but might be something such as ``dash``. You should not use
- Bash-specific script (bashisms).
- 
--Overrides and override-style operators like ``_append`` and ``_prepend``
-+Overrides and override-style operators like ``:append`` and ``:prepend``
- can also be applied to shell functions. Most commonly, this application
- would be used in a ``.bbappend`` file to modify functions in the main
- recipe. It can also be used to modify functions inherited from classes.
-@@ -1135,7 +1135,7 @@ equivalent to the following snippet::
- values set for the variables within the anonymous functions become
- available to tasks, which always run after parsing.
- 
--Overrides and override-style operators such as "``_append``" are applied
-+Overrides and override-style operators such as "``:append``" are applied
- before anonymous functions run. In the following example, ``FOO`` ends
- up with the value "foo from anonymous"::
- 
-@@ -1165,7 +1165,7 @@ To understand the benefits of this feature, consider the basic scenario
- where a class defines a task function and your recipe inherits the
- class. In this basic scenario, your recipe inherits the task function as
- defined in the class. If desired, your recipe can add to the start and
--end of the function by using the "_prepend" or "_append" operations
-+end of the function by using the ":prepend" or ":append" operations
- respectively, or it can redefine the function completely. However, if it
- redefines the function, there is no means for it to call the class
- version of the function. ``EXPORT_FUNCTIONS`` provides a mechanism that
+     overridetest = """
+ RRECOMMENDS:${PN} = "a"
+-RRECOMMENDS:${PN}_libc = "b"
++RRECOMMENDS:${PN}:libc = "b"
+ OVERRIDES = "libc:${PN}"
+ PN = "gtk+"
+ """
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 6ba1d2a376..e6e82d1118 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -1178,7 +1178,7 @@ def edit_metadata(meta_lines, variables, varfunc, match_overrides=False):
+         variables: a list of variable names to look for. Functions
+             may also be specified, but must be specified with '()' at
+             the end of the name. Note that the function doesn't have
+-            any intrinsic understanding of _append, _prepend, _remove,
++            any intrinsic understanding of :append, :prepend, :remove,
+             or overrides, so these are considered as part of the name.
+             These values go into a regular expression, so regular
+             expression syntax is allowed.
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 04ab8bcb04..74f9d56963 100644
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -1840,7 +1840,7 @@ if True:
+             pass
+         try:
+             context['image_install:append'] =  ProjectVariable.objects.get(project = prj, name = "IMAGE_INSTALL:append").value
+-            context['image_install:append_defined'] = "1"
++            context['image_install_append_defined'] = "1"
+         except ProjectVariable.DoesNotExist:
+             pass
+         try:
 -- 
 2.30.2
 
