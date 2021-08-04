@@ -1,116 +1,107 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web08.6784.1628070946973544726
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web08.6799.1628071129289604556
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 04 Aug 2021 02:55:47 -0700
+ Wed, 04 Aug 2021 02:58:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KReWSZy6;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f47.google.com with SMTP id p5so1541442wro.7
-        for <bitbake-devel@lists.openembedded.org>; Wed, 04 Aug 2021 02:55:46 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=GENbZOG6;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f44.google.com with SMTP id j2so1538439wrx.9
+        for <bitbake-devel@lists.openembedded.org>; Wed, 04 Aug 2021 02:58:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=ddfk0y+EzefXZQh1UtseV4mSSc1BqgTBMQ3a/Bc9TPg=;
-        b=KReWSZy6TkjC6BkOhCOrubW0fK0As6DiOy1Mnd1yALGmV5nv4h1kSs00Zwd5S2RdYk
-         TiNsBE9C/rMJ12djnrEe8kCdVoHERGEtV5tsC0JVBw6k16/4/LiGtKPt4nEYDDQ1ggw7
-         2ZepxtQG5lqMORJ7wF4gwK7XVv1FR/SBNGDTo=
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=FvCHxTqV/5/CF8QkyjlqdFLSq8LD+UyyqsYWQjysLkI=;
+        b=GENbZOG6dvxtr1C9LQeKFn8ffGs14Hw8dt1Aq6rL2swHDnYVoXvlyBQFPI1YqEUFs2
+         e16arT5eZeT96aS+az/y4zMthM6Lqwi87ER7Dsv0HJpHWVGz0J9NSlxjGy5ToCEbCHXU
+         bqnp+QpVSOuvRspVMMUY/pW0JA+SE9nPY7T88=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ddfk0y+EzefXZQh1UtseV4mSSc1BqgTBMQ3a/Bc9TPg=;
-        b=XK2QJZ9jGzsCPzDF226nJ/9ssiP6QKziO0roWU6vkJAtJINa7e3iWuG0NDqM0V7LEL
-         MGMGCPWqlVZq8t4eDeYMJq67zGmZKuQ6p4w4uMQYPIUwV7UeTNaduIbn/Vg8pdw0/Rdb
-         BP8tNCiwzWS3Nvoz3jTr5C9h83BlXl5f/1cqyGYYV22npLPh6Az3HdNJDD4zhKKJ8lYh
-         fA1stjoCATs8Uw4O7sV8R/9VL3mChEG61M5r+NZZ/Po99DjDL4LxKQrmDKMkJt/o1sCl
-         CxxTbcpHiTg7uC38Vy9Wtw5mY0vxh7jKCSMPVV/Ya8pg2ASSJUJJS/56SyQFtJkckX6d
-         MR0A==
-X-Gm-Message-State: AOAM533UyVEi9T7RDtuHvmNTDph+zMQW/4xXd47tBHFS16HjQQ+Ze+Up
-	e9ePskTDkyxCJCjeHjH0LaNdYSAlDzAWhA==
-X-Google-Smtp-Source: ABdhPJwTQGWQNS3HGY6gQR+neUsweRIVlcVztPTgVCHKmgxNX3xiLUyajH06P2e7O//jTEQ4GUyJkw==
-X-Received: by 2002:a5d:44cb:: with SMTP id z11mr27828384wrr.100.1628070945552;
-        Wed, 04 Aug 2021 02:55:45 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=FvCHxTqV/5/CF8QkyjlqdFLSq8LD+UyyqsYWQjysLkI=;
+        b=o+7Cxw9YbZQRZ1Jlhd2omtFTg97iu6vasoo56Oi0knqn0kvDWvo06xabbOsG7VJxIW
+         DVbX89beIIXvsOx/zt/1hqPPnzUHlFsrubvfVnde0b16NAh1l/mtFhYVymY/MMd7rVHp
+         QuZyvtyj3kVidYzGeVf9B3m0pD90YZkk6oJnxdEOI7r5C0Olew3Hj62y9Ld4S8+lPPVO
+         QmyNxgbBnvrrFDhvyWaEw6Oqtq+YPJMta+oy/MMQzxdVqJN8EQpg6Tj7CISeDZyICHXn
+         oowDNYFHE5aSaJKbR8jkQMbmkXuzJeUoOTNI+mtsOqcSce1mUuI2FVcG3Qbqgtc0SEyw
+         b3Cg==
+X-Gm-Message-State: AOAM533216NUqdJq2GN9KTHyE7XnjzOqSbERQkdi40boT0ze013sfFUf
+	o4WsVdTXVnsrf1JEIr79T81EPItoX/cXmg==
+X-Google-Smtp-Source: ABdhPJzuGGggN/ThifGY0zYpxcJAYCoqZERaaBVLSaCH6uhrkpG40V3peHHSfr2h3HQzjHRh2RwRmA==
+X-Received: by 2002:adf:efc7:: with SMTP id i7mr27870871wrp.87.1628071127669;
+        Wed, 04 Aug 2021 02:58:47 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:895b:15d0:6c2e:72fa])
-        by smtp.gmail.com with ESMTPSA id k17sm1855512wrw.53.2021.08.04.02.55.45
-        for <bitbake-devel@lists.openembedded.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:895b:15d0:6c2e:72fa? ([2001:8b0:aba:5f3c:895b:15d0:6c2e:72fa])
+        by smtp.gmail.com with ESMTPSA id c204sm5304868wme.15.2021.08.04.02.58.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 02:55:45 -0700 (PDT)
+        Wed, 04 Aug 2021 02:58:47 -0700 (PDT)
+Message-ID: <29b60e64d2f40f7064b87e0b3c7c52583fddab63.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 3/4] doc/lib: Add fixes for issues missed by the automated conversion
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] fetch/tests/toaster: Override conversion fixups
-Date: Wed,  4 Aug 2021 10:55:44 +0100
-Message-Id: <20210804095544.3500614-2-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210804095544.3500614-1-richard.purdie@linuxfoundation.org>
-References: <20210804095544.3500614-1-richard.purdie@linuxfoundation.org>
+To: Quentin Schulz <foss@0leil.net>
+Cc: bitbake-devel@lists.openembedded.org
+Date: Wed, 04 Aug 2021 10:58:46 +0100
+In-Reply-To: <249e08c0bda32c45a6ed1de71638bb36@0leil.net>
+References: <20210730134706.3360651-1-richard.purdie@linuxfoundation.org>
+	 <20210730134706.3360651-3-richard.purdie@linuxfoundation.org>
+	 <249e08c0bda32c45a6ed1de71638bb36@0leil.net>
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-Fix some references that missed during the overrides syntax migration or
-were incorrect. Thanks to Quentin Schulz <foss@0leil.net> for the patch.
+On Tue, 2021-08-03 at 00:09 +0200, Quentin Schulz wrote:
+> I can suggest the following additional changes. Please note that there 
+> are two sections for which I have doubts about their correctness. They 
+> are preceded by a FIXME FIXME FIXME comment that can (should) easily be 
+> removable after applying this diff with `patch`.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/__init__.py       | 2 +-
- lib/bb/tests/parse.py           | 2 +-
- lib/bb/utils.py                 | 2 +-
- lib/toaster/toastergui/views.py | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Thanks. I couldn't get the patch to apply for some reason (line wrapping?)
+so I just fixed up the references.
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 60aaf3902a..ad898680ff 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1146,7 +1146,7 @@ def srcrev_internal_helper(ud, d, name):
-     pn = d.getVar("PN")
-     attempts = []
-     if name != '' and pn:
--        attempts.append("SRCREV_%s_pn-%s" % (name, pn))
-+        attempts.append("SRCREV_%s:pn-%s" % (name, pn))
-     if name != '':
-         attempts.append("SRCREV_%s" % name)
-     if pn:
-diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-index 1b6b6d412e..4d17f82edc 100644
---- a/lib/bb/tests/parse.py
-+++ b/lib/bb/tests/parse.py
-@@ -99,7 +99,7 @@ exportD = "d"
- 
-     overridetest = """
- RRECOMMENDS:${PN} = "a"
--RRECOMMENDS:${PN}_libc = "b"
-+RRECOMMENDS:${PN}:libc = "b"
- OVERRIDES = "libc:${PN}"
- PN = "gtk+"
- """
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 6ba1d2a376..e6e82d1118 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -1178,7 +1178,7 @@ def edit_metadata(meta_lines, variables, varfunc, match_overrides=False):
-         variables: a list of variable names to look for. Functions
-             may also be specified, but must be specified with '()' at
-             the end of the name. Note that the function doesn't have
--            any intrinsic understanding of _append, _prepend, _remove,
-+            any intrinsic understanding of :append, :prepend, :remove,
-             or overrides, so these are considered as part of the name.
-             These values go into a regular expression, so regular
-             expression syntax is allowed.
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 04ab8bcb04..74f9d56963 100644
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -1840,7 +1840,7 @@ if True:
-             pass
-         try:
-             context['image_install:append'] =  ProjectVariable.objects.get(project = prj, name = "IMAGE_INSTALL:append").value
--            context['image_install:append_defined'] = "1"
-+            context['image_install_append_defined'] = "1"
-         except ProjectVariable.DoesNotExist:
-             pass
-         try:
--- 
-2.30.2
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index 60aaf390..46ce78a6 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -1146,9 +1146,10 @@ def srcrev_internal_helper(ud, d, name):
+>       pn = d.getVar("PN")
+>       attempts = []
+>       if name != '' and pn:
+> -        attempts.append("SRCREV_%s_pn-%s" % (name, pn))
+> +        #FIXME FIXME FIXME not sure about the SRCREV_%s to SRCREV:%s change
+> +        attempts.append("SRCREV:%s:pn-%s" % (name, pn))
+>       if name != '':
+> -        attempts.append("SRCREV_%s" % name)
+> +        attempts.append("SRCREV:%s" % name)
+
+This one shouldn't be changed, at least not at this point as name is never
+an override.
+
+> diff --git a/lib/toaster/toastergui/views.py 
+> b/lib/toaster/toastergui/views.py
+> index 04ab8bcb..34afacc1 100644
+> --- a/lib/toaster/toastergui/views.py
+> +++ b/lib/toaster/toastergui/views.py
+> @@ -1839,6 +1839,7 @@ if True:
+>           except ProjectVariable.DoesNotExist:
+>               pass
+>           try:
+> +            #FIXME FIXME FIXME Is this correct? it could also be 
+> image_install_append_defined or image_install:append:defined
+>               context['image_install:append'] =  
+> ProjectVariable.objects.get(project = prj, name = 
+> "IMAGE_INSTALL:append").value
+>               context['image_install:append_defined'] = "1"
+>           except ProjectVariable.DoesNotExist:
+
+Kicking myself on this one as I meant to fix it and something must have got 
+lost in the process. It should stay as image_install_append_defined
+
+I've sent out a couple of patches with the updated version of this, 
+thanks again.
+
+Cheers,
+
+Richard
 
