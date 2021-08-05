@@ -1,36 +1,36 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web08.8153.1628167056344868857
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web11.8012.1628167056695746056
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 05 Aug 2021 05:37:36 -0700
+ Thu, 05 Aug 2021 05:37:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=R6awRNhm;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f45.google.com with SMTP id h13so6353982wrp.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KsS17iVY;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f54.google.com with SMTP id p5so6358807wro.7
         for <bitbake-devel@lists.openembedded.org>; Thu, 05 Aug 2021 05:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=0iubxp0Hnj83MrCWHd8yifZOzNFHFG7x3MNQZF1Np5o=;
-        b=R6awRNhmLHDVjQ/plhsR7MvzWQQahbG3xHhEwtLuJFUtuOBh6YPr/p+cMR72+UPnJX
-         EQm9NTskfSAEBnJEUZ7Rg6+bjkya6qQZyP1YJyhsLa2ddfOkFNO6FyZ3suj2cPNonMyG
-         5qdA/CFHwfzTX4lzLF44dZYuhwRHH3vVXbMtU=
+        bh=tqo0PeqPaA7jUvDOGbI/bOUQNTrPVK6ntTKSRzw4bv4=;
+        b=KsS17iVYGc3/bV2uvN/r/AEC2Wsec80AVLA5cI3Wn8vyUXaFm6Ue8wH6CYRKiL+a/b
+         fHfmLqBkcF5GUQXVFpqS8nZ3ML9vGgTvJtx6F6HUCWBKR/ULi6oBwAhzLWAggK3MDZS2
+         qzK+x1rumd/WdkzVjfmqH6R0k3w8+AhwBRXDI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0iubxp0Hnj83MrCWHd8yifZOzNFHFG7x3MNQZF1Np5o=;
-        b=pham+Pk9ZFqYx3EUgqOcZJc6qRejmZP9HgQAEOqHffCWeqdX7YD/kbka3PszOE3bNQ
-         31ruL9QPkmtnqgrri7bDwrRi4N+IMIcIF/djx4bpwVHgArjhPkDSg2sU91VxaXMwByj8
-         evbVVL2aqgXc/rcTss5YSttf6k9ETgvf7ii19izKx3fzYiw4Cqnc5VQJPsDwvz4HGy8Y
-         22VWbf3iYdZnI4SHrKRUt0Hxt40vn2KHwWq2f/2ptlC/Csc2VXlKluLHYfUCGBNuNBLo
-         bmkvC7kMdx8ngUYlsEnMBjSXRm5Taor9KGX9xS7+dQc0TbneHqTcYD3zNV52ZzR9DTFd
-         vLKA==
-X-Gm-Message-State: AOAM530d6aILIuAWE6rmfhMxLPgy6xRJdCsC7m3UpPpA8DBAeCJf2Zob
-	XnTwtzKDsMiwouDCb0wTB1VI+j33z8DyCw==
-X-Google-Smtp-Source: ABdhPJzm8MM2zGWuNe27/UHNJCziiODvI6nUkNdx7zZkcXfMhgUjLLRxdkTN5BEnpr/ALDBAAD7UfA==
-X-Received: by 2002:a5d:4951:: with SMTP id r17mr4903906wrs.208.1628167054769;
-        Thu, 05 Aug 2021 05:37:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tqo0PeqPaA7jUvDOGbI/bOUQNTrPVK6ntTKSRzw4bv4=;
+        b=ZIYB81e7Jrw3ZBn+F4dh9JWI+Dl1+zY7RvuL5ORiVRQVyDH+VsNSg0prQwHGM9y2ma
+         04Qch0kH7gNag2A995E4VcmK6FDt81jWvt9nYkoWAuI7TirMNKqJUsMpwZWn7qi+2HXc
+         dUZAZ/uPs1cpKGViufMgBbyeAJx+mClAUC+JyhkgcT3x7HIPY4dwE/iGnzxvGtY3ExgJ
+         PsEhouSwBGEgd8p6K+iT6HbIDMsU1r0MCNfgHGwdPZpb/S1OA4/mvfE9hJcLOOl+onHx
+         rznPpO3Fi6W7QzSFRviqylXIis+XYfJsTAwg82A8fllmEgmCsufzYD8okGptda66WGzU
+         mENQ==
+X-Gm-Message-State: AOAM532sDLVpmxYiY4r9DM0hD1dgD+1W3arP87BqlbdpQWGZX/NmSAVD
+	kELMQz14XSe2eoimYY5Dv3W+ozQFAbzyAQ==
+X-Google-Smtp-Source: ABdhPJw04rUjRsnI7pGHpE7HaI/JynMq38iMgz5POuJ/aj8gM6WMHHeBW5u3uYva4opxREZZPrMYIg==
+X-Received: by 2002:adf:d20a:: with SMTP id j10mr5026857wrh.152.1628167055071;
+        Thu, 05 Aug 2021 05:37:35 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:ea47:91d3:ba71:9eb4])
         by smtp.gmail.com with ESMTPSA id a24sm2106291wmj.42.2021.08.05.05.37.34
@@ -39,49 +39,50 @@ Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:ea47:91d3:ba71:9eb4])
         Thu, 05 Aug 2021 05:37:34 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/4] process: Improve traceback error reporting from main loop
-Date: Thu,  5 Aug 2021 13:37:30 +0100
-Message-Id: <20210805123733.3572421-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/4] command: Ensure we catch/handle exceptions
+Date: Thu,  5 Aug 2021 13:37:31 +0100
+Message-Id: <20210805123733.3572421-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210805123733.3572421-1-richard.purdie@linuxfoundation.org>
+References: <20210805123733.3572421-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently the code can just show nothing as the exception if there was a double
-fault, which in this code path is quite likely. This leads to an error log
-which effectively says "it failed" with no information about how.
+If an exception occurs in early setup, bitbake could just hang. Return
+the exception rather than doing that.
 
-Improve things so we get a nice verbose traceback left in the logs/output
-which is preferable to no logs.
+[YOCTO #14408]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ lib/bb/command.py | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index a0955722e3..6127fd40e6 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -26,6 +26,7 @@ import errno
- import re
- import datetime
- import pickle
-+import traceback
- import bb.server.xmlrpcserver
- from bb import daemonize
- from multiprocessing import queues
-@@ -217,8 +218,9 @@ class ProcessServer():
-                     self.command_channel_reply.send(self.cooker.command.runCommand(command))
-                     serverlog("Command Completed")
-                 except Exception as e:
--                   serverlog('Exception in server main event loop running command %s (%s)' % (command, str(e)))
--                   logger.exception('Exception in server main event loop running command %s (%s)' % (command, str(e)))
-+                   stack = traceback.format_exc()
-+                   serverlog('Exception in server main event loop running command %s (%s)' % (command, stack))
-+                   logger.exception('Exception in server main event loop running command %s (%s)' % (command, stack))
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index f530cf844b..a81dcb1366 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -65,9 +65,17 @@ class Command:
  
-             if self.xmlrpc in ready:
-                 self.xmlrpc.handle_requests()
+         # Ensure cooker is ready for commands
+         if command != "updateConfig" and command != "setFeatures":
+-            self.cooker.init_configdata()
+-            if not self.remotedatastores:
+-                self.remotedatastores = bb.remotedata.RemoteDatastores(self.cooker)
++            try:
++                self.cooker.init_configdata()
++                if not self.remotedatastores:
++                    self.remotedatastores = bb.remotedata.RemoteDatastores(self.cooker)
++            except (Exception, SystemExit) as exc:
++                import traceback
++                if isinstance(exc, bb.BBHandledException):
++                    # We need to start returning real exceptions here. Until we do, we can't
++                    # tell if an exception is an instance of bb.BBHandledException
++                    return None, "bb.BBHandledException()\n" + traceback.format_exc()
++                return None, traceback.format_exc()
+ 
+         if hasattr(CommandsSync, command):
+             # Can run synchronous commands straight away
 -- 
 2.30.2
 
