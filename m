@@ -1,36 +1,36 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web11.8013.1628167056978318339
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web09.8001.1628167057452747203
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 05 Aug 2021 05:37:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dNFiVjM8;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f52.google.com with SMTP id j2so6311138wrx.9
-        for <bitbake-devel@lists.openembedded.org>; Thu, 05 Aug 2021 05:37:36 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=O0Xec3Y8;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f44.google.com with SMTP id b11so6357584wrx.6
+        for <bitbake-devel@lists.openembedded.org>; Thu, 05 Aug 2021 05:37:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=sCpD6xErnCanxjer7PfqCip4yljOpSIT89H0ePsdnME=;
-        b=dNFiVjM8wifcQj+ZRCeg9Wy7y0tNPBYrdiGLeGudofZh65VzABDYOSbrlLQzVt7ECi
-         Impo4ObuEalqSN2fCLhcx68AXOh4R1yBp4L1lPCL5ftwJp8fX4jhgLq300LIhgPtqyQe
-         l6r5YRbUpfdx6mEUVoJpoEE0lCGn17KdiyhoQ=
+        bh=7UIuHXIg5Ji9K/HZPVD8jaN4BdJWsCg7pwN1kSXKtmg=;
+        b=O0Xec3Y8ruTYSen+Ok/r+x95nta+aI76ZB55MAwg0gUql0hU7nONIi75ons1gNEydV
+         dtN5QJsHy6Qtyg1gB8anMtfWiITyGJwLRYSQS7s3GJhyu5591aP9Df3/vY1ICzA9Oz78
+         TDbzPVFFRnstkmW2tCiWoSZ7RNiYE2MdKBS4g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sCpD6xErnCanxjer7PfqCip4yljOpSIT89H0ePsdnME=;
-        b=a5ZvIYVcGM2KlsBayB5zqesy46hmPnVmcgdRa1QPeW3njTnfnCLPpSOtD3Nsvvb7tr
-         WE6BV8gyLQzMyWgczDk9MG6tK6JXx9mRf5mY+ZBRLrbbBeN1qVrSxxoFKkku9U9FfuQI
-         OR4ayunjwuFDMTeN539z0XAC13a/2uEiF2qUjfawYM2Lydvnv5mvRA/dIWi5U3eKJTA8
-         riWTyo/V7MMWoRNk6Emcn2+o6V8lHESDOe7Uz/QHaTKhDvqsDFhed85oLNFaHFdBRXwx
-         VtXo2ZgyfmThPeAPha8MMInKBOq9OtMsd5lwYKS77W8AtL1LyU4p+hst4UMpdfZYObXH
-         4zHQ==
-X-Gm-Message-State: AOAM533Gz6ybmyU9RlbFjBvNSt7fcp84qOv0IrHVuCIAv2kfJ+KQ4dut
-	zPP9nMY9UH0fBjcG83Z6wQaWJMt9kz+wkA==
-X-Google-Smtp-Source: ABdhPJzeJUQqUNZQPJPRDa+9zCLmcsPhPKw8Gz0V5Avw1IXlpt60uo9Qlgdvh6aTF9AcGU2hmDUP+A==
-X-Received: by 2002:adf:f847:: with SMTP id d7mr5156502wrq.352.1628167055558;
-        Thu, 05 Aug 2021 05:37:35 -0700 (PDT)
+        bh=7UIuHXIg5Ji9K/HZPVD8jaN4BdJWsCg7pwN1kSXKtmg=;
+        b=ag2NbDKIygC8qKOXVCUW2h5giultrINs6EAbKaBV2NHhayvivFb2AJBQHS1icl7ifG
+         LC+yjpfxeHzHppo3U6kipFLApqNTU+O82GS4Xc2L11k22TpQ4OKUzjKnwDmOm30zsCBk
+         eHlOBZO8xMZLGBBr1ZR3l5TvbT1mVtOUA7PTNFOTAhKM9HOdPcZaou1TbkuXvCTI6LEt
+         EP0UzRPagtlJjR3/77oEN8ZhIfNGaXfmvcue5gPTy0JriPZYcu9Jjsp6f/HSRS7mpWCm
+         F/cFEvUWTvMa3OHbVSm0ne5A2QzNZOAfiZdokhft1WyJ1SFj7EF2G+CybB6g+eyPhvru
+         L9OA==
+X-Gm-Message-State: AOAM532MRHh3MU5Y/Vop8Dwu+DF4KOhe3mYqf6da51Y4I24+SSXe02Rf
+	hhrmBpK3qc1/F54WFOIrgNcT/SG8lE3/SQ==
+X-Google-Smtp-Source: ABdhPJwJ5l7hjaZIzRfyZLvUmj4kBpmUhS78ymBT0SrjITF5le+KGaXGCRBq77Kcv0xllhQBaF8vbw==
+X-Received: by 2002:a5d:6e12:: with SMTP id h18mr5047469wrz.236.1628167056051;
+        Thu, 05 Aug 2021 05:37:36 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:ea47:91d3:ba71:9eb4])
         by smtp.gmail.com with ESMTPSA id a24sm2106291wmj.42.2021.08.05.05.37.35
@@ -39,46 +39,38 @@ Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:ea47:91d3:ba71:9eb4])
         Thu, 05 Aug 2021 05:37:35 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 3/4] ui/taskexp: Improve startup exception handling
-Date: Thu,  5 Aug 2021 13:37:32 +0100
-Message-Id: <20210805123733.3572421-3-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 4/4] ui/taskexp: Fix to work with empty build directories
+Date: Thu,  5 Aug 2021 13:37:33 +0100
+Message-Id: <20210805123733.3572421-4-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210805123733.3572421-1-richard.purdie@linuxfoundation.org>
 References: <20210805123733.3572421-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When an exception occurs at startup, show it to the user.
+If run on an empty build directory, taskexp wasn't working as it didn't
+send the current environment to the server. This means HOSTTOOLS in oe-core
+couldn't be built and gave an error. Add the missing updateToServer call in.
 
 [YOCTO #14408]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/ui/taskexp.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/bb/ui/taskexp.py | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/lib/bb/ui/taskexp.py b/lib/bb/ui/taskexp.py
-index 2b246710ca..81392977a0 100644
+index 81392977a0..c00eaf6638 100644
 --- a/lib/bb/ui/taskexp.py
 +++ b/lib/bb/ui/taskexp.py
-@@ -8,6 +8,7 @@
- #
+@@ -197,6 +197,7 @@ def main(server, eventHandler, params):
+     gtkgui.start()
  
- import sys
-+import traceback
- 
- try:
-     import gi
-@@ -218,6 +219,9 @@ def main(server, eventHandler, params):
-     except client.Fault as x:
-         print("XMLRPC Fault getting commandline:\n %s" % x)
-         return
-+    except Exception as e:
-+        print("Exception in startup:\n %s" % traceback.format_exc())
-+        return
- 
-     if gtkthread.quit.isSet():
-         return
+     try:
++        params.updateToServer(server, os.environ.copy())
+         params.updateFromServer(server)
+         cmdline = params.parseActions()
+         if not cmdline:
 -- 
 2.30.2
 
