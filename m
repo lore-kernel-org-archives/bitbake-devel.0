@@ -1,40 +1,42 @@
 Received: from smtpout.cvg.de (smtpout.cvg.de [87.128.211.67])
- by mx.groups.io with SMTP id smtpd.web11.57404.1629306623167777868
+ by mx.groups.io with SMTP id smtpd.web09.57693.1629306996240706492
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 18 Aug 2021 10:10:25 -0700
+ Wed, 18 Aug 2021 10:16:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sigma-chemnitz.de header.s=v2012061000 header.b=QnLWvp7m;
+ dkim=pass header.i=@sigma-chemnitz.de header.s=v2012061000 header.b=K8vAJiP5;
  spf=pass (domain: sigma-chemnitz.de, ip: 87.128.211.67, mailfrom: enrico.scholz@sigma-chemnitz.de)
 Received: from mail-mta-3.intern.sigma-chemnitz.de (mail-mta-3.intern.sigma-chemnitz.de [192.168.12.71])
-	by mail-out-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 17IHAJgV492807
+	by mail-out-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 17IHGWpk532130
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>; Wed, 18 Aug 2021 19:10:19 +0200
+	for <bitbake-devel@lists.openembedded.org>; Wed, 18 Aug 2021 19:16:32 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
-	s=v2012061000; t=1629306619;
-	bh=uKYwWgxRvakiQZJQ1Q0zEO1aro/fu5fTR+9s3eEEK2A=; l=4061;
-	h=From:To:Cc:Subject:Date;
-	b=QnLWvp7mpmgtlQVYXZb/faYkM7cWQizfV9YAz0hnc0owyJcA/y/QUD/XhxdZAQuKC
-	 FIJzkJ+Jv46IIFaQ8qmZFaUuStmsgAMFsZAYJE9hAJiWHmug78RDHPDn0HcK3jE3Be
-	 D8AUUErSMEB7ngTRvNVG/n7Z7c0RYLqaWF+bNeIY=
+	s=v2012061000; t=1629306993;
+	bh=lJhpVvJQI+4NMHQVTexFXfKDMWbiZ33QwR/sPnJyHrs=; l=4078;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=K8vAJiP58OQDoNWwX/vNj4yL1yFTz6ksGoyHA39VknLxQPFCYoxTqts6jnYm7Ofa8
+	 3JAWaz41hUFGKovgLE1gBGVRXrAyPIZDBNgR1AjC76FAe3hD6ovBX5vmlYzTW/NUvD
+	 Uls2xrkwjdaBY12JOnkSXuemqH/8hFAbcqZ8rQ3E=
 Received: from reddoxx.intern.sigma-chemnitz.de ([192.168.16.32])
-	by mail-mta-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 17IHACc21278404
-	for <bitbake-devel@lists.openembedded.org> from enrico.scholz@sigma-chemnitz.de; Wed, 18 Aug 2021 19:10:12 +0200
-Received: from mail-msa-2.intern.sigma-chemnitz.de ( [192.168.12.72]) by reddoxx.intern.sigma-chemnitz.de
-	(Reddoxx engine) with SMTP id 46D5CAD09B3; Wed, 18 Aug 2021 19:10:10 +0200
+	by mail-mta-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 17IHGPZ31278466
+	for <bitbake-devel@lists.openembedded.org> from enrico.scholz@sigma-chemnitz.de; Wed, 18 Aug 2021 19:16:25 +0200
+Received: from mail-msa-3.intern.sigma-chemnitz.de ( [192.168.12.73]) by reddoxx.intern.sigma-chemnitz.de
+	(Reddoxx engine) with SMTP id 3AD0F4A797E; Wed, 18 Aug 2021 19:16:24 +0200
 Received: from ensc-virt.intern.sigma-chemnitz.de (ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail-msa-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 17IHAA1F592556
+	by mail-msa-3.intern.sigma-chemnitz.de (8.15.2/8.15.2) with ESMTPS id 17IHGNBG569081
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 18 Aug 2021 19:10:10 +0200
+	Wed, 18 Aug 2021 19:16:24 +0200
 Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim 4.94.2)
 	(envelope-from <ensc@sigma-chemnitz.de>)
-	id 1mGP4r-000zJY-Va; Wed, 18 Aug 2021 19:10:10 +0200
+	id 1mGPAt-001hdP-HL; Wed, 18 Aug 2021 19:16:23 +0200
 From: "Enrico Scholz" <enrico.scholz@sigma-chemnitz.de>
 To: bitbake-devel@lists.openembedded.org
 Cc: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Subject: [PATCH] fetch2/wget: fix 'no_proxy' handling
-Date: Wed, 18 Aug 2021 19:10:00 +0200
-Message-Id: <20210818171000.233428-1-enrico.scholz@sigma-chemnitz.de>
+Subject: [PATCH, v2] fetch2/wget: fix 'no_proxy' handling
+Date: Wed, 18 Aug 2021 19:16:22 +0200
+Message-Id: <20210818171622.406009-1-enrico.scholz@sigma-chemnitz.de>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210818171000.233428-1-enrico.scholz@sigma-chemnitz.de>
+References: <20210818171000.233428-1-enrico.scholz@sigma-chemnitz.de>
 MIME-Version: 1.0
 Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
 Content-Transfer-Encoding: 8bit
@@ -53,11 +55,11 @@ context, but the 'opener.open(r)' call must also be made there.
 
 Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
 ---
- lib/bb/fetch2/wget.py | 85 ++++++++++++++++++++++---------------------
- 1 file changed, 43 insertions(+), 42 deletions(-)
+ lib/bb/fetch2/wget.py | 87 ++++++++++++++++++++++---------------------
+ 1 file changed, 44 insertions(+), 43 deletions(-)
 
 diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 29fcfbb3d14d..659e54a80b14 100644
+index 29fcfbb3d14d..9a49e64a0054 100644
 --- a/lib/bb/fetch2/wget.py
 +++ b/lib/bb/fetch2/wget.py
 @@ -330,50 +330,51 @@ class Wget(FetchMethod):
@@ -107,6 +109,7 @@ index 29fcfbb3d14d..659e54a80b14 100644
 -            else:
 -                # debug for now to avoid spamming the logs in e.g. remote sstate searches
 -                logger.debug2("checkstatus() urlopen failed: %s" % e)
+-                return False
 +                uri = ud.url.split(";")[0]
 +                r = urllib.request.Request(uri)
 +                r.get_method = lambda: "HEAD"
@@ -149,7 +152,7 @@ index 29fcfbb3d14d..659e54a80b14 100644
 +                else:
 +                    # debug for now to avoid spamming the logs in e.g. remote sstate searches
 +                    logger.debug2("checkstatus() urlopen failed: %s" % e)
-                 return False
++                    return False
 +
          return True
  
