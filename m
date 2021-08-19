@@ -1,63 +1,117 @@
-Received: from smtpout.cvg.de (smtpout.cvg.de [87.128.211.67])
- by mx.groups.io with SMTP id smtpd.web11.66261.1629362183415663248
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+ by mx.groups.io with SMTP id smtpd.web09.72216.1629391611347417048
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 19 Aug 2021 01:36:26 -0700
+ Thu, 19 Aug 2021 09:46:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sigma-chemnitz.de header.s=v2012061000 header.b=dB2Tyk1l;
- spf=pass (domain: sigma-chemnitz.de, ip: 87.128.211.67, mailfrom: enrico.scholz@sigma-chemnitz.de)
-Received: from mail-mta-2.intern.sigma-chemnitz.de (mail-mta-2.intern.sigma-chemnitz.de [192.168.12.70])
-	by mail-out-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 17J8aJ9n499027
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Thu, 19 Aug 2021 10:36:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
-	s=v2012061000; t=1629362179;
-	bh=XM8m25jKFl6HksI8bqiuKof5r9QJJTAi3ncFKqgAqNo=; l=497;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To;
-	b=dB2Tyk1lcdDrlNNHZ78oEzIRV8F+O8CCwEeBUQQ5avXFdjCDYhGEXOYIygxMu29qg
-	 azWErsA13aGdd2UOaevt8xuIUcn9tm9b3WV1cwVEiPI9uL6G2DDw/OoJdAQab04ojP
-	 n+3r47ujvn2rTIt/tOXyowuj+sGkHbyU+vNCI5Yk=
-Received: from reddoxx.intern.sigma-chemnitz.de ([192.168.16.32])
-	by mail-mta-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 17J8aD0r673296;
-	Thu, 19 Aug 2021 10:36:13 +0200
-Received: from mail-msa-2.intern.sigma-chemnitz.de ( [192.168.12.72]) by reddoxx.intern.sigma-chemnitz.de
-	(Reddoxx engine) with SMTP id 83C18A06804; Thu, 19 Aug 2021 10:36:11 +0200
-Received: from ensc-virt.intern.sigma-chemnitz.de (ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail-msa-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 17J8aBDH599701
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Thu, 19 Aug 2021 10:36:11 +0200
-Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim 4.94.2)
-	(envelope-from <ensc@sigma-chemnitz.de>)
-	id 1mGdX1-005ru4-3Y; Thu, 19 Aug 2021 10:36:11 +0200
-From: "Enrico Scholz" <enrico.scholz@sigma-chemnitz.de>
-To: "Chris Laplante via lists.openembedded.org"
- <chris.laplante=agilent.com@lists.openembedded.org>
-Cc: "bitbake-devel@lists.openembedded.org"
- <bitbake-devel@lists.openembedded.org>,
-        chris.laplante@agilent.com
-Subject: Re: [bitbake-devel] Trouble capturing layer revision as variable in recipe
-References: <DM8PR12MB5430C5689FA1BE41556758938BFF9@DM8PR12MB5430.namprd12.prod.outlook.com>
-Date: Thu, 19 Aug 2021 10:36:11 +0200
-In-Reply-To: <DM8PR12MB5430C5689FA1BE41556758938BFF9@DM8PR12MB5430.namprd12.prod.outlook.com>
-	(Chris Laplante via lists openembedded org's message of "Wed, 18 Aug
-	2021 19:21:05 +0000")
-Message-ID: <lyv941g7b8.fsf@ensc-virt.intern.sigma-chemnitz.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=FEoj2fhl;
+ spf=pass (domain: konsulko.com, ip: 209.85.160.176, mailfrom: scott.murray@konsulko.com)
+Received: by mail-qt1-f176.google.com with SMTP id e15so5097620qtx.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Aug 2021 09:46:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q6PDsshDrTPWIVGti+WxeXL/7LkE4lMNOpCtgJ//p6c=;
+        b=FEoj2fhlp14jvXW8YL06AIacaoTEBuIWKKypQk5qRBJHnUHLbVZZXIt5QbpbRQgPP5
+         LpjHR58PJW156rp07MnPIyv+6GMSszrB1NejghAAUoRYRwMe/26xkEGctMVtL5Q7Mln5
+         OWpyiOoAOpinj4xniI8QqG5McpFM/tfQ2Gz+g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q6PDsshDrTPWIVGti+WxeXL/7LkE4lMNOpCtgJ//p6c=;
+        b=Gx9iUS5PCx/5/oA/HjTa5tU4HjPpRCltrAQOKq9o7liBw90l2KWFzduzdQwYvjjs7G
+         x/Bi2757/QZ0O5+lXqGtXQPQzLu6fSxmLybGfAI08G+BtqERTKufysgr2zBFT58IJ17/
+         kknZ7waTL9sLlfWAOnnGzj8kXwFAwP7VFMU57kGxwjW4u5FvFy9XaOW11r7xubCMAURf
+         NvoeVE16Ih3YCjbTSvz2mlnHhRqry+sPx2UQRPnKtb1ekyT9sHW6u0XDFCKygUp5BYO2
+         CsUjOOj3M5h/N1cfBbqb21Li38X3kzO9OruzRql+e+t4ftHC4/XhcMuw2VNz/JFEGrbb
+         YkJw==
+X-Gm-Message-State: AOAM532vOqCMKx46eENtPYzJ7ypdz1R6T7rCEwuIg+D7Z8NdV8BdSXj3
+	XbFjXnIWYL8gBt2HK5JbTrsUIxKc7uqQdQ==
+X-Google-Smtp-Source: ABdhPJwhjj4WM3qPSMyg9dnmvSEkACTHjqDsnWgUnl/iZudUKJtXF70JILbOfMftc/WKiT/jVhaWjg==
+X-Received: by 2002:a05:622a:96:: with SMTP id o22mr13661840qtw.79.1629391610077;
+        Thu, 19 Aug 2021 09:46:50 -0700 (PDT)
+Return-Path: <scott.murray@konsulko.com>
+Received: from ghidorah.spiteful.org (192-0-174-222.cpe.teksavvy.com. [192.0.174.222])
+        by smtp.gmail.com with ESMTPSA id c27sm1817987qkp.5.2021.08.19.09.46.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Aug 2021 09:46:49 -0700 (PDT)
+From: "Scott Murray" <scott.murray@konsulko.com>
+To: bitbake-devel@lists.openembedded.org,
+	Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Joshua Watt <JPEWhacker@gmail.com>,
+	Paul Barker <paul@pbarker.dev>
+Subject: [PATCH v6 0/4] Re-implement prserv on top of asyncrpc
+Date: Thu, 19 Aug 2021 12:46:40 -0400
+Message-Id: <cover.1629388054.git.scott.murray@konsulko.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-"Chris Laplante via lists.openembedded.org"
-<chris.laplante=agilent.com@lists.openembedded.org> writes:
+These changes replace the old XML-based RPC system in prserv with the
+new asyncrpc implementation originally used by hashserv, and add a
+read-only mode to match the hash equivalency server's support.
 
-> OUR_LAYER_PATH := "${@get_layer_path(d, "meta-our-layer")}"
+Note that an additional change to the PR export support code in
+oe-core is being sent to its mailing list.  That change is also
+required for any serious testing, as it resolves another hang
+issue in the PR export selftest.
 
-fwiw, we capture this location by 'LAYERDIR_<layer> := "${LAYERDIR}"'
-within our layer.conf[1].
+Changes from v5:
+  * Added new patch from Joshua Watt to shift asyncio loop creation
+    into the new server processes.  This fixes one of the hangs seen
+    on the autobuilder.
 
-It would be nice, when bitbake adds such a variable automatically...
+  * New patch to always create and set the asyncio loop as default
+    in both the asyncrpc client and server initialization.  In my
+    testing this resolves a couple of different hang issues seen in
+    the selftests.
 
+  * Task cleanup on shutdown and exception handler patches from Paul
+    dropped from stack, as testing showed the hang issues were not
+    helped by the changes.
 
-Enrico
+  * Patch to rebase PR server on asyncrpc code tweaked to split the
+    new client code into a separate source file as is done in hashserv.
 
-Footnotes:
-[1]  https://github.com/sigma-embedded/meta-de.sigma-chemnitz/blob/5c4f79148e72d5c009be322e5cc32256ffb58bb4/conf/layer.conf#L17
+Changes from v4:
+  * Patch 2 updated to conditionalize all_tasks/current_task usage
+    from asyncio vs asyncio.Task based on Python version.  This fixes
+    running against Python 3.9 where they were finally removed from
+    asyncio.Task.
+
+Changes from v3:
+  * Scott Murray taking over upstreaming effort from Paul Barker.
+
+  * Dropped patches which are currently applied to master-next, this
+    series should be applied on top of the current master-next branch.
+
+  * Patches 2-4 updated by Scott Murray to rebase on top of 3983643
+    ("bitbake: asyncrpc: Catch early SIGTERM").
+
+  * Read-only PR server support patch added to stack to get it into
+    the review process.
+
+Joshua Watt (1):
+  bitbake: asyncrpc: Defer all asyncio to child process
+
+Paul Barker (2):
+  prserv: Replace XML RPC with modern asyncrpc implementation
+  prserv: Add read-only mode
+
+Scott Murray (1):
+  bitbake: asyncrpc: always create new asyncio loops
+
+ bin/bitbake-prserv        |   4 +-
+ lib/bb/asyncrpc/client.py |  10 ++
+ lib/bb/asyncrpc/serv.py   | 134 +++++++++++++-------
+ lib/hashserv/server.py    |   4 +-
+ lib/prserv/client.py      |  48 ++++++++
+ lib/prserv/db.py          |  65 +++++++---
+ lib/prserv/serv.py        | 248 ++++++++++++++++++--------------------
+ 7 files changed, 319 insertions(+), 194 deletions(-)
+ create mode 100644 lib/prserv/client.py
+
+-- 
+2.31.1
+
