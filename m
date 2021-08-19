@@ -1,256 +1,146 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
- by mx.groups.io with SMTP id smtpd.web10.72633.1629391612329972090
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+ by mx.groups.io with SMTP id smtpd.web11.71654.1629391613469275264
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 19 Aug 2021 09:46:52 -0700
+ Thu, 19 Aug 2021 09:46:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=Yb6+uJ7j;
- spf=pass (domain: konsulko.com, ip: 209.85.160.176, mailfrom: scott.murray@konsulko.com)
-Received: by mail-qt1-f176.google.com with SMTP id d5so5084895qtd.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Aug 2021 09:46:52 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=BzSa2HOO;
+ spf=pass (domain: konsulko.com, ip: 209.85.222.172, mailfrom: scott.murray@konsulko.com)
+Received: by mail-qk1-f172.google.com with SMTP id e14so7834650qkg.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Aug 2021 09:46:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=pSnjxmPE7JFFM75kyM2xdisXbLZntAkjopgTp+bD7B8=;
-        b=Yb6+uJ7j8r3sQAFN2NQGIdB0HCdUKwxl1tr1fW9a7F0nS7Oxou3LojKjuxdz2VsMnJ
-         rBfJjLVQcYkbhT8IPkElgmvSdxdyEK723TAExP9Gc5KwvHJ2gRHc56v6cGY4AWPApUdP
-         iJ6Q0mN9DKlmeM3fqk1WEhBFDEvwR6FuV45uw=
+        bh=HtWv7c3t2PB20ZCpuMaznQtgZnakhZoPIwTPaHbvxpw=;
+        b=BzSa2HOOfSPqjuRm+YVGfTWhr6tvmIKnEAEIFHBUj4uriH9nf3ptHIu6o/+e7HbdXo
+         x2vNBDXx73X55CcDXbYiPM1I6ZdNWJGTeUMjJM1qNA/ia/L5h9BeHqUmD44OzRpgac+w
+         khUUB9rRDMRJBR4E5aWM30KMiFa0GLtJVBUyA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pSnjxmPE7JFFM75kyM2xdisXbLZntAkjopgTp+bD7B8=;
-        b=JvgKmp2jDfsI5pnCq+wjSzKA6MDCW5Jyt/Bj/JnFpzigmKvgFqDaNVrqvnUtIMhaCY
-         xBwC0COeRShg2/2C0I1uwthVZvZ4Pxsr6v0PZEeVvVNAzMi7UrPPoOnIDKhvown65Rrm
-         j7ubKFBknvKAMOC6Pc5bMtzwTXBg9S0A/QwgXKF8ztr6cGoEo0or6hZ22EinAnwV+zKF
-         9a+lU7POtfVnM8L7h3ApADLHwRe4J63QC6RbDygyXowyaaGBa2XLmeUdTd9Ox6baeqep
-         Y/t90/7FausV0WaIg8j4csxBH8xIpwzXHfrMK1rhkgkul8T0xE+YwuDMnFPC7eDr0Ahw
-         l76w==
-X-Gm-Message-State: AOAM532v08arF0zyz2PTgsCnwIyOwJGJa52iqJERl3+XwI6wy6SoEq56
-	EzG6D6YkyMBWBbR4ZHAtjAifaWbf4loxgQ==
-X-Google-Smtp-Source: ABdhPJxoVz0wVdb1JpzQ1vHZGXZmJ0QMSAn2GvZwk393yjP1BC3PC4ot/RwkxQep3jVwwZR7Pcdt6w==
-X-Received: by 2002:ac8:5892:: with SMTP id t18mr13516695qta.37.1629391611153;
-        Thu, 19 Aug 2021 09:46:51 -0700 (PDT)
+        bh=HtWv7c3t2PB20ZCpuMaznQtgZnakhZoPIwTPaHbvxpw=;
+        b=iFkqtCPpOaxoY4l9eFhaf31jX8LHg3v82f87c824QSDBMta2M7h7VcANJYba3dYe3z
+         008uRNF6yO588NM+rV1Y2iTLDtkSlBzYiR/oAbtDPTXVGFUBu3/A3MNFUdV36iBf+jP4
+         9K6KEaEScbhcygnorx5zB2AYAtAHgrcyDRX/0Ju+ysnkRLrPB5kiLgwhw4Mp3O194434
+         18YUbhvrkK0N+qA6+vo4ltKBY0PmE2thUHwS0B8uIehiohLmw3S+c1auXecPYL2gvyI8
+         uGWgza7ZyQyuYY8yFVFtf8YtIJKZUudoCfUVXM09XNSzOeF8QivKBIAjTN4+rVYnHcOK
+         YsvQ==
+X-Gm-Message-State: AOAM532jK9K8K3MA7jWjnmLVUm/WiciivmClDfevwvAbHTkirdP1+pdI
+	qNearOHlJ3HROGkgg5B1zs4uh+WcGCRwMA==
+X-Google-Smtp-Source: ABdhPJw4dhW1qAI1dTqw9QvHvKmN2vbCDICZK5kr+lCYuobWOYiQ8M7UMghhKHr8eo8l9V1EU3Ox/A==
+X-Received: by 2002:a05:620a:d8e:: with SMTP id q14mr4562225qkl.409.1629391612283;
+        Thu, 19 Aug 2021 09:46:52 -0700 (PDT)
 Return-Path: <scott.murray@konsulko.com>
 Received: from ghidorah.spiteful.org (192-0-174-222.cpe.teksavvy.com. [192.0.174.222])
-        by smtp.gmail.com with ESMTPSA id c27sm1817987qkp.5.2021.08.19.09.46.50
+        by smtp.gmail.com with ESMTPSA id c27sm1817987qkp.5.2021.08.19.09.46.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 09:46:50 -0700 (PDT)
+        Thu, 19 Aug 2021 09:46:51 -0700 (PDT)
 From: "Scott Murray" <scott.murray@konsulko.com>
 To: bitbake-devel@lists.openembedded.org,
 	Richard Purdie <richard.purdie@linuxfoundation.org>,
 	Joshua Watt <JPEWhacker@gmail.com>,
 	Paul Barker <paul@pbarker.dev>
-Subject: [PATCH v6 1/4] bitbake: asyncrpc: Defer all asyncio to child process
-Date: Thu, 19 Aug 2021 12:46:41 -0400
-Message-Id: <22a4e6fc5913fdf78f5c93893b16472f0641ff29.1629388054.git.scott.murray@konsulko.com>
+Subject: [PATCH v6 2/4] bitbake: asyncrpc: always create new asyncio loops
+Date: Thu, 19 Aug 2021 12:46:42 -0400
+Message-Id: <385ebae0db5851cd4a6094810a794d90a0a85c92.1629388054.git.scott.murray@konsulko.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1629388054.git.scott.murray@konsulko.com>
 References: <cover.1629388054.git.scott.murray@konsulko.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Joshua Watt <JPEWhacker@gmail.com>
+asyncio in older Python 3.x (seen with 3.7) can seemingly hang if
+new_event_loop is called repeatedly in the same process.  The
+reuse of processes in the Bitbake thread pool during parsing seems
+to be able to trigger this with the PR server export selftest.
+It appears that calling set_event_loop with the new loop avoids the
+issue, so that is now done in the asyncrpc Client initializer (with
+an explanatory comment).  This should be revisited when the day
+arrives that Python 3.9 becomes the minimum required for BitBake.
 
-Reworks the async I/O API so that the async loop is only created in the
-child process. This requires deferring the creation of the server until
-the child process and a queue to transfer the bound address back to the
-parent process
+Additionally, it was discovered that using get_event_loop in the
+asyncrpc server initialization can trigger hangs in the hashserv
+unittests when the second test is run.  To avoid this, switch to
+calling new_event_loop + set_event_loop in the initialization code
+there as well.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-[small loop -> self.loop fix in serv.py]
 Signed-off-by: Scott Murray <scott.murray@konsulko.com>
 ---
- lib/bb/asyncrpc/serv.py | 118 ++++++++++++++++++++++++----------------
- lib/hashserv/server.py  |   4 +-
- 2 files changed, 74 insertions(+), 48 deletions(-)
+ lib/bb/asyncrpc/client.py | 10 ++++++++++
+ lib/bb/asyncrpc/serv.py   | 24 ++++++++++++++++++++----
+ 2 files changed, 30 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
-index 4084f300..45628698 100644
---- a/lib/bb/asyncrpc/serv.py
-+++ b/lib/bb/asyncrpc/serv.py
-@@ -131,53 +131,58 @@ class AsyncServerConnection(object):
+diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
+index 3eb4fdde..50e60d5c 100644
+--- a/lib/bb/asyncrpc/client.py
++++ b/lib/bb/asyncrpc/client.py
+@@ -119,6 +119,16 @@ class Client(object):
+         self.client = self._get_async_client()
+         self.loop = asyncio.new_event_loop()
  
- 
- class AsyncServer(object):
--    def __init__(self, logger, loop=None):
--        if loop is None:
--            self.loop = asyncio.new_event_loop()
--            self.close_loop = True
--        else:
--            self.loop = loop
--            self.close_loop = False
--
-+    def __init__(self, logger):
-         self._cleanup_socket = None
-         self.logger = logger
-+        self.start = None
-+        self.address = None
++        # Override any pre-existing loop.
++        # Without this, the PR server export selftest triggers a hang
++        # when running with Python 3.7.  The drawback is that there is
++        # potential for issues if the PR and hash equiv (or some new)
++        # clients need to both be instantiated in the same process.
++        # This should be revisited if/when Python 3.9 becomes the
++        # minimum required version for BitBake, as it seems not
++        # required (but harmless) with it.
++        asyncio.set_event_loop(self.loop)
 +
-+    @property
-+    def loop(self):
-+        return asyncio.get_event_loop()
- 
-     def start_tcp_server(self, host, port):
--        self.server = self.loop.run_until_complete(
--            asyncio.start_server(self.handle_client, host, port, loop=self.loop)
--        )
--
--        for s in self.server.sockets:
--            self.logger.debug('Listening on %r' % (s.getsockname(),))
--            # Newer python does this automatically. Do it manually here for
--            # maximum compatibility
--            s.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
--            s.setsockopt(socket.SOL_TCP, socket.TCP_QUICKACK, 1)
--
--        name = self.server.sockets[0].getsockname()
--        if self.server.sockets[0].family == socket.AF_INET6:
--            self.address = "[%s]:%d" % (name[0], name[1])
--        else:
--            self.address = "%s:%d" % (name[0], name[1])
-+        def start_tcp():
-+            self.server = self.loop.run_until_complete(
-+                asyncio.start_server(self.handle_client, host, port)
-+            )
-+
-+            for s in self.server.sockets:
-+                self.logger.debug('Listening on %r' % (s.getsockname(),))
-+                # Newer python does this automatically. Do it manually here for
-+                # maximum compatibility
-+                s.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
-+                s.setsockopt(socket.SOL_TCP, socket.TCP_QUICKACK, 1)
-+
-+            name = self.server.sockets[0].getsockname()
-+            if self.server.sockets[0].family == socket.AF_INET6:
-+                self.address = "[%s]:%d" % (name[0], name[1])
-+            else:
-+                self.address = "%s:%d" % (name[0], name[1])
-+
-+        self.start = start_tcp
- 
-     def start_unix_server(self, path):
-         def cleanup():
-             os.unlink(path)
- 
--        cwd = os.getcwd()
--        try:
--            # Work around path length limits in AF_UNIX
--            os.chdir(os.path.dirname(path))
--            self.server = self.loop.run_until_complete(
--                asyncio.start_unix_server(self.handle_client, os.path.basename(path), loop=self.loop)
--            )
--        finally:
--            os.chdir(cwd)
-+        def start_unix():
-+            cwd = os.getcwd()
-+            try:
-+                # Work around path length limits in AF_UNIX
-+                os.chdir(os.path.dirname(path))
-+                self.server = self.loop.run_until_complete(
-+                    asyncio.start_unix_server(self.handle_client, os.path.basename(path))
-+                )
-+            finally:
-+                os.chdir(cwd)
- 
--        self.logger.debug('Listening on %r' % path)
-+            self.logger.debug('Listening on %r' % path)
- 
--        self._cleanup_socket = cleanup
--        self.address = "unix://%s" % os.path.abspath(path)
-+            self._cleanup_socket = cleanup
-+            self.address = "unix://%s" % os.path.abspath(path)
-+
-+        self.start = start_unix
+         self._add_methods('connect_tcp', 'close', 'ping')
  
      @abc.abstractmethod
-     def accept_client(self, reader, writer):
-@@ -205,8 +210,7 @@ class AsyncServer(object):
-         self.logger.debug("Got exit signal")
-         self.loop.stop()
- 
--    def serve_forever(self):
--        asyncio.set_event_loop(self.loop)
-+    def _serve_forever(self):
-         try:
-             self.loop.add_signal_handler(signal.SIGTERM, self.signal_handler)
-             signal.pthread_sigmask(signal.SIG_UNBLOCK, [signal.SIGTERM])
-@@ -217,28 +221,50 @@ class AsyncServer(object):
-             self.loop.run_until_complete(self.server.wait_closed())
-             self.logger.debug('Server shutting down')
-         finally:
--            if self.close_loop:
--                if sys.version_info >= (3, 6):
--                    self.loop.run_until_complete(self.loop.shutdown_asyncgens())
--                self.loop.close()
+diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
+index 45628698..b4cffff2 100644
+--- a/lib/bb/asyncrpc/serv.py
++++ b/lib/bb/asyncrpc/serv.py
+@@ -136,10 +136,7 @@ class AsyncServer(object):
+         self.logger = logger
+         self.start = None
+         self.address = None
 -
-             if self._cleanup_socket is not None:
-                 self._cleanup_socket()
+-    @property
+-    def loop(self):
+-        return asyncio.get_event_loop()
++        self.loop = None
  
-+    def serve_forever(self):
-+        """
-+        Serve requests in the current process
-+        """
-+        self.start()
-+        self._serve_forever()
-+
-     def serve_as_process(self, *, prefunc=None, args=()):
--        def run():
-+        """
-+        Serve requests in a child process
-+        """
-+        def run(queue):
-+            try:
-+                self.start()
-+            finally:
-+                queue.put(self.address)
-+                queue.close()
-+
-             if prefunc is not None:
-                 prefunc(self, *args)
--            self.serve_forever()
-+
-+            self._serve_forever()
-+
-+            if sys.version_info >= (3, 6):
-+                self.loop.run_until_complete(self.loop.shutdown_asyncgens())
-+            self.loop.close()
-+
-+        queue = multiprocessing.Queue()
+     def start_tcp_server(self, host, port):
+         def start_tcp():
+@@ -228,6 +225,12 @@ class AsyncServer(object):
+         """
+         Serve requests in the current process
+         """
++        # Create loop and override any loop that may have existed in
++        # a parent process.  It is possible that the usecases of
++        # serve_forever might be constrained enough to allow using
++        # get_event_loop here, but better safe than sorry for now.
++        self.loop = asyncio.new_event_loop()
++        asyncio.set_event_loop(self.loop)
+         self.start()
+         self._serve_forever()
  
-         # Temporarily block SIGTERM. The server process will inherit this
-         # block which will ensure it doesn't receive the SIGTERM until the
-         # handler is ready for it
-         mask = signal.pthread_sigmask(signal.SIG_BLOCK, [signal.SIGTERM])
-         try:
--            self.process = multiprocessing.Process(target=run)
-+            self.process = multiprocessing.Process(target=run, args=(queue,))
-             self.process.start()
- 
-+            self.address = queue.get()
-+            queue.close()
-+            queue.join_thread()
-+
-             return self.process
-         finally:
-             signal.pthread_sigmask(signal.SIG_SETMASK, mask)
-diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index 8e849897..a059e521 100644
---- a/lib/hashserv/server.py
-+++ b/lib/hashserv/server.py
-@@ -410,11 +410,11 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
- 
- 
- class Server(bb.asyncrpc.AsyncServer):
--    def __init__(self, db, loop=None, upstream=None, read_only=False):
-+    def __init__(self, db, upstream=None, read_only=False):
-         if upstream and read_only:
-             raise bb.asyncrpc.ServerError("Read-only hashserv cannot pull from an upstream server")
- 
--        super().__init__(logger, loop)
-+        super().__init__(logger)
- 
-         self.request_stats = Stats()
-         self.db = db
+@@ -236,6 +239,19 @@ class AsyncServer(object):
+         Serve requests in a child process
+         """
+         def run(queue):
++            # Create loop and override any loop that may have existed
++            # in a parent process.  Without doing this and instead
++            # using get_event_loop, at the very minimum the hashserv
++            # unit tests will hang when running the second test.
++            # This happens since get_event_loop in the spawned server
++            # process for the second testcase ends up with the loop
++            # from the hashserv client created in the unit test process
++            # when running the first testcase.  The problem is somewhat
++            # more general, though, as any potential use of asyncio in
++            # Cooker could create a loop that needs to replaced in this
++            # new process.
++            self.loop = asyncio.new_event_loop()
++            asyncio.set_event_loop(self.loop)
+             try:
+                 self.start()
+             finally:
 -- 
 2.31.1
 
