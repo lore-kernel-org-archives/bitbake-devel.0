@@ -1,160 +1,77 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
- by mx.groups.io with SMTP id smtpd.web12.75340.1629403126842504090
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+ by mx.groups.io with SMTP id smtpd.web10.1926.1629485174234797886
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 19 Aug 2021 12:58:47 -0700
+ Fri, 20 Aug 2021 11:46:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=McOjT8M6;
- spf=pass (domain: gmail.com, ip: 209.85.210.52, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f52.google.com with SMTP id r17-20020a0568302371b0290504f3f418fbso10108010oth.12
-        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Aug 2021 12:58:46 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=LzFQ77Nn;
+ spf=pass (domain: gmail.com, ip: 209.85.219.173, mailfrom: mayank77fromindia@gmail.com)
+Received: by mail-yb1-f173.google.com with SMTP id a9so17003660ybr.5
+        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Aug 2021 11:46:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=wdm9aLZOCvRwKSRz1YcTs+J9bfZA8KS/Bzrqda8EaHw=;
-        b=McOjT8M69608hSJklOy8MXX2Z2SFkQ4rj1XqJAGge1wteWbwY8eagjLC3RWY0xhP4E
-         kHP3hqo2tV7eY0JsjDgY86lllntktkW8ZBdF4FmTtVOqdflYUgJSKJ7w2+JmWhKAjibu
-         oat6ijHvtoPEXeyK9hEU93szAG0WBzKAkddrIbhnyaoaGfWSGWESM9KUT2sKgx8W2gHU
-         s/nIfBWo3NZmxGgFKOeVuNTnDDKAMRbQFMAtym0TLyiUQ3EhDSp/gfwHtF0VBzxg2RKb
-         cXHJzM7x8z9rO4dVRj97cbYOFdqPAsij4+Vi/Q3DWim8nelgdtRgU0lEVzmP4DuHgMua
-         5kaw==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=UICqbFrxEs7mk2d4zaXHvwtiufaqDMETRxW4pHO26NM=;
+        b=LzFQ77NnS88S1V5nuOJaR6vEXK0IMfH85KwBkp9nNb70POOqRQ7Tm4nVxt5HqK3nQp
+         G+8znkbVwSsAe7ROjCWaLtYz8A1mN3I5eEz5fGsvTX1Msu6rCRQTfwPJAmsnpMdt7ZiH
+         Lsj2UyTqmEV/+JCkeU4ITUqqp70rX9GnLLz9KyPuU8Q5xRQZeWchfYwcVauZeoqHb4a2
+         Tm6K11aMJV9a+tJZmkg3a+ZZjbaSSkR51+SRTEJs2ZiYtJWpXXpwYiAAerIvaZLOrZKr
+         Wy8Z/jA1uKwUyuksLYLbRJtVf/SJIf30Gt8SxYfD/SUeU0hN5JpXyFk4ll6qD7E2TdXF
+         iuZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=wdm9aLZOCvRwKSRz1YcTs+J9bfZA8KS/Bzrqda8EaHw=;
-        b=MgNEYHivX1w6aK3XElg8uGVtYE/dZBw74jJZQJQ1acBGz+JVUS65r7Xi+KA64c8JNH
-         jL3wPJHz9gDuju1XPbk3kV0uxxFvAi5aJFBMzUY2Fn6Fm1aZBSbi6tMUHGoOleZj+Mfn
-         0s7IqCRficOWPp6GRBUO8wlmWNn/873zUOEg/tXTRSdNgYTOwC+AP59WTjtggKcxS3IQ
-         NxJ2mhD+3pQdBMYAKoI8i+YR2BGkQUgemyus8e19Na9Ctr9bnc4z6WRW2f5pSBbeDLZO
-         8aAfhVUjZv9+2gMOG0yR3t2fYMR29J9CCKZk244B5fnCG3Ga4urGzqwCMLUPqHL3wBWZ
-         Qz4A==
-X-Gm-Message-State: AOAM532YAI/iFcqVu/7+83AQG5EiD7Oapf+vszoguv6xIGqqLiFKoAE4
-	tRNSuX4KwzAznMhSO5FQQOk=
-X-Google-Smtp-Source: ABdhPJz8sxoGJqnPcsDOqzNfjmEWn02H4/zkCCEnzKbAjx2OTriyiP5GAvFrph8Q3FDyxCrT441HOQ==
-X-Received: by 2002:a9d:6391:: with SMTP id w17mr12786766otk.19.1629403126250;
-        Thu, 19 Aug 2021 12:58:46 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from ?IPv6:2605:a601:ac3d:c100:e3e8:d9:3a56:e27d? ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id 67sm888818ota.70.2021.08.19.12.58.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Aug 2021 12:58:45 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-Subject: Re: [PATCH v6 2/4] bitbake: asyncrpc: always create new asyncio loops
-To: Scott Murray <scott.murray@konsulko.com>,
- bitbake-devel@lists.openembedded.org,
- Richard Purdie <richard.purdie@linuxfoundation.org>,
- Paul Barker <paul@pbarker.dev>
-References: <cover.1629388054.git.scott.murray@konsulko.com>
- <385ebae0db5851cd4a6094810a794d90a0a85c92.1629388054.git.scott.murray@konsulko.com>
-Message-ID: <a9c79a53-5491-e97f-3fb7-15151f7bb223@gmail.com>
-Date: Thu, 19 Aug 2021 14:58:44 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=UICqbFrxEs7mk2d4zaXHvwtiufaqDMETRxW4pHO26NM=;
+        b=rCZ4sTbFzaDeIQQS4Oodhf4JugrPba06IdaGW5f8jOC0x+phAMoBXFjsvOsg4docAk
+         0ITwXQod7vNXOcdcI+wP/2XSWS5okusPC860U315TpUNTZUGvHS0kABAzcUkX1kT1Asr
+         K585x7rOETRo2nYkp5W9bUeJX4ewIMOPJp6CXiamuf5Rmi96PmlGJVcmTYrfDTz4tYBv
+         J+i0hTuGSpcw4uXOhQYC9srzZrqg1LpYsHd/CiPyfl3BexwjN0E5g/YEW6OovKFyccTs
+         BwnihKAjz125mIPSofogFB8h4V/cJTE/7+4JmA8cfAY6VqyiiwsgI5D8bAQ1A2OGbRk+
+         QxPA==
+X-Gm-Message-State: AOAM532WQyshcKPn9bca9OIynoY1MDeQz1jH5Uvmw/az28ceIN4ddZ3D
+	wcRLkBZrHYrncdDfjvJj/ThmQ2HDv7t+t/noMOsEORLFib79rg==
+X-Google-Smtp-Source: ABdhPJwVFZXVeIx8iqqSu/m6BGSvxERFfUmuDRpYiuFE3Fu97suRty013B7iW6uAEmoeQiSOVJ8eg5/7KbpwsDZ0jpo=
+X-Received: by 2002:a25:68c4:: with SMTP id d187mr1470101ybc.457.1629485173224;
+ Fri, 20 Aug 2021 11:46:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <385ebae0db5851cd4a6094810a794d90a0a85c92.1629388054.git.scott.murray@konsulko.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+From: "Mayank Agarwal" <mayank77fromindia@gmail.com>
+Date: Sat, 21 Aug 2021 00:16:02 +0530
+Message-ID: <CAKjpqyJdF4O_RBURr5Nb+GDJCzLk5=oni9yHBk09vVsaYsXgNg@mail.gmail.com>
+Subject: how to give toolchain path in recipe
+To: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000eab82005ca0214f3"
+
+--000000000000eab82005ca0214f3
+Content-Type: text/plain; charset="UTF-8"
+
+Hi all,
+
+I am compiling the module in multilib
+defaulttune is aarch64 and the usermode 32 bit.
+how can i give toolchain path in .bb file.Is it with
+
+EXTRA_OEMAKE += "${TARGET_SYS}"
+
+or
+
+EXTRA_OEMAKE   += "${TARGET_PREFIX}"
+
+I am getting arm-rdkmllib32-linux-gnueabi-gcc not found error.
 
 
-On 8/19/21 11:46 AM, Scott Murray wrote:
-> asyncio in older Python 3.x (seen with 3.7) can seemingly hang if
-> new_event_loop is called repeatedly in the same process.  The
-> reuse of processes in the Bitbake thread pool during parsing seems
-> to be able to trigger this with the PR server export selftest.
-> It appears that calling set_event_loop with the new loop avoids the
-> issue, so that is now done in the asyncrpc Client initializer (with
-> an explanatory comment).  This should be revisited when the day
-> arrives that Python 3.9 becomes the minimum required for BitBake.
->
-> Additionally, it was discovered that using get_event_loop in the
-> asyncrpc server initialization can trigger hangs in the hashserv
-> unittests when the second test is run.  To avoid this, switch to
-> calling new_event_loop + set_event_loop in the initialization code
-> there as well.
->
-> Signed-off-by: Scott Murray <scott.murray@konsulko.com>
+Best Regards,
 
-Looks good to me
+--000000000000eab82005ca0214f3
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Joshua Watt <JPEWhacker@gmail.com>
+<div dir=3D"ltr">Hi all,<div><br></div><div>I am compiling the module in mu=
+ltilib</div><div>defaulttune is aarch64 and the usermode 32 bit.</div><div>=
+how can i give toolchain path in .bb file.Is it with=C2=A0</div><div><br></=
+div><div>EXTRA_OEMAKE +=3D &quot;${TARGET_SYS}&quot;</div><div><br></div><d=
+iv>or</div><div><br class=3D"gmail-Apple-interchange-newline">EXTRA_OEMAKE=
+=C2=A0=C2=A0 +=3D &quot;${TARGET_PREFIX}&quot;<br></div><div><br></div><div=
+>I am getting arm-rdkmllib32-linux-gnueabi-gcc not found error.<br></div><d=
+iv><br></div><div><br></div><div>Best Regards,</div><div><br></div><div><br=
+></div><div><br></div><div><br></div></div>
 
-
-> ---
->   lib/bb/asyncrpc/client.py | 10 ++++++++++
->   lib/bb/asyncrpc/serv.py   | 24 ++++++++++++++++++++----
->   2 files changed, 30 insertions(+), 4 deletions(-)
->
-> diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-> index 3eb4fdde..50e60d5c 100644
-> --- a/lib/bb/asyncrpc/client.py
-> +++ b/lib/bb/asyncrpc/client.py
-> @@ -119,6 +119,16 @@ class Client(object):
->           self.client = self._get_async_client()
->           self.loop = asyncio.new_event_loop()
->   
-> +        # Override any pre-existing loop.
-> +        # Without this, the PR server export selftest triggers a hang
-> +        # when running with Python 3.7.  The drawback is that there is
-> +        # potential for issues if the PR and hash equiv (or some new)
-> +        # clients need to both be instantiated in the same process.
-> +        # This should be revisited if/when Python 3.9 becomes the
-> +        # minimum required version for BitBake, as it seems not
-> +        # required (but harmless) with it.
-> +        asyncio.set_event_loop(self.loop)
-> +
->           self._add_methods('connect_tcp', 'close', 'ping')
->   
->       @abc.abstractmethod
-> diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
-> index 45628698..b4cffff2 100644
-> --- a/lib/bb/asyncrpc/serv.py
-> +++ b/lib/bb/asyncrpc/serv.py
-> @@ -136,10 +136,7 @@ class AsyncServer(object):
->           self.logger = logger
->           self.start = None
->           self.address = None
-> -
-> -    @property
-> -    def loop(self):
-> -        return asyncio.get_event_loop()
-> +        self.loop = None
->   
->       def start_tcp_server(self, host, port):
->           def start_tcp():
-> @@ -228,6 +225,12 @@ class AsyncServer(object):
->           """
->           Serve requests in the current process
->           """
-> +        # Create loop and override any loop that may have existed in
-> +        # a parent process.  It is possible that the usecases of
-> +        # serve_forever might be constrained enough to allow using
-> +        # get_event_loop here, but better safe than sorry for now.
-> +        self.loop = asyncio.new_event_loop()
-> +        asyncio.set_event_loop(self.loop)
->           self.start()
->           self._serve_forever()
->   
-> @@ -236,6 +239,19 @@ class AsyncServer(object):
->           Serve requests in a child process
->           """
->           def run(queue):
-> +            # Create loop and override any loop that may have existed
-> +            # in a parent process.  Without doing this and instead
-> +            # using get_event_loop, at the very minimum the hashserv
-> +            # unit tests will hang when running the second test.
-> +            # This happens since get_event_loop in the spawned server
-> +            # process for the second testcase ends up with the loop
-> +            # from the hashserv client created in the unit test process
-> +            # when running the first testcase.  The problem is somewhat
-> +            # more general, though, as any potential use of asyncio in
-> +            # Cooker could create a loop that needs to replaced in this
-> +            # new process.
-> +            self.loop = asyncio.new_event_loop()
-> +            asyncio.set_event_loop(self.loop)
->               try:
->                   self.start()
->               finally:
+--000000000000eab82005ca0214f3--
