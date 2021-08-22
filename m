@@ -1,77 +1,78 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
- by mx.groups.io with SMTP id smtpd.web10.1926.1629485174234797886
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+ by mx.groups.io with SMTP id smtpd.web11.9445.1629635722131261298
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Aug 2021 11:46:14 -0700
+ Sun, 22 Aug 2021 05:35:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=LzFQ77Nn;
- spf=pass (domain: gmail.com, ip: 209.85.219.173, mailfrom: mayank77fromindia@gmail.com)
-Received: by mail-yb1-f173.google.com with SMTP id a9so17003660ybr.5
-        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Aug 2021 11:46:14 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=hgrzMXJq;
+ spf=pass (domain: gmail.com, ip: 209.85.160.174, mailfrom: weaverjs@gmail.com)
+Received: by mail-qt1-f174.google.com with SMTP id l3so11523274qtk.10
+        for <bitbake-devel@lists.openembedded.org>; Sun, 22 Aug 2021 05:35:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=UICqbFrxEs7mk2d4zaXHvwtiufaqDMETRxW4pHO26NM=;
-        b=LzFQ77NnS88S1V5nuOJaR6vEXK0IMfH85KwBkp9nNb70POOqRQ7Tm4nVxt5HqK3nQp
-         G+8znkbVwSsAe7ROjCWaLtYz8A1mN3I5eEz5fGsvTX1Msu6rCRQTfwPJAmsnpMdt7ZiH
-         Lsj2UyTqmEV/+JCkeU4ITUqqp70rX9GnLLz9KyPuU8Q5xRQZeWchfYwcVauZeoqHb4a2
-         Tm6K11aMJV9a+tJZmkg3a+ZZjbaSSkR51+SRTEJs2ZiYtJWpXXpwYiAAerIvaZLOrZKr
-         Wy8Z/jA1uKwUyuksLYLbRJtVf/SJIf30Gt8SxYfD/SUeU0hN5JpXyFk4ll6qD7E2TdXF
-         iuZw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hQunx82kUOcfhKAs1H3rUYrI4u1BFb6sqFq5WIpZ6Cs=;
+        b=hgrzMXJqyuqgJ0VQrcPqShh/hxOzAAOf8Kh130ONSQAAa1qhicvIAWvAm/F31Wn2ut
+         o+5bGQM9UF93dmM+RLDTSp9OHI29wP/cZ8rfxQsMYcDhCCIwz5QhbDw6LnjjELY5/6Xz
+         IheKh/xTJfAiyaXfGCvx1bHDPFzY9Xh/U548eGuKI4T4KfL938x4uHBAouaBIZRiu2AN
+         wvPv3rjVkVvWLs2+xjKt0ZLQk4Gq+WroT4mH2/5Bh8xSZ7hMEIIx8UOhqNSXX+2qVXZ9
+         bHemDN2AVgJUg5oHycb/As4qZaApVw885B0lpyGouxpV5fb8WLSik8eliaZCxHhMI1iw
+         aYWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=UICqbFrxEs7mk2d4zaXHvwtiufaqDMETRxW4pHO26NM=;
-        b=rCZ4sTbFzaDeIQQS4Oodhf4JugrPba06IdaGW5f8jOC0x+phAMoBXFjsvOsg4docAk
-         0ITwXQod7vNXOcdcI+wP/2XSWS5okusPC860U315TpUNTZUGvHS0kABAzcUkX1kT1Asr
-         K585x7rOETRo2nYkp5W9bUeJX4ewIMOPJp6CXiamuf5Rmi96PmlGJVcmTYrfDTz4tYBv
-         J+i0hTuGSpcw4uXOhQYC9srzZrqg1LpYsHd/CiPyfl3BexwjN0E5g/YEW6OovKFyccTs
-         BwnihKAjz125mIPSofogFB8h4V/cJTE/7+4JmA8cfAY6VqyiiwsgI5D8bAQ1A2OGbRk+
-         QxPA==
-X-Gm-Message-State: AOAM532WQyshcKPn9bca9OIynoY1MDeQz1jH5Uvmw/az28ceIN4ddZ3D
-	wcRLkBZrHYrncdDfjvJj/ThmQ2HDv7t+t/noMOsEORLFib79rg==
-X-Google-Smtp-Source: ABdhPJwVFZXVeIx8iqqSu/m6BGSvxERFfUmuDRpYiuFE3Fu97suRty013B7iW6uAEmoeQiSOVJ8eg5/7KbpwsDZ0jpo=
-X-Received: by 2002:a25:68c4:: with SMTP id d187mr1470101ybc.457.1629485173224;
- Fri, 20 Aug 2021 11:46:13 -0700 (PDT)
-MIME-Version: 1.0
-From: "Mayank Agarwal" <mayank77fromindia@gmail.com>
-Date: Sat, 21 Aug 2021 00:16:02 +0530
-Message-ID: <CAKjpqyJdF4O_RBURr5Nb+GDJCzLk5=oni9yHBk09vVsaYsXgNg@mail.gmail.com>
-Subject: how to give toolchain path in recipe
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hQunx82kUOcfhKAs1H3rUYrI4u1BFb6sqFq5WIpZ6Cs=;
+        b=Dq+tuITaXPMm+KF+LDgQU+a1NyzZm+UWH4tG1An24FjbHRUKtaB54AS1+GvZx3DN02
+         OLTqdzbV/iBhTpFNqlkJODvdxArmjMc7QGfKvvCGPC4gN7mslCrGOJgsu618t/EzCTbb
+         yuStwwYFTVp21Cqd4j5NA52MCjiOYUQjq1Pf70yJ5HjNr7dMdwGaRUEJzVpY5/wwOfqf
+         ZreAgNxNsn/Kczc3bSFJJTKgSGpfBtF0GJtKLluoPtXy4CWNXzuXAkG2mbp+VMDciWe5
+         2sHCrB2fRfP+hDFCQEhKen7LQvJn0gRmMb+rBvnj4YY5YU9Eq+4mPn2x6Q4tXKj4EsNQ
+         GF0g==
+X-Gm-Message-State: AOAM531m9h+p9zlvE2uQTzL8BnAYhEv0Qyc5Vqwu7Ii8p+ISPwkHQk5T
+	qu7nJoR9jPBMgIExEbl1ce1aAdJt3KDndWIyBQ==
+X-Google-Smtp-Source: ABdhPJwrWykxr/JZNCejAbvRdWmvNXWMF/9d0HErLFo4wCQgVbuE1uHsbfC/hdHQzxyeM9JoyXk1Mw==
+X-Received: by 2002:ac8:544e:: with SMTP id d14mr7153268qtq.133.1629635721027;
+        Sun, 22 Aug 2021 05:35:21 -0700 (PDT)
+Return-Path: <weaverjs@gmail.com>
+Received: from p-impout003.msg.pkvw.co.charter.net (cpe-69-133-48-66.cinci.res.rr.com. [69.133.48.66])
+        by smtp.gmail.com with ESMTPSA id i123sm6605020qkf.60.2021.08.22.05.35.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Aug 2021 05:35:20 -0700 (PDT)
+From: "Scott Weaver" <weaverjs@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000eab82005ca0214f3"
+Cc: Scott Weaver <weaverjs@gmail.com>
+Subject: [bitbake][PATCH] bitbake: fetch2: correct PREMIRROR URI
+Date: Sun, 22 Aug 2021 08:34:47 -0400
+Message-Id: <20210822123447.3477259-1-weaverjs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
---000000000000eab82005ca0214f3
-Content-Type: text/plain; charset="UTF-8"
+When downloadfilename is defined in a recipe's SRC_URI and a PREMIRROR is also
+defined for that URI, the downloadfilename is appended to the mirror URI and it
+should not be.
 
-Hi all,
+[YOCTO #13039]
 
-I am compiling the module in multilib
-defaulttune is aarch64 and the usermode 32 bit.
-how can i give toolchain path in .bb file.Is it with
+Signed-off-by: Scott Weaver <weaverjs@gmail.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-EXTRA_OEMAKE += "${TARGET_SYS}"
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 914fa5c024..0bcd566e83 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -467,7 +467,7 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
+                     uri_decoded[5] = {}
+                 elif ud.localpath and ud.method.supports_checksum(ud):
+                     basename = os.path.basename(ud.localpath)
+-                if basename and not result_decoded[loc].endswith(basename):
++                if basename and result_decoded[loc].endswith('/'):
+                     result_decoded[loc] = os.path.join(result_decoded[loc], basename)
+         else:
+             return None
+-- 
+2.25.1
 
-or
-
-EXTRA_OEMAKE   += "${TARGET_PREFIX}"
-
-I am getting arm-rdkmllib32-linux-gnueabi-gcc not found error.
-
-
-Best Regards,
-
---000000000000eab82005ca0214f3
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi all,<div><br></div><div>I am compiling the module in mu=
-ltilib</div><div>defaulttune is aarch64 and the usermode 32 bit.</div><div>=
-how can i give toolchain path in .bb file.Is it with=C2=A0</div><div><br></=
-div><div>EXTRA_OEMAKE +=3D &quot;${TARGET_SYS}&quot;</div><div><br></div><d=
-iv>or</div><div><br class=3D"gmail-Apple-interchange-newline">EXTRA_OEMAKE=
-=C2=A0=C2=A0 +=3D &quot;${TARGET_PREFIX}&quot;<br></div><div><br></div><div=
->I am getting arm-rdkmllib32-linux-gnueabi-gcc not found error.<br></div><d=
-iv><br></div><div><br></div><div>Best Regards,</div><div><br></div><div><br=
-></div><div><br></div><div><br></div></div>
-
---000000000000eab82005ca0214f3--
