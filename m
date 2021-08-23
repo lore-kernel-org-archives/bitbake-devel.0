@@ -1,171 +1,87 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
- by mx.groups.io with SMTP id smtpd.web11.20633.1629703124892820619
+Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
+ by mx.groups.io with SMTP id smtpd.web09.24045.1629726358774523302
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 23 Aug 2021 00:18:45 -0700
+ Mon, 23 Aug 2021 06:45:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=g9wa8PwQ;
- spf=pass (domain: gmail.com, ip: 209.85.210.172, mailfrom: jiladahe1997@gmail.com)
-Received: by mail-pf1-f172.google.com with SMTP id k19so14573398pfc.11
-        for <bitbake-devel@lists.openembedded.org>; Mon, 23 Aug 2021 00:18:44 -0700 (PDT)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=G2XVx407;
+ spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:mime-version:message-id
-         :content-transfer-encoding;
-        bh=aPw8sZWApIXBVwI43iGA1VsrcJuqgYqMCkpajt36S4M=;
-        b=g9wa8PwQMrkEWo4agIE3+ngbC0ytjNJQCgThwgLlJ+JdCFRJmhY5goYag+8w4gY/WR
-         ANn+eY+zQoIx5RdxkbEuVj9UyYEav3bmeuG15ISL0QKz7zKvAFCXEYE7615lG9D8d2px
-         FB/I0D8aicZEeNVyOQzWarRke+Gx4K477PbPNI5y8B/axmcqo4IOarea4s3+Bb3fATXa
-         2O9/k5ZZqwfvy1FnFKg2sM1FHeU52xqA8HZytfnN+IlQGF+bv2b2cLXvwq8SDImQRREz
-         HLPIvjQWQHThplf+j38Fs1L36ll2FTkDnL1prJfQciriK7ymU/8YJ+lRvsxQsgm57tas
-         WIIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:mime-version:message-id
-         :content-transfer-encoding;
-        bh=aPw8sZWApIXBVwI43iGA1VsrcJuqgYqMCkpajt36S4M=;
-        b=EYC7fET4BOvVP/agyJ0x+3aasPml2KcMzFAy0x8u7rXrRcL1F3gF/bApzpg0Ll0sdv
-         Q9Bpvl0IoJTHJqhmUTFtQ7kj6jJX+ickFEJoH2Tu/irHcqiewytWMiYHK2OuwLWhSAMQ
-         SICIc7Yhfg7EwJ5gNP3EW2ETplTl+4kYC7ilkjcJY9dO9Kn4d/ReV15wnU4ow/KoHC+d
-         vWfIBEqTIeNFgxq8lZIZ6hzo9HgDPYmUFKZrhwmt2PPcnlVmsNb1TCmZXhDaFnNduIUl
-         xVt9HjGkUOyn8NtCGjv7govRHcAt3kMyP/al8av7/BOIlDbdzLX/DRKcMbn39MZHEN9d
-         +KnA==
-X-Gm-Message-State: AOAM531H0NJKcCemlCV2nCuyHtFFWxGqO+iownV2yodUs1tIOCDdP4QT
-	v8Z0HqeWi4BVX96rGkcBm6w=
-X-Google-Smtp-Source: ABdhPJydrG7I7ytnMeaERfcDpYXcw7dS+EzvMQmSl2DtYItHcnVNmNOYlFWBeV5MnpL6ABVRuf6plg==
-X-Received: by 2002:a62:19cf:0:b0:3eb:347d:1de7 with SMTP id 198-20020a6219cf000000b003eb347d1de7mr3103164pfz.17.1629703124439;
-        Mon, 23 Aug 2021 00:18:44 -0700 (PDT)
-Return-Path: <jiladahe1997@gmail.com>
-Received: from DESKTOP-6448JS8 (li1192-94.members.linode.com. [45.79.93.94])
-        by smtp.gmail.com with ESMTPSA id 143sm14630997pfx.1.2021.08.23.00.18.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Aug 2021 00:18:44 -0700 (PDT)
-Date: Mon, 23 Aug 2021 15:18:41 +0800
-From: "Mingrui Ren" <jiladahe1997@gmail.com>
-To: yocto <yocto@lists.yoctoproject.org>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>, 
-	richard.purdie <richard.purdie@linuxfoundation.org>, 
-	poky <poky@lists.yoctoproject.org>
-Cc: ross.burton <ross.burton@arm.com>
-Subject: [PATCH v2] bitbake/fetch2: Add a new variable 'BB_FETCH_ENV' to export Fetcher env
-X-Priority: 3
-X-GUID: 998B2482-BECD-46E4-8CCA-88368AAFC43C
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.21.453[cn]
-Mime-Version: 1.0
-Message-ID: <2021082315183802113213@gmail.com>
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: base64
+  d=axis.com; q=dns/txt; s=axis-central1; t=1629726359;
+  x=1661262359;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=ccapny/qsfoxil/o8GIXmmaCXLAq8/DvHNGE5cykbpI=;
+  b=G2XVx407VpnNHtXC5LlHQ7Ny6bIwacYaQPBs6kHF1QJtOgHfMPKQT2NU
+   vd15S/RkHtwGxuaRWeq2ODfTm4TUwDGJsmKOl8ANZBvTaBCxct4RckD5q
+   kFiniAXrHMcmCZwMwEFWpVsgp2iFhI1iRd1DXx2g0+Ab/dq8h4FcSnLFl
+   8YKQqEt1Xiklj6uX7Hk5z7EeE2llw7sShylTtqQyFHc5DcMa6n3E8uk5Q
+   7s2g6u0DG4GCuPQzYiB4n9++B7+FXQb4kGIRGjBtVdhHdJ6f2j1ZZiwC1
+   rCPxKMD9h/vp26LpRXyezV6UJtajRIGur8AC8Mpx/1cl39xlr6/f3iUCQ
+   Q==;
+From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] README: Add note about test suite and new tests
+Thread-Topic: [bitbake-devel] [PATCH] README: Add note about test suite and
+ new tests
+Thread-Index: AQHXl5zP9KMppWrIjEucbN0UPFOEYquBGrqw
+Date: Mon, 23 Aug 2021 13:45:55 +0000
+Message-ID: <ad876f93694a443c867000a9ef17e409@axis.com>
+References: <20210822212925.612609-1-richard.purdie@linuxfoundation.org>
+ <20210822212925.612609-2-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20210822212925.612609-2-richard.purdie@linuxfoundation.org>
+Accept-Language: en-US, sv-SE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.5.60]
+MIME-Version: 1.0
+Return-Path: peter.kjellerstedt@axis.com
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-RnJvbSAxYjBkN2I0YmI0YTViMzlmN2FlMGNlN2Q3YWU1ODk3YTMzNjM3OTcyIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBNaW5ncnVpIFJlbiA8amlsYWRhaGUxOTk3QGdtYWlsLmNvbT4K
-RGF0ZTogTW9uLCAyMyBBdWcgMjAyMSAxNDo0OTowMyArMDgwMApTdWJqZWN0OiBbUEFUQ0ggdjJd
-IGJpdGJha2UvZmV0Y2gyOiBBZGQgYSBuZXcgdmFyaWFibGUgJ0JCX0ZFVENIX0VOVicgdG8gZXhw
-b3J0IEZldGNoZXIgZW52CgpUaGUgZW52aXJvbm1lbnQgdmFyaWFibGVzIHVzZWQgYnkgRmV0Y2hl
-ciBhcmUgaGFyZC1jb2RlZCwgYW5kIGFyZSBvYnRhaW5lZApmcm9tIEhPU1QgZW52IGluc3RlYWQg
-b2YgYml0YmFrZSBkYXRhc3RvcmUKVGhpcyBwYXRjaCBhZGQgYSBuZXcgdmFyaWFibGUgJ0JCX0ZF
-VENIX0VOVicsYW5kIG1vZGlmeSB0aGUgZGVmYXVsdApCQl9FTlZfRVhUUkFXSElURV9PRSBmb3Ig
-YmFja3dhcmRzIGNvbXBhdGliaWxpdHksIHRyeWluZyB0byBmaXggdGhlCnByb2JsZW1zIGFib3Zl
-LgoKU2lnbmVkLW9mZi1ieTogTWluZ3J1aSBSZW4gPGppbGFkYWhlMTk5N0BnbWFpbC5jb20+Ci0t
-LQpjaGFuZ2VzIGluIHYyOgogICAgIGEuY2hhbmdlcyB0aGUgdmFyaWFibGUgbmFtZSBmcm9tICdG
-RVRDSF9FTlZfV0hJVEVMSVNUJyB0byAnQkJfRkVUQ0hfRU5WJy4KICAgICBiLmFkZCAnQkJfRkVU
-Q0hfRU5WJyBpbiBsb2NhbC5jb25mLCByYXRoZXIgdGhhbiBleHBvcnQgaXQgaW4gaG9zdAogICAg
-ICAgZW52aXJvbWVudC4KICAgICBjLm1vZGlmeSBleGlzdGluZyBCQl9FTlZfRVhUUkFXSElURV9P
-RSBmb3IgYmFja3dhcmRzIGNvbXBhdGliaWxpdHkuCiAgICAgZC5Ud28gY29tbWl0cyByZWNlbnRs
-eSBtb2RpZmllZCB0aGlzIHZhcmlhYmxlLiBUaGUgY29tbWl0IElEIGlzOgogICAgICAgMzQ4Mzg0
-MTM1MjcyYWU3YzYyYTExZWVhYmNjNDNlZGRjOTU3ODExZiBhbmQgNWRjZTJmM2RhMjBhMTRjMGVi
-NTIyOTY5NjU2MWIwYzVmNmZjZTU0YywKICAgICAgIFNvIEkgYWRqdXN0ZWQgdGhlIG5ldyB2YXJp
-YWJsZXMgaW4gdGhlIHBhdGNoLgoKIGJpdGJha2UvbGliL2JiL2ZldGNoMi9fX2luaXRfXy5weSB8
-IDM0ICsrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIGJpdGJha2UvbGliL2JiL2ZldGNo
-Mi93Z2V0LnB5ICAgICB8ICAyICstCiBtZXRhLXBva3kvY29uZi9sb2NhbC5jb25mLnNhbXBsZSAg
-fCAxMiArKysrKysrKysrKwogc2NyaXB0cy9vZS1idWlsZGVudi1pbnRlcm5hbCAgICAgIHwgIDMg
-KystCiA0IGZpbGVzIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDI3IGRlbGV0aW9ucygtKQoK
-ZGlmZiAtLWdpdCBhL2JpdGJha2UvbGliL2JiL2ZldGNoMi9fX2luaXRfXy5weSBiL2JpdGJha2Uv
-bGliL2JiL2ZldGNoMi9fX2luaXRfXy5weQppbmRleCA5MTRmYTVjMDI0Li5jYmJlMzJkMWRmIDEw
-MDY0NAotLS0gYS9iaXRiYWtlL2xpYi9iYi9mZXRjaDIvX19pbml0X18ucHkKKysrIGIvYml0YmFr
-ZS9saWIvYmIvZmV0Y2gyL19faW5pdF9fLnB5CkBAIC04MDgsMjggKzgwOCwxMyBAQCBkZWYgbG9j
-YWxwYXRoKHVybCwgZCk6CiAgICAgZmV0Y2hlciA9IGJiLmZldGNoMi5GZXRjaChbdXJsXSwgZCkK
-ICAgICByZXR1cm4gZmV0Y2hlci5sb2NhbHBhdGgodXJsKQogCi0jIE5lZWQgdG8gZXhwb3J0IFBB
-VEggYXMgYmluYXJ5IGNvdWxkIGJlIGluIG1ldGFkYXRhIHBhdGhzCi0jIHJhdGhlciB0aGFuIGhv
-c3QgcHJvdmlkZWQKLSMgQWxzbyBpbmNsdWRlIHNvbWUgb3RoZXIgdmFyaWFibGVzLgotRkVUQ0hf
-RVhQT1JUX1ZBUlMgPSBbJ0hPTUUnLCAnUEFUSCcsCi0gICAgICAgICAgICAgICAgICAgICAnSFRU
-UF9QUk9YWScsICdodHRwX3Byb3h5JywKLSAgICAgICAgICAgICAgICAgICAgICdIVFRQU19QUk9Y
-WScsICdodHRwc19wcm94eScsCi0gICAgICAgICAgICAgICAgICAgICAnRlRQX1BST1hZJywgJ2Z0
-cF9wcm94eScsCi0gICAgICAgICAgICAgICAgICAgICAnRlRQU19QUk9YWScsICdmdHBzX3Byb3h5
-JywKLSAgICAgICAgICAgICAgICAgICAgICdOT19QUk9YWScsICdub19wcm94eScsCi0gICAgICAg
-ICAgICAgICAgICAgICAnQUxMX1BST1hZJywgJ2FsbF9wcm94eScsCi0gICAgICAgICAgICAgICAg
-ICAgICAnR0lUX1BST1hZX0NPTU1BTkQnLAotICAgICAgICAgICAgICAgICAgICAgJ0dJVF9TU0gn
-LAotICAgICAgICAgICAgICAgICAgICAgJ0dJVF9TU0xfQ0FJTkZPJywKLSAgICAgICAgICAgICAg
-ICAgICAgICdHSVRfU01BUlRfSFRUUCcsCi0gICAgICAgICAgICAgICAgICAgICAnU1NIX0FVVEhf
-U09DSycsICdTU0hfQUdFTlRfUElEJywKLSAgICAgICAgICAgICAgICAgICAgICdTT0NLUzVfVVNF
-UicsICdTT0NLUzVfUEFTU1dEJywKLSAgICAgICAgICAgICAgICAgICAgICdEQlVTX1NFU1NJT05f
-QlVTX0FERFJFU1MnLAotICAgICAgICAgICAgICAgICAgICAgJ1A0Q09ORklHJywKLSAgICAgICAg
-ICAgICAgICAgICAgICdTU0xfQ0VSVF9GSUxFJywKLSAgICAgICAgICAgICAgICAgICAgICdBV1Nf
-QUNDRVNTX0tFWV9JRCcsCi0gICAgICAgICAgICAgICAgICAgICAnQVdTX1NFQ1JFVF9BQ0NFU1Nf
-S0VZJywKLSAgICAgICAgICAgICAgICAgICAgICdBV1NfREVGQVVMVF9SRUdJT04nXQorZGVmIGdl
-dGZldGNoZW52KGQpOgorICAgICMgTmVlZCB0byBleHBvcnQgUEFUSCBhcyBiaW5hcnkgY291bGQg
-YmUgaW4gbWV0YWRhdGEgcGF0aHMKKyAgICAjIHJhdGhlciB0aGFuIGhvc3QgcHJvdmlkZWQKKyAg
-ICAjIEFsc28gaW5jbHVkZSBzb21lIG90aGVyIHZhcmlhYmxlcy4KKyAgICB2YXJzID0gWydIT01F
-JywgJ1BBVEgnXQorICAgIHZhcnMuZXh0ZW5kKChkLmdldFZhcigiQkJfRkVUQ0hfRU5WIikgb3Ig
-IiIpLnNwbGl0KCkpCisgICAgcmV0dXJuIHZhcnMKIAogZGVmIHJ1bmZldGNoY21kKGNtZCwgZCwg
-cXVpZXQ9RmFsc2UsIGNsZWFudXA9Tm9uZSwgbG9nPU5vbmUsIHdvcmtkaXI9Tm9uZSk6CiAgICAg
-IiIiCkBAIC04MzksNyArODI0LDcgQEAgZGVmIHJ1bmZldGNoY21kKGNtZCwgZCwgcXVpZXQ9RmFs
-c2UsIGNsZWFudXA9Tm9uZSwgbG9nPU5vbmUsIHdvcmtkaXI9Tm9uZSk6CiAgICAgT3B0aW9uYWxs
-eSByZW1vdmUgdGhlIGZpbGVzL2RpcmVjdG9yaWVzIGxpc3RlZCBpbiBjbGVhbnVwIHVwb24gZmFp
-bHVyZQogICAgICIiIgogCi0gICAgZXhwb3J0dmFycyA9IEZFVENIX0VYUE9SVF9WQVJTCisgICAg
-ZXhwb3J0dmFycyA9IGdldGZldGNoZW52KGQpCiAKICAgICBpZiBub3QgY2xlYW51cDoKICAgICAg
-ICAgY2xlYW51cCA9IFtdCkBAIC04NTUsOSArODQwLDggQEAgZGVmIHJ1bmZldGNoY21kKGNtZCwg
-ZCwgcXVpZXQ9RmFsc2UsIGNsZWFudXA9Tm9uZSwgbG9nPU5vbmUsIHdvcmtkaXI9Tm9uZSk6CiAg
-ICAgICAgIGQuc2V0VmFyKCJQViIsICJmZXRjaGVyYXZvaWRyZWN1cnNlIikKICAgICAgICAgZC5z
-ZXRWYXIoIlBSIiwgImZldGNoZXJhdm9pZHJlY3Vyc2UiKQogCi0gICAgb3JpZ2VudiA9IGQuZ2V0
-VmFyKCJCQl9PUklHRU5WIiwgRmFsc2UpCiAgICAgZm9yIHZhciBpbiBleHBvcnR2YXJzOgotICAg
-ICAgICB2YWwgPSBkLmdldFZhcih2YXIpIG9yIChvcmlnZW52IGFuZCBvcmlnZW52LmdldFZhcih2
-YXIpKQorICAgICAgICB2YWwgPSBkLmdldFZhcih2YXIpCiAgICAgICAgIGlmIHZhbDoKICAgICAg
-ICAgICAgIGNtZCA9ICdleHBvcnQgJyArIHZhciArICc9XCIlc1wiOyAlcycgJSAodmFsLCBjbWQp
-CiAKZGlmZiAtLWdpdCBhL2JpdGJha2UvbGliL2JiL2ZldGNoMi93Z2V0LnB5IGIvYml0YmFrZS9s
-aWIvYmIvZmV0Y2gyL3dnZXQucHkKaW5kZXggMjlmY2ZiYjNkMS4uMGNlMDZkZGI0ZiAxMDA2NDQK
-LS0tIGEvYml0YmFrZS9saWIvYmIvZmV0Y2gyL3dnZXQucHkKKysrIGIvYml0YmFrZS9saWIvYmIv
-ZmV0Y2gyL3dnZXQucHkKQEAgLTMwNiw3ICszMDYsNyBAQCBjbGFzcyBXZ2V0KEZldGNoTWV0aG9k
-KToKICAgICAgICAgIyB0byBzY29wZSB0aGUgY2hhbmdlcyB0byB0aGUgYnVpbGRfb3BlbmVyIHJl
-cXVlc3QsIHdoaWNoIGlzIHdoZW4gdGhlCiAgICAgICAgICMgZW52aXJvbm1lbnQgbG9va3VwcyBo
-YXBwZW4uCiAgICAgICAgIG5ld2VudiA9IHt9Ci0gICAgICAgIGZvciBuYW1lIGluIGJiLmZldGNo
-Mi5GRVRDSF9FWFBPUlRfVkFSUzoKKyAgICAgICAgZm9yIG5hbWUgaW4gYmIuZmV0Y2gyLmdldGZl
-dGNoZW52KGQpOgogICAgICAgICAgICAgdmFsdWUgPSBkLmdldFZhcihuYW1lKQogICAgICAgICAg
-ICAgaWYgbm90IHZhbHVlOgogICAgICAgICAgICAgICAgIG9yaWdlbnYgPSBkLmdldFZhcigiQkJf
-T1JJR0VOViIpCmRpZmYgLS1naXQgYS9tZXRhLXBva3kvY29uZi9sb2NhbC5jb25mLnNhbXBsZSBi
-L21ldGEtcG9reS9jb25mL2xvY2FsLmNvbmYuc2FtcGxlCmluZGV4IGYxZjZkNjkwZmIuLjRlOGE2
-ZjBjNzcgMTAwNjQ0Ci0tLSBhL21ldGEtcG9reS9jb25mL2xvY2FsLmNvbmYuc2FtcGxlCisrKyBi
-L21ldGEtcG9reS9jb25mL2xvY2FsLmNvbmYuc2FtcGxlCkBAIC0yNjcsNiArMjY3LDE4IEBAIFBB
-Q0tBR0VDT05GSUc6YXBwZW5kOnBuLXFlbXUtc3lzdGVtLW5hdGl2ZSA9ICIgc2RsIgogIwogI0JC
-X1NFUlZFUl9USU1FT1VUID0gIjYwIgogCisjIEJpdGJha2UgRmV0Y2hlciBFbnZpcm9ubWVudCBW
-YXJpYWJsZXMKKyMKKyMgU3BlY2lmaWMgd2hpY2ggZW52aXJvbm1lbnQgdmFyaWFibGVzIGluIGJp
-dGJha2UgZGF0YXN0b3JlIHVzZWQgYnkgZmV0Y2hlciB3aGVuCisjIGV4ZWN1dGluZyBmZXRjaCB0
-YXNrLgorIyBOT1RFOiBZb3UgbWF5IG5lZWQgdG8gbW9kaWZ5IEJCX0VOVl9FWFRSQVdISVRFLCBp
-biBvcmRlciB0byBhZGQgZW52aXJvbm1lbnQKKyMgdmFyaWFibGUgaW50byBiaXRiYWtlIGRhdGFz
-dG9yZSBmaXJzdC4KK0JCX0ZFVENIX0VOViA/PSAiSFRUUF9QUk9YWSBodHRwX3Byb3h5IEhUVFBT
-X1BST1hZIGh0dHBzX3Byb3h5IFwKK0ZUUF9QUk9YWSBmdHBfcHJveHkgRlRQU19QUk9YWSBmdHBz
-X3Byb3h5IE5PX1BST1hZIG5vX3Byb3h5IEFMTF9QUk9YWSBhbGxfcHJveHkgXAorR0lUX1BST1hZ
-X0NPTU1BTkQgR0lUX1NTSCBHSVRfU1NMX0NBSU5GTyBHSVRfU01BUlRfSFRUUCBTU0hfQVVUSF9T
-T0NLIFNTSF9BR0VOVF9QSUQgXAorU09DS1M1X1VTRVIgU09DS1M1X1BBU1NXRCBEQlVTX1NFU1NJ
-T05fQlVTX0FERFJFU1MgUDRDT05GSUcgU1NMX0NFUlRfRklMRSBBV1NfQUNDRVNTX0tFWV9JRFwK
-K0FXU19TRUNSRVRfQUNDRVNTX0tFWSBBV1NfREVGQVVMVF9SRUdJT04iCisKICMgQ09ORl9WRVJT
-SU9OIGlzIGluY3JlYXNlZCBlYWNoIHRpbWUgYnVpbGQvY29uZi8gY2hhbmdlcyBpbmNvbXBhdGli
-bHkgYW5kIGlzIHVzZWQgdG8KICMgdHJhY2sgdGhlIHZlcnNpb24gb2YgdGhpcyBmaWxlIHdoZW4g
-aXQgd2FzIGdlbmVyYXRlZC4gVGhpcyBjYW4gc2FmZWx5IGJlIGlnbm9yZWQgaWYKICMgdGhpcyBk
-b2Vzbid0IG1lYW4gYW55dGhpbmcgdG8geW91LgpkaWZmIC0tZ2l0IGEvc2NyaXB0cy9vZS1idWls
-ZGVudi1pbnRlcm5hbCBiL3NjcmlwdHMvb2UtYnVpbGRlbnYtaW50ZXJuYWwKaW5kZXggZTBkOTIw
-ZjJmYy4uMjljYjY5NDc5MCAxMDA3NTUKLS0tIGEvc2NyaXB0cy9vZS1idWlsZGVudi1pbnRlcm5h
-bAorKysgYi9zY3JpcHRzL29lLWJ1aWxkZW52LWludGVybmFsCkBAIC0xMTEsNyArMTExLDggQEAg
-SFRUUFNfUFJPWFkgaHR0cHNfcHJveHkgRlRQX1BST1hZIGZ0cF9wcm94eSBGVFBTX1BST1hZIGZ0
-cHNfcHJveHkgQUxMX1BST1hZIFwKIGFsbF9wcm94eSBOT19QUk9YWSBub19wcm94eSBTU0hfQUdF
-TlRfUElEIFNTSF9BVVRIX1NPQ0sgQkJfU1JDUkVWX1BPTElDWSBcCiBTREtNQUNISU5FIEJCX05V
-TUJFUl9USFJFQURTIEJCX05PX05FVFdPUksgUEFSQUxMRUxfTUFLRSBHSVRfUFJPWFlfQ09NTUFO
-RCBcCiBTT0NLUzVfUEFTU1dEIFNPQ0tTNV9VU0VSIFNDUkVFTkRJUiBTVEFNUFNfRElSIEJCUEFU
-SF9FWFRSQSBCQl9TRVRTQ0VORV9FTkZPUkNFIFwKLUJCX0xPR0NPTkZJRyIKK0JCX0xPR0NPTkZJ
-RyBIT01FIFBBVEggR0lUX1NTSCBHSVRfU1NMX0NBSU5GTyBHSVRfU01BUlRfSFRUUCBEQlVTX1NF
-U1NJT05fQlVTX0FERFJFU1MgXAorUDRDT05GSUcgU1NMX0NFUlRfRklMRSBBV1NfQUNDRVNTX0tF
-WV9JRCBBV1NfU0VDUkVUX0FDQ0VTU19LRVkgQVdTX0RFRkFVTFRfUkVHSU9OIgogCiBCQl9FTlZf
-RVhUUkFXSElURT0iJChlY2hvICRCQl9FTlZfRVhUUkFXSElURSAkQkJfRU5WX0VYVFJBV0hJVEVf
-T0UgfCB0ciAnICcgJ1xuJyB8IExDX0FMTD1DIHNvcnQgLS11bmlxdWUgfCB0ciAnXG4nICcgJyki
-CiAKLS0gCjIuMjUuMQoK
 
+
+> -----Original Message-----
+> From: bitbake-devel@lists.openembedded.org <bitbake-
+> devel@lists.openembedded.org> On Behalf Of Richard Purdie
+> Sent: den 22 augusti 2021 23:29
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH] README: Add note about test suite and ne=
+w
+> tests
+>=20
+> Document that bitbake-selftest exists and that we appreciate test cases.
+>=20
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  README | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/README b/README
+> index 64206de8a8..b9b3762972 100644
+> --- a/README
+> +++ b/README
+> @@ -38,3 +38,11 @@ Mailing list:
+>  Source code:
+>=20
+>      http://git.openembedded.org/bitbake/
+> +
+> +Testing:
+> +
+> +Bitbake has a testsuite located in lib/bb/tests/ whichs aim to try and
+> prevent regressions.
+> +You can run this with "bitbake-selftest". In particular the fetcher is
+> well covered since
+> +it has so many corner cases. The datastore has many tests too. Testing
+> with the testsuite is
+> +recommended becore submitting patches, particularly to the fetcher and
+
+Change "becore" to "before".
+
+> datastore. We also
+> +appreciate new test cases and may require them for more obscure issues.
+> --
+> 2.32.0
+
+//Peter
