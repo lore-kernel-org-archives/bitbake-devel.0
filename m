@@ -1,87 +1,67 @@
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web09.24045.1629726358774523302
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+ by mx.groups.io with SMTP id smtpd.web08.9003.1629857780095178571
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 23 Aug 2021 06:45:59 -0700
+ Tue, 24 Aug 2021 19:16:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=G2XVx407;
- spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=DfO5LSva;
+ spf=pass (domain: gmail.com, ip: 209.85.219.171, mailfrom: mayank77fromindia@gmail.com)
+Received: by mail-yb1-f171.google.com with SMTP id x140so10585161ybe.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 24 Aug 2021 19:16:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1629726359;
-  x=1661262359;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=ccapny/qsfoxil/o8GIXmmaCXLAq8/DvHNGE5cykbpI=;
-  b=G2XVx407VpnNHtXC5LlHQ7Ny6bIwacYaQPBs6kHF1QJtOgHfMPKQT2NU
-   vd15S/RkHtwGxuaRWeq2ODfTm4TUwDGJsmKOl8ANZBvTaBCxct4RckD5q
-   kFiniAXrHMcmCZwMwEFWpVsgp2iFhI1iRd1DXx2g0+Ab/dq8h4FcSnLFl
-   8YKQqEt1Xiklj6uX7Hk5z7EeE2llw7sShylTtqQyFHc5DcMa6n3E8uk5Q
-   7s2g6u0DG4GCuPQzYiB4n9++B7+FXQb4kGIRGjBtVdhHdJ6f2j1ZZiwC1
-   rCPxKMD9h/vp26LpRXyezV6UJtajRIGur8AC8Mpx/1cl39xlr6/f3iUCQ
-   Q==;
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] README: Add note about test suite and new tests
-Thread-Topic: [bitbake-devel] [PATCH] README: Add note about test suite and
- new tests
-Thread-Index: AQHXl5zP9KMppWrIjEucbN0UPFOEYquBGrqw
-Date: Mon, 23 Aug 2021 13:45:55 +0000
-Message-ID: <ad876f93694a443c867000a9ef17e409@axis.com>
-References: <20210822212925.612609-1-richard.purdie@linuxfoundation.org>
- <20210822212925.612609-2-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20210822212925.612609-2-richard.purdie@linuxfoundation.org>
-Accept-Language: en-US, sv-SE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=YS8LuncWDk2qGYXeSOWFob82smox6hXp0j1Eg1+UMo0=;
+        b=DfO5LSvakBd7YTwx7GyCunrIMIbdqbOEvwlT5jSFl8FrCI6UCf0w60qGzy/cZELgx2
+         4XNKUUdMQE+I9gPYKcHEKxMtq5RklndrnPep/Z9OtGTjMLS2jY3mi5mEbaesip/QThmr
+         EKB7QrzcL5MsMdJO/dhaTHx0lGH5Df8ct/PxrNLysle/93/bWcH7q6VyGxuHxTUrCdtw
+         XtTuxBWWMlZzkbrUg6pQpuBdx5jCw4dpLfigW6bxZ1xOCDq31Tb3huhAcFR2z526V+wF
+         2HvysrFxN6T902PdF0Qk+xS4g5nRPDi60PBaIBPI6znlMqEGznLein04oQ1AsKZA/GJB
+         2mZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=YS8LuncWDk2qGYXeSOWFob82smox6hXp0j1Eg1+UMo0=;
+        b=p0rDaFuc76MnoU3YyxgTxVJl+JCoLgyGKvhXjmX/ltkdQ3Jpg++3ZvMiq6pWf+VINk
+         MHk3Q2eBUwXYDgOmnm+0tJ1/fmcJHh6wzxVEuLpa/ZiexzZt+ihSD2u65k0+Zw6kEhXx
+         AbqeuTkMlEfIYcaHaGt3Wrj01OaOWf6gJ96L9O3u6A+/wQdNkgV+E/qCf0HXE8PwgTvu
+         tIxsmIxuqxxUftDSSvqWCGCd9vMslsFf93ecctswaWg+K+SgxNsyXHzWmEW3xznUjx+v
+         isoU2Dsg+hXRf7XKJvwdg0tkeQxi3vNPYRtfQP78taWl/N1RxXM4WN3L/Iep4Dguw/rx
+         39cA==
+X-Gm-Message-State: AOAM533xWzNXM7co9i9FngPR6CGV/eSqkZllCutUidttn0DTlJivp0Wx
+	0JECFK/r0xrkg2KtTMt2q7FPsfPoupjXUTut+SAiU6yNbts=
+X-Google-Smtp-Source: ABdhPJz9iOmA3IlV39FTFDoUKRYaMMNsc/uAXz1RtV7JMApE7CXQT/EU1RrqjnhZVitFaMYeMbnEB8c7dXFbfXBBhUw=
+X-Received: by 2002:a25:ddc6:: with SMTP id u189mr53848367ybg.125.1629857779104;
+ Tue, 24 Aug 2021 19:16:19 -0700 (PDT)
 MIME-Version: 1.0
-Return-Path: peter.kjellerstedt@axis.com
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+From: "Mayank Agarwal" <mayank77fromindia@gmail.com>
+Date: Wed, 25 Aug 2021 07:46:06 +0530
+Message-ID: <CAKjpqy+MdQPj58r5C9OYKRKLRUwmxG80+WK7YmrEsyKJYtx7=w@mail.gmail.com>
+Subject: Cross compiling external package using yocto
+To: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000f53eef05ca58d5e0"
+
+--000000000000f53eef05ca58d5e0
+Content-Type: text/plain; charset="UTF-8"
+
+Hi,
+
+How can i give the sysroot path oe_runmake using machine configuration in
+yocto
+
+Also to integrate external packages in yocto framework when we should write
+configure.ac
+
+Regards,
+Mayank
+
+--000000000000f53eef05ca58d5e0
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><br><div>Hi,</div><div><br></div><div>How can i give the s=
+ysroot path oe_runmake using machine configuration in yocto</div><div><br><=
+/div><div>Also to integrate external packages in yocto framework when we sh=
+ould write <a href=3D"http://configure.ac">configure.ac</a></div><div><br><=
+/div><div>Regards,</div><div>Mayank</div></div>
 
-
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Richard Purdie
-> Sent: den 22 augusti 2021 23:29
-> To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [PATCH] README: Add note about test suite and ne=
-w
-> tests
->=20
-> Document that bitbake-selftest exists and that we appreciate test cases.
->=20
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  README | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/README b/README
-> index 64206de8a8..b9b3762972 100644
-> --- a/README
-> +++ b/README
-> @@ -38,3 +38,11 @@ Mailing list:
->  Source code:
->=20
->      http://git.openembedded.org/bitbake/
-> +
-> +Testing:
-> +
-> +Bitbake has a testsuite located in lib/bb/tests/ whichs aim to try and
-> prevent regressions.
-> +You can run this with "bitbake-selftest". In particular the fetcher is
-> well covered since
-> +it has so many corner cases. The datastore has many tests too. Testing
-> with the testsuite is
-> +recommended becore submitting patches, particularly to the fetcher and
-
-Change "becore" to "before".
-
-> datastore. We also
-> +appreciate new test cases and may require them for more obscure issues.
-> --
-> 2.32.0
-
-//Peter
+--000000000000f53eef05ca58d5e0--
