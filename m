@@ -1,52 +1,79 @@
 Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web11.34426.1629999425256017927
+ by mx.groups.io with SMTP id smtpd.web08.34219.1629999919462143783
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 26 Aug 2021 10:37:06 -0700
+ Thu, 26 Aug 2021 10:45:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@axis.com header.s=axis-central1 header.b=EcrAbMQC;
+ dkim=fail reason="signature has expired" header.i=@axis.com header.s=axis-central1 header.b=Qi/nxOgD;
  spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1629999425;
-  x=1661535425;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=5GeDNkGCyzCnKQSybPyfiFlkNr4iIa0elQWhUKVV1aI=;
-  b=EcrAbMQCx19BKPquJ9d8HOxDUuJyDo/y6cuq83D3yRborBF03AxZ2mAr
-   gLnwOo/a790ApOggxNCi9DEMjVrRnq3TOLSz5dYdkLOp+ZgkRQJJENVM0
-   OgYamx9kEuRJSR0xV3m89nvVTpDKG1tMQIaBUnD8VO+GVx5vik4BBkApz
-   CNPlkkEd4owxmd+Yn5/vdMDj2XICO1nZDXbuY+TOSMZlA0vOT4pkRztop
-   sLcA6+oDkiFVQF8qI6BxiWsST1Z7GPWOCzo22EYlA/m2in7MaoXMzqyOt
-   4QVpxVksqFeTDJRx1ra4Nn6imFMIHaKkxjOQJYlSy3KkBL/Mw9VhcaxsN
-   Q==;
+  d=axis.com; q=dns/txt; s=axis-central1; t=1629999919;
+  x=1661535919;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=qUcWCA2Ez/NplagFZJuaTIKF5b7lQ/lLDENNSUtugvw=;
+  b=Qi/nxOgDIZvrhka2aB9G3OI5KXuzSUQvJbdFp/IYT2uakzCr4XD6xaWc
+   eBaEKWfEVCeUGCKUzxS2NKL4M3ev07nyRlx3hFciVbDaikXTzid+MtW0J
+   Ew0ufRgqenVd/7EVM2YYss/W3kKv0/QfFib4z0JoiEV+Wf87I0aVEElpa
+   KZwkxT5ztQfjltlJdbz7wDhT325iTsvWeHnkwxIdKWIjlhkHhDbBrVdwG
+   LXBVqC/jXmsBF/rByjfsO81q42wsgaoNsKpm75xOeyrF0gsq8U2qFAtRO
+   Xw/7HIzcsTLESIBcvJQ1W0Q87S3xEMp6H2dSuGNwZQvFCC8t3Nce+JJ0d
+   g==;
 From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH] providers: Use new override syntax when handling pn- "override"
-Date: Thu, 26 Aug 2021 19:37:01 +0200
-Message-ID: <20210826173701.3555-1-pkj@axis.com>
-X-Mailer: git-send-email 2.21.3
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] providers: Use new override syntax when handling pn- "override"
+Thread-Topic: [bitbake-devel] [PATCH] providers: Use new override syntax when
+ handling pn- "override"
+Thread-Index: AQHXmqD/q5eykmH/3UOK1jdGBn+MvKuGDSog
+Date: Thu, 26 Aug 2021 17:45:17 +0000
+Message-ID: <2f401da4d3e646e7b2aaecd9ac871acb@axis.com>
+References: <169EEBD79694E731.9667@lists.openembedded.org>
+In-Reply-To: <169EEBD79694E731.9667@lists.openembedded.org>
+Accept-Language: en-US, sv-SE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.5.60]
 MIME-Version: 1.0
-Return-Path: pkj@axis.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Return-Path: peter.kjellerstedt@axis.com
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Make versionVariableMatch() support pn-foo overrides using the new
-override syntax.
+> -----Original Message-----
+> From: bitbake-devel@lists.openembedded.org <bitbake-
+> devel@lists.openembedded.org> On Behalf Of Peter Kjellerstedt
+> Sent: den 26 augusti 2021 19:37
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH] providers: Use new override syntax when
+> handling pn- "override"
+>=20
+> Make versionVariableMatch() support pn-foo overrides using the new
+> override syntax.
+>=20
+> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+> ---
+>  bitbake/lib/bb/providers.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py
+> index 516d45e4aa..8c1c31a5c5 100644
+> --- a/bitbake/lib/bb/providers.py
+> +++ b/bitbake/lib/bb/providers.py
+> @@ -94,7 +94,7 @@ def versionVariableMatch(cfgData, keyword, pn):
+>=20
+>      # pn can contain '_', e.g. gcc-cross-x86_64 and an override cannot
+>      # hence we do this manually rather than use OVERRIDES
+> -    ver =3D cfgData.getVar("%s_VERSION_pn-%s" % (keyword, pn))
+> +    ver =3D cfgData.getVar("%s_VERSION:pn-%s" % (keyword, pn))
+>      if not ver:
+>          ver =3D cfgData.getVar("%s_VERSION_%s" % (keyword, pn))
+>      if not ver:
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
- bitbake/lib/bb/providers.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I do not know why PREFERRED_VERSION_<foo> & co have not been changed to=20
+the new syntax, but I will argue that at least PREFERRED_VERSION_pn-<foo>=20
+should be changed to PREFERRED_VERSION:pn-<foo> as per above to not cause=20
+confusion. Though I am unsure if anyone actually uses that format, at=20
+least I didn't know it was even supported until I found the above code.
 
-diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py
-index 516d45e4aa..8c1c31a5c5 100644
---- a/bitbake/lib/bb/providers.py
-+++ b/bitbake/lib/bb/providers.py
-@@ -94,7 +94,7 @@ def versionVariableMatch(cfgData, keyword, pn):
- 
-     # pn can contain '_', e.g. gcc-cross-x86_64 and an override cannot
-     # hence we do this manually rather than use OVERRIDES
--    ver = cfgData.getVar("%s_VERSION_pn-%s" % (keyword, pn))
-+    ver = cfgData.getVar("%s_VERSION:pn-%s" % (keyword, pn))
-     if not ver:
-         ver = cfgData.getVar("%s_VERSION_%s" % (keyword, pn))
-     if not ver:
+//Peter
+
