@@ -1,84 +1,249 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.16780.1629905657481641797
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+ by mx.groups.io with SMTP id smtpd.web11.32828.1629993769898158503
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 25 Aug 2021 08:34:17 -0700
+ Thu, 26 Aug 2021 09:02:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NHyentM0;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id b6so1631400wrh.10
-        for <bitbake-devel@lists.openembedded.org>; Wed, 25 Aug 2021 08:34:17 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=Exx580QI;
+ spf=pass (domain: gmail.com, ip: 209.85.208.52, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ed1-f52.google.com with SMTP id z10so5400618edb.6
+        for <bitbake-devel@lists.openembedded.org>; Thu, 26 Aug 2021 09:02:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=dzpypa9z/ByYKJRBEhmixK3CCctX3p4wpWHTE/8pPzg=;
-        b=NHyentM0yLcmwuShI9PebgafXGO4UHG4hp1ahse9b4aR9baXhdoYQ9fun8nHCayOgU
-         o8gLd5rotTDtN4MRdbTq8trYBmgxMctKvjdyb9pwheX2/9r+uo7KCHEwPbAkY+qhWiSS
-         zA8LthUEVzqJOG+k0Dikz2aBbXdgZZYfSjiJI=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nG/NvHPsIIjKrCyH95KNj8CfxrujPUq5j7E2DvQOKxk=;
+        b=Exx580QIUQhV9hFih4h7KG/qpu4wubumn6AIlGPjv5i91PSPPVdiVQSbkGg01zaSTy
+         AHS9fSFc0rVL4bwIHK5znv5LhhuLAPqhTsbLqDPujRtPKhY+AM2986E95FscEY4QhEld
+         Oj7xnpCSK5VPi1fqzYlGMixXxMWUdv713kUW37UjtKo+NOmL4YPqiDr5wMLyxyH+wJ1O
+         GyW6fBNmn/dFM4GyvTn/IGR1aVkMzWoPlRBj0nH6QAQG0mNFHp5tGTknfzAwqlP7cnBJ
+         sRNuSo3EvuHAeplRPer1qtzT1vQ0Z9ZRotLMaoev8dqnb/SRLjpqljZ71l6AHoFWpZT5
+         cwuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=dzpypa9z/ByYKJRBEhmixK3CCctX3p4wpWHTE/8pPzg=;
-        b=rZGixZxS/E1V7FTBI5AFtT6RcDgmjgiISkz8AbmJ526z8RA7az1w4IFkXffwopnZWF
-         zHSMmmEUe5+ypwgoJLb7Rj/8Q9N1Ogfk4iAYsLqCAGhk7G/0OVuO/A7OS/MSWowdwghi
-         5Isaxvt7hp1k14CDMzLL4VjiAc1NSLBVSUAId7RQzV9d2iOPVqzRBRYxMM6JV7I60zBl
-         +kkal4vU9N4WW7qrBRbUqyVMyh4Ha82jqM2HiyaOldROiWIHA5R4WUAzKJB8Cb1va1uh
-         3n/pFe3K6ub9R9YcP+9+xo+r9pkin1+oA97napmWEArqRPGU7elBm/ZPS9qILlX3vlBh
-         M/VA==
-X-Gm-Message-State: AOAM530xACFbOebVCV/X71pC8937gxA0uwd3vezx9e5JINWQCwnXi4Q2
-	C3/BmbCizchnO3TDYd8Hh0P19w==
-X-Google-Smtp-Source: ABdhPJwY7WOpTkebj3emnKVDvRUsb9i913t5Z1jYEMJhEIYf43qP3zeZUmGijzya3obV10UlTsMU6g==
-X-Received: by 2002:a5d:534c:: with SMTP id t12mr25958089wrv.219.1629905655916;
-        Wed, 25 Aug 2021 08:34:15 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:139a:6a20:b11e:f656? ([2001:8b0:aba:5f3c:139a:6a20:b11e:f656])
-        by smtp.gmail.com with ESMTPSA id z1sm240536wrv.22.2021.08.25.08.34.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Aug 2021 08:34:15 -0700 (PDT)
-Message-ID: <7fca677746856b934cf29355db6a40aff6fa008c.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Trouble capturing layer revision as variable in recipe
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Wed, 25 Aug 2021 16:34:13 +0100
-In-Reply-To: <DM8PR12MB5430AEE26B2BD0933BA452D98BC69@DM8PR12MB5430.namprd12.prod.outlook.com>
-References: 
-	<DM8PR12MB5430C5689FA1BE41556758938BFF9@DM8PR12MB5430.namprd12.prod.outlook.com>
-	 <eb65ff99d5863afa3425269ff7e3b0d532c5fa0e.camel@linuxfoundation.org>
-	 <DM8PR12MB5430AEE26B2BD0933BA452D98BC69@DM8PR12MB5430.namprd12.prod.outlook.com>
-User-Agent: Evolution 3.40.2-1build1 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nG/NvHPsIIjKrCyH95KNj8CfxrujPUq5j7E2DvQOKxk=;
+        b=W4gbs91XjAMpXlsvWIjNmYPptfkk/Gbh+Ix+GNRtqiYzScuKwgq/7RhXiJ70+uolDG
+         rS+T4CyUW7xR+4w6+Pi63suJZk6i+PG9fi7zF5dXIywc2FKDKZiOhfSaRDnr47IYWmJL
+         AOElPa41xAWuWvdtNPkmSGz9s+7/o72o1CYr0iQ8BTJ3C2OoNxGLdYgq/uLZdeqkJqDK
+         AiTkUVir/SpaLcSBS1+1QN+dZcptdmKl9IMXQKgoVNaeJGmfPflpD3VL4IJPKdZRusDQ
+         WudKxmGrNZUudQcVRs+HnsONpoMioY6E0dTqBY9dOVRK9CQii0MDO7TWssOggMywiSXz
+         1+2g==
+X-Gm-Message-State: AOAM532M37YZvpy4cjalho7X2+soWzg7IRJ6uUUGzWAxOWtDjClu9PAP
+	NEZH+xOmHb23z++Nv/b4AiDnrE+R0fZRoh/JwJg=
+X-Google-Smtp-Source: ABdhPJz9uQnwFQLGcKZQb27K58tcTUV6fM4zaxA3Qli7dl9aNc3ClltE/93IIg2AEgXTOxM/Qt9mqRsdK/EHWon2lOg=
+X-Received: by 2002:a05:6402:c9:: with SMTP id i9mr4889138edu.76.1629993768158;
+ Thu, 26 Aug 2021 09:02:48 -0700 (PDT)
 MIME-Version: 1.0
+References: <cover.1629388054.git.scott.murray@konsulko.com> <9a32587b89bb715e3614e15ab2695c0449d7ba26.1629388054.git.scott.murray@konsulko.com>
+In-Reply-To: <9a32587b89bb715e3614e15ab2695c0449d7ba26.1629388054.git.scott.murray@konsulko.com>
+From: "Martin Jansa" <Martin.Jansa@gmail.com>
+Date: Thu, 26 Aug 2021 18:02:37 +0200
+Message-ID: <CA+chaQcuZp=-o8m96OnZ7KzRmFzUeuiQCS4b1zCKcuM4-SzbBw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v6 3/4] prserv: Replace XML RPC with modern asyncrpc implementation
+To: Scott Murray <scott.murray@konsulko.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+	Richard Purdie <richard.purdie@linuxfoundation.org>, Joshua Watt <JPEWhacker@gmail.com>, 
+	Paul Barker <paul@pbarker.dev>
+Content-Type: multipart/alternative; boundary="00000000000089882305ca787fc7"
+
+--00000000000089882305ca787fc7
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 
-On Wed, 2021-08-25 at 15:26 +0000, chris.laplante@agilent.com wrote:
-> > > However there are two problems:
-> > >    1. Making an empty commit to meta-our-layer doesn’t cause the
-> > > recipe to be re-run. What’s weird is that when I use ‘bitbake u-boot
-> > > –e’, I can see that the value of  OUR_LAYER_COMMIT is indeed changing.
-> > > And with bitbake-dumpsig  I can see that OUR_LAYER_COMMIT is in the
-> > task deps for do_deploy.
-> > >    2. If I build ‘u-boot’, then make an empty commit to
-> > > meta-our-layer, and then run “bitbake-whatchanged u-boot”, I get a
-> > > “The metadata is not deterministic  and this needs to be fixed.” error.
-> > > 
-> > > Am I misunderstanding the purpose of vardepvalue? I thought it could
-> > > be used to here to help bitbake ‘see’ through values that otherwise change
-> > unexpectedly.
-> > 
-> > I suspect you need to have bitbake always reparse the recipe too. Maybe
-> > BB_DONT_CACHE = "1" ?
-> 
-> Thanks for the suggestion. I guess this is because unless BitBake sees that
-> the recipe file(s) changed (or they use SRCREV = AUTOREV), it won't reparse
-> stuff in general?
+On Thu, Aug 19, 2021 at 6:47 PM Scott Murray <scott.murray@konsulko.com>
+wrote:
 
-Correct, it doesn't reparse at each invocation as in general that would upset
-users! It doesn't know it needs to reparse in this case.
+> From: Paul Barker <pbarker@konsulko.com>
+>
+> Update the prserv client and server classes to use the modern json and
+> asyncio based RPC system implemented by the asyncrpc module.
+>
+> Signed-off-by: Paul Barker <pbarker@konsulko.com>
+> [updated for asyncrpc changes, client split to separate file]
+> Signed-off-by: Scott Murray <scott.murray@konsulko.com>
+>
+> ....
 
-Cheers,
 
-Richard
+> -    def export(self,version=None, pkgarch=None, checksum=None,
+> colinfo=True):
+> -        return self.connection.export(version, pkgarch, checksum, colinfo)
+> +class PRServSingleton(object):
+> +    def __init__(self, dbfile, logfile, host, port):
+> +        self.dbfile = dbfile
+> +        self.logfile = logfile
+> +        self.host = host
+> +        self.port = port
+>
+> -    def importone(self, version, pkgarch, checksum, value):
+> -        return self.connection.importone(version, pkgarch, checksum,
+> value)
+> +    def start(self):
+> +        self.prserv = PRServer(self.dbfile)
+> +        self.prserv.start_tcp_server(self.host, self.port)
+> +        self.process = self.prserv.serve_as_process()
+>
+> -    def getinfo(self):
+> -        return self.host, self.port
+> +        if not self.port:
+> +            self.port = int(self.prserv.address.rsplit(':', 1)[1])
+>
+>
+Hi,
 
+I've tried this when running inside docker container and it failed with a
+bit ugly exception:
+
+bitbake@599696cd20aa:~/nodistro/honister$ bitbake -k pkgconfig-native
+Traceback (most recent call last):
+  File "/OE/nodistro/honister/bitbake/bin/bitbake", line 35, in <module>
+    sys.exit(bitbake_main(BitBakeConfigParameters(sys.argv),
+  File "/OE/nodistro/honister/bitbake/lib/bb/main.py", line 385, in
+bitbake_main
+    return ui_module.main(server_connection.connection,
+server_connection.events,
+  File "/OE/nodistro/honister/bitbake/lib/bb/ui/knotty.py", line 397, in
+main
+    params.updateToServer(server, os.environ.copy())
+  File "/OE/nodistro/honister/bitbake/lib/bb/cookerdata.py", line 75, in
+updateToServer
+    raise Exception("Unable to update the server configuration with local
+parameters: %s" % error)
+Exception: Unable to update the server configuration with local parameters:
+Traceback (most recent call last):
+  File "/OE/nodistro/honister/bitbake/lib/bb/command.py", line 90, in
+runCommand
+    result = command_method(self, commandline)
+  File "/OE/nodistro/honister/bitbake/lib/bb/command.py", line 286, in
+updateConfig
+    command.cooker.updateConfigOpts(options, environment, cmdline)
+  File "/OE/nodistro/honister/bitbake/lib/bb/cooker.py", line 491, in
+updateConfigOpts
+    self.reset()
+  File "/OE/nodistro/honister/bitbake/lib/bb/cooker.py", line 1717, in reset
+    self.handlePRServ()
+  File "/OE/nodistro/honister/bitbake/lib/bb/cooker.py", line 383, in
+handlePRServ
+    self.prhost = prserv.serv.auto_start(self.data)
+  File "/OE/nodistro/honister/bitbake/lib/prserv/serv.py", line 318, in
+auto_start
+    singleton.start()
+  File "/OE/nodistro/honister/bitbake/lib/prserv/serv.py", line 133, in
+start
+    self.port = int(self.prserv.address.rsplit(':', 1)[1])
+AttributeError: 'NoneType' object has no attribute 'rsplit'
+
+after removing the rsplit it shows better error message:
+
+bitbake@599696cd20aa:~/nodistro/honister$ bitbake -k pkgconfig-native
+WARNING: Error talking to server: Multiple exceptions: [Errno 111] Connect
+call failed ('127.0.0.1', 0), [Errno 99] Cannot assign requested address
+WARNING: Error talking to server: Multiple exceptions: [Errno 111] Connect
+call failed ('127.0.0.1', 0), [Errno 99] Cannot assign requested address
+WARNING: Error talking to server: Multiple exceptions: [Errno 111] Connect
+call failed ('127.0.0.1', 0), [Errno 99] Cannot assign requested address
+WARNING: Error talking to server: Multiple exceptions: [Errno 111] Connect
+call failed ('127.0.0.1', 0), [Errno 99] Cannot assign requested address
+ERROR: PRservice localhost:0 not available
+ERROR: Unable to start PR Server, exitting
+
+It would be nice to improve the error handling a bit.
+
+Regards,
+
+--00000000000089882305ca787fc7
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div>On Thu, Aug 19, 2021 at 6:47 PM Scot=
+t Murray &lt;<a href=3D"mailto:scott.murray@konsulko.com" target=3D"_blank"=
+>scott.murray@konsulko.com</a>&gt; wrote:<br></div></div><div class=3D"gmai=
+l_quote"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
+x;border-left:1px solid rgb(204,204,204);padding-left:1ex">From: Paul Barke=
+r &lt;<a href=3D"mailto:pbarker@konsulko.com" target=3D"_blank">pbarker@kon=
+sulko.com</a>&gt;<br>
+<br>
+Update the prserv client and server classes to use the modern json and<br>
+asyncio based RPC system implemented by the asyncrpc module.<br>
+<br>
+Signed-off-by: Paul Barker &lt;<a href=3D"mailto:pbarker@konsulko.com" targ=
+et=3D"_blank">pbarker@konsulko.com</a>&gt;<br>
+[updated for asyncrpc changes, client split to separate file]<br>
+Signed-off-by: Scott Murray &lt;<a href=3D"mailto:scott.murray@konsulko.com=
+" target=3D"_blank">scott.murray@konsulko.com</a>&gt;<br><br></blockquote><=
+div>....</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"m=
+argin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left=
+:1ex">
+-=C2=A0 =C2=A0 def export(self,version=3DNone, pkgarch=3DNone, checksum=3DN=
+one, colinfo=3DTrue):<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 return self.connection.export(version, pkgarch=
+, checksum, colinfo)<br>
++class PRServSingleton(object):<br>
++=C2=A0 =C2=A0 def __init__(self, dbfile, logfile, host, port):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.dbfile =3D dbfile<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.logfile =3D logfile<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.host =3D host<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.port =3D port<br>
+<br>
+-=C2=A0 =C2=A0 def importone(self, version, pkgarch, checksum, value):<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 return self.connection.importone(version, pkga=
+rch, checksum, value)<br>
++=C2=A0 =C2=A0 def start(self):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.prserv =3D PRServer(self.dbfile)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.prserv.start_tcp_server(self.host, self.p=
+ort)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.process =3D self.prserv.serve_as_process(=
+)<br>
+<br>
+-=C2=A0 =C2=A0 def getinfo(self):<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 return self.host, self.port<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if not self.port:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.port =3D int(self.prserv.ad=
+dress.rsplit(&#39;:&#39;, 1)[1])<br><br></blockquote><div><br></div><div>Hi=
+,</div><div><br></div><div>I&#39;ve tried this when running inside docker c=
+ontainer and it failed with a bit ugly exception:</div><div><br></div>bitba=
+ke@599696cd20aa:~/nodistro/honister$ bitbake -k pkgconfig-native<br>Traceba=
+ck (most recent call last):<br>=C2=A0 File &quot;/OE/nodistro/honister/bitb=
+ake/bin/bitbake&quot;, line 35, in &lt;module&gt;<br>=C2=A0 =C2=A0 sys.exit=
+(bitbake_main(BitBakeConfigParameters(sys.argv),<br>=C2=A0 File &quot;/OE/n=
+odistro/honister/bitbake/lib/bb/main.py&quot;, line 385, in bitbake_main<br=
+>=C2=A0 =C2=A0 return ui_module.main(server_connection.connection, server_c=
+onnection.events,<br>=C2=A0 File &quot;/OE/nodistro/honister/bitbake/lib/bb=
+/ui/knotty.py&quot;, line 397, in main<br>=C2=A0 =C2=A0 params.updateToServ=
+er(server, os.environ.copy())<br>=C2=A0 File &quot;/OE/nodistro/honister/bi=
+tbake/lib/bb/cookerdata.py&quot;, line 75, in updateToServer<br>=C2=A0 =C2=
+=A0 raise Exception(&quot;Unable to update the server configuration with lo=
+cal parameters: %s&quot; % error)<br>Exception: Unable to update the server=
+ configuration with local parameters: Traceback (most recent call last):<br=
+>=C2=A0 File &quot;/OE/nodistro/honister/bitbake/lib/bb/command.py&quot;, l=
+ine 90, in runCommand<br>=C2=A0 =C2=A0 result =3D command_method(self, comm=
+andline)<br>=C2=A0 File &quot;/OE/nodistro/honister/bitbake/lib/bb/command.=
+py&quot;, line 286, in updateConfig<br>=C2=A0 =C2=A0 command.cooker.updateC=
+onfigOpts(options, environment, cmdline)<br>=C2=A0 File &quot;/OE/nodistro/=
+honister/bitbake/lib/bb/cooker.py&quot;, line 491, in updateConfigOpts<br>=
+=C2=A0 =C2=A0 self.reset()<br>=C2=A0 File &quot;/OE/nodistro/honister/bitba=
+ke/lib/bb/cooker.py&quot;, line 1717, in reset<br>=C2=A0 =C2=A0 self.handle=
+PRServ()<br>=C2=A0 File &quot;/OE/nodistro/honister/bitbake/lib/bb/cooker.p=
+y&quot;, line 383, in handlePRServ<br>=C2=A0 =C2=A0 self.prhost =3D prserv.=
+serv.auto_start(self.data)<br>=C2=A0 File &quot;/OE/nodistro/honister/bitba=
+ke/lib/prserv/serv.py&quot;, line 318, in auto_start<br>=C2=A0 =C2=A0 singl=
+eton.start()<br>=C2=A0 File &quot;/OE/nodistro/honister/bitbake/lib/prserv/=
+serv.py&quot;, line 133, in start<br>=C2=A0 =C2=A0 self.port =3D int(self.p=
+rserv.address.rsplit(&#39;:&#39;, 1)[1])<br>AttributeError: &#39;NoneType&#=
+39; object has no attribute &#39;rsplit&#39;<br><div><br></div><div>after r=
+emoving the rsplit it shows better error message:</div><div><br></div><div>=
+bitbake@599696cd20aa:~/nodistro/honister$ bitbake -k pkgconfig-native<br>WA=
+RNING: Error talking to server: Multiple exceptions: [Errno 111] Connect ca=
+ll failed (&#39;127.0.0.1&#39;, 0), [Errno 99] Cannot assign requested addr=
+ess<br>WARNING: Error talking to server: Multiple exceptions: [Errno 111] C=
+onnect call failed (&#39;127.0.0.1&#39;, 0), [Errno 99] Cannot assign reque=
+sted address<br>WARNING: Error talking to server: Multiple exceptions: [Err=
+no 111] Connect call failed (&#39;127.0.0.1&#39;, 0), [Errno 99] Cannot ass=
+ign requested address<br>WARNING: Error talking to server: Multiple excepti=
+ons: [Errno 111] Connect call failed (&#39;127.0.0.1&#39;, 0), [Errno 99] C=
+annot assign requested address<br>ERROR: PRservice localhost:0 not availabl=
+e<br>ERROR: Unable to start PR Server, exitting=C2=A0</div><div><br></div><=
+div>It would be nice to improve the error handling a bit.</div><div><br></d=
+iv><div>Regards,</div></div></div>
+
+--00000000000089882305ca787fc7--
