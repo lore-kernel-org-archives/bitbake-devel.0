@@ -1,105 +1,110 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web09.2876.1630355857317449008
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+ by mx.groups.io with SMTP id smtpd.web10.5129.1630367500432405505
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Aug 2021 13:37:37 -0700
+ Mon, 30 Aug 2021 16:51:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=L9Rw5VqY;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f44.google.com with SMTP id m25-20020a7bcb99000000b002e751bcb5dbso853204wmi.5
-        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Aug 2021 13:37:37 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=ulPbs1Wb;
+ spf=pass (domain: gmail.com, ip: 209.85.222.170, mailfrom: weaverjs@gmail.com)
+Received: by mail-qk1-f170.google.com with SMTP id c10so17632833qko.11
+        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Aug 2021 16:51:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=b6DrXS8khYavefCriFueFixi9h6/sdZymgPjcwVaqkw=;
-        b=L9Rw5VqYHObVBla29heKos6ReA0ULKUun0MttYj42KLU90wppSG8zutKxjMz1Pry8f
-         JOzX0qx+LjOWFoMTu53ch1qoDn/l9KmzqagjwipJfaJpRqRizs1jXSkSIpzJe4C8jn0q
-         AJT9NLoT7fTq7YPxx7v0k4azBNgENTCYimlrg=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=m5Cm6CjivGJ2pBLTkd98L74IAbeoFCPLIpmJytXL/Uo=;
+        b=ulPbs1WbzvxzLLp1iRTIBzP0IWm26/klhFsOWWnbL2wO2KOYGxvfN4hHciSSPAC9Ys
+         qBVzu99gr/XuypYKXuo5deFVJLWZB/6Mij0OVJiVqNaPMKNhQfe7kfnRjMUd7zBkJoRl
+         2Nk5IFdy8HzFCYsbZwoiG30MvK6w75II3IP1IXTlw7HsTeQTwC/sIvv6vsNM93oQR4UU
+         D+Pk3Lt2Zf+pOGDAud4hDCs4gu4AEs9vh25NKSH3oy+SQepkIrY9gkzcmqYwJHUAlQkI
+         uLz8H78o+WwpTevMU+uAADtIKb8marK8sS0SKxPORtGluy5KLnbriPS9wezfc9qq907q
+         orUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=b6DrXS8khYavefCriFueFixi9h6/sdZymgPjcwVaqkw=;
-        b=trfuyAcpZ2+lZ5J1BlA0l5jopJBWjxn9q7e6HaBbVsQILpbx5n2Thtr++2P8gC4nEL
-         ZibjxjDxwP9JT/jEItG5RvkGccl5ENJNbq1Fw4tpFIGAEvvMtM19uXYCIvbLyDSfrSbS
-         G2Y/LkrRh4occ9bMVPLrTAwKwBh3wb77+pB+IURSOnPAsmrUFapOllDQU102CCaUIxj3
-         Mg0Oz3G369/fwHJMkBA910tGpkmxzUwfNJkg4eAoQ4Mk8Wj5F/S5eFB+tMTo2QB8cUvv
-         +kN8M+VnPdsFchjXEXJwJDDfJgS+qg/PFyJ9egJAa494QHfBmGagBN1hakITnexyKLIU
-         2jPw==
-X-Gm-Message-State: AOAM533G93QFvtMgYi2AWkUrk0xcHpidzvQ5XhSpGhc+njNjnYHxJki0
-	cy2PQy4MKEMbEmFx9goKC2Dmsa2y5r3SPw==
-X-Google-Smtp-Source: ABdhPJzuauOzZH3ympqPN4DBjtxokjkRccnIl9J9qeTwvlt9HjO0Jpx9QzYhFJr1kL7OIB9fnNQ9Zg==
-X-Received: by 2002:a05:600c:3556:: with SMTP id i22mr805168wmq.104.1630355855945;
-        Mon, 30 Aug 2021 13:37:35 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:e840:dd4f:b947:28bf? ([2001:8b0:aba:5f3c:e840:dd4f:b947:28bf])
-        by smtp.gmail.com with ESMTPSA id u8sm501128wmq.45.2021.08.30.13.37.35
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=m5Cm6CjivGJ2pBLTkd98L74IAbeoFCPLIpmJytXL/Uo=;
+        b=XwwAOPnQgt3J80ta7sUXi+O/bOaSBH5BxrovafAJBFLuhskBSfEEWKRv7n1KRIlKrK
+         +IPQFwYrIIfzbdWunrzAJtOeBARfxB3eFOdBgiMsb/SKc3cCr8ypTsGVn0+ItWczJXZ1
+         gQDiKW6A1yYpJZomqXjHZB4vj9e0gjpY3BQ6A5JIRBnU9uAKX4ogsCyG7f5bMJlllHBs
+         duBOzWuzZjKuQuzjjA+vmfYPp3xhvnKFLRj8AYsdRgAKhsAdoEzk5yZw+vh+Jnn5Jd3w
+         1ppUAR50+8AQ5mnD5JQIXBs9IAJjyLopziPMJoJwH5weEyu0SstbZhTE/r3CWZXmXnrr
+         IZ9A==
+X-Gm-Message-State: AOAM532vpVvWgNnPJCr1H9nDlLvEWjbjdrIxO/dzFGkLEkV6kCrGblnT
+	0D+N4mmxjFRTtFQXpm9zgcGWpqM=
+X-Google-Smtp-Source: ABdhPJx7Qh0oefRasAW9mrWQadLDtYxaFEiSr04EDe3vZFQIDzpMu0bn1zLkg/6XdfTGfUXvwL9zmg==
+X-Received: by 2002:a37:9f4d:: with SMTP id i74mr210403qke.196.1630367499414;
+        Mon, 30 Aug 2021 16:51:39 -0700 (PDT)
+Return-Path: <weaverjs@gmail.com>
+Received: from popos (2603-6011-2200-ab10-29b7-0b6c-fb13-465c.res6.spectrum.com. [2603:6011:2200:ab10:29b7:b6c:fb13:465c])
+        by smtp.gmail.com with ESMTPSA id a9sm12453975qkk.82.2021.08.30.16.51.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Aug 2021 13:37:35 -0700 (PDT)
-Message-ID: <381bd257581076645eb07f4bbc42d62fd92d6d17.camel@linuxfoundation.org>
+        Mon, 30 Aug 2021 16:51:38 -0700 (PDT)
+Date: Mon, 30 Aug 2021 19:51:36 -0400
+From: "Scott Weaver" <weaverjs@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [bitbake-devel][RFC][PATCH] bitbake: fetch2: correct PREMIRROR URI
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Scott Weaver <weaverjs@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Mon, 30 Aug 2021 21:37:34 +0100
-In-Reply-To: <20210830035630.3634069-1-weaverjs@gmail.com>
+Message-ID: <YS1vCGwV2M7fGAcY@popos>
 References: <20210830035630.3634069-1-weaverjs@gmail.com>
-User-Agent: Evolution 3.40.2-1build1 
+ <381bd257581076645eb07f4bbc42d62fd92d6d17.camel@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <381bd257581076645eb07f4bbc42d62fd92d6d17.camel@linuxfoundation.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sun, 2021-08-29 at 23:56 -0400, Scott Weaver wrote:
-> When downloadfilename is defined in a recipe's SRC_URI and a PREMIRROR is also
-> defined for that URI, the downloadfilename is appended to the mirror URI and it
-> should not be appended.
+On 21-08-30 21:37:34, Richard Purdie wrote:
+> On Sun, 2021-08-29 at 23:56 -0400, Scott Weaver wrote:
+> > When downloadfilename is defined in a recipe's SRC_URI and a PREMIRROR is also
+> > defined for that URI, the downloadfilename is appended to the mirror URI and it
+> > should not be appended.
+> > 
+> > Three new fetch bitbake-selftest tests were added to test downloadfilename
+> > scenarios.
+> > 
+> > [YOCTO #13039]
+> > 
+> > Signed-off-by: Scott Weaver <weaverjs@gmail.com>
+> > ---
+> > 
+> > This fix is for BZ13039.
+> > 
+> > downloadfilename is defined as "the filename used when storing the downloaded
+> > file" under the definition of SRC_URI [1].
+> > This definition appears to be echoed in 44.3.2 where it says downloadfilename
+> > "allows the name of the downloaded file to be specified" [2]. Although, the
+> > second definition isn't as clear and could be interpreted to mean that the
+> > name of the file to be downloaded can be specified. Which, if intentional,
+> > would not match the first definition.
+> > 
+> > I believe that the first definition is the correct definition of
+> > downloadfilename.
+> > 
+> > I've added three new tests to bitbake-selftest's fetch testsuite.
+> > 
+> > Executed against the master branch, the following new tests fail (see patch):
+> > 
+> > test_fetch_premirror_specify_downloadfilename_regex_uri() fails because
+> > the fetcher attempts to download the downloadfilename.
+> > 
+> > test_fetch_premirror_specify_downloadfilename_specific_uri() was added
+> > to address BZ13039 and is expected to fail.
+> > 
+> > These tests pass when executed with this patch applied.
+> > 
+> > However, this change breaks the test that I have commented out in the patch
+> > which is executed by MirrorUriTest.test_urireplace.
+> > I don't believe this is a valid test because a mirror is normally the location
+> > where an artifact can be found and should not specify the filename itself.
 > 
-> Three new fetch bitbake-selftest tests were added to test downloadfilename
-> scenarios.
+> I'm afraid I have to disagree on that.
 > 
-> [YOCTO #13039]
+> If someone specifies a full URL in a mirror definition, they expect it to map to
+> that specific url. We need to find a way to fix your corner case but keep
+> complete mappings working.
 > 
-> Signed-off-by: Scott Weaver <weaverjs@gmail.com>
-> ---
-> 
-> This fix is for BZ13039.
-> 
-> downloadfilename is defined as "the filename used when storing the downloaded
-> file" under the definition of SRC_URI [1].
-> This definition appears to be echoed in 44.3.2 where it says downloadfilename
-> "allows the name of the downloaded file to be specified" [2]. Although, the
-> second definition isn't as clear and could be interpreted to mean that the
-> name of the file to be downloaded can be specified. Which, if intentional,
-> would not match the first definition.
-> 
-> I believe that the first definition is the correct definition of
-> downloadfilename.
-> 
-> I've added three new tests to bitbake-selftest's fetch testsuite.
-> 
-> Executed against the master branch, the following new tests fail (see patch):
-> 
-> test_fetch_premirror_specify_downloadfilename_regex_uri() fails because
-> the fetcher attempts to download the downloadfilename.
-> 
-> test_fetch_premirror_specify_downloadfilename_specific_uri() was added
-> to address BZ13039 and is expected to fail.
-> 
-> These tests pass when executed with this patch applied.
-> 
-> However, this change breaks the test that I have commented out in the patch
-> which is executed by MirrorUriTest.test_urireplace.
-> I don't believe this is a valid test because a mirror is normally the location
-> where an artifact can be found and should not specify the filename itself.
 
-I'm afraid I have to disagree on that.
+OK, fair enough. Thanks for the review.
 
-If someone specifies a full URL in a mirror definition, they expect it to map to
-that specific url. We need to find a way to fix your corner case but keep
-complete mappings working.
-
-Cheers,
-
-Richard
-
-
+-- 
+  - Scott
 
