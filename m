@@ -1,115 +1,121 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
- by mx.groups.io with SMTP id smtpd.web12.5493.1630487689374096790
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (NAM10-BN7-obe.outbound.protection.outlook.com [40.107.92.48])
+ by mx.groups.io with SMTP id smtpd.web11.973.1630525508093748984
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 01 Sep 2021 02:14:49 -0700
+ Wed, 01 Sep 2021 12:45:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=GWT/CPha;
- spf=pass (domain: gmail.com, ip: 209.85.218.50, mailfrom: martin.jansa@gmail.com)
-Received: by mail-ej1-f50.google.com with SMTP id lc21so5116093ejc.7
-        for <bitbake-devel@lists.openembedded.org>; Wed, 01 Sep 2021 02:14:49 -0700 (PDT)
+ dkim=pass header.i=@xilinx.onmicrosoft.com header.s=selector2-xilinx-onmicrosoft-com header.b=bWlL6Bta;
+ spf=pass (domain: xilinx.com, ip: 40.107.92.48, mailfrom: vishalpa@xilinx.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VA7w7nrOcs8qV0IKvqCRFphi7AQ8AfXiHmXNOy4Jsne0j29UL7T7CGF+YxqyeXn5I8uIGa7yt/EuU3t4SGy03L0dFOO9iDQarbbtW2cNRrjVllqbrGRMuyTSsZ3NbvMO58qsQ4zOjuGvYVQt1BJk+SFsuZqrhbZYcL6jav1rkOA7p4jrZC5YULFuM9sfL2t3OkZlfxj1l8mwxXjgHpii9YcNqiT2FrA/7tDeAhxeteR/HFnKQS3Q+tIsMYdQsYN9P0D8W7HGN3qTbj9QVdunZ1qCkqaovoeQGsOVfbR5oT9Wr/+0SK+wPfWEkic27YMqexSILHSDDnyyZW7tZR3DJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qnFV9E9uwkNtAtagLb+Afv0axu0cEF0hpDJE+qMPa9U=;
+ b=iG53bJZbLzQo7dg4o0KbU9k507/br3OeKSQcGZv8ylEPOJJjQZukg2604D/5jKhFiUnETgAkex9tNq4D3P63s95pDgh/AxC3+np9nsj0tQ0WAGwRoBTffU/Bq/ytAZ7uR3edfqVvGcgraz17hF1cOblre34AKgEdOaANplveJy3QxrhI1UKrMwDcPWF6otppSooyvTFq53iShY3WarXlt8riNlyLDxXpD+5POmhWWcuMTHuP85yXcmA25a2AHJzMW6NDUML0kFq5hrmAF7xEu9UGT6C2/FK5ED9wJ+dwG9UbdeCjkLM7o7HnczKSnufHo9Sw/oLWyh+Qijp9T7DRKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=xilinx.com; dmarc=pass (p=none sp=none pct=100) action=none
+ header.from=xilinx.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hzxPS8N4rNWyXTS2o2bOwqKLW3LWm8krGZzVBRTf+QI=;
-        b=GWT/CPhahvjuK2JqkZ6ql9PYxxt5/UDN/QTUkWEp6P+nFirNnh6DLwIyD8d4ln518c
-         gX2aD3R2lRWehtDL/AiX18/HS6bff8kFgnDKlImvywnM0FuLwmP5j0iEJCUT8puyAXT/
-         BldMXpp6vuKnbmGK5grzzvE+9heoxFWixwmKOZjnHDGaKMH8Q8tDPCIVYnXS3wT0SBh7
-         dOtaSyVPT1RcKprnhx+hmkO3fCa13/9TP2e6ZA7VQkhTcbEfMBlmNwMxRuTOrv/21A75
-         FJ7D2OuV+3L7siayKH4W6pjyGI0YgodmGRbNagnr9ULW9AbmyJ1XtviVKhHM5b1QSvBQ
-         t5Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hzxPS8N4rNWyXTS2o2bOwqKLW3LWm8krGZzVBRTf+QI=;
-        b=O0+GKsoTL7LgeRj3E8I2MumRcgRT6DT9u+GnMajk0MqJH/AHr1YuaCPtoUTGPvlvjQ
-         CvNGhSCci5s0ehOWULP249gnCYQqJfG65lZi8/TDOn+8anJwOyMZizU9fh60sB9Hk1EN
-         SnSCrpLaRMt5MFS6Tkg/L2XmS2Q2BVGm/T+BWil2gb0uZW+F0QRq+Gp5SPSaXxY8dSqd
-         qnR8Q5SHRkWcvIz0QLdedd592tntojDfggBLpuLAkTzxjw1dMfzEM9cykA1BBRzTMirx
-         eYSJZPUGPFojuqdw6cyZy2VLjRQ/IDQRC3GkQYeSk44N1gJHe77gJTpbCtJ+U6tbkHjR
-         XPsg==
-X-Gm-Message-State: AOAM531885n0SV/VXlfqPVaebG9/ERJxWy28G6m2DM4CT+Hdu0Ehd4ch
-	Xo4jbfR/rVb2gPJwyqpJI3tWm8gmDeYqXg9ajVg=
-X-Google-Smtp-Source: ABdhPJxqp01c5lxPP+LONUHIO3LuYeucjrBUXxgrlj90oS41c8HnKhWdIKBuKZxWctbRvzfQJW6m1VthfUBCXZNG7Yw=
-X-Received: by 2002:a17:906:34ca:: with SMTP id h10mr35843686ejb.137.1630487687657;
- Wed, 01 Sep 2021 02:14:47 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qnFV9E9uwkNtAtagLb+Afv0axu0cEF0hpDJE+qMPa9U=;
+ b=bWlL6Bta4bUWI0CCUSxkb6321r+qYgl36cKJN5JFo8VvaPhKzwFIhiC19Tk+R68jNsSIk/JPnRm2PHPIovzksj3M08V4xYIiemhXzg+l4GQcjXPb+qmQ+ZlzUtOjsaChCaAjQ9wEn6WnuIJCLSYnPlTXypLbJlbjPMCNRXBqguM=
+Received: from DM5PR06CA0034.namprd06.prod.outlook.com (2603:10b6:3:5d::20) by
+ SN6PR02MB4845.namprd02.prod.outlook.com (2603:10b6:805:9c::26) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4457.23; Wed, 1 Sep 2021 19:45:04 +0000
+Received: from DM3NAM02FT035.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:3:5d:cafe::b8) by DM5PR06CA0034.outlook.office365.com
+ (2603:10b6:3:5d::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19 via Frontend
+ Transport; Wed, 1 Sep 2021 19:45:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; lists.openembedded.org; dkim=none (message not
+ signed) header.d=none;lists.openembedded.org; dmarc=pass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ DM3NAM02FT035.mail.protection.outlook.com (10.13.4.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4478.19 via Frontend Transport; Wed, 1 Sep 2021 19:45:04 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Wed, 1 Sep 2021 12:45:02 -0700
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Wed, 1 Sep 2021 12:45:02 -0700
+Return-Path: vishalpa@xilinx.com
+Envelope-to: bitbake-devel@lists.openembedded.org
+Received: from [172.19.2.60] (port=55656 helo=xsjvishalpa50.xilinx.com)
+	by smtp.xilinx.com with esmtp (Exim 4.90)
+	(envelope-from <vishal.patel@xilinx.com>)
+	id 1mLWAQ-000BYB-Rx; Wed, 01 Sep 2021 12:45:02 -0700
+From: "Vishal Patel" <vishal.patel@xilinx.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: <mark.hatle@xilinx.com>, Vishal Patel <vishal.patel@xilinx.com>
+Subject: [PATCH 0/1] RFC Bug in PREMIRROR
+Date: Wed, 1 Sep 2021 12:44:55 -0700
+Message-ID: <20210901194456.2642587-1-vishal.patel@xilinx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <16A04D855643B3E7.30479@lists.openembedded.org>
- <20210831074807.5972-1-mingli.yu@windriver.com> <f3b29ae8-7582-4b3b-abaf-8e1eb08bf54@spiteful.org>
- <d3e95bfb-593d-0fd8-bcb8-65af9537f5ea@windriver.com> <CAJdd5GaViYYCa6XovSO7n6ceSjBemn28bhN7TjSaCQgXkYpmuw@mail.gmail.com>
- <af883af8-192c-0550-76ea-ee5190ba54c1@windriver.com>
-In-Reply-To: <af883af8-192c-0550-76ea-ee5190ba54c1@windriver.com>
-From: "Martin Jansa" <Martin.Jansa@gmail.com>
-Date: Wed, 1 Sep 2021 11:14:36 +0200
-Message-ID: <CA+chaQe2yEvPr9X86X-YYWypXhu4JHLM8TsHLpWpbfxPqQqe+g@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] prserv: make localhost work
-To: "Yu, Mingli" <mingli.yu@windriver.com>
-Cc: Joshua Watt <jpewhacker@gmail.com>, Scott Murray <scott.murray@konsulko.com>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="0000000000006efd2e05caeb7faf"
-
---0000000000006efd2e05caeb7faf
-Content-Type: text/plain; charset="UTF-8"
-
->
->
-> > I think that was because IPv6 support had been incorrectly configured
-> > for Docker, perhaps that is the same thing happening in your setup?
->
-> In the same docker, the PR service works with PRSERV_HOST =
-> "localhost:0" before, but it begins not work recently after some code
-> restructure for prserv part.
->
-> BTW, the ipv6 is disabled in the docker of my env.
->
-
-Check your /etc/hosts
-
-There is ::1 localhost localhost-ip6 even when ipv6 is disabled in docker's
-deamon.json.
-
-And that makes bitbake (asyncio) to try binding to ::1 instead of
-127.0.0.1, if you remove "localhost" from ::1 in /etc/hosts in running
-container, then it works again OK.
-
-My patch allows you to use 127.0.0.1:0 explicitly and still keep the same
-behavior (as autostarted prserv with random port) as when localhost:0 is
-being used (and also for consistency).
-
-Your patch is IMHO good addition to that (that the localhost is resolved in
-python and then people don't need to use 127.0.0.1 explicitly).
-
-Regards,
-
---0000000000006efd2e05caeb7faf
-Content-Type: text/html; charset="UTF-8"
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 81a34129-9529-4365-759e-08d96d80fe71
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4845:
+X-Microsoft-Antispam-PRVS: 
+	<SN6PR02MB4845E31DDABFAB74CF5148FEAFCD9@SN6PR02MB4845.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	NJcrhTwXd9u6ks6wA/IkXPm9j9PT03nISArGZNH0YXYrfNOshXE83790S0S2VyFB1p8Tl/rjaTuz2AEK1CTekLiHcugAdTluzrmGF3JR9/aMKIC7bdWQhewywc4RVzljdmKsaEjlLafV20Kes7VaFlwaHByyNWOZDgUOQl+vYzbnktoND+ddhsyNwAcZMlSd3f9THM9Hdr2JvK1s16/cVlmGsOuBOD9nyTcpeVnRAPqUHAEH6HfMgp9Q0cRu7016EOA/eW+AHg2nrveMT3/jgsM6BzuNlwQu87ea82J1kReYmF+QFSdEXafAMrnrXoOx4yiDs+03Bv82YH7tkYPtGedr8CrxyxFHCLvyUBDCosyGsEnXSPGtv7I+vCWHLCL9GTte2t8HrDUOLNnHHS4FjdlxJMT1vYdRLeNSTUaO2ZWQe+uh6M7/1O4SfAJGbtmahTr4kb381Fj4ot3+1R1VFA9SjEHiqni6bQsdr2oJzb7yxDH8w3H61LiHfQwGzZRSQsn9k/n1dG/6O3ooKz6z30K84YOeLIkYqu4DVRC3oE6FJgjnGtTVeSwAkocHPhmGbxQYQ5Qehn2edllcDrSJ0ofUndEjJvMkyhmNC8xlNfniMmIMp15ZCM5jzc6xWt04sGLch+9tHsxhD/XU9BNet04XZ9Pxm1RBD87kxLOdg4Imb6PSYpL9XNEB7kc4qYfTnH9IEE2/mm7A/PAVuCFpFJJxGGH9UQ6IIskYTvQ1SNQ=
+X-Forefront-Antispam-Report: 
+	CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(39860400002)(136003)(46966006)(36840700001)(70586007)(5660300002)(9786002)(70206006)(54906003)(36756003)(2906002)(26005)(1076003)(7696005)(478600001)(6916009)(82310400003)(44832011)(316002)(36906005)(82740400003)(107886003)(426003)(2616005)(8936002)(8676002)(336012)(83380400001)(6666004)(47076005)(4326008)(356005)(36860700001)(7636003)(186003)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2021 19:45:04.0806
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81a34129-9529-4365-759e-08d96d80fe71
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DM3NAM02FT035.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4845
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-<div dir=3D"ltr"><div class=3D"gmail_quote"><blockquote class=3D"gmail_quot=
-e" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204)=
-;padding-left:1ex"><br>
-&gt; I think that was because IPv6 support had been incorrectly configured<=
-br>
-&gt; for Docker, perhaps that is the same thing happening in your setup?<br=
->
-<br>
-In the same docker, the PR service works with PRSERV_HOST =3D <br>
-&quot;localhost:0&quot; before, but it begins not work recently after some =
-code <br>
-restructure for prserv part.<br>
-<br>
-BTW, the ipv6 is disabled in the docker of my env.<br></blockquote><div><br=
-></div><div>Check your /etc/hosts</div><div><br></div><div>There is ::1 loc=
-alhost localhost-ip6 even when ipv6 is disabled in docker&#39;s deamon.json=
-.</div><div><br></div><div>And that makes bitbake (asyncio) to try binding =
-to ::1 instead of 127.0.0.1, if you remove &quot;localhost&quot; from ::1 i=
-n /etc/hosts in running container, then it works again OK.</div><div><br></=
-div><div>My patch allows you to use <a href=3D"http://127.0.0.1:0">127.0.0.=
-1:0</a> explicitly and still keep the same behavior (as autostarted prserv =
-with random port) as when localhost:0 is being used (and also for consisten=
-cy).</div><div><br></div><div>Your patch is IMHO good addition to that (tha=
-t the localhost is resolved in python and then people don&#39;t need to use=
- 127.0.0.1 explicitly).</div><div><br></div><div>Regards,</div></div></div>
+I think we found a bug in the PREMIRROR system where if both a remote and l=
+ocal
+PREMIRROR is defined, as well as BB_NO_NETWORK =3D '1', the system will fai=
+l with
 
---0000000000006efd2e05caeb7faf--
+bb.fetch2.NetworkAccess: Network access disabled through BB_NO_NETWORK (or =
+set indirectly due to use of BB_FETCH_PREMIRRORONLY)
+
+instead of trying the next PREMIRROR which is a local file:// based one.
+The attached patch only adds a test case for the issue, but does not fix th=
+e problem.
+If anyone can point me to where to fix the problem, I can work on this.
+
+Vishal Patel (1):
+  tests/fetch.py: Add test case to verify PREMIRROR with mix of remote
+    and local
+
+ lib/bb/tests/fetch.py | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+--
+2.25.1
+
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
