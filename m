@@ -1,94 +1,68 @@
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web11.7713.1630831259616785365
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+ by mx.groups.io with SMTP id smtpd.web11.15326.1630880882230826469
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 05 Sep 2021 01:41:00 -0700
+ Sun, 05 Sep 2021 15:28:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=F+MBwTlC;
- spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=YoB1lsWR;
+ spf=pass (domain: gmail.com, ip: 209.85.160.171, mailfrom: weaverjs@gmail.com)
+Received: by mail-qt1-f171.google.com with SMTP id r21so4088701qtw.11
+        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Sep 2021 15:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1630831260;
-  x=1662367260;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=sHz9DuDZs82FInBKdzvOQFxYR1n0tiEELNWdI/50X5I=;
-  b=F+MBwTlCjo8XBdMDto/Trr6JtpkMT+whWyhN6oczg/mLVLH6gIfZrU9V
-   be24NmcfgB7gewEoXzYbmCSd15egQlLSnHaImVtOvG+lV3dxdSr627RLj
-   0bWp209n4aLZSzhpZJlneBxKVBG0+p2n1PNrGSA9N6JpykwVKQiOoA0H2
-   gyx+p2zUPzkPO8lyggu+6OwiOxKIEJ0zw+GHjMTSnlHmEpIKIIYJve7NF
-   9fl5TC+xPbq7ZtYfLMo2vmvsco7Dvwk2lrchiZ/ch3XHI+zgHh8VQP1MB
-   ONCBUOg8+ovEI+QsLWsl4nSVOixckObp18HWlG74kOAGm3vBRtCCZHf3i
-   A==;
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>, Damian Wrobel
-	<dwrobel@ertelnet.rybnik.pl>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] cooker: Only warn on potentially incompatible layer
-Thread-Topic: [bitbake-devel] [PATCH] cooker: Only warn on potentially
- incompatible layer
-Thread-Index: AQHXoNAQaBJnWwx8q0O9hdgDaJMYF6uSaSSAgAANCwCAAOq+AIABv4Ag
-Date: Sun, 5 Sep 2021 08:40:56 +0000
-Message-ID: <a8c2e55df5644453a8c97a9d9c050826@axis.com>
-References: <b23f250a23dbd3273392b6694a442f5bb5602bf7.camel@linuxfoundation.org>
-	 <22175.1630691638780132694@lists.openembedded.org>
- <209f7a813b8003ad75e5edb9600f729a91abee7b.camel@linuxfoundation.org>
-In-Reply-To: <209f7a813b8003ad75e5edb9600f729a91abee7b.camel@linuxfoundation.org>
-Accept-Language: en-US, sv-SE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hveI4eLNhozhpCJE1zCJyMtOEB1nXdy99H/zyOHf1Bs=;
+        b=YoB1lsWRcgqqAWtJvzS1w1VpHQ98L6bDWebHtPTEF6l+AWbPaBOaVbD4Sw7s9naHID
+         0tLSAkuRUtCe3gMYPzrttOlXRVlIkCyBOe36fwAOWDJBYDv/bYKxCD1uJo8rvCEC1bvt
+         Y+yZUHvHw/ct3ZeaX2F84+Gib20een7V8Y7CIJvh8plqbZDdcAOMKNkmGiVafsZAfxSW
+         8lU7D9qbhI6stuu7LTXV0kNea35H/elKm2WbULoRBt4iUZIUCiScKP1nax4DcRDjlWbz
+         BKwT/XowUYt/UMzj5gascS0Yu6JkM0KUBcv2CQGt+pf0QLX+KWlM/tM08BH4dvXfP9aW
+         yBwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hveI4eLNhozhpCJE1zCJyMtOEB1nXdy99H/zyOHf1Bs=;
+        b=jAFySLckYBrPDhN10WmDNtxcCkPwiMgwFy9amxcTfJDrCAT+xuWjt5oJNpANa3WPmu
+         roDd0y8YZQb5TuAXOjBDjxDQyu6WhMLnQrDnZti8rsv+Iz/k40Zxcp9JFGGNMwPTKumY
+         brW0RVYoGZ1Yw0U7he+k7pSXamBLV/ACCfigonTwD1d9U9D56uiyD+1PzyBMeUWMxnUx
+         3+4NgX3tUPJwm8owcCdCrAbgLbuTT79VNZysH2ccbGSoq8QZnWPyRHdgqefMXwROy72o
+         hDeqCZzbKG2OAw4C1+rUAuzzdnzXk60d5GkZ8S76goqzVWvPKUWHoDCpI7FtaFaNAzO7
+         cA/A==
+X-Gm-Message-State: AOAM531/cziTX7+7EDffv5C3DjGuPoB3OWJ/i0aDFdWByEXl908ggATV
+	QAhf1hUwBq4UlbbXIxw8bTagSAXSWTtuL7JWGw==
+X-Google-Smtp-Source: ABdhPJyMwMZx6PYQSGqwXnD/rhwpUoQJUY77CLoUQBL6G6Rzolo2S5HVPMzJ8zeUH4MM+sTj+A9htQ==
+X-Received: by 2002:ac8:7d4e:: with SMTP id h14mr8471223qtb.404.1630880880943;
+        Sun, 05 Sep 2021 15:28:00 -0700 (PDT)
+Return-Path: <weaverjs@gmail.com>
+Received: from p-impout007.msg.pkvw.co.charter.net (cpe-69-133-48-66.cinci.res.rr.com. [69.133.48.66])
+        by smtp.gmail.com with ESMTPSA id w12sm4202790qtc.47.2021.09.05.15.27.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Sep 2021 15:28:00 -0700 (PDT)
+From: "Scott Weaver" <weaverjs@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Scott Weaver <weaverjs@gmail.com>
+Subject: [bitbake-devel][0/3] BZ#13039: updates to fetch2 and tests/fetch
+Date: Sun,  5 Sep 2021 18:27:35 -0400
+Message-Id: <20210905222738.1050768-1-weaverjs@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Return-Path: peter.kjellerstedt@axis.com
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBiaXRiYWtlLWRldmVsQGxpc3Rz
-Lm9wZW5lbWJlZGRlZC5vcmcgPGJpdGJha2UtDQo+IGRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5v
-cmc+IE9uIEJlaGFsZiBPZiBSaWNoYXJkIFB1cmRpZQ0KPiBTZW50OiBkZW4gNCBzZXB0ZW1iZXIg
-MjAyMSAwOTo1NA0KPiBUbzogRGFtaWFuIFdyb2JlbCA8ZHdyb2JlbEBlcnRlbG5ldC5yeWJuaWsu
-cGw+OyBiaXRiYWtlLQ0KPiBkZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQo+IFN1YmplY3Q6
-IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENIXSBjb29rZXI6IE9ubHkgd2FybiBvbiBwb3RlbnRp
-YWxseQ0KPiBpbmNvbXBhdGlibGUgbGF5ZXINCj4gDQo+IE9uIEZyaSwgMjAyMS0wOS0wMyBhdCAx
-MDo1MyAtMDcwMCwgRGFtaWFuIFdyb2JlbCB3cm90ZToNCj4gPiBPbiBGcmksIFNlcCAzLCAyMDIx
-IGF0IDA3OjA3IFBNLCBSaWNoYXJkIFB1cmRpZSB3cm90ZToNCj4gPiA+IExBWUVSU0VSSUVTX0NP
-TVBBVA0KPiA+IFRoZSBwcm9ibGVtIGlzIHRoYXQgdGhlcmUgaXMgaW5jb25zaXN0ZW5jeSBmb3Ig
-dHJlYXRpbmcgbGF5ZXJzIHdpdGggYW5kDQo+ID4gd2l0aG91dA0KPiA+IExBWUVSU0VSSUVTX0NP
-TVBBVC4NCj4gPg0KPiA+IElmIHRoZSBsYXllciB3aXRob3V0IExBWUVSU0VSSUVTX0NPTVBBVCB3
-b3JrcyBwZXJmZWN0bHkgLSBvbmx5IGEgd2FybmluZw0KPiBpcw0KPiA+IGVtaXR0ZWQuDQo+IA0K
-PiBUaGlzIHdhcyBmcm9tIHRoZSB0aW1lIHdoZW4gd2UgaW50cm9kdWNlZCB0aGUgdmFyaWFibGUg
-YW5kIHdlIGhhZCB0byBhbGxvdw0KPiBhDQo+IHRyYW5zaXRpb24gcGVyaW9kLiBJZiB5b3UgcmVh
-bGx5IHdhbnQgc3ltbWV0cnksIHdlIHNob3VsZCBwZXJoYXBzIG1ha2UNCj4gdGhhdCBvbmUNCj4g
-YW4gZXJyb3Igbm93Pw0KPiANCj4gPiAgVGhlbiBzeW1tZXRyaWNhbGx5IHRoZSBzYW1lIHNob3Vs
-ZCBoYXBwZW4gZm9yIGEgbGF5ZXIgd2l0aA0KPiBMQVlFUlNFUklFU19DT01QQVQNCj4gPiAtIGVz
-cGVjaWFsbHkgdGhhdCB0aGlzIGNoZWNrIGlzIG5vdCBhYmxlIHRvIGRldGVjdCBhbnkgcmVhbCBw
-cm9ibGVtcyBpbg0KPiB0aGlzDQo+ID4gbGF5ZXIgLSBpdCBvbmx5IGJsaW5kbHkgcmVqZWN0cyBh
-IHZhbGlkIGxheWVyLg0KPiANCj4gV2UgKGFzIGEgVFNDIGFuZCBhIHByb2plY3QpIHJlYWxpc2Vk
-IHdlIGhhZCBhIGxvdCBvZiBwcm9ibGVtcyBkdWUgdG8NCj4gbGF5ZXJzIG5vdA0KPiBkZWNsYXJp
-bmcgd2hpY2ggdmVyc2lvbnMgdGhleSBhcmUgY29tcGF0aWJsZSB3aXRoLiBXZSBkZWNpZGVkIHRv
-IG1ha2UgdGhhdA0KPiBhDQo+IHJlcXVpcmVtZW50IGFzIGl0IGNhdXNlcyB1c2VycyBhIHByb2Js
-ZW0uIEkgZG9uJ3Qgc2VlIHRoYXQgYW55dGhpbmcgaGFzDQo+IGNoYW5nZWQNCj4gaW4gdGhpcyBy
-ZWdhcmQsIGlmIHdlIGRyb3AgdGhpcyB0byBhIHdhcm5pbmcsIHBlb3BsZSB3aWxsIGp1c3Qgbm90
-IGRlY2xhcmUNCj4gdGhlDQo+IGxheWVyIGNvbXBhdGliaWxpdHkgYW5kIHdlJ3JlIGJhY2sgdG8g
-c3F1YXJlIG9uZS4NCj4gDQo+ID4gQWRkaXRpb25hbGx5LCB0aGlzIGJiLmZhdGFsIGdlbmVyYXRl
-cyBjb21wYXRpYmlsaXR5IHByb2JsZW0gYXMgd2UncmUNCj4gYWJsZSB0bw0KPiA+IGNvbnN1bWUg
-M3JkIHBhcnR5IGxheWVycyB3aGljaCBoYXZlIExBWUVSU0VSSUVTX0NPTVBBVCBpbiB5b2N0byBt
-b3J0eQ0KPiAod2hpY2gNCj4gPiBkb2Vzbid0IHVzZSB0aGlzIGNvbXBhdGliaWxpdHkgY2hlY2sp
-LCBidXQgdGhlIHNhbWUgbGF5ZXJzIGFyZSBmYWxzZQ0KPiA+IHBvc2l0aXZlbHkgcmVqZWN0ZWQg
-YnkgeW9jdG8gZHVuZmVsbC4NCj4gDQo+IEFzIEkgc2F5IGFib3ZlLCB3ZSBoYXZlIGEgcGVyaW9k
-IHdoZXJlIHdlIGhhZCB0byBpbnRyb2R1Y2UgdGhpcyBmZWF0dXJlLg0KPiBXZSd2ZQ0KPiBkb25l
-IHRoYXQgc28gcGVyaGFwcyBub3cgaXMgdGhlIHRpbWUgdG8gcmVxdWlyZSBpdCwgbm90IHRoZSBv
-dGhlciB3YXkNCj4gYXJvdW5kIGFuZA0KPiBkcm9wIHRoZSBjaGVjay4NCj4gDQo+ID4gSGF2aW5n
-IHRoaXMgbWVyZ2VkIHdvdWxkIGFsbG93IHRvIGxpbWl0IG1haW50ZW5hbmNlIGJ1cmRlbiBvbiAz
-cmQgcGFydHkNCj4gPiBsYXllcnMuDQo+IA0KPiBBZGRpbmcgYSBzaW5nbGUga2V5d29yZCBldmVy
-eSBzaXggbW9udGhzIHRvIHNob3cgdGhlIGxheWVyIGlzIGFjdGl2ZSBhbmQNCj4gbWVhbnQNCj4g
-dG8gd29yayB3aXRoIGEgbmV3IHJlbGVhc2UgaXMgbm90IGluIG15IHZpZXcgYSBodWdlIG1haW50
-ZW5hbmNlIGJ1cmRlbg0KPiBjb21wYXJlZA0KPiB0byBzaG93aW5nIHRoYXQgdGhlIGxheWVyIGlz
-IGFjdGl2ZWx5IG1haW50YWluZWQgYW5kIGNsZWFybHkgc2hvd2luZyB3aGljaA0KPiBjb21iaW5h
-dGlvbnMgYXJlIG1lYW50IHRvIHdvcmsuDQo+IA0KPiBDaGVlcnMsDQo+IA0KPiBSaWNoYXJkDQoN
-CkluIGFkZGl0aW9uIHRvIHRoaXMsIHdpdGggdGhlIHVwY29taW5nIEhvbmlzdGVyIHJlbGVhc2Ug
-aXQgd2lsbCBiZSBuZWFybHkgDQppbXBvc3NpYmxlIHRvIGhhdmUgYSBsYXllciB0aGF0IGlzIGNv
-bXBhdGlibGUgd2l0aCBhbnl0aGluZyBvbGRlciB0aGFuIA0KRHVuZmVsbCBkdWUgdG8gdGhlIHN5
-bnRheCBjaGFuZ2VzIGZvciB0aGUgdmFyaWFibGUgb3ZlcnJpZGVzLiBTbyB5b3UgbWF5IA0KYXMg
-d2VsbCBnZXQgdXNlZCB0byBub3QgYmVpbmcgYWJsZSB0byBoYXZlIG9uZSB2ZXJzaW9uIG9mIGEg
-bGF5ZXIgdGhhdCBpcyANCmNvbXBhdGlibGUgd2l0aCBldmVyeXRoaW5nLg0KDQovL1BldGVyDQoN
-Cg==
+In this patch set, I address BZ#13039 and add fetcher tests specifically
+for downloadfilename use cases along with an update to the npm fetcher tests.
+
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=13039
+
+Scott Weaver (3):
+  bitbake: fetch2: fix premirror URI when downloadfilename defined
+  bitbake: tests/fetch: add downloadfilename tests
+  bitbake: tests/fetch: add and fix npm tests
+
+ bitbake/lib/bb/fetch2/__init__.py |  2 +-
+ bitbake/lib/bb/tests/fetch.py     | 47 +++++++++++++++++++++++++++++--
+ 2 files changed, 46 insertions(+), 3 deletions(-)
+
+-- 
+2.25.1
+
