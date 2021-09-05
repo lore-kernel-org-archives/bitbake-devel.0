@@ -1,68 +1,80 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
- by mx.groups.io with SMTP id smtpd.web11.15326.1630880882230826469
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+ by mx.groups.io with SMTP id smtpd.web11.15327.1630880885313509744
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 05 Sep 2021 15:28:02 -0700
+ Sun, 05 Sep 2021 15:28:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=YoB1lsWR;
- spf=pass (domain: gmail.com, ip: 209.85.160.171, mailfrom: weaverjs@gmail.com)
-Received: by mail-qt1-f171.google.com with SMTP id r21so4088701qtw.11
-        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Sep 2021 15:28:02 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=U0LjMnLY;
+ spf=pass (domain: gmail.com, ip: 209.85.222.177, mailfrom: weaverjs@gmail.com)
+Received: by mail-qk1-f177.google.com with SMTP id p4so5167418qki.3
+        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Sep 2021 15:28:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hveI4eLNhozhpCJE1zCJyMtOEB1nXdy99H/zyOHf1Bs=;
-        b=YoB1lsWRcgqqAWtJvzS1w1VpHQ98L6bDWebHtPTEF6l+AWbPaBOaVbD4Sw7s9naHID
-         0tLSAkuRUtCe3gMYPzrttOlXRVlIkCyBOe36fwAOWDJBYDv/bYKxCD1uJo8rvCEC1bvt
-         Y+yZUHvHw/ct3ZeaX2F84+Gib20een7V8Y7CIJvh8plqbZDdcAOMKNkmGiVafsZAfxSW
-         8lU7D9qbhI6stuu7LTXV0kNea35H/elKm2WbULoRBt4iUZIUCiScKP1nax4DcRDjlWbz
-         BKwT/XowUYt/UMzj5gascS0Yu6JkM0KUBcv2CQGt+pf0QLX+KWlM/tM08BH4dvXfP9aW
-         yBwA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MJ4KlN0y9UNvvutCYlsh4E5YsQ7NltHGaaOqoQqBChw=;
+        b=U0LjMnLYPUFHKlWpflhyFZZupkZdlPFvVx7JYwOLNCOGx7i8QrJa5iE+SwbF9OrzL/
+         qge1lW923gQ1/ccRfnCzCS+0VVWo7bRF+ZIxb2Kh+EU/lek/d+1VVwrfGZ9UByvYgoqO
+         lvf29YBDmXNPT229A+npixEKmJI4GowNzcy7Zyscy5Fha7cMkpPWN+LB4ExQPv96HVWw
+         fqF4AVI1220uWYUvYbs3DHO7D97vauRsqbjy9iWMNphJqPHilE8QsXmMEd1Z9kAxdFOY
+         EODhrbXR4YkErjBOcH8ngad8ZtTVNJLDCB/vYX6pevHeoQM9mvKJXj4JmVckQNZQw4jL
+         9ixg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hveI4eLNhozhpCJE1zCJyMtOEB1nXdy99H/zyOHf1Bs=;
-        b=jAFySLckYBrPDhN10WmDNtxcCkPwiMgwFy9amxcTfJDrCAT+xuWjt5oJNpANa3WPmu
-         roDd0y8YZQb5TuAXOjBDjxDQyu6WhMLnQrDnZti8rsv+Iz/k40Zxcp9JFGGNMwPTKumY
-         brW0RVYoGZ1Yw0U7he+k7pSXamBLV/ACCfigonTwD1d9U9D56uiyD+1PzyBMeUWMxnUx
-         3+4NgX3tUPJwm8owcCdCrAbgLbuTT79VNZysH2ccbGSoq8QZnWPyRHdgqefMXwROy72o
-         hDeqCZzbKG2OAw4C1+rUAuzzdnzXk60d5GkZ8S76goqzVWvPKUWHoDCpI7FtaFaNAzO7
-         cA/A==
-X-Gm-Message-State: AOAM531/cziTX7+7EDffv5C3DjGuPoB3OWJ/i0aDFdWByEXl908ggATV
-	QAhf1hUwBq4UlbbXIxw8bTagSAXSWTtuL7JWGw==
-X-Google-Smtp-Source: ABdhPJyMwMZx6PYQSGqwXnD/rhwpUoQJUY77CLoUQBL6G6Rzolo2S5HVPMzJ8zeUH4MM+sTj+A9htQ==
-X-Received: by 2002:ac8:7d4e:: with SMTP id h14mr8471223qtb.404.1630880880943;
-        Sun, 05 Sep 2021 15:28:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MJ4KlN0y9UNvvutCYlsh4E5YsQ7NltHGaaOqoQqBChw=;
+        b=pi4ktH1QeBRKFng21pWTk5fjD3wHgRgJpja3YPacbmisEZQiBO9CAyp/q/nLWfcML0
+         Olrdt5xkpWNAVdwwzzvvzq/bgNvkHpSdvqJxGRtswOjFaoIgAGBLIH5sW9W4Hy0aeM6u
+         Frt+yFSbMYMHhEXtOLch8OuOomTpV4x8JoE2CnGfVvRRdynOzEdQsUj6R9dimfFK3uPb
+         WFq8LeWcTr5vouTeqHdORh3jnpBu/yU7qvZUxmGzomUGjbzb/C5AOHDmPncjARdxKh8G
+         Uxd4uixr+JYCnVkvyYrAV+scxbLJjN2rc74sqFvSR/9tSr/MDlXOQV18hbTg81sYlIf9
+         dhTg==
+X-Gm-Message-State: AOAM5339uvyrPYiOdlHc+ARcnBWVe618lFjsLKTSFeWp4dDTHmN6BR3r
+	h0ulkaSwrFIIIhUHooqDnKY+rDK9BnZ6K9eQdA==
+X-Google-Smtp-Source: ABdhPJz2rt2QDkCC+JPtDISr6Th3zw1+kqJHb8XdUtcOtK+xHnoGQNpPVN45/b2aUKgA16w/Clf38w==
+X-Received: by 2002:a05:620a:318e:: with SMTP id bi14mr8563998qkb.274.1630880884198;
+        Sun, 05 Sep 2021 15:28:04 -0700 (PDT)
 Return-Path: <weaverjs@gmail.com>
 Received: from p-impout007.msg.pkvw.co.charter.net (cpe-69-133-48-66.cinci.res.rr.com. [69.133.48.66])
-        by smtp.gmail.com with ESMTPSA id w12sm4202790qtc.47.2021.09.05.15.27.59
+        by smtp.gmail.com with ESMTPSA id w12sm4202790qtc.47.2021.09.05.15.28.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Sep 2021 15:28:00 -0700 (PDT)
+        Sun, 05 Sep 2021 15:28:03 -0700 (PDT)
 From: "Scott Weaver" <weaverjs@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Scott Weaver <weaverjs@gmail.com>
-Subject: [bitbake-devel][0/3] BZ#13039: updates to fetch2 and tests/fetch
-Date: Sun,  5 Sep 2021 18:27:35 -0400
-Message-Id: <20210905222738.1050768-1-weaverjs@gmail.com>
+Subject: [bitbake-devel][ 1/3] bitbake: fetch2: fix premirror URI when downloadfilename defined
+Date: Sun,  5 Sep 2021 18:27:36 -0400
+Message-Id: <20210905222738.1050768-2-weaverjs@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210905222738.1050768-1-weaverjs@gmail.com>
+References: <20210905222738.1050768-1-weaverjs@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In this patch set, I address BZ#13039 and add fetcher tests specifically
-for downloadfilename use cases along with an update to the npm fetcher tests.
+When downloadfilename is defined in a recipe's SRC_URI and PREMIRRORS is also
+defined using the same URI, the downloadfilename is appended to the mirror
+URI and it should not be.
 
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=13039
+[YOCTO #13039]
 
-Scott Weaver (3):
-  bitbake: fetch2: fix premirror URI when downloadfilename defined
-  bitbake: tests/fetch: add downloadfilename tests
-  bitbake: tests/fetch: add and fix npm tests
+Signed-off-by: Scott Weaver <weaverjs@gmail.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- bitbake/lib/bb/fetch2/__init__.py |  2 +-
- bitbake/lib/bb/tests/fetch.py     | 47 +++++++++++++++++++++++++++++--
- 2 files changed, 46 insertions(+), 3 deletions(-)
-
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 914fa5c024..47a4943369 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -466,7 +466,7 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
+                     # Kill parameters, they make no sense for mirror tarballs
+                     uri_decoded[5] = {}
+                 elif ud.localpath and ud.method.supports_checksum(ud):
+-                    basename = os.path.basename(ud.localpath)
++                    basename = os.path.basename(uri_decoded[loc])
+                 if basename and not result_decoded[loc].endswith(basename):
+                     result_decoded[loc] = os.path.join(result_decoded[loc], basename)
+         else:
 -- 
 2.25.1
 
