@@ -1,80 +1,101 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
- by mx.groups.io with SMTP id smtpd.web11.15327.1630880885313509744
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+ by mx.groups.io with SMTP id smtpd.web08.15333.1630880889159895747
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 05 Sep 2021 15:28:05 -0700
+ Sun, 05 Sep 2021 15:28:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=U0LjMnLY;
- spf=pass (domain: gmail.com, ip: 209.85.222.177, mailfrom: weaverjs@gmail.com)
-Received: by mail-qk1-f177.google.com with SMTP id p4so5167418qki.3
-        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Sep 2021 15:28:05 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=ZAMBc9wN;
+ spf=pass (domain: gmail.com, ip: 209.85.222.171, mailfrom: weaverjs@gmail.com)
+Received: by mail-qk1-f171.google.com with SMTP id 22so5171121qkg.2
+        for <bitbake-devel@lists.openembedded.org>; Sun, 05 Sep 2021 15:28:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MJ4KlN0y9UNvvutCYlsh4E5YsQ7NltHGaaOqoQqBChw=;
-        b=U0LjMnLYPUFHKlWpflhyFZZupkZdlPFvVx7JYwOLNCOGx7i8QrJa5iE+SwbF9OrzL/
-         qge1lW923gQ1/ccRfnCzCS+0VVWo7bRF+ZIxb2Kh+EU/lek/d+1VVwrfGZ9UByvYgoqO
-         lvf29YBDmXNPT229A+npixEKmJI4GowNzcy7Zyscy5Fha7cMkpPWN+LB4ExQPv96HVWw
-         fqF4AVI1220uWYUvYbs3DHO7D97vauRsqbjy9iWMNphJqPHilE8QsXmMEd1Z9kAxdFOY
-         EODhrbXR4YkErjBOcH8ngad8ZtTVNJLDCB/vYX6pevHeoQM9mvKJXj4JmVckQNZQw4jL
-         9ixg==
+        bh=V9JBU+I1rTB4JQoCdrSrore0Y4pJSoDtsHCGzSErY1M=;
+        b=ZAMBc9wNkdkR6HIWDvWLMeziZYO5Iqyyg+WIy/pf2BpRrcEliH4OLyE7heKZNJNvLi
+         unOqd5kIQ1l35UprpvS0A9z/F2VvmyhT90XRSUMsbCa6LJJU8MTzDVv5fugv+MICiKBP
+         8QdZOvN0LxCtmBPSubq5mUkz31QFJ4IoU6+StWncRybJ4KSr4Z4e0o5gxlOz4GFtUd8b
+         0apcHZFSvTZQdmdF3MT1b3OUvBKz6pnA8FhOy2TTKO7Y0vjDF9dvlacogbZrFI0l2Mz/
+         DOh6vrLqTgs3tw8ws7Qppg20wlTE1zD9eWw+YdQv1I4AgL/xA+dcKEf1APOhOe8igWPs
+         IeXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MJ4KlN0y9UNvvutCYlsh4E5YsQ7NltHGaaOqoQqBChw=;
-        b=pi4ktH1QeBRKFng21pWTk5fjD3wHgRgJpja3YPacbmisEZQiBO9CAyp/q/nLWfcML0
-         Olrdt5xkpWNAVdwwzzvvzq/bgNvkHpSdvqJxGRtswOjFaoIgAGBLIH5sW9W4Hy0aeM6u
-         Frt+yFSbMYMHhEXtOLch8OuOomTpV4x8JoE2CnGfVvRRdynOzEdQsUj6R9dimfFK3uPb
-         WFq8LeWcTr5vouTeqHdORh3jnpBu/yU7qvZUxmGzomUGjbzb/C5AOHDmPncjARdxKh8G
-         Uxd4uixr+JYCnVkvyYrAV+scxbLJjN2rc74sqFvSR/9tSr/MDlXOQV18hbTg81sYlIf9
-         dhTg==
-X-Gm-Message-State: AOAM5339uvyrPYiOdlHc+ARcnBWVe618lFjsLKTSFeWp4dDTHmN6BR3r
-	h0ulkaSwrFIIIhUHooqDnKY+rDK9BnZ6K9eQdA==
-X-Google-Smtp-Source: ABdhPJz2rt2QDkCC+JPtDISr6Th3zw1+kqJHb8XdUtcOtK+xHnoGQNpPVN45/b2aUKgA16w/Clf38w==
-X-Received: by 2002:a05:620a:318e:: with SMTP id bi14mr8563998qkb.274.1630880884198;
-        Sun, 05 Sep 2021 15:28:04 -0700 (PDT)
+        bh=V9JBU+I1rTB4JQoCdrSrore0Y4pJSoDtsHCGzSErY1M=;
+        b=aFVJ4Q+SGJzJaQmFNh5ejNXACG0wKHplOtMQuRJEG+A0qULjskW85e9NwMZK0KyGJ8
+         w4gzkFqpsTBGGBUwid7MDVSB700INl0ypNBSe29Utdw98SMOfB9aBOTNQ90TrFSH7z/j
+         zdVtwOqbPkqws9AfNYzL9TNdl+xcNlgOOj3W4/tzRFWtMc7ne116RkeqOunwoE1o0n1m
+         T5ZAtlHAUtTHDpPqQ64CCits5kDIVuai7Lt5VUWRcEWqvtFojw7gq+W8kZhRdsCVjIQP
+         BThzDqoXfUfszfCpRUY6ChC/cunlmXagQ1oElx1LIScQup99MwrgesXgGMiT7QiDuJBu
+         wxLA==
+X-Gm-Message-State: AOAM531t/Zi9qD5mUBR4gxm3fvzaiALxg1nnWB1X1k9ETv0lHHPb/NJO
+	jDMgmy4x6VzU9PDXHO43PN37u1+0qf5GbnR/lA==
+X-Google-Smtp-Source: ABdhPJyTgIX/B/eSGP5/T9BmCLKv6zylXA4kQePCgqgPZyI1NPJxcdJNuhefgBCyIzFQMBmtzmbXug==
+X-Received: by 2002:a37:b686:: with SMTP id g128mr8531752qkf.68.1630880887887;
+        Sun, 05 Sep 2021 15:28:07 -0700 (PDT)
 Return-Path: <weaverjs@gmail.com>
 Received: from p-impout007.msg.pkvw.co.charter.net (cpe-69-133-48-66.cinci.res.rr.com. [69.133.48.66])
-        by smtp.gmail.com with ESMTPSA id w12sm4202790qtc.47.2021.09.05.15.28.03
+        by smtp.gmail.com with ESMTPSA id w12sm4202790qtc.47.2021.09.05.15.28.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Sep 2021 15:28:03 -0700 (PDT)
+        Sun, 05 Sep 2021 15:28:07 -0700 (PDT)
 From: "Scott Weaver" <weaverjs@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Scott Weaver <weaverjs@gmail.com>
-Subject: [bitbake-devel][ 1/3] bitbake: fetch2: fix premirror URI when downloadfilename defined
-Date: Sun,  5 Sep 2021 18:27:36 -0400
-Message-Id: <20210905222738.1050768-2-weaverjs@gmail.com>
+Subject: [bitbake-devel][ 2/3] bitbake: tests/fetch: add downloadfilename tests
+Date: Sun,  5 Sep 2021 18:27:37 -0400
+Message-Id: <20210905222738.1050768-3-weaverjs@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210905222738.1050768-1-weaverjs@gmail.com>
 References: <20210905222738.1050768-1-weaverjs@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When downloadfilename is defined in a recipe's SRC_URI and PREMIRRORS is also
-defined using the same URI, the downloadfilename is appended to the mirror
-URI and it should not be.
+This adds three new tests which evaluate different use cases of the
+downloadfilename property.
 
-[YOCTO #13039]
+bb.tests.fetch.FetcherNetworkTest:
+	- test_fetch_specify_downloadfilename
+	- test_fetch_premirror_specify_downloadfilename_regex_uri
+	- test_fetch_premirror_specify_downloadfilename_specific_uri
 
 Signed-off-by: Scott Weaver <weaverjs@gmail.com>
 ---
- bitbake/lib/bb/fetch2/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/tests/fetch.py | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 914fa5c024..47a4943369 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -466,7 +466,7 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
-                     # Kill parameters, they make no sense for mirror tarballs
-                     uri_decoded[5] = {}
-                 elif ud.localpath and ud.method.supports_checksum(ud):
--                    basename = os.path.basename(ud.localpath)
-+                    basename = os.path.basename(uri_decoded[loc])
-                 if basename and not result_decoded[loc].endswith(basename):
-                     result_decoded[loc] = os.path.join(result_decoded[loc], basename)
-         else:
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index 9291ce4a06..1735d0b071 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -866,6 +866,27 @@ class FetcherNetworkTest(FetcherTest):
+         fetcher.download()
+         self.assertEqual(os.path.getsize(self.dldir + "/bitbake-1.0.tar.gz"), 57749)
+ 
++    @skipIfNoNetwork()
++    def test_fetch_specify_downloadfilename(self):
++        fetcher = bb.fetch.Fetch(["http://downloads.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz;downloadfilename=bitbake-v1.0.0.tar.gz"], self.d)
++        fetcher.download()
++        self.assertEqual(os.path.getsize(self.dldir + "/bitbake-v1.0.0.tar.gz"), 57749)
++
++    @skipIfNoNetwork()
++    def test_fetch_premirror_specify_downloadfilename_regex_uri(self):
++        self.d.setVar("PREMIRRORS", "http://.*/.* http://downloads.yoctoproject.org/releases/bitbake/")
++        fetcher = bb.fetch.Fetch(["http://invalid.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz;downloadfilename=bitbake-v1.0.0.tar.gz"], self.d)
++        fetcher.download()
++        self.assertEqual(os.path.getsize(self.dldir + "/bitbake-v1.0.0.tar.gz"), 57749)
++
++    @skipIfNoNetwork()
++    # BZ13039
++    def test_fetch_premirror_specify_downloadfilename_specific_uri(self):
++        self.d.setVar("PREMIRRORS", "http://invalid.yoctoproject.org/releases/bitbake http://downloads.yoctoproject.org/releases/bitbake")
++        fetcher = bb.fetch.Fetch(["http://invalid.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz;downloadfilename=bitbake-v1.0.0.tar.gz"], self.d)
++        fetcher.download()
++        self.assertEqual(os.path.getsize(self.dldir + "/bitbake-v1.0.0.tar.gz"), 57749)
++
+     @skipIfNoNetwork()
+     def gitfetcher(self, url1, url2):
+         def checkrevision(self, fetcher):
 -- 
 2.25.1
 
