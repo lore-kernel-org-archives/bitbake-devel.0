@@ -1,98 +1,94 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web08.8850.1630742053073943712
+Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
+ by mx.groups.io with SMTP id smtpd.web11.7713.1630831259616785365
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 04 Sep 2021 00:54:13 -0700
+ Sun, 05 Sep 2021 01:41:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NxJEdX6a;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id j17-20020a05600c1c1100b002e754875260so935553wms.4
-        for <bitbake-devel@lists.openembedded.org>; Sat, 04 Sep 2021 00:54:12 -0700 (PDT)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=F+MBwTlC;
+ spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=1GdpaMJRNuTcPufE5nr8RlU/MFgAFFVdwTlhBv0UgWY=;
-        b=NxJEdX6aN8ZsemZ7oYM826aXWIThDFfEPaSRvVUCbhD5UgqbK9sHNedoj9Uqkwhwgf
-         tImzftPJTFAuucPspoxPUi5/YFkdQ+Di29gjBsn83mNc5UuGX+0nZ8XRag3uh3RlNhvn
-         1YlLrp8lidmwlZZrRZsO4v5v/r62cCs8hlpyg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=1GdpaMJRNuTcPufE5nr8RlU/MFgAFFVdwTlhBv0UgWY=;
-        b=fzwc3GjvPjHiCa+WRY1V4LqAxSucqWoWVnaJkDOkL2YrEb2NtSJ5FixNw9JhZsIAJO
-         UkTCAIpTq6oP40FIwiP/DmF5tdwK5jky04Pp+ZnZM2HT9xmVdIHnjL+YU3N6UrKYYfNa
-         RIbyDsrbEFkqWnlwVtIV4rZNq4RNh4T6j7ZsslathYrggqw2jTGp2hjX+AM+AfK5N67e
-         hQmGjI8NOCi4PLowNHmfRq1/I7vNT6S5jBEGBSac+PcMm+CicVFFYM8EG1NaxIYGUJhl
-         EGnE6lXlwmQKJP9f6J/u1s6N79fhafRTdLecv1LZ0cy8gJ69skttn5p2Yb1FdQnyFFOX
-         qsXA==
-X-Gm-Message-State: AOAM531BZzF3blZShwzoOTNfVuUPSuFBzYuJccfTpeSthtno5TtRSVP2
-	OH8mFw3Z6UZUP8WYx+joTkN8Hg==
-X-Google-Smtp-Source: ABdhPJyS12eYb1SfTKO9qZ3IsKaQFg4OOqkk0ZmxBTiOGo+rtWHCQ60WylwoQte19+R/1s/SCt1kGQ==
-X-Received: by 2002:a05:600c:acd:: with SMTP id c13mr2172987wmr.28.1630742051345;
-        Sat, 04 Sep 2021 00:54:11 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:435c:78bb:cd77:df6f? ([2001:8b0:aba:5f3c:435c:78bb:cd77:df6f])
-        by smtp.gmail.com with ESMTPSA id a133sm1418770wme.5.2021.09.04.00.54.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Sep 2021 00:54:11 -0700 (PDT)
-Message-ID: <209f7a813b8003ad75e5edb9600f729a91abee7b.camel@linuxfoundation.org>
+  d=axis.com; q=dns/txt; s=axis-central1; t=1630831260;
+  x=1662367260;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=sHz9DuDZs82FInBKdzvOQFxYR1n0tiEELNWdI/50X5I=;
+  b=F+MBwTlCjo8XBdMDto/Trr6JtpkMT+whWyhN6oczg/mLVLH6gIfZrU9V
+   be24NmcfgB7gewEoXzYbmCSd15egQlLSnHaImVtOvG+lV3dxdSr627RLj
+   0bWp209n4aLZSzhpZJlneBxKVBG0+p2n1PNrGSA9N6JpykwVKQiOoA0H2
+   gyx+p2zUPzkPO8lyggu+6OwiOxKIEJ0zw+GHjMTSnlHmEpIKIIYJve7NF
+   9fl5TC+xPbq7ZtYfLMo2vmvsco7Dvwk2lrchiZ/ch3XHI+zgHh8VQP1MB
+   ONCBUOg8+ovEI+QsLWsl4nSVOixckObp18HWlG74kOAGm3vBRtCCZHf3i
+   A==;
+From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, Damian Wrobel
+	<dwrobel@ertelnet.rybnik.pl>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Subject: Re: [bitbake-devel] [PATCH] cooker: Only warn on potentially incompatible layer
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>, 
-	bitbake-devel@lists.openembedded.org
-Date: Sat, 04 Sep 2021 08:54:08 +0100
-In-Reply-To: <22175.1630691638780132694@lists.openembedded.org>
-References: 
-	<b23f250a23dbd3273392b6694a442f5bb5602bf7.camel@linuxfoundation.org>
+Thread-Topic: [bitbake-devel] [PATCH] cooker: Only warn on potentially
+ incompatible layer
+Thread-Index: AQHXoNAQaBJnWwx8q0O9hdgDaJMYF6uSaSSAgAANCwCAAOq+AIABv4Ag
+Date: Sun, 5 Sep 2021 08:40:56 +0000
+Message-ID: <a8c2e55df5644453a8c97a9d9c050826@axis.com>
+References: <b23f250a23dbd3273392b6694a442f5bb5602bf7.camel@linuxfoundation.org>
 	 <22175.1630691638780132694@lists.openembedded.org>
-User-Agent: Evolution 3.40.2-1build1 
+ <209f7a813b8003ad75e5edb9600f729a91abee7b.camel@linuxfoundation.org>
+In-Reply-To: <209f7a813b8003ad75e5edb9600f729a91abee7b.camel@linuxfoundation.org>
+Accept-Language: en-US, sv-SE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.5.60]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Return-Path: peter.kjellerstedt@axis.com
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Fri, 2021-09-03 at 10:53 -0700, Damian Wrobel wrote:
-> On Fri, Sep 3, 2021 at 07:07 PM, Richard Purdie wrote:
-> > LAYERSERIES_COMPAT
-> The problem is that there is inconsistency for treating layers with and
-> without
-> LAYERSERIES_COMPAT.
-> 
-> If the layer without LAYERSERIES_COMPAT works perfectly - only a warning is
-> emitted.
-
-This was from the time when we introduced the variable and we had to allow a
-transition period. If you really want symmetry, we should perhaps make that one
-an error now?
-
->  Then symmetrically the same should happen for a layer with LAYERSERIES_COMPAT
-> - especially that this check is not able to detect any real problems in this
-> layer - it only blindly rejects a valid layer.
-
-We (as a TSC and a project) realised we had a lot of problems due to layers not
-declaring which versions they are compatible with. We decided to make that a
-requirement as it causes users a problem. I don't see that anything has changed
-in this regard, if we drop this to a warning, people will just not declare the
-layer compatibility and we're back to square one.
-
-> Additionally, this bb.fatal generates compatibility problem as we're able to
-> consume 3rd party layers which have LAYERSERIES_COMPAT in yocto morty (which
-> doesn't use this compatibility check), but the same layers are false
-> positively rejected by yocto dunfell.
-
-As I say above, we have a period where we had to introduce this feature. We've
-done that so perhaps now is the time to require it, not the other way around and
-drop the check.
-
-> Having this merged would allow to limit maintenance burden on 3rd party
-> layers.
-
-Adding a single keyword every six months to show the layer is active and meant
-to work with a new release is not in my view a huge maintenance burden compared
-to showing that the layer is actively maintained and clearly showing which
-combinations are meant to work.
-
-Cheers,
-
-Richard
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBiaXRiYWtlLWRldmVsQGxpc3Rz
+Lm9wZW5lbWJlZGRlZC5vcmcgPGJpdGJha2UtDQo+IGRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5v
+cmc+IE9uIEJlaGFsZiBPZiBSaWNoYXJkIFB1cmRpZQ0KPiBTZW50OiBkZW4gNCBzZXB0ZW1iZXIg
+MjAyMSAwOTo1NA0KPiBUbzogRGFtaWFuIFdyb2JlbCA8ZHdyb2JlbEBlcnRlbG5ldC5yeWJuaWsu
+cGw+OyBiaXRiYWtlLQ0KPiBkZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQo+IFN1YmplY3Q6
+IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENIXSBjb29rZXI6IE9ubHkgd2FybiBvbiBwb3RlbnRp
+YWxseQ0KPiBpbmNvbXBhdGlibGUgbGF5ZXINCj4gDQo+IE9uIEZyaSwgMjAyMS0wOS0wMyBhdCAx
+MDo1MyAtMDcwMCwgRGFtaWFuIFdyb2JlbCB3cm90ZToNCj4gPiBPbiBGcmksIFNlcCAzLCAyMDIx
+IGF0IDA3OjA3IFBNLCBSaWNoYXJkIFB1cmRpZSB3cm90ZToNCj4gPiA+IExBWUVSU0VSSUVTX0NP
+TVBBVA0KPiA+IFRoZSBwcm9ibGVtIGlzIHRoYXQgdGhlcmUgaXMgaW5jb25zaXN0ZW5jeSBmb3Ig
+dHJlYXRpbmcgbGF5ZXJzIHdpdGggYW5kDQo+ID4gd2l0aG91dA0KPiA+IExBWUVSU0VSSUVTX0NP
+TVBBVC4NCj4gPg0KPiA+IElmIHRoZSBsYXllciB3aXRob3V0IExBWUVSU0VSSUVTX0NPTVBBVCB3
+b3JrcyBwZXJmZWN0bHkgLSBvbmx5IGEgd2FybmluZw0KPiBpcw0KPiA+IGVtaXR0ZWQuDQo+IA0K
+PiBUaGlzIHdhcyBmcm9tIHRoZSB0aW1lIHdoZW4gd2UgaW50cm9kdWNlZCB0aGUgdmFyaWFibGUg
+YW5kIHdlIGhhZCB0byBhbGxvdw0KPiBhDQo+IHRyYW5zaXRpb24gcGVyaW9kLiBJZiB5b3UgcmVh
+bGx5IHdhbnQgc3ltbWV0cnksIHdlIHNob3VsZCBwZXJoYXBzIG1ha2UNCj4gdGhhdCBvbmUNCj4g
+YW4gZXJyb3Igbm93Pw0KPiANCj4gPiAgVGhlbiBzeW1tZXRyaWNhbGx5IHRoZSBzYW1lIHNob3Vs
+ZCBoYXBwZW4gZm9yIGEgbGF5ZXIgd2l0aA0KPiBMQVlFUlNFUklFU19DT01QQVQNCj4gPiAtIGVz
+cGVjaWFsbHkgdGhhdCB0aGlzIGNoZWNrIGlzIG5vdCBhYmxlIHRvIGRldGVjdCBhbnkgcmVhbCBw
+cm9ibGVtcyBpbg0KPiB0aGlzDQo+ID4gbGF5ZXIgLSBpdCBvbmx5IGJsaW5kbHkgcmVqZWN0cyBh
+IHZhbGlkIGxheWVyLg0KPiANCj4gV2UgKGFzIGEgVFNDIGFuZCBhIHByb2plY3QpIHJlYWxpc2Vk
+IHdlIGhhZCBhIGxvdCBvZiBwcm9ibGVtcyBkdWUgdG8NCj4gbGF5ZXJzIG5vdA0KPiBkZWNsYXJp
+bmcgd2hpY2ggdmVyc2lvbnMgdGhleSBhcmUgY29tcGF0aWJsZSB3aXRoLiBXZSBkZWNpZGVkIHRv
+IG1ha2UgdGhhdA0KPiBhDQo+IHJlcXVpcmVtZW50IGFzIGl0IGNhdXNlcyB1c2VycyBhIHByb2Js
+ZW0uIEkgZG9uJ3Qgc2VlIHRoYXQgYW55dGhpbmcgaGFzDQo+IGNoYW5nZWQNCj4gaW4gdGhpcyBy
+ZWdhcmQsIGlmIHdlIGRyb3AgdGhpcyB0byBhIHdhcm5pbmcsIHBlb3BsZSB3aWxsIGp1c3Qgbm90
+IGRlY2xhcmUNCj4gdGhlDQo+IGxheWVyIGNvbXBhdGliaWxpdHkgYW5kIHdlJ3JlIGJhY2sgdG8g
+c3F1YXJlIG9uZS4NCj4gDQo+ID4gQWRkaXRpb25hbGx5LCB0aGlzIGJiLmZhdGFsIGdlbmVyYXRl
+cyBjb21wYXRpYmlsaXR5IHByb2JsZW0gYXMgd2UncmUNCj4gYWJsZSB0bw0KPiA+IGNvbnN1bWUg
+M3JkIHBhcnR5IGxheWVycyB3aGljaCBoYXZlIExBWUVSU0VSSUVTX0NPTVBBVCBpbiB5b2N0byBt
+b3J0eQ0KPiAod2hpY2gNCj4gPiBkb2Vzbid0IHVzZSB0aGlzIGNvbXBhdGliaWxpdHkgY2hlY2sp
+LCBidXQgdGhlIHNhbWUgbGF5ZXJzIGFyZSBmYWxzZQ0KPiA+IHBvc2l0aXZlbHkgcmVqZWN0ZWQg
+YnkgeW9jdG8gZHVuZmVsbC4NCj4gDQo+IEFzIEkgc2F5IGFib3ZlLCB3ZSBoYXZlIGEgcGVyaW9k
+IHdoZXJlIHdlIGhhZCB0byBpbnRyb2R1Y2UgdGhpcyBmZWF0dXJlLg0KPiBXZSd2ZQ0KPiBkb25l
+IHRoYXQgc28gcGVyaGFwcyBub3cgaXMgdGhlIHRpbWUgdG8gcmVxdWlyZSBpdCwgbm90IHRoZSBv
+dGhlciB3YXkNCj4gYXJvdW5kIGFuZA0KPiBkcm9wIHRoZSBjaGVjay4NCj4gDQo+ID4gSGF2aW5n
+IHRoaXMgbWVyZ2VkIHdvdWxkIGFsbG93IHRvIGxpbWl0IG1haW50ZW5hbmNlIGJ1cmRlbiBvbiAz
+cmQgcGFydHkNCj4gPiBsYXllcnMuDQo+IA0KPiBBZGRpbmcgYSBzaW5nbGUga2V5d29yZCBldmVy
+eSBzaXggbW9udGhzIHRvIHNob3cgdGhlIGxheWVyIGlzIGFjdGl2ZSBhbmQNCj4gbWVhbnQNCj4g
+dG8gd29yayB3aXRoIGEgbmV3IHJlbGVhc2UgaXMgbm90IGluIG15IHZpZXcgYSBodWdlIG1haW50
+ZW5hbmNlIGJ1cmRlbg0KPiBjb21wYXJlZA0KPiB0byBzaG93aW5nIHRoYXQgdGhlIGxheWVyIGlz
+IGFjdGl2ZWx5IG1haW50YWluZWQgYW5kIGNsZWFybHkgc2hvd2luZyB3aGljaA0KPiBjb21iaW5h
+dGlvbnMgYXJlIG1lYW50IHRvIHdvcmsuDQo+IA0KPiBDaGVlcnMsDQo+IA0KPiBSaWNoYXJkDQoN
+CkluIGFkZGl0aW9uIHRvIHRoaXMsIHdpdGggdGhlIHVwY29taW5nIEhvbmlzdGVyIHJlbGVhc2Ug
+aXQgd2lsbCBiZSBuZWFybHkgDQppbXBvc3NpYmxlIHRvIGhhdmUgYSBsYXllciB0aGF0IGlzIGNv
+bXBhdGlibGUgd2l0aCBhbnl0aGluZyBvbGRlciB0aGFuIA0KRHVuZmVsbCBkdWUgdG8gdGhlIHN5
+bnRheCBjaGFuZ2VzIGZvciB0aGUgdmFyaWFibGUgb3ZlcnJpZGVzLiBTbyB5b3UgbWF5IA0KYXMg
+d2VsbCBnZXQgdXNlZCB0byBub3QgYmVpbmcgYWJsZSB0byBoYXZlIG9uZSB2ZXJzaW9uIG9mIGEg
+bGF5ZXIgdGhhdCBpcyANCmNvbXBhdGlibGUgd2l0aCBldmVyeXRoaW5nLg0KDQovL1BldGVyDQoN
+Cg==
