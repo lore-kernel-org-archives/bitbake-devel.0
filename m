@@ -1,86 +1,102 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web10.1501.1631042270344277906
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+ by mx.groups.io with SMTP id smtpd.web08.2270.1631045941652992970
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 07 Sep 2021 12:17:50 -0700
+ Tue, 07 Sep 2021 13:19:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=OK3bUsav;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f52.google.com with SMTP id b6so16013534wrh.10
-        for <bitbake-devel@lists.openembedded.org>; Tue, 07 Sep 2021 12:17:50 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=SvMmaUWw;
+ spf=pass (domain: gmail.com, ip: 209.85.217.50, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-vs1-f50.google.com with SMTP id bf15so63554vsb.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 07 Sep 2021 13:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=hEV5qcYQFk7IXOz3nEdesrGhVe5aiFlK30gKklZ6SQM=;
-        b=OK3bUsavwBK3ill9mzE7rAa5hIRxzkjYphYzDqeJkeoRAmm8wLSHnh6E1x5Rn+ZGxk
-         OCn1sws39wGppR+Xt9hJeBUrppUvBDyyvkulbNovzLgIYxOeH3Mxyb3WHXX4hIQOxVZK
-         ElU7EMbyqDdDAG+qKxZn5lQag0/Uu3wtWrit4=
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qsmlE/Q7jxvKfLnTvUvq210HgXW13RBmoLm1sQZuQr4=;
+        b=SvMmaUWwDcwe+JxgXM8hW3jk0IhfYRE0aU/kzO/EjRzwwbMS9yw5dgs1ukU07a9LGF
+         UBRIQUG5gGF6ar7BKEJJ2eYbu6eRWVQfVZ/1CLmAmpIuEfBwQLnWGCqxgt853EeAzS1Z
+         y0psMZ5OlT7ZGNw3SS2uLSHLntzjht1T3wC1cbKeQL6eSezMHD9rIe5ElMm0QBLTqBbt
+         0Iptva1b60rVIhvHkTH1q7EKOvmOa9kHe8yDRSYqI8+LofyjPTxlwUyvzEQFYUM+ZgVx
+         GwEHGvnqiTTW9Z808PNX+9TtB/GBI79tkWpK9jj2q5cqBAxWPSsrq7DRHoavd+0mmDU3
+         YcFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=hEV5qcYQFk7IXOz3nEdesrGhVe5aiFlK30gKklZ6SQM=;
-        b=d/AbGfPK24+iEzWSLyFG3TgYNQqKLd3EeDqiFl3WlkF8N9GRz8PksKltv35mlsNUth
-         rmJ/7Y+LVHTrQagppfeOlDvrIS75HMm1gltUt+7/2EZ4Qvcba8B4E03NBhIfqyqSXNmJ
-         krHsiHxaQ3GCqpUjq3Dsgv4Yd/DSpTX6Ufe+iYee8Kevo8eBraYBNK2CTGnpJkSanm6Z
-         Ocr9v4LcOv6wBy6glpF4p992mtzj+4AEnqxpQwwZwSnkZAm67PU6CF5/8MAi0Ctq9uqZ
-         wRc+mn5Mrlfk7Lump2z1GdoGDBf+xS1i6DF/wxfU/rNTc5cE1fh63vuBapxc1wLQIETd
-         uNyA==
-X-Gm-Message-State: AOAM530cBDhSGLZMMsEqBCLY0JuIDUf/dTWANhbzXc/3FS2cVYAOAxNN
-	eapHICW5k8haMn+Fnm1dXsvgZQ==
-X-Google-Smtp-Source: ABdhPJxqndp3V4/YBmLLzMTEpjku6yksQaHVTwTH4cCEDRS91pSNT+2LtUq+FPdWibFtfXWh4E6Urg==
-X-Received: by 2002:a05:6000:1150:: with SMTP id d16mr20908192wrx.357.1631042268495;
-        Tue, 07 Sep 2021 12:17:48 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:7ba0:bddf:c938:8f16? ([2001:8b0:aba:5f3c:7ba0:bddf:c938:8f16])
-        by smtp.gmail.com with ESMTPSA id h18sm2701889wrb.33.2021.09.07.12.17.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Sep 2021 12:17:48 -0700 (PDT)
-Message-ID: <0945d013a2111bc32698d527ede2fa747a25ad85.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] cooker: Only warn on potentially incompatible layer
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>, 
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 07 Sep 2021 20:17:45 +0100
-In-Reply-To: <13276.1631032728323594714@lists.openembedded.org>
-References: 
-	<CANNYZj88WpKLuHORum8vMnhW6UVWqJMYLDM1vz-+MX3uu3Lh7w@mail.gmail.com>
-	 <13276.1631032728323594714@lists.openembedded.org>
-User-Agent: Evolution 3.40.2-1build1 
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qsmlE/Q7jxvKfLnTvUvq210HgXW13RBmoLm1sQZuQr4=;
+        b=kAM1AjldavlkW4UcJKu51optg1ZPB5sfSzOG72tZL9KxidKE3Sl6tb3H1HnjBKSH6Z
+         k99jibHZYcvZyXwHpZWVza4tlNkaWOKt3fvH2lFs8vz2FG6zi1y2W2vlsrsyZsMoKQZG
+         o/q3VnmUjhP+b3xeuL+SLXXjLzZ50R7e/roujvxWpQHT/omkuVQLBj7Tp8syNppP6HEe
+         RmDcuI46GIKMP8Zd0nevNVVqtbvqfNzNJo7jgXrZj6/YnbVO5rdOmzNKlS3EmAchoiV6
+         qRverygxecEkWGAHDAG1fnE1Mr7J0pRKWDs3ylDeMEj+qeSkE5xrQ+HBqDEi6X8fUPWu
+         im/w==
+X-Gm-Message-State: AOAM532YAiziprn1dzUZSM0oYt6iwInPOuUq3yu0OHmRr/XkyUm5d8Ua
+	dHj5aggpticba5YIIlrGZN324O7QhdWxFwfmDq0=
+X-Google-Smtp-Source: ABdhPJwqMO0Iy+dKBGBgne3ZDV/3uEITouRUY89msnfNIdgGKtuS7sWEXkKaT189D4DUy1BEwS/STR6oT402ogFgdgE=
+X-Received: by 2002:a05:6102:94e:: with SMTP id a14mr114962vsi.1.1631045940754;
+ Tue, 07 Sep 2021 13:19:00 -0700 (PDT)
 MIME-Version: 1.0
+References: <CANNYZj88WpKLuHORum8vMnhW6UVWqJMYLDM1vz-+MX3uu3Lh7w@mail.gmail.com>
+ <13276.1631032728323594714@lists.openembedded.org> <0945d013a2111bc32698d527ede2fa747a25ad85.camel@linuxfoundation.org>
+In-Reply-To: <0945d013a2111bc32698d527ede2fa747a25ad85.camel@linuxfoundation.org>
+From: "Alexander Kanavin" <alex.kanavin@gmail.com>
+Date: Tue, 7 Sep 2021 22:18:49 +0200
+Message-ID: <CANNYZj-eA=hYnhBNw5gZcJpB3Xy8R7j1ptJJG8kYhxvzL7xadg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] cooker: Only warn on potentially incompatible layer
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>, 
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="000000000000e9411905cb6d79c2"
+
+--000000000000e9411905cb6d79c2
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Tue, 2021-09-07 at 09:38 -0700, Damian Wrobel wrote:
-> On Tue, Sep 7, 2021 at 05:49 PM, Alexander Kanavin wrote:
-> 
-> > Sorry, not possible. If dunfell branch doesn't do what you need it to, the
-> > correct solution is to send patches for the branch, or backport the needed
-> > changes into your internal copy of that layer. But certainly not to start
-> > mixing layer revisions from different releases and demand that this must be
-> > supported and easy.
-> 
-> Thank you for the hints but they do not scale well in reality and the
-> restrictions LAYERSERIES_COMPAT imposes on the rest of the components simply
-> resembles me the "rule of diversity"[0] from the Art of Unix programming.
-> 
-> [0]
-> https://www.linuxtopia.org/online_books/programming_books/art_of_unix_programmin
-> g/ch01s06_15.html
+On Tue, 7 Sept 2021 at 21:17, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-So you're saying we're showing an "unhealthy form of arrogance". Thanks.
+> So you're saying we're showing an "unhealthy form of arrogance". Thanks.
+>
+> I did mention you can bypass and do creative things with the checks. I
+> don't
+> particularly want to spell it out as I don't want to encourage it or see
+> it in
+> widespread use but someone else has also mentioned more directly how it
+> can be
+> done.
+>
 
-I did mention you can bypass and do creative things with the checks. I don't
-particularly want to spell it out as I don't want to encourage it or see it in
-widespread use but someone else has also mentioned more directly how it can be
-done.
+By the way, in my previous job I've seen a certain well-known mobile
+silicon vendor get even more creative and declare a wildcard yocto release
+compatibility for all of their BSP layers, so they would never have to
+spell out specific yocto releases. That was literally the first thing I
+told them to remove, and no, I am not saying how they did it. One can
+bypass all rules if one is determined to.
 
-The answer is still no, we're not changing that default as it does help end
-users a lot. You can avoid the check if you know what you're doing.
+Alex
 
-Cheers,
+--000000000000e9411905cb6d79c2
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Richard
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail=
+_attr">On Tue, 7 Sept 2021 at 21:17, Richard Purdie &lt;<a href=3D"mailto:r=
+ichard.purdie@linuxfoundation.org">richard.purdie@linuxfoundation.org</a>&g=
+t; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0p=
+x 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">So you=
+&#39;re saying we&#39;re showing an &quot;unhealthy form of arrogance&quot;=
+. Thanks.<br>
+<br>
+I did mention you can bypass and do creative things with the checks. I don&=
+#39;t<br>
+particularly want to spell it out as I don&#39;t want to encourage it or se=
+e it in<br>
+widespread use but someone else has also mentioned more directly how it can=
+ be<br>
+done.<br></blockquote><div><br></div><div>By the way, in my previous job I&=
+#39;ve seen a certain well-known mobile silicon vendor get even more creati=
+ve and declare a wildcard yocto release compatibility for all of their BSP =
+layers, so they would never have to spell out specific yocto releases. That=
+ was literally the first thing I told them to remove, and no, I am not sayi=
+ng how they did it. One can bypass all rules if one is determined to.<br></=
+div><div><br></div><div>Alex<br></div></div></div>
 
-
-
+--000000000000e9411905cb6d79c2--
