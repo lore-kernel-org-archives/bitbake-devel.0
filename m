@@ -1,77 +1,70 @@
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web09.10591.1631104577089446956
+Received: from sender4-op-o13.zoho.com (sender4-op-o13.zoho.com [136.143.188.13])
+ by mx.groups.io with SMTP id smtpd.web08.11599.1631108168891590827
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 Sep 2021 05:36:17 -0700
+ Wed, 08 Sep 2021 06:36:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=Z2P/UueR;
- spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1631104577;
-  x=1662640577;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=LbLz/kiNIYOpUv7re304QHg+qn86dwzQ02JAiSx4pw0=;
-  b=Z2P/UueRAHvIC/HjJG1z9hZeeg/gGpBHPMZNFG6NYHKz5sYKI5b6Q9IY
-   6DJ4iUmAzJxOfNbCdwqeBN7ZOFT93/buvWpPaqxC+haefoyQzZJu7dOfM
-   XR1naiujzndD1tTskIC9h2LWIzxDGuYdUTo4IwIITgLEk6IsZFjQFN66h
-   +fOZ+VtEKTrAiYMaW+/9QLWHi24QMNU8yHRJwIFlguYcDhTj+4qA+k1yN
-   aSTekb9/ULLILCb2lZvoA9bhkii1iCls72HOfKY1bWdLyrRcgSs7V9of9
-   wjZtOO71zXsMVKZ7MRTxi1WOp7/UY+vQl/cuNzHzauzPpuNNZ1psuhYOL
-   w==;
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: "enrico.scholz@sigma-chemnitz.de" <enrico.scholz@sigma-chemnitz.de>,
-	Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
-CC: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] cooker: Only warn on potentially incompatible layer
-Thread-Topic: [bitbake-devel] [PATCH] cooker: Only warn on potentially
- incompatible layer
-Thread-Index: AQHXoNAQaBJnWwx8q0O9hdgDaJMYF6uZ7gkGgAArvYA=
-Date: Wed, 8 Sep 2021 12:36:12 +0000
-Message-ID: <077e555a9d32412d83eedaa347a1eff4@axis.com>
-References: <20210903142840.68050-1-dwrobel@ertelnet.rybnik.pl>
- <lyv93b9yr7.fsf@ensc-virt.intern.sigma-chemnitz.de>
+ dkim=pass header.i=dwrobel@ertelnet.rybnik.pl header.s=ertelnet header.b=PtIwQnVN;
+ spf=pass (domain: ertelnet.rybnik.pl, ip: 136.143.188.13, mailfrom: dwrobel@ertelnet.rybnik.pl)
+ARC-Seal: i=1; a=rsa-sha256; t=1631108125; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=H82Lazx8wVRul0OZQYa8/PF/gb+XFtwP757f/u07dHOX4KF05/UufkxGWHDibOVpCQsaWuNEGpj7dTGD7ARNhXxS99xLIfLDEvduDKOAzFJ5j5ywrQySm//VKe0wk8uWZNOdLaynXA3D6kQdRVxswmRjZcmo9dXMZwkBgZaZqGA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1631108125; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=Gz6b70NfZ9jCqwXev7HpHYhIWkr9CPdZIekgWvLRbYU=; 
+	b=dGQ19ket/O/5VPrLlwesayaNpNawbiz9xEhK90Y0Jt9O/pzdrbPhmKy9h23Y6kI76zmNSf62PNcPl0UScYg/oE4kvTIUkID7s80liZr66kYkjChWG9ChIsfFHrRGtv/jFKjTGLr93Acvm51mWHXqGhrLTumpWwJLLUVhStzqV/M=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=ertelnet.rybnik.pl;
+	spf=pass  smtp.mailfrom=dwrobel@ertelnet.rybnik.pl;
+	dmarc=pass header.from=<dwrobel@ertelnet.rybnik.pl>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1631108125;
+	s=ertelnet; d=ertelnet.rybnik.pl; i=dwrobel@ertelnet.rybnik.pl;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=Gz6b70NfZ9jCqwXev7HpHYhIWkr9CPdZIekgWvLRbYU=;
+	b=PtIwQnVNJp1ERljN6/jj/gS3wTUvq6l97qFdB/KFK86c1Foy387a8vEv06/dtW5r
+	LSfCZjhz80jZk4CvkHPJvo+zGCasWjyUszlPenccmbErxkCgEeF/vSmS4P2Qtj6h0Wl
+	RfgMHJoX9CUNYXEZN7LDey2QURXounvY0QovPJS8=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1631108122534595.1748313984823; Wed, 8 Sep 2021 06:35:22 -0700 (PDT)
+Date: Wed, 08 Sep 2021 15:35:22 +0200
+From: "Damian Wrobel" <dwrobel@ertelnet.rybnik.pl>
+To: "Enrico Scholz" <enrico.scholz@sigma-chemnitz.de>
+Cc: "bitbake-devel" <bitbake-devel@lists.openembedded.org>
+Message-ID: <17bc59ec791.b6e62dd2473904.7067434806749865403@ertelnet.rybnik.pl>
 In-Reply-To: <lyv93b9yr7.fsf@ensc-virt.intern.sigma-chemnitz.de>
-Accept-Language: en-US, sv-SE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
+References: <20210903142840.68050-1-dwrobel@ertelnet.rybnik.pl> <lyv93b9yr7.fsf@ensc-virt.intern.sigma-chemnitz.de>
+Subject: Re: [bitbake-devel] [PATCH] cooker: Only warn on potentially incompatible layer
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Enrico Scholz via
-> lists.openembedded.org
-> Sent: den 8 september 2021 11:56
-> To: Damian Wrobel <dwrobel@ertelnet.rybnik.pl>
-> Cc: bitbake-devel@lists.openembedded.org
-> Subject: Re: [bitbake-devel] [PATCH] cooker: Only warn on potentially
-> incompatible layer
->=20
-> "Damian Wrobel" <dwrobel@ertelnet.rybnik.pl> writes:
->=20
-> > It frequently happens that the 3rd party layer is, in practise,
-> > fully compatible with the older version of yocto. So, instead of
-> > false positively reporting an error, it seems to be more
-> > appropriately to just emit the warning.
->=20
-> You can achieve this already now (when you are really sure that it works
-> for your bsp).  Just set
->=20
-> | LAYERSERIES_COMPAT:<foreign-layer>:append =3D " frodo"
->=20
-> in your bblayers.conf.
 
-Minor detail: LAYERSERIES_COMPAT is among the variables that have=20
-not been changed to use the new override format, so the above should=20
-be:
+ ---- On Wed, 08 Sep 2021 11:56:28 +0200 Enrico Scholz <enrico.scholz@sigma-chemnitz.de> wrote ----
+ > "Damian Wrobel" <dwrobel@ertelnet.rybnik.pl> writes:
+ > 
+ > > It frequently happens that the 3rd party layer is, in practise,
+ > > fully compatible with the older version of yocto. So, instead of
+ > > false positively reporting an error, it seems to be more
+ > > appropriately to just emit the warning.
+ > 
+ > You can achieve this already now (when you are really sure that it works
+ > for your bsp).  Just set
 
-LAYERSERIES_COMPAT_<foreign-layer>:append =3D " frodo"
+I'm aware of this thread [2] where it was already discussed, but I was hoping to fix it for good in the root of the problem.
 
-> Enrico
+[2] https://lists.yoctoproject.org/g/yocto/topic/74454321
 
-//Peter
+Regards,
+Damian
 
+ > 
+ > | LAYERSERIES_COMPAT:<foreign-layer>:append = " frodo"
+ > 
+ > in your bblayers.conf.
+ > 
+ > 
+ > 
+ > Enrico
+ > 
