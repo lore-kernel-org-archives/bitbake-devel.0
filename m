@@ -1,98 +1,74 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web11.5099.1631219422811746161
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web12.6697.1631265311116971541
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 09 Sep 2021 13:30:23 -0700
+ Fri, 10 Sep 2021 02:15:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CvAMI24Z;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f45.google.com with SMTP id q26so4302679wrc.7
-        for <bitbake-devel@lists.openembedded.org>; Thu, 09 Sep 2021 13:30:22 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=OjzuCQEW;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f52.google.com with SMTP id x6so1605544wrv.13
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 02:15:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=a4xA2s3C+L5gCgAWYxZsoh4pPVXU9XPaDnyzvuDdUCU=;
-        b=CvAMI24ZhcnudSVICxLg5FFhaPyqYsXyuERKCDBvF/1Z93KsJwCScy1alrh5H+PXLu
-         7s+JfS3YV30p4eYX2IKSDFtUfscmnCZ2/2AcjlNPU3kUz3OCQ3UyJ40sHWr61LUpWs5E
-         0z7qvRGsA3eBic3Hl/W97tOzGxtALfFcvoCGQ=
+        bh=BGBaqP5WFEIW7jGtXNy5Z+55qrVZ2ZDg24rr1iNupJg=;
+        b=OjzuCQEW71M28NtZOsEgMkQBzC9RRvnTxhb9YFwr+YYC3JYuEeqRRTSqdrnEkQ0TTK
+         qBWrhoBkkOCvUHF9n1VA1JeZYntfMUaaC9RWig/FRw+AF26hTwasngi83JWE5iJmqrj/
+         /gVlhH6IA+/GVEHYngNg04D/OxFcGjxW3CTJw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=a4xA2s3C+L5gCgAWYxZsoh4pPVXU9XPaDnyzvuDdUCU=;
-        b=ogt4BtD8xMNABm8B6u2xI9UmAIY+qKVRNepTRhxs0JJJyRXtFnunmBf4xRjf4W5ZqP
-         GEoShmTliq+yeK3MaI3kwRNa36wdlbVAdnOwLNbmYSH6PH0jzS+EvqhBbetLFpGNuPeU
-         7NL7uvemJglQzmWLkM8f4L2wyGFSueFYOBj4rtsot/BK6lgD+waNHVgDn8oIm3+aw1jC
-         CufQWnKhp60/g7A3B87VuQ6edf3CSr5zl3GN3xTGzvm250Wljbl1FB/u3yPlD9wxcJVB
-         xOMsWuLmHGCqXED9Irsgt0rgkCzNZ2Di02xVKepvFKzSR/5MbFXA+Ot5jdW241B8xXon
-         D6LA==
-X-Gm-Message-State: AOAM533+6s+DDqguAsaGweNqblZLpqVW/ogOPfsn1mbPUVDH3Em9gS/p
-	rxz6FuiSvq9j4WZBllAQkmnEvh+r6AW0yMzM
-X-Google-Smtp-Source: ABdhPJz/jP7QUHsoKbRhy61J4BlDtJ4RA6k0Y1L2mFnLBcErrcJh5mM/TxyhgGLjDVlWvdbs1ir6hw==
-X-Received: by 2002:a5d:61d2:: with SMTP id q18mr4244531wrv.191.1631219420948;
-        Thu, 09 Sep 2021 13:30:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BGBaqP5WFEIW7jGtXNy5Z+55qrVZ2ZDg24rr1iNupJg=;
+        b=ys6N/cEEJS0eMomz2puvw65y5h+lV2cs6B8SdfAeUk8GBwjrv1V6Wtlub11f6Ecdlf
+         qsYT2vUmZd4jCleT1If35/iggnr/QkVpT4zhX7/eqzBSq8xU+N9YYjd0dBTLfJpBvEFP
+         dQIK/404v2zI+Et5BrLw+y0gqrLLn4Go17I1O5+LxBtVEDbbfZp0YNk25W0BnVeMXyDz
+         lsZ9QyhaxA3m+H39nCYeKx8PfpDrG4mkR7abyhKtILbdO0XTV6pahcnZTvR+oAXEQhFA
+         Pt/afoB2ELqmkFkS8bZv5OLhi3kxAvdWulm6x5neJn4X+m276Vup465rviTiEcdDL6a9
+         v4bg==
+X-Gm-Message-State: AOAM532MKXRTR0hKqOEc1xKsoPntFOD1qRRC2Pi52bQSJzVfQs0nBhpM
+	8/fytjIKg6XbCrlhSFg39WQwmxp1ekYQhIP9
+X-Google-Smtp-Source: ABdhPJx23BkHOBdAD/agM79maLGEXwK86lPjPZsJY0W70hPXYzwq8h/6UwbsP73bSfbOnIN3X8bMfQ==
+X-Received: by 2002:a5d:668c:: with SMTP id l12mr1493323wru.436.1631265309475;
+        Fri, 10 Sep 2021 02:15:09 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:69c:dc1e:bcce:ea45])
-        by smtp.gmail.com with ESMTPSA id t64sm2344002wma.48.2021.09.09.13.30.20
+        by smtp.gmail.com with ESMTPSA id d29sm4372893wrc.6.2021.09.10.02.15.09
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Sep 2021 13:30:20 -0700 (PDT)
+        Fri, 10 Sep 2021 02:15:09 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 3/3] bin: Drop unused warnings import
-Date: Thu,  9 Sep 2021 21:30:19 +0100
-Message-Id: <20210909203019.1231314-3-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 1/3] build: Match markup to real function name
+Date: Fri, 10 Sep 2021 10:15:06 +0100
+Message-Id: <20210910091508.1249752-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210909203019.1231314-1-richard.purdie@linuxfoundation.org>
-References: <20210909203019.1231314-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Drop some unused module imports.
+The point of the injected text is to identify where the function comes from. Using
+the correct function name would therefore be better.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bin/bitbake-diffsigs | 1 -
- bin/bitbake-server   | 1 -
- bin/bitbake-worker   | 1 -
- 3 files changed, 3 deletions(-)
+ lib/bb/build.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bin/bitbake-diffsigs b/bin/bitbake-diffsigs
-index 19420a2df6..2786ecd673 100755
---- a/bin/bitbake-diffsigs
-+++ b/bin/bitbake-diffsigs
-@@ -10,7 +10,6 @@
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 6ce8f1e6d3..ab3344c460 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -295,8 +295,8 @@ def exec_func_python(func, d, runfile, cwd=None):
+         lineno = int(d.getVarFlag(func, "lineno", False))
+         bb.methodpool.insert_method(func, text, fn, lineno - 1)
  
- import os
- import sys
--import warnings
- import argparse
- import logging
- import pickle
-diff --git a/bin/bitbake-server b/bin/bitbake-server
-index 8e53947361..b5d275b70e 100755
---- a/bin/bitbake-server
-+++ b/bin/bitbake-server
-@@ -7,7 +7,6 @@
+-        comp = utils.better_compile(code, func, "exec_python_func() autogenerated")
+-        utils.better_exec(comp, {"d": d}, code, "exec_python_func() autogenerated")
++        comp = utils.better_compile(code, func, "exec_func_python() autogenerated")
++        utils.better_exec(comp, {"d": d}, code, "exec_func_python() autogenerated")
+     finally:
+         bb.debug(2, "Python function %s finished" % func)
  
- import os
- import sys
--import warnings
- import logging
- sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
- 
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index 7d982f90ba..a9e33ca7c7 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -5,7 +5,6 @@
- 
- import os
- import sys
--import warnings
- sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
- from bb import fetch2
- import logging
 -- 
 2.32.0
 
