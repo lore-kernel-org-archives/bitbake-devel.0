@@ -1,74 +1,117 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web10.6704.1631266188806959398
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web12.9056.1631280376412214906
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Sep 2021 02:29:49 -0700
+ Fri, 10 Sep 2021 06:26:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DqcnRXrw;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f48.google.com with SMTP id z4so1685561wrr.6
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 02:29:48 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YxEZZgc0;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f52.google.com with SMTP id l7-20020a1c2507000000b002e6be5d86b3so1386788wml.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 06:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BIu91AAR7yYPDXykuVMhLlEOtJyZhBPW3TV4UKVpSJc=;
-        b=DqcnRXrwyoqYeNgILlLVCYtgiyXqTqRjtMo7sFWUi3ZYEeoEptbYYCBNs2rcQdL/UX
-         Ts5kS2XaePsBMa6dHr/qwTRELmngSs/jnRymNNL8wB0ZO81dM/S8t+np/7V9pJMlI3vO
-         5eEwYwM+nWqLC5gFomM4B25LDmX+01gfhtm6c=
+        bh=H6asrJ9F5py39pMwEkO7xrnkeUBrljhducpnGOiSN00=;
+        b=YxEZZgc0IQC7ovyc86RTh4JWpljzotRdJr8W52HPsx1GDjoqJcyhwuMOyGBtvQsJJ/
+         faSgcFgAXznKSZakOkqVMpNvKCQxOVl11EPahiRKGDywMEWKaUw2/7O1bCvg+JwlQ747
+         k8Z6LZUhWvxCB6pWUWs8F3BohFtB+UU5c3q44=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BIu91AAR7yYPDXykuVMhLlEOtJyZhBPW3TV4UKVpSJc=;
-        b=kJEXJJ14kw8rnJhvpGLw6QHfl14AzofTZNIMgEmSe+ilefLuOd4WkpNC9m2ShRP4a5
-         owlHJpPuKK7pBZkMCm7EL0fzAdcGr+OAELQkAHh2BeePDlp80nJ+8vKDxpyWcS6XljaA
-         lYHnLsD9GZSnhEd/VMLnpxPE2OCue/6x4KmCP2aaFMl8U5rquGY3iZnVPAEWDASxxFMa
-         g27DcHk4Yh2NFutwAj+QNYRYHtyL2M4jjOCOoWr43DMeCDuQbRajta0qEEnOkOPMPoLK
-         Eyeu+tBISL6T1Hg3VtsserA1IGTs2GOarso5gQLvIGrymsi2V6xPQ32KbQCT2LucQLnG
-         5c1Q==
-X-Gm-Message-State: AOAM533ZS2EHRJeWmf2ir5/zHrF1kpwKtR72/+5gSJlnUBrcDxwWzG2u
-	C+mqCpfbc6mvwVdRlpoAWIBZDw+LNHWbQILF
-X-Google-Smtp-Source: ABdhPJyigRCl51griXoNYrAU4jjoHoLMMhmJTL3VrfoS79y7YbxNbmP1ZpmSRDj2GVUkSJtcs5yv4Q==
-X-Received: by 2002:a05:6000:178b:: with SMTP id e11mr8310261wrg.151.1631266187084;
-        Fri, 10 Sep 2021 02:29:47 -0700 (PDT)
+        bh=H6asrJ9F5py39pMwEkO7xrnkeUBrljhducpnGOiSN00=;
+        b=yGN6qjpILFY3lTSMMVaeajUstBktfpY3dZekyAIvAdwrTvqBR9sAICCpUGckYB92cy
+         aOzvG8tdeWdv7CCrs2+fRjx64Fyv141TfxHeatHBJ/JXJTZQbPc3xgBvTb8bt2Q+YEQ/
+         0FtXkadSQjoK9v7lJAWVfVqi9p5K2KuqnYlxDS8ieljt6geCngrpmv/IjqPxLopsLtkO
+         4aLGU9fAnbjv66rSDbG9QYCnh/H2iRuZFyjjqSescoHpoBFmC/ubS5SM3Kk4oZYIhWeI
+         VcuLAP++qHzysOd9xL0zaZd32SMXtNR8zBFToO8TadDir6j3c/cbXqfvSmHvTPafq2WQ
+         K15Q==
+X-Gm-Message-State: AOAM530DXI3PtyGe4J+BApXVLtjaITuQYAP9uUmDaRcmgl2FU3iXyvKB
+	+5ABMsvSKz7hC3/q7yY6G9IjQzn30lWf4bzX
+X-Google-Smtp-Source: ABdhPJwRrW0hcK2eWO3x5eydhQvOOT54QXmqkw2YcKiX68QLJCmpFT6NT5hd/+spwJVzmjDfbzRJVw==
+X-Received: by 2002:a7b:c762:: with SMTP id x2mr7127590wmk.37.1631280374617;
+        Fri, 10 Sep 2021 06:26:14 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:69c:dc1e:bcce:ea45])
-        by smtp.gmail.com with ESMTPSA id d24sm3655929wmb.35.2021.09.10.02.29.46
+        by smtp.gmail.com with ESMTPSA id e2sm4827798wra.40.2021.09.10.06.26.14
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Sep 2021 02:29:46 -0700 (PDT)
+        Fri, 10 Sep 2021 06:26:14 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] build: Avoid duplicating logs in verbose mode
-Date: Fri, 10 Sep 2021 10:29:46 +0100
-Message-Id: <20210910092946.1250124-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] data_smart: Make ExpansionErrors more readable
+Date: Fri, 10 Sep 2021 14:26:13 +0100
+Message-Id: <20210910132613.1255886-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With "bitbake -v", for task failures you'd see the log output twice. Avoid
-this by using the existing "did we print info" switch.
+This adds context to ExpansionError messages which show the variable chain for which
+expansion is being attempted. This should allow users to debug the issues more easily
+than the current message (the first line alone below). Example output from a
+SRC_URI which references ${S}:
+
+bb.data_smart.ExpansionError: Failure expanding variable PV, expression was 0.1+git${SRCPV} which triggered exception RecursionError: maximum recursion depth exceeded while calling a Python object
+The variable dependency chain for the failure is: PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV -> PV -> WORKDIR -> S -> SRC_URI -> SRCPV
+-> PV -> BP -> FILESPATH
+
+which is more useful that no output. We could truncate at repetition but I suspect
+this makes this clearer as it stands so there is little value in complicating the code.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/build.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/bb/data_smart.py | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 9862e8878e..1e062adb51 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -699,6 +699,10 @@ def _exec_task(fn, task, d, quieterr):
-                 event.fire(TaskFailedSilent(task, fn, logfn, localdata), localdata)
-             else:
-                 errprinted = errchk.triggered
-+                # If the output is already on stdout, we've printed the information in the
-+                # logs once already so don't duplicate
-+                if verboseStdoutLogging:
-+                    errprinted = True
-                 logger.error(str(exc))
-                 event.fire(TaskFailed(task, fn, logfn, localdata, errprinted), localdata)
-             return 1
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 65528c6ae6..515d195fe8 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -151,6 +151,7 @@ class ExpansionError(Exception):
+         self.expression = expression
+         self.variablename = varname
+         self.exception = exception
++        self.varlist = [varname or expression]
+         if varname:
+             if expression:
+                 self.msg = "Failure expanding variable %s, expression was %s which triggered exception %s: %s" % (varname, expression, type(exception).__name__, exception)
+@@ -160,8 +161,13 @@ class ExpansionError(Exception):
+             self.msg = "Failure expanding expression %s which triggered exception %s: %s" % (expression, type(exception).__name__, exception)
+         Exception.__init__(self, self.msg)
+         self.args = (varname, expression, exception)
++
++    def addVar(self, varname):
++        self.varlist.append(varname)
++
+     def __str__(self):
+-        return self.msg
++        chain = "\nThe variable dependency chain for the failure is: " + " -> ".join(self.varlist)
++        return self.msg + chain
+ 
+ class IncludeHistory(object):
+     def __init__(self, parent = None, filename = '[TOP LEVEL]'):
+@@ -407,7 +413,8 @@ class DataSmart(MutableMapping):
+                         raise
+                 if s == olds:
+                     break
+-            except ExpansionError:
++            except ExpansionError as e:
++                e.addVar(varname)
+                 raise
+             except bb.parse.SkipRecipe:
+                 raise
 -- 
 2.32.0
 
