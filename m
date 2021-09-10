@@ -1,69 +1,94 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web12.10245.1631285385052970029
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web11.10186.1631285671765750941
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Sep 2021 07:49:45 -0700
+ Fri, 10 Sep 2021 07:54:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Ws532pmb;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f46.google.com with SMTP id v20-20020a1cf714000000b002e71f4d2026so1196040wmh.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 07:49:44 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PSuipLCe;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f44.google.com with SMTP id u19-20020a7bc053000000b002f8d045b2caso1591434wmc.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 07:54:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=message-id:subject:from:to:cc:date:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=M+3Xy+t+wviMPRKYpJNNE7LG5Mcf46RdpxvNtV1VYXo=;
-        b=Ws532pmbrNcsMiXOO8jcctJVlfk9SzYCJsSykazR+yvnIBo+T995iOvo3QEFHYzOls
-         g6mIaD0//CBZQTkdJxHROTUuY+ih1pQ4JB8vecw5Xpv4Q55592Niy1JlbgfArZAJHE/S
-         44qOSykOjm+i0l239TTVWt7tDYqvbfk2nUtDg=
+        bh=RmnZ+E5yp7nljR04xN9RzEG1NKPCO/OtXu299dB1uFI=;
+        b=PSuipLCeTjrztrlCXgIQNpB4EFKPmUZ6Vv3uY59kKbhqNWMG8xexgmqwvEnBR9Je/o
+         UaDdmmqiizIuaYOuiNzH+ODuFNkrismdOgPSXUCx7YX9jBNgKd1d7sfH9mgIr0BmheIl
+         kPf56IajW4koBpVYLMEUis5oLGizmc+Xd8LVs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=M+3Xy+t+wviMPRKYpJNNE7LG5Mcf46RdpxvNtV1VYXo=;
-        b=zFAz84+0QwAoluw4Ry5cygVCr6oeYnaPrtWg3J0C0gE78ANUwbCbpmGm3z25dtvVn7
-         BsZfRjtDVKDLRbsyLohaaV8Fk0i9BsrlwWHUqS3h+cpnBIEhL3eFB1ckL4lEnoCk/c8J
-         Tqr4aEoRBFQow1vqQt0FCOGcV339vznsJwId+l9sRRn5BOl0dWfr7BzoHZC4xJe3M3zO
-         zXnKAEp2XPDOp1JHV+5YgAz3RcOB3aYTf2lngshA3Rf4McRvf6bBpAVqU8bEDy7Kw0g1
-         mlcsdRUUZXQt9lALCbTmHQ2vkkACuM59/fN49KlLLUGfbDw1FzLKn9wg2lvWLaATFHkf
-         OzQg==
-X-Gm-Message-State: AOAM533CEJVAH3qYui+weOJ5maSQM6NIQ+aPjNqgmbI8RSScMgj9Oboe
-	BSsWrVxXSPCdQvu4E6kQ1aT1ZQ==
-X-Google-Smtp-Source: ABdhPJxJWkZXcTim5UcNRmHKe/n9m+ADJjmtvyoqcj4e6E1DN5h5OWaiNWot/ql5uWd4D0Pd9z+S5A==
-X-Received: by 2002:a7b:cb02:: with SMTP id u2mr8888892wmj.103.1631285383568;
-        Fri, 10 Sep 2021 07:49:43 -0700 (PDT)
+        bh=RmnZ+E5yp7nljR04xN9RzEG1NKPCO/OtXu299dB1uFI=;
+        b=4PLaf5IXDnPi6Fa8rA2nBJ9Gux6dIOeemLnKzv/5C4+lZX9+/Uw5AcxPe1lyXkNw1u
+         fsATXHjbtGGhK2vqioFsn4aPuqFNMPGjYwrRcWOEfA39JF6DaVnRgeZ8wS1I6aevtLKM
+         6HuZmShiUbeLl4wavdNOvTfTJL8STAZD7vPTFie0HB0XBEo+obKpNv0iaSWNARJtbY80
+         nfMhqjxcBZPrYlnGA+rPq7Ox3rgZQCn8facna6W5Ng5VR2kjYJNtARClO23235IVyhlI
+         /vgZ8myAiK259OLv8eCJllFnkn3vVMKYyx2Lm9e6zovH/gIsttZ851ysJwgWU6/kh91c
+         572w==
+X-Gm-Message-State: AOAM533x2AnWt34cB6k62TEBVyootz/15Pu3TcWQIQeerotMT0a22mQ5
+	BwEDc+B3hbgHb1Bs3eyBUcWjWOwbTdAvsy7+
+X-Google-Smtp-Source: ABdhPJy88kDm+h1kwgJ3drAnC1t5oySnUrdOBRM8LIFAdyUOCD2t728q0YFXu5H2IsXhS/STsxw6RA==
+X-Received: by 2002:a05:600c:4fc8:: with SMTP id o8mr8658830wmq.153.1631285670325;
+        Fri, 10 Sep 2021 07:54:30 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from ?IPv6:2001:8b0:aba:5f3c:69c:dc1e:bcce:ea45? ([2001:8b0:aba:5f3c:69c:dc1e:bcce:ea45])
-        by smtp.gmail.com with ESMTPSA id k17sm4121691wmj.0.2021.09.10.07.49.43
+        by smtp.gmail.com with ESMTPSA id z6sm4534621wmp.1.2021.09.10.07.54.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Sep 2021 07:49:43 -0700 (PDT)
-Message-ID: <d691cc221010d5f5d26df7ffe646228a095b3f02.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 3/3] fetch2: Add recursion guard
+        Fri, 10 Sep 2021 07:54:30 -0700 (PDT)
+Message-ID: <8cc846add7518345e6a948ef11dab6c0c528e14b.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 1/3] build: Catch and error upon circular task references
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 Cc: bitbake-devel@lists.openembedded.org
-Date: Fri, 10 Sep 2021 15:49:42 +0100
-In-Reply-To: <20210910144809.dngz75n4k4kpis4l@fedora>
+Date: Fri, 10 Sep 2021 15:54:29 +0100
+In-Reply-To: <20210910144229.osayhx4ewsmtc7cl@fedora>
 References: <20210910140740.1256597-1-richard.purdie@linuxfoundation.org>
-	 <20210910140740.1256597-3-richard.purdie@linuxfoundation.org>
-	 <20210910144809.dngz75n4k4kpis4l@fedora>
+	 <20210910144229.osayhx4ewsmtc7cl@fedora>
 User-Agent: Evolution 3.40.2-1build1 
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2021-09-10 at 16:48 +0200, Quentin Schulz wrote:
+On Fri, 2021-09-10 at 16:42 +0200, Quentin Schulz wrote:
 > Hi Richard,
 > 
-> On Fri, Sep 10, 2021 at 03:07:40PM +0100, Richard Purdie wrote:
-> > Users sometimes put ${S} references in ${SRC_URI} without realising this can be
-> > problematic. Improve the error messages if they accidentally do.
+> On Fri, Sep 10, 2021 at 03:07:38PM +0100, Richard Purdie wrote:
+> > If there are circular task references, error on them rather than show
+> > a recursion error. A simple reproducer is:
 > > 
+> > """
+> > do_packageswu () {
+> >        :
+> > }
+> > 
+> > addtask do_packageswu after do_image_complete before do_image_qa
+> > """
+> > 
+> > into image_types.bbclass. There is code in runqueue to detect these but
+> > we never get that far with the current codebase.
+> > 
+> > [YOCTO #13140]
+> > 
+> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> > ---
+> >  lib/bb/build.py | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/lib/bb/build.py b/lib/bb/build.py
+> > index 1e062adb51..4249c0be2b 100644
+> > --- a/lib/bb/build.py
+> > +++ b/lib/bb/build.py
+> > @@ -1034,6 +1034,8 @@ def tasksbetween(task_start, task_end, d):
+> >      def follow_chain(task, endtask, chain=None):
+> >          if not chain:
+> >              chain = []
+> > +        if task in chain:
+> > +            bb.fatal("Circular task dependencies as %s depends itself via the chain %s" % (task, " -> ".join(chain)))
 > 
-> I think we could also add this check to
-> insane.bbclass:package_qa_check_src_uri ?
+> depends +on itself?
 
-It is a nice idea but would be problematic as it causes a parsing failure
-unfortunately.
+Well spotted, tweaked in master-next, thanks.
 
 Cheers,
 
