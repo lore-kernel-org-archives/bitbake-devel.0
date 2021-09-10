@@ -1,47 +1,47 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web12.9839.1631283604450027673
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web10.9765.1631284042124962483
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Sep 2021 07:20:04 -0700
+ Fri, 10 Sep 2021 07:27:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cC74974t;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id g16so2888195wrb.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 07:20:04 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=d3wbzzGG;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id q26so2903173wrc.7
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 07:27:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=BB1LFIm85gdL5vCD7e7pWW36ukpe+OUIbGmPDxhQ1j0=;
-        b=cC74974trPTV1x5meL50dFC8OsmOCdeIzrFd+0BlapGE3F+NQ0PeOqpJIME9+9dU9m
-         JDGZs2jSQRP+zUoXz7TfSuia4x751q2oyjYNinpLM1wXvFRUZlrHo3WP/aJ0tgNDeyKv
-         jVAOrgmJjLNIGUYT2se9Ybj+s27evoGLX2NP0=
+        b=d3wbzzGGViTfrKFqy7FAQKO3dW5QXoRPD8rXQfXl9lAs//rJYTVYO64DguZcKH1UTZ
+         gNXdvUDabfxIgATbNQaTbKfPHmGwZ+iI0m2XPe2DRWYCZGzkk98y5oB9BHcKFq8kblaa
+         AKiBY4h142Fhv8lUjDHubPbhS91hxxdqqg6b0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=BB1LFIm85gdL5vCD7e7pWW36ukpe+OUIbGmPDxhQ1j0=;
-        b=O8V66C3uqdIFIBy0bImJZZKNBBRpvuXwUe9iFoltKEWvAnUz7693yv2oxhho5UKjHF
-         kD7GwWiZTfQX6U/7ch/4bwkFsT/RUENCE37EDlH6zuGGh5ajuyNMIae2hLRsXqISKM6a
-         qjhDiTlQ0hpMKJtD5HxWD8cN+NIqO/DbY+lqOy1n9b/v6Z2YWwZeA/esKRKpP3bJF3Ne
-         uECGHfBmJdgzQ+l4JTVHuMwmXXZlTRsKg6huKLg+gw694/vRGcLIgsib2NYHdxf5ffou
-         JgMBDJ6qM7jO3W5CcU8WF3j1oYrhYlhgoNVOqTqAqcEx947D4lLNxbgnXtXGb4ySQfzK
-         7Jng==
-X-Gm-Message-State: AOAM530BIdXan96kBtxnXw2mrSWSd5QrQLMIbhvYMj7M037pxIa2Z2rM
-	DfTG6DR3rkPqj2XxejamVVZr1brYSCloiHBQ
-X-Google-Smtp-Source: ABdhPJyutmXZJteNGZAay8eo+7E5KjXZ9ctH44fvioNUpSKmceR7J280Wwm85NlcmtyN8Qq6PqNgrQ==
-X-Received: by 2002:a5d:4566:: with SMTP id a6mr10141413wrc.38.1631283602624;
-        Fri, 10 Sep 2021 07:20:02 -0700 (PDT)
+        b=AZ+EOb1ot7Q8CAJ0fvwpX3Hq+RIxzO3Ej9aQqZW6fY+bGV0h3PwKh0CQ+ad+WRmUBc
+         rmiqiuKoUqxz0p3nx8+geRQjZtXHZ+kx9SpGSfrdI8MMgl+5ht10RRaWPeWLgUKW/ebe
+         PBy9FApxVKHwJCJKReRgsaApbsaXG7zRUJsjEVt38qwSZH/WmVoOyjAPy49VCvlXER+f
+         PodyNpuj1NGJZJfg1Q36r0Lj4ih8Md8ub9dMv4zgi/167ojsNHk1LE9pN9SKPLttxFH1
+         4rjux83l8SjpTXyZvs4TLK5dLCkMRU88dMu9WMXyToKLrVGkguO1BLG6Ta+Y84k12pKF
+         S8TQ==
+X-Gm-Message-State: AOAM531qFD0dW/VYpZdq0SfCO1kxsPLzMJNnGNc9jBXvm2+lHffW6k1e
+	jzM7rirawQH0uzPWZfPbvA8xhrnHtayuCYHp
+X-Google-Smtp-Source: ABdhPJytmcUOOH7R/SmqszT9tFu5g2svGTjhyQIYYdn6wWI2L4XXIWVL6Pwckt7tzpObDkbuiWbKYw==
+X-Received: by 2002:adf:eb83:: with SMTP id t3mr9942342wrn.365.1631284040243;
+        Fri, 10 Sep 2021 07:27:20 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:69c:dc1e:bcce:ea45])
-        by smtp.gmail.com with ESMTPSA id 4sm3978281wmv.42.2021.09.10.07.20.02
+        by smtp.gmail.com with ESMTPSA id y1sm4737586wmq.43.2021.09.10.07.27.19
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Sep 2021 07:20:02 -0700 (PDT)
+        Fri, 10 Sep 2021 07:27:19 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
 Subject: [PATCH] cookerdata: Improve missing core layer error message
-Date: Fri, 10 Sep 2021 15:20:01 +0100
-Message-Id: <20210910142001.1256843-1-richard.purdie@linuxfoundation.org>
+Date: Fri, 10 Sep 2021 15:27:18 +0100
+Message-Id: <20210910142719.1257009-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
