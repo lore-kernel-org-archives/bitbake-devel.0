@@ -1,35 +1,35 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.9548.1631282863334945109
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web11.9549.1631282863432050189
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 10 Sep 2021 07:07:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WU3Re2xW;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id m2so1332025wmm.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZSl40BF2;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f49.google.com with SMTP id t18so2868636wrb.0
         for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 07:07:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=fJ1i8s3MIAim80jk0Lc75WA6gIz6ck7WBjZb60fsA6c=;
-        b=WU3Re2xW9Yu3MwZHNpd2p1Imc0SAKn83MgRj3INzYecQmGgWGWQWBphafnoxXIhzZe
-         vJbBnBECo8ZOaccQNxXyVWxdC/0ujtTINi9ArsbFjmqys4/RKmYExoQlaJo43E57A3Qa
-         lBGGY1mvzuZ2RxWzxCloQGQOjsr6VBmO4/o8g=
+        bh=ai42KmwpMX6hNriequg+haSMKsMwmHM9DJKjfMw0m1s=;
+        b=ZSl40BF2UK4dw+zyPEswuPaYPzs48M+RVaEph9uKRmT6CSM8O1bcrQxUFsSYRsscMA
+         xZKc54o+BBoFicQti+8YIHIROdmsChuO9rBnXDzZhOIFCfWfSXuB1WG/Vxsr01/ywBQK
+         ndaV2QilGdLAG72mV5Pv+a0qQ/rE3LasPAIDo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fJ1i8s3MIAim80jk0Lc75WA6gIz6ck7WBjZb60fsA6c=;
-        b=y0hu9p2RZXN9cR8qg2oc0oXwALMJRnDsSQoN5pHha6SQlue0XNyOLH+LvupBqYfYwj
-         kLZ0OQ5ihOQav3VxZwoqlGE+MaycqLvOVbM+lDCDNh6Oe1NhUDvzTb0PC34nA3vl/kee
-         6BKNK/v3iBzWCAZDdb3Lcqd6zGUHpqhJGO6b6/uEKWMBR4XBiyhI3beL6ndmOa8GKf7i
-         qlySHowbovZYVlMqpC+bDcF950JESYg9soMRv2of5W0XFcrxtxWr+kbzukftvQcZkNLC
-         MgQ8hKj2FgeqZorz+wGUYnTbwyGIkIcQzaGFHKE/GL+S7RLiQK5Wkj2RSEeHUk8OpOZu
-         9Jaw==
-X-Gm-Message-State: AOAM532RgH+I2ZUW+ZkgrLKk3qpPhaoRGr6+lVwQVAzOm3Zkw6+RDYjP
-	9uxXmt5HG5AEBNvyl9iO7nJIsKv6AGI+qDHj
-X-Google-Smtp-Source: ABdhPJzjM6Ae5PcSZbkU93yv9NlSlaSWicUMcrDHyN/tM7GSWpR0cmC/erEHE0WG6FV56KEbPBvDrw==
-X-Received: by 2002:a1c:2092:: with SMTP id g140mr2577744wmg.136.1631282861425;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ai42KmwpMX6hNriequg+haSMKsMwmHM9DJKjfMw0m1s=;
+        b=s0ETFDC3Gyzfpk1ItCY0DzFHz5jTpBndpNdXD8V8l8/sQlKL6UmkFoNlTe7jmyGdJs
+         98O4uvBwv6KCrgkyNrtZvFHJn9BCo1oXjAKIzLDLNpSzaUg0zzrwD7FA5Tu0CYfWpnl9
+         e1LOtTv5VTan1pjqARVgd0hUKkhCGnMfoCcOPe/dDCLak80OZlCXZ1hy/LkR9Fd192nr
+         1TMmfyRBnKKDdHKPRUf2mxg6tY010wy5Tui7KbxIcmabayzOzZ4fjfol0or4+tFkB365
+         Wc9jUDS+0VNb7NkIClaVH18rzDbbS8lnD79J8ZKxpxcWPZSpys4ro1xu8zZqaAmdbMV5
+         oZNg==
+X-Gm-Message-State: AOAM532gb9/T5HycSh7b8kzZqX2tjvSrXvpUVWirwOA6ArjrVImD7tuV
+	DWhBy2LVLOrw9iiClo7GI3KkAv8DckWiDgbV
+X-Google-Smtp-Source: ABdhPJwO0gv7yiT1Vo4L2Kr38shogqgNwecolwcfHro7+5giPpSNIn/bDCP2HajHfjtkna3cCPKvQQ==
+X-Received: by 2002:adf:f48e:: with SMTP id l14mr10281975wro.109.1631282861902;
         Fri, 10 Sep 2021 07:07:41 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:69c:dc1e:bcce:ea45])
@@ -39,47 +39,62 @@ Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:69c:dc1e:bcce:ea45])
         Fri, 10 Sep 2021 07:07:41 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/3] build: Catch and error upon circular task references
-Date: Fri, 10 Sep 2021 15:07:38 +0100
-Message-Id: <20210910140740.1256597-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/3] data_smart: Improve error display for handled exceptions
+Date: Fri, 10 Sep 2021 15:07:39 +0100
+Message-Id: <20210910140740.1256597-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210910140740.1256597-1-richard.purdie@linuxfoundation.org>
+References: <20210910140740.1256597-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If there are circular task references, error on them rather than show
-a recursion error. A simple reproducer is:
+We don't need tracebacks for BBHandledException. Reduces confusing output like:
 
-"""
-do_packageswu () {
-       :
-}
+ERROR: /meta/recipes-core/images/core-image-tiny-initramfs.bb: Circular task dependencies as do_image_complete depends itself via the chain do_image_complete -> do_packageswu -> do_image_qa -> do_image -> do_image_cpio
+ERROR: ExpansionError during parsing /meta/recipes-core/images/core-image-tiny-initramfs.bb
+Traceback (most recent call last):
+  File "/bitbake/lib/bb/build.py", line 1050, in follow_chain(task='do_image_qa', endtask='do_build', chain=['do_image_complete', 'do_packageswu', 'do_image_qa', 'do_image', 'do_image_cpio']):
+                     if task in deps:
+    >                    follow_chain(othertask, endtask, chain)
+             chain.pop()
+  File "/bitbake/lib/bb/build.py", line 1050, in follow_chain(task='do_image', endtask='do_build', chain=['do_image_complete', 'do_packageswu', 'do_image_qa', 'do_image', 'do_image_cpio']):
+                     if task in deps:
+    >                    follow_chain(othertask, endtask, chain)
+             chain.pop()
+  File "/bitbake/lib/bb/build.py", line 1050, in follow_chain(task='do_image_cpio', endtask='do_build', chain=['do_image_complete', 'do_packageswu', 'do_image_qa', 'do_image', 'do_image_cpio']):
+                     if task in deps:
+    >                    follow_chain(othertask, endtask, chain)
+             chain.pop()
+  File "/bitbake/lib/bb/build.py", line 1038, in follow_chain(task='do_image_complete', endtask='do_build', chain=['do_image_complete', 'do_packageswu', 'do_image_qa', 'do_image', 'do_image_cpio']):
+             if task in chain:
+    >            bb.fatal("Circular task dependencies as %s depends itself via the chain %s?!" % (task, " -> ".join(chain)))
+             chain.append(task)
+  File "/bitbake/lib/bb/__init__.py", line 165, in fatal:
+         mainlogger.critical(''.join(args), extra=kwargs)
+    >    raise BBHandledException()
 
-addtask do_packageswu after do_image_complete before do_image_qa
-"""
+to the real error:
 
-into image_types.bbclass. There is code in runqueue to detect these but
-we never get that far with the current codebase.
-
-[YOCTO #13140]
+ERROR: /media/build1/poky/meta/recipes-core/images/core-image-tiny-initramfs.bb: Circular task dependencies as do_image_complete depends itself via the chain do_image_complete -> do_packageswu -> do_image_qa -> do_image -> do_image_cpio
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/build.py | 2 ++
+ lib/bb/data_smart.py | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 1e062adb51..4249c0be2b 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -1034,6 +1034,8 @@ def tasksbetween(task_start, task_end, d):
-     def follow_chain(task, endtask, chain=None):
-         if not chain:
-             chain = []
-+        if task in chain:
-+            bb.fatal("Circular task dependencies as %s depends itself via the chain %s" % (task, " -> ".join(chain)))
-         chain.append(task)
-         for othertask in tasks:
-             if othertask == task:
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 515d195fe8..e4afac64b2 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -418,6 +418,8 @@ class DataSmart(MutableMapping):
+                 raise
+             except bb.parse.SkipRecipe:
+                 raise
++            except bb.BBHandledException:
++                raise
+             except Exception as exc:
+                 tb = sys.exc_info()[2]
+                 raise ExpansionError(varname, s, exc).with_traceback(tb) from exc
 -- 
 2.32.0
 
