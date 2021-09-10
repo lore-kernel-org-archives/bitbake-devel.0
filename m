@@ -1,95 +1,74 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web12.9667.1631282863942605055
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web12.9839.1631283604450027673
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Sep 2021 07:07:44 -0700
+ Fri, 10 Sep 2021 07:20:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=XUvLyeZd;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f45.google.com with SMTP id w29so2057345wra.8
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 07:07:43 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cC74974t;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f46.google.com with SMTP id g16so2888195wrb.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 07:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=OWoeRQmss+A1S2hOb5yi7ZDQciRuT5INNJxcFY8D1gs=;
-        b=XUvLyeZdpTuajFq72JifLFJQbs0+/ZGHuixABt7LuOLxPafvzEMMgLB8inNKSzwwhs
-         Mf+itM227AapJtxrEblX+pa3FSfJ+7f828+j2BptO45wj1pGtA2dt1CG73rSsHadW4vB
-         AF1+46l+TOW49Ag11bwWkeQsgQhTSAX1dx/3A=
+        bh=BB1LFIm85gdL5vCD7e7pWW36ukpe+OUIbGmPDxhQ1j0=;
+        b=cC74974trPTV1x5meL50dFC8OsmOCdeIzrFd+0BlapGE3F+NQ0PeOqpJIME9+9dU9m
+         JDGZs2jSQRP+zUoXz7TfSuia4x751q2oyjYNinpLM1wXvFRUZlrHo3WP/aJ0tgNDeyKv
+         jVAOrgmJjLNIGUYT2se9Ybj+s27evoGLX2NP0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OWoeRQmss+A1S2hOb5yi7ZDQciRuT5INNJxcFY8D1gs=;
-        b=oc1tqT6rI77oo+bUqd2Md7k4tzPWQbHxZgYtj14Pj6eVrxUgVOM9eq01hUSVn1FuZR
-         0YfCllh9TMCoZNH6H06B/MDVPuREl45dSJZv+g9Psza+LW7tONX2AIrv7m5Ao0lw8f13
-         r5HevSX+PstEtNMcUyZArPZBTkNDhliVY4AFVm5Oqe6FPF0y/johuMoIECHI0PqCrLPo
-         GLuswEt3sudxOW9hDBncRcRoC8GQgup7pNK4GPH8Vu3Q+MmG0uJyJOU7wyumYe5rTgvT
-         xKVrrWGtYZoUJXs2HbZMkEWsxnwRXU4bAf2+CbGNGyTRLWYhI9ACbBMiyIRcQ021O99m
-         px3A==
-X-Gm-Message-State: AOAM531zdDxRF7ag7NBXcVrGzqObDiSxsnPSwNHthQaY/hyfOCGgnNq/
-	/L42dj/jI6048FlJgUgMYbwPSPiuKUXiwgSA
-X-Google-Smtp-Source: ABdhPJz+gu6nsvTpx2xnObdKkP3E6w7DFqFT49Zl4JzKm2He7F0oYBUuGgT8uhMKT5s0GkN1o4rTSA==
-X-Received: by 2002:a5d:4e51:: with SMTP id r17mr9929272wrt.308.1631282862466;
-        Fri, 10 Sep 2021 07:07:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BB1LFIm85gdL5vCD7e7pWW36ukpe+OUIbGmPDxhQ1j0=;
+        b=O8V66C3uqdIFIBy0bImJZZKNBBRpvuXwUe9iFoltKEWvAnUz7693yv2oxhho5UKjHF
+         kD7GwWiZTfQX6U/7ch/4bwkFsT/RUENCE37EDlH6zuGGh5ajuyNMIae2hLRsXqISKM6a
+         qjhDiTlQ0hpMKJtD5HxWD8cN+NIqO/DbY+lqOy1n9b/v6Z2YWwZeA/esKRKpP3bJF3Ne
+         uECGHfBmJdgzQ+l4JTVHuMwmXXZlTRsKg6huKLg+gw694/vRGcLIgsib2NYHdxf5ffou
+         JgMBDJ6qM7jO3W5CcU8WF3j1oYrhYlhgoNVOqTqAqcEx947D4lLNxbgnXtXGb4ySQfzK
+         7Jng==
+X-Gm-Message-State: AOAM530BIdXan96kBtxnXw2mrSWSd5QrQLMIbhvYMj7M037pxIa2Z2rM
+	DfTG6DR3rkPqj2XxejamVVZr1brYSCloiHBQ
+X-Google-Smtp-Source: ABdhPJyutmXZJteNGZAay8eo+7E5KjXZ9ctH44fvioNUpSKmceR7J280Wwm85NlcmtyN8Qq6PqNgrQ==
+X-Received: by 2002:a5d:4566:: with SMTP id a6mr10141413wrc.38.1631283602624;
+        Fri, 10 Sep 2021 07:20:02 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:69c:dc1e:bcce:ea45])
-        by smtp.gmail.com with ESMTPSA id l10sm5292231wrg.50.2021.09.10.07.07.41
+        by smtp.gmail.com with ESMTPSA id 4sm3978281wmv.42.2021.09.10.07.20.02
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Sep 2021 07:07:42 -0700 (PDT)
+        Fri, 10 Sep 2021 07:20:02 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 3/3] fetch2: Add recursion guard
-Date: Fri, 10 Sep 2021 15:07:40 +0100
-Message-Id: <20210910140740.1256597-3-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] cookerdata: Improve missing core layer error message
+Date: Fri, 10 Sep 2021 15:20:01 +0100
+Message-Id: <20210910142001.1256843-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210910140740.1256597-1-richard.purdie@linuxfoundation.org>
-References: <20210910140740.1256597-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Users sometimes put ${S} references in ${SRC_URI} without realising this can be
-problematic. Improve the error messages if they accidentally do.
+If the core layer is missing from bblayers.conf, the message the user sees is
+hard to understand. Improve it.
 
-[YOCTO #11593]
+[YOCTO #14340]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/__init__.py | 7 +++++++
- 1 file changed, 7 insertions(+)
+ lib/bb/cookerdata.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 47a4943369..d9e1599a05 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -754,6 +754,11 @@ def get_srcrev(d, method_name='sortable_revision'):
-     that fetcher provides a method with the given name and the same signature as sortable_revision.
-     """
- 
-+    recursion = d.getVar("__BBINSRCREV")
-+    if recursion:
-+        raise FetchError("There are recursive references in fetcher variables, likely through SRC_URI")
-+    d.setVar("__BBINSRCREV", True)
-+
-     scms = []
-     fetcher = Fetch(d.getVar('SRC_URI').split(), d)
-     urldata = fetcher.ud
-@@ -768,6 +773,7 @@ def get_srcrev(d, method_name='sortable_revision'):
-         autoinc, rev = getattr(urldata[scms[0]].method, method_name)(urldata[scms[0]], d, urldata[scms[0]].names[0])
-         if len(rev) > 10:
-             rev = rev[:10]
-+        d.delVar("__BBINSRCREV")
-         if autoinc:
-             return "AUTOINC+" + rev
-         return rev
-@@ -802,6 +808,7 @@ def get_srcrev(d, method_name='sortable_revision'):
-     if seenautoinc:
-         format = "AUTOINC+" + format
- 
-+    d.delVar("__BBINSRCREV")
-     return format
- 
- def localpath(url, d):
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 1c1e008c6b..e54858cf02 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -396,6 +396,8 @@ class CookerDataBuilder(object):
+                 if c in collections_tmp:
+                     bb.fatal("Found duplicated BBFILE_COLLECTIONS '%s', check bblayers.conf or layer.conf to fix it." % c)
+                 compat = set((data.getVar("LAYERSERIES_COMPAT_%s" % c) or "").split())
++                if compat and not layerseries:
++                    bb.fatal("No core layer found to work with layer '%s'. Missing entry in bblayers.conf?" % c)
+                 if compat and not (compat & layerseries):
+                     bb.fatal("Layer %s is not compatible with the core layer which only supports these series: %s (layer is compatible with %s)"
+                               % (c, " ".join(layerseries), " ".join(compat)))
 -- 
 2.32.0
 
