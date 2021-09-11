@@ -1,184 +1,128 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.web08.13636.1631300355587850104
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+ by mx.groups.io with SMTP id smtpd.web11.133.1631331760473017611
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Sep 2021 11:59:16 -0700
+ Fri, 10 Sep 2021 20:42:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fvquyGQX;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f43.google.com with SMTP id d6so3987805wrc.11
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 11:59:15 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=kotNoQQv;
+ spf=pass (domain: gmail.com, ip: 209.85.215.169, mailfrom: jiladahe1997@gmail.com)
+Received: by mail-pg1-f169.google.com with SMTP id k24so3644881pgh.8
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 20:42:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2zYCjfG/8H0ECJZd+ksLlxCliVYM2mC9N0NYdu9vEh4=;
-        b=fvquyGQXDNqrpu8JWUSDmC8waLxOcHGRxSNF1ayFdTI9MczlTxsrPyMPyXAU1YhSvX
-         Eqq+q6HROEAZr2J6hNvdjoy/1abV3fg8LDxM0E9ZdfyO+gwDpBcq2XMe7H7f2KZa+Aou
-         BkzcVoUTy/DTK59Nqj1RdpnbE8S7+v7A6EY+E=
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:to:references:from
+         :cc:in-reply-to:content-transfer-encoding;
+        bh=GM38VTq2LjspukAq0gBdC6rnr+aybiqRnRX4gWnHx9A=;
+        b=kotNoQQvYFlymyAvhkjEIg1qbK50snjtFdJ5NJ9NvHEs2p1ABglKO/dZvL7uKHtmQK
+         SOA3DQQCgAH+iJ6v+w/Omi5LG3o8AuiMPe4roGnddkP7zH902fNgR7LEt8090hN8DvdU
+         d8BgkGhDTmKyxh/Qv8K9HrK0rooeRIaPmdZBtbehGUe3yU0R/UJlVwwDX28B1noNclGg
+         oxZ6knZDaNodcKROJLFEXUBP3I9qDyRiKpmyi10CPsQogO5uNjJJQzOeMJqS7f9ZkOPl
+         uBEFQzQ15AlyG0ATXRg205XOqHaTVMs3ZyPk38kLd+KnHQJiY27pC1/Ouz6tSuwk2JNc
+         LWTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2zYCjfG/8H0ECJZd+ksLlxCliVYM2mC9N0NYdu9vEh4=;
-        b=jvnPHf8t51eeouQt6/cseRGrSnGGyfaqJHBVWDDUp+PiQksvj8pGjkfvkC5hsJnJt9
-         5S2DEugcLWgR30JK+MOlaNcRtpSTT9+Izeid7oIrzWxLc6qrlWg/69+Cn6AMSrb491l+
-         +4IV0JYEeNKO3enVIR1Dd+z3GrNyCXrxTGuVzO3umExGmDZ5Lsmr3LkphjednH6kWKGq
-         Rqd1JUq6ixjfb6OuCOUg+BDRLtN6tpN2klf8sGBVffBG4VtNOFayfRH2G1Gr49qrxczt
-         dcthrLvB+L3DvhuIDeOJJo/NWjy5moPYKbsui1z6IeGzbRje5ZUpVKvTxUIBWe1tnT2r
-         9lJA==
-X-Gm-Message-State: AOAM531I7H6ZVBk0zyEcOr7dz16J1b5YOnpvrOi9f4M5GIMk3NAf35dT
-	jcxiQClEQDIJhDqV/yoyxx5mb75F74TsOw==
-X-Google-Smtp-Source: ABdhPJw8Cp+XdF4d8t5FoUNiFMMgZqsKt7R7MEnFeLlr1Wghc9ZVXjzOq5X/JlJKfn09SZr25ckmfw==
-X-Received: by 2002:adf:e408:: with SMTP id g8mr2895425wrm.138.1631300353837;
-        Fri, 10 Sep 2021 11:59:13 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.config (5751ab90.skybroadband.com. [87.81.171.144])
-        by smtp.gmail.com with ESMTPSA id i27sm4932443wmb.40.2021.09.10.11.59.13
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Sep 2021 11:59:13 -0700 (PDT)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] runqueue: Clean up task stats handling
-Date: Fri, 10 Sep 2021 19:59:12 +0100
-Message-Id: <20210910185912.1267679-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :to:references:from:cc:in-reply-to:content-transfer-encoding;
+        bh=GM38VTq2LjspukAq0gBdC6rnr+aybiqRnRX4gWnHx9A=;
+        b=sJKaZEE7GaAH6O5qhzqoEbA5kktgU+hsm/qql0e15NaEaObuwfaR5ediHHudX50jEw
+         PHdXj7YXttgYvkPAH0a4yiEIqlRRhTF3WUi4piP4IohOEzWUgbrR8tZ7ovyfsokqaz3O
+         yq1LaPmjOgN/J+MjczR+NieaNJWN8CSAWCOwG4SIIHJuibPR3x1McchUO1zIKVm2sXno
+         2siBU6cDdHd/AIL9Jkqx+sVPeeG+UiYVMIV6VPebOds94XK0xA7zWjICZLMklMqe5kUB
+         xCeAzxiBlN9htC/qBHGweDCa6hxCKkJbvu3sHlRiJWvb/wMpjLg9QkV5I9VEmN6JilPE
+         4BlQ==
+X-Gm-Message-State: AOAM532U6vojoMuC+2SkqEUipLzMcDjGe4XGGcDYIlD9QOftvNX+Co4u
+	5j2gcQS6FGQvoRGmEm8dX/er+nWeM28wn40a
+X-Google-Smtp-Source: ABdhPJwcc2vBiG6KWiu+1vCTc/OtuBvG+jeEzT/a0bVZPZlAzOWNita9GCAgcH+hx7bHvU3JCfpdyQ==
+X-Received: by 2002:a63:dd56:: with SMTP id g22mr864936pgj.38.1631331759728;
+        Fri, 10 Sep 2021 20:42:39 -0700 (PDT)
+Return-Path: <jiladahe1997@gmail.com>
+Received: from [127.0.0.1] (pcd453045.netvigator.com. [203.218.243.45])
+        by smtp.gmail.com with ESMTPSA id v7sm292445pjk.37.2021.09.10.20.42.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Sep 2021 20:42:39 -0700 (PDT)
+Message-ID: <7ba30db0-c7db-b1c0-5243-86d5df789f17@gmail.com>
+Date: Sat, 11 Sep 2021 11:42:44 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.0
+Subject: Re: [PATCH v2] bitbake/fetch2: Add a new variable 'BB_FETCH_ENV' to export Fetcher env
+To: yocto@lists.yoctoproject.org, bitbake-devel@lists.openembedded.org,
+ poky@lists.yoctoproject.org, richard.purdie@linuxfoundation.org
+References: <2021082315183802113213@gmail.com>
+ <92b1ba20b320376227c3003c53784de67ae01505.camel@linuxfoundation.org>
+From: "Mingrui Ren" <jiladahe1997@gmail.com>
+Cc: ross.burton@arm.com
+In-Reply-To: <92b1ba20b320376227c3003c53784de67ae01505.camel@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When we parallelised normal and setscene tasks, the task stats
-handling was left separate pending further thought. We had to remove
-handling of the setscene tasks from the UI in order to maintain
-consistent task numbering.
+Hi Richard,
 
-Currently, "0 of 0" tasks can be shown as setscene tasks execute
-until the first normal task runs.
 
-The only use left for sq_stats is in the active task numbers which
-we can use the length of sq_ive for instead. We can therefore
-drop it and return stats in all cases. This removes the "0 of 0" task
-problem since the stats in all normal and setscene tasks matches.
+On 06/09/2021 17:41, Richard Purdie wrote:
+> Hi,
+>
+> Thanks for the patch. This isn't ready to be merged yet though as there are some
+> issues.
+>
+> On Mon, 2021-08-23 at 15:18 +0800, jiladahe1997@gmail.com wrote:
+>>   # CONF_VERSION is increased each time build/conf/ changes incompatibly and is used to
+>>   # track the version of this file when it was generated. This can safely be ignored if
+>>   # this doesn't mean anything to you.
+>> diff --git a/scripts/oe-buildenv-internal b/scripts/oe-buildenv-internal
+>> index e0d920f2fc..29cb694790 100755
+>> --- a/scripts/oe-buildenv-internal
+>> +++ b/scripts/oe-buildenv-internal
+>> @@ -111,7 +111,8 @@ HTTPS_PROXY https_proxy FTP_PROXY ftp_proxy FTPS_PROXY ftps_proxy ALL_PROXY \
+>>   all_proxy NO_PROXY no_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY \
+>>   SDKMACHINE BB_NUMBER_THREADS BB_NO_NETWORK PARALLEL_MAKE GIT_PROXY_COMMAND \
+>>   SOCKS5_PASSWD SOCKS5_USER SCREENDIR STAMPS_DIR BBPATH_EXTRA BB_SETSCENE_ENFORCE \
+>> -BB_LOGCONFIG"
+>> +BB_LOGCONFIG HOME PATH GIT_SSH GIT_SSL_CAINFO GIT_SMART_HTTP DBUS_SESSION_BUS_ADDRESS \
+>> +P4CONFIG SSL_CERT_FILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION"
+>>   
+>>   BB_ENV_EXTRAWHITE="$(echo $BB_ENV_EXTRAWHITE $BB_ENV_EXTRAWHITE_OE | tr ' ' '\n' | LC_ALL=C sort --unique | tr '\n' ' ')"
+> I think if you leave BB_ORIGENV handling in place, these latter changes
+> shouldn't be needed?
+>
+> If you need to be able to pass extra variables into the fetcher, I think we
+> could/should add API for additions rather than allowing the whole list to be
+> customised. Without stating which problem you're solving, guessing what you
+> really need is hard though. A better description of the issue you're seeing
+> would help a lot.
+>
+> Cheers,
+>
+> Richard
 
-[YOCTO #14479]
+Thanks for your reply.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/runqueue.py    | 22 +++++++---------------
- lib/bb/ui/uihelper.py |  2 +-
- 2 files changed, 8 insertions(+), 16 deletions(-)
+The issue I have is that I have to pass additional variables into 
+fetcher. More specifically,
+I'm using a git:// protocol proxy tool, which requires GIT_SOCKS_PROXY 
+variable.
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 5ccf755f1a..6ce0ce80f6 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1736,7 +1736,6 @@ class RunQueueExecute:
-         self.sqdone = False
- 
-         self.stats = RunQueueStats(len(self.rqdata.runtaskentries))
--        self.sq_stats = RunQueueStats(len(self.rqdata.runq_setscene_tids))
- 
-         for mc in rq.worker:
-             rq.worker[mc].pipe.setrunqueueexec(self)
-@@ -1820,7 +1819,7 @@ class RunQueueExecute:
-     def finish(self):
-         self.rq.state = runQueueCleanUp
- 
--        active = self.stats.active + self.sq_stats.active
-+        active = self.stats.active + len(self.sq_live)
-         if active > 0:
-             bb.event.fire(runQueueExitWait(active), self.cfgData)
-             self.rq.read_workers()
-@@ -1853,7 +1852,7 @@ class RunQueueExecute:
-         return valid
- 
-     def can_start_task(self):
--        active = self.stats.active + self.sq_stats.active
-+        active = self.stats.active + len(self.sq_live)
-         can_start = active < self.number_tasks
-         return can_start
- 
-@@ -1956,7 +1955,7 @@ class RunQueueExecute:
-         err = False
-         if not self.sqdone:
-             logger.debug('We could skip tasks %s', "\n".join(sorted(self.scenequeue_covered)))
--            completeevent = sceneQueueComplete(self.sq_stats, self.rq)
-+            completeevent = sceneQueueComplete(self.stats, self.rq)
-             bb.event.fire(completeevent, self.cfgData)
-         if self.sq_deferred:
-             logger.error("Scenequeue had deferred entries: %s" % pprint.pformat(self.sq_deferred))
-@@ -2067,7 +2066,7 @@ class RunQueueExecute:
-                 self.sq_task_failoutright(task)
-                 return True
- 
--            startevent = sceneQueueTaskStarted(task, self.sq_stats, self.rq)
-+            startevent = sceneQueueTaskStarted(task, self.stats, self.rq)
-             bb.event.fire(startevent, self.cfgData)
- 
-             taskdepdata = self.sq_build_taskdepdata(task)
-@@ -2088,7 +2087,6 @@ class RunQueueExecute:
-             self.build_stamps2.append(self.build_stamps[task])
-             self.sq_running.add(task)
-             self.sq_live.add(task)
--            self.sq_stats.taskActive()
-             if self.can_start_task():
-                 return True
- 
-@@ -2178,7 +2176,7 @@ class RunQueueExecute:
-             if self.can_start_task():
-                 return True
- 
--        if self.stats.active > 0 or self.sq_stats.active > 0:
-+        if self.stats.active > 0 or len(self.sq_live) > 0:
-             self.rq.read_workers()
-             return self.rq.active_fds()
- 
-@@ -2520,13 +2518,11 @@ class RunQueueExecute:
-                 self.rq.state = runQueueCleanUp
- 
-     def sq_task_complete(self, task):
--        self.sq_stats.taskCompleted()
--        bb.event.fire(sceneQueueTaskCompleted(task, self.sq_stats, self.rq), self.cfgData)
-+        bb.event.fire(sceneQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
-         self.sq_task_completeoutright(task)
- 
-     def sq_task_fail(self, task, result):
--        self.sq_stats.taskFailed()
--        bb.event.fire(sceneQueueTaskFailed(task, self.sq_stats, result, self), self.cfgData)
-+        bb.event.fire(sceneQueueTaskFailed(task, self.stats, result, self), self.cfgData)
-         self.scenequeue_notcovered.add(task)
-         self.scenequeue_updatecounters(task, True)
-         self.sq_check_taskfail(task)
-@@ -2534,8 +2530,6 @@ class RunQueueExecute:
-     def sq_task_failoutright(self, task):
-         self.sq_running.add(task)
-         self.sq_buildable.add(task)
--        self.sq_stats.taskSkipped()
--        self.sq_stats.taskCompleted()
-         self.scenequeue_notcovered.add(task)
-         self.scenequeue_updatecounters(task, True)
- 
-@@ -2543,8 +2537,6 @@ class RunQueueExecute:
-         self.sq_running.add(task)
-         self.sq_buildable.add(task)
-         self.sq_task_completeoutright(task)
--        self.sq_stats.taskSkipped()
--        self.sq_stats.taskCompleted()
- 
-     def sq_build_taskdepdata(self, task):
-         def getsetscenedeps(tid):
-diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
-index 48d808ae28..40c7c5a5ef 100644
---- a/lib/bb/ui/uihelper.py
-+++ b/lib/bb/ui/uihelper.py
-@@ -49,7 +49,7 @@ class BBUIHelper:
-             tid = event._fn + ":" + event._task
-             removetid(event.pid, tid)
-             self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
--        elif isinstance(event, bb.runqueue.runQueueTaskStarted):
-+        elif isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
-             self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + 1
-             self.tasknumber_total = event.stats.total
-             self.needUpdate = True
--- 
-2.32.0
+I have made a bit more changes in this patch, I'm trying to make the 
+code'perfect'.
+But as you said, we could also add an API for adding additional 
+variables into fetcher,
+that's safe for back compatibility, but a bit more complicated for 
+furture maintainability.
+Please tell me which one you prefer.
 
+
+By the way, I found two recent commits on this issue:
+  (commit ID)
+348384135272ae7c62a11eeabcc43eddc957811f
+5dce2f3da20a14c0eb5229696561b0c5f6fce54c
+which means the variables used by fetcher may change frequently.
+
+I think it's a good a feature if we could add custom variables into 
+fetcher. For example,
+we could fetch private code by adding username or password, or we could 
+adding custom
+proxy tools.
+
+
+Thanks,
+
+Mingrui Ren
