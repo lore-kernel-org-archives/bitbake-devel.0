@@ -1,128 +1,86 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
- by mx.groups.io with SMTP id smtpd.web11.133.1631331760473017611
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+ by mx.groups.io with SMTP id smtpd.web11.3429.1631365002996734412
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Sep 2021 20:42:40 -0700
+ Sat, 11 Sep 2021 05:56:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=kotNoQQv;
- spf=pass (domain: gmail.com, ip: 209.85.215.169, mailfrom: jiladahe1997@gmail.com)
-Received: by mail-pg1-f169.google.com with SMTP id k24so3644881pgh.8
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Sep 2021 20:42:40 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=MBPZdkXT;
+ spf=pass (domain: gmail.com, ip: 209.85.210.47, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f47.google.com with SMTP id c8-20020a9d6c88000000b00517cd06302dso6257214otr.13
+        for <bitbake-devel@lists.openembedded.org>; Sat, 11 Sep 2021 05:56:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:to:references:from
-         :cc:in-reply-to:content-transfer-encoding;
-        bh=GM38VTq2LjspukAq0gBdC6rnr+aybiqRnRX4gWnHx9A=;
-        b=kotNoQQvYFlymyAvhkjEIg1qbK50snjtFdJ5NJ9NvHEs2p1ABglKO/dZvL7uKHtmQK
-         SOA3DQQCgAH+iJ6v+w/Omi5LG3o8AuiMPe4roGnddkP7zH902fNgR7LEt8090hN8DvdU
-         d8BgkGhDTmKyxh/Qv8K9HrK0rooeRIaPmdZBtbehGUe3yU0R/UJlVwwDX28B1noNclGg
-         oxZ6knZDaNodcKROJLFEXUBP3I9qDyRiKpmyi10CPsQogO5uNjJJQzOeMJqS7f9ZkOPl
-         uBEFQzQ15AlyG0ATXRg205XOqHaTVMs3ZyPk38kLd+KnHQJiY27pC1/Ouz6tSuwk2JNc
-         LWTg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tWPxABx+MPm1jkSnZJZmtDX4BK9UtcKzmddJHFvmIKk=;
+        b=MBPZdkXT3gK/EgGtQHlv/tUovH4wezN7iIyF2ma8Ngc13u76nWAawro2NwQKOG0x1n
+         s87XDUb9IWAkhFiFj855PQyq5ccnTBt5TLLJ6Lz19tWm0L6WnR62rvoB/r7kBKb2WkEQ
+         xiAhSV4+kkfu9YA9AqKHvYSoCpntdskb6CCU0Xmq3WRIKE9tf5UxuA/1Ibg3tSyKclKw
+         3Qp74+YZag/2NOCznFLGeLBhwiWRHK7ddLp1RdYPS/Gq8ndjk/wx9jbZcIEQ1TNiA95r
+         8m8iiTlTAfP0KfHcHzCqCjPjo/TIkfHMMfIh/1tPXya0av6Txw+70q1PuK5FFNgCpUvd
+         64Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :to:references:from:cc:in-reply-to:content-transfer-encoding;
-        bh=GM38VTq2LjspukAq0gBdC6rnr+aybiqRnRX4gWnHx9A=;
-        b=sJKaZEE7GaAH6O5qhzqoEbA5kktgU+hsm/qql0e15NaEaObuwfaR5ediHHudX50jEw
-         PHdXj7YXttgYvkPAH0a4yiEIqlRRhTF3WUi4piP4IohOEzWUgbrR8tZ7ovyfsokqaz3O
-         yq1LaPmjOgN/J+MjczR+NieaNJWN8CSAWCOwG4SIIHJuibPR3x1McchUO1zIKVm2sXno
-         2siBU6cDdHd/AIL9Jkqx+sVPeeG+UiYVMIV6VPebOds94XK0xA7zWjICZLMklMqe5kUB
-         xCeAzxiBlN9htC/qBHGweDCa6hxCKkJbvu3sHlRiJWvb/wMpjLg9QkV5I9VEmN6JilPE
-         4BlQ==
-X-Gm-Message-State: AOAM532U6vojoMuC+2SkqEUipLzMcDjGe4XGGcDYIlD9QOftvNX+Co4u
-	5j2gcQS6FGQvoRGmEm8dX/er+nWeM28wn40a
-X-Google-Smtp-Source: ABdhPJwcc2vBiG6KWiu+1vCTc/OtuBvG+jeEzT/a0bVZPZlAzOWNita9GCAgcH+hx7bHvU3JCfpdyQ==
-X-Received: by 2002:a63:dd56:: with SMTP id g22mr864936pgj.38.1631331759728;
-        Fri, 10 Sep 2021 20:42:39 -0700 (PDT)
-Return-Path: <jiladahe1997@gmail.com>
-Received: from [127.0.0.1] (pcd453045.netvigator.com. [203.218.243.45])
-        by smtp.gmail.com with ESMTPSA id v7sm292445pjk.37.2021.09.10.20.42.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Sep 2021 20:42:39 -0700 (PDT)
-Message-ID: <7ba30db0-c7db-b1c0-5243-86d5df789f17@gmail.com>
-Date: Sat, 11 Sep 2021 11:42:44 +0800
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tWPxABx+MPm1jkSnZJZmtDX4BK9UtcKzmddJHFvmIKk=;
+        b=nAw7S2C48ZpdwBold+a9AuV3I3WA3Baxr5a/26sMzpV8r9f+eR9H6vcncAIFwCib/K
+         df2TPTHzZXiNuXjB91J+RaKMCrHXrg5hIT8Np9tJ7P17gjKKL0APnV4N7Ywww/KCSztn
+         U55TXWkIh9K5b8MIVZ1lzKBe2+ZbWZ+nzmGUq3k5wCYzOodN2llEUH6bEO6Gb5M939lw
+         8snwPHFGIjlLYCQMzFfTS/t9BeSxMIbykjYeENUuhhtxQTJYWpIy5uTtkgRU7QJpV1ov
+         JSu39GeEECToR6kKuIjSiKLp0CI8zg4NXBA6F4pJZEYmQq3pZijJ6yjScK8LurC/Gra1
+         FwUw==
+X-Gm-Message-State: AOAM533M/ttPJPN/cgW1AjIFrxEmXYMJ4r7Uhg6Qk4dUih+kBncAzwBk
+	gDDhlERc5aYSKTnKZADXP4Vnsbun8uk=
+X-Google-Smtp-Source: ABdhPJz4nzGZzlmub4n1m7zYowutAczNErOBStSa+aAx++K+WpyTAqUrRDXblzGhjIn8TLVB/WkrWQ==
+X-Received: by 2002:a9d:4d93:: with SMTP id u19mr2207694otk.86.1631365002043;
+        Sat, 11 Sep 2021 05:56:42 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from localhost.localdomain ([2605:a601:ac3d:c100:4f37:550:d1b1:6f01])
+        by smtp.gmail.com with ESMTPSA id t9sm395214oie.20.2021.09.11.05.56.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Sep 2021 05:56:41 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: richard.purdie@linuxfoundation.org,
+	Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] cooker: Allow upstream for local hash equivalence server
+Date: Sat, 11 Sep 2021 07:56:28 -0500
+Message-Id: <20210911125628.487933-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Subject: Re: [PATCH v2] bitbake/fetch2: Add a new variable 'BB_FETCH_ENV' to export Fetcher env
-To: yocto@lists.yoctoproject.org, bitbake-devel@lists.openembedded.org,
- poky@lists.yoctoproject.org, richard.purdie@linuxfoundation.org
-References: <2021082315183802113213@gmail.com>
- <92b1ba20b320376227c3003c53784de67ae01505.camel@linuxfoundation.org>
-From: "Mingrui Ren" <jiladahe1997@gmail.com>
-Cc: ross.burton@arm.com
-In-Reply-To: <92b1ba20b320376227c3003c53784de67ae01505.camel@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Richard,
+The hash equivalence server has had the option to support a read-only
+upstream server for some time now when launched as a standalone program,
+but there was no way to set the upstream when using a locally started
+server. Add a new variable called BB_HASHSERVE_UPSTREAM that can be used
+to specify an upstream server when a local hash equivalence server is
+used (e.g. BB_HASHSERVE is "auto")
 
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/cooker.py | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-On 06/09/2021 17:41, Richard Purdie wrote:
-> Hi,
->
-> Thanks for the patch. This isn't ready to be merged yet though as there are some
-> issues.
->
-> On Mon, 2021-08-23 at 15:18 +0800, jiladahe1997@gmail.com wrote:
->>   # CONF_VERSION is increased each time build/conf/ changes incompatibly and is used to
->>   # track the version of this file when it was generated. This can safely be ignored if
->>   # this doesn't mean anything to you.
->> diff --git a/scripts/oe-buildenv-internal b/scripts/oe-buildenv-internal
->> index e0d920f2fc..29cb694790 100755
->> --- a/scripts/oe-buildenv-internal
->> +++ b/scripts/oe-buildenv-internal
->> @@ -111,7 +111,8 @@ HTTPS_PROXY https_proxy FTP_PROXY ftp_proxy FTPS_PROXY ftps_proxy ALL_PROXY \
->>   all_proxy NO_PROXY no_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY \
->>   SDKMACHINE BB_NUMBER_THREADS BB_NO_NETWORK PARALLEL_MAKE GIT_PROXY_COMMAND \
->>   SOCKS5_PASSWD SOCKS5_USER SCREENDIR STAMPS_DIR BBPATH_EXTRA BB_SETSCENE_ENFORCE \
->> -BB_LOGCONFIG"
->> +BB_LOGCONFIG HOME PATH GIT_SSH GIT_SSL_CAINFO GIT_SMART_HTTP DBUS_SESSION_BUS_ADDRESS \
->> +P4CONFIG SSL_CERT_FILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION"
->>   
->>   BB_ENV_EXTRAWHITE="$(echo $BB_ENV_EXTRAWHITE $BB_ENV_EXTRAWHITE_OE | tr ' ' '\n' | LC_ALL=C sort --unique | tr '\n' ' ')"
-> I think if you leave BB_ORIGENV handling in place, these latter changes
-> shouldn't be needed?
->
-> If you need to be able to pass extra variables into the fetcher, I think we
-> could/should add API for additions rather than allowing the whole list to be
-> customised. Without stating which problem you're solving, guessing what you
-> really need is hard though. A better description of the issue you're seeing
-> would help a lot.
->
-> Cheers,
->
-> Richard
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index db991702e2d..1f55d9ad73e 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -389,7 +389,12 @@ class BBCooker:
+             if not self.hashserv:
+                 dbfile = (self.data.getVar("PERSISTENT_DIR") or self.data.getVar("CACHE")) + "/hashserv.db"
+                 self.hashservaddr = "unix://%s/hashserve.sock" % self.data.getVar("TOPDIR")
+-                self.hashserv = hashserv.create_server(self.hashservaddr, dbfile, sync=False)
++                self.hashserv = hashserv.create_server(
++                    self.hashservaddr,
++                    dbfile,
++                    sync=False,
++                    upstream=self.data.getVar("BB_HASHSERVE_UPSTREAM") or None,
++                )
+                 self.hashserv.serve_as_process()
+             self.data.setVar("BB_HASHSERVE", self.hashservaddr)
+             self.databuilder.origdata.setVar("BB_HASHSERVE", self.hashservaddr)
+-- 
+2.31.1
 
-Thanks for your reply.
-
-The issue I have is that I have to pass additional variables into 
-fetcher. More specifically,
-I'm using a git:// protocol proxy tool, which requires GIT_SOCKS_PROXY 
-variable.
-
-I have made a bit more changes in this patch, I'm trying to make the 
-code'perfect'.
-But as you said, we could also add an API for adding additional 
-variables into fetcher,
-that's safe for back compatibility, but a bit more complicated for 
-furture maintainability.
-Please tell me which one you prefer.
-
-
-By the way, I found two recent commits on this issue:
-  (commit ID)
-348384135272ae7c62a11eeabcc43eddc957811f
-5dce2f3da20a14c0eb5229696561b0c5f6fce54c
-which means the variables used by fetcher may change frequently.
-
-I think it's a good a feature if we could add custom variables into 
-fetcher. For example,
-we could fetch private code by adding username or password, or we could 
-adding custom
-proxy tools.
-
-
-Thanks,
-
-Mingrui Ren
