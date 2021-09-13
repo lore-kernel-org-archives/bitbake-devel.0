@@ -1,112 +1,74 @@
-Received: from mail5.wrs.com (mail5.wrs.com [192.103.53.11])
- by mx.groups.io with SMTP id smtpd.web11.25681.1631512355798445681
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web11.26425.1631519829037636650
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 12 Sep 2021 22:52:36 -0700
+ Mon, 13 Sep 2021 00:57:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: windriver.com, ip: 192.103.53.11, mailfrom: mingli.yu@windriver.com)
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.corp.ad.wrs.com [147.11.82.252])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 18D5qXbs000412
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>; Sun, 12 Sep 2021 22:52:34 -0700
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Sun, 12 Sep 2021 22:52:33 -0700
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.14; Sun, 12 Sep 2021 22:52:33 -0700
-Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2242.12 via Frontend Transport; Sun, 12 Sep 2021 22:52:32 -0700
-From: "Yu, Mingli" <mingli.yu@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH v3] fetch2: make sure the uri added as expected
-Date: Mon, 13 Sep 2021 13:48:10 +0800
-Message-ID: <20210913054810.30554-1-mingli.yu@windriver.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <168714731971476B.24733@lists.openembedded.org>
-References: <168714731971476B.24733@lists.openembedded.org>
+ dkim=pass header.i=@bytesatwork-ch.20150623.gappssmtp.com header.s=20150623 header.b=VCQUVv5o;
+ spf=pass (domain: bytesatwork.ch, ip: 209.85.128.53, mailfrom: daniel.ammann@bytesatwork.ch)
+Received: by mail-wm1-f53.google.com with SMTP id j17-20020a05600c1c1100b002e754875260so5899108wms.4
+        for <bitbake-devel@lists.openembedded.org>; Mon, 13 Sep 2021 00:57:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytesatwork-ch.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=61T6vEndhR9R6fF8Mj/QB/LozyJ2LwA3eIYkBrZmO1A=;
+        b=VCQUVv5o7O6O5IoRxfm+5pbkTKDbs+zLCk6XqQdL9RSOkYmEW+8Sj/yOllNxm5MQKp
+         0Jzh9buqFcSBjOxdM4JCdNrnLlC0FSOQZ5lfAMFKRZUSk9V0oP/BNkA+++gqAwft/9Lh
+         9KxyUyfxV2LCEXUMRqd+3Yp+DrdTED+ymAx8jUXpU/tqg/l+IsV080I9a8mwHX9yZg0v
+         kIeuMdCXHzXo8gbYX/3+MfJQ0huFfE5I0Xw6WZWjLBF1FlaVRynVApwoXjy0tB8AwYPl
+         Y4XJqnZWT7rEqf5/T01XkZ5XnH9eUYxH0L0/Xn13xUobnCrv4TsrM4i0A/NbHTGS+PUI
+         KKjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=61T6vEndhR9R6fF8Mj/QB/LozyJ2LwA3eIYkBrZmO1A=;
+        b=he6OjqPpGDWtUu1cTgGtnSxwpWe5eaKWOYhtW9ywgzNeU5Tq6yyYGBi2jfdTtjrVhU
+         03F+r8nJEnIfuxBXJa1IIIDweRVAaO9fJYNFhH9Mb757esggI6NHTc4X/lOYMjd+pDrC
+         bS0Y0S/4fBmQAGpjECG9GFPuyX8bfKkdsJt/kAiI67RZR1rQFvgh0yV89K8JogbTX6jy
+         wwDtv2CXc36omATHuwd9PidtUuXIuvXXdDcq2roBlfAYjHr59dkPq0lOCexfQ2ccIUov
+         oTp1eUWElgx1KYMLSt59zkNWN2WQ9PBBFK6F1+xinCo41kbyp4Py6rSXoDwR75nQbjOy
+         yYCA==
+X-Gm-Message-State: AOAM532GvolLd+XPFs2xsi5QDIMKO3JItrIzKFh4V59yuWWvx9WGH7Ph
+	2dOvlZmPg4ZQdsVNhvItfw9x3+izhTnzwQ==
+X-Google-Smtp-Source: ABdhPJyLMbYWGLpgGV3wxpHGF/OMXsMPHjYFa+Ccnq9Qv4GeKerwPgXagPb9g+3eUPo6q6ZxN0q2fQ==
+X-Received: by 2002:a7b:c8c3:: with SMTP id f3mr9950039wml.30.1631519826804;
+        Mon, 13 Sep 2021 00:57:06 -0700 (PDT)
+Return-Path: <daniel.ammann@bytesatwork.ch>
+Received: from mimas.bytesatwork.ch (162.40.150.83.ftth.as8758.net. [83.150.40.162])
+        by smtp.gmail.com with ESMTPSA id u26sm6899348wrd.32.2021.09.13.00.57.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Sep 2021 00:57:06 -0700 (PDT)
+From: "Daniel Ammann" <daniel.ammann@bytesatwork.ch>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] fetch2/wget: Enable ftps
+Date: Mon, 13 Sep 2021 09:56:50 +0200
+Message-Id: <20210913075650.5989-1-daniel.ammann@bytesatwork.ch>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-From: Mingli Yu <mingli.yu@windriver.com>
+The fetcher would fail with:
+Could not find a fetcher which supports the URL: ftps://...
 
-When call uri_replace to get the new uris, we should guarantee the
-new uri is added when the replace uri begins with file if the find
-uri begin with wildcard which mapped as below.
-PREMIRRORS_append = " \
-     .*://.*/.*  git://somewhere.org/somedir/MIRRORNAME;protocol=http \n \
-"    |           |
-     |           |
-     |           |
-     find        replace
-
-Before the patch:
-the original uri
-gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https
-
-PREMIRRORS_append = " \
-     .*://.*/.*  git://somewhere.org/somedir/MIRRORNAME;protocol=http \n \
-"
-The new uri is git://somewhere.org/somedir/github.com.tianocore.edk2.git/git2_github.com.tianocore.edk2.git.tar.gz;protocol=http
-
-After the patch:
-the original uri
-gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https
-
-PREMIRRORS_append = " \
-     .*://.*/.*  git://somewhere.org/somedir/MIRRORNAME;protocol=http \n \
-"
-The new uri is None as the find begins with wildcard but the replace
-doesn't begin with file.
-
-Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+Signed-off-by: Daniel Ammann <daniel.ammann@bytesatwork.ch>
 ---
- lib/bb/fetch2/__init__.py | 2 ++
- lib/bb/tests/fetch.py     | 8 +++++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ lib/bb/fetch2/wget.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index d9e1599a..1c5242c7 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -430,6 +430,8 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
-     uri_replace_decoded = list(decodeurl(uri_replace))
-     logger.debug2("For url %s comparing %s to %s" % (uri_decoded, uri_find_decoded, uri_replace_decoded))
-     result_decoded = ['', '', '', '', '', {}]
-+    if uri_find_decoded[0] == '.*' and uri_replace_decoded[0] != 'file':
-+        uri_find_decoded[0] = uri_replace_decoded[0]
-     for loc, i in enumerate(uri_find_decoded):
-         result_decoded[loc] = uri_decoded[loc]
-         regexp = i
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 242be368..25893a34 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -406,6 +406,8 @@ class MirrorUriTest(FetcherTest):
-             : "git://somewhere.org/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
-         ("git://someserver.org/bitbake;tag=1234567890123456789012345678901234567890", "git://someserver.org/bitbake", "git://git.openembedded.org/bitbake")
-             : "git://git.openembedded.org/bitbake;tag=1234567890123456789012345678901234567890",
-+        ("gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https", ".*://.*/.*", "git://somewhere.org/somedir/MIRRORNAME;protocol=http")
-+            : None,
-         ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sstate-cache") 
-             : "file:///somewhere/1234/sstate-cache/sstate-xyz.tgz",
-         ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sstate-cache/") 
-@@ -447,7 +449,11 @@ class MirrorUriTest(FetcherTest):
-             ud.setup_localpath(self.d)
-             mirrors = bb.fetch2.mirror_from_string("%s %s" % (k[1], k[2]))
-             newuris, uds = bb.fetch2.build_mirroruris(ud, mirrors, self.d)
--            self.assertEqual([v], newuris)
-+            if not v:
-+                 self.assertEqual([v], newuris)
-+            else:
-+                 self.assertEqual([], newuris)
-+
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 9a49e64a0..349891e85 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -69,7 +69,7 @@ class Wget(FetchMethod):
+         """
+         Check to see if a given url can be fetched with wget.
+         """
+-        return ud.type in ['http', 'https', 'ftp']
++        return ud.type in ['http', 'https', 'ftp', 'ftps']
  
-     def test_urilist1(self):
-         fetcher = bb.fetch.FetchData("http://downloads.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz", self.d)
+     def recommends_checksum(self, urldata):
+         return True
 -- 
-2.32.0
+2.20.1
 
