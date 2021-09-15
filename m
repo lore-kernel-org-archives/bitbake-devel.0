@@ -1,127 +1,79 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web12.8635.1631619668444596972
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web08.5796.1631702755142281999
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 14 Sep 2021 04:41:08 -0700
+ Wed, 15 Sep 2021 03:45:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=dqj9dwXJ;
- spf=pass (domain: gmail.com, ip: 209.85.221.45, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wr1-f45.google.com with SMTP id u15so13627709wru.6
-        for <bitbake-devel@lists.openembedded.org>; Tue, 14 Sep 2021 04:41:08 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Ng0bPJ3I;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f53.google.com with SMTP id i23so3156921wrb.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Sep 2021 03:45:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=r0a9S2mA8Q7C/4Oqxeb7a6SmKmo+EU0gHbBFZxDEoh0=;
-        b=dqj9dwXJNlBGGnqWsxrfTcAaMcOFlVPn1VeLJdEp+TrbdajwwqIb41d0GNYp45riu8
-         HLnZbnnXYNp0usFdb/4SJUhkGkKnSxYd1EM0iGSlUrBTOugZsn3P8zCkwknSkrQZrTnJ
-         Ak0WVwFdFhRvx1ScN+0KSsaQ+4zPvuYLKxxbiyxFQ6JBYL2bky0fQg2W4wgR7/TTOqe3
-         LsfSLoVmwlzyvaSMX/XNGUScypJ3H0Us+tNx5l2PsmqxtqOqT3ehgEmQA2KnIcm6MwG0
-         7/TdCbzQ6qHknREwuQAubUbsuKtRk93XrzlO4x8VR6IvdV3DZCl3DgfzDmFW+5DEOBN2
-         8Rsg==
+        bh=8/Qlju8rcykhERsReho/LLMwAUk7YmtXyoWigJVQCE0=;
+        b=Ng0bPJ3I+MsIavfCx92joMBqMJaFBp4XJsXgaBEM3r1I5uJrM+j4PTAHSaU41kivBj
+         1J+Ij4A/LRyDqwazsJiVGUYX/IW0yknJOk9mQVdw1zCKcTC70akxTghwhpG9YmiZca2K
+         CA6tcj1ySE8Rph2RP7LDuPDiWFo/CY0npj1fw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=r0a9S2mA8Q7C/4Oqxeb7a6SmKmo+EU0gHbBFZxDEoh0=;
-        b=fUk9QX1GtZjnK8yY+EIQSRJxyzFEDCUogYsPm5eK5jBxlPlutBx1KrUG7uGN5iQOpN
-         DCtqnuB817rLlY/L9a4zKvXGvLuixdAuW2ekJZGoiOp9FXdXKWKxrhV2j9oL+P4t2R9y
-         l1V5V+ksRNPTpk9OTtC/m68sCfRgGe8/4Wo2XbPgRuhtHjMMwfWb0CMXZw7/Id0CK4IM
-         UrwdQz+KH3ALFuPG9dbZUJByNFSgUilFb9UL7hbrI/giKkbpEQSAsUVJkAItwhLchQTt
-         qlplJDBxbBT9ZbGMVEK/S7bIcQVpmLu82EwjaGR661ztTbU4riSB8Bk8FC0d5tcZZDhh
-         GXjg==
-X-Gm-Message-State: AOAM532nKunwQC69ymrl7vW+pHiIj7ZqgZA5qGkBGhAkMfQn3Ww/1mjl
-	Ua03CtRZZeIzC+AO7eCxbWxiAO1gDMA=
-X-Google-Smtp-Source: ABdhPJxLV8wJSdPMYtWxqOlybNQnQuBpU548OQbF+6+Yebbur+Z73jSXihj50afKQWyTA4yCNT+R/g==
-X-Received: by 2002:a5d:5386:: with SMTP id d6mr18521918wrv.112.1631619666907;
-        Tue, 14 Sep 2021 04:41:06 -0700 (PDT)
-Return-Path: <martin.jansa@gmail.com>
-Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
-        by smtp.gmail.com with ESMTPSA id a3sm10046107wrt.28.2021.09.14.04.41.06
+        bh=8/Qlju8rcykhERsReho/LLMwAUk7YmtXyoWigJVQCE0=;
+        b=eL3au0hA8EDwT2Wu5suRpDG/rqminc0dYhljIUCnXGUlZ21Sk1D2bHWnpJL1I8p0Vb
+         jsNW7qqmwV/TxNUUM8+yNASwj+ztI5YKnlYuoONU4+Y9vb4ycGQ6bbqUokukXjs4M9VU
+         DcqfGI2jbQzZFBpsx3uuTSCNRwo8glkUt4Br5bcrrU0BRebePBeUI/7J+b6sP9Dx0UW2
+         Fg19lYV9ibMtSVfuzsEgUtn/MzOc+FeN/YGm2LQE0kWIqCYaTYa5iaaNlHDvKP8UXvsh
+         zFFSi+r3nun4lhqnm9o9WXL0TJAJNFBJWJYJKuecMKlmmHgjtineeu0xxGCMt97t4bDM
+         Jniw==
+X-Gm-Message-State: AOAM531ox23WQ0ed2As5rduU5T1p3jEJ82zHt/Ll1cEU229w2VFnyMVW
+	gosDc4ueD8K9VJgv9XPUnMEZIp1tYeF8ZnUs
+X-Google-Smtp-Source: ABdhPJzlU5nd5/LA5VUSgANpqa9AzHt+H4KjHshr3BrN3aRYyR1ZWYH7RScmCyy/rDN67jayoP/beg==
+X-Received: by 2002:a05:6000:236:: with SMTP id l22mr4323900wrz.386.1631702753443;
+        Wed, 15 Sep 2021 03:45:53 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:cb98:b99:6df8:dffd])
+        by smtp.gmail.com with ESMTPSA id h18sm3909837wmq.23.2021.09.15.03.45.52
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 04:41:06 -0700 (PDT)
-From: "Martin Jansa" <Martin.Jansa@gmail.com>
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
+        Wed, 15 Sep 2021 03:45:53 -0700 (PDT)
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Martin Jansa <Martin.Jansa@gmail.com>
-Subject: [PATCH] bitbake.conf: fix vars_from_file() call
-Date: Tue, 14 Sep 2021 13:41:03 +0200
-Message-Id: <20210914114103.15591-1-Martin.Jansa@gmail.com>
+Subject: [PATCH] bitbake-worker: Improve error handling
+Date: Wed, 15 Sep 2021 11:45:52 +0100
+Message-Id: <20210915104552.1400939-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The reference to this function was dropped from BBHandler.py in:
-https://git.openembedded.org/bitbake/commit/?id=aaa5292ef96ea27f505bc5c5a4b1eb4f497ed061
+If bitbake-worker fails, return an error code showing that. Also
+make the thread cleanup code explict in a finally clause as it would
+otherwise hang.
 
-Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- conf/bitbake.conf                                         | 6 +++---
- doc/bitbake-user-manual/bitbake-user-manual-execution.rst | 4 ++--
- doc/bitbake-user-manual/bitbake-user-manual-hello.rst     | 2 +-
- doc/bitbake-user-manual/bitbake-user-manual-metadata.rst  | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ bin/bitbake-worker | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/conf/bitbake.conf b/conf/bitbake.conf
-index b3d5fab2..baf0a76f 100644
---- a/conf/bitbake.conf
-+++ b/conf/bitbake.conf
-@@ -31,10 +31,10 @@ OVERRIDES = "local:${MACHINE}:${TARGET_OS}:${TARGET_ARCH}"
- P = "${PN}-${PV}"
- PERSISTENT_DIR = "${TMPDIR}/cache"
- PF = "${PN}-${PV}-${PR}"
--PN = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE', False),d)[0] or 'defaultpkgname'}"
--PR = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE', False),d)[2] or 'r0'}"
-+PN = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[0] or 'defaultpkgname'}"
-+PR = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[2] or 'r0'}"
- PROVIDES = ""
--PV = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE', False),d)[1] or '1.0'}"
-+PV = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[1] or '1.0'}"
- S = "${WORKDIR}/${P}"
- SRC_URI = "file://${FILE}"
- STAMP = "${TMPDIR}/stamps/${PF}"
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-index 6153f36a..a4b1efbe 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-@@ -208,8 +208,8 @@ metadata. For example, in ``bitbake.conf`` the recipe name and version
- are used to set the variables :term:`PN` and
- :term:`PV`::
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+index a9e33ca7c7..11f22c11fc 100755
+--- a/bin/bitbake-worker
++++ b/bin/bitbake-worker
+@@ -512,9 +512,11 @@ except BaseException as e:
+         import traceback
+         sys.stderr.write(traceback.format_exc())
+         sys.stderr.write(str(e))
+-
+-worker_thread_exit = True
+-worker_thread.join()
++finally:
++    worker_thread_exit = True
++    worker_thread.join()
  
--   PN = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE', False),d)[0] or 'defaultpkgname'}"
--   PV = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE', False),d)[1] or '1.0'}"
-+   PN = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[0] or 'defaultpkgname'}"
-+   PV = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[1] or '1.0'}"
- 
- In this example, a recipe called "something_1.2.3.bb" would set
- :term:`PN` to "something" and :term:`PV` to "1.2.3".
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-hello.rst b/doc/bitbake-user-manual/bitbake-user-manual-hello.rst
-index c5a4ce60..83a415d9 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-hello.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-hello.rst
-@@ -216,7 +216,7 @@ Following is the complete "Hello World" example.
-     use some editor to create the ``bitbake.conf`` so that it contains
-     the following::
- 
--       PN  = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE', False),d)[0] or 'defaultpkgname'}"
-+       PN  = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[0] or 'defaultpkgname'}"
- 
-        TMPDIR  = "${TOPDIR}/tmp"
-        CACHE   = "${TMPDIR}/cache"
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-index ff60381f..119720d5 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-@@ -413,8 +413,8 @@ variables from BitBake's internal data dictionary, ``d``. The following
- lines select the values of a package name and its version number,
- respectively::
- 
--   PN = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE', False),d)[0] or 'defaultpkgname'}"
--   PV = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE', False),d)[1] or '1.0'}"
-+   PN = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[0] or 'defaultpkgname'}"
-+   PV = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[1] or '1.0'}"
- 
- .. note::
- 
+ workerlog_write("exiting")
++if not normalexit:
++    sys.exit(1)
+ sys.exit(0)
 -- 
 2.32.0
 
