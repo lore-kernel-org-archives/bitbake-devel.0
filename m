@@ -1,23 +1,23 @@
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
  by mx.groups.io with SMTP id smtpd.web11.3973.1631747984007383249
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 15 Sep 2021 16:19:50 -0700
+ Wed, 15 Sep 2021 16:19:51 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: intel.com, ip: 192.55.52.151, mailfrom: anuj.mittal@intel.com)
-X-IronPort-AV: E=McAfee;i="6200,9189,10108"; a="202605374"
+X-IronPort-AV: E=McAfee;i="6200,9189,10108"; a="202605380"
 X-IronPort-AV: E=Sophos;i="5.85,296,1624345200"; 
-   d="scan'208";a="202605374"
+   d="scan'208";a="202605380"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 16:19:49 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 16:19:51 -0700
 X-IronPort-AV: E=Sophos;i="5.85,296,1624345200"; 
-   d="scan'208";a="434303215"
+   d="scan'208";a="434303218"
 Received: from chgan-mobl.gar.corp.intel.com (HELO anmitta2-mobl1.gar.corp.intel.com) ([10.215.238.104])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 16:19:48 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 16:19:49 -0700
 From: "Anuj Mittal" <anuj.mittal@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.50][PATCH 4/5] runqueue: Improve multiconfig deferred task issues
-Date: Thu, 16 Sep 2021 07:19:37 +0800
-Message-Id: <f6ff6689dfddaf8c566b4e7d8f5926e43d277a6c.1631747835.git.anuj.mittal@intel.com>
+Subject: [1.50][PATCH 5/5] build: Catch and error upon circular task references
+Date: Thu, 16 Sep 2021 07:19:38 +0800
+Message-Id: <bbbddfd913012c5d4e1015a4131e894749df9f90.1631747835.git.anuj.mittal@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1631747835.git.anuj.mittal@intel.com>
 References: <cover.1631747835.git.anuj.mittal@intel.com>
@@ -26,123 +26,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-The previous patches have exposed new issues with this code path,
-the issues being around what should happen when the hash of a task
-changes and the task is or is not on the deferred task list.
+If there are circular task references, error on them rather than show
+a recursion error. A simple reproducer is:
 
-Rather than rebuilding the deferred task list during each rehash
-event, build it once at the start of a build. This avoids the problem
-of tasks being added back after they have run and also avoids problems
-of always ensuring the same task is deferred. It also allows the
-'outrightfail' codepath to be handled separately as the conditions
-are subtly differnt.
+"""
+do_packageswu () {
+       :
+}
 
-One significant win for the new approch is the build is not continually
-printing out lists of deferred tasks, that list remains fairly static
-from the start of the build. Logic is added in to ensure a rehashed
-task with a hash matching other deferred tasks is deferred along with
-them as a small optimization.
+addtask do_packageswu after do_image_complete before do_image_qa
+"""
 
-An interesting test case for this code was reported by Mark Hatle
-with four multiconfigs, each the same apart from TMPDIR and running a
-build of:
+into image_types.bbclass. There is code in runqueue to detect these but
+we never get that far with the current codebase.
 
-bitbake buildtools-tarball mc:{one,two,three,four}:core-image-minimal
-
-which is interesting in that the build of buildtools partially overlaps
-core-image-minimal and the build has a rehash event for qemuwrapper-cross
-even without any external hash equivalence server or preexisting data.
+[YOCTO #13140]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit bb424e0a6d274d398f434f7df63951da9ce305b3)
+(cherry picked from commit 339d4d6be515a71311b81fb9e99742af0d8a5130)
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- lib/bb/runqueue.py | 58 +++++++++++++++++++++++++---------------------
- 1 file changed, 32 insertions(+), 26 deletions(-)
+ lib/bb/build.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index f67981309..5ccf755f1 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2450,6 +2450,11 @@ class RunQueueExecute:
- 
-         if update_tasks:
-             self.sqdone = False
-+            for tid in [t[0] for t in update_tasks]:
-+                h = pending_hash_index(tid, self.rqdata)
-+                if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
-+                    self.sq_deferred[tid] = self.sqdata.hashes[h]
-+                    bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
-             update_scenequeue_data([t[0] for t in update_tasks], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
- 
-         for (tid, harddepfail, origvalid) in update_tasks:
-@@ -2793,6 +2798,19 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-     sqdata.stamppresent = set()
-     sqdata.valid = set()
- 
-+    sqdata.hashes = {}
-+    sqrq.sq_deferred = {}
-+    for mc in sorted(sqdata.multiconfigs):
-+        for tid in sorted(sqdata.sq_revdeps):
-+            if mc_from_tid(tid) != mc:
-+                continue
-+            h = pending_hash_index(tid, rqdata)
-+            if h not in sqdata.hashes:
-+                sqdata.hashes[h] = tid
-+            else:
-+                sqrq.sq_deferred[tid] = sqdata.hashes[h]
-+                bb.note("Deferring %s after %s" % (tid, sqdata.hashes[h]))
-+
-     update_scenequeue_data(sqdata.sq_revdeps, sqdata, rqdata, rq, cooker, stampcache, sqrq, summary=True)
- 
-     # Compute a list of 'stale' sstate tasks where the current hash does not match the one
-@@ -2857,32 +2875,20 @@ def update_scenequeue_data(tids, sqdata, rqdata, rq, cooker, stampcache, sqrq, s
- 
-     sqdata.valid |= rq.validate_hashes(tocheck, cooker.data, len(sqdata.stamppresent), False, summary=summary)
- 
--    sqdata.hashes = {}
--    sqrq.sq_deferred = {}
--    for mc in sorted(sqdata.multiconfigs):
--        for tid in sorted(sqdata.sq_revdeps):
--            if mc_from_tid(tid) != mc:
--                continue
--            if tid in sqdata.stamppresent:
--                continue
--            if tid in sqdata.valid:
--                continue
--            if tid in sqdata.noexec:
--                continue
--            if tid in sqrq.scenequeue_notcovered:
--                continue
--            if tid in sqrq.scenequeue_covered:
--                continue
--
--            h = pending_hash_index(tid, rqdata)
--            if h not in sqdata.hashes:
--                if tid in tids:
--                    sqdata.outrightfail.add(tid)
--                sqdata.hashes[h] = tid
--            else:
--                sqrq.sq_deferred[tid] = sqdata.hashes[h]
--                bb.note("Deferring %s after %s" % (tid, sqdata.hashes[h]))
--
-+    for tid in tids:
-+        if tid in sqdata.stamppresent:
-+            continue
-+        if tid in sqdata.valid:
-+            continue
-+        if tid in sqdata.noexec:
-+            continue
-+        if tid in sqrq.scenequeue_covered:
-+            continue
-+        if tid in sqrq.scenequeue_notcovered:
-+            continue
-+        if tid in sqrq.sq_deferred:
-+            continue
-+        sqdata.outrightfail.add(tid)
- 
- class TaskFailure(Exception):
-     """
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index b2715fc53..24ce327c5 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -1025,6 +1025,8 @@ def tasksbetween(task_start, task_end, d):
+     def follow_chain(task, endtask, chain=None):
+         if not chain:
+             chain = []
++        if task in chain:
++            bb.fatal("Circular task dependencies as %s depends on itself via the chain %s" % (task, " -> ".join(chain)))
+         chain.append(task)
+         for othertask in tasks:
+             if othertask == task:
 -- 
 2.31.1
 
