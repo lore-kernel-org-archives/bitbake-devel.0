@@ -1,23 +1,23 @@
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
  by mx.groups.io with SMTP id smtpd.web11.3973.1631747984007383249
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 15 Sep 2021 16:19:45 -0700
+ Wed, 15 Sep 2021 16:19:46 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: intel.com, ip: 192.55.52.151, mailfrom: anuj.mittal@intel.com)
-X-IronPort-AV: E=McAfee;i="6200,9189,10108"; a="202605351"
+X-IronPort-AV: E=McAfee;i="6200,9189,10108"; a="202605362"
 X-IronPort-AV: E=Sophos;i="5.85,296,1624345200"; 
-   d="scan'208";a="202605351"
+   d="scan'208";a="202605362"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 16:19:44 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 16:19:46 -0700
 X-IronPort-AV: E=Sophos;i="5.85,296,1624345200"; 
-   d="scan'208";a="434303192"
+   d="scan'208";a="434303195"
 Received: from chgan-mobl.gar.corp.intel.com (HELO anmitta2-mobl1.gar.corp.intel.com) ([10.215.238.104])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 16:19:43 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 16:19:45 -0700
 From: "Anuj Mittal" <anuj.mittal@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.50][PATCH 1/5] runqueue: Avoid deadlock avoidance task graph corruption
-Date: Thu, 16 Sep 2021 07:19:34 +0800
-Message-Id: <0c95a8724b1b8d69b5c93aea4dbd1830cf161690.1631747835.git.anuj.mittal@intel.com>
+Subject: [1.50][PATCH 2/5] runqueue: Fix issues with multiconfig deferred task deadlock messages
+Date: Thu, 16 Sep 2021 07:19:35 +0800
+Message-Id: <3984d33fa32e4bc064f94b9c08e965a368251b42.1631747835.git.anuj.mittal@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1631747835.git.anuj.mittal@intel.com>
 References: <cover.1631747835.git.anuj.mittal@intel.com>
@@ -26,31 +26,45 @@ Content-Transfer-Encoding: 8bit
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-If the deferred task deadlock avoidance code triggers, it could mark an executed
-task as failed which leads to "covered and not covered" error messages. Improve
-the logic so if the deadlock code is triggered, it doesn't cause the errors.
+In multiconfig builds with large numbers of identical tasks, builds were
+deadlocking after recent runqueue changes upon rebuilds where there was
+heavy sstate usage (i.e. on second builds after a first completed).
+
+The issue was that deferred tasks were being left indefinitely on
+the deferred list. The deadlock handler was then "breaking" things
+by failing tasks that had already succeeded, leading to the task
+being on both covered and not covered lists, giving a further error.
+
+The fix is to clean up the deferred task list when each setscene task
+completes. I'd previously been hoping to avoid iterating that list
+but it appears unavoidable.
+
+[YOCTO #14342]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 51bdd6cb3bd9e2c02e261fb578bb945b86b82c75)
+(cherry picked from commit ae24a0f2d2d8b4b5ec10efabd0e9362e560832ea)
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- lib/bb/runqueue.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/bb/runqueue.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 6c41fe6d4..014ee37bf 100644
+index 014ee37bf..f67981309 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -2180,7 +2180,8 @@ class RunQueueExecute:
-         if self.sq_deferred:
-             tid = self.sq_deferred.pop(list(self.sq_deferred.keys())[0])
-             logger.warning("Runqeueue deadlocked on deferred tasks, forcing task %s" % tid)
--            self.sq_task_failoutright(tid)
-+            if tid not in self.runq_complete:
-+                self.sq_task_failoutright(tid)
-             return True
+@@ -1904,6 +1904,12 @@ class RunQueueExecute:
+                 self.setbuildable(revdep)
+                 logger.debug("Marking task %s as buildable", revdep)
  
-         if len(self.failed_tids) != 0:
++        for t in self.sq_deferred.copy():
++            if self.sq_deferred[t] == task:
++                logger.debug2("Deferred task %s now buildable" % t)
++                del self.sq_deferred[t]
++                update_scenequeue_data([t], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
++
+     def task_complete(self, task):
+         self.stats.taskCompleted()
+         bb.event.fire(runQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
 -- 
 2.31.1
 
