@@ -1,117 +1,74 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web12.1979.1631802353704426193
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+ by mx.groups.io with SMTP id smtpd.web12.60.1631807774746020397
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Sep 2021 07:25:54 -0700
+ Thu, 16 Sep 2021 08:56:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EUHOL/S2;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f51.google.com with SMTP id u18so8062792wrg.5
-        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Sep 2021 07:25:53 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=eNCmPzfZ;
+ spf=pass (domain: gmail.com, ip: 209.85.208.45, mailfrom: drlv85@gmail.com)
+Received: by mail-ed1-f45.google.com with SMTP id c21so18432746edj.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Sep 2021 08:56:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kQ6Y9VmdI2ut6X/WRNTGGDerRsnCTeu2AisIOBErx9s=;
-        b=EUHOL/S2U55kVbqHgkgChDOpIBL2VSGXQqlD5MQm4B0MEth8Ic0BYRyRlXBUYLwtiK
-         JlafNr7uGALv2kYSXzlb7iIhT/yorVDLR5XomkHLdW6l48xwtSkw/pzEfr8yOZF4wWB/
-         QBvs0Lp+vb86PDbNmjhLN0CO+iFeQAx/Kit+8=
+        bh=KqPbDapHLns9wPadbAMlEFMxv78B31kE52mtwJR7BnE=;
+        b=eNCmPzfZ2T7RplV6oiQqhqXWQ9/dV3JtqIpE7Cc77szoiC2Yj6on+BidY9ywYdrq/W
+         nZGR5SvcAGpHhwwLtGSy0hdJ9U2A/pvJERAViKpEyKUrV2BJBHqMbM41mwEkLhiYUQ8p
+         9LdV2DNX3FoRkvAq1m5d3OIUNnZevQ3I2m9WhofU4M02X439Fu8hOMNzrfrwu8i9TRwz
+         xebqWa+Ky4cYN1nYMcVfexul5G0ncNEYERqZa30GvQExNGyMneRHWuIykaC4CuHoJR5h
+         QS/SSeiWPf1SFHYfxdiciovShxfu4J7PCsLgVSU8m7uYAImICxkfv0zILw3E7JvKXMpS
+         E2xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kQ6Y9VmdI2ut6X/WRNTGGDerRsnCTeu2AisIOBErx9s=;
-        b=KD3nwMQlukuqeverNZ5gFZFtpqaJ09Jjf57yNBLNY1rCmQqnLvdRiT1gAC3szBYjzH
-         L1bSI+NBaopsYueRvcAYEwLqOI/osQvVS/zupK+5lnNgp2jJgznKrUOlFLHy2mcbEDKN
-         WgaPuHPXupvsCBwhxSOmfdpefGYlzSYTjA3w/pxH5loiBHaiKgZQUvtE0XDdIvDwrFvA
-         rMsvOL3DvveDIvW5XNhsIxnSqiwJjuFZTsw/R8j7R4qKWeTVacxSTmMzFZKT2UI6EIHI
-         abSGOfpQjICHgitNaWwW+tUmklOek5AEWNQ3oIG+6hGAORNi0PDfL2DKo4n6gPJzJODn
-         kZug==
-X-Gm-Message-State: AOAM53344grQXVEod4/o5K9l919Ol890L5z18mfUPj/Ai1ARedSafYew
-	HPXD0XXm3m5obU6dUyfYsiZjRHn1lGD+9n/m
-X-Google-Smtp-Source: ABdhPJzgAO/CtMjraiJLHnG5j6Qh5/WzqWnWySSiZPGPebO80OhxMjCyZhvX5UarzBJtdutmmbfacw==
-X-Received: by 2002:a5d:618c:: with SMTP id j12mr6470346wru.208.1631802351906;
-        Thu, 16 Sep 2021 07:25:51 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:f11f:8fd1:42b2:e87c])
-        by smtp.gmail.com with ESMTPSA id 20sm8150922wme.46.2021.09.16.07.25.51
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Sep 2021 07:25:51 -0700 (PDT)
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+        bh=KqPbDapHLns9wPadbAMlEFMxv78B31kE52mtwJR7BnE=;
+        b=nHciqFB7PHD9zgkKCRN38OqzCyu7Ctq7YXmV6Fz/Yy4qRTDpw+1EZ+VLjNzjQdlour
+         XzlfdzMvOvzJU32o2sDKacLaSCMuox8P4SDeD936UDseocEAezq4ijv05v2ypMosnlzE
+         cI/bij4Hc8XHvfzucmA8dJmaSG2FpcAoPVDThD8RCNi/w/UAAdJ9hCkclHbv6CoHEqEG
+         bfJiEoOYhpD7uNI4JSka4/uRQW29BZemfcQcA2MAyD+++sUfEFBpgQtCGs3sP+B0glNS
+         rC8pct1hmLokBbqXAVrezTJOByOcataxxlbiSfHGuGzqjUuWh7Y4a48/VoKrwWwco3XW
+         gkag==
+X-Gm-Message-State: AOAM531SZv6AkyFshWNveWjCAmGxl02Rj23tcWJn8AWia5SZzwHF0mlC
+	oHNHDEoJfaCyZ7KDisLJG3lYf0LkMESxoDg=
+X-Google-Smtp-Source: ABdhPJx4Vxg9F0U1v3lKoR0Np63a9DbJYNyNMkye2D0NYWXEkfBSYFQFtboKtex6VarOfFAiuw18Tw==
+X-Received: by 2002:a05:6402:10d7:: with SMTP id p23mr7125647edu.74.1631807772490;
+        Thu, 16 Sep 2021 08:56:12 -0700 (PDT)
+Return-Path: <drlv85@gmail.com>
+Received: from VDanaila.upc.biz (5-12-124-239.residential.rdsnet.ro. [5.12.124.239])
+        by smtp.gmail.com with ESMTPSA id dm8sm1548351edb.90.2021.09.16.08.56.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Sep 2021 08:56:12 -0700 (PDT)
+From: drlv85@gmail.com
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch2/git: Avoid races over mirror tarball creation
-Date: Thu, 16 Sep 2021 15:25:49 +0100
-Message-Id: <20210916142549.1464585-1-richard.purdie@linuxfoundation.org>
+Cc: Valentin Danaila <drlv85@gmail.com>
+Subject: [PATCH] fetch2/s3: allow to switch profile from environment variable
+Date: Thu, 16 Sep 2021 18:56:09 +0300
+Message-Id: <20210916155609.34883-1-drlv85@gmail.com>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is a potential race over the mirror tarballs where a partial git repo
-could be extracted causing fetcher failures if the tarball is being rewritten
-whilst another build accesses it.
+  Make usage of Bitbake's s3 fetcher more flexible with different AWS profiles
+  and switch between profiles as export of the AWS_PROFILE environment variable
 
-Create the mirror tarball atomically to avoid this.
-
-[YOCTO #14441]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Valentin Danaila <drlv85@gmail.com>
 ---
- lib/bb/fetch2/git.py | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/__init__.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 488f4c7414..3643a491d7 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -68,6 +68,7 @@ import subprocess
- import tempfile
- import bb
- import bb.progress
-+from contextlib import contextmanager
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import runfetchcmd
- from   bb.fetch2 import logger
-@@ -418,6 +419,20 @@ class Git(FetchMethod):
-                 bb.utils.remove(tmpdir, recurse=True)
- 
-     def build_mirror_data(self, ud, d):
-+
-+        # Create as a temp file and move atomically into position to avoid races
-+        @contextmanager
-+        def create_atomic(filename, d):
-+            fd, tfile = tempfile.mkstemp(dir=os.path.dirname(filename))
-+            try:
-+                yield tfile
-+                umask = os.umask(0o666)
-+                os.umask(umask)
-+                os.chmod(tfile, (0o666 & ~umask))
-+                runfetchcmd("mv %s %s" % (tfile, filename), d)
-+            finally:
-+                os.close(fd)
-+
-         if ud.shallow and ud.write_shallow_tarballs:
-             if not os.path.exists(ud.fullshallow):
-                 if os.path.islink(ud.fullshallow):
-@@ -428,7 +443,8 @@ class Git(FetchMethod):
-                     self.clone_shallow_local(ud, shallowclone, d)
- 
-                     logger.info("Creating tarball of git repository")
--                    runfetchcmd("tar -czf %s ." % ud.fullshallow, d, workdir=shallowclone)
-+                    with create_atomic(ud.fullshallow, d) as tfile:
-+                        runfetchcmd("tar -czf %s ." % tfile, d, workdir=shallowclone)
-                     runfetchcmd("touch %s.done" % ud.fullshallow, d)
-                 finally:
-                     bb.utils.remove(tempdir, recurse=True)
-@@ -437,7 +453,8 @@ class Git(FetchMethod):
-                 os.unlink(ud.fullmirror)
- 
-             logger.info("Creating tarball of git repository")
--            runfetchcmd("tar -czf %s ." % ud.fullmirror, d, workdir=ud.clonedir)
-+            with create_atomic(ud.fullmirror, d) as tfile:
-+                runfetchcmd("tar -czf %s ." % tfile, d, workdir=ud.clonedir)
-             runfetchcmd("touch %s.done" % ud.fullmirror, d)
- 
-     def clone_shallow_local(self, ud, dest, d):
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index d9e1599a..ee29d89b 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -834,6 +834,7 @@ FETCH_EXPORT_VARS = ['HOME', 'PATH',
+                      'DBUS_SESSION_BUS_ADDRESS',
+                      'P4CONFIG',
+                      'SSL_CERT_FILE',
++                     'AWS_PROFILE',
+                      'AWS_ACCESS_KEY_ID',
+                      'AWS_SECRET_ACCESS_KEY',
+                      'AWS_DEFAULT_REGION']
 -- 
 2.32.0
 
