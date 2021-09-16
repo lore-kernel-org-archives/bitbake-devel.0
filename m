@@ -1,74 +1,68 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
- by mx.groups.io with SMTP id smtpd.web12.60.1631807774746020397
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+ by mx.groups.io with SMTP id smtpd.web12.485.1631810720848945601
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Sep 2021 08:56:15 -0700
+ Thu, 16 Sep 2021 09:45:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=eNCmPzfZ;
- spf=pass (domain: gmail.com, ip: 209.85.208.45, mailfrom: drlv85@gmail.com)
-Received: by mail-ed1-f45.google.com with SMTP id c21so18432746edj.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Sep 2021 08:56:14 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=by/yZpdc;
+ spf=pass (domain: gmail.com, ip: 209.85.222.169, mailfrom: mayank77fromindia@gmail.com)
+Received: by mail-qk1-f169.google.com with SMTP id 73so3292745qki.4;
+        Thu, 16 Sep 2021 09:45:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KqPbDapHLns9wPadbAMlEFMxv78B31kE52mtwJR7BnE=;
-        b=eNCmPzfZ2T7RplV6oiQqhqXWQ9/dV3JtqIpE7Cc77szoiC2Yj6on+BidY9ywYdrq/W
-         nZGR5SvcAGpHhwwLtGSy0hdJ9U2A/pvJERAViKpEyKUrV2BJBHqMbM41mwEkLhiYUQ8p
-         9LdV2DNX3FoRkvAq1m5d3OIUNnZevQ3I2m9WhofU4M02X439Fu8hOMNzrfrwu8i9TRwz
-         xebqWa+Ky4cYN1nYMcVfexul5G0ncNEYERqZa30GvQExNGyMneRHWuIykaC4CuHoJR5h
-         QS/SSeiWPf1SFHYfxdiciovShxfu4J7PCsLgVSU8m7uYAImICxkfv0zILw3E7JvKXMpS
-         E2xA==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=XBqfWzWUJL79BzGqb5sZUswc19M+jwnvdIAGZnQpc3w=;
+        b=by/yZpdcFetxzKhybWa9/FJs8hl6mNlcqmaDi/eg9LHrnMGdUwq8339TjsnBPtTun1
+         FvZ9gHmBF2MDEVYcGJJJQhKFoF0rZdJhh0yohWyR+pSg7LiUV4+HStoAhQUGUsPO/sm+
+         5p6vUzyAPkrZdoPWxXJaW1jxndQXbzqn2ko4EOUQsJye02DTUX7lm95GHpQ2HOLFWqLT
+         5MM3rSlaC2FFajpLNTx3MxJJCGF203fVH6+11x46QYvAQpKgRu6NJL7ZLwz4RBwa6IH8
+         Vx9EnUgw6OOUnQ19+5IJiD77HC3oB3YoCXu9y6oVPxpldKjrjb7HlWywpYWFvsj0WSqQ
+         Ft8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KqPbDapHLns9wPadbAMlEFMxv78B31kE52mtwJR7BnE=;
-        b=nHciqFB7PHD9zgkKCRN38OqzCyu7Ctq7YXmV6Fz/Yy4qRTDpw+1EZ+VLjNzjQdlour
-         XzlfdzMvOvzJU32o2sDKacLaSCMuox8P4SDeD936UDseocEAezq4ijv05v2ypMosnlzE
-         cI/bij4Hc8XHvfzucmA8dJmaSG2FpcAoPVDThD8RCNi/w/UAAdJ9hCkclHbv6CoHEqEG
-         bfJiEoOYhpD7uNI4JSka4/uRQW29BZemfcQcA2MAyD+++sUfEFBpgQtCGs3sP+B0glNS
-         rC8pct1hmLokBbqXAVrezTJOByOcataxxlbiSfHGuGzqjUuWh7Y4a48/VoKrwWwco3XW
-         gkag==
-X-Gm-Message-State: AOAM531SZv6AkyFshWNveWjCAmGxl02Rj23tcWJn8AWia5SZzwHF0mlC
-	oHNHDEoJfaCyZ7KDisLJG3lYf0LkMESxoDg=
-X-Google-Smtp-Source: ABdhPJx4Vxg9F0U1v3lKoR0Np63a9DbJYNyNMkye2D0NYWXEkfBSYFQFtboKtex6VarOfFAiuw18Tw==
-X-Received: by 2002:a05:6402:10d7:: with SMTP id p23mr7125647edu.74.1631807772490;
-        Thu, 16 Sep 2021 08:56:12 -0700 (PDT)
-Return-Path: <drlv85@gmail.com>
-Received: from VDanaila.upc.biz (5-12-124-239.residential.rdsnet.ro. [5.12.124.239])
-        by smtp.gmail.com with ESMTPSA id dm8sm1548351edb.90.2021.09.16.08.56.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Sep 2021 08:56:12 -0700 (PDT)
-From: drlv85@gmail.com
-To: bitbake-devel@lists.openembedded.org
-Cc: Valentin Danaila <drlv85@gmail.com>
-Subject: [PATCH] fetch2/s3: allow to switch profile from environment variable
-Date: Thu, 16 Sep 2021 18:56:09 +0300
-Message-Id: <20210916155609.34883-1-drlv85@gmail.com>
-X-Mailer: git-send-email 2.32.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=XBqfWzWUJL79BzGqb5sZUswc19M+jwnvdIAGZnQpc3w=;
+        b=Wxwmces8sZhzXp/RmQR/OSZf4jyPFEyoU9Km9qBQiqpi+blc9mtRJdHFTjMd8ojMd/
+         II4Udr5wrtvB/9ZmQhobAPdkHI07XEMnbN9JKMVEkbLg3vWeEfsC6ISplRPw6OifRv/S
+         r3Oxylwihl/XhOlp2WVy/YO7C/Eu9FoeQsf3241vOlG9PIYbv7/Zf+6lFSSc1IxOOWgk
+         vOLOT9geQhvHTlcJlbhRTmm3eACoKltH4YpZlMaMMR+pQIkMJU1JglUC1KqmY1+NPhco
+         WgT0h1be6/LRA8C1aPD2TBTksyTRZcAajCpAXaB/C24nqU0wX+Jq+MvTjprX0/ns83tz
+         U3FQ==
+X-Gm-Message-State: AOAM5335qi9yOi5P7xawQh+KzNRJqtByChk+jQlr2EMsUnu5u2A7otZ8
+	PtP0m4M2PDhtnIjsSPiIQp5/3k9HWF6EjY1ffbCiPax9DdU=
+X-Google-Smtp-Source: ABdhPJwbuNn/2QKcqy11ALfW2v84FybQ/6kFKyZsC6zxhgnVSzcVvAisvXaYfKiGRVSJpqPdJoHRZAg/ObkHsphazMM=
+X-Received: by 2002:a25:be90:: with SMTP id i16mr5841326ybk.202.1631810719034;
+ Thu, 16 Sep 2021 09:45:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Mayank Agarwal" <mayank77fromindia@gmail.com>
+Date: Thu, 16 Sep 2021 22:15:07 +0530
+Message-ID: <CAKjpqyJZGQh0BruPiny5X=hv3iqsfzj+FJwmdzXdWm-ThzgQhA@mail.gmail.com>
+Subject: Disable bbappend file from another meta layer
+To: bitbake-devel@lists.openembedded.org, 
+	openembedded-architecture@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="0000000000003fb3c405cc1f8af1"
 
-  Make usage of Bitbake's s3 fetcher more flexible with different AWS profiles
-  and switch between profiles as export of the AWS_PROFILE environment variable
+--0000000000003fb3c405cc1f8af1
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Valentin Danaila <drlv85@gmail.com>
----
- lib/bb/fetch2/__init__.py | 1 +
- 1 file changed, 1 insertion(+)
+Dear Experts,
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index d9e1599a..ee29d89b 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -834,6 +834,7 @@ FETCH_EXPORT_VARS = ['HOME', 'PATH',
-                      'DBUS_SESSION_BUS_ADDRESS',
-                      'P4CONFIG',
-                      'SSL_CERT_FILE',
-+                     'AWS_PROFILE',
-                      'AWS_ACCESS_KEY_ID',
-                      'AWS_SECRET_ACCESS_KEY',
-                      'AWS_DEFAULT_REGION']
--- 
-2.32.0
+Is there any way we can disable bbappend file from another meta-layer in
+the current
+meta-layer or recipe file.It will be of great help.If we can use
+PNBLACKLIST or BBMASK
+to disable bbappend file.
 
+Regards
+Mayank
+
+--0000000000003fb3c405cc1f8af1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Dear Experts,<div><br></div><div>Is there any way we can d=
+isable bbappend file from another meta-layer in the current</div><div>meta-=
+layer or recipe file.It will be of great help.If we can use PNBLACKLIST=C2=
+=A0or BBMASK</div><div>to disable bbappend file.</div><div><br></div><div>R=
+egards</div><div>Mayank</div></div>
+
+--0000000000003fb3c405cc1f8af1--
