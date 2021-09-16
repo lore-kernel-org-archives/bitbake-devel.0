@@ -1,66 +1,228 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
- by mx.groups.io with SMTP id smtpd.web09.1033.1631813282179865699
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web10.3352.1631823770946353867
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Sep 2021 10:28:02 -0700
+ Thu, 16 Sep 2021 13:22:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=om2kU1qh;
- spf=pass (domain: gmail.com, ip: 209.85.222.176, mailfrom: raj.khem@gmail.com)
-Received: by mail-qk1-f176.google.com with SMTP id 73so3714260qki.4;
-        Thu, 16 Sep 2021 10:28:02 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=EI6FfNGB;
+ spf=pass (domain: gmail.com, ip: 209.85.221.53, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f53.google.com with SMTP id i23so11460188wrb.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Sep 2021 13:22:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zn1/hamWdieskS/qEn6nBF+eZCdP/Su+PVQedKV4WvY=;
-        b=om2kU1qhGrp2AIV7LkSnqEuZD5Lg93N9ybidCqwhgeO1L05EzOskbvyjHKM3+n5yq2
-         vITSqBrp/dsmdvkkBElTDSVv8ga0tUb5PphtbBXK+AekZ5+OyfbIFSfpozw++dtIVis5
-         ooXWy6hFUnCNBcE6lv85ONXtk/S3bZ3vC3oVo4Ep0NS5Gcjlb2lF5Y0N+u4SXjxeKUQJ
-         DRC2OcnUTEzxKVQ6MgqQpgbRD9DTOyvERffcQ/8UFXyl6NKJLOgiYmlGh7Yhwg2AXjsZ
-         +HiPfTtPYODQbqmiGdK9zUrkH0q0+MtsnvAla85Scdg9az55cuYCESYN5rx9qqdX6Tsr
-         Z9og==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y3O6nLqn+crHx1QLC5NgSU184pb0v+1NU0ecglz2slk=;
+        b=EI6FfNGBxSf99uvHqUE01/3EMsdIoTcthzkjMozpAdSvtjPE31RQZW/BOU8ZG3MUgn
+         G1e67xOV1pBaTRcEsLAoA8jjbZ7qNdFxRh4S/INQWF2i2+YyC+wob8iiuMUJctdIu6Ya
+         q3qfN5qxPPClPyXVljcGuWiWQNuHMsxW0J8tyVqRnBgIrulXzFWlQKGypzbhTDTGPaOU
+         3HsxpG2FDiUB6L1uO3nh3+l4fAv8ol40u2nyQGA5YQnHQrPcUMudfAglGaceEyDdO1Q4
+         rQLCpdSZcdvohCqA9gEYpCMab6x2pYMkQ+75c5Co3+ONKlcfie38d+6mBhiYJadRVmuy
+         AOyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zn1/hamWdieskS/qEn6nBF+eZCdP/Su+PVQedKV4WvY=;
-        b=MlGYEjrNXEUz992ck4x/CzU0aQdrIj2nqqfVk5yuFPO/tA0xKIbwD+fkk+6hFprFRp
-         hdok4epx6DVUuapSX0eY3DnKiQCR/9/pkMX0+fr570qT3Lpjih5JkWQjSNqXeZwnYPSz
-         K/4CpN6inwkvrA6+xhaqoZCvYUNc0l0UI+pZ+O6fhlpDNfBmr3qxB2kVdG/d6OkAyo9+
-         mMekyUTFknjZDkGJYJqHy458L+LUWrx/ycPQV1vckhF8WvBvP4dBkulIpSwBnkG9XPr5
-         HNzM+BFFXhVhhTEe3ZqufgS9ZpqIc/E4fA148KgT5Km0AGfSZbz6SI+sOkgtwZheOC6y
-         s7/Q==
-X-Gm-Message-State: AOAM530z59z0XApJ6WOYF/NCuW1xmkVswluNBihyhxQ/ARZhH8Z8ZBme
-	mKSeLASYNeIId2XoTpzZ2Uigkze2O7HZVC0hmuU=
-X-Google-Smtp-Source: ABdhPJym9bC0SNATaF1xGrhq2FwDLFNRwT4TCM3uM5fHtpkJO5dZZJOOWQXUVKpUp7CJZRVkKzwCOFRAX6INDY0uiYM=
-X-Received: by 2002:a37:a04e:: with SMTP id j75mr6041723qke.98.1631813281159;
- Thu, 16 Sep 2021 10:28:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y3O6nLqn+crHx1QLC5NgSU184pb0v+1NU0ecglz2slk=;
+        b=OIiKWknMHT8+b2JDEV9WKWOh8MGh51xCWYMKMrVgYRm6+TtVbwRO3gV41rKQ/lqQGd
+         iEB73rj9fJvLiituzq8Z6z7MqOYZbh+n6ahHWXz9iMpH+cMdkbjGbZ771MblMC4/ep1Z
+         qbEX3G0XHgyo/SQYORqMJ62NrXeUxSvBabm2N7AlqlpazkoM3Eu6D4/+9i/7lLJf7bT/
+         8JvwOAD2m/caSqYaf8kGpXcZ1PS/Jut+urXeMjZtjjSECm7EAFrVmO/R5edmaSWO2yha
+         VV67bHaWNhObwaJuuiVh15X5g1+qWFcABphgzz+wahyxKM5OxpQhG/WJ4ok3KhxW1Fql
+         wSgg==
+X-Gm-Message-State: AOAM531L840FNZs2Xx0a4DnBv0jDrT7cQM4GIydLwQuk2yTcAMaTzjdp
+	MHKCOQpU8CPSm0DXwIgPJ6XXK6CD4U4=
+X-Google-Smtp-Source: ABdhPJwzumLC5K/To42TT+dsnmOMCUmb3exOHOOSqeBPzlBJX0Ntn7msY8sJIVcPURTA8RYBtjpcSw==
+X-Received: by 2002:a5d:448d:: with SMTP id j13mr8029645wrq.212.1631823769391;
+        Thu, 16 Sep 2021 13:22:49 -0700 (PDT)
+Return-Path: <alex.kanavin@gmail.com>
+Received: from nereus.lab.linutronix.de. (b2b-109-90-143-203.unitymedia.biz. [109.90.143.203])
+        by smtp.gmail.com with ESMTPSA id q11sm8644586wmc.41.2021.09.16.13.22.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Sep 2021 13:22:48 -0700 (PDT)
+From: "Alexander Kanavin" <alex.kanavin@gmail.com>
+X-Google-Original-From: Alexander Kanavin <alex@linutronix.de>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH 1/7] bitbake: enable python warnings at the first opportunity
+Date: Thu, 16 Sep 2021 22:22:31 +0200
+Message-Id: <20210916202237.1929584-1-alex@linutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CAKjpqyJZGQh0BruPiny5X=hv3iqsfzj+FJwmdzXdWm-ThzgQhA@mail.gmail.com>
-In-Reply-To: <CAKjpqyJZGQh0BruPiny5X=hv3iqsfzj+FJwmdzXdWm-ThzgQhA@mail.gmail.com>
-From: "Khem Raj" <raj.khem@gmail.com>
-Date: Thu, 16 Sep 2021 10:27:34 -0700
-Message-ID: <CAMKF1soE_CY13wubo7mqyTUKpVqXipqOCsoXhEjeiw-AqDAcsg@mail.gmail.com>
-Subject: Re: [Openembedded-architecture] Disable bbappend file from another meta layer
-To: Mayank Agarwal <mayank77fromindia@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
-	openembedded-architecture <openembedded-architecture@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 16, 2021 at 9:45 AM Mayank Agarwal
-<mayank77fromindia@gmail.com> wrote:
->
-> Dear Experts,
->
-> Is there any way we can disable bbappend file from another meta-layer in the current
-> meta-layer or recipe file.It will be of great help.If we can use PNBLACKLIST or BBMASK
-> to disable bbappend file.
->
+We really do want to see those, as they tend to turn into
+hard errors eventually, as what happened with collections
+vs collections.abc in python 3.10.
 
-bbappends can not be undone sadly, maybe you can try some BBMASKing it
-if its in unique location perhaps.
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bitbake/bin/bitbake             | 2 ++
+ bitbake/bin/bitbake-diffsigs    | 1 +
+ bitbake/bin/bitbake-getvar      | 2 ++
+ bitbake/bin/bitbake-hashclient  | 2 ++
+ bitbake/bin/bitbake-hashserv    | 2 ++
+ bitbake/bin/bitbake-layers      | 2 ++
+ bitbake/bin/bitbake-prserv      | 2 ++
+ bitbake/bin/bitbake-selftest    | 2 ++
+ bitbake/bin/bitbake-server      | 1 +
+ bitbake/bin/bitbake-worker      | 1 +
+ bitbake/bin/git-make-shallow    | 2 ++
+ bitbake/bin/toaster-eventreplay | 2 ++
+ 12 files changed, 21 insertions(+)
 
-> Regards
-> Mayank
->
-> 
->
+diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
+index dc1873af69c..d3ee8e9464b 100755
+--- a/bitbake/bin/bitbake
++++ b/bitbake/bin/bitbake
+@@ -12,6 +12,8 @@
+ 
+ import os
+ import sys
++import warnings
++warnings.simplefilter("default")
+ 
+ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                 'lib'))
+diff --git a/bitbake/bin/bitbake-diffsigs b/bitbake/bin/bitbake-diffsigs
+index 19420a2df69..6646dccdfa2 100755
+--- a/bitbake/bin/bitbake-diffsigs
++++ b/bitbake/bin/bitbake-diffsigs
+@@ -11,6 +11,7 @@
+ import os
+ import sys
+ import warnings
++warnings.simplefilter("default")
+ import argparse
+ import logging
+ import pickle
+diff --git a/bitbake/bin/bitbake-getvar b/bitbake/bin/bitbake-getvar
+index 94232192531..5435a8d7978 100755
+--- a/bitbake/bin/bitbake-getvar
++++ b/bitbake/bin/bitbake-getvar
+@@ -9,6 +9,8 @@ import argparse
+ import io
+ import os
+ import sys
++import warnings
++warnings.simplefilter("default")
+ 
+ bindir = os.path.dirname(__file__)
+ topdir = os.path.dirname(bindir)
+diff --git a/bitbake/bin/bitbake-hashclient b/bitbake/bin/bitbake-hashclient
+index a89290217b0..494f17592ac 100755
+--- a/bitbake/bin/bitbake-hashclient
++++ b/bitbake/bin/bitbake-hashclient
+@@ -13,6 +13,8 @@ import pprint
+ import sys
+ import threading
+ import time
++import warnings
++warnings.simplefilter("default")
+ 
+ try:
+     import tqdm
+diff --git a/bitbake/bin/bitbake-hashserv b/bitbake/bin/bitbake-hashserv
+index 153f65a3787..00af76b2d11 100755
+--- a/bitbake/bin/bitbake-hashserv
++++ b/bitbake/bin/bitbake-hashserv
+@@ -10,6 +10,8 @@ import sys
+ import logging
+ import argparse
+ import sqlite3
++import warnings
++warnings.simplefilter("default")
+ 
+ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'lib'))
+ 
+diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
+index ff085d67442..449434d468e 100755
+--- a/bitbake/bin/bitbake-layers
++++ b/bitbake/bin/bitbake-layers
+@@ -14,6 +14,8 @@ import logging
+ import os
+ import sys
+ import argparse
++import warnings
++warnings.simplefilter("default")
+ 
+ bindir = os.path.dirname(__file__)
+ topdir = os.path.dirname(bindir)
+diff --git a/bitbake/bin/bitbake-prserv b/bitbake/bin/bitbake-prserv
+index bef5ef68978..323df66dd06 100755
+--- a/bitbake/bin/bitbake-prserv
++++ b/bitbake/bin/bitbake-prserv
+@@ -6,6 +6,8 @@
+ import os
+ import sys,logging
+ import optparse
++import warnings
++warnings.simplefilter("default")
+ 
+ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)),'lib'))
+ 
+diff --git a/bitbake/bin/bitbake-selftest b/bitbake/bin/bitbake-selftest
+index aec47069216..f25f23b1ae7 100755
+--- a/bitbake/bin/bitbake-selftest
++++ b/bitbake/bin/bitbake-selftest
+@@ -7,6 +7,8 @@
+ 
+ import os
+ import sys, logging
++import warnings
++warnings.simplefilter("default")
+ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'lib'))
+ 
+ import unittest
+diff --git a/bitbake/bin/bitbake-server b/bitbake/bin/bitbake-server
+index 8e539473614..f53f88b6b0d 100755
+--- a/bitbake/bin/bitbake-server
++++ b/bitbake/bin/bitbake-server
+@@ -8,6 +8,7 @@
+ import os
+ import sys
+ import warnings
++warnings.simplefilter("default")
+ import logging
+ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
+ 
+diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
+index 3ca8c1853bb..6ead2da6d1e 100755
+--- a/bitbake/bin/bitbake-worker
++++ b/bitbake/bin/bitbake-worker
+@@ -6,6 +6,7 @@
+ import os
+ import sys
+ import warnings
++warnings.simplefilter("default")
+ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
+ from bb import fetch2
+ import logging
+diff --git a/bitbake/bin/git-make-shallow b/bitbake/bin/git-make-shallow
+index 57069f7edf7..1d00fbf1838 100755
+--- a/bitbake/bin/git-make-shallow
++++ b/bitbake/bin/git-make-shallow
+@@ -16,6 +16,8 @@ import itertools
+ import os
+ import subprocess
+ import sys
++import warnings
++warnings.simplefilter("default")
+ 
+ version = 1.0
+ 
+diff --git a/bitbake/bin/toaster-eventreplay b/bitbake/bin/toaster-eventreplay
+index 8fa4ab7116b..404b61f5162 100755
+--- a/bitbake/bin/toaster-eventreplay
++++ b/bitbake/bin/toaster-eventreplay
+@@ -19,6 +19,8 @@ import sys
+ import json
+ import pickle
+ import codecs
++import warnings
++warnings.simplefilter("default")
+ 
+ from collections import namedtuple
+ 
+-- 
+2.20.1
+
