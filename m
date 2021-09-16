@@ -1,175 +1,117 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web10.111.1631794508564024252
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web12.1979.1631802353704426193
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Sep 2021 05:15:08 -0700
+ Thu, 16 Sep 2021 07:25:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DPm4ailw;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f52.google.com with SMTP id d21so9099207wra.12
-        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Sep 2021 05:15:08 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EUHOL/S2;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f51.google.com with SMTP id u18so8062792wrg.5
+        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Sep 2021 07:25:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=n0LV5CRhgZELpbqYd94YJBioxAh1RZ9BIeE3ix3p7jg=;
-        b=DPm4ailw4WI/AJ0vOGs794ua6p+UOVPKFjz5rl+7GFO8P/84ms04ilAVffpPy3Svmf
-         R5Cct1kJzVtNh3wI+AUKyS9iKXYUOAbq+9qW0Iy5zETflQIzBnC0fdL8GV1CjPi9CJHx
-         /HkGfBrfamrv+XnNCjvu3bqSN8XqrL+Wh3g2I=
+        bh=kQ6Y9VmdI2ut6X/WRNTGGDerRsnCTeu2AisIOBErx9s=;
+        b=EUHOL/S2U55kVbqHgkgChDOpIBL2VSGXQqlD5MQm4B0MEth8Ic0BYRyRlXBUYLwtiK
+         JlafNr7uGALv2kYSXzlb7iIhT/yorVDLR5XomkHLdW6l48xwtSkw/pzEfr8yOZF4wWB/
+         QBvs0Lp+vb86PDbNmjhLN0CO+iFeQAx/Kit+8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=n0LV5CRhgZELpbqYd94YJBioxAh1RZ9BIeE3ix3p7jg=;
-        b=lyLTKm+7lGyrJB2FcTjJm14Y2zd7PBPXnsUJQ3JdwQtSA93uJYlgEVPjPPx+kaXA4O
-         BmIcHNzweXqnPzOdvMz/sLrevG7xxxPIHV0RIQafhyarJNMxZwfPWBER55SP+6C2y3bF
-         ZNrVcr/W5zK50xy3v+G5QOj/8YqitH+NFZlv22uslYC7vCwxnItofwcwlWps+wYo8qCt
-         f5Xv98enW/4HPm3JNRORf+SwxRVzNLZijUDFHfqbSSCi9IGszn9SYxU99W9lliwzMJMB
-         jiEMA8cZ5q49xYMmfTac7DaaLge/+rIk46RC0RqBfdUR9v2sccUZKY9IGVnzboeo1LUZ
-         QlNQ==
-X-Gm-Message-State: AOAM533GpUxXI8ja5lWX3J1yjq4poLbMCrnCkQlN1F/VlpUc7Ni9vLgu
-	7dKPBkJ8FU1yyscUFtOAkZ2q3Mg5H/b4tbA9
-X-Google-Smtp-Source: ABdhPJxFV2IYTQYLr/PPVxeQLudt3+qjWWBuUKwCuECWdfZvMCA5qPocrNpj+lMWlERqRUA1aL1qFw==
-X-Received: by 2002:adf:f2c4:: with SMTP id d4mr5840092wrp.434.1631794506692;
-        Thu, 16 Sep 2021 05:15:06 -0700 (PDT)
+        bh=kQ6Y9VmdI2ut6X/WRNTGGDerRsnCTeu2AisIOBErx9s=;
+        b=KD3nwMQlukuqeverNZ5gFZFtpqaJ09Jjf57yNBLNY1rCmQqnLvdRiT1gAC3szBYjzH
+         L1bSI+NBaopsYueRvcAYEwLqOI/osQvVS/zupK+5lnNgp2jJgznKrUOlFLHy2mcbEDKN
+         WgaPuHPXupvsCBwhxSOmfdpefGYlzSYTjA3w/pxH5loiBHaiKgZQUvtE0XDdIvDwrFvA
+         rMsvOL3DvveDIvW5XNhsIxnSqiwJjuFZTsw/R8j7R4qKWeTVacxSTmMzFZKT2UI6EIHI
+         abSGOfpQjICHgitNaWwW+tUmklOek5AEWNQ3oIG+6hGAORNi0PDfL2DKo4n6gPJzJODn
+         kZug==
+X-Gm-Message-State: AOAM53344grQXVEod4/o5K9l919Ol890L5z18mfUPj/Ai1ARedSafYew
+	HPXD0XXm3m5obU6dUyfYsiZjRHn1lGD+9n/m
+X-Google-Smtp-Source: ABdhPJzgAO/CtMjraiJLHnG5j6Qh5/WzqWnWySSiZPGPebO80OhxMjCyZhvX5UarzBJtdutmmbfacw==
+X-Received: by 2002:a5d:618c:: with SMTP id j12mr6470346wru.208.1631802351906;
+        Thu, 16 Sep 2021 07:25:51 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:f11f:8fd1:42b2:e87c])
-        by smtp.gmail.com with ESMTPSA id g1sm3265599wrr.2.2021.09.16.05.15.06
+        by smtp.gmail.com with ESMTPSA id 20sm8150922wme.46.2021.09.16.07.25.51
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Sep 2021 05:15:06 -0700 (PDT)
+        Thu, 16 Sep 2021 07:25:51 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] runqueue/knotty: Improve UI handling of setscene task counting
-Date: Thu, 16 Sep 2021 13:15:05 +0100
-Message-Id: <20210916121505.1445997-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] fetch2/git: Avoid races over mirror tarball creation
+Date: Thu, 16 Sep 2021 15:25:49 +0100
+Message-Id: <20210916142549.1464585-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The recent fixes to merge setscene and normal task accounting in runqueue
-fixed some display issues but broke the task numbering of setscene tasks.
+There is a potential race over the mirror tarballs where a partial git repo
+could be extracted causing fetcher failures if the tarball is being rewritten
+whilst another build accesses it.
 
-Add new accounting methods to the stats structure specifically designed
-for setscene. This accounts for the fact that setscene tasks can rerun
-multiple times in the build.
+Create the mirror tarball atomically to avoid this.
 
-Then use the new data in the UI to correctly display the numbers the
-user wants to see to understand progress.
+[YOCTO #14441]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py    | 21 ++++++++++++++++++---
- lib/bb/ui/knotty.py   |  2 +-
- lib/bb/ui/uihelper.py |  2 +-
- 3 files changed, 20 insertions(+), 5 deletions(-)
+ lib/bb/fetch2/git.py | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 6ce0ce80f6..10511a09dc 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -85,15 +85,19 @@ class RunQueueStats:
-     """
-     Holds statistics on the tasks handled by the associated runQueue
-     """
--    def __init__(self, total):
-+    def __init__(self, total, setscene_total):
-         self.completed = 0
-         self.skipped = 0
-         self.failed = 0
-         self.active = 0
-+        self.setscene_active = 0
-+        self.setscene_covered = 0
-+        self.setscene_notcovered = 0
-+        self.setscene_total = setscene_total
-         self.total = total
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 488f4c7414..3643a491d7 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -68,6 +68,7 @@ import subprocess
+ import tempfile
+ import bb
+ import bb.progress
++from contextlib import contextmanager
+ from   bb.fetch2 import FetchMethod
+ from   bb.fetch2 import runfetchcmd
+ from   bb.fetch2 import logger
+@@ -418,6 +419,20 @@ class Git(FetchMethod):
+                 bb.utils.remove(tmpdir, recurse=True)
  
-     def copy(self):
--        obj = self.__class__(self.total)
-+        obj = self.__class__(self.total, self.setscene_total)
-         obj.__dict__.update(self.__dict__)
-         return obj
- 
-@@ -112,6 +116,13 @@ class RunQueueStats:
-     def taskActive(self):
-         self.active = self.active + 1
- 
-+    def updateCovered(self, covered, notcovered):
-+        self.setscene_covered = covered
-+        self.setscene_notcovered = notcovered
+     def build_mirror_data(self, ud, d):
 +
-+    def updateActiveSetscene(self, active):
-+        self.setscene_active = active
++        # Create as a temp file and move atomically into position to avoid races
++        @contextmanager
++        def create_atomic(filename, d):
++            fd, tfile = tempfile.mkstemp(dir=os.path.dirname(filename))
++            try:
++                yield tfile
++                umask = os.umask(0o666)
++                os.umask(umask)
++                os.chmod(tfile, (0o666 & ~umask))
++                runfetchcmd("mv %s %s" % (tfile, filename), d)
++            finally:
++                os.close(fd)
 +
- # These values indicate the next step due to be run in the
- # runQueue state machine
- runQueuePrepare = 2
-@@ -1735,7 +1746,7 @@ class RunQueueExecute:
-         self.holdoff_need_update = True
-         self.sqdone = False
+         if ud.shallow and ud.write_shallow_tarballs:
+             if not os.path.exists(ud.fullshallow):
+                 if os.path.islink(ud.fullshallow):
+@@ -428,7 +443,8 @@ class Git(FetchMethod):
+                     self.clone_shallow_local(ud, shallowclone, d)
  
--        self.stats = RunQueueStats(len(self.rqdata.runtaskentries))
-+        self.stats = RunQueueStats(len(self.rqdata.runtaskentries), len(self.rqdata.runq_setscene_tids))
+                     logger.info("Creating tarball of git repository")
+-                    runfetchcmd("tar -czf %s ." % ud.fullshallow, d, workdir=shallowclone)
++                    with create_atomic(ud.fullshallow, d) as tfile:
++                        runfetchcmd("tar -czf %s ." % tfile, d, workdir=shallowclone)
+                     runfetchcmd("touch %s.done" % ud.fullshallow, d)
+                 finally:
+                     bb.utils.remove(tempdir, recurse=True)
+@@ -437,7 +453,8 @@ class Git(FetchMethod):
+                 os.unlink(ud.fullmirror)
  
-         for mc in rq.worker:
-             rq.worker[mc].pipe.setrunqueueexec(self)
-@@ -1786,6 +1797,7 @@ class RunQueueExecute:
-             else:
-                 self.sq_task_complete(task)
-             self.sq_live.remove(task)
-+            self.stats.updateActiveSetscene(len(self.sq_live))
-         else:
-             if status != 0:
-                 self.task_fail(task, status, fakerootlog=fakerootlog)
-@@ -2087,6 +2099,7 @@ class RunQueueExecute:
-             self.build_stamps2.append(self.build_stamps[task])
-             self.sq_running.add(task)
-             self.sq_live.add(task)
-+            self.stats.updateActiveSetscene(len(self.sq_live))
-             if self.can_start_task():
-                 return True
+             logger.info("Creating tarball of git repository")
+-            runfetchcmd("tar -czf %s ." % ud.fullmirror, d, workdir=ud.clonedir)
++            with create_atomic(ud.fullmirror, d) as tfile:
++                runfetchcmd("tar -czf %s ." % tfile, d, workdir=ud.clonedir)
+             runfetchcmd("touch %s.done" % ud.fullmirror, d)
  
-@@ -2462,6 +2475,7 @@ class RunQueueExecute:
-                 self.sq_task_failoutright(tid)
- 
-         if changed:
-+            self.stats.updateCovered(len(self.scenequeue_covered), len(self.scenequeue_notcovered))
-             self.holdoff_need_update = True
- 
-     def scenequeue_updatecounters(self, task, fail=False):
-@@ -2495,6 +2509,7 @@ class RunQueueExecute:
-                         new.add(dep)
-             next = new
- 
-+        self.stats.updateCovered(len(self.scenequeue_covered), len(self.scenequeue_notcovered))
-         self.holdoff_need_update = True
- 
-     def sq_task_completeoutright(self, task):
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 65ff2727dc..8df745d130 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -753,7 +753,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 continue
- 
-             if isinstance(event, bb.runqueue.sceneQueueTaskStarted):
--                logger.info("Running setscene task %d of %d (%s)" % (event.stats.completed + event.stats.active + event.stats.failed + 1, event.stats.total, event.taskstring))
-+                logger.info("Running setscene task %d of %d (%s)" % (event.stats.setscene_covered + event.stats.setscene_active + event.stats.setscene_notcovered + 1, event.stats.setscene_total, event.taskstring))
-                 continue
- 
-             if isinstance(event, bb.runqueue.runQueueTaskStarted):
-diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
-index 40c7c5a5ef..52fdae3fec 100644
---- a/lib/bb/ui/uihelper.py
-+++ b/lib/bb/ui/uihelper.py
-@@ -50,7 +50,7 @@ class BBUIHelper:
-             removetid(event.pid, tid)
-             self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
-         elif isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
--            self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + 1
-+            self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + event.stats.setscene_active + 1
-             self.tasknumber_total = event.stats.total
-             self.needUpdate = True
-         elif isinstance(event, bb.build.TaskProgress):
+     def clone_shallow_local(self, ud, dest, d):
 -- 
 2.32.0
 
