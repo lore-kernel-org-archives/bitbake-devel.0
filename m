@@ -1,80 +1,264 @@
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web11.801.1631892439735760240
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+ by mx.groups.io with SMTP id smtpd.web10.1083.1631897446734394335
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 Sep 2021 08:27:21 -0700
+ Fri, 17 Sep 2021 09:50:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=AIJhJLdj;
- spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=auMo4Ec/;
+ spf=pass (domain: gmail.com, ip: 209.85.208.45, mailfrom: kergoth@gmail.com)
+Received: by mail-ed1-f45.google.com with SMTP id z94so32090061ede.8
+        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Sep 2021 09:50:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1631892440;
-  x=1663428440;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=/ZiKpxQk0Kqfb9cDc0qYLUxD0sX1WufEJfqtWtbZ+5Y=;
-  b=AIJhJLdjEUdzrjW/BQRUReb3Tqw4QIJ4SowGHkp7cmnzcBkWRgV+Nzob
-   rLncNRCtUcg7q/zGJkjfbIryDMDcgMpyz2+7P4W3j6HkpOnpFNY7ET1xp
-   X48r6uwjFOsbGpQTwcBQ5wkNZKh4rZHrG7Z2YPThzHA1mUDTqQIvdBvqb
-   SVrv2226bISZn6FoG8VnlOo2YD16ZnCKdnngEkkvRIZbI/2IleUmj92wt
-   y6IxiAIyy+uzjS5GbW/n2SKdAxU62Y3yH15NpHlWZxoCg6LBvMpzTcYQY
-   F7d91EcwHOuyndoQ1wv2dglQoSZWN/Sgv9W5XfqqFDM7TUq7hbPF81+uo
-   A==;
-From: "Peter Kjellerstedt" <peter.kjellerstedt@axis.com>
-To: Andrea Adami <andrea.adami@gmail.com>
-CC: Khem Raj <raj.khem@gmail.com>, Mayank Agarwal
-	<mayank77fromindia@gmail.com>, bitbake-devel
-	<bitbake-devel@lists.openembedded.org>, openembedded-architecture
-	<openembedded-architecture@lists.openembedded.org>
-Subject: Re: [Openembedded-architecture] Disable bbappend file from another meta layer
-Thread-Topic: [Openembedded-architecture] Disable bbappend file from another
- meta layer
-Thread-Index: AQHXqzpAU1VxF1uZP0CKzSI/MQgL3quoWMVA
-Date: Fri, 17 Sep 2021 15:27:16 +0000
-Message-ID: <20463f261de64e5db33f5360421acd82@axis.com>
-References: <CAKjpqyJZGQh0BruPiny5X=hv3iqsfzj+FJwmdzXdWm-ThzgQhA@mail.gmail.com>
- <CAMKF1soE_CY13wubo7mqyTUKpVqXipqOCsoXhEjeiw-AqDAcsg@mail.gmail.com>
- <16A56782DEC68495.13685@lists.openembedded.org>
- <CAAQYJAv-mi9veLTXqqaMFMZxqWKAaH07bxciXDGMCxkOTMjYoQ@mail.gmail.com>
-In-Reply-To: <CAAQYJAv-mi9veLTXqqaMFMZxqWKAaH07bxciXDGMCxkOTMjYoQ@mail.gmail.com>
-Accept-Language: en-US, sv-SE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qp6HR2WUWpkulGNNRvmCZ4scjWXjLT4eEE13WVxaiG0=;
+        b=auMo4Ec/cujYT2E28onUwttDOtauE0QVlWzzAo0OJp+ntgLRSEDQaTd4Cv8Rem9Qaw
+         CzrLLdqoakNEPZu1a+fXEwJOz0kLNLKzp60IueX55fbKnyPtHhesARPCWNzfNVNSRvbA
+         hCFIhecYbG5zuDQTG4W4mngAJoLk8zKVPcJUJB39lEY3SYOQ6AwJhizNo5ao+5DbeVDo
+         yI3g5AVPkZtJt5evbgCmjo7isTN1oK9t3fmEJgM373RfHeTqTuq3ZNPuqvPjF8FK2CNJ
+         fN2N2a5iBDdPXJwpwPJR9MexWon8aGVonmlvAksZ6fFl/IIO+W15de8Xc8sQoahwp3rE
+         wHLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qp6HR2WUWpkulGNNRvmCZ4scjWXjLT4eEE13WVxaiG0=;
+        b=upqJgl6JCT/Sn6zN3lDaZvbz0bSXAB+T9Kb4zFJZ7uBp3hrBed3iVH/jvBr0ymjKTp
+         8JuxMlJVDTORttH9ziVcuKSOha37clKeSW9lEOPjO+p60Ty1CMf+y7inlEHhHNzwAWL+
+         a6ew/Rzk6pYGv4GiFbqdPW3V0scRkxcYzqhjOPUDatFiSZIKXH2EVcBRKc4riKgu/Htd
+         BkVSylB9JR6GD3ht2UUDHgqaemrtc0oD+7m2vLvbEECckVa2BKXosqgfiah2u0kfmaPA
+         Z/FkoyZk1Yq/vk5dWcX43BDnMPBJEmoL1ittxU/App0PdyjkWCBxPnR244yENCRu5C77
+         oYZg==
+X-Gm-Message-State: AOAM530JZ/NFlZ8+31Xvj4usupGz1OpgyqFWfNKwyipMwGqRyDjYnKOu
+	ritBHgyCcZmzUPX0XZxCpy9C9/p82OIYsRSVDS8=
+X-Google-Smtp-Source: ABdhPJwIpCFhfKLpw6P8YpDmz+0g5LyG8ff4KRGsnq2UCsVJi8j5uY1UONSOdF3MvxKAvjByOwU/gioZvDQ44wh+8Qw=
+X-Received: by 2002:a50:eacb:: with SMTP id u11mr13381027edp.209.1631897445167;
+ Fri, 17 Sep 2021 09:50:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+References: <20210916142549.1464585-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20210916142549.1464585-1-richard.purdie@linuxfoundation.org>
+From: "Christopher Larson" <kergoth@gmail.com>
+Date: Fri, 17 Sep 2021 09:50:36 -0700
+Message-ID: <CABcZANnHTKDbdBW1BauJrUURe39yovtaooJ7k_4_CCgqq_zxAA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] fetch2/git: Avoid races over mirror tarball creation
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="0000000000008777fe05cc33bbd5"
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBvcGVuZW1iZWRkZWQtYXJjaGl0
-ZWN0dXJlQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcgPG9wZW5lbWJlZGRlZC0NCj4gYXJjaGl0ZWN0
-dXJlQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc+IE9uIEJlaGFsZiBPZiBBbmRyZWEgQWRhbWkNCj4g
-U2VudDogZGVuIDE2IHNlcHRlbWJlciAyMDIxIDIyOjM0DQo+IFRvOiBBbmRyZWEgQWRhbWkgPGFu
-ZHJlYS5hZGFtaUBnbWFpbC5jb20+DQo+IENjOiBLaGVtIFJhaiA8cmFqLmtoZW1AZ21haWwuY29t
-PjsgTWF5YW5rIEFnYXJ3YWwNCj4gPG1heWFuazc3ZnJvbWluZGlhQGdtYWlsLmNvbT47IGJpdGJh
-a2UtZGV2ZWwgPGJpdGJha2UtDQo+IGRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc+OyBvcGVu
-ZW1iZWRkZWQtYXJjaGl0ZWN0dXJlIDxvcGVuZW1iZWRkZWQtDQo+IGFyY2hpdGVjdHVyZUBsaXN0
-cy5vcGVuZW1iZWRkZWQub3JnPg0KPiBTdWJqZWN0OiBSZTogW09wZW5lbWJlZGRlZC1hcmNoaXRl
-Y3R1cmVdIERpc2FibGUgYmJhcHBlbmQgZmlsZSBmcm9tDQo+IGFub3RoZXIgbWV0YSBsYXllcg0K
-PiANCj4gT24gVGh1LCBTZXAgMTYsIDIwMjEgYXQgMTA6MzAgUE0gQW5kcmVhIEFkYW1pIHZpYQ0K
-PiBsaXN0cy5vcGVuZW1iZWRkZWQub3JnIDxhbmRyZWEuYWRhbWk9Z21haWwuY29tQGxpc3RzLm9w
-ZW5lbWJlZGRlZC5vcmc+DQo+IHdyb3RlOg0KPiA+DQo+ID4gT24gVGh1LCBTZXAgMTYsIDIwMjEg
-YXQgNzoyOCBQTSBLaGVtIFJhaiA8cmFqLmtoZW1AZ21haWwuY29tPiB3cm90ZToNCj4gPiA+DQo+
-ID4gPiBPbiBUaHUsIFNlcCAxNiwgMjAyMSBhdCA5OjQ1IEFNIE1heWFuayBBZ2Fyd2FsDQo+ID4g
-PiA8bWF5YW5rNzdmcm9taW5kaWFAZ21haWwuY29tPiB3cm90ZToNCj4gPiA+ID4NCj4gPiA+ID4g
-RGVhciBFeHBlcnRzLA0KPiA+ID4gPg0KPiA+ID4gPiBJcyB0aGVyZSBhbnkgd2F5IHdlIGNhbiBk
-aXNhYmxlIGJiYXBwZW5kIGZpbGUgZnJvbSBhbm90aGVyIG1ldGEtDQo+IGxheWVyIGluIHRoZSBj
-dXJyZW50DQo+ID4gPiA+IG1ldGEtbGF5ZXIgb3IgcmVjaXBlIGZpbGUuSXQgd2lsbCBiZSBvZiBn
-cmVhdCBoZWxwLklmIHdlIGNhbiB1c2UNCj4gUE5CTEFDS0xJU1Qgb3IgQkJNQVNLDQo+ID4gPiA+
-IHRvIGRpc2FibGUgYmJhcHBlbmQgZmlsZS4NCj4gPiA+ID4NCj4gPiA+DQo+ID4gPiBiYmFwcGVu
-ZHMgY2FuIG5vdCBiZSB1bmRvbmUgc2FkbHksIG1heWJlIHlvdSBjYW4gdHJ5IHNvbWUgQkJNQVNL
-aW5nIGl0DQo+ID4gPiBpZiBpdHMgaW4gdW5pcXVlIGxvY2F0aW9uIHBlcmhhcHMuDQo+ID4gPg0K
-PiA+DQo+ID4gU2VlIGhlcmUgb25lIGV4YW1wbGU6DQo+ID4gaHR0cHM6Ly9naXRodWIuY29tL3Z1
-LXBsdXMvbWV0YS12dXBsdXMvYmxvYi9tYXN0ZXIvY29uZi9sYXllci5jb25mI0w0DQo+ID4gdnMg
-b25lIGFsbG93aW5nIHRoZW0NCj4gPiBodHRwczovL2dpdC5vcGVuZW1iZWRkZWQub3JnL21ldGEt
-aGFuZGhlbGQvdHJlZS9jb25mL2xheWVyLmNvbmYjbjgNCj4gPiBjaGVlcnMNCj4gPiBBLkEuDQo+
-ID4NCj4gDQo+IGJ1dCBtYXliZSBJIG1pc3JlYWQgJ2luIGFub3RoZXIgbWV0YS1sYXllcicgb3V0
-IG9mIHlvdXIgY29udHJvbC4gc29ycnkuLi4NCj4gQS5BLg0KPiA+ID4gPiBSZWdhcmRzDQo+ID4g
-PiA+IE1heWFuaw0KDQpJdCBpcyBwZXJmZWN0bHkgZmluZSB0byBhZGQsIGUuZy46DQoNCkJCTUFT
-SyArPSAiL21ldGEtZm9vL3JlY2lwZXMtZm9vL2Zvby9mb29fMS4yLjMuYmJhcHBlbmQiDQoNCnRv
-LCBlLmcuLCBtZXRhLWJhci9jb25mL2xheWVyLmNvbmYgdG8gZGlzYWJsZSB0aGUgdXNlIG9mIA0K
-Zm9vXzEuMi4zLmJiYXBwZW5kIGZyb20gdGhlIG1ldGEtZm9vIGxheWVyIHdoZW4gdGhlIG1ldGEt
-YmFyIGxheWVyIGlzIA0KdXNlZC4NCg0KLy9QZXRlcg0KDQo=
+--0000000000008777fe05cc33bbd5
+Content-Type: text/plain; charset="UTF-8"
+
+This looks good, though if we're creating the temporary file in the same
+directory as the resulting file, which seems to be the case, could we not
+just os.rename() rather than calling a subprocess?
+
+On Thu, Sep 16, 2021 at 7:25 AM Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> There is a potential race over the mirror tarballs where a partial git repo
+> could be extracted causing fetcher failures if the tarball is being
+> rewritten
+> whilst another build accesses it.
+>
+> Create the mirror tarball atomically to avoid this.
+>
+> [YOCTO #14441]
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/fetch2/git.py | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> index 488f4c7414..3643a491d7 100644
+> --- a/lib/bb/fetch2/git.py
+> +++ b/lib/bb/fetch2/git.py
+> @@ -68,6 +68,7 @@ import subprocess
+>  import tempfile
+>  import bb
+>  import bb.progress
+> +from contextlib import contextmanager
+>  from   bb.fetch2 import FetchMethod
+>  from   bb.fetch2 import runfetchcmd
+>  from   bb.fetch2 import logger
+> @@ -418,6 +419,20 @@ class Git(FetchMethod):
+>                  bb.utils.remove(tmpdir, recurse=True)
+>
+>      def build_mirror_data(self, ud, d):
+> +
+> +        # Create as a temp file and move atomically into position to
+> avoid races
+> +        @contextmanager
+> +        def create_atomic(filename, d):
+> +            fd, tfile = tempfile.mkstemp(dir=os.path.dirname(filename))
+> +            try:
+> +                yield tfile
+> +                umask = os.umask(0o666)
+> +                os.umask(umask)
+> +                os.chmod(tfile, (0o666 & ~umask))
+> +                runfetchcmd("mv %s %s" % (tfile, filename), d)
+> +            finally:
+> +                os.close(fd)
+> +
+>          if ud.shallow and ud.write_shallow_tarballs:
+>              if not os.path.exists(ud.fullshallow):
+>                  if os.path.islink(ud.fullshallow):
+> @@ -428,7 +443,8 @@ class Git(FetchMethod):
+>                      self.clone_shallow_local(ud, shallowclone, d)
+>
+>                      logger.info("Creating tarball of git repository")
+> -                    runfetchcmd("tar -czf %s ." % ud.fullshallow, d,
+> workdir=shallowclone)
+> +                    with create_atomic(ud.fullshallow, d) as tfile:
+> +                        runfetchcmd("tar -czf %s ." % tfile, d,
+> workdir=shallowclone)
+>                      runfetchcmd("touch %s.done" % ud.fullshallow, d)
+>                  finally:
+>                      bb.utils.remove(tempdir, recurse=True)
+> @@ -437,7 +453,8 @@ class Git(FetchMethod):
+>                  os.unlink(ud.fullmirror)
+>
+>              logger.info("Creating tarball of git repository")
+> -            runfetchcmd("tar -czf %s ." % ud.fullmirror, d,
+> workdir=ud.clonedir)
+> +            with create_atomic(ud.fullmirror, d) as tfile:
+> +                runfetchcmd("tar -czf %s ." % tfile, d,
+> workdir=ud.clonedir)
+>              runfetchcmd("touch %s.done" % ud.fullmirror, d)
+>
+>      def clone_shallow_local(self, ud, dest, d):
+> --
+> 2.32.0
+>
+>
+> 
+>
+>
+
+-- 
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Senior Software Engineer, Mentor Graphics
+
+--0000000000008777fe05cc33bbd5
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">This looks good, though if we&#39;re creating the temporar=
+y file in the same directory as the resulting file, which seems to be the c=
+ase, could we not just os.rename() rather than calling a subprocess?</div><=
+br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Thu,=
+ Sep 16, 2021 at 7:25 AM Richard Purdie &lt;<a href=3D"mailto:richard.purdi=
+e@linuxfoundation.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br=
+></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;=
+border-left:1px solid rgb(204,204,204);padding-left:1ex">There is a potenti=
+al race over the mirror tarballs where a partial git repo<br>
+could be extracted causing fetcher failures if the tarball is being rewritt=
+en<br>
+whilst another build accesses it.<br>
+<br>
+Create the mirror tarball atomically to avoid this.<br>
+<br>
+[YOCTO #14441]<br>
+<br>
+Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
+ndation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<b=
+r>
+---<br>
+=C2=A0lib/bb/fetch2/git.py | 21 +++++++++++++++++++--<br>
+=C2=A01 file changed, 19 insertions(+), 2 deletions(-)<br>
+<br>
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py<br>
+index 488f4c7414..3643a491d7 100644<br>
+--- a/lib/bb/fetch2/git.py<br>
++++ b/lib/bb/fetch2/git.py<br>
+@@ -68,6 +68,7 @@ import subprocess<br>
+=C2=A0import tempfile<br>
+=C2=A0import bb<br>
+=C2=A0import bb.progress<br>
++from contextlib import contextmanager<br>
+=C2=A0from=C2=A0 =C2=A0bb.fetch2 import FetchMethod<br>
+=C2=A0from=C2=A0 =C2=A0bb.fetch2 import runfetchcmd<br>
+=C2=A0from=C2=A0 =C2=A0bb.fetch2 import logger<br>
+@@ -418,6 +419,20 @@ class Git(FetchMethod):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.remo=
+ve(tmpdir, recurse=3DTrue)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0def build_mirror_data(self, ud, d):<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Create as a temp file and move atomically in=
+to position to avoid races<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 @contextmanager<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 def create_atomic(filename, d):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fd, tfile =3D tempfile.mkstemp(d=
+ir=3Dos.path.dirname(filename))<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 try:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 yield tfile<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 umask =3D os.umask=
+(0o666)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 os.umask(umask)<br=
+>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 os.chmod(tfile, (0=
+o666 &amp; ~umask))<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 runfetchcmd(&quot;=
+mv %s %s&quot; % (tfile, filename), d)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 finally:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 os.close(fd)<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if ud.shallow and ud.write_shallow_tarbal=
+ls:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if not os.path.exists(ud.fu=
+llshallow):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if os.path.is=
+link(ud.fullshallow):<br>
+@@ -428,7 +443,8 @@ class Git(FetchMethod):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0self.clone_shallow_local(ud, shallowclone, d)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0<a href=3D"http://logger.info" rel=3D"noreferrer" target=3D"_blank">logg=
+er.info</a>(&quot;Creating tarball of git repository&quot;)<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 runf=
+etchcmd(&quot;tar -czf %s .&quot; % ud.fullshallow, d, workdir=3Dshallowclo=
+ne)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 with=
+ create_atomic(ud.fullshallow, d) as tfile:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 runfetchcmd(&quot;tar -czf %s .&quot; % tfile, d, workdir=3Dshal=
+lowclone)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0runfetchcmd(&quot;touch %s.done&quot; % ud.fullshallow, d)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0finally:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0bb.utils.remove(tempdir, recurse=3DTrue)<br>
+@@ -437,7 +453,8 @@ class Git(FetchMethod):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0os.unlink(ud.=
+fullmirror)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0<a href=3D"http://logger.in=
+fo" rel=3D"noreferrer" target=3D"_blank">logger.info</a>(&quot;Creating tar=
+ball of git repository&quot;)<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 runfetchcmd(&quot;tar -czf %s .&=
+quot; % ud.fullmirror, d, workdir=3Dud.clonedir)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 with create_atomic(ud.fullmirror=
+, d) as tfile:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 runfetchcmd(&quot;=
+tar -czf %s .&quot; % tfile, d, workdir=3Dud.clonedir)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0runfetchcmd(&quot;touch %s.=
+done&quot; % ud.fullmirror, d)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0def clone_shallow_local(self, ud, dest, d):<br>
+-- <br>
+2.32.0<br>
+<br>
+<br>
+<br>
+<br>
+</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
+ class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christoph=
+er Larson<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, O=
+penZaurus<br>Senior Software Engineer, Mentor Graphics</div></div></div></d=
+iv>
+
+--0000000000008777fe05cc33bbd5--
