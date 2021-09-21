@@ -1,23 +1,23 @@
 Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
- by mx.groups.io with SMTP id smtpd.web11.4953.1632213334869589697
+ by mx.groups.io with SMTP id smtpd.web10.4968.1632213336001819529
  for <bitbake-devel@lists.openembedded.org>;
  Tue, 21 Sep 2021 01:35:36 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: intel.com, ip: 134.134.136.126, mailfrom: anuj.mittal@intel.com)
-X-IronPort-AV: E=McAfee;i="6200,9189,10113"; a="210390196"
+X-IronPort-AV: E=McAfee;i="6200,9189,10113"; a="210390201"
 X-IronPort-AV: E=Sophos;i="5.85,310,1624345200"; 
-   d="scan'208";a="210390196"
+   d="scan'208";a="210390201"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 01:35:33 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 01:35:34 -0700
 X-IronPort-AV: E=Sophos;i="5.85,310,1624345200"; 
-   d="scan'208";a="701611436"
+   d="scan'208";a="701611440"
 Received: from marsalan-mobl1.gar.corp.intel.com (HELO anmitta2-mobl1.gar.corp.intel.com) ([10.215.238.172])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 01:35:32 -0700
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2021 01:35:33 -0700
 From: "Anuj Mittal" <anuj.mittal@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [hardknott][PATCH 7/8] cookerdata: Show a readable error for invalid multiconfig name
-Date: Tue, 21 Sep 2021 16:35:15 +0800
-Message-Id: <636bf8aa0c5a61bfafd25fba7335092a9925e2f9.1632212181.git.anuj.mittal@intel.com>
+Subject: [hardknott][PATCH 8/8] runqueue/knotty: Improve UI handling of setscene task counting
+Date: Tue, 21 Sep 2021 16:35:16 +0800
+Message-Id: <595275dfb9de73e5f4b1422f8e59a8a21d4d5c80.1632212181.git.anuj.mittal@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1632212181.git.anuj.mittal@intel.com>
 References: <cover.1632212181.git.anuj.mittal@intel.com>
@@ -26,34 +26,132 @@ Content-Transfer-Encoding: 8bit
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-If a multiconfig starts with a digit, users would see pages of
-errors as we use the multiconfig as a python function name prefix
-and python functions cannot start with a digit. We could avoid doing
-that but it is easier just to ask users to name multiconfigs not
-starting with digits.
+The recent fixes to merge setscene and normal task accounting in runqueue
+fixed some display issues but broke the task numbering of setscene tasks.
 
-This tweak ensures the user sees an easier to understand error.
+Add new accounting methods to the stats structure specifically designed
+for setscene. This accounts for the fact that setscene tasks can rerun
+multiple times in the build.
+
+Then use the new data in the UI to correctly display the numbers the
+user wants to see to understand progress.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit f9cddaeef35b2ea0dadf717101ed896f6b857abd)
+(cherry picked from commit ed7e2da88bf4b7bfc7ebfc12b9bd6c0fb7d8c1aa)
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- lib/bb/cookerdata.py | 2 ++
- 1 file changed, 2 insertions(+)
+ lib/bb/runqueue.py    | 21 ++++++++++++++++++---
+ lib/bb/ui/knotty.py   |  2 +-
+ lib/bb/ui/uihelper.py |  2 +-
+ 3 files changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index d6206b731..ba657c03b 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -291,6 +291,8 @@ class CookerDataBuilder(object):
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 6ce0ce80f..10511a09d 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -85,15 +85,19 @@ class RunQueueStats:
+     """
+     Holds statistics on the tasks handled by the associated runQueue
+     """
+-    def __init__(self, total):
++    def __init__(self, total, setscene_total):
+         self.completed = 0
+         self.skipped = 0
+         self.failed = 0
+         self.active = 0
++        self.setscene_active = 0
++        self.setscene_covered = 0
++        self.setscene_notcovered = 0
++        self.setscene_total = setscene_total
+         self.total = total
  
-             multiconfig = (self.data.getVar("BBMULTICONFIG") or "").split()
-             for config in multiconfig:
-+                if config[0].isdigit():
-+                    bb.fatal("Multiconfig name '%s' is invalid as multiconfigs cannot start with a digit" % config)
-                 mcdata = self.parseConfigurationFiles(self.prefiles, self.postfiles, config)
-                 bb.event.fire(bb.event.ConfigParsed(), mcdata)
-                 self.mcdata[config] = mcdata
+     def copy(self):
+-        obj = self.__class__(self.total)
++        obj = self.__class__(self.total, self.setscene_total)
+         obj.__dict__.update(self.__dict__)
+         return obj
+ 
+@@ -112,6 +116,13 @@ class RunQueueStats:
+     def taskActive(self):
+         self.active = self.active + 1
+ 
++    def updateCovered(self, covered, notcovered):
++        self.setscene_covered = covered
++        self.setscene_notcovered = notcovered
++
++    def updateActiveSetscene(self, active):
++        self.setscene_active = active
++
+ # These values indicate the next step due to be run in the
+ # runQueue state machine
+ runQueuePrepare = 2
+@@ -1735,7 +1746,7 @@ class RunQueueExecute:
+         self.holdoff_need_update = True
+         self.sqdone = False
+ 
+-        self.stats = RunQueueStats(len(self.rqdata.runtaskentries))
++        self.stats = RunQueueStats(len(self.rqdata.runtaskentries), len(self.rqdata.runq_setscene_tids))
+ 
+         for mc in rq.worker:
+             rq.worker[mc].pipe.setrunqueueexec(self)
+@@ -1786,6 +1797,7 @@ class RunQueueExecute:
+             else:
+                 self.sq_task_complete(task)
+             self.sq_live.remove(task)
++            self.stats.updateActiveSetscene(len(self.sq_live))
+         else:
+             if status != 0:
+                 self.task_fail(task, status, fakerootlog=fakerootlog)
+@@ -2087,6 +2099,7 @@ class RunQueueExecute:
+             self.build_stamps2.append(self.build_stamps[task])
+             self.sq_running.add(task)
+             self.sq_live.add(task)
++            self.stats.updateActiveSetscene(len(self.sq_live))
+             if self.can_start_task():
+                 return True
+ 
+@@ -2462,6 +2475,7 @@ class RunQueueExecute:
+                 self.sq_task_failoutright(tid)
+ 
+         if changed:
++            self.stats.updateCovered(len(self.scenequeue_covered), len(self.scenequeue_notcovered))
+             self.holdoff_need_update = True
+ 
+     def scenequeue_updatecounters(self, task, fail=False):
+@@ -2495,6 +2509,7 @@ class RunQueueExecute:
+                         new.add(dep)
+             next = new
+ 
++        self.stats.updateCovered(len(self.scenequeue_covered), len(self.scenequeue_notcovered))
+         self.holdoff_need_update = True
+ 
+     def sq_task_completeoutright(self, task):
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index 0efa614df..04285eac6 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -745,7 +745,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                 continue
+ 
+             if isinstance(event, bb.runqueue.sceneQueueTaskStarted):
+-                logger.info("Running setscene task %d of %d (%s)" % (event.stats.completed + event.stats.active + event.stats.failed + 1, event.stats.total, event.taskstring))
++                logger.info("Running setscene task %d of %d (%s)" % (event.stats.setscene_covered + event.stats.setscene_active + event.stats.setscene_notcovered + 1, event.stats.setscene_total, event.taskstring))
+                 continue
+ 
+             if isinstance(event, bb.runqueue.runQueueTaskStarted):
+diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
+index 40c7c5a5e..52fdae3fe 100644
+--- a/lib/bb/ui/uihelper.py
++++ b/lib/bb/ui/uihelper.py
+@@ -50,7 +50,7 @@ class BBUIHelper:
+             removetid(event.pid, tid)
+             self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
+         elif isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
+-            self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + 1
++            self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + event.stats.setscene_active + 1
+             self.tasknumber_total = event.stats.total
+             self.needUpdate = True
+         elif isinstance(event, bb.build.TaskProgress):
 -- 
 2.31.1
 
