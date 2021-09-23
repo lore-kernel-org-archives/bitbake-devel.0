@@ -1,91 +1,160 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web11.3231.1632396536922815645
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web08.3096.1632396537423632378
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 23 Sep 2021 04:28:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DIK+/Pa6;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f52.google.com with SMTP id i24so285349wrc.9
-        for <bitbake-devel@lists.openembedded.org>; Thu, 23 Sep 2021 04:28:56 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fMwZIOgE;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f48.google.com with SMTP id i24so285425wrc.9
+        for <bitbake-devel@lists.openembedded.org>; Thu, 23 Sep 2021 04:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=5qle6vaIAWyUrKosz4esRM7nUCQp/FW1ZqUyDw3sfwM=;
-        b=DIK+/Pa6Kt9UbjWWfbD2aLZZD8X5OayCVExQCfDKkHv633JUNDtmmIKq+qenDK7zzz
-         azf9huykMFdsbuyKtN+c0zCtY11VDUqdKvs+VkE6j4QwsqKwaj8Q8kD1Az4gnJ7J91az
-         ycai1osyXD/MRWcLi7RYIn9PRAkVJ5Dt3uj00=
+        bh=WGbsdQzLjiLircADo5z1OPgZKzin02FlY/cmBSzBJtc=;
+        b=fMwZIOgEGbXtWcw//axOjPzFo17zqfXcKV/z7FdWIQ1VHTTcQji37wLtCIM2SAz36l
+         NVOuC4rK/5ca0VnHQ7xeGiezyZmL1vl2pRDO+w5BbF7SGdBMi9PjRWzgxEAXUmVO46r4
+         R0WybxoHaumbk9FSKLrswNApnapW455rlLKrQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5qle6vaIAWyUrKosz4esRM7nUCQp/FW1ZqUyDw3sfwM=;
-        b=UQkYATVls6g8R749FRbcNtJn7mqkd2wWAA1nGNYqnawCz7FeusSMou2Euy1SU1F4u2
-         LGrEqk+nr31Y+cGxvFQ1snL14LMQ3A+GV139MaXw03B3TI06ISLBpqtjqwJofHuo5z2e
-         LBJwdSd+SVPcIrE3JV2XBDAosMeftVVIZBI/zxTJbn8B9GxB0c3zhNGTDqwnTdDYnmhK
-         tVIvbQqLU/IDHu8wJNCr+8ynEU50OURnWMIL02f0d4/mVhIdrwqvdfyUZy3D/ozTLakI
-         +YhNJObdpY+A9+rbyGeln9Tm+mKiPgAv6A3YctMm8jqWonQAVdS2MBC52ud10jEu3Rc7
-         Kzlg==
-X-Gm-Message-State: AOAM533fnvfkbxkCy/ZFT61+LMdCmq/2beEpDoH/k9zxDfJrl08WM1jQ
-	/1CHzK2LglMiJWhQw3ZNt5AnCpVEyr65bI87
-X-Google-Smtp-Source: ABdhPJzl+ZT1ZPN+2AN/J7lCCZ4G0pukwoGd8Pt+PT1OnfnYIPHxPz/Fn/ZfV1KWkWlwqrTPQeMTPA==
-X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr3938236wmg.132.1632396535031;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WGbsdQzLjiLircADo5z1OPgZKzin02FlY/cmBSzBJtc=;
+        b=R2A+zjsMxNpGSrhKjtsLeJ6thoZHDlO+jTdcL3bxxUYpyeA66PympmYHUeyoatUpm3
+         vaHW3FPwbemop0r4vqIzxFAJuKpVj5827IhbiOeAvsGL7OSccwyvejzuZmC33emMaUxz
+         G114AaNmnTmuDJwJ5IRvz5uPSlVrvViEiHzdDb49TDpERia+migRVNVJZZHwkPFmpWhV
+         bGDvjQTiG3BwWEc6LFZuuP/nt/3OCYUWibFHkTa9ZnBgM8Fs+1UJRIXGfQRelse2UOQc
+         DuFYX2gCzg8kHpirjxgfyj+ovGj5tdsfEfQeGL9wrjs+AR8DItLTFeKVYkjhIpRJaobI
+         /1CA==
+X-Gm-Message-State: AOAM530OCzMtNdJOhr/msaV/vweQ4XrbWjsW/Lwq1ZQMnf+0mvSqKMJH
+	IVcIlLRUancZztQ8eCKlkzN9F+BH6B4cXruX
+X-Google-Smtp-Source: ABdhPJx9VfHHd8frXbwW6wB7PVMXXjnGBE28fnQZfJbzGqpVhogHyZxCdVY8cGna/yivJahiP9+t7g==
+X-Received: by 2002:adf:ebcd:: with SMTP id v13mr4470567wrn.400.1632396535837;
         Thu, 23 Sep 2021 04:28:55 -0700 (PDT)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:3a36:9e9a:ccb5:f067])
-        by smtp.gmail.com with ESMTPSA id 5sm5177382wmb.37.2021.09.23.04.28.54
+        by smtp.gmail.com with ESMTPSA id 5sm5177382wmb.37.2021.09.23.04.28.55
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Sep 2021 04:28:54 -0700 (PDT)
+        Thu, 23 Sep 2021 04:28:55 -0700 (PDT)
 From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/3] build: Ensure python stdout/stderr is logged correctly
-Date: Thu, 23 Sep 2021 12:28:51 +0100
-Message-Id: <20210923112853.1706985-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 3/3] build: Fix log flushing race
+Date: Thu, 23 Sep 2021 12:28:53 +0100
+Message-Id: <20210923112853.1706985-3-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210923112853.1706985-1-richard.purdie@linuxfoundation.org>
+References: <20210923112853.1706985-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently we see things like:
+There is a race between sending the TaskFailed event which could trigger
+the UI to look at the logs and flushing and closing the log files.
 
-Log data follows:
-| DEBUG: Executing python function do_pythontest_exit
-| DEBUG: Python function do_pythontest_exit finished
-| ERROR: 1
-| This is python stdout
+Reverse the order of the finally clause and the exception handling
+to ensure we've handled the logfiles before sending the task events.
 
-Whilst after the change we see things like:
-
-Log data follows:
-| DEBUG: Executing python function do_pythontest_exit
-| This is python stdout
-| DEBUG: Python function do_pythontest_exit finished
-| ERROR: 1
-
-since the output is now correctly mixed with the log messages. In some cases the logging
-tests indicate the output is being lost entirely which is bad for debugging and makes
-things rather confusing.
+This should fix a race seen in bblogging.BitBakeLogging.test_python_exit_logging
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/build.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/bb/build.py | 76 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 38 insertions(+), 38 deletions(-)
 
 diff --git a/lib/bb/build.py b/lib/bb/build.py
-index c2479dd167..18586c276e 100644
+index 99954b0c26..7e4ab9f64c 100644
 --- a/lib/bb/build.py
 +++ b/lib/bb/build.py
-@@ -298,6 +298,10 @@ def exec_func_python(func, d, runfile, cwd=None):
-         comp = utils.better_compile(code, func, "exec_func_python() autogenerated")
-         utils.better_exec(comp, {"d": d}, code, "exec_func_python() autogenerated")
-     finally:
-+        # We want any stdout/stderr to be printed before any other log messages to make debugging
-+        # more accurate. In some cases we seem to lose stdout/stderr entirely in logging tests without this.
-+        sys.stdout.flush()
-+        sys.stderr.flush()
-         bb.debug(2, "Python function %s finished" % func)
+@@ -686,51 +686,51 @@ def _exec_task(fn, task, d, quieterr):
+     try:
+         try:
+             event.fire(TaskStarted(task, fn, logfn, flags, localdata), localdata)
+-        except (bb.BBHandledException, SystemExit):
+-            return 1
  
-         if cwd and olddir:
+-        try:
+             for func in (prefuncs or '').split():
+                 exec_func(func, localdata)
+             exec_func(task, localdata)
+             for func in (postfuncs or '').split():
+                 exec_func(func, localdata)
+-        except bb.BBHandledException:
+-            event.fire(TaskFailed(task, fn, logfn, localdata, True), localdata)
+-            return 1
+-        except (Exception, SystemExit) as exc:
+-            if quieterr:
+-                event.fire(TaskFailedSilent(task, fn, logfn, localdata), localdata)
+-            else:
+-                errprinted = errchk.triggered
+-                # If the output is already on stdout, we've printed the information in the
+-                # logs once already so don't duplicate
+-                if verboseStdoutLogging:
+-                    errprinted = True
+-                logger.error(repr(exc))
+-                event.fire(TaskFailed(task, fn, logfn, localdata, errprinted), localdata)
+-            return 1
+-    finally:
+-        sys.stdout.flush()
+-        sys.stderr.flush()
+-
+-        bblogger.removeHandler(handler)
+-
+-        # Restore the backup fds
+-        os.dup2(osi[0], osi[1])
+-        os.dup2(oso[0], oso[1])
+-        os.dup2(ose[0], ose[1])
+-
+-        # Close the backup fds
+-        os.close(osi[0])
+-        os.close(oso[0])
+-        os.close(ose[0])
++        finally:
++            # Need to flush and close the logs before sending events where the
++            # UI may try to look at the logs.
++            sys.stdout.flush()
++            sys.stderr.flush()
++
++            bblogger.removeHandler(handler)
++
++            # Restore the backup fds
++            os.dup2(osi[0], osi[1])
++            os.dup2(oso[0], oso[1])
++            os.dup2(ose[0], ose[1])
++
++            # Close the backup fds
++            os.close(osi[0])
++            os.close(oso[0])
++            os.close(ose[0])
++
++            logfile.close()
++            if os.path.exists(logfn) and os.path.getsize(logfn) == 0:
++                logger.debug2("Zero size logfn %s, removing", logfn)
++                bb.utils.remove(logfn)
++                bb.utils.remove(loglink)
++    except bb.BBHandledException:
++        event.fire(TaskFailed(task, fn, logfn, localdata, True), localdata)
++        return 1
++    except (Exception, SystemExit) as exc:
++        if quieterr:
++            event.fire(TaskFailedSilent(task, fn, logfn, localdata), localdata)
++        else:
++            errprinted = errchk.triggered
++            # If the output is already on stdout, we've printed the information in the
++            # logs once already so don't duplicate
++            if verboseStdoutLogging:
++                errprinted = True
++            logger.error(repr(exc))
++            event.fire(TaskFailed(task, fn, logfn, localdata, errprinted), localdata)
++        return 1
+ 
+-        logfile.close()
+-        if os.path.exists(logfn) and os.path.getsize(logfn) == 0:
+-            logger.debug2("Zero size logfn %s, removing", logfn)
+-            bb.utils.remove(logfn)
+-            bb.utils.remove(loglink)
+     event.fire(TaskSucceeded(task, fn, logfn, localdata), localdata)
+ 
+     if not localdata.getVarFlag(task, 'nostamp', False) and not localdata.getVarFlag(task, 'selfstamp', False):
 -- 
 2.32.0
 
