@@ -1,50 +1,50 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
- by mx.groups.io with SMTP id smtpd.web12.8904.1632493340322630944
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+ by mx.groups.io with SMTP id smtpd.web12.8906.1632493342443256912
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Sep 2021 07:22:20 -0700
+ Fri, 24 Sep 2021 07:22:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=WsIGIcNA;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.53, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f53.google.com with SMTP id mv7-20020a17090b198700b0019c843e7233so7641361pjb.4
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Sep 2021 07:22:20 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=wwtxTqIn;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.178, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f178.google.com with SMTP id t4so6636370plo.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Sep 2021 07:22:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=vaqEk/kMmRsSLoHLEStyPYmqRz1hjSrv45/C5dNBxVs=;
-        b=WsIGIcNAeIEHVOpKFEu2fHc9f1ur5ypCtWYzDjWd0OW372t76BR+z6kzPIQZ9Cqwze
-         x0MkSAX2TYAPTwTRT6m86ZcKSXgpba5VQNwFeV5rl6WWN7B9CqS/XG3uHMjeFj2ybplu
-         gUaceKs2N10gwRiMqL5dghBEHEdxK9S/u4IeXEDJU6VuNKDruDqYtkZVObG5M2IJdOnV
-         WamG+Y7kh1JfNdwlxEoSbYxW7urpiHn4AhWa31mOEAEj0MOUHbmkY09LqJ58bIani7i1
-         ptJ7BUVfK5H8yq15z6FLr36xIcj377PJFXHGYrA1Jd/7nPECU7kuTBkQ/qEc+UbOEqcc
-         K2wQ==
+        bh=Bh89hzfdTkm9CaSYw91trBjCzKYVTcWViLpORIlnb4s=;
+        b=wwtxTqInktTs1ZVBAlGUmvbcMjQev4w09bVfF9YC3ybAfWAPPdJwgBZ8z5EE/a78G5
+         DmLAjzfmgre7R0ctM3xRkoW0yQHVF4oUEF/ErspgcGPbxGSNri4AFcotCq6ezeiSNk/w
+         zOfqdGO8SyKiVqZmvcgw2XEc2eGeG7FQLuK6tx4tzpj1xEQwBET0k7GDwEA//WiIkB+c
+         uPBhxLmDF5NRQF/OGYM0STynq73yUaw3ssi6DTzHxxmAQY/0nzJPIk06NhO7U0A1Qamf
+         sXroda/E0cWzY8vzp/yZHcS1kHW+ZufDH7a5VZEzVU0CjQiDye4Bj0LLsuDLQjHV/Omy
+         zIgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vaqEk/kMmRsSLoHLEStyPYmqRz1hjSrv45/C5dNBxVs=;
-        b=gRFX1wekCDm1wphjExUUIjxsNzn07t8lKos3sWTsiV4PaIz4+/i1TKo53VautOK3ab
-         yBsBpdRQVhY+0ebJtfrYJfrR0FW11WqeevAnTVgtIUiIfLEIWLmRqKNubzNS4kjyX4x0
-         Cx8BcdQIxIYZjx3415Hrrmt1Bsfo/+fAGp95PEf4cWMPhw5v9cBDPOVBvw+oq94gtnBf
-         VSXPJ5iUpOj4teCEO5FJMPZ1eSaUBEvLDCAO4BIXIvuwF6QJpVAog5Rw8O5hGNg6lhPZ
-         AHEUwsMlCun+ANAXAel0bHaVt50e9CMnzxhR5D+btiNfA46rhTT9wPiXErjNsW/S8eHx
-         WIAg==
-X-Gm-Message-State: AOAM530hWHGQ3BSnfFgkqRB5KDaEH9duAktbxKkn6BCKmpINDqJ7WmNe
-	NI4afZ5UKa+ajX5mVBapB0tCbvmRG/PNe0PWsiU=
-X-Google-Smtp-Source: ABdhPJzLOq7iss6eIiCxgueU4jHYhra3Xy+L50cy1BhtjE+IyqIB2ZXs7CvVTlhzb6+pABb6oQ+9og==
-X-Received: by 2002:a17:90b:1e4d:: with SMTP id pi13mr2611344pjb.96.1632493339359;
-        Fri, 24 Sep 2021 07:22:19 -0700 (PDT)
+        bh=Bh89hzfdTkm9CaSYw91trBjCzKYVTcWViLpORIlnb4s=;
+        b=3gRQYcfzNBYEUsh0QuaW5CRHb0qMuKik7XUD7INyj4WQSt4M0jxza/JGjau+la9pAX
+         FcxSn0tfHc6G0ZPAsAUEIP5SdeFclzay8pLNE3v5BN9CIC/abSY/fSeQ5waaWHYMeKx7
+         RqotbT7e407q5iulJ7HhJLRmse4CXMac35bA6Atk9Xwj56m60x88u5d0IvKW714l7rix
+         wz35hEKVVzz0+AEtrHTG0u7cOSzIvM/mRPwXDVkrf18MgEfxPJS3NuXAZZ4Qme5MZQDB
+         BbeRVqHc2uKV1atKc91ylJJ01qX0YR5x7e9CXudeCGBSAg+kcM5nNXZHVA6lRDjFID+h
+         eAEg==
+X-Gm-Message-State: AOAM5323efcW673N876cYylR8sNldYvJzi44p6e1JFh4Fgb88h1v0wIJ
+	H8qK8yhu8I1aJiDzCgukGr/ZWvkZsF1z0JziCe0=
+X-Google-Smtp-Source: ABdhPJwkCfxO+TnqfzIHGOoGTE/AQxapql2Cwi89jmXg3I9r17A1uNFtzw5ldvLeHbwm1hylw+Y+SA==
+X-Received: by 2002:a17:90b:1649:: with SMTP id il9mr2592107pjb.206.1632493341436;
+        Fri, 24 Sep 2021 07:22:21 -0700 (PDT)
 Return-Path: <steve@sakoman.com>
 Received: from localhost.localdomain (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id j20sm9907347pgb.2.2021.09.24.07.22.18
+        by smtp.gmail.com with ESMTPSA id j20sm9907347pgb.2.2021.09.24.07.22.20
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Sep 2021 07:22:18 -0700 (PDT)
+        Fri, 24 Sep 2021 07:22:20 -0700 (PDT)
 From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 02/14] ui/taskexp: Improve startup exception handling
-Date: Fri, 24 Sep 2021 04:20:55 -1000
-Message-Id: <c368810741e78faa139db66128b46f242b9cf7cb.1632493110.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 03/14] ui/taskexp: Fix to work with empty build directories
+Date: Fri, 24 Sep 2021 04:20:56 -1000
+Message-Id: <741837b7ceec45a098425954ebb4533f816b8549.1632493110.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1632493110.git.steve@sakoman.com>
 References: <cover.1632493110.git.steve@sakoman.com>
@@ -53,39 +53,31 @@ Content-Transfer-Encoding: 8bit
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-When an exception occurs at startup, show it to the user.
+If run on an empty build directory, taskexp wasn't working as it didn't
+send the current environment to the server. This means HOSTTOOLS in oe-core
+couldn't be built and gave an error. Add the missing updateToServer call in.
 
 [YOCTO #14408]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit cc1df1af67cfd3e223b39e2b7ea5f86b8cf78aee)
+(cherry picked from commit 06a0bbe746f879ae539223e7fdb6f07d55d13719)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/ui/taskexp.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/bb/ui/taskexp.py | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/lib/bb/ui/taskexp.py b/lib/bb/ui/taskexp.py
-index 2b246710..81392977 100644
+index 81392977..c00eaf66 100644
 --- a/lib/bb/ui/taskexp.py
 +++ b/lib/bb/ui/taskexp.py
-@@ -8,6 +8,7 @@
- #
+@@ -197,6 +197,7 @@ def main(server, eventHandler, params):
+     gtkgui.start()
  
- import sys
-+import traceback
- 
- try:
-     import gi
-@@ -218,6 +219,9 @@ def main(server, eventHandler, params):
-     except client.Fault as x:
-         print("XMLRPC Fault getting commandline:\n %s" % x)
-         return
-+    except Exception as e:
-+        print("Exception in startup:\n %s" % traceback.format_exc())
-+        return
- 
-     if gtkthread.quit.isSet():
-         return
+     try:
++        params.updateToServer(server, os.environ.copy())
+         params.updateFromServer(server)
+         cmdline = params.parseActions()
+         if not cmdline:
 -- 
 2.25.1
 
