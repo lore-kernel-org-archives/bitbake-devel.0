@@ -1,50 +1,50 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
- by mx.groups.io with SMTP id smtpd.web08.9015.1632493348319493087
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+ by mx.groups.io with SMTP id smtpd.web10.8869.1632493350493583493
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Sep 2021 07:22:28 -0700
+ Fri, 24 Sep 2021 07:22:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=AjtwRad7;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.50, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f50.google.com with SMTP id v19so7093995pjh.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Sep 2021 07:22:28 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=oGRx33Pn;
+ spf=softfail (domain: sakoman.com, ip: 209.85.215.178, mailfrom: steve@sakoman.com)
+Received: by mail-pg1-f178.google.com with SMTP id x191so3067356pgd.9
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Sep 2021 07:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=45DOJsigwAmXQJldIguQrF6ecRcF1+DMD92ABywEobA=;
-        b=AjtwRad7VyD6ySy0Z0V/SXV2K61bNZbCmYGd3BGFGoGE6RYybA+Nmpp8NRdTaueQAc
-         8qCmWL7rd9Cxw+3wAFdJgITWwZWZnBmPkck8EJIQcgHXv0viQ7Jxv8BeNUmyYA8+E6qg
-         z1onycYj2tBNZXtCay/QDb5Kj97lsnPJEJmO7Jul0zyDanZ8yRSsFto1hjasZPLur3uR
-         5rTE2swqvALRAjGhz9VoipHgaxszM7594TSMGqR+J4eQOQAoV8SjArH1XTUhqWvMrpKN
-         c91N2fu1X4mCqqp3dP+VS/FVtfre8WCscNNy0IAmaf91bsYMcXpzXzphUBmE8N8Fh8sK
-         vctw==
+        bh=aMXGIoCL1a7Etpc4iSI7MRV74JQnzZ0gnsfNQqMRhiA=;
+        b=oGRx33PnRIG/+YPtFfliPPl15odEQqfuVGUa92hzqG01jvLeYlBWzW8Hnqa37Z5ahY
+         OiPYX+KrSyGaByeLKknP2JyacJIEsMXhHKt6W48MnUf9SwECbMcksXBOTlHV1rMvZsiq
+         64eLay38C5WsC9R7En3mB3j7WyAzxIG+BSWBtHeSERNtFUTdTcZICN1wLoxDVMajOHoS
+         T9B3MNV6hHHscEyzwsEdg1OrbG79dVUf0TM+EoDysGEuI9rbm5OJVP5N9Mo+8iS+uk04
+         LAi8TCzbfR1pKo/mtXFoTS+px3yOkQJa62P+uMfT8xY6Bh1qWn4eWIQ9Isrq9pTBpFCf
+         /ZjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=45DOJsigwAmXQJldIguQrF6ecRcF1+DMD92ABywEobA=;
-        b=YvkwcEZFj1UN7ap9Vot/9JdiVt85npBPXSyuyFqYazUJhoelXaWwqfotc0YDqjfUtd
-         nDl+dC0Wd8Odc6bROZDSsgtpngz9PnktBkCztKBKGNoWcvR6WXRRTXsBHA3kl7oi3E36
-         1CDmfiz7M0+TTJRBzZbJTW1yZuD2SAD6rP5yZq3Ll/NUL00brO5uHijiPOxnQXpAAyJA
-         1iTZ5vo4I/Nq5/u+OHcWmxCghPXRklCGf5Tcqj42+h7G7gIqWM+e8hNgQX4SpbHwv1GK
-         LbSEWaOiyPhZfbagbCsA5EKjYLs3F+hbEEdilLssp7nDc1b6vLMRG8orn3sJcPpD5Guz
-         GX5A==
-X-Gm-Message-State: AOAM532t/h61K+fDSa+uq/xYppL5QDX7C/B+pU/yI8IRFGyLA343aL34
-	oCZT3H5MCd94y7FW2o7TUKQ5LzYBDhL+iC9UZa8=
-X-Google-Smtp-Source: ABdhPJysZN6r+hbbxCnp1Gwwx16OgJ9hNCbB0a2FzAYSwupinmrT1Cx+k/R15OG/mRkRXeTk+cONww==
-X-Received: by 2002:a17:90b:3b8b:: with SMTP id pc11mr2593221pjb.153.1632493347254;
-        Fri, 24 Sep 2021 07:22:27 -0700 (PDT)
+        bh=aMXGIoCL1a7Etpc4iSI7MRV74JQnzZ0gnsfNQqMRhiA=;
+        b=iWgp3xLT20+SRnIN74WlG5YCRuXEoAzWoom4hW5bkBw4ypT029mMlnkZ8Jtc3Av6CU
+         C9zlBDy6TuPuvuIBtuCNwvt2JokGM47IW2PsIzvdSMgqY4fYPEpD7lQojsr+BELjDpi6
+         9FEadnyq/Bt+PuAU4rle3CzakFoyU7c9FNcTMtMwwlvZv6l9KlpXSrpwX9amBRhD9WRz
+         W6JcLBsChVEtk8684SpvdR8cXlXz3bFUlCqxNabXNijeyxLe9u2z6zK+pquxeCYw0mfu
+         DvLEDw+IG9y63D8H1lVcNlIR/o0k0E/X43RCWqJDyeElzNRJT35dur5q4tbiBkmKOjGJ
+         5T6g==
+X-Gm-Message-State: AOAM533bpMGYyX6uXvYKmphNtn/wdlQQ7Cxy7NKac0IJvG61/hInkLpP
+	WG1chqn4t2N9ETepyI2lQH78py9xYgVpgfLwwhw=
+X-Google-Smtp-Source: ABdhPJxMLhbMKFLHJkyl/JOITuGgEW2OoJBZS+c6OAQ/22UeVJmwJAgYfAjZrdwIZK758eMZZQWmJQ==
+X-Received: by 2002:a65:508a:: with SMTP id r10mr4002950pgp.96.1632493349524;
+        Fri, 24 Sep 2021 07:22:29 -0700 (PDT)
 Return-Path: <steve@sakoman.com>
 Received: from localhost.localdomain (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id j20sm9907347pgb.2.2021.09.24.07.22.25
+        by smtp.gmail.com with ESMTPSA id j20sm9907347pgb.2.2021.09.24.07.22.28
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Sep 2021 07:22:26 -0700 (PDT)
+        Fri, 24 Sep 2021 07:22:29 -0700 (PDT)
 From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 06/14] build: Handle SystemExit in python tasks correctly
-Date: Fri, 24 Sep 2021 04:20:59 -1000
-Message-Id: <e7aadd05098fa263f8722e1010d3dff90eaea253.1632493110.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 07/14] process: Don't include logs in error message if piping them
+Date: Fri, 24 Sep 2021 04:21:00 -1000
+Message-Id: <62f4d74479d410fe510eeee33f9d202f7e63066b.1632493110.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1632493110.git.steve@sakoman.com>
 References: <cover.1632493110.git.steve@sakoman.com>
@@ -53,33 +53,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-If a python task fails with sys.exit(), we currently see no TaskFailed event.
-The high level code does detect the exit code and fail the task but it can
-leave the UI inconsistent with log output.
-
-Fix this be intercepting SystemExit explicitly. This makes python
-task failures consistent with shell task failures.
+If the caller is piping the logs, they likely don't want them in the error exception
+as well. This removes duplicate output from the build output allowing the UI level
+controls on whether to show logs to work correctly.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 9eee9fd4f2f96789ad2b037e74d561bdc1426856)
+(cherry picked from commit fc58ad84a9deb2620ad90611684dad65dafedb11)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/build.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/process.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index fa22a1b4..04971636 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -587,7 +587,7 @@ def _exec_task(fn, task, d, quieterr):
-         except bb.BBHandledException:
-             event.fire(TaskFailed(task, fn, logfn, localdata, True), localdata)
-             return 1
--        except Exception as exc:
-+        except (Exception, SystemExit) as exc:
-             if quieterr:
-                 event.fire(TaskFailedSilent(task, fn, logfn, localdata), localdata)
-             else:
+diff --git a/lib/bb/process.py b/lib/bb/process.py
+index 2dc472a8..24c588e5 100644
+--- a/lib/bb/process.py
++++ b/lib/bb/process.py
+@@ -179,5 +179,8 @@ def run(cmd, input=None, log=None, extrafiles=None, **options):
+             stderr = stderr.decode("utf-8")
+ 
+     if pipe.returncode != 0:
++        if log:
++            # Don't duplicate the output in the exception if logging it
++            raise ExecutionError(cmd, pipe.returncode, None, None)
+         raise ExecutionError(cmd, pipe.returncode, stdout, stderr)
+     return stdout, stderr
 -- 
 2.25.1
 
