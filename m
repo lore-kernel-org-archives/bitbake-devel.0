@@ -1,50 +1,50 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
- by mx.groups.io with SMTP id smtpd.web08.9019.1632493352827191731
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+ by mx.groups.io with SMTP id smtpd.web10.8871.1632493354819972013
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Sep 2021 07:22:32 -0700
+ Fri, 24 Sep 2021 07:22:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=zGMJh9MU;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.181, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f181.google.com with SMTP id c1so8970403pfp.10
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Sep 2021 07:22:32 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=wgf2Q6Uw;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.177, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f177.google.com with SMTP id w14so9043486pfu.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Sep 2021 07:22:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=Tqs8y0YW+6zwKTnzao0ueriKFrqCuBmO1o2zN2luV3g=;
-        b=zGMJh9MU9+w6619Du5o7Ro40Z1pbVCyR3+xc7YUkiplA2UiMlfbWqbvGMXzbPc38/f
-         kdOL9I3UdJcRsMsF3+XJkAwR5ovMH6iBeKy5P8+QM6aa/buT64COrT6jKJxiOnFx3r52
-         i3hHO47Z6+Dak1sVkqliB/r9UWZ+I4S2dP1+tpotrf0OqCzpBIB1ToZyESbTJ3BpPDhd
-         EryR+EA9fBTTtg21hbTiSN1Y+X2Rce34sWw12r09Zc43ExuXdQzTzVreQZo4XLajC3OL
-         zvLw8sYxYftbuNw/XsZewZvyBAXVq6mkpQAanjSxfmpmXXdfYIQe2zFosFs1tMnShPhx
-         s89g==
+        bh=b/ZgWR7ksy87rmIGoQUW7ko0BAEIQmX/6YxilLuyQcY=;
+        b=wgf2Q6UwTjxUJoKTWUXW6bbxpOWsczUJShbH52uPgNHQ3zH/+jCMyx7eFJM6zoc7Fp
+         bdDu05ADQ88SAdLQt2GacMwndK5+AvLKvWWsIH2iYJkoPvLLmL+YN+I/9xUE9+FrjOGl
+         YKT0Q7YK7gtF+q+5UAA4hoNT5Q/Rzyn1v9et/tD20ThEVpXgLeKGUAtscd8SJ6brfGdS
+         f9Spy4Mdg346Q9bPnTcd7Jcs1L4/curBmsi2QoEfQGLBbxlPznWMl1aHAu89nXe8g4wc
+         nwyhnObBSM1oj5wiiv5YKvBphUxB2pG+fOQOVdYQgp8+1UFbFRHS/YN52OWGdZ2p+yNN
+         TgOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Tqs8y0YW+6zwKTnzao0ueriKFrqCuBmO1o2zN2luV3g=;
-        b=ptg0S6tSyrr0OAGfVaPEYgIJ+6692cfTkpFMOjx0bB/pBBIRDHXLBsAfVJ5P+SVsLX
-         n5BwZBx/29Z2EZYVbVIS+YHb8g2z7g/iXWm7J0T6/xsXrqTXwkWmE4p8IgTxnLTfGbVv
-         HwIZBswVWZHjHPgO20+Vj1/0+yCW3rGewjKSKyWwRUI1lSsYcLal+kpePh1SUp72wfyZ
-         RMtSl1kB0aef4/haPNOFpnC7CAOVPr77yOGyeRYcWJsM+xqqJQLoK5nBHa0ejjfPDak6
-         bF6LHFAadLEPcZHmmrt0aGYG1ke6k3RGB2fojvi03Ia51THQxagFkRjt/i+CdDEx65XY
-         OLSA==
-X-Gm-Message-State: AOAM5323BFelt5G37tDhzJ2eeOWtvmYK4qZiPfR9QBiJkv0oB/2redMU
-	VJlOIGbW2RIvxN4QVgxKa6kXf+s7dnKx9v4jEdk=
-X-Google-Smtp-Source: ABdhPJzvZ5EvpbBdu3xhYrkKeU4/JGOH5xjTbdSSp/ytEZssAK22NNKLfIN4fvTsVcwWoPeIaz+7IQ==
-X-Received: by 2002:a65:5845:: with SMTP id s5mr3916788pgr.227.1632493351738;
-        Fri, 24 Sep 2021 07:22:31 -0700 (PDT)
+        bh=b/ZgWR7ksy87rmIGoQUW7ko0BAEIQmX/6YxilLuyQcY=;
+        b=fvpgqyQ/QxuJ5D4ruLixNa2hkf1G2LKOLjmgnr47Z+Q130NTGSb1V9Iskvo4FFxG6j
+         hVUKKM6psRPPU6pfhMLhBg80vMfhNu8zb/mFy/SLfke4a7krKS7hsNY8DmlcvIq5YPrU
+         5wcno0ThMFZQIY1am+08PcnmGajjOIos7o4bPXCKsIarOoxWIImOP3N7jG8ITpwRwRvs
+         yg8g17KVg0T5Q/0SM8PkQHjoGBMbb3BLRpMRsMKVDGJ9pdrNkmcZGZsSWWOao9FXVVXd
+         ZaOSno+B4WzS+neX262GKSqc4KwnRSQlL3PFMlaBvvZn21lELx2SuLB+WCqt2HYBoCh8
+         uZ0Q==
+X-Gm-Message-State: AOAM531YKMTigl6rv6gGv02Lqg1vjk6jFTF67cMJy7s6HUonJKbSXD5x
+	Ijz16uXBCNbp6FZlejaMv+hmxBn8OwLdnRYV24A=
+X-Google-Smtp-Source: ABdhPJxgr/jJ6lpqCLuK1NQ2ImBQ7zPY+6mBJ1FA4L1GynIiDrCgEDDTE3rD2wNCYfU2eUNpjam1Qw==
+X-Received: by 2002:a63:f513:: with SMTP id w19mr3914444pgh.231.1632493353841;
+        Fri, 24 Sep 2021 07:22:33 -0700 (PDT)
 Return-Path: <steve@sakoman.com>
 Received: from localhost.localdomain (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id j20sm9907347pgb.2.2021.09.24.07.22.30
+        by smtp.gmail.com with ESMTPSA id j20sm9907347pgb.2.2021.09.24.07.22.32
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Sep 2021 07:22:31 -0700 (PDT)
+        Fri, 24 Sep 2021 07:22:33 -0700 (PDT)
 From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 08/14] build: Avoid duplicating logs in verbose mode
-Date: Fri, 24 Sep 2021 04:21:01 -1000
-Message-Id: <e75169f7ef89cca94cefe9f0099a5b427b380a6d.1632493110.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 09/14] build: Catch and error upon circular task references
+Date: Fri, 24 Sep 2021 04:21:02 -1000
+Message-Id: <e33b04b3a2bc95ac4e3e3321805072791e84a43c.1632493110.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1632493110.git.steve@sakoman.com>
 References: <cover.1632493110.git.steve@sakoman.com>
@@ -53,31 +53,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-With "bitbake -v", for task failures you'd see the log output twice. Avoid
-this by using the existing "did we print info" switch.
+If there are circular task references, error on them rather than show
+a recursion error. A simple reproducer is:
+
+"""
+do_packageswu () {
+       :
+}
+
+addtask do_packageswu after do_image_complete before do_image_qa
+"""
+
+into image_types.bbclass. There is code in runqueue to detect these but
+we never get that far with the current codebase.
+
+[YOCTO #13140]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit e2c1afda4cb8023ed4ffeb5dc5bee4f0055659a8)
+(cherry picked from commit 339d4d6be515a71311b81fb9e99742af0d8a5130)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/build.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/bb/build.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 04971636..6e9c064e 100644
+index 6e9c064e..17c70d0a 100644
 --- a/lib/bb/build.py
 +++ b/lib/bb/build.py
-@@ -592,6 +592,10 @@ def _exec_task(fn, task, d, quieterr):
-                 event.fire(TaskFailedSilent(task, fn, logfn, localdata), localdata)
-             else:
-                 errprinted = errchk.triggered
-+                # If the output is already on stdout, we've printed the information in the
-+                # logs once already so don't duplicate
-+                if verboseStdoutLogging:
-+                    errprinted = True
-                 logger.error(str(exc))
-                 event.fire(TaskFailed(task, fn, logfn, localdata, errprinted), localdata)
-             return 1
+@@ -905,6 +905,8 @@ def tasksbetween(task_start, task_end, d):
+     def follow_chain(task, endtask, chain=None):
+         if not chain:
+             chain = []
++        if task in chain:
++            bb.fatal("Circular task dependencies as %s depends on itself via the chain %s" % (task, " -> ".join(chain)))
+         chain.append(task)
+         for othertask in tasks:
+             if othertask == task:
 -- 
 2.25.1
 
