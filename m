@@ -1,50 +1,50 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
- by mx.groups.io with SMTP id smtpd.web10.8871.1632493354819972013
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+ by mx.groups.io with SMTP id smtpd.web10.8872.1632493356901871662
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Sep 2021 07:22:34 -0700
+ Fri, 24 Sep 2021 07:22:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=wgf2Q6Uw;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.177, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f177.google.com with SMTP id w14so9043486pfu.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Sep 2021 07:22:34 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=YJPmIH9H;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.180, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f180.google.com with SMTP id 145so8993423pfz.11
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Sep 2021 07:22:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=b/ZgWR7ksy87rmIGoQUW7ko0BAEIQmX/6YxilLuyQcY=;
-        b=wgf2Q6UwTjxUJoKTWUXW6bbxpOWsczUJShbH52uPgNHQ3zH/+jCMyx7eFJM6zoc7Fp
-         bdDu05ADQ88SAdLQt2GacMwndK5+AvLKvWWsIH2iYJkoPvLLmL+YN+I/9xUE9+FrjOGl
-         YKT0Q7YK7gtF+q+5UAA4hoNT5Q/Rzyn1v9et/tD20ThEVpXgLeKGUAtscd8SJ6brfGdS
-         f9Spy4Mdg346Q9bPnTcd7Jcs1L4/curBmsi2QoEfQGLBbxlPznWMl1aHAu89nXe8g4wc
-         nwyhnObBSM1oj5wiiv5YKvBphUxB2pG+fOQOVdYQgp8+1UFbFRHS/YN52OWGdZ2p+yNN
-         TgOA==
+        bh=CMRvhHsWJ+IAVa0ezO5Z8K1OlT3I7D9HksMK7N9TqJY=;
+        b=YJPmIH9HVje8Mpe0dM6EpHaV00ig1p2I0dTAy0iWPFmA9L/XiTrZ6BoGOh/KpmUvUT
+         lLlsBEIaRSDAgbpQcRFmAPgMyYG3fAQx9sE/vIOi1GC4GEtoQHxnub2y8TxcDalsHD7b
+         e5cgHg2o0hgKjyRoIQJfMs6TPIDnQGIc/6UtaOtTJUV6bFoZ1iOYgP2P1/JvxoFZtZSK
+         td5YNtHQFJvcXbLzMEQdDje9ogBUQRD/JSFodP72y2BSttIPL6cdsqRfnf/uAR3hUyji
+         gJScuVNsUzs67JN0BQtgc9eT/aQ740rhGonf9Tx6k9LDdXSUdZkqnqtexzmUEufZ8Fgy
+         Hf5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=b/ZgWR7ksy87rmIGoQUW7ko0BAEIQmX/6YxilLuyQcY=;
-        b=fvpgqyQ/QxuJ5D4ruLixNa2hkf1G2LKOLjmgnr47Z+Q130NTGSb1V9Iskvo4FFxG6j
-         hVUKKM6psRPPU6pfhMLhBg80vMfhNu8zb/mFy/SLfke4a7krKS7hsNY8DmlcvIq5YPrU
-         5wcno0ThMFZQIY1am+08PcnmGajjOIos7o4bPXCKsIarOoxWIImOP3N7jG8ITpwRwRvs
-         yg8g17KVg0T5Q/0SM8PkQHjoGBMbb3BLRpMRsMKVDGJ9pdrNkmcZGZsSWWOao9FXVVXd
-         ZaOSno+B4WzS+neX262GKSqc4KwnRSQlL3PFMlaBvvZn21lELx2SuLB+WCqt2HYBoCh8
-         uZ0Q==
-X-Gm-Message-State: AOAM531YKMTigl6rv6gGv02Lqg1vjk6jFTF67cMJy7s6HUonJKbSXD5x
-	Ijz16uXBCNbp6FZlejaMv+hmxBn8OwLdnRYV24A=
-X-Google-Smtp-Source: ABdhPJxgr/jJ6lpqCLuK1NQ2ImBQ7zPY+6mBJ1FA4L1GynIiDrCgEDDTE3rD2wNCYfU2eUNpjam1Qw==
-X-Received: by 2002:a63:f513:: with SMTP id w19mr3914444pgh.231.1632493353841;
-        Fri, 24 Sep 2021 07:22:33 -0700 (PDT)
+        bh=CMRvhHsWJ+IAVa0ezO5Z8K1OlT3I7D9HksMK7N9TqJY=;
+        b=ZQGu/Fw0RWCuRb3vLLHZKWHPTZ4+11BG7fOItDX0rA4aQnzgn91KvE1acb88/1wd9L
+         KbxwDUgVyyD9iwnwriSTF2aqb2k21SbJ5sb20bU6VK31FFTaEKSjEcNcWzoSHThTsw3R
+         v6pgiuDPIRTH/mIEq3mGfXX+OAlHI7ZVfNyXqGJTlkXXgZkTsRyRO9TBbvJXqANmQ8JG
+         2J+PMqQ8J16v9Fy9mvmxlYGfrOsSDRx3mggNHqVfRlJ+fJG750lBWcqA7K7ldl8EUu2q
+         4pn80VYdTRChlVi0MbQMb4FDDUl+0zw5BblgW8p/c1L+5DaYjehsOedV5u+CJaufohJ9
+         S4rw==
+X-Gm-Message-State: AOAM531WbP2CR1nmjZKf8QeexipT+Wf2Hl3cJxz1bMNdtDXX5AAzRIQv
+	OPcaeJmOlEtOPk4Z/hVmXjvp5aETWjuBIYghf7k=
+X-Google-Smtp-Source: ABdhPJyBLz5S6c1ucC4LkZUm4xCCoZkjjZyo9NNwXmjVjV//qlDXWh9f6Um693a6ydVh/tFyjhSeWg==
+X-Received: by 2002:a63:b34a:: with SMTP id x10mr3963223pgt.473.1632493355894;
+        Fri, 24 Sep 2021 07:22:35 -0700 (PDT)
 Return-Path: <steve@sakoman.com>
 Received: from localhost.localdomain (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id j20sm9907347pgb.2.2021.09.24.07.22.32
+        by smtp.gmail.com with ESMTPSA id j20sm9907347pgb.2.2021.09.24.07.22.34
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Sep 2021 07:22:33 -0700 (PDT)
+        Fri, 24 Sep 2021 07:22:35 -0700 (PDT)
 From: "Steve Sakoman" <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 09/14] build: Catch and error upon circular task references
-Date: Fri, 24 Sep 2021 04:21:02 -1000
-Message-Id: <e33b04b3a2bc95ac4e3e3321805072791e84a43c.1632493110.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 10/14] data_smart: Improve error display for handled exceptions
+Date: Fri, 24 Sep 2021 04:21:03 -1000
+Message-Id: <83271ee9604094c703f291b003a5df3d458e9adc.1632493110.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1632493110.git.steve@sakoman.com>
 References: <cover.1632493110.git.steve@sakoman.com>
@@ -53,42 +53,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-If there are circular task references, error on them rather than show
-a recursion error. A simple reproducer is:
+We don't need tracebacks for BBHandledException. Reduces confusing output like:
 
-"""
-do_packageswu () {
-       :
-}
+ERROR: /meta/recipes-core/images/core-image-tiny-initramfs.bb: Circular task dependencies as do_image_complete depends itself via the chain do_image_complete -> do_packageswu -> do_image_qa -> do_image -> do_image_cpio
+ERROR: ExpansionError during parsing /meta/recipes-core/images/core-image-tiny-initramfs.bb
+Traceback (most recent call last):
+  File "/bitbake/lib/bb/build.py", line 1050, in follow_chain(task='do_image_qa', endtask='do_build', chain=['do_image_complete', 'do_packageswu', 'do_image_qa', 'do_image', 'do_image_cpio']):
+                     if task in deps:
+    >                    follow_chain(othertask, endtask, chain)
+             chain.pop()
+  File "/bitbake/lib/bb/build.py", line 1050, in follow_chain(task='do_image', endtask='do_build', chain=['do_image_complete', 'do_packageswu', 'do_image_qa', 'do_image', 'do_image_cpio']):
+                     if task in deps:
+    >                    follow_chain(othertask, endtask, chain)
+             chain.pop()
+  File "/bitbake/lib/bb/build.py", line 1050, in follow_chain(task='do_image_cpio', endtask='do_build', chain=['do_image_complete', 'do_packageswu', 'do_image_qa', 'do_image', 'do_image_cpio']):
+                     if task in deps:
+    >                    follow_chain(othertask, endtask, chain)
+             chain.pop()
+  File "/bitbake/lib/bb/build.py", line 1038, in follow_chain(task='do_image_complete', endtask='do_build', chain=['do_image_complete', 'do_packageswu', 'do_image_qa', 'do_image', 'do_image_cpio']):
+             if task in chain:
+    >            bb.fatal("Circular task dependencies as %s depends itself via the chain %s?!" % (task, " -> ".join(chain)))
+             chain.append(task)
+  File "/bitbake/lib/bb/__init__.py", line 165, in fatal:
+         mainlogger.critical(''.join(args), extra=kwargs)
+    >    raise BBHandledException()
 
-addtask do_packageswu after do_image_complete before do_image_qa
-"""
+to the real error:
 
-into image_types.bbclass. There is code in runqueue to detect these but
-we never get that far with the current codebase.
-
-[YOCTO #13140]
+ERROR: /media/build1/poky/meta/recipes-core/images/core-image-tiny-initramfs.bb: Circular task dependencies as do_image_complete depends itself via the chain do_image_complete -> do_packageswu -> do_image_qa -> do_image -> do_image_cpio
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 339d4d6be515a71311b81fb9e99742af0d8a5130)
+(cherry picked from commit 551d4c0576a0a0c3406000029df9238b312f2263)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/build.py | 2 ++
+ lib/bb/data_smart.py | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 6e9c064e..17c70d0a 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -905,6 +905,8 @@ def tasksbetween(task_start, task_end, d):
-     def follow_chain(task, endtask, chain=None):
-         if not chain:
-             chain = []
-+        if task in chain:
-+            bb.fatal("Circular task dependencies as %s depends on itself via the chain %s" % (task, " -> ".join(chain)))
-         chain.append(task)
-         for othertask in tasks:
-             if othertask == task:
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 61b37cf3..68770832 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -411,6 +411,8 @@ class DataSmart(MutableMapping):
+                 raise
+             except bb.parse.SkipRecipe:
+                 raise
++            except bb.BBHandledException:
++                raise
+             except Exception as exc:
+                 tb = sys.exc_info()[2]
+                 raise ExpansionError(varname, s, exc).with_traceback(tb) from exc
 -- 
 2.25.1
 
