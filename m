@@ -1,86 +1,127 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
- by mx.groups.io with SMTP id smtpd.web10.8874.1632493364891180718
+Return-Path: <richard.purdie@linuxfoundation.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CE0C433EF
+	for <webhook@archiver.kernel.org>; Sat, 25 Sep 2021 09:41:25 +0000 (UTC)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com
+ [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web10.5173.1632562883970148606
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Sep 2021 07:22:45 -0700
+ Sat, 25 Sep 2021 02:41:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=IRdmUv6w;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.175, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f175.google.com with SMTP id w14so9043888pfu.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Sep 2021 07:22:44 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=a7QWntQQ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f52.google.com with SMTP id r23so9500473wra.6
+        for <bitbake-devel@lists.openembedded.org>;
+ Sat, 25 Sep 2021 02:41:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3BcnRJlqbdPKSI4/ZU1BCX2RqLpwBcSS0Pw2BHn4KEQ=;
-        b=IRdmUv6wXG/M2aStZZbp5t91f09aDIN96z8hHl/RSDH5C5YHsKD4c1N4DbfY4fg+2i
-         JHaEhpLykSw87+BNaxHD9dc0aLIbgpYn8Hs5eznF8uf8O6fuMdpWPNCe9O9P3ApN7i1J
-         X4FBeE1PBruox1KBXplvoenhDTMmbSy4In++3eAmnpJUOwEzWe9UIaLf3HRsrO8RApHt
-         /7/A1FYA+sLZ9y3CyuEx1/CZ1eigsGWwEA/RNuBDR1EMJaOZOuBE8PZprYjrZxF7dYmI
-         hl1oLW5amDWD/a+DKgCyukiYrnXifoJip4DO9C4GJ4ulVOjsKVDyV2mmbLHY2wbgb6ee
-         6jgg==
+        bh=e7IYoM2gs3A+UWAJcZ2Z8W0WpA2cCccY7dTJs2qman0=;
+        b=a7QWntQQp5Nf94svD7oodk2GLQlgG7PAs9ulPA5e/PiN8Qg8H4T/B0YE6YAIuW9949
+         pN806eKNt5CEHoWPtCHLIUOW6J9n1aogTW+/aLwdL4CpIKmGaA/Qsjko/9JLix9KJ5Xr
+         cCJrgYa0csk++ibUozPQNTERZxxd1U1gkntHk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3BcnRJlqbdPKSI4/ZU1BCX2RqLpwBcSS0Pw2BHn4KEQ=;
-        b=aFd4+lLwH9gpjXsKzZu7qJLIB46VCavorLyrGIjegMeCB5gjg9nz9GPhFJGjqITBeI
-         dGffTZeFNR3UwD1kPHGNzd+tNJFWu49Tby6hgqNKg1HtMmFVd3wgBTLZxefHQnPiUOQ0
-         HVQSsgKEnJTz/tmqj7NmLvSWehmV+o0o8fWMOMETCR9fqq+QBWVJKN4qjFTvk3S5/UYY
-         x0J2cH09ToJvxgN1wGT8dNpqqDzcrl770YCWURYPmiItbyV5rYFxWUtLgjUvOoUgallo
-         KLzo/siVtWXiX/8MVktgQq7uOEctYQhh9DtNypFHkHFrd84Nhm3R7lqqK/E1nnTwCeZy
-         cOqg==
-X-Gm-Message-State: AOAM533otSvuJ3N9ATwPqeqAnNVbUTF7MZVCRqPSmzxJGhdUKLxE/jeS
-	+dCF212IjkL2j5TgvkuRD6CWQklSyDQZ/AtWmEg=
-X-Google-Smtp-Source: ABdhPJyLZ0k9hpDJ4eYKfJc/cEnhsnWFOi3zqP53wbcsHBePS6j8yDZdh2rBs9hlNMzx9YsmT6K0XQ==
-X-Received: by 2002:a63:7d01:: with SMTP id y1mr4016659pgc.343.1632493363968;
-        Fri, 24 Sep 2021 07:22:43 -0700 (PDT)
-Return-Path: <steve@sakoman.com>
-Received: from localhost.localdomain (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id j20sm9907347pgb.2.2021.09.24.07.22.42
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e7IYoM2gs3A+UWAJcZ2Z8W0WpA2cCccY7dTJs2qman0=;
+        b=4cThqTvNGdOSkQmNwx4vCwqY2yzsK2wwkXqAb4Bekk2miJ1AiRJq8MoMGoVR0Z7dI6
+         YwU1UIXoYFGuS2BxWtawiPveoL9P/daxehtZNHREN2swmluuYa2DrLw1L3kRoDXOJ5gz
+         x5juHQc0mqTwrKx1mc7y1mw9VRimBZGNX8OcU8kSTbWPcFfHc5hG5PPn+RW7ljVYJf3f
+         Th1L5b/M0nwUrXVnhZh2q5njGsu6R3BQgYlXwS/XH3K0FqbOH723LOIjKyLkVtwBoVgC
+         9GsDVCApLhAEDuVLp6qn9D/TULeChyQgLRD3R2SK/GcoGeLQy11xru2UTNWsHWYixsjh
+         Pj5w==
+X-Gm-Message-State: AOAM5324OGIDYyx598DhgcrR1+VKb9NBGd5+IF7cIJcyX28R0OEWkYIX
+	gUO2d/jUl4XwBGCW1CgPdBjz3ZaQL1USFWRy
+X-Google-Smtp-Source: 
+ ABdhPJypAndrSDWxH8v5hiWROnNLEGnZRta2LBVBXLYRaawpQx9++xr+TK3+YwVnHmJF1Z5xs+0Pjg==
+X-Received: by 2002:a05:600c:35c6:: with SMTP id
+ r6mr6353497wmq.24.1632562882014;
+        Sat, 25 Sep 2021 02:41:22 -0700 (PDT)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:2185:dd9d:1e31:557d])
+        by smtp.gmail.com with ESMTPSA id
+ a77sm10786802wme.28.2021.09.25.02.41.21
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Sep 2021 07:22:43 -0700 (PDT)
-From: "Steve Sakoman" <steve@sakoman.com>
+        Sat, 25 Sep 2021 02:41:21 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 14/14] cookerdata: Show a readable error for invalid multiconfig name
-Date: Fri, 24 Sep 2021 04:21:07 -1000
-Message-Id: <52a9dfa54e2b1bdad9a0b94946c89f619a0323f8.1632493110.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1632493110.git.steve@sakoman.com>
-References: <cover.1632493110.git.steve@sakoman.com>
+Subject: [PATCH] bitbake-worker: Allow shutdown/database flush of pseudo
+ server at task exit
+Date: Sat, 25 Sep 2021 10:41:21 +0100
+Message-Id: <20210925094121.1780833-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+List-Id: <bitbake-devel.lists.openembedded.org>
+X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
+ aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
+ <bitbake-devel@lists.openembedded.org>; Sat, 25 Sep 2021 09:41:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12704
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+We have a problem where pseudo server processes exist ater bitbake exits
+and hold the pseudo database in memory. In a docker container, the processes
+wll be killed as the container is destroyed with no warning and no opportunity
+to write the data to disk. This leads to permissions/inode corruptions and
+data loss.
 
-If a multiconfig starts with a digit, users would see pages of
-errors as we use the multiconfig as a python function name prefix
-and python functions cannot start with a digit. We could avoid doing
-that but it is easier just to ask users to name multiconfigs not
-starting with digits.
-
-This tweak ensures the user sees an easier to understand error.
+Send a shutdown message to pseudo which in new versions of pseudo will flush
+the database, thereby fixing some of the issues people using docker containers
+see.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit f9cddaeef35b2ea0dadf717101ed896f6b857abd)
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/cookerdata.py | 2 ++
- 1 file changed, 2 insertions(+)
+ bin/bitbake-worker | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 26b9b0b4..32a8798f 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -297,6 +297,8 @@ class CookerDataBuilder(object):
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+index 6ead2da6d1..24dadd997c 100755
+--- a/bin/bitbake-worker
++++ b/bin/bitbake-worker
+@@ -17,6 +17,8 @@ import signal
+ import pickle
+ import traceback
+ import queue
++import shlex
++import subprocess
+ from multiprocessing import Lock
+ from threading import Thread
  
-             multiconfig = (self.data.getVar("BBMULTICONFIG") or "").split()
-             for config in multiconfig:
-+                if config[0].isdigit():
-+                    bb.fatal("Multiconfig name '%s' is invalid as multiconfigs cannot start with a digit" % config)
-                 mcdata = self.parseConfigurationFiles(self.prefiles, self.postfiles, config)
-                 bb.event.fire(bb.event.ConfigParsed(), mcdata)
-                 self.mcdata[config] = mcdata
+@@ -146,6 +148,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
+     # a fork() or exec*() activates PSEUDO...
+ 
+     envbackup = {}
++    fakeroot = False
+     fakeenv = {}
+     umask = None
+ 
+@@ -165,6 +168,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
+ 
+     # We can't use the fakeroot environment in a dry run as it possibly hasn't been built
+     if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not dry_run:
++        fakeroot = True
+         envvars = (workerdata["fakerootenv"][fn] or "").split()
+         for key, value in (var.split('=') for var in envvars):
+             envbackup[key] = os.environ.get(key)
+@@ -283,7 +287,12 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
+             try:
+                 if dry_run:
+                     return 0
+-                return bb.build.exec_task(fn, taskname, the_data, cfg.profile)
++                ret = bb.build.exec_task(fn, taskname, the_data, cfg.profile)
++                if fakeroot:
++                    fakerootcmd = shlex.split(the_data.getVar("FAKEROOTCMD"))
++                    bb.warn("Shutting down pseudo")
++                    subprocess.run(fakerootcmd + ['-S'], capture_output=True, check=True)
++                return ret
+             except:
+                 os._exit(1)
+         if not profiling:
 -- 
-2.25.1
+2.32.0
+
 
