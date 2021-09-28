@@ -1,149 +1,113 @@
-Return-Path: <weaverjs@gmail.com>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A63EC433EF
-	for <webhook@archiver.kernel.org>; Tue, 28 Sep 2021 02:00:24 +0000 (UTC)
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com
- [209.85.222.177])
- by mx.groups.io with SMTP id smtpd.web11.8461.1632794423321646796
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3248EC433EF
+	for <webhook@archiver.kernel.org>; Tue, 28 Sep 2021 23:20:56 +0000 (UTC)
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com
+ [209.85.210.180])
+ by mx.groups.io with SMTP id smtpd.web10.1920.1632871254166485832
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 27 Sep 2021 19:00:23 -0700
+ Tue, 28 Sep 2021 16:20:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=CxlYCCMD;
- spf=pass (domain: gmail.com, ip: 209.85.222.177,
- mailfrom: weaverjs@gmail.com)
-Received: by mail-qk1-f177.google.com with SMTP id q125so24506780qkd.12
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
+ header.b=2Ly7yhxw;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.180,
+ mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f180.google.com with SMTP id q23so324837pfs.9
         for <bitbake-devel@lists.openembedded.org>;
- Mon, 27 Sep 2021 19:00:23 -0700 (PDT)
+ Tue, 28 Sep 2021 16:20:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aGKjbRbTZ+IyzVdJuMI+1mgJvTGJl3Sq+vpEXm5CDDI=;
-        b=CxlYCCMDbZ7Uq0lEZnv/DkiDqKsDuhpAfxA87n2kX2x/PEkKTmHg46WFSUFFa6bPiw
-         5AOVcNOebkr5vyxP4B/DWqh3qCiM5G5yjV0WGEn0W94SUceano65MjOihlsvoYtFIEka
-         ZNgnpA9byr8xRssD22pvncbSpVk/8waJNcUm4oBjLOXQkWDpvihABHhaCOXCkq/iobt3
-         r3nM7mMxWjPQAHa9ihn4HGp//ha/IybCx6gBYUOnRkzFE3buEIsbrNCp8Ud+A6ekh5A5
-         zNeSFSiBPdGPbhJB8V3C2D9gjU5SrWvPzmi+gtfDyi33IGF+UymRMMrDoqygPjZRb4c8
-         8pqg==
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NRl85hhYA0+v0rXDd2CXUl4P53SErF+XqasHnQyNUsM=;
+        b=2Ly7yhxwqfLg44xpyQGzHTKWqgXemKA5XNpqB5vZlIZax+QYZe/kjmpVK2AfzZFa8x
+         zOa8Z+aGnWpBIqVh7nolidqbrYh/VwCvrju1sgP3khfCZ4KL2UzIku9A0OcIq/woecYl
+         LzIZww+XVtAQCrLfMJO5uz8rhoo+FwWY8WWPXTniFWHeQuymxiwXy/QfE2kvurHqROLS
+         WFZj1od1yHSDlIK8B8Z/izTohaWunSXiU88CW2l1shd0pgglhp0wlzGKw+eOmpBRjbDM
+         OK+V5ZYw7Ht5xISE5defkRF5fEpX9Y1/sjgw39iUDvPiuK6YDBiaSF2GROYDd+QA9EfC
+         AhBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aGKjbRbTZ+IyzVdJuMI+1mgJvTGJl3Sq+vpEXm5CDDI=;
-        b=P2P9RS07DnSiAZG2aBJO5qtje95c3Gg5QddJV79rpsHsK0os6gk+aFGqN/hAHh9TdS
-         9OskvxDiLhAxAAArSj4ZYQoU9qESuo9a2WCKf9vRyoheRLeO+cxeIVaTpztEasD+Y3TX
-         sBYPU53mLWpTgtTq4VgztOjpwlEOfWN4k72P1hlPTRzEEb+D0vnCNO5OwRVA9ojVuYXY
-         Kf6O3JckNfFKPLBI53jmD0fVmrRIbA9DW0Zyx/rg+SDTKWLIiAL9EbgiPBXLtduExBCg
-         hjEtHOcYF2GClaSW7WN2kSEjlcsiYm20vxa+nUsYws16vjCjuaEN3b//C4TfrAsmdm3p
-         j+eQ==
-X-Gm-Message-State: AOAM530wENZemVJVVsUH2Yx5wPKJJFdrOLg10+e5J14TwOWyfMXaDLb+
-	RMAkgrbG8C0uwcQTX67B7qVzKmg=
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NRl85hhYA0+v0rXDd2CXUl4P53SErF+XqasHnQyNUsM=;
+        b=HR5sESIY4FkK/wdzYjZcftegjBKhwtyjCBLE6Ywd1YwsS1pvyiqQcFhAjKTBLe3Mfh
+         JVLuC/kOAkdG7jYbnt4RfiIRgqtK/K2JV/O4lQEpUUy2yvQfmdjiwn1lsEuBgPPM0rmD
+         qxS+K0dX7SA1urwseI4cWGv82JBZaXJp8SDUH+tvAit43uYc7FoCdtb/PkhapYo/GOxF
+         fyzSWpDn4DfEl0bkCpTA3bAEABCNvSRlhlGdBSPvePfvcGkLXnEAmOOu2tSgmKYDRf4i
+         euAYB2w48FO3/QSxg2a5Y+4mLtPocEQ/YAE8Ir5M7g9g37kH46mfIhLzG5PmaPRfQzI3
+         Pr5w==
+X-Gm-Message-State: AOAM531cEAeUSsCpaXR4w+Xvlu/xzob2nKpASZrEo4OjkBinJwkonwqt
+	uSXHUfwNrKntKJdeER0HbDzz4hBPuqwsDF6K2D0=
 X-Google-Smtp-Source: 
- ABdhPJyvG7MSOsN4jKYrJVlMAZRn+JAkM+qxMWBQjk2CGJlVHB6AT3YKu2zpuGqOv7LdHGj6t1k9tA==
-X-Received: by 2002:a37:a64b:: with SMTP id p72mr3066039qke.459.1632794422342;
-        Mon, 27 Sep 2021 19:00:22 -0700 (PDT)
-Received: from popos
- (2603-6011-2200-ab10-97f0-85cf-2ba4-5d6d.res6.spectrum.com.
- [2603:6011:2200:ab10:97f0:85cf:2ba4:5d6d])
+ ABdhPJynjlamdvuCTjHceymZ3ZZW2HYEG9GagUqtIN5SmEPFhsLyXLKC0+epMQK5phs90yheUImvVg==
+X-Received: by 2002:a62:d151:0:b0:44b:2b04:9b11 with SMTP id
+ t17-20020a62d151000000b0044b2b049b11mr7902822pfl.38.1632871252774;
+        Tue, 28 Sep 2021 16:20:52 -0700 (PDT)
+Received: from localhost.localdomain (rrcs-66-91-142-162.west.biz.rr.com.
+ [66.91.142.162])
         by smtp.gmail.com with ESMTPSA id
- u9sm11759167qta.90.2021.09.27.19.00.21
+ 77sm186203pfu.219.2021.09.28.16.20.51
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Sep 2021 19:00:21 -0700 (PDT)
-Date: Mon, 27 Sep 2021 22:00:19 -0400
-From: Scott Weaver <weaverjs@gmail.com>
-To: Kai <kai.kang@windriver.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel][ 1/3] bitbake: fetch2: fix premirror URI when
- downloadfilename defined
-Message-ID: <YVJ3M8RII6ssdf8/@popos>
-References: <20210905222738.1050768-1-weaverjs@gmail.com>
- <20210905222738.1050768-2-weaverjs@gmail.com>
- <dd26626a-079e-86d8-34ce-ad5d2b71ac8b@windriver.com>
+        Tue, 28 Sep 2021 16:20:52 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][dunfell][1.46][PATCH 00/14] Pull request (cover letter
+ only)
+Date: Tue, 28 Sep 2021 13:20:35 -1000
+Message-Id: <cover.1632871177.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd26626a-079e-86d8-34ce-ad5d2b71ac8b@windriver.com>
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 28 Sep 2021 02:00:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12711
+ <bitbake-devel@lists.openembedded.org>; Tue, 28 Sep 2021 23:20:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12712
 
-On 21-09-22 09:58:13, Kai wrote:
-> On 9/6/21 6:27 AM, Scott Weaver wrote:
-> > When downloadfilename is defined in a recipe's SRC_URI and PREMIRRORS is also
-> > defined using the same URI, the downloadfilename is appended to the mirror
-> > URI and it should not be.
-> > 
-> > [YOCTO #13039]
-> 
-> As I commented in the bugzilla, I suppose it is an invalid bug.
-> 
-> It save the tarball with the name of the value of downloadfilename rather
-> than the basename of the url.
-> In this case, the name of tarball in the premirror downloads/ directory is
-> uthash-2.0.2.tar.gz rather than
-> 2.0.2.tar.gz if the premirror is created by run bitbake do_fetch. So when
-> premirror is used, it checks
-> uthash-2.0.2.tar.gz in the premirrors but not the original value
-> '2.0.2.tar.gz'.
-> 
-> With this patch, it fails to fetch the tarball from premirrors. It could be
-> reproduced by config:
-> 
-> BB_NO_NETWORK = "1"
-> BB_FETCH_PREMIRRORONLY = "1"
-> 
-> Regards,
-> Kai
+The following changes since commit 3c1799b2576f80b6dcb310e03f77105a58b9fa8e:
 
-Sorry, Kai. I didn't see your email until just now.
-I'll look into it. IMO, I would treat this like a new/different bug
-than the one I addressed with this patch but regardless it is a
-related use case to this BZ.
+  tests/fetch2: Use our own git server for dtc test repo (2021-09-22 22:45:10 +0100)
 
-I'll update the BZ after I've dug into this.
+are available in the Git repository at:
 
- - Scott
+  git://git.openembedded.org/bitbake-contrib stable/1.46-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-next
 
+Joshua Watt (1):
+  server: Fix early parsing errors preventing zombie bitbake
 
-> > 
-> > Signed-off-by: Scott Weaver <weaverjs@gmail.com>
-> > ---
-> >   bitbake/lib/bb/fetch2/__init__.py | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-> > index 914fa5c024..47a4943369 100644
-> > --- a/bitbake/lib/bb/fetch2/__init__.py
-> > +++ b/bitbake/lib/bb/fetch2/__init__.py
-> > @@ -466,7 +466,7 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
-> >                       # Kill parameters, they make no sense for mirror tarballs
-> >                       uri_decoded[5] = {}
-> >                   elif ud.localpath and ud.method.supports_checksum(ud):
-> > -                    basename = os.path.basename(ud.localpath)
-> > +                    basename = os.path.basename(uri_decoded[loc])
-> >                   if basename and not result_decoded[loc].endswith(basename):
-> >                       result_decoded[loc] = os.path.join(result_decoded[loc], basename)
-> >           else:
-> > 
-> > -=-=-=-=-=-=-=-=-=-=-=-
-> > Links: You receive all messages sent to this group.
-> > View/Reply Online (#12592): https://lists.openembedded.org/g/bitbake-devel/message/12592
-> > Mute This Topic: https://lists.openembedded.org/mt/85401309/3616933
-> > Group Owner: bitbake-devel+owner@lists.openembedded.org
-> > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [kai.kang@windriver.com]
-> > -=-=-=-=-=-=-=-=-=-=-=-
-> > 
-> 
-> -- 
-> Kai Kang
-> Wind River Linux
-> 
+Marco Felsch (1):
+  bitbake: bitbake-layers: add skip reason to output
+
+Richard Purdie (12):
+  ui/taskexp: Improve startup exception handling
+  ui/taskexp: Fix to work with empty build directories
+  build: Match markup to real function name
+  build: Handle SystemExit in python tasks correctly
+  process: Don't include logs in error message if piping them
+  build: Avoid duplicating logs in verbose mode
+  build: Catch and error upon circular task references
+  data_smart: Improve error display for handled exceptions
+  cookerdata: Improve missing core layer error message
+  cookerdata: Show error for no BBLAYERS in bblayers.conf
+  bitbake-worker: Improve error handling
+  cookerdata: Show a readable error for invalid multiconfig name
+
+ bin/bitbake-worker       | 10 ++++++----
+ lib/bb/build.py          | 12 +++++++++---
+ lib/bb/cookerdata.py     |  7 +++++++
+ lib/bb/data_smart.py     |  2 ++
+ lib/bb/process.py        |  3 +++
+ lib/bb/server/process.py |  3 ++-
+ lib/bb/ui/taskexp.py     |  5 +++++
+ lib/bblayers/query.py    |  2 +-
+ 8 files changed, 35 insertions(+), 9 deletions(-)
 
 -- 
-  - Scott
+2.25.1
 
 
