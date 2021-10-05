@@ -1,90 +1,68 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45523C433F5
-	for <webhook@archiver.kernel.org>; Sat,  2 Oct 2021 22:28:22 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com
- [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web09.16293.1633213701525637583
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62622C433F5
+	for <webhook@archiver.kernel.org>; Tue,  5 Oct 2021 14:50:07 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.1522.1633445406318422255
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 02 Oct 2021 15:28:21 -0700
+ Tue, 05 Oct 2021 07:50:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aYxxWFX4;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f41.google.com with SMTP id b192so9937794wmb.2
-        for <bitbake-devel@lists.openembedded.org>;
- Sat, 02 Oct 2021 15:28:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uzGT++JornGh706qmLJ7ktZtucHQUvG5VlgE4ubQ14s=;
-        b=aYxxWFX4VDsFauQd0HKhOiMcjT4sSb9pQsaHTKBWrvqmHBmjkr+MN/+3XW0IvJmgRR
-         KoZzdZO74VpiOLmt9RpAwiQfMNAt/38RMdibkThCD2twPwcUMcBZ7N8ERAWHJ6C6/RvE
-         6qXvk3VJqTY8l+R4eGdrUuq3+np3oxOUI0F6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uzGT++JornGh706qmLJ7ktZtucHQUvG5VlgE4ubQ14s=;
-        b=Jb1I9rV/rZHpVJHAswnMxlKXKgAwJuSdmNmAUj34ZbacRV1H9oWQsQrq1LSEinoMKr
-         s3eO8iuu1B+4qoiWcQKDbGzBBh5c8xASkXXfKMpbuSHBh5UTd/Cp71e7LFEnrZqmBM87
-         4ufqXLQn2HfwnCli7gEIqXlS2GTFH7b9jG4VHE58iRQvMV7r2D9PGgEAkchGI86XZGij
-         hIm6WZVhQYAqVooCcgYuTfaNMceTpHJhEWphUNzSfTEfuJfW3BHnQeDyGWN9Pbv/kyMA
-         mse+fv0+FcQ5bOCfFuUqA4MuF+IV1CPgbY7f7Hqtm71X1k80YOSrHMcD40JKOhBnkTKm
-         +arQ==
-X-Gm-Message-State: AOAM532tpLHfrbpx/Un95Adu4FDCM1q8tDgsAQ8jx+Fl97beJ1UlDoFG
-	41lEpziAUN8ycanxRsMeDLA0ntwh3mhAzShX
-X-Google-Smtp-Source: 
- ABdhPJw4oZkmNUgurqtZYECdsCXbwG25EeYl8NQjUSoOCEhTdCc7dMqrhUatUef4Ml3qCM/ffSQReA==
-X-Received: by 2002:a1c:2785:: with SMTP id
- n127mr10675655wmn.155.1633213699790;
-        Sat, 02 Oct 2021 15:28:19 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:8657:7fac:b2bf:59a6])
-        by smtp.gmail.com with ESMTPSA id e5sm9702669wrd.1.2021.10.02.15.28.19
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Oct 2021 15:28:19 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBA9BED1;
+	Tue,  5 Oct 2021 07:50:05 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BA663F70D;
+	Tue,  5 Oct 2021 07:50:05 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] data: Ensure functions are defined in a deterministic order
-Date: Sat,  2 Oct 2021 23:28:18 +0100
-Message-Id: <20211002222818.2283977-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+Cc: mark.hatle@kernel.crashing.org
+Subject: [PATCH 3/4] fetch2: clarify the command-no-found error message
+Date: Tue,  5 Oct 2021 15:50:00 +0100
+Message-Id: <20211005145001.2717748-3-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211005145001.2717748-1-ross.burton@arm.com>
+References: <20211005145001.2717748-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 02 Oct 2021 22:28:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12722
+ <bitbake-devel@lists.openembedded.org>; Tue, 05 Oct 2021 14:50:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12724
 
-When writing functions into shell scripts, write then in a deterministic
-order. This is unlikely to affect anything at runtime but it does change
-the signatures of the generated useradd postinst scripts in OE-Core and is
-a good thing to be consistent about in general.
+If runfetchcmd() fails with bb.process.NotFoundError, the message output
+is simply "Fetch command" which doesn't really explain what the problem
+is.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Add "not found" to clarify what happened.
+
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- lib/bb/data.py | 2 +-
+ bitbake/lib/bb/fetch2/__init__.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 97022853ca..9d18b1e2bf 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -226,7 +226,7 @@ def emit_func(func, o=sys.__stdout__, d = init()):
-         deps = newdeps
-         seen |= deps
-         newdeps = set()
--        for dep in deps:
-+        for dep in sorted(deps):
-             if d.getVarFlag(dep, "func", False) and not d.getVarFlag(dep, "python", False):
-                emit_var(dep, o, d, False) and o.write('\n')
-                newdeps |=  bb.codeparser.ShellParser(dep, logger).parse_shell(d.getVar(dep))
--- 
-2.32.0
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__=
+init__.py
+index ee29d89b18..259b2637a6 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -884,7 +884,7 @@ def runfetchcmd(cmd, d, quiet=3DFalse, cleanup=3DNone=
+, log=3DNone, workdir=3DNone):
+         (output, errors) =3D bb.process.run(cmd, log=3Dlog, shell=3DTrue=
+, stderr=3Dsubprocess.PIPE, cwd=3Dworkdir)
+         success =3D True
+     except bb.process.NotFoundError as e:
+-        error_message =3D "Fetch command %s" % (e.command)
++        error_message =3D "Fetch command %s not found" % (e.command)
+     except bb.process.ExecutionError as e:
+         if e.stdout:
+             output =3D "output:\n%s\n%s" % (e.stdout, e.stderr)
+--=20
+2.25.1
 
 
