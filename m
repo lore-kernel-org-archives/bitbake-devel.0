@@ -2,44 +2,44 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B683BC433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4741C433EF
 	for <webhook@archiver.kernel.org>; Thu,  7 Oct 2021 12:55:34 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com
- [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web09.11215.1633611333737043438
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
+ [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web08.11216.1633611333147895983
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 07 Oct 2021 05:55:34 -0700
+ Thu, 07 Oct 2021 05:55:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CwIQIsie;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=M2icP02o;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f47.google.com with SMTP id e12so18811999wra.4
+Received: by mail-wr1-f45.google.com with SMTP id i12so6198638wrb.7
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 07 Oct 2021 05:55:33 -0700 (PDT)
+ Thu, 07 Oct 2021 05:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZRWNx5xymwApEURGHScpfT86oVlO1G9VWYaHjjg0J/4=;
-        b=CwIQIsie0Hb1waxTKc3+hw18obGP+BbYDlpFP7YXuMIYWiFDR/UTWuTZCJhY85LPh8
-         +37RjpCtj5hg4F+2I4fwr4+4/AWGD+UATWM6bGJpmN5WKoGQ3oEUNZUym4/aCWNbCvzY
-         7bp8J5ODNi2/GsMs/bnexeciy8yW2YOTK4hSE=
+        bh=Up0qXJHvvKfdvM3ooVmg8cx9dGP3+lxK2LPBaoeLaBQ=;
+        b=M2icP02ojrDs4shDWKtH/9fcifS/5Gg6sCsAv+k38FTRqZujEN1qhtNVki7iAVOF/s
+         1XLR/KVwAreygYaflHba7Fc4O7Sl18sGb2rHDjKVyXoOIcOKKI1yU4SrTP0P9tPC/Uiw
+         1X9vN6jV5TZqT8636qLiLc489oTpVK0AeFUxU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZRWNx5xymwApEURGHScpfT86oVlO1G9VWYaHjjg0J/4=;
-        b=qZyZep+6Q/ZzKnDiYG/ydpAP8NM52hECYmhbnOYbc60dm4pZ0AiskZiGFbUvjNC+Cx
-         8SWvAe2mOLUlyUom/aKDyBV1dxdH9ABgGyQ3UgHqT4VJWHNcbT2gfUHwM3RXS+dvWcfW
-         bK0c8hAPLNYTaBq5j4C6taz/HsYcN9d/20EgDlF7TBQjLof/HFuET8PRMIF9EsFIuGd5
-         QAyLmLbWNswPzI/uqtBquce44qfZuJ7ts5o+qxFa4FN8W7Nkv18GdGpgtQRSqZeHcon9
-         QDrrD3tY/pXMikT2YP8nQ4dGuckHZxB4yMhrLaQmoPrY0dhJriJnybhI4MoVEJQG+pA5
-         95+g==
-X-Gm-Message-State: AOAM5308oBWZ7+jHVvVBOKoYkCfbi5a7i4Nl/co9iEtKgvfF4oJDiz3Y
-	tvmh1AoE8bTmd/U2YbTvDNo7+LJTQkrLDg==
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Up0qXJHvvKfdvM3ooVmg8cx9dGP3+lxK2LPBaoeLaBQ=;
+        b=2w8+bPaJDBQ8uzwAtfxo28S0y00sOB9fcS/P9FZYAELrQyEd1VdyLt3cJnSDPiCXNl
+         rNTL+tGah/b9U4zLMO9PPYLyXlMTpm+OAG15+hRWd0pOX+8v3rREKq59gzdjdtO+4XZm
+         79dPaOOgOTFf2tY21ntS33YxclgkaPGlHZgWZE53ADR84qdIZSUxOg+dn+Q5434mCpfT
+         kIuQl23XJdtRUQUHOX5t3ycPA6mRC/ZPdgHEm3BTHsmSK7f8Hhpl6FE9Wb9Z7LyeqgJv
+         kyDCn1UQYAFxqsAqibseP+ogzuODHDZwKtAW7FeREPwxSuXbo1bvPssEI89/lVOFu45C
+         VV3w==
+X-Gm-Message-State: AOAM533okUReLvI0RIMq1RnOWIixKvr7uqNx/w09d6bAHFNzN+67CNW4
+	jJmSDCpKZQMhUtBQvIhmHg/yVdxxdS6aBg==
 X-Google-Smtp-Source: 
- ABdhPJzg9IDOGga9WFIefoZRKcvyLStcXeJoJK7MKkLWAMoAWUKLx6uDbGFDiV2aFOeYmQgLsj5jFw==
-X-Received: by 2002:a7b:cd18:: with SMTP id f24mr4394819wmj.129.1633611331744;
+ ABdhPJxoX2CsSWJQ32JvkBgoZPJSUtoRku+V3yDyfrMXlza9ky0alJfM/P8KYEtyN6yIWwxBv3863g==
+X-Received: by 2002:a1c:208:: with SMTP id 8mr16319247wmc.114.1633611331440;
         Thu, 07 Oct 2021 05:55:31 -0700 (PDT)
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:4ef0:3e29:718c:a98a])
         by smtp.gmail.com with ESMTPSA id
@@ -49,51 +49,69 @@ Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:4ef0:3e29:718c:a98a])
         Thu, 07 Oct 2021 05:55:31 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] bitbake-worker: Handle pseudo shutdown in Ctrl+C case
-Date: Thu,  7 Oct 2021 13:55:30 +0100
-Message-Id: <20211007125530.2414480-2-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 1/2] knotty/uihelper: Show setscene task progress in summary
+ output
+Date: Thu,  7 Oct 2021 13:55:29 +0100
+Message-Id: <20211007125530.2414480-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211007125530.2414480-1-richard.purdie@linuxfoundation.org>
-References: <20211007125530.2414480-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 07 Oct 2021 12:55:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12740
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12739
 
-If the build is interrupted, handle the shutdown of pseudo even in this
-case to avoid data corruption inside docker containers.
+With the changes to task accounting, bitbake doesn't show progress
+when executing setscene tasks on the summary console output.
 
-[YOCTO #14555]
+Change to show a progress within the setscene tasks and a progress
+within the main tasks. I can't see any way to display this more easily
+without confusing users.
+
+[YOCTO #14586]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bin/bitbake-worker | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ lib/bb/ui/knotty.py   | 6 +++---
+ lib/bb/ui/uihelper.py | 4 +++-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index 115bc1d091..6a12e1fed2 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -287,10 +287,12 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
-             try:
-                 if dry_run:
-                     return 0
--                ret = bb.build.exec_task(fn, taskname, the_data, cfg.profile)
--                if fakeroot:
--                    fakerootcmd = shlex.split(the_data.getVar("FAKEROOTCMD"))
--                    subprocess.run(fakerootcmd + ['-S'], check=True, stdout=subprocess.PIPE)
-+                try:
-+                    ret = bb.build.exec_task(fn, taskname, the_data, cfg.profile)
-+                finally:
-+                    if fakeroot:
-+                        fakerootcmd = shlex.split(the_data.getVar("FAKEROOTCMD"))
-+                        subprocess.run(fakerootcmd + ['-S'], check=True, stdout=subprocess.PIPE)
-                 return ret
-             except:
-                 os._exit(1)
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index 8df745d130..484545a684 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -276,11 +276,11 @@ class TerminalFilter(object):
+             print(content)
+         else:
+             if self.quiet:
+-                content = "Running tasks (%s of %s)" % (self.helper.tasknumber_current, self.helper.tasknumber_total)
++                content = "Running tasks (%s of %s/%s of %s)" % (self.helper.setscene_current, self.helper.setscene_total, self.helper.tasknumber_current, self.helper.tasknumber_total)
+             elif not len(activetasks):
+-                content = "No currently running tasks (%s of %s)" % (self.helper.tasknumber_current, self.helper.tasknumber_total)
++                content = "No currently running tasks (%s of %s/%s of %s)" % (self.helper.setscene_current, self.helper.setscene_total, self.helper.tasknumber_current, self.helper.tasknumber_total)
+             else:
+-                content = "Currently %2s running tasks (%s of %s)" % (len(activetasks), self.helper.tasknumber_current, self.helper.tasknumber_total)
++                content = "Currently %2s running tasks (%s of %s/%s of %s)" % (len(activetasks), self.helper.setscene_current, self.helper.setscene_total, self.helper.tasknumber_current, self.helper.tasknumber_total)
+             maxtask = self.helper.tasknumber_total
+             if not self.main_progress or self.main_progress.maxval != maxtask:
+                 widgets = [' ', progressbar.Percentage(), ' ', progressbar.Bar()]
+diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
+index 52fdae3fec..82913e0da8 100644
+--- a/lib/bb/ui/uihelper.py
++++ b/lib/bb/ui/uihelper.py
+@@ -50,8 +50,10 @@ class BBUIHelper:
+             removetid(event.pid, tid)
+             self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
+         elif isinstance(event, bb.runqueue.runQueueTaskStarted) or isinstance(event, bb.runqueue.sceneQueueTaskStarted):
+-            self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed + event.stats.setscene_active + 1
++            self.tasknumber_current = event.stats.completed + event.stats.active + event.stats.failed
+             self.tasknumber_total = event.stats.total
++            self.setscene_current = event.stats.setscene_active + event.stats.setscene_covered + event.stats.setscene_notcovered
++            self.setscene_total = event.stats.setscene_total
+             self.needUpdate = True
+         elif isinstance(event, bb.build.TaskProgress):
+             if event.pid > 0 and event.pid in self.pidmap:
 -- 
 2.32.0
 
