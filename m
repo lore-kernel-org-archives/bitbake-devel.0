@@ -2,69 +2,67 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A681EC433FE
-	for <webhook@archiver.kernel.org>; Fri,  8 Oct 2021 08:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB91C433EF
+	for <webhook@archiver.kernel.org>; Fri,  8 Oct 2021 09:08:37 +0000 (UTC)
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net
  [217.70.183.197])
- by mx.groups.io with SMTP id smtpd.web09.6700.1633683427492853160
+ by mx.groups.io with SMTP id smtpd.web08.6622.1633684115708807069
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 08 Oct 2021 01:57:08 -0700
+ Fri, 08 Oct 2021 02:08:36 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: bootlin.com, ip: 217.70.183.197, mailfrom: michael.opdenacker@bootlin.com)
 Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 55C181C0003;
-	Fri,  8 Oct 2021 08:57:05 +0000 (UTC)
-Subject: Re: [docs] [PATCH 5/8] bitbake: replace http with https for URLs
+	by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 991C21C000C;
+	Fri,  8 Oct 2021 09:08:33 +0000 (UTC)
+Subject: Re: [docs] [PATCH 6/8] documentation: replace http with https for
+ URLs
 To: Jon Mason <jdmason@kudzu.us>, openembedded-core@lists.openembedded.org,
  docs@lists.yoctoproject.org, bitbake-devel@lists.openembedded.org
 References: <20211007150630.22138-1-jdmason@kudzu.us>
- <20211007150630.22138-6-jdmason@kudzu.us>
+ <20211007150630.22138-7-jdmason@kudzu.us>
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 Organization: Bootlin
-Message-ID: <3377b038-93b4-0df5-7f51-e9d9c0f3cf62@bootlin.com>
-Date: Fri, 8 Oct 2021 10:57:04 +0200
+Message-ID: <3eb56880-8ecb-db1b-1a6b-fbc69074cf7f@bootlin.com>
+Date: Fri, 8 Oct 2021 11:08:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20211007150630.22138-6-jdmason@kudzu.us>
+In-Reply-To: <20211007150630.22138-7-jdmason@kudzu.us>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 08 Oct 2021 08:57:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12754
+ <bitbake-devel@lists.openembedded.org>; Fri, 08 Oct 2021 09:08:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12755
 
 Hi Jon,
 
-Many thanks for the patches!
+Thanks for the patch!
 
 On 10/7/21 5:06 PM, Jon Mason wrote:
-> --- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-> +++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-> @@ -60,11 +60,11 @@ member Chris Larson split the project into two distinct pieces:
->  -  OpenEmbedded, a metadata set utilized by BitBake
->  
->  Today, BitBake is the primary basis of the
-> -`OpenEmbedded <http://www.openembedded.org/>`__ project, which is being
-> +`OpenEmbedded <https://www.openembedded.org/>`__ project, which is being
->  used to build and maintain Linux distributions such as the `Angstrom
->  Distribution <http://www.angstrom-distribution.org/>`__, and which is
->  also being used as the build tool for Linux projects such as the `Yocto
-> -Project <http://www.yoctoproject.org>`__.
-> +Project <https://www.yoctoproject.org>`__.
+> https has been the preferred way to access websites for many years now.
+> Change all of the URLs with a _working_ https server/certificate to use
+> that URL.
+>
+> Signed-off-by: Jon Mason <jdmason@kudzu.us>
+> ---
+>  documentation/profile-manual/usage.rst     | 28 +++++++++++-----------
+>  documentation/ref-manual/faq.rst           | 16 ++++++-------
+>  documentation/ref-manual/variables.rst     |  8 +++----
+>  documentation/toaster-manual/reference.rst |  8 +++----
+>  4 files changed, 30 insertions(+), 30 deletions(-)
 
 
-Unrelated here, but Angstrom is defunct now and
-http://www.angstrom-distribution.org down. I'll address this through a
-different patch, though.
+Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+and merged into master-next (I want this to be part of the pull request
+I'm sending today).
 
-Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>*
-*Thanks again!
-Michael
-**
+Thanks again,
+
+Michael.
 
 -- 
 Michael Opdenacker, Bootlin
