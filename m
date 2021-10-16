@@ -1,183 +1,151 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C34C433F5
-	for <webhook@archiver.kernel.org>; Fri, 15 Oct 2021 13:23:29 +0000 (UTC)
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web10.9238.1634304207838875091
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E144C433F5
+	for <webhook@archiver.kernel.org>; Sat, 16 Oct 2021 12:55:15 +0000 (UTC)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com
+ [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web10.10145.1634388913984064925
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 15 Oct 2021 06:23:28 -0700
+ Sat, 16 Oct 2021 05:55:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=ZG+cNYeG;
- spf=pass (domain: axis.com, ip: 195.60.68.18,
- mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YdssUVe0;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f50.google.com with SMTP id e12so31335504wra.4
+        for <bitbake-devel@lists.openembedded.org>;
+ Sat, 16 Oct 2021 05:55:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1634304208;
-  x=1665840208;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=tCFu98HRx4r/x9IUtm9+GvdVG9hfPXgjfwmCLJdJwac=;
-  b=ZG+cNYeGlwTKAPaojxIp7kv4291RusjzOKL1ABisFrBitL1YTzsEdj2A
-   OPcH7wpi1MwWgVlex9N6si7FCfvMZWw4OrWbmAOVh9BafuchNw7RRO9MC
-   PBBQmaKijxpScg/U5y82ncKIH1VjK53vlyQ12Z/yf5uW3FFhM4QmintyO
-   ERlzmHZldtEPoczHuauyEkqNxUQpoPwAakPhYiqt1vA86IXcZIdC6nR7C
-   2G9bbjo5d7cN1nP52PWnlXvWveg8M+a3v09tKIFfjwgCUckf4YTzOoPiu
-   FW4wv9eFjmFaydQILLwC78W0pRR0OeHfDpua6x22TKP0ZL7dW6mIS5B0o
-   A==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Scott Weaver <weaverjs@gmail.com>, Richard Purdie
-	<richard.purdie@linuxfoundation.org>
-CC: Chen Qi <Qi.Chen@windriver.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel][PATCH] fetch2: fix downloadfilename issue with
- premirror
-Thread-Topic: [bitbake-devel][PATCH] fetch2: fix downloadfilename issue with
- premirror
-Thread-Index: AQHXwYxoEzLa6WXuAE6qios7E/cWSqvTzNwAgAAZ3QCAACMzEA==
-Date: Fri, 15 Oct 2021 13:23:24 +0000
-Message-ID: <7adc2cf47b594660ba47904da244275c@axis.com>
-References: <20211015061753.70640-1-Qi.Chen@windriver.com>
- <582824039f6ac8e11b9a5ff91256ee591372c1ec.camel@linuxfoundation.org>
- <YWl9LqGlSO+eB7Kp@popos>
-In-Reply-To: <YWl9LqGlSO+eB7Kp@popos>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=itmqody4daqCCgIzMeGtuI3p98NRIBkM63g1/bQdsWk=;
+        b=YdssUVe0x6OZhyYCPp8O2TN+bs/4V8WiNHJfNflPlXLBkLt6zExeK6GQpLXUwfgCzv
+         zkOQy8wxogxhUVWpk0gBMilvmGdzQt7gtDuQDeBOmcfxaGyZVO3vT945M2NRLJmdCWYU
+         S8TGKUMfwM3/6US1aTkehl7l+WmrWaiOe2xQM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=itmqody4daqCCgIzMeGtuI3p98NRIBkM63g1/bQdsWk=;
+        b=RT6LRxUvGF+mL1I/xrLWxK5cm1MPSNtL9b3rZFTLOg70+HXsNKwwTzyzaVPaO0yjJ4
+         /pKBqQdYzSE+bHQl59nAPRPG9vHUJtravUxxY514d17Yr0tW/9kueZ8L18H1QmQeq7hb
+         2rFMHC6OJ1xnlFzGkSBcuTKXJUYJBMpJdRWRtzm5kGknv1y/7Ky1XCiRJU9w5p6zWDxN
+         EgbAYg14Q+KAIrpcOdcZXkHZ7mqmZmyd0zvPZ4n9zOEtRwOO2u0zGT/0EfHYYE1+jA+5
+         loOMpwKx8iuNN8Pk3fF32XeAA6oH8IN9P+2O2kNk7URqWLytC5Lm5VSYomDb7t9FTyJc
+         DcIQ==
+X-Gm-Message-State: AOAM531bgcY5cXrQbi7NKI9CP7oX4aYDB+1fG2+sqrKOnRJ3X2bUXXqz
+	MQVaXIHSbfq4XSC6Di2mDI5tyS+GeXEYnA==
+X-Google-Smtp-Source: 
+ ABdhPJwIR1gUVIpgmgXZco9DXoFnL13QOhHzgDxIi8n1RMzvu9qzL943c4k43dvTRAhyARLtTnzQhg==
+X-Received: by 2002:adf:a31d:: with SMTP id
+ c29mr21129113wrb.381.1634388912078;
+        Sat, 16 Oct 2021 05:55:12 -0700 (PDT)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:ac10:8c11:13d1:3cb9])
+        by smtp.gmail.com with ESMTPSA id 3sm8014506wms.5.2021.10.16.05.55.11
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Oct 2021 05:55:11 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] siggen: Fix type conversion issues
+Date: Sat, 16 Oct 2021 13:55:11 +0100
+Message-Id: <20211016125511.3032540-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 15 Oct 2021 13:23:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12785
+ <bitbake-devel@lists.openembedded.org>; Sat, 16 Oct 2021 12:55:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12787
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Scott Weaver
-> Sent: den 15 oktober 2021 15:08
-> To: Richard Purdie <richard.purdie@linuxfoundation.org>
-> Cc: Chen Qi <Qi.Chen@windriver.com>; bitbake-devel@lists.openembedded.org
-> Subject: Re: [bitbake-devel][PATCH] fetch2: fix downloadfilename issue
-> with premirror
->=20
-> On 21-10-15 12:35:24, Richard Purdie wrote:
-> > On Thu, 2021-10-14 at 23:17 -0700, Chen Qi wrote:
-> > > The following commit to fix [Yocto #13039] causes regression of
-> > > the behavior of PREMIRRORS.
-> > >
-> > >   "bitbake: fetch2: fix premirror URI when downloadfilename defined"
-> > >
-> > > Take meta-openembedded/meta-networking/recipes-
-> protocols/freediameter/freediameter_1.4.0.bb
-> > > as an example.
-> > > SRC_URI =3D "\
-> > >
-> http://www.freediameter.net/hg/${fd_pkgname}/archive/${PV}.tar.gz;downloa=
-d
-> filename=3D${fd_pkgname}-${PV}.tar.gz \
-> > >     ...
-> > > "
-> > > With the above commit, it now tries to fetch 1.4.0.tar.gz instead of
-> > > freeDiameter-1.4.0.tar.gz. This makes
-> https://downloads.yoctoproject.org/mirror/sources
-> > > not work for freediameter, as it holds freeDiameter-1.4.0.tar.gz.
-> > >
-> > > The commit above tries to avoid fetching from invalid url such as:
-> > > https://<some_mirror>/1.4.0.tar.gz/freeDiameter-1.4.0.tar.gz.
-> > > And its solution is to make basename to be 1.4.0.tar.gz, thus causing
-> the
-> > > regression.
-> > >
-> > > This patch fixes the above regression. For Yocto #13039, it now tries
-> > > to fetch from url: https://<some_mirror>/freeDiameter-1.4.0.tar.gz.
-> > >
-> > > Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
-> > > ---
-> > >  lib/bb/fetch2/__init__.py | 10 +++++++---
-> > >  1 file changed, 7 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> > > index 666cc1306..000b49a50 100644
-> > > --- a/lib/bb/fetch2/__init__.py
-> > > +++ b/lib/bb/fetch2/__init__.py
-> > > @@ -466,9 +466,13 @@ def uri_replace(ud, uri_find, uri_replace,
-> replacements, d, mirrortarball=3DNone):
-> > >                      # Kill parameters, they make no sense for mirror
-> tarballs
-> > >                      uri_decoded[5] =3D {}
-> > >                  elif ud.localpath and
-> ud.method.supports_checksum(ud):
-> > > -                    basename =3D os.path.basename(uri_decoded[loc])
-> > > -                if basename and not
-> result_decoded[loc].endswith(basename):
-> > > -                    result_decoded[loc] =3D
-> os.path.join(result_decoded[loc], basename)
-> > > +                    basename =3D os.path.basename(ud.localpath)
-> > > +                if basename:
-> > > +                    uri_basename =3D os.path.basename(uri_decoded[lo=
-c])
-> > > +                    if basename !=3D uri_basename and
-> result_decoded[loc].endswith(uri_basename):
-> > > +                        result_decoded[loc] =3D
-> result_decoded[loc].replace(uri_basename, basename)
-> > > +                    elif not result_decoded[loc].endswith(basename):
-> > > +                        result_decoded[loc] =3D
-> os.path.join(result_decoded[loc], basename)
-> > >          else:
-> > >              return None
-> > >      result =3D encodeurl(result_decoded)
-> >
->=20
->=20
-> Hi Richard and Chen,
->=20
-> > I've been meaning to reply to this thread as the regression wasn't good=
-.
-> We need
-> > to be able to use DL_DIR as a mirror.
->=20
-> It's my understanding that DL_DIR is always the last mirror attempted if
-> downloading the artifact from a SRC_URI, MIRRORS and PREMIRRORS fails.
-> In my testing, this still works.
->=20
-> What we're saying is that we want to be able to copy or use an exiting
-> DL_DIR as a PREMIRROR.
+The switch to using json has messed up the type handling as the code
+does assume that set()s are present. Add a decoder to reconstruct
+the set() objects. Also fix the change of tuples to lists for the
+file checksums and fix an existing type bug where dicts insteads of
+lists was used.
 
-This is basically what the (relatively new) mirror mode of the=20
-archiver.bbclass does.
+Drop some old siginfo format handling code which is now long since
+obsolete.
 
-> If this is the use case then, yes, this is a regression but I'm just a
-> little confused because I always think of a mirror as just being an
-> alternate site where the artifact defined in the SRC_URI can be found.
->=20
-> Once that artifact is found and downloadfilename is defined it should
-> save the artifact using the name defined in downloadfilename.
->=20
-> My apologies for not understanding that downloadfilename also needs to
-> be tried when attempting to download from a premirror. I was going by thi=
-s
-> definition:
->=20
-> https://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#var=
--
-> SRC_URI
->=20
-> --
->   - Scott
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/siggen.py | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-What's important to remember is one of the reasons for using downloadfilena=
-me=20
-is to support different files with the same name but from different sites=20
-being downloaded. This needs to work whether the file is fetched from the=20
-original source, a (PRE)MIRROR or the DL_DIR, without the files overwriting=
-=20
-each other.
-
-//Peter
-
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 323430270c..730e0f9a14 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -24,9 +24,14 @@ hashequiv_logger = logging.getLogger('BitBake.SigGen.HashEquiv')
+ class SetEncoder(json.JSONEncoder):
+     def default(self, obj):
+         if isinstance(obj, set):
+-            return list(sorted(obj))
++            return dict(_set_object=list(sorted(obj)))
+         return json.JSONEncoder.default(self, obj)
+ 
++def SetDecoder(dct):
++    if '_set_object' in dct:
++        return set(dct['_set_object'])
++    return dct
++
+ def init(d):
+     siggens = [obj for obj in globals().values()
+                       if type(obj) is type and issubclass(obj, SignatureGenerator)]
+@@ -810,9 +815,9 @@ def compare_sigfiles(a, b, recursecb=None, color=False, collapsed=False):
+         return formatstr.format(**formatparams)
+ 
+     with bb.compress.zstd.open(a, "rt", encoding="utf-8", num_threads=1) as f:
+-        a_data = json.load(f)
++        a_data = json.load(f, object_hook=SetDecoder)
+     with bb.compress.zstd.open(b, "rt", encoding="utf-8", num_threads=1) as f:
+-        b_data = json.load(f)
++        b_data = json.load(f, object_hook=SetDecoder)
+ 
+     def dict_diff(a, b, whitelist=set()):
+         sa = set(a.keys())
+@@ -828,11 +833,11 @@ def compare_sigfiles(a, b, recursecb=None, color=False, collapsed=False):
+ 
+     def file_checksums_diff(a, b):
+         from collections import Counter
+-        # Handle old siginfo format
+-        if isinstance(a, dict):
+-            a = [(os.path.basename(f), cs) for f, cs in a.items()]
+-        if isinstance(b, dict):
+-            b = [(os.path.basename(f), cs) for f, cs in b.items()]
++
++        # Convert lists back to tuples
++        a = [(f[0], f[1]) for f in a]
++        b = [(f[0], f[1]) for f in b]
++
+         # Compare lists, ensuring we can handle duplicate filenames if they exist
+         removedcount = Counter(a)
+         removedcount.subtract(b)
+@@ -915,9 +920,9 @@ def compare_sigfiles(a, b, recursecb=None, color=False, collapsed=False):
+                 output.append(color_format("{color_title}Variable {var} value changed from '{color_default}{oldval}{color_title}' to '{color_default}{newval}{color_title}'{color_default}", var=dep, oldval=oldval, newval=newval))
+ 
+     if not 'file_checksum_values' in a_data:
+-         a_data['file_checksum_values'] = {}
++         a_data['file_checksum_values'] = []
+     if not 'file_checksum_values' in b_data:
+-         b_data['file_checksum_values'] = {}
++         b_data['file_checksum_values'] = []
+ 
+     changed, added, removed = file_checksums_diff(a_data['file_checksum_values'], b_data['file_checksum_values'])
+     if changed:
+@@ -1047,7 +1052,7 @@ def dump_sigfile(a):
+     output = []
+ 
+     with bb.compress.zstd.open(a, "rt", encoding="utf-8", num_threads=1) as f:
+-        a_data = json.load(f)
++        a_data = json.load(f, object_hook=SetDecoder)
+ 
+     output.append("basewhitelist: %s" % (a_data['basewhitelist']))
+ 
+-- 
+2.32.0
 
 
