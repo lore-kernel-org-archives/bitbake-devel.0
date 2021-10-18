@@ -2,69 +2,70 @@ Return-Path: <jsbronder@cold-front.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1252BC433FE
-	for <webhook@archiver.kernel.org>; Mon, 18 Oct 2021 19:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E46C4332F
+	for <webhook@archiver.kernel.org>; Mon, 18 Oct 2021 19:01:56 +0000 (UTC)
 Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com
  [66.111.4.29])
- by mx.groups.io with SMTP id smtpd.web10.10.1634583713828679315
+ by mx.groups.io with SMTP id smtpd.web10.12.1634583715127414657
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 18 Oct 2021 12:01:54 -0700
+ Mon, 18 Oct 2021 12:01:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cold-front.org header.s=mesmtp header.b=lQsFbtUR;
+ dkim=pass header.i=@cold-front.org header.s=mesmtp header.b=pJlBvKxO;
  spf=pass (domain: cold-front.org, ip: 66.111.4.29,
  mailfrom: jsbronder@cold-front.org)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 1EB0B5C00C6;
-	Mon, 18 Oct 2021 15:01:53 -0400 (EDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.nyi.internal (Postfix) with ESMTP id 71A055C0073;
+	Mon, 18 Oct 2021 15:01:54 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 18 Oct 2021 15:01:53 -0400
+  by compute4.internal (MEProxy); Mon, 18 Oct 2021 15:01:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cold-front.org;
 	 h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=mesmtp; bh=SAD60WhGnh
-	mAp4hxmX5v/iMkTppoKpo821ID3A4joxY=; b=lQsFbtURkKuVjl3h3Tor5PsN98
-	8kQ5TUGaAhiwk0HZmaq1a0geF2fZcNsiKGPp4DiQ4vF81B07yOyzhrj5EmccnEmi
-	rCWIo2ZLlUIdOboCeZB43usJmIl2XZWqvNaos+g9lRfkYLOBrNCVnSr2PR0gE7yK
-	3R8H5zuhWLf64dZ3g=
+	:mime-version:content-transfer-encoding; s=mesmtp; bh=quxwCo+h2V
+	OGbIk2Elk0BjmTWFjx4b3eJZ58t0SfH0E=; b=pJlBvKxO3wlcZd3ZcN5YBqr+qg
+	OM6tdqTbfCdvVsDpUNaS24eLu8kEzAMXX1uiWx+29fzTKM9vchqwjQ4gBHcGncd5
+	ENZPwgUFC/9WvgSSxdMeJqCiIwc7iTG3gRf0Levh4IYF9boQzqMldoNy/0fObSi1
+	sEK+QzPEXzu2/LJj8=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-transfer-encoding:date:from
 	:in-reply-to:message-id:mime-version:references:subject:to
 	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; bh=SAD60WhGnhmAp4hxmX5v/iMkTppoKpo821ID3A4joxY=; b=d2HDjTfK
-	Kmi17Y1VVqpZbx4OD7ID6DB0nMBKNSL2/LsOVizuNLaGpM4zRkJ6c/XYOmbdWyMA
-	3EBPpMJUZ1+oIhf5luFWHqGc5TNJL37JMq8LsZ7KtJSVYKPxbZrzUy0W018x/KYL
-	E/ry84JzR+GG8rbwEe00IboagKEdCw62p/nyuBXQ6kpKnWhLIZeY1IU5ysCq9scY
-	3B7fFaD/6mVfpKUlZs7tq5VpKbDYGBBHJgDts4fpslWltKUKZ4hiChcnoJEH932a
-	veofgMUBjoX1qlW8m7zpnO+auQpD1nmIXzWhMke4zrEXNYDgMHmCfxH1ArAtB7s0
-	ZLSpK0XUokKC2Q==
-X-ME-Sender: <xms:oMRtYZ3zVmvaObFx_noCATBYOb7QGyjKAuF5Vz91rs_A0bmsfpajdg>
-    <xme:oMRtYQHkltX5qsZM_-QxonZJBItc-76A411xDDHQN71LddlnRuuQmzCgW1Ke-Oyx_
-    S6ip5xOhaDMGwvquw>
+	fm1; bh=quxwCo+h2VOGbIk2Elk0BjmTWFjx4b3eJZ58t0SfH0E=; b=bpBeC09Z
+	kR2UDu//F18CS9LP1VjiaRdL+URUEcjY6/940cKbNh5AUOngDGKCXarBim0RUpI2
+	wr6whWbichiOQOCF10VowcVOG/ilYBhKb7AgopkLJJ2WFHloBKR3IBV22kBzIYGX
+	DG7yPog6hskw0AVoIZETUJ03obPneukcdaRduePWHYzVHLD1VA3WIGRVihog+uUV
+	7uV1OL5qC4Plr3aKEMuzPWgZpTnrG1jNqCFcJE2bp+0UiqMAIymMcSLtH4hsFidN
+	DXKIU2AaK9zZ/bxKuW8mwLV55srizsWC8hGWvUKzfBAE/IUSvJ3E8GlHWpMbF5Sz
+	S+yzlLJ9L7sppQ==
+X-ME-Sender: <xms:osRtYbdqzoMdJ_tFUvw2QsSKSMwTm-cYGz8cK_OYrkHzjuQNLUvDdA>
+    <xme:osRtYRP2be2nDQVHE1DFxm0bY3A3N9woxzSHguXudWHgTUOzIod9lXXFHeH0eejlX
+    lMHHpxHdJ-k-Zanrg>
 X-ME-Received: 
- <xmr:oMRtYZ5SZIgnHSfyuT3YAZhQRmPtyqwFe04B48i-j4mDBq81gIPBuU_6aScR-GUbQxJeBdgmfdl-84AoNpFRvoUnW73ExNNApCMjnI5a11vQ>
+ <xmr:osRtYUgwyy2oYXWPFBN8QFZNIBU-hsW9nlr9mOQKROKsZW_EqgxqHYpLmZfzhrm-U4b4YXCY_0-aIZdMp-Ogl0F02CNzb72KxTDzd7Jh9xTb>
 X-ME-Proxy-Cause: 
- gggruggvucftvghtrhhoucdtuddrgedvtddrvddvtddguddvlecutefuodetggdotefrod
+ gggruggvucftvghtrhhoucdtuddrgedvtddrvddvtddguddvkecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomheplfhushht
     ihhnuceurhhonhguvghruceojhhssghrohhnuggvrhestgholhguqdhfrhhonhhtrdhorh
-    hgqeenucggtffrrghtthgvrhhnpeetteehvedvhefglefftdekveeiledtueduffejjeef
-    hfdugedtfeejtdegheevffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehjshgsrhhonhguvghrsegtohhlugdqfhhrohhnthdrohhrgh
-X-ME-Proxy: <xmx:oMRtYW2NfKeoSiF5Sud0fhkZM4__4UXpj8I_c2AWUaWpJtKcQsyc5Q>
-    <xmx:oMRtYcHp11lJoLPkwI_vxQZuxyXpE94_OkybzuY2Wir94CvG_8iwZA>
-    <xmx:oMRtYX-JxJljSVVTatmoi9uWR05H2slQgHiu4Apoi6hIPhhDKVUXMA>
-    <xmx:ocRtYRQOtBNqV9nQEBRoE9Z-SqMVi3DU2aPgFrTFCOVNuTUIBhpQWg>
+    hgqeenucggtffrrghtthgvrhhnpeetheeijefhfffhleefgffhueekfefguefhgfefieet
+    ueegtdfgteeihefhudeiudenucffohhmrghinhepphihthhhohhnrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhssghrohhnuggv
+    rhestgholhguqdhfrhhonhhtrdhorhhg
+X-ME-Proxy: <xmx:osRtYc-qJ0RyF5y6xbkpklif8NeHPejV9X5pEApTM0KE526Y9jokDQ>
+    <xmx:osRtYXt4cd1BiO9q_jyJEr4cd8QBhKYnUAODHkXCznupjDxnA9fZow>
+    <xmx:osRtYbFq2XcPegGRX6VEHchmt_RrOjr4VSpW5qrFV3727ZetcKMS5A>
+    <xmx:osRtYXIViLw914BLGk8HB4B_E-ZV5JuFUMU_x0q13GJXoWWWai1mDg>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 18 Oct 2021 15:01:52 -0400 (EDT)
+ 18 Oct 2021 15:01:54 -0400 (EDT)
 From: Justin Bronder <jsbronder@cold-front.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Chris Laplante <chris.laplante@agilent.com>,
+Cc: Alexander Kanavin <alex.kanavin@gmail.com>,
+	Alexander Kanavin <alex@linutronix.de>,
 	Richard Purdie <richard.purdie@linuxfoundation.org>,
 	Justin Bronder <jsbronder@cold-front.org>
-Subject: [1.46][PATCH 1/8] compat.py: remove file since it no longer actually
- implements anything
-Date: Mon, 18 Oct 2021 15:01:34 -0400
-Message-Id: <20211018190141.15806-2-jsbronder@cold-front.org>
+Subject: [1.46][PATCH 3/8] bitbake: fix regexp deprecation warnings
+Date: Mon, 18 Oct 2021 15:01:36 -0400
+Message-Id: <20211018190141.15806-4-jsbronder@cold-front.org>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211018190141.15806-1-jsbronder@cold-front.org>
 References: <20211018190141.15806-1-jsbronder@cold-front.org>
@@ -73,157 +74,39 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 18 Oct 2021 19:01:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12794
+ <bitbake-devel@lists.openembedded.org>; Mon, 18 Oct 2021 19:01:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12796
 
-From: Chris Laplante <chris.laplante@agilent.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
 
-Now that compat.py just imports Python standard library stuff, get rid
-of the layer of indirection.
+See here for details:
+https://docs.python.org/3/library/re.html
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Justin Bronder <jsbronder@cold-front.org>
 ---
- lib/bb/compat.py       | 10 ----------
- lib/bb/event.py        | 16 ++++++++--------
- lib/bb/persist_data.py |  8 ++++----
- lib/bb/tests/event.py  | 17 +++++++++--------
- 4 files changed, 21 insertions(+), 30 deletions(-)
- delete mode 100644 lib/bb/compat.py
+ lib/bblayers/query.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/compat.py b/lib/bb/compat.py
-deleted file mode 100644
-index 49356681..00000000
---- a/lib/bb/compat.py
-+++ /dev/null
-@@ -1,10 +0,0 @@
--#
--# SPDX-License-Identifier: GPL-2.0-only
--#
--
--"""Code pulled from future python versions, here for compatibility"""
--
--from collections import MutableMapping, KeysView, ValuesView, ItemsView, OrderedDict
--from functools import total_ordering
--
--
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index d1359f01..cb0b3b33 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -10,17 +10,17 @@ BitBake build tools.
- # SPDX-License-Identifier: GPL-2.0-only
- #
+diff --git a/lib/bblayers/query.py b/lib/bblayers/query.py
+index fb6f550e..652a3acc 100644
+--- a/lib/bblayers/query.py
++++ b/lib/bblayers/query.py
+@@ -433,10 +433,10 @@ NOTE: .bbappend files can impact the dependencies.
+                     line = fnfile.readline()
  
--import sys
--import pickle
--import logging
--import atexit
--import traceback
- import ast
-+import atexit
-+import collections
-+import logging
-+import pickle
-+import sys
- import threading
-+import traceback
- 
--import bb.utils
--import bb.compat
- import bb.exceptions
-+import bb.utils
- 
- # This is the pid for which we should generate the event. This is set when
- # the runqueue forks off.
-@@ -56,7 +56,7 @@ def set_class_handlers(h):
-     _handlers = h
- 
- def clean_class_handlers():
--    return bb.compat.OrderedDict()
-+    return collections.OrderedDict()
- 
- # Internal
- _handlers = clean_class_handlers()
-diff --git a/lib/bb/persist_data.py b/lib/bb/persist_data.py
-index 7357ab2d..5f4fbe35 100644
---- a/lib/bb/persist_data.py
-+++ b/lib/bb/persist_data.py
-@@ -12,14 +12,14 @@ currently, providing a key/value store accessed by 'domain'.
- #
- 
- import collections
-+import contextlib
-+import functools
- import logging
- import os.path
-+import sqlite3
- import sys
- import warnings
--from bb.compat import total_ordering
- from collections import Mapping
--import sqlite3
--import contextlib
- 
- sqlversion = sqlite3.sqlite_version_info
- if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
-@@ -28,7 +28,7 @@ if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
- 
- logger = logging.getLogger("BitBake.PersistData")
- 
--@total_ordering
-+@functools.total_ordering
- class SQLTable(collections.MutableMapping):
-     class _Decorators(object):
-         @staticmethod
-diff --git a/lib/bb/tests/event.py b/lib/bb/tests/event.py
-index 9229b63d..9ca7e9bc 100644
---- a/lib/bb/tests/event.py
-+++ b/lib/bb/tests/event.py
-@@ -6,17 +6,18 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
- 
--import unittest
--import bb
--import logging
--import bb.compat
--import bb.event
-+import collections
- import importlib
-+import logging
-+import pickle
- import threading
- import time
--import pickle
-+import unittest
- from unittest.mock import Mock
- from unittest.mock import call
-+
-+import bb
-+import bb.event
- from bb.msg import BBLogFormatter
- 
- 
-@@ -75,7 +76,7 @@ class EventHandlingTest(unittest.TestCase):
- 
-     def _create_test_handlers(self):
-         """ Method used to create a test handler ordered dictionary """
--        test_handlers = bb.compat.OrderedDict()
-+        test_handlers = collections.OrderedDict()
-         test_handlers["handler1"] = self._test_process.handler1
-         test_handlers["handler2"] = self._test_process.handler2
-         return test_handlers
-@@ -96,7 +97,7 @@ class EventHandlingTest(unittest.TestCase):
- 
-     def test_clean_class_handlers(self):
-         """ Test clean_class_handlers method """
--        cleanDict = bb.compat.OrderedDict()
-+        cleanDict = collections.OrderedDict()
-         self.assertEqual(cleanDict,
-                          bb.event.clean_class_handlers())
- 
+         # The "require/include xxx" in conf/machine/*.conf, .inc and .bbclass
+-        conf_re = re.compile(".*/conf/machine/[^\/]*\.conf$")
+-        inc_re = re.compile(".*\.inc$")
++        conf_re = re.compile(r".*/conf/machine/[^\/]*\.conf$")
++        inc_re = re.compile(r".*\.inc$")
+         # The "inherit xxx" in .bbclass
+-        bbclass_re = re.compile(".*\.bbclass$")
++        bbclass_re = re.compile(r".*\.bbclass$")
+         for layerdir in self.bblayers:
+             layername = self.get_layer_name(layerdir)
+             for dirpath, dirnames, filenames in os.walk(layerdir):
 -- 
 2.33.0
 
