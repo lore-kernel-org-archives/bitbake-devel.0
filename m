@@ -2,69 +2,67 @@ Return-Path: <jsbronder@cold-front.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C09BC433EF
-	for <webhook@archiver.kernel.org>; Mon, 18 Oct 2021 19:01:59 +0000 (UTC)
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com
- [66.111.4.29])
- by mx.groups.io with SMTP id smtpd.web09.18.1634583717685783352
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB09C433EF
+	for <webhook@archiver.kernel.org>; Mon, 18 Oct 2021 19:02:01 +0000 (UTC)
+Received: from new3-smtp.messagingengine.com (new3-smtp.messagingengine.com
+ [66.111.4.229])
+ by mx.groups.io with SMTP id smtpd.web08.18.1634583720007097667
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 18 Oct 2021 12:01:57 -0700
+ Mon, 18 Oct 2021 12:02:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cold-front.org header.s=mesmtp header.b=dTpeQWiP;
- spf=pass (domain: cold-front.org, ip: 66.111.4.29,
+ dkim=pass header.i=@cold-front.org header.s=mesmtp header.b=IyiELkJq;
+ spf=pass (domain: cold-front.org, ip: 66.111.4.229,
  mailfrom: jsbronder@cold-front.org)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.nyi.internal (Postfix) with ESMTP id 06A4F5C01BA;
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailnew.nyi.internal (Postfix) with ESMTP id 82D0A581056;
 	Mon, 18 Oct 2021 15:01:57 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 18 Oct 2021 15:01:57 -0400
+  by compute4.internal (MEProxy); Mon, 18 Oct 2021 15:01:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cold-front.org;
 	 h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=mesmtp; bh=JPvxf4Gs7b
-	dumL+8SiMR68R7IIw84ThJEaRxVWZuT1I=; b=dTpeQWiPNNg/TXpBJHO5H2ZZjk
-	bqZwZUsC2gRtfF3yEXobF00rcFHUa9xtYp4++Mw7htSpQJRYLz64caOAYffHsbKx
-	Hp+o38RvIKSGv+lDzC2AdTK3E97RfGbSZH6qRK5yaWqSjvWEF2fQzIH75dZtQdSa
-	Fnvb07dttBExOVKI8=
+	:mime-version:content-transfer-encoding; s=mesmtp; bh=JYaIDzVP6J
+	ihZXB0idVFP1dy+kPPn2aQFQ/W81+Znbg=; b=IyiELkJqfvD70qW0prB86RFxU6
+	N+gsYktDSW+bcJihzfhD68m7ljCofsW0Efvw0s4F2bEOkCik+mPU3+iAb5TYerH1
+	FIFbkTfmmy2gh4zqw9pBPZPIxwQkW+nijBh3RnQoX2kpW0yfx9Uqj6F3Duz6JeU4
+	sH0wspPcyosAEoOnM=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-transfer-encoding:date:from
 	:in-reply-to:message-id:mime-version:references:subject:to
 	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; bh=JPvxf4Gs7bdumL+8SiMR68R7IIw84ThJEaRxVWZuT1I=; b=SIEgvWzx
-	FJSJF+d0DeQBN1JhSy1nt7xunVBqxDrBEGzNL2ATi4c7wO8MuBKdM9f6nMMC4muM
-	KU6uQVBbd3njVBQ7C+jfSVM5pB2IPLyGswzUg4tBxa0bqxYIztfRIeYlcVTnQ09q
-	Sg3Hy/GVEUKUGKQ0NJy4mZ89WtH4VyKy2uOIjbr1jJ8jZmLHxwXue4LuYEhXMFqG
-	tfixO1OAk+lgSD2uWvjfhL1b5fd/jmNHDsKcL8j5NbNZVM9yDEQO4WG+zxwjpypv
-	LAVjU89unH6qztdhkgSqWi6faNfTUWDUz9QUUyC5+rcmnNFTaSQD+605Q9Md1bL0
-	uDkflOXvZlg9Gw==
-X-ME-Sender: <xms:pMRtYXrubIFIwpcHo4PW5TWVsJwMbO6nkDM1m7DWUW4F334M13K3jg>
-    <xme:pMRtYRpCEebJUtt0zcIgTA_pSMahA0Nkk4K9sUaZpnEVW8Ems3aCxCdC1TbpIX-ZL
-    KWBAzcUBD_wxEd3Zw>
+	fm1; bh=JYaIDzVP6JihZXB0idVFP1dy+kPPn2aQFQ/W81+Znbg=; b=eDF7g0Iq
+	FW9wuhmS5tYVPxbf0NMQN1NdMp5I8vF+p78Cyayy12FLkW6DQuqEItOO0te/CPVu
+	dGCehEwBOlg01bjdueEIAwNApzKNLguMquirBfB/tMRcnCnMYctv7y5gommM4U5g
+	1z5bVq2ys/29QSxOdcEdG5CDNZKO+zuZDsEt7g4CtYzJo4KdFYE5AC2j5/b3Sv4u
+	CHWVDF+CrvX06M6Cgf8HNvwwNFTQzyDxcHAkbRy/MGvv2saVIrLyht1jw5WhQdw+
+	Em6RQCvcuxr1z8KKogWx5aw2l+z/4Sf9pqlApcKCx3Hmta56g2L/GZwUoTegbWM8
+	l+o9DFx1KBWvOA==
+X-ME-Sender: <xms:pcRtYYlfiSK3QXYrsB9DmfWGYzeQ-PRrBGdY7ajHNHHcRkkm6jbJQw>
+    <xme:pcRtYX3flEgWojmMDGkZFNeZGZjlaDE0tssbK0oas1SP0oT3ALDmTHxvlgRDoaI6G
+    m4VpyvvVBxUh5Gypw>
 X-ME-Received: 
- <xmr:pMRtYUPZFOot0PU6M4HGspSRJnFricmzLYP_YDASTSxz6qyolEWNOtWA8QQhxPDkznuOlgXW99KGOCFn-CopqUx_VCbbywdUhp_AXX6LZLR8>
+ <xmr:pcRtYWrOyQxz-Ci_eHgG_DfQnrcRMPmu4CY2fmnlppUM0AveacpQE_daeLYEBc5-DsSSciXKnA5GLwIKqB4oNoLuu6T4VHA18bxyYr6avpXy>
 X-ME-Proxy-Cause: 
  gggruggvucftvghtrhhoucdtuddrgedvtddrvddvtddguddvkecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomheplfhushht
-    ihhnuceurhhonhguvghruceojhhssghrohhnuggvrhestgholhguqdhfrhhonhhtrdhorh
-    hgqeenucggtffrrghtthgvrhhnpeehleetteejieeiteejueeufeduudelgfegffevieek
-    veffleegiefgfeethefgkeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhssghrohhnuggv
-    rhestgholhguqdhfrhhonhhtrdhorhhg
-X-ME-Proxy: <xmx:pMRtYa4fug6qHs-9vimdwne0qgIe-esDPRvXfmrUSjTzWtb3mGherA>
-    <xmx:pMRtYW6VYdJnI9hPpd-t_cP082AutuH0GEyNvlZDwWw5zI6AZ6S8RQ>
-    <xmx:pMRtYSgQHOYd3uICOYxTP_dDug4LVJB-49se5H5yUDj9j8cNDwAYdQ>
-    <xmx:pcRtYcQyKEHCWcO9WWyKKIevOo4v048ahY2vKRSOtHjoiUjQw1hGag>
+    necuuegrihhlohhuthemuceftddtnecuogevohgrshhtrghlqdfhgeduvddqtddvucdlud
+    ehtddmnecujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefl
+    uhhsthhinhcuuehrohhnuggvrhcuoehjshgsrhhonhguvghrsegtohhlugdqfhhrohhnth
+    drohhrgheqnecuggftrfgrthhtvghrnhepgeelveffvefhvdfhudetteetueejhedugeeh
+    gfffgfektdehueeujeefueeufedunecuffhomhgrihhnpehphihthhhonhdrohhrghdplh
+    hoohhprdhruhhnnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepjhhssghrohhnuggvrhestgholhguqdhfrhhonhhtrdhorhhg
+X-ME-Proxy: <xmx:pcRtYUmL-zstnJi3m3YsxMEhsxVOL4HLu7Yzk7IViQmV2JwKQ9oONQ>
+    <xmx:pcRtYW2ozXr951PK-gOWJaJO4oMJKCJC958rdyRgBbtelwkX9WcvQA>
+    <xmx:pcRtYbtARVq9GqJemDQsVjYRphYt6ufwpfLXJGV5Q6stdfxIzsmyWQ>
+    <xmx:pcRtYb-O1tAKFM8R3mWWtPFpc7b-_SND91RcW4C02CMucBaeF15tPw>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 18 Oct 2021 15:01:56 -0400 (EDT)
+ 18 Oct 2021 15:01:57 -0400 (EDT)
 From: Justin Bronder <jsbronder@cold-front.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Justin Bronder <jsbronder@cold-front.org>
-Subject: [1.46][PATCH 7/8] test/fetch: Update urls to match upstream branch
- name changes
-Date: Mon, 18 Oct 2021 15:01:40 -0400
-Message-Id: <20211018190141.15806-8-jsbronder@cold-front.org>
+Cc: Justin Bronder <jsbronder@cold-front.org>
+Subject: [1.46][PATCH 8/8] hashserv: let asyncio discover the running loop
+Date: Mon, 18 Oct 2021 15:01:41 -0400
+Message-Id: <20211018190141.15806-9-jsbronder@cold-front.org>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211018190141.15806-1-jsbronder@cold-front.org>
 References: <20211018190141.15806-1-jsbronder@cold-front.org>
@@ -73,45 +71,47 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 18 Oct 2021 19:01:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12800
+ <bitbake-devel@lists.openembedded.org>; Mon, 18 Oct 2021 19:02:01 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12801
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+From 3.10 documentation [1]:
+    Deprecated since version 3.8, removed in version 3.10: The loop
+    parameter. This function has been implicitly getting the current
+    running loop since 3.7
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+This is fixed in master as a side-effect of
+cf9bc0310b0092bf52b61057405aeb51c86ba137 which is more intrusive but
+likewise drops the loop parameter.
+
+1. https://docs.python.org/3/library/asyncio-stream.html#asyncio.open_connection
+
 Signed-off-by: Justin Bronder <jsbronder@cold-front.org>
 ---
- lib/bb/tests/fetch.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/hashserv/server.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index a0787952..8ad10708 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -937,7 +937,7 @@ class FetcherNetworkTest(FetcherTest):
+diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
+index 81050715..56f354bd 100644
+--- a/lib/hashserv/server.py
++++ b/lib/hashserv/server.py
+@@ -420,7 +420,7 @@ class Server(object):
  
-     @skipIfNoNetwork()
-     def test_git_submodule_CLI11(self):
--        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=bd4dc911847d0cde7a6b41dfa626a85aab213baf"
-+        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=bd4dc911847d0cde7a6b41dfa626a85aab213baf;branch=main"
-         fetcher = bb.fetch.Fetch([url], self.d)
-         fetcher.download()
-         # Previous cwd has been deleted
-@@ -952,12 +952,12 @@ class FetcherNetworkTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_git_submodule_update_CLI11(self):
-         """ Prevent regression on update detection not finding missing submodule, or modules without needed commits """
--        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=cf6a99fa69aaefe477cc52e3ef4a7d2d7fa40714"
-+        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=cf6a99fa69aaefe477cc52e3ef4a7d2d7fa40714;branch=main"
-         fetcher = bb.fetch.Fetch([url], self.d)
-         fetcher.download()
+     def start_tcp_server(self, host, port):
+         self.server = self.loop.run_until_complete(
+-            asyncio.start_server(self.handle_client, host, port, loop=self.loop)
++            asyncio.start_server(self.handle_client, host, port)
+         )
  
-         # CLI11 that pulls in a newer nlohmann-json
--        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=49ac989a9527ee9bb496de9ded7b4872c2e0e5ca"
-+        url = "gitsm://github.com/CLIUtils/CLI11;protocol=git;rev=49ac989a9527ee9bb496de9ded7b4872c2e0e5ca;branch=main"
-         fetcher = bb.fetch.Fetch([url], self.d)
-         fetcher.download()
-         # Previous cwd has been deleted
+         for s in self.server.sockets:
+@@ -445,7 +445,7 @@ class Server(object):
+             # Work around path length limits in AF_UNIX
+             os.chdir(os.path.dirname(path))
+             self.server = self.loop.run_until_complete(
+-                asyncio.start_unix_server(self.handle_client, os.path.basename(path), loop=self.loop)
++                asyncio.start_unix_server(self.handle_client, os.path.basename(path))
+             )
+         finally:
+             os.chdir(cwd)
 -- 
 2.33.0
 
