@@ -1,118 +1,119 @@
-Return-Path: <jsbronder@cold-front.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB09C433EF
-	for <webhook@archiver.kernel.org>; Mon, 18 Oct 2021 19:02:01 +0000 (UTC)
-Received: from new3-smtp.messagingengine.com (new3-smtp.messagingengine.com
- [66.111.4.229])
- by mx.groups.io with SMTP id smtpd.web08.18.1634583720007097667
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5B3C433F5
+	for <webhook@archiver.kernel.org>; Tue, 19 Oct 2021 20:06:28 +0000 (UTC)
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com
+ [209.85.216.53])
+ by mx.groups.io with SMTP id smtpd.web08.15452.1634673987788506096
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 18 Oct 2021 12:02:00 -0700
+ Tue, 19 Oct 2021 13:06:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cold-front.org header.s=mesmtp header.b=IyiELkJq;
- spf=pass (domain: cold-front.org, ip: 66.111.4.229,
- mailfrom: jsbronder@cold-front.org)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 82D0A581056;
-	Mon, 18 Oct 2021 15:01:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 18 Oct 2021 15:01:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cold-front.org;
-	 h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=mesmtp; bh=JYaIDzVP6J
-	ihZXB0idVFP1dy+kPPn2aQFQ/W81+Znbg=; b=IyiELkJqfvD70qW0prB86RFxU6
-	N+gsYktDSW+bcJihzfhD68m7ljCofsW0Efvw0s4F2bEOkCik+mPU3+iAb5TYerH1
-	FIFbkTfmmy2gh4zqw9pBPZPIxwQkW+nijBh3RnQoX2kpW0yfx9Uqj6F3Duz6JeU4
-	sH0wspPcyosAEoOnM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; bh=JYaIDzVP6JihZXB0idVFP1dy+kPPn2aQFQ/W81+Znbg=; b=eDF7g0Iq
-	FW9wuhmS5tYVPxbf0NMQN1NdMp5I8vF+p78Cyayy12FLkW6DQuqEItOO0te/CPVu
-	dGCehEwBOlg01bjdueEIAwNApzKNLguMquirBfB/tMRcnCnMYctv7y5gommM4U5g
-	1z5bVq2ys/29QSxOdcEdG5CDNZKO+zuZDsEt7g4CtYzJo4KdFYE5AC2j5/b3Sv4u
-	CHWVDF+CrvX06M6Cgf8HNvwwNFTQzyDxcHAkbRy/MGvv2saVIrLyht1jw5WhQdw+
-	Em6RQCvcuxr1z8KKogWx5aw2l+z/4Sf9pqlApcKCx3Hmta56g2L/GZwUoTegbWM8
-	l+o9DFx1KBWvOA==
-X-ME-Sender: <xms:pcRtYYlfiSK3QXYrsB9DmfWGYzeQ-PRrBGdY7ajHNHHcRkkm6jbJQw>
-    <xme:pcRtYX3flEgWojmMDGkZFNeZGZjlaDE0tssbK0oas1SP0oT3ALDmTHxvlgRDoaI6G
-    m4VpyvvVBxUh5Gypw>
-X-ME-Received: 
- <xmr:pcRtYWrOyQxz-Ci_eHgG_DfQnrcRMPmu4CY2fmnlppUM0AveacpQE_daeLYEBc5-DsSSciXKnA5GLwIKqB4oNoLuu6T4VHA18bxyYr6avpXy>
-X-ME-Proxy-Cause: 
- gggruggvucftvghtrhhoucdtuddrgedvtddrvddvtddguddvkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecuogevohgrshhtrghlqdfhgeduvddqtddvucdlud
-    ehtddmnecujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefl
-    uhhsthhinhcuuehrohhnuggvrhcuoehjshgsrhhonhguvghrsegtohhlugdqfhhrohhnth
-    drohhrgheqnecuggftrfgrthhtvghrnhepgeelveffvefhvdfhudetteetueejhedugeeh
-    gfffgfektdehueeujeefueeufedunecuffhomhgrihhnpehphihthhhonhdrohhrghdplh
-    hoohhprdhruhhnnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepjhhssghrohhnuggvrhestgholhguqdhfrhhonhhtrdhorhhg
-X-ME-Proxy: <xmx:pcRtYUmL-zstnJi3m3YsxMEhsxVOL4HLu7Yzk7IViQmV2JwKQ9oONQ>
-    <xmx:pcRtYW2ozXr951PK-gOWJaJO4oMJKCJC958rdyRgBbtelwkX9WcvQA>
-    <xmx:pcRtYbtARVq9GqJemDQsVjYRphYt6ufwpfLXJGV5Q6stdfxIzsmyWQ>
-    <xmx:pcRtYb-O1tAKFM8R3mWWtPFpc7b-_SND91RcW4C02CMucBaeF15tPw>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 18 Oct 2021 15:01:57 -0400 (EDT)
-From: Justin Bronder <jsbronder@cold-front.org>
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
+ header.b=aj5lVSbM;
+ spf=softfail (domain: sakoman.com, ip: 209.85.216.53,
+ mailfrom: steve@sakoman.com)
+Received: by mail-pj1-f53.google.com with SMTP id
+ nn3-20020a17090b38c300b001a03bb6c4ebso793803pjb.1
+        for <bitbake-devel@lists.openembedded.org>;
+ Tue, 19 Oct 2021 13:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TnJjKW3VreKPHPyk55UpGw9RiKu1NJfYFX1mQfWCqKk=;
+        b=aj5lVSbMWfiHjmQf/ND/QGQth+KuJqCGZjwxO9AoaDl5LrGQ5TW9+DWBS+baQWDhDL
+         OpDO1PCbiE+r7lRCPz+u/i8BFrX6IXeijS6rJl1wl4YbZ+T/r++d00Ayq/GFK5UEuBxR
+         yzySryCHuHkCWvDOJ8ygAR1AoG4Koq+0qZtYL/x784XbGgp65wHwfnJ/fFLIya8ZHYp9
+         qIbccwQ9IRw/+L6dLfandnr4QYx2cESrZ81CTwRejP31V3epGS1mF9LicBrgO08BUiGM
+         YdJTLJoWKvHySP4xVBkF3FI/uUM+gZ3GICVaUEtVmEK5qKCr4tgd4/2mBHDyfnD3bRMd
+         panA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TnJjKW3VreKPHPyk55UpGw9RiKu1NJfYFX1mQfWCqKk=;
+        b=Do1cbgC7Ax7pikE9IGp4uTQIOipaefAptcUewvt/LJqUHXkzGTCUSiFLRlZC8r2TZv
+         D7t5mPeV1a2Pv1auxqXfEeUyfNOBXXrjpATXT3fmq6mJYX4bVpf++Nm0RPm0LPnu+0s4
+         hxFQWvsRrafNuiTlZPixWhAngNMGvhw6XjFsoPbK2rNCvEcIA1etoBLN2N9X4rFOB6B+
+         zOmJsm0PgLqsiLEsem3zRSBgYF9n4W9PYw71RCXdtz8h3ZwQyguGl7cOQv48fyeHPTif
+         XL8IkYt51WW4DrMIv1MyENPUMXXdMMgRMdPRTz8TX/oUY2ziTI3xhimjFZZ0KuqmvuuM
+         Vbfw==
+X-Gm-Message-State: AOAM531+U3B8pKNnXAnAxkLJe8pkhh8Fx0HNY6nPqFge+TQc9x/OHNnt
+	YuBRJAWtxxwcOr66+spwJyzetThuIfvFcgHOZqs=
+X-Google-Smtp-Source: 
+ ABdhPJyUjWNorojetnVIpnylWpd/Lk7/C6fd9pjxmMm1kaWp3IzBt1wfk3RlcwFyTYkt3j6lgotx2A==
+X-Received: by 2002:a17:902:c104:b0:13f:59f9:db92 with SMTP id
+ 4-20020a170902c10400b0013f59f9db92mr34678232pli.75.1634673986588;
+        Tue, 19 Oct 2021 13:06:26 -0700 (PDT)
+Received: from hexa.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com.
+ [66.91.142.162])
+        by smtp.gmail.com with ESMTPSA id
+ l6sm3533562pjy.23.2021.10.19.13.06.25
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Oct 2021 13:06:26 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Justin Bronder <jsbronder@cold-front.org>
-Subject: [1.46][PATCH 8/8] hashserv: let asyncio discover the running loop
-Date: Mon, 18 Oct 2021 15:01:41 -0400
-Message-Id: <20211018190141.15806-9-jsbronder@cold-front.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211018190141.15806-1-jsbronder@cold-front.org>
-References: <20211018190141.15806-1-jsbronder@cold-front.org>
+Subject: [bitbake][dunfell][1.46][PATCH 0/8] Patch review
+Date: Tue, 19 Oct 2021 10:06:08 -1000
+Message-Id: <cover.1634673786.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 18 Oct 2021 19:02:01 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12801
+ <bitbake-devel@lists.openembedded.org>; Tue, 19 Oct 2021 20:06:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12802
 
-From 3.10 documentation [1]:
-    Deprecated since version 3.8, removed in version 3.10: The loop
-    parameter. This function has been implicitly getting the current
-    running loop since 3.7
+Please review this next set of patches for dunfell/1.46 and have comments
+back by end of day Thursday.
 
-This is fixed in master as a side-effect of
-cf9bc0310b0092bf52b61057405aeb51c86ba137 which is more intrusive but
-likewise drops the loop parameter.
+Passed a-full on autobuilder:
 
-1. https://docs.python.org/3/library/asyncio-stream.html#asyncio.open_connection
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/2772
 
-Signed-off-by: Justin Bronder <jsbronder@cold-front.org>
----
- lib/hashserv/server.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The following changes since commit b4117231bf070703b9375af4411bcd160e07fdae:
 
-diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index 81050715..56f354bd 100644
---- a/lib/hashserv/server.py
-+++ b/lib/hashserv/server.py
-@@ -420,7 +420,7 @@ class Server(object):
- 
-     def start_tcp_server(self, host, port):
-         self.server = self.loop.run_until_complete(
--            asyncio.start_server(self.handle_client, host, port, loop=self.loop)
-+            asyncio.start_server(self.handle_client, host, port)
-         )
- 
-         for s in self.server.sockets:
-@@ -445,7 +445,7 @@ class Server(object):
-             # Work around path length limits in AF_UNIX
-             os.chdir(os.path.dirname(path))
-             self.server = self.loop.run_until_complete(
--                asyncio.start_unix_server(self.handle_client, os.path.basename(path), loop=self.loop)
-+                asyncio.start_unix_server(self.handle_client, os.path.basename(path))
-             )
-         finally:
-             os.chdir(cwd)
+  build/msg: Cleanup verbose option handling (2021-09-30 04:12:50 -1000)
+
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
+
+Alexander Kanavin (5):
+  bitbake: correct the collections vs collections.abc deprecation
+  bitbake: fix regexp deprecation warnings
+  bitbake: do not import imp in layerindexlib
+  bitbake: adjust parser error check for python 3.10 compatibility
+  bitbake: correct deprecation warning in process.py
+
+Chris Laplante (1):
+  compat.py: remove file since it no longer actually implements anything
+
+Justin Bronder (1):
+  hashserv: let asyncio discover the running loop
+
+Richard Purdie (1):
+  test/fetch: Update urls to match upstream branch name changes
+
+ lib/bb/compat.py              | 10 ----------
+ lib/bb/data_smart.py          |  4 ++--
+ lib/bb/event.py               | 16 ++++++++--------
+ lib/bb/persist_data.py        | 13 +++++++------
+ lib/bb/server/process.py      |  2 +-
+ lib/bb/tests/event.py         | 17 +++++++++--------
+ lib/bb/tests/fetch.py         |  6 +++---
+ lib/bblayers/query.py         |  6 +++---
+ lib/hashserv/server.py        |  4 ++--
+ lib/layerindexlib/__init__.py |  1 -
+ 10 files changed, 35 insertions(+), 44 deletions(-)
+ delete mode 100644 lib/bb/compat.py
+
 -- 
-2.33.0
+2.25.1
 
 
