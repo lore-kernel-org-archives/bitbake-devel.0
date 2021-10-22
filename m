@@ -2,105 +2,94 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0741FC433F5
-	for <webhook@archiver.kernel.org>; Thu, 21 Oct 2021 22:23:48 +0000 (UTC)
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com
- [209.85.216.51])
- by mx.groups.io with SMTP id smtpd.web11.256.1634855026780007297
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978BAC433EF
+	for <webhook@archiver.kernel.org>; Fri, 22 Oct 2021 13:59:53 +0000 (UTC)
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com
+ [209.85.216.52])
+ by mx.groups.io with SMTP id smtpd.web09.8626.1634911192300821758
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 21 Oct 2021 15:23:46 -0700
+ Fri, 22 Oct 2021 06:59:52 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=BM84+uEu;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.51,
+ header.b=YFxyDF0T;
+ spf=softfail (domain: sakoman.com, ip: 209.85.216.52,
  mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f51.google.com with SMTP id
- q10-20020a17090a1b0a00b001a076a59640so6570646pjq.0
+Received: by mail-pj1-f52.google.com with SMTP id
+ o4-20020a17090a3d4400b001a1c8344c3fso3679402pjf.3
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 21 Oct 2021 15:23:46 -0700 (PDT)
+ Fri, 22 Oct 2021 06:59:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3yRKO2pvjzOEJ6BwIqT25cNT8zy5ZEcMwbHvvD4PDeQ=;
-        b=BM84+uEuLoclqMTrQfycbgQKzcCJeOMUk0lOGSbZtL2hyi9J3S93g1xgmBSz5jUhR5
-         j7m0S4pSAPnyXZe7QLNlHSBzHJ63cqitY3/TxPUn95OZjTjb5lyuyfAHc5qcsgsOYrS+
-         ewPqy9OLCO9dnpy5FLBcMPclR8Zjhbb0wC4UDCl3gdWr0eNENf7U3vYuLc6FH5+Cur2Q
-         pSPFhrS4sd7uWbD6C2S6V9owxa/wsyskuHTxBteXdxyr4gYHuZbL50I9r/C9ssElU6nf
-         fetyC5TEnNvTQ/4Mycw/U5YTQyh9S2ISVxZBmhPmOhjy9i8h4AA05ZEoNnJLjGyJjf8n
-         dYvQ==
+        bh=HdHpXzUapBljDxWimWgYSrUkl0Z+NkF+GXQQqroyybE=;
+        b=YFxyDF0TEcTXQmYv8IoIZvU9jHRHeO9il453SLjA0I5S2IVt1lIUulIfZmJuHfXCWH
+         VCZTklQRiEviPm1KotHKhJFimDedR7ZEF4XqqNyyjcmtv3vCAhqBb1hvSu3t5W7rXzyM
+         NAY+Euv2BjrJI9oT2X1F+KJ8aGYPAJsFAGSlmcL6urrW+vw6QhDiOdJwWTCBuofsq1WW
+         cZ6kKOKBc6uMmMK9W0u8D/lpQiElhqUNzOx2ZuN+eW194SCgD5vuRq4yTxO+hAhViAtt
+         xKNXtHOWwmLll5EQwriqdw6LUOO3UFNPQ6igNMjPs7kZKTamUE+kfMDGbgWEhIepKGU8
+         dptw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3yRKO2pvjzOEJ6BwIqT25cNT8zy5ZEcMwbHvvD4PDeQ=;
-        b=b3HaJ31zM/7Jg1AIEGhLdvalYn47JsN3+ifTwyoJHgjDRh51T2eSluiXB9xlPbaHhn
-         pz740pMVSaT9wLrMJIV3AKO6Do1ia0NrLW3tcaxSsRHkrT9ob0+dpxaBVbr5GR+TMvqq
-         l7qULFfXlZuq050tet0t2yWwb8r/DWEkLvytJJgOiwMKywcvEhmyb/bNRJhStZsuyoiA
-         Dz7fXmutNCr5AJzXAyn7gNsALrE60ypDqKLKI5Ahtg9iVK0X3xS/wSp0VNiPUS83Nseq
-         x0CNK7J6f6xHZW1rKTq0j3KbwnF3pWDvRg5mpvsadd8RhRz+aY7ReSsYPerIPv3q+u8/
-         tnmQ==
-X-Gm-Message-State: AOAM532E+5MxdgxZjjGCyqn3/EVq8GSPl+pvLZuETnKIT+SK8wS8wdBH
-	AFH+LtVkSn8h5FPRyAEi9fFzQA/RkYIs9CytJ/Q=
+        bh=HdHpXzUapBljDxWimWgYSrUkl0Z+NkF+GXQQqroyybE=;
+        b=iK2P5OB+EYKlkIl0veu4SdatjWsxVOVMv/OwK2cJF4NTtJVXQs9+1p9Nagbw9xphmc
+         TvpO+Jt96v6KmDmbVZBQoFb8te+xlwx+Vl/OpB72604Op0GjutYzMFvgFq0Vjx1F7PbM
+         QO5JltPNYPfJabIJvajv+YoUQQ9BtkKrfzU9s0NrSJmYRLx47iB6KJ/3GU72cjBK4RXl
+         wVV4Ki+EVItEJTVT5uUE6h6BK0tm+nSRsyvSkc64rI0llaWHO5Dc50KEzak2XnCkbR5k
+         axoOgFCvXcjqWu92V0G1FMxumKomBcsqVlk5B6DWwtd8mPTKXXZotRNNH+26Uz83LdrE
+         G+FA==
+X-Gm-Message-State: AOAM531JI9ETlhcozH+TdYsn0AhaWd/sDkcywR/dlXHvN5kcz3CSyazN
+	6Gne5fkb7GOWU1wleGvGfEvo9Hp5sQPPrpHBCbI=
 X-Google-Smtp-Source: 
- ABdhPJxYr2i0cSG47iesc48EDEn+DOT+MqVwFMuhE1onTdwNPaXq9ysc4HzUQeoJB/4FFpnG1l3bdw==
-X-Received: by 2002:a17:90a:191a:: with SMTP id
- 26mr10081713pjg.79.1634855025855;
-        Thu, 21 Oct 2021 15:23:45 -0700 (PDT)
+ ABdhPJz/Uvl3lV5E8pdDIKilYJoE5PuFNZjq+EEl+z721t/Y5QVo3h4AaXgahQO1zi/Bz+oXVNnVyw==
+X-Received: by 2002:a17:902:c7d3:b0:13f:f813:833e with SMTP id
+ r19-20020a170902c7d300b0013ff813833emr46065pla.68.1634911190887;
+        Fri, 22 Oct 2021 06:59:50 -0700 (PDT)
 Received: from hexa.router0800d9.com (rrcs-66-91-142-162.west.biz.rr.com.
  [66.91.142.162])
         by smtp.gmail.com with ESMTPSA id
- 142sm302188pgh.22.2021.10.21.15.23.44
+ d20sm10032806pfl.82.2021.10.22.06.59.49
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 15:23:45 -0700 (PDT)
+        Fri, 22 Oct 2021 06:59:50 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 0/7] Pull request (cover letter only)
-Date: Thu, 21 Oct 2021 12:23:33 -1000
-Message-Id: <cover.1634854899.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 0/2] Patch review
+Date: Fri, 22 Oct 2021 03:59:13 -1000
+Message-Id: <cover.1634910994.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 21 Oct 2021 22:23:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12813
+ <bitbake-devel@lists.openembedded.org>; Fri, 22 Oct 2021 13:59:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12814
 
-The following changes since commit 93094705c1c66688e0730a1efb17805778c9fa9f:
+Please review this set of patches for dunfell/1.46 and have comments back by
+end of day Monday.
 
-  test/fetch: Update urls to match upstream branch name changes (2021-10-19 22:28:23 +0100)
+Passed a-full on autobuilder:
+
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/2787
+
+The following changes since commit 35f01508d687eb44c2dc488cd74a9b35124859d9:
+
+  hashserv: let asyncio discover the running loop (2021-10-21 05:57:38 -1000)
 
 are available in the Git repository at:
 
-  git://git.openembedded.org/bitbake-contrib stable/1.46-next
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-next
+  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
 
-Alexander Kanavin (5):
-  bitbake: correct the collections vs collections.abc deprecation
-  bitbake: fix regexp deprecation warnings
-  bitbake: do not import imp in layerindexlib
-  bitbake: adjust parser error check for python 3.10 compatibility
-  bitbake: correct deprecation warning in process.py
+Richard Purdie (2):
+  fetch2/git: Avoid races over mirror tarball creation
+  fetch2/git: Use os.rename instead of mv
 
-Chris Laplante (1):
-  compat.py: remove file since it no longer actually implements anything
-
-Justin Bronder (1):
-  hashserv: let asyncio discover the running loop
-
- lib/bb/compat.py              | 10 ----------
- lib/bb/data_smart.py          |  4 ++--
- lib/bb/event.py               | 16 ++++++++--------
- lib/bb/persist_data.py        | 13 +++++++------
- lib/bb/server/process.py      |  2 +-
- lib/bb/tests/event.py         | 17 +++++++++--------
- lib/bblayers/query.py         |  6 +++---
- lib/hashserv/server.py        |  4 ++--
- lib/layerindexlib/__init__.py |  1 -
- 9 files changed, 32 insertions(+), 41 deletions(-)
- delete mode 100644 lib/bb/compat.py
+ lib/bb/fetch2/git.py | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
 -- 
 2.25.1
