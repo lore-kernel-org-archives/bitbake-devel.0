@@ -1,139 +1,249 @@
-Return-Path: <kweihmann@outlook.com>
+Return-Path: <scott.murray@konsulko.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26CBC433F5
-	for <webhook@archiver.kernel.org>; Tue, 26 Oct 2021 17:18:21 +0000 (UTC)
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com
- (EUR05-DB8-obe.outbound.protection.outlook.com [40.92.89.27])
- by mx.groups.io with SMTP id smtpd.web08.187.1635268701262194656
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D2DC433EF
+	for <webhook@archiver.kernel.org>; Tue, 26 Oct 2021 22:52:26 +0000 (UTC)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com
+ [209.85.222.42])
+ by mx.groups.io with SMTP id smtpd.web09.4130.1635288744986173561
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 26 Oct 2021 10:18:21 -0700
+ Tue, 26 Oct 2021 15:52:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@outlook.com
- header.s=selector1 header.b=Si8qiacH;
- spf=pass (domain: outlook.com, ip: 40.92.89.27,
- mailfrom: kweihmann@outlook.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H2bW6/b1V4OIK8e8CcxNBgBtlBXsiTslNdoLMbwu/yiBpbI+KZTBaVQgTmU+iPVNa6/XXuz3meox6Nj9vAfzZQVr7RDxuLl//vnWCY7fP4S9lNXYsZl9vSpV8qsZSIi7HLRJr/6QUsklgp7LvG5l4DQjidFDY+fzcbXl7VMqFOEycTfq1uHc1z82wPk4t+H4RhR7MLFRw3zYhz4YDiP6PALXWRuoZoQdIfqUXNvz8fd7d2PZfoeB7/+Kc8WULBkFyv7U+1IWG/1Une4mu8UUXvK2xB2zi3gUQUjB0joydA6nw9ohn26cJEHlbytMlrW3eMiuYMmgt2UepvLMdLum/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k567qm/4oA5OMiNZKPMaFUfYgPCk7RtjTryK0AjR/N8=;
- b=bnbFqSj99AWdMgn8LhFxP3PkbcFCbkol+LFU6DqP2VGxNe+53dakdID5oaZqxv+rTKgWvcitjyulww81XFteW0xkQeim3JfYPrv6nrbVCHcBo6juzbmqHUPBSVhzYdt50ZzLsdE40bxZfb8m6fN1xRMj3qKsCwx9Oom0n1suauL04QPG9FwSa8e13gPL12s4uYqTpjq3wmp7tSLYA9RhJKBMpDvQuyMfwaOQ+EdbWv1S+lH5BJf4ux8ASI1m/ODw2IU/YRFHIhmfu8TMK/mNmK6b+ko3YCe/d+c89E6r2NiDBZdFMZmVq1dWphlW4uz5fEd+QFmR7oxaaAWKBcJIUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k567qm/4oA5OMiNZKPMaFUfYgPCk7RtjTryK0AjR/N8=;
- b=Si8qiacHIn2jKBdsLRPU8Qya2wxu1feo88RPxzB73IvQ70jcKbFC9hFweRa+yePYV4f9CIdmaEeBv5yMMVYaqA2ZxNPiDizpCSxwifxcNKBJs4gtY7vHuNQfdZwLmKdrq/2uhd9CYFlBiHxELNfwpQS94VF3fKK0FEXhLItYe3YGuT5FtwoOIaYJ5pwYqKiob43+yWAMowsTmlIF3xike+6ETLPuuZzvzmq0syg33gM23KNC7mYDOwmYjSMg8F0mC0jEoRcwDD9/bqyjoUC9EwJu2dDDLknIwV0zyw2CoQT9iuGFx4K0YenpGt2aHOA3CY0MxUAz3shNZq5dTeIAOQ==
-Received: from AM9PR09MB4642.eurprd09.prod.outlook.com (2603:10a6:20b:284::24)
- by AM0PR09MB3667.eurprd09.prod.outlook.com (2603:10a6:208:181::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18; Tue, 26 Oct
- 2021 17:18:19 +0000
-Received: from AM9PR09MB4642.eurprd09.prod.outlook.com
- ([fe80::7c6f:9b99:3d00:f710]) by AM9PR09MB4642.eurprd09.prod.outlook.com
- ([fe80::7c6f:9b99:3d00:f710%4]) with mapi id 15.20.4628.020; Tue, 26 Oct 2021
- 17:18:19 +0000
-Subject: Re: [bitbake-devel] noexec varflag behavior vs documentation?
-To: Scott Murray <scott.murray@konsulko.com>,
- bitbake-devel@lists.openembedded.org
-References: <d248a56-a985-952c-363c-7a642761c2b6@spiteful.org>
-From: Konrad Weihmann <kweihmann@outlook.com>
-Message-ID: 
- <AM9PR09MB4642DA41A9B3F3FCF6CB23EDA8849@AM9PR09MB4642.eurprd09.prod.outlook.com>
-Date: Tue, 26 Oct 2021 19:18:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-In-Reply-To: <d248a56-a985-952c-363c-7a642761c2b6@spiteful.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-TMN: [MEO4Lp5hY3MGSYYfaMK3OAXndaF3LdkfV1PetpyIL9EJrT7usPbulHBVajNNz8O/]
-X-ClientProxiedBy: AM3PR05CA0117.eurprd05.prod.outlook.com
- (2603:10a6:207:2::19) To AM9PR09MB4642.eurprd09.prod.outlook.com
- (2603:10a6:20b:284::24)
-X-Microsoft-Original-Message-ID: 
- <20c3e6c0-ee2b-d309-83d0-7f4fb02cb606@outlook.com>
+ dkim=pass header.i=@konsulko.com header.s=google header.b=f/JEcqY/;
+ spf=pass (domain: konsulko.com, ip: 209.85.222.42,
+ mailfrom: scott.murray@konsulko.com)
+Received: by mail-ua1-f42.google.com with SMTP id f24so1293919uav.12
+        for <bitbake-devel@lists.openembedded.org>;
+ Tue, 26 Oct 2021 15:52:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9baU40iRTpCfEosnDFbupWIzsNWUilUrDV7eUxVEAFk=;
+        b=f/JEcqY/sUCxUq8pvZwRvJh4o4+HHqII3l3FV95/fYXk/3E4YbUgU3xvzglxN1s+fd
+         liY3PD9+qGwEGFQZsEDJjOOfXPXTtHPVBCalAiMzEYPGqhqlFquIyHFM8ycmQYc+WH5T
+         mkSzSkQFv9wHvPxh6lNh8bbM/8cG4HvcRIMCo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9baU40iRTpCfEosnDFbupWIzsNWUilUrDV7eUxVEAFk=;
+        b=gUSdrVapctKA0WRY2J8IcQSmXlOcoCU3aXk8z4aOPq5Y0ai1yFlm/xUWZXY1q6Kox7
+         R7BMv54OOv8nnkFTcblNStCUbPjJMvRuZQuDS1d0te5VGFXGuApYkYDyYxnqTgTZxKWq
+         pfcaHYDpzfVvJAj/51+pAsRdojN4cXpygzlE1SjnnDaIv8OwxFhVMbZ4X+sP1pScQsht
+         ZoBIzXng+ilc7PDIC4t5fURRow0gkR9jfrkYQdT3+Hz/txPU7HvAMXetxyhDAgfUQQM6
+         b/KGhSoh5tnZbXwkKeXtFeRLpFCwqXT26y1WJ2j1r04NHniWH9MkWQxdVYpWktRmbrAX
+         QCRg==
+X-Gm-Message-State: AOAM531/DyYWainUdUxnXfQGPg8PlxCR98ZTjfy2Ts7tAgyzz8OIp+V/
+	S+ZQtM8fd+gxnrNweAKQ2GGOtoNXhDWeYIHvZmCOtA==
+X-Google-Smtp-Source: 
+ ABdhPJw2PkWa9g1RxgK+KW4NyqlD2kisxIgtmkBmuE3Ml4X2vuyq9MXzM0V2O+7IghAbot+r991zxEAfxZsqtfCUHPg=
+X-Received: by 2002:a67:2c95:: with SMTP id s143mr19740208vss.0.1635288744026;
+ Tue, 26 Oct 2021 15:52:24 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:3103:205c:200:bed3:df7f:f488:16a2]
- (2a02:3103:205c:200:bed3:df7f:f488:16a2) by
- AM3PR05CA0117.eurprd05.prod.outlook.com (2603:10a6:207:2::19) with Microsoft
- SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16 via Frontend
- Transport; Tue, 26 Oct 2021 17:18:18 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1965879c-c9a2-4f15-a915-08d998a49ad4
-X-MS-TrafficTypeDiagnostic: AM0PR09MB3667:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	es9nq4zyTqP2qOoGrpq+yvMQiu0WL6uLMjW2snmhXfiSUhJwVQfq5nlnYXyiRrG1jSYZziirbU8iSsjffbF2q+16YkJKmyWXLEWtp2bT/fdTyIu5rgoiKTSp54VIQe3X/vFr69vNjUAnzqdlQRP2QAiXwyM/OCM/WloquZYubI7l5YpHjTj9DhJx6UcG4cOBIx3NgSAfaAIl2jXYGdm6YtI99/JzWoxU1+PWg8EfREdNjd7FI3nuMOZrpCGhJj/9CWO1MktmOqE6thHyPVIcGxJNh91/qpAaHnQL9KNKfblcyjq31ayGWKLe6XpbnQz9jZU4RF+GvlfFhlIRGDR+UR0IFffVOKrv2VBj8jHm3BWkRVXHlm4+ehoDS8IR2ZpT6OxxK0QMsUl+PHkSipGfSnFeB313m137GQLzmhxdMuq/naYa2EvAUqWwnEO4+JuibcQrF/I14PpcCbBDH3we/TKI0EWkzou7GEPfzIWmGb0yqIayyRlti34EOLNbxZ9AURFBiugqW2bvfoheDD7RJqLCqh7HfORyI5XHILgfP3CZCknuEu7YXokmXKcy4CHJdz4/Jy2pf+jYXTU1JCU2Kuxr5AqVLntXQkE7Smg7bhIgNMxuX6xE3HqEYyuazIv5
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	y3MuuR8Q+7p4mLdD/uireAGRLYbx1bwWZBwPLz9vtV7M/HcsN4Jr0vYoxnyAR9h3t/8iicGxGo8MEwiQeBthJJV5i5144CdbuEiqhcD+nIW7vI6Vf/P65b0TVdlM9OMskjZC1I/6axjEa6WkdOBYev8V74EkMNjs4JCXdvD+Z390VXMr9nfFplFBiPgwtTzotxx7GwwkRywLhiqUTiCDzUU4XXVW2ynW8OYdHbNNDFtpt0qSFn47jb5f3g2qYvR83z0rJZoG9kQbarTpRwahybOCw7AEdt5rTlxYHF4qx7V8LAdc+/337DY7X3lOTJ8cnf72BS2Io6dgLnteWL2njwOGiPzwcpdcYQWrLt2TUiNs99obUmPSAajrhD+vIoOwGm2CGTizaU9KHXJS0LOn84kLraK9l37Ab8E7a5TwMRxpsv5jUEFKipIH2J7KbMkAj+3Av48DoLPLJB0j3IGpH8heF1ofq5PdeX/pklnF+PAQ+nqjXVwgN9ojBThItEnRii3zMW3brhoNXDtY4zbErVZX6Ts/Hzk7VvoiN63essLw9kismMwCNR8o/jXBX8fMd9OOVr5JDjkHjLfSvDKRHW1AxIfpb4MF50vbdtdboAZcopPs2cqn5Rn67WV9oIlJvyQuwaaGkUHZs4pBMRRpJl/HDhlpiI5lu9O0OaaKRO1WTnRhhEKMrYk5LufdMyKgZaZGi03HPyQCTfe+TZ96esJHUEDukLqUrRB1n3jQ7C0jTOVVzkVkLJHruFMywqfCkdsu69KJBcPVa55g4HPjmA==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 
- 1965879c-c9a2-4f15-a915-08d998a49ad4
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR09MB4642.eurprd09.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2021 17:18:19.2588
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR09MB3667
+References: <d248a56-a985-952c-363c-7a642761c2b6@spiteful.org>
+ <AM9PR09MB4642DA41A9B3F3FCF6CB23EDA8849@AM9PR09MB4642.eurprd09.prod.outlook.com>
+ <7aabfa2b-2019-2dfb-3ae0-3ace4c4638d@spiteful.org>
+ <16B1B4E0DFE93958.19566@lists.openembedded.org>
+ <8bd2e9ff001261ae11beb8794f843965088c3162.camel@linuxfoundation.org>
+In-Reply-To: 
+ <8bd2e9ff001261ae11beb8794f843965088c3162.camel@linuxfoundation.org>
+From: Scott Murray <scott.murray@konsulko.com>
+Date: Tue, 26 Oct 2021 18:52:13 -0400
+Message-ID: 
+ <CAFrvZPWhg6hw0yirR-Sq5=+hJwhuwOg7B+uH1ZYicDBoY18e2g@mail.gmail.com>
+Subject: Re: [bitbake-devel] noexec varflag behavior vs documentation?
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: Konrad Weihmann <kweihmann@outlook.com>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="000000000000b1754e05cf49542f"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 26 Oct 2021 17:18:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12834
+ <bitbake-devel@lists.openembedded.org>; Tue, 26 Oct 2021 22:52:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12838
 
-On 26.10.21 17:57, Scott Murray wrote:
-> As I brought up on the dev call earlier, the task noexec varflag
-> documentation says:
->=20
-> * [noexec]: When set to =E2=80=9C1=E2=80=9D, marks the task as being empt=
-y, with no
-> execution required. You can use the [noexec] flag to set up tasks as
-> dependency placeholders, or to disable tasks defined elsewhere that are
-> not needed in a particular recipe.
->=20
-> (from:
+--000000000000b1754e05cf49542f
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Oct 26, 2021 at 6:44 PM Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> On Tue, 2021-10-26 at 23:23 +0100, Richard Purdie via
+> lists.openembedded.org
+> wrote:
+> > On Tue, 2021-10-26 at 15:54 -0400, Scott Murray wrote:
+> > > On Tue, 26 Oct 2021, Konrad Weihmann wrote:
+> > >
+> > > > On 26.10.21 17:57, Scott Murray wrote:
+> > > > > As I brought up on the dev call earlier, the task noexec varflag
+> > > > > documentation says:
+> > > > >
+> > > > > * [noexec]: When set to =E2=80=9C1=E2=80=9D, marks the task as be=
+ing empty, with no
+> > > > > execution required. You can use the [noexec] flag to set up tasks
+> as
+> > > > > dependency placeholders, or to disable tasks defined elsewhere
+> that are
+> > > > > not needed in a particular recipe.
+> > > > >
+> > > > > (from:
+> > > > >
 > https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-ma=
-nual-metadata.html?highlight=3Dnoexec#variable-flags)
->=20
-> However, as I discovered yesterday, the reality is that it being set to
-> any value at all disables execution, which Richard mentioned on the dev
-> call helps with performance.  The question Richard asked me to bring here
-> is whether the documentation should be updated, or if the behavior should
-> be changed to match it?  I do not have a strong opinion either way, but
-> would like this resolved somehow to avoid others spending time scratching
-> their heads like I did for a bit yesterday.
+nual-metadata.html?highlight=3Dnoexec#variable-flags
+> )
+> > > > >
+> > > > > However, as I discovered yesterday, the reality is that it being
+> set to
+> > > > > any value at all disables execution, which Richard mentioned on
+> the dev
+> > > > > call helps with performance.  The question Richard asked me to
+> bring here
+> > > > > is whether the documentation should be updated, or if the behavio=
+r
+> should
+> > > > > be changed to match it?  I do not have a strong opinion either
+> way, but
+> > > > > would like this resolved somehow to avoid others spending time
+> scratching
+> > > > > their heads like I did for a bit yesterday.
+> > > >
+> > > > As I stumbled upon the very same, I'd love to see the docu being
+> updated - I
+> > > > mean implicitly it already does that as noexec can be only
+> deactivated by
+> > > > putting no value in it - but both cases should be properly
+> documented IMO
+> > >
+> > > Chris mentioned to me OOB this existing Bugzilla:
+> > >
+> > > https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D13808
+> > >
+> > > I don't see the discussed deprecation warning change in master,
+> though, so
+> > > I'm guessing it got dropped.
+> >
+> >
+> http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=3D66f22c0bd19a81ee7c=
+cb49543f24a4f90fc012ba
+> >
+> > Is that code working?
+>
+> I did check and with do_compile[noexec] =3D "0" in the bash recipe, I see=
+:
+>
+> WARNING: /xxx/meta/recipes-extended/bash/bash_5.1.8.bb: In a future
+> version of BitBake, setting the 'noexec' flag to something other than '1'
+> will result in the flag not being set. See YP bug #13808
+>
+> so it does appear to.
+>
 
-As I stumbled upon the very same, I'd love to see the docu being updated=20
-- I mean implicitly it already does that as noexec can be only=20
-deactivated by putting no value in it - but both cases should be=20
-properly documented IMO
+Yes, I did just try it here as well.  I've been working on dunfell and
+missed it in master
+when I looked through git grep, my apologies.  I guess there's still the
+questions of
+just when the deprecation takes effect and if anything should be done with
+respect to
+the documentation in the meantime (since it could IMO be argued it's
+incorrect ATM).
 
->=20
-> Thanks,
->=20
-> Scott
->=20
->=20
->=20
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#12833): https://lists.openembedded.org/g/bitbake-deve=
-l/message/12833
-> Mute This Topic: https://lists.openembedded.org/mt/86606339/3647476
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [kweihm=
-ann@outlook.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->=20
+Scott
+
+--000000000000b1754e05cf49542f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail=
+_attr">On Tue, Oct 26, 2021 at 6:44 PM Richard Purdie &lt;<a href=3D"mailto=
+:richard.purdie@linuxfoundation.org">richard.purdie@linuxfoundation.org</a>=
+&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px =
+0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On T=
+ue, 2021-10-26 at 23:23 +0100, Richard Purdie via <a href=3D"http://lists.o=
+penembedded.org" rel=3D"noreferrer" target=3D"_blank">lists.openembedded.or=
+g</a><br>
+wrote:<br>
+&gt; On Tue, 2021-10-26 at 15:54 -0400, Scott Murray wrote:<br>
+&gt; &gt; On Tue, 26 Oct 2021, Konrad Weihmann wrote:<br>
+&gt; &gt; <br>
+&gt; &gt; &gt; On 26.10.21 17:57, Scott Murray wrote:<br>
+&gt; &gt; &gt; &gt; As I brought up on the dev call earlier, the task noexe=
+c varflag<br>
+&gt; &gt; &gt; &gt; documentation says:<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; * [noexec]: When set to =E2=80=9C1=E2=80=9D, marks the =
+task as being empty, with no<br>
+&gt; &gt; &gt; &gt; execution required. You can use the [noexec] flag to se=
+t up tasks as<br>
+&gt; &gt; &gt; &gt; dependency placeholders, or to disable tasks defined el=
+sewhere that are<br>
+&gt; &gt; &gt; &gt; not needed in a particular recipe.<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; (from:<br>
+&gt; &gt; &gt; &gt; <a href=3D"https://docs.yoctoproject.org/bitbake/bitbak=
+e-user-manual/bitbake-user-manual-metadata.html?highlight=3Dnoexec#variable=
+-flags" rel=3D"noreferrer" target=3D"_blank">https://docs.yoctoproject.org/=
+bitbake/bitbake-user-manual/bitbake-user-manual-metadata.html?highlight=3Dn=
+oexec#variable-flags</a>)<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; However, as I discovered yesterday, the reality is that=
+ it being set to<br>
+&gt; &gt; &gt; &gt; any value at all disables execution, which Richard ment=
+ioned on the dev<br>
+&gt; &gt; &gt; &gt; call helps with performance.=C2=A0 The question Richard=
+ asked me to bring here<br>
+&gt; &gt; &gt; &gt; is whether the documentation should be updated, or if t=
+he behavior should<br>
+&gt; &gt; &gt; &gt; be changed to match it?=C2=A0 I do not have a strong op=
+inion either way, but<br>
+&gt; &gt; &gt; &gt; would like this resolved somehow to avoid others spendi=
+ng time scratching<br>
+&gt; &gt; &gt; &gt; their heads like I did for a bit yesterday.<br>
+&gt; &gt; &gt; <br>
+&gt; &gt; &gt; As I stumbled upon the very same, I&#39;d love to see the do=
+cu being updated - I<br>
+&gt; &gt; &gt; mean implicitly it already does that as noexec can be only d=
+eactivated by<br>
+&gt; &gt; &gt; putting no value in it - but both cases should be properly d=
+ocumented IMO<br>
+&gt; &gt; <br>
+&gt; &gt; Chris mentioned to me OOB this existing Bugzilla:<br>
+&gt; &gt; <br>
+&gt; &gt; <a href=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D13=
+808" rel=3D"noreferrer" target=3D"_blank">https://bugzilla.yoctoproject.org=
+/show_bug.cgi?id=3D13808</a><br>
+&gt; &gt; <br>
+&gt; &gt; I don&#39;t see the discussed deprecation warning change in maste=
+r, though, so<br>
+&gt; &gt; I&#39;m guessing it got dropped.<br>
+&gt; <br>
+&gt; <a href=3D"http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=3D66f2=
+2c0bd19a81ee7ccb49543f24a4f90fc012ba" rel=3D"noreferrer" target=3D"_blank">=
+http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=3D66f22c0bd19a81ee7ccb=
+49543f24a4f90fc012ba</a><br>
+&gt; <br>
+&gt; Is that code working?<br>
+<br>
+I did check and with do_compile[noexec] =3D &quot;0&quot; in the bash recip=
+e, I see:<br>
+<br>
+WARNING: /xxx/meta/recipes-extended/bash/<a href=3D"http://bash_5.1.8.bb" r=
+el=3D"noreferrer" target=3D"_blank">bash_5.1.8.bb</a>: In a future version =
+of BitBake, setting the &#39;noexec&#39; flag to something other than &#39;=
+1&#39; will result in the flag not being set. See YP bug #13808<br>
+<br>
+so it does appear to.<br></blockquote></div><div class=3D"gmail_quote"><br>=
+</div>Yes, I did just try it here as well.=C2=A0 I&#39;ve been working on d=
+unfell and missed it in master<div class=3D"gmail_quote">when I looked thro=
+ugh git grep, my apologies.=C2=A0 I guess there&#39;s still the questions o=
+f</div><div class=3D"gmail_quote">just when the deprecation takes effect an=
+d if anything should be done with respect to</div><div class=3D"gmail_quote=
+">the documentation in the meantime (since it could IMO be argued it&#39;s =
+incorrect ATM).</div><div class=3D"gmail_quote"><br></div><div class=3D"gma=
+il_quote">Scott</div><div class=3D"gmail_quote"><br></div><div class=3D"gma=
+il_quote"><br></div></div>
+
+--000000000000b1754e05cf49542f--
 
