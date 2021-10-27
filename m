@@ -1,283 +1,249 @@
-Return-Path: <mingli.yu@windriver.com>
+Return-Path: <quentin.schulz@theobroma-systems.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9EFC433EF
-	for <webhook@archiver.kernel.org>; Wed, 27 Oct 2021 06:39:41 +0000 (UTC)
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com
- [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.web09.8182.1635316780408834375
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E33C433EF
+	for <webhook@archiver.kernel.org>; Wed, 27 Oct 2021 09:53:20 +0000 (UTC)
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com
+ (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.80])
+ by mx.groups.io with SMTP id smtpd.web09.9612.1635328398312464924
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 26 Oct 2021 23:39:41 -0700
+ Wed, 27 Oct 2021 02:53:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=pps06212021 header.b=VqJAOniN;
- spf=pass (domain: windriver.com, ip: 205.220.178.238,
- mailfrom: prvs=59342b0480=mingli.yu@windriver.com)
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19R6dd88014956
-	for <bitbake-devel@lists.openembedded.org>; Wed, 27 Oct 2021 06:39:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
- h=subject : to : cc
- : references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=PPS06212021;
- bh=86SAAcNgLT8xAJ1pmYpWXN+jQEnjSLeud01aHT/VARo=;
- b=VqJAOniNy203qW4UVbYyzd470WHwUXkfFRg6/SYci8/nUUt8CWbIWr2WbYkxtDjtu8gq
- hhka5s0TooeDM/PpWR+CZZkMMcta9A2WXrq8koJc4wpXCUgqIDcsACQTFZ6rGcz1kn0J
- nwURl1JCzOhZexei1T7uoYsvvKuheunieXwZbF3OOuJ6RTrDC5tVS8zKa/n7Q0L/BenX
- vSWRssJy5SsB94S8AjER7vJQEUL4/hBGQDsstfaH+fezcLn4YOG0dFl2o5/yA3x1Io7T
- aZbgeUukt0JzTV+yVrpVNjziTuWxpWH/bPNJLKwe3ELC4C73xavVpJI8PLFhIChdGJFX rA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-0064b401.pphosted.com with ESMTP id 3bx4rch908-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Wed, 27 Oct 2021 06:39:39 +0000
-Received: from m0250811.ppops.net (m0250811.ppops.net [127.0.0.1])
-	by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19R6dcjv014947
-	for <bitbake-devel@lists.openembedded.org>; Wed, 27 Oct 2021 06:39:38 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com
- (mail-bn7nam10lp2107.outbound.protection.outlook.com [104.47.70.107])
-	by mx0a-0064b401.pphosted.com with ESMTP id 3bx4rch905-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Oct 2021 06:39:38 +0000
+ dkim=fail reason="body hash did not verify"
+ header.i=@cherrycloud.onmicrosoft.com
+ header.s=selector2-cherrycloud-onmicrosoft-com header.b=EgNERtw5;
+ spf=pass (domain: theobroma-systems.com, ip: 40.107.20.80,
+ mailfrom: quentin.schulz@theobroma-systems.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L+Y12lovJTaLbZ0X1GmgsjB/UAP0T70IG9gTTul7+w40CkMWDGDmh7GNhEct2fIX6rcBNFqpPXu9BKavckuTzsT+7g4QGMsblsicGJZYfxJ3VdgDLxOfNGOGH+EmH9S3/XKyuQwK3A7RA4HBK+ecCWnGPSG5DXHWS7wUYrzqSgXgvSjCSE6hQsaBQd0U5q1MAAkGyaNEROCmwTUg1wluGmKxS3+9SVPCZSEkXR6JFXeNvEVcQUh/+MB4egc4RmcOaD9J2U/54vLxvtTzUJCATfskP7CGuJ+zAqsR72GSZrtEU+lN8FvBqf8/fOtKt2qap+/kLx2Rkg902R7pAaEshQ==
+ b=hpmXKhledeaz/6eoird+fdKoUNf3rs+CgYCG0/EV/5UWJ2GdlnHGEEKxpMRXjtuJLC5+JmuID2/kligl9FkRa8/ekRqzvgo9ax4EFT8VZ5aBJ4yofASlBOrSdbAM5QV6sM+FCgaTvid8gi31S6qzjiVNDXBQiFFmySEgLxJmfmqp5/ghYJTmYqN+aeIIzxDOsees9jSaeIi2ReXTcQDLxoxwf0L/HZSYpSYMyjVWcWij2zIMZdMPbJo+6zh/26wtwekPbGymeOTYcQsyKj88kUXicqCDxgtrqj1sh/nBlmKH1cbsjRj57xgBwu2YZCb4xdv0FZOd51odDUuqgaM7rA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=86SAAcNgLT8xAJ1pmYpWXN+jQEnjSLeud01aHT/VARo=;
- b=iRmg+hwQb57lgZvgVfFtrwHGgvb6e161/u7Gu8Kr7NQcIVw16h1FzagyZtjBngOWolsXrAfzVrWpB7YXi5bkffpdSVurtMz239AQZsGk/rm5Iw+Pakt36gjFmBPmLhovDdYSsRJiZnKsgZtzJlFR+vHhuO7h52ZA/NLCSS96X5+9hfSEsIyK3uI335s8lsP0zz/3avQKfsMXiZy5r5QH/1W8l72l6rAW/Iu0hwVS4k1QhkIxj5dmSw+HmekPChTEdGczSWm+AkauT2/Rfm3Dwm/fpswtQa2cqcuPKUdKd5MMvJd7C/wmySNYBOWyh3PrzeKZndB3PawnEQuDHFEWHw==
+ bh=pWJQOPxvnzhY3PtQyzP/ZjOrfz4a29lUKD/4LxCAwDI=;
+ b=JPmmAXodepcrn60bOQp/YkdbhFqXGyY3HKwPDFH0zWSSMpprbDKuaIyRQbtJ0FFKnE8HxJ8XbaokmtpJ1abbBHbIheqFF+WnC5yP1RGgYPfcHog6Sdoe/jG52GVTMEuQxeMs6IKQk7RIP/9wW6YYX99/NtWJvFK39tAU/VvHVo5ufo1sJG4SmwUQRjx2ZBfAsQNGf56lrLnJEnTZfuBhI2DKZ+dkDU/UmjYWi4B6soiYIvm7gD0LUxkRwiADDARDo8mxUYxsje2+Hk2rizBhHCbjfTUokHp5IyWrp0OwC3WWpV/nQaC4pVt6SnpIdoJdFQG8c3cMJX4jlQ/9xpbk0w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Authentication-Results: lists.openembedded.org; dkim=none (message not signed)
- header.d=none;lists.openembedded.org; dmarc=none action=none
- header.from=windriver.com;
-Received: from PH0PR11MB5014.namprd11.prod.outlook.com (2603:10b6:510:31::17)
- by PH0PR11MB5127.namprd11.prod.outlook.com (2603:10b6:510:3c::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18; Wed, 27 Oct
- 2021 06:39:36 +0000
-Received: from PH0PR11MB5014.namprd11.prod.outlook.com
- ([fe80::186:2d0e:a19a:3b6]) by PH0PR11MB5014.namprd11.prod.outlook.com
- ([fe80::186:2d0e:a19a:3b6%6]) with mapi id 15.20.4628.020; Wed, 27 Oct 2021
- 06:39:35 +0000
-Subject: Re: [bitbake-devel] [PATCH v3] fetch2: make sure the uri added as
- expected
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: bitbake-devel@lists.openembedded.org
-References: <168714731971476B.24733@lists.openembedded.org>
- <20210913054810.30554-1-mingli.yu@windriver.com> <YXiOH15WmkbpUaO1@piout.net>
-From: "Yu, Mingli" <mingli.yu@windriver.com>
-Message-ID: <7348d54d-5071-4ac3-afbb-7dc4caa33943@windriver.com>
-Date: Wed, 27 Oct 2021 14:45:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <YXiOH15WmkbpUaO1@piout.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: HK2PR02CA0213.apcprd02.prod.outlook.com
- (2603:1096:201:20::25) To PH0PR11MB5014.namprd11.prod.outlook.com
- (2603:10b6:510:31::17)
+ smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
+ header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cherrycloud.onmicrosoft.com; s=selector2-cherrycloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pWJQOPxvnzhY3PtQyzP/ZjOrfz4a29lUKD/4LxCAwDI=;
+ b=EgNERtw5sG9YE/+KkxD2Ok2ITlw7r7aUBZmK18UZVPsTK3A0oga5cLnfwlzccOJkd5s8OjZBimN/i5XEBNR8L2mjhAMmNd+lK6h42oFKknIx6wk9VaD6kiS89By/VHX/IKcrBk76CK8JEp63oRidVElaBZnlFY6K57qVu60Syx4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
+Received: from AM0PR0402MB3348.eurprd04.prod.outlook.com
+ (2603:10a6:208:24::24) by AM0PR04MB5460.eurprd04.prod.outlook.com
+ (2603:10a6:208:11c::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14; Wed, 27 Oct
+ 2021 09:53:13 +0000
+Received: from AM0PR0402MB3348.eurprd04.prod.outlook.com
+ ([fe80::d56f:ec59:3bd0:6d7a]) by AM0PR0402MB3348.eurprd04.prod.outlook.com
+ ([fe80::d56f:ec59:3bd0:6d7a%5]) with mapi id 15.20.4628.020; Wed, 27 Oct 2021
+ 09:53:13 +0000
+Date: Wed, 27 Oct 2021 11:53:11 +0200
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+To: Scott Murray <scott.murray@konsulko.com>
+CC: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Konrad Weihmann <kweihmann@outlook.com>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] noexec varflag behavior vs documentation?
+Message-ID: <20211027095311.yy3gr5uc7fwhkui4@fedora>
+References: <d248a56-a985-952c-363c-7a642761c2b6@spiteful.org>
+ <AM9PR09MB4642DA41A9B3F3FCF6CB23EDA8849@AM9PR09MB4642.eurprd09.prod.outlook.com>
+ <7aabfa2b-2019-2dfb-3ae0-3ace4c4638d@spiteful.org>
+ <16B1B4E0DFE93958.19566@lists.openembedded.org>
+ <8bd2e9ff001261ae11beb8794f843965088c3162.camel@linuxfoundation.org>
+ <CAFrvZPWhg6hw0yirR-Sq5=+hJwhuwOg7B+uH1ZYicDBoY18e2g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: 
+ <CAFrvZPWhg6hw0yirR-Sq5=+hJwhuwOg7B+uH1ZYicDBoY18e2g@mail.gmail.com>
+X-ClientProxiedBy: AM6PR04CA0001.eurprd04.prod.outlook.com
+ (2603:10a6:20b:92::14) To AM0PR0402MB3348.eurprd04.prod.outlook.com
+ (2603:10a6:208:24::24)
 MIME-Version: 1.0
-Received: from [128.224.162.173] (60.247.85.82) by
- HK2PR02CA0213.apcprd02.prod.outlook.com (2603:1096:201:20::25) with Microsoft
+Received: from fedora (92.42.140.82) by
+ AM6PR04CA0001.eurprd04.prod.outlook.com (2603:10a6:20b:92::14) with Microsoft
  SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16 via Frontend
- Transport; Wed, 27 Oct 2021 06:39:34 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.22 via Frontend
+ Transport; Wed, 27 Oct 2021 09:53:13 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e9342530-3b30-4da7-0abd-08d999148ab8
-X-MS-TrafficTypeDiagnostic: PH0PR11MB5127:
+X-MS-Office365-Filtering-Correlation-Id: eb29a71d-7f9c-4129-e211-08d9992f976f
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5460:
 X-Microsoft-Antispam-PRVS: 
-	<PH0PR11MB5127E816050F5D79A2B756DBF1859@PH0PR11MB5127.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:513;
+	<AM0PR04MB5460634731A5C4BEB4BF9C39C2859@AM0PR04MB5460.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	EWlAekHof5IWegt8PfhzClzFHFuHhw5Nl0qZoC0yUi/K80n8V64F6HhGKr+j/7lMYBqizs75T5ylA40eSHdbserIkixe5E7i7T6MnmXyCgp3P3LqT4qvB/p29ZQ6RyplDfJR3lWKgvEikh/qxdoCfaNsw1wY2mf5GuFCTZ6mC6qGyU2byN2jiA2K544DoyEtE8KKlrDcxuQ868n2FebMFwsuJSd7FUcy6rWi7CcRprqLzQT8xm6U25JF0XI7sBmwjS48jT+51YNPSyRc7UcQWtkZiFgEFJN8vWKkL4jRxKPnXUm5cJUQdMoA8y04gexxRCCpttSRJjemxBPcWq3mDg0UwR640gjD/Kz+XSYNL/JiUcaFbsLp+GBwizuqc+abUN4MOORq+nujY/X1CjJqkp0GfgStu+IYtwa5uq31rKQM6gb5PuCJ0rUtzGO563TZp9p1sbxLLhDLJ8YSSY/qs+pJE1t6jRh10GxHJZE9uY989WqQYbwkOtry7Q34FMj9g2IlVZrgyzGxXcZ3aqZC9BNSTwj14U51sIsYOP2j/HcIbqIHCrty6OchvSgQ/14DItJHDvntL2HgeBsoI540orRM0AbDQoy6NLaBfi4YbZlEtUKjh0CHIbXH4FRNKH0m5CIPbsnkrH6dXFCAnJzNT+NRb1AXtzB47q0znEchbxarvm2Iq5tIduHcCr2eG/3i1J/X5ggOkYJOwZXfutj0aYZHGCSSuEQ7BuUllhhV2Bx8ETJEreKfGwEk092Xdt8mULO0ds0kRp7Ao7rxC+Qzdys7cbC+sWgY0uW0pMIWRa9InsyCItZWY5mlecYB1Ak1h0LTkZJkVlOlJffXY2crAZeAUdZGOA1WHEOaWXNaQYlRadsAabmbQKw/voS6pJZfF2cHtb9/BdPFJi6MGWotIXlQdKpwkGzsx/Vge0JxXH+g0ZNhefw7PuDydQzjQxgB
+	Md4VBO3HgPE+EZEXXgLKg5VA08MVYHaFToGI1QLaCYuK708YmwPSxddxkUAdezKK3Ef2+klNs/QQHvQmZhhWxsk9xHi4/6OQ4smslgwTOQTKPpa9DgcnGJtPIXPdiDbf3/WUEff/6qkzM9zfdKJzLBS7aqxNApHKyvU0HXRigx9OgoJlTv6GYLVrlJ7I9ryYiSGds6yDuVOsD667l3+Pt5QkDr4oLRYV+VoGznf2XbBm1v+nEfjb+rK+/4SjYMHH7RBACdUgTwyu+bPlo5x6z+fp48gWoBu4Kv71qUON8i+NnGEVpQNAy+9HkLPL8U6gNyBvnSBydaUHg/Z5cpw4yjfhvyDc9BOWYMAcIMoqkxtA3CM1Kyu8Pe+o0/12YY9c9PVWbvmGZrpiGlwBjofnEjh0jQNpskditz/Tx+97KDLZ0bR4qFSVdJ+n59vKSRGGEILLtb1mM4PXtRevH0Na/bUYSxfDh45xeC5ycxHrAjQ8Ab87yFZVg7dVDw5IKkr3LYjSZhuMe2xxL0fQxafH3CMFc764TacpW5zTJTNmPMNiKHSZ1g/yWHxuT7OUK5QTELGTmvlFlnEPEkmb426XKLfmLEaCfx+E7vpx6KzHWnEwrg915jnjXpHlvzBsxewDO6ygGjRWLHjI7XYnSWE/Aes8EJX+9VsMgTbAuF+ulja78WaKfeA74eQtsuJUa3iuZPN8Y1GRkwn/mfTgBQbDBFd5rEt4sSWWK+nO6t0z5sEYS2dZ8a/gpD2ACv51BLZhpx/X84bmOq54UkQGuQYAhgvingF+fb+R1JcEDFWJ/ILVZFVwha4QWaFsTEu60RKm
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5014.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(16576012)(5660300002)(31686004)(316002)(66556008)(6706004)(53546011)(26005)(38100700002)(508600001)(83380400001)(66476007)(8676002)(6486002)(6916009)(2616005)(6666004)(31696002)(38350700002)(8936002)(186003)(4326008)(66946007)(86362001)(36756003)(52116002)(966005)(2906002)(956004)(78286007)(43740500002)(45980500001)(4084875004);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0402MB3348.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(956004)(1076003)(966005)(55016002)(316002)(53546011)(66476007)(186003)(66946007)(83380400001)(6496006)(52116002)(66556008)(4001150100001)(508600001)(44832011)(2906002)(4326008)(5660300002)(54906003)(8676002)(9686003)(86362001)(38350700002)(26005)(33716001)(9576002)(38100700002)(8936002)(6916009)(21314003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?bXFYUUEzQnJPVVRqbUFsNTFJb2tCUDVwbGtndDhZNEV2Sis3c0ZKYzhuamxx?=
- =?utf-8?B?Z3RtdGlieXIrN1BXZXNVL2QvanRWY2RVellaVUgvRHpqUHE4Z3BXc3pyeWt2?=
- =?utf-8?B?TnVkb1hQUmhheGFOcXN5bzdoQ2hmelBXT3JMN1V0czBFWTBUYWtteTZwVGN2?=
- =?utf-8?B?NThLbXI0Z3NvblpBdUp5b2hEeU0wUEM2SU4xeU9kcS83VjJDMG5EdUJZZ2Zz?=
- =?utf-8?B?blZqZHZXY1F2REVEcWczUU5jQVVhSmxwanFONzA0Qjd3OWxReDV2dVdnRW81?=
- =?utf-8?B?WW9YTit6b0d2dlFYL1hFM0tMU0ZINEhwbHd4T2ZnZ0lmc2N2S2FMbXA0cjBM?=
- =?utf-8?B?UWRGRVgzNU1FR3J5enpVdFgrZTVIeFhGRDV3SkZYVmhJTWNkNVRQdG9Cckhq?=
- =?utf-8?B?UzJBSWpDSk04VnhDa2tEd1hhbmVTekdsNTVYbi95eVlQRlhyeVRjSElkMkpo?=
- =?utf-8?B?aTZGNWNUYTdmNnYzcTBoU2dZNWYzODhsaDBYbkNnNFNtSnRXUHNwTmEvK3d4?=
- =?utf-8?B?aXZwTWZnTWRsWnNlczdmdXR2RzJaQWVkSVJ5TVZDVmtoc1ZWVHhLN1FoQUdY?=
- =?utf-8?B?eDBkT0lRTmU5RlpGY2VRVmw4WFpxTHp5RGVCM1dSVGxjV2VrUGNkcmF4eG1G?=
- =?utf-8?B?WUE2Tm9rMXhlTE1IR0lSRExXZDZSV0pLZ1hmdjA2OC9rODRDSWlxbW5XRnhY?=
- =?utf-8?B?TlgrcGdqR08rWnV1STB1aGRQci9KdFNJUEpadE0rVlpRWmdEZ0Y0VTRHYVVn?=
- =?utf-8?B?NEtVbjlTb3l5TnVnM1FCYS9seWdrQldUMGpHY0lVSFZTTnBBQU5CbmtVbzR5?=
- =?utf-8?B?L3ZlZUNDekNxcHhPdDlqSXZINHcwVE4zY1Jyc0ZmcUNDZC9iM01WVmVTaEJi?=
- =?utf-8?B?aGNoeWNQZ3V1d1YzZjdMNWtkUmdRU1g1ZzI2R2JGVkxFa29KMVdPa2IzL0pH?=
- =?utf-8?B?WklpNlZ4ZTBIT1NKalZTU1U0dWR1MFp0Nmlhcm9jSzNDMDdDUjhZMGlxS0Zh?=
- =?utf-8?B?emRSOFNJQ2pkSmltZ082bFREcnNkS3VzaUhxODdqdXovZS9CQ3pVc0RVVitP?=
- =?utf-8?B?b01yaFFXV0FmU09SaWoyS3ppVm93cncrRkJxOUhNbk5aa1FaWEcvTzVEVHV5?=
- =?utf-8?B?YWR5WVd3L3NhL3NNWGhJeE1IWWtraFU4NjJqRzFIS0hkdE9zVUxmcEo5aGpV?=
- =?utf-8?B?Z0o1aDN1M1lNWkhkRGRrYWxLTmt1cjR4U0ZQU0hMblNTc2xwZUhKLzB5bmJ1?=
- =?utf-8?B?Y3lwZDJoSTh6aUZKSklFd0lrbmR4K0tpdjFyeGdMcVN0cHk0RXZJSVJLU3k2?=
- =?utf-8?B?RFpyaGdldEg1WFpaY0ppUGFZanI2MjRCZUpOdllVWDQvRk81NjYraDFld1RT?=
- =?utf-8?B?Y2tycEMrSGk2VXhaK0lxNTMxZng0cDNpMXA3ZkVYbVVaaW1acWc1aU1BWW53?=
- =?utf-8?B?Um9HL2M0anUzS1dKY013UlVLT0V0VDJ6Qi9FQlA0NWthbDJlcWl3ajRzVkNl?=
- =?utf-8?B?cmVUYXFKM1diZVFtSGZsVnBaZHM5ZENuTEg0SHFnNDUvWGhaeFkwWlRZQzBm?=
- =?utf-8?B?R05mSWt5REhqR0h0VGFuOUVXazd0MGk3bkFsUDRkZ0FGd1lhQ21tWWozbXpG?=
- =?utf-8?B?K2w0REpyWDlEdjVFQVJ1VFN3NjhXUDhDTWNna2xxUlpQVk44SDE4WFRYMS9Z?=
- =?utf-8?B?L1U0d3JhVFhVZWU1ekZwbGwraWxtZm9nTmxIVTVYRkdML2dVVjFVeEltRWNG?=
- =?utf-8?B?Z2hDYnd6bUVaNHpNUE5XRlFFTFhPYUNKUitQVTJMQ2Y1d3MrMXNGaDFwRnFG?=
- =?utf-8?B?TnlIQ3kxZHVQcks0L3VvSlVJaTlnanMyV0MxbnRvUUJvTDlVNHJtTjhPY011?=
- =?utf-8?B?OXNFUHhBeVpSMnIxdlpXcURvMURNQzJtU0dncFA0UXA0YkxxbHVuek1mMTdp?=
- =?utf-8?B?V3oxbEFOQk5WaktPaU11dFFHc3FSWU1ZbFNHMXlYUk55d3AxN0V3SmpHT3Vy?=
- =?utf-8?B?TnJsdjdZa1hsVXBwU2QzSkdsSEhqcW9hc2wrdmtRaVpVMmN1UzBhdzBiSjls?=
- =?utf-8?B?aFl5VG9HUUNYajN6ZTZEM21wWnR5cWRDSUs5OWxaaUNiaGV6dWZpWTllUzRR?=
- =?utf-8?B?aDdEQlB1WnU2K1JuUXpzT0FxZCtIeitrcGdZV2NQMWdSWnBBRTM0Mkl3TVA2?=
- =?utf-8?Q?v6zf0dPnKg2ZLG0yXo5yICQ=3D?=
-X-OriginatorOrg: windriver.com
+	=?us-ascii?Q?ZiABPbDfPpvTWkFkk8hdavxGkJB7gBlpJc7dQZQ3fVLLfQwFJiTT+OcpG9tL?=
+ =?us-ascii?Q?+ovhPxCjWlfT/8Au9AL2hHsqrIU/lQne6zn4GRp77gkDNYBgCRRIZNXl82cR?=
+ =?us-ascii?Q?Mpwv9YaDVfzDatffWhS/cSw6GCEiaJXelgMnDwRxcj9zISSQzxYBPpFKlBH4?=
+ =?us-ascii?Q?4tizfhj+DExsbZmrCBTJl3VC7coZE084cs429TrBfoWLmD+3BJCh/q2TuSdk?=
+ =?us-ascii?Q?pUttUWiBNmbNzewCzEiWVGRssKqRbacQyPX3BAWfFsPHCZtlHmztoU6bHiUC?=
+ =?us-ascii?Q?HmCyrCeqRCHxRe11fLkF2iSzF/ElhH6U+UZ26ZR28uUUYIbOU2CrxBisSUD6?=
+ =?us-ascii?Q?/nP/jLV2l0pcIPVMYckqXsXDUtoinzwoBXT+pQqPz1GhW4eYmBMY5vB+bxcl?=
+ =?us-ascii?Q?lD8b9A2Kuu8tQ7XOoZs1K4xOKS9pAc5b+CBnpG/NlWDfaNd0ePZXz9fm/2ym?=
+ =?us-ascii?Q?CxhfvpexK8pc2uGhTh5jR7DJ4RSIpGEzHDei/vPT3I/saU4ZJSgqphjJfq0e?=
+ =?us-ascii?Q?I34eR5HdjOjBzh2hzl0dnYjoC96ktLacYFQP+6myeJCXWLGnPQfh441QJwTi?=
+ =?us-ascii?Q?JppiA/sVIDW0uBOcKoYrAjhPnzWDbbKjvkQEZuULEEyrwxwr1DJvbf0U20Zj?=
+ =?us-ascii?Q?jRgS5jlNcj2qP0+Pork1+WcOwCGjiZKoWtYg2oB26YUJF7JccSKYe1KhkRmU?=
+ =?us-ascii?Q?3yAVWltuFGoL0tJj/r/Te83xyqakAVDzkz0BO9mQtL7jFD3DXS3CoGtJt2Hy?=
+ =?us-ascii?Q?wTiu2+6K25cMcFCXk+yc5i3skTLwtUFPNPo4pPgJCn7fMei7iTXmSoxAKpnH?=
+ =?us-ascii?Q?NXW9REYavDw9bGXhGvVjsgax1UcKN4MINveSti198rEb9pUBhHvMLTQ8PrTk?=
+ =?us-ascii?Q?ujtWO5lhNHlhMCWFIhKwMxVH5JZiQRSYIo25VMeXQ1Hwv9t6HJQuG+J5rk3+?=
+ =?us-ascii?Q?AktCHt1WcUk9sfGKzTJr9DEYvTT6U82CvT3QXUKM2GoAddwwO10q+i85sIZn?=
+ =?us-ascii?Q?uGioMrP2zWw6b9sM+QR3aHMhA4ir0y3xO9Jmtb8JPAea9JRVGEBtrFQ5E3Td?=
+ =?us-ascii?Q?rnK0SJPpA0XOs3opXc5eunluXym4BYCpMKR1MQ3cMjvCmdbfF0zQXPxUf18M?=
+ =?us-ascii?Q?DZu4Hb8cynukbP0FohiSbvVTG62LaRSPhe5l7sqab8rYcu20H6NxHorKDGJa?=
+ =?us-ascii?Q?M13A+DLIhxp1hkDb0cpqbb+7br1mkRlb6UakJ0cMw2RisEXKj+3+pgX7Cnmt?=
+ =?us-ascii?Q?L+GGbCYhP1MBJsvM6ArnRtX7/Ruz1x1D1oqyf/M7pSnShLLCFQOIAbv22qaC?=
+ =?us-ascii?Q?HSj4PY9WBCQNPeMlR3T8v/lDt/v6A712cJ+hOUr6rpnkoAQXOnE7Oj9Ddo8m?=
+ =?us-ascii?Q?YNxnVkrDJv5gbDc9HZDY8V1l0gu5gt+tiTBbPsSfM2yffhInP4YPrHbpYGjP?=
+ =?us-ascii?Q?bD72AN+O4mIB9mEyvo54f5eVYKz4TKZBZaOSdiPj9Pd8d0U8o1V7WkBFXNEs?=
+ =?us-ascii?Q?BJl/ntszg+t9TuUyfaxLqJDDvFxT/fyfOSiw4BTnshKKOo0MCcB1gxPF6IDe?=
+ =?us-ascii?Q?Fq6TXbl4BIzV/yAmf+v7kaT7ggZgEd2ZX0BPRlPfosjAgGSiHSjUVOquCfUk?=
+ =?us-ascii?Q?Xa4SqqTUC8TzpwHZMNb8dSPXNyyeRzeyGQqaiW5R251HETWFvc2aHtK2ANGT?=
+ =?us-ascii?Q?LWn15DC5BjE/rqWZMkHCg5wyQFpBB5kExTiBT3XEJLCRo23AIBobmZ+s0Gve?=
+ =?us-ascii?Q?umDsmeDrBA=3D=3D?=
+X-OriginatorOrg: theobroma-systems.com
 X-MS-Exchange-CrossTenant-Network-Message-Id: 
- e9342530-3b30-4da7-0abd-08d999148ab8
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5014.namprd11.prod.outlook.com
+ eb29a71d-7f9c-4129-e211-08d9992f976f
+X-MS-Exchange-CrossTenant-AuthSource: 
+ AM0PR0402MB3348.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2021 06:39:35.7449
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2021 09:53:13.4819
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
 X-MS-Exchange-CrossTenant-UserPrincipalName: 
- vyxLTBUYPbnxa3HD0+wIaMbOBi0j6a5EVz6h+aw2TBHTmZVNNjMRBerbp5iqbW73vODM9bbVMoLev0i10bLiVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5127
-X-Proofpoint-GUID: AMsXsFs-HfP7bMR60jYTDRBbQDSC2yb4
-X-Proofpoint-ORIG-GUID: 7UAH0wTnrFjH0z9pAJHjyfLBP7G8XGmn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-10-27_02,2021-10-26_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxscore=0
- spamscore=0 clxscore=1011 suspectscore=0 bulkscore=0 phishscore=0
- adultscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2110270038
+ XPVgZQTz4JzIl1mDUCGI4dOX53yKKPAzKFa5RxMJgIJtozi2cDKp+7B00DaSRGZBEqWADI456u4ldryAp2meq5FQ/qQicsTcwjS+Ddd+tOUfQ680suDFDNG68+72ixOZ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5460
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 27 Oct 2021 06:39:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12841
+ <bitbake-devel@lists.openembedded.org>; Wed, 27 Oct 2021 09:53:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12842
 
+Hi all,
 
+On Tue, Oct 26, 2021 at 06:52:13PM -0400, Scott Murray wrote:
+> On Tue, Oct 26, 2021 at 6:44 PM Richard Purdie <
+> richard.purdie@linuxfoundation.org> wrote:
+>=20
+> > On Tue, 2021-10-26 at 23:23 +0100, Richard Purdie via
+> > lists.openembedded.org
+> > wrote:
+> > > On Tue, 2021-10-26 at 15:54 -0400, Scott Murray wrote:
+> > > > On Tue, 26 Oct 2021, Konrad Weihmann wrote:
+> > > >
+> > > > > On 26.10.21 17:57, Scott Murray wrote:
+> > > > > > As I brought up on the dev call earlier, the task noexec varfla=
+g
+> > > > > > documentation says:
+> > > > > >
+> > > > > > * [noexec]: When set to =E2=80=9C1=E2=80=9D, marks the task as =
+being empty, with no
+> > > > > > execution required. You can use the [noexec] flag to set up tas=
+ks
+> > as
+> > > > > > dependency placeholders, or to disable tasks defined elsewhere
+> > that are
+> > > > > > not needed in a particular recipe.
+> > > > > >
+> > > > > > (from:
+> > > > > >
+> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__docs.yoctoprojec=
+t.org_bitbake_bitbake-2Duser-2Dmanual_bitbake-2Duser-2Dmanual-2Dmetadata.ht=
+ml-3Fhighlight-3Dnoexec-23variable-2Dflags&d=3DDwIFaQ&c=3D_sEr5x9kUWhuk4_nF=
+wjJtA&r=3DLYjLexDn7rXIzVmkNPvw5ymA1XTSqHGq8yBP6m6qZZ4njZguQhZhkI_-172IIy1t&=
+m=3D3MyfDNSSpgdyktGkBPxMbSTE5f_Zhd1LPfnJpB5RZKj7Y_kz1mNBKHiDRQIcQqVa&s=3DFt=
+7skkAcV-DVdN9pgL86P8uC4YXvmaZAAxv_Z_b2RfI&e=3D=20
+> > )
+> > > > > >
+> > > > > > However, as I discovered yesterday, the reality is that it bein=
+g
+> > set to
+> > > > > > any value at all disables execution, which Richard mentioned on
+> > the dev
+> > > > > > call helps with performance.  The question Richard asked me to
+> > bring here
+> > > > > > is whether the documentation should be updated, or if the behav=
+ior
+> > should
+> > > > > > be changed to match it?  I do not have a strong opinion either
+> > way, but
+> > > > > > would like this resolved somehow to avoid others spending time
+> > scratching
+> > > > > > their heads like I did for a bit yesterday.
+> > > > >
+> > > > > As I stumbled upon the very same, I'd love to see the docu being
+> > updated - I
+> > > > > mean implicitly it already does that as noexec can be only
+> > deactivated by
+> > > > > putting no value in it - but both cases should be properly
+> > documented IMO
+> > > >
+> > > > Chris mentioned to me OOB this existing Bugzilla:
+> > > >
+> > > > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__bugzilla.yoc=
+toproject.org_show-5Fbug.cgi-3Fid-3D13808&d=3DDwIFaQ&c=3D_sEr5x9kUWhuk4_nFw=
+jJtA&r=3DLYjLexDn7rXIzVmkNPvw5ymA1XTSqHGq8yBP6m6qZZ4njZguQhZhkI_-172IIy1t&m=
+=3D3MyfDNSSpgdyktGkBPxMbSTE5f_Zhd1LPfnJpB5RZKj7Y_kz1mNBKHiDRQIcQqVa&s=3D5Al=
+gH0WAkrLyi_26gPtB36P6DpYuzhOLhAqWG9JYPUs&e=3D=20
+> > > >
+> > > > I don't see the discussed deprecation warning change in master,
+> > though, so
+> > > > I'm guessing it got dropped.
+> > >
+> > >
+> > https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__git.yoctoproject.=
+org_cgit.cgi_poky_commit_-3Fid-3D66f22c0bd19a81ee7ccb49543f24a4f90fc012ba&d=
+=3DDwIFaQ&c=3D_sEr5x9kUWhuk4_nFwjJtA&r=3DLYjLexDn7rXIzVmkNPvw5ymA1XTSqHGq8y=
+BP6m6qZZ4njZguQhZhkI_-172IIy1t&m=3D3MyfDNSSpgdyktGkBPxMbSTE5f_Zhd1LPfnJpB5R=
+ZKj7Y_kz1mNBKHiDRQIcQqVa&s=3D2DxZLnNctIoF2d_HHDemxGxT74p51rChV-ZLG9bJz84&e=
+=3D=20
+> > >
+> > > Is that code working?
+> >
+> > I did check and with do_compile[noexec] =3D "0" in the bash recipe, I s=
+ee:
+> >
+> > WARNING: /xxx/meta/recipes-extended/bash/bash_5.1.8.bb: In a future
+> > version of BitBake, setting the 'noexec' flag to something other than '=
+1'
+> > will result in the flag not being set. See YP bug #13808
+> >
+> > so it does appear to.
+> >
+>=20
+> Yes, I did just try it here as well.  I've been working on dunfell and
+> missed it in master
+> when I looked through git grep, my apologies.  I guess there's still the
+> questions of
+> just when the deprecation takes effect and if anything should be done wit=
+h
+> respect to
+> the documentation in the meantime (since it could IMO be argued it's
+> incorrect ATM).
+>=20
 
-On 10/27/21 7:24 AM, Alexandre Belloni wrote:
-> [Please note: This e-mail is from an EXTERNAL e-mail address]
-> 
-> Hello,
-> 
-> I'm sorry, it took me a while to properly test this patch but I'm pretty
-> sure it is the cause of:
-> 
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/87/builds/2773/steps/11/logs/stdio
+I'd keep that 1 is setting it as this is the expected behavior. I would
+add a note that "due to a bug <insert link>, undoing a [noexec] requires to
+unset the variable like so: <current way of undoing this varflag>" and
+we remove this note once the bug is fixed (can already say we'll forget
+but eh :) ).
 
-Thanks for your following up! I will look into this.
-
-Thanks,
-
-> 
-> On 13/09/2021 13:48:10+0800, Yu, Mingli wrote:
->> From: Mingli Yu <mingli.yu@windriver.com>
->>
->> When call uri_replace to get the new uris, we should guarantee the
->> new uri is added when the replace uri begins with file if the find
->> uri begin with wildcard which mapped as below.
->> PREMIRRORS_append = " \
->>       .*://.*/.*  git://somewhere.org/somedir/MIRRORNAME;protocol=http \n \
->> "    |           |
->>       |           |
->>       |           |
->>       find        replace
->>
->> Before the patch:
->> the original uri
->> gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https
->>
->> PREMIRRORS_append = " \
->>       .*://.*/.*  git://somewhere.org/somedir/MIRRORNAME;protocol=http \n \
->> "
->> The new uri is git://somewhere.org/somedir/github.com.tianocore.edk2.git/git2_github.com.tianocore.edk2.git.tar.gz;protocol=http
->>
->> After the patch:
->> the original uri
->> gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https
->>
->> PREMIRRORS_append = " \
->>       .*://.*/.*  git://somewhere.org/somedir/MIRRORNAME;protocol=http \n \
->> "
->> The new uri is None as the find begins with wildcard but the replace
->> doesn't begin with file.
->>
->> Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
->> ---
->>   lib/bb/fetch2/__init__.py | 2 ++
->>   lib/bb/tests/fetch.py     | 8 +++++++-
->>   2 files changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
->> index d9e1599a..1c5242c7 100644
->> --- a/lib/bb/fetch2/__init__.py
->> +++ b/lib/bb/fetch2/__init__.py
->> @@ -430,6 +430,8 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
->>       uri_replace_decoded = list(decodeurl(uri_replace))
->>       logger.debug2("For url %s comparing %s to %s" % (uri_decoded, uri_find_decoded, uri_replace_decoded))
->>       result_decoded = ['', '', '', '', '', {}]
->> +    if uri_find_decoded[0] == '.*' and uri_replace_decoded[0] != 'file':
->> +        uri_find_decoded[0] = uri_replace_decoded[0]
->>       for loc, i in enumerate(uri_find_decoded):
->>           result_decoded[loc] = uri_decoded[loc]
->>           regexp = i
->> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
->> index 242be368..25893a34 100644
->> --- a/lib/bb/tests/fetch.py
->> +++ b/lib/bb/tests/fetch.py
->> @@ -406,6 +406,8 @@ class MirrorUriTest(FetcherTest):
->>               : "git://somewhere.org/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http",
->>           ("git://someserver.org/bitbake;tag=1234567890123456789012345678901234567890", "git://someserver.org/bitbake", "git://git.openembedded.org/bitbake")
->>               : "git://git.openembedded.org/bitbake;tag=1234567890123456789012345678901234567890",
->> +        ("gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https", ".*://.*/.*", "git://somewhere.org/somedir/MIRRORNAME;protocol=http")
->> +            : None,
->>           ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sstate-cache")
->>               : "file:///somewhere/1234/sstate-cache/sstate-xyz.tgz",
->>           ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sstate-cache/")
->> @@ -447,7 +449,11 @@ class MirrorUriTest(FetcherTest):
->>               ud.setup_localpath(self.d)
->>               mirrors = bb.fetch2.mirror_from_string("%s %s" % (k[1], k[2]))
->>               newuris, uds = bb.fetch2.build_mirroruris(ud, mirrors, self.d)
->> -            self.assertEqual([v], newuris)
->> +            if not v:
->> +                 self.assertEqual([v], newuris)
->> +            else:
->> +                 self.assertEqual([], newuris)
->> +
->>
->>       def test_urilist1(self):
->>           fetcher = bb.fetch.FetchData("http://downloads.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz", self.d)
->> --
->> 2.32.0
->>
-> 
->>
->> -=-=-=-=-=-=-=-=-=-=-=-
->> Links: You receive all messages sent to this group.
->> View/Reply Online (#12637): https://lists.openembedded.org/g/bitbake-devel/message/12637
->> Mute This Topic: https://lists.openembedded.org/mt/85568847/3617179
->> Group Owner: bitbake-devel+owner@lists.openembedded.org
->> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
->> -=-=-=-=-=-=-=-=-=-=-=-
->>
-> 
-> 
-> --
-> Alexandre Belloni, co-owner and COO, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
+Cheers,
+Quentin
 
