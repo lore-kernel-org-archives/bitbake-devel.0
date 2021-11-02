@@ -1,100 +1,90 @@
-Return-Path: <anuj.mittal@intel.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89181C433EF
-	for <webhook@archiver.kernel.org>; Tue,  2 Nov 2021 09:02:57 +0000 (UTC)
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
- by mx.groups.io with SMTP id smtpd.web10.6743.1635843773682662604
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407FCC433EF
+	for <webhook@archiver.kernel.org>; Tue,  2 Nov 2021 12:45:04 +0000 (UTC)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com
+ [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web08.232.1635857103226155693
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 02 Nov 2021 02:02:56 -0700
+ Tue, 02 Nov 2021 05:45:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: intel.com, ip: 134.134.136.126, mailfrom: anuj.mittal@intel.com)
-X-IronPort-AV: E=McAfee;i="6200,9189,10155"; a="218125281"
-X-IronPort-AV: E=Sophos;i="5.87,202,1631602800";
-   d="scan'208";a="218125281"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 02 Nov 2021 02:02:55 -0700
-X-IronPort-AV: E=Sophos;i="5.87,202,1631602800";
-   d="scan'208";a="496847337"
-Received: from kehoh-mobl.gar.corp.intel.com (HELO
- anmitta2-mobl1.gar.corp.intel.com) ([10.215.233.28])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 02 Nov 2021 02:02:54 -0700
-From: Anuj Mittal <anuj.mittal@intel.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=b12FUZ3R;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f50.google.com with SMTP id s13so25960443wrb.3
+        for <bitbake-devel@lists.openembedded.org>;
+ Tue, 02 Nov 2021 05:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JcDu7Pvwty7y5zGJ28fDzIjSV+P1Kl9X7WwFf+BDO/A=;
+        b=b12FUZ3Rh636fLorlfA6gAFV1KZRn0mH1uuA95iscf8XuQGsMKTixvpX/qv9gfXyzl
+         kJphGHHvZray1AWj0FAgXrwq1sNRnxl5VVkswm3Ll+Brb+SUruFWLCFwj0dLSHHfyjHM
+         A4sOQeCsXVW6RQN8x7/xzk+9UmnA/iyGV12HQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JcDu7Pvwty7y5zGJ28fDzIjSV+P1Kl9X7WwFf+BDO/A=;
+        b=lucntMqtxV9oFoYOJ9rwv3x7dKDeNpe97hKXD3tf8SU5vhVivyy0EKi5NFaBsZDSha
+         HCrH1vLz3fEnF6km7i6PLS/j0eShq8SXjjtH1kTnz0nvMWLPLaEz8qYE4h84Tc0diZQI
+         P5/AKE3SA10Avz0LqbAUeXhtvUlVtg09luCgGe149VlMmYRhC4W4v86f7baax6A3Yn/G
+         tnoMPfDYqBTS9QXk5KyBiAoeR0o4wniS89hC8KdLPQ5rXN2DcKfcX9IG+4RZYlWi0eq7
+         xsoAyM1iVi2vcszb62SuEuBrjPYyw8y8wkSSkUzfiwFIsGeRiDnd8WoL7N68CJfu7SqL
+         hBKQ==
+X-Gm-Message-State: AOAM530l4flG/TTL8u1vOvOquzrij9nuB3guQwxKN72j0SUhPjLtrSXx
+	RCD5SYjSKLcvoS+aveiBW4y1Za6nhETzUg==
+X-Google-Smtp-Source: 
+ ABdhPJwJH0q7YRSbZHaPuTCpL961+0ecp1QI7B56wezMYAn9+fOoRRKWBmnaLPUTQuCzd090TxGAhA==
+X-Received: by 2002:a5d:47c7:: with SMTP id o7mr12821990wrc.204.1635857101637;
+        Tue, 02 Nov 2021 05:45:01 -0700 (PDT)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:e05:60cd:475e:19f5])
+        by smtp.gmail.com with ESMTPSA id
+ b6sm19748349wrd.85.2021.11.02.05.45.01
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Nov 2021 05:45:01 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.52][PATCH 3/3] fetch2: fix downloadfilename issue with premirror
-Date: Tue,  2 Nov 2021 17:02:45 +0800
-Message-Id: 
- <a790c04819507306b1a2248acdfd2b4520930116.1635843660.git.anuj.mittal@intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1635843660.git.anuj.mittal@intel.com>
-References: <cover.1635843660.git.anuj.mittal@intel.com>
+Subject: [PATCH 1/2] fetch/git: Handle github dropping git:// support
+Date: Tue,  2 Nov 2021 12:44:59 +0000
+Message-Id: <20211102124500.3542952-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 02 Nov 2021 09:02:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12855
+ <bitbake-devel@lists.openembedded.org>; Tue, 02 Nov 2021 12:45:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12856
 
-From: Chen Qi <Qi.Chen@windriver.com>
+github is dropping support for git procotol iun git urls. Add code to remap
+this to https in a way that could be used in older bitbake versions.
 
-The following commit to fix [Yocto #13039] causes regression of
-the behavior of PREMIRRORS.
-
-  "bitbake: fetch2: fix premirror URI when downloadfilename defined"
-
-Take meta-openembedded/meta-networking/recipes-protocols/freediameter/freediameter_1.4.0.bb
-as an example.
-SRC_URI = "\
-    http://www.freediameter.net/hg/${fd_pkgname}/archive/${PV}.tar.gz;downloadfilename=${fd_pkgname}-${PV}.tar.gz \
-    ...
-"
-With the above commit, it now tries to fetch 1.4.0.tar.gz instead of
-freeDiameter-1.4.0.tar.gz. This makes https://downloads.yoctoproject.org/mirror/sources
-not work for freediameter, as it holds freeDiameter-1.4.0.tar.gz.
-
-The commit above tries to avoid fetching from invalid url such as:
-https://<some_mirror>/1.4.0.tar.gz/freeDiameter-1.4.0.tar.gz.
-And its solution is to make basename to be 1.4.0.tar.gz, thus causing the
-regression.
-
-This patch fixes the above regression. For Yocto #13039, it now tries
-to fetch from url: https://<some_mirror>/freeDiameter-1.4.0.tar.gz.
-
-Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 96c30007dc0b32eee2b15771daec7948bc9bfd97)
-Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- lib/bb/fetch2/__init__.py | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ lib/bb/fetch2/git.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 259b2637a..8078991d7 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -466,9 +466,13 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
-                     # Kill parameters, they make no sense for mirror tarballs
-                     uri_decoded[5] = {}
-                 elif ud.localpath and ud.method.supports_checksum(ud):
--                    basename = os.path.basename(uri_decoded[loc])
--                if basename and not result_decoded[loc].endswith(basename):
--                    result_decoded[loc] = os.path.join(result_decoded[loc], basename)
-+                    basename = os.path.basename(ud.localpath)
-+                if basename:
-+                    uri_basename = os.path.basename(uri_decoded[loc])
-+                    if basename != uri_basename and result_decoded[loc].endswith(uri_basename):
-+                        result_decoded[loc] = result_decoded[loc].replace(uri_basename, basename)
-+                    elif not result_decoded[loc].endswith(basename):
-+                        result_decoded[loc] = os.path.join(result_decoded[loc], basename)
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index e974445fbe..f5be24d6ab 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -142,6 +142,10 @@ class Git(FetchMethod):
+             ud.proto = 'file'
          else:
-             return None
-     result = encodeurl(result_decoded)
+             ud.proto = "git"
++        if ud.host == "github.com" and ud.proto == "git":
++            # github stopped supporting git protocol
++            # https://github.blog/2021-09-01-improving-git-protocol-security-github/#no-more-unauthenticated-git
++            ud.proto = "https"
+ 
+         if not ud.proto in ('git', 'file', 'ssh', 'http', 'https', 'rsync'):
+             raise bb.fetch2.ParameterError("Invalid protocol type", ud.url)
 -- 
-2.31.1
+2.32.0
 
 
