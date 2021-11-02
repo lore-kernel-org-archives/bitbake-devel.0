@@ -1,392 +1,162 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <quentin.schulz@theobroma-systems.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA43C433FE
-	for <webhook@archiver.kernel.org>; Tue,  2 Nov 2021 14:57:46 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com
- [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web11.913.1635865066144285304
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF77BC4332F
+	for <webhook@archiver.kernel.org>; Tue,  2 Nov 2021 14:57:47 +0000 (UTC)
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com
+ (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.43])
+ by mx.groups.io with SMTP id smtpd.web09.945.1635865065919145713
  for <bitbake-devel@lists.openembedded.org>;
  Tue, 02 Nov 2021 07:57:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=OwmUEVoQ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id
- b2-20020a1c8002000000b0032fb900951eso2177203wmd.4
-        for <bitbake-devel@lists.openembedded.org>;
- Tue, 02 Nov 2021 07:57:45 -0700 (PDT)
+ dkim=pass header.i=@cherrycloud.onmicrosoft.com
+ header.s=selector2-cherrycloud-onmicrosoft-com header.b=ZajNuM7G;
+ spf=pass (domain: theobroma-systems.com, ip: 40.107.6.43,
+ mailfrom: quentin.schulz@theobroma-systems.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lFHexy9kTZNW1TEnwxVPdxouJpzkKV5XIRQAPBKhld9pMABqEfV/lWRSodbwtphJKrjdy+wnBS9ilgH7vHqNSqahIRJh6ij0DLa6CyJljJbspDK2DD7KSIXbgBbTjs2pBmxmQYnAa/RFNZARwqmdsApOg83CUup8ZGyE48mgq7AktbfQGLsMhVLnYPOIGMhhBE6mB4o5ndKtqUXKlw83xNxXiuhyuN8rjxxafGMCxRhLluQa3BDzBAJ8K0jEwmomhdTPgvFG4HoIK2ysBTk+kxCTQWdeirivwgZ/GWlS2lm+bpVlcSMb14aOMTpd4cXGEojTs/6GO34ghMio4fscDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CMn6K37LaGj84sQ43QGjXWz0ziNwcrKvPc4UtgbiUs4=;
+ b=ChP0iQfkCp58US/4WAbrVj5QsQyu6ywqPYoCZTkkYf6qTX0F4JzRuwrOs0xEwMM2aNiRuREosOwoo1eSweJgPDQ1r69hlkSmkJTrqP1JWpctNyjXKwdplhel8HSNNhq+tqInW98jDcGLRlvH4Id4VTWTLNFSEIkbgyrZLab18Cf392Rd0pZSmUb7mS3D9Sv/I/+Z2tcyMtY126cFM3eRpyOJdwgO3Gq5DOFg4YJYDltSoVDb1gEDDTbvrXEacWbna7SsYk00Iu+7wEI5X1QGEShlpp3pgVQT6LRXhUOSsFzf/6gpUqVYmTdjSerBLIxtElmaXA1ibZTEXmSZLVez1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
+ header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
+ arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=giWLb/w/Y0It8igkVa+1FOigd+LODjq4dUvFGkSDwNg=;
-        b=OwmUEVoQh5e80PnfbmHrR36+XTZP8xrWwUMaCaIrYId2KxDnK5pSYC9vhATPOWZ1IY
-         viJa+NwDor5h71T+WTuxy3nyZBstfl3B60APIOFMgoBJjqIKgayqoOO9GsvKF4KnOjWq
-         +yuYoN5yc7Yaec2R1nLbf8Bf8DTrGm/nz8BUg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=giWLb/w/Y0It8igkVa+1FOigd+LODjq4dUvFGkSDwNg=;
-        b=cCGR89YeRNs1DMkB7SMJLc+QzgqDaslwSeycYcjhRcFJUgnUqJBjPqbQ4rGS06EY6B
-         epxAqRN6UnahaaiMBT4ifnK/yjEOB1+/AW6khwLfn4BPeOk5aneC7Z3AHPD12lDm3gQi
-         slIQ19aJSKf7b2kvCEUSVns95+1LhyUcgBDUxbWO1YFd341QAR7+ckhEJ7wdKCHnJ0YM
-         jlpEiauw/w+b1rZG1LXQngilgEU82wORt0VjGc7VsgWuUnz4uCq+8KUTh4ll4uHNXHPo
-         ++78wdvRPxTHzTZkODt0Of0KOf3ZQqXatbhXkDUql7h2w3AQNYBC1EpJdKGFaOF29SEe
-         tYlg==
-X-Gm-Message-State: AOAM530P7y74x9qfAMAYo8K3TKnpcaYrtbu9u4ZLMpsAgiFKxFpWlrTZ
-	x2H77USeq5jwDNgOkPgAPS3nRcRqGxpa5Q==
-X-Google-Smtp-Source: 
- ABdhPJylh8DREQDw/CqMQSpuXDA+hoMK0xFSjb7WpQffJBvtysl7ibdGJlbUgX2I8Z7vosCvh6hySg==
-X-Received: by 2002:a05:600c:4f87:: with SMTP id
- n7mr6003647wmq.63.1635865064166;
-        Tue, 02 Nov 2021 07:57:44 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:e05:60cd:475e:19f5])
-        by smtp.gmail.com with ESMTPSA id
- q26sm14916634wrc.39.2021.11.02.07.57.43
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 07:57:43 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 3/5] lib/bb: Fix string concatination potential performance
- issues
-Date: Tue,  2 Nov 2021 14:57:40 +0000
-Message-Id: <20211102145742.3550251-3-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211102145742.3550251-1-richard.purdie@linuxfoundation.org>
-References: <20211102145742.3550251-1-richard.purdie@linuxfoundation.org>
+ d=cherrycloud.onmicrosoft.com; s=selector2-cherrycloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CMn6K37LaGj84sQ43QGjXWz0ziNwcrKvPc4UtgbiUs4=;
+ b=ZajNuM7GO5AqdR/R8IJYVYouIPD9ziKTM+4SDydI5Zpj/CytavL2i62SA91PbnzGCVw8KFV2Ou9vLnTcir/ObJo6b1PG7D9TYq7IjqC+S26U76YjdhWdLxmItqpXJ0rcTmmEJlBpxre1WsihJoxe+Rw34ax7aI8CRqVN/a32raw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
+Received: from AM0PR0402MB3348.eurprd04.prod.outlook.com
+ (2603:10a6:208:24::24) by AM8PR04MB7283.eurprd04.prod.outlook.com
+ (2603:10a6:20b:1c7::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14; Tue, 2 Nov
+ 2021 14:57:43 +0000
+Received: from AM0PR0402MB3348.eurprd04.prod.outlook.com
+ ([fe80::d56f:ec59:3bd0:6d7a]) by AM0PR0402MB3348.eurprd04.prod.outlook.com
+ ([fe80::d56f:ec59:3bd0:6d7a%5]) with mapi id 15.20.4649.020; Tue, 2 Nov 2021
+ 14:57:43 +0000
+Date: Tue, 2 Nov 2021 15:57:41 +0100
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+To: Frank Earl <linusti@gmail.com>
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Konrad Weihmann <kweihmann@outlook.com>,
+	bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH 1/2] fetch/git: Handle github dropping
+ git:// support
+Message-ID: <20211102145741.inxodrxjabwiu67t@fedora>
+References: <20211102124500.3542952-1-richard.purdie@linuxfoundation.org>
+ <AM9PR09MB4642729BBF86DB48FCA16DFCA88B9@AM9PR09MB4642.eurprd09.prod.outlook.com>
+ <7930bb9f4875fdc32c4fa43395da68bae76a24c0.camel@linuxfoundation.org>
+ <CANepkxCNovifgi84YiXmoydUpQbTLoV-uGWVF_oJ6rp10+V4cA@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: 
+ <CANepkxCNovifgi84YiXmoydUpQbTLoV-uGWVF_oJ6rp10+V4cA@mail.gmail.com>
+X-ClientProxiedBy: AS8PR04CA0007.eurprd04.prod.outlook.com
+ (2603:10a6:20b:310::12) To AM0PR0402MB3348.eurprd04.prod.outlook.com
+ (2603:10a6:208:24::24)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from fedora (92.42.140.82) by
+ AS8PR04CA0007.eurprd04.prod.outlook.com (2603:10a6:20b:310::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.15 via Frontend
+ Transport; Tue, 2 Nov 2021 14:57:43 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 959729e0-401e-449d-8024-08d99e111f9f
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7283:
+X-Microsoft-Antispam-PRVS: 
+	<AM8PR04MB7283E843400544F25F833EB1C28B9@AM8PR04MB7283.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	bojJSw4MEdXafFawafZbVyqs0SYjhQ0NM7j2qYudywAJsw7FCpo5puJUjNhipE3gG0NSYVgm2MvkFtXubKjnZk+0qyHQ/VpWy/eX/hzlwp1B+9nUc99etdrS/8EOX9y034FfCH8NduLq1SYcSmfD88bGUyLKfAk7L84OmtQ7fBJGbAdIepVjh28K61IdPpFjBq0tdWBAB/Hbr8NRigYhft3U1ghT2DiJwV6fuflydjrd10fciaGklxpmhtS0vAY4kr8oIee+FzA0FpTsxaIvPK8Mkr2MyDG3xM6iOF6EyR3mK7FdZ2lUogwAioDOt3Nve7SMdRP8gI9Lu0UEv164Jn/2mQieNpp3YHoHMRr1QqAb0t11w8jmvB4watQrOUkEQKj9088FPUBynJWEvG5T6x0Xkg4gNZfYl8bcKusJGH+Hiv+iHz+duXUIhuRbrfKgfifhV0U081Fr9q85NS+9Dv1ceTbDe2EwWrVHK6ZzIw2l0N03g0Lw01pY+V3FjVkrX9ANPBcZuAzSaEhJQDhHUD7zslNeE3qKkilL7UQ5a4fKC4sYcVFL5Rd2YKoW9UVGGTnFVUHO9ahYTYJonA1ubZKxblZFITQ4PYyF4f7bM+uzuFIy6dKq3f16Aeej9Rd2P/TN3c7TaMqRfqjB0136g/NbbbT8osYqwBMR8B57juadvh1/py639jlqWTi6F9madx70o7+1otlYoyS/3GBIyw==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0402MB3348.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(1076003)(33716001)(4326008)(8676002)(956004)(52116002)(6496006)(38100700002)(55016002)(66476007)(44832011)(66556008)(9686003)(508600001)(66946007)(38350700002)(4744005)(54906003)(186003)(86362001)(2906002)(6916009)(9576002)(316002)(26005)(83380400001)(5660300002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?nCRDJ8PhchrkM/M1XYom+qYybO4NaxsjE9SrO52DPIzMzohmaVZ77MuwGz5b?=
+ =?us-ascii?Q?+i6GuyemlvAwVxkTOHLt2yLgl6dlywyJa9S7ZUD+R/Jnv36IjFYONN/gj3qv?=
+ =?us-ascii?Q?73bVTotfIgGZRAKaXWmCrw4nYxXwr6/Nw3t12dApToWaACEE3f9GI1epbQl7?=
+ =?us-ascii?Q?4/1mM5fMKwk9JJvqLd9yI1v52L6hRIJNsxrC5s31/SOhJ95bXrWtlVMjcDqL?=
+ =?us-ascii?Q?xMl2gr9RXXckS4xahAzM8FfrXsCbvc8CGpR/Wd9TklRJeCGALxirf20PqHQ6?=
+ =?us-ascii?Q?rup18fA54vD96p3EJe5On8Biz7ntOLUCAD0WkMd8LCGi6mF3rzk/QkpfKUZR?=
+ =?us-ascii?Q?c/MKnxThYkhoXzmvCEx5uV5dfET+ONmjknf2bnOpC+I4IvNI4CZ8zzBeQbUh?=
+ =?us-ascii?Q?hBJovZuULQImjVuHXzixPb2QnJpa52x6XqKLCFng5tQudHv563NUHLjyS7c9?=
+ =?us-ascii?Q?ZTkDFN+xzKSpCeboONn+b+RLyW/Xnh54QdAlqam08MxAnW5xi722F0lnL7HB?=
+ =?us-ascii?Q?R9R2auF/zDS8zgvxECxBgNIjVWeudnsPLisgzoboR8xorvpkyOFlKQgrV2Fa?=
+ =?us-ascii?Q?XWyGvvHo9XEgWgPuMrpJ2e2HYJ4bcX6hQE+OELBPFM9mM//Oufg8tg0TMHNo?=
+ =?us-ascii?Q?sANLYe+mUniGzIKahgDmnQ1BgKp7AJLKRbBVQ9nR//KJmDaoxj68wNNj9K1f?=
+ =?us-ascii?Q?Op69FpGFquExvj6tmbSDGDqeCv0x9R15QoAb2/KiK79v8Q+aHiLW520geh8w?=
+ =?us-ascii?Q?OrzqN6BG//ypoQiFXZPD8YhqjDS2c120sARvHpCJYSWo3pS6P4gLyjCSVzpR?=
+ =?us-ascii?Q?HE1wKwzg2KDmn/GHwrEOvSEVAGl1cBQLewBeSDisLqvOaX6R6QLnEYuT9tLs?=
+ =?us-ascii?Q?H79Zl4ZS8L4Afm2+3ltpMrF+YbP1d/XF3YpK7gNRLknNb+rSap8+1CduTwpq?=
+ =?us-ascii?Q?rncZexJxT3jtMcuzr8H7y/qBnqTosdRKLfOZ+XBm/BV7HcQ41gmZ3D0wecXm?=
+ =?us-ascii?Q?0zWabpwzBioFHolh2tgFpGrgl/Brq7wwdUn63+JPX+SUYRG4lJn8r5SeI754?=
+ =?us-ascii?Q?Wty93HdJH7l1lHSBv/dlyhYatXOAjlO7skp5bNE6yOQcEyqBmQPJ/MNG3sFE?=
+ =?us-ascii?Q?qgyjqpHghwNsuI1r3dZLxJi89rTHu9Ag2/DVJ/nRp+go+mT1FNHRYM3Lyvtc?=
+ =?us-ascii?Q?t8QgNcwv1a+b8d9lAOU4vTDpVpptXWqsmW0LJDdXFeItmjmT8FgeMbYebxBa?=
+ =?us-ascii?Q?Cs3qrHj+Zz9iongAk9/fSxTCHLUyUWo7CGiLyu6GdLqVj+Oos5bF7yfAXPmV?=
+ =?us-ascii?Q?woJG6Yxm5YZ7obPWO1ejtWtMzOL0Xp0b7mXhKtHp+X0qBpxOUJRFPhyA5fSC?=
+ =?us-ascii?Q?AmGOF5WwdlEPDQ44yKGmkNQq9hri76ARhmD6COwXDrnE/dgPjfU6RBCTdvxJ?=
+ =?us-ascii?Q?ii9yaq+sW88lB7E4xHzCG2jK5E3PbtLVLQ7/q9XCqjv1rpR34eXsDHloMnEO?=
+ =?us-ascii?Q?uSgM6RBG+iLAdsh23lucxoIqI0ccCGxtdzX7BHDO9kv+fGJSFXY+LlAI41Nw?=
+ =?us-ascii?Q?TguxnxW9dJQy70706wMOsHt87zgTl0dABXPpuFyC0B2SK8Szx6x5oeNXHyHN?=
+ =?us-ascii?Q?JMa8nkhAfYaCLHUy3wfwjMF0vU99vDaBM9hUia5mVvtjEUDiVaTvt5Ic6lj+?=
+ =?us-ascii?Q?s+wXKMmy7m2iA6cqTn4sybpQ7kFLYgIywoCuTWpXo1bGQoGWE+eeyZhxY8G+?=
+ =?us-ascii?Q?OIYjhhrCYA=3D=3D?=
+X-OriginatorOrg: theobroma-systems.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 
+ 959729e0-401e-449d-8024-08d99e111f9f
+X-MS-Exchange-CrossTenant-AuthSource: 
+ AM0PR0402MB3348.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2021 14:57:43.3204
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 
+ nX3HOPh384myozuFW9/YKpalUqbHAya99LQCINqhNyVz5rLpoizRfkHQdAM+BXUCSeA9oFpLzSYpguXYuu7v/0HcelChzToaNi9R35NegcE/bxo9CIpqVzFSuEWOa3f3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7283
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 02 Nov 2021 14:57:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12864
+ <bitbake-devel@lists.openembedded.org>; Tue, 02 Nov 2021 14:57:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12865
 
-Python scales badly when concatinating strings in loops. Most of these
-references aren't problematic but at least one (in data.py) is probably
-a performance issue as the issue is compounded as strings become large.
+Hi Frank,
 
-The way to handle this in python is to create lists which don't reconstruct
-all the objects when appending to them. We may as well fix all the references
-since it stops them being copy/pasted into something problematic in the future.
+On Tue, Nov 02, 2021 at 09:06:19AM -0500, Frank Earl wrote:
+> (Reply to all, since I simply hit reply...not nearly enough caffeine
+> yet...)
+> 
+> This kind of breaks other things- what if you have a server that you need
+> to do protocol=ssh and it's authenticated (We have some of this at Motorola
 
-This patch was based on issues highligthted by a report from AWS Codeguru.
+I think in that case you have ;protocol=ssh at the end of your URL?
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/data.py               | 24 +++++++++++------------
- lib/bb/data_smart.py         |  6 +++---
- lib/bb/fetch2/__init__.py    | 16 ++++++++--------
- lib/bb/runqueue.py           | 37 ++++++++++++++++++------------------
- lib/bb/server/process.py     |  6 +++---
- lib/bb/ui/buildinfohelper.py | 16 ++++++++--------
- 6 files changed, 53 insertions(+), 52 deletions(-)
+In that case, the suggested code does handle that because it only
+replaces the protocol from git to https. git protocol does not have
+authentication, c.f. man git-clone:
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 9d18b1e2bf..008c5593cf 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -285,21 +285,19 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
-         vardeps = varflags.get("vardeps")
- 
-         def handle_contains(value, contains, d):
--            newvalue = ""
-+            newvalue = []
-+            if value:
-+                newvalue.append(value)
-             for k in sorted(contains):
-                 l = (d.getVar(k) or "").split()
-                 for item in sorted(contains[k]):
-                     for word in item.split():
-                         if not word in l:
--                            newvalue += "\n%s{%s} = Unset" % (k, item)
-+                            newvalue.append("\n%s{%s} = Unset" % (k, item))
-                             break
-                     else:
--                        newvalue += "\n%s{%s} = Set" % (k, item)
--            if not newvalue:
--                return value
--            if not value:
--                return newvalue
--            return value + newvalue
-+                        newvalue.append("\n%s{%s} = Set" % (k, item))
-+            return "".join(newvalue)
- 
-         def handle_remove(value, deps, removes, d):
-             for r in sorted(removes):
-@@ -406,7 +404,9 @@ def generate_dependency_hash(tasklist, gendeps, lookupcache, whitelist, fn):
- 
-         if data is None:
-             bb.error("Task %s from %s seems to be empty?!" % (task, fn))
--            data = ''
-+            data = []
-+        else:
-+            data = [data]
- 
-         gendeps[task] -= whitelist
-         newdeps = gendeps[task]
-@@ -424,12 +424,12 @@ def generate_dependency_hash(tasklist, gendeps, lookupcache, whitelist, fn):
- 
-         alldeps = sorted(seen)
-         for dep in alldeps:
--            data = data + dep
-+            data.append(dep)
-             var = lookupcache[dep]
-             if var is not None:
--                data = data + str(var)
-+                data.append(str(var))
-         k = fn + ":" + task
--        basehash[k] = hashlib.sha256(data.encode("utf-8")).hexdigest()
-+        basehash[k] = hashlib.sha256("".join(data).encode("utf-8")).hexdigest()
-         taskdeps[task] = alldeps
- 
-     return taskdeps, basehash
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 8d235da121..7ed7112bdc 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -810,7 +810,7 @@ class DataSmart(MutableMapping):
-                     expanded_removes[r] = self.expand(r).split()
- 
-                 parser.removes = set()
--                val = ""
-+                val = []
-                 for v in __whitespace_split__.split(parser.value):
-                     skip = False
-                     for r in removes:
-@@ -819,8 +819,8 @@ class DataSmart(MutableMapping):
-                             skip = True
-                     if skip:
-                         continue
--                    val = val + v
--                parser.value = val
-+                    val.append(v)
-+                parser.value = "".join(val)
-                 if expand:
-                     value = parser.value
- 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 1d6e4e0964..43b312ce7e 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -402,24 +402,24 @@ def encodeurl(decoded):
- 
-     if not type:
-         raise MissingParameterError('type', "encoded from the data %s" % str(decoded))
--    url = '%s://' % type
-+    url = ['%s://' % type]
-     if user and type != "file":
--        url += "%s" % user
-+        url.append("%s" % user)
-         if pswd:
--            url += ":%s" % pswd
--        url += "@"
-+            url.append(":%s" % pswd)
-+        url.append("@")
-     if host and type != "file":
--        url += "%s" % host
-+        url.append("%s" % host)
-     if path:
-         # Standardise path to ensure comparisons work
-         while '//' in path:
-             path = path.replace("//", "/")
--        url += "%s" % urllib.parse.quote(path)
-+        url.append("%s" % urllib.parse.quote(path))
-     if p:
-         for parm in p:
--            url += ";%s=%s" % (parm, p[parm])
-+            url.append(";%s=%s" % (parm, p[parm]))
- 
--    return url
-+    return "".join(url)
- 
- def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
-     if not ud.url or not uri_find or not uri_replace:
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 87c00462c1..67f8dfbd9e 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1061,12 +1061,12 @@ class RunQueueData:
-                         seen_pn.append(pn)
-                     else:
-                         bb.fatal("Multiple versions of %s are due to be built (%s). Only one version of a given PN should be built in any given build. You likely need to set PREFERRED_VERSION_%s to select the correct version or don't depend on multiple versions." % (pn, " ".join(prov_list[prov]), pn))
--                msg = "Multiple .bb files are due to be built which each provide %s:\n  %s" % (prov, "\n  ".join(prov_list[prov]))
-+                msgs = ["Multiple .bb files are due to be built which each provide %s:\n  %s" % (prov, "\n  ".join(prov_list[prov]))]
-                 #
-                 # Construct a list of things which uniquely depend on each provider
-                 # since this may help the user figure out which dependency is triggering this warning
-                 #
--                msg += "\nA list of tasks depending on these providers is shown and may help explain where the dependency comes from."
-+                msg.append("\nA list of tasks depending on these providers is shown and may help explain where the dependency comes from.")
-                 deplist = {}
-                 commondeps = None
-                 for provfn in prov_list[prov]:
-@@ -1086,12 +1086,12 @@ class RunQueueData:
-                         commondeps &= deps
-                     deplist[provfn] = deps
-                 for provfn in deplist:
--                    msg += "\n%s has unique dependees:\n  %s" % (provfn, "\n  ".join(deplist[provfn] - commondeps))
-+                    msg.append("\n%s has unique dependees:\n  %s" % (provfn, "\n  ".join(deplist[provfn] - commondeps)))
-                 #
-                 # Construct a list of provides and runtime providers for each recipe
-                 # (rprovides has to cover RPROVIDES, PACKAGES, PACKAGES_DYNAMIC)
-                 #
--                msg += "\nIt could be that one recipe provides something the other doesn't and should. The following provider and runtime provider differences may be helpful."
-+                msg.append("\nIt could be that one recipe provides something the other doesn't and should. The following provider and runtime provider differences may be helpful.")
-                 provide_results = {}
-                 rprovide_results = {}
-                 commonprovs = None
-@@ -1118,16 +1118,16 @@ class RunQueueData:
-                     else:
-                         commonrprovs &= rprovides
-                     rprovide_results[provfn] = rprovides
--                #msg += "\nCommon provides:\n  %s" % ("\n  ".join(commonprovs))
--                #msg += "\nCommon rprovides:\n  %s" % ("\n  ".join(commonrprovs))
-+                #msg.append("\nCommon provides:\n  %s" % ("\n  ".join(commonprovs)))
-+                #msg.append("\nCommon rprovides:\n  %s" % ("\n  ".join(commonrprovs)))
-                 for provfn in prov_list[prov]:
--                    msg += "\n%s has unique provides:\n  %s" % (provfn, "\n  ".join(provide_results[provfn] - commonprovs))
--                    msg += "\n%s has unique rprovides:\n  %s" % (provfn, "\n  ".join(rprovide_results[provfn] - commonrprovs))
-+                    msg.append("\n%s has unique provides:\n  %s" % (provfn, "\n  ".join(provide_results[provfn] - commonprovs)))
-+                    msg.append("\n%s has unique rprovides:\n  %s" % (provfn, "\n  ".join(rprovide_results[provfn] - commonrprovs)))
- 
-                 if self.warn_multi_bb:
--                    logger.verbnote(msg)
-+                    logger.verbnote("".join(msg))
-                 else:
--                    logger.error(msg)
-+                    logger.error("".join(msg))
- 
-         self.init_progress_reporter.next_stage()
- 
-@@ -1935,7 +1935,7 @@ class RunQueueExecute:
-         self.stats.taskFailed()
-         self.failed_tids.append(task)
- 
--        fakeroot_log = ""
-+        fakeroot_log = []
-         if fakerootlog and os.path.exists(fakerootlog):
-             with open(fakerootlog) as fakeroot_log_file:
-                 fakeroot_failed = False
-@@ -1945,12 +1945,12 @@ class RunQueueExecute:
-                             fakeroot_failed = True
-                     if 'doing new pid setup and server start' in line:
-                         break
--                    fakeroot_log = line + fakeroot_log
-+                    fakeroot_log.append(line)
- 
-             if not fakeroot_failed:
--                fakeroot_log = None
-+                fakeroot_log = []
- 
--        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode, self.rq, fakeroot_log=fakeroot_log), self.cfgData)
-+        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode, self.rq, fakeroot_log=("".join(fakeroot_log) or None)), self.cfgData)
- 
-         if self.rqdata.taskData[''].abort:
-             self.rq.state = runQueueCleanUp
-@@ -2608,12 +2608,13 @@ class RunQueueExecute:
-         pn = self.rqdata.dataCaches[mc].pkg_fn[taskfn]
-         if not check_setscene_enforce_whitelist(pn, taskname, self.rqdata.setscenewhitelist):
-             if tid in self.rqdata.runq_setscene_tids:
--                msg = 'Task %s.%s attempted to execute unexpectedly and should have been setscened' % (pn, taskname)
-+                msg = ['Task %s.%s attempted to execute unexpectedly and should have been setscened' % (pn, taskname)]
-             else:
--                msg = 'Task %s.%s attempted to execute unexpectedly' % (pn, taskname)
-+                msg = ['Task %s.%s attempted to execute unexpectedly' % (pn, taskname)]
-             for t in self.scenequeue_notcovered:
--                msg = msg + "\nTask %s, unihash %s, taskhash %s" % (t, self.rqdata.runtaskentries[t].unihash, self.rqdata.runtaskentries[t].hash)
--            logger.error(msg + '\nThis is usually due to missing setscene tasks. Those missing in this build were: %s' % pprint.pformat(self.scenequeue_notcovered))
-+                msg.append("\nTask %s, unihash %s, taskhash %s" % (t, self.rqdata.runtaskentries[t].unihash, self.rqdata.runtaskentries[t].hash))
-+            msg.append('\nThis is usually due to missing setscene tasks. Those missing in this build were: %s' % pprint.pformat(self.scenequeue_notcovered))
-+            logger.error("".join(msg))
-             return True
-         return False
- 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 8fdcc66dc7..1636616660 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -326,10 +326,10 @@ class ProcessServer():
-                         if e.errno != errno.ENOENT:
-                             raise
- 
--                msg = "Delaying shutdown due to active processes which appear to be holding bitbake.lock"
-+                msg = ["Delaying shutdown due to active processes which appear to be holding bitbake.lock"]
-                 if procs:
--                    msg += ":\n%s" % str(procs.decode("utf-8"))
--                serverlog(msg)
-+                    msg.append(":\n%s" % str(procs.decode("utf-8")))
-+                serverlog("".join(msg))
- 
-     def idle_commands(self, delay, fds=None):
-         nextsleep = delay
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 8588849dd4..835e92c299 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -571,7 +571,7 @@ class ORMWrapper(object):
-         assert isinstance(build_obj, Build)
-         assert isinstance(target_obj, Target)
- 
--        errormsg = ""
-+        errormsg = []
-         for p in packagedict:
-             # Search name swtiches round the installed name vs package name
-             # by default installed name == package name
-@@ -636,7 +636,7 @@ class ORMWrapper(object):
-                     if packagefile_objects:
-                         Package_File.objects.bulk_create(packagefile_objects)
-                 except KeyError as e:
--                    errormsg += "  stpi: Key error, package %s key %s \n" % ( p, e )
-+                    errormsg.append("  stpi: Key error, package %s key %s \n" % (p, e))
- 
-             # save disk installed size
-             packagedict[p]['object'].installed_size = packagedict[p]['size']
-@@ -678,8 +678,8 @@ class ORMWrapper(object):
-         else:
-             logger.info("No package dependencies created")
- 
--        if len(errormsg) > 0:
--            logger.warning("buildinfohelper: target_package_info could not identify recipes: \n%s", errormsg)
-+        if errormsg:
-+            logger.warning("buildinfohelper: target_package_info could not identify recipes: \n%s", "".join(errormsg))
- 
-     def save_target_image_file_information(self, target_obj, file_name, file_size):
-         Target_Image_File.objects.create(target=target_obj,
-@@ -1404,7 +1404,7 @@ class BuildInfoHelper(object):
-         assert 'pn' in event._depgraph
-         assert 'tdepends' in event._depgraph
- 
--        errormsg = ""
-+        errormsg = []
- 
-         # save layer version priorities
-         if 'layer-priorities' in event._depgraph.keys():
-@@ -1496,7 +1496,7 @@ class BuildInfoHelper(object):
-                 elif dep in self.internal_state['recipes']:
-                     dependency = self.internal_state['recipes'][dep]
-                 else:
--                    errormsg += "  stpd: KeyError saving recipe dependency for %s, %s \n" % (recipe, dep)
-+                    errormsg.append("  stpd: KeyError saving recipe dependency for %s, %s \n" % (recipe, dep))
-                     continue
-                 recipe_dep = Recipe_Dependency(recipe=target,
-                                                depends_on=dependency,
-@@ -1537,8 +1537,8 @@ class BuildInfoHelper(object):
-                 taskdeps_objects.append(Task_Dependency( task = target, depends_on = dep ))
-         Task_Dependency.objects.bulk_create(taskdeps_objects)
- 
--        if len(errormsg) > 0:
--            logger.warning("buildinfohelper: dependency info not identify recipes: \n%s", errormsg)
-+        if errormsg:
-+            logger.warning("buildinfohelper: dependency info not identify recipes: \n%s", "".join(errormsg))
- 
- 
-     def store_build_package_information(self, event):
--- 
-2.32.0
+"""
+       The native transport (i.e. git:// URL) does no authentication and should be used with caution on unsecured
+       networks.
+"""
 
+So if you needed authentication in the first place and it worked, I'm
+pretty sure this change will not change anything for you.
+
+Hopefully I understood your complain and am not completely off-topic :)
+
+Cheers,
+Quentin
 
