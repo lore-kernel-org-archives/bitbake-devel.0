@@ -2,584 +2,390 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080DEC433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA43C433FE
 	for <webhook@archiver.kernel.org>; Tue,  2 Nov 2021 14:57:46 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com
- [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web12.930.1635865065151467615
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com
+ [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web11.913.1635865066144285304
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 02 Nov 2021 07:57:45 -0700
+ Tue, 02 Nov 2021 07:57:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Nr8BJ0gL;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=OwmUEVoQ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f49.google.com with SMTP id
- 77-20020a1c0450000000b0033123de3425so2218540wme.0
+Received: by mail-wm1-f54.google.com with SMTP id
+ b2-20020a1c8002000000b0032fb900951eso2177203wmd.4
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 02 Nov 2021 07:57:44 -0700 (PDT)
+ Tue, 02 Nov 2021 07:57:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=E7bIiIjj7XRyvIgRH59hhSHt09mzTiBSfoghtMqdNKo=;
-        b=Nr8BJ0gLFsrlh/IGUtg4PzksENSGRBeD5CEpAa73aIcbVQJFP90HZNKlBy+OV7uUVc
-         Ix+2GOolpbSy9JPESe3S6IHILGmpfyfCWXRNPCIa69AdkFPTxTKOxHhxlGefMlK5aKqu
-         HSarIe4zQfz+5/bSrYH3GHfnppAMzY4+OwTEg=
+        bh=giWLb/w/Y0It8igkVa+1FOigd+LODjq4dUvFGkSDwNg=;
+        b=OwmUEVoQh5e80PnfbmHrR36+XTZP8xrWwUMaCaIrYId2KxDnK5pSYC9vhATPOWZ1IY
+         viJa+NwDor5h71T+WTuxy3nyZBstfl3B60APIOFMgoBJjqIKgayqoOO9GsvKF4KnOjWq
+         +yuYoN5yc7Yaec2R1nLbf8Bf8DTrGm/nz8BUg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E7bIiIjj7XRyvIgRH59hhSHt09mzTiBSfoghtMqdNKo=;
-        b=wgOtyijZe8Of7+mG3ZHCYau6ZllIO1JyWRX0ob8Bga/nVv6X++hoHFoY7fQIr5e85k
-         eWwR6qX14FwhYaajDRyOc8p7OmKqtVIY8VODNHqd70ouWHAGW4UlAaacqGgDKdw0tf2D
-         Ebn8vkBOdBeLD7nGoE1WYN13Ui9skRwggePvf7DM9r0NtOHrx7+BdylJ5D5Bat22dkkE
-         3lSw8i5JgrKNDRhudl+t/cAl5mwJahRndf6dye7XWz/rm/z7rk3VxIxDBJEyNxOVLj7R
-         jai+Z6x0gNKVXt47B1cbgiBCadfa+A8QRuR9g5AsIOjn3eQU1mCeXFKZTvaW8eugVLzy
-         27WQ==
-X-Gm-Message-State: AOAM530QGsec63dBJvueJqrM4HPrAAbVeeogTvZg3GZ4peg4L5ngKlxH
-	KoFUOve223UpGUhpzRrmVO3G7gXEhQSRfg==
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=giWLb/w/Y0It8igkVa+1FOigd+LODjq4dUvFGkSDwNg=;
+        b=cCGR89YeRNs1DMkB7SMJLc+QzgqDaslwSeycYcjhRcFJUgnUqJBjPqbQ4rGS06EY6B
+         epxAqRN6UnahaaiMBT4ifnK/yjEOB1+/AW6khwLfn4BPeOk5aneC7Z3AHPD12lDm3gQi
+         slIQ19aJSKf7b2kvCEUSVns95+1LhyUcgBDUxbWO1YFd341QAR7+ckhEJ7wdKCHnJ0YM
+         jlpEiauw/w+b1rZG1LXQngilgEU82wORt0VjGc7VsgWuUnz4uCq+8KUTh4ll4uHNXHPo
+         ++78wdvRPxTHzTZkODt0Of0KOf3ZQqXatbhXkDUql7h2w3AQNYBC1EpJdKGFaOF29SEe
+         tYlg==
+X-Gm-Message-State: AOAM530P7y74x9qfAMAYo8K3TKnpcaYrtbu9u4ZLMpsAgiFKxFpWlrTZ
+	x2H77USeq5jwDNgOkPgAPS3nRcRqGxpa5Q==
 X-Google-Smtp-Source: 
- ABdhPJwrGHflmyhRcgrPHJt4ytoCx1e/pC3mV5j30no2m/3fbFiaTewfV85VzWFyzOZPJBUq527+NQ==
-X-Received: by 2002:a7b:cb54:: with SMTP id v20mr7798264wmj.36.1635865063043;
-        Tue, 02 Nov 2021 07:57:43 -0700 (PDT)
+ ABdhPJylh8DREQDw/CqMQSpuXDA+hoMK0xFSjb7WpQffJBvtysl7ibdGJlbUgX2I8Z7vosCvh6hySg==
+X-Received: by 2002:a05:600c:4f87:: with SMTP id
+ n7mr6003647wmq.63.1635865064166;
+        Tue, 02 Nov 2021 07:57:44 -0700 (PDT)
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:e05:60cd:475e:19f5])
         by smtp.gmail.com with ESMTPSA id
- q26sm14916634wrc.39.2021.11.02.07.57.42
+ q26sm14916634wrc.39.2021.11.02.07.57.43
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 07:57:42 -0700 (PDT)
+        Tue, 02 Nov 2021 07:57:43 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/5] lib/bb: Clean up use of len()
-Date: Tue,  2 Nov 2021 14:57:38 +0000
-Message-Id: <20211102145742.3550251-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 3/5] lib/bb: Fix string concatination potential performance
+ issues
+Date: Tue,  2 Nov 2021 14:57:40 +0000
+Message-Id: <20211102145742.3550251-3-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20211102145742.3550251-1-richard.purdie@linuxfoundation.org>
+References: <20211102145742.3550251-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 02 Nov 2021 14:57:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12863
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12864
+
+Python scales badly when concatinating strings in loops. Most of these
+references aren't problematic but at least one (in data.py) is probably
+a performance issue as the issue is compounded as strings become large.
+
+The way to handle this in python is to create lists which don't reconstruct
+all the objects when appending to them. We may as well fix all the references
+since it stops them being copy/pasted into something problematic in the future.
+
+This patch was based on issues highligthted by a report from AWS Codeguru.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bin/bitbake-diffsigs         |  4 +--
- lib/bb/cooker.py             |  6 ++--
- lib/bb/cookerdata.py         |  2 +-
- lib/bb/fetch2/__init__.py    |  4 +--
- lib/bb/fetch2/gitsm.py       |  2 +-
- lib/bb/runqueue.py           | 66 ++++++++++++++++++------------------
- lib/bb/taskdata.py           |  4 +--
- lib/bb/ui/buildinfohelper.py | 20 +++++------
- lib/bb/ui/uievent.py         |  4 +--
- 9 files changed, 56 insertions(+), 56 deletions(-)
+ lib/bb/data.py               | 24 +++++++++++------------
+ lib/bb/data_smart.py         |  6 +++---
+ lib/bb/fetch2/__init__.py    | 16 ++++++++--------
+ lib/bb/runqueue.py           | 37 ++++++++++++++++++------------------
+ lib/bb/server/process.py     |  6 +++---
+ lib/bb/ui/buildinfohelper.py | 16 ++++++++--------
+ 6 files changed, 53 insertions(+), 52 deletions(-)
 
-diff --git a/bin/bitbake-diffsigs b/bin/bitbake-diffsigs
-index 6646dccdfa..cf4cc706a2 100755
---- a/bin/bitbake-diffsigs
-+++ b/bin/bitbake-diffsigs
-@@ -60,7 +60,7 @@ def find_siginfo_task(bbhandler, pn, taskname, sig1=None, sig2=None):
+diff --git a/lib/bb/data.py b/lib/bb/data.py
+index 9d18b1e2bf..008c5593cf 100644
+--- a/lib/bb/data.py
++++ b/lib/bb/data.py
+@@ -285,21 +285,19 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
+         vardeps = varflags.get("vardeps")
  
-     if sig1 and sig2:
-         sigfiles = find_siginfo(bbhandler, pn, taskname, [sig1, sig2])
--        if len(sigfiles) == 0:
-+        if not sigfiles:
-             logger.error('No sigdata files found matching %s %s matching either %s or %s' % (pn, taskname, sig1, sig2))
-             sys.exit(1)
-         elif not sig1 in sigfiles:
-@@ -86,7 +86,7 @@ def recursecb(key, hash1, hash2):
-     hashfiles = find_siginfo(tinfoil, key, None, hashes)
+         def handle_contains(value, contains, d):
+-            newvalue = ""
++            newvalue = []
++            if value:
++                newvalue.append(value)
+             for k in sorted(contains):
+                 l = (d.getVar(k) or "").split()
+                 for item in sorted(contains[k]):
+                     for word in item.split():
+                         if not word in l:
+-                            newvalue += "\n%s{%s} = Unset" % (k, item)
++                            newvalue.append("\n%s{%s} = Unset" % (k, item))
+                             break
+                     else:
+-                        newvalue += "\n%s{%s} = Set" % (k, item)
+-            if not newvalue:
+-                return value
+-            if not value:
+-                return newvalue
+-            return value + newvalue
++                        newvalue.append("\n%s{%s} = Set" % (k, item))
++            return "".join(newvalue)
  
-     recout = []
--    if len(hashfiles) == 0:
-+    if not hashfiles:
-         recout.append("Unable to find matching sigdata for %s with hashes %s or %s" % (key, hash1, hash2))
-     elif not hash1 in hashfiles:
-         recout.append("Unable to find matching sigdata for %s with hash %s" % (key, hash1))
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index af794b4c42..194595ce8b 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1656,7 +1656,7 @@ class BBCooker:
-         # Return a copy, don't modify the original
-         pkgs_to_build = pkgs_to_build[:]
+         def handle_remove(value, deps, removes, d):
+             for r in sorted(removes):
+@@ -406,7 +404,9 @@ def generate_dependency_hash(tasklist, gendeps, lookupcache, whitelist, fn):
  
--        if len(pkgs_to_build) == 0:
-+        if not pkgs_to_build:
-             raise NothingToBuild
+         if data is None:
+             bb.error("Task %s from %s seems to be empty?!" % (task, fn))
+-            data = ''
++            data = []
++        else:
++            data = [data]
  
-         ignore = (self.data.getVar("ASSUME_PROVIDED") or "").split()
-@@ -1795,10 +1795,10 @@ class CookerCollectFiles(object):
-         files.sort( key=lambda fileitem: self.calc_bbfile_priority(fileitem)[0] )
-         config.setVar("BBFILES_PRIORITIZED", " ".join(files))
+         gendeps[task] -= whitelist
+         newdeps = gendeps[task]
+@@ -424,12 +424,12 @@ def generate_dependency_hash(tasklist, gendeps, lookupcache, whitelist, fn):
  
--        if not len(files):
-+        if not files:
-             files = self.get_bbfiles()
+         alldeps = sorted(seen)
+         for dep in alldeps:
+-            data = data + dep
++            data.append(dep)
+             var = lookupcache[dep]
+             if var is not None:
+-                data = data + str(var)
++                data.append(str(var))
+         k = fn + ":" + task
+-        basehash[k] = hashlib.sha256(data.encode("utf-8")).hexdigest()
++        basehash[k] = hashlib.sha256("".join(data).encode("utf-8")).hexdigest()
+         taskdeps[task] = alldeps
  
--        if not len(files):
-+        if not files:
-             collectlog.error("no recipe files to build, check your BBPATH and BBFILES?")
-             bb.event.fire(CookerExit(), eventdata)
+     return taskdeps, basehash
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 8d235da121..7ed7112bdc 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -810,7 +810,7 @@ class DataSmart(MutableMapping):
+                     expanded_removes[r] = self.expand(r).split()
  
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index ba657c03b6..592bc2968e 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -86,7 +86,7 @@ class ConfigParameters(object):
-                 action['msg'] = "Only one target can be used with the --environment option."
-             elif self.options.buildfile and len(self.options.pkgs_to_build) > 0:
-                 action['msg'] = "No target should be used with the --environment and --buildfile options."
--            elif len(self.options.pkgs_to_build) > 0:
-+            elif self.options.pkgs_to_build:
-                 action['action'] = ["showEnvironmentTarget", self.options.pkgs_to_build]
-             else:
-                 action['action'] = ["showEnvironment", self.options.buildfile]
+                 parser.removes = set()
+-                val = ""
++                val = []
+                 for v in __whitespace_split__.split(parser.value):
+                     skip = False
+                     for r in removes:
+@@ -819,8 +819,8 @@ class DataSmart(MutableMapping):
+                             skip = True
+                     if skip:
+                         continue
+-                    val = val + v
+-                parser.value = val
++                    val.append(v)
++                parser.value = "".join(val)
+                 if expand:
+                     value = parser.value
+ 
 diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 000b49a500..1d6e4e0964 100644
+index 1d6e4e0964..43b312ce7e 100644
 --- a/lib/bb/fetch2/__init__.py
 +++ b/lib/bb/fetch2/__init__.py
-@@ -770,7 +770,7 @@ def get_srcrev(d, method_name='sortable_revision'):
-         if urldata[u].method.supports_srcrev():
-             scms.append(u)
+@@ -402,24 +402,24 @@ def encodeurl(decoded):
  
--    if len(scms) == 0:
-+    if not scms:
-         raise FetchError("SRCREV was used yet no valid SCM was found in SRC_URI")
+     if not type:
+         raise MissingParameterError('type', "encoded from the data %s" % str(decoded))
+-    url = '%s://' % type
++    url = ['%s://' % type]
+     if user and type != "file":
+-        url += "%s" % user
++        url.append("%s" % user)
+         if pswd:
+-            url += ":%s" % pswd
+-        url += "@"
++            url.append(":%s" % pswd)
++        url.append("@")
+     if host and type != "file":
+-        url += "%s" % host
++        url.append("%s" % host)
+     if path:
+         # Standardise path to ensure comparisons work
+         while '//' in path:
+             path = path.replace("//", "/")
+-        url += "%s" % urllib.parse.quote(path)
++        url.append("%s" % urllib.parse.quote(path))
+     if p:
+         for parm in p:
+-            url += ";%s=%s" % (parm, p[parm])
++            url.append(";%s=%s" % (parm, p[parm]))
  
-     if len(scms) == 1 and len(urldata[scms[0]].names) == 1:
-@@ -1636,7 +1636,7 @@ class Fetch(object):
-         if localonly and cache:
-             raise Exception("bb.fetch2.Fetch.__init__: cannot set cache and localonly at same time")
+-    return url
++    return "".join(url)
  
--        if len(urls) == 0:
-+        if not urls:
-             urls = d.getVar("SRC_URI").split()
-         self.urls = urls
-         self.d = d
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index a7110a988d..c5c23d5260 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -163,7 +163,7 @@ class GitSM(Git):
-         else:
-             self.process_submodules(ud, ud.clonedir, need_update_submodule, d)
- 
--        if len(need_update_list) > 0:
-+        if need_update_list:
-             logger.debug('gitsm: Submodules requiring update: %s' % (' '.join(need_update_list)))
-             return True
- 
+ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
+     if not ud.url or not uri_find or not uri_replace:
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 10511a09dc..87c00462c1 100644
+index 87c00462c1..67f8dfbd9e 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -547,7 +547,7 @@ class RunQueueData:
-                         next_points.append(revdep)
-                         task_done[revdep] = True
-             endpoints = next_points
--            if len(next_points) == 0:
-+            if not next_points:
-                 break
+@@ -1061,12 +1061,12 @@ class RunQueueData:
+                         seen_pn.append(pn)
+                     else:
+                         bb.fatal("Multiple versions of %s are due to be built (%s). Only one version of a given PN should be built in any given build. You likely need to set PREFERRED_VERSION_%s to select the correct version or don't depend on multiple versions." % (pn, " ".join(prov_list[prov]), pn))
+-                msg = "Multiple .bb files are due to be built which each provide %s:\n  %s" % (prov, "\n  ".join(prov_list[prov]))
++                msgs = ["Multiple .bb files are due to be built which each provide %s:\n  %s" % (prov, "\n  ".join(prov_list[prov]))]
+                 #
+                 # Construct a list of things which uniquely depend on each provider
+                 # since this may help the user figure out which dependency is triggering this warning
+                 #
+-                msg += "\nA list of tasks depending on these providers is shown and may help explain where the dependency comes from."
++                msg.append("\nA list of tasks depending on these providers is shown and may help explain where the dependency comes from.")
+                 deplist = {}
+                 commondeps = None
+                 for provfn in prov_list[prov]:
+@@ -1086,12 +1086,12 @@ class RunQueueData:
+                         commondeps &= deps
+                     deplist[provfn] = deps
+                 for provfn in deplist:
+-                    msg += "\n%s has unique dependees:\n  %s" % (provfn, "\n  ".join(deplist[provfn] - commondeps))
++                    msg.append("\n%s has unique dependees:\n  %s" % (provfn, "\n  ".join(deplist[provfn] - commondeps)))
+                 #
+                 # Construct a list of provides and runtime providers for each recipe
+                 # (rprovides has to cover RPROVIDES, PACKAGES, PACKAGES_DYNAMIC)
+                 #
+-                msg += "\nIt could be that one recipe provides something the other doesn't and should. The following provider and runtime provider differences may be helpful."
++                msg.append("\nIt could be that one recipe provides something the other doesn't and should. The following provider and runtime provider differences may be helpful.")
+                 provide_results = {}
+                 rprovide_results = {}
+                 commonprovs = None
+@@ -1118,16 +1118,16 @@ class RunQueueData:
+                     else:
+                         commonrprovs &= rprovides
+                     rprovide_results[provfn] = rprovides
+-                #msg += "\nCommon provides:\n  %s" % ("\n  ".join(commonprovs))
+-                #msg += "\nCommon rprovides:\n  %s" % ("\n  ".join(commonrprovs))
++                #msg.append("\nCommon provides:\n  %s" % ("\n  ".join(commonprovs)))
++                #msg.append("\nCommon rprovides:\n  %s" % ("\n  ".join(commonrprovs)))
+                 for provfn in prov_list[prov]:
+-                    msg += "\n%s has unique provides:\n  %s" % (provfn, "\n  ".join(provide_results[provfn] - commonprovs))
+-                    msg += "\n%s has unique rprovides:\n  %s" % (provfn, "\n  ".join(rprovide_results[provfn] - commonrprovs))
++                    msg.append("\n%s has unique provides:\n  %s" % (provfn, "\n  ".join(provide_results[provfn] - commonprovs)))
++                    msg.append("\n%s has unique rprovides:\n  %s" % (provfn, "\n  ".join(rprovide_results[provfn] - commonrprovs)))
  
-         # Circular dependency sanity check
-@@ -589,7 +589,7 @@ class RunQueueData:
- 
-         found = False
-         for mc in self.taskData:
--            if len(taskData[mc].taskentries) > 0:
-+            if taskData[mc].taskentries:
-                 found = True
-                 break
-         if not found:
-@@ -773,7 +773,7 @@ class RunQueueData:
-         # Find the dependency chain endpoints
-         endpoints = set()
-         for tid in self.runtaskentries:
--            if len(deps[tid]) == 0:
-+            if not deps[tid]:
-                 endpoints.add(tid)
-         # Iterate the chains collating dependencies
-         while endpoints:
-@@ -784,11 +784,11 @@ class RunQueueData:
-                     cumulativedeps[dep].update(cumulativedeps[tid])
-                     if tid in deps[dep]:
-                         deps[dep].remove(tid)
--                    if len(deps[dep]) == 0:
-+                    if not deps[dep]:
-                         next.add(dep)
-             endpoints = next
-         #for tid in deps:
--        #    if len(deps[tid]) != 0:
-+        #    if deps[tid]:
-         #        bb.warn("Sanity test failure, dependencies left for %s (%s)" % (tid, deps[tid]))
- 
-         # Loop here since recrdeptasks can depend upon other recrdeptasks and we have to
-@@ -958,7 +958,7 @@ class RunQueueData:
-                     delcount[tid] = self.runtaskentries[tid]
-                     del self.runtaskentries[tid]
- 
--            if len(self.runtaskentries) == 0:
-+            if not self.runtaskentries:
-                 bb.msg.fatal("RunQueue", "Could not find any tasks with the tasknames %s to run within the recipes of the taskgraphs of the targets %s" % (str(self.cooker.configuration.runall), str(self.targets)))
+                 if self.warn_multi_bb:
+-                    logger.verbnote(msg)
++                    logger.verbnote("".join(msg))
+                 else:
+-                    logger.error(msg)
++                    logger.error("".join(msg))
  
          self.init_progress_reporter.next_stage()
-@@ -983,7 +983,7 @@ class RunQueueData:
-                     delcount[tid] = self.runtaskentries[tid]
-                     del self.runtaskentries[tid]
  
--            if len(self.runtaskentries) == 0:
-+            if not self.runtaskentries:
-                 bb.msg.fatal("RunQueue", "Could not find any tasks with the tasknames %s to run within the taskgraphs of the targets %s" % (str(self.cooker.configuration.runonly), str(self.targets)))
+@@ -1935,7 +1935,7 @@ class RunQueueExecute:
+         self.stats.taskFailed()
+         self.failed_tids.append(task)
  
-         #
-@@ -991,7 +991,7 @@ class RunQueueData:
-         #
+-        fakeroot_log = ""
++        fakeroot_log = []
+         if fakerootlog and os.path.exists(fakerootlog):
+             with open(fakerootlog) as fakeroot_log_file:
+                 fakeroot_failed = False
+@@ -1945,12 +1945,12 @@ class RunQueueExecute:
+                             fakeroot_failed = True
+                     if 'doing new pid setup and server start' in line:
+                         break
+-                    fakeroot_log = line + fakeroot_log
++                    fakeroot_log.append(line)
  
-         # Check to make sure we still have tasks to run
--        if len(self.runtaskentries) == 0:
-+        if not self.runtaskentries:
-             if not taskData[''].abort:
-                 bb.msg.fatal("RunQueue", "All buildable tasks have been run but the build is incomplete (--continue mode). Errors for the tasks that failed will have been printed above.")
+             if not fakeroot_failed:
+-                fakeroot_log = None
++                fakeroot_log = []
+ 
+-        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode, self.rq, fakeroot_log=fakeroot_log), self.cfgData)
++        bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode, self.rq, fakeroot_log=("".join(fakeroot_log) or None)), self.cfgData)
+ 
+         if self.rqdata.taskData[''].abort:
+             self.rq.state = runQueueCleanUp
+@@ -2608,12 +2608,13 @@ class RunQueueExecute:
+         pn = self.rqdata.dataCaches[mc].pkg_fn[taskfn]
+         if not check_setscene_enforce_whitelist(pn, taskname, self.rqdata.setscenewhitelist):
+             if tid in self.rqdata.runq_setscene_tids:
+-                msg = 'Task %s.%s attempted to execute unexpectedly and should have been setscened' % (pn, taskname)
++                msg = ['Task %s.%s attempted to execute unexpectedly and should have been setscened' % (pn, taskname)]
              else:
-@@ -1015,7 +1015,7 @@ class RunQueueData:
-         endpoints = []
-         for tid in self.runtaskentries:
-             revdeps = self.runtaskentries[tid].revdeps
--            if len(revdeps) == 0:
-+            if not revdeps:
-                 endpoints.append(tid)
-             for dep in revdeps:
-                 if dep in self.runtaskentries[tid].depends:
-@@ -1188,9 +1188,9 @@ class RunQueueData:
-         # Iterate over the task list and call into the siggen code
-         dealtwith = set()
-         todeal = set(self.runtaskentries)
--        while len(todeal) > 0:
-+        while todeal:
-             for tid in todeal.copy():
--                if len(self.runtaskentries[tid].depends - dealtwith) == 0:
-+                if not (self.runtaskentries[tid].depends - dealtwith):
-                     dealtwith.add(tid)
-                     todeal.remove(tid)
-                     self.prepare_task_hash(tid)
-@@ -1500,10 +1500,10 @@ class RunQueue:
-             self.rqexe = RunQueueExecute(self)
- 
-             # If we don't have any setscene functions, skip execution
--            if len(self.rqdata.runq_setscene_tids) == 0:
-+            if not self.rqdata.runq_setscene_tids:
-                 logger.info('No setscene tasks')
-                 for tid in self.rqdata.runtaskentries:
--                    if len(self.rqdata.runtaskentries[tid].depends) == 0:
-+                    if not self.rqdata.runtaskentries[tid].depends:
-                         self.rqexe.setbuildable(tid)
-                     self.rqexe.tasks_notcovered.add(tid)
-                 self.rqexe.sqdone = True
-@@ -1780,7 +1780,7 @@ class RunQueueExecute:
-             bb.fatal("Invalid scheduler '%s'.  Available schedulers: %s" %
-                      (self.scheduler, ", ".join(obj.name for obj in schedulers)))
- 
--        #if len(self.rqdata.runq_setscene_tids) > 0:
-+        #if self.rqdata.runq_setscene_tids:
-         self.sqdata = SQData()
-         build_scenequeue_data(self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self)
- 
-@@ -1821,7 +1821,7 @@ class RunQueueExecute:
-                 # worker must have died?
-                 pass
- 
--        if len(self.failed_tids) != 0:
-+        if self.failed_tids:
-             self.rq.state = runQueueFailed
-             return
- 
-@@ -1837,7 +1837,7 @@ class RunQueueExecute:
-             self.rq.read_workers()
-             return self.rq.active_fds()
- 
--        if len(self.failed_tids) != 0:
-+        if self.failed_tids:
-             self.rq.state = runQueueFailed
+-                msg = 'Task %s.%s attempted to execute unexpectedly' % (pn, taskname)
++                msg = ['Task %s.%s attempted to execute unexpectedly' % (pn, taskname)]
+             for t in self.scenequeue_notcovered:
+-                msg = msg + "\nTask %s, unihash %s, taskhash %s" % (t, self.rqdata.runtaskentries[t].unihash, self.rqdata.runtaskentries[t].hash)
+-            logger.error(msg + '\nThis is usually due to missing setscene tasks. Those missing in this build were: %s' % pprint.pformat(self.scenequeue_notcovered))
++                msg.append("\nTask %s, unihash %s, taskhash %s" % (t, self.rqdata.runtaskentries[t].unihash, self.rqdata.runtaskentries[t].hash))
++            msg.append('\nThis is usually due to missing setscene tasks. Those missing in this build were: %s' % pprint.pformat(self.scenequeue_notcovered))
++            logger.error("".join(msg))
              return True
+         return False
  
-@@ -2001,7 +2001,7 @@ class RunQueueExecute:
-             if x not in self.tasks_scenequeue_done:
-                 logger.error("Task %s was never processed by the setscene code" % x)
-                 err = True
--            if len(self.rqdata.runtaskentries[x].depends) == 0 and x not in self.runq_buildable:
-+            if not self.rqdata.runtaskentries[x].depends and x not in self.runq_buildable:
-                 logger.error("Task %s was never marked as buildable by the setscene code" % x)
-                 err = True
-         return err
-@@ -2025,7 +2025,7 @@ class RunQueueExecute:
-             # Find the next setscene to run
-             for nexttask in self.sorted_setscene_tids:
-                 if nexttask in self.sq_buildable and nexttask not in self.sq_running and self.sqdata.stamps[nexttask] not in self.build_stamps.values():
--                    if nexttask not in self.sqdata.unskippable and len(self.sqdata.sq_revdeps[nexttask]) > 0 and self.sqdata.sq_revdeps[nexttask].issubset(self.scenequeue_covered) and self.check_dependencies(nexttask, self.sqdata.sq_revdeps[nexttask]):
-+                    if nexttask not in self.sqdata.unskippable and self.sqdata.sq_revdeps[nexttask] and self.sqdata.sq_revdeps[nexttask].issubset(self.scenequeue_covered) and self.check_dependencies(nexttask, self.sqdata.sq_revdeps[nexttask]):
-                         if nexttask not in self.rqdata.target_tids:
-                             logger.debug2("Skipping setscene for task %s" % nexttask)
-                             self.sq_task_skip(nexttask)
-@@ -2189,7 +2189,7 @@ class RunQueueExecute:
-             if self.can_start_task():
-                 return True
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 8fdcc66dc7..1636616660 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -326,10 +326,10 @@ class ProcessServer():
+                         if e.errno != errno.ENOENT:
+                             raise
  
--        if self.stats.active > 0 or len(self.sq_live) > 0:
-+        if self.stats.active > 0 or self.sq_live:
-             self.rq.read_workers()
-             return self.rq.active_fds()
+-                msg = "Delaying shutdown due to active processes which appear to be holding bitbake.lock"
++                msg = ["Delaying shutdown due to active processes which appear to be holding bitbake.lock"]
+                 if procs:
+-                    msg += ":\n%s" % str(procs.decode("utf-8"))
+-                serverlog(msg)
++                    msg.append(":\n%s" % str(procs.decode("utf-8")))
++                serverlog("".join(msg))
  
-@@ -2201,7 +2201,7 @@ class RunQueueExecute:
-                 self.sq_task_failoutright(tid)
-             return True
- 
--        if len(self.failed_tids) != 0:
-+        if self.failed_tids:
-             self.rq.state = runQueueFailed
-             return True
- 
-@@ -2280,7 +2280,7 @@ class RunQueueExecute:
-         covered.intersection_update(self.tasks_scenequeue_done)
- 
-         for tid in notcovered | covered:
--            if len(self.rqdata.runtaskentries[tid].depends) == 0:
-+            if not self.rqdata.runtaskentries[tid].depends:
-                 self.setbuildable(tid)
-             elif self.rqdata.runtaskentries[tid].depends.issubset(self.runq_complete):
-                  self.setbuildable(tid)
-@@ -2339,7 +2339,7 @@ class RunQueueExecute:
-         # Now iterate those tasks in dependency order to regenerate their taskhash/unihash
-         next = set()
-         for p in total:
--            if len(self.rqdata.runtaskentries[p].depends) == 0:
-+            if not self.rqdata.runtaskentries[p].depends:
-                 next.add(p)
-             elif self.rqdata.runtaskentries[p].depends.isdisjoint(total):
-                 next.add(p)
-@@ -2349,7 +2349,7 @@ class RunQueueExecute:
-             current = next.copy()
-             next = set()
-             for tid in current:
--                if len(self.rqdata.runtaskentries[p].depends) and not self.rqdata.runtaskentries[tid].depends.isdisjoint(total):
-+                if self.rqdata.runtaskentries[p].depends and not self.rqdata.runtaskentries[tid].depends.isdisjoint(total):
-                     continue
-                 orighash = self.rqdata.runtaskentries[tid].hash
-                 dc = bb.parse.siggen.get_data_caches(self.rqdata.dataCaches, mc_from_tid(tid))
-@@ -2436,7 +2436,7 @@ class RunQueueExecute:
-             if not harddepfail and self.sqdata.sq_revdeps[tid].issubset(self.scenequeue_covered | self.scenequeue_notcovered):
-                 if tid not in self.sq_buildable:
-                     self.sq_buildable.add(tid)
--            if len(self.sqdata.sq_revdeps[tid]) == 0:
-+            if not self.sqdata.sq_revdeps[tid]:
-                 self.sq_buildable.add(tid)
- 
-             if tid in self.sqdata.outrightfail:
-@@ -2652,7 +2652,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-     for tid in rqdata.runtaskentries:
-         sq_revdeps[tid] = copy.copy(rqdata.runtaskentries[tid].revdeps)
-         sq_revdeps_squash[tid] = set()
--        if (len(sq_revdeps[tid]) == 0) and tid not in rqdata.runq_setscene_tids:
-+        if not sq_revdeps[tid] and tid not in rqdata.runq_setscene_tids:
-             #bb.warn("Added endpoint %s" % (tid))
-             endpoints[tid] = set()
- 
-@@ -2693,9 +2693,9 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-                     sq_revdeps[dep].remove(point)
-                 if tasks:
-                     sq_revdeps_squash[dep] |= tasks
--                if len(sq_revdeps[dep]) == 0 and dep not in rqdata.runq_setscene_tids:
-+                if not sq_revdeps[dep] and dep not in rqdata.runq_setscene_tids:
-                     newendpoints[dep] = task
--        if len(newendpoints) != 0:
-+        if newendpoints:
-             process_endpoints(newendpoints)
- 
-     process_endpoints(endpoints)
-@@ -2707,7 +2707,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-     # Take the build endpoints (no revdeps) and find the sstate tasks they depend upon
-     new = True
-     for tid in rqdata.runtaskentries:
--        if len(rqdata.runtaskentries[tid].revdeps) == 0:
-+        if not rqdata.runtaskentries[tid].revdeps:
-             sqdata.unskippable.add(tid)
-     sqdata.unskippable |= sqrq.cantskip
-     while new:
-@@ -2716,7 +2716,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-         for tid in sorted(orig, reverse=True):
-             if tid in rqdata.runq_setscene_tids:
-                 continue
--            if len(rqdata.runtaskentries[tid].depends) == 0:
-+            if not rqdata.runtaskentries[tid].depends:
-                 # These are tasks which have no setscene tasks in their chain, need to mark as directly buildable
-                 sqrq.setbuildable(tid)
-             sqdata.unskippable |= rqdata.runtaskentries[tid].depends
-@@ -2731,7 +2731,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-     for taskcounter, tid in enumerate(rqdata.runtaskentries):
-         if tid in rqdata.runq_setscene_tids:
-             pass
--        elif len(sq_revdeps_squash[tid]) != 0:
-+        elif sq_revdeps_squash[tid]:
-             bb.msg.fatal("RunQueue", "Something went badly wrong during scenequeue generation, aborting. Please report this problem.")
-         else:
-             del sq_revdeps_squash[tid]
-@@ -2796,7 +2796,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-     sqdata.multiconfigs = set()
-     for tid in sqdata.sq_revdeps:
-         sqdata.multiconfigs.add(mc_from_tid(tid))
--        if len(sqdata.sq_revdeps[tid]) == 0:
-+        if not sqdata.sq_revdeps[tid]:
-             sqrq.sq_buildable.add(tid)
- 
-     rqdata.init_progress_reporter.finish()
-@@ -3050,7 +3050,7 @@ class runQueuePipe():
-                 raise
-         end = len(self.queue)
-         found = True
--        while found and len(self.queue):
-+        while found and self.queue:
-             found = False
-             index = self.queue.find(b"</event>")
-             while index != -1 and self.queue.startswith(b"<event>"):
-@@ -3088,7 +3088,7 @@ class runQueuePipe():
-     def close(self):
-         while self.read():
-             continue
--        if len(self.queue) > 0:
-+        if self.queue:
-             print("Warning, worker left partial message: %s" % self.queue)
-         self.input.close()
- 
-diff --git a/lib/bb/taskdata.py b/lib/bb/taskdata.py
-index 47bad6d1fa..7bfcdb8414 100644
---- a/lib/bb/taskdata.py
-+++ b/lib/bb/taskdata.py
-@@ -451,12 +451,12 @@ class TaskData:
-         for target in self.build_targets:
-             if fn in self.build_targets[target]:
-                 self.build_targets[target].remove(fn)
--                if len(self.build_targets[target]) == 0:
-+                if not self.build_targets[target]:
-                     self.remove_buildtarget(target, missing_list)
-         for target in self.run_targets:
-             if fn in self.run_targets[target]:
-                 self.run_targets[target].remove(fn)
--                if len(self.run_targets[target]) == 0:
-+                if not self.run_targets[target]:
-                     self.remove_runtarget(target, missing_list)
- 
-     def remove_buildtarget(self, target, missing_list=None):
+     def idle_commands(self, delay, fds=None):
+         nextsleep = delay
 diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 43aa592842..8588849dd4 100644
+index 8588849dd4..835e92c299 100644
 --- a/lib/bb/ui/buildinfohelper.py
 +++ b/lib/bb/ui/buildinfohelper.py
-@@ -483,11 +483,11 @@ class ORMWrapper(object):
+@@ -571,7 +571,7 @@ class ORMWrapper(object):
+         assert isinstance(build_obj, Build)
+         assert isinstance(target_obj, Target)
  
-             # we already created the root directory, so ignore any
-             # entry for it
--            if len(path) == 0:
-+            if not path:
-                 continue
- 
-             parent_path = "/".join(path.split("/")[:len(path.split("/")) - 1])
--            if len(parent_path) == 0:
-+            if not parent_path:
-                 parent_path = "/"
-             parent_obj = self._cached_get(Target_File, target = target_obj, path = parent_path, inodetype = Target_File.ITYPE_DIRECTORY)
-             tf_obj = Target_File.objects.create(
-@@ -633,7 +633,7 @@ class ORMWrapper(object):
-                         packagefile_objects.append(Package_File( package = packagedict[p]['object'],
-                             path = targetpath,
-                             size = targetfilesize))
--                    if len(packagefile_objects):
-+                    if packagefile_objects:
+-        errormsg = ""
++        errormsg = []
+         for p in packagedict:
+             # Search name swtiches round the installed name vs package name
+             # by default installed name == package name
+@@ -636,7 +636,7 @@ class ORMWrapper(object):
+                     if packagefile_objects:
                          Package_File.objects.bulk_create(packagefile_objects)
                  except KeyError as e:
-                     errormsg += "  stpi: Key error, package %s key %s \n" % ( p, e )
-@@ -673,7 +673,7 @@ class ORMWrapper(object):
-                     logger.warning("Could not add dependency to the package %s "
-                                    "because %s is an unknown package", p, px)
+-                    errormsg += "  stpi: Key error, package %s key %s \n" % ( p, e )
++                    errormsg.append("  stpi: Key error, package %s key %s \n" % (p, e))
  
--        if len(packagedeps_objs) > 0:
-+        if packagedeps_objs:
-             Package_Dependency.objects.bulk_create(packagedeps_objs)
+             # save disk installed size
+             packagedict[p]['object'].installed_size = packagedict[p]['size']
+@@ -678,8 +678,8 @@ class ORMWrapper(object):
          else:
              logger.info("No package dependencies created")
-@@ -767,7 +767,7 @@ class ORMWrapper(object):
-             packagefile_objects.append(Package_File( package = bp_object,
-                                         path = path,
-                                         size = package_info['FILES_INFO'][path] ))
--        if len(packagefile_objects):
-+        if packagefile_objects:
-             Package_File.objects.bulk_create(packagefile_objects)
  
-         def _po_byname(p):
-@@ -809,7 +809,7 @@ class ORMWrapper(object):
-                 packagedeps_objs.append(Package_Dependency(  package = bp_object,
-                     depends_on = _po_byname(p), dep_type = Package_Dependency.TYPE_RCONFLICTS))
+-        if len(errormsg) > 0:
+-            logger.warning("buildinfohelper: target_package_info could not identify recipes: \n%s", errormsg)
++        if errormsg:
++            logger.warning("buildinfohelper: target_package_info could not identify recipes: \n%s", "".join(errormsg))
  
--        if len(packagedeps_objs) > 0:
-+        if packagedeps_objs:
-             Package_Dependency.objects.bulk_create(packagedeps_objs)
+     def save_target_image_file_information(self, target_obj, file_name, file_size):
+         Target_Image_File.objects.create(target=target_obj,
+@@ -1404,7 +1404,7 @@ class BuildInfoHelper(object):
+         assert 'pn' in event._depgraph
+         assert 'tdepends' in event._depgraph
  
-         return bp_object
-@@ -826,7 +826,7 @@ class ORMWrapper(object):
-                     desc = vardump[root_var]['doc']
-             if desc is None:
-                 desc = ''
--            if len(desc):
-+            if desc:
-                 HelpText.objects.get_or_create(build=build_obj,
-                                                area=HelpText.VARIABLE,
-                                                key=k, text=desc)
-@@ -846,7 +846,7 @@ class ORMWrapper(object):
-                                 file_name = vh['file'],
-                                 line_number = vh['line'],
-                                 operation = vh['op']))
--                if len(varhist_objects):
-+                if varhist_objects:
-                     VariableHistory.objects.bulk_create(varhist_objects)
+-        errormsg = ""
++        errormsg = []
+ 
+         # save layer version priorities
+         if 'layer-priorities' in event._depgraph.keys():
+@@ -1496,7 +1496,7 @@ class BuildInfoHelper(object):
+                 elif dep in self.internal_state['recipes']:
+                     dependency = self.internal_state['recipes'][dep]
+                 else:
+-                    errormsg += "  stpd: KeyError saving recipe dependency for %s, %s \n" % (recipe, dep)
++                    errormsg.append("  stpd: KeyError saving recipe dependency for %s, %s \n" % (recipe, dep))
+                     continue
+                 recipe_dep = Recipe_Dependency(recipe=target,
+                                                depends_on=dependency,
+@@ -1537,8 +1537,8 @@ class BuildInfoHelper(object):
+                 taskdeps_objects.append(Task_Dependency( task = target, depends_on = dep ))
+         Task_Dependency.objects.bulk_create(taskdeps_objects)
+ 
+-        if len(errormsg) > 0:
+-            logger.warning("buildinfohelper: dependency info not identify recipes: \n%s", errormsg)
++        if errormsg:
++            logger.warning("buildinfohelper: dependency info not identify recipes: \n%s", "".join(errormsg))
  
  
-@@ -1069,7 +1069,7 @@ class BuildInfoHelper(object):
-         for t in self.internal_state['targets']:
-             buildname = self.internal_state['build'].build_name
-             pe, pv = task_object.recipe.version.split(":",1)
--            if len(pe) > 0:
-+            if pe:
-                 package = task_object.recipe.name + "-" + pe + "_" + pv
-             else:
-                 package = task_object.recipe.name + "-" + pv
-@@ -1618,7 +1618,7 @@ class BuildInfoHelper(object):
- 
-         if 'backlog' in self.internal_state:
-             # if we have a backlog of events, do our best to save them here
--            if len(self.internal_state['backlog']):
-+            if self.internal_state['backlog']:
-                 tempevent = self.internal_state['backlog'].pop()
-                 logger.debug("buildinfohelper: Saving stored event %s "
-                              % tempevent)
-diff --git a/lib/bb/ui/uievent.py b/lib/bb/ui/uievent.py
-index 8607d0523b..e19c770bc9 100644
---- a/lib/bb/ui/uievent.py
-+++ b/lib/bb/ui/uievent.py
-@@ -73,13 +73,13 @@ class BBUIEventQueue:
- 
-         self.eventQueueLock.acquire()
- 
--        if len(self.eventQueue) == 0:
-+        if not self.eventQueue:
-             self.eventQueueLock.release()
-             return None
- 
-         item = self.eventQueue.pop(0)
- 
--        if len(self.eventQueue) == 0:
-+        if not self.eventQueue:
-             self.eventQueueNotify.clear()
- 
-         self.eventQueueLock.release()
+     def store_build_package_information(self, event):
 -- 
 2.32.0
 
