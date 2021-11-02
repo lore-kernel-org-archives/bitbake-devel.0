@@ -1,88 +1,103 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA924C433EF
-	for <webhook@archiver.kernel.org>; Tue,  2 Nov 2021 17:06:03 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
- [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web11.755.1635872762971828431
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C5BC433F5
+	for <webhook@archiver.kernel.org>; Tue,  2 Nov 2021 18:00:19 +0000 (UTC)
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web09.1636.1635876018037308668
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 02 Nov 2021 10:06:03 -0700
+ Tue, 02 Nov 2021 11:00:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NPtRUkY0;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f51.google.com with SMTP id t30so9536172wra.10
-        for <bitbake-devel@lists.openembedded.org>;
- Tue, 02 Nov 2021 10:06:02 -0700 (PDT)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=XSVmst2U;
+ spf=pass (domain: axis.com, ip: 195.60.68.17,
+ mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rqpvLmjWb/lpUij4PeqSs6tGZcudvGd4VXbZW39BYL0=;
-        b=NPtRUkY0zFAcYiYJgLUXUiw4hm9bwMSpfYowkbhQGMaUD6b4Tlfes5ny6Y+k71uQCv
-         +nVSSNSVuHSuAzBqfmMLzMSCnWdqhBLYQEBB5fJ62xI7IOUNNDXF9YzdyMUVWSFI/v42
-         J6AKk1LfZASPUSWKO0Zakzt3w+0d7kh7/BGBA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rqpvLmjWb/lpUij4PeqSs6tGZcudvGd4VXbZW39BYL0=;
-        b=2aAVS/q8fHPcrQ5u4qN636HIbCA1pXyfzdsYtpBfTW9Nj2xOfVbGBLn1TxHqUkaXAs
-         g6aVSDdwEYsjOVd32TPLDJUpvmmR0mtpauOjS2g05UQF7+bG9EHkpmHxRjNyK9ZvRLOL
-         /Tv+d6OD3tnjIltlHIX0JcfjvBrjkH8Sf9O6JN5QZR8Pktt0pl2sZ3Gl9Kv2aRW2Fa2A
-         DqwISs/qNQC8QH7CZTBtEdrxYci1m/LHorES5r1ZKPBwAc/H5EHsIDzmwnCitR39BF05
-         MiIso4nwio6vMa4/8nOTLT0xZINGtLIZbVmsLi10W3zQ6etoC9BfGcllyGl65mE8BgLA
-         2izw==
-X-Gm-Message-State: AOAM533WEdBb6Am+wPZ7M+qppJoMarqwx6fZFWa9AFWrTadGIEFKoJ25
-	GFQY5E5gRSU9z4jplCl62JZJ2H+wxqiiiQ==
-X-Google-Smtp-Source: 
- ABdhPJy0KUGXZYKpNCkhCU3nvfkTx6HXTCuAHPRmvpMr2WAFek86F3QG+vQ66xEclEsb+Oz93Oi81w==
-X-Received: by 2002:adf:f787:: with SMTP id q7mr29591012wrp.1.1635872760980;
-        Tue, 02 Nov 2021 10:06:00 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:e05:60cd:475e:19f5])
-        by smtp.gmail.com with ESMTPSA id
- j40sm3019515wms.16.2021.11.02.10.05.59
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 10:06:00 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v2] fetch/git: Show warning for invalid github urls
-Date: Tue,  2 Nov 2021 17:05:59 +0000
-Message-Id: <20211102170559.3553007-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+  d=axis.com; q=dns/txt; s=axis-central1; t=1635876018;
+  x=1667412018;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=UTtLY+E1G7uSWWzeU9CqxVPYgvSqQKpIxLB6Ysw9mck=;
+  b=XSVmst2U9naF/xXAW9ZEdzC/EBOsg79x7+diW6XzdCVEaHMW9yGo7itL
+   dv/Yf8r36GL4407wS5VtVYHuSEIPytzMc9qyjZdryzQGQ40mQoc3pPuTy
+   nL//4k1nDRzrCOKvDdyQjH0M7lzELvVRq33RZeNkYo5T+RttRIKd+VITy
+   IOysWEnatoksZ6Us5A6GCWTvZ82Jj6s2V+Bab2kTPHXwUZwTCCu56e1kj
+   5u0CK7mbW5e8qnMGKZnO4vpJoh9YzdxSK3Sqd/qydlD4p8JzQGyQ8MTkc
+   IaVIpXW+01g7s7+OfTBBzgEUQw3duHll4uEGaZ8ZmYtzE0+aAowHfRV6w
+   A==;
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: RE: [bitbake-devel] [PATCH 1/2] fetch/git: Handle github dropping
+ git:// support
+Thread-Topic: [bitbake-devel] [PATCH 1/2] fetch/git: Handle github dropping
+ git:// support
+Thread-Index: AQHXz+d3lMVYNMgRBkqv79NKJI01HKvwhgEQ
+Date: Tue, 2 Nov 2021 18:00:13 +0000
+Message-ID: <5f1da11f834f496da0944ea65f140460@axis.com>
+References: <20211102124500.3542952-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20211102124500.3542952-1-richard.purdie@linuxfoundation.org>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.5.60]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 02 Nov 2021 17:06:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12868
+ <bitbake-devel@lists.openembedded.org>; Tue, 02 Nov 2021 18:00:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12869
 
-On master, tell the users they need to update their urls for github.
+> -----Original Message-----
+> From: bitbake-devel@lists.openembedded.org <bitbake-
+> devel@lists.openembedded.org> On Behalf Of Richard Purdie
+> Sent: den 2 november 2021 13:45
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH 1/2] fetch/git: Handle github dropping
+> git:// support
+>=20
+> github is dropping support for git procotol iun git urls. Add code to rem=
+ap
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/git.py | 1 +
- 1 file changed, 1 insertion(+)
+Typo: procotol iun -> protocol in
 
-[v2 - add missing ud.url)
+> this to https in a way that could be used in older bitbake versions.
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index f5be24d6ab..6546aef6a2 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -146,6 +146,7 @@ class Git(FetchMethod):
-             # github stopped supporting git protocol
-             # https://github.blog/2021-09-01-improving-git-protocol-security-github/#no-more-unauthenticated-git
-             ud.proto = "https"
-+            bb.warn("URL: %s uses git protocol which is no longer supported by github. Please change to ;protocol=https in the url." % ud.url)
- 
-         if not ud.proto in ('git', 'file', 'ssh', 'http', 'https', 'rsync'):
-             raise bb.fetch2.ParameterError("Invalid protocol type", ud.url)
--- 
-2.32.0
+Though I would have written:
+
+github is dropping support for the Git protocol in Git URLs. Add code to=20
+remap this to HTTPS in a way that can be used in older bitbake versions.
+
+//Peter
+
+>=20
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/fetch2/git.py | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> index e974445fbe..f5be24d6ab 100644
+> --- a/lib/bb/fetch2/git.py
+> +++ b/lib/bb/fetch2/git.py
+> @@ -142,6 +142,10 @@ class Git(FetchMethod):
+>              ud.proto =3D 'file'
+>          else:
+>              ud.proto =3D "git"
+> +        if ud.host =3D=3D "github.com" and ud.proto =3D=3D "git":
+> +            # github stopped supporting git protocol
+> +            # https://github.blog/2021-09-01-improving-git-protocol-secu=
+rity-github/#no-more-unauthenticated-git
+> +            ud.proto =3D "https"
+>=20
+>          if not ud.proto in ('git', 'file', 'ssh', 'http', 'https', 'rsyn=
+c'):
+>              raise bb.fetch2.ParameterError("Invalid protocol type", ud.u=
+rl)
+> --
+> 2.32.0
 
 
