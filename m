@@ -1,103 +1,196 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <maksym.iliev@litmus.io>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93B3C433F5
-	for <webhook@archiver.kernel.org>; Wed,  3 Nov 2021 14:13:26 +0000 (UTC)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com
- [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web10.8302.1635948805288813977
- for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Nov 2021 07:13:25 -0700
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=OYypnZF3;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f50.google.com with SMTP id d3so3788555wrh.8
-        for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Nov 2021 07:13:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=Xs99ofJmY4f6WfiCmwPMSZo7FpzCN7fJ9tvzsCQp1XQ=;
-        b=OYypnZF3wXYdVavEeGiEn7Jpxu/Hh3q1q6KYUfGDXSNCqdBSSIbpUAqX3tjPeoCchG
-         sszpwct3WnMAA9aw8RnQ2+lRs+WZQuzaApfC2iHGr3z3oepWZZWbgBjV/LKIND4l0Qr1
-         jYo7FINzSQGaSUxhxLgTuB/VTc/wGE6Pu79+A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Xs99ofJmY4f6WfiCmwPMSZo7FpzCN7fJ9tvzsCQp1XQ=;
-        b=ZrYzZDIhQW0Au5IiYtv4lBiqRaeGfI0dCXHBteYb6oW8cXOjewSEVix3Ag5ELRsRsf
-         NZMUwt8Eya2/BiPX8nXsfpH9jZG9IQbracC+rys6Q21aNF+rj8W7o4leIUvbTeN6Y8Z5
-         M04DElV8KuKB6SAjSbELWtQJOD9VIYx0zQiuoj3IZkIMvnxzB15p52jop8XHfwjac6Y/
-         n8UP2Isouihty1MRyu1crErf8mQBuNiG5NDCXXirwD8vDK+3CNGzcEiaNDdKacuyFS4Z
-         KyqXHgx8qaCPtDrcJTMB4o0buFfkOROYDwlePzjNYVeRFhnrAjbSILFK0ZYJgwjc00O3
-         DjsA==
-X-Gm-Message-State: AOAM532SxldVgXsI4LdZFizbnBjMoFQpyGYoLc5rvhdTevAH2o5NBBTg
-	i/IP2AU1ktZN1BVp4deXXvAzFA6q548Mbg==
-X-Google-Smtp-Source: 
- ABdhPJzaY0ay5ztu595FZPbDgn6aMda5sdOqD3z8FmVTLeyEOajXD384JwweQXC6F3AHTB3uSCUgdg==
-X-Received: by 2002:adf:f44e:: with SMTP id f14mr55636265wrp.37.1635948803284;
-        Wed, 03 Nov 2021 07:13:23 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:52dc:b819:4029:149f?
- ([2001:8b0:aba:5f3c:52dc:b819:4029:149f])
-        by smtp.gmail.com with ESMTPSA id
- c6sm1669668wmq.46.2021.11.03.07.13.22
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Nov 2021 07:13:22 -0700 (PDT)
-Message-ID: 
- <6a5db3389ed956233ca71f9b72b2fc051386ac34.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/2] fetch/git: Handle github dropping
- git:// support
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8E5C433EF
+	for <webhook@archiver.kernel.org>; Wed,  3 Nov 2021 20:26:58 +0000 (UTC)
+Subject: Bitbake build fails because of a python function
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 03 Nov 2021 14:13:19 +0000
-In-Reply-To: <16B3BB5E65837842.31260@lists.openembedded.org>
-References: <16B3BB5E65837842.31260@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1 
+From: "Maksym Iliev" <maksym.iliev@litmus.io>
+X-Originating-Location: Montreal, Quebec, CA (66.22.161.94)
+X-Originating-Platform: Windows Chrome 95
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Wed, 03 Nov 2021 13:26:57 -0700
+Message-ID: <1tcH.1635971217520897935.hiAz@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="6hUHywaqumhgbBqH2oAN"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 03 Nov 2021 14:13:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12872
+ <bitbake-devel@lists.openembedded.org>; Wed, 03 Nov 2021 20:26:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12873
 
-On Tue, 2021-11-02 at 12:44 +0000, Richard Purdie via lists.openembedded.org
-wrote:
-> github is dropping support for git procotol iun git urls. Add code to remap
-> this to https in a way that could be used in older bitbake versions.
-> 
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/fetch2/git.py | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> index e974445fbe..f5be24d6ab 100644
-> --- a/lib/bb/fetch2/git.py
-> +++ b/lib/bb/fetch2/git.py
-> @@ -142,6 +142,10 @@ class Git(FetchMethod):
->              ud.proto = 'file'
->          else:
->              ud.proto = "git"
-> +        if ud.host == "github.com" and ud.proto == "git":
-> +            # github stopped supporting git protocol
-> +            # https://github.blog/2021-09-01-improving-git-protocol-security-github/#no-more-unauthenticated-git
-> +            ud.proto = "https"
->  
->          if not ud.proto in ('git', 'file', 'ssh', 'http', 'https', 'rsync'):
->              raise bb.fetch2.ParameterError("Invalid protocol type", ud.url)
+--6hUHywaqumhgbBqH2oAN
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-To make things a bit easier for everyone, I did backport this to a number of the
-older bitbake branches back to 1.40.
+Hello guys. I am brand new to obenembedded and bitbake and I am looking for=
+ any help/advice/hints I can get. I have inherited someone else's code for =
+building yocto project images, but the bitbake fails with the following err=
+or:
 
-Cheers,
+>=20
+> ERROR: perl-5.30.1-r0 do_package_write_rpm: Error executing a python
+> function in exec_func_python()=20
+> autogenerated:The stack trace of python
+> calls that resulted in this exception/failure was: File:
+> 'exec_func_python() autogenerated', lineno: 2, function: <module>
+> 0001:
+> ***=20
+> 0002:do_package_rpm(d)    =20
+> 0003:
+> File:
+> '/srv/yocto/poky/meta/classes/package_rpm.bbclass', lineno: 712, function=
+:
+> do_package_rpm    =20
+> 0708:    =20
+> 0709:    # Build the rpm package!    =20
+> 0710:    d.setVar('BUILDSPEC', cmd + \"\\n\" + cleanupcmd + \"\\n\")    =
+=20
+> 0711:    d.setVarFlag('BUILDSPEC', 'func', '1')
+> 0712:  =20
+> bb.build.exec_func('BUILDSPEC', d)    =20
+> 0713:    =20
+> 0714:    if
+> d.getVar('RPM_SIGN_PACKAGES') =3D=3D '1':
+> 0715:      =20
+> bb.build.exec_func(\"sign_rpm\", d)    =20
+> 0716:}
+> File:
+> '/srv/yocto/poky/bitbake/lib/bb/build.py', lineno: 254, function:
+> exec_func    =20
+> 0250:    with bb.utils.fileslocked(lockfiles):    =20
+> 0251: =20
+> if ispython:    =20
+> 0252:            exec_func_python(func, d, runfile,
+> cwd=3Dadir)    =20
+> 0253:    else: ***=20
+> 0254:            exec_func_shell(func,
+> d, runfile, cwd=3Dadir)    =20
+> 0255:    =20
+> 0256:    try:    =20
+> 0257:      =20
+> curcwd =3D os.getcwd()    =20
+> 0258:    except:
+> File:
+> '/srv/yocto/poky/bitbake/lib/bb/build.py', lineno: 455, function:
+> exec_func_shell    =20
+> 0451:    with open(fifopath, 'r+b', buffering=3D0) as
+> fifo:    =20
+> 0452:        try:    =20
+> 0453:            bb.debug(2, \"Executing
+> shell function %s\" % func)   =20
+> 0454:            with open(os.devnull,
+> 'r+') as stdin, logfile: ***=20
+> 0455:                bb.process.run(cmd,
+> shell=3DFalse, stdin=3Dstdin, log=3Dlogfile, extrafiles=3D[(fifo,readfifo=
+)])    =20
+> 0456:        finally:    =20
+> 0457:            os.unlink(fifopath)   =20
+> 0458:=20
+> 0459:    bb.debug(2, \"Shell function %s finished\" % func)
+> File:
+> '/srv/yocto/poky/bitbake/lib/bb/process.py', lineno: 184, function: run  =
+=20
+> 0180:    =20
+> 0181:    if pipe.returncode !=3D 0:    =20
+> 0182:        if log:   =20
+> 0183:            # Don't duplicate the output in the exception if logging
+> it ***=20
+> 0184:            raise ExecutionError(cmd, pipe.returncode, None,
+> None)    =20
+> 0185:        raise ExecutionError(cmd, pipe.returncode, stdout,
+> stderr)    =20
+> 0186:    return stdout, stderr Exception:
+> bb.process.ExecutionError: Execution of
+> '/srv/yocto/build/tmp/work/corei7-64-poky-linux/perl/5.30.1-r0/temp/run.B=
+UILDSPEC.35372'
+> failed with exit code 1
+>=20
 
-Richard
+Would anyone be able to point me in the right direction as to what could be=
+ potentially causing this issue?
 
+Thanks in advance,
+Maksym
+
+--6hUHywaqumhgbBqH2oAN
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<p>Hello guys. I am brand new to obenembedded and bitbake and I am looking =
+for any help/advice/hints I can get. I have inherited someone else's code f=
+or building yocto project images, but the bitbake fails with the following =
+error:</p>
+<blockquote>
+<pre style=3D"margin-bottom: 0px; padding: 12px; font-variant-numeric: inhe=
+rit; font-variant-east-asian: inherit; font-stretch: inherit; line-height: =
+1.30769; font-family: var(--ff-mono); vertical-align: baseline; box-sizing:=
+ inherit; width: auto; max-height: 600px; background-color: var(--highlight=
+-bg); border-radius: 5px; overflow-wrap: normal; color: var(--highlight-col=
+or); border: 0px initial initial;"><code style=3D"margin: 0px; border: 0px;=
+ font-style: inherit; font-variant: inherit; font-weight: inherit; font-str=
+etch: inherit; line-height: inherit; font-family: var(--ff-mono); font-size=
+: 13px; vertical-align: baseline; box-sizing: inherit; white-space: inherit=
+;">ERROR: perl-5.30.1-r0 do_package_write_rpm: Error executing a python fun=
+ction in exec_func_python()=20
+autogenerated:The stack trace of python calls that resulted in this excepti=
+on/failure was: File: 'exec_func_python() autogenerated', lineno: 2, functi=
+on: &lt;module&gt;
+0001: ***=20
+0002:do_package_rpm(d)    =20
+0003:
+File: '/srv/yocto/poky/meta/classes/package_rpm.bbclass', lineno: 712, func=
+tion: do_package_rpm    =20
+0708:    =20
+0709:    # Build the rpm package!    =20
+0710:    d.setVar('BUILDSPEC', cmd + \"\\n\" + cleanupcmd + \"\\n\")    =20
+0711:    d.setVarFlag('BUILDSPEC', 'func', '1')
+0712:    bb.build.exec_func('BUILDSPEC', d)    =20
+0713:    =20
+0714:    if d.getVar('RPM_SIGN_PACKAGES') =3D=3D '1':
+0715:        bb.build.exec_func(\"sign_rpm\", d)    =20
+0716:}
+File: '/srv/yocto/poky/bitbake/lib/bb/build.py', lineno: 254, function: exe=
+c_func    =20
+0250:    with bb.utils.fileslocked(lockfiles):    =20
+0251:    if ispython:    =20
+0252:            exec_func_python(func, d, runfile, cwd=3Dadir)    =20
+0253:    else: ***=20
+0254:            exec_func_shell(func, d, runfile, cwd=3Dadir)    =20
+0255:    =20
+0256:    try:    =20
+0257:        curcwd =3D os.getcwd()    =20
+0258:    except:
+File: '/srv/yocto/poky/bitbake/lib/bb/build.py', lineno: 455, function: exe=
+c_func_shell    =20
+0451:    with open(fifopath, 'r+b', buffering=3D0) as fifo:    =20
+0452:        try:    =20
+0453:            bb.debug(2, \"Executing shell function %s\" % func)   =20
+0454:            with open(os.devnull, 'r+') as stdin, logfile: ***=20
+0455:                bb.process.run(cmd, shell=3DFalse, stdin=3Dstdin, log=
+=3Dlogfile, extrafiles=3D[(fifo,readfifo)])    =20
+0456:        finally:    =20
+0457:            os.unlink(fifopath)   =20
+0458:    =20
+0459:    bb.debug(2, \"Shell function %s finished\" % func)
+File: '/srv/yocto/poky/bitbake/lib/bb/process.py', lineno: 184, function: r=
+un    =20
+0180:    =20
+0181:    if pipe.returncode !=3D 0:    =20
+0182:        if log:    =20
+0183:            # Don't duplicate the output in the exception if logging i=
+t ***=20
+0184:            raise ExecutionError(cmd, pipe.returncode, None, None)    =
+=20
+0185:        raise ExecutionError(cmd, pipe.returncode, stdout, stderr)    =
+=20
+0186:    return stdout, stderr Exception: bb.process.ExecutionError: Execut=
+ion of '/srv/yocto/build/tmp/work/corei7-64-poky-linux/perl/5.30.1-r0/temp/=
+run.BUILDSPEC.35372' failed with exit code 1<br /></code></pre>
+</blockquote>
+Would anyone be able to point me in the right direction as to what could be=
+ potentially causing this issue?<br /><br />Thanks in advance,<br />Maksym
+
+--6hUHywaqumhgbBqH2oAN--
 
