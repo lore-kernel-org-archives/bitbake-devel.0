@@ -1,246 +1,131 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <Jasper.Orschulko@iris-sensing.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB89FC433EF
-	for <webhook@archiver.kernel.org>; Wed,  3 Nov 2021 20:39:32 +0000 (UTC)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com
- [209.85.222.48])
- by mx.groups.io with SMTP id smtpd.web11.2310.1635971967610230575
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0E4C433F5
+	for <webhook@archiver.kernel.org>; Thu,  4 Nov 2021 12:29:55 +0000 (UTC)
+Received: from mail.irisgmbh.de (mail.irisgmbh.de [81.169.172.79])
+ by mx.groups.io with SMTP id smtpd.web10.11036.1636028992754514354
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Nov 2021 13:39:27 -0700
+ Thu, 04 Nov 2021 05:29:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=osVx1ir+;
- spf=pass (domain: gmail.com, ip: 209.85.222.48,
- mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ua1-f48.google.com with SMTP id v3so6760722uam.10
-        for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Nov 2021 13:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EKM98TiT6QU5vjps19qqiCUKmMd74EXDipkMfaFOPz8=;
-        b=osVx1ir+4cB5S3/hbBD4j9pzicXvH1QVmm4s34ZjxGKmww5eBpHgk5I9x7QQbvbdgj
-         n5GytC7riTl1y4r/9/xJBb9jqe8lWs0vfgEKwvwiKny7DuhxBbUolf75v7gCHGXvHfEl
-         YeWEoPWUsI61qV1L7gLmLy4VZVQerOaBR/ANss3IIyXLPBy4ubQhOhZzZ6lAFhaZbXKD
-         i+7cR8OEqb9yhEerTZEXUtfn38BLYYel3/MVThtuMBmYuzDS5NCMjpSDj/NZ9CZbEv5q
-         gAOi5LG2PJYbTFbWWDgRGUr/Wv4MSbdR9iTpPidcw82oMlN6qJKSN5Fb+AwgTge6ezow
-         5Z8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EKM98TiT6QU5vjps19qqiCUKmMd74EXDipkMfaFOPz8=;
-        b=l6YvNimWIHur3AEtY5z0Hz6ompiqc+cgB1tofZfite+bh2SJqLr13rmIS6XysZ+mC5
-         w9tP4PjqYwED5XVKR7phHrELPU0bmYAFAn1IRUJUbzrW3/TJFxPtYms057goqvb51FuH
-         PUlJuyxnH2RpfoRnEKyHZVMeDfphzp/Ar9Ouq+iOqyQW4nXo8dTTWsjcH8C85DEQReqR
-         J06kMpleqRkoO0G9I/ZYq8VVwTXU3CRXwHlHlgttuTfzDY20JkiAWnVEfy7e40Q18zjy
-         poPBfCvweRLi+Nm1oDyk1wvUZ7+Ui9pkc8kzdzp4avYa3SKUlGdme/Cz90an6FUJuOnJ
-         d6TQ==
-X-Gm-Message-State: AOAM531c/YcreKMX7hFm3UG5jyVAnT75jSroQCKDWnjS/ugrPq2wDJHI
-	pkh9j9HDjup4ZtS6Aho1mv00cWNzds6LZf5HBP8=
-X-Google-Smtp-Source: 
- ABdhPJzLSBkghUJPii5xp+J2GhSJDk/voCdS+JU0Pa1w0jdEVCW/tO/vjOB4UXnOEuiwZnyoZoSYiyKnOTgYKpJIIl0=
-X-Received: by 2002:ab0:484:: with SMTP id 4mr3595272uaw.71.1635971966687;
- Wed, 03 Nov 2021 13:39:26 -0700 (PDT)
+ dkim=missing;
+ spf=none, err=SPF record not found (domain: iris-sensing.com,
+ ip: 81.169.172.79, mailfrom: jasper.orschulko@iris-sensing.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.irisgmbh.de (Postfix) with ESMTP id 9F79431E0349;
+	Thu,  4 Nov 2021 13:29:49 +0100 (CET)
+X-Virus-Scanned: amavisd-new at irisgmbh.de
+Received: from mail.irisgmbh.de ([127.0.0.1])
+	by localhost (s15324379.rootmaster.info [127.0.0.1]) (amavisd-new,
+ port 10027)
+	with ESMTP; Thu,  4 Nov 2021 13:29:49 +0100 (CET)
+Received: from ERDE.irisgmbh.local (unknown [213.61.209.158])
+	by mail.irisgmbh.de (Postfix) with ESMTPS id 80A5D31E032F;
+	Thu,  4 Nov 2021 13:29:49 +0100 (CET)
+Received: from ERDE.irisgmbh.local ([172.30.10.11]) by ERDE.irisgmbh.local
+ ([172.30.10.11]) with mapi id 14.03.0513.000; Thu, 4 Nov 2021 13:29:48 +0100
+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+CC: "martin@mko.dev" <martin@mko.dev>, Daniel Baumgart
+	<Daniel.Baumgart@iris-sensing.com>
+Subject: Improving npm(sw) fetcher & integration within Bitbake
+Thread-Topic: Improving npm(sw) fetcher & integration within Bitbake
+Thread-Index: AQHX0Xen6HV5VooQfU+dD24h/zH3OQ==
+Date: Thu, 4 Nov 2021 12:29:47 +0000
+Message-ID: <1c7d6bb2479af789132b3e94c44a54f1d1b5c304.camel@iris-sensing.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.10.1]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3F12C12CE3317B439B8A1896AA4F9C6B@irisgmbh.local>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1tcH.1635971217520897935.hiAz@lists.openembedded.org>
-In-Reply-To: <1tcH.1635971217520897935.hiAz@lists.openembedded.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 3 Nov 2021 21:39:15 +0100
-Message-ID: 
- <CANNYZj9-Dw6t6Z3+fUNkLhQcPHB4E4_LJg0joUnMFF+JCiqO6w@mail.gmail.com>
-Subject: Re: [bitbake-devel] Bitbake build fails because of a python function
-To: maksym.iliev@litmus.io
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="000000000000efdd8d05cfe867c0"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 03 Nov 2021 20:39:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12874
+ <bitbake-devel@lists.openembedded.org>; Thu, 04 Nov 2021 12:29:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12875
 
---000000000000efdd8d05cfe867c0
-Content-Type: text/plain; charset="UTF-8"
-
-Please use the yocto@lists.yoctoproject.org mailing list, or #yocto on
-libera.chat IRC.
-
-Alex
-
-On Wed, 3 Nov 2021 at 21:26, Maksym Iliev via lists.openembedded.org
-<maksym.iliev=litmus.io@lists.openembedded.org> wrote:
-
-> Hello guys. I am brand new to obenembedded and bitbake and I am looking
-> for any help/advice/hints I can get. I have inherited someone else's code
-> for building yocto project images, but the bitbake fails with the following
-> error:
->
-> ERROR: perl-5.30.1-r0 do_package_write_rpm: Error executing a python function in exec_func_python()
-> autogenerated:The stack trace of python calls that resulted in this exception/failure was: File: 'exec_func_python() autogenerated', lineno: 2, function: <module>
-> 0001: ***
-> 0002:do_package_rpm(d)
-> 0003:
-> File: '/srv/yocto/poky/meta/classes/package_rpm.bbclass', lineno: 712, function: do_package_rpm
-> 0708:
-> 0709:    # Build the rpm package!
-> 0710:    d.setVar('BUILDSPEC', cmd + \"\\n\" + cleanupcmd + \"\\n\")
-> 0711:    d.setVarFlag('BUILDSPEC', 'func', '1')
-> 0712:    bb.build.exec_func('BUILDSPEC', d)
-> 0713:
-> 0714:    if d.getVar('RPM_SIGN_PACKAGES') == '1':
-> 0715:        bb.build.exec_func(\"sign_rpm\", d)
-> 0716:}
-> File: '/srv/yocto/poky/bitbake/lib/bb/build.py', lineno: 254, function: exec_func
-> 0250:    with bb.utils.fileslocked(lockfiles):
-> 0251:    if ispython:
-> 0252:            exec_func_python(func, d, runfile, cwd=adir)
-> 0253:    else: ***
-> 0254:            exec_func_shell(func, d, runfile, cwd=adir)
-> 0255:
-> 0256:    try:
-> 0257:        curcwd = os.getcwd()
-> 0258:    except:
-> File: '/srv/yocto/poky/bitbake/lib/bb/build.py', lineno: 455, function: exec_func_shell
-> 0451:    with open(fifopath, 'r+b', buffering=0) as fifo:
-> 0452:        try:
-> 0453:            bb.debug(2, \"Executing shell function %s\" % func)
-> 0454:            with open(os.devnull, 'r+') as stdin, logfile: ***
-> 0455:                bb.process.run(cmd, shell=False, stdin=stdin, log=logfile, extrafiles=[(fifo,readfifo)])
-> 0456:        finally:
-> 0457:            os.unlink(fifopath)
-> 0458:
-> 0459:    bb.debug(2, \"Shell function %s finished\" % func)
-> File: '/srv/yocto/poky/bitbake/lib/bb/process.py', lineno: 184, function: run
-> 0180:
-> 0181:    if pipe.returncode != 0:
-> 0182:        if log:
-> 0183:            # Don't duplicate the output in the exception if logging it ***
-> 0184:            raise ExecutionError(cmd, pipe.returncode, None, None)
-> 0185:        raise ExecutionError(cmd, pipe.returncode, stdout, stderr)
-> 0186:    return stdout, stderr Exception: bb.process.ExecutionError: Execution of '/srv/yocto/build/tmp/work/corei7-64-poky-linux/perl/5.30.1-r0/temp/run.BUILDSPEC.35372' failed with exit code 1
->
-> Would anyone be able to point me in the right direction as to what could
-> be potentially causing this issue?
->
-> Thanks in advance,
-> Maksym
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#12873):
-> https://lists.openembedded.org/g/bitbake-devel/message/12873
-> Mute This Topic: https://lists.openembedded.org/mt/86801315/1686489
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> alex.kanavin@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
->
-
---000000000000efdd8d05cfe867c0
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>Please use the <a href=3D"mailto:yocto@lists.yoctopro=
-ject.org">yocto@lists.yoctoproject.org</a> mailing list, or #yocto on liber=
-a.chat IRC.</div><div><br></div><div>Alex<br></div></div><br><div class=3D"=
-gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Wed, 3 Nov 2021 at 21=
-:26, Maksym Iliev via <a href=3D"http://lists.openembedded.org">lists.opene=
-mbedded.org</a> &lt;maksym.iliev=3D<a href=3D"mailto:litmus.io@lists.openem=
-bedded.org">litmus.io@lists.openembedded.org</a>&gt; wrote:<br></div><block=
-quote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1=
-px solid rgb(204,204,204);padding-left:1ex"><p>Hello guys. I am brand new t=
-o obenembedded and bitbake and I am looking for any help/advice/hints I can=
- get. I have inherited someone else&#39;s code for building yocto project i=
-mages, but the bitbake fails with the following error:</p>
-<blockquote>
-<pre style=3D"margin-bottom:0px;padding:12px;font-variant-numeric:inherit;f=
-ont-variant-east-asian:inherit;font-stretch:inherit;line-height:1.30769;ver=
-tical-align:baseline;box-sizing:inherit;width:auto;max-height:600px;border-=
-radius:5px"><code style=3D"margin:0px;border:0px none;font-style:inherit;fo=
-nt-variant:inherit;font-weight:inherit;font-stretch:inherit;line-height:inh=
-erit;font-size:13px;vertical-align:baseline;box-sizing:inherit;white-space:=
-inherit">ERROR: perl-5.30.1-r0 do_package_write_rpm: Error executing a pyth=
-on function in exec_func_python()=20
-autogenerated:The stack trace of python calls that resulted in this excepti=
-on/failure was: File: &#39;exec_func_python() autogenerated&#39;, lineno: 2=
-, function: &lt;module&gt;
-0001: ***=20
-0002:do_package_rpm(d)    =20
-0003:
-File: &#39;/srv/yocto/poky/meta/classes/package_rpm.bbclass&#39;, lineno: 7=
-12, function: do_package_rpm    =20
-0708:    =20
-0709:    # Build the rpm package!    =20
-0710:    d.setVar(&#39;BUILDSPEC&#39;, cmd + \&quot;\\n\&quot; + cleanupcmd=
- + \&quot;\\n\&quot;)    =20
-0711:    d.setVarFlag(&#39;BUILDSPEC&#39;, &#39;func&#39;, &#39;1&#39;)
-0712:    bb.build.exec_func(&#39;BUILDSPEC&#39;, d)    =20
-0713:    =20
-0714:    if d.getVar(&#39;RPM_SIGN_PACKAGES&#39;) =3D=3D &#39;1&#39;:
-0715:        bb.build.exec_func(\&quot;sign_rpm\&quot;, d)    =20
-0716:}
-File: &#39;/srv/yocto/poky/bitbake/lib/bb/build.py&#39;, lineno: 254, funct=
-ion: exec_func    =20
-0250:    with bb.utils.fileslocked(lockfiles):    =20
-0251:    if ispython:    =20
-0252:            exec_func_python(func, d, runfile, cwd=3Dadir)    =20
-0253:    else: ***=20
-0254:            exec_func_shell(func, d, runfile, cwd=3Dadir)    =20
-0255:    =20
-0256:    try:    =20
-0257:        curcwd =3D os.getcwd()    =20
-0258:    except:
-File: &#39;/srv/yocto/poky/bitbake/lib/bb/build.py&#39;, lineno: 455, funct=
-ion: exec_func_shell    =20
-0451:    with open(fifopath, &#39;r+b&#39;, buffering=3D0) as fifo:    =20
-0452:        try:    =20
-0453:            bb.debug(2, \&quot;Executing shell function %s\&quot; % fu=
-nc)   =20
-0454:            with open(os.devnull, &#39;r+&#39;) as stdin, logfile: ***=
-=20
-0455:                bb.process.run(cmd, shell=3DFalse, stdin=3Dstdin, log=
-=3Dlogfile, extrafiles=3D[(fifo,readfifo)])    =20
-0456:        finally:    =20
-0457:            os.unlink(fifopath)   =20
-0458:    =20
-0459:    bb.debug(2, \&quot;Shell function %s finished\&quot; % func)
-File: &#39;/srv/yocto/poky/bitbake/lib/bb/process.py&#39;, lineno: 184, fun=
-ction: run    =20
-0180:    =20
-0181:    if pipe.returncode !=3D 0:    =20
-0182:        if log:    =20
-0183:            # Don&#39;t duplicate the output in the exception if loggi=
-ng it ***=20
-0184:            raise ExecutionError(cmd, pipe.returncode, None, None)    =
-=20
-0185:        raise ExecutionError(cmd, pipe.returncode, stdout, stderr)    =
-=20
-0186:    return stdout, stderr Exception: bb.process.ExecutionError: Execut=
-ion of &#39;/srv/yocto/build/tmp/work/corei7-64-poky-linux/perl/5.30.1-r0/t=
-emp/run.BUILDSPEC.35372&#39; failed with exit code 1<br></code></pre>
-</blockquote>
-Would anyone be able to point me in the right direction as to what could be=
- potentially causing this issue?<br><br>Thanks in advance,<br>Maksym
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#12873): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/12873" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/12873</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/86801315/1686=
-489" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/86801315/1686489</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:alex.kanavin@gmail.com" target=3D"=
-_blank">alex.kanavin@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div>
-
---000000000000efdd8d05cfe867c0--
+LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMjU2DQoNCkRlYXIg
+Qml0YmFrZSBkZXZlbG9wZXJzLA0KDQpyZWNlbnRseSB3ZSBoYXZlIGJlZW4gbG9va2luZyBhdCB0
+aGUgbnBtc3cgZmV0Y2hlciBhbmQgZGlzY292ZXJlZCBzb21lDQpjaGFsbGVuZ2VzIHJlZ2FyZGlu
+ZyB0aGUgaW50ZWdyYXRpb24gaW50byB0aGUgZGV2ZWxvcGVyIHdvcmtmbG93IGFzDQp3ZWxsIGFz
+IHRoZSBidWlsZCB0aW1lcyB3aXRoaW4gQml0YmFrZS4gV2UgYmVsaWV2ZSB0aGF0IHdlIGZvdW5k
+IGENCm1lY2hhbmlzbSB3aGljaCB3b3VsZCBpbnRlZ3JhdGUgd2VsbCBpbnRvIEJpdGJha2UncyBl
+eGlzdGluZyBwcm9qZWN0DQpzdHJ1Y3R1cmUgYW5kIGRyYXN0aWNhbGx5IGltcHJvdmUgdGhlIHNp
+dHVhdGlvbi4NCg0KDQpCdXQgZmlyc3QsIHdoYXQgYXJlIHRoZSBpc3N1ZXMgd2l0aCB0aGUgY3Vy
+cmVudCBucG1zdyBmZXRjaGVyPw0KDQoxLiBMZXQncyBoYXZlIGEgbG9vayBhdCBhIHR5cGljYWwg
+bnBtLWJhc2VkIHByb2plY3QuIFlvdSdkIHR5cGljYWxseQ0KaGF2ZSB5b3VyIHBhY2thZ2UtbG9j
+ay5qc29uIChha2Egc2hyaW5rd3JhcCBmaWxlKSBzdG9yZWQgd2l0aGluIHRoZSBnaXQNCnJlcG9z
+aXRvcnkgY29udGFpbmluZyB5b3VyIHNvdXJjZSBjb2RlLiBEZXZlbG9wZXJzIHdpbGwgcmVseSBv
+biB0aGlzDQpwYWNrYWdlLWxvY2sgZmlsZSBvbiBhIGRhaWx5IGJhc2lzIGR1cmluZyB0aGUgZGV2
+ZWxvcG1lbnQgY3ljbGUuDQpVbmZvcnR1bmF0ZWx5LCB0aGUgY3VycmVudCBucG1zdyBmZXRjaGVy
+IG9ubHkgc3VwcG9ydHMgc2hyaW5rd3JhcCBmaWxlcw0Kc3RvcmVkIHdpdGhpbiB0aGUgbWV0YSBs
+YXllciBvciB3aXRoaW4gYW4gbnBtIHJlZ2lzdHJ5LiBUaGlzIGlzIG5vdA0KaWRlYWwsIGFzIGNo
+YW5nZXMgdG8gdGhlIGZpbGUgbWlnaHQgYmUgbWFkZSB3aXRoaW4gdGhlIHByb2plY3QgcmVwbywN
+CndoaWNoIHRoZW4gbmVlZCB0byBiZSBtYW51YWxseSBhcHBsaWVkIHRvIHRoZSBsb2NrIGZpbGUg
+d2l0aGluIHRoZSBtZXRhDQpyZXBvLiBBbiBpZGVhbCBucG1zdyBmZXRjaGVyIHRoZXJlZm9yZSB3
+b3VsZCBzdXBwb3J0IHVzaW5nIHRoZSBsb2NrDQpmaWxlIGRpcmVjdGx5IGZyb20gdGhlIHNvdXJj
+ZSBjb2RlIHJlcG8uIA0KDQoyLiBUaGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiBvZiB0aGUgbnBt
+IGNsYXNzIHVzZXMgbXVsdGlwbGUgc2hlbGxvdXRzDQpwZXIgbnBtIG1vZHVsZSBpbiBvcmRlciB0
+byBhZGQgdGhlc2UgdG8gdGhlIG5wbSBjYWNoZS4gVGhpcyBpcyBkb25lLCBhcw0KdGhlIGBucG0g
+aW5zdGFsbGAgY29tbWFuZCBpcyBub3QgY2FsbGVkIHdpdGhpbiB0aGUgZG9fZmV0Y2gsIGJ1dCBh
+dCB0aGUNCmVuZCBvZiB0aGUgZG9fY29uZmlndXJlIHN0ZXAuIFRoaXMgZHJhc3RpY2FsbHkgaW5j
+cmVhc2VzIHRoZSB0aW1lDQpCaXRiYWtlIHNwZW5kcyBpbiB0aGUgZG9fY29uZmlndXJlIHN0ZXAg
+Zm9yIGEgbnBtIGJhc2VkIHJlY2lwZS4gSW4gb3VyDQpjYXNlICh3ZSBoYXZlIGEgcmVsYXRpdmVs
+eSBzbWFsbCBwcm9qZWN0IHdpdGggYXBwcm94LiA2MDAgbnBtIHBhY2thZ2VzDQppbiB0b3RhbCwg
+aW5jbHVkaW5nIHJlY3Vyc2l2ZSBwYWNrYWdlcykgdGhpcyB0YWtlcyB+MTAwIG1pbnV0ZXMgdG8N
+CmNvbXBsZXRlLiBXaGF0IG1ha2VzIHRoaW5ncyB3b3JzZSwgZXZlcnkgY2hhbmdlIHRvIHRoZSBy
+ZWNpcGUgYW5kL29yDQpsb2NrIGZpbGUgd2lsbCBjYXVzZSBhIGNvbXBsZXRlIHJlcnVuIG9mIHRo
+ZSBkb19jb25maWd1cmUgam9iLg0KDQpBcyBhIHJlc3VsdCwgdGhlIG5wbSBmZXRjaGVyIGN1cnJl
+bnRseSBpcyBub3QgcmVhbGx5IHVzYWJsZSBmb3INCnByb2R1Y3Rpb24gd29ya2xvYWRzLg0KDQoN
+ClNvIGhvdyBjYW4gd2UgYWRkcmVzcyB0aGVzZSBpc3N1ZXM/DQoNCldlIHBsYW4gdG8gaW1wbGVt
+ZW50IGEgInN1Yi1mZXRjaGVyIiBmb3IgbnBtc3cgKGEgY29uY2VwdCB3aGljaCBtaWdodA0KYWxz
+byBiZSByZWN5Y2xhYmxlIGZvciBzaW1pbGFyIHVzZS1jYXNlcykuIFRoaXMgd291bGQgdGFrZSB0
+aGUNCmZvcm0gb2YgZS5nLjoNCg0KU1JDX1VSSSA9ICJucG1zdytnaXQ6Ly9naXQtdXJpLmdpdDtu
+cG0tdG9wZGlyPXBhdGhfdG9fbnBtX3Byb2plY3Q7Li4uIg0KDQpUaGUgaWRlYSBpcywgdGhhdCB0
+aGUgbnBzdyBmZXRjaGVyIHdvdWxkIHRoZW4gY2FsbCBhbiBhcmJpdHJhcnkgc3ViLQ0KZmV0Y2hl
+ciAoaW4gdGhpcyBjYXNlIGdpdCwgaG93ZXZlciBhbnkgZmV0Y2hlciB3aWxsIGJlIHN1cHBvcnRl
+ZCkgYW5kDQphZnRlciB0aGUgc3ViLWZldGNoZXIgaGFzIGV4dHJhY3RlZCB0aGUgc291cmNlIGNv
+ZGUgaW50byB0aGUgRExfRElSLA0KdGhlIG5wbSBmZXRjaGVyIHdpbGwgY3JlYXRlIGEgc2Vjb25k
+YXJ5IGRvd25sb2FkIGZvbGRlciBhcyBhIGNvcHkgb2YNCnRoZSBzdWItZmV0Y2hlcnMgZG93bmxv
+YWQgZm9sZGVyLiBXaXRoaW4gdGhpcyBjb3B5LCB0aGUgbnBtIGZldGNoZXINCndpbGwgY2FsbCBg
+bnBtIGNpYCwgZWZmZWN0aXZlbHkgZG93bmxvYWRpbmcgdGhlIG5wbSBwYWNrYWdlcyBieSBkb2lu
+ZyBhDQpjbGVhbi1pbnN0YWxsIG9uIHRoZSBiYXNpcyBvZiB0aGUgcGFja2FnZS5qc29uIGFuZCB0
+aGUgcGFja2FnZS0NCmxvY2suanNvbiBmaWxlcyB3aXRoaW4gdGhlIG5wbXN3IGRvd25sb2FkIGRp
+ci4gVGhpcyByZXN1bHRzIGluIGEgbXVjaA0KZmFzdGVyIGJ1aWxkLCBhcyBpdCByZW1vdmVzIHRo
+ZSBuZWVkIGZvciBzZXBlcmF0ZSBoYW5kbGluZyBvZiB0aGUNCmluZGl2aWR1YWwgbm9kZSBwYWNr
+YWdlcywgYXMgd2VsbCBhcyBzdHJlYW1saW5pbmcgdGhlIGRldmVsb3BlcnMNCndvcmtmbG93IHdp
+dGggdGhlIGJ1aWxkIHByb2Nlc3Mgd2l0aGluIEJpdGJha2UuDQoNCkFzIHRoaXMgZmV0Y2hlciB3
+b3VsZCBiZSBpbXBsZW1lbnRlZCBzZXBhcmF0ZWx5IGZyb20gdGhlIGN1cnJlbnQgbnBtc3cNCmZl
+dGNoZXIsIHRoaXMgd2lsbCBub3QgY2F1c2UgYW55IGJyZWFraW5nIGNoYW5nZXMgZm9yIGV4aXN0
+aW5nIHNldHVwcy4NCg0KQWRkaXRpb25hbGx5LCB3ZSBwbGFuIG9uIHdyaXRpbmcgYSBzZXBhcmF0
+ZSBucG1zdy5iYmNsYXNzLCB3aGljaCB3aWxsDQpwYXJzZSB0aGUgcGFja2FnZS5qc29uIGZvciBl
+YWNoIG5vZGUgbW9kdWxlIGZvciBhbiBhdXRvbWF0ZWQgQml0YmFrZQ0KbGljZW5zZSBtYW5pZmVz
+dCBnZW5lcmF0aW9uLCB3aGljaCB3aWxsIHJlc29sdmUgdGhlIGN1cnJlbnQgY2hhbGxlbmdlDQpv
+ZiBoYXZpbmcgdG8gbWFpbnRhaW4gdGhlc2UgbWFudWFsbHksIGFzIGN1cnJlbnRseSBkZXNjcmli
+ZWQgYXQNCmh0dHBzOi8vd3d3LnlvY3RvcHJvamVjdC5vcmcvZG9jcy9sYXRlc3QvbWVnYS1tYW51
+YWwvbWVnYS1tYW51YWwuaHRtbCNucG0tdXNpbmctdGhlLXJlZ2lzdHJ5LW1vZHVsZXMtbWV0aG9k
+DQouDQoNCklmIHRoaXMgaXMgc29tZXRoaW5nIHlvdSBzZWUgYXMgYSB3b3J0aHdoaWxlIGdvYWws
+IHdlIHdpbGwgcHJvdmlkZSBhDQpzZXQgb2YgcGF0Y2ggZmlsZXMgd2l0aGluIHRoZSBjb21pbmcg
+d2Vla3MuDQoNCi0gLS0gDQpXaXRoIGJlc3QgcmVnYXJkcw0KDQpKYXNwZXIgT3JzY2h1bGtvDQpE
+ZXZPcHMgRW5naW5lZXINCg0KVGVsLiArNDkgMzAgNTggNTggMTQgMjY1DQpGYXggKzQ5IDMwIDU4
+IDU4IDE0IDk5OQ0KSmFzcGVyLk9yc2NodWxrb0BpcmlzLXNlbnNpbmcuY29tDQoNCuKAoiDigKIg
+4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDi
+gKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKINCg0KaXJpcy1HbWJIDQppbmZy
+YXJlZCAmIGludGVsbGlnZW50IHNlbnNvcnMNClNjaG5lbGxlcnN0cmHDn2UgMS01IHwgMTI0Mzkg
+QmVybGluDQoNCmh0dHBzOi8vaXJpcy1zZW5zaW5nLmNvbS8NCg0KDQoNCg0KLS0tLS1CRUdJTiBQ
+R1AgU0lHTkFUVVJFLS0tLS0NCg0KaVFFekJBRUJDQUFkRmlFRTRXeVBNSUM1QXA0K09vbzFZZ3Fl
+dzA3Vk1OVUZBbUdEMGpzQUNna1FZZ3FldzA3Vg0KTU5WYTFRZitNd3Jsd1hlUytGSThKcnRIZFRK
+NUNOSjY0RGtpVGUwVGdxYjdTUVZrYXdYbG02S1BlekJZRklaYg0KSG1BcnVWOHZwUXBVSGt5S1hw
+d3VINFgwQTJDTzNqSjl2MjBIM3NkUmZMKzMzZ1NDT1k5K0xET0FEbFJmMU1oVA0KZmtWK09xd1l1
+ZndHMDJabk9wRjNZUmNUaURmRzlVRXpNK2x6QXJPemhZNkdqTXA0Rnh2UVoveExqRXZkR1ZKMQ0K
+bDNoM05QbXNlZHFzSm5hbDAyMndrUGkyZ04yWkNRUHlJdzExRUpMOTI5d3F3UEh1ZHZxajhPWDJx
+MUpoRFVuNQ0KdmpScE4ybDR5ZzZnOGJwRjFJZis1WWtUL1pWanJacWNsZUw5cFlQcFZPdXFrK2ov
+aVdiUFNUbVhqdnpzcktETA0KMVVXcVRCdFJtV01ZSCt4a2pLeEQ3U3BqejFzY1JBPT0NCj1xalFB
+DQotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0tLS0NCg==
 
