@@ -1,91 +1,107 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <Jasper.Orschulko@iris-sensing.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19839C433F5
-	for <webhook@archiver.kernel.org>; Fri,  5 Nov 2021 14:49:12 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com
- [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.6471.1636123750650078145
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423EDC433EF
+	for <webhook@archiver.kernel.org>; Fri,  5 Nov 2021 14:53:10 +0000 (UTC)
+Received: from mail.irisgmbh.de (mail.irisgmbh.de [81.169.172.79])
+ by mx.groups.io with SMTP id smtpd.web11.6674.1636123988845082157
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Nov 2021 07:49:11 -0700
+ Fri, 05 Nov 2021 07:53:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=drb0HHBJ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id d5so14161623wrc.1
-        for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Nov 2021 07:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=lCwOUgOQg6i6KGsaIEqc8NzkCg9XR+kQWSiJZuY8fhI=;
-        b=drb0HHBJ22OqpcasKPc56FnsmYu303ps5yrQBHh3fo6/lEthbrRaYnWkBgQQOBxEZJ
-         iwZZAWy1vNfl6HSkvzg1jWd8n9ilu5nKLzDMuqmhXYEZfU8ltaEFE0/Leeb0TzG5LLeK
-         BOBflFyC68QOf9m63WSFuNMnVaNoVe6g+yG64=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=lCwOUgOQg6i6KGsaIEqc8NzkCg9XR+kQWSiJZuY8fhI=;
-        b=UqNtAT2S5VOzBNBMF8GaV1/pG5zILW0a0LL2dHZ0BbFd1gMHXc5s3MjVmEcClJZL0V
-         9I0wUiurjdJ+EvYWDJ9YirjtynfX6UtxjxNmaJdczCyFzttmRrS8tgZWQRdo6rY7STjM
-         X9OIBNs0dygfSwXv+riF/UNoQg/+Pzas4wIKNkHyNIqtG2oWu30NvP7W+ZMjNNG39g6H
-         AURxm+z5efYXl8a+v2X0ZctLAW8TJ5a1XYQBKifog9M6/JpQ62QccwepbMwDPNI+hoj/
-         pI3d5boqZzo3lC9bhP10izN6B4kbFYTwH/dr0Rd6x3Tico0xXDF/0BJRtcC3m/SqOTGK
-         rPig==
-X-Gm-Message-State: AOAM531yHSKIO9Ax031o3deoxCTQvekjXwDHzbHJpQ0bebOXxtle1pB9
-	HN64ayrLrAeEOi+vNlkGUL2CjA==
-X-Google-Smtp-Source: 
- ABdhPJyAXrvxLcI1D7jnfrspN2uuHYCKYIJvxWO8ZniXeJ27ErHM5acCMbCXQvxnVSuOnT+3Qtt8Yw==
-X-Received: by 2002:adf:da44:: with SMTP id r4mr76320727wrl.180.1636123749112;
-        Fri, 05 Nov 2021 07:49:09 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:38e6:15ea:3134:28e5?
- ([2001:8b0:aba:5f3c:38e6:15ea:3134:28e5])
-        by smtp.gmail.com with ESMTPSA id
- u2sm8377830wrs.17.2021.11.05.07.49.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Nov 2021 07:49:08 -0700 (PDT)
-Message-ID: 
- <8ade477af55c3fe2ef5ba23b3e6d535ad671e33b.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/2] doc: bitbake-user-manual: add
- TMPDIR and WORKDIR to the variable index
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Michael Opdenacker <michael.opdenacker@bootlin.com>,
-	bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org
-Date: Fri, 05 Nov 2021 14:49:07 +0000
-In-Reply-To: <20211105144238.27679-2-michael.opdenacker@bootlin.com>
-References: <20211105144238.27679-1-michael.opdenacker@bootlin.com>
-	 <20211105144238.27679-2-michael.opdenacker@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1 
+ dkim=missing;
+ spf=none, err=SPF record not found (domain: iris-sensing.com,
+ ip: 81.169.172.79, mailfrom: jasper.orschulko@iris-sensing.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.irisgmbh.de (Postfix) with ESMTP id AB61631E0348;
+	Fri,  5 Nov 2021 15:53:05 +0100 (CET)
+X-Virus-Scanned: amavisd-new at irisgmbh.de
+Received: from mail.irisgmbh.de ([127.0.0.1])
+	by localhost (s15324379.rootmaster.info [127.0.0.1]) (amavisd-new,
+ port 10027)
+	with ESMTP; Fri,  5 Nov 2021 15:53:05 +0100 (CET)
+Received: from ERDE.irisgmbh.local (unknown [213.61.209.158])
+	by mail.irisgmbh.de (Postfix) with ESMTPS id 8FA6D31E033F;
+	Fri,  5 Nov 2021 15:53:05 +0100 (CET)
+Received: from ERDE.irisgmbh.local ([172.30.10.11]) by ERDE.irisgmbh.local
+ ([172.30.10.11]) with mapi id 14.03.0513.000; Fri, 5 Nov 2021 15:53:04 +0100
+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+To: "openembedded-core@lists.openembedded.org"
+	<openembedded-core@lists.openembedded.org>, "kweihmann@outlook.com"
+	<kweihmann@outlook.com>, "jasper@fancydomain.eu" <jasper@fancydomain.eu>
+CC: "martin@mko.dev" <martin@mko.dev>, "Daniel.Baumgart@iris-sensing.net"
+	<Daniel.Baumgart@iris-sensing.net>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
+ for repo 2.17.3
+Thread-Topic: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
+ for repo 2.17.3
+Thread-Index: AQHX0klmUmLVPFJtF0Ob3PuHG3t8+6v03rAAgAADSACAAAYMgIAAA0EAgAAJDgA=
+Date: Fri, 5 Nov 2021 14:53:03 +0000
+Message-ID: <ce7b4cd1e4f0be2c72766fa3098fa03834c3d391.camel@iris-sensing.com>
+References: <20211105133104.19895-1-jasper@fancydomain.eu>
+	 <AM9PR09MB4642AA3727D430C698E95EE5A88E9@AM9PR09MB4642.eurprd09.prod.outlook.com>
+	 <b8897c8a436f384ef0a41d708816c2f61f9e22c7.camel@iris-sensing.com>
+	 <d87ff011218f55d97e5aa48ff9b06d216f6d477a.camel@iris-sensing.com>
+	 <AM9PR09MB4642B8B561D87758C3423C60A88E9@AM9PR09MB4642.eurprd09.prod.outlook.com>
+In-Reply-To: 
+ <AM9PR09MB4642B8B561D87758C3423C60A88E9@AM9PR09MB4642.eurprd09.prod.outlook.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.10.1]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7B931F9F55BE9A4D916CD141E9394FB9@irisgmbh.local>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Nov 2021 14:49:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12903
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Nov 2021 14:53:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12904
 
-On Fri, 2021-11-05 at 15:42 +0100, Michael Opdenacker wrote:
-> This allows to add references to these variables
-> 
-> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-> ---
->  .../bitbake-user-manual-execution.rst         |  2 +-
->  .../bitbake-user-manual-fetching.rst          |  4 +--
->  .../bitbake-user-manual-hello.rst             |  4 +--
->  .../bitbake-user-manual-ref-variables.rst     | 28 +++++++++++++++++--
->  4 files changed, 30 insertions(+), 8 deletions(-)
-
-There is a small problem here in that bitbake doesn't actually define or care
-about either TMPDIR or WORKDIR. They are variables created by the configuration
-of bitbake...
-
-Cheers,
-
-Richard
-
+LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMjU2DQoNCj4gT2th
+eSBmaW5lIHRoYXQgbWFrZXMgc2Vuc2UsIGV2ZW4gaWYgaXQgaXMgc3RpbGwgcGhvbmluZyBob21l
+Lg0KVHJ1ZS4gQmFkIHNvZnR3YXJlIGRlc2lnbiBhdCBiZXN0LiBCdXQgbHVja2lseSBub3QgYW4g
+aXNzdWUgZnJvbSBhDQpidWlsZCBzeXN0ZW0gcGVyc3BlY3RpdmUuIDopDQoNCj4gQW5vdGhlciB0
+aGluZywgY291bGQgeW91IHBsZWFzZSBleGNoYW5nZSAiK1JFUE9fUkVWID0gJ3YyLjE3LjMnIiBm
+b3INCj4gYSANCj4gU0hBIHJldmlzaW9uLCBhcyBJIHdvdWxkbid0IGJldCBteSBsaWZlIG9uIGdv
+b2dsZSBub3QNCj4gZGVsZXRpbmcvcmVtb3ZpbmcgDQo+IHRhZ3MgZnJvbSB0aGVpciByZXBvcyAt
+IGFuZCB1bnBsZWFzYW50bHkgd2Ugd291bGRuJ3QgZXZlbiBub3RpY2UgdGhhdA0KPiBlYXNpbHkN
+Cg0KRmFpciBwb2ludCwgd2lsbCBkbyENCg0KLSAtLSANCldpdGggYmVzdCByZWdhcmRzDQoNCkph
+c3BlciBPcnNjaHVsa28NCkRldk9wcyBFbmdpbmVlcg0KDQpUZWwuICs0OSAzMCA1OCA1OCAxNCAy
+NjUNCkZheCArNDkgMzAgNTggNTggMTQgOTk5DQpKYXNwZXIuT3JzY2h1bGtvQGlyaXMtc2Vuc2lu
+Zy5jb20NCg0K4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg
+4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAog0K
+DQppcmlzLUdtYkgNCmluZnJhcmVkICYgaW50ZWxsaWdlbnQgc2Vuc29ycw0KU2NobmVsbGVyc3Ry
+YcOfZSAxLTUgfCAxMjQzOSBCZXJsaW4NCg0KaHR0cHM6Ly9pcmlzLXNlbnNpbmcuY29tLw0KDQoN
+Cg0KDQoNCk9uIEZyaSwgMjAyMS0xMS0wNSBhdCAxNToyMCArMDEwMCwgS29ucmFkIFdlaWhtYW5u
+IHdyb3RlOg0KPiANCj4gDQo+IE9uIDA1LjExLjIxIDE1OjA5LCBKYXNwZXIgT3JzY2h1bGtvIHdy
+b3RlOg0KPiA+IEFjdHVhbGx5LCBJIGRvbid0IGJlbGlldmUgdGhpcyB0byBiZSBhbiBpc3N1ZSBm
+b3IgdGhlIGZvbGxvd2luZw0KPiA+IHJlYXNvbnM6DQo+ID4gDQo+ID4gMS4gVGhlIHJlY2lwZSBk
+b2VzIG5vdGhpbmcgbW9yZSB0aGFuIHRha2luZyB0aGUgd3JhcHBlciBzY3JpcHQgYXMgaXMNCj4g
+PiBhbmQgY29weWluZyBpdCB0byB0aGUgc3lzcm9vdC4gQXMgdGhlIHJlcG8gYmluYXJ5IGlzIG5l
+dmVyIGNhbGxlZA0KPiA+IHdoZW4NCj4gPiBidWlsZGluZywgaXQgZG9lcyBub3QgaGF2ZSB0aGUg
+ImNoYW5jZSIgdG8gbG9vayBmb3IgYW4gdXBkYXRlIGR1cmluZw0KPiA+IHRoZSB5b2N0byBvZmZs
+aW5lIGJ1aWxkIHByb2Nlc3MuIFRoZSBvdXRjb21lIG9mIGFuIG9mZmxpbmUgYnVpbGQgaXMNCj4g
+PiB0aGVyZWZvcmUgcHJlZGljdGFibGUuDQo+ID4gDQo+ID4gMi4gV2hlbiB1c2luZyByZXBvIHdp
+dGhpbiB0aGUgeW9jdG8gYnVpbGQgaXRzZWxmICh3aXRoIHRoZSByZXBvDQo+ID4gZmV0Y2hlciks
+IHRoZSByZXBvIGJpbmFyeSBpcyBvbmx5IGV2ZXIgY2FsbGVkIGR1cmluZyB0aGUgZG9fZmV0Y2gN
+Cj4gPiBzdGVwLA0KPiA+IHdoaWNoIG9idmlvdXNseSBoYXMgbm8gaXNzdWVzIHdpdGggYW55IG5l
+dHdvcmsgYWNjZXNzLg0KPiA+IA0KPiDCoD4NCj4gDQo+IE9rYXkgZmluZSB0aGF0IG1ha2VzIHNl
+bnNlLCBldmVuIGlmIGl0IGlzIHN0aWxsIHBob25pbmcgaG9tZS4NCj4gQW5vdGhlciB0aGluZywg
+Y291bGQgeW91IHBsZWFzZSBleGNoYW5nZSAiK1JFUE9fUkVWID0gJ3YyLjE3LjMnIiBmb3IgYSAN
+Cj4gU0hBIHJldmlzaW9uLCBhcyBJIHdvdWxkbid0IGJldCBteSBsaWZlIG9uIGdvb2dsZSBub3Qg
+ZGVsZXRpbmcvcmVtb3ZpbmcNCj4gdGFncyBmcm9tIHRoZWlyIHJlcG9zIC0gYW5kIHVucGxlYXNh
+bnRseSB3ZSB3b3VsZG4ndCBldmVuIG5vdGljZSB0aGF0DQo+IGVhc2lseQ0KLS0tLS1CRUdJTiBQ
+R1AgU0lHTkFUVVJFLS0tLS0NCg0KaVFFekJBRUJDQUFkRmlFRTRXeVBNSUM1QXA0K09vbzFZZ3Fl
+dzA3Vk1OVUZBbUdGUlU0QUNna1FZZ3FldzA3Vg0KTU5YM3l3ZitNUUF3bUg5VFZGMGl6ZlZWSVlo
+d2lUQVNnWkxsRzBwd01CWGZRdzZpSWVXQVhtTzhMY2NKTnJ3Yg0KZmNlVk1GRlhQaTEvMlNqQWRq
+aE96emg1WDd1U0diY1ZUMEcxM1JwZXVZZnNudTdIeUozbjZUQWR6b1hpUXROYQ0KUHFKcVBWc1pC
+RUlwSGlsVFlFWnFQdS9FTkhOcTc0U2ovc1FYcU0wWGpOTVRhSktLVzdTeWM5amJHZEVkbitNVg0K
+Z1U5aU5JUW1ZV0VQU1VTMlRwK2xnRmg5eEMzcVFPUUpaUHBjSjVWM2hXZkFJaWJhUk1lZDRrR2Rk
+M21sSnNZag0KL0FvcSs3Z1hlMWlaT1hCN094WFgrYms3dWVvSENucDdRVVB5V0ZWeHNsS3gvci9m
+YUgrZitQd0htSkhacDBWRA0KZ09yemJqYUlLMkUyQ1ZuUm9iYU9rU2tuSWZmSnpRPT0NCj1UZnor
+DQotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0tLS0NCg==
 
