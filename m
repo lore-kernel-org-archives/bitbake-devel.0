@@ -2,27 +2,26 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9C0C43217
-	for <webhook@archiver.kernel.org>; Fri,  5 Nov 2021 14:42:45 +0000 (UTC)
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net
- [217.70.183.195])
- by mx.groups.io with SMTP id smtpd.web11.6534.1636123364733435536
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9186C4321E
+	for <webhook@archiver.kernel.org>; Fri,  5 Nov 2021 14:42:46 +0000 (UTC)
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net
+ [217.70.183.199])
+ by mx.groups.io with SMTP id smtpd.web10.6381.1636123365303455865
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 05 Nov 2021 07:42:45 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: bootlin.com, ip: 217.70.183.195, mailfrom: michael.opdenacker@bootlin.com)
+ spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: michael.opdenacker@bootlin.com)
 Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id C7DEB6000F;
-	Fri,  5 Nov 2021 14:42:42 +0000 (UTC)
+	by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id DE9C7FF80A;
+	Fri,  5 Nov 2021 14:42:43 +0000 (UTC)
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: docs@lists.yoctoproject.org,
 	Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH 1/2] doc: bitbake-user-manual: add TMPDIR and WORKDIR to the
- variable index
-Date: Fri,  5 Nov 2021 15:42:37 +0100
-Message-Id: <20211105144238.27679-2-michael.opdenacker@bootlin.com>
+Subject: [PATCH 2/2] doc: bitbake-user-manual: expand SRC_URI description
+Date: Fri,  5 Nov 2021 15:42:38 +0100
+Message-Id: <20211105144238.27679-3-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211105144238.27679-1-michael.opdenacker@bootlin.com>
 References: <20211105144238.27679-1-michael.opdenacker@bootlin.com>
@@ -31,129 +30,158 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Nov 2021 14:42:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12901
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Nov 2021 14:42:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12902
 
-This allows to add references to these variables
+From contents from the Yocto Project manual
+Took the opportunity to reorder SRC_URI fetchers and options
+alphabetically.
 
 Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 ---
- .../bitbake-user-manual-execution.rst         |  2 +-
- .../bitbake-user-manual-fetching.rst          |  4 +--
- .../bitbake-user-manual-hello.rst             |  4 +--
- .../bitbake-user-manual-ref-variables.rst     | 28 +++++++++++++++++--
- 4 files changed, 30 insertions(+), 8 deletions(-)
+ .../bitbake-user-manual-ref-variables.rst     | 94 ++++++++++++++-----
+ 1 file changed, 68 insertions(+), 26 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-index a4b1efbe..580503d5 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-@@ -545,7 +545,7 @@ to help illustrate the concept::
-        CCACHE_DIR EXTERNAL_TOOLCHAIN CCACHE CCACHE_DISABLE LICENSE_PATH SDKPKGSUFFIX"
- 
- The previous example excludes the work directory, which is part of
--``TMPDIR``.
-+:term:`TMPDIR`.
- 
- The rules for deciding which hashes of dependent tasks to include
- through dependency chains are more complex and are generally
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index 4396830a..38083e54 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -42,7 +42,7 @@ The instantiation of the fetch class is usually followed by::
-    rootdir = l.getVar('WORKDIR')
-    fetcher.unpack(rootdir)
- 
--This code unpacks the downloaded files to the specified by ``WORKDIR``.
-+This code unpacks the downloaded files to the specified by :term:`WORKDIR`.
- 
- .. note::
- 
-@@ -51,7 +51,7 @@ This code unpacks the downloaded files to the specified by ``WORKDIR``.
-    examine the OpenEmbedded class file ``base.bbclass``
-    .
- 
--The :term:`SRC_URI` and ``WORKDIR`` variables are not hardcoded into the
-+The :term:`SRC_URI` and :term:`WORKDIR` variables are not hardcoded into the
- fetcher, since those fetcher methods can be (and are) called with
- different variable names. In OpenEmbedded for example, the shared state
- (sstate) code uses the fetch module to fetch the sstate files.
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-hello.rst b/doc/bitbake-user-manual/bitbake-user-manual-hello.rst
-index 722dc5a2..0aab6fcd 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-hello.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-hello.rst
-@@ -233,11 +233,11 @@ Following is the complete "Hello World" example.
-        recipe to set PN . You will also need to include PN as part of the STAMP
-        , T , and B variable definitions in the local.conf file.
- 
--    The ``TMPDIR`` variable establishes a directory that BitBake uses
-+    The :term:`TMPDIR` variable establishes a directory that BitBake uses
-     for build output and intermediate files other than the cached
-     information used by the
-     :ref:`bitbake-user-manual/bitbake-user-manual-execution:setscene`
--    process. Here, the ``TMPDIR`` directory is set to ``hello/tmp``.
-+    process. Here, the :term:`TMPDIR` directory is set to ``hello/tmp``.
- 
-     .. tip::
- 
 diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index e955beb1..5abf43d8 100644
+index 5abf43d8..66a65143 100644
 --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
 +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -176,7 +176,7 @@ overview of their function and contents.
-       The first example works only if you also set the
-       :term:`BB_DISKMON_WARNINTERVAL`
-       variable. This example causes the build system to immediately abort
--      when either the disk space in ``${TMPDIR}`` drops below 1 Gbyte or
-+      when either the disk space in :term:`TMPDIR` drops below 1 Gbyte or
-       the available free inodes drops below 100 Kbytes. Because two
-       directories are provided with the variable, the build system also
-       issues a warning when the disk space in the ``${SSTATE_DIR}``
-@@ -185,12 +185,12 @@ overview of their function and contents.
-       defined by the :term:`BB_DISKMON_WARNINTERVAL` variable.
+@@ -1333,67 +1333,109 @@ overview of their function and contents.
+       The list of source files - local or remote. This variable tells
+       BitBake which bits to pull for the build and how to pull them. For
+       example, if the recipe or append file needs to fetch a single tarball
+-      from the Internet, the recipe or append file uses a :term:`SRC_URI` entry
+-      that specifies that tarball. On the other hand, if the recipe or
+-      append file needs to fetch a tarball and include a custom file, the
+-      recipe or append file needs an :term:`SRC_URI` variable that specifies
+-      all those sources.
+-
+-      The following list explains the available URI protocols:
++      from the Internet, the recipe or append file uses a :term:`SRC_URI`
++      entry that specifies that tarball. On the other hand, if the recipe or
++      append file needs to fetch a tarball, apply two patches, and include
++      a custom file, the recipe or append file needs an :term:`SRC_URI`
++      variable that specifies all those sources.
++
++      The following list explains the available URI protocols. URI
++      protocols are highly dependent on particular BitBake Fetcher
++      submodules. Depending on the fetcher BitBake uses, various URL
++      parameters are employed. For specifics on the supported Fetchers, see
++      the :ref:`bitbake-user-manual/bitbake-user-manual-fetching:fetchers`
++      section.
  
-       The second example stops the build after all currently executing
--      tasks complete when the minimum disk space in the ``${TMPDIR}``
-+      tasks complete when the minimum disk space in the :term:`TMPDIR`
-       directory drops below 1 Gbyte. No disk monitoring occurs for the free
-       inodes in this case.
+-      -  ``file://`` : Fetches files, which are usually files shipped
+-         with the metadata, from the local machine. The path is relative to
+-         the :term:`FILESPATH` variable.
++      -  ``az://`` : Fetches files from an Azure Storage account using HTTPS.
  
-       The final example immediately aborts the build when the number of
--      free inodes in the ``${TMPDIR}`` directory drops below 100 Kbytes. No
-+      free inodes in the :term:`TMPDIR` directory drops below 100 Kbytes. No
-       disk space monitoring for the directory itself occurs in this case.
+       -  ``bzr://`` : Fetches files from a Bazaar revision control
+          repository.
  
-    :term:`BB_DISKMON_WARNINTERVAL`
-@@ -1446,6 +1446,28 @@ overview of their function and contents.
-       consist mostly of task logs and scripts, when building a particular
-       recipe.
+-      -  ``git://`` : Fetches files from a Git revision control
++      -  ``ccrc://`` - Fetches files from a ClearCase repository.
++
++      -  ``cvs://`` : Fetches files from a CVS revision control
+          repository.
  
-+   :term:`TMPDIR`
-+      This variable is the base directory BitBake uses for all build output
-+      and intermediate files (other than the shared state cache). By default,
-+      the :term:`TMPDIR` variable points to ``tmp`` within the
-+      Build Directory.
+-      -  ``osc://`` : Fetches files from an OSC (OpenSUSE Build service)
+-         revision control repository.
++      -  ``file://`` - Fetches files, which are usually files shipped
++         with the Metadata, from the local machine.
++         The path is relative to the :term:`FILESPATH`
++         variable. Thus, the build system searches, in order, from the
++         following directories, which are assumed to be a subdirectories of
++         the directory in which the recipe file (``.bb``) or append file
++         (``.bbappend``) resides:
+ 
+-      -  ``repo://`` : Fetches files from a repo (Git) repository.
++         -  ``${BPN}`` - The base recipe name without any special suffix
++            or version numbers.
+ 
+-      -  ``http://`` : Fetches files from the Internet using HTTP.
++         -  ``${BP}`` - ``${BPN}-${PV}``. The base recipe name and
++            version but without any special package name suffix.
+ 
+-      -  ``https://`` : Fetches files from the Internet using HTTPS.
++         -  *files -* Files within a directory, which is named ``files``
++            and is also alongside the recipe or append file.
+ 
+       -  ``ftp://`` : Fetches files from the Internet using FTP.
+ 
+-      -  ``cvs://`` : Fetches files from a CVS revision control
++      -  ``git://`` : Fetches files from a Git revision control
+          repository.
+ 
+       -  ``hg://`` : Fetches files from a Mercurial (``hg``) revision
+          control repository.
+ 
++      -  ``http://`` : Fetches files from the Internet using HTTP.
 +
-+      If you want to establish this directory in a location other than the
-+      default, you can set it in your project's ``local.conf`` file.
++      -  ``https://`` : Fetches files from the Internet using HTTPS.
 +
-+      An example use for this scenario is to set :term:`TMPDIR` to a local disk,
-+      which does not use NFS, while having the Build Directory use NFS.
++      -  ``npm://`` - Fetches JavaScript modules from a registry.
 +
-+      The filesystem used by :term:`TMPDIR` must have standard filesystem
-+      semantics (i.e. mixed-case files are unique, POSIX file locking, and
-+      persistent inodes). Due to various issues with NFS and bugs in some
-+      implementations, NFS does not meet this minimum requirement.
-+      Consequently, :term:`TMPDIR` cannot be on NFS.
++      -  ``osc://`` : Fetches files from an OSC (OpenSUSE Build service)
++         revision control repository.
 +
-    :term:`TOPDIR`
-       Points to the build directory. BitBake automatically sets this
-       variable.
+       -  ``p4://`` : Fetches files from a Perforce (``p4``) revision
+          control repository.
+ 
++      -  ``repo://`` : Fetches files from a repo (Git) repository.
 +
-+   :term:`WORKDIR`
-+      Speficies the working directory in which BitBake builds a recipe.
-+      BitBake automatically sets this variable.
+       -  ``ssh://`` : Fetches files from a secure shell.
+ 
+       -  ``svn://`` : Fetches files from a Subversion (``svn``) revision
+          control repository.
+ 
+-      -  ``az://`` : Fetches files from an Azure Storage account using HTTPS.
+-
+       Here are some additional options worth mentioning:
+ 
+-      -  ``unpack`` : Controls whether or not to unpack the file if it is
+-         an archive. The default action is to unpack the file.
++      -  ``destsuffix`` - Places the file (or extracts its contents) into
++         the specified subdirectory of :term:`WORKDIR` when
++         the Git fetcher is used. When the Npm fetcher is used, it specifies
++         the directory to use to unpack the dependencies.
++
++      -  ``downloadfilename`` : Specifies the filename used when storing
++         the downloaded file.
++
++      -  ``localdir`` - Places the file (or extracts its contents) into
++         the specified subdirectory of :term:`WORKDIR` when the CVS fetcher is
++         used.
++
++      -  ``name`` - Specifies a name to be used for association with
++         :term:`SRC_URI` checksums or :term:`SRCREV` when you have more than one
++         file or git repository specified in :term:`SRC_URI`. For example::
++
++            SRC_URI = "git://example.com/foo.git;name=first \
++                       git://example.com/bar.git;name=second \
++                       http://example.com/file.tar.gz;name=third"
++
++            SRCREV_first = "f1d2d2f924e986ac86fdf7b36c94bcdf32beec15"
++            SRCREV_second = "e242ed3bffccdf271b7fbaf34ed72d089537b42f"
++            SRC_URI[third.sha256sum] = "13550350a8681c84c861aac2e5b440161c2b33a3e4f302ac680ca5b686de48de"
+ 
+       -  ``subdir`` : Places the file (or extracts its contents) into the
+          specified subdirectory. This option is useful for unusual tarballs
+          or other archives that do not have their files already in a
+          subdirectory within the archive.
+ 
+-      -  ``name`` : Specifies a name to be used for association with
+-         :term:`SRC_URI` checksums when you have more than one file specified
+-         in :term:`SRC_URI`.
++      -  ``subpath`` - Limits the checkout to a specific subpath of the
++         tree when using the Git fetcher is used.
+ 
+-      -  ``downloadfilename`` : Specifies the filename used when storing
+-         the downloaded file.
++      -  ``unpack`` : Controls whether or not to unpack the file if it is
++         an archive. The default action is to unpack the file.
+ 
+    :term:`SRCDATE`
+       The date of the source code used to build the package. This variable
 -- 
 2.25.1
 
