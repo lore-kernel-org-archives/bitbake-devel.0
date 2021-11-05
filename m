@@ -1,224 +1,862 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3018C433F5
-	for <webhook@archiver.kernel.org>; Fri,  5 Nov 2021 17:07:52 +0000 (UTC)
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web11.8582.1636132070929223170
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF57C433F5
+	for <webhook@archiver.kernel.org>; Fri,  5 Nov 2021 17:43:10 +0000 (UTC)
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com
+ [209.85.221.177])
+ by mx.groups.io with SMTP id smtpd.web10.9036.1636134189426291203
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Nov 2021 10:07:52 -0700
+ Fri, 05 Nov 2021 10:43:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=oPlvU3x6;
- spf=pass (domain: axis.com, ip: 195.60.68.18,
- mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=E0tr2f5G;
+ spf=pass (domain: gmail.com, ip: 209.85.221.177,
+ mailfrom: alex.kanavin@gmail.com)
+Received: by mail-vk1-f177.google.com with SMTP id h133so4971650vke.10
+        for <bitbake-devel@lists.openembedded.org>;
+ Fri, 05 Nov 2021 10:43:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1636132071;
-  x=1667668071;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=1S83Al7WVS8pJ7S66aWKUDV6SdttBedHn1RpktocUmQ=;
-  b=oPlvU3x6Zn0qfm3AzLDRsMHSlEOWsQ5VHRdU+pr59vDHA6ucqCl47809
-   6Ag/evcRDWG43WQqxRnWclE358IX56Xw0WpG4X+qkCr1Y1xXDRpjh++nU
-   M9r0rMo4DP9jhy7Lb+O/idgtlV5gKrBWVHYwq1lf+RIbZM6ZrT8h9RTsv
-   msIsiG0TlNf6reClnVMBdq6kRsnMNiPHaVyTplpIaHWN89ctX5sjY4m6w
-   BWBFGlAuISCEfOeV+IJViChSwAXrtDjpFt45aUX6+y84iUmYNhdkBWKZ9
-   ZtK8WGRHI4TmhYmd1+3bEln4OkNrNcLD6MFs7pBw4Z9MKxgWGEIlRrJEo
-   w==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>,
-	"openembedded-core@lists.openembedded.org"
-	<openembedded-core@lists.openembedded.org>, "jasper@fancydomain.eu"
-	<jasper@fancydomain.eu>
-CC: "martin@mko.dev" <martin@mko.dev>, Daniel Baumgart
-	<Daniel.Baumgart@iris-sensing.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [oe-core][PATCH v2 1/2] devtools: Initial recipe
- for repo 2.17.3
-Thread-Topic: [bitbake-devel] [oe-core][PATCH v2 1/2] devtools: Initial recipe
- for repo 2.17.3
-Thread-Index: AQHX0lpRAkuEghAQsEel2yEQ1F7DYav1Fh8w///5zYCAABo1IA==
-Date: Fri, 5 Nov 2021 17:07:48 +0000
-Message-ID: <c24d0f819d2c4100bca2984f9425f784@axis.com>
-References: <20211105153135.26033-1-jasper@fancydomain.eu>
-	 <361859de452742cdbd666b45babcbf51@axis.com>
- <b29ee121a5e17b03e8b803594a81e3f6190d8a88.camel@iris-sensing.com>
-In-Reply-To: <b29ee121a5e17b03e8b803594a81e3f6190d8a88.camel@iris-sensing.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r4p5N333jsHsUtScQxhC97StV7EruoO8CzHH1PA8n7o=;
+        b=E0tr2f5GqE1R+c3rAuwPPYvCQuNfVWazXp9YHaz7bGNwvVsvZ0y8j6cImbE3xpw8z4
+         aKbZ4lQuikubSngbKrePcYwAO9PruefuTFtLxG0KZCKj6B22C7gNMJFBzkmSiInNH+Fx
+         qEVd1YgITvF9tICCdPD7AU950emgPunyFNZXHMMrbSn4eTcZqBM9TbdZ8p9qdJGVomXC
+         LViZxxyi62awbUIsqdGZppT/f+bJwePeKK9pHLu/SZogwKBptsEJGE/as2mNFcrdYxRv
+         0bVtoY3O/rRGl2S4pKo0GA0d1hyQv6Tp71ZEH9nCbJrEB7JD0iN1nJPhynJHRC/5AqiH
+         /GRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r4p5N333jsHsUtScQxhC97StV7EruoO8CzHH1PA8n7o=;
+        b=5WlwqEsym1gVxOwJPDI4dvLiwIyHoSwx7apEQOciYMyNQ/PKtAx2oJC2BgLfYlCdGE
+         +9jJ/AePG3lPEiLdimp9DLTsMXn62M4cUrlVZwVQWq6gz26IuXVnJAcCq19U6TDZ60ip
+         5qmONymuHIQq4K3ZU5TkjNCR9EYjVQvrKZUdgCteJnQ9MRrHjbsTnXZHmDfWBkqAvyqf
+         PeB7Z2AxgMPsL/+qB43cjY//HfaxF515ckH3wjM/1oHwHk1HxK2eOin48HJix2bwFyD2
+         Dh2blY9qnLRXtnOy8KgooDS3qC8/VlT766bFn2oBA7Q919JDLXh4ciUKV2OgPUoYqHJI
+         7ZtQ==
+X-Gm-Message-State: AOAM5314uuKZx41jwystJXpfNFWU1wlMviRX1pee1JyUPT/JBBy3eA1J
+	5YYqDZnw6viKdb7vt2w7cdLkV/Dhysdqx1XuCIU=
+X-Google-Smtp-Source: 
+ ABdhPJxakVwfalTBcvS9gHG80QFB4s5tG5XA+JUcb+AAe2uPNJYt1NvgONzC10IsAjjyTd7Y3exJhStE5T5scq7g3Jo=
+X-Received: by 2002:a05:6122:a18:: with SMTP id
+ 24mr59680616vkn.6.1636134188369;
+ Fri, 05 Nov 2021 10:43:08 -0700 (PDT)
 MIME-Version: 1.0
+References: <1c7d6bb2479af789132b3e94c44a54f1d1b5c304.camel@iris-sensing.com>
+ <0b63fba531fc94bbe915dfc9915c0a2f42ad3ce9.camel@linuxfoundation.org>
+ <42a0350d-991a-731d-29c2-83cd62da8c7b@weidmueller.com>
+ <CAAdc0hwA12CiWHCXQV=MBHv-h=vopK7of3CUViR58fJ8k2rK1g@mail.gmail.com>
+ <3556fec928b8b3f86c1a08b3cb4e2a2fb708cc9c.camel@iris-sensing.com>
+In-Reply-To: <3556fec928b8b3f86c1a08b3cb4e2a2fb708cc9c.camel@iris-sensing.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 5 Nov 2021 18:42:57 +0100
+Message-ID: 
+ <CANNYZj9HgB29QnXcqt9ymJiJka6QRu3kERZ3gfEgqV5ZfOACOQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] Improving npm(sw) fetcher & integration within
+ Bitbake
+To: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+Cc: "stefan.herbrechtsmeier-oss@weidmueller.com"
+ <stefan.herbrechtsmeier-oss@weidmueller.com>,
+	"jeanmarie.lemetayer@gmail.com" <jeanmarie.lemetayer@gmail.com>,
+	"richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org"
+ <bitbake-devel@lists.openembedded.org>, "martin@mko.dev" <martin@mko.dev>,
+	Daniel Baumgart <Daniel.Baumgart@iris-sensing.com>
+Content-Type: multipart/alternative; boundary="0000000000001a49c305d00e2d68"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Nov 2021 17:07:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12914
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Nov 2021 17:43:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12915
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYXNwZXIgT3JzY2h1bGtvIDxK
-YXNwZXIuT3JzY2h1bGtvQGlyaXMtc2Vuc2luZy5jb20+DQo+IFNlbnQ6IGRlbiA1IG5vdmVtYmVy
-IDIwMjEgMTc6MzINCj4gVG86IG9wZW5lbWJlZGRlZC1jb3JlQGxpc3RzLm9wZW5lbWJlZGRlZC5v
-cmc7IFBldGVyIEtqZWxsZXJzdGVkdA0KPiA8cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPjsg
-amFzcGVyQGZhbmN5ZG9tYWluLmV1DQo+IENjOiBtYXJ0aW5AbWtvLmRldjsgRGFuaWVsIEJhdW1n
-YXJ0IDxEYW5pZWwuQmF1bWdhcnRAaXJpcy1zZW5zaW5nLmNvbT47DQo+IGJpdGJha2UtZGV2ZWxA
-bGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiBTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFtv
-ZS1jb3JlXVtQQVRDSCB2MiAxLzJdIGRldnRvb2xzOiBJbml0aWFsDQo+IHJlY2lwZSBmb3IgcmVw
-byAyLjE3LjMNCj4gDQo+IC0tLS0tQkVHSU4gUEdQIFNJR05FRCBNRVNTQUdFLS0tLS0NCj4gSGFz
-aDogU0hBMjU2DQo+IA0KPiBIaSBQZXRlciwNCj4gDQo+ID4gQ2hhbmdlIHRvIFJERVBFTkRTOiR7
-UE59IGFuZCBtb3ZlIGl0IHRvIGJldHdlZW4gZG9faW5zdGFsbCgpIGFuZA0KPiA+IEJCQ0xBU1NF
-WFRFTkQuDQo+IA0KPiBXaGF0IGRvZXMgdGhpcyBkbz8gVGhlIFlvY3RvIG1hbnVhbCBvbmx5IG1l
-bnRpb25zIFJERVBFTkRTXyR7UE59Lg0KDQpUaGUgc3ludGF4IGZvciBiaXRiYWtlIHZhcmlhYmxl
-IG92ZXJyaWRlcyB3ZXJlIGNoYW5nZWQgd2l0aCB0aGUgDQpIb25pc3RlciByZWxlYXNlLCBzZWU6
-IA0KDQpodHRwczovL2RvY3MueW9jdG9wcm9qZWN0Lm9yZy8zLjQvbWlncmF0aW9uLWd1aWRlcy9t
-aWdyYXRpb24tMy40Lmh0bWwjb3ZlcnJpZGUtc3ludGF4LWNoYW5nZXMNCg0KLy9QZXRlcg0KDQo+
-IA0KPiBhY2sgdG8gdGhlIHJlc3QuDQo+IA0KPiAtIC0tDQo+IFdpdGggYmVzdCByZWdhcmRzDQo+
-IA0KPiBKYXNwZXIgT3JzY2h1bGtvDQo+IERldk9wcyBFbmdpbmVlcg0KPiANCj4gVGVsLiArNDkg
-MzAgNTggNTggMTQgMjY1DQo+IEZheCArNDkgMzAgNTggNTggMTQgOTk5DQo+IEphc3Blci5PcnNj
-aHVsa29AaXJpcy1zZW5zaW5nLmNvbQ0KPiANCj4g4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCi
-IOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg
-4oCiIOKAoiDigKIg4oCiIOKAog0KPiANCj4gaXJpcy1HbWJIDQo+IGluZnJhcmVkICYgaW50ZWxs
-aWdlbnQgc2Vuc29ycw0KPiBTY2huZWxsZXJzdHJhw59lIDEtNSB8IDEyNDM5IEJlcmxpbg0KPiAN
-Cj4gaHR0cHM6Ly9pcmlzLXNlbnNpbmcuY29tLw0KPiANCj4gDQo+IA0KPiANCj4gDQo+IE9uIEZy
-aSwgMjAyMS0xMS0wNSBhdCAxNjoxMSArMDAwMCwgUGV0ZXIgS2plbGxlcnN0ZWR0IHdyb3RlOg0K
-PiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206DQo+ID4gPiBiaXRi
-YWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmfCoDxiaXRiYWtlLQ0KPiBkZXZlbEBsaXN0
-cy5vcGVuZW1iZWRkZWQub3JnDQo+ID4gPiA+IE9uIEJlaGFsZiBPZiBKYXNwZXIgT3JzY2h1bGtv
-IHZpYSBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQo+ID4gPiBTZW50OiBkZW4gNSBub3ZlbWJlciAy
-MDIxIDE2OjMyDQo+ID4gPiBUbzogb3BlbmVtYmVkZGVkLWNvcmVAbGlzdHMub3BlbmVtYmVkZGVk
-Lm9yZw0KPiA+ID4gQ2M6IG1hcnRpbkBta28uZGV2OyBEYW5pZWwuQmF1bWdhcnRAaXJpcy1zZW5z
-aW5nLmNvbTsNCj4gPiA+IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzsgSmFz
-cGVyIE9yc2NodWxrbw0KPiA+ID4gPEphc3Blci5PcnNjaHVsa29AaXJpcy1zZW5zaW5nLmNvbT4N
-Cj4gPiA+IFN1YmplY3Q6IFtiaXRiYWtlLWRldmVsXSBbb2UtY29yZV1bUEFUQ0ggdjIgMS8yXSBk
-ZXZ0b29sczogSW5pdGlhbA0KPiA+ID4gcmVjaXBlIGZvciByZXBvIDIuMTcuMw0KPiA+DQo+ID4g
-Q2hhbmdlIHRoZSBHaXQgc3ViamVjdCB0bzoNCj4gPg0KPiA+IHJlcG86IEFkZCByZWNpcGUgZm9y
-IDIuMTcuMw0KPiA+DQo+ID4gPg0KPiA+ID4gRnJvbTogSmFzcGVyIE9yc2NodWxrbyA8SmFzcGVy
-Lk9yc2NodWxrb0BpcmlzLXNlbnNpbmcuY29tPg0KPiA+ID4NCj4gPiA+IEFkZCBhIHJlY2lwZSBm
-b3IgcmVwbywgcHJlcmVxdWlzaXRlIGZvciB0aGUgcmVwbyBmZXRjaGVyLg0KPiA+ID4NCj4gPiA+
-IFNpZ25lZC1vZmYtYnk6IEphc3BlciBPcnNjaHVsa28gPEphc3Blci5PcnNjaHVsa29AaXJpcy1z
-ZW5zaW5nLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gwqAuLi4vcmVwby9maWxlcy8wMDAxLXB5dGhv
-bjMtc2hlYmFuZy5wYXRjaMKgwqDCoMKgIHwgMjEgKysrKysrKysrKysrDQo+ID4gPiDCoC4uLi8w
-MDAxLVNldC1SRVBPX1JFVi10by12Mi4xNy4zLnBhdGNowqDCoMKgwqDCoMKgwqAgfCAzMw0KPiA+
-ID4gKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gwqBtZXRhL3JlY2lwZXMtZGV2dG9vbHMvcmVw
-by9yZXBvLmluY8KgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMjUgKysrKysrKysrKysrKysNCj4gPiA+
-IMKgbWV0YS9yZWNpcGVzLWRldnRvb2xzL3JlcG8vcmVwb18yLjE3LjMuYmLCoMKgwqDCoCB8wqAg
-NyArKysrDQo+ID4gPiDCoDQgZmlsZXMgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygrKQ0KPiA+ID4g
-wqBjcmVhdGUgbW9kZSAxMDA2NDQgbWV0YS9yZWNpcGVzLWRldnRvb2xzL3JlcG8vZmlsZXMvMDAw
-MS1weXRob24zLQ0KPiA+ID4gc2hlYmFuZy5wYXRjaA0KPiA+ID4gwqBjcmVhdGUgbW9kZSAxMDA2
-NDQgbWV0YS9yZWNpcGVzLWRldnRvb2xzL3JlcG8vcmVwby0yLjE3LjMvMDAwMS1TZXQtDQo+ID4g
-PiBSRVBPX1JFVi10by12Mi4xNy4zLnBhdGNoDQo+ID4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBt
-ZXRhL3JlY2lwZXMtZGV2dG9vbHMvcmVwby9yZXBvLmluYw0KPiA+ID4gwqBjcmVhdGUgbW9kZSAx
-MDA2NDQgbWV0YS9yZWNpcGVzLWRldnRvb2xzL3JlcG8vcmVwb18yLjE3LjMuYmINCj4gPiA+DQo+
-ID4gPiBkaWZmIC0tZ2l0IGEvbWV0YS9yZWNpcGVzLWRldnRvb2xzL3JlcG8vZmlsZXMvMDAwMS1w
-eXRob24zLQ0KPiA+ID4gc2hlYmFuZy5wYXRjaCA+IGIvbWV0YS9yZWNpcGVzLWRldnRvb2xzL3Jl
-cG8vZmlsZXMvMDAwMS1weXRob24zLQ0KPiA+ID4gc2hlYmFuZy5wYXRjaA0KPiA+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gPiA+IGluZGV4IDAwMDAwMDAwMDAuLjA5Y2NmNTgyNjQNCj4gPiA+
-IC0tLSAvZGV2L251bGwNCj4gPiA+ICsrKyBiL21ldGEvcmVjaXBlcy1kZXZ0b29scy9yZXBvL2Zp
-bGVzLzAwMDEtcHl0aG9uMy1zaGViYW5nLnBhdGNoDQo+ID4gPiBAQCAtMCwwICsxLDIxIEBADQo+
-ID4gPiArRnJvbSBiOGU4NGIyMDJjZDMwMmE3Yzk5Mjg4ZDM4MzVkYzljNjMwNzFmOGYyIE1vbiBT
-ZXAgMTcgMDA6MDA6MDANCj4gPiA+IDIwMDENCj4gPiA+ICtGcm9tOiBKYXNwZXIgT3JzY2h1bGtv
-IDxKYXNwZXIuT3JzY2h1bGtvQGlyaXMtc2Vuc2luZy5jb20+DQo+ID4gPiArRGF0ZTogVHVlLCAx
-NCBTZXAgMjAyMSAxNjo0Njo1MSArMDIwMA0KPiA+ID4gK1N1YmplY3Q6IFtQQVRDSF0gcHl0aG9u
-MyBzaGViYW5nDQo+ID4gPiArDQo+ID4gPiArLS0tDQo+ID4gPiArIHJlcG8gfCAyICstDQo+ID4g
-PiArIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4g
-Kw0KPiA+ID4gK2RpZmYgLS1naXQgYS9yZXBvIGIvcmVwbw0KPiA+ID4gK2luZGV4IGIxM2UzNGMu
-LjIwNWUwZTUgMTAwNzU1DQo+ID4gPiArLS0tIGEvcmVwbw0KPiA+ID4gKysrKyBiL3JlcG8NCj4g
-PiA+ICtAQCAtMSw0ICsxLDQgQEANCj4gPiA+ICstIyEvdXNyL2Jpbi9lbnYgcHl0aG9uDQo+ID4g
-PiArKyMhL3Vzci9iaW4vZW52IHB5dGhvbjMNCj4gPiA+ICsgIyAtKi0gY29kaW5nOnV0Zi04IC0q
-LQ0KPiA+ID4gKyAjDQo+ID4gPiArICMgQ29weXJpZ2h0IChDKSAyMDA4IFRoZSBBbmRyb2lkIE9w
-ZW4gU291cmNlIFByb2plY3QNCj4gPiA+ICstLQ0KPiA+ID4gKzIuMzMuMA0KPiA+ID4gZGlmZiAt
-LWdpdCBhL21ldGEvcmVjaXBlcy1kZXZ0b29scy9yZXBvL3JlcG8tMi4xNy4zLzAwMDEtU2V0LQ0K
-PiA+ID4gUkVQT19SRVYtdG8tdjIuMTcuMy5wYXRjaCBiL21ldGEvcmVjaXBlcy1kZXZ0b29scy9y
-ZXBvL3JlcG8tDQo+ID4gPiAyLjE3LjMvMDAwMS1TZXQtUkVQT19SRVYtdG8tdjIuMTcuMy5wYXRj
-aA0KPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+IGluZGV4IDAwMDAwMDAwMDAuLjRk
-NzZiZmM1ZDINCj4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ICsrKyBiL21ldGEvcmVjaXBlcy1k
-ZXZ0b29scy9yZXBvL3JlcG8tMi4xNy4zLzAwMDEtU2V0LVJFUE9fUkVWLXRvLQ0KPiA+ID4gdjIu
-MTcuMy5wYXRjaA0KPiA+ID4gQEAgLTAsMCArMSwzMyBAQA0KPiA+ID4gK0Zyb20gYmRkMmE1Mjhk
-YTU5YzI4ZGI4YWUyOTg2ODM0OTI2ZGU3Y2ViZjNhYiBNb24gU2VwIDE3IDAwOjAwOjAwDQo+ID4g
-PiAyMDAxDQo+ID4gPiArRnJvbTogSmFzcGVyIE9yc2NodWxrbyA8SmFzcGVyLk9yc2NodWxrb0Bp
-cmlzLXNlbnNpbmcuY29tPg0KPiA+ID4gK0RhdGU6IFRodSwgNCBOb3YgMjAyMSAxNjo1NToxMiAr
-MDEwMA0KPiA+ID4gK1N1YmplY3Q6IFtQQVRDSF0gU2V0IFJFUE9fUkVWIHRvIHYyLjE3LjMNCj4g
-PiA+ICsNCj4gPiA+ICtyZXBvIGlzIGFuIHVudXN1YWwgdG9vbCBiZWNhdXNlIGl0IGRvd25sb2Fk
-cyBhbGwgb2YgaXRzIG93biBQeXRob24NCj4gPiA+IG1vZHVsZXMNCj4gPiA+ICt1c2luZyBHUEct
-c2lnbmVkIGdpdCB0YWdzLCBhbmQgc3RvcmVzIHRob3NlIGZpbGVzIGFzIHBhcnQgb2YgdGhlDQo+
-ID4gPiBwcm9qZWN0DQo+ID4gPiArdGhhdCBpdCBpcyB3b3JraW5nIHdpdGguDQo+ID4gPiArDQo+
-ID4gPiArU28gaW4gb3JkZXIgdG8gaGF2ZSBhIHJlcHJvZHVjaWJsZSByZXBvIGluc3RhbGxhdGlv
-biB3aXRoaW4gdGhlDQo+ID4gPiBwcm9qZWN0DQo+ID4gPiArZm9sZGVycywgd2UgaGFyZGNvZGUg
-dGhlIFJFUE9fUkVWIHZhcmlhYmxlIHRvIHRoaXMgcmVjaXBlcyBQVi4NCj4gPg0KPiA+IENoYW5n
-ZSAidGhpcyByZWNpcGVzIFBWIiB0byAiYSBTSEExIHRoYXQgY29ycmVzcG9uZHMgdG8gdGhlIHZl
-cnNpb24NCj4gPiBvZiB0aGUgcmVjaXBlLiINCj4gPg0KPiA+ID4gKw0KPiA+ID4gK1Vwc3RyZWFt
-LVN0YXR1czogSW5hcHByb3ByaWF0ZSBbY29uZmlndXJhdGlvbl0NCj4gPiA+ICtTaWduZWQtb2Zm
-LWJ5OiBKYXNwZXIgT3JzY2h1bGtvIDxKYXNwZXIuT3JzY2h1bGtvQGlyaXMtc2Vuc2luZy5jb20+
-DQo+ID4gPiArLS0tDQo+ID4gPiArIHJlcG8gfCAyICstDQo+ID4gPiArIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4gKw0KPiA+ID4gK2RpZmYgLS1n
-aXQgYS9yZXBvIGIvcmVwbw0KPiA+ID4gK2luZGV4IDRjZGRiZjEuLmNmNWY2YjEgMTAwNzU1DQo+
-ID4gPiArLS0tIGEvcmVwbw0KPiA+ID4gKysrKyBiL3JlcG8NCj4gPiA+ICtAQCAtMTQyLDcgKzE0
-Miw3IEBAIGlmIF9fbmFtZV9fID09ICdfX21haW5fXyc6DQo+ID4gPiArIFJFUE9fVVJMID0gb3Mu
-ZW52aXJvbi5nZXQoJ1JFUE9fVVJMJywgTm9uZSkNCj4gPiA+ICsgaWYgbm90IFJFUE9fVVJMOg0K
-PiA+ID4gK8KgwqAgUkVQT19VUkwgPSAnaHR0cHM6Ly9nZXJyaXQuZ29vZ2xlc291cmNlLmNvbS9n
-aXQtcmVwbycNCj4gPiA+ICstUkVQT19SRVYgPSBvcy5lbnZpcm9uLmdldCgnUkVQT19SRVYnKQ0K
-PiA+ID4gKytSRVBPX1JFViA9ICcxMWIzMGI5MWRmMWYwZTAzYjUzZGE5NzBlYzI1ODhlODU4MTdi
-YWNjJw0KPiA+ID4gKyBpZiBub3QgUkVQT19SRVY6DQo+ID4gPiArwqDCoCBSRVBPX1JFViA9ICdz
-dGFibGUnDQo+ID4gPiArICMgVVJMIHRvIGZpbGUgYnVnIHJlcG9ydHMgZm9yIHJlcG8gdG9vbCBp
-c3N1ZXMuDQo+ID4gPiArLS0NCj4gPiA+ICsyLjMzLjENCj4gPiA+IGRpZmYgLS1naXQgYS9tZXRh
-L3JlY2lwZXMtZGV2dG9vbHMvcmVwby9yZXBvLmluYyBiL21ldGEvcmVjaXBlcy0NCj4gPiA+IGRl
-dnRvb2xzL3JlcG8vcmVwby5pbmMNCj4gPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gPiBp
-bmRleCAwMDAwMDAwMDAwLi42MGIzMmU0ZDc0DQo+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiAr
-KysgYi9tZXRhL3JlY2lwZXMtZGV2dG9vbHMvcmVwby9yZXBvLmluYw0KPiA+ID4gQEAgLTAsMCAr
-MSwyNSBAQA0KPiA+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVA0KPiA+ID4gKyMg
-Q29weXJpZ2h0IChDKSAyMDIxIGlyaXMtR21iSCBpbmZyYXJlZCAmIGludGVsbGlnZW50IHNlbnNv
-cnMNCj4gPiA+ICsNCj4gPiA+ICtTVU1NQVJZID0gIlRvb2wgZm9yIG1hbmFnaW5nIG1hbnkgR2l0
-IHJlcG9zaXRvcmllcyINCj4gPiA+ICtERVNDUklQVElPTiA9ICJSZXBvIGlzIGEgdG9vbCBidWls
-dCBvbiB0b3Agb2YgR2l0LiBSZXBvIGhlbHBzIG1hbmFnZQ0KPiA+ID4gbWFueSBHaXQgcmVwb3Np
-dG9yaWVzLCBkb2VzIHRoZSB1cGxvYWRzIHRvIHJldmlzaW9uIGNvbnRyb2wgc3lzdGVtcywNCj4g
-PiA+IGFuZCBhdXRvbWF0ZXMgcGFydHMgb2YgdGhlIGRldmVsb3BtZW50IHdvcmtmbG93LiINCj4g
-PiA+ICtIT01FUEFHRSA9ICJodHRwczovL2FuZHJvaWQuZ29vZ2xlc291cmNlLmNvbS90b29scy9y
-ZXBvIg0KPiA+ID4gK1NFQ1RJT04gPSAiY29uc29sZS91dGlscyINCj4gPiA+ICsNCj4gPiA+ICtM
-SUNFTlNFID0gIkFwYWNoZS0yLjAiDQo+ID4gPiArDQo+ID4gPiArU1JDX1VSSSA9ICJnaXQ6Ly9n
-aXRAZ2Vycml0Lmdvb2dsZXNvdXJjZS5jb20vZ2l0LQ0KPiA+ID4gcmVwby5naXQ7cHJvdG9jb2w9
-aHR0cHM7YnJhbmNoPW1haW4iDQo+ID4NCj4gPiBJIGRvIG5vdCB0aGluayB5b3UgbmVlZCB0byBz
-cGVjaWZ5ICJnaXRAIiBmb3IgdGhpcyBVUkwuDQo+ID4NCj4gPiA+ICtNSVJST1JTID0gImdpdDov
-L2dpdEBnZXJyaXQuZ29vZ2xlc291cmNlLmNvbS9naXQtcmVwby5naXQNCj4gPiA+IGdpdDovL2dp
-dGh1Yi5jb20vR2Vycml0Q29kZVJldmlldy9naXQtcmVwby5naXQgXG4iDQo+ID4NCj4gPiBJdCBp
-cyBwcm9iYWJseSBiZXR0ZXIgdG8gdXNlICs9IGFuZCBhZGQgdG8gTUlSUk9SUy4NCj4gPg0KPiA+
-ID4gKw0KPiA+ID4gK1NSQ19VUkkgKz0gImZpbGU6Ly8wMDAxLXB5dGhvbjMtc2hlYmFuZy5wYXRj
-aCINCj4gPg0KPiA+IEkgd291bGQgcmV3cml0ZSB0aGUgYWJvdmUgbGluZXMgYXM6DQo+ID4NCj4g
-PiBTUkNfVVJJID0gImdpdDovL2dlcnJpdC5nb29nbGVzb3VyY2UuY29tL2dpdC0NCj4gPiByZXBv
-LmdpdDtwcm90b2NvbD1odHRwczticmFuY2g9bWFpbiINCj4gPiBTUkNfVVJJICs9ICJmaWxlOi8v
-MDAwMS1weXRob24zLXNoZWJhbmcucGF0Y2giDQo+ID4NCj4gPiBNSVJST1JTICs9ICJnaXQ6Ly9n
-ZXJyaXQuZ29vZ2xlc291cmNlLmNvbS9naXQtcmVwby5naXQNCj4gPiBnaXQ6Ly9naXRodWIuY29t
-L0dlcnJpdENvZGVSZXZpZXcvZ2l0LXJlcG8uZ2l0IFxuIg0KPiA+DQo+ID4gPiArDQo+ID4gPiAr
-UyA9ICIke1dPUktESVJ9L2dpdCINCj4gPiA+ICsNCj4gPiA+ICtSREVQRU5EU18ke1BOfSA9ICJw
-eXRob24zIg0KPiA+DQo+ID4gQ2hhbmdlIHRvIFJERVBFTkRTOiR7UE59IGFuZCBtb3ZlIGl0IHRv
-IGJldHdlZW4gZG9faW5zdGFsbCgpIGFuZA0KPiA+IEJCQ0xBU1NFWFRFTkQuDQo+ID4NCj4gPiA+
-ICsNCj4gPiA+ICtkb19pbnN0YWxsKCkgew0KPiA+ID4gK8KgwqDCoCBpbnN0YWxsIC1kICR7RH0k
-e2JpbmRpcn0NCj4gPiA+ICvCoMKgwqAgaW5zdGFsbCAtbSA3NTUgJHtXT1JLRElSfS9naXQvcmVw
-byAke0R9JHtiaW5kaXJ9DQo+ID4NCj4gPiBVc2UgdGFicyB0byBpbmRlbnQgc2hlbGwgY29kZSBp
-biBPRS1Db3JlLiBZb3UgY2FuIGFsc28gcmVtb3ZlICItbSA3NTUiDQo+ID4gYXMgdGhhdCBpcyB0
-aGUgZGVmYXVsdCBmb3IgaW5zdGFsbC4NCj4gPg0KPiA+ID4gK30NCj4gPiA+ICsNCj4gPiA+ICtC
-QkNMQVNTRVhURU5EID0gIm5hdGl2ZSBuYXRpdmVzZGsiDQo+ID4gPiBkaWZmIC0tZ2l0IGEvbWV0
-YS9yZWNpcGVzLWRldnRvb2xzL3JlcG8vcmVwb18yLjE3LjMuYmINCj4gPiA+IGIvbWV0YS9yZWNp
-cGVzLWRldnRvb2xzL3JlcG8vcmVwb18yLjE3LjMuYmINCj4gPiA+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0DQo+ID4gPiBpbmRleCAwMDAwMDAwMDAwLi5jMjYyNjRiOWU5DQo+ID4gPiAtLS0gL2Rldi9u
-dWxsDQo+ID4gPiArKysgYi9tZXRhL3JlY2lwZXMtZGV2dG9vbHMvcmVwby9yZXBvXzIuMTcuMy5i
-Yg0KPiA+ID4gQEAgLTAsMCArMSw3IEBADQo+ID4gPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
-cjogTUlUDQo+ID4gPiArIyBDb3B5cmlnaHQgKEMpIDIwMjEgaXJpcy1HbWJIIGluZnJhcmVkICYg
-aW50ZWxsaWdlbnQgc2Vuc29ycw0KPiA+ID4gKw0KPiA+ID4gK3JlcXVpcmUgcmVjaXBlcy1kZXZ0
-b29scy9yZXBvL3JlcG8uaW5jDQo+ID4NCj4gPiBNZXJnZSB0aGUgcmVwby5pbmMgd2l0aCB0aGUg
-cmVjaXBlIGFzIHRoZXJlIGlzIG9ubHkgb25lIHVzZXIgb2YgaXQuDQo+ID4NCj4gPiA+ICsNCj4g
-PiA+ICtTUkNSRVYgPSAiMTFiMzBiOTFkZjFmMGUwM2I1M2RhOTcwZWMyNTg4ZTg1ODE3YmFjYyIN
-Cj4gPiA+ICtMSUNfRklMRVNfQ0hLU1VNID0NCj4gPiA+ICJmaWxlOi8vTElDRU5TRTttZDU9M2I4
-M2VmOTYzODdmMTQ2NTVmYzg1NGRkYzNjNmJkNTciDQo+ID4gPiAtLQ0KPiA+ID4gMi4zMy4xDQo+
-ID4NCj4gPiAvL1BldGVyDQo+ID4NCj4gLS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0NCj4g
-DQo+IGlRRXpCQUVCQ0FBZEZpRUU0V3lQTUlDNUFwNCtPb28xWWdxZXcwN1ZNTlVGQW1HRlhKQUFD
-Z2tRWWdxZXcwN1YNCj4gTU5WeDF3ZitKNWZYbDZTbEMyQzRONkY0OGZueFcwYks0dit4YUtlVWps
-UUo2b04yaTZTREFnSEtpeDU0U09oeg0KPiB6OFJiZXBVM0dIaWtTazIvR1huL2NYNmdOekc4c3hC
-ZkFiaFQwTWVUamlKRWZiaHV5cVlXbzNXK2k1dDhOUHVMDQo+IDc2R201eWE0bGpuQVRJdEFoSWdC
-QzFXeUdncWJwTUNhakI4MmdMdzFYRUM2bWxENGZVb21hMlNCSVdmR2g5NHkNCj4gamJVNml4VUtG
-MHVsbVN5SzJxMjB5elhqcTZqZCsrU2hEYVllU1B4NVAxczBDMU5lV29UTThsbGFhYWduSjNSMQ0K
-PiBDbmovdUZWZmY3YTQ2aTR5ZDRwYks2bzRvajhzTm9CY0JwUmtYOXN6SEJGNHhBTEY5djZzQUFE
-NHFrWXRHd3EwDQo+IEN3TjNwc3V0WTFvcDRoSFM0T0ZDSmc4Vmw4QUhwdz09DQo+ID1id2RaDQo+
-IC0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQ0K
+--0000000000001a49c305d00e2d68
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+For what it's worth (food for thought wise) I've written an essay a while
+ago on the subject:
+
+https://www.yoctoproject.org/pipermail/yocto/2017-March/035028.html
+https://www.yoctoproject.org/pipermail/yocto/2017-March/035029.html
+
+Alex
+
+On Fri, 5 Nov 2021 at 17:02, Jasper Orschulko <
+Jasper.Orschulko@iris-sensing.com> wrote:
+
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA256
+>
+> Thanks @all for your input.
+>
+> It seems like there is a lot to be considered. When it comes to under-
+> the-hood development, the yocto project is fairly new to Martin and
+> myself. The term "bitbake requirements" has been used more than once in
+> this conversation, yet I am currently not aware of any formal
+> requirements. You wouldn't happen to have some documentation on this by
+> any chance? A common understanding of this and the actual usecases for
+> npm would be great, before we go into further details on how a possible
+> solution might look like.
+>
+> - --
+> With best regards
+>
+> Jasper Orschulko
+> DevOps Engineer
+>
+> Tel. +49 30 58 58 14 265
+> Fax +49 30 58 58 14 999
+> Jasper.Orschulko@iris-sensing.com
+>
+> =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=
+=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=
+=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =
+=E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2
+>
+> iris-GmbH
+> infrared & intelligent sensors
+> Schnellerstra=C3=9Fe 1-5 | 12439 Berlin
+>
+> https://iris-sensing.com/
+>
+>
+>
+>
+>
+> On Fri, 2021-11-05 at 04:24 -0700, Jean-Marie Lemetayer wrote:
+> > Hi Jasper and folks,
+> >
+> > I am the guy who updated the NPM support in bitbake last time. All
+> > your remarks are correct, shrinkwarp file placement can be updated
+> > and the do_configure step is a real pain. But this is the only way I
+> > found which follows the bitbake requirements.
+> >
+> > For the 'access to network' thing, be careful with NPM because there
+> > are some corner cases when NPM tries to access it without permissions
+> > (node-gyp if I remember well). I was doing my test builds with my
+> > RJ45 unplugged to be sure.
+> >
+> > The fact that the NPM workflow is totally not the same as the Bitbake
+> > one is the real issue. I think the best solution could be to make
+> > some improvements to NPM directly so it can fit better in an
+> > environment like Bitbake (maybe a new fetch command).
+> >
+> > Best regards and good luck,
+> > Jean-Marie
+> >
+> >
+> > On Fri, Nov 5, 2021 at 2:07 AM Stefan Herbrechtsmeier
+> > <stefan.herbrechtsmeier-oss@weidmueller.com> wrote:
+> > > Hi Jasper and Richard,
+> > >
+> > > Am 05.11.2021 um 00:15 schrieb Richard Purdie via
+> > > lists.openembedded.org:
+> > > > On Thu, 2021-11-04 at 12:29 +0000, Jasper Orschulko wrote:
+> > > > > Dear Bitbake developers,
+> > > > >
+> > > > > recently we have been looking at the npmsw fetcher and
+> > > > > discovered
+> > > some
+> > > > > challenges regarding the integration into the developer
+> > > > > workflow
+> > > as
+> > > > > well as the build times within Bitbake. We believe that we
+> > > > > found a
+> > > > > mechanism which would integrate well into Bitbake's existing
+> > > project
+> > > > > structure and drastically improve the situation.
+> > > > >
+> > > > >
+> > > > > But first, what are the issues with the current npmsw fetcher?
+> > > > >
+> > > > > 1. Let's have a look at a typical npm-based project. You'd
+> > > typically
+> > > > > have your package-lock.json (aka shrinkwrap file) stored within
+> > > the git
+> > > > > repository containing your source code. Developers will rely on
+> > > this
+> > > > > package-lock file on a daily basis during the development
+> > > > > cycle.
+> > > > > Unfortunately, the current npmsw fetcher only supports
+> > > > > shrinkwrap
+> > > files
+> > > > > stored within the meta layer or within an npm registry. This is
+> > > not
+> > > > > ideal, as changes to the file might be made within the project
+> > > repo,
+> > > > > which then need to be manually applied to the lock file within
+> > > > > the
+> > > meta
+> > > > > repo. An ideal npmsw fetcher therefore would support using the
+> > > lock
+> > > > > file directly from the source code repo.
+> > >
+> > > The package-lock.json and npm-shrinkwrap.json are identical. The
+> > > only
+> > > difference is that the npm-shrinkwrap.json could be published with
+> > > the
+> > > package.
+> > >
+> > > > > 2. The current implementation of the npm class uses multiple
+> > > shellouts
+> > > > > per npm module in order to add these to the npm cache. This is
+> > > done, as
+> > > > > the `npm install` command is not called within the do_fetch,
+> > > > > but
+> > > at the
+> > > > > end of the do_configure step. This drastically increases the
+> > > > > time
+> > > > > Bitbake spends in the do_configure step for a npm based recipe.
+> > > > > In
+> > > our
+> > > > > case (we have a relatively small project with approx. 600 npm
+> > > packages
+> > > > > in total, including recursive packages) this takes ~100 minutes
+> > > > > to
+> > > > > complete. What makes things worse, every change to the recipe
+> > > and/or
+> > > > > lock file will cause a complete rerun of the do_configure job.
+> > >
+> > > This is a problem of the sequential setup of the cache. I have a
+> > > process task inside the bb task. But I have also a prototype which
+> > > remove the complete cache and speed up the build significant.
+> > >
+> > > > > As a result, the npm fetcher currently is not really usable for
+> > > > > production workloads.
+> > >
+> > > Ack.
+> > >
+> > > > > So how can we address these issues?
+> > > > >
+> > > > > We plan to implement a "sub-fetcher" for npmsw (a concept which
+> > > might
+> > > > > also be recyclable for similar use-cases). This would take the
+> > > > > form of e.g.:
+> > > > >
+> > > > > SRC_URI =3D "npmsw+git://git-uri.git;npm-
+> > > topdir=3Dpath_to_npm_project;..."
+> > > > >
+> > > > > The idea is, that the npsw fetcher would then call an arbitrary
+> > > sub-
+> > > > > fetcher (in this case git, however any fetcher will be
+> > > > > supported)
+> > > and
+> > > > > after the sub-fetcher has extracted the source code into the
+> > > DL_DIR,
+> > > > > the npm fetcher will create a secondary download folder as a
+> > > > > copy
+> > > of
+> > > > > the sub-fetchers download folder. Within this copy, the npm
+> > > fetcher
+> > > > > will call `npm ci`, effectively downloading the npm packages by
+> > > doing a
+> > > > > clean-install on the basis of the package.json and the package-
+> > > > > lock.json files within the npmsw download dir. This results in
+> > > > > a
+> > > much
+> > > > > faster build, as it removes the need for seperate handling of
+> > > > > the
+> > > > > individual node packages, as well as streamlining the
+> > > > > developers
+> > > > > workflow with the build process within Bitbake.
+> > >
+> > > How should this support the download proxy? The npm ci command need
+> > > a
+> > > repository or a cache to work.
+> > >
+> > > Furthermore you need a patch step in between the fetch steps to
+> > > support
+> > > tuning / fixing of the configuration before the second fetch step.
+> > >
+> > > > > As this fetcher would be implemented separately from the
+> > > > > current
+> > > npmsw
+> > > > > fetcher, this will not cause any breaking changes for existing
+> > > setups.
+> > > > >
+> > > > > Additionally, we plan on writing a separate npmsw.bbclass,
+> > > > > which
+> > > will
+> > > > > parse the package.json for each node module for an automated
+> > > Bitbake
+> > > > > license manifest generation, which will resolve the current
+> > > challenge
+> > > > > of having to maintain these manually, as currently described at
+> > > > >
+> > >
+> https://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#npm=
+-using-the-registry-modules-method
+> > > > > .
+> > >
+> > > This licenses will be generated by the recipetool and you could
+> > > provide
+> > > checksums to detect the correct licenses.
+> > >
+> > > The license inside the package.json is only a hint and you need a
+> > > license file to fulfill the license compliance. Because of this I
+> > > remove
+> > > the package.json from LIC_FILES_CHKSUM because it is useless for
+> > > the
+> > > license compliance.
+> > >
+> > >
+> > > > > If this is something you see as a worthwhile goal, we will
+> > > > > provide
+> > > a
+> > > > > set of patch files within the coming weeks.
+> > >
+> > > I think you mixed the unusable npm implementation with your special
+> > > use
+> > > case.
+> > >
+> > > The problem is that the current npm implementation isn't really
+> > > usable.
+> > > I'm working on this and have already a prototype that could
+> > > install,
+> > > build and *test* a proprietary angular project and node-red as well
+> > > as
+> > > koa/examples from github.
+> > >
+> > > If I understand you correct you like to build a npm recipe that
+> > > could
+> > > change it dependencies without update the recipe except the SRCREV
+> > > of
+> > > the repositories.
+> > >
+> > > > At a first read it sounds reasonable but I don't know the answers
+> > > to a few
+> > > > questions which make or break things from an OE/bitbake
+> > > perspective. Those
+> > > > questions are:
+> > > >
+> > > > a) Once DL_DIR has been populated by this fetch mechanism, can a
+> > > subsequent
+> > > > build run with just the data from there without accessing the
+> > > network?
+> > > >
+> > > > b) Is the information encoded into SRC_URI enough to give a
+> > > deterministic build
+> > > > result, i.e. if we run this build at some later date, will we get
+> > > the same
+> > > > result?
+> > > >
+> > > > c) Is fetching only happening during the do_fetch task and not in
+> > > any subsequent
+> > > > step?
+> > > >
+> > > >
+> > > > I'd love for some of the other people who're worked on this code
+> > > > to
+> > > jump in as I
+> > > > don't use it or understand it in detail. I am worried about how
+> > > > we
+> > > maintain this
+> > > > longer term as different people seem to have different use cases
+> > > which sees the
+> > > > code changing in different directions and we're starting to look
+> > > like we may end
+> > > > up with multiple ways of doing things which I really dislike.
+> > >
+> > > This leads to the questions what is the desired way to integrate a
+> > > package / dependency manager. Nowadays any language (even C/C++)
+> > > has
+> > > a
+> > > package manager available and more and more build systems (ex.
+> > > Meson,
+> > > CMake) support automatic download of dependencies. The common
+> > > from the foreign configuration. The current npm implementation is
+> > > special because it reuse a foreign configuration and translate it
+> > > into
+> > > fetch commands on-the-fly. This leads to the problem that common
+> > > tweaks
+> > > like override a dependency or share configuration between recipes
+> > > via
+> > > include file isn't possible. We could fix it by removing the
+> > > foreign
+> > > configuration and do the translation during recipe creation. But
+> > > this
+> > > means you have to recreate the recipe after every dependency
+> > > change.
+> > >
+> > > Is it a valid use case for OE to support foreign dependency
+> > > configurations like npm-shrinkwrap.json, go.sum or conan.lock?
+> > >
+> > > Regards
+> > >    Stefan
+> > >
+> > >
+> > >
+> -----BEGIN PGP SIGNATURE-----
+>
+> iQEzBAEBCAAdFiEE4WyPMIC5Ap4+Ooo1Ygqew07VMNUFAmGFVaUACgkQYgqew07V
+> MNX4NQf+PwyOaBwFeWY/IKWhUfTswHKOkMDubyJnvTM0eRuNiJ+a6GNZo0ZXe/8v
+> 7ozIwTIJShu/roimQff9K44HNjyvZJVC3hMeBUY9VS75RUliAJa48Vo71P57CtXD
+> ysuTg9hDaPicDA228pljFTHGk+SgLVUkAtgAw0J4URwJyfqoquzRXckt3s7A5/Nm
+> K3/SZg7FOS4D8bjWLwZvlSX4NVWswb478ct00JL0hdJv6I/Hnr+KBpKXG6OE0+Dj
+> x2lple1BxDmLcOoUsbvXroojGQNqIi4iYcxbkkvQqFmL/zb9r3MKv5h2VipbNLIC
+> E3Hdk2iFsXSOnf2Eo1RB3Hy4EwYoSQ=3D=3D
+> =3DrOen
+> -----END PGP SIGNATURE-----
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#12911):
+> https://lists.openembedded.org/g/bitbake-devel/message/12911
+> Mute This Topic: https://lists.openembedded.org/mt/86814331/1686489
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> alex.kanavin@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
+
+--0000000000001a49c305d00e2d68
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>For what it&#39;s worth (food for thought wise) I&#39=
+;ve written an essay a while ago on the subject:</div><div><br></div><div><=
+a href=3D"https://www.yoctoproject.org/pipermail/yocto/2017-March/035028.ht=
+ml">https://www.yoctoproject.org/pipermail/yocto/2017-March/035028.html</a>=
+</div><div><a href=3D"https://www.yoctoproject.org/pipermail/yocto/2017-Mar=
+ch/035029.html">https://www.yoctoproject.org/pipermail/yocto/2017-March/035=
+029.html</a></div><div><br></div><div>Alex<br></div></div><br><div class=3D=
+"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, 5 Nov 2021 at 1=
+7:02, Jasper Orschulko &lt;<a href=3D"mailto:Jasper.Orschulko@iris-sensing.=
+com">Jasper.Orschulko@iris-sensing.com</a>&gt; wrote:<br></div><blockquote =
+class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px sol=
+id rgb(204,204,204);padding-left:1ex">-----BEGIN PGP SIGNED MESSAGE-----<br=
+>
+Hash: SHA256<br>
+<br>
+Thanks @all for your input.<br>
+<br>
+It seems like there is a lot to be considered. When it comes to under-<br>
+the-hood development, the yocto project is fairly new to Martin and<br>
+myself. The term &quot;bitbake requirements&quot; has been used more than o=
+nce in<br>
+this conversation, yet I am currently not aware of any formal<br>
+requirements. You wouldn&#39;t happen to have some documentation on this by=
+<br>
+any chance? A common understanding of this and the actual usecases for<br>
+npm would be great, before we go into further details on how a possible<br>
+solution might look like.<br>
+<br>
+- -- <br>
+With best regards<br>
+<br>
+Jasper Orschulko<br>
+DevOps Engineer<br>
+<br>
+Tel. +49 30 58 58 14 265<br>
+Fax +49 30 58 58 14 999<br>
+<a href=3D"mailto:Jasper.Orschulko@iris-sensing.com" target=3D"_blank">Jasp=
+er.Orschulko@iris-sensing.com</a><br>
+<br>
+=E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=
+=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=
+=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2 =
+=E2=80=A2 =E2=80=A2 =E2=80=A2 =E2=80=A2<br>
+<br>
+iris-GmbH<br>
+infrared &amp; intelligent sensors<br>
+Schnellerstra=C3=9Fe 1-5 | 12439 Berlin<br>
+<br>
+<a href=3D"https://iris-sensing.com/" rel=3D"noreferrer" target=3D"_blank">=
+https://iris-sensing.com/</a><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+On Fri, 2021-11-05 at 04:24 -0700, Jean-Marie Lemetayer wrote:<br>
+&gt; Hi Jasper and folks,<br>
+&gt; <br>
+&gt; I am the guy who updated the NPM support in bitbake last time. All<br>
+&gt; your remarks are correct, shrinkwarp=C2=A0file placement can be update=
+d<br>
+&gt; and the do_configure step is a real pain. But this is the only way I<b=
+r>
+&gt; found which follows the bitbake requirements.<br>
+&gt; <br>
+&gt; For the &#39;access to network&#39; thing, be careful with NPM because=
+ there<br>
+&gt; are some corner cases when NPM tries to access it without permissions<=
+br>
+&gt; (node-gyp if I remember=C2=A0well). I was doing my test builds with my=
+<br>
+&gt; RJ45 unplugged to be sure.<br>
+&gt; <br>
+&gt; The fact that the NPM workflow=C2=A0is totally not the same as the Bit=
+bake<br>
+&gt; one is the real issue. I think the best solution could be to make<br>
+&gt; some improvements to NPM directly so it can fit better in an<br>
+&gt; environment=C2=A0like Bitbake (maybe a new fetch=C2=A0command).<br>
+&gt; <br>
+&gt; Best regards and good luck,<br>
+&gt; Jean-Marie<br>
+&gt; <br>
+&gt; <br>
+&gt; On Fri, Nov 5, 2021 at 2:07 AM Stefan Herbrechtsmeier<br>
+&gt; &lt;<a href=3D"mailto:stefan.herbrechtsmeier-oss@weidmueller.com" targ=
+et=3D"_blank">stefan.herbrechtsmeier-oss@weidmueller.com</a>&gt; wrote:<br>
+&gt; &gt; Hi Jasper and Richard,<br>
+&gt; &gt; <br>
+&gt; &gt; Am 05.11.2021 um 00:15 schrieb Richard Purdie via<br>
+&gt; &gt; <a href=3D"http://lists.openembedded.org" rel=3D"noreferrer" targ=
+et=3D"_blank">lists.openembedded.org</a>:<br>
+&gt; &gt; &gt; On Thu, 2021-11-04 at 12:29 +0000, Jasper Orschulko wrote:<b=
+r>
+&gt; &gt; &gt; &gt; Dear Bitbake developers,<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; recently we have been looking at the npmsw fetcher and<=
+br>
+&gt; &gt; &gt; &gt; discovered<br>
+&gt; &gt; some<br>
+&gt; &gt; &gt; &gt; challenges regarding the integration into the developer=
+<br>
+&gt; &gt; &gt; &gt; workflow<br>
+&gt; &gt; as<br>
+&gt; &gt; &gt; &gt; well as the build times within Bitbake. We believe that=
+ we<br>
+&gt; &gt; &gt; &gt; found a<br>
+&gt; &gt; &gt; &gt; mechanism which would integrate well into Bitbake&#39;s=
+ existing<br>
+&gt; &gt; project<br>
+&gt; &gt; &gt; &gt; structure and drastically improve the situation.<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; But first, what are the issues with the current npmsw f=
+etcher?<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; 1. Let&#39;s have a look at a typical npm-based project=
+. You&#39;d<br>
+&gt; &gt; typically<br>
+&gt; &gt; &gt; &gt; have your package-lock.json (aka shrinkwrap file) store=
+d within<br>
+&gt; &gt; the git<br>
+&gt; &gt; &gt; &gt; repository containing your source code. Developers will=
+ rely on<br>
+&gt; &gt; this<br>
+&gt; &gt; &gt; &gt; package-lock file on a daily basis during the developme=
+nt<br>
+&gt; &gt; &gt; &gt; cycle.<br>
+&gt; &gt; &gt; &gt; Unfortunately, the current npmsw fetcher only supports<=
+br>
+&gt; &gt; &gt; &gt; shrinkwrap<br>
+&gt; &gt; files<br>
+&gt; &gt; &gt; &gt; stored within the meta layer or within an npm registry.=
+ This is<br>
+&gt; &gt; not<br>
+&gt; &gt; &gt; &gt; ideal, as changes to the file might be made within the =
+project<br>
+&gt; &gt; repo,<br>
+&gt; &gt; &gt; &gt; which then need to be manually applied to the lock file=
+ within<br>
+&gt; &gt; &gt; &gt; the<br>
+&gt; &gt; meta<br>
+&gt; &gt; &gt; &gt; repo. An ideal npmsw fetcher therefore would support us=
+ing the<br>
+&gt; &gt; lock<br>
+&gt; &gt; &gt; &gt; file directly from the source code repo.<br>
+&gt; &gt; <br>
+&gt; &gt; The package-lock.json and npm-shrinkwrap.json are identical. The<=
+br>
+&gt; &gt; only<br>
+&gt; &gt; difference is that the npm-shrinkwrap.json could be published wit=
+h<br>
+&gt; &gt; the <br>
+&gt; &gt; package.<br>
+&gt; &gt; <br>
+&gt; &gt; &gt; &gt; 2. The current implementation of the npm class uses mul=
+tiple<br>
+&gt; &gt; shellouts<br>
+&gt; &gt; &gt; &gt; per npm module in order to add these to the npm cache. =
+This is<br>
+&gt; &gt; done, as<br>
+&gt; &gt; &gt; &gt; the `npm install` command is not called within the do_f=
+etch,<br>
+&gt; &gt; &gt; &gt; but<br>
+&gt; &gt; at the<br>
+&gt; &gt; &gt; &gt; end of the do_configure step. This drastically increase=
+s the<br>
+&gt; &gt; &gt; &gt; time<br>
+&gt; &gt; &gt; &gt; Bitbake spends in the do_configure step for a npm based=
+ recipe.<br>
+&gt; &gt; &gt; &gt; In<br>
+&gt; &gt; our<br>
+&gt; &gt; &gt; &gt; case (we have a relatively small project with approx. 6=
+00 npm<br>
+&gt; &gt; packages<br>
+&gt; &gt; &gt; &gt; in total, including recursive packages) this takes ~100=
+ minutes<br>
+&gt; &gt; &gt; &gt; to<br>
+&gt; &gt; &gt; &gt; complete. What makes things worse, every change to the =
+recipe<br>
+&gt; &gt; and/or<br>
+&gt; &gt; &gt; &gt; lock file will cause a complete rerun of the do_configu=
+re job.<br>
+&gt; &gt; <br>
+&gt; &gt; This is a problem of the sequential setup of the cache. I have a =
+<br>
+&gt; &gt; process task inside the bb task. But I have also a prototype whic=
+h <br>
+&gt; &gt; remove the complete cache and speed up the build significant.<br>
+&gt; &gt; <br>
+&gt; &gt; &gt; &gt; As a result, the npm fetcher currently is not really us=
+able for<br>
+&gt; &gt; &gt; &gt; production workloads.<br>
+&gt; &gt; <br>
+&gt; &gt; Ack.<br>
+&gt; &gt; <br>
+&gt; &gt; &gt; &gt; So how can we address these issues?<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; We plan to implement a &quot;sub-fetcher&quot; for npms=
+w (a concept which<br>
+&gt; &gt; might<br>
+&gt; &gt; &gt; &gt; also be recyclable for similar use-cases). This would t=
+ake the<br>
+&gt; &gt; &gt; &gt; form of e.g.:<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; SRC_URI =3D &quot;npmsw+git://git-uri.git;npm-<br>
+&gt; &gt; topdir=3Dpath_to_npm_project;...&quot;<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; The idea is, that the npsw fetcher would then call an a=
+rbitrary<br>
+&gt; &gt; sub-<br>
+&gt; &gt; &gt; &gt; fetcher (in this case git, however any fetcher will be<=
+br>
+&gt; &gt; &gt; &gt; supported)<br>
+&gt; &gt; and<br>
+&gt; &gt; &gt; &gt; after the sub-fetcher has extracted the source code int=
+o the<br>
+&gt; &gt; DL_DIR,<br>
+&gt; &gt; &gt; &gt; the npm fetcher will create a secondary download folder=
+ as a<br>
+&gt; &gt; &gt; &gt; copy<br>
+&gt; &gt; of<br>
+&gt; &gt; &gt; &gt; the sub-fetchers download folder. Within this copy, the=
+ npm<br>
+&gt; &gt; fetcher<br>
+&gt; &gt; &gt; &gt; will call `npm ci`, effectively downloading the npm pac=
+kages by<br>
+&gt; &gt; doing a<br>
+&gt; &gt; &gt; &gt; clean-install on the basis of the package.json and the =
+package-<br>
+&gt; &gt; &gt; &gt; lock.json files within the npmsw download dir. This res=
+ults in<br>
+&gt; &gt; &gt; &gt; a<br>
+&gt; &gt; much<br>
+&gt; &gt; &gt; &gt; faster build, as it removes the need for seperate handl=
+ing of<br>
+&gt; &gt; &gt; &gt; the<br>
+&gt; &gt; &gt; &gt; individual node packages, as well as streamlining the<b=
+r>
+&gt; &gt; &gt; &gt; developers<br>
+&gt; &gt; &gt; &gt; workflow with the build process within Bitbake.<br>
+&gt; &gt; <br>
+&gt; &gt; How should this support the download proxy? The npm ci command ne=
+ed<br>
+&gt; &gt; a<br>
+&gt; &gt; repository or a cache to work.<br>
+&gt; &gt; <br>
+&gt; &gt; Furthermore you need a patch step in between the fetch steps to<b=
+r>
+&gt; &gt; support <br>
+&gt; &gt; tuning / fixing of the configuration before the second fetch step=
+.<br>
+&gt; &gt; <br>
+&gt; &gt; &gt; &gt; As this fetcher would be implemented separately from th=
+e<br>
+&gt; &gt; &gt; &gt; current<br>
+&gt; &gt; npmsw<br>
+&gt; &gt; &gt; &gt; fetcher, this will not cause any breaking changes for e=
+xisting<br>
+&gt; &gt; setups.<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; &gt; &gt; Additionally, we plan on writing a separate npmsw.bbcla=
+ss,<br>
+&gt; &gt; &gt; &gt; which<br>
+&gt; &gt; will<br>
+&gt; &gt; &gt; &gt; parse the package.json for each node module for an auto=
+mated<br>
+&gt; &gt; Bitbake<br>
+&gt; &gt; &gt; &gt; license manifest generation, which will resolve the cur=
+rent<br>
+&gt; &gt; challenge<br>
+&gt; &gt; &gt; &gt; of having to maintain these manually, as currently desc=
+ribed at<br>
+&gt; &gt; &gt; &gt; <br>
+&gt; &gt; <a href=3D"https://www.yoctoproject.org/docs/latest/mega-manual/m=
+ega-manual.html#npm-using-the-registry-modules-method" rel=3D"noreferrer" t=
+arget=3D"_blank">https://www.yoctoproject.org/docs/latest/mega-manual/mega-=
+manual.html#npm-using-the-registry-modules-method</a><br>
+&gt; &gt; &gt; &gt; .<br>
+&gt; &gt; <br>
+&gt; &gt; This licenses will be generated by the recipetool and you could<b=
+r>
+&gt; &gt; provide <br>
+&gt; &gt; checksums to detect the correct licenses.<br>
+&gt; &gt; <br>
+&gt; &gt; The license inside the package.json is only a hint and you need a=
+ <br>
+&gt; &gt; license file to fulfill the license compliance. Because of this I=
+<br>
+&gt; &gt; remove <br>
+&gt; &gt; the package.json from LIC_FILES_CHKSUM because it is useless for<=
+br>
+&gt; &gt; the <br>
+&gt; &gt; license compliance.<br>
+&gt; &gt; <br>
+&gt; &gt; <br>
+&gt; &gt; &gt; &gt; If this is something you see as a worthwhile goal, we w=
+ill<br>
+&gt; &gt; &gt; &gt; provide<br>
+&gt; &gt; a<br>
+&gt; &gt; &gt; &gt; set of patch files within the coming weeks.<br>
+&gt; &gt; <br>
+&gt; &gt; I think you mixed the unusable npm implementation with your speci=
+al<br>
+&gt; &gt; use <br>
+&gt; &gt; case.<br>
+&gt; &gt; <br>
+&gt; &gt; The problem is that the current npm implementation isn&#39;t real=
+ly<br>
+&gt; &gt; usable. <br>
+&gt; &gt; I&#39;m working on this and have already a prototype that could<b=
+r>
+&gt; &gt; install, <br>
+&gt; &gt; build and *test* a proprietary angular project and node-red as we=
+ll<br>
+&gt; &gt; as <br>
+&gt; &gt; koa/examples from github.<br>
+&gt; &gt; <br>
+&gt; &gt; If I understand you correct you like to build a npm recipe that<b=
+r>
+&gt; &gt; could<br>
+&gt; &gt; change it dependencies without update the recipe except the SRCRE=
+V<br>
+&gt; &gt; of<br>
+&gt; &gt; the repositories.<br>
+&gt; &gt; <br>
+&gt; &gt; &gt; At a first read it sounds reasonable but I don&#39;t know th=
+e answers<br>
+&gt; &gt; to a few<br>
+&gt; &gt; &gt; questions which make or break things from an OE/bitbake<br>
+&gt; &gt; perspective. Those<br>
+&gt; &gt; &gt; questions are:<br>
+&gt; &gt; &gt; <br>
+&gt; &gt; &gt; a) Once DL_DIR has been populated by this fetch mechanism, c=
+an a<br>
+&gt; &gt; subsequent<br>
+&gt; &gt; &gt; build run with just the data from there without accessing th=
+e<br>
+&gt; &gt; network?<br>
+&gt; &gt; &gt; <br>
+&gt; &gt; &gt; b) Is the information encoded into SRC_URI enough to give a<=
+br>
+&gt; &gt; deterministic build<br>
+&gt; &gt; &gt; result, i.e. if we run this build at some later date, will w=
+e get<br>
+&gt; &gt; the same<br>
+&gt; &gt; &gt; result?<br>
+&gt; &gt; &gt; <br>
+&gt; &gt; &gt; c) Is fetching only happening during the do_fetch task and n=
+ot in<br>
+&gt; &gt; any subsequent<br>
+&gt; &gt; &gt; step?<br>
+&gt; &gt; &gt; <br>
+&gt; &gt; &gt; <br>
+&gt; &gt; &gt; I&#39;d love for some of the other people who&#39;re worked =
+on this code<br>
+&gt; &gt; &gt; to<br>
+&gt; &gt; jump in as I<br>
+&gt; &gt; &gt; don&#39;t use it or understand it in detail. I am worried ab=
+out how<br>
+&gt; &gt; &gt; we<br>
+&gt; &gt; maintain this<br>
+&gt; &gt; &gt; longer term as different people seem to have different use c=
+ases<br>
+&gt; &gt; which sees the<br>
+&gt; &gt; &gt; code changing in different directions and we&#39;re starting=
+ to look<br>
+&gt; &gt; like we may end<br>
+&gt; &gt; &gt; up with multiple ways of doing things which I really dislike=
+.<br>
+&gt; &gt; <br>
+&gt; &gt; This leads to the questions what is the desired way to integrate =
+a <br>
+&gt; &gt; package / dependency manager. Nowadays any language (even C/C++)<=
+br>
+&gt; &gt; has<br>
+&gt; &gt; a <br>
+&gt; &gt; package manager available and more and more build systems (ex.<br=
+>
+&gt; &gt; Meson,<br>
+&gt; &gt; CMake) support automatic download of dependencies. The common <br=
+>
+&gt; &gt; from the foreign configuration. The current npm implementation is=
+ <br>
+&gt; &gt; special because it reuse a foreign configuration and translate it=
+<br>
+&gt; &gt; into <br>
+&gt; &gt; fetch commands on-the-fly. This leads to the problem that common<=
+br>
+&gt; &gt; tweaks <br>
+&gt; &gt; like override a dependency or share configuration between recipes=
+<br>
+&gt; &gt; via<br>
+&gt; &gt; include file isn&#39;t possible. We could fix it by removing the<=
+br>
+&gt; &gt; foreign <br>
+&gt; &gt; configuration and do the translation during recipe creation. But<=
+br>
+&gt; &gt; this<br>
+&gt; &gt; means you have to recreate the recipe after every dependency<br>
+&gt; &gt; change.<br>
+&gt; &gt; <br>
+&gt; &gt; Is it a valid use case for OE to support foreign dependency <br>
+&gt; &gt; configurations like npm-shrinkwrap.json, go.sum or conan.lock?<br=
+>
+&gt; &gt; <br>
+&gt; &gt; Regards<br>
+&gt; &gt; =C2=A0 =C2=A0Stefan<br>
+&gt; &gt; <br>
+&gt; &gt; <br>
+&gt; &gt; <br>
+-----BEGIN PGP SIGNATURE-----<br>
+<br>
+iQEzBAEBCAAdFiEE4WyPMIC5Ap4+Ooo1Ygqew07VMNUFAmGFVaUACgkQYgqew07V<br>
+MNX4NQf+PwyOaBwFeWY/IKWhUfTswHKOkMDubyJnvTM0eRuNiJ+a6GNZo0ZXe/8v<br>
+7ozIwTIJShu/roimQff9K44HNjyvZJVC3hMeBUY9VS75RUliAJa48Vo71P57CtXD<br>
+ysuTg9hDaPicDA228pljFTHGk+SgLVUkAtgAw0J4URwJyfqoquzRXckt3s7A5/Nm<br>
+K3/SZg7FOS4D8bjWLwZvlSX4NVWswb478ct00JL0hdJv6I/Hnr+KBpKXG6OE0+Dj<br>
+x2lple1BxDmLcOoUsbvXroojGQNqIi4iYcxbkkvQqFmL/zb9r3MKv5h2VipbNLIC<br>
+E3Hdk2iFsXSOnf2Eo1RB3Hy4EwYoSQ=3D=3D<br>
+=3DrOen<br>
+-----END PGP SIGNATURE-----<br>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#12911): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/12911" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/12911</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/86814331/1686=
+489" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
+/86814331/1686489</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:alex.kanavin@gmail.com" target=3D"=
+_blank">alex.kanavin@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
+
+--0000000000001a49c305d00e2d68--
 
