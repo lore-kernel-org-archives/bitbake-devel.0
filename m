@@ -1,128 +1,159 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <Jasper.Orschulko@iris-sensing.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C4DC433FE
-	for <webhook@archiver.kernel.org>; Fri,  5 Nov 2021 18:45:27 +0000 (UTC)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com
- [209.85.222.54])
- by mx.groups.io with SMTP id smtpd.web09.9791.1636137927060759096
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842D0C433FE
+	for <webhook@archiver.kernel.org>; Fri,  5 Nov 2021 20:33:07 +0000 (UTC)
+Received: from mail.irisgmbh.de (mail.irisgmbh.de [81.169.172.79])
+ by mx.groups.io with SMTP id smtpd.web11.11229.1636144386098413629
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Nov 2021 11:45:27 -0700
+ Fri, 05 Nov 2021 13:33:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=Q0JU2ktv;
- spf=pass (domain: gmail.com, ip: 209.85.222.54,
- mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ua1-f54.google.com with SMTP id s13so3262392uaj.11;
-        Fri, 05 Nov 2021 11:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k12EYiZt2TJZze+0DnVwUY9cDlO0VgFvLTVaOCA234Q=;
-        b=Q0JU2ktvNFv0UIt+Mv44PlI5bo50lKRroSydWT7OsAswD9LxPpmXYpBv2p89bs9PXe
-         ZxYEbTugfwCE+BEY03eF3CkU0yUpM5B926i3jaNRuQgYk+XBbqqzXqn4FCPNhSKlb+lK
-         AHjSXOTealLAZlGM5UWwmogodmEIzNXHRlanbPuOsROGiFXO8kyI+yGnNrBX6YvlJ7Zl
-         SY5YcdRdp94WstQGt150qf1F02aaX5lc+BuyykKk+nC2CBPKIOcQaawDHsYdsN364D8t
-         PRd+XFLokah83QDDeDg/AICsHI7RWgLnonym7cw1EQIde4utj1uvdxdEyMRcb0Qzn+Cm
-         4keQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k12EYiZt2TJZze+0DnVwUY9cDlO0VgFvLTVaOCA234Q=;
-        b=njxGzN+BLqcvNh3LM4uVP79bZdZH9HehiwmbPmcMcXMApw824h0HxDEMkEyO+8LSJR
-         GWam5t4UMhXGqqMQtTSniOLw9DbxuRBJM0oiRV7MkSLUd/rmH33VrexpfW8XW31b88hu
-         vsLvlKFdUL0em9dD0PxiLpJ6+NSOz4xliUoC72jbydVAJANIJhLZybI222Zufa3sCXGU
-         NhZkZLxSrBQM216QflpOfPK+Z2G5m4mrCmmWGLdjYoOKRRHU/qeRi/3GDegy6pJj/p9m
-         FZBlxyeNI6mf3wbmB6jq5ALoSnu1E9wl5iw68rS7vnJAkL6BCUh1W33XwOrxS7zDW9h6
-         CIPw==
-X-Gm-Message-State: AOAM5333yvkADkDNpHf7/U/kSvsrxN5FuSKNYHrLIqUEbNqybE+OXZ6Z
-	4AGZTnB6c5pqS1D8gjZmEGdDaagCh4/mKUBFTW4=
-X-Google-Smtp-Source: 
- ABdhPJzZ4jmtTodW1jwsSoMvwjQxjdsx1jnKOyzr2JkWZFK/HG2MnPio1GCUeCeO/10JEcnXKp/WWjRfwraHWnzcccw=
-X-Received: by 2002:a67:c511:: with SMTP id e17mr16601470vsk.40.1636137926245;
- Fri, 05 Nov 2021 11:45:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211105133104.19895-1-jasper@fancydomain.eu>
- <CANNYZj_s8_PkKfMQnBxNZLs-p0F5xb4StCXiF84OkbE5zpptqw@mail.gmail.com>
- <ea3f24549a6e54f880e925e8f5cf6128fc5629f9.camel@iris-sensing.com>
- <CANNYZj9sxmakRNGKUuH+ZAWDMJs2EhKT5O4f8HRxd=ovhQPpug@mail.gmail.com>
- <281CD8F4-9B15-40A6-9AAE-F2C0D633E5AD@fancydomain.eu>
-In-Reply-To: <281CD8F4-9B15-40A6-9AAE-F2C0D633E5AD@fancydomain.eu>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 5 Nov 2021 19:45:14 +0100
-Message-ID: 
- <CANNYZj-pKjvRT+Y39mT-t3G+GBON0Z=xZFURJH8AhPGfjOf7yw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe for
- repo 2.17.3
-To: Jasper Orschulko <jasper@fancydomain.eu>
-Cc: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>,
-	"openembedded-core@lists.openembedded.org"
- <openembedded-core@lists.openembedded.org>,
-	"martin@mko.dev" <martin@mko.dev>,
- Daniel Baumgart <Daniel.Baumgart@iris-sensing.com>,
+ dkim=missing;
+ spf=none, err=SPF record not found (domain: iris-sensing.com,
+ ip: 81.169.172.79, mailfrom: jasper.orschulko@iris-sensing.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.irisgmbh.de (Postfix) with ESMTP id 09EE831E0356;
+	Fri,  5 Nov 2021 21:32:54 +0100 (CET)
+X-Virus-Scanned: amavisd-new at irisgmbh.de
+Received: from mail.irisgmbh.de ([127.0.0.1])
+	by localhost (s15324379.rootmaster.info [127.0.0.1]) (amavisd-new,
+ port 10027)
+	with ESMTP; Fri,  5 Nov 2021 21:32:53 +0100 (CET)
+Received: from ERDE.irisgmbh.local (unknown [213.61.209.158])
+	by mail.irisgmbh.de (Postfix) with ESMTPS id E2FD431E02DD;
+	Fri,  5 Nov 2021 21:32:53 +0100 (CET)
+Received: from ERDE.irisgmbh.local ([172.30.10.11]) by ERDE.irisgmbh.local
+ ([172.30.10.11]) with mapi id 14.03.0513.000; Fri, 5 Nov 2021 21:32:53 +0100
+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+To: "alex.kanavin@gmail.com" <alex.kanavin@gmail.com>, "jasper@fancydomain.eu"
+	<jasper@fancydomain.eu>
+CC: "openembedded-core@lists.openembedded.org"
+	<openembedded-core@lists.openembedded.org>, "martin@mko.dev"
+	<martin@mko.dev>, Daniel Baumgart <Daniel.Baumgart@iris-sensing.com>,
 	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="000000000000e5bfeb05d00f0b12"
+Subject: Re: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
+ for repo 2.17.3
+Thread-Topic: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
+ for repo 2.17.3
+Thread-Index: 
+ AQHX0klmUmLVPFJtF0Ob3PuHG3t8+6v06xoAgAASAwCAACepgIAABWqAgAALAwCAAB4RgA==
+Date: Fri, 5 Nov 2021 20:32:52 +0000
+Message-ID: <37710923b54b6675d315124f3916eb9c19c233e1.camel@iris-sensing.com>
+References: <20211105133104.19895-1-jasper@fancydomain.eu>
+	 <CANNYZj_s8_PkKfMQnBxNZLs-p0F5xb4StCXiF84OkbE5zpptqw@mail.gmail.com>
+	 <ea3f24549a6e54f880e925e8f5cf6128fc5629f9.camel@iris-sensing.com>
+	 <CANNYZj9sxmakRNGKUuH+ZAWDMJs2EhKT5O4f8HRxd=ovhQPpug@mail.gmail.com>
+	 <281CD8F4-9B15-40A6-9AAE-F2C0D633E5AD@fancydomain.eu>
+	 <CANNYZj-pKjvRT+Y39mT-t3G+GBON0Z=xZFURJH8AhPGfjOf7yw@mail.gmail.com>
+In-Reply-To: 
+ <CANNYZj-pKjvRT+Y39mT-t3G+GBON0Z=xZFURJH8AhPGfjOf7yw@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.10.1]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6E4CDB17E540E14E9974D535C1FD4AE9@irisgmbh.local>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Nov 2021 18:45:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12918
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Nov 2021 20:33:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12919
 
---000000000000e5bfeb05d00f0b12
-Content-Type: text/plain; charset="UTF-8"
-
-On Fri, 5 Nov 2021 at 19:05, Jasper Orschulko <jasper@fancydomain.eu> wrote:
-
->
-> But that is exactly what we are doing, by integrating the repo fetcher
-> into the yocto workflow, thus improving the yocto tooling :)
-> Why reinvent the wheel, when you can reuse whats already there? You
-> wouldn't reinvent git just for yocto, would you?
->
-
-What I mean is that I would try harder to find a workable setup while
-keeping the recipes for individual items that need to be built.
-For instance, devtool is capable of updating source revisions in recipes
-automatically, it may not work exactly as you want, but that can be fixed.
-Yes, repo itself is not proprietary, but your organizational workflow is.
-
-Particularly this:
-"if you want to create another version with different cmake flags, you
-would have to create copies of all 50ish recipes"
-looks odd. Why would you make copies? Just set the needed flags with a
-variable that is set from a global config,
-perhaps the distro or local.conf.
-
-Alex
-
---000000000000e5bfeb05d00f0b12
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail=
-_attr">On Fri, 5 Nov 2021 at 19:05, Jasper Orschulko &lt;<a href=3D"mailto:=
-jasper@fancydomain.eu">jasper@fancydomain.eu</a>&gt; wrote:<br></div><block=
-quote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1=
-px solid rgb(204,204,204);padding-left:1ex"><div><br>But that is exactly wh=
-at we are doing, by integrating the repo fetcher into the yocto workflow, t=
-hus improving the yocto tooling :)<br>Why reinvent the wheel, when you can =
-reuse whats already there? You wouldn&#39;t reinvent git just for yocto, wo=
-uld you?<br></div></blockquote><div><br></div>What I mean is that I would t=
-ry harder to find a workable setup while keeping the recipes for individual=
- items that need to be built. <br></div><div class=3D"gmail_quote">For inst=
-ance, devtool is capable of updating source revisions in recipes automatica=
-lly, it may not work exactly as you want, but that can be fixed.<br></div><=
-div class=3D"gmail_quote">Yes, repo itself is not proprietary, but your org=
-anizational workflow is.<br></div><div class=3D"gmail_quote"><br></div><div=
- class=3D"gmail_quote">Particularly this:</div><div class=3D"gmail_quote">&=
-quot;if you want to create another version with different cmake flags, you =
-would have to create copies of all 50ish recipes&quot;</div><div class=3D"g=
-mail_quote">looks odd. Why would you make copies? Just set the needed flags=
- with a variable that is set from a global config,</div><div class=3D"gmail=
-_quote">perhaps the distro or local.conf.</div><div class=3D"gmail_quote"><=
-br></div><div class=3D"gmail_quote">Alex<br></div></div>
-
---000000000000e5bfeb05d00f0b12--
+LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMjU2DQoNCkhpIEFs
+ZXgsDQoNCndlIGFyZSBnZXR0aW5nIGEgYml0IG9mZiB0b3BpYyBoZXJlLCBidXQgd2hhdGV2ZXIu
+Li4gOykgDQoNCj4gV2hhdCBJIG1lYW4gaXMgdGhhdCBJIHdvdWxkIHRyeSBoYXJkZXIgdG8gZmlu
+ZCBhIHdvcmthYmxlIHNldHVwIHdoaWxlDQo+IGtlZXBpbmcgdGhlIHJlY2lwZXMgZm9yIGluZGl2
+aWR1YWwgaXRlbXMgdGhhdCBuZWVkIHRvIGJlIGJ1aWx0Lg0KDQp0aGUgaW5kaXZpZHVhbCByZWNp
+cGVzIGRvbid0IHJlYWxseSBhZGQgdGhhdCBtdWNoIGJlbmVmaXQgZm9yIHVzLA0KbW9zdGx5IGp1
+c3QgbWFpbnRlbmFuY2Ugb3ZlcmhlYWQgYW5kIGNvbXBsZXhpdHksIGFzIHdlIG5lZWQgdG8NCmNv
+bnN0YW50bHkgZW5zdXJlIHRoYXQgdGhlIHZhcmlvdXMgY29tcG9uZW50cyBkZXBlbmQgb24gZWFj
+aCBvdGhlciBpbg0KdGhlIHJpZ2h0IG9yZGVyLiBUaGUgb25seSBiZW5lZmljaWFsIGFzcGVjdCB0
+byB0aGUgbXVsdGl0dWRlIG9mIHJlY2lwZXMNCmlzIHRoZSBzc3RhdGUgY2FjaGUuIEhvd2V2ZXIs
+IGFzIHRoZSBwYWNrYWdlcyBoZWF2aWx5IGRlcGVuZCBvbiBvbmUNCmFub3RoZXIsIHRoZSBiZW5l
+Zml0IGlzIG1hcmdpbmFsLCBhcyB3ZSBoYXZlIHRvIHJlYnVpbGQgbW9zdCBvZiB0aGUNCmFwcGxp
+Y2F0aW9uIGFueXdheXMuDQoNCkFkZGl0aW9uYWxseSwgdGhpcyBpcyBub3QgaG93IHRoZSBkZXZl
+bG9wZXJzIGJ1aWxkIHRoZSBhcHBsaWNhdGlvbiwgc28NCmJhc2ljYWxseSB3ZSBjdXJyZW50bHkg
+aGF2ZSB0byBtYWludGFpbiB0d28gc2VwYXJhdGUgYnVpbGQgd29ya2Zsb3dzLg0KQ2hhbmdpbmcg
+dG8gcmVwbyBhbHNvIGltcHJvdmVzIHRoZSBkZXZlbG9wZXIgd29ya2Zsb3cgb3V0c2lkZSBvZiB5
+b2N0bywNCmUuZy4gdGhhbmtzIHRvIHRoZSBub3Rpb24gb2YgInRvcGljcyIuIFRoZSAiZGV2dG9v
+bCIgb3B0aW9uLCB3aGlsc3QNCmR1YWJsZSBJIGFzc3VtZSwgd291bGQgYWdhaW4gbGltaXQgdGhl
+IHVzYWJpbGl0eSB0byB3aXRoaW4gdGhlIFlvY3RvDQplbnZpcm9ubWVudC4gV2UgYXJlIGN1cnJl
+bnRseSB0cnlpbmcgdG8gZ2V0IHRvIGEgcG9pbnQsIHdoZXJlIHdlIG1hbmFnZQ0KbW9zdCBvZiBv
+dXIgKGF1dG9tYXRlZCkgd29ya2xvYWRzIChlLmcuIHRlc3RpbmcpIHdpdGhpbiBZb2N0byBidXQN
+Cmhpc3RvcmljYWxseSB0aGlzIHdhcyBub3QgdGhlIGNhc2UgYW5kIGZvciBkYWlseSBkZXZlbG9w
+bWVudCB0aGlzIGlzDQpqdXN0IG5vdCByZWFsbHkgcHJhY3RpY2FsLg0KDQo+IFBhcnRpY3VsYXJs
+eSB0aGlzOg0KPiAiaWYgeW91IHdhbnQgdG8gY3JlYXRlIGFub3RoZXIgdmVyc2lvbiB3aXRoIGRp
+ZmZlcmVudCBjbWFrZSBmbGFncywNCj4geW91IHdvdWxkIGhhdmUgdG8gY3JlYXRlIGNvcGllcyBv
+ZiBhbGwgNTBpc2ggcmVjaXBlcyINCj4gbG9va3Mgb2RkLiBXaHkgd291bGQgeW91IG1ha2UgY29w
+aWVzPyBKdXN0IHNldCB0aGUgbmVlZGVkIGZsYWdzIHdpdGgNCj4gYSB2YXJpYWJsZSB0aGF0IGlz
+IHNldCBmcm9tIGEgZ2xvYmFsIGNvbmZpZywNCj4gcGVyaGFwcyB0aGUgZGlzdHJvIG9yIGxvY2Fs
+LmNvbmYuDQoNCkFzIGZhciBhcyBJIHVuZGVyc3RhbmQsIHRoaXMgaXMgbm90IHJlYXNvbmFibHkg
+cG9zc2libGUgKHRob3VnaCBJIG1pZ2h0DQpiZSB3cm9uZy4gVEJILCB1bmRlcnN0YW5kaW5nIHZh
+cmlhYmxlIHNjb3BlcyBpbiBZb2N0byBpcyBhIG5pZ2h0bWFyZSkuDQoNClRvIGdpdmUgdGhpcyBz
+b21lIGNvbnRleHQsIG91ciBjdXJyZW50IGJhc2Ugc2V0dXAgbG9va3MgYXMgZm9sbG93czoNCg0K
+LSAtIFdlIGhhdmUgb25lIGRpc3Ryby5jb25mDQotIC0gV2UgaGF2ZSB0aHJlZSBpbWFnZSByZWNp
+cGVzIHdpdGggc2xpZ2h0bHkgZGlmZmVyZW50IGNvbmZpZyArDQpmZWF0dXJlc2V0DQotIC0gQUZB
+SUsgYW4gaW1hZ2UgcmVjaXBlIGNhbm5vdCBzZXQgdmFyaWFibGVzIHdpdGhpbiBhbm90aGVyIHJl
+Y2lwZSwgaXQNCmp1c3QgImNvbnN1bWVzIiBleGlzdGluZyByZWNpcGVzIHdpdGggdGhlaXIgY29u
+ZmlndXJhdGlvbi4NCi0gLT4gVGh1cyB3ZSBoYXZlIHRocmVlIHJlc3BlY3RpdmUgcmVjaXBlcyB3
+aXRoIHNsaWdodGx5IGRpZmZlcmVudA0KY29uZmlndXJhdGlvbi4gSWYgd2Ugd2hlcmUgdG8gdXNl
+IGluZGl2aWR1YWwgcmVjaXBlcyBpbiB0aGlzIHNldHVwLA0Kd2UnZCBoYXZlIDUwaXNoIHggMyBy
+ZWNpcGVzLg0KDQpUaGUgYXBwcm9hY2ggeW91IGFyZSBkZXNjcmliaW5nIG1pZ2h0IGNpcmN1bXZl
+bnQgdGhpcyBwYXJ0aWN1bGFyDQpzaXR1YXRpb24gYnV0IGJhc2ljYWxseSBqdXN0IG1vdmVzIHRo
+ZSBpc3N1ZSBhcm91bmQsIGFzIHlvdSdyZSBub3cNCnVuYWJlIHRvIGJ1aWxkIGFsbCB0aHJlZSBj
+b25maWd1cmF0aW9ucyBpbiBvbmUgZ28sIGJ1dCBuZWVkIHRvIHN0YXJ0DQpqdWdnbGluZyB5b3Vy
+IGxvY2FsLmNvbmZzLiBBbHRlcm5hdGl2ZWx5IHlvdSBtaWdodCB0aGluayBhYm91dCB1c2luZw0K
+bXVsdGktY29uZnMuIEhvd2V2ZXIsIGVhY2ggbXVsdGljb25mIGRvdWJsZXMgdGhlIHBhcnNlIHRp
+bWVzIGZvciB5b3VyDQpyZWNpcGVzLiBBcyB3ZSBhbHJlYWR5IHVzZSBhIGNvdXBsZSBvZiBtdWx0
+aWNvbmZzIGZvciBkaWZmZXJlbnQgbWFjaGluZQ0KY29uZmlncywgd2Ugd291bGQgYmFzaWNhbGx5
+IGluY3JlYXNlIHRoZSB0aW1lIGl0IHRha2VzIHRvIHBhcnNlIHRoZQ0KcmVjaXBlcyBieSB+Zmlm
+dGVlbi1mb2xkICg1IHByZS1leGlzdGluZyBtdWx0aS1jb25mcyB4IDMgKG9yIG1vcmUpDQpkaXN0
+byBjb25mcykuIEFkZGl0aW9uYWxseSwgeW91IG5vdyBuZWVkIHRvIHN0YXJ0IHdvcnJ5aW5nIGFi
+b3V0DQphcnRpZmFjdCBuYW1lcywgYXMgYnkgZGVmYXVsdCB0aGUgZGlzdHJvIG5hbWUgaXMgbm90
+IGluY2x1ZGVkLg0KDQpTbyB5ZWFoLi4uIGFzIGZhciBhcyBJIGNhbiB0ZWxsLCB0aGVyZSBhcmUg
+bXVsdGlwbGUgd2F5cyB0byBhcHByb2FjaA0KdGhpcyBpc3N1ZSwgYnV0IG5vbmUgb2YgdGhlbSBz
+ZWVtIHN0cmFpZ2h0IGZvcndhcmQgbm9yIHByZXR0eS4gQml0YmFrZQ0KYXMgaXQgaXMgaXMganVz
+dCBmdW5kYW1lbnRhbGx5IG5vdCBnb29kIGF0IGhhbmRsaW5nIGhpZ2hseSBkeW5hbWljDQpjb25m
+aWd1cmF0aW9ucy4gVGhlIGNvbWJpbmF0aW9uIHdpdGggS0FTIHNvbWV3aGF0IGRlZnVzZXMgdGhl
+DQpzaXR1YXRpb24sIGJ1dCB0aGVyZSBhcmUgc3RpbGwgc29tZSBzaXR1YXRpb25zIHdoZXJlIHRo
+ZXJlIGlzIG5vIGVhc3kNCmFuc3dlci4NCg0KLSAtLSANCldpdGggYmVzdCByZWdhcmRzDQoNCkph
+c3BlciBPcnNjaHVsa28NCkRldk9wcyBFbmdpbmVlcg0KDQpUZWwuICs0OSAzMCA1OCA1OCAxNCAy
+NjUNCkZheCArNDkgMzAgNTggNTggMTQgOTk5DQpKYXNwZXIuT3JzY2h1bGtvQGlyaXMtc2Vuc2lu
+Zy5jb20NCg0K4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg
+4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAog0K
+DQppcmlzLUdtYkgNCmluZnJhcmVkICYgaW50ZWxsaWdlbnQgc2Vuc29ycw0KU2NobmVsbGVyc3Ry
+YcOfZSAxLTUgfCAxMjQzOSBCZXJsaW4NCg0KaHR0cHM6Ly9pcmlzLXNlbnNpbmcuY29tLw0KDQoN
+Cg0KDQoNCk9uIEZyaSwgMjAyMS0xMS0wNSBhdCAxOTo0NSArMDEwMCwgQWxleGFuZGVyIEthbmF2
+aW4gd3JvdGU6DQo+IE9uIEZyaSwgNSBOb3YgMjAyMSBhdCAxOTowNSwgSmFzcGVyIE9yc2NodWxr
+byA8amFzcGVyQGZhbmN5ZG9tYWluLmV1Pg0KPiB3cm90ZToNCj4gPiANCj4gPiBCdXQgdGhhdCBp
+cyBleGFjdGx5IHdoYXQgd2UgYXJlIGRvaW5nLCBieSBpbnRlZ3JhdGluZyB0aGUgcmVwbw0KPiA+
+IGZldGNoZXIgaW50byB0aGUgeW9jdG8gd29ya2Zsb3csIHRodXMgaW1wcm92aW5nIHRoZSB5b2N0
+byB0b29saW5nDQo+ID4gOikNCj4gPiBXaHkgcmVpbnZlbnQgdGhlIHdoZWVsLCB3aGVuIHlvdSBj
+YW4gcmV1c2Ugd2hhdHMgYWxyZWFkeSB0aGVyZT8gWW91DQo+ID4gd291bGRuJ3QgcmVpbnZlbnQg
+Z2l0IGp1c3QgZm9yIHlvY3RvLCB3b3VsZCB5b3U/DQo+ID4gDQo+IA0KPiANCj4gV2hhdCBJIG1l
+YW4gaXMgdGhhdCBJIHdvdWxkIHRyeSBoYXJkZXIgdG8gZmluZCBhIHdvcmthYmxlIHNldHVwIHdo
+aWxlDQo+IGtlZXBpbmcgdGhlIHJlY2lwZXMgZm9yIGluZGl2aWR1YWwgaXRlbXMgdGhhdCBuZWVk
+IHRvIGJlIGJ1aWx0LiANCj4gRm9yIGluc3RhbmNlLCBkZXZ0b29sIGlzIGNhcGFibGUgb2YgdXBk
+YXRpbmcgc291cmNlIHJldmlzaW9ucyBpbg0KPiByZWNpcGVzIGF1dG9tYXRpY2FsbHksIGl0IG1h
+eSBub3Qgd29yayBleGFjdGx5IGFzIHlvdSB3YW50LCBidXQgdGhhdA0KPiBjYW4gYmUgZml4ZWQu
+DQo+IFllcywgcmVwbyBpdHNlbGYgaXMgbm90IHByb3ByaWV0YXJ5LCBidXQgeW91ciBvcmdhbml6
+YXRpb25hbCB3b3JrZmxvdw0KPiBpcy4NCj4gDQo+IFBhcnRpY3VsYXJseSB0aGlzOg0KPiAiaWYg
+eW91IHdhbnQgdG8gY3JlYXRlIGFub3RoZXIgdmVyc2lvbiB3aXRoIGRpZmZlcmVudCBjbWFrZSBm
+bGFncywNCj4geW91IHdvdWxkIGhhdmUgdG8gY3JlYXRlIGNvcGllcyBvZiBhbGwgNTBpc2ggcmVj
+aXBlcyINCj4gbG9va3Mgb2RkLiBXaHkgd291bGQgeW91IG1ha2UgY29waWVzPyBKdXN0IHNldCB0
+aGUgbmVlZGVkIGZsYWdzIHdpdGgNCj4gYSB2YXJpYWJsZSB0aGF0IGlzIHNldCBmcm9tIGEgZ2xv
+YmFsIGNvbmZpZywNCj4gcGVyaGFwcyB0aGUgZGlzdHJvIG9yIGxvY2FsLmNvbmYuDQo+IA0KPiBB
+bGV4DQotLS0tLUJFR0lOIFBHUCBTSUdOQVRVUkUtLS0tLQ0KDQppUUV6QkFFQkNBQWRGaUVFNFd5
+UE1JQzVBcDQrT29vMVlncWV3MDdWTU5VRkFtR0ZsUE1BQ2drUVlncWV3MDdWDQpNTlhvQ0FmL2ZO
+NGdpMWRmeDdyNGFjZmJ1N2thdzkrM3JqZE11MzRKNlNYL2FoR2pDZmJUWkFnMVR3ZjhONlJaDQpM
+QnVPcERrWFBVNzdpSnVKaXhaeVN2ZTVFWmM0QTIvTlMwaHFYRXBEMGFXZjhBWGFaenhxMFViRUJN
+NzhvVGdIDQpIazF6VkVGeHdMd0VIcFZJUXl2d3g1ckZ6L0p2WjJFTjRhSDU3NmNpUGF3NW4rYkhJ
+WkJldlVmaHNzUHJqUVdYDQp5VVR1V3llVW9NSmxYejQxRStKZlNkMVZJUU9DM2hkV0tGMjZlcjE1
+MnpTeWhZdmhDYWdCTXNIWk1US2RyYWhuDQoyam1JbkdNU01pelhSNnZYQlVUZndhQjQ4QmEwaXFG
+b2kvdHI3K2pOSUhWNVdaTng0QXZVNjFVT3U4TGNhNmhlDQpiR3ZNNW5NN3hScGVIdU5YMnhhOXhX
+czNTa1VORWc9PQ0KPVVKYUUNCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQ0K
 
