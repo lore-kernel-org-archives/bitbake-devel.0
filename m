@@ -1,194 +1,128 @@
-Return-Path: <jasper@fancydomain.eu>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371E9C433FE
-	for <webhook@archiver.kernel.org>; Fri,  5 Nov 2021 18:05:57 +0000 (UTC)
-Received: from mx.walter.deinstapel.de (mx.walter.deinstapel.de
- [116.202.209.171])
- by mx.groups.io with SMTP id smtpd.web12.9307.1636135553885871420
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C4DC433FE
+	for <webhook@archiver.kernel.org>; Fri,  5 Nov 2021 18:45:27 +0000 (UTC)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com
+ [209.85.222.54])
+ by mx.groups.io with SMTP id smtpd.web09.9791.1636137927060759096
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Nov 2021 11:05:56 -0700
+ Fri, 05 Nov 2021 11:45:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="no key for verify" header.i=@fancydomain.eu header.s=mail
- header.b=TIRNKHaZ;
- spf=pass (domain: fancydomain.eu, ip: 116.202.209.171,
- mailfrom: jasper@fancydomain.eu)
-Date: Fri, 05 Nov 2021 19:05:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fancydomain.eu;
-	s=mail; t=1636135551;
-	bh=2jdoaLRilwZeoATN3+hDaahAlTCnkxpypVPrETX1BBI=;
-	h=From:To:CC:Subject:In-Reply-To:References;
-	b=TIRNKHaZTATLWff7nufwHAfR6I+XjqLeP0odnkhj3pKZkKpZJTWPZlhrbN/S3VfAR
-	 C9p/Pcd1WyOu2GY1cz4rxCdzkeTpU56AW/gKMAFmjIGVlCHQs2Sd4w3gY3Gs1rIOY6
-	 5QKcw9zT0IxUIGFdn3nR8Gj0VuYHB5OKPwD203Ba2SmYVlOCu77jxSOri79htAHsPi
-	 fl0dHNbr94WvOp+Fi92nVo7jvDQUvSHwOMecnVHU8Oh6vzcgkKpz5R6j1Ty3x9hsTk
-	 jnve/xjik2uvZNaJkOXGc1xjg9mIyy+A4gENgeI3OiriNw2tLEZrFh2V663jO4lFXf
-	 3QRSEFcpDhNhA==
-From: Jasper Orschulko <jasper@fancydomain.eu>
-To: Alexander Kanavin <alex.kanavin@gmail.com>,
- Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-CC: "openembedded-core@lists.openembedded.org"
- <openembedded-core@lists.openembedded.org>,
- "martin@mko.dev" <martin@mko.dev>,
- Daniel Baumgart <Daniel.Baumgart@iris-sensing.com>,
- "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: =?US-ASCII?Q?Re=3A_=5Bbitbake-devel=5D_=5Boe-core=5D=5BPATCH_1/2=5D?=
- =?US-ASCII?Q?_devtools=3A_Initial_recipe_for_repo_2=2E17=2E3?=
-In-Reply-To: 
- <CANNYZj9sxmakRNGKUuH+ZAWDMJs2EhKT5O4f8HRxd=ovhQPpug@mail.gmail.com>
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=Q0JU2ktv;
+ spf=pass (domain: gmail.com, ip: 209.85.222.54,
+ mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ua1-f54.google.com with SMTP id s13so3262392uaj.11;
+        Fri, 05 Nov 2021 11:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k12EYiZt2TJZze+0DnVwUY9cDlO0VgFvLTVaOCA234Q=;
+        b=Q0JU2ktvNFv0UIt+Mv44PlI5bo50lKRroSydWT7OsAswD9LxPpmXYpBv2p89bs9PXe
+         ZxYEbTugfwCE+BEY03eF3CkU0yUpM5B926i3jaNRuQgYk+XBbqqzXqn4FCPNhSKlb+lK
+         AHjSXOTealLAZlGM5UWwmogodmEIzNXHRlanbPuOsROGiFXO8kyI+yGnNrBX6YvlJ7Zl
+         SY5YcdRdp94WstQGt150qf1F02aaX5lc+BuyykKk+nC2CBPKIOcQaawDHsYdsN364D8t
+         PRd+XFLokah83QDDeDg/AICsHI7RWgLnonym7cw1EQIde4utj1uvdxdEyMRcb0Qzn+Cm
+         4keQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k12EYiZt2TJZze+0DnVwUY9cDlO0VgFvLTVaOCA234Q=;
+        b=njxGzN+BLqcvNh3LM4uVP79bZdZH9HehiwmbPmcMcXMApw824h0HxDEMkEyO+8LSJR
+         GWam5t4UMhXGqqMQtTSniOLw9DbxuRBJM0oiRV7MkSLUd/rmH33VrexpfW8XW31b88hu
+         vsLvlKFdUL0em9dD0PxiLpJ6+NSOz4xliUoC72jbydVAJANIJhLZybI222Zufa3sCXGU
+         NhZkZLxSrBQM216QflpOfPK+Z2G5m4mrCmmWGLdjYoOKRRHU/qeRi/3GDegy6pJj/p9m
+         FZBlxyeNI6mf3wbmB6jq5ALoSnu1E9wl5iw68rS7vnJAkL6BCUh1W33XwOrxS7zDW9h6
+         CIPw==
+X-Gm-Message-State: AOAM5333yvkADkDNpHf7/U/kSvsrxN5FuSKNYHrLIqUEbNqybE+OXZ6Z
+	4AGZTnB6c5pqS1D8gjZmEGdDaagCh4/mKUBFTW4=
+X-Google-Smtp-Source: 
+ ABdhPJzZ4jmtTodW1jwsSoMvwjQxjdsx1jnKOyzr2JkWZFK/HG2MnPio1GCUeCeO/10JEcnXKp/WWjRfwraHWnzcccw=
+X-Received: by 2002:a67:c511:: with SMTP id e17mr16601470vsk.40.1636137926245;
+ Fri, 05 Nov 2021 11:45:26 -0700 (PDT)
+MIME-Version: 1.0
 References: <20211105133104.19895-1-jasper@fancydomain.eu>
  <CANNYZj_s8_PkKfMQnBxNZLs-p0F5xb4StCXiF84OkbE5zpptqw@mail.gmail.com>
  <ea3f24549a6e54f880e925e8f5cf6128fc5629f9.camel@iris-sensing.com>
  <CANNYZj9sxmakRNGKUuH+ZAWDMJs2EhKT5O4f8HRxd=ovhQPpug@mail.gmail.com>
-Message-ID: <281CD8F4-9B15-40A6-9AAE-F2C0D633E5AD@fancydomain.eu>
-Mime-Version: 1.0
-Content-Type: multipart/alternative;
- boundary=----4XK4ATX5V7LEB7EH07P3FZ88VO7S6E
-Content-Transfer-Encoding: 7bit
+ <281CD8F4-9B15-40A6-9AAE-F2C0D633E5AD@fancydomain.eu>
+In-Reply-To: <281CD8F4-9B15-40A6-9AAE-F2C0D633E5AD@fancydomain.eu>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 5 Nov 2021 19:45:14 +0100
+Message-ID: 
+ <CANNYZj-pKjvRT+Y39mT-t3G+GBON0Z=xZFURJH8AhPGfjOf7yw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe for
+ repo 2.17.3
+To: Jasper Orschulko <jasper@fancydomain.eu>
+Cc: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>,
+	"openembedded-core@lists.openembedded.org"
+ <openembedded-core@lists.openembedded.org>,
+	"martin@mko.dev" <martin@mko.dev>,
+ Daniel Baumgart <Daniel.Baumgart@iris-sensing.com>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="000000000000e5bfeb05d00f0b12"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Nov 2021 18:05:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12917
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Nov 2021 18:45:27 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12918
 
-------4XK4ATX5V7LEB7EH07P3FZ88VO7S6E
-Content-Type: text/plain;
- charset=utf-8
+--000000000000e5bfeb05d00f0b12
+Content-Type: text/plain; charset="UTF-8"
+
+On Fri, 5 Nov 2021 at 19:05, Jasper Orschulko <jasper@fancydomain.eu> wrote:
+
+>
+> But that is exactly what we are doing, by integrating the repo fetcher
+> into the yocto workflow, thus improving the yocto tooling :)
+> Why reinvent the wheel, when you can reuse whats already there? You
+> wouldn't reinvent git just for yocto, would you?
+>
+
+What I mean is that I would try harder to find a workable setup while
+keeping the recipes for individual items that need to be built.
+For instance, devtool is capable of updating source revisions in recipes
+automatically, it may not work exactly as you want, but that can be fixed.
+Yes, repo itself is not proprietary, but your organizational workflow is.
+
+Particularly this:
+"if you want to create another version with different cmake flags, you
+would have to create copies of all 50ish recipes"
+looks odd. Why would you make copies? Just set the needed flags with a
+variable that is set from a global config,
+perhaps the distro or local.conf.
+
+Alex
+
+--000000000000e5bfeb05d00f0b12
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Alex,
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail=
+_attr">On Fri, 5 Nov 2021 at 19:05, Jasper Orschulko &lt;<a href=3D"mailto:=
+jasper@fancydomain.eu">jasper@fancydomain.eu</a>&gt; wrote:<br></div><block=
+quote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1=
+px solid rgb(204,204,204);padding-left:1ex"><div><br>But that is exactly wh=
+at we are doing, by integrating the repo fetcher into the yocto workflow, t=
+hus improving the yocto tooling :)<br>Why reinvent the wheel, when you can =
+reuse whats already there? You wouldn&#39;t reinvent git just for yocto, wo=
+uld you?<br></div></blockquote><div><br></div>What I mean is that I would t=
+ry harder to find a workable setup while keeping the recipes for individual=
+ items that need to be built. <br></div><div class=3D"gmail_quote">For inst=
+ance, devtool is capable of updating source revisions in recipes automatica=
+lly, it may not work exactly as you want, but that can be fixed.<br></div><=
+div class=3D"gmail_quote">Yes, repo itself is not proprietary, but your org=
+anizational workflow is.<br></div><div class=3D"gmail_quote"><br></div><div=
+ class=3D"gmail_quote">Particularly this:</div><div class=3D"gmail_quote">&=
+quot;if you want to create another version with different cmake flags, you =
+would have to create copies of all 50ish recipes&quot;</div><div class=3D"g=
+mail_quote">looks odd. Why would you make copies? Just set the needed flags=
+ with a variable that is set from a global config,</div><div class=3D"gmail=
+_quote">perhaps the distro or local.conf.</div><div class=3D"gmail_quote"><=
+br></div><div class=3D"gmail_quote">Alex<br></div></div>
 
-> that you invented a custom, proprietary=20
-> workflow that you have to support entirely by > yourselves
-
-We are not though=2E We are integrating an established tool for multi-repo=
-sitory management into yocto=2E Google repo is not proprietary by the way, =
-it is permissive licensed=2E It is just a little "special" in it's modus op=
-erandi=2E
-
-> instead of finding ways to do what you need
-> with standard yocto tooling, improving the
-> tooling where/if necessary=2E
-
-But that is exactly what we are doing, by integrating the repo fetcher int=
-o the yocto workflow, thus improving the yocto tooling :)
-Why reinvent the wheel, when you can reuse whats already there? You wouldn=
-'t reinvent git just for yocto, would you?
-
-Best regards,
-Jasper
-
-
-On 5 November 2021 18:46:27 CET, Alexander Kanavin <alex=2Ekanavin@gmail=
-=2Ecom> wrote:
->On Fri, 5 Nov 2021 at 16:24, Jasper Orschulko <
->Jasper=2EOrschulko@iris-sensing=2Ecom> wrote:
->
->>
->> In our case some binary which is made up from some 50ish separately
->> versioned sub-components=2E We used to have separate recipes for each o=
-f
->> this components and static link them using DEPENDS=2E However, this doe=
-s
->> not scale well=2E E=2Eg=2E if you want to create another version with
->> different cmake flags, you would have to create copies of all 50ish
->> recipes=2E You could move all the components into a single recipe and d=
-o
->> 50x git fetcher, but keeping this versioned is still painful=2E
->> Especially since the developers mainly don't use yocto but use the SDK
->> for cross-compiling=2E As such this used to mean, that versioning in th=
-e
->> development workflow and the release workflow worked differently ->
->> more maintenance work=2E
->>
->> With repo fetcher we can streamline the versioning within the yocto
->> build process and the daily developer workflow, as both can fetch the
->> repo manifest from a central stored git repo=2E The idea is, that the
->> repo manifest defaults to develop branch for all component repos and if
->> we want to create a release we can use repos own tooling to
->> automatically create fixed refspecs from the development manifest=2E
->> something like `repo manifest -r -o release-1=2E0=2E0=2Exml`, push that=
- as a
->> release to the manifest repo, set this release as refspec in the recipe
->> within the meta layer and proceed with the release process=2E So no mor=
-e
->> manually maintaining the component versioning within the yocto recipes=
-=2E
->>
->
->I see=2E I don't particularly endorse that you invented a custom, proprie=
-tary
->workflow that you have to support entirely by yourselves - instead of
->finding ways to do what you need with standard yocto tooling, improving t=
-he
->tooling where/if necessary=2E But if that works out ok for you, then fine=
- :)
->
->Alex
-
-------4XK4ATX5V7LEB7EH07P3FZ88VO7S6E
-Content-Type: text/html;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<html><head></head><body>Hi Alex,<br><br>&gt; that you invented a custom, p=
-roprietary <br>&gt; workflow that you have to support entirely by &gt; your=
-selves<br><br>We are not though=2E We are integrating an established tool f=
-or multi-repository management into yocto=2E Google repo is not proprietary=
- by the way, it is permissive licensed=2E It is just a little "special" in =
-it's modus operandi=2E<br><br>&gt; instead of finding ways to do what you n=
-eed<br>&gt; with standard yocto tooling, improving the<br>&gt; tooling wher=
-e/if necessary=2E<br><br>But that is exactly what we are doing, by integrat=
-ing the repo fetcher into the yocto workflow, thus improving the yocto tool=
-ing :)<br>Why reinvent the wheel, when you can reuse whats already there? Y=
-ou wouldn't reinvent git just for yocto, would you?<br><br>Best regards,<br=
->Jasper<br><br><br><div class=3D"gmail_quote">On 5 November 2021 18:46:27 C=
-ET, Alexander Kanavin &lt;alex=2Ekanavin@gmail=2Ecom&gt; wrote:<blockquote =
-class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0=2E8ex; border-left: 1p=
-x solid rgb(204, 204, 204); padding-left: 1ex;">
-<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmai=
-l_attr">On Fri, 5 Nov 2021 at 16:24, Jasper Orschulko &lt;<a href=3D"mailto=
-:Jasper=2EOrschulko@iris-sensing=2Ecom">Jasper=2EOrschulko@iris-sensing=2Ec=
-om</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margi=
-n:0px 0px 0px 0=2E8ex;border-left:1px solid rgb(204,204,204);padding-left:1=
-ex"><br>
-In our case some binary which is made up from some 50ish separately<br>
-versioned sub-components=2E We used to have separate recipes for each of<b=
-r>
-this components and static link them using DEPENDS=2E However, this does<b=
-r>
-not scale well=2E E=2Eg=2E if you want to create another version with<br>
-different cmake flags, you would have to create copies of all 50ish<br>
-recipes=2E You could move all the components into a single recipe and do<b=
-r>
-50x git fetcher, but keeping this versioned is still painful=2E<br>
-Especially since the developers mainly don't use yocto but use the SDK<br>
-for cross-compiling=2E As such this used to mean, that versioning in the<b=
-r>
-development workflow and the release workflow worked differently -&gt;<br>
-more maintenance work=2E<br>
-<br>
-With repo fetcher we can streamline the versioning within the yocto<br>
-build process and the daily developer workflow, as both can fetch the<br>
-repo manifest from a central stored git repo=2E The idea is, that the<br>
-repo manifest defaults to develop branch for all component repos and if<br=
->
-we want to create a release we can use repos own tooling to<br>
-automatically create fixed refspecs from the development manifest=2E<br>
-something like `repo manifest -r -o release-1=2E0=2E0=2Exml`, push that as=
- a<br>
-release to the manifest repo, set this release as refspec in the recipe<br=
->
-within the meta layer and proceed with the release process=2E So no more<b=
-r>
-manually maintaining the component versioning within the yocto recipes=2E<=
-br></blockquote><div><br></div>I see=2E I don't particularly endorse that y=
-ou invented a custom, proprietary workflow that you have to support entirel=
-y by yourselves - instead of finding ways to do what you need with standard=
- yocto tooling, improving the tooling where/if necessary=2E But if that wor=
-ks out ok for you, then fine :)</div><div class=3D"gmail_quote"><br></div><=
-div class=3D"gmail_quote">Alex<br></div></div>
-</blockquote></div></body></html>
-------4XK4ATX5V7LEB7EH07P3FZ88VO7S6E--
+--000000000000e5bfeb05d00f0b12--
 
