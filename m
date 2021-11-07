@@ -1,83 +1,110 @@
-Return-Path: <mac@mcrowe.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76747C433EF
-	for <webhook@archiver.kernel.org>; Sat,  6 Nov 2021 16:58:38 +0000 (UTC)
-Received: from avasout-peh-002.plus.net (avasout-peh-002.plus.net
- [212.159.14.18])
- by mx.groups.io with SMTP id smtpd.web12.21246.1636217914083866187
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AC7C433F5
+	for <webhook@archiver.kernel.org>; Sun,  7 Nov 2021 08:54:59 +0000 (UTC)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com
+ [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web08.29222.1636275299032060805
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 06 Nov 2021 09:58:36 -0700
+ Sun, 07 Nov 2021 01:54:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@mcrowe.com header.s=20191005 header.b=AseNTdiw;
- spf=pass (domain: mcrowe.com, ip: 212.159.14.18, mailfrom: mac@mcrowe.com)
-Received: from deneb.mcrowe.com ([80.229.24.9])
-	by smtp with ESMTP
-	id jP1Rm5soUfv01jP1SmF2Vq; Sat, 06 Nov 2021 16:58:32 +0000
-X-Clacks-Overhead: "GNU Terry Pratchett"
-X-CM-Score: 0.00
-X-CNFS-Analysis: v=2.4 cv=Opwsdwzt c=1 sm=1 tr=0 ts=6186b438
- a=E/9URZZQ5L3bK/voZ0g0HQ==:117 a=E/9URZZQ5L3bK/voZ0g0HQ==:17
- a=kj9zAlcOel0A:10 a=vIxV3rELxO4A:10 a=iGHA9ds3AAAA:8 a=KBDoviU24F2BO3hyrfMA:9
- a=CjuIK1q_8ugA:10 a=nM-MV4yxpKKO9kiQg6Ot:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mcrowe.com;
-	s=20191005; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:To:From:Date:Sender:Reply-To:CC:Content-Transfer-Encoding:Content-ID:
-	Content-Description; bh=iABf7eDJ1dcYFBvmHCAf9ypljqrvGQt0gtzWkwOH0LA=; b=AseNT
-	diw8PyzcOnERr3s7hq1R53Ktb/wpH6LoGQSmLFiTC2/3zNVn7FfN7ygWKtbJjhOSqyoIlSNjgQfb/
-	8QHZl2Zj1icfkDXZzmwDRRcksoemq/ruNl0fGiCJ7Y87gK1VLi6xgqWGrCUpXYdC9HRsoJcSI1K4G
-	PnH0zTbyP1p/z4ZOIEZ8DUvG7jfVD/skelgHcS4k2Bgm8uRAAcBaKKzDtfAUtM6ddhidkkKFURizl
-	+44y4AEhP7gc7zlkqWaunOXFtm/g/ml4HWuaWEHO3ykFhEsPPW5dfOP2hyC1bZAiLfa1ss07Hlnn0
-	Bg7FLFkieUEFvooX5HoV8JfVgjqUg==;
-Received: from mac by deneb.mcrowe.com with local (Exim 4.94.2)
-	(envelope-from <mac@mcrowe.com>)
-	id 1mjP1R-004Vws-Bd; Sat, 06 Nov 2021 16:58:29 +0000
-Date: Sat, 6 Nov 2021 16:58:29 +0000
-From: Mike Crowe <mac@mcrowe.com>
-To: Alexander Kanavin <alex.kanavin@gmail.com>,
-	Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>,
-	Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>,
-	"bitbake-devel@lists.openembedded.org"
- <bitbake-devel@lists.openembedded.org>,
-	"martin@mko.dev" <martin@mko.dev>,
-	Caner Altinbasak <cal@brightsign.biz>,
-	Daniel Baumgart <Daniel.Baumgart@iris-sensing.com>
-Subject: Re: [bitbake-devel] Improving npm(sw) fetcher & integration within
- Bitbake
-Message-ID: <YYa0NeCHOjBXYsxA@mcrowe.com>
-References: <1c7d6bb2479af789132b3e94c44a54f1d1b5c304.camel@iris-sensing.com>
- <CANNYZj_0U_Yk4TPVxS4hQ5zdeSvZ1LZkFQ+8fv8-x9ieZ4AH7g@mail.gmail.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=id53zIja;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f49.google.com with SMTP id d27so21250406wrb.6
+        for <bitbake-devel@lists.openembedded.org>;
+ Sun, 07 Nov 2021 01:54:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=PYn1YsWmDGHBE73S11+NRPpyeUtGg+d79r24H2Q+Ngo=;
+        b=id53zIja37UevhD7oSYf1qEwEQ/MQB9Km4r6FWtxwqbcXMgr8I83iZUlq9vsdqXQAc
+         2F6bZJHIlQNznU2xknuI3rO0P7yS4gMbsfQ6qK/o6Fasv1RBtwM5eA2PSBLoIzdUgO0L
+         PFhPkiEnsHsEZoK8gzgHCDGWcBZOMzpxXCt8Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=PYn1YsWmDGHBE73S11+NRPpyeUtGg+d79r24H2Q+Ngo=;
+        b=pq+i+XK8yrHR2VjmsXlVZ2rhtRGQlNmyjAx3wWceqd/LIPoJuGRG5iDcJcUQcQxuFo
+         l/ckCkr+mPu+yeEVvBcogClxf8VABMUBfBX2L9btf1AgKNqu6bvRB+xXqKQGRNI3FmBZ
+         5lZaof062McIaPzXLDJp/KF/0J6JBAm5cgOWCE9ArsvpnScx6Uwk9Qt9t+Ebn+3QkN4m
+         C6VDGo39uFH7fpKTxmEsOZE6Z8iPpXtclSsZdlTDptjrqnv3R6+JSneXqD1E7OiAMl87
+         GV4z8GyZQ7BhyKAft/OoYZqzOAYuW1mtVRA6hd1mHROvp3Eo8GKuvWFo0rTXwQMDw8j9
+         1DAQ==
+X-Gm-Message-State: AOAM532uU2DR6BPJxuQENUmGa75OovsVVxKU65Q9HgzWZxPXyGOejQon
+	X2p0WHiMSqua26n6RnBOFA+MsA==
+X-Google-Smtp-Source: 
+ ABdhPJw/I14/w66f0BT5kY+EyyMelTFM0cTQe303Zp8p/0wc0ktl+HV1VWu1ky2s2gdm9fW5k4gQPg==
+X-Received: by 2002:a5d:4a0a:: with SMTP id
+ m10mr65932112wrq.221.1636275297264;
+        Sun, 07 Nov 2021 01:54:57 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:fdfa:2bc:4272:d318?
+ ([2001:8b0:aba:5f3c:fdfa:2bc:4272:d318])
+        by smtp.gmail.com with ESMTPSA id
+ h3sm12680371wrv.69.2021.11.07.01.54.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Nov 2021 01:54:56 -0700 (PDT)
+Message-ID: 
+ <cf04f6c310491ca861ce5073dc14554bcba99ebc.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 2/2] fetch2: Fix race condition in
+ latest_revision
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: jasper@fancydomain.eu, bitbake-devel@lists.openembedded.org
+Cc: martin@mko.dev, Daniel.Baumgart@iris-sensing.net,
+	openembedded-core@lists.openembedded.org, Jasper Orschulko
+	 <Jasper.Orschulko@iris-sensing.com>
+Date: Sun, 07 Nov 2021 08:54:55 +0000
+In-Reply-To: <20211105133048.19879-2-jasper@fancydomain.eu>
+References: <20211105133048.19879-1-jasper@fancydomain.eu>
+	 <20211105133048.19879-2-jasper@fancydomain.eu>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: 
- <CANNYZj_0U_Yk4TPVxS4hQ5zdeSvZ1LZkFQ+8fv8-x9ieZ4AH7g@mail.gmail.com>
-X-CMAE-Envelope: 
- MS4xfHiqzZFb+NJ0oboxjaDZecLYD8PNmSDMeBvkoUUXHMb4Sn2bwl+20HPpgaJXAAjU1eQnt52OErY7+X4FkfL9jRBSJwH/FU/YIj8xHDAG4+7PPtSXG8iG
- jfDwgeA4hWpMHq9/rDPWJUheqdn40x+MvljxafDhWTqLcezmi1EvVosFLxI+MOJXQAwa1TIcvhOi7bgAi7GIqDjameukUrfKz8o=
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 06 Nov 2021 16:58:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12925
+ <bitbake-devel@lists.openembedded.org>; Sun, 07 Nov 2021 08:54:59 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12926
 
-On Thursday 04 November 2021 at 14:09:42 +0100, Alexander Kanavin wrote:
-> To the best of my knowledge, no other companies at the moment are using
-> Yocto to integrate npm-based items into a product.
+On Fri, 2021-11-05 at 14:30 +0100, Jasper Orschulko via lists.openembedded.org
+wrote:
+> From: Martin Koppehel <martin@mko.dev>
+> 
+> Setting latest_revision contained a race condition, where it would be
+> set to an empty string, if the hash calculation function would take to
+> long.
+> 
+> Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+> ---
+>  lib/bb/fetch2/__init__.py | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index 6a38cb09..9dc23d05 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -1602,7 +1602,9 @@ class FetchMethod(object):
+>          try:
+>              return revs[key]
+>          except KeyError:
+> -            revs[key] = rev = self._latest_revision(ud, d, name)
+> +            rev = self._latest_revision(ud, d, name)
+> +            if rev != '':
+> +                revs[key] = rev
+>              return rev
+>  
+>      def sortable_revision(self, ud, d, name):
 
-We make light use of npm in the production of the rootfs for our products.
-The upgrade to Dunfell was a bit painful, and the slowness is annoying too,
-but I think that we've ended up with things being better in the end because
-we can now be sure that all the sources are captured correctly.
+I'm afraid I don't understand why this is a race condition? Where is the timeout
+that stops one being set?
 
-We did run into a few bugs and some of our fixes for those have landed. The
-npm fetcher seems to be fighting with the usual way that Bitbake expects
-fetchers to work that I don't really understand enough (from either side)
-to know how to fix. (e.g.
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=14383 which doesn't
-directly affect us, but the underlying cause meant that our usual method
-for capture sources needed some extra workarounds.)
+Cheers,
 
-Mike.
+Richard
+
 
