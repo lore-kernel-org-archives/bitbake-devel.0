@@ -1,72 +1,89 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <n.papenkov@inango-systems.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6309DC433F5
-	for <webhook@archiver.kernel.org>; Mon,  8 Nov 2021 13:32:19 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com
- [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web08.44807.1636378338069317952
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA88C433F5
+	for <webhook@archiver.kernel.org>; Mon,  8 Nov 2021 14:16:33 +0000 (UTC)
+Received: from mail.inango-systems.com (mail.inango-systems.com
+ [178.238.230.57])
+ by mx.groups.io with SMTP id smtpd.web10.45256.1636380991748206042
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Nov 2021 05:32:18 -0800
+ Mon, 08 Nov 2021 06:16:32 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=VKkhK92W;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f43.google.com with SMTP id o29so9213306wms.2
-        for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Nov 2021 05:32:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=K7iVR8X51zOXd1LQzktStd0kOO0PvhK7u3fEiT2Sqlc=;
-        b=VKkhK92WAqylIndTZviOvp+yGeTKeTbyFS7WV+MZL3b5kmPmhxhpZ8RBlkjt1Hobx4
-         rd4nhfrJi8CRf2laBSyMZKX5LVCzMbngrg1LTdG+O7PgeDeaCMK1eyQlqJC6vlwK0ecc
-         eDkAvhzUenqg8IPBIj+jxFR7EGrDmgM4pBYz8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=K7iVR8X51zOXd1LQzktStd0kOO0PvhK7u3fEiT2Sqlc=;
-        b=HG5vSYCwzg3/TN3+TerwTC7QQCxsJc0eUKVUhOJOG/GNhA68IgA+LbTyjeV4JGBde6
-         btP8Ft201UFcYaKVOdsvJMNh6ATTXso2FwpHTyaotQVfYVVfy7gN36h+Omz2ztKOfKH0
-         oa1OxYA3Z7f9XTYMFVaRdkR6Fr1E629pOfGSVE2ZqeI2+gwEIdZGFOqrLbK0FRfH1klk
-         O2KuOgMjfPtW1n5EHgAfY4+bQLTSy/NNnK3H4hDs/emecz5gJSLUo+q2f6Rd3f3UCNa3
-         ELDU2lA7E6d3OQyshwvlBRn4gwTQv24Lyki4SpWgG2wg9cx3+fxDSct8GA5FToGivL/2
-         82Vg==
-X-Gm-Message-State: AOAM531xESKISST7l/dI8+7cPwl26UfILOdjAJDlQ9Pw/Cynh2JRpjga
-	dE0IMT9KSw8UaJ+7jge98JtPnw==
-X-Google-Smtp-Source: 
- ABdhPJx7z1RvAaj2l4CRBanZuCqWP0pDKZgBbjt3cmnLf2zas2w82wIb9lO95fy9VBbK+5a6Dbfanw==
-X-Received: by 2002:a05:600c:a45:: with SMTP id
- c5mr52501533wmq.79.1636378336372;
-        Mon, 08 Nov 2021 05:32:16 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:5c39:dba0:779a:3673?
- ([2001:8b0:aba:5f3c:5c39:dba0:779a:3673])
-        by smtp.gmail.com with ESMTPSA id
- x13sm17054050wrr.47.2021.11.08.05.32.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Nov 2021 05:32:15 -0800 (PST)
+ dkim=pass header.i=@inango-systems.com
+ header.s=45a440e0-d841-11e8-b985-5fcc721607e0 header.b=HPfYLGXX;
+ spf=pass (domain: inango-systems.com, ip: 178.238.230.57,
+ mailfrom: n.papenkov@inango-systems.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.inango-systems.com (Postfix) with ESMTP id 658FA108044A;
+	Mon,  8 Nov 2021 16:16:29 +0200 (IST)
+Received: from mail.inango-systems.com ([127.0.0.1])
+	by localhost (mail.inango-systems.com [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id I57EbdH9lr27; Mon,  8 Nov 2021 16:16:28 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.inango-systems.com (Postfix) with ESMTP id 9D2FD1080449;
+	Mon,  8 Nov 2021 16:16:28 +0200 (IST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-systems.com 9D2FD1080449
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
+	s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1636380988;
+	bh=EUK1PTsyv0LDA9CC2nU8GXYWs5NAtapRnvpTLOTNpCQ=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=HPfYLGXXBOvniCkDhQqWjrmAJrVVSNi3c3NNNGroD9Pa7VKrDZ9aPBMaZeiBjc69x
+	 As1jjEdh/7wP1lrd1Ewb3dZxo7mpQEnjIqb0cyBaiUU36Bd4T5ofoyW6Lo3NlQzK/r
+	 EBryaYJ3qDt3ZHp6CEDzgEPvTvQFaJx9Ugs4Tx7oencYD1o41nhtgFzdbjeWmnVVh1
+	 czEyg+Rl03AbP75elK0Rm76M71k2rwOQzys6hMiW2FeUHvAON0+5OG4m7IN2oqi1XN
+	 VU/QJT7bXqaOg9yOGw1NyAp1w85NaJVylvx7zMKCMVmSiGn1Lwu4PWtWrFI27uT8f4
+	 J3SQ84Ey303YQ==
+X-Virus-Scanned: amavisd-new at inango-systems.com
+Received: from mail.inango-systems.com ([127.0.0.1])
+	by localhost (mail.inango-systems.com [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YF27a5Wrpqkk; Mon,  8 Nov 2021 16:16:28 +0200 (IST)
+Received: from mail.inango-systems.com (mail.inango-systems.com
+ [172.17.220.3])
+	by mail.inango-systems.com (Postfix) with ESMTP id 727D51080440;
+	Mon,  8 Nov 2021 16:16:28 +0200 (IST)
+Date: Mon, 8 Nov 2021 16:16:28 +0200 (IST)
+From: Nikolay Papenkov <n.papenkov@inango-systems.com>
+To: richard purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Dmytro Slovinskyi <d.slovinskyi@inango-systems.com>
 Message-ID: 
+ <2015885332.145861.1636380988162.JavaMail.zimbra@inango-systems.com>
+In-Reply-To: 
+ <357b3cba89e7fa3f1ba9bd300520c69e33b69f76.camel@linuxfoundation.org>
+References: <20211026074217.1637-1-n.papenkov@inango-systems.com>
  <357b3cba89e7fa3f1ba9bd300520c69e33b69f76.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel][PATCH] bitbake: a cooker is stuck for a long
  time
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: n.papenkov@inango-systems.com, bitbake-devel@lists.openembedded.org
-Cc: Dmytro Slovinskyi <d.slovinskyi@inango-systems.com>
-Date: Mon, 08 Nov 2021 13:32:14 +0000
-In-Reply-To: <20211026074217.1637-1-n.papenkov@inango-systems.com>
-References: <20211026074217.1637-1-n.papenkov@inango-systems.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1 
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.17.220.3]
+X-Mailer: Zimbra 8.8.15_GA_4173 (ZimbraWebClient - FF88
+ (Linux)/8.8.15_GA_4173)
+Thread-Topic: bitbake: a cooker is stuck for a long time
+Thread-Index: jnzHg5S7sKuUNxWa2Uatu8SsA9dz1w==
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 08 Nov 2021 13:32:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12942
+ <bitbake-devel@lists.openembedded.org>; Mon, 08 Nov 2021 14:16:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12943
+
+Hello Richard,
+
+Thanks for proposing a better solution. With this fix we don't observe cooker hang anymore and as soon as the last not-killed thread finishes parsing we see error message:
+"ERROR: ParseError in None: Not all recipes parsed, parser thread killed/died? Exiting"
+as expected.
+
+Regards,
+Nikolay
+
+----- Original Message -----
+From: "richard purdie" <richard.purdie@linuxfoundation.org>
+To: "Nikolay Papenkov" <n.papenkov@inango-systems.com>, "bitbake-devel" <bitbake-devel@lists.openembedded.org>
+Cc: "Dmytro Slovinskyi" <d.slovinskyi@inango-systems.com>
+Sent: Monday, November 8, 2021 3:32:14 PM
+Subject: Re: [bitbake-devel][PATCH] bitbake: a cooker is stuck for a long time
 
 On Tue, 2021-10-26 at 07:42 +0000, Nikolay Papenkov via lists.openembedded.org
 wrote:
@@ -124,4 +141,24 @@ Cheers,
 Richard
 
 
+
+
+-=-=-=-=-=-=-=-=-=-=-=-
+Links: You receive all messages sent to this group.
+View/Reply Online (#12942): https://lists.openembedded.org/g/bitbake-devel/message/12942
+Mute This Topic: https://lists.openembedded.org/mt/86597730/6123239
+Group Owner: bitbake-devel+owner@lists.openembedded.org
+Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [n.papenkov@inango-systems.com]
+-=-=-=-=-=-=-=-=-=-=-=-
+-- 
+Nikolay Papenkov 
+Architect, Arch group 
+
+
+Inango. The Service Orchestrator. 
+web. [ https://mail.inango.com/inango.com | inango.com ] 
+mail. [ mailto:n.papenkov@inango-systems.com | n.papenkov@inango-systems.com ] 
+tel. +357 99 615176 
+
+The information contained in this message is proprietary to Inango Systems, protected from disclosure, and may be privileged. The information is intended to be conveyed only to the designated recipient(s) of the message. If the reader of this message is not the intended recipient, you are hereby notified that any dissemination, use, distribution or copying of this communication is strictly prohibited and may be unlawful. If you have received this communication in error, please notify us immediately by replying to the message and deleting it from your computer.
 
