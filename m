@@ -1,49 +1,50 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <marius.kriegerowski@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E55DC433F5
-	for <webhook@archiver.kernel.org>; Tue,  9 Nov 2021 06:47:50 +0000 (UTC)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com
- [209.85.222.49])
- by mx.groups.io with SMTP id smtpd.web08.8769.1636440469366929657
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F27C433EF
+	for <webhook@archiver.kernel.org>; Tue,  9 Nov 2021 08:05:16 +0000 (UTC)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com
+ [209.85.208.46])
+ by mx.groups.io with SMTP id smtpd.web08.9217.1636445115445671176
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Nov 2021 22:47:49 -0800
+ Tue, 09 Nov 2021 00:05:15 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=j8p1tPQ7;
- spf=pass (domain: gmail.com, ip: 209.85.222.49,
- mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ua1-f49.google.com with SMTP id v3so36465809uam.10
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=HomC0Qpp;
+ spf=pass (domain: gmail.com, ip: 209.85.208.46,
+ mailfrom: marius.kriegerowski@gmail.com)
+Received: by mail-ed1-f46.google.com with SMTP id o8so73148261edc.3
         for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Nov 2021 22:47:49 -0800 (PST)
+ Tue, 09 Nov 2021 00:05:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9WHRqDJ3BYd0qj+oahsO9nwedN7lmr0ELgd6rZSVfLA=;
-        b=j8p1tPQ7SnGeaCxHZb4bEG+POXtSIv9uy5Of/6bWdjBqsSS8GcpjkhTqCbhDkqm0si
-         EhoKYjBDxFvtaDVY3f8MIFF9m4mLgmwcNIazKUbda+QrsD/NgBaUk/7bYPdIaTgqlOvL
-         v/j9AOKrELn97AIqdbFLIb1NFkE7vu0pOd92e5CUfZYuPk2bjk5zg/LNVT4oh0aHF0bA
-         Uzh7brV2y8cMCJLzclgp+qTePQYXhthmQW6eOi4Lg80pXcp5hfiSem/ng02ieFMJsgNn
-         YMJYOUAdBBxrRzd6vijMHUo+qghxUo5GToAD6YzKZxSrE3Ocg6Cqarv136KZjwZjnukE
-         51Nw==
+        bh=Zh2bHDtWXehQ6g88X2UgeupOqHLaCTpoveB5RGQiTd0=;
+        b=HomC0QpprmcemmatV2L6M7ogq+gK3mlgEEK+Yp4Ghf7HSaWokOH3tpfYK9JYArLFNA
+         d8O9fqePyCdoBGdNMF/U9Na+HlAVZXMUxfys6ZyV8npd567H/V8BHAFCRpbumhcKzIbw
+         Awciyv+RTpdBVNL7DEw4ADlTixNfDfcJZoIDpOXSxQwFI9Nrn31H6J2wPESG4kjgQLdo
+         Sl3z844Zq8/ayAjE6BszdvL+mskHrGgBg76zuHAH8qQvXOSlXMdxxNWHzBrW3nWV7GjN
+         ls1tUpcg5DgeYpsTQH6rCeyVSBWYc3h5SMir5JTZI0ot9GCsfHOVGGHierv9f4h4Yt75
+         ZR6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9WHRqDJ3BYd0qj+oahsO9nwedN7lmr0ELgd6rZSVfLA=;
-        b=hfFNIHkM2Hdu0K+gGefXkzdgo2bfdSsvigs0bQH/3bjQ0eQFaFwzHdPmZzbMvId0rv
-         8oJiHJumgC3lu1Fc3Je4yhz1RC3A9YOXtE/kyaxYL4J61qA4ZY8aptKp1MK33LjN4van
-         M0YqOZvDBD1p9JJWG/OZIbQuIflj5os+vaJ+sY5moBR0VNF5+G/0EGZNaRKfe9oLSIbO
-         UKGGziOTcxw/aheWn5sfwJVQ54na2dzop38jrDWdnUP8IN2C/uMhA/ocFQsTCxdJoaxk
-         1uRRM6B0qUFdROyz+Gz5OP4GdY/U0UPuQId8SKVsWoVuLEzRSnOQ0sn6+RbSY9+tIQTW
-         wRhQ==
-X-Gm-Message-State: AOAM530vn1MXJ/9TzdiNwcK4s+bzek8NyieHJzhqRBSPjJv2nUqomaxV
-	jltZHcXceV/2bxpUN3ZvdD2JIXn9lz7J7hwpdDk=
+        bh=Zh2bHDtWXehQ6g88X2UgeupOqHLaCTpoveB5RGQiTd0=;
+        b=OGxHux2aXl2K6QENRCPuFx4uhIcPbsVHmIhAQ/DsD2285j5KCyM9t45NSbONBpDYIK
+         ZcRuMgHvnILc/845y/QmiLFetazapKl9N/6h0rAxVhxVml4raiKfcwX0RNDQ3xZyQE2n
+         dzVYzEnW8KgRHc2n+CoHeL6j5f3oA7UzdgfdJYe+O5g46irdqcLHUhG2mVwZVWmQ+Wr2
+         12SWOyl0fD6NZCFGUaPmOIv3XSK877croQvEY+OYEZr+0YQFsDc0u2+g7NPzuCtUWDH3
+         BX4DFU+izx/Q4pMCPv13RSs25dxBzdhvrgxBm4jhbItZ+NpITy8kOXp69AFvIn/jYcsJ
+         w+nw==
+X-Gm-Message-State: AOAM532PdISfEkts9C5BRRByMj1GF4OGKNgr/S5TvY50mMM6IEq6HtKp
+	1YruR8TbrlIJXT3nV2Dn0PECeG5ES14OkvVR+ro=
 X-Google-Smtp-Source: 
- ABdhPJxDKFuSyGze9gyDDc88Poo2seayHgnKTOtqbNplBnEaYPcDrzK81sjzlOym4A5qeqgQYnDsoPdzFYIO7DFrpQY=
-X-Received: by 2002:ab0:3d10:: with SMTP id f16mr7317689uax.100.1636440468391;
- Mon, 08 Nov 2021 22:47:48 -0800 (PST)
+ ABdhPJyoLNh6D3aQCj+vK9MzhOJZAOb9thKTZhVJSB30FZDjOGtNX/bZybRf6Ft513Mb0Vt/frxYCKvLW5EJaK+Hs0A=
+X-Received: by 2002:a17:906:ce2a:: with SMTP id
+ sd10mr7217119ejb.154.1636445113536;
+ Tue, 09 Nov 2021 00:05:13 -0800 (PST)
 MIME-Version: 1.0
 References: 
  <CAMaS9hNh8iztUquiPddua-6Lu0nLzU832YwHG+rw284zqUzEZQ@mail.gmail.com>
@@ -51,403 +52,462 @@ References:
  <d5683f0ad0dd0185309d5d8feea6c7e7141fa343.camel@linuxfoundation.org>
  <CAMaS9hNpp9QsUqkpXvNj_F5R4aQoe+qHg+_mtxnZRL0PoAYaGw@mail.gmail.com>
  <589e9863e78ed9f8234a3756b37ffb979daa770c.camel@linuxfoundation.org>
-In-Reply-To: 
- <589e9863e78ed9f8234a3756b37ffb979daa770c.camel@linuxfoundation.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Tue, 9 Nov 2021 07:47:37 +0100
-Message-ID: 
  <CANNYZj8_zPhh_XCZrxaPvXd_Oz5kzbzHNLvT6qzvtztquKA0ew@mail.gmail.com>
+In-Reply-To: 
+ <CANNYZj8_zPhh_XCZrxaPvXd_Oz5kzbzHNLvT6qzvtztquKA0ew@mail.gmail.com>
+From: Marius Kriegerowski <marius.kriegerowski@gmail.com>
+Date: Tue, 9 Nov 2021 09:05:02 +0100
+Message-ID: 
+ <CAMaS9hO8yU+T3tKb-dQj-DFx-vqGsUTLc7Jkta1sAM+eDr45BA@mail.gmail.com>
 Subject: Re: [bitbake-devel] bitbake style/workflow
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: Marius Kriegerowski <marius.kriegerowski@gmail.com>,
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
 	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="000000000000d0890e05d0557cc3"
+Content-Type: multipart/alternative; boundary="000000000000afd52705d0569170"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 09 Nov 2021 06:47:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12953
+ <bitbake-devel@lists.openembedded.org>; Tue, 09 Nov 2021 08:05:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12954
 
---000000000000d0890e05d0557cc3
+--000000000000afd52705d0569170
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-There's another problem with github/gitlab which I find significant. These
-tools do not allow reviewing commit messages, and don't even make it easy
-to see them. So the developers using those tools, both submitters and
-maintainers, are effectively being conditioned by the tools to see good
-commit messages as superfluous and unnecessary. And so you more often than
-not end up with poorly written commit history in github projects, or, if
-you're a reviewer, have to repeatedly explain to the submitter how to
-explain and structure their changes properly.
+Good morning,
 
-I'd rather not have a change, than have a change that no one, even the
-original author, can understand or remember the reasons for one year down
-the line.
+I don=E2=80=99t think this is correct. You can change the git history and c=
+ommit
+messages of every MR to whatever you like with `git commit =E2=80=94amend`,=
+ `git
+rebase -I` and `git push -f`. So, you can very well ask contributors to
+cleanup their history before merging.
 
-Alex
+Best
+Marius
 
+Am Di., 9. Nov. 2021 um 07:47 Uhr schrieb Alexander Kanavin <
+alex.kanavin@gmail.com>:
 
-On Tue, 9 Nov 2021 at 00:30, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
-
-> On Mon, 2021-11-08 at 23:44 +0100, Marius Kriegerowski wrote:
-> >
-> >
-> > > On 8. Nov 2021, at 22:47, Richard Purdie
-> > > <richard.purdie@linuxfoundation.org> wrote:
-> > >
-> > > On Mon, 2021-11-08 at 18:37 +0100, Marius Kriegerowski wrote:
-> > > > Is there a plan to switch to some more modern ways to collaborate o=
+> There's another problem with github/gitlab which I find significant. Thes=
+e
+> tools do not allow reviewing commit messages, and don't even make it easy
+> to see them. So the developers using those tools, both submitters and
+> maintainers, are effectively being conditioned by the tools to see good
+> commit messages as superfluous and unnecessary. And so you more often tha=
 n
-> > > > bitbake,
-> > > > you know, like, gitlab/github/gitea with issues, PRs and so forth? =
-I
-> mean=E2=80=A6
-> > > > it=E2=80=99s
-> > > > late 2021 and sending MRs/Issues via email feels reaaaally outdated=
-,
-> slow,
-> > > > intransparent, ineffective (how to you do reviews, code comparisons
-> during
-> > > > reviews, insert suggestions, etc.) and indirect (where is the CI
-> pipeline
-> > > > that I
-> > > > trigger when pushing something somewhere?).
-> > >
-> > > There are pros and cons to switching to something else. Keep in mind
-> that
-> > > whilst the github workflow works well for a single maintainer of a
-> project,
-> > > it does not work well for diverse review.
-> >
-> > I strongly disagree with that. Reviews can equally well be done in a MR
-> > thread. That=E2=80=99s what they are there for. You can discuss things =
-there
-> with as
-> > many people as you want and can e.g. define a minimum number of approva=
-ls
-> > before a MR can be merged.
+> not end up with poorly written commit history in github projects, or, if
+> you're a reviewer, have to repeatedly explain to the submitter how to
+> explain and structure their changes properly.
 >
-> You misunderstand my point. We have a several thousand people on the
-> mailing
-> lists and they filter things to what interests them. *I* have no people I
-> want
-> to discuss a given change with, it is a question of whether the people wh=
-o
-> have
-> an interest in a given change would see it.
+> I'd rather not have a change, than have a change that no one, even the
+> original author, can understand or remember the reasons for one year down
+> the line.
 >
-> A minimum number of approvals is utterly meaningless for how we work, I
-> need the
-> interested people to see it and that varies massively depending on what i=
+> Alex
+>
+>
+> On Tue, 9 Nov 2021 at 00:30, Richard Purdie <
+> richard.purdie@linuxfoundation.org> wrote:
+>
+>> On Mon, 2021-11-08 at 23:44 +0100, Marius Kriegerowski wrote:
+>> >
+>> >
+>> > > On 8. Nov 2021, at 22:47, Richard Purdie
+>> > > <richard.purdie@linuxfoundation.org> wrote:
+>> > >
+>> > > On Mon, 2021-11-08 at 18:37 +0100, Marius Kriegerowski wrote:
+>> > > > Is there a plan to switch to some more modern ways to collaborate =
+on
+>> > > > bitbake,
+>> > > > you know, like, gitlab/github/gitea with issues, PRs and so forth?
+>> I mean=E2=80=A6
+>> > > > it=E2=80=99s
+>> > > > late 2021 and sending MRs/Issues via email feels reaaaally
+>> outdated, slow,
+>> > > > intransparent, ineffective (how to you do reviews, code comparison=
 s
-> being
-> changed. It is this aspect of mailing list change distribution and
-> discussion we
-> benefit from.
->
-> >  It also naturally groups discussions. You can address experts for
-> specific
-> > domains which means less noise for the experts. I really don=E2=80=99t =
-see why
-> mailing
-> > list reviews should work any better here.
->
-> We all have established mechanisms to "see" the things which interest us =
-as
-> maintainers?
->
-> Please don't misunderstand me, I do see the attraction of github from you=
-r
-> perspective. It would just destroy the ecosystem we already have. You are
-> basically saying that our current ecosystem is worthless but I would poin=
+>> during
+>> > > > reviews, insert suggestions, etc.) and indirect (where is the CI
+>> pipeline
+>> > > > that I
+>> > > > trigger when pushing something somewhere?).
+>> > >
+>> > > There are pros and cons to switching to something else. Keep in mind
+>> that
+>> > > whilst the github workflow works well for a single maintainer of a
+>> project,
+>> > > it does not work well for diverse review.
+>> >
+>> > I strongly disagree with that. Reviews can equally well be done in a M=
+R
+>> > thread. That=E2=80=99s what they are there for. You can discuss things=
+ there
+>> with as
+>> > many people as you want and can e.g. define a minimum number of
+>> approvals
+>> > before a MR can be merged.
+>>
+>> You misunderstand my point. We have a several thousand people on the
+>> mailing
+>> lists and they filter things to what interests them. *I* have no people =
+I
+>> want
+>> to discuss a given change with, it is a question of whether the people
+>> who have
+>> an interest in a given change would see it.
+>>
+>> A minimum number of approvals is utterly meaningless for how we work, I
+>> need the
+>> interested people to see it and that varies massively depending on what
+>> is being
+>> changed. It is this aspect of mailing list change distribution and
+>> discussion we
+>> benefit from.
+>>
+>> >  It also naturally groups discussions. You can address experts for
+>> specific
+>> > domains which means less noise for the experts. I really don=E2=80=99t=
+ see why
+>> mailing
+>> > list reviews should work any better here.
+>>
+>> We all have established mechanisms to "see" the things which interest us
+>> as
+>> maintainers?
+>>
+>> Please don't misunderstand me, I do see the attraction of github from yo=
+ur
+>> perspective. It would just destroy the ecosystem we already have. You ar=
+e
+>> basically saying that our current ecosystem is worthless but I would
+>> point out
+>> it has resulted in a project which you did say you appreciate so it can'=
 t
-> out
-> it has resulted in a project which you did say you appreciate so it can't
-> be all
-> bad.
->
-> >  If google can coordinate 2.1k repos with 1.1k contributors over GitHub=
-,
-> why
-> > should that not work for openembedded??
->
-> It isn't about raw numbers, it is about numbers of reviewers for a given
-> change.
-> We have hundreds of people doing that using the mailing lists.
->
-> > > The Bitbake case is a little bit different but in general we'd follow
-> what
-> > > OE/Yocto Project are doing.
-> > >
-> > > We have discussed changing and it is listed as one topic on:
-> > > https://wiki.yoctoproject.org/wiki/Future_Directions
-> > > (Code Submission process)
-> > >
-> > > I'd note that it is a huge change to our current developers and most
-> of us
-> > > are very used to the mailing lists so if we did change, it would allo=
+>> be all
+>> bad.
+>>
+>> >  If google can coordinate 2.1k repos with 1.1k contributors over
+>> GitHub, why
+>> > should that not work for openembedded??
+>>
+>> It isn't about raw numbers, it is about numbers of reviewers for a given
+>> change.
+>> We have hundreds of people doing that using the mailing lists.
+>>
+>> > > The Bitbake case is a little bit different but in general we'd follo=
 w
-> > > potential new collaborators at the risk of losing people with key
-> > > knowledge/experience.
-> > =E2=80=A6 which reads to me like: =E2=80=9CIt has always been that way =
-so we will not
-> change
-> > that" doesn=E2=80=99t it? Always a very poor argument.
->
-> No, what I said is "upsetting our existing developers is something which
-> we may
-> want to potentially avoid".
->
-> There are some options out there which have offered mailing list
-> integration for
-> example and we have tried to explore those. Something which drops the lis=
-ts
-> entirely could in the current view of the TSC result in loss of too many
-> of our
-> existing maintainers.
->
-> >
-> > > We do have CI which is shared with Yocto Project and
-> > > OpenEmbedded. You can see it here:
-> > >
-> > > https://autobuilder.yoctoproject.org/typhoon/#/console
-> > >
-> > > and it has it's own manual which was recently added to our
-> documentations
-> > > set:
-> > >
-> > > http://docs.yoctoproject.org/test-manual/index.html
-> > =E2=80=A6 stressing my point: Why does the location of the CI need
-> documentation? All
-> > of the aforementioned platforms smoothly integrate with multiple CI
-> solutions,
-> > drastically reducing the time required for reviews if the pipeline
-> provides
-> > automated feedback to the contributor. It would probably cost me about
-> one
-> > afternoon to setup a decent CI pipeline at least for all python codes
-> pushing
-> > the need to review from manual labor to automated tools. If open embedd=
-ed
-> > migrates to a proper git platform I happily volunteer on that end!!
->
-> We're not talking about simple python code. We're talking about testing a
-> build
-> environment which cross compiles multiple operating systems for multiple
-> architectures, C libraries, GUI stacks, init systems and so on. Testing t=
-he
-> python code is one small part of that. I've spent several years trying to
-> improve and get our CI to where it is today.
->
-> Yes, the python code is tested as part of this as we don't really want to
-> have
-> multiple test platforms and the real world usage is some of the best
-> testing
-> changes can have.
->
-> > > There is work still needed on that but it is a start. One challenge o=
-f
-> > > bitbake/OE is that the builds take an age and the test matrix is huge
-> so the
-> > > CI
-> > > process isn't quite as simple as some other simpler projects.
-> > At least for python I bet that most bugs can be caught simply by firing
-> up
-> > `black`, `flake8`, `pylint` (and a hand full of other tools) just to
-> check the
-> > modified files.
->
-> Well, I would bet that most of our bugs are not caused by issues like
-> that. I do
-> attend the weekly bug triage meetings and have fixed my share of them. Yo=
-u
-> could
-> have a look at the issues filed in bugzilla over the past few weeks if
-> you'd
-> like to see the kinds of issues that get filed and are open.
->
-> >  Regarding meta-layers and recipes out there we are currently pushing
-> forward
-> > with a linter for bitbake recipes (thanks @priv-kweihmann for this
-> awesome and
-> > overdue tool!!!).
->
-> Whilst improving recipes in that way does help, it isn't the main source
-> of our
-> major issues.
->
-> > >
-> > > As a shortcut through things, the "bitbake-selftest" command within
-> bitbake
-> > > may
-> > > be one thing you're looking for which does simple tests on bitbake. I=
-t
-> isn't
-> > > complete coverage and we welcome more being added, it is a start and
-> some
-> > > areas
-> > > of the code are covered better than others.
-> > I=E2=80=99d love to overhaul the tests e.g. porting them to `pytest` wh=
-ich
-> offers a
-> > much simpler yet much more powerful API/plugin-ecosystem. But won=E2=80=
-=99t do
-> via
-> > email :)
->
-> The tests are written in python's own unittest.
->
-> > > Issues are filed in the project bugzilla and are actively worked on:
-> > >
-> > > https://bugzilla.yoctoproject.org/
-> > Didn=E2=80=99t know that. But why keeping issues separate from MRs? Aut=
-omatic
-> issue
-> > closing through referencing in MRs is a pretty nice feature=E2=80=A6
->
-> If I had to list the pain points we have, this is not high on the list.
->
-> > > > * side-note on bitbake style/linting: It=E2=80=99s violating PEP8 i=
-n a
-> couple of
-> > > > ways and TBH PEP8 is the bare minimum I would accept these days for
-> > > > collaboration on projects the dimension of bitbake. So an additiona=
-l
-> > > > question: Would you be up for a PEP8 compatibility overhaul of the
-> source
-> > > > code? I=E2=80=99d volunteer if I don=E2=80=99t have to send a patch=
- via email ;)
-> > >
-> > > We're interested in patches to improve the coding style as long as th=
-ey
-> > > don't
-> > > break things like readability or performance. Which rules in PEP8 in
-> > > particular
-> > > are you referring to?
-> >
-> > To name a few violations:
-> >
-> >  * hanging indents
-> >  * inconsistent indentation
-> >  * 2 separating lines missing in between classes/top level methods
->
-> FWIW I find it really hard to get worked up about whitespace issues. I
-> appreciate these aren't always great to look at and I appreciate the
-> familiarity
-> argument and standardising the look but these aren't issues I would
-> prioritise.
->
-> In particular changing them globally in mass patches tends to break patch
-> backporting and taking fixes back to older code which we do benefit from
-> being
-> able to do so there is a cost to doing it. We are trying to make new code
-> more
-> consistent and with older code, we do try and fix the worst issues.
->
-> >  * unused imported modules
-> >  * missing white-spaces after comma
-> >  * unreachable codes
->
-> These ones we do take patches for and try to fix when/where we see it. Fo=
+>> what
+>> > > OE/Yocto Project are doing.
+>> > >
+>> > > We have discussed changing and it is listed as one topic on:
+>> > > https://wiki.yoctoproject.org/wiki/Future_Directions
+>> > > (Code Submission process)
+>> > >
+>> > > I'd note that it is a huge change to our current developers and most
+>> of us
+>> > > are very used to the mailing lists so if we did change, it would all=
+ow
+>> > > potential new collaborators at the risk of losing people with key
+>> > > knowledge/experience.
+>> > =E2=80=A6 which reads to me like: =E2=80=9CIt has always been that way=
+ so we will not
+>> change
+>> > that" doesn=E2=80=99t it? Always a very poor argument.
+>>
+>> No, what I said is "upsetting our existing developers is something which
+>> we may
+>> want to potentially avoid".
+>>
+>> There are some options out there which have offered mailing list
+>> integration for
+>> example and we have tried to explore those. Something which drops the
+>> lists
+>> entirely could in the current view of the TSC result in loss of too many
+>> of our
+>> existing maintainers.
+>>
+>> >
+>> > > We do have CI which is shared with Yocto Project and
+>> > > OpenEmbedded. You can see it here:
+>> > >
+>> > > https://autobuilder.yoctoproject.org/typhoon/#/console
+>> > >
+>> > > and it has it's own manual which was recently added to our
+>> documentations
+>> > > set:
+>> > >
+>> > > http://docs.yoctoproject.org/test-manual/index.html
+>> > =E2=80=A6 stressing my point: Why does the location of the CI need
+>> documentation? All
+>> > of the aforementioned platforms smoothly integrate with multiple CI
+>> solutions,
+>> > drastically reducing the time required for reviews if the pipeline
+>> provides
+>> > automated feedback to the contributor. It would probably cost me about
+>> one
+>> > afternoon to setup a decent CI pipeline at least for all python codes
+>> pushing
+>> > the need to review from manual labor to automated tools. If open
+>> embedded
+>> > migrates to a proper git platform I happily volunteer on that end!!
+>>
+>> We're not talking about simple python code. We're talking about testing =
+a
+>> build
+>> environment which cross compiles multiple operating systems for multiple
+>> architectures, C libraries, GUI stacks, init systems and so on. Testing
+>> the
+>> python code is one small part of that. I've spent several years trying t=
+o
+>> improve and get our CI to where it is today.
+>>
+>> Yes, the python code is tested as part of this as we don't really want t=
+o
+>> have
+>> multiple test platforms and the real world usage is some of the best
+>> testing
+>> changes can have.
+>>
+>> > > There is work still needed on that but it is a start. One challenge =
+of
+>> > > bitbake/OE is that the builds take an age and the test matrix is hug=
+e
+>> so the
+>> > > CI
+>> > > process isn't quite as simple as some other simpler projects.
+>> > At least for python I bet that most bugs can be caught simply by firin=
+g
+>> up
+>> > `black`, `flake8`, `pylint` (and a hand full of other tools) just to
+>> check the
+>> > modified files.
+>>
+>> Well, I would bet that most of our bugs are not caused by issues like
+>> that. I do
+>> attend the weekly bug triage meetings and have fixed my share of them.
+>> You could
+>> have a look at the issues filed in bugzilla over the past few weeks if
+>> you'd
+>> like to see the kinds of issues that get filed and are open.
+>>
+>> >  Regarding meta-layers and recipes out there we are currently pushing
+>> forward
+>> > with a linter for bitbake recipes (thanks @priv-kweihmann for this
+>> awesome and
+>> > overdue tool!!!).
+>>
+>> Whilst improving recipes in that way does help, it isn't the main source
+>> of our
+>> major issues.
+>>
+>> > >
+>> > > As a shortcut through things, the "bitbake-selftest" command within
+>> bitbake
+>> > > may
+>> > > be one thing you're looking for which does simple tests on bitbake.
+>> It isn't
+>> > > complete coverage and we welcome more being added, it is a start and
+>> some
+>> > > areas
+>> > > of the code are covered better than others.
+>> > I=E2=80=99d love to overhaul the tests e.g. porting them to `pytest` w=
+hich
+>> offers a
+>> > much simpler yet much more powerful API/plugin-ecosystem. But won=E2=
+=80=99t do
+>> via
+>> > email :)
+>>
+>> The tests are written in python's own unittest.
+>>
+>> > > Issues are filed in the project bugzilla and are actively worked on:
+>> > >
+>> > > https://bugzilla.yoctoproject.org/
+>> > Didn=E2=80=99t know that. But why keeping issues separate from MRs? Au=
+tomatic
+>> issue
+>> > closing through referencing in MRs is a pretty nice feature=E2=80=A6
+>>
+>> If I had to list the pain points we have, this is not high on the list.
+>>
+>> > > > * side-note on bitbake style/linting: It=E2=80=99s violating PEP8 =
+in a
+>> couple of
+>> > > > ways and TBH PEP8 is the bare minimum I would accept these days fo=
 r
-> example,
-> http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=3D47e5c456a20432b511
-> d830df9cbd4113a4352b2c
-> <http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=3D47e5c456a20432b51=
-1d830df9cbd4113a4352b2c> contained
-> a couple of white-space after comma fixing
-> while I was in that area.
->
-> > These are just a couple of examples that struck my PEP8 used eye from
-> looking
-> > at two, three modules.
-> >
-> > It=E2=80=99s just like with any code smell: they don=E2=80=99t necessar=
-ily break things.
-> But
-> > they make maintenance, code-reviews and quality control harder than
-> necessary.
-> > Code that does not at least follow PEP8 (and I actually strongly
-> recommend to
-> > go the extra mile with `black`) just looks odd and is unnecessary hard =
-to
-> > read. I=E2=80=99m surprised I have to argue for standards.
->
-> I wasn't saying it was a bad thing, I asked which issues you noticed in
-> particular since I'm trying to ensure we do at least try and react to
-> feedback.
-> Some whitespace issues we aren't likely to tackle, some like the others y=
-ou
-> mentioned above we should fix.
-> >
-> > Besides that, some minor cleanup just to warm
-> > up: https://github.com/openembedded/bitbake/pull/33,
-> https://github.com/openem
-> > bedded/bitbake/pull/32/files
->
-> Those two do look like reasonable changes FWIW.
->
-> > (it was after these two that I found the comment in one of those old
-> commits
-> > which made me open https://github.com/openembedded/bitbake/pull/34). At
-> least
-> > there should be an automated reply to each MR that is posted if someone
-> makes
-> > the effort to fix code and open a MRs that this is actually in vein -
-> That=E2=80=99s
-> > the mood that took me here :)
->
-> There is a certain irony in that given you patched the section called
-> "Contributing" in the README in 32!
->
-> > >
-> > > Help appreciated but email patches is how we accept them at the momen=
-t.
-> >
-> > Not from me then :(
->
-> Sorry to hear that, your changes in 32/33 do look reasonable.
->
-> Cheers,
->
-> Richard
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#12951):
-> https://lists.openembedded.org/g/bitbake-devel/message/12951
-> Mute This Topic: https://lists.openembedded.org/mt/86911583/1686489
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> alex.kanavin@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
+>> > > > collaboration on projects the dimension of bitbake. So an addition=
+al
+>> > > > question: Would you be up for a PEP8 compatibility overhaul of the
+>> source
+>> > > > code? I=E2=80=99d volunteer if I don=E2=80=99t have to send a patc=
+h via email ;)
+>> > >
+>> > > We're interested in patches to improve the coding style as long as
+>> they
+>> > > don't
+>> > > break things like readability or performance. Which rules in PEP8 in
+>> > > particular
+>> > > are you referring to?
+>> >
+>> > To name a few violations:
+>> >
+>> >  * hanging indents
+>> >  * inconsistent indentation
+>> >  * 2 separating lines missing in between classes/top level methods
+>>
+>> FWIW I find it really hard to get worked up about whitespace issues. I
+>> appreciate these aren't always great to look at and I appreciate the
+>> familiarity
+>> argument and standardising the look but these aren't issues I would
+>> prioritise.
+>>
+>> In particular changing them globally in mass patches tends to break patc=
+h
+>> backporting and taking fixes back to older code which we do benefit from
+>> being
+>> able to do so there is a cost to doing it. We are trying to make new cod=
+e
+>> more
+>> consistent and with older code, we do try and fix the worst issues.
+>>
+>> >  * unused imported modules
+>> >  * missing white-spaces after comma
+>> >  * unreachable codes
+>>
+>> These ones we do take patches for and try to fix when/where we see it. F=
+or
+>> example,
+>> http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=3D47e5c456a20432b51=
+1
+>> d830df9cbd4113a4352b2c
+>> <http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=3D47e5c456a20432b5=
+11d830df9cbd4113a4352b2c> contained
+>> a couple of white-space after comma fixing
+>> while I was in that area.
+>>
+>> > These are just a couple of examples that struck my PEP8 used eye from
+>> looking
+>> > at two, three modules.
+>> >
+>> > It=E2=80=99s just like with any code smell: they don=E2=80=99t necessa=
+rily break
+>> things. But
+>> > they make maintenance, code-reviews and quality control harder than
+>> necessary.
+>> > Code that does not at least follow PEP8 (and I actually strongly
+>> recommend to
+>> > go the extra mile with `black`) just looks odd and is unnecessary hard
+>> to
+>> > read. I=E2=80=99m surprised I have to argue for standards.
+>>
+>> I wasn't saying it was a bad thing, I asked which issues you noticed in
+>> particular since I'm trying to ensure we do at least try and react to
+>> feedback.
+>> Some whitespace issues we aren't likely to tackle, some like the others
+>> you
+>> mentioned above we should fix.
+>> >
+>> > Besides that, some minor cleanup just to warm
+>> > up: https://github.com/openembedded/bitbake/pull/33,
+>> https://github.com/openem
+>> > bedded/bitbake/pull/32/files
+>>
+>> Those two do look like reasonable changes FWIW.
+>>
+>> > (it was after these two that I found the comment in one of those old
+>> commits
+>> > which made me open https://github.com/openembedded/bitbake/pull/34).
+>> At least
+>> > there should be an automated reply to each MR that is posted if someon=
+e
+>> makes
+>> > the effort to fix code and open a MRs that this is actually in vein -
+>> That=E2=80=99s
+>> > the mood that took me here :)
+>>
+>> There is a certain irony in that given you patched the section called
+>> "Contributing" in the README in 32!
+>>
+>> > >
+>> > > Help appreciated but email patches is how we accept them at the
+>> moment.
+>> >
+>> > Not from me then :(
+>>
+>> Sorry to hear that, your changes in 32/33 do look reasonable.
+>>
+>> Cheers,
+>>
+>> Richard
+>>
+>>
+>> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>> Links: You receive all messages sent to this group.
+>> View/Reply Online (#12951):
+>> https://lists.openembedded.org/g/bitbake-devel/message/12951
+>> Mute This Topic: https://lists.openembedded.org/mt/86911583/1686489
+>> Group Owner: bitbake-devel+owner@lists.openembedded.org
+>> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+>> alex.kanavin@gmail.com]
+>> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>>
+>>
 
---000000000000d0890e05d0557cc3
+--000000000000afd52705d0569170
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>There&#39;s another problem with github/gitlab which =
-I find significant. These tools do not allow reviewing commit messages, and=
- don&#39;t even make it easy to see them. So the developers using those too=
-ls, both submitters and maintainers, are effectively being conditioned by t=
-he tools to see good commit messages as superfluous and unnecessary. And so=
- you more often than not end up with poorly written commit history in githu=
-b projects, or, if you&#39;re a reviewer, have to repeatedly explain to the=
- submitter how to explain and structure their changes properly.</div><div><=
-br></div><div>I&#39;d rather not have a change, than have a change that no =
-one, even the original author, can understand or remember the reasons for o=
-ne year down the line.</div><div><br></div><div>Alex<br></div><br></div><br=
-><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, 9=
- Nov 2021 at 00:30, Richard Purdie &lt;<a href=3D"mailto:richard.purdie@lin=
-uxfoundation.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br></di=
-v><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;borde=
-r-left:1px solid rgb(204,204,204);padding-left:1ex">On Mon, 2021-11-08 at 2=
-3:44 +0100, Marius Kriegerowski wrote:<br>
+<div dir=3D"ltr"><div class=3D"gmail-" style=3D"color:rgb(0,0,0);font-famil=
+y:Helvetica;font-size:12px;font-style:normal;font-variant-caps:normal;font-=
+weight:normal;letter-spacing:normal;text-align:start;text-indent:0px;text-t=
+ransform:none;white-space:normal;word-spacing:0px;text-decoration:none">Goo=
+d morning,</div><div class=3D"gmail-" style=3D"color:rgb(0,0,0);font-family=
+:Helvetica;font-size:12px;font-style:normal;font-variant-caps:normal;font-w=
+eight:normal;letter-spacing:normal;text-align:start;text-indent:0px;text-tr=
+ansform:none;white-space:normal;word-spacing:0px;text-decoration:none"><br =
+class=3D"gmail-"></div><div class=3D"gmail-" style=3D"color:rgb(0,0,0);font=
+-family:Helvetica;font-size:12px;font-style:normal;font-variant-caps:normal=
+;font-weight:normal;letter-spacing:normal;text-align:start;text-indent:0px;=
+text-transform:none;white-space:normal;word-spacing:0px;text-decoration:non=
+e">I don=E2=80=99t think this is correct. You can change the git history an=
+d commit messages of every MR to whatever you like with `git commit =E2=80=
+=94amend`, `git rebase -I` and `git push -f`. So, you can very well ask con=
+tributors to cleanup their history before merging.</div><div class=3D"gmail=
+-" style=3D"color:rgb(0,0,0);font-family:Helvetica;font-size:12px;font-styl=
+e:normal;font-variant-caps:normal;font-weight:normal;letter-spacing:normal;=
+text-align:start;text-indent:0px;text-transform:none;white-space:normal;wor=
+d-spacing:0px;text-decoration:none"><br class=3D"gmail-"></div><div class=
+=3D"gmail-" style=3D"color:rgb(0,0,0);font-family:Helvetica;font-size:12px;=
+font-style:normal;font-variant-caps:normal;font-weight:normal;letter-spacin=
+g:normal;text-align:start;text-indent:0px;text-transform:none;white-space:n=
+ormal;word-spacing:0px;text-decoration:none">Best</div><div class=3D"gmail-=
+" style=3D"color:rgb(0,0,0);font-family:Helvetica;font-size:12px;font-style=
+:normal;font-variant-caps:normal;font-weight:normal;letter-spacing:normal;t=
+ext-align:start;text-indent:0px;text-transform:none;white-space:normal;word=
+-spacing:0px;text-decoration:none">Marius</div></div><br><div class=3D"gmai=
+l_quote"><div dir=3D"ltr" class=3D"gmail_attr">Am Di., 9. Nov. 2021 um 07:4=
+7=C2=A0Uhr schrieb Alexander Kanavin &lt;<a href=3D"mailto:alex.kanavin@gma=
+il.com">alex.kanavin@gmail.com</a>&gt;:<br></div><blockquote class=3D"gmail=
+_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204=
+,204);padding-left:1ex"><div dir=3D"ltr"><div>There&#39;s another problem w=
+ith github/gitlab which I find significant. These tools do not allow review=
+ing commit messages, and don&#39;t even make it easy to see them. So the de=
+velopers using those tools, both submitters and maintainers, are effectivel=
+y being conditioned by the tools to see good commit messages as superfluous=
+ and unnecessary. And so you more often than not end up with poorly written=
+ commit history in github projects, or, if you&#39;re a reviewer, have to r=
+epeatedly explain to the submitter how to explain and structure their chang=
+es properly.</div><div><br></div><div>I&#39;d rather not have a change, tha=
+n have a change that no one, even the original author, can understand or re=
+member the reasons for one year down the line.</div><div><br></div><div>Ale=
+x<br></div><br></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=
+=3D"gmail_attr">On Tue, 9 Nov 2021 at 00:30, Richard Purdie &lt;<a href=3D"=
+mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie=
+@linuxfoundation.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quo=
+te" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204=
+);padding-left:1ex">On Mon, 2021-11-08 at 23:44 +0100, Marius Kriegerowski =
+wrote:<br>
 &gt; <br>
 &gt; <br>
 &gt; &gt; On 8. Nov 2021, at 22:47, Richard Purdie<br>
@@ -797,6 +857,7 @@ _blank">alex.kanavin@gmail.com</a>]<br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 <br>
 </blockquote></div>
+</blockquote></div>
 
---000000000000d0890e05d0557cc3--
+--000000000000afd52705d0569170--
 
