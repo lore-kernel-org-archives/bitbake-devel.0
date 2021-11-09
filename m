@@ -2,60 +2,61 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD81C433F5
-	for <webhook@archiver.kernel.org>; Tue,  9 Nov 2021 12:03:56 +0000 (UTC)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com
- [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web08.11124.1636459435961255389
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DD7C4332F
+	for <webhook@archiver.kernel.org>; Tue,  9 Nov 2021 12:21:50 +0000 (UTC)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com
+ [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.web10.11091.1636460509342970826
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Nov 2021 04:03:56 -0800
+ Tue, 09 Nov 2021 04:21:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PMswIwAJ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=MBH2EWBs;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.51,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f49.google.com with SMTP id s13so32596403wrb.3
+Received: by mail-wm1-f51.google.com with SMTP id
+ f7-20020a1c1f07000000b0032ee11917ceso2142311wmf.0
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Nov 2021 04:03:55 -0800 (PST)
+ Tue, 09 Nov 2021 04:21:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=message-id:subject:from:to:cc:date:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=RhLL1FriU2X+CtadaJ1BttTKkKyT7w3KTZdbtwMpvO0=;
-        b=PMswIwAJ1VEXq7T8mZpM1YjZd8d3SJOHZz8HF0xySZ3/gAOuSzwl0Xi7+Z/FV4tDzy
-         d31qydZ+izKwHHiNoKWvphcfSC3XraT2LtXDtyB/drEMubz5huqj20dcqy0ttWBpQdaL
-         wu4obYp/cXrviK+3yQNs1EyyCkPsKvADSdPxw=
+        bh=0r6djCxhPMyGAaUqiTrcP6p6fl3fmgEestGie0jzzv8=;
+        b=MBH2EWBsG1Co9x7xiJQU7mWeHOAx+wzfrkc1GL2XSDq1YRzbAKKa3x9huOIJDskVwg
+         SHEjohf4PWMe/Fsm+0Ru01ZJHc2dz8W258l+K1MUEOD03J6mUS64Bx/6kiQJkN5mlL0v
+         YjRG+NkNfagWq+3FdN0pHr2b5JI3B5K3ptuCk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=RhLL1FriU2X+CtadaJ1BttTKkKyT7w3KTZdbtwMpvO0=;
-        b=3bKVfH/Ts8XCa4IQjPPqhbzuxXSVYzCrs1WNJV1Wi6jMWI7Kgr5YW4eOfErSmR2A4n
-         lqw70HsSoTPBMxnqyeM7joayla/Fs5msd5zdB8IdlJ7HNnJkxJ5DNEhm5xz2PsgGy60h
-         YdN5qwD5UvE55VUJJbrhjRBsxZTEobAFDw3SWV1/E4QH81v+6SBG3fYdhAlvI75HmEFr
-         YVtWQRQzXOxgdlBjmZT1va55tuTeBHX8C0tdNmVRSkUFUt0SKoxHffyifODBWbUWJqr+
-         pf/TjglNaacw4q97fFCDPFrIm8x2uG9vvBCciuDzTwSnEAxxJ7iRmzjIOsbmrm4h9x7+
-         80RA==
-X-Gm-Message-State: AOAM533i5MNoropwnlis4SxRGqPQzExpB8El8tf6/8rcXp1UhHl+3Kq/
-	OpMDtjNICHFzJtHnsg0BGeuHRQ==
+        bh=0r6djCxhPMyGAaUqiTrcP6p6fl3fmgEestGie0jzzv8=;
+        b=YuUfQgosNDwBkJkXnQI4K87eZwZU6nQqgXq0te2APSx4JG8pszoC3VHDTX3+fLwJhx
+         Ywu/BNB8Ij1VKawowOlH+C3XvMEQVbkY+a4cHdISrJVIubkxs2EC0/yhw87ulR306hqX
+         8Y2Rv+o+bwfW+i3NYVIF6GJ3tDbPy7UI5tpE1H5qcGwZMGsnnX2PZxVy2riYFm1QdFky
+         nIjDKwOLJFOJCobI54Myy8hI3YppiPih3u7HU8THzRSzxIz6OUMMTOnpwIphHyoOFTQK
+         kw47USbKnA1cBTuV8yPD7W38XBc2jQILAEnBQ7rYh+vmc4XkT8CFFyf/z/vQ/TWUBme3
+         +VeQ==
+X-Gm-Message-State: AOAM530424RDZk1Afey5axreCpeqlOqGb9OmA/QtGDpgjQZCy4sEHUy4
+	OW/Su1Icn5QXvjApx3wSAqU/wQ==
 X-Google-Smtp-Source: 
- ABdhPJykjzJmBQ8xRtk06/svAWyUtnksYqYBlo2pp39LBxSfznZys1yhx8cThOTXjDr0jlqOw5xKCg==
-X-Received: by 2002:a05:6000:1688:: with SMTP id
- y8mr8662098wrd.420.1636459434220;
-        Tue, 09 Nov 2021 04:03:54 -0800 (PST)
+ ABdhPJyEK1vO7MDf0tXHb7EeCW9Oj9aYTmVyv+IZn1PI9yx0Pp4FEZUujduZD0jRNifiPagLYByBDQ==
+X-Received: by 2002:a1c:8093:: with SMTP id
+ b141mr6740223wmd.129.1636460507865;
+        Tue, 09 Nov 2021 04:21:47 -0800 (PST)
 Received: from ?IPv6:2001:8b0:aba:5f3c:10b7:e9c6:d1a:6f7c?
  ([2001:8b0:aba:5f3c:10b7:e9c6:d1a:6f7c])
         by smtp.gmail.com with ESMTPSA id
- o4sm2853607wmq.31.2021.11.09.04.03.53
+ p12sm23632994wrr.10.2021.11.09.04.21.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Nov 2021 04:03:53 -0800 (PST)
+        Tue, 09 Nov 2021 04:21:47 -0800 (PST)
 Message-ID: 
- <f04a8a8b56be668ea8ea29e2707bbd50bedf43c4.camel@linuxfoundation.org>
+ <e5b2f8439e5aab93a2841728e00650185ff60573.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] bitbake style/workflow
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Marius Kriegerowski <marius.kriegerowski@gmail.com>
 Cc: Mikko.Rapeli@bmw.de, Alexander Kanavin <alex.kanavin@gmail.com>,
 	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 09 Nov 2021 12:03:51 +0000
+Date: Tue, 09 Nov 2021 12:21:46 +0000
 In-Reply-To: 
  <CAMaS9hNRUsmWdXNaJV9E8rKCw6g2OzdZd4U8s6k+0c7VYo8P9g@mail.gmail.com>
 References: 
@@ -78,45 +79,38 @@ Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 09 Nov 2021 12:03:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12964
+ <bitbake-devel@lists.openembedded.org>; Tue, 09 Nov 2021 12:21:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12966
 
 On Tue, 2021-11-09 at 12:56 +0100, Marius Kriegerowski wrote:
-> Okay, one thing I have to add after killing some time with this: I quickly
-> scrutinized the git history of `bitbake` and `meta-openembedded`.
-> 
-> Attached are two figures that show the first time contributor count of both
-> projects over the last ~ten years. While `bitbake` shows a linear growth of
-> first-time contributors, `meta-openembedded` is exponential. I didn't analyze
-> the first derivative but to me it looks like there is a kink following that
-> timestamp indicated by the vertical bar. That line represents a subtle, yet
-> important change in intonation in the merge requests. Before that there was
-> always a comment "Please read README and send patches to
-> openembedded-devel@lists.openembedded.org for review." or alike. After that
-> the intonation changed to messages "Patches should be sent to openembedded-
-> devel as described in README." and if I interprete the following MRs correctly
-> the maintainers (mostly @kraj) were kind enough to apply the MRs as patches.
 > I'm sure there is a readon not to hit the merge button but instead doing that
-> manually which I don't understand. But most important point to mention:
-> 
-> The development of the community around meta-openembedded is what a community
-> driven project should look like - the evolution of `bitbake` not so much...
-> 
-> Have a look, reproduce, ask and draw your own conclusions.
-> > > > > > > > > > 
+> manually which I don't understand.
 
-Thanks for sharing that, data is interesting and useful. Looking at the data, I
-agree one is linear, the other is more like a growth curve however what I don't
-see is that it changes from linear to the curve at the point other commits are
-taken via MRs. It looks more like the change didn't make much difference as the
-curve was already there before that.
+No, you don't understand and it is actually a *really* important difference.
 
-The nature of the repositories and code is very different too so I'm cautious
-about reading too much into this one way or another but it is interesting.
+We are a community project with wide peer review. *Nobody* gets to merge changes
+without that peer review. I may be the maintainer for some of it but even my own
+patches get peer review. This means there is no single "this patch can merge"
+point without it having been on the mailing list for potential discussion.
+
+If a patch gets sent via the github MR, someone needs to take that, put it on
+the mailing list and ensure the community gets to review it. Khem has kindly
+taken on that role for some patches which is his choice. If there is review
+feedback, it puts him in a tricky position since he then has to merge that back
+to the github discussion somehow. We do not encourage this and in the case of
+the repositories I maintain, I simply do not have the bandwidth to try and do
+this for multiple github MRs.
+
+I understand it is easier for people to submit but our processes simply don't
+scale to that and people would get *very* upset if changes through github MRs
+were bypassing normal peer review. This is why Khem cannot simply hit the merge
+button and why our other repos don't support that workflow.
 
 Cheers,
 
 Richard
+
+
 
 
 
