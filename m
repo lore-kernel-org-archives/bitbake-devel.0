@@ -1,117 +1,184 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <Martin.Jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DD7C4332F
-	for <webhook@archiver.kernel.org>; Tue,  9 Nov 2021 12:21:50 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com
- [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web10.11091.1636460509342970826
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D316C433F5
+	for <webhook@archiver.kernel.org>; Tue,  9 Nov 2021 12:25:02 +0000 (UTC)
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com
+ [209.85.214.179])
+ by mx.groups.io with SMTP id smtpd.web10.11120.1636460701890029006
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Nov 2021 04:21:49 -0800
+ Tue, 09 Nov 2021 04:25:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=MBH2EWBs;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.51,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f51.google.com with SMTP id
- f7-20020a1c1f07000000b0032ee11917ceso2142311wmf.0
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=lJ3b6M4e;
+ spf=pass (domain: gmail.com, ip: 209.85.214.179,
+ mailfrom: martin.jansa@gmail.com)
+Received: by mail-pl1-f179.google.com with SMTP id t21so20589947plr.6
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Nov 2021 04:21:49 -0800 (PST)
+ Tue, 09 Nov 2021 04:25:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=0r6djCxhPMyGAaUqiTrcP6p6fl3fmgEestGie0jzzv8=;
-        b=MBH2EWBsG1Co9x7xiJQU7mWeHOAx+wzfrkc1GL2XSDq1YRzbAKKa3x9huOIJDskVwg
-         SHEjohf4PWMe/Fsm+0Ru01ZJHc2dz8W258l+K1MUEOD03J6mUS64Bx/6kiQJkN5mlL0v
-         YjRG+NkNfagWq+3FdN0pHr2b5JI3B5K3ptuCk=
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p6eikVcBzFn3dRY7mXUaEm60esiiwt+c+A2y2FSVqsI=;
+        b=lJ3b6M4eSAoV30Hu7RViKMzfc63CIXbkiW6J0exFnxCb1yeCbW8Ww8wSapEK6ZK2CX
+         B8haRAq6sWA3DIjTcSzs6kD+U5F9kaU0STXXlfqg6KCyiCBNlQIecfb77ILNF5Q/eVqQ
+         tygGx8A+bsWRaBeYOyWMzTSBpcvkegtfhYa903vfxA2RdxcOSQTJS+oSpYecW3ptLzXe
+         9UdS6ttFYuv0RdyC2EIudDPUxyuKPa2u8cD26GmcTDFq1JtDhlc9rIjKGUEYER2cV2gG
+         3tWMlWLHZGb1Bzs8XDs14jrFcKgpVW73ELJyPrFR2hlNNDP0UHb68ZccZGxfPdEb/tdp
+         Slfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=0r6djCxhPMyGAaUqiTrcP6p6fl3fmgEestGie0jzzv8=;
-        b=YuUfQgosNDwBkJkXnQI4K87eZwZU6nQqgXq0te2APSx4JG8pszoC3VHDTX3+fLwJhx
-         Ywu/BNB8Ij1VKawowOlH+C3XvMEQVbkY+a4cHdISrJVIubkxs2EC0/yhw87ulR306hqX
-         8Y2Rv+o+bwfW+i3NYVIF6GJ3tDbPy7UI5tpE1H5qcGwZMGsnnX2PZxVy2riYFm1QdFky
-         nIjDKwOLJFOJCobI54Myy8hI3YppiPih3u7HU8THzRSzxIz6OUMMTOnpwIphHyoOFTQK
-         kw47USbKnA1cBTuV8yPD7W38XBc2jQILAEnBQ7rYh+vmc4XkT8CFFyf/z/vQ/TWUBme3
-         +VeQ==
-X-Gm-Message-State: AOAM530424RDZk1Afey5axreCpeqlOqGb9OmA/QtGDpgjQZCy4sEHUy4
-	OW/Su1Icn5QXvjApx3wSAqU/wQ==
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p6eikVcBzFn3dRY7mXUaEm60esiiwt+c+A2y2FSVqsI=;
+        b=UIttxYb8SQcmRrTsgYxAY5Yn9P6UXNjBjM8NJVc9PMP9Fn4HFIZZTl9dmXeoJgFBb1
+         qjrTnWOmNI8O11+3QkPrf/8VTiOdYhOGQP1ewVM75xA0xnvEKtXKPiAKu8yHMicTikRL
+         RkLmQgZcnFpqlMxI5+fNt7SIERpEsQLm9e42UYxwt2IfF5LzsAaHrCtfzM1sXU5cG98Q
+         WoszwzBtz0Ho1yNahO2GDNTyrnBotijmNhMFNGGUewNHXOe2cPQs6i+IfYNhuy/cKXe9
+         Zb7Rr9Yjt2f7zhzY2vj2RV0iszE3AwHDkTEAd3EqzjA6hx1TB0fV51bBMCWWcZsy4phV
+         NAZg==
+X-Gm-Message-State: AOAM531WdF50ApMtpnF3MFDidZG7xuraw5KWFj3nPKK2ZAR7MUvjfDOr
+	V+/5xnbofrFf/UCwgzn9PSqndnIVjMgv7s8oNTk=
 X-Google-Smtp-Source: 
- ABdhPJyEK1vO7MDf0tXHb7EeCW9Oj9aYTmVyv+IZn1PI9yx0Pp4FEZUujduZD0jRNifiPagLYByBDQ==
-X-Received: by 2002:a1c:8093:: with SMTP id
- b141mr6740223wmd.129.1636460507865;
-        Tue, 09 Nov 2021 04:21:47 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:10b7:e9c6:d1a:6f7c?
- ([2001:8b0:aba:5f3c:10b7:e9c6:d1a:6f7c])
-        by smtp.gmail.com with ESMTPSA id
- p12sm23632994wrr.10.2021.11.09.04.21.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Nov 2021 04:21:47 -0800 (PST)
-Message-ID: 
- <e5b2f8439e5aab93a2841728e00650185ff60573.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] bitbake style/workflow
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Marius Kriegerowski <marius.kriegerowski@gmail.com>
-Cc: Mikko.Rapeli@bmw.de, Alexander Kanavin <alex.kanavin@gmail.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 09 Nov 2021 12:21:46 +0000
+ ABdhPJzLtkL1GDlzd+qWYcdOOs8R77nzbDl9Eayy6BXhzCsvLDyWlzGapPXGuigRiIu6IWYKi7CR6mMySy/uRt5+ELE=
+X-Received: by 2002:a17:90a:dc15:: with SMTP id
+ i21mr5208627pjv.183.1636460701354;
+ Tue, 09 Nov 2021 04:25:01 -0800 (PST)
+MIME-Version: 1.0
+References: 
+ <CAMaS9hNh8iztUquiPddua-6Lu0nLzU832YwHG+rw284zqUzEZQ@mail.gmail.com>
+ <CAMaS9hPB=273mfQ4eZp32tsy3DrsqX3x0sKmxSaZ2CbsvaYYxA@mail.gmail.com>
+ <d5683f0ad0dd0185309d5d8feea6c7e7141fa343.camel@linuxfoundation.org>
+ <CAMaS9hNpp9QsUqkpXvNj_F5R4aQoe+qHg+_mtxnZRL0PoAYaGw@mail.gmail.com>
+ <589e9863e78ed9f8234a3756b37ffb979daa770c.camel@linuxfoundation.org>
+ <CANNYZj8_zPhh_XCZrxaPvXd_Oz5kzbzHNLvT6qzvtztquKA0ew@mail.gmail.com>
+ <CAMaS9hO8yU+T3tKb-dQj-DFx-vqGsUTLc7Jkta1sAM+eDr45BA@mail.gmail.com>
+ <CANNYZj9G7YaHpQgCzVZaCjTTAmNXgEiGnkf-GyrXzbxckqp4oA@mail.gmail.com>
+ <CAMaS9hNwT5iK8X3NKAq6cJq1qk4mHS99a36kTogc6_=fDHALFA@mail.gmail.com>
+ <YYo2KsoUeMTZ6y5C@korppu> <16B5D5AA827DA237.27841@lists.openembedded.org>
+ <16B5D6BAD1F7C3E6.27841@lists.openembedded.org>
+ <CAMaS9hNRUsmWdXNaJV9E8rKCw6g2OzdZd4U8s6k+0c7VYo8P9g@mail.gmail.com>
 In-Reply-To: 
  <CAMaS9hNRUsmWdXNaJV9E8rKCw6g2OzdZd4U8s6k+0c7VYo8P9g@mail.gmail.com>
-References: 
-	<CAMaS9hNh8iztUquiPddua-6Lu0nLzU832YwHG+rw284zqUzEZQ@mail.gmail.com>
-	 <CAMaS9hPB=273mfQ4eZp32tsy3DrsqX3x0sKmxSaZ2CbsvaYYxA@mail.gmail.com>
-	 <d5683f0ad0dd0185309d5d8feea6c7e7141fa343.camel@linuxfoundation.org>
-	 <CAMaS9hNpp9QsUqkpXvNj_F5R4aQoe+qHg+_mtxnZRL0PoAYaGw@mail.gmail.com>
-	 <589e9863e78ed9f8234a3756b37ffb979daa770c.camel@linuxfoundation.org>
-	 <CANNYZj8_zPhh_XCZrxaPvXd_Oz5kzbzHNLvT6qzvtztquKA0ew@mail.gmail.com>
-	 <CAMaS9hO8yU+T3tKb-dQj-DFx-vqGsUTLc7Jkta1sAM+eDr45BA@mail.gmail.com>
-	 <CANNYZj9G7YaHpQgCzVZaCjTTAmNXgEiGnkf-GyrXzbxckqp4oA@mail.gmail.com>
-	 <CAMaS9hNwT5iK8X3NKAq6cJq1qk4mHS99a36kTogc6_=fDHALFA@mail.gmail.com>
-	 <YYo2KsoUeMTZ6y5C@korppu> <16B5D5AA827DA237.27841@lists.openembedded.org>
-	 <16B5D6BAD1F7C3E6.27841@lists.openembedded.org>
-	 <CAMaS9hNRUsmWdXNaJV9E8rKCw6g2OzdZd4U8s6k+0c7VYo8P9g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Martin Jansa <martin.jansa@gmail.com>
+Date: Tue, 9 Nov 2021 13:24:49 +0100
+Message-ID: 
+ <CA+chaQdsfGMSXJ0ASH=dM8TafcdsbkTUFQZP66w9W5E5_7conw@mail.gmail.com>
+Subject: Re: [bitbake-devel] bitbake style/workflow
+To: Marius Kriegerowski <marius.kriegerowski@gmail.com>
+Cc: mikko.rapeli@bmw.de, Alexander Kanavin <alex.kanavin@gmail.com>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="000000000000cb0db005d05a32f1"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 09 Nov 2021 12:21:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12966
+ <bitbake-devel@lists.openembedded.org>; Tue, 09 Nov 2021 12:25:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12967
 
-On Tue, 2021-11-09 at 12:56 +0100, Marius Kriegerowski wrote:
-> I'm sure there is a readon not to hit the merge button but instead doing that
-> manually which I don't understand.
+--000000000000cb0db005d05a32f1
+Content-Type: text/plain; charset="UTF-8"
 
-No, you don't understand and it is actually a *really* important difference.
+On Tue, Nov 9, 2021 at 12:56 PM Marius Kriegerowski <
+marius.kriegerowski@gmail.com> wrote:
 
-We are a community project with wide peer review. *Nobody* gets to merge changes
-without that peer review. I may be the maintainer for some of it but even my own
-patches get peer review. This means there is no single "this patch can merge"
-point without it having been on the mailing list for potential discussion.
+> Okay, one thing I have to add after killing some time with this: I quickly
+> scrutinized the git history of `bitbake` and `meta-openembedded`.
+>
+> Attached are two figures that show the first time contributor count of
+> both projects over the last ~ten years. While `bitbake` shows a linear
+> growth of first-time contributors, `meta-openembedded` is exponential. I
+> didn't analyze the first derivative but to me it looks like there is a kink
+> following that timestamp indicated by the vertical bar. That line
+> represents a subtle, yet important change in intonation in the merge
+> requests. Before that there was always a comment "Please read README and
+> send patches to openembedded-devel@lists.openembedded.org for review." or
+> alike. After that the intonation changed to messages "Patches should be
+> sent to openembedded-devel as described in README." and if I interprete the
+> following MRs correctly the maintainers (mostly @kraj) were kind enough to
+> apply the MRs as patches.
+>
 
-If a patch gets sent via the github MR, someone needs to take that, put it on
-the mailing list and ensure the community gets to review it. Khem has kindly
-taken on that role for some patches which is his choice. If there is review
-feedback, it puts him in a tricky position since he then has to merge that back
-to the github discussion somehow. We do not encourage this and in the case of
-the repositories I maintain, I simply do not have the bandwidth to try and do
-this for multiple github MRs.
+and as you can see in the ML, Khem is sending those commits from meta-oe
+PRs as e-mails to openembedded-devel ML for others to review, which is very
+kind of him, but also causes a lot of overhead (especially when there is a
+feedback on ML which he needs to forward back to the discussion on the
+github PR and then resend the vN patch to ML and so on).
 
-I understand it is easier for people to submit but our processes simply don't
-scale to that and people would get *very* upset if changes through github MRs
-were bypassing normal peer review. This is why Khem cannot simply hit the merge
-button and why our other repos don't support that workflow.
+And it's not only the review process of the new changes, there is a lot of
+discussions in various MLs which even occasional contributors should find
+useful (especially some global changes or project directions discussed in
+openembedded-architecture ML).
 
-Cheers,
+I'm sure there is a readon not to hit the merge button but instead doing
+> that manually which I don't understand.
+>
 
-Richard
+github.com/openembedded are read-only mirrors of authoritative git server
+https://git.openembedded.org/ so just hitting the merge button would break
+the synchronization. And the changes are first cherry-picked to various
+branches to be at least build tested in some world build, before they are
+considered for merge.
 
+PS: I'm retro, I actually prefer black and white plain text e-mails. And
+for review in other projects I'm involved with I definitely prefer gerrit
+over github/gitlab. Not only it allows correct review of commit messages,
+but also is significantly better at comparing various revisions of the same
+changes and tracking inline comments there.
 
+Regards,
 
+--000000000000cb0db005d05a32f1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div dir=3D"ltr">On Tue, Nov 9, 2021 at 12:56 PM Marius Kr=
+iegerowski &lt;<a href=3D"mailto:marius.kriegerowski@gmail.com" target=3D"_=
+blank">marius.kriegerowski@gmail.com</a>&gt; wrote:<br></div><div dir=3D"lt=
+r"><div class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"ma=
+rgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=
+1ex"><div dir=3D"ltr"><div>Okay, one thing I have to add after killing some=
+ time with this: I quickly scrutinized the git history of `bitbake` and `me=
+ta-openembedded`.</div><div><br></div><div>Attached are two figures that sh=
+ow the first time contributor count of both projects over the last ~ten yea=
+rs. While `bitbake` shows a linear growth of first-time contributors, `meta=
+-openembedded` is exponential. I didn&#39;t analyze the first derivative bu=
+t to me it looks like there is a kink following that timestamp indicated by=
+ the vertical bar. That line represents a subtle, yet important change in i=
+ntonation in the merge requests. Before that there was always a comment &qu=
+ot;Please read README and send patches to <a href=3D"mailto:openembedded-de=
+vel@lists.openembedded.org" target=3D"_blank">openembedded-devel@lists.open=
+embedded.org</a> for review.&quot; or alike. After that the intonation chan=
+ged to messages &quot;Patches should be sent to openembedded-devel as descr=
+ibed in README.&quot; and if I interprete the following MRs correctly the m=
+aintainers (mostly @kraj) were kind enough to apply the MRs as patches.</di=
+v></div></blockquote><div><br></div><div>and as you can see in the ML, Khem=
+ is sending those commits from meta-oe PRs as e-mails to openembedded-devel=
+ ML for others to review, which is very kind of him, but also causes a lot =
+of overhead (especially when there is a feedback on ML which he needs to fo=
+rward back to the discussion on the github PR and then resend the vN patch =
+to ML and so on).</div><div><br></div><div>And it&#39;s not only the review=
+ process of the new changes, there is a lot of discussions in various MLs w=
+hich even occasional contributors should find useful (especially some globa=
+l changes or project directions discussed in openembedded-architecture ML).=
+</div><div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px =
+0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div=
+ dir=3D"ltr"><div>I&#39;m sure there is a readon not to hit the merge butto=
+n but instead doing that manually which I don&#39;t understand.</div></div>=
+</blockquote><div><br></div><div><a href=3D"http://github.com/openembedded"=
+>github.com/openembedded</a> are read-only mirrors of authoritative git ser=
+ver=C2=A0<a href=3D"https://git.openembedded.org/">https://git.openembedded=
+.org/</a> so just hitting the merge button would break the synchronization.=
+ And the changes are first cherry-picked to various branches to be at least=
+ build tested in some world build, before they are considered for merge.</d=
+iv><div><br></div><div>PS: I&#39;m retro, I actually prefer black and white=
+ plain text e-mails. And for review in other projects I&#39;m involved with=
+ I definitely prefer gerrit over github/gitlab. Not only it allows correct =
+review of commit messages, but also is significantly better at comparing va=
+rious revisions of the same changes and tracking inline comments there.</di=
+v><div><br></div><div>Regards,</div></div></div>
+</div>
 
+--000000000000cb0db005d05a32f1--
 
