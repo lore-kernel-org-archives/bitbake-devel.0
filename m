@@ -1,156 +1,232 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD74AC433EF
-	for <webhook@archiver.kernel.org>; Wed, 10 Nov 2021 16:33:21 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
- [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web08.548.1636562000872896668
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98812C433F5
+	for <webhook@archiver.kernel.org>; Wed, 10 Nov 2021 17:20:04 +0000 (UTC)
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com
+ [209.85.214.178])
+ by mx.groups.io with SMTP id smtpd.web12.1263.1636564803890535916
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Nov 2021 08:33:21 -0800
+ Wed, 10 Nov 2021 09:20:04 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=iRoaB2Pz;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f44.google.com with SMTP id r8so5020314wra.7
-        for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Nov 2021 08:33:20 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=i8h5yt9R;
+ spf=pass (domain: gmail.com, ip: 209.85.214.178,
+ mailfrom: raj.khem@gmail.com)
+Received: by mail-pl1-f178.google.com with SMTP id b11so3521896pld.12;
+        Wed, 10 Nov 2021 09:20:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=IaLcBwSUIF3+BYtngNWVL+RRrkq8kbtLcDfRYzuAoqg=;
-        b=iRoaB2Pzvvj88CSvsdrTONLUolcd9+UM/giID0fPSyv52Xbv3nz9R/eFy2XXcgVJcG
-         cannsov77+Pe5Oa89sbEq6477BdvyDq7aEoavz7TEeahOsGas9h3FxS4O+ca+a8fHwoL
-         EnB73mLDvsfbqVxofRTvLi4AR1swv4F3qKo2c=
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=nHmRlZft6yaNKqC0gWZDBDN5S7QALwAMq9TyyLEbZL8=;
+        b=i8h5yt9RzoqY1RO4joqMQ8OSFGa1KCoyNvDd8Uf/UyMwncCgH1eG6W/olFKCLrH+EK
+         gBB/dpLXgye5nQS/W6fDALE6HWqWOvidFm/Naq89TWRwI06WDhMi+ehs3aRcpHKXFg3p
+         IMyfhWkQiNuWKbP2GtmTl7SwUMpGSJAuxkzcvhzZGNj1N4fAxHpBKpd4Mw3E0XrKuCQd
+         td90aaQ0XjMXjfmAZR9/WjDj2c9VckqrSP5aTuJCIce1oEfGU78oNWtgZs5joCN+F0Wj
+         HrlkqIDi4q/rfzbn3kFjWt/i8mIgCrfRsZq7Rs1LQ41/6dxewJDf8TnQH91P3QrKu2pR
+         UOLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=IaLcBwSUIF3+BYtngNWVL+RRrkq8kbtLcDfRYzuAoqg=;
-        b=q6Qkg//aXBhZFsVvZcf5oNUOPEEGLmfx21LuYo9PU7LplKSgGeqThcoOOZ3HSM8oJD
-         F/cB1u8DBm1+c9k0fKYxKUzk9rDswdoAH+BOGcDM4INd7xW+3UH8Ubgrvi/1q6iI7XMv
-         cfPI7zb+whAaEezvtSeKDPiC9CyFiyEQH3dfL2iz1KP/u5zctzA4Vv9vYiLDiuAlIVP3
-         Mw7q5MdEOc3RNZ/Nofmzy5NyDN0qdLSVSQjC3O52skZrMU3svFNZQ6IxWZEDNfmwJtXx
-         Nqs4BPS8oz40HD0YbjvklF1uEVxq1528IyNK5G09ervcUms/pnIFp81Df6zoHlU9pKgw
-         zMzw==
-X-Gm-Message-State: AOAM533FSpiDVixxMTWum81Qx55hfElbx97Dk5wo1UQqtKh1ZbpbWUSo
-	BjR+ML4bKAhQ8PgSnXVkeEjMoA==
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=nHmRlZft6yaNKqC0gWZDBDN5S7QALwAMq9TyyLEbZL8=;
+        b=FrFH0mbVOQjSPH4oocC9nvMZqWljDE78avb2MjZCh4Yc3aBOMSeKEE8qf5RVabyVt3
+         al5qB5enyVRCX6piCWAVtZ9OAqfDJ5a0bptgMy5dqCX7IsT+brlLGGn5TUjR84uAfv4i
+         Yu+ToNgeyUA7gojFlKgG4QtQFngnKohs6IRXMOwCiJzzZoZgGEa02uELXKvzXYgJPBij
+         OAfDZIfu8Kv9C1DteaPy9ASw4X7HTAmEmpusK0Abutv6b0q4x2U1Lr3pEwQPdd8Vs0p0
+         r22BaPUkQFggvIm5gCSgMzbXk10RhEOmEeIZ6DAv49/ppz/OA1TJGfoknuo4m/8PKpLz
+         fdjg==
+X-Gm-Message-State: AOAM532sb3r7J9qSnepX8wjKhFmcp3ultN666gE0xc4oDUSaYhMFnx+j
+	dRI/K3RnRHdaR5OEPJAcxvQ=
 X-Google-Smtp-Source: 
- ABdhPJxhO8b+sM4o1Ja5GreIcyxSeFOdQA8QnVEB3va8655+SS7XRZ7gnpH6Nm5unGH7BYVaawaUvA==
-X-Received: by 2002:adf:ce0e:: with SMTP id p14mr304673wrn.423.1636561999039;
-        Wed, 10 Nov 2021 08:33:19 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:ac1:e64:a6c2:6c7d?
- ([2001:8b0:aba:5f3c:ac1:e64:a6c2:6c7d])
+ ABdhPJzhlrYifqXuuqTqJEsGKsyeGMPAh6SBYAOGAFwMMsAFAFPGuVBmje7vOuxgJ3PEHoJyn07Pfw==
+X-Received: by 2002:a17:903:246:b0:13f:2ff9:8b93 with SMTP id
+ j6-20020a170903024600b0013f2ff98b93mr621666plh.54.1636564803247;
+        Wed, 10 Nov 2021 09:20:03 -0800 (PST)
+Received: from ?IPV6:2601:646:9200:a0f0:7cfe:7a02:cfe2:7296?
+ ([2601:646:9200:a0f0:7cfe:7a02:cfe2:7296])
         by smtp.gmail.com with ESMTPSA id
- c11sm385191wmq.27.2021.11.10.08.33.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Nov 2021 08:33:18 -0800 (PST)
-Message-ID: 
- <b8b2081df6de0e8eb0caaf0bb93cb2c337d885c2.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
- for repo 2.17.3
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>,
-	"openembedded-core@lists.openembedded.org"
-	 <openembedded-core@lists.openembedded.org>, "kweihmann@outlook.com"
-	 <kweihmann@outlook.com>, "jasper@fancydomain.eu" <jasper@fancydomain.eu>
-Cc: "martin@mko.dev" <martin@mko.dev>, "Daniel.Baumgart@iris-sensing.net"
-	 <Daniel.Baumgart@iris-sensing.net>, "bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Wed, 10 Nov 2021 16:33:16 +0000
-In-Reply-To: <d36258228dd2fb0dc2fdb88ddab9a117fa1454db.camel@iris-sensing.com>
-References: <20211105133104.19895-1-jasper@fancydomain.eu>
-	 <AM9PR09MB4642AA3727D430C698E95EE5A88E9@AM9PR09MB4642.eurprd09.prod.outlook.com>
-	 <b8897c8a436f384ef0a41d708816c2f61f9e22c7.camel@iris-sensing.com>
-	 <d87ff011218f55d97e5aa48ff9b06d216f6d477a.camel@iris-sensing.com>
-	 <029d18fa589265e32476c7cc45c9977f7b4bb9aa.camel@linuxfoundation.org>
-	 <3101a847508371b09b2949434f9ca09c672a7097.camel@iris-sensing.com>
-	 <f815b01f00eb3271ea947442cd6837fa27cefb3f.camel@linuxfoundation.org>
-	 <d36258228dd2fb0dc2fdb88ddab9a117fa1454db.camel@iris-sensing.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1 
+ mn15sm218474pjb.35.2021.11.10.09.20.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Nov 2021 09:20:02 -0800 (PST)
+Message-ID: <b9f45c83-9be2-96bc-4a5a-d163c14d32b4@gmail.com>
+Date: Wed, 10 Nov 2021 09:20:01 -0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.3.0
+Subject: Re: [bitbake-devel] [oe-core][PATCH v4 1/2] repo: Add recipe for
+ 2.17.3
+Content-Language: en-US
+To: jasper@fancydomain.eu, openembedded-core@lists.openembedded.org
+Cc: martin@mko.dev, Daniel.Baumgart@iris-sensing.com,
+ bitbake-devel@lists.openembedded.org,
+ Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+References: <20211110155332.578088-1-jasper@fancydomain.eu>
+From: Khem Raj <raj.khem@gmail.com>
+Organization: HIMVIS LLC
+In-Reply-To: <20211110155332.578088-1-jasper@fancydomain.eu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Nov 2021 16:33:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12993
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Nov 2021 17:20:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/12994
 
-On Wed, 2021-11-10 at 13:52 +0000, Jasper Orschulko wrote:
-> Hi Richard,
+
+
+On 11/10/21 7:53 AM, Jasper Orschulko via lists.openembedded.org wrote:
+> From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
 > 
-> > When you say "fixed refspec", will that be a definitive sha revision
-> > or a tag?
-> > We always force resolution of tags as they tend to cause problems and
-> > can change even if it is bad form.
+> Add a recipe for repo 2.17.3, prerequisite for the repo fetcher.
 > 
-> that's a good point. Actually, Martin and I have just been discussing
-> this, as we noticed that this point actually got "lost" during our
-> implementation. We are currently working on fixing this. Good to know
-> how you handle this. I will keep you posted.
-
-Ok, it is good to be clear on that one. I know the fact we hit the network for
-tags does concern some but it really is the only way to handle them.
-
-> > This is potentially a big issue. Cloning operations during parsing is
-> > pretty
-> > horrible. We'd not expect any thing being written out like that
-> > during a parse.
-> > It would probably work "ok" for one recipe but if you start getting
-> > the hundreds
-> > of git recipes we have in some layers, it wouldn't scale if we
-> > allowed that :(.
-> > 
-> > Not sure what to recommend here but it is definitely problematic.
+> Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+> ---
+>   meta/conf/distro/include/maintainers.inc      |  1 +
+>   .../0001-Set-REPO_REV-to-v2.17.3.patch        | 34 +++++++++++++++++++
+>   .../repo/repo/0001-python3-shebang.patch      | 26 ++++++++++++++
+>   meta/recipes-devtools/repo/repo_2.17.3.bb     | 29 ++++++++++++++++
+>   4 files changed, 90 insertions(+)
+>   create mode 100644 meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to-v2.17.3.patch
+>   create mode 100644 meta/recipes-devtools/repo/repo/0001-python3-shebang.patch
+>   create mode 100644 meta/recipes-devtools/repo/repo_2.17.3.bb
 > 
-> Just to make sure that we are on the same page: This ONLY affects
-> recipes which use the repo fetcher. And it ONLY clones the repository
-> containing the repo manifest (which tend to be small in size).
+> diff --git a/meta/conf/distro/include/maintainers.inc b/meta/conf/distro/include/maintainers.inc
+> index f3e0a75d56..58a0a9615f 100644
+> --- a/meta/conf/distro/include/maintainers.inc
+> +++ b/meta/conf/distro/include/maintainers.inc
+> @@ -652,6 +652,7 @@ RECIPE_MAINTAINER:pn-quilt-native = "Robert Yang <liezhi.yang@windriver.com>"
+>   RECIPE_MAINTAINER:pn-quota = "Anuj Mittal <anuj.mittal@intel.com>"
+>   RECIPE_MAINTAINER:pn-re2c = "Khem Raj <raj.khem@gmail.com>"
+>   RECIPE_MAINTAINER:pn-readline = "Hongxu Jia <hongxu.jia@windriver.com>"
+> +RECIPE_MAINTAINER:pn-repo = "Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>"
+>   RECIPE_MAINTAINER:pn-resolvconf = "Chen Qi <Qi.Chen@windriver.com>"
+>   RECIPE_MAINTAINER:pn-rgb = "Unassigned <unassigned@yoctoproject.org>"
+>   RECIPE_MAINTAINER:pn-rpcbind = "Hongxu Jia <hongxu.jia@windriver.com>"
+> diff --git a/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to-v2.17.3.patch b/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to-v2.17.3.patch
+> new file mode 100644
+> index 0000000000..3086f8eb42
+> --- /dev/null
+> +++ b/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to-v2.17.3.patch
+> @@ -0,0 +1,34 @@
+> +From bdd2a528da59c28db8ae2986834926de7cebf3ab Mon Sep 17 00:00:00 2001
+> +From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+> +Date: Thu, 4 Nov 2021 16:55:12 +0100
+> +Subject: [PATCH] Set REPO_REV to v2.17.3
+> +
+> +repo is an unusual tool because it downloads all of its own Python modules
+> +using GPG-signed git tags, and stores those files as part of the project
+> +that it is working with.
+> +
+> +So in order to have a reproducible repo installation within the project
+> +folders, we hardcode the REPO_REV variable to a SHA1 that corresponds to
+> +the version of the recipe.
+> +
+> +Upstream-Status: Inappropriate [configuration]
+> +Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+> +---
+> + repo | 2 +-
+> + 1 file changed, 1 insertion(+), 1 deletion(-)
+> +
+> +diff --git a/repo b/repo
+> +index 4cddbf1..cf5f6b1 100755
+> +--- a/repo
+> ++++ b/repo
+> +@@ -142,7 +142,7 @@ if __name__ == '__main__':
+> + REPO_URL = os.environ.get('REPO_URL', None)
+> + if not REPO_URL:
+> +   REPO_URL = 'https://gerrit.googlesource.com/git-repo'
+> +-REPO_REV = os.environ.get('REPO_REV')
+> ++REPO_REV = '11b30b91df1f0e03b53da970ec2588e85817bacc'
+> + if not REPO_REV:
+> +   REPO_REV = 'stable'
+> + # URL to file bug reports for repo tool issues.
+> +--
+> +2.33.1
+> diff --git a/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch b/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch
+> new file mode 100644
+> index 0000000000..d3888c8bb2
+> --- /dev/null
+> +++ b/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch
+> @@ -0,0 +1,26 @@
+> +From b8e84b202cd302a7c99288d3835dc9c63071f8f2 Mon Sep 17 00:00:00 2001
+> +From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+> +Date: Tue, 14 Sep 2021 16:46:51 +0200
+> +Subject: [PATCH] python3 shebang
+> +
+> +Yocto does not symlink from python to python3, thus change the shebang from
+> +python to python3.
+> +
+> +Upstream-Status: Inappropriate [configuration]
+> +Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+> +---
+> + repo | 2 +-
+> + 1 file changed, 1 insertion(+), 1 deletion(-)
+> +
+> +diff --git a/repo b/repo
+> +index b13e34c..205e0e5 100755
+> +--- a/repo
+> ++++ b/repo
+> +@@ -1,4 +1,4 @@
+> +-#!/usr/bin/env python
+> ++#!/usr/bin/env python3
+> + # -*- coding:utf-8 -*-
+> + #
+> + # Copyright (C) 2008 The Android Open Source Project
+> +--
+> +2.33.0
+> diff --git a/meta/recipes-devtools/repo/repo_2.17.3.bb b/meta/recipes-devtools/repo/repo_2.17.3.bb
+> new file mode 100644
+> index 0000000000..20f5d465d3
+> --- /dev/null
+> +++ b/meta/recipes-devtools/repo/repo_2.17.3.bb
+> @@ -0,0 +1,29 @@
+> +# SPDX-License-Identifier: MIT
+> +# Copyright (C) 2021 iris-GmbH infrared & intelligent sensors
+> +
+> +SUMMARY = "Tool for managing many Git repositories"
+> +DESCRIPTION = "Repo is a tool built on top of Git. Repo helps manage many Git repositories, does the uploads to revision control systems, and automates parts of the development workflow."
+> +HOMEPAGE = "https://android.googlesource.com/tools/repo"
+> +SECTION = "console/utils"
+> +
+> +LICENSE = "Apache-2.0"
+> +LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
+> +
+> +SRC_URI = "git://gerrit.googlesource.com/git-repo.git;protocol=https;branch=main"
+> +SRCREV = "11b30b91df1f0e03b53da970ec2588e85817bacc"
+> +
+> +SRC_URI += "file://0001-python3-shebang.patch \
+> +            file://0001-Set-REPO_REV-to-v2.17.3.patch"
+> +
+> +MIRRORS += "git://gerrit.googlesource.com/git-repo.git git://github.com/GerritCodeReview/git-repo.git \n"
+> +
+> +S = "${WORKDIR}/git"
+> +
+> +do_install() {
+> +	install -d ${D}${bindir}
+> +	install ${WORKDIR}/git/repo ${D}${bindir}
 
-Correct, we are on the same page. This is still quite problematic as the recipes
-are meant to parse quickly and a repository clone is definitely not expected.
+to be on safer side perhaps use below single line instead of above two.
 
-> So unless developers start using hundreds of repo-based recipes, which I
-> find a very unlikely scenario, this should not be an issue.
+install -Dm 0755 ${WORKDIR}/git/repo ${D}${bindir}/repo
 
-Even ten recipes using this will show a degradation in parsing speed and I do
-get a lot of complaints when parsing slows down for any reason. The user doesn't
-expect this and it won't be visible what bitbake is doing (sitting at 99% parsed
-for a period).
-
-Also, the "tend to be small" implies someone will create a huge one at some
-point even if that is a bad idea for whatever reasons, I just know how these
-things end up going :(.
-
-> Unfortunately, I don't see any other way to access the repo manifest
-> file, as we need to calculate the commit hashes of the git repos
-> referenced in the repo manifest file. Otherwise, it is impossible for
-> us to determinate the necessity of an update when SRCREV =
-> "${AUTOREV}". 
-
-Some further questions:
-
-* Does it only clone a repo in the AUTOREV case?
-* Could it only obtain the manifest file somehow without a clone of the repo?
-
-> However, I see one potential improvement here. Currently the cloning of
-> the manifest repo is done on a per-recipe basis. E.g. this means if we
-> have 10 recipes inheriting a bbclass containing a repo fetcher, we will
-> clone 10 identical manifest repos. We'll work on improving this.
-
-At least for wget or git, it is assumed that for a given url, there would be one
-tarball/clone and that there is locking in place to share it between them. This
-means you'll see do_fetch tasks for binutils, binutils-cross-XXX, nativesdk-
-binutils and binutils-native and one will block the others but the fetch will
-happen once and be shared between them. I guess with repo it may not be as
-simple as that but we should try and share what we can if possible.
-
-Cheers,
-
-Richard
-
-
+> +}
+> +
+> +RDEPENDS:${PN} = "python3"
+> +
+> +BBCLASSEXTEND = "native nativesdk"
+> 
+> 
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#12990): https://lists.openembedded.org/g/bitbake-devel/message/12990
+> Mute This Topic: https://lists.openembedded.org/mt/86960071/1997914
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [raj.khem@gmail.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
