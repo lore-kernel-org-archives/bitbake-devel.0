@@ -2,197 +2,77 @@ Return-Path: <jasper@fancydomain.eu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A254C433F5
-	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 10:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13F6C433F5
+	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 10:22:07 +0000 (UTC)
 Received: from mx.walter.deinstapel.de (mx.walter.deinstapel.de
  [116.202.209.171])
- by mx.groups.io with SMTP id smtpd.web08.8682.1636626114993534863
+ by mx.groups.io with SMTP id smtpd.web09.8805.1636626126728105368
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Nov 2021 02:21:57 -0800
+ Thu, 11 Nov 2021 02:22:07 -0800
 Authentication-Results: mx.groups.io;
  dkim=fail reason="no key for verify" header.i=@fancydomain.eu header.s=mail
- header.b=e7WZk/9y;
+ header.b=hvKfyfWc;
  spf=pass (domain: fancydomain.eu, ip: 116.202.209.171,
  mailfrom: jasper@fancydomain.eu)
 From: jasper@fancydomain.eu
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fancydomain.eu;
-	s=mail; t=1636626112;
-	bh=6yw0P0l8vUsTJ/V3ibHt3bh/RhCs3vN1VXrUlcK601s=;
-	h=From:To:Cc:Subject;
-	b=e7WZk/9yLyFviMrx5FaTFPSWMsWas8q5xR6qWQDTxKaH0sOLCxZFq0pL9jmyeBkcn
-	 8hQ225lLt/TL2ec5OxUAPxlApONb8LCFsrw9RRv0G/VGHfjmhW50sVoqnx6HqnA8jc
-	 PJ+2jf50aAwburvse75DtaAJRMqBUTUNI2+Y/7QtfiqWcnkXz/hlx/bM90nlsNKlJX
-	 m6CnsJWC3aruv2cOncCYmbHg40I/RXgndgsKyaQYio7qXYU+XKW072FWdkExUB5Mbq
-	 B9ONkgGptx8+0G9x6Yf4oKscUno64kRExlfSWuz2BLl4CVXfajVXiwoOLEbZcCNp2a
-	 4xDkKa/Bfn+Rg==
+	s=mail; t=1636626114;
+	bh=YsAwmhrgFCN7SQ2qqINnMwLtQsyf5ROvOlXWvA5u8cs=;
+	h=From:To:Cc:Subject:In-Reply-To:References;
+	b=hvKfyfWcyGqCrHC2GlIxrTT/jfKdl/OBT/J/RMKLhp0eZjPqZQp0o/9Dy2EvoKOQB
+	 wdibJpCiYMrLJMHzgbk+sUbmNu6ofbIOcq5u5gGoc/ZUM9HAF8nY4peN273v8xrGss
+	 MFxEjdNd/zq5wFaNtxpADa4Mdq7SUxp8mx33Zxj9FaICgnhFhZ/dPLOwEVNJdSYZwZ
+	 Yq24D3QLWapsMzjATXuh1zuwfePjMPdYAk7U+LbFxyQuHkHxdWdiXYr8FNJJUBekhS
+	 tjWyGR/L/021HMj2GYPf8keAvbFWUWxIfsYU/m6XJmnCrGJdeGGJBxZvMAyRKRPRXB
+	 xkuUfhSdaF+dg==
 To: openembedded-core@lists.openembedded.org
 Cc: martin@mko.dev,
 	Daniel.Baumgart@iris-sensing.com,
 	bitbake-devel@lists.openembedded.org,
 	Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-Subject: [oe-core][PATCH v5 1/2] repo: Add recipe for 2.17.3
-Date: Thu, 11 Nov 2021 11:21:23 +0100
-Message-Id: <20211111102124.7661-1-jasper@fancydomain.eu>
+Subject: [oe-core][PATCH v5 2/2] base.bbclass: Add sysroot deps for repo
+ fetcher
+Date: Thu, 11 Nov 2021 11:21:24 +0100
+Message-Id: <20211111102124.7661-2-jasper@fancydomain.eu>
+In-Reply-To: <20211111102124.7661-1-jasper@fancydomain.eu>
+References: <20211111102124.7661-1-jasper@fancydomain.eu>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 10:21:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13003
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 10:22:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13004
 
 From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
 
-Add a recipe for repo 2.17.3, prerequisite for the repo fetcher.
+Add git-native and repo-native as prerequisite for the repo fetcher.
 
 Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
 ---
- meta/conf/distro/include/maintainers.inc      |  1 +
- .../0001-Set-REPO_REV-to-v2.17.3.patch        | 35 +++++++++++++++++++
- .../repo/repo/0001-python3-shebang.patch      | 26 ++++++++++++++
- meta/recipes-devtools/repo/repo_2.17.3.bb     | 28 +++++++++++++++
- 4 files changed, 90 insertions(+)
- create mode 100644 meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_=
-REV-to-v2.17.3.patch
- create mode 100644 meta/recipes-devtools/repo/repo/0001-python3-shebang.=
-patch
- create mode 100644 meta/recipes-devtools/repo/repo_2.17.3.bb
+ meta/classes/base.bbclass | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/meta/conf/distro/include/maintainers.inc b/meta/conf/distro/=
-include/maintainers.inc
-index f3e0a75d56..58a0a9615f 100644
---- a/meta/conf/distro/include/maintainers.inc
-+++ b/meta/conf/distro/include/maintainers.inc
-@@ -652,6 +652,7 @@ RECIPE_MAINTAINER:pn-quilt-native =3D "Robert Yang <l=
-iezhi.yang@windriver.com>"
- RECIPE_MAINTAINER:pn-quota =3D "Anuj Mittal <anuj.mittal@intel.com>"
- RECIPE_MAINTAINER:pn-re2c =3D "Khem Raj <raj.khem@gmail.com>"
- RECIPE_MAINTAINER:pn-readline =3D "Hongxu Jia <hongxu.jia@windriver.com>=
-"
-+RECIPE_MAINTAINER:pn-repo =3D "Jasper Orschulko <Jasper.Orschulko@iris-s=
-ensing.com>"
- RECIPE_MAINTAINER:pn-resolvconf =3D "Chen Qi <Qi.Chen@windriver.com>"
- RECIPE_MAINTAINER:pn-rgb =3D "Unassigned <unassigned@yoctoproject.org>"
- RECIPE_MAINTAINER:pn-rpcbind =3D "Hongxu Jia <hongxu.jia@windriver.com>"
-diff --git a/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to-=
-v2.17.3.patch b/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-=
-to-v2.17.3.patch
-new file mode 100644
-index 0000000000..285b1d3129
---- /dev/null
-+++ b/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to-v2.17.3=
-.patch
-@@ -0,0 +1,35 @@
-+From bdd2a528da59c28db8ae2986834926de7cebf3ab Mon Sep 17 00:00:00 2001
-+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-+Date: Thu, 4 Nov 2021 16:55:12 +0100
-+Subject: [PATCH] Set REPO_REV to v2.17.3
+diff --git a/meta/classes/base.bbclass b/meta/classes/base.bbclass
+index a65fcc6c1d..3298bd1952 100644
+--- a/meta/classes/base.bbclass
++++ b/meta/classes/base.bbclass
+@@ -665,6 +665,11 @@ python () {
+         elif uri.scheme =3D=3D "npm":
+             d.appendVarFlag('do_fetch', 'depends', ' nodejs-native:do_po=
+pulate_sysroot')
+=20
++        elif uri.scheme =3D=3D "repo":
++            needsrcrev =3D True
++            d.appendVarFlag('do_fetch', 'depends', ' repo-native:do_popu=
+late_sysroot')
++            d.appendVarFlag('do_fetch', 'depends', ' git-native:do_popul=
+ate_sysroot')
 +
-+repo is an unusual tool because it downloads all of its own Python modul=
-es
-+using GPG-signed git tags, and stores those files as part of the project
-+that it is working with.
-+
-+So in order to have a reproducible repo installation within the project
-+folders, we hardcode the default REPO_REV to a SHA1 that corresponds to
-+the version of the recipe. REPO_REV can still be overwriten by the user,
-+by specifying the REPO_REV environment variable.
-+
-+Upstream-Status: Inappropriate [configuration]
-+Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-+---
-+ repo | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/repo b/repo
-+index b13e34c..31130e9 100755
-+--- a/repo
-++++ b/repo
-+@@ -130,7 +130,7 @@ if not REPO_URL:
-+   REPO_URL =3D 'https://gerrit.googlesource.com/git-repo'
-+ REPO_REV =3D os.environ.get('REPO_REV')
-+ if not REPO_REV:
-+-  REPO_REV =3D 'stable'
-++  REPO_REV =3D '11b30b91df1f0e03b53da970ec2588e85817bacc'
-+=20
-+ # increment this whenever we make important changes to this script
-+ VERSION =3D (2, 8)
-+--=20
-+2.33.1
-diff --git a/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch b=
-/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch
-new file mode 100644
-index 0000000000..d3888c8bb2
---- /dev/null
-+++ b/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch
-@@ -0,0 +1,26 @@
-+From b8e84b202cd302a7c99288d3835dc9c63071f8f2 Mon Sep 17 00:00:00 2001
-+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-+Date: Tue, 14 Sep 2021 16:46:51 +0200
-+Subject: [PATCH] python3 shebang
-+
-+Yocto does not symlink from python to python3, thus change the shebang f=
-rom
-+python to python3.
-+
-+Upstream-Status: Inappropriate [configuration]
-+Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-+---
-+ repo | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/repo b/repo
-+index b13e34c..205e0e5 100755
-+--- a/repo
-++++ b/repo
-+@@ -1,4 +1,4 @@
-+-#!/usr/bin/env python
-++#!/usr/bin/env python3
-+ # -*- coding:utf-8 -*-
-+ #
-+ # Copyright (C) 2008 The Android Open Source Project
-+--
-+2.33.0
-diff --git a/meta/recipes-devtools/repo/repo_2.17.3.bb b/meta/recipes-dev=
-tools/repo/repo_2.17.3.bb
-new file mode 100644
-index 0000000000..cb0af89c09
---- /dev/null
-+++ b/meta/recipes-devtools/repo/repo_2.17.3.bb
-@@ -0,0 +1,28 @@
-+# SPDX-License-Identifier: MIT
-+# Copyright (C) 2021 iris-GmbH infrared & intelligent sensors
-+
-+SUMMARY =3D "Tool for managing many Git repositories"
-+DESCRIPTION =3D "Repo is a tool built on top of Git. Repo helps manage m=
-any Git repositories, does the uploads to revision control systems, and a=
-utomates parts of the development workflow."
-+HOMEPAGE =3D "https://android.googlesource.com/tools/repo"
-+SECTION =3D "console/utils"
-+
-+LICENSE =3D "Apache-2.0"
-+LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D3b83ef96387f14655fc854ddc3c6b=
-d57"
-+
-+SRC_URI =3D "git://gerrit.googlesource.com/git-repo.git;protocol=3Dhttps=
-;branch=3Dmain"
-+SRCREV =3D "11b30b91df1f0e03b53da970ec2588e85817bacc"
-+
-+SRC_URI +=3D "file://0001-python3-shebang.patch \
-+            file://0001-Set-REPO_REV-to-v2.17.3.patch"
-+
-+MIRRORS +=3D "git://gerrit.googlesource.com/git-repo.git git://github.co=
-m/GerritCodeReview/git-repo.git \n"
-+
-+S =3D "${WORKDIR}/git"
-+
-+do_install() {
-+	install -Dm 0755 ${WORKDIR}/git/repo ${D}${bindir}/repo
-+}
-+
-+RDEPENDS:${PN} =3D "python3"
-+
-+BBCLASSEXTEND =3D "native nativesdk"
+         # *.lz4 should DEPEND on lz4-native for unpacking
+         if path.endswith('.lz4'):
+             d.appendVarFlag('do_unpack', 'depends', ' lz4-native:do_popu=
+late_sysroot')
 --=20
 2.33.1
 
