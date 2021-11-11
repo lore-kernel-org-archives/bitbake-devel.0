@@ -1,206 +1,103 @@
-Return-Path: <Jasper.Orschulko@iris-sensing.com>
+Return-Path: <gabriel.valcazar@digi.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA8CC433F5
-	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 12:10:33 +0000 (UTC)
-Received: from mail.irisgmbh.de (mail.irisgmbh.de [81.169.172.79])
- by mx.groups.io with SMTP id smtpd.web11.9509.1636632631978886474
- for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Nov 2021 04:10:32 -0800
-Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=none, err=SPF record not found (domain: iris-sensing.com,
- ip: 81.169.172.79, mailfrom: jasper.orschulko@iris-sensing.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.irisgmbh.de (Postfix) with ESMTP id 1D07131E033F;
-	Thu, 11 Nov 2021 13:10:29 +0100 (CET)
-X-Virus-Scanned: amavisd-new at irisgmbh.de
-Received: from mail.irisgmbh.de ([127.0.0.1])
-	by localhost (s15324379.rootmaster.info [127.0.0.1]) (amavisd-new,
- port 10027)
-	with ESMTP; Thu, 11 Nov 2021 13:10:29 +0100 (CET)
-Received: from ERDE.irisgmbh.local (unknown [213.61.209.158])
-	by mail.irisgmbh.de (Postfix) with ESMTPS id 02E4131E02E9;
-	Thu, 11 Nov 2021 13:10:29 +0100 (CET)
-Received: from ERDE.irisgmbh.local ([172.30.10.11]) by ERDE.irisgmbh.local
- ([172.30.10.11]) with mapi id 14.03.0513.000; Thu, 11 Nov 2021 13:10:28 +0100
-From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
-	"openembedded-core@lists.openembedded.org"
-	<openembedded-core@lists.openembedded.org>, "kweihmann@outlook.com"
-	<kweihmann@outlook.com>, "peter.kjellerstedt@axis.com"
-	<peter.kjellerstedt@axis.com>, "jasper@fancydomain.eu"
-	<jasper@fancydomain.eu>
-CC: "martin@mko.dev" <martin@mko.dev>, Daniel Baumgart
-	<Daniel.Baumgart@iris-sensing.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
- for repo 2.17.3
-Thread-Topic: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
- for repo 2.17.3
-Thread-Index: 
- AQHX0klmUmLVPFJtF0Ob3PuHG3t8+6v03rAAgAADSACAAAYMgIABSAqAgATTzgCAAmPRAIAAqg6AgAAZFICAAAoTAA==
-Date: Thu, 11 Nov 2021 12:10:27 +0000
-Message-ID: <e0ac884bc63e94e0c01a020ef178b7358779776b.camel@iris-sensing.com>
-References: <20211105133104.19895-1-jasper@fancydomain.eu>
-	 <AM9PR09MB4642AA3727D430C698E95EE5A88E9@AM9PR09MB4642.eurprd09.prod.outlook.com>
-	 <b8897c8a436f384ef0a41d708816c2f61f9e22c7.camel@iris-sensing.com>
-	 <d87ff011218f55d97e5aa48ff9b06d216f6d477a.camel@iris-sensing.com>
-	 <029d18fa589265e32476c7cc45c9977f7b4bb9aa.camel@linuxfoundation.org>
-	 <3101a847508371b09b2949434f9ca09c672a7097.camel@iris-sensing.com>
-	 <dd07e5137044429f805caf23114a2e72@axis.com>
-	 <c1b45d484d3f55f9522cfa85c58e2acfa7d0e3f1.camel@iris-sensing.com>
-	 <83886954b53b47eb93b6ab8a7feebf19@axis.com>
-In-Reply-To: <83886954b53b47eb93b6ab8a7feebf19@axis.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.10.1]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B89DE479ABD2B1498B07FAE091AD8BC8@irisgmbh.local>
-Content-Transfer-Encoding: base64
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8BCC433F5
+	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 12:18:01 +0000 (UTC)
+Subject: Re: [PATCH 1/2] fetch/git: Handle github dropping git:// support
+To: bitbake-devel@lists.openembedded.org
+From: gabriel.valcazar@digi.com
+X-Originating-Location: =?utf-8?b?TGXDs24sIENhc3RpbGxlIGFuZCBMZcOzbiwgRVMg?=
+ =?utf-8?b?KDgxLjQ3LjE2NS40MCk=?=
+X-Originating-Platform: Linux Firefox 94
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
+Date: Thu, 11 Nov 2021 04:18:01 -0800
+References: 
+ <5b3eb5a7a03a999e37b2ac0aacf2997819c00fd2.camel@linuxfoundation.org>
+In-Reply-To: 
+ <5b3eb5a7a03a999e37b2ac0aacf2997819c00fd2.camel@linuxfoundation.org>
+Message-ID: <30784.1636633081071526988@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="ZxIcDLEtqS5U0iCFWF6s"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 12:10:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13014
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 12:18:01 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13015
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMjU2DQoNCkhpIFBl
-dGVyLA0KDQo+IEhvd2V2ZXIsIHRoaXMgbWVhbnMgDQo+IHRoYXQgb25seSB0aGUgc291cmNlIGZv
-ciB0aGUgcmVwbyB3cmFwcGVyIGlzIGF2YWlsYWJsZSBpbiBETF9ESVIuIFNvIA0KPiB3aGVuIHRo
-ZSByZXBvIHdyYXBwZXIgZXhlY3V0ZXMgaXQgd2lsbCB0cnkgdG8gZ28gb24gdGhlIEludGVybmV0
-IHRvIA0KPiBmZXRjaCB0aGUgcmVzdCBvZiB0aGUgcmVwbyBzb3VyY2UsIHdoaWNoIHdpbGwgZmFp
-bC4NCg0KanVzdCB0byBjbGVhcmlmeTogQXJlIHdlIHRhbGtpbmcgYWJvdXQgaW5zdGFsbGluZyBy
-ZXBvIG9uIGEgdGFyZ2V0LCBvcg0KYXJlIHdlIHRhbGtpbmcgYWJvdXQgdGhlIHJlcG8gZmV0Y2hl
-cj8NCg0KV2hlbiBpbnN0YWxsaW5nIHJlcG8gb24gdGhlIHRhcmdldCwgd2UgZG8gbm90IGNhbGwg
-YW55ICJyZXBvIiBjb21tYW5kDQp3aXRoaW4gdGhlIGJpdGJha2UgYnVpbGQgcHJvY2Vzcy4gV2Ug
-anVzdCBjbG9uZSB0aGUgZ2l0IHJlcG8gY29udGFpbmluZw0KdGhlIHdyYXBwZXIgc2NyaXB0IGFu
-ZCBpbnN0YWxsIHRoZSB3cmFwcGVyIHNjcmlwdCBpbnRvIHRoZSBzeXNyb290LiBBdA0KdGhhdCBw
-b2ludCB0aGUgYml0YmFrZSBidWlsZCBwcm9jZXNzIGlzIGZpbmlzaGVkIGFuZCB0aGUgdXNlciBl
-bmRzIHVwDQp3aXRoIGp1c3QgdGhlIHdyYXBwZXIgc2NyaXB0IG9uIGhpcyBkZXZpY2UuIEp1c3Qg
-YXMgaGUgd291bGQgd2hlbg0KaW5zdGFsbGluZyByZXBvIGZyb20gdGhlIHN5c3RlbSByZXBvc2l0
-b3JpZXMgb24gZGViaWFuLCBhcmNoLCBldGMuDQoNCldoZW4gdXNpbmcgdGhlIGZldGNoZXIsIHRo
-ZSByZXBvIHNvdXJjZXMgYXJlIGZldGNoZWQgZHVyaW5nIHRoZSBpbml0aWFsDQpkb19mZXRjaCAo
-dGhpcyBhbHNvIHdvcmtzIHdpdGggYGJpdGJha2UgLS1ydW5vbmx5PWRvX2ZldGNoYCkgYW5kIHBs
-YWNlZA0KaW50byB0aGUgRExfRElSIChpbiB0aGUgLnJlcG8gZm9sZGVyLCBuZXh0IHRvIHRoZSBz
-b3VyY2VzIGFzIGRlc2NyaWJlZA0KaW4gdGhlIHJlcG8gbWFuaWZlc3QpLiBTbyB1bmxlc3MgdGhl
-IHVzZXIgY2hhbmdlcyBzb21ldGhpbmcgZmV0Y2hlcg0KcmVsYXRlZCBpbiB0aGUgcmVjaXBlIG9y
-IGRlbGV0ZXMgaGlzIERMX0RJUiwgaGUgY2FuIHVzZSB0aGlzIGJ1aWxkDQplbnZpcm9ubWVudCBm
-b3IgYW4gb2ZmbGluZSBidWlsZC4NCg0KWW91IGNhbiB0cnkgdGhpcyBmb3IgeW91cnNlbGYsIGlm
-IHlvdSBsaWtlOg0KDQoxKSBjbG9uZSBodHRwczovL2dpdGh1Yi5jb20vSmFzcGVyLUJlbi9kZW1v
-LWthcw0KMikgKHdpdGggZG9ja2VyIGFuZCBkb2NrZXItY29tcG9zZSBpbnN0YWxsZWQpIHJ1biBg
-bWFrZSBvZmZsaW5lLWJ1aWxkYA0KDQotIC0tIA0KV2l0aCBiZXN0IHJlZ2FyZHMNCg0KSmFzcGVy
-IE9yc2NodWxrbw0KRGV2T3BzIEVuZ2luZWVyDQoNClRlbC4gKzQ5IDMwIDU4IDU4IDE0IDI2NQ0K
-RmF4ICs0OSAzMCA1OCA1OCAxNCA5OTkNCkphc3Blci5PcnNjaHVsa29AaXJpcy1zZW5zaW5nLmNv
-bQ0KDQrigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg
-4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiDQoNCmly
-aXMtR21iSA0KaW5mcmFyZWQgJiBpbnRlbGxpZ2VudCBzZW5zb3JzDQpTY2huZWxsZXJzdHJhw59l
-IDEtNSB8IDEyNDM5IEJlcmxpbg0KDQpodHRwczovL2lyaXMtc2Vuc2luZy5jb20vDQoNCg0KDQoN
-Cg0KT24gVGh1LCAyMDIxLTExLTExIGF0IDExOjM0ICswMDAwLCBQZXRlciBLamVsbGVyc3RlZHQg
-d3JvdGU6DQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBKYXNwZXIg
-T3JzY2h1bGtvIDxKYXNwZXIuT3JzY2h1bGtvQGlyaXMtc2Vuc2luZy5jb20+DQo+ID4gU2VudDog
-ZGVuIDExIG5vdmVtYmVyIDIwMjEgMTE6MDUNCj4gPiBUbzogcmljaGFyZC5wdXJkaWVAbGludXhm
-b3VuZGF0aW9uLm9yZzsgb3BlbmVtYmVkZGVkLQ0KPiA+IGNvcmVAbGlzdHMub3BlbmVtYmVkZGVk
-Lm9yZzsga3dlaWhtYW5uQG91dGxvb2suY29tOyBQZXRlcg0KPiA+IEtqZWxsZXJzdGVkdA0KPiA+
-IDxwZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb20+OyBqYXNwZXJAZmFuY3lkb21haW4uZXUNCj4g
-PiBDYzogbWFydGluQG1rby5kZXY7IERhbmllbCBCYXVtZ2FydA0KPiA+IDxEYW5pZWwuQmF1bWdh
-cnRAaXJpcy1zZW5zaW5nLmNvbT47DQo+ID4gYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRk
-ZWQub3JnDQo+ID4gU3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBbb2UtY29yZV1bUEFUQ0gg
-MS8yXSBkZXZ0b29sczogSW5pdGlhbA0KPiA+IHJlY2lwZQ0KPiA+IGZvciByZXBvIDIuMTcuMw0K
-PiA+IA0KPiA+IC0tLS0tQkVHSU4gUEdQIFNJR05FRCBNRVNTQUdFLS0tLS0NCj4gPiBIYXNoOiBT
-SEEyNTYNCj4gPiANCj4gPiBIaSBQZXRlciwNCj4gPiANCj4gPiA+IEhvdyBkbyB5b3UgYXZvaWQg
-dGhlIHJlcG8gd3JhcHBlciBmZXRjaGluZyB0aGUgcmVwbyBzb3VyY2UgaXRzZWxmDQo+ID4gPiBh
-bmQgaW5zdGVhZCBmZXRjaCBpdCB1c2luZyB0aGUgYml0YmFrZSBmZXRjaGVyPyBJIGhhdmUgc2Vl
-biBub3RoaW5nDQo+ID4gPiB0byB0aGF0IGV4dGVudCBpbiB0aGUgcGF0Y2hlcyBzbyBmYXIuDQo+
-ID4gDQo+ID4gd2UgZG9uJ3QuIFRoaXMgcmVjaXBlIG9ubHkgaW5zdGFsbHMgdGhlIHJlcG8gd3Jh
-cHBlci4gVGhlIHNvdXJjZSBjb2RlDQo+ID4gaXMgZG93bmxvYWRlZCBhbmQgaW5zdGFsbGVkIHdo
-ZW4gcnVubmluZyBgcmVwbyBpbml0YC4NCj4gPiANCj4gPiBIb3dldmVyLCBpbiBvdXIgb3Bpbmlv
-biB0aGlzIGlzIG5vdCBhbiBpc3N1ZS4gV2hlbiBpbnN0YWxsaW5nIHJlcG8gYXMNCj4gPiBhDQo+
-ID4gcGFja2FnZSB0byBhIHRhcmdldCwgdGhpcyBpcyB0aGUgZXhwZWN0ZWQgYmVoYXZpb3VyLiBU
-aGUgdGFyZ2V0IHdvdWxkDQo+ID4gb25seSBoYXZlIHRoZSByZXBvIHdyYXBwZXIgaW5zdGFsbGVk
-LCBqdXN0IGxpa2Ugb24gYW55IG90aGVyIGxpbnV4DQo+ID4gZGlzdHJvYnV0aW9uLiBUaGUgYWN0
-dWFsIHVzYWdlIG9mIHJlcG8gb24gdGhlIHRhcmdldCBpcyBkZWNvdXBsZWQNCj4gPiBmcm9tDQo+
-ID4gdGhlIGJpdGJha2UgYnVpbGQgcHJvY2Vzcy4NCj4gDQo+IEl0IG1pZ2h0IGJlIGhvdyByZXBv
-IGlzIGRlc2lnbmVkLCBidXQgaXQgd2lsbCBzdGlsbCBicmVhayB0aGUgYml0YmFrZQ0KPiBleHBl
-Y3RhdGlvbnMuIEkuZS4sIGlmIEkgaGF2ZSBhbiBlbnZpcm9ubWVudCB3aXRoIHRoZSBsYXllcnMg
-YXZhaWxhYmxlLA0KPiBhIHBvcHVsYXRlZCBETF9ESVIgYW5kIEJCX05PX05FVFdPUksgPSAiMSIs
-IGFuZCB0aGVuIGRpc2Nvbm5lY3QgdGhlIA0KPiBidWlsZCBob3N0IGZyb20gdGhlIEludGVybmV0
-LCBJIHNob3VsZCBzdGlsbCBiZSBhYmxlIHRvIHNvdXJjZSANCj4gb2UtaW5pdC1idWlsZC1lbnYg
-Zm9yIGEgbmV3IG1hY2hpbmUgYW5kIGJ1aWxkIGl0LiBIb3dldmVyLCB0aGlzIG1lYW5zDQo+IHRo
-YXQgb25seSB0aGUgc291cmNlIGZvciB0aGUgcmVwbyB3cmFwcGVyIGlzIGF2YWlsYWJsZSBpbiBE
-TF9ESVIuIFNvIA0KPiB3aGVuIHRoZSByZXBvIHdyYXBwZXIgZXhlY3V0ZXMgaXQgd2lsbCB0cnkg
-dG8gZ28gb24gdGhlIEludGVybmV0IHRvIA0KPiBmZXRjaCB0aGUgcmVzdCBvZiB0aGUgcmVwbyBz
-b3VyY2UsIHdoaWNoIHdpbGwgZmFpbC4NCj4gDQo+ID4gV2hlbiB1c2luZyB0aGUgcmVwbyBmZXRj
-aGVyLCB0aGUgcmVwbyBzb3VyY2UgaXMgZmV0Y2hlZCBkdXJpbmcgdGhlDQo+ID4gZG9fZmV0Y2gg
-c3RhZ2UgYnkgcnVubmluZyBgcmVwbyBpbml0YCAod2hlbiBTUkNSRVYgPSBBVVRPUkVWLCBjaGFu
-Z2VzDQo+ID4gdG8gdGhlIHJlY2lwZSBvciBubyBwcmV2aW91cyBzb3VyY2VzIGF2YWlsYWJsZSBp
-biBETF9ESVIpLiBCeQ0KPiA+IGV4ZWN1dGluZw0KPiA+IHRoaXMgd2l0aGluIHRoZSAicnVuZmV0
-Y2hjbWQiIGZ1bmN0aW9uLCB0aGlzIGFsc28gd29ya3Mgd2l0aCB0aGUNCj4gPiB1c3VhbA0KPiA+
-IG5ldHdvcmsgZmVhdHVyZXMgYml0YmFrZSBwcm92aWRlcywgZS5nLiBwcm94eS4NCj4gPiBJZiB0
-aGUgcmVjaXBlIGhhcyBub3QgY2hhbmdlZCBhbmQgc291cmNlcyBhcmUgYWxyZWFkeSBhdmFpbGFi
-bGUgZnJvbQ0KPiA+IGENCj4gPiBwcmV2aW91cyBydW4sIHJlcG8gd2lsbCBub3QgYmUgcmVydW4u
-IEFzIHN1Y2gsIHJlcHJvZHVjaW5nIGEgYnVpbGQNCj4gPiBvZmZsaW5lIGlzIGFsc28gcG9zc2li
-bGUuDQo+ID4gDQo+ID4gLSAtLQ0KPiA+IFdpdGggYmVzdCByZWdhcmRzDQo+ID4gDQo+ID4gSmFz
-cGVyIE9yc2NodWxrbw0KPiA+IERldk9wcyBFbmdpbmVlcg0KPiA+IA0KPiA+IFRlbC4gKzQ5IDMw
-IDU4IDU4IDE0IDI2NQ0KPiA+IEZheCArNDkgMzAgNTggNTggMTQgOTk5DQo+ID4gSmFzcGVyLk9y
-c2NodWxrb0BpcmlzLXNlbnNpbmcuY29tDQo+ID4gDQo+ID4g4oCiIOKAoiDigKIg4oCiIOKAoiDi
-gKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKA
-oiDigKIg4oCiIOKAoiDigKIg4oCiIOKAog0KPiA+IA0KPiA+IGlyaXMtR21iSA0KPiA+IGluZnJh
-cmVkICYgaW50ZWxsaWdlbnQgc2Vuc29ycw0KPiA+IFNjaG5lbGxlcnN0cmHDn2UgMS01IHwgMTI0
-MzkgQmVybGluDQo+ID4gDQo+ID4gaHR0cHM6Ly9pcmlzLXNlbnNpbmcuY29tLw0KPiA+IA0KPiA+
-IA0KPiA+IA0KPiA+IA0KPiA+IA0KPiA+IE9uIFdlZCwgMjAyMS0xMS0xMCBhdCAyMzo1NSArMDAw
-MCwgUGV0ZXIgS2plbGxlcnN0ZWR0IHdyb3RlOg0KPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiA+ID4gPiBGcm9tOiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5v
-cmfCoDxiaXRiYWtlLQ0KPiA+ID4gPiBkZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPiBPbiBC
-ZWhhbGYgT2YgSmFzcGVyIE9yc2NodWxrbw0KPiA+ID4gPiBTZW50OiBkZW4gOSBub3ZlbWJlciAy
-MDIxIDEyOjI2DQo+ID4gPiA+IFRvOiByaWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3Jn
-OyBvcGVuZW1iZWRkZWQtDQo+ID4gPiA+IGNvcmVAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzsga3dl
-aWhtYW5uQG91dGxvb2suY29tOw0KPiA+ID4gPiBqYXNwZXJAZmFuY3lkb21haW4uZXUNCj4gPiA+
-ID4gQ2M6IG1hcnRpbkBta28uZGV2OyBEYW5pZWwuQmF1bWdhcnRAaXJpcy1zZW5zaW5nLm5ldDsg
-Yml0YmFrZS0NCj4gPiA+ID4gZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiA+ID4gPiBT
-dWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFtvZS1jb3JlXVtQQVRDSCAxLzJdIGRldnRvb2xz
-Og0KPiA+ID4gPiBJbml0aWFsDQo+ID4gPiA+IHJlY2lwZQ0KPiA+ID4gPiBmb3IgcmVwbyAyLjE3
-LjMNCj4gPiA+ID4gDQo+ID4gPiA+IC0tLS0tQkVHSU4gUEdQIFNJR05FRCBNRVNTQUdFLS0tLS0N
-Cj4gPiA+ID4gSGFzaDogU0hBMjU2DQo+ID4gPiA+IA0KPiA+ID4gPiBIaSBSaWNoYXJkLA0KPiA+
-ID4gPiANCj4gPiA+ID4gSSB0aGluayBvdXIgaW1wbGVtZW50YXRpb24gb2YgdGhlIHJlcG8gZmV0
-Y2hlciBjaGVja3MgdGhlICh3aGF0IEkNCj4gPiA+ID4gYmVsaWV2ZSB0byBiZSkgbW9zdCByZWxl
-dmFudCBwYXJ0cyBvZiB5b3VyIGNoZWNrbGlzdCAodGhhbmtzIGZvcg0KPiA+ID4gPiB0aGUNCj4g
-PiA+ID4gd3JpdGUtdXApLiBNYXJ0aW4sIHBsZWFzZSBjb3JyZW50IG1lIGlmIEknbSBtaXNzaW5n
-IHNvbWV0aGluZzoNCj4gPiA+ID4gDQo+ID4gPiA+ID4gYSkgbmV0d29yayBhY2Nlc3MgZm9yIHNv
-dXJjZXMgaXMgb25seSBleHBlY3RlZCB0byBoYXBwZW4gaW4gdGhlDQo+ID4gPiA+ID4gZG9fZmV0
-Y2ggc3RlcC4NCj4gPiA+ID4gPiBUaGlzIGlzIG5vdCBlbmZvcmNlZCBvciB0ZXN0ZWQgYnV0IGlz
-IHJlcXVpcmVkIHNvIHRoYXQgd2UgY2FuOg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IMKgaSkgYXVk
-aXQgdGhlIHNvdXJjZXMgdXNlZCAoaS5lLiBmb3IgbGljZW5zZS9tYW5pZmVzdCByZWFzb25zKQ0K
-PiA+ID4gPiA+IMKgaWkpIHN1cHBvcnQgb2ZmbGluZSBidWlsZHMgd2l0aCBhIHN1aXRhYmxlIGNh
-Y2hlDQo+ID4gPiA+ID4gwqBpaWkpIGFsbG93IHdvcmsgdG8gY29udGludWUgZXZlbiB3aXRoIGRv
-d250aW1lIHVwc3RyZWFtDQo+ID4gPiA+ID4gwqBpdikgYWxsb3cgZm9yIGNoYW5nZXMgdXBzdHJl
-YW0gaW4gaW5jb21wYXRpYmxlIHdheXMNCj4gPiA+ID4gPiDCoHYpIGFsbG93IHJlYnVpbGRpbmcg
-b2YgdGhlIHNvZnR3YXJlIGluIFggeWVhcnMgdGltZQ0KPiA+ID4gPiANCj4gPiA+ID4gY2hlY2sN
-Cj4gPiA+ID4gDQo+ID4gPiA+ID4gYikgbmV0d29yayBhY2Nlc3MgaXMgbm90IGV4cGVjdGVkIGlu
-IGRvX3VucGFjaw0KPiA+ID4gPiANCj4gPiA+ID4gY2hlY2sNCj4gPiA+IA0KPiA+ID4gSG93IGRv
-IHlvdSBhdm9pZCB0aGUgcmVwbyB3cmFwcGVyIGZldGNoaW5nIHRoZSByZXBvIHNvdXJjZSBpdHNl
-bGYNCj4gPiA+IGFuZCBpbnN0ZWFkIGZldGNoIGl0IHVzaW5nIHRoZSBiaXRiYWtlIGZldGNoZXI/
-IEkgaGF2ZSBzZWVuIG5vdGhpbmcNCj4gPiA+IHRvIHRoYXQgZXh0ZW50IGluIHRoZSBwYXRjaGVz
-IHNvIGZhci4NCj4gPiA+IA0KPiA+ID4gLy9QZXRlcg0KPiA+ID4gDQo+ID4gLS0tLS1CRUdJTiBQ
-R1AgU0lHTkFUVVJFLS0tLS0NCj4gPiANCj4gPiBpUUV6QkFFQkNBQWRGaUVFNFd5UE1JQzVBcDQr
-T29vMVlncWV3MDdWTU5VRkFtR002clVBQ2drUVlncWV3MDdWDQo+ID4gTU5VQ0lBZitNWEdwOUhu
-ZnhtdSs4dzNCYXNWc1AyTjd0dFcyRk4zWnJvaXlyL2hLckp6ZXEvcURRd08rL0szVQ0KPiA+IHpX
-Wko4NUg2TDJlVGpPUDhmUGFIYlZNUkQxalVvWVZwWVVBRS9mTjY0RmJoQ0JtdXJWdVdGckxvL3U2
-R3kyY1UNCj4gPiBEQ2QzU0llalhpZEIyNUVRUm9TNEJmbDI1aWwxd0c0aU13MXBDRkE2a3U1ckdo
-YjhxNWp2ZlpFQ2YwV3VoaDdYDQo+ID4gRm5NUWxJM1Zac1NrNENha0YzZzg4QUZUTEZyc1FZY04y
-dkRVc2tkaE1mVFpwdVJBOGR1SXZXNHJWZ092SEpRVA0KPiA+IHYwN3JBU05SLzl5elBSVmt6cGdQ
-VUk5VmwyTEEzdkVaM1JjY3czanNjWUhGd2t6ajAwOTZETzQramVEd3l6YTUNCj4gPiBmRm0wZERU
-OUhqR3V6VHo2NmM1Skw4c2RaWmk5cHc9PQ0KPiA+ID1BT3lwDQo+ID4gLS0tLS1FTkQgUEdQIFNJ
-R05BVFVSRS0tLS0tDQotLS0tLUJFR0lOIFBHUCBTSUdOQVRVUkUtLS0tLQ0KDQppUUV6QkFFQkNB
-QWRGaUVFNFd5UE1JQzVBcDQrT29vMVlncWV3MDdWTU5VRkFtR05DRElBQ2drUVlncWV3MDdWDQpN
-TlhHNWdnQWx3dXY1STNQaTNhRzl0eXBpU2VQQUJ2dzBjUVQrR2JMeXNyNzRVVFU3VUpORGQrQnll
-TTVVN1ZjDQpsbUZ1Vk82U0tSY3QwYnJQeTVXN3dlWnhwUzdZeGd3ckZjNlFsaVVwc2Q0eUlaSmtQ
-VFpWQnpkcUJ4c2tNVS9mDQp6MHZIYjlsaXB5WFBrZzRPVTQ5VEd2MmszckJCY3JZR01Td0c4V2lx
-SkwrZjJnWEhEYUNid2IvMW9KdUkxSWU1DQpMWFcxbmtJUFZpYVJ1b1BnS2RsdnpwdEZOSSt2QnVJ
-Umc4S3Z3U2Y0VzVwZkpZQzAzalpMZFJ0aFdqMVROUXZ6DQo2NTNLcnp5dnUzaGh4SUtnbjlZWVBi
-L21JM1pJMU5nWW0vOWhwRVl3anRaU0xxMzAzdUxNQjcwcVlXajZmRy9WDQp1SGFCRk43YjJzRjRo
-Yk1mZkozaktPRUlqL21nU1E9PQ0KPVBBUkkNCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQ0K
+--ZxIcDLEtqS5U0iCFWF6s
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Richard,
+
+Thanks for the explanation. I fully understand the reasoning behind your de=
+cision, but I really think this issue requires specific treatment due to it=
+s nature.
+
+Ideally, customers using our legacy products (and thus, really old versions=
+ of our Yocto distribution) would migrate to newer products running newer s=
+oftware, and these situations would be avoided altogether. However, we're t=
+alking about products that are already in production, with several devices =
+in the field that require periodic updates. Maintaining outdated software, =
+while not recommendable from several standpoints, is oftentimes a more effi=
+cient approach than migrating to something newer, especially in these cases=
+.
+
+Older Yocto builds are still possible for us and our customers via docker c=
+ontainers or virtual machines, which provide "old" environments where the b=
+uilds still work, despite all of the missing fixes in bitbake/poky. Basical=
+ly, rather than patching the Yocto stack to fit our environment, we adapt o=
+ur environment to fit the Yocto stack - again, because several legacy custo=
+mers have made the decision to depend on old Yocto versions.
+
+Having said this, I believe GitHub's deprecation of the git protocol is a s=
+pecial case because, regardless of the environment you're using or how many=
+ patches you've backported so far, builds will simply stop working altogeth=
+er after the plug is pulled. No matter which environment we use, this is an=
+ external factor that's going to force changes in the Yocto stack, in areas=
+ that we have little to no control over. We're going to have to fix it eith=
+er way, but it would be a much smoother transition if the fix were included=
+ by the community, and it's a unique enough case to warrant it being patche=
+d in older bitbake versions (in my opinion).
+
+Forgive me for the insistence, but I truly believe this situation requires =
+exceptional treatment.
+
+Best regards,
+Gabriel
+
+--ZxIcDLEtqS5U0iCFWF6s
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Richard,<br /><br />Thanks for the explanation. I fully understand the r=
+easoning behind your decision, but I really think this issue requires speci=
+fic treatment due to its nature.<br /><br />Ideally, customers using our le=
+gacy products (and thus, really old versions of our Yocto distribution) wou=
+ld migrate to newer products running newer software, and these situations w=
+ould be avoided altogether. However, we're talking about products that are =
+already in production, with several devices in the field that require perio=
+dic updates. Maintaining outdated software, while not recommendable from se=
+veral standpoints, is oftentimes a more efficient approach than migrating t=
+o something newer, especially in these cases.<br /><br />Older Yocto builds=
+ are still possible for us and our customers via docker containers or virtu=
+al machines, which provide "old" environments where the builds still work, =
+despite all of the missing fixes in bitbake/poky. Basically, rather than pa=
+tching the Yocto stack to fit our environment, we adapt our environment to =
+fit the Yocto stack - again, because several legacy customers have made the=
+ decision to depend on old Yocto versions.<br /><br />Having said this, I b=
+elieve GitHub's deprecation of the <em>git </em>protocol is a special case =
+because, regardless of the environment you're using or how many patches you=
+'ve backported so far, builds will simply stop working altogether after the=
+ plug is pulled. No matter which environment we use, this is an external fa=
+ctor that's going to force changes in the Yocto stack, in areas that we hav=
+e little to no control over. We're going to have to fix it either way, but =
+it would be a much smoother transition if the fix were included by the comm=
+unity, and it's a unique enough case to warrant it being patched in older b=
+itbake versions (in my opinion).<br /><br />Forgive me for the insistence, =
+but I truly believe this situation requires exceptional treatment.<br /><br=
+ />Best regards,<br />Gabriel
+
+--ZxIcDLEtqS5U0iCFWF6s--
 
