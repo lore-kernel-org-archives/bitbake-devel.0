@@ -1,229 +1,140 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42503C433F5
-	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 11:20:31 +0000 (UTC)
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web08.9133.1636629629986694408
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36201C433F5
+	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 11:21:30 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
+ [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web11.9110.1636629686094419707
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Nov 2021 03:20:30 -0800
+ Thu, 11 Nov 2021 03:21:26 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=UHUy677L;
- spf=pass (domain: axis.com, ip: 195.60.68.18,
- mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TXz0wk8h;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f44.google.com with SMTP id t30so9175812wra.10
+        for <bitbake-devel@lists.openembedded.org>;
+ Thu, 11 Nov 2021 03:21:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1636629630;
-  x=1668165630;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=v9vHnM0dixyLuc51lVFVEpajHu2REoCzkRJCTMGGkJ8=;
-  b=UHUy677LqCoE7onj4JPPk8zF3H6J8jjLux3hQILZ6o3TGBKyjOe53TkA
-   zPvWhu356dqvSIxxjyjZjFcViYh8LnYbKXimoZJBQ5nVI5A3VClwCyNuD
-   AViwi9yiLqdVCh5djLY/4FyajeA60RKqNzr/ncVzxXFlfGrMgeXyf5rYO
-   z3jgDlMEWU6JnCjiYDjfehFTh+47AKgpVRhemworBdIgWy2ozG5Ai+ZDe
-   WRT90dheMopYRU+plQEJIRxAq0+X9T/3GcNEf63J1t5wNi5c/Lo3q2SFX
-   NBf3gfWp7BtZPEvT6CjTgk0vqGJL9V3fXSWSZewYXdNm4N1SNS6Hs7nhc
-   g==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: "jasper@fancydomain.eu" <jasper@fancydomain.eu>,
-	"openembedded-core@lists.openembedded.org"
-	<openembedded-core@lists.openembedded.org>
-CC: "martin@mko.dev" <martin@mko.dev>, "Daniel.Baumgart@iris-sensing.com"
-	<Daniel.Baumgart@iris-sensing.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>, Jasper Orschulko
-	<Jasper.Orschulko@iris-sensing.com>
-Subject: RE: [oe-core][PATCH v5 1/2] repo: Add recipe for 2.17.3
-Thread-Topic: [oe-core][PATCH v5 1/2] repo: Add recipe for 2.17.3
-Thread-Index: AQHX1u0tv7/AT1LEC0CQcRzZqDfwJ6v+LSkA
-Date: Thu, 11 Nov 2021 11:20:28 +0000
-Message-ID: <4a5e17ecbc0641598b144094f60945c0@axis.com>
-References: <20211111102124.7661-1-jasper@fancydomain.eu>
-In-Reply-To: <20211111102124.7661-1-jasper@fancydomain.eu>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UShn/SRqyOQyH9EmafrVmaeKidlCpSlAzk8DN+e3Ly8=;
+        b=TXz0wk8hRWKIz5KMT2zdVKHr+JKGYJL86J2oO2WuZ/frUIez+75B9kmaH9Rnr7CBH4
+         YoWkp1h7g4BuzapZ4ndaD4+WytURzHUOTz3iLkoQEdAJPjRu+GCM8aFQUyOmJGefz3QV
+         DihZihkeYm3Buk/dx/y9rhcjpmbDTaE2Nevc0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UShn/SRqyOQyH9EmafrVmaeKidlCpSlAzk8DN+e3Ly8=;
+        b=z641q5zfmKndLOvwsoKm2ocOV9ChNXkEiPdCrDVDh/zywpTg/KKnqKL15AgRlE6/3l
+         NPiDUKeC4aX50lbD5U1p5QXg+ZaY5m0XRcEE+jPpBoH1r+po37TXDAOl2+95jUKC5baP
+         nVmL+wtTBBcHCaSpXFzo9fJE0Pyq1tr4+Vcoyv0nGEsD6ScdlIhxYwSSJYu7GMvdszbN
+         ngX/ZX7xDKa3RazC19QI+fVUyMlSdxpejlaGCCOdiCsvjVOVAuMF1gK/ZQ8qDmfmBL3w
+         5XXkVijM9XXvgpYXWGyReASW7ib9zAcZJV89dvOSRXfmK4BtAtKWUxBJrEB6hzqy+OIN
+         5bKg==
+X-Gm-Message-State: AOAM530hLOpG82gDUKX/mkXNzvqMfnzIRdr9AV6YwxWDQjGdPrNfMrpD
+	hvG9sg2JfM7kOCulaXxPXiccKiMOJRCe0g==
+X-Google-Smtp-Source: 
+ ABdhPJxxfhAxqxa+fZLQXQuIEfN2ccHRlP3noGc2J4PiTcOM+hO24ECRTLxv7y+IEaeXX06NPMzU4w==
+X-Received: by 2002:adf:e747:: with SMTP id c7mr7964185wrn.38.1636629684382;
+        Thu, 11 Nov 2021 03:21:24 -0800 (PST)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:b19:11f4:a3d9:cabc])
+        by smtp.gmail.com with ESMTPSA id
+ a12sm2573715wrm.62.2021.11.11.03.21.23
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Nov 2021 03:21:24 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] fetch: Add README on fetcher design constraints
+Date: Thu, 11 Nov 2021 11:21:23 +0000
+Message-Id: <20211111112123.3853646-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 11:20:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13010
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 11:21:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13011
 
-> -----Original Message-----
-> From: openembedded-core@lists.openembedded.org <openembedded-core@lists.o=
-penembedded.org> On Behalf Of Jasper Orschulko via lists.openembedded.org
-> Sent: den 11 november 2021 11:21
-> To: openembedded-core@lists.openembedded.org
-> Cc: martin@mko.dev; Daniel.Baumgart@iris-sensing.com; bitbake-devel@lists=
-.openembedded.org; Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-> Subject: [oe-core][PATCH v5 1/2] repo: Add recipe for 2.17.3
->=20
-> From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
->=20
-> Add a recipe for repo 2.17.3, prerequisite for the repo fetcher.
->=20
-> Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-> ---
->  meta/conf/distro/include/maintainers.inc      |  1 +
->  .../0001-Set-REPO_REV-to-v2.17.3.patch        | 35 +++++++++++++++++++
->  .../repo/repo/0001-python3-shebang.patch      | 26 ++++++++++++++
->  meta/recipes-devtools/repo/repo_2.17.3.bb     | 28 +++++++++++++++
->  4 files changed, 90 insertions(+)
->  create mode 100644 meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_=
-REV-to-v2.17.3.patch
->  create mode 100644 meta/recipes-devtools/repo/repo/0001-python3-shebang.=
-patch
->  create mode 100644 meta/recipes-devtools/repo/repo_2.17.3.bb
->=20
-> diff --git a/meta/conf/distro/include/maintainers.inc b/meta/conf/distro/=
-include/maintainers.inc
-> index f3e0a75d56..58a0a9615f 100644
-> --- a/meta/conf/distro/include/maintainers.inc
-> +++ b/meta/conf/distro/include/maintainers.inc
-> @@ -652,6 +652,7 @@ RECIPE_MAINTAINER:pn-quilt-native =3D "Robert Yang <l=
-iezhi.yang@windriver.com>"
->  RECIPE_MAINTAINER:pn-quota =3D "Anuj Mittal <anuj.mittal@intel.com>"
->  RECIPE_MAINTAINER:pn-re2c =3D "Khem Raj <raj.khem@gmail.com>"
->  RECIPE_MAINTAINER:pn-readline =3D "Hongxu Jia <hongxu.jia@windriver.com>=
-"
-> +RECIPE_MAINTAINER:pn-repo =3D "Jasper Orschulko <Jasper.Orschulko@iris-s=
-ensing.com>"
->  RECIPE_MAINTAINER:pn-resolvconf =3D "Chen Qi <Qi.Chen@windriver.com>"
->  RECIPE_MAINTAINER:pn-rgb =3D "Unassigned <unassigned@yoctoproject.org>"
->  RECIPE_MAINTAINER:pn-rpcbind =3D "Hongxu Jia <hongxu.jia@windriver.com>"
-> diff --git a/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to-=
-v2.17.3.patch b/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to=
--v2.17.3.patch
-> new file mode 100644
-> index 0000000000..285b1d3129
-> --- /dev/null
-> +++ b/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to-
-> v2.17.3.patch
-> @@ -0,0 +1,35 @@
-> +From bdd2a528da59c28db8ae2986834926de7cebf3ab Mon Sep 17 00:00:00 2001
-> +From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-> +Date: Thu, 4 Nov 2021 16:55:12 +0100
-> +Subject: [PATCH] Set REPO_REV to v2.17.3
-> +
-> +repo is an unusual tool because it downloads all of its own Python modul=
-es
-> +using GPG-signed git tags, and stores those files as part of the project
-> +that it is working with.
-> +
-> +So in order to have a reproducible repo installation within the project
-> +folders, we hardcode the default REPO_REV to a SHA1 that corresponds to
-> +the version of the recipe. REPO_REV can still be overwriten by the user,
-> +by specifying the REPO_REV environment variable.
-> +
-> +Upstream-Status: Inappropriate [configuration]
-> +Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-> +---
-> + repo | 2 +-
-> + 1 file changed, 1 insertion(+), 1 deletion(-)
-> +
-> +diff --git a/repo b/repo
-> +index b13e34c..31130e9 100755
-> +--- a/repo
-> ++++ b/repo
-> +@@ -130,7 +130,7 @@ if not REPO_URL:
-> +   REPO_URL =3D 'https://gerrit.googlesource.com/git-repo'
-> + REPO_REV =3D os.environ.get('REPO_REV')
-> + if not REPO_REV:
-> +-  REPO_REV =3D 'stable'
-> ++  REPO_REV =3D '11b30b91df1f0e03b53da970ec2588e85817bacc'
-> +
-> + # increment this whenever we make important changes to this script
-> + VERSION =3D (2, 8)
-> +--
-> +2.33.1
-> diff --git a/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch b=
-/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch
-> new file mode 100644
-> index 0000000000..d3888c8bb2
-> --- /dev/null
-> +++ b/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch
-> @@ -0,0 +1,26 @@
-> +From b8e84b202cd302a7c99288d3835dc9c63071f8f2 Mon Sep 17 00:00:00 2001
-> +From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-> +Date: Tue, 14 Sep 2021 16:46:51 +0200
-> +Subject: [PATCH] python3 shebang
-> +
-> +Yocto does not symlink from python to python3, thus change the shebang f=
-rom
-> +python to python3.
-> +
-> +Upstream-Status: Inappropriate [configuration]
-> +Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-> +---
-> + repo | 2 +-
-> + 1 file changed, 1 insertion(+), 1 deletion(-)
-> +
-> +diff --git a/repo b/repo
-> +index b13e34c..205e0e5 100755
-> +--- a/repo
-> ++++ b/repo
-> +@@ -1,4 +1,4 @@
-> +-#!/usr/bin/env python
-> ++#!/usr/bin/env python3
-> + # -*- coding:utf-8 -*-
-> + #
-> + # Copyright (C) 2008 The Android Open Source Project
-> +--
-> +2.33.0
-> diff --git a/meta/recipes-devtools/repo/repo_2.17.3.bb b/meta/recipes-dev=
-tools/repo/repo_2.17.3.bb
-> new file mode 100644
-> index 0000000000..cb0af89c09
-> --- /dev/null
-> +++ b/meta/recipes-devtools/repo/repo_2.17.3.bb
-> @@ -0,0 +1,28 @@
-> +# SPDX-License-Identifier: MIT
-> +# Copyright (C) 2021 iris-GmbH infrared & intelligent sensors
-> +
-> +SUMMARY =3D "Tool for managing many Git repositories"
-> +DESCRIPTION =3D "Repo is a tool built on top of Git. Repo helps manage m=
-any Git repositories, does the uploads to revision control systems, and aut=
-omates parts of the development workflow."
-> +HOMEPAGE =3D "https://android.googlesource.com/tools/repo"
-> +SECTION =3D "console/utils"
-> +
-> +LICENSE =3D "Apache-2.0"
-> +LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D3b83ef96387f14655fc854ddc3c6b=
-d57"
-> +
-> +SRC_URI =3D "git://gerrit.googlesource.com/git-repo.git;protocol=3Dhttps=
-;branch=3Dmain"
-> +SRCREV =3D "11b30b91df1f0e03b53da970ec2588e85817bacc"
-> +
-> +SRC_URI +=3D "file://0001-python3-shebang.patch \
-> +            file://0001-Set-REPO_REV-to-v2.17.3.patch"
-> +
-> +MIRRORS +=3D "git://gerrit.googlesource.com/git-repo.git git://github.co=
-m/GerritCodeReview/git-repo.git \n"
+There have been requests to better document the contraints of fetcher
+design and operation. This README attempts to start that.
 
-Remove " \n".
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/README | 58 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+ create mode 100644 lib/bb/fetch2/README
 
-> +
-> +S =3D "${WORKDIR}/git"
-> +
-> +do_install() {
-> +	install -Dm 0755 ${WORKDIR}/git/repo ${D}${bindir}/repo
-
-You can remove "m 0755" as that is the default for install.
-
-> +}
-> +
-> +RDEPENDS:${PN} =3D "python3"
-> +
-> +BBCLASSEXTEND =3D "native nativesdk"
-> --
-> 2.33.1
-
-//Peter
+diff --git a/lib/bb/fetch2/README b/lib/bb/fetch2/README
+new file mode 100644
+index 0000000000..eb214709e5
+--- /dev/null
++++ b/lib/bb/fetch2/README
+@@ -0,0 +1,58 @@
++There are expectations of users of the fetcher code. This file attempts to document
++some of the constraints that are present. Some are obvious, some are less so. It is
++documented in the context of how OE uses it but the API calls are generic.
++
++a) network access for sources is only expected to happen in the do_fetch step.
++   This is not enforced or tested but is required so that we can:
++
++   i) audit the sources used (i.e. for license/manifest reasons) 
++   ii) support offline builds with a suitable cache
++   iii) allow work to continue even with downtime upstream
++   iv) allow for changes upstream in incompatible ways
++   v) allow rebuilding of the software in X years time
++
++b) network access is not expected in do_unpack
++
++c) you can take DL_DIR and use it as a mirror for offline builds
++
++d) access to the network is only made when explicitly configured in recipes
++   (e.g. use of AUTOREV, or use of git tags which change revision)
++
++e) fetcher output is deterministic
++   (i.e. if you fetch configuration XXX now it will match in future exactly in 
++    a clean build with a new DL_DIR)
++   One specific pain point example are git tags. They can be replaced and change
++   so the git fetcher has to resolve them with the network. We use git revisions
++   where possible to avoid this and ensure determinism.
++
++f) network access is expected to work with the standard linux proxy variables
++   so that access behind firewalls works (the fetcher sets these in the 
++   environment but only in the do_fetch tasks)
++
++g) access during parsing has to be minimal, a "git ls-remote" for an AUTOREV 
++   git recipe might be ok but you can't expect to checkout a git tree
++
++h) we need to provide revision information during parsing such that a version
++   for the recipe can be constructed.
++
++i) versions are expected to be able to increase in a way which sorts allowing 
++   package feeds to operate (see PR server required for git revisions to sort)
++
++j) API to query for possible version upgrades of a url is highly desireable to 
++   allow out automated upgrage code to function (it is implied this does always 
++   have network access)
++
++k) Where fixes or changes to behaviour in the fetcher are made, we ask that 
++   test cases are added (run with "bitbake-selftest bb.tests.fetch"). We do 
++   have fairly extensive test coverage of the fetcher as it is the only way
++   to track all of it's corner cases, it still doesn't give entire coverage 
++   though sadly.
++   
++l) If using tools during parse time, they will have to be in ASSUME_PROVIDED
++   in OE's context as we can't build git-native, then parse a recipe and use
++   git to ls-remote.
++
++Not all fetchers support all features, autorev is optional and doesn't make
++sense for some. Upgrade detection means different things in different contexts
++too.
++
+-- 
+2.32.0
 
 
