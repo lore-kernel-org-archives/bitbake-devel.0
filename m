@@ -1,232 +1,136 @@
-Return-Path: <quaresma.jose@gmail.com>
+Return-Path: <Jasper.Orschulko@iris-sensing.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A8DC433F5
-	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 09:57:00 +0000 (UTC)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com
- [209.85.167.54])
- by mx.groups.io with SMTP id smtpd.web12.8456.1636624618459882573
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69524C433F5
+	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 10:04:49 +0000 (UTC)
+Received: from mail.irisgmbh.de (mail.irisgmbh.de [81.169.172.79])
+ by mx.groups.io with SMTP id smtpd.web09.8659.1636625087596107230
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Nov 2021 01:56:58 -0800
+ Thu, 11 Nov 2021 02:04:48 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=glAWxogS;
- spf=pass (domain: gmail.com, ip: 209.85.167.54,
- mailfrom: quaresma.jose@gmail.com)
-Received: by mail-lf1-f54.google.com with SMTP id k37so12898639lfv.3
-        for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Nov 2021 01:56:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0l6hZkqFSxl8bYFfxQREX5aO6o3bmvDoIDzjhMM9SF8=;
-        b=glAWxogSNqrq4ZwnUvCVqg0vLo/CWlSOBikuSI34lHqbYnUIA4ayXDG+fQZDaFK2gS
-         B7wUKrchCShR0M+hML9xbAuEhKrZLb6nspHZqOJpxFvyZc/VwMBDJNTWf7KJ5SJjTyfY
-         IX946xq3kN4xXy0bwYrp1wjDsAZuKzMVwOP1uATDb9xATwARsP/ch2Uj4QQFpWt45QNa
-         2NvXu5ltybhxUYYsyiBmCOKrkiETi9Y+j6Lxk2jWGgnS1XIjZKnr5GTqTT1khNCMzI5O
-         cuvDL0wmVBq2gUHSnpxMgiIzpG5kbKF+U2uxAfv7HcoXJnGA+ayvp87PI6765010o/2z
-         NZfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0l6hZkqFSxl8bYFfxQREX5aO6o3bmvDoIDzjhMM9SF8=;
-        b=erFSc73dOWlfaqYI6oIINS1H8nOBn358hN1gII2+LNfp7D76K4u615UE0hY3Hx6Sdk
-         CH8BaflzbrUPLtPonCjEzAsiVStmJU03VU8jM9F6EYRfJyGah9APdcO5kB0TZACUnggo
-         QNgciYZb32ZV27rOvlaN/fgID44dvgs5DsoE9t3qrKN3VBvY6y9zrOuuxau8muDF3Zc6
-         Cvpfgv9rtFr3rUYELs8g2QE1LBPCNFsiLeRaqgZ2VckKFUXiJ+Lu2YX3R0S9RyhqHJ39
-         0j+WWpEc6drql3ahnVYtG3tQkDcSZma6EaxhFkssY8KK1aEWx8NcoojajLxc6djkz6Ue
-         qa3Q==
-X-Gm-Message-State: AOAM531L6HZw0upo0V5H6ZS8siBRl8NSrt8MUir2Pk2CRqrPHTEb+lF2
-	oKqLXfyIGUDgkH4Tc5GUE0iLm21pQzk2JyEjiWGiBjSI
-X-Google-Smtp-Source: 
- ABdhPJzNVLb/Yjw7IiaQpOLJDS9HL4iJJ4h/5dqZrnbpt2I36aUTtcunKn9JiTUTeJeLt+XrLLXGumrVzV49yckszbw=
-X-Received: by 2002:a05:6512:3cf:: with SMTP id
- w15mr5510700lfp.555.1636624616290;
- Thu, 11 Nov 2021 01:56:56 -0800 (PST)
+ dkim=missing;
+ spf=none, err=SPF record not found (domain: iris-sensing.com,
+ ip: 81.169.172.79, mailfrom: jasper.orschulko@iris-sensing.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.irisgmbh.de (Postfix) with ESMTP id 2507531E033F;
+	Thu, 11 Nov 2021 11:04:39 +0100 (CET)
+X-Virus-Scanned: amavisd-new at irisgmbh.de
+Received: from mail.irisgmbh.de ([127.0.0.1])
+	by localhost (s15324379.rootmaster.info [127.0.0.1]) (amavisd-new,
+ port 10027)
+	with ESMTP; Thu, 11 Nov 2021 11:04:39 +0100 (CET)
+Received: from ERDE.irisgmbh.local (unknown [213.61.209.158])
+	by mail.irisgmbh.de (Postfix) with ESMTPS id 0E19031E02E9;
+	Thu, 11 Nov 2021 11:04:39 +0100 (CET)
+Received: from ERDE.irisgmbh.local ([172.30.10.11]) by ERDE.irisgmbh.local
+ ([172.30.10.11]) with mapi id 14.03.0513.000; Thu, 11 Nov 2021 11:04:38 +0100
+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
+	"openembedded-core@lists.openembedded.org"
+	<openembedded-core@lists.openembedded.org>, "kweihmann@outlook.com"
+	<kweihmann@outlook.com>, "peter.kjellerstedt@axis.com"
+	<peter.kjellerstedt@axis.com>, "jasper@fancydomain.eu"
+	<jasper@fancydomain.eu>
+CC: "martin@mko.dev" <martin@mko.dev>, Daniel Baumgart
+	<Daniel.Baumgart@iris-sensing.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
+ for repo 2.17.3
+Thread-Topic: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
+ for repo 2.17.3
+Thread-Index: 
+ AQHX0klmUmLVPFJtF0Ob3PuHG3t8+6v03rAAgAADSACAAAYMgIABSAqAgATTzgCAAmPRAIAAqg6A
+Date: Thu, 11 Nov 2021 10:04:38 +0000
+Message-ID: <c1b45d484d3f55f9522cfa85c58e2acfa7d0e3f1.camel@iris-sensing.com>
+References: <20211105133104.19895-1-jasper@fancydomain.eu>
+	 <AM9PR09MB4642AA3727D430C698E95EE5A88E9@AM9PR09MB4642.eurprd09.prod.outlook.com>
+	 <b8897c8a436f384ef0a41d708816c2f61f9e22c7.camel@iris-sensing.com>
+	 <d87ff011218f55d97e5aa48ff9b06d216f6d477a.camel@iris-sensing.com>
+	 <029d18fa589265e32476c7cc45c9977f7b4bb9aa.camel@linuxfoundation.org>
+	 <3101a847508371b09b2949434f9ca09c672a7097.camel@iris-sensing.com>
+	 <dd07e5137044429f805caf23114a2e72@axis.com>
+In-Reply-To: <dd07e5137044429f805caf23114a2e72@axis.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.10.1]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AB84FCC80815604E8CEF67D551128466@irisgmbh.local>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <cover.1636591465.git.steve@sakoman.com>
- <c8c7678eccee16e6c2ac93ae6c5ba74a62e0a9e9.1636591465.git.steve@sakoman.com>
-In-Reply-To: 
- <c8c7678eccee16e6c2ac93ae6c5ba74a62e0a9e9.1636591465.git.steve@sakoman.com>
-From: Jose Quaresma <quaresma.jose@gmail.com>
-Date: Thu, 11 Nov 2021 09:56:45 +0000
-Message-ID: 
- <CANPvuR=Hmz65ttyRxK3x6h_zTW8-QVnHZKst7g=3V+eqQdPh6A@mail.gmail.com>
-Subject: Re: [bitbake-devel] [bitbake][dunfell][1.46][PATCH] fetch/wget: Add
- timeout for checkstatus calls (30s)
-To: Steve Sakoman <steve@sakoman.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000e27e0805d0805cc8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 09:57:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13001
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 10:04:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13002
 
---000000000000e27e0805d0805cc8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Steve Sakoman <steve@sakoman.com> escreveu no dia quinta, 11/11/2021 =C3=A0=
-(s)
-00:45:
-
-> From: Richard Purdie <richard.purdie@linuxfoundation.org>
->
-> We had an issue where a webserver serving sstate had filesystem issues so
-> would accept connections but effectively not do anything with them. This
-> causes bitbake to hang whilst processing things like sstate objects insid=
-e
-> the checkstatus() calls. It can be replicated by setting up a server like=
-:
->
-> socat -u TCP4-LISTEN:NNN,fork OPEN:/dev/null
->
-> and pointing SSTATE_MIRRORS in OE at that address.
->
-> Adding a timeout to the checkstatus calls of 15s means that whilst the
->
-
--15
-+30
-
-but if we need the commit as in master we can drop this typo
-
-
-> system will pause, it will then continue and not hang entirely. Since the=
-re
-> isn't a large transfer here, 30s should be a reasonable response time aft=
-er
-> which we should fall back to building things ourselves.
->
-> [YOCTO #13716]
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/fetch2/wget.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-> index f7d1de26..5676d3fd 100644
-> --- a/lib/bb/fetch2/wget.py
-> +++ b/lib/bb/fetch2/wget.py
-> @@ -319,7 +319,7 @@ class Wget(FetchMethod):
->              except (TypeError, ImportError, IOError,
-> netrc.NetrcParseError):
->                  pass
->
-> -            with opener.open(r) as response:
-> +            with opener.open(r, timeout=3D30) as response:
->                  pass
->          except urllib.error.URLError as e:
->              if try_again:
-> --
-> 2.25.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#12997):
-> https://lists.openembedded.org/g/bitbake-devel/message/12997
-> Mute This Topic: https://lists.openembedded.org/mt/86971891/5052612
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> quaresma.jose@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
-
---=20
-Best regards,
-
-Jos=C3=A9 Quaresma
-
---000000000000e27e0805d0805cc8
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">Steve Sakoman &lt;<a href=3D"mailto:s=
-teve@sakoman.com">steve@sakoman.com</a>&gt; escreveu no dia quinta, 11/11/2=
-021 =C3=A0(s) 00:45:<br></div><blockquote class=3D"gmail_quote" style=3D"ma=
-rgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=
-1ex">From: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundat=
-ion.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<br>
-<br>
-We had an issue where a webserver serving sstate had filesystem issues so<b=
-r>
-would accept connections but effectively not do anything with them. This<br=
->
-causes bitbake to hang whilst processing things like sstate objects inside<=
-br>
-the checkstatus() calls. It can be replicated by setting up a server like:<=
-br>
-<br>
-socat -u TCP4-LISTEN:NNN,fork OPEN:/dev/null<br>
-<br>
-and pointing SSTATE_MIRRORS in OE at that address.<br>
-<br>
-Adding a timeout to the checkstatus calls of 15s means that whilst the<br><=
-/blockquote><div><br></div><div>-15</div><div>+30</div><div><br></div><div>=
-but if we need the commit as in master we can drop this typo</div><div>=C2=
-=A0<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px =
-0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-system will pause, it will then continue and not hang entirely. Since there=
-<br>
-isn&#39;t a large transfer here, 30s should be a reasonable response time a=
-fter<br>
-which we should fall back to building things ourselves.<br>
-<br>
-[YOCTO #13716]<br>
-<br>
-Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
-ndation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<b=
-r>
----<br>
-=C2=A0lib/bb/fetch2/wget.py | 2 +-<br>
-=C2=A01 file changed, 1 insertion(+), 1 deletion(-)<br>
-<br>
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py<br>
-index f7d1de26..5676d3fd 100644<br>
---- a/lib/bb/fetch2/wget.py<br>
-+++ b/lib/bb/fetch2/wget.py<br>
-@@ -319,7 +319,7 @@ class Wget(FetchMethod):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0except (TypeError, ImportEr=
-ror, IOError, netrc.NetrcParseError):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pass<br>
-<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 with opener.open(r) as response:=
-<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 with opener.open(r, timeout=3D30=
-) as response:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pass<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0except urllib.error.URLError as e:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if try_again:<br>
--- <br>
-2.25.1<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#12997): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/12997" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/12997</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/86971891/5052=
-612" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/86971891/5052612</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:quaresma.jose@gmail.com" target=3D=
-"_blank">quaresma.jose@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
- class=3D"gmail_signature"><div dir=3D"ltr">Best regards,<div><br>Jos=C3=A9=
- Quaresma</div></div></div></div>
-
---000000000000e27e0805d0805cc8--
+LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMjU2DQoNCkhpIFBl
+dGVyLA0KDQo+IEhvdyBkbyB5b3UgYXZvaWQgdGhlIHJlcG8gd3JhcHBlciBmZXRjaGluZyB0aGUg
+cmVwbyBzb3VyY2UgaXRzZWxmIA0KPiBhbmQgaW5zdGVhZCBmZXRjaCBpdCB1c2luZyB0aGUgYml0
+YmFrZSBmZXRjaGVyPyBJIGhhdmUgc2VlbiBub3RoaW5nDQo+IHRvIHRoYXQgZXh0ZW50IGluIHRo
+ZSBwYXRjaGVzIHNvIGZhci4NCg0Kd2UgZG9uJ3QuIFRoaXMgcmVjaXBlIG9ubHkgaW5zdGFsbHMg
+dGhlIHJlcG8gd3JhcHBlci4gVGhlIHNvdXJjZSBjb2RlDQppcyBkb3dubG9hZGVkIGFuZCBpbnN0
+YWxsZWQgd2hlbiBydW5uaW5nIGByZXBvIGluaXRgLg0KDQpIb3dldmVyLCBpbiBvdXIgb3Bpbmlv
+biB0aGlzIGlzIG5vdCBhbiBpc3N1ZS4gV2hlbiBpbnN0YWxsaW5nIHJlcG8gYXMgYQ0KcGFja2Fn
+ZSB0byBhIHRhcmdldCwgdGhpcyBpcyB0aGUgZXhwZWN0ZWQgYmVoYXZpb3VyLiBUaGUgdGFyZ2V0
+IHdvdWxkDQpvbmx5IGhhdmUgdGhlIHJlcG8gd3JhcHBlciBpbnN0YWxsZWQsIGp1c3QgbGlrZSBv
+biBhbnkgb3RoZXIgbGludXgNCmRpc3Ryb2J1dGlvbi4gVGhlIGFjdHVhbCB1c2FnZSBvZiByZXBv
+IG9uIHRoZSB0YXJnZXQgaXMgZGVjb3VwbGVkIGZyb20NCnRoZSBiaXRiYWtlIGJ1aWxkIHByb2Nl
+c3MuDQoNCldoZW4gdXNpbmcgdGhlIHJlcG8gZmV0Y2hlciwgdGhlIHJlcG8gc291cmNlIGlzIGZl
+dGNoZWQgZHVyaW5nIHRoZQ0KZG9fZmV0Y2ggc3RhZ2UgYnkgcnVubmluZyBgcmVwbyBpbml0YCAo
+d2hlbiBTUkNSRVYgPSBBVVRPUkVWLCBjaGFuZ2VzDQp0byB0aGUgcmVjaXBlIG9yIG5vIHByZXZp
+b3VzIHNvdXJjZXMgYXZhaWxhYmxlIGluIERMX0RJUikuIEJ5IGV4ZWN1dGluZw0KdGhpcyB3aXRo
+aW4gdGhlICJydW5mZXRjaGNtZCIgZnVuY3Rpb24sIHRoaXMgYWxzbyB3b3JrcyB3aXRoIHRoZSB1
+c3VhbA0KbmV0d29yayBmZWF0dXJlcyBiaXRiYWtlIHByb3ZpZGVzLCBlLmcuIHByb3h5Lg0KSWYg
+dGhlIHJlY2lwZSBoYXMgbm90IGNoYW5nZWQgYW5kIHNvdXJjZXMgYXJlIGFscmVhZHkgYXZhaWxh
+YmxlIGZyb20gYQ0KcHJldmlvdXMgcnVuLCByZXBvIHdpbGwgbm90IGJlIHJlcnVuLiBBcyBzdWNo
+LCByZXByb2R1Y2luZyBhIGJ1aWxkDQpvZmZsaW5lIGlzIGFsc28gcG9zc2libGUuDQoNCi0gLS0g
+DQpXaXRoIGJlc3QgcmVnYXJkcw0KDQpKYXNwZXIgT3JzY2h1bGtvDQpEZXZPcHMgRW5naW5lZXIN
+Cg0KVGVsLiArNDkgMzAgNTggNTggMTQgMjY1DQpGYXggKzQ5IDMwIDU4IDU4IDE0IDk5OQ0KSmFz
+cGVyLk9yc2NodWxrb0BpcmlzLXNlbnNpbmcuY29tDQoNCuKAoiDigKIg4oCiIOKAoiDigKIg4oCi
+IOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg
+4oCiIOKAoiDigKIg4oCiIOKAoiDigKINCg0KaXJpcy1HbWJIDQppbmZyYXJlZCAmIGludGVsbGln
+ZW50IHNlbnNvcnMNClNjaG5lbGxlcnN0cmHDn2UgMS01IHwgMTI0MzkgQmVybGluDQoNCmh0dHBz
+Oi8vaXJpcy1zZW5zaW5nLmNvbS8NCg0KDQoNCg0KDQpPbiBXZWQsIDIwMjEtMTEtMTAgYXQgMjM6
+NTUgKzAwMDAsIFBldGVyIEtqZWxsZXJzdGVkdCB3cm90ZToNCj4gPiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiA+IEZyb206IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9y
+Z8KgPGJpdGJha2UtDQo+ID4gZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4gT24gQmVoYWxm
+IE9mIEphc3BlciBPcnNjaHVsa28NCj4gPiBTZW50OiBkZW4gOSBub3ZlbWJlciAyMDIxIDEyOjI2
+DQo+ID4gVG86IHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmc7IG9wZW5lbWJlZGRl
+ZC0NCj4gPiBjb3JlQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc7IGt3ZWlobWFubkBvdXRsb29rLmNv
+bTsNCj4gPiBqYXNwZXJAZmFuY3lkb21haW4uZXUNCj4gPiBDYzogbWFydGluQG1rby5kZXY7IERh
+bmllbC5CYXVtZ2FydEBpcmlzLXNlbnNpbmcubmV0OyBiaXRiYWtlLQ0KPiA+IGRldmVsQGxpc3Rz
+Lm9wZW5lbWJlZGRlZC5vcmcNCj4gPiBTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFtvZS1j
+b3JlXVtQQVRDSCAxLzJdIGRldnRvb2xzOiBJbml0aWFsDQo+ID4gcmVjaXBlDQo+ID4gZm9yIHJl
+cG8gMi4xNy4zDQo+ID4gDQo+ID4gLS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0K
+PiA+IEhhc2g6IFNIQTI1Ng0KPiA+IA0KPiA+IEhpIFJpY2hhcmQsDQo+ID4gDQo+ID4gSSB0aGlu
+ayBvdXIgaW1wbGVtZW50YXRpb24gb2YgdGhlIHJlcG8gZmV0Y2hlciBjaGVja3MgdGhlICh3aGF0
+IEkNCj4gPiBiZWxpZXZlIHRvIGJlKSBtb3N0IHJlbGV2YW50IHBhcnRzIG9mIHlvdXIgY2hlY2ts
+aXN0ICh0aGFua3MgZm9yIHRoZQ0KPiA+IHdyaXRlLXVwKS4gTWFydGluLCBwbGVhc2UgY29ycmVu
+dCBtZSBpZiBJJ20gbWlzc2luZyBzb21ldGhpbmc6DQo+ID4gDQo+ID4gPiBhKSBuZXR3b3JrIGFj
+Y2VzcyBmb3Igc291cmNlcyBpcyBvbmx5IGV4cGVjdGVkIHRvIGhhcHBlbiBpbiB0aGUNCj4gPiA+
+IGRvX2ZldGNoIHN0ZXAuDQo+ID4gPiBUaGlzIGlzIG5vdCBlbmZvcmNlZCBvciB0ZXN0ZWQgYnV0
+IGlzIHJlcXVpcmVkIHNvIHRoYXQgd2UgY2FuOg0KPiA+ID4gDQo+ID4gPiDCoGkpIGF1ZGl0IHRo
+ZSBzb3VyY2VzIHVzZWQgKGkuZS4gZm9yIGxpY2Vuc2UvbWFuaWZlc3QgcmVhc29ucykNCj4gPiA+
+IMKgaWkpIHN1cHBvcnQgb2ZmbGluZSBidWlsZHMgd2l0aCBhIHN1aXRhYmxlIGNhY2hlDQo+ID4g
+PiDCoGlpaSkgYWxsb3cgd29yayB0byBjb250aW51ZSBldmVuIHdpdGggZG93bnRpbWUgdXBzdHJl
+YW0NCj4gPiA+IMKgaXYpIGFsbG93IGZvciBjaGFuZ2VzIHVwc3RyZWFtIGluIGluY29tcGF0aWJs
+ZSB3YXlzDQo+ID4gPiDCoHYpIGFsbG93IHJlYnVpbGRpbmcgb2YgdGhlIHNvZnR3YXJlIGluIFgg
+eWVhcnMgdGltZQ0KPiA+IA0KPiA+IGNoZWNrDQo+ID4gDQo+ID4gPiBiKSBuZXR3b3JrIGFjY2Vz
+cyBpcyBub3QgZXhwZWN0ZWQgaW4gZG9fdW5wYWNrDQo+ID4gDQo+ID4gY2hlY2sNCj4gDQo+IEhv
+dyBkbyB5b3UgYXZvaWQgdGhlIHJlcG8gd3JhcHBlciBmZXRjaGluZyB0aGUgcmVwbyBzb3VyY2Ug
+aXRzZWxmIA0KPiBhbmQgaW5zdGVhZCBmZXRjaCBpdCB1c2luZyB0aGUgYml0YmFrZSBmZXRjaGVy
+PyBJIGhhdmUgc2VlbiBub3RoaW5nIA0KPiB0byB0aGF0IGV4dGVudCBpbiB0aGUgcGF0Y2hlcyBz
+byBmYXIuDQo+IA0KPiAvL1BldGVyDQo+IA0KLS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0N
+Cg0KaVFFekJBRUJDQUFkRmlFRTRXeVBNSUM1QXA0K09vbzFZZ3FldzA3Vk1OVUZBbUdNNnJVQUNn
+a1FZZ3FldzA3Vg0KTU5VQ0lBZitNWEdwOUhuZnhtdSs4dzNCYXNWc1AyTjd0dFcyRk4zWnJvaXly
+L2hLckp6ZXEvcURRd08rL0szVQ0KeldaSjg1SDZMMmVUak9QOGZQYUhiVk1SRDFqVW9ZVnBZVUFF
+L2ZONjRGYmhDQm11clZ1V0ZyTG8vdTZHeTJjVQ0KRENkM1NJZWpYaWRCMjVFUVJvUzRCZmwyNWls
+MXdHNGlNdzFwQ0ZBNmt1NXJHaGI4cTVqdmZaRUNmMFd1aGg3WA0KRm5NUWxJM1Zac1NrNENha0Yz
+Zzg4QUZUTEZyc1FZY04ydkRVc2tkaE1mVFpwdVJBOGR1SXZXNHJWZ092SEpRVA0KdjA3ckFTTlIv
+OXl6UFJWa3pwZ1BVSTlWbDJMQTN2RVozUmNjdzNqc2NZSEZ3a3pqMDA5NkRPNCtqZUR3eXphNQ0K
+ZkZtMGREVDlIakd1elR6NjZjNUpMOHNkWlppOXB3PT0NCj1BT3lwDQotLS0tLUVORCBQR1AgU0lH
+TkFUVVJFLS0tLS0NCg==
 
