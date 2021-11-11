@@ -1,136 +1,199 @@
-Return-Path: <Jasper.Orschulko@iris-sensing.com>
+Return-Path: <jasper@fancydomain.eu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69524C433F5
-	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 10:04:49 +0000 (UTC)
-Received: from mail.irisgmbh.de (mail.irisgmbh.de [81.169.172.79])
- by mx.groups.io with SMTP id smtpd.web09.8659.1636625087596107230
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A254C433F5
+	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 10:21:58 +0000 (UTC)
+Received: from mx.walter.deinstapel.de (mx.walter.deinstapel.de
+ [116.202.209.171])
+ by mx.groups.io with SMTP id smtpd.web08.8682.1636626114993534863
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Nov 2021 02:04:48 -0800
+ Thu, 11 Nov 2021 02:21:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=none, err=SPF record not found (domain: iris-sensing.com,
- ip: 81.169.172.79, mailfrom: jasper.orschulko@iris-sensing.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.irisgmbh.de (Postfix) with ESMTP id 2507531E033F;
-	Thu, 11 Nov 2021 11:04:39 +0100 (CET)
-X-Virus-Scanned: amavisd-new at irisgmbh.de
-Received: from mail.irisgmbh.de ([127.0.0.1])
-	by localhost (s15324379.rootmaster.info [127.0.0.1]) (amavisd-new,
- port 10027)
-	with ESMTP; Thu, 11 Nov 2021 11:04:39 +0100 (CET)
-Received: from ERDE.irisgmbh.local (unknown [213.61.209.158])
-	by mail.irisgmbh.de (Postfix) with ESMTPS id 0E19031E02E9;
-	Thu, 11 Nov 2021 11:04:39 +0100 (CET)
-Received: from ERDE.irisgmbh.local ([172.30.10.11]) by ERDE.irisgmbh.local
- ([172.30.10.11]) with mapi id 14.03.0513.000; Thu, 11 Nov 2021 11:04:38 +0100
-From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
-	"openembedded-core@lists.openembedded.org"
-	<openembedded-core@lists.openembedded.org>, "kweihmann@outlook.com"
-	<kweihmann@outlook.com>, "peter.kjellerstedt@axis.com"
-	<peter.kjellerstedt@axis.com>, "jasper@fancydomain.eu"
-	<jasper@fancydomain.eu>
-CC: "martin@mko.dev" <martin@mko.dev>, Daniel Baumgart
-	<Daniel.Baumgart@iris-sensing.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
- for repo 2.17.3
-Thread-Topic: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
- for repo 2.17.3
-Thread-Index: 
- AQHX0klmUmLVPFJtF0Ob3PuHG3t8+6v03rAAgAADSACAAAYMgIABSAqAgATTzgCAAmPRAIAAqg6A
-Date: Thu, 11 Nov 2021 10:04:38 +0000
-Message-ID: <c1b45d484d3f55f9522cfa85c58e2acfa7d0e3f1.camel@iris-sensing.com>
-References: <20211105133104.19895-1-jasper@fancydomain.eu>
-	 <AM9PR09MB4642AA3727D430C698E95EE5A88E9@AM9PR09MB4642.eurprd09.prod.outlook.com>
-	 <b8897c8a436f384ef0a41d708816c2f61f9e22c7.camel@iris-sensing.com>
-	 <d87ff011218f55d97e5aa48ff9b06d216f6d477a.camel@iris-sensing.com>
-	 <029d18fa589265e32476c7cc45c9977f7b4bb9aa.camel@linuxfoundation.org>
-	 <3101a847508371b09b2949434f9ca09c672a7097.camel@iris-sensing.com>
-	 <dd07e5137044429f805caf23114a2e72@axis.com>
-In-Reply-To: <dd07e5137044429f805caf23114a2e72@axis.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.10.1]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AB84FCC80815604E8CEF67D551128466@irisgmbh.local>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+ dkim=fail reason="no key for verify" header.i=@fancydomain.eu header.s=mail
+ header.b=e7WZk/9y;
+ spf=pass (domain: fancydomain.eu, ip: 116.202.209.171,
+ mailfrom: jasper@fancydomain.eu)
+From: jasper@fancydomain.eu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fancydomain.eu;
+	s=mail; t=1636626112;
+	bh=6yw0P0l8vUsTJ/V3ibHt3bh/RhCs3vN1VXrUlcK601s=;
+	h=From:To:Cc:Subject;
+	b=e7WZk/9yLyFviMrx5FaTFPSWMsWas8q5xR6qWQDTxKaH0sOLCxZFq0pL9jmyeBkcn
+	 8hQ225lLt/TL2ec5OxUAPxlApONb8LCFsrw9RRv0G/VGHfjmhW50sVoqnx6HqnA8jc
+	 PJ+2jf50aAwburvse75DtaAJRMqBUTUNI2+Y/7QtfiqWcnkXz/hlx/bM90nlsNKlJX
+	 m6CnsJWC3aruv2cOncCYmbHg40I/RXgndgsKyaQYio7qXYU+XKW072FWdkExUB5Mbq
+	 B9ONkgGptx8+0G9x6Yf4oKscUno64kRExlfSWuz2BLl4CVXfajVXiwoOLEbZcCNp2a
+	 4xDkKa/Bfn+Rg==
+To: openembedded-core@lists.openembedded.org
+Cc: martin@mko.dev,
+	Daniel.Baumgart@iris-sensing.com,
+	bitbake-devel@lists.openembedded.org,
+	Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+Subject: [oe-core][PATCH v5 1/2] repo: Add recipe for 2.17.3
+Date: Thu, 11 Nov 2021 11:21:23 +0100
+Message-Id: <20211111102124.7661-1-jasper@fancydomain.eu>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 10:04:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13002
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 10:21:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13003
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMjU2DQoNCkhpIFBl
-dGVyLA0KDQo+IEhvdyBkbyB5b3UgYXZvaWQgdGhlIHJlcG8gd3JhcHBlciBmZXRjaGluZyB0aGUg
-cmVwbyBzb3VyY2UgaXRzZWxmIA0KPiBhbmQgaW5zdGVhZCBmZXRjaCBpdCB1c2luZyB0aGUgYml0
-YmFrZSBmZXRjaGVyPyBJIGhhdmUgc2VlbiBub3RoaW5nDQo+IHRvIHRoYXQgZXh0ZW50IGluIHRo
-ZSBwYXRjaGVzIHNvIGZhci4NCg0Kd2UgZG9uJ3QuIFRoaXMgcmVjaXBlIG9ubHkgaW5zdGFsbHMg
-dGhlIHJlcG8gd3JhcHBlci4gVGhlIHNvdXJjZSBjb2RlDQppcyBkb3dubG9hZGVkIGFuZCBpbnN0
-YWxsZWQgd2hlbiBydW5uaW5nIGByZXBvIGluaXRgLg0KDQpIb3dldmVyLCBpbiBvdXIgb3Bpbmlv
-biB0aGlzIGlzIG5vdCBhbiBpc3N1ZS4gV2hlbiBpbnN0YWxsaW5nIHJlcG8gYXMgYQ0KcGFja2Fn
-ZSB0byBhIHRhcmdldCwgdGhpcyBpcyB0aGUgZXhwZWN0ZWQgYmVoYXZpb3VyLiBUaGUgdGFyZ2V0
-IHdvdWxkDQpvbmx5IGhhdmUgdGhlIHJlcG8gd3JhcHBlciBpbnN0YWxsZWQsIGp1c3QgbGlrZSBv
-biBhbnkgb3RoZXIgbGludXgNCmRpc3Ryb2J1dGlvbi4gVGhlIGFjdHVhbCB1c2FnZSBvZiByZXBv
-IG9uIHRoZSB0YXJnZXQgaXMgZGVjb3VwbGVkIGZyb20NCnRoZSBiaXRiYWtlIGJ1aWxkIHByb2Nl
-c3MuDQoNCldoZW4gdXNpbmcgdGhlIHJlcG8gZmV0Y2hlciwgdGhlIHJlcG8gc291cmNlIGlzIGZl
-dGNoZWQgZHVyaW5nIHRoZQ0KZG9fZmV0Y2ggc3RhZ2UgYnkgcnVubmluZyBgcmVwbyBpbml0YCAo
-d2hlbiBTUkNSRVYgPSBBVVRPUkVWLCBjaGFuZ2VzDQp0byB0aGUgcmVjaXBlIG9yIG5vIHByZXZp
-b3VzIHNvdXJjZXMgYXZhaWxhYmxlIGluIERMX0RJUikuIEJ5IGV4ZWN1dGluZw0KdGhpcyB3aXRo
-aW4gdGhlICJydW5mZXRjaGNtZCIgZnVuY3Rpb24sIHRoaXMgYWxzbyB3b3JrcyB3aXRoIHRoZSB1
-c3VhbA0KbmV0d29yayBmZWF0dXJlcyBiaXRiYWtlIHByb3ZpZGVzLCBlLmcuIHByb3h5Lg0KSWYg
-dGhlIHJlY2lwZSBoYXMgbm90IGNoYW5nZWQgYW5kIHNvdXJjZXMgYXJlIGFscmVhZHkgYXZhaWxh
-YmxlIGZyb20gYQ0KcHJldmlvdXMgcnVuLCByZXBvIHdpbGwgbm90IGJlIHJlcnVuLiBBcyBzdWNo
-LCByZXByb2R1Y2luZyBhIGJ1aWxkDQpvZmZsaW5lIGlzIGFsc28gcG9zc2libGUuDQoNCi0gLS0g
-DQpXaXRoIGJlc3QgcmVnYXJkcw0KDQpKYXNwZXIgT3JzY2h1bGtvDQpEZXZPcHMgRW5naW5lZXIN
-Cg0KVGVsLiArNDkgMzAgNTggNTggMTQgMjY1DQpGYXggKzQ5IDMwIDU4IDU4IDE0IDk5OQ0KSmFz
-cGVyLk9yc2NodWxrb0BpcmlzLXNlbnNpbmcuY29tDQoNCuKAoiDigKIg4oCiIOKAoiDigKIg4oCi
-IOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg
-4oCiIOKAoiDigKIg4oCiIOKAoiDigKINCg0KaXJpcy1HbWJIDQppbmZyYXJlZCAmIGludGVsbGln
-ZW50IHNlbnNvcnMNClNjaG5lbGxlcnN0cmHDn2UgMS01IHwgMTI0MzkgQmVybGluDQoNCmh0dHBz
-Oi8vaXJpcy1zZW5zaW5nLmNvbS8NCg0KDQoNCg0KDQpPbiBXZWQsIDIwMjEtMTEtMTAgYXQgMjM6
-NTUgKzAwMDAsIFBldGVyIEtqZWxsZXJzdGVkdCB3cm90ZToNCj4gPiAtLS0tLU9yaWdpbmFsIE1l
-c3NhZ2UtLS0tLQ0KPiA+IEZyb206IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9y
-Z8KgPGJpdGJha2UtDQo+ID4gZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4gT24gQmVoYWxm
-IE9mIEphc3BlciBPcnNjaHVsa28NCj4gPiBTZW50OiBkZW4gOSBub3ZlbWJlciAyMDIxIDEyOjI2
-DQo+ID4gVG86IHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmc7IG9wZW5lbWJlZGRl
-ZC0NCj4gPiBjb3JlQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc7IGt3ZWlobWFubkBvdXRsb29rLmNv
-bTsNCj4gPiBqYXNwZXJAZmFuY3lkb21haW4uZXUNCj4gPiBDYzogbWFydGluQG1rby5kZXY7IERh
-bmllbC5CYXVtZ2FydEBpcmlzLXNlbnNpbmcubmV0OyBiaXRiYWtlLQ0KPiA+IGRldmVsQGxpc3Rz
-Lm9wZW5lbWJlZGRlZC5vcmcNCj4gPiBTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFtvZS1j
-b3JlXVtQQVRDSCAxLzJdIGRldnRvb2xzOiBJbml0aWFsDQo+ID4gcmVjaXBlDQo+ID4gZm9yIHJl
-cG8gMi4xNy4zDQo+ID4gDQo+ID4gLS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0K
-PiA+IEhhc2g6IFNIQTI1Ng0KPiA+IA0KPiA+IEhpIFJpY2hhcmQsDQo+ID4gDQo+ID4gSSB0aGlu
-ayBvdXIgaW1wbGVtZW50YXRpb24gb2YgdGhlIHJlcG8gZmV0Y2hlciBjaGVja3MgdGhlICh3aGF0
-IEkNCj4gPiBiZWxpZXZlIHRvIGJlKSBtb3N0IHJlbGV2YW50IHBhcnRzIG9mIHlvdXIgY2hlY2ts
-aXN0ICh0aGFua3MgZm9yIHRoZQ0KPiA+IHdyaXRlLXVwKS4gTWFydGluLCBwbGVhc2UgY29ycmVu
-dCBtZSBpZiBJJ20gbWlzc2luZyBzb21ldGhpbmc6DQo+ID4gDQo+ID4gPiBhKSBuZXR3b3JrIGFj
-Y2VzcyBmb3Igc291cmNlcyBpcyBvbmx5IGV4cGVjdGVkIHRvIGhhcHBlbiBpbiB0aGUNCj4gPiA+
-IGRvX2ZldGNoIHN0ZXAuDQo+ID4gPiBUaGlzIGlzIG5vdCBlbmZvcmNlZCBvciB0ZXN0ZWQgYnV0
-IGlzIHJlcXVpcmVkIHNvIHRoYXQgd2UgY2FuOg0KPiA+ID4gDQo+ID4gPiDCoGkpIGF1ZGl0IHRo
-ZSBzb3VyY2VzIHVzZWQgKGkuZS4gZm9yIGxpY2Vuc2UvbWFuaWZlc3QgcmVhc29ucykNCj4gPiA+
-IMKgaWkpIHN1cHBvcnQgb2ZmbGluZSBidWlsZHMgd2l0aCBhIHN1aXRhYmxlIGNhY2hlDQo+ID4g
-PiDCoGlpaSkgYWxsb3cgd29yayB0byBjb250aW51ZSBldmVuIHdpdGggZG93bnRpbWUgdXBzdHJl
-YW0NCj4gPiA+IMKgaXYpIGFsbG93IGZvciBjaGFuZ2VzIHVwc3RyZWFtIGluIGluY29tcGF0aWJs
-ZSB3YXlzDQo+ID4gPiDCoHYpIGFsbG93IHJlYnVpbGRpbmcgb2YgdGhlIHNvZnR3YXJlIGluIFgg
-eWVhcnMgdGltZQ0KPiA+IA0KPiA+IGNoZWNrDQo+ID4gDQo+ID4gPiBiKSBuZXR3b3JrIGFjY2Vz
-cyBpcyBub3QgZXhwZWN0ZWQgaW4gZG9fdW5wYWNrDQo+ID4gDQo+ID4gY2hlY2sNCj4gDQo+IEhv
-dyBkbyB5b3UgYXZvaWQgdGhlIHJlcG8gd3JhcHBlciBmZXRjaGluZyB0aGUgcmVwbyBzb3VyY2Ug
-aXRzZWxmIA0KPiBhbmQgaW5zdGVhZCBmZXRjaCBpdCB1c2luZyB0aGUgYml0YmFrZSBmZXRjaGVy
-PyBJIGhhdmUgc2VlbiBub3RoaW5nIA0KPiB0byB0aGF0IGV4dGVudCBpbiB0aGUgcGF0Y2hlcyBz
-byBmYXIuDQo+IA0KPiAvL1BldGVyDQo+IA0KLS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0N
-Cg0KaVFFekJBRUJDQUFkRmlFRTRXeVBNSUM1QXA0K09vbzFZZ3FldzA3Vk1OVUZBbUdNNnJVQUNn
-a1FZZ3FldzA3Vg0KTU5VQ0lBZitNWEdwOUhuZnhtdSs4dzNCYXNWc1AyTjd0dFcyRk4zWnJvaXly
-L2hLckp6ZXEvcURRd08rL0szVQ0KeldaSjg1SDZMMmVUak9QOGZQYUhiVk1SRDFqVW9ZVnBZVUFF
-L2ZONjRGYmhDQm11clZ1V0ZyTG8vdTZHeTJjVQ0KRENkM1NJZWpYaWRCMjVFUVJvUzRCZmwyNWls
-MXdHNGlNdzFwQ0ZBNmt1NXJHaGI4cTVqdmZaRUNmMFd1aGg3WA0KRm5NUWxJM1Zac1NrNENha0Yz
-Zzg4QUZUTEZyc1FZY04ydkRVc2tkaE1mVFpwdVJBOGR1SXZXNHJWZ092SEpRVA0KdjA3ckFTTlIv
-OXl6UFJWa3pwZ1BVSTlWbDJMQTN2RVozUmNjdzNqc2NZSEZ3a3pqMDA5NkRPNCtqZUR3eXphNQ0K
-ZkZtMGREVDlIakd1elR6NjZjNUpMOHNkWlppOXB3PT0NCj1BT3lwDQotLS0tLUVORCBQR1AgU0lH
-TkFUVVJFLS0tLS0NCg==
+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+
+Add a recipe for repo 2.17.3, prerequisite for the repo fetcher.
+
+Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+---
+ meta/conf/distro/include/maintainers.inc      |  1 +
+ .../0001-Set-REPO_REV-to-v2.17.3.patch        | 35 +++++++++++++++++++
+ .../repo/repo/0001-python3-shebang.patch      | 26 ++++++++++++++
+ meta/recipes-devtools/repo/repo_2.17.3.bb     | 28 +++++++++++++++
+ 4 files changed, 90 insertions(+)
+ create mode 100644 meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_=
+REV-to-v2.17.3.patch
+ create mode 100644 meta/recipes-devtools/repo/repo/0001-python3-shebang.=
+patch
+ create mode 100644 meta/recipes-devtools/repo/repo_2.17.3.bb
+
+diff --git a/meta/conf/distro/include/maintainers.inc b/meta/conf/distro/=
+include/maintainers.inc
+index f3e0a75d56..58a0a9615f 100644
+--- a/meta/conf/distro/include/maintainers.inc
++++ b/meta/conf/distro/include/maintainers.inc
+@@ -652,6 +652,7 @@ RECIPE_MAINTAINER:pn-quilt-native =3D "Robert Yang <l=
+iezhi.yang@windriver.com>"
+ RECIPE_MAINTAINER:pn-quota =3D "Anuj Mittal <anuj.mittal@intel.com>"
+ RECIPE_MAINTAINER:pn-re2c =3D "Khem Raj <raj.khem@gmail.com>"
+ RECIPE_MAINTAINER:pn-readline =3D "Hongxu Jia <hongxu.jia@windriver.com>=
+"
++RECIPE_MAINTAINER:pn-repo =3D "Jasper Orschulko <Jasper.Orschulko@iris-s=
+ensing.com>"
+ RECIPE_MAINTAINER:pn-resolvconf =3D "Chen Qi <Qi.Chen@windriver.com>"
+ RECIPE_MAINTAINER:pn-rgb =3D "Unassigned <unassigned@yoctoproject.org>"
+ RECIPE_MAINTAINER:pn-rpcbind =3D "Hongxu Jia <hongxu.jia@windriver.com>"
+diff --git a/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to-=
+v2.17.3.patch b/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-=
+to-v2.17.3.patch
+new file mode 100644
+index 0000000000..285b1d3129
+--- /dev/null
++++ b/meta/recipes-devtools/repo/repo-2.17.3/0001-Set-REPO_REV-to-v2.17.3=
+.patch
+@@ -0,0 +1,35 @@
++From bdd2a528da59c28db8ae2986834926de7cebf3ab Mon Sep 17 00:00:00 2001
++From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
++Date: Thu, 4 Nov 2021 16:55:12 +0100
++Subject: [PATCH] Set REPO_REV to v2.17.3
++
++repo is an unusual tool because it downloads all of its own Python modul=
+es
++using GPG-signed git tags, and stores those files as part of the project
++that it is working with.
++
++So in order to have a reproducible repo installation within the project
++folders, we hardcode the default REPO_REV to a SHA1 that corresponds to
++the version of the recipe. REPO_REV can still be overwriten by the user,
++by specifying the REPO_REV environment variable.
++
++Upstream-Status: Inappropriate [configuration]
++Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
++---
++ repo | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/repo b/repo
++index b13e34c..31130e9 100755
++--- a/repo
+++++ b/repo
++@@ -130,7 +130,7 @@ if not REPO_URL:
++   REPO_URL =3D 'https://gerrit.googlesource.com/git-repo'
++ REPO_REV =3D os.environ.get('REPO_REV')
++ if not REPO_REV:
++-  REPO_REV =3D 'stable'
+++  REPO_REV =3D '11b30b91df1f0e03b53da970ec2588e85817bacc'
++=20
++ # increment this whenever we make important changes to this script
++ VERSION =3D (2, 8)
++--=20
++2.33.1
+diff --git a/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch b=
+/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch
+new file mode 100644
+index 0000000000..d3888c8bb2
+--- /dev/null
++++ b/meta/recipes-devtools/repo/repo/0001-python3-shebang.patch
+@@ -0,0 +1,26 @@
++From b8e84b202cd302a7c99288d3835dc9c63071f8f2 Mon Sep 17 00:00:00 2001
++From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
++Date: Tue, 14 Sep 2021 16:46:51 +0200
++Subject: [PATCH] python3 shebang
++
++Yocto does not symlink from python to python3, thus change the shebang f=
+rom
++python to python3.
++
++Upstream-Status: Inappropriate [configuration]
++Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
++---
++ repo | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/repo b/repo
++index b13e34c..205e0e5 100755
++--- a/repo
+++++ b/repo
++@@ -1,4 +1,4 @@
++-#!/usr/bin/env python
+++#!/usr/bin/env python3
++ # -*- coding:utf-8 -*-
++ #
++ # Copyright (C) 2008 The Android Open Source Project
++--
++2.33.0
+diff --git a/meta/recipes-devtools/repo/repo_2.17.3.bb b/meta/recipes-dev=
+tools/repo/repo_2.17.3.bb
+new file mode 100644
+index 0000000000..cb0af89c09
+--- /dev/null
++++ b/meta/recipes-devtools/repo/repo_2.17.3.bb
+@@ -0,0 +1,28 @@
++# SPDX-License-Identifier: MIT
++# Copyright (C) 2021 iris-GmbH infrared & intelligent sensors
++
++SUMMARY =3D "Tool for managing many Git repositories"
++DESCRIPTION =3D "Repo is a tool built on top of Git. Repo helps manage m=
+any Git repositories, does the uploads to revision control systems, and a=
+utomates parts of the development workflow."
++HOMEPAGE =3D "https://android.googlesource.com/tools/repo"
++SECTION =3D "console/utils"
++
++LICENSE =3D "Apache-2.0"
++LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D3b83ef96387f14655fc854ddc3c6b=
+d57"
++
++SRC_URI =3D "git://gerrit.googlesource.com/git-repo.git;protocol=3Dhttps=
+;branch=3Dmain"
++SRCREV =3D "11b30b91df1f0e03b53da970ec2588e85817bacc"
++
++SRC_URI +=3D "file://0001-python3-shebang.patch \
++            file://0001-Set-REPO_REV-to-v2.17.3.patch"
++
++MIRRORS +=3D "git://gerrit.googlesource.com/git-repo.git git://github.co=
+m/GerritCodeReview/git-repo.git \n"
++
++S =3D "${WORKDIR}/git"
++
++do_install() {
++	install -Dm 0755 ${WORKDIR}/git/repo ${D}${bindir}/repo
++}
++
++RDEPENDS:${PN} =3D "python3"
++
++BBCLASSEXTEND =3D "native nativesdk"
+--=20
+2.33.1
+
 
