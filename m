@@ -1,140 +1,157 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36201C433F5
-	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 11:21:30 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
- [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web11.9110.1636629686094419707
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E9AC433EF
+	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 11:34:30 +0000 (UTC)
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web12.9226.1636630465593604829
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Nov 2021 03:21:26 -0800
+ Thu, 11 Nov 2021 03:34:26 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TXz0wk8h;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f44.google.com with SMTP id t30so9175812wra.10
-        for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Nov 2021 03:21:25 -0800 (PST)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=KQpgvrnN;
+ spf=pass (domain: axis.com, ip: 195.60.68.17,
+ mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UShn/SRqyOQyH9EmafrVmaeKidlCpSlAzk8DN+e3Ly8=;
-        b=TXz0wk8hRWKIz5KMT2zdVKHr+JKGYJL86J2oO2WuZ/frUIez+75B9kmaH9Rnr7CBH4
-         YoWkp1h7g4BuzapZ4ndaD4+WytURzHUOTz3iLkoQEdAJPjRu+GCM8aFQUyOmJGefz3QV
-         DihZihkeYm3Buk/dx/y9rhcjpmbDTaE2Nevc0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UShn/SRqyOQyH9EmafrVmaeKidlCpSlAzk8DN+e3Ly8=;
-        b=z641q5zfmKndLOvwsoKm2ocOV9ChNXkEiPdCrDVDh/zywpTg/KKnqKL15AgRlE6/3l
-         NPiDUKeC4aX50lbD5U1p5QXg+ZaY5m0XRcEE+jPpBoH1r+po37TXDAOl2+95jUKC5baP
-         nVmL+wtTBBcHCaSpXFzo9fJE0Pyq1tr4+Vcoyv0nGEsD6ScdlIhxYwSSJYu7GMvdszbN
-         ngX/ZX7xDKa3RazC19QI+fVUyMlSdxpejlaGCCOdiCsvjVOVAuMF1gK/ZQ8qDmfmBL3w
-         5XXkVijM9XXvgpYXWGyReASW7ib9zAcZJV89dvOSRXfmK4BtAtKWUxBJrEB6hzqy+OIN
-         5bKg==
-X-Gm-Message-State: AOAM530hLOpG82gDUKX/mkXNzvqMfnzIRdr9AV6YwxWDQjGdPrNfMrpD
-	hvG9sg2JfM7kOCulaXxPXiccKiMOJRCe0g==
-X-Google-Smtp-Source: 
- ABdhPJxxfhAxqxa+fZLQXQuIEfN2ccHRlP3noGc2J4PiTcOM+hO24ECRTLxv7y+IEaeXX06NPMzU4w==
-X-Received: by 2002:adf:e747:: with SMTP id c7mr7964185wrn.38.1636629684382;
-        Thu, 11 Nov 2021 03:21:24 -0800 (PST)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:b19:11f4:a3d9:cabc])
-        by smtp.gmail.com with ESMTPSA id
- a12sm2573715wrm.62.2021.11.11.03.21.23
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Nov 2021 03:21:24 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch: Add README on fetcher design constraints
-Date: Thu, 11 Nov 2021 11:21:23 +0000
-Message-Id: <20211111112123.3853646-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+  d=axis.com; q=dns/txt; s=axis-central1; t=1636630467;
+  x=1668166467;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=TEt/LWZ4Zct776xCvKFzRB6+EdP6U3YpwhcxUfBYS3U=;
+  b=KQpgvrnNPjR6FvOToe0iCBM7K/rizdZwtMhW1EbVei7YY8gcSDnT2PHE
+   mMO4ffq3UkOIgiviBu+HRKGijfhrr6E31mJzWdotoAuyWfb3bNVmrwJss
+   tMSGVeCo7BZDpOethz/D0a7puEB9ByM9FAyP3d2E3ey0urhqqnyeRAve3
+   MW3KPutX8e0ePSIa+F7mMZuQyY31Y7CbrcnivWOVqfo8NmiFGoXPlOfF6
+   WQfXo6I6xJYMYN+P1zONUhgNMeHaQQOKOaHBt5XQpAIQb1jOJrnJD8vyE
+   58Y+e/quxEa3pufsTUBBOqXpp/XnYwmcVuhKp8/E1OcwZO2YIWeT6/6qM
+   Q==;
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>,
+	"richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
+	"openembedded-core@lists.openembedded.org"
+	<openembedded-core@lists.openembedded.org>, "kweihmann@outlook.com"
+	<kweihmann@outlook.com>, "jasper@fancydomain.eu" <jasper@fancydomain.eu>
+CC: "martin@mko.dev" <martin@mko.dev>, Daniel Baumgart
+	<Daniel.Baumgart@iris-sensing.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: RE: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe for
+ repo 2.17.3
+Thread-Topic: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
+ for repo 2.17.3
+Thread-Index: 
+ AQHX0klyDNlqBsVJg0ODnUI5/vjSvKv03rAAgAADRwCAAAYOAIABSAmAgATTzYCAAnMggIAAmsEAgAAm3FA=
+Date: Thu, 11 Nov 2021 11:34:23 +0000
+Message-ID: <83886954b53b47eb93b6ab8a7feebf19@axis.com>
+References: <20211105133104.19895-1-jasper@fancydomain.eu>
+	 <AM9PR09MB4642AA3727D430C698E95EE5A88E9@AM9PR09MB4642.eurprd09.prod.outlook.com>
+	 <b8897c8a436f384ef0a41d708816c2f61f9e22c7.camel@iris-sensing.com>
+	 <d87ff011218f55d97e5aa48ff9b06d216f6d477a.camel@iris-sensing.com>
+	 <029d18fa589265e32476c7cc45c9977f7b4bb9aa.camel@linuxfoundation.org>
+	 <3101a847508371b09b2949434f9ca09c672a7097.camel@iris-sensing.com>
+	 <dd07e5137044429f805caf23114a2e72@axis.com>
+ <c1b45d484d3f55f9522cfa85c58e2acfa7d0e3f1.camel@iris-sensing.com>
+In-Reply-To: <c1b45d484d3f55f9522cfa85c58e2acfa7d0e3f1.camel@iris-sensing.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.5.60]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 11:21:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13011
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 11:34:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13012
 
-There have been requests to better document the contraints of fetcher
-design and operation. This README attempts to start that.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/README | 58 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 lib/bb/fetch2/README
-
-diff --git a/lib/bb/fetch2/README b/lib/bb/fetch2/README
-new file mode 100644
-index 0000000000..eb214709e5
---- /dev/null
-+++ b/lib/bb/fetch2/README
-@@ -0,0 +1,58 @@
-+There are expectations of users of the fetcher code. This file attempts to document
-+some of the constraints that are present. Some are obvious, some are less so. It is
-+documented in the context of how OE uses it but the API calls are generic.
-+
-+a) network access for sources is only expected to happen in the do_fetch step.
-+   This is not enforced or tested but is required so that we can:
-+
-+   i) audit the sources used (i.e. for license/manifest reasons) 
-+   ii) support offline builds with a suitable cache
-+   iii) allow work to continue even with downtime upstream
-+   iv) allow for changes upstream in incompatible ways
-+   v) allow rebuilding of the software in X years time
-+
-+b) network access is not expected in do_unpack
-+
-+c) you can take DL_DIR and use it as a mirror for offline builds
-+
-+d) access to the network is only made when explicitly configured in recipes
-+   (e.g. use of AUTOREV, or use of git tags which change revision)
-+
-+e) fetcher output is deterministic
-+   (i.e. if you fetch configuration XXX now it will match in future exactly in 
-+    a clean build with a new DL_DIR)
-+   One specific pain point example are git tags. They can be replaced and change
-+   so the git fetcher has to resolve them with the network. We use git revisions
-+   where possible to avoid this and ensure determinism.
-+
-+f) network access is expected to work with the standard linux proxy variables
-+   so that access behind firewalls works (the fetcher sets these in the 
-+   environment but only in the do_fetch tasks)
-+
-+g) access during parsing has to be minimal, a "git ls-remote" for an AUTOREV 
-+   git recipe might be ok but you can't expect to checkout a git tree
-+
-+h) we need to provide revision information during parsing such that a version
-+   for the recipe can be constructed.
-+
-+i) versions are expected to be able to increase in a way which sorts allowing 
-+   package feeds to operate (see PR server required for git revisions to sort)
-+
-+j) API to query for possible version upgrades of a url is highly desireable to 
-+   allow out automated upgrage code to function (it is implied this does always 
-+   have network access)
-+
-+k) Where fixes or changes to behaviour in the fetcher are made, we ask that 
-+   test cases are added (run with "bitbake-selftest bb.tests.fetch"). We do 
-+   have fairly extensive test coverage of the fetcher as it is the only way
-+   to track all of it's corner cases, it still doesn't give entire coverage 
-+   though sadly.
-+   
-+l) If using tools during parse time, they will have to be in ASSUME_PROVIDED
-+   in OE's context as we can't build git-native, then parse a recipe and use
-+   git to ls-remote.
-+
-+Not all fetchers support all features, autorev is optional and doesn't make
-+sense for some. Upgrade detection means different things in different contexts
-+too.
-+
--- 
-2.32.0
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYXNwZXIgT3JzY2h1bGtvIDxK
+YXNwZXIuT3JzY2h1bGtvQGlyaXMtc2Vuc2luZy5jb20+DQo+IFNlbnQ6IGRlbiAxMSBub3ZlbWJl
+ciAyMDIxIDExOjA1DQo+IFRvOiByaWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnOyBv
+cGVuZW1iZWRkZWQtDQo+IGNvcmVAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzsga3dlaWhtYW5uQG91
+dGxvb2suY29tOyBQZXRlciBLamVsbGVyc3RlZHQNCj4gPHBldGVyLmtqZWxsZXJzdGVkdEBheGlz
+LmNvbT47IGphc3BlckBmYW5jeWRvbWFpbi5ldQ0KPiBDYzogbWFydGluQG1rby5kZXY7IERhbmll
+bCBCYXVtZ2FydCA8RGFuaWVsLkJhdW1nYXJ0QGlyaXMtc2Vuc2luZy5jb20+Ow0KPiBiaXRiYWtl
+LWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4gU3ViamVjdDogUmU6IFtiaXRiYWtlLWRl
+dmVsXSBbb2UtY29yZV1bUEFUQ0ggMS8yXSBkZXZ0b29sczogSW5pdGlhbCByZWNpcGUNCj4gZm9y
+IHJlcG8gMi4xNy4zDQo+IA0KPiAtLS0tLUJFR0lOIFBHUCBTSUdORUQgTUVTU0FHRS0tLS0tDQo+
+IEhhc2g6IFNIQTI1Ng0KPiANCj4gSGkgUGV0ZXIsDQo+IA0KPiA+IEhvdyBkbyB5b3UgYXZvaWQg
+dGhlIHJlcG8gd3JhcHBlciBmZXRjaGluZyB0aGUgcmVwbyBzb3VyY2UgaXRzZWxmDQo+ID4gYW5k
+IGluc3RlYWQgZmV0Y2ggaXQgdXNpbmcgdGhlIGJpdGJha2UgZmV0Y2hlcj8gSSBoYXZlIHNlZW4g
+bm90aGluZw0KPiA+IHRvIHRoYXQgZXh0ZW50IGluIHRoZSBwYXRjaGVzIHNvIGZhci4NCj4gDQo+
+IHdlIGRvbid0LiBUaGlzIHJlY2lwZSBvbmx5IGluc3RhbGxzIHRoZSByZXBvIHdyYXBwZXIuIFRo
+ZSBzb3VyY2UgY29kZQ0KPiBpcyBkb3dubG9hZGVkIGFuZCBpbnN0YWxsZWQgd2hlbiBydW5uaW5n
+IGByZXBvIGluaXRgLg0KPiANCj4gSG93ZXZlciwgaW4gb3VyIG9waW5pb24gdGhpcyBpcyBub3Qg
+YW4gaXNzdWUuIFdoZW4gaW5zdGFsbGluZyByZXBvIGFzIGENCj4gcGFja2FnZSB0byBhIHRhcmdl
+dCwgdGhpcyBpcyB0aGUgZXhwZWN0ZWQgYmVoYXZpb3VyLiBUaGUgdGFyZ2V0IHdvdWxkDQo+IG9u
+bHkgaGF2ZSB0aGUgcmVwbyB3cmFwcGVyIGluc3RhbGxlZCwganVzdCBsaWtlIG9uIGFueSBvdGhl
+ciBsaW51eA0KPiBkaXN0cm9idXRpb24uIFRoZSBhY3R1YWwgdXNhZ2Ugb2YgcmVwbyBvbiB0aGUg
+dGFyZ2V0IGlzIGRlY291cGxlZCBmcm9tDQo+IHRoZSBiaXRiYWtlIGJ1aWxkIHByb2Nlc3MuDQoN
+Ckl0IG1pZ2h0IGJlIGhvdyByZXBvIGlzIGRlc2lnbmVkLCBidXQgaXQgd2lsbCBzdGlsbCBicmVh
+ayB0aGUgYml0YmFrZSANCmV4cGVjdGF0aW9ucy4gSS5lLiwgaWYgSSBoYXZlIGFuIGVudmlyb25t
+ZW50IHdpdGggdGhlIGxheWVycyBhdmFpbGFibGUsIA0KYSBwb3B1bGF0ZWQgRExfRElSIGFuZCBC
+Ql9OT19ORVRXT1JLID0gIjEiLCBhbmQgdGhlbiBkaXNjb25uZWN0IHRoZSANCmJ1aWxkIGhvc3Qg
+ZnJvbSB0aGUgSW50ZXJuZXQsIEkgc2hvdWxkIHN0aWxsIGJlIGFibGUgdG8gc291cmNlIA0Kb2Ut
+aW5pdC1idWlsZC1lbnYgZm9yIGEgbmV3IG1hY2hpbmUgYW5kIGJ1aWxkIGl0LiBIb3dldmVyLCB0
+aGlzIG1lYW5zIA0KdGhhdCBvbmx5IHRoZSBzb3VyY2UgZm9yIHRoZSByZXBvIHdyYXBwZXIgaXMg
+YXZhaWxhYmxlIGluIERMX0RJUi4gU28gDQp3aGVuIHRoZSByZXBvIHdyYXBwZXIgZXhlY3V0ZXMg
+aXQgd2lsbCB0cnkgdG8gZ28gb24gdGhlIEludGVybmV0IHRvIA0KZmV0Y2ggdGhlIHJlc3Qgb2Yg
+dGhlIHJlcG8gc291cmNlLCB3aGljaCB3aWxsIGZhaWwuDQoNCj4gV2hlbiB1c2luZyB0aGUgcmVw
+byBmZXRjaGVyLCB0aGUgcmVwbyBzb3VyY2UgaXMgZmV0Y2hlZCBkdXJpbmcgdGhlDQo+IGRvX2Zl
+dGNoIHN0YWdlIGJ5IHJ1bm5pbmcgYHJlcG8gaW5pdGAgKHdoZW4gU1JDUkVWID0gQVVUT1JFViwg
+Y2hhbmdlcw0KPiB0byB0aGUgcmVjaXBlIG9yIG5vIHByZXZpb3VzIHNvdXJjZXMgYXZhaWxhYmxl
+IGluIERMX0RJUikuIEJ5IGV4ZWN1dGluZw0KPiB0aGlzIHdpdGhpbiB0aGUgInJ1bmZldGNoY21k
+IiBmdW5jdGlvbiwgdGhpcyBhbHNvIHdvcmtzIHdpdGggdGhlIHVzdWFsDQo+IG5ldHdvcmsgZmVh
+dHVyZXMgYml0YmFrZSBwcm92aWRlcywgZS5nLiBwcm94eS4NCj4gSWYgdGhlIHJlY2lwZSBoYXMg
+bm90IGNoYW5nZWQgYW5kIHNvdXJjZXMgYXJlIGFscmVhZHkgYXZhaWxhYmxlIGZyb20gYQ0KPiBw
+cmV2aW91cyBydW4sIHJlcG8gd2lsbCBub3QgYmUgcmVydW4uIEFzIHN1Y2gsIHJlcHJvZHVjaW5n
+IGEgYnVpbGQNCj4gb2ZmbGluZSBpcyBhbHNvIHBvc3NpYmxlLg0KPiANCj4gLSAtLQ0KPiBXaXRo
+IGJlc3QgcmVnYXJkcw0KPiANCj4gSmFzcGVyIE9yc2NodWxrbw0KPiBEZXZPcHMgRW5naW5lZXIN
+Cj4gDQo+IFRlbC4gKzQ5IDMwIDU4IDU4IDE0IDI2NQ0KPiBGYXggKzQ5IDMwIDU4IDU4IDE0IDk5
+OQ0KPiBKYXNwZXIuT3JzY2h1bGtvQGlyaXMtc2Vuc2luZy5jb20NCj4gDQo+IOKAoiDigKIg4oCi
+IOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg
+4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKINCj4gDQo+IGlyaXMtR21iSA0KPiBp
+bmZyYXJlZCAmIGludGVsbGlnZW50IHNlbnNvcnMNCj4gU2NobmVsbGVyc3RyYcOfZSAxLTUgfCAx
+MjQzOSBCZXJsaW4NCj4gDQo+IGh0dHBzOi8vaXJpcy1zZW5zaW5nLmNvbS8NCj4gDQo+IA0KPiAN
+Cj4gDQo+IA0KPiBPbiBXZWQsIDIwMjEtMTEtMTAgYXQgMjM6NTUgKzAwMDAsIFBldGVyIEtqZWxs
+ZXJzdGVkdCB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBG
+cm9tOiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmfCoDxiaXRiYWtlLQ0KPiA+
+ID4gZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4gT24gQmVoYWxmIE9mIEphc3BlciBPcnNj
+aHVsa28NCj4gPiA+IFNlbnQ6IGRlbiA5IG5vdmVtYmVyIDIwMjEgMTI6MjYNCj4gPiA+IFRvOiBy
+aWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnOyBvcGVuZW1iZWRkZWQtDQo+ID4gPiBj
+b3JlQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc7IGt3ZWlobWFubkBvdXRsb29rLmNvbTsNCj4gPiA+
+IGphc3BlckBmYW5jeWRvbWFpbi5ldQ0KPiA+ID4gQ2M6IG1hcnRpbkBta28uZGV2OyBEYW5pZWwu
+QmF1bWdhcnRAaXJpcy1zZW5zaW5nLm5ldDsgYml0YmFrZS0NCj4gPiA+IGRldmVsQGxpc3RzLm9w
+ZW5lbWJlZGRlZC5vcmcNCj4gPiA+IFN1YmplY3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW29lLWNv
+cmVdW1BBVENIIDEvMl0gZGV2dG9vbHM6IEluaXRpYWwNCj4gPiA+IHJlY2lwZQ0KPiA+ID4gZm9y
+IHJlcG8gMi4xNy4zDQo+ID4gPg0KPiA+ID4gLS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0Ut
+LS0tLQ0KPiA+ID4gSGFzaDogU0hBMjU2DQo+ID4gPg0KPiA+ID4gSGkgUmljaGFyZCwNCj4gPiA+
+DQo+ID4gPiBJIHRoaW5rIG91ciBpbXBsZW1lbnRhdGlvbiBvZiB0aGUgcmVwbyBmZXRjaGVyIGNo
+ZWNrcyB0aGUgKHdoYXQgSQ0KPiA+ID4gYmVsaWV2ZSB0byBiZSkgbW9zdCByZWxldmFudCBwYXJ0
+cyBvZiB5b3VyIGNoZWNrbGlzdCAodGhhbmtzIGZvciB0aGUNCj4gPiA+IHdyaXRlLXVwKS4gTWFy
+dGluLCBwbGVhc2UgY29ycmVudCBtZSBpZiBJJ20gbWlzc2luZyBzb21ldGhpbmc6DQo+ID4gPg0K
+PiA+ID4gPiBhKSBuZXR3b3JrIGFjY2VzcyBmb3Igc291cmNlcyBpcyBvbmx5IGV4cGVjdGVkIHRv
+IGhhcHBlbiBpbiB0aGUNCj4gPiA+ID4gZG9fZmV0Y2ggc3RlcC4NCj4gPiA+ID4gVGhpcyBpcyBu
+b3QgZW5mb3JjZWQgb3IgdGVzdGVkIGJ1dCBpcyByZXF1aXJlZCBzbyB0aGF0IHdlIGNhbjoNCj4g
+PiA+ID4NCj4gPiA+ID4gwqBpKSBhdWRpdCB0aGUgc291cmNlcyB1c2VkIChpLmUuIGZvciBsaWNl
+bnNlL21hbmlmZXN0IHJlYXNvbnMpDQo+ID4gPiA+IMKgaWkpIHN1cHBvcnQgb2ZmbGluZSBidWls
+ZHMgd2l0aCBhIHN1aXRhYmxlIGNhY2hlDQo+ID4gPiA+IMKgaWlpKSBhbGxvdyB3b3JrIHRvIGNv
+bnRpbnVlIGV2ZW4gd2l0aCBkb3dudGltZSB1cHN0cmVhbQ0KPiA+ID4gPiDCoGl2KSBhbGxvdyBm
+b3IgY2hhbmdlcyB1cHN0cmVhbSBpbiBpbmNvbXBhdGlibGUgd2F5cw0KPiA+ID4gPiDCoHYpIGFs
+bG93IHJlYnVpbGRpbmcgb2YgdGhlIHNvZnR3YXJlIGluIFggeWVhcnMgdGltZQ0KPiA+ID4NCj4g
+PiA+IGNoZWNrDQo+ID4gPg0KPiA+ID4gPiBiKSBuZXR3b3JrIGFjY2VzcyBpcyBub3QgZXhwZWN0
+ZWQgaW4gZG9fdW5wYWNrDQo+ID4gPg0KPiA+ID4gY2hlY2sNCj4gPg0KPiA+IEhvdyBkbyB5b3Ug
+YXZvaWQgdGhlIHJlcG8gd3JhcHBlciBmZXRjaGluZyB0aGUgcmVwbyBzb3VyY2UgaXRzZWxmDQo+
+ID4gYW5kIGluc3RlYWQgZmV0Y2ggaXQgdXNpbmcgdGhlIGJpdGJha2UgZmV0Y2hlcj8gSSBoYXZl
+IHNlZW4gbm90aGluZw0KPiA+IHRvIHRoYXQgZXh0ZW50IGluIHRoZSBwYXRjaGVzIHNvIGZhci4N
+Cj4gPg0KPiA+IC8vUGV0ZXINCj4gPg0KPiAtLS0tLUJFR0lOIFBHUCBTSUdOQVRVUkUtLS0tLQ0K
+PiANCj4gaVFFekJBRUJDQUFkRmlFRTRXeVBNSUM1QXA0K09vbzFZZ3FldzA3Vk1OVUZBbUdNNnJV
+QUNna1FZZ3FldzA3Vg0KPiBNTlVDSUFmK01YR3A5SG5meG11Kzh3M0Jhc1ZzUDJON3R0VzJGTjNa
+cm9peXIvaEtySnplcS9xRFF3TysvSzNVDQo+IHpXWko4NUg2TDJlVGpPUDhmUGFIYlZNUkQxalVv
+WVZwWVVBRS9mTjY0RmJoQ0JtdXJWdVdGckxvL3U2R3kyY1UNCj4gRENkM1NJZWpYaWRCMjVFUVJv
+UzRCZmwyNWlsMXdHNGlNdzFwQ0ZBNmt1NXJHaGI4cTVqdmZaRUNmMFd1aGg3WA0KPiBGbk1RbEkz
+VlpzU2s0Q2FrRjNnODhBRlRMRnJzUVljTjJ2RFVza2RoTWZUWnB1UkE4ZHVJdlc0clZnT3ZISlFU
+DQo+IHYwN3JBU05SLzl5elBSVmt6cGdQVUk5VmwyTEEzdkVaM1JjY3czanNjWUhGd2t6ajAwOTZE
+TzQramVEd3l6YTUNCj4gZkZtMGREVDlIakd1elR6NjZjNUpMOHNkWlppOXB3PT0NCj4gPUFPeXAN
+Cj4gLS0tLS1FTkQgUEdQIFNJR05BVFVSRS0tLS0tDQo=
 
