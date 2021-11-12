@@ -1,95 +1,105 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <Jasper.Orschulko@iris-sensing.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1459C433F5
-	for <webhook@archiver.kernel.org>; Fri, 12 Nov 2021 10:44:41 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com
- [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web10.14199.1636713880459330905
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE044C433F5
+	for <webhook@archiver.kernel.org>; Fri, 12 Nov 2021 12:22:58 +0000 (UTC)
+Received: from mail.irisgmbh.de (mail.irisgmbh.de [81.169.172.79])
+ by mx.groups.io with SMTP id smtpd.web08.14937.1636719777657270645
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Nov 2021 02:44:40 -0800
+ Fri, 12 Nov 2021 04:22:58 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Y+4olxz3;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id
- 77-20020a1c0450000000b0033123de3425so9508581wme.0
-        for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Nov 2021 02:44:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rLpt/3me/eNYXqjUMSB34q3p6YSPqI1b5sk8hg28HkI=;
-        b=Y+4olxz3uDVq8PtY64JgrKkcG2BygmVW1MNaqwjeejfH+LaLCVM+h+4915RIdVLC1d
-         pSQlRiiaggBfeEpiMfoazwGDwXkt2Y1aLIT46mca1m59/HAuwXkRoNf6muid6RH0X3qp
-         WaXsFEe1luDU5C8BWj1oLoNk6L1Zi7XqSANG8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rLpt/3me/eNYXqjUMSB34q3p6YSPqI1b5sk8hg28HkI=;
-        b=oTaRVPXSKnOcvmXZV0svw2OHj4dJBkY6kbjEXQzE+cExGBz68EfkEOEGZ9N/K6P8SM
-         f1NSg9cxiazypB2d32sujvSZ5MD4AWKk6rdbwAz4fPcTmeBdBMiqnPGr0/hT5SgIPNSI
-         onreIWIeFvqO3nk5rf0bYECzNmX2wMpDlEsNW9pEojmFlmQYrx8ZwNEZp0FlJgxlxo3e
-         +3XiMoQhGkVqyMqI9zAHEVQnY6/HJ7jRoqetMcNRn26OJjIQfuHJOR+ZVTjPl9M/xjUU
-         mUdLxpX+Pj8TPE4bxVy3Z1Qlet2eDwyBdINg9q9wPIsf8+FuKt6RK7iUrDvaBYDV7vaE
-         Lkig==
-X-Gm-Message-State: AOAM531s+76z98xNj9F0dIUURz9flDahnrarUi4UR2fTjac36etmT1iu
-	fMK3HK3GCwa0xUmHURS10biaql21rtTP5w==
-X-Google-Smtp-Source: 
- ABdhPJwpv//7iaWIJOq98NPIrSXpZWIUkb16G84xuq2UHoYQTJFqm7EM1WnLC+K3rMpvXPzfwRa4GQ==
-X-Received: by 2002:a1c:2b81:: with SMTP id
- r123mr17086380wmr.136.1636713878720;
-        Fri, 12 Nov 2021 02:44:38 -0800 (PST)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:c0bd:72b4:105a:2914])
-        by smtp.gmail.com with ESMTPSA id
- x21sm11091346wmc.14.2021.11.12.02.44.38
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Nov 2021 02:44:38 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] cooker: Fix task-depends.dot for multiconfig targets
-Date: Fri, 12 Nov 2021 10:44:37 +0000
-Message-Id: <20211112104437.3890014-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+ dkim=missing;
+ spf=none, err=SPF record not found (domain: iris-sensing.com,
+ ip: 81.169.172.79, mailfrom: jasper.orschulko@iris-sensing.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.irisgmbh.de (Postfix) with ESMTP id 6C3D131E034B;
+	Fri, 12 Nov 2021 13:22:54 +0100 (CET)
+X-Virus-Scanned: amavisd-new at irisgmbh.de
+Received: from mail.irisgmbh.de ([127.0.0.1])
+	by localhost (s15324379.rootmaster.info [127.0.0.1]) (amavisd-new,
+ port 10027)
+	with ESMTP; Fri, 12 Nov 2021 13:22:54 +0100 (CET)
+Received: from ERDE.irisgmbh.local (unknown [213.61.209.158])
+	by mail.irisgmbh.de (Postfix) with ESMTPS id C182731E0355;
+	Fri, 12 Nov 2021 13:22:53 +0100 (CET)
+Received: from ERDE.irisgmbh.local ([172.30.10.11]) by ERDE.irisgmbh.local
+ ([172.30.10.11]) with mapi id 14.03.0513.000; Fri, 12 Nov 2021 13:22:53 +0100
+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+To: "alex.kanavin@gmail.com" <alex.kanavin@gmail.com>
+CC: "jasper@fancydomain.eu" <jasper@fancydomain.eu>,
+	"richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
+	"peter.kjellerstedt@axis.com" <peter.kjellerstedt@axis.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>, "martin@mko.dev" <martin@mko.dev>,
+	"kweihmann@outlook.com" <kweihmann@outlook.com>, Daniel Baumgart
+	<Daniel.Baumgart@iris-sensing.com>,
+	"openembedded-core@lists.openembedded.org"
+	<openembedded-core@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
+ for repo 2.17.3
+Thread-Topic: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
+ for repo 2.17.3
+Thread-Index: 
+ AQHX0klmUmLVPFJtF0Ob3PuHG3t8+6v03rAAgAADSACAAAYMgIABSAqAgATTzgCAAmPRAIAAqg6AgAAZFICAAAoTAIAAIckAgAAP84CAAEZSAIABHcAA
+Date: Fri, 12 Nov 2021 12:22:52 +0000
+Message-ID: <9cc55c0f408862bfcd23fe5f154c4b4a7f3ee2c8.camel@iris-sensing.com>
+References: <20211105133104.19895-1-jasper@fancydomain.eu>
+	 <AM9PR09MB4642AA3727D430C698E95EE5A88E9@AM9PR09MB4642.eurprd09.prod.outlook.com>
+	 <b8897c8a436f384ef0a41d708816c2f61f9e22c7.camel@iris-sensing.com>
+	 <d87ff011218f55d97e5aa48ff9b06d216f6d477a.camel@iris-sensing.com>
+	 <029d18fa589265e32476c7cc45c9977f7b4bb9aa.camel@linuxfoundation.org>
+	 <3101a847508371b09b2949434f9ca09c672a7097.camel@iris-sensing.com>
+	 <dd07e5137044429f805caf23114a2e72@axis.com>
+	 <c1b45d484d3f55f9522cfa85c58e2acfa7d0e3f1.camel@iris-sensing.com>
+	 <83886954b53b47eb93b6ab8a7feebf19@axis.com>
+	 <e0ac884bc63e94e0c01a020ef178b7358779776b.camel@iris-sensing.com>
+	 <64e41080db7642d0b54818bdcf916dac@axis.com>
+	 <699b2927411dbdfdfd01e64ffb16dc057d5bb320.camel@iris-sensing.com>
+	 <CANNYZj9LXZjLq9mTxJ7g0T1Zz0XzZHhjiNud9o_kAbuyVb76UA@mail.gmail.com>
+In-Reply-To: 
+ <CANNYZj9LXZjLq9mTxJ7g0T1Zz0XzZHhjiNud9o_kAbuyVb76UA@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.10.1]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F61CA1A677024F44BB5FF4138ACCDD19@irisgmbh.local>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Nov 2021 10:44:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13033
+ <bitbake-devel@lists.openembedded.org>; Fri, 12 Nov 2021 12:22:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13034
 
-The right hand side of dependencies in the task dependency file generated
-by bitbake -g was missing multiconfig prefixes, corrupting the data. Fix
-this.
-
-[YOCTO #14621]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index b2d8bbdbac..08e45e79d0 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -814,7 +814,9 @@ class BBCooker:
-             for dep in rq.rqdata.runtaskentries[tid].depends:
-                 (depmc, depfn, _, deptaskfn) = bb.runqueue.split_tid_mcfn(dep)
-                 deppn = self.recipecaches[depmc].pkg_fn[deptaskfn]
--                depend_tree["tdepends"][dotname].append("%s.%s" % (deppn, bb.runqueue.taskname_from_tid(dep)))
-+                if depmc:
-+                    depmc = "mc:" + depmc + ":"
-+                depend_tree["tdepends"][dotname].append("%s%s.%s" % (depmc, deppn, bb.runqueue.taskname_from_tid(dep)))
-             if taskfn not in seen_fns:
-                 seen_fns.append(taskfn)
-                 packages = []
--- 
-2.32.0
-
+LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMjU2DQoNCkhpIEFs
+ZXgsDQoNCnRoYW5rcyBmb3IgeW91ciBpbnB1dC4gWW91IGFyZSBhYnNvbHV0ZWx5IGNvcnJlY3Qs
+IHRoaXMgY3VycmVudGx5IGRvZXMNCm5vdCB3b3JrLiBXZSdsbCBsb29rIGludG8gdGhpcy4NCg0K
+LSAtLSANCldpdGggYmVzdCByZWdhcmRzDQoNCkphc3BlciBPcnNjaHVsa28NCkRldk9wcyBFbmdp
+bmVlcg0KDQpUZWwuICs0OSAzMCA1OCA1OCAxNCAyNjUNCkZheCArNDkgMzAgNTggNTggMTQgOTk5
+DQpKYXNwZXIuT3JzY2h1bGtvQGlyaXMtc2Vuc2luZy5jb20NCg0K4oCiIOKAoiDigKIg4oCiIOKA
+oiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCi
+IOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAog0KDQppcmlzLUdtYkgNCmluZnJhcmVkICYgaW50
+ZWxsaWdlbnQgc2Vuc29ycw0KU2NobmVsbGVyc3RyYcOfZSAxLTUgfCAxMjQzOSBCZXJsaW4NCg0K
+aHR0cHM6Ly9pcmlzLXNlbnNpbmcuY29tLw0KDQoNCg0KDQoNCk9uIFRodSwgMjAyMS0xMS0xMSBh
+dCAyMDoyMCArMDEwMCwgQWxleGFuZGVyIEthbmF2aW4gd3JvdGU6DQo+IE9uIFRodSwgMTEgTm92
+IDIwMjEgYXQgMTY6MDgsIEphc3BlciBPcnNjaHVsa28NCj4gPEphc3Blci5PcnNjaHVsa29AaXJp
+cy1zZW5zaW5nLmNvbT4gd3JvdGU6DQo+ID4gU28gaWYgeW91IGhhdmUgZG9uZSB0aGlzIGluaXRp
+YWwgZmV0Y2ggb2YgeW91ciBzb3VyY2VzIGFuZCBzdGFzaA0KPiA+IHlvdXINCj4gPiB3b3JraW5n
+IGRpciBhd2F5LCB5b3UgY2FuIGRvIGFuIG9mZmxpbmUgYnVpbGQuDQo+IA0KPiBCdXQgY2FuIHlv
+dSBkbyBhbiBvZmZsaW5lIGJ1aWxkIHdpdGhvdXQgYSBwcmVwb3B1bGF0ZWQgd29ya2luZyBkaXI/
+DQo+IFRoYXQncyB0aGUgY3J1Y2lhbCBwb2ludDogb2ZmbGluZSBidWlsZCBzaG91bGQgd29yayBp
+biBhIGZyZXNobHkgc2V0DQo+IHVwIGJ1aWxkIGRpcmVjdG9yeSwgd2l0aG91dCBzc3RhdGUgY2Fj
+aGUsIGFuZCB3aXRoIHByZXBvcHVsYXRlZA0KPiBETF9ESVIgb25seS4NCj4gDQo+IEFsZXgNCi0t
+LS0tQkVHSU4gUEdQIFNJR05BVFVSRS0tLS0tDQoNCmlRRXpCQUVCQ0FBZEZpRUU0V3lQTUlDNUFw
+NCtPb28xWWdxZXcwN1ZNTlVGQW1HT1hKd0FDZ2tRWWdxZXcwN1YNCk1OWGF4d2YrTkRPeDVUWVI0
+ZFk0aUNzYjBJZmRmb0IwMStIN1VEWlIyczVHWktLQTlUeU1LYkVxQmRackhCZGoNClBUcVpKMzM5
+SU9YQmxrczFLUEFVY2kwVk9YQmR3SG95YlIyWEZNR0VOVG5yajZYQSs5WXI5Nm9mU1BIcVFUV3IN
+CmFtRC9sb3cwY0Z2ZnFaQ2xiK21kL0ZjeGhuVks0NXJGaGZMSmNrS0VsUGlZbUtqY2docy9QWEFX
+YmgrVHc2UzcNCm01S0NxOGFnUHFYbmFVL2JXRG1qMmVDOXQ2dCtWVC8wT25DMHRRdG9oTWJZVmQ4
+d3VsNGNmNUljM0ppbGVjakkNCnFDSDRySzdFQkZmeldoczFXVFlER2VYWDVpV05tWk9zZHVmcFhG
+MFVSSmE1Y3BqR0E1YmhqZnlYam9VWlB6Q1INCld4RXJEMWNuUVNOUXF5c3FXbG5CNUVnTTN5K2NC
+Zz09DQo9cTB6Wg0KLS0tLS1FTkQgUEdQIFNJR05BVFVSRS0tLS0tDQo=
 
