@@ -1,275 +1,207 @@
-Return-Path: <michail.kurochkin@zorachka.com>
+Return-Path: <anuj.mittal@intel.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932A1C433F5
-	for <webhook@archiver.kernel.org>; Thu, 11 Nov 2021 23:42:55 +0000 (UTC)
-Subject: eSDK 'setscene whitelist'
-To: bitbake-devel@lists.openembedded.org
-From: "Michail Kurochkin" <michail.kurochkin@zorachka.com>
-X-Originating-Location: BY (91.149.141.6)
-X-Originating-Platform: Linux Chrome 80
-User-Agent: GROUPS.IO Web Poster
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C11C433F5
+	for <webhook@archiver.kernel.org>; Fri, 12 Nov 2021 02:50:43 +0000 (UTC)
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+ by mx.groups.io with SMTP id smtpd.web10.10211.1636685442394153849
+ for <bitbake-devel@lists.openembedded.org>;
+ Thu, 11 Nov 2021 18:50:42 -0800
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@intel.onmicrosoft.com
+ header.s=selector2-intel-onmicrosoft-com header.b=pDORxoV6;
+ spf=pass (domain: intel.com, ip: 192.55.52.151,
+ mailfrom: anuj.mittal@intel.com)
+X-IronPort-AV: E=McAfee;i="6200,9189,10165"; a="213789054"
+X-IronPort-AV: E=Sophos;i="5.87,227,1631602800";
+   d="scan'208";a="213789054"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 11 Nov 2021 18:50:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,227,1631602800";
+   d="scan'208";a="502284369"
+Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Nov 2021 18:50:41 -0800
+Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
+ ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Thu, 11 Nov 2021 18:50:40 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12 via Frontend Transport; Thu, 11 Nov 2021 18:50:40 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2242.12; Thu, 11 Nov 2021 18:50:40 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DdgzIgESH1P4UHEG9Fv0yffPIiQHHOURY06S3oChP0OvWkkqI33AmPSQ1Pmbbrx281fCJympwH/VjhDT4eujryvbQ1JQGWeV2R9kqtmuWpt2ho4xda49rw4BMxSvWia1Sd9F4yfxfIvhyBZFgrYJYmF8tfnrLEwZknIuUrg0V+/iKdnJoyQqx/ocvk8wIqq1oVv4q5YtZcXWouXWGcvzBdUnjJrZQF6S4KykKJzjBCcvKE2n0DMTC9xosiU6jKbDZN1MrhX+Nv3t8O8g3nbIRgl2D/CfbIRTM1d8Rn0hBLHA8nLjOQTkfxmB7jnjfc0ihV9p4FEBSsssSm2z94++ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OZPkbLpZWjImtt8mC9SHiV3BMqi+enJWpomomtustvY=;
+ b=e8k4eTIZoQ4AiHb/n4aNWsvWOwJM+eH7MEYipB+Ym4D0XHlhIX+dqHEkhvXxpPGog8VE48ID3Qo6mXsT4ZWivvFxKS5/xXSvtcPtr025jeljRSWbC0qsUpICrtBKmF4jABZ5pMBpiXkZKYsXuDGGJAbxlTxySqrEEAcqAZYRW/MuNuxz9mcsxftiy/NaJ4i6vy+aikDf2mAHUspvU49wL4NSmr8Wm3Ylr8zrV8Zxe/Lc7yedVlQluDqYjtYinoyV1o2ljSE9SAkvGITvz6G8VeQOEiE1sRmj+Q/oGfuMsJ6AXV74guURpIVIpVHow8gRwukb7+9BRQYnZJdv5w3TFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OZPkbLpZWjImtt8mC9SHiV3BMqi+enJWpomomtustvY=;
+ b=pDORxoV68KZS06u2lJK/e0XdaDhyiRKTmK1lJLsiCd8WU00OMuq6zHa3P2zow+KcTDiOeMD5zB+6Pm25bqSsOIQBQdwbLA9msrGQlENSNIECdGa/1e8SIR1Ze4KZOnW5Acb48fgl+R9inDd4ApWu79VgCPtfcNMgqxpQCZeIsyk=
+Received: from SJ0PR11MB4896.namprd11.prod.outlook.com (2603:10b6:a03:2dd::20)
+ by BY5PR11MB4387.namprd11.prod.outlook.com (2603:10b6:a03:1cb::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.15; Fri, 12 Nov
+ 2021 02:50:39 +0000
+Received: from SJ0PR11MB4896.namprd11.prod.outlook.com
+ ([fe80::2c3d:dccb:aa85:53c5]) by SJ0PR11MB4896.namprd11.prod.outlook.com
+ ([fe80::2c3d:dccb:aa85:53c5%2]) with mapi id 15.20.4690.016; Fri, 12 Nov 2021
+ 02:50:39 +0000
+From: "Mittal, Anuj" <anuj.mittal@intel.com>
+To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [1.52][PATCH 5/7] cooker: Handle parse threads
+ disappearing to avoid hangs
+Thread-Topic: [bitbake-devel] [1.52][PATCH 5/7] cooker: Handle parse threads
+ disappearing to avoid hangs
+Thread-Index: AQHX1Xj393qDeVzBxEu8ZT2tlDN+O6v+MD+AgAEE9AA=
+Date: Fri, 12 Nov 2021 02:50:39 +0000
+Message-ID: <91f00870e81d5268157f7d6edb38e6683c1f0edb.camel@intel.com>
+References: <cover.1636469164.git.anuj.mittal@intel.com>
+	 <446269bcf62addbe55f6abee3b81a882f2fe2b94.1636469164.git.anuj.mittal@intel.com>
+	 <1b791d5c581038f715d80a4d47a7c74d0b367a36.camel@linuxfoundation.org>
+In-Reply-To: 
+ <1b791d5c581038f715d80a4d47a7c74d0b367a36.camel@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.40.4 (3.40.4-2.fc34) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 57c56371-cc33-4e74-1f48-08d9a5873619
+x-ms-traffictypediagnostic: BY5PR11MB4387:
+x-microsoft-antispam-prvs: 
+ <BY5PR11MB43878DF423078384D204E050F8959@BY5PR11MB4387.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ 6BAMFFVuO9zkQJWq+SOv69KWzLWdoFXFZzOcDnWjf2jnC6SSslw8OKDEVKP9aNe3sZ6+2eKAHRmGdBzLR5Eri/PojOXsziRSNkhM605sYeUHbLJRu+Rpz/+mWuAuvv7Gp2aenXbiKa+MejeHaGSHpHG1T4kBg7c+v7vUQuKH9oNF0GscW318Bd2d4vGmzJyYtRc5oREH6Aq2/1Z9bzhv8la58Fwt1vBmO7SJT+k9BZiL3Gii5jSbTkHt/q0aLSAE1XBZofHYQRuJ2rVqugtQsHAuTWe0cvMEaFGnFnlXf/9tV/PZzynZIMHiI7bQ6blhsHFuWDnzHQBr0DpL5YYrvMncM59o/u1XjxKEFFftXk73ryOYJ6XJ1QUbtxqyyeBrpDQ2FDphBNyNMrOT+SbeiT+tWJaTDnEB4ohwEbD8n9mcFBh9g2IR9kYoV9gmlUjipvsRFTW23y0dqg6dsCtgwZaqSeNRfFF0YSkW/EAvRf9WfGgHpgEkhpHkn3mGoZmHMuWK8DOVATtuXVzXkDy8/lAP/r1o42+vPSzOWBY2IDbmuS4XRyj8wXf02PeiKfA16bGuXFHjUO/j0bkI16FnVfZvvd+KA6oN3qbqT3bl8sdQOS0J7s+QsZL5HnB1AgHzRF78PDQtT/Zw72bwGht/F8gKdMdsnmqlBbyvBczttDZ1NG0MFVC5ezbX+4Szist6eOq49IQ/woVn4u2qoJ38RQ==
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB4896.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(71200400001)(4001150100001)(186003)(38100700002)(83380400001)(76116006)(86362001)(26005)(5660300002)(110136005)(316002)(122000001)(8936002)(8676002)(36756003)(6512007)(6506007)(38070700005)(82960400001)(2616005)(2906002)(91956017)(508600001)(6486002)(66446008)(64756008)(66556008)(66476007)(66946007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?THZUWExKTS9NTS9HMjl6bkZWSGM5UDdJUElxaGtlUjlpTERNLzV0T3JNSzRK?=
+ =?utf-8?B?ZUVWZzdLNTI5SVlBRlRMUU91ODJkMXkrVENabm14QVRLTTZCNytLZTYwbWNH?=
+ =?utf-8?B?eG4ycGRybUQ2eE8yVVBXaU1BWkhYWWcreEhydzhON1o1S3Y4YmR5MkVEOHN3?=
+ =?utf-8?B?R3UzekRLdXRDMmIzYm1xMnphOTZ2MFBZenQySG40M3kzaTRMNUVYdzRwQUZu?=
+ =?utf-8?B?b0cxcHRrc0cxQXU3RWtVTDZPU0tQUlZZa1A1ZG9QK0pIbDNXVnhUa2U3cnU5?=
+ =?utf-8?B?eThxRUtNc0pQWFhYZmJLTTJjZGdtV05CZjcrQUlIV0FYSFJuallDNWJZcHh4?=
+ =?utf-8?B?NkZseU5OV2VvdjlZM2dpdFpuZDlkQ0RWNEhvb2w5c0t1a0lOL3R1bUZnOS9C?=
+ =?utf-8?B?OTNaSGVucWVGL0xsbXdKL0VEZTQxZXFEeEtONFpsNDZrMXp0dk9VcnlmeHNV?=
+ =?utf-8?B?NFhGd2RHeGNRT2EzWnE3T25Lb29KY2VyUjhReWJKOFoyOEdsaVBlUXJKTjBj?=
+ =?utf-8?B?RE9XSWFMaG51aU95a29ObU9rT2RCTXBwSUh2R0RnOUxaSEIrNEtGc2M5cmRI?=
+ =?utf-8?B?NW13Z1lXU0h4b2tjT0s1T2JncmJVUmtOQjRGTWhlRkwvSkpudi8vbUFCK1Z0?=
+ =?utf-8?B?YkdlTGZEMVZJdlpXeVg5aWZpbW5kcHBXQ3U5bHRSL3J2ajN5b1RQeHZlWHRw?=
+ =?utf-8?B?Z1ZnNHl2aGtYdFY3SmZUT0prelFpR3k2emFKSzBFdTJpSXg2akdDSDFPbVpB?=
+ =?utf-8?B?RU9IVGE2Sm1oeEpITGpHcllNS1RIUXBWQUhYM3RPMk43ME15blFEYURtdnl6?=
+ =?utf-8?B?Nkg4TU80UjU3V0JyVVpUSE9IR0lmODRHa29jWFFOc09UZFRzWnFRTmVwN0dh?=
+ =?utf-8?B?MTdnQ3dYdmRXK3cwMWNGOWE2aUhXZ0lzY29lUzJka1R6dXladDlQMGFoOTVh?=
+ =?utf-8?B?OVRjeElLalQ5aEREcStZaStmVUZVZXc1TnNMb1dFcnNjaVc3UDl0a2lzamNv?=
+ =?utf-8?B?c1JHT2tOOWdyeVh0LzRzWlh6K0RPc2hlM1psWTNUZUdlbTBYUml0aHN4eGhP?=
+ =?utf-8?B?Y3VjNCtaRXFDdFBUVDlSOFZ1aXJTeVpBNGdQMVhuR2swSlVtRUxwa0JrN0U2?=
+ =?utf-8?B?Q3FDR0lDUCs2WUlHcS9JeFdkWm5GNy9ZVERVWW4zYjI3U085dmVXSDFyai9m?=
+ =?utf-8?B?c0dkanBOQnl2RktNNnpwNHBnMVJnK0JsOWkzUGQ1eFptWFlwTVc2VDNld3Jp?=
+ =?utf-8?B?TzRtVzUwMmVRT2xMbW12ZzVJekZWcVhHeFJZdmJmcHdPeUpvRUtGUU0yL0FV?=
+ =?utf-8?B?K1dRbTViZ3ZhYTNtZElSTHFOdFFsM2U4SHVuMGRNMlBueDBPcEFzWjR6UnVH?=
+ =?utf-8?B?TlFNWnpHODltdEQ0Qy84Q0Y3eXhjL1BwWktROUpVSXJkcXY3TUFucmx5eURO?=
+ =?utf-8?B?OTVKUWNrY3lMVFBTSHc1RXR0L05qMGdKSUE5QjNJVkhNcXFtTnJaL2hrNUVT?=
+ =?utf-8?B?SWNKYW1FYUVldnJWVU10TnRXeHBITkpYQ0VyYjZEZittT2hOK2oySmlLUUho?=
+ =?utf-8?B?M0ZFbGRCWVNWVWZ4RkxJVzVOUnZCVFYvNDJlYVpzWjYrSWxiZ3lENnFML0l3?=
+ =?utf-8?B?ZzJPWnFocHExSVpMM2ZrL21kYkVPWU9MOHJpVXp1MTA2QS9reVRnNlFNWEtn?=
+ =?utf-8?B?T2hZd3UvZHdZR1crbm5HV1lIdU82TUNMazlmSVRJSGIzeldMRzNQTHBneE9Q?=
+ =?utf-8?B?WjkrRUo3M01oSDdydTV6WUlmRWpBRVBERi9mTWRXQUt3RmpFMGh2ZjlLSGVV?=
+ =?utf-8?B?aE1CV0Mxa3lHRjhhejdHZjJaRFl3WkVZbHpYZzJrKzNXUUpRWGtMYXpyclN6?=
+ =?utf-8?B?ZUR3MUkwcHh5OUN6VDR3czQvSmVpYVFtcHBBMkY4VTZ6YldyY0NTczkvVktu?=
+ =?utf-8?B?elpsMWNKNzZGSWZ3WWozUjNIc2RnNDEvek9PdjVuN0luQnFxQUp6dGVhaWQ3?=
+ =?utf-8?B?WENuczcrd1FudHhBZEtlTE11UzFLNXZIajd1NGdUSDNDdmNRY2NBT0RPb1Iv?=
+ =?utf-8?B?MEk0VWF3cW1GWTNoZGVVcURNaTNOR0dxNVNNdWZ5WjhucGZuUjhRMUU3Tk5J?=
+ =?utf-8?B?SmxUVmI2RmVwNEp5cng2MWlRNFEzcWlMODZpQ2w4dy8wS2grdmp1SDdGRHJ5?=
+ =?utf-8?Q?fRuEY2G2G9Mh8d0paXNLCpuWaRJV4Z+uNcDiX6IjgDvD?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BF4AABDBD28DED4F837A23AB7A14B2F9@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Date: Thu, 11 Nov 2021 15:42:55 -0800
-Message-ID: <kbp1.1636674175283754737.sZv2@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="A58i5n9Xh33mikTvZ5aH"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB4896.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 
+ 57c56371-cc33-4e74-1f48-08d9a5873619
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2021 02:50:39.5981
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 
+ APgv2ag5wO1pSy73tNzvbGSXP1u8Ik9M9F+eSJOuJkceVfSe3tCXRjoQQX1g3nxxUjy4c7r9wSpZSs/L3Ilqqg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4387
+X-OriginatorOrg: intel.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Nov 2021 23:42:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13027
+ <bitbake-devel@lists.openembedded.org>; Fri, 12 Nov 2021 02:50:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13028
 
---A58i5n9Xh33mikTvZ5aH
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hello all,
-I am writing to ask if you could possibly help me to resolve error during b=
-uilding eSDK.
-
-During building eSDK I faced an error: failed with exit code 'setscene whit=
-elist'.
-
-Preconditions:
-- Yocto dunfell
-- used SoC vendor's layer xarina-sdk
-- distro: xarina-s-evb-distro based on poky version: 3.1.11
-- machine: xarina-s-evb cortexa9hf-neon
-
-- The issue is reproduced on:
-distro: xarina-s-evb-distro
-machine: xarina-s-evb
-target: xarina-s-evb-image-debug
-
-- The issue is not reproduced on:
-distro: poky
-machine:qemux86-64
-target: core-image-minimal
-
-During processing 'bitbake xarina-s-evb-image-debug -c populate_sdk_ext' th=
-e new build-system is generated to the directory 'xarina-build-dunfell/tmp/=
-work/xarina_s_evb-poky-linux-gnueabi/xarina-s-evb-image-debug/1.0-r0/sdk-ex=
-t/image/tmp-renamed-sdk'.
-
-After that in 'tmp-renamed-sdk' is executed 'BB_SETSCENE_ENFORCE=3D1 bitbak=
-e -n xarina-s-evb-image-debug'. But it fails with 'setscene whitelist' erro=
-r. Bitbake attempts to execute a task 'linux-xarina:do_fetch'. But this tas=
-k is not under the whitelist established for 'tmp-renamed-sdk'. Bitbake att=
-empts to execute 'linux-xarina:do_fetch' because it depends on another task=
- 'xarina-s-evb-image-debug:do_image_complete' that is not covered. But it i=
-s supposed to be covered by the time of creation 'tmp-renamed-sdk'.
-
-I have the following stamp files for the task 'xarina-s-evb-image-debug:do_=
-image_complete':
-In the original build system stamp files:
-do_image_complete.4016b0b3eca996a1bf85306886e895555affb655a5c66cd7042760749=
-b372a04.xarina_s_evb
-do_image_complete_setscene.sigbasedata.4ad046af069b754c70e9c791b62e737777b4=
-1f04dc4354eb65255d39118844a1
-do_image_complete.sigbasedata.3262e62d12c0460539aa7d4696957b662f39ee172e135=
-1e8a60d845df8e3fdd4
-do_image_complete.sigbasedata.954712fcd44e248587d7287939ba449453f56581e21d7=
-eb80e766b9fd67113b2
-do_image_complete.sigbasedata.bab4a6d4ae8ff5b8ee789fb5b4c3a386b751d8fa04b85=
-a32c76648190471d6b8
-do_image_complete.sigbasedata.e77b9b9468bb8e687a77739091458e8384ddbc5708396=
-470d8fdf1fccf6cbaea
-do_image_complete.sigdata.1bdf5d197c3795c552a2f01b0b7e5cf12c406c5002301a7ca=
-b12bd2ca39558b5
-do_image_complete.sigdata.4016b0b3eca996a1bf85306886e895555affb655a5c66cd70=
-42760749b372a04
-
-And in the 'tmp-renamed-sdk' build system stamp files:
-do_image_complete_setscene.sigbasedata.46473df9fc35eb915d83681fbcdf70188886=
-46d2e8aeca00f826a3340fbe8564
-do_image_complete.sigbasedata.954712fcd44e248587d7287939ba449453f56581e21d7=
-eb80e766b9fd67113b2
-
-Why is 'xarina-s-evb-image-debug:do_image_complete' is not covered? How to =
-find out why it is not covered? What could help me to find out this?
-
-This issue make me crazy. I have spent a lot of time for this.
-During investigation the issue I have got some questions. It would be appre=
-ciated if you could help me to find answers to the following questions:
-1) A task have a taskhash. Why do we need a basehash and a unihash for a ta=
-sk ? What is the point of these hashes?
-2) Stamp files. In the stamp files directory there are four types of files:
-- do_xxx.hash
-- do_xxx.sigbasedata.hash
-- do_xxx.sigdata.hash
-- do_xxx.siginfo.hash
-I guess the first one indicates that the task is complete.
-I heard of utilities =E2=80=9Cbitbake-dumpsig=E2=80=9D and =E2=80=9Cbitbake=
--diffsig=E2=80=9D that could help me to find out the reason of the differen=
-ce between tasks sources, that leads to different stamp files. But the util=
-ities do not work if the task does not have a *.sigdata.* stamp file. In my=
- case mostly *.sigdata.* files are absent for the tasks. Why some tasks do =
-have *.sigdata.* stamp files but other don=E2=80=99t? In the build director=
-y tmp-renamed-sdk I did not find any *.sigdata.* stamp files at all.
-
-3) I have read a lot of documentations about setscene. But it does not make=
- much sense for me.
-3.1) How, when and depending on what is generated the source code for a tas=
-k =E2=80=9Cxxx_setscene=E2=80=9D? Is there any source code of =E2=80=9Cxxx_=
-setscene=E2=80=9D task?=C2=A0 Or is "_setscene" just a text string (mark/su=
-ffix) meaning that there is no need to execute a task =E2=80=9Cxxx=E2=80=9D=
- and instead of execution it is needed to unpack the task =E2=80=9Cxxx=E2=
-=80=9D artifacts from the sstate-cache?
-
-3.2) Some tasks can have '_setscene' versions and others can not. How does =
-bitbake determines that a task can have a '_setscene' version or the task c=
-annot have it in general? Can I create a 'xxx_setscene' task directly?
-
-3.3) What do mean hashes in the names of stamp files for the tasks 'xxx_set=
-scene'? What is the difference between them and those I mentioned in the po=
-int 1 and 2?
-
-4) Is there any documentation for bitbake-core that could in details descri=
-be internal structure, logic and algorithms for: task-shedulers, resipe-dep=
-endencies, resipe-caches, stamp files, sstate-cache etc. ?
-
-Unfortunately documentations =E2=80=9CYocto Mega Manual=E2=80=9Dand =E2=80=
-=9CBitbalke User Manual=E2=80=9D describes these topics superficially. Perh=
-aps is there any additional documentation for internal logic and algorithms=
- of Bitbake?
-
-It would be much appreciated if you could help me to find a solution to sol=
-ve eSDK issue and help me to find the answers about Bitbake internal struct=
-ure.
-
-Thank you in advance,
-Michail
-
---A58i5n9Xh33mikTvZ5aH
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div>Hello all,</div>
-<div>I am writing to ask if you could possibly help me to resolve error dur=
-ing building eSDK.</div>
-<div>&nbsp;</div>
-<div>During building eSDK I faced an error: failed with exit code 'setscene=
- whitelist'.</div>
-<div>&nbsp;</div>
-<div>Preconditions:</div>
-<div>&nbsp; - Yocto dunfell</div>
-<div>&nbsp; - used SoC vendor's layer xarina-sdk</div>
-<div>&nbsp; - distro: xarina-s-evb-distro based on poky version: 3.1.11</di=
-v>
-<div>&nbsp; - machine: xarina-s-evb cortexa9hf-neon</div>
-<div>&nbsp;</div>
-<div>&nbsp; - The issue is reproduced on:</div>
-<div>&nbsp; &nbsp; &nbsp; distro: xarina-s-evb-distro</div>
-<div>&nbsp; &nbsp; &nbsp; machine: xarina-s-evb</div>
-<div>&nbsp; &nbsp; &nbsp; target: xarina-s-evb-image-debug</div>
-<div>&nbsp;</div>
-<div>&nbsp; - The issue is not reproduced on:</div>
-<div>&nbsp; &nbsp; &nbsp; distro: poky</div>
-<div>&nbsp; &nbsp; &nbsp; machine:qemux86-64</div>
-<div>&nbsp; &nbsp; &nbsp; target: core-image-minimal</div>
-<div>&nbsp;</div>
-<div>During processing 'bitbake xarina-s-evb-image-debug -c populate_sdk_ex=
-t' the new build-system is generated to the directory 'xarina-build-dunfell=
-/tmp/work/xarina_s_evb-poky-linux-gnueabi/xarina-s-evb-image-debug/1.0-r0/s=
-dk-ext/image/tmp-renamed-sdk'.</div>
-<div>&nbsp;</div>
-<div>After that in 'tmp-renamed-sdk' is executed 'BB_SETSCENE_ENFORCE=3D1 b=
-itbake -n xarina-s-evb-image-debug'. But it fails with 'setscene whitelist'=
- error. Bitbake attempts to execute a task 'linux-xarina:do_fetch'. But thi=
-s task is not under the whitelist established for 'tmp-renamed-sdk'. Bitbak=
-e attempts to execute 'linux-xarina:do_fetch' because it depends on another=
- task 'xarina-s-evb-image-debug:do_image_complete' that is not covered. But=
- it is supposed to be covered by the time of creation 'tmp-renamed-sdk'.</d=
-iv>
-<div>&nbsp;</div>
-<div>I have the following stamp files for the task 'xarina-s-evb-image-debu=
-g:do_image_complete':</div>
-<div>&nbsp; In the original build system stamp files:</div>
-<div>&nbsp; &nbsp; do_image_complete.4016b0b3eca996a1bf85306886e895555affb6=
-55a5c66cd7042760749b372a04.xarina_s_evb</div>
-<div>&nbsp; &nbsp; do_image_complete_setscene.sigbasedata.4ad046af069b754c7=
-0e9c791b62e737777b41f04dc4354eb65255d39118844a1</div>
-<div>&nbsp; &nbsp; do_image_complete.sigbasedata.3262e62d12c0460539aa7d4696=
-957b662f39ee172e1351e8a60d845df8e3fdd4</div>
-<div>&nbsp; &nbsp; do_image_complete.sigbasedata.954712fcd44e248587d7287939=
-ba449453f56581e21d7eb80e766b9fd67113b2</div>
-<div>&nbsp; &nbsp; do_image_complete.sigbasedata.bab4a6d4ae8ff5b8ee789fb5b4=
-c3a386b751d8fa04b85a32c76648190471d6b8</div>
-<div>&nbsp; &nbsp; do_image_complete.sigbasedata.e77b9b9468bb8e687a77739091=
-458e8384ddbc5708396470d8fdf1fccf6cbaea</div>
-<div>&nbsp; &nbsp; do_image_complete.sigdata.1bdf5d197c3795c552a2f01b0b7e5c=
-f12c406c5002301a7cab12bd2ca39558b5</div>
-<div>&nbsp; &nbsp; do_image_complete.sigdata.4016b0b3eca996a1bf85306886e895=
-555affb655a5c66cd7042760749b372a04</div>
-<div>&nbsp;</div>
-<div>&nbsp; And in the 'tmp-renamed-sdk' build system stamp files:</div>
-<div>&nbsp; &nbsp; do_image_complete_setscene.sigbasedata.46473df9fc35eb915=
-d83681fbcdf7018888646d2e8aeca00f826a3340fbe8564</div>
-<div>&nbsp; &nbsp; do_image_complete.sigbasedata.954712fcd44e248587d7287939=
-ba449453f56581e21d7eb80e766b9fd67113b2</div>
-<div>&nbsp;</div>
-<div>Why is 'xarina-s-evb-image-debug:do_image_complete' is not covered? Ho=
-w to find out why it is not covered? What could help me to find out this?</=
-div>
-<div>&nbsp;</div>
-<div>This issue make me crazy. I have spent a lot of time for this.</div>
-<div>During investigation the issue I have got some questions. It would be =
-appreciated if you could help me to find answers to the following questions=
-:</div>
-<div>&nbsp; 1) A task have a taskhash. Why do we need a basehash and a unih=
-ash for a task ? What is the point of these hashes?</div>
-<div>&nbsp; 2) Stamp files. In the stamp files directory there are four typ=
-es of files:</div>
-<div>&nbsp; &nbsp; &nbsp; - do_xxx.hash</div>
-<div>&nbsp; &nbsp; &nbsp; - do_xxx.sigbasedata.hash</div>
-<div>&nbsp; &nbsp; &nbsp; - do_xxx.sigdata.hash</div>
-<div>&nbsp; &nbsp; &nbsp; - do_xxx.siginfo.hash</div>
-<div>&nbsp; &nbsp; I guess the first one indicates that the task is complet=
-e.</div>
-<div>&nbsp; &nbsp; I heard of utilities &ldquo;bitbake-dumpsig&rdquo; and &=
-ldquo;bitbake-diffsig&rdquo; that could help me to find out the reason of t=
-he difference between tasks sources, that leads to different stamp files. B=
-ut the utilities do not work if the task does not have a *.sigdata.* stamp =
-file. In my case mostly *.sigdata.* files are absent for the tasks. Why som=
-e tasks do have *.sigdata.* stamp files but other don&rsquo;t? In the build=
- directory tmp-renamed-sdk I did not find any *.sigdata.* stamp files at al=
-l.</div>
-<div>&nbsp;</div>
-<div>&nbsp; 3) I have read a lot of documentations about setscene. But it d=
-oes not make much sense for me.</div>
-<div>&nbsp; &nbsp; &nbsp; 3.1) How, when and depending on what is generated=
- the source code for a task &ldquo;xxx_setscene&rdquo;? Is there any source=
- code of &ldquo;xxx_setscene&rdquo; task?&nbsp; Or is "_setscene" just a te=
-xt string (mark/suffix) meaning that there is no need to execute a task &ld=
-quo;xxx&rdquo; and instead of execution it is needed to unpack the task &ld=
-quo;xxx&rdquo; artifacts from the sstate-cache?</div>
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp; &nbsp; 3.2) Some tasks can have '_setscene' versions and=
- others can not. How does bitbake determines that a task can have a '_setsc=
-ene' version or the task cannot have it in general? Can I create a 'xxx_set=
-scene' task directly?</div>
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp; &nbsp; 3.3) What do mean hashes in the names of stamp fi=
-les for the tasks 'xxx_setscene'? What is the difference between them and t=
-hose I mentioned in the point 1 and 2?</div>
-<div>&nbsp;</div>
-<div>&nbsp; 4) Is there any documentation for bitbake-core that could in de=
-tails describe internal structure, logic and algorithms for: task-shedulers=
-, resipe-dependencies, resipe-caches, stamp files, sstate-cache etc. ?</div=
->
-<div>&nbsp;</div>
-<div>Unfortunately documentations &ldquo;Yocto Mega Manual&rdquo;and &ldquo=
-;Bitbalke User Manual&rdquo; describes these topics superficially. Perhaps =
-is there any additional documentation for internal logic and algorithms of =
-Bitbake?</div>
-<div>&nbsp;</div>
-<div>It would be much appreciated if you could help me to find a solution t=
-o solve eSDK issue and help me to find the answers about Bitbake internal s=
-tructure.</div>
-<div>&nbsp;</div>
-<div>Thank you in advance,</div>
-<div>Michail</div>
-
---A58i5n9Xh33mikTvZ5aH--
+T24gVGh1LCAyMDIxLTExLTExIGF0IDExOjE2ICswMDAwLCBSaWNoYXJkIFB1cmRpZSB3cm90ZToK
+PiBPbiBUdWUsIDIwMjEtMTEtMDkgYXQgMjI6NTAgKzA4MDAsIEFudWogTWl0dGFsIHdyb3RlOgo+
+ID4gRnJvbTogUmljaGFyZCBQdXJkaWUgPHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5v
+cmc+Cj4gPiAKPiA+IElmIG9uZSBvZiB0aGUgcGFyc2UgdGhyZWFkcyBkaXNhcHBlYXJzIGR1cmlu
+ZyBwYXJzaW5nIGZvciBzb21lCj4gPiByZWFzb24sIGJpdGJha2UKPiA+IGN1cnJlbnRseSBoYW5n
+cy4gQXZvaWQgdGhpcyAoYW5kIHpvbWJpZSB0aHJlYWRzIGhhbmdpbmcgYXJvdW5kKSBieQo+ID4g
+am9pbmluZygpCj4gPiB0aHJlYWRzIHdoaWNoIGhhdmUgZXhpdGVkLgo+ID4gCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBSaWNoYXJkIFB1cmRpZSA8cmljaGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9y
+Zz4KPiA+IChjaGVycnkgcGlja2VkIGZyb20gY29tbWl0Cj4gPiBkYzg2YTUzM2Q5NTFkMTM2NDNj
+ZTQ0NjUzMzM3MGRhODA0NzgyYWZjKQo+ID4gU2lnbmVkLW9mZi1ieTogQW51aiBNaXR0YWwgPGFu
+dWoubWl0dGFsQGludGVsLmNvbT4KPiA+IC0tLQo+ID4gwqBsaWIvYmIvY29va2VyLnB5IHwgMTEg
+KysrKysrKysrKy0KPiA+IMKgMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDEgZGVs
+ZXRpb24oLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2xpYi9iYi9jb29rZXIucHkgYi9saWIvYmIv
+Y29va2VyLnB5Cj4gPiBpbmRleCAwNmI0MGMxMzguLjhhZThlNGVjYyAxMDA2NDQKPiA+IC0tLSBh
+L2xpYi9iYi9jb29rZXIucHkKPiA+ICsrKyBiL2xpYi9iYi9jb29rZXIucHkKPiA+IEBAIC0yMDQw
+LDYgKzIwNDAsNyBAQCBjbGFzcyBQYXJzZXIobXVsdGlwcm9jZXNzaW5nLlByb2Nlc3MpOgo+ID4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVzdWx0ID0gcGVuZGluZy5wb3AoKQo+
+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVsc2U6Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCB0cnk6Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgdGltZS5zbGVlcCgwLjI1KQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBqb2IgPSBzZWxmLmpvYnMucG9wKCkKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGV4Y2VwdCBJbmRleEVycm9yOgo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLnJlc3VsdHMuY2xvc2UoKQo+ID4gQEAgLTIyMTgsNyAr
+MjIxOSw3IEBAIGNsYXNzIENvb2tlclBhcnNlcihvYmplY3QpOgo+ID4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHlpZWxkIG5vdCBjYWNoZWQsIG1jLCBpbmZvcwo+ID4gwqAKPiA+IMKgwqDCoMKg
+IGRlZiBwYXJzZV9nZW5lcmF0b3Ioc2VsZik6Cj4gPiAtwqDCoMKgwqDCoMKgwqAgd2hpbGUgVHJ1
+ZToKPiA+ICvCoMKgwqDCoMKgwqDCoCB3aGlsZSBzZWxmLnByb2Nlc3NlczoKPiA+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBpZiBzZWxmLnBhcnNlZCA+PSBzZWxmLnRvcGFyc2U6Cj4gPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBicmVhawo+ID4gwqAKPiA+IEBAIC0yMjMyLDYg
+KzIyMzMsMTQgQEAgY2xhc3MgQ29va2VyUGFyc2VyKG9iamVjdCk6Cj4gPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJhaXNlIHZhbHVlCj4gPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBlbHNlOgo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCB5aWVsZCByZXN1bHQKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZv
+ciBwcm9jZXNzIGluIHNlbGYucHJvY2Vzc2VzLmNvcHkoKToKPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgaWYgbm90IHByb2Nlc3MuaXNfYWxpdmUoKToKPiA+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcm9jZXNzLmpvaW4oKQo+ID4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNlbGYucHJvY2Vzc2VzLnJlbW92ZShwcm9j
+ZXNzKQo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgIGlmIG5vdCAoc2VsZi5wYXJzZWQgPj0gc2Vs
+Zi50b3BhcnNlKToKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJhaXNlIGJiLnBhcnNlLlBh
+cnNlRXJyb3IoIk5vdCBhbGwgcmVjaXBlcyBwYXJzZWQsCj4gPiBwYXJzZXIgdGhyZWFkIGtpbGxl
+ZC9kaWVkPyBFeGl0aW5nLiIsIE5vbmUpCj4gPiArCj4gPiDCoAo+ID4gwqDCoMKgwqAgZGVmIHBh
+cnNlX25leHQoc2VsZik6Cj4gPiDCoMKgwqDCoMKgwqDCoMKgIHJlc3VsdCA9IFtdCj4gCj4gVGhp
+cyBwYXRjaCBjaGFuZ2VkIGEgYml0IGluIG1hc3RlciBkdWUgdG8gaXNzdWVzIGJlaW5nIGZvdW5k
+IHNvIHdlJ2xsCj4gc2VlIHRvCj4gaW5jbHVkZSB0aG9zZSBjaGFuZ2VzIGluIHRoZSBiYWNrcG9y
+dC4KPiAKCkkgaGF2ZSBkcm9wcGVkIHRoaXMgcGF0Y2ggZnJvbSBteSBicmFuY2ggZm9yIG5vdyBh
+bmQgd2lsbCBpbmNsdWRlIGJvdGgKdGhpcyBhbmQgc3Vic2VxdWVudCBmaXggbGF0ZXIuCgpUaGFu
+a3MsCgpBbnVqCgo=
 
