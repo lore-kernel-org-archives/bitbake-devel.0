@@ -2,34 +2,36 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF41C433EF
-	for <webhook@archiver.kernel.org>; Fri, 12 Nov 2021 16:47:59 +0000 (UTC)
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net
- [217.70.183.198])
- by mx.groups.io with SMTP id smtpd.web11.18422.1636735678161559511
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D6C433F5
+	for <webhook@archiver.kernel.org>; Fri, 12 Nov 2021 16:48:30 +0000 (UTC)
+Received: from relay10.mail.gandi.net (relay10.mail.gandi.net
+ [217.70.178.230])
+ by mx.groups.io with SMTP id smtpd.web09.18605.1636735709540471816
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Nov 2021 08:47:59 -0800
+ Fri, 12 Nov 2021 08:48:30 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: michael.opdenacker@bootlin.com)
+ spf=pass (domain: bootlin.com, ip: 217.70.178.230, mailfrom: michael.opdenacker@bootlin.com)
 Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 33D3DC0009;
-	Fri, 12 Nov 2021 16:47:55 +0000 (UTC)
+	by relay10.mail.gandi.net (Postfix) with ESMTPSA id 4F435240008;
+	Fri, 12 Nov 2021 16:48:26 +0000 (UTC)
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: docs@lists.yoctoproject.org,
 	Michael Opdenacker <michael.opdenacker@bootlin.com>
 Subject: [PATCH] doc: bitbake-user-manual: expand SRC_URI description
-Date: Fri, 12 Nov 2021 17:47:47 +0100
-Message-Id: <20211112164748.177526-1-michael.opdenacker@bootlin.com>
+Date: Fri, 12 Nov 2021 17:47:48 +0100
+Message-Id: <20211112164748.177526-2-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211112164748.177526-1-michael.opdenacker@bootlin.com>
+References: <20211112164748.177526-1-michael.opdenacker@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Nov 2021 16:47:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13035
+ <bitbake-devel@lists.openembedded.org>; Fri, 12 Nov 2021 16:48:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13036
 
 From contents from the Yocto Project manual
 Took the opportunity to reorder SRC_URI fetchers and options
