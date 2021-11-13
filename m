@@ -1,179 +1,92 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D6C433F5
-	for <webhook@archiver.kernel.org>; Fri, 12 Nov 2021 16:48:30 +0000 (UTC)
-Received: from relay10.mail.gandi.net (relay10.mail.gandi.net
- [217.70.178.230])
- by mx.groups.io with SMTP id smtpd.web09.18605.1636735709540471816
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1212EC433FE
+	for <webhook@archiver.kernel.org>; Sat, 13 Nov 2021 16:25:54 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
+ [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web10.476.1636820752440552057
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Nov 2021 08:48:30 -0800
+ Sat, 13 Nov 2021 08:25:52 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: bootlin.com, ip: 217.70.178.230, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay10.mail.gandi.net (Postfix) with ESMTPSA id 4F435240008;
-	Fri, 12 Nov 2021 16:48:26 +0000 (UTC)
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hqbgY5lk;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f45.google.com with SMTP id i5so21320352wrb.2
+        for <bitbake-devel@lists.openembedded.org>;
+ Sat, 13 Nov 2021 08:25:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=10tqX30b1r6m3u48GYWCmHxF5eby0XyY/Q9rLadSs7E=;
+        b=hqbgY5lkZgd11gNvKRCKgNiegIVml/ZIxev2B/JstMyPy/96k4QGpb4I0bgnGyHdPk
+         x8mZu4mPNSr/wVsfgRRT0o7HZ+UjJeTblFJTLGgp84rzKZRfbeaPZ33gyiuuPiczjTzy
+         c7Ix+osTzqH/Wsu6InwKrLmmj+ZWahWACCMcM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=10tqX30b1r6m3u48GYWCmHxF5eby0XyY/Q9rLadSs7E=;
+        b=mRlSXZ4wCJmtuqO9iEQDwVWyeVVQrWZH0qc0Luy5aE2kSOiEBEGmttDRy3vFd+E5/m
+         GDXlj3npeSwAWQiBh9iZ4u1ncV14yYwf4Yv1ayc5nlJ9MiaPvuHkmI5kgL8wjvpkWexU
+         sbUGozPi1ygwpul0yjCJSHLgK4kdUKu8Yy9kDVlj+vCbGUL1U5zPvoxgbvFmmbYXEXTo
+         Z4kWkzoi5oyUYT3t5EpJzmhdlUTxqwRy72aN7wk/o1Bh+60BH5dLSj3IxkJ3zPPiAjyk
+         xkDn7J2rE6j0oFKBa27fHeUhBSz4ySU89u65CgXHXILVmFrVyVzErsgz6p9kmvGcAYLQ
+         Io9g==
+X-Gm-Message-State: AOAM532OWh4kRfn2wG8KWt2iYA7NTASRFAJ+7/2U5q2uHt8Fr4X7HSlY
+	hHIkGKohVVEYecOuBhv92OD4MNTE+vHAqQ==
+X-Google-Smtp-Source: 
+ ABdhPJyk3DY4uk4oOWAKmyP5aK/V/hURQX5BAHJfVJ6Menw9vaW53gbf1ESni6zCItM2u9jHikJjFw==
+X-Received: by 2002:adf:ecce:: with SMTP id s14mr29108401wro.98.1636820750714;
+        Sat, 13 Nov 2021 08:25:50 -0800 (PST)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:4f1d:7b2:7d47:57f5])
+        by smtp.gmail.com with ESMTPSA id
+ b14sm11331714wrd.24.2021.11.13.08.25.50
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Nov 2021 08:25:50 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH] doc: bitbake-user-manual: expand SRC_URI description
-Date: Fri, 12 Nov 2021 17:47:48 +0100
-Message-Id: <20211112164748.177526-2-michael.opdenacker@bootlin.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211112164748.177526-1-michael.opdenacker@bootlin.com>
-References: <20211112164748.177526-1-michael.opdenacker@bootlin.com>
+Subject: [PATCH 1/3] tests/runqueue: Set TOPDIR in test
+Date: Sat, 13 Nov 2021 16:25:47 +0000
+Message-Id: <20211113162549.3931833-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Nov 2021 16:48:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13036
+ <bitbake-devel@lists.openembedded.org>; Sat, 13 Nov 2021 16:25:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13038
 
-From contents from the Yocto Project manual
-Took the opportunity to reorder SRC_URI fetchers and options
-alphabetically.
+It was clear with testing that we're asuming bitbake sets TOPDIR correctly
+when running these tests. Remove that implict assumption and make it
+explicit.
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- .../bitbake-user-manual-ref-variables.rst     | 85 +++++++++++++------
- 1 file changed, 59 insertions(+), 26 deletions(-)
+ lib/bb/tests/runqueue.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index e955beb1..78fb2826 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -1333,67 +1333,100 @@ overview of their function and contents.
-       The list of source files - local or remote. This variable tells
-       BitBake which bits to pull for the build and how to pull them. For
-       example, if the recipe or append file needs to fetch a single tarball
--      from the Internet, the recipe or append file uses a :term:`SRC_URI` entry
--      that specifies that tarball. On the other hand, if the recipe or
--      append file needs to fetch a tarball and include a custom file, the
--      recipe or append file needs an :term:`SRC_URI` variable that specifies
--      all those sources.
--
--      The following list explains the available URI protocols:
-+      from the Internet, the recipe or append file uses a :term:`SRC_URI`
-+      entry that specifies that tarball. On the other hand, if the recipe or
-+      append file needs to fetch a tarball, apply two patches, and include
-+      a custom file, the recipe or append file needs an :term:`SRC_URI`
-+      variable that specifies all those sources.
-+
-+      The following list explains the available URI protocols. URI
-+      protocols are highly dependent on particular BitBake Fetcher
-+      submodules. Depending on the fetcher BitBake uses, various URL
-+      parameters are employed. For specifics on the supported Fetchers, see
-+      the :ref:`bitbake-user-manual/bitbake-user-manual-fetching:fetchers`
-+      section.
- 
--      -  ``file://`` : Fetches files, which are usually files shipped
--         with the metadata, from the local machine. The path is relative to
--         the :term:`FILESPATH` variable.
-+      -  ``az://`` : Fetches files from an Azure Storage account using HTTPS.
- 
-       -  ``bzr://`` : Fetches files from a Bazaar revision control
-          repository.
- 
--      -  ``git://`` : Fetches files from a Git revision control
-+      -  ``ccrc://`` - Fetches files from a ClearCase repository.
-+
-+      -  ``cvs://`` : Fetches files from a CVS revision control
-          repository.
- 
--      -  ``osc://`` : Fetches files from an OSC (OpenSUSE Build service)
--         revision control repository.
-+      -  ``file://`` - Fetches files, which are usually files shipped
-+         with the Metadata, from the local machine.
-+         The path is relative to the :term:`FILESPATH`
-+         variable. Thus, the build system searches, in order, from the
-+         following directories, which are assumed to be a subdirectories of
-+         the directory in which the recipe file (``.bb``) or append file
-+         (``.bbappend``) resides:
- 
--      -  ``repo://`` : Fetches files from a repo (Git) repository.
-+         -  ``${BPN}`` - The base recipe name without any special suffix
-+            or version numbers.
- 
--      -  ``http://`` : Fetches files from the Internet using HTTP.
-+         -  ``${BP}`` - ``${BPN}-${PV}``. The base recipe name and
-+            version but without any special package name suffix.
- 
--      -  ``https://`` : Fetches files from the Internet using HTTPS.
-+         -  *files -* Files within a directory, which is named ``files``
-+            and is also alongside the recipe or append file.
- 
-       -  ``ftp://`` : Fetches files from the Internet using FTP.
- 
--      -  ``cvs://`` : Fetches files from a CVS revision control
-+      -  ``git://`` : Fetches files from a Git revision control
-          repository.
- 
-       -  ``hg://`` : Fetches files from a Mercurial (``hg``) revision
-          control repository.
- 
-+      -  ``http://`` : Fetches files from the Internet using HTTP.
-+
-+      -  ``https://`` : Fetches files from the Internet using HTTPS.
-+
-+      -  ``npm://`` - Fetches JavaScript modules from a registry.
-+
-+      -  ``osc://`` : Fetches files from an OSC (OpenSUSE Build service)
-+         revision control repository.
-+
-       -  ``p4://`` : Fetches files from a Perforce (``p4``) revision
-          control repository.
- 
-+      -  ``repo://`` : Fetches files from a repo (Git) repository.
-+
-       -  ``ssh://`` : Fetches files from a secure shell.
- 
-       -  ``svn://`` : Fetches files from a Subversion (``svn``) revision
-          control repository.
- 
--      -  ``az://`` : Fetches files from an Azure Storage account using HTTPS.
--
-       Here are some additional options worth mentioning:
- 
--      -  ``unpack`` : Controls whether or not to unpack the file if it is
--         an archive. The default action is to unpack the file.
-+      -  ``downloadfilename`` : Specifies the filename used when storing
-+         the downloaded file.
-+
-+      -  ``name`` - Specifies a name to be used for association with
-+         :term:`SRC_URI` checksums or :term:`SRCREV` when you have more than one
-+         file or git repository specified in :term:`SRC_URI`. For example::
-+
-+            SRC_URI = "git://example.com/foo.git;name=first \
-+                       git://example.com/bar.git;name=second \
-+                       http://example.com/file.tar.gz;name=third"
-+
-+            SRCREV_first = "f1d2d2f924e986ac86fdf7b36c94bcdf32beec15"
-+            SRCREV_second = "e242ed3bffccdf271b7fbaf34ed72d089537b42f"
-+            SRC_URI[third.sha256sum] = "13550350a8681c84c861aac2e5b440161c2b33a3e4f302ac680ca5b686de48de"
- 
-       -  ``subdir`` : Places the file (or extracts its contents) into the
-          specified subdirectory. This option is useful for unusual tarballs
-          or other archives that do not have their files already in a
-          subdirectory within the archive.
- 
--      -  ``name`` : Specifies a name to be used for association with
--         :term:`SRC_URI` checksums when you have more than one file specified
--         in :term:`SRC_URI`.
-+      -  ``subpath`` - Limits the checkout to a specific subpath of the
-+         tree when using the Git fetcher is used.
- 
--      -  ``downloadfilename`` : Specifies the filename used when storing
--         the downloaded file.
-+      -  ``unpack`` : Controls whether or not to unpack the file if it is
-+         an archive. The default action is to unpack the file.
- 
-    :term:`SRCDATE`
-       The date of the source code used to build the package. This variable
+diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
+index 5b6ada886a..2bf00dc62a 100644
+--- a/lib/bb/tests/runqueue.py
++++ b/lib/bb/tests/runqueue.py
+@@ -29,9 +29,10 @@ class RunQueueTests(unittest.TestCase):
+     def run_bitbakecmd(self, cmd, builddir, sstatevalid="", slowtasks="", extraenv=None, cleanup=False):
+         env = os.environ.copy()
+         env["BBPATH"] = os.path.realpath(os.path.join(os.path.dirname(__file__), "runqueue-tests"))
+-        env["BB_ENV_EXTRAWHITE"] = "SSTATEVALID SLOWTASKS"
++        env["BB_ENV_EXTRAWHITE"] = "SSTATEVALID SLOWTASKS TOPDIR"
+         env["SSTATEVALID"] = sstatevalid
+         env["SLOWTASKS"] = slowtasks
++        env["TOPDIR"] = builddir
+         if extraenv:
+             for k in extraenv:
+                 env[k] = extraenv[k]
 -- 
-2.25.1
+2.32.0
 
 
