@@ -2,65 +2,65 @@ Return-Path: <anuj.mittal@intel.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B502AC433EF
-	for <webhook@archiver.kernel.org>; Tue, 16 Nov 2021 16:27:12 +0000 (UTC)
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
- by mx.groups.io with SMTP id smtpd.web11.297.1637080031078195453
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2AEC433F5
+	for <webhook@archiver.kernel.org>; Tue, 16 Nov 2021 16:27:47 +0000 (UTC)
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+ by mx.groups.io with SMTP id smtpd.web08.319.1637080066468883180
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 16 Nov 2021 08:27:11 -0800
+ Tue, 16 Nov 2021 08:27:46 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: intel.com, ip: 134.134.136.126, mailfrom: anuj.mittal@intel.com)
-X-IronPort-AV: E=McAfee;i="6200,9189,10169"; a="220613336"
+ spf=pass (domain: intel.com, ip: 134.134.136.20, mailfrom: anuj.mittal@intel.com)
+X-IronPort-AV: E=McAfee;i="6200,9189,10169"; a="220936565"
 X-IronPort-AV: E=Sophos;i="5.87,239,1631602800";
-   d="scan'208";a="220613336"
+   d="scan'208";a="220936565"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 16 Nov 2021 08:27:10 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
+ 16 Nov 2021 08:27:06 -0800
 X-IronPort-AV: E=Sophos;i="5.87,239,1631602800";
-   d="scan'208";a="506500479"
+   d="scan'208";a="506500469"
 Received: from mmohdso1-mobl.gar.corp.intel.com (HELO
  anmitta2-mobl3.intel.com) ([10.215.237.91])
   by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 16 Nov 2021 08:27:08 -0800
+ 16 Nov 2021 08:27:05 -0800
 From: Anuj Mittal <anuj.mittal@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.52][PATCH 2/4] cooker: Remove debug code, oops :(
-Date: Wed, 17 Nov 2021 00:26:58 +0800
-Message-Id: 
- <ae1bfbf9523e8f6155bb43ee3adba17af3ec9630.1637079892.git.anuj.mittal@intel.com>
+Subject: [1.52][PATCH 0/4] Review request
+Date: Wed, 17 Nov 2021 00:26:56 +0800
+Message-Id: <cover.1637079892.git.anuj.mittal@intel.com>
 X-Mailer: git-send-email 2.33.1
-In-Reply-To: <cover.1637079892.git.anuj.mittal@intel.com>
-References: <cover.1637079892.git.anuj.mittal@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 16 Nov 2021 16:27:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13059
+ <bitbake-devel@lists.openembedded.org>; Tue, 16 Nov 2021 16:27:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13060
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Please review these changes for 1.52. No problems seen while testing on
+autobuilder.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 19291665fa8b6cc331290f2542af3e8e653203f1)
-Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
----
- lib/bb/cooker.py | 1 -
- 1 file changed, 1 deletion(-)
+Thanks,
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 8ae8e4ec..9be6603f 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -2040,7 +2040,6 @@ class Parser(multiprocessing.Process):
-                 result = pending.pop()
-             else:
-                 try:
--                    time.sleep(0.25)
-                     job = self.jobs.pop()
-                 except IndexError:
-                     self.results.close()
+Anuj
+
+The following changes since commit 693eec8edf8d3b2b01c53be6776213cccd797485:
+
+  runqueue: Fix runall option handling (2021-11-12 14:16:48 +0800)
+
+are available in the Git repository at:
+
+  git://push.openembedded.org/bitbake-contrib stable/1.52-next
+
+Richard Purdie (4):
+  cooker: Handle parse threads disappearing to avoid hangs
+  cooker: Remove debug code, oops :(
+  cooker: Handle parsing results queue race
+  cooker: Fix task-depends.dot for multiconfig targets
+
+ lib/bb/cooker.py | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
 -- 
 2.33.1
 
