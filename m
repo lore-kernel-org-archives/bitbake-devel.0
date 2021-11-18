@@ -1,66 +1,105 @@
-Return-Path: <anuj.mittal@intel.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7308C433F5
-	for <webhook@archiver.kernel.org>; Thu, 18 Nov 2021 06:51:47 +0000 (UTC)
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
- by mx.groups.io with SMTP id smtpd.web08.2315.1637218306639184685
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CED9C433F5
+	for <webhook@archiver.kernel.org>; Thu, 18 Nov 2021 13:54:25 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com
+ [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web08.1780.1637243663842627162
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 17 Nov 2021 22:51:46 -0800
+ Thu, 18 Nov 2021 05:54:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: intel.com, ip: 192.55.52.88, mailfrom: anuj.mittal@intel.com)
-X-IronPort-AV: E=McAfee;i="6200,9189,10171"; a="257906284"
-X-IronPort-AV: E=Sophos;i="5.87,243,1631602800";
-   d="scan'208";a="257906284"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 17 Nov 2021 22:51:45 -0800
-X-IronPort-AV: E=Sophos;i="5.87,243,1631602800";
-   d="scan'208";a="605044838"
-Received: from mnoorazm-mobl2.gar.corp.intel.com (HELO
- anmitta2-mobl3.intel.com) ([10.213.140.242])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 17 Nov 2021 22:51:44 -0800
-From: Anuj Mittal <anuj.mittal@intel.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=igWI9On3;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f41.google.com with SMTP id 133so5440569wme.0
+        for <bitbake-devel@lists.openembedded.org>;
+ Thu, 18 Nov 2021 05:54:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fo547w3uvdctVeWsn7nLAbRGyyIGVBcNbEnRDzUPIyg=;
+        b=igWI9On3E3ZkTC8c9JdfFEYW23YnjtOELFmFOftx13EZMmekWh3wcPZAEdDs8G9CJy
+         rGzx3NtvKr6qwDjUbKRjYH3bYjCcveMCnFvAS9gve4lyRhoiVm3Pj+GTciiAOnimIrdP
+         /goMFfSkU0ftfQuxXAywY8QUxrLz6qD47Z3IY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fo547w3uvdctVeWsn7nLAbRGyyIGVBcNbEnRDzUPIyg=;
+        b=OfkBtCtiN+S6V7ZzJlQQ/fA3e24+iPlCpMd4MgNdZoDb4J9auwl49M9kvs9H7lC340
+         Xcp+Fsjqi3Bf8AEuHvrGd3VDBdBmJkmr/HiNuYpZ5ZUBgGXRjknFvs3ecLqP9oxNs8y3
+         u6lbPMKI/NdmbkXf/e6fyF0VEIkZaCHYNbaum/FXnQabEyuwf0oVeoCeyHMI8YVJC46I
+         9923Fq9IUMZbg7RPmM6r5DgGlud/+1wSmuhCf5X5O5qmzqJ7aMcfVoZ5svnH/3jPED5F
+         q166r04dEjh3AQpcdTlbd4zwX0bdk/GXA/33LIS7bt1MX5EorHpzS6lQ7STA57X0e2Ic
+         igpw==
+X-Gm-Message-State: AOAM53217ruEeIIC7pp+u6BtaCpYd0wODDXMSpJIV7tHE/c4bgCM0ALS
+	iLBUHNbJCpidLg+5DRJ+dBudAi3oCQ2amQ==
+X-Google-Smtp-Source: 
+ ABdhPJwybOY7grB8p2bbq+xsE4znrvK01Eo9NXoBQf11qp34nDAnmVKCuqcr0GioWQhPTG5iBN/g9g==
+X-Received: by 2002:a7b:ce16:: with SMTP id m22mr9994625wmc.39.1637243661972;
+        Thu, 18 Nov 2021 05:54:21 -0800 (PST)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:423a:6c9:d9d0:129f])
+        by smtp.gmail.com with ESMTPSA id
+ f7sm3991489wri.74.2021.11.18.05.54.21
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Nov 2021 05:54:21 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.52][PATCH 0/4] Pull request
-Date: Thu, 18 Nov 2021 14:51:39 +0800
-Message-Id: <cover.1637218179.git.anuj.mittal@intel.com>
-X-Mailer: git-send-email 2.33.1
+Subject: [PATCH] utils: Handle lockfile filenames that are too long for
+ filesystems
+Date: Thu, 18 Nov 2021 13:54:21 +0000
+Message-Id: <20211118135421.4068596-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 18 Nov 2021 06:51:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13066
+ <bitbake-devel@lists.openembedded.org>; Thu, 18 Nov 2021 13:54:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13067
 
-Please merge these changes.
+The fetcher mirror code can go crazy creating lock filenames which exceed the
+filesystem limits. When this happens, the code will loop/hang.
 
-Thanks,
+Handle the filename too long exception correctly but also truncate lockfile
+lengths to under 256 since the worst case situation is lockfile overlap
+and lack of parallelism.
 
-Anuj
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/utils.py | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-The following changes since commit 693eec8edf8d3b2b01c53be6776213cccd797485:
-
-  runqueue: Fix runall option handling (2021-11-12 14:16:48 +0800)
-
-are available in the Git repository at:
-
-  git://push.openembedded.org/bitbake-contrib stable/1.52-next
-
-Richard Purdie (4):
-  cooker: Handle parse threads disappearing to avoid hangs
-  cooker: Remove debug code, oops :(
-  cooker: Handle parsing results queue race
-  cooker: Fix task-depends.dot for multiconfig targets
-
- lib/bb/cooker.py | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 70634910f7..23ff64df7a 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -451,6 +451,11 @@ def lockfile(name, shared=False, retry=True, block=False):
+     consider the possibility of sending a signal to the process to break
+     out - at which point you want block=True rather than retry=True.
+     """
++    if len(name) > 255:
++        components = name.rsplit(".", 1)
++        components[0] = components[0][:255 - len(components[1]) - 1]
++        name = ".".join(components)
++
+     dirname = os.path.dirname(name)
+     mkdirhier(dirname)
+ 
+@@ -487,7 +492,7 @@ def lockfile(name, shared=False, retry=True, block=False):
+                     return lf
+             lf.close()
+         except OSError as e:
+-            if e.errno == errno.EACCES:
++            if e.errno == errno.EACCES or e.errno == errno.ENAMETOOLONG:
+                 logger.error("Unable to acquire lock '%s', %s",
+                              e.strerror, name)
+                 sys.exit(1)
 -- 
-2.33.1
+2.32.0
 
 
