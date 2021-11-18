@@ -1,96 +1,161 @@
-Return-Path: <jacob.kroon@gmail.com>
+Return-Path: <kergoth@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D366FC433EF
-	for <webhook@archiver.kernel.org>; Thu, 18 Nov 2021 16:27:07 +0000 (UTC)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com
- [209.85.167.50])
- by mx.groups.io with SMTP id smtpd.web11.3930.1637252826685784213
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DCEC433F5
+	for <webhook@archiver.kernel.org>; Thu, 18 Nov 2021 21:15:13 +0000 (UTC)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com
+ [209.85.208.53])
+ by mx.groups.io with SMTP id smtpd.web12.335.1637270112330166631
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 18 Nov 2021 08:27:07 -0800
+ Thu, 18 Nov 2021 13:15:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=p6CzVOh9;
- spf=pass (domain: gmail.com, ip: 209.85.167.50,
- mailfrom: jacob.kroon@gmail.com)
-Received: by mail-lf1-f50.google.com with SMTP id b40so28829613lfv.10
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=mHag/ZDH;
+ spf=pass (domain: gmail.com, ip: 209.85.208.53, mailfrom: kergoth@gmail.com)
+Received: by mail-ed1-f53.google.com with SMTP id y12so32971940eda.12
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 18 Nov 2021 08:27:06 -0800 (PST)
+ Thu, 18 Nov 2021 13:15:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OKrG1JwbfcWqE3h/bXOr/RlMZpUC4v7iwzEYxpkTtFc=;
-        b=p6CzVOh9nZJhMLU9HOAb0sz0bP7EbOwY2N8tFAQ+uO3mEJ9WkEwD/HF4sKPYX7JBcC
-         GXpGOQv6Mkb8Vv/xc6OrPac4jZ9kiWjJbsAFpXKHBHppGT0xK7d4YHkZoFpuJw3qzfeu
-         +e2LFHk31wSq1dbzmlOWcplcXr2be43Nl/Fg+9FaucZdgD5txx2nNZ4Q7nwMRMi8APxI
-         ZefF+P1oeEY91k8Y755RgKHi2QhvxnFYV2B/6ZAso6y+DacBbNpsvV1sMs8bB1csC4pn
-         vADwHvw7R8jPDA8EhrEK/EAxvpAlgxvmR/H7rD2YgFMGSmQ0z87jxqBUxcxa3XZIYgxW
-         LTmg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UdLlxZ+TXE8zhctkH5apJxMXJZz2hIFOVWyBuW06kFQ=;
+        b=mHag/ZDHAV3rIdHnLQQAk9QfR9kQB/h7h5203PR6ZxO7Gej/rna0Rm1KjgX4Z93m/5
+         5w1razZIrLgBUs6iTVfGClfWFFEBQe8FPZZz4AcV/yM4UlVGf/BSQQb9QVzRWK72P9D3
+         s/ET4QQo9CkTltkrQHIKcc/gBlT2DvVGRgR7DpyUMqodu9vP3e1MTsUooRDhRpOTrQzf
+         PfwgSe+C9Kt0CzO7zl44n6RLwWI5CGLTeiK4s1MekhqIxfnrbB9CVKwyDiT1KRDr3dv9
+         ZG1j6ym+4gVJeXB/dIHPCyvXul+u/MbTJm9K2t5nCFThYs1tFJHmTPnpa2qhyupeHrzs
+         asRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OKrG1JwbfcWqE3h/bXOr/RlMZpUC4v7iwzEYxpkTtFc=;
-        b=2Bp6FwEYDWu9AvciPutuX1aqoD18iWvc9eGiYCA2SkjmD9jNENYaQapogHevI0gNQX
-         +he3h6ZA8wVn/WYXLPacpcR3EoYXc8LYEhGjMzoyHo7TJOF/XH7f3bD86fiDVZGYSzyj
-         /ADG07VoCClqZ5iNDts5w8z1WUbwVoH4CpY9nXEeoUBHysv2u9qCdkkfEM8IT/tViLXS
-         jLKLCOUFjZ1Cjjw9oyFzwbqKeMq86vIuLWlixFgxqLTzTLMd5WoPl9BDHCA+9Ku3YGRj
-         RvGUKcgI/EoDaFJTV86l+/9w7ycDAskg3xQ6mkUyZlX6VBqjpNetjJhJVPyFLKB+M/pw
-         0p6g==
-X-Gm-Message-State: AOAM533EwTCYCEv8+pBurmMPFic/eTqnwqenpjAyq9jP+x6+rEDB5qGi
-	1AdxUnzFvHtp5GOUKvty9JO2o3r43WuO3XXm
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UdLlxZ+TXE8zhctkH5apJxMXJZz2hIFOVWyBuW06kFQ=;
+        b=kRVww+wIsGNYhtGeSPMt3ugWVuQh0/XgZvCF3rbeEHXLkfLaH6kwQKo1tvYbDfnIlO
+         JAncodehXs3f3+Ruvxm5HL8ECFRfDi0B9YMGCUOdP+c3uP3BA8hK3g6Wd/JDnfAVvCQq
+         WC5RQTTb4h7KUJjuS4UBvfR+hQmOGgoDkXk2wbwF/ExpewDdcSbyoMzne3P/YmnmWJZK
+         8UiF3d0IDgNPtsAqC/5jOad3BKwnuatKFkXsa07tm8exbhb4BkJQhh1jAxq1ZIQQRyK+
+         p/Kj9VjgNrB+8Q3grR0LCiYKZDQz6vwVAbw101iW3mHB0Ga7YzWgNxFU2o01Xb++vrfx
+         3Cbg==
+X-Gm-Message-State: AOAM533HoRYj/Y3uRpQXB93wJokL+sPLjRyhAf4CxWSHys4LzdYryOcD
+	MocQSBvFmtg2veKGYmYwgwXHdcIAjnBhmm0f6U4=
 X-Google-Smtp-Source: 
- ABdhPJyCU9pOFeVOiZ1OW9zJAx9CZ0l2ZlCJBfEd70vbQcm5/OkAe4HMn3jNViaHAkjjjEv1klouDw==
-X-Received: by 2002:a05:651c:621:: with SMTP id
- k33mr18522167lje.359.1637252825138;
-        Thu, 18 Nov 2021 08:27:05 -0800 (PST)
-Received: from localhost.localdomain (37-247-29-68.customers.ownit.se.
- [37.247.29.68])
-        by smtp.gmail.com with ESMTPSA id
- p17sm37252lfs.292.2021.11.18.08.27.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 08:27:04 -0800 (PST)
-From: Jacob Kroon <jacob.kroon@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex.kanavin@gmail.com>,
-	Alexander Kanavin <alex@linutronix.de>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [1.50][PATCH 4/4] bitbake: correct deprecation warning in process.py
-Date: Thu, 18 Nov 2021 17:26:23 +0100
-Message-Id: <20211118162623.3117035-5-jacob.kroon@gmail.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211118162623.3117035-1-jacob.kroon@gmail.com>
-References: <20211118162623.3117035-1-jacob.kroon@gmail.com>
+ ABdhPJxIvIhsrps+KNmGo8h+5aZ1bajFU7oWAsGzLtBq6ZHT8EVH3uTr0Lqn3eTW9VD5692MwOzTb0lfgLHdhajAHoI=
+X-Received: by 2002:a05:6402:1e92:: with SMTP id
+ f18mr15694106edf.153.1637270110613;
+ Thu, 18 Nov 2021 13:15:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211118135421.4068596-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20211118135421.4068596-1-richard.purdie@linuxfoundation.org>
+From: Christopher Larson <kergoth@gmail.com>
+Date: Thu, 18 Nov 2021 14:14:57 -0700
+Message-ID: 
+ <CABcZANk2sMUxGVhoDg8NiViDp5yQruJQB+6_6iR0fWnkCZghfg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] utils: Handle lockfile filenames that are
+ too long for filesystems
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="00000000000058367805d116a7f0"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 18 Nov 2021 16:27:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13072
+ <bitbake-devel@lists.openembedded.org>; Thu, 18 Nov 2021 21:15:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13073
 
-From: Alexander Kanavin <alex.kanavin@gmail.com>
+--00000000000058367805d116a7f0
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit aff52fe21a0b27f6302555c1e52a864550eb46ce)
-Signed-off-by: Jacob Kroon <jacob.kroon@gmail.com>
----
- lib/bb/server/process.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Nov 18, 2021 at 6:54 AM Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 07bb785a..fcdce197 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -659,7 +659,7 @@ class BBUIEventQueue:
-         self.reader = ConnectionReader(readfd)
- 
-         self.t = threading.Thread()
--        self.t.setDaemon(True)
-+        self.t.daemon = True
-         self.t.run = self.startCallbackHandler
-         self.t.start()
- 
+> The fetcher mirror code can go crazy creating lock filenames which exceed
+> the
+> filesystem limits. When this happens, the code will loop/hang.
+>
+> Handle the filename too long exception correctly but also truncate lockfile
+> lengths to under 256 since the worst case situation is lockfile overlap
+> and lack of parallelism.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/utils.py | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+> index 70634910f7..23ff64df7a 100644
+> --- a/lib/bb/utils.py
+> +++ b/lib/bb/utils.py
+> @@ -451,6 +451,11 @@ def lockfile(name, shared=False, retry=True,
+> block=False):
+>      consider the possibility of sending a signal to the process to break
+>      out - at which point you want block=True rather than retry=True.
+>      """
+> +    if len(name) > 255:
+> +        components = name.rsplit(".", 1)
+> +        components[0] = components[0][:255 - len(components[1]) - 1]
+> +        name = ".".join(components)
+>
+
+I think this may be easier to read with separate variables and
+os.path.splitext:
+
+    root, ext = os.path.splitext(name)
+    name = root[:255 - len(ext) - 1] + ext
+-- 
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Senior Software Engineer, Mentor Graphics
+
+--00000000000058367805d116a7f0
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
+<div dir=3D"ltr" class=3D"gmail_attr">On Thu, Nov 18, 2021 at 6:54 AM Richa=
+rd Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">richard=
+.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><blockquote class=3D"gm=
+ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
+204,204);padding-left:1ex">The fetcher mirror code can go crazy creating lo=
+ck filenames which exceed the<br>
+filesystem limits. When this happens, the code will loop/hang.<br>
+<br>
+Handle the filename too long exception correctly but also truncate lockfile=
+<br>
+lengths to under 256 since the worst case situation is lockfile overlap<br>
+and lack of parallelism.<br>
+<br>
+Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
+ndation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<b=
+r>
+---<br>
+=C2=A0lib/bb/utils.py | 7 ++++++-<br>
+=C2=A01 file changed, 6 insertions(+), 1 deletion(-)<br>
+<br>
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py<br>
+index 70634910f7..23ff64df7a 100644<br>
+--- a/lib/bb/utils.py<br>
++++ b/lib/bb/utils.py<br>
+@@ -451,6 +451,11 @@ def lockfile(name, shared=3DFalse, retry=3DTrue, block=
+=3DFalse):<br>
+=C2=A0 =C2=A0 =C2=A0consider the possibility of sending a signal to the pro=
+cess to break<br>
+=C2=A0 =C2=A0 =C2=A0out - at which point you want block=3DTrue rather than =
+retry=3DTrue.<br>
+=C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;<br>
++=C2=A0 =C2=A0 if len(name) &gt; 255:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 components =3D name.rsplit(&quot;.&quot;, 1)<b=
+r>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 components[0] =3D components[0][:255 - len(com=
+ponents[1]) - 1]<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 name =3D &quot;.&quot;.join(components)<br></b=
+lockquote><div><br></div><div>I think this may be easier to read with separ=
+ate variables and os.path.splitext:</div><div><br></div><div>=C2=A0 =C2=A0 =
+root, ext =3D os.path.splitext(name)</div><div>=C2=A0 =C2=A0 name =3D root[=
+:255 - len(ext) - 1]=C2=A0+ ext</div></div>-- <br><div dir=3D"ltr" class=3D=
+"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr">Christopher Larson=
+<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus=
+<br>Senior Software Engineer, Mentor Graphics</div></div></div></div></div>
+
+--00000000000058367805d116a7f0--
 
