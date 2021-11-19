@@ -1,115 +1,117 @@
-Return-Path: <jacob.kroon@gmail.com>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B45C433F5
-	for <webhook@archiver.kernel.org>; Fri, 19 Nov 2021 05:11:42 +0000 (UTC)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com
- [209.85.167.52])
- by mx.groups.io with SMTP id smtpd.web11.4635.1637298701676184421
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2689C433FE
+	for <webhook@archiver.kernel.org>; Fri, 19 Nov 2021 17:06:00 +0000 (UTC)
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net
+ [217.70.183.201])
+ by mx.groups.io with SMTP id smtpd.web09.11943.1637341558731057441
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 18 Nov 2021 21:11:42 -0800
+ Fri, 19 Nov 2021 09:05:59 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=gjLi/AmN;
- spf=pass (domain: gmail.com, ip: 209.85.167.52,
- mailfrom: jacob.kroon@gmail.com)
-Received: by mail-lf1-f52.google.com with SMTP id z34so37783108lfu.8
-        for <bitbake-devel@lists.openembedded.org>;
- Thu, 18 Nov 2021 21:11:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=tjJq/18FdWDfwUaI8wjAdurfwzV+pkBaiMMa/viChO0=;
-        b=gjLi/AmNG0xyPAlJOQfgIz+yDjfYiY5z0I17hJ3mQ9YFPlFJdn2nKv3LTTXaf6T8Dp
-         peADqGmB3Xt6sx/UoD7htyUzxTdjDFOsG8Eu05njm1pGGPfmkTBGwzPh95XJWJbHJGeX
-         7ZAYqz61u8lSS2PojOkfOALEpBivHQXmtNjzQZ3A0zsANrc6/21ge+mjBPjNUG4nalXG
-         hM+N6YX/uiGVdn0WcBWu0YZVi7Jqmm3oCkq5vbC2Q/CmxdPSNMnCpTDKe5FH0hgn1mO/
-         k+g/lf0gzXpjoWR7SkBRQcMl8rB2JXNanhghpJqa1pTo249jj4p9KRE10/3/SCtvEWGT
-         xryQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=tjJq/18FdWDfwUaI8wjAdurfwzV+pkBaiMMa/viChO0=;
-        b=u6ztEmgdL7YepMRJBfd2Fashreo9SAR/aaeM4EIYCMSjlFiPtv04EdvkODQfZFLn4Z
-         IjPznigwOv6XalbV7hm3a5cefevZLdEp0GOXNQygCy7arCedLh1uCaPq4vWE39Z7CLxq
-         Ie/TsSnD4581Sh1EfaPNqt3hW6XzSFBsBp/Ds7YkLBxt98ybDS3DcRUgx9C6VMav9VJn
-         RAWhH/gbJTVBk60BFPlh07XOoO9m0GxWlGNMkVDo16fc3qsU3Soq0Phm+mTYOoWqTl2H
-         oFsjsCe4rQ2QwN0zp546gfjs/IZLCpy/H6R9jsViWpd9EYlUV8QNvsVPLgt9ndGsapKo
-         Sc9g==
-X-Gm-Message-State: AOAM5305FxWneILQkbSZ0puvEB1IYO7LFKRGevTFoCKnvwuYZUD8JKhd
-	Qn1IiLiF8xT2ku8oxHsql40=
-X-Google-Smtp-Source: 
- ABdhPJw7sMvBKntFjDHuTk+Ern5exzQJVPjpVLr5DbfMr2RXUtHEFsghLzmN4UyJx6O8z7b2Rv3WQA==
-X-Received: by 2002:ac2:4312:: with SMTP id
- l18mr29482521lfh.602.1637298699475;
-        Thu, 18 Nov 2021 21:11:39 -0800 (PST)
-Received: from [192.168.10.175] (37-247-29-68.customers.ownit.se.
- [37.247.29.68])
-        by smtp.gmail.com with ESMTPSA id
- x27sm243766lfq.192.2021.11.18.21.11.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Nov 2021 21:11:39 -0800 (PST)
-Message-ID: <1ddd2d5d-addd-6fce-628a-253ddc137255@gmail.com>
-Date: Fri, 19 Nov 2021 06:11:38 +0100
+ dkim=missing;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: michael.opdenacker@bootlin.com)
+Received: (Authenticated sender: michael.opdenacker@bootlin.com)
+	by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C0A911BF209;
+	Fri, 19 Nov 2021 17:05:56 +0000 (UTC)
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	Michael Opdenacker <michael.opdenacker@bootlin.com>
+Subject: [PATCH] bitbake-user-manual: fix backslash issues
+Date: Fri, 19 Nov 2021 18:05:54 +0100
+Message-Id: <20211119170554.1972442-1-michael.opdenacker@bootlin.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [bitbake-devel] [1.50][PATCH 0/4] Backport fixes for python 3.10
-Content-Language: en-US
-To: "Mittal, Anuj" <anuj.mittal@intel.com>,
- "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-References: <20211118162623.3117035-1-jacob.kroon@gmail.com>
- <SJ0PR11MB4896E641713CC8C0787C9E28F89B9@SJ0PR11MB4896.namprd11.prod.outlook.com>
-From: Jacob Kroon <jacob.kroon@gmail.com>
-In-Reply-To: 
- <SJ0PR11MB4896E641713CC8C0787C9E28F89B9@SJ0PR11MB4896.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 19 Nov 2021 05:11:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13076
+ <bitbake-devel@lists.openembedded.org>; Fri, 19 Nov 2021 17:06:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13077
 
-On 11/19/21 00:35, Mittal, Anuj wrote:
-> Thanks, I already have these in my queue and would be sent as part of next merge request.
-> 
-> https://cgit.openembedded.org/bitbake-contrib/log/?h=anujm/1.50
-> 
-> Thanks,
-> 
-> Anuj
-> 
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+---
+ .../bitbake-user-manual-fetching.rst          | 20 +++++++++----------
+ .../bitbake-user-manual-metadata.rst          | 10 +++++-----
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
-Super! Thanks Anuj
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index 4396830a..260d43ab 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -84,18 +84,18 @@ fetcher does know how to use HTTP as a transport.
+ Here are some examples that show commonly used mirror definitions::
+ 
+    PREMIRRORS ?= "\
+-      bzr://.*/.\*  http://somemirror.org/sources/ \\n \
+-      cvs://.*/.\*  http://somemirror.org/sources/ \\n \
+-      git://.*/.\*  http://somemirror.org/sources/ \\n \
+-      hg://.*/.\*   http://somemirror.org/sources/ \\n \
+-      osc://.*/.\*  http://somemirror.org/sources/ \\n \
+-      p4://.*/.\*   http://somemirror.org/sources/ \\n \
+-     svn://.*/.\*   http://somemirror.org/sources/ \\n"
++      bzr://.*/.\*  http://somemirror.org/sources/ \n \
++      cvs://.*/.\*  http://somemirror.org/sources/ \n \
++      git://.*/.\*  http://somemirror.org/sources/ \n \
++      hg://.*/.\*   http://somemirror.org/sources/ \n \
++      osc://.*/.\*  http://somemirror.org/sources/ \n \
++      p4://.*/.\*   http://somemirror.org/sources/ \n \
++     svn://.*/.\*   http://somemirror.org/sources/ \n"
+ 
+    MIRRORS =+ "\
+-      ftp://.*/.\*   http://somemirror.org/sources/ \\n \
+-      http://.*/.\*  http://somemirror.org/sources/ \\n \
+-      https://.*/.\* http://somemirror.org/sources/ \\n"
++      ftp://.*/.\*   http://somemirror.org/sources/ \n \
++      http://.*/.\*  http://somemirror.org/sources/ \n \
++      https://.*/.\* http://somemirror.org/sources/ \n"
+ 
+ It is useful to note that BitBake
+ supports cross-URLs. It is possible to mirror a Git repository on an
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index 119720d5..46bcfa60 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -104,15 +104,15 @@ Line Joining
+ 
+ Outside of :ref:`functions <bitbake-user-manual/bitbake-user-manual-metadata:functions>`,
+ BitBake joins any line ending in
+-a backslash character ("\") with the following line before parsing
+-statements. The most common use for the "\" character is to split
++a backslash character ("\\") with the following line before parsing
++statements. The most common use for the "\\" character is to split
+ variable assignments over multiple lines, as in the following example::
+ 
+    FOO = "bar \
+           baz \
+           qaz"
+ 
+-Both the "\" character and the newline
++Both the "\\" character and the newline
+ character that follow it are removed when joining lines. Thus, no
+ newline characters end up in the value of ``FOO``.
+ 
+@@ -125,7 +125,7 @@ Consider this additional example where the two assignments both assign
+ 
+ .. note::
+ 
+-   BitBake does not interpret escape sequences like "\n" in variable
++   BitBake does not interpret escape sequences like "\\n" in variable
+    values. For these to have an effect, the value must be passed to some
+    utility that interprets escape sequences, such as
+    ``printf`` or ``echo -n``.
+@@ -159,7 +159,7 @@ behavior::
+    C = "qux"
+    *At this point, ${A} equals "qux bar baz"*
+    B = "norf"
+-   *At this point, ${A} equals "norf baz"\*
++   *At this point, ${A} equals "norf baz"*
+ 
+ Contrast this behavior with the
+ :ref:`bitbake-user-manual/bitbake-user-manual-metadata:immediate variable
+-- 
+2.25.1
 
-/Jacob
-
->> -----Original Message-----
->> From: bitbake-devel@lists.openembedded.org <bitbake-
->> devel@lists.openembedded.org> On Behalf Of Jacob Kroon
->> Sent: Friday, November 19, 2021 12:26 AM
->> To: bitbake-devel@lists.openembedded.org
->> Subject: [bitbake-devel] [1.50][PATCH 0/4] Backport fixes for python 3.10
->>
->> Backport fixes for running bitbake on Fedora 35, which ships with python 3.10.
->>
->> Alexander Kanavin (3):
->>    bitbake: correct the collections vs collections.abc deprecation
->>    bitbake: adjust parser error check for python 3.10 compatibility
->>    bitbake: correct deprecation warning in process.py
->>
->> Justin Bronder (1):
->>    hashserv: let asyncio discover the running loop
->>
->>   lib/bb/cache.py          | 3 ++-
->>   lib/bb/data_smart.py     | 4 ++--
->>   lib/bb/persist_data.py   | 5 +++--
->>   lib/bb/server/process.py | 2 +-
->>   lib/hashserv/server.py   | 4 ++--
->>   5 files changed, 10 insertions(+), 8 deletions(-)
-> 
 
