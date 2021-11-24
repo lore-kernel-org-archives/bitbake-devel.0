@@ -1,150 +1,77 @@
-Return-Path: <Jasper.Orschulko@iris-sensing.com>
+Return-Path: <jasper@fancydomain.eu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5ADC433EF
-	for <webhook@archiver.kernel.org>; Wed, 24 Nov 2021 16:04:19 +0000 (UTC)
-Received: from mail.irisgmbh.de (mail.irisgmbh.de [81.169.172.79])
- by mx.groups.io with SMTP id smtpd.web09.315.1637769857726311327
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E23AC433F5
+	for <webhook@archiver.kernel.org>; Wed, 24 Nov 2021 18:36:18 +0000 (UTC)
+Received: from mx.walter.deinstapel.de (mx.walter.deinstapel.de
+ [116.202.209.171])
+ by mx.groups.io with SMTP id smtpd.web11.2047.1637778977213837861
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 24 Nov 2021 08:04:18 -0800
+ Wed, 24 Nov 2021 10:36:18 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=none, err=SPF record not found (domain: iris-sensing.com,
- ip: 81.169.172.79, mailfrom: jasper.orschulko@iris-sensing.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.irisgmbh.de (Postfix) with ESMTP id 97F2231E034D;
-	Wed, 24 Nov 2021 17:04:14 +0100 (CET)
-X-Virus-Scanned: amavisd-new at irisgmbh.de
-Received: from mail.irisgmbh.de ([127.0.0.1])
-	by localhost (s15324379.rootmaster.info [127.0.0.1]) (amavisd-new,
- port 10027)
-	with ESMTP; Wed, 24 Nov 2021 17:04:14 +0100 (CET)
-Received: from ERDE.irisgmbh.local (unknown [213.61.209.158])
-	by mail.irisgmbh.de (Postfix) with ESMTPS id 7822F31E0337;
-	Wed, 24 Nov 2021 17:04:14 +0100 (CET)
-Received: from ERDE.irisgmbh.local ([172.30.10.11]) by ERDE.irisgmbh.local
- ([172.30.10.11]) with mapi id 14.03.0513.000; Wed, 24 Nov 2021 17:04:13 +0100
-From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
-To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
-	"openembedded-core@lists.openembedded.org"
-	<openembedded-core@lists.openembedded.org>, "jasper@fancydomain.eu"
-	<jasper@fancydomain.eu>
-CC: "martin@mko.dev" <martin@mko.dev>, Daniel Baumgart
-	<Daniel.Baumgart@iris-sensing.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
- for repo 2.17.3
-Thread-Topic: [bitbake-devel] [oe-core][PATCH 1/2] devtools: Initial recipe
- for repo 2.17.3
-Thread-Index: 
- AQHX0klmUmLVPFJtF0Ob3PuHG3t8+6v03rAAgAADSACAAAYMgIABSAqAgATTzgCAAajaAIAAElkAgAAs7QCAAUEMAIAUt3kA
-Date: Wed, 24 Nov 2021 16:04:12 +0000
-Message-ID: <8a46e343a67d81eaf9d45142a1eb6be064c4df67.camel@iris-sensing.com>
-References: <20211105133104.19895-1-jasper@fancydomain.eu>
-	 <AM9PR09MB4642AA3727D430C698E95EE5A88E9@AM9PR09MB4642.eurprd09.prod.outlook.com>
-	 <b8897c8a436f384ef0a41d708816c2f61f9e22c7.camel@iris-sensing.com>
-	 <d87ff011218f55d97e5aa48ff9b06d216f6d477a.camel@iris-sensing.com>
-	 <029d18fa589265e32476c7cc45c9977f7b4bb9aa.camel@linuxfoundation.org>
-	 <3101a847508371b09b2949434f9ca09c672a7097.camel@iris-sensing.com>
-	 <f815b01f00eb3271ea947442cd6837fa27cefb3f.camel@linuxfoundation.org>
-	 <d36258228dd2fb0dc2fdb88ddab9a117fa1454db.camel@iris-sensing.com>
-	 <b8b2081df6de0e8eb0caaf0bb93cb2c337d885c2.camel@linuxfoundation.org>
-	 <4f23ecc6eaeb73580a90265bab560063d07856fc.camel@iris-sensing.com>
-In-Reply-To: <4f23ecc6eaeb73580a90265bab560063d07856fc.camel@iris-sensing.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.10.1]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3BCFC41DDC8D2940B066A6DD80BF84E5@irisgmbh.local>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+ dkim=fail reason="no key for verify" header.i=@fancydomain.eu header.s=mail
+ header.b=I8FHsooS;
+ spf=pass (domain: fancydomain.eu, ip: 116.202.209.171,
+ mailfrom: jasper@fancydomain.eu)
+From: jasper@fancydomain.eu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fancydomain.eu;
+	s=mail; t=1637778973;
+	bh=UCHZaJuxFw+PJISigau4cNc/BIjVaeL0gFLCi9eWNsk=;
+	h=From:To:Cc:Subject:In-Reply-To:References;
+	b=I8FHsooSVD0ghAGZ8g6LLtRnkGWAX1GeSa2BtJ5n2XlG9dhngp+gOiZrmYRSUduuA
+	 XLxLt1vsPyxOSkyzoueFdM6w4Nzo1Hr+ZCTysUtuGiP9EldRIVb2FTlLp721BXDBlc
+	 dEuH7OV1ypd6bwU3JPmvU161Ct//GAfV4lpXqUM3r4iXJqp9eVsNNyDvexjoV7EkOk
+	 Okp38lugTcQ9odtUtcPCA6PkVrrIb9Lesra6xjQPBvoVXgnyPmIBmHrn8RnvC3gTiC
+	 bX5/41t/2qSbGSlsGlA6T1rzJwwzpSEl/QTuZ65gj7q3aS+bTXh+M4oDGMUvp7A0D+
+	 QkDp7BI9p11kA==
+To: openembedded-core@lists.openembedded.org
+Cc: martin@mko.dev,
+	Daniel.Baumgart@iris-sensing.net,
+	bitbake-devel@lists.openembedded.org,
+	Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+Subject: [eo-core][PATCH v6 2/2] base.bbclass: Add sysroot deps for repo
+ fetcher
+Date: Wed, 24 Nov 2021 19:35:40 +0100
+Message-Id: <20211124183540.39312-2-jasper@fancydomain.eu>
+In-Reply-To: <20211124183540.39312-1-jasper@fancydomain.eu>
+References: <20211124183540.39312-1-jasper@fancydomain.eu>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 24 Nov 2021 16:04:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13098
+ <bitbake-devel@lists.openembedded.org>; Wed, 24 Nov 2021 18:36:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13100
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMjU2DQoNCkhpIFJp
-Y2hhcmQgYW5kIGZvbGtzLA0KDQo+IFRoZSBvbmx5IG90aGVyIHdheSBJIGNvdWxkIGltYWdpbmUg
-dGhpcyB0byB3b3JrIHdvdWxkIHJlcXVpcmUgdXMgdG8NCj4ga2VlcCB0aGUgbWFuaWZlc3QgZmls
-ZSB3aXRoaW4gdGhlIG1ldGEgbGF5ZXIgYW5kIGRvIGEgc29tZXdoYXQNCj4gImhhY2t5Ig0KPiB3
-b3JrYXJvdW5kOg0KPiANCj4gSXQgaXMgcG9zc2libGUgdG8gcnVuIGByZXBvIGluaXRgIG9uIGEg
-bG9jYWwgZ2l0IGZvbGRlci4NCj4gQXMgc3VjaCwgc29tZXRoaW5nIGxpa2UgdGhpcyBjb3VsZCB3
-b3JrOg0KPiANCj4gMSkgY3JlYXRlIHRlbXAgZm9sZGVyIChlLmcuIC90bXAvcmVwby1YWFhYWFhY
-WFgpDQo+IDIpIHJ1biBnaXQgaW5pdCBpbiB0ZW1wIGZvbGRlcg0KPiAzKSBpbnN0YWxsIG1hbmlm
-ZXN0IGZpbGUgaW50byB0ZW1wIGZvbGRlcg0KPiA0KSBhZGQgJiBjb21taXQNCj4gNSkgcnVuIHJl
-cG8gaW5pdCAtdSBmaWxlOi8vJHRlbXAtZm9sZGVyDQoNCnRvZGF5IEkgZGlzY292ZXJlZCB0aGF0
-IHJlcG8gYWxzbyBzdXBwb3J0cyB0aGUgLS1zdGFuZGFsb25lLW1hbmlmZXN0DQpmbGFnLCB3aGlj
-aCBtYWtlcyB0aGUgd29ya2Fyb3VuZCBkZXNjcmliZWQgYWJvdmUgb2Jzb2xldGUuDQpUaHVzLCBJ
-IGJlbGlldmUgc3VwcG9ydGluZyByZXBvIG1hbmlmZXN0cyBmcm9tIHRoZSBsYXllciByZXBvIG9u
-bHkgaXMNCnRoZSBjbGVhbmVzdCBhbmQgZWFzaWVzdCB3YXkgdG8gaW1wbGVtZW50IHRoaXMgYW5k
-IHdlDQp3b3VsZG4ndCBoYXZlIHRvIHJlbHkgb24gY2xvbmluZyBtYW5pZmVzdCByZXBvcyBkdXJp
-bmcgcmVjaXBlIHBhcnNpbmcuDQoNCkhvd2V2ZXIsIHRoaXMgd291bGQgYmUgYSBicmVha2luZyBj
-aGFuZ2UgdG8gdGhlIGN1cnJlbnQgcmVwbyBmZXRjaGVyDQppbXBsZW1lbnRhdGlvbiwgYXMgaXQg
-c3VwcG9ydHMgcmVtb3RlIG1hbmlmZXN0IHJlcG9zLg0KSSBhbSBwcmV0dHkgY29uZmlkZW50IGhv
-d2V2ZXIgdGhhdCBubyBvbmUgdXNlcyB0aGUgYXJndWFibHkgYWxyZWFkeQ0KYnJva2VuIGFuZCB1
-bnVzYWJsZSBjdXJyZW50IHJlcG8gZmV0Y2hlciBpbXBsZW1lbnRhdGlvbg0KaW4gYSBwcm9kdWN0
-aW9uIHdvcmtsb2FkIHNvIHRoaXMgc2hvdWxkbid0IGJlIGEgbWFqb3IgaXNzdWUuDQoNCldoYXQg
-YXJlIHlvdXIgdGhvdWdodHMgb24gdGhpcz8NCg0KLSAtLSANCldpdGggYmVzdCByZWdhcmRzDQoN
-Ckphc3BlciBPcnNjaHVsa28NCkRldk9wcyBFbmdpbmVlcg0KDQpUZWwuICs0OSAzMCA1OCA1OCAx
-NCAyNjUNCkZheCArNDkgMzAgNTggNTggMTQgOTk5DQpKYXNwZXIuT3JzY2h1bGtvQGlyaXMtc2Vu
-c2luZy5jb20NCg0K4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDi
-gKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKAoiDigKIg4oCiIOKA
-og0KDQppcmlzLUdtYkgNCmluZnJhcmVkICYgaW50ZWxsaWdlbnQgc2Vuc29ycw0KU2NobmVsbGVy
-c3RyYcOfZSAxLTUgfCAxMjQzOSBCZXJsaW4NCg0KaHR0cHM6Ly9pcmlzLXNlbnNpbmcuY29tLw0K
-DQoNCg0KDQoNCk9uIFRodSwgMjAyMS0xMS0xMSBhdCAxMjo0MiArMDEwMCwgSmFzcGVyIE9yc2No
-dWxrbyB3cm90ZToNCj4gSGkgUmljaGFyZCwNCj4gDQo+ID4gRXZlbiB0ZW4gcmVjaXBlcyB1c2lu
-ZyB0aGlzIHdpbGwgc2hvdyBhIGRlZ3JhZGF0aW9uIGluIHBhcnNpbmcNCj4gPiBzcGVlZA0KPiA+
-IGFuZCBJIGRvDQo+ID4gZ2V0IGEgbG90IG9mIGNvbXBsYWludHMgd2hlbiBwYXJzaW5nIHNsb3dz
-IGRvd24gZm9yIGFueSByZWFzb24uIFRoZQ0KPiA+IHVzZXIgZG9lc24ndA0KPiA+IGV4cGVjdCB0
-aGlzIGFuZCBpdCB3b24ndCBiZSB2aXNpYmxlIHdoYXQgYml0YmFrZSBpcyBkb2luZyAoc2l0dGlu
-Zw0KPiA+IGF0DQo+ID4gOTklIHBhcnNlZA0KPiA+IGZvciBhIHBlcmlvZCkuDQo+ID4gDQo+ID4g
-QWxzbywgdGhlICJ0ZW5kIHRvIGJlIHNtYWxsIiBpbXBsaWVzIHNvbWVvbmUgd2lsbCBjcmVhdGUg
-YSBodWdlIG9uZQ0KPiA+IGF0IHNvbWUNCj4gPiBwb2ludCBldmVuIGlmIHRoYXQgaXMgYSBiYWQg
-aWRlYSBmb3Igd2hhdGV2ZXIgcmVhc29ucywgSSBqdXN0IGtub3cNCj4gPiBob3cgdGhlc2UNCj4g
-PiB0aGluZ3MgZW5kIHVwIGdvaW5nIDooLg0KPiANCj4gSSBiZWxpZXZlIHRoaXMgaXMgc29tZXRo
-aW5nIHRoYXQgY291bGQgYmUgYWRkcmVzc2VkIGluIHRoZQ0KPiBkb2N1bWVudGF0aW9uIG9mIHRo
-ZSByZXBvIGZldGNoZXI/IFNvbWV0aGluZyBhbG9uZyB0aGUgbGluZXMgb2YNCj4gIlVzaW5nDQo+
-IHRoZSByZXBvIGZldGNoZXIgY2FuIGluY3JlYXNlIHRoZSB0aW1lIHNwZW50IGluIHRoZSBwYXJz
-aW5nIHBoYXNlLCBhcw0KPiB3ZSBuZWVkIHRvIGNsb25lIGFuZCBpbnNwZWN0IHRoZSBtYW5pZmVz
-dCByZXBvc2l0b3J5LiBUbyBhdm9pZCB0aGlzLA0KPiBrZWVwIHRoZSBzaXplIG9mIHlvdXIgbWFu
-aWZlc3QgcmVwb3NpdG9yeSBhdCBhIG1pbmltdW0uIg0KPiANCj4gV2hlbiB0aGlzIGlzIGRvbmUs
-IHRoZSBkYWxheSBpcyBiYXJlbHkgbm90aWNhYmxlLiBXZSBoYXZlIGEgdGVzdHNldHVwDQo+IHdp
-dGggMjQgcmVjaXBlcyBhbmQgcmVhc29uYWJsZSBwYXJzaW5nIHNwZWVkcy4NCj4gDQo+ID4gKiBE
-b2VzIGl0IG9ubHkgY2xvbmUgYSByZXBvIGluIHRoZSBBVVRPUkVWIGNhc2U/DQo+IA0KPiBObywg
-aXQgYWxzbyBjbG9uZXMgd2l0aCBmaXhlZCByZWZzcGVjcywgYXMgd2Ugd2FudCB0byBlbnN1cmUg
-dGhhdA0KPiBlYWNoDQo+IG9mIHRoZSBnaXQgcmVwb3MgcmVmZXJlbmNlZCBpbiB0aGUgbWFuaWZl
-c3QgYWxzbyB1c2VzIGZpeGVkIHJlZnNwZWNzLg0KPiBPdGhlcndpc2UsIHRoZSBzb3VyY2VzIGlu
-IHRoZSBiYWNrZ3JvdW5kIG1pZ2h0IGNoYW5nZSwgd2hpbGUgdGhlDQo+IHJlY2lwZQ0KPiBzdGls
-bCAoY29ycmVjdGx5KSByZWZlcmVuY2VzIHRoZSBzYW1lIHJldmlzaW9uIG9mIHRoZSBtYW5pZmVz
-dCByZXBvLg0KPiANCj4gPiAqIENvdWxkIGl0IG9ubHkgb2J0YWluIHRoZSBtYW5pZmVzdCBmaWxl
-IHNvbWVob3cgd2l0aG91dCBhIGNsb25lIG9mDQo+ID4gdGhlIHJlcG8/DQo+IA0KPiBVbmZvcnR1
-bmF0ZWx5IG5vdCByZWFsbHkuIGdpdCBkb2VzIG5vdCBvZmZlciBhIHdheSB0byBsaXN0IHRoZQ0K
-PiBjb250ZW50DQo+IG9mIGEgZmlsZSB3aXRob3V0IGNsb25pbmcgaXQgYmVmb3JlaGFuZC4NCj4g
-DQo+IFRoZSBvbmx5IG90aGVyIHdheSBJIGNvdWxkIGltYWdpbmUgdGhpcyB0byB3b3JrIHdvdWxk
-IHJlcXVpcmUgdXMgdG8NCj4ga2VlcCB0aGUgbWFuaWZlc3QgZmlsZSB3aXRoaW4gdGhlIG1ldGEg
-bGF5ZXIgYW5kIGRvIGEgc29tZXdoYXQNCj4gImhhY2t5Ig0KPiB3b3JrYXJvdW5kOg0KPiANCj4g
-SXQgaXMgcG9zc2libGUgdG8gcnVuIGByZXBvIGluaXRgIG9uIGEgbG9jYWwgZ2l0IGZvbGRlci4N
-Cj4gQXMgc3VjaCwgc29tZXRoaW5nIGxpa2UgdGhpcyBjb3VsZCB3b3JrOg0KPiANCj4gMSkgY3Jl
-YXRlIHRlbXAgZm9sZGVyIChlLmcuIC90bXAvcmVwby1YWFhYWFhYWFgpDQo+IDIpIHJ1biBnaXQg
-aW5pdCBpbiB0ZW1wIGZvbGRlcg0KPiAzKSBpbnN0YWxsIG1hbmlmZXN0IGZpbGUgaW50byB0ZW1w
-IGZvbGRlcg0KPiA0KSBhZGQgJiBjb21taXQNCj4gNSkgcnVuIHJlcG8gaW5pdCAtdSBmaWxlOi8v
-JHRlbXAtZm9sZGVyDQo+IA0KPiBUaGUgcmVwbyBtYW5pZmVzdCBjb3VsZCBldmVuIHN0aWxsIGJl
-IHVzZWQgb3V0c2lkZSBvZiB5b2N0bywgYnkgdXNpbmcNCj4gdGhlIG1ldGFsYXllciByZXBvIGFz
-IGJhc2lzIGZvciB0aGUgcmVwbyBpbml0OiBgcmVwbyBpbml0IC11DQo+ICRtZXRhbGF5ZXItcmVw
-byAtbSAkcGF0aC10by1tYW5pZmVzdC1maWxlYC4gTm90IHByZXR0eSwgYnV0IGl0IHdvcmtzLg0K
-PiANCj4gU28gaWYgY2xvbmluZyB3aXRoaW4gdGhlIHBhcnNlciBpcyBhIGRlYWxicmVha2VyIGZv
-ciB5b3UsIHRoaXMgb3B0aW9uDQo+IG1pZ2h0IGJlIHdvcnRoIGxvb2tpbmcgaW50by4NCj4gDQot
-LS0tLUJFR0lOIFBHUCBTSUdOQVRVUkUtLS0tLQ0KDQppUUV6QkFFQkNBQWRGaUVFNFd5UE1JQzVB
-cDQrT29vMVlncWV3MDdWTU5VRkFtR2VZbndBQ2drUVlncWV3MDdWDQpNTldYRkFnQWtaNytDUlph
-ZFVJdE0rQXk4dWVQZmZ5c3VRaGx3eEhhQWd6eDFIKzRQay9IS0s5UXBFeTNqRld6DQprT0RyM0RQ
-T1dsZjZlUytBY3FwSlhWWWRNc1R1Y3ZFMzRlTElXYjhyZUZrclBRS010eHAwTjZVNWdxejdlK0Jt
-DQpXZjRsUzA0dHFHWnpDL0xkMkRPcy96RW5HS0V3WEJSSE1YLzlqNll2Vk1ZeHdLanhnaFcyTFJs
-b1dwemdoZHVIDQpqMEZUQXAxYUdLTGhDUWpxZUV1TlpSTVQrcm4waThrNnU4THhlbDF3UkhpMkxO
-aHlUM1ZEM05UaGpWTDY0YWNIDQpGRjgzamhheFEwSnhwc1NuOW91dkpEM3dNSkhpNzJyZGZHenpu
-dVFIbUZUMGxPeE81QWpsY0lPdEszS2lzaUFJDQpLUS9qRVYvNDRXTjBKTzdPcG1IclZ5T1NmUGVW
-QkE9PQ0KPUgwRloNCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQ0K
+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+
+Add repo-native as prerequisite for the repo fetcher.
+
+Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+---
+ meta/classes/base.bbclass | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/meta/classes/base.bbclass b/meta/classes/base.bbclass
+index a65fcc6c1d..b709777f24 100644
+--- a/meta/classes/base.bbclass
++++ b/meta/classes/base.bbclass
+@@ -665,6 +665,10 @@ python () {
+         elif uri.scheme =3D=3D "npm":
+             d.appendVarFlag('do_fetch', 'depends', ' nodejs-native:do_po=
+pulate_sysroot')
+=20
++        elif uri.scheme =3D=3D "repo":
++            needsrcrev =3D True
++            d.appendVarFlag('do_fetch', 'depends', ' repo-native:do_popu=
+late_sysroot')
++
+         # *.lz4 should DEPEND on lz4-native for unpacking
+         if path.endswith('.lz4'):
+             d.appendVarFlag('do_unpack', 'depends', ' lz4-native:do_popu=
+late_sysroot')
+--=20
+2.34.0
+
 
