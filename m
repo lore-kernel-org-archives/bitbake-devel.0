@@ -2,45 +2,45 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9264C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FCBC433F5
 	for <webhook@archiver.kernel.org>; Thu, 25 Nov 2021 13:00:22 +0000 (UTC)
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com
- (EUR02-VE1-obe.outbound.protection.outlook.com [40.107.2.59])
- by mx.groups.io with SMTP id smtpd.web10.11801.1637845217309637017
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+ (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.53])
+ by mx.groups.io with SMTP id smtpd.web12.11588.1637845220665090110
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 25 Nov 2021 05:00:22 -0800
 Authentication-Results: mx.groups.io;
  dkim=fail reason="body hash did not verify"
  header.i=@weidmueller.onmicrosoft.com
- header.s=selector1-weidmueller-onmicrosoft-com header.b=3gU+dqcG;
- spf=pass (domain: weidmueller.com, ip: 40.107.2.59,
+ header.s=selector1-weidmueller-onmicrosoft-com header.b=DsvKUkH8;
+ spf=pass (domain: weidmueller.com, ip: 40.107.21.53,
  mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kIJri4k6INOgk8ZFFs4UjH1t6iqAX6njohUp5exHyrAx7YhaPG16invM1jNGmGmNeXdfFIIgCUlkumIRi2weZ9D6yEU+THEH3d5nv0e/FwK9eNmV+d2OXyupBiiChTVkLRLcuRl3cqkLRNUFo2ob4u73yAdPQTIXdYK2IUUwCzcpTvcU7EfRHZ9+IPxq7TEQ28zyegNn0OkfYlwAycN3d1xzuHlqpjX9Cvq5J7PGLZ0BgZ/1w+VMDme3gBO/pmwSVLwuB1riSajMVsnkiDIxoBOpOvMqpSsljUcF7zHB9ofCC0tbZIagmIGKxODH2kxgfTNU5+Up8pDJHeKPo+zaiw==
+ b=KlGrvjuXG/XRfzhw5k217ZpFLNyUMj3ElzNjIL7OJEMwi7gUjhZLYym6TRcZiMVrh4+hcB0L+/fGrD8VaNut4mGchxNbkgjoEf3YQSoleQIsn+w/cDilpmYjRlshXI33ft8AKLv4Di+MVbRKfhCBenKvSiLv2mFzef+Qt1lTiMWr7AeqzjymAA/W2f6tTF0kejRL4ArPgd1xQnggCFWtZuZG04VFghwP8fqLqGhoU2HMhbxRD6V1QrIsbwGFJ+nvkabtZHUC2mCz7G/ZLfRhECQfNHlzDkoaGgTu7dCvvAHl1LZ4iVxyWAMGqdlyqPI64JgMQF1RwHVUwnsGU5iYBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DZgwLcpmV5KSUjJ9ZtwwSPejrhXzOZwzWUDA5EUJtwI=;
- b=RlxTpZJdFMM3ar1LbHjy5mWVMy8Ah0TfVdLfd5yU9qmEBcBc/YAqaEcT883182OEx13oE0JOICWe9UdzPf8AQfSG3V0FvgluleFm/cGgBs/OoV/Bul+mgchUMQBNuPvVk5zbVgvjnoLTcmvQxvSuzfkDIvYbLXZBSPksv10zhrN5e/lZ4ptj1ZOh/GOZYYf6+QvYOR+E9f95U0KqawNZ7MvDCXTUMekPh3SewEgLEQ/4D2S/44flhfr+1m4BDnuAxlhOGt+/aJ0ZhJGB76uszhGCBklXfmnzYUwaBQilKy1wOOhqpb4/a2bVB5uPUxVV2lTDDzfzpXBTcQrPubWPQQ==
+ bh=9MtG/ZnaQYaC3LkXIwzROTukLBc03qwPzRwcyM2nAnY=;
+ b=nIwy6dxrm2vJL+TxNRlUHcVION+7ovX2Q0Wz2+ertujfHLdU/aE7L/JZ9OJfXGMcIrd3D9RpFzEO8ME1h38O/h2mguIF4OuTNJZox2vfMqBKkIxXoeEQ2iiEalJOBiwLgA9UW/YN2wuRxMpv9LXTHnID2xq5iG2dij6lGzxz3q/HWJGoF5cHiXYQEDZJHeYbkYtW4h4BTs6KSqK1mztBGp5QPFHdaV3N+21J3obsxH9BDU3LstiQKf5dqHZEqvYyHb9Ey5HFBHWzVVmV00LBsOjx5CDrp3a4o6gJx7zRRRnPiRytrw84CctlMJmfX0w5ihXwGb0roVRI2+KltOtdgQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=weidmueller.onmicrosoft.com; s=selector1-weidmueller-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DZgwLcpmV5KSUjJ9ZtwwSPejrhXzOZwzWUDA5EUJtwI=;
- b=3gU+dqcGCdpuusqZnIpXJzAdV3w7ItEpMWJkBRnjesi5l/SsZ2N3tB9D29Oo23rZzsobCDtlzOmg7tNNQ3wrMa8hDN+EVtjMMeKEj9vsX3oyJa9+qbuo9qvdHKX0U2wOdQdG9If5rSvAW81gl7ny+iDKrn+LIiJtBI3ioZ4P7R4=
+ bh=9MtG/ZnaQYaC3LkXIwzROTukLBc03qwPzRwcyM2nAnY=;
+ b=DsvKUkH8HPtyHqHWBWNh46T7vGNL0vO7/mt4tNR9hhsMuOPC3s0v2kYGNzfi4L6bsTe5Q4pfYzRtqqw886p0Fr1XOCYqlmhxOjGm9NDzJ34Ue9LQdjNt/wG7KxnyLL+Y1QEoFtUtKrg2ajXAGr5BZxILSK97p2VrolC5s4p6r90=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
- by PAXPR08MB7020.eurprd08.prod.outlook.com (2603:10a6:102:203::22) with
+ by PR2PR08MB5228.eurprd08.prod.outlook.com (2603:10a6:101:21::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.22; Thu, 25 Nov
- 2021 13:00:15 +0000
+ 2021 13:00:17 +0000
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::f:41c4:eb10:5010]) by PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::f:41c4:eb10:5010%7]) with mapi id 15.20.4713.026; Thu, 25 Nov 2021
- 13:00:15 +0000
+ 13:00:17 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org,
 	Alexander Kanavin <alex.kanavin@gmail.com>,
@@ -48,10 +48,10 @@ To: bitbake-devel@lists.openembedded.org,
 	Martin Koppehel <martin@mko.dev>,
 	Richard Purdie <richard.purdie@linuxfoundation.org>
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [PATCH 2/4] fetch2: Add striplevel support to unpack
-Date: Thu, 25 Nov 2021 13:59:52 +0100
+Subject: [PATCH 4/4] test/fetch: Add striplevel unpack parameter test
+Date: Thu, 25 Nov 2021 13:59:54 +0100
 Message-ID: 
- <20211125125954.15890-2-stefan.herbrechtsmeier-oss@weidmueller.com>
+ <20211125125954.15890-4-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: 
  <20211125125954.15890-1-stefan.herbrechtsmeier-oss@weidmueller.com>
@@ -67,106 +67,119 @@ Received: from DE10512.weidmueller.com (94.134.181.29) by
  AS8PR04CA0172.eurprd04.prod.outlook.com (2603:10a6:20b:331::27) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.22 via Frontend
- Transport; Thu, 25 Nov 2021 13:00:14 +0000
+ Transport; Thu, 25 Nov 2021 13:00:16 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b30106a4-4635-4aeb-82ac-08d9b01385c9
-X-MS-TrafficTypeDiagnostic: PAXPR08MB7020:
+X-MS-Office365-Filtering-Correlation-Id: 2b49b5e9-94f5-49dd-1fe2-08d9b01386f3
+X-MS-TrafficTypeDiagnostic: PR2PR08MB5228:
 X-Microsoft-Antispam-PRVS: 
-	<PAXPR08MB7020F72CF57A39ABE8C40670D7629@PAXPR08MB7020.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1265;
+	<PR2PR08MB522886A8C41187E1782AF7A8D7629@PR2PR08MB5228.eurprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:296;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	QO6sRL9v4vInF19odn5WWNfczgcJ+3EY4IF0JIuVXYDK5guFPkU9495bJhYSQmOky/ZrgYGpiPIHvwry4JTvaneCh3ufIMSJVf7ukmNkn7I2TGGg1GkgppSdJSDHxoNPpLKKnYTlNkJLfU37A0NzpM7Pj9yNcCCLLtq2jW7R+/u6fQ7hqn+wpm0opQB0dKDXZK8kWA1vF9KSQCAaFztP8NWzJB3y+pfFSiElL/g65dQ1iyNEzt67JknaaFXqdAht0b3QaWvrWz84cuysZ5U/C0v5MhlJItGjoCxrZLlMSG7FAHxtGPF/MOo7TPMy7m+lKcjvZxiaDwLE5vORw0PTJGXw4DGMCw0JOK7bwUfyaNDTN3KioJ/scZbdfJFLCt/Z5pIZF0Tej21ZXDKkaZJAJjNRscb/gvppBdlxYRkRrsy/isTVp21wBmmkFR1zMaADOSePs8TuYQmK9j5yT0hGZujBXT5tCa3p8HxalxD0tL3fAMY4lRoxc01rtzOOcjpYYyV6piyPnrau5nquKj9FSYmdgastY1gv1dNDjajI0KhbXcm/Z7Urb71DY2Og8F6vQ1U6KrQIwGkVnTG5MfbzNdF/hEdOWeAftFE/uxVGazQjC1TZ0RRHXrSO3oAc50n61y5CszYI87j+u2EXejRAVl3z6zgp4OXc7yYhZ1j9P5PYLg4++jlGPkbcDnEaK8KP
+	TsO6w1YeifYqxtdD/qjrNGjhTRVFPF26MHFDa9DadxKV/kXAdkEo/0saR5yJZBBx2EH5D08IC7LG8GkSO3vifDBkWsycgmfYJSaXvtDYyhX3e6V0nMwPGVJUV7eDIByErRGherUkr79W4aMT8D0/LmawHkSXYwVMxIJed+31pDM3+uorgzCCiD3THhAjE37tnqegV9EzJYz7Blb1xnPcaFmjM1yT9OcKBIHeyHwmgxPMQRdOgOJyYD/9I3EVafSrD5p2W3QiaM3lC1tQsd4VnXRIWH0+bHXGk1dKSVoUYOyDcIqcQPmfpP2GOEpiTrCkxJ45C5RQEWlSMaIhAodWLYCupF9Qdh1W9ouDhjn7V8zbUogWecz7uDnv9A8q6xtCmhaCnsZRtTPqQDINNE1ZWvq/BGVIg7rz5wFR1ekFXILD9s0fe5p9tb0ANL37Ld05oefeHqRFnnoHKVwrfgpdje1Oda7c64rORgZZUEFWkKGIN35z5IFfyeFIojvza8JDD7nSIbpyEhdQp1MD1opMpFzAxILw2ZVlc26nArWIfzGE2OxgYmRAa8FGlEgfsqB18Jk6Qvxq6bQZ4nwPq4eEOV/RropiuRT5yELEoomp8Nug1q6GbqNlMVnjH6GhgtLPGt26KZGjZOC62n9JB5uQfpLjv3MHFJYLT5y3MYvfvnL6JzKd6cSrbuXUDh+3IkeiTNOpz9xYreu3EX7u7hEvnA==
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66476007)(38350700002)(66556008)(2906002)(1076003)(8936002)(38100700002)(107886003)(66946007)(110136005)(7696005)(5660300002)(4326008)(36756003)(6666004)(8676002)(52116002)(26005)(508600001)(2616005)(316002)(186003)(86362001)(956004)(6486002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(186003)(4326008)(1076003)(26005)(316002)(66946007)(6486002)(8676002)(8936002)(956004)(110136005)(38100700002)(107886003)(2906002)(38350700002)(7696005)(508600001)(36756003)(52116002)(66476007)(66556008)(5660300002)(2616005)(86362001)(6666004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?HB1e3Yqpt1fI/2+thGZ7VxD4cb3wbkLlNAI8YAGK1JH7DITFxTUznJYhRgjc?=
- =?us-ascii?Q?UYpoFuRZkxJm/eJPhOUve+VaTtN5d2QpWcNq8Zp2kD6m8ORF+y4dEfEtj107?=
- =?us-ascii?Q?mnXVQUgiPIu2bXzSbyuSwqCoJmJd9Tje1wtlU4vSkLYd+InkMcbT7gwRc22Q?=
- =?us-ascii?Q?Xde3rsnAxRgnTHbTXNjcjezlATMfyLx0cI+KufnbM8/8jXTJxCYm/qNdN/Bn?=
- =?us-ascii?Q?Vob/QjXDe/DlelWca87dM8DcBggFjgPptBP6OBEFHWH7OAaiNMkUXd8byPt+?=
- =?us-ascii?Q?ypLO6xgJa7Bp3A0a6fBdnp32XguzH8RclOhQTfWu9jqvleFXF6P8f2a2Wh9S?=
- =?us-ascii?Q?bXb2GYlBkgWevFZjtKObGBT+9CX4yOJWWfQMv3kvrcYKGQ4j7FM3FH1nkQd0?=
- =?us-ascii?Q?advzXgVgs76O4+B+nTsOB8MuO3yI1IpF7NT6JFpEKYYY146Chp3VX3D9Mp0e?=
- =?us-ascii?Q?1dJ6SVvS9zbPYtiAxMOx8rs3HpF0iQdVV0tc8/l5+2WTZXxxwlUyKg0H5ovc?=
- =?us-ascii?Q?2b4I2HtgEf4iVoj1OM2wgSfc1TRR+KmmDgWg7efOomKBBHpAxo+x9PMwvcqS?=
- =?us-ascii?Q?uJMjKYNTq3ctrKQxZulQgQ56VUTuZ/HJ38V1kN+l8qp12ipeisSv83P4t87V?=
- =?us-ascii?Q?JBW+kAHtLA70m90WgN1bAiXAWtGcIofS6ogFmIWPn+p87Agpf8aZmvs1r/Nk?=
- =?us-ascii?Q?MD4rOY+xiJLCg3lwQYZuVxqoVFwAqufejZAPeu9Z9ALbMliM82YYvT6WThbn?=
- =?us-ascii?Q?9FfJNIvBxnvhotDKTBGosVoI+ynHkGMdbRbtA+eZoNVZiJ/MAUGYhgnAy5jh?=
- =?us-ascii?Q?TeBThm2tCsydrXsHxmoqekLwSJGvxz7K26u3VzvGc3N79YUmZHzGd2vbwdlk?=
- =?us-ascii?Q?T3Q/30ZuC3WaKPHGtjJBogk/aGsceBThawj7JJAyvOPNt3wg8DbkfdhyzQm8?=
- =?us-ascii?Q?FBU/He3UmsKa+Sm7pI3KDbVXP4P8/7h0aZM7jmWxkzc+EJveYTbwzjHIdPxK?=
- =?us-ascii?Q?KwOoC9N7QdyWYUJwKHyNhZu1n2cruITY7aXxQbU0utxE4i+Fwz4fMVkpksy+?=
- =?us-ascii?Q?1pVrFghX5ikGyMlKMfjbk5yhQww9YjE+Il9VWQ0FC/xm45VcoofYyfJq5Uph?=
- =?us-ascii?Q?sbhrqQGXFZvNCVKsvDdaX9ericow1RoWigpqmcy8KeJ6FwezK+iipM0qLWUS?=
- =?us-ascii?Q?K27C7X/u2lKoe8rik6cBrLgBLbYKH1pbKw6w38H+ibysJF+eZDf2jyzex3Nl?=
- =?us-ascii?Q?bnaGD81egxxFv9bTzkHu8/jpGsbYq4FD2rrmwhsCOlZXQiXUyzjmMg3KT+p8?=
- =?us-ascii?Q?PYpYVcDu/VpdzU3ECeX6FOVmrrjFLpADwGxuD6VilVmIFPFQNBf35k3vlmbL?=
- =?us-ascii?Q?5Q9+eSCgFRGZbQ6nngx9jtpmZlesGT0FFL9FSMRGiUeNUBQTCAvRfVFK1qDS?=
- =?us-ascii?Q?biywDiOrMVwipKsdimlHc9Yb619lX5vEglH+J8G+6YIvuoKnVVmDqRwwXAau?=
- =?us-ascii?Q?vKAp8mL5BTVzyWbfT5DQLuGpEUv+SIGumB1Aqc/IO6o910CWADrqnRcnp5ya?=
- =?us-ascii?Q?KIxtK3rX+NCjo5gB0EY+NJNmUC0ecAwxFuI+xY14bcVP4/H2TTSwUKwT9lix?=
- =?us-ascii?Q?uMXBH5H1WvhOyJG6XUF54Mg=3D?=
+	=?us-ascii?Q?koUMqalYrJEh3rvVuTB1ni8ROTcDIK24tZ15h7IluDkW+uqdCGFDolzLQFLz?=
+ =?us-ascii?Q?+sfM5hTG5krIkenKbmbJWmrMeum/RqDvJqSSjkMVtzXCRR1o6rK6q3j8dRMu?=
+ =?us-ascii?Q?3LKnSlDipr90Np9YliquA67Q8kzkFatAPolgKWpmc1u0LGBdCvxreeB0MB2W?=
+ =?us-ascii?Q?zrPwh7sd0mia50Mx5i8Ug05M4u8hn3ImpDjhcy7S25yjMqi3JZIRR0c5alrS?=
+ =?us-ascii?Q?pXnGnQEzfadKR+6iKBiHYXvkxYvcstE5aEBv7YPYtLMb0c6gkQ6O3LiERHSo?=
+ =?us-ascii?Q?isQDNlGIfSj05rFYTR7WH+H+mN8PvWkB9xH726JThLrHYf3PKLTFi9Eb7O7Y?=
+ =?us-ascii?Q?pPKxj9Q2kH8Fn9+cPtgDDpz5jIWILHe1l9rT8xQo5v3B4dh4XRj3femYHsqy?=
+ =?us-ascii?Q?3BtFbc6wkz+0eLrS/stLGTiqqLjaKBlMi+caLVub8y8wlzTHsl1z8ucVHGwB?=
+ =?us-ascii?Q?XR6H2Cu8rzcbRTqR65KsUDfUttlEQdCd5hrLGVQZFUgQByjuQXKRlK65DaHd?=
+ =?us-ascii?Q?sxJOIfZ0DI6g0h3a1N10RL2omn3iKoPB5LivGVP/Zujb7irAQi5qxsC6HOc/?=
+ =?us-ascii?Q?tqH3e+Vwh3KubiVsXaIqgorxzLPp6Ws5Y4RUFRqAHhW1RwXT3wiR6aV7q2fT?=
+ =?us-ascii?Q?u/n0tv+jbmFtm7GEAMvgZcETk1tiYTmjtvsfzsMW7HMRaXlOkYP9d9Nrs57O?=
+ =?us-ascii?Q?4Fj1g+L0KyjhJW76KXPyN83MGi8Jo5oz7U7RZVIxt8LJuQmiwKjuFE5cSfxS?=
+ =?us-ascii?Q?lV5LFPz1MTFtu7suNGrZM6NlmyXpqwnYwJNXxNxPXPqGNiVCZncrdVYsNyPq?=
+ =?us-ascii?Q?X2dlhKc15mPAFJiN42wQPG+nNC7pnPqkZndRD5CuZY9uaGuXf3a4NofO4/JC?=
+ =?us-ascii?Q?bN9rveeJtvpOib/I2XQqZ3Uk270MQ7LjY59GT6UQ6t6R8o4B52I6dZXYvb5s?=
+ =?us-ascii?Q?3SsEPQ8tf78l+ukttIo8EV93idqu3xD9sun2OsPPnVBWHgCTwUuJifQH3FoU?=
+ =?us-ascii?Q?EorqFLIrsEo0oR27GHsQl8xQmNAp7NdMqOAjrKRoDnvrxHeHP2Xy2kMV4XNO?=
+ =?us-ascii?Q?DeMPSJGIiBNUH38EUsUds+kqBIwxIy/mid0sMKbAMBoF2+Vo2sMObyvz1211?=
+ =?us-ascii?Q?mwwsG/V8nbJEMJus87jtQ46b7E6DQAsOZUE6iPkvqPdGmxIipDlGC+0JsYNk?=
+ =?us-ascii?Q?TDGKqnE1/ruqC1Ff8GfdCD2wtBSEgfjiQZTWDf+OCgnGZre4tD/IxTcjCx3G?=
+ =?us-ascii?Q?2S2ar6Cg2PwIin0g7ejG5AFB/1sgz4E+GReLpOXFe59vcBEqq73Trn3Iyghi?=
+ =?us-ascii?Q?Zzc5See5rCvpHx202fA4rqBv2CHxwGyy3zqMD/AMDmCCdBzm6+H82sFOwyJT?=
+ =?us-ascii?Q?/kx/WNBWN+Cm3jF2JKICUeliNSF4LFQLQX/ms9BXZX5vXOluufH9j/NF67tA?=
+ =?us-ascii?Q?9ppQo4aj+mSEKvJrevwEld9ON5KYDS3zESQs43HtmkGpNbb9GQc+a7MDwdtF?=
+ =?us-ascii?Q?z+PS1vwxFI6SdJhMT4rg62T9pXRaQZv8Qtzf/rvaXo7HyvJQO5mVb7rND8qf?=
+ =?us-ascii?Q?IM4EzDyKEiho5iRrru2jqGEZ3tKBd4Jt2qyTBulKiIfSxQ0ma55+eLzUW1KH?=
+ =?us-ascii?Q?RMALKIDFIe1s4ANFStyaLUg=3D?=
 X-OriginatorOrg: weidmueller.com
 X-MS-Exchange-CrossTenant-Network-Message-Id: 
- b30106a4-4635-4aeb-82ac-08d9b01385c9
+ 2b49b5e9-94f5-49dd-1fe2-08d9b01386f3
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2021 13:00:15.0057
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2021 13:00:17.0288
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
 X-MS-Exchange-CrossTenant-UserPrincipalName: 
- 6UeOFt2r7UyCaKoyM1BGVubmVoK85yvOXipiyyBT2OnKDeCYpj6pjO5X2QHfsnSfkoS2bK8nywP/UcbL5tgFtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB7020
+ HHsqHQHaLhc6QZZNgLSzxCCLtPAQ4Ewj+XuZST9veWFbZBPLuJ2CcsELct7kf559VB65/C1XoiWbPX7r7gtdlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR2PR08MB5228
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 25 Nov 2021 13:00:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13109
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13108
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-Add a parameter `striplevel` to the SRC_URI to strip NUMBER leading
-components (levels) from file names on extraction.
-
-For example, if the archive `archive.tar.gz` contains `some/file`,
-the SRC_URI `https://.../archive.tar.gz;subdir=3Dother;striplevel=3D1`
-will extract `some/file` to `other/file`.
-
-This is useful to extract archives to a specified directory instead of
-the original root component of the archive. The feature is required for
-the npm support. The npm package contents should reside in a subfolder
-inside a npm archive (usually it is called package/). npm strips one
-directory layer when installing the package.
-
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
+
 ---
 
- lib/bb/fetch2/__init__.py | 2 ++
- 1 file changed, 2 insertions(+)
+ lib/bb/tests/fetch.py | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index b0d5508d..0b39ea6a 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1459,6 +1459,8 @@ class FetchMethod(object):
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index d6c0af78..dc45eb2e 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -626,6 +626,9 @@ class FetcherLocalTest(FetcherTest):
+         os.makedirs(os.path.join(self.localsrcdir, 'dir', 'subdir'))
+         touch(os.path.join(self.localsrcdir, 'dir', 'subdir', 'e'))
+         touch(os.path.join(self.localsrcdir, r'backslash\x2dsystemd-unit.d=
+evice'))
++        bb.process.run('tar cf archive.tar -C dir .', cwd=3Dself.localsrcd=
+ir)
++        bb.process.run('tar czf archive.tar.gz -C dir .', cwd=3Dself.local=
+srcdir)
++        bb.process.run('tar cjf archive.tar.bz2 -C dir .', cwd=3Dself.loca=
+lsrcdir)
+         self.d.setVar("FILESPATH", self.localsrcdir)
 =20
-         if unpack:
-             tar_cmd =3D 'tar --extract --no-same-owner'
-+            if 'striplevel' in urldata.parm:
-+                tar_cmd +=3D ' --strip-components=3D%s' %  urldata.parm['s=
-triplevel']
-             if file.endswith('.tar'):
-                 cmd =3D '%s -f %s' % (tar_cmd, file)
-             elif file.endswith('.tgz') or file.endswith('.tar.gz') or file=
-.endswith('.tar.Z'):
+     def fetchUnpack(self, uris):
+@@ -680,6 +683,18 @@ class FetcherLocalTest(FetcherTest):
+         with self.assertRaises(bb.fetch2.UnpackError):
+             self.fetchUnpack(['file://a;subdir=3D/bin/sh'])
+=20
++    def test_local_striplevel(self):
++        tree =3D self.fetchUnpack(['file://archive.tar;subdir=3Dbar;stripl=
+evel=3D1'])
++        self.assertEqual(tree, ['bar/c', 'bar/d', 'bar/subdir/e'])
++
++    def test_local_striplevel_gzip(self):
++        tree =3D self.fetchUnpack(['file://archive.tar.gz;subdir=3Dbar;str=
+iplevel=3D1'])
++        self.assertEqual(tree, ['bar/c', 'bar/d', 'bar/subdir/e'])
++
++    def test_local_striplevel_bzip2(self):
++        tree =3D self.fetchUnpack(['file://archive.tar.bz2;subdir=3Dbar;st=
+riplevel=3D1'])
++        self.assertEqual(tree, ['bar/c', 'bar/d', 'bar/subdir/e'])
++
+     def dummyGitTest(self, suffix):
+         # Create dummy local Git repo
+         src_dir =3D tempfile.mkdtemp(dir=3Dself.tempdir,
 --=20
 2.20.1
 
