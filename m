@@ -1,87 +1,101 @@
-Return-Path: <anuj.mittal@intel.com>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5DFC433EF
-	for <webhook@archiver.kernel.org>; Fri,  3 Dec 2021 14:25:58 +0000 (UTC)
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
- by mx.groups.io with SMTP id smtpd.web12.12280.1638541552915223576
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF7FC433EF
+	for <webhook@archiver.kernel.org>; Fri,  3 Dec 2021 18:27:27 +0000 (UTC)
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com
+ [209.85.215.178])
+ by mx.groups.io with SMTP id smtpd.web11.15252.1638556046687042384
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 03 Dec 2021 06:25:58 -0800
+ Fri, 03 Dec 2021 10:27:26 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: intel.com, ip: 134.134.136.31, mailfrom: anuj.mittal@intel.com)
-X-IronPort-AV: E=McAfee;i="6200,9189,10186"; a="297779942"
-X-IronPort-AV: E=Sophos;i="5.87,284,1631602800";
-   d="scan'208";a="297779942"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 03 Dec 2021 06:25:57 -0800
-X-IronPort-AV: E=Sophos;i="5.87,284,1631602800";
-   d="scan'208";a="746722975"
-Received: from ffoo-mobl1.gar.corp.intel.com (HELO anmitta2-mobl3.intel.com)
- ([10.215.225.43])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 03 Dec 2021 06:25:56 -0800
-From: Anuj Mittal <anuj.mittal@intel.com>
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
+ header.b=GWFC08MO;
+ spf=softfail (domain: sakoman.com, ip: 209.85.215.178,
+ mailfrom: steve@sakoman.com)
+Received: by mail-pg1-f178.google.com with SMTP id m15so3853939pgu.11
+        for <bitbake-devel@lists.openembedded.org>;
+ Fri, 03 Dec 2021 10:27:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fp5Vyt9iRab0pfQhMdTBJgu9D30vok0kT5hmNkYab38=;
+        b=GWFC08MOnrFuV/DF3fGNeMrzlVi2s4XgKo2LsM72Q9bzy107kv+sY5yR/2YlqeNLdG
+         rSxNlpFkinq4i+dwKlNKnsVOk6sr09RuinCRQ3NB+UyqMDrBoNBAVkD3oOk8QpENc/aq
+         zNrEYYucTFUIRT6U39jwzV/eQfjv8n8b+RsCe+GLCQkRNXYlmqwlyXi4VgO4/y9Yo5CS
+         k0zskY/uIRRWg1Lx5Dj1FlqKNGiHiiaUlVPFx3ZHEbGHb0hemdczaqn1av/I6c7fmTUr
+         NTFpOVlfuGHWRal4nj/580cOtYK/eZlPogo7zxLtym4bE1NJpWRz2wE+YwkDxh6beccv
+         IHPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fp5Vyt9iRab0pfQhMdTBJgu9D30vok0kT5hmNkYab38=;
+        b=xmIVjnJ5qERC8p4ow/Dr6ekmRYHIQpz7bP36LjPUD9rQkVzdKtLuGAB43Bgi3HabLU
+         qboech8qJV61HtYgU6ZcUH8b7Pgsya6JRNU1FHWL7jF6mLFSZfaeNr1O+rJwvyYNTA4S
+         +P4/vAadMIzIRq3IErurWcvzr4mPFrmUXFmGz5VVEhUzROmDxUOdyp07V377TsppVkZq
+         9rhpEbOC3BvmYylxU61fheZ9lPEM9h9sN5gptkDWL8nrwz8PNEW83fUWTfGnK5WP2LeC
+         idpN8q5qEcAIs/V8fTohir+ElX5Io1yLsyVcQd1KOxX8NIeRd0e6U2Toyebp8KhdHLfp
+         dIHw==
+X-Gm-Message-State: AOAM533j1dszHQxV87T0vGEZaHzS+f3ll4AnxPEVoBXn0A1+uZNA8L2h
+	ugIl34tB0Aa7AHHA6Ii/lgUOvnUiMQYI3YkgtgM=
+X-Google-Smtp-Source: 
+ ABdhPJx2AejnqWA4lfwRUIGOBCT8u1v4QSFGXpEa0KX+kCBX63flm8FpfzQe9Z4fBfX7bupVBfL8Vg==
+X-Received: by 2002:a63:654:: with SMTP id 81mr5625110pgg.218.1638556045595;
+        Fri, 03 Dec 2021 10:27:25 -0800 (PST)
+Received: from localhost.localdomain (rrcs-66-91-142-162.west.biz.rr.com.
+ [66.91.142.162])
+        by smtp.gmail.com with ESMTPSA id
+ v1sm3785423pfg.169.2021.12.03.10.27.24
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Dec 2021 10:27:25 -0800 (PST)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.50][PATCH 1/1] utils: Handle lockfile filenames that are too long
- for filesystems
-Date: Fri,  3 Dec 2021 22:25:46 +0800
-Message-Id: 
- <f5811b0179fc0fa5e990f52b27d46610760bfc79.1638541408.git.anuj.mittal@intel.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <cover.1638541408.git.anuj.mittal@intel.com>
-References: <cover.1638541408.git.anuj.mittal@intel.com>
+Subject: [bitbake][dunfell][1.46][PATCH 0/2] Patch review
+Date: Fri,  3 Dec 2021 08:27:10 -1000
+Message-Id: <cover.1638555853.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 03 Dec 2021 14:25:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13126
+ <bitbake-devel@lists.openembedded.org>; Fri, 03 Dec 2021 18:27:27 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13127
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Please review this set of patches for dunfell/1.46 and have comments back by
+end of day Tuesday.
 
-The fetcher mirror code can go crazy creating lock filenames which exceed the
-filesystem limits. When this happens, the code will loop/hang.
+Passed a-full on autobuilder:
 
-Handle the filename too long exception correctly but also truncate lockfile
-lengths to under 256 since the worst case situation is lockfile overlap
-and lack of parallelism.
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/2988
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 63baf3440b16e41ac6601de21ced94a94bdf1509)
-Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
----
- lib/bb/utils.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+with the exception of a known autobuilder intermittent issue (on qemuppc test)
+which passed on subsequent retest:
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index b282d09a..40b5006f 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -451,6 +451,10 @@ def lockfile(name, shared=False, retry=True, block=False):
-     consider the possibility of sending a signal to the process to break
-     out - at which point you want block=True rather than retry=True.
-     """
-+    if len(name) > 255:
-+        root, ext = os.path.splitext(name)
-+        name = root[:255 - len(ext)] + ext
-+
-     dirname = os.path.dirname(name)
-     mkdirhier(dirname)
- 
-@@ -487,7 +491,7 @@ def lockfile(name, shared=False, retry=True, block=False):
-                     return lf
-             lf.close()
-         except OSError as e:
--            if e.errno == errno.EACCES:
-+            if e.errno == errno.EACCES or e.errno == errno.ENAMETOOLONG:
-                 logger.error("Unable to acquire lock '%s', %s",
-                              e.strerror, name)
-                 sys.exit(1)
+https://autobuilder.yoctoproject.org/typhoon/#/builders/63/builds/4402
+
+The following changes since commit 7fdd43c5cbde38daa013076de2fdedcf3c3d3107:
+
+  process/knotty: Improve early exception handling (2021-11-22 04:15:15 -1000)
+
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
+
+Richard Purdie (2):
+  cooker: Ensure reparsing is handled correctly
+  bblayers/action: When adding layers, catch BBHandledException
+
+ lib/bb/cooker.py       | 2 ++
+ lib/bblayers/action.py | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
 -- 
-2.33.1
+2.25.1
 
 
