@@ -1,136 +1,100 @@
-Return-Path: <jsbronder@cold-front.org>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE96C433F5
-	for <webhook@archiver.kernel.org>; Mon,  6 Dec 2021 21:24:45 +0000 (UTC)
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com
- [66.111.4.26])
- by mx.groups.io with SMTP id smtpd.web11.58206.1638825883459256416
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AD0C433F5
+	for <webhook@archiver.kernel.org>; Mon,  6 Dec 2021 22:47:28 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com
+ [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web09.59138.1638830847261201023
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 06 Dec 2021 13:24:43 -0800
+ Mon, 06 Dec 2021 14:47:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cold-front.org header.s=mesmtp header.b=GPj1sNIg;
- spf=pass (domain: cold-front.org, ip: 66.111.4.26,
- mailfrom: jsbronder@cold-front.org)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 5F5185C0255;
-	Mon,  6 Dec 2021 16:24:42 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 06 Dec 2021 16:24:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cold-front.org;
-	 h=from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=mesmtp; bh=vFHCThAbbcf8liK8o2pG8sE
-	/tLv8No+PTLTKMxi2qXU=; b=GPj1sNIg9Y2rsA+hMv5CGdN7lQHOZbNbNtoQquV
-	bZUi+kgQXP4TZGS8IuwlM1AnoMGutHyz4NjrJg2T8p+QK+vSHxipsnSs0oL+EcmA
-	MB3/5SZb7m06CVgnc1KJQjHE2I7T1zMM1r0oo5esgCS+eLevCk0bOsuwyyQOkSIv
-	SR+Q=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:date:from
-	:message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=vFHCThAbbcf8liK8o
-	2pG8sE/tLv8No+PTLTKMxi2qXU=; b=dTKDcva4wS35loBwjJjJkgifvRr3vEQob
-	Q+/EwO+bSLnFiG17J5+HghpZzwQFdjXEHWQTLWeYUPewx4fHURY+i2wkf1ynJUFz
-	GkQ41uL/u72ffE9UyceCv9unRkfxx/HEncRydrJGLAH+4ziCHriNy3LfdbFym9W2
-	3BkCw8hnohH6MkSAansuWjPo4ctoIOw5ZUrDhHV6Dza2EVWGp/wx8Q36gfd17lWg
-	rwcuYKH7Ow7ZDZpY3MbxspKak3oZ0uwkkwJqX6q/wbxt0oeR60ia+weOcaLzzoha
-	lHN9goESHj+umIwQ6e1RJF39atND1tC0OtWU7b18zdEF2op0cSAmw==
-X-ME-Sender: <xms:mn-uYVZ-jlXj_ivFaoLVK4Nm-hVVoU-1J_ox1lo0P1ZL5cbcmQBwQA>
-    <xme:mn-uYcYqa8YD1XxZnbYRn_pJnp-HShbgNjX82tRO-IXVjpGOva6gSv93KmIBWv77g
-    6A17e83Maz7BQ-nMw>
-X-ME-Received: 
- <xmr:mn-uYX9y990R0aJuM_AhB32cJYOngx0f2Cn_y2Rgpbd82jixLrT6Zx9KM6auMwckpCnmElFvcOBrRao_T1LxumlgRoxQKeqiDdvlTs4NTDwR>
-X-ME-Proxy-Cause: 
- gggruggvucftvghtrhhoucdtuddrgedvuddrjeefgddugeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomheplfhushhtihhnuceurhhonhguvghruceojhhssghrohhnuggvrhes
-    tgholhguqdhfrhhonhhtrdhorhhgqeenucggtffrrghtthgvrhhnpefgieevfeeugeelvd
-    dvveeghfetudfhkeegveeuteehudfgfffffeetueeggeeugeenucffohhmrghinhepkhgv
-    rhhnvghlrdhorhhgpdhhrghnughhvghlughsrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhssghrohhnuggvrhestgholhguqdhf
-    rhhonhhtrdhorhhg
-X-ME-Proxy: <xmx:mn-uYTpGMcf5qHctcnVYr6fVSc1KW-HaZoZqz4kwGOE9z1KOLfdFCg>
-    <xmx:mn-uYQrHzlq_jbN83h5UhvX7EjLN7w0yPJuDCPemzWEw6TMSNJTcRw>
-    <xmx:mn-uYZRX_BqN9XZ0S07Hq-soPpv_l5DfS3YUVOlJL-fbXVcqIJQehA>
-    <xmx:mn-uYdAesY_AN2IH8zcGDNyY0uiiQ1qEHNKBZjyVv2YgYlkQttQr1Q>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 6 Dec 2021 16:24:41 -0500 (EST)
-From: Justin Bronder <jsbronder@cold-front.org>
-To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Justin Bronder <jsbronder@cold-front.org>
-Subject: [PATCH] fetch2/wget: add redirectauth parameter
-Date: Mon,  6 Dec 2021 16:24:37 -0500
-Message-Id: <20211206212437.31332-1-jsbronder@cold-front.org>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=U7PyqId2;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f44.google.com with SMTP id
+ k37-20020a05600c1ca500b00330cb84834fso385420wms.2
+        for <bitbake-devel@lists.openembedded.org>;
+ Mon, 06 Dec 2021 14:47:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=s01CkJ7amXMm6u0sG/7vYMehnfLnZMU4uVJ4LMwWlfg=;
+        b=U7PyqId2HDXIsUbWwYc4WNLj6HhispWVIHKx2bT4RM/vCSUGY1kVUWG2XNOwRctzZf
+         8RsWPiCeOCrsplCyYpUra0YTrnHaLnra+Z2cpkgVkFe0aSyHLfi4VuF0eP+G5jy+KU7c
+         Y81bOJP1UWWcca3uzo2A149k5Nuuzuol5Ftaw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=s01CkJ7amXMm6u0sG/7vYMehnfLnZMU4uVJ4LMwWlfg=;
+        b=JvLklAXeQq3uoaffzn+RNd2i9qnXWMoVMbppR9Pyth4Thm/uCS6Gi2PIXL9Z37eJ0F
+         xKPqzuQSWKI5pqhoptkApAw7HBGxR8b/p+FwSl8O1CdUE3n9iTlYhWcSbstOMKrhfQiP
+         VT3NLzTcY7x7BC/dCEL2OQIPSp8w5JAoIdLE6+1J25MnYohxJTWoHJ9bCctaKCBTDzBU
+         uU/Qq1QlxmwfRFeUSTSw+zqY+GfJ/Tot+FevlMpPgBA/X7ftI8S3fmyZ0Bd9+duR6cob
+         xoqmEZVHqPUOdwiQ0Dv+IB5nDlZ6Kg1JW3XXJM6cuo3NnU6ceHpPxXFj71s2x3uHWn+T
+         +/lQ==
+X-Gm-Message-State: AOAM5310cKlRJFIYlbSr3jgDJEXdnP5UtJ6jfUD3EyeWIuXRz6nfeo+U
+	8RxUtK1qXjzCoSHi+iTfByeyDQ==
+X-Google-Smtp-Source: 
+ ABdhPJyJ0ifUzARVEfGySsQMbLsfke9wJZDrsMGMPkWxiBgCmGV+RzQYUaZMP/3FM0YxN9WPWllVfQ==
+X-Received: by 2002:a05:600c:3586:: with SMTP id
+ p6mr1943686wmq.34.1638830845688;
+        Mon, 06 Dec 2021 14:47:25 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:a430:ef69:a06e:8b4a?
+ ([2001:8b0:aba:5f3c:a430:ef69:a06e:8b4a])
+        by smtp.gmail.com with ESMTPSA id
+ f15sm798192wmg.30.2021.12.06.14.47.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Dec 2021 14:47:25 -0800 (PST)
+Message-ID: 
+ <4ff493233f785384ac845b2b712388155a328bab.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] fetch2/wget: do not hardcode tarball
+ compressors in version check
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alexander Kanavin <alex.kanavin@gmail.com>,
+	bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Date: Mon, 06 Dec 2021 22:47:24 +0000
+In-Reply-To: <20211206164119.4076119-1-alex@linutronix.de>
+References: <20211206164119.4076119-1-alex@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 06 Dec 2021 21:24:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13136
+ <bitbake-devel@lists.openembedded.org>; Mon, 06 Dec 2021 22:47:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13137
 
-Add a parameter that limits sending Basic authentication in the
-Authorization header to only the first host and not any that we're
-redirected to.  Ignoring potential security concerns, temporary AWS URLs
-will reject any request that includes authentication details in both the
-query parameters (from the redirect) and in the Authorization header.
+On Mon, 2021-12-06 at 17:41 +0100, Alexander Kanavin wrote:
+> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+> ---
+>  bitbake/lib/bb/fetch2/wget.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+> index fd9b304961..3021ef359e 100644
+> --- a/bitbake/lib/bb/fetch2/wget.py
+> +++ b/bitbake/lib/bb/fetch2/wget.py
+> @@ -583,7 +583,7 @@ class Wget(FetchMethod):
+>  
+>          # src.rpm extension was added only for rpm package. Can be removed if the rpm
+>          # packaged will always be considered as having to be manually upgraded
+> -        psuffix_regex = r"(tar\.gz|tgz|tar\.bz2|zip|xz|tar\.lz|rpm|bz2|orig\.tar\.gz|tar\.xz|src\.tar\.gz|src\.tgz|svnr\d+\.tar\.bz2|stable\.tar\.gz|src\.rpm)"
+> +        psuffix_regex = r"(tar\.\w+|tgz|zip|xz|rpm|bz2|orig\.tar\.\w+|src\.tar\.\w+|src\.tgz|svnr\d+\.tar\.\w+|stable\.tar\.\w+|src\.rpm)"
+>  
+>          # match name, version and archive type of a package
+>          package_regex_comp = re.compile(r"(?P<name>%s?\.?v?)(?P<pver>%s)(?P<arch>%s)?[\.-](?P<type>%s$)"
 
-Temporary AWS URLs are now being used for release assets from private
-Github repositories.  According to the previous discussion linked below,
-they're also in use by bitbucket.
+Looks good, is there something we should be adding to lib/bb/tests/fetch.py so
+that we don't forget this lesson?
 
-See also:
-https://lore.kernel.org/bitbake-devel/CAC9ffDEuZL-k8199bUyN+8frjw6bg-g=vrumxxtvt+RVParQ8Q@mail.gmail.com/
+Cheers,
 
-Signed-off-by: Justin Bronder <jsbronder@cold-front.org>
----
- .../bitbake-user-manual-fetching.rst                 |  5 +++++
- lib/bb/fetch2/wget.py                                | 12 +++++++++++-
- 2 files changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index 51ab233a..0fc2d5e6 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -229,6 +229,11 @@ downloaded file is useful for avoiding collisions in
- :term:`DL_DIR` when dealing with multiple files that
- have the same name.
- 
-+If a username and password are specified in the ``SRC_URI``, a Basic
-+Authorization header will be added to each request, including across redirects.
-+To instead limit the Authorization header to the first request, add
-+"redirectauth=0" to the list of parameters.
-+
- Some example URLs are as follows::
- 
-    SRC_URI = "http://oe.handhelds.org/not_there.aac"
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index fd9b3049..d48998a9 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -112,7 +112,17 @@ class Wget(FetchMethod):
-             fetchcmd += " -O %s" % shlex.quote(localpath)
- 
-         if ud.user and ud.pswd:
--            fetchcmd += " --user=%s --password=%s --auth-no-challenge" % (ud.user, ud.pswd)
-+            fetchcmd += " --auth-no-challenge"
-+            if ud.parm.get("redirectauth", "1") == "1":
-+                # An undocumented feature of wget is that if the
-+                # username/password are specified on the URI, wget will only
-+                # send the Authorization header to the first host and not to
-+                # any hosts that it is redirected to.  With the increasing
-+                # usage of temporary AWS URLs, this difference now matters as
-+                # AWS will reject any request that has authentication both in
-+                # the query parameters (from the redirect) and in the
-+                # Authorization header.
-+                fetchcmd += " --user=%s --password=%s" % (ud.user, ud.pswd)
- 
-         uri = ud.url.split(";")[0]
-         if os.path.exists(ud.localpath):
--- 
-2.34.1
+Richard
 
 
