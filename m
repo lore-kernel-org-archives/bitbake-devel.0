@@ -2,8 +2,8 @@ Return-Path: <pontus.jaensson@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2FCC433F5
-	for <webhook@archiver.kernel.org>; Thu, 16 Dec 2021 13:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79467C433F5
+	for <webhook@archiver.kernel.org>; Thu, 16 Dec 2021 13:37:33 +0000 (UTC)
 Subject: Re: [RFC] Implementation of a submodule fetcher
 To: bitbake-devel@lists.openembedded.org
 From: "Pontus Jaensson" <pontus.jaensson@axis.com>
@@ -12,114 +12,94 @@ X-Originating-Location: =?utf-8?b?THVuZCwgU2vDpW5lIENvdW50eSwgU0UgKDE5NS42?=
 X-Originating-Platform: Linux Chrome 96
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Thu, 16 Dec 2021 05:36:29 -0800
-References: 
- <6d3f11fb30f39fd9d0f933e92c71d94a59592bbf.camel@linuxfoundation.org>
-In-Reply-To: 
- <6d3f11fb30f39fd9d0f933e92c71d94a59592bbf.camel@linuxfoundation.org>
-Message-ID: <15835.1639661789942932561@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="iT1uLcdAs4jXmoDJdKYx"
+Date: Thu, 16 Dec 2021 05:37:33 -0800
+References: <20211215144241.yvzsdgdwbnrr3yax@fedora>
+In-Reply-To: <20211215144241.yvzsdgdwbnrr3yax@fedora>
+Message-ID: <8627.1639661853122616902@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="ddlv58dU1nLO7L5rjL9o"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 Dec 2021 13:36:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13181
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Dec 2021 13:37:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13182
 
---iT1uLcdAs4jXmoDJdKYx
+--ddlv58dU1nLO7L5rjL9o
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Richard,
+Hi Quentin,
 
-Thanks for your comments. Regarding your question whether or not the design=
- goals are followed I have the following motivation:
+Thank you for your feedback and thanks for noticing that I missed the Signe=
+d-off. The answer to your question about why I just not simply extend the a=
+lready existing gitsm fetcher instead of writing my own is that all though =
+they are both using submodule I don't think they are related and should hav=
+e a shared functionality. gitsm:// is allowing a package to have submodules=
+, my version submodules:// is allowing a layer to have submodules. I am awa=
+re that the naming is not perfect for the intended purpose, it's a quite bi=
+g difference. I personally can see a reason for using the submodule:// fetc=
+her but I don't understand why the gitsm:// fetcher is not just an option t=
+o the git:// fetcher.
 
-a) Yes, the fetcher follows the same structure as the other fetchers.
-b) Done.
-c) You can=E2=80=99t for now. DL_DIR is not needed to be inside a layer. Fr=
-edrik has two ideas about how to solve it but we would very much want to he=
-ar your opinion about any of them is a viable solution. The idea is that it=
- is possible to solve the problem by a symlink or by copying the content of=
- the submodule to DL_DIR. Do you think either of these suggestions can solv=
-e the problem?
-d) I don=E2=80=99t completely understand this one but once the do_fetch() i=
-s done, there is no more network access.
-e) It should be. As long as the layer is a git repository and still has its=
- git-database it=E2=80=99s reproducible.
-f) done.
-g) done.
-h) Not yet implemented. I can look up how it is done in other git:// recipe=
-s in the meta/layer and do my best to implement it here as well.
-i) Should already be done since no new tools are used.
-j) Not implemented??
-k) Not implemented yet.
-l) It does not use any tools.
+If I have understood the current implementation of gitsm it fetches informa=
+tion about the submodules from the main git repository. My implementation u=
+ses the local .gitmodules file for initializing and updating the submodules=
+. For this reason we won't have to rely on the SRCREV-tag in recipes and it=
+ can be removed completely. Also as previously mentioned by Fredrik, the pu=
+rpose of this patch is to introduce reproducible builds where the informati=
+on is stored in git and not in the bb-files. This will significantly improv=
+e the traceability since when you are developing a package that should be i=
+ntegrated to the bitbake system you will no longer need to commit both to t=
+he package- and the layer repository. To solve this problem, we have develo=
+ped a service that once a package is updated, the bb-file in the layer repo=
+sitory is automatically rewritten so match the new version of the package. =
+But by using the layer repository as a super project it is possible to use =
+gerrits superproject subscription that makes the layer repository to be upd=
+ated each time the submodule (the package) is updated. This gives us reprod=
+ucible builds, only one commit to introduce a change and no in-house develo=
+ped services.
 
-Regarding your other question why we do need two different fetchers to work=
- with git
-submodules I use the same answer as I did to Quentin. All though they are b=
-oth using submodule I don't think they are related and should have a shared=
- functionality. gitsm:// is allowing a package to have submodules, my versi=
-on submodules:// is allowing a layer to have submodules. I am aware that th=
-e naming is not perfect for the intended purpose and as Fredrik answered yo=
-u before I am happy to receive suggestions for a better naming. I personall=
-y can see a reason for using the submodule:// fetcher but I don't understan=
-d why the gitsm:// fetcher is not just an option to the git:// fetcher.
-
-Hope this answered your questions, please come back if you have more or if =
-there is something that I need to explain further.
-
+Hope this clarified my intentions
 Best Regards
 / Pontus
 
---iT1uLcdAs4jXmoDJdKYx
+--ddlv58dU1nLO7L5rjL9o
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div>Hi Richard,</div>
+<div>Hi Quentin,</div>
 <div>&nbsp;</div>
-<div>Thanks for your comments. Regarding your question whether or not the d=
-esign goals are followed I have the following motivation:</div>
+<div>Thank you for your feedback and thanks for noticing that I missed the =
+Signed-off. The answer to your question about why I just not simply extend =
+the already existing gitsm fetcher instead of writing my own is that all th=
+ough they are both using submodule I don't think they are related and shoul=
+d have a shared functionality. gitsm:// is allowing a package to have submo=
+dules, my version submodules:// is allowing a layer to have submodules. I a=
+m aware that the naming is not perfect for the intended purpose, it's a qui=
+te big difference. I personally can see a reason for using the submodule://=
+ fetcher but I don't understand why the gitsm:// fetcher is not just an opt=
+ion to the git:// fetcher.</div>
 <div>&nbsp;</div>
-<div>a) Yes, the fetcher follows the same structure as the other fetchers.<=
-/div>
-<div>b) Done.</div>
-<div>c) You can&rsquo;t for now. DL_DIR is not needed to be inside a layer.=
- Fredrik has two ideas about how to solve it but we would very much want to=
- hear your opinion about any of them is a viable solution. The idea is that=
- it is possible to solve the problem by a symlink or by copying the content=
- of the submodule to DL_DIR. Do you think either of these suggestions can s=
-olve the problem?</div>
-<div>d) I don&rsquo;t completely understand this one but once the do_fetch(=
-) is done, there is no more network access.</div>
-<div>e) It should be. As long as the layer is a git repository and still ha=
-s its git-database it&rsquo;s reproducible.</div>
-<div>f) done.</div>
-<div>g) done.</div>
-<div>h) Not yet implemented. I can look up how it is done in other git:// r=
-ecipes in the meta/layer and do my best to implement it here as well.</div>
-<div>i) Should already be done since no new tools are used.</div>
-<div>j) Not implemented??</div>
-<div>k) Not implemented yet.</div>
-<div>l) It does not use any tools.</div>
+<div>If I have understood the current implementation of gitsm it fetches in=
+formation about the submodules from the main git repository. My implementat=
+ion uses the local .gitmodules file for initializing and updating the submo=
+dules. For this reason we won't have to rely on the SRCREV-tag in recipes a=
+nd it can be removed completely. Also as previously mentioned by Fredrik, t=
+he purpose of this patch is to introduce reproducible builds where the info=
+rmation is stored in git and not in the bb-files. This will significantly i=
+mprove the traceability since when you are developing a package that should=
+ be integrated to the bitbake system you will no longer need to commit both=
+ to the package- and the layer repository. To solve this problem, we have d=
+eveloped a service that once a package is updated, the bb-file in the layer=
+ repository is automatically rewritten so match the new version of the pack=
+age. But by using the layer repository as a super project it is possible to=
+ use gerrits superproject subscription that makes the layer repository to b=
+e updated each time the submodule (the package) is updated. This gives us r=
+eproducible builds, only one commit to introduce a change and no in-house d=
+eveloped services.</div>
 <div>&nbsp;</div>
-<div>Regarding your other question why we do need two different fetchers to=
- work with git</div>
-<div>submodules I use the same answer as I did to Quentin. All though they =
-are both using submodule I don't think they are related and should have a s=
-hared functionality. gitsm:// is allowing a package to have submodules, my =
-version submodules:// is allowing a layer to have submodules. I am aware th=
-at the naming is not perfect for the intended purpose and as Fredrik answer=
-ed you before I am happy to receive suggestions for a better naming. I pers=
-onally can see a reason for using the submodule:// fetcher but I don't unde=
-rstand why the gitsm:// fetcher is not just an option to the git:// fetcher=
-.</div>
-<div>&nbsp;</div>
-<div>Hope this answered your questions, please come back if you have more o=
-r if there is something that I need to explain further.</div>
-<div>&nbsp;</div>
+<div>Hope this clarified my intentions</div>
 <div>Best Regards</div>
 <div>/ Pontus</div>
 
---iT1uLcdAs4jXmoDJdKYx--
+--ddlv58dU1nLO7L5rjL9o--
 
