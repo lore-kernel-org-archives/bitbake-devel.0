@@ -1,118 +1,83 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F466C433EF
-	for <webhook@archiver.kernel.org>; Thu, 16 Dec 2021 09:16:43 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com
- [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web08.8286.1639646202158659432
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C00C433EF
+	for <webhook@archiver.kernel.org>; Thu, 16 Dec 2021 09:52:12 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net
+ [217.70.183.194])
+ by mx.groups.io with SMTP id smtpd.web08.8747.1639648331456872820
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Dec 2021 01:16:42 -0800
+ Thu, 16 Dec 2021 01:52:11 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gR8dKuXt;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f43.google.com with SMTP id
- k37-20020a05600c1ca500b00330cb84834fso1227590wms.2
-        for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Dec 2021 01:16:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=H5cosC5zaceoJUWMisZ8n+OnuAmL3t3Zomezff2e9i4=;
-        b=gR8dKuXt1xydk8SpwOd4A2PStYH1NoxQCmjocN1SrWIQ2pOgEV5d42i0B4YlAOYsVW
-         RfD/8EsOYUT0e86v0VOnzSA5ioTyjeKwECT8La9duh6RVsTg3irdVKVRunZYO+BLGl77
-         e1+rB4z10Jq0XeMENlkxgSAy4er9etNE0VIWk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=H5cosC5zaceoJUWMisZ8n+OnuAmL3t3Zomezff2e9i4=;
-        b=TVn9l2jrepK/0N2JKO7WR67epnaMxOXbd5xsDt7jxWvHMdpRe6EO9AWbeenEIdtbaF
-         pBmjHTopt11K3MucU9moZwVS7hZJGzOAXZdpnCDnHVC2tccBaPOcZGRnej1xyWk+idG/
-         RjGf/Irca1SLd/VP9SNDQ+BK9UhUlliMfwiFvg0V7Ua23U99q8GVkVMDtuolSwmQ3DPl
-         alA85Zhbwn+xCQ3cVV4Cg6zLhSRhZ3ZJiwNYke0A2r1+G9gUJdq+1xmpCak5Gvn7c4U6
-         DX/sZ3rNlUEDZq7nTsKe6AYDQIu3HLe7sf9kzuZTWPnh7dSqXExME4Nqq+EtpjZuex3K
-         Kurg==
-X-Gm-Message-State: AOAM532zRQurEN3vMWZl2H853s6FSOv0o63DxJR2rfIvjHZx9rhnrNf4
-	iR9rG39RAP6ExqWc6RxHhboLmQ==
-X-Google-Smtp-Source: 
- ABdhPJzhhh5Moy6XP2JPKTrBjhFXw+/2b4utilo2jIrCfiK/ZvrtQ2BsoUMfwn+tByXDnbu1N6seeQ==
-X-Received: by 2002:a05:600c:4ed2:: with SMTP id
- g18mr4046241wmq.25.1639646200626;
-        Thu, 16 Dec 2021 01:16:40 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:7bea:ecb7:80b0:2828?
- ([2001:8b0:aba:5f3c:7bea:ecb7:80b0:2828])
-        by smtp.gmail.com with ESMTPSA id
- k33sm1047474wms.21.2021.12.16.01.16.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 01:16:40 -0800 (PST)
-Message-ID: 
- <6d3f11fb30f39fd9d0f933e92c71d94a59592bbf.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [RFC] Implementation of a submodule fetcher
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Pontus Jaensson <pontus.jaensson@axis.com>,
-	bitbake-devel@lists.openembedded.org
-Cc: fredrik.gustafsson@axis.com, Pontus Jaensson <pontusja@axis.com>
-Date: Thu, 16 Dec 2021 09:16:36 +0000
-In-Reply-To: <20211215142449.13469-1-pontusja@lap5cg1077w4w.se.axis.com>
-References: <20211215142449.13469-1-pontusja@lap5cg1077w4w.se.axis.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1 
+ dkim=missing;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: michael.opdenacker@bootlin.com)
+Received: (Authenticated sender: michael.opdenacker@bootlin.com)
+	by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 898D340010;
+	Thu, 16 Dec 2021 09:52:08 +0000 (UTC)
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	Michael Opdenacker <michael.opdenacker@bootlin.com>
+Subject: [PATCH v2] doc: bitbake-user-manual: expand BB_HASHSERVE and document
+ BB_HASHSERVE_UPSTREAM
+Date: Thu, 16 Dec 2021 10:52:04 +0100
+Message-Id: <20211216095204.2016867-1-michael.opdenacker@bootlin.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <16C0F955FEA53DE5.26558@lists.yoctoproject.org>
+References: <16C0F955FEA53DE5.26558@lists.yoctoproject.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 Dec 2021 09:16:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13175
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Dec 2021 09:52:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13177
 
-On Wed, 2021-12-15 at 15:24 +0100, Pontus Jaensson wrote:
-> From: Pontus Jaensson <pontusja@axis.com>
-> 
-> This patch consists of a Submodule class which inherits from and extends the FetchMethod-class
-> for retrieving, initializing and updating a submodule directory. The main reason for implementing
-> it is to make it possible to track the version of a packet with git instead of just a recipe.
-> 
-> The submodule fetcher is used by using the following syntax in the SRC_URI field in the recipe:
-> SRC_URI = submodule://<PATH TO TOP LEVEL DIRECTORY>;localpath=<NAME OF THE WANTED SUBMODULE>.
-> Where the submodule-keyword is necessary to use in order to call this specific fetcher.
-> 
-> In the download-method the URI is then parsed and the relevant parts from it are extracted and
-> used to find information about the module in the .gitmodules-file in the top level git directory.
-> The final thing that happens in the download-method is that git submodule init & git submodule
-> update are called and executed at the right location for the specified submodule.
-> 
-> In the unpack-method the empty directory, that is being created during the process but contains no
-> information, is removed and replaced with a symlink to the directory that contains the actual
-> source code.
-> 
-> The code has been tested and so far it seems to work fine.
-> ---
->  bitbake/lib/bb/fetch2/__init__.py  |   2 +
->  bitbake/lib/bb/fetch2/submodule.py | 123 +++++++++++++++++++++++++++++
->  2 files changed, 125 insertions(+)
->  create mode 100644 bitbake/lib/bb/fetch2/submodule.py
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+---
+ .../bitbake-user-manual-ref-variables.rst     | 23 +++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-As others have said, why do we need two different fetchers to work with git
-submodules? I really dislike having two ways of doing something, it is bad for
-usability and suggests a problem in the underlying code, particularly when it
-isn't clear when one should be used and when the other should.
-
-Does the fetcher meet the design goals in:
-
-https://git.yoctoproject.org/poky/tree/bitbake/lib/bb/fetch2/README
-
-?
-
-I'd also note there are no tests, not that adding any would change my review
-given the above points.
-
-Cheers,
-
-Richard
-
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index bb996e84..fdcd08d8 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -374,12 +374,31 @@ overview of their function and contents.
+       Specifies the Hash Equivalence server to use.
+ 
+       If set to ``auto``, BitBake automatically starts its own server
+-      over a UNIX domain socket.
++      over a UNIX domain socket. An option is to connect this server
++      to an upstream one, by setting :term:`BB_HASHSERVE_UPSTREAM`.
+ 
+-      If set to ``host:port``, BitBake will use a remote server on the
++      If set to ``unix://path``, BitBake will connect to an existing a
++      hash server available over a UNIX domain socket.
++
++      If set to ``host:port``, BitBake will connect to a remote server on the
+       specified host. This allows multiple clients to share the same
+       hash equivalence data.
+ 
++      This last kind of server can be started manually through
++      the ``bin/bitbake-hashserv`` script provided by BitBake,
++      which supports UNIX domain sockets too.
++
++   :term:`BB_HASHSERVE_UPSTREAM`
++      Specifies an upstream Hash Equivalence server.
++
++      This optional setting is only useful when a local Hash Equivalence
++      server is started (setting :term:`BB_HASHSERVE` to ``auto``),
++      and you wish the local server to query an upstream server for
++      Hash Equivalence data.
++
++      Example usage::
++         BB_HASHSERVE_UPSTREAM = "typhoon.yocto.io:8687"
++
+    :term:`BB_INVALIDCONF`
+       Used in combination with the ``ConfigParsed`` event to trigger
+       re-parsing the base metadata (i.e. all the recipes). The
+-- 
+2.25.1
 
 
