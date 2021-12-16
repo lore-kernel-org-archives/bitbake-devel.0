@@ -1,161 +1,118 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BE8C433F5
-	for <webhook@archiver.kernel.org>; Thu, 16 Dec 2021 08:15:51 +0000 (UTC)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com
- [209.85.222.44])
- by mx.groups.io with SMTP id smtpd.web08.7412.1639642549991615018
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F466C433EF
+	for <webhook@archiver.kernel.org>; Thu, 16 Dec 2021 09:16:43 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com
+ [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web08.8286.1639646202158659432
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Dec 2021 00:15:50 -0800
+ Thu, 16 Dec 2021 01:16:42 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=EtQza4gm;
- spf=pass (domain: gmail.com, ip: 209.85.222.44,
- mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ua1-f44.google.com with SMTP id y22so9793997uap.2
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gR8dKuXt;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id
+ k37-20020a05600c1ca500b00330cb84834fso1227590wms.2
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Dec 2021 00:15:49 -0800 (PST)
+ Thu, 16 Dec 2021 01:16:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=raYp3/39g3h2TbMKQBfjHxENHkdyb2n4rqzvhpEpnQQ=;
-        b=EtQza4gmUq07IW4GgMCo+FQFRD474f3xajGRhbfrT7QlmJKd+jelcyT3X3mJrM9Ov3
-         sXwbEo6boA/6A6q2pxEbSWfZ3BUvgG0lEBfSOAcD1pBfi7muo/P/qGcbpKDlXNcSqqCz
-         jCa3uWQrbm2j5IwBVaSWsId5CLLPtDWzXQXjEBr/FhiH0niwrazJ+FsKNfYb0DI9FFss
-         1Q+Cpnr6CEJhZToy21KipgiQZTmDCZMOQsKH9jl6d9zaCJgmPNLq0/1n87n0Ajk5i2KI
-         hScUzAZaPol1XmrvTeBkxaZZ/R5imFH91SAgVy5+zq9Rcs5SCJMynU7DlMDV3BSqNeDD
-         krYQ==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=H5cosC5zaceoJUWMisZ8n+OnuAmL3t3Zomezff2e9i4=;
+        b=gR8dKuXt1xydk8SpwOd4A2PStYH1NoxQCmjocN1SrWIQ2pOgEV5d42i0B4YlAOYsVW
+         RfD/8EsOYUT0e86v0VOnzSA5ioTyjeKwECT8La9duh6RVsTg3irdVKVRunZYO+BLGl77
+         e1+rB4z10Jq0XeMENlkxgSAy4er9etNE0VIWk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=raYp3/39g3h2TbMKQBfjHxENHkdyb2n4rqzvhpEpnQQ=;
-        b=5SX4qAthK3f/ccMDcg+7dTvYuxO1bKcDKbZuH3csxvbFxbeLvlh0Fixni/qWdRupR4
-         q1TVZAB/KTcTxhUYOL3uIR7Fu6xZHaAngNUVcjyIBVB1vFTbDbSuD5Jp5gC5Ix04T+kb
-         q0IoJeC/+Q7UFgpGFi2Ng68ng3CA6kXxr5qFxKIUyvyp5JXhGQnWflThDA/3NERxtDZE
-         mAKw4Ml2CiRPf32CAMWvJYpX5+vfGvWuFA3sTZYoQcGdckTrb9jxz/d+2FNLcjvPOSbS
-         pSbglSSgbttSSTqPUyLsdpJqdT2z4RtpRbuU0sk51Bf6Bss0iU0Y9QsUSrAImvuxxWIC
-         7s1A==
-X-Gm-Message-State: AOAM5307NWprF3gMPV5anWX2JR/J+bQmYraIP/sF41HW6/Z4YbMEIR40
-	lnhfK5vLa1bO1ff/44EygN6gL1LTNuMB1b3Wnzc=
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=H5cosC5zaceoJUWMisZ8n+OnuAmL3t3Zomezff2e9i4=;
+        b=TVn9l2jrepK/0N2JKO7WR67epnaMxOXbd5xsDt7jxWvHMdpRe6EO9AWbeenEIdtbaF
+         pBmjHTopt11K3MucU9moZwVS7hZJGzOAXZdpnCDnHVC2tccBaPOcZGRnej1xyWk+idG/
+         RjGf/Irca1SLd/VP9SNDQ+BK9UhUlliMfwiFvg0V7Ua23U99q8GVkVMDtuolSwmQ3DPl
+         alA85Zhbwn+xCQ3cVV4Cg6zLhSRhZ3ZJiwNYke0A2r1+G9gUJdq+1xmpCak5Gvn7c4U6
+         DX/sZ3rNlUEDZq7nTsKe6AYDQIu3HLe7sf9kzuZTWPnh7dSqXExME4Nqq+EtpjZuex3K
+         Kurg==
+X-Gm-Message-State: AOAM532zRQurEN3vMWZl2H853s6FSOv0o63DxJR2rfIvjHZx9rhnrNf4
+	iR9rG39RAP6ExqWc6RxHhboLmQ==
 X-Google-Smtp-Source: 
- ABdhPJytnCaCggDgrkVHYCq214/O4HNsnAFaf5APKlJQKmIpH2Y5nSX4KNjB+BtSToUhcxqD6eRnkiQXRoTzEGzQEQ8=
-X-Received: by 2002:a9f:218c:: with SMTP id 12mr11525437uac.71.1639642549121;
- Thu, 16 Dec 2021 00:15:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20211215142449.13469-1-pontusja@lap5cg1077w4w.se.axis.com>
- <CANNYZj-EFA-tZzFLQvVDrLmiFyat5BsU14nyKdQ3BC7gzsmPfg@mail.gmail.com>
- <5d35085259c04e5a9e0177430f316dd6@axis.com>
-In-Reply-To: <5d35085259c04e5a9e0177430f316dd6@axis.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 16 Dec 2021 09:15:37 +0100
+ ABdhPJzhhh5Moy6XP2JPKTrBjhFXw+/2b4utilo2jIrCfiK/ZvrtQ2BsoUMfwn+tByXDnbu1N6seeQ==
+X-Received: by 2002:a05:600c:4ed2:: with SMTP id
+ g18mr4046241wmq.25.1639646200626;
+        Thu, 16 Dec 2021 01:16:40 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:7bea:ecb7:80b0:2828?
+ ([2001:8b0:aba:5f3c:7bea:ecb7:80b0:2828])
+        by smtp.gmail.com with ESMTPSA id
+ k33sm1047474wms.21.2021.12.16.01.16.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Dec 2021 01:16:40 -0800 (PST)
 Message-ID: 
- <CANNYZj8OvCOk3mQbedykKN2zJr7V74SNdn4S6e-x7OYsEj1O=g@mail.gmail.com>
+ <6d3f11fb30f39fd9d0f933e92c71d94a59592bbf.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [RFC] Implementation of a submodule fetcher
-To: Fredrik Gustafsson <Fredrik.Gustafsson@axis.com>
-Cc: Pontus Jaensson <Pontus.Jaensson@axis.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="000000000000b2f79205d33f0720"
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Pontus Jaensson <pontus.jaensson@axis.com>,
+	bitbake-devel@lists.openembedded.org
+Cc: fredrik.gustafsson@axis.com, Pontus Jaensson <pontusja@axis.com>
+Date: Thu, 16 Dec 2021 09:16:36 +0000
+In-Reply-To: <20211215142449.13469-1-pontusja@lap5cg1077w4w.se.axis.com>
+References: <20211215142449.13469-1-pontusja@lap5cg1077w4w.se.axis.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 Dec 2021 08:15:51 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13173
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Dec 2021 09:16:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13175
 
---000000000000b2f79205d33f0720
-Content-Type: text/plain; charset="UTF-8"
+On Wed, 2021-12-15 at 15:24 +0100, Pontus Jaensson wrote:
+> From: Pontus Jaensson <pontusja@axis.com>
+> 
+> This patch consists of a Submodule class which inherits from and extends the FetchMethod-class
+> for retrieving, initializing and updating a submodule directory. The main reason for implementing
+> it is to make it possible to track the version of a packet with git instead of just a recipe.
+> 
+> The submodule fetcher is used by using the following syntax in the SRC_URI field in the recipe:
+> SRC_URI = submodule://<PATH TO TOP LEVEL DIRECTORY>;localpath=<NAME OF THE WANTED SUBMODULE>.
+> Where the submodule-keyword is necessary to use in order to call this specific fetcher.
+> 
+> In the download-method the URI is then parsed and the relevant parts from it are extracted and
+> used to find information about the module in the .gitmodules-file in the top level git directory.
+> The final thing that happens in the download-method is that git submodule init & git submodule
+> update are called and executed at the right location for the specified submodule.
+> 
+> In the unpack-method the empty directory, that is being created during the process but contains no
+> information, is removed and replaced with a symlink to the directory that contains the actual
+> source code.
+> 
+> The code has been tested and so far it seems to work fine.
+> ---
+>  bitbake/lib/bb/fetch2/__init__.py  |   2 +
+>  bitbake/lib/bb/fetch2/submodule.py | 123 +++++++++++++++++++++++++++++
+>  2 files changed, 125 insertions(+)
+>  create mode 100644 bitbake/lib/bb/fetch2/submodule.py
 
-On Thu, 16 Dec 2021 at 06:31, Fredrik Gustafsson <
-Fredrik.Gustafsson@axis.com> wrote:
+As others have said, why do we need two different fetchers to work with git
+submodules? I really dislike having two ways of doing something, it is bad for
+usability and suggests a problem in the underlying code, particularly when it
+isn't clear when one should be used and when the other should.
 
-> bitbake has already support for non reproduceable builds, you can set
-> SRCREV to a branch, which will change. This patch is actually for
-> introducing reproducible builds, however the information is in git and not
-> in bb-files.
->
-> The usecase here is traceability. Let's say you're developing a package
-> and you want to integrate that to your bitbake system. It will require two
-> commits, one to the package repository and one to the layer repository. You
-> can get around this by settings SRCREV to a branch but then you no longer
-> get reproduceable builds.
->
-> To solve this, we have built a service that once a package is updated, the
-> bb-file in the layer repository is automatically rewritten so match the new
-> version of the package. This is error prone and cumbersome. Using the layer
-> repository as a superproject will made it possible to use gerrits
-> superproject subscription that makes the layer repository to be updated
-> each time the submodule (the package) is updated. This gives us
-> reproduceable builds, only one commit to introduce a change and no inhouse
-> developed services.
->
+Does the fetcher meet the design goals in:
 
-Apologies again, but without organizationally enforcing submodule structure
-this fetcher is not providing reproducible behaviour. If there are no
-source code checksums available for bitbake to verify during fetch, then
-there's no guarantee that the component repo has not been modified, and
-that guarantee must be technical, not organizational. The requirement for
-all fetchers is that they provide that ability: you can switch it off if
-you want to, but that is not allowed to be the default (or only) behavior.
+https://git.yoctoproject.org/poky/tree/bitbake/lib/bb/fetch2/README
 
-If the problem is updating SRCREVs in a recipe, there is a standard,
-official way to do it: 'devtool upgrade'. Would that work for you?
+?
 
-Alex
+I'd also note there are no tests, not that adding any would change my review
+given the above points.
 
---000000000000b2f79205d33f0720
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cheers,
 
-<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail=
-_attr">On Thu, 16 Dec 2021 at 06:31, Fredrik Gustafsson &lt;<a href=3D"mail=
-to:Fredrik.Gustafsson@axis.com">Fredrik.Gustafsson@axis.com</a>&gt; wrote:<=
-br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
-x;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+Richard
 
 
-
-
-<div dir=3D"ltr">
-<div id=3D"gmail-m_2139662143445721374divtagdefaultwrapper" style=3D"font-s=
-ize:12pt;color:rgb(0,0,0);font-family:Calibri,Helvetica,sans-serif,EmojiFon=
-t,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;,NotoColorEmoji,&=
-quot;Segoe UI Symbol&quot;,&quot;Android Emoji&quot;,EmojiSymbols" dir=3D"l=
-tr">bitbake has already support for non reproduceable builds, you can set S=
-RCREV to a branch, which will change. This patch is actually for introducin=
-g reproducible builds, however the information is in git and not in bb-file=
-s.<div style=3D"color:rgb(0,0,0)">
-<div><br>
-</div>
-<div>The usecase here is traceability. Let&#39;s say you&#39;re developing =
-a package and you want to integrate that to your bitbake system. It will re=
-quire two commits, one to the package repository and one to the layer repos=
-itory. You can get around this by settings
- SRCREV to a branch but then you no longer get reproduceable builds.</div>
-<div><br>
-</div>
-<div>To solve this, we have built a service that once a package is updated,=
- the bb-file in the layer repository is automatically rewritten so match th=
-e new version of the package. This is error prone and cumbersome. Using the=
- layer repository as a superproject
- will made it possible to use gerrits superproject subscription that makes =
-the layer repository to be updated each time the submodule (the package) is=
- updated. This gives us reproduceable builds, only one commit to introduce =
-a change and no inhouse developed
- services.</div></div></div></div></blockquote></div><div class=3D"gmail_qu=
-ote"><br></div><div class=3D"gmail_quote">Apologies again, but without orga=
-nizationally enforcing submodule structure this fetcher is not providing re=
-producible behaviour. If there are no source code checksums available for b=
-itbake to verify during fetch, then there&#39;s no guarantee that the compo=
-nent repo has not been modified, and that guarantee must be technical, not =
-organizational. The requirement for all fetchers is that they provide that =
-ability: you can switch it off if you want to, but that is not allowed to b=
-e the default (or only) behavior.</div><div class=3D"gmail_quote"><br></div=
-><div class=3D"gmail_quote">If the problem is updating SRCREVs in a recipe,=
- there is a standard, official way to do it: &#39;devtool upgrade&#39;. Wou=
-ld that work for you?</div><div class=3D"gmail_quote"><br></div><div class=
-=3D"gmail_quote">Alex<br></div></div>
-
---000000000000b2f79205d33f0720--
 
