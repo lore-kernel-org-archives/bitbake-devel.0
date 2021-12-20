@@ -1,86 +1,90 @@
-Return-Path: <linusti@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC89C433EF
-	for <webhook@archiver.kernel.org>; Sun, 19 Dec 2021 17:57:06 +0000 (UTC)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com
- [209.85.208.44])
- by mx.groups.io with SMTP id smtpd.web11.19320.1639936625845895183
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65457C433FE
+	for <webhook@archiver.kernel.org>; Mon, 20 Dec 2021 14:39:21 +0000 (UTC)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com
+ [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web08.5925.1640011160379601710
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 19 Dec 2021 09:57:06 -0800
+ Mon, 20 Dec 2021 06:39:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=GVis6+BL;
- spf=pass (domain: gmail.com, ip: 209.85.208.44, mailfrom: linusti@gmail.com)
-Received: by mail-ed1-f44.google.com with SMTP id f5so6252859edq.6
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KW2zfod/;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id s1so15149598wra.6
         for <bitbake-devel@lists.openembedded.org>;
- Sun, 19 Dec 2021 09:57:05 -0800 (PST)
+ Mon, 20 Dec 2021 06:39:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=3Mb9yVsVssspLOstS84Ve/EjUfhPR77lT9Jh3kzNd3w=;
-        b=GVis6+BL9WLymPo841474kCQKAQCDZ6TFvwKQQ41KzEQlZtkYQFi1K8hsEWiLwfeSu
-         5FlIpPCPZssdS7nQn3QeC5s7O7J22PZax9rzgQjP1blMhh4G5h1NgoLspoJKckZ3AyqV
-         NgvFT+msxuZrcbH1fobohMESECG70UVSqJh3Kd4e1fR9DbNFKwx8y6MJtbN9f2vRJWd3
-         tiPthm3IFBou3DGCOshxXVORcCU+flcCHEfa+7zYAk5A/d+PEV1Fq9f42xwJEkm+Fzi7
-         F/hzWrfioG86q3PhSLyaKKFVX5MGrj+aR9ZsqB3J28XVRMoK26f4XSFU+DtNGivwm86d
-         iNjw==
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=icWVk4qupD1aOCksvbBpW+WeaFGXglU7VeArnT22DLQ=;
+        b=KW2zfod/nByr9b9MoftguR6K3lSLOihCd8g77TBUut5ancQO2+bz9QDUq1DdSbtTlX
+         4+88tgPsqVyttc8fj+lH0/hzYsXJ/4CucoQtt7sD7HJ6CdHwngRn2Ri2LaLB/balFn1c
+         WFrYgTpPXtR2n3Oc+zC9dkcu50cqajQTDPTxA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=3Mb9yVsVssspLOstS84Ve/EjUfhPR77lT9Jh3kzNd3w=;
-        b=3GJV5KQY5CzlxCRGJ17WSFGlhlW9ZLQDSR/vNUp78mku46sEYqbmF/XaIf/UhW7AqA
-         HYcYnH7pPNnKSRiUp1X4arbSh1c6VcCwsI3qr8Qm4uDAJ+3f9j6P7BhWXuTtkYpyOjmG
-         NXfnLP9lfJqYdL/8uxNMYbQ4BcmFb4WC/zLCEAbhw7tIQIU8UbgdSUWcjlsyNuAw7GI+
-         yDWWkumOsre9KfWMvnTnMRenWZRcslNeOru8RJtuFQ8EDrtGfLS96RkpehqtCItkrjW0
-         EhSM/GeABoqUcliqL7gE4yUVgfl4YZpf7lURCsm5ra6ZoTAxeTpE+WGTkgbGg0I/pAdV
-         jaZQ==
-X-Gm-Message-State: AOAM531KmDYKNI19Z7S4Cr3eEWUzqKflg0vKiCr34g0UVPBY05Xy6lG2
-	71ZtoP0ORWUTmIWTjuaiKOBG6SPDqEs/SL51+y6tmiLqAWCa5A==
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=icWVk4qupD1aOCksvbBpW+WeaFGXglU7VeArnT22DLQ=;
+        b=bF2IyNVHil1lvQvZEpOSoe+0X8DcpvDNfUpDLxdSBccn9bUOcBC8ZR59n/CzJh9+D3
+         ceOw6z0WaZIG6vxNX57BIu/N8lIhUH0enhYSqR3Um1wL+fta8MGaUGEM3fr2tz6/tAut
+         Z+mkTJumQRQD9hHZXoqP9NoNSvGUdNQMYlh0+Y0lAOQZABWdUK1ZClvdSR5ofQ0QRLTa
+         2wvru04m/85bpBi6aDGdA4Ue2CqQW+ESyzPzvG32n2uddES51PInhpnUne+PHbuJypqu
+         RLIhj5vjoRxoNucJNeut9Th7+v2jmGzkeYjWFvSLsmu2dCEL5NZ8sPLrnFVV8EtHRuKe
+         d7yg==
+X-Gm-Message-State: AOAM531goZ+W8LMQXe4tHBn2ZRa6V425dQPmtjQs8+5KODR+vwQp/x+n
+	DprTt8+jaPFTZvMhJ+GTUKSgXo5xxV9SNA==
 X-Google-Smtp-Source: 
- ABdhPJxjXkXEFHhLh9B49C6oC2MTpjUJ+NX04SMuUVxRzErSWSdQgVY0A4p2PYGKvsuuU737haswM6gg01ts5fkFPok=
-X-Received: by 2002:a05:6402:1492:: with SMTP id
- e18mr10863297edv.381.1639936623944;
- Sun, 19 Dec 2021 09:57:03 -0800 (PST)
-MIME-Version: 1.0
-From: Frank Earl <linusti@gmail.com>
-Date: Sun, 19 Dec 2021 11:56:53 -0600
-Message-ID: 
- <CANepkxDzx9gi_LQMZiMkcXvfLBB6HXpRuc-T9ZLk70frw6EVBA@mail.gmail.com>
-Subject: A bit confused about something regarding the new override syntax...
+ ABdhPJwwc4DvS4+tSfvB9jPA8NfPk7nJrXhspMh9hR8DHwwwp6hT2qUWFyfETRgbSn2Ndm/15GWjaQ==
+X-Received: by 2002:a5d:4690:: with SMTP id
+ u16mr13705734wrq.321.1640011158321;
+        Mon, 20 Dec 2021 06:39:18 -0800 (PST)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:2f2b:ae5:15d4:240b])
+        by smtp.gmail.com with ESMTPSA id
+ s189sm18346176wme.0.2021.12.20.06.39.17
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Dec 2021 06:39:17 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000eca85505d3837f50"
+Subject: [PATCH] tests/fetch: Drop gnu urls from wget connectivity test
+Date: Mon, 20 Dec 2021 14:39:16 +0000
+Message-Id: <20211220143916.956523-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 19 Dec 2021 17:57:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13196
+ <bitbake-devel@lists.openembedded.org>; Mon, 20 Dec 2021 14:39:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13198
 
---000000000000eca85505d3837f50
-Content-Type: text/plain; charset="UTF-8"
+These urls are no longer adding much to the test coverage but the intermittent
+network issues connecting to them are painful. Drop the urls.
 
-I'd have thought that the following wasn't the case here...
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tests/fetch.py | 3 ---
+ 1 file changed, 3 deletions(-)
 
-WARNING: Layer meta-edgeml should set LAYERSERIES_COMPAT_meta-edgeml in its
-conf/layer.conf file to list the core layer names it is compatible with.
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 6b77afe5f1..2a046d0ded 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -1400,9 +1400,6 @@ class FetchCheckStatusTest(FetcherTest):
+                       "https://downloads.yoctoproject.org/releases/opkg/opkg-0.1.7.tar.gz",
+                       "https://downloads.yoctoproject.org/releases/opkg/opkg-0.3.0.tar.gz",
+                       "ftp://sourceware.org/pub/libffi/libffi-1.20.tar.gz",
+-                      "http://ftp.gnu.org/gnu/autoconf/autoconf-2.60.tar.gz",
+-                      "https://ftp.gnu.org/gnu/chess/gnuchess-5.08.tar.gz",
+-                      "https://ftp.gnu.org/gnu/gmp/gmp-4.0.tar.gz",
+                       # GitHub releases are hosted on Amazon S3, which doesn't support HEAD
+                       "https://github.com/kergoth/tslib/releases/download/1.1/tslib-1.1.tar.xz"
+                       ]
+-- 
+2.32.0
 
-I was working through modernizing my stuff so I was properly compatible
-with Honister and this shows up on all the ones I've worked on to this
-point.  Is that not an override?  Everything else looks and acts like it
-is- and I'd always understood that the stuff in the layer.conf were those...
-
---000000000000eca85505d3837f50
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>I&#39;d have thought that the following wasn&#39;t th=
-e case here...<br><br>WARNING: Layer meta-edgeml should set LAYERSERIES_COM=
-PAT_meta-edgeml in its conf/layer.conf file to list the core layer names it=
- is compatible with.<br><br></div>I was working through modernizing my stuf=
-f so I was properly compatible with Honister and this shows up on all the o=
-nes I&#39;ve worked on to this point.=C2=A0 Is that not an override?=C2=A0 =
-Everything else looks and acts like it is- and I&#39;d always understood th=
-at the stuff in the layer.conf were those...<br></div>
-
---000000000000eca85505d3837f50--
 
