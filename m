@@ -1,88 +1,107 @@
-Return-Path: <anuj.mittal@intel.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52E7C433F5
-	for <webhook@archiver.kernel.org>; Fri, 31 Dec 2021 00:22:07 +0000 (UTC)
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
- by mx.groups.io with SMTP id smtpd.web11.5667.1640910121693805729
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671DDC433F5
+	for <webhook@archiver.kernel.org>; Sat,  1 Jan 2022 11:29:21 +0000 (UTC)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
+ [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web10.24168.1641036560119751990
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 30 Dec 2021 16:22:06 -0800
+ Sat, 01 Jan 2022 03:29:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="unable to parse pub key" header.i=@intel.com header.s=intel
- header.b=MvgconDz;
- spf=pass (domain: intel.com, ip: 134.134.136.100,
- mailfrom: anuj.mittal@intel.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640910126; x=1672446126;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=5NItFxBAXwhIaIQ7o3EKFN8HM7mxIBcaqij0ZIH8rW4=;
-  b=MvgconDz+Yx/lCdglcOTlvUwTYikE59rtGieF4NwZ4zSrGilyUbv/M/K
-   N9z5KN2ySzknSzj4FyqBTQzPAFBJLlqIS3teElezf/W6MaUFrDXbhtUJ/
-   5vXQZL5O0sqC3F0fHbA1r0mndLV8P1dbrK6BoGG8QIaXzOj/CsysKUyXm
-   t7qSYQlgOdLryRX7QuqkzyERwreNYNxW5sYLW5o+iSrSXQ+U0f/GDZMiA
-   0ZWSqNlLoYpKQdvQJCdun1Zk9UL8W0OV7Taulg5c4XNOL0GCYiBNEazda
-   LDyTSjm443OkgO5Tz5IMawoOiCRixbeLoSt+7uAP2MHP10FY4Y29QUVkg
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10213"; a="305110487"
-X-IronPort-AV: E=Sophos;i="5.88,248,1635231600";
-   d="scan'208";a="305110487"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 30 Dec 2021 16:22:06 -0800
-X-IronPort-AV: E=Sophos;i="5.88,248,1635231600";
-   d="scan'208";a="468943790"
-Received: from jiayingk-mobl2.gar.corp.intel.com (HELO
- anmitta2-mobl3.intel.com) ([10.215.231.141])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 30 Dec 2021 16:22:05 -0800
-From: Anuj Mittal <anuj.mittal@intel.com>
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=leXdgCe0;
+ spf=pass (domain: gmail.com, ip: 209.85.221.51,
+ mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f51.google.com with SMTP id k18so23418882wrg.11
+        for <bitbake-devel@lists.openembedded.org>;
+ Sat, 01 Jan 2022 03:29:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tVN6kmvl2Xv0svDBV7ReQ6kf+RIw03oW7+wxvJyjrAk=;
+        b=leXdgCe0FCpA3d6BiaBNla8IOoqMI1qLbHk6+Gg1M+OupN0xuYk7Po+KlykqMeNzn7
+         /QZRlQhJcJL5GbSkzzyYnoFTpxEEmH4JyMk+c/18cwqJ9CCHz4nCO7+vdQAcVM4UQPde
+         lvuvs1jo6X634XanhLksoOOpIUqgxGS9SUnZiEK56/Yzckmb3PNX4y7l4/cOvovzMV86
+         3fjHcUS2nwD7IkLhmIonSMRBWASmZ/r6iCduDS1mQCH7E+nrJANEoOecMqhH/8zbsQtq
+         l6OXfGovczjeryW9xko+DIe58ke9W5rrWQFjbVKB1ApZ96AeFrKh0CqzfdYKgn49lq/q
+         xpjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tVN6kmvl2Xv0svDBV7ReQ6kf+RIw03oW7+wxvJyjrAk=;
+        b=xXXPE+urdgD0r5rdTLQn2z2q/MRVMhhI1v+kosQ85uEa7uh9Vmyjy/uZNIFJGl0JD9
+         4Jj2svI3e4yMqVu8xyY9hErhhoeK7xHQDh9rdtmNn30lrsnh+Eal3VxbO22AI63hgRUU
+         u2WyW7wgCqOGk9ZNUu9KcpaZuq2hvUBsc8zjm9r9dzytwqmomi3DleccqqM87Dx5XeN5
+         VfiPJyrJqpQRVHmPpARgwDTym77GTHu3U3BrffHUWfEdkgytJF9yOu+26l7ZpHshYty6
+         3TzdJTWBNJaEaQhQYY9JbgJlhwpdEIFVnpUKPoeh+hMY6YZv72pKDV5yYbDKcqzj8IMQ
+         g6Tw==
+X-Gm-Message-State: AOAM531OvF0A9JVJINV0/UTm43GGUQx7X+GRZE+l1cTuqbEZZQLQoch1
+	gM4MRZPfzJD8qzg6g4ZCN6jVm9k9qrk=
+X-Google-Smtp-Source: 
+ ABdhPJzjP4whXzvg3YJXCc39cgMg5X2xiY/niAzo3aLz6caMWj12mAHM1M8BJc00uRuEjFTLUPdz0A==
+X-Received: by 2002:a5d:5988:: with SMTP id n8mr32643469wri.309.1641036558515;
+        Sat, 01 Jan 2022 03:29:18 -0800 (PST)
+Received: from nereus.lab.linutronix.de. (b2b-109-90-143-203.unitymedia.biz.
+ [109.90.143.203])
+        by smtp.gmail.com with ESMTPSA id
+ a22sm28799057wme.19.2022.01.01.03.29.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Jan 2022 03:29:18 -0800 (PST)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+X-Google-Original-From: Alexander Kanavin <alex@linutronix.de>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.52][PATCH 4/4] tests/fetch: Drop gnu urls from wget connectivity
- test
-Date: Fri, 31 Dec 2021 08:21:55 +0800
-Message-Id: 
- <92a16b425fee5f0c46122eb126ecd8b381cf1ec5.1640910042.git.anuj.mittal@intel.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <cover.1640910042.git.anuj.mittal@intel.com>
-References: <cover.1640910042.git.anuj.mittal@intel.com>
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH] providers.py: do not skip recipes providing 'virtual/x' in
+ world builds
+Date: Sat,  1 Jan 2022 12:29:11 +0100
+Message-Id: <20220101112911.1866500-1-alex@linutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 31 Dec 2021 00:22:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13208
+ <bitbake-devel@lists.openembedded.org>; Sat, 01 Jan 2022 11:29:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13209
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+This is very old code pre-dating 2005, and the reasons are probably lost in
+history.
 
-These urls are no longer adding much to the test coverage but the intermittent
-network issues connecting to them are painful. Drop the urls.
+Doing this skipping means that anything providing 'virtual/x' is excluded
+from populating packages to deploy/ in world builds, and thus, from reproducubility
+and packaging tests.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit bdf5739c5d831dc97a7d81568f94a0953c71017f)
-Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+This issue has been largely masked until 'package_ipk/deb/rpm: Drop recursive do_build task dependencies'
+as previously recipes without virtual/x provides would pull in the dependent rpms instead of the world target
+doing that directly.
+
+I have noticed the issue by observing that go-runtime is no longer reported as
+non-reproducible when it should be.
+
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- lib/bb/tests/fetch.py | 3 ---
- 1 file changed, 3 deletions(-)
+ bitbake/lib/bb/providers.py | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index a85ebdf4..34f3a4f6 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1378,9 +1378,6 @@ class FetchCheckStatusTest(FetcherTest):
-                       "https://downloads.yoctoproject.org/releases/opkg/opkg-0.1.7.tar.gz",
-                       "https://downloads.yoctoproject.org/releases/opkg/opkg-0.3.0.tar.gz",
-                       "ftp://sourceware.org/pub/libffi/libffi-1.20.tar.gz",
--                      "http://ftp.gnu.org/gnu/autoconf/autoconf-2.60.tar.gz",
--                      "https://ftp.gnu.org/gnu/chess/gnuchess-5.08.tar.gz",
--                      "https://ftp.gnu.org/gnu/gmp/gmp-4.0.tar.gz",
-                       # GitHub releases are hosted on Amazon S3, which doesn't support HEAD
-                       "https://github.com/kergoth/tslib/releases/download/1.1/tslib-1.1.tar.xz"
-                       ]
+diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py
+index 8c1c31a5c5..3c4462fbdd 100644
+--- a/bitbake/lib/bb/providers.py
++++ b/bitbake/lib/bb/providers.py
+@@ -429,10 +429,6 @@ def buildWorldTargetList(dataCache, task=None):
+             terminal = False
+ 
+         for p in dataCache.pn_provides[pn]:
+-            if p.startswith('virtual/'):
+-                logger.debug2("World build skipping %s due to %s provider starting with virtual/", f, p)
+-                terminal = False
+-                break
+             for pf in dataCache.providers[p]:
+                 if dataCache.pkg_fn[pf] != pn:
+                     logger.debug2("World build skipping %s due to both us and %s providing %s", f, pf, p)
 -- 
-2.33.1
+2.20.1
 
 
