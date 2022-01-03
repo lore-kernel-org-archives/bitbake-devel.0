@@ -1,115 +1,132 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B5BC433EF
-	for <webhook@archiver.kernel.org>; Mon,  3 Jan 2022 16:22:51 +0000 (UTC)
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net
- [217.70.183.198])
- by mx.groups.io with SMTP id smtpd.web09.30422.1641226969969402104
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AE6C433EF
+	for <webhook@archiver.kernel.org>; Mon,  3 Jan 2022 22:38:28 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
+ [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web11.35918.1641249507300930774
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 03 Jan 2022 08:22:50 -0800
+ Mon, 03 Jan 2022 14:38:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id ABD5CC000F;
-	Mon,  3 Jan 2022 16:22:46 +0000 (UTC)
-Cc: docs@lists.yoctoproject.org, Quentin Schulz <foss@0leil.net>
-Subject: Re: [bitbake-devel] [PATCH] doc: document override style operators
- not working for task dependencies
-To: Daniel Wagenknecht <dwagenknecht@emlix.com>,
- bitbake-devel@lists.openembedded.org
-References: <20211216152555.815291-1-dwagenknecht@emlix.com>
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-Message-ID: <da20e941-ec99-5f58-8c9d-bc4577bf26a1@bootlin.com>
-Date: Mon, 3 Jan 2022 17:22:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Xi9/yPRw;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f44.google.com with SMTP id t26so72391345wrb.4
+        for <bitbake-devel@lists.openembedded.org>;
+ Mon, 03 Jan 2022 14:38:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=4avB4S3bnu2YD5W00hRouhUHoAgYVTX7cUP7WKPqUww=;
+        b=Xi9/yPRwUZFIjxQWFsKG15dI1MYiliPsh1ml2qNClHZX/gw070pyosy6sdPzMTF4O6
+         qyLcf6/jpZaGqsIduUAEkyeKgLbr6Iyodu2uFlsHN6j0jNvdHYc1dMgIYlyUjrlOdEjy
+         L1ge4gStYey6EwgxZuPkNgvqLwKqkewypVozw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=4avB4S3bnu2YD5W00hRouhUHoAgYVTX7cUP7WKPqUww=;
+        b=JNa7i9aJ0y8QHsMqrDHZchOIPFFUXfqL31p003618XOAd1W4A3ebU3NNbVwTzNgqiH
+         MJZmCrwwLg98azpu3A6IAnSw+U2vtcKep+KYKSzkgvkBUbT/puw6DExIYX8zYgahvUFe
+         3njMxgMqwhDv0nNMFxLhDVPYaxATwVGp4oKSdvlWqzJosnHxxfCCho9FJ9MRZKKwf0ZL
+         6Rju7NXbBWP3kPYcqab8guUT+X+EzVvu8kLK9HP18aWTxnZc74kc6h8gfMLF9p//2CCb
+         ho6nWwXwRpT+okwYK8kNZ8u76B4IOp4TaJaQKc1BtQrkCH/BQSisKLGduJ1GBFl0qHgk
+         On0A==
+X-Gm-Message-State: AOAM531uKIx9vQ+XFgUP5XRLGVpTE3KO8/DPEZT7hezl+ZsZG3A4AjUd
+	KIasdPg88FdxhJLHbpFvqMEQOg==
+X-Google-Smtp-Source: 
+ ABdhPJy9GMYmxrWmRpDfAqJQyzF/hytD7QCEwSHVy68gc8S6/Vp//EWylJ/YpiCKeHLr1bCUhBQudg==
+X-Received: by 2002:adf:f70b:: with SMTP id
+ r11mr41591136wrp.496.1641249505722;
+        Mon, 03 Jan 2022 14:38:25 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:da22:f51:54c3:4a4f?
+ ([2001:8b0:aba:5f3c:da22:f51:54c3:4a4f])
+        by smtp.gmail.com with ESMTPSA id
+ a204sm38368231wmd.39.2022.01.03.14.38.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jan 2022 14:38:25 -0800 (PST)
+Message-ID: 
+ <2ec888840075cdb4a9d9883492b3ebf62654c085.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] providers.py: do not skip recipes
+ providing 'virtual/x' in world builds
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alexander Kanavin <alex.kanavin@gmail.com>,
+	bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Date: Mon, 03 Jan 2022 22:38:24 +0000
+In-Reply-To: <20220101112911.1866500-1-alex@linutronix.de>
+References: <20220101112911.1866500-1-alex@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4-1 
 MIME-Version: 1.0
-In-Reply-To: <20211216152555.815291-1-dwagenknecht@emlix.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 03 Jan 2022 16:22:51 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13211
+ <bitbake-devel@lists.openembedded.org>; Mon, 03 Jan 2022 22:38:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13212
 
-Hi Daniel,
+On Sat, 2022-01-01 at 12:29 +0100, Alexander Kanavin wrote:
+> This is very old code pre-dating 2005, and the reasons are probably lost in
+> history.
 
-On 12/16/21 4:25 PM, Daniel Wagenknecht wrote:
-> Override style operators do not work for specifying task dependencies.
-> This is not obvious and should be highlighted in the documentation.
->
-> Signed-off-by: Daniel Wagenknecht <dwagenknecht@emlix.com>
+They're not, I remember this.
+
+> Doing this skipping means that anything providing 'virtual/x' is excluded
+> from populating packages to deploy/ in world builds, and thus, from reproducubility
+> and packaging tests.
+> 
+> This issue has been largely masked until 'package_ipk/deb/rpm: Drop recursive do_build task dependencies'
+> as previously recipes without virtual/x provides would pull in the dependent rpms instead of the world target
+> doing that directly.
+> 
+> I have noticed the issue by observing that go-runtime is no longer reported as
+> non-reproducible when it should be.
+
+The principle is that virtual/XXX should only be built if something actually
+depends upon them as they're usually used to denote things which can be provided
+from multiple sources. I'd argue that the code is correct and wonder whether:
+
+a) go-runtime should be providing a virtual
+b) that OE-Core should have something depending on go-runtime for test purposes
+
+Cheers,
+
+Richard
+
+
+> 
+> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 > ---
->
-> I have experienced this problem with external layers "in the wild" leading to
-> dependencies being undeclared and builds sometimes failing. Additional
-> documentation will not necessarily fix the problem, but might make it easier to
-> find the problem. I'm not sure if there's also some mechanism in bitbake that
-> could detect such mistakes and provide a warning?
->
-> CC: qschulz, we talked about this on IRC:
->   https://www.yoctoproject.org/irc/%23yocto.2021-11-30.log.html#t2021-11-30T14:18:08
->
-> Sincerely
-> Daniel Wagenknecht
->
->  .../bitbake-user-manual-metadata.rst          | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> index d802a8d3..181c0997 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> @@ -1689,6 +1689,14 @@ This section describes several ways to declare dependencies. Remember,
->  even though dependencies are declared in different ways, they are all
->  simply dependencies between tasks.
+>  bitbake/lib/bb/providers.py | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py
+> index 8c1c31a5c5..3c4462fbdd 100644
+> --- a/bitbake/lib/bb/providers.py
+> +++ b/bitbake/lib/bb/providers.py
+> @@ -429,10 +429,6 @@ def buildWorldTargetList(dataCache, task=None):
+>              terminal = False
 >  
-> +.. note::
-> +
-> +   Override style operators do not work for declaring task dependencies.
-> +   See
-> +   :ref:`bitbake-user-manual/bitbake-user-manual-metadata:Inter-Task Dependencies`
-> +   for details.
-> +
-> +
->  .. _dependencies-internal-to-the-bb-file:
->  
->  Dependencies Internal to the ``.bb`` File
-> @@ -1813,6 +1821,17 @@ must have completed before the ``do_patch`` task can execute.
->  The ``[rdepends]`` flag works in a similar way but takes targets in the
->  runtime namespace instead of the build-time dependency namespace.
->  
-> +Note that dependencies are specified via
-> +:ref:`bitbake-user-manual/bitbake-user-manual-metadata:Variable Flag Syntax`
-> +and thus override style operators do not work for declaring task
-> +dependencies. You can add a task dependency for a specific override
-> +(e.g. a specific machine) by declaring an intermediary variable and using
-> +overrides for setting that variable::
-> +
-> +   # Does not work: do_compile:machine[depends] += "another_target:do_task"
-> +   EXTRA_DO_COMPILE_DEPENDS:machine = "another_target:do_task"
-> +   do_compile[depends] += "${EXTRA_DO_COMPILE_DEPENDS}"
-> +
->  Functions You Can Call From Within Python
->  =========================================
+>          for p in dataCache.pn_provides[pn]:
+> -            if p.startswith('virtual/'):
+> -                logger.debug2("World build skipping %s due to %s provider starting with virtual/", f, p)
+> -                terminal = False
+> -                break
+>              for pf in dataCache.providers[p]:
+>                  if dataCache.pkg_fn[pf] != pn:
+>                      logger.debug2("World build skipping %s due to both us and %s providing %s", f, pf, p)
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#13209): https://lists.openembedded.org/g/bitbake-devel/message/13209
+> Mute This Topic: https://lists.openembedded.org/mt/88071309/1686473
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [richard.purdie@linuxfoundation.org]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
-
-Thanks for the patch. I believe it could already be merged, and further
-improvements remain possible.
-
-Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Cheers
-Michael.
-
--- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
 
 
