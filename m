@@ -1,62 +1,86 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <quentin.schulz@theobroma-systems.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3B1C433F5
-	for <webhook@archiver.kernel.org>; Fri, 14 Jan 2022 16:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FE6C43217
+	for <webhook@archiver.kernel.org>; Mon, 17 Jan 2022 13:08:38 +0000 (UTC)
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net
  [217.70.183.199])
- by mx.groups.io with SMTP id smtpd.web11.8952.1642176019149123032
+ by mx.groups.io with SMTP id smtpd.web10.10910.1642424915645285258
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 14 Jan 2022 08:00:19 -0800
+ Mon, 17 Jan 2022 05:08:37 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id F414AFF80E;
-	Fri, 14 Jan 2022 16:00:13 +0000 (UTC)
-Cc: bitbake-devel@lists.openembedded.org, ashishm@mvista.com
-Subject: Re: [bitbake-devel] [1.46][PATCH] hashserv: specify loop for asyncio
- in python < 3.7
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-To: Jate Sujjavanich <jatedev@gmail.com>
-References: <20220113010527.181-1-jatedev@gmail.com>
- <78ac1aea-db40-2a99-1668-dc3bfcb3a074@bootlin.com>
- <CAPphmgaM5ABM=omAhgizE+ay+S65hELq_rgQio9ed4aVdSTRNQ@mail.gmail.com>
- <16CA2D972C0D44B2.13159@lists.openembedded.org>
-Organization: Bootlin
-Message-ID: <54534c9f-7cb4-1b01-1fa1-009b23ea847d@bootlin.com>
-Date: Fri, 14 Jan 2022 17:00:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+ spf=fail (domain: theobroma-systems.com, ip: 217.70.183.199,
+ mailfrom: quentin.schulz@theobroma-systems.com)
+Received: (Authenticated sender: foss@0leil.net)
+	by mail.gandi.net (Postfix) with ESMTPSA id D6F38FF80D;
+	Mon, 17 Jan 2022 13:08:31 +0000 (UTC)
+From: quentin.schulz@theobroma-systems.com
+To: docs@lists.yoctoproject.org,
+	bitbake-devel@lists.openembedded.org
+Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+	Quentin Schulz <foss+yocto@0leil.net>
+Subject: [PATCH] doc: bitbake-user-manual: specify the URL to be used with SSH
+ over git is different from `git clone`'s
+Date: Mon, 17 Jan 2022 14:08:16 +0100
+Message-Id: <20220117130816.104203-1-quentin.schulz@theobroma-systems.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <16CA2D972C0D44B2.13159@lists.openembedded.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 14 Jan 2022 16:00:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13236
+ <bitbake-devel@lists.openembedded.org>; Mon, 17 Jan 2022 13:08:38 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13237
 
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-On 1/14/22 4:45 PM, Michael Opdenacker wrote:
->
-> Actually, I don't have the issue on BitBake 1.46 (testing on Dunfell).
-> Just tested.
->
-> I have it with the version in master Poky, and your patch doesn't apply.
+The URL expected by git fetcher when the SSH protocol is used differs
+from the one given by Git servers to be used with the `git clone`
+command.
 
+Add a note making this specificity known to users.
 
-I filed a new bug about this:
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=14689
-Cheers
-Michael.
+Cc: Quentin Schulz <foss+yocto@0leil.net>
+Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+---
+ .../bitbake-user-manual-fetching.rst               | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index 0fc2d5e699..77384cfdc7 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -396,6 +396,19 @@ This fetcher supports the following parameters:
+    protocol is "file". You can also use "http", "https", "ssh" and
+    "rsync".
+ 
++   .. note::
++
++     When ``protocol`` is "ssh", the URL expected in :term:`SRC_URI` differs
++     from the one that is typically passed to ``git clone`` command and provided
++     by the Git server to fetch from. For example, the URL returned by GitLab
++     server for ``mesa`` when cloning over SSH is
++     ``git@gitlab.freedesktop.org:mesa/mesa.git``, however the expected URL in
++     :term:`SRC_URI` is the following::
++
++       SRC_URI = "git://git@gitlab.freedesktop.org/mesa/mesa.git;protocol=ssh;..."
++
++     Note the ``:`` character changed for a ``/`` before the path to the project.
++
+ -  *"nocheckout":* Tells the fetcher to not checkout source code when
+    unpacking when set to "1". Set this option for the URL where there is
+    a custom routine to checkout code. The default is "0".
+@@ -446,6 +459,7 @@ Here are some example URLs::
+ 
+    SRC_URI = "git://git.oe.handhelds.org/git/vip.git;tag=version-1"
+    SRC_URI = "git://git.oe.handhelds.org/git/vip.git;protocol=http"
++   SRC_URI = "git://git@gitlab.freedesktop.org/mesa/mesa.git;protocol=ssh;..."
+ 
+ .. note::
+ 
 -- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
 
 
