@@ -1,285 +1,263 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <quaresma.jose@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD01C433F5
-	for <webhook@archiver.kernel.org>; Wed, 19 Jan 2022 18:00:19 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com
- [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web12.30.1642615217807813109
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A689EC433F5
+	for <webhook@archiver.kernel.org>; Wed, 19 Jan 2022 23:16:16 +0000 (UTC)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com
+ [209.85.167.49])
+ by mx.groups.io with SMTP id smtpd.web09.4362.1642634175913173166
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Jan 2022 10:00:18 -0800
+ Wed, 19 Jan 2022 15:16:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=To/0qLVl;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f47.google.com with SMTP id n8so6724511wmk.3
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=R/Lst93j;
+ spf=pass (domain: gmail.com, ip: 209.85.167.49,
+ mailfrom: quaresma.jose@gmail.com)
+Received: by mail-lf1-f49.google.com with SMTP id x22so14395599lfd.10
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Jan 2022 10:00:17 -0800 (PST)
+ Wed, 19 Jan 2022 15:16:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t48/TeFhy9qSg93uVErhXpbSE6Q6vCr3Fn/0MFITBS0=;
-        b=To/0qLVlkXpnlCtV0HkYANs1sl1QP260Lf28/dn5nEL57DhggRf0/s5B5HA3wlVM1S
-         o+zPP77GRpKQDTnYvfIuLboYoodoAWVMKByqGuNHQ60sEf146zQAfZhksOOCWrD5bqqL
-         BxFy8Jpa8OyEVPkENHMTvnitqugPEKK8bzd48=
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=36G08H0rNWeZmoCetrl4MsakDc96mROfULFck/ns7fo=;
+        b=R/Lst93jPQPBi9R5xbdp1MTB+0Bd4tXMFfI14PcAtRwLBj7ypwOPpANO0aANIfSBR+
+         m+rm8QR4EAhf3IQH3qg1qgfLVscWAQvfrJYVuUmJXkS81nQ3/nwa2qXDkfBqQEMdyptC
+         qBtr22S9SRJLuK/IJ1pFc9US6weSC9KdooPetRfAGVDqi7Dzy0Kj32ZKhWgVYMVD5An4
+         QmCAL9fhz+fV1IKsah9vz6q7kXJGukZWPdyMTnM9OAJrsgwv5X3hGZhdzmFyS33xkpZo
+         9EwM1su5CDSFTLEAO7mUsxOYae6QxU/VID/IUa+6/jD2vo40//cXs53OnwWU7o0k9WfA
+         P4ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t48/TeFhy9qSg93uVErhXpbSE6Q6vCr3Fn/0MFITBS0=;
-        b=V4FfR/yMH+xER2DKVKZc61ksmdEti9zuHjSFk0WISoFnY/SjzWMyRnpAK6Wqpn1B+V
-         r+tyyaeHJDkjTMpl+Vf0liiIWpQWHJ+AM0WY2Dr2SMuYkpZVEqjFD01WVQgapPDFR9XV
-         WQVkVn6oF8qxIgy8wQf6H5L0z/Pfcpx8DtyN+fennaVLrANlANi7dXU7mKIusnHt1oqV
-         /FBA+Szu6RW1STFvqpRieuCeCQGV5ox6Of9+LE5uAY0c+mfmyp31//qn18D5KMk383pI
-         asg10eWS0SjSH01Y8nVQzuWqC+mlO6KCZpi9+lHnVI/NfAGIwnRyUGNBeyl/YveicY1N
-         1hyg==
-X-Gm-Message-State: AOAM530hNCFh24/arD6iJps+EI62mbDNkJSB/x6ebzaQ5cXxeem0SSyl
-	JLJbqTbSfJ3c/Yi/QljuClYUVLI/FF4OiQ==
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=36G08H0rNWeZmoCetrl4MsakDc96mROfULFck/ns7fo=;
+        b=FTM4T3BRomo+oplOmqqgs/fV7R3xtt/ahgIIrkDd9m2Lviez8sy4iXGqPhGY4YIQFh
+         a4a0kgnUA5p4ugtm/gPLKjJcsCXWGp+c7n8YiPhskVVyDx7l1i/iJzUWFqDlSRVAdM61
+         D1+sol6VslKmwfjLe8oUhKY/pQCJTDYGaolyN0hiVm2z6jnDhN7KSOhtNLmTo/ApK7Bm
+         CyvN+p2yGHva1Rx/fWqHfz+C2v29wy2QQvn3grWs16O0A4ouDdLEb5rLe7BctTUbv8Ii
+         eKWNKCpEqp2XU/tZi8dmpcMBPzj0Q7TrxV6yqmqwC2zlW/NKTGG0O1qt2prGB7kTCSWY
+         l/yA==
+X-Gm-Message-State: AOAM531Pf+hsjAOYPHo0ozytUwAn3X0OYsggRdWjl8CvVMXUPQgXjbG1
+	+rgsdPlsOyN2YzUvGK3rp+WTnX7750lyGHiYufI=
 X-Google-Smtp-Source: 
- ABdhPJyXoKzuQbsDMGGrwlktYmCbw8sQsWwursb14PSMG6RY0/zuHERoXFpF693rZF271RHh5buYpw==
-X-Received: by 2002:adf:f410:: with SMTP id
- g16mr29843411wro.114.1642615215868;
-        Wed, 19 Jan 2022 10:00:15 -0800 (PST)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:4e1a:65bf:4ced:cc2d])
-        by smtp.gmail.com with ESMTPSA id
- m12sm618126wrp.55.2022.01.19.10.00.15
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jan 2022 10:00:15 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch2: Add crate fetcher
-Date: Wed, 19 Jan 2022 18:00:15 +0000
-Message-Id: <20220119180015.1931903-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+ ABdhPJxhXTKK3pY9O53WrVLZlHofDBZhYeL/HZBMPZEtdqztx7Kp2kre7Th+5z/QYvtaPeflzerRbJEY556d1fAa7pE=
+X-Received: by 2002:ac2:424b:: with SMTP id
+ m11mr14954873lfl.447.1642634173947;
+ Wed, 19 Jan 2022 15:16:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220107231526.1517563-1-richard.purdie@linuxfoundation.org>
+ <20220107231526.1517563-2-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20220107231526.1517563-2-richard.purdie@linuxfoundation.org>
+From: Jose Quaresma <quaresma.jose@gmail.com>
+Date: Wed, 19 Jan 2022 23:16:02 +0000
+Message-ID: 
+ <CANPvuRkZj_WKgLzUE8vu-15e8RMXWqLwg=5B3SzYeDhdkj+COw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 2/2] bitbake-worker: Add/support network
+ task flag
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="0000000000006f21f505d5f792ab"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Jan 2022 18:00:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13247
+ <bitbake-devel@lists.openembedded.org>; Wed, 19 Jan 2022 23:16:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13248
 
-This imports the crate fetcher from OE-Core to resolve various module issues
-and adds some very very basic tests of that new fetcher.
+--0000000000006f21f505d5f792ab
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/__init__.py |   2 +
- lib/bb/fetch2/crate.py    | 137 ++++++++++++++++++++++++++++++++++++++
- lib/bb/tests/fetch.py     |  35 ++++++++++
- 3 files changed, 174 insertions(+)
- create mode 100644 lib/bb/fetch2/crate.py
+Hi Richard,
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 0b39ea6aaa..d37174185a 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1942,6 +1942,7 @@ from . import clearcase
- from . import npm
- from . import npmsw
- from . import az
-+from . import crate
- 
- methods.append(local.Local())
- methods.append(wget.Wget())
-@@ -1962,3 +1963,4 @@ methods.append(clearcase.ClearCase())
- methods.append(npm.Npm())
- methods.append(npmsw.NpmShrinkWrap())
- methods.append(az.Az())
-+methods.append(crate.Crate())
-diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
-new file mode 100644
-index 0000000000..f7e2354afb
---- /dev/null
-+++ b/lib/bb/fetch2/crate.py
-@@ -0,0 +1,137 @@
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
-+"""
-+BitBake 'Fetch' implementation for crates.io
-+"""
-+
-+# Copyright (C) 2016 Doug Goldstein
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Based on functions from the base bb module, Copyright 2003 Holger Schurig
-+
-+import hashlib
-+import json
-+import os
-+import shutil
-+import subprocess
-+import bb
-+from   bb.fetch2 import logger, subprocess_setup, UnpackError
-+from   bb.fetch2.wget import Wget
-+
-+
-+class Crate(Wget):
-+
-+    """Class to fetch crates via wget"""
-+
-+    def _cargo_bitbake_path(self, rootdir):
-+        return os.path.join(rootdir, "cargo_home", "bitbake")
-+
-+    def supports(self, ud, d):
-+        """
-+        Check to see if a given url is for this fetcher
-+        """
-+        return ud.type in ['crate']
-+
-+    def recommends_checksum(self, urldata):
-+        return False
-+
-+    def urldata_init(self, ud, d):
-+        """
-+        Sets up to download the respective crate from crates.io
-+        """
-+
-+        if ud.type == 'crate':
-+            self._crate_urldata_init(ud, d)
-+
-+        super(Crate, self).urldata_init(ud, d)
-+
-+    def _crate_urldata_init(self, ud, d):
-+        """
-+        Sets up the download for a crate
-+        """
-+
-+        # URL syntax is: crate://NAME/VERSION
-+        # break the URL apart by /
-+        parts = ud.url.split('/')
-+        if len(parts) < 5:
-+            raise bb.fetch2.ParameterError("Invalid URL: Must be crate://HOST/NAME/VERSION", ud.url)
-+
-+        # last field is version
-+        version = parts[len(parts) - 1]
-+        # second to last field is name
-+        name = parts[len(parts) - 2]
-+        # host (this is to allow custom crate registries to be specified
-+        host = '/'.join(parts[2:len(parts) - 2])
-+
-+        # if using upstream just fix it up nicely
-+        if host == 'crates.io':
-+            host = 'crates.io/api/v1/crates'
-+
-+        ud.url = "https://%s/%s/%s/download" % (host, name, version)
-+        ud.parm['downloadfilename'] = "%s-%s.crate" % (name, version)
-+        ud.parm['name'] = name
-+
-+        logger.debug(2, "Fetching %s to %s" % (ud.url, ud.parm['downloadfilename']))
-+
-+    def unpack(self, ud, rootdir, d):
-+        """
-+        Uses the crate to build the necessary paths for cargo to utilize it
-+        """
-+        if ud.type == 'crate':
-+            return self._crate_unpack(ud, rootdir, d)
-+        else:
-+            super(Crate, self).unpack(ud, rootdir, d)
-+
-+    def _crate_unpack(self, ud, rootdir, d):
-+        """
-+        Unpacks a crate
-+        """
-+        thefile = ud.localpath
-+
-+        # possible metadata we need to write out
-+        metadata = {}
-+
-+        # change to the rootdir to unpack but save the old working dir
-+        save_cwd = os.getcwd()
-+        os.chdir(rootdir)
-+
-+        pn = d.getVar('BPN')
-+        if pn == ud.parm.get('name'):
-+            cmd = "tar -xz --no-same-owner -f %s" % thefile
-+        else:
-+            cargo_bitbake = self._cargo_bitbake_path(rootdir)
-+
-+            cmd = "tar -xz --no-same-owner -f %s -C %s" % (thefile, cargo_bitbake)
-+
-+            # ensure we've got these paths made
-+            bb.utils.mkdirhier(cargo_bitbake)
-+
-+            # generate metadata necessary
-+            with open(thefile, 'rb') as f:
-+                # get the SHA256 of the original tarball
-+                tarhash = hashlib.sha256(f.read()).hexdigest()
-+
-+            metadata['files'] = {}
-+            metadata['package'] = tarhash
-+
-+        path = d.getVar('PATH')
-+        if path:
-+            cmd = "PATH=\"%s\" %s" % (path, cmd)
-+        bb.note("Unpacking %s to %s/" % (thefile, os.getcwd()))
-+
-+        ret = subprocess.call(cmd, preexec_fn=subprocess_setup, shell=True)
-+
-+        os.chdir(save_cwd)
-+
-+        if ret != 0:
-+            raise UnpackError("Unpack command %s failed with return value %s" % (cmd, ret), ud.url)
-+
-+        # if we have metadata to write out..
-+        if len(metadata) > 0:
-+            cratepath = os.path.splitext(os.path.basename(thefile))[0]
-+            bbpath = self._cargo_bitbake_path(rootdir)
-+            mdfile = '.cargo-checksum.json'
-+            mdpath = os.path.join(bbpath, cratepath, mdfile)
-+            with open(mdpath, "w") as f:
-+                json.dump(metadata, f)
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 2a046d0ded..ec7d83c959 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2260,6 +2260,41 @@ class GitURLWithSpacesTest(FetcherTest):
-             self.assertEqual(ud.clonedir, os.path.join(self.dldir, "git2", ref['gitsrcname']))
-             self.assertEqual(ud.fullmirror, os.path.join(self.dldir, "git2_" + ref['gitsrcname'] + '.tar.gz'))
- 
-+class CrateTest(FetcherTest):
-+    def test_crate_url(self):
-+
-+        uri = "crate://crates.io/glob/0.2.11"
-+        self.d.setVar('SRC_URI', uri)
-+
-+        uris = self.d.getVar('SRC_URI').split()
-+        d = self.d
-+
-+        fetcher = bb.fetch2.Fetch(uris, self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.tempdir)
-+        self.assertEqual(sorted(os.listdir(self.tempdir)), ['cargo_home', 'download' , 'unpacked'])
-+        self.assertEqual(sorted(os.listdir(self.tempdir + "/download")), ['glob-0.2.11.crate', 'glob-0.2.11.crate.done'])
-+        self.assertTrue(os.path.exists(self.tempdir + "/cargo_home/bitbake/glob-0.2.11/.cargo-checksum.json"))
-+        self.assertTrue(os.path.exists(self.tempdir + "/cargo_home/bitbake/glob-0.2.11/src/lib.rs"))
-+
-+    def test_crate_url_multi(self):
-+
-+        uri = "crate://crates.io/glob/0.2.11 crate://crates.io/time/0.1.35"
-+        self.d.setVar('SRC_URI', uri)
-+
-+        uris = self.d.getVar('SRC_URI').split()
-+        d = self.d
-+
-+        fetcher = bb.fetch2.Fetch(uris, self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.tempdir)
-+        self.assertEqual(sorted(os.listdir(self.tempdir)), ['cargo_home', 'download' , 'unpacked'])
-+        self.assertEqual(sorted(os.listdir(self.tempdir + "/download")), ['glob-0.2.11.crate', 'glob-0.2.11.crate.done', 'time-0.1.35.crate', 'time-0.1.35.crate.done'])
-+        self.assertTrue(os.path.exists(self.tempdir + "/cargo_home/bitbake/glob-0.2.11/.cargo-checksum.json"))
-+        self.assertTrue(os.path.exists(self.tempdir + "/cargo_home/bitbake/glob-0.2.11/src/lib.rs"))
-+        self.assertTrue(os.path.exists(self.tempdir + "/cargo_home/bitbake/time-0.1.35/.cargo-checksum.json"))
-+        self.assertTrue(os.path.exists(self.tempdir + "/cargo_home/bitbake/time-0.1.35/src/lib.rs"))
-+
- class NPMTest(FetcherTest):
-     def skipIfNoNpm():
-         import shutil
--- 
-2.32.0
+Unfortunately this patch breaks the usage of the icecc.bbclass.
 
+Currently I build with icecc inside a container with network isolation and
+my icecc demon runs outside of the container.
+The only thing I need to do for using the icecc inside my build container i=
+s
+mounting the unix /var/run/icecc/iceccd.socket inside the container.
+
+I think that we need something like this functionality to have access to
+some sockets connections inside the tasks with the new namespace.
+
+Jose
+
+
+Richard Purdie <richard.purdie@linuxfoundation.org> escreveu no dia sexta,
+7/01/2022 =C3=A0(s) 23:15:
+
+> This patch changes behaviour. After this change any task which does not
+> have the network flag set will have networking disabled on systems that
+> support that (kernel version dependent).
+>
+> Add a "network" task specific flag which then triggers networking to
+> be enabled for this task, it is otherwise disabled.
+>
+> This needs to happen before we enter the fakeroot environment of the task
+> due to the need for the real uid/gid which we save in the parent process.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  bin/bitbake-worker | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+> index bf96207edc..3aaf3c2444 100755
+> --- a/bin/bitbake-worker
+> +++ b/bin/bitbake-worker
+> @@ -152,6 +152,10 @@ def fork_off_task(cfg, data, databuilder, workerdata=
+,
+> fn, task, taskname, taskha
+>      fakeenv =3D {}
+>      umask =3D None
+>
+> +    uid =3D os.getuid()
+> +    gid =3D os.getgid()
+> +
+> +
+>      taskdep =3D workerdata["taskdeps"][fn]
+>      if 'umask' in taskdep and taskname in taskdep['umask']:
+>          umask =3D taskdep['umask'][taskname]
+> @@ -257,6 +261,10 @@ def fork_off_task(cfg, data, databuilder, workerdata=
+,
+> fn, task, taskname, taskha
+>
+>                  bb.utils.set_process_name("%s:%s" %
+> (the_data.getVar("PN"), taskname.replace("do_", "")))
+>
+> +                if not the_data.getVarFlag(taskname, 'network', False):
+> +                    logger.debug("Attempting to disable network")
+> +                    bb.utils.disable_network(uid, gid)
+> +
+>                  # exported_vars() returns a generator which *cannot* be
+> passed to os.environ.update()
+>                  # successfully. We also need to unset anything from the
+> environment which shouldn't be there
+>                  exports =3D bb.data.exported_vars(the_data)
+> --
+> 2.32.0
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#13225):
+> https://lists.openembedded.org/g/bitbake-devel/message/13225
+> Mute This Topic: https://lists.openembedded.org/mt/88273738/5052612
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> quaresma.jose@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
+
+--=20
+Best regards,
+
+Jos=C3=A9 Quaresma
+
+--0000000000006f21f505d5f792ab
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Richard,<div><br></div><div>Unfortunately this patch br=
+eaks the usage of the icecc.bbclass.</div><div><br></div><div>Currently I b=
+uild with icecc inside a container with network isolation and</div><div>my =
+icecc demon=C2=A0runs outside of the container.</div><div>The only thing I =
+need to do for using the icecc inside my build container is<br></div><div>m=
+ounting the unix /var/run/icecc/iceccd.socket inside the container.</div><d=
+iv><br></div><div>I think that we need something like this functionality to=
+ have access=C2=A0to</div><div>some sockets connections=C2=A0inside the tas=
+ks with the new namespace.</div><div><br></div><div>Jose</div><div><br></di=
+v></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr=
+">Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">=
+richard.purdie@linuxfoundation.org</a>&gt; escreveu no dia sexta, 7/01/2022=
+ =C3=A0(s) 23:15:<br></div><blockquote class=3D"gmail_quote" style=3D"margi=
+n:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex=
+">This patch changes behaviour. After this change any task which does not<b=
+r>
+have the network flag set will have networking disabled on systems that<br>
+support that (kernel version dependent).<br>
+<br>
+Add a &quot;network&quot; task specific flag which then triggers networking=
+ to<br>
+be enabled for this task, it is otherwise disabled.<br>
+<br>
+This needs to happen before we enter the fakeroot environment of the task<b=
+r>
+due to the need for the real uid/gid which we save in the parent process.<b=
+r>
+<br>
+Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
+ndation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<b=
+r>
+---<br>
+=C2=A0bin/bitbake-worker | 8 ++++++++<br>
+=C2=A01 file changed, 8 insertions(+)<br>
+<br>
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker<br>
+index bf96207edc..3aaf3c2444 100755<br>
+--- a/bin/bitbake-worker<br>
++++ b/bin/bitbake-worker<br>
+@@ -152,6 +152,10 @@ def fork_off_task(cfg, data, databuilder, workerdata, =
+fn, task, taskname, taskha<br>
+=C2=A0 =C2=A0 =C2=A0fakeenv =3D {}<br>
+=C2=A0 =C2=A0 =C2=A0umask =3D None<br>
+<br>
++=C2=A0 =C2=A0 uid =3D os.getuid()<br>
++=C2=A0 =C2=A0 gid =3D os.getgid()<br>
++<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0taskdep =3D workerdata[&quot;taskdeps&quot;][fn]<br>
+=C2=A0 =C2=A0 =C2=A0if &#39;umask&#39; in taskdep and taskname in taskdep[&=
+#39;umask&#39;]:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0umask =3D taskdep[&#39;umask&#39;][taskna=
+me]<br>
+@@ -257,6 +261,10 @@ def fork_off_task(cfg, data, databuilder, workerdata, =
+fn, task, taskname, taskha<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.set_=
+process_name(&quot;%s:%s&quot; % (the_data.getVar(&quot;PN&quot;), taskname=
+.replace(&quot;do_&quot;, &quot;&quot;)))<br>
+<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if not the_data.ge=
+tVarFlag(taskname, &#39;network&#39;, False):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 logg=
+er.debug(&quot;Attempting to disable network&quot;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.u=
+tils.disable_network(uid, gid)<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# exported_va=
+rs() returns a generator which *cannot* be passed to os.environ.update() <b=
+r>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# successfull=
+y. We also need to unset anything from the environment which shouldn&#39;t =
+be there <br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0exports =3D b=
+b.data.exported_vars(the_data)<br>
+-- <br>
+2.32.0<br>
+<br>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#13225): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/13225" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/13225</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/88273738/5052=
+612" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
+/88273738/5052612</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:quaresma.jose@gmail.com" target=3D=
+"_blank">quaresma.jose@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
+ class=3D"gmail_signature"><div dir=3D"ltr">Best regards,<div><br>Jos=C3=A9=
+ Quaresma</div></div></div>
+
+--0000000000006f21f505d5f792ab--
 
