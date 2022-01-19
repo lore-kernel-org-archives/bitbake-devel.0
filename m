@@ -2,123 +2,113 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B39C433EF
-	for <webhook@archiver.kernel.org>; Wed, 19 Jan 2022 12:11:49 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com
- [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web08.5417.1642594308953730793
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B6DC433EF
+	for <webhook@archiver.kernel.org>; Wed, 19 Jan 2022 17:43:49 +0000 (UTC)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com
+ [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.web11.1073.1642614228696110973
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Jan 2022 04:11:49 -0800
+ Wed, 19 Jan 2022 09:43:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=HyTs5nAA;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YTtjfQ2Y;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.51,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id p18so5006920wmg.4
+Received: by mail-wm1-f51.google.com with SMTP id w26so6744037wmi.0
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Jan 2022 04:11:48 -0800 (PST)
+ Wed, 19 Jan 2022 09:43:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=QzHCmQcfy5y3KvhrllSzdYKviya0qk0Ea5wmq8KcyN8=;
-        b=HyTs5nAAYJv07FJ9hBngdUj+eNnWGute9wwoda7133s3gytiouXVpLsma9VmrTxjgL
-         NgeovUlE1JRb3a/KWQWeXD/mu7oXfkUH3keHPddeFgQBA2GdcUdFwEmYnNzflxciTHrd
-         gb5UH3leF+HmDN+AtA/C844TRnY6miexS1jiI=
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vY4mDVeIo+R5RP3BZeX42T1dvuEZ2l5z39sXf79Rc9g=;
+        b=YTtjfQ2YzS3DSfhSXt21VHDXx9s1vJgoggJ/tfEeaULho4ksy9KV0n05w7D+en+uKb
+         zMp2Mw0O/0/k7XervNw4fuX73Jz5GiuXCDQWHtIa7upRiTdq1u0NXvWyJwSeHqC0O5+x
+         z83ohuKAVZ5Ea55ClfbyVOBHl+4AUGub1sNTI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=QzHCmQcfy5y3KvhrllSzdYKviya0qk0Ea5wmq8KcyN8=;
-        b=TasY1oY5fX8em2kZzfr6rcCAA7HEptmknBmHJ6Y6K07AMaureA7rtHbKwkpdWhU9tT
-         csOGh6qoHvwesGAwTABbS6TC7Nukqk/hK2SgoHAMZePXgj11emKgB/Ev0MKEfcyRkqqH
-         apLoUnmzVXLMvfF0hzYxidlbG5lD1ZEDAXdVOgKvLzcs7OGmurmGr4oPQBs/yzvjDw4o
-         e6qvtfZv2ckZoQWBqsSyjIayD6Uq2gkuTNJOgxGRfc8dmOBY6nEdMuzXxKRnVN7uKU06
-         zPN/xc8C3L0YUWpsogYjX9KbAQTkBfajluOT4Lq+BPwNZtOgCXdz+BPv80QyfduVUOpU
-         0kcg==
-X-Gm-Message-State: AOAM533je6aiByUJshqpYzf4NTIubo2/WO1MvVD54KPinMdZYWFm7QEk
-	LcnVXXkYOWNv21lPMZKvfSEkURCT7vAS+A==
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vY4mDVeIo+R5RP3BZeX42T1dvuEZ2l5z39sXf79Rc9g=;
+        b=WOEPvAdNqNo7lJJ+WHuodWz8gJpDT9kOVoi9UWHSq6y4/dhn7dLnv0DMeDVq3vfLxY
+         SHUPNnHnEfdstMJZDFTQIlg8s5wIP6aZDpPVxWMpNYYuoJhxY7PldetbKVFQ05xlNhiu
+         M7aDBI5txaQVHNoZlqzAeBhiqioMGOF8JpwD6vsBydcK7PpdvYDwmvyRnVusQBUJV/oU
+         B/r4EZp2gdxuzDhAa+mJTuLvbq6oVHSYkHEnuPS/3LJApCwYeka3Yv4a7JH/hEc2TgRG
+         zhrSBHqpV5/8+Txn4Pghw+mb0Q7YCEPV37VyUj4lcDpJeT6Cf6luiFxtx3v3yFu/1EaJ
+         pDjQ==
+X-Gm-Message-State: AOAM532qlG+nu3OYa6cePdLuJUgH1o1nIfDHcFzgA/592vMhpMpwC+cf
+	U1xp67AeOQBke1b//DN3/hRGLVJR5TX0JQ==
 X-Google-Smtp-Source: 
- ABdhPJzSzhu94vEfbTSpt2CSwIeF4KFFYGxqFgImduEksjHGuIZ3DyvSScNDPaqDK9fghSCEUe41+Q==
-X-Received: by 2002:a5d:628e:: with SMTP id k14mr662829wru.462.1642594306932;
-        Wed, 19 Jan 2022 04:11:46 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:4e1a:65bf:4ced:cc2d?
- ([2001:8b0:aba:5f3c:4e1a:65bf:4ced:cc2d])
-        by smtp.gmail.com with ESMTPSA id
- p4sm5091282wmq.40.2022.01.19.04.11.46
+ ABdhPJzz+1/O4DMH0WaBScSfsXPJA3wcskZWGGs/WB3QDpnH8C79QTeEj75mBFi1t01PaG37endkSQ==
+X-Received: by 2002:a05:600c:4e8a:: with SMTP id
+ f10mr4638117wmq.195.1642614226808;
+        Wed, 19 Jan 2022 09:43:46 -0800 (PST)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:4e1a:65bf:4ced:cc2d])
+        by smtp.gmail.com with ESMTPSA id y8sm824889wrd.8.2022.01.19.09.43.46
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jan 2022 04:11:46 -0800 (PST)
-Message-ID: 
- <4c46161127f6a8a6a903cafefd1512348b1240ca.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 2/2] bitbake-worker: Add/support network
- task flag
+        Wed, 19 Jan 2022 09:43:46 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Wed, 19 Jan 2022 12:11:44 +0000
-In-Reply-To: <706c435f-4c16-0914-fc9a-bbc4050319a1@windriver.com>
-References: <20220107231526.1517563-1-richard.purdie@linuxfoundation.org>
-	 <20220107231526.1517563-2-richard.purdie@linuxfoundation.org>
-	 <706c435f-4c16-0914-fc9a-bbc4050319a1@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] build: Tweak exception handling for setscene tasks
+Date: Wed, 19 Jan 2022 17:43:45 +0000
+Message-Id: <20220119174345.1931067-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Jan 2022 12:11:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13245
+ <bitbake-devel@lists.openembedded.org>; Wed, 19 Jan 2022 17:43:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13246
 
-On Wed, 2022-01-19 at 19:49 +0800, Robert Yang wrote:
-> Hi RP,
-> 
-> On 1/8/22 7:15 AM, Richard Purdie wrote:
-> > This patch changes behaviour. After this change any task which does not
-> > have the network flag set will have networking disabled on systems that
-> > support that (kernel version dependent).
-> > 
-> > Add a "network" task specific flag which then triggers networking to
-> > be enabled for this task, it is otherwise disabled.
-> > 
-> > This needs to happen before we enter the fakeroot environment of the task
-> > due to the need for the real uid/gid which we save in the parent process.
-> > 
-> 
-> It seems that this patch doesn't work with NIS user, since NIS user alwasy try
-> to access the network to translate UID to USER, but there is no network, so we
-> will get the errors like the following during the build:
-> 
-> do_ypcall: clnt_call: RPC: Unable to send; errno = Network is unreachable
-> 
-> These error messages may cause build failures such as
-> 
-> 1) bitbake quilt-native -cdevshell doesn't work when set OE_TERMINAL = "screen" 
-> in conf/local.conf:
-> ERROR: quilt-native-0.66-r0 do_devshell: Unable to spawn terminal screen: 
-> Execution of /path/to/0.66-r0/temp/run.do_terminal.189055' failed with exit code 1:
-> getpwuid() can't identify your account!
-> 
-> If no OE_TERMINAL is setting, it will go into a shell with "I have no name!":
-> 
-> I have no name!@host:/path/to/quilt-0.66$
-> 
-> 2) bitbake cmake-native failed
-> This because the error string "do_ypcall: clnt_call: RPC: Unable to send; errno 
-> = Network is unreachable" has been assigned to a variable, thus caused while 
-> errors, for example:
-> VAR=$(whomai)
-> 
-> It will get the string "do_ypcall: clnt_call: RPC: Unable to send; errno = 
-> Network is unreachable", and cause build errors.
+If an unexpected exception occurs in a setscene task, it is currently hidden
+from the user and not recorded in any logs. This isn't helpful to debug
+such failures.
 
+Change the code so that even in the "silent" or "quiet" task case (setscene
+tasks), a warning is shown with the traceback unless it was an "handled"
+exception. This means the failing function can show it's own warning/error
+instead if it wants to and then raise a handled event.
 
-Thanks for the report, that is rather sad/unfortunate.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/build.py | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-I guess we'll have to add some way to allow network access globally for such
-machines, much as I'd prefer not to.
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index d6418e40b3..65b7fc000d 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -714,19 +714,23 @@ def _exec_task(fn, task, d, quieterr):
+                 logger.debug2("Zero size logfn %s, removing", logfn)
+                 bb.utils.remove(logfn)
+                 bb.utils.remove(loglink)
+-    except bb.BBHandledException:
+-        event.fire(TaskFailed(task, fn, logfn, localdata, True), localdata)
+-        return 1
+     except (Exception, SystemExit) as exc:
++        handled = False
++        if isinstance(exc, bb.BBHandledException):
++            handled = True
++
+         if quieterr:
++            if not handled:
++                logger.warning(repr(exc))
+             event.fire(TaskFailedSilent(task, fn, logfn, localdata), localdata)
+         else:
+             errprinted = errchk.triggered
+             # If the output is already on stdout, we've printed the information in the
+             # logs once already so don't duplicate
+-            if verboseStdoutLogging:
++            if verboseStdoutLogging or handled:
+                 errprinted = True
+-            logger.error(repr(exc))
++            if not handled:
++                logger.error(repr(exc))
+             event.fire(TaskFailed(task, fn, logfn, localdata, errprinted), localdata)
+         return 1
+ 
+-- 
+2.32.0
 
 
