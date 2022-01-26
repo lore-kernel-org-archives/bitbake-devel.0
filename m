@@ -1,157 +1,202 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <ptsneves@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26A6C28CF5
-	for <webhook@archiver.kernel.org>; Wed, 26 Jan 2022 09:57:43 +0000 (UTC)
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web11.10837.1643191061615949642
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B027CC433F5
+	for <webhook@archiver.kernel.org>; Wed, 26 Jan 2022 21:04:45 +0000 (UTC)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com
+ [209.85.167.50])
+ by mx.groups.io with SMTP id smtpd.web12.18951.1643231084661954174
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 26 Jan 2022 01:57:42 -0800
+ Wed, 26 Jan 2022 13:04:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=Ch+pihql;
- spf=pass (domain: axis.com, ip: 195.60.68.17,
- mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=qsnbPxeT;
+ spf=pass (domain: gmail.com, ip: 209.85.167.50, mailfrom: ptsneves@gmail.com)
+Received: by mail-lf1-f50.google.com with SMTP id n8so1346091lfq.4
+        for <bitbake-devel@lists.openembedded.org>;
+ Wed, 26 Jan 2022 13:04:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1643191062;
-  x=1674727062;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=a7HkMjuxTa8em3C/Ps5rLmA7XSFOSj272jbeXJ15Pbw=;
-  b=Ch+pihqlBiIb0WLeDRT3ZcFlnlzfabZAbZzFqJAEWCDfxkWt+qLJEdIy
-   pJPk/5B2sGxfS8qbKPqdHzvgIBLvTzwhowaTwpS5p/g52L1tijk7JutXe
-   xSFHYqjjtBuISHRE8fMotfGmwoEdgdUPuuLpaX8r8EqaZiUIOC6s/mVNp
-   rgy249deu70qc3Ki7cV+WmNcuV6VAiPKksaoco6bgVfrW+/7KyUBxMnkL
-   9dG30D01XnEC4TOS7h2eIuyhc/4TNE3CN8PgHkot8nMw1hx2UvCI4NELm
-   yyq2L3vvrIuwhTSkIWRY/4aLFxwufuOwHG+jzNtur0T/JOIQuIEGf4Ynp
-   g==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Trevor Woerner <twoerner@gmail.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [PATCH] knotty: improve the UI information
-Thread-Topic: [bitbake-devel] [PATCH] knotty: improve the UI information
-Thread-Index: AQHYElJ4tceEoWI+s06Mf4TNHUujAKx0hwLA
-Date: Wed, 26 Jan 2022 09:57:38 +0000
-Message-ID: <456a90b823214b2685283370409e1f7a@axis.com>
-References: <20220126011708.24391-1-twoerner@gmail.com>
-In-Reply-To: <20220126011708.24391-1-twoerner@gmail.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GT9KSMs2qJcAGAIKNBYvYn+A10v8UvOmRrYelP/Fox8=;
+        b=qsnbPxeTCRtCL22gOLJdhiqA7WMbro+uBz//LVhH2ODq1HdgLDvY8hgQ/wM/U7Egi8
+         nU25PELLEHYPX8jUuqQCMV6XyflmP0YeH9jn69DVBl1x5D852S35vfgLTpHwX/6WBj/8
+         /0a2S6B4epQ0CDrskrnCD0msghLRPxmAsusK49RX6mizr+K4525KBnAbG++c5ZNqow+E
+         YVubqaaXLC7gDD3rw44aOQ9sa1iU9pP844CHd93qt9TyVMyYX03u5oymRbw3TSAcJA9S
+         mvN4VNPrNFsDDYmMj8ORtIZoQcZCBTIZ235cP8BOEqmyN0UTrKpX8X3bFc8Vc09vg9c0
+         cDTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GT9KSMs2qJcAGAIKNBYvYn+A10v8UvOmRrYelP/Fox8=;
+        b=7BJi8XIvXpjccMkzPa8IbrzSv1zMeojaoErohqfKPXGnWKQFOQYUqIXqgti8bImNrj
+         GVNJhyD4UBhMJaGpz+Ci6nmuu8o0w4PksMv7Q35igXRkG+4bml7t3yPmMe6kVoD/eWaq
+         kxvmGYQPx6bNmDw0gfkrabMglQmGoW7s8GOCmadrKG17gnlmRfXT94fBvtQOSXBlRf1p
+         SBqKSyXVGAA7kLmhcdY7zDRJFHJOOOl4SP+FvTxyoi1swUjqWP3OMLd6Q7Y4eR4LMZWX
+         mhqxeiI0cx+WMw1+QsVQXB7GcxoHS+XuZIFxcxAlfOdjS/YoxZpcj6GD9umGD3fP1HIs
+         pSOQ==
+X-Gm-Message-State: AOAM531gwaNjMRzgRK2gz30CYXjdiGqbkVvMsfdsaajjHk5tQpRd2M8O
+	5L8DB9FYBFcQdec4Rn044jqS+d+Bgg==
+X-Google-Smtp-Source: 
+ ABdhPJwwpAW1GqFlMzLhvkuqgjkMfYL+NsdMjmyIR4prUM3HsqYt5AM1Yp6++G6UzYqrmC3xXUDwyw==
+X-Received: by 2002:ac2:539b:: with SMTP id g27mr572443lfh.612.1643231082776;
+        Wed, 26 Jan 2022 13:04:42 -0800 (PST)
+Received: from localhost.localdomain
+ (031011128254.dynamic-3-poz-k-0-2-0.vectranet.pl. [31.11.128.254])
+        by smtp.gmail.com with ESMTPSA id
+ y22sm1949005lfa.48.2022.01.26.13.04.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jan 2022 13:04:42 -0800 (PST)
+From: Paulo Neves <ptsneves@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Paulo Neves <ptsneves@gmail.com>
+Subject: [PATCH v2] checksum: Support uri formatted file list
+Date: Wed, 26 Jan 2022 22:04:18 +0100
+Message-Id: <20220126210417.466199-1-ptsneves@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 26 Jan 2022 09:57:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13284
+ <bitbake-devel@lists.openembedded.org>; Wed, 26 Jan 2022 21:04:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13285
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Trevor Woerner
-> Sent: den 26 januari 2022 02:17
-> To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [PATCH] knotty: improve the UI information
->=20
-> During a build you might end up with bitbake telling you:
->=20
-> 	Currently 30 running tasks (2757 of 2757/3476 of 6390)
->=20
-> Which, to me, is really confusing. For one the forward slash separator
-> and the two numbers immediately on each side of which are likely to be
-> interpreted as being one unit (i.e. 2757/3476) but they're not.
->=20
-> Add labels, spaces, etc. to help clarify the information bitbake is tryin=
-g to
-> convey.
+Before this commit, if the file list for checksumming had
+files names with spaces there would be a crash. This happened
+due to filelist.split breaking on the file names instead of
+on k:v boundaries. Now we validate this case and emit a fatal
+error if such case is found. This needs to be fatal as the split
+will generate broken k:v from then on.
 
-While I agree with what you are trying to achieve, the suggested line=20
-is very verbose. If my calculations are correct, that leaves only 5-7=20
-characters for the progress bar in an 80 character window. Here is the=20
-original line:
+Instead of putting literal spaces in the file list the user
+should urlencode the file names and if they contain coded spaces
+they will be decoded. This is consistent with the current
+practice where file names are urlencoded. A reproducer of the
+issue this commit fixes, was to pass a do_compile[file-checksums]
+list with files containing spaces in their names, urlencoded or
+literal.
 
-Currently 99 running tasks (12345 of 12345/12345 of 12345) 100% |##########=
-####|
-No currently running tasks (12345 of 12345/12345 of 12345) 100% |##########=
-####|
+Change-Id: I6ac4f1cffbb86e913883491d46e8cc69a028e992
+Signed-off-by: Paulo Neves <ptsneves@gmail.com>
+---
+ bitbake/lib/bb/checksum.py                   |  9 +++++++--
+ bitbake/lib/bb/fetch2/__init__.py            |  6 +++---
+ meta/classes/base.bbclass                    |  4 +++-
+ meta/lib/oeqa/selftest/cases/lic_checksum.py | 18 ++++++++++++++++++
+ 4 files changed, 31 insertions(+), 6 deletions(-)
 
-And here is the updated one:
-
-Currently 99 running tasks (setscene:12345/12345 tasks:12345/12345) 100% |#=
-####|
-No currently running tasks (setscene:12345/12345 tasks:12345/12345) 100% |#=
-####|
-
-Dropping "Currently ", which is not really needed, would be a start.=20
-That would also give the "No running tasks ..." variant the same=20
-formatting:
-
-99 running tasks (setscene:12345/12345 tasks:12345/12345) 100% |###########=
-####|
-No running tasks (setscene:12345/12345 tasks:12345/12345) 100% |###########=
-####|
-
-Personally, I would have preferred the even terser form, since I know=20
-what those numbers represent:
-
-99 running tasks (12345/12345, 12345/12345) 100% |#########################=
-####|
-No running tasks (12345/12345, 12345/12345) 100% |#########################=
-####|
-
-but that might be too much to ask. And I don't have good alternatives=20
-to "setscene" and "tasks".
-
-(And if anybody wonders, I love watching those progress bars move=20
-across the window, which is why I don't want them reduced to only a=20
-few characters.) ;)
-
-//Peter
-
->=20
-> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
-> ---
->  lib/bb/ui/knotty.py | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-> index 484545a6..1150a6ab 100644
-> --- a/lib/bb/ui/knotty.py
-> +++ b/lib/bb/ui/knotty.py
-> @@ -276,11 +276,11 @@ class TerminalFilter(object):
->              print(content)
->          else:
->              if self.quiet:
-> -                content =3D "Running tasks (%s of %s/%s of %s)" % (self.=
-helper.setscene_current, self.helper.setscene_total, self.helper.tasknumber=
-_current, self.helper.tasknumber_total)
-> +                content =3D "Running tasks (setscene:%s/%s tasks:%s/%s)"=
- % (self.helper.setscene_current, self.helper.setscene_total, self.helper.t=
-asknumber_current, self.helper.tasknumber_total)
->              elif not len(activetasks):
-> -                content =3D "No currently running tasks (%s of %s/%s of =
-%s)" % (self.helper.setscene_current, self.helper.setscene_total, self.help=
-er.tasknumber_current, self.helper.tasknumber_total)
-> +                content =3D "No currently running tasks (setscene:%s/%s =
-tasks:%s/%s)" % (self.helper.setscene_current, self.helper.setscene_total, =
-self.helper.tasknumber_current, self.helper.tasknumber_total)
->              else:
-> -                content =3D "Currently %2s running tasks (%s of %s/%s of=
- %s)" % (len(activetasks), self.helper.setscene_current, self.helper.setsce=
-ne_total, self.helper.tasknumber_current, self.helper.tasknumber_total)
-> +                content =3D "Currently %2s running tasks (setscene:%s/%s=
- tasks:%s/%s)" % (len(activetasks), self.helper.setscene_current, self.help=
-er.setscene_total, self.helper.tasknumber_current, self.helper.tasknumber_t=
-otal)
->              maxtask =3D self.helper.tasknumber_total
->              if not self.main_progress or self.main_progress.maxval !=3D =
-maxtask:
->                  widgets =3D [' ', progressbar.Percentage(), ' ', progres=
-sbar.Bar()]
-> --
-> 2.34.1.75.gabe6bb3905
+diff --git a/bitbake/lib/bb/checksum.py b/bitbake/lib/bb/checksum.py
+index fb8a77f6ab..4d34baffcc 100644
+--- a/bitbake/lib/bb/checksum.py
++++ b/bitbake/lib/bb/checksum.py
+@@ -8,6 +8,7 @@
+ import glob
+ import operator
+ import os
++import urllib
+ import stat
+ import bb.utils
+ import logging
+@@ -110,10 +111,14 @@ class FileChecksumCache(MultiProcessCache):
+ 
+         checksums = []
+         for pth in filelist.split():
+-            exist = pth.split(":")[1]
++            spl = pth.split(':')
++            if len(spl) != 2:
++                bb.fatal("found unformatted path in filelist " + pth)
++
++            exist = spl[1]
+             if exist == "False":
+                 continue
+-            pth = pth.split(":")[0]
++            pth = urllib.parse.unquote(spl[0])
+             if '*' in pth:
+                 # Handle globs
+                 for f in glob.glob(pth):
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index d37174185a..c19d4b8636 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -1214,13 +1214,13 @@ def get_checksum_file_list(d):
+             paths = ud.method.localpaths(ud, d)
+             for f in paths:
+                 pth = ud.decodedurl
+-                if f.startswith(dl_dir):
++                if pth.startswith(dl_dir):
+                     # The local fetcher's behaviour is to return a path under DL_DIR if it couldn't find the file anywhere else
+-                    if os.path.exists(f):
++                    if os.path.exists(pth):
+                         bb.warn("Getting checksum for %s SRC_URI entry %s: file not found except in DL_DIR" % (d.getVar('PN'), os.path.basename(f)))
+                     else:
+                         bb.warn("Unable to get checksum for %s SRC_URI entry %s: file could not be found" % (d.getVar('PN'), os.path.basename(f)))
+-                filelist.append(f + ":" + str(os.path.exists(f)))
++                filelist.append(f + ":" + str(os.path.exists(pth)))
+ 
+     return " ".join(filelist)
+ 
+diff --git a/meta/classes/base.bbclass b/meta/classes/base.bbclass
+index 5f4956a1d3..8e6cf84479 100644
+--- a/meta/classes/base.bbclass
++++ b/meta/classes/base.bbclass
+@@ -94,6 +94,8 @@ def extra_path_elements(d):
+ PATH:prepend = "${@extra_path_elements(d)}"
+ 
+ def get_lic_checksum_file_list(d):
++    import urllib
++
+     filelist = []
+     lic_files = d.getVar("LIC_FILES_CHKSUM") or ''
+     tmpdir = d.getVar("TMPDIR")
+@@ -113,7 +115,7 @@ def get_lic_checksum_file_list(d):
+             if path[0] == '/':
+                 if path.startswith((tmpdir, s, b, workdir)):
+                     continue
+-                filelist.append(path + ":" + str(os.path.exists(path)))
++                filelist.append(urllib.parse.quote(path) + ":" + str(os.path.exists(path)))
+         except bb.fetch.MalformedUrl:
+             bb.fatal(d.getVar('PN') + ": LIC_FILES_CHKSUM contains an invalid URL: " + url)
+     return " ".join(filelist)
+diff --git a/meta/lib/oeqa/selftest/cases/lic_checksum.py b/meta/lib/oeqa/selftest/cases/lic_checksum.py
+index 91021ac335..6bdbac3ba2 100644
+--- a/meta/lib/oeqa/selftest/cases/lic_checksum.py
++++ b/meta/lib/oeqa/selftest/cases/lic_checksum.py
+@@ -4,6 +4,7 @@
+ 
+ import os
+ import tempfile
++import urllib
+ 
+ from oeqa.selftest.case import OESelftestTestCase
+ from oeqa.utils.commands import bitbake
+@@ -11,6 +12,23 @@ from oeqa.utils import CommandError
+ 
+ class LicenseTests(OESelftestTestCase):
+ 
++    def test_checksum_with_space(self):
++        bitbake_cmd = '-c populate_lic emptytest'
++
++        lic_file, lic_path = tempfile.mkstemp(" -afterspace")
++        os.close(lic_file)
++        #self.track_for_cleanup(lic_path)
++
++        self.write_config("INHERIT:remove = \"report-error\"")
++
++        self.write_recipeinc('emptytest', """
++INHIBIT_DEFAULT_DEPS = "1"
++LIC_FILES_CHKSUM = "file://%s;md5=d41d8cd98f00b204e9800998ecf8427e"
++SRC_URI = "file://%s;md5=d41d8cd98f00b204e9800998ecf8427e"
++""" % (urllib.parse.quote(lic_path), urllib.parse.quote(lic_path)))
++        result = bitbake(bitbake_cmd)
++
++
+     # Verify that changing a license file that has an absolute path causes
+     # the license qa to fail due to a mismatched md5sum.
+     def test_nonmatching_checksum(self):
+-- 
+2.25.1
 
 
