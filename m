@@ -1,114 +1,114 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <twoerner@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F18BC433EF
-	for <webhook@archiver.kernel.org>; Thu, 27 Jan 2022 12:07:49 +0000 (UTC)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com
- [209.85.221.173])
- by mx.groups.io with SMTP id smtpd.web11.27611.1643285268331127500
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5A1C433EF
+	for <webhook@archiver.kernel.org>; Thu, 27 Jan 2022 20:22:55 +0000 (UTC)
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com
+ [209.85.166.54])
+ by mx.groups.io with SMTP id smtpd.web12.3475.1643314974564903866
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 27 Jan 2022 04:07:48 -0800
+ Thu, 27 Jan 2022 12:22:54 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=ekgFH/Ci;
- spf=pass (domain: gmail.com, ip: 209.85.221.173,
- mailfrom: alex.kanavin@gmail.com)
-Received: by mail-vk1-f173.google.com with SMTP id y192so1689165vkc.8
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=YSdz+sVD;
+ spf=pass (domain: gmail.com, ip: 209.85.166.54, mailfrom: twoerner@gmail.com)
+Received: by mail-io1-f54.google.com with SMTP id p63so4226747iod.11
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 27 Jan 2022 04:07:48 -0800 (PST)
+ Thu, 27 Jan 2022 12:22:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VWQQn1Dv5TIq0MtKyx0crrQLBkIW+Ea7DTdWadb0TeU=;
-        b=ekgFH/CiMD1QDKj+B6aJZXRmG13o9iHZpLso54dA9IGZRlaACSZFFatodIRHNLBgZ/
-         6ZxYwHnsvQKjG9yIbXlgcHNFVTOH+QSmJQoLof6rRrGLIPcog82x3j7rb99laoY9/z/Y
-         CgFUuGbn6/DYNfJgL19fswJYZMQWkgavXrE/kN9D4/C5+SHDMVEI6H4300mNZiBU8cap
-         smKqohBCjekFQHoLMJEZ/iJ+NqcWqJldh89PwxqpV+kiq+PkZawlntj8jcAxHb83Jlb1
-         S+hVW6lz0ZqotJcfB+5GrgBypwuz6SnTadLoRC1A1Lq+ZeCuwxnEvUeMaXRyX663M+3y
-         pPnQ==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GCpNdItw47HXj+H47PoNfVB/I0RdOVq7ZGi8WqhfHf4=;
+        b=YSdz+sVD0UGFUlfxRKM5eTZJOqpwpk26VqVK3AU8ggW/aINoTBmsB8i+vZ6RD0RBMU
+         2VwCr28dIGWGtFo53AB15mYO7UynE4eqKTCTdMIXHV40ozY4zrK5HS2eBvsecgglKwuy
+         oewFr+uUkoavZ6rXsmwhLuarbi0W0+XMh+AdL7RmgXCUQQdmcwyVdoByZjgiITL7tdtG
+         MTkkokINhy4It/aFR4c1pUjKkeISfzavL+12zP9A3ig/TsdeMr0TnczPIxPyb4UsBP49
+         khVGBObhozYWv0cEplvrL2eOfQIulZU3Q/vJ49scy4wx/UgS3vCvJumLttQUSfVztmZ0
+         yJ3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VWQQn1Dv5TIq0MtKyx0crrQLBkIW+Ea7DTdWadb0TeU=;
-        b=kHTvnfK5PLAKShKnrsXw2U2mJjgOJm9VG6VQ/edIv91AJb4VhYOGHQGowOZjbPQ4R+
-         u+fqeDSw89iYKJ5cAkxNIwxGPgK4t2F8QRW4uV1dxloCQ8Xd1cvroDxezHfh+cNmg5o8
-         RgAHveMbfbZnM31TPsHrqBAoFnksH8iycReNMqGqsH/3No6C5tSFJPRtpFZvzffcQO8z
-         Odsgina919zR2ggOBEKLKfBGYWvbfU9lwxGowKzsm1LecwCLdrJxcwH5i2S6PLAUi+/3
-         +m4VJwjW/60vbajo/Ynnqhuy2m7m91JHQT7M7Jl75alqBx4KXWqYzIp/szPiq07lcZQ5
-         3M+g==
-X-Gm-Message-State: AOAM53361eSp8KehpRVODHwnuAoTpAWVuo6eJ5tlaETv1zylaSXdbix1
-	MzWCpYJ5pbIi70DgZBtYiacFb3GFyV2PiKcLlho=
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GCpNdItw47HXj+H47PoNfVB/I0RdOVq7ZGi8WqhfHf4=;
+        b=HB6SqKSW4klH9SbYXzGQj0lNYBujKSKFfGSXnfR6/HGIl2XHpZEC4R1DtlZ6134Aam
+         vm0/bUcmTnvTGt3WhC7PTP1Aq0sDD0+e/Cv1WVbR68ywhPGb7SclLwOTdHOg6tSvbR0C
+         IP/OgOagI7aeelDj3AVyA06eFQ5/uGVKnEKE3EJ/zrjnGnYor7NpYMvJEBhz5Xm4Sc0N
+         xmeyKKetiOSEbvH/EfJMhL963G1SGvqTkjxO21+tNaf4WxhWI38+hxJq2dLGuynJg+vy
+         GX9jW7xhU563CmAM+w0adGNcHkKTOxgmaPPxQD26wdmEHukVfUqk31vKv+2Xdd5nFdA8
+         Cesw==
+X-Gm-Message-State: AOAM533kwXm3ax9aCmVMC3q2Gfli73n7bpRQ3WX+pPCucJ/9FrQEXIEv
+	KePdwz5FIELyTaOEdE2mKoLWnG0aG2Y=
 X-Google-Smtp-Source: 
- ABdhPJzOtex0A76DXbIe9nbcFIDv481fwBaJDBwCF1SznhyNwAFz+9qTvjKnwEmLlT+e9cvgdP0/ftNKvgKFzmqncsA=
-X-Received: by 2002:a05:6122:218f:: with SMTP id
- j15mr700207vkd.20.1643285267519;
- Thu, 27 Jan 2022 04:07:47 -0800 (PST)
+ ABdhPJwuj9TpYL7K5AwHHxUPP7iR3F2oDUDuCkxlVRZJC0nsmzRMjFGXKeMYIk760qpXmR0MJOfHjQ==
+X-Received: by 2002:a05:6602:727:: with SMTP id
+ g7mr3251945iox.90.1643314973549;
+        Thu, 27 Jan 2022 12:22:53 -0800 (PST)
+Received: from localhost.localdomain (pppoe-209-91-167-254.vianet.ca.
+ [209.91.167.254])
+        by smtp.gmail.com with ESMTPSA id
+ q14sm6415003iow.1.2022.01.27.12.22.52
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jan 2022 12:22:52 -0800 (PST)
+From: Trevor Woerner <twoerner@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH v2] knotty: improve the UI information
+Date: Thu, 27 Jan 2022 15:22:43 -0500
+Message-Id: <20220127202243.26972-1-twoerner@gmail.com>
+X-Mailer: git-send-email 2.34.1.75.gabe6bb3905
 MIME-Version: 1.0
-References: <20220119180015.1931903-1-richard.purdie@linuxfoundation.org>
- <b889e360-9b6e-4517-c03a-f31f3168e36e@weidmueller.com>
- <CANNYZj8X3-zB+JBf2aHhiNmgPEBZ6KrrdZCAxBr9gj6WVJwsxQ@mail.gmail.com>
- <c70b25c8-417c-1a67-ae2e-cc717151c198@weidmueller.com>
-In-Reply-To: <c70b25c8-417c-1a67-ae2e-cc717151c198@weidmueller.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 27 Jan 2022 13:07:36 +0100
-Message-ID: 
- <CANNYZj_+wuv7wmJqFSufcjyogehXkSSsaVgvik5cQx+wUFiEgw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch2: Add crate fetcher
-To: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="000000000000a29e4705d68f2a61"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Jan 2022 12:07:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13290
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Jan 2022 20:22:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13291
 
---000000000000a29e4705d68f2a61
-Content-Type: text/plain; charset="UTF-8"
+During a build you might end up with bitbake telling you:
 
-On Thu, 27 Jan 2022 at 13:00, Stefan Herbrechtsmeier <
-stefan.herbrechtsmeier-oss@weidmueller.com> wrote:
+	Currently 30 running tasks (2757 of 2757/3476 of 6390)
 
-> Am 27.01.2022 um 11:53 schrieb Alexander Kanavin:
-> > this is already in master, so the concerns you have are probably better
-> > addressed with followup patches.
->
-> Does this means the SRC_URI syntax is fixed and we have total different
-> syntax to specific a repository, package name and version for npm and
-> crate?
->
+Which, to me, is really confusing. The forward slash separator and the two
+numbers immediately on each side of which are likely to be interpreted as
+being one unit (i.e. 2757/3476) but they're not. Also nothing is labeled,
+leaving the user to wonder what these numbers are.
 
-No it means that patches to address the concerns are welcome, and they will
-be reviewed on their own merit. Nothing is fixed, and everything can be
-changed.
+Add labels, spaces, etc. to help clarify the information bitbake is trying to
+convey. The resulting line would appear as:
 
+	30 running tasks (setscene:2757/2757 tasks:3476/6390)
 
-Alex
+Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+---
+changes since v1:
+- improve the commit message
+- remove the redundant word "Currently" in order to help keep the total
+  line length manageable for users of 80-column terminals
+---
+ lib/bb/ui/knotty.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---000000000000a29e4705d68f2a61
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index 484545a6..c2a7d06e 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -276,11 +276,11 @@ class TerminalFilter(object):
+             print(content)
+         else:
+             if self.quiet:
+-                content = "Running tasks (%s of %s/%s of %s)" % (self.helper.setscene_current, self.helper.setscene_total, self.helper.tasknumber_current, self.helper.tasknumber_total)
++                content = "Running tasks (setscene:%s/%s tasks:%s/%s)" % (self.helper.setscene_current, self.helper.setscene_total, self.helper.tasknumber_current, self.helper.tasknumber_total)
+             elif not len(activetasks):
+-                content = "No currently running tasks (%s of %s/%s of %s)" % (self.helper.setscene_current, self.helper.setscene_total, self.helper.tasknumber_current, self.helper.tasknumber_total)
++                content = "No currently running tasks (setscene:%s/%s tasks:%s/%s)" % (self.helper.setscene_current, self.helper.setscene_total, self.helper.tasknumber_current, self.helper.tasknumber_total)
+             else:
+-                content = "Currently %2s running tasks (%s of %s/%s of %s)" % (len(activetasks), self.helper.setscene_current, self.helper.setscene_total, self.helper.tasknumber_current, self.helper.tasknumber_total)
++                content = "%2s running tasks (setscene:%s/%s  tasks:%s/%s)" % (len(activetasks), self.helper.setscene_current, self.helper.setscene_total, self.helper.tasknumber_current, self.helper.tasknumber_total)
+             maxtask = self.helper.tasknumber_total
+             if not self.main_progress or self.main_progress.maxval != maxtask:
+                 widgets = [' ', progressbar.Percentage(), ' ', progressbar.Bar()]
+-- 
+2.34.1.75.gabe6bb3905
 
-<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail=
-_attr">On Thu, 27 Jan 2022 at 13:00, Stefan Herbrechtsmeier &lt;<a href=3D"=
-mailto:stefan.herbrechtsmeier-oss@weidmueller.com">stefan.herbrechtsmeier-o=
-ss@weidmueller.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote=
-" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);=
-padding-left:1ex">Am 27.01.2022 um 11:53 schrieb Alexander Kanavin:<br>
-&gt; this is already in master, so the concerns you have are probably bette=
-r <br>
-&gt; addressed with followup patches.<br>
-<br>
-Does this means the SRC_URI syntax is fixed and we have total different <br=
->
-syntax to specific a repository, package name and version for npm and crate=
-?<br></blockquote><div><br></div><div>No it means that patches to address t=
-he concerns are welcome, and they will be reviewed on their own merit. Noth=
-ing is fixed, and everything can be changed.</div><div><br></div><div><br><=
-/div><div>Alex <br></div></div></div>
-
---000000000000a29e4705d68f2a61--
 
