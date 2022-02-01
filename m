@@ -1,169 +1,107 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A1FC4167D
-	for <webhook@archiver.kernel.org>; Sat, 29 Jan 2022 02:29:46 +0000 (UTC)
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web12.1486.1643423385313383936
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70E3C433EF
+	for <webhook@archiver.kernel.org>; Tue,  1 Feb 2022 08:00:52 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com
+ [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web08.45426.1643702451694805505
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 28 Jan 2022 18:29:45 -0800
+ Tue, 01 Feb 2022 00:00:52 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=D21xAtwj;
- spf=pass (domain: axis.com, ip: 195.60.68.18,
- mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PBDzXmCt;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f46.google.com with SMTP id n8so12042116wmk.3
+        for <bitbake-devel@lists.openembedded.org>;
+ Tue, 01 Feb 2022 00:00:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1643423385;
-  x=1674959385;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=1uoTPw+HChDwsAD73ihE9SNecrlYvBybpxHXVQXZsCw=;
-  b=D21xAtwj8y3EYlCwMojD8DmYdkVKqAQcYiddo63nxl137CA0NFzbILKY
-   dOga5Qda0YCW4wgRXOIUQ3CQpmGvtLfUUQ3XKkvKZTZjbVtLX90/KiHp3
-   kJpByTWXCJbRwtKzYVotlxwTwmOU+S59xmvwHoB1cPPb/1kQhcRj6WBYF
-   QbJTQLbFU2XFpyYZtv7eyEPbe/CAOgqKHdcSWe9nEdr7k4DuNtFLHopy2
-   8gcQJG+htJQC/HyP2/dWevyPeJB0zWKDQEsdienhaFAZ1B4Jpx4swbZA/
-   METXDGlET+4H4z5IsfENUWljNNWlC8jBIwNS+8efnI2g69KpsxZzug070
-   A==;
-From: Peter Kjellerstedt <pkj@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH 8/9] fetch2: Correct handling of replacing the basename in
- URIs
-Date: Sat, 29 Jan 2022 03:29:38 +0100
-Message-ID: <20220129022939.19329-8-pkj@axis.com>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20220129022939.19329-1-pkj@axis.com>
-References: <20220129022939.19329-1-pkj@axis.com>
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=Vmp9luEgd+5biSwIBokyvBqgrIVj/mUssdyjTC5ZybM=;
+        b=PBDzXmCtebi/P9+WjZfN8yIT8R1hzwVSforIKZF1ks0fmbg9mYuKz64nbuAyxJOxIF
+         +ehUrRVcNzs/Ug5mf2Abo1APvOBJxTeFETLaTZOwddXyzs5lYeq6EFMCkxRebKVbiYsx
+         S52VgvKoFmgV6qpEd1ubm2u8uKDW88UzL0F+M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=Vmp9luEgd+5biSwIBokyvBqgrIVj/mUssdyjTC5ZybM=;
+        b=TUK2+ekDKbziibHgZTn7T4RtbOL6KN79OjVWydG1RZIamS3tHQzyJEANtXGelxWOFl
+         YZQiAb+95bVkyszStCOqE2AtdBdIK4ieiytv4PP5iyY1yuPkDuGYpHgaP5DO+oFG7gvX
+         CRC+TztqIjvYaxJ8lDh0JbtqkCAXvSpOrzBH4zn271M13kNR3EzwmBSzTGbLsWAprHNd
+         mwpIPJwVZUOb2JwnDonlcKVli6eCNd+5SLmWEZFZVPFM/q8oQQMcbAwy890JDUi/w+SQ
+         io+nz8jmYdq+5Y5enBG017+lsgDMmjySo/Gm0sPZKoQCL8SmB5dHiCHcGH7Oz81FQS+r
+         ox+g==
+X-Gm-Message-State: AOAM533sbc04+GcSCn0Tg4e56AVSCbhV6wEl4SjNDM5786PDER9o0jDV
+	eyTyF/mQwztNbvmBW3mOGJelFA==
+X-Google-Smtp-Source: 
+ ABdhPJzWMxdgX1EQZpYZLgB5CXD4ZPikWdhCf33jzV7PmCKnt+RZoa/LxqCuJnMOEmFtNeqYoUQ/sw==
+X-Received: by 2002:a05:600c:27d2:: with SMTP id
+ l18mr651040wmb.176.1643702450061;
+        Tue, 01 Feb 2022 00:00:50 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:687d:5e4e:cf88:f9f9?
+ ([2001:8b0:aba:5f3c:687d:5e4e:cf88:f9f9])
+        by smtp.gmail.com with ESMTPSA id j2sm1408800wms.2.2022.02.01.00.00.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Feb 2022 00:00:49 -0800 (PST)
+Message-ID: 
+ <6dd771e81db2c09c606c298b452850c16818be5c.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v3] knotty: improve the UI information
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Trevor Woerner <twoerner@gmail.com>, bitbake-devel@lists.openembedded.org
+Date: Tue, 01 Feb 2022 08:00:48 +0000
+In-Reply-To: <20220127205138.29159-1-twoerner@gmail.com>
+References: <20220127205138.29159-1-twoerner@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4-1ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 29 Jan 2022 02:29:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13301
+ <bitbake-devel@lists.openembedded.org>; Tue, 01 Feb 2022 08:00:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13303
 
-The solution implementated in commit 96c30007 (fetch2: fix
-downloadfilename issue with premirror) missed two corner cases. The
-first is if the basename of the original URI also appears somewhere
-else in the replacement URI, in which case it would also be replaced.
-The second is if the basename of the original URI partially matches
-the basename of the replacement URI, in which case the inital part of
-the basename from the replacement URI would be left behind.
+On Thu, 2022-01-27 at 15:51 -0500, Trevor Woerner wrote:
+> During a build you might end up with bitbake telling you:
+> 
+> 	Currently 30 running tasks (2757 of 2757/3476 of 6390)
+> 
+> Which, to me, is really confusing. The forward slash separator and the two
+> numbers immediately on each side of which are likely to be interpreted as
+> being one unit (i.e. 2757/3476) but they're not. Also nothing is labeled,
+> leaving the user to wonder what these numbers are.
+> 
+> Add labels, spaces, etc. to help clarify the information bitbake is trying to
+> convey. The resulting line would appear as:
+> 
+> 	30 running tasks (setscene:2757/2757 tasks:3476/6390)
 
-The second case caused test_npm_premirrors_with_specified_filename to
-fail.
+I agree we shouldn't have used / as a separator, my fault on that.
 
-The solution is to prefix the basename with a slash when matching to
-avoid partial matches, and only replace the basename at the end of the
-URI.
+If we're going to change this again we need to get it right and I feel we're not
+quite there yet. I was wondering about:
 
-This also adds two test cases that test for these problems. Before
-this they would give the following errors:
+  30 running tasks (3476 of 6390), (Setscene: 2757 of 2757)
 
-  - ['file:///mirror/example/1.0.0/some-example-1.0.0.tgz;downloadfilename=some-example-1.0.0.tgz']
-  + ['file:///mirror/some-example-1.0.0.tgz/1.0.0/some-example-1.0.0.tgz;downloadfilename=some-example-1.0.0.tgz']
-  ?                  +++++       ++++++++++
+which moves the "tasks" closer together however my other worry is that people
+don't know what setscene tasks are and that the setscene piece is then not
+ordered before tasks. The "of" keyword does clearly indicate something to some
+subgroup of users, I think I was once advised about that.
 
-  - ['file:///mirror/some-example-1.0.0.tgz;downloadfilename=some-example-1.0.0.tgz']
-  + ['file:///mirror/some-some-example-1.0.0.tgz;downloadfilename=some-example-1.0.0.tgz']
-  ?                  +++++
+We could consider:
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
- bitbake/lib/bb/fetch2/__init__.py | 11 +++++----
- bitbake/lib/bb/tests/fetch.py     | 39 +++++++++++++++++--------------
- 2 files changed, 28 insertions(+), 22 deletions(-)
+  Setscene tasks: 2757 of 2757
+  30 running tasks: 3476 of 6390 
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index d37174185a..28a3e54c7f 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -473,10 +473,13 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
-                     basename = os.path.basename(ud.localpath)
-                 if basename:
-                     uri_basename = os.path.basename(uri_decoded[loc])
--                    if uri_basename and basename != uri_basename and result_decoded[loc].endswith(uri_basename):
--                        result_decoded[loc] = result_decoded[loc].replace(uri_basename, basename)
--                    elif not result_decoded[loc].endswith(basename):
--                        result_decoded[loc] = os.path.join(result_decoded[loc], basename)
-+                    # Prefix with a slash as a sentinel in case
-+                    # result_decoded[loc] does not contain one.
-+                    path = "/" + result_decoded[loc]
-+                    if uri_basename and basename != uri_basename and path.endswith("/" + uri_basename):
-+                        result_decoded[loc] = path[1:-len(uri_basename)] + basename
-+                    elif not path.endswith("/" + basename):
-+                        result_decoded[loc] = os.path.join(path[1:], basename)
-         else:
-             return None
-     result = encodeurl(result_decoded)
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index 9fb6378fdc..8b13e178e6 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -412,34 +412,34 @@ class FetcherTest(unittest.TestCase):
- class MirrorUriTest(FetcherTest):
- 
-     replaceuris = {
--        ("git://git.invalid.infradead.org/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "http://somewhere.org/somedir/") 
-+        ("git://git.invalid.infradead.org/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "http://somewhere.org/somedir/")
-             : "http://somewhere.org/somedir/git2_git.invalid.infradead.org.mtd-utils.git.tar.gz",
--        ("git://git.invalid.infradead.org/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/([^/]+/)*([^/]*)", "git://somewhere.org/somedir/\\2;protocol=http") 
--            : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
--        ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/([^/]+/)*([^/]*)", "git://somewhere.org/somedir/\\2;protocol=http") 
--            : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
--        ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/([^/]+/)*([^/]*)", "git://somewhere.org/\\2;protocol=http") 
--            : "git://somewhere.org/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
-+        ("git://git.invalid.infradead.org/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/([^/]+/)*([^/]*)", "git://somewhere.org/somedir/\\2;protocol=http")
-+            : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http",
-+        ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/([^/]+/)*([^/]*)", "git://somewhere.org/somedir/\\2;protocol=http")
-+            : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http",
-+        ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/([^/]+/)*([^/]*)", "git://somewhere.org/\\2;protocol=http")
-+            : "git://somewhere.org/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http",
-         ("git://someserver.org/bitbake;tag=1234567890123456789012345678901234567890", "git://someserver.org/bitbake", "git://git.openembedded.org/bitbake")
-             : "git://git.openembedded.org/bitbake;tag=1234567890123456789012345678901234567890",
--        ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sstate-cache") 
-+        ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sstate-cache")
-             : "file:///somewhere/1234/sstate-cache/sstate-xyz.tgz",
--        ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sstate-cache/") 
-+        ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sstate-cache/")
-             : "file:///somewhere/1234/sstate-cache/sstate-xyz.tgz",
--        ("http://somewhere.org/somedir1/somedir2/somefile_1.2.3.tar.gz", "http://.*/.*", "http://somewhere2.org/somedir3") 
-+        ("http://somewhere.org/somedir1/somedir2/somefile_1.2.3.tar.gz", "http://.*/.*", "http://somewhere2.org/somedir3")
-             : "http://somewhere2.org/somedir3/somefile_1.2.3.tar.gz",
--        ("http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere2.org/somedir3/somefile_1.2.3.tar.gz") 
-+        ("http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere2.org/somedir3/somefile_1.2.3.tar.gz")
-             : "http://somewhere2.org/somedir3/somefile_1.2.3.tar.gz",
-         ("http://www.apache.org/dist/subversion/subversion-1.7.1.tar.bz2", "http://www.apache.org/dist", "http://archive.apache.org/dist")
-             : "http://archive.apache.org/dist/subversion/subversion-1.7.1.tar.bz2",
-         ("http://www.apache.org/dist/subversion/subversion-1.7.1.tar.bz2", "http://.*/.*", "file:///somepath/downloads/")
-             : "file:///somepath/downloads/subversion-1.7.1.tar.bz2",
--        ("git://git.invalid.infradead.org/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/BASENAME;protocol=http") 
--            : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
--        ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/BASENAME;protocol=http") 
--            : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
--        ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/MIRRORNAME;protocol=http") 
--            : "git://somewhere.org/somedir/git.invalid.infradead.org.foo.mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
-+        ("git://git.invalid.infradead.org/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/BASENAME;protocol=http")
-+            : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http",
-+        ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/BASENAME;protocol=http")
-+            : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http",
-+        ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/MIRRORNAME;protocol=http")
-+            : "git://somewhere.org/somedir/git.invalid.infradead.org.foo.mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http",
-         ("http://somewhere.org/somedir1/somedir2/somefile_1.2.3.tar.gz", "http://.*/.*", "http://somewhere2.org")
-             : "http://somewhere2.org/somefile_1.2.3.tar.gz",
-         ("http://somewhere.org/somedir1/somedir2/somefile_1.2.3.tar.gz", "http://.*/.*", "http://somewhere2.org/")
-@@ -450,8 +450,11 @@ class MirrorUriTest(FetcherTest):
-             : "git://user2@git.openembedded.org/bitbake;tag=1234567890123456789012345678901234567890;branch=master;protocol=http",
-         ("git://someserver.org/bitbake;tag=1234567890123456789012345678901234567890;protocol=git;branch=master", "git://someserver.org/bitbake", "git://someotherserver.org/bitbake;protocol=https")
-             : "git://someotherserver.org/bitbake;tag=1234567890123456789012345678901234567890;protocol=https;branch=master",
--
-         ("gitsm://git.qemu.org/git/seabios.git/;protocol=https;name=roms/seabios;subpath=roms/seabios;bareclone=1;nobranch=1;rev=1234567890123456789012345678901234567890", "gitsm://.*/.*", "http://petalinux.xilinx.com/sswreleases/rel-v${XILINX_VER_MAIN}/downloads") : "http://petalinux.xilinx.com/sswreleases/rel-v%24%7BXILINX_VER_MAIN%7D/downloads/git2_git.qemu.org.git.seabios.git..tar.gz",
-+        ("https://somewhere.org/example/1.0.0/example;downloadfilename=some-example-1.0.0.tgz", "https://.*/.*", "file:///mirror/PATH")
-+            : "file:///mirror/example/1.0.0/some-example-1.0.0.tgz;downloadfilename=some-example-1.0.0.tgz",
-+        ("https://somewhere.org/example-1.0.0.tgz;downloadfilename=some-example-1.0.0.tgz", "https://.*/.*", "file:///mirror/some-example-1.0.0.tgz")
-+            : "file:///mirror/some-example-1.0.0.tgz;downloadfilename=some-example-1.0.0.tgz",
- 
-         #Renaming files doesn't work
-         #("http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz") : "http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz"
+which would break the code assumptions about a single line but we can likely fix
+that...
+
+Cheers,
+
+Richard
+
 
