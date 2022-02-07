@@ -1,114 +1,86 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ptsneves@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E238C433EF
-	for <webhook@archiver.kernel.org>; Mon,  7 Feb 2022 10:06:58 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com
- [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web10.20461.1644228416632528833
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CA3C433F5
+	for <webhook@archiver.kernel.org>; Mon,  7 Feb 2022 10:16:46 +0000 (UTC)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com
+ [209.85.208.169])
+ by mx.groups.io with SMTP id smtpd.web12.20615.1644229005152613908
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Feb 2022 02:06:57 -0800
+ Mon, 07 Feb 2022 02:16:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZBD5gkkj;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f47.google.com with SMTP id k18so23710075wrg.11
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=kDPPZNzQ;
+ spf=pass (domain: gmail.com, ip: 209.85.208.169,
+ mailfrom: ptsneves@gmail.com)
+Received: by mail-lj1-f169.google.com with SMTP id a25so18763940lji.9
         for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Feb 2022 02:06:56 -0800 (PST)
+ Mon, 07 Feb 2022 02:16:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=l2oEEj7m9/UKqtlMnzLyz9vo/GoSAcnBCbIrx5gcGno=;
-        b=ZBD5gkkjfZQnJ0C5haSY0UjPRqBzIpBJOBH2yJrb313WpdZE0yz+r2QNe49APrhx7n
-         odsitNrNxdRzVdnKHm31QrNbVDLJB4zPr6cvGC5mfVyTQs8ct6nvwdL2qHrFbrJW4Ves
-         uArXL7ruCwNLQTa+iX4vbRtw9AKAcRD0RDvgQ=
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=J3b8FIx3fK30kjiuRphm6iuCGZqtpVpIhgFBiJNWf4s=;
+        b=kDPPZNzQQAD7DJjK3WQwgCEB7HE7gSJdPFqzK8NZzVgHIW19ooEUEHoNs7VxIRPAgZ
+         cM/GgE56EvPBkkGU8FUg5ZnlTUyG37ZQHe8iV1syC8snAk513tRumpNAMLR1S1tPmYyP
+         qy9S4tjt1IVFaYdWqKgZgkaYbRt44g5GDOuS65W29TS8w3Ng5As4FvwpUHNxxJvbf0dU
+         Oh2v2ScOmVhlUCdJW4/XoCfpJZjHRNCj2NjKYbQxEmZVdfuWECCV/3VUa5tieGIWTkL9
+         9V1CN2S0MZd6LkHp+Hbk7WlJH1gp8OC2ULcnqgTPzu3Wle+doE00ni4GJHapnWdwZCbz
+         4NXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=l2oEEj7m9/UKqtlMnzLyz9vo/GoSAcnBCbIrx5gcGno=;
-        b=3zaipV/NVMOZwsiF9ww3tEqTuG5yuW08MNxuxcABy9pN4W4A+5IaTCRk4Zr5KNiaZY
-         VbBLCpAHfvzC5tdecnIn3ZnfO8FTtjnO5SJu1GdGF+TzkAxfpVL3O8FUBM1h21J6mqyW
-         qRv3+GHMfib1SB+7fwKVjzxEw5MZppkHRAL8bZJKRvKYhO7lIM7r9ojTDhwsrsmyj8m6
-         2Yo7nOFDzONl4m4eeZX6Awg8ALtGuChGxW7evnzb3ECd8TbQc1a98mmX998vzgtxyOOK
-         RzKUi7hAaDjQWuRcyjIq0tFattVtSdPn4jYCLtJKJvQtTUWGGtUtQtUeRJYwiCuRz/JZ
-         yxrw==
-X-Gm-Message-State: AOAM530FRNysY34trcDpVDE9tBd0EDNjJALw7WBJOo0HoGe+kD576VFe
-	aSyEmyfiGah5u7S2RoEdBMF2sR1ac2sM4A==
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=J3b8FIx3fK30kjiuRphm6iuCGZqtpVpIhgFBiJNWf4s=;
+        b=sISZcVbiXyqYQ/xHziNiAYcD9v9kCZoDQZIJBjXv+6mG593r0egqgkLrOFWIQWqCVF
+         h+dGXENwYEZzYSQ0s6dIQvku3aYuXKdGBcfaN6AY407SaEpu2vWVGISmONqjUsiuY0B1
+         4M1FILqtEGNEuEEKdkDPYw+fL77Hd0nMI1K5jf+zgWXsj0gW4SOEIvOdHXCmZllXw6NI
+         QwC+t5ZgZZadVLMmL8PGm41a+Ldk7DBDnKjwEQ+TrY8WtWygRWmcEqmNv4pZWpgtlkR5
+         ccoTHBUVxHhgkAqjmZmPY9G/pssfc2PX00593+4UEaf4L92DDLb7K0MdFxfvQfKicHk4
+         Qlow==
+X-Gm-Message-State: AOAM530rjgz+gAqxTTw9zr8Atx3JLsg+N2Q6Hs4f3R9txAOxALxvhFqZ
+	HRdW+m0e9sF7jVVq3+AJnA==
 X-Google-Smtp-Source: 
- ABdhPJwlxTe8ihtzxYRAGasriXpqn87WT4t/T/eks0vvvKdDO3NniU8+8eV+JwGAAroKeS9koE2S7g==
-X-Received: by 2002:a5d:5112:: with SMTP id s18mr2828369wrt.296.1644228415220;
-        Mon, 07 Feb 2022 02:06:55 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:6244:607e:d5da:d0fc?
- ([2001:8b0:aba:5f3c:6244:607e:d5da:d0fc])
+ ABdhPJy8kVmBAbqp5lHr1nf508reTQ/6k/XmuXdA3HoBLwy1t/r0cJoz8H7MyOGT5KcpwvK2I8Xcvg==
+X-Received: by 2002:a2e:9e98:: with SMTP id f24mr8189921ljk.471.1644229003306;
+        Mon, 07 Feb 2022 02:16:43 -0800 (PST)
+Received: from [192.168.1.248]
+ (031011128254.dynamic-3-poz-k-0-2-0.vectranet.pl. [31.11.128.254])
         by smtp.gmail.com with ESMTPSA id
- u19sm8920544wmm.0.2022.02.07.02.06.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Feb 2022 02:06:54 -0800 (PST)
-Message-ID: 
- <e8d78db446c3c0649d0003afdcc7c2f897c6e744.camel@linuxfoundation.org>
+ k4sm1439229lfr.102.2022.02.07.02.16.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Feb 2022 02:16:43 -0800 (PST)
+Message-ID: <fc916698-247f-4603-bfb6-50c948ee06e3@gmail.com>
+Date: Mon, 7 Feb 2022 11:16:42 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
 Subject: Re: [bitbake-devel] [PATCH v3] checksum: Support uri formatted file
  list
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paulo Neves <ptsneves@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Mon, 07 Feb 2022 10:06:53 +0000
-In-Reply-To: <20220206134507.123558-1-ptsneves@gmail.com>
+Content-Language: en-US
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+ bitbake-devel@lists.openembedded.org
 References: <20220206134507.123558-1-ptsneves@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1ubuntu2 
-MIME-Version: 1.0
+ <e8d78db446c3c0649d0003afdcc7c2f897c6e744.camel@linuxfoundation.org>
+From: Paulo Neves <ptsneves@gmail.com>
+In-Reply-To: 
+ <e8d78db446c3c0649d0003afdcc7c2f897c6e744.camel@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 07 Feb 2022 10:06:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13315
+ <bitbake-devel@lists.openembedded.org>; Mon, 07 Feb 2022 10:16:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13316
 
-On Sun, 2022-02-06 at 14:45 +0100, Paulo Neves wrote:
-> Before this commit, if the file list for checksumming had
-> files names with spaces there would be a crash. This happened
-> due to filelist.split breaking on the file names instead of
-> on k:v boundaries. Now we validate this case and emit a fatal
-> error if such case is found. This needs to be fatal as the split
-> will generate broken k:v from then on.
-> 
-> Instead of putting literal spaces in the file list the user
-> should urlencode the file names and if they contain coded spaces
-> they will be decoded. This is consistent with the current
-> practice where file names are urlencoded. A reproducer of the
-> issue this commit fixes, was to pass a do_compile[file-checksums]
-> list with files containing spaces in their names, urlencoded or
-> literal.
-> 
-> Change-Id: I6ac4f1cffbb86e913883491d46e8cc69a028e992
-> Signed-off-by: Paulo Neves <ptsneves@gmail.com>
-> ---
->  bitbake/lib/bb/checksum.py                   |  9 +++++++--
->  bitbake/lib/bb/fetch2/__init__.py            |  6 +++---
->  meta/classes/base.bbclass                    |  4 +++-
->  meta/lib/oeqa/selftest/cases/lic_checksum.py | 18 ++++++++++++++++++
->  4 files changed, 31 insertions(+), 6 deletions(-)
-> 
+Thanks Richard.
 
-Since this touches both bitbake and OE-Core I had to split the patch into two to
-be able to test it. I did that and found that one of the other selftests fails
-when it is applied:
+I will try to have a look and fix it :)
 
-oe-selftest -r layerappend.LayerAppendTests.test_layer_appends
+Paulo Neves
 
-e.g.:
-
-https://autobuilder.yoctoproject.org/typhoon/#/builders/79/builds/3128/steps/14/logs/stdio
-
-but it does this consistently and reproducibly. We'll need to get to the bottom
-of that potential regression...
-
-Cheers,
-
-Richard
-
-
+On 2/7/22 11:06, Richard Purdie wrote:
+> oe-selftest -r layerappend.LayerAppendTests.test_layer_appends
 
 
