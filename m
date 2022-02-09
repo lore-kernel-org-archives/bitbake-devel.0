@@ -1,124 +1,101 @@
-Return-Path: <pavel@zhukoff.net>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC26C433EF
-	for <webhook@archiver.kernel.org>; Mon,  7 Feb 2022 12:58:07 +0000 (UTC)
-Received: from forward500p.mail.yandex.net (forward500p.mail.yandex.net
- [77.88.28.110])
- by mx.groups.io with SMTP id smtpd.web08.21649.1644238677740759745
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2777CC433EF
+	for <webhook@archiver.kernel.org>; Wed,  9 Feb 2022 21:40:24 +0000 (UTC)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com
+ [209.85.208.53])
+ by mx.groups.io with SMTP id smtpd.web08.1658.1644442822606007526
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Feb 2022 04:57:58 -0800
+ Wed, 09 Feb 2022 13:40:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@zhukoff.net header.s=mail header.b=eaIZn/JA;
- spf=pass (domain: zhukoff.net, ip: 77.88.28.110, mailfrom: pavel@zhukoff.net)
-Received: from myt6-08ca0b879dee.qloud-c.yandex.net
- (myt6-08ca0b879dee.qloud-c.yandex.net [IPv6:2a02:6b8:c12:12a2:0:640:8ca:b87])
-	by forward500p.mail.yandex.net (Yandex) with ESMTP id 3CFC1F02BF7;
-	Mon,  7 Feb 2022 15:57:54 +0300 (MSK)
-Received: from 2a02:6b8:c12:1f90:0:640:d9f8:acef
- (2a02:6b8:c12:1f90:0:640:d9f8:acef [2a02:6b8:c12:1f90:0:640:d9f8:acef])
-	by myt6-08ca0b879dee.qloud-c.yandex.net (mxback/Yandex) with HTTP id
- rvWhIM0dZuQ1-vrdiURjM;
-	Mon, 07 Feb 2022 15:57:53 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; s=mail;
- t=1644238673;
-	bh=0BRqzRcFksPfPacXUD1KRhFQjJnf2/1QuUNniJ1GJy0=;
-	h=References:Date:Message-Id:Cc:Subject:In-Reply-To:To:From;
-	b=eaIZn/JAr9EWa7HZcNYtsnwcoixZ2/gtsWqhxWjQzhPwWeeczs7i15rcj6K3TNE3u
-	 j2fSp7RUg30iQ2Y0DxWiCpf1MrtegUWx+NeLc63ERP0IatJYqn2dpIqAxOe4QaYfZE
-	 KmHqoRnXx8RiKTNlNezqjKfYYDuXrOi8AeS1dtpY=
-Authentication-Results: myt6-08ca0b879dee.qloud-c.yandex.net;
- dkim=pass header.i=@zhukoff.net
-Received: by myt5-d9f8acef3da8.qloud-c.yandex.net with HTTP;
-	Mon, 07 Feb 2022 15:57:53 +0300
-From: Pavel Zhukov <pavel@zhukoff.net>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Cc: Pavel Zhukov <pavel.zhukov@huawei.com>
-In-Reply-To: 
- <803e4c5c9ffe5b8a347826aa4cf86e979ebe54d0.camel@linuxfoundation.org>
-References: <20220207115322.28209-1-pavel@zhukoff.net>
- <803e4c5c9ffe5b8a347826aa4cf86e979ebe54d0.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch: Use git rev-parse if network is
- not available
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=cwBlCqqW;
+ spf=pass (domain: gmail.com, ip: 209.85.208.53,
+ mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ed1-f53.google.com with SMTP id u18so7720416edt.6
+        for <bitbake-devel@lists.openembedded.org>;
+ Wed, 09 Feb 2022 13:40:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ySe6B7CM0dnCLF4ItpAqpIhRMnphmv43RHp6VptNVKs=;
+        b=cwBlCqqWgKvFtl3Yr5U7GlRnJaqn9atEkY1K8I0bmzjKU8i97+Ewh2jdvGAqsf7LX7
+         S+rmJpHu9NWYCOtDf1TB4cbsRirbyPuJrYSA+kFgIIMxuDVFPOYDA6GQbfBIydr8IDxV
+         WFwzw2KeQXZVTs/bte0owT38lE/dHhHsXwmJ2QEQpVJYWTAtw5fO2nvS5hBps3nzcChz
+         3kS2EVVNwBG32sRV6q//9cbOf12ySW3rhLB8XB+5uCHLhbU01c2uPByE3lkGH1YuA+sB
+         LDnyvdAP7x88VUMopS7NII+9/uaAESbA9RWVn1tk2YqJu4KoA605yAb6MP9uD/7AQxzI
+         Crow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ySe6B7CM0dnCLF4ItpAqpIhRMnphmv43RHp6VptNVKs=;
+        b=UjcN9aZju579bIGMubFXY0bkXWoKqDQJYFCyXzt94Pp4/FXoB/XTHLbjYcbNyZlSOB
+         kXSq40stx1hfEla5XFaL5csPawldnMUgwSG9u/WKCp5aN5YXFvjhRHSich+PAIn//oKQ
+         HvgOYd7URDN0xfrcNkb6vULsswblQ2Qx0cU+6Nyt5khYjPFlA5yBhOcp9PfnVFLCBSGz
+         lS8uZzgTknuFD9R22lN1bRMHta1RVF7wtZoHFBrSkWvtelUTT0F7f1Z4FON/WUXiHbz/
+         pZohjmsmHo5s11OhL4oKK/b2EJQ+YNmVcPo2einXm0YtwNgVitH/pxveS97cfR2FjHKz
+         79Jw==
+X-Gm-Message-State: AOAM530lLND6eKer7zwT14S0rZ1boXaVIg7vvCpXgTYjj/l6gkQWfxH4
+	Os9GdNvGGa3r5R6+7RIfEj2zExgostY=
+X-Google-Smtp-Source: 
+ ABdhPJw6ONn4siqQn8J8LBDhnFfNb7TFVLiqXF/1T9WskFjFnnRzyt9AS6eKpbglMztdim13q2gW3g==
+X-Received: by 2002:a05:6402:11d2:: with SMTP id
+ j18mr4923564edw.349.1644442821045;
+        Wed, 09 Feb 2022 13:40:21 -0800 (PST)
+Received: from nereus.lab.linutronix.de.
+ (ip-109-090-143-203.um36.pools.vodafone-ip.de. [109.90.143.203])
+        by smtp.gmail.com with ESMTPSA id
+ v19sm6651000edw.39.2022.02.09.13.40.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Feb 2022 13:40:20 -0800 (PST)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+X-Google-Original-From: Alexander Kanavin <alex@linutronix.de>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH] wget.py: use a longer timeout in checkstatus()
+Date: Wed,  9 Feb 2022 22:40:18 +0100
+Message-Id: <20220209214018.363691-1-alex@linutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date: Mon, 07 Feb 2022 13:57:53 +0100
-Message-Id: <997221644238229@mail.yandex.ru>
-Content-Transfer-Encoding: base64
-Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 07 Feb 2022 12:58:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13322
+ <bitbake-devel@lists.openembedded.org>; Wed, 09 Feb 2022 21:40:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13323
 
-PGRpdj5IaSBSaWNoYXJkLDwvZGl2PjxkaXY+wqA8L2Rpdj48ZGl2PllvdXIgcG9pbnQgaXMgdmFs
-aWQsIGhvd2V2ZXIgdGhlIHRlc3QgaXMgZmFpbGluZyB3aXRoIGZldGNoZXJfaW5pdCgpIGJlaW5n
-IGNhbGxlZCBiZWZvcmUgdGhlIGNvbnN0cnVjdG9yIChzZWUgdjMpLiBBY3R1YWxseSBmZXRjaGVy
-LnVucGFjaygpIGFuZCB1bnBhY2tlci51bnBhY2soKSBjYW4gYmUgZHJvcHBlZCBmcm9tIHRoZSB0
-ZXN0IGJlY2F1c2UgdGhlIHByb2JsZW0gaXMgaW4gdGhlIGNvbnN0cnVjdG9yIGl0c2VsZi48L2Rp
-dj48ZGl2PlRoZXkgaGF2ZSBiZWVuIGFkZGVkIHRoZXJlIHRvIGRvIHRlc3QgbW9yZSAiY29tcGxl
-dGUiPC9kaXY+PGRpdj7CoDwvZGl2PjxkaXY+SW4gbm9ybWFsIGJ1aWxkIHdlIGhhdmU6IGZldGNo
-ZXJfaW5pdCAtJmd0OyBGZXRjaGVyKCkgLSZndDsgZG93bmxvYWQoKSAtJmd0OyBkaXNhYmxlX25l
-dHdvcmsoKSAtJmd0OyB1bnBhY2soKTxiciAvPkluICJzaG9ydC1jaXJjdWl0IiB3ZSBoYXZlOiBm
-ZXRjaGVyX2luaXQgWy0mZ3Q7IChGZXRjaGVyKCkgYW5kIGRvd25sb2FkKCkgc2tpcHBlZCkgXSAt
-Jmd0OyBkaXNhYmxlX25ldHdvcmsoKSAtJmd0OyBGZXRjaGVyKCkgKGJlY2F1c2UgaXQgd2FzIG5v
-dCBpbml0aWFsaXplZCBiZWZvcmUpIC0mZ3Q7IHVucGFjaygpPC9kaXY+PGRpdj7CoDwvZGl2Pjxk
-aXY+d2l0aG91dCBmZXRjaGVyX2luaXQoKSB0aGUgdGVzdCB3aWxsIHBhc3MgYmVjYXVzZSBkYXRh
-IHN0b3JlIGlzIG5vdCBjbGVhbmVkIHVwIGFuZCBjYWNoZSB3aWxsIGJlIHVzZWQgdG8gZGV0ZXJt
-aW5hdGUgbGF0ZXN0X3JldmlzaW9uIHdpdGhvdXQgY2FsbGluZyBscy1yZW1vdGUgZnJvbSB0aGUg
-ZXhjZXB0aW9uIGhhbmRsZXIuPC9kaXY+PGRpdj4tLcKgPC9kaXY+PGRpdj5QYXZlbDwvZGl2Pjxk
-aXY+wqA8L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj7CoDwvZGl2PjxkaXY+MDcuMDIuMjAyMiwgMTM6
-NDMsICJSaWNoYXJkIFB1cmRpZSIgJmx0O3JpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5v
-cmcmZ3Q7OjwvZGl2PjxibG9ja3F1b3RlPjxwPk9uIE1vbiwgMjAyMi0wMi0wNyBhdCAxMjo1MyAr
-MDEwMCwgUGF2ZWwgWmh1a292IHdyb3RlOjwvcD48YmxvY2txdW90ZT7CoFNvbWV0aW1lcyBGZXRj
-aGVyIGlzIGluaXRpYWxpemVkIHdoaWxlIG5ldHdvcmsgaXMgZGlzYWJsZWQgKHVucGFjaygpIGlz
-PGJyIC8+wqBvbmUgb2Ygc3VjaCBjYXNlcykgYW5kIEZldGNoZXIgZmFpbHMgdG8gbWFwIG5vbiBT
-SEExIFNSQ1JFViB0byBTSEExIG9uZS48YnIgLz7CoEluIHN1Y2ggY2FzZXMgZ2l0IGxzLXJlbW90
-ZSBjYW5ub3QgYmUgdXNlZCB0byBkZXRlcm1pbmF0ZSBsYXRlc3Q8YnIgLz7CoHJldmlzaW9uIGFu
-ZCBnaXQgcmV2LXBhcnNlIGNhbiBiZSB1c2VkIGluc3RlYWQuIFRoaXMgYXBwcm9hY2ggZG9lc24n
-dDxiciAvPsKgd29yayB3aXRoIHJlYmFzZWFibGUgcmVwb3Mgc28gZXhjZXB0aW9uIHdpbGwgb2Nj
-dXIgZm9yIHN1Y2ggcmVwb3MuPGJyIC8+wqA8YnIgLz7CoFNlZSBbWU9DVE8gIzE0NzA3XSBmb3Ig
-bW9yZSBkZXRhaWxzLiBOb3RlOiB0aGUgaXNzdWUgZG9lc24ndCBvY2N1ciBlYWNoPGJyIC8+wqB0
-aW1lIGluIHVucGFjaygpIGJlY2F1c2UgaW4gbm9ybWFsIGZsb3cgKGZldGNoLSZndDt1bnBhY2sg
-aW4gb25lIGJ1aWxkKTxiciAvPsKgVVJJX0hFQURSRVZzIGFyZSBjYWNoZWQuPGJyIC8+wqA8YnIg
-Lz7CoFNpZ25lZC1vZmYtYnk6IFBhdmVsIFpodWtvdiAmbHQ7PGEgaHJlZj0ibWFpbHRvOnBhdmVs
-LnpodWtvdkBodWF3ZWkuY29tIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiPnBhdmVsLnpodWtv
-dkBodWF3ZWkuY29tPC9hPiZndDs8YnIgLz7CoC0tLTwvYmxvY2txdW90ZT48cD48YnIgLz5UaGFu
-a3MgZm9yIGxvb2tpbmcgYXQgdGhpcy4gSSBsaWtlIHRoZSBpZGVhIG9mIHNvbWUgdGVzdHMgdG8g
-ZGVtb25zdHJhdGUgdGhlPGJyIC8+cHJvYmxlbSBzbyB3ZSBzaG91bGQgc3RhcnQgdGhlcmUuPGJy
-IC8+PGJyIC8+wqA8L3A+PGJsb2NrcXVvdGU+wqArY2xhc3MgR2l0VW5wYWNrT2ZmbGluZVRlc3Qo
-RmV0Y2hlclRlc3QpOjxiciAvPsKgKzxiciAvPsKgKyBkZWYgc2V0VXAoc2VsZik6PGJyIC8+wqAr
-IHN1cGVyKEdpdFVucGFja09mZmxpbmVUZXN0LCBzZWxmKS5zZXRVcCgpPGJyIC8+wqArIHNlbGYu
-dGVtcGRpciA9IHNlbGYudGVtcGRpcjxiciAvPsKgKyBzZWxmLnBlcnNpc3RkaXIgPSBvcy5wYXRo
-LmpvaW4oc2VsZi50ZW1wZGlyLCAicGVyc2lzdGRhdGEiKTxiciAvPsKgKzxiciAvPsKgKyBkZWYg
-c2V0RGF0YShzZWxmKTo8YnIgLz7CoCsgc2VsZi5yZWNpcGVfdXJsID0gIjxhIHJlbD0ibm9vcGVu
-ZXIgbm9yZWZlcnJlciI+Z2l0Oi8vZ2l0aHViLmNvbS9sejQvbHo0LmdpdDticmFuY2g9cmVsZWFz
-ZTtwcm90b2NvbD1odHRwczwvYT47IjxiciAvPsKgKyBzZWxmLmQuc2V0VmFyKCdTUkNSRVYnLCAn
-djEuOS4wJyk8YnIgLz7CoCsgc2VsZi5kLnNldFZhcigiUEVSU0lTVEVOVF9ESVIiLCBzZWxmLnBl
-cnNpc3RkaXIpPGJyIC8+wqArIHNlbGYuZC5zZXRWYXIoIkRMX0RJUiIsIHNlbGYuZGxkaXIpPGJy
-IC8+wqArPGJyIC8+wqArIEBza2lwSWZOb05ldHdvcmsoKTxiciAvPsKgKyBkZWYgdGVzdF91bnBh
-Y2tfb2ZmbGluZShzZWxmKTo8YnIgLz7CoCsgc2VsZi5zZXREYXRhKCk8YnIgLz7CoCsgZmV0Y2hl
-ciA9IGJiLmZldGNoLkZldGNoKFtzZWxmLnJlY2lwZV91cmxdLCBzZWxmLmQpPGJyIC8+wqArIGJi
-LmZldGNoLmZldGNoZXJfaW5pdChzZWxmLmQpPGJyIC8+wqArIGZldGNoZXIuZG93bmxvYWQoKTxi
-ciAvPsKgKyBmZXRjaGVyLnVucGFjayhzZWxmLnVucGFja2Rpcik8YnIgLz7CoCs8YnIgLz7CoCsg
-IyMgZW11bGF0ZSBkb191bnBhY2sgKGRpc2FibGUgbmV0d29yayk8YnIgLz7CoCsgc2VsZi5kLnNl
-dFZhcigiQkJfTk9fTkVUV09SSyIsICIxIik8YnIgLz7CoCsgdW5wYWNrZXIgPSBiYi5mZXRjaC5G
-ZXRjaChbc2VsZi5yZWNpcGVfdXJsXSwgc2VsZi5kKTxiciAvPsKgKyBiYi5mZXRjaC5mZXRjaGVy
-X2luaXQoc2VsZi5kKTxiciAvPsKgKyB1bnBhY2tlci51bnBhY2soc2VsZi51bnBhY2tkaXIpPGJy
-IC8+wqArPC9ibG9ja3F1b3RlPjxwPjxiciAvPkkgZG9uJ3QgdGhpbmsgdGhpcyBpcyBhIHZhbGlk
-IHRlc3QuIEkgdGhpbmsgaXQgc2hvdWxkIG9ubHkgY2FsbDxiciAvPmJiLmZldGNoLmZldGNoZXJf
-aW5pdCgpIG9uY2UgYW5kIGF0IHRoZSBzdGFydCBvZiB0aGUgdGVzdCBiZWZvcmUgdGhlIEZldGNo
-KCk8YnIgLz5jYWxsLjxiciAvPjxiciAvPklmIHdlIGNoYW5nZSBpdCB0byBkbyB0aGF0LCB0aGUg
-dGVzdCBwYXNzZXMuPGJyIC8+PGJyIC8+R29pbmcgYmFjayB0byB5b3VyIG9yaWdpbmFsIGJ1ZyBy
-ZXBvcnQsIHRoZSBpc3N1ZSBjb3VsZCBiZSB0aGF0PGJyIC8+YmIuZmV0Y2guZmV0Y2hlcl9pbml0
-KCkgaXMgYmVpbmcgY2FsbGVkIGluIHRoZSBkb191bnBhY2sgdGFzayBhbmQgImRlc3Ryb3lpbmci
-PGJyIC8+dGhlIHNvdXJjZSByZXZzIGluIHRoZSB3b3JrZXIgY29udGV4dC48YnIgLz48YnIgLz5J
-IHN1c3BlY3QgYnV0IGhhdmVuJ3QgbG9va2VkIGludG8gdGhhdCB5ZXQuIFdoYXQgd2UgbWF5IG5l
-ZWQgdG8gZG8gaXMgdHJhbnNmZXI8YnIgLz50aGUgYmIuZmV0Y2gyLnNhdmVkX2hlYWRyZXZzIGlu
-dG8gdGhlIHdvcmtlciBjb250ZXh0PzxiciAvPjxiciAvPkNoZWVycyw8YnIgLz48YnIgLz5SaWNo
-YXJkPGJyIC8+PGJyIC8+PGJyIC8+PGJyIC8+wqA8L3A+PC9ibG9ja3F1b3RlPg==
+The addition of 30 second timeout is recent [1], and has
+proved not long enough with the AB server when mass-checking
+for sstate item availability, resulting in timeout errors with
+extensible SDKs[2].
+
+[1]
+https://git.yoctoproject.org/poky/commit/?id=2c46245f449d2716566ef668da0bf48f2109643a
+[2]
+https://autobuilder.yoctoproject.org/typhoon/#/builders/53/builds/4710/steps/16/logs/stdio
+
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bitbake/lib/bb/fetch2/wget.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+index 253cabce75..2a7592ae5f 100644
+--- a/bitbake/lib/bb/fetch2/wget.py
++++ b/bitbake/lib/bb/fetch2/wget.py
+@@ -366,7 +366,7 @@ class Wget(FetchMethod):
+                 except (TypeError, ImportError, IOError, netrc.NetrcParseError):
+                     pass
+ 
+-                with opener.open(r, timeout=30) as response:
++                with opener.open(r, timeout=300) as response:
+                     pass
+             except urllib.error.URLError as e:
+                 if try_again:
+-- 
+2.20.1
+
 
