@@ -1,110 +1,86 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F2DC433F5
-	for <webhook@archiver.kernel.org>; Wed,  9 Feb 2022 21:47:22 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com
- [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web12.1766.1644443241369279579
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19937C433FE
+	for <webhook@archiver.kernel.org>; Wed,  9 Feb 2022 22:01:19 +0000 (UTC)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com
+ [209.85.217.49])
+ by mx.groups.io with SMTP id smtpd.web12.1985.1644444078100516804
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 09 Feb 2022 13:47:21 -0800
+ Wed, 09 Feb 2022 14:01:18 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Bk/2qkN2;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id o24so3617888wro.3
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=oNO6iBg5;
+ spf=pass (domain: gmail.com, ip: 209.85.217.49,
+ mailfrom: alex.kanavin@gmail.com)
+Received: by mail-vs1-f49.google.com with SMTP id w6so3828315vsf.3
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 09 Feb 2022 13:47:21 -0800 (PST)
+ Wed, 09 Feb 2022 14:01:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=qjYm1JwMKFkrYVeHhGtiU73A9xBftKfUfe7bQL+UmJQ=;
-        b=Bk/2qkN2HnR7rSZgFJk44L92xr+CRRQ0KETPRxa0b3JVRG4nGGbay5JxCtT8KzFFN5
-         WTHgGKEbmx7zWT9+1frr2yScDS/LBPJBuD0tW2SLfv72vr3YrQtcP3N0OPaf6am5Psev
-         OdUv1iHm06oDgF90467aaXin5QRtfT2voW3mQ=
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r3BtZkSIsAGjHjnnLZXp+x8fWQLZcWc+yu8gLTGt4OM=;
+        b=oNO6iBg55KV+WC0ACZa7pYdAUAFWokFJcaRppU3DJBU9KComjveN1Zr/AvJ3CInpiP
+         3tbGt1mJgiJlHHZnoQTYuXkFiDc/7fRqHI8YNT0yHzQ93qTDr2iYBI6CS+F9H9mFj31N
+         /yUsDmeBSYn5EowjtCmL0id5UHKYebZO6CZ+x/oI2CJk5ttBiuY0QcjDu7IZzUlQxmKc
+         /6dFY1dVOC9Ml1/RQP89JQMjEprL5Ax5FXV0axheXSTOUiPYYvUnPJ+bWvIqoQq4meni
+         crgQBxA5x++CmRLdYs3tHyBSHG77qjsDoyPSj7JdjohX0EQhOTcrdoAmRbUBzoyXyGoX
+         ZOSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=qjYm1JwMKFkrYVeHhGtiU73A9xBftKfUfe7bQL+UmJQ=;
-        b=hHY+HgGqVp5m1aTVDooGvPXVWaC+ppXqrAFoNHlIe5+kpAiQuRhcUMmJd11xxpELlO
-         gbbbv4VsoKWczM6J9jqTv0a1QfW2uEE3vQ56556y/pEwCEg0MNP6NBKNBBcS5feqvEj2
-         Ff9ZT7bdsZz7zs3Ckko0UwdfSHHswpKf0E7qPaHSVYvqj7NYp7gyVTF+AfyThDjSu1z/
-         j+iS1JLhdxAHZEJPdJkU32s0R7T2GejJl5haBTcRblcnbtTc0Hcv4KRjDXCNsGtrshSD
-         kvAVE5aF1bpiXchjJ9muRhs1G3qOiMld92ewuU9WZXG7nM5kF1BQoK3wIWDwiffoNxsq
-         hz/Q==
-X-Gm-Message-State: AOAM5301mi6koMjQT60IIf4pCP2966B0mSxXCVAQAvdxb7joCuCSIaHg
-	JNHGzTWKPvx8QioFkK/5wbg9hQ==
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r3BtZkSIsAGjHjnnLZXp+x8fWQLZcWc+yu8gLTGt4OM=;
+        b=7AJcYtcqrf1FOE6B2AWQUC3bcIa1beIUwpFMnQqwF80macSuw4l7Tc/O+V3Qbmxl+B
+         RcZbM3NQ5+WeS5vOD28ZfrRDoLpVxzMdHH8lHNnMQpN23jDXQhLGNZk/vt3LJnatnLf7
+         9tBsr8L5KPLOh3y9syTxGvKh1076KaTA7bT88rlAr2l/lVLg7iUJinTiXWcLMVQeyzXE
+         VUaZLfSseyg1DnC8C6GR/W/+xosMLzbGinhX3B3nFJh+2fFYSWN8Sm349IkTzFNUf3pn
+         Ozj3zbrkhW5k+RyKwFnXkLiXoOVkS3ksi+qZGD3cExLJpAPp3H8EJYkdZTNAILCZ4fIu
+         narA==
+X-Gm-Message-State: AOAM532y39lZtaCAIq67YteOPx9FXYJcRueuvA9hpzjauzC0x4gHTr0p
+	phMPEMOtTfGB9E7S43ZPHVvh77rGcfa69jFGybE=
 X-Google-Smtp-Source: 
- ABdhPJzFNz0z/EY0ZOCLdcf0Xfeg0dB+IV9zeXzLNPsOzOLXJnAOJp5Y98/Sv1bqbIiQS1qdxyhJnA==
-X-Received: by 2002:adf:aa84:: with SMTP id h4mr2030017wrc.122.1644443239625;
-        Wed, 09 Feb 2022 13:47:19 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:2250:1cae:83bc:d91f?
- ([2001:8b0:aba:5f3c:2250:1cae:83bc:d91f])
-        by smtp.gmail.com with ESMTPSA id
- ay3sm5869363wmb.44.2022.02.09.13.47.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Feb 2022 13:47:19 -0800 (PST)
-Message-ID: 
+ ABdhPJzYqI29BmUJJYyodDl8sz7s4l4+BmnLQwk2yG005j6KoSjjKw+l1HRgYBItocbEXC/vrKBguqSWoSk4s4dTqis=
+X-Received: by 2002:a67:fc16:: with SMTP id o22mr57947vsq.42.1644444077238;
+ Wed, 09 Feb 2022 14:01:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20220209214018.363691-1-alex@linutronix.de>
  <0f1f2eace443402fca3790908033286be4a9b0e0.camel@linuxfoundation.org>
+In-Reply-To: 
+ <0f1f2eace443402fca3790908033286be4a9b0e0.camel@linuxfoundation.org>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 9 Feb 2022 23:01:05 +0100
+Message-ID: 
+ <CANNYZj9wDgfTEUdrToHxenEDrLHGW+KZ-VaWYn6o4Je6k=A1uw@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH] wget.py: use a longer timeout in
  checkstatus()
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alexander Kanavin <alex.kanavin@gmail.com>,
-	bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>
-Date: Wed, 09 Feb 2022 21:47:17 +0000
-In-Reply-To: <20220209214018.363691-1-alex@linutronix.de>
-References: <20220209214018.363691-1-alex@linutronix.de>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Michael Halstead <mhalstead@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Alexander Kanavin <alex@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 09 Feb 2022 21:47:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13324
+ <bitbake-devel@lists.openembedded.org>; Wed, 09 Feb 2022 22:01:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13325
 
-On Wed, 2022-02-09 at 22:40 +0100, Alexander Kanavin wrote:
-> The addition of 30 second timeout is recent [1], and has
-> proved not long enough with the AB server when mass-checking
-> for sstate item availability, resulting in timeout errors with
-> extensible SDKs[2].
-> 
-> [1]
-> https://git.yoctoproject.org/poky/commit/?id=2c46245f449d2716566ef668da0bf48f2109643a
-> [2]
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/53/builds/4710/steps/16/logs/stdio
-> 
-> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
-> ---
->  bitbake/lib/bb/fetch2/wget.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-> index 253cabce75..2a7592ae5f 100644
-> --- a/bitbake/lib/bb/fetch2/wget.py
-> +++ b/bitbake/lib/bb/fetch2/wget.py
-> @@ -366,7 +366,7 @@ class Wget(FetchMethod):
->                  except (TypeError, ImportError, IOError, netrc.NetrcParseError):
->                      pass
->  
-> -                with opener.open(r, timeout=30) as response:
-> +                with opener.open(r, timeout=300) as response:
->                      pass
->              except urllib.error.URLError as e:
->                  if try_again:
+On Wed, 9 Feb 2022 at 22:47, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
 
+> We need to fix the servers. I doubt that at 300s it would work much better but
+> the user experience would be horrible with builds hanging at startup for 5
+> minutes.
 
-We need to fix the servers. I doubt that at 300s it would work much better but
-the user experience would be horrible with builds hanging at startup for 5
-minutes.
+The tracebacks are showing both straightforward timeouts, and timeouts
+while handling a server 503 error (presumably urllib has a built-in
+retry mechanism which is thwarted by the 30 sec timeout). I guess I
+mostly wanted to see if bumping the timeout value resolves those
+errors, and in at least in my a-full they did not show up.
 
-Cheers,
+Checking the server logs would be helpful: they probably do say
+something useful when issuing 503.
 
-Richard
-
+Alex
 
