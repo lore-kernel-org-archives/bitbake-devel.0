@@ -1,167 +1,313 @@
-Return-Path: <pavel@zhukoff.net>
+Return-Path: <tomasz.dziendzielski@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B15C433F5
-	for <webhook@archiver.kernel.org>; Thu, 10 Feb 2022 14:41:00 +0000 (UTC)
-Received: from forward501o.mail.yandex.net (forward501o.mail.yandex.net
- [37.140.190.203])
- by mx.groups.io with SMTP id smtpd.web09.10761.1644504058662608246
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1081C433F5
+	for <webhook@archiver.kernel.org>; Thu, 10 Feb 2022 14:55:10 +0000 (UTC)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com
+ [209.85.217.43])
+ by mx.groups.io with SMTP id smtpd.web10.11091.1644504909649983353
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 10 Feb 2022 06:41:00 -0800
+ Thu, 10 Feb 2022 06:55:09 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@zhukoff.net header.s=mail header.b=NTCyNVuc;
- spf=pass (domain: zhukoff.net, ip: 37.140.190.203,
- mailfrom: pavel@zhukoff.net)
-Received: from sas1-0e0150e31af0.qloud-c.yandex.net
- (sas1-0e0150e31af0.qloud-c.yandex.net
- [IPv6:2a02:6b8:c14:392a:0:640:e01:50e3])
-	by forward501o.mail.yandex.net (Yandex) with ESMTP id 065BC45C5294;
-	Thu, 10 Feb 2022 17:40:54 +0300 (MSK)
-Received: from 2a02:6b8:c08:78a8:0:640:8780:f191
- (2a02:6b8:c08:78a8:0:640:8780:f191 [2a02:6b8:c08:78a8:0:640:8780:f191])
-	by sas1-0e0150e31af0.qloud-c.yandex.net (mxback/Yandex) with HTTP id
- qeb2Z00cmuQ1-erc4idAt;
-	Thu, 10 Feb 2022 17:40:53 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; s=mail;
- t=1644504053;
-	bh=hBDAAZ+euLbTDhYBNw9FRRxkPJwm66UnuPFvOUg3DkU=;
-	h=References:Date:Message-Id:Cc:Subject:In-Reply-To:To:From;
-	b=NTCyNVuciH+crSQzV/Jm9B7F8HXt0T0KtwJVPK+Vjm17yz/OiZOb2KPHoJW8PMDXL
-	 /5vmMsM3SMnatAemvAcDvzYHsMSPwWm43BbdzMQIjJLuhKUbf0VHQtC0x+u/FYzW9u
-	 1XGH66fFhWZzBqbN6haXEywNsY6aReQEmMGQlqX4=
-Authentication-Results: sas1-0e0150e31af0.qloud-c.yandex.net;
- dkim=pass header.i=@zhukoff.net
-Received: by sas1-8780f191e495.qloud-c.yandex.net with HTTP;
-	Thu, 10 Feb 2022 17:40:53 +0300
-From: Pavel Zhukov <pavel@zhukoff.net>
-To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=SCwum4D7;
+ spf=pass (domain: gmail.com, ip: 209.85.217.43,
+ mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-vs1-f43.google.com with SMTP id r20so6766013vsn.0
+        for <bitbake-devel@lists.openembedded.org>;
+ Thu, 10 Feb 2022 06:55:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cjt/2zfT+NOS3fMAOJ7GVVTrXugkMBr7DeDtCIWijp8=;
+        b=SCwum4D7K6WHGnorQg0LRqLz1T1rA503vSFsG4itrXuS+1X0mlu1NC70d0QVyPPalG
+         rx+Mu3WG85gbxTZg0ov9nYU25FxL3YhKA1tuKsT7PY9YI9Y2BTFldxdJWyn0BFwARZTk
+         mJRYuJaDWwxn0H3U4zE29z7dzb0x53zqRJW33o5eAJZH5KG2sHnNnDLysiMp56O3FgqV
+         HYJ9NHr5N1Vu2VrIsBz7vSBkciu1BB02VC/5+zWonWTeLFi231EpSmTSvtP3nW0ANWnM
+         +rflydXhtNEiIwwO5b/s/vdzDkBNNzrge9U8CiepZiV6XLj3fmaRk1mNh/38D1MyKoun
+         l4hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cjt/2zfT+NOS3fMAOJ7GVVTrXugkMBr7DeDtCIWijp8=;
+        b=iZLki5jJL0Hf3biDIDy0jTy9EgcVQB5owBmeVxQrqVni4HC4Np8VWU4lcdY7rUL4L7
+         YYasFhc3czPSHD4BnINbRgHX7k2+eoVz+BJYjexBilW9fgg8jiZNLtJdMA6mLLb+vMfb
+         p1HYW71jb4vICwuNOS93oRx2UP1442Qp8E6Itp22u4rjBuPsDWeQDpI+p5XHf76Nav2C
+         0ZD0xSZLFUe+4bkMboAIVU+jfil5Ylq6LgQWQKVrhkrg0WXy1h6ZGCTYkF+ojNAtDsNy
+         2zCsH3uAGx3dURGch5qs4nLBpetPr1s3AzGRG+OaOdArsXDyal5uGRzf7V2mpoevfI7f
+         DmBA==
+X-Gm-Message-State: AOAM532KHpc9EkcCEXc+Au8AAhSt1Qcl7sYxzA14WCFL1bs4ux2N/1Yq
+	8W6IufOP3jKKP9f2hd2p+gdfveioWNHEvqsU7cE=
+X-Google-Smtp-Source: 
+ ABdhPJzq6Om38BVtVAlU6TONwRxWZdIRepv56ZuXwGCDXcwGoj+PmdUSADNNFb8bH5Ly87oZRGmFuLevSmWgpAqeDaY=
+X-Received: by 2002:a05:6102:32cc:: with SMTP id
+ o12mr2598176vss.39.1644504908798;
+ Thu, 10 Feb 2022 06:55:08 -0800 (PST)
+MIME-Version: 1.0
+References: <20220210132714.22921-1-tomasz.dziendzielski@gmail.com>
+ <CANNYZj86ijf96uT3umpXywktF3X27vjeS1PAUULeNGP9neVrJA@mail.gmail.com>
+ <293951644501808@mail.yandex.ru>
+ <CAJkqNs1m-Y=q9ss0E0W7eNGdSjZd-orBfreuZnTm=3S6uswQOA@mail.gmail.com>
+ <6148401644503498@mail.yandex.ru>
+In-Reply-To: <6148401644503498@mail.yandex.ru>
+From: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Date: Thu, 10 Feb 2022 15:58:19 +0100
+Message-ID: 
+ <CAJkqNs2i4gdxQT=hO0duZtqbmf6iDbafU=iHQn4=4hXkuaapig@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2] fetch2/git.py: Check if clonedir is
+ correct after shallow tarball clone
+To: Pavel Zhukov <pavel@zhukoff.net>
 Cc: Alexander Kanavin <alex.kanavin@gmail.com>,
 	bitbake-devel <bitbake-devel@lists.openembedded.org>,
 	Jan Brzezanski <jan.brzezanski@gmail.com>
-In-Reply-To: 
- <CAJkqNs1m-Y=q9ss0E0W7eNGdSjZd-orBfreuZnTm=3S6uswQOA@mail.gmail.com>
-References: <20220210132714.22921-1-tomasz.dziendzielski@gmail.com>
-	 <CANNYZj86ijf96uT3umpXywktF3X27vjeS1PAUULeNGP9neVrJA@mail.gmail.com>
- <293951644501808@mail.yandex.ru>
- <CAJkqNs1m-Y=q9ss0E0W7eNGdSjZd-orBfreuZnTm=3S6uswQOA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH v2] fetch2/git.py: Check if clonedir is
- correct after shallow tarball clone
-MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date: Thu, 10 Feb 2022 15:40:53 +0100
-Message-Id: <6148401644503498@mail.yandex.ru>
-Content-Transfer-Encoding: base64
-Content-Type: text/html; charset=utf-8
+Content-Type: multipart/alternative; boundary="000000000000eb9e5605d7ab22b7"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 10 Feb 2022 14:41:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13334
+ <bitbake-devel@lists.openembedded.org>; Thu, 10 Feb 2022 14:55:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13335
 
-PGRpdj5Ob3QgcmVhbGx5LjxiciAvPml0IHdpbGwgZWl0aGVyIGNvbXBsYWluIFsxXSBpZiB0aGVy
-ZSdzIG5vdCBnaXQgcmVwb3NpdG9yeSBpbiB0aGUgcGFyZW50J3MgZGlycyBvciByZXBsYWNlIGdp
-dCByZW1vdGUgd2l0aCB0aGUgb25lIGZyb20gcmVjaXBlX3VybCBhbmQgZmFpbCB3aXRoIFsyXSBp
-ZiBidWlsZCBkaXJlY3RvcnkgaXMgdW5kZXIgc29tZSBnaXQgbWFuYWdlZCBkaXJlY3RvcnkuPC9k
-aXY+PGRpdj7CoDwvZGl2PjxkaXY+WzFdPGRpdj5GZXRjaGVyIGZhaWx1cmU6IEZldGNoIGNvbW1h
-bmQgZXhwb3J0IFBTRVVET19ESVNBQkxFRD0xOyBnaXQgLWMgY29yZS5mc3luY29iamVjdGZpbGVz
-PTAgLWMgZ2MuYXV0b0RldGFjaD1mYWxzZSByZW1vdGUgZmFpbGVkIHdpdGggZXhpdCBjb2RlIDEy
-OCwgb3V0cHV0OjwvZGl2PjxkaXY+ZmF0YWw6IG5vdCBhIGdpdCByZXBvc2l0b3J5IChvciBhbnkg
-cGFyZW50IHVwIHRvIG1vdW50IHBvaW50IC8pPC9kaXY+PGRpdj7CoDwvZGl2PjxkaXY+WzJdPGRp
-dj48ZGl2PmJiLmZldGNoMi5GZXRjaEVycm9yOiBGZXRjaGVyIGZhaWx1cmU6IEZldGNoIGNvbW1h
-bmQgZXhwb3J0IFBTRVVET19ESVNBQkxFRD0xOyBnaXQgLWMgY29yZS5mc3luY29iamVjdGZpbGVz
-PTAgLWMgZ2MuYXV0b0RldGFjaD1mYWxzZSBjbG9uZSAtbiAtcyAvdG1wL2JpdGJha2UtZmV0Y2gt
-aHlyY3FrcncvZG93bmxvYWQvZ2l0Mi9naXQub3BlbmVtYmVkZGVkLm9yZy5iaXRiYWtlLyAvdG1w
-L2JpdGJha2UtZmV0Y2gtaHlyY3FrcncvdW5wYWNrZWQvZ2l0LyBmYWlsZWQgd2l0aCBleGl0IGNv
-ZGUgMTI4LCBvdXRwdXQ6PC9kaXY+PGRpdj5mYXRhbDogcmVwb3NpdG9yeSAnL3RtcC9iaXRiYWtl
-LWZldGNoLWh5cmNxa3J3L2Rvd25sb2FkL2dpdDIvZ2l0Lm9wZW5lbWJlZGRlZC5vcmcuYml0YmFr
-ZS8nIGRvZXMgbm90IGV4aXN0PC9kaXY+PGRpdj7CoDwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2Pjxk
-aXY+wqA8L2Rpdj48ZGl2Pi0twqA8L2Rpdj48ZGl2PlBhdmVsPC9kaXY+PGRpdj7CoDwvZGl2Pjxk
-aXY+wqA8L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj4xMC4wMi4yMDIyLCAxNToxOSwgIlRvbWFzeiBE
-emllbmR6aWVsc2tpIiAmbHQ7dG9tYXN6LmR6aWVuZHppZWxza2lAZ21haWwuY29tJmd0Ozo8L2Rp
-dj48YmxvY2txdW90ZT48ZGl2PjxkaXY+VGhlbiB0aGUgZmlyc3QgcGF0Y2ggaXMgc2FmZXIsIGFz
-IGl0IHdpbGwgbm90IGJyZWFrIGJ1aWxkIHdpdGggdGFyYmFsbHMgd2l0aG91dCB2Y3MuPC9kaXY+
-PGRpdj7CoDwvZGl2PjxkaXY+QmVzdCByZWdhcmRzLDwvZGl2PjxkaXY+VG9tYXN6IER6aWVuZHpp
-ZWxza2k8L2Rpdj48L2Rpdj7CoDxkaXY+PGRpdj5jencuLCAxMCBsdXQgMjAyMiBvIDE1OjA4wqBQ
-YXZlbCBaaHVrb3YgJmx0OzxhIGhyZWY9Im1haWx0bzpwYXZlbEB6aHVrb2ZmLm5ldCIgcmVsPSJu
-b29wZW5lciBub3JlZmVycmVyIj5wYXZlbEB6aHVrb2ZmLm5ldDwvYT4mZ3Q7IG5hcGlzYcWCKGEp
-OjwvZGl2PjxibG9ja3F1b3RlIHN0eWxlPSJib3JkZXItbGVmdC1jb2xvcjpyZ2IoIDIwNCAsIDIw
-NCAsIDIwNCApO2JvcmRlci1sZWZ0LXN0eWxlOnNvbGlkO2JvcmRlci1sZWZ0LXdpZHRoOjFweDtt
-YXJnaW46MHB4IDBweCAwcHggMC44ZXg7cGFkZGluZy1sZWZ0OjFleCI+PGRpdj5UaGlzIGlzIGdv
-b2QgcXVlc3Rpb24uPC9kaXY+PGRpdj5JdCBpcyBwb3NzaWJsZSB0byBwcm92aWRlIGJpdGJha2Ug
-d2l0aCBtYWlsZm9ybWVkIGdpdCByZXBvIG1pcnJvciB0YXJiYWxsIChtYW51YWxseSBjcmVhdGVk
-IG9uZSBmb3IgZXhhbXBsZSB3aXRoIC0tZXhjbHVkZS12Y3MgZmxhZyBzZXQgb3IgZnJvbSB3cm9u
-ZyBzdWJkaXJlY3RvcnkpIGluIHRoYXQgY2FzZSB0YXIgd2lsbCBub3QgcmV0dXJuIGFueSByZXR1
-cm4gY29kZSBidXQgZ2l0LmRvd25sb2FkKCkgd2lsbCB0cnkgdG8gcmVwbGFjZSByZW1vdGUgd2l0
-aCBvcmlnaW4gZnJvbSByZWNpcGVfdXJsLiBJbiB3b3JzZSBjYXNlIGl0IHdpbGwgcmVwbGFjZSBv
-cmlnaW4gb2YgInVwcGVyIiBnaXQgcmVwbyAocG9reT8pIHdpdGggcmVjaXBlJ3Mgb25lLjxkaXY+
-wqA8L2Rpdj48L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj4tLcKgPC9kaXY+PGRpdj5QYXZlbDwvZGl2
-PjxkaXY+wqA8L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj7CoDwvZGl2PjxkaXY+MTAuMDIuMjAyMiwg
-MTQ6MzEsICJBbGV4YW5kZXIgS2FuYXZpbiIgJmx0OzxhIGhyZWY9Im1haWx0bzphbGV4LmthbmF2
-aW5AZ21haWwuY29tIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5h
-bGV4LmthbmF2aW5AZ21haWwuY29tPC9hPiZndDs6PC9kaXY+PGJsb2NrcXVvdGU+PHA+V2FpdCwg
-ZG9lc24ndCB0aGlzIG1hc2sgdGhlIHJlYWwgaXNzdWU/IElzIGl0IG9rIHRoYXQgdGhlIHRhcmJh
-bGw8YnIgLz51bnBhY2tpbmcgZmFpbGVkICdmb3IgYW55IHJlYXNvbic/PGJyIC8+PGJyIC8+QWxl
-eDxiciAvPjxiciAvPk9uIFRodSwgMTAgRmViIDIwMjIgYXQgMTQ6MjcsIFRvbWFzeiBEemllbmR6
-aWVsc2tpPGJyIC8+Jmx0OzxhIGhyZWY9Im1haWx0bzp0b21hc3ouZHppZW5kemllbHNraUBnbWFp
-bC5jb20iIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPnRvbWFzei5k
-emllbmR6aWVsc2tpQGdtYWlsLmNvbTwvYT4mZ3Q7IHdyb3RlOjwvcD48YmxvY2txdW90ZT48YnIg
-Lz7CoElmIHNoYWxsb3cgdGFyYmFsbCBjbG9uZSBpcyB1c2VkIGFuZCBpZiB0YXIgdW5wYWNraW5n
-IGZhaWxzIGZvciBhbnk8YnIgLz7CoHJlYXNvbiBpdCBtaWdodCBlbmQgdXAgd2l0aCBlbXB0eSBk
-aXJlY3RvcnkgY3JlYXRlZC4gU2luY2UgcnVuZmV0Y2hjbWQ8YnIgLz7CoGRvZXMgbm90IGNoZWNr
-IGFueSByZXR1cm4gY29kZSB3ZSBtaWdodCBub3QgZGV0ZWN0IHRoZSBpc3N1ZSBhbmQgd2Ugd2ls
-bDxiciAvPsKgbm90IGNsb25lIGZyb20gZ2l0LiBUaGVuIGR1ZSB0byBtaXNzaW5nIGhhc2ggaXQg
-d2lsbCByZXBsYWNlIG1haW48YnIgLz7CoHJlcG9zaXRvcnkncyBnaXQgcmVtb3RlIHdpdGggdGhl
-IHJlbW90ZSBvZiBmYWlsaW5nIHJlY2lwZS48YnIgLz48YnIgLz7CoFRvIGZpeCB0aGlzIGJlaGF2
-aW91ciB3ZSdsbCBjaGVjayBpZiBjbG9uZWRpciBpcyBub3QgZW1wdHkgYW5kIGlmIGdpdDxiciAv
-PsKgZGlyIGlzIHRoZSBzYW1lIGFzIGNsb25lZGlyLjxiciAvPjxiciAvPsKgU2lnbmVkLW9mZi1i
-eTogVG9tYXN6IER6aWVuZHppZWxza2kgJmx0OzxhIGhyZWY9Im1haWx0bzp0b21hc3ouZHppZW5k
-emllbHNraUBnbWFpbC5jb20iIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxh
-bmsiPnRvbWFzei5kemllbmR6aWVsc2tpQGdtYWlsLmNvbTwvYT4mZ3Q7PGJyIC8+wqBTaWduZWQt
-b2ZmLWJ5OiBKYW4gQnJ6ZXphbnNraSAmbHQ7PGEgaHJlZj0ibWFpbHRvOmphbi5icnplemFuc2tp
-QGdtYWlsLmNvbSIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIiB0YXJnZXQ9Il9ibGFuayI+amFu
-LmJyemV6YW5za2lAZ21haWwuY29tPC9hPiZndDs8YnIgLz7CoC0tLTxiciAvPsKgwqBsaWIvYmIv
-ZmV0Y2gyL2dpdC5weSB8IDExICsrKysrKysrKy0tPGJyIC8+wqDCoDEgZmlsZSBjaGFuZ2VkLCA5
-IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pPGJyIC8+PGJyIC8+wqBkaWZmIC0tZ2l0IGEv
-bGliL2JiL2ZldGNoMi9naXQucHkgYi9saWIvYmIvZmV0Y2gyL2dpdC5weTxiciAvPsKgaW5kZXgg
-MzBkYThlOTUuLmVkNmVjYjY0IDEwMDY0NDxiciAvPsKgLS0tIGEvbGliL2JiL2ZldGNoMi9naXQu
-cHk8YnIgLz7CoCsrKyBiL2xpYi9iYi9mZXRjaDIvZ2l0LnB5PGJyIC8+wqBAQCAtMzU2LDggKzM1
-NiwxNSBAQCBjbGFzcyBHaXQoRmV0Y2hNZXRob2QpOjxiciAvPjxiciAvPsKgwqDCoMKgwqDCoMKg
-wqDCoMKgcmVwb3VybCA9IHNlbGYuX2dldF9yZXBvX3VybCh1ZCk8YnIgLz48YnIgLz7CoC0gIyBJ
-ZiB0aGUgcmVwbyBzdGlsbCBkb2Vzbid0IGV4aXN0LCBmYWxsYmFjayB0byBjbG9uaW5nIGl0PGJy
-IC8+wqAtIGlmIG5vdCBvcy5wYXRoLmV4aXN0cyh1ZC5jbG9uZWRpcik6PGJyIC8+wqArICMgQ2xl
-YW4gcmVwbyBpZiBnaXQgZGlyIGlzIGRpZmZlcmVudCB0aGFuIHVkLmNsb25lZGlyLCB3aGljaCBt
-ZWFucyB0YXIgdW5wYWNraW5nIGZhaWxlZDxiciAvPsKgKyBpZiBvcy5wYXRoLmV4aXN0cyh1ZC5j
-bG9uZWRpcik6PGJyIC8+wqArIGlmIHVkLmNsb25lZGlyICE9IHJ1bmZldGNoY21kKCIlcyAtQyAl
-cyByZXYtcGFyc2UgLS1naXQtZGlyIiAlICh1ZC5iYXNlY21kLCB1ZC5jbG9uZWRpciksIGQpOjxi
-ciAvPsKgKyBiYi51dGlscy5yZW1vdmUodWQuY2xvbmVkaXIsIHJlY3Vyc2U9VHJ1ZSk8YnIgLz7C
-oCsgYmIudXRpbHMubWtkaXJoaWVyKHVkLmNsb25lZGlyKTxiciAvPsKgKyBvcy5jaGRpcih1ZC5j
-bG9uZWRpcik8YnIgLz7CoCs8YnIgLz7CoCsgIyBJZiB0aGUgcmVwbyBzdGlsbCBkb2Vzbid0IGV4
-aXN0IG9yIGlzIGVtcHR5LCBmYWxsYmFjayB0byBjbG9uaW5nIGl0PGJyIC8+wqArIGlmIG5vdCBv
-cy5wYXRoLmV4aXN0cyh1ZC5jbG9uZWRpcikgb3Igbm90IG9zLmxpc3RkaXIodWQuY2xvbmVkaXIp
-OjxiciAvPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjIFdlIGRvIHRoaXMgc2luY2UgZ2l0
-IHdpbGwgdXNlIGEgIi1sIiBvcHRpb24gYXV0b21hdGljYWxseSBmb3IgbG9jYWwgdXJscyB3aGVy
-ZSBwb3NzaWJsZTxiciAvPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiByZXBvdXJsLnN0
-YXJ0c3dpdGgoImZpbGU6Ly8iKTo8YnIgLz7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqByZXBvdXJsID0gcmVwb3VybFs3Ol08YnIgLz7CoC0tPGJyIC8+wqAyLjM0LjE8YnIgLz48
-YnIgLz48YnIgLz7CoC09LT0tPS09LT0tPS09LT0tPS09LT0tPGJyIC8+wqBMaW5rczogWW91IHJl
-Y2VpdmUgYWxsIG1lc3NhZ2VzIHNlbnQgdG8gdGhpcyBncm91cC48YnIgLz7CoFZpZXcvUmVwbHkg
-T25saW5lICgjMTMzMjgpOiA8YSBocmVmPSJodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcv
-Zy9iaXRiYWtlLWRldmVsL21lc3NhZ2UvMTMzMjgiIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciIg
-dGFyZ2V0PSJfYmxhbmsiPmh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9nL2JpdGJha2Ut
-ZGV2ZWwvbWVzc2FnZS8xMzMyODwvYT48YnIgLz7CoE11dGUgVGhpcyBUb3BpYzogPGEgaHJlZj0i
-aHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL210Lzg5MDQ1MDc2LzE2ODY0ODkiIHJlbD0i
-bm9vcGVuZXIgbm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBzOi8vbGlzdHMub3BlbmVt
-YmVkZGVkLm9yZy9tdC84OTA0NTA3Ni8xNjg2NDg5PC9hPjxiciAvPsKgR3JvdXAgT3duZXI6IDxh
-IGhyZWY9Im1haWx0bzpiaXRiYWtlLWRldmVsK293bmVyQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmci
-IHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPmJpdGJha2UtZGV2ZWwr
-b3duZXJAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzwvYT48YnIgLz7CoFVuc3Vic2NyaWJlOiA8YSBo
-cmVmPSJodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvZy9iaXRiYWtlLWRldmVsL3Vuc3Vi
-IiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL2xpc3Rz
-Lm9wZW5lbWJlZGRlZC5vcmcvZy9iaXRiYWtlLWRldmVsL3Vuc3ViPC9hPiBbPGEgaHJlZj0ibWFp
-bHRvOmFsZXgua2FuYXZpbkBnbWFpbC5jb20iIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciIgdGFy
-Z2V0PSJfYmxhbmsiPmFsZXgua2FuYXZpbkBnbWFpbC5jb208L2E+XTxiciAvPsKgLT0tPS09LT0t
-PS09LT0tPS09LT0tPS08YnIgLz7CoDwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1
-b3RlPjwvZGl2PjwvYmxvY2txdW90ZT4=
+--000000000000eb9e5605d7ab22b7
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Is this bitbake-selftest output? I tried that but got network issues and
+missing branch tag only.
+Maybe I'll check it on different machine.
+
+Best regards,
+Tomasz Dziendzielski
+
+czw., 10 lut 2022 o 15:40 Pavel Zhukov <pavel@zhukoff.net> napisa=C5=82(a):
+
+> Not really.
+> it will either complain [1] if there's not git repository in the parent's
+> dirs or replace git remote with the one from recipe_url and fail with [2]
+> if build directory is under some git managed directory.
+>
+> [1]
+> Fetcher failure: Fetch command export PSEUDO_DISABLED=3D1; git -c
+> core.fsyncobjectfiles=3D0 -c gc.autoDetach=3Dfalse remote failed with exi=
+t code
+> 128, output:
+> fatal: not a git repository (or any parent up to mount point /)
+>
+> [2]
+> bb.fetch2.FetchError: Fetcher failure: Fetch command export
+> PSEUDO_DISABLED=3D1; git -c core.fsyncobjectfiles=3D0 -c gc.autoDetach=3D=
+false
+> clone -n -s
+> /tmp/bitbake-fetch-hyrcqkrw/download/git2/git.openembedded.org.bitbake/
+> /tmp/bitbake-fetch-hyrcqkrw/unpacked/git/ failed with exit code 128, outp=
+ut:
+> fatal: repository
+> '/tmp/bitbake-fetch-hyrcqkrw/download/git2/git.openembedded.org.bitbake/'
+> does not exist
+>
+>
+> --
+> Pavel
+>
+>
+>
+> 10.02.2022, 15:19, "Tomasz Dziendzielski" <tomasz.dziendzielski@gmail.com
+> >:
+>
+> Then the first patch is safer, as it will not break build with tarballs
+> without vcs.
+>
+> Best regards,
+> Tomasz Dziendzielski
+>
+> czw., 10 lut 2022 o 15:08 Pavel Zhukov <pavel@zhukoff.net> napisa=C5=82(a=
+):
+>
+> This is good question.
+> It is possible to provide bitbake with mailformed git repo mirror tarball
+> (manually created one for example with --exclude-vcs flag set or from wro=
+ng
+> subdirectory) in that case tar will not return any return code but
+> git.download() will try to replace remote with origin from recipe_url. In
+> worse case it will replace origin of "upper" git repo (poky?) with recipe=
+'s
+> one.
+>
+>
+> --
+> Pavel
+>
+>
+>
+> 10.02.2022, 14:31, "Alexander Kanavin" <alex.kanavin@gmail.com>:
+>
+> Wait, doesn't this mask the real issue? Is it ok that the tarball
+> unpacking failed 'for any reason'?
+>
+> Alex
+>
+> On Thu, 10 Feb 2022 at 14:27, Tomasz Dziendzielski
+> <tomasz.dziendzielski@gmail.com> wrote:
+>
+>
+>  If shallow tarball clone is used and if tar unpacking fails for any
+>  reason it might end up with empty directory created. Since runfetchcmd
+>  does not check any return code we might not detect the issue and we will
+>  not clone from git. Then due to missing hash it will replace main
+>  repository's git remote with the remote of failing recipe.
+>
+>  To fix this behaviour we'll check if clonedir is not empty and if git
+>  dir is the same as clonedir.
+>
+>  Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+>  Signed-off-by: Jan Brzezanski <jan.brzezanski@gmail.com>
+>  ---
+>   lib/bb/fetch2/git.py | 11 +++++++++--
+>   1 file changed, 9 insertions(+), 2 deletions(-)
+>
+>  diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+>  index 30da8e95..ed6ecb64 100644
+>  --- a/lib/bb/fetch2/git.py
+>  +++ b/lib/bb/fetch2/git.py
+>  @@ -356,8 +356,15 @@ class Git(FetchMethod):
+>
+>           repourl =3D self._get_repo_url(ud)
+>
+>  - # If the repo still doesn't exist, fallback to cloning it
+>  - if not os.path.exists(ud.clonedir):
+>  + # Clean repo if git dir is different than ud.clonedir, which means tar
+> unpacking failed
+>  + if os.path.exists(ud.clonedir):
+>  + if ud.clonedir !=3D runfetchcmd("%s -C %s rev-parse --git-dir" %
+> (ud.basecmd, ud.clonedir), d):
+>  + bb.utils.remove(ud.clonedir, recurse=3DTrue)
+>  + bb.utils.mkdirhier(ud.clonedir)
+>  + os.chdir(ud.clonedir)
+>  +
+>  + # If the repo still doesn't exist or is empty, fallback to cloning it
+>  + if not os.path.exists(ud.clonedir) or not os.listdir(ud.clonedir):
+>               # We do this since git will use a "-l" option automatically
+> for local urls where possible
+>               if repourl.startswith("file://"):
+>                   repourl =3D repourl[7:]
+>  --
+>  2.34.1
+>
+>
+>  -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>  Links: You receive all messages sent to this group.
+>  View/Reply Online (#13328):
+> https://lists.openembedded.org/g/bitbake-devel/message/13328
+>  Mute This Topic: https://lists.openembedded.org/mt/89045076/1686489
+>  Group Owner: bitbake-devel+owner@lists.openembedded.org
+>  Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> alex.kanavin@gmail.com]
+>  -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
+>
+
+--000000000000eb9e5605d7ab22b7
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Is this bitbake-selftest output? I tried that but got=
+  network issues and missing branch tag only.</div><div>Maybe I&#39;ll chec=
+k it on different machine.</div><div><br></div><div>Best regards,</div><div=
+>Tomasz Dziendzielski<br></div></div><br><div class=3D"gmail_quote"><div di=
+r=3D"ltr" class=3D"gmail_attr">czw., 10 lut 2022 o 15:40=C2=A0Pavel Zhukov =
+&lt;<a href=3D"mailto:pavel@zhukoff.net">pavel@zhukoff.net</a>&gt; napisa=
+=C5=82(a):<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0=
+px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div>=
+Not really.<br>it will either complain [1] if there&#39;s not git repositor=
+y in the parent&#39;s dirs or replace git remote with the one from recipe_u=
+rl and fail with [2] if build directory is under some git managed directory=
+.</div><div>=C2=A0</div><div>[1]<div>Fetcher failure: Fetch command export =
+PSEUDO_DISABLED=3D1; git -c core.fsyncobjectfiles=3D0 -c gc.autoDetach=3Dfa=
+lse remote failed with exit code 128, output:</div><div>fatal: not a git re=
+pository (or any parent up to mount point /)</div><div>=C2=A0</div><div>[2]=
+<div><div>bb.fetch2.FetchError: Fetcher failure: Fetch command export PSEUD=
+O_DISABLED=3D1; git -c core.fsyncobjectfiles=3D0 -c gc.autoDetach=3Dfalse c=
+lone -n -s /tmp/bitbake-fetch-hyrcqkrw/download/git2/git.openembedded.org.b=
+itbake/ /tmp/bitbake-fetch-hyrcqkrw/unpacked/git/ failed with exit code 128=
+, output:</div><div>fatal: repository &#39;/tmp/bitbake-fetch-hyrcqkrw/down=
+load/git2/git.openembedded.org.bitbake/&#39; does not exist</div><div>=C2=
+=A0</div></div></div></div><div>=C2=A0</div><div>--=C2=A0</div><div>Pavel</=
+div><div>=C2=A0</div><div>=C2=A0</div><div>=C2=A0</div><div>10.02.2022, 15:=
+19, &quot;Tomasz Dziendzielski&quot; &lt;<a href=3D"mailto:tomasz.dziendzie=
+lski@gmail.com" target=3D"_blank">tomasz.dziendzielski@gmail.com</a>&gt;:</=
+div><blockquote><div><div>Then the first patch is safer, as it will not bre=
+ak build with tarballs without vcs.</div><div>=C2=A0</div><div>Best regards=
+,</div><div>Tomasz Dziendzielski</div></div>=C2=A0<div><div>czw., 10 lut 20=
+22 o 15:08=C2=A0Pavel Zhukov &lt;<a href=3D"mailto:pavel@zhukoff.net" rel=
+=3D"noopener noreferrer" target=3D"_blank">pavel@zhukoff.net</a>&gt; napisa=
+=C5=82(a):</div><blockquote style=3D"border-left:1px solid rgb(204,204,204)=
+;margin:0px 0px 0px 0.8ex;padding-left:1ex"><div>This is good question.</di=
+v><div>It is possible to provide bitbake with mailformed git repo mirror ta=
+rball (manually created one for example with --exclude-vcs flag set or from=
+ wrong subdirectory) in that case tar will not return any return code but g=
+it.download() will try to replace remote with origin from recipe_url. In wo=
+rse case it will replace origin of &quot;upper&quot; git repo (poky?) with =
+recipe&#39;s one.<div>=C2=A0</div></div><div>=C2=A0</div><div>--=C2=A0</div=
+><div>Pavel</div><div>=C2=A0</div><div>=C2=A0</div><div>=C2=A0</div><div>10=
+.02.2022, 14:31, &quot;Alexander Kanavin&quot; &lt;<a href=3D"mailto:alex.k=
+anavin@gmail.com" rel=3D"noopener noreferrer" target=3D"_blank">alex.kanavi=
+n@gmail.com</a>&gt;:</div><blockquote><p>Wait, doesn&#39;t this mask the re=
+al issue? Is it ok that the tarball<br>unpacking failed &#39;for any reason=
+&#39;?<br><br>Alex<br><br>On Thu, 10 Feb 2022 at 14:27, Tomasz Dziendzielsk=
+i<br>&lt;<a href=3D"mailto:tomasz.dziendzielski@gmail.com" rel=3D"noopener =
+noreferrer" target=3D"_blank">tomasz.dziendzielski@gmail.com</a>&gt; wrote:=
+</p><blockquote><br>=C2=A0If shallow tarball clone is used and if tar unpac=
+king fails for any<br>=C2=A0reason it might end up with empty directory cre=
+ated. Since runfetchcmd<br>=C2=A0does not check any return code we might no=
+t detect the issue and we will<br>=C2=A0not clone from git. Then due to mis=
+sing hash it will replace main<br>=C2=A0repository&#39;s git remote with th=
+e remote of failing recipe.<br><br>=C2=A0To fix this behaviour we&#39;ll ch=
+eck if clonedir is not empty and if git<br>=C2=A0dir is the same as clonedi=
+r.<br><br>=C2=A0Signed-off-by: Tomasz Dziendzielski &lt;<a href=3D"mailto:t=
+omasz.dziendzielski@gmail.com" rel=3D"noopener noreferrer" target=3D"_blank=
+">tomasz.dziendzielski@gmail.com</a>&gt;<br>=C2=A0Signed-off-by: Jan Brzeza=
+nski &lt;<a href=3D"mailto:jan.brzezanski@gmail.com" rel=3D"noopener norefe=
+rrer" target=3D"_blank">jan.brzezanski@gmail.com</a>&gt;<br>=C2=A0---<br>=
+=C2=A0=C2=A0lib/bb/fetch2/git.py | 11 +++++++++--<br>=C2=A0=C2=A01 file cha=
+nged, 9 insertions(+), 2 deletions(-)<br><br>=C2=A0diff --git a/lib/bb/fetc=
+h2/git.py b/lib/bb/fetch2/git.py<br>=C2=A0index 30da8e95..ed6ecb64 100644<b=
+r>=C2=A0--- a/lib/bb/fetch2/git.py<br>=C2=A0+++ b/lib/bb/fetch2/git.py<br>=
+=C2=A0@@ -356,8 +356,15 @@ class Git(FetchMethod):<br><br>=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0repourl =3D self._get_repo_url=
+(ud)<br><br>=C2=A0- # If the repo still doesn&#39;t exist, fallback to clon=
+ing it<br>=C2=A0- if not os.path.exists(ud.clonedir):<br>=C2=A0+ # Clean re=
+po if git dir is different than ud.clonedir, which means tar unpacking fail=
+ed<br>=C2=A0+ if os.path.exists(ud.clonedir):<br>=C2=A0+ if ud.clonedir !=
+=3D runfetchcmd(&quot;%s -C %s rev-parse --git-dir&quot; % (ud.basecmd, ud.=
+clonedir), d):<br>=C2=A0+ bb.utils.remove(ud.clonedir, recurse=3DTrue)<br>=
+=C2=A0+ bb.utils.mkdirhier(ud.clonedir)<br>=C2=A0+ os.chdir(ud.clonedir)<br=
+>=C2=A0+<br>=C2=A0+ # If the repo still doesn&#39;t exist or is empty, fall=
+back to cloning it<br>=C2=A0+ if not os.path.exists(ud.clonedir) or not os.=
+listdir(ud.clonedir):<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0# We do this since git will use a &quot=
+;-l&quot; option automatically for local urls where possible<br>=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+if repourl.startswith(&quot;file://&quot;):<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0repourl =3D repourl[7:]<br>=C2=A0--<br>=C2=A02.34.1<br><br><br>=C2=A0=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>=C2=A0Links: You receive a=
+ll messages sent to this group.<br>=C2=A0View/Reply Online (#13328): <a hre=
+f=3D"https://lists.openembedded.org/g/bitbake-devel/message/13328" rel=3D"n=
+oopener noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bitb=
+ake-devel/message/13328</a><br>=C2=A0Mute This Topic: <a href=3D"https://li=
+sts.openembedded.org/mt/89045076/1686489" rel=3D"noopener noreferrer" targe=
+t=3D"_blank">https://lists.openembedded.org/mt/89045076/1686489</a><br>=C2=
+=A0Group Owner: <a href=3D"mailto:bitbake-devel+owner@lists.openembedded.or=
+g" rel=3D"noopener noreferrer" target=3D"_blank">bitbake-devel+owner@lists.=
+openembedded.org</a><br>=C2=A0Unsubscribe: <a href=3D"https://lists.openemb=
+edded.org/g/bitbake-devel/unsub" rel=3D"noopener noreferrer" target=3D"_bla=
+nk">https://lists.openembedded.org/g/bitbake-devel/unsub</a> [<a href=3D"ma=
+ilto:alex.kanavin@gmail.com" rel=3D"noopener noreferrer" target=3D"_blank">=
+alex.kanavin@gmail.com</a>]<br>=C2=A0-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-<br>=C2=A0</blockquote></blockquote></blockquote></div></blockquote=
+></blockquote></div>
+
+--000000000000eb9e5605d7ab22b7--
 
