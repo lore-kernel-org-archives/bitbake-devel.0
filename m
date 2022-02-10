@@ -2,249 +2,130 @@ Return-Path: <pavel@zhukoff.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CF9C433F5
-	for <webhook@archiver.kernel.org>; Thu, 10 Feb 2022 13:56:39 +0000 (UTC)
-Received: from forward104p.mail.yandex.net (forward104p.mail.yandex.net
- [77.88.28.107])
- by mx.groups.io with SMTP id smtpd.web10.10273.1644501394855615794
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F216C433EF
+	for <webhook@archiver.kernel.org>; Thu, 10 Feb 2022 14:08:31 +0000 (UTC)
+Received: from forward501p.mail.yandex.net (forward501p.mail.yandex.net
+ [77.88.28.111])
+ by mx.groups.io with SMTP id smtpd.web10.10437.1644502109104468292
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 10 Feb 2022 05:56:36 -0800
+ Thu, 10 Feb 2022 06:08:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@zhukoff.net
- header.s=mail header.b=zYFwwLbn;
- spf=pass (domain: zhukoff.net, ip: 77.88.28.107, mailfrom: pavel@zhukoff.net)
-Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net
- [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
-	by forward104p.mail.yandex.net (Yandex) with ESMTP id EA1043C1F2C9;
-	Thu, 10 Feb 2022 16:56:30 +0300 (MSK)
-Received: from vla1-68d3ce55e22b.qloud-c.yandex.net
- (vla1-68d3ce55e22b.qloud-c.yandex.net
- [IPv6:2a02:6b8:c0d:3385:0:640:68d3:ce55])
-	by forward100q.mail.yandex.net (Yandex) with ESMTP id E65936F40007;
-	Thu, 10 Feb 2022 16:56:30 +0300 (MSK)
-Received: from vla5-47b3f4751bc4.qloud-c.yandex.net
- (vla5-47b3f4751bc4.qloud-c.yandex.net [2a02:6b8:c18:3508:0:640:47b3:f475])
-	by vla1-68d3ce55e22b.qloud-c.yandex.net (mxback/Yandex) with ESMTP id
- N4a7c99Wpl-uUcWotw7;
-	Thu, 10 Feb 2022 16:56:30 +0300
+ dkim=pass header.i=@zhukoff.net header.s=mail header.b=wsO423UV;
+ spf=pass (domain: zhukoff.net, ip: 77.88.28.111, mailfrom: pavel@zhukoff.net)
+Received: from sas1-8501f683a096.qloud-c.yandex.net
+ (sas1-8501f683a096.qloud-c.yandex.net
+ [IPv6:2a02:6b8:c08:78a5:0:640:8501:f683])
+	by forward501p.mail.yandex.net (Yandex) with ESMTP id D204C62168E4;
+	Thu, 10 Feb 2022 17:08:25 +0300 (MSK)
+Received: from 2a02:6b8:c08:b68e:0:640:93fe:46cc
+ (2a02:6b8:c08:b68e:0:640:93fe:46cc [2a02:6b8:c08:b68e:0:640:93fe:46cc])
+	by sas1-8501f683a096.qloud-c.yandex.net (mxback/Yandex) with HTTP id
+ O8btcA2dEGk1-8PdGQj3i;
+	Thu, 10 Feb 2022 17:08:25 +0300
+X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; s=mail;
- t=1644501390;
-	bh=pV53t+wZSNGJNrpHLiZC8ZfrOVPuPNvThtZlBNsLx/4=;
-	h=Date:Subject:To:From:Message-Id:Cc;
-	b=zYFwwLbn4LG/p6XKDgA84+ylL5K/Xe1trcJwQUieLBgakmtKFxkEKIJ4A078ytKyV
-	 Q0v9DlE4bgRPv9ArNSJMfTODLXdR0QoGZIFEHtf1sJOxvZgSy5xnb42A89PZ2u2byz
-	 Zn6uF9j7Qt1piP+4hcQh7ZLuMYlsi7c5XWZdT8NQ=
-Authentication-Results: vla1-68d3ce55e22b.qloud-c.yandex.net;
+ t=1644502105;
+	bh=tgo2GppRoA97IbCGyiRlQK2hoj+Wg/SLyWkvueueti8=;
+	h=References:Date:Message-Id:Cc:Subject:In-Reply-To:To:From;
+	b=wsO423UVOYTopiQdFaUq0/t0a7x/UudUgjqGcscQnq7xWs35E87MvVhH6ZTKZW4PS
+	 rVMtomsX4DL+3bAp/qKGGj3VI2tA7bHAbjRbNopSRZcsmGP9HhTu+c3/hiMBEi7GVS
+	 UWz4ZGY2ePjMGzUH2C2ccsjMwGduTgKT4FSQ4IgQ=
+Authentication-Results: sas1-8501f683a096.qloud-c.yandex.net;
  dkim=pass header.i=@zhukoff.net
-Received: by vla5-47b3f4751bc4.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA
- id T8NKxsQPSr-uTHeGXug;
-	Thu, 10 Feb 2022 16:56:29 +0300
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(Client certificate not present)
-X-Yandex-Fwd: 2
+Received: by sas1-93fe46cc9fdc.qloud-c.yandex.net with HTTP;
+	Thu, 10 Feb 2022 17:08:25 +0300
 From: Pavel Zhukov <pavel@zhukoff.net>
-To: bitbake-devel@lists.openembedded.org
-Cc: pavel@zhukoff.net,
-	Pavel Zhukov <pavel.zhukov@huawei.com>
-Subject: [PATCH] Do not try upstream if BB_FETCH_PREMIRRORONLY was specified
-Date: Thu, 10 Feb 2022 14:56:11 +0100
-Message-Id: <20220210135610.10216-1-pavel@zhukoff.net>
-X-Mailer: git-send-email 2.34.1
+To: Alexander Kanavin <alex.kanavin@gmail.com>,
+	Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Jan Brzezanski <jan.brzezanski@gmail.com>
+In-Reply-To: 
+ <CANNYZj86ijf96uT3umpXywktF3X27vjeS1PAUULeNGP9neVrJA@mail.gmail.com>
+References: <20220210132714.22921-1-tomasz.dziendzielski@gmail.com>
+ <CANNYZj86ijf96uT3umpXywktF3X27vjeS1PAUULeNGP9neVrJA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2] fetch2/git.py: Check if clonedir is
+ correct after shallow tarball clone
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date: Thu, 10 Feb 2022 15:08:25 +0100
+Message-Id: <293951644501808@mail.yandex.ru>
+Content-Transfer-Encoding: base64
+Content-Type: text/html; charset=utf-8
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 10 Feb 2022 13:56:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13331
+ <bitbake-devel@lists.openembedded.org>; Thu, 10 Feb 2022 14:08:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13332
 
-This should fix [Yocto 13353] and related to [Yocto 13233] as well.
-Previously if git repo mirror has been updated in between of two builds
-fetcher of the second build didn't try updated mirror but switched to
-git clone from upstream instead. This is problem for offline builds.
-Fix this to raise MirrorException if BB_FETCH_PREMIRRORONLY has been
-specified by the mirror doesn't contain SRC_REV.
-Note if SRC_REV is nonSHA1 revision when it will fail without the
-network due to `ls-remote`.
-
-Signed-off-by: Pavel Zhukov <pavel.zhukov@huawei.com>
----
- lib/bb/fetch2/__init__.py | 10 ++++++
- lib/bb/fetch2/git.py      | 18 +++++-----
- lib/bb/tests/fetch.py     | 70 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 89 insertions(+), 9 deletions(-)
-
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index d3717418..452f1469 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -133,6 +133,12 @@ class NonLocalMethod(Exception):
-     def __init__(self):
-         Exception.__init__(self)
-=20
-+class MirrorException(BBFetchException):
-+    """Exception raises when BB_FETCH_PREMIRRORONLY was specified but mi=
-rrors don't have SRCREV"""
-+    def __init__(self, message):
-+        BBFetchException.__init__(self, message)
-+
-+
- class MissingChecksumEvent(bb.event.Event):
-     def __init__(self, url, **checksums):
-         self.url =3D url
-@@ -1066,6 +1072,8 @@ def try_mirror_url(fetch, origud, ud, ld, check =3D=
- False):
-                 rename_bad_checksum(ud, e.checksum)
-         elif isinstance(e, NoChecksumError):
-             raise
-+        elif isinstance(e, MirrorException):
-+            logger.warning(str(e))
-         else:
-             logger.debug("Mirror fetch failure for url %s (original url:=
- %s)" % (ud.url, origud.url))
-             logger.debug(str(e))
-@@ -1729,6 +1737,8 @@ class Fetch(object):
-                             done =3D False
-=20
-                 if premirroronly:
-+                    if not done:
-+                        raise MirrorException("Failed to download premir=
-ror {} and BB_FETCH_PREMIRRORONLY has been set to 1.".format(self.d.getVa=
-r("PREMIRRORS")))
-                     self.d.setVar("BB_NO_NETWORK", "1")
-=20
-                 firsterr =3D None
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 30da8e95..26923f78 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -335,11 +335,7 @@ class Git(FetchMethod):
-     def try_premirror(self, ud, d):
-         # If we don't do this, updating an existing checkout with only p=
-remirrors
-         # is not possible
--        if bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
--            return True
--        if os.path.exists(ud.clonedir):
--            return False
--        return True
-+        return bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")) o=
-r not os.path.exists(ud.clonedir)
-=20
-     def download(self, ud, d):
-         """Fetch url"""
-@@ -350,10 +346,14 @@ class Git(FetchMethod):
-         if ud.shallow and os.path.exists(ud.fullshallow) and self.need_u=
-pdate(ud, d):
-             ud.localpath =3D ud.fullshallow
-             return
--        elif os.path.exists(ud.fullmirror) and not os.path.exists(ud.clo=
-nedir):
--            bb.utils.mkdirhier(ud.clonedir)
--            runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=3Dud.c=
-lonedir)
--
-+        if os.path.exists(ud.fullmirror):
-+            if self.try_premirror(ud, d) and self.need_update(ud, d):
-+                bb.utils.mkdirhier(ud.clonedir)
-+                runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=3D=
-ud.clonedir)
-+                if self.need_update(ud, d) and \
-+                   bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY"=
-)):
-+                    raise bb.fetch2.MirrorException("Premirror doesn't c=
-ontain revisions {} and "\
-+                                                          "upstream cann=
-ot be used due to BB_FETCH_PREMIRRORONLY setting".format(ud.revisions))
-         repourl =3D self._get_repo_url(ud)
-=20
-         # If the repo still doesn't exist, fallback to cloning it
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index ec7d83c9..471e4b7f 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2776,3 +2776,73 @@ class GitSharedTest(FetcherTest):
-         fetcher.unpack(self.unpackdir)
-         alt =3D os.path.join(self.unpackdir, 'git/.git/objects/info/alte=
-rnates')
-         self.assertFalse(os.path.exists(alt))
-+
-+
-+class FetchPremirroronlyLocalTest(FetcherTest):
-+
-+    def git(self, cmd, cwd=3DNone):
-+        if isinstance(cmd, str):
-+            cmd =3D 'git ' + cmd
-+        else:
-+            cmd =3D ['git'] + cmd
-+        if cwd is None:
-+            cwd =3D self.gitdir
-+        return bb.process.run(cmd, cwd=3Dcwd)[0]
-+
-+    def setUp(self):
-+        super(FetchPremirroronlyLocalTest, self).setUp()
-+        self.mirrordir =3D os.path.join(self.tempdir, "mirrors")
-+        os.mkdir(self.mirrordir)
-+        self.reponame =3D "bitbake"
-+        self.gitdir =3D os.path.join(self.tempdir, "git", self.reponame)
-+        self.recipe_url =3D "git://git.fake.repo/bitbake"
-+        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-+        self.d.setVar("BB_NO_NETWORK", "1")
-+        self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".=
-format(self.mirrordir) + " \n")
-+
-+    def make_git_repo(self):
-+        self.mirrorname =3D "git2_git.fake.repo.bitbake.tar.gz"
-+        recipeurl =3D "git:/git.fake.repo/bitbake"
-+        os.makedirs(self.gitdir)
-+        self.git("init", self.gitdir)
-+        for i in range(0):
-+            self.git_new_commit()
-+        bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrord=
-ir, self.mirrorname)), cwd =3D  self.gitdir)
-+
-+    def git_new_commit(self):
-+        import random
-+        testfilename =3D "bibake-fetch.test"
-+        os.unlink(os.path.join(self.mirrordir, self.mirrorname))
-+        with open(os.path.join(self.gitdir, testfilename), "w") as testf=
-ile:
-+            testfile.write("Useless random data {}".format(random.random=
-()))
-+        self.git("add {}".format(testfilename), self.gitdir)
-+        self.git("commit -a -m \"This random commit {}. I'm useless.\"".=
-format(random.random()), self.gitdir)
-+        bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrord=
-ir, self.mirrorname)), cwd =3D  self.gitdir)
-+        return self.git("rev-parse HEAD", self.gitdir).strip()
-+
-+    def test_mirror_commit_nonexistent(self):
-+        self.make_git_repo()
-+        self.d.setVar("SRCREV", "0"*40)
-+        fetcher =3D bb.fetch.Fetch([self.recipe_url], self.d)
-+        if hasattr(bb.fetch2, "MirrorException"):
-+            with self.assertRaises(bb.fetch2.MirrorException):
-+                fetcher.download()
-+        else:
-+            fetcher.download()
-+
-+    def test_mirror_commit_exists(self):
-+        self.make_git_repo()
-+        self.d.setVar("SRCREV", self.git_new_commit())
-+        fetcher =3D bb.fetch.Fetch([self.recipe_url], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+
-+    def test_mirror_tarball_nonexistent(self):
-+        self.d.setVar("SRCREV", "0"*40)
-+        fetcher =3D bb.fetch.Fetch([self.recipe_url], self.d)
-+        if hasattr(bb.fetch2, "MirrorException"):
-+            with self.assertRaises(bb.fetch2.MirrorException):
-+                fetcher.download()
-+        else:
-+            fetcher.download()
-+
---=20
-2.34.1
-
+PGRpdj5UaGlzIGlzIGdvb2QgcXVlc3Rpb24uPC9kaXY+PGRpdj5JdCBpcyBwb3NzaWJsZSB0byBw
+cm92aWRlIGJpdGJha2Ugd2l0aCBtYWlsZm9ybWVkIGdpdCByZXBvIG1pcnJvciB0YXJiYWxsICht
+YW51YWxseSBjcmVhdGVkIG9uZSBmb3IgZXhhbXBsZSB3aXRoIC0tZXhjbHVkZS12Y3MgZmxhZyBz
+ZXQgb3IgZnJvbSB3cm9uZyBzdWJkaXJlY3RvcnkpIGluIHRoYXQgY2FzZSB0YXIgd2lsbCBub3Qg
+cmV0dXJuIGFueSByZXR1cm4gY29kZSBidXQgZ2l0LmRvd25sb2FkKCkgd2lsbCB0cnkgdG8gcmVw
+bGFjZSByZW1vdGUgd2l0aCBvcmlnaW4gZnJvbSByZWNpcGVfdXJsLiBJbiB3b3JzZSBjYXNlIGl0
+IHdpbGwgcmVwbGFjZSBvcmlnaW4gb2YgInVwcGVyIiBnaXQgcmVwbyAocG9reT8pIHdpdGggcmVj
+aXBlJ3Mgb25lLjxkaXY+wqA8L2Rpdj48L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj4tLcKgPC9kaXY+
+PGRpdj5QYXZlbDwvZGl2PjxkaXY+wqA8L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj7CoDwvZGl2Pjxk
+aXY+MTAuMDIuMjAyMiwgMTQ6MzEsICJBbGV4YW5kZXIgS2FuYXZpbiIgJmx0O2FsZXgua2FuYXZp
+bkBnbWFpbC5jb20mZ3Q7OjwvZGl2PjxibG9ja3F1b3RlPjxwPldhaXQsIGRvZXNuJ3QgdGhpcyBt
+YXNrIHRoZSByZWFsIGlzc3VlPyBJcyBpdCBvayB0aGF0IHRoZSB0YXJiYWxsPGJyIC8+dW5wYWNr
+aW5nIGZhaWxlZCAnZm9yIGFueSByZWFzb24nPzxiciAvPjxiciAvPkFsZXg8YnIgLz48YnIgLz5P
+biBUaHUsIDEwIEZlYiAyMDIyIGF0IDE0OjI3LCBUb21hc3ogRHppZW5kemllbHNraTxiciAvPiZs
+dDs8YSBocmVmPSJtYWlsdG86dG9tYXN6LmR6aWVuZHppZWxza2lAZ21haWwuY29tIiByZWw9Im5v
+b3BlbmVyIG5vcmVmZXJyZXIiPnRvbWFzei5kemllbmR6aWVsc2tpQGdtYWlsLmNvbTwvYT4mZ3Q7
+IHdyb3RlOjwvcD48YmxvY2txdW90ZT48YnIgLz7CoElmIHNoYWxsb3cgdGFyYmFsbCBjbG9uZSBp
+cyB1c2VkIGFuZCBpZiB0YXIgdW5wYWNraW5nIGZhaWxzIGZvciBhbnk8YnIgLz7CoHJlYXNvbiBp
+dCBtaWdodCBlbmQgdXAgd2l0aCBlbXB0eSBkaXJlY3RvcnkgY3JlYXRlZC4gU2luY2UgcnVuZmV0
+Y2hjbWQ8YnIgLz7CoGRvZXMgbm90IGNoZWNrIGFueSByZXR1cm4gY29kZSB3ZSBtaWdodCBub3Qg
+ZGV0ZWN0IHRoZSBpc3N1ZSBhbmQgd2Ugd2lsbDxiciAvPsKgbm90IGNsb25lIGZyb20gZ2l0LiBU
+aGVuIGR1ZSB0byBtaXNzaW5nIGhhc2ggaXQgd2lsbCByZXBsYWNlIG1haW48YnIgLz7CoHJlcG9z
+aXRvcnkncyBnaXQgcmVtb3RlIHdpdGggdGhlIHJlbW90ZSBvZiBmYWlsaW5nIHJlY2lwZS48YnIg
+Lz48YnIgLz7CoFRvIGZpeCB0aGlzIGJlaGF2aW91ciB3ZSdsbCBjaGVjayBpZiBjbG9uZWRpciBp
+cyBub3QgZW1wdHkgYW5kIGlmIGdpdDxiciAvPsKgZGlyIGlzIHRoZSBzYW1lIGFzIGNsb25lZGly
+LjxiciAvPjxiciAvPsKgU2lnbmVkLW9mZi1ieTogVG9tYXN6IER6aWVuZHppZWxza2kgJmx0Ozxh
+IGhyZWY9Im1haWx0bzp0b21hc3ouZHppZW5kemllbHNraUBnbWFpbC5jb20iIHJlbD0ibm9vcGVu
+ZXIgbm9yZWZlcnJlciI+dG9tYXN6LmR6aWVuZHppZWxza2lAZ21haWwuY29tPC9hPiZndDs8YnIg
+Lz7CoFNpZ25lZC1vZmYtYnk6IEphbiBCcnplemFuc2tpICZsdDs8YSBocmVmPSJtYWlsdG86amFu
+LmJyemV6YW5za2lAZ21haWwuY29tIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiPmphbi5icnpl
+emFuc2tpQGdtYWlsLmNvbTwvYT4mZ3Q7PGJyIC8+wqAtLS08YnIgLz7CoMKgbGliL2JiL2ZldGNo
+Mi9naXQucHkgfCAxMSArKysrKysrKystLTxiciAvPsKgwqAxIGZpbGUgY2hhbmdlZCwgOSBpbnNl
+cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKTxiciAvPjxiciAvPsKgZGlmZiAtLWdpdCBhL2xpYi9i
+Yi9mZXRjaDIvZ2l0LnB5IGIvbGliL2JiL2ZldGNoMi9naXQucHk8YnIgLz7CoGluZGV4IDMwZGE4
+ZTk1Li5lZDZlY2I2NCAxMDA2NDQ8YnIgLz7CoC0tLSBhL2xpYi9iYi9mZXRjaDIvZ2l0LnB5PGJy
+IC8+wqArKysgYi9saWIvYmIvZmV0Y2gyL2dpdC5weTxiciAvPsKgQEAgLTM1Niw4ICszNTYsMTUg
+QEAgY2xhc3MgR2l0KEZldGNoTWV0aG9kKTo8YnIgLz48YnIgLz7CoMKgwqDCoMKgwqDCoMKgwqDC
+oHJlcG91cmwgPSBzZWxmLl9nZXRfcmVwb191cmwodWQpPGJyIC8+PGJyIC8+wqAtICMgSWYgdGhl
+IHJlcG8gc3RpbGwgZG9lc24ndCBleGlzdCwgZmFsbGJhY2sgdG8gY2xvbmluZyBpdDxiciAvPsKg
+LSBpZiBub3Qgb3MucGF0aC5leGlzdHModWQuY2xvbmVkaXIpOjxiciAvPsKgKyAjIENsZWFuIHJl
+cG8gaWYgZ2l0IGRpciBpcyBkaWZmZXJlbnQgdGhhbiB1ZC5jbG9uZWRpciwgd2hpY2ggbWVhbnMg
+dGFyIHVucGFja2luZyBmYWlsZWQ8YnIgLz7CoCsgaWYgb3MucGF0aC5leGlzdHModWQuY2xvbmVk
+aXIpOjxiciAvPsKgKyBpZiB1ZC5jbG9uZWRpciAhPSBydW5mZXRjaGNtZCgiJXMgLUMgJXMgcmV2
+LXBhcnNlIC0tZ2l0LWRpciIgJSAodWQuYmFzZWNtZCwgdWQuY2xvbmVkaXIpLCBkKTo8YnIgLz7C
+oCsgYmIudXRpbHMucmVtb3ZlKHVkLmNsb25lZGlyLCByZWN1cnNlPVRydWUpPGJyIC8+wqArIGJi
+LnV0aWxzLm1rZGlyaGllcih1ZC5jbG9uZWRpcik8YnIgLz7CoCsgb3MuY2hkaXIodWQuY2xvbmVk
+aXIpPGJyIC8+wqArPGJyIC8+wqArICMgSWYgdGhlIHJlcG8gc3RpbGwgZG9lc24ndCBleGlzdCBv
+ciBpcyBlbXB0eSwgZmFsbGJhY2sgdG8gY2xvbmluZyBpdDxiciAvPsKgKyBpZiBub3Qgb3MucGF0
+aC5leGlzdHModWQuY2xvbmVkaXIpIG9yIG5vdCBvcy5saXN0ZGlyKHVkLmNsb25lZGlyKTo8YnIg
+Lz7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIyBXZSBkbyB0aGlzIHNpbmNlIGdpdCB3aWxs
+IHVzZSBhICItbCIgb3B0aW9uIGF1dG9tYXRpY2FsbHkgZm9yIGxvY2FsIHVybHMgd2hlcmUgcG9z
+c2libGU8YnIgLz7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgcmVwb3VybC5zdGFydHN3
+aXRoKCJmaWxlOi8vIik6PGJyIC8+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+cmVwb3VybCA9IHJlcG91cmxbNzpdPGJyIC8+wqAtLTxiciAvPsKgMi4zNC4xPGJyIC8+PGJyIC8+
+PGJyIC8+wqAtPS09LT0tPS09LT0tPS09LT0tPS09LTxiciAvPsKgTGlua3M6IFlvdSByZWNlaXZl
+IGFsbCBtZXNzYWdlcyBzZW50IHRvIHRoaXMgZ3JvdXAuPGJyIC8+wqBWaWV3L1JlcGx5IE9ubGlu
+ZSAoIzEzMzI4KTogPGEgaHJlZj0iaHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0
+YmFrZS1kZXZlbC9tZXNzYWdlLzEzMzI4IiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiPmh0dHBz
+Oi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2ZWwvbWVzc2FnZS8xMzMyODwv
+YT48YnIgLz7CoE11dGUgVGhpcyBUb3BpYzogPGEgaHJlZj0iaHR0cHM6Ly9saXN0cy5vcGVuZW1i
+ZWRkZWQub3JnL210Lzg5MDQ1MDc2LzE2ODY0ODkiIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciI+
+aHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL210Lzg5MDQ1MDc2LzE2ODY0ODk8L2E+PGJy
+IC8+wqBHcm91cCBPd25lcjogPGEgaHJlZj0ibWFpbHRvOmJpdGJha2UtZGV2ZWwrb3duZXJAbGlz
+dHMub3BlbmVtYmVkZGVkLm9yZyIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIj5iaXRiYWtlLWRl
+dmVsK293bmVyQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8L2E+PGJyIC8+wqBVbnN1YnNjcmliZTog
+PGEgaHJlZj0iaHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC91
+bnN1YiIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIj5odHRwczovL2xpc3RzLm9wZW5lbWJlZGRl
+ZC5vcmcvZy9iaXRiYWtlLWRldmVsL3Vuc3ViPC9hPiBbPGEgaHJlZj0ibWFpbHRvOmFsZXgua2Fu
+YXZpbkBnbWFpbC5jb20iIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciI+YWxleC5rYW5hdmluQGdt
+YWlsLmNvbTwvYT5dPGJyIC8+wqAtPS09LT0tPS09LT0tPS09LT0tPS09LTxiciAvPsKgPC9ibG9j
+a3F1b3RlPjwvYmxvY2txdW90ZT4=
 
