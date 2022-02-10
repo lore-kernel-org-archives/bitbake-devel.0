@@ -1,201 +1,155 @@
-Return-Path: <pavel@zhukoff.net>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A51C433FE
-	for <webhook@archiver.kernel.org>; Thu, 10 Feb 2022 17:23:14 +0000 (UTC)
-Received: from forward501j.mail.yandex.net (forward501j.mail.yandex.net
- [5.45.198.251])
- by mx.groups.io with SMTP id smtpd.web09.13144.1644513791811839500
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EBAC433F5
+	for <webhook@archiver.kernel.org>; Thu, 10 Feb 2022 17:54:30 +0000 (UTC)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
+ [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web09.13621.1644515669871638708
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 10 Feb 2022 09:23:13 -0800
+ Thu, 10 Feb 2022 09:54:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@zhukoff.net header.s=mail header.b=adBAfUAC;
- spf=pass (domain: zhukoff.net, ip: 5.45.198.251, mailfrom: pavel@zhukoff.net)
-Received: from myt6-722f198f7b2f.qloud-c.yandex.net
- (myt6-722f198f7b2f.qloud-c.yandex.net
- [IPv6:2a02:6b8:c12:4e10:0:640:722f:198f])
-	by forward501j.mail.yandex.net (Yandex) with ESMTP id 58AAF6232F3;
-	Thu, 10 Feb 2022 20:23:08 +0300 (MSK)
-Received: from 2a02:6b8:c12:f9c:0:640:ee03:4efb
- (2a02:6b8:c12:f9c:0:640:ee03:4efb [2a02:6b8:c12:f9c:0:640:ee03:4efb])
-	by myt6-722f198f7b2f.qloud-c.yandex.net (mxback/Yandex) with HTTP id
- 6NeFc80cD0U1-N7cCRiCP;
-	Thu, 10 Feb 2022 20:23:07 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; s=mail;
- t=1644513787;
-	bh=Txh0M1NPYO3J0G3KEVvtN6+Kf9kusfAWpnCwEdhzP8U=;
-	h=References:Date:Message-Id:Cc:Subject:In-Reply-To:To:From;
-	b=adBAfUAC1ALj0L6fIOQW6CAAnePBiAhQ/lbAVansrXZfWfln7S2JIGSuD/eozMPQ8
-	 PlIo3CcZrn5r6TUS0JSk6jP+AjjPT/g5H43usrEmgYz4+kw2T7pq5u3+TwLbKu75iB
-	 xDsGkqM1Q8hI1Np9S0jHkR1vNFtRlwyCl4PU2hfY=
-Authentication-Results: myt6-722f198f7b2f.qloud-c.yandex.net;
- dkim=pass header.i=@zhukoff.net
-Received: by myt5-ee034efba146.qloud-c.yandex.net with HTTP;
-	Thu, 10 Feb 2022 20:23:07 +0300
-From: Pavel Zhukov <pavel@zhukoff.net>
-To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-Cc: Alexander Kanavin <alex.kanavin@gmail.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	Jan Brzezanski <jan.brzezanski@gmail.com>
-In-Reply-To: 
- <CAJkqNs3LTQZkDqpmObPG24aLdqVaOTU_9YGL7yFz-YOZrw+Ubg@mail.gmail.com>
-References: <20220210132714.22921-1-tomasz.dziendzielski@gmail.com>
-	 <CANNYZj86ijf96uT3umpXywktF3X27vjeS1PAUULeNGP9neVrJA@mail.gmail.com>
-	 <293951644501808@mail.yandex.ru>
- <CAJkqNs1m-Y=q9ss0E0W7eNGdSjZd-orBfreuZnTm=3S6uswQOA@mail.gmail.com>
-	 <6148401644503498@mail.yandex.ru>
- <16D27480B462D202.11771@lists.openembedded.org>
- <CAJkqNs3LTQZkDqpmObPG24aLdqVaOTU_9YGL7yFz-YOZrw+Ubg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH v2] fetch2/git.py: Check if clonedir is
- correct after shallow tarball clone
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=RjCrY/4o;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f51.google.com with SMTP id k1so10956047wrd.8
+        for <bitbake-devel@lists.openembedded.org>;
+ Thu, 10 Feb 2022 09:54:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t4ADXE109HoSiXFYAOWGZcZeriQcLqN/n4OycBm0sQc=;
+        b=RjCrY/4ok5VTc77/CFc3fq8I+fZzDAegc3YTmMqCWsRCYFtVddS89qQCCPGIeeLl+w
+         /517OONyWRxsT2fNf8d+6QodCM3P5OY4BAg1LXMAWqaYJyHD6VGhuWcN3NfAzeVxTawU
+         PX1xQyAP32n5YCwI+C89N8tEtKTLdW4TEm9AM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t4ADXE109HoSiXFYAOWGZcZeriQcLqN/n4OycBm0sQc=;
+        b=GFEo9XJpG9inuhSGLzu/752mewPFIvBy3lW1dvuJjE+azWiSUwS1qXFTtyGhzxlMFz
+         RkWuSZ/Bjn0pbYP0De/5G/pTWgtrKzmqcpDgShX9t84S/QqzoQt7FslR86myz6qnSTIB
+         5zGLIqP9YhaLvGNSEfK+SnJdETowff8EIFBzEtbHEsY3WYkLaY9/+d7V29uoRNKzMiqM
+         xf8x4MBxZF6V0u/RCHQXjezHZiBugwUfuinMlOixaEmdK2hw+eQz9GEZGP4L+d9pucIE
+         mBVL5PQIXWH8SFTptgjXyQEl+kFTLKspOlufeR1x6xX+tIuSwM3V9kTNSMNufDtLcq1t
+         NqVw==
+X-Gm-Message-State: AOAM530+Zj9+6nVuwJexrkO1z08LMoLtpQTMhP2jr7gLQjYaDF96leKd
+	kH1TZZ/IIKOtkPhMZBHhQy5ctgg6mk1eqw==
+X-Google-Smtp-Source: 
+ ABdhPJyXOy4jmYqiMQylrS6rCioH/xyCCRyTaoNNzOWFF/eynwXSqH0x1Bd4EiWBIJrzLDnYUxoLSg==
+X-Received: by 2002:adf:d1c5:: with SMTP id b5mr7167754wrd.465.1644515668094;
+        Thu, 10 Feb 2022 09:54:28 -0800 (PST)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:7dcb:9837:5409:449e])
+        by smtp.gmail.com with ESMTPSA id
+ o10sm7352115wrc.98.2022.02.10.09.54.27
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Feb 2022 09:54:27 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] fetch2/cooker: Fix source revision handling with floating
+ upstreams
+Date: Thu, 10 Feb 2022 17:54:26 +0000
+Message-Id: <20220210175426.2695614-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date: Thu, 10 Feb 2022 18:23:07 +0100
-Message-Id: <7276101644513729@mail.yandex.ru>
-Content-Transfer-Encoding: base64
-Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 10 Feb 2022 17:23:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13337
+ <bitbake-devel@lists.openembedded.org>; Thu, 10 Feb 2022 17:54:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13338
 
-PGRpdj5JIHRoaW5rIHRoaXMgdGVzdCBzaG91bGQgaWxsdXN0cmF0ZSB0aGUgcHJvYmxlbTogaHR0
-cHM6Ly9naXRodWIuY29tL2xhbmRncmFmL2JpdGJha2UvY29tbWl0L2VhNDMxZjhkZmRmZjEzMjQw
-MGZmNWQ4YjIxZjk3YzRjMDYzZDMwMjQ8L2Rpdj48ZGl2Pi0twqA8L2Rpdj48ZGl2PlBhdmVsPC9k
-aXY+PGRpdj7CoDwvZGl2PjxkaXY+wqA8L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj4xMC4wMi4yMDIy
-LCAxNjoyMCwgIlRvbWFzeiBEemllbmR6aWVsc2tpIiAmbHQ7dG9tYXN6LmR6aWVuZHppZWxza2lA
-Z21haWwuY29tJmd0Ozo8L2Rpdj48YmxvY2txdW90ZT48ZGl2PjxkaXY+wqBJIGp1c3QgZG91Ymxl
-IGNoZWNrZWQgYW5kIHdpdGggdGhlIGZpcnN0IHBhdGNoIGJpdGJha2Utc2VsZnRlc3QgaXMgZmFp
-bGluZyB3aXRoIHR3byBlcnJvcnMgdGhhdCBhcHBlYXIgYWxzbyB3aXRob3V0IG15IGNoYW5nZXMs
-IHNvbWV0aGluZyBhYm91dCBtaXNzaW5nIGhhc2ggb24gYnJhbmNoLiBXaGVyZSBkaWQgeW91IHRh
-a2UgdGhhdCBsb2dzIHNvIEkgY291bGQgY2hlY2sgaXQgYW5kIGZpeCB0aGUgcGF0Y2g/PC9kaXY+
-PGRpdj7CoDwvZGl2PjxkaXY+QmVzdCByZWdhcmRzLDwvZGl2PjxkaXY+VG9tYXN6IER6aWVuZHpp
-ZWxza2k8L2Rpdj48L2Rpdj7CoDxkaXY+PGRpdj5jencuLCAxMCBsdXQgMjAyMiBvIDE1OjU1wqBU
-b21hc3ogRHppZW5kemllbHNraSB2aWEgPGEgaHJlZj0iaHR0cDovL2xpc3RzLm9wZW5lbWJlZGRl
-ZC5vcmcvIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiPmxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8
-L2E+ICZsdDt0b21hc3ouZHppZW5kemllbHNraT08YSBocmVmPSJtYWlsdG86Z21haWwuY29tQGxp
-c3RzLm9wZW5lbWJlZGRlZC5vcmciIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciI+Z21haWwuY29t
-QGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8L2E+Jmd0OyBuYXBpc2HFgihhKTo8L2Rpdj48YmxvY2tx
-dW90ZSBzdHlsZT0iYm9yZGVyLWxlZnQtY29sb3I6cmdiKCAyMDQgLCAyMDQgLCAyMDQgKTtib3Jk
-ZXItbGVmdC1zdHlsZTpzb2xpZDtib3JkZXItbGVmdC13aWR0aDoxcHg7bWFyZ2luOjBweCAwcHgg
-MHB4IDAuOGV4O3BhZGRpbmctbGVmdDoxZXgiPjxkaXY+PGRpdj5JcyB0aGlzIGJpdGJha2Utc2Vs
-ZnRlc3Qgb3V0cHV0PyBJIHRyaWVkIHRoYXQgYnV0IGdvdCBuZXR3b3JrIGlzc3VlcyBhbmQgbWlz
-c2luZyBicmFuY2ggdGFnIG9ubHkuPC9kaXY+PGRpdj5NYXliZSBJJ2xsIGNoZWNrIGl0IG9uIGRp
-ZmZlcmVudCBtYWNoaW5lLjwvZGl2PjxkaXY+wqA8L2Rpdj48ZGl2PkJlc3QgcmVnYXJkcyw8L2Rp
-dj48ZGl2PlRvbWFzeiBEemllbmR6aWVsc2tpPC9kaXY+PC9kaXY+wqA8ZGl2PjxkaXY+Y3p3Liwg
-MTAgbHV0IDIwMjIgbyAxNTo0MMKgUGF2ZWwgWmh1a292ICZsdDs8YSBocmVmPSJtYWlsdG86cGF2
-ZWxAemh1a29mZi5uZXQiIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsi
-PnBhdmVsQHpodWtvZmYubmV0PC9hPiZndDsgbmFwaXNhxYIoYSk6PC9kaXY+PGJsb2NrcXVvdGUg
-c3R5bGU9ImJvcmRlci1sZWZ0LWNvbG9yOnJnYiggMjA0ICwgMjA0ICwgMjA0ICk7Ym9yZGVyLWxl
-ZnQtc3R5bGU6c29saWQ7Ym9yZGVyLWxlZnQtd2lkdGg6MXB4O21hcmdpbjowcHggMHB4IDBweCAw
-LjhleDtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2Pk5vdCByZWFsbHkuPGJyIC8+aXQgd2lsbCBlaXRo
-ZXIgY29tcGxhaW4gWzFdIGlmIHRoZXJlJ3Mgbm90IGdpdCByZXBvc2l0b3J5IGluIHRoZSBwYXJl
-bnQncyBkaXJzIG9yIHJlcGxhY2UgZ2l0IHJlbW90ZSB3aXRoIHRoZSBvbmUgZnJvbSByZWNpcGVf
-dXJsIGFuZCBmYWlsIHdpdGggWzJdIGlmIGJ1aWxkIGRpcmVjdG9yeSBpcyB1bmRlciBzb21lIGdp
-dCBtYW5hZ2VkIGRpcmVjdG9yeS48L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj5bMV08ZGl2PkZldGNo
-ZXIgZmFpbHVyZTogRmV0Y2ggY29tbWFuZCBleHBvcnQgUFNFVURPX0RJU0FCTEVEPTE7IGdpdCAt
-YyBjb3JlLmZzeW5jb2JqZWN0ZmlsZXM9MCAtYyBnYy5hdXRvRGV0YWNoPWZhbHNlIHJlbW90ZSBm
-YWlsZWQgd2l0aCBleGl0IGNvZGUgMTI4LCBvdXRwdXQ6PC9kaXY+PGRpdj5mYXRhbDogbm90IGEg
-Z2l0IHJlcG9zaXRvcnkgKG9yIGFueSBwYXJlbnQgdXAgdG8gbW91bnQgcG9pbnQgLyk8L2Rpdj48
-ZGl2PsKgPC9kaXY+PGRpdj5bMl08ZGl2PjxkaXY+YmIuZmV0Y2gyLkZldGNoRXJyb3I6IEZldGNo
-ZXIgZmFpbHVyZTogRmV0Y2ggY29tbWFuZCBleHBvcnQgUFNFVURPX0RJU0FCTEVEPTE7IGdpdCAt
-YyBjb3JlLmZzeW5jb2JqZWN0ZmlsZXM9MCAtYyBnYy5hdXRvRGV0YWNoPWZhbHNlIGNsb25lIC1u
-IC1zIC90bXAvYml0YmFrZS1mZXRjaC1oeXJjcWtydy9kb3dubG9hZC9naXQyL2dpdC5vcGVuZW1i
-ZWRkZWQub3JnLmJpdGJha2UvIC90bXAvYml0YmFrZS1mZXRjaC1oeXJjcWtydy91bnBhY2tlZC9n
-aXQvIGZhaWxlZCB3aXRoIGV4aXQgY29kZSAxMjgsIG91dHB1dDo8L2Rpdj48ZGl2PmZhdGFsOiBy
-ZXBvc2l0b3J5ICcvdG1wL2JpdGJha2UtZmV0Y2gtaHlyY3FrcncvZG93bmxvYWQvZ2l0Mi9naXQu
-b3BlbmVtYmVkZGVkLm9yZy5iaXRiYWtlLycgZG9lcyBub3QgZXhpc3Q8L2Rpdj48ZGl2PsKgPC9k
-aXY+PC9kaXY+PC9kaXY+PC9kaXY+PGRpdj7CoDwvZGl2PjxkaXY+LS3CoDwvZGl2PjxkaXY+UGF2
-ZWw8L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj7CoDwvZGl2PjxkaXY+wqA8L2Rpdj48ZGl2PjEwLjAy
-LjIwMjIsIDE1OjE5LCAiVG9tYXN6IER6aWVuZHppZWxza2kiICZsdDs8YSBocmVmPSJtYWlsdG86
-dG9tYXN6LmR6aWVuZHppZWxza2lAZ21haWwuY29tIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIi
-IHRhcmdldD0iX2JsYW5rIj50b21hc3ouZHppZW5kemllbHNraUBnbWFpbC5jb208L2E+Jmd0Ozo8
-L2Rpdj48YmxvY2txdW90ZT48ZGl2PjxkaXY+VGhlbiB0aGUgZmlyc3QgcGF0Y2ggaXMgc2FmZXIs
-IGFzIGl0IHdpbGwgbm90IGJyZWFrIGJ1aWxkIHdpdGggdGFyYmFsbHMgd2l0aG91dCB2Y3MuPC9k
-aXY+PGRpdj7CoDwvZGl2PjxkaXY+QmVzdCByZWdhcmRzLDwvZGl2PjxkaXY+VG9tYXN6IER6aWVu
-ZHppZWxza2k8L2Rpdj48L2Rpdj7CoDxkaXY+PGRpdj5jencuLCAxMCBsdXQgMjAyMiBvIDE1OjA4
-wqBQYXZlbCBaaHVrb3YgJmx0OzxhIGhyZWY9Im1haWx0bzpwYXZlbEB6aHVrb2ZmLm5ldCIgcmVs
-PSJub29wZW5lciBub3JlZmVycmVyIiB0YXJnZXQ9Il9ibGFuayI+cGF2ZWxAemh1a29mZi5uZXQ8
-L2E+Jmd0OyBuYXBpc2HFgihhKTo8L2Rpdj48YmxvY2txdW90ZSBzdHlsZT0iYm9yZGVyLWxlZnQt
-Y29sb3I6cmdiKCAyMDQgLCAyMDQgLCAyMDQgKTtib3JkZXItbGVmdC1zdHlsZTpzb2xpZDtib3Jk
-ZXItbGVmdC13aWR0aDoxcHg7bWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O3BhZGRpbmctbGVmdDox
-ZXgiPjxkaXY+VGhpcyBpcyBnb29kIHF1ZXN0aW9uLjwvZGl2PjxkaXY+SXQgaXMgcG9zc2libGUg
-dG8gcHJvdmlkZSBiaXRiYWtlIHdpdGggbWFpbGZvcm1lZCBnaXQgcmVwbyBtaXJyb3IgdGFyYmFs
-bCAobWFudWFsbHkgY3JlYXRlZCBvbmUgZm9yIGV4YW1wbGUgd2l0aCAtLWV4Y2x1ZGUtdmNzIGZs
-YWcgc2V0IG9yIGZyb20gd3Jvbmcgc3ViZGlyZWN0b3J5KSBpbiB0aGF0IGNhc2UgdGFyIHdpbGwg
-bm90IHJldHVybiBhbnkgcmV0dXJuIGNvZGUgYnV0IGdpdC5kb3dubG9hZCgpIHdpbGwgdHJ5IHRv
-IHJlcGxhY2UgcmVtb3RlIHdpdGggb3JpZ2luIGZyb20gcmVjaXBlX3VybC4gSW4gd29yc2UgY2Fz
-ZSBpdCB3aWxsIHJlcGxhY2Ugb3JpZ2luIG9mICJ1cHBlciIgZ2l0IHJlcG8gKHBva3k/KSB3aXRo
-IHJlY2lwZSdzIG9uZS48ZGl2PsKgPC9kaXY+PC9kaXY+PGRpdj7CoDwvZGl2PjxkaXY+LS3CoDwv
-ZGl2PjxkaXY+UGF2ZWw8L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj7CoDwvZGl2PjxkaXY+wqA8L2Rp
-dj48ZGl2PjEwLjAyLjIwMjIsIDE0OjMxLCAiQWxleGFuZGVyIEthbmF2aW4iICZsdDs8YSBocmVm
-PSJtYWlsdG86YWxleC5rYW5hdmluQGdtYWlsLmNvbSIgcmVsPSJub29wZW5lciBub3JlZmVycmVy
-IiB0YXJnZXQ9Il9ibGFuayI+YWxleC5rYW5hdmluQGdtYWlsLmNvbTwvYT4mZ3Q7OjwvZGl2Pjxi
-bG9ja3F1b3RlPjxwPldhaXQsIGRvZXNuJ3QgdGhpcyBtYXNrIHRoZSByZWFsIGlzc3VlPyBJcyBp
-dCBvayB0aGF0IHRoZSB0YXJiYWxsPGJyIC8+dW5wYWNraW5nIGZhaWxlZCAnZm9yIGFueSByZWFz
-b24nPzxiciAvPjxiciAvPkFsZXg8YnIgLz48YnIgLz5PbiBUaHUsIDEwIEZlYiAyMDIyIGF0IDE0
-OjI3LCBUb21hc3ogRHppZW5kemllbHNraTxiciAvPiZsdDs8YSBocmVmPSJtYWlsdG86dG9tYXN6
-LmR6aWVuZHppZWxza2lAZ21haWwuY29tIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiIHRhcmdl
-dD0iX2JsYW5rIj50b21hc3ouZHppZW5kemllbHNraUBnbWFpbC5jb208L2E+Jmd0OyB3cm90ZTo8
-L3A+PGJsb2NrcXVvdGU+PGJyIC8+wqBJZiBzaGFsbG93IHRhcmJhbGwgY2xvbmUgaXMgdXNlZCBh
-bmQgaWYgdGFyIHVucGFja2luZyBmYWlscyBmb3IgYW55PGJyIC8+wqByZWFzb24gaXQgbWlnaHQg
-ZW5kIHVwIHdpdGggZW1wdHkgZGlyZWN0b3J5IGNyZWF0ZWQuIFNpbmNlIHJ1bmZldGNoY21kPGJy
-IC8+wqBkb2VzIG5vdCBjaGVjayBhbnkgcmV0dXJuIGNvZGUgd2UgbWlnaHQgbm90IGRldGVjdCB0
-aGUgaXNzdWUgYW5kIHdlIHdpbGw8YnIgLz7CoG5vdCBjbG9uZSBmcm9tIGdpdC4gVGhlbiBkdWUg
-dG8gbWlzc2luZyBoYXNoIGl0IHdpbGwgcmVwbGFjZSBtYWluPGJyIC8+wqByZXBvc2l0b3J5J3Mg
-Z2l0IHJlbW90ZSB3aXRoIHRoZSByZW1vdGUgb2YgZmFpbGluZyByZWNpcGUuPGJyIC8+PGJyIC8+
-wqBUbyBmaXggdGhpcyBiZWhhdmlvdXIgd2UnbGwgY2hlY2sgaWYgY2xvbmVkaXIgaXMgbm90IGVt
-cHR5IGFuZCBpZiBnaXQ8YnIgLz7CoGRpciBpcyB0aGUgc2FtZSBhcyBjbG9uZWRpci48YnIgLz48
-YnIgLz7CoFNpZ25lZC1vZmYtYnk6IFRvbWFzeiBEemllbmR6aWVsc2tpICZsdDs8YSBocmVmPSJt
-YWlsdG86dG9tYXN6LmR6aWVuZHppZWxza2lAZ21haWwuY29tIiByZWw9Im5vb3BlbmVyIG5vcmVm
-ZXJyZXIiIHRhcmdldD0iX2JsYW5rIj50b21hc3ouZHppZW5kemllbHNraUBnbWFpbC5jb208L2E+
-Jmd0OzxiciAvPsKgU2lnbmVkLW9mZi1ieTogSmFuIEJyemV6YW5za2kgJmx0OzxhIGhyZWY9Im1h
-aWx0bzpqYW4uYnJ6ZXphbnNraUBnbWFpbC5jb20iIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciIg
-dGFyZ2V0PSJfYmxhbmsiPmphbi5icnplemFuc2tpQGdtYWlsLmNvbTwvYT4mZ3Q7PGJyIC8+wqAt
-LS08YnIgLz7CoMKgbGliL2JiL2ZldGNoMi9naXQucHkgfCAxMSArKysrKysrKystLTxiciAvPsKg
-wqAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKTxiciAvPjxi
-ciAvPsKgZGlmZiAtLWdpdCBhL2xpYi9iYi9mZXRjaDIvZ2l0LnB5IGIvbGliL2JiL2ZldGNoMi9n
-aXQucHk8YnIgLz7CoGluZGV4IDMwZGE4ZTk1Li5lZDZlY2I2NCAxMDA2NDQ8YnIgLz7CoC0tLSBh
-L2xpYi9iYi9mZXRjaDIvZ2l0LnB5PGJyIC8+wqArKysgYi9saWIvYmIvZmV0Y2gyL2dpdC5weTxi
-ciAvPsKgQEAgLTM1Niw4ICszNTYsMTUgQEAgY2xhc3MgR2l0KEZldGNoTWV0aG9kKTo8YnIgLz48
-YnIgLz7CoMKgwqDCoMKgwqDCoMKgwqDCoHJlcG91cmwgPSBzZWxmLl9nZXRfcmVwb191cmwodWQp
-PGJyIC8+PGJyIC8+wqAtICMgSWYgdGhlIHJlcG8gc3RpbGwgZG9lc24ndCBleGlzdCwgZmFsbGJh
-Y2sgdG8gY2xvbmluZyBpdDxiciAvPsKgLSBpZiBub3Qgb3MucGF0aC5leGlzdHModWQuY2xvbmVk
-aXIpOjxiciAvPsKgKyAjIENsZWFuIHJlcG8gaWYgZ2l0IGRpciBpcyBkaWZmZXJlbnQgdGhhbiB1
-ZC5jbG9uZWRpciwgd2hpY2ggbWVhbnMgdGFyIHVucGFja2luZyBmYWlsZWQ8YnIgLz7CoCsgaWYg
-b3MucGF0aC5leGlzdHModWQuY2xvbmVkaXIpOjxiciAvPsKgKyBpZiB1ZC5jbG9uZWRpciAhPSBy
-dW5mZXRjaGNtZCgiJXMgLUMgJXMgcmV2LXBhcnNlIC0tZ2l0LWRpciIgJSAodWQuYmFzZWNtZCwg
-dWQuY2xvbmVkaXIpLCBkKTo8YnIgLz7CoCsgYmIudXRpbHMucmVtb3ZlKHVkLmNsb25lZGlyLCBy
-ZWN1cnNlPVRydWUpPGJyIC8+wqArIGJiLnV0aWxzLm1rZGlyaGllcih1ZC5jbG9uZWRpcik8YnIg
-Lz7CoCsgb3MuY2hkaXIodWQuY2xvbmVkaXIpPGJyIC8+wqArPGJyIC8+wqArICMgSWYgdGhlIHJl
-cG8gc3RpbGwgZG9lc24ndCBleGlzdCBvciBpcyBlbXB0eSwgZmFsbGJhY2sgdG8gY2xvbmluZyBp
-dDxiciAvPsKgKyBpZiBub3Qgb3MucGF0aC5leGlzdHModWQuY2xvbmVkaXIpIG9yIG5vdCBvcy5s
-aXN0ZGlyKHVkLmNsb25lZGlyKTo8YnIgLz7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIyBX
-ZSBkbyB0aGlzIHNpbmNlIGdpdCB3aWxsIHVzZSBhICItbCIgb3B0aW9uIGF1dG9tYXRpY2FsbHkg
-Zm9yIGxvY2FsIHVybHMgd2hlcmUgcG9zc2libGU8YnIgLz7CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgaWYgcmVwb3VybC5zdGFydHN3aXRoKCJmaWxlOi8vIik6PGJyIC8+wqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVwb3VybCA9IHJlcG91cmxbNzpdPGJyIC8+wqAtLTxi
-ciAvPsKgMi4zNC4xPGJyIC8+PGJyIC8+PGJyIC8+wqA8YnIgLz7CoDwvYmxvY2txdW90ZT48L2Js
-b2NrcXVvdGU+PC9ibG9ja3F1b3RlPjwvZGl2PjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PC9k
-aXY+PGJyIC8+LT0tPS09LT0tPS09LT0tPS09LT0tPS08YnIgLz5MaW5rczogWW91IHJlY2VpdmUg
-YWxsIG1lc3NhZ2VzIHNlbnQgdG8gdGhpcyBncm91cC48YnIgLz5WaWV3L1JlcGx5IE9ubGluZSAo
-IzEzMzM1KTogPGEgaHJlZj0iaHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0YmFr
-ZS1kZXZlbC9tZXNzYWdlLzEzMzM1IiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiIHRhcmdldD0i
-X2JsYW5rIj5odHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvZy9iaXRiYWtlLWRldmVsL21l
-c3NhZ2UvMTMzMzU8L2E+PGJyIC8+TXV0ZSBUaGlzIFRvcGljOiA8YSBocmVmPSJodHRwczovL2xp
-c3RzLm9wZW5lbWJlZGRlZC5vcmcvbXQvODkwNDUwNzYvMzYxOTUxNCIgcmVsPSJub29wZW5lciBu
-b3JlZmVycmVyIiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3Jn
-L210Lzg5MDQ1MDc2LzM2MTk1MTQ8L2E+PGJyIC8+R3JvdXAgT3duZXI6IDxhIGhyZWY9Im1haWx0
-bzpiaXRiYWtlLWRldmVsJTJCb3duZXJAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyIgcmVsPSJub29w
-ZW5lciBub3JlZmVycmVyIiB0YXJnZXQ9Il9ibGFuayI+Yml0YmFrZS1kZXZlbCtvd25lckBsaXN0
-cy5vcGVuZW1iZWRkZWQub3JnPC9hPjxiciAvPlVuc3Vic2NyaWJlOiA8YSBocmVmPSJodHRwczov
-L2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvZy9iaXRiYWtlLWRldmVsL3Vuc3ViIiByZWw9Im5vb3Bl
-bmVyIG5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL2xpc3RzLm9wZW5lbWJlZGRl
-ZC5vcmcvZy9iaXRiYWtlLWRldmVsL3Vuc3ViPC9hPiBbPGEgaHJlZj0ibWFpbHRvOnRvbWFzei5k
-emllbmR6aWVsc2tpQGdtYWlsLmNvbSIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIiB0YXJnZXQ9
-Il9ibGFuayI+dG9tYXN6LmR6aWVuZHppZWxza2lAZ21haWwuY29tPC9hPl08YnIgLz4tPS09LT0t
-PS09LT0tPS09LT0tPS09LTxiciAvPsKgPC9ibG9ja3F1b3RlPjwvZGl2PjwvYmxvY2txdW90ZT4=
+Where a git url uses a tag instead of a full source revision, breakage
+can currently occur in builds. Issues include:
+
+* the revision being looked up in multiple tasks (fetch and unpack)
+* the risk a different revision may be obtained in those tasks
+* that some tasks may not be allowed to access the network
+* that a revision may not be consistent throughout a given build
+* rerunning a specific task may given inconsistent results
+
+To fix this, stop the workers from cleaning out the source revision store. This
+should only be done in the cooker itself (based on current policy).
+
+Also, where the code "sees" an upstream access, mark the recipe as not to be
+cached. The reparse re-triggers the upstream lookup by the server.
+
+Add a test to ensure that if get_srcrev isn't called, the user is told they're
+using a configuration that is known to break.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ bin/bitbake-worker        | 2 +-
+ lib/bb/cookerdata.py      | 4 ++--
+ lib/bb/fetch2/__init__.py | 1 +
+ lib/bb/fetch2/git.py      | 6 ++++++
+ 4 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+index 063cf37926..9d850ec77c 100755
+--- a/bin/bitbake-worker
++++ b/bin/bitbake-worker
+@@ -440,7 +440,7 @@ class BitbakeWorker(object):
+     def handle_cookercfg(self, data):
+         self.cookercfg = pickle.loads(data)
+         self.databuilder = bb.cookerdata.CookerDataBuilder(self.cookercfg, worker=True)
+-        self.databuilder.parseBaseConfiguration()
++        self.databuilder.parseBaseConfiguration(worker=True)
+         self.data = self.databuilder.data
+ 
+     def handle_extraconfigdata(self, data):
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 397b43dfa7..a961f36574 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -258,12 +258,12 @@ class CookerDataBuilder(object):
+         self.data = self.basedata
+         self.mcdata = {}
+ 
+-    def parseBaseConfiguration(self):
++    def parseBaseConfiguration(self, worker=False):
+         data_hash = hashlib.sha256()
+         try:
+             self.data = self.parseConfigurationFiles(self.prefiles, self.postfiles)
+ 
+-            if self.data.getVar("BB_WORKERCONTEXT", False) is None:
++            if self.data.getVar("BB_WORKERCONTEXT", False) is None and not worker:
+                 bb.fetch.fetcher_init(self.data)
+             bb.parse.init_parser(self.data)
+             bb.codeparser.parser_cache_init(self.data)
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 28a3e54c7f..d099cd1092 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -765,6 +765,7 @@ def get_srcrev(d, method_name='sortable_revision'):
+     that fetcher provides a method with the given name and the same signature as sortable_revision.
+     """
+ 
++    d.setVar("__BBSEENSRCREV", "1")
+     recursion = d.getVar("__BBINSRCREV")
+     if recursion:
+         raise FetchError("There are recursive references in fetcher variables, likely through SRC_URI")
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 30da8e95b7..836ef1c49a 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -727,6 +727,12 @@ class Git(FetchMethod):
+         """
+         Compute the HEAD revision for the url
+         """
++        if not d.getVar("__BBSEENSRCREV"):
++            raise bb.fetch2.FetchError("Recipe uses a floating tag/branch without a fixed SRCREV yet doesn't call bb.fetch2.get_srcrev() (use SRCPV in PV for OE).")
++
++        # Ensure we mark as not cached
++        bb.fetch2.get_autorev(d)
++
+         output = self._lsremote(ud, d, "")
+         # Tags of the form ^{} may not work, need to fallback to other form
+         if ud.unresolvedrev[name][:5] == "refs/" or ud.usehead:
+-- 
+2.32.0
+
 
