@@ -1,86 +1,100 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <tomasz.dziendzielski@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19937C433FE
-	for <webhook@archiver.kernel.org>; Wed,  9 Feb 2022 22:01:19 +0000 (UTC)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com
- [209.85.217.49])
- by mx.groups.io with SMTP id smtpd.web12.1985.1644444078100516804
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FFAC433FE
+	for <webhook@archiver.kernel.org>; Thu, 10 Feb 2022 09:21:29 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
+ [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web10.7961.1644484887628548153
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 09 Feb 2022 14:01:18 -0800
+ Thu, 10 Feb 2022 01:21:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=oNO6iBg5;
- spf=pass (domain: gmail.com, ip: 209.85.217.49,
- mailfrom: alex.kanavin@gmail.com)
-Received: by mail-vs1-f49.google.com with SMTP id w6so3828315vsf.3
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=N2totG8a;
+ spf=pass (domain: gmail.com, ip: 209.85.221.44,
+ mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-wr1-f44.google.com with SMTP id s18so8345920wrv.7
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 09 Feb 2022 14:01:17 -0800 (PST)
+ Thu, 10 Feb 2022 01:21:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r3BtZkSIsAGjHjnnLZXp+x8fWQLZcWc+yu8gLTGt4OM=;
-        b=oNO6iBg55KV+WC0ACZa7pYdAUAFWokFJcaRppU3DJBU9KComjveN1Zr/AvJ3CInpiP
-         3tbGt1mJgiJlHHZnoQTYuXkFiDc/7fRqHI8YNT0yHzQ93qTDr2iYBI6CS+F9H9mFj31N
-         /yUsDmeBSYn5EowjtCmL0id5UHKYebZO6CZ+x/oI2CJk5ttBiuY0QcjDu7IZzUlQxmKc
-         /6dFY1dVOC9Ml1/RQP89JQMjEprL5Ax5FXV0axheXSTOUiPYYvUnPJ+bWvIqoQq4meni
-         crgQBxA5x++CmRLdYs3tHyBSHG77qjsDoyPSj7JdjohX0EQhOTcrdoAmRbUBzoyXyGoX
-         ZOSA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F4SGN2/vHFTl/DyYQwIk18wLuPCjnpCrjwJ2WBvlmPo=;
+        b=N2totG8aRHKQHA+zarsiWT4I8d56iT9jK6UqfssY0kIBlMqMIw49u5MyR6xE/Iqh/2
+         o4Dr9PC8Kt5MECXQ+1xdwWYODA3Qus3OWGk8FUJv+Ihm1Z7PBMbYEPMkj1ygPsi48/ys
+         ySljBKpOWabMCXfMcuYWqVpSCkcDcTa7l7xks3jKIQko69vxCDJOOqZVRhssR7avM6kv
+         fxM4RZYmpjCrrqRBn+Q2JtB3/FcK7FOBNkBKJI2w8Nnv6pn0C3O4rjWlawiiPlu5sMVq
+         3ZDkCfPARs6NMHxc1Wd4DWurpC7G/QGhfdhtioJNHBdTasxkzxbO/09pe/gkO5Bo90TE
+         TTiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r3BtZkSIsAGjHjnnLZXp+x8fWQLZcWc+yu8gLTGt4OM=;
-        b=7AJcYtcqrf1FOE6B2AWQUC3bcIa1beIUwpFMnQqwF80macSuw4l7Tc/O+V3Qbmxl+B
-         RcZbM3NQ5+WeS5vOD28ZfrRDoLpVxzMdHH8lHNnMQpN23jDXQhLGNZk/vt3LJnatnLf7
-         9tBsr8L5KPLOh3y9syTxGvKh1076KaTA7bT88rlAr2l/lVLg7iUJinTiXWcLMVQeyzXE
-         VUaZLfSseyg1DnC8C6GR/W/+xosMLzbGinhX3B3nFJh+2fFYSWN8Sm349IkTzFNUf3pn
-         Ozj3zbrkhW5k+RyKwFnXkLiXoOVkS3ksi+qZGD3cExLJpAPp3H8EJYkdZTNAILCZ4fIu
-         narA==
-X-Gm-Message-State: AOAM532y39lZtaCAIq67YteOPx9FXYJcRueuvA9hpzjauzC0x4gHTr0p
-	phMPEMOtTfGB9E7S43ZPHVvh77rGcfa69jFGybE=
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F4SGN2/vHFTl/DyYQwIk18wLuPCjnpCrjwJ2WBvlmPo=;
+        b=ebqLW432WUVW/VFj7FYgQh49KMAUGflsDHsmw92g+v/zgmBqxP7t+9sYvUaEFzM50l
+         QZoqOXorGJgRyLlxZP96a4b/3wpYweO9L7iQr/oGjgS/9esnWxm+H7tbiSbr1EMrZdKC
+         aZuuEYcCqesVqXnPPQNPIju+SJjswjFO2lvk+bh80rvJWrnA95dPV735IcheR3ypx72K
+         fVmnwQmQW2evRN0Bs7AF4pLGS+cpWgAViUlvFh0PHsD8Gz6TsKj8Uh0t+38dfwOa2HgX
+         mWE0IJiueyZws6cMWA3DFVJlro6fmB79ljkDLN8gH4pNjW7DBnHAFud4MDpakOvBlcxJ
+         Rfdg==
+X-Gm-Message-State: AOAM533Y1lV+8rv4AxOWQUWXRL5YMRabdXScjv99KOzrwClXx8HwcCso
+	cRxl9xb14cD15F+EW9Qh2IJUxiBzUjEIjG4b
 X-Google-Smtp-Source: 
- ABdhPJzYqI29BmUJJYyodDl8sz7s4l4+BmnLQwk2yG005j6KoSjjKw+l1HRgYBItocbEXC/vrKBguqSWoSk4s4dTqis=
-X-Received: by 2002:a67:fc16:: with SMTP id o22mr57947vsq.42.1644444077238;
- Wed, 09 Feb 2022 14:01:17 -0800 (PST)
+ ABdhPJyWNoZH+ZO1q9ZtJK3LjsPP4KQRMdF0ksNWeFMZgsGYUABHgzngM3wAEdWemTrD8GfWP1hv0g==
+X-Received: by 2002:a05:6000:4b:: with SMTP id
+ k11mr5463931wrx.144.1644484885911;
+        Thu, 10 Feb 2022 01:21:25 -0800 (PST)
+Received: from localhost.localdomain ([194.99.105.106])
+        by smtp.gmail.com with ESMTPSA id
+ e8sm3672641wru.37.2022.02.10.01.21.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Feb 2022 01:21:25 -0800 (PST)
+From: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>,
+	Jan Brzezanski <jan.brzezanski@gmail.com>
+Subject: [PATCH] fetch2/git.py: Check if clonedir is not empty after shallow
+ tarball clone
+Date: Thu, 10 Feb 2022 10:21:19 +0100
+Message-Id: <20220210092119.3994-1-tomasz.dziendzielski@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20220209214018.363691-1-alex@linutronix.de>
- <0f1f2eace443402fca3790908033286be4a9b0e0.camel@linuxfoundation.org>
-In-Reply-To: 
- <0f1f2eace443402fca3790908033286be4a9b0e0.camel@linuxfoundation.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 9 Feb 2022 23:01:05 +0100
-Message-ID: 
- <CANNYZj9wDgfTEUdrToHxenEDrLHGW+KZ-VaWYn6o4Je6k=A1uw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] wget.py: use a longer timeout in
- checkstatus()
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Michael Halstead <mhalstead@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	Alexander Kanavin <alex@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 09 Feb 2022 22:01:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13325
+ <bitbake-devel@lists.openembedded.org>; Thu, 10 Feb 2022 09:21:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13326
 
-On Wed, 9 Feb 2022 at 22:47, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
+If shallow tarball clone is used and if tar unpacking fails for any
+reason it might end up with empty directory created. Since runfetchcmd
+does not check any return code we might not detect the issue and we will
+not clone from git. Then due to missing hash it will replace main
+repository's git remote with the remote of failing recipe.
 
-> We need to fix the servers. I doubt that at 300s it would work much better but
-> the user experience would be horrible with builds hanging at startup for 5
-> minutes.
+Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Signed-off-by: Jan Brzezanski <jan.brzezanski@gmail.com>
+---
+ lib/bb/fetch2/git.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The tracebacks are showing both straightforward timeouts, and timeouts
-while handling a server 503 error (presumably urllib has a built-in
-retry mechanism which is thwarted by the 30 sec timeout). I guess I
-mostly wanted to see if bumping the timeout value resolves those
-errors, and in at least in my a-full they did not show up.
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 30da8e95..cd317633 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -356,8 +356,8 @@ class Git(FetchMethod):
+ 
+         repourl = self._get_repo_url(ud)
+ 
+-        # If the repo still doesn't exist, fallback to cloning it
+-        if not os.path.exists(ud.clonedir):
++        # If the repo still doesn't exist or is empty, fallback to cloning it
++        if not os.path.exists(ud.clonedir) or not os.listdir(ud.clonedir):
+             # We do this since git will use a "-l" option automatically for local urls where possible
+             if repourl.startswith("file://"):
+                 repourl = repourl[7:]
+-- 
+2.34.1
 
-Checking the server logs would be helpful: they probably do say
-something useful when issuing 503.
-
-Alex
 
