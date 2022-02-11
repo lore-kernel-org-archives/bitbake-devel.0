@@ -1,405 +1,261 @@
-Return-Path: <martin.leduc@luminator.com>
+Return-Path: <kergoth@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420C4C433EF
-	for <webhook@archiver.kernel.org>; Fri, 11 Feb 2022 17:55:05 +0000 (UTC)
-Subject: bitbake addtask bbclass dependancies
-To: bitbake-devel@lists.openembedded.org
-From: "Martin Leduc" <martin.leduc@luminator.com>
-X-Originating-Location: Drummondville, Quebec, CA (184.148.204.177)
-X-Originating-Platform: Windows Chrome 98
-User-Agent: GROUPS.IO Web Poster
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EB9C433F5
+	for <webhook@archiver.kernel.org>; Fri, 11 Feb 2022 22:06:36 +0000 (UTC)
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com
+ [209.85.216.48])
+ by mx.groups.io with SMTP id smtpd.web11.2316.1644617196209212926
+ for <bitbake-devel@lists.openembedded.org>;
+ Fri, 11 Feb 2022 14:06:36 -0800
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=VIT1KsZI;
+ spf=pass (domain: gmail.com, ip: 209.85.216.48, mailfrom: kergoth@gmail.com)
+Received: by mail-pj1-f48.google.com with SMTP id
+ h7-20020a17090a648700b001b927560c2bso8879858pjj.1
+        for <bitbake-devel@lists.openembedded.org>;
+ Fri, 11 Feb 2022 14:06:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:message-id:in-reply-to:references:subject:mime-version;
+        bh=lfA4JLwKsf+4/NT+IY0MgNuSRjeiWRFqzUWfikahjBc=;
+        b=VIT1KsZIMXvKWlAXS8gp8At3u9BO9qgArTihGemkk2LCGU2SIiK8+c0wYqrRMYUhzP
+         NWwMIuBIb69K3JGHSTvPOqV7Ysth891Qkqb22UojHByuHpsPUrAChLrFeJqv3cVhghJZ
+         J0Om9wt6xGxpU/m1pCswwUCD/BV7kftULb8OdMgQiGchCKoP2EgCr9sKcg6qx1hGgHtS
+         VQb4qqp4Ut/3J6R0O5ev1uIeJrlSN51fMVeT/+EdCBgvzGwfd4yYW7KDp7fpZidOgycT
+         xUnC96aDlJtPVYK3rRqOWgot9Oki4rL8d9+ykYPqO6EaUluMb7OFBhX6+xiC1T08rX7g
+         tEaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:message-id:in-reply-to:references
+         :subject:mime-version;
+        bh=lfA4JLwKsf+4/NT+IY0MgNuSRjeiWRFqzUWfikahjBc=;
+        b=ObcbeNhAfGqBwzmTFtAlpnH7CGOVVlH39Wk6CRQbrGtNzAn5pQBMjvwrjzFxpiBdmu
+         2NiST0lP2AwbBJbauSgaM49Fy/5IwlAQCvGigCmfSjw2xt4X0pfyU5eDblf+6Wlwh7H1
+         ru/vnbMFqL7mY0mZJPYA57hCvYLrVo8qPfCj6wpODhssJC4LBjvLbPTjiQ3TpZ2VpdqU
+         TK5QEenYtoOhnKxX4R3aAslW5zVq7Iy9EdRSrpZtjDrh4Amc8RxS6kbYbi5+tmKtVzLu
+         lz/pvc4I3f5Jkp/ByFdWFxZdOehkaVjbb293bFumzuKMqgI5tiDiTUfKbf51PVbUndlA
+         nU6g==
+X-Gm-Message-State: AOAM533imDqo4YZM+lpI8sqB7aWfqkcKG6OtEfUS/C0uq9LpKzpCsqdu
+	BkPrqh9/SsnJ/AY0XCll8a/EQSQhUFjJFw==
+X-Google-Smtp-Source: 
+ ABdhPJwkMb14bLdzlTzTOCInRyqAGg9vEwFwX6kHJULyVvAySFgsjm5e1pZIPqo/5ah9E9IExJs2Ug==
+X-Received: by 2002:a17:90a:bf81:: with SMTP id
+ d1mr2446434pjs.147.1644617195131;
+        Fri, 11 Feb 2022 14:06:35 -0800 (PST)
+Received: from [192.168.1.17] (ip70-188-217-212.ph.ph.cox.net.
+ [70.188.217.212])
+        by smtp.gmail.com with ESMTPSA id
+ m1sm29398143pfk.202.2022.02.11.14.06.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 11 Feb 2022 14:06:34 -0800 (PST)
+Date: Fri, 11 Feb 2022 15:06:27 -0700
+From: Christopher Larson <kergoth@gmail.com>
+To: bitbake-devel@lists.openembedded.org, Martin Leduc
+ <martin.leduc@luminator.com>
+Message-ID: <5689f841-7090-4141-ae31-8d02596bdad1@Spark>
+In-Reply-To: <Me0Z.1644602104245206529.KOgD@lists.openembedded.org>
+References: <Me0Z.1644602104245206529.KOgD@lists.openembedded.org>
+Subject: Re: [bitbake-devel] bitbake addtask bbclass dependancies
+X-Readdle-Message-ID: 5689f841-7090-4141-ae31-8d02596bdad1@Spark
 MIME-Version: 1.0
-Date: Fri, 11 Feb 2022 09:55:04 -0800
-Message-ID: <Me0Z.1644602104245206529.KOgD@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="weYGQb69q72kAH1PJ880"
+Content-Type: multipart/alternative; boundary="6206dde8_38437fdb_4f0"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 11 Feb 2022 17:55:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13340
+ <bitbake-devel@lists.openembedded.org>; Fri, 11 Feb 2022 22:06:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13341
 
---weYGQb69q72kAH1PJ880
+--6206dde8_38437fdb_4f0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-Hi everyone,
+Tasks you add are *not* automatically run, unless they=E2=80=99re explici=
+tly requested with -c or they=E2=80=99re pulled in as a dependency by a t=
+ask already being run (i.e. our default task, do=5Fbuild, see BB=5FDE=46A=
+ULT=5FTASK). i.e. addtask thisattheend after do=5Fimage=5Fcomplete before=
+ do=5Fbuild.
 
-I try to figure if the approach is good.
+--
+Christopher =E2=80=9Ckergoth=E2=80=9D Larson
+chris=5Flarson=40mentor.com, chris.larson=40siemens.com, kergoth=40gmail.=
+com
+On =46eb 11, 2022, 10:55 AM -0700, Martin Leduc <martin.leduc=40luminator=
+.com>, wrote:
+> Hi everyone,
+>
+> I try to figure if the approach is good.
+>
+> =46or my embeeded image, I need to run a function name do=5Fthisattheen=
+d.=C2=A0 The approach I've is:
+>
+> Into a=C2=A0thisattheend.bbclass=C2=A0file, I write:
+>
+> inherit logging
+> do=5Fthisattheend () =7B
+> bbplain Well, it's done
+> =7D
+>
+> do=5Fthisattheend=5Bnostamp=5D =3D =221=22
+>
+> addtask after do=5Fimage=5Fcomplete
+>
+>
+> bitbake show the do=5Frootfs execution, a little quickly do=5Fimage=5Fc=
+omplete and done.
+>
+> If I replace=C2=A0addtask thisattheend after do=5Fimage=5Fcomplete
+> by=C2=A0addtask thisattheend before do=5Fbuild after do=5Fimage=5Fcompl=
+ete
+> I see Well, it's done
+>
+> And I see it 2 times, when my comprehension is the do=5Fimage=5Fcomplet=
+e is called one time.
+>
+>
+> I've to say that I'm confused about the dependency structure and layout=
+ because when I look at the picture:
+>
+> <dummyfile.0.part>
+>
+> The do=5Fimage=5Fcomplete is the last state of the build process, exact=
+ly where I need to run my task.
+>
+>
+>
+> What I'm doing wrong=3F
+>
+>
+>
+> Any help is appreciated.
+>
+>
+>
+> Thank you
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (=2313340): https://lists.openembedded.org/g/bitbake-=
+devel/message/13340
+> Mute This Topic: https://lists.openembedded.org/mt/89077246/3617123
+> Group Owner: bitbake-devel+owner=40lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub =5Bke=
+rgoth=40gmail.com=5D
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
-For my embeeded image, I need to run a function name do_thisattheend.=C2=A0=
- The approach I've is:
-
-Into a thisattheend.bbclass file, I write:
-
-inherit logging
-do_thisattheend () {
-bbplain Well, it's done
-}
-
-do_thisattheend [nostamp] =3D "1"
-
-addtask after do_image_complete
-
-bitbake show the do_rootfs execution, a little quickly do_image_complete an=
-d done.
-
-If I replace addtask thisattheend a fter do_image_complete
-by addtask thisattheend before do_build after do_image_complete
-I see Well, it's done
-And I see it 2 times, when my comprehension is the do_image_complete is cal=
-led one time.
-
-I've to say that I'm confused about the dependency structure and layout bec=
-ause when I look at the picture:
-
-The do_image_complete is the last state of the build process, exactly where=
- I need to run my task.
-
-What I'm doing wrong?
-
-Any help is appreciated.
-
-Thank you
-
---weYGQb69q72kAH1PJ880
+--6206dde8_38437fdb_4f0
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-Hi everyone,<br /><br />I try to figure if the approach is good.<br /><br /=
->For my embeeded image, I need to run a function name do_thisattheend.&nbsp=
-; The approach I've is:<br /><br />Into a&nbsp;<span style=3D"color: #d4d4d=
-4; font-family: Consolas, 'Courier New', monospace; white-space: pre; backg=
-round-color: #1e1e1e;">thisattheend.bbclass</span>&nbsp;file, I write:<br /=
-><br />
-<div style=3D"color: #d4d4d4; background-color: #1e1e1e; font-family: Conso=
-las, 'Courier New', monospace; line-height: 19px; white-space: pre;"><span =
-style=3D"color: #c586c0;">inherit</span> logging<br />do_thisattheend () {<=
-br />bbplain Well, it's done<br />}<br /><br />
-<div style=3D"line-height: 19px;">do_thisattheend<span style=3D"color: #9cd=
-cfe;">[nostamp]</span> =3D <span style=3D"color: #ce9178;">"1"</span></div>
-<br />addtask after do_image_complete<br /><br /></div>
-<br />bitbake show the do_rootfs execution, a little quickly do_image_compl=
-ete and done.<br /><br />If I replace&nbsp;<span style=3D"color: #d4d4d4; f=
-ont-family: Consolas, 'Courier New', monospace; white-space: pre; backgroun=
-d-color: #1e1e1e;">addtask </span><span style=3D"color: #d4d4d4; font-famil=
-y: Consolas, 'Courier New', monospace; white-space: pre; background-color: =
-#1e1e1e;">thisattheend a</span><span style=3D"color: #d4d4d4; font-family: =
-Consolas, 'Courier New', monospace; white-space: pre; background-color: #1e=
-1e1e;">fter do_image_complete<br /></span>by&nbsp;<span style=3D"color: #d4=
-d4d4; font-family: Consolas, 'Courier New', monospace; white-space: pre; ba=
-ckground-color: #1e1e1e;">addtask </span><span style=3D"color: #d4d4d4; fon=
-t-family: Consolas, 'Courier New', monospace; white-space: pre; background-=
-color: #1e1e1e;">thisattheend </span><span style=3D"color: #d4d4d4; font-fa=
-mily: Consolas, 'Courier New', monospace; white-space: pre; background-colo=
-r: #1e1e1e;">before do_build after do_image_complete<br /></span><span styl=
-e=3D"color: #000000; font-family: Consolas, 'Courier New', monospace; white=
--space: pre;"><span style=3D"background-color: #ffffff;">I see</span> </spa=
-n><span style=3D"color: #d4d4d4; font-family: Consolas, 'Courier New', mono=
-space; white-space: pre; background-color: #1e1e1e;">Well, it's done<br /><=
-span style=3D"background-color: #ffffff; color: #000000;">And I see it 2 ti=
-mes, when my comprehension is the do_image_complete is called one time.</sp=
-an><br /><br /><br /><span style=3D"background-color: #ffffff; color: #0000=
-00;">I've to say that I'm confused about the dependency structure and layou=
-t because when I look at the picture: </span><br /><br /></span><img src=3D=
-"data:image/png;base64,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
-AAASUVORK5CYII=3D" alt=3D"" /><br /><br /><span style=3D"color: #000000; fo=
-nt-family: Consolas, 'Courier New', monospace; white-space: pre; background=
--color: #ffffff;">The do_image_complete is the last state of the build proc=
-ess, exactly where I need to run my task.<br /><br />What I'm doing wrong?<=
-br /><br />Any help is appreciated.<br /><br />Thank you</span>
+<html xmlns=3D=22http://www.w3.org/1999/xhtml=22>
+<head>
+<title></title>
+</head>
+<body>
+<div name=3D=22messageBodySection=22>
+<div dir=3D=22auto=22>Tasks you add are *not* automatically run, unless t=
+hey=E2=80=99re explicitly requested with -c or they=E2=80=99re pulled in =
+as a dependency by a task already being run (i.e. our default task, do=5F=
+build, see BB=5FDE=46AULT=5FTASK). i.e. addtask thisattheend after do=5Fi=
+mage=5Fcomplete before do=5Fbuild.</div>
+</div>
+<div name=3D=22messageSignatureSection=22><br />
+<div class=3D=22match=46ont=22>
+<div dir=3D=22auto=22>--</div>
+<div dir=3D=22auto=22>Christopher =E2=80=9Ckergoth=E2=80=9D Larson</div>
+<div dir=3D=22auto=22>chris=5Flarson=40mentor.com, chris.larson=40siemens=
+.com, kergoth=40gmail.com</div>
+</div>
+</div>
+<div name=3D=22messageReplySection=22>On =46eb 11, 2022, 10:55 AM -0700, =
+Martin Leduc &lt;martin.leduc=40luminator.com&gt;, wrote:<br />
+<blockquote type=3D=22cite=22 style=3D=22border-left-color: grey; border-=
+left-width: thin; border-left-style: solid; margin: 5px 5px;padding-left:=
+ 10px;=22>Hi everyone,<br />
+<br />
+I try to figure if the approach is good.<br />
+<br />
+=46or my embeeded image, I need to run a function name do=5Fthisattheend.=
+&=23160; The approach I've is:<br />
+<br />
+Into a&=23160;<span style=3D=22color: =23d4d4d4; font-family: Consolas, '=
+Courier New', monospace; white-space: pre; background-color: =231e1e1e;=22=
+>thisattheend.bbclass</span>&=23160;file, I write:<br />
+<br />
+<div style=3D=22color: =23d4d4d4; background-color: =231e1e1e; font-famil=
+y: Consolas, 'Courier New', monospace; line-height: 19px; white-space: pr=
+e;=22><span style=3D=22color: =23c586c0;=22>inherit</span> logging<br />
+do=5Fthisattheend () =7B<br />
+bbplain Well, it's done<br />
+=7D<br />
+<br />
+<div style=3D=22line-height: 19px;=22>do=5Fthisattheend<span style=3D=22c=
+olor: =239cdcfe;=22>=5Bnostamp=5D</span> =3D <span style=3D=22color: =23c=
+e9178;=22>=221=22</span></div>
+<br />
+addtask after do=5Fimage=5Fcomplete<br />
+<br /></div>
+<br />
+bitbake show the do=5Frootfs execution, a little quickly do=5Fimage=5Fcom=
+plete and done.<br />
+<br />
+If I replace&=23160;<span style=3D=22color: =23d4d4d4; font-family: Conso=
+las, 'Courier New', monospace; white-space: pre; background-color: =231e1=
+e1e;=22>addtask</span> <span style=3D=22color: =23d4d4d4; font-family: Co=
+nsolas, 'Courier New', monospace; white-space: pre; background-color: =23=
+1e1e1e;=22>thisattheend a</span><span style=3D=22color: =23d4d4d4; font-f=
+amily: Consolas, 'Courier New', monospace; white-space: pre; background-c=
+olor: =231e1e1e;=22>fter do=5Fimage=5Fcomplete<br /></span>by&=23160;<spa=
+n style=3D=22color: =23d4d4d4; font-family: Consolas, 'Courier New', mono=
+space; white-space: pre; background-color: =231e1e1e;=22>addtask</span> <=
+span style=3D=22color: =23d4d4d4; font-family: Consolas, 'Courier New', m=
+onospace; white-space: pre; background-color: =231e1e1e;=22>thisattheend<=
+/span> <span style=3D=22color: =23d4d4d4; font-family: Consolas, 'Courier=
+ New', monospace; white-space: pre; background-color: =231e1e1e;=22>befor=
+e do=5Fbuild after do=5Fimage=5Fcomplete<br /></span><span style=3D=22col=
+or: =23000000; font-family: Consolas, 'Courier New', monospace; white-spa=
+ce: pre;=22><span style=3D=22background-color: =23ffffff;=22>I see</span>=
+</span> <span style=3D=22color: =23d4d4d4; font-family: Consolas, 'Courie=
+r New', monospace; white-space: pre; background-color: =231e1e1e;=22>Well=
+, it's done<br />
+<span style=3D=22background-color: =23ffffff; color: =23000000;=22>And I =
+see it 2 times, when my comprehension is the do=5Fimage=5Fcomplete is cal=
+led one time.</span><br />
+<br />
+<br />
+<span style=3D=22background-color: =23ffffff; color: =23000000;=22>I've t=
+o say that I'm confused about the dependency structure and layout because=
+ when I look at the picture:</span><br />
+<br /></span> &lt;dummyfile.0.part&gt;<br />
+<br />
+<span style=3D=22color: =23000000; font-family: Consolas, 'Courier New', =
+monospace; white-space: pre; background-color: =23ffffff;=22>The do=5Fima=
+ge=5Fcomplete is the last state of the build process, exactly where I nee=
+d to run my task.<br />
+<br />
+What I'm doing wrong=3F<br />
+<br />
+Any help is appreciated.<br />
+<br />
+Thank you</span><br />
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br />
+Links: You receive all messages sent to this group.<br />
+View/Reply Online (=2313340): https://lists.openembedded.org/g/bitbake-de=
+vel/message/13340<br />
+Mute This Topic: https://lists.openembedded.org/mt/89077246/3617123<br />=
 
---weYGQb69q72kAH1PJ880--
+Group Owner: bitbake-devel+owner=40lists.openembedded.org<br />
+Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub =5Bkerg=
+oth=40gmail.com=5D<br />
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br />
+<br /></blockquote>
+</div>
+</body>
+</html>
+
+--6206dde8_38437fdb_4f0--
+
 
