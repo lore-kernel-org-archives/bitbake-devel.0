@@ -2,58 +2,59 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B5FC43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42132C4332F
 	for <webhook@archiver.kernel.org>; Wed, 16 Feb 2022 11:32:07 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
- [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web12.10615.1645011126119857005
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com
+ [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.web12.10614.1645011123351027335
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 16 Feb 2022 03:32:06 -0800
+ Wed, 16 Feb 2022 03:32:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fq1+t2YE;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DzA10kxZ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f51.google.com with SMTP id u2so1808694wrw.1
+Received: by mail-wm1-f50.google.com with SMTP id
+ x3-20020a05600c21c300b0037c01ad715bso1377202wmj.2
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 16 Feb 2022 03:32:05 -0800 (PST)
+ Wed, 16 Feb 2022 03:32:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=U67L4WQ3xSjVipoAMgRt0JRoAgI5A+rg5eoYeq5BOZg=;
-        b=fq1+t2YE7b7MDbK6Pwjx8zGWCdmXfbbUKXdDApnt0w0U1SS0IhJdcxcxemB9CRFCat
-         D1M9hDkOJmfJujLN9yf7gnLmUuLlERcfIR1UZ/jSXaMNi23W0HmYyG4B3AfksaMGAmTV
-         D6uneUpGR082dMQHIiaBH/0tuh1WzPhHiQ/6w=
+        bh=0vNaQVkcsQcQAXLW4sZiAVr2DYmpK530NHp6vGPxSWQ=;
+        b=DzA10kxZjhUAUzbomJtMsexPHaaF31uyAhW9lJFb+QV00eAyRcfOv5nz+6NWFkMlhI
+         YcKY0bU0L/w1rF9bbIev6ZNV6g3oWxD066fE/X9K6hkRVj/mjTIZ+Gds2NMeTzdDGO+u
+         TubQTx5fd1BKiZOlj1JHwreZKzhIs+D34GVYQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=U67L4WQ3xSjVipoAMgRt0JRoAgI5A+rg5eoYeq5BOZg=;
-        b=p0oWF+8dingG2twwfBfce1qE8xlv0kbRm6Q1n8IbWLwSxHu7MiE0WihhvIktpP5xvK
-         K3S6VH94qyUNXfragMhRqqEwofEPdnpCMYYZxEN32QdL/ZjjATBq9WWIAMl2FPjyhLHG
-         tKz3LMTHnMoIQSexvE70Ivfv6Qhr8OvUdY3peZzHBcbWDz5YD66DleBkAp939Zera70W
-         EJbTLDPEKc0fPU34RAS8Hajc/Fjxsybf8i6SG7SsYJR46Fh2tVr1UZbIf5e75imEZQWL
-         lD4U4Ycg0WBYTCRvWY7oG6ml5q4DpNG4FDqAMv/qj6LX1MoN1N6idOPzqwOURBnk9ba7
-         M83Q==
-X-Gm-Message-State: AOAM532/DMTBwyI2ta2L40wJVHkkozszAp59BO72C22z5CNlh9HS1UEE
-	5/0ENz5dYAGCRX7D6c6Qp+CVd/d2sylEzikB
+        bh=0vNaQVkcsQcQAXLW4sZiAVr2DYmpK530NHp6vGPxSWQ=;
+        b=rb/Xg25yjZkdXxpREAb7Fj9hWUAhv5mES1jy/aJhJhsaJW4vx8hvesu/z/fYDqXq84
+         X8NRZT4lLdqqZxXJeTB1vJHsRdrAqNcjzDGwsT3wCo+G/VpD28Fiq5jLu5IFnMr+IC0A
+         qUm+IfKU3SgOhsfNK/7gRQxU/TbVKOezZV3KftGFXT+ZBlnLuvrVHh3Goe0qjfyq+5dD
+         IDLtQnncSIQjjnyzhL4+C1Ji4Q3I52Ci0MmtkhBIBNwSN78He8vpx7qnuTrT//wNe+Sf
+         YJfdvnRSYe+YddjXtjyCjKTHoT3IAzo75OxCLob7j53MwkXcnNeLanRE8wFSuko2ttQO
+         P/rw==
+X-Gm-Message-State: AOAM532Qsu7DZSJ3jofB0XUoi3oDAps5IISs2OAPLb8SumnvE1XOgBPQ
+	RjsZ+r8igfO5g3aB6Igzxj2F8cxMGcpl4AOP
 X-Google-Smtp-Source: 
- ABdhPJwjmXmSDNh0jav2nuZxXaUuankGWVJzizLo57KdVhFHnsC5fVg6NhEbcXbpTVM6QzQJabx1gA==
-X-Received: by 2002:adf:fb06:0:b0:1e6:8b27:f1ea with SMTP id
- c6-20020adffb06000000b001e68b27f1eamr1924091wrr.353.1645011124343;
-        Wed, 16 Feb 2022 03:32:04 -0800 (PST)
+ ABdhPJz6fTr69RuT+pM6ZLBcXRRVukCIndmTepATowafFcjpOdmrBpABGJQqelSp/k0NJjEv8HKmaw==
+X-Received: by 2002:a05:600c:49a9:b0:349:bf22:468b with SMTP id
+ h41-20020a05600c49a900b00349bf22468bmr1210625wmp.136.1645011121391;
+        Wed, 16 Feb 2022 03:32:01 -0800 (PST)
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:a680:61af:4a53:1ad3])
         by smtp.gmail.com with ESMTPSA id
- x18sm35476238wrw.17.2022.02.16.03.32.03
+ x18sm35476238wrw.17.2022.02.16.03.32.00
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Feb 2022 03:32:03 -0800 (PST)
+        Wed, 16 Feb 2022 03:32:00 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 5/5] data_smart: Add hasOverrides method to public datastore
- API
-Date: Wed, 16 Feb 2022 11:31:58 +0000
-Message-Id: <20220216113158.2899964-5-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/5] cooker: Improve parsing failure from handled exception
+ usability
+Date: Wed, 16 Feb 2022 11:31:55 +0000
+Message-Id: <20220216113158.2899964-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220216113158.2899964-1-richard.purdie@linuxfoundation.org>
 References: <20220216113158.2899964-1-richard.purdie@linuxfoundation.org>
@@ -63,31 +64,42 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 16 Feb 2022 11:32:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13355
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13352
 
-There are some cases where the metadata needs to check if a variable
-has any overrides set, even if they are currently inactive. That code
-currently pokes into datastore internals. Add API instead to replace
-and avoid that.
+When a recipe raises a BBHandledException, it means the error was already
+shown to the user. Adding an additional one here isn't helpful. What is
+helpful is to mention that parsing was halted.
+
+Tweak the code to do this with improves the messages the user sees
+and helps understand what happened.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/data_smart.py | 2 ++
- 1 file changed, 2 insertions(+)
+ lib/bb/cooker.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 242476be0e..cb2d4b620f 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -488,6 +488,8 @@ class DataSmart(MutableMapping):
-         else:
-             self.initVar(var)
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 08e45e79d0..d1d4e32595 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -2167,6 +2167,8 @@ class CookerParser(object):
+                                             self.total)
  
-+    def hasOverrides(self, var):
-+        return var in self.overridedata
+             bb.event.fire(event, self.cfgdata)
++        else:
++            bb.error("Parsing halted due to errors")
  
-     def setVar(self, var, value, **loginfo):
-         #print("var=" + str(var) + "  val=" + str(value))
+         for process in self.processes:
+             self.parser_quit.put(None)
+@@ -2257,7 +2259,7 @@ class CookerParser(object):
+             return False
+         except bb.BBHandledException as exc:
+             self.error += 1
+-            logger.error('Failed to parse recipe: %s' % exc.recipe)
++            logger.debug('Failed to parse recipe: %s' % exc.recipe)
+             self.shutdown(clean=False, force=True)
+             return False
+         except ParsingFailure as exc:
 -- 
 2.32.0
 
