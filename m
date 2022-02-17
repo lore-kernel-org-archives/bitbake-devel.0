@@ -1,131 +1,96 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDFDC433EF
-	for <webhook@archiver.kernel.org>; Wed, 16 Feb 2022 16:22:17 +0000 (UTC)
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web11.1209.1645028535479051371
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5171BC433F5
+	for <webhook@archiver.kernel.org>; Thu, 17 Feb 2022 16:58:59 +0000 (UTC)
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com
+ [209.85.161.47])
+ by mx.groups.io with SMTP id smtpd.web11.2616.1645117138754596787
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 16 Feb 2022 08:22:16 -0800
+ Thu, 17 Feb 2022 08:58:58 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=gsKR1QY6;
- spf=pass (domain: axis.com, ip: 195.60.68.17,
- mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=CLDvegrX;
+ spf=pass (domain: gmail.com, ip: 209.85.161.47,
+ mailfrom: jpewhacker@gmail.com)
+Received: by mail-oo1-f47.google.com with SMTP id
+ e19-20020a4ab993000000b0031a98fe3a9dso277290oop.6
+        for <bitbake-devel@lists.openembedded.org>;
+ Thu, 17 Feb 2022 08:58:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1645028536;
-  x=1676564536;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=klbbGELagccNdvw/0qDFwQ1WXyGGh6Sa99NkK92YlcI=;
-  b=gsKR1QY6PjC9yrSphpoYkZUm4R0J/QI9gFozMVJ66kfZYM8YBDbLj3iK
-   Sa4Kzv5ZXlhe8FnTQvfbebETG/lrmMkusOxac3CI1fUge0JaVGT0QN953
-   qc036oRE4SJNPGE8BirI8ko6rfriqfzlobtZ0drm4kPWaH8fyvL6Adotb
-   xNrDzKf8tdRJb4l2B3AiMo0dOjVLwWRmLK2P0m1fPpLWJGYHPPt7bE2+G
-   c5xMcrxsxO6zCQ5YgZhXJ1Cp49mzMvl5H2gM1wOpgq/O3V0Gf1Ob8eEGq
-   3KyFZkudpacDte+21KCk84+XpBJrP3vWBmggLBdpfVc37yxiCXR7XH1ld
-   Q==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Joshua Watt <JPEWhacker@gmail.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-CC: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: RE: [bitbake-devel][PATCH] bitbake: msg: Add bb.warnonce() and
- bb.erroronce() log methods
-Thread-Topic: [bitbake-devel][PATCH] bitbake: msg: Add bb.warnonce() and
- bb.erroronce() log methods
-Thread-Index: AQHYI0x29QOMbLJsBUWGEoHc6PE4P6yWWSBA
-Date: Wed, 16 Feb 2022 16:22:12 +0000
-Message-ID: <b4859a1015a64948b9326c6800fd70f4@axis.com>
-References: <20220216154646.2499980-1-JPEWhacker@gmail.com>
-In-Reply-To: <20220216154646.2499980-1-JPEWhacker@gmail.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ge67O8eHBEI4zztPjOlI5GtfheHszZuTgtC5yuc9+U8=;
+        b=CLDvegrXJ7MHMOyU81KpVzhEXHFT3e+8v+NHJSdMNrww0vmvmP42JVe9UJK6L4UCrj
+         OcsWG2hpenmKaQNqBHIveWNxAidL4Bi8PuoSdBxkqsgKNTJ1ZI+mFvDqq0yQjYVfs42x
+         Lh3Bpo2OpG5pmg8IQFAJy4gsiJzstKUkCwadwtuXWGk8pH1FshGkkaULgTyNY1QVmAH2
+         FW0T4+Q78WxhG53XA/5nvLb8kf/qVKFI3r02O59IlIflWK1uu9sjd4eKdCzWdm/CApCe
+         qYh8440Ck87pY/h2REVW3sOYnVPHg1+AwJP7P7rUywRxc77hMNMqniBfV8gEuhHqjtfP
+         bzoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ge67O8eHBEI4zztPjOlI5GtfheHszZuTgtC5yuc9+U8=;
+        b=5sExBWndJrdSwTxoizY6Ocmhs0qH7PV8C+HZWeolAkBUOb2AvBk2CpuYZ3y4AWNyFn
+         B/2KHfM9WT0AN00tGnOz3xsnwQJfifQl2/ZV/EOn8IZRUFrbgv0ZA229evcwZcCX2ait
+         0GbZQr3NidW6quqbztxc5WTIJbshQDheMzs4XN+rTNobte3Gx4/Y3oAbTdhGDZQgzB37
+         HpEY409VLGbFk4CEV6FRcT5y6oN2dLMOm1XEfG6d5GWrFTCIKrsYr9AYtXkhWex8+6Wh
+         X7U0IsenbuLoILyMW5M4VqVz2t9vbinceB/oNDrcGrltpV96BG5+VxZuRMxHkoBWmzv5
+         mVQQ==
+X-Gm-Message-State: AOAM533u4AvF5q7gl8VOk3g16tsc0EPgs6WWD7Gc9CFTBnyzKsLHMELT
+	z5NZEjr8Qp/4BbCqMGPpVcltl/r26Ms=
+X-Google-Smtp-Source: 
+ ABdhPJwOWtRY8trvQ6yPULFhvufFAf6DEqeGmSLAxYEWt2vBGVpMauSeZ/DvSF3aA9xK9L4b8n0uJg==
+X-Received: by 2002:a4a:7601:0:b0:2e0:3c62:4787 with SMTP id
+ t1-20020a4a7601000000b002e03c624787mr1039391ooc.11.1645117137795;
+        Thu, 17 Feb 2022 08:58:57 -0800 (PST)
+Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
+        by smtp.gmail.com with ESMTPSA id k19sm82218oot.41.2022.02.17.08.58.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Feb 2022 08:58:57 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] bitbake: Ensure manually created loggers have
+ the once filter
+Date: Thu, 17 Feb 2022 10:58:53 -0600
+Message-Id: <20220217165853.69695-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 16 Feb 2022 16:22:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13358
+ <bitbake-devel@lists.openembedded.org>; Thu, 17 Feb 2022 16:58:59 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13359
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Joshua Watt
-> Sent: den 16 februari 2022 16:47
-> To: bitbake-devel@lists.openembedded.org
-> Cc: Richard Purdie <richard.purdie@linuxfoundation.org>; Joshua Watt
-> <JPEWhacker@gmail.com>
-> Subject: [bitbake-devel][PATCH] bitbake: msg: Add bb.warnonce() and
-> bb.erroronce() log methods
->=20
-> From: Richard Purdie <richard.purdie@linuxfoundation.org>
->=20
-> This adds a log level and logging function call to use it where the
-> warning or error will only be displayed once, regardless of how many
-> times the message is logged.
->=20
-> This has to be done either in the cooker or on the UI side. I've opted
-> for the UI side since display control is really a UI issue but it uses
-> a common library filter function to enable it which can be reused
-> elsewhere.
->=20
-> The knotty message displayed as the build summary is tweaked to
-> make sense when the numbers won't match since it will still count
-> the number of times it was logged and this is probably helpful
-> for debugging in some cases so I've deliberately left it that way.
->=20
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> ---
->  bitbake/lib/bb/__init__.py  | 13 +++++++++++++
->  bitbake/lib/bb/msg.py       | 32 +++++++++++++++++++++++++++++++-
->  bitbake/lib/bb/ui/knotty.py | 14 +++++++-------
->  3 files changed, 51 insertions(+), 8 deletions(-)
+Loggers created with a logging configuration file automatically get the
+once filter applied to ensure that warnonce()/erroronce() only appear a
+single time. The same filter needs to also be added to
+bb.msg.logger_create() to ensure that manually created loggers have the
+same behavior
 
-[cut]
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/msg.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-> diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
-> index 291b38ff7f..512ec1f5c1 100644
-> --- a/bitbake/lib/bb/msg.py
-> +++ b/bitbake/lib/bb/msg.py
-> @@ -30,7 +30,9 @@ class BBLogFormatter(logging.Formatter):
->      PLAIN =3D logging.INFO + 1
->      VERBNOTE =3D logging.INFO + 2
->      ERROR =3D logging.ERROR
-> +    ERRORONCE =3D logging.ERROR - 1
->      WARNING =3D logging.WARNING
-> +    WARNONCE =3D logging.WARNING - 1
->      CRITICAL =3D logging.CRITICAL
->=20
->      levelnames =3D {
-> @@ -42,7 +44,9 @@ class BBLogFormatter(logging.Formatter):
->          PLAIN  : '',
->          VERBNOTE: 'NOTE',
->          WARNING : 'WARNING',
-> +        WARNONCE : 'WARNING',
->          ERROR   : 'ERROR',
-> +        ERRORONCE   : 'ERROR',
->          CRITICAL: 'ERROR',
->      }
->=20
-> @@ -58,7 +62,9 @@ class BBLogFormatter(logging.Formatter):
->          PLAIN   : BASECOLOR,
->          VERBNOTE: BASECOLOR,
->          WARNING : YELLOW,
-> +        WARNONCE : YELLOW,
->          ERROR   : RED,
-> +        ERRORONCE : RED,
->          CRITICAL: RED,
->      }
->=20
+diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
+index 512ec1f5c1..c95a874beb 100644
+--- a/bitbake/lib/bb/msg.py
++++ b/bitbake/lib/bb/msg.py
+@@ -229,6 +229,7 @@ def logger_create(name, output=sys.stderr, level=logging.INFO, preserve_handlers
+     """Standalone logger creation function"""
+     logger = logging.getLogger(name)
+     console = logging.StreamHandler(output)
++    console.addFilter(bb.msg.LogFilterShowOnce())
+     format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
+     if color == 'always' or (color == 'auto' and output.isatty()):
+         format.enable_color()
+-- 
+2.33.0
 
-A qualified guess is that those colons above were once expected to=20
-line up...
-
-
-//Peter
 
