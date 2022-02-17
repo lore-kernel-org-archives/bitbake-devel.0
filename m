@@ -1,96 +1,104 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <scott.murray@konsulko.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5171BC433F5
-	for <webhook@archiver.kernel.org>; Thu, 17 Feb 2022 16:58:59 +0000 (UTC)
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com
- [209.85.161.47])
- by mx.groups.io with SMTP id smtpd.web11.2616.1645117138754596787
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5184EC433EF
+	for <webhook@archiver.kernel.org>; Thu, 17 Feb 2022 22:09:48 +0000 (UTC)
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com
+ [209.85.219.46])
+ by mx.groups.io with SMTP id smtpd.web10.3290.1645135787369023303
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Feb 2022 08:58:58 -0800
+ Thu, 17 Feb 2022 14:09:47 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=CLDvegrX;
- spf=pass (domain: gmail.com, ip: 209.85.161.47,
- mailfrom: jpewhacker@gmail.com)
-Received: by mail-oo1-f47.google.com with SMTP id
- e19-20020a4ab993000000b0031a98fe3a9dso277290oop.6
+ dkim=pass header.i=@konsulko.com header.s=google header.b=dFw8lVHi;
+ spf=pass (domain: konsulko.com, ip: 209.85.219.46,
+ mailfrom: scott.murray@konsulko.com)
+Received: by mail-qv1-f46.google.com with SMTP id f19so11100665qvb.6
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Feb 2022 08:58:58 -0800 (PST)
+ Thu, 17 Feb 2022 14:09:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=konsulko.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ge67O8eHBEI4zztPjOlI5GtfheHszZuTgtC5yuc9+U8=;
-        b=CLDvegrXJ7MHMOyU81KpVzhEXHFT3e+8v+NHJSdMNrww0vmvmP42JVe9UJK6L4UCrj
-         OcsWG2hpenmKaQNqBHIveWNxAidL4Bi8PuoSdBxkqsgKNTJ1ZI+mFvDqq0yQjYVfs42x
-         Lh3Bpo2OpG5pmg8IQFAJy4gsiJzstKUkCwadwtuXWGk8pH1FshGkkaULgTyNY1QVmAH2
-         FW0T4+Q78WxhG53XA/5nvLb8kf/qVKFI3r02O59IlIflWK1uu9sjd4eKdCzWdm/CApCe
-         qYh8440Ck87pY/h2REVW3sOYnVPHg1+AwJP7P7rUywRxc77hMNMqniBfV8gEuhHqjtfP
-         bzoA==
+        bh=pod8VbMhvxIzeFHVsEkEBfwnNZs6lOpxIJvFN/bJsnM=;
+        b=dFw8lVHiHN5YgarU9Vwz0jrtX4C57tSo/HvtRExlAfYsFyGKTANS693morfGGlRxN+
+         ohdFX1/uJeY2p4bXx32UAlVpyFfRzRv8xVA5FrkVqaI0YpQnVKAMWAaRc88yyQfOs7bt
+         ruimGaOar9QmlOkIu4kJ9eMnmkjJXSXwX8EDk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ge67O8eHBEI4zztPjOlI5GtfheHszZuTgtC5yuc9+U8=;
-        b=5sExBWndJrdSwTxoizY6Ocmhs0qH7PV8C+HZWeolAkBUOb2AvBk2CpuYZ3y4AWNyFn
-         B/2KHfM9WT0AN00tGnOz3xsnwQJfifQl2/ZV/EOn8IZRUFrbgv0ZA229evcwZcCX2ait
-         0GbZQr3NidW6quqbztxc5WTIJbshQDheMzs4XN+rTNobte3Gx4/Y3oAbTdhGDZQgzB37
-         HpEY409VLGbFk4CEV6FRcT5y6oN2dLMOm1XEfG6d5GWrFTCIKrsYr9AYtXkhWex8+6Wh
-         X7U0IsenbuLoILyMW5M4VqVz2t9vbinceB/oNDrcGrltpV96BG5+VxZuRMxHkoBWmzv5
-         mVQQ==
-X-Gm-Message-State: AOAM533u4AvF5q7gl8VOk3g16tsc0EPgs6WWD7Gc9CFTBnyzKsLHMELT
-	z5NZEjr8Qp/4BbCqMGPpVcltl/r26Ms=
+        bh=pod8VbMhvxIzeFHVsEkEBfwnNZs6lOpxIJvFN/bJsnM=;
+        b=c3JB1II6n+kitE5cmWYVnum6F5XQDcFpLOGplgQyFhRCFwfXCgT2VcWf0quOitPQxb
+         G8jHY86CxBmLLH2Zf8GrZ8TcV39WJUOoArbhYRFTdBKe+tCm4A5bPRk2eutyNW5oju6d
+         bXuvogYp8o4a54oBEzZe+l1O0xHmFP1UpcTWcGXLFPVj5nKgH0pMvPS8RsCHcHhYN+C7
+         uGGX1r+k8DqCmyWMIPv4UEKR3pavwIFafR8gSvmG1ot6qFe5Wz3IyqyxZtHMcAjvx7z5
+         US+OzNIB3+UvRtwoi8aqvykWUb5+fnaTXe+x5mbhb04Pi2nOFu2G1/hp2S/t8HX+lOQV
+         hfgQ==
+X-Gm-Message-State: AOAM5300l7WxBqectu67iyZ+IL3HbP0wueBXBJ4uRBjjyFGeZbFJbeug
+	OVYXRofkoUZXPFdWJKGVYRuCwDSgrfRpOQ==
 X-Google-Smtp-Source: 
- ABdhPJwOWtRY8trvQ6yPULFhvufFAf6DEqeGmSLAxYEWt2vBGVpMauSeZ/DvSF3aA9xK9L4b8n0uJg==
-X-Received: by 2002:a4a:7601:0:b0:2e0:3c62:4787 with SMTP id
- t1-20020a4a7601000000b002e03c624787mr1039391ooc.11.1645117137795;
-        Thu, 17 Feb 2022 08:58:57 -0800 (PST)
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id k19sm82218oot.41.2022.02.17.08.58.57
+ ABdhPJzhxBBQYRY4pV/HynaUThspuuTSQ09g+ZLXcYM8ct6ls5z7THKJ3xGWfpALzK39VHxU+edhXw==
+X-Received: by 2002:ac8:5ace:0:b0:2d8:c7fa:6f8f with SMTP id
+ d14-20020ac85ace000000b002d8c7fa6f8fmr4176496qtd.410.1645135785984;
+        Thu, 17 Feb 2022 14:09:45 -0800 (PST)
+Received: from ghidorah.spiteful.org (192-0-174-222.cpe.teksavvy.com.
+ [192.0.174.222])
+        by smtp.gmail.com with ESMTPSA id
+ q15sm5127572qtn.41.2022.02.17.14.09.45
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Feb 2022 08:58:57 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+        Thu, 17 Feb 2022 14:09:45 -0800 (PST)
+From: Scott Murray <scott.murray@konsulko.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bitbake: Ensure manually created loggers have
- the once filter
-Date: Thu, 17 Feb 2022 10:58:53 -0600
-Message-Id: <20220217165853.69695-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.33.0
+Subject: [PATCH 0/4] Further inclusive language fixes
+Date: Thu, 17 Feb 2022 17:09:31 -0500
+Message-Id: <cover.1645135230.git.scott.murray@konsulko.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 17 Feb 2022 16:58:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13359
+ <bitbake-devel@lists.openembedded.org>; Thu, 17 Feb 2022 22:09:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13360
 
-Loggers created with a logging configuration file automatically get the
-once filter applied to ensure that warnonce()/erroronce() only appear a
-single time. The same filter needs to also be added to
-bb.msg.logger_create() to ensure that manually created loggers have the
-same behavior
+A set of patches to address the remaining blacklist/whitelist/abort
+clean up tasks in BitBake on the list at:
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/bb/msg.py | 1 +
- 1 file changed, 1 insertion(+)
+https://wiki.yoctoproject.org/wiki/Inclusive_language
 
-diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
-index 512ec1f5c1..c95a874beb 100644
---- a/bitbake/lib/bb/msg.py
-+++ b/bitbake/lib/bb/msg.py
-@@ -229,6 +229,7 @@ def logger_create(name, output=sys.stderr, level=logging.INFO, preserve_handlers
-     """Standalone logger creation function"""
-     logger = logging.getLogger(name)
-     console = logging.StreamHandler(output)
-+    console.addFilter(bb.msg.LogFilterShowOnce())
-     format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
-     if color == 'always' or (color == 'auto' and output.isatty()):
-         format.enable_color()
+The BB_DISKMON_DIRS change is the most user visible, and I'll
+be sending corresponding changes for oe-core and meta-poky to
+quiet the new warning with respect to it that Richard requested.
+
+Scott Murray (4):
+  Replace remaining "blacklist"/"whitelist" usage
+  Replace "abort" usage in task handling
+  Replace "ABORT" action in BB_DISKMON_DIRS
+  Replace remaining "abort" usage
+
+ bin/toaster                                   |  4 ++--
+ .../bitbake-user-manual-ref-variables.rst     | 12 +++++-----
+ lib/bb/cooker.py                              | 24 +++++++++----------
+ lib/bb/cookerdata.py                          |  4 ++--
+ lib/bb/event.py                               |  2 +-
+ lib/bb/fetch2/__init__.py                     |  2 +-
+ lib/bb/main.py                                |  2 +-
+ lib/bb/monitordisk.py                         | 17 ++++++++-----
+ lib/bb/runqueue.py                            | 12 +++++-----
+ lib/bb/siggen.py                              |  2 +-
+ lib/bb/taskdata.py                            | 10 ++++----
+ lib/bblayers/action.py                        |  2 +-
+ lib/layerindexlib/__init__.py                 |  4 ++--
+ lib/layerindexlib/cooker.py                   |  2 +-
+ .../bldcontrol/localhostbecontroller.py       |  4 ++--
+ .../orm/management/commands/lsupdates.py      | 12 +++++-----
+ .../toastergui/templates/projectconf.html     | 10 ++++----
+ lib/toaster/toastergui/views.py               | 18 +++++++-------
+ 18 files changed, 74 insertions(+), 69 deletions(-)
+
 -- 
-2.33.0
+2.35.1
 
 
