@@ -2,59 +2,59 @@ Return-Path: <scott.murray@konsulko.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE3EC433EF
-	for <webhook@archiver.kernel.org>; Thu, 17 Feb 2022 22:09:50 +0000 (UTC)
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com
- [209.85.219.41])
- by mx.groups.io with SMTP id smtpd.web10.3292.1645135789718205120
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4DEC433FE
+	for <webhook@archiver.kernel.org>; Thu, 17 Feb 2022 22:09:52 +0000 (UTC)
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com
+ [209.85.219.44])
+ by mx.groups.io with SMTP id smtpd.web09.3387.1645135790914260368
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Feb 2022 14:09:49 -0800
+ Thu, 17 Feb 2022 14:09:51 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=IfN53gGi;
- spf=pass (domain: konsulko.com, ip: 209.85.219.41,
+ dkim=pass header.i=@konsulko.com header.s=google header.b=sm2F8pJ1;
+ spf=pass (domain: konsulko.com, ip: 209.85.219.44,
  mailfrom: scott.murray@konsulko.com)
-Received: by mail-qv1-f41.google.com with SMTP id c14so11065876qvl.12
+Received: by mail-qv1-f44.google.com with SMTP id o5so11108547qvm.3
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Feb 2022 14:09:49 -0800 (PST)
+ Thu, 17 Feb 2022 14:09:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=LZwR1OF5IeWR925Iw4u5lqy6Mseb0+6q3nQOlgAeFa0=;
-        b=IfN53gGiaUGoddvLWV0xr/NA6M/RcD4Wz4nuG6d/ulD78ncGwPB8CcNMTBxyWP3qON
-         Akzq7hvgdT45Uo3UEWm5uvSwbdqee7pudp6RFVR2AqCRbm5ztSIu8UmV84ZXdlbOABsV
-         BGtwRWj+68te6Ij/QNnesiBtJRCqqYHF6WjkA=
+        bh=R73oPIKQkRvztHPs+7Or+xALhdsieIDsFg7IxQ6+moc=;
+        b=sm2F8pJ10FhC7UWpdW6SGq4uyJUeNUAioKv9t4kTZWzUut65LlxF/7YaIYuV1632/K
+         ufgd7H6ylctmcztaVqCPHfAy0OQH6L2Ug4y7BADg4pmgE4+px6L6OOaDPhVFNJAKw7TR
+         Y5aQWEJP7JdS/GLLZ2yWlN0DHeLkC13jJL+7c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LZwR1OF5IeWR925Iw4u5lqy6Mseb0+6q3nQOlgAeFa0=;
-        b=rcGU8/EGTdhO425Ga2yfNxKvzooLbIkyqMjm+PXoDjbxXvuN1mObUH+/8t1DVUvaUi
-         +HZxCbBoeiLbwkOVI8ix3r/LK8PTvDpFe0jlyZzNhTFbNTsUVL3OerIPXVGpDFM5Ybdu
-         U6au6fmliqx5vVsPr+cp91AB+7RgLdL71Vs9Y3gW0pSkmTg3HUOTIvCYFQ8d6R95Ug/s
-         Um76UfqGDvcMB+ffIQgTFuZx+2d2TGYDy6o+PNsqMwAV0UHFF07mbuXHLLtSoZELYMFh
-         XPaQ/YV+VDzVzF2FdGc5Npak6rQ2in1A2vLWs5JFR979X78/3Zlr5duMdJ3PdbOtEjTD
-         ECwA==
-X-Gm-Message-State: AOAM533s7kQ95qpgqVzrkR82u0azv2NNIKY1y/r+QQ7q+7BYmHpF8Etn
-	DSzTIe3dj6xviFBe9w4xwOg0W4ozn2v7vQ==
+        bh=R73oPIKQkRvztHPs+7Or+xALhdsieIDsFg7IxQ6+moc=;
+        b=T9W0WI2LZVjnDhc78AbSrceVemiGzKRVxULj1YbS9iLmey59RM/QX1+ZoXauZV+0vG
+         2jtEfkxQ+Va3qQd4MW8f6XGb5azCACN3lR3206Al+OSRmi/kzBoPYSnP+P8HC7spVK2k
+         qixScgTCRdKYepYSL56QhAaZqbTJH9LFAFBlTrDWSXvr2zrsYa7Ne6RuX3WEr9QnXt76
+         QlxhLCng4ynPcvDO+36wMIQjlFdSrecU/9RWfe7hjfjxThgVlpICoFONyqYUWTE+sYGd
+         qO1mDglJNHl8C8cemQ1sL3rVrY25oL1q6gsyNHtLsjo3c1GGGtDIAsLSllLgfII7mEhK
+         GJXQ==
+X-Gm-Message-State: AOAM530JeYkufabHFlSaPk7UAIwzoxI9MiNzD//bbS3rkHa8XuOVOfcV
+	lgKGhEzK8Q6UgTUcpu6Bsc70tqANTE3FTQ==
 X-Google-Smtp-Source: 
- ABdhPJyVdZjrOxtFj3vdKNTO4vTy4LfTN1A01tfuPz8iTeGAxm/6w4RgBRABFDDdmipo2Qj42R9nAw==
-X-Received: by 2002:ac8:75d0:0:b0:2db:aad5:ec47 with SMTP id
- z16-20020ac875d0000000b002dbaad5ec47mr4283084qtq.390.1645135788211;
-        Thu, 17 Feb 2022 14:09:48 -0800 (PST)
+ ABdhPJylr0YjQwT8Em4UPuDdN/cAASqgkHwMzbhYvPA9ntqwNZud/NBGhCmoRCeZxjmbs3SigCBdgQ==
+X-Received: by 2002:a05:6214:238b:b0:430:842c:1863 with SMTP id
+ fw11-20020a056214238b00b00430842c1863mr3647654qvb.105.1645135789433;
+        Thu, 17 Feb 2022 14:09:49 -0800 (PST)
 Received: from ghidorah.spiteful.org (192-0-174-222.cpe.teksavvy.com.
  [192.0.174.222])
         by smtp.gmail.com with ESMTPSA id
- q15sm5127572qtn.41.2022.02.17.14.09.47
+ q15sm5127572qtn.41.2022.02.17.14.09.48
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Feb 2022 14:09:47 -0800 (PST)
+        Thu, 17 Feb 2022 14:09:48 -0800 (PST)
 From: Scott Murray <scott.murray@konsulko.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/4] Replace "abort" usage in task handling
-Date: Thu, 17 Feb 2022 17:09:33 -0500
+Subject: [PATCH 3/4] Replace "ABORT" action in BB_DISKMON_DIRS
+Date: Thu, 17 Feb 2022 17:09:34 -0500
 Message-Id: 
- <e30c762db3aea0f071e0992dd394ae7f2ded6e42.1645135230.git.scott.murray@konsulko.com>
+ <b61e35198c98e63c304799b3fbb0dee962511807.1645135230.git.scott.murray@konsulko.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <cover.1645135230.git.scott.murray@konsulko.com>
 References: <cover.1645135230.git.scott.murray@konsulko.com>
@@ -63,270 +63,126 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 17 Feb 2022 22:09:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13362
+ <bitbake-devel@lists.openembedded.org>; Thu, 17 Feb 2022 22:09:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13363
 
 In line with the inclusive language migration defined at:
 
 https://wiki.yoctoproject.org/wiki/Inclusive_language
 
-replace the use of "abort" with "halt" in code related to handling
-task failure.
+replace the "ABORT" action in BB_DISKMON_DIRS entries with "HALT".
+In order to ease migration, code has been added to warn users to
+update their configurations if the old name is used, as opposed to
+to throwing an error.
 
 Signed-off-by: Scott Murray <scott.murray@konsulko.com>
 ---
- lib/bb/cooker.py     | 24 ++++++++++++------------
- lib/bb/cookerdata.py |  4 ++--
- lib/bb/main.py       |  2 +-
- lib/bb/runqueue.py   | 12 ++++++------
- lib/bb/taskdata.py   | 10 +++++-----
- 5 files changed, 26 insertions(+), 26 deletions(-)
+ .../bitbake-user-manual-ref-variables.rst       | 10 +++++-----
+ lib/bb/event.py                                 |  2 +-
+ lib/bb/monitordisk.py                           | 17 +++++++++++------
+ 3 files changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index d1d4e325..730575c5 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -199,7 +199,7 @@ class BBCooker:
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 7601d15a..315086a6 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -138,7 +138,7 @@ overview of their function and contents.
+          where:
  
-         self.inotify_modified_files = []
+             <action> is:
+-               ABORT:     Immediately abort the build when
++               HALT:      Immediately halt the build when
+                           a threshold is broken.
+                STOPTASKS: Stop the build after the currently
+                           executing tasks have finished when
+@@ -169,13 +169,13 @@ overview of their function and contents.
  
--        def _process_inotify_updates(server, cooker, abort):
-+        def _process_inotify_updates(server, cooker, halt):
-             cooker.process_inotify_updates()
-             return 1.0
+       Here are some examples::
  
-@@ -505,7 +505,7 @@ class BBCooker:
-             logger.debug("Base environment change, triggering reparse")
-             self.reset()
+-         BB_DISKMON_DIRS = "ABORT,${TMPDIR},1G,100K WARN,${SSTATE_DIR},1G,100K"
++         BB_DISKMON_DIRS = "HALT,${TMPDIR},1G,100K WARN,${SSTATE_DIR},1G,100K"
+          BB_DISKMON_DIRS = "STOPTASKS,${TMPDIR},1G"
+-         BB_DISKMON_DIRS = "ABORT,${TMPDIR},,100K"
++         BB_DISKMON_DIRS = "HALT,${TMPDIR},,100K"
  
--    def runCommands(self, server, data, abort):
-+    def runCommands(self, server, data, halt):
-         """
-         Run any queued asynchronous command
-         This is done by the idle handler so it runs in true context rather than
-@@ -578,7 +578,7 @@ class BBCooker:
-                 if pkgs_to_build[0] in set(ignore.split()):
-                     bb.fatal("%s is in ASSUME_PROVIDED" % pkgs_to_build[0])
+       The first example works only if you also set the
+       :term:`BB_DISKMON_WARNINTERVAL`
+-      variable. This example causes the build system to immediately abort
++      variable. This example causes the build system to immediately halt
+       when either the disk space in ``${TMPDIR}`` drops below 1 Gbyte or
+       the available free inodes drops below 100 Kbytes. Because two
+       directories are provided with the variable, the build system also
+@@ -189,7 +189,7 @@ overview of their function and contents.
+       directory drops below 1 Gbyte. No disk monitoring occurs for the free
+       inodes in this case.
  
--                taskdata, runlist = self.buildTaskData(pkgs_to_build, None, self.configuration.abort, allowincomplete=True)
-+                taskdata, runlist = self.buildTaskData(pkgs_to_build, None, self.configuration.halt, allowincomplete=True)
+-      The final example immediately aborts the build when the number of
++      The final example immediately halts the build when the number of
+       free inodes in the ``${TMPDIR}`` directory drops below 100 Kbytes. No
+       disk space monitoring for the directory itself occurs in this case.
  
-                 mc = runlist[0][0]
-                 fn = runlist[0][3]
-@@ -616,7 +616,7 @@ class BBCooker:
-             self.disableDataTracking()
-             self.reset()
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 0454c753..b85a434d 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -486,7 +486,7 @@ class BuildCompleted(BuildBase, OperationCompleted):
+         BuildBase.__init__(self, n, p, failures)
  
--    def buildTaskData(self, pkgs_to_build, task, abort, allowincomplete=False):
-+    def buildTaskData(self, pkgs_to_build, task, halt, allowincomplete=False):
-         """
-         Prepare a runqueue and taskdata object for iteration over pkgs_to_build
-         """
-@@ -663,7 +663,7 @@ class BBCooker:
-         localdata = {}
+ class DiskFull(Event):
+-    """Disk full case build aborted"""
++    """Disk full case build halted"""
+     def __init__(self, dev, type, freespace, mountpoint):
+         Event.__init__(self)
+         self._dev = dev
+diff --git a/lib/bb/monitordisk.py b/lib/bb/monitordisk.py
+index 98f2109e..8d8cfbb9 100644
+--- a/lib/bb/monitordisk.py
++++ b/lib/bb/monitordisk.py
+@@ -76,7 +76,12 @@ def getDiskData(BBDirs):
+             return None
  
-         for mc in self.multiconfigs:
--            taskdata[mc] = bb.taskdata.TaskData(abort, skiplist=self.skiplist, allowincomplete=allowincomplete)
-+            taskdata[mc] = bb.taskdata.TaskData(halt, skiplist=self.skiplist, allowincomplete=allowincomplete)
-             localdata[mc] = data.createCopy(self.databuilder.mcdata[mc])
-             bb.data.expandKeys(localdata[mc])
+         action = pathSpaceInodeRe.group(1)
+-        if action not in ("ABORT", "STOPTASKS", "WARN"):
++        if action == "ABORT":
++            # Emit a deprecation warning
++            logger.warnonce("The BB_DISKMON_DIRS \"ABORT\" action has been been renamed to \"HALT\", update configuration")
++            action = "HALT"
++
++        if action not in ("HALT", "STOPTASKS", "WARN"):
+             printErr("Unknown disk space monitor action: %s" % action)
+             return None
  
-@@ -737,7 +737,7 @@ class BBCooker:
-         Prepare a runqueue and taskdata object for iteration over pkgs_to_build
-         """
- 
--        # We set abort to False here to prevent unbuildable targets raising
-+        # We set halt to False here to prevent unbuildable targets raising
-         # an exception when we're just generating data
-         taskdata, runlist = self.buildTaskData(pkgs_to_build, task, False, allowincomplete=True)
- 
-@@ -1425,7 +1425,7 @@ class BBCooker:
- 
-         # Setup taskdata structure
-         taskdata = {}
--        taskdata[mc] = bb.taskdata.TaskData(self.configuration.abort)
-+        taskdata[mc] = bb.taskdata.TaskData(self.configuration.halt)
-         taskdata[mc].add_provider(self.databuilder.mcdata[mc], self.recipecaches[mc], item)
- 
-         if quietlog:
-@@ -1441,11 +1441,11 @@ class BBCooker:
- 
-         rq = bb.runqueue.RunQueue(self, self.data, self.recipecaches, taskdata, runlist)
- 
--        def buildFileIdle(server, rq, abort):
-+        def buildFileIdle(server, rq, halt):
- 
-             msg = None
-             interrupted = 0
--            if abort or self.state == state.forceshutdown:
-+            if halt or self.state == state.forceshutdown:
-                 rq.finish_runqueue(True)
-                 msg = "Forced shutdown"
-                 interrupted = 2
-@@ -1487,10 +1487,10 @@ class BBCooker:
-         Attempt to build the targets specified
-         """
- 
--        def buildTargetsIdle(server, rq, abort):
-+        def buildTargetsIdle(server, rq, halt):
-             msg = None
-             interrupted = 0
--            if abort or self.state == state.forceshutdown:
-+            if halt or self.state == state.forceshutdown:
-                 rq.finish_runqueue(True)
-                 msg = "Forced shutdown"
-                 interrupted = 2
-@@ -1533,7 +1533,7 @@ class BBCooker:
- 
-         bb.event.fire(bb.event.BuildInit(packages), self.data)
- 
--        taskdata, runlist = self.buildTaskData(targets, task, self.configuration.abort)
-+        taskdata, runlist = self.buildTaskData(targets, task, self.configuration.halt)
- 
-         buildname = self.data.getVar("BUILDNAME", False)
- 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 8d96fc41..c1d1f949 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -57,7 +57,7 @@ class ConfigParameters(object):
- 
-     def updateToServer(self, server, environment):
-         options = {}
--        for o in ["abort", "force", "invalidate_stamp",
-+        for o in ["halt", "force", "invalidate_stamp",
-                   "dry_run", "dump_signatures",
-                   "extra_assume_provided", "profile",
-                   "prefile", "postfile", "server_timeout",
-@@ -124,7 +124,7 @@ class CookerConfiguration(object):
-         self.prefile = []
-         self.postfile = []
-         self.cmd = None
--        self.abort = True
-+        self.halt = True
-         self.force = False
-         self.profile = False
-         self.nosetscene = False
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index 639fc188..93eda363 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -127,7 +127,7 @@ def create_bitbake_parser():
-                       help="Execute tasks from a specific .bb recipe directly. WARNING: Does "
-                            "not handle any dependencies from other recipes.")
- 
--    parser.add_option("-k", "--continue", action="store_false", dest="abort", default=True,
-+    parser.add_option("-k", "--continue", action="store_false", dest="halt", default=True,
-                       help="Continue as much as possible after an error. While the target that "
-                            "failed and anything depending on it cannot be built, as much as "
-                            "possible will be built before stopping.")
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index aedf9354..a7a84630 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -485,7 +485,7 @@ class RunQueueData:
-                             msgs.append("  Task %s (dependent Tasks %s)\n" % (dep, self.runq_depends_names(self.runtaskentries[dep].depends)))
-                         msgs.append("\n")
-                     if len(valid_chains) > 10:
--                        msgs.append("Aborted dependency loops search after 10 matches.\n")
-+                        msgs.append("Halted dependency loops search after 10 matches.\n")
-                         raise TooManyLoops
-                     continue
-                 scan = False
-@@ -989,7 +989,7 @@ class RunQueueData:
- 
-         # Check to make sure we still have tasks to run
-         if not self.runtaskentries:
--            if not taskData[''].abort:
-+            if not taskData[''].halt:
-                 bb.msg.fatal("RunQueue", "All buildable tasks have been run but the build is incomplete (--continue mode). Errors for the tasks that failed will have been printed above.")
-             else:
-                 bb.msg.fatal("RunQueue", "No active tasks and not in --continue mode?! Please report this bug.")
-@@ -1424,7 +1424,7 @@ class RunQueue:
-         """
-         Run the tasks in a queue prepared by rqdata.prepare()
-         Upon failure, optionally try to recover the build using any alternate providers
--        (if the abort on failure configuration option isn't set)
-+        (if the halt on failure configuration option isn't set)
-         """
- 
-         retval = True
-@@ -1929,7 +1929,7 @@ class RunQueueExecute:
- 
-         bb.event.fire(runQueueTaskFailed(task, self.stats, exitcode, self.rq, fakeroot_log=("".join(fakeroot_log) or None)), self.cfgData)
- 
--        if self.rqdata.taskData[''].abort:
-+        if self.rqdata.taskData[''].halt:
-             self.rq.state = runQueueCleanUp
- 
-     def task_skip(self, task, reason):
-@@ -2392,7 +2392,7 @@ class RunQueueExecute:
-                 self.tasks_scenequeue_done.remove(tid)
-             for dep in self.sqdata.sq_covered_tasks[tid]:
-                 if dep in self.runq_complete and dep not in self.runq_tasksrun:
--                    bb.error("Task %s marked as completed but now needing to rerun? Aborting build." % dep)
-+                    bb.error("Task %s marked as completed but now needing to rerun? Halting build." % dep)
-                     self.failed_tids.append(tid)
-                     self.rq.state = runQueueCleanUp
-                     return
-@@ -2710,7 +2710,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-         if tid in rqdata.runq_setscene_tids:
-             pass
-         elif sq_revdeps_squash[tid]:
--            bb.msg.fatal("RunQueue", "Something went badly wrong during scenequeue generation, aborting. Please report this problem.")
-+            bb.msg.fatal("RunQueue", "Something went badly wrong during scenequeue generation, halting. Please report this problem.")
-         else:
-             del sq_revdeps_squash[tid]
-         rqdata.init_progress_reporter.update(taskcounter)
-diff --git a/lib/bb/taskdata.py b/lib/bb/taskdata.py
-index 7bfcdb84..66545a65 100644
---- a/lib/bb/taskdata.py
-+++ b/lib/bb/taskdata.py
-@@ -39,7 +39,7 @@ class TaskData:
-     """
-     BitBake Task Data implementation
-     """
--    def __init__(self, abort = True, skiplist = None, allowincomplete = False):
-+    def __init__(self, halt = True, skiplist = None, allowincomplete = False):
-         self.build_targets = {}
-         self.run_targets = {}
- 
-@@ -57,7 +57,7 @@ class TaskData:
-         self.failed_rdeps = []
-         self.failed_fns = []
- 
--        self.abort = abort
-+        self.halt = halt
-         self.allowincomplete = allowincomplete
- 
-         self.skiplist = skiplist
-@@ -328,7 +328,7 @@ class TaskData:
-         try:
-             self.add_provider_internal(cfgData, dataCache, item)
-         except bb.providers.NoProvider:
--            if self.abort:
-+            if self.halt:
-                 raise
-             self.remove_buildtarget(item)
- 
-@@ -479,7 +479,7 @@ class TaskData:
-                     fn = tid.rsplit(":",1)[0]
-                     self.fail_fn(fn, missing_list)
- 
--        if self.abort and target in self.external_targets:
-+        if self.halt and target in self.external_targets:
-             logger.error("Required build target '%s' has no buildable providers.\nMissing or unbuildable dependency chain was: %s", target, missing_list)
-             raise bb.providers.NoProvider(target)
- 
-@@ -516,7 +516,7 @@ class TaskData:
-                     self.add_provider_internal(cfgData, dataCache, target)
-                     added = added + 1
-                 except bb.providers.NoProvider:
--                    if self.abort and target in self.external_targets and not self.allowincomplete:
-+                    if self.halt and target in self.external_targets and not self.allowincomplete:
-                         raise
-                     if not self.allowincomplete:
-                         self.remove_buildtarget(target)
+@@ -177,7 +182,7 @@ class diskMonitor:
+                     # use them to avoid printing too many warning messages
+                     self.preFreeS = {}
+                     self.preFreeI = {}
+-                    # This is for STOPTASKS and ABORT, to avoid printing the message
++                    # This is for STOPTASKS and HALT, to avoid printing the message
+                     # repeatedly while waiting for the tasks to finish
+                     self.checked = {}
+                     for k in self.devDict:
+@@ -219,8 +224,8 @@ class diskMonitor:
+                         self.checked[k] = True
+                         rq.finish_runqueue(False)
+                         bb.event.fire(bb.event.DiskFull(dev, 'disk', freeSpace, path), self.configuration)
+-                    elif action == "ABORT" and not self.checked[k]:
+-                        logger.error("Immediately abort since the disk space monitor action is \"ABORT\"!")
++                    elif action == "HALT" and not self.checked[k]:
++                        logger.error("Immediately halt since the disk space monitor action is \"HALT\"!")
+                         self.checked[k] = True
+                         rq.finish_runqueue(True)
+                         bb.event.fire(bb.event.DiskFull(dev, 'disk', freeSpace, path), self.configuration)
+@@ -245,8 +250,8 @@ class diskMonitor:
+                         self.checked[k] = True
+                         rq.finish_runqueue(False)
+                         bb.event.fire(bb.event.DiskFull(dev, 'inode', freeInode, path), self.configuration)
+-                    elif action  == "ABORT" and not self.checked[k]:
+-                        logger.error("Immediately abort since the disk space monitor action is \"ABORT\"!")
++                    elif action  == "HALT" and not self.checked[k]:
++                        logger.error("Immediately halt since the disk space monitor action is \"HALT\"!")
+                         self.checked[k] = True
+                         rq.finish_runqueue(True)
+                         bb.event.fire(bb.event.DiskFull(dev, 'inode', freeInode, path), self.configuration)
 -- 
 2.35.1
 
