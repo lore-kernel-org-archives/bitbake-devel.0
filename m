@@ -2,39 +2,39 @@ Return-Path: <zygmunt.krynicki@huawei.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72962C433FE
-	for <webhook@archiver.kernel.org>; Sat, 19 Feb 2022 16:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B4AC433F5
+	for <webhook@archiver.kernel.org>; Sat, 19 Feb 2022 16:40:43 +0000 (UTC)
 Received: from wnew1-smtp.messagingengine.com (wnew1-smtp.messagingengine.com
  [64.147.123.26])
- by mx.groups.io with SMTP id smtpd.web12.11865.1645288838272231649
+ by mx.groups.io with SMTP id smtpd.web10.11893.1645288840189659696
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 19 Feb 2022 08:40:38 -0800
+ Sat, 19 Feb 2022 08:40:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=RzThEtCN;
+ dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=ATSys9pu;
  spf=fail (domain: huawei.com, ip: 64.147.123.26,
  mailfrom: zygmunt.krynicki@huawei.com)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailnew.west.internal (Postfix) with ESMTP id B21322B000EA;
-	Sat, 19 Feb 2022 11:40:37 -0500 (EST)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailnew.west.internal (Postfix) with ESMTP id 9CD4F2B000EB;
+	Sat, 19 Feb 2022 11:40:39 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Sat, 19 Feb 2022 11:40:37 -0500
+  by compute1.internal (MEProxy); Sat, 19 Feb 2022 11:40:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=qSFkkc
-	DKfYhGMTEVAie+dAO8rtiAOwsPuEMwAG9+Yko=; b=RzThEtCNncCc+poTfvGkqE
-	RHDj6z9hdVOULM5NGSPITmPNvASiXWKmivE/VT9hcWALec7y99M40yT2oQneTz44
-	2zNZeuGHwJcIZ/oGW6EIycqHwwZyVbQheEDbAAFFc0wjfRXRCiPPGPZduc920hwD
-	T2030PbqaQourAff08W/3y1nYY5+RrFX9MSe1v3IchUsnyerVLnLbSwFJbdgN1ua
-	wYtcUFJjlI2+UwyHEe6DB9KGtaxy1HH2k5/ccjnP8aYfbmF/NiuQ5ckJaWnsrO6q
-	4x9BebSATRsJr7Sg4d/bzfV1ZRMrERCJJTSQT3gAkr2Ezs8NXcIN6tUkK9uBmdDA
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=b4NtdA
+	JSuoaCVXAaVNelFQwgCL/c8APGIVxrdhcH9Jg=; b=ATSys9puYChRmiFW/MqptO
+	YhLUTB5cjQshXdw4giDphA11YYRGIahBhVC8Py68KP9R9RuNoemmiBjivLm32jq5
+	cHSHwAij2uJkvbEl6Gu/D0pTsik8mbIybDUzeUgFg/yg1ZdEow4frvjvlZDpV6Nl
+	hPA8ILsXHvULxD8ych3maY+LK5zriQGKL/lohsZrFUHbUGkZt//J08O8oBcumGWr
+	I2o1FqMphzfNdb+zVCQcSDh4AzyIIQbgYq2ZvTz+HaDkKiQsDlAQXNV7LhodUACK
+	KRgYworEz+w5vsvoIy8gM2HGF8cFBPuZzXJeE8q5n/fB/Zgjsfb+KPbNy4iGrYXw
 	==
-X-ME-Sender: <xms:hR0RYu1pz-FZxZ4V14TNiSbyV9S6RDBJ7Cr0foNuKEGAw7et6R5-wQ>
-    <xme:hR0RYhEk7fIup7bKBz2nwB_R6aUMKxNjyhdDuo0y1485SfL9DQZET0naMGR5_THvw
-    fmTk0XNnSsqBN7WNw>
+X-ME-Sender: <xms:hx0RYvBG8s3KA3UhZXHWD28hk-ffOUBeYnxlMjYL9fFDaUwr32h8Hg>
+    <xme:hx0RYljwGSlN4CMgnSMdyDkaavtP3-GLdfbkZK4SRGZWMlNdMP4zpEh_8JCI4WRkJ
+    -o6mJdept8RG4KSNg>
 X-ME-Received: 
- <xmr:hR0RYm75a3JqC3_60ydfQKBpirvExycuH1XvnaqNtZstGWsVlN4Cn2P-s8d3JZMii93GO3oriXDlaVmMvwPtPvE1cKI6Sr91BZq3F1AAUzRHJ4VedbfNEv0lqBzR5sQ>
+ <xmr:hx0RYqm9eqYzPuP9Ce_NiV-VZlkCyzFZ4Q5hkotgDYWBsAjS5S44wdD5--43ynesaZ6yIUQopBKCENbBYNiYQoWUMC9Y2ZEqWPQYkRDTAdWHM8rFnGBs4c4AJ2BfZOo>
 X-ME-Proxy-Cause: 
  gggruggvucftvghtrhhoucdtuddrgedvvddrkedvgdeludcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
@@ -44,18 +44,18 @@ X-ME-Proxy-Cause:
     fgjefffeeifeefheetvdduhfekueetgeeijedvheelhffhhffgleehfeeuheenucevlhhu
     shhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpeiihihgmhhunhhtrd
     hkrhihnhhitghkiheshhhurgifvghirdgtohhm
-X-ME-Proxy: <xmx:hR0RYv1zXVQX734ftsrMlWjf31_JV50VUnRZaP1RIW_dkMp990RY3g>
-    <xmx:hR0RYhF1f3FBM9kBT706FDl2PMyGr8z-e0-yUjVXjr5OmQBTPzPOgQ>
-    <xmx:hR0RYo-6BAHYShJZRfIzqyt-SDgrb0Yv6aXAgEKIQElI5iR9SxDNHQ>
-    <xmx:hR0RYgxoMc_tlxI2rFVblFsgvr4qJT2Hp64BlgRQLD5B1LWPJJ-NC4ILLPM>
+X-ME-Proxy: <xmx:hx0RYhwDWNNENdvSq6w6odF5HMgpLE2j65Lu6r-1njIhidO841X0GQ>
+    <xmx:hx0RYkQ_WHHf3MeeF2Ff5i17aC4ErgINMB4wi35-_U9mQgYB7SzmNg>
+    <xmx:hx0RYkakAFf9HUwcO4HkvzkzUClND7Eq1fIJGL4qvZvgwqRvpcvqwg>
+    <xmx:hx0RYjPWGj0DDr7j1pbTUdE7XPtjWVJmDBjwclCVJnd1wy1OYhJPDvyLxNI>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 19 Feb 2022 11:40:36 -0500 (EST)
+ 19 Feb 2022 11:40:38 -0500 (EST)
 From: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
-Subject: [PATCH 07/17] fetch2: Fix typo "conform"
-Date: Sat, 19 Feb 2022 17:40:11 +0100
-Message-Id: <20220219164021.8344-7-zygmunt.krynicki@huawei.com>
+Subject: [PATCH 08/17] fetch2: Fix typo "processed"
+Date: Sat, 19 Feb 2022 17:40:12 +0100
+Message-Id: <20220219164021.8344-8-zygmunt.krynicki@huawei.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220219164021.8344-1-zygmunt.krynicki@huawei.com>
 References: <20220219164021.8344-1-zygmunt.krynicki@huawei.com>
@@ -64,8 +64,8 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 19 Feb 2022 16:40:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13374
+ <bitbake-devel@lists.openembedded.org>; Sat, 19 Feb 2022 16:40:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13375
 
 Signed-off-by: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
 ---
@@ -73,18 +73,18 @@ Signed-off-by: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index d099cd10..18a71a07 100644
+index 18a71a07..a7e84e0d 100644
 --- a/lib/bb/fetch2/__init__.py
 +++ b/lib/bb/fetch2/__init__.py
-@@ -182,7 +182,7 @@ class URI(object):
-     Some notes about relative URIs: while it's specified that
-     a URI beginning with <scheme>:// should either be directly
-     followed by a hostname or a /, the old URI handling of the
--    fetch2 library did not comform to this. Therefore, this URI
-+    fetch2 library did not conform to this. Therefore, this URI
-     class has some kludges to make sure that URIs are parsed in
-     a way comforming to bitbake's current usage. This URI class
-     supports the following:
+@@ -113,7 +113,7 @@ class MissingParameterError(BBFetchException):
+         self.args = (missing, url)
+ 
+ class ParameterError(BBFetchException):
+-    """Exception raised when a url cannot be proccessed due to invalid parameters."""
++    """Exception raised when a url cannot be processed due to invalid parameters."""
+     def __init__(self, message, url):
+         msg = "URL: '%s' has invalid parameters. %s" % (url, message)
+         self.url = url
 -- 
 2.25.1
 
