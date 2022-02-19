@@ -1,121 +1,88 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <zygmunt.krynicki@huawei.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326D2C433F5
-	for <webhook@archiver.kernel.org>; Sat, 19 Feb 2022 18:24:28 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com
- [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web11.13043.1645295057936754202
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5013CC433F5
+	for <webhook@archiver.kernel.org>; Sat, 19 Feb 2022 20:20:24 +0000 (UTC)
+Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com
+ [66.111.4.224])
+ by mx.groups.io with SMTP id smtpd.web10.14306.1645302022282141067
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 19 Feb 2022 10:24:18 -0800
+ Sat, 19 Feb 2022 12:20:23 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bzi0F7Iq;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id m27so8097672wrb.4
-        for <bitbake-devel@lists.openembedded.org>;
- Sat, 19 Feb 2022 10:24:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3wWxx3gy6aJ29MvoNxBakX/HBhq0iTgz2E2B+9mZhMk=;
-        b=bzi0F7IqG0RkaVnWTH5mqX44stItUxRc3IgH/eokQj3fVB705M6bmJq+u3NB2bi5NE
-         6Sw/O3PJM7hXdJo2uxSnpy/uQ0mV9dyjuuxBazAX1VX1IxCyLmCQAPZ7NCs7LjBxhCHy
-         /e7sRJUqfB5lM9BTLxQ90+B6KOrL4iukX6zGs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3wWxx3gy6aJ29MvoNxBakX/HBhq0iTgz2E2B+9mZhMk=;
-        b=ejCOffO4XGLnUtmwMmXHeSXXF5ljrPePK2hulf/RVaXT+gMXSVdIlwQObI/qm//ZZI
-         AUoutcHIVOx8JGt32fPXUqCPWSvT5a4E0HnS2bCuE7T3zOpjMXK4yxX8WQiOs5bFth/J
-         +3DkyPziYF+XYZIiW6wp0hcjS4HKqxNFZTXdoIfFi+SC44pNM1a84U/RkwH4HgmyKKAM
-         2Qbdx/8bt9ewDhV4h7hNMH2IQZec1k0YK+e206XPabqIN34/GY/mzRyDjBSgLq8R6gQ5
-         M58Sh7W9gPPE4fVsInWFAzWuWvuCBKNLVT1dwqjA460G4jH06ICDaxXGQrNHUHscHwDY
-         tm/Q==
-X-Gm-Message-State: AOAM533FXu+oSMeispuq/cX+M2R1DRgZwwLP+1dyIQ+8/FANByZyJNcm
-	E+Rt8oVKt0HDYKgjrXQKEw1Of2IX3lXEpvlo
-X-Google-Smtp-Source: 
- ABdhPJx9z6J/cdg3zaqe+utTQzY9IhTSrPgY3JIbV5yai+fwxB8i9n2w/1rq0a1+ndD1P8fq6zvrMA==
-X-Received: by 2002:adf:f14e:0:b0:1e4:a64c:c1f8 with SMTP id
- y14-20020adff14e000000b001e4a64cc1f8mr10177828wro.512.1645295055999;
-        Sat, 19 Feb 2022 10:24:15 -0800 (PST)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:bf04:d486:cfa0:deab])
-        by smtp.gmail.com with ESMTPSA id
- z6-20020a1cf406000000b0037c4e2d3baesm2930799wma.19.2022.02.19.10.24.15
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Feb 2022 10:24:15 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+ dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=BuwhIU83;
+ spf=fail (domain: huawei.com, ip: 66.111.4.224,
+ mailfrom: zygmunt.krynicki@huawei.com)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailnew.nyi.internal (Postfix) with ESMTP id 494AB58055F;
+	Sat, 19 Feb 2022 15:20:21 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Sat, 19 Feb 2022 15:20:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+	:from:from:in-reply-to:message-id:mime-version:reply-to:sender
+	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm2; bh=P8GzF0w6o87FX4YM08H6N4bwpBjtg
+	fT1TmsQ/1Xt5oM=; b=BuwhIU838dCs+AADoCobkzGW3m33xAxSRD9fbAN86fJ3X
+	3xw7cZmfpznWlPbZncz47/Yht9IhCt7LHwyeUKf0K9nfnR9AxDGuJGs6Isr+HQFj
+	/aPpZ1yz2FY0I9IDEn0sevpn3rGiVRobFl6iP2jK5wx6ZvIFHzpdhQ7yeQ+YWmZd
+	+o+A5uRH2JK60k1Xl+FrfmseNZZHa0WZkEvQtHGlKzGW0yV3GydjEY6QklGB1j9a
+	43QCNG5A7myrALnLTMfxhtzpECt6HhRN3e6ag46kvJgvhdDD8+7gV5FZWnxXOAQ7
+	rBQ08cbXZidGRfPOkyX5rPcfGvW/UmB9ONtXAdetA==
+X-ME-Sender: <xms:BFERYljlgMqq14aKG6q-n85bhzJ_-8nQ781W4hbjBwhJZCa-jZJ9Ww>
+    <xme:BFERYqDSBAxBUqm-FJFeFmu3nzc5mCZXQ243in4_RZHCF6TO15KBtQq8ClVU9bZEJ
+    pdeObG-xax9jfotkg>
+X-ME-Received: 
+ <xmr:BFERYlHGKVZVs2tVgbeixbW9bhQHPx5d1Z9YTxDhQCA1Sc-V5hccO3KnG0t9TiGoYwRdlYiGWTY2VO-sUBPOZJGgfFFaNrgWmsLdw-sCZBxgSTOQtc9qYOcVhGgQo2Q>
+X-ME-Proxy-Cause: 
+ gggruggvucftvghtrhhoucdtuddrgedvvddrkedvgddufeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomhepkgihghhmuhhnthcumfhrhihnihgtkhhiuceoiiihghhmuhhnthdr
+    khhrhihnihgtkhhisehhuhgrfigvihdrtghomheqnecuggftrfgrthhtvghrnhepiedvhf
+    eltdeileeiffeugfehkedvfeffieehvdejtefhlefhffdtheevkeehveehnecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepiiihghhmuhhnthdrkh
+    hrhihnihgtkhhisehhuhgrfigvihdrtghomh
+X-ME-Proxy: <xmx:BFERYqSihY1d4Jn4G6G5net2dJ7vPMLBELUEzCE76UFhHSe8-PHZOg>
+    <xmx:BFERYixcebUNWxrB6V-JQ-qf4hrEmLBo5-Iqsej8e_zV9hSXZQ-xlw>
+    <xmx:BFERYg5j8u4CMnLXw_WFTX7lSauO4GzXEtv-bv8W3-TZoOdN0D_uwA>
+    <xmx:BVERYnu5VMxu7fNDXLuc42Esh7u4jlpTQv_0cDXINihr8ksUjZERXA>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 19 Feb 2022 15:20:19 -0500 (EST)
+From: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch2: Abstract fetcher environment to a function
-Date: Sat, 19 Feb 2022 18:24:14 +0000
-Message-Id: <20220219182414.3083770-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+Cc: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
+Subject: [PATCH 1/3] simplediff: Remove redundant parentheses
+Date: Sat, 19 Feb 2022 21:19:55 +0100
+Message-Id: <20220219201957.8329-1-zygmunt.krynicki@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 19 Feb 2022 18:24:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13388
+ <bitbake-devel@lists.openembedded.org>; Sat, 19 Feb 2022 20:20:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13389
 
-The changing of the environment inside the wget fetcher can race if
-threading is used, such as with sstate in OE-Core. Abstract the function
-so the environment can be correct before the function is called, removing
-the race since the enviroment is then no longer changed.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
 ---
- lib/bb/fetch2/__init__.py | 11 +++++++++++
- lib/bb/fetch2/wget.py     |  9 +--------
- 2 files changed, 12 insertions(+), 8 deletions(-)
+ lib/simplediff/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 14d3557f98..5dfe5ff360 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -851,6 +851,17 @@ FETCH_EXPORT_VARS = ['HOME', 'PATH',
-                      'AWS_SECRET_ACCESS_KEY',
-                      'AWS_DEFAULT_REGION']
- 
-+def get_fetcher_environment(d):
-+    newenv = {}
-+    origenv = d.getVar("BB_ORIGENV")
-+    for name in bb.fetch2.FETCH_EXPORT_VARS:
-+        value = d.getVar(name)
-+        if not value and origenv:
-+            value = origenv.getVar(name)
-+        if value:
-+            newenv[name] = value
-+    return newenv
-+
- def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None, workdir=None):
-     """
-     Run cmd returning the command output
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 92cc10785c..b3a3de571a 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -315,14 +315,7 @@ class Wget(FetchMethod):
-         # Avoid tramping the environment too much by using bb.utils.environment
-         # to scope the changes to the build_opener request, which is when the
-         # environment lookups happen.
--        newenv = {}
--        origenv = d.getVar("BB_ORIGENV")
--        for name in bb.fetch2.FETCH_EXPORT_VARS:
--            value = d.getVar(name)
--            if not value and origenv:
--                value = origenv.getVar(name)
--            if value:
--                newenv[name] = value
-+        newenv = bb.fetch2.get_fetcher_environment(d)
- 
-         with bb.utils.environment(**newenv):
-             import ssl
+diff --git a/lib/simplediff/__init__.py b/lib/simplediff/__init__.py
+index 57ee3c5c..11eb7e70 100644
+--- a/lib/simplediff/__init__.py
++++ b/lib/simplediff/__init__.py
+@@ -90,7 +90,7 @@ def diff(old, new):
+             # now we are considering all values of iold such that
+             # `old[iold] == new[inew]`.
+             _overlap[iold] = (iold and overlap.get(iold - 1, 0)) + 1
+-            if(_overlap[iold] > sub_length):
++            if _overlap[iold] > sub_length:
+                 # this is the largest substring seen so far, so store its
+                 # indices
+                 sub_length = _overlap[iold]
 -- 
-2.32.0
+2.25.1
 
 
