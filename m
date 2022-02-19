@@ -1,103 +1,99 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <zygmunt.krynicki@huawei.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30B3C433F5
-	for <webhook@archiver.kernel.org>; Sat, 19 Feb 2022 16:49:12 +0000 (UTC)
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web09.11926.1645289351481821094
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6D1C433EF
+	for <webhook@archiver.kernel.org>; Sat, 19 Feb 2022 16:59:51 +0000 (UTC)
+Received: from wnew1-smtp.messagingengine.com (wnew1-smtp.messagingengine.com
+ [64.147.123.26])
+ by mx.groups.io with SMTP id smtpd.web09.12042.1645289990363705521
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 19 Feb 2022 08:49:12 -0800
+ Sat, 19 Feb 2022 08:59:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=K8qHbOz8;
- spf=pass (domain: axis.com, ip: 195.60.68.18,
- mailfrom: peter.kjellerstedt@axis.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1645289352;
-  x=1676825352;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=4oiSkYjhTFeWXoqntvvhX1vNLbWg9VaZjvHorv4Vqtk=;
-  b=K8qHbOz82dVQmiThE/F91aSMyPpfayT7/JJY+tNxCBSpfbJoBggzQ9hI
-   S2Otm+YkkVy1yho9qMNUPZvMtTfUlMFjg6b1300FVMIVIYcW7VecHPauV
-   AQWp9d2oCm7VVLZUshjUGLGXX7egFSr0ugmM9YXO3f2FMNiQJNh4nvslq
-   WdzXyAhnzCDfh05NnyRD/1ec8pL7JE6mR9vNib7SpP7FGFtcloch+pjPe
-   NAjpEQtlTIYT0eMOD7SrcP6jZmMV6+7Xg2TSvVxMeOCMmuzQ2YR89xZar
-   m+aIk48Z+cnl9gtN1ydr9J6ZPLX7wBKsJVqoSdDUjCwDYbxKngT0nG67o
-   A==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: "zygmunt.krynicki@huawei.com" <zygmunt.krynicki@huawei.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [PATCH] wget: move loop-invariant load of
- BB_ORIGENV
-Thread-Topic: [bitbake-devel] [PATCH] wget: move loop-invariant load of
- BB_ORIGENV
-Thread-Index: AQHYJbAA3pJrbtWstkGM2U1lxfUxE6ybFV/Q
-Date: Sat, 19 Feb 2022 16:49:09 +0000
-Message-ID: <c271185878ce4234ac15cbf78b3cdaa7@axis.com>
-References: <20220219164439.8534-1-zygmunt.krynicki@huawei.com>
-In-Reply-To: <20220219164439.8534-1-zygmunt.krynicki@huawei.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=iGiD9JG3;
+ spf=fail (domain: huawei.com, ip: 64.147.123.26,
+ mailfrom: zygmunt.krynicki@huawei.com)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailnew.west.internal (Postfix) with ESMTP id 53D5C2B000E8;
+	Sat, 19 Feb 2022 11:59:49 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Sat, 19 Feb 2022 11:59:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+	:from:from:in-reply-to:message-id:mime-version:reply-to:sender
+	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm2; bh=T/7kQuI0F2jaw3GV/Ki4jB8TYTvvY
+	X9cDWh+SO8Ryeo=; b=iGiD9JG3OCxlzs5KVUjbiC2jriZ8KwqNrSY7d0RVvuhxT
+	hOsj1735fQQkhXvTFbXPz0pg+EB/C9pVA2o72yZQoli44sz6rdK83soLHkhDL0pk
+	Hroky9WFh/EqQ4nfFC55UvsTCEKV3OoleV9TXfU/dAUehs/P1DossCHLiSaedwUO
+	5oJwPkFQJr98B6mYm+llDoOjqn+2OPKpjxdejc0cpbLmbQVnH0a4E8LR1yFjxY/H
+	/1EfEiLUCy8LbLn06uGDVYlw8puaKHIE0aKEaF/4435I3yJXABG+Pu4ijSUc4kos
+	ebkk0160YCBZ0rODnCj6dJEfAu2aSD4aLyD/ajinQ==
+X-ME-Sender: <xms:AyIRYj9G1E-aoWhNO4YMKQyUj8akEjbrh3GiWEtS6uxB8CK18jBWOA>
+    <xme:AyIRYvueiGC72oc4TGrHtXwVbcYcOtykGAvsDI0mnCB9di17fnNkK3ZN3-n58nROd
+    lH8-BYtodKzuEdssA>
+X-ME-Received: 
+ <xmr:AyIRYhCLxQl7ojk9XjwbF69jB2j8P6XfZiXMEuQpcEDo0NHJq3cLuF6bUA4duMCRpsI07-HV1uthvEbgHCZPr-1KlBItl69QhZHhOxwp1srPD2Toet0jaHLnfJ2Z8fU>
+X-ME-Proxy-Cause: 
+ gggruggvucftvghtrhhoucdtuddrgedvvddrkedvgdelgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpegkhihgmhhunhhtucfmrhihnhhitghkihcuoeiihihgmhhunhhtrdhk
+    rhihnhhitghkiheshhhurgifvghirdgtohhmqeenucggtffrrghtthgvrhhnpeeivdfhle
+    dtieelieffuefgheekvdefffeihedvjeethfelhffftdehveekheevheenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiihihgmhhunhhtrdhkrh
+    ihnhhitghkiheshhhurgifvghirdgtohhm
+X-ME-Proxy: <xmx:AyIRYvcBsPs1qOuIKC2pYaeTpQdce169hsIhtkLtA9M2Fru9l96llQ>
+    <xmx:AyIRYoOErIkybIuKp7OVpaykF4DJQYVsl97xwyVKcvijGB8t1WQpCQ>
+    <xmx:AyIRYhm6LOFk0TUBbc5gH3IBBv-A0Cpq4386H7-st-wvSjU4dvSTlQ>
+    <xmx:BCIRYjaWZZui6s6AdBiPf3snSCfevtsqxxM1KQjYF2YV2jkmV7o6FArjxkQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 19 Feb 2022 11:59:47 -0500 (EST)
+From: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
+Subject: [PATCHv2] wget: move loop-invariant load of BB_ORIGENV
+Date: Sat, 19 Feb 2022 17:59:46 +0100
+Message-Id: <20220219165946.9355-1-zygmunt.krynicki@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 19 Feb 2022 16:49:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13386
+ <bitbake-devel@lists.openembedded.org>; Sat, 19 Feb 2022 16:59:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13387
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Zygmunt Krynicki via
-> lists.openembedded.org
-> Sent: den 19 februari 2022 17:45
-> To: bitbake-devel@lists.openembedded.org
-> Cc: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
-> Subject: [bitbake-devel] [PATCH] wget: move loop-invariant load of
-> BB_ORIGENV
->=20
-> BB_ORIGENV is used as a fallback environment block. It is repeatedly
-> access inside the loop. Since it is a loop invariant, move it out of the
+BB_ORIGENV is used as a fallback environment block. It is repeatedly
+accessed inside the loop. Since it is a loop invariant, move it out of
+the loop.
 
-Change "access" to "accessed".
+Signed-off-by: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
+---
+ lib/bb/fetch2/wget.py | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-> loop.
->=20
-> Signed-off-by: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
-> ---
->  lib/bb/fetch2/wget.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-> index 253cabce..9a3a9d66 100644
-> --- a/lib/bb/fetch2/wget.py
-> +++ b/lib/bb/fetch2/wget.py
-> @@ -316,10 +316,10 @@ class Wget(FetchMethod):
->          # to scope the changes to the build_opener request, which is whe=
-n
-> the
->          # environment lookups happen.
->          newenv =3D {}
-> +        origenv =3D d.getVar("BB_ORIGENV")
->          for name in bb.fetch2.FETCH_EXPORT_VARS:
->              value =3D d.getVar(name)
->              if not value:
-> -                origenv =3D d.getVar("BB_ORIGENV")
->                  if origenv:
->                      value =3D origenv.getVar(name)
-
-You can simplify it to:
-
-            if not value and origenv:
-                value =3D origenv.getVar(name)
-
->              if value:
-> --
-> 2.25.1
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 253cabce..2579a65c 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -316,12 +316,11 @@ class Wget(FetchMethod):
+         # to scope the changes to the build_opener request, which is when the
+         # environment lookups happen.
+         newenv = {}
++        origenv = d.getVar("BB_ORIGENV")
+         for name in bb.fetch2.FETCH_EXPORT_VARS:
+             value = d.getVar(name)
+-            if not value:
+-                origenv = d.getVar("BB_ORIGENV")
+-                if origenv:
+-                    value = origenv.getVar(name)
++            if not value and origenv:
++                value = origenv.getVar(name)
+             if value:
+                 newenv[name] = value
+ 
+-- 
+2.25.1
 
 
