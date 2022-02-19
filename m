@@ -1,88 +1,105 @@
-Return-Path: <zygmunt.krynicki@huawei.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B0FC433F5
-	for <webhook@archiver.kernel.org>; Sat, 19 Feb 2022 20:21:58 +0000 (UTC)
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com
- [66.111.4.224])
- by mx.groups.io with SMTP id smtpd.web09.14216.1645302117515831456
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F19DC433EF
+	for <webhook@archiver.kernel.org>; Sat, 19 Feb 2022 20:25:37 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
+ [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web09.14258.1645302335886745564
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 19 Feb 2022 12:21:57 -0800
+ Sat, 19 Feb 2022 12:25:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=ASAF/jES;
- spf=fail (domain: huawei.com, ip: 66.111.4.224,
- mailfrom: zygmunt.krynicki@huawei.com)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailnew.nyi.internal (Postfix) with ESMTP id D271558016A;
-	Sat, 19 Feb 2022 15:21:56 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Sat, 19 Feb 2022 15:21:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-	:from:from:in-reply-to:message-id:mime-version:reply-to:sender
-	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; bh=3x70OWrSbpipWcASn9vu9s0IftiWI
-	5dkDTN+5ilLDkY=; b=ASAF/jESjATp1GvrNrIJNKARxCRiZrb2OINkZHuTvwLsi
-	tzyE2/TfQUy409CiQzMil8xSWFFnKKyY3Wn1rb5EtKnxnKw7uLgzY0ObCLDHrtPW
-	+D+Fbixl5QrO/vBqVCQrGaYN5xt01GMUTvRwDqPTRqh9LxZUcbDK17iMyyeEfIsJ
-	633sTRRuoCbIlWNaPX0XLkzg+dZn6uuxlzb0Kc3jZDE5zpmylh6pV3Iztj0abti+
-	vPRCccPAIFrV8p70lDZYCbxk8VmK3aCcBsfxovoWteD1c6NahZlbY0uGsh7CTwHZ
-	A+39svKSpxiriMU38tYA5+RvkadkuvSEMYyAFGNYg==
-X-ME-Sender: <xms:ZFERYm9vW7fjs2fPFoPRCZbJR_RzAgyzmOT_CuAe94i2ZMqUXrA_2Q>
-    <xme:ZFERYmtIVny1TxNmnpMH1m1zugTpQ54wxhiUXdylxahQVZtzp1vpqCCNsWJ9ei4B7
-    O1V-V4c3rAZKJbw1Q>
-X-ME-Received: 
- <xmr:ZFERYsBP0fkBVAAZOspKXL-odnHDITxFynR5zDvzsf26sjn5kT5nh-MLmHWLUKK7OWPoxtaHuE_0qXmW-_9DwNb3g4GSG4xpi-PCCPbHLPs8U124h8BjiVAigd0UdHg>
-X-ME-Proxy-Cause: 
- gggruggvucftvghtrhhoucdtuddrgedvvddrkedvgddufeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomhepkgihghhmuhhnthcumfhrhihnihgtkhhiuceoiiihghhmuhhnthdr
-    khhrhihnihgtkhhisehhuhgrfigvihdrtghomheqnecuggftrfgrthhtvghrnhepiedvhf
-    eltdeileeiffeugfehkedvfeffieehvdejtefhlefhffdtheevkeehveehnecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepiiihghhmuhhnthdrkh
-    hrhihnihgtkhhisehhuhgrfigvihdrtghomh
-X-ME-Proxy: <xmx:ZFERYufgqLX7u-00wya7JJ2zf_wsjHn4V6rkMDgLTDlucpcP3G2UzA>
-    <xmx:ZFERYrMQL_aMtFwkL1gWLWYUcyDmxe1xA63puIIRoGywypeunYYOgg>
-    <xmx:ZFERYomK9TrZhYMhoLtS8-uGF4O20uGNeOlGVEsDZx-TPI6DnsLWYQ>
-    <xmx:ZFERYqb9VPqlUhmGCFtB-82AlxPRY_wV9d-hXB3ZN-eILh9sUf-gdA>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 19 Feb 2022 15:21:55 -0500 (EST)
-From: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
-Subject: [PATCH] bb: Fix typo "priority"
-Date: Sat, 19 Feb 2022 21:21:49 +0100
-Message-Id: <20220219202149.8441-1-zygmunt.krynicki@huawei.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=La+usPLE;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f45.google.com with SMTP id i14so20126658wrc.10
+        for <bitbake-devel@lists.openembedded.org>;
+ Sat, 19 Feb 2022 12:25:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=PZugp6JCkKraoMmoCtArhMIfD/9/xReHLYyQ76yt/Cc=;
+        b=La+usPLErg2cMEb23jLU3CkbSGIo3GRMLoFCoBAHPMYAx6h02ckPN83cEP/27h0DSL
+         6cavv564EB1YV1RKS7wjnMXOui8ECHTTZO+YsA8PUvbE+epkJ8cuO9pTTZMGaQ4LV5uW
+         fluVmV1cUTHbfytvS8IKvsG06PttdbqbhRB0M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=PZugp6JCkKraoMmoCtArhMIfD/9/xReHLYyQ76yt/Cc=;
+        b=lw8IdcJ5DEAzX63jdmoiW5MoXH7oUFoQ7J01ysNIHsa/H0gamzF+1W/064+JxbxtuS
+         0+mnbBYVzUSBUS1SWpXM5kZkyRddEAQDuiWkd8D6D8cMdRs6VYrTk8v7MQvMucVxt4iA
+         7nfqtzIGHKUPkyhgYydLUfCZiSTA+BuhH44YxnLCbVAoMP3fH3NDRwzfiuQ+bAlnTnoB
+         kJt9TPDaimCaJInhH3kMLyAoxLc0liumRiGnQ0lZ4CpXDuLmV7RD+OQqFIvhpWTR9vey
+         +7wYur3MbTnqpAPkE4N6hUJeecsKOzXd/LTDu7Vx9U6f4CrKgQOZD4KErCOVXvN/sCWV
+         OF+g==
+X-Gm-Message-State: AOAM531uV6mdbwIY/z0qkKmEXva3vul36xCkOUEDMFZLuoAaeQSHNfa1
+	Ng9UdXuhgjEkzoHi8a7Auk8AXw==
+X-Google-Smtp-Source: 
+ ABdhPJy6ODGr8MWZMhypJyXMg/2vz5LQds7TFhoahhsjRbw5y4YeQi0m+fdzBEkaOArr0G7DzAVLdQ==
+X-Received: by 2002:a5d:6546:0:b0:1e3:2236:e338 with SMTP id
+ z6-20020a5d6546000000b001e32236e338mr10056606wrv.72.1645302334058;
+        Sat, 19 Feb 2022 12:25:34 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:bf04:d486:cfa0:deab?
+ ([2001:8b0:aba:5f3c:bf04:d486:cfa0:deab])
+        by smtp.gmail.com with ESMTPSA id
+ n7sm3135652wmd.30.2022.02.19.12.25.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Feb 2022 12:25:33 -0800 (PST)
+Message-ID: 
+ <edab9e75c3e51c087f85d448a7be22e64aaaa5cb.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 3/3] simplediff: Add type annotations
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: zygmunt.krynicki@huawei.com, bitbake-devel@lists.openembedded.org
+Date: Sat, 19 Feb 2022 20:25:31 +0000
+In-Reply-To: <20220219201957.8329-3-zygmunt.krynicki@huawei.com>
+References: <20220219201957.8329-1-zygmunt.krynicki@huawei.com>
+	 <20220219201957.8329-3-zygmunt.krynicki@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4-1ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 19 Feb 2022 20:21:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13392
+ <bitbake-devel@lists.openembedded.org>; Sat, 19 Feb 2022 20:25:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13393
 
-Signed-off-by: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
----
- lib/bb/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat, 2022-02-19 at 21:19 +0100, Zygmunt Krynicki via lists.openembedded.org
+wrote:
+> I was trying to grok how various parts of bitbake work. As a habit I
+> make type annotations, as those help both me and, perhaps, others.
+> 
+> Introducing typing to an existing project is somewhat challenging, but
+> by now, well established. It's good to start from any leaf module and
+> work up from there.
+> 
+> I've picked, somewhat at random, the simplediff module, since it's
+> small, self-contained and might be used as a starting point for the
+> discussion around type hints.
+> 
+> With the patch applied, one can run mypy as follows:
+> 
+>         mypy --strict ./lib/simplediff
+> 
+> The module now has strict typing compatibility. Allowing it to be used
+> in a typed context.
+> 
+> Signed-off-by: Zygmunt Krynicki <zygmunt.krynicki@huawei.com>
+> ---
+>  lib/simplediff/__init__.py | 29 ++++++++++++++++++++---------
+>  1 file changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index 269f65ed..de1ff893 100644
---- a/lib/bb/__init__.py
-+++ b/lib/bb/__init__.py
-@@ -150,7 +150,7 @@ def note(*args):
-     mainlogger.info(''.join(args))
- 
- #
--# A higher prioity note which will show on the console but isn't a warning
-+# A higher priority note which will show on the console but isn't a warning
- #
- # Something is happening the user should be aware of but they probably did
- # something to make it happen
--- 
-2.25.1
+Just to be really clear on this, we have no interest in adding typing to
+bitbake.
+
+I've also mentioned on irc that some of the files in lib/ are upstream modules
+so we limit our changes in those cases.
+
+Cheers,
+
+Richard
 
 
