@@ -1,94 +1,125 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <rybczynska@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0601C433F5
-	for <webhook@archiver.kernel.org>; Mon, 21 Feb 2022 16:04:00 +0000 (UTC)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com
- [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web09.487.1645459439151463750
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F275FC4332F
+	for <webhook@archiver.kernel.org>; Mon, 21 Feb 2022 17:13:42 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com
+ [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web09.1385.1645463622065983835
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 21 Feb 2022 08:03:59 -0800
+ Mon, 21 Feb 2022 09:13:42 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=eEOMGZ9M;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f50.google.com with SMTP id o24so27937962wro.3
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=S+p7T+PE;
+ spf=pass (domain: gmail.com, ip: 209.85.128.46,
+ mailfrom: rybczynska@gmail.com)
+Received: by mail-wm1-f46.google.com with SMTP id
+ k127-20020a1ca185000000b0037bc4be8713so13996221wme.3
         for <bitbake-devel@lists.openembedded.org>;
- Mon, 21 Feb 2022 08:03:58 -0800 (PST)
+ Mon, 21 Feb 2022 09:13:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=mHNPlG152gqTfTwXiWCiruOecHT9t5pjddnJ88KW3HQ=;
-        b=eEOMGZ9MT78V2iqY6RAMO5HTJZATVFPOD/5GoKoyIj42r17T1z9tC1dTis3j2k+ZKc
-         GrvCm28qyNnYlvjtVnmcw7io/QNdCW42Zjqhlif5ZJ5k1O8KZBblDOMwyP9fT+g9hNCk
-         FySeCfOug2RSfO2c2HMd+pKTtldDCEYRBvtpo=
+        bh=qTBz+8+Fs7VNHFt+eDfxuTKvVZSrNIKzCoXJrd34DXA=;
+        b=S+p7T+PEGiSsswRg5djAttAFnNMSmz6lSqYP0yDXXnqJCNrGkg6bTiAOBYaVA9bCxf
+         LmoRGnVi9930tuPBksYydzpmml6If+bKkMO0Q+2jJWJbZ+tovSDZmy7n9H9pYtm875wO
+         34rTjY+5FZvZYheRJqVHMBFx25qE8RieMr9DAaYmR9LjjFlNlTvyq5JGxol+e/ULNUQA
+         VuR5mSVKimZfptE57cnCiTZvQtyCTbabpMhN/u/VaLAL6163o2FtTX9RPjMTVmToDpWX
+         nhD7V1pk0sVQxvGYkuMdTJxdNNIpglPNFbKT2z6GnkHtnEAyp+TklW17OoL4izgWr7fr
+         rr1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=mHNPlG152gqTfTwXiWCiruOecHT9t5pjddnJ88KW3HQ=;
-        b=psuxnWPjsR4Z5ocqfCdgEran+jW0NOfzEMaS6Tcty+nNF1KhFS6pMQm25LcUjoMJDH
-         T+479lEv/JrYlqQbscNCFtYYUm5jD9Sty/MHPnHrPfvOH/J6R8Mhcer0lYaaoeG6HipZ
-         uBnVZtZn75dKgCrJRx3T4DZlIdzL54+WAzrBdqjMx5SaW5kRb5FxW2altuSIPxHGzFQ7
-         7mrdGk7CHjf8umqxyk9TzVltWh/2bXnq9aWL2YfdDrFXNy90bbW0rvm5XZ3TExeYqmfm
-         M9j8IC9M4Hj6aKenr7sYEfMSsaam8pZiKC/nV+9YJJ2jwmM9IGnL8ZHoDQlzMMTePv/a
-         UojA==
-X-Gm-Message-State: AOAM53380uEBOaX20GpdLsKgidv2NgYbSq3Tq9M4Hnis6BfqExVeyH6L
-	smn5uI8y9kCtnAq35tWI7eDJzZFf10CZAr25
+        bh=qTBz+8+Fs7VNHFt+eDfxuTKvVZSrNIKzCoXJrd34DXA=;
+        b=jCR9V7yN4xttvwMcCIdG+Puol52AR2GDULC9aj3tKfo3gsu5AFlnQGBhr9DNwkbN1D
+         9PFv4rNoB73tqHgCEiuxuypnpBUaCtQFJPyeau5jH2MvXL2HHsOuOAMQxUa7yCMm3LEM
+         zisChe8QDjGgd8SSX2oRnKyfDFoAQEvaZsGzqiqntgs8vsJYRBMDV73pbM6jofv5Odms
+         Ed0haKmHoD248GM4yHy+ls38PZnss6+eLgBrP8rQv7jQg92KmgVxxWA4LYNiObBbJ+0G
+         NL0WiVdpQOIxzOkjCmCkB4exzJFAdiAJuoqDHdeRY9K9mIoVDVPz72m/ZTrQKsq8NA3Y
+         0i4g==
+X-Gm-Message-State: AOAM533y/0Pxq8a8d09v+IGKNfL1O25XRhaOzi6szJi8kSnZ/ojiGLWd
+	7v1r0PEpaHA8sJdTapqhZwI=
 X-Google-Smtp-Source: 
- ABdhPJyW2n8gqORnOMMTS1tRJigH5DveGppledbWqJmCznBHwOBwDS9jWKqRLeAzO6JMZZgFuhkqzg==
-X-Received: by 2002:adf:e951:0:b0:1e6:85e6:65d9 with SMTP id
- m17-20020adfe951000000b001e685e665d9mr15805392wrn.412.1645459437395;
-        Mon, 21 Feb 2022 08:03:57 -0800 (PST)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:ae50:3f11:233d:4303])
+ ABdhPJzdo5UOr/NtZ6z4v/3QY/CG1VhzJOSAF3kSex1MRdNZOFUzv/MZjAPO6ds9D6VY9dyiJegWXg==
+X-Received: by 2002:a05:600c:20c7:b0:37b:b739:8177 with SMTP id
+ y7-20020a05600c20c700b0037bb7398177mr18534316wmm.121.1645463620398;
+        Mon, 21 Feb 2022 09:13:40 -0800 (PST)
+Received: from localhost.localdomain ([80.215.234.23])
         by smtp.gmail.com with ESMTPSA id
- k11sm159444wrd.103.2022.02.21.08.03.56
-        for <bitbake-devel@lists.openembedded.org>
+ x7sm43542367wro.21.2022.02.21.09.13.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Feb 2022 08:03:56 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] utils: Ensure shell function failure in python logging is
- correct
-Date: Mon, 21 Feb 2022 16:03:56 +0000
-Message-Id: <20220221160356.3167661-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+        Mon, 21 Feb 2022 09:13:39 -0800 (PST)
+From: Marta Rybczynska <rybczynska@gmail.com>
+To: richard.purdie@linuxfoundation.org,
+	bitbake-devel@lists.openembedded.org
+Cc: Marta Rybczynska <rybczynska@gmail.com>,
+	Marta Rybczynska <marta.rybczynska@huawei.com>
+Subject: [PATCH][master-next] lib/bb: fix exit when found renamed variables
+Date: Mon, 21 Feb 2022 18:13:31 +0100
+Message-Id: <20220221171331.6197-1-rybczynska@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 21 Feb 2022 16:04:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13394
+ <bitbake-devel@lists.openembedded.org>; Mon, 21 Feb 2022 17:13:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13395
 
-If a python function exec_func() calls a shell task, the logging wasn't working
-correctly in all cases since the exception was turned into a BBHandledException()
-and the logfile piece was lost which is handled at the top task level.
+Until now, if a renamed variable was found, bitbake exited
+immediately if it was in a class, but continued after an error
+message if the variable was in a recipe. This was caused by
+cookerdata.py CookerDataBuilder::parseBaseConfiguration checking
+a different DataSmart instance than the variable was set in.
+To solve the issue, add a special variable and set it when we
+find a renamed variable. Check for it in ast.py and bail out
+if needed.
 
-The easiest way to avoid this is to allow the ExecutionError exceptions to
-be raised to a higher level, we don't need the traceback for them.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Marta Rybczynska <marta.rybczynska@huawei.com>
 ---
- lib/bb/utils.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/data_smart.py | 4 ++++
+ lib/bb/parse/ast.py  | 3 +++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 2c22535424..2e8256101a 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -402,7 +402,7 @@ def better_exec(code, context, text = None, realfile = "<code>", pythonexception
-         code = better_compile(code, realfile, realfile)
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 7b06d3a1..e7047d79 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -546,6 +546,8 @@ class DataSmart(MutableMapping):
+         shortvar = var.split(":", 1)[0]
+         if shortvar in self._var_renames:
+             _print_rename_error(shortvar, loginfo, self._var_renames, fullvar=var)
++            # Mark that we have seen a renamed variable
++            self.setVar("_FAILPARSINGERRORHANDLED", True)
+ 
+         self.expand_cache = {}
+         parsing=False
+@@ -737,6 +739,8 @@ class DataSmart(MutableMapping):
+ 
+         if var in self._var_renames:
+             _print_rename_error(var, loginfo, self._var_renames)
++            # Mark that we have seen a renamed variable
++            self.setVar("_FAILPARSINGERRORHANDLED", True)
+ 
+         if 'op' not in loginfo:
+             loginfo['op'] = "set"
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 31bcc8e7..c186a45e 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -333,6 +333,9 @@ def runAnonFuncs(d):
+ def finalize(fn, d, variant = None):
+     saved_handlers = bb.event.get_handlers().copy()
      try:
-         exec(code, get_context(), context)
--    except (bb.BBHandledException, bb.parse.SkipRecipe, bb.data_smart.ExpansionError):
-+    except (bb.BBHandledException, bb.parse.SkipRecipe, bb.data_smart.ExpansionError, bb.process.ExecutionError):
-         # Error already shown so passthrough, no need for traceback
-         raise
-     except Exception as e:
++        if d.getVar("_FAILPARSINGERRORHANDLED", False) == True:
++            bb.fatal ("Found renamed variables. Please fix them before trying again\n")
++
+         for var in d.getVar('__BBHANDLERS', False) or []:
+             # try to add the handler
+             handlerfn = d.getVarFlag(var, "filename", False)
 -- 
-2.32.0
+2.33.0
 
 
