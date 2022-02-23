@@ -2,117 +2,85 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04BEC433EF
-	for <webhook@archiver.kernel.org>; Tue, 22 Feb 2022 11:52:06 +0000 (UTC)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
- [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web09.11864.1645530725583792877
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4925C433F5
+	for <webhook@archiver.kernel.org>; Wed, 23 Feb 2022 18:08:41 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com
+ [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web08.11323.1645639720996643116
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 22 Feb 2022 03:52:06 -0800
+ Wed, 23 Feb 2022 10:08:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Axme1/j3;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=d1xxd7r9;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f48.google.com with SMTP id d28so4918593wra.4
+Received: by mail-wr1-f53.google.com with SMTP id d17so6134411wrc.9
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 22 Feb 2022 03:52:05 -0800 (PST)
+ Wed, 23 Feb 2022 10:08:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=34G7du+U4I3ltrwsMIa68oDEjgS0bTh9DjxSI2ZFPhY=;
-        b=Axme1/j32OhE8vpRhih+1kePtG2JWFvz6+TSvatdVsFwefGXV5NfNDAMSl3rCSkYL3
-         WBjpRYeW/mM0SsbBKXuE+WGCEvayFD4yxLb2C4ITh2fqszToXN0Si9PaBZJClHMb+/OE
-         JMQsMpveb85MVONHBgwxTXZf8fhZS8m1gP5/Y=
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4IB51UhuMKjeu1gdp7LXm9Q359XSqyCE95V7gJsc2ck=;
+        b=d1xxd7r9nzVSOF00HTfa6JQH17ous6h3Z2jQnEskl/bjVlEfmd9BfsMN4LsEeAVqBB
+         b8MUMZd4DmRP59DzpZvdyQWjAvy/8/s3XiKlaxqIBqb1NybHTRSwnioFZUw8QRK8Mbs/
+         n0sfJsjjxhQI+p+QM+M5+iqTiC8kHlbDJ4YSE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=34G7du+U4I3ltrwsMIa68oDEjgS0bTh9DjxSI2ZFPhY=;
-        b=K5gj51h2kOlRD9gmyllOamzsY3tcWrdFfEefhTQMC9Am33x4Gdm3x4ZcaodWQhrtBc
-         hwkpzLTCZvGrbcgrxP3vhaRafoQ8pIJ9tb6t5QMRCJWru5pj/7HF+Gp4D1dBsqzdzdNB
-         WJn0NyN0XKYhcaYWO2liQ7UNDsL7iQ60t7iysdSoTxn3ijIvHkuqTewTh8tsLe8psNIn
-         XxIUBLteuw+g+jP/pQu5fE7gGW972MCX6Mgx+En7rlFVI06h8AE3r8/hqXYffkVh8zfO
-         1NN0rdmFgZ6OifHjZ1XmiqcOhgI5rSGll+2eHaBTvg3ZhEQvE+enAdBFO9ZCsSheP0JE
-         6nVA==
-X-Gm-Message-State: AOAM533vZTHdsMal2CbiDngGctdJbee9kpOv7TpAhAEG1zpJKHFlpF6R
-	C0I3H0Phd8HPTLtYV1nb3+hIuA==
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4IB51UhuMKjeu1gdp7LXm9Q359XSqyCE95V7gJsc2ck=;
+        b=sa2ffp+UipqPjMWLpv7Mo12jA4kwzEuesEt1UVaGJqzoLSHYo+xavjYbAlSBnu5Uq3
+         cWcTHEAVvsy0VYAdSnXmw5zglytOnpOMfVhTV8xQPk/rtALf1A13BVufYRxQvShS2w5B
+         2n/7o2czFVCNlbNfZMw480FWHYnaBPCj0+TQZnC4DzOu91gK7NIGTwBkAQ77GuURkXJT
+         i/0+AzxG1qVB6jQJMuNRxt3PZX7EVYG2xYHRP7SM4PtT+eg5EDJllUUgNd6B1k1x4OFM
+         d0qoKg+yIFdTQO87VTTCJ6xd95pSgiARCFW8B6PxtNKpkOPTgP1X+u2kGY4CszE61rbe
+         d8tw==
+X-Gm-Message-State: AOAM530K8TxSyPuFAhcQDmXQpdipVyaeSWhfMwaWDstqD6s7LjtElcbu
+	O+W8gSYqD0IdWqsPf7xIuWsAeYulFBC5HMZB
 X-Google-Smtp-Source: 
- ABdhPJy+U6sdFul4H25JlvoUKLq2UZ0w1Cza1mn78MLCQO3C7AKgHWfSgkuqBtrTv2h0+ijsM/yKOA==
-X-Received: by 2002:adf:ec11:0:b0:1e6:352b:6027 with SMTP id
- x17-20020adfec11000000b001e6352b6027mr19166528wrn.702.1645530723943;
-        Tue, 22 Feb 2022 03:52:03 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:26ce:ff82:5c7d:d03e?
- ([2001:8b0:aba:5f3c:26ce:ff82:5c7d:d03e])
+ ABdhPJxqXYGCSqAedDAr2EopauXfHFj1k2LubIUVQMwccw2z39RcvLYxodyB4aX/LFO7jWpwpUaKbQ==
+X-Received: by 2002:adf:9103:0:b0:1e5:8cc9:5aa1 with SMTP id
+ j3-20020adf9103000000b001e58cc95aa1mr589195wrj.17.1645639719071;
+        Wed, 23 Feb 2022 10:08:39 -0800 (PST)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:4709:85d1:7b5:8346])
         by smtp.gmail.com with ESMTPSA id
- az13sm34147294wrb.39.2022.02.22.03.52.03
+ m13-20020a05600c3b0d00b0037c00e01771sm458827wms.34.2022.02.23.10.08.38
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Feb 2022 03:52:03 -0800 (PST)
-Message-ID: 
- <284cf7b4c470a91994a506d829a02b226b9b6a46.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] data_smart: Avoid exceptions for non
- string data
+        Wed, 23 Feb 2022 10:08:38 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 22 Feb 2022 11:52:01 +0000
-In-Reply-To: <67fa258b-14ac-0ade-3851-5c632848a396@theobroma-systems.com>
-References: <20220222113813.3213276-1-richard.purdie@linuxfoundation.org>
-	 <67fa258b-14ac-0ade-3851-5c632848a396@theobroma-systems.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1ubuntu2 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] tests/fetch: Update for master -> main change upstream
+Date: Wed, 23 Feb 2022 18:08:37 +0000
+Message-Id: <20220223180837.3277253-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 22 Feb 2022 11:52:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13399
+ <bitbake-devel@lists.openembedded.org>; Wed, 23 Feb 2022 18:08:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13400
 
-On Tue, 2022-02-22 at 12:50 +0100, Quentin Schulz wrote:
-> Hi Richard,
-> 
-> On 2/22/22 12:38, Richard Purdie wrote:
-> >    File "scripts/lib/checklayer/__init__.py", line 49, in _get_layer_collections
-> >      ldata.expandVarref('LAYERDIR')
-> >    File "build/bitbake/lib/bb/data_smart.py", line 1007, in expandVarref
-> >      if referrervalue and ref in referrervalue:
-> > TypeError: argument of type 'bool' is not iterable
-> > 
-> > We inject True values as an internal sentinel to the datastore, fix
-> > this codepath to handle it.
-> > 
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > ---
-> >   lib/bb/data_smart.py | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-> > index e7047d79ca..8d3825f398 100644
-> > --- a/lib/bb/data_smart.py
-> > +++ b/lib/bb/data_smart.py
-> > @@ -1004,7 +1004,7 @@ class DataSmart(MutableMapping):
-> >           value = self.getVar(variable, False)
-> >           for key in keys:
-> >               referrervalue = self.getVar(key, False)
-> > -            if referrervalue and ref in referrervalue:
-> > +            if referrervalue and isinstance(referrervalue, str) and ref in referrervalue:
-> 
-> I assume we can remove the referrervalue check? If it was about 
-> protecting from None value, isinstance() will return False. If it was 
-> about '' string.. it was never needed in the first place since it's ref 
-> in '' which would always return false (provided ref is never '' too, but 
-> that was not covered by the current condition anyways).
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tests/fetch.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-True, we could have done that.
-
-> Otherwise... can't we just have referrervalue = self.getVar(key, False) 
-> or '' ? so that it's always a string?
-
-No, since getVar could return a bool or int.
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index f0d417a50d..eff12b7c50 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -1110,7 +1110,7 @@ class FetcherNetworkTest(FetcherTest):
+         """ Prevent regression on deeply nested submodules not being checked out properly, even though they were fetched. """
+ 
+         # This repository also has submodules where the module (name), path and url do not align
+-        url = "gitsm://github.com/azure/iotedge.git;protocol=https;rev=d76e0316c6f324345d77c48a83ce836d09392699;branch=master"
++        url = "gitsm://github.com/azure/iotedge.git;protocol=https;rev=d76e0316c6f324345d77c48a83ce836d09392699;branch=main"
+         fetcher = bb.fetch.Fetch([url], self.d)
+         fetcher.download()
+         # Previous cwd has been deleted
+-- 
+2.32.0
 
 
