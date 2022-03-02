@@ -1,86 +1,55 @@
-Return-Path: <mark.hatle@kernel.crashing.org>
+Return-Path: <stefnexter@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E923C433EF
-	for <webhook@archiver.kernel.org>; Tue,  1 Mar 2022 01:30:56 +0000 (UTC)
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
- by mx.groups.io with SMTP id smtpd.web08.3310.1646098255008730618
- for <bitbake-devel@lists.openembedded.org>;
- Mon, 28 Feb 2022 17:30:55 -0800
-Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: kernel.crashing.org, ip: 63.228.1.57,
- mailfrom: mark.hatle@kernel.crashing.org)
-Received: from lons-builder.int.hatle.net (ip203.trans.bevcomm.net
- [76.164.132.203] (may be forged))
-	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 2211Us7p019930
-	for <bitbake-devel@lists.openembedded.org>; Mon, 28 Feb 2022 19:30:54 -0600
-From: Mark Hatle <mark.hatle@kernel.crashing.org>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6BEC433F5
+	for <webhook@archiver.kernel.org>; Wed,  2 Mar 2022 15:47:13 +0000 (UTC)
+Subject: access to bitbake arguments 
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] Change md5 usages to work on FIPS enabled hosts
-Date: Mon, 28 Feb 2022 19:30:53 -0600
-Message-Id: <20220301013053.1378917-1-mark.hatle@kernel.crashing.org>
-X-Mailer: git-send-email 2.25.1
+From: stefnexter@gmail.com
+X-Originating-Location: Spanga, Stockholm County, SE (81.170.142.70)
+X-Originating-Platform: Windows Chrome 98
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Wed, 02 Mar 2022 07:47:12 -0800
+Message-ID: <vWgJ.1646236032314957322.874H@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="MmKEx2NvPgudlizrGR8U"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 01 Mar 2022 01:30:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13402
+ <bitbake-devel@lists.openembedded.org>; Wed, 02 Mar 2022 15:47:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13405
 
-hashlib.md5() is not permitted on a FIPS enabled host system.  This is due
-to md5 not being an approved hash algorithm.
+--MmKEx2NvPgudlizrGR8U
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Instead use:
- hashlib.new('MD5', usedforsecurity=False)
+Hi,
 
-This is allowed, as it's clear the hash is used for a non-security purpose.
+I hope that this question is suitable for mailing list, if not please sugge=
+st a more proper one.
+We are using bitbake 1.44
 
-Note: utils.py version should never be used to verify file integrity, but
-instead be used to identify if the file may have changed.  sha256 should be
-used for integrity purposes.
+is there a way to get the arguments bitbake were started with during parsin=
+g of conf/bitbake.conf=C2=A0 ?
 
-Signed-off-by: Mark Hatle <mark.hatle@xilinx.com>
-Signed-off-by: Mark Hatle <mark.hatle@kernel.crashing.org>
----
- lib/bb/utils.py | 2 +-
- lib/ply/yacc.py | 7 ++-----
- 2 files changed, 3 insertions(+), 6 deletions(-)
+In 1.17 using python sys.argv=C2=A0 worked but with 1.44 I see that the con=
+fig file is parsed several times, the last time there is no argument other =
+than "decafbad"
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 2e825610..fcaeb991 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -538,7 +538,7 @@ def md5_file(filename):
-     Return the hex string representation of the MD5 checksum of filename.
-     """
-     import hashlib
--    return _hasher(hashlib.md5(), filename)
-+    return _hasher(hashlib.new('MD5', usedforsecurity=False), filename)
- 
- def sha256_file(filename):
-     """
-diff --git a/lib/ply/yacc.py b/lib/ply/yacc.py
-index 46e7dc96..767c4e46 100644
---- a/lib/ply/yacc.py
-+++ b/lib/ply/yacc.py
-@@ -2797,11 +2797,8 @@ class ParserReflect(object):
-     # Compute a signature over the grammar
-     def signature(self):
-         try:
--            from hashlib import md5
--        except ImportError:
--            from md5 import md5
--        try:
--            sig = md5()
-+            import hashlib
-+            sig = hashlib.new('MD5', usedforsecurity=False)
-             if self.start:
-                 sig.update(self.start.encode('latin-1'))
-             if self.prec:
--- 
-2.25.1
+//Stef
 
+--MmKEx2NvPgudlizrGR8U
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,<br /><br />I hope that this question is suitable for mailing list, if n=
+ot please suggest a more proper one.<br />We are using bitbake 1.44<br /><b=
+r />is there a way to get the arguments bitbake were started with during pa=
+rsing of conf/bitbake.conf&nbsp; ?<br /><br />In 1.17 using python sys.argv=
+&nbsp; worked but with 1.44 I see that the config file is parsed several ti=
+mes, the last time there is no argument other than "decafbad"<br /><br />//=
+Stef
+
+--MmKEx2NvPgudlizrGR8U--
 
