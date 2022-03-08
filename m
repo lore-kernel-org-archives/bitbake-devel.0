@@ -1,88 +1,103 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C082AC433F5
-	for <webhook@archiver.kernel.org>; Tue,  8 Mar 2022 09:45:54 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com
- [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web11.6474.1646732753400407954
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22263C433EF
+	for <webhook@archiver.kernel.org>; Tue,  8 Mar 2022 10:39:52 +0000 (UTC)
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web12.6827.1646735989595236753
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 08 Mar 2022 01:45:53 -0800
+ Tue, 08 Mar 2022 02:39:51 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PBUiKhL6;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f47.google.com with SMTP id t11so27532907wrm.5
-        for <bitbake-devel@lists.openembedded.org>;
- Tue, 08 Mar 2022 01:45:53 -0800 (PST)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=o9L9vIdT;
+ spf=pass (domain: axis.com, ip: 195.60.68.17,
+ mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JpObsHeX6iMwsAnVao6vE+/oYFA6PihF0RpQkSaHgLA=;
-        b=PBUiKhL6IW7JK9y6bmldb1u+FxHNG8qCV5xTSGQcf11j0R6SEU1Mh8aqbjgntf3rw5
-         /y7R+5kBsYNQ/RQ0oNOBHOjYIWEuvSH6/y+FGxrDpKpQm4rZQrXdzNbvhGtv4vjetVua
-         JRunhIQ0cvMKpfHPYn4x5b2KQlye7EW3ywFOg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JpObsHeX6iMwsAnVao6vE+/oYFA6PihF0RpQkSaHgLA=;
-        b=eqa8xhO9taeFQ7PDk+Zwwcfxlwtqjhfikns75Q/PrAkNpChxs//gADGdXyK0l9Qlm3
-         r/yd0ngTQ+gjh5w1Ec/jinmPt2PB7relXNtDjMQhF30ghhSzKgKCBL159q5zCL1XmVYY
-         8+P+oZEbZNFIlNMT7IhR4OwxZH/hNifNjWLPEuDGkJlbTYrPEwbd3jFijr2R2SFYwIE/
-         9RTYLnW9uJw+PJqLgediVYlbig0kd3UBAb5DhKAH1zpGZFusSYZHkwDAJBcSmdLNPPEU
-         kmDGlK6fKfEYoSDOIm+t+rKR/5RVCZ1KBw0u0DFhi7XxUtDamtqhQSHcSro+QOKZ5kBe
-         BZ9A==
-X-Gm-Message-State: AOAM531nkTKnkvmm0HsBbbZ5uRJiU5Fo1sdTjGLeZpOIXyXuRsMRfmfj
-	fJAC10NypdZiHJ6Rx/rRKBuiE3Ez8SwpuifM
-X-Google-Smtp-Source: 
- ABdhPJyEzOMfP3JqslGnHWit+Fn6qLRHZCiOyImAzh45zI+AsP2cBJ1eNoxqZe1BwdUEceXh6C+GRw==
-X-Received: by 2002:a5d:5887:0:b0:1f1:fae9:a95e with SMTP id
- n7-20020a5d5887000000b001f1fae9a95emr5626533wrf.340.1646732751536;
-        Tue, 08 Mar 2022 01:45:51 -0800 (PST)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:1a2:8f31:9d13:9148])
-        by smtp.gmail.com with ESMTPSA id
- g2-20020a5d46c2000000b001f079ba0158sm10017712wrs.60.2022.03.08.01.45.50
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 01:45:51 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] server/xmlrpcserver: Add missing xmlrpcclient import
-Date: Tue,  8 Mar 2022 09:45:50 +0000
-Message-Id: <20220308094550.509927-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+  d=axis.com; q=dns/txt; s=axis-central1; t=1646735990;
+  x=1678271990;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=awvyj5jMbspgkKI68kA213ijk1NqzTyM9bmsSm5Evrs=;
+  b=o9L9vIdTn9xxWv5PVsfLFPnwgrsaf+taGHCnhFB/JJQx7dWVWy/u8ORM
+   220PZVLGMAdrW1s+BnDa85UOJeHc+a3oQ7Z/iaMPaPOXDiwer5KFXZNAC
+   HSE+2x2wWNbWo8n8tvz2wmqA3JN6Svw/4ARfb9xAa5IbTUDJ+/FBTkLUw
+   +0zasZW7/voMnyTcwWFjHRHILx1KSGyya+8Vd616Lu0IaWf/ON3oHwU/y
+   z98Wcfj6k8EoCCvRlhgJxtx7vlNJG0jZk6yCeYwXforEXYcPtACwwX+IM
+   ATFOtQ9dtvUdOyZXvsQ5Y3i4t2DWTb3zw/OeY+1qLZZN9HrANYnSQxXyQ
+   g==;
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: "Mittal, Anuj" <anuj.mittal@intel.com>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: RE: [bitbake-devel] [PATCH] utils: Ensure shell function failure in
+ python logging is correct
+Thread-Topic: [bitbake-devel] [PATCH] utils: Ensure shell function failure in
+ python logging is correct
+Thread-Index: AQHYKOIrmEFo76xtiUiYatCy/qcSxKy1Xl9Q
+Date: Tue, 8 Mar 2022 10:39:45 +0000
+Message-ID: <ee2ce832f87b40ebbc02eb0a43339a85@axis.com>
+References: <20220221160356.3167661-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20220221160356.3167661-1-richard.purdie@linuxfoundation.org>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.5.60]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 08 Mar 2022 09:45:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13441
+ <bitbake-devel@lists.openembedded.org>; Tue, 08 Mar 2022 10:39:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13442
 
-This avoids backtraces when starting toaster or using bitbake in
-remote mode.
+> -----Original Message-----
+> From: bitbake-devel@lists.openembedded.org <bitbake-devel@lists.openembed=
+ded.org> On Behalf Of Richard Purdie
+> Sent: den 21 februari 2022 17:04
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH] utils: Ensure shell function failure in
+> python logging is correct
+>=20
+> If a python function exec_func() calls a shell task, the logging wasn't w=
+orking
+> correctly in all cases since the exception was turned into a BBHandledExc=
+eption()
+> and the logfile piece was lost which is handled at the top task level.
+>=20
+> The easiest way to avoid this is to allow the ExecutionError exceptions t=
+o
+> be raised to a higher level, we don't need the traceback for them.
+>=20
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/utils.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+> index 2c22535424..2e8256101a 100644
+> --- a/lib/bb/utils.py
+> +++ b/lib/bb/utils.py
+> @@ -402,7 +402,7 @@ def better_exec(code, context, text =3D None, realfil=
+e =3D "<code>", pythonexception
+>          code =3D better_compile(code, realfile, realfile)
+>      try:
+>          exec(code, get_context(), context)
+> -    except (bb.BBHandledException, bb.parse.SkipRecipe, bb.data_smart.Ex=
+pansionError):
+> +    except (bb.BBHandledException, bb.parse.SkipRecipe, bb.data_smart.Ex=
+pansionError, bb.process.ExecutionError):
+>          # Error already shown so passthrough, no need for traceback
+>          raise
+>      except Exception as e:
+> --
+> 2.32.0
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/server/xmlrpcserver.py | 1 +
- 1 file changed, 1 insertion(+)
+This needs to be cherry-picked to Honister. There are corresponding=20
+patches for oe-selftest as well to exercise the above change, but I'm=20
+not sure if you normally backport them too.
 
-diff --git a/lib/bb/server/xmlrpcserver.py b/lib/bb/server/xmlrpcserver.py
-index 2fa71be667..01f55538ae 100644
---- a/lib/bb/server/xmlrpcserver.py
-+++ b/lib/bb/server/xmlrpcserver.py
-@@ -11,6 +11,7 @@ import hashlib
- import time
- import inspect
- from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
-+import bb.server.xmlrpcclient
- 
- import bb
- 
--- 
-2.32.0
+//Peter
 
 
