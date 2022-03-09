@@ -1,83 +1,79 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <tom.hochstein@nxp.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF2BC433EF
-	for <webhook@archiver.kernel.org>; Tue,  8 Mar 2022 14:32:48 +0000 (UTC)
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web08.8421.1646749965576838932
- for <bitbake-devel@lists.openembedded.org>;
- Tue, 08 Mar 2022 06:32:48 -0800
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=j6BhzwrE;
- spf=pass (domain: axis.com, ip: 195.60.68.18,
- mailfrom: peter.kjellerstedt@axis.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1646749966;
-  x=1678285966;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=HlJ+seLdWeitkNWMojl47dxqeuPUd65X13f6tw7tBks=;
-  b=j6BhzwrEPirjXx2fHfp3kb0RMLuZUQtYpp1HuPCuzs+BsJCyoLKijFOA
-   eTVxNjEiL0hz5+YcIFjGsdfS/4eqUPLYZCjKoYEMbBSPFIEM2dVvZ/Lib
-   Qghd+Nsaa9FYkP9x3gTRglWjtpSvEud36MB7OWczXR6+Jh4geJCpusuF/
-   z6PbvZzkqzhr10MBGQ0InodfK4sI3hDaZRGB6KVvyIgqmFiSBvRdRKAsu
-   tNGC+dsBHjOZNBoyEwPMdFBH7ZhyGlGbvQKgl6j0Yk7idlUZj3pjNfMjT
-   G8SiIbvNja43w9IdgkvmRb0CH8TKbTIISEquInsdKMeFJxvJ4jmO7weVY
-   w==;
-From: Peter Kjellerstedt <pkj@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCHv3 4/4] knotty.py: Unify quiet and non-quiet output for the
- running tasks
-Date: Tue, 8 Mar 2022 15:32:33 +0100
-Message-ID: <20220308143233.19972-4-pkj@axis.com>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20220308143233.19972-1-pkj@axis.com>
-References: <20220308143233.19972-1-pkj@axis.com>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F488C433EF
+	for <webhook@archiver.kernel.org>; Wed,  9 Mar 2022 00:22:50 +0000 (UTC)
+Subject: bitbake -e and "no history recorded"
+To: bitbake-devel@lists.openembedded.org
+From: "Tom Hochstein" <tom.hochstein@nxp.com>
+X-Originating-Location: Texas, US (165.225.33.77)
+X-Originating-Platform: Windows Chrome 98
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Date: Tue, 08 Mar 2022 16:22:49 -0800
+Message-ID: <rMEQ.1646785369249055290.S70q@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="0uQTYOD3SC9J7Apo6vNu"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 08 Mar 2022 14:32:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13449
+ <bitbake-devel@lists.openembedded.org>; Wed, 09 Mar 2022 00:22:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13450
 
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+--0uQTYOD3SC9J7Apo6vNu
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-This adds the number of currently running tasks to the output in quiet
-mode, and removes the word "currently" from the output for the non-quiet
-output. Removing "currently" avoids having the text "jump around"
-depending on whether any tasks are running or not, and it also gives a
-little bit more space to the progress bar.
+The output of bitbake -e on kirkstone is missing information on numerous va=
+riables and shows "no history recorded". For example:
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
+#
+# $ALLOW_EMPTY
+#=C2=A0 =C2=A0set /opt/kirkstone/sources/poky/meta/conf/documentation.conf:=
+62
+#=C2=A0 =C2=A0 =C2=A0[doc] "Specifies if an output package should still be =
+produced if it is empty."
+#
+# $ALLOW_EMPTY:glm
+#=C2=A0 =C2=A0[no history recorded]
+#
+#=C2=A0 =C2=A0"1"
+ALLOW_EMPTY:glm=3D"1"
 
-PATCHv2: New.
-PATCHv3: No changes.
+Is this a known issue?
 
- bitbake/lib/bb/ui/knotty.py | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Tom
 
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 78888f8bdd..704e688f48 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -287,12 +287,11 @@ class TerminalFilter(object):
-                 content += msg + "\n"
-                 print(msg)
- 
-+            msg = "%2s running tasks" % (len(activetasks) or "No")
-             if self.quiet:
--                msg = "Running tasks (%s, %s)" % (scene_tasks, cur_tasks)
--            elif not len(activetasks):
--                msg = "No currently running tasks (%s)" % cur_tasks
-+                msg += " (%s, %s)" % (scene_tasks, cur_tasks)
-             else:
--                msg = "Currently %2s running tasks (%s)" % (len(activetasks), cur_tasks)
-+                msg += " (%s)" % cur_tasks
-             maxtask = self.helper.tasknumber_total
-             if not self.main_progress or self.main_progress.maxval != maxtask:
-                 widgets = [' ', progressbar.Percentage(), ' ', progressbar.Bar()]
+--0uQTYOD3SC9J7Apo6vNu
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+The output of bitbake -e on kirkstone is missing information on numerous va=
+riables and shows "no history recorded". For example:<br /><br />
+<div><span style=3D"font-family: courier_newregular, courier;">#</span></di=
+v>
+<div><span style=3D"font-family: courier_newregular, courier;"># $ALLOW_EMP=
+TY</span></div>
+<div><span style=3D"font-family: courier_newregular, courier;">#&nbsp; &nbs=
+p;set /opt/kirkstone/sources/poky/meta/conf/documentation.conf:62</span></d=
+iv>
+<div><span style=3D"font-family: courier_newregular, courier;">#&nbsp; &nbs=
+p; &nbsp;[doc] "Specifies if an output package should still be produced if =
+it is empty."</span></div>
+<div><span style=3D"font-family: courier_newregular, courier;">#</span></di=
+v>
+<div><span style=3D"font-family: courier_newregular, courier;"># $ALLOW_EMP=
+TY:glm</span></div>
+<div><span style=3D"font-family: courier_newregular, courier;">#&nbsp; &nbs=
+p;[no history recorded]</span></div>
+<div><span style=3D"font-family: courier_newregular, courier;">#</span></di=
+v>
+<div><span style=3D"font-family: courier_newregular, courier;">#&nbsp; &nbs=
+p;"1"</span></div>
+<div><span style=3D"font-family: courier_newregular, courier;">ALLOW_EMPTY:=
+glm=3D"1"</span></div>
+<div>&nbsp;</div>
+Is this a known issue?<br /><br />Tom
+
+--0uQTYOD3SC9J7Apo6vNu--
 
