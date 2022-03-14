@@ -2,49 +2,49 @@ Return-Path: <anuj.mittal@intel.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51615C433EF
-	for <webhook@archiver.kernel.org>; Mon, 14 Mar 2022 02:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58549C433FE
+	for <webhook@archiver.kernel.org>; Mon, 14 Mar 2022 02:14:08 +0000 (UTC)
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
  by mx.groups.io with SMTP id smtpd.web08.21884.1647224044035250454
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 13 Mar 2022 19:14:06 -0700
+ Sun, 13 Mar 2022 19:14:08 -0700
 Authentication-Results: mx.groups.io;
  dkim=fail reason="unable to parse pub key" header.i=@intel.com header.s=intel
- header.b=GfRbIc1B;
+ header.b=maX8Wnjl;
  spf=pass (domain: intel.com, ip: 192.55.52.43,
  mailfrom: anuj.mittal@intel.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647224046; x=1678760046;
+  t=1647224048; x=1678760048;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=k5DqUzTF/zzUx+a+tqIskFxonu16L0MDgRkz7JmFzJU=;
-  b=GfRbIc1BHGFkkGlOwnvFKWES4L7P9CtCeutWzHVIayxO/EGgbxqd6DbM
-   cuyMwUzTD5dFJifXSfLoxpu7QCykuQuN6vHN8aLtwf8ucT8b0aKtTkzm0
-   UgagwBqdz1w93yCiicq/QWYw2LMrr5uuzU1VGT4Qoq7Dp7UueHa67Hw0z
-   qfisbogxThQSsSA+kwSuExQJLtQPS77a9klQ0biyCxg599Wbebgx/bN3l
-   kzyiLimvQjHm2izLgIorCCpO7BotXK9pX9oTZIFmp5Y/BTF5tspEjmWyy
-   3gpyoLoIW8XXp+QZoAk25V5+OoeNlmgKBR9NvHoglVgHGkv6KAOAPwd9V
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10285"; a="342344741"
+  bh=y28O2xmVVM67J3GtU1qB/vUObvwbmwDcHMQaNEaflEI=;
+  b=maX8WnjlFrVX0Kmbc7o9ZYgq+RfFiCIR45OY9HyB5Tf1Jy4cx+MESQae
+   6E+BixxHul9Gh34tKLvC1NYux0Tdi/r+C9iGoeO+1HN5ZqR6Jj6BAZl21
+   RV+uN+TASk0QXCrwJvhrqj1pz2L59pR1QZGRPhavhMv+Rk0iVvgGg04PG
+   e6A6drbnPKiR/MCwJIybBHy9jZfUdZg+t1wHKf4pgohIeKpVd0P0tEc7S
+   7W5MF8gLMfrfuwOvG1OJ1vpcPpmWETKY0msabcJrCAlCt40UOSIZUneaK
+   ZYYw+EIaL0UFCvlMSEX4ECu5RgeMSKhSqrLwxb4HRMQF0POQeiuNremtN
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10285"; a="342344746"
 X-IronPort-AV: E=Sophos;i="5.90,179,1643702400";
-   d="scan'208";a="342344741"
+   d="scan'208";a="342344746"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 13 Mar 2022 19:14:06 -0700
+ 13 Mar 2022 19:14:07 -0700
 X-IronPort-AV: E=Sophos;i="5.90,179,1643702400";
-   d="scan'208";a="818562578"
+   d="scan'208";a="818562599"
 Received: from lsim7-mobl1.gar.corp.intel.com (HELO anmitta2-mobl3.intel.com)
  ([10.215.229.232])
   by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 13 Mar 2022 19:14:05 -0700
+ 13 Mar 2022 19:14:06 -0700
 From: Anuj Mittal <anuj.mittal@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.52][PATCH 2/5] data_smart: Fix overrides file/line message
- additions
-Date: Mon, 14 Mar 2022 10:13:54 +0800
+Subject: [1.52][PATCH 3/5] cooker: Improve parsing failure from handled
+ exception usability
+Date: Mon, 14 Mar 2022 10:13:55 +0800
 Message-Id: 
- <2d7c63fd2626e55a17076befae33cfdca3ceedcc.1647223687.git.anuj.mittal@intel.com>
+ <61d3f81169adf2d590b42cb87ebfdfc1df04e764.1647223687.git.anuj.mittal@intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <cover.1647223687.git.anuj.mittal@intel.com>
 References: <cover.1647223687.git.anuj.mittal@intel.com>
@@ -53,41 +53,47 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 14 Mar 2022 02:14:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13478
+ <bitbake-devel@lists.openembedded.org>; Mon, 14 Mar 2022 02:14:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13479
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-The overrides warning message is meant to show filename and line
-numbers but the variable names are incorrect and this wasn't working.
-Fix it.
+When a recipe raises a BBHandledException, it means the error was already
+shown to the user. Adding an additional one here isn't helpful. What is
+helpful is to mention that parsing was halted.
+
+Tweak the code to do this with improves the messages the user sees
+and helps understand what happened.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 551c1cb20fc9b9d0dab5d830182c2bf626e72845)
+(cherry picked from commit fdf6ebc8b603fcfd3ed7c64baf486a4adabd25be)
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- lib/bb/data_smart.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ lib/bb/cooker.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 5ffedebc..e9603278 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -494,10 +494,10 @@ class DataSmart(MutableMapping):
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 3688aa08..288d73fd 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -2167,6 +2167,8 @@ class CookerParser(object):
+                                             self.total)
  
-         if not var.startswith("__anon_") and ("_append" in var or "_prepend" in var or "_remove" in var):
-             info = "%s" % var
--            if "filename" in loginfo:
--                info += " file: %s" % loginfo[filename]
--            if "lineno" in loginfo:
--                info += " line: %s" % loginfo[lineno]
-+            if "file" in loginfo:
-+                info += " file: %s" % loginfo["file"]
-+            if "line" in loginfo:
-+                info += " line: %s" % loginfo["line"]
-             bb.fatal("Variable %s contains an operation using the old override syntax. Please convert this layer/metadata before attempting to use with a newer bitbake." % info)
+             bb.event.fire(event, self.cfgdata)
++        else:
++            bb.error("Parsing halted due to errors")
  
-         self.expand_cache = {}
+         for process in self.processes:
+             self.parser_quit.put(None)
+@@ -2257,7 +2259,7 @@ class CookerParser(object):
+             return False
+         except bb.BBHandledException as exc:
+             self.error += 1
+-            logger.error('Failed to parse recipe: %s' % exc.recipe)
++            logger.debug('Failed to parse recipe: %s' % exc.recipe)
+             self.shutdown(clean=False, force=True)
+             return False
+         except ParsingFailure as exc:
 -- 
 2.35.1
 
