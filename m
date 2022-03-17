@@ -2,94 +2,97 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DA2C433F5
-	for <webhook@archiver.kernel.org>; Thu, 17 Mar 2022 12:22:30 +0000 (UTC)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com
- [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web09.9649.1647519749408809204
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E582C433EF
+	for <webhook@archiver.kernel.org>; Thu, 17 Mar 2022 12:22:31 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com
+ [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web10.9376.1647519750409088964
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Mar 2022 05:22:29 -0700
+ Thu, 17 Mar 2022 05:22:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bt4G4Fo+;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JoWw7ltW;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f41.google.com with SMTP id j26so7149115wrb.1
+Received: by mail-wm1-f54.google.com with SMTP id
+ n31-20020a05600c3b9f00b003898fc06f1eso4854292wms.1
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Mar 2022 05:22:29 -0700 (PDT)
+ Thu, 17 Mar 2022 05:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=DQOgM9y9zU7tvK7rZUE6zn7wEs9DUOJ8SABVMYAvRow=;
-        b=bt4G4Fo+3gXecHQkSEAdriCpVRkvCuP9M5e40nX+xBeruzq4qcGRqW6Dqtsbsk5vJp
-         eADzyMnhGyEBzE+vcvP751is/kFk/x+Br16t6+SUXv9sa4/gSUIZvVkYRF6aUfzZ5e2z
-         NonLlnaUJFzdHPNn45TixdO8jwMvumvI8Xnoo=
+        bh=/R6abOfYHmOqzXq6U7Kqbxfs/2200jQ/+3ebFvLGcVg=;
+        b=JoWw7ltWhCBH5IIMco96qCPfzI9AvwPRMzRGNC0VycszmAw8xs5d8INreTCrF583Mk
+         2gMkfsv0CnQSlqLZVdO1Drt9JwO68YgOtQwkERRO4pTjicrvZVX3SYnN6AvSNbKM+0L5
+         wbpYRYNWVlKaQTUkod5KJUu4T60DplT8+WZ34=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DQOgM9y9zU7tvK7rZUE6zn7wEs9DUOJ8SABVMYAvRow=;
-        b=8CKGEsEx6r5de0cXUmVBPFfV1r1WNkhCmU8bo5I/jZ9U21JB4CKd+b1oKqHFGJchi6
-         Rg+sNyJgKoUIJ59KKgubVfwEZ/NK+tI7JaXFi/4yCE1W19W/0w9Eaa9z6oa0nxDYMqBD
-         jq5Bg16WVIlttNwWhfG2JeikG6ABZH5G/Ahu1SZa+AL+rhV0SLV4SyLVy4nt0vxtukd6
-         Xqxk8OWFwCcgmESmd1R0/xQ/SCnzahB1Q376a0zz0F5faGOKGRaFl0A6hb8tRIOn/UEY
-         O6cct5VU41okNocd53QJ+SGbesAHZAXg1idnhu18HzU4yJfeZR52hW7vZT9IaTMxUZKT
-         rJLA==
-X-Gm-Message-State: AOAM533hrsrxL2FUjyWunSuE96YpGClHQSPkicev6r5YnWKhG46pk9UQ
-	Mw+rhXnc/w/8vjS5lsi1pFVuKzc4KuaKClRz
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/R6abOfYHmOqzXq6U7Kqbxfs/2200jQ/+3ebFvLGcVg=;
+        b=1j57CwrWfHRSxm7N4+eVv8tQTbtcafl3oFDC4Dez2D3gYT6qKYjXiGRiINiEQZcYAW
+         w5vhC7N4dfLG54ToFjRRXT+NNqN9nCpu9IzJUUZwr/YWqjEffilLG7T3pJwC5kXHgjfI
+         8qIGJf02R8+AJTufJsf7tp/kUhWWJVE6egI46aHjpvsfppPd5LAJvEqOIsDNmRiAueUj
+         9efqaw0ZR/hlpI9H3aJXZNd8iL46nDX6qPneIAyKaM/I+6v/iA+MQ425sJTsjuEq5pn8
+         hmqGa5XouItxuW6VOuOJD2ltgwfmEnEMr/qNcdlsHfhSQUXAkMGKG9tjzpsmW5ppF0uk
+         8IDg==
+X-Gm-Message-State: AOAM530UPHAosZg4lH90gpnGVm6KtwhWl143bK/kuFUXoc952pFhj4Wt
+	9oGGcr025CBBkI8syA1u7DAi62o9LZlDq377
 X-Google-Smtp-Source: 
- ABdhPJwc6f2SY6lX7o6hgt2P0p2jcT9+CgqXPii9vw8IJQL8AQCf18NSgnCRxPoQHNSPnQOQI21vzg==
-X-Received: by 2002:adf:c5ca:0:b0:1f0:aa2:494b with SMTP id
- v10-20020adfc5ca000000b001f00aa2494bmr3916863wrg.275.1647519747491;
-        Thu, 17 Mar 2022 05:22:27 -0700 (PDT)
+ ABdhPJzbXg+J27+2W2wxuceMifzS4N6R0YxExsh14WwSmwZZ+bVbnMT1paDD422nAAj/bHWeP/oC6A==
+X-Received: by 2002:a7b:c7ca:0:b0:38a:f22:701e with SMTP id
+ z10-20020a7bc7ca000000b0038a0f22701emr3647949wmk.35.1647519748487;
+        Thu, 17 Mar 2022 05:22:28 -0700 (PDT)
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:64d8:6f1c:d663:861])
         by smtp.gmail.com with ESMTPSA id
- i15-20020a5d584f000000b00203ded4f92esm6338248wrf.18.2022.03.17.05.22.26
+ i15-20020a5d584f000000b00203ded4f92esm6338248wrf.18.2022.03.17.05.22.27
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Mar 2022 05:22:26 -0700 (PDT)
+        Thu, 17 Mar 2022 05:22:27 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/3] data_smart: Skip commonly accessed variables from
- variable data context lookup
-Date: Thu, 17 Mar 2022 12:22:23 +0000
-Message-Id: <20220317122225.996597-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/3] data_smart: Avoid multiple getVarFlag calls
+Date: Thu, 17 Mar 2022 12:22:24 +0000
+Message-Id: <20220317122225.996597-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220317122225.996597-1-richard.purdie@linuxfoundation.org>
+References: <20220317122225.996597-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 17 Mar 2022 12:22:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13483
+ <bitbake-devel@lists.openembedded.org>; Thu, 17 Mar 2022 12:22:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13484
 
-The code tries to expand missing entities when they're encountered in
-python expressions. Looking at traces, these are often things which
-would not be in the data store such as "bb".
-
-Optimise to skip the data store queries for things we know will never
-be there. The expansion cache usually covers these but skipping
-entirely cuts a few million function calls parsing OE-Core.
+We can call getVarFlags() instead of the multiple getVarFlag calls
+which is a little more efficient. This reduces the number of overall
+function calls so is good but probably isn't much faster (or slower).
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/data_smart.py | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/bb/data_smart.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 8d3825f398..ca78d84133 100644
+index ca78d84133..dd20ca557e 100644
 --- a/lib/bb/data_smart.py
 +++ b/lib/bb/data_smart.py
-@@ -152,6 +152,9 @@ class DataContext(dict):
-         self['d'] = metadata
+@@ -673,10 +673,11 @@ class DataSmart(MutableMapping):
+             self.varhistory.record(**loginfo)
+             self.setVar(newkey, val, ignore=True, parsing=True)
  
-     def __missing__(self, key):
-+        # Skip commonly accessed invalid variables
-+        if key in ['bb', 'oe', 'int', 'bool', 'time', 'str', 'os']:
-+            raise KeyError(key)
-         value = self.metadata.getVar(key)
-         if value is None or self.metadata.getVarFlag(key, 'func', False):
-             raise KeyError(key)
+-        for i in (__setvar_keyword__):
+-            src = self.getVarFlag(key, i, False)
+-            if src is None:
++        srcflags = self.getVarFlags(key, False, True) or {}
++        for i in srcflags:
++            if i not in (__setvar_keyword__):
+                 continue
++            src = srcflags[i]
+ 
+             dest = self.getVarFlag(newkey, i, False) or []
+             dest.extend(src)
 -- 
 2.32.0
 
