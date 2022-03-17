@@ -1,171 +1,96 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD626C433EF
-	for <webhook@archiver.kernel.org>; Tue, 15 Mar 2022 14:21:35 +0000 (UTC)
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net
- [217.70.183.201])
- by mx.groups.io with SMTP id smtpd.web12.11301.1647354094281172083
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DA2C433F5
+	for <webhook@archiver.kernel.org>; Thu, 17 Mar 2022 12:22:30 +0000 (UTC)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com
+ [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web09.9649.1647519749408809204
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 15 Mar 2022 07:21:34 -0700
+ Thu, 17 Mar 2022 05:22:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=iK/4tpfN;
- spf=pass (domain: bootlin.com, ip: 217.70.183.201,
- mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 426711BF207;
-	Tue, 15 Mar 2022 14:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1647354092;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=x2mmp6xOhSIlpBe4sP0JwYvmATOYgaMtje5kqguznRQ=;
-	b=iK/4tpfNkM27LsMOkTS0hUGGVLVhJ+0dcp7WvMtSRRKJ05Kt8tksH8tO7IQZMojwHBoRjN
-	SLLl4qKWNLoAeqr+ZNXPDM68DhgC2h1RMygu7Xy0OlJ9hYlBl6xtu86EouWTBjnnPnQqO6
-	+S1YQkofibhi73gevIRCXyKZLYS7c6OEqHJxegZUnYJbM+F2ooxBbT37cq4uel7N66PT2M
-	vHEFwGjdIlX74LvvnLWiia64SB8S5yKF5Z7LdXnJnWDbA03NVHJE15UH14WCpACugPX/dq
-	u5qPaPdaG1tlm9p3LwNH24Go0TAr76IZ4H0IewgbfW1ovZEz8JMiGyOq9UiJOQ==
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bt4G4Fo+;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f41.google.com with SMTP id j26so7149115wrb.1
+        for <bitbake-devel@lists.openembedded.org>;
+ Thu, 17 Mar 2022 05:22:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DQOgM9y9zU7tvK7rZUE6zn7wEs9DUOJ8SABVMYAvRow=;
+        b=bt4G4Fo+3gXecHQkSEAdriCpVRkvCuP9M5e40nX+xBeruzq4qcGRqW6Dqtsbsk5vJp
+         eADzyMnhGyEBzE+vcvP751is/kFk/x+Br16t6+SUXv9sa4/gSUIZvVkYRF6aUfzZ5e2z
+         NonLlnaUJFzdHPNn45TixdO8jwMvumvI8Xnoo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DQOgM9y9zU7tvK7rZUE6zn7wEs9DUOJ8SABVMYAvRow=;
+        b=8CKGEsEx6r5de0cXUmVBPFfV1r1WNkhCmU8bo5I/jZ9U21JB4CKd+b1oKqHFGJchi6
+         Rg+sNyJgKoUIJ59KKgubVfwEZ/NK+tI7JaXFi/4yCE1W19W/0w9Eaa9z6oa0nxDYMqBD
+         jq5Bg16WVIlttNwWhfG2JeikG6ABZH5G/Ahu1SZa+AL+rhV0SLV4SyLVy4nt0vxtukd6
+         Xqxk8OWFwCcgmESmd1R0/xQ/SCnzahB1Q376a0zz0F5faGOKGRaFl0A6hb8tRIOn/UEY
+         O6cct5VU41okNocd53QJ+SGbesAHZAXg1idnhu18HzU4yJfeZR52hW7vZT9IaTMxUZKT
+         rJLA==
+X-Gm-Message-State: AOAM533hrsrxL2FUjyWunSuE96YpGClHQSPkicev6r5YnWKhG46pk9UQ
+	Mw+rhXnc/w/8vjS5lsi1pFVuKzc4KuaKClRz
+X-Google-Smtp-Source: 
+ ABdhPJwc6f2SY6lX7o6hgt2P0p2jcT9+CgqXPii9vw8IJQL8AQCf18NSgnCRxPoQHNSPnQOQI21vzg==
+X-Received: by 2002:adf:c5ca:0:b0:1f0:aa2:494b with SMTP id
+ v10-20020adfc5ca000000b001f00aa2494bmr3916863wrg.275.1647519747491;
+        Thu, 17 Mar 2022 05:22:27 -0700 (PDT)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:64d8:6f1c:d663:861])
+        by smtp.gmail.com with ESMTPSA id
+ i15-20020a5d584f000000b00203ded4f92esm6338248wrf.18.2022.03.17.05.22.26
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Mar 2022 05:22:26 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH] doc: bitbake-user-manual: reorder variable definitions
-Date: Tue, 15 Mar 2022 15:21:22 +0100
-Message-Id: <20220315142122.130520-1-michael.opdenacker@bootlin.com>
-X-Mailer: git-send-email 2.25.1
+Subject: [PATCH 1/3] data_smart: Skip commonly accessed variables from
+ variable data context lookup
+Date: Thu, 17 Mar 2022 12:22:23 +0000
+Message-Id: <20220317122225.996597-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 15 Mar 2022 14:21:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13482
+ <bitbake-devel@lists.openembedded.org>; Thu, 17 Mar 2022 12:22:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13483
 
-By alphabetical order, to get the same order as in the HTML
-output, sorted thanks to the ":sorted:" directive.
+The code tries to expand missing entities when they're encountered in
+python expressions. Looking at traces, these are often things which
+would not be in the data store such as "bb".
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Optimise to skip the data store queries for things we know will never
+be there. The expansion cache usually covers these but skipping
+entirely cuts a few million function calls parsing OE-Core.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
+ lib/bb/data_smart.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The change was made manually, but the source order was compared automatically
-with the generated one thanks to these quick and dirty commands...
-egrep -o "^<dt id=\"term-([0-9A-Za-z\-_])*" _build/html/bitbake-user-manual/bitbake-user-manual-ref-variables.html | cut -c 14- > ~/tmp/sorted
-cd doc; make html; git grep "   :term:" bitbake-user-manual/bitbake-user-manual-ref-variables.rst | grep -v "    " | cut -d ":" -f4  | cut -d "\`" -f2 > ~/tmp/unsorted
----
- .../bitbake-user-manual-ref-variables.rst     | 62 +++++++++----------
- 1 file changed, 31 insertions(+), 31 deletions(-)
-
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 59a9de2f..25af563d 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -93,6 +93,13 @@ overview of their function and contents.
-       fetcher does not attempt to use the host listed in :term:`SRC_URI` after
-       a successful fetch from the :term:`PREMIRRORS` occurs.
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 8d3825f398..ca78d84133 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -152,6 +152,9 @@ class DataContext(dict):
+         self['d'] = metadata
  
-+   :term:`BB_BASEHASH_IGNORE_VARS`
-+      Lists variables that are excluded from checksum and dependency data.
-+      Variables that are excluded can therefore change without affecting
-+      the checksum mechanism. A common example would be the variable for
-+      the path of the build. BitBake's output should not (and usually does
-+      not) depend on the directory in which it was built.
-+
-    :term:`BB_CHECK_SSL_CERTS`
-       Specifies if SSL certificates should be checked when fetching. The default
-       value is ``1`` and certificates are not checked if the value is set to ``0``.
-@@ -236,17 +243,6 @@ overview of their function and contents.
-       based on the interval occur each time a respective interval is
-       reached beyond the initial warning (i.e. 1 Gbytes and 100 Kbytes).
- 
--   :term:`BB_ENV_PASSTHROUGH_ADDITIONS`
--      Specifies an additional set of variables to allow through from the
--      external environment into BitBake's datastore. This list of variables
--      are on top of the internal list set in
--      :term:`BB_ENV_PASSTHROUGH`.
--
--      .. note::
--
--         You must set this variable in the external environment in order
--         for it to work.
--
-    :term:`BB_ENV_PASSTHROUGH`
-       Specifies the internal list of variables to allow through from
-       the external environment into BitBake's datastore. If the value of
-@@ -259,6 +255,17 @@ overview of their function and contents.
-          You must set this variable in the external environment in order
-          for it to work.
- 
-+   :term:`BB_ENV_PASSTHROUGH_ADDITIONS`
-+      Specifies an additional set of variables to allow through from the
-+      external environment into BitBake's datastore. This list of variables
-+      are on top of the internal list set in
-+      :term:`BB_ENV_PASSTHROUGH`.
-+
-+      .. note::
-+
-+         You must set this variable in the external environment in order
-+         for it to work.
-+
-    :term:`BB_FETCH_PREMIRRORONLY`
-       When set to "1", causes BitBake's fetcher module to only search
-       :term:`PREMIRRORS` for files. BitBake will not
-@@ -337,13 +344,6 @@ overview of their function and contents.
- 
-       For example usage, see :term:`BB_GIT_SHALLOW`.
- 
--   :term:`BB_BASEHASH_IGNORE_VARS`
--      Lists variables that are excluded from checksum and dependency data.
--      Variables that are excluded can therefore change without affecting
--      the checksum mechanism. A common example would be the variable for
--      the path of the build. BitBake's output should not (and usually does
--      not) depend on the directory in which it was built.
--
-    :term:`BB_HASHCHECK_FUNCTION`
-       Specifies the name of the function to call during the "setscene" part
-       of the task's execution in order to validate the list of task hashes.
-@@ -426,6 +426,19 @@ overview of their function and contents.
-       If you want to force log files to take a specific name, you can set this
-       variable in a configuration file.
- 
-+   :term:`BB_MULTI_PROVIDER_ALLOWED`
-+      Allows you to suppress BitBake warnings caused when building two
-+      separate recipes that provide the same output.
-+
-+      BitBake normally issues a warning when building two different recipes
-+      where each provides the same output. This scenario is usually
-+      something the user does not want. However, cases do exist where it
-+      makes sense, particularly in the ``virtual/*`` namespace. You can use
-+      this variable to suppress BitBake's warnings.
-+
-+      To use the variable, list provider names (e.g. recipe names,
-+      ``virtual/kernel``, and so forth).
-+
-    :term:`BB_NICE_LEVEL`
-       Allows BitBake to run at a specific priority (i.e. nice level).
-       System permissions usually mean that BitBake can reduce its priority
-@@ -1054,19 +1067,6 @@ overview of their function and contents.
-       upstream source, and then locations specified by :term:`MIRRORS` in that
-       order.
- 
--   :term:`BB_MULTI_PROVIDER_ALLOWED`
--      Allows you to suppress BitBake warnings caused when building two
--      separate recipes that provide the same output.
--
--      BitBake normally issues a warning when building two different recipes
--      where each provides the same output. This scenario is usually
--      something the user does not want. However, cases do exist where it
--      makes sense, particularly in the ``virtual/*`` namespace. You can use
--      this variable to suppress BitBake's warnings.
--
--      To use the variable, list provider names (e.g. recipe names,
--      ``virtual/kernel``, and so forth).
--
-    :term:`OVERRIDES`
-       BitBake uses :term:`OVERRIDES` to control what variables are overridden
-       after BitBake parses recipes and configuration files.
+     def __missing__(self, key):
++        # Skip commonly accessed invalid variables
++        if key in ['bb', 'oe', 'int', 'bool', 'time', 'str', 'os']:
++            raise KeyError(key)
+         value = self.metadata.getVar(key)
+         if value is None or self.metadata.getVarFlag(key, 'func', False):
+             raise KeyError(key)
 -- 
-2.25.1
+2.32.0
 
 
