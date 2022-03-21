@@ -1,77 +1,86 @@
-Return-Path: <quaresma.jose@gmail.com>
+Return-Path: <Martin.Jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17DCC433F5
-	for <webhook@archiver.kernel.org>; Mon, 21 Mar 2022 17:05:41 +0000 (UTC)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com
- [209.85.167.51])
- by mx.groups.io with SMTP id smtpd.web10.1013.1647882340822557509
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F17C433EF
+	for <webhook@archiver.kernel.org>; Mon, 21 Mar 2022 17:20:33 +0000 (UTC)
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com
+ [209.85.217.47])
+ by mx.groups.io with SMTP id smtpd.web11.34.1647883232235469430
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 21 Mar 2022 10:05:41 -0700
+ Mon, 21 Mar 2022 10:20:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=YhurLEJD;
- spf=pass (domain: gmail.com, ip: 209.85.167.51,
- mailfrom: quaresma.jose@gmail.com)
-Received: by mail-lf1-f51.google.com with SMTP id bt26so25640632lfb.3
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=RYGexWK/;
+ spf=pass (domain: gmail.com, ip: 209.85.217.47,
+ mailfrom: martin.jansa@gmail.com)
+Received: by mail-vs1-f47.google.com with SMTP id u198so8957357vsu.10
         for <bitbake-devel@lists.openembedded.org>;
- Mon, 21 Mar 2022 10:05:40 -0700 (PDT)
+ Mon, 21 Mar 2022 10:20:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AVS/vFmSlbb05Utd/i+g1roK+di5pzlwQIYMhn9zKto=;
-        b=YhurLEJDlj7bogr9sXEWo6RhrV92A3GWjfLHiUBjAAEuO/cpR/nk5sDGpg3CMTZSUF
-         2t0YBm/xHHXHw68htFQ2oAkuLVksrRReuBpsaghJ7rg8/WoTdysxp0u791lWWVPNjIVp
-         qiByJVCafV92ZxEXlWH6f5ppK9Td5Hyyw052aXpeDhfZRp8oVb2heddi+BUE5D4A2Btd
-         LgOahs7br9K/8+tWeOJpjn88bk9J+hoyR0iUe02gScM0Lh6XljP5cr4V9Ab+uvJtjlQa
-         vSRKWssyurGOZUReE24BIGw59h7gCd0PmEFGqYSOO+uVyHlyeq8wKeQ6Abeg+yH13tOc
-         svWQ==
+        bh=5hXmEtcEgluBSQW+cXFbR0Q08N+MM0iOQeMJ1/YZM/0=;
+        b=RYGexWK/93zRWg0umsT3x8fSSeX1TAoFbkXaAAQJg0Xg2CeRq47NNRpNRJlAaOjpZ7
+         13Do4T2zw1qHFTO9wHEW/93gZ/ORs/sm5wLNqysDUE7QNiCNP/wx0/G60vgpKuWREmH/
+         8NstYlnQt5mKigi/l7fb0WfpwgmH310ip7gjygBXHFIHFqlRwGVdxp4vthBxaHIOBLn+
+         w9ZVYz8heIQH4QSG+3M6DLTw3H2XS7yYkMXA951IJ3MzdjipHvk/CKkxqQ2iYVNQhbVf
+         VDQl767V0uJB4vUs56JBKYoCneR/1YPxfIyMT/ZpxieXI8Z08eKETeqZS8DLC9j6sLGL
+         Viuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AVS/vFmSlbb05Utd/i+g1roK+di5pzlwQIYMhn9zKto=;
-        b=ChgK0jX4893Or4FRfHawtdR1tB5XE/6dluhMRYwvGOvvsKvyxovfXfZE++IG68tx+T
-         DZYLGLR9gG0+xjxQtZhhZux5+QjLoxQKvS/FBL4JWZYErFZdGOgYicIybemWp3WRtPKp
-         hb5wxwgM6XBwiyRctfB1afYX/qUHxnNDvg9ZQnzyAhNIxm1k2nQ/npMo1s3C1V+CVY/t
-         jJfS8+Jr+Oa9k8rUumdAh0AedAcoDCrJfT1aN73Fx6QXro+OzrRRwF63ccjSJXAWgFVd
-         afgXEGbD6GhkrEkjtYWjahfJ3MXaf5hXNElMiNKspeDVVLSYdBvaRYD6o4zT076uFtin
-         sGMw==
-X-Gm-Message-State: AOAM5307FmuwVNmq8BBHpvNml4OOR/WN4VPPA6cQRjfnFqf3CAZyAoro
-	Jba+mHdqkka6Xd974eBGB6ZDTt3F2VZ9lJt5PCMeCdaptak=
+        bh=5hXmEtcEgluBSQW+cXFbR0Q08N+MM0iOQeMJ1/YZM/0=;
+        b=74QWK74NeiTfFvin5ZZcGbtWEuHZXtkDmcdOsOgxWk7eceoQThAZ7R8UMbWUTxhmBH
+         VJJVK2UNjaGf+Mx5ufv8nKV++u/Tw4pkCohuVuEzfuj8Zd6l/wl7oTD03cRj7I0pfTGi
+         csRRg49AXePWCdyLvSV9hC6NZLLAQMpMbwHHKV03Y9m8CqYHjMhAa622t/xBnuNz7ShM
+         jRoQ5Ay5SVOVW2UtXtumOCaufWFU8LiSL1o9RSaSPVEs8FRtJ+aKRiygYlAsVWeSyo2r
+         nrC+2N+L6XWRFjxM8b7r7bKjzaJOJnhaCCkY+UEqiAA0ov677k/ShtR/9Qn7+iqtIkY+
+         9EyQ==
+X-Gm-Message-State: AOAM530Ix/bl8LqZEllXUJqqJm+9kyLQwhY04bJNPgUPaNelPcnuoOoh
+	0E45f9cTYOiGgKU7lN560D15vgSynKGuAZ4u3do=
 X-Google-Smtp-Source: 
- ABdhPJyUT3Y/Y08gSpw508hKkH/b6kDNxUV6N7fNpoBM6OMbzvqlOIu0qtDJrAZB1cSv0SwSO8jMpQHZYF5UC1ii5DU=
-X-Received: by 2002:a05:6512:acb:b0:44a:24b7:7fa4 with SMTP id
- n11-20020a0565120acb00b0044a24b77fa4mr6079467lfu.94.1647882338898; Mon, 21
- Mar 2022 10:05:38 -0700 (PDT)
+ ABdhPJy8ADtvYKackLtq23OWMxoyFMKdzu75dObT37TGweTHaTUnx53tS1qcE2l+VdLxupkPUvro8eeC+BIc9NcmrBc=
+X-Received: by 2002:a05:6102:5594:b0:324:f7e8:a6df with SMTP id
+ dc20-20020a056102559400b00324f7e8a6dfmr3153465vsb.62.1647883231334; Mon, 21
+ Mar 2022 10:20:31 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220321170104.3371476-1-ross.burton@arm.com>
 In-Reply-To: <20220321170104.3371476-1-ross.burton@arm.com>
-From: Jose Quaresma <quaresma.jose@gmail.com>
-Date: Mon, 21 Mar 2022 17:05:27 +0000
+From: Martin Jansa <martin.jansa@gmail.com>
+Date: Mon, 21 Mar 2022 18:19:59 +0100
 Message-ID: 
- <CANPvuRkLfOOtqe2a8roVRisq7Qxb6yyJLxiGFkHQ=sSzOFQ8Mw@mail.gmail.com>
+ <CA+chaQfYrpNihF_BNx66f3cSoRbhfRTy2wLOjekq00G=Q=tE9A@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH] knotty: display active tasks when
  printing keepAlive() message
 To: Ross Burton <ross@burtonini.com>
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000711a8205dabd811e"
+Content-Type: multipart/alternative; boundary="000000000000a2a15305dabdb66c"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 21 Mar 2022 17:05:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13491
+ <bitbake-devel@lists.openembedded.org>; Mon, 21 Mar 2022 17:20:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13492
 
---000000000000711a8205dabd811e
+--000000000000a2a15305dabdb66c
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Ross,
+I like this idea and with this implemented, it might be useful to
+lower printinterval 5000s to something a bit shorter as well (or make it
+configurable)
 
-Ross Burton <ross@burtonini.com> escreveu no dia segunda, 21/03/2022 =C3=A0=
-(s)
-17:01:
+No output at all for 10+ minutes always looks strange and if I have a shell
+on the builder I would check top/htop to see what's still running (if it's
+something expected like chromium do_compile or something less expected like
+linux-yocto do_fetch when the premirror should already be populated).
+Printing this directly in knotty log file would very convenient for people
+who cannot just run htop or similar on builder and tens extra lines in the
+log file doesn't seem too bad.
+
+Regards,
+
+On Mon, Mar 21, 2022 at 6:01 PM Ross Burton <ross@burtonini.com> wrote:
 
 > In interactive bitbake sessions it is obvious what tasks are running
 > when one of them hangs or otherwise takes a long time. However, in
@@ -101,47 +110,44 @@ Ross Burton <ross@burtonini.com> escreveu no dia segunda, 21/03/2022 =C3=A0=
 > tasks:" % t)
 > +            for t in self.helper.running_tasks:
 > +                print(t)
->
-
-I think that building a new string with all tasks and call print at the end
-is more efficient.
-
-Jose
-
-             sys.stdout.flush()
+>              sys.stdout.flush()
 >
 >      def updateFooter(self):
 > --
 > 2.25.1
 >
 >
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> -=-=-=-=-=-=-=-=-=-=-=-
 > Links: You receive all messages sent to this group.
 > View/Reply Online (#13490):
 > https://lists.openembedded.org/g/bitbake-devel/message/13490
-> Mute This Topic: https://lists.openembedded.org/mt/89932958/5052612
+> Mute This Topic: https://lists.openembedded.org/mt/89932958/3617156
 > Group Owner: bitbake-devel+owner@lists.openembedded.org
 > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> quaresma.jose@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Martin.Jansa@gmail.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
 >
 >
 
---=20
-Best regards,
-
-Jos=C3=A9 Quaresma
-
---000000000000711a8205dabd811e
+--000000000000a2a15305dabdb66c
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>Hi Ross,</div><br><div class=3D"gmail_quote"><div dir=
-=3D"ltr" class=3D"gmail_attr">Ross Burton &lt;<a href=3D"mailto:ross@burton=
-ini.com">ross@burtonini.com</a>&gt; escreveu no dia segunda, 21/03/2022 =C3=
-=A0(s) 17:01:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0p=
-x 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">In=
- interactive bitbake sessions it is obvious what tasks are running<br>
+<div dir=3D"ltr">I like this idea and with this implemented, it might be us=
+eful to lower=C2=A0printinterval 5000s to something a bit shorter as well (=
+or make it configurable)<div><br></div><div>No output at all for 10+ minute=
+s always looks strange and if I have a shell on the builder I would check t=
+op/htop to see what&#39;s still running (if it&#39;s something expected lik=
+e chromium do_compile or something less expected like linux-yocto do_fetch =
+when the premirror should already be populated). Printing this directly in =
+knotty log file would very convenient for people who cannot just run htop o=
+r similar on builder and tens extra lines in the log file doesn&#39;t seem =
+too bad.</div><div><br></div><div>Regards,</div></div><br><div class=3D"gma=
+il_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Mon, Mar 21, 2022 at 6:0=
+1 PM Ross Burton &lt;<a href=3D"mailto:ross@burtonini.com">ross@burtonini.c=
+om</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margi=
+n:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex=
+">In interactive bitbake sessions it is obvious what tasks are running<br>
 when one of them hangs or otherwise takes a long time. However, in<br>
 non-interactive sessions (such as automated builds) bitbake just prints<br>
 a message saying that it is &quot;still alive&quot; with no clues as to wha=
@@ -174,11 +180,7 @@ index 78888f8bdd3..50dd4229da4 100644<br>
 (no events for %ds). Active tasks:&quot; % t)<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 for t in self.helper.running_tas=
 ks:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 print(t)<br></bloc=
-kquote><div><br></div><div>I think that building a new string with all task=
-s and call print at the end is more efficient.</div><div><br></div><div>Jos=
-e</div><div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px=
- 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 print(t)<br>
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0sys.stdout.flush()<br>
 <br>
 =C2=A0 =C2=A0 =C2=A0def updateFooter(self):<br>
@@ -191,20 +193,18 @@ Links: You receive all messages sent to this group.<br>
 View/Reply Online (#13490): <a href=3D"https://lists.openembedded.org/g/bit=
 bake-devel/message/13490" rel=3D"noreferrer" target=3D"_blank">https://list=
 s.openembedded.org/g/bitbake-devel/message/13490</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/89932958/5052=
-612" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/89932958/5052612</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/89932958/3617=
+156" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
+/89932958/3617156</a><br>
 Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
 " target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
 Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
 b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:quaresma.jose@gmail.com" target=3D=
-"_blank">quaresma.jose@gmail.com</a>]<br>
+tbake-devel/unsub</a> [<a href=3D"mailto:Martin.Jansa@gmail.com" target=3D"=
+_blank">Martin.Jansa@gmail.com</a>]<br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 <br>
-</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
- class=3D"gmail_signature"><div dir=3D"ltr">Best regards,<div><br>Jos=C3=A9=
- Quaresma</div></div></div></div>
+</blockquote></div>
 
---000000000000711a8205dabd811e--
+--000000000000a2a15305dabdb66c--
 
