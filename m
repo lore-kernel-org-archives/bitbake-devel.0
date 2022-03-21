@@ -1,146 +1,166 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <david.reyna@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEF9C433F5
-	for <webhook@archiver.kernel.org>; Thu, 17 Mar 2022 12:22:32 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com
- [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web12.9476.1647519751438876200
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70EDC433F5
+	for <webhook@archiver.kernel.org>; Mon, 21 Mar 2022 05:02:24 +0000 (UTC)
+Received: from mail1.wrs.com (mail1.wrs.com [147.11.3.146])
+ by mx.groups.io with SMTP id smtpd.web10.26765.1647838943930271129
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Mar 2022 05:22:31 -0700
+ Sun, 20 Mar 2022 22:02:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=SIYXIufP;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id
- 123-20020a1c1981000000b0038b3616a71aso3055761wmz.4
-        for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Mar 2022 05:22:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=picEUnG1bYdHgUCQjm7QARnpWFUK3GAW/w+OHbfVFoU=;
-        b=SIYXIufPcKuBZ/cy4J/b64I4fCMa5e9irFgN94gRvB0lubmBFAuO85VINsnYoS58fD
-         tOHzGcUn0d8+EDO78ozls910XVvg7omD59eTI5+niz9uMR5M37RoavTiboAHqQLUwpVs
-         tiYBGJzmygOsLP+2u1uPobpMlg2PnVB7jNPA8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=picEUnG1bYdHgUCQjm7QARnpWFUK3GAW/w+OHbfVFoU=;
-        b=qgQugFcSd3HmNQQN+PsnDuxFbYh7+IiqRBWB+O5kGxoLCAm4gWnHf+u3pUo7ccdyXi
-         XkyjDODbwGju9fge1R0P7P0IxeE7wTIBpQ+Z86QDZsMZS3temChdpmclH8IckmlEMM4V
-         eb5WbviAqPGk8U2BdJN3SjPogCy1UjXMjIeCsCvaIlxnXit/D0apjhNMvBKYDn39BFSh
-         lB41XsQeVH/WlzADNW5roBhlz4UGnWp0pvud8b9p3G2P9CtPWkg48hwwH36OuDQjRVgw
-         t7HuMO1al1T9GSsfxcRI8zr4C3Pl5uhGKn/2EwpSRU5ycI2lVBEz/zy23i2f/F9aTGtU
-         gPSw==
-X-Gm-Message-State: AOAM530UfA4wwmkIupwqMv4pZGnAa8I3gYpLew4D/+8oLfOqEKNqUN+g
-	ohAAFzhm3+08gA8UzVzlDishoNdQmVv3L5Vp
-X-Google-Smtp-Source: 
- ABdhPJxHvlUqOBrLefJ6739ZkIqW9mFcjOBaZyYFinlWAcCtXvbRuWqRjY03zh2Q+80iCaHTtEIS6A==
-X-Received: by 2002:a1c:c912:0:b0:37b:e074:dfcb with SMTP id
- f18-20020a1cc912000000b0037be074dfcbmr10884780wmb.161.1647519749517;
-        Thu, 17 Mar 2022 05:22:29 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:64d8:6f1c:d663:861])
-        by smtp.gmail.com with ESMTPSA id
- i15-20020a5d584f000000b00203ded4f92esm6338248wrf.18.2022.03.17.05.22.28
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Mar 2022 05:22:28 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 3/3] codeparser: Avoid log bufer overhead in cache case
-Date: Thu, 17 Mar 2022 12:22:25 +0000
-Message-Id: <20220317122225.996597-3-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220317122225.996597-1-richard.purdie@linuxfoundation.org>
-References: <20220317122225.996597-1-richard.purdie@linuxfoundation.org>
+ dkim=missing;
+ spf=permerror,
+ err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid
+ domain name (domain: windriver.com, ip: 147.11.3.146,
+ mailfrom: david.reyna@windriver.com)
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.corp.ad.wrs.com
+ [147.11.82.252])
+	by mail1.wrs.com (8.15.2/8.15.2) with ESMTPS id 22L52Me9006434
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>; Sun, 20 Mar 2022 22:02:22 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Sun, 20 Mar 2022 22:02:22 -0700
+Received: from ala-lpggp2.wrs.com (147.11.105.123) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2242.12 via Frontend Transport; Sun, 20 Mar 2022 22:02:22 -0700
+From: David Reyna <david.reyna@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH 1/2] toaster: detect when bitbake crashed
+Date: Sun, 20 Mar 2022 22:02:20 -0700
+Message-ID: 
+ <19b4157ed0212570f46d681ebce2af51ad436e13.1647836508.git.David.Reyna@windriver.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1647836508.git.David.Reyna@windriver.com>
+References: <cover.1647836508.git.David.Reyna@windriver.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 17 Mar 2022 12:22:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13485
+ <bitbake-devel@lists.openembedded.org>; Mon, 21 Mar 2022 05:02:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13486
 
-Creating the new log instances triggers a lot of python logging overhead
-in a commonly called function (about 600,000 for parsing OE-Core).
+From: David Reyna <David.Reyna@windriver.com>
 
-We only need the log functionality if we're parsing, not if we just hit
-from the cache. Therefore defer the log setup overhead until we know it
-is a cache miss.
+Add a polling check on tracebacks in a build's log. This
+can for example indicate that bitbake crashed, which would
+stop the event stream that Toaster normally uses to detect
+build errors.
 
-Whilst this complicates the code slightly, the performance gain is worth
-it as for parsing OE-Core we drop 60 million funciton calls (from 225
-overall).
+[YOCTO #14085]
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/bb/codeparser.py | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ .../management/commands/runbuilds.py          | 83 ++++++++++++++++++-
+ 1 file changed, 81 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index 0cec452c00..3b3c3b41ff 100644
---- a/lib/bb/codeparser.py
-+++ b/lib/bb/codeparser.py
-@@ -195,6 +195,10 @@ class BufferedLogger(Logger):
-                 self.target.handle(record)
-         self.buffer = []
+diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index 19f659ec41..834e32b36f 100644
+--- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -180,6 +180,77 @@ class Command(BaseCommand):
+         except Exception as e:
+             logger.warning("runbuilds: schedule exception %s" % str(e))
  
-+class DummyLogger():
-+    def flush(self):
-+        return
++    # Test to see if a build pre-maturely died due to a bitbake crash
++    def check_dead_builds(self):
++        do_cleanup = False
++        try:
++            for br in BuildRequest.objects.filter(state=BuildRequest.REQ_INPROGRESS):
++                # Get the build directory
++                if br.project.builddir:
++                    builddir =  br.project.builddir
++                else:
++                    builddir = '%s-toaster-%d' % (br.environment.builddir,br.project.id)
++                # Check log to see if there is a recent traceback
++                toaster_ui_log = os.path.join(builddir, 'toaster_ui.log')
++                test_file = os.path.join(builddir, '._toaster_check.txt')
++                os.system("tail -n 50 %s > %s" % (os.path.join(builddir, 'toaster_ui.log'),test_file))
++                traceback_text = ''
++                is_traceback = False
++                with open(test_file,'r') as test_file_fd:
++                    test_file_tail = test_file_fd.readlines()
++                    for line in test_file_tail:
++                        if line.startswith('Traceback (most recent call last):'):
++                            traceback_text = line
++                            is_traceback = True
++                        elif line.startswith('NOTE: ToasterUI waiting for events'):
++                            # Ignore any traceback before new build start
++                            traceback_text = ''
++                            is_traceback = False
++                        elif line.startswith('Note: Toaster traceback auto-stop'):
++                            # Ignore any traceback before this previous traceback catch
++                            traceback_text = ''
++                            is_traceback = False
++                        elif is_traceback:
++                            traceback_text += line
++                # Test the results
++                is_stop = False
++                if is_traceback:
++                    # Found a traceback
++                    errtype = 'Bitbake crash'
++                    errmsg = 'Bitbake crash\n' + traceback_text
++                    state = BuildRequest.REQ_FAILED
++                    # Clean up bitbake files
++                    bitbake_lock = os.path.join(builddir, 'bitbake.lock')
++                    if os.path.isfile(bitbake_lock):
++                        os.remove(bitbake_lock)
++                    bitbake_sock = os.path.join(builddir, 'bitbake.sock')
++                    if os.path.isfile(bitbake_sock):
++                        os.remove(bitbake_sock)
++                    if os.path.isfile(test_file):
++                        os.remove(test_file)
++                    # Add note to ignore this traceback on next check
++                    os.system('echo "Note: Toaster traceback auto-stop" >> %s' % toaster_ui_log)
++                    is_stop = True
++                # Add more tests here
++                #elif ...
++                # Stop the build request?
++                if is_stop:
++                    brerror = BRError(
++                        req = br,
++                        errtype = errtype,
++                        errmsg = errmsg,
++                        traceback = traceback_text,
++                        )
++                    brerror.save()
++                    br.state = state
++                    br.save()
++                    do_cleanup = True
++            # Do cleanup
++            if do_cleanup:
++                self.cleanup()
++        except Exception as e:
++            logger.error("runbuilds: Error in check_dead_builds %s" % e)
 +
- class PythonParser():
-     getvars = (".getVar", ".appendVar", ".prependVar", "oe.utils.conditional")
-     getvarflags = (".getVarFlag", ".appendVarFlag", ".prependVarFlag")
-@@ -276,7 +280,9 @@ class PythonParser():
-         self.contains = {}
-         self.execs = set()
-         self.references = set()
--        self.log = BufferedLogger('BitBake.Data.PythonParser', logging.DEBUG, log)
-+        self._log = log
-+        # Defer init as expensive
-+        self.log = DummyLogger()
+     def handle(self, **options):
+         pidfile_path = os.path.join(os.environ.get("BUILDDIR", "."),
+                                     ".runbuilds.pid")
+@@ -187,10 +258,18 @@ class Command(BaseCommand):
+         with open(pidfile_path, 'w') as pidfile:
+             pidfile.write("%s" % os.getpid())
  
-         self.unhandled_message = "in call of %s, argument '%s' is not a string literal"
-         self.unhandled_message = "while parsing %s, %s" % (name, self.unhandled_message)
-@@ -303,6 +309,9 @@ class PythonParser():
-                 self.contains[i] = set(codeparsercache.pythoncacheextras[h].contains[i])
-             return
++        # Clean up any stale/failed builds from previous Toaster run
+         self.runbuild()
  
-+        # Need to parse so take the hit on the real log buffer
-+        self.log = BufferedLogger('BitBake.Data.PythonParser', logging.DEBUG, self._log)
+         signal.signal(signal.SIGUSR1, lambda sig, frame: None)
+ 
+         while True:
+-            signal.pause()
+-            self.runbuild()
++            sigset = signal.sigtimedwait([signal.SIGUSR1], 5)
++            if sigset:
++                for sig in sigset:
++                    # Consume each captured pending event
++                    self.runbuild()
++            else:
++                # Check for build exceptions
++                self.check_dead_builds()
 +
-         # We can't add to the linenumbers for compile, we can pad to the correct number of blank lines though
-         node = "\n" * int(lineno) + node
-         code = compile(check_indent(str(node)), filename, "exec",
-@@ -321,7 +330,11 @@ class ShellParser():
-         self.funcdefs = set()
-         self.allexecs = set()
-         self.execs = set()
--        self.log = BufferedLogger('BitBake.Data.%s' % name, logging.DEBUG, log)
-+        self._name = name
-+        self._log = log
-+        # Defer init as expensive
-+        self.log = DummyLogger()
-+
-         self.unhandled_template = "unable to handle non-literal command '%s'"
-         self.unhandled_template = "while parsing %s, %s" % (name, self.unhandled_template)
- 
-@@ -340,6 +353,9 @@ class ShellParser():
-             self.execs = set(codeparsercache.shellcacheextras[h].execs)
-             return self.execs
- 
-+        # Need to parse so take the hit on the real log buffer
-+        self.log = BufferedLogger('BitBake.Data.%s' % self._name, logging.DEBUG, self._log)
-+
-         self._parse_shell(value)
-         self.execs = set(cmd for cmd in self.allexecs if cmd not in self.funcdefs)
- 
 -- 
-2.32.0
+2.17.1
 
 
