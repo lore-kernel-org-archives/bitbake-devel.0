@@ -1,109 +1,139 @@
-Return-Path: <anuj.mittal@intel.com>
+Return-Path: <o.mandel@menlosystems.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C86AC433F5
-	for <webhook@archiver.kernel.org>; Thu, 24 Mar 2022 10:59:42 +0000 (UTC)
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
- by mx.groups.io with SMTP id smtpd.web08.9321.1648119580459621582
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623D3C433FE
+	for <webhook@archiver.kernel.org>; Thu, 24 Mar 2022 16:48:08 +0000 (UTC)
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
+ by mx.groups.io with SMTP id smtpd.web12.13453.1648140486418111125
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 24 Mar 2022 03:59:40 -0700
+ Thu, 24 Mar 2022 09:48:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="unable to parse pub key" header.i=@intel.com header.s=intel
- header.b=l4SYrBR5;
- spf=pass (domain: intel.com, ip: 134.134.136.65,
- mailfrom: anuj.mittal@intel.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648119580; x=1679655580;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=tA2PhHtjXJTB47Z2Z8fmYR7MG2NEXQP2dp9SM5T0DAA=;
-  b=l4SYrBR5XUcGPnUf7werOgJI0srbNOYTeYLJDAaOIdJP6S3vTwfNmbSA
-   e3YOHj13sQwCezKa9+D2g3eVYLIqqc75QIMREtnMbBTg5uADjxgyHepCE
-   NDkt5Wk8iZhFp1imeODmoLWFI6Hjwo8UO+XW0bn+pSiL68l4ZrySYo8UU
-   1JFCCCuWw8Atq8qcBkJpWt9PBoDc2Two/3ur2naJeiQDH0ggxZZiE9KR7
-   GionUKKYKXjso8sbzo/Elp7DNsPQ5JyuaXG/VOKMXDr8kR902degV0l03
-   tJkhXX5VjjJAbYZMTHXtz7f354kAoiF0r5O5RXooFgKPuPIoovhD+9n6n
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10295"; a="258299388"
-X-IronPort-AV: E=Sophos;i="5.90,207,1643702400";
-   d="scan'208";a="258299388"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 24 Mar 2022 03:59:26 -0700
-X-IronPort-AV: E=Sophos;i="5.90,207,1643702400";
-   d="scan'208";a="584037582"
-Received: from yeeweita-mobl.gar.corp.intel.com (HELO
- anmitta2-mobl3.intel.com) ([10.213.139.46])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 24 Mar 2022 03:59:25 -0700
-From: Anuj Mittal <anuj.mittal@intel.com>
+ dkim=missing;
+ spf=none, err=permanent DNS error (domain: menlosystems.com, ip: 212.18.0.9,
+ mailfrom: o.mandel@menlosystems.com)
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 4KPWPH4cK9z1qyJG;
+	Thu, 24 Mar 2022 17:48:03 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+	by mail.m-online.net (Postfix) with ESMTP id 4KPWPH3Tyjz1qqkD;
+	Thu, 24 Mar 2022 17:48:03 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+	by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new,
+ port 10024)
+	with ESMTP id aahfkdXoNCwD; Thu, 24 Mar 2022 17:48:02 +0100 (CET)
+X-Auth-Info: ECygsBGjIrPu0YiohmtwYxfG/0suoviPVVVst64awKkYsQTmYkWIIvJnzIycpm06
+Received: from menlobuildserver.MenloSystems.local
+ (host-82-135-125-165.customer.m-online.net [82.135.125.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Thu, 24 Mar 2022 17:48:02 +0100 (CET)
+From: Olaf Mandel <o.mandel@menlosystems.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [1.52][PATCH] build: Tweak exception handling for setscene tasks
-Date: Thu, 24 Mar 2022 18:59:20 +0800
-Message-Id: <20220324105920.6586-1-anuj.mittal@intel.com>
-X-Mailer: git-send-email 2.35.1
+Cc: Olaf Mandel <o.mandel@menlosystems.com>
+Subject: [PATCH] fetch2/git: stop generated tarballs from leaking info
+Date: Thu, 24 Mar 2022 17:47:59 +0100
+Message-Id: <20220324164759.4097867-1-o.mandel@menlosystems.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 24 Mar 2022 10:59:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13500
+ <bitbake-devel@lists.openembedded.org>; Thu, 24 Mar 2022 16:48:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13501
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+When using BB_GENERATE_MIRROR_TARBALLS=3D"1" to generate mirror tarballs
+of git repositories, they leaked local information: username, group and
+time of the last fetch. Remove all these by setting fixed information:
 
-If an unexpected exception occurs in a setscene task, it is currently hidden
-from the user and not recorded in any logs. This isn't helpful to debug
-such failures.
+ * uname =3D pokybuild
+ * gname =3D users
+ * mtime =3D committer time of newest commit in repo
 
-Change the code so that even in the "silent" or "quiet" task case (setscene
-tasks), a warning is shown with the traceback unless it was an "handled"
-exception. This means the failing function can show it's own warning/error
-instead if it wants to and then raise a handled event.
+The username and group value were taken from the archives available on
+the downloads.yoctoproject.org mirror. The modification time is chosen
+so it still retains some relationship to the contents of the archive.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 41dcdc61eb40def8c14a42e8d7bb9ce5a34afa57)
-Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+Signed-off-by: Olaf Mandel <o.mandel@menlosystems.com>
 ---
- lib/bb/build.py | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ lib/bb/fetch2/git.py  |  5 ++++-
+ lib/bb/tests/fetch.py | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 7e4ab9f6..44d1d9d9 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -715,19 +715,23 @@ def _exec_task(fn, task, d, quieterr):
-                 logger.debug2("Zero size logfn %s, removing", logfn)
-                 bb.utils.remove(logfn)
-                 bb.utils.remove(loglink)
--    except bb.BBHandledException:
--        event.fire(TaskFailed(task, fn, logfn, localdata, True), localdata)
--        return 1
-     except (Exception, SystemExit) as exc:
-+        handled = False
-+        if isinstance(exc, bb.BBHandledException):
-+            handled = True
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index b3c5e6da..4d06a571 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -462,7 +462,10 @@ class Git(FetchMethod):
+=20
+             logger.info("Creating tarball of git repository")
+             with create_atomic(ud.fullmirror) as tfile:
+-                runfetchcmd("tar -czf %s ." % tfile, d, workdir=3Dud.clo=
+nedir)
++                mtime =3D runfetchcmd("git log --all -1 --format=3D%cD",=
+ d,
++                        quiet=3DTrue, workdir=3Dud.clonedir)
++                runfetchcmd("tar -czf %s --owner pokybuild --group users=
+ --mtime \"%s\" ."
++                        % (tfile, mtime), d, workdir=3Dud.clonedir)
+             runfetchcmd("touch %s.done" % ud.fullmirror, d)
+=20
+     def clone_shallow_local(self, ud, dest, d):
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index eff12b7c..233ecae7 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -11,6 +11,7 @@ import hashlib
+ import tempfile
+ import collections
+ import os
++import tarfile
+ from bb.fetch2 import URI
+ from bb.fetch2 import FetchMethod
+ import bb
+@@ -628,6 +629,35 @@ class GitShallowTarballNamingTest(FetcherTest):
+         self.assertIn(self.mirror_tarball, dir)
+=20
+=20
++class CleanTarballTest(FetcherTest):
++    def setUp(self):
++        super(CleanTarballTest, self).setUp()
++        self.recipe_url =3D "git://git.openembedded.org/bitbake"
++        self.recipe_tarball =3D "git2_git.openembedded.org.bitbake.tar.g=
+z"
 +
-         if quieterr:
-+            if not handled:
-+                logger.warning(repr(exc))
-             event.fire(TaskFailedSilent(task, fn, logfn, localdata), localdata)
-         else:
-             errprinted = errchk.triggered
-             # If the output is already on stdout, we've printed the information in the
-             # logs once already so don't duplicate
--            if verboseStdoutLogging:
-+            if verboseStdoutLogging or handled:
-                 errprinted = True
--            logger.error(repr(exc))
-+            if not handled:
-+                logger.error(repr(exc))
-             event.fire(TaskFailed(task, fn, logfn, localdata, errprinted), localdata)
-         return 1
- 
--- 
-2.35.1
++        self.d.setVar('BB_GENERATE_MIRROR_TARBALLS', '1')
++        self.d.setVar('SRCREV', '82ea737a0b42a8b53e11c9cde141e9e9c0bd8c4=
+0')
++
++    @skipIfNoNetwork()
++    def test_that_the_tarball_contents_does_not_leak_info(self):
++        fetcher =3D bb.fetch.Fetch([self.recipe_url], self.d)
++
++        fetcher.download()
++
++        fetcher.unpack(self.unpackdir)
++        mtime =3D bb.process.run('git log --all -1 --format=3D%ct',
++                cwd=3Dos.path.join(self.unpackdir, 'git'))
++        self.assertEqual(len(mtime), 2)
++        mtime =3D int(mtime[0])
++
++        archive =3D tarfile.open(os.path.join(self.dldir, self.recipe_ta=
+rball))
++        self.assertNotEqual(len(archive.members), 0)
++        for member in archive.members:
++            self.assertEqual(member.uname, 'pokybuild')
++            self.assertEqual(member.gname, 'users')
++            self.assertEqual(member.mtime, mtime)
++
++
+ class FetcherLocalTest(FetcherTest):
+     def setUp(self):
+         def touch(fn):
+--=20
+2.25.1
 
 
