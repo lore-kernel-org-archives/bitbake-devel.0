@@ -1,103 +1,101 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEC7C433EF
-	for <webhook@archiver.kernel.org>; Fri, 25 Mar 2022 09:29:18 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
- [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web10.3103.1648200556822153533
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB322C433FE
+	for <webhook@archiver.kernel.org>; Fri, 25 Mar 2022 14:35:47 +0000 (UTC)
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net
+ [217.70.183.200])
+ by mx.groups.io with SMTP id smtpd.web12.6172.1648218946561163998
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 25 Mar 2022 02:29:17 -0700
+ Fri, 25 Mar 2022 07:35:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=caVKy5nS;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f44.google.com with SMTP id t11so10025130wrm.5
-        for <bitbake-devel@lists.openembedded.org>;
- Fri, 25 Mar 2022 02:29:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=2i1V81xIb+SLb5DJbFAyAjfhSiQZMK7KmDRHGM2gIYk=;
-        b=caVKy5nS2GlIrH4uDgZnjysAbPYpLzq3elGBdWQ+cpeFSGQ15bWYtENoRQhg13ntYd
-         haiPsrJwM54XTGzcWAggarTl/AaHk+n7mBhjjxdmza6HlLRM6vdd7+BZzfKdNLdYZI5r
-         Wiz51NrCl5HSLWFqXaD3Gonnvd/BZP8lED3gU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2i1V81xIb+SLb5DJbFAyAjfhSiQZMK7KmDRHGM2gIYk=;
-        b=1AvNXk8ogD4L6mE1OwYvj/6TeMBLWDrVc8CIy1/weswgoNqMQtB2D2jq6kucgM4U9L
-         yPYyrDESfhoz1L7IQjdvnYBp829H3AyhOt9ASPnGOFwV1IaoEVa+xhX/7ct8JgRUQzWy
-         fTEAyH63EUruBNPE8Pf6A/RfoPzuGj90iHg+RmCEKaVXwzNPQSnUUBKb+samWj3UPCXH
-         X1/sIq+nuJcdF/jR6I1E2poUhrGOV1fWTJKXdv5lBkYwa13UDsR5InIvsr8nVLh695gp
-         BU4S6qS1cyF2xcJ3rFh38OwHDxhmuKuTvJvsJHGfqPQvt0BseYHDtJElMqWhy42Doz8A
-         d2Kg==
-X-Gm-Message-State: AOAM5331pBmCHNw7s3VZ1IYJ6Ni+SLO2yk6BVnK1/XEN+BKk8nZJaB+5
-	p/kaZUnlCiMBGmGFTZ7kWOoG4kJwUa028t2E
-X-Google-Smtp-Source: 
- ABdhPJxm2d3UBqyeaHG5z0T1YEaSmJt6YPzGenEf2EaShmZFXg63byMHtefYN/gaOZGRDtHIq8Szfw==
-X-Received: by 2002:adf:ec04:0:b0:205:8537:af5c with SMTP id
- x4-20020adfec04000000b002058537af5cmr8066017wrn.357.1648200555052;
-        Fri, 25 Mar 2022 02:29:15 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:f167:7010:a0cc:679f])
-        by smtp.gmail.com with ESMTPSA id
- p8-20020a5d4e08000000b002054b5437f2sm4478904wrt.115.2022.03.25.02.29.14
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Mar 2022 02:29:14 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=mniEJLzi;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.200,
+ mailfrom: michael.opdenacker@bootlin.com)
+Received: (Authenticated sender: michael.opdenacker@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id 549B220010;
+	Fri, 25 Mar 2022 14:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1648218944;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=v+WwDmg5ZRDW3rAEC040TsIDJTDxMzaQ7HhImnvcpW8=;
+	b=mniEJLziYhIs/Nb77Hey/nLpk+5mgkDbuDihmLIOPPV2qpTDonjv0N1PPAJSZKdKQRFXPF
+	prvsUv56434CyvoQBX+NA2jJY+Rvth6ZeXJf1xfLFjywSglmzFukhinVYu9De4+Sc1iP1p
+	7WnB5iPxbZmwUCj+Bgtk65rOZM2Rl5EuEkv2HpwoOF1VpZbxUH5yDpQTiUs0+8+fsgJH7Q
+	6Aoj8Es6IKQZjQ9ifapjvsLDrUDFuEtHDfygrT1xajFYAc+dI76y9wUvBWiOn/4e97dkLZ
+	flLyyPJkrkdXceDcfemO5DZI2bbo6OK1oC1SW0NEbaAq5hSG6DCKol3eWCT+/Q==
+From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 3/3] server/process: Move threads left debug to after cooker
- shutdown
-Date: Fri, 25 Mar 2022 09:29:12 +0000
-Message-Id: <20220325092912.1350321-3-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220325092912.1350321-1-richard.purdie@linuxfoundation.org>
-References: <20220325092912.1350321-1-richard.purdie@linuxfoundation.org>
+Cc: docs@lists.yoctoproject.org,
+	Michael Opdenacker <michael.opdenacker@bootlin.com>
+Subject: [PATCH RESEND 1/2] doc: bitbake-user-manual: add branch parameter to
+ git SRC_URI examples
+Date: Fri, 25 Mar 2022 15:35:35 +0100
+Message-Id: <20220325143536.139665-1-michael.opdenacker@bootlin.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 25 Mar 2022 09:29:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13505
+ <bitbake-devel@lists.openembedded.org>; Fri, 25 Mar 2022 14:35:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13507
 
-This debug is useful but the cooker shutdown or post_serve() may have cleanup
-left so run after those.
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+This parameter is now required by the git fetcher module
+
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 ---
- lib/bb/server/process.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ doc/bitbake-user-manual/bitbake-user-manual-fetching.rst  | 8 ++++----
+ .../bitbake-user-manual-ref-variables.rst                 | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 1636616660..efc3f04b4c 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -243,9 +243,6 @@ class ProcessServer():
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index 9ff4e161..07885392 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -405,7 +405,7 @@ This fetcher supports the following parameters:
+      ``git@gitlab.freedesktop.org:mesa/mesa.git``, however the expected URL in
+      :term:`SRC_URI` is the following::
  
-             ready = self.idle_commands(.1, fds)
+-       SRC_URI = "git://git@gitlab.freedesktop.org/mesa/mesa.git;protocol=ssh;..."
++       SRC_URI = "git://git@gitlab.freedesktop.org/mesa/mesa.git;branch=main;protocol=ssh;..."
  
--        if len(threading.enumerate()) != 1:
--            serverlog("More than one thread left?: " + str(threading.enumerate()))
--
-         serverlog("Exiting")
-         # Remove the socket file so we don't get any more connections to avoid races
-         try:
-@@ -263,6 +260,9 @@ class ProcessServer():
+      Note the ``:`` character changed for a ``/`` before the path to the project.
  
-         self.cooker.post_serve()
+@@ -457,9 +457,9 @@ This fetcher supports the following parameters:
  
-+        if len(threading.enumerate()) != 1:
-+            serverlog("More than one thread left?: " + str(threading.enumerate()))
-+
-         # Flush logs before we release the lock
-         sys.stdout.flush()
-         sys.stderr.flush()
+ Here are some example URLs::
+ 
+-   SRC_URI = "git://git.oe.handhelds.org/git/vip.git;tag=version-1"
+-   SRC_URI = "git://git.oe.handhelds.org/git/vip.git;protocol=http"
+-   SRC_URI = "git://git@gitlab.freedesktop.org/mesa/mesa.git;protocol=ssh;..."
++   SRC_URI = "git://github.com/fronteed/icheck.git;protocol=https;branch=${PV};tag=${PV}"
++   SRC_URI = "git://github.com/asciidoc/asciidoc-py;protocol=https;branch=main"
++   SRC_URI = "git://git@gitlab.freedesktop.org/mesa/mesa.git;branch=main;protocol=ssh;..."
+ 
+ .. note::
+ 
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 25af563d..96cfdc82 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -1413,8 +1413,8 @@ overview of their function and contents.
+          :term:`SRC_URI` checksums or :term:`SRCREV` when you have more than one
+          file or git repository specified in :term:`SRC_URI`. For example::
+ 
+-            SRC_URI = "git://example.com/foo.git;name=first \
+-                       git://example.com/bar.git;name=second \
++            SRC_URI = "git://example.com/foo.git;branch=main;name=first \
++                       git://example.com/bar.git;branch=main;name=second \
+                        http://example.com/file.tar.gz;name=third"
+ 
+             SRCREV_first = "f1d2d2f924e986ac86fdf7b36c94bcdf32beec15"
 -- 
-2.32.0
+2.25.1
 
 
