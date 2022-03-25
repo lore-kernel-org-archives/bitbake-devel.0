@@ -1,106 +1,116 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83261C433EF
-	for <webhook@archiver.kernel.org>; Fri, 25 Mar 2022 14:57:55 +0000 (UTC)
-Received: from relay12.mail.gandi.net (relay12.mail.gandi.net
- [217.70.178.232])
- by mx.groups.io with SMTP id smtpd.web08.6395.1648220273747698136
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20073C433F5
+	for <webhook@archiver.kernel.org>; Fri, 25 Mar 2022 15:09:32 +0000 (UTC)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com
+ [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web10.6562.1648220965576636914
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 25 Mar 2022 07:57:54 -0700
+ Fri, 25 Mar 2022 08:09:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=OIy5wd5w;
- spf=pass (domain: bootlin.com, ip: 217.70.178.232,
- mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 83D15200012;
-	Fri, 25 Mar 2022 14:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1648220272;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/LREZ4KpYSKluBm5Xd9xM/k5DkolipTXr9D94MtxHGM=;
-	b=OIy5wd5wyqubGutv/rL+FdOXGBEwuZHWNkoJj6KJf+IHsWLQZt7Zvs3OHRYO05Y1q6mLYH
-	bLelCfo7M5GBr11E3jp4N6/dOCD1pk1MW/cRNPUKzCoBtCojHqd2cA7x71g8wO/DhtfeY7
-	n3AMaOgK3K4LYW25jiyldNnhi70uJe5v5z5oAJnHMgr3wkwO8YRPQswJCiped89Kofcvo4
-	kKBD95DSCY2Gt/sylXCAGmbt91inTEtTMd6mCr64AX7mO1eQBgEwlJp4xADXdiWJFrQpA6
-	XtFBnfzdteythENICZK6D0ZLmm1j8CxbnX4iLgSGJrnUT/4piLCrtCrWKpML3Q==
-Message-ID: <bb55d51b-1563-07b3-b21c-ba982e811615@bootlin.com>
-Date: Fri, 25 Mar 2022 15:57:51 +0100
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=S4DZSE6L;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f54.google.com with SMTP id j18so11276129wrd.6
+        for <bitbake-devel@lists.openembedded.org>;
+ Fri, 25 Mar 2022 08:09:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6Yn24Mj41KVFOPLoC4RAF89GMUuS66HmTpKY/slVX88=;
+        b=S4DZSE6LuYcW7bLeW78jUG21aekdLc1EvJi8plm7P2CdH4cTd4LKZDZYzl83VuSSA8
+         2BjuzmocKJp4SU3HY3ae/QT4k0lN8vengEZBu7zLh/UZhTGCYf3XooFEiYcMWRvEprEd
+         Ri6Dh6M2Jrl3oxOe0jUpch+qYVPH9RPmao6cI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6Yn24Mj41KVFOPLoC4RAF89GMUuS66HmTpKY/slVX88=;
+        b=mld5BExG10ujDaQ8jivaOrDHtSj1cIHaiOlpbDqVcoUTz18jXs8+iwyiXu6c4M9N6I
+         zaCPjKTjkyedoqtsuQYI17Q1pTlUdY/C2eZ7iziNL9ojM6iKjS6xGYswAx1go7NT7Jnm
+         W1TM+vS86q6D4pZhxWf4BQE/42cnr1uG1pLLuo/wkCQi5mj4JzH3EisiSo51cLdLNq6b
+         glc2ji1igJV8yuVPCdvcnEEcZQRE+rPMbgCCfxMpeuRs4Um5lgK4/FM4gP2QdPsJ3wzc
+         uCJxH51Q6B68Xnw7CVkjXcphuVOUAkcBWkxByEs/NUlETI6wl9wb1b2XqXXRraJhMWce
+         4aiw==
+X-Gm-Message-State: AOAM530bmw1moWFs+6ydrq9yzBWoItvbF7IAeUEVgiK/cZhwYxEnOyWW
+	HNyxJLCPnqb9EtJXw5zZm3reSG1gkV2u4TCW
+X-Google-Smtp-Source: 
+ ABdhPJwAAqNvaOUyYX8T3ZnksIT53cOMPHP0cR4dKX34tMRZd84dpQIA9/lBzw+urk9pFicH+6GjJQ==
+X-Received: by 2002:a5d:5504:0:b0:203:e3be:518b with SMTP id
+ b4-20020a5d5504000000b00203e3be518bmr9561379wrv.462.1648220963433;
+        Fri, 25 Mar 2022 08:09:23 -0700 (PDT)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:31ae:a7af:ec6f:bb27])
+        by smtp.gmail.com with ESMTPSA id
+ bg18-20020a05600c3c9200b0037c2ef07493sm5486644wmb.3.2022.03.25.08.09.22
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Mar 2022 08:09:23 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] cooker: Fix inotify watches causing memory resident bitbake
+ corruption
+Date: Fri, 25 Mar 2022 15:09:19 +0000
+Message-Id: <20220325150919.1361415-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Cc: docs@lists.yoctoproject.org
-Subject: Re: [docs] [PATCH] bitbake: doc: bitbake-user-manual: Improve
- OVERRIDES docs
-Content-Language: en-US
-To: "Simon A. Eugster" <simon.eu@gmail.com>,
- bitbake-devel@lists.openembedded.org
-References: <ca5a3aed-e04c-b2b5-65eb-6bb424d0c379@bootlin.com>
- <20220323121605.144257-1-simon.eu@gmail.com>
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-In-Reply-To: <20220323121605.144257-1-simon.eu@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 25 Mar 2022 14:57:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13509
+ <bitbake-devel@lists.openembedded.org>; Fri, 25 Mar 2022 15:09:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13510
 
-Hi Simon
+Thanks to great debugging from pavel@zhukoff.net we had a simpler reproducer
+for the corruption see in oe-selftest when using BB_SERVER_TIMEOUT=60, i.e.
+with bitbake in memory resident mode. This was effectively:
 
-On 3/23/22 13:16, Simon A. Eugster wrote:
-> Improve the explanation about OVERRIDES to clarify how variable
-> overrides are chosen based on OVERRIDES.
->
-> Signed-off-by: Simon A. Eugster <simon.eu@gmail.com>
-> ---
->  .../bitbake-user-manual-metadata.rst          | 20 ++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> index ea42d77c..a78f9048 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> @@ -517,20 +517,22 @@ variable.
->  -  *Selecting a Variable:* The :term:`OVERRIDES` variable is a
->     colon-character-separated list that contains items for which you want
->     to satisfy conditions. Thus, if you have a variable that is
-> -   conditional on "arm", and "arm" is in :term:`OVERRIDES`, then the
-> +   conditional on "arm", and "arm" is listed in :term:`OVERRIDES`, then the
->     "arm"-specific version of the variable is used rather than the
->     non-conditional version. Here is an example::
->  
-> -      OVERRIDES = "architecture:os:machine"
-> +      # Typically, OVERRIDES contains something like architecture:os:machine
-> +      OVERRIDES = "arm:linux:beaglebone"
->        TEST = "default"
-> -      TEST:os = "osspecific"
-> +      TEST:arm = "armspecific"
->        TEST:nooverride = "othercondvalue"
->  
-> -   In this example, the :term:`OVERRIDES`
-> -   variable lists three overrides: "architecture", "os", and "machine".
-> -   The variable ``TEST`` by itself has a default value of "default". You
-> -   select the os-specific version of the ``TEST`` variable by appending
-> -   the "os" override to the variable (i.e. ``TEST:os``).
-> +   In this example, the :term:`OVERRIDES` variable lists three
-> +   overrides: "foo", "linux", and "arm". The variable ``TEST`` by itself
+oe-selftest -r devtool.DevtoolUpgradeTests.test_devtool_upgrade devtool.DevtoolUpgradeTests.test_devtool_upgrade_git -j 1 -K
 
+The issue is that if directories are removed (such as workspace), if
+they are added again, we don't have the watches in place any more. This
+patch adds some slightly paranoid checks to ensure we do the correct things
+for directory additions and removals (we track directories, not files
+specifically to avoid running out of watches).
 
-Shouldn't the three overrides be "beaglebone", "linux" and "arm" from
-the code above?
-Thanks
-Michael.
+[YOCTO #14023]
 
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index c0a7a2fd79..eac956aa97 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -253,6 +253,11 @@ class BBCooker:
+             return
+         if not event.pathname in self.configwatcher.bbwatchedfiles:
+             return
++        if "IN_ISDIR" in event.maskname:
++            if "IN_CREATE" in event.maskname:
++                self.add_filewatch([[event.pathname]], watcher=self.configwatcher, dirs=True)
++            elif "IN_DELETE" in event.maskname and event.pathname in self.watcher.bbseen:
++                self.configwatcher.bbseen.remove(event.pathname)
+         if not event.pathname in self.inotify_modified_files:
+             self.inotify_modified_files.append(event.pathname)
+         self.baseconfig_valid = False
+@@ -266,6 +271,11 @@ class BBCooker:
+         if event.pathname.endswith("bitbake-cookerdaemon.log") \
+                 or event.pathname.endswith("bitbake.lock"):
+             return
++        if "IN_ISDIR" in event.maskname:
++            if "IN_CREATE" in event.maskname:
++                self.add_filewatch([[event.pathname]], dirs=True)
++            elif "IN_DELETE" in event.maskname and event.pathname in self.watcher.bbseen:
++                self.watcher.bbseen.remove(event.pathname)
+         if not event.pathname in self.inotify_modified_files:
+             self.inotify_modified_files.append(event.pathname)
+         self.parsecache_valid = False
 -- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.32.0
 
 
