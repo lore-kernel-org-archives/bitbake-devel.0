@@ -1,102 +1,97 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBCCC433EF
-	for <webhook@archiver.kernel.org>; Sat, 26 Mar 2022 20:35:09 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
- [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web09.7399.1648326907765045724
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1401C433F5
+	for <webhook@archiver.kernel.org>; Sun, 27 Mar 2022 16:44:11 +0000 (UTC)
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com
+ [209.85.214.175])
+ by mx.groups.io with SMTP id smtpd.web09.806.1648399451065919775
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 26 Mar 2022 13:35:08 -0700
+ Sun, 27 Mar 2022 09:44:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EAVKXjME;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f51.google.com with SMTP id r7so13965010wrc.0
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
+ header.b=3+82K4XI;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.175,
+ mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f175.google.com with SMTP id w4so12830524ply.13
         for <bitbake-devel@lists.openembedded.org>;
- Sat, 26 Mar 2022 13:35:07 -0700 (PDT)
+ Sun, 27 Mar 2022 09:44:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ty+YthLjsrx5Q54ndd2odgUrNeaz/zyoQXuoqYS5K48=;
-        b=EAVKXjME4LqgqjbbzQa+cvG8Ko+4jRRFx7SLAgA44WrFGb+SRtBfsy3Oz5kV7+bOSq
-         U3g/VTs/ngkYv1UmRkz4zvW+EZVnCIgqayDNbCYe0R2vl9YtTktA7sMR0u+nYlGs6kGi
-         WCZHRuj/dWGO6YUJ7KHXMXLoGRfwfz3KfUizQ=
+        bh=0SU4UBE7GcExNlr5FQpvzxnY+x3idk1csY9eZaWUPlo=;
+        b=3+82K4XIry6U8WtXllvMTfiRchBUlEfrT3My3mNk+jRuc7q3N0iVEAx+nUQGCMnwT+
+         8zVRsjIuXon9luGg3ITiQuGhl8y+bJGGAtcxQ0ua2nAivy9vpwvf23nuTE9/2mCjKaRV
+         A0VrVoVJh9P+kKyIwibKoX4eCs3a/MJhRhhrACe/XbI5ivBvnmCsqwVy6t6gBkCVh+YP
+         0FGor/3qF1Tg2bhm/bqu3eJCFjaEsR/31pbZhRTIioMwfLr11xEumcZiV+68UjDY3u3D
+         5q/BySGo/A/w/pmlfWatJr6NzUcB8botwF3LIZSqEZC6widn2aUz7x0k1paEDsTn7GRr
+         fnHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ty+YthLjsrx5Q54ndd2odgUrNeaz/zyoQXuoqYS5K48=;
-        b=k1VZz42usF+DoyGhdWvDjKQkMwryR6Ls9gp2bNm3Lrs+Fle3Sjsh9/yd/6iF63/1Dc
-         pXeLGjpWXcucjnpZubpw5GWOMph7dl0b6az3oHoyNpyJikuXlMebINr30Zg8Me+YiZDE
-         28QV54DH/j5IhPSig5Vtnyy8cgiphBIr2rVprQ4s5ei6npmHIbU8PQplzm3jP4Q3AL07
-         kXZo3Y4kj4m5dtwpuzy+7hX1oi3bbSuf2AOMc1aeb8DHOVz8ZP2TC4kJ6SojVQXvm9Fv
-         44BpMWuI/rGXVr4KjaEzSX1PD8Y7FLGOuLGMd2SFXYlp4YWKnXRnWOq8Dy4uvcAg31Vp
-         JM+w==
-X-Gm-Message-State: AOAM532InPJ7xTD41wrGsEfiq96Jv/JfbO9Imx43nQoP0xrhToBOv0Ih
-	tgfRguy89BLOoUN+L3PQpnpxIMX4eodCVXzV
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0SU4UBE7GcExNlr5FQpvzxnY+x3idk1csY9eZaWUPlo=;
+        b=GP9naL8AUf/2gew6ZnJZH3eoyVhZxSEwY97We7fKxuG5cp/5cRvgfyo4sl2xxLroUU
+         WhSD2Foo8e09InANeuBr5XqOwviLtxDwzEdsiW2z7+S1u4TuXusun3hrh0fH6H9Y31DU
+         dCw9sSX5O8W08oQ+r2yXIOzl6up7lXfMFEuR3PK2ZGqSDVfQXDHJM+5TW6OM71yMUQqO
+         +S9oNOS8u09zZqWUZoDKHItNy/C0+uE2KDJanvYqaJ3SlffWAhu4JHHyBL4Y1PLFRvh6
+         9wiefqq7mIYOpjSmsfiepL+cAamCpQJbRC0KzedM36R+ZLABfnvEKKSFbz3qJqP+aehc
+         cUMw==
+X-Gm-Message-State: AOAM531lgodeVjr7GKkdMIPZfFzg5E4KHK8IDWCyBNhAMOW6wXirk1K+
+	kmpe3Jjh+Ns+q2WeUC59GxVqfcKRvhT6+Z7hg6E=
 X-Google-Smtp-Source: 
- ABdhPJyHu16oyS39HQj/HS8KM7LXLHUOVtVw9fOlXOT1+VfNMWam8Ffvsf8VyebvzgUAkoTa1HHNYA==
-X-Received: by 2002:adf:f40c:0:b0:203:e768:ae54 with SMTP id
- g12-20020adff40c000000b00203e768ae54mr14581334wro.488.1648326906073;
-        Sat, 26 Mar 2022 13:35:06 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:3949:59d4:6f55:52f])
+ ABdhPJxzMqqWk5kYkk4XKmwv0VdU0gjGG/naf9n7thRVz9SuZGhFe8fNG7ZipSsZuCGKlfc1iK67gw==
+X-Received: by 2002:a17:90a:a502:b0:1bc:8dd6:a859 with SMTP id
+ a2-20020a17090aa50200b001bc8dd6a859mr24472576pjq.46.1648399450155;
+        Sun, 27 Mar 2022 09:44:10 -0700 (PDT)
+Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
+ [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- a18-20020a05600c349200b0038ca453a887sm12242586wmq.19.2022.03.26.13.35.05
+ k13-20020aa7820d000000b004fa72a52040sm12935630pfi.172.2022.03.27.09.44.08
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Mar 2022 13:35:05 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Sun, 27 Mar 2022 09:44:09 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 6/6] cooker: Pass SIGINT to parsing processes at shutdown
-Date: Sat, 26 Mar 2022 20:34:58 +0000
-Message-Id: <20220326203458.1391301-6-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220326203458.1391301-1-richard.purdie@linuxfoundation.org>
-References: <20220326203458.1391301-1-richard.purdie@linuxfoundation.org>
+Subject: [bitbake][dunfell][1.46][PATCH 0/2] Patch review
+Date: Sun, 27 Mar 2022 06:43:59 -1000
+Message-Id: <cover.1648399312.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 26 Mar 2022 20:35:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13518
+ <bitbake-devel@lists.openembedded.org>; Sun, 27 Mar 2022 16:44:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13519
 
-To try and improve shutdown, sent SIGINT to parsing processes now it
-is handled safely around locks, perhaps avoiding the need for the more
-risky SIGTERM.
+Please review this set of patches for dunfell/1.46 and have comments back by end of
+day Tuesday.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Passed a-full on autobuilder:
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 4b8b18a68d..bd7ab8ac3c 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -2146,7 +2146,7 @@ class CookerParser(object):
-             def init():
-                 signal.signal(signal.SIGTERM, signal.SIG_DFL)
-                 signal.signal(signal.SIGHUP, signal.SIG_DFL)
--                signal.signal(signal.SIGINT, signal.SIG_IGN)
-+                signal.signal(signal.SIGINT, signal.default_int_handler)
-                 bb.utils.set_process_name(multiprocessing.current_process().name)
-                 multiprocessing.util.Finalize(None, bb.codeparser.parser_cache_save, exitpriority=1)
-                 multiprocessing.util.Finalize(None, bb.fetch.fetcher_parse_save, exitpriority=1)
-@@ -2194,6 +2194,9 @@ class CookerParser(object):
-             except queue.Empty:
-                 break
- 
-+        for process in self.processes:
-+            os.kill(process.pid, signal.SIGINT)
-+
-         for process in self.processes:
-             if force:
-                 process.join(.1)
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/3433
+
+The following changes since commit d22cc1e587c650fd5f90cda32f5720f8a3105aac:
+
+  tests/fetch: Handle upstream master -> main branch change (2022-02-23 18:11:51 +0000)
+
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
+
+Richard Purdie (2):
+  server/process: Note when commands complete in logs
+  tinfoil: Allow run_command not to wait on events
+
+ lib/bb/server/process.py | 1 +
+ lib/bb/tinfoil.py        | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
 -- 
-2.32.0
+2.25.1
 
 
