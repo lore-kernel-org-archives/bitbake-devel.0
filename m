@@ -2,187 +2,141 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F04FC433F5
-	for <webhook@archiver.kernel.org>; Tue, 29 Mar 2022 14:28:06 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com
- [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.7261.1648564084815790718
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ED4C433EF
+	for <webhook@archiver.kernel.org>; Tue, 29 Mar 2022 14:52:12 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com
+ [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web08.7583.1648565531615104251
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Mar 2022 07:28:05 -0700
+ Tue, 29 Mar 2022 07:52:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=O5KdfOqe;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NzwM3xsB;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id
- 125-20020a1c0283000000b0038d043aac51so1365945wmc.0
+Received: by mail-wm1-f54.google.com with SMTP id
+ k124-20020a1ca182000000b0038c9cf6e2a6so1671303wme.0
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Mar 2022 07:28:04 -0700 (PDT)
+ Tue, 29 Mar 2022 07:52:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=P67altbjq8eoAsQk9mhKF+xIRrDWZMZHmcEdGF6jcTU=;
-        b=O5KdfOqeVJrK02fKsFE14/Ukg32L/KuqRT9yzpUH9Dk8e91p2BpY92Tg6h1Pgd+dPt
-         PGK7X8c8D49YYNXQuRikll9Cf39OfHI/sFJ57QRhuT+s8Hc0ZJS3n9FOzcsxwoxMYGdH
-         udUXZVeUMAv73dShvCk6KMXaDVQq4JWiAYOVo=
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=MuyEc0VBH8srKqrodcOXdJf+rbEI4soLiYM8eHIKF1o=;
+        b=NzwM3xsBKpho5RGKKMcbVeldZNgxTep6RXNOFXvD/lF+UETY9qKn0KQZu4xUPWjLe5
+         Y2BJdjxjI56mXcnSwaMT0nBOPWbRz1xVjrJWBK1+o/RkuHIGw8GQSwP2idT5lM+8EeeX
+         xCUws1EvfYnZ7f3Gu/ATMpjdcLs+Vez8W6uv8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=P67altbjq8eoAsQk9mhKF+xIRrDWZMZHmcEdGF6jcTU=;
-        b=zml+kmX/AmtQWKnmjDuDJL1wnT8r9QwuIcKwGcgIEKivUd+Cv3ZR14IDhwStIBsGzI
-         Qjt3pyxW9MZj/7DkwG/onB/FlaEaYA2rYZzRL7EcsXWM9z3F1hfDgpGovWTBwqRduKOz
-         VRlWPMwKvv+khXlSzWJD1ndQuTEms65R4GfDRRn0cPueKiMxMZK2Gjw6E5QoWg1TzQbX
-         h2+9VLGTMVT5S3JSZt/2qQ0sxbj0WWgS7H5fQB6y6XA02+tgO0HRZ1uvAM5zEU3Klt69
-         v7MbHEwczD/g/Ih1L4DjhrErVmwjGjuiMcUsobZ+RAlkAXEMtYwEo0wOWm7f71K0RNj7
-         pQuQ==
-X-Gm-Message-State: AOAM530kzFs+8UNXqfaf858msP/rNl249Tqj5L1cIsAGbBzwXcKsRGEe
-	jAhaCeZY9r4YTIoTZg1uw4EmJBCRc1IMYu/m
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=MuyEc0VBH8srKqrodcOXdJf+rbEI4soLiYM8eHIKF1o=;
+        b=ao15+Hw9OjDR8PepOPqPqOMS1B1aEZ4RsOxQRLehFqD5pdbGUsF6QbajCL2tkGTOsS
+         tvLBS/U0ZPgGOEegBxq3jiCed7FAenzzeU6pIPgqIIswYz0f5X2wgfq1PQLpNywBVr+M
+         adNHCQc+5rA+P9QKV+JsUoe8pvM8AHnrNZsCP/7HCE2LZScK972YyTAYpUCatuw+3LZP
+         eKuSDcPlfk1z+QAlI4AJsdRj+nCVvh9RmP+C1UQDpw+bi1xrN3kumwCUaX1y8lyLBgOc
+         V48Km0lSxuc8Bhbs2XwMO3eKEYSCgzz+eCEVBFMQOodVMPVdrCMrhz6xAqfcx6NWWRgv
+         PoKA==
+X-Gm-Message-State: AOAM532H+MjcALrBjgDjbsYBJ3ivanPUwHWkOu2V95m/21/6zATzc7XT
+	rcFJMGfylUnUmY6WzA9QQsYkptnOMbyiPb7t
 X-Google-Smtp-Source: 
- ABdhPJzWjdmQ8zlwUKzz65eCtVOukcKcbcAa4Pcqp+mM4HnheXefA85sfGPku8CQ5J4O9k++dZuVEA==
-X-Received: by 2002:a1c:7c03:0:b0:38c:804d:d477 with SMTP id
- x3-20020a1c7c03000000b0038c804dd477mr7323185wmc.32.1648564082964;
-        Tue, 29 Mar 2022 07:28:02 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:a144:3266:4a07:b254])
+ ABdhPJzKwr+LVqH/zXpr22MyT5knoPXAsH9jt6pQFGl+Lpj07AMCR6MIZ+qDPXgaIxKK+on+YbyOLw==
+X-Received: by 2002:a05:600c:2185:b0:38c:9091:892 with SMTP id
+ e5-20020a05600c218500b0038c90910892mr53506wme.14.1648565529609;
+        Tue, 29 Mar 2022 07:52:09 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:a144:3266:4a07:b254?
+ ([2001:8b0:aba:5f3c:a144:3266:4a07:b254])
         by smtp.gmail.com with ESMTPSA id
- bg42-20020a05600c3caa00b00380deeaae72sm2529043wmb.1.2022.03.29.07.28.02
+ d20-20020a05600c34d400b0038caf684679sm3495092wmq.0.2022.03.29.07.52.06
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Mar 2022 07:28:02 -0700 (PDT)
+        Tue, 29 Mar 2022 07:52:07 -0700 (PDT)
+Message-ID: 
+ <050cc4f32cac444d6ff4da309d2f4e4e4c15708c.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 4/6 v2] server/process: Avoid hanging if
+ a parser process is terminated
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 6/6] cooker: Rework force parser shutdown
-Date: Tue, 29 Mar 2022 15:27:55 +0100
-Message-Id: <20220329142755.1473185-6-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220329142755.1473185-1-richard.purdie@linuxfoundation.org>
-References: <20220329142755.1473185-1-richard.purdie@linuxfoundation.org>
+Date: Tue, 29 Mar 2022 15:52:03 +0100
+In-Reply-To: <16E0852D83889B52.4597@lists.openembedded.org>
+References: <16E0852D83889B52.4597@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4-1ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 29 Mar 2022 14:28:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13545
+ <bitbake-devel@lists.openembedded.org>; Tue, 29 Mar 2022 14:52:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13547
 
-The "force" option to parser shutdown was often the cause of lockups and
-there is no good reason we should have two different behaviours.
+On Mon, 2022-03-28 at 11:38 +0100, Richard Purdie via lists.openembedded.org
+wrote:
+> If a parser process is terminated while holding a write lock, then it
+> will lead to a deadlock (see
+> https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process.terminate).
+> 
+> With SIGTERM, we don't want to terminate holding the lock. We also don't
+> want a SIGINT to cause a partial write to the event stream.
+> 
+> I tried using signal masks to avoid this but it doesn't work, see
+> https://bugs.python.org/issue47139
+> 
+> Instead, add a signal handler and catch the calls around the critical section
+> which is heavier but safe and seems to avoid all the deadlocks I was able to
+> trigger.
+> 
+> Some ideas from Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+> 
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/server/process.py | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+> index efc3f04b4c..f59a0ed5f6 100644
+> --- a/lib/bb/server/process.py
+> +++ b/lib/bb/server/process.py
+> @@ -20,6 +20,7 @@ import os
+>  import sys
+>  import time
+>  import select
+> +import signal
+>  import socket
+>  import subprocess
+>  import errno
+> @@ -736,11 +737,25 @@ class ConnectionWriter(object):
+>          self.wlock = multiprocessing.Lock()
+>          # Why bb.event needs this I have no idea
+>          self.event = self
+> +        self.signal_received = []
+> +
+> +    def catch_sig(self, signum, frame):
+> +        self.signal_received.append(signum)
+>  
+>      def send(self, obj):
+>          obj = multiprocessing.reduction.ForkingPickler.dumps(obj)
+> +        # We must not terminate holding this lock. For SIGTERM, raising afterwards avoids this.
+> +        # For SIGINT, we don't want to have written partial data to the pipe.
+> +        # pthread_sigmask block/unblock would be nice but doesn't work, https://bugs.python.org/issue47139
+> +        oldsigterm = signal.signal(signal.SIGTERM, self.catch_sig)
+> +        oldsigint = signal.signal(signal.SIGINT, self.catch_sig)
+>          with self.wlock:
+>              self.writer.send_bytes(obj)
+> +        signal.signal(signal.SIGTERM, oldsigterm)
+> +        signal.signal(signal.SIGINT, oldsigint)
+> +        for sig in [signal.SIGTERM, signal.SIGINT]:
+> +            if sig in self.signal_received:
+> +                os.kill(os.getpid(), sig)
+>  
 
-Change and unify the codepaths to always:
-  * Wait for longer for a controlled shutdown of a process (0.5s). Usually
-    it will be much faster if it has finished so the delay doesn't really matter.
-  * Send processes a SIGINT
-  * Failing that, send a SIGTERM
-  * Call .close() if available to release zombies
+For the record and maybe my future self wondering about this, you can't call
+signal.signal unless you're the main thread/process, you'd get a ValueError
+otherwise. This leads to silent hangs of some builds, e.g. in devtool workflows
+in oe-selftest.
 
-This means we no longer need the "force" parameter to the function so it is removed.
+Cheers,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py | 37 +++++++++++++++++++++++++------------
- 1 file changed, 25 insertions(+), 12 deletions(-)
+Richard
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 7c0c5d4efa..f435b18c87 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1613,7 +1613,7 @@ class BBCooker:
- 
-         if self.state in (state.shutdown, state.forceshutdown, state.error):
-             if hasattr(self.parser, 'shutdown'):
--                self.parser.shutdown(clean=False, force = True)
-+                self.parser.shutdown(clean=False)
-                 self.parser.final_cleanup()
-             raise bb.BBHandledException()
- 
-@@ -1741,7 +1741,7 @@ class BBCooker:
-             self.state = state.shutdown
- 
-         if self.parser:
--            self.parser.shutdown(clean=not force, force=force)
-+            self.parser.shutdown(clean=not force)
-             self.parser.final_cleanup()
- 
-     def finishcommand(self):
-@@ -2186,7 +2186,7 @@ class CookerParser(object):
- 
-             self.results = itertools.chain(self.results, self.parse_generator())
- 
--    def shutdown(self, clean=True, force=False):
-+    def shutdown(self, clean=True):
-         if not self.toparse:
-             return
-         if self.haveshutdown:
-@@ -2215,11 +2215,24 @@ class CookerParser(object):
-                 break
- 
-         for process in self.processes:
--            if force:
--                process.join(.1)
-+            process.join(0.5)
-+
-+        for process in self.processes:
-+            if process.exitcode is None:
-+                os.kill(process.pid, signal.SIGINT)
-+
-+        for process in self.processes:
-+            process.join(0.5)
-+
-+        for process in self.processes:
-+            if process.exitcode is None:
-                 process.terminate()
--            else:
--                process.join()
-+
-+        for process in self.processes:
-+            process.join()
-+            # Added in 3.7, cleans up zombies
-+            if hasattr(process, "close"):
-+                process.close()
- 
-         self.parser_quit.close()
-         # Allow data left in the cancel queue to be discarded
-@@ -2296,18 +2309,18 @@ class CookerParser(object):
-         except bb.BBHandledException as exc:
-             self.error += 1
-             logger.debug('Failed to parse recipe: %s' % exc.recipe)
--            self.shutdown(clean=False, force=True)
-+            self.shutdown(clean=False)
-             return False
-         except ParsingFailure as exc:
-             self.error += 1
-             logger.error('Unable to parse %s: %s' %
-                      (exc.recipe, bb.exceptions.to_string(exc.realexception)))
--            self.shutdown(clean=False, force=True)
-+            self.shutdown(clean=False)
-             return False
-         except bb.parse.ParseError as exc:
-             self.error += 1
-             logger.error(str(exc))
--            self.shutdown(clean=False, force=True)
-+            self.shutdown(clean=False)
-             return False
-         except bb.data_smart.ExpansionError as exc:
-             self.error += 1
-@@ -2316,7 +2329,7 @@ class CookerParser(object):
-             tb = list(itertools.dropwhile(lambda e: e.filename.startswith(bbdir), exc.traceback))
-             logger.error('ExpansionError during parsing %s', value.recipe,
-                          exc_info=(etype, value, tb))
--            self.shutdown(clean=False, force=True)
-+            self.shutdown(clean=False)
-             return False
-         except Exception as exc:
-             self.error += 1
-@@ -2328,7 +2341,7 @@ class CookerParser(object):
-                 # Most likely, an exception occurred during raising an exception
-                 import traceback
-                 logger.error('Exception during parse: %s' % traceback.format_exc())
--            self.shutdown(clean=False, force=True)
-+            self.shutdown(clean=False)
-             return False
- 
-         self.current += 1
--- 
-2.32.0
 
 
