@@ -1,92 +1,89 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33680C433F5
-	for <webhook@archiver.kernel.org>; Tue, 29 Mar 2022 15:04:28 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com
- [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.7946.1648566267280492288
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5388BC433F5
+	for <webhook@archiver.kernel.org>; Tue, 29 Mar 2022 16:33:57 +0000 (UTC)
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net
+ [217.70.183.196])
+ by mx.groups.io with SMTP id smtpd.web12.9102.1648571635655926969
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Mar 2022 08:04:27 -0700
+ Tue, 29 Mar 2022 09:33:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=E8lH1R2q;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f47.google.com with SMTP id q20so10517707wmq.1
-        for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Mar 2022 08:04:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CT5Pcj7KAapxLzCFmMvVoAF1aVI+eCWdPgq0tizzv4Y=;
-        b=E8lH1R2qnQeqPicy5H1qKCm0d8UevlVVuIgNUVEZXBq/pfx0vv01OvZF+nw7xyz/BT
-         66fb1dbHeS3W3+y/ZdfCz+OI26I7Xn3HSxL2U4xEu7iB4TeQjkx82ctaJ0Ip4IofWmgB
-         d1wtfwreDyB9fb3PIVXWZ2Op/TA8arQTcW+AY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CT5Pcj7KAapxLzCFmMvVoAF1aVI+eCWdPgq0tizzv4Y=;
-        b=of6VuCZ7dmT9L6ot7EuL+bs9VeF1vUPsXQsI4vzRJwLQeJ1nZUhDMb2CWGf+vMuCo6
-         DyLQ/6V8y+zh1nioD3n8cXtPuai5w1NeeWjaNosG1S4nnee88zHglx7vpkM2zy2H28yI
-         Yu4XNdRYBd4gTKY1uFX33YC2rlTy3XuIcUie61dYx9Zx51xas4ycwRIIN5ldVo1Q6eTD
-         jTkYJAh1E4/fticGuPxsgdMhxI1yTUUmDcYqYrHcW316sJJPRU/j/jY08xbc6aN3SDLR
-         Wp+mHQeGfVfl0T8NYCvx/W/68K8NSUEUojMa2HbwzTz6ew1m5kw+KtkLU91T1X/Zzr/4
-         vJFw==
-X-Gm-Message-State: AOAM530DSG2gXcaE4uN7rSztoshDo+CkyKRyvi+RbfJXRkRh9jfsOtiB
-	CZEZLRby+5khCFOEguDE8VVMTuMqaLVbow9Z
-X-Google-Smtp-Source: 
- ABdhPJz209TX4dRwO4BlkXJkOGsBFfRPTU4KZ6Jvff3MprOAZNj0yKdCivhyN5PuD34xHBvkwQIb9g==
-X-Received: by 2002:a05:600c:1909:b0:38c:e8f3:8e3d with SMTP id
- j9-20020a05600c190900b0038ce8f38e3dmr90175wmq.152.1648566265215;
-        Tue, 29 Mar 2022 08:04:25 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:a144:3266:4a07:b254])
-        by smtp.gmail.com with ESMTPSA id
- bj26-20020a0560001e1a00b0020597757ebcsm14022933wrb.7.2022.03.29.08.04.24
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Mar 2022 08:04:24 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] build: Add missing parameter to TaskInvalid
-Date: Tue, 29 Mar 2022 16:04:23 +0100
-Message-Id: <20220329150423.1477640-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=BWZ/vIxf;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.196,
+ mailfrom: michael.opdenacker@bootlin.com)
+Received: (Authenticated sender: michael.opdenacker@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id 7ED14E000B;
+	Tue, 29 Mar 2022 16:33:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1648571633;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BRj6exUvF9d/scDMrlcKlV79sftYzVNIcKqatf1Gm1Q=;
+	b=BWZ/vIxfntiLTueuUiXCH20yNKxcw34VornAvId2Y30O0QnVzmHsTOAjeH+kpM7BQnIfg2
+	Ia/G9R6QUNPV/+NpJ8Idaj4GXbaOUar6s1QoEAdlxJ8aFphwHvLmQuJd0Ifiw+Nefb9Fyo
+	T5/JA7TtePYSfyd+Q292mhIlAF0txlH9G+IR5bjidqNXIAUArtBar9Mxr+tn1CFkrox2V3
+	AoMN9sqgl2S6Y4IJe/CsyNF3NTmKG9VzNPXqjqhvvb72Ntszjt3k/sBVBCYG4Azwjcjc3c
+	1Nv7VNJjVZ/idUjsZhYXUvV13W3VTC9Tn2tisrC+B1g9WwFeeecduQAZkZbifQ==
+Message-ID: <119c048f-010d-f9d2-2e74-da470b1d043d@bootlin.com>
+Date: Tue, 29 Mar 2022 18:33:51 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Cc: docs@lists.yoctoproject.org
+Subject: Re: [docs] [PATCH] bitbake-user-manual: punctuation fixes
+Content-Language: en-US
+To: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+ bitbake-devel@lists.openembedded.org
+References: <20220329130747.364485-1-michael.opdenacker@bootlin.com>
+ <5205d592-db48-f554-5c64-221dbcb7b774@theobroma-systems.com>
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Organization: Bootlin
+In-Reply-To: <5205d592-db48-f554-5c64-221dbcb7b774@theobroma-systems.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 29 Mar 2022 15:04:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13548
+ <bitbake-devel@lists.openembedded.org>; Tue, 29 Mar 2022 16:33:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13549
 
-Fixes:
+Hi Quentin,
 
-File "bitbake/lib/bb/build.py", line 585, in _exec_task
-  event.fire(TaskInvalid(task, d), d)
-TypeError: __init__() missing 1 required positional argument: 'metadata'
+Thanks for the review!
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/build.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 3/29/22 15:13, Quentin Schulz wrote:
+> Hi Michael,
+>
+> On 3/29/22 14:07, Michael Opdenacker via lists.yoctoproject.org wrote:
+>> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+>>
+>> - Replace hyphens by em dashes when necessary
+>
+> I seem to recall we ultimately decided to not go for em dashes because
+> it wouldn't be matched by a search in the browser or in the sources?
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 65b7fc000d..af60c3d8f5 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -582,7 +582,7 @@ def _exec_task(fn, task, d, quieterr):
-     running it with its own local metadata, and with some useful variables set.
-     """
-     if not d.getVarFlag(task, 'task', False):
--        event.fire(TaskInvalid(task, d), d)
-+        event.fire(TaskInvalid(task, fn, d), d)
-         logger.error("No such task: %s" % task)
-         return 1
- 
+
+Ouch, this is frustrating. I'd rather not deviate from English writing
+rules, so that we don't have to keep a list of exceptions to them, or
+worse keep them in the back of our heads.
+
+And why would one need to look for an em dash in the browser or in the
+sources? As a reader, I'd avoid special characters in my searches, and
+as a developer, I would do the same, but if I really want to look for a
+specific em dash, I'll quickly find what the corresponding characters
+are in the sources, thanks to the surrounding context.
+
+Would it be possible to vote again on this?
+Cheers
+Michael.
+
 -- 
-2.32.0
+Michael Opdenacker, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
