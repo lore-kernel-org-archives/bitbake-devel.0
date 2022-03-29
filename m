@@ -1,146 +1,217 @@
-Return-Path: <quentin.schulz@theobroma-systems.com>
+Return-Path: <chris.laplante@agilent.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CEAC433EF
-	for <webhook@archiver.kernel.org>; Tue, 29 Mar 2022 13:13:10 +0000 (UTC)
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com
- (EUR02-HE1-obe.outbound.protection.outlook.com [40.107.1.89])
- by mx.groups.io with SMTP id smtpd.web11.6310.1648559589681950996
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F05CC433F5
+	for <webhook@archiver.kernel.org>; Tue, 29 Mar 2022 14:27:02 +0000 (UTC)
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com
+ (NAM12-DM6-obe.outbound.protection.outlook.com [40.107.243.77])
+ by mx.groups.io with SMTP id smtpd.web09.7284.1648564021010000479
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Mar 2022 06:13:10 -0700
+ Tue, 29 Mar 2022 07:27:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cherrycloud.onmicrosoft.com
- header.s=selector2-cherrycloud-onmicrosoft-com header.b=eU5y7Ksg;
- spf=pass (domain: theobroma-systems.com, ip: 40.107.1.89,
- mailfrom: quentin.schulz@theobroma-systems.com)
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=1IPmxIUS;
+ spf=permerror,
+ err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}:
+ invalid domain name (domain: agilent.com, ip: 40.107.243.77,
+ mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NVIxhqLo/1UBJ/4LRpDWcyDlbvcq4Z3dsv4H0J6W7gFrdDkIz3Txi+H3ciVirT1/h+cyTm4mzsj7c6q9OTlkhtzYZl5cdQKEknWJ7BhRkzPilJkj9NBpRg1lIRIN69wapI/eeyy1DDz8Ys1mhaB7WE3/ysJgPfCRqIzmIvEVPoT2rymv4hXS3yKNAnw0zH3tlIXJpXnDB93oeSFnyTU8XDpAl4jULOu7rzzAvaEbHHgx1vwca52eAPJWVnIqr0vQXMyfxUfyf+jsYKKt1m79VWDOS9F3bDljtu4Yj2fIevbeda52DqTZDkBnSX9jSwhfFyRzj91NDnNrJwyc5fI55w==
+ b=O1hSZpYDnAR9rPkWn78mdK5oxKgYOU4A00hDEVQZbbdMQdr1+MtUBIne+3kI9JI4JgDAFwICvfk6sAEco5I4gVuy0baSMqpcLECRyYsJ1fVtI0rnUOLvUjzzZ16NNlTS1//dw8z1TihqdlCW1m16GTu2HX7W5CGMiOXCp3Ds42ZhK4d9HYS1CrLwevozo2NLrpM+yTqwI5/BeV+TYeqpAxkV1tOQEgIV23Qk/OtkR7Ph2+X1OzvTieApbQKzhuwgCjqxFHaN72GPp3sdzJIHmdd63DnWE1ClOBSQqwgubScuZBHa+Q2f8A8pnW5qHQw99mkA3hgk4jbLlZ0bHzh8Hg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FYA9bHc/km2Zl6zLH/xoHnVMXnnb3kek1gtqlNL1HQA=;
- b=A+koLyc51tIFCgdC3F3J3Ky1O/w9uqgE0SqeYoak53BG0p2ex6BtopWp21ML8XhH2C49k7TQD/yR+GrzlZUb1ct1bHDtMYOEmsADSw2llAHuBWGUhRUxvNGXS4MlqdZu9+zhI/x6dmbzVsDSoHDBJ9ED/qJUdLV9l5NWKDs8k9hfElxulWEL2/m93PyuBiEyPWYu9YPA7IFUpGZ/mH5N+nUs3itPFp/xw8Z9Ro7Xx/kd4HylR5OlOPUfqIqltVq7hM1t160HQFD2wfE4I4SkZkmEpHgBFyuwV82MX80FGu2LcOQ+GOXlJP+rfPiR/WBbBQQI5RqohisrVt/vxVMN2Q==
+ bh=ZX5dfh+BWNSxv2cDCZbQSkAaSYMlZ1uQkbO+kDk/aIo=;
+ b=QWSyL6Ci/XiU1ej1GfjTeCfTbRsOQIBamn2vawvUerD9FWixlyKw6fAx74GCkS3saqgbgru/OCcLqUJH0LJeOZHoGmr7J9NlGqG8xuolyVynOaw0ZT4GZfeYAobLiGv2Dnw4CgyxRpf3adKJywCi02a3Dgvj1g55KyRiCYlT039koxRtIE1/u9Dx45pTrFNDAdqayftH919r1+AC6N/iB46ielGBv7mvSQe2v6DAndPVrg16w7YLoKZ+mMB5Kqg4nX0RTIbkO+c59MDFYZrHNnKAHWDOkTX4OSt85Kk0g0/swtI7L1MIzYT6wDQrnDaLiglP+UmFIoYsKH3bLuFaSg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
- header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cherrycloud.onmicrosoft.com; s=selector2-cherrycloud-onmicrosoft-com;
+ smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
+ dkim=pass header.d=agilent.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FYA9bHc/km2Zl6zLH/xoHnVMXnnb3kek1gtqlNL1HQA=;
- b=eU5y7Ksg3TmMqrWZ9b4I4NefOGMWB2vo4daGe1svSs7jf6t/Sgye9UrbVQHH5mOchjMtUlkiRuV/NCKEEXZ26bcGiONr5uIZ4O/342tFPG6rsHglFCp0wvWipGRtGQu33cay60VoD9qa17+EMSk2bhLBIgzZU8pQgzExMizHTDI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
-Received: from PA4PR04MB9367.eurprd04.prod.outlook.com (2603:10a6:102:2aa::7)
- by AM4PR0401MB2227.eurprd04.prod.outlook.com (2603:10a6:200:4d::24) with
+ bh=ZX5dfh+BWNSxv2cDCZbQSkAaSYMlZ1uQkbO+kDk/aIo=;
+ b=1IPmxIUSkgOqWRION1oIjTNcigzBnWq069/DR0oQUPpaKbZp/Y9DW0Rcep2xs/U21qGYtgEdfTPm+ue850WyEuLVjsFGcA4TpK4SLpkhqjIOUp4yeDBq/jt9AKf7EGntkbwGYbS0wz89jEtFnOoR1roiPNR7FqEEQolswZZWK2XmhQMD77VTPm4FU78o/b1RbckSP0e+BR5n/e3blPYUspvQ6IF41tNTKm8Dxt48RJsZssalNEycIpyrIpqwi1JTliBpceGD3WGczt0sHWMW7EViwgXqSUdRnD4NcRxhZT3aWDWdSmHKLflt2lFu3/md31heFD2iQIEIdVmUdh5J0w==
+Received: from DM8PR12MB5430.namprd12.prod.outlook.com (2603:10b6:8:28::6) by
+ MN2PR12MB4142.namprd12.prod.outlook.com (2603:10b6:208:1dd::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.23; Tue, 29 Mar
- 2022 13:13:05 +0000
-Received: from PA4PR04MB9367.eurprd04.prod.outlook.com
- ([fe80::8ca9:a2e2:60c8:95e]) by PA4PR04MB9367.eurprd04.prod.outlook.com
- ([fe80::8ca9:a2e2:60c8:95e%6]) with mapi id 15.20.5102.023; Tue, 29 Mar 2022
- 13:13:05 +0000
-Message-ID: <5205d592-db48-f554-5c64-221dbcb7b774@theobroma-systems.com>
-Date: Tue, 29 Mar 2022 14:13:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [docs] [PATCH] bitbake-user-manual: punctuation fixes
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.19; Tue, 29 Mar
+ 2022 14:26:58 +0000
+Received: from DM8PR12MB5430.namprd12.prod.outlook.com
+ ([fe80::f9e1:27d9:4498:2795]) by DM8PR12MB5430.namprd12.prod.outlook.com
+ ([fe80::f9e1:27d9:4498:2795%6]) with mapi id 15.20.5102.022; Tue, 29 Mar 2022
+ 14:26:58 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: bytebraise - experimental Rust implementation of BitBake's DataSmart
+ & parser
+Thread-Topic: bytebraise - experimental Rust implementation of BitBake's
+ DataSmart & parser
+Thread-Index: AdhDeIjTwai5brEeSw6mXWbOMbkVMA==
+Date: Tue, 29 Mar 2022 14:26:57 +0000
+Message-ID: 
+ <DM8PR12MB5430BF930602CDC35185CB7E8B1E9@DM8PR12MB5430.namprd12.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-To: michael.opdenacker@bootlin.com, bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org
-References: <20220329130747.364485-1-michael.opdenacker@bootlin.com>
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-In-Reply-To: <20220329130747.364485-1-michael.opdenacker@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS9PR06CA0255.eurprd06.prod.outlook.com
- (2603:10a6:20b:45f::26) To PA4PR04MB9367.eurprd04.prod.outlook.com
- (2603:10a6:102:2aa::7)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=agilent.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c938db2b-b6e9-4c44-ce91-08da11902ebb
+x-ms-traffictypediagnostic: MN2PR12MB4142:EE_
+x-microsoft-antispam-prvs: 
+ <MN2PR12MB4142EE85B35CB117A128F4EB8B1E9@MN2PR12MB4142.namprd12.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ +dlbtD8kXxdL8VIJO/RrRCCwHNuJAMAF4v8lQP/j5Gxd63fgWUA8srU6xA/FhN0eyQZxhKhenbE6oJOU2oc9qPRglNYZuFOJ8t+e/ZCam+c/2B8ouoQFxPIS5fcari0SRUloR8FPLUfd4X2MS26YXy6fWcnCx6hNx3QHG7DG9fOOypRpJj0jeQKhHS5zKskNyWf5hmYreA777HOWDliYuWdSBiXOmwHl+fhyirtkdHb7hWzbztDJW9KhQbEyEa8sokX75Xo2kQU60ny46tnE6BXeHXL/0Afuy0GR9kfItmw6L0GuN2Zxq1WMj50aZgmnn8SYbCBdqyc2wJ/iCQOxaIH1TmBiB8xqiWBQQziFl57Ibsh5BeygAc8h4KMY5w9JPtYNSnpRtIlm1TQeviozC0hvEZPAIx7pTBG7b7tUuPyt2txDA0cD66moT0HWZsf35oudmEdwlhUc5uUwiVqCbig4aaEVhhf8MvA0MHrhaS2k3kwxUKtjLaQ58jOFQ2WCEsUhPPddMjjm+P4aZ4svGYsPrR86tPvtOgCZ89HXoKnINZNYcPtbIIsV080Hgccjm+AlL7rnQKh1epsQNvhPdZdFvoHwrpB2EIkQBhNdAjruShMfeJOFEmyp7Nqxgo9s99Wn5AVkUWGLe3AcEPsjB99Mcnm1QNlr2X18rcwO4PoMENeoFeQ+vRdW4NMMWhJBMrRhQAFiSHrmZnp0Dg2zQbJYP6EW5dIVDoEf3NeRw8H+64Mgl4IY+XGmM1UwjUygqp/ZsRYckS5zFwZvZtaDaxz7uhWW9vnLdLl7HaQriBk=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5430.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(29502001)(6916009)(316002)(7696005)(6506007)(9686003)(26005)(186003)(38070700005)(71200400001)(966005)(508600001)(2906002)(166002)(5660300002)(8936002)(4744005)(55016003)(86362001)(122000001)(8676002)(66446008)(38100700002)(66476007)(66556008)(64756008)(66946007)(33656002)(76116006)(52536014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?84YIu/A96JazjoIe//Z5FPamKVvirNh/jcMMnM1lksPUM3/Y0ZGcGYkeSy+b?=
+ =?us-ascii?Q?yxy1oUdm67xOf+S6GoV92we4GDSkzYFNbDRs8K5zAizvqzHzSFGBMLOtMYTx?=
+ =?us-ascii?Q?qIJn0+ZGNhVdweHZfhqGt1/maVS6H2eFMLrdzAGy7+KYl+5kAd55G3VdHb/q?=
+ =?us-ascii?Q?m74ToiNAbNFfFwZso3RXNDoxJy6NyoSH9/CZkWKLebqerGN1+wk1rD7026vR?=
+ =?us-ascii?Q?rYcg4woiUAIh8cwgA5Q7LWzt/Y583lMqskEsyXjXusm4Wev/fzOaJ+TYN9u+?=
+ =?us-ascii?Q?yK1oqFocxB9L9g4TGrtZ1URBNyO9FG2WfaFi3vlLjK8PWlsIqSyslxv4Sjal?=
+ =?us-ascii?Q?B5c/CyKxeoBHzgguieVA0SvCGZ/vIkX0hI8EaGXPKre9sac7yQ5h8DBqowqf?=
+ =?us-ascii?Q?+hxchYmqukeMNYyBdrMYSFoo7zqHtVP3ItT7FmhpjTITXbSR1AIqF0BuSWEa?=
+ =?us-ascii?Q?HlcA7o6gGY8PWV0n+l2geKNM531kM7MGHW8hcovpiHxoRQJSuCmixAdebGEG?=
+ =?us-ascii?Q?BgcbdsLigDVwPTe4nsBcCKz3a3Ju/zD92nvWtILS333VsQuwqKRiewab6T0t?=
+ =?us-ascii?Q?2Y2SDDt7JR3aQcWi7gl0cEGGGcKf+kMnK9I5UXj606FTiKUYW79k4oLe15F0?=
+ =?us-ascii?Q?kcvikcPpIKfZwozVTy+Vom8YypeeoGeWk+dUVZryjmDBTfsfZTgKN+GHQWg8?=
+ =?us-ascii?Q?t0sfc4O3q91yyghd1Kd9vlW8KuNyvkqxVuS6XVfaGE8PJe/hmj23DFFtIkG5?=
+ =?us-ascii?Q?kr9XvemL8sXPujg0JkQqIn60Cg1QKSYiauwN6OdlgCBTqsEO+KlpVJQuTjXY?=
+ =?us-ascii?Q?PlGLK3EKNgqPx9xzVpCepbqTDDGwQ/uLu80uVdh8HyOhHDNYBqAtc5NwEiEa?=
+ =?us-ascii?Q?oCKTqnwxkz1QVDkxmOO+5ncgvRUFJImt3gaJlWH0SDzzHwSEPYF4ea2yaogn?=
+ =?us-ascii?Q?aqoALoaMjcW48A4ChrEp1Ahv8oahzgdhfBNue61BibQl/1utpo8m+3x80t/f?=
+ =?us-ascii?Q?sb9Y2ozXWfwCwdW3BiHlbHsQRWAAaws1IY/XEplVbDjOcBMZaryIr6IAD6tj?=
+ =?us-ascii?Q?aWOXnMscJunQ0tTiPcXi2QGy/JpZ/GHpnOqjfqheQ4jVA0111xJsfkTCWnUz?=
+ =?us-ascii?Q?0j/Ff6Q5kyFUg5R+Uw+75b+KFg5RPC+VFzfwGHZLZSDM4RjOYQoJ1K3BOrHf?=
+ =?us-ascii?Q?J6HFiwCzhr/QjXmvuQccKI4WrG8ZbFsSmMmTHMDIwlvmbvNk42pLFV9QcYD/?=
+ =?us-ascii?Q?Wm2YeFY8gKCK7rTDvfE13vBMh04ZZaBGTLaD1A7WMSS3lFuVS2Z1gf15LNkr?=
+ =?us-ascii?Q?Gp6XgFn0vimeNzwIRigEIIczWV4kTsfGP8BMmgsm+ku8egzCO/ODMq7Y8676?=
+ =?us-ascii?Q?EvR8Bmvr9RQLzFCJHXYfpiCnE7512ALJQNXEopsX5yJYh/GYQ6g1o9tbC5LM?=
+ =?us-ascii?Q?dDGVCctPYdHk9F9Nn4xRSO+ZI++YBCLSCqVZtUxjJ4zLgntA+nBuyboyXEwR?=
+ =?us-ascii?Q?HsPZesq3T6S4cIdZOynMykooPnfhlz068ij/jEWHyGmC46+7j6qXJmL90NT1?=
+ =?us-ascii?Q?ZAOz+PuiMtrN+nSDAfXFqN2bYLV/bTkQKaL2jUHj5NT/jhdMypIAFXyiba4e?=
+ =?us-ascii?Q?SuGYEIbfhkbC/mvZmtj0jXHI3Nj5FbnxwaG2aPUI+royvna0kOTUx7J/+U4x?=
+ =?us-ascii?Q?1vlv2lkeiI2ZQthx5jNiDhirAJ60unsje3DCzoGMg151azOdwUSJ4lKg7zQ3?=
+ =?us-ascii?Q?ofb+NTdSGOakmO2f+KX/EOR3DjQtLYs=3D?=
+Content-Type: multipart/alternative;
+	boundary="_000_DM8PR12MB5430BF930602CDC35185CB7E8B1E9DM8PR12MB5430namp_"
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 094d7f53-dedd-437f-0ee8-08da1185dc4b
-X-MS-TrafficTypeDiagnostic: AM4PR0401MB2227:EE_
-X-Microsoft-Antispam-PRVS: 
-	<AM4PR0401MB2227272A524D0EC949671E07C21E9@AM4PR0401MB2227.eurprd04.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	4QT3eMHHjNfhg+8jqKyOHpEwe9WyEw2v4Y3vWvrRqHNGl0GoaISuibvT5o+LZ2bGJCmTaUEeVcGr3i+0udVCfocaIPSGcB94QUYv11GhkhmrHvvCbkf70FBVpc6Lf+deSvHf+uJtclhHKgH3sjE3uTPQRfBk4wKz1BmklsWm/gLhc01RtdH5ApKcGng55phemp5yHLRXoHSchOuVnWKYyS4fNjw+4myvUtuNm+4owWnC3ztYJ78rPOBSUenwmq0uP18n5087tE3XNWuIfPDzJBIFlFatUPJ3VHMUi+nvsxLCjUG2nL9EVt94t4iUrT2vtQ4AIPIio1F2f962P2PZteO61gozxjFQYEzTJX1JOXrY5iyuru2eDo86ThaMrNkCMpeHwc3+gOmBZ1//qQw8FjNOTz+KFPOwFxjXwau3IiHXjRcMdrKGfa18/Hq1CAumQsuIhBDP9rZYLn7Prs5wZcWUq1kkeZK7CeJvJhqv+JBdK9U8BcMzpyAf/5FhzF7EDwqJ0ntxfKzshMLSBix/gQpe3OFYlUNcdZq+w8PkL89kkntvRzoe9zkl4IdsN6eD/W225/vjg4WSnqdiNiMVi/OfLUH+GbpTo4CEqaVbtFUJ0cWFJaZrrHbkgqh4gXVgaCppJMO4Ze9HoBEJAUhEo5gwM8Pkkb0kkSLmpiAyLFj685ISqFkPUD6CGkAN3N6L9qPqRM9NyJ2qlN6LOvO/vwzezHQWTvnqzlqgEJJx9E0=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9367.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(8936002)(6506007)(508600001)(86362001)(66556008)(66946007)(31696002)(316002)(66476007)(8676002)(4326008)(6486002)(186003)(6512007)(53546011)(66574015)(38100700002)(2616005)(5660300002)(26005)(2906002)(4744005)(44832011)(31686004)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?UXQxYXZFTzFQRnl4VTNGRmxoT3g3ZXJ5UnNsRi81Zzdobm4vdThwUVNCK1Fx?=
- =?utf-8?B?SFE3SmJJWVNiS2hyQUh1RGI1SXQrRzNsMm5ILzAxSktBWWluNzJwOGxYTGt6?=
- =?utf-8?B?UjFRWHc1TVBtUUxNYjMydFNXSmdLNlk3cjIvOUQrckM2bjZRa2tUWDRwNHc4?=
- =?utf-8?B?MkZ6bG1aSnRIUUYwbEdyNHgyM3lRSGNBeFhWZFZXc2x6YVE4L1RmSTNYS2I4?=
- =?utf-8?B?YWJ4d00wN1RFa2N6YkoxYmJMMlVzTHpYVFEraFhabWtpaURyRlRhUHpIcDk3?=
- =?utf-8?B?TUx5S3JrcnFuUzVzSVlZOXNVRUdTY0xPb2liRVZCYkRObVBqSjVVVGpGU0dS?=
- =?utf-8?B?bCt6Yko3K2draEs3eE5mbFNna1lpMkVtL2lzeVgyWVBlcmc2bURra3htaTNC?=
- =?utf-8?B?bEJPV2krRU9YNjE3VHdDVTZWWkMwWUhFQll0UXlWTU5xK2dPTnkxUVJMUHBX?=
- =?utf-8?B?czBPUHNGQTgwSnYzVHpwSEROaXlpQ2QyUmRkeVYyVHkzVnlEOGtiTjljeGFF?=
- =?utf-8?B?MUtjRXZJR2FjYmdaaFhPZS9hQUNtTG4zSW9zVHA5Y0dsc0hMRHdId1ROdW9Y?=
- =?utf-8?B?YVhwTkJJUFNha0JJQlBES3lSakVLNGkxRlRJSnhnR0JUTlNIbUZ2aEk4UC95?=
- =?utf-8?B?RkdpVnFlU1ZlZElWa1c4WWJwRHoxYUJUQnJxbzAwaXpnODFNQjdvenNvUFVl?=
- =?utf-8?B?aVZJUnF0RlpnY2tNcXRaYkhOejNuZ3QwNnFocXJYSGROb1F1OUhkblk1ZVYv?=
- =?utf-8?B?UTFWaStQdWxlQ0VEbG8vR2VpNnd1eHBGUnREd1kzem0rZkJhZFhJQUFuQVNW?=
- =?utf-8?B?TmZWZjd2cmpvWjNhNDJZU1E1TFBGdTNkZVYzUUVEMWV0bUNIb1B2NDh2MVJI?=
- =?utf-8?B?V01ldHZiRTIybGtWU0d5dWQ0VVdQTDkvVk1RQUFwQ3lRWnMwajUzZlUvT0pi?=
- =?utf-8?B?eFlLU3p0U2NGYUxVeGZta1JBV29QMDM4NWpEblJSZHliOHhKalc2d1V6NFRC?=
- =?utf-8?B?ZmFCdGo2Y2t3blIzZnhqdmtEL2ZBN1RwK29YcmlrcGdEb2ZCV28xcUx3RXI0?=
- =?utf-8?B?a0dXQ09oKzJYNXpqZ1lLcTc4aTUwa0R3TXNHK2txUUsrUTZPcWZHanRyT01E?=
- =?utf-8?B?bnFLVHphcXlHRnozdU9rdUxEZkpVU01zRG9TN2J0QkRNVEJjVjEvUnhjRE1Y?=
- =?utf-8?B?OFVISW5XQ1pxY1VoQUxGb3FuRDR3endoVExNaG5tRG5IQmc4aU9xNlc1bGl5?=
- =?utf-8?B?M2h3ZldqVFI5eTlRSytEYnVSVVVkbVBaZkZSMHlreXpadGp0NmRubGlvdWRW?=
- =?utf-8?B?VEpidm5kb1NMc3NOUTJ6akVxTng5KzZKOHI2WnJzeHdVakRsdkEwK2xINnpB?=
- =?utf-8?B?c2FLZExzK1hkWlZiZWJSQ2FxdVRkdzNhampUQjB5aytpNmxUbFV4UjRkSEdG?=
- =?utf-8?B?ZlhWalQxc1RhUDV3cXp3UWFFQ0o0WFBkVkkrRktpcWVrWXlXYnNOTUNTRmxr?=
- =?utf-8?B?cGNZeDZoSjBrWTZGUXl5aHVObHorazk5cWdmYWZQYndISVNBQXRtOXlTREh1?=
- =?utf-8?B?cWtCQld0Nlh5WHlEaG9wR0tpRFc0bTRUUW1uRHJpazJIblZOekNDZ2ZOMVNH?=
- =?utf-8?B?ZGxhSE1TcmFJQ1RyblMyMm1GOW5URkpXU3lYdjkxejZOY1dyaEExZ2ljTndv?=
- =?utf-8?B?NHZOUWJlcTcwQXQ3V1RBaitvS2VJaUx5MmtjV3grR0Z0OWYxNjRXMjNVdjkx?=
- =?utf-8?B?OThPVE52cEtTM2txMjBIRHpoSnlhbFpNSGdFaTVGeExvVEhlQTFtallXTGZM?=
- =?utf-8?B?YUhPZC9OUHFVYzY4V2VYemo2cWNtN3pmT1RaWjl6TktsWkVuejZtNW4wd0Y0?=
- =?utf-8?B?Y2N6d1ZBK003R1lJNlVRN05icDJTQjdyMWpnQllWVFhTT3BaRGVBNDJnMmNI?=
- =?utf-8?B?ZU5oOVJkOGFJbEpFZTFpZWRESjJXU3ErazRTNXVkYUhNVldrNi9sbldWK2xx?=
- =?utf-8?B?NmtuY0p3YXMybU9GaVBKL0NSTnBEUlYvV2Y1eHVWekpBU1pSdmNyeGVvUDcx?=
- =?utf-8?B?ZW5iYXZZZUh1Si9nREk5c2dZWEMyTmVHeVFZWnd0NWhnYXdLQTkxYXI4dFJz?=
- =?utf-8?B?dFFJcGd3ZFZHUVpScFpMRko5OEo1aWU5ekQrTHg1dklQVnZXTzdtdGFkUDNv?=
- =?utf-8?B?bDVHbXY4elFTd1QwZ2l3NlN0OFlncUt6ekxsT1NNTTl1cjhSTjNoTUUycHA5?=
- =?utf-8?B?MlF1U1hmVVVsUkU5V3VCWWtsM2k5L3lRUXVDUjNQUko2NU44WFl4VkpScEFF?=
- =?utf-8?B?Z096ak1pcUN3cCtpbkU2MDZsTDJtMU4waXJyeGtwbnA2QmFCVlpoYkNYdlRI?=
- =?utf-8?Q?aQh4+ifbEcJD42GBcaoAnFEIRmqU0/3HQQgm2?=
-X-OriginatorOrg: theobroma-systems.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 
- 094d7f53-dedd-437f-0ee8-08da1185dc4b
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9367.eurprd04.prod.outlook.com
+X-OriginatorOrg: agilent.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2022 13:13:05.2137
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR12MB5430.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 
+ c938db2b-b6e9-4c44-ce91-08da11902ebb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2022 14:26:58.2588
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 
- 0ENdXcXbLnV33Sfug2LRjUJTDtmnH5Hlae4jNswolFIcbjxpOY0dupEh0vALPMOKhaqTAnC141eUE99su9212O021RBitMot20Lqy4Ew/Zx+gNx/FPjNeuWYicX8iViq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0401MB2227
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 
+ xhqjhH0SxHrEtICXRdI3KWheJk6jfJ2BmylKs6j5szluX9A8+VgZNep4HXI2xJzPjrjXcXwHhBP2GlDaM5SRvmhVO0K/b3All2w8nSAWtSE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4142
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 29 Mar 2022 13:13:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13538
+ <bitbake-devel@lists.openembedded.org>; Tue, 29 Mar 2022 14:27:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13539
 
-Hi Michael,
+--_000_DM8PR12MB5430BF930602CDC35185CB7E8B1E9DM8PR12MB5430namp_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/29/22 14:07, Michael Opdenacker via lists.yoctoproject.org wrote:
-> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-> 
-> - Replace hyphens by em dashes when necessary
+Hi all,
 
-I seem to recall we ultimately decided to not go for em dashes because 
-it wouldn't be matched by a search in the browser or in the sources?
+If anyone is interested, I've been working on reimplementing some parts of =
+BitBake in Rust (for fun and educational purposes). The code is here: https=
+://github.com/Agilent/bytebraise
 
-Cheers,
-Quentin
+For now, I've implemented DataSmart and a lexer & parser. The ability to in=
+teract with Python is also prototyped.
+
+It is all very rough and early code, but maybe someone will find it interes=
+ting/useful.
+
+Thanks,
+Chris
+
+--_000_DM8PR12MB5430BF930602CDC35185CB7E8B1E9DM8PR12MB5430namp_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri",sans-serif;
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"EN-US" link=3D"#0563C1" vlink=3D"#954F72" style=3D"word-wrap:=
+break-word">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal">Hi all,<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">If anyone is interested, I&#8217;ve been working on =
+reimplementing some parts of BitBake in Rust (for fun and educational purpo=
+ses). The code is here:
+<a href=3D"https://github.com/Agilent/bytebraise">https://github.com/Agilen=
+t/bytebraise</a><o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">For now, I&#8217;ve implemented DataSmart and a lexe=
+r &amp; parser. The ability to interact with Python is also prototyped.<o:p=
+></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">It is all very rough and early code, but maybe someo=
+ne will find it interesting/useful.<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Thanks,<o:p></o:p></p>
+<p class=3D"MsoNormal">Chris<o:p></o:p></p>
+</div>
+</body>
+</html>
+
+--_000_DM8PR12MB5430BF930602CDC35185CB7E8B1E9DM8PR12MB5430namp_--
 
