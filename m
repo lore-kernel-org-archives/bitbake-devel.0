@@ -2,96 +2,71 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78E9C433FE
-	for <webhook@archiver.kernel.org>; Tue, 29 Mar 2022 09:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C709C433EF
+	for <webhook@archiver.kernel.org>; Tue, 29 Mar 2022 10:00:46 +0000 (UTC)
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net
  [217.70.183.201])
- by mx.groups.io with SMTP id smtpd.web10.4652.1648545791386007073
+ by mx.groups.io with SMTP id smtpd.web08.4721.1648548044776287269
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Mar 2022 02:23:12 -0700
+ Tue, 29 Mar 2022 03:00:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=VnD5KpNM;
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=Tvx+RI3b;
  spf=pass (domain: bootlin.com, ip: 217.70.183.201,
  mailfrom: michael.opdenacker@bootlin.com)
 Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id A5F271BF20E;
-	Tue, 29 Mar 2022 09:23:08 +0000 (UTC)
+	by mail.gandi.net (Postfix) with ESMTPSA id C164B1BF214;
+	Tue, 29 Mar 2022 10:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1648545788;
+	t=1648548043;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yVCnFLEcAqwso0Pnuwn6sZRTwonWBusHkWDquNoIEtw=;
-	b=VnD5KpNMVKS8msHUn97KVz8k+Fqsj+jLXa5XdWOYuXUTPjd9dqgWKo8+/Sg3NHfd7G1xqF
-	Zuum3jQ3Kv2JA/IDBllQNjNEE0jwCVRldRVRQnRECIlGA9uWR2wFuccHAXYuPdFYitAZMg
-	H5W4sQ3aQqe2v+ZEfl/bl6/Ur/YcwLiNO4g4jOKyf2RueHpVN92qoUL8qErwWRY7EG8q3w
-	NWjK5ZFqzXwoiZ/3npxgITmgs+Hqvabm5H+c/TPjX1KAXz7MDWTKwWB+o/QUssK7JuYPE8
-	eFLzS8b1TV7+VmKzhq8VEmaFBRcLWHTqeJ3Yjq3itx8hQh5luTo3xIS92Tglxg==
-Message-ID: <46a88c96-2efb-0043-e62a-c0bb2b4f71a4@bootlin.com>
-Date: Tue, 29 Mar 2022 11:23:07 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Cc: docs@lists.yoctoproject.org
-Subject: Re: [docs] [PATCH] bitbake-user-manual: fix broken links to manual
- releases
-Content-Language: en-US
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hqgLoSPhd7sQpHyz7SWPhrihaQUI8trP/oHt1uOkmTE=;
+	b=Tvx+RI3bwB7CfmqgKFyjbMyN9UHeEWSmb7DQ3W4g1UzEd1708Qr0YpXVc+Pn+eYXcsTk/2
+	A6BXI5qa8idc0EJpVOIASADa4OjqEPyDFdt+rXByaX4vWV3Y/4Mg//f6HftnVNJxtfjp1/
+	t31mQUxkEwkj04WWcu09rqa0lNWVFkUjDo/PEgb+pFBAxyE1RCzdB+dNLU2/Z4fqFpzcAg
+	6bAgrzcBWdrpTFckLy6bfmyjPnhdgI5YFKAwcJp3CUz/BUj+Ms+q9OSvR1Ov5+aG9OSLyf
+	/cUG1AAJbpdc7CEPVX7KFDjD4Du5lt3rY/mWE0gNQC7xo/DnUHtcGPq+aGW4jw==
+From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
-References: <16E0CF5A54A31339.3733@lists.yoctoproject.org>
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-In-Reply-To: <16E0CF5A54A31339.3733@lists.yoctoproject.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc: docs@lists.yoctoproject.org,
+	Michael Opdenacker <michael.opdenacker@bootlin.com>
+Subject: [PATCH] [bitbake 1.46] doc/conf.py: correct version
+Date: Tue, 29 Mar 2022 12:00:39 +0200
+Message-Id: <20220329100039.353687-1-michael.opdenacker@bootlin.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 29 Mar 2022 09:23:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13531
+ <bitbake-devel@lists.openembedded.org>; Tue, 29 Mar 2022 10:00:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13533
 
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-On 3/29/22 11:17, Michael Opdenacker via lists.yoctoproject.org wrote:
->  ****************************
->  Release Series 3.1 (dunfell)
->  ****************************
->  
-> +- :yocto_docs:`BitBake 1.46 User Manual </bitbake/1.46/>`
->  - :yocto_docs:`3.1 BitBake User Manual </3.1/bitbake-user-manual/bitbake-user-manual.html>`
->  - :yocto_docs:`3.1.1 BitBake User Manual </3.1.1/bitbake-user-manual/bitbake-user-manual.html>`
->  - :yocto_docs:`3.1.2 BitBake User Manual </3.1.2/bitbake-user-manual/bitbake-user-manual.html>`
->  - :yocto_docs:`3.1.3 BitBake User Manual </3.1.3/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.4 BitBake User Manual </3.1.4/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.5 BitBake User Manual </3.1.5/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.6 BitBake User Manual </3.1.6/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.7 BitBake User Manual </3.1.7/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.8 BitBake User Manual </3.1.8/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.9 BitBake User Manual </3.1.9/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.10 BitBake User Manual </3.1.10/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.11 BitBake User Manual </3.1.11/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.12 BitBake User Manual </3.1.12/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.13 BitBake User Manual </3.1.13/bitbake-user-manual/bitbake-user-manual.html>`
-> -- :yocto_docs:`3.1.14 BitBake User Manual </3.1.14/bitbake-user-manual/bitbake-user-manual.html>`
+Otherwise the version information in generated docs is wrong
+(appearing on the left bar in HTML output, for example)
 
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+---
+ doc/conf.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This one looks a bit odd. We could keep only the link to BitBake's 1.46
-manual. We cannot really move the manuals for Yocto 3.1, 3.1.1, 3.1.2
-and 3.1.3 (before the switch to Sphinx) to the "Outdated Release
-Manuals" section, because 3.1.x is not an outdated release.
-
-Unless we call the section "Older Release Manuals"...
-
-The order also feels odd: latest manual for 3.1, then for 3.0, 3.1.1,
-3.1.2 and 3.1.3. But wouldn't it be odd to have to latest and relevent
-version last? Until we revert the order everywhere.=
-
-Any thoughts?
-Thanks in advance
-Michael.
-
+diff --git a/doc/conf.py b/doc/conf.py
+index fc2ee081..718130b9 100644
+--- a/doc/conf.py
++++ b/doc/conf.py
+@@ -17,7 +17,7 @@
+ import sys
+ import datetime
+ 
+-current_version = "dev"
++current_version = "1.46"
+ 
+ # String used in sidebar
+ version = 'Version: ' + current_version
 -- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.25.1
 
 
