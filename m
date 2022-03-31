@@ -1,116 +1,106 @@
-Return-Path: <kergoth@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514F3C433F5
-	for <webhook@archiver.kernel.org>; Thu, 31 Mar 2022 15:34:37 +0000 (UTC)
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com
- [209.85.218.54])
- by mx.groups.io with SMTP id smtpd.web08.8770.1648740876445535618
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60EBC433EF
+	for <webhook@archiver.kernel.org>; Thu, 31 Mar 2022 20:05:48 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com
+ [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web09.1866.1648757147513292740
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 31 Mar 2022 08:34:36 -0700
+ Thu, 31 Mar 2022 13:05:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=hcYs8vBQ;
- spf=pass (domain: gmail.com, ip: 209.85.218.54, mailfrom: kergoth@gmail.com)
-Received: by mail-ej1-f54.google.com with SMTP id bh17so99102ejb.8
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=HqEQUz1i;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f42.google.com with SMTP id
+ k124-20020a1ca182000000b0038c9cf6e2a6so315339wme.0
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 31 Mar 2022 08:34:36 -0700 (PDT)
+ Thu, 31 Mar 2022 13:05:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K5DvfvoYB1LWfd4TTFjr5zIYOWit7APGX5XvFgAt0kU=;
-        b=hcYs8vBQZVdQKvfLLQKD0nqUec7y0YU6wGdGImrGsA1frok91Lgxaer/cchodnGW3N
-         BLxXOn7ItgneYZ2Mko5LPugHu3amgOQs5i2H+taw/fAL4pF5g5wqvAZU+tzTsn3+75eu
-         uN1nb94t0L3HNfO0+f8HW0OKtO/SmeoUglUcEL5uXoL3399F3PcG4au1OFKCngAVPD3A
-         1x2hn++s+Q6MpXqE1xMsy2bKy8tnGfuNnHsxQaqKBO/ZoBc41jFE2jVIi860GAIoJd2M
-         zFtMtpefCUL9Eolhf0Vx+KksQITMUpeqGjF4eyKEw9SEQMje9keE8Ae9EDZ1MYKREBq3
-         BrpQ==
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=II8LtEqkdIb5TR8xlNIgToZiCnsmq0ShCoHHd4QOubQ=;
+        b=HqEQUz1iMH44sM4TC9WO6ar4B1pmuWVFW45pvLooMtypyiojGNGW5PTlXu7XFQy8ov
+         X9wpewMJtfH5wOTH7iU4A93V8/K5Zz/VhwFhNHjDUuJAWJsedZ2MXTtJLPGLOrK2n07v
+         rQi9ZtIHD3AW5m7JVqRe7f/HJ46qIiln/elBU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K5DvfvoYB1LWfd4TTFjr5zIYOWit7APGX5XvFgAt0kU=;
-        b=ZnHV+jNcxRkQh8beP38vpxvWnV0rPqoseh4o1+2QsSSh9qfCfUubF3jBFS3viK4jTl
-         BJdC6bgMyu/fMPUv9LFkmmzK5rqxC4dKda52LZJuPyRlDL9cpfeHV53d2x4sB1dyUEXl
-         Ay6t92ai3HKlWAdGR9k0hoVFbEoYGsjqtjwBDCKiefGvQXQXWzxcsAy0U3taknISfLOA
-         t/ObYf6LGZvb/K8XQdYGdTWh7EuqYwFhaGVOAfr3MUHCDvswlKBpcvn8wj3vVFI9TKeN
-         nZkH/+KU95cqtcs2UrS946hn48mDqSAeUwcKgNOlR4ki7s17M6SpkC1HTpgUG8WP/UQK
-         mPcA==
-X-Gm-Message-State: AOAM5301dtbLGIUGxRKKM3t4DF+ITy6au/FEfNtVwXvPAhhUgABBh8Oq
-	5HsXlNfywrIGIbEQpZthz7tOmRSaIiSs45MaVAU=
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=II8LtEqkdIb5TR8xlNIgToZiCnsmq0ShCoHHd4QOubQ=;
+        b=owvkbrTqnr9ATI3xrvBbgbG+C+JL5AAyGia53TacoxBILQmwGGxtyGEbDb66AhTXTg
+         gaM87NIj/f02BQzC1YW0+CbPNlaCMVvfvvlhH8bOLpEr8Woe4hsTbzXF8O1dzK2Gw1Zr
+         1RMTawWeBmEWzMTOriwR3GFhjb2wU7kEeTc//0xNfiezbyt/Qf8fdAOBcFj4M3nWhZGF
+         8WDPBVncWfkQcYWE9/8MvC72+4kBmvpqumdLtk0U8J1CVx8gISg/hejq7SU8QzSkGp/g
+         1sVkQf1odcCBpqp4miYWL71QasnBgTXgptgIuMheLG0yIzcLmw5+RSQBNZh6bU4fsh4I
+         Kpmg==
+X-Gm-Message-State: AOAM530xi2Xihf9AvZJDZVrncZFiRZPX9OPqbEFz7FlbvZDW7/gBbzFo
+	7XYZY9OWIUPzAsYFA+menMTktqBjTbDsdklS
 X-Google-Smtp-Source: 
- ABdhPJyQsxpjnhqfIM8sWXYw7AX0BI/iBf68XTFQ5whQ0R3EY9JPSqUpDVbCHceq3EbA4X6NQT9/tOy6Df77Cvwp4MA=
-X-Received: by 2002:a17:907:1b09:b0:6d8:faa8:4a06 with SMTP id
- mp9-20020a1709071b0900b006d8faa84a06mr5481877ejc.701.1648740874662; Thu, 31
- Mar 2022 08:34:34 -0700 (PDT)
+ ABdhPJxfjqbo3aJ9pQ12WY/m5gUPRLnW1O8nLYDS/w2mTjnWgJ2timGqq/B9SNLm/CIB+prz1FlJbQ==
+X-Received: by 2002:a05:600c:3016:b0:38c:8786:d3b6 with SMTP id
+ j22-20020a05600c301600b0038c8786d3b6mr6024385wmh.135.1648757145526;
+        Thu, 31 Mar 2022 13:05:45 -0700 (PDT)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:a160:31eb:e235:3dfd])
+        by smtp.gmail.com with ESMTPSA id
+ j15-20020a05600c1c0f00b0038cabc63721sm184452wms.30.2022.03.31.13.05.44
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Mar 2022 13:05:44 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 1/2 v2] cooker: Restore sys.path and sys.modules between
+ parses
+Date: Thu, 31 Mar 2022 21:05:42 +0100
+Message-Id: <20220331200543.1583022-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <20220331110437.1562951-1-richard.purdie@linuxfoundation.org>
- <20220331110437.1562951-2-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20220331110437.1562951-2-richard.purdie@linuxfoundation.org>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Thu, 31 Mar 2022 08:34:23 -0700
-Message-ID: 
- <CABcZANkKWnVs8uT4d4c1KN9duL7LqPFtBWXxmV=MnA4C358c0g@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 2/2] cooker: Restore sys.path and
- sys.modules between parses
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="0000000000002940d605db85663a"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 31 Mar 2022 15:34:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13559
+ <bitbake-devel@lists.openembedded.org>; Thu, 31 Mar 2022 20:05:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13560
 
---0000000000002940d605db85663a
-Content-Type: text/plain; charset="UTF-8"
+When memory resident bitbake is active and we re-parse, the old module
+configuration is present which can lead to strange errors. Reset this
+when reparsing so the state is consistent. This fixes memory resident
+bitbake errors.
 
-On Thu, Mar 31, 2022 at 4:04 AM Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> When memory resident bitbake is active and we re-parse, the old module
-> configuration is present which can lead to strange errors. Reset this
-> when reparsing so the state is consistent. This fixes memory resident
-> bitbake errors.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->
-
-Looks good!
-
-Acked-by: Christopher Larson <chris_larson@mentor.com>
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 1359d33f77..0d29aa03a0 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -159,6 +159,9 @@ class BBCooker:
+             for f in featureSet:
+                 self.featureset.setFeature(f)
+ 
++        self.orig_syspath = sys.path.copy()
++        self.orig_sysmodules = [*sys.modules]
++
+         self.configuration = bb.cookerdata.CookerConfiguration()
+ 
+         self.idleCallBackRegister = idleCallBackRegister
+@@ -350,6 +353,11 @@ class BBCooker:
+         self.state = state.initial
+         self.caches_array = []
+ 
++        sys.path = self.orig_syspath.copy()
++        for mod in [*sys.modules]:
++            if mod not in self.orig_sysmodules:
++                del sys.modules[mod]
++
+         # Need to preserve BB_CONSOLELOG over resets
+         consolelog = None
+         if hasattr(self, "data"):
 -- 
-Christopher Larson
-chris_larson@mentor.com, chris.larson@siemens.com, kergoth@gmail.com
-Principal Software Engineer, Embedded Linux Solutions, Siemens Digital
-Industries Software
+2.32.0
 
---0000000000002940d605db85663a
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">On Thu, Mar 31, 2022 at 4:04 AM Richa=
-rd Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">richard=
-.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-l=
-eft-style:solid;border-left-color:rgb(204,204,204);padding-left:1ex">When m=
-emory resident bitbake is active and we re-parse, the old module<br>
-configuration is present which can lead to strange errors. Reset this<br>
-when reparsing so the state is consistent. This fixes memory resident<br>
-bitbake errors.<br>
-<br>
-Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
-ndation.org" target=3D"_blank" rel=3D"noopener">richard.purdie@linuxfoundat=
-ion.org</a>&gt;<br></blockquote><div><br></div><div>Looks good!</div><div><=
-br></div><div>Acked-by: Christopher Larson &lt;<a href=3D"mailto:chris_lars=
-on@mentor.com">chris_larson@mentor.com</a>&gt;</div></div>-- <br><div dir=
-=3D"ltr" class=3D"gmail_signature"><div dir=3D"ltr"><div dir=3D"ltr"><font =
-color=3D"#333333">Christopher Larson<br><a>chris_larson@mentor.com</a>,=C2=
-=A0<a>chris.larson@siemens.com</a>,=C2=A0<a>kergoth@gmail.com</a><br>Princi=
-pal Software Engineer,=C2=A0Embedded Linux Solutions,=C2=A0Siemens Digital =
-Industries Software</font><br></div></div></div></div>
-
---0000000000002940d605db85663a--
 
