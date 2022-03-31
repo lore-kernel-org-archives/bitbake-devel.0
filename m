@@ -1,112 +1,189 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <simon.eu@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D405C433FE
-	for <webhook@archiver.kernel.org>; Thu, 31 Mar 2022 11:04:42 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com
- [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web11.5689.1648724681020858347
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296ACC433EF
+	for <webhook@archiver.kernel.org>; Thu, 31 Mar 2022 14:08:29 +0000 (UTC)
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com
+ [209.85.210.169])
+ by mx.groups.io with SMTP id smtpd.web10.7413.1648735708422072216
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 31 Mar 2022 04:04:41 -0700
+ Thu, 31 Mar 2022 07:08:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=J4enk6dQ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id c7so6655628wrd.0
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=GpOAewAR;
+ spf=pass (domain: gmail.com, ip: 209.85.210.169,
+ mailfrom: simon.eu@gmail.com)
+Received: by mail-pf1-f169.google.com with SMTP id bo5so2650784pfb.4
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 31 Mar 2022 04:04:40 -0700 (PDT)
+ Thu, 31 Mar 2022 07:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bqexovU5LHPs3zxapw8VuPIT5QcZxRdFhTqn+RW/qoU=;
-        b=J4enk6dQsdBqP0T/VYiCtSDBYZRcXYc7zvVQwqKIn3GUmv3MFkW/iDe1u3EbNkVjtj
-         xxxE2L8wCkSxlawO06fqvA8HqhfoSjSWSWe4aw8000KHbAkGb5fXsgvspY3TkiCzeWsp
-         mt+8wsCagtpSfd3y3QggpEDAQg1tFttQEqbc4=
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gx6iYBZaFAsH30PZlmOR7I5sDZ6/H3NrdsmRflXk6B8=;
+        b=GpOAewAR8DJdQ7HosU5CGe6SCP+o4Dzhc59o2/Ql6wkKC0pO+WxHfPwy+537FhdbLb
+         EoXZi6sqxFcm7skCIB1dzh8h0PwAwBwvN0gUKqyNiIzd7BcZj6v8847g5gTqbtzDy+cz
+         ciD29dte/aNCXygwwmGcOz2h7kR8ZXajqloRhpSFBIRc+FgMTwo/Lk/XCs1Lr1u4hU5j
+         pSIh38slQIrvQ3w0LXZOj568CrHAKhWAip0kEPTiaUytY9dVtbPzZq9LxFaGsWEvsYiV
+         OGg0i3YTgvpJi3DUQVotknHYLUAGdW4hbcCt4b37YaBBUAubYfYJemlWWn/giCYgjK7O
+         8tOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bqexovU5LHPs3zxapw8VuPIT5QcZxRdFhTqn+RW/qoU=;
-        b=zuFGi9asVHBUVC2UEO6rbhk5QxmVmxxg07TyVpYpcP9iaNLmjTfBG3nR6TwNdgcxaw
-         FyefyJktl7OvB/z/U2mlPQg05mZt8ogP0DNZJ++Om75epeMO2sPGlIwocjf5Cg22Wd2k
-         +BtY+Fmj8/IFkHC71LnnSJa6yN8oCfoPwthJTZwU6YYb70OhoDtG5kXjGMSdLABWut5Y
-         8ZXfq8Z4pBuwd5JRztWPNWofMDNpTlSEDsEQhZdhORoKtoLjvylEJmhOczvRraXsFUJ8
-         +nIH4R4838Z+9aKx3ndM0bKjYhXgdtftkNRaH+VEfW9xPM3kS8i6joME8dkUGRNhFXS8
-         JS3A==
-X-Gm-Message-State: AOAM532FDWIazWCRYvvO+r0jPtDY8EhVcavSy6VEmXjOBfx64ul+I5RU
-	3j5L2IP3CBwK0ei/HI1oEiDshKNUW1ptkZrZ
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gx6iYBZaFAsH30PZlmOR7I5sDZ6/H3NrdsmRflXk6B8=;
+        b=pSbK2UVWpdespGyKCToDUA8oQmiSsFPoXk/Wor+cnMiV3T+SWGXzMGXMo3Z/Ybjuc2
+         0kRWyCRXPxC9CM/e1XeYGI+yEOKgr0Sbm5eMJPA9m6RLh0pb1EzlY3G86wD2KlRR5J0g
+         lFvlwcQbfeNr0i/jmnJAi5e0D2rbmgnt/9+0mBaAy/Q+jz3Zy/65UChr4drWAbXIERkl
+         DnE8h1TOFLe2bYw09E1S33HE71oTa2Uv1kFnL6IKOInzptAc+ekLEOk0JaYoYqMfucBv
+         HPUrmC8aADL6VOjKUpDJsUeQU0Ga1VRDWA0DMChrzlUg6pQjIRQk4fFeW4k4yumTz3k4
+         jzng==
+X-Gm-Message-State: AOAM530lY8tyoEpg9rO4xqolSsO24lteAL5TDtZosAp0Jd6RpPYTqTrY
+	eJONLxdqrBo3G3Bzw+mQDTf5kXhBXJ6bHn/OGuQAgbOV
 X-Google-Smtp-Source: 
- ABdhPJx+T7ehBA1Dk4RIt4J1sk/nR8FCiqdszC2fWw5P+auvHkyI5fLKJEsecYgFzHzNu2k71YyC0w==
-X-Received: by 2002:adf:ed06:0:b0:203:e759:8d51 with SMTP id
- a6-20020adfed06000000b00203e7598d51mr3653704wro.613.1648724679265;
-        Thu, 31 Mar 2022 04:04:39 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:6605:7b3b:ef3e:a309])
-        by smtp.gmail.com with ESMTPSA id
- m3-20020a5d64a3000000b00203ed35b0aesm33155728wrp.108.2022.03.31.04.04.38
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Mar 2022 04:04:38 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/2] cooker: Further fixes to inotify to fix memres bitbake
- issues
-Date: Thu, 31 Mar 2022 12:04:36 +0100
-Message-Id: <20220331110437.1562951-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+ ABdhPJxoiRngtfiYu+0Tlnhln+NEoEd6fOqFyCoQU0LK0McnTz3LGFtOr1LJmFxFoIvq+thWIfm56DADu4NEQkOzXRw=
+X-Received: by 2002:a63:cf52:0:b0:36c:8e67:45c9 with SMTP id
+ b18-20020a63cf52000000b0036c8e6745c9mr11114466pgj.542.1648735707795; Thu, 31
+ Mar 2022 07:08:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <bb55d51b-1563-07b3-b21c-ba982e811615@bootlin.com>
+ <20220329143748.297881-1-simon.eu@gmail.com>
+ <bb5d84ce-8424-3d40-2ace-5a68bbe260b6@bootlin.com>
+In-Reply-To: <bb5d84ce-8424-3d40-2ace-5a68bbe260b6@bootlin.com>
+From: Simon Eugster <simon.eu@gmail.com>
+Date: Thu, 31 Mar 2022 16:08:16 +0200
+Message-ID: 
+ <CAO8d5BbqYEpcZJvcCvLMJ5xWf683VOK_fNgWaVPSkOeEVNVorw@mail.gmail.com>
+Subject: Re: [docs] [PATCH] bitbake: doc: bitbake-user-manual: Add more
+ explanations to OVERRIDES
+To: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
+Content-Type: multipart/alternative; boundary="00000000000031164705db843216"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 31 Mar 2022 11:04:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13555
+ <bitbake-devel@lists.openembedded.org>; Thu, 31 Mar 2022 14:08:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13558
 
-The previous fix for inotify wasn't quite correct as we need to modify
-bbseen before calling add_filewatch(). We also need to ensure the parse
-mtime cache is cleared when directories are added/removed. There was also
-a typo in the original fix and the wrong watcher was being changed. Fix
-the various issues which improves memory resident bitbake testing results.
+--00000000000031164705db843216
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Hi Michael,
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index f435b18c87..1359d33f77 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -254,9 +254,14 @@ class BBCooker:
-         if not event.pathname in self.configwatcher.bbwatchedfiles:
-             return
-         if "IN_ISDIR" in event.maskname:
-+            if "IN_CREATE" in event.maskname or "IN_DELETE" in event.maskname:
-+                if event.pathname in self.configwatcher.bbseen:
-+                    self.configwatcher.bbseen.remove(event.pathname)
-+                # Could remove all entries starting with the directory but for now...
-+                bb.parse.clear_cache()
-             if "IN_CREATE" in event.maskname:
-                 self.add_filewatch([[event.pathname]], watcher=self.configwatcher, dirs=True)
--            elif "IN_DELETE" in event.maskname and event.pathname in self.watcher.bbseen:
-+            elif "IN_DELETE" in event.maskname and event.pathname in self.configwatcher.bbseen:
-                 self.configwatcher.bbseen.remove(event.pathname)
-         if not event.pathname in self.inotify_modified_files:
-             self.inotify_modified_files.append(event.pathname)
-@@ -272,6 +277,11 @@ class BBCooker:
-                 or event.pathname.endswith("bitbake.lock"):
-             return
-         if "IN_ISDIR" in event.maskname:
-+            if "IN_CREATE" in event.maskname or "IN_DELETE" in event.maskname:
-+                if event.pathname in self.watcher.bbseen:
-+                    self.watcher.bbseen.remove(event.pathname)
-+                # Could remove all entries starting with the directory but for now...
-+                bb.parse.clear_cache()
-             if "IN_CREATE" in event.maskname:
-                 self.add_filewatch([[event.pathname]], dirs=True)
-             elif "IN_DELETE" in event.maskname and event.pathname in self.watcher.bbseen:
--- 
-2.32.0
+On Tue, Mar 29, 2022 at 7:11 PM Michael Opdenacker <
+michael.opdenacker@bootlin.com> wrote:
 
+> Hi Simon,
+>
+> Thanks for the patch update. See my comments below.
+>
+> On 3/29/22 16:37, Simon A. Eugster wrote:
+> > Signed-off-by: Simon A. Eugster <simon.eu@gmail.com>
+> > ---
+> >  .../bitbake-user-manual-metadata.rst          | 26 ++++++++++++-------
+> >  1 file changed, 17 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+> b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+> > index ea42d77c..7d7d99c2 100644
+> > --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+> > +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+> > @@ -300,6 +300,12 @@ It is also possible to append and prepend to shell
+> functions and
+> >  BitBake-style Python functions. See the
+> ":ref:`bitbake-user-manual/bitbake-user-manual-metadata:shell functions`"
+> and ":ref:`bitbake-user-manual/bitbake-user-manual-metadata:bitbake-style
+> python functions`"
+> >  sections for examples.
+> >
+> > +.. note::
+> > +
+> > +   Before Honister (3.4), override style used ``_`` instead of ``:``,
+> so you will
+> > +   still find a lot of documentation using =E2=80=9C_append=E2=80=9D, =
+=E2=80=9C_prepend=E2=80=9D, and
+> > +   =E2=80=9C_remove=E2=80=9D.
+> > +
+> >  .. _removing-override-style-syntax:
+> >
+> >  Removal (Override Style Syntax)
+>
+>
+> As discussed previously, we already have such as statement elsewhere in
+> the same file (currently:
+>
+> https://git.openembedded.org/bitbake/tree/doc/bitbake-user-manual/bitbake=
+-user-manual-metadata.rst#n590
+> ).
+>
+
+Sorry, not sure how that slipped into the patch again, I had previously
+removed it. Should be fixed now! :)
+
+(Would be a bit easier with MRs on something like GitLab O:-))
+
+Thanks and sorry for the countless retries,
+Simon
+
+--00000000000031164705db843216
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi Michael,<br></div><br><div class=3D"gmail_quote"><=
+div dir=3D"ltr" class=3D"gmail_attr">On Tue, Mar 29, 2022 at 7:11 PM Michae=
+l Opdenacker &lt;<a href=3D"mailto:michael.opdenacker@bootlin.com">michael.=
+opdenacker@bootlin.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_q=
+uote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,2=
+04);padding-left:1ex">Hi Simon,<br>
+<br>
+Thanks for the patch update. See my comments below.<br>
+<br>
+On 3/29/22 16:37, Simon A. Eugster wrote:<br>
+&gt; Signed-off-by: Simon A. Eugster &lt;<a href=3D"mailto:simon.eu@gmail.c=
+om" target=3D"_blank">simon.eu@gmail.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 .../bitbake-user-manual-metadata.rst=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 | 26 ++++++++++++-------<br>
+&gt;=C2=A0 1 file changed, 17 insertions(+), 9 deletions(-)<br>
+&gt;<br>
+&gt; diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst =
+b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst<br>
+&gt; index ea42d77c..7d7d99c2 100644<br>
+&gt; --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst<br>
+&gt; +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst<br>
+&gt; @@ -300,6 +300,12 @@ It is also possible to append and prepend to shel=
+l functions and<br>
+&gt;=C2=A0 BitBake-style Python functions. See the &quot;:ref:`bitbake-user=
+-manual/bitbake-user-manual-metadata:shell functions`&quot; and &quot;:ref:=
+`bitbake-user-manual/bitbake-user-manual-metadata:bitbake-style python func=
+tions`&quot;<br>
+&gt;=C2=A0 sections for examples.<br>
+&gt;=C2=A0 <br>
+&gt; +.. note::<br>
+&gt; +<br>
+&gt; +=C2=A0 =C2=A0Before Honister (3.4), override style used ``_`` instead=
+ of ``:``, so you will<br>
+&gt; +=C2=A0 =C2=A0still find a lot of documentation using =E2=80=9C_append=
+=E2=80=9D, =E2=80=9C_prepend=E2=80=9D, and<br>
+&gt; +=C2=A0 =C2=A0=E2=80=9C_remove=E2=80=9D.<br>
+&gt; +<br>
+&gt;=C2=A0 .. _removing-override-style-syntax:<br>
+&gt;=C2=A0 <br>
+&gt;=C2=A0 Removal (Override Style Syntax)<br>
+<br>
+<br>
+As discussed previously, we already have such as statement elsewhere in<br>
+the same file (currently:<br>
+<a href=3D"https://git.openembedded.org/bitbake/tree/doc/bitbake-user-manua=
+l/bitbake-user-manual-metadata.rst#n590" rel=3D"noreferrer" target=3D"_blan=
+k">https://git.openembedded.org/bitbake/tree/doc/bitbake-user-manual/bitbak=
+e-user-manual-metadata.rst#n590</a>).<br></blockquote><div><br></div><div>S=
+orry, not sure how that slipped into the patch again, I had previously remo=
+ved it. Should be fixed now! :)</div><div><br></div><div>(Would be a bit ea=
+sier with MRs on something like GitLab O:-))</div><div><br></div><div>Thank=
+s and sorry for the countless retries,</div><div>Simon <br></div></div></di=
+v>
+
+--00000000000031164705db843216--
 
