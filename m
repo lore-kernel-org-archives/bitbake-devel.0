@@ -2,104 +2,90 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60EBC433EF
-	for <webhook@archiver.kernel.org>; Thu, 31 Mar 2022 20:05:48 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com
- [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web09.1866.1648757147513292740
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE4AC433FE
+	for <webhook@archiver.kernel.org>; Thu, 31 Mar 2022 20:05:49 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com
+ [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web09.1867.1648757148548762011
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 31 Mar 2022 13:05:47 -0700
+ Thu, 31 Mar 2022 13:05:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=HqEQUz1i;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PfqtDAtD;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id
- k124-20020a1ca182000000b0038c9cf6e2a6so315339wme.0
+Received: by mail-wm1-f53.google.com with SMTP id r7so464827wmq.2
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 31 Mar 2022 13:05:47 -0700 (PDT)
+ Thu, 31 Mar 2022 13:05:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=II8LtEqkdIb5TR8xlNIgToZiCnsmq0ShCoHHd4QOubQ=;
-        b=HqEQUz1iMH44sM4TC9WO6ar4B1pmuWVFW45pvLooMtypyiojGNGW5PTlXu7XFQy8ov
-         X9wpewMJtfH5wOTH7iU4A93V8/K5Zz/VhwFhNHjDUuJAWJsedZ2MXTtJLPGLOrK2n07v
-         rQi9ZtIHD3AW5m7JVqRe7f/HJ46qIiln/elBU=
+        bh=leslJjAfHVOwdnTJ9cATvHNlH0LZfsuXGoZf5TtAFSk=;
+        b=PfqtDAtDhJZXV8LAubR/c5De3khJhK1jjjFeJb9cD89VJtNwdVerRmHBEz6lv1YpBi
+         cuwQOl/HmdZejLqhInZE5Jy3UzYABWCKWYye+i/nv4FlxXI3T3HtsAG4lfMplwCUe/iV
+         8j8qOQOEMOJUEGA71dChoWIsez6aFRY+KhAqY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=II8LtEqkdIb5TR8xlNIgToZiCnsmq0ShCoHHd4QOubQ=;
-        b=owvkbrTqnr9ATI3xrvBbgbG+C+JL5AAyGia53TacoxBILQmwGGxtyGEbDb66AhTXTg
-         gaM87NIj/f02BQzC1YW0+CbPNlaCMVvfvvlhH8bOLpEr8Woe4hsTbzXF8O1dzK2Gw1Zr
-         1RMTawWeBmEWzMTOriwR3GFhjb2wU7kEeTc//0xNfiezbyt/Qf8fdAOBcFj4M3nWhZGF
-         8WDPBVncWfkQcYWE9/8MvC72+4kBmvpqumdLtk0U8J1CVx8gISg/hejq7SU8QzSkGp/g
-         1sVkQf1odcCBpqp4miYWL71QasnBgTXgptgIuMheLG0yIzcLmw5+RSQBNZh6bU4fsh4I
-         Kpmg==
-X-Gm-Message-State: AOAM530xi2Xihf9AvZJDZVrncZFiRZPX9OPqbEFz7FlbvZDW7/gBbzFo
-	7XYZY9OWIUPzAsYFA+menMTktqBjTbDsdklS
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=leslJjAfHVOwdnTJ9cATvHNlH0LZfsuXGoZf5TtAFSk=;
+        b=00N34T7sqHa/plkKyAMI7VLZ2bS435xjES51bzIzDs1UEgKaW8hWC/aJbAW1hA4ynf
+         JZoc+DRRYKiluhr7RUFElwZpzSAo+a0g374p0Ve9XfpNQaSCElWD1K8xMWQ4w59lMn7/
+         O9GfrtOlU90akQz1Ey5ZFqb6+l/LgtrnPXLkAZlL5FPSlALddrZDHG8JC0I3UMo61G+u
+         wexUniEI6K+zqU5imel4v6cYuaupaS9YPcxOMFs1X7ma6Dkr/s4Npm6+IS3L2zUv91yg
+         LkFTiehP7zSVCZAapz/Jzpy9KMZXRYqoX8vra27hXCxo3TvQTNr4wolgGQDEwj5SnEWl
+         Mwww==
+X-Gm-Message-State: AOAM530IayrilL5gyuP7yJXhakrX0HSqnjdpWc0uZ/KwoffjGBVBdrap
+	tSFQAQPlpPDeFvqMXmcQMhJqAbqTGsJC4Bml
 X-Google-Smtp-Source: 
- ABdhPJxfjqbo3aJ9pQ12WY/m5gUPRLnW1O8nLYDS/w2mTjnWgJ2timGqq/B9SNLm/CIB+prz1FlJbQ==
-X-Received: by 2002:a05:600c:3016:b0:38c:8786:d3b6 with SMTP id
- j22-20020a05600c301600b0038c8786d3b6mr6024385wmh.135.1648757145526;
-        Thu, 31 Mar 2022 13:05:45 -0700 (PDT)
+ ABdhPJzoU8htLKCNzjCr1JHq05rSh2SiWpwTFvV0uu12MK+TBtnEL2iSfp9V7GKWcopoz/mQq68CQA==
+X-Received: by 2002:a05:600c:3ba5:b0:38c:b19e:253c with SMTP id
+ n37-20020a05600c3ba500b0038cb19e253cmr6081136wms.35.1648757146836;
+        Thu, 31 Mar 2022 13:05:46 -0700 (PDT)
 Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:a160:31eb:e235:3dfd])
         by smtp.gmail.com with ESMTPSA id
- j15-20020a05600c1c0f00b0038cabc63721sm184452wms.30.2022.03.31.13.05.44
+ j15-20020a05600c1c0f00b0038cabc63721sm184452wms.30.2022.03.31.13.05.45
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Mar 2022 13:05:44 -0700 (PDT)
+        Thu, 31 Mar 2022 13:05:45 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/2 v2] cooker: Restore sys.path and sys.modules between
- parses
-Date: Thu, 31 Mar 2022 21:05:42 +0100
-Message-Id: <20220331200543.1583022-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/2] cooker: Ensure any existing hashserv connection is closed
+Date: Thu, 31 Mar 2022 21:05:43 +0100
+Message-Id: <20220331200543.1583022-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220331200543.1583022-1-richard.purdie@linuxfoundation.org>
+References: <20220331200543.1583022-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 31 Mar 2022 20:05:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13560
+ <bitbake-devel@lists.openembedded.org>; Thu, 31 Mar 2022 20:05:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13561
 
-When memory resident bitbake is active and we re-parse, the old module
-configuration is present which can lead to strange errors. Reset this
-when reparsing so the state is consistent. This fixes memory resident
-bitbake errors.
+Ensure any exiting hash server connection is terminated before we start
+a new bitbake session. This avoids errors seen with memory resident bitbake
+when the asyncio event loop isn't closed correctly.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ lib/bb/cooker.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 1359d33f77..0d29aa03a0 100644
+index 0d29aa03a0..d100b96f53 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -159,6 +159,9 @@ class BBCooker:
-             for f in featureSet:
-                 self.featureset.setFeature(f)
- 
-+        self.orig_syspath = sys.path.copy()
-+        self.orig_sysmodules = [*sys.modules]
-+
-         self.configuration = bb.cookerdata.CookerConfiguration()
- 
-         self.idleCallBackRegister = idleCallBackRegister
-@@ -350,6 +353,11 @@ class BBCooker:
+@@ -1766,6 +1766,8 @@ class BBCooker:
          self.state = state.initial
-         self.caches_array = []
  
-+        sys.path = self.orig_syspath.copy()
-+        for mod in [*sys.modules]:
-+            if mod not in self.orig_sysmodules:
-+                del sys.modules[mod]
-+
-         # Need to preserve BB_CONSOLELOG over resets
-         consolelog = None
-         if hasattr(self, "data"):
+     def reset(self):
++        if hasattr(bb.parse, "siggen"):
++            bb.parse.siggen.exit()
+         self.initConfigurationData()
+         self.handlePRServ()
+ 
 -- 
 2.32.0
 
