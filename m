@@ -1,261 +1,181 @@
-Return-Path: <quaresma.jose@gmail.com>
+Return-Path: <quentin.schulz@theobroma-systems.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 500A2C433EF
-	for <webhook@archiver.kernel.org>; Wed, 30 Mar 2022 17:24:16 +0000 (UTC)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com
- [209.85.167.50])
- by mx.groups.io with SMTP id smtpd.web09.795.1648661055262932774
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D754C433EF
+	for <webhook@archiver.kernel.org>; Thu, 31 Mar 2022 08:24:18 +0000 (UTC)
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com
+ (EUR03-AM5-obe.outbound.protection.outlook.com [40.107.3.50])
+ by mx.groups.io with SMTP id smtpd.web12.4731.1648715056317801303
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 30 Mar 2022 10:24:15 -0700
+ Thu, 31 Mar 2022 01:24:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=fsAj6tni;
- spf=pass (domain: gmail.com, ip: 209.85.167.50,
- mailfrom: quaresma.jose@gmail.com)
-Received: by mail-lf1-f50.google.com with SMTP id k21so37025553lfe.4
-        for <bitbake-devel@lists.openembedded.org>;
- Wed, 30 Mar 2022 10:24:15 -0700 (PDT)
+ dkim=pass header.i=@cherrycloud.onmicrosoft.com
+ header.s=selector2-cherrycloud-onmicrosoft-com header.b=grAMctzi;
+ spf=pass (domain: theobroma-systems.com, ip: 40.107.3.50,
+ mailfrom: quentin.schulz@theobroma-systems.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OjYtmqUZVzg8Txw6PQDOPui1RxzKH41SnwFWyLX7Ds918GQxyDZZEqlfnWyL4S8vfOwZQeevUvEjAetwPf2vUFZ9CTYORaRk6yt5f/28Zi8RRBL0wM0zcBHurj52MtIVU4ZcYXfac0ojDW+vLOniPKtq8RaEnI/F1Dyc7olZC/G+i8VirIS8R62eFaXnW2XQ+/vANO1dl/Phe8mBZLDVzMPCxL0uPmWmBAQTlEeOuxYGT/BGI7v4QWsIkBCnITYYGHSsc8JrWEj/ssXtFx5rJpHpn+J/sZhekZ2VCWHE/WZHS2HNYrsGDxAJlpxHmLKrxOZiUDqhrpwQ5y08rBKbow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DDspASYKNUByZ4ItM8lyY3MAsA8OvAlckbM3+S/aPNk=;
+ b=kfxlgPygV5j1xlQ/dANQmt3yAdMxEuFDVeImq36f5zyEnrQB1QJaZQx5p4Ru27hD+la3gqLrUDZd06SoyNuRl422DoSNsA6NOYl90XxzjsZmgfntBEY9Mgdr1eT6FWEMH349sdWowyTRuYhq+3G4Qvnbont5HW0zjUnhkOxebsUlxg0YFhCqVnR7nfk3G12RnBw8sS+89HwA6SIbPIfKGeDSALGf1cxBFONW6NomT02d9klgqPLPzFMR+hr5eNVfzflNSIEf8F0EHhwLDEfH1gg/OisFMDHY7MtXNvMx/Ovr/rOn2hxbubZxLAazXldALYaUY7n6PREjnWLWDfUzQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
+ header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
+ arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aHxB2YvkDffbNVi8WbQ6WkdHJNgD/YNvfnAVuzeehjI=;
-        b=fsAj6tni8cw/MuCUUoU+MhIk932SJgNCpJ1l7B6mvyCAtwW1U3dg3KZ+SJXAgVZAU7
-         44XwV6Ve9uZ6Q/sPAOC1LjE7OKm8qYHeS7G9EKd/AEjWmd0xZBVhoe+D1CoCSt7W/qR6
-         x8QaDr0jgP+O9E5MQO7tY7RkVGrR/65iAi4LxTFY1rHw2ZjEXHulaT5hRrT8APtf8yuK
-         Z/BehWkRqajINzOMoHc/AH6q/eVSzXXfin0bK6BF+8mD1BC+cvNGjdA1Ee+AE6pLgdPO
-         m1hYI6ZELDnjUAu68lLv6Mt/hxzdwn1zoFcAwYUvTycyGLpH8wAmLG4QzKNVZNAJtBQX
-         QB4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aHxB2YvkDffbNVi8WbQ6WkdHJNgD/YNvfnAVuzeehjI=;
-        b=I30WAQheSwnUJVS9EElvQCxwCalAGc0ga8hb0Rz/N2P+dsn4e83//gT34PDcLwcJee
-         9pqFJZCbon1OoXTWuxv6Dk7cGeiTcYdc4Tx53cf03MV0+gkyvRM0JVHdkmscJwJBVQ2S
-         zbD4EdfpaBLoV7g7pSjqIbicp4doTR4lm4mo6Hfm/cxJWSXBFYP9RrFtb9+uzUyzSSq/
-         spNmAHk2f/Onz8pP7P4FLAIFdkAu295VeotLIxIX0a9N5l+g6R12PRXSbO+Qbinx7VF+
-         jLnbMASZSd9WTClT+EXpdnFpAu4/NArFVaO0NMOUXSf7AtVpZv7s8Nx7ogP0XPGaaZea
-         8igw==
-X-Gm-Message-State: AOAM531c+YBcZiigpHy5Hk7J9mvZc4n2UlHVn6DVeuYlGqT5l/zNZikQ
-	it/EvOWN4/gmMsXxL6wIVlXTyVh1QLy2Isp4Bmo=
-X-Google-Smtp-Source: 
- ABdhPJyYgPbCipDeXFyXf/Mxs9bATMlGEXjyf67/Jp6xec16iDc0kHLKY1is6KQfobioJWHWpCedPxssqCoq19TZLKs=
-X-Received: by 2002:a19:6709:0:b0:448:3162:d843 with SMTP id
- b9-20020a196709000000b004483162d843mr7566336lfc.95.1648661053352; Wed, 30 Mar
- 2022 10:24:13 -0700 (PDT)
+ d=cherrycloud.onmicrosoft.com; s=selector2-cherrycloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DDspASYKNUByZ4ItM8lyY3MAsA8OvAlckbM3+S/aPNk=;
+ b=grAMctziQLA1/BIAbepIJJoXB0pYq3giuL3JVqDoCr1JSH5yN+I65gclPb9dsrfgIGuiNBpW8GBBSLsGYWmrK8s9sIJwWmU0b3Z1QNkrScQkVre1Q08Z9hs0fJOa8nGYliiohMuPkwqUXJ+tCYUEvDVDUDYo0uccplyMZ/iQz/Q=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
+Received: from PA4PR04MB9367.eurprd04.prod.outlook.com (2603:10a6:102:2aa::7)
+ by VE1PR04MB6512.eurprd04.prod.outlook.com (2603:10a6:803:120::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.22; Thu, 31 Mar
+ 2022 08:24:11 +0000
+Received: from PA4PR04MB9367.eurprd04.prod.outlook.com
+ ([fe80::8ca9:a2e2:60c8:95e]) by PA4PR04MB9367.eurprd04.prod.outlook.com
+ ([fe80::8ca9:a2e2:60c8:95e%6]) with mapi id 15.20.5102.023; Thu, 31 Mar 2022
+ 08:24:11 +0000
+Message-ID: <6a58f3eb-7140-b6aa-6b9f-a0372b7311fa@theobroma-systems.com>
+Date: Thu, 31 Mar 2022 10:24:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [docs] [PATCH] bitbake-user-manual: punctuation fixes
+Content-Language: en-US
+To: Michael Opdenacker <michael.opdenacker@bootlin.com>,
+ bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org
+References: <20220329130747.364485-1-michael.opdenacker@bootlin.com>
+ <5205d592-db48-f554-5c64-221dbcb7b774@theobroma-systems.com>
+ <119c048f-010d-f9d2-2e74-da470b1d043d@bootlin.com>
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+In-Reply-To: <119c048f-010d-f9d2-2e74-da470b1d043d@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR3P281CA0001.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:1d::10) To PA4PR04MB9367.eurprd04.prod.outlook.com
+ (2603:10a6:102:2aa::7)
 MIME-Version: 1.0
-References: <cover.1648658231.git.steve@sakoman.com>
- <2cfc128b583a6e7f44f095fff0cd1e4e937f3790.1648658231.git.steve@sakoman.com>
-In-Reply-To: 
- <2cfc128b583a6e7f44f095fff0cd1e4e937f3790.1648658231.git.steve@sakoman.com>
-From: Jose Quaresma <quaresma.jose@gmail.com>
-Date: Wed, 30 Mar 2022 18:24:02 +0100
-Message-ID: 
- <CANPvuRkACMYMoQVm_GPNoZ88bdNRk_E0azGv=t9_e1b_A8=PEg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [bitbake][dunfell][1.46][PATCH 1/1] fetch2: add
- check for empty SRC_URI hash string
-To: Steve Sakoman <steve@sakoman.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="00000000000070aef105db72d08a"
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bd7a176b-2dee-4b0f-baa3-08da12efd53b
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6512:EE_
+X-Microsoft-Antispam-PRVS: 
+	<VE1PR04MB6512374A327AD39E3AA77F7AC2E19@VE1PR04MB6512.eurprd04.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	YyJRR/si/Oec+G31f/frXde65RP0z8kesRjUXPWXOMlZ2ON3AGL1C1TFcHjHmtfj2TVYLOrTl23b1JlJLA/S4ig08pGf+izloxjlOSZvdJhSoH97BqO4czGnoSd9uLyja81C+377QwJJbSK3CaMazkbyhZTSdKlt64JmZeg5oiOoDvQuRg0xRviJdPFhfcewlLzGZvtBfQwc5AG6S+S6pWwYSr34gg7trT8qc7cn3ahcz784cvtfzUlNxjQ1nrrYc2sRniNEazhlsyJdVitJlWV/TR0kwNy/PabUp40lZaD6v+ozAqfwPjw1u1OIuI7skzvyJtquE88LrRQl25RlEtYqtox+g4c1B3hUDyqpIN7LeKM5TawayXPtnEFi1x7RQ589NaRVfB2uD/8AbDpliLKu7MfOFpqB2MWDpRVX1SDAOrMh9tc5SzYfsN6WbzVhIig0TAYJemTSA7xyY1EXP5nw9rjIpVBBU+F6WVfxYoQagOA4xpLdy0NJH8Dj+DW1eiMpyoukRhP4fO6vmOWpcX+KvrEThxQAXI5J1hJ8gXId8GQsUz6t9JnEeAGTsEwKwgKBfXXcOFwU3ZnSHPI8YKSNql9d3NrunMSZ9Nc/YcStTDWQh7kH2hKTb/6i95K8W0VUZAMZg3LCKdgnGdIQMUwjahxTPEhz3b/XircStltnV1Wlf0pyRiRJ2yqa/ajgvVS9JA2I7PywW1/NI40HcVlCCFJZXNP6QKXs2I+4iJbg2KR/z6fml/d0OigJAlYLlwMdFd6jo3pWGByawv9Eu4xQjeQA4uKgc1xsg55UwW2sKCMHna7DXH2AtdvUIBV0
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9367.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(5660300002)(8936002)(2906002)(6486002)(53546011)(83380400001)(508600001)(316002)(36756003)(31686004)(966005)(44832011)(6512007)(38100700002)(4326008)(186003)(31696002)(66946007)(2616005)(26005)(86362001)(66476007)(6506007)(8676002)(66574015)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?dzlRZnVOUFlYM3cxMVNrc2ltVERybURtYlJlTThhK2ljcmhLckZtZVZDakdF?=
+ =?utf-8?B?TDVLV3dLTXkwTkFETVkzNFRMVWMzREN0Y3RLUGMxZHNKWWtTN3pnaFdHTzZs?=
+ =?utf-8?B?WVZGUXNtdWVLcFdJVjRNd1pOZEQrelhETGJnUmVCM1JzMksvakRQQVUrVXBI?=
+ =?utf-8?B?QnB4cU1PRHRPSVJxMityL1V3bGpyVjRGZ2pyS2NoNGhSemFpd1JBeWFDNXB5?=
+ =?utf-8?B?WkRPT1VWMjUxeFB2QXYrWk5BNjJseFhFQkpYMUVWMmw4Ym9Ldm4zMlIyNnc2?=
+ =?utf-8?B?VFBUWHoxdWMyZlU1VXpJWkVaWXZZalNML3l4MW54K0ZtUWlFS2h5RTFTWDBG?=
+ =?utf-8?B?NVN4Tk8wL2t5TjhuYWlsNjNxMTc1dGFING95ZTNrTTI4T3pvbXlVRzhEd2Fn?=
+ =?utf-8?B?VG8xT29ENHp1VTNnWmNwTnd1U054TGhGTmtCVVpxVitmVVNpVEl4UlRTUUpV?=
+ =?utf-8?B?eGdobVU5d3EvZGN0SWhuVzZoaHpoZGNBNXp2OVRucTNYMW9NbUdDZVZQVHIr?=
+ =?utf-8?B?MnRnMUgybTRyV1dGQnh2bDRZcUlvc2psSnFzV1F1QmR2ZGtERUdYSXJNVzVO?=
+ =?utf-8?B?THFsd1BaWFpjdnNOaSt5dFVoamdiS0xGMzBjS3JIeHdOM1N1UVBsQ0FoM0NO?=
+ =?utf-8?B?aGI4MkJoNnVVWEg4OXhPbktVdzdsZkJCZjgvcEl2Mk1NeWp2Zm54VTZKeDh1?=
+ =?utf-8?B?OXh6SlB0OGpkNmc4VElFRDM0dzFTUVp0VWx2RGlZOW1WeXZzUlU2ZXpiRGpY?=
+ =?utf-8?B?RHEreFJnSW1lZGlZemFFRUNzRTY5bGllZzZ6TjVGS2N4NGtNcFYydHAxWmJG?=
+ =?utf-8?B?NjFtMjBWUExtS0tTamdxQ25LTmVuV3U5eE5Sbm90K1cxOEFEbUhTcjgySVlC?=
+ =?utf-8?B?VnpHSlR1MWhCQ2x3MnhoREM0dDIzOEdrNXE0S2QyTk5pK0pxUTlLK01WREFx?=
+ =?utf-8?B?MzR2K0h0ZlNiU3RmZytqaEp3ZjhYd3JOWGFTU0xPM1RRc2JVWGZzejhaN2Fk?=
+ =?utf-8?B?WUoveXNtT0hhRjNabnBpVURoVHJqTG44dEJ3RzF4YkVweGp6azVnWk9zREln?=
+ =?utf-8?B?Z3BhRE1wRHVuN0t4eW9id0JzSUVYcGJQZHUzTFpESUZobEp0WXcyN3crZXdo?=
+ =?utf-8?B?dGo1NkQxdWJXZ0lWNGlWdlZBZXJZWHVRNDF2NHQ2SHRIQ0NxK1lhVjk3dFFN?=
+ =?utf-8?B?VUZtMjM3TmpvcUhNajBmSlozMDJNNFhHNGJYMHdTWFJOdFM3Nlpma2VmSGRz?=
+ =?utf-8?B?Mjc3eW1aeFV1NGNJVkhRaTU3c1I4ZGFUVnRXdjhKMDdGRGFIdzQ0T2c2ZnZq?=
+ =?utf-8?B?QTlSZU9zMmR1V0xpMHRyYnhiY2FCemxEcjJVMHBzbEQ4Z1BjbWhsZ2tCMjBV?=
+ =?utf-8?B?YmtDdmFwVEFhdlQzK3FMckU3dWtEc2pnSVBncUJGM1dHK0dIek9aWDFaTnl4?=
+ =?utf-8?B?RHBhVEZzZlp0cXUvZnN3Q0ljVVh2cGVhQUx2SXVIRy9Yd21MSTkxY1FuVndU?=
+ =?utf-8?B?S1JTM2tudGFDenJSV1RFb3B6OS9zZ2VkRmdHblJQR1REZndScFhTTXJPMzRt?=
+ =?utf-8?B?SUZubGNrdzc4TVFWZ3N0L0ZYQ0tSQTFHcnQ0NFhUR3VOc1Z2eUR6WjFTYjRF?=
+ =?utf-8?B?cnBiZ04rUFJjMFM2c2pCc3R5bnhrdkdRY3RHNDhvaXMyb3VxTlpmaGE2cktH?=
+ =?utf-8?B?V3RKMHJSMllIZjlnY200ZXZ6YzAwTTRYejU3aHgwN00wMkJFb1ErbHdybG1N?=
+ =?utf-8?B?TFIwdEVFbG1tWkJ2ano0WDJGUmRDM3lLeUJUVHlUZVluUlJCNDA3UCs3bWcy?=
+ =?utf-8?B?RkUzdnE3M1hGZjg1UENkbXdZbjVsT1pWUWwyM1hMOFFZUGNrNnEyZTk0bEZO?=
+ =?utf-8?B?MDhEbFB0RHEzRFlxa0RkbzNUc2VPUzBYd0lHN2JvRHpwak95ZFNNUEFiSE9S?=
+ =?utf-8?B?cWpEYUtoRWxxYWErVi9pdlYyRE1KOENYZzNvSEhhaTB2NFBsL2VEbHFVb1Qw?=
+ =?utf-8?B?WUsvVzZhTFg0UEV4MlMxa1BWcjlCazIxNEtIajZWRVFRVVJQd0tTV3EySXkr?=
+ =?utf-8?B?SnhheWxMbE5uVjJGbHE4aUdFYnE4bkIzVGRyKytsNGc3bkZqTXNGbXdXRGJ4?=
+ =?utf-8?B?ejFpRmlJUzUzbW9Ydm0xb2d5VzRuWVpYTzNrR0dCZ3JoU3NCNUJGeEdJaHFl?=
+ =?utf-8?B?Rm1Xc1RrdXU4eWlEU09tTXNNYytmWitxVDlBOGUrbGMzRnBjNGJYcDFzc3dP?=
+ =?utf-8?B?S24xVDFhb09NWHU3Z0wxdWQwNzRqZG9zSDJzMFg4KzdDNXQ1d0o3SUU1VENi?=
+ =?utf-8?B?bWRYeUowdDFHVlM3N0FmUytKWVo4R2taelVwR2t1ekFSMVlodEE4aWY3VjV2?=
+ =?utf-8?Q?spu2nvK2WkPCssRY/uIAE83hJO6vGoprzt6V4?=
+X-OriginatorOrg: theobroma-systems.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 
+ bd7a176b-2dee-4b0f-baa3-08da12efd53b
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9367.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2022 08:24:11.5133
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 
+ oZL4cLVx//ZOfhnxa+NmfXTL4bQV5s1C/nRcqW/F630lxpZh2nYjSxGAjoPlpagPTkbTTjgqEIgUQGLptzhp/WiORuWBDHscWrDYmQA9J9hPxsynGBbNgUrIdawLqtUw
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6512
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 30 Mar 2022 17:24:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13553
+ <bitbake-devel@lists.openembedded.org>; Thu, 31 Mar 2022 08:24:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13554
 
---00000000000070aef105db72d08a
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Michael,
 
-Hi Steve,
+On 3/29/22 18:33, Michael Opdenacker wrote:
+> Hi Quentin,
+> 
+> Thanks for the review!
+> 
+> On 3/29/22 15:13, Quentin Schulz wrote:
+>> Hi Michael,
+>>
+>> On 3/29/22 14:07, Michael Opdenacker via lists.yoctoproject.org wrote:
+>>> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+>>>
+>>> - Replace hyphens by em dashes when necessary
+>>
+>> I seem to recall we ultimately decided to not go for em dashes because
+>> it wouldn't be matched by a search in the browser or in the sources?
+> 
 
-Thanks for that, this will improve some errors reporting on the fetch.
+c.f. https://lists.yoctoproject.org/g/docs/topic/85211078#1731
 
-Acked-by: Jose Quaresma <quaresma.jose@gmail.com>
+for the original discussion around em dashes. Didn't decide anything at 
+that time though but you have all the arguments there.
 
-Jose
+> 
+> Ouch, this is frustrating. I'd rather not deviate from English writing
+> rules, so that we don't have to keep a list of exceptions to them, or
+> worse keep them in the back of our heads.
+> 
+> And why would one need to look for an em dash in the browser or in the
+> sources? As a reader, I'd avoid special characters in my searches, and
+> as a developer, I would do the same, but if I really want to look for a
+> specific em dash, I'll quickly find what the corresponding characters
+> are in the sources, thanks to the surrounding context.
+> 
 
-Steve Sakoman <steve@sakoman.com> escreveu no dia quarta, 30/03/2022 =C3=A0=
-(s)
-17:39:
+You just gave the example as to why I think we shouldn't use em dashes: 
+to "avoid special characters in my searches".
 
-> From: Scott Weaver <weaverjs@gmail.com>
->
-> No error was being reported when the hash string was set to empty.
-> For example: SRC_URI[md5sum] =3D ""
->
-> On a related note (not a bug):
-> Because whitespace in the string will result in a checksum mismatch, the
-> error
-> message was updated to make it a little clearer why the error was thrown.
-> For example: SRC_URI[md5sum] =3D " " or
-> SRC_URI[md5sum] =3D " 209f8326f5137d8817a6276d9577a2f1"
->
-> Now creates a message like this:
-> File: '/home/scott/yocto-cache/downloads/rsync-3.2.3.tar.gz' has md5
-> checksum '209f8326f5137d8817a6276d9577a2f1' when '
-> 209f8326f5137d8817a6276d9577a2f1' was expected
->
-> [YOCTO #14232]
->
-> Signed-off-by: Scott Weaver <weaverjs@gmail.com>
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> (cherry picked from commit a13510d0028e234ea2f4744b0d0c38558395c70f)
-> Signed-off-by: Steve Sakoman <steve@sakoman.com>
-> ---
->  lib/bb/fetch2/__init__.py | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> index dc99914c..3e6555bd 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -562,6 +562,9 @@ def verify_checksum(ud, d, precomputed=3D{}):
->
->          checksum_expected =3D getattr(ud, "%s_expected" % checksum_id)
->
-> +        if checksum_expected =3D=3D '':
-> +            checksum_expected =3D None
-> +
->          return {
->              "id": checksum_id,
->              "name": checksum_name,
-> @@ -612,7 +615,7 @@ def verify_checksum(ud, d, precomputed=3D{}):
->
->      for ci in checksum_infos:
->          if ci["expected"] and ci["expected"] !=3D ci["data"]:
-> -            messages.append("File: '%s' has %s checksum %s when %s was "=
- \
-> +            messages.append("File: '%s' has %s checksum '%s' when '%s'
-> was " \
->                              "expected" % (ud.localpath, ci["id"],
-> ci["data"], ci["expected"]))
->              bad_checksum =3D ci["data"]
->
-> --
-> 2.25.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#13552):
-> https://lists.openembedded.org/g/bitbake-devel/message/13552
-> Mute This Topic: https://lists.openembedded.org/mt/90135601/5052612
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> quaresma.jose@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
+No more arguments since the discussion Robert started last August, so... 
+up to you.
 
---=20
-Best regards,
-
-Jos=C3=A9 Quaresma
-
---00000000000070aef105db72d08a
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>Hi Steve,</div><div><br></div><div>Thanks=C2=A0for th=
-at, this will improve some errors reporting on the fetch.</div><div><br></d=
-iv><div>Acked-by: Jose Quaresma &lt;<a href=3D"mailto:quaresma.jose@gmail.c=
-om">quaresma.jose@gmail.com</a>&gt;</div><div>=C2=A0<br></div>Jose<div><br>=
-<div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">Steve Sako=
-man &lt;<a href=3D"mailto:steve@sakoman.com">steve@sakoman.com</a>&gt; escr=
-eveu no dia quarta, 30/03/2022 =C3=A0(s) 17:39:<br></div><blockquote class=
-=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
-b(204,204,204);padding-left:1ex">From: Scott Weaver &lt;<a href=3D"mailto:w=
-eaverjs@gmail.com" target=3D"_blank">weaverjs@gmail.com</a>&gt;<br>
-<br>
-No error was being reported when the hash string was set to empty.<br>
-For example: SRC_URI[md5sum] =3D &quot;&quot;<br>
-<br>
-On a related note (not a bug):<br>
-Because whitespace in the string will result in a checksum mismatch, the er=
-ror<br>
-message was updated to make it a little clearer why the error was thrown.<b=
-r>
-For example: SRC_URI[md5sum] =3D &quot; &quot; or<br>
-SRC_URI[md5sum] =3D &quot; 209f8326f5137d8817a6276d9577a2f1&quot;<br>
-<br>
-Now creates a message like this:<br>
-File: &#39;/home/scott/yocto-cache/downloads/rsync-3.2.3.tar.gz&#39; has md=
-5<br>
-checksum &#39;209f8326f5137d8817a6276d9577a2f1&#39; when &#39; 209f8326f513=
-7d8817a6276d9577a2f1&#39; was expected<br>
-<br>
-[YOCTO #14232]<br>
-<br>
-Signed-off-by: Scott Weaver &lt;<a href=3D"mailto:weaverjs@gmail.com" targe=
-t=3D"_blank">weaverjs@gmail.com</a>&gt;<br>
-Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
-ndation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<b=
-r>
-(cherry picked from commit a13510d0028e234ea2f4744b0d0c38558395c70f)<br>
-Signed-off-by: Steve Sakoman &lt;<a href=3D"mailto:steve@sakoman.com" targe=
-t=3D"_blank">steve@sakoman.com</a>&gt;<br>
----<br>
-=C2=A0lib/bb/fetch2/__init__.py | 5 ++++-<br>
-=C2=A01 file changed, 4 insertions(+), 1 deletion(-)<br>
-<br>
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py<br>
-index dc99914c..3e6555bd 100644<br>
---- a/lib/bb/fetch2/__init__.py<br>
-+++ b/lib/bb/fetch2/__init__.py<br>
-@@ -562,6 +562,9 @@ def verify_checksum(ud, d, precomputed=3D{}):<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0checksum_expected =3D getattr(ud, &quot;%=
-s_expected&quot; % checksum_id)<br>
-<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if checksum_expected =3D=3D &#39;&#39;:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 checksum_expected =3D None<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return {<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;id&quot;: checksum_id=
-,<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;name&quot;: checksum_=
-name,<br>
-@@ -612,7 +615,7 @@ def verify_checksum(ud, d, precomputed=3D{}):<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0for ci in checksum_infos:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if ci[&quot;expected&quot;] and ci[&quot;=
-expected&quot;] !=3D ci[&quot;data&quot;]:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 messages.append(&quot;File: &#39=
-;%s&#39; has %s checksum %s when %s was &quot; \<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 messages.append(&quot;File: &#39=
-;%s&#39; has %s checksum &#39;%s&#39; when &#39;%s&#39; was &quot; \<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;expected&quot; % (ud.localpath, ci[&qu=
-ot;id&quot;], ci[&quot;data&quot;], ci[&quot;expected&quot;]))<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bad_checksum =3D ci[&quot;d=
-ata&quot;]<br>
-<br>
--- <br>
-2.25.1<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#13552): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/13552" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/13552</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/90135601/5052=
-612" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/90135601/5052612</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:quaresma.jose@gmail.com" target=3D=
-"_blank">quaresma.jose@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
- class=3D"gmail_signature"><div dir=3D"ltr">Best regards,<div><br>Jos=C3=A9=
- Quaresma</div></div></div></div></div>
-
---00000000000070aef105db72d08a--
+Cheers,
+Quentin
 
