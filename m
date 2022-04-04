@@ -1,89 +1,108 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8BFC54F3F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECD0C5518D
 	for <webhook@archiver.kernel.org>; Mon,  4 Apr 2022 18:46:45 +0000 (UTC)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com
- [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web12.33108.1649066394503930035
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web12.34150.1649074314770045297
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 04 Apr 2022 02:59:54 -0700
+ Mon, 04 Apr 2022 05:11:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QGCvc4OC;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f52.google.com with SMTP id r13so13599284wrr.9
-        for <bitbake-devel@lists.openembedded.org>;
- Mon, 04 Apr 2022 02:59:54 -0700 (PDT)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=IbZubFex;
+ spf=pass (domain: axis.com, ip: 195.60.68.17,
+ mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fBAE4CtS7IQDvEKtFDUbelu7KpZAjtsW/vHa9pfM2jo=;
-        b=QGCvc4OCMyPPRaRGg+x7MRlP5p1NVr2W6JnKvjbcYnnPMmolE+JE+5Rp8k+41Dt9ua
-         S4jyMarJlLrpzKs7oXI6gRbt6YBDhbRKyZqVCqqy2372t1ThCeeIt4pA3uDxxjMFsZFy
-         cQs8iUZu08GXz7hE4vlCpmLRtWI7MGKWOBVkE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fBAE4CtS7IQDvEKtFDUbelu7KpZAjtsW/vHa9pfM2jo=;
-        b=RbxGHgigBuILpuymDq/KM8/ort+Wh/IUH38XBxfEE4QnUc8kcQfGqypwqqMH2gw8kL
-         JLrX+RIzrwyqngsJ0QuhRlJEBoJAYlRCdeLwSFDpkEx4oTxudznel+z1ausIXxETRoED
-         tOdWdL/sIvjti7FGcSN8U6xRXP0whpabgaXIn3rpxLWFRXeSoE+HgyP7b25anWvIKQyn
-         aGQtsT8wOaefgqKu8ROj5J7U8AUkxsc1F+KRusJUU47grwcYENwP2jL06JlrC5R5JhvT
-         sgz6nSJ5/OHJqaNica/ru08x3OTeQkuOYOeaBTJFTbEe9hoAXpWV0vSqTsIURqj3nUps
-         KFlQ==
-X-Gm-Message-State: AOAM530VrfQ6aTcms/oNh9oWhFdX7di3usNkrGJs7b0uIfGNuwrnulpT
-	a2mYMDGZW+t0tT08Y2apm+uj0QxzP3ELo6HG
-X-Google-Smtp-Source: 
- ABdhPJxk3TStdhK81wNGk7RBI/GsrwiKxT2NpgV1QoglDunu+FyT43LnC0bP7iTmmWKRSd/vV5mOjA==
-X-Received: by 2002:a5d:6152:0:b0:205:bcf3:2cc with SMTP id
- y18-20020a5d6152000000b00205bcf302ccmr16994876wrt.158.1649066392579;
-        Mon, 04 Apr 2022 02:59:52 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:4552:8cb0:e722:b501])
-        by smtp.gmail.com with ESMTPSA id
- f1-20020a1c6a01000000b0038c9f6a3634sm16502617wmc.7.2022.04.04.02.59.51
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Apr 2022 02:59:51 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] data: Fix accidentally added parameter
-Date: Mon,  4 Apr 2022 10:59:50 +0100
-Message-Id: <20220404095950.1723753-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+  d=axis.com; q=dns/txt; s=axis-central1; t=1649074315;
+  x=1680610315;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=O8bEoJo418qcQ1nCRTGreIF5N0izP6JDdCXiwiE5xpg=;
+  b=IbZubFexOexGIP7pKzOdF7so8ibzdNctbwcdAh+UMUVfRmGk0mPO7Fid
+   xvTFU0LbkhuMZpdc9yn4P5po2rQGuqMftKavziPlwtzODizQrLtsxRA4i
+   4xR7JN30nrXRX0Wlo5x5yeXFb/Ja7kUCcMaLW1F0Vuh1Ft3HneRnmZneM
+   5s2s7XZoPRwip4p4kGnHcHl7Z2KC31Sg5Yp/lLiFLUOgchCU1KQZfTI5A
+   t2a56YgNEwZi1h68JHYuvLmA8BL/wwpGDMMshYkZVum9qApe7spytJoY5
+   Jr4lVWh60Ihhtq8W0vwLEg9+LI1ENWiWLwNpoaqTbRcZ9ZxLIC5liMruX
+   g==;
+From: Peter Kjellerstedt <pkj@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] knotty.py: Show elapsed time also for tasks with progress
+ bars
+Date: Mon, 4 Apr 2022 14:11:51 +0200
+Message-ID: <20220404121151.10729-1-pkj@axis.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 04 Apr 2022 18:46:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13576
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13577
 
-This was only meant to be added for the handle_contains function in
-a previous commit, fix it.
+While the progress bar is good at conveying information about how much
+of a task has executed, the elapsed time of the task is still very
+much relevant to show.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- lib/bb/data.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/ui/knotty.py | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 363901b5d3..62ec214762 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -329,7 +329,7 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, ignored_vars, d):
-                 deps = deps | (keys & parser.execs) | (keys & parsedvar.execs)
-                 value = handle_contains(value, parsedvar.contains, exclusions, d)
-                 if hasattr(parsedvar, "removes"):
--                    value = handle_remove(value, deps, parsedvar.removes, varflags, d)
-+                    value = handle_remove(value, deps, parsedvar.removes, d)
-             if vardeps is None:
-                 parser.log.flush()
-             if "prefuncs" in varflags:
--- 
-2.32.0
-
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index b2e7520ee7..3f410fd525 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -252,26 +252,26 @@ class TerminalFilter(object):
+             return
+         tasks = []
+         for t in runningpids:
++            start_time = activetasks[t].get("starttime", None)
++            if start_time:
++                msg = "%s - %s (pid %s)" % (activetasks[t]["title"], self.elapsed(currenttime - start_time), activetasks[t]["pid"])
++            else:
++                msg = "%s (pid %s)" % (activetasks[t]["title"], activetasks[t]["pid"])
+             progress = activetasks[t].get("progress", None)
+             if progress is not None:
+                 pbar = activetasks[t].get("progressbar", None)
+                 rate = activetasks[t].get("rate", None)
+-                start_time = activetasks[t].get("starttime", None)
+                 if not pbar or pbar.bouncing != (progress < 0):
+                     if progress < 0:
+-                        pbar = BBProgress("0: %s (pid %s)" % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[' ', progressbar.BouncingSlider(), ''], extrapos=3, resize_handler=self.sigwinch_handle)
++                        pbar = BBProgress("0: %s" % msg, 100, widgets=[' ', progressbar.BouncingSlider(), ''], extrapos=3, resize_handler=self.sigwinch_handle)
+                         pbar.bouncing = True
+                     else:
+-                        pbar = BBProgress("0: %s (pid %s)" % (activetasks[t]["title"], activetasks[t]["pid"]), 100, widgets=[' ', progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=5, resize_handler=self.sigwinch_handle)
++                        pbar = BBProgress("0: %s" % msg, 100, widgets=[' ', progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=5, resize_handler=self.sigwinch_handle)
+                         pbar.bouncing = False
+                     activetasks[t]["progressbar"] = pbar
+-                tasks.append((pbar, progress, rate, start_time))
++                tasks.append((pbar, msg, progress, rate, start_time))
+             else:
+-                start_time = activetasks[t].get("starttime", None)
+-                if start_time:
+-                    tasks.append("%s - %s (pid %s)" % (activetasks[t]["title"], self.elapsed(currenttime - start_time), activetasks[t]["pid"]))
+-                else:
+-                    tasks.append("%s (pid %s)" % (activetasks[t]["title"], activetasks[t]["pid"]))
++                tasks.append(msg)
+ 
+         if self.main.shutdown:
+             content = pluralise("Waiting for %s running task to finish",
+@@ -308,12 +308,12 @@ class TerminalFilter(object):
+         if not self.quiet:
+             for tasknum, task in enumerate(tasks[:(self.rows - 1 - lines)]):
+                 if isinstance(task, tuple):
+-                    pbar, progress, rate, start_time = task
++                    pbar, msg, progress, rate, start_time = task
+                     if not pbar.start_time:
+                         pbar.start(False)
+                         if start_time:
+                             pbar.start_time = start_time
+-                    pbar.setmessage('%s:%s' % (tasknum, pbar.msg.split(':', 1)[1]))
++                    pbar.setmessage('%s: %s' % (tasknum, msg))
+                     pbar.setextra(rate)
+                     if progress > -1:
+                         content = pbar.update(progress)
 
