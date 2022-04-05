@@ -1,310 +1,101 @@
-Return-Path: <ticotimo@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C37C433EF
-	for <webhook@archiver.kernel.org>; Tue,  5 Apr 2022 19:49:23 +0000 (UTC)
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com
- [209.85.214.174])
- by mx.groups.io with SMTP id smtpd.web09.1070.1649184044173802164
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065AAC35273
+	for <webhook@archiver.kernel.org>; Tue,  5 Apr 2022 19:49:24 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com
+ [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web12.1661.1649187258516957360
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 05 Apr 2022 11:40:44 -0700
+ Tue, 05 Apr 2022 12:34:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=C1k2CxZ4;
- spf=pass (domain: gmail.com, ip: 209.85.214.174,
- mailfrom: ticotimo@gmail.com)
-Received: by mail-pl1-f174.google.com with SMTP id c23so11678413plo.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LgS2ejCW;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f46.google.com with SMTP id p189so93565wmp.3
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 05 Apr 2022 11:40:44 -0700 (PDT)
+ Tue, 05 Apr 2022 12:34:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PrPJY1aFPgHcitysfWLnXYlFC14tWsaAX8RdJA5nlAM=;
-        b=C1k2CxZ4FEtaeJl7Ejh03gN0KG7hYeTZs1SPeszXnsgYpoT+m5skgnf+vVrSz+Vpb6
-         EkPyoUKzeFAOeFlLUo4AfjK6gABfseaxWiJprLr6lIQoHsxtBe5eUSW6DaNBtBYFbVIy
-         IsTzivDTcYSt2K9NbWWC8GGNeXCV2X1R/J+GYKxUiXdUaTI3cCTX04t0pyDGfZtsZmn2
-         5xhtMCVex90RLfWSNYwwI5eFyWJAgciARAYoozMI/dAFTowqAmyxpr5392pmbSEEwLbD
-         dr/9z0Ed/j0h4KpCe16k2fpng+HHlyXB6AEchg4N0kojEBHZUDicXNPp1naQhc5/BaqJ
-         eWEw==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=3f+naprLgolTKZrv5JZfAclXgPP2t4PZ5YOiplM+1GQ=;
+        b=LgS2ejCW78PFj8H1NnV9xuFkW7HBVi0y8GVhX/YcW7qLMvxMLb5p1w+6eD2RnI+HFx
+         Xtpf3jU2ASfncNsf6+StAqCVoNl7ZWUJlkiu3kRMYlJq+8dazpgT3rLpf2Y9AzR9cCV+
+         DmjVhJvaKUXv4stfEmkrSh0LL0Utuz8z7vyi0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PrPJY1aFPgHcitysfWLnXYlFC14tWsaAX8RdJA5nlAM=;
-        b=zBc1r6oCA35AgSehq8D+Cy6hGEuRvZ115UwNq+jiT2pCbCYFnKSGDn3lB0i3WaSYLq
-         NUFarOVh8PJ0JKZtsK9DW/VAyIGvDIjE87kLtcJuv/DRN0V5gqQ90Jpqxwz/b32sq+BN
-         0jnRs1+T9/6Qpptg1geG1OjZBaM6dgA0uumnDWcLGF/rAAg0ta4tGWteKVvsEbZVMlSO
-         rVbCQB7Zl/ocvCU9PemvMVJH0e6WtVubk0bZK6+b807TLbl7cLZTswMkkLREA+HHNkRx
-         X53z7ry03e2MZA3Db4qN+xzIDQyMKRvEoY7Amc2iUy7A3Au06dyZ27eOrB7+StNBm1Lc
-         Nq8A==
-X-Gm-Message-State: AOAM530QJvRmBFVP3i4Qu5kiZVgFyuYwW7WnuLZ7rW2cyQQA0ymp1Y+x
-	TFLSVR6St6MIwurKyKtDy4OxPFl38ns=
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=3f+naprLgolTKZrv5JZfAclXgPP2t4PZ5YOiplM+1GQ=;
+        b=he6xRnX5QcB+caI7G7JG3Yf+DND/ZPa1LDEomqhU7iYUhjyfV5JPJuuB8KrT558Afr
+         4Q4oIyLulPcBCi1D58j0C1bQVfXQXZpkANEG962/GAbhmGvqvXd10rP3y95WntdIKhgO
+         ke6rlLEPhwfiG1wtZ6gRtCx4CjduTNZ27yLb3Kav9TV6HDER6hajHKTUqF8rwBrsiYgH
+         bCEGhKx82G3XvR0QiKnLQv0E/whh8hm5OwWx9fuGM5RHPPBnECfid2VMqbKHhaCpfRuU
+         p4xLUGmDa2VtNxLbiBy7Tx5s2p8tJbUqoYFA/CfPulqB8WkjId+UXjD810Y0udAHq1/o
+         ya9A==
+X-Gm-Message-State: AOAM531OLz53uBds7hsC2n6GX19aXBDMway/KP0iDlRSDKQRIAIb0YTf
+	iLNx/cblbJ0ZoGWM5EiCsBHH8Q==
 X-Google-Smtp-Source: 
- ABdhPJyLNmsnAggpPY1qCCSTyPH6rUVPVsZwi6ay5IojdpsqBqFUoX/XevdTThADnLCIjGixknTf6A==
-X-Received: by 2002:a17:90a:a78c:b0:1b8:b769:62d0 with SMTP id
- f12-20020a17090aa78c00b001b8b76962d0mr5588867pjq.227.1649184043058;
-        Tue, 05 Apr 2022 11:40:43 -0700 (PDT)
-Received: from nereus.hsd1.or.comcast.net
- ([2601:1c0:6000:1b20:3168:a6eb:9b6b:c371])
+ ABdhPJwrhIeh7tz6zm4io8B0UaBjjOVH61aiy5BpQXKer6a1QDgwo7HLw/6ru6ouMbHbjKN01Wp3Bw==
+X-Received: by 2002:a05:600c:2351:b0:38e:6583:4202 with SMTP id
+ 17-20020a05600c235100b0038e65834202mr4393679wmq.122.1649187257010;
+        Tue, 05 Apr 2022 12:34:17 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:ea8d:a311:bb62:cc91?
+ ([2001:8b0:aba:5f3c:ea8d:a311:bb62:cc91])
         by smtp.gmail.com with ESMTPSA id
- s22-20020a056a00179600b004fb28a97abdsm18424657pfg.12.2022.04.05.11.40.42
+ i1-20020a05600c400100b0038cf3371208sm2972262wmm.22.2022.04.05.12.34.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Apr 2022 11:40:42 -0700 (PDT)
-From: Tim Orling <ticotimo@gmail.com>
-X-Google-Original-From: Tim Orling <tim.orling@konsulko.com>
-To: bitbake-devel@lists.openembedded.org,
-	toaster@lists.yoctoproject.org
-Cc: Tim Orling <tim.orling@konsulko.com>
-Subject: [1.52][honister][PATCH] toaster: fixtures replace gatesgarth
-Date: Tue,  5 Apr 2022 11:40:36 -0700
-Message-Id: <20220405184036.2622209-1-tim.orling@konsulko.com>
-X-Mailer: git-send-email 2.30.2
+        Tue, 05 Apr 2022 12:34:16 -0700 (PDT)
+Message-ID: 
+ <1c27961aa31d014024489f059efb31ad0faf6c5f.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] Added double quotes aound variables in
+ bitbake/source to prevent gobbling or splitting
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Abongwa Amahnui Bonalais <abongwabonalais@gmail.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 05 Apr 2022 20:34:15 +0100
+In-Reply-To: <20220405182906.57588-1-abongwabonalais@gmail.com>
+References: <20220405182906.57588-1-abongwabonalais@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4-1ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 05 Apr 2022 19:49:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13583
+ <bitbake-devel@lists.openembedded.org>; Tue, 05 Apr 2022 19:49:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13584
 
-Add hardknott
-Add honister
+Hi,
 
-Signed-off-by: Tim Orling <tim.orling@konsulko.com>
----
- lib/toaster/orm/fixtures/oe-core.xml | 28 +++++++---
- lib/toaster/orm/fixtures/poky.xml    | 80 ++++++++++++++++++++++------
- 2 files changed, 85 insertions(+), 23 deletions(-)
+Thanks for the patch, I have a question below.
 
-diff --git a/lib/toaster/orm/fixtures/oe-core.xml b/lib/toaster/orm/fixtures/oe-core.xml
-index b01a3370..25543f6e 100644
---- a/lib/toaster/orm/fixtures/oe-core.xml
-+++ b/lib/toaster/orm/fixtures/oe-core.xml
-@@ -23,9 +23,14 @@
-     <field type="CharField" name="branch">master</field>
-   </object>
-   <object model="orm.bitbakeversion" pk="4">
--    <field type="CharField" name="name">gatesgarth</field>
-+    <field type="CharField" name="name">hardknott</field>
-     <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
--    <field type="CharField" name="branch">1.48</field>
-+    <field type="CharField" name="branch">1.50</field>
-+  </object>
-+  <object model="orm.bitbakeversion" pk="5">
-+    <field type="CharField" name="name">honister</field>
-+    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="branch">1.52</field>
-   </object>
- 
-   <!-- Releases available -->
-@@ -51,11 +56,18 @@
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/\"&gt;OpenEmbedded master&lt;/a&gt; branch.</field>
-   </object>
-   <object model="orm.release" pk="4">
--    <field type="CharField" name="name">gatesgarth</field>
--    <field type="CharField" name="description">Openembedded Gatesgarth</field>
-+    <field type="CharField" name="name">hardknott</field>
-+    <field type="CharField" name="description">Openembedded Hardknott</field>
-     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
--    <field type="CharField" name="branch_name">gatesgarth</field>
--    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=gatesgarth\"&gt;OpenEmbedded Gatesgarth&lt;/a&gt; branch.</field>
-+    <field type="CharField" name="branch_name">hardknott</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=hardknott\"&gt;OpenEmbedded Hardknott&lt;/a&gt; branch.</field>
-+  </object>
-+  <object model="orm.release" pk="5">
-+    <field type="CharField" name="name">honister</field>
-+    <field type="CharField" name="description">Openembedded Honister</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">5</field>
-+    <field type="CharField" name="branch_name">honister</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=honister\"&gt;OpenEmbedded Honister&lt;/a&gt; branch.</field>
-   </object>
- 
-   <!-- Default layers for each release -->
-@@ -75,6 +87,10 @@
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-     <field type="CharField" name="layer_name">openembedded-core</field>
-   </object>
-+  <object model="orm.releasedefaultlayer" pk="5">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">openembedded-core</field>
-+  </object>
- 
- 
-   <!-- Layer for the Local release -->
-diff --git a/lib/toaster/orm/fixtures/poky.xml b/lib/toaster/orm/fixtures/poky.xml
-index 363789d6..5811cfae 100644
---- a/lib/toaster/orm/fixtures/poky.xml
-+++ b/lib/toaster/orm/fixtures/poky.xml
-@@ -26,9 +26,15 @@
-     <field type="CharField" name="dirpath">bitbake</field>
-   </object>
-   <object model="orm.bitbakeversion" pk="4">
--    <field type="CharField" name="name">gatesgarth</field>
-+    <field type="CharField" name="name">hardknott</field>
-     <field type="CharField" name="giturl">git://git.yoctoproject.org/poky</field>
--    <field type="CharField" name="branch">gatesgarth</field>
-+    <field type="CharField" name="branch">hardknott</field>
-+    <field type="CharField" name="dirpath">bitbake</field>
-+  </object>
-+  <object model="orm.bitbakeversion" pk="5">
-+    <field type="CharField" name="name">honister</field>
-+    <field type="CharField" name="giturl">git://git.yoctoproject.org/poky</field>
-+    <field type="CharField" name="branch">honister</field>
-     <field type="CharField" name="dirpath">bitbake</field>
-   </object>
- 
-@@ -56,11 +62,18 @@
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/"&gt;Yocto Project Master branch&lt;/a&gt;.</field>
-   </object>
-   <object model="orm.release" pk="4">
--    <field type="CharField" name="name">gatesgarth</field>
--    <field type="CharField" name="description">Yocto Project 3.2 "Gatesgarth"</field>
-+    <field type="CharField" name="name">hardknott</field>
-+    <field type="CharField" name="description">Yocto Project 3.3 "Hardknott"</field>
-     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
--    <field type="CharField" name="branch_name">gatesgarth</field>
--    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=gatesgarth"&gt;Yocto Project Gatesgarth branch&lt;/a&gt;.</field>
-+    <field type="CharField" name="branch_name">hardknott</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=hardknott"&gt;Yocto Project Hardknott branch&lt;/a&gt;.</field>
-+  </object>
-+  <object model="orm.release" pk="5">
-+    <field type="CharField" name="name">honister</field>
-+    <field type="CharField" name="description">Yocto Project 3.4 "Honister"</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">5</field>
-+    <field type="CharField" name="branch_name">honister</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=honister"&gt;Yocto Project Honister branch&lt;/a&gt;.</field>
-   </object>
- 
-   <!-- Default project layers for each release -->
-@@ -112,6 +125,18 @@
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-     <field type="CharField" name="layer_name">meta-yocto-bsp</field>
-   </object>
-+  <object model="orm.releasedefaultlayer" pk="13">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">openembedded-core</field>
-+  </object>
-+  <object model="orm.releasedefaultlayer" pk="14">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">meta-poky</field>
-+  </object>
-+  <object model="orm.releasedefaultlayer" pk="15">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">meta-yocto-bsp</field>
-+  </object>
- 
-   <!-- Default layers provided by poky
-        openembedded-core
-@@ -152,7 +177,14 @@
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
--    <field type="CharField" name="branch">gatesgarth</field>
-+    <field type="CharField" name="branch">hardknott</field>
-+    <field type="CharField" name="dirpath">meta</field>
-+  </object>
-+  <object model="orm.layer_version" pk="5">
-+    <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-+    <field type="IntegerField" name="layer_source">0</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="branch">honister</field>
-     <field type="CharField" name="dirpath">meta</field>
-   </object>
- 
-@@ -164,14 +196,14 @@
-     <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-     <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-   </object>
--  <object model="orm.layer_version" pk="5">
-+  <object model="orm.layer_version" pk="6">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
-     <field type="CharField" name="branch">dunfell</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
--  <object model="orm.layer_version" pk="6">
-+  <object model="orm.layer_version" pk="7">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
-@@ -179,18 +211,25 @@
-     <field type="CharField" name="commit">HEAD</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
--  <object model="orm.layer_version" pk="7">
-+  <object model="orm.layer_version" pk="8">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
-     <field type="CharField" name="branch">master</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
--  <object model="orm.layer_version" pk="8">
-+  <object model="orm.layer_version" pk="9">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
--    <field type="CharField" name="branch">gatesgarth</field>
-+    <field type="CharField" name="branch">hardknott</field>
-+    <field type="CharField" name="dirpath">meta-poky</field>
-+  </object>
-+  <object model="orm.layer_version" pk="10">
-+    <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-+    <field type="IntegerField" name="layer_source">0</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="branch">honister</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
- 
-@@ -202,14 +241,14 @@
-     <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-     <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-   </object>
--  <object model="orm.layer_version" pk="9">
-+  <object model="orm.layer_version" pk="11">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
-     <field type="CharField" name="branch">dunfell</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
--  <object model="orm.layer_version" pk="10">
-+  <object model="orm.layer_version" pk="12">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
-@@ -217,18 +256,25 @@
-     <field type="CharField" name="commit">HEAD</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
--  <object model="orm.layer_version" pk="11">
-+  <object model="orm.layer_version" pk="13">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
-     <field type="CharField" name="branch">master</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
--  <object model="orm.layer_version" pk="12">
-+  <object model="orm.layer_version" pk="14">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
--    <field type="CharField" name="branch">gatesgarth</field>
-+    <field type="CharField" name="branch">hardknott</field>
-+    <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-+  </object>
-+  <object model="orm.layer_version" pk="15">
-+    <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-+    <field type="IntegerField" name="layer_source">0</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="branch">honister</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
- </django-objects>
--- 
-2.30.2
+On Tue, 2022-04-05 at 19:29 +0100, Abongwa Amahnui Bonalais wrote:
+> Signed-off-by: Abongwa Bonalais Amahnui <abongwabonalais@gmail.com>
+> ---
+>  bitbake/bin/toaster | 65 +++++++++++++++++++++++----------------------
+>  1 file changed, 33 insertions(+), 32 deletions(-)
+> 
+> diff --git a/bitbake/bin/toaster b/bitbake/bin/toaster
+> index 558a819570..d98c4c69f0 100755
+> --- a/bitbake/bin/toaster
+> +++ b/bitbake/bin/toaster
+> @@ -1,4 +1,5 @@
+> -#!/bin/echo ERROR: This script needs to be sourced. Please run as .
+> +#!/bin/sh 
+> +echo ERROR: This script needs to be sourced. Please run as .
+>  
+>  # toaster - shell script to start Toaster
+> 
+
+Changing /bin/echo to /bin/sh probably isn't intentional? We do intend the
+script to be sourced rather than run directly. How did you test the changes?
+
+Cheers,
+
+Richard
+
 
 
