@@ -2,61 +2,60 @@ Return-Path: <abongwabonalais@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A0BC43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DB9C4167B
 	for <webhook@archiver.kernel.org>; Wed,  6 Apr 2022 16:33:18 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com
- [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web08.999.1649195306742254256
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com
+ [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web08.913.1649194890578846885
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 05 Apr 2022 14:48:27 -0700
+ Tue, 05 Apr 2022 14:41:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=gSNr97+f;
- spf=pass (domain: gmail.com, ip: 209.85.128.54,
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=YKmRVUVz;
+ spf=pass (domain: gmail.com, ip: 209.85.221.46,
  mailfrom: abongwabonalais@gmail.com)
-Received: by mail-wm1-f54.google.com with SMTP id
- 123-20020a1c1981000000b0038b3616a71aso451824wmz.4
+Received: by mail-wr1-f46.google.com with SMTP id b19so402035wrh.11
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 05 Apr 2022 14:48:26 -0700 (PDT)
+ Tue, 05 Apr 2022 14:41:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KfFMy41gHkc19vQDcpChmZLPMAWG3eeR4gSA0uiee40=;
-        b=gSNr97+fLO5o1scjXk5PHPILHI5k+t/nbR++ZbkeqAW3JtiNtu1pOdPeGAISvVPyiK
-         P1LyyUFLtr8kLG6oACE6FrnK1zPIEEsH10a0qylEaGgUfoSO1Qe9LL7jlkK3bsqeslXd
-         0n99YS2rSDm6sZvzb8GN1ERl21z7zCotakcnauH2pL4GAJN3CgewCczrpbpIH7bO5Bkz
-         bD2kDR4j0fLYAZcTigXZLn7dYfCnLeW+y6VUhQ1MGg5GlLiUXSY+mcEz0WQxTH5sENpw
-         WOCTLIpI41TWzv1Yl3FHNz9ULEG7teiU0ABAI//XldHBH3kPZtorYiCfw+lwCI+uFFls
-         Sgag==
+        bh=WIZJJi2dCEE6Q8rzmm7v/mBt8A2EYfOKcz40+5GdQoE=;
+        b=YKmRVUVzOeI6X+AKI4QUH9+I/2kt7jDE8tv2CL38pfMEyqEPug/+iVXf5CaCmxtbZm
+         UJ4xppcaeMr94ITVczJFdIwaKBTN0l6VvTUCXYmiZdvhF4xAKnNcUmng6bicry2Bh1cU
+         5JajjWkBu8WE/svJeaiYHuF7EWqrnVPNXP4BX+diE87I50qCH6mrFiBZpGmFaaa4xa0m
+         w60p4Qro6X8OcfWtRI44uEp2DS7z1yVFm8CdnJsGtxPuH6sehfRZipyI+5bm5oKkUzCq
+         fQtJS3mYk6dpRBEaxyKTtABWqyqvt3KTRISzu63ZVPrcTROgWvIaMRA+clmchCNrePqc
+         DpGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KfFMy41gHkc19vQDcpChmZLPMAWG3eeR4gSA0uiee40=;
-        b=Att123bFyH0mVlvcu+QASd0WgSG2QqlYaXSA/sZP8Gl0mEJ7xU4sG8ZgkoKeOask69
-         apQEZxdvrotTpVVW+1gWPvMP7LpxXqH+o+TUydlD5lRQK23gxWvaV4c3BWFOd6huMzwp
-         80SMQMm1Hy6rnaLKfzqNQHwQ7H3FbrFj9IxNaCSuVYyvSPS26CTcOTg+y4KmETaFa+GX
-         bqhpIbnbtLn+XAIaySa2NWMrpDGGxA55Ex5JDR66GToA3zjaAElzGsRX2DKjmGYrnsC9
-         3bJlXhVVNCf+6YQbdCk1cP6/ukAISBPvb9rvtn0OgdY8+7SrlJnG5Wbekem1CISlxZZe
-         o9kQ==
-X-Gm-Message-State: AOAM530Uv16ZTHnUsnER4fIrUQVqTHhaUpNNOUeyKIoFCvVJY7lwJbho
-	0dPRdoquT0BSxePYWSgWvRWLenQ0/lP4Tqst
+        bh=WIZJJi2dCEE6Q8rzmm7v/mBt8A2EYfOKcz40+5GdQoE=;
+        b=iL3a0N/olY8WYrg0WP9fRuLUTrDWrXDK3JFQQGVaXkegU2P9A2ZUM4vl7zFpS0IUQO
+         7r4dsiUmuOhu8V2TjbHZhTD+IIzW3uEjCDQK8rO2Iyi4grR+x/jsZg9EAPGMyF/3sbWZ
+         OFkesttweuQQS6oH9G2fq18+50kFYrC4HqROhOk5rw+OhYn0P4OTi4s+EASO7eTpFotq
+         xKo1oeInTm5906NNAmMjNTaD8U9yPaOH0AC+q8IkEgfRT0Sk0BbaUKWcU40TpGjJegw2
+         Z6SW936f1kBIyYVH4CONlAtgdZLrv+U+plpBa/wFqVpwDnzsqt2Xa8DEyIASm++v63ie
+         ECGQ==
+X-Gm-Message-State: AOAM530SjujFytD/bJgffk1op4wS6gdSMGeZiPHLcAXxJP5nYyIXnSfi
+	YiSwvriosNvGBvLuOrqQ/CLxv+bKedCIoYo+
 X-Google-Smtp-Source: 
- ABdhPJwXxnCBn5swKc6Q2xKq3sxy4TkZ7JvAwSIjN3K2c2UJB2Jge8o0kCxHireXSGZb+ow4e76BYg==
-X-Received: by 2002:a05:600c:4408:b0:388:a042:344f with SMTP id
- u8-20020a05600c440800b00388a042344fmr4604477wmn.52.1649195304610;
-        Tue, 05 Apr 2022 14:48:24 -0700 (PDT)
+ ABdhPJzYaHqCY/qfA1A0rTlNMICLpbbESpAWA+g9AaU+YD/zsteRBJAhu6ERqGKBSmxvcOOH+4EdDw==
+X-Received: by 2002:a5d:4207:0:b0:206:1593:3e8b with SMTP id
+ n7-20020a5d4207000000b0020615933e8bmr4274401wrq.153.1649194888524;
+        Tue, 05 Apr 2022 14:41:28 -0700 (PDT)
 Received: from localhost.localdomain ([154.72.153.155])
         by smtp.gmail.com with ESMTPSA id
- n1-20020a1ca401000000b0038e748c2f64sm3179818wme.31.2022.04.05.14.48.22
+ y6-20020a05600015c600b00203fa70b4ebsm16095976wry.53.2022.04.05.14.41.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Apr 2022 14:48:24 -0700 (PDT)
+        Tue, 05 Apr 2022 14:41:28 -0700 (PDT)
 From: Abongwa Bonalais Amahnui <abongwabonalais@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Abongwa Bonalais Amahnui <abongwabonalais@gmail.com>
 Subject: [PATCH] toaster: Add quoting of variables to avoid splitting
-Date: Tue,  5 Apr 2022 22:47:42 +0100
-Message-Id: <20220405214741.62174-1-abongwabonalais@gmail.com>
+Date: Tue,  5 Apr 2022 22:41:00 +0100
+Message-Id: <20220405214100.61887-1-abongwabonalais@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -64,7 +63,7 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 06 Apr 2022 16:33:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13591
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13590
 
 Signed-off-by: Abongwa Bonalais Amahnui <abongwabonalais@gmail.com>
 ---
@@ -72,7 +71,7 @@ Signed-off-by: Abongwa Bonalais Amahnui <abongwabonalais@gmail.com>
  1 file changed, 33 insertions(+), 33 deletions(-)
 
 diff --git a/bitbake/bin/toaster b/bitbake/bin/toaster
-index 558a819570..2c223a53bf 100755
+index 558a819570..e190f2c9db 100755
 --- a/bitbake/bin/toaster
 +++ b/bitbake/bin/toaster
 @@ -19,9 +19,9 @@ Usage 2: source toaster manage [createsuperuser|lsupdates|migrate|makemigrations
@@ -250,7 +249,7 @@ index 558a819570..2c223a53bf 100755
 -        cd $BBBASEDIR/lib/toaster
 -        $MANAGE $manage_cmd
 +        cd "$BBBASEDIR/lib/toaster"
-+        "$MANAGE" "$manage_cmd"
++        "$MANAGE $manage_cmd"
      ;;
  esac
 -custom_extention toaster_postpend $CMD $ADDR_PORT
