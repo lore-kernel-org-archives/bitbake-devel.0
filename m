@@ -1,115 +1,108 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ptsneves@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732E2C4332F
-	for <webhook@archiver.kernel.org>; Tue, 12 Apr 2022 16:46:42 +0000 (UTC)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com
- [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web08.8465.1649752786533651964
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321DFC48BCF
+	for <webhook@archiver.kernel.org>; Tue, 12 Apr 2022 16:46:41 +0000 (UTC)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com
+ [209.85.208.177])
+ by mx.groups.io with SMTP id smtpd.web12.8184.1649749883868301079
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 12 Apr 2022 01:39:46 -0700
+ Tue, 12 Apr 2022 00:51:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=geNkE/5o;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f49.google.com with SMTP id t1so8906795wra.4
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=OquEKvoP;
+ spf=pass (domain: gmail.com, ip: 209.85.208.177,
+ mailfrom: ptsneves@gmail.com)
+Received: by mail-lj1-f177.google.com with SMTP id h11so23047405ljb.2
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 12 Apr 2022 01:39:46 -0700 (PDT)
+ Tue, 12 Apr 2022 00:51:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=7C0JXwWvqL4quv5wMQs1D3IVO6umfc5mNseHhq3iS4U=;
-        b=geNkE/5oEBrDM/orshXoMLaUO14YwP7A+gCveoewwJmBN+MY5wTTSEw7o+Js7Fw2ni
-         ZPBILCgHHXXk7pJyObpD4haJ6kMPNEdG4tiUdAEWCE1HXlijRNKedjSc13Pdf2W3dFHq
-         hlf1iM1tELfRddWbIRgyZyPgX9N3Bo0cZvHYY=
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=08cF5RCCFEfd1/bBnvdv+M+DkkXkPmGe7NmbJBM2oG4=;
+        b=OquEKvoPWJKxIPA2rlj279rV0vvPZpbBIA+iGcvfo5YlHRlL9/QoWrCfir3nPCCcYs
+         ZucHPzeWXqwCvh8zCiV1iqSftOM6a1bjgWzxpKv4mYpLgthSoC6BYqQJH/cWZt/hzGqk
+         pO8t661kVXM5TSzxL7hGSfzbPAAaJyV5WQYZlpP6+l+pGKr8kDvQFdYFbg1K2nXe4PQG
+         jx8GtqG+eIIhVvsenHM1MQa7ZaO/Kq6IKZXyVslDDn4q0OTs73YXMYjnzoUk+2KrothH
+         cFmk3vWochyUIthNRnV+mw+eh78LgeqrSIX+jFKl49IDRULXdsJwGhTe4heljDhkhYWZ
+         7vMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=7C0JXwWvqL4quv5wMQs1D3IVO6umfc5mNseHhq3iS4U=;
-        b=mZ/K3vY3P+HO0DK21vJwz0XA3F0g+TcLfzbIuEpKbPUouIu8UsArg/25GLtmtrTOVZ
-         qCvpjryiGDKxIt+yDBA86vVYsIAnow62JQQpcv+Idpl9cC4C0BWWHK65lXmacImcabO/
-         EzmXEAadYfJFKkHlrl2EDEOAhzz22fi1SChk1RAtSuV7Y/zLRh0jDBTBEYfybKv9/gmf
-         ApsHh1fWNiByVa2A0D5DaOmcdMAjaNH7rwzDkXjbpqzjnZvRMIT/V9TwZHGeP/oX/FVf
-         g8CweuBfoRuw5l7xTIz8pX5cvscqNHHvDCA76YUWkJWLDAto48dW2F+8JddQ+vqfYe/W
-         79eg==
-X-Gm-Message-State: AOAM530X+N9bC8aFi8MAL6t5h7hZuT8AltU/dyErWoQpS2iHTR69WWLe
-	d4s5rX6+9yg77qNC3vCFM0ZmHA==
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=08cF5RCCFEfd1/bBnvdv+M+DkkXkPmGe7NmbJBM2oG4=;
+        b=j968KVOKDhtCZj7whLWU4Fygid93eSfDlqg/MUbY7edQ54Ebm6ON70Gj1pZVI7BFhp
+         g8oMVitE4R1SfVEeP/7Zn9lfuY5xedUuYbzioA79Do7q54nEm80AOLC/dcDJBdX63dm5
+         6tNcBwxdSiUAqxA9rxVjIT5bwNMIUAJoUqdPs5YmPliF1uXBVAF1ijwfM1nNQr4FI0uH
+         1rKwdlc3R3JH4NA8Y1Levi4/GZOZdMTLCjpu04AwAqblftBlSET9ZlcxowF/uCHF6UOL
+         PBQ+o8Ci/mVsnpOVO+9ntlLMjC3rT2JWHYQDi2QpNn5+LsQCpAaUokKTU74tiyrsvfPW
+         nBDQ==
+X-Gm-Message-State: AOAM530ywYIKQuHrqkKNmD3P5Fp1PRlRn+zvoLjyUtAFXKmF031+tD59
+	R2l8UcuEdQPzW348DxZV1A==
 X-Google-Smtp-Source: 
- ABdhPJzTOnwWc5xe3jxnu4pWd7E+Jqu9f9qGoLWCgx+D0/17StzYLHRazwg4CaEObsMAt41NqI1VeA==
-X-Received: by 2002:adf:d1c4:0:b0:204:b9d:a840 with SMTP id
- b4-20020adfd1c4000000b002040b9da840mr28115021wrd.285.1649752784963;
-        Tue, 12 Apr 2022 01:39:44 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:b168:4a11:27d6:cd01?
- ([2001:8b0:aba:5f3c:b168:4a11:27d6:cd01])
+ ABdhPJw/dwnuImddVhoD3AKByoAw80BmHBjjA+EeMzobf3nII2Xf0f08PA/cBqRSGU0HUM362Qp75Q==
+X-Received: by 2002:a05:651c:a12:b0:24b:1726:9b49 with SMTP id
+ k18-20020a05651c0a1200b0024b17269b49mr22934788ljq.497.1649749882028;
+        Tue, 12 Apr 2022 00:51:22 -0700 (PDT)
+Received: from [192.168.0.88] (77-92-34-4.cable-modem.tkk.net.pl.
+ [77.92.34.4])
         by smtp.gmail.com with ESMTPSA id
- m7-20020adfe0c7000000b002060e7bbe49sm29315234wri.45.2022.04.12.01.39.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 01:39:44 -0700 (PDT)
-Message-ID: 
- <77442b51b5b9fdd47a1815b7d6a8804e7b7dd309.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] pyinotify.py: Simplify identification
- of which event has occurred
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Apr 2022 09:39:43 +0100
-In-Reply-To: <20220408144430.29768-1-pkj@axis.com>
-References: <20220408144430.29768-1-pkj@axis.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1ubuntu2 
+ c3-20020a056512104300b0044a3582c9ecsm3548451lfb.219.2022.04.12.00.51.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Apr 2022 00:51:21 -0700 (PDT)
+Message-ID: <4044fd64-fe74-6ac2-7747-e8351a766258@gmail.com>
+Date: Tue, 12 Apr 2022 09:51:20 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [bitbake-devel] [PATCH v3] checksum: Support uri formatted file
+ list
+Content-Language: en-US
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+ bitbake-devel@lists.openembedded.org
+References: <20220206134507.123558-1-ptsneves@gmail.com>
+ <16D17908BC3DCB81.25014@lists.openembedded.org>
+ <2c7698c9a48dcca849b964b5cd5076c12f5168be.camel@linuxfoundation.org>
+ <957f9816-d2d8-b43e-b77e-51a64b9d984a@gmail.com>
+ <54bf9bc2753e4b91adfe1efd2c5aeec382792dfa.camel@linuxfoundation.org>
+From: Paulo Neves <ptsneves@gmail.com>
+In-Reply-To: 
+ <54bf9bc2753e4b91adfe1efd2c5aeec382792dfa.camel@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 12 Apr 2022 16:46:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13606
+ <bitbake-devel@lists.openembedded.org>; Tue, 12 Apr 2022 16:46:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13604
 
-On Fri, 2022-04-08 at 16:44 +0200, Peter Kjellerstedt wrote:
-> Use bitwise operators to manipulate the received event mask in
-> _ProcessEvent.
-> 
-> Also minor clarification & clean up of the related comments.
-> 
-> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> ---
->  bitbake/lib/pyinotify.py | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/bitbake/lib/pyinotify.py b/bitbake/lib/pyinotify.py
-> index 5c9b6d0fe2..3c5dab0312 100644
-> --- a/bitbake/lib/pyinotify.py
-> +++ b/bitbake/lib/pyinotify.py
-> @@ -595,24 +595,23 @@ class _ProcessEvent:
->          @type event: Event object
->          @return: By convention when used from the ProcessEvent class:
->                   - Returning False or None (default value) means keep on
-> -                 executing next chained functors (see chain.py example).
-> +                   executing next chained functors (see chain.py example).
->                   - Returning True instead means do not execute next
->                     processing functions.
->          @rtype: bool
->          @raise ProcessEventError: Event object undispatchable,
->                                    unknown event.
->          """
-> -        stripped_mask = event.mask - (event.mask & IN_ISDIR)
-> -        # Bitbake hack - we see event masks of 0x6, IN_MODIFY & IN_ATTRIB
-> +        stripped_mask = event.mask & ~IN_ISDIR
-> +        # Bitbake hack - we see event masks of 0x6, i.e., IN_MODIFY & IN_ATTRIB.
+Thanks. I see that it is [1]. I would not have come up with the regex 
+fix, so your patch looks much better than mine. Still it looks like the 
+whole logic should rely on the url being passed around in encoded form, 
+and be decoded only at usage time. Is this what you mean by the code 
+refactor?
 
-What worries me a little is the above is part of the upstream we took this from.
-That is why I copied the style below too although we don't have to do that.
+Paulo Neves
 
-I'm torn. Aligning with the upstream code is good but equally it appears
-unmaintained now :(. There are other inotify extensions for python but this one
-seemed the best for cooker's needs at the time. If we did adopt it, there are
-probably things we could strip out as we only use a subsection of the code.
 
-Cheers,
+[1] 
+https://git.yoctoproject.org/poky/commit/?h=master-next&id=450878eb43f378431066d9e9fd6ae2ce5cc70565
 
-Richard
+On 4/11/22 17:56, Richard Purdie wrote:
+> On Mon, 2022-04-11 at 17:23 +0200, Paulo Neves wrote:
+>> Hey Richard,
+>>
+>> Thanks for the ping. I will try to have a look at it this week. Sorry I
+>> got a bit lost with private stuff and forgot about it :(
+> I've just sent a different patch which I think should fix the issue. I'll run it
+> through testing and may be able to merge my bitbake change with your test for
+> OE-Core. Changes are in master-next.
+>
+> Cheers,
+>
+> Richard
+>
 
 
