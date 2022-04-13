@@ -2,60 +2,60 @@ Return-Path: <marius.kriegerowski@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F2AC48BD1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AA2C4743E
 	for <webhook@archiver.kernel.org>; Wed, 13 Apr 2022 15:48:08 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
- [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web11.7049.1649860258113167313
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com
+ [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web08.6801.1649859568753869550
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 13 Apr 2022 07:30:58 -0700
+ Wed, 13 Apr 2022 07:19:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=PYHcWYw+;
- spf=pass (domain: gmail.com, ip: 209.85.221.44,
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=BotwtS7z;
+ spf=pass (domain: gmail.com, ip: 209.85.128.41,
  mailfrom: marius.kriegerowski@gmail.com)
-Received: by mail-wr1-f44.google.com with SMTP id c10so2932729wrb.1
+Received: by mail-wm1-f41.google.com with SMTP id r7so1190075wmq.2
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 13 Apr 2022 07:30:57 -0700 (PDT)
+ Wed, 13 Apr 2022 07:19:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KaXMwrmoE9afGkkWAw7coBLnRDcnpmj+h9hir30ZE0w=;
-        b=PYHcWYw++1zrM0K0g5xEAcoEEkVBYrxd14BcYmEKKbOT6YFc93ZIGvpsw15U1nZ35f
-         w9kFGe3CUOR7cTe/i35Idj+qP4emGfVPmTpCz4yaC4lyDeOuARYOuaxeEFtfsKda5Ned
-         MwjBQXWAgdw0e10R//8cIBML1PrdtGwyjjllyHWIFoMp6Ersd6nZLbmRz4tCY0cTdbRW
-         Cg58meV4xdLt739urg8aPZNe97K1PnuI0MX2ejvbkcNtTDHxDZucsBderbOdtNae4X59
-         Kic3r5cftjQd8uMLnXRJ2zBnuoz/Sr7GLq46HzAj8THe/MBepesanBsk7xbsoS2yMYD2
-         p6/w==
+        bh=wNEcA3El1rodoVdKZu/EUp7dg6YhQmODNjd5KRCBVDo=;
+        b=BotwtS7zLr8Xjf+LFDGIZKZMXo3p8AQEHQ5I9ENn/NaLSsvBC+tN6xh3qZrf2elnLy
+         pjwIvT8EBQjAxH8UB8fvjtEBqTjpg6udnZZ+NzhSY8uDHtgepJ1+2O7F0Jeg1omYABrB
+         ERUwW9bmsifYXqn5z9jBv7weQo68yAei9VzhC07e3JAL1k9VP+ITzDK9d7qeS+PFETBl
+         lbajrZZNBy+GADFLMBpSfUfHrjvpuVmgzCV2Ud42zH8AZNVq6ESPHL2jqOU7Wx9PnJM+
+         oTNzkFEf1ys65fXmq80UQ1kWxofNV4XVUQ8T21Xrp4lJ9dltNU49kJDc2x0pZBFfW1tF
+         3yYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KaXMwrmoE9afGkkWAw7coBLnRDcnpmj+h9hir30ZE0w=;
-        b=OZOuXnALV9BS1zJjiXEaeavci8qWLvwpIHUAkMvOc4orr/l9FgkODd8wnj+ux2ajFs
-         ROfc+aKBaa7f2m48RLeIaV+RVT4Xk2UT/tTcYs2+jp6tUftabBwDw8EDKDVyXFU7/edp
-         RfXbL2BFvSUBtzBN+O1pBH7BmF3/mbprv/elwP95Kq93PqTefYPGS5SJrx3wKTFhpf3z
-         A8XgUJf4Rukokzukndo0ISQlx303ZWvSjyO1wONmJQMGtNFb2TWnI+kq6BzOeXyNdToV
-         Tsp8KPLnx1cuFsVlIrJb2zr1Tyn/484okJ/lKgGFFhxugQwPQHy7p7cnUaU97UY51KDE
-         NEaQ==
-X-Gm-Message-State: AOAM531oxCfO2hKivc8ufRcPRzzMsPt9ysn1UozhP4HaGcjqKoTEzh2x
-	RLtDaUDLuiP3lfcSd78Lcx8ntB9lVvw=
+        bh=wNEcA3El1rodoVdKZu/EUp7dg6YhQmODNjd5KRCBVDo=;
+        b=WVIn13vpu0Jd3OkQwNQ7thxwt1bHwIAIqtdg71j0iAccyb+Z7wUl7ZbCMbGxKXYJ4Y
+         CJlt451OtDUeTdqz/1FvgxyXju4oJ2+sYQnpTEKbn7I06h6zJqmVmLhTTcS+vN276RRa
+         KbfbzGUMG1Qnv53l7CZu7VKzbsxkmf5h0R/OgDWbrTmlRlOSOpHd8nCHAJIgb9u/HtuB
+         SDZmEMwkfewwT+kS657pdVzpYKAJP9T36eVNBQr1cApW/GaFm6FmdIkY/yIOS6eURHSS
+         Ys9WI/TpZiEACHayiN8ur3Uq2GMXO0zq5UuiflOx36ElwQaqWG/ZtlxbXuEr45EdbH1x
+         L2/Q==
+X-Gm-Message-State: AOAM530XjwjALbgj0vrFDNRDjgEErzpgRTM9/U6o2Og2JeEUxQfHpzBd
+	fB8wezF1/iYT1SbYawn76kcAYUJYwIA=
 X-Google-Smtp-Source: 
- ABdhPJxXZQHIFhtU6xcmHpzVubVeq5qckA2WYUYpTwA/Mni46m94+FhopPesz/4o/5iZzy/pr3o0sA==
-X-Received: by 2002:adf:fb10:0:b0:207:af88:1eb9 with SMTP id
- c16-20020adffb10000000b00207af881eb9mr6457575wrr.238.1649860256535;
-        Wed, 13 Apr 2022 07:30:56 -0700 (PDT)
+ ABdhPJxrw4JIlFsU6ww3JKArUI6NBtBCPSxV0aiAQq/vF5VNwArJM6/aU8MU1HHuYeW2sqlgU8sVjw==
+X-Received: by 2002:a7b:c844:0:b0:37b:b986:7726 with SMTP id
+ c4-20020a7bc844000000b0037bb9867726mr9275373wml.160.1649859567032;
+        Wed, 13 Apr 2022 07:19:27 -0700 (PDT)
 Received: from localhost.localdomain ([195.201.126.231])
         by smtp.gmail.com with ESMTPSA id
- x16-20020a5d4450000000b00207a459ca80sm10216916wrr.99.2022.04.13.07.30.55
+ o6-20020a05600002c600b00207a389117csm11155267wry.53.2022.04.13.07.19.26
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 13 Apr 2022 07:30:55 -0700 (PDT)
+        Wed, 13 Apr 2022 07:19:26 -0700 (PDT)
 From: Marius Kriegerowski <marius.kriegerowski@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Marius Kriegerowski <marius.kriegerowski@gmail.com>
-Subject: [PATCH] make bitbake-diffsig PEP8 compliant
-Date: Wed, 13 Apr 2022 16:30:53 +0200
-Message-Id: <20220413143053.41897-1-marius.kriegerowski@gmail.com>
+Subject: [PATCH] scriptutils: fix style to be more PEP8 compliant
+Date: Wed, 13 Apr 2022 16:19:22 +0200
+Message-Id: <20220413141922.41322-1-marius.kriegerowski@gmail.com>
 X-Mailer: git-send-email 2.32.0 (Apple Git-132)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -63,143 +63,131 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 13 Apr 2022 15:48:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13614
-
-This ignores flake8 rules:
-  * E402 module level import not at top of file
-  * E501 line too long
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13613
 
 Signed-off-by: Marius Kriegerowski <marius.kriegerowski@gmail.com>
 ---
- bitbake/bin/bitbake-diffsigs | 49 ++++++++++++++++++++----------------
- 1 file changed, 27 insertions(+), 22 deletions(-)
+ scripts/lib/scriptutils.py | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/bitbake/bin/bitbake-diffsigs b/bitbake/bin/bitbake-diffsigs
-index cf4cc706a2..fe0f33eea1 100755
---- a/bitbake/bin/bitbake-diffsigs
-+++ b/bitbake/bin/bitbake-diffsigs
-@@ -11,6 +11,7 @@
- import os
- import sys
- import warnings
-+
- warnings.simplefilter("default")
- import argparse
+diff --git a/scripts/lib/scriptutils.py b/scripts/lib/scriptutils.py
+index adf81476f0..b265b5c838 100644
+--- a/scripts/lib/scriptutils.py
++++ b/scripts/lib/scriptutils.py
+@@ -5,7 +5,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import argparse
+ import glob
  import logging
-@@ -27,6 +28,7 @@ logger = bb.msg.logger_create(myname)
- 
- is_dump = myname == 'bitbake-dumpsig'
- 
-+
- def find_siginfo(tinfoil, pn, taskname, sigs=None):
-     result = None
-     tinfoil.set_event_mask(['bb.event.FindSigInfoResult',
-@@ -52,6 +54,7 @@ def find_siginfo(tinfoil, pn, taskname, sigs=None):
-         sys.exit(2)
-     return result
+ import os
+@@ -21,11 +20,12 @@ import importlib
+ import importlib.machinery
+ import importlib.util
  
 +
- def find_siginfo_task(bbhandler, pn, taskname, sig1=None, sig2=None):
-     """ Find the most recent signature files for the specified PN/task """
+ class KeepAliveStreamHandler(logging.StreamHandler):
+     def __init__(self, keepalive=True, **kwargs):
+         super().__init__(**kwargs)
+         if keepalive is True:
+-            keepalive = 5000 # default timeout
++            keepalive = 5000  # default timeout
+         self._timeout = threading.Condition()
+         self._stop = False
  
-@@ -63,10 +66,10 @@ def find_siginfo_task(bbhandler, pn, taskname, sig1=None, sig2=None):
-         if not sigfiles:
-             logger.error('No sigdata files found matching %s %s matching either %s or %s' % (pn, taskname, sig1, sig2))
-             sys.exit(1)
--        elif not sig1 in sigfiles:
-+        elif sig1 not in sigfiles:
-             logger.error('No sigdata files found matching %s %s with signature %s' % (pn, taskname, sig1))
-             sys.exit(1)
--        elif not sig2 in sigfiles:
-+        elif sig2 not in sigfiles:
-             logger.error('No sigdata files found matching %s %s with signature %s' % (pn, taskname, sig2))
-             sys.exit(1)
-         latestfiles = [sigfiles[sig1], sigfiles[sig2]]
-@@ -88,9 +91,9 @@ def recursecb(key, hash1, hash2):
-     recout = []
-     if not hashfiles:
-         recout.append("Unable to find matching sigdata for %s with hashes %s or %s" % (key, hash1, hash2))
--    elif not hash1 in hashfiles:
-+    elif hash1 not in hashfiles:
-         recout.append("Unable to find matching sigdata for %s with hash %s" % (key, hash1))
--    elif not hash2 in hashfiles:
-+    elif hash2 not in hashfiles:
-         recout.append("Unable to find matching sigdata for %s with hash %s" % (key, hash2))
-     else:
-         out2 = bb.siggen.compare_sigfiles(hashfiles[hash1], hashfiles[hash2], recursecb, color=color)
-@@ -110,36 +113,36 @@ parser.add_argument('-D', '--debug',
+@@ -36,9 +36,9 @@ class KeepAliveStreamHandler(logging.StreamHandler):
+                 with self._timeout:
+                     if not self._timeout.wait(keepalive):
+                         self.emit(logging.LogRecord("keepalive", logging.INFO,
+-                            None, None, "Keepalive message", None, None))
++                                                    None, None, "Keepalive message", None, None))
  
- if is_dump:
-     parser.add_argument("-t", "--task",
--            help="find the signature data file for the last run of the specified task",
--            action="store", dest="taskargs", nargs=2, metavar=('recipename', 'taskname'))
-+                        help="find the signature data file for the last run of the specified task",
-+                        action="store", dest="taskargs", nargs=2, metavar=('recipename', 'taskname'))
+-        self._thread = threading.Thread(target = thread, daemon = True)
++        self._thread = threading.Thread(target=thread, daemon=True)
+         self._thread.start()
  
-     parser.add_argument("sigdatafile1",
--            help="Signature file to dump. Not used when using -t/--task.",
--            action="store", nargs='?', metavar="sigdatafile")
-+                        help="Signature file to dump. Not used when using -t/--task.",
-+                        action="store", nargs='?', metavar="sigdatafile")
- else:
-     parser.add_argument('-c', '--color',
--            help='Colorize the output (where %(metavar)s is %(choices)s)',
--            choices=['auto', 'always', 'never'], default='auto', metavar='color')
-+                        help='Colorize the output (where %(metavar)s is %(choices)s)',
-+                        choices=['auto', 'always', 'never'], default='auto', metavar='color')
+     def close(self):
+@@ -56,6 +56,7 @@ class KeepAliveStreamHandler(logging.StreamHandler):
+         with self._timeout:
+             self._timeout.notify()
  
-     parser.add_argument('-d', '--dump',
--            help='Dump the last signature data instead of comparing (equivalent to using bitbake-dumpsig)',
--            action='store_true')
-+                        help='Dump the last signature data instead of comparing (equivalent to using bitbake-dumpsig)',
-+                        action='store_true')
++
+ def logger_create(name, stream=None, keepalive=None):
+     logger = logging.getLogger(name)
+     if keepalive is not None:
+@@ -67,21 +68,21 @@ def logger_create(name, stream=None, keepalive=None):
+     logger.setLevel(logging.INFO)
+     return logger
  
-     parser.add_argument("-t", "--task",
--            help="find the signature data files for the last two runs of the specified task and compare them",
--            action="store", dest="taskargs", nargs=2, metavar=('recipename', 'taskname'))
-+                        help="find the signature data files for the last two runs of the specified task and compare them",
-+                        action="store", dest="taskargs", nargs=2, metavar=('recipename', 'taskname'))
++
+ def logger_setup_color(logger, color='auto'):
+     from bb.msg import BBLogFormatter
  
-     parser.add_argument("-s", "--signature",
--            help="With -t/--task, specify the signatures to look for instead of taking the last two",
--            action="store", dest="sigargs", nargs=2, metavar=('fromsig', 'tosig'))
-+                        help="With -t/--task, specify the signatures to look for instead of taking the last two",
-+                        action="store", dest="sigargs", nargs=2, metavar=('fromsig', 'tosig'))
+     for handler in logger.handlers:
+         if (isinstance(handler, logging.StreamHandler) and
+-            isinstance(handler.formatter, BBLogFormatter)):
++                isinstance(handler.formatter, BBLogFormatter)):
+             if color == 'always' or (color == 'auto' and handler.stream.isatty()):
+                 handler.formatter.enable_color()
  
-     parser.add_argument("sigdatafile1",
--            help="First signature file to compare (or signature file to dump, if second not specified). Not used when using -t/--task.",
--            action="store", nargs='?')
-+                        help="First signature file to compare (or signature file to dump, if second not specified). Not used when using -t/--task.",
-+                        action="store", nargs='?')
  
-     parser.add_argument("sigdatafile2",
--            help="Second signature file to compare",
--            action="store", nargs='?')
-+                        help="Second signature file to compare",
-+                        action="store", nargs='?')
+ def load_plugins(logger, plugins, pluginpath):
+-
+     def load_plugin(name):
+         logger.debug('Loading plugin %s' % name)
+-        spec = importlib.machinery.PathFinder.find_spec(name, path=[pluginpath] )
++        spec = importlib.machinery.PathFinder.find_spec(name, path=[pluginpath])
+         if spec:
+             mod = importlib.util.module_from_spec(spec)
+             spec.loader.exec_module(mod)
+@@ -112,6 +113,7 @@ def git_convert_standalone_clone(repodir):
+             bb.process.run('git repack -a', cwd=repodir)
+             os.remove(alternatesfile)
  
- options = parser.parse_args()
- if is_dump:
-@@ -157,7 +160,8 @@ if options.taskargs:
-     with bb.tinfoil.Tinfoil() as tinfoil:
-         tinfoil.prepare(config_only=True)
-         if not options.dump and options.sigargs:
--            files = find_siginfo_task(tinfoil, options.taskargs[0], options.taskargs[1], options.sigargs[0], options.sigargs[1])
-+            files = find_siginfo_task(tinfoil, options.taskargs[0], options.taskargs[1], options.sigargs[0],
-+                                      options.sigargs[1])
-         else:
-             files = find_siginfo_task(tinfoil, options.taskargs[0], options.taskargs[1])
++
+ def _get_temp_recipe_dir(d):
+     # This is a little bit hacky but we need to find a place where we can put
+     # the recipe so that bitbake can find it. We're going to delete it at the
+@@ -128,12 +130,15 @@ def _get_temp_recipe_dir(d):
+                     break
+     return fetchrecipedir
  
-@@ -166,7 +170,8 @@ if options.taskargs:
-             output = bb.siggen.dump_sigfile(files[-1])
-         else:
-             if len(files) < 2:
--                logger.error('Only one matching sigdata file found for the specified task (%s %s)' % (options.taskargs[0], options.taskargs[1]))
-+                logger.error('Only one matching sigdata file found for the specified task (%s %s)' % (
-+                    options.taskargs[0], options.taskargs[1]))
-                 sys.exit(1)
++
+ class FetchUrlFailure(Exception):
+     def __init__(self, url):
+         self.url = url
++
+     def __str__(self):
+         return "Failed to fetch URL %s" % self.url
  
-             # Recurse into signature comparison
++
+ def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False, mirrors=False):
+     """
+     Fetch the specified URL using normal do_fetch and do_unpack tasks, i.e.
+@@ -254,12 +259,13 @@ def run_editor(fn, logger=None):
+ 
+     editor = os.getenv('VISUAL', os.getenv('EDITOR', 'vi'))
+     try:
+-        #print(shlex.split(editor) + files)
++        # print(shlex.split(editor) + files)
+         return subprocess.check_call(shlex.split(editor) + files)
+     except subprocess.CalledProcessError as exc:
+         logger.error("Execution of '%s' failed: %s" % (editor, exc))
+         return 1
+ 
++
+ def is_src_url(param):
+     """
+     Check if a parameter is a URL and return True if so
+@@ -273,6 +279,7 @@ def is_src_url(param):
+         return True
+     return False
+ 
++
+ def filter_src_subdirs(pth):
+     """
+     Filter out subdirectories of initial unpacked source trees that we do not care about.
 -- 
 2.32.0 (Apple Git-132)
 
