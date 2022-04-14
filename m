@@ -1,104 +1,80 @@
-Return-Path: <ricardo@foundries.io>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0280C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E841FC43219
 	for <webhook@archiver.kernel.org>; Thu, 14 Apr 2022 20:37:09 +0000 (UTC)
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com
- [209.85.160.42])
- by mx.groups.io with SMTP id smtpd.web08.213.1649965404013287339
+Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
+ by mx.groups.io with SMTP id smtpd.web08.649.1649967639594393660
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 Apr 2022 12:43:24 -0700
+ Thu, 14 Apr 2022 13:20:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@foundries.io header.s=google header.b=hWJgZGms;
- spf=pass (domain: foundries.io, ip: 209.85.160.42,
- mailfrom: ricardo@foundries.io)
-Received: by mail-oa1-f42.google.com with SMTP id
- 586e51a60fabf-e2fa360f6dso6312079fac.2
-        for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 Apr 2022 12:43:23 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@axis.com
+ header.s=axis-central1 header.b=mhoPwsvu;
+ spf=pass (domain: axis.com, ip: 195.60.68.18,
+ mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foundries.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=19vOzTWH/l+DYofKWl0scEcXMgPMc4CzURUIsgCGsvU=;
-        b=hWJgZGmsXIlTaP7pj1N2KIgIsxdyu0T/2/JMd7olin1RTL4KZdXHY2r6H/6ZECtCDY
-         zbJgumttqO0lSBahfya71RVMPjugHOIndLJ3+yiNUAmeTdXCKiMNVzukMkG0J2VIB2MR
-         96Fi5jwlM0DjBQCFa4PZ94EeuYb8RzG4TuZPzZi6DWH3dx2O7AXdnyC37FYGOO56rmNH
-         tq1pvMb5fWrdGyEgWcrrQHCxYJpv4zSB9HQInFGSVQYgqOpAHzq+0K0+VVdqaER0UHyG
-         Y3rCA+eLGCuuUMEYmacA25xbWrc+dg2mRUWbNclqIhAKzaN2yl1rz9aP0rt05CmWRoi8
-         RuHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=19vOzTWH/l+DYofKWl0scEcXMgPMc4CzURUIsgCGsvU=;
-        b=kjyAejUSK8AVJK/9uOqB4txMR9GG8D1HM6d+CZvfhvBLJK3zEG16NDBdKCRhb+p+tl
-         6t8Nt/jDzMsHlA0tlt4bwDqePAuvlsLb69OVgdRvU77EeWvu5h5A8vWon7kXTHXIdHyU
-         0eXlbHnkFS0PAhyaXOCGFfwGZrd0YW9jQsZbHhxot+LVBCw1/TAyjrC6IL5jhvhSSSn+
-         ZXqz8UxgHYmV+BALPhBCrrkGZFd36sbqcxpi0Fi1xTOOmkCFnFJwkOxcOP4YQlkaUtw3
-         JGM/dBkMYzuX9rzz0GEGZPGduTVqOFhinbRbeZewDSrvGej0VXatbOae78eM/y8rtsyu
-         c4YA==
-X-Gm-Message-State: AOAM533HNotsjRzanESjwRa6C/bxO5ifYTwSuDbN/CftIKg1j6cGlizS
-	A9Rq55aOMwYmix85CMNPeASuf3d245jL
-X-Google-Smtp-Source: 
- ABdhPJwt1fCo6WQRCelBJJTkSHAvrBbUBj2dab14YzZb9bYCSaaMiWWM91H7xJERm1OlMRNsePLjrA==
-X-Received: by 2002:a05:6870:a106:b0:e5:929b:130e with SMTP id
- m6-20020a056870a10600b000e5929b130emr17496oae.92.1649965402742;
-        Thu, 14 Apr 2022 12:43:22 -0700 (PDT)
-Received: from localhost.localdomain ([179.181.86.70])
-        by smtp.gmail.com with ESMTPSA id
- t10-20020a056830224a00b005cd9db03fabsm359931otd.78.2022.04.14.12.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Apr 2022 12:43:22 -0700 (PDT)
-From: Ricardo Salveti <ricardo@foundries.io>
-To: bitbake-devel@lists.openembedded.org
-Cc: openembedded-core@lists.openembedded.org,
-	daiane.angolini@foundries.io,
-	caio.pereira@foundries.io,
-	Randy.MacLeod@windriver.com,
-	anuj.mittal@intel.com
-Subject: [PATCH] bitbake: fetch2: crate: fix logger.debug line
-Date: Thu, 14 Apr 2022 16:42:59 -0300
-Message-Id: <20220414194259.2436452-1-ricardo@foundries.io>
-X-Mailer: git-send-email 2.35.1
+  d=axis.com; q=dns/txt; s=axis-central1; t=1649967639;
+  x=1681503639;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=LdbA7ZDGBbC0ZP4mOEv04I2AQfq2A+ekeZM9CvtlIx4=;
+  b=mhoPwsvu3j4eqS55WItRI2Zg7ymZKlCWsmAoGvY9NWyL4P7T39553pDd
+   NVFchlKF9+2QJ5n42lNeF2cEmFryIbukWY930NUOf+FBxmIblKZHd7AMi
+   44gUbvCDHggtD9hhSCTZR0sFyrpVhn+We5pD4OoirR5iyceYmZ5fmJqCh
+   5KyI1pdrBZ1Yq4PXskehv2HRsbvij1WycpBdfUIZ8i8D+UQeUzmGh6FLI
+   Hsz/zNmvGPZhhGBpZsd94jnIdzGg7JZRYe7DvOLLSHbfdSi9pS0J6AlHx
+   H6vmm0uaTYsOr/jT8fSrJyrqKznBAfXV5wQzwb2vHrihfX5PRPAhGyUu4
+   A==;
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: RE: [bitbake-devel] [PATCH] fetch2/git: Simplify the validation of
+ SHA-1 revisions
+Thread-Topic: [bitbake-devel] [PATCH] fetch2/git: Simplify the validation of
+ SHA-1 revisions
+Thread-Index: AQHYUBySS0qfJtCjHUalHKZtb0eHbqzv2Hrw
+Date: Thu, 14 Apr 2022 20:20:36 +0000
+Message-ID: <a51df30aaebc4da1bb6c02f519ede9be@axis.com>
+References: <20220414154207.25999-1-pkj@axis.com>
+ <083ca178f3da30a8f3f21c641606a7f5267b41b3.camel@linuxfoundation.org>
+In-Reply-To: 
+ <083ca178f3da30a8f3f21c641606a7f5267b41b3.camel@linuxfoundation.org>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.5.60]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 14 Apr 2022 20:37:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13624
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13625
 
-logger.debug was giving an integer value (2) as event message, causing
-knotty to crash when running with debug enabled.
-
-bitbake/lib/bb/ui/knotty.py", line 685, in main
-  event.msg = taskinfo['title'] + ': ' + event.msg
-TypeError: can only concatenate str (not "int") to str
-
-Same issue also happens in the original code that was taken from
-oe-core (openembedded-core/meta/lib/crate.py honister) / meta-rust.
-
-Signed-off-by: Ricardo Salveti <ricardo@foundries.io>
----
- lib/bb/fetch2/crate.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
-index f7e2354a..aac1221c 100644
---- a/lib/bb/fetch2/crate.py
-+++ b/lib/bb/fetch2/crate.py
-@@ -72,7 +72,7 @@ class Crate(Wget):
-         ud.parm['downloadfilename'] = "%s-%s.crate" % (name, version)
-         ud.parm['name'] = name
- 
--        logger.debug(2, "Fetching %s to %s" % (ud.url, ud.parm['downloadfilename']))
-+        logger.debug("Fetching %s to %s" % (ud.url, ud.parm['downloadfilename']))
- 
-     def unpack(self, ud, rootdir, d):
-         """
--- 
-2.35.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmlj
+aGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gU2VudDogZGVuIDE0IGFwcmlsIDIw
+MjIgMTg6MjgNCj4gVG86IFBldGVyIEtqZWxsZXJzdGVkdCA8cGV0ZXIua2plbGxlcnN0ZWR0QGF4
+aXMuY29tPjsgYml0YmFrZS0NCj4gZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiBTdWJq
+ZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFtQQVRDSF0gZmV0Y2gyL2dpdDogU2ltcGxpZnkgdGhl
+IHZhbGlkYXRpb24NCj4gb2YgU0hBLTEgcmV2aXNpb25zDQo+IA0KPiBPbiBUaHUsIDIwMjItMDQt
+MTQgYXQgMTc6NDIgKzAyMDAsIFBldGVyIEtqZWxsZXJzdGVkdCB3cm90ZToNCj4gPiBBbHNvIGNv
+cnJlY3QgdHdvIGNvbW1lbnRzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgS2plbGxl
+cnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb20+DQo+ID4gLS0tDQo+ID4gIGJpdGJh
+a2UvbGliL2JiL2ZldGNoMi9naXQucHkgfCAxMSArKysrKystLS0tLQ0KPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgNiBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdp
+dCBhL2JpdGJha2UvbGliL2JiL2ZldGNoMi9naXQucHkgYi9iaXRiYWtlL2xpYi9iYi9mZXRjaDIv
+Z2l0LnB5DQo+ID4gaW5kZXggYjNlYjgyNDhkMC4uOTAxMDRhYzM4MyAxMDA2NDQNCj4gPiAtLS0g
+YS9iaXRiYWtlL2xpYi9iYi9mZXRjaDIvZ2l0LnB5DQo+ID4gKysrIGIvYml0YmFrZS9saWIvYmIv
+ZmV0Y2gyL2dpdC5weQ0KPiA+IEBAIC0yNDgsOSArMjQ4LDEwIEBAIGNsYXNzIEdpdChGZXRjaE1l
+dGhvZCk6DQo+ID4NCj4gPiAgICAgICAgICB1ZC5zZXR1cF9yZXZpc2lvbnMoZCkNCj4gPg0KPiA+
+ICsgICAgICAgIHNoYTFfcmUgPSByZS5jb21waWxlKHInXlswLTlhLWZdezQwfSQnKQ0KPiANCj4g
+cmUuY29tcGlsZSgpIGlzIGV4cGVuc2l2ZSBzbyBpbiBnZW5lcmFsIHdlIHNob3VsZCBjYWNoZSB0
+aGF0IG9yIGRvIGl0IGF0DQo+IHRoZSBtb2R1bGUgdG9wIGxldmVsLi4uDQoNClN1cmUsIEkgY2Fu
+IG1vdmUgaXQgdG8gdGhlIG1vZHVsZSB0b3AgbGV2ZWwuDQoNCkkgYmFzZWQgdGhlIHVzZSBvZiBy
+ZS5jb21waWxlKCkgaW4gdGhhdCBjbGFzcyBvbiBob3cgaXQgd2FzIGRvbmUgaW4gDQp0aGUgX3Jl
+dmlzaW9uX2tleSgpIGZ1bmN0aW9uLiBEbyB5b3Ugd2FudCBtZSB0byBtb3ZlIGl0cyBzbGFzaF9y
+ZSBhcyANCndlbGw/DQoNCj4gQ2hlZXJzLA0KPiANCj4gUmljaGFyZA0KDQovL1BldGVyDQoNCg==
 
