@@ -1,145 +1,258 @@
-Return-Path: <quentin.schulz@theobroma-systems.com>
+Return-Path: <marius.kriegerowski@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166AAC433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08305C63704
 	for <webhook@archiver.kernel.org>; Thu, 14 Apr 2022 16:03:57 +0000 (UTC)
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com
- (EUR03-DB5-obe.outbound.protection.outlook.com [40.107.4.69])
- by mx.groups.io with SMTP id smtpd.web11.10965.1649939353580581147
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com
+ [209.85.208.50])
+ by mx.groups.io with SMTP id smtpd.web10.10658.1649936605935367399
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 Apr 2022 05:29:16 -0700
+ Thu, 14 Apr 2022 04:43:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify"
- header.i=@cherrycloud.onmicrosoft.com
- header.s=selector2-cherrycloud-onmicrosoft-com header.b=ESnJdL2L;
- spf=pass (domain: theobroma-systems.com, ip: 40.107.4.69,
- mailfrom: quentin.schulz@theobroma-systems.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FAFZG+e/6INrv2dVH3tJiazvq0rYWgzNwFwn0uyWwCJqgHdvB0YjuuSChkN3mnbs2f1K3jclDFYQvGy1NXWbyKFb5fyA9qLNEu1rVVTG6jVlYEoSIYJd8g/WYmlUu0QuDIqChXtBy6+3AhEvT93B57jiicPx1qE3rH8tgeAcp7JykIruQbZAk6xBkAu314KKm+cCIgAaaYUlKMUNC0JR1sJWTsJxY78X7YVYonCBbaf3i+a+f/oj4KwvmZX8fx+zkyNV6CzzEMzHpKvzBnbvOesDMvBSfddUfsl7wJXvFdAudF9pE5ZeVuXIH4I6x/kwkX6VvmH8+LI70JLQ4LE0EQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RiGC+8cMXfBI7sHK3EHKVQZGNNR0uj8fp+5L6KC+Fsg=;
- b=OOOL6tYbvkeDjVycdQGc1N4L7fyMqCp2EwbbM7pV4U9YKjiP5qM9JeYmtkDAvOKHCDxRyjywbHGn05QLeRhsewwNy2FhNbLVru1akRr58f5IUR6qL8+fLATXvZd/BrdnoztKV8BCYX8NLRLUKei52OfAc8rvp06CCiYH98IBG3YC83pyv4RpkFZa3YbSw+Qmo7c/aL19/U2deYybrNHNVHetG2vZVxs5C9RW/J/pKuoiRm5CxzJBdE5BpQSJ0JBRJywI2iYzRarE7kJR8cOPPEbzRofOE1VJ+I1/cVCu9PvitROOXQqj8lrOou6KkJh2Tg4g1mvJKZDHNsw/O/vfUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
- header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
- arc=none
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=Xc4Chie5;
+ spf=pass (domain: gmail.com, ip: 209.85.208.50,
+ mailfrom: marius.kriegerowski@gmail.com)
+Received: by mail-ed1-f50.google.com with SMTP id v4so5984419edl.7
+        for <bitbake-devel@lists.openembedded.org>;
+ Thu, 14 Apr 2022 04:43:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cherrycloud.onmicrosoft.com; s=selector2-cherrycloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RiGC+8cMXfBI7sHK3EHKVQZGNNR0uj8fp+5L6KC+Fsg=;
- b=ESnJdL2L/+54dGeiOzxArLLthe8ha5fbakQ99X/9u0zeXafy2vsqjVw7+jwIdDHto6XSroxSd88Vx9+XjxCq7MRyM3dgaZht8f9JMC1Hk3WOtbyvBGIzgzJNCVPCZJgg/gvq7iUAtReYR1mvnBq+HoBMIP54/zBWwRPU1NWnTOg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
-Received: from PA4PR04MB9367.eurprd04.prod.outlook.com (2603:10a6:102:2aa::7)
- by AS8PR04MB7528.eurprd04.prod.outlook.com (2603:10a6:20b:297::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.30; Thu, 14 Apr
- 2022 12:29:10 +0000
-Received: from PA4PR04MB9367.eurprd04.prod.outlook.com
- ([fe80::bd4b:4dac:7747:3093]) by PA4PR04MB9367.eurprd04.prod.outlook.com
- ([fe80::bd4b:4dac:7747:3093%8]) with mapi id 15.20.5144.027; Thu, 14 Apr 2022
- 12:29:10 +0000
-Message-ID: <003e31eb-6963-3b8d-1547-b2c15b6d5082@theobroma-systems.com>
-Date: Thu, 14 Apr 2022 14:29:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
+        d=gmail.com; s=20210112;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=fvi24Ika/E4d7QDMRcS24sKyv60jeNtPj0YqWrAImi4=;
+        b=Xc4Chie5rfFeoSEX6lsnSjppInDwO4cO0sjvgG+sPRL/6eE7kXRuYtZQ6I2xDKenkt
+         lG0iw5FuZTQSwX3Xh/NVFrdXWKuTMyaaHaKntq9FbhrcKZEeiMbP7G+8F53ImY4Gmowf
+         AsZHWZ3wBje7KwfDY89oAP6bHUkfYx+LGk8Ry6R4H4NZ/ilbnknR53jex7Uehw+fyD7s
+         oXst77RnlsFCJhZeHsAb2dThMZdadq3dRy9wsVydVf4JmWYcE+nF0bi/9/6c2BUjMrn8
+         c497qxFwMxxfAFVipRcsSoNjxn4CtzWRNsjbz1bv9zaq1+QmRd3Nr8U2uQgj+Ygx98W5
+         7X/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=fvi24Ika/E4d7QDMRcS24sKyv60jeNtPj0YqWrAImi4=;
+        b=ooeW9hZSmGueJ9QSWDtnUXI+8OSLJBHnEwix4d/dUxTI8xhFaj5RDa0yioplpCwo0F
+         vQnKLt1XUj5LhHjJHNWSHnOamkHl2nCuDQ3q5uXdY4S0Vcem/s8c5x8s3gyQdxgNdnoa
+         TrS2yJw3uhv+UG+Ae5/0eSJRecWmi6YdBg9xFfcCs5n3RylyoEuYytKy7pSERccStwqv
+         JP9jzhqRwxKhLLaZaKJZgs4Hd6R4ba13PyF4yd382w75EPwrv5BM4p5ktiimCOeQEvSN
+         2BLH04E/MO6yj+zYXm/VLdAAkC87iGtO8QO2++xmAx6HeJQZxv1NvAx3rERMfUMTQ15U
+         DYuA==
+X-Gm-Message-State: AOAM530b0AzwAZT56E46p3r+18ycbWsjTQi2Vb1KGK+JlePMV0DEBrhY
+	Prcc5tR5zxNPMXHfPobM57Xnhb8djAo=
+X-Google-Smtp-Source: 
+ ABdhPJyGLDykSA2+Vc2C+VxER3d+jIy1YKBMQ/9ifC2YNc+60I5C/GdIAcLmaUY4Tj3zlVVC3Rjj5Q==
+X-Received: by 2002:a50:fe81:0:b0:419:16a5:d265 with SMTP id
+ d1-20020a50fe81000000b0041916a5d265mr2520516edt.4.1649936604441;
+        Thu, 14 Apr 2022 04:43:24 -0700 (PDT)
+Received: from smtpclient.apple
+ (dslb-178-003-195-224.178.003.pools.vodafone-ip.de. [178.3.195.224])
+        by smtp.gmail.com with ESMTPSA id
+ 10-20020a170906310a00b006e834953b55sm535995ejx.27.2022.04.14.04.43.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Apr 2022 04:43:23 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.40.0.1.81\))
 Subject: Re: [bitbake-devel] [PATCH] scriptutils: fix style to be more PEP8
  compliant
-Content-Language: en-US
-To: Marius Kriegerowski <marius.kriegerowski@gmail.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC: bitbake-devel@lists.openembedded.org
+From: Marius Kriegerowski <marius.kriegerowski@gmail.com>
+In-Reply-To: <YlfllwA72TEcOCPX@mail.local>
+Date: Thu, 14 Apr 2022 13:43:22 +0200
+Cc: bitbake-devel@lists.openembedded.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <49046AA1-E85B-4373-9208-0016EC418B5F@gmail.com>
 References: <20220413141922.41322-1-marius.kriegerowski@gmail.com>
  <YlfllwA72TEcOCPX@mail.local>
- <49046AA1-E85B-4373-9208-0016EC418B5F@gmail.com>
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-In-Reply-To: <49046AA1-E85B-4373-9208-0016EC418B5F@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: AM6PR0502CA0043.eurprd05.prod.outlook.com
- (2603:10a6:20b:56::20) To PA4PR04MB9367.eurprd04.prod.outlook.com
- (2603:10a6:102:2aa::7)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f6144fa7-c69f-463f-220c-08da1e126097
-X-MS-TrafficTypeDiagnostic: AS8PR04MB7528:EE_
-X-Microsoft-Antispam-PRVS: 
-	<AS8PR04MB7528918560434782A969536EC2EF9@AS8PR04MB7528.eurprd04.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	nU1Sb6k8MgRcu0sq77TYjTi3tWwOnGFbqdpSeA5mI48wlhhG+nNVzEHSyRiX+EogTRk1zJP/2CeyF1y0OcuhyQERUnuNP3qSjdH8nA5xrinUbN9sfylLW6VwSZKbZ5pImyCfujaANyNfs/OAeJbVI7KwvBrvszLRMUzaAIhmWbfFc3+x0atK4yAm2ls4qt+FP1g6xcklLSTGeE8mWP4NyJBGAS3/mvXknh4hb1PJ3+b7GIHeLUZDBwMzNAnev2IBHr4DrBtF0kmuP3Komp8WosxT++Qjg4CN7ApE0rN5FXfMyNrZoflzi91gMGwxoLJcCw817ZxPer3/wU144ry84ph25TyuWSisumjd4ATFDcsOA4ENaysdasanvrdTXkjq6SBf5Qd6JXtn53auz+o664hwKOw621eZGD/4gx32u4LyF9ZDBGtTXjdmDdKr/cDrTq/JlVUqumVed7aml3Fzy8ldkWxDv/zU0iv0Vd28BPpeUxLA1Hyow5UbN6s7sU5Gv/t6qbTfB7slzbtVnA+KYOC7o+f1toe1kvdt79BZkJYPL+PzHBITQkg7cbHsZSXhC4S5n0xNVwx7Nt8j7Swf3nTFt66gLRo0wPHV1rDS/XNfXf5RTkiAXku76dCdFysmQqi9ElOhoG65h4oB0A1gwC6amG9pqHFa6B602hUqDpk48AZtkrGwYEgaEabuuwu8dXll7cjGvKKhjnC3OxhFrpRPn9pKBrL2jOdfX3dqej4=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9367.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6486002)(6506007)(5660300002)(2616005)(316002)(508600001)(66556008)(66476007)(2906002)(110136005)(66946007)(8676002)(8936002)(4326008)(38100700002)(6512007)(26005)(53546011)(44832011)(186003)(4744005)(31696002)(36756003)(31686004)(86362001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?BtM1uQzGCamSZDSH6xFUV43k6Mg7/15cHMnmMSepUHILbiPn8619yfNbUSM9?=
- =?us-ascii?Q?9j9ei4zP2DadudzfVdoZe5omTuTflTtqjRqtPPS24QE1JnIbA2+Y1QXY6eTE?=
- =?us-ascii?Q?5tf3BU0m81qguVrfdEwphuNkYBWkIPC3L3Vt2fWzxll568Dby++2v4DLA+cq?=
- =?us-ascii?Q?0x+He9chiv128/f+had4JPtUTuQ0gmzrlZrJicka1k3oA3pOiEcv+/FiG8rg?=
- =?us-ascii?Q?QX0aaKAptsfG3KgdMOWZtPEKPi98INfZyY1IGh4iG8uVlneXgfkjhCBCITAN?=
- =?us-ascii?Q?JTfFlIwGGU1Zw0vU3Nxwt+KNNL2zC0nQcIJe5luOLv5BqGSJUnT0kuOPhGMv?=
- =?us-ascii?Q?0LnwFA4sDSWb88w6WKnlfntQbx6JUJivpOWU3YU6YAFokh0VlzSIyMgDEKTj?=
- =?us-ascii?Q?p6k73FPiYnFPGQ7TGF/1MLMSJTtpdMYRSywcn3kIGmZfXetTMmG2Ra05eGiy?=
- =?us-ascii?Q?NhHVx43m1ekTjY76JToFKQ/oAT/Idajkc6NuD6RYD9lLau4yfkpee0KTrzJP?=
- =?us-ascii?Q?402kLIlMxxahoCGoX79VgwX07VFgHdAa/dSifyKCEIq+I+OxqsoNrtdOnEgm?=
- =?us-ascii?Q?mg2Ryjg5mw7BH1zn84QpiKfLf62C/tDAUKNPZofMxxBqXloeWgqc83BxFVzR?=
- =?us-ascii?Q?F3qkvI4uxCK8P7ZHiuyvOKGdMRdCXxH/Uc9VSQ2MSVAa7/wtMWYvCfx8ES54?=
- =?us-ascii?Q?z5KfKKSSQ6K/Oz0KGzr5tgeYs+tcHydBzEO+yml6hA3hAB+FcWDWZxX8z0KZ?=
- =?us-ascii?Q?NAlAMMqBKnPB4+nV6I3UA7cSlU+jo7mGWCe/H9pVcRtiYfzlQy4kDB3kF2WL?=
- =?us-ascii?Q?fY6333Cftpeynf0hnZ4motDHQ177m03pXX1mOlvapgQt5ITu9GFb2wudoRiI?=
- =?us-ascii?Q?4Zp64j3/ZOz/IVMIBoRJh07V7bPjdAcDi++E2yTRhclCkr/t14LHOpA2jSaY?=
- =?us-ascii?Q?IH0+uQrKXfb8rGS3Nk3Yxt3d9hhiyysuToN00nrwBxo6rHcp2WBrBqczSsLr?=
- =?us-ascii?Q?jWGV2RgwLC6H+AXrUUj9ABkPiQ5/j90zmQcQEPrf9cNnTN59hFSgrbObmjza?=
- =?us-ascii?Q?BoO930rYCSF/yiiNIdQiBE+cGSChsz1fxmfVx92kjCDKW2KyXTk5xD6rG6mv?=
- =?us-ascii?Q?Ipv1FX3IbYS7R/leWdImThyjq6HcvnZpPsY+9o9PscLKGgk79NqVY7AqJ528?=
- =?us-ascii?Q?zovVOPP4Y1NdsQXkEM+3vam8pj+YiYuleXSAbLUYrBsJMNczzUDqqn4IR/Ct?=
- =?us-ascii?Q?N5KrxRuzXlqqdEavfX838uNbcUubanXsIatW+FppgIJZx+uDDL6Dk+kkSTro?=
- =?us-ascii?Q?iX4Y9T+BFcf+vMi4WX848v767iULSlPJlo5kSvthGhRXo+5/GRqGFdalQYsM?=
- =?us-ascii?Q?3XNtOhfqM8vSveiKEiVWF8dpvbn9UXUqdmgE+D3BoXj497+Q6lMAhp6AKxLC?=
- =?us-ascii?Q?mAjoXq5/EfhgZrXPWqFvfntKu4xPMvVtLniIWbLUVlG2XMpfbAYlvi7cbLOA?=
- =?us-ascii?Q?iGK6P69Z/SWlUhA31ON1AaoWDrcCh4h0MNnAkgcWyjRm/xljFjIWa5dKqSTH?=
- =?us-ascii?Q?a+cD7KcJLMx31PB3mFHTO6kJTKuWe7pKpzjYXVGYld1vnHsz3jiYxV6FCTsf?=
- =?us-ascii?Q?gr/MX012BEdmCrsF3LA656hG+kMeBUIjitBIi3L1uuQBJOPFtymcIlDyXAlF?=
- =?us-ascii?Q?OAgHrJVFfdUb3Dbyi9lVPCjelvt5/3RqzYA8Skc/XzpGEuCssbL/nugFbF59?=
- =?us-ascii?Q?yV31c9FOHt65A4P7Cg9mxLcGxg2Y+DC/9+zDEkoWhxO2cOM4V7jt?=
-X-OriginatorOrg: theobroma-systems.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 
- f6144fa7-c69f-463f-220c-08da1e126097
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9367.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2022 12:29:10.6202
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 
- Q7+dLejtqIn0P5UJmu6BTFhtkcaqiAcs1FFe4vppoqa5lsSradBnZHNva3td7g6oG9W8tDciO2BOijdOvCxVtgjuVu1s3rFiIioI38rvJtBMcgLda5WFX2mqLDs+Ezr4
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7528
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+X-Mailer: Apple Mail (2.3693.40.0.1.81)
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 14 Apr 2022 16:03:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13619
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13618
 
-Hi Marius,
+Hi,
+Thanks for the reply. I rebased on master and just resent the patch. I =
+think this procedure created a new email thread and didn=E2=80=99t =
+attach to this one.
+Not sure if this is the way it=E2=80=99s supposed to be.
+Sorry for the inconvenience
+Best
 
-On 4/14/22 13:43, Marius Kriegerowski wrote:
-> Hi,
-> Thanks for the reply. I rebased on master and just resent the patch. I th=
-ink this procedure created a new email thread and didn=E2=80=99t attach to =
-this one.
-> Not sure if this is the way it=E2=80=99s supposed to be.
+Marius
 
-That's how it's supposed to be :) However you should have added v2 in=20
-the patch series (git format-patch -v 2 or git send-email -v2 I think?).=20
-I'll let maintainers decide but there may not be a need to resend a v2=20
-for this one here (it'd be "spamming" the mailing list).
+=20
 
-Cheers,
-Quentin
+> On 14. Apr 2022, at 11:12, Alexandre Belloni =
+<alexandre.belloni@bootlin.com> wrote:
+>=20
+> Hello,
+>=20
+> This doesn't apply on master, can you rebase?
+>=20
+> Thanks!
+>=20
+> On 13/04/2022 16:19:22+0200, Marius Kriegerowski wrote:
+>> Signed-off-by: Marius Kriegerowski <marius.kriegerowski@gmail.com>
+>> ---
+>> scripts/lib/scriptutils.py | 23 +++++++++++++++--------
+>> 1 file changed, 15 insertions(+), 8 deletions(-)
+>>=20
+>> diff --git a/scripts/lib/scriptutils.py b/scripts/lib/scriptutils.py
+>> index adf81476f0..b265b5c838 100644
+>> --- a/scripts/lib/scriptutils.py
+>> +++ b/scripts/lib/scriptutils.py
+>> @@ -5,7 +5,6 @@
+>> # SPDX-License-Identifier: GPL-2.0-only
+>> #
+>>=20
+>> -import argparse
+>> import glob
+>> import logging
+>> import os
+>> @@ -21,11 +20,12 @@ import importlib
+>> import importlib.machinery
+>> import importlib.util
+>>=20
+>> +
+>> class KeepAliveStreamHandler(logging.StreamHandler):
+>>     def __init__(self, keepalive=3DTrue, **kwargs):
+>>         super().__init__(**kwargs)
+>>         if keepalive is True:
+>> -            keepalive =3D 5000 # default timeout
+>> +            keepalive =3D 5000  # default timeout
+>>         self._timeout =3D threading.Condition()
+>>         self._stop =3D False
+>>=20
+>> @@ -36,9 +36,9 @@ class =
+KeepAliveStreamHandler(logging.StreamHandler):
+>>                 with self._timeout:
+>>                     if not self._timeout.wait(keepalive):
+>>                         self.emit(logging.LogRecord("keepalive", =
+logging.INFO,
+>> -                            None, None, "Keepalive message", None, =
+None))
+>> +                                                    None, None, =
+"Keepalive message", None, None))
+>>=20
+>> -        self._thread =3D threading.Thread(target =3D thread, daemon =
+=3D True)
+>> +        self._thread =3D threading.Thread(target=3Dthread, =
+daemon=3DTrue)
+>>         self._thread.start()
+>>=20
+>>     def close(self):
+>> @@ -56,6 +56,7 @@ class =
+KeepAliveStreamHandler(logging.StreamHandler):
+>>         with self._timeout:
+>>             self._timeout.notify()
+>>=20
+>> +
+>> def logger_create(name, stream=3DNone, keepalive=3DNone):
+>>     logger =3D logging.getLogger(name)
+>>     if keepalive is not None:
+>> @@ -67,21 +68,21 @@ def logger_create(name, stream=3DNone, =
+keepalive=3DNone):
+>>     logger.setLevel(logging.INFO)
+>>     return logger
+>>=20
+>> +
+>> def logger_setup_color(logger, color=3D'auto'):
+>>     from bb.msg import BBLogFormatter
+>>=20
+>>     for handler in logger.handlers:
+>>         if (isinstance(handler, logging.StreamHandler) and
+>> -            isinstance(handler.formatter, BBLogFormatter)):
+>> +                isinstance(handler.formatter, BBLogFormatter)):
+>>             if color =3D=3D 'always' or (color =3D=3D 'auto' and =
+handler.stream.isatty()):
+>>                 handler.formatter.enable_color()
+>>=20
+>>=20
+>> def load_plugins(logger, plugins, pluginpath):
+>> -
+>>     def load_plugin(name):
+>>         logger.debug('Loading plugin %s' % name)
+>> -        spec =3D importlib.machinery.PathFinder.find_spec(name, =
+path=3D[pluginpath] )
+>> +        spec =3D importlib.machinery.PathFinder.find_spec(name, =
+path=3D[pluginpath])
+>>         if spec:
+>>             mod =3D importlib.util.module_from_spec(spec)
+>>             spec.loader.exec_module(mod)
+>> @@ -112,6 +113,7 @@ def git_convert_standalone_clone(repodir):
+>>             bb.process.run('git repack -a', cwd=3Drepodir)
+>>             os.remove(alternatesfile)
+>>=20
+>> +
+>> def _get_temp_recipe_dir(d):
+>>     # This is a little bit hacky but we need to find a place where we =
+can put
+>>     # the recipe so that bitbake can find it. We're going to delete =
+it at the
+>> @@ -128,12 +130,15 @@ def _get_temp_recipe_dir(d):
+>>                     break
+>>     return fetchrecipedir
+>>=20
+>> +
+>> class FetchUrlFailure(Exception):
+>>     def __init__(self, url):
+>>         self.url =3D url
+>> +
+>>     def __str__(self):
+>>         return "Failed to fetch URL %s" % self.url
+>>=20
+>> +
+>> def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, =
+preserve_tmp=3DFalse, mirrors=3DFalse):
+>>     """
+>>     Fetch the specified URL using normal do_fetch and do_unpack =
+tasks, i.e.
+>> @@ -254,12 +259,13 @@ def run_editor(fn, logger=3DNone):
+>>=20
+>>     editor =3D os.getenv('VISUAL', os.getenv('EDITOR', 'vi'))
+>>     try:
+>> -        #print(shlex.split(editor) + files)
+>> +        # print(shlex.split(editor) + files)
+>>         return subprocess.check_call(shlex.split(editor) + files)
+>>     except subprocess.CalledProcessError as exc:
+>>         logger.error("Execution of '%s' failed: %s" % (editor, exc))
+>>         return 1
+>>=20
+>> +
+>> def is_src_url(param):
+>>     """
+>>     Check if a parameter is a URL and return True if so
+>> @@ -273,6 +279,7 @@ def is_src_url(param):
+>>         return True
+>>     return False
+>>=20
+>> +
+>> def filter_src_subdirs(pth):
+>>     """
+>>     Filter out subdirectories of initial unpacked source trees that =
+we do not care about.
+>> --=20
+>> 2.32.0 (Apple Git-132)
+>>=20
+>=20
+>>=20
+>> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>> Links: You receive all messages sent to this group.
+>> View/Reply Online (#13613): =
+https://lists.openembedded.org/g/bitbake-devel/message/13613
+>> Mute This Topic: https://lists.openembedded.org/mt/90441542/3617179
+>> Group Owner: bitbake-devel+owner@lists.openembedded.org
+>> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub =
+[alexandre.belloni@bootlin.com]
+>> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>>=20
+>=20
+>=20
+> --=20
+> Alexandre Belloni, co-owner and COO, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
 
