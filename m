@@ -1,190 +1,229 @@
-Return-Path: <anuj.mittal@intel.com>
+Return-Path: <marius.kriegerowski@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20C5C65BA0
-	for <webhook@archiver.kernel.org>; Mon, 18 Apr 2022 14:26:02 +0000 (UTC)
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
- by mx.groups.io with SMTP id smtpd.web12.3950.1649998830625236836
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D08DC6786C
+	for <webhook@archiver.kernel.org>; Mon, 18 Apr 2022 14:26:03 +0000 (UTC)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com
+ [209.85.208.54])
+ by mx.groups.io with SMTP id smtpd.web09.6166.1650021827923712456
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 Apr 2022 22:00:31 -0700
+ Fri, 15 Apr 2022 04:23:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="unable to parse pub key" header.i=@intel.com header.s=intel
- header.b=d+bHvp4f;
- spf=pass (domain: intel.com, ip: 192.55.52.43,
- mailfrom: anuj.mittal@intel.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649998830; x=1681534830;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=II4dEdb8jnpRxQ84f1LUN/vIw4mIb8UxyoG89/YNTWU=;
-  b=d+bHvp4fetbFWlJO3E6/FsN9KOmb7SEKD9kNZlcw+NCzx2mO7sM7m2lD
-   yj6J8KXKs1yICgHy9N3qs/GvXlnz15TussrnChWLuh1Gf0AaStRj8GjGB
-   PPW+a735oAJqFXU9IZS1x754nGL5vgUpFNu694xB+K2wQo+LV1WQ51vJ2
-   vBNYJEHCpHWjyJx4kNiE7ZknK67htXC7/sFCnaCrgFsfWH6BXfmwfnAaK
-   MEqD8d03JfAerP9hX6nmEgYqv8weMkNxkY2rfqsDgknwID1+bIbm0rjXa
-   9qLZonaVvveiYUB/9LaOkJoDqro0KOpHMGinVNnKPNI2QtuhWX3+63r/0
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="349529988"
-X-IronPort-AV: E=Sophos;i="5.90,261,1643702400";
-   d="scan'208";a="349529988"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384;
- 14 Apr 2022 22:00:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,261,1643702400";
-   d="scan'208";a="591447385"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga001.jf.intel.com with ESMTP; 14 Apr 2022 22:00:29 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Thu, 14 Apr 2022 22:00:29 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Thu, 14 Apr 2022 22:00:29 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Thu, 14 Apr 2022 22:00:29 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Thu, 14 Apr 2022 22:00:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PAxtnLOVwQ/1DHep91/xZXLlA9EkeO7crSzT5PsJMfcdvFL39PLz3WMbe8JpNAxBaVsL47XgjnY1f2GELV8SY9jiyoMzCRx8kH6JJWZQRaPY0kvh3EPYm/fnr+e4UjB6RkkRmpRMt5r05aHi7q6wvKtDKy6eE8WVExc6HPZmVZBEf8KYtkkxBuTpk0noBs0Gc2HCs0xChVwkpFjsn6oT9Nk3v9CFxqQWNxdwutFvcPDfRFnU/vzWyzrWwBedG0bC3SlwzOotwjnK2fpCHsxDOK1e5VvzWIvVN09IZ8p26jY6qPT2qMYt1oRrDsk4wyRVOD7Px3114ifYg+rbGYfZyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=II4dEdb8jnpRxQ84f1LUN/vIw4mIb8UxyoG89/YNTWU=;
- b=knOr6gdejJjk8eHnjpZLH0fbf0e2UcOtlmo5iFWk1/CSZ4OelHCGNfqCrLuFuVH/7VXtOl4el37pTE4sFY27do/I5J+T0lgJ2x/3NilOa7VCTps8ExhMz64HzFlwqjGFA0OCwHGKec+oYIQLWwCqnmCajDqjV9m3OE8ADHCAwvNo8SlckNYO0N9e3+LPjwqAxMofNGiHBXaWE9B54zge7hmHpu72kvV+wXW3ykZqB+FxoCwUBJPDN34tC5UO2BDY5zBssJ74b9ElBUek/W05PP4YY9X287Ly5wFp1CiaH+4IZ4c4DyG/fFCbfjj6HxswkdYI2ZLnnabNCFV9Ea1czg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ0PR11MB4896.namprd11.prod.outlook.com (2603:10b6:a03:2dd::20)
- by DM5PR1101MB2314.namprd11.prod.outlook.com (2603:10b6:4:58::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5164.20; Fri, 15 Apr
- 2022 05:00:26 +0000
-Received: from SJ0PR11MB4896.namprd11.prod.outlook.com
- ([fe80::8159:14f9:7d9f:9bdd]) by SJ0PR11MB4896.namprd11.prod.outlook.com
- ([fe80::8159:14f9:7d9f:9bdd%5]) with mapi id 15.20.5164.018; Fri, 15 Apr 2022
- 05:00:26 +0000
-From: "Mittal, Anuj" <anuj.mittal@intel.com>
-To: "luca.ceresoli@bootlin.com" <luca.ceresoli@bootlin.com>,
-	"marius.kriegerowski@gmail.com" <marius.kriegerowski@gmail.com>
-CC: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] scriptutils: fix style to be more PEP8
- compliant
-Thread-Topic: [bitbake-devel] [PATCH] scriptutils: fix style to be more PEP8
- compliant
-Thread-Index: AQHYT/R1H1zziU0JGUOBUtXnYEWKO6zvgyoAgAA12ICAALKEgA==
-Date: Fri, 15 Apr 2022 05:00:26 +0000
-Message-ID: <21a09c414ff08dcb87f1b5a2c127069e9aacfe45.camel@intel.com>
-References: <20220414114009.56067-1-marius.kriegerowski@gmail.com>
-	 <20220414170846.55417ac0@melee>
-	 <9418ABBB-4F3C-4062-860A-53068272E18A@gmail.com>
-In-Reply-To: <9418ABBB-4F3C-4062-860A-53068272E18A@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.42.4 (3.42.4-2.fc35) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b1e8f1ee-d5c6-408e-2208-08da1e9cdaea
-x-ms-traffictypediagnostic: DM5PR1101MB2314:EE_
-x-microsoft-antispam-prvs: 
- <DM5PR1101MB23141257F6273F016019B2A5F8EE9@DM5PR1101MB2314.namprd11.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- mphd5uJMPgjYYdaqBOl/Ur46UG9Bibq3d1UHSXULhrq5rWoPWErKS+Kfs1SeA9beC6e00ASuXbkxWhcgeDM7c266r+Agsg5QXvjCGrqQXTKF8Sz0DkDD/E9R1dtx1dTdMjy7+xqU7KwdPaVUQIABUWrCZ6Et6bDqy9Tgdb6wqZxFW7s/YpinnC+uXilZksyInbOaP0YiysM8YVXeWrPYutJrxA8Dwdg4+6DEryQPx7MR/JN37QQ/3/vEtNrZLhLW22/jhkoLrKvqgsR0+4dclrrc3HPPUn7ZCvd97lzYqCX8P9mpD1vdZWvrnVOVqvkLvvxwo4pSJUW/LGQB7iht+Nf+WBmr0y24JQ2qcqQkgdoK5dnW084q6WCrqWKMQwBcnZNmTCodoOZ92e8crk+ja28aRN4GbIyFA5Xiajhj8kBFVYqWgL2/h38pZTLS84I+Z+ow6PUa5pGq1zjhpb41NYE1s576EThIz5fi0ECcDEmkJpoNHmVY+6+jdm389A8xxOpLvYRdrcZf3gs2HdtLxXNjr+M2RjkzFlpHecIrVOZYhj5LpoIr0er50ZVYTdUW58KM6E9vFKk7N5PXxwC6hoSwD1BaKk82N6tIjQOvwum0RPLfyyKrEW+vHK3N6zYe65yMNek46yJxIRkjKLy9kS8WLFQXNK4S+LHf4f0I1AN1inf2A4pT4SE56Mc8T8+Cj81eAsN3oI2q0OnBxCwEYnbDCG1Tg6YBJ+U1UNovzrqSY3PB0G9sxuzvPOBHSCX7OXiDvTie/HezBnwjddX81uQphREg9QV/YwXMaOwWtFdrumQd5j8KyDPkVOE4NZeunCv6joC/dRz8BwMT28007w==
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB4896.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(122000001)(82960400001)(5660300002)(4744005)(2616005)(36756003)(38070700005)(38100700002)(110136005)(316002)(83380400001)(2906002)(86362001)(91956017)(66446008)(8676002)(4326008)(71200400001)(508600001)(966005)(6486002)(66946007)(76116006)(66556008)(64756008)(66476007)(8936002)(26005)(186003)(6506007)(6512007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?RUJYL3FFTzl4MHVoVDlIWTlWZXYvak1iMk11Q2s0ZUgyaC9tU3NURmdvcnc0?=
- =?utf-8?B?eElsTzJTLzVmeDJaRVBRT203WnRpaEN5aUdhdXVwUEdpeE1tbFZ2Y3dTTVBJ?=
- =?utf-8?B?RmVBSEdNc2EyZHVwV1d5bUVuaTNPdmY3QkV3ZkZsRmdwVURTQnoyaytZWlE5?=
- =?utf-8?B?OFZocjVJN1BMMitLWXd2NHIxRllRMlRFeElsNjNMSVlVZVIzb1ptVVpHVjlB?=
- =?utf-8?B?TmRmeElkcUJleDR6UnpoTXkrUGg5UjVDZDNoMFNQWDBWUEd0Q0oxSFNlU2Ni?=
- =?utf-8?B?eUVpWDhabFZLa09MRXoyclYzZnAzTVcvei9pdG05cGUxSEJWUExTMW9nRnZy?=
- =?utf-8?B?T3lCK25oQnVyNVRrTVFzd1BuUFY1MFVBb0UyQWtGVzVzSnBUL1JQV1ZSdDBp?=
- =?utf-8?B?STJYbmdQNzJjQWh4TzZRY3FRbGZKOUFuOHdEcWVOVjhkem8yK0xxc0dlMHBO?=
- =?utf-8?B?UDAvQUJhVnJzeXYvUTVlT0NrdFpjVlVoYTdCcllVNkZDZTY0TmMzYkJtMGti?=
- =?utf-8?B?MlRMMmVRMEQ5c2Q2dzBmRUY5c1EwSUdQTXN2UmZJY01SUmxxVlU3Q01CY2k1?=
- =?utf-8?B?QzUxMngxVjJrRHN4MWgzZ0VDQ1MxNTJOYkdKNkRLTDRBTzRJS3BYTTk0dzgz?=
- =?utf-8?B?VkI1S00vR0hXdHk2cTRLWFRaeUlWTWMwazNQVXdmeWFCQXNhdFdCZDFBdHBR?=
- =?utf-8?B?THgyRklNL3IyVHpBdks5NE1ZUm5USDdQM29FYzFhWTgwUUxBdUVDUmNNN3Zn?=
- =?utf-8?B?a0x5ZTBzMVJLRDVNclAwSzlISzl2VU01V3FwNzRGRGFIVHRpMTJLaitqUE1M?=
- =?utf-8?B?VkUvQWppQllLd3dhTVBiRVdRa1RSWElCWkxUZTlhaDloMjVSVTNiTlJhQzhk?=
- =?utf-8?B?UnJkQXdTRnZjaXVMQnJ6Q0xDdVkzbGNzdWN5eElQazlTWG1DdU96VXJwdWNU?=
- =?utf-8?B?WDhoT09GRm9VOTJsTVI3OFBCcVI0OHJ2TmErSU5qdlJGV2lHZmdwbURQQ3BN?=
- =?utf-8?B?QnYwbVRjclF2QmpscHUxdVQvWDRwK3VXMnJqNjlWTmRtSmxJNHFUSHFHTisx?=
- =?utf-8?B?RHF3UktiZVREaThpUnlUdnhDYTFWTVRIamlselJqbnBWNmtkVHh2ejVyRC9P?=
- =?utf-8?B?NW5nbHo4V29xTGc5eG1Vd1NRNHppMktWRnl5eDI3UmRpN3NreklVdFpEelJO?=
- =?utf-8?B?MjluRDhYd2VnbFFFZ09OdVdZczAxUnJLbTMvU0Jha1Q2encwQS9mY1J0UEZE?=
- =?utf-8?B?QmNRZ1BGN0hZaGJZNFZhbmpBanpNRGc0RThKWlF1OTRZbUt6RVh4Zk0wZlcr?=
- =?utf-8?B?S3djOHJhOXhqL09rMjFTMGgwRnJzMEFqdk1EeEFjNHpvNm9KOVNvWXRqUjBR?=
- =?utf-8?B?ZEo5eTk4ZUJzZUJaZVFMdExTNnZUcWdYdWZXMEJpaElHTk1vUWR6R2hpSmRB?=
- =?utf-8?B?d2ROTU1pWEptQVJUekpaTGhOM2NTemF0SFVoL0o1NWRQNG1nQnpBQXA0QjRG?=
- =?utf-8?B?R1Voek9vT2VuQTY1OU9uMEp2cFBTUUVuc0hKd2VVS2Z5d3Y4T0JqTjlwTGlO?=
- =?utf-8?B?WEhoMklvR2ZGbWRKWm5sdXAvOHdUYThqSGU0WnJBQUtpVzN5MjhkTlNTdko1?=
- =?utf-8?B?aktPYmI2OURoUW81TmZmZ1dSQzU3eEdwKzg4M1FTL3dwMHZIT093dkI5dDgz?=
- =?utf-8?B?RlFCRERKbXFEV1VTMU9xcXY5UWJHRFc0YkVXakcrWHM2UnQ4MVJJQ1cvdytt?=
- =?utf-8?B?VGFLZWxPUEpBNDZCeEo0V2JJeHNwWXBhZTcrUCt0ZHFyNFRVa1hxVHZrMEZ3?=
- =?utf-8?B?WEhWTXQrWkhKVmV3TjBrYVByVVo3cERDb3E0MFlibzlvc1JuZElza3NTczBR?=
- =?utf-8?B?K0ZuZ3RxaXVKekNWT0NxbE1HaUw5dm8veWVPdHAyOFRtZzVuNkhmZEJwbC94?=
- =?utf-8?B?Y0d2VUlZdnl5c0tmSFVlMzB6cmZLSVdURUp5WFAySjJGY2RnOU1MdS8wQ09a?=
- =?utf-8?B?N1J1dnpNSExiQU9CZXVkSlgxek4vaTNnVTNKS1ZlRDJBdEdXb29NblFsMnR6?=
- =?utf-8?B?V2xBZDBmYVdoRDFZYjRRT3JjOEFXSHJNYURFZmZtdlpVcDBJaFVITG5TQXhn?=
- =?utf-8?B?cmRoZlZ2MXhVQ1FxSzhZUjVsa0lkYmhxYXp2N25BbjI1YjRmWENiNEkxSDRY?=
- =?utf-8?B?M2Q2dlZDNGFoeHFTZGNibTFFdVRSZHBqajZjMWMvQW1CbkN5ZDlZRjNySmtv?=
- =?utf-8?B?V3gyZnRzTVNvYVAzSHF4Yk5ObDAxU3lIbnpET0hjdkkrMlRadGFFNFkwUTl6?=
- =?utf-8?B?SG1HQy9SaXQxOW5hb1l0Z0hmZlhCcm42ZTNabWwrRjBuSEUyeDBnMnBiUEFo?=
- =?utf-8?Q?2unp4k/tX7Xjn+0M=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F09E73DEB45DA74CA1473C904C38E3CB@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB4896.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 
- b1e8f1ee-d5c6-408e-2208-08da1e9cdaea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2022 05:00:26.2074
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 
- hsCO50mb/JYxybyjlvVK6+HE7Inzeg4KEqC/AHv+qhcI8A9siV/07mqhyy0pjv7XRvjqVRhrL1TTNKyIKStwRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2314
-X-OriginatorOrg: intel.com
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=OrLqGqmN;
+ spf=pass (domain: gmail.com, ip: 209.85.208.54,
+ mailfrom: marius.kriegerowski@gmail.com)
+Received: by mail-ed1-f54.google.com with SMTP id g20so9596363edw.6
+        for <bitbake-devel@lists.openembedded.org>;
+ Fri, 15 Apr 2022 04:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=BekgkDyzYhF1sd+QkhE+VzEWupgyEETxjAkUD0iguUc=;
+        b=OrLqGqmNerk2uUf7OhuhrSOLZl16FOUdF+xM2Wq3MAKb//goOmzKQvfrgUpQ08FmDt
+         QKlRB1MWhy9diFvQlS0XxiNyVN5ojfVuOIT/sP5Or30h4D5Xk8u+2StyNvQymyplILBJ
+         h5JzceahxwRlUV8AR9UcM3YuyAJLKVaS2meD4GA6DNE0tabWzhWeZ5E2kNJ9htz2GEvk
+         83pC7vzgESxoN8eg7F0G7LNreeMzEQknfndNUMhnmEDrLSfpBt+ZDCY/SfZSarF435Wk
+         7PWbf8ajenIHHERkhaWJMZg6iWzkwXGzXLilyLtQwHM2u+zFgzix5Nt17d4zZfubEMfy
+         GDlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=BekgkDyzYhF1sd+QkhE+VzEWupgyEETxjAkUD0iguUc=;
+        b=MLU24Z1cYFp9go/5TYRRiuye8BzSs2jKEFnaQQG/VweHxlrjabOcFBUJZs/Hn+2wwe
+         DuHGBr48xGnRRvBpa4F0441ToGyMMQqR5l0OQEi2Ur+hXABnQWaAo57YNEfe6DkhsplI
+         R/zoiV8yOxU0de+rXp5m0ZFPDr6J+bJ+laSgI/Bec7u6y//cCbjkmuqjvMK0dx3yU6CL
+         /hhXRl275sP0HjM6A2wFPd1cRkDb7wTK4IE0uz8YsYa6v5piZ3Vz7X3B+pt/csDp7K3o
+         JRjEiljEToTJV0ZXyoWtXbITilWX6JxEKni8Sn4BAtNija5UtH7dDIb8v37G6R4FC0D9
+         Th1g==
+X-Gm-Message-State: AOAM531dGmeQC38+m1TyQzijn6Ll3JkOWMkGBrRSBHv+K471wxuP7G4j
+	DU914i/QQk+4Fp2/NRU99Zc=
+X-Google-Smtp-Source: 
+ ABdhPJxOyr9yD4AsSibeLOkHriuGNFyy+7K20RpOocnSD1XhAV8BKMrXZgAvCV4UyD6WY0ucyrKlew==
+X-Received: by 2002:aa7:cd87:0:b0:41d:90a8:2670 with SMTP id
+ x7-20020aa7cd87000000b0041d90a82670mr7816443edv.404.1650021825223;
+        Fri, 15 Apr 2022 04:23:45 -0700 (PDT)
+Received: from smtpclient.apple
+ (dslb-178-003-195-224.178.003.pools.vodafone-ip.de. [178.3.195.224])
+        by smtp.gmail.com with ESMTPSA id
+ bw3-20020a170906c1c300b006e88cdfbc32sm1612831ejb.45.2022.04.15.04.23.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Apr 2022 04:23:44 -0700 (PDT)
+From: Marius Kriegerowski <marius.kriegerowski@gmail.com>
+Message-Id: <749CBEAC-6A91-4465-9514-0C97F7A8A43D@gmail.com>
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_82116F36-31CC-4B3D-80A9-60913A898F36"
+Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.40.0.1.81\))
+Subject: Re: [bitbake-devel] Branch switch doesn't work on openembedded.org
+Date: Fri, 15 Apr 2022 13:23:43 +0200
+In-Reply-To: <91312f6a-5758-3758-0896-e7dcd438cd90@bootlin.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+To: Michael Opdenacker <michael.opdenacker@bootlin.com>
+References: <D247F1F9-1C2C-4B53-828A-ABB4D29800DF@gmail.com>
+ <91312f6a-5758-3758-0896-e7dcd438cd90@bootlin.com>
+X-Mailer: Apple Mail (2.3693.40.0.1.81)
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 18 Apr 2022 14:26:02 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13628
+ <bitbake-devel@lists.openembedded.org>; Mon, 18 Apr 2022 14:26:03 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13630
 
-T24gVGh1LCAyMDIyLTA0LTE0IGF0IDIwOjIxICswMjAwLCBNYXJpdXMgS3JpZWdlcm93c2tpIHdy
-b3RlOg0KPiANCj4gVGhhbmtzIGZvciB0aGUgY2xhcmlmaWNhdGlvbiEgUGhldywgaWYgb25seSB0
-aGVyZSB3YXMgYSByZXBvc2l0b3J5DQo+IHdoZXJlIEkgY291bGQgb3BlbiBhIG1lcmdlIHJlcXVl
-c3QganVzdCBhcyBJ4oCZbSB1c2VkIHRv4oCmIDspDQo+IA0KPiBBbnl3YXksIHNvIGp1c3QgZm9y
-IG1lIHRvIGdldCB0aGlzIHJpZ2h0IGluIHRoZSBmdXR1cmU6IFRoZXJlIGlzIG9uZQ0KPiByZXBv
-c2l0b3J5IG5hbWVkIHBva3kgKGh0dHBzOi8vZ2l0LnlvY3RvcHJvamVjdC5vcmcvcG9reSkuIElm
-IEkgcGF0Y2gNCj4gc29tZXRoaW5nIGluIHRoZSBiaXRiYWtlIHN1YmRpcmVjdG9yeSwgSSBzZW5k
-IHRoYXQgcGF0Y2ggdG8gYml0YmFrZS0NCj4gZGV2ZWwuIElmIEkgcGF0Y2ggc29tZXRoaW5nIGlu
-IHRoZSBhbnkgb3RoZXIgc3ViZGlyZWN0b3J5IEkgc2VuZCBhDQo+IHBhdGNoIHRvIG9wZW5lbWJl
-ZGRlZC1jb3JlPw0KPiBJcyB0aGVyZSBhIHBsYWNlIHdoZXJlIGFsbCB0aGF0IGluZm8gaXMgYWdn
-cmVnYXRlZCBsaWtlIGEgdGFibGUgd2l0aA0KPiBsZWZ0IGNvbHVtbiByZXBvL2RpcmVjdG9yeSBh
-bmQgcmlnaHQgY29sdW1uIG1haWxpbmcgbGlzdD8NCg0KSXRzIGV4cGxhaW5lZCBoZXJlOg0KDQpo
-dHRwczovL2dpdC55b2N0b3Byb2plY3Qub3JnL3Bva3kvdHJlZS9tZXRhLXBva3kvUkVBRE1FLnBv
-a3kubWQNCg0KVGhhbmtzLA0KDQpBbnVqDQoNCg==
+
+--Apple-Mail=_82116F36-31CC-4B3D-80A9-60913A898F36
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+Dear Michael,
+
+Thanks for your reply. This does not seem to be the issue. Switching =
+between branches on the GitHub Repo works flawless.=20
+Dunfell:
+=
+https://github.com/openembedded/meta-openembedded/blob/dunfell/meta-python=
+/recipes-devtools/python/python3-pybind11_2.4.3.bb =
+<https://github.com/openembedded/meta-openembedded/blob/dunfell/meta-pytho=
+n/recipes-devtools/python/python3-pybind11_2.4.3.bb>
+Master:
+=
+https://github.com/openembedded/meta-openembedded/blob/master/meta-python/=
+recipes-devtools/python/python3-pybind11_2.8.1.bb =
+<https://github.com/openembedded/meta-openembedded/blob/master/meta-python=
+/recipes-devtools/python/python3-pybind11_2.8.1.bb>
+
+As you can see the name has changed. But that should somehow be =
+reflected in what is displayed, such as a 404 when the recipe is not =
+available under the former name. So, I guess this is what doesn=E2=80=99t =
+work properly at git.openembedded.org <http://git.openembedded.org/>.
+
+Best regards
+
+Marius
+
+
+
+> On 15. Apr 2022, at 12:48, Michael Opdenacker =
+<michael.opdenacker@bootlin.com> wrote:
+>=20
+> Hi Marius,
+>=20
+> On 4/12/22 18:26, Marius Kriegerowski wrote:
+>> Hi,
+>>=20
+>> The branch switch button on the top right on git.openembedded.org
+>> <http://git.openembedded.org> seems to be broken. At least it =
+doesn=E2=80=99t
+>> switch between branches on firefox 99.0.
+>>=20
+>> I tried switching between `master` and `dunfell` on this one (but
+>> doesn=E2=80=99t seem to switch nowhere):=20
+>>=20
+>> =
+http://git.openembedded.org/meta-openembedded/tree/meta-python/recipes-dev=
+tools/python/python3-pybind11_2.6.2.bb?id=3D82b80e6ab10a0cf678428ff11832dc=
+9b90f9d5a6&h=3Dmaster
+>> =
+<http://git.openembedded.org/meta-openembedded/tree/meta-python/recipes-de=
+vtools/python/python3-pybind11_2.6.2.bb?id=3D82b80e6ab10a0cf678428ff11832d=
+c9b90f9d5a6&h=3Dmaster>
+>>=20
+>>=20
+>> Also, it doesn=E2=80=99t work when clicking the `switch` button after
+>> selecting a different branch. Am I using it in the wrong way??
+>=20
+>=20
+> Maybe because in your example, both "master" and "dunfell" have the =
+same
+> version of this file.
+> Try this instead:
+> =
+https://git.openembedded.org/openembedded-core/tree/scripts/runqemu?h=3Dma=
+ster
+>=20
+> Thanks for sharing issues with us anyway.
+> Cheers
+> Michael.
+>=20
+> --=20
+> Michael Opdenacker, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>=20
+
+
+--Apple-Mail=_82116F36-31CC-4B3D-80A9-60913A898F36
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; =
+charset=3Dutf-8"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; line-break: after-white-space;" class=3D"">Dear =
+Michael,<div class=3D""><br class=3D""></div><div class=3D"">Thanks for =
+your reply. This does not seem to be the issue. Switching between =
+branches on the GitHub Repo works flawless.&nbsp;</div><div =
+class=3D"">Dunfell:</div><div class=3D""><a =
+href=3D"https://github.com/openembedded/meta-openembedded/blob/dunfell/met=
+a-python/recipes-devtools/python/python3-pybind11_2.4.3.bb" =
+class=3D"">https://github.com/openembedded/meta-openembedded/blob/dunfell/=
+meta-python/recipes-devtools/python/python3-pybind11_2.4.3.bb</a></div><di=
+v class=3D"">Master:</div><div class=3D""><a =
+href=3D"https://github.com/openembedded/meta-openembedded/blob/master/meta=
+-python/recipes-devtools/python/python3-pybind11_2.8.1.bb" =
+class=3D"">https://github.com/openembedded/meta-openembedded/blob/master/m=
+eta-python/recipes-devtools/python/python3-pybind11_2.8.1.bb</a></div><div=
+ class=3D""><br class=3D""></div><div class=3D"">As you can see the name =
+has changed. But that should somehow be reflected in what is displayed, =
+such as a 404 when the recipe is not available under the former name. =
+So, I guess this is what doesn=E2=80=99t work properly at <a =
+href=3D"http://git.openembedded.org" =
+class=3D"">git.openembedded.org</a>.</div><div class=3D""><br =
+class=3D""></div><div class=3D"">Best regards</div><div class=3D""><br =
+class=3D""></div><div class=3D"">Marius</div><div class=3D""><br =
+class=3D""></div><div class=3D""><br class=3D""><div><br =
+class=3D""><blockquote type=3D"cite" class=3D""><div class=3D"">On 15. =
+Apr 2022, at 12:48, Michael Opdenacker &lt;<a =
+href=3D"mailto:michael.opdenacker@bootlin.com" =
+class=3D"">michael.opdenacker@bootlin.com</a>&gt; wrote:</div><br =
+class=3D"Apple-interchange-newline"><div class=3D""><div class=3D"">Hi =
+Marius,<br class=3D""><br class=3D"">On 4/12/22 18:26, Marius =
+Kriegerowski wrote:<br class=3D""><blockquote type=3D"cite" =
+class=3D"">Hi,<br class=3D""><br class=3D"">The branch switch button on =
+the top right on&nbsp;<a href=3D"http://git.openembedded.org" =
+class=3D"">git.openembedded.org</a><br class=3D"">&lt;<a =
+href=3D"http://git.openembedded.org" =
+class=3D"">http://git.openembedded.org</a>&gt;&nbsp;seems to be broken. =
+At least it doesn=E2=80=99t<br class=3D"">switch between branches on =
+firefox 99.0.<br class=3D""><br class=3D"">I tried switching between =
+`master` and `dunfell` on this one (but<br class=3D"">doesn=E2=80=99t =
+seem to switch nowhere):&nbsp;<br class=3D""><br class=3D""><a =
+href=3D"http://git.openembedded.org/meta-openembedded/tree/meta-python/rec=
+ipes-devtools/python/python3-pybind11_2.6.2.bb?id=3D82b80e6ab10a0cf678428f=
+f11832dc9b90f9d5a6&amp;h=3Dmaster" =
+class=3D"">http://git.openembedded.org/meta-openembedded/tree/meta-python/=
+recipes-devtools/python/python3-pybind11_2.6.2.bb?id=3D82b80e6ab10a0cf6784=
+28ff11832dc9b90f9d5a6&amp;h=3Dmaster</a><br =
+class=3D"">&lt;http://git.openembedded.org/meta-openembedded/tree/meta-pyt=
+hon/recipes-devtools/python/python3-pybind11_2.6.2.bb?id=3D82b80e6ab10a0cf=
+678428ff11832dc9b90f9d5a6&amp;h=3Dmaster&gt;<br class=3D""><br =
+class=3D""><br class=3D"">Also, it doesn=E2=80=99t work when clicking =
+the `switch` button after<br class=3D"">selecting a different branch. Am =
+I using it in the wrong way??<br class=3D""></blockquote><br =
+class=3D""><br class=3D"">Maybe because in your example, both "master" =
+and "dunfell" have the same<br class=3D"">version of this file.<br =
+class=3D"">Try this instead:<br class=3D""><a =
+href=3D"https://git.openembedded.org/openembedded-core/tree/scripts/runqem=
+u?h=3Dmaster" =
+class=3D"">https://git.openembedded.org/openembedded-core/tree/scripts/run=
+qemu?h=3Dmaster</a><br class=3D""><br class=3D"">Thanks for sharing =
+issues with us anyway.<br class=3D"">Cheers<br class=3D"">Michael.<br =
+class=3D""><br class=3D"">-- <br class=3D"">Michael Opdenacker, =
+Bootlin<br class=3D"">Embedded Linux and Kernel engineering<br =
+class=3D"">https://bootlin.com<br class=3D""><br =
+class=3D""></div></div></blockquote></div><br =
+class=3D""></div></body></html>=
+
+--Apple-Mail=_82116F36-31CC-4B3D-80A9-60913A898F36--
 
