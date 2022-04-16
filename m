@@ -1,145 +1,251 @@
-Return-Path: <matt@madison.systems>
+Return-Path: <marius.kriegerowski@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642FBC4321E
-	for <webhook@archiver.kernel.org>; Mon, 18 Apr 2022 14:25:53 +0000 (UTC)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com
- [209.85.208.172])
- by mx.groups.io with SMTP id smtpd.web09.11034.1650049922152088940
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5576C43217
+	for <webhook@archiver.kernel.org>; Mon, 18 Apr 2022 14:25:57 +0000 (UTC)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com
+ [209.85.218.54])
+ by mx.groups.io with SMTP id smtpd.web12.16662.1650095784488038452
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 15 Apr 2022 12:12:02 -0700
+ Sat, 16 Apr 2022 00:56:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@madison.systems header.s=google header.b=c2mI8lCP;
- spf=pass (domain: madison.systems, ip: 209.85.208.172,
- mailfrom: matt@madison.systems)
-Received: by mail-lj1-f172.google.com with SMTP id h11so10396096ljb.2
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=qYsLpH7M;
+ spf=pass (domain: gmail.com, ip: 209.85.218.54,
+ mailfrom: marius.kriegerowski@gmail.com)
+Received: by mail-ej1-f54.google.com with SMTP id r13so18814128ejd.5
         for <bitbake-devel@lists.openembedded.org>;
- Fri, 15 Apr 2022 12:12:01 -0700 (PDT)
+ Sat, 16 Apr 2022 00:56:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=madison.systems; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+Y41wap7eHDf6zL2SE1WWlAG9sa9yY9+ma2Yrd/jkKM=;
-        b=c2mI8lCPfO/VkVNY1OD+YbF1eiJp52ezy2T6gH5aNjMr9koS3oJ1yPOwBwJpKYHa0k
-         SCtWnOL4zzrLpwJtC3gUuZC1FI11huu7mjH+nWqnORlZ8i0nRN7GOmuUUEH61FoEIU5U
-         9sNtoW4fEKzB4VRcVHSmwWaZ5kXOLOMypDHG5rtsVICs8hydOTZQepZu9IsfHOQzp794
-         59fBSQ6hLaUUt0r21kuMW0KI6J4boGPd/k1Sb3vzSY60dCwDZs+5egJAe67Qsy72dhU0
-         PP0vvgSnIEIfIl9rFNZRvF7csi2nJ7ZwBLm9SpCyj3R/vpqs/Z/Q3c7Dsffp3HziqOrF
-         LirA==
+        d=gmail.com; s=20210112;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=1kPfyV23wggmZypMPCZGj2IMVfEPm3QJcb/h1/kx6zM=;
+        b=qYsLpH7MUMnqvFD9n9iixEappTbAtlLR6AivyW9ei8VeSNfzQQPEQPUJwZeNcIQxAK
+         tGv5ESdQc9jB2oB/rAizWZBenW1HeldYgkLqgiMY6Jq3LQ0jD27H9fVKj74nPMx+yhSL
+         6DWoWbMcYC3GjK+iIajty9dHUcFt5GQnvbMXVFeUR0J+AHZVjtalXnY2nC2tY2prjPdV
+         M5c0d7GQvX+2BA0lbsGZm6LaBe12QS5PPtsj6oHhkfbt0zwXhHEImrKYhdEc45p3w85L
+         U+fUrpAvk5sbuq8oCZBrdy+TZl0S1ovFVjN0CTxuEdCCzxMjxd3z30kp1gnvcCEThBXN
+         WfKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+Y41wap7eHDf6zL2SE1WWlAG9sa9yY9+ma2Yrd/jkKM=;
-        b=bjySFBmLJ1+SAPpOuTROHny+jHGaPTzhePjtlXn0pasdpvdTg2HU/0Fm5RMBw2P5CX
-         BqlIAP7YR1jMi0+5mtLk3Tf0FUk5OTnlIQi+a3Y8USge7vsDWJFw2gzaZy/0aH6S8VxI
-         zNXfQzM9VliZm2X3N/FFBic6RbJzazuxZeu02PPru+V1xdRcmvJ2iedpjGli0pxzxfZ8
-         GRPYTOQS+F82QY+iWsKXeIZXGuBiaaP2hpvLPdzhe/06zFBUo7dKGfK+hNKTW4l/e/zH
-         1v7jU3pkQYwqdZWNq49EyPSSolsmchiD13A8phM+GyjQOFg4VsI5J5yocHROK067V6E5
-         8Blg==
-X-Gm-Message-State: AOAM531l9bCZj0UcUJBpVjqWTxMrEHGuzHVUTJIrlce54NhaaN+wH2fT
-	llQp1Xf2jlM9G1wGV1ogP5CM9zhjM9Ox5l0HjOZCJg==
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=1kPfyV23wggmZypMPCZGj2IMVfEPm3QJcb/h1/kx6zM=;
+        b=ZefGsf7xGv3+tyBiBQrlke+D6SIpLtDJMj+paDYrPtjQVYwsGH18BwyuPBTRxkVBsc
+         scbEoiZNxC3mxOjWi23NfEOuqVyiC11VqZoiTdTZGMotqpvvhmMdidtUkb62Ui4jUxvb
+         MjbLhg/I4qCbPLXj0Rkyx5r85VN103HLwKEomhbA7lxHXlaKncpswNgXDHHSpEXd+m5t
+         XuE+baRxHNOW7TXBqId/x8xlzptwwyr0LJ0eGqv5Rs4kWlynO4tthMOe15pgeB5dycNC
+         tXEyhj7FkCfT2bK/gyyLhzLNsjpuXLCsaXghcVaUQGRI3ugrwq/3LhX4KRjqnZVWh4Aj
+         nCcw==
+X-Gm-Message-State: AOAM531aaJnjzQZ6swveVeMm5LhKiPoei4sNZpcyDZ+BFrlRekNbDrJA
+	RnV0WKWhLTK9uVBtFZx168Y=
 X-Google-Smtp-Source: 
- ABdhPJzt8eurJq0gAI6yGRXPch4Te54+Y8Se7/CzftiNO5IPLAa6f6yyYHxdDLig9sbPWUPNHcwIVXcXu3U2TdLPmNw=
-X-Received: by 2002:a2e:390c:0:b0:248:1b88:d6c4 with SMTP id
- g12-20020a2e390c000000b002481b88d6c4mr277895lja.49.1650049919979; Fri, 15 Apr
- 2022 12:11:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220415133456.44233-1-matt@madison.systems>
- <CAMKF1srWYsAXw+HYMTBivYNSt_sME7JFoDP1+uVxSfM1SfW8rQ@mail.gmail.com>
+ ABdhPJxiOMJ1NXELXXHj5sMMZwwJ5x7G6HcIntFMsg9IMKfzDHbrNr/aCdMAr4ZvZZlb7TQuIpyNWQ==
+X-Received: by 2002:a17:907:7882:b0:6e8:946f:adb3 with SMTP id
+ ku2-20020a170907788200b006e8946fadb3mr1982383ejc.564.1650095782691;
+        Sat, 16 Apr 2022 00:56:22 -0700 (PDT)
+Received: from smtpclient.apple
+ (dslb-178-003-195-224.178.003.pools.vodafone-ip.de. [178.3.195.224])
+        by smtp.gmail.com with ESMTPSA id
+ r29-20020a50c01d000000b00415fb0dc793sm3897437edb.47.2022.04.16.00.56.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 16 Apr 2022 00:56:22 -0700 (PDT)
+From: Marius Kriegerowski <marius.kriegerowski@gmail.com>
+Message-Id: <979FD4CA-0C74-4288-BCFF-049C93786CAC@gmail.com>
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_0E25856E-EBA2-4229-8AEC-DAF692FD5B41"
+Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.40.0.1.81\))
+Subject: Re: [bitbake-devel] Branch switch doesn't work on openembedded.org
+Date: Sat, 16 Apr 2022 09:56:21 +0200
 In-Reply-To: 
- <CAMKF1srWYsAXw+HYMTBivYNSt_sME7JFoDP1+uVxSfM1SfW8rQ@mail.gmail.com>
-From: Matt Madison <matt@madison.systems>
-Date: Fri, 15 Apr 2022 12:11:49 -0700
-Message-ID: 
- <CAGgRHJqbjOLBR8Fx9A61wdd-+0tViCQEq_YrozNKuvYgkbgr8A@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] providers: use local variable for
- packages_dynamic pattern
-To: Khem Raj <raj.khem@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+ <CADfgfoZiBuY0JeJPqZa_=w+bE+d4mQTbPSENepKVt-=hqOoXow@mail.gmail.com>
+Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+ Michael Opdenacker <michael.opdenacker@bootlin.com>,
+ bitbake-devel <bitbake-devel@lists.openembedded.org>
+To: Michael Halstead <mhalstead@linuxfoundation.org>
+References: <D247F1F9-1C2C-4B53-828A-ABB4D29800DF@gmail.com>
+ <91312f6a-5758-3758-0896-e7dcd438cd90@bootlin.com>
+ <75e09aed-e62e-f596-32ea-c2ac76d9b186@theobroma-systems.com>
+ <CADfgfoZiBuY0JeJPqZa_=w+bE+d4mQTbPSENepKVt-=hqOoXow@mail.gmail.com>
+X-Mailer: Apple Mail (2.3693.40.0.1.81)
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 18 Apr 2022 14:25:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13636
+ <bitbake-devel@lists.openembedded.org>; Mon, 18 Apr 2022 14:25:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13637
 
-On Fri, Apr 15, 2022 at 9:04 AM Khem Raj <raj.khem@gmail.com> wrote:
->
->
->
-> On Fri, Apr 15, 2022 at 6:36 AM Matt Madison <matt@madison.systems> wrote:
->>
->> During parsing, Python raises
->>
->>    RuntimeError: dictionary changed size during iteration
->>
->> in getRuntimeProviders, if you happen to have a recipe
->> with an explicit RDEPENDS on a dynamic package containing a '+'
->> character, such as 'gtk+3-locale-en'.
->>
->> This is because we're using the modified pattern as the
->> key into the packages_dynamic dict to append to rproviders,
->> and since that key doesn't exist, the dict is getting modified
->> to add a new, empty, entry for it. So even without the runtime
->> error, we'd be generating an incorrect result.
->>
->> Fix this by using a local variable for modifying the pattern
->> and using the original key to retrieve the value on a match.
->
->
-> Good fine I wonder if a test case would be good to have Added as well
 
-I was wondering that, too.  Are there test cases for exercising the
-PACKAGES_DYNAMIC feature already? If someone can provide a pointer, I
-can see about adding one for this.
+--Apple-Mail=_0E25856E-EBA2-4229-8AEC-DAF692FD5B41
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Thanks,
--Matt
+Dear Michael,
 
->>
->>
->>
->> Signed-off-by: Matt Madison <matt@madison.systems>
->> ---
->>  lib/bb/providers.py | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/lib/bb/providers.py b/lib/bb/providers.py
->> index 8c1c31a5..e11a4637 100644
->> --- a/lib/bb/providers.py
->> +++ b/lib/bb/providers.py
->> @@ -396,8 +396,8 @@ def getRuntimeProviders(dataCache, rdepend):
->>          return rproviders
->>
->>      # Only search dynamic packages if we can't find anything in other variables
->> -    for pattern in dataCache.packages_dynamic:
->> -        pattern = pattern.replace(r'+', r"\+")
->> +    for pat_key in dataCache.packages_dynamic:
->> +        pattern = pat_key.replace(r'+', r"\+")
->>          if pattern in regexp_cache:
->>              regexp = regexp_cache[pattern]
->>          else:
->> @@ -408,7 +408,7 @@ def getRuntimeProviders(dataCache, rdepend):
->>                  raise
->>              regexp_cache[pattern] = regexp
->>          if regexp.match(rdepend):
->> -            rproviders += dataCache.packages_dynamic[pattern]
->> +            rproviders += dataCache.packages_dynamic[pat_key]
->>              logger.debug("Assuming %s is a dynamic package, but it may not exist" % rdepend)
->>
->>      return rproviders
->> --
->> 2.32.0
->>
->>
->> -=-=-=-=-=-=-=-=-=-=-=-
->> Links: You receive all messages sent to this group.
->> View/Reply Online (#13633): https://lists.openembedded.org/g/bitbake-devel/message/13633
->> Mute This Topic: https://lists.openembedded.org/mt/90486450/1997914
->> Group Owner: bitbake-devel+owner@lists.openembedded.org
->> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [raj.khem@gmail.com]
->> -=-=-=-=-=-=-=-=-=-=-=-
->>
+Thanks a lot! Posted to the cgit mailing list.
+Best
+
+Marius
+
+
+
+> On 15. Apr 2022, at 19:05, Michael Halstead =
+<mhalstead@linuxfoundation.org> wrote:
+>=20
+> Hi Marius,
+> If I understand correctly you want to get a 404 page when the path =
+specified doesn't exist in the branch selected. Dropping the id from the =
+query string when switching branches would accomplish that. The correct =
+place to propose these changes is on the cgit mailing list. You can join =
+at https://lists.zx2c4.com/mailman/listinfo/cgit =
+<https://lists.zx2c4.com/mailman/listinfo/cgit>. Once the changes are in =
+cgit you can email it-coreprojects-helpdesk@linuxfoundation.org =
+<mailto:it-coreprojects-helpdesk@linuxfoundation.org> to request we pull =
+them into production.
+>=20
+> On Fri, Apr 15, 2022 at 4:32 AM Quentin Schulz =
+<quentin.schulz@theobroma-systems.com =
+<mailto:quentin.schulz@theobroma-systems.com>> wrote:
+> Hi Marius,
+>=20
+> =
+http://git.openembedded.org/meta-openembedded/tree/meta-python/recipes-dev=
+tools/python/python3-pybind11_2.6.2.bb?id=3D82b80e6ab10a0cf678428ff11832dc=
+9b90f9d5a6&h=3Dmaster =
+<http://git.openembedded.org/meta-openembedded/tree/meta-python/recipes-de=
+vtools/python/python3-pybind11_2.6.2.bb?id=3D82b80e6ab10a0cf678428ff11832d=
+c9b90f9d5a6&h=3Dmaster>
+>=20
+> is actually going to show you the state of the file at the given =
+commit=20
+> hash passed in the id argument and the branch (h argument) will be =
+ignored.
+>=20
+> I assume we'd like to remove the id argument when the dropdown menu =
+for=20
+> versions is used to switch between branches.
+>=20
+> I don't know where to do this so I'll let the competent people do it =
+or=20
+> guide us :)
+>=20
+> Cheers,
+> Quentin
+>=20
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#13631): =
+https://lists.openembedded.org/g/bitbake-devel/message/13631 =
+<https://lists.openembedded.org/g/bitbake-devel/message/13631>
+> Mute This Topic: https://lists.openembedded.org/mt/90421898/1003190 =
+<https://lists.openembedded.org/mt/90421898/1003190>
+> Group Owner: bitbake-devel+owner@lists.openembedded.org =
+<mailto:bitbake-devel%2Bowner@lists.openembedded.org>
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub =
+<https://lists.openembedded.org/g/bitbake-devel/unsub> =
+[mhalstead@linuxfoundation.org <mailto:mhalstead@linuxfoundation.org>]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>=20
+>=20
+>=20
+> --=20
+> Michael Halstead
+> Linux Foundation / Yocto Project
+> Systems Operations Engineer
+
+
+--Apple-Mail=_0E25856E-EBA2-4229-8AEC-DAF692FD5B41
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; =
+charset=3Dus-ascii"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; line-break: after-white-space;" class=3D"">Dear =
+Michael,<div class=3D""><br class=3D""></div><div class=3D"">Thanks a =
+lot! Posted to the cgit mailing list.</div><div class=3D"">Best</div><div =
+class=3D""><br class=3D""></div><div class=3D"">Marius</div><div =
+class=3D""><br class=3D""></div><div class=3D""><br class=3D""><div><br =
+class=3D""><blockquote type=3D"cite" class=3D""><div class=3D"">On 15. =
+Apr 2022, at 19:05, Michael Halstead &lt;<a =
+href=3D"mailto:mhalstead@linuxfoundation.org" =
+class=3D"">mhalstead@linuxfoundation.org</a>&gt; wrote:</div><br =
+class=3D"Apple-interchange-newline"><div class=3D""><div dir=3D"ltr" =
+class=3D""><div class=3D"">Hi Marius,</div><div class=3D"">If I =
+understand correctly you want to get a 404 page when the path =
+specified&nbsp;doesn't exist&nbsp;in the branch selected. Dropping the =
+id from the query string when switching branches would accomplish that. =
+The correct place to propose these changes is on the cgit mailing list. =
+You can join at&nbsp;<a =
+href=3D"https://lists.zx2c4.com/mailman/listinfo/cgit" =
+class=3D"">https://lists.zx2c4.com/mailman/listinfo/cgit</a>. Once the =
+changes are in cgit you can email&nbsp;<a =
+href=3D"mailto:it-coreprojects-helpdesk@linuxfoundation.org" =
+class=3D"">it-coreprojects-helpdesk@linuxfoundation.org</a> to request =
+we pull them into production.</div><br class=3D""><div =
+class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, Apr =
+15, 2022 at 4:32 AM Quentin Schulz &lt;<a =
+href=3D"mailto:quentin.schulz@theobroma-systems.com" =
+class=3D"">quentin.schulz@theobroma-systems.com</a>&gt; wrote:<br =
+class=3D""></div><blockquote class=3D"gmail_quote" style=3D"margin:0px =
+0px 0px 0.8ex;border-left:1px solid =
+rgb(204,204,204);padding-left:1ex">Hi Marius,<br class=3D"">
+<br class=3D"">
+<a =
+href=3D"http://git.openembedded.org/meta-openembedded/tree/meta-python/rec=
+ipes-devtools/python/python3-pybind11_2.6.2.bb?id=3D82b80e6ab10a0cf678428f=
+f11832dc9b90f9d5a6&amp;h=3Dmaster" rel=3D"noreferrer" target=3D"_blank" =
+class=3D"">http://git.openembedded.org/meta-openembedded/tree/meta-python/=
+recipes-devtools/python/python3-pybind11_2.6.2.bb?id=3D82b80e6ab10a0cf6784=
+28ff11832dc9b90f9d5a6&amp;h=3Dmaster</a><br class=3D"">
+<br class=3D"">
+is actually going to show you the state of the file at the given commit =
+<br class=3D"">
+hash passed in the id argument and the branch (h argument) will be =
+ignored.<br class=3D"">
+<br class=3D"">
+I assume we'd like to remove the id argument when the dropdown menu for =
+<br class=3D"">
+versions is used to switch between branches.<br class=3D"">
+<br class=3D"">
+I don't know where to do this so I'll let the competent people do it or =
+<br class=3D"">
+guide us :)<br class=3D"">
+<br class=3D"">
+Cheers,<br class=3D"">
+Quentin<br class=3D"">
+<br class=3D"">
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br class=3D"">
+Links: You receive all messages sent to this group.<br class=3D"">
+View/Reply Online (#13631): <a =
+href=3D"https://lists.openembedded.org/g/bitbake-devel/message/13631" =
+rel=3D"noreferrer" target=3D"_blank" =
+class=3D"">https://lists.openembedded.org/g/bitbake-devel/message/13631</a=
+><br class=3D"">
+Mute This Topic: <a =
+href=3D"https://lists.openembedded.org/mt/90421898/1003190" =
+rel=3D"noreferrer" target=3D"_blank" =
+class=3D"">https://lists.openembedded.org/mt/90421898/1003190</a><br =
+class=3D"">
+Group Owner: <a =
+href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org" =
+target=3D"_blank" =
+class=3D"">bitbake-devel+owner@lists.openembedded.org</a><br class=3D"">
+Unsubscribe: <a =
+href=3D"https://lists.openembedded.org/g/bitbake-devel/unsub" =
+rel=3D"noreferrer" target=3D"_blank" =
+class=3D"">https://lists.openembedded.org/g/bitbake-devel/unsub</a> [<a =
+href=3D"mailto:mhalstead@linuxfoundation.org" target=3D"_blank" =
+class=3D"">mhalstead@linuxfoundation.org</a>]<br class=3D"">
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br class=3D"">
+<br class=3D"">
+</blockquote></div><br clear=3D"all" class=3D""><div class=3D""><br =
+class=3D""></div>-- <br class=3D""><div dir=3D"ltr" =
+class=3D"gmail_signature"><div dir=3D"ltr" class=3D"">Michael =
+Halstead<div class=3D"">Linux Foundation / Yocto Project</div><div =
+class=3D"">Systems Operations Engineer</div></div></div></div>
+</div></blockquote></div><br class=3D""></div></body></html>=
+
+--Apple-Mail=_0E25856E-EBA2-4229-8AEC-DAF692FD5B41--
 
