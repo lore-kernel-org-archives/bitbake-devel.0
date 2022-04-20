@@ -1,91 +1,87 @@
-Return-Path: <liezhi.yang@windriver.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F165C38A02
-	for <webhook@archiver.kernel.org>; Tue, 19 Apr 2022 17:48:48 +0000 (UTC)
-Received: from mail1.wrs.com (mail1.wrs.com [147.11.3.146])
- by mx.groups.io with SMTP id smtpd.web10.2485.1650390165605979057
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1082C54EC5
+	for <webhook@archiver.kernel.org>; Thu, 21 Apr 2022 16:46:07 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
+ [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web08.7668.1650460934218327873
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 19 Apr 2022 10:42:45 -0700
+ Wed, 20 Apr 2022 06:22:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=permerror,
- err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid
- domain name (domain: windriver.com, ip: 147.11.3.146,
- mailfrom: liezhi.yang@windriver.com)
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.corp.ad.wrs.com
- [147.11.82.252])
-	by mail1.wrs.com (8.15.2/8.15.2) with ESMTPS id 23JHgibQ011834
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 19 Apr 2022 10:42:44 -0700
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Tue, 19 Apr 2022 10:42:44 -0700
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Tue, 19 Apr 2022 10:42:43 -0700
-Received: from ala-lpggp3.wrs.com (147.11.105.124) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2242.12 via Frontend Transport; Tue, 19 Apr 2022 10:42:43 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH] fetch2/ssh.py: Fix url code for +
-Date: Tue, 19 Apr 2022 10:42:43 -0700
-Message-ID: <20220419174243.44519-1-liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.35.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=RBXULpw8;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f48.google.com with SMTP id c10so2275704wrb.1
+        for <bitbake-devel@lists.openembedded.org>;
+ Wed, 20 Apr 2022 06:22:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=a0rYC266jhSdp9QOkdvRKMi0i0dQpgYSAKIXPIH98hA=;
+        b=RBXULpw8vqJIIUgoCSNW4PGmODP6y/a+CoS6/FkKPJumlSvKnxj+0Baew2dDFDW4Cs
+         qziLWXLkKA7sHTOoRy89UY/ClEt+2zR4gSbNaZlfC4ldCAQjH8Zi4t+bUcrODWfSFczg
+         vH6I4YLYf39oh//Ssk+tlLGoz8tgKELbkfsuA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=a0rYC266jhSdp9QOkdvRKMi0i0dQpgYSAKIXPIH98hA=;
+        b=zlLhdmru4g9REHQkxNSFcELUAKvlRZthW3kF0gBidur9cHU4W13kX4fpW+obTGatEw
+         MtHt2IkM9Q9MdKY7GjKzWnrE5CF5+BfvJax9RiMjM5UOj6puh+lB5OAEHun9c9MqJtnE
+         6tsI6KWX/bM+tB8jDvHmzdRN4fwwsRv86lAtYcEDXdgF4C2bk6BNaE/bN69WlH7ppW0l
+         ZqSWX8Vf0ybP0M59muNg8HNLxfkcR2ojZaYewIX4ehRHPF/xPgdLrvrzY1JwAtUOT7mF
+         GTTAK6SEOmKDhHDkckbJTjWJvhus6bFBfabuLjXM033SN7ptXmpCyaKvovxmyqoM4Rmi
+         ObKQ==
+X-Gm-Message-State: AOAM531Bkmt632do3IuvkscAohYFmhkKaB31enuNycskS930jRWNazLE
+	a69iD/matn8OxtAI+UhyUgAPMHah6Q1/IQ==
+X-Google-Smtp-Source: 
+ ABdhPJyqyl5lsgwUWXRlA/Al+P0bbxz7ivp7AJI/gtZUpIgmlf49vBfSyzzNnEKhSFYojkGaDfEOMA==
+X-Received: by 2002:a05:6000:18c9:b0:203:fb67:debe with SMTP id
+ w9-20020a05600018c900b00203fb67debemr15542642wrq.494.1650460932198;
+        Wed, 20 Apr 2022 06:22:12 -0700 (PDT)
+Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:9745:8b8f:81da:af07])
+        by smtp.gmail.com with ESMTPSA id
+ a7-20020adffb87000000b00207982c7f4dsm15213265wrr.67.2022.04.20.06.22.09
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Apr 2022 06:22:10 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 04/11] msg: Drop unused local variable
+Date: Wed, 20 Apr 2022 14:21:58 +0100
+Message-Id: <20220420132205.2530591-4-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220420132205.2530591-1-richard.purdie@linuxfoundation.org>
+References: <20220420132205.2530591-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 19 Apr 2022 17:48:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13641
+ <bitbake-devel@lists.openembedded.org>; Thu, 21 Apr 2022 16:46:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13646
 
-Fixed when fetch from PREMIRRORS via ssh:
-$ bitbake bonnie++ libsigc++-2.0 -cfetch
-
-scp: /paht/to/downloads/libsigc%2B%2B-2.10.7.tar.xz: No such file or directory
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/ssh.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ lib/bb/msg.py | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/ssh.py b/lib/bb/fetch2/ssh.py
-index 484453088f..2836d7c884 100644
---- a/lib/bb/fetch2/ssh.py
-+++ b/lib/bb/fetch2/ssh.py
-@@ -70,6 +70,7 @@ class SSH(FetchMethod):
-                 "git:// prefix with protocol=ssh", urldata.url)
-         m = __pattern__.match(urldata.url)
-         path = m.group('path')
-+        path = path.replace("%3A", ":").replace("%2B", "+")
-         host = m.group('host')
-         urldata.localpath = os.path.join(d.getVar('DL_DIR'),
-                 os.path.basename(os.path.normpath(path)))
-@@ -99,7 +100,7 @@ class SSH(FetchMethod):
+diff --git a/lib/bb/msg.py b/lib/bb/msg.py
+index c95a874beb..93575d89c4 100644
+--- a/lib/bb/msg.py
++++ b/lib/bb/msg.py
+@@ -133,7 +133,6 @@ class LogFilterShowOnce(logging.Filter):
+         self.seen_errors = set()
  
-         if path[0] != '~':
-             path = '/%s' % path
--        path = path.replace("%3A", ":")
-+        path = path.replace("%3A", ":").replace("%2B", "+")
- 
-         fr += ':%s' % path
- 
-@@ -139,7 +140,7 @@ class SSH(FetchMethod):
- 
-         if path[0] != '~':
-             path = '/%s' % path
--        path = path.replace("%3A", ":")
-+        path = path.replace("%3A", ":").replace("%2B", "+")
- 
-         cmd = 'ssh -o BatchMode=true %s %s [ -f %s ]' % (
-             portarg,
+     def filter(self, record):
+-        msg = record.msg
+         if record.levelno == bb.msg.BBLogFormatter.WARNONCE:
+             if record.msg in self.seen_warnings:
+                 return False
 -- 
-2.35.1
+2.32.0
 
 
