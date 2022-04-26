@@ -1,89 +1,84 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666B4C433EF
-	for <webhook@archiver.kernel.org>; Fri, 22 Apr 2022 16:51:59 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com
- [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web11.48.1650571368324857766
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AEBC433EF
+	for <webhook@archiver.kernel.org>; Tue, 26 Apr 2022 21:49:28 +0000 (UTC)
+Received: from relay11.mail.gandi.net (relay11.mail.gandi.net
+ [217.70.178.231])
+ by mx.groups.io with SMTP id smtpd.web09.960.1651009763534116338
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 21 Apr 2022 13:02:48 -0700
+ Tue, 26 Apr 2022 14:49:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Oe6ALpb0;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f53.google.com with SMTP id b19so8105727wrh.11
-        for <bitbake-devel@lists.openembedded.org>;
- Thu, 21 Apr 2022 13:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Xgh55u3hruTGBL8ryEH4G4hR7jCMoM0oO/iKYGsAG04=;
-        b=Oe6ALpb0kKqNrbkayjYpBFY+Fmh7wQJHFkcLbTecH4zs7EJCOLfpBlNogBBAdfumHy
-         mJptcG0RyBUyOWsz795buUzdiZZYY5ohMoKciAmmDGTdoyBOQB9SF7r1l2GMXW+MXRqg
-         lvu2Sy4IkvXVyHxnwUrXvdxA8PVQ+qMpzR60g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Xgh55u3hruTGBL8ryEH4G4hR7jCMoM0oO/iKYGsAG04=;
-        b=KcsN29K4F+0ubbV/nGxs/6+AgPUOxX1WfUi9dXMuAe7xv/xYT4Yk9uhf+qCgKItXQ3
-         /VT14kQ5akHnOMv0fSoLsk9/I4EaEmpLNNXbQPdOELiyitSrYS9PFsB2m14ms8ZAGffM
-         mwqmcuPg+PqIczXelYk9ddydD0PBj05aw5hNIh1CoFkw0egCCIA2tRGyezx+IoPgGpUc
-         8Y0zHEloh23Xa2T2gPmWWe74wSXDMr3V42kKsp6qIkOSvcpz3jNVbMXfSLi1YiZfLwE6
-         bXtx135JwAuYCdPjT6TnaM3gcGaQha1TnSeWqcHbX+5ELh/uD31MABhkUHI4097xfMKz
-         yaSQ==
-X-Gm-Message-State: AOAM530pTiPKZNxiyaIS0b0AjueNbjTxBJjf+Aw3NX4roSE8g3Zs8TAb
-	4F0EUpiHvBU7D98JjMxcCDLK7XoMRGOYfw==
-X-Google-Smtp-Source: 
- ABdhPJzKlplRKSthTC2/lpNPrKnWDLrrp5Ez6piHmFtPwahKO34xUNlqNrBKx2kQuMPIoWUvkFP+Cg==
-X-Received: by 2002:a5d:6d8b:0:b0:20a:97c4:bdc6 with SMTP id
- l11-20020a5d6d8b000000b0020a97c4bdc6mr976867wrs.156.1650571366295;
-        Thu, 21 Apr 2022 13:02:46 -0700 (PDT)
-Received: from hex.int.rpsys.net ([2001:8b0:aba:5f3c:9788:6d00:bfe8:c84e])
-        by smtp.gmail.com with ESMTPSA id
- x9-20020adfdd89000000b0020a839cdab1sm2801wrl.52.2022.04.21.13.02.42
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Apr 2022 13:02:43 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=F0cwil9R;
+ spf=pass (domain: bootlin.com, ip: 217.70.178.231,
+ mailfrom: michael.opdenacker@bootlin.com)
+Received: (Authenticated sender: michael.opdenacker@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id 4EF3E100002;
+	Tue, 26 Apr 2022 21:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1651009761;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=IxiF7bBUzU6V3cfl9RJjyARwketN9MjwfNmFaPsD7YM=;
+	b=F0cwil9R1JjPY2WYz090LMmhsldaO231ufKilr/KOpS573U3kkuxJVfCpcsGsA0wux8HPF
+	qduJ9SJRt6gI6w51ok1s4KaLxbgUxY6IshYEWLnIxi//97nnW4/puvxXalqYi8vEA74spv
+	x5Bh/JGEOEUWfhhKew4yN9MFxhdWgePUwv1mV1vDzXhERKc9wwpUuBIj2ozR16h/GSLVpG
+	RKHpHa/4y2ISET93iHuffcoGsadTrJompS8lYpLwoNG9fUn1MxYTF422b3yCHg0Hfbm38z
+	eCrTeobV+uHTrzmosKhltxeyN+8fpr+XID4gtoGYnHk/u7fA0P8ZuotXytxPUg==
+From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch2/osc: Add missing parameter
-Date: Thu, 21 Apr 2022 21:02:41 +0100
-Message-Id: <20220421200241.2608546-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.32.0
+Cc: docs@lists.yoctoproject.org,
+	Michael Opdenacker <michael.opdenacker@bootlin.com>
+Subject: [PATCH] bitbake-user-manual: document TEMPLATECONF environment
+ variable
+Date: Tue, 26 Apr 2022 23:49:01 +0200
+Message-Id: <20220426214901.201802-1-michael.opdenacker@bootlin.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 22 Apr 2022 16:51:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13657
+ <bitbake-devel@lists.openembedded.org>; Tue, 26 Apr 2022 21:49:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13658
 
-This probably means the osc fetcher isn't being used but fix the missing
-parameter.
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 ---
- lib/bb/fetch2/osc.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bitbake-user-manual-ref-variables.rst        | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/lib/bb/fetch2/osc.py b/lib/bb/fetch2/osc.py
-index d9ce44390c..99a529e5bf 100644
---- a/lib/bb/fetch2/osc.py
-+++ b/lib/bb/fetch2/osc.py
-@@ -43,7 +43,7 @@ class Osc(FetchMethod):
-             ud.revision = ud.parm['rev']
-         else:
-             pv = d.getVar("PV", False)
--            rev = bb.fetch2.srcrev_internal_helper(ud, d)
-+            rev = bb.fetch2.srcrev_internal_helper(ud, d, '')
-             if rev:
-                 ud.revision = rev
-             else:
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index af4ff980..80005580 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -1483,6 +1483,22 @@ overview of their function and contents.
+       consist mostly of task logs and scripts, when building a particular
+       recipe.
+ 
++   :term:`TEMPLATECONF`
++      Specifies the directory used by the build system to find templates
++      from which to build the ``bblayers.conf`` and ``local.conf`` files.
++      Use this variable if you wish to customize such files, and the default
++      BitBake targets shown when sourcing the ``oe-init-build-env`` script.
++
++      For details, see the
++      :yocto_docs:`Creating a Custom Template Configuration Directory
++      </dev-manual/common-tasks.html#creating-a-custom-template-configuration-directory>`
++      section in the Yocto Project Development Tasks manual.
++
++      .. note::
++
++         You must set this variable in the external environment in order
++         for it to work.
++
+    :term:`TOPDIR`
+       Points to the build directory. BitBake automatically sets this
+       variable.
 -- 
-2.32.0
+2.25.1
 
 
