@@ -1,216 +1,152 @@
-Return-Path: <pavel@zhukoff.net>
+Return-Path: <adriaan.schmidt@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA69C433F5
-	for <webhook@archiver.kernel.org>; Fri,  6 May 2022 09:02:06 +0000 (UTC)
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com
- [66.111.4.224])
- by mx.groups.io with SMTP id smtpd.web08.7473.1651827718746038749
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE42C433F5
+	for <webhook@archiver.kernel.org>; Fri,  6 May 2022 12:11:17 +0000 (UTC)
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+ (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.57])
+ by mx.groups.io with SMTP id smtpd.web10.8560.1651839070658072223
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 06 May 2022 02:01:59 -0700
+ Fri, 06 May 2022 05:11:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@zhukoff.net header.s=fm1
- header.b=hzpGbgVH;
- spf=pass (domain: zhukoff.net, ip: 66.111.4.224, mailfrom: pavel@zhukoff.net)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 0DBE3580C68;
-	Fri,  6 May 2022 05:01:58 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 06 May 2022 05:01:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
-	cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-	:message-id:mime-version:reply-to:sender:subject:subject:to:to;
-	 s=fm1; t=1651827718; x=1651834918; bh=w6Xlbxa2nelIiNjbPRaGWukpL
-	QAjI3m4R3bIqZDt9Yw=; b=hzpGbgVHkDT7xyhTHN9QldfQHUq0Evbz8axJtkseq
-	EfAhv8MH91UJHC+kG4YbTZfK82g0+ifM/2N12x2p40Xb0kfJ0snCufvbRPjbC7PW
-	25xb1IpVwmdYJ5b+h9ZbPSWuM9scWg/dynNc0xG8jBdDyBjvfdiYBw35lmdMqu1b
-	eQyVdQlnlm1ll9peTAQ5LjOqsJXEDdPlaEdH54+yJq8IQDUJHxrRMsvGOl/RS1nI
-	z+9U3+yWzxy7SQmKzSL6nchWddkgOZKvTBxz6yIub7Izg71Y2QnF/qAk9x19005D
-	gAaX4Tm1PBGlhdaVh/+xIHbGAcw962UMqpSziRCOPjVYg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-	:from:from:in-reply-to:message-id:mime-version:reply-to:sender
-	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1651827718; x=1651834918; bh=w
-	6Xlbxa2nelIiNjbPRaGWukpLQAjI3m4R3bIqZDt9Yw=; b=lnjWLUKuYiEl+px8K
-	9uTj39HRpgqg6tSUfSlUrzLpCop0uZ0Ngt5RbA8CA0R0tQ+eJyrhQaHRTJaZ5q6t
-	/tkv7wiRFBDq3vF5WlMU5V0lwBBw1GV5V3i3W9IudYoiMeCKfH4cVaxO5tKnhBQz
-	Dbd3jNiECJKBTx3TZ5qbQCR1VTz97VSHIE8wWxBAsZX9i+4epokFguTe+XjWCnYD
-	B/hStjkvc+Ver9/xUSwEb5BlWokrw3oFG+h00YgnrkYaTO/u6SSqRMb82NMs9kwB
-	KWpq4VCbbbXLjuJFwdMFjxzsJVOnIX23XHMd2CDmHf+BeZrJPKUnV60+v2/B0+ET
-	E6CFw==
-X-ME-Sender: <xms:BeR0YtGGXfJEklv28E4641ACeiCXBvLVLM44TPprSC8KIRlxdFrGxQ>
-    <xme:BeR0YiVJlAc3jMRZUwhNos9res-BGURGLxDFeFZ7-WSEE_WOn6mVtEmd1keCZZQ1i
-    ymS1eX57Niw3iFntMg>
-X-ME-Received: 
- <xmr:BeR0YvK6Vu_h49Ec4PaCgUZLP1X-S-zQUyWcuffaeuOp-BiC2OPDJIhkMinFOkEpbLzlbYSrBpiM5zo8sTHjLNg>
-X-ME-Proxy-Cause: 
- gggruggvucftvghtrhhoucdtuddrgedvfedrfeefgddutdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecuogevohgrshhtrghlqdfhgeduvddqtddvucdludehtd
-    dmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomheprfgrvhgv
-    lhcukghhuhhkohhvuceophgrvhgvlhesiihhuhhkohhffhdrnhgvtheqnecuggftrfgrth
-    htvghrnhepgfehieeuveetvdeuieevudevgeetudeikeevudeigfegheeiueelvdelffef
-    vefhnecuffhomhgrihhnpehuthhilhhsrdhtohdpphhrohgtvghsshdrrhhunhenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghvvghlseii
-    hhhukhhofhhfrdhnvght
-X-ME-Proxy: <xmx:BeR0YjFx3kv0dXmCLiUHckkIOrrtmKxhlikeIEDhm8zUv-vYOnpN9w>
-    <xmx:BeR0YjX81zp8M3pExfpwSlqwLZ-IzL6yFdIy-V7p9slHYG4YVBLe8g>
-    <xmx:BeR0YuOcUBJmyUpUUdp9ivnSPuOKT8O_sbFVS76uSpy5OjGgAZZt6Q>
-    <xmx:BuR0YkeEkTO8-fjGiNXb40ffy0Kk1rKI37X1tu6QRcyzrPZ8yMdh-Q>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 May 2022 05:01:56 -0400 (EDT)
-From: Pavel Zhukov <pavel@zhukoff.net>
-To: bitbake-devel@lists.openembedded.org
-Cc: Pavel Zhukov <pavel.zhukov@huawei.com>
-Subject: [PATCH v2] Honour BB_FETCH_PREMIRRORONLY option
-Date: Fri,  6 May 2022 10:58:47 +0200
-Message-Id: <20220506085845.22974-1-pavel@zhukoff.net>
-X-Mailer: git-send-email 2.35.1
+ dkim=fail reason="body hash did not verify" header.i=@siemens.com
+ header.s=selector2 header.b=bEMX4+ZH;
+ spf=pass (domain: siemens.com, ip: 40.107.8.57,
+ mailfrom: adriaan.schmidt@siemens.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HVIrJRz7DZeVVwH7RFXR5bu67JEeVs00O07SGRickXd01IYgTNrOI/BMi3zYNgihnoDrAr55z3xYaN4TYZaPhFnRjonAjwBPPDGjAYYXI0c6TA08bFTGrf+38ElISePg2B7m23IahRjFpUyUmxW3Zds/kJ4Ter56USGRsXmu2oG8t5wa+48DtnQRIGyBMJnGRynlfs6ttFHPGc+xLNX1k56hi1LaqfECtuZw4xhi8EEaBddireNmwlbl2/1361WpqvBBeEeXbMBriAZQIk5hZoyjGJ0OTn4vOg3qc5ZP/jHlYBOMnO8mAN4aDlfdxWTT0oGN/ZSM5U+iXZ+z54fzkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CxfSlMKVnlBZDtxFcWSw4LTn/X5zlHZAWGTkJuAoV9g=;
+ b=ihNLRwPztHRKdEXX6jLuNbfsJFUYx9zyq2U5+Gzdh0ukcdYc6aC0GOI+e2++aGle4Dl86bN+fNOccaoyYDayjiS6XSV4Sfo7HMX64tVHpSc6FqE94twRiaRYTlEYuy7swZiLvPpjNSWp5YZWkQFoZKHYA4kI9oIbfheB3J137MoE7IGdVkmiqu9c4u1hCzNCgyQBJwZ8X/cwRtbAJCal7BYnVtxVnAK6CJpSuip/JoyPQUoe6imnZ96oBSx5J0k8lp7m+1h01C0k8DmOu+QJSYOMgbtCCmrd19gaYImA63MmbrN6ziQ1WST39u9XCNTAML1qVXy7oTN0pUROltRPmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 194.138.21.73) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=siemens.com; dmarc=pass (p=none sp=none pct=100) action=none
+ header.from=siemens.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CxfSlMKVnlBZDtxFcWSw4LTn/X5zlHZAWGTkJuAoV9g=;
+ b=bEMX4+ZHx6xePSVkW4UQR6b2DTttArsbfTUyb3gOz5EmQwKfGWAwbsgFeRpSEBN0yWxZ0HKUocrF/PCo6PKaJAhnyVKRFmw0YI6GbCwjT5BKMqbgrGM+ZzqLZxzZ+EX/FxJMnSkHbF1l/qVzoF99bpzKa+YBQlGGg8y5lUkW5wBF9bj0xEuwvcXF4T1UDpYIwMXCCCrS9XpGqycsoeba4OXDCE9nl/TD6BLnDOzCzGUtF5581DINvOf+VRD973tPdqT8yM6dA7CsMsZCD5JPN79HkOZ43KV1rcsQUH4kBDJ9Ea087jUbiAe8wFjVlS8liLZdvBvfyAVoj9JMhJhAaw==
+Received: from AS9PR06CA0288.eurprd06.prod.outlook.com (2603:10a6:20b:45a::19)
+ by DB7PR10MB2171.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:4e::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.13; Fri, 6 May
+ 2022 12:11:07 +0000
+Received: from VE1EUR01FT031.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:20b:45a:cafe::b2) by AS9PR06CA0288.outlook.office365.com
+ (2603:10a6:20b:45a::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.14 via Frontend
+ Transport; Fri, 6 May 2022 12:11:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.73)
+ smtp.mailfrom=siemens.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=siemens.com;
+Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
+ 194.138.21.73 as permitted sender) receiver=protection.outlook.com;
+ client-ip=194.138.21.73; helo=hybrid.siemens.com;
+Received: from hybrid.siemens.com (194.138.21.73) by
+ VE1EUR01FT031.mail.protection.outlook.com (10.152.2.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5227.15 via Frontend Transport; Fri, 6 May 2022 12:11:06 +0000
+Received: from DEMCHDC89XA.ad011.siemens.net (139.25.226.103) by
+ DEMCHDC9SNA.ad011.siemens.net (194.138.21.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 6 May 2022 14:11:06 +0200
+Received: from random.ppmd.siemens.net (139.25.68.25) by
+ DEMCHDC89XA.ad011.siemens.net (139.25.226.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 6 May 2022 14:11:06 +0200
+From: Adriaan Schmidt <adriaan.schmidt@siemens.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: Adriaan Schmidt <adriaan.schmidt@siemens.com>
+Subject: [PATCH] bitbake-diffsigs: break on first dependent task difference
+Date: Fri, 6 May 2022 14:10:33 +0200
+Message-ID: <20220506121033.1212704-1-adriaan.schmidt@siemens.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [139.25.68.25]
+X-ClientProxiedBy: DEMCHDC89XA.ad011.siemens.net (139.25.226.103) To
+ DEMCHDC89XA.ad011.siemens.net (139.25.226.103)
+X-TM-AS-Product-Ver: SMEX-14.0.0.3080-8.6.1018-26680.007
+X-TM-AS-Result: No-10--11.927600-8.000000
+X-TMASE-MatchedRID: dh+U1xplaFOD48uwiopfRMYBHeGPZPw2LIdNqQECjaCYh7QjWI3JDCY6
+	ALX8FNLOg62QWKBoZ9Rj8XzdqXhnXq3aC25avUua4yf6Jl3/aOQ5hou9z/6pqd+G9ND+fWcZAgv
+	M6h73BtpncSzHLoRamctfdBL+08yffS0Ip2eEHnz3IzXlXlpamPoLR4+zsDTtgUicvJ4MChljG7
+	WlrEHKY4Omoovoo/xux1BMjI72P3NKG3FTLtIr0noGAEEg4pV0
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--11.927600-8.000000
+X-TMASE-Version: SMEX-14.0.0.3080-8.6.1018-26680.007
+X-TM-SNTS-SMTP: 
+ B83C0F112E00CE0CA701671560FA1005519040F2096DCAADDA47CB6852E3B18F2000:8
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 79cc73df-f127-4bed-68f6-08da2f597fb8
+X-MS-TrafficTypeDiagnostic: DB7PR10MB2171:EE_
+X-Microsoft-Antispam-PRVS: 
+	<DB7PR10MB2171F17ED3BA319021E25477EDC59@DB7PR10MB2171.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	xtSeAjt2ybUzGXr8pAJ486Tct6K0OHsG4Pb45iCF9E4nu2Ehq8oVlE2Hh6IStDqyMSyrL4HuFV9omsGn0cvfstXole3fPTCs6nT+h1PUR0aqKULmHyG+7Mo9UR8fsV2boMQnJcKLOfCWq81n62c1C554pmTt/SXBcpBtLfvh3ovbQZ9XcSBdTk0UjA6JGaqxhQ7CPVoj233QDZ5AjezUbApap7NI6iYkYoXavBPYJsTexva2da3mqbyRQI6tsBeUgUVy+kIRFBoqAPmeUhGkEhW/khyis1Ov2/KyIj8UMuDcwUVYuH8zgUSvUQuh/xpZcSIx/KXbWjM3CAHFmI9aKjCvo6tT5J9L+lhWVw1ju7sL1zEh45QVWzCkzBgwwPPj3chSlYKsndnS8iNyKmoWF/olqnFe39X/qirrBGBInzfw8K2cw2Ms/sNl+kb+xL7dvTE9FLFWmOft5TB4a9isACRvJ+bMHEDYFJPk9kchnjF8loe+bTCiLbL2pit5V+S0AXxsOl7hj+VSwhbU3JTZ+hrL0rPvz4qEGF3fDV+Oj4syuIWEAv52Oxmhgr50dYlShLuIdAY+SqrktDrKu22WdAUqAsfwMx9UK/BQ16Sh1hEE+wkA9Xs0pT9pUymtWTIZIhQaeeOh8eNnwabaqL4Md+MV7DDDcUnnoDSh7waQI19+KmM09+T5ZT1GAZRb332S37+tDT7D/m+zgLdALu3jaw==
+X-Forefront-Antispam-Report: 
+	CIP:194.138.21.73;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(8936002)(508600001)(6666004)(2616005)(26005)(4326008)(36756003)(1076003)(83380400001)(16526019)(186003)(36860700001)(107886003)(336012)(47076005)(86362001)(356005)(82960400001)(40460700003)(81166007)(82310400005)(316002)(5660300002)(70586007)(70206006)(8676002)(956004)(2906002)(6916009)(44832011)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2022 12:11:06.7108
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 
+ 79cc73df-f127-4bed-68f6-08da2f597fb8
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: 
+ TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.73];Helo=[hybrid.siemens.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	VE1EUR01FT031.eop-EUR01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR10MB2171
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 06 May 2022 09:02:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13672
+ <bitbake-devel@lists.openembedded.org>; Fri, 06 May 2022 12:11:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13673
 
-This should fix [Yocto 13353] and related to [Yocto 13233] as well.
-Previously if git repo mirror has been updated in between of two builds
-fetcher of the second build didn't try updated mirror but switched to
-git clone from upstream instead. This is problem for offline builds.
-Fix this to raise MirrorException if BB_FETCH_PREMIRRORONLY has been
-specified by the mirror doesn't contain SRC_REV.
+compare_sigfiles() recursively calculates differences on all dependent
+tasks with changed hashes. This is done in arbitrary/alphabetical order, an=
+d
+only the last of those results is returned, while everything else is discar=
+ded.
 
-Signed-off-by: Pavel Zhukov <pavel.zhukov@huawei.com>
+This changes the behavior to instead return the first difference and not ca=
+lculate
+any more, which significantly speeds up diffs of tasks with many dependenci=
+es.
+
+Signed-off-by: Adriaan Schmidt <adriaan.schmidt@siemens.com>
 ---
- lib/bb/fetch2/__init__.py |  2 ++
- lib/bb/fetch2/git.py      | 18 +++++------
- lib/bb/tests/fetch.py     | 63 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 74 insertions(+), 9 deletions(-)
+ lib/bb/siggen.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 5dfe5ff3..ce013eb2 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1744,6 +1744,8 @@ class Fetch(object):
-                             done = False
- 
-                 if premirroronly:
-+                    if not done:
-+                        raise FetchError("Failed to download premirror {} and BB_FETCH_PREMIRRORONLY has been set to 1.".format(self.d.getVar("PREMIRRORS")))
-                     self.d.setVar("BB_NO_NETWORK", "1")
- 
-                 firsterr = None
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 4d06a571..0d5f6048 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -335,11 +335,7 @@ class Git(FetchMethod):
-     def try_premirror(self, ud, d):
-         # If we don't do this, updating an existing checkout with only premirrors
-         # is not possible
--        if bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
--            return True
--        if os.path.exists(ud.clonedir):
--            return False
--        return True
-+        return bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")) or not os.path.exists(ud.clonedir)
- 
-     def download(self, ud, d):
-         """Fetch url"""
-@@ -350,10 +346,14 @@ class Git(FetchMethod):
-         if ud.shallow and os.path.exists(ud.fullshallow) and self.need_update(ud, d):
-             ud.localpath = ud.fullshallow
-             return
--        elif os.path.exists(ud.fullmirror) and not os.path.exists(ud.clonedir):
--            bb.utils.mkdirhier(ud.clonedir)
--            runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir)
--
-+        if os.path.exists(ud.fullmirror):
-+            if self.try_premirror(ud, d) and self.need_update(ud, d):
-+                bb.utils.mkdirhier(ud.clonedir)
-+                runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir)
-+                if self.need_update(ud, d) and \
-+                   bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
-+                    raise bb.fetch2.FetchError("Premirror doesn't contain revisions {} and "\
-+                            "upstream cannot be used due to BB_FETCH_PREMIRRORONLY setting".format(ud.revisions))
-         repourl = self._get_repo_url(ud)
- 
-         # If the repo still doesn't exist, fallback to cloning it
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 233ecae7..62c7296e 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2800,3 +2800,66 @@ class GitSharedTest(FetcherTest):
-         fetcher.unpack(self.unpackdir)
-         alt = os.path.join(self.unpackdir, 'git/.git/objects/info/alternates')
-         self.assertFalse(os.path.exists(alt))
-+
-+
-+class FetchPremirroronlyLocalTest(FetcherTest):
-+
-+    def git(self, cmd, cwd=None):
-+        if isinstance(cmd, str):
-+            cmd = 'git ' + cmd
-+        else:
-+            cmd = ['git'] + cmd
-+        if cwd is None:
-+            cwd = self.gitdir
-+        return bb.process.run(cmd, cwd=cwd)[0]
-+
-+    def setUp(self):
-+        super(FetchPremirroronlyLocalTest, self).setUp()
-+        self.mirrordir = os.path.join(self.tempdir, "mirrors")
-+        os.mkdir(self.mirrordir)
-+        self.reponame = "bitbake"
-+        self.gitdir = os.path.join(self.tempdir, "git", self.reponame)
-+        self.recipe_url = "git://git.fake.repo/bitbake"
-+        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-+        self.d.setVar("BB_NO_NETWORK", "1")
-+        self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
-+
-+    def make_git_repo(self):
-+        self.mirrorname = "git2_git.fake.repo.bitbake.tar.gz"
-+        recipeurl = "git:/git.fake.repo/bitbake"
-+        os.makedirs(self.gitdir)
-+        self.git("init", self.gitdir)
-+        for i in range(0):
-+            self.git_new_commit()
-+        bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
-+
-+    def git_new_commit(self):
-+        import random
-+        testfilename = "bibake-fetch.test"
-+        os.unlink(os.path.join(self.mirrordir, self.mirrorname))
-+        with open(os.path.join(self.gitdir, testfilename), "w") as testfile:
-+            testfile.write("Useless random data {}".format(random.random()))
-+        self.git("add {}".format(testfilename), self.gitdir)
-+        self.git("commit -a -m \"This random commit {}. I'm useless.\"".format(random.random()), self.gitdir)
-+        bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
-+        return self.git("rev-parse HEAD", self.gitdir).strip()
-+
-+    def test_mirror_commit_nonexistent(self):
-+        self.make_git_repo()
-+        self.d.setVar("SRCREV", "0"*40)
-+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
-+        with self.assertRaises(bb.fetch2.FetchError):
-+            fetcher.download()
-+
-+    def test_mirror_commit_exists(self):
-+        self.make_git_repo()
-+        self.d.setVar("SRCREV", self.git_new_commit())
-+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+
-+    def test_mirror_tarball_nonexistent(self):
-+        self.d.setVar("SRCREV", "0"*40)
-+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
-+        with self.assertRaises(bb.fetch2.FetchError):
-+            fetcher.download()
--- 
-2.35.1
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 9fa568f6..08eca786 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -1026,6 +1026,7 @@ def compare_sigfiles(a, b, recursecb=3DNone, color=3D=
+False, collapsed=3DFalse):
+                             # If a dependent hash changed, might as well p=
+rint the line above and then defer to the changes in
+                             # that hash since in all likelyhood, they're t=
+he same changes this task also saw.
+                             output =3D [output[-1]] + recout
++                            break
+=20
+     a_taint =3D a_data.get('taint', None)
+     b_taint =3D b_data.get('taint', None)
+--=20
+2.30.2
 
 
