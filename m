@@ -2,125 +2,108 @@ Return-Path: <pavel@zhukoff.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C53C433EF
-	for <webhook@archiver.kernel.org>; Fri,  6 May 2022 14:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 679E6C433F5
+	for <webhook@archiver.kernel.org>; Fri,  6 May 2022 14:20:58 +0000 (UTC)
 Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com
  [66.111.4.27])
- by mx.groups.io with SMTP id smtpd.web08.10175.1651846839344228631
+ by mx.groups.io with SMTP id smtpd.web08.10177.1651846856080568856
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 06 May 2022 07:20:40 -0700
+ Fri, 06 May 2022 07:20:56 -0700
 Authentication-Results: mx.groups.io;
  dkim=fail reason="signature has expired" header.i=@zhukoff.net header.s=fm1
- header.b=VbAqvgrm;
+ header.b=ryLC1Mzb;
  spf=pass (domain: zhukoff.net, ip: 66.111.4.27, mailfrom: pavel@zhukoff.net)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 92DE25C015C;
-	Fri,  6 May 2022 10:20:38 -0400 (EDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id 6943A5C00C7;
+	Fri,  6 May 2022 10:20:55 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Fri, 06 May 2022 10:20:38 -0400
+  by compute3.internal (MEProxy); Fri, 06 May 2022 10:20:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
 	cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-	:message-id:mime-version:reply-to:sender:subject:subject:to:to;
-	 s=fm1; t=1651846838; x=1651933238; bh=itqOLOEdJ8x1vupENosBcaALK
-	MwY8Pl79KUiF0NRa20=; b=VbAqvgrmofFWdHw9Ow/8jU77YGR7pAduhpXrib3qM
-	e2437tz2PxqQ3DQYYll2RZkHXOFAR1evhzDFZu44o0WZ79P6MRxjwEqp/c+pJk7n
-	12/USRKg9jtLdJVtPsimDu2Xnvozpd+81WLJcAWgj9XaB4saIz/F2B/V2eoj1vvz
-	xzDFvfemV93G5oUrlv0xTN6feaYsjsM7Ul8bRr2+lCh/o7yGZ3GCLrpujyN39tjf
-	+/wuCbHCLJTEDVB/XSjZmFsLkZCzIJzxl8riAlhIMzm93wwwXsg2EpV3b/JK+TH/
-	/Ab0WiVzCRoR4+7PxNi7v+doApFsIoBFgADugmmaOvL9Q==
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm1; t=1651846855; x=1651933255; bh=4T
+	egpgSNrK9Vl8QogP6CNGs5dgiQ5KrWf4Q96C+Lm5Q=; b=ryLC1MzbimyJ9OjH7w
+	XEqJrojTvptwNxdDIOcHL/f4JJgnZjkTJBBc4AQQac3xIkdJ1k7bHoY8lDdAc4Ra
+	isdZGaFeDE2NfYa4WnzYWqkKfmKx/klq1ZlcDwyZ+5yRehRiVNnG03je3S75s/dy
+	C7HELeXGPpaRr0+QcL3KpukLGowpwstXJCrc8KdMDkec7VKJqo9v2z4Z+Fv3uNR8
+	R2jmLWEbkEewOaLkHAaB0w5EfjaF0iYf5hfd4xI3XeC/zC8kTM2pTaUUmQGHnJJN
+	hzJBvxAN3quE/Baaz27WO3TEPb5qzlmPkAUv8F4l3/Mz3zluBZRWQhwTJDidWW6K
+	zfWw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-	:from:from:in-reply-to:message-id:mime-version:reply-to:sender
-	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1651846838; x=1651933238; bh=i
-	tqOLOEdJ8x1vupENosBcaALKMwY8Pl79KUiF0NRa20=; b=KgTQszHFK4SS/k/W9
-	/TeBBillbSy9Io8L8DQDdOD3MKUao0C8ce6ng4ax3FkSvVPleFIQJpP1/h7j4bTP
-	oHcjiYzLMTbA1ml+TGdKErrdSxFYco1jX8vyt0CFNbqNVEGuMSGLwCXhT/8E1Fmj
-	Rf5cVpcRxw9RUF/J/1FrU+uXCLSBovzCZmkBRA7p1F79Drz5d2HolJshyQxabPrb
-	UQfzABtDNh1uU/7cMOvuKSPUvxMp8k++1HP99/OAbxfnSajhvq+h863AYkkOS6Sp
-	rz4MIySVGnzJwQ+PdoD4SAeDhQovu5xxsg3u5ARbcejtchyzoXC+x3M/LOqI8Q4R
-	SdMJg==
-X-ME-Sender: <xms:ti51YoawCRlcdF9yC_8yEq4YsbhB6KFW_pvyK-9RrdTMAoDc6vTnjQ>
-    <xme:ti51YjapNpUxDTp-h40jUPJhzh4GcZp-Y-nvMjiJUZogMZWzmlxUBUMfzKQNJvDA-
-    1EfYPAHsq_U6dcaT78>
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1651846855; x=1651933255; bh=4TegpgSNrK9Vl8QogP6CNGs5dgiQ5KrWf4Q
+	96C+Lm5Q=; b=XiYgGo0dlQR7NBC9u4G8nNWNP9lVXqbrJI+5fhAxg7Rw2TCbFxT
+	+rozW4syBOcRla1+oiz3nP4bbTuLaAdUdV9ldA83AlweqfLwpAzrCrYZG2XS8wBf
+	EI7CGBMclcLF4NFYJ7aCoAc7NV5JGCOQE8oOl0f4WbofyMvloK85LfeCQDtUrCJf
+	3mbfkY+SZcS1cPkqBXrNfpp/hKXF2LrR8NPMGD0J7NMoB5H0YYbFGP6Aao8/ieVO
+	Pw4Sw5sOIdL3BwhGC2NpUgQEMnO0Lsvk2AtD3zi+EY6iOGrcK23LTd0p1aAljE7E
+	4zmpoLzl1yZ5TSRru6WgY7AAkHNS/EvO7JQ==
+X-ME-Sender: <xms:xy51Ysz3Ph9BXeyXKaolEK37YcTH-RG5w-fpqfvEoE0BvtbCQvyBfg>
+    <xme:xy51YgTmdoBkyEtry7JbFIEOg5jXTGpt1YAiHZqAcTWV_pCBvdhg-zw9h96RBhapg
+    qb79WqO5Y3K2uaewxM>
 X-ME-Received: 
- <xmr:ti51Yi_odG2c85MY-53yxAqyiuoNwtLIYUcUVuPj3uq3k0cq7brHIV7G4Hm9QllYYwt55mZBIe9qHnqJkXBTEWo>
+ <xmr:xy51YuXfVwAFg1d8vN0me_LYorzI2MC0ASuLtBptBicRmob2lhX3Igab2f4YTzbKxPOv2YeZwm5WDHHVOqJnBUM>
 X-ME-Proxy-Cause: 
  gggruggvucftvghtrhhoucdtuddrgedvfedrfeefgdejfecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtre
-    dttdenucfhrhhomheprfgrvhgvlhcukghhuhhkohhvuceophgrvhgvlhesiihhuhhkohhf
-    fhdrnhgvtheqnecuggftrfgrthhtvghrnhepieejgfeiieehtedtgfduheehgfdtfeeftd
-    elffevleffieehkeffteevkeekkeejnecuffhomhgrihhnpehuthhilhhsrdhtohenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghvvghlse
-    iihhhukhhofhhfrdhnvght
-X-ME-Proxy: <xmx:ti51YiqCmLXw9Pd0J7SjzOD-B-bipxGON6E3PwlLlRyrGzcQPXCsAw>
-    <xmx:ti51Yjrs3P3-41tJQvr4vRDX4aLznn5F9NYVKkDgG44AmYDUs53uaQ>
-    <xmx:ti51YgRNqyUoiMkMDA1qY-qkBw_djqzbCiReIVREvd3WJUU1DTkq1g>
-    <xmx:ti51YsDo6SL_UBFpN0mUH1RO5Pq-kSixkHEuTVqdAQHsVtSzLF1GZw>
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgjfhgggfestdekre
+    dtredttdenucfhrhhomheprfgrvhgvlhcukghhuhhkohhvuceophgrvhgvlhesiihhuhhk
+    ohhffhdrnhgvtheqnecuggftrfgrthhtvghrnhepkefgieevhfelkeevudevvddutdelgf
+    ffueehffdtgfduleffueekfeegkefgudffnecuffhomhgrihhnpehuthhilhhsrdhtohen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghvvg
+    hlseiihhhukhhofhhfrdhnvght
+X-ME-Proxy: <xmx:xy51Yqh-kVr-bza-Nq2Gerz1o7bQCx26XAEhrQBHD_FZg4rNelXCAw>
+    <xmx:xy51YuCh4fYkP7XYx6tbrFPdMMmgvQmJM60zLk_srdnY_K8It89lnw>
+    <xmx:xy51YrLI59BLrVCDhXvBxm75G0434b-8TPMGZac3Z--FL4HptRL4yQ>
+    <xmx:xy51Yv62CsxN8Mr_7i4myACzXqrUQTz93JHLD43D11YVq4i1RgeFow>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 May 2022 10:20:37 -0400 (EDT)
+ 6 May 2022 10:20:54 -0400 (EDT)
 From: Pavel Zhukov <pavel@zhukoff.net>
 To: bitbake-devel@lists.openembedded.org
 Cc: pavel@zhukoff.net,
 	Pavel Zhukov <pavel.zhukov@huawei.com>
-Subject: [PATCH v3 1/3] Honour BB_FETCH_PREMIRRORONLY option
-Date: Fri,  6 May 2022 16:17:33 +0200
-Message-Id: <20220506141733.3298-1-pavel@zhukoff.net>
+Subject: [PATCH v3 3/3] fetch2: Clear try_premirror
+Date: Fri,  6 May 2022 16:17:37 +0200
+Message-Id: <20220506141733.3298-3-pavel@zhukoff.net>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220506141733.3298-1-pavel@zhukoff.net>
+References: <20220506141733.3298-1-pavel@zhukoff.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 06 May 2022 14:20:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13674
+ <bitbake-devel@lists.openembedded.org>; Fri, 06 May 2022 14:20:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13676
 
-This should fix [Yocto 13353] and related to [Yocto 13233] as well.
-Previously if git repo mirror has been updated in between of two builds
-fetcher of the second build didn't try updated mirror but switched to
-git clone from upstream instead. This is problem for offline builds.
-Fix this to raise MirrorException if BB_FETCH_PREMIRRORONLY has been
-specified by the mirror doesn't contain SRC_REV.
+This is non-functional change and aim to improve readability of the
+function.
 
 Signed-off-by: Pavel Zhukov <pavel.zhukov@huawei.com>
 ---
- lib/bb/fetch2/__init__.py | 2 ++
- lib/bb/fetch2/git.py      | 6 ++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/git.py | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index ac557176..c99cd104 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1745,6 +1745,8 @@ class Fetch(object):
-                             done = False
- 
-                 if premirroronly:
-+                    if not done:
-+                        raise FetchError("Failed to download premirror {} and BB_FETCH_PREMIRRORONLY has been set to 1.".format(self.d.getVar("PREMIRRORS")))
-                     self.d.setVar("BB_NO_NETWORK", "1")
- 
-                 firsterr = None
 diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index bdcfa497..e556f297 100644
+index e556f297..b17703d8 100644
 --- a/lib/bb/fetch2/git.py
 +++ b/lib/bb/fetch2/git.py
-@@ -353,10 +353,12 @@ class Git(FetchMethod):
-         if ud.shallow and os.path.exists(ud.fullshallow) and self.need_update(ud, d):
-             ud.localpath = ud.fullshallow
-             return
--        elif os.path.exists(ud.fullmirror) and not os.path.exists(ud.clonedir):
-+        if os.path.exists(ud.fullmirror) and self.try_premirror(ud, d) and self.need_update(ud, d):
-             bb.utils.mkdirhier(ud.clonedir)
-             runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir)
--
-+            if self.need_update(ud, d) and bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
-+                    raise bb.fetch2.FetchError("Premirror doesn't contain revisions {} and "\
-+                            "upstream cannot be used due to BB_FETCH_PREMIRRORONLY setting".format(ud.revisions))
-         repourl = self._get_repo_url(ud)
+@@ -338,11 +338,7 @@ class Git(FetchMethod):
+     def try_premirror(self, ud, d):
+         # If we don't do this, updating an existing checkout with only premirrors
+         # is not possible
+-        if bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
+-            return True
+-        if os.path.exists(ud.clonedir):
+-            return False
+-        return True
++        return bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")) or not os.path.exists(ud.clonedir)
  
-         # If the repo still doesn't exist, fallback to cloning it
+     def download(self, ud, d):
+         """Fetch url"""
 -- 
 2.35.1
 
