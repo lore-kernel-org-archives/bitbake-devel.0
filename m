@@ -2,64 +2,64 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3CAC433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09A7C4332F
 	for <webhook@archiver.kernel.org>; Tue, 10 May 2022 18:06:53 +0000 (UTC)
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com
- [209.85.214.173])
- by mx.groups.io with SMTP id smtpd.web10.611.1652206005982248248
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com
+ [209.85.215.172])
+ by mx.groups.io with SMTP id smtpd.web09.629.1652206003451564122
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 May 2022 11:06:46 -0700
+ Tue, 10 May 2022 11:06:43 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=2XDwuEgv;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.173,
+ header.b=eKpXmG8Y;
+ spf=softfail (domain: sakoman.com, ip: 209.85.215.172,
  mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f173.google.com with SMTP id d17so17468870plg.0
+Received: by mail-pg1-f172.google.com with SMTP id g184so12766689pgc.1
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 May 2022 11:06:45 -0700 (PDT)
+ Tue, 10 May 2022 11:06:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=VxKJs/6ndKqV4bAMj6Gsg2R5aK27w2TRYhY4Pwf+dB4=;
-        b=2XDwuEgv9Dl19RAX70uXbt6YMk8Fu9qVTYat6JdKljRX/lwdDfikmSzWUKu9X8QDYK
-         FdJV4xpkcmPCWuQgq/E0rnwF3v94vOh8MoWgJSqz+zYpUoHC9VGrNdJ5Sznldz7yzbfY
-         +at1trM2GOFu5NN0YzLC6YlWjh8T3T8w6CdLqZDhcFF/TiJTqitKv1sWQoqZ2hSIXVtF
-         GRmNs/0SQdWfjTjO+7e7RzEe/FA1PraLJ7iMahSO6E1YiV9AsRX94XoE03kMzapwegv/
-         ALcf3CxFnt4zHqlA1subnS+qkzg8H25u666wGDK04YDyRjfX2tH81qABXpb+xKTObANK
-         veYA==
+        bh=CK6I828emvT02CmhlQqIR1l0GCrKwgbOB0SrQ7GUOY4=;
+        b=eKpXmG8YJFpswQ7Miy2tGA36ujyIPoaFNf+2J4BKeiOGmi1InH6C3pjOG3ytmNckzT
+         i2vsPE00fVbOrzra2tZ4guzM30WbOk1raF9sCA1vz5rXr/aN8BwN6hwdHXODkIO7zHGC
+         SO62LOFOMWq2z4znC+P0oBkXHmHQMPL49497TWImZSBPhZJ5VI38XswL/agMi2B9Wh4y
+         HCJ2HxdEGfWs8ZtGZV9EsDCNKXFDDEbxbx2xgR9/Ax2E4JZkuTbyhQ8PkOOqqco4fRwJ
+         AwmH4+7MH/6Qhuv/QCh8f4/LuRlctSzTgyaCfuEJVsGVWFzWADP0jAPiqZrkQi81zYrd
+         jzow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VxKJs/6ndKqV4bAMj6Gsg2R5aK27w2TRYhY4Pwf+dB4=;
-        b=r9xZyamZVosTZNsGS4iHVbO1oup5010OT7sYYr/3kDYYDE8Rl9zTRhi95wlKaq0qrx
-         5NUpN3qMvoWctgKxXYjQ6z72FJIrcGoolUSVSkwEsEMXKS/iK7Qw/2LuQ0t4zLTij+SA
-         p0K+8NMmNHGElhk1F4ob7iowPskvvIgTUWuBqSPF0mid2GR93CIRndQ/zWNHhlwV17jo
-         jw4nurie/oE/7HaWwjbHKSQ1RIqQOMJBPQ2+mXsX9JT62dEbu05AT8EjnXZwqHXZOroR
-         uPxc+8Tjs7hXLUzMLfesol2ZW5BgCvWqYozK+5e97fXj2QMov8oMExriInAt/JXI9VAW
-         hJsw==
-X-Gm-Message-State: AOAM531RkrhMEJLijcvfJHTXPYjRROdhsMSVZTJozGwGOtjQPrF330+A
-	7KLzivVlr2fxKhfsUbF+EG0Y9RaHuAoYhWnx
+        bh=CK6I828emvT02CmhlQqIR1l0GCrKwgbOB0SrQ7GUOY4=;
+        b=YIXEUoq1LgjaZWfy7nKJfkDFc3dfcMfL2fJF8/RMFE+QAA8GIPgylhDDWVnnKXkjDR
+         tffjo9cGS/F/QIc3jK9KIr5+q910M/HK1fh6ftXYnEEl/DlPJmPZv7CeEG5/cdu0jsNa
+         /ByQIz1lMQbuuyfM/mJnwh/ssycmjSq2t1xgdKT7XNBax5k/QPAeNPj0kkVqMLemImrN
+         RCBpyg6KIxOSB7aSwHxneSxi3g0LCkMRyhCT2spLl9nxwHKdUxZSzSRo9KPDal6Ej1s6
+         fJB+23vSF5NIVcQjdueUsPGs/sr1oM7uYOgjFsmmm9Z5/CmHw/Bq5h6sqnlXyD7QESWo
+         8M5g==
+X-Gm-Message-State: AOAM533wkyFX1SxwMvWo97FuV0pfRrCxAUosOK+vNflocWcq56034m0Z
+	jJoSVhGfcV8UpNmqAWNZI5x0FaE89LcMip9v
 X-Google-Smtp-Source: 
- ABdhPJw6oo1n5IsBZpC9SyOiMVcjrsXXyqkDu2U+kKdpM3S0x/XWTivM9pj2qivyZ39ur6t/8mIgFw==
-X-Received: by 2002:a17:90a:9483:b0:1dc:5fb2:9b89 with SMTP id
- s3-20020a17090a948300b001dc5fb29b89mr1063138pjo.235.1652206004631;
-        Tue, 10 May 2022 11:06:44 -0700 (PDT)
+ ABdhPJzbNxQA4FfD3rPKPZ8q+86baF/YOiM1DAZfbG2W6nvB1ZMjdXc1BE32tgO055tygt6my3CrrA==
+X-Received: by 2002:a62:6410:0:b0:4f3:9654:266d with SMTP id
+ y16-20020a626410000000b004f39654266dmr2981626pfb.59.1652206002257;
+        Tue, 10 May 2022 11:06:42 -0700 (PDT)
 Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
  [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- 12-20020aa7910c000000b0050dc76281c4sm10846777pfh.158.2022.05.10.11.06.43
+ 12-20020aa7910c000000b0050dc76281c4sm10846777pfh.158.2022.05.10.11.06.40
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 May 2022 11:06:43 -0700 (PDT)
+        Tue, 10 May 2022 11:06:41 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 17/18] cache: correctly handle file
- names containing colons
-Date: Tue, 10 May 2022 08:05:42 -1000
+Subject: [bitbake][kirkstone][2.0][PATCH 16/18] runqueue: Fix sig file
+ location when using multiconfig
+Date: Tue, 10 May 2022 08:05:41 -1000
 Message-Id: 
- <11460a5b887762b946eb11e847c1ce70f83f74f7.1652205806.git.steve@sakoman.com>
+ <23d5829088147bb3d296558695833866d1bf04cd.1652205806.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1652205806.git.steve@sakoman.com>
 References: <cover.1652205806.git.steve@sakoman.com>
@@ -69,39 +69,36 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 10 May 2022 18:06:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13697
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13696
 
-From: Roland Hieber <rhi@pengutronix.de>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-File names containing colons cause split() to return a list with more
-than two elements, which will lead to a stack trace ending in:
+We're using the wrong data store when trying to locate siginfo files,
+fix this. Thanks to Gregory Lumen <gregorylumen@microsoft.com> for
+spotting.
 
-    ValueError: too many values to unpack (expected 2)
+[YOCTO #14774]
 
-Split only once at the last colon, thereby making sure that only two
-elements are returned.
-
-Signed-off-by: Roland Hieber <rhi@pengutronix.de>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit a70a7376a8708bde07959deb5d5842d7f84ee5f8)
+(cherry picked from commit 0ed800e19a3197f8e622c8d3b630aae384e60aba)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/cache.py | 2 +-
+ lib/bb/runqueue.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index fcb15796..92e9a3ce 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -619,7 +619,7 @@ class Cache(NoCache):
-                 for f in flist:
-                     if not f:
-                         continue
--                    f, exist = f.split(":")
-+                    f, exist = f.rsplit(":", 1)
-                     if (exist == "True" and not os.path.exists(f)) or (exist == "False" and os.path.exists(f)):
-                         self.logger.debug2("%s's file checksum list file %s changed",
-                                              fn, f)
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index a4e82f37..f34f1568 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1674,7 +1674,7 @@ class RunQueue:
+             (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
+             pn = self.rqdata.dataCaches[mc].pkg_fn[taskfn]
+             h = self.rqdata.runtaskentries[tid].hash
+-            matches = bb.siggen.find_siginfo(pn, taskname, [], self.cfgData)
++            matches = bb.siggen.find_siginfo(pn, taskname, [], self.cooker.databuilder.mcdata[mc])
+             match = None
+             for m in matches:
+                 if h in m:
 -- 
 2.25.1
 
