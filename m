@@ -2,65 +2,64 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D6CC433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE3AC433F5
 	for <webhook@archiver.kernel.org>; Tue, 10 May 2022 18:06:43 +0000 (UTC)
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com
- [209.85.216.53])
- by mx.groups.io with SMTP id smtpd.web11.614.1652205993340569441
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com
+ [209.85.210.176])
+ by mx.groups.io with SMTP id smtpd.web10.609.1652205998184472247
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 May 2022 11:06:33 -0700
+ Tue, 10 May 2022 11:06:38 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=UZtb5WVv;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.53,
+ header.b=azg2g8ls;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.176,
  mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f53.google.com with SMTP id
- a15-20020a17090ad80f00b001dc2e23ad84so2640237pjv.4
+Received: by mail-pf1-f176.google.com with SMTP id x52so15580907pfu.11
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 May 2022 11:06:33 -0700 (PDT)
+ Tue, 10 May 2022 11:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=MUTfbQBVdwP0MUzP0QYHspmFyqMeTnWUzIbo98ngA7o=;
-        b=UZtb5WVvKus+LKpOt/BRgeI3pPnTcOEV0c7iDDh8ckynksAijkpa1Napg/ocxcmMCy
-         c8M2tLsF//s3dlJ1AvxTfW81Q+6B0KEbGFA4zd6l5W0fIbjz/xckVrVnNCE6IzwG3HDc
-         2lulLTaoS79J9J93PnxZj3L3httw7PZz9v2RAeLtdJmrOmNLdvYhk3EVUacUhLogkv8O
-         CmRjai55CgUXQ85fIWDoW6p9m0270omJdvUME1w9r4Hm5BQPRXrTqOwV22Sba+sA6Tv9
-         ZvG34FkpNxhUUzhb0GPJKiyYW6ibeX3k0/bdUjc8e7sYdRD8TkTKN25HieyEF2MDf+fF
-         E4Mw==
+        bh=N1Y0EIx1oVrzRhafJE7gCCEntMxO5O0I07rapMu3228=;
+        b=azg2g8ls6UGRikcBt6IA6VFSeg2YvNjhlx1l1Wg9RHbrLrzsHlkBpNCA/gpzBgOD6B
+         BP2CZSBB+yAxOB3kL1AY26Okj/ENZ6sq6TZ5hOyQifQXOaFmibyMeKIBiXZXzfLAmVMa
+         MP6oFmEeggiRgEvSJPq4MwmOp1NDUOY1lcZ603QAza4p5LFSd/eCL7gIC0RQdVPbbGvI
+         H5NQ+5Y6dOgiRfdNtSWYq8fsnpthQ6xN66HlBtCKkFV4mk8HO9tmfkmYEzNgJlz8MYQd
+         CWY4tH+HmwVbNgbEwOBajHrJRJvsjLIqimqzU3u0CgflTFnev8m46+gqL60s62dFctCn
+         yeiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MUTfbQBVdwP0MUzP0QYHspmFyqMeTnWUzIbo98ngA7o=;
-        b=o7gPqrJuzrPGum0OhRjYu2kF/pkfQUXmenugm62riYP06K9jivQh/tmWRO9vq1conj
-         syyvZMNaZcjsEyIO7zOKvQS3flM7dVSh0QmrjkVHC9kJg2ILAI3gV5LMrHdb0GEVpJBc
-         xqBK8Ec46jNTcY5r3TZhzxMjFvOdpZxyLbVS8YI1GQnItLxOMcLmwLtlNpO1PTYbym01
-         /EhvboPXn0WdoPIobdw+Iq/Z0bp227cqQHckphpB19vkzGxIdmHT8uWTGmC0J+abHIOC
-         a+hHJ4jHUHHP9LaxFhWzKC98YyBCJmSv+SurZf5UNPhV3qEcoGlBw3R+D1isONg0mP5b
-         B7tw==
-X-Gm-Message-State: AOAM531N8rOAAFTV6rnweHM12DqgIRpQJOuZE2IBBrhODFY26pXVydna
-	W5FPiPqWGc9D8E6ZRpfKSPoK7PqhJLNfPJpM
+        bh=N1Y0EIx1oVrzRhafJE7gCCEntMxO5O0I07rapMu3228=;
+        b=aiN7RBG7pSfraxWa5A8dNsc+mPzQX0rZQDJuHDdqBf12DgTkOMNcPrvGQwQhXnGTb2
+         GmZ2RtrbPHB5waQa9oE6Doneeiog9LUs1ytDbUeKEiibNZmnkPHoqoIOAoNIxJjZ8uMv
+         lC6gw2/I40ZrwMJSvobMrEAWSG/BqBh4UPBNx1oa1oNQNObcFrLHWYy9vvj/9QlhfazT
+         zM/UJarfUAkecgug/ETjI3GJvAQgWJSi4D/nGaxKbl0C2aMrcJ8OmVv09tgTDP9kG5z1
+         wSN5wb/zAYxaLiCEipLU/xq5f35jPylEm/QOrdBt9qsPr9pZIgzoWMAuy59K0TdZXZt8
+         cryA==
+X-Gm-Message-State: AOAM5310m0nedXNPgivLO69KmU98p8D0C6HR7XyUNSCE6p5KqsLkUltp
+	GyNxXRqTJ/VQj7nLsIezCXIaRTGt1uzE2E8F
 X-Google-Smtp-Source: 
- ABdhPJyjBCWPLozkrgY8LVVQcbjJOfsGhZoXtbSzvs+mbE9Lw2VyTvxSKZmdtX0VSiClPKuf/e7cZw==
-X-Received: by 2002:a17:903:244f:b0:15e:bb9a:3aa9 with SMTP id
- l15-20020a170903244f00b0015ebb9a3aa9mr21494571pls.78.1652205992247;
-        Tue, 10 May 2022 11:06:32 -0700 (PDT)
+ ABdhPJwrC230EyWP8vyNlHeTKRUl8wtVsecLgoQDVlvwy7cb4lVlxKbnCe8rybxl3XqCGynNVTrK5A==
+X-Received: by 2002:a62:1687:0:b0:50d:3364:46d4 with SMTP id
+ 129-20020a621687000000b0050d336446d4mr21563569pfw.74.1652205997107;
+        Tue, 10 May 2022 11:06:37 -0700 (PDT)
 Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
  [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- 12-20020aa7910c000000b0050dc76281c4sm10846777pfh.158.2022.05.10.11.06.30
+ 12-20020aa7910c000000b0050dc76281c4sm10846777pfh.158.2022.05.10.11.06.35
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 May 2022 11:06:31 -0700 (PDT)
+        Tue, 10 May 2022 11:06:36 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 12/18] runqueue: Drop pointless
- variable assignment
-Date: Tue, 10 May 2022 08:05:37 -1000
+Subject: [bitbake][kirkstone][2.0][PATCH 14/18] fetch2/osc: Add missing
+ parameter
+Date: Tue, 10 May 2022 08:05:39 -1000
 Message-Id: 
- <190c61d94a54b5eaecfc850640c91f1360ff3543.1652205806.git.steve@sakoman.com>
+ <f4617c0bf54f9c033ae080ff52a8652433b86c0c.1652205806.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1652205806.git.steve@sakoman.com>
 References: <cover.1652205806.git.steve@sakoman.com>
@@ -70,32 +69,33 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 10 May 2022 18:06:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13692
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13694
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-This is set at the start of the loop anyway so it does nothing. Drop
-the pointless code.
+This probably means the osc fetcher isn't being used but fix the missing
+parameter.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit e6a3173c9cdf349ccbd4cf612868f92cce8717c8)
+(cherry picked from commit a23c201cb6efc5c0abf763c26f905442f0eebb68)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/runqueue.py | 1 -
- 1 file changed, 1 deletion(-)
+ lib/bb/fetch2/osc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index a7a84630..a4e82f37 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2664,7 +2664,6 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
-             sq_revdeps_squash[point] = set()
-             if point in rqdata.runq_setscene_tids:
-                 sq_revdeps_squash[point] = tasks
--                tasks = set()
-                 continue
-             for dep in rqdata.runtaskentries[point].depends:
-                 if point in sq_revdeps[dep]:
+diff --git a/lib/bb/fetch2/osc.py b/lib/bb/fetch2/osc.py
+index d9ce4439..99a529e5 100644
+--- a/lib/bb/fetch2/osc.py
++++ b/lib/bb/fetch2/osc.py
+@@ -43,7 +43,7 @@ class Osc(FetchMethod):
+             ud.revision = ud.parm['rev']
+         else:
+             pv = d.getVar("PV", False)
+-            rev = bb.fetch2.srcrev_internal_helper(ud, d)
++            rev = bb.fetch2.srcrev_internal_helper(ud, d, '')
+             if rev:
+                 ud.revision = rev
+             else:
 -- 
 2.25.1
 
