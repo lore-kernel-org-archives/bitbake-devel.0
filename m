@@ -2,65 +2,64 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DD1C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEC0C43217
 	for <webhook@archiver.kernel.org>; Tue, 10 May 2022 18:06:23 +0000 (UTC)
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com
- [209.85.216.44])
- by mx.groups.io with SMTP id smtpd.web09.625.1652205971397246784
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com
+ [209.85.215.177])
+ by mx.groups.io with SMTP id smtpd.web12.677.1652205982322914085
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 May 2022 11:06:16 -0700
+ Tue, 10 May 2022 11:06:22 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=5l815EF3;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.44,
+ header.b=lCm1NLh9;
+ spf=softfail (domain: sakoman.com, ip: 209.85.215.177,
  mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f44.google.com with SMTP id
- cx11-20020a17090afd8b00b001d9fe5965b3so2646079pjb.3
+Received: by mail-pg1-f177.google.com with SMTP id v10so15245788pgl.11
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 May 2022 11:06:16 -0700 (PDT)
+ Tue, 10 May 2022 11:06:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=irAwxtw+2l2pV2lfo2mVFihkd2cxnyjtQMAgdh0nskE=;
-        b=5l815EF3nuVJQFEWbaEb7+RPwmKcJEuM7LgWHnJhm8fwBhzWKhSiPLZMpq3eHG+eWP
-         HFCqt7KnVs3UKwaNvzxFke7HVIsUbxkLr/RZotkRABUlYHMgRhh27lGNRADpv5d9XZQe
-         LJejzRNA62IxXuocnda4qGWIqMwv1Q42DAwvpg5ZsYWa6mvLZBJo19WrnpYTVkiWz8cb
-         cQeZobtK5dsqZ8f33TNIWxJXPL3oSK44Hx/T083TBVtRifsh+I+dQBQmAuOUSZ2Lbs/8
-         E9Xe2nrzOrpPXkct1cXG8DZyf4UVxtfKgyeT6b4iabv4lP/uGLi4RdRHRKd9jOFU1Qfv
-         qgMg==
+        bh=ShqqtqrtJ+nE5Ow0Ym8bK7Fy0Vr+EDh8BD8+HEINatU=;
+        b=lCm1NLh9zX11D+/W22J5cgoMHz1CQqi03stkZJEr8cvMUd+cn0lqNEzpvWSdH3cdk8
+         RC65ckb6bOcRrBL/Uz1CwC3G10dWECL9IndVOjT0b3mVLoqkiGrjRf3Ri8pOSJUDy/Ol
+         QpM4heQ98YMI1KmHnSfUn+/SuhSpzgAitevDmRHF5tuZEg0MIxoU+ThnJ4zvYyxDsX5k
+         Rj1lOuRh09pB0SUya2YzgfeTOZoXF1RZEw0s6kFrQz1qO8Iwz8xj04vIIEt5iMvwrU05
+         2mv5TTd386mZFSeucwGMj9E1zEFn98HUnXA4+vzzUHpwe+XXd60Z/i5fwFsOW1FXZX+R
+         nqIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=irAwxtw+2l2pV2lfo2mVFihkd2cxnyjtQMAgdh0nskE=;
-        b=nBIKmK7qeY3Y9AfpnR5YlTr1oj7WrE4wLOezmzGLVZw6hMUz6fNxHgGMZaIFyPFvWd
-         AwQ2cOmA71ZMPPP3DIFiUO+8219MNoH3pJYcRsiyL02G+ea6heo4y1XjdJP9Dv5Jd/bG
-         FPGN37EbgrKqq8HyVQCp8NmMzb20rbh0Z31sb6k7iS8XlDs3KihLTtGVf1PN504worcs
-         fmERb5VscG13bLnNDr3rNPowWPrTaQgVMD23TQK+bqTS1t8HkDwJMYuYKXxenalAFjH8
-         OLL5SnDbqggwgcLovkfF6d4gUSKXa1tIJbPBHlFD2Dn/Pl/ky6P5HxXkExmxUYJDisos
-         +hkA==
-X-Gm-Message-State: AOAM533STm/f4We12lvB2xscVoGk9opJOVCxBGCCHlAulpsxppPr8UXK
-	3nsb4OriWjG1T85VI29XG1pg8eH27XNFbmdN
+        bh=ShqqtqrtJ+nE5Ow0Ym8bK7Fy0Vr+EDh8BD8+HEINatU=;
+        b=AALuhQyPpx/DDfSvxDw65ZDwXlwVx2zFAzHceNg/qlAMMdOCBy/6b6tOspv8UxcWce
+         f3NXo7qh6AFaNtSqgxZmxLkUUnsaVcYgTzl0Ye4OKvC2DWFRyqZMZAvkWY+v5W7hRl/M
+         HNETBKnie+CbK05NqXLXz8u1MGwqlwkROfCRJ7sYMGKZjDAKTdY/3VH39+45EAc3AGMD
+         9lxXxsGaXPyGO+LvdU6MofUHRbDFZxZcEpU/eMYBJcx3BhapDb6FP9/oAZRO9i6uyNtv
+         Fa2/3dHmUzMGaV42/9irWXcYJHqKPqUMhF7ibRIbRd3Zu8ksVIEEjvkdM0LCSLbEK79E
+         EBIA==
+X-Gm-Message-State: AOAM530IdFgE6EBY/JDmi5FP/D8Mm0gN/QRzw0ArI2+tHPzIzd648lF/
+	U1fePbTVpykEegf+dJXcQvE/3WJPM+9/i/TP
 X-Google-Smtp-Source: 
- ABdhPJxoqUZcSKZFh2Ne7HOetSJymny3GAegklP8GhYAenSub24X0rDbOs8h2whrzlL2CFlKnyNqIQ==
-X-Received: by 2002:a17:902:c409:b0:15e:bdd3:1fa3 with SMTP id
- k9-20020a170902c40900b0015ebdd31fa3mr21668125plk.67.1652205975650;
-        Tue, 10 May 2022 11:06:15 -0700 (PDT)
+ ABdhPJwuRyyNkgY+j4I9xhawokXkKwzKfVqKmGeMjL3lBc8tELDZYcloGjcUe+4F91uo2OakH3xahg==
+X-Received: by 2002:a05:6a00:230d:b0:4f6:ec4f:35ff with SMTP id
+ h13-20020a056a00230d00b004f6ec4f35ffmr21667880pfh.53.1652205981210;
+        Tue, 10 May 2022 11:06:21 -0700 (PDT)
 Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
  [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- 12-20020aa7910c000000b0050dc76281c4sm10846777pfh.158.2022.05.10.11.06.14
+ 12-20020aa7910c000000b0050dc76281c4sm10846777pfh.158.2022.05.10.11.06.19
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 May 2022 11:06:14 -0700 (PDT)
+        Tue, 10 May 2022 11:06:20 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 06/18] msg: Drop unused local
- variable
-Date: Tue, 10 May 2022 08:05:31 -1000
+Subject: [bitbake][kirkstone][2.0][PATCH 08/18] fetch2/crate: Drop unused
+ import
+Date: Tue, 10 May 2022 08:05:33 -1000
 Message-Id: 
- <98b6158c174779fcfa214bb52e2e91d1db86ef83.1652205806.git.steve@sakoman.com>
+ <7fcb08de9ab8d65beb8d6129a7e17da348759248.1652205806.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1652205806.git.steve@sakoman.com>
 References: <cover.1652205806.git.steve@sakoman.com>
@@ -70,29 +69,29 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 10 May 2022 18:06:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13686
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13688
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 140929b404ee1e2f5e0e1a3a1d3aa49fb3759ade)
+(cherry picked from commit 879f17ecd5ba09e217cef74f6a51339b145e8ef5)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/msg.py | 1 -
+ lib/bb/fetch2/crate.py | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/lib/bb/msg.py b/lib/bb/msg.py
-index c95a874b..93575d89 100644
---- a/lib/bb/msg.py
-+++ b/lib/bb/msg.py
-@@ -133,7 +133,6 @@ class LogFilterShowOnce(logging.Filter):
-         self.seen_errors = set()
- 
-     def filter(self, record):
--        msg = record.msg
-         if record.levelno == bb.msg.BBLogFormatter.WARNONCE:
-             if record.msg in self.seen_warnings:
-                 return False
+diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
+index aac1221c..f4ddc782 100644
+--- a/lib/bb/fetch2/crate.py
++++ b/lib/bb/fetch2/crate.py
+@@ -13,7 +13,6 @@ BitBake 'Fetch' implementation for crates.io
+ import hashlib
+ import json
+ import os
+-import shutil
+ import subprocess
+ import bb
+ from   bb.fetch2 import logger, subprocess_setup, UnpackError
 -- 
 2.25.1
 
