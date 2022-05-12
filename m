@@ -1,105 +1,154 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09A7C4332F
-	for <webhook@archiver.kernel.org>; Tue, 10 May 2022 18:06:53 +0000 (UTC)
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com
- [209.85.215.172])
- by mx.groups.io with SMTP id smtpd.web09.629.1652206003451564122
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671CBC433EF
+	for <webhook@archiver.kernel.org>; Thu, 12 May 2022 21:21:34 +0000 (UTC)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com
+ [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web10.839.1652390486437590395
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 May 2022 11:06:43 -0700
+ Thu, 12 May 2022 14:21:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=eKpXmG8Y;
- spf=softfail (domain: sakoman.com, ip: 209.85.215.172,
- mailfrom: steve@sakoman.com)
-Received: by mail-pg1-f172.google.com with SMTP id g184so12766689pgc.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YAwnqhQf;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f41.google.com with SMTP id j25so7917874wrc.9
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 May 2022 11:06:43 -0700 (PDT)
+ Thu, 12 May 2022 14:21:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=CK6I828emvT02CmhlQqIR1l0GCrKwgbOB0SrQ7GUOY4=;
-        b=eKpXmG8YJFpswQ7Miy2tGA36ujyIPoaFNf+2J4BKeiOGmi1InH6C3pjOG3ytmNckzT
-         i2vsPE00fVbOrzra2tZ4guzM30WbOk1raF9sCA1vz5rXr/aN8BwN6hwdHXODkIO7zHGC
-         SO62LOFOMWq2z4znC+P0oBkXHmHQMPL49497TWImZSBPhZJ5VI38XswL/agMi2B9Wh4y
-         HCJ2HxdEGfWs8ZtGZV9EsDCNKXFDDEbxbx2xgR9/Ax2E4JZkuTbyhQ8PkOOqqco4fRwJ
-         AwmH4+7MH/6Qhuv/QCh8f4/LuRlctSzTgyaCfuEJVsGVWFzWADP0jAPiqZrkQi81zYrd
-         jzow==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :content-transfer-encoding:user-agent:mime-version;
+        bh=UD7epRr4t2gt5BdXI8HWf2E5JwSrp9FycvhPyiVEHk8=;
+        b=YAwnqhQfZwZcMQQk3IJ3fzKPo5RULkcssJJsg1eefecbbPz9x8IYrabjlmfEHEu8I5
+         T+DrrKKikDqJUkh1GzHD1XSqEwxGnupJlGvxsKvqUtQlJQc7ZGGz6ZW+W58fW/wikXrH
+         1MM4jNDliU86sqifTMN3ESA/KGzXfPEJEWk6E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CK6I828emvT02CmhlQqIR1l0GCrKwgbOB0SrQ7GUOY4=;
-        b=YIXEUoq1LgjaZWfy7nKJfkDFc3dfcMfL2fJF8/RMFE+QAA8GIPgylhDDWVnnKXkjDR
-         tffjo9cGS/F/QIc3jK9KIr5+q910M/HK1fh6ftXYnEEl/DlPJmPZv7CeEG5/cdu0jsNa
-         /ByQIz1lMQbuuyfM/mJnwh/ssycmjSq2t1xgdKT7XNBax5k/QPAeNPj0kkVqMLemImrN
-         RCBpyg6KIxOSB7aSwHxneSxi3g0LCkMRyhCT2spLl9nxwHKdUxZSzSRo9KPDal6Ej1s6
-         fJB+23vSF5NIVcQjdueUsPGs/sr1oM7uYOgjFsmmm9Z5/CmHw/Bq5h6sqnlXyD7QESWo
-         8M5g==
-X-Gm-Message-State: AOAM533wkyFX1SxwMvWo97FuV0pfRrCxAUosOK+vNflocWcq56034m0Z
-	jJoSVhGfcV8UpNmqAWNZI5x0FaE89LcMip9v
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:content-transfer-encoding:user-agent:mime-version;
+        bh=UD7epRr4t2gt5BdXI8HWf2E5JwSrp9FycvhPyiVEHk8=;
+        b=AyJhc2g/sedYgB+igEHWIhy0I/zu5XlYGZ8WL3Xbu2RAKN7uqhwtYeUf4IqbeSVnuw
+         6fFidQrfegfmtu43KMrbs5Bw4b73MWHIDbc3IpDG4FwtY+ewAoQNUv0sXQQymq5N/SYg
+         L5qylrv1oeoSUxrg3oBmYgmSDSDFkCo76tPRSESzcMh3ErAcKK0KDfEx9QlUMcfmDvW4
+         Fbqvz36Jg7oJQOImp0FP4m1S0qPlOX7YusqaNPWCFLPOIa503pOrBKZoY/HyThqPukmT
+         mi5L+hoHppihQkAAHHyiDPdKCicIzC67DtSIy9fZ3e5TcRy4L/f2+maj3elKo56diIAl
+         YSuA==
+X-Gm-Message-State: AOAM531M2YER0LLHVsN2MvybvZpryLtKiwETSPwMy9Z1LojRMgRQ9Dmo
+	CHmROoTCvOsOXWybAw3HyINeag==
 X-Google-Smtp-Source: 
- ABdhPJzbNxQA4FfD3rPKPZ8q+86baF/YOiM1DAZfbG2W6nvB1ZMjdXc1BE32tgO055tygt6my3CrrA==
-X-Received: by 2002:a62:6410:0:b0:4f3:9654:266d with SMTP id
- y16-20020a626410000000b004f39654266dmr2981626pfb.59.1652206002257;
-        Tue, 10 May 2022 11:06:42 -0700 (PDT)
-Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
- [72.253.6.214])
+ ABdhPJxV1x0JAs9ANzlyAfeP7/rpT9IWpS20Q8jhjsGKeagxkdGLLM8sNEjz6oppNmPRDrctd6EiPw==
+X-Received: by 2002:a05:6000:1f1b:b0:20c:9ea8:b650 with SMTP id
+ bv27-20020a0560001f1b00b0020c9ea8b650mr1307421wrb.300.1652390484676;
+        Thu, 12 May 2022 14:21:24 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:a1e1:9ec5:5b27:abc8?
+ ([2001:8b0:aba:5f3c:a1e1:9ec5:5b27:abc8])
         by smtp.gmail.com with ESMTPSA id
- 12-20020aa7910c000000b0050dc76281c4sm10846777pfh.158.2022.05.10.11.06.40
-        for <bitbake-devel@lists.openembedded.org>
+ t9-20020a1c7709000000b003942a244f4dsm3663609wmi.38.2022.05.12.14.21.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 May 2022 11:06:41 -0700 (PDT)
-From: Steve Sakoman <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 16/18] runqueue: Fix sig file
- location when using multiconfig
-Date: Tue, 10 May 2022 08:05:41 -1000
-Message-Id: 
- <23d5829088147bb3d296558695833866d1bf04cd.1652205806.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1652205806.git.steve@sakoman.com>
-References: <cover.1652205806.git.steve@sakoman.com>
+        Thu, 12 May 2022 14:21:24 -0700 (PDT)
+Message-ID: 
+ <fe6d38f97f3ad3dce9fbeffbde6628570ac6bd72.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v3 1/3] Honour BB_FETCH_PREMIRRORONLY
+ option
+From: richard.purdie@linuxfoundation.org
+To: Pavel Zhukov <pavel@zhukoff.net>, bitbake-devel@lists.openembedded.org
+Cc: Pavel Zhukov <pavel.zhukov@huawei.com>
+Date: Thu, 12 May 2022 22:21:21 +0100
+In-Reply-To: <20220506141733.3298-1-pavel@zhukoff.net>
+References: <20220506141733.3298-1-pavel@zhukoff.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.0-1ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 10 May 2022 18:06:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13696
+ <bitbake-devel@lists.openembedded.org>; Thu, 12 May 2022 21:21:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13699
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+On Fri, 2022-05-06 at 16:17 +0200, Pavel Zhukov wrote:
+> This should fix [Yocto 13353] and related to [Yocto 13233] as well.
+> Previously if git repo mirror has been updated in between of two builds
+> fetcher of the second build didn't try updated mirror but switched to
+> git clone from upstream instead. This is problem for offline builds.
+> Fix this to raise MirrorException if BB_FETCH_PREMIRRORONLY has been
+> specified by the mirror doesn't contain SRC_REV.
+>=20
+> Signed-off-by: Pavel Zhukov <pavel.zhukov@huawei.com>
+> ---
+>  lib/bb/fetch2/__init__.py | 2 ++
+>  lib/bb/fetch2/git.py      | 6 ++++--
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index ac557176..c99cd104 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -1745,6 +1745,8 @@ class Fetch(object):
+>                              done =3D False
+> =20
+>                  if premirroronly:
+> +                    if not done:
+> +                        raise FetchError("Failed to download premirror {=
+} and BB_FETCH_PREMIRRORONLY has been set to 1.".format(self.d.getVar("PREM=
+IRRORS")))
+>                      self.d.setVar("BB_NO_NETWORK", "1")
+> =20
+>                  firsterr =3D None
+> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> index bdcfa497..e556f297 100644
+> --- a/lib/bb/fetch2/git.py
+> +++ b/lib/bb/fetch2/git.py
+> @@ -353,10 +353,12 @@ class Git(FetchMethod):
+>          if ud.shallow and os.path.exists(ud.fullshallow) and self.need_u=
+pdate(ud, d):
+>              ud.localpath =3D ud.fullshallow
+>              return
+> -        elif os.path.exists(ud.fullmirror) and not os.path.exists(ud.clo=
+nedir):
+> +        if os.path.exists(ud.fullmirror) and self.try_premirror(ud, d) a=
+nd self.need_update(ud, d):
+>              bb.utils.mkdirhier(ud.clonedir)
+>              runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=3Dud.c=
+lonedir)
+> -
+> +            if self.need_update(ud, d) and bb.utils.to_boolean(d.getVar(=
+"BB_FETCH_PREMIRRORONLY")):
+> +                    raise bb.fetch2.FetchError("Premirror doesn't contai=
+n revisions {} and "\
+> +                            "upstream cannot be used due to BB_FETCH_PRE=
+MIRRORONLY setting".format(ud.revisions))
+>          repourl =3D self._get_repo_url(ud)
+>=20
 
-We're using the wrong data store when trying to locate siginfo files,
-fix this. Thanks to Gregory Lumen <gregorylumen@microsoft.com> for
-spotting.
+Thanks for this series, it is a long standing issue we need to fix.
+Sorry for the delayed reply, I've had to think about this for while. I
+think your patch is mostly correct. What I'm worried about is the
+fetchers having premirror knowledge, that was intended to say inside
+__init__.py in the fetcher.
 
-[YOCTO #14774]
+I think there is a better way for the git fetcher to behave. It tries
+hard to preserve clonedir if it already exists but in the premirror
+case it will remove it.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 0ed800e19a3197f8e622c8d3b630aae384e60aba)
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
----
- lib/bb/runqueue.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This does lead me to one concern with the patch as it stands which is
+that if clonedir already exists and we untar ud.fullmirror over the top
+of it, the mix of existing and new files may be toxic (e.g. expanded
+refs and packed-refs being mixed). At the very least we need a delete
+in there.
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index a4e82f37..f34f1568 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1674,7 +1674,7 @@ class RunQueue:
-             (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
-             pn = self.rqdata.dataCaches[mc].pkg_fn[taskfn]
-             h = self.rqdata.runtaskentries[tid].hash
--            matches = bb.siggen.find_siginfo(pn, taskname, [], self.cfgData)
-+            matches = bb.siggen.find_siginfo(pn, taskname, [], self.cooker.databuilder.mcdata[mc])
-             match = None
-             for m in matches:
-                 if h in m:
--- 
-2.25.1
+I think what it should do is untar ud.fullmirror to a temp directory,
+then replace clonedir if this looks "better" than clonedir, else if
+just deletes the temp directory.
+
+I think that way we can remove a lot of the twisted logic and simplify
+things. Would you agree and is that something you could look at?
+
+Cheers,
+
+Richard
+
 
 
