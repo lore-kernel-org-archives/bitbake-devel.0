@@ -1,143 +1,105 @@
-Return-Path: <pavel@zhukoff.net>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC01C433FE
-	for <webhook@archiver.kernel.org>; Wed, 25 May 2022 14:43:16 +0000 (UTC)
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com
- [64.147.123.25])
- by mx.groups.io with SMTP id smtpd.web09.7582.1653489792630801147
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F5BC433F5
+	for <webhook@archiver.kernel.org>; Wed, 25 May 2022 18:53:17 +0000 (UTC)
+Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
+ by mx.groups.io with SMTP id smtpd.web12.10756.1653504795593497541
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 25 May 2022 07:43:13 -0700
+ Wed, 25 May 2022 11:53:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@zhukoff.net header.s=fm1
- header.b=CvmCjJUQ;
- spf=pass (domain: zhukoff.net, ip: 64.147.123.25,
- mailfrom: pavel@zhukoff.net)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 81D993200936;
-	Wed, 25 May 2022 10:43:09 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Wed, 25 May 2022 10:43:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
-	cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1653489789; x=1653576189; bh=JG
-	acXPoAOH5/VaAQM56r7BY35AbTVK3U9VsdjHCVsdA=; b=CvmCjJUQH7xtJsIl71
-	ycyJMvm5t0EQm5rTvsagE03FCtWA6G4U9ANa0PU9YrvUYhXtmzAi3Ejr7+bFapec
-	hRzPEQBufH1kraBGAAJgNTQ4ntqK3fFzSGZY19mwvfDTOqON1MUluW+Eu8E72Vw8
-	EuRqoYFWHbKy+ENdx7/UhRz7k733OTSAPt1dHcmYMvysm28ImrMhicDW9zbNQ+b2
-	mx+u2cQ9QoVmTvanRp/70BmuohKOY+OOr81NH+VQtcEmq9J7zF/7ucFhYt/L+1Em
-	+zL5lUl6O29cIPp5pOQFvNnkRQajx0q8I9pnv2Lq3mUccNFcuQKtaRK8uf2Ez4JY
-	GwlA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1653489789; x=1653576189; bh=JGacXPoAOH5/V
-	aAQM56r7BY35AbTVK3U9VsdjHCVsdA=; b=Um4LEdKxtIx/OE1EYnGQDp0AUD94Q
-	XhAenAQ7nYmwtmuzppRmC+aO+AM+d+lm4WCWR07c7rgbakmNgrAdzXa9QKm+8XWx
-	BBF9zVH7Iw3B3lepoFSJcJha3FO/0zDwY/4qykbUGRaIbsiMVlCHmgxhnAjocleq
-	z8NDZsMQhtUpRGp8eLwugnI3aBYlai4RVQPQb176IkKbOfjIRK40fodzAGqXrh05
-	gOSXkz83gCp2XlZM0UAQ3ZT/lKirwIS5q/U4MA+iIb9FWFMYJ1OOnRAf//IAEcUS
-	hj9JTYHJee9K0ZBZ2kjuHJrqlzF+AyYJaCAaZLyPoFjQdQu1GAYFdQXDw==
-X-ME-Sender: <xms:fECOYgZpfKHLC5p9f5b5E_B_DhZaQi-rQykASjqb1cnqlOhQxB9umg>
-    <xme:fECOYrY30tXEO4t5Yv8FCndzBY9yeSdR6aVX-Xd5gPXb_b3pFKTyVhXP5ix0PmxB8
-    U-uJHv-LRUTTyG_qdM>
-X-ME-Received: 
- <xmr:fECOYq-Utw9R1Ttdmkt3qQZGnS_K_-Z-7C7srgpLbfVXyok1-daPUCNU6U2orw-kK4aTMminRovlrFVXgLhXpvI>
-X-ME-Proxy-Cause: 
- gggruggvucftvghtrhhoucdtuddrgedvfedrjeehgdejkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefrrghvvghl
-    ucgkhhhukhhovhcuoehprghvvghlseiihhhukhhofhhfrdhnvghtqeenucggtffrrghtth
-    gvrhhnpeegieevvdeiieekheekfeeigfdtueejffeugedutdeutdetffdvgfetledtleek
-    veenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprg
-    hvvghlseiihhhukhhofhhfrdhnvght
-X-ME-Proxy: <xmx:fECOYqr09rjXIPGpznDbhh391kw_dKeyZRB5xKFsBAtBleKO76lR3A>
-    <xmx:fECOYrqs8tX972Z7MuX-n-M550YkiyrauTm0jMupY7np182HtcaJdw>
-    <xmx:fECOYoRD4SdV1MiKfjlIGtwM6Nf2uE7TN4qQ6KbRBS-_BxRTD3lgPQ>
-    <xmx:fUCOYi3XPIfHf2dxT-n7zCYMSEItnnYQC9pnLyUWDNZYor3FBOLV8Q>
-Feedback-ID: ib94946c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 25 May 2022 10:43:07 -0400 (EDT)
-From: Pavel Zhukov <pavel@zhukoff.net>
-To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	pavel@zhukoff.net,
-	Pavel Zhukov <pavel.zhukov@huawei.com>
-Subject: [PATCH v4] Honour BB_FETCH_PREMIRRORONLY option
-Date: Wed, 25 May 2022 16:42:45 +0200
-Message-Id: <20220525144243.19999-1-pavel@zhukoff.net>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: 
- <f09538e33bbae7eca1ff6365492f165c2da32b0b.camel@linuxfoundation.org>
-References: 
- <f09538e33bbae7eca1ff6365492f165c2da32b0b.camel@linuxfoundation.org>
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=jEAPGq1/;
+ spf=pass (domain: axis.com, ip: 195.60.68.18,
+ mailfrom: peter.kjellerstedt@axis.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; q=dns/txt; s=axis-central1; t=1653504796;
+  x=1685040796;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=a+icPKV/9Wp4D7ucJkHK7Hl0XztUembwR9WlrLs8bck=;
+  b=jEAPGq1/AZHzXhzz/2D+DtOwnJK1MaGgpggHN8oQpLbjfsZ1xivnNmDt
+   DD/Y7axNq5zKNpP2tyG+IrEuIp2dQItTPzGFFR9o3VVc48k5rJjKp6RBp
+   emko/WnRR2ZYsE+iS4L5QUJ10D/bvbXdmYc6YH8wPhkR/iKbgm5lht63S
+   FKI/oifeO0KtE+Wbk8LNHqR7AHIEA0dldZ8qq9Nwct4/ElXfsLGEA/9oL
+   9wSWNDWWNbS7+lOcfxtgffw/c9qTU/MZy9u2LjLXvcUURbLWZtRgVJ7sH
+   f+pNTb0ETCY4OaO/NETMwqQDwV3dfj40o3zl+cXXlno3S0pkyodaiS8px
+   w==;
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: "Reyna, David" <david.reyna@windriver.com>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: RE: [bitbake-devel] [PATCH 0/1] bitbake: ncurses version of
+ taskexp.py
+Thread-Topic: [bitbake-devel] [PATCH 0/1] bitbake: ncurses version of
+ taskexp.py
+Thread-Index: AQHYcAAm4OQt25afr0OENtumUZKtGK0v7q/w
+Date: Wed, 25 May 2022 18:53:13 +0000
+Message-ID: <b17960eece2c4985b066539792242c23@axis.com>
+References: <cover.1653448549.git.David.Reyna@windriver.com>
+In-Reply-To: <cover.1653448549.git.David.Reyna@windriver.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.5.60]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 25 May 2022 14:43:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13713
+ <bitbake-devel@lists.openembedded.org>; Wed, 25 May 2022 18:53:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13714
 
-This should fix [Yocto 13353] and related to [Yocto 13233] as well.
-Previously if git repo mirror has been updated in between of two builds
-fetcher of the second build didn't try updated mirror but switched to
-git clone from upstream instead. This is problem for offline builds.
-Fix this to raise MirrorException if BB_FETCH_PREMIRRORONLY has been
-specified by the mirror doesn't contain SRC_REV.
+> -----Original Message-----
+> From: bitbake-devel@lists.openembedded.org <bitbake-devel@lists.openembed=
+ded.org> On Behalf Of Reyna, David
+> Sent: den 25 maj 2022 08:25
+> To: bitbake-devel@lists.openembedded.org
+> Cc: David Reyna <David.Reyna@windriver.com>
+> Subject: [bitbake-devel] [PATCH 0/1] bitbake: ncurses version of taskexp.=
+py
+>=20
+> From: David Reyna <David.Reyna@windriver.com>
+>=20
+>=20
+> Added since demo at YP Summit:
+>  * Protection against window resizing
+>  * Line art (with ASCII line art as backup)
+>  * Additional internal documentation
+>  * Tested against misspelled recipe errors
+>=20
+>=20
+> The following changes since commit 13d70e57f8693e506aada946ae9b2e0997e4c5=
+f0:
+>=20
+>   migration guides: release notes for 3.4.3 and 3.4.4 (2022-05-24 13:58:4=
+7 +0100)
+>=20
+> are available in the Git repository at:
+>=20
+>   git://push.yoctoproject.org/poky-contrib dreyna/bitbake/ncurses_taskexp=
+_14814
+>=20
+> David Reyna (1):
+>   bitbake: ncurses version of taskexp.py
+>=20
+>  lib/bb/ui/taskexp_cli.py | 1302 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 1302 insertions(+)
+>  create mode 100755 bitbake/lib/bb/ui/taskexp_cli.py
+>=20
+> --
+> 2.35.1
 
-Signed-off-by: Pavel Zhukov <pavel.zhukov@huawei.com>
----
- lib/bb/fetch2/__init__.py |  2 ++
- lib/bb/fetch2/git.py      | 16 ++++++++++++----
- 2 files changed, 14 insertions(+), 4 deletions(-)
+May I suggest using a name that does not include "cli", because as I see it=
+,=20
+this has nothing to do with a command line interface, rather it is a text=20
+based UI. More appropriate may be something like "tty" or "ncurses". Or to=
+=20
+complement "knotty", you could call it "tetty". ;) (Though I guess it may b=
+e=20
+harder to remember what that does compared to "taskexp_tty".)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index ac557176..c99cd104 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1745,6 +1745,8 @@ class Fetch(object):
-                             done = False
- 
-                 if premirroronly:
-+                    if not done:
-+                        raise FetchError("Failed to download premirror {} and BB_FETCH_PREMIRRORONLY has been set to 1.".format(self.d.getVar("PREMIRRORS")))
-                     self.d.setVar("BB_NO_NETWORK", "1")
- 
-                 firsterr = None
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 23f8c0da..bf7c9d26 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -353,10 +353,18 @@ class Git(FetchMethod):
-         if ud.shallow and os.path.exists(ud.fullshallow) and self.need_update(ud, d):
-             ud.localpath = ud.fullshallow
-             return
--        elif os.path.exists(ud.fullmirror) and not os.path.exists(ud.clonedir):
--            bb.utils.mkdirhier(ud.clonedir)
--            runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir)
--
-+        elif os.path.exists(ud.fullmirror) and self.need_update(ud, d):
-+            if not os.path.exists(ud.clonedir):
-+                bb.utils.mkdirhier(ud.clonedir)
-+                runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir)
-+            else:
-+                tmpdir = tempfile.mkdtemp(dir=d.getVar('DL_DIR'))
-+                runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=tmpdir)
-+                fetch_cmd = "LANG=C %s fetch -f --progress %s " % (ud.basecmd, shlex.quote(tmpdir))
-+                runfetchcmd(fetch_cmd, d, workdir=ud.clonedir)
-+            if self.try_premirror(ud, d) and self.need_update(ud, d):
-+                    raise bb.fetch2.FetchError("Premirror doesn't contain revisions {} and "\
-+                            "upstream cannot be used due to BB_FETCH_PREMIRRORONLY setting".format(ud.revisions))
-         repourl = self._get_repo_url(ud)
- 
-         # If the repo still doesn't exist, fallback to cloning it
--- 
-2.35.1
+//Peter
 
 
