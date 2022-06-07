@@ -2,46 +2,46 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EEACCA47C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95169C3F2D4
 	for <webhook@archiver.kernel.org>; Tue,  7 Jun 2022 14:17:41 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com
- [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web12.13089.1654611458822943738
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
+ [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web08.13240.1654611459212812539
  for <bitbake-devel@lists.openembedded.org>;
  Tue, 07 Jun 2022 07:17:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CKt2hYHs;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=A4w9ZDRV;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id a15so15863943wrh.2
+Received: by mail-wr1-f45.google.com with SMTP id p10so24379768wrg.12
         for <bitbake-devel@lists.openembedded.org>;
  Tue, 07 Jun 2022 07:17:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=h0Yj2Fzgr+IPkdpXXbXzfSW3oXM/mbk/wn1BlAHKi4o=;
-        b=CKt2hYHsWUXtCDCDVxbQuvb4jqBdi+bAQYvfs5HaBWDqU/abUzCurki8iIX6IYigHR
-         +9SlhGZkjOwjMX1bi9pMRC4JA2AgsP9NwLqFbUXAJmBprnh2N3BdP6fStIg4RN7U01gB
-         0g27Ar1XdEmdgh9XChB0DwwRMBZJgaQ8iGcxk=
+        bh=NUid9dP0T4FX5pvY1hUyiPifnB0fg6D4dpOqDoj+O2M=;
+        b=A4w9ZDRVIzwnM4A39i0GL603NdDirRUY0nz2sJ+BoNb/As3tf8oMtQZQDd4DmdOSbW
+         sb8Wo5UNfpGkPXHVAkkHt+2C4UKOFnEWnc44IVXtpWvzdm/YPIsAfp56XO4wqTnxrmmu
+         Ho4wpLMkfyp2aD9cjiZwYdZT1q9C0OqOEWCwU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h0Yj2Fzgr+IPkdpXXbXzfSW3oXM/mbk/wn1BlAHKi4o=;
-        b=fYWQVs7akyx8PNWlc0Egr5IHsABVwdU89SBhdNJXY0CW7M87Ig7Le0SqUspRA2p/7G
-         KdlWiqhBwHAOOYWEA5i3JUKqnXRzZKbn1X6dqRTFbzehO7raaFbvivx2CfsaE+to61N8
-         3fRzW5s2nBugepPX1YrTsz/nYFPmZjqcKW3UdXkKbdG/1azXyenjr753jB6dvIm1p6an
-         AjcXyJWpXr2/qOzZZv+O/zKGRcdwD2tzbitqyRO75hpb9cGCmQFd3JOCi6Z2shoIMClq
-         t+q9d7zK3gmjxgVfF0EdY5a7Nrr9YFx43cibzuch2T08dfNRmwyxQceNXAPFy5sAPhUL
-         ZSRA==
-X-Gm-Message-State: AOAM530OsxvJf201B7kwt2jDX3e8jWv0iClgbN0AKBLKeI1UaVAPd+Lr
-	tP8VETUrNrtCFk963M1UNI4RI9py4nVGPw==
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NUid9dP0T4FX5pvY1hUyiPifnB0fg6D4dpOqDoj+O2M=;
+        b=tod7++LQDxvwfNHyICN8IJMcgDAlbQH6DkiEdTy0CiozWvz78lsK1UrA/n1fGEONl1
+         cq7Ydfps1uvkqYGkm/uSHxspL2Ioep5DI6QbR0qaJwpGV5oWxAq71/o/MbWkdu0164R3
+         qpKNZb+CHZe2mBi1jPCNEGkRjE0BBKKr1CePWplIsoY1hixpno7PvOT/mOY1Ct6uQ2vJ
+         MIM6NKN5MpEvYsr05ibV5/qgJJ4I+VNya4B4UEg/rYPb7yx2FUwW7xRTQyfus8z04odN
+         cwp5RjxK9UdFULaqRs2H54/mKDVVO/6G1EONjMIZTvvqf411RNkqJFK+jQuZXDdHbgAW
+         xaTQ==
+X-Gm-Message-State: AOAM5328VepN4hlEXorX26+WWs0OVQHHoapmOQSq8wf/c8jzOYYpyOK/
+	GlADWAKcMWCFlygXeZzoge0ib5iKKePsuQ==
 X-Google-Smtp-Source: 
- ABdhPJzL8E7gEvipl4nhTtNxhbE+Fq3gjsUM3xiRVcFIrxH79q2k+51kcLYjLjo+T79WYbqr1bik3Q==
-X-Received: by 2002:a05:6000:147:b0:214:7d6e:cb1d with SMTP id
- r7-20020a056000014700b002147d6ecb1dmr21238054wrx.650.1654611456747;
-        Tue, 07 Jun 2022 07:17:36 -0700 (PDT)
+ ABdhPJw3eG59zNoBoc+Ahhx4uZF6/NPflAA0+qsBotcQUnqLtnWqs4v6rrla6hDKtCm93//0kDHegQ==
+X-Received: by 2002:adf:e8cd:0:b0:210:2b10:ab22 with SMTP id
+ k13-20020adfe8cd000000b002102b10ab22mr26863755wrn.476.1654611457420;
+        Tue, 07 Jun 2022 07:17:37 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:e835:fc94:6c5b:fc12])
         by smtp.gmail.com with ESMTPSA id
  bd9-20020a05600c1f0900b0039c47767e23sm10483182wmb.33.2022.06.07.07.17.36
@@ -50,52 +50,76 @@ Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:e835:fc94:6c5b:fc12])
         Tue, 07 Jun 2022 07:17:36 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/3] fetch/wget: Move files into place atomically
-Date: Tue,  7 Jun 2022 15:17:33 +0100
-Message-Id: <20220607141735.341158-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/3] server/process: Avoid risk of exception deadlocks
+Date: Tue,  7 Jun 2022 15:17:34 +0100
+Message-Id: <20220607141735.341158-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220607141735.341158-1-richard.purdie@linuxfoundation.org>
+References: <20220607141735.341158-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 07 Jun 2022 14:17:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13736
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13737
+
+The open coded lock acquire/release in the UI event handler doesn't
+cover the case an exception occurs and if one did, it could deadlock
+the code. Switch to use 'with' statements which would handle this
+possibility.
+
+We have seen deadlocks in the UI at exit this so this removes a
+possible cause.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/wget.py | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ lib/bb/server/process.py | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index b3a3de571a..b2b542e1dc 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -106,10 +106,9 @@ class Wget(FetchMethod):
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 613956f30f..74b74dc39b 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -667,18 +667,14 @@ class BBUIEventQueue:
+         self.t.start()
  
-         fetchcmd = self.basecmd
+     def getEvent(self):
+-        self.eventQueueLock.acquire()
+-
+-        if len(self.eventQueue) == 0:
+-            self.eventQueueLock.release()
+-            return None
+-
+-        item = self.eventQueue.pop(0)
++        with self.eventQueueLock:
++            if len(self.eventQueue) == 0:
++                return None
  
--        if 'downloadfilename' in ud.parm:
--            localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile)
--            bb.utils.mkdirhier(os.path.dirname(localpath))
--            fetchcmd += " -O %s" % shlex.quote(localpath)
-+        localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile) + ".tmp"
-+        bb.utils.mkdirhier(os.path.dirname(localpath))
-+        fetchcmd += " -O %s" % shlex.quote(localpath)
+-        if len(self.eventQueue) == 0:
+-            self.eventQueueNotify.clear()
++            item = self.eventQueue.pop(0)
++            if len(self.eventQueue) == 0:
++                self.eventQueueNotify.clear()
  
-         if ud.user and ud.pswd:
-             fetchcmd += " --auth-no-challenge"
-@@ -133,6 +132,10 @@ class Wget(FetchMethod):
+-        self.eventQueueLock.release()
+         return item
  
-         self._runwget(ud, d, fetchcmd, False)
+     def waitEvent(self, delay):
+@@ -686,10 +682,9 @@ class BBUIEventQueue:
+         return self.getEvent()
  
-+        # Remove the ".tmp" and move the file into position atomically
-+        # Our lock prevents multiple writers but mirroring code may grab incomplete files
-+        os.rename(localpath, localpath[:-4])
-+
-         # Sanity check since wget can pretend it succeed when it didn't
-         # Also, this used to happen if sourceforge sent us to the mirror page
-         if not os.path.exists(ud.localpath):
+     def queue_event(self, event):
+-        self.eventQueueLock.acquire()
+-        self.eventQueue.append(event)
+-        self.eventQueueNotify.set()
+-        self.eventQueueLock.release()
++        with self.eventQueueLock:
++            self.eventQueue.append(event)
++            self.eventQueueNotify.set()
+ 
+     def send_event(self, event):
+         self.queue_event(pickle.loads(event))
 -- 
 2.34.1
 
