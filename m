@@ -1,105 +1,93 @@
-Return-Path: <mikko.rapeli@bmw.de>
+Return-Path: <luca.ceresoli@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03C5C43334
-	for <webhook@archiver.kernel.org>; Thu,  9 Jun 2022 05:56:40 +0000 (UTC)
-Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
- by mx.groups.io with SMTP id smtpd.web08.7369.1654754190478615908
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D8AC433EF
+	for <webhook@archiver.kernel.org>; Thu,  9 Jun 2022 06:58:01 +0000 (UTC)
+Received: from relay11.mail.gandi.net (relay11.mail.gandi.net
+ [217.70.178.231])
+ by mx.groups.io with SMTP id smtpd.web12.7440.1654757879022481710
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 Jun 2022 22:56:31 -0700
+ Wed, 08 Jun 2022 23:57:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=none, err=permanent DNS error (domain: lakka.kapsi.fi, ip: 91.232.154.25,
- mailfrom: mcfrisk@lakka.kapsi.fi)
-Received: from kapsi.fi ([91.232.154.11] helo=lakka.kapsi.fi)
-	by mail.kapsi.fi with esmtps  (TLS1.3) tls
- TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mcfrisk@lakka.kapsi.fi>)
-	id 1nzB9f-00E5tf-75; Thu, 09 Jun 2022 08:56:26 +0300
-Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.92)
-	(envelope-from <mcfrisk@lakka.kapsi.fi>)
-	id 1nzB9e-000Av4-Ax; Thu, 09 Jun 2022 08:56:26 +0300
-From: mikko.rapeli@bmw.de
-To: bitbake-devel@lists.openembedded.org
-Cc: Mikko Rapeli <mikko.rapeli@bmw.de>
-Subject: [PATCH] event.py: ignore exceptions from stdout and sterr operations
- in atexit
-Date: Thu,  9 Jun 2022 08:56:10 +0300
-Message-Id: <20220609055610.29857-1-mikko.rapeli@bmw.de>
-X-Mailer: git-send-email 2.20.1
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=lD6RYEe3;
+ spf=pass (domain: bootlin.com, ip: 217.70.178.231,
+ mailfrom: luca.ceresoli@bootlin.com)
+Received: from booty (unknown [77.244.183.192])
+	(Authenticated sender: luca.ceresoli@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id BC85910000E;
+	Thu,  9 Jun 2022 06:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1654757877;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BiVUt7SwjND4FqvrAhK9zP9dW67JiY1mk++LjpDG7JQ=;
+	b=lD6RYEe3EiCacNZdQ9la7qrRke9X0xpStrMxhp22jsKIWzwcOHLPJ9GVfPI3KV5POXc366
+	qgJQ2kMphlgDXl1A9llwaKAYYOolH3LSLqsR54kj72wLWK9iwHi8/L1G4G8jy9yPgwr8QV
+	jbiYDcTHcN8r55XM77Qih5mgsAYmHgFV1M1JCcOSfAok5Eunhs6XDoY2AYNVqpjIMmYNaJ
+	RW/ng6iDYM0nZnN2bsF8DBmmgVzggeJhi3p5GbdwTauVijYeNP/Cymx4ml/V6WHF+31d8P
+	HboVU7Ql7+quZQgddMiqVBqxsbmozy6Imz7jUMjF6djRXmCMyXjmdREJ/0J4WQ==
+Date: Thu, 9 Jun 2022 08:57:54 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: "Mikko Rapeli" <mikko.rapeli@bmw.de>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH] event.py: ignore exceptions from stdout
+ and sterr operations in atexit
+Message-ID: <20220609085754.22144287@booty>
+In-Reply-To: <20220609055610.29857-1-mikko.rapeli@bmw.de>
+References: <20220609055610.29857-1-mikko.rapeli@bmw.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspam-Score: -1.2 (-)
-X-Rspam-Report: Action: no action
- Symbol: RCVD_TLS_LAST(0.00)
- Symbol: ARC_NA(0.00)
- Symbol: DMARC_POLICY_SOFTFAIL(0.10)
- Symbol: TO_DN_SOME(0.00)
- Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
- Symbol: R_MISSING_CHARSET(0.50)
- Symbol: MIME_GOOD(-0.10)
- Symbol: RCPT_COUNT_TWO(0.00)
- Symbol: FROM_NO_DN(0.00)
- Symbol: MID_CONTAINS_FROM(1.00)
- Symbol: R_SPF_NA(0.00)
- Symbol: FORGED_SENDER(0.30)
- Symbol: R_DKIM_NA(0.00)
- Symbol: MIME_TRACE(0.00)
- Symbol: ASN(0.00)
- Symbol: FROM_NEQ_ENVFROM(0.00)
- Symbol: BAYES_HAM(-3.00)
- Symbol: RCVD_COUNT_TWO(0.00)
- Message-ID: 20220609055610.29857-1-mikko.rapeli@bmw.de
-X-SA-Exim-Connect-IP: 91.232.154.11
-X-SA-Exim-Mail-From: mcfrisk@lakka.kapsi.fi
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 09 Jun 2022 05:56:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13743
+ <bitbake-devel@lists.openembedded.org>; Thu, 09 Jun 2022 06:58:01 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13744
 
-From: Mikko Rapeli <mikko.rapeli@bmw.de>
+Hi Mikko,
 
-When atexit functions run, stdout and stderr operations may fail, e.g.
-when output is piped to less but has been exited by the user.
-This removes error print from output of "bitbake -e sqlite3 | less"
-if user presses "q" before bitbake has finished processing:
+On Thu,  9 Jun 2022 08:56:10 +0300
+"Mikko Rapeli" <mikko.rapeli@bmw.de> wrote:
 
-[Errno 32] Broken pipeError in atexit._run_exitfuncs:
-Traceback (most recent call last):
-  File "/home/builder/src/poky/bitbake/lib/bb/event.py", line 135, in print_ui_queue
-    sys.stdout.flush()
+> From: Mikko Rapeli <mikko.rapeli@bmw.de>
+> 
+> When atexit functions run, stdout and stderr operations may fail, e.g.
+> when output is piped to less but has been exited by the user.
+> This removes error print from output of "bitbake -e sqlite3 | less"
+> if user presses "q" before bitbake has finished processing:
+> 
+> [Errno 32] Broken pipeError in atexit._run_exitfuncs:
+> Traceback (most recent call last):
+>   File "/home/builder/src/poky/bitbake/lib/bb/event.py", line 135, in print_ui_queue
+>     sys.stdout.flush()
+> 
+> Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
+> ---
+>  bitbake/lib/bb/event.py | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+> index df020551e3..97668601a1 100644
+> --- a/bitbake/lib/bb/event.py
 
-Signed-off-by: Mikko Rapeli <mikko.rapeli@bmw.de>
----
- bitbake/lib/bb/event.py | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+        ^^^^^^^^
 
-diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-index df020551e3..97668601a1 100644
---- a/bitbake/lib/bb/event.py
-+++ b/bitbake/lib/bb/event.py
-@@ -132,8 +132,14 @@ def print_ui_queue():
-     if not _uiready:
-         from bb.msg import BBLogFormatter
-         # Flush any existing buffered content
--        sys.stdout.flush()
--        sys.stderr.flush()
-+        try:
-+            sys.stdout.flush()
-+        except:
-+            pass
-+        try:
-+            sys.stderr.flush()
-+        except:
-+            pass
-         stdout = logging.StreamHandler(sys.stdout)
-         stderr = logging.StreamHandler(sys.stderr)
-         formatter = BBLogFormatter("%(levelname)s: %(message)s")
+This patch does not apply on the bitbake tree due to the extra
+'bitbake/' directory component. Perhaps you generated it from a poky
+tree instead?
+
+I removed the extra component and applied it however, thus no need to
+resend, and also:
+
+Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+
 -- 
-2.20.1
-
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
