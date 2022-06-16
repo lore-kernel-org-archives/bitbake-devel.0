@@ -2,63 +2,66 @@ Return-Path: <Martin.Jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34AFCCA47E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F7BC3F2D4
 	for <webhook@archiver.kernel.org>; Thu, 16 Jun 2022 13:49:13 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com
- [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web08.17891.1655387347562174527
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
+ [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web11.17873.1655387348455523470
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Jun 2022 06:49:07 -0700
+ Thu, 16 Jun 2022 06:49:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=HiMMJvXe;
- spf=pass (domain: gmail.com, ip: 209.85.128.41,
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=HbeRASou;
+ spf=pass (domain: gmail.com, ip: 209.85.221.45,
  mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f41.google.com with SMTP id
- m16-20020a7bca50000000b0039c8a224c95so910159wml.2
+Received: by mail-wr1-f45.google.com with SMTP id w17so1958565wrg.7
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Jun 2022 06:49:07 -0700 (PDT)
+ Thu, 16 Jun 2022 06:49:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=duyNTGMvZE0oxJFURy56BK1PgpgJuqZ6WzON69fN5Fs=;
-        b=HiMMJvXe9/33kldujCIvrmRUvpWMluINKfZ/0q6U44XZuZ0XDY775QvX7uq9aWwqwL
-         gTcvLcNzyoNskRgCv4tt+WJpsZyh5E3xXBqe2sOYkbIADalW8zKnkEFcJl3nBzN081M+
-         yeEFRWfTkccoj1828OAW6vfI6qVttWcy/e605P82iEMPfumEbWgjsTE/Yeb2bNgTtOBF
-         hr4VYUcw/EdFjRwBWOIUwB3fQABmov0T/VGhHxFvh9kFFUGkpz2Il+iSMgkPjtUM4vSi
-         8kMrQcjonBVwYOVQb8bS/lEGv3G4QBcyw5Zk3+c/NRfIuvkXv9SWhzlSc1UxHBy2gIZA
-         1cQQ==
+        bh=5Z/+9Q9P8Pd+cpUlHbyLDcQ987zCspEEfE31i9WyVkY=;
+        b=HbeRASouj1Hcqg8DcpTtH/RsMiv/U643bL5L1vEGleLLclUuDvrE27IHdnudtAPaCF
+         ETxA5/1VG/XESQ/FMhfkjRfRJQdl9F+Srgx8EGZecsud1rx5JHNIiuWsYuIP6JyOsvuK
+         fSRAFTmGn1Q6CpysyUxNkdUZuzBtfs2O5l3NuRyyGO1dZ+Zk9OPpbyuPZFONK9sITM4S
+         Nr2W8IdV0JV/ZBJYZ8xlE2/AwovtlksDGRhKxk8f9iUh2BCoTrXNWxEdAoj+fuifslRQ
+         pfJtPrzBJHgRBBiTaeqQmk4pv8uBsgMB8kCnKh6/txUQFRyOmNo23TPCmKNXR8xfxMzr
+         /iwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=duyNTGMvZE0oxJFURy56BK1PgpgJuqZ6WzON69fN5Fs=;
-        b=3fLMjMw2FDotSXzuhRgKXCWVNMherozvJU8QLWdeMc7sTkQFN3DOTnFnCSaOjMg7YL
-         NSElgcQ4/pWyRyxt3iueXQywRNFmCby5VJPQf+6Zf3w1nz8gFTILe2TpmK9Bj0GVw1dk
-         Us/kDEq7cGfz+JMbyb4IxVAZ/9XAIXYceyvrI/Q8I1HWTGjb9ACiype5YstIWRRwBSQp
-         eYPurfEKw0VvKwYxXK1oxSENl1kUgD5h8y6tjkOjnPMl7nCv5nVVnKePUabAXWAN6mW0
-         5gHuD5YNsUyWIcfcgovxDcZ0EdX2/yU8zd1wYR/pEm4qumZiXIa1Zz946J7ubBevGW74
-         3zVA==
-X-Gm-Message-State: AJIora/l27kgDFBMJax+cXFrOIG9rrtOauZQjHJR2I/hbcaqWuOtuZa2
-	7gq1ONcZ2lwNghv5X2/ghh1k8ppjS38=
+        bh=5Z/+9Q9P8Pd+cpUlHbyLDcQ987zCspEEfE31i9WyVkY=;
+        b=Z0ktOZxj5wc1YF789lv/qPqe9w36u8/B+ZUs7DYP1TI7d71VnRh9u1QA/Ym6WHkivx
+         Pdc3++1PQE6VGuz/dMuMPVWvyCLABMrluuLFuF5l2RUOtPC9Vot8WPVsrmX1JcEmpffO
+         90oxpxtAqtMt6T+mGfbhjqlaiuheFx9BGWZSVPqlU/OwnzftZPs0exS6/QYAee5Yvs8a
+         8pRLOG4qbVNaIo/a5FU1E7033JGsfrz9lDNoR426s0p1vuPX1uKz1ckZUsmi2cmOX1lV
+         ia3JWqw1+zuOERMU+Cx6I93XbuOng3q+W/kvk22XAncD+hQGd48itp4BX9CoqkY5N4ww
+         95zQ==
+X-Gm-Message-State: AJIora8ZnqcNaInFwou1EAhSeoj102XqZy4gjX9iIrUWPG37tNxb7Pz3
+	/z04niVQjEl9RCLSUTf9umf2fLQIn64=
 X-Google-Smtp-Source: 
- AGRyM1vGY3pIktA2ZLWXfJea1H9kWoZMPC1F8pcTTmnOHkt0QUkm74PZsGC9/H++8ApCvEje6rA3mQ==
-X-Received: by 2002:a05:600c:2054:b0:39c:3f73:3552 with SMTP id
- p20-20020a05600c205400b0039c3f733552mr5204991wmg.15.1655387345935;
-        Thu, 16 Jun 2022 06:49:05 -0700 (PDT)
+ AGRyM1uBvDPhwdrQzLnDunf+2ypHYhobsXaMdyfYgRHPDqra7/mFczbEtmbn7EgCqVD4izPw+NQunw==
+X-Received: by 2002:adf:d1e7:0:b0:215:2126:dede with SMTP id
+ g7-20020adfd1e7000000b002152126dedemr4774892wrd.297.1655387347074;
+        Thu, 16 Jun 2022 06:49:07 -0700 (PDT)
 Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
         by smtp.gmail.com with ESMTPSA id
- v12-20020a5d678c000000b0020c5253d90asm1957391wru.86.2022.06.16.06.49.05
+ m188-20020a1c26c5000000b0039c4945c753sm5988313wmm.39.2022.06.16.06.49.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jun 2022 06:49:05 -0700 (PDT)
+        Thu, 16 Jun 2022 06:49:06 -0700 (PDT)
 From: Martin Jansa <martin.jansa@gmail.com>
 X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [1.46][PATCH 2/4] bin/bitbake-getvar: Add a new command to query a
- variable value (with history)
-Date: Thu, 16 Jun 2022 15:48:48 +0200
-Message-Id: <20220616134850.3471187-2-Martin.Jansa@gmail.com>
+Cc: Ross Burton <ross@burtonini.com>,
+	Ross Burton <ross.burton@arm.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Anuj Mittal <anuj.mittal@intel.com>
+Subject: [1.46][PATCH 3/4] knotty: display active tasks when printing
+ keepAlive() message
+Date: Thu, 16 Jun 2022 15:48:49 +0200
+Message-Id: <20220616134850.3471187-3-Martin.Jansa@gmail.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220616134850.3471187-1-Martin.Jansa@gmail.com>
 References: <20220616134850.3471187-1-Martin.Jansa@gmail.com>
@@ -68,81 +71,45 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 16 Jun 2022 13:49:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13769
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13770
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+From: Ross Burton <ross@burtonini.com>
 
-We've talked about having this for long enough. Add a command which queries a single
-variable value with history. This saves "bitbake -e | grep" and avoids the
-various pitfalls that has.
+In interactive bitbake sessions it is obvious what tasks are running
+when one of them hangs or otherwise takes a long time. However, in
+non-interactive sessions (such as automated builds) bitbake just prints
+a message saying that it is "still alive" with no clues as to what tasks
+are active still.
 
-It also provides a neat example of using tinfoil to make such a query.
+By simply listing the active tasks when printing the keep alive message,
+we don't need to parse the bitbake log to identify which of the tasks
+is still active and has presumably hung.
 
-Parameters to limit the output to just the value, to limit to a variable flag
-and to not expand the output are provided.
-
-[YOCTO #10748]
-
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 30f6c3f175617beea8e8bb75dcf255611e3fc2fd)
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bin/bitbake-getvar | 48 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100755 bin/bitbake-getvar
+ lib/bb/ui/knotty.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/bin/bitbake-getvar b/bin/bitbake-getvar
-new file mode 100755
-index 00000000..0eddfe29
---- /dev/null
-+++ b/bin/bitbake-getvar
-@@ -0,0 +1,48 @@
-+#! /usr/bin/env python3
-+#
-+# Copyright (C) 2021 Richard Purdie
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+
-+import argparse
-+import io
-+import os
-+import sys
-+
-+bindir = os.path.dirname(__file__)
-+topdir = os.path.dirname(bindir)
-+sys.path[0:0] = [os.path.join(topdir, 'lib')]
-+
-+import bb.tinfoil
-+
-+if __name__ == "__main__":
-+    parser = argparse.ArgumentParser(description="Bitbake Query Variable")
-+    parser.add_argument("variable", help="variable name to query")
-+    parser.add_argument("-r", "--recipe", help="Recipe name to query", default=None, required=False)
-+    parser.add_argument('-u', '--unexpand', help='Do not expand the value (with --value)', action="store_true")
-+    parser.add_argument('-f', '--flag', help='Specify a variable flag to query (with --value)', default=None)
-+    parser.add_argument('--value', help='Only report the value, no history and no variable name', action="store_true")
-+    args = parser.parse_args()
-+
-+    if args.unexpand and not args.value:
-+        print("--unexpand only makes sense with --value")
-+        sys.exit(1)
-+
-+    if args.flag and not args.value:
-+        print("--flag only makes sense with --value")
-+        sys.exit(1)
-+
-+    with bb.tinfoil.Tinfoil(tracking=True) as tinfoil:
-+        if not args.recipe:
-+            tinfoil.prepare(quiet=2, config_only=True)
-+            d = tinfoil.config_data
-+        else:
-+            tinfoil.prepare(quiet=2)
-+            d = tinfoil.parse_recipe(args.recipe)
-+        if args.flag:
-+            print(str(d.getVarFlag(args.variable, args.flag, expand=(not args.unexpand))))        
-+        elif args.value:
-+            print(str(d.getVar(args.variable, expand=(not args.unexpand))))
-+        else:
-+            bb.data.emit_var(args.variable, d=d, all=True)
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index e70c2464..71c5a3e9 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -227,7 +227,9 @@ class TerminalFilter(object):
+ 
+     def keepAlive(self, t):
+         if not self.cuu:
+-            print("Bitbake still alive (%ds)" % t)
++            print("Bitbake still alive (no events for %ds). Active tasks:" % t)
++            for t in self.helper.running_tasks:
++                print(t)
+             sys.stdout.flush()
+ 
+     def updateFooter(self):
 -- 
 2.35.1
 
