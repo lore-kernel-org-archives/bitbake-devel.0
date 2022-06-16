@@ -2,125 +2,128 @@ Return-Path: <Martin.Jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6642CCA47A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63D3C43334
 	for <webhook@archiver.kernel.org>; Thu, 16 Jun 2022 13:49:13 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com
- [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.web09.18166.1655387349566663526
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com
+ [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web09.18163.1655387346331806704
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Jun 2022 06:49:09 -0700
+ Thu, 16 Jun 2022 06:49:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=q3gDWFTk;
- spf=pass (domain: gmail.com, ip: 209.85.128.52,
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=QPiVka1M;
+ spf=pass (domain: gmail.com, ip: 209.85.221.43,
  mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f52.google.com with SMTP id z9so809896wmf.3
+Received: by mail-wr1-f43.google.com with SMTP id c21so1983029wrb.1
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Jun 2022 06:49:09 -0700 (PDT)
+ Thu, 16 Jun 2022 06:49:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ofrl6iRRWZ07K8HObjlrKvIGGakVB3gHx50TBprsnuE=;
-        b=q3gDWFTkPNsvqYkt6E50P6CoVqlS9aZ1OzSxdOIjoCmzjrSdgekXurHCc56EdsD6b/
-         XuZqZuLzGMmOe0bv3xJ6dR5raGSV2e0GvLoKQEYf0sO75bpXmv7FNfur5wZW1NTus5cF
-         GREVVlJSZmK2syNwTdVeQqvMMQUjwnq+PGW4whFrOIR/Nx3k2V5JXKDe32AWPEmmCnkd
-         LK9RgBRObdHewEuHivu4DqC/vAzbJi6h8NhebWdGxMLw3nnr/toRbfh8gcKFMmfJH2Kr
-         Y7VbMDUfzePh87lhEuW5BAJ2oqVYe4yiSe4DZVQk7MoLcFiL8xxVuyHqsF1Jeg5kdc/H
-         SK6g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PfZZCRPZPD4SUOVAKZl6a30wIvMwQ+X32uJssyguZ7c=;
+        b=QPiVka1MZKUJeRyQN78U4peWilK/aX4oyMNQzZUj+TUYTtc8pm6DkdJOkP0kUMA5Ky
+         dojkSbl79IEcdgHlJLLCU3mch/3QaJjRi/1T3N5yFEmyjKxq5HLUfArfb/ySAt8i52kC
+         eTFRTTxd5zRziSI5g4SkUjST21uYlChVESA+DFf2NoOrmU5cS0u7UyjWvJyH82kR9Hn8
+         EIMkG9fj8LzLZp1k3YBMjiOP3Y5/8zdLtOglGZB5WHzmdJcsmvwMJEUNRxy69OUG0bgX
+         6IpzCmvZzF+7h1ya93nREUa74i4WhmYRS4HSLxfnQLxtk2USZyi11jZBjGUCtQ8H9XWU
+         FUvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ofrl6iRRWZ07K8HObjlrKvIGGakVB3gHx50TBprsnuE=;
-        b=LZ6ZKevXYo/Z1tGXak6DbCjAl+eTL0z7oOcdMQzUsc+y7nU/OgdvjA7ccPfkv5W83Y
-         ft+vbGoHHlC9dp2aA8VdOqQq77yHjit35m7bDCd+inLPg7XtXsue3b4yo9xKI/3UPUKD
-         YTxkun59LpfK5YARf0MSTae6FajMlijXx7B38qT5qsqUvxocBlJh4wJ7J3bCWdy1htMi
-         /GluKHtxTUwpDInDCTcuGbByXEjWmVwoYojkVb/8qCdwj0dxh6fmH/Zbvz82fkfHHKnl
-         +Bb6CshoJP+FaJFsGiRbYqLVowHSAeE2rWchemfHh6j6oX1K4rCjpLa4B1jy0rmj2Xvl
-         7EIA==
-X-Gm-Message-State: AJIora9JgrojfzX2+R/028QBMfPaAijdJfCxAAuDRFzqkrmy1rccpZa7
-	Pi74/UpibSS3UP4Jfr+XPVvSREmdQlM=
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PfZZCRPZPD4SUOVAKZl6a30wIvMwQ+X32uJssyguZ7c=;
+        b=NGcUQl4iZYUaxvopYs59jrdHUlr4LrVVWwWJ0YU7vUocn448wwSba8Cd6REDbswz26
+         3WaNiW8+47l35y3W8Zye8RMKt29BcoxrqZs8OlrQqCxbWiUOy7nIG5KJUSY4rQ94TXQm
+         XhDzuT8jZQbnIe/Ym3qpEk72JjOMC6GudowcR6hurQvkWfF+5DirxAfx+IESUlKekrq0
+         682+F6VIJLMuvLR5+62gn4VI4JG5KrnBxtBUS1qUDodvpsUgdGiUDc6N9wtvpOmjrvPw
+         Q1Nj1Hl3+1omzrA5jW/+J3a1qdBPTA2vxvsQ3PiO9RGJ28SeNhofxzD5HUvf4VzQj4e2
+         48yg==
+X-Gm-Message-State: AJIora95NABt89dFGA09vuf6r7ANnGL/r31SijTVphSsqNJQ0v+KLf0D
+	AyzlNVNoheJn7OuxJ6/6P7M3Vi8cIWA=
 X-Google-Smtp-Source: 
- AGRyM1udRVjlq9/K1nl3lejx0LKlsh6vghsHlx88Cat/TQjBDVNsrc/LhPPYYyjA7mP82FyF5s2wQQ==
-X-Received: by 2002:a05:600c:1d1c:b0:39c:7ac8:1faa with SMTP id
- l28-20020a05600c1d1c00b0039c7ac81faamr5195113wms.202.1655387348178;
-        Thu, 16 Jun 2022 06:49:08 -0700 (PDT)
+ AGRyM1tuvGnTnLL5ohR/x26WwAN95mIpf8Er0FrjP40zgXzR8LZQfO6kxRbjH40b5KZZRx7djiWCXQ==
+X-Received: by 2002:a5d:6d8b:0:b0:218:4de1:25a0 with SMTP id
+ l11-20020a5d6d8b000000b002184de125a0mr4970894wrs.8.1655387344678;
+        Thu, 16 Jun 2022 06:49:04 -0700 (PDT)
 Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
         by smtp.gmail.com with ESMTPSA id
- by13-20020a056000098d00b0021a39a56a73sm1347299wrb.106.2022.06.16.06.49.07
+ v184-20020a1cacc1000000b0039c454067ddsm2395679wme.15.2022.06.16.06.49.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jun 2022 06:49:07 -0700 (PDT)
+        Thu, 16 Jun 2022 06:49:04 -0700 (PDT)
 From: Martin Jansa <martin.jansa@gmail.com>
 X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Ross Burton <ross@burtonini.com>,
-	Ross Burton <ross.burton@arm.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Anuj Mittal <anuj.mittal@intel.com>
-Subject: [1.46][PATCH 4/4] knotty: reduce keep-alive timeout from 5000s (83
- minutes) to 10 minutes
-Date: Thu, 16 Jun 2022 15:48:50 +0200
-Message-Id: <20220616134850.3471187-4-Martin.Jansa@gmail.com>
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [1.46][PATCH 1/4] tinfoil/data_smart: Allow variable history emit()
+ to function remotely
+Date: Thu, 16 Jun 2022 15:48:47 +0200
+Message-Id: <20220616134850.3471187-1-Martin.Jansa@gmail.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220616134850.3471187-1-Martin.Jansa@gmail.com>
-References: <20220616134850.3471187-1-Martin.Jansa@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 16 Jun 2022 13:49:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13771
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13768
 
-From: Ross Burton <ross@burtonini.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-The keep alive timeout is excessively long at 83 minutes (5000 seconds),
-reduce this to 10 minutes: this should be long enough that it rarely
-triggers in normal builds, but when it does it has useful information.
+We can't access the emit() function of varhistory currently as the datastore parameter
+isn't handled correctly, nor is the output stream. Add a custom wrapper for this
+function which handles the two details correctly.
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit dcf52157d3635925491783be656c6b76d1efe1a4)
-Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/ui/knotty.py | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ lib/bb/command.py | 12 ++++++++++++
+ lib/bb/tinfoil.py |  4 ++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 71c5a3e9..d1f74389 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -599,7 +599,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-     warnings = 0
-     taskfailures = []
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index 98c945ed..b8429b27 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -20,6 +20,7 @@ Commands are queued in a CommandQueue
  
--    printinterval = 5000
-+    printintervaldelta = 10 * 60 # 10 minutes
-+    printinterval = printintervaldelta
-     lastprint = time.time()
+ from collections import OrderedDict, defaultdict
  
-     termfilter = tf(main, helper, console_handlers, params.options.quiet)
-@@ -609,7 +610,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-         try:
-             if (lastprint + printinterval) <= time.time():
-                 termfilter.keepAlive(printinterval)
--                printinterval += 5000
-+                printinterval += printintervaldelta
-             event = eventHandler.waitEvent(0)
-             if event is None:
-                 if main.shutdown > 1:
-@@ -640,7 +641,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
++import io
+ import bb.event
+ import bb.cooker
+ import bb.remotedata
+@@ -478,6 +479,17 @@ class CommandsSync:
+         d = command.remotedatastores[dsindex].varhistory
+         return getattr(d, method)(*args, **kwargs)
  
-             if isinstance(event, logging.LogRecord):
-                 lastprint = time.time()
--                printinterval = 5000
-+                printinterval = printintervaldelta
-                 if event.levelno >= bb.msg.BBLogFormatter.ERROR:
-                     errors = errors + 1
-                     return_value = 1
++    def dataStoreConnectorVarHistCmdEmit(self, command, params):
++        dsindex = params[0]
++        var = params[1]
++        oval = params[2]
++        val = params[3]
++        d = command.remotedatastores[params[4]]
++
++        o = io.StringIO()
++        command.remotedatastores[dsindex].varhistory.emit(var, oval, val, o, d)
++        return o.getvalue()
++
+     def dataStoreConnectorIncHistCmd(self, command, params):
+         dsindex = params[0]
+         method = params[1]
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index 28f1e562..8bec8cba 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -53,6 +53,10 @@ class TinfoilDataStoreConnectorVarHistory:
+     def remoteCommand(self, cmd, *args, **kwargs):
+         return self.tinfoil.run_command('dataStoreConnectorVarHistCmd', self.dsindex, cmd, args, kwargs)
+ 
++    def emit(self, var, oval, val, o, d):
++        ret = self.tinfoil.run_command('dataStoreConnectorVarHistCmdEmit', self.dsindex, var, oval, val, d.dsindex)
++        o.write(ret)
++
+     def __getattr__(self, name):
+         if not hasattr(bb.data_smart.VariableHistory, name):
+             raise AttributeError("VariableHistory has no such method %s" % name)
 -- 
 2.35.1
 
