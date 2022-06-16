@@ -1,131 +1,127 @@
-Return-Path: <alex.kiernan@gmail.com>
+Return-Path: <Martin.Jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E54C43334
-	for <webhook@archiver.kernel.org>; Thu, 16 Jun 2022 12:27:53 +0000 (UTC)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com
- [209.85.218.47])
- by mx.groups.io with SMTP id smtpd.web09.17260.1655382469787621283
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6642CCA47A
+	for <webhook@archiver.kernel.org>; Thu, 16 Jun 2022 13:49:13 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com
+ [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web09.18166.1655387349566663526
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Jun 2022 05:27:50 -0700
+ Thu, 16 Jun 2022 06:49:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=PjDdy2/u;
- spf=pass (domain: gmail.com, ip: 209.85.218.47,
- mailfrom: alex.kiernan@gmail.com)
-Received: by mail-ej1-f47.google.com with SMTP id fu3so2475398ejc.7
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=q3gDWFTk;
+ spf=pass (domain: gmail.com, ip: 209.85.128.52,
+ mailfrom: martin.jansa@gmail.com)
+Received: by mail-wm1-f52.google.com with SMTP id z9so809896wmf.3
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Jun 2022 05:27:49 -0700 (PDT)
+ Thu, 16 Jun 2022 06:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FVGG2/69kXhEMScT0L8/pmo0HykJ4eLLuzeE/w0RS38=;
-        b=PjDdy2/u2xR3Ca1Y0heW1MYe3ngRBNqFciOqtnHrzXmpkYCGOkqZc32nh2iMX0/7kN
-         dp0lCq+qpOEJ65/b5NfL5CO/r1g2CCP8w9A3mnNcA/NPkrILILL/QTvK0Y2NZ+Fi+aIF
-         nXbHbTirOxDV39MnJCR4AdTWkPQMMZ3zpoVZKbi5ChYU4jmxSrBKgdXM/WKUo78+OzeY
-         FSNkJABCRzdzjKMgofujeIeTLe5tU7vY+oopb3TvIdtlxhr29AVNx8luwCgfVLCRWNlD
-         BpYMsbUFYyZSgfFAle5ybf1/GhvUf6FnIqxR37bJpbPuBh5hnqmBRSSzC5ksT4eTmj4k
-         gWBw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ofrl6iRRWZ07K8HObjlrKvIGGakVB3gHx50TBprsnuE=;
+        b=q3gDWFTkPNsvqYkt6E50P6CoVqlS9aZ1OzSxdOIjoCmzjrSdgekXurHCc56EdsD6b/
+         XuZqZuLzGMmOe0bv3xJ6dR5raGSV2e0GvLoKQEYf0sO75bpXmv7FNfur5wZW1NTus5cF
+         GREVVlJSZmK2syNwTdVeQqvMMQUjwnq+PGW4whFrOIR/Nx3k2V5JXKDe32AWPEmmCnkd
+         LK9RgBRObdHewEuHivu4DqC/vAzbJi6h8NhebWdGxMLw3nnr/toRbfh8gcKFMmfJH2Kr
+         Y7VbMDUfzePh87lhEuW5BAJ2oqVYe4yiSe4DZVQk7MoLcFiL8xxVuyHqsF1Jeg5kdc/H
+         SK6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FVGG2/69kXhEMScT0L8/pmo0HykJ4eLLuzeE/w0RS38=;
-        b=IZaPTH9RelgZXEy2S51WUm0ay0KESWfRdbRT75tHeZGWi0tv4FeYblAwezwR109359
-         lZ7uxoI23JYi+sbFi0Pc9LgWu+tmn8A/gPE6iUHV5a48/nPPnG1noI/uEYVPM4qOUrLB
-         DhwsqeV7xFbWUy+DlbWgaSJdDiJ6rM3j3kzmkhOuYMoiJjKceRH/pSd5Clh2Ysrf3Urc
-         OQgKGScHu3dv1jFMAiY6c+1gaSL6JOvzbpWMX5olukvLKgkuxS9WILD1XLll5D4RZ55i
-         ZUg6/YyZgAcCXAgxmguyWIlImEuU5KzdRxV0SB6HSosCA/OsNZNxh6+GPREhB8hFpmLi
-         2jKQ==
-X-Gm-Message-State: AJIora+aR4ob/CHEI57JAULpTVoLgAbT+q0y0gQOuU+i5GaofTJ0wuLa
-	XNRtmF8XjKf/R725bQzAhc9emOP0bJZeLGNxrwM=
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ofrl6iRRWZ07K8HObjlrKvIGGakVB3gHx50TBprsnuE=;
+        b=LZ6ZKevXYo/Z1tGXak6DbCjAl+eTL0z7oOcdMQzUsc+y7nU/OgdvjA7ccPfkv5W83Y
+         ft+vbGoHHlC9dp2aA8VdOqQq77yHjit35m7bDCd+inLPg7XtXsue3b4yo9xKI/3UPUKD
+         YTxkun59LpfK5YARf0MSTae6FajMlijXx7B38qT5qsqUvxocBlJh4wJ7J3bCWdy1htMi
+         /GluKHtxTUwpDInDCTcuGbByXEjWmVwoYojkVb/8qCdwj0dxh6fmH/Zbvz82fkfHHKnl
+         +Bb6CshoJP+FaJFsGiRbYqLVowHSAeE2rWchemfHh6j6oX1K4rCjpLa4B1jy0rmj2Xvl
+         7EIA==
+X-Gm-Message-State: AJIora9JgrojfzX2+R/028QBMfPaAijdJfCxAAuDRFzqkrmy1rccpZa7
+	Pi74/UpibSS3UP4Jfr+XPVvSREmdQlM=
 X-Google-Smtp-Source: 
- AGRyM1vGVN7s45ZmXRzOQP7FhvWg+oKARMOniesZvgBA6fFU9FMFVwPtWIrYSyCdWPpZ3Ty3CCm/88PxSOmSWTB0GIU=
-X-Received: by 2002:a17:906:8454:b0:711:c970:227a with SMTP id
- e20-20020a170906845400b00711c970227amr4310711ejy.4.1655382468197; Thu, 16 Jun
- 2022 05:27:48 -0700 (PDT)
+ AGRyM1udRVjlq9/K1nl3lejx0LKlsh6vghsHlx88Cat/TQjBDVNsrc/LhPPYYyjA7mP82FyF5s2wQQ==
+X-Received: by 2002:a05:600c:1d1c:b0:39c:7ac8:1faa with SMTP id
+ l28-20020a05600c1d1c00b0039c7ac81faamr5195113wms.202.1655387348178;
+        Thu, 16 Jun 2022 06:49:08 -0700 (PDT)
+Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
+        by smtp.gmail.com with ESMTPSA id
+ by13-20020a056000098d00b0021a39a56a73sm1347299wrb.106.2022.06.16.06.49.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jun 2022 06:49:07 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Ross Burton <ross@burtonini.com>,
+	Ross Burton <ross.burton@arm.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Anuj Mittal <anuj.mittal@intel.com>
+Subject: [1.46][PATCH 4/4] knotty: reduce keep-alive timeout from 5000s (83
+ minutes) to 10 minutes
+Date: Thu, 16 Jun 2022 15:48:50 +0200
+Message-Id: <20220616134850.3471187-4-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220616134850.3471187-1-Martin.Jansa@gmail.com>
+References: <20220616134850.3471187-1-Martin.Jansa@gmail.com>
 MIME-Version: 1.0
-References: <20220609070631.23346-1-alex.kiernan@gmail.com>
- <5e781972643ed99e2948ac5a908222a190678475.camel@linuxfoundation.org>
- <16F6ED45D7C68CA7.32696@lists.openembedded.org>
-In-Reply-To: <16F6ED45D7C68CA7.32696@lists.openembedded.org>
-From: Alex Kiernan <alex.kiernan@gmail.com>
-Date: Thu, 16 Jun 2022 13:27:36 +0100
-Message-ID: 
- <CAO5Uq5SxhRhpRGyD4PoXm3b2Edtzy=tgGWkRFpjKRikFgsW+mg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] data_smart: Pass flags through variable
- rename
-To: Alex Kiernan <alex.kiernan@gmail.com>
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	bitbake-devel@lists.openembedded.org,
-	Otavio Salvador <otavio.salvador@ossystems.com.br>,
- Alex Kiernan <alexk@zuma.ai>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 Jun 2022 12:27:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13767
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Jun 2022 13:49:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13771
 
-I've been thinking around this, I guess the bit I really want to work
-is for flags to survive through variable renames, rather than
-overrides, but the two use cases do tend to collide as we often have
-overrides with variable expansion, which is then renaming...
+From: Ross Burton <ross@burtonini.com>
 
-Just realised I c&p my example from our vendor branch which is still
-on _ based overrides rather than : based ones, but both seem to work
-for me.
+The keep alive timeout is excessively long at 83 minutes (5000 seconds),
+reduce this to 10 minutes: this should be long enough that it rarely
+triggers in normal builds, but when it does it has useful information.
 
-On Thu, Jun 9, 2022 at 11:33 AM Alex Kiernan via
-lists.openembedded.org <alex.kiernan=gmail.com@lists.openembedded.org>
-wrote:
->
-> Not that I've found, but I'd really like to use it... I've a layer for
-> s6-rc (https://skarnet.org/software/s6-rc/) and defining the
-> configuration using this syntax works really well:
->
-> S6_RC_SERVICE_${BPN} ?= "longrun"
-> S6_RC_SERVICE_${BPN}[producer-for] ?= "${BPN}-log"
-> S6_RC_SERVICE_${BPN}-log ?= "longrun"
-> S6_RC_SERVICE_${BPN}-log[consumer-for] ?= "${BPN}"
-> S6_RC_SERVICE_${BPN}-log[notification-fd] ?= "3"
-> S6_RC_SERVICE_${BPN}-log[pipeline-name] ?= "${BPN}-pipeline"
-> S6_RC_SERVICE_${BPN}-log[run] ?= "${@ d.getVar('s6_rc_log') }"
->
-> Is the kind of thing I'd like to work.
->
-> On Thu, Jun 9, 2022 at 10:58 AM Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
-> >
-> > On Thu, 2022-06-09 at 08:06 +0100, Alex Kiernan wrote:
-> > > During variable expansion, the flags are not passed through but are
-> > > discarded which makes constructs such as:
-> > >
-> > >   ALTERNATIVE_TARGET:${PN}-foo[name] = "value"
-> >
-> > This is a tricky one. I don't think we've ever supported overrides and
-> > flags combined? Is this in use in metadata?
-> >
-> > Cheers,
-> >
-> > Richard
->
->
->
-> --
-> Alex Kiernan
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#13747): https://lists.openembedded.org/g/bitbake-devel/message/13747
-> Mute This Topic: https://lists.openembedded.org/mt/91640731/3618097
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.kiernan@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit dcf52157d3635925491783be656c6b76d1efe1a4)
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/ui/knotty.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index 71c5a3e9..d1f74389 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -599,7 +599,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+     warnings = 0
+     taskfailures = []
+ 
+-    printinterval = 5000
++    printintervaldelta = 10 * 60 # 10 minutes
++    printinterval = printintervaldelta
+     lastprint = time.time()
+ 
+     termfilter = tf(main, helper, console_handlers, params.options.quiet)
+@@ -609,7 +610,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+         try:
+             if (lastprint + printinterval) <= time.time():
+                 termfilter.keepAlive(printinterval)
+-                printinterval += 5000
++                printinterval += printintervaldelta
+             event = eventHandler.waitEvent(0)
+             if event is None:
+                 if main.shutdown > 1:
+@@ -640,7 +641,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+ 
+             if isinstance(event, logging.LogRecord):
+                 lastprint = time.time()
+-                printinterval = 5000
++                printinterval = printintervaldelta
+                 if event.levelno >= bb.msg.BBLogFormatter.ERROR:
+                     errors = errors + 1
+                     return_value = 1
 -- 
-Alex Kiernan
+2.35.1
+
 
