@@ -2,106 +2,115 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FB0C43334
-	for <webhook@archiver.kernel.org>; Tue, 21 Jun 2022 18:21:16 +0000 (UTC)
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com
- [209.85.215.176])
- by mx.groups.io with SMTP id smtpd.web10.46483.1655835673500309700
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E593CC433EF
+	for <webhook@archiver.kernel.org>; Tue, 21 Jun 2022 18:21:25 +0000 (UTC)
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com
+ [209.85.214.169])
+ by mx.groups.io with SMTP id smtpd.web09.47105.1655835675999463112
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 21 Jun 2022 11:21:13 -0700
+ Tue, 21 Jun 2022 11:21:16 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=CkaYInMl;
- spf=softfail (domain: sakoman.com, ip: 209.85.215.176,
+ header.b=bNj4R24p;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.169,
  mailfrom: steve@sakoman.com)
-Received: by mail-pg1-f176.google.com with SMTP id 23so7686646pgc.8
+Received: by mail-pl1-f169.google.com with SMTP id o18so6194693plg.2
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 21 Jun 2022 11:21:13 -0700 (PDT)
+ Tue, 21 Jun 2022 11:21:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=EZeKPePAqVRYS0wp1poAT4NZlkj911TIIZBMtQC5pCc=;
-        b=CkaYInMlD/3xv1AE9tJFBd+sc15ve4AljJah0T8U9c/itiEYEVUT9b6rK0cYCyc9ZM
-         llxIDNdynxbh22kzd3UOYL/YwnzwmGt+G0zqz8pHoxE5Pcdjk26IltvcWIgVVYRU+ujI
-         Rm10gb17hXePZkTjH/om7DyR44dhzKeXJttEzR+6QMGkaNy49A1gp93sQytMl6DE5jWz
-         jFcEYvwPrRAibgyP/ocHQ43NIOsCVahKghWb6FQLzNeaaadb+ckvI0BIkHpxKPfdNXvP
-         +CgI+32lSdVTy4I0eKdQ1LDo+i5NqWd7s7Yk/C9pT1s4LG2juzoYu3GJTu1f4utnz3tO
-         AdOg==
+        bh=k1x4vw8yHkic5ZcHlK8FUyQKYpvGk1aOXSLZ2F9R2IA=;
+        b=bNj4R24pCDJyRAaP2hTaH1+A7MB2i2Dj3JiTJerkyIRnuN+iAMQlgM2lN7oiRCzNyM
+         +tycHQC+nL8/hLVe1AuQdd3yb2CKZ+nT+rjey1wY4ih0pv8ArW0j6eGNcYe+dQmmHMXH
+         bI9SZN2PmW5U+Tt1xMN6h4oVzejNu93ErLA3iBlWG/BRadyrKKbqz9W6scZXfji0MB0a
+         v/lHmuWODryzTLdFKtH0xAnnpOPIffxSMTi0AP/8h99BISJ4K861nRDtckHN+pZKTvVF
+         zqjth+84lwrCT5CIGAZvd4gEK4mCgyCCR325gfXmmC//zVdwJYBST52sRPqdIG0ohtDQ
+         L3Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EZeKPePAqVRYS0wp1poAT4NZlkj911TIIZBMtQC5pCc=;
-        b=XFI8YJXjVnnf4jHv3k6IMqG+DVXxpxoWwB8LxuLQHojwaktyPDXsfw/+/gx8QH6PaD
-         FzrPusmY7efJlLw5zoGhXKOAEa7Ab2vkfMIQJp0CA6erhPs5RtZALxnZ7PDuTLRY3TXH
-         DtkflyrTLuse4YIZ8MvZs6mqaoVzLEDTmk33hxkgQHmRBrpP2mBa7A8RNjs93Lv/neUG
-         UJs/QGXL9aQJjTB0Itr8yzOScl0i46YJG+WISvbF0mCZBi18O/PJLFg1Uygk155ES1EZ
-         B+1FheWH+TwOdo678iiMC/7gopg7HFUfvrICofFbeanbg1rQfF6z0bUIkHtNUWxAswv+
-         OHeQ==
-X-Gm-Message-State: AJIora+kb8yEZzh6j0YzAuzlqF8QXQi0oQs+BolQ/MUc8mY+WSxifQse
-	ZgznuKHFbrlrHqWY9V+K192f3a+Z2L0843x9
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=k1x4vw8yHkic5ZcHlK8FUyQKYpvGk1aOXSLZ2F9R2IA=;
+        b=tawkGdMBeJmM6ngA5Fay5W7TnH/QQxyn4P83ujL+n+QxvlQyfn9yrhjNzJh3uCKmcM
+         uzEGbYWHIrtNq1RxIZOijnssROVlkfKpTT0o2kgEXCMDbrDXTgMq9Niq8aQAIZc68j93
+         EwZvDSbb2ItGqqCsZwBpTA1hIlGEfWNO0kbyq1J8arNwnv/9uXG8kArxJV2lxsRAYKnG
+         QK+qkXdqci+eRlTbWdXbWOECSDrbT9lmDKbPvP5hzGL7HvhP9OQKFHKEl2efwWYnI8sT
+         mdS0wMwikUGjZvhgXBTJ8pDS3cHsUam29AqaCXDMCFODXoI/24jCHaLRVN1xl/6+W/Wn
+         iLlw==
+X-Gm-Message-State: AJIora881nH1r9bNrh/rUT2CZNA0DG1yc/0gGQmhJ5YyV5PGxgyq5G43
+	oULrd7bOVlOMZtMkn/brJfsvcwjkXPb7aWJA
 X-Google-Smtp-Source: 
- AGRyM1tJBF2OG3KLDWQTQLOfgdusP4oGUzLNb4Vl+pCbNTYX+ubKD790/TCZ7hvfbKz3mgTXS4BNDA==
-X-Received: by 2002:aa7:930e:0:b0:525:360e:eae9 with SMTP id
- cz14-20020aa7930e000000b00525360eeae9mr4949944pfb.67.1655835672251;
-        Tue, 21 Jun 2022 11:21:12 -0700 (PDT)
+ AGRyM1sIcNd2El4s7CwxC9lKmPfViCgVd+bOE6GELUZzaL/ZCVDq2Xb5i2xduY7xkLxrUkowEInWjQ==
+X-Received: by 2002:a17:90b:18b:b0:1ec:b259:a6af with SMTP id
+ t11-20020a17090b018b00b001ecb259a6afmr10878529pjs.237.1655835674853;
+        Tue, 21 Jun 2022 11:21:14 -0700 (PDT)
 Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
  [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- t13-20020a1709027fcd00b0016392bd5060sm9755503plb.142.2022.06.21.11.21.10
+ t13-20020a1709027fcd00b0016392bd5060sm9755503plb.142.2022.06.21.11.21.13
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jun 2022 11:21:11 -0700 (PDT)
+        Tue, 21 Jun 2022 11:21:14 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 0/5] Patch review
-Date: Tue, 21 Jun 2022 08:20:56 -1000
-Message-Id: <cover.1655835530.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH 1/5] server/process: Disable gc around
+ critical section
+Date: Tue, 21 Jun 2022 08:20:57 -1000
+Message-Id: 
+ <0784db7dd0fef6f0621ad8d74372f44e87fef950.1655835530.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1655835530.git.steve@sakoman.com>
+References: <cover.1655835530.git.steve@sakoman.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 21 Jun 2022 18:21:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13778
+ <bitbake-devel@lists.openembedded.org>; Tue, 21 Jun 2022 18:21:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13779
 
-Please review this set of patches for 1.46/dunfell and have comments back by
-end of day Thursday/
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Passed a-full on autobuilder:
+The python gc can trigger whilst we're holding the event stream lock
+and when cleaning up objects, they can trigger warnings. This translates
+into a new event which would then need the lock and we can deadlock.
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/3805
+Disable gc whilst we hold that lock to avoid this unfortunate and
+problematic situation.
 
-The following changes since commit d8c2175f6a7b5fdf111d6a073b2c3dbd3c0b061d:
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 96a6303949cefd469bcf5ed250ff512271354357)
+Signed-off-by: Steve Sakoman <steve@sakoman.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/server/process.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-  fetch2: add check for empty SRC_URI hash string (2022-04-05 20:49:37 +0100)
-
-are available in the Git repository at:
-
-  git://git.openembedded.org/bitbake-contrib stable/1.46-nut
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-nut
-
-Richard Purdie (3):
-  server/process: Disable gc around critical section
-  tinfoil/data_smart: Allow variable history emit() to function remotely
-  bin/bitbake-getvar: Add a new command to query a variable value (with
-    history)
-
-Ross Burton (2):
-  knotty: display active tasks when printing keepAlive() message
-  knotty: reduce keep-alive timeout from 5000s (83 minutes) to 10
-    minutes
-
- bin/bitbake-getvar       | 48 ++++++++++++++++++++++++++++++++++++++++
- lib/bb/command.py        | 12 ++++++++++
- lib/bb/server/process.py |  3 +++
- lib/bb/tinfoil.py        |  4 ++++
- lib/bb/ui/knotty.py      | 11 +++++----
- 5 files changed, 74 insertions(+), 4 deletions(-)
- create mode 100755 bin/bitbake-getvar
-
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 3c9ed706..4bdb84ae 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -25,6 +25,7 @@ import subprocess
+ import errno
+ import re
+ import datetime
++import gc
+ import bb.server.xmlrpcserver
+ from bb import daemonize
+ from multiprocessing import queues
+@@ -671,8 +672,10 @@ class ConnectionWriter(object):
+ 
+     def send(self, obj):
+         obj = multiprocessing.reduction.ForkingPickler.dumps(obj)
++        gc.disable()
+         with self.wlock:
+             self.writer.send_bytes(obj)
++        gc.enable()
+ 
+     def fileno(self):
+         return self.writer.fileno()
 -- 
 2.25.1
 
