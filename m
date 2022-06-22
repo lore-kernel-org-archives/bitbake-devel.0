@@ -2,34 +2,34 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F329EC43334
-	for <webhook@archiver.kernel.org>; Wed, 22 Jun 2022 14:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAF6C43334
+	for <webhook@archiver.kernel.org>; Wed, 22 Jun 2022 14:48:33 +0000 (UTC)
 Received: from relay11.mail.gandi.net (relay11.mail.gandi.net
  [217.70.178.231])
- by mx.groups.io with SMTP id smtpd.web12.7641.1655907632039052919
+ by mx.groups.io with SMTP id smtpd.web12.7973.1655909308934952071
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 Jun 2022 07:20:32 -0700
+ Wed, 22 Jun 2022 07:48:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=A8EeyKpe;
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=g4SxzK/7;
  spf=pass (domain: bootlin.com, ip: 217.70.178.231,
  mailfrom: michael.opdenacker@bootlin.com)
 Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id BE421100005;
-	Wed, 22 Jun 2022 14:20:28 +0000 (UTC)
+	by mail.gandi.net (Postfix) with ESMTPSA id 5E841100009;
+	Wed, 22 Jun 2022 14:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1655907630;
+	t=1655909307;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1+R+9JfhNOeQoQwc2+NW8cCdscwuxHzQzxbdsM7k2Jo=;
-	b=A8EeyKpeIVB3kGKcGYKySCZwLR7aL+wL/3YAPtO1Pl1+99Pp+ZycYBCsR/DlLi+U4kl92T
-	RUTz9aP8hAFEvWrdMsaNBSpKWGErIylN8rsHt866cDcdJ7dSbMzVhZE1k84DHDUCuKu9x1
-	scbpp6q+y3iPFsDg192vVxq8mLnBS71mogj5Ifse9EPpWyg7FvPyEq/baOjjRFh7tp4HfY
-	6jsV3GXVFJ/Ionzn4hL/y0lAJ+LACXEnVogyr9apGzreL3WW0D5ntLJuT8FxRLxQ+eZ0vz
-	u3sIEOLaCFy9rR/MMqE4jXx7BNHxRTRECrj2A+FKiM5JwkbcYfWRg5/umr8EYw==
-Message-ID: <4ff52ac9-acfe-b578-d70b-57e4cf8711be@bootlin.com>
-Date: Wed, 22 Jun 2022 16:20:28 +0200
+	bh=z1ritxu2DPsKYQiYkzfYjGV4OGmQ8O7NvNk24Qmx/pk=;
+	b=g4SxzK/7ItD+Mz0ZvMQBCRA3PFgNBtFtYUKkDilYW/udk9K+nRAbH2l237WtcPqVBBxK2B
+	V2Boh3ke14p7JO5fwZ5KVFxABFoT1bK6nIPdIQEZ3qmhx5O93q9mp+CSE4pLFUD6ikPpZ+
+	C+n1fBdmnUrMuP56tU3MwMUkfBCdzPzWyOg6e8qqCuldDGf5LkJMBgr0Q9Cf3LAx5NSK7U
+	6JxyYJq+kM+W4/DQBICVSGb8ccQMX/2sbsz92GsWte+8GFWOilT0JtfJBFoeou3ejvH2IX
+	FL1SfBPRsAd5mxvVjBZ8rUPFd/V+qCiALPud2v9zf9TwEmbpFI825nC8+dPoPw==
+Message-ID: <dde23013-a205-7fa9-afb6-f48eb819d857@bootlin.com>
+Date: Wed, 22 Jun 2022 16:48:25 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
@@ -46,91 +46,34 @@ References: <20220329130747.364485-1-michael.opdenacker@bootlin.com>
  <119c048f-010d-f9d2-2e74-da470b1d043d@bootlin.com>
  <6a58f3eb-7140-b6aa-6b9f-a0372b7311fa@theobroma-systems.com>
  <16E1CD5D84DCAFFA.24007@lists.openembedded.org>
+ <16FAF73805DB6D1B.31435@lists.yoctoproject.org>
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 Organization: Bootlin
-In-Reply-To: <16E1CD5D84DCAFFA.24007@lists.openembedded.org>
+In-Reply-To: <16FAF73805DB6D1B.31435@lists.yoctoproject.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 22 Jun 2022 14:20:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13787
-
-Hello,
-
-On 4/1/22 16:52, Michael Opdenacker via lists.openembedded.org wrote:
-> Hi Quentin,
->
-> On 3/31/22 10:24, Quentin Schulz wrote:
->> Hi Michael,
->>
->> On 3/29/22 18:33, Michael Opdenacker wrote:
->>> Hi Quentin,
->>>
->>> Thanks for the review!
->>>
->>> On 3/29/22 15:13, Quentin Schulz wrote:
->>>> Hi Michael,
->>>>
->>>> On 3/29/22 14:07, Michael Opdenacker via lists.yoctoproject.org wrote:
->>>>> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
->>>>>
->>>>> - Replace hyphens by em dashes when necessary
->>>> I seem to recall we ultimately decided to not go for em dashes because
->>>> it wouldn't be matched by a search in the browser or in the sources?
->> c.f. https://lists.yoctoproject.org/g/docs/topic/85211078#1731
->>
->> for the original discussion around em dashes. Didn't decide anything
->> at that time though but you have all the arguments there.
->>
->>> Ouch, this is frustrating. I'd rather not deviate from English writing
->>> rules, so that we don't have to keep a list of exceptions to them, or
->>> worse keep them in the back of our heads.
->>>
->>> And why would one need to look for an em dash in the browser or in the
->>> sources? As a reader, I'd avoid special characters in my searches, and
->>> as a developer, I would do the same, but if I really want to look for a
->>> specific em dash, I'll quickly find what the corresponding characters
->>> are in the sources, thanks to the surrounding context.
->>>
->> You just gave the example as to why I think we shouldn't use em
->> dashes: to "avoid special characters in my searches".
->>
->> No more arguments since the discussion Robert started last August,
->> so... up to you.
->
-> Thanks for the reminder about the original discussion. You have a better
-> memory than I do ;-)
->
-> Could others (at least Richard, Nico ?) share their opinion here?
-> Otherwise it's hard to find a majority opinion...
->
-> The question is whether we should use em dashes
-> (https://www.thepunctuationguide.com/em-dash.html), described as "---"
-> in Restructed Text. This respects the English punctuation rules, but is
-> harder to grep in the sources.
->
-> If we prefer to use hyphens instead of em dashes in the documentation,
-> we will have to document the exception, but the risk remains to get
-> questions from time to time.
->
-> My vote goes to using em dashes, and I submitted patches for the YP and
-> Bitbake docs, but of course, I can accept the opposite choice if there's
-> a majority for it.
->
-> Thanks in advance
-> Cheers
-> Michael.
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 Jun 2022 14:48:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13788
 
 
-Since nobody except Quentin voted against this change (for practical 
-reasons to grep in the source code), I'll like to proceed with this 
-change, to be consistent with standard rules for English text.
+On 6/22/22 16:20, Michael Opdenacker via lists.yoctoproject.org wrote:
+>
+>
+> Since nobody except Quentin voted against this change (for practical 
+> reasons to grep in the source code), I'll like to proceed with this 
+> change, to be consistent with standard rules for English text.
+>
+> At least, this will allow us to distinguish simple dashes and em 
+> dashes, which have a different meaning, and may help Sphinx to break 
+> lines (or not to) in a correct way.
 
-At least, this will allow us to distinguish simple dashes and em dashes, 
-which have a different meaning, and may help Sphinx to break lines (or 
-not to) in a correct way.
+
+Actually, this patch got merged: 
+https://git.openembedded.org/bitbake/commit/?id=f1c4ac816e927f490fb9852c12aa408e8c9403b1
+So, I resent the corresponding patch for em dashes in yocto-docs.
 
 Cheers
 Michael.
