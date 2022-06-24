@@ -1,86 +1,99 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAF6C43334
-	for <webhook@archiver.kernel.org>; Wed, 22 Jun 2022 14:48:33 +0000 (UTC)
-Received: from relay11.mail.gandi.net (relay11.mail.gandi.net
- [217.70.178.231])
- by mx.groups.io with SMTP id smtpd.web12.7973.1655909308934952071
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397BEC43334
+	for <webhook@archiver.kernel.org>; Fri, 24 Jun 2022 21:56:20 +0000 (UTC)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com
+ [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web11.13532.1656107777721932577
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 Jun 2022 07:48:29 -0700
+ Fri, 24 Jun 2022 14:56:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=g4SxzK/7;
- spf=pass (domain: bootlin.com, ip: 217.70.178.231,
- mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 5E841100009;
-	Wed, 22 Jun 2022 14:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1655909307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z1ritxu2DPsKYQiYkzfYjGV4OGmQ8O7NvNk24Qmx/pk=;
-	b=g4SxzK/7ItD+Mz0ZvMQBCRA3PFgNBtFtYUKkDilYW/udk9K+nRAbH2l237WtcPqVBBxK2B
-	V2Boh3ke14p7JO5fwZ5KVFxABFoT1bK6nIPdIQEZ3qmhx5O93q9mp+CSE4pLFUD6ikPpZ+
-	C+n1fBdmnUrMuP56tU3MwMUkfBCdzPzWyOg6e8qqCuldDGf5LkJMBgr0Q9Cf3LAx5NSK7U
-	6JxyYJq+kM+W4/DQBICVSGb8ccQMX/2sbsz92GsWte+8GFWOilT0JtfJBFoeou3ejvH2IX
-	FL1SfBPRsAd5mxvVjBZ8rUPFd/V+qCiALPud2v9zf9TwEmbpFI825nC8+dPoPw==
-Message-ID: <dde23013-a205-7fa9-afb6-f48eb819d857@bootlin.com>
-Date: Wed, 22 Jun 2022 16:48:25 +0200
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=evcMwmc9;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f52.google.com with SMTP id i10so4871167wrc.0
+        for <bitbake-devel@lists.openembedded.org>;
+ Fri, 24 Jun 2022 14:56:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CWJTuF5f9/FuzNgSmCVs0y4a5eBZqYtMWJwnHQXZSW4=;
+        b=evcMwmc9f73hk8hNoCmnYdUZQyGyFxzNbCyupItuLIcxUQyYR9H/XwWC6iepSTZ1Cs
+         xnMANSGthT7zlb6rgGByxTsUZkCSPSjHCRrJO5PbRrhi/E/bC8IeT3t+NJcq5k355jNA
+         tmLFWwvHv0NoedGfxEOGRJvfv0cRtqtURzRys=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CWJTuF5f9/FuzNgSmCVs0y4a5eBZqYtMWJwnHQXZSW4=;
+        b=foC2B+1GgW4z1q9hDBNYVdY3dKrB+mbgjNvwvF3T9MKBpCed8MmrYXQXisLlqMgwI7
+         Q0c28HcNntZ1TN1mnfj71L4jwWYPnVlEKl/RPvRJYpED5Lzxd5Pm+KZ86Eo0rGTY3CXO
+         I2YL4dp2BauYbFZDCPGWaVQzxEYFkeMwJF/HivtQcawipgkI6eskJffvyV/DIxpjBOVu
+         +RSbSSqidyR2v+nMNNbIRqeAKMOCR2xmiBlGlddZbVTPFOIdGHxAUhKFDAJBcbK4c7yc
+         x4DQmPM9a9CEL4eEnDrjvuLlZKd1McwiuIxBl7u4HgNzrt+IYUNCakOuZp7duHgAWMFU
+         o/YQ==
+X-Gm-Message-State: AJIora9dJ8VEhBUBBVxZ9XddqKO0LpTNQMvsyL8/xqlCSDWbQFsPrDht
+	pe3yRC7GqnvAIMhKo+zS0mhah9LLRlkIWA==
+X-Google-Smtp-Source: 
+ AGRyM1vDP/v5SfqjV5vlD1vkLb94no+0NnQ+lx+TvFh81EicLrXgUdx5El1Ofc8wD/VLjWpAzyzaOw==
+X-Received: by 2002:a5d:568b:0:b0:21b:995c:eb4e with SMTP id
+ f11-20020a5d568b000000b0021b995ceb4emr1064524wrv.325.1656107775705;
+        Fri, 24 Jun 2022 14:56:15 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:94fb:7e7b:31cf:be7f])
+        by smtp.gmail.com with ESMTPSA id
+ m2-20020a7bcb82000000b0039744bd664esm8166539wmi.13.2022.06.24.14.56.15
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jun 2022 14:56:15 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] server/process: Fix logging issues where only the first
+ message was displayed
+Date: Fri, 24 Jun 2022 22:56:14 +0100
+Message-Id: <20220624215614.276988-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Cc: docs@lists.yoctoproject.org, "Robert P. J. Day" <rpjday@crashcourse.ca>,
- Nicolas Dechesne <nicolas.dechesne@linaro.org>,
- Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [docs] [PATCH] bitbake-user-manual: punctuation
- fixes
-Content-Language: en-US
-To: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
- bitbake-devel@lists.openembedded.org
-References: <20220329130747.364485-1-michael.opdenacker@bootlin.com>
- <5205d592-db48-f554-5c64-221dbcb7b774@theobroma-systems.com>
- <119c048f-010d-f9d2-2e74-da470b1d043d@bootlin.com>
- <6a58f3eb-7140-b6aa-6b9f-a0372b7311fa@theobroma-systems.com>
- <16E1CD5D84DCAFFA.24007@lists.openembedded.org>
- <16FAF73805DB6D1B.31435@lists.yoctoproject.org>
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-In-Reply-To: <16FAF73805DB6D1B.31435@lists.yoctoproject.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 22 Jun 2022 14:48:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13788
+ <bitbake-devel@lists.openembedded.org>; Fri, 24 Jun 2022 21:56:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13789
 
+I realised only the first logging message was being displayed in a given
+parsing process. The reason turned out to be the UI handler failing
+with a "pop from empty list". The default handler was then lost and
+no further messages were processed.
 
-On 6/22/22 16:20, Michael Opdenacker via lists.yoctoproject.org wrote:
->
->
-> Since nobody except Quentin voted against this change (for practical 
-> reasons to grep in the source code), I'll like to proceed with this 
-> change, to be consistent with standard rules for English text.
->
-> At least, this will allow us to distinguish simple dashes and em 
-> dashes, which have a different meaning, and may help Sphinx to break 
-> lines (or not to) in a correct way.
+Fix this by catching the exception correctly in the connection writer code.
 
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/server/process.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Actually, this patch got merged: 
-https://git.openembedded.org/bitbake/commit/?id=f1c4ac816e927f490fb9852c12aa408e8c9403b1
-So, I resent the corresponding patch for em dashes in yocto-docs.
-
-Cheers
-Michael.
-
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 43790b6631..5d02c0b9f5 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -756,8 +756,11 @@ class ConnectionWriter(object):
+                 process.queue_signals = True
+                 self._send(obj)
+                 process.queue_signals = False
+-                for sig in process.signal_received.pop():
+-                    process.handle_sig(sig, None)
++                try:
++                    for sig in process.signal_received.pop():
++                        process.handle_sig(sig, None)
++                except IndexError:
++                    pass
+         else:
+             self._send(obj)
+ 
 -- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
 
 
