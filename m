@@ -1,113 +1,95 @@
-Return-Path: <alex.kiernan@gmail.com>
+Return-Path: <gen.iorio92@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11A3C43334
-	for <webhook@archiver.kernel.org>; Tue, 28 Jun 2022 11:14:14 +0000 (UTC)
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com
- [209.85.208.51])
- by mx.groups.io with SMTP id smtpd.web10.53915.1656414852956365150
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BFCC433EF
+	for <webhook@archiver.kernel.org>; Thu, 30 Jun 2022 17:25:12 +0000 (UTC)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com
+ [209.85.208.46])
+ by mx.groups.io with SMTP id smtpd.web09.28367.1656609905453434317
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 28 Jun 2022 04:14:13 -0700
+ Thu, 30 Jun 2022 10:25:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=kpkiQRUb;
- spf=pass (domain: gmail.com, ip: 209.85.208.51,
- mailfrom: alex.kiernan@gmail.com)
-Received: by mail-ed1-f51.google.com with SMTP id z19so17013339edb.11
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=gGtG96+m;
+ spf=pass (domain: gmail.com, ip: 209.85.208.46,
+ mailfrom: gen.iorio92@gmail.com)
+Received: by mail-ed1-f46.google.com with SMTP id c13so27460458eds.10
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 28 Jun 2022 04:14:12 -0700 (PDT)
+ Thu, 30 Jun 2022 10:25:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JA7Ph2PR4QpTSBryaYIih5K36eOM0mwThO05CPeokGA=;
-        b=kpkiQRUb9FrAFuh/fM8qQprFI8FSP8kv/zasZO93OvMR5kEAmPHERtArcJFa0WN9sq
-         sj97NGpeT4KqALQ3eQj3JR3GWSvAU0YHFXOsLvpyBsx9c60vwHR7jtYX5X2m5PCEG/1a
-         SioOnj0HKsvTBQ+EbcvS5TDp2kQKgRG6WNVUx40KlrrgZZeuW9fMFU66hsGh6IafRNUR
-         dcXf7uG/TUnfRxOIJywQ3GB5SvRI0QB2yKGYemZzq25smXD7u8zy9xiArF+R+P3U+DX/
-         Ipo+cFvkz445F2Jiv25tMRZK7FO8dHuDr5vhzWznroqiHCFG9JZWsEInkWcmzbSwik1a
-         znzw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dsDJ3CFOQsB+GPEiQF7PxO4gY8ZQeQtKqLMWKlghOWw=;
+        b=gGtG96+mvLM3Z3z5qfZ/rGR1+vE6wLAax1WxLF+l4J/GQd1CpA+ivHuMDqD94qxQ03
+         SZc3kxmGkd1Sw5bNhdjLTRl4cIc+K/6j6N4MtvjUyyKCLuoahfx5KJJR0XGqmEcJVuHu
+         lRDw9V/oMCWL3Y/7G/J5aq4h6IBl/xDAE9fRp3mIP31Z3FbiQ2vgA/lB67M/dcCbCjin
+         TfmexU4tITYWUdq9Vq4EANiiuIXwHI0VdRpOeiyR2GRKeorREKrZYS/ym20PDyBIbfhK
+         jrGpb3P/yGve2zgMKjBhO6/yserLLXbM0Vxkd8Xlq/AquqfDIsGjd5OOlcf5stB1PBRi
+         9cYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JA7Ph2PR4QpTSBryaYIih5K36eOM0mwThO05CPeokGA=;
-        b=g0TAMFU0SfAp2ms2pV/qE0K8QXdP+AhvY2t8gOcIdYojQzS5nszq3J6n5tCIHDSsSh
-         MgXAlHWWAFzBEIcRjO9nqqwIqv+AqKLT/Ec4Js7485jF0UyQDXwMwDl1nTmmouady35f
-         lF1NcF3LYyGSmIMdYGwqyR8he/uXISBTTXz7LtkhW3w/jOx7/lyIirOSv8vyapnZB5Sf
-         6IkQXrC+eHDxWCTTMTBCDOsfWsxyHJox+OrlyygBzLa8H2XxYOGoaq/LjNmnbbr+k+eX
-         aeJv4H77olDIhFbQPGm84pdNi/gSxm4zjTOooihnEsxYJcRTOaJN4Qfs0bMTHZePKZZS
-         bWZQ==
-X-Gm-Message-State: AJIora9i58lA7jK3dpAEelKJDYxBHUbUdtn9DvCVvtJAtULhwwKyDuum
-	eF+FiJ2iU0cNXtgUeUfDDhEVC3Vp5eV5AmBzmTM=
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dsDJ3CFOQsB+GPEiQF7PxO4gY8ZQeQtKqLMWKlghOWw=;
+        b=l7o/tgM4WYvyomt8wXtsntwAg6MvDRlJhKH7iQyEnXTvWeUeC+WQ7W/dXQwm3nOQTR
+         gC6SRatBT/ERZeKZX5caNJLN5kDXim8iY6arq6z0ORGEczUjysai2aOP7NwzOX+G5Kwy
+         yhWBZRbF4FqoEyel51bcrSlSM5CLmsRu1qeuNqa95Rx3NhteySQ/hcgOg03P+2HmjKQy
+         jLFnRG5nglnYr4jo/1ONcM9NqzXm3oKrIjk5ovk04/RdL1m1OcJVMDqCIi0LIHmpk5VD
+         AO2d3L1uoD/aTGba+LNHM1iLVaOD66vtBw4Jo6/1+yXSqUi09n8MLeuTkjAkUk9t1+PD
+         ZQsw==
+X-Gm-Message-State: AJIora+DOETJZyrAVUa+Q4caK1kvJ93+dReDpCMzP+JNW2/DDcZlEasG
+	f67tXxVGxCCuHcg0JrNyDc5VoCWeBe76
 X-Google-Smtp-Source: 
- AGRyM1sqpkA0WIGo4exRTRSgA7Ov8Y9jwObMovBNTrDoeJrUG87lwOnVV+hzxT3NCILOLOTBp3likBY8wx//bRHFQjs=
-X-Received: by 2002:a05:6402:158e:b0:435:7d0f:ac85 with SMTP id
- c14-20020a056402158e00b004357d0fac85mr22408170edv.93.1656414851434; Tue, 28
- Jun 2022 04:14:11 -0700 (PDT)
+ AGRyM1tyMKOU9tWlUN89Ke9d26XQSzQwkGWO+DlAf1xGMsz9j5x5nJwSEwbWqfQhMwLBbQ6CGaJqug==
+X-Received: by 2002:a05:6402:908:b0:434:f9d9:3b18 with SMTP id
+ g8-20020a056402090800b00434f9d93b18mr13229861edz.37.1656609903577;
+        Thu, 30 Jun 2022 10:25:03 -0700 (PDT)
+Received: from localhost.localdomain ([185.178.95.241])
+        by smtp.gmail.com with ESMTPSA id
+ k25-20020a170906971900b00724e6a55d1asm9233543ejx.197.2022.06.30.10.25.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jun 2022 10:25:03 -0700 (PDT)
+From: Gennaro Iorio <gen.iorio92@gmail.com>
+X-Google-Original-From: Gennaro Iorio <gennaro.iorio@schindler.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: gennaro.iorio@schindler.com
+Subject: [PATCH] bitbake: fetch2: gitsm: fix incorrect handling of git
+ submodule relative urls
+Date: Thu, 30 Jun 2022 19:24:55 +0200
+Message-Id: <20220630172455.3893-1-gennaro.iorio@schindler.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220609070631.23346-1-alex.kiernan@gmail.com>
- <5e781972643ed99e2948ac5a908222a190678475.camel@linuxfoundation.org>
- <16F6ED45D7C68CA7.32696@lists.openembedded.org>
- <CAO5Uq5SxhRhpRGyD4PoXm3b2Edtzy=tgGWkRFpjKRikFgsW+mg@mail.gmail.com>
- <d6260e8bcd7b49395c7e81e4649f5989df8d6e91.camel@linuxfoundation.org>
-In-Reply-To: 
- <d6260e8bcd7b49395c7e81e4649f5989df8d6e91.camel@linuxfoundation.org>
-From: Alex Kiernan <alex.kiernan@gmail.com>
-Date: Tue, 28 Jun 2022 12:13:59 +0100
-Message-ID: 
- <CAO5Uq5T6wOcv3XWvyAyKM0mMcrMEQZ1buGt+Sy_R0PuvYRtowg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] data_smart: Pass flags through variable
- rename
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org,
-	Otavio Salvador <otavio.salvador@ossystems.com.br>,
- Alex Kiernan <alexk@zuma.ai>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 28 Jun 2022 11:14:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13792
+ <bitbake-devel@lists.openembedded.org>; Thu, 30 Jun 2022 17:25:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13793
 
-On Mon, Jun 27, 2022 at 12:10 PM Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> On Thu, 2022-06-16 at 13:27 +0100, Alex Kiernan wrote:
-> > I've been thinking around this, I guess the bit I really want to work
-> > is for flags to survive through variable renames, rather than
-> > overrides, but the two use cases do tend to collide as we often have
-> > overrides with variable expansion, which is then renaming...
-> >
-> > Just realised I c&p my example from our vendor branch which is still
-> > on _ based overrides rather than : based ones, but both seem to work
-> > for me.
->
-> I've been pondering this a bit more but I'm not sure we want to wade
-> into the complexities of how flags+overrides+key expansion can all
-> collide together.
->
+As specified by git submodule manual relative urls can start either
+with '..' or './', second case was incorrectly managed leading to an
+interpretation of urls starting with './' as absoulte urls.
 
-I guess I understand this, even if I'd like it to work :)
+Signed-off-by: Gennaro Iorio <gennaro.iorio@schindler.com>
+---
+ bitbake/lib/bb/fetch2/gitsm.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> I did notice this in the metadata though:
->
-> RRECOMMENDS:coreutils-dev[nodeprrecs] = "1"
->
-> which happens to work as it doesn't use key expansion and doesn't rely
-> on override expansion for access (the variable named
-> "RRECOMMENDS:coreutils-dev" exists).
->
-> It does mean we have some subset of this problem live in metadata
-> though :/.
->
-> Changing it to RRECOMMENDS:${PN}-dev breaks things.
->
-
-Feels like it merits at least a warning? Though I guess the challenge
-is chasing an ever moving set of internal flags which can be attached
-to a variable.
-
+diff --git a/bitbake/lib/bb/fetch2/gitsm.py b/bitbake/lib/bb/fetch2/gitsm.py
+index e7083001da..a307e55194 100644
+--- a/bitbake/lib/bb/fetch2/gitsm.py
++++ b/bitbake/lib/bb/fetch2/gitsm.py
+@@ -88,7 +88,7 @@ class GitSM(Git):
+                 subrevision[m] = module_hash.split()[2]
+ 
+                 # Convert relative to absolute uri based on parent uri
+-                if uris[m].startswith('..'):
++                if  uris[m].startswith('..') or uris[m].startswith('./'):
+                     newud = copy.copy(ud)
+                     newud.path = os.path.realpath(os.path.join(newud.path, uris[m]))
+                     uris[m] = Git._get_repo_url(self, newud)
 -- 
-Alex Kiernan
+2.25.1
+
 
