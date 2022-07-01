@@ -1,95 +1,165 @@
-Return-Path: <gen.iorio92@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BFCC433EF
-	for <webhook@archiver.kernel.org>; Thu, 30 Jun 2022 17:25:12 +0000 (UTC)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com
- [209.85.208.46])
- by mx.groups.io with SMTP id smtpd.web09.28367.1656609905453434317
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98BEC433EF
+	for <webhook@archiver.kernel.org>; Fri,  1 Jul 2022 16:57:20 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com
+ [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web09.41314.1656694637250389464
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 30 Jun 2022 10:25:05 -0700
+ Fri, 01 Jul 2022 09:57:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=gGtG96+m;
- spf=pass (domain: gmail.com, ip: 209.85.208.46,
- mailfrom: gen.iorio92@gmail.com)
-Received: by mail-ed1-f46.google.com with SMTP id c13so27460458eds.10
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aka5Wnhh;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id l68so1654370wml.3
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 30 Jun 2022 10:25:05 -0700 (PDT)
+ Fri, 01 Jul 2022 09:57:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=linuxfoundation.org; s=google;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dsDJ3CFOQsB+GPEiQF7PxO4gY8ZQeQtKqLMWKlghOWw=;
-        b=gGtG96+mvLM3Z3z5qfZ/rGR1+vE6wLAax1WxLF+l4J/GQd1CpA+ivHuMDqD94qxQ03
-         SZc3kxmGkd1Sw5bNhdjLTRl4cIc+K/6j6N4MtvjUyyKCLuoahfx5KJJR0XGqmEcJVuHu
-         lRDw9V/oMCWL3Y/7G/J5aq4h6IBl/xDAE9fRp3mIP31Z3FbiQ2vgA/lB67M/dcCbCjin
-         TfmexU4tITYWUdq9Vq4EANiiuIXwHI0VdRpOeiyR2GRKeorREKrZYS/ym20PDyBIbfhK
-         jrGpb3P/yGve2zgMKjBhO6/yserLLXbM0Vxkd8Xlq/AquqfDIsGjd5OOlcf5stB1PBRi
-         9cYg==
+        bh=dV/JKeB68C3s7dy+bWs5a3HZgbwaXqJ3UFBG4K2bu34=;
+        b=aka5WnhhuiF2rnyGYWW4tuVn8xI86A6YdaGqRYtQ8UNipN8Gpd/A+uDoGskx/q6L6J
+         qBOKj/OLOjxZIoGl9SzBae191hPIZljwtPJDOwXF/ZRltL5224czdNhch3CcyLvMUbOt
+         2vna1tx5DpI0epfPGAfZPa5ucLBRi1yc4KpXo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dsDJ3CFOQsB+GPEiQF7PxO4gY8ZQeQtKqLMWKlghOWw=;
-        b=l7o/tgM4WYvyomt8wXtsntwAg6MvDRlJhKH7iQyEnXTvWeUeC+WQ7W/dXQwm3nOQTR
-         gC6SRatBT/ERZeKZX5caNJLN5kDXim8iY6arq6z0ORGEczUjysai2aOP7NwzOX+G5Kwy
-         yhWBZRbF4FqoEyel51bcrSlSM5CLmsRu1qeuNqa95Rx3NhteySQ/hcgOg03P+2HmjKQy
-         jLFnRG5nglnYr4jo/1ONcM9NqzXm3oKrIjk5ovk04/RdL1m1OcJVMDqCIi0LIHmpk5VD
-         AO2d3L1uoD/aTGba+LNHM1iLVaOD66vtBw4Jo6/1+yXSqUi09n8MLeuTkjAkUk9t1+PD
-         ZQsw==
-X-Gm-Message-State: AJIora+DOETJZyrAVUa+Q4caK1kvJ93+dReDpCMzP+JNW2/DDcZlEasG
-	f67tXxVGxCCuHcg0JrNyDc5VoCWeBe76
+        bh=dV/JKeB68C3s7dy+bWs5a3HZgbwaXqJ3UFBG4K2bu34=;
+        b=YOr85jsJrtnv3QBQ1Mk27OcelN/U8qFAWY3f0rGdATWCVazT7T86tDHN4z8PO10ind
+         1BvW0ksYirG0QhOXBp8RHTp3ChMDeFyEq5SBgm7ncr+Tc7WAXyGQhNVMo5+LWHYBt1iR
+         ZuTPfeRSGOEtUDiEwsak2uCBVsCCjbPX3N8i/I8LpKZKuaOqXbU7iAe9ANX91oKvvCWK
+         RyML4GB4+f+HouwV3yz+RigLDZlrll76J9l+riHOx1lX1jNUaMU+rbCdjFOBXun9aTbl
+         Kj4Pqaq/gJPXUJXG30rqnmS+Kug44T9eq5I7hktjEFXboyy/IW+WJo6SsaXgm5fNSYwY
+         YxPw==
+X-Gm-Message-State: AJIora+BUK/DNCR94J6DOX4ltH3zOjP2oy6FDw4Waj9X3rdwVA2U7ppe
+	4FeGoXEI3FFAbM+EviisLPzcA6EWdNdjEA==
 X-Google-Smtp-Source: 
- AGRyM1tyMKOU9tWlUN89Ke9d26XQSzQwkGWO+DlAf1xGMsz9j5x5nJwSEwbWqfQhMwLBbQ6CGaJqug==
-X-Received: by 2002:a05:6402:908:b0:434:f9d9:3b18 with SMTP id
- g8-20020a056402090800b00434f9d93b18mr13229861edz.37.1656609903577;
-        Thu, 30 Jun 2022 10:25:03 -0700 (PDT)
-Received: from localhost.localdomain ([185.178.95.241])
+ AGRyM1udu+lNmW1CfYDRkbpSC2NqvBcPrqOMu4ygIwbZzLH1ujeaQh7ZB6M1vwxoiRbSBplZ97d3Hg==
+X-Received: by 2002:a05:600c:3c83:b0:39c:9039:852c with SMTP id
+ bg3-20020a05600c3c8300b0039c9039852cmr17609700wmb.187.1656694635264;
+        Fri, 01 Jul 2022 09:57:15 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:a49f:615b:a613:6a47])
         by smtp.gmail.com with ESMTPSA id
- k25-20020a170906971900b00724e6a55d1asm9233543ejx.197.2022.06.30.10.25.02
+ h13-20020adff4cd000000b002103aebe8absm22811347wrp.93.2022.07.01.09.57.12
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jun 2022 10:25:03 -0700 (PDT)
-From: Gennaro Iorio <gen.iorio92@gmail.com>
-X-Google-Original-From: Gennaro Iorio <gennaro.iorio@schindler.com>
+        Fri, 01 Jul 2022 09:57:13 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: gennaro.iorio@schindler.com
-Subject: [PATCH] bitbake: fetch2: gitsm: fix incorrect handling of git
- submodule relative urls
-Date: Thu, 30 Jun 2022 19:24:55 +0200
-Message-Id: <20220630172455.3893-1-gennaro.iorio@schindler.com>
-X-Mailer: git-send-email 2.25.1
+Subject: [PATCH] ConfHandler/BBHandler: Improve comment error messages and add
+ tests
+Date: Fri,  1 Jul 2022 17:57:10 +0100
+Message-Id: <20220701165710.797159-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 30 Jun 2022 17:25:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13793
+ <bitbake-devel@lists.openembedded.org>; Fri, 01 Jul 2022 16:57:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13794
 
-As specified by git submodule manual relative urls can start either
-with '..' or './', second case was incorrectly managed leading to an
-interpretation of urls starting with './' as absoulte urls.
+Currently if you trigger one of the comment errors, the newline characters
+are stripped and the line numbers are incorrect. In one case it prints
+the empty line which is also unhelpful.
 
-Signed-off-by: Gennaro Iorio <gennaro.iorio@schindler.com>
+Rework the code around these errors so the line numbers are correct
+and the lines in question are more clearly displayed complete with newlines
+so the user can more clearly see the error.
+
+I also added a couple of simplistic test cases to ensure that errors
+are raised by the two known comment format errors.
+
+[YOCTO #11904]
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/fetch2/gitsm.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/parse/parse_py/BBHandler.py   |  4 ++--
+ lib/bb/parse/parse_py/ConfHandler.py |  9 +++++++--
+ lib/bb/tests/parse.py                | 23 +++++++++++++++++++++++
+ 3 files changed, 32 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/gitsm.py b/bitbake/lib/bb/fetch2/gitsm.py
-index e7083001da..a307e55194 100644
---- a/bitbake/lib/bb/fetch2/gitsm.py
-+++ b/bitbake/lib/bb/fetch2/gitsm.py
-@@ -88,7 +88,7 @@ class GitSM(Git):
-                 subrevision[m] = module_hash.split()[2]
+diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
+index ee9bd760ce..68415735fd 100644
+--- a/lib/bb/parse/parse_py/BBHandler.py
++++ b/lib/bb/parse/parse_py/BBHandler.py
+@@ -178,10 +178,10 @@ def feeder(lineno, s, fn, root, statements, eof=False):
  
-                 # Convert relative to absolute uri based on parent uri
--                if uris[m].startswith('..'):
-+                if  uris[m].startswith('..') or uris[m].startswith('./'):
-                     newud = copy.copy(ud)
-                     newud.path = os.path.realpath(os.path.join(newud.path, uris[m]))
-                     uris[m] = Git._get_repo_url(self, newud)
+     if s and s[0] == '#':
+         if len(__residue__) != 0 and __residue__[0][0] != "#":
+-            bb.fatal("There is a comment on line %s of file %s (%s) which is in the middle of a multiline expression.\nBitbake used to ignore these but no longer does so, please fix your metadata as errors are likely as a result of this change." % (lineno, fn, s))
++            bb.fatal("There is a comment on line %s of file %s:\n'''\n%s\n'''\nwhich is in the middle of a multiline expression. This syntax is invalid, please correct it." % (lineno, fn, s))
+ 
+     if len(__residue__) != 0 and __residue__[0][0] == "#" and (not s or s[0] != "#"):
+-        bb.fatal("There is a confusing multiline, partially commented expression on line %s of file %s (%s).\nPlease clarify whether this is all a comment or should be parsed." % (lineno, fn, s))
++        bb.fatal("There is a confusing multiline partially commented expression on line %s of file %s:\n%s\nPlease clarify whether this is all a comment or should be parsed." % (lineno - len(__residue__), fn, "\n".join(__residue__)))
+ 
+     if s and s[-1] == '\\':
+         __residue__.append(s[:-1])
+diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
+index 810b6011cf..451e68dd66 100644
+--- a/lib/bb/parse/parse_py/ConfHandler.py
++++ b/lib/bb/parse/parse_py/ConfHandler.py
+@@ -125,16 +125,21 @@ def handle(fn, data, include):
+             s = f.readline()
+             if not s:
+                 break
++            origlineno = lineno
++            origline = s
+             w = s.strip()
+             # skip empty lines
+             if not w:
+                 continue
+             s = s.rstrip()
+             while s[-1] == '\\':
+-                s2 = f.readline().rstrip()
++                line = f.readline()
++                origline += line
++                s2 = line.rstrip()
+                 lineno = lineno + 1
+                 if (not s2 or s2 and s2[0] != "#") and s[0] == "#" :
+-                    bb.fatal("There is a confusing multiline, partially commented expression on line %s of file %s (%s).\nPlease clarify whether this is all a comment or should be parsed." % (lineno, fn, s))
++                    bb.fatal("There is a confusing multiline, partially commented expression starting on line %s of file %s:\n%s\nPlease clarify whether this is all a comment or should be parsed." % (origlineno, fn, origline))
++
+                 s = s[:-1] + s2
+             # skip comments
+             if s[0] == '#':
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index 2898f9bb14..1a3b74934d 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -194,3 +194,26 @@ deltask ${EMPTYVAR}
+         self.assertTrue('addtask ignored: " do_patch"' in stdout)
+         #self.assertTrue('dependent task do_foo for do_patch does not exist' in stdout)
+ 
++    broken_multiline_comment = """
++# First line of comment \\
++# Second line of comment \\
++
++"""
++    def test_parse_broken_multiline_comment(self):
++        f = self.parsehelper(self.broken_multiline_comment)
++        with self.assertRaises(bb.BBHandledException):
++            d = bb.parse.handle(f.name, self.d)['']
++
++
++    comment_in_var = """
++VAR = " \\
++    SOMEVAL \\
++#   some comment \\
++    SOMEOTHERVAL \\
++"
++"""
++    def test_parse_comment_in_var(self):
++        f = self.parsehelper(self.comment_in_var)
++        with self.assertRaises(bb.BBHandledException):
++            d = bb.parse.handle(f.name, self.d)['']
++
 -- 
-2.25.1
+2.34.1
 
 
