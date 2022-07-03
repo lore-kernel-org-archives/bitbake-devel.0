@@ -1,165 +1,202 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ptsneves@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98BEC433EF
-	for <webhook@archiver.kernel.org>; Fri,  1 Jul 2022 16:57:20 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com
- [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web09.41314.1656694637250389464
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE5DC43334
+	for <webhook@archiver.kernel.org>; Sun,  3 Jul 2022 12:17:53 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com
+ [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web11.59664.1656850668805850486
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 01 Jul 2022 09:57:17 -0700
+ Sun, 03 Jul 2022 05:17:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aka5Wnhh;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f43.google.com with SMTP id l68so1654370wml.3
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=cnRVf+ee;
+ spf=pass (domain: gmail.com, ip: 209.85.128.47, mailfrom: ptsneves@gmail.com)
+Received: by mail-wm1-f47.google.com with SMTP id
+ o19-20020a05600c4fd300b003a0489f414cso4103775wmq.4
         for <bitbake-devel@lists.openembedded.org>;
- Fri, 01 Jul 2022 09:57:17 -0700 (PDT)
+ Sun, 03 Jul 2022 05:17:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dV/JKeB68C3s7dy+bWs5a3HZgbwaXqJ3UFBG4K2bu34=;
-        b=aka5WnhhuiF2rnyGYWW4tuVn8xI86A6YdaGqRYtQ8UNipN8Gpd/A+uDoGskx/q6L6J
-         qBOKj/OLOjxZIoGl9SzBae191hPIZljwtPJDOwXF/ZRltL5224czdNhch3CcyLvMUbOt
-         2vna1tx5DpI0epfPGAfZPa5ucLBRi1yc4KpXo=
+        bh=1oo4y60XPfh5lyDPCOFPASUy1Z4UKsboWDSDxdvz1uo=;
+        b=cnRVf+eeofA2mrkuKjq/7YATaLub8Wt4YfJ78XBr4SnN82QaQ32k3IIeB+kLwGO17A
+         RexKVeYwHYoEOkIq2q9snA6VkApKeFDwQMQVy7mFe1dXmg9xBwfSOMVtnTgpmCuaH0Ao
+         vwQ2u25syOEO1dDUygVxotQ+Eu8xju1rC9ruXMJVTRwCH5g5t97cheBukpkrtVBm6hwX
+         0WfJ78MXRVb36qB3A5grnAXgrC+FP7ybwK9MjKx0xQdJmhVKnhuResv8tnZCUP0+N2Bn
+         hye8JjMM4CjwED6CbNyoWGeuv6UGqaZT9qcBFIgW+v93XSFsevd1M1AoEyBGUlqZX1/m
+         Uzxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dV/JKeB68C3s7dy+bWs5a3HZgbwaXqJ3UFBG4K2bu34=;
-        b=YOr85jsJrtnv3QBQ1Mk27OcelN/U8qFAWY3f0rGdATWCVazT7T86tDHN4z8PO10ind
-         1BvW0ksYirG0QhOXBp8RHTp3ChMDeFyEq5SBgm7ncr+Tc7WAXyGQhNVMo5+LWHYBt1iR
-         ZuTPfeRSGOEtUDiEwsak2uCBVsCCjbPX3N8i/I8LpKZKuaOqXbU7iAe9ANX91oKvvCWK
-         RyML4GB4+f+HouwV3yz+RigLDZlrll76J9l+riHOx1lX1jNUaMU+rbCdjFOBXun9aTbl
-         Kj4Pqaq/gJPXUJXG30rqnmS+Kug44T9eq5I7hktjEFXboyy/IW+WJo6SsaXgm5fNSYwY
-         YxPw==
-X-Gm-Message-State: AJIora+BUK/DNCR94J6DOX4ltH3zOjP2oy6FDw4Waj9X3rdwVA2U7ppe
-	4FeGoXEI3FFAbM+EviisLPzcA6EWdNdjEA==
+        bh=1oo4y60XPfh5lyDPCOFPASUy1Z4UKsboWDSDxdvz1uo=;
+        b=3Y2OxPssDfCg9sLaKJfyYWTITvZmo3L+NqGoVJiQeZwJnO9PzaJgCqIcZUy98mHadr
+         tPnHma5K9dbYm0UXmnfwVL5j1uPhFxXM45XIAFayliRRm/tWuoFMBGgA1FVIjrgLXmUP
+         gMAfWW9lLa63ymcd2J4PxhlPBPcF/YvVIlNqbQibxo6wFCqr41yyEWFsSOPHqv5p2oe/
+         qkNQ+8SqVxOuAH4Ynu6bjU9U+Y0Qtw8lrDYYJST0MUYbcKMyMo5KucqkuF6NA/k69/iq
+         +SwBOX4yZewuvPTnBJTyuimQd852l2hxwjsmH3NmmbWYo0f0QuiMBIbi68LdFgj6Z+Je
+         LSRg==
+X-Gm-Message-State: AJIora8Iydw0PB4o+5ZDynh7mHKMLPaQn5BPygqmH5Jq8bF8UlyrikVw
+	+uajMDcUS1irzz12gWOyf15GrFCXFA14hE4=
 X-Google-Smtp-Source: 
- AGRyM1udu+lNmW1CfYDRkbpSC2NqvBcPrqOMu4ygIwbZzLH1ujeaQh7ZB6M1vwxoiRbSBplZ97d3Hg==
-X-Received: by 2002:a05:600c:3c83:b0:39c:9039:852c with SMTP id
- bg3-20020a05600c3c8300b0039c9039852cmr17609700wmb.187.1656694635264;
-        Fri, 01 Jul 2022 09:57:15 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:a49f:615b:a613:6a47])
+ AGRyM1ubdTAOqznNiMFcsJGD2PkCH/eiDGDnBP3llFxtXtHM3ui6KTrsL11sSq3okXQ+/bKHVxUkmA==
+X-Received: by 2002:a05:600c:4fc8:b0:3a1:99cf:7fe with SMTP id
+ o8-20020a05600c4fc800b003a199cf07femr4705231wmq.142.1656850667101;
+        Sun, 03 Jul 2022 05:17:47 -0700 (PDT)
+Received: from localhost.localdomain (83.11.75.211.ipv4.supernova.orange.pl.
+ [83.11.75.211])
         by smtp.gmail.com with ESMTPSA id
- h13-20020adff4cd000000b002103aebe8absm22811347wrp.93.2022.07.01.09.57.12
-        for <bitbake-devel@lists.openembedded.org>
+ z18-20020a05600c0a1200b0039c45fc58c4sm16562045wmp.21.2022.07.03.05.17.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Jul 2022 09:57:13 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Sun, 03 Jul 2022 05:17:46 -0700 (PDT)
+From: Paulo Neves <ptsneves@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] ConfHandler/BBHandler: Improve comment error messages and add
- tests
-Date: Fri,  1 Jul 2022 17:57:10 +0100
-Message-Id: <20220701165710.797159-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.34.1
+Cc: Joey Degges <jdegges@gmail.com>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Paulo Neves <ptsneves@gmail.com>
+Subject: [bitbake][dunfell][1.46][PATCH] fetch/git: Fix usehead for
+ non-default names
+Date: Sun,  3 Jul 2022 14:17:31 +0200
+Message-Id: <20220703121731.2326008-1-ptsneves@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 01 Jul 2022 16:57:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13794
+ <bitbake-devel@lists.openembedded.org>; Sun, 03 Jul 2022 12:17:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13795
 
-Currently if you trigger one of the comment errors, the newline characters
-are stripped and the line numbers are incorrect. In one case it prints
-the empty line which is also unhelpful.
+From: Joey Degges <jdegges@gmail.com>
 
-Rework the code around these errors so the line numbers are correct
-and the lines in question are more clearly displayed complete with newlines
-so the user can more clearly see the error.
+The usehead url parameter for git repositories causes bitbake to use
+whatever commit the repository HEAD is pointing to if the repository
+happens to have the name 'default'. This is the default name so in many
+cases it works just fine, but if a different name is specified with the
+url parameter 'name=newName' then it will fail to parse the recipe with
+an error along the lines of:
 
-I also added a couple of simplistic test cases to ensure that errors
-are raised by the two known comment format errors.
+ERROR: ExpansionError during parsing /path/to/my/recipe.bb
+Traceback (most recent call last):
+  File "/path/to/poky/bitbake/lib/bb/fetch2/git.py", line 235, in Git.urldata_init:
+    >        ud.setup_revisions(d)
+  File "/path/to/poky/bitbake/lib/bb/fetch2/__init__.py", line 1302, in FetchData.setup_revisions:
+             for name in self.names:
+    >            self.revisions[name] = srcrev_internal_helper(self, d, name)
+  File "/path/to/poky/bitbake/lib/bb/fetch2/__init__.py", line 1167, in srcrev_internal_helper(name='newName'):
+         if srcrev == "AUTOINC":
+    >        srcrev = ud.method.latest_revision(ud, d, name)
+  File "/path/to/poky/bitbake/lib/bb/fetch2/__init__.py", line 1562, in Git.latest_revision(name='newName'):
+             except KeyError:
+    >            revs[key] = rev = self._latest_revision(ud, d, name)
+                 return rev
+  File "/path/to/poky/bitbake/lib/bb/fetch2/git.py", line 650, in Git._latest_revision(name='newName'):
+             raise bb.fetch2.FetchError("Unable to resolve '%s' in upstream git repository in git ls-remote output for %s" % \
+    >            (ud.unresolvedrev[name], ud.host+ud.path))
+bb.data_smart.ExpansionError: Failure expanding variable SRCPV, expression was ${@bb.fetch2.get_srcrev(d)} which triggered exception FetchError: Fetcher failure: Unable to resolve 'master' in upstream git repository in git ls-remote output for /path/to/local/git/repo
 
-[YOCTO #11904]
+Let's fix this by setting the unresolved rev of _all_ repository names
+to 'HEAD' when the usehead url parameter is specified. Update the
+currently failing test, test_local_gitfetch_usehead_withname, to now
+expect success.
 
+This change preserves existing behavior that allows usehead to be
+overridden by a valid looking revision if one happens to be specified
+instead of AUTOREV.
+
+Signed-off-by: Joey Degges <jdegges@gmail.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 01e901c44ab0f496606b1d45c8953dc54970204c)
+Signed-off-by: Paulo Neves <ptsneves@gmail.com>
 ---
- lib/bb/parse/parse_py/BBHandler.py   |  4 ++--
- lib/bb/parse/parse_py/ConfHandler.py |  9 +++++++--
- lib/bb/tests/parse.py                | 23 +++++++++++++++++++++++
- 3 files changed, 32 insertions(+), 4 deletions(-)
+ lib/bb/fetch2/git.py  |  7 +++++-
+ lib/bb/tests/fetch.py | 52 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
-index ee9bd760ce..68415735fd 100644
---- a/lib/bb/parse/parse_py/BBHandler.py
-+++ b/lib/bb/parse/parse_py/BBHandler.py
-@@ -178,10 +178,10 @@ def feeder(lineno, s, fn, root, statements, eof=False):
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index f6f6b63a..63a9f92b 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -224,7 +224,12 @@ class Git(FetchMethod):
+             ud.shallow = False
  
-     if s and s[0] == '#':
-         if len(__residue__) != 0 and __residue__[0][0] != "#":
--            bb.fatal("There is a comment on line %s of file %s (%s) which is in the middle of a multiline expression.\nBitbake used to ignore these but no longer does so, please fix your metadata as errors are likely as a result of this change." % (lineno, fn, s))
-+            bb.fatal("There is a comment on line %s of file %s:\n'''\n%s\n'''\nwhich is in the middle of a multiline expression. This syntax is invalid, please correct it." % (lineno, fn, s))
+         if ud.usehead:
+-            ud.unresolvedrev['default'] = 'HEAD'
++            # When usehead is set let's associate 'HEAD' with the unresolved
++            # rev of this repository. This will get resolved into a revision
++            # later. If an actual revision happens to have also been provided
++            # then this setting will be overridden.
++            for name in ud.names:
++                ud.unresolvedrev[name] = 'HEAD'
  
-     if len(__residue__) != 0 and __residue__[0][0] == "#" and (not s or s[0] != "#"):
--        bb.fatal("There is a confusing multiline, partially commented expression on line %s of file %s (%s).\nPlease clarify whether this is all a comment or should be parsed." % (lineno, fn, s))
-+        bb.fatal("There is a confusing multiline partially commented expression on line %s of file %s:\n%s\nPlease clarify whether this is all a comment or should be parsed." % (lineno - len(__residue__), fn, "\n".join(__residue__)))
+         ud.basecmd = d.getVar("FETCHCMD_git") or "git -c core.fsyncobjectfiles=0"
  
-     if s and s[-1] == '\\':
-         __residue__.append(s[:-1])
-diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
-index 810b6011cf..451e68dd66 100644
---- a/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/lib/bb/parse/parse_py/ConfHandler.py
-@@ -125,16 +125,21 @@ def handle(fn, data, include):
-             s = f.readline()
-             if not s:
-                 break
-+            origlineno = lineno
-+            origline = s
-             w = s.strip()
-             # skip empty lines
-             if not w:
-                 continue
-             s = s.rstrip()
-             while s[-1] == '\\':
--                s2 = f.readline().rstrip()
-+                line = f.readline()
-+                origline += line
-+                s2 = line.rstrip()
-                 lineno = lineno + 1
-                 if (not s2 or s2 and s2[0] != "#") and s[0] == "#" :
--                    bb.fatal("There is a confusing multiline, partially commented expression on line %s of file %s (%s).\nPlease clarify whether this is all a comment or should be parsed." % (lineno, fn, s))
-+                    bb.fatal("There is a confusing multiline, partially commented expression starting on line %s of file %s:\n%s\nPlease clarify whether this is all a comment or should be parsed." % (origlineno, fn, origline))
-+
-                 s = s[:-1] + s2
-             # skip comments
-             if s[0] == '#':
-diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-index 2898f9bb14..1a3b74934d 100644
---- a/lib/bb/tests/parse.py
-+++ b/lib/bb/tests/parse.py
-@@ -194,3 +194,26 @@ deltask ${EMPTYVAR}
-         self.assertTrue('addtask ignored: " do_patch"' in stdout)
-         #self.assertTrue('dependent task do_foo for do_patch does not exist' in stdout)
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 301c4683..484fa582 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -650,6 +650,58 @@ class FetcherLocalTest(FetcherTest):
+         with self.assertRaises(bb.fetch2.UnpackError):
+             self.fetchUnpack(['file://a;subdir=/bin/sh'])
  
-+    broken_multiline_comment = """
-+# First line of comment \\
-+# Second line of comment \\
++    def test_local_gitfetch_usehead(self):
++        # Create dummy local Git repo
++        src_dir = tempfile.mkdtemp(dir=self.tempdir,
++                                   prefix='gitfetch_localusehead_')
++        src_dir = os.path.abspath(src_dir)
++        bb.process.run("git init", cwd=src_dir)
++        bb.process.run("git commit --allow-empty -m'Dummy commit'",
++                       cwd=src_dir)
++        # Use other branch than master
++        bb.process.run("git checkout -b my-devel", cwd=src_dir)
++        bb.process.run("git commit --allow-empty -m'Dummy commit 2'",
++                       cwd=src_dir)
++        stdout = bb.process.run("git rev-parse HEAD", cwd=src_dir)
++        orig_rev = stdout[0].strip()
 +
-+"""
-+    def test_parse_broken_multiline_comment(self):
-+        f = self.parsehelper(self.broken_multiline_comment)
-+        with self.assertRaises(bb.BBHandledException):
-+            d = bb.parse.handle(f.name, self.d)['']
++        # Fetch and check revision
++        self.d.setVar("SRCREV", "AUTOINC")
++        url = "git://" + src_dir + ";protocol=file;usehead=1"
++        fetcher = bb.fetch.Fetch([url], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++        stdout = bb.process.run("git rev-parse HEAD",
++                                cwd=os.path.join(self.unpackdir, 'git'))
++        unpack_rev = stdout[0].strip()
++        self.assertEqual(orig_rev, unpack_rev)
 +
++    def test_local_gitfetch_usehead_withname(self):
++        # Create dummy local Git repo
++        src_dir = tempfile.mkdtemp(dir=self.tempdir,
++                                   prefix='gitfetch_localusehead_')
++        src_dir = os.path.abspath(src_dir)
++        bb.process.run("git init", cwd=src_dir)
++        bb.process.run("git commit --allow-empty -m'Dummy commit'",
++                       cwd=src_dir)
++        # Use other branch than master
++        bb.process.run("git checkout -b my-devel", cwd=src_dir)
++        bb.process.run("git commit --allow-empty -m'Dummy commit 2'",
++                       cwd=src_dir)
++        stdout = bb.process.run("git rev-parse HEAD", cwd=src_dir)
++        orig_rev = stdout[0].strip()
 +
-+    comment_in_var = """
-+VAR = " \\
-+    SOMEVAL \\
-+#   some comment \\
-+    SOMEOTHERVAL \\
-+"
-+"""
-+    def test_parse_comment_in_var(self):
-+        f = self.parsehelper(self.comment_in_var)
-+        with self.assertRaises(bb.BBHandledException):
-+            d = bb.parse.handle(f.name, self.d)['']
++        # Fetch and check revision
++        self.d.setVar("SRCREV", "AUTOINC")
++        url = "git://" + src_dir + ";protocol=file;usehead=1;name=newName"
++        fetcher = bb.fetch.Fetch([url], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++        stdout = bb.process.run("git rev-parse HEAD",
++                                cwd=os.path.join(self.unpackdir, 'git'))
++        unpack_rev = stdout[0].strip()
++        self.assertEqual(orig_rev, unpack_rev)
 +
+ class FetcherNoNetworkTest(FetcherTest):
+     def setUp(self):
+         super().setUp()
 -- 
-2.34.1
+2.25.1
 
 
