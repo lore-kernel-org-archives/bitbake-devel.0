@@ -1,278 +1,210 @@
-Return-Path: <ptsneves@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570B6C43334
-	for <webhook@archiver.kernel.org>; Sat,  9 Jul 2022 11:22:46 +0000 (UTC)
-Subject: Re: [PATCH v3] runqueue: add cpu/io pressure regulation
-To: bitbake-devel@lists.openembedded.org
-From: "Paulo Neves" <ptsneves@gmail.com>
-X-Originating-Location: Szczecin, West Pomerania, PL (83.11.75.211)
-X-Originating-Platform: Linux Firefox 102
-User-Agent: GROUPS.IO Web Poster
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0053C433EF
+	for <webhook@archiver.kernel.org>; Sat,  9 Jul 2022 13:20:36 +0000 (UTC)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com
+ [209.85.218.46])
+ by mx.groups.io with SMTP id smtpd.web11.6230.1657372829481092928
+ for <bitbake-devel@lists.openembedded.org>;
+ Sat, 09 Jul 2022 06:20:29 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PaPhIcoL;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.218.46,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-ej1-f46.google.com with SMTP id mf4so705635ejc.3
+        for <bitbake-devel@lists.openembedded.org>;
+ Sat, 09 Jul 2022 06:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :content-transfer-encoding:user-agent:mime-version;
+        bh=z0OOn+zMD/zBEwV5+y9fVp/lf2fXtIWy9JHXUx12tSI=;
+        b=PaPhIcoLZY9rYbutwh/kiek+uRQjIFboy5zDupxi/nIyzN74izqf5puRDTtzG4bWYF
+         i3PHQd7QRkpHP9tf9s6UXqhZSRapcCuNrZQERsBrJQtGJjOi+tzufuvQw4nRIAskcdK4
+         deZuY1jDSEQZGAd2++zxgjWm67TDC04eQYuJw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:content-transfer-encoding:user-agent:mime-version;
+        bh=z0OOn+zMD/zBEwV5+y9fVp/lf2fXtIWy9JHXUx12tSI=;
+        b=clQRad/LiAKkxMfv9Rq13IhSGLTj+pswcun0+rxD2SAK30eWMLNP16JKPnHwQOs9qw
+         MpaZUb64qPSJIXck1S2PlsBBSPcpOMfxDHezrvPkj5i4ahjkHO8f1IXhH/gv+Fe6rpCb
+         sgxwp2ftj4LSKIhpgBJBm93TMM7NKW8kInZzZlVc7Sjp5PuNlVZly4XME6MXjSrJhKgh
+         cae7FE8R4U35C4Yd3fKQ5m7mO2APcAXO0MLsDBL7+zpO2WDuPqdslG6KZqHHILmW+Wzk
+         lqziePS/KXKbMYQFH2muiYfZio9MvScKG1JW0CD5e2s9vk+RNHxrECLS8ISFw7si+ib5
+         oOvw==
+X-Gm-Message-State: AJIora8AkO0R/IfvmkGGoRbmpELmKD2H7ZiIquhToOcySC+Non3bExsV
+	HLFp9MiInnugsVF0JHiFQeffyA==
+X-Google-Smtp-Source: 
+ AGRyM1vFMbyGW16an3XIYFdycIqJs0fmZNE4OGq+v5OrEuuszOhgDwEw41NMONMKHv5u0YZktttTtg==
+X-Received: by 2002:a17:907:b17:b0:72a:edb8:7529 with SMTP id
+ h23-20020a1709070b1700b0072aedb87529mr8714685ejl.749.1657372827602;
+        Sat, 09 Jul 2022 06:20:27 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:a5a8:564c:c2df:f45c?
+ ([2001:8b0:aba:5f3c:a5a8:564c:c2df:f45c])
+        by smtp.gmail.com with ESMTPSA id
+ lb7-20020a170907784700b0072b1738a1d7sm591633ejc.214.2022.07.09.06.20.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Jul 2022 06:20:26 -0700 (PDT)
+Message-ID: 
+ <bd23c5b5baedb0d3ebfcc9dc437260ab3b7e6d00.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 1/2] fetch2: local files only in DL_DIR
+ becomes fatal error
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Paulo Neves <ptsneves@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Date: Sat, 09 Jul 2022 14:20:25 +0100
+In-Reply-To: <a7dffab1-9b0c-fab8-a538-81c3d0065834@gmail.com>
+References: <20220708205407.1680137-1-ptsneves@gmail.com>
+	 <c677e1a7cedcd974e9ecd6b0bb4aefdcd240932f.camel@linuxfoundation.org>
+	 <CAJO0J4g4cyPLGEQ1s4v8cMk0RTgGKGtoh3GME=9Sx+D0KQLX3A@mail.gmail.com>
+	 <a7dffab1-9b0c-fab8-a538-81c3d0065834@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1-0ubuntu1 
 MIME-Version: 1.0
-Date: Sat, 09 Jul 2022 04:22:37 -0700
-References: <20220706205048.2492443-1-aryaman.gupta@windriver.com>
-In-Reply-To: <20220706205048.2492443-1-aryaman.gupta@windriver.com>
-Message-ID: <24475.1657365757702269187@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="amcnRzJkdlMPUSL9wmTw"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 09 Jul 2022 11:22:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13817
+ <bitbake-devel@lists.openembedded.org>; Sat, 09 Jul 2022 13:20:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13818
 
---amcnRzJkdlMPUSL9wmTw
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Sat, 2022-07-09 at 13:12 +0200, Paulo Neves wrote:
+> =C2=A0
+> =C2=A0
+> On 7/9/22 09:19, Paulo Neves wrote:
+> =C2=A0
+> > =C2=A0
+> >=20
+> > =C2=A0
+> > On Sat, Jul 9, 2022, 08:52 Richard Purdie
+> > <richard.purdie@linuxfoundation.org> wrote:
+> > =C2=A0
+> > > On Fri, 2022-07-08 at 22:54 +0200, Paulo Neves wrote:
+> > > =C2=A0> When trying to checksum local files, if a given file is not
+> > > found
+> > > =C2=A0> anywhere else than the DL_DIR then this means that the the
+> > > build is
+> > > =C2=A0> inconsistent, and unreproducible.
+> > > =C2=A0>=20
+> > > =C2=A0> This also means that if the DL_DIR is removed or not availabl=
+e
+> > > the
+> > > =C2=A0> build does not know how to fetch the file and will fail. With
+> > > this
+> > > =C2=A0> commit we fail earlier and consistently on this condition.
+> > > =C2=A0>=20
+> > > =C2=A0> Signed-off-by: Paulo Neves <ptsneves@gmail.com>
+> > > =C2=A0> ---
+> > > =C2=A0>=C2=A0 lib/bb/fetch2/__init__.py | 4 +++-
+> > > =C2=A0>=C2=A0 lib/bb/tests/fetch.py=C2=A0 =C2=A0 =C2=A0| 7 +++++++
+> > > =C2=A0>=C2=A0 2 files changed, 10 insertions(+), 1 deletion(-)
+> > > =C2=A0>=20
+> > > =C2=A0> diff --git a/lib/bb/fetch2/__init__.py
+> > > b/lib/bb/fetch2/__init__.py
+> > > =C2=A0> index ac557176..5f05278a 100644
+> > > =C2=A0> --- a/lib/bb/fetch2/__init__.py
+> > > =C2=A0> +++ b/lib/bb/fetch2/__init__.py
+> > > =C2=A0> @@ -1233,7 +1233,9 @@ def get_checksum_file_list(d):
+> > > =C2=A0>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ if f.startswith(dl_dir):
+> > > =C2=A0>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 # The local fetcher's behaviour is to
+> > > return a path under DL_DIR if it couldn't find the file anywhere
+> > > else
+> > > =C2=A0>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 if os.path.exists(f):
+> > > =C2=A0> -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn("Getting checksum for %s
+> > > SRC_URI entry %s: file not found except in DL_DIR" %
+> > > (d.getVar('PN'), os.path.basename(f)))
+> > > =C2=A0> +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 bb.fatal(("Getting checksum for %s
+> > > SRC_URI entry %s: file not found except in DL_DIR."
+> > > =C2=A0> +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 " This means there is no way to
+> > > get the file except for an orphaned copy"
+> > > =C2=A0> +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 " in DL_DIR.") % (d.getVar('PN'),
+> > > os.path.basename(f)))
+> > > =C2=A0>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 else:
+> > > =C2=A0>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn("Unable to get checksum for
+> > > %s SRC_URI entry %s: file could not be found" % (d.getVar('PN'),
+> > > os.path.basename(f)))
+> > > =C2=A0>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ filelist.append(f + ":" +
+> > > str(os.path.exists(f)))
+> > > =C2=A0
+> > > =C2=A0Did you manage to trigger that error in a real world use case?
+> > > =C2=A0
+> > > =C2=A0I've just been looking at this code and it is horribly old and
+> > > =C2=A0outdated. I can't help wonder if we shouldn't do something a bi=
+t
+> > > more
+> > > =C2=A0invasive to clean it up a bit more. I suspect it does some of
+> > > these
+> > > =C2=A0things for old/obsolete reasons...
+> > > =C2=A0
+> > > =C2=A0I ask since I'm wondering if anyone ever hits these code paths
+> > > in a
+> > > =C2=A0valid usecase.
+> > > =C2=A0
+> > > =C2=A0Thanks for working on it, we do need to improve some of these
+> > > things.
+> > > =C2=A0
+> > > =C2=A0Cheers,
+> > > =C2=A0
+> > > =C2=A0Richard
+> > >=20
+> >=20
+> > Hey Richard,=C2=A0
+> >=20
+> > I think these codepaths are hit on mostly on bugs(bad uri parsing)
+> > or bad files(bad permissions).
+> >=20
+> > The use case i added on the tests is also clearly bad, but I have
+> > seen builds going on for very long in the state of warning, which
+> > becomes fatal with the patch, because the dl_dir was stable and
+> > used by all users. So expect this patch to increase the reports of
+> > latent issues people just ignored.=C2=A0
+> >=20
+> > Yesterday I also hit this warning organically exactly on the
+> > situation of the test: a directory mentioned on the SRC_URI which
+> > did not exist in any FILESPATHS but somehow existed on the dl_dir.
+> > So it is real.=C2=A0
+> >=20
+> > I will investigate the whole default to dl_dir if not found and
+> > remove it if I cannot find a good reason.
+> >=20
+> > Paulo Neves=C2=A0
+> =C2=A0
+> =C2=A0I did some archeology trying to find why DL_DIR has anything to do
+> with the local fetcher and the reason probably comes from this[1] and
+> this[2]. The commit is about sstate cache and i think it considers
+> DL_DIR as valid mirror directory in agreement with
+> lib/bb/fetch2/README[2].=20
+> =C2=A0
+> =C2=A0The problem is that [3] from the same README "spec", is either
+> contradictory with with [2], senseless, or accurate depending on the
+> usage of the local file:// fetcher. For a SRC_URI file, what it is
+> senseless to search DL_DIR if we have the FILEPATHS? If it is not at
+> hand and only in the DL_DIR then it is irreproducible and contradicts
+> [3] (the case this patch argues for).
 
-On Wed, Jul 6, 2022 at 01:51 PM, Aryaman Gupta wrote:
+sstate.bbclass sets DL_DIR to SSTATE_DIR in the context of sstate
+downloads.=C2=A0It also puts SSTATE_DIR in FILESPATH which I suspect it did
+not back in 2011. I therefore suspect we now have a better fix for the
+issue as FILESPATH is set and the change from 2011 is now obsolete for
+sstate. Or I hope so anyway!
 
->=20
-> Stop the scheduler from starting new tasks if the current cpu or io
-> pressure is above a certain threshold and there is at least one active
-> task. This threshold can be specified through the
-> "BB_PRESSURE_MAX_SOME_{CPU|IO}" variables in conf/local.conf.
->=20
-> If the thresholds aren't specified, pressure is not monitored and hence
-> there is no impact on build times.
-> Arbitary lower limit of 1.0 results in a fatal error to avoid extremely
-> long builds. If the percentage limits are higher than 100, then the
-> vales are rounded down to 100 and warnings are issued to inform users
-> that the specified limit is out of bounds.
->=20
-> The current bitbake scheduling algorithm requires that at least one
-> task be active. This means that if high pressure is seen, then new tasks
-> will not be started and pressure will be checked only for as long as at
-> least one task is active. When there are no active tasks, an additional
-> task
-> will be started and pressure checking resumed. This behaviour means that
-> if an external source is causing the pressure to exceed the threshold,
-> bitbake will continue to make some progress towards the requested target.
-> This violates the intent of limiting pressure but, given the current
-> scheduling algorithm as described above, there seems to be no other
-> option.
-> In the case where only one bitbake build is running, the implications of
-> the scheduler requirement will likely result in pressure being higher
-> than the threshold. More work would be required to ensure that
-> the pressure threshold is never exceeded, for example adding pressure
-> monitoring to make/ninja.
->=20
-> Signed-off-by: Aryaman Gupta <aryaman.gupta@windriver.com>
-> Signed-off-by: Randy Macleod <randy.macleod@windriver.com>
-> ---
-> * Changes in V3:
-> - Ensure that there is always at least one active task before monitoring
-> pressure.
-> - Fix formatting issues and make code more Pythonic.
->=20
-> * Changes in V2:
-> - Replace subprocess() calls with open()
-> - Rename BB variables to BB_PRESSURE_MAX_SOME_{CPU|IO}
-> - Skip the checking of pressure when no value is provided.
->=20
-> bitbake/lib/bb/runqueue.py | 48 ++++++++++++++++++++++++++++++++++++++
-> 1 file changed, 48 insertions(+)
->=20
-> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-> index 1e47fe70ef..eb3bea07a9 100644
-> --- a/bitbake/lib/bb/runqueue.py
-> +++ b/bitbake/lib/bb/runqueue.py
-> @@ -159,6 +159,28 @@ class RunQueueScheduler(object):
-> self.buildable.append(tid)
->=20
-> self.rev_prio_map =3D None
-> + # Some hosts like openSUSE have readable /proc/pressure files but throw
-> errors when these files are opened
-> + # and can't actually be read so don't check pressure in that case.
-> + if self.rq.max_cpu_pressure or self.rq.max_io_pressure:
-> + try:
-> + with open("/proc/pressure/cpu") as cpu_pressure_fds,
-> open("/proc/pressure/io") as io_pressure_fds:
-> + cpu_pressure_fds.read()
-> + io_pressure_fds.read()
-> + self.check_pressure =3D True
-> + except:
-> + bb.warn("The /proc/pressure files can't be read. Continuing build
-> without monitoring pressure")
-> + self.check_pressure =3D False
-> + else:
-> + self.check_pressure =3D False
-> +
+Cheers,
 
-Can you extract the check into a standalone function returning a boolean? I=
-t would be more readable and maintainable.
+Richard
 
->=20
-> + def exceeds_max_pressure(self):
-> + if self.check_pressure:
-> + # Extract 'some avg10 percent values' from /proc/pressure/{cpu|io}
-> + with open("/proc/pressure/cpu") as cpu_pressure_fds,
-> open("/proc/pressure/io") as io_pressure_fds:
-> + curr_cpu_pressure =3D cpu_pressure_fds.readline().split()[1].split("=3D=
-")[1]
->=20
-> + curr_io_pressure =3D io_pressure_fds.readline().split()[1].split("=3D")=
-[1]
-> + return float(curr_cpu_pressure) > self.rq.max_cpu_pressure or
-> float(curr_io_pressure) > self.rq.max_io_pressure
-> + return False
->=20
-> def next_buildable_task(self):
-> """
-> @@ -172,6 +194,12 @@ class RunQueueScheduler(object):
-> if not buildable:
-> return None
->=20
-> + # Bitbake requires that at least one task be active. Only check for
-> pressure if
-> + # this is the case, otherwise the pressure limitation could result in n=
-o
-> tasks
-> + # being active and no new tasks started.
-> + if self.rq.stats.active and self.exceeds_max_pressure():
-> + return None
-> +
-> # Filter out tasks that have a max number of threads that have been
-> exceeded
-> skip_buildable =3D {}
-> for running in self.rq.runq_running.difference(self.rq.runq_complete):
-> @@ -1699,6 +1727,8 @@ class RunQueueExecute:
->=20
-> self.number_tasks =3D int(self.cfgData.getVar("BB_NUMBER_THREADS") or 1)
-> self.scheduler =3D self.cfgData.getVar("BB_SCHEDULER") or "speed"
-> + self.max_cpu_pressure =3D self.cfgData.getVar("BB_PRESSURE_MAX_SOME_CPU=
-")
-> + self.max_io_pressure =3D self.cfgData.getVar("BB_PRESSURE_MAX_SOME_IO")
->=20
-> self.sq_buildable =3D set()
-> self.sq_running =3D set()
-> @@ -1733,6 +1763,24 @@ class RunQueueExecute:
-> if self.number_tasks <=3D 0:
-> bb.fatal("Invalid BB_NUMBER_THREADS %s" % self.number_tasks)
->=20
-> + lower_limit =3D 1.0
-> + upper_limit =3D 100.0
-> + if self.max_cpu_pressure:
-> + self.max_cpu_pressure =3D float(self.max_cpu_pressure)
-> + if self.max_cpu_pressure < lower_limit:
-> + bb.fatal("Invalid BB_PRESSURE_MAX_SOME_CPU %s, minimum value is %s" %
-> (self.max_cpu_pressure, lower_limit))
-> + if self.max_cpu_pressure > upper_limit:
-> + bb.warn("Percentage value of BB_PRESSURE_MAX_SOME_CPU %s rounded down t=
-o
-> %s" % (self.max_cpu_pressure, upper_limit))
-> + self.max_cpu_pressure =3D upper_limit
-> +
-> + if self.max_io_pressure:
-> + self.max_io_pressure =3D float(self.max_io_pressure)
-> + if self.max_io_pressure < lower_limit:
-> + bb.fatal("Invalid BB_PRESSURE_MAX_SOME_IO %s, minimum value is %s" %
-> (self.max_io_pressure, lower_limit))
-> + if self.max_io_pressure > upper_limit:
-> + bb.warn("Percentage value of BB_PRESSURE_MAX_SOME_IO %s rounded down to
-> %s" % (self.max_io_pressure, upper_limit))
-> + self.max_io_pressure =3D upper_limit
-> +
-> # List of setscene tasks which we've covered
-> self.scenequeue_covered =3D set()
-> # List of tasks which are covered (including setscene ones)
-> --
-> 2.35.1
 
---amcnRzJkdlMPUSL9wmTw
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 6, 2022 at 01:51 PM, Aryaman Gupta wrote:<br />
-<blockquote>Stop the scheduler from starting new tasks if the current cpu o=
-r io<br />pressure is above a certain threshold and there is at least one a=
-ctive<br />task. This threshold can be specified through the<br />"BB_PRESS=
-URE_MAX_SOME_{CPU|IO}" variables in conf/local.conf.<br /><br />If the thre=
-sholds aren't specified, pressure is not monitored and hence<br />there is =
-no impact on build times.<br />Arbitary lower limit of 1.0 results in a fat=
-al error to avoid extremely<br />long builds. If the percentage limits are =
-higher than 100, then the<br />vales are rounded down to 100 and warnings a=
-re issued to inform users<br />that the specified limit is out of bounds.<b=
-r /><br />The current bitbake scheduling algorithm requires that at least o=
-ne<br />task be active. This means that if high pressure is seen, then new =
-tasks<br />will not be started and pressure will be checked only for as lon=
-g as at<br />least one task is active. When there are no active tasks, an a=
-dditional task<br />will be started and pressure checking resumed. This beh=
-aviour means that<br />if an external source is causing the pressure to exc=
-eed the threshold,<br />bitbake will continue to make some progress towards=
- the requested target.<br />This violates the intent of limiting pressure b=
-ut, given the current<br />scheduling algorithm as described above, there s=
-eems to be no other option.<br />In the case where only one bitbake build i=
-s running, the implications of<br />the scheduler requirement will likely r=
-esult in pressure being higher<br />than the threshold. More work would be =
-required to ensure that<br />the pressure threshold is never exceeded, for =
-example adding pressure<br />monitoring to make/ninja.<br /><br />Signed-of=
-f-by: Aryaman Gupta &lt;aryaman.gupta@windriver.com&gt;<br />Signed-off-by:=
- Randy Macleod &lt;randy.macleod@windriver.com&gt;<br />---<br />* Changes =
-in V3:<br />- Ensure that there is always at least one active task before m=
-onitoring<br />pressure.<br />- Fix formatting issues and make code more Py=
-thonic.<br /><br />* Changes in V2:<br />- Replace subprocess() calls with =
-open()<br />- Rename BB variables to BB_PRESSURE_MAX_SOME_{CPU|IO}<br />- S=
-kip the checking of pressure when no value is provided.<br /><br />bitbake/=
-lib/bb/runqueue.py | 48 ++++++++++++++++++++++++++++++++++++++<br />1 file =
-changed, 48 insertions(+)<br /><br />diff --git a/bitbake/lib/bb/runqueue.p=
-y b/bitbake/lib/bb/runqueue.py<br />index 1e47fe70ef..eb3bea07a9 100644<br =
-/>--- a/bitbake/lib/bb/runqueue.py<br />+++ b/bitbake/lib/bb/runqueue.py<br=
- />@@ -159,6 +159,28 @@ class RunQueueScheduler(object):<br />self.buildabl=
-e.append(tid)<br /><br />self.rev_prio_map =3D None<br />+ # Some hosts lik=
-e openSUSE have readable /proc/pressure files but throw errors when these f=
-iles are opened<br />+ # and can't actually be read so don't check pressure=
- in that case.<br />+ if self.rq.max_cpu_pressure or self.rq.max_io_pressur=
-e:<br />+ try:<br />+ with open("/proc/pressure/cpu") as cpu_pressure_fds, =
-open("/proc/pressure/io") as io_pressure_fds:<br />+ cpu_pressure_fds.read(=
-)<br />+ io_pressure_fds.read()<br />+ self.check_pressure =3D True<br />+ =
-except:<br />+ bb.warn("The /proc/pressure files can't be read. Continuing =
-build without monitoring pressure")<br />+ self.check_pressure =3D False<br=
- />+ else:<br />+ self.check_pressure =3D False<br />+</blockquote>
-Can you extract the check into a standalone function returning a boolean? I=
-t would be more readable and maintainable.<br /><br />
-<blockquote>+ def exceeds_max_pressure(self):<br />+ if self.check_pressure=
-:<br />+ # Extract 'some avg10 percent values' from /proc/pressure/{cpu|io}=
-<br />+ with open("/proc/pressure/cpu") as cpu_pressure_fds, open("/proc/pr=
-essure/io") as io_pressure_fds:<br />+ curr_cpu_pressure =3D cpu_pressure_f=
-ds.readline().split()[1].split("=3D")[1]<br />+ curr_io_pressure =3D io_pre=
-ssure_fds.readline().split()[1].split("=3D")[1]<br />+ return float(curr_cp=
-u_pressure) &gt; self.rq.max_cpu_pressure or float(curr_io_pressure) &gt; s=
-elf.rq.max_io_pressure<br />+ return False<br /><br />def next_buildable_ta=
-sk(self):<br />"""<br />@@ -172,6 +194,12 @@ class RunQueueScheduler(object=
-):<br />if not buildable:<br />return None<br /><br />+ # Bitbake requires =
-that at least one task be active. Only check for pressure if<br />+ # this =
-is the case, otherwise the pressure limitation could result in no tasks<br =
-/>+ # being active and no new tasks started.<br />+ if self.rq.stats.active=
- and self.exceeds_max_pressure():<br />+ return None<br />+<br /># Filter o=
-ut tasks that have a max number of threads that have been exceeded<br />ski=
-p_buildable =3D {}<br />for running in self.rq.runq_running.difference(self=
-.rq.runq_complete):<br />@@ -1699,6 +1727,8 @@ class RunQueueExecute:<br />=
-<br />self.number_tasks =3D int(self.cfgData.getVar("BB_NUMBER_THREADS") or=
- 1)<br />self.scheduler =3D self.cfgData.getVar("BB_SCHEDULER") or "speed"<=
-br />+ self.max_cpu_pressure =3D self.cfgData.getVar("BB_PRESSURE_MAX_SOME_=
-CPU")<br />+ self.max_io_pressure =3D self.cfgData.getVar("BB_PRESSURE_MAX_=
-SOME_IO")<br /><br />self.sq_buildable =3D set()<br />self.sq_running =3D s=
-et()<br />@@ -1733,6 +1763,24 @@ class RunQueueExecute:<br />if self.number=
-_tasks &lt;=3D 0:<br />bb.fatal("Invalid BB_NUMBER_THREADS %s" % self.numbe=
-r_tasks)<br /><br />+ lower_limit =3D 1.0<br />+ upper_limit =3D 100.0<br /=
->+ if self.max_cpu_pressure:<br />+ self.max_cpu_pressure =3D float(self.ma=
-x_cpu_pressure)<br />+ if self.max_cpu_pressure &lt; lower_limit:<br />+ bb=
-.fatal("Invalid BB_PRESSURE_MAX_SOME_CPU %s, minimum value is %s" % (self.m=
-ax_cpu_pressure, lower_limit))<br />+ if self.max_cpu_pressure &gt; upper_l=
-imit:<br />+ bb.warn("Percentage value of BB_PRESSURE_MAX_SOME_CPU %s round=
-ed down to %s" % (self.max_cpu_pressure, upper_limit))<br />+ self.max_cpu_=
-pressure =3D upper_limit<br />+<br />+ if self.max_io_pressure:<br />+ self=
-.max_io_pressure =3D float(self.max_io_pressure)<br />+ if self.max_io_pres=
-sure &lt; lower_limit:<br />+ bb.fatal("Invalid BB_PRESSURE_MAX_SOME_IO %s,=
- minimum value is %s" % (self.max_io_pressure, lower_limit))<br />+ if self=
-.max_io_pressure &gt; upper_limit:<br />+ bb.warn("Percentage value of BB_P=
-RESSURE_MAX_SOME_IO %s rounded down to %s" % (self.max_io_pressure, upper_l=
-imit))<br />+ self.max_io_pressure =3D upper_limit<br />+<br /># List of se=
-tscene tasks which we've covered<br />self.scenequeue_covered =3D set()<br =
-/># List of tasks which are covered (including setscene ones)<br />-- <br /=
->2.35.1</blockquote>
-
---amcnRzJkdlMPUSL9wmTw--
 
