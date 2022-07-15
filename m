@@ -2,65 +2,67 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E82C43334
-	for <webhook@archiver.kernel.org>; Thu, 14 Jul 2022 12:45:01 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com
- [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web09.7024.1657802699060070270
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2F1CCA47C
+	for <webhook@archiver.kernel.org>; Fri, 15 Jul 2022 11:21:35 +0000 (UTC)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com
+ [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web08.5232.1657884086350652840
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 Jul 2022 05:44:59 -0700
+ Fri, 15 Jul 2022 04:21:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=BVc5/emo;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47,
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Ll+bJKEs;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52,
  mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f47.google.com with SMTP id bu1so2387179wrb.9
+Received: by mail-wr1-f52.google.com with SMTP id e15so1072561wro.5
         for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 Jul 2022 05:44:58 -0700 (PDT)
+ Fri, 15 Jul 2022 04:21:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=OnJSUGaqYgPCVJr/f9Gw0DA4pHyD99fYNe49FD4vF5g=;
-        b=BVc5/emoqC5IpmcuBRiubDbBIHBhCtagZ1GqdkbiGnvAPCnwTUhol5hjHuDUniR5ad
-         3OkMknr/3nS9b1KMc8Pk99/u+os+LjsrzUJ80u+42HclcjWRzIRfx5vFpPundIoAqT4G
-         7YxqsU/kHuGRf0XeEQOUYRl/Tkq/pqiUyC+e0=
+        bh=ZhL6h3Z5+w5gQ/KEqCmTAYJtyzaisSZbUi6tSfQEF6M=;
+        b=Ll+bJKEsSB/jIu1RkMHLHrZ/ZeAsRCQ+UJ4t7K9qewr+bt9tvQevuWVBuCsG8EQtoW
+         x/i/3MgE+KgsoX6Fqum3CaTOsBCOwm15c8xSn3VLaeLEB+GKL7EYfy4onD0k+MlsTiUI
+         VWzg3Np0f9IOxhUvTaMI1EW0gnSqEeDzTikFg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OnJSUGaqYgPCVJr/f9Gw0DA4pHyD99fYNe49FD4vF5g=;
-        b=SMu6yN7dnR2zqL2DnqimCJazDxzKm9ullkZiTM3toMS47AJYsDMt+am90ZJaWP6ByP
-         AQor7ZvqK/lfOyG88Xkrx5CwTMD2VX3vMtLebIZ829QlJxsknxZr739bPyk0NvXQAc3I
-         9+qM5zGYNurmLtrza3JjyKoVVhza+KrgLBtbq+W6C7Ht11iQk/3TV/MoRuVYbWSrPnbR
-         z7mqJ+eBM7A41x5mmfk3m7V3FEtUDGWKTP+NzzcTzzv5AjE4yrN60uveSGQ9myx9G3L9
-         Jc2ry3q4OgHPlmffSL2r0nCvTbs7ROCrwrrN21i7ziChXEp//bylygNkMpwpe9Y0Nrss
-         ysEQ==
-X-Gm-Message-State: AJIora8sU4VdPLRgPv9IxjTmXNVNO062aDnNgExBOGWiL9Te09v7x0uM
-	8S2geTQQRl+PG4FUFVgrOgZPfikkCx5L2Q==
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZhL6h3Z5+w5gQ/KEqCmTAYJtyzaisSZbUi6tSfQEF6M=;
+        b=ilfWcdeggWH5n0o0X4+rePEzm22l5SwWR9gEE3JEW6Yzr1V69ljvf3b4vnvz1+7klU
+         plxXrGP0rkPMNNnJGBd/QZAyRjxKLvGbscJbe1m3djXyvtaH7buHQT+YUktNUELqXCxi
+         q1Ntg8rjGA7IceqgEWEZWNWWVcc6Cai+ciSwwi8WVbXNbRACMo5KJpulcR0CGQZMqyS/
+         sN3eqJLokQs3dTJh6KPBfB/ZxfKnKCdW/ICNIk4w3BmDYEYxQqHMY6g2wQN6TTeLfu5u
+         rO05Q3pFFde/OuUEexAXpTxnLLm9nJGvWJR2cOUwE92AfE+uU/N5VBjZtgCb+NI+jMhX
+         W/DA==
+X-Gm-Message-State: AJIora/pzz62IkmKSW4BuV3eNRzhef3jEVAR7kcQY7pfVNbl8W7FD5i1
+	NqjPp9MulxGD4BCx8fyor+n9/nmH0p9wfw==
 X-Google-Smtp-Source: 
- AGRyM1siJrykLmzwbPY/uXnbjebS+al+i1tB5dPXg08y4ki4QLF83Jxh5Dl7ntdIbKfBqxb89QHVLw==
-X-Received: by 2002:a5d:404f:0:b0:21d:b690:92a0 with SMTP id
- w15-20020a5d404f000000b0021db69092a0mr8473756wrp.436.1657802697089;
-        Thu, 14 Jul 2022 05:44:57 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:c037:3be3:5ea0:9a64])
+ AGRyM1u/IA5Wy5ZftfRftOeVE6vxkEv8Ww/gfefK38A+gMOd7PI4Qlmy52CjbnbrDBEf3pLaC9AsiQ==
+X-Received: by 2002:a05:6000:249:b0:21d:a952:31f1 with SMTP id
+ m9-20020a056000024900b0021da95231f1mr12581069wrz.411.1657884084478;
+        Fri, 15 Jul 2022 04:21:24 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:ef6a:f831:81f1:d696])
         by smtp.gmail.com with ESMTPSA id
- z18-20020a5d4c92000000b0021d6d18a9f8sm1389087wrs.76.2022.07.14.05.44.56
+ d15-20020adffbcf000000b0020fff0ea0a3sm3628229wrs.116.2022.07.15.04.21.23
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 05:44:56 -0700 (PDT)
+        Fri, 15 Jul 2022 04:21:23 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch2: Ensure directory exists before creating symlink
-Date: Thu, 14 Jul 2022 13:44:55 +0100
-Message-Id: <20220714124455.505815-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/2] fetch2: Ensure directory exists before creating symlink
+Date: Fri, 15 Jul 2022 12:21:22 +0100
+Message-Id: <20220715112122.634528-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220715112122.634528-1-richard.purdie@linuxfoundation.org>
+References: <20220715112122.634528-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 14 Jul 2022 12:45:01 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13828
+ <bitbake-devel@lists.openembedded.org>; Fri, 15 Jul 2022 11:21:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13830
 
 If the mirrors code is trying to create a symlink and the
 parent directory doesn't exist, as might be the case for sstate
@@ -74,7 +76,7 @@ Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index f9c23681bc..e20d19ce4a 100644
+index 3eda9bbe70..0fb718b23e 100644
 --- a/lib/bb/fetch2/__init__.py
 +++ b/lib/bb/fetch2/__init__.py
 @@ -1097,6 +1097,8 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
