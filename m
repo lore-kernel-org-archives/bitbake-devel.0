@@ -1,134 +1,104 @@
-Return-Path: <quaresma.jose@gmail.com>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FB8C433EF
-	for <webhook@archiver.kernel.org>; Tue, 19 Jul 2022 09:40:18 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
- [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web10.38795.1658223616863173365
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87CDC433EF
+	for <webhook@archiver.kernel.org>; Tue, 19 Jul 2022 18:37:10 +0000 (UTC)
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com
+ [209.85.210.49])
+ by mx.groups.io with SMTP id smtpd.web12.44444.1658255821547066600
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 19 Jul 2022 02:40:17 -0700
+ Tue, 19 Jul 2022 11:37:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=XPUWRkCx;
- spf=pass (domain: gmail.com, ip: 209.85.221.44,
- mailfrom: quaresma.jose@gmail.com)
-Received: by mail-wr1-f44.google.com with SMTP id bk26so20704030wrb.11
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=djQ+FXwB;
+ spf=pass (domain: gmail.com, ip: 209.85.210.49,
+ mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f49.google.com with SMTP id
+ cb12-20020a056830618c00b00616b871cef3so12371591otb.5
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 19 Jul 2022 02:40:16 -0700 (PDT)
+ Tue, 19 Jul 2022 11:37:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gWaC/E9QE6poNXDo5KxJ4ByrIOqHoDXgktyuUInmiyU=;
-        b=XPUWRkCxTGKsbQ9ekTc3+s85ZIFdXExuGgCiRb3D1oNZbIKCw/G+iN6U+f8fLKbxj5
-         bj7HdH18NYbJ1LY/Nl8IYOLg4OBcLyxqkKDMYvcMIgReppFbn7of/cQumYpjpNVoeyNk
-         +TdmCoYGYG2xNLXUD8ZzquhMA1zkjMzqKW4+Zv48TvgREOuqeQQgl/VPl9SVJrbD3UuN
-         +0Eqz02B/d03yIKzJFlYbVtwJIc1zIpMEPcXZTCqjPpeRcTjm63FMebQnohr3+lg87Dh
-         u8LNjGOYB9TT8IFVlyF+YCRJT+S26e2Zur8EReXRdl0pYf1WcZaI7SomSwKaHc5QuSps
-         LMiQ==
+        bh=GDVCJrh2sx1K7rwvW8hMLrjDsLUbMcZP8uZQt90UUUs=;
+        b=djQ+FXwB9qy4c4Qop5LTjJGlhNQUvKPpt20fXbczQBQQMKSaQVq6himg34EwNn/AhV
+         0o6G6GRyAqRYJTUonRAeBzXSG6jox8sgu1Q/RRjKx6Kq0nm/+PhdAlyVldj+ePrs0iEP
+         laJTmBaPIYPR79KxMzFECGOJQIT4XsDs0XA5+Yuvy9Rxfpy9EIUBOsSKBDVQZ23SR6fB
+         DvnLgUSCeVaosjPNJva9XiRRgxXkwQOKvZpVs4QSNeRlKyzphNGfMtUEDHkQ97ONDujb
+         p5NOazYIUdrHIxKeXSeXH2lCuhnZ6v+rER4OMtZ6SRqs14WhVpe0Djxlei8okEK7iEoW
+         VZnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gWaC/E9QE6poNXDo5KxJ4ByrIOqHoDXgktyuUInmiyU=;
-        b=UJ+3OfelVWBixjZA1EJ7+DcJcP4xOFFSnlSuZtHextHoLCR8jBCWgY2fSZvF75NyIa
-         bzNO0+mEUYk5pcaIAbcZPeu3xCuMQNgBxbiZ3v7z/xthIuu93/vVAcFl/d3ehfVqdrmN
-         Ve0OIbdRdOd3Li5M3zoTeZijVuj37uHzG5okjS5yNfwyxMm+TiTR/T2brYzB1kf5ikIv
-         4Nifjbp/36IQA9w5M3WrSah0HipTOqxK16/TA/L5ORZz8WWFPFnfVQTZUtOxKTJ2J7il
-         e2gNSpqn+VJ4rJlCFjoQht2Q2pxKlWGxPldofPPRT1eMfQ5JwurPJ5sfH3V0MSsnknG3
-         1yWA==
-X-Gm-Message-State: AJIora/Y9pwKCf0Ys4/ZCrQDwnYa7tWuICHzkuB5ZbX/ocuVkCkA8YRI
-	Vqs1pOF+o78gCy9NhrdXHk+L0J2xKzI=
+        bh=GDVCJrh2sx1K7rwvW8hMLrjDsLUbMcZP8uZQt90UUUs=;
+        b=DroAKehF8KAneXAAd44zE0p0XKAPtVAFknpVWAmTrj/8CTUdLnONx3RMxwT9t7hqAR
+         LhZm65ccISEpvO2LwI8veMCX8ZrUtnMlLjjgysWX8PovhZB1nadbjNCJ2EgqTFlGA2Cp
+         0tuaU9p/Y/DT10gpOUU+YUyus6MFCkivhL19Nr+FkButz9Dh9lagC4/uP+qZLA4rXWIm
+         Bq+Ln9Gh8nX2sIeuW/o8T82Tr/NplKiBIEsx5sOUnMlOGZf4YpQjZd6flHUpt9W1j4q1
+         hGA+2X2t7BinLaZuFyB848AW1BVI3jC1UMvaA6WBPhkvzepiXM919AEY+pl5VJp6jShB
+         P6fg==
+X-Gm-Message-State: AJIora+S3ZMAHheX/Byl8s+nnmZ5LuLl+kPqJfpMDcDOujzW+SqEfU/t
+	vy3045mmEGRQfsfIhnqsEunjCRVbPiEqBA==
 X-Google-Smtp-Source: 
- AGRyM1vTvea07q5F5MNdt3glq/TJ6l6vEImrjixEk5SCP/+yMuoYLlAI/jCvhGnaIj+P6JuBur25FQ==
-X-Received: by 2002:a5d:5846:0:b0:21d:a98a:b236 with SMTP id
- i6-20020a5d5846000000b0021da98ab236mr26405715wrf.674.1658223614963;
-        Tue, 19 Jul 2022 02:40:14 -0700 (PDT)
-Received: from fio.lan (176.57.115.89.rev.vodafone.pt. [89.115.57.176])
+ AGRyM1v3u6hElCLMVxM2l4FFk9jU63AGllcdSnGTQ75ugGDu6uWTm0Ez6Dx9C2StOl22h6DHtBOAwQ==
+X-Received: by 2002:a9d:dc5:0:b0:61c:b51b:3db4 with SMTP id
+ 63-20020a9d0dc5000000b0061cb51b3db4mr1687037ots.301.1658255820443;
+        Tue, 19 Jul 2022 11:37:00 -0700 (PDT)
+Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
         by smtp.gmail.com with ESMTPSA id
- t8-20020a5d49c8000000b0021e37fd6f32sm1290063wrs.112.2022.07.19.02.40.14
+ ca23-20020a056830611700b0061c7adb4006sm6371487otb.13.2022.07.19.11.36.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Jul 2022 02:40:14 -0700 (PDT)
-From: Jose Quaresma <quaresma.jose@gmail.com>
-X-Google-Original-From: Jose Quaresma <jose.quaresma@foundries.io>
+        Tue, 19 Jul 2022 11:36:59 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Jose Quaresma <jose.quaresma@foundries.io>
-Subject: [bitbake-devel][PATCH] bb/utils: movefile: use the logger for
- printing
-Date: Tue, 19 Jul 2022 10:40:11 +0100
-Message-Id: <20220719094011.91956-1-jose.quaresma@foundries.io>
-X-Mailer: git-send-email 2.37.1
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] asyncrpc: Add TCP Keep Alives
+Date: Tue, 19 Jul 2022 13:36:53 -0500
+Message-Id: <20220719183653.804775-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 19 Jul 2022 09:40:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13833
+ <bitbake-devel@lists.openembedded.org>; Tue, 19 Jul 2022 18:37:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13834
 
-Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
+Adds TCP Keep Alive support to the async RPC server. This should help
+prevent file descriptor exhaustion on the server when client connections
+are interrupted and the socket never closes (e.g. no FIN is sent from
+the client).
+
+A keep alive is sent after 30 seconds of inactivity, then every 15
+seconds after that up to a maximum of 2 minutes.
+
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/utils.py | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ bitbake/lib/bb/asyncrpc/serv.py | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index d11da978..3abc4938 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -751,7 +751,7 @@ def movefile(src, dest, newmtime = None, sstat = None):
-         if not sstat:
-             sstat = os.lstat(src)
-     except Exception as e:
--        print("movefile: Stating source file failed...", e)
-+        logger.warning("movefile: Stating source file failed...", e)
-         return None
+diff --git a/bitbake/lib/bb/asyncrpc/serv.py b/bitbake/lib/bb/asyncrpc/serv.py
+index b4cffff213..585bc121da 100644
+--- a/bitbake/lib/bb/asyncrpc/serv.py
++++ b/bitbake/lib/bb/asyncrpc/serv.py
+@@ -151,6 +151,13 @@ class AsyncServer(object):
+                 s.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
+                 s.setsockopt(socket.SOL_TCP, socket.TCP_QUICKACK, 1)
  
-     destexists = 1
-@@ -779,7 +779,7 @@ def movefile(src, dest, newmtime = None, sstat = None):
-             os.unlink(src)
-             return os.lstat(dest)
-         except Exception as e:
--            print("movefile: failed to properly create symlink:", dest, "->", target, e)
-+            logger.warning("movefile: failed to properly create symlink:", dest, "->", target, e)
-             return None
- 
-     renamefailed = 1
-@@ -796,7 +796,7 @@ def movefile(src, dest, newmtime = None, sstat = None):
-         except Exception as e:
-             if e.errno != errno.EXDEV:
-                 # Some random error.
--                print("movefile: Failed to move", src, "to", dest, e)
-+                logger.warning("movefile: Failed to move", src, "to", dest, e)
-                 return None
-             # Invalid cross-device-link 'bind' mounted or actually Cross-Device
- 
-@@ -808,13 +808,13 @@ def movefile(src, dest, newmtime = None, sstat = None):
-                 bb.utils.rename(destpath + "#new", destpath)
-                 didcopy = 1
-             except Exception as e:
--                print('movefile: copy', src, '->', dest, 'failed.', e)
-+                logger.warning('movefile: copy', src, '->', dest, 'failed.', e)
-                 return None
-         else:
-             #we don't yet handle special, so we need to fall back to /bin/mv
-             a = getstatusoutput("/bin/mv -f " + "'" + src + "' '" + dest + "'")
-             if a[0] != 0:
--                print("movefile: Failed to move special file:" + src + "' to '" + dest + "'", a)
-+                logger.warning("movefile: Failed to move special file:" + src + "' to '" + dest + "'", a)
-                 return None # failure
-         try:
-             if didcopy:
-@@ -822,7 +822,7 @@ def movefile(src, dest, newmtime = None, sstat = None):
-                 os.chmod(destpath, stat.S_IMODE(sstat[stat.ST_MODE])) # Sticky is reset on chown
-                 os.unlink(src)
-         except Exception as e:
--            print("movefile: Failed to chown/chmod/unlink", dest, e)
-+            logger.warning("movefile: Failed to chown/chmod/unlink", dest, e)
-             return None
- 
-     if newmtime:
++                # Enable keep alives. This prevents broken client connections
++                # from persisting on the server for long periods of time.
++                s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
++                s.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 30)
++                s.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 15)
++                s.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 4)
++
+             name = self.server.sockets[0].getsockname()
+             if self.server.sockets[0].family == socket.AF_INET6:
+                 self.address = "[%s]:%d" % (name[0], name[1])
 -- 
-2.37.1
+2.33.0
 
 
