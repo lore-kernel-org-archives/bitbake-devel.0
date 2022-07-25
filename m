@@ -1,208 +1,136 @@
-Return-Path: <quentin.schulz@theobroma-systems.com>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54742CCA473
-	for <webhook@archiver.kernel.org>; Mon, 25 Jul 2022 11:48:07 +0000 (UTC)
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com
- (EUR04-HE1-obe.outbound.protection.outlook.com [40.107.7.89])
- by mx.groups.io with SMTP id smtpd.web11.26982.1658749677513940104
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60147C433EF
+	for <webhook@archiver.kernel.org>; Mon, 25 Jul 2022 11:53:57 +0000 (UTC)
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web08.27196.1658750035624461835
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 25 Jul 2022 04:47:58 -0700
+ Mon, 25 Jul 2022 04:53:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cherrycloud.onmicrosoft.com
- header.s=selector2-cherrycloud-onmicrosoft-com header.b=pQ90khG7;
- spf=pass (domain: theobroma-systems.com, ip: 40.107.7.89,
- mailfrom: quentin.schulz@theobroma-systems.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=br6JswiRkp1RJYT7s+cP64vjy6kt/zKXEXOYshPL27673IH0V1aAydu5JL7epNO6qctk0SuPCqGxeVIWlVnrVPZuDsSDmLbt9Jcwxvhl95vEz/s2thd9sANrafcxkgM+rB3ypYJXrQoP2owCjn0E5HiNgPnFPxkz60J52zF+TYTCW98EgNhC0qHUEyBYQHU/WdNSf7PTiWLBxnC/CcdR3TXTgjNezBlkq6giWB9C5TfDbgmrqopexVRghB47V1P/r9aksycub3ljlwVeb3Tta98k9ZtfETjVV/LWPRY8oTorZo5x50UXPF+8QgW/JP6xV7TvSvrT3s9BUL+raJfvwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Fc7XfYXQYK2UHyn8H48EbZpGYiQwoo4t9Ns85W326Es=;
- b=YBNGPGjrxAc3KtBRhdUGJOWiIXMxiuyoPPrFg2YSNxhGfGV1VtBoUN7mYnRx/X/qm/e+X3fSKBiIpbnpcvYTi0wTVPdItioyWf2iBDhSVi5KwiFxiycXrGZe+6BGySrJRDAidztalUWB5+Fba0espwPj9nyunumoJrTHvAZvlX+Cl5Y5jBatgY12NcdhVmGveQlO1OqNTuqaFfQOrmz7GNQWbYABqOMLHGuZnR7jfEjj75/2POqLvusJEj/Z29/K2R8zB6tfLJZsMjxHIvkqWRWMUAmsD1EmqxqMZLfJ7TuKWlXI3qR3RvYDyxt03d9M63IwTc6R8fvsVrzlPkIt5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
- header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
- arc=none
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=pdkGMJci;
+ spf=pass (domain: axis.com, ip: 195.60.68.17,
+ mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cherrycloud.onmicrosoft.com; s=selector2-cherrycloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fc7XfYXQYK2UHyn8H48EbZpGYiQwoo4t9Ns85W326Es=;
- b=pQ90khG7OOj87LTdujFOxWG/14qlTi2uV0oPbroqlHlHfCPbhaU/12D7vav0KPW3GZMl0nSyZF40fz+Pnp4XXLmkaksz01n/i8C1OS4rVhjLA/XuHkRMHCaYPuZMm8p61qEM6OwK2afuppoUBuq0jmFRQ2c7ouS0hkmNKlgJFwU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
-Received: from PA4PR04MB9367.eurprd04.prod.outlook.com (2603:10a6:102:2aa::7)
- by PAXPR04MB8269.eurprd04.prod.outlook.com (2603:10a6:102:1c4::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.24; Mon, 25 Jul
- 2022 11:47:54 +0000
-Received: from PA4PR04MB9367.eurprd04.prod.outlook.com
- ([fe80::5c3:766e:66e9:8c4]) by PA4PR04MB9367.eurprd04.prod.outlook.com
- ([fe80::5c3:766e:66e9:8c4%9]) with mapi id 15.20.5458.023; Mon, 25 Jul 2022
- 11:47:53 +0000
-Message-ID: <0897938e-df44-2c3d-95ce-ca7474b1c810@theobroma-systems.com>
-Date: Mon, 25 Jul 2022 13:47:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [bitbake-devel] [PATCH v2] bitbake-user-manual: Document override
- :append, :prepend, :remove order
-Content-Language: en-US
-To: Marek Vasut <marex@denx.de>, bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org, Quentin Schulz <foss+yocto@0leil.net>,
- Martin Jansa <martin.jansa@gmail.com>,
- Richard Purdie <richard.purdie@linuxfoundation.org>
+  d=axis.com; q=dns/txt; s=axis-central1; t=1658750036;
+  x=1690286036;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=6tLYXvZtNd5HsyMvja1M6LcwBULUcMx2aqjXUqlNXGE=;
+  b=pdkGMJciZOOEVdrMiTKwUnYCODEkGV6mS88jO4BD0cXmDUO+GRbYBQDI
+   8TqBNpaK+b9siEuDlAvBY5HUevQYjzw4VaJhkw6qlvzx+70vAInFwXvtu
+   r3uJpzAZIFMJ1RO9pSgKS00xbOSLIYOKf3w04bTtSo2xWtkV4JY2yLhpR
+   bmUTfrlRH5xLOIExPU+znrilakYCZzJEh3EnMALiR/CGBJ/8pZt0L1yt+
+   Rjhkx/HDVPoCt+w9Xznj8yBZPgTVAKPAAPdC/AC2bYRvS1tjS3MELku/s
+   ZXtrmu6p+O4oX9vwYZd7ujGVk30aewk2tN7AR/0iZNalvXd3uaF1TgSbV
+   Q==;
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Quentin Schulz <quentin.schulz@theobroma-systems.com>, Marek Vasut
+	<marex@denx.de>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+CC: "docs@lists.yoctoproject.org" <docs@lists.yoctoproject.org>, "Quentin
+ Schulz" <foss+yocto@0leil.net>, Martin Jansa <martin.jansa@gmail.com>,
+	"Richard Purdie" <richard.purdie@linuxfoundation.org>
+Subject: RE: [docs] [bitbake-devel] [PATCH v2] bitbake-user-manual: Document
+ override :append, :prepend, :remove order
+Thread-Topic: [docs] [bitbake-devel] [PATCH v2] bitbake-user-manual: Document
+ override :append, :prepend, :remove order
+Thread-Index: AQHYoBVYXvQOsqbXD0uZYYp+3BV9/a2O1wwAgAAhyxA=
+Date: Mon, 25 Jul 2022 11:53:53 +0000
+Message-ID: <6f82be5c0c704100b5a88d9b3f0a8c4f@axis.com>
 References: <20220725105715.89474-1-marex@denx.de>
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-In-Reply-To: <20220725105715.89474-1-marex@denx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS8P189CA0029.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:20b:31f::15) To PA4PR04MB9367.eurprd04.prod.outlook.com
- (2603:10a6:102:2aa::7)
+ <0897938e-df44-2c3d-95ce-ca7474b1c810@theobroma-systems.com>
+In-Reply-To: <0897938e-df44-2c3d-95ce-ca7474b1c810@theobroma-systems.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.5.60]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b5e97dd4-d3c1-4feb-240b-08da6e33826f
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8269:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	E/j510GPof5tqHEdUMtDDhAsA4/WdRijkkYY3BObCV82fRSxgBsEjje8RfPiWcTv0J2ENH1AUKlNxe4vhnVvPeSXLvfpG6FuHEYNYG6qIl+syfkc0tMsf5bvgBYdOT9hu8OJTeczNbEklrbIr4dkpdGrC3ZJIIv5xAF2RrlH+cMBk6oFOtTKeV/FfvQZDmopQjy84hZnTtsC0Drr8a0IFq6cRNwwvRnS7vYQg82pMcC4nIfd/XfSCGR8Ps3DzqbvoqNn6TUDQ+qVsPpuyshmpGLn0SaEQpW1Z/Wqo2imB7wczEhXAxhIpzBWVftTI7YJ32cwBXVqVjpWSnMcs6WbZ/Yp9Njj3D+n0kfhl4Sr1nLgkkXUMQggSbMCDszuPkQkE/1L1keBbNPisE7Rj0uxfTXil4UMhlFOMcoA85k14Jlkfc4s5Wrdkfn0wQcXLNekbWZ95IF8aKke4T7oKKkKzcJ8zeQ739JvgAj4F1fAMfSWi6eiIYnGMPjbah6SNSdb4PMb7IesY4BOeCRKBy0qrGs0rFcFbbZzoTyVOahcPd/dykR/oGfxN9S/xYw++SiXEDqTyvdzVFp9gCX865X9AFrjxAfWl9p+5f2ki9oFj36N4U4f1RAp24CdjhIpuk4AbCUI4F+AS0kuuZRNLaCZtdshYyWR958sOhszrXRQk3gM9DNDsjQWgARhDC16NSSU6j//NMwHn8AHaxv12Q6GZyLmTLFmFa0sx7ylGsH027WDfuTikASCCj9yYQSvqn7Bzngjj9VMurI/QE60xfy1LdoKIYaFYB2LpAp+aaa/PDl4O+jiQM0ynRRe2uWrKH2ZZqTdeeCWwiRNv5HMs1Th+Q==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9367.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(396003)(376002)(39850400004)(346002)(366004)(83380400001)(44832011)(8936002)(5660300002)(38100700002)(26005)(2906002)(54906003)(478600001)(6486002)(66476007)(66556008)(316002)(66946007)(8676002)(186003)(2616005)(41300700001)(6512007)(53546011)(86362001)(36756003)(6506007)(31696002)(31686004)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?dkdUT1ZMd3pxbGZZQ0VZUDFqU2pqYnY5RlhVdkJLNzRPN1BFaENnVHBtWDMx?=
- =?utf-8?B?VXFBZ3A5R25SNFgrbjVXNEtwKzJrdVp1azBscXlVVGlsa0pRS25yY2lNRm4v?=
- =?utf-8?B?ZEdoM2FXYkd4UkFEeWdndU5MTzZuUWZVYys3N2RHVndsaEpYcVlvZ3hIekJT?=
- =?utf-8?B?NlZvam5LRC9jeisrcHdYZFhwKzVyaFc5TVVaaUdhOFdWT2lsZFl6WGN4VWEr?=
- =?utf-8?B?UjNObktJdlhYeVBDcXVtU1RQK1JwM2laeFErOUQxY2wxSUVVUG9NdmV6SHNS?=
- =?utf-8?B?aFlzL0pJL3EvQ1BSZUdyMEJ1Z0p4Mkk4THN5WEN5Q04xTjA4S2RwWjdNeTMy?=
- =?utf-8?B?MWpsdFRPbVcrWnRyNDE2MzJpeVZVQTk3cnZtRzNONkpkVVBZYVVGd2VhSkt1?=
- =?utf-8?B?OHA3bE5PaUZxNEM5WVNUSnNRYTA2YXBtVE1EZW5jcFAvbkg4d3NSaDl5ZVBx?=
- =?utf-8?B?UWFXb01nMXVGTDZHVGlrTkpsRlI1NjZBWm95SFFjRWFFYWJxekxJenFkWmxF?=
- =?utf-8?B?UHJQNjFaTU5CMUluN2cxRUJDWm9icnNnTk56d2R0Nkh1d0Jsdi9HREFBQTZn?=
- =?utf-8?B?Z3NXODB6Y21xc1c5UVRjU1lnSVBDamVweWI3SU1kUUhoQVFLTU5SbktwL05C?=
- =?utf-8?B?TWd2eHBXSUlnMDN1a24xcXB1U3pmbUZ5cmdJS3ZBTkMxemJkZDBtK1NKODlO?=
- =?utf-8?B?VHQxQlVpOCtuS0lQVzFwVm5tZHljYWl4MEI3dlBOVHdLUzFsOHdpNXRSd3p1?=
- =?utf-8?B?MUFTQ1d2YVRLVlZhVVJ5UDgrQ2liMWdhZVduazVqbXdhQ1h3Tm13ZXEwKzQ0?=
- =?utf-8?B?a2h2Rnd4Uk5pQWFEd1VTZDZWV2RYbWE0aUozZmRLQTRXaXFrbFA5YVovNW0w?=
- =?utf-8?B?SDB4RHo5N0hPaTV0UWdhTVVDdC95WnY5OHlIUjNwWEM2Q3ViNG9Id01zT1d6?=
- =?utf-8?B?d1RrOFV5VllXSXJtN1NEUE5HR2oxd3dIMU5tM0RJc2lrVmIvU3J6UDUvbXhy?=
- =?utf-8?B?Z1NQaXVRUFc2M2FpWVF2SUJBbFAxcHlSRXVMbkJrSm05M0wwd2g5L2FrYTBt?=
- =?utf-8?B?WndPdTRRZ094RlpEK0d6aFBHTlZUcHdnQ3VzejFaV0pqUGVHUitmYVR0UEpE?=
- =?utf-8?B?MkRJeEZqSWVBNDRhUmlRcDBoTW1OUUkwQzM2MjdHNjQvZ2tHY3pSWHU5bDdi?=
- =?utf-8?B?aXkvU3ptMXNaT2E5N0R3UnZNU2xXRjByWUZ0UWFkdEpxUjIzc0J5WThQaFZx?=
- =?utf-8?B?a2VoaUJNRzlsbjZyNlhhYnhVbGZseVdIallKVFlVa2pSaTkwY0RPd1l2K3lF?=
- =?utf-8?B?alNEZFR0OW81dzBpbEUwU28yNE42eFRndy82WGtYZHc4cGU1Tyt5MXVZZ0E4?=
- =?utf-8?B?L2tJbG94YXRpODYrL2ZUTWVoOXAwS0Joa0xsa1czWEl3OW1WZDBUUnpwai9V?=
- =?utf-8?B?VEREMlNjbG1GWDVMbXVZR3BYOW9GOW1CcEpBc2hPU2trWnpHbnUvNGFtcmpn?=
- =?utf-8?B?akFWTkV1UUlNUndWajFrRVdpYUxaTVlnbE5BMmdST1BSd0g4ZGNxczZRRkxX?=
- =?utf-8?B?RVFWWDFIU1hyTG5GWkY0anVhZ0lNL1pSZ2s2VExRRklRMmU1UEdIb0lNZHVF?=
- =?utf-8?B?ZjJnalFTZ21kbUZSYTJZeFlFNFhBYUNkalJ1MHIxSkJSOW5FUlRqWFpvY1NZ?=
- =?utf-8?B?ckxUMU9RNGZkUVJLd0VyTnBYa0N1YlYrays3dEtFK3NJQTdickM5NE1ic0NM?=
- =?utf-8?B?bjVxZDd6SG83SzkxTS9EcHdkeW9Da0lJSlFWeEdBQXc5cU1mSmVwbFJFNENq?=
- =?utf-8?B?dElSY1JSbkhxbEZYYlh2elNVQ1F0SlUrVDJ5T0E3WTJyWDR4eHRQcmpGcUlj?=
- =?utf-8?B?ajlnYTBraVNQUHpndWxkQjh6S2svTUxEKzJMcU4vb21oVDZ3RzVTS3Npc1Zy?=
- =?utf-8?B?VDhOYVJXRE1iT3hsQlhFV0ZCVGl2dzIwcEFuMjBqVGtPaTlrNytNVUhpRnZt?=
- =?utf-8?B?R1BJVHQ5SGtmc3dranhrcm1ScmxsMmhLSHpjM1VseDFIY1luUkVlQmd1Tksv?=
- =?utf-8?B?aGdLeUFhZGozQWt3YUJYQndkV0pEcUtjUWpZelE4aXBZWTMyOFYrRXBhZDBn?=
- =?utf-8?B?UEY0SGc5TVlDRlZ4eENQK3pGL1AxcW1KWlZPd1VmckZRbTZmVy8wSmFoeXNS?=
- =?utf-8?Q?plgUF/n99CVn2JVVD1UwRNA=3D?=
-X-OriginatorOrg: theobroma-systems.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 
- b5e97dd4-d3c1-4feb-240b-08da6e33826f
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9367.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2022 11:47:53.8929
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 
- CX9CiiHr1uDzwqSXL+gLvS66kkTu/d/NkphkOK75dWJNi7MKBRWvNSfKu0KNC5SHE6tt3Aq+T86ZzcA1Kifbs+4V97I5UZqlOrlu6zdbLVnaQ5mBvbMi/WMdyKaJeon7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8269
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 25 Jul 2022 11:48:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13843
+ <bitbake-devel@lists.openembedded.org>; Mon, 25 Jul 2022 11:53:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13844
 
-Hi Marek,
-
-On 7/25/22 12:57, Marek Vasut wrote:
-> The application order of override syntax :append, :prepend, :remove is
-> inobvious and undocumented. The order does not match variable parse
-> history, i.e. output of "bitbake -e", either.
-> 
-> Add note documenting the exact order in which :append, :prepend, :remove
-> are applied to variable in lib/bb/data_smart.py getVarFlag(). Add note
-> that this order does not match the variable parse history order. This
-> is mostly to prevent others from running into this and scratching their
-> heads, trying to find out what is going on.
-> 
-> Reviewed-by: Quentin Schulz <foss+yocto@0leil.net>
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> Cc: Martin Jansa <martin.jansa@gmail.com>
-> Cc: Quentin Schulz <foss+yocto@0leil.net>
-> Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
-> V2: - Add RB from Quentin
->      - Mention un-remove implementation
->      - Reference :remove order in append/prepend override syntax
-> ---
->   .../bitbake-user-manual-metadata.rst          | 25 +++++++++++++++++++
->   1 file changed, 25 insertions(+)
-> 
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> index 33782161..4da18826 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> @@ -319,6 +319,10 @@ The variable ``D`` becomes "dvaladditional data".
->   
->      You must control all spacing when you use the override syntax.
->   
-> +.. note::
-> +
-> +   The overrides are applied in this order, ":append", ":prepend", ":remove".
-> +
->   It is also possible to append and prepend to shell functions and
->   BitBake-style Python functions. See the ":ref:`bitbake-user-manual/bitbake-user-manual-metadata:shell functions`" and ":ref:`bitbake-user-manual/bitbake-user-manual-metadata:bitbake-style python functions`"
->   sections for examples.
-> @@ -351,6 +355,27 @@ The variable ``FOO`` becomes
->   Like ":append" and ":prepend", ":remove" is applied at variable
->   expansion time.
->   
-> +.. note::
-> +
-> +   The overrides are applied in this order, ":append", ":prepend", ":remove".
-> +   This implies it is not possible to re-append previously removed strings.
-> +   While it is not possible to re-append strings, it is possible to remove
-> +   strings from separate variable which contains the string remove list to
-> +   achieve the same effect using un-remove::
-> +
-
-I can suggest:
-"""
-However, one can undo a ":remove" by using an intermediate variable 
-whose content is passed to the ":remove" so that modifying the 
-intermediate variable equals to keeping the string in::
-"""
-
-I specifically want to avoid "un-remove". Not sure my suggestion is 
-easier to understand as I'm usually pretty good at unwillingly writing 
-convoluted sentences.
-
-> +     FOOREMOVE = "123 456 789"
-> +     FOO:remove = "${FOOREMOVE}"
-> +     FOOREMOVE:remove = "456"
-> + > +   This expands to ``FOO:remove = "123 789"``.
-> +
-
-Did you test this? I think there's an additional white space (because 
-only 456 gets removed but the spaces around it stay).
-
-Cheers,
-Quentin
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBkb2NzQGxpc3RzLnlvY3RvcHJv
+amVjdC5vcmcgPGRvY3NAbGlzdHMueW9jdG9wcm9qZWN0Lm9yZz4gT24gQmVoYWxmDQo+IE9mIFF1
+ZW50aW4gU2NodWx6DQo+IFNlbnQ6IGRlbiAyNSBqdWxpIDIwMjIgMTM6NDgNCj4gVG86IE1hcmVr
+IFZhc3V0IDxtYXJleEBkZW54LmRlPjsgYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQu
+b3JnDQo+IENjOiBkb2NzQGxpc3RzLnlvY3RvcHJvamVjdC5vcmc7IFF1ZW50aW4gU2NodWx6IDxm
+b3NzK3lvY3RvQDBsZWlsLm5ldD47DQo+IE1hcnRpbiBKYW5zYSA8bWFydGluLmphbnNhQGdtYWls
+LmNvbT47IFJpY2hhcmQgUHVyZGllDQo+IDxyaWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24u
+b3JnPg0KPiBTdWJqZWN0OiBSZTogW2RvY3NdIFtiaXRiYWtlLWRldmVsXSBbUEFUQ0ggdjJdIGJp
+dGJha2UtdXNlci1tYW51YWw6DQo+IERvY3VtZW50IG92ZXJyaWRlIDphcHBlbmQsIDpwcmVwZW5k
+LCA6cmVtb3ZlIG9yZGVyDQo+IA0KPiBIaSBNYXJlaywNCj4gDQo+IE9uIDcvMjUvMjIgMTI6NTcs
+IE1hcmVrIFZhc3V0IHdyb3RlOg0KPiA+IFRoZSBhcHBsaWNhdGlvbiBvcmRlciBvZiBvdmVycmlk
+ZSBzeW50YXggOmFwcGVuZCwgOnByZXBlbmQsIDpyZW1vdmUgaXMNCj4gPiBpbm9idmlvdXMgYW5k
+IHVuZG9jdW1lbnRlZC4gVGhlIG9yZGVyIGRvZXMgbm90IG1hdGNoIHZhcmlhYmxlIHBhcnNlDQo+
+ID4gaGlzdG9yeSwgaS5lLiBvdXRwdXQgb2YgImJpdGJha2UgLWUiLCBlaXRoZXIuDQo+ID4NCj4g
+PiBBZGQgbm90ZSBkb2N1bWVudGluZyB0aGUgZXhhY3Qgb3JkZXIgaW4gd2hpY2ggOmFwcGVuZCwg
+OnByZXBlbmQsIDpyZW1vdmUNCj4gPiBhcmUgYXBwbGllZCB0byB2YXJpYWJsZSBpbiBsaWIvYmIv
+ZGF0YV9zbWFydC5weSBnZXRWYXJGbGFnKCkuIEFkZCBub3RlDQo+ID4gdGhhdCB0aGlzIG9yZGVy
+IGRvZXMgbm90IG1hdGNoIHRoZSB2YXJpYWJsZSBwYXJzZSBoaXN0b3J5IG9yZGVyLiBUaGlzDQo+
+ID4gaXMgbW9zdGx5IHRvIHByZXZlbnQgb3RoZXJzIGZyb20gcnVubmluZyBpbnRvIHRoaXMgYW5k
+IHNjcmF0Y2hpbmcgdGhlaXINCj4gPiBoZWFkcywgdHJ5aW5nIHRvIGZpbmQgb3V0IHdoYXQgaXMg
+Z29pbmcgb24uDQo+ID4NCj4gPiBSZXZpZXdlZC1ieTogUXVlbnRpbiBTY2h1bHogPGZvc3MreW9j
+dG9AMGxlaWwubmV0Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hcmVrIFZhc3V0IDxtYXJleEBkZW54
+LmRlPg0KPiA+IENjOiBNYXJ0aW4gSmFuc2EgPG1hcnRpbi5qYW5zYUBnbWFpbC5jb20+DQo+ID4g
+Q2M6IFF1ZW50aW4gU2NodWx6IDxmb3NzK3lvY3RvQDBsZWlsLm5ldD4NCj4gPiBDYzogUmljaGFy
+ZCBQdXJkaWUgPHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+ID4gLS0tDQo+
+ID4gVjI6IC0gQWRkIFJCIGZyb20gUXVlbnRpbg0KPiA+ICAgICAgLSBNZW50aW9uIHVuLXJlbW92
+ZSBpbXBsZW1lbnRhdGlvbg0KPiA+ICAgICAgLSBSZWZlcmVuY2UgOnJlbW92ZSBvcmRlciBpbiBh
+cHBlbmQvcHJlcGVuZCBvdmVycmlkZSBzeW50YXgNCj4gPiAtLS0NCj4gPiAgIC4uLi9iaXRiYWtl
+LXVzZXItbWFudWFsLW1ldGFkYXRhLnJzdCAgICAgICAgICB8IDI1ICsrKysrKysrKysrKysrKysr
+KysNCj4gPiAgIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZm
+IC0tZ2l0IGEvZG9jL2JpdGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC1tZXRh
+ZGF0YS5yc3QNCj4gYi9kb2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFs
+LW1ldGFkYXRhLnJzdA0KPiA+IGluZGV4IDMzNzgyMTYxLi40ZGExODgyNiAxMDA2NDQNCj4gPiAt
+LS0gYS9kb2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLW1ldGFkYXRh
+LnJzdA0KPiA+ICsrKyBiL2RvYy9iaXRiYWtlLXVzZXItbWFudWFsL2JpdGJha2UtdXNlci1tYW51
+YWwtbWV0YWRhdGEucnN0DQo+ID4gQEAgLTMxOSw2ICszMTksMTAgQEAgVGhlIHZhcmlhYmxlIGBg
+RGBgIGJlY29tZXMgImR2YWxhZGRpdGlvbmFsIGRhdGEiLg0KPiA+DQo+ID4gICAgICBZb3UgbXVz
+dCBjb250cm9sIGFsbCBzcGFjaW5nIHdoZW4geW91IHVzZSB0aGUgb3ZlcnJpZGUgc3ludGF4Lg0K
+PiA+DQo+ID4gKy4uIG5vdGU6Og0KPiA+ICsNCj4gPiArICAgVGhlIG92ZXJyaWRlcyBhcmUgYXBw
+bGllZCBpbiB0aGlzIG9yZGVyLCAiOmFwcGVuZCIsICI6cHJlcGVuZCIsDQo+ICI6cmVtb3ZlIi4N
+Cj4gPiArDQo+ID4gICBJdCBpcyBhbHNvIHBvc3NpYmxlIHRvIGFwcGVuZCBhbmQgcHJlcGVuZCB0
+byBzaGVsbCBmdW5jdGlvbnMgYW5kDQo+ID4gICBCaXRCYWtlLXN0eWxlIFB5dGhvbiBmdW5jdGlv
+bnMuIFNlZSB0aGUgIjpyZWY6YGJpdGJha2UtdXNlci0NCj4gbWFudWFsL2JpdGJha2UtdXNlci1t
+YW51YWwtbWV0YWRhdGE6c2hlbGwgZnVuY3Rpb25zYCIgYW5kICI6cmVmOmBiaXRiYWtlLQ0KPiB1
+c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLW1ldGFkYXRhOmJpdGJha2Utc3R5bGUgcHl0
+aG9uIGZ1bmN0aW9uc2AiDQo+ID4gICBzZWN0aW9ucyBmb3IgZXhhbXBsZXMuDQo+ID4gQEAgLTM1
+MSw2ICszNTUsMjcgQEAgVGhlIHZhcmlhYmxlIGBgRk9PYGAgYmVjb21lcw0KPiA+ICAgTGlrZSAi
+OmFwcGVuZCIgYW5kICI6cHJlcGVuZCIsICI6cmVtb3ZlIiBpcyBhcHBsaWVkIGF0IHZhcmlhYmxl
+DQo+ID4gICBleHBhbnNpb24gdGltZS4NCj4gPg0KPiA+ICsuLiBub3RlOjoNCj4gPiArDQo+ID4g
+KyAgIFRoZSBvdmVycmlkZXMgYXJlIGFwcGxpZWQgaW4gdGhpcyBvcmRlciwgIjphcHBlbmQiLCAi
+OnByZXBlbmQiLA0KPiAiOnJlbW92ZSIuDQo+ID4gKyAgIFRoaXMgaW1wbGllcyBpdCBpcyBub3Qg
+cG9zc2libGUgdG8gcmUtYXBwZW5kIHByZXZpb3VzbHkgcmVtb3ZlZA0KPiBzdHJpbmdzLg0KPiA+
+ICsgICBXaGlsZSBpdCBpcyBub3QgcG9zc2libGUgdG8gcmUtYXBwZW5kIHN0cmluZ3MsIGl0IGlz
+IHBvc3NpYmxlIHRvDQo+IHJlbW92ZQ0KPiA+ICsgICBzdHJpbmdzIGZyb20gc2VwYXJhdGUgdmFy
+aWFibGUgd2hpY2ggY29udGFpbnMgdGhlIHN0cmluZyByZW1vdmUgbGlzdA0KPiB0bw0KPiA+ICsg
+ICBhY2hpZXZlIHRoZSBzYW1lIGVmZmVjdCB1c2luZyB1bi1yZW1vdmU6Og0KPiA+ICsNCj4gDQo+
+IEkgY2FuIHN1Z2dlc3Q6DQo+ICIiIg0KPiBIb3dldmVyLCBvbmUgY2FuIHVuZG8gYSAiOnJlbW92
+ZSIgYnkgdXNpbmcgYW4gaW50ZXJtZWRpYXRlIHZhcmlhYmxlDQo+IHdob3NlIGNvbnRlbnQgaXMg
+cGFzc2VkIHRvIHRoZSAiOnJlbW92ZSIgc28gdGhhdCBtb2RpZnlpbmcgdGhlDQo+IGludGVybWVk
+aWF0ZSB2YXJpYWJsZSBlcXVhbHMgdG8ga2VlcGluZyB0aGUgc3RyaW5nIGluOjoNCj4gIiIiDQo+
+IA0KPiBJIHNwZWNpZmljYWxseSB3YW50IHRvIGF2b2lkICJ1bi1yZW1vdmUiLiBOb3Qgc3VyZSBt
+eSBzdWdnZXN0aW9uIGlzDQo+IGVhc2llciB0byB1bmRlcnN0YW5kIGFzIEknbSB1c3VhbGx5IHBy
+ZXR0eSBnb29kIGF0IHVud2lsbGluZ2x5IHdyaXRpbmcNCj4gY29udm9sdXRlZCBzZW50ZW5jZXMu
+DQo+IA0KPiA+ICsgICAgIEZPT1JFTU9WRSA9ICIxMjMgNDU2IDc4OSINCj4gPiArICAgICBGT086
+cmVtb3ZlID0gIiR7Rk9PUkVNT1ZFfSINCj4gPiArICAgICBGT09SRU1PVkU6cmVtb3ZlID0gIjQ1
+NiINCg0KSSByZWNvbW1lbmQgbm90IHVzaW5nIDpyZW1vdmUgaGVyZSwgYnV0IHJhdGhlciBleHBs
+aWNpdGx5IHNldHRpbmcgDQpGT09SRU1PVkUuIFdoaWxlIGl0IG9mIGNvdXJzZSB3b3JrcyB0byB1
+c2UgOnJlbW92ZSBsaWtlIHRoYXQsIGl0IA0KZGlzdHJhY3RzIGZyb20gdGhlIGFjdHVhbCBwcm9i
+bGVtLg0KDQpJdCBtaWdodCBhbHNvIGJlIGJldHRlciB3cml0dGVuIGFzOg0KDQogICAgIEZPT1JF
+TU9WRSA9ICIxMjMgNDU2IDc4OSINCiAgICAgRk9POnJlbW92ZSA9ICIke0ZPT1JFTU9WRX0iDQoN
+CiAgICAgLi4uDQoNCiAgICAgRk9PUkVNT1ZFID0gIjEyMyA3ODkiDQoNCnRvIGluZGljYXRlIHRo
+YXQgdGhleSBhcmUgdHlwaWNhbGx5IG5vdCBkZWZpbmVkIGF0IHRoZSBzYW1lIHBsYWNlLg0KDQo+
+ID4gKyA+ICsgICBUaGlzIGV4cGFuZHMgdG8gYGBGT086cmVtb3ZlID0gIjEyMyA3ODkiYGAuDQo+
+ID4gKw0KPiANCj4gRGlkIHlvdSB0ZXN0IHRoaXM/IEkgdGhpbmsgdGhlcmUncyBhbiBhZGRpdGlv
+bmFsIHdoaXRlIHNwYWNlIChiZWNhdXNlDQo+IG9ubHkgNDU2IGdldHMgcmVtb3ZlZCBidXQgdGhl
+IHNwYWNlcyBhcm91bmQgaXQgc3RheSkuDQo+IA0KPiBDaGVlcnMsDQo+IFF1ZW50aW4NCg0KLy9Q
+ZXRlcg0KDQo=
 
