@@ -2,175 +2,134 @@ Return-Path: <patrick@stwcx.xyz>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AECCC00140
-	for <webhook@archiver.kernel.org>; Tue, 26 Jul 2022 15:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60530C00140
+	for <webhook@archiver.kernel.org>; Tue, 26 Jul 2022 16:01:54 +0000 (UTC)
 Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com
  [66.111.4.27])
- by mx.groups.io with SMTP id smtpd.web08.8621.1658851079174732172
+ by mx.groups.io with SMTP id smtpd.web12.8598.1658851312032899881
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 26 Jul 2022 08:58:01 -0700
+ Tue, 26 Jul 2022 09:01:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@stwcx.xyz header.s=fm1 header.b=FgY0kUuy;
+ dkim=fail reason="signature has expired" header.i=@stwcx.xyz header.s=fm1
+ header.b=GtfW99P9;
  spf=pass (domain: stwcx.xyz, ip: 66.111.4.27, mailfrom: patrick@stwcx.xyz)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 7575F5C0127;
-	Tue, 26 Jul 2022 11:57:58 -0400 (EDT)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailout.nyi.internal (Postfix) with ESMTP id 54A615C0112;
+	Tue, 26 Jul 2022 12:01:51 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 26 Jul 2022 11:57:58 -0400
+  by compute1.internal (MEProxy); Tue, 26 Jul 2022 12:01:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=cc
 	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm1; t=1658851078; x=1658937478; bh=agdNoobRDz
-	XDchd1W+NwFhJHluMkbvaqT7uTC2fpm8Y=; b=FgY0kUuypvE1F4EZlBX4vr+zCF
-	IXptHwtwAKvxLb8DAhnKZubiBjiRx0ckd+L1W083V90LO4ub/GVIuXnWTzLonvu2
-	naD2rxe4g1nUGokhmhZ/jORi3vb2TNw25EuWOprxFTybWqA+r6TbOquwdA4y1QKj
-	UQkQPQzlQb4vib1wWMKKGRmIfjIITMhwQpB4sOSl7iLaoc6yiQPP70MWE1YuI04M
-	v/uj3Sm4dy1eguWeJSez3/1p7SuZxB3kACdG62OCE1OFSSUp0EDxWmNSay6m8bVP
-	MaQ73NGYBKJ93ehSqaw58n+bygbls6XFwkJ/svFW2JCkqRibE11Ach/ewT0g==
+	:subject:to:to; s=fm1; t=1658851311; x=1658937711; bh=GDUbBpww5S
+	CaOhQYhaVS7UwKfEKHy7zNGthAwh0iOVA=; b=GtfW99P9R6fCd/YJ6q3Ch4rrHa
+	YTquVy1VujojKvL4gNSAoQ0vsQQ/t26tfG67+KfiM+hSnyUJ7ts8r+EkDzOlylLD
+	Nso0GWok4zfYvyVKHbEAlwFoWlG2UMhNRTZsSZQnFW9t9ZdgWATygEyifsftUfDb
+	FZtXX9TWEfd9NLQw4NAnXyr2U8oojbPFyku9XkBq71cC6MwrRxXsajoPKYgzr7uK
+	r9a6rgmicO4EYwyyL6PWVQyBJNh0sdUvOQgjv+LGKmu8jr8inHLBb3ikzBVL+u+Z
+	4fbIHlEAyMA3lxjpHCSITdPwQc6kSftJtzfuD4XCDByOi9O6onSPMgg9wZ5g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
 	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
 	:mime-version:references:reply-to:sender:subject:subject:to:to
 	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1658851078; x=1658937478; bh=agdNoobRDzXDchd1W+NwFhJHluMk
-	bvaqT7uTC2fpm8Y=; b=qzs6SAY9RUYW8CYCPrwsVNpiy+1U3ehhuWiztU9BHJCM
-	fhGwTJSZ3ILSXst155cyM+dA+5Waes2xpCkpTqwjrwABvAh/UOWXpUagyMS0MS/k
-	tmYfmY8mLCkhMYJQ608Ira3IBTrtBlu+Xstqu5bx5SHGLtj6IbPOd2fIQbdiqygZ
-	vH6MKorof8eTf/NZp6gVQtVsRfA1zv5uD7osB+th4G6pQg3Rhp2Bldb8fxh0o3Od
-	tZUsBMhLOQ1HoXOtaos0M+OnKndsKslzw0Z/f2XLlr/aiQMpLv3vbH/G0s5L1Zg6
-	xJfeu7AHgDuA3qCAM5o3M8bOTmDSXxlqSMychFy6rg==
-X-ME-Sender: <xms:Bg_gYgAQDs76U4N0ch-cEgjB2k11kL--7G3VFlp8OOilydwmNPxcQA>
-    <xme:Bg_gYijsUmZiQ-QD_fxEiJoTm91DHSjCmAQdAJzPfQrwYbAKOdJvwhqpmrRi7MCSY
-    6zHJ3k7A7hphK1ofqM>
+	fm3; t=1658851311; x=1658937711; bh=GDUbBpww5SCaOhQYhaVS7UwKfEKH
+	y7zNGthAwh0iOVA=; b=A+u5Dg+aNyigYVrxB3ONlWAhTigI1JzMUhm27yJTurrg
+	oqb9M2svQzS30i+h4bDmmkCtBdDG/gDu2ut3IUFSBVjbra12V4iAVFpmhZ+SUgbD
+	U9pbk5D9/P8oplyHUbPjiqUOOYz2ThS23XgzX7tHQ/iC8t/U6x07psMKdLyUANBf
+	4f4NcT8nGlvWst89aLjArb2lf2hswwq0oEQI3zCeAjZoD6lEIQ8ZkcAQl1oeBrNW
+	HANjIgFH0lSwki3lsPsfXumGOjLxr17+ZuJxWdBnY8rtDS2FHGWfjA+aTohiecwC
+	hmYmb5pE+piU9MJMdyHS1Q+LvCtZv9og3AU/gJAxkw==
+X-ME-Sender: <xms:7g_gYudP2-XsRgiLPLN61lAyh9l8PdqfutQT9UZiMVLXg-c21ExWcg>
+    <xme:7g_gYoOrFCv77XH7RpWiVpaLSZLDDIEsuvdoHqbyJbzAA3OOzFhcP_sc7m7_snE7K
+    6U2eyG4sYGDl60tY4A>
 X-ME-Received: 
- <xmr:Bg_gYjnVum3vBwfei0rV6n9SJ6Z_uc7xmFS8DEsunoyhMhWI4S5OBXDme_ZmE5St5daVLY-E45V7obg6qNp1QnXRjbvnuSlv>
+ <xmr:7g_gYvgQCZi5gSFN6MTaW_ibhPdzTHOEd9bvgSItiBQBdVNRkY-qpewmAdDw0pQLSdo52SCvKbOFNDbwziih1I4HVyQ1nFlp>
 X-ME-Proxy-Cause: 
- gggruggvucftvghtrhhoucdtuddrgedvfedrvddutddgleeiucetufdoteggodetrfdotf
+ gggruggvucftvghtrhhoucdtuddrgedvfedrvddutddgleejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdludejmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtdorredt
+    gfrhhlucfvnfffucdlfeehmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtderredt
     tddvnecuhfhrohhmpefrrghtrhhitghkucghihhllhhirghmshcuoehprghtrhhitghkse
-    hsthiftgigrdighiiiqeenucggtffrrghtthgvrhhnpefggeeiieevgeffheffledtkeei
-    gfehleevgefhueduffffhedttdegtdettedvieenucffohhmrghinhephihotghtohhprh
-    hojhgvtghtrdhorhhgpdhgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedt
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehprghtrhhitghksehsthiftgigrdighiii
-X-ME-Proxy: <xmx:Bg_gYmxrjddTwvOtQEPKcgvJ7kfr60WFu7SrNa1CiqbT5gn2IlvKKA>
-    <xmx:Bg_gYlSJjcE3WFUuAtPKNe1UinMzyz7ZWvz6OBy7z2TtcHVEEzfyZA>
-    <xmx:Bg_gYhaN-4Q1UxqWu9VWCprG9g1gVAzUhLuqZuHnYaia98KVDyLD_A>
-    <xmx:Bg_gYgfteJ3nHKttFTaa44BbkxFZ73DwoQB9Mj-P6rR1XM4ipdYjiA>
+    hsthiftgigrdighiiiqeenucggtffrrghtthgvrhhnpeehfeejheeftdejiedvfeekffeh
+    ledukeduleelffekgfdtleduledvtdegtdehkeenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehprghtrhhitghksehsthiftgigrdighiii
+X-ME-Proxy: <xmx:7g_gYr91ntryQ9jqiDBHGzUvHSfsDcCDz7ctE_fG_Kvrwg189aGulA>
+    <xmx:7g_gYquAmd2qcj0IbHseTS8WQDL5z6ofwSOEIa4-pGEufTovbJybiA>
+    <xmx:7g_gYiEHgKwV7NXS_8A35W87Lt7Evqvw_tLPvXFTy_fv_suqNHHHqQ>
+    <xmx:7w_gYvXZgFrojsZevM49EiDDd7YZMMEEao3F9d0xOQ1SrWPOKDYh3g>
 Feedback-ID: i68a1478a:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 26 Jul 2022 11:57:57 -0400 (EDT)
-Date: Tue, 26 Jul 2022 10:57:56 -0500
+ 26 Jul 2022 12:01:50 -0400 (EDT)
+Date: Tue, 26 Jul 2022 11:01:49 -0500
 From: Patrick Williams <patrick@stwcx.xyz>
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: Paulo Neves <ptsneves@gmail.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 2/2] fetch: bb.fatal when trying to
- checksum non-existing files.
-Message-ID: <YuAPBJrwSDriYmTZ@heinlein.stwcx.org.github.beta.tailscale.net>
+To: Paulo Neves <ptsneves@gmail.com>
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 2/2] fetch: bb.fatal when trying to checksum non-existing
+ files.
+Message-ID: <YuAP7QK8YYLjp9Sh@heinlein.stwcx.org.github.beta.tailscale.net>
 References: <20220708205407.1680137-1-ptsneves@gmail.com>
  <20220708205407.1680137-2-ptsneves@gmail.com>
  <Yt9o3TefXIqpJk7q@heinlein.stwcx.org.github.beta.tailscale.net>
- <CANNYZj99t0x08TYJ6JmZC9uT7VderpqjPCdKRp-QNzJAS2s6Qw@mail.gmail.com>
+ <8cbc762227c6c5223004d7e457dff8f3da683a2d.camel@linuxfoundation.org>
+ <CAJO0J4g25ypP_RW=pN76suM1z15VEh9cdOsxqfNj9-C_xW5PcQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LP+MJyEgP/5/lJRM"
+	protocol="application/pgp-signature"; boundary="fnLqhLDhXE120UeV"
 Content-Disposition: inline
 In-Reply-To: 
- <CANNYZj99t0x08TYJ6JmZC9uT7VderpqjPCdKRp-QNzJAS2s6Qw@mail.gmail.com>
+ <CAJO0J4g25ypP_RW=pN76suM1z15VEh9cdOsxqfNj9-C_xW5PcQ@mail.gmail.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 26 Jul 2022 15:58:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13853
+ <bitbake-devel@lists.openembedded.org>; Tue, 26 Jul 2022 16:01:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13854
 
 
---LP+MJyEgP/5/lJRM
+--fnLqhLDhXE120UeV
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 26, 2022 at 07:35:21AM +0200, Alexander Kanavin wrote:
-> On Tue, 26 Jul 2022 at 06:09, Patrick Williams <patrick@stwcx.xyz> wrote:
-> > There are some more complex examples, but one easy example is a recipe
-> > which had `file://${MACHINE}/eeprom.h` in its SRC_URI[1].  Any machine
-> > which didn't provide this file, even if it never intended to use the
-> > recipe, now fails when we picked up this change.
+On Tue, Jul 26, 2022 at 09:01:31AM +0200, Paulo Neves wrote:
+
+> > I'm just going from memory but it might help to set COMPATIBLE_MACHINE
+> > in the recipe so that it isn't fully parsed for the machines it isn't
+> > intended for.
+> That is what I do. If the recipe is machine specific it should be marked =
+as
+> such.
 >=20
-> This is not how machine-specific versions of the same file are
-> supposed to be listed. Just use `file://eeprom.h`, and bitbake will
-> look for it in subdirectories that include $MACHINE, and if not found
-> there, a default version will be picked (which you can make bogus, so
-> builds will fail at recipe build stage instead of parsing stage).
->=20
-> Example:
-> https://git.yoctoproject.org/poky/tree/meta/recipes-graphics/xorg-xserver=
-/xserver-xf86-config?h=3Dmaster-next
 
-I agree.  The person who originally wrote the recipe didn't know about
-the automatic addition of overrides with the FILESEXTRAPATHS.  As I
-wrote this was just one easy example.  I fixed this one to both use the
-override implicitly (as you also suggested) and put a default 'eeprom.h'
-with a `#error`[1].
+Thanks for the info.  At first blush it doesn't sound pleasant to
+maintain a list like this for each recipe (since we have over 30
+different machines), but we might be able to take a tactical approach on
+specific problematic recipes and/or leverage some overrides to better
+classify the machine feature that causes the recipe to be necessary.
 
-A seriously more complex example we have is that we have our own u-boot
-recipes and used the same `u-boot-foo.inc` file names as are present in
-`meta/`.  It happens that the recipes in `meta/recipes-bsp/u-boot` end
-up, even though we'd never use them, using our `u-boot-foo.inc` files
-and ending up with totally bogus SRC_URIs in the parsing phase (and
-thus failing).  Essentially, whenever there is a new version of u-boot
-in `meta` we're going to end up having to make some bogus empty
-files[2].
-
->=20
-> > I know we've been ignoring the warning(s) for a while on these kinds of
-> > failures, so it is our own fault, but it is kind of annoying the new
-> > behavior.  We now have to make sure every recipe not only parses validly
-> > on all machine configs but it also has to have fully populated SRC_URIs
-> > even when the recipe is never used on that machine config.
-> >
-> > 1. https://github.com/facebook/openbmc/blob/f0d9511ad2fbd563a6b793093cd=
-ac557c5ef2a89/meta-facebook/recipes-utils/mac-util/mac-util_0.1.bb#L12
->=20
-> Look, this is bleeding edge. And bleeding edge sometimes bleeds and
-> breaks your builds. You signed up for it; if you don't like it there,
-> use stable branches, or use controlled transitions to milestone tags.
-
-I agree we signed up for the bleeding edge, partially to be more aware
-of changes like this.  Hopefully this wasn't worded too poorly, but I am
-not complaining that "things are currently broken for me".  I was trying
-to raise awareness that this change isn't as pleasant to downstream layer
-maintainers as it might seem on the surface.  If there is an improvement
-or revert, great; if there isn't, we'll deal with it.
-
-1. https://github.com/facebook/openbmc/commit/c4e6ffacb73a567c83458f6a1b7e5=
-bb0a032b770
-2. https://github.com/facebook/openbmc/tree/c4e6ffacb73a567c83458f6a1b7e5bb=
-0a032b770/meta-aspeed/recipes-bsp/u-boot/files/openbmc-fb
 --=20
 Patrick Williams
 
---LP+MJyEgP/5/lJRM
+--fnLqhLDhXE120UeV
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAmLgDwMACgkQqwNHzC0A
-wRnjuRAAhYuNRWlyZJwtCNkWj+72d7DmshhBw+7oQmBbsh8rutj/LTIq5qgOQ6cu
-EgYhPk0yEMkibqFjde3P4oegQwtyF6dfNIVqV0n25YVzdihOQ2e7TvIFoqo4TuI4
-DagADpzBqlzHsM+hrFKmzZjnF+ziTo42Fwwot+O4CHqgYJ0QtdspOFCTqnFgB2oK
-I1u0FPnLPK5az/qFnXpaiSohcupKsI2GRH7assBpJbtNd1Cv18ny1TKlX9r0wnpT
-lPYmKIk9zs7F6NRpZhwBhyBVAvFnt6E1A4TY1gYxNQEOrS33/qzseDpYxoGHsj6w
-hFv1kvf1KxSSnyRrMIQmj0ffGLFCS1YqvsVYdc8bomONxWS0H5Ddg+jCvv2oh9XR
-+dDSjjPe0B6Hoe3p3WZA196D1IF+THgfEYHChoO6tjYcqzbhQPDJO6RAjrhNXnZ6
-QcXzXEydtYFA/tdl70DvjfmZTgJMB+iwF4MNl9umF5+TvaTt+jT384VBqk8PaSs7
-b6hj+Z9LwzcaThm+RurgTuhvNgCbHCyYnugS2m7rLMrFOBUhdNC7iyznufgRE2UC
-8UklmW5gtOhh/5HW9U50VamhoCCuwRP57evoYzJhXlty67NluLUHvUz6+6rV02Ox
-D//hwgGspKPLV0NJd5XZBVWGo62iBzzRZx5l/UqBx/mWY0V6330=
-=UrHF
+iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAmLgD+0ACgkQqwNHzC0A
+wRkcSg//VLWQqURnNTVAn0O4TI2usE937Vqdjy6+V4qT5SjqA3vVgQPah2MVlFgd
+IutbFc0oVG6mtLGleJMENUhxGnrXELIrB948Xkh0mckYYjvZS5IRj0D7wd6cTIyU
+EyMn+l0dfNcFoHCpQECDsScakBfuZvxAykCipHF4uTEG5mBUfdmnx75tB1xdnvdd
+31RyrvuXs+kns1BOSyjjc4Lw6NDG9CA08RTRse6LDV615z4zeloPkazsPE5F7838
+JT0H/KoIGa72ifPcHed8uQbCCFDgLyqGaUi7cfnrI3J4d6h2yPBOMDdLbmtEFBcI
+MjwaL7obHF/5uYUYO9XMkL00nbj+8JchCRt1hOGJmvJCVjCyzXpxzE7udQqaMa3n
+i2nnbPN/jPov7LUG5vuBiT6z4cIvK9DNjPSiJER247V0+XFEYlgs/ol7GTyXAZzo
+V+3E+sq2WVhY3z5JeC6eE3kLD77yl5VdLovp5OCHNix9a4X4TC59moW3qrBTaaJL
+5cR126dlDybfruDdja6C0O6xL5Jhk7IZH8wVgsj4GbDbkapYanvkPu/zDKbpXXsy
+xh72Ptyx59CU/G2PcRjWq54fLpnxXWYH+FVAS/vDOMSZbavBUgF7g6DaY+y3Qhoa
+X//KCXA8LB1qmAiNhXtq69x4lMGG4AhYQ4FTYm/lPPqWpyJLgPk=
+=+7lE
 -----END PGP SIGNATURE-----
 
---LP+MJyEgP/5/lJRM--
+--fnLqhLDhXE120UeV--
 
