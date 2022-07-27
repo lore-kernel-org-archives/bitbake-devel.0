@@ -1,173 +1,159 @@
-Return-Path: <regulationdango@gmail.com>
+Return-Path: <patrick@stwcx.xyz>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E053C04A68
-	for <webhook@archiver.kernel.org>; Wed, 27 Jul 2022 15:49:41 +0000 (UTC)
-Subject: [REPORT]Some strange behavior with XMLRPC server
-To: bitbake-devel@lists.openembedded.org
-From: regulationdango@gmail.com
-X-Originating-Location: Tokyo, JP (160.237.142.147)
-X-Originating-Platform: Windows Chrome 103
-User-Agent: GROUPS.IO Web Poster
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5BFC19F21
+	for <webhook@archiver.kernel.org>; Wed, 27 Jul 2022 19:16:12 +0000 (UTC)
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com
+ [64.147.123.21])
+ by mx.groups.io with SMTP id smtpd.web10.24053.1658949366179407057
+ for <bitbake-devel@lists.openembedded.org>;
+ Wed, 27 Jul 2022 12:16:06 -0700
+Authentication-Results: mx.groups.io;
+ dkim=fail reason="signature has expired" header.i=@stwcx.xyz header.s=fm1
+ header.b=tVws74qb;
+ spf=pass (domain: stwcx.xyz, ip: 64.147.123.21, mailfrom: patrick@stwcx.xyz)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.west.internal (Postfix) with ESMTP id B50803200915;
+	Wed, 27 Jul 2022 15:16:04 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 27 Jul 2022 15:16:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm1; t=1658949364; x=1659035764; bh=r4qGK98sg4
+	2Vk4nGLDU9Rohvg1uYf2TuYvcv51y5nOY=; b=tVws74qbPOlthf49R6AX7EX5N1
+	4KYxdj3C7lsdvQeRy3EDgJtyVtYBdXI9eDTPGV8FeR+HRFlBoYJJMmvUovorzhBB
+	V6MmeFnDqiridIbnASdRP0KKCYKuSACDWwwSOOjR8I2NPtfvul5tSn7x3lZuS3eE
+	Z/jHmObf338OF/z3l8022idmvyrFYdhIERTxKy5+99VtMdOMBb4y2Kb7ee7aHZYG
+	3eY5lhZHes04OwX0NdYy1x6l3rNRIA5b84dcnggsPDm91B1YnpHveZrZ2BAPn8gU
+	yw21+FxO3wATZutvgoFf7L8VJjy0rNrPK+fC+WXMN0thXwhhocGgDFqr5ikw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1658949364; x=1659035764; bh=r4qGK98sg42Vk4nGLDU9Rohvg1uY
+	f2TuYvcv51y5nOY=; b=2sim3mX/FU/T91R/3HELJ/7/A9kHDhvcFafEloXbqahb
+	3/c8Oz05G1QOkvnYm94ihHhKU8EorD+GeJx1e+rYO7zcXOl2QshZZxAidTpgNRuk
+	ih3z6oOHRd4089F6/895n1rCxFG4RNhMw7w4dOtoB+jGkyLwqCRvIESOcprp9J8w
+	SdeXEGDrBCjxPU2Zb2d7UhpW5FIftzrI6z837pxJ4zFw+moyL7j95rfDDKvJh1Yh
+	sS05zC2vraaDoqyQHLqdG9Ilk29oMsebMmw34/51/4L/q4hmeqBHi8SWtcVvOgJa
+	Zevh4T2Zvb9XyLYqzJZ7TOjkvVj2uR0T7M1iKt/fTw==
+X-ME-Sender: <xms:847hYtYeQ5aJ_lrTn05vRmQ6UBnXzqX1kLT-oVyJjTbaZYOkvSo0aw>
+    <xme:847hYkaBhpH0FPOPhAZvqDruAPXmBHK1xd-d2KFM50-9LIkaLW_cRDHsX6VcajwWa
+    wh-aeZjIGeCfvTcOc0>
+X-ME-Received: 
+ <xmr:847hYv9GUqaLUf7JbRdfZbPOa6sItAWnXvajPhrjJS3fcbXTrpCSdZzSwzur2R7-HYo7h7d1eRQbXpt35iJl3__lU3o-OIX->
+X-ME-Proxy-Cause: 
+ gggruggvucftvghtrhhoucdtuddrgedvfedrvdduvddgudefiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enfghrlhcuvffnffculdefhedmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreer
+    tddtvdenucfhrhhomheprfgrthhrihgtkhcuhghilhhlihgrmhhsuceophgrthhrihgtkh
+    esshhtfigtgidrgiihiieqnecuggftrfgrthhtvghrnhephefgiefglefgfeefudfhffdu
+    fefhhedvjeefueeguddttdeileekgeeuieejuedvnecuffhomhgrihhnpehophgvnhgvmh
+    gsvgguuggvugdrohhrghdphihotghtohhprhhojhgvtghtrdhorhhgnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgrthhrihgtkhesshhtfi
+    gtgidrgiihii
+X-ME-Proxy: <xmx:847hYrrAyJYpWBMgKvTuHmmZMetEFR1AefCpu1KGJd_vDyqUO8Oqeg>
+    <xmx:847hYorvXMShf5nwi-ULVHlOs0--zynFG7UjzImkGH5EgudiT0RIDQ>
+    <xmx:847hYhSW5hpYinBcEK534OjnsMfhd5Rni0xeFTMaXYpLeVoZgQzRKA>
+    <xmx:9I7hYjUqfLHCokZhfBISLDD3UaAKEfAZ4vnGSvpcgqcTZJlFneUMbg>
+Feedback-ID: i68a1478a:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 27 Jul 2022 15:16:03 -0400 (EDT)
+Date: Wed, 27 Jul 2022 14:16:02 -0500
+From: Patrick Williams <patrick@stwcx.xyz>
+To: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Cc: Alexander Kanavin <alex.kanavin@gmail.com>,
+	Paulo Neves <ptsneves@gmail.com>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 2/2] fetch: bb.fatal when trying to
+ checksum non-existing files.
+Message-ID: <YuGO8jIZ/SE215Nh@heinlein.stwcx.org.github.beta.tailscale.net>
+References: <20220708205407.1680137-1-ptsneves@gmail.com>
+ <20220708205407.1680137-2-ptsneves@gmail.com>
+ <Yt9o3TefXIqpJk7q@heinlein.stwcx.org.github.beta.tailscale.net>
+ <CANNYZj99t0x08TYJ6JmZC9uT7VderpqjPCdKRp-QNzJAS2s6Qw@mail.gmail.com>
+ <YuAPBJrwSDriYmTZ@heinlein.stwcx.org.github.beta.tailscale.net>
+ <f3f31635-e216-d11a-d30d-dbedb6ed3335@theobroma-systems.com>
 MIME-Version: 1.0
-Date: Wed, 27 Jul 2022 08:49:35 -0700
-Message-ID: <bGRy.1658936975483534028.Wbtj@lists.openembedded.org>
-Content-Type: multipart/mixed; boundary="JrRAYLabBftJqUlBM3EU"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="McHT4cjUskvDRz8E"
+Content-Disposition: inline
+In-Reply-To: <f3f31635-e216-d11a-d30d-dbedb6ed3335@theobroma-systems.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 27 Jul 2022 15:49:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13859
+ <bitbake-devel@lists.openembedded.org>; Wed, 27 Jul 2022 19:16:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13860
 
---JrRAYLabBftJqUlBM3EU
-Content-Type: multipart/alternative; boundary="y9sKOy4xRMwGOEyrQdYF"
 
---y9sKOy4xRMwGOEyrQdYF
-Content-Type: text/plain; charset="utf-8"
+--McHT4cjUskvDRz8E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi! I'm a newbie of bitbake community!
-Recently, I'm trying to implement XMLRPC client for bitbake command(this is=
- similar to tinfoil).
-As I do this activity,=C2=A0 I found the following strange behavior.
+On Wed, Jul 27, 2022 at 04:50:37PM +0200, Quentin Schulz wrote:
+> On 7/26/22 17:57, Patrick Williams wrote:
+> > On Tue, Jul 26, 2022 at 07:35:21AM +0200, Alexander Kanavin wrote:
+> >> On Tue, 26 Jul 2022 at 06:09, Patrick Williams <patrick@stwcx.xyz> wro=
+te:
 
----
+> The original u-boot recipe uses "require" with just the filename, c.f.=20
+> https://cgit.openembedded.org/openembedded-core/tree/meta/recipes-bsp/u-b=
+oot/u-boot_2022.07.bb?h=3Dmaster,=20
+> etc... there's not a single recipes-bsp/u-boot returned by git grep in=20
+> openembedded-core... My understanding of the require mechanism so far is=
+=20
+> that if you pass it a filename, it'll only look into the current=20
+> directory (where the recipe is located) and if it has a path, it'll look=
+=20
+> for that path in all layers (well, BBPATH, which in the majority of=20
+> cases should be LAYERDIR, the root of the layer). Since there is no path=
+=20
+> in require for the u-boot recipes in openmebedded-core, I don't=20
+> understand what you're saying happens happens. c.f.=20
+> https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-ma=
+nual-metadata.html#require-directive=20
+> for the doc on require directive.
+>=20
+> This highlights one of the following:
+>   - a rogue bbappend or some weird configuration in one the layers in use,
 
-# getRecipePackages commands returns collections.defaultdict object, but it=
-'s not supported by XMLRPCServer
-This is as the title says.=C2=A0The following two places may help you under=
-stand.=C2=A0Isn't this a glitch?
+I dug into it a little more.  It is a rogue bbappend in the u-boot case
+and not an issue with the require.
 
-* getRecipePackages command returns=C2=A0command.cooker.recipecaches[mc].pa=
-ckages(See https://git.yoctoproject.org/poky/tree/bitbake/lib/bb/command.py=
-#n343 ) ( https://git.yoctoproject.org/poky/tree/bitbake/lib/bb/command.py#=
-n343 )
-* command.cooker.recipecaches[mc].packages is set as defaultdict(list) (See=
- https://git.yoctoproject.org/poky/tree/bitbake/lib/bb/cache.py#n153 )
+We have an internal tree that contains all the u-boot code along side
+the recipes, along with a u-boot%.bbappend to replace the external
+SRC_URI with an internal ("file://"-based) one.  This gets applied to
+the `meta/recipes-bsp` versions even though we don't have copies of
+their code.
 
-This causes an exception when calling getRecipePackages commands. See the a=
-ttached log file.
-We can fix this by returning as a dict object.
+--=20
+Patrick Williams
 
-```
-return dict(command.cooker.recipecaches[mc].packages)
-```
+--McHT4cjUskvDRz8E
+Content-Type: application/pgp-signature; name="signature.asc"
 
-#=C2=A0getLayerPriorities command clears recipescache
-I noticed that `getLayerPriorities` command deletes cache data because `get=
-LayerPriorities` calls `cooker.parseConfiguration()`, and this deletes cook=
-er.recipecaches.
-Is this behavior as intended?
+-----BEGIN PGP SIGNATURE-----
 
-1. getLayerPriorities=C2=A0command calls command.cooker.parseConfiguration(=
-)(See https://git.yoctoproject.org/poky/tree/bitbake/lib/bb/command.py#n298=
- )
-2. parseConfiguration deletes recipecaches(See https://git.yoctoproject.org=
-/poky/tree/bitbake/lib/bb/cooker.py#n467 )
+iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAmLhjvAACgkQqwNHzC0A
+wRngYQ//ZAi7220p77qJ0IHuHNunXDbAxAKWzNkkWZF5kwhV+5rgJlpfUi1F6N5y
+tOn0yvfBcmPvyjhUAsrNMkIzSkfjCGc1IzeYWTC2uCDfbgt9cH9uyPpImYjoGVUO
+lEuyYVEZX+l+a95ZHzsSyWPoanEHTySrGoL6SW1QQfR64FvacqPbwS2DR/TJh0G0
+OiNPQdnp1zcM/NL/xWnPOFqlQ90iumkm+BdZj7riW1CIuTJDWTDKqXXmuLrITDVA
+x/pMCGhQToDKADFVEHszPmFINdzFM5RD6cTSmtsQT3n+VgAO2L4vtXVt2XqunokQ
+2qqtrsLzE/2g3OYsIiZo36lLbgZO7OvgKADz+nFKFNAeDrPugWTMt73aLZeuNp9n
+3ErnI67Nu42EoGSQq2CEeR2htD1Eys9jmSrpg5/RB8NBmiGgZfd55l3IM/EJ1YsE
+eIGwNB54S4d39QseQefM8VkGp+2uybs/R10oOBODGTYiMbMxhrV5ZPRUHEtQDcYe
+0mSzq/QJWKPlr5yeKdvYGd4Gu1aOtFmqv6gyM1EH2C6RWE06Ivae6T5BKWf5iJA5
+eqyRCM0BrrDTIpg5IpOFCEV/NPsFaYSqdgXI1uR7uPcUvK7EKwcorW8diCGLnrOP
+w+Nu5pUT7XqcB/bsk8J7U1K17yw50NsyLr00i52tjpB5HTmcQNY=
+=GjPT
+-----END PGP SIGNATURE-----
 
-Therefore, If user calls commands by following order, the results of the th=
-ird and fifth getRecipes are different because the fourth getLayerPrioritie=
-s clears the cache.
-
-1. parseConfiguration command
-2. parseFiles command
-3.=C2=A0getRecipes command=C2=A0 =C2=A0<- user can get info normaly
-3.=C2=A0getLayerPriorities command
-4. getRecipes command=C2=A0 =C2=A0=C2=A0=C2=A0<- user can get empty info!
-
----
-
-This is my first post to this mailing list, so please forgive me if I am ru=
-de in any way. Thanks for reading!
-
---y9sKOy4xRMwGOEyrQdYF
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi! I'm a newbie of bitbake community!&nbsp;<br />Recently, I'm trying to i=
-mplement XMLRPC client for bitbake command(this is similar to tinfoil).&nbs=
-p;<br />As I do this activity,&nbsp; I found the following strange behavior=
-.<br /><br />---<br /><br /># getRecipePackages commands returns collection=
-s.defaultdict object, but it's not supported by XMLRPCServer<br />This is a=
-s the title says.&nbsp;The following two places may help you understand.&nb=
-sp;Isn't this a glitch?<br /><br />* getRecipePackages command returns&nbsp=
-;command.cooker.recipecaches[mc].packages(See&nbsp;<a href=3D"https://git.y=
-octoproject.org/poky/tree/bitbake/lib/bb/command.py#n343" target=3D"_blank"=
- rel=3D"noopener">https://git.yoctoproject.org/poky/tree/bitbake/lib/bb/com=
-mand.py#n343 )</a><br />* command.cooker.recipecaches[mc].packages is set a=
-s defaultdict(list) (See <a href=3D"https://git.yoctoproject.org/poky/tree/=
-bitbake/lib/bb/cache.py#n153" target=3D"_blank" rel=3D"noopener">https://gi=
-t.yoctoproject.org/poky/tree/bitbake/lib/bb/cache.py#n153</a>)<br /><br />T=
-his causes an exception when calling getRecipePackages commands. See the at=
-tached log file.&nbsp;<br />We can fix this by returning as a dict object.&=
-nbsp;<br /><br />```<br />return dict(command.cooker.recipecaches[mc].packa=
-ges)<br />```<br /><br />#&nbsp;getLayerPriorities command clears recipesca=
-che<br />I noticed that `getLayerPriorities` command deletes cache data bec=
-ause `getLayerPriorities` calls `cooker.parseConfiguration()`, and this del=
-etes cooker.recipecaches.<br />Is this behavior as intended?<br /><br />1. =
-getLayerPriorities&nbsp;command calls command.cooker.parseConfiguration()(S=
-ee <a href=3D"https://git.yoctoproject.org/poky/tree/bitbake/lib/bb/command=
-.py#n298" target=3D"_blank" rel=3D"noopener">https://git.yoctoproject.org/p=
-oky/tree/bitbake/lib/bb/command.py#n298</a>)<br />2. parseConfiguration del=
-etes recipecaches(See&nbsp;<a href=3D"https://git.yoctoproject.org/poky/tre=
-e/bitbake/lib/bb/cooker.py#n467" target=3D"_blank" rel=3D"noopener">https:/=
-/git.yoctoproject.org/poky/tree/bitbake/lib/bb/cooker.py#n467</a>)<br /><br=
- />Therefore, If user calls commands by following order, the results of the=
- third and fifth getRecipes are different because the fourth getLayerPriori=
-ties clears the cache.<br /><br />1. parseConfiguration command
-<div>2. parseFiles command<br />3.&nbsp;getRecipes command&nbsp; &nbsp;&lt;=
-- user can get info normaly<br />3.&nbsp;getLayerPriorities command<br />4.=
- getRecipes command&nbsp; &nbsp;&nbsp;&nbsp;&lt;- user can get empty info!&=
-nbsp;<br /><br />---<br /><br />This is my first post to this mailing list,=
- so please forgive me if I am rude in any way. Thanks for reading!<br /><br=
- /></div>
-
---y9sKOy4xRMwGOEyrQdYF--
-
---JrRAYLabBftJqUlBM3EU
-Content-Type: application/octet-stream; name="log"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="log"
-
-L3Vzci9saWIvcHl0aG9uMy9kaXN0LXBhY2thZ2VzL2h0bWw1bGliL190cmllL19iYXNlLnB5OjM6
-IERlcHJlY2F0aW9uV2FybmluZzogVXNpbmcgb3IgaW1wb3J0aW5nIHRoZSBBQkNzIGZyb20gJ2Nv
-bGxlY3Rpb25zJyBpbnN0ZWFkIG9mIGZyb20gJ2NvbGxlY3Rpb25zLmFiYycgaXMgZGVwcmVjYXRl
-ZCBzaW5jZSBQeXRob24gMy4zLCBhbmQgaW4gMy4xMCBpdCB3aWxsIHN0b3Agd29ya2luZwogIGZy
-b20gY29sbGVjdGlvbnMgaW1wb3J0IE1hcHBpbmcKV0FSTklORzogeWFjYyB0YWJsZSBmaWxlIHZl
-cnNpb24gaXMgb3V0IG9mIGRhdGUKTG9hZGluZyBjYWNoZTogMTAwJSB8IyMjIyMjIyMjIyMjIyMj
-IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
-IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
-IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyN8IFRpbWU6IDA6MDA6MDAKTG9hZGVkIDE2NzIgZW50cmll
-cyBmcm9tIGRlcGVuZGVuY3kgY2FjaGUuCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KZ2V0UmVjaXBl
-UGFja2FnZXMKVHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3QpOgogIEZpbGUgIi9ob21l
-L3lvc3VrZS93b3JrL2dpdC9iYmNsaW50L3Rlc3QvYmJjbGllbnQvYmJjbGllbnQucHkiLCBsaW5l
-IDc5OSwgaW4gX19ydW5fY29tbWFuZAogICAgcmVzdWx0ID0gc2VydmVyX2Nvbm5lY3Rpb24uY29u
-bmVjdGlvbi5ydW5Db21tYW5kKGNvbW1hbmRsaW5lKQogIEZpbGUgIi91c3IvbGliL3B5dGhvbjMu
-OC94bWxycGMvY2xpZW50LnB5IiwgbGluZSAxMTA5LCBpbiBfX2NhbGxfXwogICAgcmV0dXJuIHNl
-bGYuX19zZW5kKHNlbGYuX19uYW1lLCBhcmdzKQogIEZpbGUgIi91c3IvbGliL3B5dGhvbjMuOC94
-bWxycGMvY2xpZW50LnB5IiwgbGluZSAxNDUwLCBpbiBfX3JlcXVlc3QKICAgIHJlc3BvbnNlID0g
-c2VsZi5fX3RyYW5zcG9ydC5yZXF1ZXN0KAogIEZpbGUgIi91c3IvbGliL3B5dGhvbjMuOC94bWxy
-cGMvY2xpZW50LnB5IiwgbGluZSAxMTUzLCBpbiByZXF1ZXN0CiAgICByZXR1cm4gc2VsZi5zaW5n
-bGVfcmVxdWVzdChob3N0LCBoYW5kbGVyLCByZXF1ZXN0X2JvZHksIHZlcmJvc2UpCiAgRmlsZSAi
-L3Vzci9saWIvcHl0aG9uMy44L3htbHJwYy9jbGllbnQucHkiLCBsaW5lIDExNjksIGluIHNpbmds
-ZV9yZXF1ZXN0CiAgICByZXR1cm4gc2VsZi5wYXJzZV9yZXNwb25zZShyZXNwKQogIEZpbGUgIi91
-c3IvbGliL3B5dGhvbjMuOC94bWxycGMvY2xpZW50LnB5IiwgbGluZSAxMzQxLCBpbiBwYXJzZV9y
-ZXNwb25zZQogICAgcmV0dXJuIHUuY2xvc2UoKQogIEZpbGUgIi91c3IvbGliL3B5dGhvbjMuOC94
-bWxycGMvY2xpZW50LnB5IiwgbGluZSA2NTUsIGluIGNsb3NlCiAgICByYWlzZSBGYXVsdCgqKnNl
-bGYuX3N0YWNrWzBdKQp4bWxycGMuY2xpZW50LkZhdWx0OiA8RmF1bHQgMTogIjxjbGFzcyAnVHlw
-ZUVycm9yJz46Y2Fubm90IG1hcnNoYWwgPGNsYXNzICdjb2xsZWN0aW9ucy5kZWZhdWx0ZGljdCc+
-IG9iamVjdHMiPgoKRHVyaW5nIGhhbmRsaW5nIG9mIHRoZSBhYm92ZSBleGNlcHRpb24sIGFub3Ro
-ZXIgZXhjZXB0aW9uIG9jY3VycmVkOgoKVHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3Qp
-OgogIEZpbGUgIi4vbWFpbi5weSIsIGxpbmUgNzIsIGluIDxtb2R1bGU+CiAgICBtYWluKCkKICBG
-aWxlICIuL21haW4ucHkiLCBsaW5lIDUzLCBpbiBtYWluCiAgICByZXQgPSBjbGllbnQuZ2V0X3Jl
-Y2lwZV9wYWNrYWdlcygpCiAgRmlsZSAiL2hvbWUveW9zdWtlL3dvcmsvZ2l0L2JiY2xpbnQvdGVz
-dC9iYmNsaWVudC9iYmNsaWVudC5weSIsIGxpbmUgNDk4LCBpbiBnZXRfcmVjaXBlX3BhY2thZ2Vz
-CiAgICByZXR1cm4gc2VsZi5fX3J1bl9jb21tYW5kKCAgIyB0eXBlOiBpZ25vcmUKICBGaWxlICIv
-aG9tZS95b3N1a2Uvd29yay9naXQvYmJjbGludC90ZXN0L2JiY2xpZW50L2JiY2xpZW50LnB5Iiwg
-bGluZSA4MDMsIGluIF9fcnVuX2NvbW1hbmQKICAgIHByaW50KHJlc3VsdCkKVW5ib3VuZExvY2Fs
-RXJyb3I6IGxvY2FsIHZhcmlhYmxlICdyZXN1bHQnIHJlZmVyZW5jZWQgYmVmb3JlIGFzc2lnbm1l
-bnQK
-
---JrRAYLabBftJqUlBM3EU--
+--McHT4cjUskvDRz8E--
 
