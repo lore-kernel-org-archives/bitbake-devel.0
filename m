@@ -1,157 +1,208 @@
-Return-Path: <rasmus.villemoes@prevas.dk>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438C0C19F28
-	for <webhook@archiver.kernel.org>; Wed,  3 Aug 2022 11:40:23 +0000 (UTC)
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com
- (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.117])
- by mx.groups.io with SMTP id smtpd.web11.7344.1659526812214810017
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9752AC19F28
+	for <webhook@archiver.kernel.org>; Wed,  3 Aug 2022 13:22:03 +0000 (UTC)
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com
+ [209.85.210.45])
+ by mx.groups.io with SMTP id smtpd.web09.8412.1659532913758819548
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Aug 2022 04:40:13 -0700
+ Wed, 03 Aug 2022 06:21:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@prevas.dk header.s=selector1 header.b=Asyg7COf;
- spf=pass (domain: prevas.dk, ip: 40.107.6.117,
- mailfrom: rasmus.villemoes@prevas.dk)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jOirgUYT2wxlHIh6KsTglORha1vwhDcHKDVL+41uHygLAQwUdS0ayDAUHeTWFv0ICZNeNnHE9zTLpvGH41HuEjy0rdAfisibkSbq2HkMn3BL2F0LzW7gsqWYlfqdube+wIPpgy50TVlh7nNkf7umSzJLBSchZBDhtxsnmcYS94Qy72rvQnUrx/5VXqMeiX5pYjI1K7jcwWwejksM2FK/sHvJ3r1zqc/3F59uZKKGnqkj+WEv0GdTQZuc8yUAa/JxPGdrqC43pQemrsVxk8a4YP4O6vBY5S1VNpx1IceEC4f9cZJQVlo2lvcXxMNLb2YmFt+lRnItyDcPH5bzED/Tzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xrzCWGIuBbqyAAtONi2gg1QdsNxS8qussLirfpsjho0=;
- b=JZMDokNqw0fQcGAO0Yzs9OpruQo/YStupbi1HAWcSW9uS1DjJGFrZ/tJxfRblrKoBSUf/K4kmJ/b0oya1IywsKKBgPakeMGCA9SZNAZxeWT+7hqfboQsWqVGUm+9fUebv5jMi8OirtjuNo8iriSwH4N1dmoGmrEYEuHsmPD8aj0SJw+2jX/1I5kgIjnfPcHQWicNfuhcuCGlkW00VH/0C+hnkq1imGSY7KrDZRe1DHRfkEeXDLvUo6clK1Fvlw1USjIBoe0uVPJ8632ws0ZCigUCbg0Bm6mRnZ6jk4w6GjCXQZglyBZkvw5dBMKOy7WBL8gqlAU8C6j+FHGnlGO7nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
- dkim=pass header.d=prevas.dk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xrzCWGIuBbqyAAtONi2gg1QdsNxS8qussLirfpsjho0=;
- b=Asyg7COf+8wSHWI0iJQTUCd3X8AK9t0DaLm6tET6jEkjnk1H1ZpaHXNQaeUC4VzLuV5aAZpIvQVanXb7raflQB91cYaxJtR2f9cN72REseur+G9/jUKu4Yd674xBunv4JkWtDmjGgLVrUbGRRCYEo50kM1ArZ1VFOhAaGuJ6zWE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=prevas.dk;
-Received: from DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:34a::22)
- by PAXPR10MB5160.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:288::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.16; Wed, 3 Aug
- 2022 11:40:08 +0000
-Received: from DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::84cd:fa2:ffc0:456e]) by DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::84cd:fa2:ffc0:456e%7]) with mapi id 15.20.5504.014; Wed, 3 Aug 2022
- 11:40:08 +0000
-Message-ID: <29b6f80a-74e8-896c-d02a-cd584d50cfb3@prevas.dk>
-Date: Wed, 3 Aug 2022 13:40:06 +0200
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=qk5OgvNj;
+ spf=pass (domain: gmail.com, ip: 209.85.210.45,
+ mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f45.google.com with SMTP id
+ g19-20020a9d1293000000b0061c7bfda5dfso12206080otg.1
+        for <bitbake-devel@lists.openembedded.org>;
+ Wed, 03 Aug 2022 06:21:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:in-reply-to;
+        bh=dwbPkp2Ci3/KkEz427qsWY7hWnMgK6BlJ6uYnyUcx+A=;
+        b=qk5OgvNjYiigyH8kofoofME/j/sqpgNbJ9uf4553KWranzMDIEqAcdEV4T9vXyQN0v
+         WHmRnHvqBgnISQF6Sa1Xh38R1A5ecB1Su3XNrwEapwFlvpfB8xKwWrF1+VthsW74LWbZ
+         8Knuh2tWaNraJC+5IgQsuB2P6zcfwfT8HywEpasEES3uFcAqal3zDaZ760P3DG6rgxJL
+         8EwbVkYqnoNVIXkG/wV/S1krmGLkXNT6kJZOVyzpkbfgG35LPTY5NqhBnN1CsWAVnFtL
+         yeFWWM8TzV+J/vZGNnjYZAsVGp4qnvHKBJXkoaaF+Ca1kvpWO3jWKKSI+WWwQGHv22zd
+         +ygA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:message-id:date:mime-version:user-agent
+         :subject:content-language:to:references:in-reply-to;
+        bh=dwbPkp2Ci3/KkEz427qsWY7hWnMgK6BlJ6uYnyUcx+A=;
+        b=THeEDOalYBLKeGHTG/nakWDj7m9oRECQ6G2azjGKSq4SRMOpyo1e50GNFMxiGHejso
+         eywqQJKlFHbxQbubiivLcNPa6jwxq1GeYBAuxeB0RO1qM4QCv9EEb2FLZP0FZdP/z+jx
+         KQcBmaZyN8lpp9jCWpR2ArETJVc/sgCDLyIxfF9dwPmJEYCI/ILEFfDwdYE6cBuDvzYW
+         PYj3JrVl/TUYC5TEIGa+e7sl9mUs6FsjDSn96iffJyjBdltKxwAdf77bdSO3NiRVVGp7
+         sHIMUb/rcb20gD++2U7fM/UXVdDujAYNIvugdda9eZazeeAlPldqqfu6b5A9SiGKfqGB
+         nkJw==
+X-Gm-Message-State: AJIora/axEAbetCthEl4kQYuDd8vreJ7LM+8AXlWy37M7MfAguN1ZVyC
+	zwjD+f2SlGMAY33RdsesxvY=
+X-Google-Smtp-Source: 
+ AGRyM1uzODbTK95M+oNWBxLs+Z3en3CLnORTwzB1J7OKol1nCL5fhHdy1wco4pG06R2L/K+xp0f/OA==
+X-Received: by 2002:a9d:4b0a:0:b0:61c:f85a:3d47 with SMTP id
+ q10-20020a9d4b0a000000b0061cf85a3d47mr9593481otf.360.1659532912923;
+        Wed, 03 Aug 2022 06:21:52 -0700 (PDT)
+Received: from ?IPV6:2605:a601:ac3d:c100:e3e8:d9:3a56:e27d?
+ ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
+        by smtp.gmail.com with ESMTPSA id
+ v20-20020a4ae6d4000000b00435b0a84995sm3959821oot.24.2022.08.03.06.21.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Aug 2022 06:21:51 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+Content-Type: multipart/alternative;
+ boundary="------------R08uDMf7kv0mkEZKaEoJZpZy"
+Message-ID: <a1e4c7e7-e048-e57a-976f-86584b2970fb@gmail.com>
+Date: Wed, 3 Aug 2022 08:21:50 -0500
+MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
+ Thunderbird/91.9.1
 Subject: Re: [bitbake-devel][PATCH v2] siggen: Fix sigtask data not being
  renamed atomically
 Content-Language: en-US
-To: bitbake-devel@lists.openembedded.org
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+ bitbake-devel@lists.openembedded.org
 References: <20220801203418.57677-1-JPEWhacker@gmail.com>
  <20220802131405.318201-1-JPEWhacker@gmail.com>
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc: Joshua Watt <jpewhacker@gmail.com>
-In-Reply-To: <20220802131405.318201-1-JPEWhacker@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: GV3P280CA0088.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:150:a::19) To DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:34a::22)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5171c23c-7108-4c7d-e30b-08da7544ea87
-X-MS-TrafficTypeDiagnostic: PAXPR10MB5160:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	uKNC2SKWU6h/BTKeaO0egqqPVT41OdMhYCPG1EeYUjStxR9WDM30DsPnbXA2psI7MGH7VHtipnDAyQUC2qVquJJ9KHfTABqNtK7CZvvjnK1x6gbwEGhyQ8dHsSQUwtsc/DeG2SM25URbNB4K1lOfX/7/aRpzD+koOb8WCCVuQ7pAnUVe324SfR62FUKoj/C6UCqgDhdy7N04IyOVc3xdE/z+ZNteOvF3+BMR3cVG4gPha/H6mICexqtjoLccMiVxPJ4DwbLRcDKEMPYlZNI5WEWqtfxvt4Ic6jJ0j9X8YP94uw3tV5YICEOCXGi0+aOJpU9dARLt6fC49zRWvKgAaxVit4qYm0IejAOGjIJVlRayrOMK/G6BbYGCQPDA5rx8BHecgAL19YOzkTc0MHDrC5wOpw4YZqbTGlW+WTVUrR/sBP0V3TNVx9i7VvSXyeY6C7V64u1N1c2jHZMjCcGoUltfJzCXUpXYYLGpqQFmc/DdLSk2KnlkDoTjUZNJ2Vkf3IsWROw4DsCrPwoJ3sOQot9mdJM6RuFajre479TBw5xwk047PXz5wDnCdPukobqqlNk/I8Ddee1tsLnXMY4COGJZncHLb6BwpUInYLsjnhFhV70nEbm+3/hmh34llu4IjNsFPQD33hHJZlXhUQITl9RvIpspOGFPKlSr4jjqhs6NaxAdUGTQ6X8DEqarrrhDtORhVkoIu725AA0igsKMR8KkAWDjpzLFAMjBDpCEOdWulIv2fA7KDulddM7o1gXT9eOKmKArdRjGBrkwSlI7GrAvCyzZSXyZ5S0KyDS1cfGYyoAej20T1DMLfv8N5j/7nxUdbSZNCHjbEo3nKIdsnCA32bJ6YBy0uOXSAGJ95ps=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(396003)(376002)(39850400004)(136003)(366004)(346002)(31696002)(316002)(31686004)(36756003)(86362001)(6916009)(38350700002)(6506007)(52116002)(2906002)(38100700002)(5660300002)(66946007)(8676002)(66476007)(8976002)(4326008)(83380400001)(8936002)(6512007)(478600001)(41300700001)(6486002)(2616005)(26005)(44832011)(186003)(66556008)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?UGxhc2oyRFUyZ2xXVk5pZDhDK2NlMkRSZEY5akVtNEtzYUJobEdaWVEvWGs5?=
- =?utf-8?B?eDZMQWgvb1Q3S1UzT3F6RjNGK1E1dFYvcmpMaFFCUmplSDhwMnBDTjVod1lj?=
- =?utf-8?B?clBtbkZZWGdDQ2xRbjVhT1QwMFZNSUh0RHN4L1hzVy9BaU9uUU1YZHhGZ2NF?=
- =?utf-8?B?SE1oYXZ0UU9NbG5xdW53SU1SbUVablJqaWxreXBBakJVT2o0dHNMbEdxa0JR?=
- =?utf-8?B?S3BIYWdtQU5UT0RyUkpIWmt6eEVxZXhrTmU3Mnp2MlNqQnpIU3o0U3p2cnkz?=
- =?utf-8?B?NWYreVgzZnZuN3o5ZnMyT1dXQ0hOQmNyaEZ2NjBFUEdhNmF6aCs0Sjl4dFpX?=
- =?utf-8?B?SGluU056TUFlVjFRL010ZXhtTkNUVURjNGdkdFE2ODZLTE5NYUhldEltV3pl?=
- =?utf-8?B?L1dMR1hPMlUySno3N2U0TlZWNTdlYzlUOVpKNUY5VlpLSlNMWFdGdTRsaDF4?=
- =?utf-8?B?SDYxMWRHZW0xTkdGY3Z4NXQwempRNFg5eWRrWTdNYlJzZ1duM3pRR0FvRy9K?=
- =?utf-8?B?UUZUZDgwcStFcTZvdU5RWFBxS0huV1YvYW81WFVHUHMvR0RzN2MyU3BIQVBz?=
- =?utf-8?B?TnJFb1Z6NFl2ZUswTElIaUtMMUo4VHdNU3NDNkhaSlVNZUs1QzZoOWwrMzgy?=
- =?utf-8?B?aFp0VmF0WVdwc3NCREhqckVVRDJURjZxdXVsN3QzeEVoekJGYVg1TEFwWEZu?=
- =?utf-8?B?THlSVkFKMzAxdFVwaW5Kc2Uyd05COHo3QVZjNmlWcU15NVFRWHlDVnFicURJ?=
- =?utf-8?B?ZzVOVXpTOEplcjlJYTFxQjJZK0hrRmdhdkY2Q2NNUk1OdGg3SkFlaFRyNDNs?=
- =?utf-8?B?NHJUVmk1ZTl3UlM0b2prR2ZyMVd1c3JSdlNxa2NDY1hBTC94VDBqcExyc1FX?=
- =?utf-8?B?bTk1aUxyZGloTFdSRFpUYVEvTUtKelZGSSs3ejhWU2ZKL3lKQm1kMmFYS3dT?=
- =?utf-8?B?Mmc0ZVNxb1Fzd3djWFkzcE1mWWNxdzVwRzIzWGJWS0FUM2JiZExNc3NQeDZY?=
- =?utf-8?B?cURyMHRrYVhkMVdDRjdXNmp4S25wTVFUVkFTbkg5Vmozd00xT1hTRDcwUUha?=
- =?utf-8?B?ZnJkdWRxczh2cUNoZWNLQlNQODNNMUNEVnBmZ240ajd0b0ZEenRVSVZ6VmZm?=
- =?utf-8?B?UE1KN2hERXJlYzFoNnN5VFNKMk4xdC9UQlowTWJqUnY0ZzUzT0t2YmlGSmpD?=
- =?utf-8?B?c2NVaXp6WTdodFNEYU9pVmozZFRnZ0h4Vm55TlQ4WUIyekdDMUFSK2NkdnVa?=
- =?utf-8?B?VlhldGdENVlKU29NTUFKdnR1eUlrbmw4Nkw5bFlOem9QMkdDdk5WaWxSSnJo?=
- =?utf-8?B?MlZvNi9RS21GczMydDl0eS91bTBkR1BCYTdoK1Y0Z2dTRkZIUHIyaTgzU3lm?=
- =?utf-8?B?Y0JCSjhMK3hNZkRkUnc3WFY0cElyZ3BqOXdhSEVNT3J3ZERqWU8wT21qbGJp?=
- =?utf-8?B?elBLWW5COFpUcXZmOTZOcCtuMXNvdDE0cFB4ZzZFZ2x4Z1czZ01JL3pxWmF0?=
- =?utf-8?B?eVplNGo2UDNYdXlrc2k0Q3RUdTdURXR4bkxhZWh0U0VMem1jOGY0cjRPbXQz?=
- =?utf-8?B?enR2eFF5ZitZZk9HM21MRlZPNUtYTEJqeDZaNjQwVVBYNzBLVXdPdTJiUGVJ?=
- =?utf-8?B?VWowbGNvRXpwRnFmdlFNWUhrSWFESzBudmlPRkFjT1hDL1RDS2tVa1FNUksx?=
- =?utf-8?B?SHIzaG5BVXhlTkJUakZxbnVzWkw5VXhsL3hrRnFwdXU4VlZWQmV5TkNtb1k0?=
- =?utf-8?B?cFJJTmJYNTlJTFM2SHpidGUvUStXMHZ2KzVtcERtWXpldHA4cnc5emZUaWFv?=
- =?utf-8?B?K1hySjUyeHBzVlZqUjQ1WjJUd0paS3lwMHhtR0tCdzRZRmN4WTlybkNiWlJj?=
- =?utf-8?B?ZjZkN1QxQ1Q5QjBReERvRWNEWmFmUElxMWNnd2VXeW51bmNrYlF2V2dmKzJ5?=
- =?utf-8?B?VHVaYXd3YllDc2lWRzlsbHUxR1Q5ZWdsZmNmQjRpNzZxQ3dZTUVuZm9WZnEr?=
- =?utf-8?B?bzdGSDB1VnZTRTh1dnZOdHNVYWtvNGhBVlFuRWwxWE9VYlhHWXRwWkRCUmVr?=
- =?utf-8?B?V3hBcmlxSjJ2QjZkZ1pkSWNzb201dFdLKzhZQk42M3k3YXJIeDA3dmtBVUlM?=
- =?utf-8?B?a3lhazI4NHpIek8ybk80Y2YxQncwMW1MSmU0MW9XRjc3SmY1Vi8vK2NhOGRW?=
- =?utf-8?B?aVE9PQ==?=
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 
- 5171c23c-7108-4c7d-e30b-08da7544ea87
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2022 11:40:08.1220
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 
- EKNVmVySaDtAwUg3JA1AqFHhgpIUkrnIaWFNHx2BDJdAJQycktQnIniIWvD+2h2lYDPmzJkLn144kghZmuda96JbJVLNC/iJOHx31XUgEoM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR10MB5160
+ <29b6f80a-74e8-896c-d02a-cd584d50cfb3@prevas.dk>
+In-Reply-To: <29b6f80a-74e8-896c-d02a-cd584d50cfb3@prevas.dk>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 03 Aug 2022 11:40:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13865
+ <bitbake-devel@lists.openembedded.org>; Wed, 03 Aug 2022 13:22:03 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13866
 
-On 02/08/2022 15.14, Joshua Watt via lists.openembedded.org wrote:
-> Signature generation uses mkstemp() to get a file descriptor to a unique
-> file and then write the signature into it, however it closed the file
-> before doing the chmod() and rename() operations. Closing the file means
-> that other mkstemp() could potentially open the same file and race with
-> the chmod() and rename(), causing a error. While it may not sound like
-> this would be very likely, glibc (at least) generates the filename for
-> mkstemp() using the system clock, meaning that it is much more likely
-> for highly parallel builds sharing sstate over NFS to encounter the race
-> condition.
-> 
-> To fix the problem, perform the chmod() and rename() while the file is
-> still open, since this prevents other mkstemp() calls from being able to
-> open the file (due to the O_EXCL flag).
+This is a multi-part message in MIME format.
+--------------R08uDMf7kv0mkEZKaEoJZpZy
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+
+On 8/3/22 06:40, Rasmus Villemoes wrote:
+> On 02/08/2022 15.14, Joshua Watt via lists.openembedded.org wrote:
+>> Signature generation uses mkstemp() to get a file descriptor to a unique
+>> file and then write the signature into it, however it closed the file
+>> before doing the chmod() and rename() operations. Closing the file means
+>> that other mkstemp() could potentially open the same file and race with
+>> the chmod() and rename(), causing a error. While it may not sound like
+>> this would be very likely, glibc (at least) generates the filename for
+>> mkstemp() using the system clock, meaning that it is much more likely
+>> for highly parallel builds sharing sstate over NFS to encounter the race
+>> condition.
+>>
+>> To fix the problem, perform the chmod() and rename() while the file is
+>> still open, since this prevents other mkstemp() calls from being able to
+>> open the file (due to the O_EXCL flag).
+> Eh, O_CREAT|O_EXCL should prevent opening an already existing file,
+> whether somebody has it open or not, so I don't see how another
+> mkstemp() could end up opening "our" file. Unless O_EXCL semantics are
+> broken on NFS and only work by accident when the local client does have
+> the file open - but what would then prevent other clients with,
+> presumably, the exact same system time from clobbering our file, whether
+> or not the chmod+rename is done with the fd still held?
+
+Yes, for some reason I had it my head that O_EXCL only affects open 
+files; so I'm not sure. Maybe NFS is the culprit :/
+
+>
+> The patch is probably fine (as in, shouldn't make anything worse), but I
+> think it would be nice to understand just what the problem actually is,
+> and if this fixes it, how.
+
+Ya, we are definetely getting errors like:
+
+
+FileNotFoundError: [Errno 2] No such file or directory: 
+'/mnt/releases/sstate/99/sigtask.wq6gkrm7' -> 
+'/mnt/releases/sstate/99/sstate:hdparm::9.48:r0::3:990d8b39c15752a2dd68369cb3609283_unpack.tgz.siginfo'
+
+With a backtrace to the os.rename() under heavy load. I don't understand 
+how the chmod() can succeed and the rename fail unless there is a race. 
+It's very hard to diagnose what went wrong post-mortem.
+
+My other option was to manually add more entropy to the file names by 
+prepending some random characters after "sigtask", since the 
+"randomeness" of mkstemp() isn't great all tasks use the same sigtask 
+file prefix (which increases the likely hood of a collision).
+>
+> Rasmus
+--------------R08uDMf7kv0mkEZKaEoJZpZy
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">On 8/3/22 06:40, Rasmus Villemoes
+      wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:29b6f80a-74e8-896c-d02a-cd584d50cfb3@prevas.dk">
+      <pre class="moz-quote-pre" wrap="">On 02/08/2022 15.14, Joshua Watt via lists.openembedded.org wrote:
+</pre>
+      <blockquote type="cite">
+        <pre class="moz-quote-pre" wrap="">Signature generation uses mkstemp() to get a file descriptor to a unique
+file and then write the signature into it, however it closed the file
+before doing the chmod() and rename() operations. Closing the file means
+that other mkstemp() could potentially open the same file and race with
+the chmod() and rename(), causing a error. While it may not sound like
+this would be very likely, glibc (at least) generates the filename for
+mkstemp() using the system clock, meaning that it is much more likely
+for highly parallel builds sharing sstate over NFS to encounter the race
+condition.
+
+To fix the problem, perform the chmod() and rename() while the file is
+still open, since this prevents other mkstemp() calls from being able to
+open the file (due to the O_EXCL flag).
+</pre>
+      </blockquote>
+      <pre class="moz-quote-pre" wrap="">
 Eh, O_CREAT|O_EXCL should prevent opening an already existing file,
 whether somebody has it open or not, so I don't see how another
 mkstemp() could end up opening "our" file. Unless O_EXCL semantics are
 broken on NFS and only work by accident when the local client does have
 the file open - but what would then prevent other clients with,
 presumably, the exact same system time from clobbering our file, whether
-or not the chmod+rename is done with the fd still held?
+or not the chmod+rename is done with the fd still held?</pre>
+    </blockquote>
+    <p><font face="monospace">Yes, for some reason I had it my head that
+        O_EXCL only affects open files; so I'm not sure. Maybe NFS is
+        the culprit :/</font><br>
+    </p>
+    <blockquote type="cite"
+      cite="mid:29b6f80a-74e8-896c-d02a-cd584d50cfb3@prevas.dk">
+      <pre class="moz-quote-pre" wrap="">
 
 The patch is probably fine (as in, shouldn't make anything worse), but I
 think it would be nice to understand just what the problem actually is,
-and if this fixes it, how.
+and if this fixes it, how.</pre>
+    </blockquote>
+    <p><font face="monospace">Ya, we are definetely getting errors like:</font></p>
+    <p><font face="monospace"><br>
+      </font></p>
+    <font face="monospace"><span style="font-size: 12px; font-style: normal; font-variant-ligatures: none; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; text-align: left; text-indent: 0px; text-transform: none; white-space: pre-wrap; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgba(29, 28, 29, 0.04); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">FileNotFoundError: [Errno 2] No such file or directory: '/mnt/releases/sstate/99/sigtask.wq6gkrm7' -&gt; '/mnt/releases/sstate/99/sstate:hdparm::9.48:r0::3:990d8b39c15752a2dd68369cb3609283_unpack.tgz.siginfo'</span></font><br>
+    <p><span style="font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: none; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; text-align: left; text-indent: 0px; text-transform: none; white-space: pre-wrap; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgba(29, 28, 29, 0.04); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"><font face="monospace">With a backtrace to the os.rename() under heavy load. I don't understand how the chmod() can succeed and the rename fail unless there is a race. It's very hard to diagnose what went wrong post-mortem.</font></span></p>
+    <p><span style="font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: none; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; text-align: left; text-indent: 0px; text-transform: none; white-space: pre-wrap; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgba(29, 28, 29, 0.04); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"><font face="monospace">
+</font></span></p>
+    <span style="font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: none; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; text-align: left; text-indent: 0px; text-transform: none; white-space: pre-wrap; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgba(29, 28, 29, 0.04); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"><font face="monospace">My other option was to manually add more entropy to the file names by prepending some random characters after "sigtask", since the "randomeness" of mkstemp() isn't great all tasks use the same sigtask file prefix (which increases the likely hood of a collision). </font></span><br>
+    <span style="font-family: Monaco, Menlo, Consolas, &quot;Courier New&quot;, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: none; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; text-align: left; text-indent: 0px; text-transform: none; white-space: pre-wrap; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgba(29, 28, 29, 0.04); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"></span>
+    <blockquote type="cite"
+      cite="mid:29b6f80a-74e8-896c-d02a-cd584d50cfb3@prevas.dk">
+      <pre class="moz-quote-pre" wrap="">
 
 Rasmus
+</pre>
+    </blockquote>
+  </body>
+</html>
+
+--------------R08uDMf7kv0mkEZKaEoJZpZy--
 
