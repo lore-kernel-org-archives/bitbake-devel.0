@@ -1,108 +1,104 @@
-Return-Path: <quaresma.jose@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9CEC00140
-	for <webhook@archiver.kernel.org>; Fri,  5 Aug 2022 09:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D22C00140
+	for <webhook@archiver.kernel.org>; Fri,  5 Aug 2022 10:32:39 +0000 (UTC)
 Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com
  [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web11.5156.1659692958841544934
+ by mx.groups.io with SMTP id smtpd.web10.5519.1659695556928293962
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Aug 2022 02:49:19 -0700
+ Fri, 05 Aug 2022 03:32:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=E2hTZpb3;
- spf=pass (domain: gmail.com, ip: 209.85.221.52,
- mailfrom: quaresma.jose@gmail.com)
-Received: by mail-wr1-f52.google.com with SMTP id j7so2657673wrh.3
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=eNfhIbnQ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f52.google.com with SMTP id l4so2718856wrm.13
         for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Aug 2022 02:49:18 -0700 (PDT)
+ Fri, 05 Aug 2022 03:32:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc;
-        bh=Q/mnAqoYi7oxgwFJLPXIomsmBCatzWPJFIvMIV/UMY4=;
-        b=E2hTZpb3IZj3bphd/72CJ9LxY/8bhwYU5Up4zalmaMo43KoNTbVsJKoHVEFkTCCrR9
-         dkvvTHen5H496vLQvIu5h0PHnBxoIM0CNjDaxW70XOxkW4y0IrL2aG7KYbZmw2QU+OoU
-         u5obksZTbyGmNZyhevNtELkVtR44m2Kelfjd7Bm4lMy0mGJ1YOMpC1uFkcWQCOVGxlRj
-         dnPfrdXBFtUDIBcbDkg2C0bH8aKZx52M5UAOStTeqg248A4EoK3elq/nqLuZbzoasmXh
-         ot0Qm6nC6/aKVj2ct/vbFWVhk5EZqU1uCExz0rWuhEhw480rzuELFE2ZAwVqFIoT8+0E
-         ItNw==
+        d=linuxfoundation.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc;
+        bh=GYFe283MHiR69w8+jOB1hXP7ILkG9qoTUTErGESO098=;
+        b=eNfhIbnQeQzr9XGWxC56sJzG+uC8agiQXZsTcWGB+q8FlPpwH+7tH9uZks5Iqewobl
+         igsJiRWTVy86ssyq8RaVOSYLA65tZCKJZ1BgG4wrofVVyuvBJqetjoVo6PxoeU8VFf8T
+         wF7DRxkzGE4v8E7AUAG3qB0/UjyCw6+R8BQRQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc;
-        bh=Q/mnAqoYi7oxgwFJLPXIomsmBCatzWPJFIvMIV/UMY4=;
-        b=Kirge3Mn9TovHdJEHBSncmAW7vLMQ+ZxDPebaPXtSXXc2iWBBQDHqDzY3+E6UaNGya
-         MzMWvSCQkXSvfQwm6MAIEQPTPKQaBbuJmd3mf8rT7kSlomgF75FX5GT0wOYDjDIhp8O8
-         exIZBcpBmsL1YHQCfkoco2BHXOEm3B7pBdfnLADS9uHDd3O39imjoC+RTr1IVKXB2OIq
-         z447xIJgRJDP0s0PU37//vj4JBSl+dVnN3ybjZX+FTBtsQubN4C0/hPj+7fuz0R9gH60
-         QjFcQWZibvy4ggJiCscKUcYtmOfDU0dX9UW05ojI1jOrHblmRDg/IDTDsDL2P0YU+xjO
-         EfdQ==
-X-Gm-Message-State: ACgBeo272II+GFM7fbiOb5lEPTFGHDk1g9sV+zJFqMnODmSEJ2g6VoPV
-	odesGEi8wA15PrSJRrCMh5pgxQeBBck=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc;
+        bh=GYFe283MHiR69w8+jOB1hXP7ILkG9qoTUTErGESO098=;
+        b=yJMajLjpSr+95G0pi6oHfR/TdvuYqgMoJWpB2TInQELIMED5qyvQP30+QJG46om6pE
+         6sezi4OYj9T1uyeACv0uPszbebWydrmHMGXeoJouww8x2aAWzefmsPNQ+MuUzimBw4I6
+         JvSVzC9nypnrxRBQPl5J+fFljiof/U07N9b2EFlknUI1KKuXaOafFPJZc5ElcqSIoWhs
+         OBSfX6Jt5cY7aich3BNC5ryeXfYRf2TGXnaZX5LCOVAbDkyxAxgqBsoJx2kaj0DalXLJ
+         hd3wsea1iMOI6rdGOOyw8T3UPQabxQbkZsvR35/3QZnnoj2kHhSl2wcak8fZf4G2+deQ
+         3Lcw==
+X-Gm-Message-State: ACgBeo1PzRuy/LUvidMiqzkGolM671EDiisID5MVd8ZcbYUg5N6yQXZ/
+	LEyWTNgTHbJJC3e0HCUX+Z8hqvYhJRPWGw==
 X-Google-Smtp-Source: 
- AA6agR5XIF0e4GJ53iYhSNAL+fKclG6W+G6eTtVnhrHrmzO5RuNlp37wKS0LRkgKIKTamiJktUKhjA==
-X-Received: by 2002:a5d:5986:0:b0:220:6871:de88 with SMTP id
- n6-20020a5d5986000000b002206871de88mr3758093wri.469.1659692956929;
-        Fri, 05 Aug 2022 02:49:16 -0700 (PDT)
-Received: from fio.lan (176.57.115.89.rev.vodafone.pt. [89.115.57.176])
+ AA6agR6hLYDJxheu3hU8Lg5fWNxi9o9sKx89QFONlllKuhygqqChgxHPigPRTTVJZH8AkvxLX+OZnw==
+X-Received: by 2002:adf:fa4a:0:b0:221:61d0:c79c with SMTP id
+ y10-20020adffa4a000000b0022161d0c79cmr2386234wrr.444.1659695554718;
+        Fri, 05 Aug 2022 03:32:34 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:f483:fcb0:1452:5a5a])
         by smtp.gmail.com with ESMTPSA id
- r29-20020adfa15d000000b002206d5fded3sm3460156wrr.104.2022.08.05.02.49.15
+ e12-20020a5d65cc000000b002207a8773b7sm4501401wrw.27.2022.08.05.03.32.33
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Aug 2022 02:49:16 -0700 (PDT)
-From: Jose Quaresma <quaresma.jose@gmail.com>
-X-Google-Original-From: Jose Quaresma <jose.quaresma@foundries.io>
+        Fri, 05 Aug 2022 03:32:34 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: ricardo@foundries.io,
-	daiane.angolini@foundries.io,
-	Jose Quaresma <jose.quaresma@foundries.io>
-Subject: [bitbake-devel][PATCH v2] build: prefix the tasks with a timestamp in
- the log task_order
-Date: Fri,  5 Aug 2022 10:47:51 +0100
-Message-Id: <20220805094750.390489-1-jose.quaresma@foundries.io>
-X-Mailer: git-send-email 2.37.1
+Subject: [PATCH 1/3] runqueue: Ensure deferred tasks are sorted by multiconfig
+Date: Fri,  5 Aug 2022 11:32:30 +0100
+Message-Id: <20220805103232.3674163-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Aug 2022 09:49:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13872
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Aug 2022 10:32:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13873
 
-This is useful when debugging as it helps understand possible
-race conditions between tasks of diferent recipes.
+We have to prefer one multiconfig over another when deferring tasks, else
+we'll have cross-linked build trees and nothing will be able to build.
 
-Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
+In the original population code, we sort like this but we don't after
+rehashing. Ensure we have the same sorting after rehashing toa void
+deadlocks.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
+ lib/bb/runqueue.py | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
- V2: import full datetime module
-
- lib/bb/build.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 55f68b98..b8c1099e 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -20,6 +20,7 @@ import itertools
- import time
- import re
- import stat
-+import datetime
- import bb
- import bb.msg
- import bb.process
-@@ -618,7 +619,8 @@ def _exec_task(fn, task, d, quieterr):
-     logorder = os.path.join(tempdir, 'log.task_order')
-     try:
-         with open(logorder, 'a') as logorderfile:
--            logorderfile.write('{0} ({1}): {2}\n'.format(task, os.getpid(), logbase))
-+            timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S.%f")
-+            logorderfile.write('{0} {1} ({2}): {3}\n'.format(timestamp, task, os.getpid(), logbase))
-     except OSError:
-         logger.exception("Opening log file '%s'", logorder)
-         pass
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 359b503297..4d4ac3b991 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2506,11 +2506,14 @@ class RunQueueExecute:
+ 
+         if update_tasks:
+             self.sqdone = False
+-            for tid in [t[0] for t in update_tasks]:
+-                h = pending_hash_index(tid, self.rqdata)
+-                if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
+-                    self.sq_deferred[tid] = self.sqdata.hashes[h]
+-                    bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
++            for mc in sorted(sqdata.multiconfigs):
++                for tid in sorted([t[0] for t in update_tasks]):
++                    if mc_from_tid(tid) != mc:
++                        continue
++                    h = pending_hash_index(tid, self.rqdata)
++                    if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
++                        self.sq_deferred[tid] = self.sqdata.hashes[h]
++                        bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
+             update_scenequeue_data([t[0] for t in update_tasks], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
+ 
+         for (tid, harddepfail, origvalid) in update_tasks:
 -- 
-2.37.1
+2.34.1
 
 
