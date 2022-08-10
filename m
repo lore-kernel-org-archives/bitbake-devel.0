@@ -1,113 +1,113 @@
-Return-Path: <raj.khem@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAF3C00140
-	for <webhook@archiver.kernel.org>; Wed, 10 Aug 2022 15:56:05 +0000 (UTC)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com
- [209.85.167.43])
- by mx.groups.io with SMTP id smtpd.web12.28.1660146963634781565
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E7EC00140
+	for <webhook@archiver.kernel.org>; Wed, 10 Aug 2022 16:19:35 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com
+ [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web11.343.1660148369203215551
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Aug 2022 08:56:04 -0700
+ Wed, 10 Aug 2022 09:19:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=h0xGzVey;
- spf=pass (domain: gmail.com, ip: 209.85.167.43, mailfrom: raj.khem@gmail.com)
-Received: by mail-lf1-f43.google.com with SMTP id z25so21870639lfr.2
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=RVAQ70RT;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f53.google.com with SMTP id
+ i128-20020a1c3b86000000b003a536d58f73so1255397wma.4
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Aug 2022 08:56:03 -0700 (PDT)
+ Wed, 10 Aug 2022 09:19:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=5oa9Hu1pHWSQYLhTYoCzRbJzWkxl7c5xkxqt98uMo8U=;
-        b=h0xGzVeyuBLzG3xSgDp1a9RSE9h8c5mx2gmhnhymotXFWdWGLKFfYfM0KhsyxqzISS
-         NvgtwP/aCLcJ3DqGxu902qPC/FAk0iRVqo0SkyNQZUQDw/cWikPl9Zv/AEHChf5Ba9vY
-         Qn0YN9ABUf49Quz+6k8ZXijQtDVWpck7OmYF0E2jMy5pX/+cZ9B/AZP/2WI08hKt93ny
-         +mlgJ8J6UQSrE+NPsy1sPkfD1Y5fmcOxUXO2HEW++1jT0u9gCsnfA6tp4FyBAAPJt1FU
-         f40OjMn89pNrMv8YRk7rsP9UT0n+DtEUn6R5+J82+DO3qsFjfPpJDt/GxSKF+K//2QWI
-         AzWg==
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc;
+        bh=X0Kn6hUT0hdFF8dWO2c7YzkPj7lzm0a0NIKbDfT8o/c=;
+        b=RVAQ70RTH9IW0j5HQYM4WDjcIqAv4xC5FRUmDtv37zbWshDm4lN7fouo8zgBeTtxCA
+         uTHHP7WQeVa9fvkoJXQwBnOUzw5u9CoAr2USrNJ6vlvYI3C1eChw9CeZ0HM00eNmIBFv
+         kPf98y3UEodOfylqtocl+h3Izi7cKVtwXL4tk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=5oa9Hu1pHWSQYLhTYoCzRbJzWkxl7c5xkxqt98uMo8U=;
-        b=MyPVhWXoWVAwIDspoFcWKTJlDCV6FS3ZDA0IRXtpHmng+bfFD24c0vcEx3jBZCCAkB
-         LhdPDi0fPTh98bWLwu5pVedCvqD4n4oEffVhDS6hujWINCyTqbNLh79uzV0cPhG9sYhq
-         XgjvB+Ob+SnOUa3JA4rzaGbPryJI4HgHaH3h6/bLW6rrI8/d9VFCEslzt2DsbCaNFvlL
-         fZqHcMlWh6IRHuxSkEH1TFDI45zGHT/12RQCl6zy6liqD9VKF3cNd/PeA5kDNHBb0i03
-         zCxX31xMTIP/vdbHiQwu2vFjNV1VP7PnLMO45CkwVIfhuL4t+TOaypsL1zoJxVbnwRug
-         i0pA==
-X-Gm-Message-State: ACgBeo2K1CQjla9JjV2nyF+uYeG64TdvNPAVhqvjTQp0jFCWRpUmRLIK
-	SXGAssGc6qXG80wJK6Ird1DdXxIzilHtz0VVBlM=
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc;
+        bh=X0Kn6hUT0hdFF8dWO2c7YzkPj7lzm0a0NIKbDfT8o/c=;
+        b=dJFUTTPmIadecc40KzcNhxyVOVGUv2Oa//DYfYnxLFbfEOKVi2pl0sWnZZVvMglYqR
+         zghu7BLYLGg4ktsEUEosLyWvArOdG0Nexgy0x/AwH2OqeexePTEZUrUI0xQM5JdoQy2L
+         uB7CMyL6pELZiQo4A+3GY7sZbOIUvlkgxFFIuYcMTKehHsvCv3ARyK/d/5fZnGyjwzWA
+         Nn9unovsOOVccXuQoLe9HvInWYAnFAc/SBvMDHFGgP8ohNigCNoGP568ez8awIPZi6vn
+         hUtr6EQv7bGipUBgGoH1gMKB/MAUvhDCf9v6Wko9W7ydy3jXHGIL/ZIJs72iE16PITuK
+         rLBw==
+X-Gm-Message-State: ACgBeo1Cc0zzMZMGAtXeQg+S82p79A4ouqkFcGn1roUq7kML3S9jyi+q
+	YS1GCU5yY09hrL+wn42fAzXqXA==
 X-Google-Smtp-Source: 
- AA6agR4RL+gb57sHbSoeaz6UbU9mGoxjdbpk5z79HHq442rOR01XDG3VdFDs9j0/wwSoTe5Xxyg0ZoUGheuY4T5npMA=
-X-Received: by 2002:a05:6512:1154:b0:48b:3020:b29 with SMTP id
- m20-20020a056512115400b0048b30200b29mr9427643lfg.338.1660146961590; Wed, 10
- Aug 2022 08:56:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220810134337.420149-1-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20220810134337.420149-1-richard.purdie@linuxfoundation.org>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Wed, 10 Aug 2022 08:55:33 -0700
+ AA6agR5zeD82dmbHq0P1W4VA1ncxFc/Ww7aTPO4QcR5htnfeehEeYZMSQSLml/aJzCZK1eXeF5gvRw==
+X-Received: by 2002:a1c:2785:0:b0:3a2:dcff:7903 with SMTP id
+ n127-20020a1c2785000000b003a2dcff7903mr3137071wmn.113.1660148367557;
+        Wed, 10 Aug 2022 09:19:27 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:54f2:80ed:9b2b:a32b?
+ ([2001:8b0:aba:5f3c:54f2:80ed:9b2b:a32b])
+        by smtp.gmail.com with ESMTPSA id
+ 8-20020a05600c020800b003a52969e89csm2967251wmi.4.2022.08.10.09.19.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Aug 2022 09:19:26 -0700 (PDT)
 Message-ID: 
- <CAMKF1sq8xAqD-yzEkV67yDPs3yoeQ86ygHKXoLHbp0Go2n=kWQ@mail.gmail.com>
+ <e37b5612a36eaebe3ac3aa93f36ebe9bcda3861d.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH 1/3] BBHandler: Allow earlier exit for
  classes not found
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Khem Raj <raj.khem@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org
+Date: Wed, 10 Aug 2022 17:19:25 +0100
+In-Reply-To: 
+ <CAMKF1sq8xAqD-yzEkV67yDPs3yoeQ86ygHKXoLHbp0Go2n=kWQ@mail.gmail.com>
+References: <20220810134337.420149-1-richard.purdie@linuxfoundation.org>
+	 <CAMKF1sq8xAqD-yzEkV67yDPs3yoeQ86ygHKXoLHbp0Go2n=kWQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1-0ubuntu1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Aug 2022 15:56:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13887
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Aug 2022 16:19:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13888
 
-I seeing
+On Wed, 2022-08-10 at 08:55 -0700, Khem Raj wrote:
+> I seeing
+>=20
+> % bitbake binutils
+> WARNING: ['base', 'sanity-meta-odroid-extras', 'clang',
+> 'report-error', 'image-buildinfo', 'package_ipk', 'buildhistory',
+> 'buildstats', 'buildstats-summary', 'debian', 'devshell', 'sstate',
+> 'license', 'remove-libtool', 'sanity']
+> ERROR: ParseError at
+> /mnt/b/yoe/master/sources/openembedded-core/meta/classes/buildhistory.bbc=
+lass:10:
+> Could not inherit file classes/image-artifact-names.bbclass
 
-% bitbake binutils
-WARNING: ['base', 'sanity-meta-odroid-extras', 'clang',
-'report-error', 'image-buildinfo', 'package_ipk', 'buildhistory',
-'buildstats', 'buildstats-summary', 'debian', 'devshell', 'sstate',
-'license', 'remove-libtool', 'sanity']
-ERROR: ParseError at
-/mnt/b/yoe/master/sources/openembedded-core/meta/classes/buildhistory.bbclass:10:
-Could not inherit file classes/image-artifact-names.bbclass
+I think we need something like:
 
-On Wed, Aug 10, 2022 at 6:43 AM Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> Rather than relying on later code to error if the class isn't found,
-> exit earlier and more clearly from a code perspective.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/parse/parse_py/BBHandler.py | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
-> index 68415735fd..532a4e08f1 100644
-> --- a/lib/bb/parse/parse_py/BBHandler.py
-> +++ b/lib/bb/parse/parse_py/BBHandler.py
-> @@ -56,6 +56,9 @@ def inherit(files, fn, lineno, d):
->              if abs_fn:
->                  file = abs_fn
->
-> +        if not os.path.exists(file):
-> +            raise ParseError("Could not inherit file %s" % (file), fn, lineno)
-> +
->          if not file in __inherit_cache:
->              logger.debug("Inheriting %s (from %s:%d)" % (file, fn, lineno))
->              __inherit_cache.append( file )
-> --
-> 2.34.1
->
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#13880): https://lists.openembedded.org/g/bitbake-devel/message/13880
-> Mute This Topic: https://lists.openembedded.org/mt/92936457/1997914
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [raj.khem@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+diff --git a/meta/classes/buildhistory.bbclass b/meta/classes/buildhistory.=
+bbclass
+index 4345ffc6939..203310ba975 100644
+--- a/meta/classes/buildhistory.bbclass
++++ b/meta/classes/buildhistory.bbclass
+@@ -7,7 +7,7 @@
+ # Copyright (C) 2007-2011 Koen Kooi <koen@openembedded.org>
+ #
+=20
+-inherit image-artifact-names
++IMAGE_CLASSES +=3D "image-artifact-names"
+=20
+ BUILDHISTORY_FEATURES ?=3D "image package sdk"
+ BUILDHISTORY_DIR ?=3D "${TOPDIR}/buildhistory"
+
+Does that help?
+
+I need to remove that warning too! Although it does help debugging right no=
+w.
+
+Cheers,
+
+Richard
 
