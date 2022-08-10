@@ -1,116 +1,113 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6DDC00140
-	for <webhook@archiver.kernel.org>; Wed, 10 Aug 2022 14:48:25 +0000 (UTC)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com
- [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web10.6548.1660142897403408289
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAF3C00140
+	for <webhook@archiver.kernel.org>; Wed, 10 Aug 2022 15:56:05 +0000 (UTC)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com
+ [209.85.167.43])
+ by mx.groups.io with SMTP id smtpd.web12.28.1660146963634781565
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Aug 2022 07:48:17 -0700
+ Wed, 10 Aug 2022 08:56:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LNENi6wO;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f41.google.com with SMTP id z17so18009412wrq.4
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=h0xGzVey;
+ spf=pass (domain: gmail.com, ip: 209.85.167.43, mailfrom: raj.khem@gmail.com)
+Received: by mail-lf1-f43.google.com with SMTP id z25so21870639lfr.2
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Aug 2022 07:48:17 -0700 (PDT)
+ Wed, 10 Aug 2022 08:56:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc;
-        bh=e5wnWHIPP1IDhJw3Cgue+sTIFO+II8qnwsJL+2aBjQw=;
-        b=LNENi6wOxB83d+QHcgr5kYRAWMSO1cWEM0PvyzzXLToVRNPKWmoYBLq9o1tkt8rjBS
-         HGRwxkkhQD9rHcsp0VZVCwC5GuTCyHJXdrehgMrqnPKTcbE0airCWtcwAz74o35mrqTo
-         l2O9gQrvDocrQDsAtVOncFlP6BLMWvM47FCPI=
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=5oa9Hu1pHWSQYLhTYoCzRbJzWkxl7c5xkxqt98uMo8U=;
+        b=h0xGzVeyuBLzG3xSgDp1a9RSE9h8c5mx2gmhnhymotXFWdWGLKFfYfM0KhsyxqzISS
+         NvgtwP/aCLcJ3DqGxu902qPC/FAk0iRVqo0SkyNQZUQDw/cWikPl9Zv/AEHChf5Ba9vY
+         Qn0YN9ABUf49Quz+6k8ZXijQtDVWpck7OmYF0E2jMy5pX/+cZ9B/AZP/2WI08hKt93ny
+         +mlgJ8J6UQSrE+NPsy1sPkfD1Y5fmcOxUXO2HEW++1jT0u9gCsnfA6tp4FyBAAPJt1FU
+         f40OjMn89pNrMv8YRk7rsP9UT0n+DtEUn6R5+J82+DO3qsFjfPpJDt/GxSKF+K//2QWI
+         AzWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc;
-        bh=e5wnWHIPP1IDhJw3Cgue+sTIFO+II8qnwsJL+2aBjQw=;
-        b=Kb/uUZTCmAjQZiVr9UQ9wpbXMaIyHiO7kuYSkHpdm91qlQa8bbunXy9GZW6a+eAoQS
-         c6CTpqiSbk+b2wbuJqNWlla6GgjyCHyaTbR7F9KoZ8VeqikovEEsA0d9AKH9Pbr5tpju
-         k3+VGgtynJ58Y9mHyQ1GO3K0qb52LlAf/RFWrpDXAz7dCJI7ggoJ1XI//o8d0qvpubZq
-         R6W8IZlxXVtThOyyx2agpbsMTqMq1+tUAHyGWolxnoohSxRIQK1vdUMzRa4lnhSkTr6Y
-         g0useKB538cjyGrtEDsJbyaGe5IDEb0mTwja+DAnFddCbiHwI1PAoKihuTb/lpsjdLFj
-         6ydA==
-X-Gm-Message-State: ACgBeo24QetM2okvk8hP0vcnTkinBt9v0WYaUk65rcjG6bme7JBd1CSb
-	lOyfX02EC4tZbb3WVq1RPPZUdQ==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=5oa9Hu1pHWSQYLhTYoCzRbJzWkxl7c5xkxqt98uMo8U=;
+        b=MyPVhWXoWVAwIDspoFcWKTJlDCV6FS3ZDA0IRXtpHmng+bfFD24c0vcEx3jBZCCAkB
+         LhdPDi0fPTh98bWLwu5pVedCvqD4n4oEffVhDS6hujWINCyTqbNLh79uzV0cPhG9sYhq
+         XgjvB+Ob+SnOUa3JA4rzaGbPryJI4HgHaH3h6/bLW6rrI8/d9VFCEslzt2DsbCaNFvlL
+         fZqHcMlWh6IRHuxSkEH1TFDI45zGHT/12RQCl6zy6liqD9VKF3cNd/PeA5kDNHBb0i03
+         zCxX31xMTIP/vdbHiQwu2vFjNV1VP7PnLMO45CkwVIfhuL4t+TOaypsL1zoJxVbnwRug
+         i0pA==
+X-Gm-Message-State: ACgBeo2K1CQjla9JjV2nyF+uYeG64TdvNPAVhqvjTQp0jFCWRpUmRLIK
+	SXGAssGc6qXG80wJK6Ird1DdXxIzilHtz0VVBlM=
 X-Google-Smtp-Source: 
- AA6agR5/VRU3cclxYIbMfP/WlSFTIu7TdwniwqywO/GIHNwipEVIsI33i9KIJQ2KOdhAep5JZbuk8g==
-X-Received: by 2002:a5d:6190:0:b0:21f:cf9:68ec with SMTP id
- j16-20020a5d6190000000b0021f0cf968ecmr18069558wru.696.1660142895740;
-        Wed, 10 Aug 2022 07:48:15 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:54f2:80ed:9b2b:a32b?
- ([2001:8b0:aba:5f3c:54f2:80ed:9b2b:a32b])
-        by smtp.gmail.com with ESMTPSA id
- e20-20020a05600c4b9400b003a2cf1ba9e2sm2518639wmp.6.2022.08.10.07.48.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Aug 2022 07:48:15 -0700 (PDT)
-Message-ID: 
- <3fdfc0580eacf23711052b4fb7b6be7d95509ab0.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch2/git: Switch branch to correct
- hash in case of two premirrors
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, Mateusz Marciniec
-	 <mateuszmar2@gmail.com>, Jan Brzezanski <jan.brzezanski@gmail.com>
-Date: Wed, 10 Aug 2022 15:48:14 +0100
-In-Reply-To: 
- <CAJkqNs2oOCm7h0otnQEmc3brr1Y5RdjkMkGWfSW0tc+yhWCKVg@mail.gmail.com>
-References: <20220810084401.3885-1-tomasz.dziendzielski@gmail.com>
-	 <f853e0fb1daec7c32a1fb1d0ac523cc4b8c2031f.camel@linuxfoundation.org>
-	 <CAJkqNs2oOCm7h0otnQEmc3brr1Y5RdjkMkGWfSW0tc+yhWCKVg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1-0ubuntu1 
+ AA6agR4RL+gb57sHbSoeaz6UbU9mGoxjdbpk5z79HHq442rOR01XDG3VdFDs9j0/wwSoTe5Xxyg0ZoUGheuY4T5npMA=
+X-Received: by 2002:a05:6512:1154:b0:48b:3020:b29 with SMTP id
+ m20-20020a056512115400b0048b30200b29mr9427643lfg.338.1660146961590; Wed, 10
+ Aug 2022 08:56:01 -0700 (PDT)
 MIME-Version: 1.0
+References: <20220810134337.420149-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20220810134337.420149-1-richard.purdie@linuxfoundation.org>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 10 Aug 2022 08:55:33 -0700
+Message-ID: 
+ <CAMKF1sq8xAqD-yzEkV67yDPs3yoeQ86ygHKXoLHbp0Go2n=kWQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 1/3] BBHandler: Allow earlier exit for
+ classes not found
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Aug 2022 14:48:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13886
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Aug 2022 15:56:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13887
 
-On Wed, 2022-08-10 at 16:33 +0200, Tomasz Dziendzielski wrote:
-> > If I understand what that code is doing, even if the upstream
-> > branch
-> > didn't have (and never had) the revision in question, it would
-> > force
-> > that revision onto the branch?
-> >=20
-> > I don't think we want to do that.
-> Actually yes, since I couldn't find a way to determine the specific
-> branch for specific git:// entry at this point. It's still better
-> than not being able to checkout the hash on a branch even though=C2=A0it'=
-s
-> there. Maybe the better solution would be to get rid of 'tmpdir' and
-> just clean the clonedir=C2=A0and unpack the tarball to clonedir? I wasn't
-> sure if there was some reason for using tmpdir, so I didn't want to
-> change that.
+I seeing
 
-Looking at the git history for the file:
+% bitbake binutils
+WARNING: ['base', 'sanity-meta-odroid-extras', 'clang',
+'report-error', 'image-buildinfo', 'package_ipk', 'buildhistory',
+'buildstats', 'buildstats-summary', 'debian', 'devshell', 'sstate',
+'license', 'remove-libtool', 'sanity']
+ERROR: ParseError at
+/mnt/b/yoe/master/sources/openembedded-core/meta/classes/buildhistory.bbclass:10:
+Could not inherit file classes/image-artifact-names.bbclass
 
-https://git.yoctoproject.org/poky/log/bitbake/lib/bb/fetch2/git.py
-
-you'll see it was added recently:
-
-https://git.yoctoproject.org/poky/commit/bitbake/lib/bb/fetch2/git.py?id=3D=
-53ed421226228f60a89a1868819b6c3ed6d45026
-
-and addressed a number of long standing bugs. In particular the fetcher
-was wiping out data and causing long refetches when it was
-misconfigured. We did add test cases for those issues.
->=20
-
-> > Some basic test would be useful here.=C2=A0
-> I will try to work on some test once we find some solution.
-
-Test cases can also be useful to clarify exactly what the problem being
-solved is too. We'll need a test case regardless of how we solve it.
-
-Cheers,
-
-Richard
+On Wed, Aug 10, 2022 at 6:43 AM Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+>
+> Rather than relying on later code to error if the class isn't found,
+> exit earlier and more clearly from a code perspective.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/parse/parse_py/BBHandler.py | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
+> index 68415735fd..532a4e08f1 100644
+> --- a/lib/bb/parse/parse_py/BBHandler.py
+> +++ b/lib/bb/parse/parse_py/BBHandler.py
+> @@ -56,6 +56,9 @@ def inherit(files, fn, lineno, d):
+>              if abs_fn:
+>                  file = abs_fn
+>
+> +        if not os.path.exists(file):
+> +            raise ParseError("Could not inherit file %s" % (file), fn, lineno)
+> +
+>          if not file in __inherit_cache:
+>              logger.debug("Inheriting %s (from %s:%d)" % (file, fn, lineno))
+>              __inherit_cache.append( file )
+> --
+> 2.34.1
+>
+>
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#13880): https://lists.openembedded.org/g/bitbake-devel/message/13880
+> Mute This Topic: https://lists.openembedded.org/mt/92936457/1997914
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [raj.khem@gmail.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+>
 
