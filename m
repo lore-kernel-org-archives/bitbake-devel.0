@@ -1,107 +1,141 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B627BC19F2A
-	for <webhook@archiver.kernel.org>; Wed, 10 Aug 2022 14:03:55 +0000 (UTC)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com
- [209.85.208.54])
- by mx.groups.io with SMTP id smtpd.web11.5995.1660140231226905285
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FA7C25B07
+	for <webhook@archiver.kernel.org>; Wed, 10 Aug 2022 14:05:15 +0000 (UTC)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com
+ [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web12.6164.1660140311843548189
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Aug 2022 07:03:51 -0700
+ Wed, 10 Aug 2022 07:05:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=OnTEBXvj;
- spf=pass (domain: gmail.com, ip: 209.85.208.54,
- mailfrom: jpewhacker@gmail.com)
-Received: by mail-ed1-f54.google.com with SMTP id b96so19301421edf.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QaF4FbTz;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f41.google.com with SMTP id v3so17957546wrp.0
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Aug 2022 07:03:50 -0700 (PDT)
+ Wed, 10 Aug 2022 07:05:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=6UD8Ltm/+snGonNGY5vrNYIuzGOwXBj8DZlosrdq2Rk=;
-        b=OnTEBXvjSw8SkE5bpeiZ+YZ5o01TtwH1JMOUScfJp78/5glq/s3hXDTJHvjRSVDwwv
-         UWuBgwSmJ5+thoXsJrZ5DN51mai9Qn0vmWvg3Dhsd15k+mskhKX+1G26BQDyEEYMWSfH
-         939H/QUYdk/uZ9izXT88IuDwkymjZBkmhp9Pt52YOXErR9KRF5AmpTztNdKz0uSDibzk
-         hmYZC/3wFCNTVnLDhXxr8UPjtIi+8no5NFMiKudGuRql+fM1Mky3BoLCgdYWnivJbVB+
-         8XHnPKOdf7oG4/HrobpN7O6UlvAuBg12V2gvWrH8zU7RKwDc5KLP35qHaL1gXrwb4SvG
-         ccKw==
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc;
+        bh=pCRsCWeUDJCizMhec6ZmblGLdtUcYa8OitWzCYFpSwE=;
+        b=QaF4FbTz/qdmf2lkmBo8qoLn2U4PzXajTc1i7dhMbS2KarAbVoVNEHFMDmtual0lCN
+         1Xa8ljxgS+YzN4dAQcNg5FYDO3xVX2oEuL9gIQLJ/VXkxU004rY2gomc9UalG2t43kkr
+         o5S+FMnzAlLFzx4fVnDRhWqKrbDmH9eSnpMvA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=6UD8Ltm/+snGonNGY5vrNYIuzGOwXBj8DZlosrdq2Rk=;
-        b=yFPhdyV2wf7Wf3m37rHZWpu8P1Fz3RoBpbIE74pih7Jj1kSW8MSA/CTr7e2mMcRuMn
-         yLBVzhJzBboIcGhh0qtnnAmCWNL83wv/23K7Mf++K99Uem8A5PG6BONMkTCoZ9RUe6P9
-         iTBebP7zEmCBmPL6lAD0Ul6CIpQmnLfIJ4ycqA9HrYutVbZZU3PSk/2SzJtGLgure9VZ
-         RZuwAbeJWfCILfMHryRemO3hL+HD3TTY3/p7XhO22ehmsy3C8GsBjAeb0RkQUliMQtau
-         x14tcbjUCS01V11Dj2++kwncmmiYwN00YVGfLuVvDe7FdNyuQQ1S1aHXd8hV8Qp0FFQc
-         wAVQ==
-X-Gm-Message-State: ACgBeo3ROZJ1caK5VAsOdiS/tykHv8cvXMXLFfUHKM8qzhQ//xEcZl+j
-	ZX519oJrEFrUj+MVI98bwr8zMdtPSx+I3rUsZJY=
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc;
+        bh=pCRsCWeUDJCizMhec6ZmblGLdtUcYa8OitWzCYFpSwE=;
+        b=4R94TmMdQHKd/9sysQWqlL4tYLMdhPSlrlphAyh4Xekibivgf4fIsF+SXKpOwqhbG3
+         gBwqq3hbecJj9yX+Qaqf2JiyozDL3/L2uiv7NANA58fhbM4Fir0Bs7R6qcy2Wcmy/9JF
+         9xGXtWAJKamVGDf7PSF/8ki11UAqb2Jcrl1oMrMkFatCXRHaxlTLMQx/+zXkFoLugIol
+         SAWdciiNrliXTlbNPHTxGQTrBVgHE44vmc+NSMNPB9/oo2cYQGF+VuVSyyYMUSNyvWNK
+         QF5CowL2uCQy79fyTpdjlLenYI6S0cNqQeosww5Zt8je6Yz7cDCQv0rg7u7Nzn8zkH8p
+         rhMQ==
+X-Gm-Message-State: ACgBeo10WAIrMgq6j30dZw5fSSPiH3tECW3sQ7wyHA3fJ99TnWZRw8jN
+	IwK7q7QShTZPXg2izkPn2rqRIw==
 X-Google-Smtp-Source: 
- AA6agR48seeE/vVH3oaQM+u1Wrh44EeX2H5VoXXQRZ1DsrLjhroLlygdeSCsJ/sttwQQmJBvEm+0dNOA4aj1yiVmFuw=
-X-Received: by 2002:aa7:dc17:0:b0:441:e5fc:7f91 with SMTP id
- b23-20020aa7dc17000000b00441e5fc7f91mr6019279edu.301.1660140229582; Wed, 10
- Aug 2022 07:03:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220803140441.1196056-1-JPEWhacker@gmail.com>
- <20220804112648.71c80544@booty>
- <CAJdd5GZRRUOf3ZMSQQnxOgU0oxqW2-ty5P0QKbAKTEitD7HnfA@mail.gmail.com>
- <CAOSpxda8h1Wzc6odfQxqn4EUJzgY7Os-sWi9wynk2GKiuKNVpA@mail.gmail.com>
-In-Reply-To: 
- <CAOSpxda8h1Wzc6odfQxqn4EUJzgY7Os-sWi9wynk2GKiuKNVpA@mail.gmail.com>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Wed, 10 Aug 2022 09:03:38 -0500
+ AA6agR4yjZRJxvLTckcbq6nlRcygKPtN2TzYK7Xr9A2QRnDROo3ulMeXyXV6Hj9S25bWHUnqmAhvMg==
+X-Received: by 2002:a05:6000:178e:b0:220:635f:eb13 with SMTP id
+ e14-20020a056000178e00b00220635feb13mr17447276wrg.634.1660140310115;
+        Wed, 10 Aug 2022 07:05:10 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:54f2:80ed:9b2b:a32b?
+ ([2001:8b0:aba:5f3c:54f2:80ed:9b2b:a32b])
+        by smtp.gmail.com with ESMTPSA id
+ p3-20020a05600c1d8300b003a50924f1c0sm2659940wms.18.2022.08.10.07.05.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Aug 2022 07:05:09 -0700 (PDT)
 Message-ID: 
- <CAJdd5GZ+O2jepST0K8ACe9GWt-8XUysbMnGe+nC_doTo=DU75Q@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH] siggen: Fix insufficent entropy in sigtask
- file names
-To: Steve Sakoman <steve@sakoman.com>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
- bitbake-devel@lists.openembedded.org,
-	rasmus.villemoes@prevas.dk
+ <f853e0fb1daec7c32a1fb1d0ac523cc4b8c2031f.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] fetch2/git: Switch branch to correct
+ hash in case of two premirrors
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>,
+	bitbake-devel@lists.openembedded.org
+Cc: Mateusz Marciniec <mateuszmar2@gmail.com>, Jan Brzezanski
+	 <jan.brzezanski@gmail.com>
+Date: Wed, 10 Aug 2022 15:05:08 +0100
+In-Reply-To: <20220810084401.3885-1-tomasz.dziendzielski@gmail.com>
+References: <20220810084401.3885-1-tomasz.dziendzielski@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1-0ubuntu1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Aug 2022 14:03:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13883
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Aug 2022 14:05:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13884
 
-On Tue, Aug 9, 2022 at 4:48 PM Steve Sakoman <steve@sakoman.com> wrote:
->
-> On Tue, Aug 9, 2022 at 11:44 AM Joshua Watt <jpewhacker@gmail.com> wrote:
-> >
-> > On Thu, Aug 4, 2022 at 4:26 AM Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
-> > >
-> > > Hi Joshua,
-> > >
-> > > On Wed,  3 Aug 2022 09:04:41 -0500
-> > > "Joshua Watt" <JPEWhacker@gmail.com> wrote:
-> > >
-> > > > Signature generation uses mkstemp() to get a file descriptor to a unique
-> > > > file and then write the signature into it. However, the unique file name
-> > > > generation in glibc is based on the system timestamp, which means that
-> > > > with highly parallel builds it is more likely than one might expect
-> > > > expected that a conflict will occur between two different builder nodes.
-> > >
-> > > s/expect expected/expect/
-> > >
-> > > Taken in my testing branch with the above fix.
-> >
-> > Steve, can you please backport this to kirkstone and dunfell? There
-> > may be a context failure backporting it to dunfell, let me know if you
-> > want me to send a new patch with the correct context.
->
-> Yes! I'll probably get to that tomorrow after I finish up testing for
-> the 4.0.3 release.  I'll let you know if I run into any issues I'm not
-> confident about resolving.
+On Wed, 2022-08-10 at 10:44 +0200, Tomasz Dziendzielski wrote:
+> If we use two premirrors and tarball from the first one contains older
+> commit then after fetching from tmpdir master ref still points to older
+> commit, so _contains_ref can't find the proper revision on a branch.
+>=20
+> Switch master ref to correct hash so _contains ref can find it. It needs
+> to be done in for loop because we don't know which branch is used for
+> specific repo in case of multiple repositories.
+>=20
+> We need to use two try blocks because both commands might fail and it's
+> not the reason to break the execution. There are two specific cases I
+> want to cover. First is when we have multiple git:// entries in SRC_URI
+> and one uses "master" and second "main". In this code we don't know
+> which branch is assigned for which repository so we want to add both
+> branches - so first we need to remove both branches and one might not
+> exist. We could check if the branch exists and create it only then but
+> this would break the second case. Now the second case is when for the
+> first premirror we remove the branch but we can't create it later
+> because the hash does not exist on the branch since tarball doesn't
+> contain the newer commits - then for the second premirror the removal of
+> the branch would fail.
+>=20
+> Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+> Signed-off-by: Mateusz Marciniec <mateuszmar2@gmail.com>
+> Signed-off-by: Jan Brzezanski <jan.brzezanski@gmail.com>
+> ---
+>  lib/bb/fetch2/git.py | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+> index 4534bd758..ea47df3cf 100644
+> --- a/lib/bb/fetch2/git.py
+> +++ b/lib/bb/fetch2/git.py
+> @@ -362,6 +362,16 @@ class Git(FetchMethod):
+>                  runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=3D=
+tmpdir)
+>                  fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s " % (u=
+d.basecmd, shlex.quote(tmpdir))
+>                  runfetchcmd(fetch_cmd, d, workdir=3Dud.clonedir)
+> +                # Switch branch ref to a correct hash
+> +                for name in ud.names:
+> +                    try:
+> +                        runfetchcmd("LANG=3DC %s branch -d %s" % (ud.bas=
+ecmd, ud.parm.get('branch', ud.branches[name])), d, workdir=3Dud.clonedir)
+> +                    except:
+> +                        pass
+> +                    try:
+> +                        runfetchcmd("LANG=3DC %s branch %s %s" % (ud.bas=
+ecmd, ud.parm.get('branch', ud.branches[name]), ud.revisions[name]), d, wor=
+kdir=3Dud.clonedir)
+> +                    except:
+> +                        pass
+>          repourl =3D self._get_repo_url(ud)
+> =20
+>          # If the repo still doesn't exist, fallback to cloning it
 
-That's fine. I also just realized this relies on Python 3.6
-functionality, so hold off on backporting it to dunfell for the time
-being; Hardknott should be OK still
 
->
-> Steve
+If I understand what that code is doing, even if the upstream branch
+didn't have (and never had) the revision in question, it would force
+that revision onto the branch?
+
+I don't think we want to do that.
+
+Cheers,
+
+Richard
+
 
