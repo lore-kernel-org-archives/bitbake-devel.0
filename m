@@ -1,100 +1,123 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <tomasz.dziendzielski@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E58C19F2D
-	for <webhook@archiver.kernel.org>; Tue,  9 Aug 2022 21:48:20 +0000 (UTC)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com
- [209.85.218.49])
- by mx.groups.io with SMTP id smtpd.web11.241.1660081692526886154
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABC7C25B06
+	for <webhook@archiver.kernel.org>; Wed, 10 Aug 2022 08:45:54 +0000 (UTC)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com
+ [209.85.167.49])
+ by mx.groups.io with SMTP id smtpd.web09.3519.1660121144595200383
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Aug 2022 14:48:12 -0700
+ Wed, 10 Aug 2022 01:45:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=gYuL/DKl;
- spf=softfail (domain: sakoman.com, ip: 209.85.218.49,
- mailfrom: steve@sakoman.com)
-Received: by mail-ej1-f49.google.com with SMTP id gb36so24459465ejc.10
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=QaLj9bQ/;
+ spf=pass (domain: gmail.com, ip: 209.85.167.49,
+ mailfrom: tomasz.dziendzielski@gmail.com)
+Received: by mail-lf1-f49.google.com with SMTP id e15so20365822lfs.0
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Aug 2022 14:48:12 -0700 (PDT)
+ Wed, 10 Aug 2022 01:45:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W3V3doWX58zRgkZekpRoSPwmiKbUHTKhJTZ9E9eB5xk=;
-        b=gYuL/DKl+LUhQHh8oxPi5Y1/FRf8OTJWmChuDiMEBRwLpfmV6LcvU9WPAUkyUhl6YF
-         l/TwpUzGg0KuJMRRi5dBASvNjA3ES8nXZAF2hM3s30utf7iJVqiVno1KymDO5WbBgobO
-         PW8EI3WxGnyNsduU2L/eG10qH1koSiGeNunlA+2Vn+dQCtWrRtwpmXlTBNrGWnPtbMTR
-         NiBFIMOnFznt9vYVwvQqAk6uZOxtzsoWXSm0ZcqZ3a49NYOyI1XjOkKnHu2e5uERf9Hl
-         axP7+4avwXUgH/8349kbjXrUDC9YPeqN2lejBz5vIRJHamohij6rVtjV1HvuNCJSxHMn
-         Kqgw==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=oPOzn+0It9R+uHCBQsr5v981UHCUcAByROZNkHUqGeE=;
+        b=QaLj9bQ/e0x7syv2rZoc9A/XdVhPb0KflEwDvTBHXHw1zdbdouuXerVlv/TDAxAIHk
+         tghtj2pbOqL6AIFTCBkCGKpnoas/4Up529cZPWym6apaVK4msMF9nGB/4Bl8Io3kzw1t
+         eUfWc8B3jrhEiFyFE3pE7ZVH3RxF07NoEXzgUVtxJXtAXEIGEkbTnRnXypcd8VrrRRKH
+         8tpKi/SRxy+kVQ1KRJSPrjLEPBnJ98nmNK3Fqw66BSlS1dEG5kDTzIgdjlzx/3zfWAu4
+         4rH9f8BTSTdHfVs9NDKE4OA8KV4KvHqvOv6fGyNIlIB/AuHrnmbD2rKpgAinB0aJf6jI
+         1keQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W3V3doWX58zRgkZekpRoSPwmiKbUHTKhJTZ9E9eB5xk=;
-        b=WreBg6L2Du4l4kSBdhjQk0O4CFP7pUCP8ov5EoweL5zyxQl/AFL7pnnzaZHjRpJJ51
-         HjnOd1p5ue0qF1RXhNnpTXWQR6lCFt5EGQz1FzoirRcqC6OWUDqQrF1tj14RAdJySDmK
-         PsDZm89ShdR76lpAzfnaHFuFJ5D32bWcTw1E7rB127xnCYiuPFMfUtBVlm5PpUStf/Yk
-         SQSwrsMThIgLrdSIgvHXK2GFdG+lMooi42nu4YUl58cXJUwW9TMB4uHWfoj9+x5Cv+SM
-         qSxn0de7YlCUWcGz/LU9w55yjSsXn7B6IQ71Dsy2dVfdHND/6KU35XrU42WSPxFjqLM5
-         iZtw==
-X-Gm-Message-State: ACgBeo2qDPdkxHtZI5BiRnDQcqNznC/nkEjhhvTZy/vf4o5dyZth53nD
-	YKpZgDXLEqhL08agwx+Jg+rCQT1/iN0V4wXs5OKxFQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=oPOzn+0It9R+uHCBQsr5v981UHCUcAByROZNkHUqGeE=;
+        b=x8225bDufGJ+ahEl6oNuxwjoT0LOIat8zU1JzXXjKDl3mAWsKuThaW81oQhbXs56DS
+         nlDsA3Q0S/9Q204whPo7yJrXKoKIdHMGa/1gsggX8NFoobKk/T6WnwTjkuHkkWN/eIUh
+         ITt9qd1zNjclVjOoEUklj6+lfb2H+ZHJCjcCVmqNRtJ4CSL/5JM6njOnwVbBu+Aa05Vd
+         QPCmTmzDA6YNl5UmQNkUT7mdVZHu65FrJo79VnrROz+g+JftT8GKJwJDDXS026Vd3qHI
+         ritdGusL1ox+Ov4XuGGy/PD1+o2w7nnh2N5RvJTUz4jUQ5bxEPqSgwsn1q+cA3fUjNRE
+         WLQA==
+X-Gm-Message-State: ACgBeo33+B43jCEc1uNFlH4l3/eXMvJNsnA96oNyVowstSQkWwDNy8o/
+	fobposuNiC93tkZXUWcmIst4YBR7ixHMNA==
 X-Google-Smtp-Source: 
- AA6agR5rv+1sZs7JwtOaMA7yHRjPm+1V5hphdlamSrwjvyln9+inm3BSMUi0XclC9K1iUVfH7dF0tABZ1dLbmEePseQ=
-X-Received: by 2002:a17:907:2e01:b0:731:1eb0:b9ff with SMTP id
- ig1-20020a1709072e0100b007311eb0b9ffmr12818279ejc.728.1660081690870; Tue, 09
- Aug 2022 14:48:10 -0700 (PDT)
+ AA6agR7Ti2LZeQ0q4+EhMRiHBP6P4ZtsTqlMVCA4yRjoluVfkVmz49GE0F3uk3KkbVhK4sDtgHGSsg==
+X-Received: by 2002:a05:6512:e99:b0:48b:2ba1:1511 with SMTP id
+ bi25-20020a0565120e9900b0048b2ba11511mr9947575lfb.0.1660121142241;
+        Wed, 10 Aug 2022 01:45:42 -0700 (PDT)
+Received: from localhost.localdomain ([82.180.151.39])
+        by smtp.gmail.com with ESMTPSA id
+ x1-20020a2e9dc1000000b0025df5f38da8sm317576ljj.119.2022.08.10.01.45.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Aug 2022 01:45:41 -0700 (PDT)
+From: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>,
+	Mateusz Marciniec <mateuszmar2@gmail.com>,
+	Jan Brzezanski <jan.brzezanski@gmail.com>
+Subject: [PATCH] fetch2/git: Switch branch to correct hash in case of two
+ premirrors
+Date: Wed, 10 Aug 2022 10:44:01 +0200
+Message-Id: <20220810084401.3885-1-tomasz.dziendzielski@gmail.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-References: <20220803140441.1196056-1-JPEWhacker@gmail.com>
- <20220804112648.71c80544@booty>
- <CAJdd5GZRRUOf3ZMSQQnxOgU0oxqW2-ty5P0QKbAKTEitD7HnfA@mail.gmail.com>
-In-Reply-To: 
- <CAJdd5GZRRUOf3ZMSQQnxOgU0oxqW2-ty5P0QKbAKTEitD7HnfA@mail.gmail.com>
-From: Steve Sakoman <steve@sakoman.com>
-Date: Tue, 9 Aug 2022 11:47:59 -1000
-Message-ID: 
- <CAOSpxda8h1Wzc6odfQxqn4EUJzgY7Os-sWi9wynk2GKiuKNVpA@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH] siggen: Fix insufficent entropy in sigtask
- file names
-To: Joshua Watt <jpewhacker@gmail.com>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
- bitbake-devel@lists.openembedded.org,
-	rasmus.villemoes@prevas.dk
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 09 Aug 2022 21:48:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13877
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Aug 2022 08:45:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13878
 
-On Tue, Aug 9, 2022 at 11:44 AM Joshua Watt <jpewhacker@gmail.com> wrote:
->
-> On Thu, Aug 4, 2022 at 4:26 AM Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
-> >
-> > Hi Joshua,
-> >
-> > On Wed,  3 Aug 2022 09:04:41 -0500
-> > "Joshua Watt" <JPEWhacker@gmail.com> wrote:
-> >
-> > > Signature generation uses mkstemp() to get a file descriptor to a unique
-> > > file and then write the signature into it. However, the unique file name
-> > > generation in glibc is based on the system timestamp, which means that
-> > > with highly parallel builds it is more likely than one might expect
-> > > expected that a conflict will occur between two different builder nodes.
-> >
-> > s/expect expected/expect/
-> >
-> > Taken in my testing branch with the above fix.
->
-> Steve, can you please backport this to kirkstone and dunfell? There
-> may be a context failure backporting it to dunfell, let me know if you
-> want me to send a new patch with the correct context.
+If we use two premirrors and tarball from the first one contains older
+commit then after fetching from tmpdir master ref still points to older
+commit, so _contains_ref can't find the proper revision on a branch.
 
-Yes! I'll probably get to that tomorrow after I finish up testing for
-the 4.0.3 release.  I'll let you know if I run into any issues I'm not
-confident about resolving.
+Switch master ref to correct hash so _contains ref can find it. It needs
+to be done in for loop because we don't know which branch is used for
+specific repo in case of multiple repositories.
 
-Steve
+We need to use two try blocks because both commands might fail and it's
+not the reason to break the execution. There are two specific cases I
+want to cover. First is when we have multiple git:// entries in SRC_URI
+and one uses "master" and second "main". In this code we don't know
+which branch is assigned for which repository so we want to add both
+branches - so first we need to remove both branches and one might not
+exist. We could check if the branch exists and create it only then but
+this would break the second case. Now the second case is when for the
+first premirror we remove the branch but we can't create it later
+because the hash does not exist on the branch since tarball doesn't
+contain the newer commits - then for the second premirror the removal of
+the branch would fail.
+
+Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Signed-off-by: Mateusz Marciniec <mateuszmar2@gmail.com>
+Signed-off-by: Jan Brzezanski <jan.brzezanski@gmail.com>
+---
+ lib/bb/fetch2/git.py | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 4534bd758..ea47df3cf 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -362,6 +362,16 @@ class Git(FetchMethod):
+                 runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=tmpdir)
+                 fetch_cmd = "LANG=C %s fetch -f --progress %s " % (ud.basecmd, shlex.quote(tmpdir))
+                 runfetchcmd(fetch_cmd, d, workdir=ud.clonedir)
++                # Switch branch ref to a correct hash
++                for name in ud.names:
++                    try:
++                        runfetchcmd("LANG=C %s branch -d %s" % (ud.basecmd, ud.parm.get('branch', ud.branches[name])), d, workdir=ud.clonedir)
++                    except:
++                        pass
++                    try:
++                        runfetchcmd("LANG=C %s branch %s %s" % (ud.basecmd, ud.parm.get('branch', ud.branches[name]), ud.revisions[name]), d, workdir=ud.clonedir)
++                    except:
++                        pass
+         repourl = self._get_repo_url(ud)
+ 
+         # If the repo still doesn't exist, fallback to cloning it
+-- 
+2.36.1
+
 
