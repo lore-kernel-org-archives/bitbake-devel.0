@@ -2,52 +2,52 @@ Return-Path: <aryaman.gupta@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22348C25B0E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B1EC32772
 	for <webhook@archiver.kernel.org>; Tue, 16 Aug 2022 19:14:10 +0000 (UTC)
 Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com
  [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.web12.19848.1660677241464313950
+ by mx.groups.io with SMTP id smtpd.web11.19715.1660677243085929957
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 16 Aug 2022 12:14:01 -0700
+ Tue, 16 Aug 2022 12:14:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=pps06212021 header.b=sxO4O9Vw;
+ dkim=pass header.i=@windriver.com header.s=pps06212021 header.b=D83xPYIG;
  spf=permerror,
  err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}:
  invalid domain name (domain: windriver.com, ip: 205.220.178.238,
  mailfrom: prvs=522748b83a=aryaman.gupta@windriver.com)
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
 	by mx0a-0064b401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id
- 27GIf2jE022680
-	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Aug 2022 19:14:00 GMT
+ 27GHdAF1025564
+	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Aug 2022 19:14:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
  h=from : to : cc :
- subject : date : message-id : content-transfer-encoding : content-type :
- mime-version; s=PPS06212021;
- bh=QTnx+mPvy2Tv5aOYJ//ral0MjJ9OMwMcBtql8RxfK54=;
- b=sxO4O9Vww2JFT8zxJxnNWlEHxsqTwgmumBCVzBdSoANGxpggJBEIDhUsL+Xdl1M4pqwJ
- lUT6l6CmktdnFb10ZwnhyjN85qLyvLaKRA2aFt6FfQZ6aVUE4yCJvUnryYud/441hPtb
- +hjyym+miAnJKgoPYXovqzg9yKmbkYCZNsAoUiEJdu7gA30tjDzfMmXXy3hiLLGaO4C6
- 2psfz11oyMMP2B2q4YccZdzq9qcW2Qw1gMb4GWwK5n5GmefrX9vidWXBqCOAQlVlIAeh
- k+F6IHwXjPdqhKPSPGyKDxFDR22iafwfQ/L5Jp9wIN4qGO93IXje6WAG0l9Lac+GcxFH TQ==
+ subject : date : message-id : in-reply-to : references :
+ content-transfer-encoding : content-type : mime-version; s=PPS06212021;
+ bh=iPyz3kX/kNTtM4p14PAQMzfCg1KFd94pMvWwiiLqo1I=;
+ b=D83xPYIGnjK03pVAYhOa8b8QjvwrDvBQt8Ze2NZfvVRiv0/4YWiF2EyCh+NoDoMJicG7
+ xAXEqtF3mhNy3to1Kf9bqD1l8/0TmtBLXgvdv1bIY3JJAfS+8Sk4joAalhwJZLZJV5Qz
+ jgbD0rXJNKxopMkzpoFP/Ae7EgU9X5BD8oQVlW2lgsZLGeer20nM7qH/ulgXoESr640q
+ pW5BdJu73Y9W5hJufii6rbIpok/r04YsMvI7BqAJckjkr8vgjKmfM5lwm4Cm7i8qe+fI
+ 2E82AIucSclbygOPVV9Fcoc/MmkNYZJfy5KSjNUP7C7c+tAQO3bwNbMv9B67WGXLfvwh HQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3hx2x8jtx2-1
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3hx160tvh0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Aug 2022 19:14:00 +0000
-Received: from m0250812.ppops.net (m0250812.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 27GJAqlY032229
-	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Aug 2022 19:13:59 GMT
+	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Aug 2022 19:14:02 +0000
+Received: from m0250811.ppops.net (m0250811.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 27GJE1Ml008761
+	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Aug 2022 19:14:01 GMT
 Received: from nam12-dm6-obe.outbound.protection.outlook.com
- (mail-dm6nam12lp2174.outbound.protection.outlook.com [104.47.59.174])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3hx2x8jtx0-1
+ (mail-dm6nam12lp2176.outbound.protection.outlook.com [104.47.59.176])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3hx160tvgx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Aug 2022 19:13:59 +0000
+	Tue, 16 Aug 2022 19:14:01 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GnJDPFB1ZGrffTZG1W60rO0MeCC3pGh+kKLOPfYKYHPoiDEPfB2MevSYKUM0iihSA4GDBL5knDzM7hRf+XcWipUeoMLL0ixrlF1IrApCXFHoyXtzRORjeULfz2DtUZKpA5CTk4Mot3hY/1HfwEYbXfoD6I0tf65So+uYnxdyMCqVi6/W2HGRxotmSWpvMbPkLNUJRZE7g9fLsq/O/uR+pOCQtIa5KWoN1hgzJs0bW3O6FwK3L8uO4nFJeKJcO2OeXdNju82dDLN7Pmu7+FNR0NQh+HbjM41HENAWHnXQQn9eSU9ruysZr/W0PzZratDEHZml7MBexSsLVc03jB9HXA==
+ b=C3PG1y/dWCwQMHYymOVNPo6JQz1MiUAGWzELgWkTHuoS1fgC0rF3Uid+GILq+TzuZ5WVgOk9zj+MCHwJ7NVQUihV0/4cpt5aO53/ltjXrwTDLIOBk8nBSwoCiAlVklq0+0sdx0HrHSQ1gsGFmaZ+SNFgw3Um/K8FgfmNgeHa/ApQahls3IfH6RZ6FkYoGwkJv3rki0nYqsoic4vddR/8E/Rw1LmLPwxzGmSC5poMmTr320KspO/EmvttWn/Z9bnbX5S8ONKx1yNg6zApVEG4awIHl75okCIMuC++i5/ErYQ4b+P8gH3UxtSbvDbSL18+QJTC8gW2iAe313exdN8Cwg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QTnx+mPvy2Tv5aOYJ//ral0MjJ9OMwMcBtql8RxfK54=;
- b=U4+EDz0jXLKuArqOMQt1JeM4KLBPNOkllyOgYAie/Vag2XdcPBRcGSSylSqTSrepSN/DviipO90dvaSRqRtCLqEvgwt8622HJ9vbNGKvvF6mhETa4WFPpxqElNIrCcZEofIGEDmIoc6yd27chTi5QQFshteAaGsHHTDcLJaef/g3L2OLEBbPIcPXfTsVk6/fjVJFqoihyT7a2SmfMAV2UQzCwfyJ24zTMIS5UPUk1gxgMWiqKpa7Hv6Z5EL5/wLG+Fk9F4RL1ut3neeZa6vRJzeOA6Qc8yoEruAt0gp2Hty9Mv4DUc4oww0idCELwlLiPk7r7jML8IruCwLC2952Vw==
+ bh=iPyz3kX/kNTtM4p14PAQMzfCg1KFd94pMvWwiiLqo1I=;
+ b=U4VN4eMfZNnyvo2yICnU5y8jCZyiHFftTe/r27fNsdayT7D+Ktq0LYQIa8fQROYaf83d3kPe8xNJRYbsPfg+I1fWxq5wf+ghrcJrHil9NRos3WfUz8ijpvKNCJJUQC9lX8BgHNZEBlDqaiecsLtyvoKEb61qVxi1k27YL7Mo2wyTnyMePwFy1QVowcpsZCQ8wcyQPi51fOitqiq4kO/tsVGq2ByYxK3AXKvLz2p3sDxzjCkrCWC71+9ZBMpXH8HbkIb7dzP5ar8V/kbKbz1vz1qbkQy6cu3md2DUYX9vT2yYtk3xUVJRSDY8gl7rnNcEQizociUebaK5g+OdCib3Zw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=windriver.com; dmarc=pass action=none
  header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
@@ -55,18 +55,20 @@ Received: from PH7PR11MB6030.namprd11.prod.outlook.com (2603:10b6:510:1d1::19)
  by BYAPR11MB2614.namprd11.prod.outlook.com (2603:10b6:a02:cc::27) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.10; Tue, 16 Aug
- 2022 19:13:55 +0000
+ 2022 19:13:56 +0000
 Received: from PH7PR11MB6030.namprd11.prod.outlook.com
  ([fe80::300a:e5c7:e79b:9a36]) by PH7PR11MB6030.namprd11.prod.outlook.com
  ([fe80::300a:e5c7:e79b:9a36%9]) with mapi id 15.20.5504.028; Tue, 16 Aug 2022
- 19:13:55 +0000
+ 19:13:56 +0000
 From: Aryaman Gupta <aryaman.gupta@windriver.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: steve@sakoman.com
-Subject: [PATCH dunfell 1/2] bitbake: runqueue: add cpu/io pressure regulation
-Date: Tue, 16 Aug 2022 15:13:43 -0400
-Message-Id: <20220816191344.509172-1-aryaman.gupta@windriver.com>
+Subject: [PATCH dunfell 2/2] bitbake: runqueue: add memory pressure regulation
+Date: Tue, 16 Aug 2022 15:13:44 -0400
+Message-Id: <20220816191344.509172-2-aryaman.gupta@windriver.com>
 X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20220816191344.509172-1-aryaman.gupta@windriver.com>
+References: <20220816191344.509172-1-aryaman.gupta@windriver.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: YQXPR0101CA0032.CANPRD01.PROD.OUTLOOK.COM
@@ -74,225 +76,166 @@ X-ClientProxiedBy: YQXPR0101CA0032.CANPRD01.PROD.OUTLOOK.COM
  (2603:10b6:510:1d1::19)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6d32932c-40e6-486b-707a-08da7fbb768d
+X-MS-Office365-Filtering-Correlation-Id: a86e2915-f43f-474a-fb5b-08da7fbb76fa
 X-MS-TrafficTypeDiagnostic: BYAPR11MB2614:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	7L30ECzznHR+aG32pu/1XpK0VbVm5vca73OdMr0uCnxgsS4t3SkO0W0C/UncgxUXQORRmfyOd/fAPL78iZPQtAJ6p4vbInWtKJj5EgChu4Jt9LEetJBE0eIfNs07k3U63epJF4h8BqJCkCGVDwL/BKZgWQFzl8hftaddSuaTPwe7/w3CgolMtox1aW6LvFZFWvI8NHo/dUzAsgV35AAKwN+iQ8+L/g9ADEPJ+4IJ8BDmLU1aMuw4zV2CifELJ9KkmWbyYhhbl5esUpJKPSKQW+AlfnUoHPVQRavlPUOxU7Oh+ZKZpFkp9nxnypKfI6sp1zsmWNMV0bqmBiwGKxH0px0SjRFT0fHbqrzgORW+cRY0D79RyCAbtdZrQDeWCGlAhdjs1p/CTUQTMT92Ipwvnjn/tOTuirV4knPJYpFZCf5ZqW6xN6OZ3STnH2gmduUVQnDVOx11vGYDBZF2DaQ2tELEfLZPhJwehXIzUrOc9VKa/OOSg40gQZTsxCHkjHp/82EZfrg/RdEzlaC9+p1n819yBUA/iZ0fQQDsuHVLBiF4X6rUY9vUcwBn3GV8OunhclvQuqknFHoiAO6Hlbt/pN7oYKSOGDBABE6jKWGmnKMn8W60pml82VHtZN85SE1EpT+kd3icTbm8J1SMmv2Z5gkpBAWWZudlPoMKNhY82HFZ8V5kHChL34ezhoVnyFnO4e8VNn9Zp41H/XhcLxZCZj9iy0ojlpcvU6m53PzWua8v3HGpYCPGTYE90GbkEZq+hvHuwG0FwEsRi0naFkzsqncjrlRm/J0Cm+fSXD+L2B8=
+	1GZwlsZsGOYbd/suuipAkNG5XVZyyNuww5OpbceuMCRRpUiQ4LN6GwomttK2yPZQMmFOu3VacvJKNGPWmRkanOEyq4myQdnhVLTfS8rW6gueRnDGDFzufPkaeQm0s3nE6NAIWhsyfp5ytIoPOxMbbRpBppLvLN2gq0NX5Xugut6iTvnpr7OxpwS/jxtLq+klZfcapKJzenoztQ7SV9+rof6KiBV5aeni3hZRLNoUYGpNg0MJoC/PSX4mqteNJ9zHe/9iBr+ySSApmFs9zrhkafL739G4yYKcw0AKY2R75ekRZA14oXmO7Fhpe3X9RC6VkYOPwLchD45u3zECcP24Ck94V1CmvZWiWyfBTLwm85pgLb2lhwl2JrWAWvyPpCML5d7FGg7JpNb2E0I268V+OjphONjH6mH4EjR+PybrN771lpLMVv8lwNbOufkIEIhcvGuohcc4Q/9fAP7jaejJzVGSSRFGcCaFfjTjwFvO3JI1DpZ0LPtWDteVAJYDq6EJCF+DhqJKWXPT3h5OOEQT5qyEGjH4oHI4TRucwqFnKszfpR0c1TTTZiCN7ysy64rSn/PSoL4abgmfxAQO11FE6WHorFdpywGdGanRcSFStXntnSdKN7V3Du5ocGUOVsa50ZB9BmD1G0RhF7AnN/ePZgPOjt3izS+59/jjJbUkLn/1020e5OnhR09EvxdRX4ltLIYg/xOUx3azo2LpsO6PJgW3CyP14t8UMNX9EAVDp2DDy0I2Z973rYcHdxmIMleFHSbsFsRXTno6n8ZMzgS5WfDsJQXiM7NioFJh6+LZZig=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6030.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(376002)(366004)(346002)(396003)(39850400004)(52116002)(4326008)(2906002)(26005)(6512007)(44832011)(6916009)(2616005)(38350700002)(6666004)(8936002)(6506007)(41300700001)(86362001)(6486002)(36756003)(478600001)(1076003)(83380400001)(186003)(66476007)(66946007)(8676002)(316002)(66556008)(5660300002)(38100700002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?jkz1qTh8sKC/q0dktPYrXxGn+Ag72aMuUcbHEbMPNlQQV2A6USQ72MnCc/vd?=
- =?us-ascii?Q?2FtULbRcxE+ceEgklOyJOxTnqp6k2jqLSMPdLtox3aMasPCBq/GKcEsm8tVa?=
- =?us-ascii?Q?GGLi9rd6L+oFH+GyLb27LSJ1crpP8M5RaRNNwid++t6dmsz2lIBRmh2Rm7Me?=
- =?us-ascii?Q?YgYk7nbVdI//GCfftl1nh7Rt8mlhLhR3WcNcxOV3gV3ihOOlsxPoo679MJjV?=
- =?us-ascii?Q?ZSuovjh0uGNON9Bfqx2o9BBq51Glze6UZ8cXtzW6aa6XiwD+Im+48R+7B+AM?=
- =?us-ascii?Q?tB3RnmB/r3gYpWm3uMZT2/PKV9J6jKtkipEmNMZswfTn4bEuG96XbaPUDVaz?=
- =?us-ascii?Q?eAltZFvWAlwo97PNdrg1qBBS+UcULFaHqmqtcrmiqhV6+nynPuqBge0m174M?=
- =?us-ascii?Q?3M8eGqtv6d0meHM0AkeW1lzrWrXfS9tA3TW63RgrdF858WNyBN6aCYUUI023?=
- =?us-ascii?Q?H3jBJW5k2yvApmNS6tugAbZDM3eUiWjl9RqoxQdGMoHE9PM1Gz3iz1B6dzzd?=
- =?us-ascii?Q?cTFJ2AAlZkwE6Nygm8mEVXsoqO9gQedavkbcvHLCMN/pcJqRIJ/brYwYJCKZ?=
- =?us-ascii?Q?/nY8hwmp7HdQMZK5ZNEgZ2lRNsyTy0Eu3eIcK9n1w0T58eGlMD0I1k5Iv4KE?=
- =?us-ascii?Q?LZ0asufcx9rdC2CStapS0EbddDJfRruHJBWweG+bXSwIzmhGtuqO5PCRIf/c?=
- =?us-ascii?Q?47v8PuuJZMkkWeUaruqVjEpAgcOcPJ6EtvXNnrB2uBqiivmbpwI3qyURNZpM?=
- =?us-ascii?Q?1U2v9+bnfHSQVW1pXwuWoA+Q3oqtHbmLqVPDzZIK8hlgB0neRTWPazQHPT/Z?=
- =?us-ascii?Q?HY8EjSeYCUU3eEer9Bg7KyShoy+avsdTUaO8bopSwykIkK+zB2s6/Zx87Ibh?=
- =?us-ascii?Q?nOLzQ38MjUL/q/jqL7oamldgB+9j/ZGkrHE8auDRwN4buWvY3iEa9vSGFx/w?=
- =?us-ascii?Q?/4EqZh+DO+UIJZhJttzfQLAUep1wGpLLSoMiv7zcy61K+8KI8ZhgzZoStUJe?=
- =?us-ascii?Q?vRJtQLa666HHHAz4sKJzO6OMLHH67EQmaBjmfI+Ct1LN89cu4HnLBBturuY2?=
- =?us-ascii?Q?GYNgmZujNdFQA69Iflz0wGaompxW8a3L+GpIzT/E68679vVKHsx5gzdqwKIn?=
- =?us-ascii?Q?lCs5qXPaq8OaP0Jz0vqPlwg30pTuKBayJv5n5kd9Xe0hk0lBL0mvkKLA2+Lq?=
- =?us-ascii?Q?vBYfNNYMjwbGJDG10o9gX4Wqt4svQGcDoIhgfpBimA1ncGBNKq6bUcosHpXR?=
- =?us-ascii?Q?P1w+D+qH6bYABHMaNb3UHs57Uyi5eA+Hl9ikZ0Igu7zXOMW+ls7X0IKA2tWe?=
- =?us-ascii?Q?TGrcyNlnQB1iZaXQyJ/i/cxNP+gNWQrAIfyKFsn7qDStoq/f9pdHQ4du9SLk?=
- =?us-ascii?Q?VmOtETkCT0wwWcG/+HGvWHNJ3B1GEmd1wpkeAA//A8h3EnxG5Un8HnjoaiTF?=
- =?us-ascii?Q?rQ5MuBVJ/jQVVMArz3XkH7SozJE9NVZbVqVxuG8Q3TzHERA5MjJ4LGjid3Jx?=
- =?us-ascii?Q?yqEFrqv2zkoCEjK4lp8J33kTMUOFnkXH8e9Mjgma9s0dkjZGVXd0YKCJcClv?=
- =?us-ascii?Q?jrE4IRm9yT3rSz6bFX8NapknmpMtlNR+vhY9Seknas4WCoKtdLwSt77AI344?=
- =?us-ascii?Q?Bw=3D=3D?=
+	=?us-ascii?Q?FMvuzKlaNtC1xRkWBrOwmiltFI/0HZMc3EYTKjbz2x62lscj0kWMpKWSHaNe?=
+ =?us-ascii?Q?mwqvOYe2Shikht3gTDHfNm2S6uoXphFU8IyQXo6aXPRNl7jV8hqaM/FW4Fpb?=
+ =?us-ascii?Q?VZ7ue6M5CM9TkEYM3lpm7eQF9YiXixgKhTcnqbVpYr+4x3256sZLob3YlMJ8?=
+ =?us-ascii?Q?P/aTrWwnJz6WKqK/P8302bVh0QyKfjK2tNrYQI/2SrU2fzm1Q3/bPiFUzfgN?=
+ =?us-ascii?Q?cc4Xb8Peq+yEzIcdyNMh1wm3SU6JseVcbH1pmiHCiWJEs/A80nQ1r3o7tqek?=
+ =?us-ascii?Q?jbcV/ZmAvRq0lN25O/ViR3M0Cx5mUGAWdt/K4/yKQGrxqOrlOiBJukzNhDaJ?=
+ =?us-ascii?Q?Bj+C9Vc7no4nCmc171u0lAr+QZ/Y0SYd0yhhAyxWKXJqyq+Bb2tdJmKpKQqj?=
+ =?us-ascii?Q?a+qXRu5LkX1O2DeMXWa31uA+Ta24oviwvAV8aGOzykZNiwFNHCJMASN0eJ3B?=
+ =?us-ascii?Q?CkXe+oOh4FPKOyk8rjHbkhMvWCI2C/zbxM0sjChSg1UdW8hht4dH2ZFTuBIa?=
+ =?us-ascii?Q?xqFgdXwHX4e9DxdZcluv2FjgTyg4P6vGDTs48KyLOJN0iL9qceSws+1xy35e?=
+ =?us-ascii?Q?7D90Vp3nWGbI2+BQHm1J+jiogdWAg77v3KOapX94OpjrH1LpMSCFZY3wWs9L?=
+ =?us-ascii?Q?RuA/sXCa5/OKKO/pnpIPCWVr7ASPB8Fjq3FGi4wWmehamqLcbzJRUzPVeG7w?=
+ =?us-ascii?Q?w/w/0YXJW/D3TaDiVc/CbT9t41Mc0CRaXFMME1YAXGqMwuFZvJWaq/xIg0JN?=
+ =?us-ascii?Q?zxdCTqFrSX32WCUvnij7DNZ/eQw7uMHljsX1E1tjIGWzend2adzH1KxnkJBr?=
+ =?us-ascii?Q?CcoY473hfUolUV8pgd/CavQgd27nBNMIIcdqqakWy/bwXnZs591aZJGmdSpl?=
+ =?us-ascii?Q?PEIN/jvz2GofY58RNuTeEpPq6dK/NEyeFlqnZ/hiWqtxPRdRce9nLLxASozF?=
+ =?us-ascii?Q?R3y/yOdiPt1WGlWf+DYcB6k9OLQZxdP9B9X0HHSNJp6+pjW/1fstzs/wiAi/?=
+ =?us-ascii?Q?7itjAu0tD5Ynu1QvjBlx0cWzqFZvo3W156C9JosN/y2c43M9eA8x2PCKXwdt?=
+ =?us-ascii?Q?NYSq/5xsVdTYsPb/RwQImXwUugX51xhVDQXpdQstR/dBwDbomN9MVfqNhyoH?=
+ =?us-ascii?Q?R2lX+Wh3ITcwwvNUHRdfSS6S0q+jv6LjhpBmaqH+JgCRNLNj0KefV8d35RWh?=
+ =?us-ascii?Q?iCHHlEHARCgUotl+eL04sFY4V1aoYLVwPfY9xDhk9tgKDZhmoTF8sNQtQGSx?=
+ =?us-ascii?Q?jPJ2a+sKXxoqFGIyGWZIphjSFtX2e1/zS7IIolwY3XxRPzqokmixwXE6+mVh?=
+ =?us-ascii?Q?9iKYmbBC+Hu9y1XJHcT6fXQf3gNYkTRVq9gZE11NnCzSAjZjcmoD3gBdNstx?=
+ =?us-ascii?Q?oOG+PAU8MOVODdfdo5f9nLl+SEW0fuX3Ixih1JlXToAQkU8VF8HpSqQ+Ldb/?=
+ =?us-ascii?Q?jkrpc8fKalDfOGDEJBM92XXfLs+mx1K6xo+hsD46WXmP1oYWvrN8wZnR+sRU?=
+ =?us-ascii?Q?76Nm4npJH3B9iZd7JIlANXj3PbvEk7/qfV8unO++VIU3FRNZbdsPmFLIQJXW?=
+ =?us-ascii?Q?Ke6gAbrFw12lDRBmsRlQrRs/pPNBWCI16gxxcfKNP0Zl2nsNSizidSwDKt6Z?=
+ =?us-ascii?Q?gA=3D=3D?=
 X-OriginatorOrg: windriver.com
 X-MS-Exchange-CrossTenant-Network-Message-Id: 
- 6d32932c-40e6-486b-707a-08da7fbb768d
+ a86e2915-f43f-474a-fb5b-08da7fbb76fa
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6030.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2022 19:13:55.2657
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2022 19:13:56.0305
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
 X-MS-Exchange-CrossTenant-UserPrincipalName: 
- uAnI51UoRcLR4aubkkcIiAjFTro2PVcjp8US5qk/bWEdOg4ohbQvg+y2nIpu9AzWbzMZk4Jf2d8Jwydjt42W3Wcq/ZtfRdYgB1M/JAyF2Ac=
+ y7wYPQy4ErT+7x/rqWakdL7/qAVlb5HvyTjXCEDLlJleEhdkZUnDh3pQ3qFxUcPRhXSzkFDhmo15Yj7xyBGtC1TQZfAkQkEpUWybrH9RpxI=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2614
-X-Proofpoint-ORIG-GUID: 0vCy0Sw3ZdGjAihE42BcQ9kGaIksUyGc
-X-Proofpoint-GUID: kwGGQcJpfz1AfvcT1yyg4HLXG630S5W6
+X-Proofpoint-ORIG-GUID: AJpOGQv5EVdLZHxKoJ9Bhhj9zzo6ckFe
+X-Proofpoint-GUID: kDoKojDWsJpUpC9KSNFUMR6Y_2agRGsZ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
  definitions=2022-08-16_08,2022-08-16_02,2022-06-22_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  priorityscore=1501
- phishscore=0 malwarescore=0 bulkscore=0 clxscore=1015 mlxscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 adultscore=0
- impostorscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2207270000 definitions=main-2208160071
+ mlxlogscore=999 lowpriorityscore=0 malwarescore=0 mlxscore=0 phishscore=0
+ spamscore=0 adultscore=0 bulkscore=0 suspectscore=0 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2208160071
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 16 Aug 2022 19:14:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13899
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13900
 
-Prevent the scheduler from starting new tasks if the current cpu or io
-pressure is above a certain threshold and there is at least one active
-task. This threshold can be specified through the
-"BB_PRESSURE_MAX_{CPU|IO}" variables in conf/local.conf.
+Prevent new tasks from being scheduled if the memory pressure is above
+a certain threshold, specified through the "BB_MAX_PRESSURE_MEMORY"
+variable in the conf/local.conf file. This is an extension to the
+following commit and hence regulates pressure in the same way:
+   48a6d84de1 bitbake: runqueue: add cpu/io pressure regulation
 
-The threshold represents the difference in "total" pressure from the
-previous second. The pressure data is discussed in this oe-core commit:
-   061931520b buildstats.py: enable collection of /proc/pressure data
-where one can see that the average and "total" values are available.
-From tests, it was seen that while using the averaged data was somewhat
-useful, the latency in regulating builds was too high. By taking the
-difference between the current pressure and the pressure seen in the
-previous second, better regulation occurs. Using a shorter time period
-is appealing but due to fluctations in pressure, comparing the current
-pressure to 1 second ago achieves a reasonable compromise. One can look
-at the buildstats logs, that usually sample once per second, to decide a
-sensible threshold.
+Memory pressure is experienced when time is spent swapping, refaulting
+pages from the page cache or performing direct reclaim. This is why
+memory pressure is rarely seen but might be useful as a last resort to
+prevent OOM errors.
 
-If the thresholds aren't specified, pressure is not monitored and hence
-there is no impact on build times. Arbitary lower limit of 1.0 results
-in a fatal error to avoid extremely long builds. If the limits are higher
-than 1,000,000, then warnings are issued to inform users that the specified
-limit is very high and unlikely to result in any regulation.
-
-The current bitbake scheduling algorithm requires that at least one
-task be active. This means that if high pressure is seen, then new tasks
-will not be started and pressure will be checked only for as long as at
-least one task is active. When there are no active tasks, an additional task
-will be started and pressure checking resumed. This behaviour means that
-if an external source is causing the pressure to exceed the threshold,
-bitbake will continue to make some progress towards the requested target.
-This violates the intent of limiting pressure but, given the current
-scheduling algorithm as described above, there seems to be no other option.
-In the case where only one bitbake build is running, the implications of
-the scheduler requirement will likely result in pressure being higher
-than the threshold. More work would be required to ensure that
-the pressure threshold is never exceeded, for example by adding pressure
-monitoring to make and ninja.
-
-(Bitbake rev: 502e05cbe67fb7a0e804dcc2cc0764a2e05c014f)
+(Bitbake rev: 44c395434c7be8dab968630a610c8807f512920c)
 
 Signed-off-by: Aryaman Gupta <aryaman.gupta@windriver.com>
-Signed-off-by: Randy Macleod <randy.macleod@windriver.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Randy Macleod <Randy.Macleod@windriver.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/runqueue.py | 65 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+ bitbake/lib/bb/runqueue.py | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
 diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index a513b0983b..9aa99ef4a1 100644
+index 9aa99ef4a1..13965796eb 100644
 --- a/bitbake/lib/bb/runqueue.py
 +++ b/bitbake/lib/bb/runqueue.py
-@@ -24,6 +24,7 @@ import pickle
- from multiprocessing import Process
- import shlex
- import pprint
-+import time
- 
- bblogger = logging.getLogger("BitBake")
- logger = logging.getLogger("BitBake.RunQueue")
-@@ -142,6 +143,46 @@ class RunQueueScheduler(object):
-                 self.buildable.append(tid)
- 
-         self.rev_prio_map = None
-+        self.is_pressure_usable()
+@@ -151,11 +151,15 @@ class RunQueueScheduler(object):
+         openSUSE /proc/pressure/* files have readable file permissions but when read the error EOPNOTSUPP (Operation not supported)
+         is returned.
+         """
+-        if self.rq.max_cpu_pressure or self.rq.max_io_pressure:
++        if self.rq.max_cpu_pressure or self.rq.max_io_pressure or self.rq.max_memory_pressure:
+             try:
+-                with open("/proc/pressure/cpu") as cpu_pressure_fds, open("/proc/pressure/io") as io_pressure_fds:
++                with open("/proc/pressure/cpu") as cpu_pressure_fds, \
++                    open("/proc/pressure/io") as io_pressure_fds, \
++                    open("/proc/pressure/memory") as memory_pressure_fds:
 +
-+    def is_pressure_usable(self):
-+        """
-+        If monitoring pressure, return True if pressure files can be open and read. For example
-+        openSUSE /proc/pressure/* files have readable file permissions but when read the error EOPNOTSUPP (Operation not supported)
-+        is returned.
-+        """
-+        if self.rq.max_cpu_pressure or self.rq.max_io_pressure:
-+            try:
-+                with open("/proc/pressure/cpu") as cpu_pressure_fds, open("/proc/pressure/io") as io_pressure_fds:
-+                    self.prev_cpu_pressure = cpu_pressure_fds.readline().split()[4].split("=")[1]
-+                    self.prev_io_pressure = io_pressure_fds.readline().split()[4].split("=")[1]
-+                    self.prev_pressure_time = time.time()
-+                self.check_pressure = True
-+            except:
-+                bb.warn("The /proc/pressure files can't be read. Continuing build without monitoring pressure")
-+                self.check_pressure = False
-+        else:
-+            self.check_pressure = False
-+
-+    def exceeds_max_pressure(self):
-+        """
-+        Monitor the difference in total pressure at least once per second, if
-+        BB_PRESSURE_MAX_{CPU|IO} are set, return True if above threshold.
-+        """
-+        if self.check_pressure:
-+            with open("/proc/pressure/cpu") as cpu_pressure_fds, open("/proc/pressure/io") as io_pressure_fds:
-+                # extract "total" from /proc/pressure/{cpu|io}
-+                curr_cpu_pressure = cpu_pressure_fds.readline().split()[4].split("=")[1]
-+                curr_io_pressure = io_pressure_fds.readline().split()[4].split("=")[1]
-+                exceeds_cpu_pressure =  self.rq.max_cpu_pressure and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) > self.rq.max_cpu_pressure
-+                exceeds_io_pressure =  self.rq.max_io_pressure and (float(curr_io_pressure) - float(self.prev_io_pressure)) > self.rq.max_io_pressure
-+                now = time.time()
-+                if now - self.prev_pressure_time > 1.0:
-+                    self.prev_cpu_pressure = curr_cpu_pressure
-+                    self.prev_io_pressure = curr_io_pressure
-+                    self.prev_pressure_time = now
-+            return (exceeds_cpu_pressure or exceeds_io_pressure)
-+        return False
+                     self.prev_cpu_pressure = cpu_pressure_fds.readline().split()[4].split("=")[1]
+                     self.prev_io_pressure = io_pressure_fds.readline().split()[4].split("=")[1]
++                    self.prev_memory_pressure = memory_pressure_fds.readline().split()[4].split("=")[1]
+                     self.prev_pressure_time = time.time()
+                 self.check_pressure = True
+             except:
+@@ -167,21 +171,26 @@ class RunQueueScheduler(object):
+     def exceeds_max_pressure(self):
+         """
+         Monitor the difference in total pressure at least once per second, if
+-        BB_PRESSURE_MAX_{CPU|IO} are set, return True if above threshold.
++        BB_PRESSURE_MAX_{CPU|IO|MEMORY} are set, return True if above threshold.
+         """
+         if self.check_pressure:
+-            with open("/proc/pressure/cpu") as cpu_pressure_fds, open("/proc/pressure/io") as io_pressure_fds:
++            with open("/proc/pressure/cpu") as cpu_pressure_fds, \
++                open("/proc/pressure/io") as io_pressure_fds, \
++                open("/proc/pressure/memory") as memory_pressure_fds:
+                 # extract "total" from /proc/pressure/{cpu|io}
+                 curr_cpu_pressure = cpu_pressure_fds.readline().split()[4].split("=")[1]
+                 curr_io_pressure = io_pressure_fds.readline().split()[4].split("=")[1]
++                curr_memory_pressure = memory_pressure_fds.readline().split()[4].split("=")[1]
+                 exceeds_cpu_pressure =  self.rq.max_cpu_pressure and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) > self.rq.max_cpu_pressure
+                 exceeds_io_pressure =  self.rq.max_io_pressure and (float(curr_io_pressure) - float(self.prev_io_pressure)) > self.rq.max_io_pressure
++                exceeds_memory_pressure = self.rq.max_memory_pressure and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) > self.rq.max_memory_pressure
+                 now = time.time()
+                 if now - self.prev_pressure_time > 1.0:
+                     self.prev_cpu_pressure = curr_cpu_pressure
+                     self.prev_io_pressure = curr_io_pressure
++                    self.prev_memory_pressure = curr_memory_pressure
+                     self.prev_pressure_time = now
+-            return (exceeds_cpu_pressure or exceeds_io_pressure)
++            return (exceeds_cpu_pressure or exceeds_io_pressure or exceeds_memory_pressure)
+         return False
  
      def next_buildable_task(self):
-         """
-@@ -155,6 +196,12 @@ class RunQueueScheduler(object):
-         if not buildable:
-             return None
- 
-+        # Bitbake requires that at least one task be active. Only check for pressure if
-+        # this is the case, otherwise the pressure limitation could result in no tasks
-+        # being active and no new tasks started thereby, at times, breaking the scheduler.
-+        if self.rq.stats.active and self.exceeds_max_pressure():
-+            return None
-+
-         # Filter out tasks that have a max number of threads that have been exceeded
-         skip_buildable = {}
-         for running in self.rq.runq_running.difference(self.rq.runq_complete):
-@@ -1700,6 +1747,8 @@ class RunQueueExecute:
- 
-         self.number_tasks = int(self.cfgData.getVar("BB_NUMBER_THREADS") or 1)
+@@ -1749,6 +1758,7 @@ class RunQueueExecute:
          self.scheduler = self.cfgData.getVar("BB_SCHEDULER") or "speed"
-+        self.max_cpu_pressure = self.cfgData.getVar("BB_PRESSURE_MAX_CPU")
-+        self.max_io_pressure = self.cfgData.getVar("BB_PRESSURE_MAX_IO")
+         self.max_cpu_pressure = self.cfgData.getVar("BB_PRESSURE_MAX_CPU")
+         self.max_io_pressure = self.cfgData.getVar("BB_PRESSURE_MAX_IO")
++        self.max_memory_pressure = self.cfgData.getVar("BB_PRESSURE_MAX_MEMORY")
  
          self.sq_buildable = set()
          self.sq_running = set()
-@@ -1735,6 +1784,22 @@ class RunQueueExecute:
-         if self.number_tasks <= 0:
-              bb.fatal("Invalid BB_NUMBER_THREADS %s" % self.number_tasks)
+@@ -1800,6 +1810,13 @@ class RunQueueExecute:
+             if self.max_io_pressure > upper_limit:
+                 bb.warn("Your build will be largely unregulated since BB_PRESSURE_MAX_IO is set to %s. It is very unlikely that such high pressure will be experienced." % (self.max_io_pressure))
  
-+        lower_limit = 1.0
-+        upper_limit = 1000000.0
-+        if self.max_cpu_pressure:
-+            self.max_cpu_pressure = float(self.max_cpu_pressure)
-+            if self.max_cpu_pressure < lower_limit:
-+                bb.fatal("Invalid BB_PRESSURE_MAX_CPU %s, minimum value is %s." % (self.max_cpu_pressure, lower_limit))
-+            if self.max_cpu_pressure > upper_limit:
-+                bb.warn("Your build will be largely unregulated since BB_PRESSURE_MAX_CPU is set to %s. It is very unlikely that such high pressure will be experienced." % (self.max_cpu_pressure))
-+
-+        if self.max_io_pressure:
-+            self.max_io_pressure = float(self.max_io_pressure)
-+            if self.max_io_pressure < lower_limit:
-+                bb.fatal("Invalid BB_PRESSURE_MAX_IO %s, minimum value is %s." % (self.max_io_pressure, lower_limit))
-+            if self.max_io_pressure > upper_limit:
-+                bb.warn("Your build will be largely unregulated since BB_PRESSURE_MAX_IO is set to %s. It is very unlikely that such high pressure will be experienced." % (self.max_io_pressure))
-+
++        if self.max_memory_pressure:
++            self.max_memory_pressure = float(self.max_memory_pressure)
++            if self.max_memory_pressure < lower_limit:
++                bb.fatal("Invalid BB_PRESSURE_MAX_MEMORY %s, minimum value is %s." % (self.max_memory_pressure, lower_limit))
++            if self.max_memory_pressure > upper_limit:
++                bb.warn("Your build will be largely unregulated since BB_PRESSURE_MAX_MEMORY is set to %s. It is very unlikely that such high pressure will be experienced." % (self.max_io_pressure))
++            
          # List of setscene tasks which we've covered
          self.scenequeue_covered = set()
          # List of tasks which are covered (including setscene ones)
