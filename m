@@ -1,123 +1,89 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1289AC25B08
-	for <webhook@archiver.kernel.org>; Sat, 20 Aug 2022 12:07:07 +0000 (UTC)
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web11.5872.1660997218416580587
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41691C00140
+	for <webhook@archiver.kernel.org>; Sun, 21 Aug 2022 23:07:01 +0000 (UTC)
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com
+ [209.85.216.54])
+ by mx.groups.io with SMTP id smtpd.web11.11889.1661123214394620627
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 20 Aug 2022 05:06:59 -0700
+ Sun, 21 Aug 2022 16:06:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@axis.com
- header.s=axis-central1 header.b=JCHT0hHF;
- spf=pass (domain: axis.com, ip: 195.60.68.18,
- mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
+ header.b=cp68ZaRc;
+ spf=softfail (domain: sakoman.com, ip: 209.85.216.54,
+ mailfrom: steve@sakoman.com)
+Received: by mail-pj1-f54.google.com with SMTP id
+ r14-20020a17090a4dce00b001faa76931beso12295417pjl.1
+        for <bitbake-devel@lists.openembedded.org>;
+ Sun, 21 Aug 2022 16:06:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1660997218;
-  x=1692533218;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=jRVvNyiDAbISBEz9sIe6Z4qxBLRlMgK20tUAIp1U9D8=;
-  b=JCHT0hHFTTvS01jvjO5cid9c5PEXnIytF1ui6kQejUm31eGIyy2V2cYo
-   4Of2+J2TsaJTqlzDb3KlxqMx2ssX2aQjO2+Q5p/RK9Rsddg92RahfrdhU
-   F/U6ZyENtKOfyGHTf0rNiMJBBS10MAH3nAtk1RdPIqrw0UBOP+FRAqd0c
-   +4FT+P5NRP1WfmklkWg7Cx4Ql5yMZQ3MaYne/EE1Nsqafn/EXXTW8aEhV
-   ujg8tHqulUXMuU/4m0JfF5XjMBN04ZVFgkfeKwAtv6lMG70R7DWF/6gJg
-   vfNI4SeIV2fpzx2Zt1IYovykXCAEAY++vcvha6bfZkaMlzDWUmfsyIkMk
-   A==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Marek Vasut <marex@denx.de>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-CC: Martin Jansa <Martin.Jansa@gmail.com>, Richard Purdie
-	<richard.purdie@linuxfoundation.org>
-Subject: RE: [PATCH] [RFC] fetch2/git: Prevent git fetcher from fetching
- gitlab repository metadata
-Thread-Topic: [PATCH] [RFC] fetch2/git: Prevent git fetcher from fetching
- gitlab repository metadata
-Thread-Index: AQHYs+xv6Ur3otLigUKfkUpnMtN9z623q2hQ
-Date: Sat, 20 Aug 2022 12:06:55 +0000
-Message-ID: <ab9e6c5562c44ac68e5d5e13e82dc8c0@axis.com>
-References: <20220819165455.270130-1-marex@denx.de>
-In-Reply-To: <20220819165455.270130-1-marex@denx.de>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc;
+        bh=Qlccl9rwgPJlOkWwgpNhUAOSepcsBRW7CwfND8s13zg=;
+        b=cp68ZaRcURjMSp2U7coRVrGwTBETLzQ4ZKhr/5WDkl/2Y9bd88fNPEKjByM6U7QoKO
+         P2OrQ3QgzHpL1wiuXBY4t0sJ+7qjameRoV8rYsE0aihhR0NMQf+NaewAxIgtMdggcHXT
+         ptFC9uLuVLomiUKqeHYylDdOqrVdDX+4hSqbL8gMkYBonIYZWHwAbeXZsdgHfGMUAlK7
+         gDWx/7JdMWLm/hFMYNmQSJyzBkYQGUPTV5y50YHcHqoVtWGX8/TofRBozBRVpW1txrUs
+         MNaYFDsaBeSE5Vm71K/jliwpzlDqj4bUXDV1FvDR+Qa7Pz9eQ/Utt/Mb8GUR2r6F31Iz
+         E8Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc;
+        bh=Qlccl9rwgPJlOkWwgpNhUAOSepcsBRW7CwfND8s13zg=;
+        b=vIS0Q2NEY5Z6kqECnBIdOa3i4pug0T6PDyaeVlCJua9gbFZnxeoPV8gFWOgYnKVnbX
+         pvor6nmY752hGH1ZC/vDWCTzRbUmMJ6FZuxCm5t1FDmwphaXeiaX+IW2ANBPVbqMeadm
+         yfS5z97YdpgrSfyXxsQPOpMOLcTKGDmTwlB1x1JLz+ny6tl5Y1thYqeUYl82E6koIWxW
+         9DA4UfNU3pC2lG9V5DJ+RoOE8CnxcRSpGA0SK8+qLFxYDtL9WGa7UJ9OctaoyBOq2wsE
+         m5N22RfDaI0zG9nOz2CSXSswrYbaU0Qicogg3RFhqFu35jjX+rYcil39g2aoAil/upDf
+         GXDw==
+X-Gm-Message-State: ACgBeo2w9ZwH1CT0YnQ46wJhfB2+baOTI7FZu1xP4LOxtGKNUqlUqiFL
+	5m+Wty6KuQlqkrLeUc3CK40TfsRN+Wgzd/th
+X-Google-Smtp-Source: 
+ AA6agR6c+WZheVsxHL3d9OKPlfnXcByeheriJPzXbWXnUDlPGYKDmkodQs4C8Rb/1In3aGOnlnVe3g==
+X-Received: by 2002:a17:90b:1c0c:b0:1f5:494a:304b with SMTP id
+ oc12-20020a17090b1c0c00b001f5494a304bmr20292511pjb.157.1661123213476;
+        Sun, 21 Aug 2022 16:06:53 -0700 (PDT)
+Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
+ [72.253.6.214])
+        by smtp.gmail.com with ESMTPSA id
+ i11-20020a170902c94b00b0016dc6279ab7sm6983074pla.149.2022.08.21.16.06.52
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Aug 2022 16:06:52 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][dunfell][1.46][PATCH 0/1] Pull request (cover letter only)
+Date: Sun, 21 Aug 2022 13:06:43 -1000
+Message-Id: <cover.1661123122.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 20 Aug 2022 12:07:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13908
+ <bitbake-devel@lists.openembedded.org>; Sun, 21 Aug 2022 23:07:01 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13909
 
-> -----Original Message-----
-> From: Marek Vasut <marex@denx.de>
-> Sent: den 19 augusti 2022 18:55
-> To: bitbake-devel@lists.openembedded.org
-> Cc: Marek Vasut <marex@denx.de>; Martin Jansa <Martin.Jansa@gmail.com>; P=
-eter Kjellerstedt <peter.kjellerstedt@axis.com>; Richard Purdie <richard.pu=
-rdie@linuxfoundation.org>
-> Subject: [PATCH] [RFC] fetch2/git: Prevent git fetcher from fetching gitl=
-ab repository metadata
->=20
-> The bitbake git fetcher currently fetches 'refs/*:refs/*', i.e. every
-> single object in the remote repository. This works poorly with gitlab
-> and github, which use the remote git repository to track its metadata
-> like merge requests, CI pipelines and such.
->=20
-> Specifically, gitlab generates refs/merge-requests/*, refs/pipelines/*
-> and refs/keep-around/* and they all contain massive amount of data that
-> are useless for the bitbake build purposes. The amount of useless data
-> can in fact be so massive (e.g. with FDO mesa.git repository) that some
-> proxies may outright terminate the 'git fetch' connection, and make it
-> appear as if bitbake got stuck on 'git fetch' with no output.
->=20
-> To avoid fetching all these useless metadata, tweak the git fetcher such
-> that it only fetches refs/heads/* and refs/tags/* . Avoid using negative
-> refspecs as those are only available in new git versions.
->=20
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> ---
-> Cc: Martin Jansa <Martin.Jansa@gmail.com>
-> Cc: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/fetch2/git.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> index 4534bd75..b5fc0a51 100644
-> --- a/lib/bb/fetch2/git.py
-> +++ b/lib/bb/fetch2/git.py
-> @@ -382,7 +382,7 @@ class Git(FetchMethod):
->                runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=
-=3Dud.clonedir)
->=20
->              runfetchcmd("%s remote add --mirror=3Dfetch origin %s" % (ud=
-.basecmd, shlex.quote(repourl)), d, workdir=3Dud.clonedir)
-> -            fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/*:ref=
-s/*" % (ud.basecmd, shlex.quote(repourl))
-> +            fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/heads=
-/*:refs/heads/* refs/tags/*:refs/tags/*" % (ud.basecmd, shlex.quote(repourl=
-))
->              if ud.proto.lower() !=3D 'file':
->                  bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
->              progresshandler =3D GitProgressHandler(d)
-> --
-> 2.35.1
+The following changes since commit 7fc4cffebf5dcc1d050416c0b7f7d58c765c1d69:
 
-Seems like the right thing to do. We use Gerrit, which also has its=20
-metadata in special refs/ spaces. One repository I tested with grew=20
-from 3 MB to 35 MB when I fetched using refs/* while another grew=20
-from 20 MB to 120 MB, so there is definitely space and time to be=20
-saved by only fetching the refs/heads and refs/tags spaces....
+  fetch/wget: Move files into place atomically (2022-07-08 06:48:38 -1000)
 
-Reviewed-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+are available in the Git repository at:
 
-//Peter
+  git://git.openembedded.org/bitbake-contrib stable/1.46-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-next
+
+Christophe Priouzeau (1):
+  fetch2/wget: Update user-agent
+
+ lib/bb/fetch2/wget.py | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+-- 
+2.25.1
 
 
