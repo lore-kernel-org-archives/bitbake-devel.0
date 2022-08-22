@@ -1,133 +1,90 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <luca.ceresoli@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7F2C28D13
-	for <webhook@archiver.kernel.org>; Mon, 22 Aug 2022 15:21:55 +0000 (UTC)
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web09.19431.1661181707023241511
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E586AC28D13
+	for <webhook@archiver.kernel.org>; Mon, 22 Aug 2022 16:02:45 +0000 (UTC)
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net
+ [217.70.183.199])
+ by mx.groups.io with SMTP id smtpd.web12.19891.1661184165129950338
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Aug 2022 08:21:47 -0700
+ Mon, 22 Aug 2022 09:02:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=k1/HPPO4;
- spf=pass (domain: axis.com, ip: 195.60.68.17,
- mailfrom: peter.kjellerstedt@axis.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1661181707;
-  x=1692717707;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=od21ZtZhFHT5eATVb1LyOcWxW9KsuGJ9InU8Sc0V45U=;
-  b=k1/HPPO4usBJO376hxhIMpXWBXK2ZeO/5lXI8Np4CduXMalyv82ujBrL
-   Mc4v3IqMmeoVFCaHiAwv1va3tgIQG4b2AaQdxvAWRU7dMYzPFStpB3WAf
-   Wi7WSKY5QrDw9EDnOKHFa9APMz7WwJnU8F8uKdmD5T10OJVlhRyLlaLGp
-   UpmoOSQsybIzpZ9a7NPUBsV2TnVJhCkKpalvCzoo8tNUn1CQD+XNSi0YJ
-   OHvb8y0YRxOqu0Kx5wZPi/4HkS8I+uNVFrDRyPoGT6tw0n8Dt6s4DYdVX
-   vRFXCp2RHdJaSfzRW97SFCQ8zgWb8BPsPLq75zEyd1Mj8Ui9LwvdS8KpG
-   g==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>, Marek Vasut
-	<marex@denx.de>, Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	Alexander Kanavin <alex.kanavin@gmail.com>
-CC: Mikko Rapeli <Mikko.Rapeli@bmw.de>, Martin Jansa <Martin.Jansa@gmail.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [PATCH] [RFC] fetch2/git: Prevent git fetcher
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=TaGySe02;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.199,
+ mailfrom: luca.ceresoli@bootlin.com)
+Received: from booty (unknown [77.244.183.192])
+	(Authenticated sender: luca.ceresoli@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id B0935FF802;
+	Mon, 22 Aug 2022 16:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1661184163;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YYhXPL8bly3qqbxT/vaOWpIVirdKkJXp+uDocDNZAk8=;
+	b=TaGySe02zgw7PEVfRDHLexCYI/Cxqa9S2u814DLltXIdW/cZ0sp6tH/V0EI3Jd7A6K8hvb
+	M6PTYb/N2Kraf35FZfEnAWXYF+V6KIZI/UekX2u5bUETeCZIokuMyudNSo8w2o6awjB9/v
+	CUcbjM2ERiHZKOromfMy1lPBPrCnSaMA2npDhwX7EM7rzLIbOXVsgOHZDVaNy8bimj4FoU
+	Z0OQtHEWWUyVZq9BEZM+ZryPqYNFucEz8BHXJE+L4wommER1UMRBXjuYGRsPSySzwx0CI2
+	1V2mYXO0eg5lQfMrFfT/PAqTxDXyIj0mXmzdi2/XO1Y6MYQNpJ4nN3cJ2Dx/Dw==
+Date: Mon, 22 Aug 2022 18:02:41 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: "Marek Vasut" <marex@denx.de>
+Cc: bitbake-devel@lists.openembedded.org, Martin Jansa
+ <Martin.Jansa@gmail.com>, Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
+ Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] [RFC] fetch2/git: Prevent git fetcher
  from fetching gitlab repository metadata
-Thread-Topic: [bitbake-devel] [PATCH] [RFC] fetch2/git: Prevent git fetcher
- from fetching gitlab repository metadata
-Thread-Index: 
- AQHYs+xv6Ur3otLigUKfkUpnMtN9z623q2hQgAKY1oCAABsvgIAAC3EAgAAOYICAAAI0AIAAATCAgAAfsACAAAY/gIAAEFAAgAAnjQCAAC/n8A==
-Date: Mon, 22 Aug 2022 15:21:43 +0000
-Message-ID: <a96c3947126b49089b0f91e050dd0d3f@axis.com>
+Message-ID: <20220822180241.5f625ed3@booty>
+In-Reply-To: <20220819165455.270130-1-marex@denx.de>
 References: <20220819165455.270130-1-marex@denx.de>
-	 <ab9e6c5562c44ac68e5d5e13e82dc8c0@axis.com> <YwMR+H8KWePvpJtn@korppu>
-	 <CANNYZj_Ag2Y8ZTXVgwagGv+26+HKPM31SRq8p3h4EL0PUEPefQ@mail.gmail.com>
-	 <YwMyXi/vfRh3S6bx@korppu> <7b3d167e-17c0-c236-d0a7-97c4b0fd8e27@denx.de>
-	 <c4c53113-49bd-ec7b-b5dd-f510c281f013@denx.de>
-	 <CANNYZj_LPwamXHBTj=g8_+ZGaL2WF+s0EOcGKf5VJYfxUyOq6g@mail.gmail.com>
-	 <438756a1-efb1-cd7e-2c80-af60f8b2fcdc@denx.de>
-	 <0761a8c9-78b4-0794-6bc3-14afd248ac16@theobroma-systems.com>
-	 <fbf40e09-ff85-42c0-54d0-0bb8fc833e58@denx.de>
- <54100db12fc1f75f28ca1592d5debf1cf164f723.camel@linuxfoundation.org>
-In-Reply-To: 
- <54100db12fc1f75f28ca1592d5debf1cf164f723.camel@linuxfoundation.org>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 22 Aug 2022 15:21:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13923
+ <bitbake-devel@lists.openembedded.org>; Mon, 22 Aug 2022 16:02:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13924
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmlj
-aGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gU2VudDogZGVuIDIyIGF1Z3VzdGkg
-MjAyMiAxNjoxNw0KPiBUbzogTWFyZWsgVmFzdXQgPG1hcmV4QGRlbnguZGU+OyBRdWVudGluIFNj
-aHVseiA8cXVlbnRpbi5zY2h1bHpAdGhlb2Jyb21hLQ0KPiBzeXN0ZW1zLmNvbT47IEFsZXhhbmRl
-ciBLYW5hdmluIDxhbGV4LmthbmF2aW5AZ21haWwuY29tPg0KPiBDYzogTWlra28gUmFwZWxpIDxN
-aWtrby5SYXBlbGlAYm13LmRlPjsgTWFydGluIEphbnNhDQo+IDxNYXJ0aW4uSmFuc2FAZ21haWwu
-Y29tPjsgYml0YmFrZS1kZXZlbCA8Yml0YmFrZS0NCj4gZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVk
-Lm9yZz47IFBldGVyIEtqZWxsZXJzdGVkdA0KPiA8cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29t
-Pg0KPiBTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFtQQVRDSF0gW1JGQ10gZmV0Y2gyL2dp
-dDogUHJldmVudCBnaXQgZmV0Y2hlcg0KPiBmcm9tIGZldGNoaW5nIGdpdGxhYiByZXBvc2l0b3J5
-IG1ldGFkYXRhDQo+IA0KPiBPbiBNb24sIDIwMjItMDgtMjIgYXQgMTM6NTUgKzAyMDAsIE1hcmVr
-IFZhc3V0IHdyb3RlOg0KPiA+IE9uIDgvMjIvMjIgMTI6NTcsIFF1ZW50aW4gU2NodWx6IHdyb3Rl
-Og0KPiA+ID4gSGkgTWFyZWssDQo+ID4gPg0KPiA+ID4gT24gOC8yMi8yMiAxMjozNSwgTWFyZWsg
-VmFzdXQgd3JvdGU6DQo+ID4gPiA+IE9uIDgvMjIvMjIgMTA6NDEsIEFsZXhhbmRlciBLYW5hdmlu
-IHdyb3RlOg0KPiA+ID4gPiA+IE9uIE1vbiwgMjIgQXVnIDIwMjIgYXQgMTA6MzcsIE1hcmVrIFZh
-c3V0IDxtYXJleEBkZW54LmRlPiB3cm90ZToNCj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBTbyBt
-YXliZSB0aGUgZWFzeSB3YXkgb3V0IGlzLCBpZiBub2JyYW5jaD0xIHRoZW4gZmV0Y2gNCj4gZXZl
-cnl0aGluZywNCj4gPiA+ID4gPiA+ID4gZWxzZQ0KPiA+ID4gPiA+ID4gPiBqdXN0IGhlYWRzIGFu
-ZCB0YWdzID8NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBObywgdGhpcyB3b24ndCBkbywgbm9i
-cmFuY2ggZXhwZWN0cyB0aGUgY29tbWl0IHRvIGJlIGluIGEgdGFnLg0KPiA+ID4gPiA+DQo+ID4g
-PiA+ID4gSSBkb24ndCB0aGluayBpdCBleHBlY3RzIHRoYXQuDQo+ID4gPiA+DQo+ID4gPiA+IERv
-Y3VtZW50YXRpb24gc2F5cyBpdCBkb2VzOg0KPiA+ID4gPg0KPiA+ID4gPiBodHRwczovL3VybGRl
-ZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cHMtDQo+IDNBX19naXQub3BlbmVtYmVk
-ZGVkLm9yZ19iaXRiYWtlX3RyZWVfbGliX2JiX2ZldGNoMl9naXQucHktDQo+IDIzbjQ1JmQ9RHdJ
-Q2FRJmM9X3NFcjV4OWtVV2h1azRfbkZ3akp0QSZyPUxZakxleERuN3JYSXpWbWtOUHZ3NXltQTFY
-VFNxSEdxDQo+IDh5QlA2bTZxWlo0bmpaZ3VRaFpoa0lfLQ0KPiAxNzJJSXkxdCZtPXVaTldWTUdF
-b3d5X250TzhxNWZqSU5YdTNMSWU5aGFxYlNUWWp3V2lxTzZRNXNFUHNVSXg1bncyOFlUQnc2bw0K
-PiBJJnM9X0FKM21rR25uTThwZVNOUDhrNk1lUFowUnRFa1FMbzd5UzFDbGwyeWptYyZlPSAiDQo+
-ID4gPiA+IC0gbm9icmFuY2gNCj4gPiA+ID4gwqDCoMKgIERvbid0IGNoZWNrIHRoZSBTSEEgdmFs
-aWRhdGlvbiBmb3IgYnJhbmNoLiBzZXQgdGhpcyBvcHRpb24gZm9yDQo+IHRoZQ0KPiA+ID4gPiBy
-ZWNpcGUNCj4gPiA+ID4gwqDCoMKgIHJlZmVycmluZyB0byBjb21taXQgd2hpY2ggaXMgdmFsaWQg
-aW4gdGFnIGluc3RlYWQgb2YgYnJhbmNoLg0KPiA+ID4NCj4gPiA+IEkgYXNzdW1lIHRoaXMgd2Fz
-IG1lYW50IHRvIGdpdmUgdGhlIGV4YW1wbGUgb2YgdGFncyB3aGljaCBhcmVuJ3QNCj4gPiA+IG5l
-Y2Vzc2FyaWx5IGluIGEgYnJhbmNoIChhbm5vdGF0ZWQgdGFncyBvciB0YWdzIG9mIGNvbW1pdHMg
-bm90IGJlbG9uZw0KPiB0bw0KPiA+ID4gYW55IGJyYW5jaCBhbnltb3JlIChmb3JjZS1wdXNoIGZv
-ciBleGFtcGxlLCBvciBicmFuY2ggZGVsZXRpb24pLg0KPiA+ID4NCj4gPiA+IFRoZSBnaXQgZmV0
-Y2hlciBkb2VzIGEgZ2l0IGxvZyAtLXByZXR0eT1vbmVsaW5lIC1uIDEgPGhhc2g+IHdoZW4NCj4g
-PiA+IG5vYnJhbmNoIGlzIHNldCwgb3RoZXJ3aXNlIGdpdCBicmFuY2ggLS1jb250YWlucyA8aGFz
-aD4gLS1saXN0DQo+IDxicmFuY2g+DQo+ID4gPiB0byBjaGVjayB3aGV0aGVyIGEgY29tbWl0IGV4
-aXN0cyBhbmQgY2FuIGJlIHVzZWQgYnkgYml0YmFrZS4NCj4gPiA+DQo+ID4gPiBDb25zaWRlcmlu
-ZyB0aGlzIGNoZWNrLCBJIGFzc3VtZSBub2JyYW5jaD0xIGlzIHdvcmtpbmcgZm9yIGFueSBjb21t
-aXQNCj4gPiA+IHRoYXQgd2FzIGZldGNoZWQgYnkgdGhlIGdpdCBmZXRjaGVyPw0KPiA+ID4NCj4g
-PiA+IChXZSBuZWVkIHRvIHVwZGF0ZSB0aGUgZG9jcyB0byByZWZsZWN0IHRoYXQgaW4gdGhhdCBj
-YXNlKS4NCj4gPg0KPiA+IEluIHRoYXQgY2FzZSwgJ2dpdCBmZXRjaCByZWZzLyonIGluIGNhc2Ug
-bm9icmFuY2ggaXMgc2V0IGFuZCAncmVmcy9oZWFkDQo+ID4gcmVmcy90YWdzJyBvdGhlcndpc2Ug
-Pw0KPiANCj4gVGhpcyBkb2VzIGdldCBhIGJpdCBtb3JlIGNvbXBsZXggdGhvdWdoIHNpbmNlIHlv
-dSBub3cgbmVlZCB0d28NCj4gZGlmZmVyZW50IG1pcnJvciB0YXJiYWxscywgb25lIGZvciBlYWNo
-IG9wdGlvbi4gVGhlIGNvZGUgY2FuIGRvIHRoYXQgaWYNCj4gc2V0dXAgY29ycmVjdGx5IGJ1dCB3
-ZSBkbyBuZWVkIHRvIGNvdmVyIHRoYXQgaXNzdWUuDQo+IA0KPiBDaGVlcnMsDQo+IA0KPiBSaWNo
-YXJkDQoNCkkgbWFkZSBzb21lIHRlc3RpbmcsIGFuZCBmb3IgR2Vycml0IHRvIGNvbnRpbnVlIHRv
-IHdvcmsgaXQgd291bGQgYmUNCmVub3VnaCB0byB1c2U6DQoNCiAgICAgICAgICAgIGZldGNoX2Nt
-ZCA9ICJMQU5HPUMgJXMgZmV0Y2ggLWYgLS1wcm9ncmVzcyAlcyByZWZzL2hlYWRzLyo6cmVmcy9o
-ZWFkcy8qIHJlZnMvdGFncy8qOnJlZnMvdGFncy8qIHJlZnMvY2hhbmdlcy8qOnJlZnMvY2hhbmdl
-cy8qIiAlICh1ZC5iYXNlY21kLCBzaGxleC5xdW90ZShyZXBvdXJsKSkNCg0KVGhpcyBzaG91bGQg
-bm90IGFmZmVjdCBvdGhlciBHaXQgc2VydmVycyBhbmQgc2hvdWxkIGF2b2lkIHVzaW5nIA0KZGlm
-ZmVyZW50IGZldGNoIGNvbW1hbmRzIGRlcGVuZGluZyBvbiB0aGUgVVJMLiBUaGUgZHJhd2JhY2sg
-aXMgb2YgDQpjb3Vyc2UgdGhhdCBmb3IgR2Vycml0LCB0aGVyZSB3b3VsZCBiZSBvbmx5IG1hcmdp
-bmFsIGJlbmVmaXRzIHRvIA0KdGhpcyBjaGFuZ2Ugc2luY2UgdGhlIG1ham9yaXR5IG9mIGl0cyBt
-ZXRhZGF0YSBpcyBpbiB0aGUgDQpyZWZzL2NoYW5nZXMgc3BhY2UuDQoNCkhvd2V2ZXIsIEkgd29u
-ZGVyIGlmIHRoZSBzdWdnZXN0ZWQgY2hhbmdlIGFjdHVhbGx5IGhhcyBhbnkgc2lnbmlmaWNhbnQg
-DQplZmZlY3QsIGdpdmVuIHRoYXQgdGhlIGluaXRpYWwgY2xvbmUgaXMgZG9uZSB1c2luZyAtLW1p
-cnJvciwgd2hpY2ggbWVhbnMgDQphbGwgcmVmcy8gc3BhY2VzIGFyZSBmZXRjaGVkLiBJZiBJIHJl
-bW92ZSB0aGUgLS1taXJyb3Igb3B0aW9uIGZyb20gdGhlIA0KY2xvbmUgY29tbWFuZCB0aGUgY2hh
-bmdlIHdvcmtzIGFzIGV4cGVjdGVkLCBidXQgSSBoYXZlIG5vIGlkZWEgaWYgdGhhdCANCmhhcyBh
-bnkgb3RoZXIgc2lnbmlmaWNhbnQgaW1wYWN0Li4uDQoNCi8vUGV0ZXINCg0K
+Hi Marek,
+
+On Fri, 19 Aug 2022 18:54:55 +0200
+"Marek Vasut" <marex@denx.de> wrote:
+
+> The bitbake git fetcher currently fetches 'refs/*:refs/*', i.e. every
+> single object in the remote repository. This works poorly with gitlab
+> and github, which use the remote git repository to track its metadata
+> like merge requests, CI pipelines and such.
+> 
+> Specifically, gitlab generates refs/merge-requests/*, refs/pipelines/*
+> and refs/keep-around/* and they all contain massive amount of data that
+> are useless for the bitbake build purposes. The amount of useless data
+> can in fact be so massive (e.g. with FDO mesa.git repository) that some
+> proxies may outright terminate the 'git fetch' connection, and make it
+> appear as if bitbake got stuck on 'git fetch' with no output.
+> 
+> To avoid fetching all these useless metadata, tweak the git fetcher such
+> that it only fetches refs/heads/* and refs/tags/* . Avoid using negative
+> refspecs as those are only available in new git versions.
+> 
+> Signed-off-by: Marek Vasut <marex@denx.de>
+
+Of course this might become irrelevant with whatever implementation
+will be in v2, however when testing with this patch applied I got the
+following warning and wonder whether they are related:
+
+WARNING: mesa-2_22.1.6-r0 do_package_qa: QA Issue: File /usr/lib/dri/nouveau_dri.so in package mesa-megadriver contains reference to TMPDIR
+
+Full log:
+https://autobuilder.yoctoproject.org/typhoon/#/builders/72/builds/5753/steps/32/logs/stdio
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
