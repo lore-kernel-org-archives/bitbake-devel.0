@@ -1,82 +1,68 @@
-Return-Path: <mikko.rapeli@bmw.de>
+Return-Path: <marex@denx.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E143C28D13
-	for <webhook@archiver.kernel.org>; Mon, 22 Aug 2022 07:38:13 +0000 (UTC)
-Received: from esa8.hc324-48.eu.iphmx.com (esa8.hc324-48.eu.iphmx.com
- [207.54.65.242])
- by mx.groups.io with SMTP id smtpd.web08.15584.1661153890931160149
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FB0C28D13
+	for <webhook@archiver.kernel.org>; Mon, 22 Aug 2022 08:29:43 +0000 (UTC)
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+ by mx.groups.io with SMTP id smtpd.web12.15713.1661156979107113981
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Aug 2022 00:38:12 -0700
+ Mon, 22 Aug 2022 01:29:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bmw.de header.s=mailing1 header.b=OkNNP6pA;
- spf=pass (domain: bmw.de, ip: 207.54.65.242,
- mailfrom: prvs=226cd0590=mikko.rapeli@bmw.de)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-  t=1661153891; x=1692689891;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=FJmagnZEQSCIp+kMO76KHHNmuHIJEE1Wau+PZ6Wsb9c=;
-  b=OkNNP6pAxZ8HvcjRB9WbFjo9vLCC/BAZLrdLePE5Jb8kRd9GPbgDYW9J
-   TDOts9Y75IYBGUxBoahetnTNgkS+4GVVf2Ry4/XdRCTZHKpfGLv5Yidpm
-   XVcBTpidQZYaAcCcARefVIBcUz5pukZ2EBgZp5cxgr2Ui2HNiWtHjC/9P
-   8=;
-Received: from esagw4.bmwgroup.com (HELO esagw4.muc) ([160.46.252.39]) by
- esa8.hc324-48.eu.iphmx.com with ESMTP/TLS; 22 Aug 2022 09:38:09 +0200
-Received: from esabb4.muc ([160.50.100.33])  by esagw4.muc with ESMTP/TLS;
- 22 Aug 2022 09:38:09 +0200
-Received: from smucmp08b.bmwgroup.net (HELO SMUCMP08B.europe.bmw.corp)
- ([10.30.13.68])
- by esabb4.muc with ESMTP/TLS; 22 Aug 2022 09:38:09 +0200
-Received: from SMUCMP08E.europe.bmw.corp (2a03:1e80:a15:58f::1:24) by
- SMUCMP08B.europe.bmw.corp (2a03:1e80:a15:58f::22fd) with Microsoft SMTP
- Server (version=TLS; Mon, 22 Aug 2022 09:38:08 +0200
-Received: from SMUCMP08E.europe.bmw.corp ([10.30.13.71]) by
- SMUCMP08E.europe.bmw.corp ([10.30.13.71]) with mapi id 15.02.0922.027; Mon,
- 22 Aug 2022 09:38:08 +0200
-From: <Mikko.Rapeli@bmw.de>
-To: <alex.kanavin@gmail.com>
-CC: <Martin.Jansa@gmail.com>, <bitbake-devel@lists.openembedded.org>,
-	<marex@denx.de>, <peter.kjellerstedt@axis.com>,
-	<richard.purdie@linuxfoundation.org>
+ dkim=pass header.i=@denx.de header.s=phobos-20191101 header.b=C4Qzit3C;
+ spf=pass (domain: denx.de, ip: 85.214.62.61, mailfrom: marex@denx.de)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 15B8383FA2;
+	Mon, 22 Aug 2022 10:29:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1661156976;
+	bh=6Ky9M6ucEIWpyM10ZdHyXCAn8gLsIaRT60mMiyp2Cqg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=C4Qzit3C6HVcmeux0ZhBAaSjx/2b2BHSQAtTbRyz7q+ppB8YYHSW2/5JHZ8kLr+SC
+	 LvxFlpDCF+zkG497hNUQ4kgDAkiZS9jVuAjbaHuAaHjIZ6ho34xiplZsHTxGbkMN3/
+	 qaJWNq5fT9SMZQz0bzjwek92pNnfsuDeJnF9ud1QFvIoa1vx8oKlyMd0crgzGQx7D/
+	 /8bHYbXUBpxOAZQ8R2hHW0xXNWhYDPef2cKQcmkK7G9EPDPU7MLxSYDiTrK2b6l1u/
+	 GRVRGdUEuToOH5IKQ+rZiEmeHCZRbAYiDYjecr35muzMHDpELmuDxNsIqtLzjTwh06
+	 b1VCyKdq0HyyA==
+Message-ID: <7b3d167e-17c0-c236-d0a7-97c4b0fd8e27@denx.de>
+Date: Mon, 22 Aug 2022 10:29:35 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
 Subject: Re: [bitbake-devel] [PATCH] [RFC] fetch2/git: Prevent git fetcher
  from fetching gitlab repository metadata
-Thread-Topic: [bitbake-devel] [PATCH] [RFC] fetch2/git: Prevent git fetcher
- from fetching gitlab repository metadata
-Thread-Index: AQHYs+yI6ZkxFnyDGU+Z/Quo9ksiHa23kU2AgAKy7wCAABsxgIAAC28A
-Date: Mon, 22 Aug 2022 07:38:08 +0000
-Message-ID: <YwMyXi/vfRh3S6bx@korppu>
+To: Mikko.Rapeli@bmw.de, alex.kanavin@gmail.com
+Cc: Martin.Jansa@gmail.com, bitbake-devel@lists.openembedded.org,
+ peter.kjellerstedt@axis.com, richard.purdie@linuxfoundation.org
 References: <20220819165455.270130-1-marex@denx.de>
  <ab9e6c5562c44ac68e5d5e13e82dc8c0@axis.com> <YwMR+H8KWePvpJtn@korppu>
  <CANNYZj_Ag2Y8ZTXVgwagGv+26+HKPM31SRq8p3h4EL0PUEPefQ@mail.gmail.com>
-In-Reply-To: 
- <CANNYZj_Ag2Y8ZTXVgwagGv+26+HKPM31SRq8p3h4EL0PUEPefQ@mail.gmail.com>
-Accept-Language: en-US, de-DE
+ <YwMyXi/vfRh3S6bx@korppu>
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <638F150AB40C924A8BFBCA17CB178BC7@bmwmail.corp>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <YwMyXi/vfRh3S6bx@korppu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 22 Aug 2022 07:38:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13912
+ <bitbake-devel@lists.openembedded.org>; Mon, 22 Aug 2022 08:29:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13913
 
-On Mon, Aug 22, 2022 at 08:57:11AM +0200, Alexander Kanavin wrote:
-> Can be solved with a parameter to a fetcher perhaps?
+On 8/22/22 09:38, Mikko.Rapeli@bmw.de wrote:
+> On Mon, Aug 22, 2022 at 08:57:11AM +0200, Alexander Kanavin wrote:
+>> Can be solved with a parameter to a fetcher perhaps?
+> 
+> Frequently developers know to change the git URL in recipes from
+> "branch=master" to "nobranch=1" for their test commits.
+> 
+> This could be used for fetching the changes too, to limit the scope.
 
-Frequently developers know to change the git URL in recipes from
-"branch=3Dmaster" to "nobranch=3D1" for their test commits.
-
-This could be used for fetching the changes too, to limit the scope.
-
-Cheers,
-
--Mikko=
+So maybe the easy way out is, if nobranch=1 then fetch everything, else 
+just heads and tags ?
 
