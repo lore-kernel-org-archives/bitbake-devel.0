@@ -1,172 +1,178 @@
-Return-Path: <marex@denx.de>
+Return-Path: <forums@bitflipper.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACF2C28D13
-	for <webhook@archiver.kernel.org>; Mon, 22 Aug 2022 16:39:26 +0000 (UTC)
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
- by mx.groups.io with SMTP id smtpd.web12.20349.1661186358684718503
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C10C28D13
+	for <webhook@archiver.kernel.org>; Mon, 22 Aug 2022 19:24:06 +0000 (UTC)
+Received: from omta033.useast.a.cloudfilter.net
+ (omta033.useast.a.cloudfilter.net [44.202.169.32])
+ by mx.groups.io with SMTP id smtpd.web08.22570.1661196244034621458
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Aug 2022 09:39:20 -0700
+ Mon, 22 Aug 2022 12:24:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@denx.de
- header.s=phobos-20191101 header.b=jMrzBYQV;
- spf=pass (domain: denx.de, ip: 85.214.62.61, mailfrom: marex@denx.de)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 17EE4844AC;
-	Mon, 22 Aug 2022 18:39:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1661186355;
-	bh=g8pFLexOefKuwhNOHwXpoA70ouIVwVJNUMme3814ugI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jMrzBYQV2pa+xJUKm1SpQjXK2U5j+Fo+yZMDsi65cfM8SAHsuUk4a0jbfSbRJynzO
-	 Fapi0nUI180WcxEM8UkHtageDENE1vlSsG5QZA1c4LA5Px1nS9OjDQkHKqrlB2RVH8
-	 Mv5SCURroZ1/sX7x1xovZwiBljakPltwS21zIQ3u74XwcQ7zsglOlynREzOw+5uJaQ
-	 5jz/DGL0K5A9lWKO5KFzHyQzPkiOCNpyX6bC/1o6DB9jAFSBO/HbK65YGMGwWMiYlM
-	 dTQHPOxbVzHsAJ5DxPv5ThE2oSZAXROhzsHfGAKq2GqxasV2GYSho1q/BLqRK9sgDP
-	 FXPr7YBvb3n5w==
-Message-ID: <3bd32832-e3fa-deaa-bf42-07b2d0534552@denx.de>
-Date: Mon, 22 Aug 2022 18:39:14 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [bitbake-devel] [PATCH] [RFC] fetch2/git: Prevent git fetcher
- from fetching gitlab repository metadata
-Content-Language: en-US
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
- Richard Purdie <richard.purdie@linuxfoundation.org>,
- Quentin Schulz <quentin.schulz@theobroma-systems.com>,
- Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: Mikko Rapeli <Mikko.Rapeli@bmw.de>, Martin Jansa
- <Martin.Jansa@gmail.com>,
- bitbake-devel <bitbake-devel@lists.openembedded.org>
-References: <20220819165455.270130-1-marex@denx.de>
- <ab9e6c5562c44ac68e5d5e13e82dc8c0@axis.com> <YwMR+H8KWePvpJtn@korppu>
- <CANNYZj_Ag2Y8ZTXVgwagGv+26+HKPM31SRq8p3h4EL0PUEPefQ@mail.gmail.com>
- <YwMyXi/vfRh3S6bx@korppu> <7b3d167e-17c0-c236-d0a7-97c4b0fd8e27@denx.de>
- <c4c53113-49bd-ec7b-b5dd-f510c281f013@denx.de>
- <CANNYZj_LPwamXHBTj=g8_+ZGaL2WF+s0EOcGKf5VJYfxUyOq6g@mail.gmail.com>
- <438756a1-efb1-cd7e-2c80-af60f8b2fcdc@denx.de>
- <0761a8c9-78b4-0794-6bc3-14afd248ac16@theobroma-systems.com>
- <fbf40e09-ff85-42c0-54d0-0bb8fc833e58@denx.de>
- <54100db12fc1f75f28ca1592d5debf1cf164f723.camel@linuxfoundation.org>
- <a96c3947126b49089b0f91e050dd0d3f@axis.com>
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <a96c3947126b49089b0f91e050dd0d3f@axis.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
-X-Virus-Status: Clean
-Content-Transfer-Encoding: quoted-printable
+ dkim=pass header.i=@bitflipper.net header.s=default header.b=crJi6ViF;
+ spf=pass (domain: bitflipper.net, ip: 44.202.169.32,
+ mailfrom: forums@bitflipper.net)
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	by cmsmtp with ESMTP
+	id PzXjoUKoqh3t8QD1mokM95; Mon, 22 Aug 2022 19:24:03 +0000
+Received: from gator4161.hostgator.com ([108.167.133.17])
+	by cmsmtp with ESMTP
+	id QD1kosOUGp7pVQD1lo6bfA; Mon, 22 Aug 2022 19:24:01 +0000
+X-Authority-Analysis: v=2.4 cv=Cr+sz10D c=1 sm=1 tr=0 ts=6303d7d1
+ a=wy83rNxz+atVFkX2aYqp/w==:117 a=aN6y9qdCXCRkBQVezpBZ3g==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=biHskzXt2R4A:10 a=myVjTR8LsXQA:10
+ a=Kw0Nh6hiwHLgQ-Elx6EA:9 a=QEXdDO2ut3YA:10 a=1MXsooTFzbQZieEm:21
+ a=_W_S_7VecoQA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=bitflipper.net; s=default; h=To:Date:Message-Id:Subject:Mime-Version:
+	Content-Type:From:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=rPliUp4FYl0FRy123QO2KSDZSsH4QS1deIsdBjm+1yQ=; b=crJi6ViF/9xlOQpKMMyqMDoZcC
+	NTbBhcxsB39oCti0oou0ajBByG0MB2WMSmLdOordcKQ482Fm0bfHNuWr8Qj6gofX8l6vixs9Nc1nJ
+	ju+wJVQo7KIXVr53cMA9PwEVcVenELPSKHcPfpA++zlJnsWPmq67MgcYqBJIsDpO4qg+qnBEkMrNL
+	Vg7ulq3WagA5BSOAM9iiiHrQ8BEerQg1zAri26F4RLmaiUBOhyY68kHLtS81UL0kBYDs5WuU9LlDW
+	Upae9RJpMEm70kInIzPubzXm3vX4baUkliLv6T7hA2IcQI26/bKGHAK5EpvZDyTK4e67XhJOtXhdl
+	TIe0J+dg==;
+Received: from pool-108-20-201-51.bstnma.fios.verizon.net
+ ([108.20.201.51]:51347 helo=smtpclient.apple)
+	by gator4161.hostgator.com with esmtpsa  (TLS1.2) tls
+ TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <forums@bitflipper.net>)
+	id 1oQD1k-002xGT-7w
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 22 Aug 2022 14:24:00 -0500
+From: forums <forums@bitflipper.net>
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_A823EDAF-D554-4395-8AFC-A8667A54EC91"
+Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.60.0.1.1\))
+Subject: Bitbake + Patching
+Message-Id: <535F3AC6-0FB2-4559-AFE9-A7DE98519735@bitflipper.net>
+Date: Mon, 22 Aug 2022 15:23:58 -0400
+To: bitbake-devel@lists.openembedded.org
+X-Mailer: Apple Mail (2.3693.60.0.1.1)
+X-AntiAbuse: This header was added to track abuse,
+ please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4161.hostgator.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - bitflipper.net
+X-BWhitelist: no
+X-Source-IP: 108.20.201.51
+X-Source-L: No
+X-Exim-ID: 1oQD1k-002xGT-7w
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: pool-108-20-201-51.bstnma.fios.verizon.net (smtpclient.apple)
+ [108.20.201.51]:51347
+X-Source-Auth: forums@bitflipper.net
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: YmFsc29uODg7YmFsc29uODg7Z2F0b3I0MTYxLmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: 
+ MS4xfGQ8IW64WLZHSfN9QwOXFXIF3Byd8yGCcGnE66EeF0PSqPOrD2BwBet7Xh1WUWNl2jF+OLWzmHaLw4ATq7wORMNmJ4uK1dN2Q5Y6a/sohTAjJ1SNSiup
+ UfiGbUaHBchYDz2WjVL2LRjQksqtblYEbk6dsvzGN3AZMdgEBmamFzVVTglx43KiQwuyzigObkBT8ngHztaQqgSUhEy0eElk3PKWb81S3fb5Wg1NY6lGXz5k
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 22 Aug 2022 16:39:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13927
+ <bitbake-devel@lists.openembedded.org>; Mon, 22 Aug 2022 19:24:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13928
 
-On 8/22/22 17:21, Peter Kjellerstedt wrote:
->> -----Original Message-----
->> From: Richard Purdie <richard.purdie@linuxfoundation.org>
->> Sent: den 22 augusti 2022 16:17
->> To: Marek Vasut <marex@denx.de>; Quentin Schulz <quentin.schulz@theobr=
-oma-
->> systems.com>; Alexander Kanavin <alex.kanavin@gmail.com>
->> Cc: Mikko Rapeli <Mikko.Rapeli@bmw.de>; Martin Jansa
->> <Martin.Jansa@gmail.com>; bitbake-devel <bitbake-
->> devel@lists.openembedded.org>; Peter Kjellerstedt
->> <peter.kjellerstedt@axis.com>
->> Subject: Re: [bitbake-devel] [PATCH] [RFC] fetch2/git: Prevent git fet=
-cher
->> from fetching gitlab repository metadata
->>
->> On Mon, 2022-08-22 at 13:55 +0200, Marek Vasut wrote:
->>> On 8/22/22 12:57, Quentin Schulz wrote:
->>>> Hi Marek,
->>>>
->>>> On 8/22/22 12:35, Marek Vasut wrote:
->>>>> On 8/22/22 10:41, Alexander Kanavin wrote:
->>>>>> On Mon, 22 Aug 2022 at 10:37, Marek Vasut <marex@denx.de> wrote:
->>>>>>
->>>>>>>> So maybe the easy way out is, if nobranch=3D1 then fetch
->> everything,
->>>>>>>> else
->>>>>>>> just heads and tags ?
->>>>>>>
->>>>>>> No, this won't do, nobranch expects the commit to be in a tag.
->>>>>>
->>>>>> I don't think it expects that.
->>>>>
->>>>> Documentation says it does:
->>>>>
->>>>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-
->> 3A__git.openembedded.org_bitbake_tree_lib_bb_fetch2_git.py-
->> 23n45&d=3DDwICaQ&c=3D_sEr5x9kUWhuk4_nFwjJtA&r=3DLYjLexDn7rXIzVmkNPvw5y=
-mA1XTSqHGq
->> 8yBP6m6qZZ4njZguQhZhkI_-
->> 172IIy1t&m=3DuZNWVMGEowy_ntO8q5fjINXu3LIe9haqbSTYjwWiqO6Q5sEPsUIx5nw28=
-YTBw6o
->> I&s=3D_AJ3mkGnnM8peSNP8k6MePZ0RtEkQLo7yS1Cll2yjmc&e=3D "
->>>>> - nobranch
->>>>>  =C2=A0=C2=A0=C2=A0 Don't check the SHA validation for branch. set =
-this option for
->> the
->>>>> recipe
->>>>>  =C2=A0=C2=A0=C2=A0 referring to commit which is valid in tag inste=
-ad of branch.
->>>>
->>>> I assume this was meant to give the example of tags which aren't
->>>> necessarily in a branch (annotated tags or tags of commits not belon=
-g
->> to
->>>> any branch anymore (force-push for example, or branch deletion).
->>>>
->>>> The git fetcher does a git log --pretty=3Doneline -n 1 <hash> when
->>>> nobranch is set, otherwise git branch --contains <hash> --list
->> <branch>
->>>> to check whether a commit exists and can be used by bitbake.
->>>>
->>>> Considering this check, I assume nobranch=3D1 is working for any com=
-mit
->>>> that was fetched by the git fetcher?
->>>>
->>>> (We need to update the docs to reflect that in that case).
->>>
->>> In that case, 'git fetch refs/*' in case nobranch is set and 'refs/he=
-ad
->>> refs/tags' otherwise ?
->>
->> This does get a bit more complex though since you now need two
->> different mirror tarballs, one for each option. The code can do that i=
-f
->> setup correctly but we do need to cover that issue.
->>
->> Cheers,
->>
->> Richard
->=20
-> I made some testing, and for Gerrit to continue to work it would be
-> enough to use:
->=20
->              fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/hea=
-ds/*:refs/heads/* refs/tags/*:refs/tags/* refs/changes/*:refs/changes/*" =
-% (ud.basecmd, shlex.quote(repourl))
->=20
-> This should not affect other Git servers and should avoid using
-> different fetch commands depending on the URL. The drawback is of
-> course that for Gerrit, there would be only marginal benefits to
-> this change since the majority of its metadata is in the
-> refs/changes space.
->=20
-> However, I wonder if the suggested change actually has any significant
-> effect, given that the initial clone is done using --mirror, which mean=
-s
-> all refs/ spaces are fetched. If I remove the --mirror option from the
-> clone command the change works as expected, but I have no idea if that
-> has any other significant impact...
 
-With this change, I am able to actually fetch mesa from=20
-gitlab.freedesktop.org without local CI proxy terminating the connection=20
-in the process. So yes, it does have effect.
+--Apple-Mail=_A823EDAF-D554-4395-8AFC-A8667A54EC91
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+
+
+
+HI, I don=E2=80=99t think this is the right email to be poosing this =
+question to, but I am hoping that you can point to the right place where =
+I can get my answers. The problem I need to gain more insight on is the =
+following:
+
+We are currently using  Zeus, and with Zeus, we get Apacje v2.4.41. But =
+I would like to get a later version of apache because of there have been =
+a few fixes related to cyber security. So I believe that, given we=E2=80=99=
+re using Zeus, we can=E2=80=99t upgrade to the latest version of Apache =
+vis the current recipe that Zeus uses. Therefore I believe that the only =
+way accomplish getting tho the latest version of apache would to be =
+=E2=80=98patch=E2=80=99  the v2.4.41 version that comes with Zeus.
+
+Looking at the Bitbake manual, in section 4.1, it states the following:
+
+"BitBake takes several steps when fetching source code or files. The =
+fetcher codebase deals with two distinct processes in order: obtaining =
+the files from somewhere (cached or otherwise) and then unpacking those =
+files into a specific location and perhaps in a specific way. Getting =
+and unpacking the files is often optionally followed by patching. =
+Patching, however, is not covered by this module."
+
+
+The manual does not cover patching.=20
+
+Where can I get information on this process of patching something like =
+apache or any other application that was add via IMAGE_INSTALL_append =
+method.
+
+Any help pointing me to where this process might be documented is much =
+appreciated.
+
+
+Thanks, Jim
+
+
+--Apple-Mail=_A823EDAF-D554-4395-8AFC-A8667A54EC91
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; =
+charset=3Dutf-8"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; line-break: after-white-space;" class=3D""><div =
+class=3D""><br class=3D""></div><div class=3D""><br class=3D""></div><div =
+class=3D""><br class=3D""></div><div class=3D"">HI, I don=E2=80=99t =
+think this is the right email to be poosing this question to, but I am =
+hoping that you can point to the right place where I can get my answers. =
+The problem I need to gain more insight on is the following:</div><div =
+class=3D""><br class=3D""></div><div class=3D"">We are currently using =
+&nbsp;Zeus, and with Zeus, we get Apacje v2.4.41. But I would like to =
+get a later version of apache because of there have been a few fixes =
+related to cyber security. So I believe that, given we=E2=80=99re using =
+Zeus, we can=E2=80=99t upgrade to the latest version of Apache vis the =
+current recipe that Zeus uses. Therefore I believe that the only way =
+accomplish getting tho the latest version of apache would to be =
+=E2=80=98patch=E2=80=99 &nbsp;the v2.4.41 version that comes with =
+Zeus.</div><div class=3D""><br class=3D""></div><div class=3D"">Looking =
+at the Bitbake manual, in section 4.1, it states the =
+following:</div><div class=3D""><br class=3D""></div><blockquote =
+style=3D"margin: 0 0 0 40px; border: none; padding: 0px;" class=3D""><div =
+class=3D""><p style=3D"line-height: 1.5em; margin-top: 0em; caret-color: =
+rgb(51, 51, 51); color: rgb(51, 51, 51); font-family: Verdana, Sans, =
+sans-serif;" class=3D"">"BitBake takes several steps when fetching =
+source code or files. The fetcher codebase deals with two distinct =
+processes in order: obtaining the files from somewhere (cached or =
+otherwise) and then unpacking those files into a specific location and =
+perhaps in a specific way. Getting and unpacking the files is often =
+optionally followed by patching. <b class=3D""><i class=3D"">Patching, =
+however, is not covered by this =
+module</i></b>."</p></div></blockquote><div class=3D""><div class=3D""><br=
+ class=3D""></div></div><div class=3D"">The manual does not cover =
+patching.&nbsp;</div><div class=3D""><br class=3D""></div><div =
+class=3D"">Where can I get information on this process of patching =
+something like apache or any other application that was add via =
+IMAGE_INSTALL_append method.</div><div class=3D""><br =
+class=3D""></div><div class=3D"">Any help pointing me to where this =
+process might be documented is much appreciated.</div><div class=3D""><br =
+class=3D""></div><div class=3D""><br class=3D""></div><div =
+class=3D"">Thanks, Jim</div><div class=3D""><br =
+class=3D""></div></body></html>=
+
+--Apple-Mail=_A823EDAF-D554-4395-8AFC-A8667A54EC91--
 
