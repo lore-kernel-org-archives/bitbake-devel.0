@@ -1,89 +1,101 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A62EC00140
-	for <webhook@archiver.kernel.org>; Wed, 24 Aug 2022 14:43:13 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com
- [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web09.11711.1661352182659721472
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F332ECAAA0
+	for <webhook@archiver.kernel.org>; Thu, 25 Aug 2022 20:35:41 +0000 (UTC)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com
+ [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web08.29380.1661459736315570088
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 24 Aug 2022 07:43:03 -0700
+ Thu, 25 Aug 2022 13:35:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=VTrc/moa;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id h1so8882701wmd.3
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=ENA99ouB;
+ spf=pass (domain: gmail.com, ip: 209.85.221.47,
+ mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f47.google.com with SMTP id a4so26052071wrq.1
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 24 Aug 2022 07:43:02 -0700 (PDT)
+ Thu, 25 Aug 2022 13:35:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc;
-        bh=Kew1LjInkhGT2bQ4zpX4XvaMNzCUnaiFrPc5OS0cDsQ=;
-        b=VTrc/moavfQUyoXavEZfaVhcjKVdhH6sLdDJITQ5nt853qwgQ7e/T+JwWcW0iXth88
-         0fI9r+Uvw1D/vdW0FgQkXdgHoa5adnbySd09AXkH3rVTQxIK2otBsfpsbhHBeuzwk2YZ
-         8uwfAAun7DLDBLF2YEoVw+WHJybHUfBXG/FOY=
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=drgC7WZYbal1e2xCCgjpsITVLUjCmzMZOEfSqQFouww=;
+        b=ENA99ouBygroykUrJQ5M7J8BEcnNscyxHKo0RjllR+rsEzG2q7d+vpY1DZdY05qgK5
+         G8Hht3NpziIRRvALyI0QcVZ1kdNGocLCG51qr3mDdKDDgvN4KOO/AcPceiMfovqjya+2
+         lAzoz/jIbqZH7dT/AWIYRRLB2ezurr+vRPKU8Cf/5WkBpf0SsbgV11yhfTOAbdCVqc3p
+         aWkwc5fPV7UNI+LxpvjJcEdGan+UpQC85wHW16TuMzO39VkpIDNCHXeULZ3Q63ULJ9SM
+         sMfWJej46KJKCUau+NnJOSktiuTD4lDGFOCPFeobMZE8ctPtrdOU7//1/wtBgfDO8ueB
+         cGHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc;
-        bh=Kew1LjInkhGT2bQ4zpX4XvaMNzCUnaiFrPc5OS0cDsQ=;
-        b=LAx/d0Dqa3Hn1I+N2s+aipWbd7piVTxVkofQHhWrlitGtRD7JJoEqlxL0QL6mmZmoG
-         voIl77gvIaIpPqveKHNtk5CQ5GviHFlYNTFnrwJuke97/1sqsoXfymYYS/0PLfO1j9Bq
-         85Vs7yUmnjlZvY/mIg4FQtaafMHeSfBROoHpmE9M0jor86Ml2WfloiCcZ/gdfCeO67VR
-         CtOmok1WfmGaRET9Srw+hPI3JIw2HMMTe8Jq3X1bGPJKD0TbCbCjbvswK1J6ulZh0yGO
-         oJrPiQfA/zj68FO3Y5rO72Oql5zG7ljPzXZMzF64IpaRt0y7scGwKiWcy/Az3pYK1PLt
-         cwNw==
-X-Gm-Message-State: ACgBeo1OofwT/VKEjUtEM9cJUNDGwYPNoDoYVLokQ5hAGCHd2hWl8hFl
-	755f9jzNy1n0+08EBtoE+8/fOP1KYavaqw==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=drgC7WZYbal1e2xCCgjpsITVLUjCmzMZOEfSqQFouww=;
+        b=kcqwwdn2m1r+OXdEB1HxKdxwtRnylmmTgP9O0GiI2WEJEEDGxAU8Dn27249Zmvvlv6
+         Tv6XfH5159w0/M4wjnnr661zJcyXXNTrdBr9Md9/4ovc5CN3wOenYmekaPYdeKSdxF41
+         s4dtOyXIlJEILadWyFdAjAmEDZpUjvzAA4tqSYKwql8nQoI/UFprEGhmZGxn3wjF6eq9
+         7rKSi2xPeSfMrWwFwSwWBCSI/0Q5WmFbRDOF0CJL67pbe+kk8TCU0R3uDWxL0c2xaAlQ
+         TkOfxegv2miXUxLd1il6w2a0MVFl8h+TJp5ga5SFjKsJaLAaKeZ7Q2OL8COjzbheoedZ
+         KvDg==
+X-Gm-Message-State: ACgBeo2VRz7s4tzUKoos0EYqKyaL72ws1XLcFIvukaTpisrrGjtlwf0t
+	/a94mG/5226L5UlcjbbK+vtRudaLpvw=
 X-Google-Smtp-Source: 
- AA6agR5WntG9GIKzV8vGQnpq3b4VqCYY/qmyz51sSj5XcIr4+q3DqyoCPPJfghqQgJXledoNzpqEVA==
-X-Received: by 2002:a05:600c:418a:b0:3a5:168e:a918 with SMTP id
- p10-20020a05600c418a00b003a5168ea918mr5537770wmh.31.1661352180683;
-        Wed, 24 Aug 2022 07:43:00 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:4e4:9da0:6de0:5e33])
+ AA6agR6IPxIPcQsRNMSgTO8EUXfIkyxxROx6P0kWyw7I3kdCYuIK9YtF9DW3ae4oXoD0gYuw8VQzeA==
+X-Received: by 2002:adf:cd86:0:b0:225:1a3a:d984 with SMTP id
+ q6-20020adfcd86000000b002251a3ad984mr3358587wrj.212.1661459734812;
+        Thu, 25 Aug 2022 13:35:34 -0700 (PDT)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de.
+ [80.153.143.164])
         by smtp.gmail.com with ESMTPSA id
- u11-20020a05600c19cb00b003a5c7a942edsm2200527wmq.28.2022.08.24.07.42.59
-        for <bitbake-devel@lists.openembedded.org>
+ d18-20020a056000115200b0022582e811c2sm172040wrx.35.2022.08.25.13.35.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Aug 2022 07:42:59 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Thu, 25 Aug 2022 13:35:33 -0700 (PDT)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+X-Google-Original-From: Alexander Kanavin <alex@linutronix.de>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] runqueue: Change pressure file warning to a note
-Date: Wed, 24 Aug 2022 15:42:59 +0100
-Message-Id: <20220824144259.3110779-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.34.1
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH] bitbake-layers: initialize tinfoil before registering command
+ line arguments
+Date: Thu, 25 Aug 2022 22:35:31 +0200
+Message-Id: <20220825203531.2074157-1-alex@linutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 24 Aug 2022 14:43:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13932
+ <bitbake-devel@lists.openembedded.org>; Thu, 25 Aug 2022 20:35:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13933
 
-The user does need to be told about this but it isn't really a warning,
-just something they may need to be aware of. Drop the level accordingly.
+Plugins may want to use it (e.g. the layers-setup plugin that would
+want to discover writer sub-plugins with it), and so it makes sense
+to make tinfoil available a bit eariler.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- lib/bb/runqueue.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/bin/bitbake-layers | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index d0ffe3932c..48e25401ba 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -180,7 +180,7 @@ class RunQueueScheduler(object):
-                     self.prev_pressure_time = time.time()
-                 self.check_pressure = True
-             except:
--                bb.warn("The /proc/pressure files can't be read. Continuing build without monitoring pressure")
-+                bb.note("The /proc/pressure files can't be read. Continuing build without monitoring pressure")
-                 self.check_pressure = False
-         else:
-             self.check_pressure = False
+diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
+index 449434d468..d4b1d1aaf2 100755
+--- a/bitbake/bin/bitbake-layers
++++ b/bitbake/bin/bitbake-layers
+@@ -68,11 +68,11 @@ def main():
+ 
+         registered = False
+         for plugin in plugins:
++            if hasattr(plugin, 'tinfoil_init'):
++                plugin.tinfoil_init(tinfoil)
+             if hasattr(plugin, 'register_commands'):
+                 registered = True
+                 plugin.register_commands(subparsers)
+-            if hasattr(plugin, 'tinfoil_init'):
+-                plugin.tinfoil_init(tinfoil)
+ 
+         if not registered:
+             logger.error("No commands registered - missing plugins?")
 -- 
-2.34.1
+2.30.2
 
 
