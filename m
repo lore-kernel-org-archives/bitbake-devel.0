@@ -1,132 +1,234 @@
-Return-Path: <pavel@zhukoff.net>
+Return-Path: <liezhi.yang@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED09BECAAA3
-	for <webhook@archiver.kernel.org>; Fri, 26 Aug 2022 08:41:14 +0000 (UTC)
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com
- [66.111.4.25])
- by mx.groups.io with SMTP id smtpd.web08.35011.1661503267417239478
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E697FECAAD4
+	for <webhook@archiver.kernel.org>; Fri, 26 Aug 2022 12:13:35 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com
+ [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.web08.36440.1661516011347384447
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 26 Aug 2022 01:41:08 -0700
+ Fri, 26 Aug 2022 05:13:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@zhukoff.net header.s=fm1
- header.b=VmC1Pp12;
- spf=pass (domain: zhukoff.net, ip: 66.111.4.25, mailfrom: pavel@zhukoff.net)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.nyi.internal (Postfix) with ESMTP id 9C4515C004D;
-	Fri, 26 Aug 2022 04:41:06 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 26 Aug 2022 04:41:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
-	cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1661503266; x=1661589666; bh=uK
-	FuBt5pj0faFRF07vm7DDfy4Iinw4RQjHbVbB+Lb2U=; b=VmC1Pp12+I5fC/ZOuw
-	O9PMxfJoiam5loDhXYZyrBMN2T8lRQSnvqpsPugiXmfQtzZpFkZpw2Oj3nmjYZDf
-	JU0WmVUKynsQ6q6DkI+NXeNcsv/WRN6Ff3YwVFP9IjNDNKGHyMAv9DXP3lz7X6XG
-	UZljU8itsz/HNaiesNmfcLvymYb3I0pD73KMNAmTD9I4rGhjIUJf5L5WLYwaPnuJ
-	54/YnUkbe817/hBr1iXOOVdlWMzmBmb2mMQkefo+yrLrAmIQyaiIHHAB3gb6E/PY
-	qlFO9ZHUeVFNR/fiDS3uCFppHteqJQ+Z0Bj8pD1gHgsjc2VxJrL+vE44g2Bxpw3E
-	qQDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1661503266; x=1661589666; bh=uKFuBt5pj0faF
-	RF07vm7DDfy4Iinw4RQjHbVbB+Lb2U=; b=mQ1q1JCjATfm2kn+cFYIZvVW8lldR
-	egmkjqbRuKs1TKOm762j8b1tjPOXyU3ly8UTbpBByDaQQAxVXzRD77FFe6eJzPOb
-	0VaQ1O0QbFNBjHVohJKxojMSt8wES3v++IXxs28lqkfnGjIJSvrtwMYt88mJF3G3
-	aavj7DLU52j0knmzl3BNlYy97C+USjxYzc+JxaYXD/FQlDOcOd1s1uKsk7HKmE7F
-	qJc5Z3oIdvCosGCoWiNRU9LDULWNyGVtsteH2KqGnxYgPPcuaD+TE/scKoNt7/eH
-	q8PpPJMr4xvY2sQG/f3me9eWwn3oji9gf7JenlZLJvQxogWdpXqgGAbrQ==
-X-ME-Sender: <xms:IocIY8uutC5wLp_bSLS-IEchqNcDaLYWthRJyVL0dpHxhjqOFq1uuQ>
-    <xme:IocIY5fqEq2h0TDo7CiUb8M0cmyugL_6vuHbl9c2v-w1Mg2oz2AbfPSDmsVcH-HFU
-    H_7VZkOdvaqG8MEKAQ>
-X-ME-Received: 
- <xmr:IocIY3zkZdy86ugOYacAAezFwuMwtRNPDWfzyqfb-NK6Pvzy4kVQz964YLA_16BGGaRZKUjcV0QdlB764pIROxM>
-X-ME-Proxy-Cause: 
- gggruggvucftvghtrhhoucdtuddrgedvfedrvdejhedgtdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpefrrghvvghlucgkhhhukhhovhcuoehprghvvghlseiihhhu
-    khhofhhfrdhnvghtqeenucggtffrrghtthgvrhhnpeehfeevgfdtleekledvudeuuedutd
-    dukeetudfhffejtddvtdegfffgjeeifeduteenucffohhmrghinhepghhoohhglhgvrdgt
-    ohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepph
-    grvhgvlhesiihhuhhkohhffhdrnhgvth
-X-ME-Proxy: <xmx:IocIY_Mc3dFdYcpwMz-ujcAuhyL_O5TjRBvzQZgH1QdCBFE1TO9_Mw>
-    <xmx:IocIY89pb6ng76Nr4m0zzClPI9tbCH7q-u_rwJkuPZ8pvzdGqK9-yQ>
-    <xmx:IocIY3WjOsuiTGDsDEJcB3V37zBSZ96A4Cp8orRhmZbSq7oS79faKQ>
-    <xmx:IocIYxGVROQOUeb5OFwPuwl5UEzFQ7EdbQF2umB6FXo5nbyYbKBbng>
-Feedback-ID: ib94946c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 26 Aug 2022 04:41:05 -0400 (EDT)
-From: Pavel Zhukov <pavel@zhukoff.net>
-To: bitbake-devel@lists.openembedded.org
-Cc: Pavel Zhukov <pavel@zhukoff.net>
-Subject: [PATCH 2/3] tests:  Add Timeout class
-Date: Fri, 26 Aug 2022 10:40:30 +0200
-Message-Id: <20220826084031.11919-2-pavel@zhukoff.net>
+ dkim=pass header.i=@windriver.com header.s=pps06212021 header.b=gVAOq7Hz;
+ spf=permerror,
+ err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}:
+ invalid domain name (domain: windriver.com, ip: 205.220.166.238,
+ mailfrom: prvs=5237a95137=liezhi.yang@windriver.com)
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id
+ 27QBw3r3028539
+	for <bitbake-devel@lists.openembedded.org>; Fri, 26 Aug 2022 05:13:31 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+ h=from : to :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=PPS06212021;
+ bh=MSV1g0sbT/vqEBUEIwBzW35rrFpXIWXeCf0r70GTpac=;
+ b=gVAOq7HznwEpA0TMYGvBoqQF8OomgsjZfv95Qa/O7XvaIP72BiCccWzeiXGwwaA+3xKq
+ S7D5LRhhRJKgzTKOr8Pxq3rOW4dF0RyEy4hS9HVEkSE+mOYkTAqOucLq2LD8Gyg6U1xv
+ ZBsL3us3tYwaGGG66/L8thekw+jZtoMX+gTmyxuhGFenU8x67vkxeuxJKDSJD+syIPD0
+ CpJ0H0Y4ugxXIu1M/0yNp9d3riew61qxgW3k6alf998DoC0oiUJRO0Esa647ys9s6Wfv
+ Fua0y5rHmi5x3e0SYac980f4INYoraASzyp593j8hY1bh4un/aXF1Ltau6PQaaEv1bFR QA==
+Received: from ala-exchng01.corp.ad.wrs.com (unknown-82-252.windriver.com
+ [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3j53rvjpw3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Fri, 26 Aug 2022 05:13:31 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Fri, 26 Aug 2022 05:13:30 -0700
+Received: from ala-lpggp3.wrs.com (147.11.105.124) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2242.12 via Frontend Transport; Fri, 26 Aug 2022 05:13:30 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [RFC][PATCH] bitbake: fetch2/git: Use git fetch to shallow clone
+ revisions
+Date: Fri, 26 Aug 2022 05:13:30 -0700
+Message-ID: <20220826121330.192914-1-liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220826084031.11919-1-pavel@zhukoff.net>
-References: <20220826084031.11919-1-pavel@zhukoff.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: hjjvqpGUzkLF77mYL7hbwU-cm6Qmj-UH
+X-Proofpoint-ORIG-GUID: hjjvqpGUzkLF77mYL7hbwU-cm6Qmj-UH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-26_05,2022-08-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 impostorscore=0
+ spamscore=0 phishscore=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2208260051
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 26 Aug 2022 08:41:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13935
+ <bitbake-devel@lists.openembedded.org>; Fri, 26 Aug 2022 12:13:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13937
 
-The class and exception aim to test rare cases there deadlocks are
-possible.
-Can be used in context managers:
-with Timeout(<value>):
-        do_deadlock()
+The "git clone --depth" only works for refs, doesn't support revisions, but
+"git fetch --depth" supports revisions, o use it to do the shallow clone, so
+use it to do the shallow clone, the idea is from
+"git clone --recurse-submodules --shallow-submodules".
 
-Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
+The workflow is (Only enable when BB_GIT_SHALLOW = "1"):
+$ git init --bare <clonedir>
+$ git remote add origin <url>
+$ git fetch origin --depeth <depeth> revision
+$ git branch <branchname> FETCH_HEAD
+$ git tag v<branchname> FETCH_HEAD
+
+Here is the testing data based on poky, the testing server has a very good
+network bandwidth:
+
+Add 'BB_GIT_SHALLOW = "1"' conf/local.conf
+$ rm -fr tmp downloads # Fresh download for each build
+$ time bitbake world --runall=fetch
+
+       Full        Shallow      Saved
+--------------------------------------
+Time:  15m59        2m31         84% (13m28s)
+Size:  1.2G         12G          90% (10.8G)
+
+* Size is the size of downloads/git2/, the tarballs are not counted.
+
+We can see that it saves a lot of download speed and disk space, for example:
+
+linux-yocto: 2.8G -> 228M
+llvm: 2.5G -> 171M
+cryptography: 1.5G -> 35M
+
+And "$ bitbake world" works well.
+
+This a RFC patch, feel free to give you comments.
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- lib/bb/tests/fetch.py | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ bitbake/lib/bb/fetch2/git.py | 83 ++++++++++++++++++++++++++++--------
+ 1 file changed, 66 insertions(+), 17 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 7fcf57e7..e69b4b05 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -11,6 +11,7 @@ import hashlib
- import tempfile
- import collections
- import os
-+import signal
- import tarfile
- from bb.fetch2 import URI
- from bb.fetch2 import FetchMethod
-@@ -22,6 +23,24 @@ def skipIfNoNetwork():
-         return unittest.skip("network test")
-     return lambda f: f
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 4534bd75800..57bb61d5ee1 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -244,6 +244,7 @@ class Git(FetchMethod):
+                 ud.unresolvedrev[name] = 'HEAD'
  
-+class TestTimeout(Exception):
-+    pass
+         ud.basecmd = d.getVar("FETCHCMD_git") or "git -c core.fsyncobjectfiles=0 -c gc.autoDetach=false -c core.pager=cat"
++        ud.basecmd = "LANG=C %s" % ud.basecmd
+ 
+         write_tarballs = d.getVar("BB_GENERATE_MIRROR_TARBALLS") or "0"
+         ud.write_tarballs = write_tarballs != "0" or ud.rebaseable
+@@ -344,6 +345,49 @@ class Git(FetchMethod):
+             return False
+         return True
+ 
++    def shallow_clone_by_fetch(self, ud, repourl, d):
++        """
++        Use "git fetch --depth <depth> revision" to implement shallow clone
++        since git can't clone a revision, a better solution should be:
++        "git fetch --depth <depth> revision:<branchname>" but it doesn't work
++        when revision is a tag, e.g.:
++        error: cannot update ref 'refs/heads/master': trying to write
++                non-commit object <revision> to branch 'refs/heads/master'
++        """
 +
-+class Timeout():
++        import datetime
 +
-+    def __init__(self, seconds):
-+        self.seconds = seconds
++        depth = ud.shallow_depths[ud.names[0]]
++        revision = ud.revisions[ud.names[0]]
++        branchname = ud.branches[ud.names[0]]
++        if not branchname:
++            branchname = "master"
 +
-+    def handle_timeout(self, signum, frame):
-+        raise TestTimeout("Test failed: timeout reached")
++        # Rename branchname if it exists which can:
++        # - Avoid conflicts during update
++        # - Keep the revision on a branch so that "git submodule update --recursive"
++        #    can work since it requires the revision on a branch.
++        branch_path = os.path.join(ud.clonedir, 'refs/heads/%s' % branchname)
++        if os.path.exists(branch_path):
++            os.rename(branch_path, '%s.%s' % (branch_path, datetime.datetime.now().strftime("%Y%m%d%H%M%S")))
 +
-+    def __enter__(self):
-+        signal.signal(signal.SIGALRM, self.handle_timeout)
-+        signal.alarm(self.seconds)
++        init_cmd = "%s init --bare -q" % ud.basecmd
++        add_remote_cmd = "%s remote add origin %s" % (ud.basecmd, shlex.quote(repourl))
++        fetch_cmd = "%s fetch --progress origin --depth %s %s" % (ud.basecmd, depth, revision)
++        # Create both branch and tag for the revision
++        branch_cmd = "%s branch -f %s FETCH_HEAD" % (ud.basecmd, branchname)
++        tag_cmd = "%s tag -f v%s FETCH_HEAD" % (ud.basecmd, branchname)
 +
-+    def __exit__(self, exc_type, exc_val, exc_tb):
-+        signal.alarm(0)
++        if ud.proto.lower() != 'file':
++            bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
 +
- class URITest(unittest.TestCase):
-     test_uris = {
-         "http://www.google.com/index.html" : {
++        if not os.path.exists(ud.clonedir):
++            bb.utils.mkdirhier(ud.clonedir)
++
++        progresshandler = GitProgressHandler(d)
++        for cmd in (init_cmd, add_remote_cmd, fetch_cmd, branch_cmd, tag_cmd):
++            runfetchcmd(cmd, d, log=progresshandler, workdir=ud.clonedir)
++
+     def download(self, ud, d):
+         """Fetch url"""
+ 
+@@ -360,7 +404,7 @@ class Git(FetchMethod):
+             else:
+                 tmpdir = tempfile.mkdtemp(dir=d.getVar('DL_DIR'))
+                 runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=tmpdir)
+-                fetch_cmd = "LANG=C %s fetch -f --progress %s " % (ud.basecmd, shlex.quote(tmpdir))
++                fetch_cmd = "%s fetch -f --progress %s " % (ud.basecmd, shlex.quote(tmpdir))
+                 runfetchcmd(fetch_cmd, d, workdir=ud.clonedir)
+         repourl = self._get_repo_url(ud)
+ 
+@@ -369,27 +413,32 @@ class Git(FetchMethod):
+             # We do this since git will use a "-l" option automatically for local urls where possible
+             if repourl.startswith("file://"):
+                 repourl = repourl[7:]
+-            clone_cmd = "LANG=C %s clone --bare --mirror %s %s --progress" % (ud.basecmd, shlex.quote(repourl), ud.clonedir)
+-            if ud.proto.lower() != 'file':
+-                bb.fetch2.check_network_access(d, clone_cmd, ud.url)
+-            progresshandler = GitProgressHandler(d)
+-            runfetchcmd(clone_cmd, d, log=progresshandler)
++            if ud.shallow:
++                self.shallow_clone_by_fetch(ud, repourl, d)
++            else:
++                clone_cmd = "%s clone --bare --mirror %s %s --progress" % (ud.basecmd, shlex.quote(repourl), ud.clonedir)
++                progresshandler = GitProgressHandler(d)
++                if ud.proto.lower() != 'file':
++                    bb.fetch2.check_network_access(d, clone_cmd, ud.url)
++                runfetchcmd(clone_cmd, d, log=progresshandler)
+ 
+         # Update the checkout if needed
+         if self.clonedir_need_update(ud, d):
+             output = runfetchcmd("%s remote" % ud.basecmd, d, quiet=True, workdir=ud.clonedir)
+             if "origin" in output:
+-              runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=ud.clonedir)
+-
+-            runfetchcmd("%s remote add --mirror=fetch origin %s" % (ud.basecmd, shlex.quote(repourl)), d, workdir=ud.clonedir)
+-            fetch_cmd = "LANG=C %s fetch -f --progress %s refs/*:refs/*" % (ud.basecmd, shlex.quote(repourl))
+-            if ud.proto.lower() != 'file':
+-                bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
+-            progresshandler = GitProgressHandler(d)
+-            runfetchcmd(fetch_cmd, d, log=progresshandler, workdir=ud.clonedir)
+-            runfetchcmd("%s prune-packed" % ud.basecmd, d, workdir=ud.clonedir)
+-            runfetchcmd("%s pack-refs --all" % ud.basecmd, d, workdir=ud.clonedir)
+-            runfetchcmd("%s pack-redundant --all | xargs -r rm" % ud.basecmd, d, workdir=ud.clonedir)
++                runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=ud.clonedir)
++            if ud.shallow:
++                self.shallow_clone_by_fetch(ud, repourl, d)
++            else:
++                runfetchcmd("%s remote add --mirror=fetch origin %s" % (ud.basecmd, shlex.quote(repourl)), d, workdir=ud.clonedir)
++                fetch_cmd = "%s fetch -f --progress %s refs/*:refs/*" % (ud.basecmd, shlex.quote(repourl))
++                if ud.proto.lower() != 'file':
++                    bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
++                progresshandler = GitProgressHandler(d)
++                runfetchcmd(fetch_cmd, d, log=progresshandler, workdir=ud.clonedir)
++                runfetchcmd("%s prune-packed" % ud.basecmd, d, workdir=ud.clonedir)
++                runfetchcmd("%s pack-refs --all" % ud.basecmd, d, workdir=ud.clonedir)
++                runfetchcmd("%s pack-redundant --all | xargs -r rm" % ud.basecmd, d, workdir=ud.clonedir)
+             try:
+                 os.unlink(ud.fullmirror)
+             except OSError as exc:
 -- 
 2.35.1
 
