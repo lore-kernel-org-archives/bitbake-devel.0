@@ -1,150 +1,145 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4DBECAAD2
-	for <webhook@archiver.kernel.org>; Mon, 29 Aug 2022 10:46:25 +0000 (UTC)
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web08.69201.1661769978243961943
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3207ECAAD5
+	for <webhook@archiver.kernel.org>; Mon, 29 Aug 2022 12:46:35 +0000 (UTC)
+Received: from relay11.mail.gandi.net (relay11.mail.gandi.net
+ [217.70.178.231])
+ by mx.groups.io with SMTP id smtpd.web11.69734.1661777193717954095
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 29 Aug 2022 03:46:19 -0700
+ Mon, 29 Aug 2022 05:46:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@axis.com
- header.s=axis-central1 header.b=FInPtXIR;
- spf=pass (domain: axis.com, ip: 195.60.68.17,
- mailfrom: peter.kjellerstedt@axis.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1661769978;
-  x=1693305978;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=ZfH/48vXJ+4i+4jYIrENkq6hiFiJPjoOO6ghfvlkPj4=;
-  b=FInPtXIRK2Jeq98codQn9Q7Slp3lcE9GBLBaMjwA+aWI8AzyppgFSym5
-   v6aJGv4NNfhcIrZ7+UJExyRxkfhFnOPBxPdxIj7k1RYHKAdIgTi/I/g69
-   2bN+kUPNa6JYzxI6BdfUbByIe/N0TN7MB4Rl1LMYrrChkj0trY93hdc6w
-   mpae1iBjwQbuh132SG4CiVGZKZqMJEGtIZGoLHKicwstXZk3xMAr4YnGB
-   EypSnbd6lZmEp2ebloo8qYGQtjW43qPbakEAOBfYCpKuFbDMMw8XSNNAo
-   LzOGPRcWj8UvHHk6eQcV1qEfPPL1UoU3ez7GxmS8tK8K8uxwSsfEyDPkK
-   A==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Robert Yang <liezhi.yang@windriver.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [RFC][PATCH V2] bitbake: fetch2/git: Use git
- fetch to shallow clone revisions
-Thread-Topic: [bitbake-devel] [RFC][PATCH V2] bitbake: fetch2/git: Use git
- fetch to shallow clone revisions
-Thread-Index: AQHYuU1Gw59fzXMdoUasR/NEAFiDKa3BN3aQgADA2gCAA7JSgA==
-Date: Mon, 29 Aug 2022 10:46:15 +0000
-Message-ID: <d9b06a8c3f874ee386fb80d0ada7b24e@axis.com>
-References: <20220826131047.51373-1-liezhi.yang@windriver.com>
- <94af8607626d42e58b05fb79a2d07e02@axis.com>
- <7e6cdfb0-3022-69fb-f835-54bf7f042962@windriver.com>
-In-Reply-To: <7e6cdfb0-3022-69fb-f835-54bf7f042962@windriver.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=ILHYBshu;
+ spf=pass (domain: bootlin.com, ip: 217.70.178.231,
+ mailfrom: michael.opdenacker@bootlin.com)
+Received: (Authenticated sender: michael.opdenacker@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id BD1C3100008;
+	Mon, 29 Aug 2022 12:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1661777191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=83NU8HmPV4iZg8zsC/KrrexIslEreUv2wQJ3yabFEW8=;
+	b=ILHYBshu6bIn1CFczgHhWubu4CvK3lfrEP8jEPoffDKz9VPPnYenA3k/T9/6aJbrNvifMp
+	YNf6PnSCiMnIojFR78UQ8jfHV22slcUm6VCcD42APTjaRZ8y66p2IYDEse9d+Ee9NFqOs1
+	aGFEJtJV/Z7kKDrZALYvHqS8WolgBks7tMg4ZOqXSS0FxGngoPgbCq1u2ujauY3/CPkOJI
+	fIrV9Zki0VJaTdIduGwxEa0HcBYbE8tdce61oF3Brhcg9y3sTqBY8rAlpmG8/qX6rclqHV
+	9hm+5yDTSKiEZcoaDJCk49nM44Hj7aq00vwjF/Crpc3uRgd0Uu7q/SXGvesbSQ==
+Message-ID: <a7c1377a-b3e1-fea0-9b67-5d5cb652871a@bootlin.com>
+Date: Mon, 29 Aug 2022 14:46:29 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Cc: docs@lists.yoctoproject.org
+Subject: Re: [docs] [PATCH v2] doc: bitbake-user-manual: Add definition for
+ BB_PRESSURE_MAX variables
+Content-Language: en-US
+To: Aryaman Gupta <aryaman.gupta@windriver.com>,
+ bitbake-devel@lists.openembedded.org
+References: <20220812182236.1650194-1-aryaman.gupta@windriver.com>
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Organization: Bootlin
+In-Reply-To: <20220812182236.1650194-1-aryaman.gupta@windriver.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 29 Aug 2022 10:46:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13943
+ <bitbake-devel@lists.openembedded.org>; Mon, 29 Aug 2022 12:46:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13944
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2JlcnQgWWFuZyA8bGllemhp
-LnlhbmdAd2luZHJpdmVyLmNvbT4NCj4gU2VudDogZGVuIDI3IGF1Z3VzdGkgMjAyMiAwNTozNw0K
-PiBUbzogUGV0ZXIgS2plbGxlcnN0ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb20+OyBi
-aXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4gU3ViamVjdDogUmU6IFtiaXRi
-YWtlLWRldmVsXSBbUkZDXVtQQVRDSCBWMl0gYml0YmFrZTogZmV0Y2gyL2dpdDogVXNlIGdpdCBm
-ZXRjaCB0byBzaGFsbG93IGNsb25lIHJldmlzaW9ucw0KPiANCj4gSGkgUGV0ZXIsDQo+IA0KPiBP
-biA4LzI2LzIyIDIyOjIxLCBQZXRlciBLamVsbGVyc3RlZHQgd3JvdGU6DQo+ID4+IC0tLS0tT3Jp
-Z2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVt
-YmVkZGVkLm9yZyA8Yml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPiBPbiBCZWhh
-bGYgT2YgUm9iZXJ0IFlhbmcNCj4gPj4gU2VudDogZGVuIDI2IGF1Z3VzdGkgMjAyMiAxNToxMQ0K
-PiA+PiBUbzogYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQo+ID4+IFN1Ympl
-Y3Q6IFtiaXRiYWtlLWRldmVsXSBbUkZDXVtQQVRDSCBWMl0gYml0YmFrZTogZmV0Y2gyL2dpdDog
-VXNlIGdpdCBmZXRjaCB0byBzaGFsbG93IGNsb25lIHJldmlzaW9ucw0KPiA+Pg0KPiA+PiAqIFYy
-DQo+ID4+ICAgIEZpeGVkIHR5cG9zIGluIGNvbW1pdCBtZXNzYWdlDQo+ID4NCj4gPiBQYXRjaCBo
-aXN0b3J5IHNob3VsZCBnbyBhZnRlciB0aGUgLS0tIGJlbG93Lg0KPiA+DQo+ID4+IFRoZSAiZ2l0
-IGNsb25lIC0tZGVwdGgiIG9ubHkgd29ya3MgZm9yIHJlZnMsIGRvZXNuJ3Qgc3VwcG9ydCByZXZp
-c2lvbnMsIGJ1dA0KPiA+PiAiZ2l0IGZldGNoIC0tZGVwdGgiIHN1cHBvcnRzIHJldmlzaW9ucywg
-c28gdXNlIGl0IHRvIGRvIHRoZSBzaGFsbG93IGNsb25lLCB0aGUNCj4gPj4gaWRlYSBpcyBmcm9t
-ICJnaXQgY2xvbmUgLS1yZWN1cnNlLXN1Ym1vZHVsZXMgLS1zaGFsbG93LXN1Ym1vZHVsZXMiLg0K
-PiA+Pg0KPiA+PiBUaGUgd29ya2Zsb3cgaXMgKE9ubHkgZW5hYmxlZCB3aGVuIEJCX0dJVF9TSEFM
-TE9XID0gIjEiKToNCj4gPj4gJCBnaXQgaW5pdCAtLWJhcmUgPGNsb25lZGlyPg0KPiA+PiAkIGdp
-dCByZW1vdGUgYWRkIG9yaWdpbiA8dXJsPg0KPiA+PiAkIGdpdCBmZXRjaCBvcmlnaW4gLS1kZXB0
-aCA8ZGVwdGg+IHJldmlzaW9uDQo+ID4+ICQgZ2l0IGJyYW5jaCA8YnJhbmNobmFtZT4gRkVUQ0hf
-SEVBRA0KPiA+PiAkIGdpdCB0YWcgdjxicmFuY2huYW1lPiBGRVRDSF9IRUFEDQo+ID4+DQo+ID4+
-IEhlcmUgaXMgdGhlIHRlc3RpbmcgZGF0YSBiYXNlZCBvbiBwb2t5LCB0aGUgdGVzdGluZyBzZXJ2
-ZXIgaGFzIGEgdmVyeSBnb29kDQo+ID4+IG5ldHdvcmsgYmFuZHdpZHRoOg0KPiA+Pg0KPiA+PiBB
-ZGQgJ0JCX0dJVF9TSEFMTE9XID0gIjEiJyBjb25mL2xvY2FsLmNvbmYNCj4gPj4gJCBybSAtZnIg
-dG1wIGRvd25sb2FkcyAjIEZyZXNoIGRvd25sb2FkIGZvciBlYWNoIGJ1aWxkDQo+ID4+ICQgdGlt
-ZSBiaXRiYWtlIHdvcmxkIC0tcnVuYWxsPWZldGNoDQo+ID4+ICQgZHUgLXNoIGRvd25sb2Fkcy9n
-aXQyLw0KPiA+Pg0KPiA+PiAgICAgICAgIEZ1bGwgICAgICAgIFNoYWxsb3cgICAgICBTYXZlZA0K
-PiA+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+PiBUaW1lOiAg
-MTVtNTlzICAgICAgIDJtMzFzICAgICAgIDg0JSAoMTNtMjhzKQ0KPiA+PiBTaXplOiAgMTJHICAg
-ICAgICAgIDEuMkcgICAgICAgIDkwJSAoMTAuOEcpDQo+ID4+DQo+ID4+ICogVGhlIFNpemUgaXMg
-Zm9yIGRvd25sb2Fkcy9naXQyLywgdGhlIHRhcmJhbGxzIGFyZSBub3QgY291bnRlZC4NCj4gPj4N
-Cj4gPj4gV2UgY2FuIHNlZSB0aGF0IGl0IHNhdmVzIGEgbG90IG9mIGRvd25sb2FkIHRpbWUgYW5k
-IGRpc2sgc3BhY2UsIGZvcg0KPiA+PiBleGFtcGxlOg0KPiA+Pg0KPiA+PiBsaW51eC15b2N0bzog
-Mi44RyAtPiAyMjhNDQo+ID4+IGxsdm06IDIuNUcgLT4gMTcxTQ0KPiA+PiBjcnlwdG9ncmFwaHk6
-IDEuNUcgLT4gMzVNDQo+ID4+DQo+ID4+IEFuZCAiJCBiaXRiYWtlIHdvcmxkIiB3b3JrcyB3ZWxs
-Lg0KPiA+Pg0KPiA+PiBUaGlzIGEgUkZDIHBhdGNoLCBwbGVhc2UgZmVlbCBmcmVlIHRvIGdpdmUg
-eW91IGNvbW1lbnRzLg0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBSb2JlcnQgWWFuZyA8bGll
-emhpLnlhbmdAd2luZHJpdmVyLmNvbT4NCj4gPj4gLS0tDQo+ID4+ICAgYml0YmFrZS9saWIvYmIv
-ZmV0Y2gyL2dpdC5weSB8IDgzICsrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLQ0K
-PiA+PiAgIDEgZmlsZSBjaGFuZ2VkLCA2NiBpbnNlcnRpb25zKCspLCAxNyBkZWxldGlvbnMoLSkN
-Cj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2JpdGJha2UvbGliL2JiL2ZldGNoMi9naXQucHkgYi9i
-aXRiYWtlL2xpYi9iYi9mZXRjaDIvZ2l0LnB5DQo+ID4+IGluZGV4IDQ1MzRiZDc1ODAwLi41N2Ji
-NjFkNWVlMSAxMDA2NDQNCj4gPj4gLS0tIGEvYml0YmFrZS9saWIvYmIvZmV0Y2gyL2dpdC5weQ0K
-PiA+PiArKysgYi9iaXRiYWtlL2xpYi9iYi9mZXRjaDIvZ2l0LnB5DQo+ID4+IEBAIC0yNDQsNiAr
-MjQ0LDcgQEAgY2xhc3MgR2l0KEZldGNoTWV0aG9kKToNCj4gPj4gICAgICAgICAgICAgICAgICAg
-dWQudW5yZXNvbHZlZHJldltuYW1lXSA9ICdIRUFEJw0KPiA+Pg0KPiA+PiAgICAgICAgICAgdWQu
-YmFzZWNtZCA9IGQuZ2V0VmFyKCJGRVRDSENNRF9naXQiKSBvciAiZ2l0IC1jIGNvcmUuZnN5bmNv
-YmplY3RmaWxlcz0wIC1jIGdjLmF1dG9EZXRhY2g9ZmFsc2UgLWMgY29yZS5wYWdlcj1jYXQiDQo+
-ID4+ICsgICAgICAgIHVkLmJhc2VjbWQgPSAiTEFORz1DICVzIiAlIHVkLmJhc2VjbWQNCj4gPj4N
-Cj4gPj4gICAgICAgICAgIHdyaXRlX3RhcmJhbGxzID0gZC5nZXRWYXIoIkJCX0dFTkVSQVRFX01J
-UlJPUl9UQVJCQUxMUyIpIG9yICIwIg0KPiA+PiAgICAgICAgICAgdWQud3JpdGVfdGFyYmFsbHMg
-PSB3cml0ZV90YXJiYWxscyAhPSAiMCIgb3IgdWQucmViYXNlYWJsZQ0KPiA+PiBAQCAtMzQ0LDYg
-KzM0NSw0OSBAQCBjbGFzcyBHaXQoRmV0Y2hNZXRob2QpOg0KPiA+PiAgICAgICAgICAgICAgIHJl
-dHVybiBGYWxzZQ0KPiA+PiAgICAgICAgICAgcmV0dXJuIFRydWUNCj4gPj4NCj4gPj4gKyAgICBk
-ZWYgc2hhbGxvd19jbG9uZV9ieV9mZXRjaChzZWxmLCB1ZCwgcmVwb3VybCwgZCk6DQo+ID4+ICsg
-ICAgICAgICIiIg0KPiA+PiArICAgICAgICBVc2UgImdpdCBmZXRjaCAtLWRlcHRoIDxkZXB0aD4g
-cmV2aXNpb24iIHRvIGltcGxlbWVudCBzaGFsbG93IGNsb25lDQo+ID4+ICsgICAgICAgIHNpbmNl
-IGdpdCBjYW4ndCBjbG9uZSBhIHJldmlzaW9uLCBhIGJldHRlciBzb2x1dGlvbiBzaG91bGQgYmU6
-DQo+ID4+ICsgICAgICAgICJnaXQgZmV0Y2ggLS1kZXB0aCA8ZGVwdGg+IHJldmlzaW9uOjxicmFu
-Y2huYW1lPiIgYnV0IGl0IGRvZXNuJ3Qgd29yaw0KPiA+PiArICAgICAgICB3aGVuIHJldmlzaW9u
-IGlzIGEgdGFnLCBlLmcuOg0KPiA+PiArICAgICAgICBlcnJvcjogY2Fubm90IHVwZGF0ZSByZWYg
-J3JlZnMvaGVhZHMvbWFzdGVyJzogdHJ5aW5nIHRvIHdyaXRlDQo+ID4+ICsgICAgICAgICAgICAg
-ICAgbm9uLWNvbW1pdCBvYmplY3QgPHJldmlzaW9uPiB0byBicmFuY2ggJ3JlZnMvaGVhZHMvbWFz
-dGVyJw0KPiA+PiArICAgICAgICAiIiINCj4gPj4gKw0KPiA+PiArICAgICAgICBpbXBvcnQgZGF0
-ZXRpbWUNCj4gPj4gKw0KPiA+PiArICAgICAgICBkZXB0aCA9IHVkLnNoYWxsb3dfZGVwdGhzW3Vk
-Lm5hbWVzWzBdXQ0KPiA+PiArICAgICAgICByZXZpc2lvbiA9IHVkLnJldmlzaW9uc1t1ZC5uYW1l
-c1swXV0NCj4gPj4gKyAgICAgICAgYnJhbmNobmFtZSA9IHVkLmJyYW5jaGVzW3VkLm5hbWVzWzBd
-XQ0KPiA+PiArICAgICAgICBpZiBub3QgYnJhbmNobmFtZToNCj4gPj4gKyAgICAgICAgICAgIGJy
-YW5jaG5hbWUgPSAibWFzdGVyIg0KPiA+PiArDQo+ID4+ICsgICAgICAgICMgUmVuYW1lIGJyYW5j
-aG5hbWUgaWYgaXQgZXhpc3RzIHdoaWNoIGNhbjoNCj4gPj4gKyAgICAgICAgIyAtIEF2b2lkIGNv
-bmZsaWN0cyBkdXJpbmcgdXBkYXRlDQo+ID4+ICsgICAgICAgICMgLSBLZWVwIHRoZSByZXZpc2lv
-biBvbiBhIGJyYW5jaCBzbyB0aGF0ICJnaXQgc3VibW9kdWxlIHVwZGF0ZSAtLXJlY3Vyc2l2ZSIN
-Cj4gPj4gKyAgICAgICAgIyAgICBjYW4gd29yayBzaW5jZSBpdCByZXF1aXJlcyB0aGUgcmV2aXNp
-b24gb24gYSBicmFuY2guDQo+ID4+ICsgICAgICAgIGJyYW5jaF9wYXRoID0gb3MucGF0aC5qb2lu
-KHVkLmNsb25lZGlyLCAncmVmcy9oZWFkcy8lcycgJSBicmFuY2huYW1lKQ0KPiA+PiArICAgICAg
-ICBpZiBvcy5wYXRoLmV4aXN0cyhicmFuY2hfcGF0aCk6DQo+ID4+ICsgICAgICAgICAgICBvcy5y
-ZW5hbWUoYnJhbmNoX3BhdGgsICclcy4lcycgJSAoYnJhbmNoX3BhdGgsIGRhdGV0aW1lLmRhdGV0
-aW1lLm5vdygpLnN0cmZ0aW1lKCIlWSVtJWQlSCVNJVMiKSkpDQo+ID4NCj4gPiBBbnkgcmVhc29u
-IHRoaXMgaXMgZG9uZSB1c2luZyBvcy5yZW5hbWUoKSByYXRoZXIgdGhhbiBgZ2l0IGJyYW5jaCAt
-bT8NCj4gDQo+IEl0IGlzIGJlY2F1c2UgdGhpcyBpcyBzaW1wbGVyIGFuZCB0byBrZWVwIGFsaWdu
-IHdpdGggYnJhbmNoX3BhdGgsIG90aGVyd2lzZSwgd2UNCj4gbmVlZDoNCj4gLSBnaXQgYnJhbmNo
-IC0tbGlzdCB0byBnZXQgdGhlIGJyYW5jaCBsaXN0IGFuZCBzcGxpdCB0aGVtIGJ5ICdcbicsIHJl
-bW92ZSB0aGUgc3Rhci4NCj4gLSBDaGVjayBicmFuY2ggaW4gdGhlIGxpc3QNCj4gLSBnaXQgYnJh
-bmNoIC1tIHRvIHJlbmFtZSB0aGUgYnJhbmNoDQoNCklmIHlvdSBhY2NlcHQgdGhhdCB0aGUgY29t
-bWFuZCBjYW4gZmFpbCwgdGhlbiB5b3UgZG8gbm90IG5lZWQgdG8gbGlzdCANCnRoZSBicmFuY2hl
-cy4gSnVzdCBkbyB0aGUgcmVuYW1lLiBJZiB0aGUgYnJhbmNoIGV4aXN0cywgdGhlbiB0aGUgDQpy
-ZW5hbWUgd2lsbCBzdWNjZWVkLCBvdGhlcndpc2UgaXQgd2lsbCBmYWlsLCBidXQgdGhhdCBpcyBl
-eHBlY3RlZCBhbmQgDQppZ25vcmVkLiANCg0KV2hhdCBJIGRvIG5vdCBsaWtlIGFib3V0IHRoZSB1
-c2Ugb2Ygb3MucmVuYW1lKCkgaGVyZSBpcyB0aGF0IGl0IHVzZXMgDQppbnRlcm5hbCBrbm93bGVk
-Z2Ugb2YgaG93IEdpdCBzdG9yZXMgaXRzIGRhdGEuDQoNCi8vUGV0ZXINCg0K
+Hi Aryaman,
+
+Many thanks for the patch! Apologies for the late review, I was away on 
+vacation.
+
+See my comments below:
+
+On 8/12/22 20:22, Aryaman Gupta wrote:
+> Add the definitions for the BB_PRESSURE_MAX{CPU|IO|MEMORY} variables in the
+> bitbake varibales glossary. Further information on how to determine a good
+> threshold will be added to the Yocto reference manual in a later commit.
+>
+> Signed-off-by: Aryaman Gupta <aryaman.gupta@windriver.com>
+> Signed-off-by: Randy Macleod <Randy.Macleod@windriver.com>
+> ---
+>   .../bitbake-user-manual-ref-variables.rst     | 30 +++++++++++++++++++
+>   1 file changed, 30 insertions(+)
+>
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> index 12aef3cb..9b2027de 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> @@ -482,6 +482,36 @@ overview of their function and contents.
+>   
+>            You must set this variable in the external environment in order
+>            for it to work.
+> +
+> +   :term:`BB_PRESSURE_MAX_CPU`
+> +      The threshold for maximum CPU pressure before BitBake prevents the
+> +      scheduling of new tasks. Once the :term:`BB_PRESSURE_MAX_CPU` threshold
+> +      is exceeded, new tasks are not started until the pressure subsides to
+> +      below the threshold. If :term:`BB_PRESSURE_MAX_CPU` is not set, CPU
+> +      pressure is not monitored. A threshold can be set in ``conf/local.conf``
+> +      as:
+> +      ::
+
+
+Actually, here you can just use "as::" instead of "as:" followed by "::" 
+in the next line.
+
+> +
+> +         BB_PRESSURE_MAX_CPU = "500"
+> +
+> +      Information about how to set a suitable value and some other caveats to
+> +      consider can be found in the
+> +      :ref:`Reference Manual </ref-manual/variables:BB_PRESSURE_MAX_CPU>``
+
+
+I'm afraid you'll have to add this reference in a later commit, because 
+for the moment, this creates a warning that is turned into an error. 
+Sorry, this is the pain of managing two manuals at once. You may say 
+"Yocto Project Reference Manual" then.
+
+By the way, you had an extra backquote at the end of your reference.
+
+> +
+> +   :term:`BB_PRESSURE_MAX_IO`
+> +      The threshold for maximum IO pressure experienced before BitBake
+> +      prevents the scheduling of new tasks. The IO pressure is regulated in the
+> +      same way as :term:`BB_PRESSURE_MAX_CPU`. At this point in time,
+> +      experiments show that IO pressure tends to be short-lived and regulating
+> +      just the CPU can help to reduce it.
+> +
+> +   :term:`BB_PRESSURE_MAX_MEMORY`
+> +      The threshold for maximum memory pressure experienced before BitBake
+> +      prevents the scheduling of new tasks. The memory pressure is regulated in
+> +      the same way as :term:`BB_PRESSURE_MAX_CPU`. Note that any memory
+> +      pressure indicates that a system is being pushed beyond it's capacity. At
+
+
+s/it's/its/
+
+> +      this point in time, experiments show that memory pressure tends to be
+> +      short-lived and regulating just the CPU can help to reduce it.
+>   
+>      :term:`BB_RUNFMT`
+>         Specifies the name of the executable script files (i.e. run files)
+
+
+Would you mind sending a V3 fixing these, please? This one should be 
+ready to merge.
+Thanks in advance, and thank you for your patience :)
+
+Cheers
+Michael.
+
+-- 
+Michael Opdenacker, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
