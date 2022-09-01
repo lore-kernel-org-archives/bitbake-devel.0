@@ -1,212 +1,89 @@
-Return-Path: <kergoth@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0047ECAAD4
-	for <webhook@archiver.kernel.org>; Wed, 31 Aug 2022 20:55:58 +0000 (UTC)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com
- [209.85.208.43])
- by mx.groups.io with SMTP id smtpd.web10.4250.1661979356929294370
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12718ECAAD3
+	for <webhook@archiver.kernel.org>; Thu,  1 Sep 2022 11:19:53 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com
+ [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web12.10806.1662031185946750160
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 31 Aug 2022 13:55:57 -0700
+ Thu, 01 Sep 2022 04:19:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=TrbQoKTn;
- spf=pass (domain: gmail.com, ip: 209.85.208.43, mailfrom: kergoth@gmail.com)
-Received: by mail-ed1-f43.google.com with SMTP id t5so19957343edc.11
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aeMveESz;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f45.google.com with SMTP id v16so19167218wrm.8
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 31 Aug 2022 13:55:56 -0700 (PDT)
+ Thu, 01 Sep 2022 04:19:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=9/cMeaEIX3LJT9h4GWHCk6EsNmbHIapQOQ662dmboOA=;
-        b=TrbQoKTnKmn6Aal4S7lD3Ep3bMggX+yJnNW+Zww+QGYFtuNl45GI+pQzgGF+qnTyY4
-         e+Fkum1BwGkpi44fRDzGZeG7Dp3uylkN/A0yNY1ywkjohSBjGrkpiKB5O1HNFh86W1nx
-         uC5PBCqS7o4bnAaEPRwUPbCuoxg8OJvFBzispvAsW4LaCxbpMfMhmsMjPddgdPJDQokw
-         VabhPZv8jR9XX/VhZ0TVFJn1KMfpIu5dLzDsLBLGBVhJmTpfs7ZIgg00ShxfnL1lpPEk
-         GJG67JO8H58YDDi04hTA8mtRgZJuv5HhccpdF5sg/RkFGDBnJob0K3kV+129CyRZAu1y
-         14mA==
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date;
+        bh=uQnr3osZfKQ9u9nS0gFeMJNsxubfXvfOJF/Wz/+5lLk=;
+        b=aeMveESz3wPrJIynZ5Fw9qV2Eh24E40b1BH+T5ooJA6IcZyYvHJyzKvqpzBZsUmEJA
+         L6bYdxGom41pncB6RouKZIyjofTiFRcz/G6EP26K0h56TrYB/oG23zQbiMo03fDzdir5
+         GxiHGQxeMUiCAmJwNf7z3ZIHWolBrvJeeptcE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=9/cMeaEIX3LJT9h4GWHCk6EsNmbHIapQOQ662dmboOA=;
-        b=pX7CkFepTKGkCwGR5F27XgE8lXDbrhmz5FkRLgHmcvfqmJ30abXKXH64TxBOBmetpo
-         3H7mQvqC1kAHSNFhzsiUkXGptczNrFAx2J8w1SMUCxu2rUi2S4mP81shvdKESYjQYjse
-         pL2mzZmSci5bixgDHJvLect2/hUPkCJKGhpPnRssAJQzy4dsVcE+Zwk6jFMBZfUu7KEv
-         N20MOE2R//3EXkP0SMA1K0Hu/mxMe69aWQOb6b+usgrZvPbg0uwLk9P6RNN7at+6BRMQ
-         mdBRbZXHDoTwch8QxogZDFaufA45DB0JDVaBPHMqrdylNr3Xc/1JfgDG97jznyBhC3qm
-         1GhQ==
-X-Gm-Message-State: ACgBeo0xYmTdzvKuTnCx4m+4uUiqUJ1uZBXBdzntIwCKL2Nro6k4faIN
-	7F7waRQTLESMiehPwebh2Gk/91tF3fJ17TH6t8Y21g1MlGg=
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=uQnr3osZfKQ9u9nS0gFeMJNsxubfXvfOJF/Wz/+5lLk=;
+        b=yxj2Z/25hfbg7Zbjz1PK4mrMEsDs+W583zOHj27atGBWr0spDJLlBg+aBmtAtQCdVr
+         8AN1oROBdpj0r5DdcGDkHJBtVZgQCXS7H8qreSFnNh3DaPXtoaK4vmo3wCN3k+93qiy+
+         natA5cXLpGePZqzOpC1lSUowXviTUoToJ4OVMslewB3P20TWyeDVk8qT+DPSbJuFJrM1
+         5N3jxif4InpwFcmfjSwzJJndHVPbVBjtz81e1n6/cuNPI2vOLlfmUGG0PyNRCBEFMNdK
+         R6JrQ5NoFlnIPqYlC0bW7sNs+cB9QYQBh2I9piS8uVbi5BANghz93eLoPh9Ot6rPUYdB
+         SVeQ==
+X-Gm-Message-State: ACgBeo2gMWVjL0JxxivSPFOgHW7IXw+7Kre2xA6QrYQ9zpiXQegdkAaK
+	guGUbaNdsVBmbh3T3tT6SdWLvA==
 X-Google-Smtp-Source: 
- AA6agR79q2HA3kKMH91CHR91GFi7RCaE/x6o5zlbI83rX22C55W+1yxiRunWT8BYup6KcQ9u4LcJQr1nqvKI7REMQTM=
-X-Received: by 2002:aa7:d814:0:b0:447:b848:9e53 with SMTP id
- v20-20020aa7d814000000b00447b8489e53mr25301806edq.64.1661979354974; Wed, 31
- Aug 2022 13:55:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <170B7854B4242295.1911@lists.openembedded.org>
- <0abf1f86-d023-a445-0758-436f4767e7ef@windriver.com>
-In-Reply-To: <0abf1f86-d023-a445-0758-436f4767e7ef@windriver.com>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Wed, 31 Aug 2022 13:55:43 -0700
+ AA6agR7eJQJ0CqGFhoA7AnfR/ccN0Nqg0hGfz+skJyqlrZ1rUSb8lIzogl8HDWseuXgkRXdc3bbQ5g==
+X-Received: by 2002:a5d:6d86:0:b0:226:e362:237d with SMTP id
+ l6-20020a5d6d86000000b00226e362237dmr7492131wrs.453.1662031184190;
+        Thu, 01 Sep 2022 04:19:44 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:417:930f:844b:d765?
+ ([2001:8b0:aba:5f3c:417:930f:844b:d765])
+        by smtp.gmail.com with ESMTPSA id
+ b2-20020adff902000000b00226dfac0149sm8353583wrr.114.2022.09.01.04.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Sep 2022 04:19:43 -0700 (PDT)
 Message-ID: 
- <CABcZAN=rSxhgebWTScxW6tL6+f7k-natKstYWyBVSb11rz1=wA@mail.gmail.com>
+ <7bec4de4e5c8ae8db193bfc6fb3f15e9388c0512.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH] fetch: use BPN instead
-To: "Yu, Mingli" <mingli.yu@windriver.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Christopher Larson <kergoth@gmail.com>, "Yu, Mingli"
+	 <mingli.yu@windriver.com>
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="00000000000013ccce05e78fb992"
+Date: Thu, 01 Sep 2022 12:19:43 +0100
+In-Reply-To: 
+ <CABcZAN=rSxhgebWTScxW6tL6+f7k-natKstYWyBVSb11rz1=wA@mail.gmail.com>
+References: <170B7854B4242295.1911@lists.openembedded.org>
+	 <0abf1f86-d023-a445-0758-436f4767e7ef@windriver.com>
+	 <CABcZAN=rSxhgebWTScxW6tL6+f7k-natKstYWyBVSb11rz1=wA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1-0ubuntu1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 31 Aug 2022 20:55:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13949
+ <bitbake-devel@lists.openembedded.org>; Thu, 01 Sep 2022 11:19:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13950
 
---00000000000013ccce05e78fb992
-Content-Type: text/plain; charset="UTF-8"
+On Wed, 2022-08-31 at 13:55 -0700, Christopher Larson wrote:
+> BPN is not defined by bitbake, you're hardcoding OE-specifics into
+> bitbake with this patch.
 
-BPN is not defined by bitbake, you're hardcoding OE-specifics into bitbake
-with this patch.
+This was accidentally applied from the patch queue but I've reverted
+it, Chris is correct.
 
-On Sun, Aug 28, 2022 at 11:42 PM Yu, Mingli <mingli.yu@windriver.com> wrote:
+If you still think this isn't right, please show the error you're
+seeing with the selftest as we need more information to help further.
 
-> Ping.
->
-> On 8/15/22 16:46, Yu, Mingli wrote:
-> > From: Mingli Yu <mingli.yu@windriver.com>
-> >
-> > When checking for the non-existing file, BPN is actually the acutal
-> recipe
-> > name. And we should use BPN for the error message and it also fix the
-> below
-> > test when multilib is enabled.
-> >   $ oe-selftest -r bbtests.BitbakeTests.test_invalid_recipe_src_uri
-> >
-> > Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
-> > ---
-> >   lib/bb/fetch2/__init__.py | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> > index 0fb718b2..43d07e56 100644
-> > --- a/lib/bb/fetch2/__init__.py
-> > +++ b/lib/bb/fetch2/__init__.py
-> > @@ -1236,7 +1236,7 @@ def get_checksum_file_list(d):
-> >               if not found:
-> >                   bb.fatal(("Unable to get checksum for %s SRC_URI entry
-> %s: file could not be found"
-> >                               "\nThe following paths were searched:"
-> > -                            "\n%s") % (d.getVar('PN'),
-> os.path.basename(f), '\n'.join(paths)))
-> > +                            "\n%s") % (d.getVar('BPN'),
-> os.path.basename(f), '\n'.join(paths)))
-> >
-> >       return " ".join(filelist)
-> >
-> >
-> >
-> >
-> >
-> >
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#13942):
-> https://lists.openembedded.org/g/bitbake-devel/message/13942
-> Mute This Topic: https://lists.openembedded.org/mt/93032280/3617123
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> kergoth@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
->
+Cheers,
 
--- 
-Christopher Larson
-chris_larson@mentor.com, chris.larson@siemens.com, kergoth@gmail.com
-Principal Software Engineer, Embedded Linux Solutions, Siemens Digital
-Industries Software
-
---00000000000013ccce05e78fb992
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">BPN is not defined by bitbake, you&#39;re hardcoding OE-sp=
-ecifics into bitbake with this patch.</div><br><div class=3D"gmail_quote"><=
-div dir=3D"ltr" class=3D"gmail_attr">On Sun, Aug 28, 2022 at 11:42 PM Yu, M=
-ingli &lt;<a href=3D"mailto:mingli.yu@windriver.com">mingli.yu@windriver.co=
-m</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin=
-:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"=
->Ping.<br>
-<br>
-On 8/15/22 16:46, Yu, Mingli wrote:<br>
-&gt; From: Mingli Yu &lt;<a href=3D"mailto:mingli.yu@windriver.com" target=
-=3D"_blank">mingli.yu@windriver.com</a>&gt;<br>
-&gt; <br>
-&gt; When checking for the non-existing file, BPN is actually the acutal re=
-cipe<br>
-&gt; name. And we should use BPN for the error message and it also fix the =
-below<br>
-&gt; test when multilib is enabled.<br>
-&gt;=C2=A0 =C2=A0$ oe-selftest -r bbtests.BitbakeTests.test_invalid_recipe_=
-src_uri<br>
-&gt; <br>
-&gt; Signed-off-by: Mingli Yu &lt;<a href=3D"mailto:mingli.yu@windriver.com=
-" target=3D"_blank">mingli.yu@windriver.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 =C2=A0lib/bb/fetch2/__init__.py | 2 +-<br>
-&gt;=C2=A0 =C2=A01 file changed, 1 insertion(+), 1 deletion(-)<br>
-&gt; <br>
-&gt; diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py<br>
-&gt; index 0fb718b2..43d07e56 100644<br>
-&gt; --- a/lib/bb/fetch2/__init__.py<br>
-&gt; +++ b/lib/bb/fetch2/__init__.py<br>
-&gt; @@ -1236,7 +1236,7 @@ def get_checksum_file_list(d):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if not found:<br=
->
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb=
-.fatal((&quot;Unable to get checksum for %s SRC_URI entry %s: file could no=
-t be found&quot;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;\nThe following paths were s=
-earched:&quot;<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;\n%s&quot;) % (d.getVar(&#39;PN&#39;), o=
-s.path.basename(f), &#39;\n&#39;.join(paths)))<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;\n%s&quot;) % (d.getVar(&#39;BPN&#39;), =
-os.path.basename(f), &#39;\n&#39;.join(paths)))<br>
-&gt;=C2=A0 =C2=A0<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0return &quot; &quot;.join(filelist)<br>
-&gt;=C2=A0 =C2=A0<br>
-&gt; <br>
-&gt; <br>
-&gt; <br>
-&gt; <br>
-&gt; <br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#13942): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/13942" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/13942</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/93032280/3617=
-123" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/93032280/3617123</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:kergoth@gmail.com" target=3D"_blan=
-k">kergoth@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
- class=3D"gmail_signature"><div dir=3D"ltr"><div dir=3D"ltr"><font color=3D=
-"#333333">Christopher Larson<br><a>chris_larson@mentor.com</a>,=C2=A0<a>chr=
-is.larson@siemens.com</a>,=C2=A0<a>kergoth@gmail.com</a><br>Principal Softw=
-are Engineer,=C2=A0Embedded Linux Solutions,=C2=A0Siemens Digital Industrie=
-s Software</font><br></div></div></div>
-
---00000000000013ccce05e78fb992--
+Richard
 
