@@ -2,65 +2,65 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3809BC54EE9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E78FC6FA89
 	for <webhook@archiver.kernel.org>; Tue, 13 Sep 2022 14:27:30 +0000 (UTC)
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com
- [209.85.215.176])
- by mx.groups.io with SMTP id smtpd.web09.5465.1663079247735907587
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com
+ [209.85.214.174])
+ by mx.groups.io with SMTP id smtpd.web09.5464.1663079238452346540
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 13 Sep 2022 07:27:27 -0700
+ Tue, 13 Sep 2022 07:27:23 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=cV19OBeJ;
- spf=softfail (domain: sakoman.com, ip: 209.85.215.176,
+ header.b=3iDVWg/l;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.174,
  mailfrom: steve@sakoman.com)
-Received: by mail-pg1-f176.google.com with SMTP id c24so11470525pgg.11
+Received: by mail-pl1-f174.google.com with SMTP id l10so11989205plb.10
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 13 Sep 2022 07:27:27 -0700 (PDT)
+ Tue, 13 Sep 2022 07:27:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=SQQozrF2B7Si5qVKeRDFjwFn8Av+q4JfnFilhotDfQI=;
-        b=cV19OBeJFVPmj5ubKF4dErfljRehye7jdzhYGJYsEeHsFESe8DcXLu3LSpnhIyRalr
-         K3y5iIWNOVEqnwDLamA8HYu0fcKi17mQKmyVelrrjBaj8d+Pi6d2IjM97SbHko+djTRP
-         ym3AuczkqfXANpprvYp/2beF4rpQ6dxN/f5EN1eZKo0N6LU+PoqtjG5EGZZZvU6QR7H9
-         EJJr2I9H7Jl0QUufsUJ0CAqgWoGv+49nQa7y85P5daVML71E5km4Izl3D6pKHVff1kVh
-         SzfdSZ1C26a/vcVHWDvpwuL7dk5hR+qu5Z7k/hfAVv4g361Ui14Zq/fl7zwWzziw8FR8
-         oeng==
+        bh=+urg61y2Fj3ocDy8sdhqwi7kKvoIxv/p9Fq9PehVjxk=;
+        b=3iDVWg/l7V5VG6zySSW6HDyamjuyHWeAjdV3wbRVmApNPRobR/dfb08EuRVGgIKLBn
+         eJO+HegHZ7FJdCiMsSjMOkF++iemMIC6cVhZN+ubIivAT8Vy/aVuVRxW7sithvdrzehG
+         2Boy3vSyook1Vmm37WOhY/927Y27qbxGAW9YbhuszYMyH8t+v0FA/gDqwNByIDKMJH1M
+         AQXlPyR7c9BhJt18lAylAxhugV760VUAmCoxNYUAmofM54X9MmoMFCY6QNXgyTpzeHTP
+         8teCS8eeyQAE3gKdIeKCIR6XKHxA7v69Z7pmKNU6zOlgrW3mhhkQ3lLRlEiZGdCn7bZ6
+         jxrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=SQQozrF2B7Si5qVKeRDFjwFn8Av+q4JfnFilhotDfQI=;
-        b=II3eP1Oiflc+M96ZFZ7B/iIpPFTYD7rKPb5pbjxGi2gnCRYbO4P59fFn+feHwHRWeG
-         6ZB6iHYNjOyj15eirqadqAhog3k4gzhHgUzi/Dvq8PE+1aYQnNcUKlneG+qULNz8foaK
-         P52TPNFRJa/yw6xKmxSDu18J9IpNLKLOz8qs0IG/g2WoLcAT3SDX49mByvHXuYgcs0pL
-         c59CILb+qkptFh9qpK2NCuzbzZY1cI6vhWqCu9cylVTIZ/0nN/yry7PKNzd3BTRkkqje
-         Ub36cAugdm+p1UpguqaXmgxfz5kNh4kZgM8/BBSmBsZa38IggnKxCBewHyA9zY6dW4aB
-         ND5A==
-X-Gm-Message-State: ACgBeo3dLCh1UP8UEU0b7/uHdCuFhxA5BBFY+p6YnRvC4Q5sD3y0GCHU
-	6wK/77242lWJ65cs+iFEJ29fVY5uXjO1S50r
+        bh=+urg61y2Fj3ocDy8sdhqwi7kKvoIxv/p9Fq9PehVjxk=;
+        b=LvHHnpWDCIPcdhzIgL756rizwJP4vwuytebhWs4D42fIbf9kPofK7BeHSV1d2/aTig
+         NC0bK0TF4Q320+D8E5yKPYMjil8AzR8WZW2AxQXRn2ZWruaqyzSxKBd8ENvCgOiSSirP
+         xGDgXSi8AVmvbs30VEu2huSvdaf9PhZh1DZkmNQSujqQd7z9o5wwhNIrSyzn2G9JABeU
+         tIDKbu5D0Ni2o+11pqnhNjNMm5Ay1E3ebCZxT9Cg9gOYaL9AdgAc5UX5Y9XvkF2VxmdR
+         siSX6WtkCABlXhjMxNoyvJJjoMOtsXwy7I8mNGaDWfNWN3UtY+fvD/2ITCPHmL8yOUF/
+         tJzA==
+X-Gm-Message-State: ACgBeo1vNG6E8kAE6wzAkKSj1dSJT5MuOK7epaZk8oSAB5Q8wPxqTgyL
+	GHvHpLHH2as5JH17TUi7YbadNj8mcDcN3PRS
 X-Google-Smtp-Source: 
- AA6agR5eEo8W0Y5jS4j8V0TfJU3My72yhrGIEktrP2GPu+HOtd8yJRBGd0E4td4sEJ0akvJseMQ0Dw==
-X-Received: by 2002:a05:6a00:88f:b0:530:dec:81fd with SMTP id
- q15-20020a056a00088f00b005300dec81fdmr33517709pfj.64.1663079246556;
-        Tue, 13 Sep 2022 07:27:26 -0700 (PDT)
+ AA6agR4z7xOGIzZgu97ke43MakV5AeVXJ6othi2rvnV1OkuGY68JqBCeYq6iTfbnH/3InrzzTcKfZw==
+X-Received: by 2002:a17:90a:d151:b0:1fa:b2a6:226a with SMTP id
+ t17-20020a17090ad15100b001fab2a6226amr4374666pjw.104.1663079241875;
+        Tue, 13 Sep 2022 07:27:21 -0700 (PDT)
 Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
  [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- f196-20020a6238cd000000b00540de61c967sm7840286pfa.201.2022.09.13.07.27.25
+ f196-20020a6238cd000000b00540de61c967sm7840286pfa.201.2022.09.13.07.27.20
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Sep 2022 07:27:25 -0700 (PDT)
+        Tue, 13 Sep 2022 07:27:21 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 11/14] bitbake: bitbake-user-manual:
- hashserv can be accessed on a dedicated domain
-Date: Tue, 13 Sep 2022 04:26:41 -1000
+Subject: [bitbake][kirkstone][2.0][PATCH 09/14] ConfHandler/BBHandler: Improve
+ comment error messages and add tests
+Date: Tue, 13 Sep 2022 04:26:39 -1000
 Message-Id: 
- <9d27db5320fd9cf8bbed3b5a2b0e84a4f6e5138e.1663078873.git.steve@sakoman.com>
+ <f8c11121dedd40bcc8d219c028c1a70ada70ebb6.1663078873.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1663078873.git.steve@sakoman.com>
 References: <cover.1663078873.git.steve@sakoman.com>
@@ -70,31 +70,108 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 13 Sep 2022 14:27:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13972
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13970
 
-From: Jose Quaresma <quaresma.jose@gmail.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-(cherry picked from commit b171aa45fb8518dcfbba315b303a4fe9bf2180c6)
+Currently if you trigger one of the comment errors, the newline characters
+are stripped and the line numbers are incorrect. In one case it prints
+the empty line which is also unhelpful.
+
+Rework the code around these errors so the line numbers are correct
+and the lines in question are more clearly displayed complete with newlines
+so the user can more clearly see the error.
+
+I also added a couple of simplistic test cases to ensure that errors
+are raised by the two known comment format errors.
+
+[YOCTO #11904]
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 712da71b24445c814d79a206ce26188def8fce0a)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/parse/parse_py/BBHandler.py   |  4 ++--
+ lib/bb/parse/parse_py/ConfHandler.py |  9 +++++++--
+ lib/bb/tests/parse.py                | 23 +++++++++++++++++++++++
+ 3 files changed, 32 insertions(+), 4 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index af4ff980..12aef3cb 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -401,7 +401,7 @@ overview of their function and contents.
+diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
+index ee9bd760..68415735 100644
+--- a/lib/bb/parse/parse_py/BBHandler.py
++++ b/lib/bb/parse/parse_py/BBHandler.py
+@@ -178,10 +178,10 @@ def feeder(lineno, s, fn, root, statements, eof=False):
  
-       Example usage::
+     if s and s[0] == '#':
+         if len(__residue__) != 0 and __residue__[0][0] != "#":
+-            bb.fatal("There is a comment on line %s of file %s (%s) which is in the middle of a multiline expression.\nBitbake used to ignore these but no longer does so, please fix your metadata as errors are likely as a result of this change." % (lineno, fn, s))
++            bb.fatal("There is a comment on line %s of file %s:\n'''\n%s\n'''\nwhich is in the middle of a multiline expression. This syntax is invalid, please correct it." % (lineno, fn, s))
  
--         BB_HASHSERVE_UPSTREAM = "typhoon.yocto.io:8687"
-+         BB_HASHSERVE_UPSTREAM = "hashserv.yocto.io:8687"
+     if len(__residue__) != 0 and __residue__[0][0] == "#" and (not s or s[0] != "#"):
+-        bb.fatal("There is a confusing multiline, partially commented expression on line %s of file %s (%s).\nPlease clarify whether this is all a comment or should be parsed." % (lineno, fn, s))
++        bb.fatal("There is a confusing multiline partially commented expression on line %s of file %s:\n%s\nPlease clarify whether this is all a comment or should be parsed." % (lineno - len(__residue__), fn, "\n".join(__residue__)))
  
-    :term:`BB_INVALIDCONF`
-       Used in combination with the ``ConfigParsed`` event to trigger
+     if s and s[-1] == '\\':
+         __residue__.append(s[:-1])
+diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
+index 810b6011..451e68dd 100644
+--- a/lib/bb/parse/parse_py/ConfHandler.py
++++ b/lib/bb/parse/parse_py/ConfHandler.py
+@@ -125,16 +125,21 @@ def handle(fn, data, include):
+             s = f.readline()
+             if not s:
+                 break
++            origlineno = lineno
++            origline = s
+             w = s.strip()
+             # skip empty lines
+             if not w:
+                 continue
+             s = s.rstrip()
+             while s[-1] == '\\':
+-                s2 = f.readline().rstrip()
++                line = f.readline()
++                origline += line
++                s2 = line.rstrip()
+                 lineno = lineno + 1
+                 if (not s2 or s2 and s2[0] != "#") and s[0] == "#" :
+-                    bb.fatal("There is a confusing multiline, partially commented expression on line %s of file %s (%s).\nPlease clarify whether this is all a comment or should be parsed." % (lineno, fn, s))
++                    bb.fatal("There is a confusing multiline, partially commented expression starting on line %s of file %s:\n%s\nPlease clarify whether this is all a comment or should be parsed." % (origlineno, fn, origline))
++
+                 s = s[:-1] + s2
+             # skip comments
+             if s[0] == '#':
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index 2898f9bb..1a3b7493 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -194,3 +194,26 @@ deltask ${EMPTYVAR}
+         self.assertTrue('addtask ignored: " do_patch"' in stdout)
+         #self.assertTrue('dependent task do_foo for do_patch does not exist' in stdout)
+ 
++    broken_multiline_comment = """
++# First line of comment \\
++# Second line of comment \\
++
++"""
++    def test_parse_broken_multiline_comment(self):
++        f = self.parsehelper(self.broken_multiline_comment)
++        with self.assertRaises(bb.BBHandledException):
++            d = bb.parse.handle(f.name, self.d)['']
++
++
++    comment_in_var = """
++VAR = " \\
++    SOMEVAL \\
++#   some comment \\
++    SOMEOTHERVAL \\
++"
++"""
++    def test_parse_comment_in_var(self):
++        f = self.parsehelper(self.comment_in_var)
++        with self.assertRaises(bb.BBHandledException):
++            d = bb.parse.handle(f.name, self.d)['']
++
 -- 
 2.25.1
 
