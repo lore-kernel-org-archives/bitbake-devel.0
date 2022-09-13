@@ -1,88 +1,133 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093B2C54EE9
-	for <webhook@archiver.kernel.org>; Wed,  7 Sep 2022 13:48:15 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com
- [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web08.7882.1662558494306305693
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519C2C54EE9
+	for <webhook@archiver.kernel.org>; Tue, 13 Sep 2022 14:27:00 +0000 (UTC)
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com
+ [209.85.214.175])
+ by mx.groups.io with SMTP id smtpd.web08.5352.1663079218165494293
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 07 Sep 2022 06:48:14 -0700
+ Tue, 13 Sep 2022 07:26:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ALcf39KC;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id d5so8778856wms.5
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
+ header.b=1Nw59Het;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.175,
+ mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f175.google.com with SMTP id c2so12007239plo.3
         for <bitbake-devel@lists.openembedded.org>;
- Wed, 07 Sep 2022 06:48:14 -0700 (PDT)
+ Tue, 13 Sep 2022 07:26:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date;
-        bh=VqqWXN/VBQE9u/srcABe6VyK0Mjgtvq4ZVC/+0Xm3WA=;
-        b=ALcf39KC1U2JdhL3QQ2QHHyK8OHcn6abGgmVKZzuJgbMtdsQgGsVPcKWGf0vb+0Fxj
-         D2vosrECy8LC5o9jtSYTyHnrIooWaM7NEkoDHPL0FqpyUY2M5X/mYYXx7sJUce3eNCtd
-         8oF970JhlnCelB9umHHH69xmvFRZdgJk5XU1U=
+        bh=OJ0G2ELecLNdxw/D6lnEexgtylU/Bv9qBWFtJbmkVxw=;
+        b=1Nw59HetTpXcX+kvn419QuzGtqrQVo8QHShNENN9HtzISr2owiBUnmBowU1hAqr9AC
+         dOl5aHID568S4ev84J3aJXbHT1Cf/usfGDc4FjcmmApSIg/mqOiBniNGsvoHPvWwSS55
+         V0HRu4o2aiOMlLFwR6PFRAnXX7943LOKjUNSQIGBCcKLINp8j7jMMyx+TZpeZFbF/PvY
+         EuQlE43OTzjbukbJ+j+Ec3TOReWX25soZidFvcupHAcCM5HbK9ysJqNQbz3jk9di9/zR
+         oaNoRaIT80duGkoTEAIoL+q7cmDxAg+l3Q5TP3fv/n6FqGB19SVvgPMDX9TNLp8S7QXE
+         2Fjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=VqqWXN/VBQE9u/srcABe6VyK0Mjgtvq4ZVC/+0Xm3WA=;
-        b=PFl/NNGuoiMj8z+AsjL4+UDvAq8dk5qOqtu1s9iPfZybgvfcBBlMeBZ3zzFWImdlOq
-         uKDUVp7wO/DXV1N5lsZqaOUGWZrF4zWEzX27JOImBvYznF3UMQmTCNdTwEZbPiQiIyrr
-         Zheap8XId1S5u+3tT4tltSv0MW2zSNIr0z+RT7bs/YTnfjogzcYnggi7y23nlswyuHwI
-         dA2ZDJ61SnsXuRjoLImZDp5fCL3LXutrnb7XPSu4/CgdB5ozc8AXZgCqgUczdx/v2qdw
-         JA+r6ZQLNEOT6mC41ADQRw1ZD49fytUO3FQk5gDrnmWx30+wfYPMO2BuODqfK0U4D7XI
-         DxlA==
-X-Gm-Message-State: ACgBeo1tEyRdwxPEsfvLjOwIwTzw/4P92jaRm1y8DuqtlQ2jokvfvdlV
-	eT7ILGznHK4EbZB0y/9be/hUrIyldMvIrQ==
+        bh=OJ0G2ELecLNdxw/D6lnEexgtylU/Bv9qBWFtJbmkVxw=;
+        b=r/6t2xFAD0Uk02gb4QnvSqmIgLVCp5GBsaW6BEPcpH0/KOqVdbT4iyIOBI6XVVu4zO
+         ZVChKzCFRNpiCHO32JICfP3jT4kzzeZCr6wyUTboeQ7MJcuBFVnbkNBcPXCgyHEI4WiL
+         cU0QuvQ8iSwp62RxvUIAoFPyYdE64IQ98EnCnpGaI8nc7wbUtX4WovuJNiAMrQmx9uua
+         YjVZCA9ou+5LzzW7eXSAYrE0FXC3sGSXCc4KAmSu8XE7t4TEzi6zsPfYHJPJMSCs+sm1
+         myQ6V3Rvxy0lrelk0/qVBFHgEt1EeM0bfogBH7KIpYrFyyEGfyjtaOCwbQgsxp0Zaz0f
+         uf/A==
+X-Gm-Message-State: ACgBeo1Zg+uIPoDmVccSCT5y0+dO9AJFe0PeGQS1nwASM2S0prIJnUVj
+	9nEpAtxH3TZUZiZyzdJS1K+G91Ev4CzzwF+C
 X-Google-Smtp-Source: 
- AA6agR7LSsKQrRru43vji2zuMN5sv+hbwOZ5ONtDlFeH5sTBGU041xm6kXSDVJuw9Ra0XJCQqq2Ylw==
-X-Received: by 2002:a05:600c:4e8d:b0:3a5:f7ed:873 with SMTP id
- f13-20020a05600c4e8d00b003a5f7ed0873mr17179119wmq.170.1662558492527;
-        Wed, 07 Sep 2022 06:48:12 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:eb69:bb70:edb:6315])
+ AA6agR6xFWeGtLM6H9N2t8b1L3PQYh5BZ0KvN7BtCgUPSbWt0GiSKCCcVWdulTSu/6pC1Yp1a5mIiA==
+X-Received: by 2002:a17:902:aa81:b0:173:3f68:e768 with SMTP id
+ d1-20020a170902aa8100b001733f68e768mr32016938plr.80.1663079217023;
+        Tue, 13 Sep 2022 07:26:57 -0700 (PDT)
+Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
+ [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- n19-20020a05600c3b9300b003a846a014c1sm27605155wms.23.2022.09.07.06.48.12
+ f196-20020a6238cd000000b00540de61c967sm7840286pfa.201.2022.09.13.07.26.55
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Sep 2022 06:48:12 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Tue, 13 Sep 2022 07:26:55 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch2: Ensure mirror tarballs don't enforce checksum
-Date: Wed,  7 Sep 2022 14:48:11 +0100
-Message-Id: <20220907134811.565440-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.34.1
+Subject: [bitbake][kirkstone][2.0][PATCH 00/14] Patch review
+Date: Tue, 13 Sep 2022 04:26:30 -1000
+Message-Id: <cover.1663078873.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 07 Sep 2022 13:48:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13960
+ <bitbake-devel@lists.openembedded.org>; Tue, 13 Sep 2022 14:27:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13961
 
-local file fetches now validate checksums. The checksums for mirror
-tarballs of repositories will not match so ignore these checksums.
+Please review this set of patches for 2.0/kirkstone and have comments back
+by end of day Thursday.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/__init__.py | 1 +
- 1 file changed, 1 insertion(+)
+Passed a-full on autobuilder:
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index e6dd79c4aa..893ec6f6bd 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -980,6 +980,7 @@ def build_mirroruris(origud, mirrors, ld):
- 
-                 try:
-                     newud = FetchData(newuri, ld)
-+                    newud.ignore_checksums = True
-                     newud.setup_localpath(ld)
-                 except bb.fetch2.BBFetchException as e:
-                     logger.debug("Mirror fetch failure for url %s (original url: %s)" % (newuri, origud.url))
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/4220
+
+The following changes since commit ce9fe70156e8f909a3a81da017b89ea61bc6fe38:
+
+  utils: Pass lock argument in fileslocked (2022-09-02 11:44:47 +0100)
+
+are available in the Git repository at:
+
+  git://git.openembedded.org/bitbake-contrib stable/2.0-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.0-nut
+
+Gennaro Iorio (1):
+  fetch2: gitsm: fix incorrect handling of git submodule relative urls
+
+Jacob Kroon (1):
+  bitbake-user-manual: Correct description of the ??= operator
+
+Jose Quaresma (3):
+  bitbake: bitbake-user-manual: hashserv can be accessed on a dedicated
+    domain
+  bb/utils: remove: check the path again the expand python glob
+  bb/utils: movefile: use the logger for printing
+
+Michael Opdenacker (3):
+  doc: bitbake-user-manual: add explicit target for crates fetcher
+  doc: bitbake-user-manual: document npm and npmsw fetchers
+  bitbake-user-manual: npm fetcher: improve description of SRC_URI
+    format
+
+Mikko Rapeli (1):
+  event.py: ignore exceptions from stdout and sterr operations in atexit
+
+Ola x Nilsson (1):
+  ConfHandler: Remove lingering close
+
+Richard Purdie (4):
+  runqueue: Fix unihash cache mismatch issues
+  cooker: Drop sre_constants usage
+  ConfHandler/BBHandler: Improve comment error messages and add tests
+  fetch2: Ensure directory exists before creating symlink
+
+ .../bitbake-user-manual-fetching.rst          | 78 ++++++++++++++++++-
+ .../bitbake-user-manual-metadata.rst          | 55 +++++++++----
+ .../bitbake-user-manual-ref-variables.rst     |  2 +-
+ lib/bb/cooker.py                              |  5 +-
+ lib/bb/event.py                               | 10 ++-
+ lib/bb/fetch2/__init__.py                     |  2 +
+ lib/bb/fetch2/gitsm.py                        |  2 +-
+ lib/bb/parse/parse_py/BBHandler.py            |  4 +-
+ lib/bb/parse/parse_py/ConfHandler.py          | 11 ++-
+ lib/bb/runqueue.py                            |  3 +
+ lib/bb/tests/parse.py                         | 23 ++++++
+ lib/bb/utils.py                               | 16 ++--
+ 12 files changed, 172 insertions(+), 39 deletions(-)
+
 -- 
-2.34.1
+2.25.1
 
 
