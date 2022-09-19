@@ -1,94 +1,116 @@
-Return-Path: <quaresma.jose@gmail.com>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BC3ECAAD3
-	for <webhook@archiver.kernel.org>; Mon, 19 Sep 2022 10:18:57 +0000 (UTC)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com
- [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web11.18114.1663582732530774141
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B109DC6FA86
+	for <webhook@archiver.kernel.org>; Mon, 19 Sep 2022 14:58:31 +0000 (UTC)
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net
+ [217.70.183.197])
+ by mx.groups.io with SMTP id smtpd.web08.53.1663599510486944546
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 19 Sep 2022 03:18:52 -0700
+ Mon, 19 Sep 2022 07:58:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=Gqa4MQcv;
- spf=pass (domain: gmail.com, ip: 209.85.221.52,
- mailfrom: quaresma.jose@gmail.com)
-Received: by mail-wr1-f52.google.com with SMTP id r7so5660926wrm.2
-        for <bitbake-devel@lists.openembedded.org>;
- Mon, 19 Sep 2022 03:18:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=t+53ErWQSsTEp8pUOVW+p9Zy2nyysUOjiTpN/gKFeFg=;
-        b=Gqa4MQcv6WG9/ovpUMMbKxEtVru0dCG+2w5aD9jFfzxw235Xvqsue7idSX2GsLxh6s
-         ups5tlGcY6Zg2ZDyV72h+qR6xtuCOAxHjM3s4VNspkeFRnrfmjsUWnT7H4N8pMfkmq3Q
-         i9ayqVFMkjqD+x4xooH9/zM6UHKinu1s70bSRxl7R0YRstjAEo+/JMMlB5cP1ClhbHa7
-         KHSdfuD33IVjfgPi3uHaKR4SiPuMdY9jLZmxNYxwXiDuzq/0S0OWnom7H2qrslJnhHph
-         gLvZtEKQ5eSmRuhH/5JeNRuD5vD2AEBsR/B24rQ9s0w1zGs6h6qqzaKv37E41zmBp31D
-         GgaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=t+53ErWQSsTEp8pUOVW+p9Zy2nyysUOjiTpN/gKFeFg=;
-        b=gLVOs3mRx0qELjGgAauViRo+4mC+nuxvkbA3aDZSHmO7OmnEz7XcPl+fN+PO3oEzMS
-         4r+GzuZ47UAQXMnaj0GpO2hUio0eM/wX1fw2s/e3MNPhTsNS/M1goKmdGj4I2sjWxnfj
-         hB35Ph2w9T5QueV4XsHF3JLaXASxAtWqVRA/Aeicy7lQsyu+icQByvpSenc0NfPGLpv8
-         OW+eBJpuDXR1F/Xd7PfnGgHSWQcvg7w+mlIROjNFr5k28Dvj0nnIJ/9ccAsAiHFbH+qk
-         5dETVyA5mqNPTSmqtYWcdhR4uEn6r3HvEXrBYji5IlMsaeCO3zgu/BJ70pe9L3j4ZWZ6
-         S5qA==
-X-Gm-Message-State: ACrzQf1Et1KlxyoiRKF3PSJsHlwo6fVLRR0poGZ7iitxMe//1jZwqyZw
-	fjuSwgHEB58DskiUBU8PUcTI6D8Tr6dwkQ==
-X-Google-Smtp-Source: 
- AMsMyM7NNIeJ3VF0pbNtQG1WDQHc80lMkwIDmCb0WyPRSnYJjxqTPPxA4pOauVgF5p8nVwHtbhFmsg==
-X-Received: by 2002:adf:dbc3:0:b0:22a:d393:bd84 with SMTP id
- e3-20020adfdbc3000000b0022ad393bd84mr10320434wrj.626.1663582730632;
-        Mon, 19 Sep 2022 03:18:50 -0700 (PDT)
-Received: from og-worker-dev-01.infra.foundries.io.net
- (51-159-19-113.rev.poneytelecom.eu. [51.159.19.113])
-        by smtp.gmail.com with ESMTPSA id
- a5-20020adffb85000000b0022a2f4fa042sm13340378wrr.103.2022.09.19.03.18.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Sep 2022 03:18:49 -0700 (PDT)
-From: Jose Quaresma <quaresma.jose@gmail.com>
-X-Google-Original-From: Jose Quaresma <jose.quaresma@foundries.io>
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=po2mQk3f;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.197,
+ mailfrom: michael.opdenacker@bootlin.com)
+Received: (Authenticated sender: michael.opdenacker@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id 2FE021C0002;
+	Mon, 19 Sep 2022 14:58:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1663599507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y45iuFmajc7JbGljfPRyTpsknHt3+Yl8lug2lubTDh8=;
+	b=po2mQk3fphZ06+EzOQLC26eLCSzqBvsAijs7xjsrld3fSMBEP7AIHsd/0Qmar0ngkxuNBZ
+	RyIsKAeKUOnGxFCdoma30PnD/I34en1E5eMHD5wAe2+YBJHY2wOUQxO17Z/qpO75QNB5R6
+	o3YqIaSTeRSpaE3i94A1TPPlv5gjghfNpsTxLMQquM66ytjd3I7MwA8wQM6GhP/Pta/KH2
+	PvOapLfC4nl1sO6Zq6kyC8tIGAQvF4BqXidr+/JxpNBeaTNfCZVTyKupnspoDoA+ykrgtf
+	2abxAmyumqPJKvbWTkiy7qZZ+TIsZJ6MjcD99cv5X6UUda6lvkDaog8AbccURw==
+From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
-Cc: ricardo@foundries.io,
-	Jose Quaresma <jose.quaresma@foundries.io>
-Subject: [bitbake-devel][PATCH] fetch2/crate fixup c212b0f3 loglevel
-Date: Mon, 19 Sep 2022 10:17:54 +0000
-Message-Id: <20220919101754.901485-1-jose.quaresma@foundries.io>
+Cc: docs@lists.yoctoproject.org,
+	Michael Opdenacker <michael.opdenacker@bootlin.com>,
+	Aryaman Gupta <aryaman.gupta@windriver.com>,
+	Randy Macleod <Randy.Macleod@windriver.com>,
+	Quentin Schulz <foss+yocto@0leil.net>
+Subject: [PATCH RESEND v3] doc: bitbake-user-manual: Add definition for
+ BB_PRESSURE_MAX variables
+Date: Mon, 19 Sep 2022 16:58:12 +0200
+Message-Id: <20220919145812.38756-1-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <17111BB47189E793.5304@lists.yoctoproject.org>
+References: <17111BB47189E793.5304@lists.yoctoproject.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 19 Sep 2022 10:18:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13980
+ <bitbake-devel@lists.openembedded.org>; Mon, 19 Sep 2022 14:58:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13981
 
-c212b0f3 change the debug log level unintentional when tryng to fix a knotty issue.
-This will maintain the same debug log level 2 as before.
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
+From: Aryaman Gupta <aryaman.gupta@windriver.com>
+
+Add the definitions for the BB_PRESSURE_MAX{CPU|IO|MEMORY} variables in the
+bitbake varibales glossary. Further information on how to determine a good
+threshold will be added to the Yocto reference manual in a later commit.
+
+Signed-off-by: Aryaman Gupta <aryaman.gupta@windriver.com>
+Signed-off-by: Randy Macleod <Randy.Macleod@windriver.com>
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Reviewed-by: Quentin Schulz <foss+yocto@0leil.net>
+
 ---
- lib/bb/fetch2/crate.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
-index f4ddc782..f091200d 100644
---- a/lib/bb/fetch2/crate.py
-+++ b/lib/bb/fetch2/crate.py
-@@ -71,7 +71,7 @@ class Crate(Wget):
-         ud.parm['downloadfilename'] = "%s-%s.crate" % (name, version)
-         ud.parm['name'] = name
+Changes in V3 (Michael Opdenacker):
+- Remove reference to Yocto Project manual, not documenting
+  the variables yet.
+- Fix a typo ("it's" -> "its")
+- Simplify syntax (":" followed by "::" replaced by "::"
+---
+ .../bitbake-user-manual-ref-variables.rst     | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 12aef3cb..725e6c2c 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -483,6 +483,31 @@ overview of their function and contents.
+          You must set this variable in the external environment in order
+          for it to work.
  
--        logger.debug("Fetching %s to %s" % (ud.url, ud.parm['downloadfilename']))
-+        logger.debug2("Fetching %s to %s" % (ud.url, ud.parm['downloadfilename']))
- 
-     def unpack(self, ud, rootdir, d):
-         """
++   :term:`BB_PRESSURE_MAX_CPU`
++      The threshold for maximum CPU pressure before BitBake prevents the
++      scheduling of new tasks. Once the :term:`BB_PRESSURE_MAX_CPU` threshold
++      is exceeded, new tasks are not started until the pressure subsides to
++      below the threshold. If :term:`BB_PRESSURE_MAX_CPU` is not set, CPU
++      pressure is not monitored. A threshold can be set in ``conf/local.conf``
++      as::
++
++         BB_PRESSURE_MAX_CPU = "500"
++
++   :term:`BB_PRESSURE_MAX_IO`
++      The threshold for maximum IO pressure experienced before BitBake
++      prevents the scheduling of new tasks. The IO pressure is regulated in the
++      same way as :term:`BB_PRESSURE_MAX_CPU`. At this point in time,
++      experiments show that IO pressure tends to be short-lived and regulating
++      just the CPU can help to reduce it.
++
++   :term:`BB_PRESSURE_MAX_MEMORY`
++      The threshold for maximum memory pressure experienced before BitBake
++      prevents the scheduling of new tasks. The memory pressure is regulated in
++      the same way as :term:`BB_PRESSURE_MAX_CPU`. Note that any memory
++      pressure indicates that a system is being pushed beyond its capacity. At
++      this point in time, experiments show that memory pressure tends to be
++      short-lived and regulating just the CPU can help to reduce it.
++
+    :term:`BB_RUNFMT`
+       Specifies the name of the executable script files (i.e. run files)
+       saved into ``${``\ :term:`T`\ ``}``. By default, the
 -- 
 2.34.1
 
