@@ -1,157 +1,136 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13FDECAAD8
-	for <webhook@archiver.kernel.org>; Fri, 23 Sep 2022 14:42:13 +0000 (UTC)
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web08.8234.1663944123334125404
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A50C6FA8B
+	for <webhook@archiver.kernel.org>; Fri, 23 Sep 2022 14:54:14 +0000 (UTC)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
+ [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web10.8392.1663944849734370031
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 23 Sep 2022 07:42:04 -0700
+ Fri, 23 Sep 2022 07:54:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@axis.com
- header.s=axis-central1 header.b=IwvlPNM/;
- spf=pass (domain: axis.com, ip: 195.60.68.17,
- mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fszuqjoP;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51,
+ mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f51.google.com with SMTP id c11so343006wrp.11
+        for <bitbake-devel@lists.openembedded.org>;
+ Fri, 23 Sep 2022 07:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1663944123;
-  x=1695480123;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=dDN3j71HKh7wL15d48SIPFLZgngipms5kjknH6OE7wU=;
-  b=IwvlPNM/ycW+MBzepm4yGdNrqCR0yFKw6hEIK+zSxE74naUfRq6HrOIl
-   LuANuyTQHKCEnaLrxVymD0MDei4WPuw0vqp/F0bUG/3C4zp3wBqCX/uZL
-   YteCBnXz+raMt42Nmk3XayDXqJVnAnMNT30sDoZ1SZeTaatpeUTTnXbIV
-   X9q74yuDEIDYDoUsSkviWqC4Bp0QRhw36t7IGjzXc+ms8jcomvLTALZu8
-   9PY173Q2ple3m/8pTOZksXqJ2uvIBeNjoktglZRpQL8NAFCvc632WH6PP
-   anL66La6+AynZ/Q9v3VG94ls8qd+9HZoBf6iEr7zpqVTz+klV9ZJT3LBv
-   w==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [PATCH] utils: Enable the loopback interface in
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date;
+        bh=uGLDRIYuamaRE7by4giTVxrg/CZQ+C7z/STUWJignY4=;
+        b=fszuqjoPKZYSkZiHE0hib93fUYDP0TjJ00Awby8mV1xqBcBiPMAKWN9766ZEObrOaK
+         bzQuWsgj/hLFyBTJgjeHgWZ5EWwxrsNjHSbdXuN8/iX0hjLvXXQf1P1cWp+6yvGnKeZE
+         J2uoiL7NpIRfk4cb9qJ2xcAxGw3355gq4ezGk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date;
+        bh=uGLDRIYuamaRE7by4giTVxrg/CZQ+C7z/STUWJignY4=;
+        b=2WEKYY3Wm/cRjGWFPVGHz2c00pHhSmboRACatJEIKoCQ9/AtGyszWZ1VwVritGw8Yy
+         nyWeUmKX3UoRzqihOBpoXzD2An3hm9Hb1duid4GPFt+XvAneJwekUiRmDyp7Nbap0kG5
+         8ZnwkiDr3QlUQcwPuSQ24BMYT3/thEExTmjskOeQ7BaQxVBp5uacONatn4LOIYvME9Et
+         qVKoXRXVkdgIV5+cG3E03z1ug4/FmrefN/J5AKXCBzh97k1uoZxCPvzcF8aiJnYQy4Qd
+         adI2yXN4Wk6EO+UziLKISaORDbM6TSfJ+hVpkSvO+oiZ2ITQjfPdVf7cUBs8feaEE/70
+         Dycw==
+X-Gm-Message-State: ACrzQf12LVJuPIIyzX7JaPDaPzmJS0LlRY9FJFcu5iFASEQVwkj+IN3P
+	b8gng6PRY4EObJSuHd0O63ctVw==
+X-Google-Smtp-Source: 
+ AMsMyM75CPtUp7fdK0XhlB7H94VIjker9BULtEyfeCAASKxoy74k6fdQgHVuNPAZJP8evG15aMAgYw==
+X-Received: by 2002:a5d:5a14:0:b0:22a:25be:7f69 with SMTP id
+ bq20-20020a5d5a14000000b0022a25be7f69mr5442361wrb.662.1663944847974;
+        Fri, 23 Sep 2022 07:54:07 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:7946:c7c6:1ddc:ce8e?
+ ([2001:8b0:aba:5f3c:7946:c7c6:1ddc:ce8e])
+        by smtp.gmail.com with ESMTPSA id
+ bg34-20020a05600c3ca200b003b4ff30e566sm8504626wmb.3.2022.09.23.07.54.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Sep 2022 07:54:07 -0700 (PDT)
+Message-ID: 
+ <c88684a7e0becc8137066edfce1c13f493fcdd33.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] utils: Enable the loopback interface in
  disable_network()
-Thread-Topic: [bitbake-devel] [PATCH] utils: Enable the loopback interface in
- disable_network()
-Thread-Index: AQHYz061DhseqygumU+A9Hhzn9QeYa3tCTAw
-Date: Fri, 23 Sep 2022 14:42:00 +0000
-Message-ID: <ce3bdf3377094bd6aa9afea17735ec48@axis.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
+	"bitbake-devel@lists.openembedded.org"
+	 <bitbake-devel@lists.openembedded.org>
+Date: Fri, 23 Sep 2022 15:54:06 +0100
+In-Reply-To: <ce3bdf3377094bd6aa9afea17735ec48@axis.com>
 References: <20220923101613.1096056-1-pkj@axis.com>
- <e66ec2ca23ac7ce7e5be44aaacaeb2f6d1ab779b.camel@linuxfoundation.org>
-In-Reply-To: 
- <e66ec2ca23ac7ce7e5be44aaacaeb2f6d1ab779b.camel@linuxfoundation.org>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	 <e66ec2ca23ac7ce7e5be44aaacaeb2f6d1ab779b.camel@linuxfoundation.org>
+	 <ce3bdf3377094bd6aa9afea17735ec48@axis.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1-0ubuntu1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 23 Sep 2022 14:42:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13991
+ <bitbake-devel@lists.openembedded.org>; Fri, 23 Sep 2022 14:54:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13992
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmlj
-aGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gU2VudDogZGVuIDIzIHNlcHRlbWJl
-ciAyMDIyIDE1OjE3DQo+IFRvOiBQZXRlciBLamVsbGVyc3RlZHQgPHBldGVyLmtqZWxsZXJzdGVk
-dEBheGlzLmNvbT47IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiBTdWJq
-ZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFtQQVRDSF0gdXRpbHM6IEVuYWJsZSB0aGUgbG9vcGJh
-Y2sgaW50ZXJmYWNlIGluIGRpc2FibGVfbmV0d29yaygpDQo+IA0KPiBPbiBGcmksIDIwMjItMDkt
-MjMgYXQgMTI6MTYgKzAyMDAsIFBldGVyIEtqZWxsZXJzdGVkdCB3cm90ZToNCj4gPiBGcm9tOiBN
-YXR0aWFzIEplcm5iZXJnIDxtYXR0aWFzakBheGlzLmNvbT4NCj4gPg0KPiA+IFRoaXMgYWxsb3dz
-LCBlLmcuLCBnUlBDIHdpdGhpbiB0aGUgaG9zdCB0byBiZSB1c2VkIGV2ZW4gd2hlbg0KPiA+IG5l
-dHdvcmtpbmcgaXMgZGlzYWJsZWQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aWFzIEpl
-cm5iZXJnIDxtYXR0aWFzLmplcm5iZXJnQGF4aXMuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBl
-dGVyIEtqZWxsZXJzdGVkdCA8cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPg0KPiA+IC0tLQ0K
-PiA+DQo+ID4gSW4gb3VyIGNhc2UsIHdlIGhhdmUgYSB3cmFwcGVyIGZvciBtYWtlIChiZWFyIGZy
-b20NCj4gPiBodHRwczovL2dpdGh1Yi5jb20vcml6c290dG8vQmVhcikgdGhhdCBpcyBhdXRvbWF0
-aWNhbGx5IGVuYWJsZWQgd2hlbg0KPiA+IGV4dGVybmFsc3JjIGlzIHVzZWQuIFRoaXMgY3JlYXRl
-cyBhIGNvbXBpbGVfY29tbWFuZHMuanNvbiBmaWxlLCB3aGljaCwNCj4gPiBlLmcuLCBWUyBDb2Rl
-IGNhbiBtYWtlIHVzZSBvZi4gVGhlIHByb2JsZW0gaGVyZSBpcyB0aGF0IGJlYXIgdXNlcyBnUlBD
-DQo+ID4gdG8gY29tbXVuaWNhdGUgd2l0aCBpdHNlbGYgYW5kIHRoaXMgZG9lcyBub3Qgd29yayB3
-aGVuIGFsbCBuZXR3b3JrDQo+ID4gY29tbXVuaWNhdGlvbnMgYXJlIGRpc2FibGVkLiBFbmFibGlu
-ZyB0aGUgbG9vcGJhY2sgaW50ZXJmYWNlIHJlc29sdmVzDQo+ID4gdGhpcyBwcm9ibGVtLg0KPiA+
-DQo+ID4gIGJpdGJha2UvbGliL2JiL3V0aWxzLnB5IHwgNDEgKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQxIGluc2VydGlvbnMo
-KykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9iaXRiYWtlL2xpYi9iYi91dGlscy5weSBiL2JpdGJh
-a2UvbGliL2JiL3V0aWxzLnB5DQo+ID4gaW5kZXggOTJkNDRjNTI2MC4uMmQzN2M1MGJhYyAxMDA2
-NDQNCj4gPiAtLS0gYS9iaXRiYWtlL2xpYi9iYi91dGlscy5weQ0KPiA+ICsrKyBiL2JpdGJha2Uv
-bGliL2JiL3V0aWxzLnB5DQo+ID4gQEAgLTI5LDYgKzI5LDggQEAgaW1wb3J0IGNvbGxlY3Rpb25z
-DQo+ID4gIGltcG9ydCBjb3B5DQo+ID4gIGltcG9ydCBjdHlwZXMNCj4gPiAgaW1wb3J0IHJhbmRv
-bQ0KPiA+ICtpbXBvcnQgc29ja2V0DQo+ID4gK2ltcG9ydCBzdHJ1Y3QNCj4gPiAgaW1wb3J0IHRl
-bXBmaWxlDQo+ID4gIGZyb20gc3VicHJvY2VzcyBpbXBvcnQgZ2V0c3RhdHVzb3V0cHV0DQo+ID4g
-IGZyb20gY29udGV4dGxpYiBpbXBvcnQgY29udGV4dG1hbmFnZXINCj4gPiBAQCAtMTYwMyw2ICsx
-NjA1LDQxIEBAIGRlZiBzZXRfcHJvY2Vzc19uYW1lKG5hbWUpOg0KPiA+ICAgICAgZXhjZXB0Og0K
-PiA+ICAgICAgICAgIHBhc3MNCj4gPg0KPiA+ICtkZWYgbG9vcGJhY2tfdXAoKToNCj4gPiArICAg
-ICMgRnJvbSBiaXRzL2lvY3Rscy5oDQo+ID4gKyAgICBTSU9DR0lGRkxBR1MgPSAweDg5MTMNCj4g
-PiArICAgIFNJT0NTSUZGTEFHUyA9IDB4ODkxNA0KPiA+ICsgICAgU0lPQ1NJRkFERFIgPSAweDg5
-MTYNCj4gPiArICAgIFNJT0NTSUZORVRNQVNLID0gMHg4OTFDDQo+ID4gKw0KPiA+ICsgICAgIyBp
-Zi5oDQo+ID4gKyAgICBJRkZfVVAgPSAweDENCj4gPiArICAgIElGRl9SVU5OSU5HID0gMHg0MA0K
-PiA+ICsNCj4gPiArICAgICMgYml0cy9zb2NrZXQuaA0KPiA+ICsgICAgQUZfSU5FVCA9IDINCj4g
-PiArDQo+ID4gKyAgICAjIGNoYXIgaWZyX25hbWVbSUZOQU1TSVo9MTZdDQo+ID4gKyAgICBpZnJf
-bmFtZSA9IHN0cnVjdC5wYWNrKCJAMTZzIiwgYiJsbyIpDQo+ID4gKyAgICBkZWYgbmV0ZGV2X3Jl
-cShmZCwgcmVxLCBkYXRhID0gYiIiKToNCj4gPiArICAgICAgICAjIFBhZCBhbmQgYWRkIGludGVy
-ZmFjZSBuYW1lDQo+ID4gKyAgICAgICAgZGF0YSA9IGlmcl9uYW1lICsgZGF0YSArIChiJ1x4MDAn
-ICogKDE2IC0gbGVuKGRhdGEpKSkNCj4gPiArICAgICAgICAjIFJldHVybiBhbGwgZGF0YSBhZnRl
-ciBpbnRlcmZhY2UgbmFtZQ0KPiA+ICsgICAgICAgIHJldHVybiBmY250bC5pb2N0bChmZCwgcmVx
-LCBkYXRhKVsxNjpdDQo+ID4gKw0KPiA+ICsgICAgd2l0aCBzb2NrZXQuc29ja2V0KHNvY2tldC5B
-Rl9JTkVULCBzb2NrZXQuU09DS19ER1JBTSwgc29ja2V0LklQUFJPVE9fSVApIGFzIHNvY2s6DQo+
-ID4gKyAgICAgICAgZmQgPSBzb2NrLmZpbGVubygpDQo+IA0KPiA+ICsgICAgICAgICMgc3RydWN0
-IHNvY2thZGRyX2luIGlmcl9hZGRyIHsgdW5zaWduZWQgc2hvcnQgZmFtaWx5OyB1aW50MTZfdCBz
-aW5fcG9ydCA7IHVpbnQzMl90IGluX2FkZHI7IH0NCj4gPiArICAgICAgICByZXEgPSBzdHJ1Y3Qu
-cGFjaygiQEgiLCBBRl9JTkVUKSArIHN0cnVjdC5wYWNrKCI9SDRCIiwgMCwgMTI3LCAwLCAwLCAx
-KQ0KPiA+ICsgICAgICAgIG5ldGRldl9yZXEoZmQsIFNJT0NTSUZBRERSLCByZXEpDQo+IA0KPiA+
-ICsgICAgICAgICMgc2hvcnQgaWZyX2ZsYWdzDQo+ID4gKyAgICAgICAgZmxhZ3MgPSBzdHJ1Y3Qu
-dW5wYWNrX2Zyb20oJ0BoJywgbmV0ZGV2X3JlcShmZCwgU0lPQ0dJRkZMQUdTKSlbMF0NCj4gPiAr
-ICAgICAgICBmbGFncyB8PSBJRkZfVVAgfCBJRkZfUlVOTklORw0KPiA+ICsgICAgICAgIG5ldGRl
-dl9yZXEoZmQsIFNJT0NTSUZGTEFHUywgc3RydWN0LnBhY2soJ0BoJywgZmxhZ3MpKQ0KPiANCj4g
-DQo+ID4gKyAgICAgICAgIyBzdHJ1Y3Qgc29ja2FkZHJfaW4gaWZyX25ldG1hc2sNCj4gPiArICAg
-ICAgICByZXEgPSBzdHJ1Y3QucGFjaygiQEgiLCBBRl9JTkVUKSArIHN0cnVjdC5wYWNrKCI9SDRC
-IiwgMCwgMjU1LCAwLCAwLCAwKQ0KPiA+ICsgICAgICAgIG5ldGRldl9yZXEoZmQsIFNJT0NTSUZO
-RVRNQVNLLCByZXEpDQo+ID4gKw0KPiANCj4gSSBmb3VuZCB0aGF0IHF1aXRlIGhhcmQgdG8gcmVh
-ZC91bmRlcnN0YW5kLCBpdCB3b3VsZCBwcm9iYWJseSBoZWxwIHRvDQo+IHB1dCBzb21lIHdoaXRl
-c3BhY2UgYmV0d2VlbiB0aGUgbmV0ZGV2IHJlcXVlc3RzLiBVc2luZyB0aG9zZSBraW5kcyBvZg0K
-PiBzdHJ1Y3RzIGlzIHByZXR0eSBob3JyaWJsZSBidXQgSSBndWVzcyB0aGVyZSBpc24ndCBtdWNo
-IGVsc2Ugd2UgY2FuIGRvDQo+IGFib3V0IGl0LiBIYXZpbmcgdGhlIGNvZGUgaW4gYml0YmFrZSBh
-bmQgaGVuY2UgbWFkZSBhdmFpbGFibGUgdmlhIGENCj4gZnVuY3Rpb24gaXMgcHJvYmFibHkgYmV0
-dGVyIHRoYW4gdGhlIGFsdGVybmF0aXZlcy4NCg0KT2suDQoNCj4gPiAgZGVmIGRpc2FibGVfbmV0
-d29yayh1aWQ9Tm9uZSwgZ2lkPU5vbmUpOg0KPiA+ICAgICAgIiIiDQo+ID4gICAgICBEaXNhYmxl
-IG5ldHdvcmtpbmcgaW4gdGhlIGN1cnJlbnQgcHJvY2VzcyBpZiB0aGUga2VybmVsIHN1cHBvcnRz
-IGl0LCBlbHNlDQo+ID4gQEAgLTE2MjYsNiArMTY2MywxMCBAQCBkZWYgZGlzYWJsZV9uZXR3b3Jr
-KHVpZD1Ob25lLCBnaWQ9Tm9uZSk6DQo+ID4gICAgICBpZiByZXQgIT0gMDoNCj4gPiAgICAgICAg
-ICBsb2dnZXIuZGVidWcoIlN5c3RlbSBkb2Vzbid0IHN1cG9ydCBkaXNhYmxpbmcgbmV0d29yayB3
-aXRob3V0IGFkbWluIHByaXZzIikNCj4gPiAgICAgICAgICByZXR1cm4NCj4gPiArDQo+ID4gKyAg
-ICAjIEVuYWJsZSB0aGUgbG9vcGJhY2sgaW50ZXJmYWNlDQo+ID4gKyAgICBsb29wYmFja191cCgp
-DQo+ID4gKw0KPiA+ICAgICAgd2l0aCBvcGVuKCIvcHJvYy9zZWxmL3VpZF9tYXAiLCAidyIpIGFz
-IGY6DQo+ID4gICAgICAgICAgZi53cml0ZSgiJXMgJXMgMSIgJSAodWlkLCB1aWQpKQ0KPiA+ICAg
-ICAgd2l0aCBvcGVuKCIvcHJvYy9zZWxmL3NldGdyb3VwcyIsICJ3IikgYXMgZjoNCj4gDQo+IEkg
-dGhpbmsgSSdkIHByb2JhYmx5IHByZWZlciBqdXN0IHRvIGxlYXZlIG5ldHdvcmtpbmcgZGlzYWJs
-ZWQgYW5kIHRoZW4NCj4gYWxsb3cgcGxhY2VzIHdoZXJlIGl0IGlzIHNwZWNpZmljYWxseSBuZWVk
-ZWQgdG8gYWRkIGxvb3BiYWNrIGJhY2suIFlvdQ0KPiBjb3VsZCBwcm9iYWJseSBkbyB0aGF0IGlu
-IGV4dGVybmFsc3JjIHdoZXJlIHlvdSBhZGQgdGhlIGJlYXINCj4gZGVwZW5kZW5jeT8NCg0KT2su
-IEkgaG9wZSBpdCBpcyB0aGVuIG9rIHRoYXQgSSBhZGQgYSBuZXcgdGFzayB2YXJmbGFnICJuZXR3
-b3JrLWxvb3BiYWNrIiANCihvciBtYXliZSBldmVuIGp1c3QgImxvb3BiYWNrIj8pIEUuZy46DQoN
-CmRpZmYgLS1naXQgYS9iaXRiYWtlL2Jpbi9iaXRiYWtlLXdvcmtlciBiL2JpdGJha2UvYmluL2Jp
-dGJha2Utd29ya2VyDQppbmRleCA3YmUzOTM3MGIzLi40MTE1NjA0ZDk5IDEwMDc1NQ0KLS0tIGEv
-Yml0YmFrZS9iaW4vYml0YmFrZS13b3JrZXINCisrKyBiL2JpdGJha2UvYmluL2JpdGJha2Utd29y
-a2VyDQpAQCAtMjY3LDYgKzI2Nyw4IEBAIGRlZiBmb3JrX29mZl90YXNrKGNmZywgZGF0YSwgZGF0
-YWJ1aWxkZXIsIHdvcmtlcmRhdGEsIGZuLCB0YXNrLCB0YXNrbmFtZSwgdGFza2hhDQogICAgICAg
-ICAgICAgICAgICAgICBpZiBiYi51dGlscy5pc19sb2NhbF91aWQodWlkKToNCiAgICAgICAgICAg
-ICAgICAgICAgICAgICBsb2dnZXIuZGVidWcoIkF0dGVtcHRpbmcgdG8gZGlzYWJsZSBuZXR3b3Jr
-IGZvciAlcyIgJSB0YXNrbmFtZSkNCiAgICAgICAgICAgICAgICAgICAgICAgICBiYi51dGlscy5k
-aXNhYmxlX25ldHdvcmsodWlkLCBnaWQpDQorICAgICAgICAgICAgICAgICAgICAgICAgaWYgdGhl
-X2RhdGEuZ2V0VmFyRmxhZyh0YXNrbmFtZSwgJ25ldHdvcmstbG9vcGJhY2snLCBGYWxzZSk6DQor
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJiLnV0aWxzLmxvb3BiYWNrX3VwKCkNCiAgICAg
-ICAgICAgICAgICAgICAgIGVsc2U6DQogICAgICAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmRl
-YnVnKCJTa2lwcGluZyBkaXNhYmxlIG5ldHdvcmsgZm9yICVzIHNpbmNlICVzIGlzIG5vdCBhIGxv
-Y2FsIHVpZC4iICUgKHRhc2tuYW1lLCB1aWQpKQ0KDQpXaXRoIHRoYXQgaW4gcGxhY2UsIEkgc2Vl
-IG5vIGRyYXdiYWNrcyBjb21wYXJlZCB0byBhbHdheXMgDQplbmFibGluZyB0aGUgbG9vcGJhY2sg
-aW50ZXJmYWNlIGluIGRpc2FibGVfbmV0d29yaygpIHNpbmNlIA0Kc2V0dGluZywgZS5nLiwgZG9f
-Y29tcGlsZVtuZXR3b3JrLWxvb3BiYWNrXSA9ICIxIiB3aWxsIG1ha2UgDQpzdXJlIGl0IGlzIG9u
-bHkgZW5hYmxlZCB3aGVuIGFjdHVhbGx5IG5lZWRlZCwgY29tcGFyZWQgdG8sIA0KZS5nLiwgZG9p
-bmcgaXQgaW4gYW4gYW5vbnltb3VzIFB5dGhvbiBmdW5jdGlvbi4gDQoNCj4gDQo+IENoZWVycywN
-Cj4gDQo+IFJpY2hhcmQNCg0KLy9QZXRlcg0KDQo=
+On Fri, 2022-09-23 at 14:42 +0000, Peter Kjellerstedt wrote:
+>=20
+>=20
+> Ok. I hope it is then ok that I add a new task varflag "network-
+> loopback"=20
+> (or maybe even just "loopback"?) E.g.:
+>=20
+> diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
+> index 7be39370b3..4115604d99 100755
+> --- a/bitbake/bin/bitbake-worker
+> +++ b/bitbake/bin/bitbake-worker
+> @@ -267,6 +267,8 @@ def fork_off_task(cfg, data, databuilder,
+> workerdata, fn, task, taskname, taskha
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if bb.utils.is_local_=
+uid(uid):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0logger.debug("Attempting to disable network
+> for %s" % taskname)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0bb.utils.disable_network(uid, gid)
+> +                        if the_data.getVarFlag(taskname, 'network-
+> loopback', False):
+> +                            bb.utils.loopback_up()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0else:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0logger.debug("Skipping disable network for
+> %s since %s is not a local uid." % (taskname, uid))
+>=20
+> With that in place, I see no drawbacks compared to always=20
+> enabling the loopback interface in disable_network() since=20
+> setting, e.g., do_compile[network-loopback] =3D "1" will make=20
+> sure it is only enabled when actually needed, compared to,=20
+> e.g., doing it in an anonymous Python function.=20
+
+Setting it in a prefunc doesn't look that bad once you have a function
+for it?
+
+python enable_loopback () {
+    bb.utils.loopback_up()
+}
+
+do_compile[prefuncs] +=3D "enable_loopback"
+
+
+On the subject of naming, it may be clearer as something like:
+
+bb.utils.enable_loopback_networking()
+
+as we need to think about how this looks without context we have in
+these patches.
+
+Cheers,
+
+Richard
+
+
 
