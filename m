@@ -1,74 +1,78 @@
-Return-Path: <rg@braneaudio.com>
+Return-Path: <pascal.bach@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A4DC07E9D
-	for <webhook@archiver.kernel.org>; Fri, 23 Sep 2022 23:34:19 +0000 (UTC)
-Subject: Git lfs support does not work if destsuffix is set. #bitbake
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC67C6FA82
+	for <webhook@archiver.kernel.org>; Wed, 28 Sep 2022 20:26:11 +0000 (UTC)
+Received: from mta-64-226.siemens.flowmailer.net
+ (mta-64-226.siemens.flowmailer.net [185.136.64.226])
+ by mx.groups.io with SMTP id smtpd.web12.2647.1664396762262968239
+ for <bitbake-devel@lists.openembedded.org>;
+ Wed, 28 Sep 2022 13:26:03 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=pascal.bach@siemens.com header.s=fm1 header.b=aUyymb7q;
+ spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.64.226,
+ mailfrom: fm-402798-20220928202558dfa95998f850b705bc-_tnjeo@rts-flowmailer.siemens.com)
+Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id
+ 20220928202558dfa95998f850b705bc
+        for <bitbake-devel@lists.openembedded.org>;
+        Wed, 28 Sep 2022 22:25:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=pascal.bach@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=ZOCJOLU0hNfXpHn4HV358trJqkJw2kKMpejSzeZOHnU=;
+ b=aUyymb7qoRIvMucNef94bzyOPm/S91eek5w9neE1xLR+fcqTp5g5idRPe6WMJHrrQ+6OVI
+ eP58+y0hWbxvwBo7lafgvGvvAhYS/1z2o9aX+3/C8M7gPH0hEdBBhtl/Cr81FBkW+mgW6tUO
+ +BVarfS4Xggk3/S2bl+Fz7OM4l0dM=;
+From: pascal.bach@siemens.com
 To: bitbake-devel@lists.openembedded.org
-From: "Richard Greer" <rg@braneaudio.com>
-X-Originating-Location: Austin, Texas, US (70.113.41.81)
-X-Originating-Platform: Linux Chrome 105
-User-Agent: GROUPS.IO Web Poster
+Cc: Pascal Bach <pascal.bach@siemens.com>
+Subject: [PATCH] fetch2/ssh.py: fix checkstatus
+Date: Wed, 28 Sep 2022 22:25:54 +0200
+Message-Id: <20220928202554.1596966-1-pascal.bach@siemens.com>
 MIME-Version: 1.0
-Date: Fri, 23 Sep 2022 16:34:18 -0700
-Message-ID: <qdE8.1663976058379726644.HOzG@lists.openembedded.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-402798:519-21489:flowmailer
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 23 Sep 2022 23:34:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13994
+ <bitbake-devel@lists.openembedded.org>; Wed, 28 Sep 2022 20:26:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13995
 
-First off, this is my first ever post to the list.  So, if I am doing somet=
-hing incorrectly please let me know.  I also have very limited knowledge in=
-to the inner workings of bitbake.
+From: Pascal Bach <pascal.bach@siemens.com>
 
-This was done on the kirkstone release, but I do not think the relevant fil=
-e has been changed since then for git LFS support.
+The output of runfetchcmd is always empty in this case, as
+the test doesn't produce any output.
+SSH either returns 0 or 1, which is handled via exceptions.
 
-I have a private git repository that requires LFS support.  I setup the SRC=
-_URI as:
-   SRC_URI =3D "git://git@github.com/BraneAudio/Image.git;branch=3Dmain;pro=
-tocol=3Dssh;lfs=3D1;destsuffix=3Dbrane-files"
+This means the current check is not only unnecessary but prevents the
+function from working.
 
-The relevant file is bitbake/lib/bb/fetch2/git.py.
+We can just assume that if we reach the end of the function that the
+file exists and return True.
 
-When it gets to the do_unpack task, it fails since it cannot find the large=
- files.  This is because Git.download()
-calls Git.unpack to put items into a tmpdir.  When it goes to check for and=
- LFS into the repo, it assumes that
-the unpack put the repo into a "git" folder which is not the case if destsu=
-ffix is set.
+Signed-off-by: Pascal Bach <pascal.bach@siemens.com>
+---
+ lib/bb/fetch2/ssh.py | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-I believe that ud.destdir would have the correct path if it were used inste=
-ad.
+diff --git a/lib/bb/fetch2/ssh.py b/lib/bb/fetch2/ssh.py
+index 8d082b38..0cbb2a6f 100644
+--- a/lib/bb/fetch2/ssh.py
++++ b/lib/bb/fetch2/ssh.py
+@@ -150,8 +150,6 @@ class SSH(FetchMethod):
+         )
+ 
+         check_network_access(d, cmd, urldata.url)
++        runfetchcmd(cmd, d)
+ 
+-        if runfetchcmd(cmd, d):
+-            return True
+-
+-        return False
++        return True
+-- 
+2.37.3
 
-It would mean changing the following lines (line numbers 424-425 in kirksto=
-ne):
-                if os.path.exists(os.path.join(tmpdir, "git", ".git", "lfs"=
-)):
-                    runfetchcmd("tar -cf - lfs | tar -xf - -C %s" % ud.clon=
-edir, d, workdir=3D"%s/git/.git" % tmpdir)
-to:
-                if os.path.exists(os.path.join(ud.destdir, ".git", "lfs")):
-                    runfetchcmd("tar -cf - lfs | tar -xf - -C %s" % ud.clon=
-edir, d, workdir=3D"%s/.git" % ud.destdir)
-
-I do not know enough about bitbake and all of the fetching code to know if =
-it works for all cases.  It does work for my case though.
-
-It should be noted that if subdir is set to an absolute path, the Git.unpac=
-k() to the tmpdir will fail since there is no way for that absolute path to=
- exist in the tmpdir.  That does not affect me, and I would assume that to =
-fix that for LFS support would be a lot more involved.  If I were to make a=
- patch, I would include a comment about that though.
-
-Does anyone know if my fix can be applied in the general case, or if there =
-are some potential problems with it?
-
-Thanks for reading my first post.
-
-Richard Greer
 
