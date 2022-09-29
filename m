@@ -2,34 +2,34 @@ Return-Path: <pascal.bach@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC67C6FA82
-	for <webhook@archiver.kernel.org>; Wed, 28 Sep 2022 20:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26916C433F5
+	for <webhook@archiver.kernel.org>; Thu, 29 Sep 2022 09:20:55 +0000 (UTC)
 Received: from mta-64-226.siemens.flowmailer.net
  (mta-64-226.siemens.flowmailer.net [185.136.64.226])
- by mx.groups.io with SMTP id smtpd.web12.2647.1664396762262968239
+ by mx.groups.io with SMTP id smtpd.web09.8355.1664443246370011999
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 28 Sep 2022 13:26:03 -0700
+ Thu, 29 Sep 2022 02:20:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=pascal.bach@siemens.com header.s=fm1 header.b=aUyymb7q;
+ dkim=pass header.i=pascal.bach@siemens.com header.s=fm1 header.b=nTF/DsRO;
  spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.64.226,
- mailfrom: fm-402798-20220928202558dfa95998f850b705bc-_tnjeo@rts-flowmailer.siemens.com)
+ mailfrom: fm-402798-2022092909204361aaf924c3ec9875c0-_21shh@rts-flowmailer.siemens.com)
 Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id
- 20220928202558dfa95998f850b705bc
+ 2022092909204361aaf924c3ec9875c0
         for <bitbake-devel@lists.openembedded.org>;
-        Wed, 28 Sep 2022 22:25:59 +0200
+        Thu, 29 Sep 2022 11:20:43 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
  d=siemens.com; i=pascal.bach@siemens.com;
  h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
  bh=ZOCJOLU0hNfXpHn4HV358trJqkJw2kKMpejSzeZOHnU=;
- b=aUyymb7qoRIvMucNef94bzyOPm/S91eek5w9neE1xLR+fcqTp5g5idRPe6WMJHrrQ+6OVI
- eP58+y0hWbxvwBo7lafgvGvvAhYS/1z2o9aX+3/C8M7gPH0hEdBBhtl/Cr81FBkW+mgW6tUO
- +BVarfS4Xggk3/S2bl+Fz7OM4l0dM=;
+ b=nTF/DsROAIOyEF6TUUjxm9KQQZm0438LQK47in/n5GMs9o9yve73phoRsMMTEfy7oAdgqz
+ vkk8JdVlAaqM97wD9hMAZvcqKFxXRMgsEg0xxKR2u8JTapIr5U+vHdjZdBnjF+Eqgl7jG3NS
+ nZUhvoGE2qte+JW06RqKG1aQrckXg=;
 From: pascal.bach@siemens.com
 To: bitbake-devel@lists.openembedded.org
 Cc: Pascal Bach <pascal.bach@siemens.com>
 Subject: [PATCH] fetch2/ssh.py: fix checkstatus
-Date: Wed, 28 Sep 2022 22:25:54 +0200
-Message-Id: <20220928202554.1596966-1-pascal.bach@siemens.com>
+Date: Thu, 29 Sep 2022 11:20:39 +0200
+Message-Id: <20220929092039.1873677-1-pascal.bach@siemens.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Flowmailer-Platform: Siemens
@@ -37,8 +37,8 @@ Feedback-ID: 519:519-402798:519-21489:flowmailer
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 28 Sep 2022 20:26:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13995
+ <bitbake-devel@lists.openembedded.org>; Thu, 29 Sep 2022 09:20:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/13996
 
 From: Pascal Bach <pascal.bach@siemens.com>
 
