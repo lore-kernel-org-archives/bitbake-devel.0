@@ -2,49 +2,49 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD09C433F5
-	for <webhook@archiver.kernel.org>; Fri, 30 Sep 2022 20:36:47 +0000 (UTC)
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com
- [209.85.166.53])
- by mx.groups.io with SMTP id smtpd.web12.79.1664570202740755145
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1030C433FE
+	for <webhook@archiver.kernel.org>; Fri, 30 Sep 2022 20:42:07 +0000 (UTC)
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com
+ [209.85.166.172])
+ by mx.groups.io with SMTP id smtpd.web08.156.1664570525523229738
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Sep 2022 13:36:42 -0700
+ Fri, 30 Sep 2022 13:42:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=XbemgRMa;
- spf=pass (domain: gmail.com, ip: 209.85.166.53,
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=hcSs9AgV;
+ spf=pass (domain: gmail.com, ip: 209.85.166.172,
  mailfrom: alex.kanavin@gmail.com)
-Received: by mail-io1-f53.google.com with SMTP id h194so4178335iof.4
+Received: by mail-il1-f172.google.com with SMTP id g13so25246ile.0
         for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Sep 2022 13:36:42 -0700 (PDT)
+ Fri, 30 Sep 2022 13:42:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=GFqxgYW371bP9iUL6vn1pwlnJ5WCeR0t1/XAERdBY9w=;
-        b=XbemgRMa3qNqFWbqIR9xeN/JQmnSiQdL9MnRixyWnxk1vvDZoI5W5/S76BUo2WsYDs
-         5mi5ZL6J/81OsR1KffSVJj7iDyPzHzfbjyU8B8FoYGf3WKDwtHjuRYg4d7Te4+1e/7yq
-         3iR/6pa9+Z4TPES6KfncoZ16vU709SSALrOWAkjNStGC1yYIL4MK4xvEdojFV7BHspz4
-         Hy+JBnP17Pi4YCHNv8HbqVR4v+rKQp+j7QHKhYDA+JiVicY+LVELCXxKNdrLQ3yb6RWE
-         zXqmP3bzi253rM4gHqFiYFJlzWaVETMC1RZgWhys3NE5z/sz6X4qqudL2Hg74otfw/N/
-         Md9Q==
+        bh=RJmbV5B6B+2+r0xN9is5Eo02XVLt5IU0IuHct+lhpxs=;
+        b=hcSs9AgVpvFyaNTJ0Yk1Ms8+VqC4OlaoFZvwJgt+draMIc+nw6cJJ9wQvCrqIaM5yz
+         2KN1i9YRLPhBx+AYJyjdn2ZpQX0kPVnHawyXIiN8ace+/OVUv7JpZlWn+yyJXeOLxLEz
+         ogRHC7VccFXYgXcYoV7QxTxmuDoLKeuthXrOX3K4DIM1LzILcvrMO2UZad5lGPzC92m3
+         nbm+OMAtY6uCljm00rel6UCgfL9bAXrUlNonMOR11wwl4/T6hC6CTZVN7ngoymxvi3EE
+         S9FKQJBmZxvq/JjyaPpTsGX/LUR1XjRNxvAlgMEyglDfgLFT9RB8jxS163fQztBceiXQ
+         VWoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=GFqxgYW371bP9iUL6vn1pwlnJ5WCeR0t1/XAERdBY9w=;
-        b=w6Gej4iP8NwQTEnm6XoPW9iS4llhFxCYPnQZCPgd7tCy7No1E6gLnFb1kVtRU18fen
-         XrjBSRr2Z58gi/N5kAk7SoMnd5B63qFP9IeM/wApe8zQRrbUhPvK3N1T1L40pdwL2LvD
-         01Jgm9Vln8EOSRwIicD6L8KrZRQtwPCJWTg5NbKoHhm7cHmGpjl0sav1P4jHw39GGbiF
-         oYZPTAI25BS0PZ+bWeFaLlAHVvsN7GKRY629e85nXXOycNFLQLj/9d5QHPWYjxJhGMYE
-         NUBFiPLMw3qi+OMmVXPMsn72qN13LH8cO8GAQk4adqs9rpD1y9V7xHgvcTMP+boBIUcc
-         HjTg==
-X-Gm-Message-State: ACrzQf0Os4RAzL+EYdvwMi9fHY5F+tVNdW/RjZDHdEmrTGeQA/+uBJHi
-	fFYmmDEUKwGFZ+xO1Q8lRdYixMO9zSzkLg4pWkU=
+        bh=RJmbV5B6B+2+r0xN9is5Eo02XVLt5IU0IuHct+lhpxs=;
+        b=1GZLeAnoZcgZlEbQcLMihcQavJ3jb1kWF2o34ib5BlqWTRCjuFbtr3bP4NMZPMrHtt
+         brGM53S5wz5A1w1o4elW5XOI5aE6GIOz2mCXbgeY1c7xSD7M6TKjeg6aFOMXVcKimYNw
+         wkTUxrd2WrK+JgCvcJveXlndoJRIAWGQ3J9dTyLPtZFF/QEWhVDl+lpxH0Jfi5wJexaC
+         b8I0ux7YNM/SFkdIb1Ht6P+nbsah5AJ2vhQyEKo+54NEMMUvP06/n6tRBgybaw68H4Ch
+         cnPTeGNiphRDZGeR2Hxi7nGsY7iHMDeYEjsdPM3Q0+IegYPM/k9JmgkYiIYBqDbRmxXn
+         s1pQ==
+X-Gm-Message-State: ACrzQf1Lhu5EbUwn9DZhU4xM17mVhv1C5GH9H3VM+uKIQcnCu6MceZ6B
+	ZoCja98brTGgb6DQs66qt9V9czwdnmPmsKIOWJU=
 X-Google-Smtp-Source: 
- AMsMyM4UM0b37BF28Khi5IwBjaRPRBZbW5y8KTHd+Lclu1SdY/+BenwogYdRogU3GvzPnd+o6ow1YSslJkQRWyRHkoc=
-X-Received: by 2002:a05:6602:14c1:b0:689:34d0:a0ef with SMTP id
- b1-20020a05660214c100b0068934d0a0efmr4632726iow.69.1664570201727; Fri, 30 Sep
- 2022 13:36:41 -0700 (PDT)
+ AMsMyM7akmL94Vg6S90B3sN6iiruHsW5Ejgom5ACna1yyEaSM0D51E76Dtokj2mhNShayLT7F0JaUj7F308TTHw6foY=
+X-Received: by 2002:a92:cb91:0:b0:2f6:240a:9887 with SMTP id
+ z17-20020a92cb91000000b002f6240a9887mr5300030ilo.203.1664570524570; Fri, 30
+ Sep 2022 13:42:04 -0700 (PDT)
 MIME-Version: 1.0
 References: 
  <BYAPR12MB2710069E5D018DBB8F800AECF5569@BYAPR12MB2710.namprd12.prod.outlook.com>
@@ -52,336 +52,367 @@ References:
  <BYAPR12MB2710359C1636EC9716B3EB83F5569@BYAPR12MB2710.namprd12.prod.outlook.com>
  <CANNYZj9ETtBH1mY3x3G2Fe4Fjyni7zkRMcA9UsYtpBcTznUQDg@mail.gmail.com>
  <BYAPR12MB2710778AF2346FD1E8FAD51AF5569@BYAPR12MB2710.namprd12.prod.outlook.com>
-In-Reply-To: 
- <BYAPR12MB2710778AF2346FD1E8FAD51AF5569@BYAPR12MB2710.namprd12.prod.outlook.com>
+ <1719BDC7DCD0DABC.17026@lists.openembedded.org>
+In-Reply-To: <1719BDC7DCD0DABC.17026@lists.openembedded.org>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 30 Sep 2022 22:36:29 +0200
+Date: Fri, 30 Sep 2022 22:41:52 +0200
 Message-ID: 
- <CANNYZj_V-3TdZGvfom1QCwKkcr=QbC_hsMJUCT47z1nBsLJNbA@mail.gmail.com>
+ <CANNYZj95vsnNLd97LzL7ix=JC9HCReJo7VNa80EymiSRYNgRiQ@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH] bitbake: wget: fix netrc with pseudo
-To: Nicholas Jackson <Nicholas.Jackson@zii.aero>
-Cc: "bitbake-devel@lists.openembedded.org"
- <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/related; boundary="000000000000962e2105e9eaf31a"
+To: alex.kanavin@gmail.com
+Cc: Nicholas Jackson <Nicholas.Jackson@zii.aero>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Content-Type: multipart/related; boundary="000000000000d4707705e9eb06df"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 30 Sep 2022 20:36:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14006
+ <bitbake-devel@lists.openembedded.org>; Fri, 30 Sep 2022 20:42:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14007
 
---000000000000962e2105e9eaf31a
-Content-Type: multipart/alternative; boundary="000000000000962e2005e9eaf319"
+--000000000000d4707705e9eb06df
+Content-Type: multipart/alternative; boundary="000000000000d4707605e9eb06de"
 
---000000000000962e2005e9eaf319
+--000000000000d4707605e9eb06de
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Can you try with a plain poky checkout (git clone
-https://git.yoctoproject.org/poky ), and outside of docker? It is rather
-odd that no one else sees this.
+Basically what would help is finding how this can be reproduced by someone
+else, e.g. me :)
 
 Alex
 
-On Fri, 30 Sept 2022 at 22:02, Nicholas Jackson <Nicholas.Jackson@zii.aero>
-wrote:
+On Fri, 30 Sept 2022 at 22:36, Alexander Kanavin via lists.openembedded.org
+<alex.kanavin=3Dgmail.com@lists.openembedded.org> wrote:
 
-> Yes, the same issue occurs outside docker.
-> Are you thinking that the root issue may perhaps be that
-> PSEUDO_DISABLED is being set to 0 in the first place? It does
-> seem strange to me that we'd need a fakeroot-like environment for
-> a task involving wget.
->
->
-> *Nicholas JACKSON*
-> Software Engineer II
->
-> Safran Passenger Innovations
->
-> T +1 714 854 8600 ext 527
->
-> 3151 East Imperial Hwy
->
-> Brea, Ca 92821 USA
->
-> *www.safran-passenger-innovations.com*
-> <http://www.safran-passenger-innovations.com/>
->
->
->
->
-> <http://www.safran-group.com/subscription-account?utm_source=3Dsubscribem=
-ail&utm_medium=3Dmailpro&utm_campaign=3DsubscribemailEN>
-> <http://www.safran-group.com/subscription-account?utm_source=3Dsubscribem=
-ail&utm_medium=3Dmailpro&utm_campaign=3DsubscribemailEN>
->
-> <http://twitter.com/SAFRAN>
->
-> <http://www.facebook.com/GroupeSafran>
->
-> <http://fr.linkedin.com/company/safran>
->
-> ------------------------------
-> *From:* Alexander Kanavin <alex.kanavin@gmail.com>
-> *Sent:* Friday, September 30, 2022 12:51 PM
-> *To:* Nicholas Jackson <Nicholas.Jackson@zii.aero>
-> *Cc:* bitbake-devel@lists.openembedded.org <
-> bitbake-devel@lists.openembedded.org>
-> *Subject:* Re: [bitbake-devel] [PATCH] bitbake: wget: fix netrc with
-> pseudo
->
-> This does seem like there=E2=80=99s something particular about your setup
-> triggering this. Can you try outside if docker?
+> Can you try with a plain poky checkout (git clone
+> https://git.yoctoproject.org/poky ), and outside of docker? It is rather
+> odd that no one else sees this.
 >
 > Alex
 >
-> On Fri 30. Sep 2022 at 21.24, Nicholas Jackson <Nicholas.Jackson@zii.aero=
->
-> wrote:
->
-> Thanks for the quick response.
-> My setup is an Artifactory replication of https://sstate.yoctoproject.org=
-/
-> <https://urldefense.com/v3/__https://sstate.yoctoproject.org/__;!!BXNzmnh=
-nlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90QOTCASJ2KP6SS=
-GxggHMuX16yplCGYp4D16fL_TkJgA78$>,
-> with
-> the Artifactory credentials stored in a netrc file. The issue specificall=
-y
-> occurs
-> when attempting to build certain packages using bitbake --setscene-only=
-=E2=80=8B.
-> (It probably also happens without --setscene-only).
-> A warning is produced, e.g.:
-> WARNING: efibootmgr-18-r0 do_package_setscene: No sstate archive
-> obtainable, will run full task instead.
-> WARNING: Logfile for failed setscene task is
-> /home/foo/bar/build/tmp/work/core2-64-poky-linux/efibootmgr/18-r0/temp/lo=
-g.do_package_setscene.472771
-> WARNING: Setscene task (/home/foo/bar
-> /poky/meta/recipes-bsp/efibootmgr/efibootmgr_18.bb:do_package_setscene)
-> failed with exit code '1' - real task will be run instead
->
-> In certain cases, bitbake will spawn a bitbake-worker with
-> PSEUDO_DISABLED=3D0.
-> Unfortunately, I have not been able to pinpoint when exactly this happens=
-.
-> I'm not
-> familiar with bitbake internals, so I don't know when pseudo is used
-> specifically.
-> What I can say for sure is that bitbake --setscene-only world=E2=80=8B wi=
-ll always
-> reproduce the issue for me without this patch.
->
-> For my environment, I am building the default core-image-minimal for
-> qemux86-64 with
-> the three default poky layers. I've reproduced the issue in both Ubuntu
-> 22.04 and
-> Docker using the image ghcr.io/siemens/kas/kas:3.1
-> <https://urldefense.com/v3/__http://ghcr.io/siemens/kas/kas:3.1__;!!BXNzm=
-nhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90QOTCASJ2KP6=
-SSGxggHMuX16yplCGYp4D16fL_TKPQAyS$>.
-> In case it matters, I am using kas.
->
->
-> *Nicholas JACKSON*
-> Software Engineer II
->
-> Safran Passenger Innovations
->
-> T +1 714 854 8600 ext 527
->
-> 3151 East Imperial Hwy
->
-> Brea, Ca 92821 USA
->
-> *www.safran-passenger-innovations.com*
-> <https://urldefense.com/v3/__http://www.safran-passenger-innovations.com/=
-__;!!BXNzmnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90Q=
-OTCASJ2KP6SSGxggHMuX16yplCGYp4D16fL_TOfrCXE$>
->
->
->
->
-> <https://urldefense.com/v3/__http://www.safran-group.com/subscription-acc=
-ount?utm_source=3Dsubscribemail&utm_medium=3Dmailpro&utm_campaign=3Dsubscri=
-bemailEN__;!!BXNzmnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq2=
-1ddVS90QOTCASJ2KP6SSGxggHMuX16yplCGYp4D16fL_eBgAh8f$>
-> <https://urldefense.com/v3/__http://www.safran-group.com/subscription-acc=
-ount?utm_source=3Dsubscribemail&utm_medium=3Dmailpro&utm_campaign=3Dsubscri=
-bemailEN__;!!BXNzmnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq2=
-1ddVS90QOTCASJ2KP6SSGxggHMuX16yplCGYp4D16fL_eBgAh8f$>
->
->
-> <https://urldefense.com/v3/__http://twitter.com/SAFRAN__;!!BXNzmnhnlE-olP=
-yVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90QOTCASJ2KP6SSGxggHMu=
-X16yplCGYp4D16fL_azwuY37$>
->
->
-> <https://urldefense.com/v3/__http://www.facebook.com/GroupeSafran__;!!BXN=
-zmnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90QOTCASJ2K=
-P6SSGxggHMuX16yplCGYp4D16fL_T5mTjcB$>
->
->
-> <https://urldefense.com/v3/__http://fr.linkedin.com/company/safran__;!!BX=
-NzmnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90QOTCASJ2=
-KP6SSGxggHMuX16yplCGYp4D16fL_UMGP7F-$>
->
-> ------------------------------
-> *From:* bitbake-devel@lists.openembedded.org <
-> bitbake-devel@lists.openembedded.org> on behalf of Alexander Kanavin <
-> alex.kanavin@gmail.com>
-> *Sent:* Friday, September 30, 2022 10:59 AM
-> *To:* Nicholas Jackson <Nicholas.Jackson@zii.aero>
-> *Cc:* bitbake-devel@lists.openembedded.org <
-> bitbake-devel@lists.openembedded.org>
-> *Subject:* Re: [bitbake-devel] [PATCH] bitbake: wget: fix netrc with
-> pseudo
->
-> How can the problem be reproduced?
->
-> Alex
->
-> On Fri, 30 Sept 2022 at 19:55, Nicholas Jackson <Nicholas.Jackson@zii.aer=
+> On Fri, 30 Sept 2022 at 22:02, Nicholas Jackson <Nicholas.Jackson@zii.aer=
 o>
 > wrote:
 >
-> From: Nicholas Jackson <nicholas.jackson@zii.aero>
->
-> The netrc module will refuse to use a file that is not owned by the
-> current user. Psuedo can trigger this failure due to a reported uid of
-> 0. To fix this, change ownership of the default netrc file to 0:0. This
-> has no permanent effect on the actual netrc file.
->
-> Note that while it is not possible to ask the netrc module what the
-> default netrc file is, the documentation explicitly mentions that
-> expanduser is used.
->
-> Signed-off-by: Nicholas Jackson <nicholas.jackson@zii.aero>
-> ---
->  bitbake/lib/bb/fetch2/wget.py | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.p=
-y
-> index 821afa5b58..0ce6e25c5c 100644
-> --- a/bitbake/lib/bb/fetch2/wget.py
-> +++ b/bitbake/lib/bb/fetch2/wget.py
-> @@ -360,10 +360,16 @@ class Wget(FetchMethod):
->
->                  try:
->                      import netrc
-> +                    # Pseudo can cause ownership mismatch issues with
-> netrc, which is
-> +                    # required to be owned by the current user (root).
-> +                    if os.environ.get("PSEUDO_DISABLED") =3D=3D "0":
-> +                        os.chown(os.path.join(os.path.expanduser("~"),
-> ".netrc"), 0, 0)
->                      n =3D netrc.netrc()
->                      login, unused, password =3D
-> n.authenticators(urllib.parse.urlparse(uri).hostname)
->                      add_basic_auth("%s:%s" % (login, password), r)
-> -                except (TypeError, ImportError, IOError,
-> netrc.NetrcParseError):
-> +                except netrc.NetrcParseError as e:
-> +                    logger.debug("netrc failed: %s" % e)
-> +                except (TypeError, ImportError, IOError) as e:
->                      pass
->
->                  with opener.open(r, timeout=3D30) as response:
-> --
-> 2.37.2
->
->
->
-> *Nicholas JACKSON*
-> Software Engineer II
->
-> Safran Passenger Innovations
->
-> T +1 714 854 8600 ext 527
->
-> 3151 East Imperial Hwy
->
-> Brea, Ca 92821 USA
->
-> *www.safran-passenger-innovations.com*
-> <https://urldefense.com/v3/__http://www.safran-passenger-innovations.com/=
-__;!!BXNzmnhnlE-olPyVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0Ird5wj8wR=
-p_VGu9fGuLkpGGLDedRzDSMUZ1LJCoQAS8jyCHL6szf$>
->
->
->
->
-> <https://urldefense.com/v3/__http://www.safran-group.com/subscription-acc=
-ount?utm_source=3Dsubscribemail&utm_medium=3Dmailpro&utm_campaign=3Dsubscri=
-bemailEN__;!!BXNzmnhnlE-olPyVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0I=
-rd5wj8wRp_VGu9fGuLkpGGLDedRzDSMUZ1LJCoQAS8jyBduGohQ$>
-> <https://urldefense.com/v3/__http://www.safran-group.com/subscription-acc=
-ount?utm_source=3Dsubscribemail&utm_medium=3Dmailpro&utm_campaign=3Dsubscri=
-bemailEN__;!!BXNzmnhnlE-olPyVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0I=
-rd5wj8wRp_VGu9fGuLkpGGLDedRzDSMUZ1LJCoQAS8jyBduGohQ$>
->
->
-> <https://urldefense.com/v3/__http://twitter.com/SAFRAN__;!!BXNzmnhnlE-olP=
-yVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0Ird5wj8wRp_VGu9fGuLkpGGLDedR=
-zDSMUZ1LJCoQAS8jyNnzvPqy$>
->
->
-> <https://urldefense.com/v3/__http://www.facebook.com/GroupeSafran__;!!BXN=
-zmnhnlE-olPyVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0Ird5wj8wRp_VGu9fG=
-uLkpGGLDedRzDSMUZ1LJCoQAS8jyHmr7D_P$>
->
->
-> <https://urldefense.com/v3/__http://fr.linkedin.com/company/safran__;!!BX=
+>> Yes, the same issue occurs outside docker.
+>> Are you thinking that the root issue may perhaps be that
+>> PSEUDO_DISABLED is being set to 0 in the first place? It does
+>> seem strange to me that we'd need a fakeroot-like environment for
+>> a task involving wget.
+>>
+>>
+>> *Nicholas JACKSON*
+>> Software Engineer II
+>>
+>> Safran Passenger Innovations
+>>
+>> T +1 714 854 8600 ext 527
+>>
+>> 3151 East Imperial Hwy
+>>
+>> Brea, Ca 92821 USA
+>>
+>> *www.safran-passenger-innovations.com*
+>> <http://www.safran-passenger-innovations.com/>
+>>
+>>
+>>
+>>
+>> <http://www.safran-group.com/subscription-account?utm_source=3Dsubscribe=
+mail&utm_medium=3Dmailpro&utm_campaign=3DsubscribemailEN>
+>> <http://www.safran-group.com/subscription-account?utm_source=3Dsubscribe=
+mail&utm_medium=3Dmailpro&utm_campaign=3DsubscribemailEN>
+>>
+>> <http://twitter.com/SAFRAN>
+>>
+>> <http://www.facebook.com/GroupeSafran>
+>>
+>> <http://fr.linkedin.com/company/safran>
+>>
+>> ------------------------------
+>> *From:* Alexander Kanavin <alex.kanavin@gmail.com>
+>> *Sent:* Friday, September 30, 2022 12:51 PM
+>> *To:* Nicholas Jackson <Nicholas.Jackson@zii.aero>
+>> *Cc:* bitbake-devel@lists.openembedded.org <
+>> bitbake-devel@lists.openembedded.org>
+>> *Subject:* Re: [bitbake-devel] [PATCH] bitbake: wget: fix netrc with
+>> pseudo
+>>
+>> This does seem like there=E2=80=99s something particular about your setu=
+p
+>> triggering this. Can you try outside if docker?
+>>
+>> Alex
+>>
+>> On Fri 30. Sep 2022 at 21.24, Nicholas Jackson <Nicholas.Jackson@zii.aer=
+o>
+>> wrote:
+>>
+>> Thanks for the quick response.
+>> My setup is an Artifactory replication of
+>> https://sstate.yoctoproject.org/
+>> <https://urldefense.com/v3/__https://sstate.yoctoproject.org/__;!!BXNzmn=
+hnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90QOTCASJ2KP6S=
+SGxggHMuX16yplCGYp4D16fL_TkJgA78$>,
+>> with
+>> the Artifactory credentials stored in a netrc file. The issue
+>> specifically occurs
+>> when attempting to build certain packages using bitbake --setscene-only=
+=E2=80=8B.
+>> (It probably also happens without --setscene-only).
+>> A warning is produced, e.g.:
+>> WARNING: efibootmgr-18-r0 do_package_setscene: No sstate archive
+>> obtainable, will run full task instead.
+>> WARNING: Logfile for failed setscene task is
+>> /home/foo/bar/build/tmp/work/core2-64-poky-linux/efibootmgr/18-r0/temp/l=
+og.do_package_setscene.472771
+>> WARNING: Setscene task (/home/foo/bar
+>> /poky/meta/recipes-bsp/efibootmgr/efibootmgr_18.bb:do_package_setscene)
+>> failed with exit code '1' - real task will be run instead
+>>
+>> In certain cases, bitbake will spawn a bitbake-worker with
+>> PSEUDO_DISABLED=3D0.
+>> Unfortunately, I have not been able to pinpoint when exactly this
+>> happens. I'm not
+>> familiar with bitbake internals, so I don't know when pseudo is used
+>> specifically.
+>> What I can say for sure is that bitbake --setscene-only world=E2=80=8B w=
+ill
+>> always
+>> reproduce the issue for me without this patch.
+>>
+>> For my environment, I am building the default core-image-minimal for
+>> qemux86-64 with
+>> the three default poky layers. I've reproduced the issue in both Ubuntu
+>> 22.04 and
+>> Docker using the image ghcr.io/siemens/kas/kas:3.1
+>> <https://urldefense.com/v3/__http://ghcr.io/siemens/kas/kas:3.1__;!!BXNz=
+mnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90QOTCASJ2KP=
+6SSGxggHMuX16yplCGYp4D16fL_TKPQAyS$>.
+>> In case it matters, I am using kas.
+>>
+>>
+>> *Nicholas JACKSON*
+>> Software Engineer II
+>>
+>> Safran Passenger Innovations
+>>
+>> T +1 714 854 8600 ext 527
+>>
+>> 3151 East Imperial Hwy
+>>
+>> Brea, Ca 92821 USA
+>>
+>> *www.safran-passenger-innovations.com*
+>> <https://urldefense.com/v3/__http://www.safran-passenger-innovations.com=
+/__;!!BXNzmnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90=
+QOTCASJ2KP6SSGxggHMuX16yplCGYp4D16fL_TOfrCXE$>
+>>
+>>
+>>
+>>
+>> <https://urldefense.com/v3/__http://www.safran-group.com/subscription-ac=
+count?utm_source=3Dsubscribemail&utm_medium=3Dmailpro&utm_campaign=3Dsubscr=
+ibemailEN__;!!BXNzmnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq=
+21ddVS90QOTCASJ2KP6SSGxggHMuX16yplCGYp4D16fL_eBgAh8f$>
+>> <https://urldefense.com/v3/__http://www.safran-group.com/subscription-ac=
+count?utm_source=3Dsubscribemail&utm_medium=3Dmailpro&utm_campaign=3Dsubscr=
+ibemailEN__;!!BXNzmnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq=
+21ddVS90QOTCASJ2KP6SSGxggHMuX16yplCGYp4D16fL_eBgAh8f$>
+>>
+>>
+>> <https://urldefense.com/v3/__http://twitter.com/SAFRAN__;!!BXNzmnhnlE-ol=
+PyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90QOTCASJ2KP6SSGxggHM=
+uX16yplCGYp4D16fL_azwuY37$>
+>>
+>>
+>> <https://urldefense.com/v3/__http://www.facebook.com/GroupeSafran__;!!BX=
+NzmnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90QOTCASJ2=
+KP6SSGxggHMuX16yplCGYp4D16fL_T5mTjcB$>
+>>
+>>
+>> <https://urldefense.com/v3/__http://fr.linkedin.com/company/safran__;!!B=
+XNzmnhnlE-olPyVU9tI!FbyY92yX6Ab2wL6z84GEifystfPM_rtQNCO7rqvq21ddVS90QOTCASJ=
+2KP6SSGxggHMuX16yplCGYp4D16fL_UMGP7F-$>
+>>
+>> ------------------------------
+>> *From:* bitbake-devel@lists.openembedded.org <
+>> bitbake-devel@lists.openembedded.org> on behalf of Alexander Kanavin <
+>> alex.kanavin@gmail.com>
+>> *Sent:* Friday, September 30, 2022 10:59 AM
+>> *To:* Nicholas Jackson <Nicholas.Jackson@zii.aero>
+>> *Cc:* bitbake-devel@lists.openembedded.org <
+>> bitbake-devel@lists.openembedded.org>
+>> *Subject:* Re: [bitbake-devel] [PATCH] bitbake: wget: fix netrc with
+>> pseudo
+>>
+>> How can the problem be reproduced?
+>>
+>> Alex
+>>
+>> On Fri, 30 Sept 2022 at 19:55, Nicholas Jackson <
+>> Nicholas.Jackson@zii.aero> wrote:
+>>
+>> From: Nicholas Jackson <nicholas.jackson@zii.aero>
+>>
+>> The netrc module will refuse to use a file that is not owned by the
+>> current user. Psuedo can trigger this failure due to a reported uid of
+>> 0. To fix this, change ownership of the default netrc file to 0:0. This
+>> has no permanent effect on the actual netrc file.
+>>
+>> Note that while it is not possible to ask the netrc module what the
+>> default netrc file is, the documentation explicitly mentions that
+>> expanduser is used.
+>>
+>> Signed-off-by: Nicholas Jackson <nicholas.jackson@zii.aero>
+>> ---
+>>  bitbake/lib/bb/fetch2/wget.py | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.=
+py
+>> index 821afa5b58..0ce6e25c5c 100644
+>> --- a/bitbake/lib/bb/fetch2/wget.py
+>> +++ b/bitbake/lib/bb/fetch2/wget.py
+>> @@ -360,10 +360,16 @@ class Wget(FetchMethod):
+>>
+>>                  try:
+>>                      import netrc
+>> +                    # Pseudo can cause ownership mismatch issues with
+>> netrc, which is
+>> +                    # required to be owned by the current user (root).
+>> +                    if os.environ.get("PSEUDO_DISABLED") =3D=3D "0":
+>> +                        os.chown(os.path.join(os.path.expanduser("~"),
+>> ".netrc"), 0, 0)
+>>                      n =3D netrc.netrc()
+>>                      login, unused, password =3D
+>> n.authenticators(urllib.parse.urlparse(uri).hostname)
+>>                      add_basic_auth("%s:%s" % (login, password), r)
+>> -                except (TypeError, ImportError, IOError,
+>> netrc.NetrcParseError):
+>> +                except netrc.NetrcParseError as e:
+>> +                    logger.debug("netrc failed: %s" % e)
+>> +                except (TypeError, ImportError, IOError) as e:
+>>                      pass
+>>
+>>                  with opener.open(r, timeout=3D30) as response:
+>> --
+>> 2.37.2
+>>
+>>
+>>
+>> *Nicholas JACKSON*
+>> Software Engineer II
+>>
+>> Safran Passenger Innovations
+>>
+>> T +1 714 854 8600 ext 527
+>>
+>> 3151 East Imperial Hwy
+>>
+>> Brea, Ca 92821 USA
+>>
+>> *www.safran-passenger-innovations.com*
+>> <https://urldefense.com/v3/__http://www.safran-passenger-innovations.com=
+/__;!!BXNzmnhnlE-olPyVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0Ird5wj8w=
+Rp_VGu9fGuLkpGGLDedRzDSMUZ1LJCoQAS8jyCHL6szf$>
+>>
+>>
+>>
+>>
+>> <https://urldefense.com/v3/__http://www.safran-group.com/subscription-ac=
+count?utm_source=3Dsubscribemail&utm_medium=3Dmailpro&utm_campaign=3Dsubscr=
+ibemailEN__;!!BXNzmnhnlE-olPyVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0=
+Ird5wj8wRp_VGu9fGuLkpGGLDedRzDSMUZ1LJCoQAS8jyBduGohQ$>
+>> <https://urldefense.com/v3/__http://www.safran-group.com/subscription-ac=
+count?utm_source=3Dsubscribemail&utm_medium=3Dmailpro&utm_campaign=3Dsubscr=
+ibemailEN__;!!BXNzmnhnlE-olPyVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0=
+Ird5wj8wRp_VGu9fGuLkpGGLDedRzDSMUZ1LJCoQAS8jyBduGohQ$>
+>>
+>>
+>> <https://urldefense.com/v3/__http://twitter.com/SAFRAN__;!!BXNzmnhnlE-ol=
+PyVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0Ird5wj8wRp_VGu9fGuLkpGGLDed=
+RzDSMUZ1LJCoQAS8jyNnzvPqy$>
+>>
+>>
+>> <https://urldefense.com/v3/__http://www.facebook.com/GroupeSafran__;!!BX=
 NzmnhnlE-olPyVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0Ird5wj8wRp_VGu9f=
-GuLkpGGLDedRzDSMUZ1LJCoQAS8jyGC1R16c$>
+GuLkpGGLDedRzDSMUZ1LJCoQAS8jyHmr7D_P$>
+>>
+>>
+>> <https://urldefense.com/v3/__http://fr.linkedin.com/company/safran__;!!B=
+XNzmnhnlE-olPyVU9tI!As8zj7fVv20WKGLUTF4RmEeqROZCvPaimgdLyag0Ird5wj8wRp_VGu9=
+fGuLkpGGLDedRzDSMUZ1LJCoQAS8jyGC1R16c$>
+>>
+>>
+>> ------------------------------
+>>
+>> This email and any files transmitted with it are confidential &
+>> proprietary to Safran Passenger Innovations. This information is intende=
+d
+>> solely for the use of the individual or entity to which it is addressed.
+>> Access or transmittal of the information contained in this e-mail, in fu=
+ll
+>> or in part, to any other organization or persons is not authorized.
+>>
+>>
+>>
+>>
+>> ------------------------------
+>>
+>> This email and any files transmitted with it are confidential &
+>> proprietary to Safran Passenger Innovations. This information is intende=
+d
+>> solely for the use of the individual or entity to which it is addressed.
+>> Access or transmittal of the information contained in this e-mail, in fu=
+ll
+>> or in part, to any other organization or persons is not authorized.
+>>
+>>
+>> ------------------------------
+>>
+>> This email and any files transmitted with it are confidential &
+>> proprietary to Safran Passenger Innovations. This information is intende=
+d
+>> solely for the use of the individual or entity to which it is addressed.
+>> Access or transmittal of the information contained in this e-mail, in fu=
+ll
+>> or in part, to any other organization or persons is not authorized.
+>>
 >
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14006):
+> https://lists.openembedded.org/g/bitbake-devel/message/14006
+> Mute This Topic: https://lists.openembedded.org/mt/94022677/1686489
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> alex.kanavin@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 >
-> ------------------------------
->
-> This email and any files transmitted with it are confidential &
-> proprietary to Safran Passenger Innovations. This information is intended
-> solely for the use of the individual or entity to which it is addressed.
-> Access or transmittal of the information contained in this e-mail, in ful=
-l
-> or in part, to any other organization or persons is not authorized.
->
->
->
->
-> ------------------------------
->
-> This email and any files transmitted with it are confidential &
-> proprietary to Safran Passenger Innovations. This information is intended
-> solely for the use of the individual or entity to which it is addressed.
-> Access or transmittal of the information contained in this e-mail, in ful=
-l
-> or in part, to any other organization or persons is not authorized.
->
->
-> ------------------------------
->
-> This email and any files transmitted with it are confidential &
-> proprietary to Safran Passenger Innovations. This information is intended
-> solely for the use of the individual or entity to which it is addressed.
-> Access or transmittal of the information contained in this e-mail, in ful=
-l
-> or in part, to any other organization or persons is not authorized.
 >
 
---000000000000962e2005e9eaf319
+--000000000000d4707605e9eb06de
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>Can you try with a plain poky checkout (git clone <a =
-href=3D"https://git.yoctoproject.org/poky">https://git.yoctoproject.org/pok=
-y</a> ), and outside of docker? It is rather odd that no one else sees this=
-.</div><div><br></div><div>Alex<br></div></div><br><div class=3D"gmail_quot=
-e"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, 30 Sept 2022 at 22:02, Nic=
-holas Jackson &lt;<a href=3D"mailto:Nicholas.Jackson@zii.aero">Nicholas.Jac=
-kson@zii.aero</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" sty=
-le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
-ng-left:1ex"><div class=3D"msg1673450979541750862">
+<div dir=3D"ltr"><div>Basically what would help is finding how this can be =
+reproduced by someone else, e.g. me :)</div><div><br></div><div>Alex<br></d=
+iv></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_att=
+r">On Fri, 30 Sept 2022 at 22:36, Alexander Kanavin via <a href=3D"http://l=
+ists.openembedded.org">lists.openembedded.org</a> &lt;alex.kanavin=3D<a hre=
+f=3D"mailto:gmail.com@lists.openembedded.org">gmail.com@lists.openembedded.=
+org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"marg=
+in:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1e=
+x"><div dir=3D"ltr"><div>Can you try with a plain poky checkout (git clone =
+<a href=3D"https://git.yoctoproject.org/poky" target=3D"_blank">https://git=
+.yoctoproject.org/poky</a> ), and outside of docker? It is rather odd that =
+no one else sees this.</div><div><br></div><div>Alex<br></div></div><br><di=
+v class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, 30 Se=
+pt 2022 at 22:02, Nicholas Jackson &lt;<a href=3D"mailto:Nicholas.Jackson@z=
+ii.aero" target=3D"_blank">Nicholas.Jackson@zii.aero</a>&gt; wrote:<br></di=
+v><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;borde=
+r-left:1px solid rgb(204,204,204);padding-left:1ex"><div>
 
 
 
@@ -411,15 +442,16 @@ or:rgb(255,255,255)"></span><br>
 ;color:rgb(0,0,0)">
 <br>
 </div>
-<div id=3D"m_1673450979541750862Signature">
+<div id=3D"m_-4610262440112331633m_1673450979541750862Signature">
 <div>
 <div style=3D"font-family:Calibri,Arial,Helvetica,sans-serif;font-size:12pt=
 ;color:rgb(0,0,0)">
 </div>
 <div></div>
 <div></div>
-<div id=3D"m_1673450979541750862divtagdefaultwrapper" dir=3D"ltr" style=3D"=
-font-size:12pt;color:rgb(0,0,0);font-family:Calibri,Helvetica,sans-serif">
+<div id=3D"m_-4610262440112331633m_1673450979541750862divtagdefaultwrapper"=
+ dir=3D"ltr" style=3D"font-size:12pt;color:rgb(0,0,0);font-family:Calibri,H=
+elvetica,sans-serif">
 <p style=3D"margin-top:0px;margin-bottom:0px"></p>
 <table style=3D"color:rgb(33,33,33);font-family:wf_segoe-ui_normal,&quot;Se=
 goe UI&quot;,&quot;Segoe WP&quot;,Tahoma,Arial,sans-serif,serif,EmojiFont;f=
@@ -555,12 +587,12 @@ kedIn&quot;" target=3D"_blank"><img src=3D"cid:183901b7e48c2b406cd12"></a><=
 </div>
 </div>
 </div>
-<div id=3D"m_1673450979541750862appendonsend"></div>
+<div id=3D"m_-4610262440112331633m_1673450979541750862appendonsend"></div>
 <hr style=3D"display:inline-block;width:98%">
-<div id=3D"m_1673450979541750862divRplyFwdMsg" dir=3D"ltr"><font style=3D"f=
-ont-size:11pt" face=3D"Calibri, sans-serif" color=3D"#000000"><b>From:</b> =
-Alexander Kanavin &lt;<a href=3D"mailto:alex.kanavin@gmail.com" target=3D"_=
-blank">alex.kanavin@gmail.com</a>&gt;<br>
+<div id=3D"m_-4610262440112331633m_1673450979541750862divRplyFwdMsg" dir=3D=
+"ltr"><font style=3D"font-size:11pt" face=3D"Calibri, sans-serif" color=3D"=
+#000000"><b>From:</b> Alexander Kanavin &lt;<a href=3D"mailto:alex.kanavin@=
+gmail.com" target=3D"_blank">alex.kanavin@gmail.com</a>&gt;<br>
 <b>Sent:</b> Friday, September 30, 2022 12:51 PM<br>
 <b>To:</b> Nicholas Jackson &lt;<a href=3D"mailto:Nicholas.Jackson@zii.aero=
 " target=3D"_blank">Nicholas.Jackson@zii.aero</a>&gt;<br>
@@ -683,16 +715,17 @@ r.io/siemens/kas/kas:3.1</a>.
 ;color:rgb(0,0,0)">
 <br>
 </div>
-<div id=3D"m_1673450979541750862x_m_-8722381858772988065Signature">
+<div id=3D"m_-4610262440112331633m_1673450979541750862x_m_-8722381858772988=
+065Signature">
 <div>
 <div style=3D"font-family:Calibri,Arial,Helvetica,sans-serif;font-size:12pt=
 ;color:rgb(0,0,0)">
 </div>
 <div></div>
 <div></div>
-<div id=3D"m_1673450979541750862x_m_-8722381858772988065divtagdefaultwrappe=
-r" dir=3D"ltr" style=3D"font-size:12pt;font-family:Calibri,Helvetica,sans-s=
-erif;color:rgb(0,0,0)">
+<div id=3D"m_-4610262440112331633m_1673450979541750862x_m_-8722381858772988=
+065divtagdefaultwrapper" dir=3D"ltr" style=3D"font-size:12pt;font-family:Ca=
+libri,Helvetica,sans-serif;color:rgb(0,0,0)">
 <p style=3D"margin-top:0px;margin-bottom:0px;font-family:Calibri,Helvetica,=
 sans-serif">
 </p>
@@ -883,13 +916,13 @@ sans-serif">
 </div>
 </div>
 </div>
-<div id=3D"m_1673450979541750862x_m_-8722381858772988065appendonsend"></div=
->
+<div id=3D"m_-4610262440112331633m_1673450979541750862x_m_-8722381858772988=
+065appendonsend"></div>
 <hr style=3D"display:inline-block;width:98%">
-<div id=3D"m_1673450979541750862x_m_-8722381858772988065divRplyFwdMsg" dir=
-=3D"ltr"><font style=3D"font-size:11pt;font-family:Calibri,sans-serif;color=
-:rgb(0,0,0)" face=3D"Calibri, sans-serif"><b style=3D"font-family:Calibri,s=
-ans-serif">From:</b>
+<div id=3D"m_-4610262440112331633m_1673450979541750862x_m_-8722381858772988=
+065divRplyFwdMsg" dir=3D"ltr"><font style=3D"font-size:11pt;font-family:Cal=
+ibri,sans-serif;color:rgb(0,0,0)" face=3D"Calibri, sans-serif"><b style=3D"=
+font-family:Calibri,sans-serif">From:</b>
 <a href=3D"mailto:bitbake-devel@lists.openembedded.org" style=3D"font-famil=
 y:Calibri,sans-serif" target=3D"_blank">
 bitbake-devel@lists.openembedded.org</a> &lt;<a href=3D"mailto:bitbake-deve=
@@ -1095,17 +1128,17 @@ kground-color:rgb(255,255,255)">
 ;color:rgb(0,0,0)">
 <br>
 </div>
-<div id=3D"m_1673450979541750862x_m_-8722381858772988065x_m_748379262052044=
-6128Signature">
+<div id=3D"m_-4610262440112331633m_1673450979541750862x_m_-8722381858772988=
+065x_m_7483792620520446128Signature">
 <div>
 <div style=3D"font-family:Calibri,Arial,Helvetica,sans-serif;font-size:12pt=
 ;color:rgb(0,0,0)">
 </div>
 <div></div>
 <div></div>
-<div id=3D"m_1673450979541750862x_m_-8722381858772988065x_m_748379262052044=
-6128divtagdefaultwrapper" dir=3D"ltr" style=3D"font-size:12pt;font-family:C=
-alibri,Helvetica,sans-serif;color:rgb(0,0,0)">
+<div id=3D"m_-4610262440112331633m_1673450979541750862x_m_-8722381858772988=
+065x_m_7483792620520446128divtagdefaultwrapper" dir=3D"ltr" style=3D"font-s=
+ize:12pt;font-family:Calibri,Helvetica,sans-serif;color:rgb(0,0,0)">
 <p style=3D"margin-top:0px;margin-bottom:0px;font-family:Calibri,Helvetica,=
 sans-serif">
 </p>
@@ -1342,10 +1375,28 @@ s not authorized.<br>
 </div>
 
 </div></blockquote></div>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#14006): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/14006" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/14006</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/94022677/1686=
+489" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
+/94022677/1686489</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:alex.kanavin@gmail.com" target=3D"=
+_blank">alex.kanavin@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
 
---000000000000962e2005e9eaf319--
+--000000000000d4707605e9eb06de--
 
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-kybjmhvy.png"
 Content-Disposition: inline; filename="Outlook-kybjmhvy.png"
 Content-Transfer-Encoding: base64
@@ -1376,7 +1427,7 @@ HZTds0u1Lt6HwxoKIQndht1bnZz4aHO71YXylKoNhUTmjc6j+D4yh4yhkPhyWJpDRt/eZ++TuYbV
 TpPF2vgegf2ltHUA5GxAUJytSgM/fC7YyjITpRpmpF9he9BpwGQc96BHzn0Hnwn4OMM9+xnnaHMX
 QuBuA/cgct11uxOlWlzmLsaUI83/B7nlo0eav8VoNTzspkAeotBDTYFoNTzspkAeotBD/wDHO/NC
 zFjfiwAAAABJRU5ErkJggg==
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-w1u0235i.png"
 Content-Disposition: inline; filename="Outlook-w1u0235i.png"
 Content-Transfer-Encoding: base64
@@ -1392,7 +1443,7 @@ ERY6xCCTHE8ISq3Ai/A13+KDoQj+EaSjnZWlyf6PHOub3jrd2ztHPGKPk+b301d5geNFtWYMXFE1
 jhc5XjT0M41gK0Dqr+usj46EAwfrC6nRruNsLr1x4mNoQVJtoLUlvR9FKQVZsWWXXorw02gLgKJc
 JUjzA0a23ap+Gq3MVxiAB+/q4n38Tz7adGu0ze05+zQk/QDTJLtnN8OJWPb6ybi8xyK9n5mq61A1
 i7Jr6Szk0R8w1HZa1QlaJ2/euMXP6r4D45GH2XAQI60AAAAASUVORK5CYII=
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-vuq5al0t.png"
 Content-Disposition: inline; filename="Outlook-vuq5al0t.png"
 Content-Transfer-Encoding: base64
@@ -1410,7 +1461,7 @@ lFbqJ8cnRy5NLRSW3eKJQ7vQpbkGeecPY8FZ9sHck8n3ALLdidvjhu048SgDo+Cio7X5lWoDiRiA
 St0SAJG+0gi4eCBr9B9sZHPANj+/Dt5ngsH/8DGN+hJ/eY21s0wRSXFJcmzS24HPBAPv/jTl3tNP
 +WKZKZGZ1wVsjd+cmnu5UGpynvtQFG4Bs/PfLt7KMUoL3ytCQn4Q7/27H860RUFToFJhr82FSe40
 uICS8Pt1G1KpwPzxzxQQ1eACufIPfBi14pXIw4kAAAAASUVORK5CYII=
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-5hcun3aa.png"
 Content-Disposition: inline; filename="Outlook-5hcun3aa.png"
 Content-Transfer-Encoding: base64
@@ -1441,7 +1492,7 @@ HZTds0u1Lt6HwxoKIQndht1bnZz4aHO71YXylKoNhUTmjc6j+D4yh4yhkPhyWJpDRt/eZ++TuYbV
 TpPF2vgegf2ltHUA5GxAUJytSgM/fC7YyjITpRpmpF9he9BpwGQc96BHzn0Hnwn4OMM9+xnnaHMX
 QuBuA/cgct11uxOlWlzmLsaUI83/B7nlo0eav8VoNTzspkAeotBDTYFoNTzspkAeotBD/wDHO/NC
 zFjfiwAAAABJRU5ErkJggg==
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-1z2l04w5.png"
 Content-Disposition: inline; filename="Outlook-1z2l04w5.png"
 Content-Transfer-Encoding: base64
@@ -1460,7 +1511,7 @@ Zerv5Gr5Smxju1hte5jPXfunRA6SQutn8oTAIzx+vRZP5rsY+vj2YxqNQ3nA0EPRNrf2aIC2l9a2
 8n9O5uYfLRW2S/tzRVVlJ6lLysXTQ3eunRn3ewHIqtZoqslsMRJNvFlOKX9NbicIsf+/2gJD3CLv
 G3SfGu4v1+VCqZH5UTRmXuQtwanchknxAHTd6IKqGb8NMCaUYztz3oVZR7v+djQCjoBj/pXNwizD
 1N+6+E+jV/4PYgbPhuN5GeEAAAAASUVORK5CYII=
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-1pkwad4d.png"
 Content-Disposition: inline; filename="Outlook-1pkwad4d.png"
 Content-Transfer-Encoding: base64
@@ -1486,7 +1537,7 @@ aCcJA6gjZCH22nCD2n69iGr8SCUg5D02AyWIezJz/eMeZZs3kvHYDKeshmGznrcbA0I+IOR5u5H6
 W3xJIpkeZZvv248I5Q6mTmjf85wfBOC+YB4xqb2RzIhJPf6NhTSOdLZbejuEZIE8zKgjZE53MOUO
 phZzq3XJNJSquC+YyX9g//8JrcVeMXburr0yndeYx34lr7F4/xP0HznQ1fmW5FX0AAAAAElFTkSu
 QmCC
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-5ajisvr2.png"
 Content-Disposition: inline; filename="Outlook-5ajisvr2.png"
 Content-Transfer-Encoding: base64
@@ -1512,7 +1563,7 @@ aCcJA6gjZCH22nCD2n69iGr8SCUg5D02AyWIezJz/eMeZZs3kvHYDKeshmGznrcbA0I+IOR5u5H6
 W3xJIpkeZZvv248I5Q6mTmjf85wfBOC+YB4xqb2RzIhJPf6NhTSOdLZbejuEZIE8zKgjZE53MOUO
 phZzq3XJNJSquC+YyX9g//8JrcVeMXburr0yndeYx34lr7F4/xP0HznQ1fmW5FX0AAAAAElFTkSu
 QmCC
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-loscivc5.png"
 Content-Disposition: inline; filename="Outlook-loscivc5.png"
 Content-Transfer-Encoding: base64
@@ -1531,7 +1582,7 @@ Zerv5Gr5Smxju1hte5jPXfunRA6SQutn8oTAIzx+vRZP5rsY+vj2YxqNQ3nA0EPRNrf2aIC2l9a2
 8n9O5uYfLRW2S/tzRVVlJ6lLysXTQ3eunRn3ewHIqtZoqslsMRJNvFlOKX9NbicIsf+/2gJD3CLv
 G3SfGu4v1+VCqZH5UTRmXuQtwanchknxAHTd6IKqGb8NMCaUYztz3oVZR7v+djQCjoBj/pXNwizD
 1N+6+E+jV/4PYgbPhuN5GeEAAAAASUVORK5CYII=
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-x2vgiek3.png"
 Content-Disposition: inline; filename="Outlook-x2vgiek3.png"
 Content-Transfer-Encoding: base64
@@ -1606,7 +1657,7 @@ RKf+/f9BAnxPQ5vwL0owLdEOYf9ECo2EFsKxQyNBhx/q9Uw0XrTzqG/3I5IAC24gAFQAg3u0Trhp
 0g8gEhnSnrNO1r8eROEkd3698/1WhqYZs7RAj5fALmE9Z5w4DOc9+8R7+w8t+FfAlh2fcXNHuatr
 8Ct3tA7i+SXaC48bXzAhBjTKB4WVGoXNrOnsSMbvFIH7YzBR4dk4L+4MWH9xzkggJJiMAxx09/+E
 4j08Rzu0FmfDO7ZvJ5zJodQ7xybBC6f+H6QLXKXgoYARAAAAAElFTkSuQmCC
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-iz5nuuf5.png"
 Content-Disposition: inline; filename="Outlook-iz5nuuf5.png"
 Content-Transfer-Encoding: base64
@@ -1622,7 +1673,7 @@ ERY6xCCTHE8ISq3Ai/A13+KDoQj+EaSjnZWlyf6PHOub3jrd2ztHPGKPk+b301d5geNFtWYMXFE1
 jhc5XjT0M41gK0Dqr+usj46EAwfrC6nRruNsLr1x4mNoQVJtoLUlvR9FKQVZsWWXXorw02gLgKJc
 JUjzA0a23ap+Gq3MVxiAB+/q4n38Tz7adGu0ze05+zQk/QDTJLtnN8OJWPb6ybi8xyK9n5mq61A1
 i7Jr6Szk0R8w1HZa1QlaJ2/euMXP6r4D45GH2XAQI60AAAAASUVORK5CYII=
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-1h4phv2m.png"
 Content-Disposition: inline; filename="Outlook-1h4phv2m.png"
 Content-Transfer-Encoding: base64
@@ -1697,7 +1748,7 @@ RKf+/f9BAnxPQ5vwL0owLdEOYf9ECo2EFsKxQyNBhx/q9Uw0XrTzqG/3I5IAC24gAFQAg3u0Trhp
 0g8gEhnSnrNO1r8eROEkd3698/1WhqYZs7RAj5fALmE9Z5w4DOc9+8R7+w8t+FfAlh2fcXNHuatr
 8Ct3tA7i+SXaC48bXzAhBjTKB4WVGoXNrOnsSMbvFIH7YzBR4dk4L+4MWH9xzkggJJiMAxx09/+E
 4j08Rzu0FmfDO7ZvJ5zJodQ7xybBC6f+H6QLXKXgoYARAAAAAElFTkSuQmCC
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-qob15plp.png"
 Content-Disposition: inline; filename="Outlook-qob15plp.png"
 Content-Transfer-Encoding: base64
@@ -1715,7 +1766,7 @@ lFbqJ8cnRy5NLRSW3eKJQ7vQpbkGeecPY8FZ9sHck8n3ALLdidvjhu048SgDo+Cio7X5lWoDiRiA
 St0SAJG+0gi4eCBr9B9sZHPANj+/Dt5ngsH/8DGN+hJ/eY21s0wRSXFJcmzS24HPBAPv/jTl3tNP
 +WKZKZGZ1wVsjd+cmnu5UGpynvtQFG4Bs/PfLt7KMUoL3ytCQn4Q7/27H860RUFToFJhr82FSe40
 uICS8Pt1G1KpwPzxzxQQ1eACufIPfBi14pXIw4kAAAAASUVORK5CYII=
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-dkgz5ftk.png"
 Content-Disposition: inline; filename="Outlook-dkgz5ftk.png"
 Content-Transfer-Encoding: base64
@@ -1790,7 +1841,7 @@ RKf+/f9BAnxPQ5vwL0owLdEOYf9ECo2EFsKxQyNBhx/q9Uw0XrTzqG/3I5IAC24gAFQAg3u0Trhp
 0g8gEhnSnrNO1r8eROEkd3698/1WhqYZs7RAj5fALmE9Z5w4DOc9+8R7+w8t+FfAlh2fcXNHuatr
 8Ct3tA7i+SXaC48bXzAhBjTKB4WVGoXNrOnsSMbvFIH7YzBR4dk4L+4MWH9xzkggJJiMAxx09/+E
 4j08Rzu0FmfDO7ZvJ5zJodQ7xybBC6f+H6QLXKXgoYARAAAAAElFTkSuQmCC
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-n0brb45z.png"
 Content-Disposition: inline; filename="Outlook-n0brb45z.png"
 Content-Transfer-Encoding: base64
@@ -1816,7 +1867,7 @@ aCcJA6gjZCH22nCD2n69iGr8SCUg5D02AyWIezJz/eMeZZs3kvHYDKeshmGznrcbA0I+IOR5u5H6
 W3xJIpkeZZvv248I5Q6mTmjf85wfBOC+YB4xqb2RzIhJPf6NhTSOdLZbejuEZIE8zKgjZE53MOUO
 phZzq3XJNJSquC+YyX9g//8JrcVeMXburr0yndeYx34lr7F4/xP0HznQ1fmW5FX0AAAAAElFTkSu
 QmCC
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-rjthrtbh.png"
 Content-Disposition: inline; filename="Outlook-rjthrtbh.png"
 Content-Transfer-Encoding: base64
@@ -1847,7 +1898,7 @@ HZTds0u1Lt6HwxoKIQndht1bnZz4aHO71YXylKoNhUTmjc6j+D4yh4yhkPhyWJpDRt/eZ++TuYbV
 TpPF2vgegf2ltHUA5GxAUJytSgM/fC7YyjITpRpmpF9he9BpwGQc96BHzn0Hnwn4OMM9+xnnaHMX
 QuBuA/cgct11uxOlWlzmLsaUI83/B7nlo0eav8VoNTzspkAeotBDTYFoNTzspkAeotBD/wDHO/NC
 zFjfiwAAAABJRU5ErkJggg==
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-0s54wy3j.png"
 Content-Disposition: inline; filename="Outlook-0s54wy3j.png"
 Content-Transfer-Encoding: base64
@@ -1866,7 +1917,7 @@ Zerv5Gr5Smxju1hte5jPXfunRA6SQutn8oTAIzx+vRZP5rsY+vj2YxqNQ3nA0EPRNrf2aIC2l9a2
 8n9O5uYfLRW2S/tzRVVlJ6lLysXTQ3eunRn3ewHIqtZoqslsMRJNvFlOKX9NbicIsf+/2gJD3CLv
 G3SfGu4v1+VCqZH5UTRmXuQtwanchknxAHTd6IKqGb8NMCaUYztz3oVZR7v+djQCjoBj/pXNwizD
 1N+6+E+jV/4PYgbPhuN5GeEAAAAASUVORK5CYII=
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-xfb1c4q5.png"
 Content-Disposition: inline; filename="Outlook-xfb1c4q5.png"
 Content-Transfer-Encoding: base64
@@ -1882,7 +1933,7 @@ ERY6xCCTHE8ISq3Ai/A13+KDoQj+EaSjnZWlyf6PHOub3jrd2ztHPGKPk+b301d5geNFtWYMXFE1
 jhc5XjT0M41gK0Dqr+usj46EAwfrC6nRruNsLr1x4mNoQVJtoLUlvR9FKQVZsWWXXorw02gLgKJc
 JUjzA0a23ap+Gq3MVxiAB+/q4n38Tz7adGu0ze05+zQk/QDTJLtnN8OJWPb6ybi8xyK9n5mq61A1
 i7Jr6Szk0R8w1HZa1QlaJ2/euMXP6r4D45GH2XAQI60AAAAASUVORK5CYII=
---000000000000962e2105e9eaf31a
+--000000000000d4707705e9eb06df
 Content-Type: image/png; name="Outlook-cqxeiypw.png"
 Content-Disposition: inline; filename="Outlook-cqxeiypw.png"
 Content-Transfer-Encoding: base64
@@ -1900,5 +1951,5 @@ lFbqJ8cnRy5NLRSW3eKJQ7vQpbkGeecPY8FZ9sHck8n3ALLdidvjhu048SgDo+Cio7X5lWoDiRiA
 St0SAJG+0gi4eCBr9B9sZHPANj+/Dt5ngsH/8DGN+hJ/eY21s0wRSXFJcmzS24HPBAPv/jTl3tNP
 +WKZKZGZ1wVsjd+cmnu5UGpynvtQFG4Bs/PfLt7KMUoL3ytCQn4Q7/27H860RUFToFJhr82FSe40
 uICS8Pt1G1KpwPzxzxQQ1eACufIPfBi14pXIw4kAAAAASUVORK5CYII=
---000000000000962e2105e9eaf31a--
+--000000000000d4707705e9eb06df--
 
