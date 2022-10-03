@@ -1,104 +1,128 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <luca.ceresoli@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D993C4332F
-	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 17:22:42 +0000 (UTC)
-Received: from relay11.mail.gandi.net (relay11.mail.gandi.net
- [217.70.178.231])
- by mx.groups.io with SMTP id smtpd.web11.318.1664817751587846925
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A424C4332F
+	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 21:06:43 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net
+ [217.70.183.194])
+ by mx.groups.io with SMTP id smtpd.web08.3048.1664831198409177809
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 03 Oct 2022 10:22:32 -0700
+ Mon, 03 Oct 2022 14:06:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=MpLpULOe;
- spf=pass (domain: bootlin.com, ip: 217.70.178.231,
- mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 01C64100008;
-	Mon,  3 Oct 2022 17:22:28 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=D2tDgEGr;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.194,
+ mailfrom: luca.ceresoli@bootlin.com)
+Received: from booty (unknown [77.244.183.192])
+	(Authenticated sender: luca.ceresoli@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id F3F7D40004;
+	Mon,  3 Oct 2022 21:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1664817749;
+	t=1664831196;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qTXyxuGxfMDST+0byw4zoX7ICMwLrTPfBnf3dBJy74Y=;
-	b=MpLpULOeZDm6Ez/kHS1XLgCrNtOgRO+yNSV2HGyjc+sm4NAN15Luw6TFcK5Lu3JMElDzMr
-	ouZ80gCJEoypKdjyWL+KJ2WWdoPXook8eb1vLQzrwuH8VUGXe4AW6vbIggPFVZj6LHHxTw
-	bPhZf5MIXK7q7vtN/vEBy/+Nhlgp15zWgK0grF5eOz85Fgk68xuCuQLJXU9/XQg1pg29Gk
-	UbKxTxBcLWdoewH/WX/RqSXLNU03mLg7/jwQUDyeiab4n+khjgegus8mjtpAIHb9Ak8AeX
-	72Sya92ExwCS/9L20TmywMK4FQ9vNfU7Wgh20rar7EDRvSr1ANKWfX+cTc5lZg==
-Message-ID: <94f999c9-88ea-64a2-b4dc-1651bd52453e@bootlin.com>
-Date: Mon, 3 Oct 2022 19:22:28 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
- Quentin Schulz <quentin.schulz@theobroma-systems.com>,
- Ross Burton <ross.burton@arm.com>,
- Nicolas Dechesne <nicolas.dechesne@linaro.org>, docs@lists.yoctoproject.org,
- bitbake-devel@lists.openembedded.org
-Subject: Re: [docs] [PATCH v2] bitbake: user-manual: inform about spaces in
- :remove
-Content-Language: en-US
-To: Johan Korsnes <johan.korsnes@remarkable.no>
-References: <20220929122133.261961-1-johan.korsnes@remarkable.no>
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+	bh=nQOsVFf+gwk1S1qOTuC9y39/6kgn/4dDoBnTQyE1Lc8=;
+	b=D2tDgEGrkbBXTGfXqQJYVHQOUIFMKMbBLsEz0arXfUVCx74qa8hB0Id6npJmiBQl5DfTTO
+	vuJaz12jvwvcG7JpBtY4makOMN1asnvLZbjtMbr44nB0oWIYqAZ9hlSUGw4nTjL1ft/p0F
+	QvM8Py+GLYJ9iG5Hk4EXzP6CJpwR56j/AL22pJaNbnqCLI6KO5GS57xKQzlpD7/OGXtEhZ
+	vQRJkePOXQnyiVpbrc8X3s7F6DpZxK2WnX2Fej7BnFohLbYswnTbSvLg+1JUdwc/U4DKQU
+	YSeXtHd5rrXNT0X7snLg31lWaobFduMrAxts1RJFy7B98aiJmxVjZCeDmvPd0Q==
+Date: Mon, 3 Oct 2022 23:06:34 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: "Richard Greer" <rg@braneaudio.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH] Change git lfs support to allow for
+ destsuffix being set.
+Message-ID: <20221003230634.529ca225@booty>
+In-Reply-To: <00fa7401-7894-3c86-6b25-3ad62d184260@braneaudio.com>
+References: <00fa7401-7894-3c86-6b25-3ad62d184260@braneaudio.com>
 Organization: Bootlin
-In-Reply-To: <20220929122133.261961-1-johan.korsnes@remarkable.no>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 03 Oct 2022 17:22:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14012
+ <bitbake-devel@lists.openembedded.org>; Mon, 03 Oct 2022 21:06:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14014
 
+Hello Richard,
 
-On 29.09.22 14:21, Johan Korsnes wrote:
-> Inform the reader that there should be no need for spaces in the value
-> when using removal override `:remove`.
->
-> Considering why spaces are used in the other override operators, it
-> might seem obvious that they aren't needed for the removal operator.
-> But, it seems like I'm not the first to be confused about this.
->
-> Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-> Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-> Cc: Ross Burton <ross.burton@arm.com>
-> Cc: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-> Signed-off-by: Johan Korsnes <johan.korsnes@remarkable.no>
->
+On Mon, 3 Oct 2022 12:58:14 -0500
+"Richard Greer" <rg@braneaudio.com> wrote:
+
+> From: Richard Greer <rg@braneaudio.com>
+>=20
+> When getting large files with git lfs need to try and recreate the path=20
+> where the repo
+> is actually located after the unpack.
+>=20
+> If destsuffix or subdir (where subdir is not an absolute path) is set=20
+> then it will not be in
+> tmpdir/git.
+>=20
+> It looks like the more correct place would be in ud.destdir.
+>=20
+> This does not address the issue where it will fail in the unpack if=20
+> subdir is an absolute path
+> since it cannot possibly be in the same path as the tmpdir.=C2=A0 I have =
+no=20
+> idea as to how to
+> deal with that.
+
+Text wrapping seems broken in the text. Not necessarily a big problem,
+but not nice to read.
+
+> Signed-off-by: Richard Greer <rg@braneaudio.com>
 > ---
-> v1->v2
->   * better wording :)
-> ---
->   .../doc/bitbake-user-manual/bitbake-user-manual-metadata.rst   | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> index 337821612c..bc27eb1b6b 100644
-> --- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> +++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-> @@ -330,7 +330,8 @@ Removal (Override Style Syntax)
->   
->   You can remove values from lists using the removal override style
->   syntax. Specifying a value for removal causes all occurrences of that
-> -value to be removed from the variable.
-> +value to be removed from the variable. Unlike ":append" and ":prepend",
-> +there is no need to add a leading or trailing space to the value.
->   
->   When you use this syntax, BitBake expects one or more strings.
->   Surrounding spaces and spacing are preserved. Here is an example::
+>  =C2=A0bitbake/lib/bb/fetch2/git.py | 4 ++--
+>  =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+> index f0df6fb69b..fa454a1c07 100644
+> --- a/bitbake/lib/bb/fetch2/git.py
+> +++ b/bitbake/lib/bb/fetch2/git.py
+> @@ -421,8 +421,8 @@ class Git(FetchMethod):
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 # Only do this if the unpack resulted in a .git/lf=
+s=20
+> directory being
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 # created; this only happens if at least one blob=
+=20
+> needed to be
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 # downloaded.
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 if os.path.exists(os.path.join(tmpdir, "git", ".git",=20
+> "lfs")):
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 runfetchcmd("tar -cf - lfs | tar=
+ -xf - -C %s" %=20
+> ud.clonedir, d, workdir=3D"%s/git/.git" % tmpdir)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 if os.path.exists(os.path.join(ud.destdir, ".git", "lfs"=
+)):
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 runfetchcmd("tar -cf - lfs | tar=
+ -xf - -C %s" %=20
 
+Here wrapping is also wrong, but this one is definitely a problem. You
+must not wrap a line in a patch, otherwise it won't apply.
 
-Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Thanks!
-Michael.
+I strongly suggest to use 'git format-patch' + 'git send-email' to send
+a patch. Those tools will ensure the patch is not mangled, and it will
+apply correctly. More info at
+https://www.openembedded.org/wiki/How_to_submit_a_patch_to_OpenEmbedded
 
--- 
-Michael Opdenacker, Bootlin
+Can you please send a v2 with that fixed?
+
+Best regards.
+--=20
+Luca Ceresoli, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
 
