@@ -2,66 +2,65 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6071EC4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606F4C433F5
 	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 15:55:38 +0000 (UTC)
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com
- [209.85.216.53])
- by mx.groups.io with SMTP id smtpd.web10.12293.1664898930090141835
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com
+ [209.85.214.180])
+ by mx.groups.io with SMTP id smtpd.web08.12417.1664898932267689714
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Oct 2022 08:55:30 -0700
+ Tue, 04 Oct 2022 08:55:32 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=DV5ajeYV;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.53,
+ header.b=KlI/OS+w;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.180,
  mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f53.google.com with SMTP id
- x1-20020a17090ab00100b001fda21bbc90so19005571pjq.3
+Received: by mail-pl1-f180.google.com with SMTP id h10so10302172plb.2
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Oct 2022 08:55:30 -0700 (PDT)
+ Tue, 04 Oct 2022 08:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=gebORtQXX9mXxvhJ88KIdWlFpm9g069u8KhIW60lErE=;
-        b=DV5ajeYVG5IrVxTKxpscB7RrDXMrkeQH6VFysj9k4oJ+/09e16DqkpN9l1HE/sAckf
-         V5m1dgHeB2jz74DzG79YR3F7yIR2rBSFaCHQkVHW/BFkvGK8tKQVkVOw9dtFjy81lNEb
-         i65DhL4RsFEZgAsvF9odJ9m7YDfjr+GcGsVn7uob/IjLW4Kp+yyrqMjWS3jp597CB+qV
-         4Im5unsBviA/egsiQGDHfOsHTbIbWgFc9hHUYURdC5gZ/k7hUoPnqIhammq9R/Xzt4Cp
-         D+ElROBJQ9v1/Gn7fctllheTvoFdJ77Vlcbvcvx+TYImQetgSBiPSwyJJHRSBri2RYeX
-         6olw==
+        bh=nHVvsCc4sF3f1OELLFL7N9/tPU0TcAzz54wittgRkMc=;
+        b=KlI/OS+wIrzAhQ+fEA/478CvhmNT+uCcfiFljCJUroHxOgBDPst8SZZEcp4trVuFkP
+         gkrk7l5btCKVLxLsdhg+E43ibjuiJ7pDD/cxKizzLgBCE0NDH9p8f7Jx5N+wNt1ISpAg
+         CvGW33vvxSGJdMvkgOUTwXjf38Y40lrpab5xFqu2sFo7gP51tRbCQHMky+j3AFIkwezy
+         P/TK6TZ64swkCVsx6oL+p13lex9DnIF0Es50WeTQCAWBP395L80Lq6T8h/E/HK6tkV5G
+         p8l3uJCQ+uBg2M75+efop5EYQv0mrOotrNyiwHcCHxHuLjLsu9OhaGQK3uKc27XiPArU
+         g8Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=gebORtQXX9mXxvhJ88KIdWlFpm9g069u8KhIW60lErE=;
-        b=1r1Dd1ZsqJdZ0XqXyOFPKzHHMVFqW3/GDigyUflA563W14bF/r9O4R6YH1D5ldDXSN
-         qXG++g2TP7IsuyeqCmM1GSkNut9cOg41Vu9Gn86GXw8rxyDnOj7dXMVW4a5/WtB65/fU
-         5P7Gvpp+jRNeyGKRPV2xy//uQavlaThuGf5iKinwplQ6RMRnmHZ0G9hrP2sTGk5DmXb8
-         D0OVbcpGBhskMubc53u15mOU+4igcyyUdf3sp0q5zAKjO6BcP70O/mS1KHRCOxk4fsnr
-         fPKJEUlkFbPFUZJuBzTeXo/Z5IaiLtwrcA5cbHXkA+jqHhPR5CM2HtVYWRh1aEt2KPIX
-         NOhQ==
-X-Gm-Message-State: ACrzQf3yBkVYsbW4nNqWpP5L7A1EQEfZ3V0iEBprHThmour3eVK+Ljdg
-	pwzu23QFCcqbiKamHOTQpztv/rxNW0WxOYNG
+        bh=nHVvsCc4sF3f1OELLFL7N9/tPU0TcAzz54wittgRkMc=;
+        b=jUWW0dueWnEdcvCKvKUCaN1SUbZ1gG6D6k6fsVB8/XXj/lXVOpSd/rL0s/VURRJs4n
+         IsoF2I9wWcJnHqclrj+MAcqKoimNEmDBlK3+jluCDlhEtB5YstSUrCuLwRyxoUa5HcBT
+         mLQUgtLXMb+b/XXhxo69zITVEqTp+VqNSFX8eH14mQhOwhLekoJenr4zeVMOgssKzokZ
+         uy5eapJ0xiQH5o/DZu53lEDlFOzJmMLEEjdu1JTz+10sQWPVkpvD2LL+aK+jjSiXb0T/
+         bFs13PCP+8JCtjpsoih35R76fQRGQ7SNuftxfmnBySq+AvZh8PShmrYnk/1wfG8mpbZR
+         lQug==
+X-Gm-Message-State: ACrzQf0JTZi920sSP0Ac+yQ6dvG/FxmMQcQiqW2vdfgbgRddiqnOeR7M
+	IVxMWXBlzzpGM9kjrc1tyv+uVpgm4aEiIjeP
 X-Google-Smtp-Source: 
- AMsMyM7v2kWOUw3HJBaguJtXKIIBZf2DlJ59GAAdKEy3KwupxUSPs2IMcPTQim+MVivqln2ZP31dRQ==
-X-Received: by 2002:a17:90a:50:b0:20a:b146:e75e with SMTP id
- 16-20020a17090a005000b0020ab146e75emr384322pjb.216.1664898929170;
-        Tue, 04 Oct 2022 08:55:29 -0700 (PDT)
+ AMsMyM4AdQhCiSG/9qzcscfKRgY/qa6PfqMd5MJjfDwRdCA59CIldjWaE1SekUBOVyffU+MaeENXIg==
+X-Received: by 2002:a17:90b:3b44:b0:205:d22a:e94 with SMTP id
+ ot4-20020a17090b3b4400b00205d22a0e94mr371379pjb.15.1664898931343;
+        Tue, 04 Oct 2022 08:55:31 -0700 (PDT)
 Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
  [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- k18-20020a170902c41200b0017e232b6724sm4716457plk.69.2022.10.04.08.55.28
+ k18-20020a170902c41200b0017e232b6724sm4716457plk.69.2022.10.04.08.55.30
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 08:55:28 -0700 (PDT)
+        Tue, 04 Oct 2022 08:55:30 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 7/8] gitsm: Error out if submodule
- refers to parent repo
-Date: Tue,  4 Oct 2022 05:54:58 -1000
+Subject: [bitbake][kirkstone][2.0][PATCH 8/8] asyncrpc/client: Fix unix domain
+ socket chdir race issues
+Date: Tue,  4 Oct 2022 05:54:59 -1000
 Message-Id: 
- <987712c4c8fefd86a1f5116c11ee86e296e852ee.1664898736.git.steve@sakoman.com>
+ <6603c3e39f1cf746669ec6c9f0be8c6e6ece426e.1664898736.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1664898736.git.steve@sakoman.com>
 References: <cover.1664898736.git.steve@sakoman.com>
@@ -71,39 +70,71 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 04 Oct 2022 15:55:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14022
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14023
 
-From: Pavel Zhukov <pavel@zhukoff.net>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-If submodule refers to specific revision of the parent repository it
-causes deadlock in bitbake locking mechanism (lock is acquired to fetch
-the parent and cannot be released before all submodules are fetched).
-raise FetchError in such situation to prevent deadlocking.
+The connect_unix() call had a bug where if a relative path to a socket
+was passed (which the non-async client always does), and the current
+working directory was changed after the initial call, it would fail to
+reconnect if it became disconnected, since the socket couldn't be found
+relative to the new current working directory.
 
-[Yocto 14045]
+To work around this, change the socket connection for UNIX domain
+sockets to be synchronous and change current working before connecting.
+This isn't ideal since the connection could block the entire event loop,
+but in practice this shouldn't happen since the socket are local files
+anyway.
 
-Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
+Help debugging and resolving from Joshua Watt.
+
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 0361ecf7eb82c386a9842cf1f3cb706c0a112e77)
+(cherry picked from commit 5964bb67bb20df7f411ee0650cf189504a05cf25)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/fetch2/gitsm.py | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/bb/asyncrpc/client.py | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index c1950e48..25d5db0e 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -115,6 +115,9 @@ class GitSM(Git):
-                     # This has to be a file reference
-                     proto = "file"
-                     url = "gitsm://" + uris[module]
-+            if "{}{}".format(ud.host, ud.path) in url:
-+                raise bb.fetch2.FetchError("Submodule refers to the parent repository. This will cause deadlock situation in current version of Bitbake." \
-+                                           "Consider using git fetcher instead.")
+diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
+index 881434d2..fa042bbe 100644
+--- a/lib/bb/asyncrpc/client.py
++++ b/lib/bb/asyncrpc/client.py
+@@ -31,7 +31,17 @@ class AsyncClient(object):
  
-             url += ';protocol=%s' % proto
-             url += ";name=%s" % module
+     async def connect_unix(self, path):
+         async def connect_sock():
+-            return await asyncio.open_unix_connection(path)
++            # AF_UNIX has path length issues so chdir here to workaround
++            cwd = os.getcwd()
++            try:
++                os.chdir(os.path.dirname(path))
++                # The socket must be opened synchronously so that CWD doesn't get
++                # changed out from underneath us so we pass as a sock into asyncio
++                sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM, 0)
++                sock.connect(os.path.basename(path))
++            finally:
++               os.chdir(cwd)
++            return await asyncio.open_unix_connection(sock=sock)
+ 
+         self._connect_sock = connect_sock
+ 
+@@ -150,14 +160,8 @@ class Client(object):
+             setattr(self, m, self._get_downcall_wrapper(downcall))
+ 
+     def connect_unix(self, path):
+-        # AF_UNIX has path length issues so chdir here to workaround
+-        cwd = os.getcwd()
+-        try:
+-            os.chdir(os.path.dirname(path))
+-            self.loop.run_until_complete(self.client.connect_unix(os.path.basename(path)))
+-            self.loop.run_until_complete(self.client.connect())
+-        finally:
+-            os.chdir(cwd)
++        self.loop.run_until_complete(self.client.connect_unix(path))
++        self.loop.run_until_complete(self.client.connect())
+ 
+     @property
+     def max_chunk(self):
 -- 
 2.25.1
 
