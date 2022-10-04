@@ -1,141 +1,96 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <rg@braneaudio.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606F4C433F5
-	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 15:55:38 +0000 (UTC)
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com
- [209.85.214.180])
- by mx.groups.io with SMTP id smtpd.web08.12417.1664898932267689714
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD34C433F5
+	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 22:20:00 +0000 (UTC)
+Received: from p3plsmtpa07-02.prod.phx3.secureserver.net
+ (p3plsmtpa07-02.prod.phx3.secureserver.net [173.201.192.231])
+ by mx.groups.io with SMTP id smtpd.web12.17272.1664921990631614510
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Oct 2022 08:55:32 -0700
+ Tue, 04 Oct 2022 15:19:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=KlI/OS+w;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.180,
- mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f180.google.com with SMTP id h10so10302172plb.2
-        for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Oct 2022 08:55:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=nHVvsCc4sF3f1OELLFL7N9/tPU0TcAzz54wittgRkMc=;
-        b=KlI/OS+wIrzAhQ+fEA/478CvhmNT+uCcfiFljCJUroHxOgBDPst8SZZEcp4trVuFkP
-         gkrk7l5btCKVLxLsdhg+E43ibjuiJ7pDD/cxKizzLgBCE0NDH9p8f7Jx5N+wNt1ISpAg
-         CvGW33vvxSGJdMvkgOUTwXjf38Y40lrpab5xFqu2sFo7gP51tRbCQHMky+j3AFIkwezy
-         P/TK6TZ64swkCVsx6oL+p13lex9DnIF0Es50WeTQCAWBP395L80Lq6T8h/E/HK6tkV5G
-         p8l3uJCQ+uBg2M75+efop5EYQv0mrOotrNyiwHcCHxHuLjLsu9OhaGQK3uKc27XiPArU
-         g8Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=nHVvsCc4sF3f1OELLFL7N9/tPU0TcAzz54wittgRkMc=;
-        b=jUWW0dueWnEdcvCKvKUCaN1SUbZ1gG6D6k6fsVB8/XXj/lXVOpSd/rL0s/VURRJs4n
-         IsoF2I9wWcJnHqclrj+MAcqKoimNEmDBlK3+jluCDlhEtB5YstSUrCuLwRyxoUa5HcBT
-         mLQUgtLXMb+b/XXhxo69zITVEqTp+VqNSFX8eH14mQhOwhLekoJenr4zeVMOgssKzokZ
-         uy5eapJ0xiQH5o/DZu53lEDlFOzJmMLEEjdu1JTz+10sQWPVkpvD2LL+aK+jjSiXb0T/
-         bFs13PCP+8JCtjpsoih35R76fQRGQ7SNuftxfmnBySq+AvZh8PShmrYnk/1wfG8mpbZR
-         lQug==
-X-Gm-Message-State: ACrzQf0JTZi920sSP0Ac+yQ6dvG/FxmMQcQiqW2vdfgbgRddiqnOeR7M
-	IVxMWXBlzzpGM9kjrc1tyv+uVpgm4aEiIjeP
-X-Google-Smtp-Source: 
- AMsMyM4AdQhCiSG/9qzcscfKRgY/qa6PfqMd5MJjfDwRdCA59CIldjWaE1SekUBOVyffU+MaeENXIg==
-X-Received: by 2002:a17:90b:3b44:b0:205:d22a:e94 with SMTP id
- ot4-20020a17090b3b4400b00205d22a0e94mr371379pjb.15.1664898931343;
-        Tue, 04 Oct 2022 08:55:31 -0700 (PDT)
-Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
- [72.253.6.214])
-        by smtp.gmail.com with ESMTPSA id
- k18-20020a170902c41200b0017e232b6724sm4716457plk.69.2022.10.04.08.55.30
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 08:55:30 -0700 (PDT)
-From: Steve Sakoman <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 8/8] asyncrpc/client: Fix unix domain
- socket chdir race issues
-Date: Tue,  4 Oct 2022 05:54:59 -1000
-Message-Id: 
- <6603c3e39f1cf746669ec6c9f0be8c6e6ece426e.1664898736.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1664898736.git.steve@sakoman.com>
-References: <cover.1664898736.git.steve@sakoman.com>
+ dkim=missing;
+ spf=pass (domain: braneaudio.com, ip: 173.201.192.231,
+ mailfrom: rg@braneaudio.com)
+Received: from [192.168.0.22] ([70.112.164.231])
+	by :SMTPAUTH: with ESMTPSA
+	id fqGRoJg6FhDfIfqGUobXOc; Tue, 04 Oct 2022 15:19:50 -0700
+X-CMAE-Analysis: v=2.4 cv=BZAdbph2 c=1 sm=1 tr=0 ts=633cb186
+ a=S3BSAMYkHO6g4MQ2VxJkNg==:117 a=S3BSAMYkHO6g4MQ2VxJkNg==:17
+ a=IkcTkHD0fZMA:10 a=EfASa0wiAAAA:8 a=Q4-j1AaZAAAA:8 a=yeyJmGBnnEQbqALXa4UA:9
+ a=QEXdDO2ut3YA:10 a=Ogh1Um8Ajkq3hpB3iR5s:22 a=9H3Qd4_ONW2Ztcrla5EB:22
+X-SECURESERVER-ACCT: rg@braneaudio.com
+Message-ID: <ad8a8eb0-48b7-3d06-f8d3-ddab5747c4f9@braneaudio.com>
+Date: Tue, 4 Oct 2022 17:19:47 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Content-Language: en-US
+To: bitbake-devel@lists.openembedded.org
+From: Richard Greer <rg@braneaudio.com>
+Subject: [bitbake-devel][PATCH v2] Change git lfs support to allow for
+ destsuffix being set.
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: 
+ MS4xfDzSj+prTFLipVZoPkfVG4hNvwsmusVMoN/vYpQWSIU+rjSNk3ic+Hlj+s3n5U52IeF4kRdFPvJsJkQJtpGdJgLEPm31PBlgLUrZyMRne8AKbzfiUrR5
+ jEnN82vvFK2UZJs8PvDXMwXfGgYVmp3AtZEpDCErFQG3tOEd+ntz9Q+ED+QD1qfYGtTj4FSZaqGVbLCHhUvDmW2CgSNVGc/n3N8=
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 04 Oct 2022 15:55:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14023
+ <bitbake-devel@lists.openembedded.org>; Tue, 04 Oct 2022 22:20:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14024
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+From: Richard Greer<rg@braneaudio.com>
 
-The connect_unix() call had a bug where if a relative path to a socket
-was passed (which the non-async client always does), and the current
-working directory was changed after the initial call, it would fail to
-reconnect if it became disconnected, since the socket couldn't be found
-relative to the new current working directory.
+When getting large files with git lfs need to try and recreate the
+path where the repo is actually located after the unpack.
 
-To work around this, change the socket connection for UNIX domain
-sockets to be synchronous and change current working before connecting.
-This isn't ideal since the connection could block the entire event loop,
-but in practice this shouldn't happen since the socket are local files
-anyway.
+If destsuffix or subdir (where subdir is not an absolute path) is
+set then it will not be in tmpdir/git.
 
-Help debugging and resolving from Joshua Watt.
+It looks like the more correct place would be in ud.destdir.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 5964bb67bb20df7f411ee0650cf189504a05cf25)
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
+This does not address the issue where it will fail in the unpack
+if subdir is an absolute path since it cannot possibly be in the
+same path as the tmpdir.  I have no idea as to how to deal with
+that.
+
+Signed-off-by: Richard Greer<rg@braneaudio.com>
+
 ---
- lib/bb/asyncrpc/client.py | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+v1->v2
+  * Try to get rid of improper line breaks.
+  * Tried git send-email but could not get it to work with our mail
+    server for any settings.
+  * Tried routing it through gmail using personal account as a login,
+    but it failed due to personal account not being subscribed to
+    mailing list.  Do not really want to have my personal email
+    subscribed either.
+  * I do not see line breaks in patch from previous email in what I
+    received from the mailing list, nor do I see it if I look at the
+    post in Chrome on lists.openembedded.org.  So, I hope attempt two
+    works since git send-email does not look like an option for me.
+---
+  bitbake/lib/bb/fetch2/git.py | 4 ++--
+  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-index 881434d2..fa042bbe 100644
---- a/lib/bb/asyncrpc/client.py
-+++ b/lib/bb/asyncrpc/client.py
-@@ -31,7 +31,17 @@ class AsyncClient(object):
- 
-     async def connect_unix(self, path):
-         async def connect_sock():
--            return await asyncio.open_unix_connection(path)
-+            # AF_UNIX has path length issues so chdir here to workaround
-+            cwd = os.getcwd()
-+            try:
-+                os.chdir(os.path.dirname(path))
-+                # The socket must be opened synchronously so that CWD doesn't get
-+                # changed out from underneath us so we pass as a sock into asyncio
-+                sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM, 0)
-+                sock.connect(os.path.basename(path))
-+            finally:
-+               os.chdir(cwd)
-+            return await asyncio.open_unix_connection(sock=sock)
- 
-         self._connect_sock = connect_sock
- 
-@@ -150,14 +160,8 @@ class Client(object):
-             setattr(self, m, self._get_downcall_wrapper(downcall))
- 
-     def connect_unix(self, path):
--        # AF_UNIX has path length issues so chdir here to workaround
--        cwd = os.getcwd()
--        try:
--            os.chdir(os.path.dirname(path))
--            self.loop.run_until_complete(self.client.connect_unix(os.path.basename(path)))
--            self.loop.run_until_complete(self.client.connect())
--        finally:
--            os.chdir(cwd)
-+        self.loop.run_until_complete(self.client.connect_unix(path))
-+        self.loop.run_until_complete(self.client.connect())
- 
-     @property
-     def max_chunk(self):
--- 
-2.25.1
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index f0df6fb69b..fa454a1c07 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -421,8 +421,8 @@ class Git(FetchMethod):
+                  # Only do this if the unpack resulted in a .git/lfs directory being
+                  # created; this only happens if at least one blob needed to be
+                  # downloaded.
+-                if os.path.exists(os.path.join(tmpdir, "git", ".git", "lfs")):
+-                    runfetchcmd("tar -cf - lfs | tar -xf - -C %s" % ud.clonedir, d, workdir="%s/git/.git" % tmpdir)
++                if os.path.exists(os.path.join(ud.destdir, ".git", "lfs")):
++                    runfetchcmd("tar -cf - lfs | tar -xf - -C %s" % ud.clonedir, d, workdir="%s/.git" % ud.destdir)
+              finally:
+                  bb.utils.remove(tmpdir, recurse=True)
+  
+-- 2.34.1
 
 
