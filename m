@@ -2,65 +2,65 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4EEC43217
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA5EC433F5
 	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 15:55:28 +0000 (UTC)
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com
- [209.85.216.41])
- by mx.groups.io with SMTP id smtpd.web10.12291.1664898915909779205
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com
+ [209.85.210.182])
+ by mx.groups.io with SMTP id smtpd.web08.12416.1664898923443777737
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Oct 2022 08:55:21 -0700
+ Tue, 04 Oct 2022 08:55:23 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=nZLsNp4i;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.41,
+ header.b=zcbk0U2G;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.182,
  mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f41.google.com with SMTP id l12so13051810pjh.2
+Received: by mail-pf1-f182.google.com with SMTP id a26so4484789pfg.7
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Oct 2022 08:55:21 -0700 (PDT)
+ Tue, 04 Oct 2022 08:55:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=kdSPLUVms5XZm3DMauYn+86F+BW4pJfYPBI5O+7Kudw=;
-        b=nZLsNp4iUYI0ia7DL+jYJncHhn9Tk98CcIiLgY8/ZO6cHEkpAOYoLoOlhyTCGuZstj
-         Beaxv6zFWgU9NvyndRabGySywbmtJaY1oZ3188Q7U4LwazFV0+e7KqaJji753ITRGn9n
-         mR5klzth74OePzQH65XXLPM1lzGoAE77oOQ8ZLn4MHF9Cr30ouHWyx/ng7FjpTP++elB
-         J/onN7h7bjrQGflH+/QXZJcPGiaKS3IQvh+Iwqm5LF7dVkY+pHlOnf8/iXwPor7jpwMS
-         nGukowF+1hYS+kfQEi99hhR+dgj/AvarY0dJZUh/ByvD1MVe337Dk34jOBJ4FZUYRtb+
-         dQmg==
+        bh=Wu7o3tuilGEMQ9r85i4+JQBAVRqbhHSx9nM74Xja2fQ=;
+        b=zcbk0U2G1FqLIvvCY3KTSFGSaVGaDKaGwvQWXSJPCeyK/ISJwabKpoyR+eN/g02T4z
+         4YBwtshyNG8KCEYq2r3cR4Tn1ymWRGiH1eB6/diB7IoDTmtZMYvlJ1K94wZcmXlstaMW
+         /M3UuEZB+VkeunRqpkrWG2vL7dp84LjJeoOS24Lo34wF4pa8bZYpvIld3GzQQVfHvpMP
+         4Sb/GYyOUiLZVeo1WZBB57j3hhyLtZp+4kvZThSvaX6bMElKBUDaeyB3UOmAGRvFhJIg
+         ixPP50fX2STMFTFCiUeO2V5prR2VzS+9MayQLDMkWpiLI8U3qiSCWd6hD5Dv3mU4tWsO
+         ayYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=kdSPLUVms5XZm3DMauYn+86F+BW4pJfYPBI5O+7Kudw=;
-        b=y0vRuuw6F5a01XBZY9JSBYkm1ZyYmx2WQRy5b/D/r/fDrA+0tp8zRRIuLX41+K2RPP
-         NwlQItSj0Hf4nz0nZ0Ts54sQnxy8y94m/LrPMrDsp1oKmdKD9j5Qoa9Ei3vC5/FP5azt
-         Lu9JHhe4n2drGEsbY+QHMBUrVffVe1njQ2rJf2xUqTW9hDWC4yVojeC16k8cPrBNchBl
-         leKtIig81Jqs8omS0VeyL3kv6dNsJrt+ZUrE9Ynu7WyMTytb18IrDDV7UqrCJT6fGhX+
-         O4qKHYawruvgPWRlRWLaEoxgbVIFSBwJLj+80gMTnjyuvIiJfXrgPyE+yWfOT+wnbSHF
-         ZdRQ==
-X-Gm-Message-State: ACrzQf1r9PtU2zapLcjAGmlmi7rJtBkCSx6/feFmLMGnfW3f2JkFfHQI
-	TuKAU3IOCL4oo8xqjv9g/UqLpiraCxltbVvA
+        bh=Wu7o3tuilGEMQ9r85i4+JQBAVRqbhHSx9nM74Xja2fQ=;
+        b=F7QkmC9K4OlvbFHgN9yBKvhAVwmm+jNYUqr9MRUihfvEBaylzHiJ1Q1H4fiwd/QYrr
+         cKgWmJV6Q66TE4Lpyhfa/pBO2etv8CpqSPbj7EB1y20C3fRYN0MCZ8lXRMRrThO0wFkY
+         20nlQEjz9F8lnyEx20xc7WwuYvN705qW1ZTH1+HrNkRuYECRH2hzclqy7ToKgA5v6T30
+         JItmI18N23HZHd4RZ3uuJLAZguWSZSwpBBDgbtLd3uvhRVK/3xDeEraevfgTYkqJU7nQ
+         AEKFAsF37ETNhKiyJ0NzceBC0rNo5op0zwd2ibWM+JjHwXVqbw52VSOGEhol0pK6l4jA
+         aSQw==
+X-Gm-Message-State: ACrzQf2tGvhcIp0A/1RCOW40x2T1kKNkKHZWV2gxVqaBMaL3K+j3gNmz
+	XI/emN/Kj6DTHQ3vsGt1+xNOu5gKh6aJOJ06
 X-Google-Smtp-Source: 
- AMsMyM4nCxtKZyyVpE/s+Z2GhliIVDVvCzn8Cx72qS/E5VyEAyurnh2vb/ZL0D8PiAoHQFusYEPA3g==
-X-Received: by 2002:a17:90b:4f45:b0:203:6d82:205c with SMTP id
- pj5-20020a17090b4f4500b002036d82205cmr383204pjb.224.1664898920178;
-        Tue, 04 Oct 2022 08:55:20 -0700 (PDT)
+ AMsMyM5tiwaSOBo7fslP50HRcTzC54rphGQMmgk7JG1GcvqJogjBsWXTaeQHQ86cy6B5X6pnZkYKxg==
+X-Received: by 2002:a63:6a85:0:b0:43b:d845:f67d with SMTP id
+ f127-20020a636a85000000b0043bd845f67dmr23169506pgc.349.1664898922483;
+        Tue, 04 Oct 2022 08:55:22 -0700 (PDT)
 Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
  [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- k18-20020a170902c41200b0017e232b6724sm4716457plk.69.2022.10.04.08.55.18
+ k18-20020a170902c41200b0017e232b6724sm4716457plk.69.2022.10.04.08.55.21
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 08:55:18 -0700 (PDT)
+        Tue, 04 Oct 2022 08:55:21 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 3/8] runqueue: Drop deadlock breaking
- force fail
-Date: Tue,  4 Oct 2022 05:54:54 -1000
+Subject: [bitbake][kirkstone][2.0][PATCH 4/8] siggen: Fix insufficent entropy
+ in sigtask file names
+Date: Tue,  4 Oct 2022 05:54:55 -1000
 Message-Id: 
- <f386298fc056ef130c2eb6dabf25eafbd55f55ca.1664898736.git.steve@sakoman.com>
+ <63bb5591e833de0e7b552963ad9bc4b39e56fda9.1664898736.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1664898736.git.steve@sakoman.com>
 References: <cover.1664898736.git.steve@sakoman.com>
@@ -70,39 +70,85 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 04 Oct 2022 15:55:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14018
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14019
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+From: Joshua Watt <JPEWhacker@gmail.com>
 
-I'm 99% certain this failing of a scenequeue task corrupts runqueue and
-causes all kinds of breakage. I'd rather runqueue deadlocked than corrupted
-and did weird things so drop this code.
+Signature generation uses mkstemp() to get a file descriptor to a unique
+file and then write the signature into it. However, the unique file name
+generation in glibc is based on the system timestamp, which means that
+with highly parallel builds it is more likely than one might expect
+expected that a conflict will occur between two different builder nodes.
+When operating over NFS (such as a shared sstate cache), this can cause
+race conditions and rare failures (particularly with NFS servers that
+may not correctly implement O_EXCL).
 
-We've seen builds where the deadlock triggers and it then tries to run tasks
-where the SQ task already ran with very confusing failures. It is likely it
-is this code causing it.
+The signature generation code is particularly susceptible to races since
+a single "sigtask." prefix used for all signatures from all tasks, which
+makes collision even more likely.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 8efced47fcb47851a370fd6786df6fb377f99963)
+To work around this, add an internal implementation of mkstemp() that
+adds additional truly random entropy to the file name to eliminate
+conflicts.
+
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+(cherry picked from commit 97955f3c1c738aa4b4478a6ec10a08094ffc689d)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/runqueue.py | 3 ---
- 1 file changed, 3 deletions(-)
+ lib/bb/siggen.py |  2 +-
+ lib/bb/utils.py  | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 0d89740b..48e25401 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2257,9 +2257,6 @@ class RunQueueExecute:
-             deferred_tid = list(self.sq_deferred.keys())[0]
-             blocking_tid = self.sq_deferred.pop(deferred_tid)
-             logger.warning("Runqeueue deadlocked on deferred tasks, forcing task %s blocked by %s" % (deferred_tid, blocking_tid))
--            if blocking_tid not in self.runq_complete:
--                logger.warning("Failing blocking task %s" % (blocking_tid))
--                self.sq_task_failoutright(blocking_tid)
-             return True
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 9fa568f6..bd6fc204 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -419,7 +419,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+                 bb.error("Taskhash mismatch %s versus %s for %s" % (computed_taskhash, self.taskhash[tid], tid))
+                 sigfile = sigfile.replace(self.taskhash[tid], computed_taskhash)
  
-         if self.failed_tids:
+-        fd, tmpfile = tempfile.mkstemp(dir=os.path.dirname(sigfile), prefix="sigtask.")
++        fd, tmpfile = bb.utils.mkstemp(dir=os.path.dirname(sigfile), prefix="sigtask.")
+         try:
+             with bb.compress.zstd.open(fd, "wt", encoding="utf-8", num_threads=1) as f:
+                 json.dump(data, f, sort_keys=True, separators=(",", ":"), cls=SetEncoder)
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 95b3c898..92d44c52 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -28,6 +28,8 @@ import signal
+ import collections
+ import copy
+ import ctypes
++import random
++import tempfile
+ from subprocess import getstatusoutput
+ from contextlib import contextmanager
+ from ctypes import cdll
+@@ -1756,3 +1758,22 @@ def is_local_uid(uid=''):
+             if str(uid) == line_split[2]:
+                 return True
+     return False
++
++def mkstemp(suffix=None, prefix=None, dir=None, text=False):
++    """
++    Generates a unique filename, independent of time.
++
++    mkstemp() in glibc (at least) generates unique file names based on the
++    current system time. When combined with highly parallel builds, and
++    operating over NFS (e.g. shared sstate/downloads) this can result in
++    conflicts and race conditions.
++
++    This function adds additional entropy to the file name so that a collision
++    is independent of time and thus extremely unlikely.
++    """
++    entropy = "".join(random.choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", k=20))
++    if prefix:
++        prefix = prefix + entropy
++    else:
++        prefix = tempfile.gettempprefix() + entropy
++    return tempfile.mkstemp(suffix=suffix, prefix=prefix, dir=dir, text=text)
 -- 
 2.25.1
 
