@@ -1,128 +1,118 @@
-Return-Path: <luca.ceresoli@bootlin.com>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A424C4332F
-	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 21:06:43 +0000 (UTC)
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net
- [217.70.183.194])
- by mx.groups.io with SMTP id smtpd.web08.3048.1664831198409177809
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800C3C433FE
+	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 15:55:18 +0000 (UTC)
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com
+ [209.85.216.41])
+ by mx.groups.io with SMTP id smtpd.web10.12291.1664898915909779205
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 03 Oct 2022 14:06:39 -0700
+ Tue, 04 Oct 2022 08:55:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=D2tDgEGr;
- spf=pass (domain: bootlin.com, ip: 217.70.183.194,
- mailfrom: luca.ceresoli@bootlin.com)
-Received: from booty (unknown [77.244.183.192])
-	(Authenticated sender: luca.ceresoli@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id F3F7D40004;
-	Mon,  3 Oct 2022 21:06:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1664831196;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nQOsVFf+gwk1S1qOTuC9y39/6kgn/4dDoBnTQyE1Lc8=;
-	b=D2tDgEGrkbBXTGfXqQJYVHQOUIFMKMbBLsEz0arXfUVCx74qa8hB0Id6npJmiBQl5DfTTO
-	vuJaz12jvwvcG7JpBtY4makOMN1asnvLZbjtMbr44nB0oWIYqAZ9hlSUGw4nTjL1ft/p0F
-	QvM8Py+GLYJ9iG5Hk4EXzP6CJpwR56j/AL22pJaNbnqCLI6KO5GS57xKQzlpD7/OGXtEhZ
-	vQRJkePOXQnyiVpbrc8X3s7F6DpZxK2WnX2Fej7BnFohLbYswnTbSvLg+1JUdwc/U4DKQU
-	YSeXtHd5rrXNT0X7snLg31lWaobFduMrAxts1RJFy7B98aiJmxVjZCeDmvPd0Q==
-Date: Mon, 3 Oct 2022 23:06:34 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: "Richard Greer" <rg@braneaudio.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH] Change git lfs support to allow for
- destsuffix being set.
-Message-ID: <20221003230634.529ca225@booty>
-In-Reply-To: <00fa7401-7894-3c86-6b25-3ad62d184260@braneaudio.com>
-References: <00fa7401-7894-3c86-6b25-3ad62d184260@braneaudio.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
+ header.b=0uOOvstT;
+ spf=softfail (domain: sakoman.com, ip: 209.85.216.41,
+ mailfrom: steve@sakoman.com)
+Received: by mail-pj1-f41.google.com with SMTP id l12so13051620pjh.2
+        for <bitbake-devel@lists.openembedded.org>;
+ Tue, 04 Oct 2022 08:55:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date;
+        bh=DLZEoSid4yGN20VnYLy6CeAOYQ19VXJJ/FawhZptvUk=;
+        b=0uOOvstTnNDZC9Jy1dC/tnAyC+kbMwBg37tIQU42nCYdyRij+JQRAh6pqCl/UTy4I0
+         o1KtyGfCI4a4DLZ26FfX/YMPZ0+Df25Ka25ihStMus06hUhaToxaokBOoDU937IHTiUr
+         BdoN3auWMR+2MeL7ZJ8QE8+GEBY+0KgWS08xC8uODBFxNnQ19GJyNbRluVjtFGQ9an9Y
+         KYMjyysEChVYtpSIChLhCwEr0+lF9VaWjkgP47EoJ10zdfFhNFd/Q1xI5N1W6L4GCu9T
+         JusTySuY1S1+HaO0+XM0kY9hSYlAZo2NOh9imZTQ9vJeKRshxSLVaA1OGesOSgQE41AD
+         FqrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=DLZEoSid4yGN20VnYLy6CeAOYQ19VXJJ/FawhZptvUk=;
+        b=flNuOHT0Ut2oaT8wUuaavfNqwQj4DmEdzwl8T1wxQ1ZfpB0Kihk//Roi8Z2tmRoIx8
+         4j473NNgXP8p5eKPx9BNpDSSswCrdw5Z4nzau9uDoU2jb3TcobaIVtmEEkUPwI4diucB
+         2JzIVShdQulFlrEGpKCx7ubDzS8g09P6vA20FI++YarWuSkNhWGib+qeBqw2cP3ng5k4
+         WupKEsk4m79ceZpFFDavMSmUo647jPxQkZXluQIkC6KKtvrsvzsYD46WOl6xePde4MCB
+         7JUgos/u8ka1xJJepq9N+rttQ2OTBCVf/RNu6RUJ6f+UIOukboJX25Cr2lN18P1tS7B1
+         JhDw==
+X-Gm-Message-State: ACrzQf2NF3zAQpnJoEQvVJT3Rr/9aBvd1rGT9QNm2T9xzCKO3+d6GpQP
+	0/XLnMIqMEhVil/jgwtQFzcbRLyxnptORXgI
+X-Google-Smtp-Source: 
+ AMsMyM75DWD02N/PYt8+YCNVfQrciQtEtI/g9LCkkRB5Vvrd1PkDKuAOAGBYx7n12AqNhUyozQ7E1Q==
+X-Received: by 2002:a17:902:e74e:b0:178:b4c4:5ac4 with SMTP id
+ p14-20020a170902e74e00b00178b4c45ac4mr27760862plf.11.1664898914985;
+        Tue, 04 Oct 2022 08:55:14 -0700 (PDT)
+Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
+ [72.253.6.214])
+        by smtp.gmail.com with ESMTPSA id
+ k18-20020a170902c41200b0017e232b6724sm4716457plk.69.2022.10.04.08.55.13
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Oct 2022 08:55:14 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][kirkstone][2.0][PATCH 1/8] runqueue: Ensure deferred tasks
+ are sorted by multiconfig
+Date: Tue,  4 Oct 2022 05:54:52 -1000
+Message-Id: 
+ <513bfd771d9095fcb6a8bf93806673dbf988a4de.1664898736.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1664898736.git.steve@sakoman.com>
+References: <cover.1664898736.git.steve@sakoman.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 03 Oct 2022 21:06:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14014
+ <bitbake-devel@lists.openembedded.org>; Tue, 04 Oct 2022 15:55:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14016
 
-Hello Richard,
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-On Mon, 3 Oct 2022 12:58:14 -0500
-"Richard Greer" <rg@braneaudio.com> wrote:
+We have to prefer one multiconfig over another when deferring tasks, else
+we'll have cross-linked build trees and nothing will be able to build.
 
-> From: Richard Greer <rg@braneaudio.com>
->=20
-> When getting large files with git lfs need to try and recreate the path=20
-> where the repo
-> is actually located after the unpack.
->=20
-> If destsuffix or subdir (where subdir is not an absolute path) is set=20
-> then it will not be in
-> tmpdir/git.
->=20
-> It looks like the more correct place would be in ud.destdir.
->=20
-> This does not address the issue where it will fail in the unpack if=20
-> subdir is an absolute path
-> since it cannot possibly be in the same path as the tmpdir.=C2=A0 I have =
-no=20
-> idea as to how to
-> deal with that.
+In the original population code, we sort like this but we don't after
+rehashing. Ensure we have the same sorting after rehashing toa void
+deadlocks.
 
-Text wrapping seems broken in the text. Not necessarily a big problem,
-but not nice to read.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 27228c7f026acb8ae9e1211d0486ffb7338123a2)
+Signed-off-by: Steve Sakoman <steve@sakoman.com>
+---
+ lib/bb/runqueue.py | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-> Signed-off-by: Richard Greer <rg@braneaudio.com>
-> ---
->  =C2=A0bitbake/lib/bb/fetch2/git.py | 4 ++--
->  =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-> index f0df6fb69b..fa454a1c07 100644
-> --- a/bitbake/lib/bb/fetch2/git.py
-> +++ b/bitbake/lib/bb/fetch2/git.py
-> @@ -421,8 +421,8 @@ class Git(FetchMethod):
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 # Only do this if the unpack resulted in a .git/lf=
-s=20
-> directory being
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 # created; this only happens if at least one blob=
-=20
-> needed to be
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 # downloaded.
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if os.path.exists(os.path.join(tmpdir, "git", ".git",=20
-> "lfs")):
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 runfetchcmd("tar -cf - lfs | tar=
- -xf - -C %s" %=20
-> ud.clonedir, d, workdir=3D"%s/git/.git" % tmpdir)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if os.path.exists(os.path.join(ud.destdir, ".git", "lfs"=
-)):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 runfetchcmd("tar -cf - lfs | tar=
- -xf - -C %s" %=20
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 111dc0ee..a23f7a89 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2523,11 +2523,14 @@ class RunQueueExecute:
+ 
+         if update_tasks:
+             self.sqdone = False
+-            for tid in [t[0] for t in update_tasks]:
+-                h = pending_hash_index(tid, self.rqdata)
+-                if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
+-                    self.sq_deferred[tid] = self.sqdata.hashes[h]
+-                    bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
++            for mc in sorted(self.sqdata.multiconfigs):
++                for tid in sorted([t[0] for t in update_tasks]):
++                    if mc_from_tid(tid) != mc:
++                        continue
++                    h = pending_hash_index(tid, self.rqdata)
++                    if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
++                        self.sq_deferred[tid] = self.sqdata.hashes[h]
++                        bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
+             update_scenequeue_data([t[0] for t in update_tasks], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
+ 
+         for (tid, harddepfail, origvalid) in update_tasks:
+-- 
+2.25.1
 
-Here wrapping is also wrong, but this one is definitely a problem. You
-must not wrap a line in a patch, otherwise it won't apply.
-
-I strongly suggest to use 'git format-patch' + 'git send-email' to send
-a patch. Those tools will ensure the patch is not mangled, and it will
-apply correctly. More info at
-https://www.openembedded.org/wiki/How_to_submit_a_patch_to_OpenEmbedded
-
-Can you please send a v2 with that fixed?
-
-Best regards.
---=20
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
 
