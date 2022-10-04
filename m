@@ -2,137 +2,110 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BA5C4332F
-	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 15:55:18 +0000 (UTC)
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com
- [209.85.215.179])
- by mx.groups.io with SMTP id smtpd.web08.12413.1664898910860796005
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B78DC433FE
+	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 15:55:28 +0000 (UTC)
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com
+ [209.85.210.182])
+ by mx.groups.io with SMTP id smtpd.web11.12406.1664898918135068556
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Oct 2022 08:55:11 -0700
+ Tue, 04 Oct 2022 08:55:18 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=Sn9eufIN;
- spf=softfail (domain: sakoman.com, ip: 209.85.215.179,
+ header.b=6zxo2lZP;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.182,
  mailfrom: steve@sakoman.com)
-Received: by mail-pg1-f179.google.com with SMTP id c7so13041468pgt.11
+Received: by mail-pf1-f182.google.com with SMTP id f140so8228681pfa.1
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Oct 2022 08:55:10 -0700 (PDT)
+ Tue, 04 Oct 2022 08:55:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date;
-        bh=LiUkz1jr6zBgtqiwsBwshwtifb7GcAnXYv2RQl20ol0=;
-        b=Sn9eufIN3zi1cNO873oGrdvKI+rbByVjx6767/18WZmvIH3uJK6PEvdckXWpKhCwXp
-         bc0MGNuFA1hc7F7pGEhfRi2JOWWvc0tHI5SXFjMeqMw40KwxKmd2TLDTP6QGtiTeWMhp
-         IiFgjcvsT8A675+sYJJQXayK5BmvNY3xlwUBTjPD2vDVzIPoizDhiFg/OMu04QhAotOq
-         WRu0iR1a2iEAbTZY3+jHQx535gkOtG1wo8fBAmlw39Z6RUPtBmx3Tk+zicvPgvw3CcsT
-         93X6pwRKPbkIMjDJkUO8yRQdJ2arZKlG8wyUgaQ/WnqnK29XM9FmHbd/0AOpZLZF/Kzx
-         s0OQ==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date;
+        bh=dJN/iQdUKnAO96vhpniYvoPZSJmLqx5bazJL5maOIxQ=;
+        b=6zxo2lZPmHuT02awghdjGICNM+p6SjdP9Z/7GwVl5BWGIn7a5OYAcvlEbV54WA4+xS
+         wX+0+wNb8JJddNUHCoYUrmUs0JsrdO5DhIkOio2s/c5hmXiYf7reW1Yfw9bZg0jxHB0o
+         XFQ1iqlQImh1rPGLtZHafIDdv3Hem2yvDtHy6oNHKpFmaEsacwSIekSbWPKome3sAtLL
+         JCcZTF5bc0tUDXyrKvpJ9Put7TtZBagiWWvUupdCc5auJiu5QQrIW84Ou19jPXV4X+RO
+         KPV412ZMg5S1i8ZwgLqhvDPHM8i5C4YMGXBhwPRLnZFw00uBxsfSckoef507DAl1tvuw
+         dRcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=LiUkz1jr6zBgtqiwsBwshwtifb7GcAnXYv2RQl20ol0=;
-        b=qfu7T+yxGDUPFOWSH25vB+WzXLYtoTJhsStq6rpfbGLj6hqItdUdy/JmkMrjxZvK+G
-         DmwoJebK/aqi1sZWq2J0kac6gDsxDUdFZYCfB1HfGNsdkDxcIVn+Fk1B4FSBZM6tR8yK
-         GDhENnpSYhtoqPvGB1LiPqmEivCD2blUXO+28dzzgIRcava5TewiQYPNB+7+z0rVYAOw
-         L9S3pOMFcRy6gsguV/U3Yv6u9xrXAZyjR1k8P8Wy+UyY6RqTIZyf/tg3t+uLvcBK6+GZ
-         98gVAgq44oCjXmDaLHe+AQ8+PzGPA6C0BADAZVSnB0EPDtSiA+ZNYrK708uCScD3QhB6
-         b/Bw==
-X-Gm-Message-State: ACrzQf1zVvATZzK82IDPBBcxwqBo1NFTsikU1YVWkJp+qWqraUh1hq2L
-	3uTrSPs7iiNtnxn4eTLY+3gnJmBDzyuAU/6l
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=dJN/iQdUKnAO96vhpniYvoPZSJmLqx5bazJL5maOIxQ=;
+        b=2ianNp2LLCMztBBLECBlsQZGoo71rWa5aUQYQ9cVUovhLbT+W6f02/PqA4XaI9IgGu
+         XY5X+IQODLf0uT7kcGh1BubxRtLnX8/3jRnuFdz1zaurJx4ffa4gjV5Zm32+lVl74SEN
+         Dcm9BtApjmIYySPBl/9T4heRB1JlLlSkq7nhlFPagd3C0fpJlcm+hYJw+v2hR/6B5LY1
+         USvHi9z+TGrjh8aZdhQ1UjMB/MBbSQb6A0BEEFfiT1HswcMz7Qvs3qPmJlpegHamcjLy
+         Wq6d+f4ymKpgrKkLTujRCPtCaNQiB5/2SDC6lKHJcXBdU/fIjXAG4OhwVIcE9tkJwsCz
+         oUlw==
+X-Gm-Message-State: ACrzQf1z6ttI892gp+YgCtKfC2YX6frzYzXE6fZ/OQ4nSERDLRsiXWgf
+	6k0GanxKYtIsIlm9U2CbOxty5kx0ahJ6OhZU
 X-Google-Smtp-Source: 
- AMsMyM6///XL+Tm+wDJhkeRUygevUTKjXPApsqWg0n7kmD60P++zMwt48aBzhvysk67LhyKbTDrnNg==
-X-Received: by 2002:aa7:8893:0:b0:544:7429:b077 with SMTP id
- z19-20020aa78893000000b005447429b077mr28239491pfe.69.1664898908466;
-        Tue, 04 Oct 2022 08:55:08 -0700 (PDT)
+ AMsMyM5RSFrZKOCkRr7QoS2f3aEcsX72+NnfANFkrK+rRwl0Ekwc6GCQaFRZGLT5KQH2hCImg4vdsA==
+X-Received: by 2002:a63:cf48:0:b0:439:7d1c:fedc with SMTP id
+ b8-20020a63cf48000000b004397d1cfedcmr23960461pgj.281.1664898917175;
+        Tue, 04 Oct 2022 08:55:17 -0700 (PDT)
 Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
  [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- k18-20020a170902c41200b0017e232b6724sm4716457plk.69.2022.10.04.08.55.07
+ k18-20020a170902c41200b0017e232b6724sm4716457plk.69.2022.10.04.08.55.16
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 08:55:07 -0700 (PDT)
+        Tue, 04 Oct 2022 08:55:16 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 0/8] Patch review
-Date: Tue,  4 Oct 2022 05:54:51 -1000
-Message-Id: <cover.1664898736.git.steve@sakoman.com>
+Subject: [bitbake][kirkstone][2.0][PATCH 2/8] runqueue: Improve deadlock
+ warning messages
+Date: Tue,  4 Oct 2022 05:54:53 -1000
+Message-Id: 
+ <d1b84e3cfe9fb8d282d4b700a9fe31891e00d837.1664898736.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1664898736.git.steve@sakoman.com>
+References: <cover.1664898736.git.steve@sakoman.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 04 Oct 2022 15:55:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14015
+ <bitbake-devel@lists.openembedded.org>; Tue, 04 Oct 2022 15:55:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14017
 
-Please review this set of patches for kirkstone/2.0 and have comments back
-by end of day Wednesday.
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Passded a-full on autobuilder:
+Tweak the deadlock breaking messages to be explict about which task is
+blocked on which other task. The messages currently imply it is "freeing"
+the blocking task which is confusing.
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/4294
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit cf7f60b83adaded180f6717cb4681edc1d65b66d)
+Signed-off-by: Steve Sakoman <steve@sakoman.com>
+---
+ lib/bb/runqueue.py | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-The following changes since commit ac576d6fad6bba0cfea931883f25264ea83747ca:
-
-  bitbake-user-manual: npm fetcher: improve description of SRC_URI format (2022-09-16 17:52:26 +0100)
-
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.0-nut
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.0-nut
-
-Joshua Watt (1):
-  siggen: Fix insufficent entropy in sigtask file names
-
-Neil Horman (1):
-  Fix npm to use https rather than http
-
-Pavel Zhukov (1):
-  gitsm: Error out if submodule refers to parent repo
-
-Richard Purdie (5):
-  runqueue: Ensure deferred tasks are sorted by multiconfig
-  runqueue: Improve deadlock warning messages
-  runqueue: Drop deadlock breaking force fail
-  bitbake: Add copyright headers where missing
-  asyncrpc/client: Fix unix domain socket chdir race issues
-
- bin/bitbake-prserv               |  2 ++
- bin/bitbake-worker               |  2 ++
- bin/git-make-shallow             |  2 ++
- lib/bb/COW.py                    |  2 ++
- lib/bb/asyncrpc/__init__.py      |  2 ++
- lib/bb/asyncrpc/client.py        | 24 +++++++++++++++---------
- lib/bb/asyncrpc/serv.py          |  2 ++
- lib/bb/codeparser.py             |  2 ++
- lib/bb/compress/_pipecompress.py |  2 ++
- lib/bb/compress/lz4.py           |  2 ++
- lib/bb/compress/zstd.py          |  2 ++
- lib/bb/daemonize.py              |  2 ++
- lib/bb/exceptions.py             |  2 ++
- lib/bb/fetch2/gitsm.py           |  3 +++
- lib/bb/fetch2/npm.py             |  2 +-
- lib/bb/fetch2/osc.py             |  2 ++
- lib/bb/process.py                |  2 ++
- lib/bb/runqueue.py               | 20 +++++++++++---------
- lib/bb/siggen.py                 |  4 +++-
- lib/bb/tests/compression.py      |  2 ++
- lib/bb/tests/cooker.py           |  2 ++
- lib/bb/utils.py                  | 21 +++++++++++++++++++++
- lib/bblayers/__init__.py         |  2 ++
- lib/bblayers/action.py           |  2 ++
- lib/bblayers/common.py           |  2 ++
- lib/bblayers/layerindex.py       |  2 ++
- lib/bblayers/query.py            |  2 ++
- lib/prserv/__init__.py           |  2 ++
- lib/prserv/client.py             |  2 ++
- lib/prserv/db.py                 |  2 ++
- lib/prserv/serv.py               |  2 ++
- lib/toaster/manage.py            |  2 ++
- 32 files changed, 106 insertions(+), 20 deletions(-)
-
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index a23f7a89..0d89740b 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2254,10 +2254,12 @@ class RunQueueExecute:
+ 
+         # No more tasks can be run. If we have deferred setscene tasks we should run them.
+         if self.sq_deferred:
+-            tid = self.sq_deferred.pop(list(self.sq_deferred.keys())[0])
+-            logger.warning("Runqeueue deadlocked on deferred tasks, forcing task %s" % tid)
+-            if tid not in self.runq_complete:
+-                self.sq_task_failoutright(tid)
++            deferred_tid = list(self.sq_deferred.keys())[0]
++            blocking_tid = self.sq_deferred.pop(deferred_tid)
++            logger.warning("Runqeueue deadlocked on deferred tasks, forcing task %s blocked by %s" % (deferred_tid, blocking_tid))
++            if blocking_tid not in self.runq_complete:
++                logger.warning("Failing blocking task %s" % (blocking_tid))
++                self.sq_task_failoutright(blocking_tid)
+             return True
+ 
+         if self.failed_tids:
 -- 
 2.25.1
 
