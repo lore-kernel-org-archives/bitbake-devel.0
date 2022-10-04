@@ -2,116 +2,137 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800C3C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BA5C4332F
 	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 15:55:18 +0000 (UTC)
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com
- [209.85.216.41])
- by mx.groups.io with SMTP id smtpd.web10.12291.1664898915909779205
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com
+ [209.85.215.179])
+ by mx.groups.io with SMTP id smtpd.web08.12413.1664898910860796005
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Oct 2022 08:55:16 -0700
+ Tue, 04 Oct 2022 08:55:11 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
- header.b=0uOOvstT;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.41,
+ header.b=Sn9eufIN;
+ spf=softfail (domain: sakoman.com, ip: 209.85.215.179,
  mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f41.google.com with SMTP id l12so13051620pjh.2
+Received: by mail-pg1-f179.google.com with SMTP id c7so13041468pgt.11
         for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Oct 2022 08:55:15 -0700 (PDT)
+ Tue, 04 Oct 2022 08:55:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=DLZEoSid4yGN20VnYLy6CeAOYQ19VXJJ/FawhZptvUk=;
-        b=0uOOvstTnNDZC9Jy1dC/tnAyC+kbMwBg37tIQU42nCYdyRij+JQRAh6pqCl/UTy4I0
-         o1KtyGfCI4a4DLZ26FfX/YMPZ0+Df25Ka25ihStMus06hUhaToxaokBOoDU937IHTiUr
-         BdoN3auWMR+2MeL7ZJ8QE8+GEBY+0KgWS08xC8uODBFxNnQ19GJyNbRluVjtFGQ9an9Y
-         KYMjyysEChVYtpSIChLhCwEr0+lF9VaWjkgP47EoJ10zdfFhNFd/Q1xI5N1W6L4GCu9T
-         JusTySuY1S1+HaO0+XM0kY9hSYlAZo2NOh9imZTQ9vJeKRshxSLVaA1OGesOSgQE41AD
-         FqrQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date;
+        bh=LiUkz1jr6zBgtqiwsBwshwtifb7GcAnXYv2RQl20ol0=;
+        b=Sn9eufIN3zi1cNO873oGrdvKI+rbByVjx6767/18WZmvIH3uJK6PEvdckXWpKhCwXp
+         bc0MGNuFA1hc7F7pGEhfRi2JOWWvc0tHI5SXFjMeqMw40KwxKmd2TLDTP6QGtiTeWMhp
+         IiFgjcvsT8A675+sYJJQXayK5BmvNY3xlwUBTjPD2vDVzIPoizDhiFg/OMu04QhAotOq
+         WRu0iR1a2iEAbTZY3+jHQx535gkOtG1wo8fBAmlw39Z6RUPtBmx3Tk+zicvPgvw3CcsT
+         93X6pwRKPbkIMjDJkUO8yRQdJ2arZKlG8wyUgaQ/WnqnK29XM9FmHbd/0AOpZLZF/Kzx
+         s0OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=DLZEoSid4yGN20VnYLy6CeAOYQ19VXJJ/FawhZptvUk=;
-        b=flNuOHT0Ut2oaT8wUuaavfNqwQj4DmEdzwl8T1wxQ1ZfpB0Kihk//Roi8Z2tmRoIx8
-         4j473NNgXP8p5eKPx9BNpDSSswCrdw5Z4nzau9uDoU2jb3TcobaIVtmEEkUPwI4diucB
-         2JzIVShdQulFlrEGpKCx7ubDzS8g09P6vA20FI++YarWuSkNhWGib+qeBqw2cP3ng5k4
-         WupKEsk4m79ceZpFFDavMSmUo647jPxQkZXluQIkC6KKtvrsvzsYD46WOl6xePde4MCB
-         7JUgos/u8ka1xJJepq9N+rttQ2OTBCVf/RNu6RUJ6f+UIOukboJX25Cr2lN18P1tS7B1
-         JhDw==
-X-Gm-Message-State: ACrzQf2NF3zAQpnJoEQvVJT3Rr/9aBvd1rGT9QNm2T9xzCKO3+d6GpQP
-	0/XLnMIqMEhVil/jgwtQFzcbRLyxnptORXgI
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date;
+        bh=LiUkz1jr6zBgtqiwsBwshwtifb7GcAnXYv2RQl20ol0=;
+        b=qfu7T+yxGDUPFOWSH25vB+WzXLYtoTJhsStq6rpfbGLj6hqItdUdy/JmkMrjxZvK+G
+         DmwoJebK/aqi1sZWq2J0kac6gDsxDUdFZYCfB1HfGNsdkDxcIVn+Fk1B4FSBZM6tR8yK
+         GDhENnpSYhtoqPvGB1LiPqmEivCD2blUXO+28dzzgIRcava5TewiQYPNB+7+z0rVYAOw
+         L9S3pOMFcRy6gsguV/U3Yv6u9xrXAZyjR1k8P8Wy+UyY6RqTIZyf/tg3t+uLvcBK6+GZ
+         98gVAgq44oCjXmDaLHe+AQ8+PzGPA6C0BADAZVSnB0EPDtSiA+ZNYrK708uCScD3QhB6
+         b/Bw==
+X-Gm-Message-State: ACrzQf1zVvATZzK82IDPBBcxwqBo1NFTsikU1YVWkJp+qWqraUh1hq2L
+	3uTrSPs7iiNtnxn4eTLY+3gnJmBDzyuAU/6l
 X-Google-Smtp-Source: 
- AMsMyM75DWD02N/PYt8+YCNVfQrciQtEtI/g9LCkkRB5Vvrd1PkDKuAOAGBYx7n12AqNhUyozQ7E1Q==
-X-Received: by 2002:a17:902:e74e:b0:178:b4c4:5ac4 with SMTP id
- p14-20020a170902e74e00b00178b4c45ac4mr27760862plf.11.1664898914985;
-        Tue, 04 Oct 2022 08:55:14 -0700 (PDT)
+ AMsMyM6///XL+Tm+wDJhkeRUygevUTKjXPApsqWg0n7kmD60P++zMwt48aBzhvysk67LhyKbTDrnNg==
+X-Received: by 2002:aa7:8893:0:b0:544:7429:b077 with SMTP id
+ z19-20020aa78893000000b005447429b077mr28239491pfe.69.1664898908466;
+        Tue, 04 Oct 2022 08:55:08 -0700 (PDT)
 Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
  [72.253.6.214])
         by smtp.gmail.com with ESMTPSA id
- k18-20020a170902c41200b0017e232b6724sm4716457plk.69.2022.10.04.08.55.13
+ k18-20020a170902c41200b0017e232b6724sm4716457plk.69.2022.10.04.08.55.07
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 08:55:14 -0700 (PDT)
+        Tue, 04 Oct 2022 08:55:07 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 1/8] runqueue: Ensure deferred tasks
- are sorted by multiconfig
-Date: Tue,  4 Oct 2022 05:54:52 -1000
-Message-Id: 
- <513bfd771d9095fcb6a8bf93806673dbf988a4de.1664898736.git.steve@sakoman.com>
+Subject: [bitbake][kirkstone][2.0][PATCH 0/8] Patch review
+Date: Tue,  4 Oct 2022 05:54:51 -1000
+Message-Id: <cover.1664898736.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1664898736.git.steve@sakoman.com>
-References: <cover.1664898736.git.steve@sakoman.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 04 Oct 2022 15:55:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14016
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14015
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Please review this set of patches for kirkstone/2.0 and have comments back
+by end of day Wednesday.
 
-We have to prefer one multiconfig over another when deferring tasks, else
-we'll have cross-linked build trees and nothing will be able to build.
+Passded a-full on autobuilder:
 
-In the original population code, we sort like this but we don't after
-rehashing. Ensure we have the same sorting after rehashing toa void
-deadlocks.
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/4294
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 27228c7f026acb8ae9e1211d0486ffb7338123a2)
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
----
- lib/bb/runqueue.py | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+The following changes since commit ac576d6fad6bba0cfea931883f25264ea83747ca:
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 111dc0ee..a23f7a89 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2523,11 +2523,14 @@ class RunQueueExecute:
- 
-         if update_tasks:
-             self.sqdone = False
--            for tid in [t[0] for t in update_tasks]:
--                h = pending_hash_index(tid, self.rqdata)
--                if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
--                    self.sq_deferred[tid] = self.sqdata.hashes[h]
--                    bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
-+            for mc in sorted(self.sqdata.multiconfigs):
-+                for tid in sorted([t[0] for t in update_tasks]):
-+                    if mc_from_tid(tid) != mc:
-+                        continue
-+                    h = pending_hash_index(tid, self.rqdata)
-+                    if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
-+                        self.sq_deferred[tid] = self.sqdata.hashes[h]
-+                        bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
-             update_scenequeue_data([t[0] for t in update_tasks], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
- 
-         for (tid, harddepfail, origvalid) in update_tasks:
+  bitbake-user-manual: npm fetcher: improve description of SRC_URI format (2022-09-16 17:52:26 +0100)
+
+are available in the Git repository at:
+
+  https://git.openembedded.org/bitbake-contrib stable/2.0-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.0-nut
+
+Joshua Watt (1):
+  siggen: Fix insufficent entropy in sigtask file names
+
+Neil Horman (1):
+  Fix npm to use https rather than http
+
+Pavel Zhukov (1):
+  gitsm: Error out if submodule refers to parent repo
+
+Richard Purdie (5):
+  runqueue: Ensure deferred tasks are sorted by multiconfig
+  runqueue: Improve deadlock warning messages
+  runqueue: Drop deadlock breaking force fail
+  bitbake: Add copyright headers where missing
+  asyncrpc/client: Fix unix domain socket chdir race issues
+
+ bin/bitbake-prserv               |  2 ++
+ bin/bitbake-worker               |  2 ++
+ bin/git-make-shallow             |  2 ++
+ lib/bb/COW.py                    |  2 ++
+ lib/bb/asyncrpc/__init__.py      |  2 ++
+ lib/bb/asyncrpc/client.py        | 24 +++++++++++++++---------
+ lib/bb/asyncrpc/serv.py          |  2 ++
+ lib/bb/codeparser.py             |  2 ++
+ lib/bb/compress/_pipecompress.py |  2 ++
+ lib/bb/compress/lz4.py           |  2 ++
+ lib/bb/compress/zstd.py          |  2 ++
+ lib/bb/daemonize.py              |  2 ++
+ lib/bb/exceptions.py             |  2 ++
+ lib/bb/fetch2/gitsm.py           |  3 +++
+ lib/bb/fetch2/npm.py             |  2 +-
+ lib/bb/fetch2/osc.py             |  2 ++
+ lib/bb/process.py                |  2 ++
+ lib/bb/runqueue.py               | 20 +++++++++++---------
+ lib/bb/siggen.py                 |  4 +++-
+ lib/bb/tests/compression.py      |  2 ++
+ lib/bb/tests/cooker.py           |  2 ++
+ lib/bb/utils.py                  | 21 +++++++++++++++++++++
+ lib/bblayers/__init__.py         |  2 ++
+ lib/bblayers/action.py           |  2 ++
+ lib/bblayers/common.py           |  2 ++
+ lib/bblayers/layerindex.py       |  2 ++
+ lib/bblayers/query.py            |  2 ++
+ lib/prserv/__init__.py           |  2 ++
+ lib/prserv/client.py             |  2 ++
+ lib/prserv/db.py                 |  2 ++
+ lib/prserv/serv.py               |  2 ++
+ lib/toaster/manage.py            |  2 ++
+ 32 files changed, 106 insertions(+), 20 deletions(-)
+
 -- 
 2.25.1
 
