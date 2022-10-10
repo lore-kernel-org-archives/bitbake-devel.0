@@ -1,133 +1,131 @@
-Return-Path: <mark.asselstine@windriver.com>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23BCC433F5
-	for <webhook@archiver.kernel.org>; Sun,  9 Oct 2022 23:26:40 +0000 (UTC)
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com
- [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.web12.752.1665357995158626534
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D48CC433FE
+	for <webhook@archiver.kernel.org>; Mon, 10 Oct 2022 16:15:56 +0000 (UTC)
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com
+ [209.85.214.175])
+ by mx.groups.io with SMTP id smtpd.web10.8331.1665418554426118605
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 09 Oct 2022 16:26:35 -0700
+ Mon, 10 Oct 2022 09:15:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=pps06212021 header.b=bIWYiZhc;
- spf=permerror,
- err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}:
- invalid domain name (domain: windriver.com, ip: 205.220.178.238,
- mailfrom: prvs=72811a6c6a=mark.asselstine@windriver.com)
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.19/8.17.1.5) with ESMTP id
- 299NKESM003158;
-	Sun, 9 Oct 2022 23:26:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
- h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=PPS06212021;
- bh=Vo0/9q1tCNXuS41I6P4Ut5enIpLjozGqTRV//yVsV70=;
- b=bIWYiZhcnk5bOYa+o8FQcbFiDL+ZmI0G6UmD+3gW3xuN39qf7BrNEeDZHW5GIib8fCKu
- SdxoSHbd/nFmzpCsotEATLs394sNxROIkdP7UEA1nppSnVfCZ3Y0MXY/Fh9M4uq3n4Jn
- vUFGQWK00dif7Hc2gsbvdzweAW5itEU0Bop2LB0oj/pary00ZGl028u/KJCH7A8apZ7v
- gt3bHCNvHChby4BjyzKAjQl+dB1D4HrwNQFQoUku0FQhCSk0E1xSzmKahAIp7+FkEygs
- F0spnj+tRwgLALmuTl/Bj74A8g+cUbqpH43UKYO6fdNPSD+l2n0NOfADBRHRozOiT4cb Bw==
-Received: from ala-exchng01.corp.ad.wrs.com (unknown-82-252.windriver.com
- [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3k3067s2t7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sun, 09 Oct 2022 23:26:29 +0000
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Sun, 9 Oct 2022 16:26:28 -0700
-Received: from yow-dellw-ma.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2242.12 via Frontend Transport; Sun, 9 Oct 2022 16:26:28 -0700
-From: Mark Asselstine <mark.asselstine@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: <bluelightning@bluelightning.org>
-Subject: [PATCH] bitbake: bitbake-layers: checkout layer(s) branch when clone
- exists
-Date: Sun, 9 Oct 2022 19:26:24 -0400
-Message-ID: <20221009232624.3165976-1-mark.asselstine@windriver.com>
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112
+ header.b=NH9vV3NS;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.175,
+ mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f175.google.com with SMTP id n7so10826090plp.1
+        for <bitbake-devel@lists.openembedded.org>;
+ Mon, 10 Oct 2022 09:15:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=43lq9rJtoQ96Mk3JAnCFccBknSNZmcZcnvyya/qb6Xs=;
+        b=NH9vV3NS6Fhanbse9aMH6EpHRxtZ6A0V5AKVCY+7OFZD9q8+SBcUdcK8AmgxMTz0cw
+         x8WVj9jLOgjuPEt9pVO2D/ozTGDy6MfHX8DHpMrT6gFf+5fIx0gIqK4l9kxarEGTb5/j
+         s1AQ8HprScowchyrvChufUn4NQuM0iGXmuMsQ0LfyC8DdTc8MDj/1xOAqsVq/EFFvAvV
+         UvGk7KKQjaVzelNNzWTMw+Oog8VqXv3Z51EwSzLCR1vspiUdDBLFq/L9vp8dWiyCCOJb
+         uyX8YGFeoFwPMNU6kAI39/xontFyQ3dcszOS/faAgFagYLTZNgfALhnyMkCtp4cpt/sZ
+         bFIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=43lq9rJtoQ96Mk3JAnCFccBknSNZmcZcnvyya/qb6Xs=;
+        b=QQAbw4dzLSetEwSLhyJJTomuBoJKYmtqyXuSJnZSjRyW5+LPXqWb1IrphnpyeCmcoX
+         qBflZidGOSMO3WqXnJY1hzoCZ/r0gHVbX7VrS2C09rtYlZKNN9x+zmY7ZDhEHBalIfNZ
+         1rV1gZv1MC7YkeVSMEPPfgiAQlrvJexbugWSjIZP5yVO2uoC21k6b4/OtkcT3U4yO3aI
+         tL1f4pkAaFcXyG5wrvuWFTrapVKUXA49l47yGCO0Gd8NTiQUKZbPBuINnKbaqMSL/yNQ
+         Ny8nWyQaFXS2UmExjH/dX4bqinWhv1xsiPopJy14d0Xbl6zZvOjx0TLYYTHleGBB6BQu
+         NnEg==
+X-Gm-Message-State: ACrzQf1Ge8++OonRPiMfpHbwC1+iPfaTgtyK+pAyxUUpHcnrBN4ttfsO
+	4RXGnxbS58/iZlmy0NQP0Cqj7e67Xb3Bpdwy
+X-Google-Smtp-Source: 
+ AMsMyM4BVmxG+yoJDi0cdOuiRC7R6JI9o766m9uGPgU5TLdiEQHF6oiD9CZAJTRk/BfvgUms2yibOw==
+X-Received: by 2002:a17:902:b944:b0:179:fdb0:1c39 with SMTP id
+ h4-20020a170902b94400b00179fdb01c39mr19947174pls.98.1665418553109;
+        Mon, 10 Oct 2022 09:15:53 -0700 (PDT)
+Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net.
+ [72.253.6.214])
+        by smtp.gmail.com with ESMTPSA id
+ r27-20020aa7963b000000b005636d8aa98dsm1979312pfg.141.2022.10.10.09.15.52
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Oct 2022 09:15:52 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][kirkstone][2.0][PATCH 0/8] Pull request (cover letter only)
+Date: Mon, 10 Oct 2022 06:15:44 -1000
+Message-Id: <cover.1665418501.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: 9n6ZzgGWrL7g3iaBqnaXXV6KYsF-b2IN
-X-Proofpoint-ORIG-GUID: 9n6ZzgGWrL7g3iaBqnaXXV6KYsF-b2IN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-10-07_04,2022-10-07_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 impostorscore=0
- spamscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0 clxscore=1011
- bulkscore=0 mlxlogscore=999 priorityscore=1501 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
- definitions=main-2210090151
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 09 Oct 2022 23:26:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14030
+ <bitbake-devel@lists.openembedded.org>; Mon, 10 Oct 2022 16:15:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14031
 
-[YOCTO #7852]
+The following changes since commit ac576d6fad6bba0cfea931883f25264ea83747ca:
 
-Fixes 'bitbake-layers layerindex-fetch --branch kirkstone meta-arm'
-not checking out the branch if the repo is already cloned and on a
-different branch.
+  bitbake-user-manual: npm fetcher: improve description of SRC_URI format (2022-09-16 17:52:26 +0100)
 
-If a clone of a layer being added already exists check what branch it
-is on and if necessary attempt to switch to the given branch. If the
-switch fails to happen the git error will be reported. We also warn if
-there are uncommitted changes as the changes might go unnoticed and
-result in unexpected behaviors.
+are available in the Git repository at:
 
-Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
----
+  https://git.openembedded.org/bitbake-contrib stable/2.0-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.0-next
 
-Paul, I was not able to determine how you were seeing (2) from the
-bugzilla comment, ie. the oe-core or poky checked out on the wrong
-branch getting a second clone. If you can provide a hint I can
-ensure this fix addresses this as well. Thanks.
+Joshua Watt (1):
+  siggen: Fix insufficent entropy in sigtask file names
 
- lib/bblayers/layerindex.py | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Neil Horman (1):
+  Fix npm to use https rather than http
 
-diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
-index 0ac8fd2e..ba91fac6 100644
---- a/lib/bblayers/layerindex.py
-+++ b/lib/bblayers/layerindex.py
-@@ -49,6 +49,31 @@ class LayerIndexPlugin(ActionPlugin):
-             else:
-                 logger.plain("Repository %s needs to be fetched" % url)
-                 return subdir, layername, layerdir
-+        elif os.path.exists(repodir) and branch:
-+            """
-+            If the repo is already cloned, ensure it is on the correct branch,
-+            switching branches if necessary and possible.
-+            """
-+            base_cmd = ['git', '--git-dir=%s/.git' % repodir, '--work-tree=%s' % repodir]
-+            cmd = base_cmd + ['branch']
-+            completed_proc = subprocess.run(cmd, text=True, capture_output=True)
-+            if completed_proc.returncode:
-+                logger.error("Unable to validate repo %s (%s)" % (repodir, stderr))
-+                return None, None, None
-+            else:
-+                if branch != completed_proc.stdout[2:-1]:
-+                    cmd = base_cmd + ['status', '--short']
-+                    completed_proc = subprocess.run(cmd, text=True, capture_output=True)
-+                    if completed_proc.stdout.count('\n') != 0:
-+                        logger.warning("There are uncommitted changes in repo %s" % repodir)
-+                    cmd = base_cmd + ['checkout', branch]
-+                    completed_proc = subprocess.run(cmd, text=True, capture_output=True)
-+                    if completed_proc.returncode:
-+                        # Could be due to original shallow clone on a different branch for example
-+                        logger.error("Unable to automatically switch %s to desired branch '%s' (%s)"
-+                                     % (repodir, branch, completed_proc.stderr))
-+                        return None, None, None
-+            return subdir, layername, layerdir
-         elif os.path.exists(layerdir):
-             return subdir, layername, layerdir
-         else:
+Pavel Zhukov (1):
+  gitsm: Error out if submodule refers to parent repo
+
+Richard Purdie (5):
+  runqueue: Ensure deferred tasks are sorted by multiconfig
+  runqueue: Improve deadlock warning messages
+  runqueue: Drop deadlock breaking force fail
+  bitbake: Add copyright headers where missing
+  asyncrpc/client: Fix unix domain socket chdir race issues
+
+ bin/bitbake-prserv               |  2 ++
+ bin/bitbake-worker               |  2 ++
+ bin/git-make-shallow             |  2 ++
+ lib/bb/COW.py                    |  2 ++
+ lib/bb/asyncrpc/__init__.py      |  2 ++
+ lib/bb/asyncrpc/client.py        | 24 +++++++++++++++---------
+ lib/bb/asyncrpc/serv.py          |  2 ++
+ lib/bb/codeparser.py             |  2 ++
+ lib/bb/compress/_pipecompress.py |  2 ++
+ lib/bb/compress/lz4.py           |  2 ++
+ lib/bb/compress/zstd.py          |  2 ++
+ lib/bb/daemonize.py              |  2 ++
+ lib/bb/exceptions.py             |  2 ++
+ lib/bb/fetch2/gitsm.py           |  3 +++
+ lib/bb/fetch2/npm.py             |  2 +-
+ lib/bb/fetch2/osc.py             |  2 ++
+ lib/bb/process.py                |  2 ++
+ lib/bb/runqueue.py               | 20 +++++++++++---------
+ lib/bb/siggen.py                 |  4 +++-
+ lib/bb/tests/compression.py      |  2 ++
+ lib/bb/tests/cooker.py           |  2 ++
+ lib/bb/utils.py                  | 21 +++++++++++++++++++++
+ lib/bblayers/__init__.py         |  2 ++
+ lib/bblayers/action.py           |  2 ++
+ lib/bblayers/common.py           |  2 ++
+ lib/bblayers/layerindex.py       |  2 ++
+ lib/bblayers/query.py            |  2 ++
+ lib/prserv/__init__.py           |  2 ++
+ lib/prserv/client.py             |  2 ++
+ lib/prserv/db.py                 |  2 ++
+ lib/prserv/serv.py               |  2 ++
+ lib/toaster/manage.py            |  2 ++
+ 32 files changed, 106 insertions(+), 20 deletions(-)
+
 -- 
 2.25.1
 
