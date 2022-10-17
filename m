@@ -1,193 +1,83 @@
-Return-Path: <Martin.Jansa@gmail.com>
+Return-Path: <akuster808@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA05C4332F
-	for <webhook@archiver.kernel.org>; Mon, 17 Oct 2022 16:07:34 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web11.43041.1666022844916362144
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61D3C43217
+	for <webhook@archiver.kernel.org>; Mon, 17 Oct 2022 17:15:25 +0000 (UTC)
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+ by mx.groups.io with SMTP id smtpd.web12.285.1666026915725766054
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 17 Oct 2022 09:07:25 -0700
+ Mon, 17 Oct 2022 10:15:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=Yo03Cg9P;
- spf=pass (domain: gmail.com, ip: 209.85.128.48, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f48.google.com with SMTP id v130-20020a1cac88000000b003bcde03bd44so13039239wme.5
-        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Oct 2022 09:07:24 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=dv5dXW7G;
+ spf=pass (domain: gmail.com, ip: 209.85.160.172, mailfrom: akuster808@gmail.com)
+Received: by mail-qt1-f172.google.com with SMTP id g16so3298127qtu.2;
+        Mon, 17 Oct 2022 10:15:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KD0mZhm4CtpO1dz5kP6+0T2qGo6XgezWOy5sQHt5y0g=;
-        b=Yo03Cg9POdzxX90A0n8yYFNDsbCI2N/4LTvQwZVCD2q81wxR2EiJQJ9lrDqQ4D8L5P
-         gaIZ5XqNxtl8esnTJobeQIell9rbPvwEtTPgobXB7pVtaG7wRF8tPNilSKdkkg5zTjGW
-         Yc93bM83RLDueWHbdEjTX5j+pDNfWOgLrVFeTaG3Vo1iVTcdf0+t70YRk6Ux6I1kj5Zg
-         JKjbn8TTmIwz7L58brUICyH//EHXJAIr912jb5dgiHGQdGGjtOnXXDPl412tm8pE/h6O
-         r0BJOjRCK+EcdOfAwxHNmNPLQOdTeD83Bojx+rxh7c8l53H2SCtZPetVbvAZ43n4VjKK
-         Rs0A==
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ox9DYZcypO7qwFq9S4+dO5lD79z9FBzyIn2FVl47Hf8=;
+        b=dv5dXW7Gq53PmSxBvh/v0k7pGDp0wEksQwuKJ4RYf3wHPtvVPHe1htMFE9fHWmQnep
+         Qf1RTL0gGWwo4X8IGFFhNR4sGf7cgFVbg1SQzGhzIA1j5v4fwZWpsHufK3y8WB6fcbJ8
+         aqpYV9KAQflP+/1sGIb1ZfUtHPCFsmuXWEcIZRMDZwJUQJ/acv/el1Sp+yNwLONTGEYI
+         3eUhgo8st0wn3uGST0JlX51eAHfChFDqaEIVIQsLao0Tcft4aVIl2kKtb9j0g/yO0TG9
+         Bl+UJH9e+ac0rPdFZIyK1nG9jUViHS9k0dVboIbjYrpu3zUwQoxs5sPeB419RukljpsK
+         KTzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KD0mZhm4CtpO1dz5kP6+0T2qGo6XgezWOy5sQHt5y0g=;
-        b=OXIXDxKOmah/QVSckGWxl8lVGvjQqbtRNEH/8XOmYiUZiOqQWMLNtGKAe+OYkpZPc5
-         JOjek9IDe47HQfKCCjF8XU47GhfGg0x3XAIr6XKsVwwfNU57mKKN2eyKM5TiKJJEo1LB
-         zX+bX+7Ud7iLxuufvTU9uX1phv5dTM4WTkkYd1KqY/pC57z9p/bzHS2zVYARPgNyBfP6
-         e6PTe35r4lVQjmDB5PdDAzmBRPkUyYPpd6rNVxmUZjbcBM48zf229pY2nZH1EJ5N6qEG
-         HTbrSH0ktz5XSOfnkvjhLQ7zL1X/UK4eAUtsCAfxBBYkiZYXFL8gTU3owmVgy0gKgvdt
-         QZsw==
-X-Gm-Message-State: ACrzQf0hItg1N5AwOUjlI2KsElSHwNjcV+Y858YqQMQMKCGum+e70o/d
-	xp4qRfJOR3Stc6J/ICXgFA/uJvFyPmrY2hgKtMo=
-X-Google-Smtp-Source: AMsMyM5zBPDbOsotu6iYO8D7XLxF48Td0SHXHt6t/BLXnXWc1moEToT8e0lEOISMQb1g4pbOnusUmbwLtLe9zbRpo3w=
-X-Received: by 2002:a7b:cd15:0:b0:3c5:1b4c:7632 with SMTP id
- f21-20020a7bcd15000000b003c51b4c7632mr20253343wmj.2.1666022843184; Mon, 17
- Oct 2022 09:07:23 -0700 (PDT)
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ox9DYZcypO7qwFq9S4+dO5lD79z9FBzyIn2FVl47Hf8=;
+        b=NXarpM0kGGss8X/vyCyo4Qa+tsCq6CqKNHYFxCSRqh316cX2G8FsfrjuzVDD0h2KMi
+         eVr7Kyg+HJRtrnBKVkHyCAQpFKoiy9rPiTXt9U++KrD6lWXTMgcuMIqmvV1yI74eMCMs
+         4UdTYEYHqcJYLm2pqofExuyq2pujU2XiE+yYcC48w6LMhdEfACnCQkFLhRnwfo0j5OGW
+         Vm9oABeD6nt5782H7dGAdFd85waoU7mi8MIU3I6XF0mPFu80Ub+p2Ghpt3clUvezJeuW
+         uwQFPomuBlGbQUlS48K9QdC/jNcEvEPYpEDhsoPlYiS/8NIGL1uS0cx2FI3st6I3H3KB
+         gMyw==
+X-Gm-Message-State: ACrzQf2X745tiB1s/v4G1fDw2OPxCDwTEvEoA/tP7zfPYbCYWilQRy44
+	iRuRlUPqX7x0oZ74hlLYjaAnwwa/U70=
+X-Google-Smtp-Source: AMsMyM4vVtSItFnPcCBRLUxqN3vCdQ+x4CrL4yKWV5LYk94Oj1MWF3u3Ztm706BdGzHLzM0hVDh4rg==
+X-Received: by 2002:ac8:59c2:0:b0:39c:e3b4:1265 with SMTP id f2-20020ac859c2000000b0039ce3b41265mr8327717qtf.55.1666026914385;
+        Mon, 17 Oct 2022 10:15:14 -0700 (PDT)
+Received: from ?IPV6:2600:1700:9190:ba10:f3c7:f51b:7232:a830? ([2600:1700:9190:ba10:f3c7:f51b:7232:a830])
+        by smtp.gmail.com with ESMTPSA id i11-20020ac85e4b000000b0039cb59f00fcsm253090qtx.30.2022.10.17.10.15.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Oct 2022 10:15:13 -0700 (PDT)
+Message-ID: <a03f341b-d247-57a4-812d-bbdc455cd22a@gmail.com>
+Date: Mon, 17 Oct 2022 13:15:13 -0400
 MIME-Version: 1.0
-References: <171EDDD869A66677.2422@lists.openembedded.org>
-In-Reply-To: <171EDDD869A66677.2422@lists.openembedded.org>
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Mon, 17 Oct 2022 18:07:09 +0200
-Message-ID: <CA+chaQfhSrOJB-4u23XsryLwvm+XXE3uMCp+DYpZLW4pP8uhkw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] gitsm: pass lfs parameter from main repo
- to all its submodules
-To: Martin.Jansa@gmail.com
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000c1797a05eb3d2b47"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Content-Language: en-US
+To: OpenEmbedded Devel List <openembedded-devel@lists.openembedded.org>,
+ Patches and discussions about the oe-core layer
+ <openembedded-core@lists.openembedded.org>,
+ Yocto-mailing-list <yocto@lists.yoctoproject.org>,
+ "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+From: akuster808 <akuster808@gmail.com>
+Subject: Yocto Project Summit: 2011.11
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 17 Oct 2022 16:07:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14038
+ <bitbake-devel@lists.openembedded.org>; Mon, 17 Oct 2022 17:15:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14039
 
---000000000000c1797a05eb3d2b47
-Content-Type: text/plain; charset="UTF-8"
+Hello,
 
-This might need a bit more work, it seemed to work, but then I still got
-the same failure on different host
+This is a reminder that the Yocto Project Summit is scheduled for 
+November 29th to December. Registration is open.
 
-First I was assuming it was just stale tarball in PREMIRROR, but even after
-cleaning that I didn't get it to work.
+The CFP still open and will close in 12 days from now on Oct 28th.
 
-Luckily for vulkan-samples we can get away with just explicitly disabling
-LFS, so this change isn't needed.
 
-On the other hand vulkan-samples with lfs=0 changed to lfs=1 is good
-oe-core reproducer for this smudge issue in submodule.
+For more information see: 
+https://www.yoctoproject.org/yocto-project-summit-2022-11/
 
-On Mon, Oct 17, 2022 at 3:20 PM Martin Jansa via lists.openembedded.org
-<Martin.Jansa=gmail.com@lists.openembedded.org> wrote:
-
-> * it might not be ideal in some cases where we might require LFS objects
->   only in some of the submodules, but still better than no way to set
->   lfs for submodules which causes git smudge issues in e.g. vulkan-samples
->   when LFS is enabled in gitconfig
->
-> [YOCTO #14938]
->
-> Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
-> ---
->  lib/bb/fetch2/gitsm.py | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-> index 25d5db0e..36f0464c 100644
-> --- a/lib/bb/fetch2/gitsm.py
-> +++ b/lib/bb/fetch2/gitsm.py
-> @@ -122,6 +122,7 @@ class GitSM(Git):
->              url += ';protocol=%s' % proto
->              url += ";name=%s" % module
->              url += ";subpath=%s" % module
-> +            url += ";lfs=%s" % ud.parm.get("lfs", "1")
->
->              ld = d.createCopy()
->              # Not necessary to set SRC_URI, since we're passing the URI to
-> --
-> 2.38.0
->
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#14037):
-> https://lists.openembedded.org/g/bitbake-devel/message/14037
-> Mute This Topic: https://lists.openembedded.org/mt/94383851/3617156
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> Martin.Jansa@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
->
-
---000000000000c1797a05eb3d2b47
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">This might need a bit more work, it seemed to work, but th=
-en I still got the same failure on different host<div><br></div><div>First =
-I was assuming it was just stale tarball in PREMIRROR, but even after clean=
-ing that I didn&#39;t get it to work.</div><div><br></div><div>Luckily for =
-vulkan-samples we can get away with just explicitly disabling LFS, so this =
-change isn&#39;t needed.</div><div><br></div><div>On the other hand vulkan-=
-samples with lfs=3D0 changed to lfs=3D1 is good oe-core reproducer for this=
- smudge issue in submodule.</div></div><br><div class=3D"gmail_quote"><div =
-dir=3D"ltr" class=3D"gmail_attr">On Mon, Oct 17, 2022 at 3:20 PM Martin Jan=
-sa via <a href=3D"http://lists.openembedded.org">lists.openembedded.org</a>=
- &lt;Martin.Jansa=3D<a href=3D"mailto:gmail.com@lists.openembedded.org">gma=
-il.com@lists.openembedded.org</a>&gt; wrote:<br></div><blockquote class=3D"=
-gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(20=
-4,204,204);padding-left:1ex">* it might not be ideal in some cases where we=
- might require LFS objects<br>
-=C2=A0 only in some of the submodules, but still better than no way to set<=
-br>
-=C2=A0 lfs for submodules which causes git smudge issues in e.g. vulkan-sam=
-ples<br>
-=C2=A0 when LFS is enabled in gitconfig<br>
-<br>
-[YOCTO #14938]<br>
-<br>
-Signed-off-by: Martin Jansa &lt;<a href=3D"mailto:Martin.Jansa@gmail.com" t=
-arget=3D"_blank">Martin.Jansa@gmail.com</a>&gt;<br>
----<br>
-=C2=A0lib/bb/fetch2/gitsm.py | 1 +<br>
-=C2=A01 file changed, 1 insertion(+)<br>
-<br>
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py<br>
-index 25d5db0e..36f0464c 100644<br>
---- a/lib/bb/fetch2/gitsm.py<br>
-+++ b/lib/bb/fetch2/gitsm.py<br>
-@@ -122,6 +122,7 @@ class GitSM(Git):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0url +=3D &#39;;protocol=3D%=
-s&#39; % proto<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0url +=3D &quot;;name=3D%s&q=
-uot; % module<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0url +=3D &quot;;subpath=3D%=
-s&quot; % module<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 url +=3D &quot;;lfs=3D%s&quot; %=
- ud.parm.get(&quot;lfs&quot;, &quot;1&quot;)<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ld =3D d.createCopy()<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# Not necessary to set SRC_=
-URI, since we&#39;re passing the URI to<br>
--- <br>
-2.38.0<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#14037): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/14037" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/14037</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/94383851/3617=
-156" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/94383851/3617156</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:Martin.Jansa@gmail.com" target=3D"=
-_blank">Martin.Jansa@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div>
-
---000000000000c1797a05eb3d2b47--
+regards,
+Armin
 
