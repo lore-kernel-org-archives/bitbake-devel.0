@@ -1,80 +1,109 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <jsbronder@cold-front.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B219FC4332F
-	for <webhook@archiver.kernel.org>; Fri, 21 Oct 2022 09:30:46 +0000 (UTC)
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
- by mx.groups.io with SMTP id smtpd.web09.8129.1666344638714893909
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A08CC67871
+	for <webhook@archiver.kernel.org>; Mon, 24 Oct 2022 20:07:55 +0000 (UTC)
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+ by mx.groups.io with SMTP id smtpd.web09.942.1666642065885509627
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 21 Oct 2022 02:30:39 -0700
+ Mon, 24 Oct 2022 13:07:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=ScstuF+X;
- spf=pass (domain: bootlin.com, ip: 217.70.183.193, mailfrom: alexandre.belloni@bootlin.com)
-Received: (Authenticated sender: alexandre.belloni@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id A6CD3240015;
-	Fri, 21 Oct 2022 09:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1666344637;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=gWHNE/tlGY7tE83jChW+YqwkbajXn4UstXScaruPxic=;
-	b=ScstuF+X8zPOBJDacxNqNBQ1DRraG849z99sgROoQN9485ZKdA5KVVDEvCRcIrLSfAU4c1
-	zrfiCGIMtapoOF5B6MWJ5JFOfCddqKALo3TvHoI3RTtFbOEAlkJvQP912P/OscH2TCrUtq
-	R4lUaiFoOdIeCOHVRmzUEUyCA6CcolRzf4aiDi27Nke+hDy8bLOJ0N7ByhOZrH04K5dPzr
-	eCHcUxjpWNAYHzQDnJLIAvGIjwSLCVw+iJtu4rx1Vt2yrEjepv2xPXgP6OqLYPOGAQxQrB
-	J87TZOvGLypMfD9ngaD5G54IuQNdwBRcu8KzXJ7NRbiVyQVEeRs+BpOECcTRqw==
-From: alexandre.belloni@bootlin.com
+ dkim=fail reason="signature has expired" header.i=@cold-front.org header.s=mesmtp header.b=RWAO26B8;
+ spf=pass (domain: cold-front.org, ip: 66.111.4.25, mailfrom: jsbronder@cold-front.org)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id 2DBE95C00FE;
+	Mon, 24 Oct 2022 16:07:45 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 24 Oct 2022 16:07:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cold-front.org;
+	 h=cc:cc:content-transfer-encoding:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:sender:subject
+	:subject:to:to; s=mesmtp; t=1666642065; x=1666728465; bh=0UqOLrX
+	gMfl5a28I+ARAFTtb6VL0Mce9l4fvK9HapDg=; b=RWAO26B80PONFaWUxL502mm
+	1sQArJwy1PgfypMItao0ESJnC84tEvDcz18Wg1lrV8D8p8LuEjjlBxmIIxA0+X8Z
+	cw8OWikBEmx/ghFv6vlZub7IETM3h4z0iaAdC5pTfSt4AJ3MLkBAp+aQrNFO6eco
+	DnFCN8NfE2T2BNfwSZYM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1666642065; x=1666728465; bh=0UqOLrXgMfl5a28I+ARAFTtb6VL0Mce9l4f
+	vK9HapDg=; b=olz4MaFgmiQhom+jbv+Er+wRQiY+xHTQeSvlySuZevCgAmb/T97
+	qoE9d5JXPVrQoMOeLBfRvlW7ZOuUtNBuUxWQ4EXjNBR7QzuEvVmJNVO7SWSQR8qq
+	XLFp8K1R3gCcIJBalvYn2MJOK+NHEsy5NTXZd9BRm3ctx7N9sAPr6GnT6MPlH2wQ
+	LS1gwvsfm7N50ZmW1JCFIf5EACTNYHRKThCVPkGHlPbRX37BNpBGxueaCfeYxKl9
+	5LMDjEZnNadRHXoXoc19ddWdgjcVeQ4UR7QSR7T47t8gJsHfZMT84GxegCWQ9TS7
+	DXDmfx53nKqJMF8WufdeAt1XyKl8gtUVwWw==
+X-ME-Sender: <xms:kPBWY8l4eUBYSUXwYNLkyw2DBzBmyu1aeI4b-Amo_Fl2JYD_73v5BQ>
+    <xme:kPBWY70ff4VoMcwWtjgnxT4px4qeX2418nPUZH7SXN24OJo9BNt1t6ZPOeJkx9YhS
+    h46b_o8AmhIheS15A>
+X-ME-Received: <xmr:kPBWY6qpQC1hbtvSjHgvCwcvuG20-RZjdXcMsRr4Kms5doL0Jy8sQYM4K6uQ00riMRBGWJGWiwkyHh1xBtdCZhuz4nvWOA3ySySGl4-jVg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrgedtgedgudegtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekre
+    dtredttdenucfhrhhomheplfhushhtihhnuceurhhonhguvghruceojhhssghrohhnuggv
+    rhestgholhguqdhfrhhonhhtrdhorhhgqeenucggtffrrghtthgvrhhnpedugffhvdekue
+    ehudduudfhueeiieekgeeflefhgfefjeegleehjefhfedtleehgeenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjshgsrhhonhguvghrsegtoh
+    hlugdqfhhrohhnthdrohhrgh
+X-ME-Proxy: <xmx:kPBWY4llknZAwBNb2UXBMEVmJc6QD5wm0l0g9J9y1TkvYmTALr8ERA>
+    <xmx:kPBWY60VHqgmB3bgo3TD9YfqSfnQqjy2m9ZbS1sqiGJD8NnKv8xCfQ>
+    <xmx:kPBWY_tEqx63xnBNJbkVC1er1LABj1jh3KLoBz0UkyXhJmJ4bPiD9g>
+    <xmx:kfBWY_-RlUKPc98kFP7n1dxNY-X5kR6NsXYUgmrAAJqXUyx-8l5xWg>
+Feedback-ID: iea0042cb:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 24 Oct 2022 16:07:44 -0400 (EDT)
+From: Justin Bronder <jsbronder@cold-front.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2] tests: bb.tests.fetch.GitShallowTest: allow file transport
-Date: Fri, 21 Oct 2022 11:30:33 +0200
-Message-Id: <20221021093033.2949077-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.37.3
+Cc: Justin Bronder <jsbronder@cold-front.org>
+Subject: [PATCH] asyncrpc: serv: correct closed client socket detection
+Date: Mon, 24 Oct 2022 16:07:41 -0400
+Message-Id: <20221024200741.23646-1-jsbronder@cold-front.org>
+X-Mailer: git-send-email 2.38.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 21 Oct 2022 09:30:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14047
+ <bitbake-devel@lists.openembedded.org>; Mon, 24 Oct 2022 20:07:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14048
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+If the client socket is closed, asyncio.StreamReader.readline() will
+return an empty bytes object, not None.
 
-Following CVE-2022-39253, distributions are disabling file:// transport for
-submodules. See https://git.launchpad.net/ubuntu/+source/git/tree/debian/patches/CVE-2022-39253-11.patch?h=applied/ubuntu/jammy-security
+This prevents multiple tracebacks being logged by bitbake-hashserv each
+time bitbake is started and performs a connection check.
 
-[YOCTO #14941]
-
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Justin Bronder <jsbronder@cold-front.org>
 ---
- lib/bb/tests/fetch.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/bb/asyncrpc/serv.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index c5f6ce9dabdb..d91bb595699e 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1870,6 +1870,8 @@ class GitShallowTest(FetcherTest):
-         self.add_empty_file('asub', cwd=smdir)
-         self.add_empty_file('bsub', cwd=smdir)
+diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
+index 5cf45f908..d2de4891b 100644
+--- a/lib/bb/asyncrpc/serv.py
++++ b/lib/bb/asyncrpc/serv.py
+@@ -42,7 +42,7 @@ class AsyncServerConnection(object):
  
-+        self.d.appendVar('FETCHCMD_git', " -c protocol.file.allow=always")
-+
-         self.git('submodule init', cwd=self.srcdir)
-         self.git('submodule add file://%s' % smdir, cwd=self.srcdir)
-         self.git('submodule update', cwd=self.srcdir)
-@@ -1900,6 +1902,8 @@ class GitShallowTest(FetcherTest):
-         self.add_empty_file('asub', cwd=smdir)
-         self.add_empty_file('bsub', cwd=smdir)
+             # Read protocol and version
+             client_protocol = await self.reader.readline()
+-            if client_protocol is None:
++            if not client_protocol:
+                 return
  
-+        self.d.appendVar('FETCHCMD_git', " -c protocol.file.allow=always")
-+
-         self.git('submodule init', cwd=self.srcdir)
-         self.git('submodule add file://%s' % smdir, cwd=self.srcdir)
-         self.git('submodule update', cwd=self.srcdir)
+             (client_proto_name, client_proto_version) = client_protocol.decode('utf-8').rstrip().split()
+@@ -59,7 +59,7 @@ class AsyncServerConnection(object):
+             # an empty line to signal the end of the headers
+             while True:
+                 line = await self.reader.readline()
+-                if line is None:
++                if not line:
+                     return
+ 
+                 line = line.decode('utf-8').rstrip()
 -- 
-2.37.3
+2.38.0
 
 
