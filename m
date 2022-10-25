@@ -1,109 +1,103 @@
-Return-Path: <jsbronder@cold-front.org>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A08CC67871
-	for <webhook@archiver.kernel.org>; Mon, 24 Oct 2022 20:07:55 +0000 (UTC)
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
- by mx.groups.io with SMTP id smtpd.web09.942.1666642065885509627
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC108C04A95
+	for <webhook@archiver.kernel.org>; Tue, 25 Oct 2022 14:21:39 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web11.7728.1666707694384873763
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 24 Oct 2022 13:07:46 -0700
+ Tue, 25 Oct 2022 07:21:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@cold-front.org header.s=mesmtp header.b=RWAO26B8;
- spf=pass (domain: cold-front.org, ip: 66.111.4.25, mailfrom: jsbronder@cold-front.org)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 2DBE95C00FE;
-	Mon, 24 Oct 2022 16:07:45 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 24 Oct 2022 16:07:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cold-front.org;
-	 h=cc:cc:content-transfer-encoding:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to; s=mesmtp; t=1666642065; x=1666728465; bh=0UqOLrX
-	gMfl5a28I+ARAFTtb6VL0Mce9l4fvK9HapDg=; b=RWAO26B80PONFaWUxL502mm
-	1sQArJwy1PgfypMItao0ESJnC84tEvDcz18Wg1lrV8D8p8LuEjjlBxmIIxA0+X8Z
-	cw8OWikBEmx/ghFv6vlZub7IETM3h4z0iaAdC5pTfSt4AJ3MLkBAp+aQrNFO6eco
-	DnFCN8NfE2T2BNfwSZYM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1666642065; x=1666728465; bh=0UqOLrXgMfl5a28I+ARAFTtb6VL0Mce9l4f
-	vK9HapDg=; b=olz4MaFgmiQhom+jbv+Er+wRQiY+xHTQeSvlySuZevCgAmb/T97
-	qoE9d5JXPVrQoMOeLBfRvlW7ZOuUtNBuUxWQ4EXjNBR7QzuEvVmJNVO7SWSQR8qq
-	XLFp8K1R3gCcIJBalvYn2MJOK+NHEsy5NTXZd9BRm3ctx7N9sAPr6GnT6MPlH2wQ
-	LS1gwvsfm7N50ZmW1JCFIf5EACTNYHRKThCVPkGHlPbRX37BNpBGxueaCfeYxKl9
-	5LMDjEZnNadRHXoXoc19ddWdgjcVeQ4UR7QSR7T47t8gJsHfZMT84GxegCWQ9TS7
-	DXDmfx53nKqJMF8WufdeAt1XyKl8gtUVwWw==
-X-ME-Sender: <xms:kPBWY8l4eUBYSUXwYNLkyw2DBzBmyu1aeI4b-Amo_Fl2JYD_73v5BQ>
-    <xme:kPBWY70ff4VoMcwWtjgnxT4px4qeX2418nPUZH7SXN24OJo9BNt1t6ZPOeJkx9YhS
-    h46b_o8AmhIheS15A>
-X-ME-Received: <xmr:kPBWY6qpQC1hbtvSjHgvCwcvuG20-RZjdXcMsRr4Kms5doL0Jy8sQYM4K6uQ00riMRBGWJGWiwkyHh1xBtdCZhuz4nvWOA3ySySGl4-jVg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrgedtgedgudegtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekre
-    dtredttdenucfhrhhomheplfhushhtihhnuceurhhonhguvghruceojhhssghrohhnuggv
-    rhestgholhguqdhfrhhonhhtrdhorhhgqeenucggtffrrghtthgvrhhnpedugffhvdekue
-    ehudduudfhueeiieekgeeflefhgfefjeegleehjefhfedtleehgeenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjshgsrhhonhguvghrsegtoh
-    hlugdqfhhrohhnthdrohhrgh
-X-ME-Proxy: <xmx:kPBWY4llknZAwBNb2UXBMEVmJc6QD5wm0l0g9J9y1TkvYmTALr8ERA>
-    <xmx:kPBWY60VHqgmB3bgo3TD9YfqSfnQqjy2m9ZbS1sqiGJD8NnKv8xCfQ>
-    <xmx:kPBWY_tEqx63xnBNJbkVC1er1LABj1jh3KLoBz0UkyXhJmJ4bPiD9g>
-    <xmx:kfBWY_-RlUKPc98kFP7n1dxNY-X5kR6NsXYUgmrAAJqXUyx-8l5xWg>
-Feedback-ID: iea0042cb:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 24 Oct 2022 16:07:44 -0400 (EDT)
-From: Justin Bronder <jsbronder@cold-front.org>
-To: bitbake-devel@lists.openembedded.org
-Cc: Justin Bronder <jsbronder@cold-front.org>
-Subject: [PATCH] asyncrpc: serv: correct closed client socket detection
-Date: Mon, 24 Oct 2022 16:07:41 -0400
-Message-Id: <20221024200741.23646-1-jsbronder@cold-front.org>
-X-Mailer: git-send-email 2.38.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PGNVouvS;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f48.google.com with SMTP id l14so14113310wrw.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 25 Oct 2022 07:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PzOkNlD9uaabFvE54fuQ95FA2ppJzQR9fXlHM2EhWC0=;
+        b=PGNVouvSa1kJ3hxVYP00LcHhnsSicqCIBlzPQkscPCkaCkDZIsr2kI5DH7FCrDAZgI
+         KlUgaehqZ9/iu4nDSlk1VfQ1hE5QIHo5xthu5BIfCRhApq25YtRLOahgFit4BBlXW4MW
+         KN9InUaUO4oZw3BAtaabyXocJ0mx4x5XQ061I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PzOkNlD9uaabFvE54fuQ95FA2ppJzQR9fXlHM2EhWC0=;
+        b=NXrONCdjxLwAiUMAPsbRpgErNxAbuIziq6jDErtILn7i1qanCCGf9e2HUxQOep41cR
+         uAbKG85buAQhUURInIBADPX9OPls9aSnP+00KBfExGhZeCfnkJTlelHNqT44UZFgUWXv
+         ibjZnW79cBScf4ExbHnGLFhARlySkAubxEM86AgAgwK8hxc6t6WmPABEOr4f0sVn6Tzp
+         86SPXeSjz+MjFfoK+gXJsccFW9G4oEq+n2KR8i04u+jJty6qXgZQdFORowDQ/jK1aWV/
+         odanW/XRIa2c/vyfsDPs04asY+MQCp4jLVkckCvbjEN6YQqPQ9cw8MIEJQqMBgXcLfxK
+         HPPQ==
+X-Gm-Message-State: ACrzQf2YXVRXPiYRAPyQUnzqdBMFu1tzXGqHI5TTchuQgGAuJmL15HIA
+	ZGF7hezW++yq+ALDo6Tou+4XCA==
+X-Google-Smtp-Source: AMsMyM7JBXaQsBvFZzb/ScTY6NuWUDakQJGsdY8sl2rLiXz1/1J49PYOqpyx51uLsJ0krOKSdrTfgg==
+X-Received: by 2002:a5d:6d02:0:b0:232:4070:6026 with SMTP id e2-20020a5d6d02000000b0023240706026mr26124230wrq.33.1666707692433;
+        Tue, 25 Oct 2022 07:21:32 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:46a:60c6:26a1:e0b0? ([2001:8b0:aba:5f3c:46a:60c6:26a1:e0b0])
+        by smtp.gmail.com with ESMTPSA id h8-20020a05600c314800b003c6cd82596esm11677085wmo.43.2022.10.25.07.21.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Oct 2022 07:21:31 -0700 (PDT)
+Message-ID: <321b3611966533c6083eb40ed4300971f9e0a347.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] gitsm: pass lfs parameter from main
+ repo to all its submodules
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Martin Jansa <Martin.Jansa@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 25 Oct 2022 15:21:29 +0100
+In-Reply-To: <20221017132026.88753-1-Martin.Jansa@gmail.com>
+References: <20221017132026.88753-1-Martin.Jansa@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 24 Oct 2022 20:07:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14048
+ <bitbake-devel@lists.openembedded.org>; Tue, 25 Oct 2022 14:21:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14049
 
-If the client socket is closed, asyncio.StreamReader.readline() will
-return an empty bytes object, not None.
+On Mon, 2022-10-17 at 15:20 +0200, Martin Jansa wrote:
+> * it might not be ideal in some cases where we might require LFS objects
+>   only in some of the submodules, but still better than no way to set
+>   lfs for submodules which causes git smudge issues in e.g. vulkan-sample=
+s
+>   when LFS is enabled in gitconfig
+>=20
+> [YOCTO #14938]
+>=20
+> Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+> ---
+>  lib/bb/fetch2/gitsm.py | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+> index 25d5db0e..36f0464c 100644
+> --- a/lib/bb/fetch2/gitsm.py
+> +++ b/lib/bb/fetch2/gitsm.py
+> @@ -122,6 +122,7 @@ class GitSM(Git):
+>              url +=3D ';protocol=3D%s' % proto
+>              url +=3D ";name=3D%s" % module
+>              url +=3D ";subpath=3D%s" % module
+> +            url +=3D ";lfs=3D%s" % ud.parm.get("lfs", "1")
+> =20
+>              ld =3D d.createCopy()
+>              # Not necessary to set SRC_URI, since we're passing the URI =
+to
 
-This prevents multiple tracebacks being logged by bitbake-hashserv each
-time bitbake is started and performs a connection check.
 
-Signed-off-by: Justin Bronder <jsbronder@cold-front.org>
----
- lib/bb/asyncrpc/serv.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Shouldn't that be:
 
-diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
-index 5cf45f908..d2de4891b 100644
---- a/lib/bb/asyncrpc/serv.py
-+++ b/lib/bb/asyncrpc/serv.py
-@@ -42,7 +42,7 @@ class AsyncServerConnection(object):
- 
-             # Read protocol and version
-             client_protocol = await self.reader.readline()
--            if client_protocol is None:
-+            if not client_protocol:
-                 return
- 
-             (client_proto_name, client_proto_version) = client_protocol.decode('utf-8').rstrip().split()
-@@ -59,7 +59,7 @@ class AsyncServerConnection(object):
-             # an empty line to signal the end of the headers
-             while True:
-                 line = await self.reader.readline()
--                if line is None:
-+                if not line:
-                     return
- 
-                 line = line.decode('utf-8').rstrip()
--- 
-2.38.0
+ud.parm.get("lfs", "0")
 
+i.e. default to off but pass if present?
+
+Cheers,
+
+Richard
 
