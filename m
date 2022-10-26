@@ -1,189 +1,92 @@
-Return-Path: <Martin.Jansa@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F195FC433FE
-	for <webhook@archiver.kernel.org>; Wed, 26 Oct 2022 08:14:11 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web11.5188.1666772044306039857
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8723FC433FE
+	for <webhook@archiver.kernel.org>; Wed, 26 Oct 2022 16:03:14 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web10.9354.1666800186809847378
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 26 Oct 2022 01:14:04 -0700
+ Wed, 26 Oct 2022 09:03:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=KMMyAJPG;
- spf=pass (domain: gmail.com, ip: 209.85.221.45, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wr1-f45.google.com with SMTP id y16so14576738wrt.12
-        for <bitbake-devel@lists.openembedded.org>; Wed, 26 Oct 2022 01:14:04 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=A6DCN+YM;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f46.google.com with SMTP id c3-20020a1c3503000000b003bd21e3dd7aso1890996wma.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 26 Oct 2022 09:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZsP6JWkgRKYE9uClKu1DnA7WVSDcE/B3jvNPrJuOQxI=;
-        b=KMMyAJPGA160VDuLAtfKd7EVqdJRqDHtHL16awqM03EHADw5v13HEfZxHN07nquGeC
-         n7UFrgd66JQ+MKWHZGL85StsNlzYPM8SkighVJNSFXRjU0QvTtyJYunJyS3/fGRtCL1/
-         9/aQcy71PrRbgMCnpTbSFlK/bWxSRGSexIClcpuaijpXJTkXilDqSIpXqdeYHeVjKOFc
-         Cf0yvKAfEgQq3YutAvj0RcvjgY5tHk+KPSrXI7bxvZWHoEdzsEB0+SiilFcZvpe5y6LR
-         iRIM8pHK8oCQOsOvGbtpl1jM9s2ALtE2iHfnhxrH7PA/mziQn+nD4KbOy3/9ng2CpXVm
-         RocA==
+        d=linuxfoundation.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kxr6zqebeXsIF7AGc0MGTtqujDDrQ4AftmP6vYiUP0g=;
+        b=A6DCN+YMKdBsvuGWys70gUGSGjTpONu20CRAJ+YGytsK0Ae4yvijYt/MeuYCgr93Zl
+         Wc5CDxBS9VFOvpT42rKjplAEa7N35l43V8oWgTSzzRJPn4VE3Y/y1kPjOdK2wcJN+9Gf
+         xQWDXSw/48wvk4qRG9CYqnX5Pwj2/0bOGmNnQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZsP6JWkgRKYE9uClKu1DnA7WVSDcE/B3jvNPrJuOQxI=;
-        b=z13PH3RSBC0ycx7jFlrVLhyIoDEn8rz/o60ihjKCn0iucQAhp4rvWi3Bpz3X1MXLp4
-         N213wliSOXhxqnzm6/lBdvN6JOJfukClICeUIhvqoI8sEhXbvtuQdDs2Qz2C47W9V6tE
-         ulLE6erAnXSOUHBa8vjhDniGKxzvIFdS6RE9kjiMVJUETs+ZyU1Scpm3Y+bdQ2+LHISs
-         ghu5AVhgAzi2FaO7AlS3d5o2E7fwFIj2oxUsAaFPxBETJMfgoQuhA4um3Q76I9Ur9oMu
-         ms2Deh2O3F8sUEo1Rk8c9h6/zqVE//K3TL2qUv6zoOESg3PoeB+QQfsed94YIt26u1Qx
-         KS0Q==
-X-Gm-Message-State: ACrzQf27U9tSucyDogYx4jHybtCUL3T95uF/8pjBUtK6FlhNfZDR7S+Z
-	/4xJv8FknuGNyKVQQ6I5Pc5x3NTth6hdkISSMok=
-X-Google-Smtp-Source: AMsMyM7i0yBu/1fjffgpbbuV23mQ6sH7QHzbZNCKgC8X27XWzxcLqAeCpkQqXoIK7XNevtBhNjB2fORISjZZFyqrpsI=
-X-Received: by 2002:adf:dd12:0:b0:236:6ef7:dacf with SMTP id
- a18-20020adfdd12000000b002366ef7dacfmr10594361wrm.204.1666772042344; Wed, 26
- Oct 2022 01:14:02 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kxr6zqebeXsIF7AGc0MGTtqujDDrQ4AftmP6vYiUP0g=;
+        b=pIzTcMssKRS8VarutVws7FCKwW6myuxck3NbhHRpiRJ3hTb51UZ4uKoYufzZo8SXCp
+         lidDwyIT+TKXGTIn/2ac7mI5WZsWYCyaAz7ON+Qf9zlkw0duRGK4PA+GPVJnhcqdxykS
+         oXqorztpeQfizEB/bemswqCKD4GYIAyMSvAL1guvSqDfvX8//NtpPRflg6hY1h1QXYna
+         6zoadQV2OFjJP7mg1rAIk4iP4COFZh4pZnx+38oTPFgJKFpYrubxVps+gcjRciPU05yd
+         /e8EqP8l+fWVZmyJoGkTQRFS9MLmeS6V7P8WTy1mS8k2+4HYgTqEzanSRG+00fCw3Qc0
+         dTrQ==
+X-Gm-Message-State: ACrzQf1Ck9xk57EjbsfWTrEZvCj3F0GvZwTY3N7/wfPtst5OvznF6iwZ
+	WEuZPojU4fHsbR8zObevOH/NLwAECcKFzg==
+X-Google-Smtp-Source: AMsMyM7IdVTtCggZcrcdojrJfjEPUc2XSr/YgY+09T866dwFlNe9kK0Df5+hO3J6aiZ2UpWWeibN/Q==
+X-Received: by 2002:a05:600c:3d08:b0:3c6:fb56:ac9f with SMTP id bh8-20020a05600c3d0800b003c6fb56ac9fmr3070528wmb.193.1666800184442;
+        Wed, 26 Oct 2022 09:03:04 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:bd65:7511:b73b:c094])
+        by smtp.gmail.com with ESMTPSA id p2-20020a5d6382000000b002368a6deaf8sm2481156wru.57.2022.10.26.09.03.01
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Oct 2022 09:03:01 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] tests/fetch: Allow handling of a file:// url within a submodule
+Date: Wed, 26 Oct 2022 17:02:56 +0100
+Message-Id: <20221026160256.3749563-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20221017132026.88753-1-Martin.Jansa@gmail.com> <321b3611966533c6083eb40ed4300971f9e0a347.camel@linuxfoundation.org>
-In-Reply-To: <321b3611966533c6083eb40ed4300971f9e0a347.camel@linuxfoundation.org>
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Wed, 26 Oct 2022 10:13:49 +0200
-Message-ID: <CA+chaQf62vb2M-KzSNmrjHvFHvf3kN-wvi8sx1YShC-Oir609g@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] gitsm: pass lfs parameter from main repo
- to all its submodules
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000816d4305ebeb9b02"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 26 Oct 2022 08:14:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14051
+ <bitbake-devel@lists.openembedded.org>; Wed, 26 Oct 2022 16:03:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14052
 
---000000000000816d4305ebeb9b02
-Content-Type: text/plain; charset="UTF-8"
+CVE-2022-39253 in git meant file:// urls within submodules were disabled. Add
+a parameter to the commands in the tests to allow this to continue to work.
 
-Hi,
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tests/fetch.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-yes, that might be better default, but this change alone doesn't resolve
-all issues with git-lfs still :(
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index c5f6ce9dab..0af06e46e5 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -1871,7 +1871,7 @@ class GitShallowTest(FetcherTest):
+         self.add_empty_file('bsub', cwd=smdir)
+ 
+         self.git('submodule init', cwd=self.srcdir)
+-        self.git('submodule add file://%s' % smdir, cwd=self.srcdir)
++        self.git('-c protocol.file.allow=always submodule add file://%s' % smdir, cwd=self.srcdir)
+         self.git('submodule update', cwd=self.srcdir)
+         self.git('commit -m submodule -a', cwd=self.srcdir)
+ 
+@@ -1901,7 +1901,7 @@ class GitShallowTest(FetcherTest):
+         self.add_empty_file('bsub', cwd=smdir)
+ 
+         self.git('submodule init', cwd=self.srcdir)
+-        self.git('submodule add file://%s' % smdir, cwd=self.srcdir)
++        self.git('-c protocol.file.allow=always submodule add file://%s' % smdir, cwd=self.srcdir)
+         self.git('submodule update', cwd=self.srcdir)
+         self.git('commit -m submodule -a', cwd=self.srcdir)
+ 
+-- 
+2.34.1
 
-as documented by added test:
-
-https://patchwork.yoctoproject.org/project/bitbake/patch/20221018193746.3599845-1-Martin.Jansa@gmail.com/
-
-I don't know what is expected behavior which would be reproducible (not
-affected by user's .gitconfig and git-lfs installed or not-installed).
-
-Regards,
-
-On Tue, Oct 25, 2022 at 4:21 PM Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
-
-> On Mon, 2022-10-17 at 15:20 +0200, Martin Jansa wrote:
-> > * it might not be ideal in some cases where we might require LFS objects
-> >   only in some of the submodules, but still better than no way to set
-> >   lfs for submodules which causes git smudge issues in e.g.
-> vulkan-samples
-> >   when LFS is enabled in gitconfig
-> >
-> > [YOCTO #14938]
-> >
-> > Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
-> > ---
-> >  lib/bb/fetch2/gitsm.py | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-> > index 25d5db0e..36f0464c 100644
-> > --- a/lib/bb/fetch2/gitsm.py
-> > +++ b/lib/bb/fetch2/gitsm.py
-> > @@ -122,6 +122,7 @@ class GitSM(Git):
-> >              url += ';protocol=%s' % proto
-> >              url += ";name=%s" % module
-> >              url += ";subpath=%s" % module
-> > +            url += ";lfs=%s" % ud.parm.get("lfs", "1")
-> >
-> >              ld = d.createCopy()
-> >              # Not necessary to set SRC_URI, since we're passing the URI
-> to
->
->
-> Shouldn't that be:
->
-> ud.parm.get("lfs", "0")
->
-> i.e. default to off but pass if present?
->
-> Cheers,
->
-> Richard
->
-
---000000000000816d4305ebeb9b02
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi,<div><br></div><div>yes, that might be better default, =
-but this change alone doesn&#39;t resolve all issues with git-lfs still :(<=
-/div><div><br></div><div>as documented by added test:<br><br><a href=3D"htt=
-ps://patchwork.yoctoproject.org/project/bitbake/patch/20221018193746.359984=
-5-1-Martin.Jansa@gmail.com/">https://patchwork.yoctoproject.org/project/bit=
-bake/patch/20221018193746.3599845-1-Martin.Jansa@gmail.com/</a><br><br>I do=
-n&#39;t know what is expected behavior which would be reproducible (not aff=
-ected by user&#39;s .gitconfig and git-lfs installed or not-installed).<br>=
-</div><div><br></div><div>Regards,</div></div><br><div class=3D"gmail_quote=
-"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, Oct 25, 2022 at 4:21 PM Ric=
-hard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">richa=
-rd.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><blockquote class=3D"=
-gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(20=
-4,204,204);padding-left:1ex">On Mon, 2022-10-17 at 15:20 +0200, Martin Jans=
-a wrote:<br>
-&gt; * it might not be ideal in some cases where we might require LFS objec=
-ts<br>
-&gt;=C2=A0 =C2=A0only in some of the submodules, but still better than no w=
-ay to set<br>
-&gt;=C2=A0 =C2=A0lfs for submodules which causes git smudge issues in e.g. =
-vulkan-samples<br>
-&gt;=C2=A0 =C2=A0when LFS is enabled in gitconfig<br>
-&gt; <br>
-&gt; [YOCTO #14938]<br>
-&gt; <br>
-&gt; Signed-off-by: Martin Jansa &lt;<a href=3D"mailto:Martin.Jansa@gmail.c=
-om" target=3D"_blank">Martin.Jansa@gmail.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 lib/bb/fetch2/gitsm.py | 1 +<br>
-&gt;=C2=A0 1 file changed, 1 insertion(+)<br>
-&gt; <br>
-&gt; diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py<br>
-&gt; index 25d5db0e..36f0464c 100644<br>
-&gt; --- a/lib/bb/fetch2/gitsm.py<br>
-&gt; +++ b/lib/bb/fetch2/gitsm.py<br>
-&gt; @@ -122,6 +122,7 @@ class GitSM(Git):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 url +=3D &#39;;protoco=
-l=3D%s&#39; % proto<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 url +=3D &quot;;name=
-=3D%s&quot; % module<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 url +=3D &quot;;subpat=
-h=3D%s&quot; % module<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 url +=3D &quot;;lfs=3D%s&qu=
-ot; % ud.parm.get(&quot;lfs&quot;, &quot;1&quot;)<br>
-&gt;=C2=A0 <br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ld =3D d.createCopy()<=
-br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # Not necessary to set=
- SRC_URI, since we&#39;re passing the URI to<br>
-<br>
-<br>
-Shouldn&#39;t that be:<br>
-<br>
-ud.parm.get(&quot;lfs&quot;, &quot;0&quot;)<br>
-<br>
-i.e. default to off but pass if present?<br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-</blockquote></div>
-
---000000000000816d4305ebeb9b02--
 
