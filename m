@@ -1,73 +1,69 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4EEECAAA1
-	for <webhook@archiver.kernel.org>; Thu, 27 Oct 2022 14:08:29 +0000 (UTC)
-Received: from relay10.mail.gandi.net (relay10.mail.gandi.net [217.70.178.230])
- by mx.groups.io with SMTP id smtpd.web10.6930.1666879702778476507
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C14AC38A02
+	for <webhook@archiver.kernel.org>; Fri, 28 Oct 2022 17:15:47 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.2058.1666977341037243172
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 27 Oct 2022 07:08:23 -0700
+ Fri, 28 Oct 2022 10:15:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=fhAim7lJ;
- spf=pass (domain: bootlin.com, ip: 217.70.178.230, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 114DE240006;
-	Thu, 27 Oct 2022 14:08:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1666879701;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ut/NU3g6ZYfnuwKAmSSqmY2z+oPyaHaqAH5hpuNfoRg=;
-	b=fhAim7lJ/++7izFmzYbyyssq3/ko1Jnms6PQLKubsmpNJOwnwyeg2aBFX2HpJv8KhEHch6
-	YkMf/zMgf83QJ0w9m4fCL46U5oREqkg3ZWe7ZSaiHrNFL+MiCpwZoMy0SG+vQS2RINMN7v
-	dzvpxmJohlcCUwrvk0he4yHU/ISoFO2O+A2YzAX5N0A8KJStG/xP23vLsETznLyymyHPTG
-	vXBulGzGmd4dvN53vadvy3CS/18EepgbBS1zyo/79KazvKGggKL2NJTGcXmmYr0qViz0+Q
-	oEw9R20Nz0av9YxPtdK+NpFJ2N7lKal/sNYgT+csc2mt2VaGENw3IYtIX7TcLQ==
-From: michael.opdenacker@bootlin.com
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F7F41FB;
+	Fri, 28 Oct 2022 10:15:46 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2B653F703;
+	Fri, 28 Oct 2022 10:15:39 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH RESEND] bitbake-user-manual: details about variable flags starting with underscore
-Date: Thu, 27 Oct 2022 16:08:07 +0200
-Message-Id: <20221027140808.46669-1-michael.opdenacker@bootlin.com>
+Cc: nd@arm.com
+Subject: [PATCH] fetch2/git: don't set core.fsyncobjectfiles=0
+Date: Fri, 28 Oct 2022 18:15:35 +0100
+Message-Id: <20221028171535.21518-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Oct 2022 14:08:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14053
+ <bitbake-devel@lists.openembedded.org>; Fri, 28 Oct 2022 17:15:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14054
 
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+This git configuration variable is deprecated in 2.36.0 onwards, so git
+warns in the logs for every git call.
 
-Fixes [YOCTO #14140]
+Luckily the default value has always been false[1], so we can just remove
+this.
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+[ YOCTO #14939 ]
+
+[1] https://github.com/git/git/commit/aafe9fbaf4f1d1f27a6f6e3eb3e246fff81=
+240ef
+
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- doc/bitbake-user-manual/bitbake-user-manual-metadata.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
+ bitbake/lib/bb/fetch2/git.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-index b533d9dc..b7c3d809 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-@@ -422,6 +422,12 @@ documentation to a BitBake variable as follows::
- 
-    CACHE[doc] = "The directory holding the cache of the metadata."
- 
-+.. note::
-+
-+   Variable flag names starting with an underscore (``_``) character
-+   are allowed but are ignored by ``d.getVarFlags("VAR")``
-+   in Python code. Such flag names are used internally by BitBake.
-+
- Inline Python Variable Expansion
- --------------------------------
- 
--- 
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 17d4904927d..578edc5914f 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -243,7 +243,7 @@ class Git(FetchMethod):
+             for name in ud.names:
+                 ud.unresolvedrev[name] =3D 'HEAD'
+=20
+-        ud.basecmd =3D d.getVar("FETCHCMD_git") or "git -c core.fsyncobj=
+ectfiles=3D0 -c gc.autoDetach=3Dfalse -c core.pager=3Dcat"
++        ud.basecmd =3D d.getVar("FETCHCMD_git") or "git -c gc.autoDetach=
+=3Dfalse -c core.pager=3Dcat"
+=20
+         write_tarballs =3D d.getVar("BB_GENERATE_MIRROR_TARBALLS") or "0=
+"
+         ud.write_tarballs =3D write_tarballs !=3D "0" or ud.rebaseable
+--=20
 2.34.1
 
 
