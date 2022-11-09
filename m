@@ -2,56 +2,56 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6333C4321E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EF1C433FE
 	for <webhook@archiver.kernel.org>; Wed,  9 Nov 2022 14:30:00 +0000 (UTC)
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
- by mx.groups.io with SMTP id smtpd.web09.3947.1668004197424767315
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+ by mx.groups.io with SMTP id smtpd.web09.3946.1668004191857003826
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 09 Nov 2022 06:29:57 -0800
+ Wed, 09 Nov 2022 06:29:52 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=PsBVHPS8;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.179, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f179.google.com with SMTP id i3so16822604pfc.11
-        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Nov 2022 06:29:57 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=2IBTu+T2;
+ spf=softfail (domain: sakoman.com, ip: 209.85.215.179, mailfrom: steve@sakoman.com)
+Received: by mail-pg1-f179.google.com with SMTP id q1so16347811pgl.11
+        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Nov 2022 06:29:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6himniHtQZwjP++OVwDsJa68gFBfVXk+0BkJEQBHiz8=;
-        b=PsBVHPS8+X9gM9HWJPw6kmNlTfC6fsLi1yQNo74fVydRUil8b7YxUwnUgvwkgel+zn
-         yMqcRAeszbec2o+uEgqqIVYOaceeeRHzsmaqz3JsV3C8BMqmXR0ea+pKGM2J/2X6+Pdp
-         CqIg8dxz6AXBvA8dESuRAFHdyDwgU+l3i+5aZEfCGWMDMBlc7fVdV5r64ctI6l2YKyP0
-         d1euikpDgBLG5HlSU/qDLRjF1hQByOEK2ewf8Vt/JSTubl1bG4itT1EbOLAM7bA9SkqN
-         1DHPZfNd8c9JD/X9/yw2YI8r+0VELzWtPUIiczcf8bI5HSGYAGRKaZkTSaY1jjOU146z
-         6jVQ==
+        bh=7WKON8Xqgm7mfACpFVqMDSuF3F0b35OxeVGF/9TkqNg=;
+        b=2IBTu+T2NQc6QH2snT6vryTwelt38rCdTXY+gkxYiwnh6GkZ/Bfqnzh9aV80MtA9Qh
+         sQHiv0w7MCIhgKaI6dJoj9xOFdnMyclvyjB6aakSCj8gz0QIUgPE+ZDh6VWU24uzQ8Mm
+         G8iC5z/bqE17t6XDa+jfjIWHVCzq3Y1UV2AcsLwRfeA1vrStzloCc7K2pgTkFphIBa8d
+         uTni33PZ5O6Jizai0qf6yQCgM/I2DZe6a8NFAK4i/U+iNSpS+nPv+GY9mrkSJaBl2nBS
+         As1ai4hoZd4YBJAednLCg6ceFwvYHhHzmAj3lJRgVzP/AxYsXvcHVAKZJWyXzfSklj27
+         CwmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6himniHtQZwjP++OVwDsJa68gFBfVXk+0BkJEQBHiz8=;
-        b=xcpwjMfz/IrEc1+nc1yJB7MHyI+pjTEjrP/m/LVx1Y4B8hRwWci94KyZ5Q9hp6noRF
-         w/dD8TyJjM219dUfFr15ouflggklOpTGZtfM9QA0xk1c0PbbBYfYCioFYmgIUA+X8rbF
-         xNgXjlUBu4NE2I2P5KQfH34C2K+BrOXs70ooco1hXmCRCBZyErI4PxDSYhG1o7FtH9Ep
-         SAXVblMo4B9r3/4OeFeqEXZ2fwWewwUOu5CiFe3ihleeS8epViG4EmPvnlYAT7gbMvF1
-         lDySOdyjISKnpNXQW8zQzrjZVSIzD6ebCdHvszGzmGgWUXpu+IVu71q/3m4Hbhj0wpyH
-         nzhw==
-X-Gm-Message-State: ACrzQf1oTDOeLdhVfYcK4C9RioDrYYZg4PVBDHcnwG6v5bV3jbiiShw4
-	/W8+nfiprEtbehxUnoHSJb/8KAGyemoPS5HU
-X-Google-Smtp-Source: AMsMyM61jnZCxNk80UcAwE7RlshT6sdXUPMwtT6neOy3ELZ4KgaER9Dqa2+95YKxBAL5PNSJ3+/97g==
-X-Received: by 2002:a63:fc0b:0:b0:46f:87a8:97aa with SMTP id j11-20020a63fc0b000000b0046f87a897aamr51372345pgi.234.1668004196526;
-        Wed, 09 Nov 2022 06:29:56 -0800 (PST)
+        bh=7WKON8Xqgm7mfACpFVqMDSuF3F0b35OxeVGF/9TkqNg=;
+        b=zWiEFK2TSSjkoi0xf37jmWHrUwNqjSTn0ZPO8rOtgnCR55W67/xPsL3KM4z2LwC/oN
+         VUuVvnsodwV1KuhJLRWYARSnUFh1k9q9M/vlMMFfal+z60qIq+AxjX00Zk4NXeS9yM9z
+         4dur/A6Qkf5KvpHU3k+pckHG+dRPelP63ou7huEQIOqweV6TvtT2x/OKQVOsUzPjVPHq
+         qmKhKBsYxC/Sbjl2dLrYvbPubOB+w/3uEvfAs2mWvXSONhmugzebTci6rk/pebk2Yv0V
+         /XT0DPnOBiVjCXG69MgaxJVDSvpx26dsim7/VPiCkPVsaqhUNvthbrbOjT1Tt/rKO1CA
+         pvXg==
+X-Gm-Message-State: ACrzQf2M4a7rycxQ1wjHCnJ7LLOwyMBRIL/dOmtZye0YsmQwWBjgewTp
+	ZAXQsdRQrX351bOfUzSRM+3nfZBZ/fXEGR8u
+X-Google-Smtp-Source: AMsMyM4AToYM+PeS7beqOsMCoHbN+l0bVUzuBOi64GUDDLZFyJfEDSl85nonmUPBRXMAmMtclmu6NA==
+X-Received: by 2002:a05:6a00:22c3:b0:56b:f793:5ad1 with SMTP id f3-20020a056a0022c300b0056bf7935ad1mr61975603pfj.58.1668004190929;
+        Wed, 09 Nov 2022 06:29:50 -0800 (PST)
 Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net. [72.253.6.214])
-        by smtp.gmail.com with ESMTPSA id nn14-20020a17090b38ce00b00213d28a6dedsm1308611pjb.13.2022.11.09.06.29.55
+        by smtp.gmail.com with ESMTPSA id nn14-20020a17090b38ce00b00213d28a6dedsm1308611pjb.13.2022.11.09.06.29.49
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 06:29:56 -0800 (PST)
+        Wed, 09 Nov 2022 06:29:50 -0800 (PST)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][langdale][2.2][PATCH 4/4] bitbake: bitbake-layers: checkout layer(s) branch when clone exists
-Date: Wed,  9 Nov 2022 04:29:36 -1000
-Message-Id: <42d63b381a60c217145dc2fdba47eaf02c893f3e.1668003926.git.steve@sakoman.com>
+Subject: [bitbake][langdale][2.2][PATCH 1/4] bitbake-user-manual: details about variable flags starting with underscore
+Date: Wed,  9 Nov 2022 04:29:33 -1000
+Message-Id: <a51e68544f97fce8c1b136b4f78fc0da8c69e9d6.1668003926.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1668003926.git.steve@sakoman.com>
 References: <cover.1668003926.git.steve@sakoman.com>
@@ -61,67 +61,37 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 09 Nov 2022 14:30:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14065
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14062
 
-From: Mark Asselstine <mark.asselstine@windriver.com>
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-[YOCTO #7852]
+Fixes [YOCTO #14140]
 
-Fixes 'bitbake-layers layerindex-fetch --branch kirkstone meta-arm'
-not checking out the branch if the repo is already cloned and on a
-different branch.
-
-If a clone of a layer being added already exists check what branch it
-is on and if necessary attempt to switch to the given branch. If the
-switch fails to happen the git error will be reported. We also warn if
-there are uncommitted changes as the changes might go unnoticed and
-result in unexpected behaviors.
-
-Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit d2cb388f58a37db2149fad34e4572d954e6e5441)
+(cherry picked from commit 0f3e9d87168813ce49995ff04bccdce11c5f7b47)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bblayers/layerindex.py | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ doc/bitbake-user-manual/bitbake-user-manual-metadata.rst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
-index 0ac8fd2e..ba91fac6 100644
---- a/lib/bblayers/layerindex.py
-+++ b/lib/bblayers/layerindex.py
-@@ -49,6 +49,31 @@ class LayerIndexPlugin(ActionPlugin):
-             else:
-                 logger.plain("Repository %s needs to be fetched" % url)
-                 return subdir, layername, layerdir
-+        elif os.path.exists(repodir) and branch:
-+            """
-+            If the repo is already cloned, ensure it is on the correct branch,
-+            switching branches if necessary and possible.
-+            """
-+            base_cmd = ['git', '--git-dir=%s/.git' % repodir, '--work-tree=%s' % repodir]
-+            cmd = base_cmd + ['branch']
-+            completed_proc = subprocess.run(cmd, text=True, capture_output=True)
-+            if completed_proc.returncode:
-+                logger.error("Unable to validate repo %s (%s)" % (repodir, stderr))
-+                return None, None, None
-+            else:
-+                if branch != completed_proc.stdout[2:-1]:
-+                    cmd = base_cmd + ['status', '--short']
-+                    completed_proc = subprocess.run(cmd, text=True, capture_output=True)
-+                    if completed_proc.stdout.count('\n') != 0:
-+                        logger.warning("There are uncommitted changes in repo %s" % repodir)
-+                    cmd = base_cmd + ['checkout', branch]
-+                    completed_proc = subprocess.run(cmd, text=True, capture_output=True)
-+                    if completed_proc.returncode:
-+                        # Could be due to original shallow clone on a different branch for example
-+                        logger.error("Unable to automatically switch %s to desired branch '%s' (%s)"
-+                                     % (repodir, branch, completed_proc.stderr))
-+                        return None, None, None
-+            return subdir, layername, layerdir
-         elif os.path.exists(layerdir):
-             return subdir, layername, layerdir
-         else:
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index b533d9dc..b7c3d809 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -422,6 +422,12 @@ documentation to a BitBake variable as follows::
+ 
+    CACHE[doc] = "The directory holding the cache of the metadata."
+ 
++.. note::
++
++   Variable flag names starting with an underscore (``_``) character
++   are allowed but are ignored by ``d.getVarFlags("VAR")``
++   in Python code. Such flag names are used internally by BitBake.
++
+ Inline Python Variable Expansion
+ --------------------------------
+ 
 -- 
 2.25.1
 
