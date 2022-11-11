@@ -2,100 +2,87 @@ Return-Path: <quaresma.jose@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B9AC433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77CCC4332F
 	for <webhook@archiver.kernel.org>; Fri, 11 Nov 2022 18:59:25 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web08.628.1668193160981396440
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web11.633.1668193159632338191
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 11 Nov 2022 10:59:21 -0800
+ Fri, 11 Nov 2022 10:59:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=ofER2KNI;
- spf=pass (domain: gmail.com, ip: 209.85.221.51, mailfrom: quaresma.jose@gmail.com)
-Received: by mail-wr1-f51.google.com with SMTP id z14so7588075wrn.7
-        for <bitbake-devel@lists.openembedded.org>; Fri, 11 Nov 2022 10:59:20 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=ZRwqWJiM;
+ spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: quaresma.jose@gmail.com)
+Received: by mail-wm1-f45.google.com with SMTP id v7so3440038wmn.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 11 Nov 2022 10:59:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mx3/iRohRSf16KviV2J8KUCCAELR5JwJwXKHnmjSQ7Y=;
-        b=ofER2KNIZ9yO42/g/wyjKark9Ee4mspqQGooyoIvbxihHAMfWrkglhrLIFnpyDZwz2
-         NlJ+KavNQWMQ1TG7jjWrnqUiabFqMhL4BTbXEU4OKrmJPwuLocaNtomzS1ZvPqah1exW
-         HF8e+srOY8QHdZqO9jgIftvFfoY3enkuN8xlAR6aSuEahSRyYZS+uRzsoBUGO/yObn+5
-         YKOrf+lv6kn1v55lEWU4ucoKB/NGmDUXKoMhNP7iOMpmBg1w9bc/R3W/GYC2NhRGc3YS
-         ZpUJfE2heMVT4wFg8R6LmHNwPckl915hChX5HQRUZx5mxz7krJ6ASVSPoLHoK1Cx2CPS
-         xnHQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qsJ1tOxngCsNTNcwtkv1SyaRZEeejdCx+zvV/Np4ZCM=;
+        b=ZRwqWJiMZjdfOqpEX2qHjFSP4NoGKo0jDhIr9zZnTnOIocT13ZIvnk1jMq9/szT22z
+         CNDMkt81bAEgM0/mMXfdI2IDBnEn7kEIyxKok66tog7i4Uw+MiaDvaFrnZzRLGWYosOw
+         kCJ4e+id4DIo2MeZLAwaoI22HtuaUY9liAeBVeMPuiHVWzTQ3v8BzKt8pEWcP7FQvlgY
+         FIhtdMpl0FWNjrtIIBwLetuZwYYKCVfXbYb+l5+OibPGT3g1JLTZ5bKV8TTgZTYXmVuf
+         BR/nij5Zcu78H/4iWkj1DQhy0HcBA8Cx4sK8+SjfI0SF9bduKp9PRcrn9FeVUTVATOLe
+         tc/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mx3/iRohRSf16KviV2J8KUCCAELR5JwJwXKHnmjSQ7Y=;
-        b=tf64oHtVzh+pGdupgjwjAkk+vRjv6mJyRzH1cq9pWrhYTng780R0h39+ZCj11ku771
-         MrLMkbmNLW/kc9FPhKKZWYHCpFbHo/7gnX8hWbgY5/om1gUtRt/s2OTDhWZonbgNLt/g
-         M6bz+8jyY4a6yFeomhQcOdDU4fqmbj3e0gb3IXTt+Pp0y8t+HsaHdjbAz47vJcabDKc+
-         cxDJLzq/WKAZc+qc6inFj9PgDPRHCHk5dueMs/rMoCRJ5AKi55D96l5VQx5zcw3Jm2Nd
-         AmmAobn1O4Xq5lnBVbJmm2Dyj3uhswVxMJoz5Oev7sfTPz4fNvfA7bBSUMdw+NW2Lzhe
-         THLg==
-X-Gm-Message-State: ANoB5pmBJhKY2+amdTH+TxV50nhRcCu+uMu3Fc4WOLbL9MNf6C2a4+Tw
-	0U7GPT02OmlUwYenpMeByFLxCtlbRofNdwX7
-X-Google-Smtp-Source: AA0mqf5xhGDjC0zzFeIbock7yHqZmHiZ5MZ3nFd3XkFG3oLSJAYlZeCARtmmmV/gnBOHkm6z/dw6kA==
-X-Received: by 2002:adf:f309:0:b0:231:355b:211c with SMTP id i9-20020adff309000000b00231355b211cmr1972525wro.509.1668193159217;
-        Fri, 11 Nov 2022 10:59:19 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qsJ1tOxngCsNTNcwtkv1SyaRZEeejdCx+zvV/Np4ZCM=;
+        b=ldkCalXqImL/hHp5viRb04QhWZSkhoNN878uwdiITfMifseV2iePqtuEC/sW8LXtdI
+         4al6q6fE3Bl+Fi+z+LHooXCJNMZFcFBH3S5lXViCTvZFk5KHGRJW4WFlM9wDK433M9o5
+         jLbdl+DWFKQ4ys8YE5be2U8MlplwKH5F/uAaE0PNXqBrFtnnjQ6NDrtKV0viulZ7Esth
+         b7XsGOWPq054ahV8CmY7pFXzfpNZROtW7NtxgMNb9Jcbbot1BL/PKQGLRoYRE2qNGJEV
+         9iBLusmmxO6BLKvpyi1DnDkF1Ae1pWI5pG0QrabAU9aSN7Ss6KFoWdE6McmoOthct3bz
+         leCg==
+X-Gm-Message-State: ANoB5pk1FLgSbU4gl1D0WA4OlCnRKyUogH3idZ9hv6QvFbbLNtoLFYql
+	JDCyobTIFVg88j23wlc5mkl9IRXjhS+8kzC2
+X-Google-Smtp-Source: AA0mqf6XkA9pjVdDvCyqTYq/wIrG0Oath7KW+dbWV0WKq66cQCv1OcPc+8V57lmWEyYKKosAZUgHJw==
+X-Received: by 2002:a05:600c:3b26:b0:3cf:61a3:464e with SMTP id m38-20020a05600c3b2600b003cf61a3464emr2208835wms.111.1668193157769;
+        Fri, 11 Nov 2022 10:59:17 -0800 (PST)
 Received: from og-worker-dev-01.infra.foundries.io.net (51-159-19-113.rev.poneytelecom.eu. [51.159.19.113])
-        by smtp.gmail.com with ESMTPSA id 3-20020a05600c024300b003c6b874a0dfsm4265034wmj.14.2022.11.11.10.59.17
+        by smtp.gmail.com with ESMTPSA id 3-20020a05600c024300b003c6b874a0dfsm4265034wmj.14.2022.11.11.10.59.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Nov 2022 10:59:18 -0800 (PST)
+        Fri, 11 Nov 2022 10:59:16 -0800 (PST)
 From: Jose Quaresma <quaresma.jose@gmail.com>
 X-Google-Original-From: Jose Quaresma <jose.quaresma@foundries.io>
 To: bitbake-devel@lists.openembedded.org
 Cc: ricardo@foundries.io,
 	daiane.angolini@foundries.io,
 	Jose Quaresma <jose.quaresma@foundries.io>
-Subject: [bitbake-devel][PATCH 2/2] build: log when the task is locked
-Date: Fri, 11 Nov 2022 18:58:49 +0000
-Message-Id: <20221111185849.2458457-2-jose.quaresma@foundries.io>
+Subject: [bitbake-devel][PATCH 1/2] build: log the lockfiles in use with debug
+Date: Fri, 11 Nov 2022 18:58:48 +0000
+Message-Id: <20221111185849.2458457-1-jose.quaresma@foundries.io>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221111185849.2458457-1-jose.quaresma@foundries.io>
-References: <20221111185849.2458457-1-jose.quaresma@foundries.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 11 Nov 2022 18:59:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14073
-
-This improve the bitbake UI when there are tasks with
-lockfiles waiting to run.
-
-In such cases one or more tasks are waiting because
-there is another one with the lock acquired.
-The bitbake UI shows that all the tasks is running
-which is not true and can confuse the user.
-
-This patch will shows what are the task that have the lock
-acquired.
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14072
 
 Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
 ---
- lib/bb/build.py | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/bb/build.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/lib/bb/build.py b/lib/bb/build.py
-index ae781c8c..6c0b07a1 100644
+index b8c1099e..ae781c8c 100644
 --- a/lib/bb/build.py
 +++ b/lib/bb/build.py
-@@ -253,6 +253,9 @@ def exec_func(func, d, dirs = None):
-                 pass
+@@ -217,7 +217,9 @@ def exec_func(func, d, dirs = None):
  
-     with bb.utils.fileslocked(lockfiles):
-+        if lockfiles:
-+            bb.verbnote("Task locked with lockfiles")
-+
-         if ispython:
-             exec_func_python(func, d, runfile, cwd=adir)
-         else:
+     lockflag = flags.get('lockfiles')
+     if lockflag:
+-        lockfiles = [f for f in d.expand(lockflag).split()]
++        expandlockfiles = d.expand(lockflag)
++        bb.debug(2, "Task lock files: %s" % expandlockfiles)
++        lockfiles = [f for f in expandlockfiles.split()]
+     else:
+         lockfiles = None
+ 
 -- 
 2.34.1
 
