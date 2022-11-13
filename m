@@ -1,497 +1,105 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <pavel@zhukoff.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BD3C4332F
-	for <webhook@archiver.kernel.org>; Sat, 12 Nov 2022 20:17:16 +0000 (UTC)
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
- by mx.groups.io with SMTP id smtpd.web11.694.1668284234053318665
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D06C4332F
+	for <webhook@archiver.kernel.org>; Sun, 13 Nov 2022 10:47:13 +0000 (UTC)
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+ by mx.groups.io with SMTP id smtpd.web08.1547.1668336426485952623
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 12 Nov 2022 12:17:14 -0800
+ Sun, 13 Nov 2022 02:47:06 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=TcNrkiBs;
- spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: alexandre.belloni@bootlin.com)
-Received: (Authenticated sender: alexandre.belloni@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 7B6941BF205;
-	Sat, 12 Nov 2022 20:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1668284231;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=voKti7Kfsi9KiPoTEM8HoGgKYxH7wotZ3UoWJ5p826w=;
-	b=TcNrkiBsxQkt8RjlddyQ7vqwYNQaPgwuqZo8CO4ApgF3vW3MusibFPFGxh+QA3hHOZW+MK
-	wv1hQnAH6yHnedwD/G0PFRUoGYcCTEZy0guIL9GQteKfcTdXzPpQ0t9wN0HaaLACZz5NUb
-	cKUFxGy7/Gq77NeZPlXBSap0qa3TCkNarSLpXvIc75ZTGKgwc3yql3MsfgTf1D/pCuJeDH
-	IrM+nu7F7WA0Aw6KPdshDip+y7imXNgVU7BfoI3AoBWE/u7sDalicdxNfPosv0O+ZdiGXc
-	4Sfn3QBIRIzseJFvxjygiWbjoZzhSaSyB+n5mw+OTPDHAgwjC98D0fxn9usZkQ==
-Date: Sat, 12 Nov 2022 21:17:11 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Joshua Watt <JPEWhacker@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel][PATCH v2] bitbake: Convert to argparse
-Message-ID: <Y2//R9NwhtgajjeI@mail.local>
-References: <20221110170046.3295885-1-JPEWhacker@gmail.com>
- <20221110185208.137924-1-JPEWhacker@gmail.com>
+ dkim=fail reason="signature has expired" header.i=@zhukoff.net header.s=fm1 header.b=Tsq8qmuO;
+ spf=pass (domain: zhukoff.net, ip: 64.147.123.21, mailfrom: pavel@zhukoff.net)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.west.internal (Postfix) with ESMTP id 7B2693200392;
+	Sun, 13 Nov 2022 05:47:05 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sun, 13 Nov 2022 05:47:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
+	cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:sender:subject:subject:to:to;
+	 s=fm1; t=1668336425; x=1668422825; bh=HBwWWpy46m4z4crz9grzC32nE
+	vSTV2Py9mlmCP+MzX0=; b=Tsq8qmuOONZXubM+IxqWAverTLtbAwTQ2SJvFxtvJ
+	K69K3TQvbZ+MalhOz6j/N2nYfOb4FJ53kMGRw52tTttE/rCfx/td4SL45Z6DFo/R
+	z1inHpcJOI/mW1mzOkc5SFNXNTYwpZuxCdpKeon1Fr4v8g2/eZBtgvrWtD9p0jx8
+	7hrwMEZ4193x8c8NoO8HiCWvYcGBd2bz+2YjrUrVeugqi4vbp/+q5suExMu3awVG
+	kg7n3ZA4/kGwMX2QI9xMZQ7nmHmh8dG7lFRtgE0a72x6zLVpfuPn5ZVXPERDMl2Q
+	9AEWe3BGA8DXyTNkqStgZbDnW64dWw4mguoOd3ecJR16g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1668336425; x=1668422825; bh=HBwWWpy46m4z4crz9grzC32nEvSTV2Py9ml
+	mCP+MzX0=; b=hW84F/CaxwOci7kXRKt2WoW6SUTgfaWXEezk1MoSCeh2Umbkn/T
+	0YYpDe68pjREt3W7SmvYRWFrHTb5KpUQWs/mf31qG6OjKrhRw38vYIxQaNVob7vg
+	N9ZyR3k2tgYIYmbkAlR3Vq2XFRgBxJH9RXKSPvrhserSILGrUTjEzpHMlXJHoFzg
+	L80EVBXb+WzxoX8Ybj7iJ5n5NjnnNVb9snnoXVb9DUuQQJ2OzcvSs5MLbVdWDsUU
+	BSSeO6wA3JK1Hd6frN73qxHVgbkcHoa+xnvefRPR6PVcIlHTFOo5CM8FJJB8p+WO
+	93wyEMU2jiqigIyd1koEqbp6XKTDIAcGJeA==
+X-ME-Sender: <xms:KMtwY3cgaT1hbO4h5wgb5CGkIYnE4w7j9neZqSJF9JlK12uZAqcUVA>
+    <xme:KMtwY9PYlwC_BEDLwwc__ty1rjx1f54kfR6jxS7jYP37YHh8jWUI5kr4d0lfLANUN
+    sbyK0aQkUOjAqcobjw>
+X-ME-Received: <xmr:KMtwYwg8WYHHhV93GGSn9hqsxcuZKTWqmTl0Vk-2eLuvV0CEhuW9HXHgHipWOdP7pEwbWbT7Anr5h-jYch327PA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrgedtgddvtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtre
+    dttdenucfhrhhomheprfgrvhgvlhcukghhuhhkohhvuceophgrvhgvlhesiihhuhhkohhf
+    fhdrnhgvtheqnecuggftrfgrthhtvghrnhepgeektddthfelgffhuddvhedtheffteefff
+    ekkeetveefveeuffevvdfgjeehjedtnecuffhomhgrihhnpeihohgtthhophhrohhjvggt
+    thdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehprghvvghlseiihhhukhhofhhfrdhnvght
+X-ME-Proxy: <xmx:KMtwY48rMctkLhpgAD96t21awOLAm-HXktNpLHU_SY2c7oKh7OAxeg>
+    <xmx:KMtwYzvKKRdIOANwfLmQTq_PjT2YZhsP1E0ERB6lMFzX6TFlT34glA>
+    <xmx:KMtwY3G5xoEqejDxGvUHY5W0cHAVOz0qlMBFqLIiFozII8JsrAhBmw>
+    <xmx:KctwYx3SPuap-H6pl0e0RTu4yq0mshYlEIq4JK3sC7zhjvFqM_ZoPw>
+Feedback-ID: ib94946c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 13 Nov 2022 05:47:04 -0500 (EST)
+From: Pavel Zhukov <pavel@zhukoff.net>
+To: bitbake-devel@lists.openembedded.org
+Cc: Pavel Zhukov <pavel@zhukoff.net>
+Subject: [PATCH] gitsm: Fix regression in gitsm submodule path parsing
+Date: Sun, 13 Nov 2022 11:46:39 +0100
+Message-Id: <20221113104638.7939-1-pavel@zhukoff.net>
+X-Mailer: git-send-email 2.38.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221110185208.137924-1-JPEWhacker@gmail.com>
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 12 Nov 2022 20:17:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14075
+ <bitbake-devel@lists.openembedded.org>; Sun, 13 Nov 2022 10:47:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14076
 
-Hello Joshua,
+Commit 0361ecf7eb82c386a9842cf1f3cb706c0a112e77 introduced regression
+in submodules path parsing. As the result gitsm fetcher fails on each
+submodule which name begins from the name of the parent repo which is
+totally valid usecase [Yocto #14045] [1]
+Fix the code to error out only if submodule's name is equal to parent
+name but not if it's part of it.
 
-I believe this is the cause of:
-AssertionError: Command 'bitbake  selftest-ed -c deploy_archives selftest-ed-native' returned non-zero exit status 2:
-usage: bitbake [-h] [--version] [-b BUILDFILE] [-k] [-f] [-c CMD]
-               [-C INVALIDATE_STAMP] [-r PREFILE] [-R POSTFILE] [-v] [-D] [-q]
-               [-n] [-S SIGNATURE_HANDLER] [-p] [-s] [-e] [-g]
-               [-I EXTRA_ASSUME_PROVIDED] [-l DEBUG_DOMAINS] [-P] [-u UI]
-               [--token XMLRPCTOKEN] [--revisions-changed] [--server-only]
-               [-B BIND] [-T SERVER_TIMEOUT] [--no-setscene] [--skip-setscene]
-               [--setscene-only] [--remote-server REMOTE_SERVER] [-m]
-               [--observe-only] [--status-only] [-w WRITEEVENTLOG]
-               [--runall RUNALL] [--runonly RUNONLY]
-               [recipename/target ...]
-bitbake: error: unrecognized arguments: selftest-ed-native
+[1] https://bugzilla.yoctoproject.org/show_bug.cgi?id=14045#c4
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/80/builds/4310/steps/14/logs/stdio
+Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
+---
+ lib/bb/fetch2/gitsm.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 10/11/2022 12:52:08-0600, Joshua Watt wrote:
-> Converts the main bitbake program to use argparse instead of the
-> deprecated optparse.
-> 
-> The resulting Namespace returned by argparse should be equivalent to the
-> one returned from optparse; the only major difference is that the
-> positional "target" arguments are consumed by argparse and returned as
-> the "targets" property instead of an additional argument from
-> parse_args().
-> 
-> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> ---
-> 
-> This one should be ready this time :)
-> 
-> 
->  bitbake/lib/bb/main.py | 346 +++++++++++++++++++++--------------------
->  1 file changed, 175 insertions(+), 171 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-> index 93eda3632ed..2f7875ca530 100755
-> --- a/bitbake/lib/bb/main.py
-> +++ b/bitbake/lib/bb/main.py
-> @@ -12,7 +12,7 @@
->  import os
->  import sys
->  import logging
-> -import optparse
-> +import argparse
->  import warnings
->  import fcntl
->  import time
-> @@ -43,18 +43,18 @@ def present_options(optionlist):
->      else:
->          return optionlist[0]
->  
-> -class BitbakeHelpFormatter(optparse.IndentedHelpFormatter):
-> -    def format_option(self, option):
-> +class BitbakeHelpFormatter(argparse.HelpFormatter):
-> +    def _get_help_string(self, action):
->          # We need to do this here rather than in the text we supply to
->          # add_option() because we don't want to call list_extension_modules()
->          # on every execution (since it imports all of the modules)
->          # Note also that we modify option.help rather than the returned text
->          # - this is so that we don't have to re-format the text ourselves
-> -        if option.dest == 'ui':
-> +        if action.dest == 'ui':
->              valid_uis = list_extension_modules(bb.ui, 'main')
-> -            option.help = option.help.replace('@CHOICES@', present_options(valid_uis))
-> +            return action.help.replace('@CHOICES@', present_options(valid_uis))
->  
-> -        return optparse.IndentedHelpFormatter.format_option(self, option)
-> +        return action.help
->  
->  def list_extension_modules(pkg, checkattr):
->      """
-> @@ -114,180 +114,184 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
->  warnings.showwarning = _showwarning
->  
->  def create_bitbake_parser():
-> -    parser = optparse.OptionParser(
-> -        formatter=BitbakeHelpFormatter(),
-> -        version="BitBake Build Tool Core version %s" % bb.__version__,
-> -        usage="""%prog [options] [recipename/target recipe:do_task ...]
-> -
-> -    Executes the specified task (default is 'build') for a given set of target recipes (.bb files).
-> -    It is assumed there is a conf/bblayers.conf available in cwd or in BBPATH which
-> -    will provide the layer, BBFILES and other configuration information.""")
-> -
-> -    parser.add_option("-b", "--buildfile", action="store", dest="buildfile", default=None,
-> -                      help="Execute tasks from a specific .bb recipe directly. WARNING: Does "
-> -                           "not handle any dependencies from other recipes.")
-> -
-> -    parser.add_option("-k", "--continue", action="store_false", dest="halt", default=True,
-> -                      help="Continue as much as possible after an error. While the target that "
-> -                           "failed and anything depending on it cannot be built, as much as "
-> -                           "possible will be built before stopping.")
-> -
-> -    parser.add_option("-f", "--force", action="store_true", dest="force", default=False,
-> -                      help="Force the specified targets/task to run (invalidating any "
-> -                           "existing stamp file).")
-> -
-> -    parser.add_option("-c", "--cmd", action="store", dest="cmd",
-> -                      help="Specify the task to execute. The exact options available "
-> -                           "depend on the metadata. Some examples might be 'compile'"
-> -                           " or 'populate_sysroot' or 'listtasks' may give a list of "
-> -                           "the tasks available.")
-> -
-> -    parser.add_option("-C", "--clear-stamp", action="store", dest="invalidate_stamp",
-> -                      help="Invalidate the stamp for the specified task such as 'compile' "
-> -                           "and then run the default task for the specified target(s).")
-> -
-> -    parser.add_option("-r", "--read", action="append", dest="prefile", default=[],
-> -                      help="Read the specified file before bitbake.conf.")
-> -
-> -    parser.add_option("-R", "--postread", action="append", dest="postfile", default=[],
-> -                      help="Read the specified file after bitbake.conf.")
-> -
-> -    parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False,
-> -                      help="Enable tracing of shell tasks (with 'set -x'). "
-> -                           "Also print bb.note(...) messages to stdout (in "
-> -                           "addition to writing them to ${T}/log.do_<task>).")
-> -
-> -    parser.add_option("-D", "--debug", action="count", dest="debug", default=0,
-> -                      help="Increase the debug level. You can specify this "
-> -                           "more than once. -D sets the debug level to 1, "
-> -                           "where only bb.debug(1, ...) messages are printed "
-> -                           "to stdout; -DD sets the debug level to 2, where "
-> -                           "both bb.debug(1, ...) and bb.debug(2, ...) "
-> -                           "messages are printed; etc. Without -D, no debug "
-> -                           "messages are printed. Note that -D only affects "
-> -                           "output to stdout. All debug messages are written "
-> -                           "to ${T}/log.do_taskname, regardless of the debug "
-> -                           "level.")
-> -
-> -    parser.add_option("-q", "--quiet", action="count", dest="quiet", default=0,
-> -                      help="Output less log message data to the terminal. You can specify this more than once.")
-> -
-> -    parser.add_option("-n", "--dry-run", action="store_true", dest="dry_run", default=False,
-> -                      help="Don't execute, just go through the motions.")
-> -
-> -    parser.add_option("-S", "--dump-signatures", action="append", dest="dump_signatures",
-> -                      default=[], metavar="SIGNATURE_HANDLER",
-> -                      help="Dump out the signature construction information, with no task "
-> -                           "execution. The SIGNATURE_HANDLER parameter is passed to the "
-> -                           "handler. Two common values are none and printdiff but the handler "
-> -                           "may define more/less. none means only dump the signature, printdiff"
-> -                           " means compare the dumped signature with the cached one.")
-> -
-> -    parser.add_option("-p", "--parse-only", action="store_true",
-> -                      dest="parse_only", default=False,
-> -                      help="Quit after parsing the BB recipes.")
-> -
-> -    parser.add_option("-s", "--show-versions", action="store_true",
-> -                      dest="show_versions", default=False,
-> -                      help="Show current and preferred versions of all recipes.")
-> -
-> -    parser.add_option("-e", "--environment", action="store_true",
-> -                      dest="show_environment", default=False,
-> -                      help="Show the global or per-recipe environment complete with information"
-> -                           " about where variables were set/changed.")
-> -
-> -    parser.add_option("-g", "--graphviz", action="store_true", dest="dot_graph", default=False,
-> -                      help="Save dependency tree information for the specified "
-> -                           "targets in the dot syntax.")
-> -
-> -    parser.add_option("-I", "--ignore-deps", action="append",
-> -                      dest="extra_assume_provided", default=[],
-> -                      help="Assume these dependencies don't exist and are already provided "
-> -                           "(equivalent to ASSUME_PROVIDED). Useful to make dependency "
-> -                           "graphs more appealing")
-> -
-> -    parser.add_option("-l", "--log-domains", action="append", dest="debug_domains", default=[],
-> -                      help="Show debug logging for the specified logging domains")
-> -
-> -    parser.add_option("-P", "--profile", action="store_true", dest="profile", default=False,
-> -                      help="Profile the command and save reports.")
-> +    parser = argparse.ArgumentParser(
-> +        description="""\
-> +            It is assumed there is a conf/bblayers.conf available in cwd or in BBPATH which
-> +            will provide the layer, BBFILES and other configuration information.
-> +            """,
-> +        formatter_class=BitbakeHelpFormatter,
-> +        allow_abbrev=False,
-> +    )
-> +
-> +    parser.add_argument("--version", action="store_true",
-> +                        help="Show programs version and exit")
-> +
-> +    parser.add_argument("-b", "--buildfile",
-> +                        help="Execute tasks from a specific .bb recipe directly. WARNING: Does "
-> +                             "not handle any dependencies from other recipes.")
-> +
-> +    parser.add_argument("-k", "--continue", action="store_false", dest="halt",
-> +                        help="Continue as much as possible after an error. While the target that "
-> +                             "failed and anything depending on it cannot be built, as much as "
-> +                             "possible will be built before stopping.")
-> +
-> +    parser.add_argument("-f", "--force", action="store_true",
-> +                        help="Force the specified targets/task to run (invalidating any "
-> +                             "existing stamp file).")
-> +
-> +    parser.add_argument("-c", "--cmd",
-> +                        help="Specify the task to execute. The exact options available "
-> +                             "depend on the metadata. Some examples might be 'compile'"
-> +                             " or 'populate_sysroot' or 'listtasks' may give a list of "
-> +                             "the tasks available.")
-> +
-> +    parser.add_argument("-C", "--clear-stamp", dest="invalidate_stamp",
-> +                        help="Invalidate the stamp for the specified task such as 'compile' "
-> +                             "and then run the default task for the specified target(s).")
-> +
-> +    parser.add_argument("-r", "--read", action="append", dest="prefile", default=[],
-> +                        help="Read the specified file before bitbake.conf.")
-> +
-> +    parser.add_argument("-R", "--postread", action="append", dest="postfile", default=[],
-> +                        help="Read the specified file after bitbake.conf.")
-> +
-> +    parser.add_argument("-v", "--verbose", action="store_true",
-> +                        help="Enable tracing of shell tasks (with 'set -x'). "
-> +                             "Also print bb.note(...) messages to stdout (in "
-> +                             "addition to writing them to ${T}/log.do_<task>).")
-> +
-> +    parser.add_argument("-D", "--debug", action="count", default=0,
-> +                        help="Increase the debug level. You can specify this "
-> +                             "more than once. -D sets the debug level to 1, "
-> +                             "where only bb.debug(1, ...) messages are printed "
-> +                             "to stdout; -DD sets the debug level to 2, where "
-> +                             "both bb.debug(1, ...) and bb.debug(2, ...) "
-> +                             "messages are printed; etc. Without -D, no debug "
-> +                             "messages are printed. Note that -D only affects "
-> +                             "output to stdout. All debug messages are written "
-> +                             "to ${T}/log.do_taskname, regardless of the debug "
-> +                             "level.")
-> +
-> +    parser.add_argument("-q", "--quiet", action="count", default=0,
-> +                        help="Output less log message data to the terminal. You can specify this more than once.")
-> +
-> +    parser.add_argument("-n", "--dry-run", action="store_true",
-> +                        help="Don't execute, just go through the motions.")
-> +
-> +    parser.add_argument("-S", "--dump-signatures", action="append",
-> +                        default=[], metavar="SIGNATURE_HANDLER",
-> +                        help="Dump out the signature construction information, with no task "
-> +                             "execution. The SIGNATURE_HANDLER parameter is passed to the "
-> +                             "handler. Two common values are none and printdiff but the handler "
-> +                             "may define more/less. none means only dump the signature, printdiff"
-> +                             " means compare the dumped signature with the cached one.")
-> +
-> +    parser.add_argument("-p", "--parse-only", action="store_true",
-> +                        help="Quit after parsing the BB recipes.")
-> +
-> +    parser.add_argument("-s", "--show-versions", action="store_true",
-> +                        help="Show current and preferred versions of all recipes.")
-> +
-> +    parser.add_argument("-e", "--environment", action="store_true",
-> +                        dest="show_environment",
-> +                        help="Show the global or per-recipe environment complete with information"
-> +                             " about where variables were set/changed.")
-> +
-> +    parser.add_argument("-g", "--graphviz", action="store_true", dest="dot_graph",
-> +                        help="Save dependency tree information for the specified "
-> +                             "targets in the dot syntax.")
-> +
-> +    parser.add_argument("-I", "--ignore-deps", action="append",
-> +                        dest="extra_assume_provided", default=[],
-> +                        help="Assume these dependencies don't exist and are already provided "
-> +                             "(equivalent to ASSUME_PROVIDED). Useful to make dependency "
-> +                             "graphs more appealing")
-> +
-> +    parser.add_argument("-l", "--log-domains", action="append", dest="debug_domains", default=[],
-> +                        help="Show debug logging for the specified logging domains")
-> +
-> +    parser.add_argument("-P", "--profile", action="store_true",
-> +                        help="Profile the command and save reports.")
->  
->      # @CHOICES@ is substituted out by BitbakeHelpFormatter above
-> -    parser.add_option("-u", "--ui", action="store", dest="ui",
-> -                      default=os.environ.get('BITBAKE_UI', 'knotty'),
-> -                      help="The user interface to use (@CHOICES@ - default %default).")
-> -
-> -    parser.add_option("", "--token", action="store", dest="xmlrpctoken",
-> -                      default=os.environ.get("BBTOKEN"),
-> -                      help="Specify the connection token to be used when connecting "
-> -                           "to a remote server.")
-> -
-> -    parser.add_option("", "--revisions-changed", action="store_true",
-> -                      dest="revisions_changed", default=False,
-> -                      help="Set the exit code depending on whether upstream floating "
-> -                           "revisions have changed or not.")
-> -
-> -    parser.add_option("", "--server-only", action="store_true",
-> -                      dest="server_only", default=False,
-> -                      help="Run bitbake without a UI, only starting a server "
-> -                           "(cooker) process.")
-> -
-> -    parser.add_option("-B", "--bind", action="store", dest="bind", default=False,
-> -                      help="The name/address for the bitbake xmlrpc server to bind to.")
-> -
-> -    parser.add_option("-T", "--idle-timeout", type=float, dest="server_timeout",
-> -                      default=os.getenv("BB_SERVER_TIMEOUT"),
-> -                      help="Set timeout to unload bitbake server due to inactivity, "
-> -                           "set to -1 means no unload, "
-> -                           "default: Environment variable BB_SERVER_TIMEOUT.")
-> -
-> -    parser.add_option("", "--no-setscene", action="store_true",
-> -                      dest="nosetscene", default=False,
-> -                      help="Do not run any setscene tasks. sstate will be ignored and "
-> -                           "everything needed, built.")
-> -
-> -    parser.add_option("", "--skip-setscene", action="store_true",
-> -                      dest="skipsetscene", default=False,
-> -                      help="Skip setscene tasks if they would be executed. Tasks previously "
-> -                           "restored from sstate will be kept, unlike --no-setscene")
-> -
-> -    parser.add_option("", "--setscene-only", action="store_true",
-> -                      dest="setsceneonly", default=False,
-> -                      help="Only run setscene tasks, don't run any real tasks.")
-> -
-> -    parser.add_option("", "--remote-server", action="store", dest="remote_server",
-> -                      default=os.environ.get("BBSERVER"),
-> -                      help="Connect to the specified server.")
-> -
-> -    parser.add_option("-m", "--kill-server", action="store_true",
-> -                      dest="kill_server", default=False,
-> -                      help="Terminate any running bitbake server.")
-> -
-> -    parser.add_option("", "--observe-only", action="store_true",
-> -                      dest="observe_only", default=False,
-> -                      help="Connect to a server as an observing-only client.")
-> -
-> -    parser.add_option("", "--status-only", action="store_true",
-> -                      dest="status_only", default=False,
-> -                      help="Check the status of the remote bitbake server.")
-> -
-> -    parser.add_option("-w", "--write-log", action="store", dest="writeeventlog",
-> -                      default=os.environ.get("BBEVENTLOG"),
-> -                      help="Writes the event log of the build to a bitbake event json file. "
-> -                           "Use '' (empty string) to assign the name automatically.")
-> -
-> -    parser.add_option("", "--runall", action="append", dest="runall",
-> +    parser.add_argument("-u", "--ui",
-> +                        default=os.environ.get('BITBAKE_UI', 'knotty'),
-> +                        help="The user interface to use (@CHOICES@ - default %(default)s).")
-> +
-> +    parser.add_argument("--token", dest="xmlrpctoken",
-> +                        default=os.environ.get("BBTOKEN"),
-> +                        help="Specify the connection token to be used when connecting "
-> +                             "to a remote server.")
-> +
-> +    parser.add_argument("--revisions-changed", action="store_true",
-> +                        help="Set the exit code depending on whether upstream floating "
-> +                            "revisions have changed or not.")
-> +
-> +    parser.add_argument("--server-only", action="store_true",
-> +                        help="Run bitbake without a UI, only starting a server "
-> +                            "(cooker) process.")
-> +
-> +    parser.add_argument("-B", "--bind", default=False,
-> +                        help="The name/address for the bitbake xmlrpc server to bind to.")
-> +
-> +    parser.add_argument("-T", "--idle-timeout", type=float, dest="server_timeout",
-> +                        default=os.getenv("BB_SERVER_TIMEOUT"),
-> +                        help="Set timeout to unload bitbake server due to inactivity, "
-> +                             "set to -1 means no unload, "
-> +                             "default: Environment variable BB_SERVER_TIMEOUT.")
-> +
-> +    parser.add_argument("--no-setscene", action="store_true",
-> +                        dest="nosetscene",
-> +                        help="Do not run any setscene tasks. sstate will be ignored and "
-> +                            "everything needed, built.")
-> +
-> +    parser.add_argument("--skip-setscene", action="store_true",
-> +                        dest="skipsetscene",
-> +                        help="Skip setscene tasks if they would be executed. Tasks previously "
-> +                            "restored from sstate will be kept, unlike --no-setscene")
-> +
-> +    parser.add_argument("--setscene-only", action="store_true",
-> +                        dest="setsceneonly",
-> +                        help="Only run setscene tasks, don't run any real tasks.")
-> +
-> +    parser.add_argument("--remote-server",
-> +                        default=os.environ.get("BBSERVER"),
-> +                        help="Connect to the specified server.")
-> +
-> +    parser.add_argument("-m", "--kill-server", action="store_true",
-> +                        help="Terminate any running bitbake server.")
-> +
-> +    parser.add_argument("--observe-only", action="store_true",
-> +                        help="Connect to a server as an observing-only client.")
-> +
-> +    parser.add_argument("--status-only", action="store_true",
-> +                        help="Check the status of the remote bitbake server.")
-> +
-> +    parser.add_argument("-w", "--write-log", dest="writeeventlog",
-> +                        default=os.environ.get("BBEVENTLOG"),
-> +                        help="Writes the event log of the build to a bitbake event json file. "
-> +                            "Use '' (empty string) to assign the name automatically.")
-> +
-> +    parser.add_argument("--runall", action="append", default=[],
->                        help="Run the specified task for any recipe in the taskgraph of the specified target (even if it wouldn't otherwise have run).")
->  
-> -    parser.add_option("", "--runonly", action="append", dest="runonly",
-> -                      help="Run only the specified task within the taskgraph of the specified targets (and any task dependencies those tasks may have).")
-> +    parser.add_argument("--runonly", action="append",
-> +                        help="Run only the specified task within the taskgraph of the specified targets (and any task dependencies those tasks may have).")
-> +
-> +    parser.add_argument("targets", nargs="*", metavar="recipename/target",
-> +                        help="Execute the specified task (default is 'build') for these target recipes (.bb files).")
-> +
->      return parser
->  
->  
->  class BitBakeConfigParameters(cookerdata.ConfigParameters):
->      def parseCommandLine(self, argv=sys.argv):
->          parser = create_bitbake_parser()
-> -        options, targets = parser.parse_args(argv)
-> +        options = parser.parse_args(argv[1:])
-> +
-> +        if options.version:
-> +            print("BitBake Build Tool Core version %s" % bb.__version__)
-> +            sys.exit(0)
->  
->          if options.quiet and options.verbose:
->              parser.error("options --quiet and --verbose are mutually exclusive")
-> @@ -319,7 +323,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
->          else:
->              options.xmlrpcinterface = (None, 0)
->  
-> -        return options, targets[1:]
-> +        return options, options.targets
->  
->  
->  def bitbake_main(configParams, configuration):
-> -- 
-> 2.33.0
-> 
-
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#14069): https://lists.openembedded.org/g/bitbake-devel/message/14069
-> Mute This Topic: https://lists.openembedded.org/mt/94943006/3617179
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
-
-
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index 25d5db0e..c5f7c03c 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -115,7 +115,7 @@ class GitSM(Git):
+                     # This has to be a file reference
+                     proto = "file"
+                     url = "gitsm://" + uris[module]
+-            if "{}{}".format(ud.host, ud.path) in url:
++            if url.endswith("{}{}".format(ud.host, ud.path)):
+                 raise bb.fetch2.FetchError("Submodule refers to the parent repository. This will cause deadlock situation in current version of Bitbake." \
+                                            "Consider using git fetcher instead.")
+ 
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.38.0
+
 
