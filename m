@@ -1,202 +1,288 @@
-Return-Path: <quaresma.jose@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0F6C43217
-	for <webhook@archiver.kernel.org>; Mon, 14 Nov 2022 16:47:40 +0000 (UTC)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
- by mx.groups.io with SMTP id smtpd.web11.7900.1668444453156669063
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6DEC433FE
+	for <webhook@archiver.kernel.org>; Tue, 15 Nov 2022 22:14:47 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web11.7538.1668550478294021640
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 14 Nov 2022 08:47:33 -0800
+ Tue, 15 Nov 2022 14:14:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=Hc4J5WW1;
- spf=pass (domain: gmail.com, ip: 209.85.167.42, mailfrom: quaresma.jose@gmail.com)
-Received: by mail-lf1-f42.google.com with SMTP id c1so20231824lfi.7
-        for <bitbake-devel@lists.openembedded.org>; Mon, 14 Nov 2022 08:47:32 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hR6ardEF;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f53.google.com with SMTP id w14so26742383wru.8
+        for <bitbake-devel@lists.openembedded.org>; Tue, 15 Nov 2022 14:14:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QbP/t7kgxLpLeYhxyrzoh7dljXmXm6gD1nzpRKiupzU=;
-        b=Hc4J5WW1wsCEB+hm/NkscA5WiRQvdTQLIy4vrKk3luGAmblGhQvaM7gtW8zPMtB30m
-         6h+w8uYRK5f/RhcOWB5cNFaVrbzUuYYQngRIlzt4K89Zy4JnB2rkZLWjzc0VUWCbiDfh
-         mQDizvCnbo5SN/K7PCkIkycvOXywnZ6/ieHyVL7WCl/ap4hWrPu/BBp331GV9pFSt6QK
-         vZrJXtLmKrJXF0YO4CjWbAF4KysSnxTCB3YPOX58yyWsKbFQIvojg1PDo1s0tG338bcO
-         eKG835cGV6lzChblkZ7cb5gJD8vWiZD2zdN0yNniSgHDikEIuHLFQRw9IeJdDmMhwIA/
-         Z5AQ==
+        d=linuxfoundation.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=O2EqSttunXxt55rmgRdDbnVnoOgBy6uebt7WvkwE6Dw=;
+        b=hR6ardEFPbSESBHNeYa130dfYAhvcWrRJvwu8O6cYuPmic8dn9CdO7yX0t/R5p/Nmx
+         SjFedQSHw0PcBRY1NB85ZGxzmt8Nhv2OTQA0c4JHCs4sO89wEHmH+V3QC+RkdHxLRGF9
+         489+8RUxU3FwI3ICJEQbFL3VXoCziAVUz7xGs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QbP/t7kgxLpLeYhxyrzoh7dljXmXm6gD1nzpRKiupzU=;
-        b=dXklrTngS0DmgdENudPChp5d9C70QZNaZtzfzGpiIvkaVE1SrGUseh2hNhaFIoA/PY
-         PdcWzXn3JnQlHVS+iyVD0I3KsLCabhX8GWeQ8Rkddqr44PGMYTSmMBS22n/wnjbH/qN7
-         Rj8SdSgsEO6k4VWtwRfVgqmEL7/VLeTGqRMP51wjSW9Q5ErAoWEOqk2Yn069mO8pfOxL
-         GZ8bc426c3SIKldrT+UJNMgr0IqB4sCXhyYS76oeydgvxeQ5Ru/2mM8nUfuYqwBlh2Rd
-         NGAvT4bmKwJCAxFvcjeWQ4G++mcLkv1WErj++/0KIdL8qvR7wkys6ztI61Qv8eRvnOuZ
-         8UUA==
-X-Gm-Message-State: ANoB5plelVpJQJsMUf/AQSwgz/4JCVtOqgF0Vl0YtDPHX2LCWiIt4fQr
-	/E6pMfImDn7mG6rp/piQVTKkriPJJf38sAnpAYE=
-X-Google-Smtp-Source: AA0mqf5WwuquMPMgxErHn6xKHJ6YgJmSPYDvrxolPFRlmPrYQLNCkg38neYg/bIDNFklk3Rvo6MEcbykITzB8xc5gcY=
-X-Received: by 2002:a05:6512:b82:b0:4a2:2af6:98e5 with SMTP id
- b2-20020a0565120b8200b004a22af698e5mr4302571lfv.5.1668444451002; Mon, 14 Nov
- 2022 08:47:31 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O2EqSttunXxt55rmgRdDbnVnoOgBy6uebt7WvkwE6Dw=;
+        b=WKAYFaQWSE9dV+X9lkG2ZsMD0/OOldE1QRqXSXaUu6QI6cVFwYkTfB8ftIYe/Z805T
+         47YYPZwEzJPxY6eeVzYZBpUnTkAwg6EWa7vJ1m4qEKKvdmKpjwyWeYm9TDaClwxwbYRn
+         rZP8OR6xBmc771n+oRv6NML7T7OO2cnDp08BuYeQuFpKBz4SNZPb5N+S4shSumnwZMjL
+         lJMsLYZOeStqYpf3XPVvriZ/XKYtnl6Frs6kKvzu2kHHhbymYWmvzNr2ylnxiq2Pmawn
+         aoeMHymmJeQKX9QPZ2YJ99uOdkfW6Hbqq/QIeYfv6kHq/bq3rGyKXrWCK7S3F1D8Egzk
+         CWQA==
+X-Gm-Message-State: ANoB5pnJbYte+RU9gmZG6dLmgIStSdqKU40NrRJVOLEvYrJtZv/kTXsV
+	nOEF+dTjlRTqrvIU6TJdMD2ab66yz0xGKQ==
+X-Google-Smtp-Source: AA0mqf5UkVd8+ipoIjCwEBX9TqN9RR5TLzyMqe6pjozbqC6MzGS5qxEVrBZmc6LHdeXGlHcb87EF9A==
+X-Received: by 2002:a5d:4012:0:b0:22e:3ca6:d4ab with SMTP id n18-20020a5d4012000000b0022e3ca6d4abmr12693434wrp.658.1668550476029;
+        Tue, 15 Nov 2022 14:14:36 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:6779:84d:e47:6803])
+        by smtp.gmail.com with ESMTPSA id t11-20020a5d49cb000000b002383fc96509sm13285924wrs.47.2022.11.15.14.14.35
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Nov 2022 14:14:35 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] cache/cookerdata: Move recipe parsing functions from cache to databuilder
+Date: Tue, 15 Nov 2022 22:14:33 +0000
+Message-Id: <20221115221433.2471258-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <CAOuPNLh1+LhxH8yuQprUntwjibAP_iuwF7tXnHjfhAZhLCCG-A@mail.gmail.com>
- <CAOuPNLgEs7Obni8kOqgznv_mLW8JQ4cF0CUS8jaV6AXEhw6aOg@mail.gmail.com>
-In-Reply-To: <CAOuPNLgEs7Obni8kOqgznv_mLW8JQ4cF0CUS8jaV6AXEhw6aOg@mail.gmail.com>
-From: Jose Quaresma <quaresma.jose@gmail.com>
-Date: Mon, 14 Nov 2022 16:47:19 +0000
-Message-ID: <CANPvuR=RT3YBSBmRHNtoeCMST2DJ3Wqq7fzh6jj2C1oxUxR0EA@mail.gmail.com>
-Subject: Re: [linux-yocto] Removing DISTRO_FEATURES from a specific machine type
-To: Pintu Agarwal <pintu.ping@gmail.com>
-Cc: yocto@lists.yoctoproject.org, linux-yocto@lists.yoctoproject.org, 
-	poky@lists.yoctoproject.org, bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000d45f1d05ed70fe75"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 14 Nov 2022 16:47:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14083
+ <bitbake-devel@lists.openembedded.org>; Tue, 15 Nov 2022 22:14:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14084
 
---000000000000d45f1d05ed70fe75
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+When 'NoCache' was written, databuilder/cookerdata didn't exist. It does
+now and the recipe parsing functionality contained in NoCache clearly
+belongs there, it isn't a cache function. Move those functions, renaming
+to match the style in databuilder but otherwise not changing functionality
+for now. Fix up the callers to match (which make it clear this is the right
+move).
 
-Hi Pintu,
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ bin/bitbake-worker   |  3 +-
+ lib/bb/cache.py      | 71 ++++----------------------------------------
+ lib/bb/command.py    |  3 +-
+ lib/bb/cookerdata.py | 51 +++++++++++++++++++++++++++++++
+ lib/bb/runqueue.py   |  3 +-
+ 5 files changed, 59 insertions(+), 72 deletions(-)
 
-Pintu Agarwal <pintu.ping@gmail.com> escreveu no dia segunda, 14/11/2022
-=C3=A0(s) 16:35:
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+index 7be39370b3..d54044f361 100755
+--- a/bin/bitbake-worker
++++ b/bin/bitbake-worker
+@@ -238,7 +238,6 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
+                 os.umask(umask)
+ 
+             try:
+-                bb_cache = bb.cache.NoCache(databuilder)
+                 (realfn, virtual, mc) = bb.cache.virtualfn2realfn(fn)
+                 the_data = databuilder.mcdata[mc]
+                 the_data.setVar("BB_WORKERCONTEXT", "1")
+@@ -257,7 +256,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, fn, task, taskname, taskha
+                     bb.parse.siggen.set_taskhashes(workerdata["newhashes"])
+                 ret = 0
+ 
+-                the_data = bb_cache.loadDataFull(fn, appends)
++                the_data = databuilder.parseRecipe(fn, appends)
+                 the_data.setVar('BB_TASKHASH', taskhash)
+                 the_data.setVar('BB_UNIHASH', unihash)
+ 
+diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+index 988c596c39..4d715e911d 100644
+--- a/lib/bb/cache.py
++++ b/lib/bb/cache.py
+@@ -280,75 +280,14 @@ def variant2virtual(realfn, variant):
+         return "mc:" + elems[1] + ":" + realfn
+     return "virtual:" + variant + ":" + realfn
+ 
+-def parse_recipe(bb_data, bbfile, appends, mc=''):
+-    """
+-    Parse a recipe
+-    """
+-
+-    bb_data.setVar("__BBMULTICONFIG", mc)
+-
+-    bbfile_loc = os.path.abspath(os.path.dirname(bbfile))
+-    bb.parse.cached_mtime_noerror(bbfile_loc)
+-
+-    if appends:
+-        bb_data.setVar('__BBAPPEND', " ".join(appends))
+-    bb_data = bb.parse.handle(bbfile, bb_data)
+-    return bb_data
+-
+-
+-class NoCache(object):
+-
+-    def __init__(self, databuilder):
+-        self.databuilder = databuilder
+-        self.data = databuilder.data
+-
+-    def loadDataFull(self, virtualfn, appends):
+-        """
+-        Return a complete set of data for fn.
+-        To do this, we need to parse the file.
+-        """
+-        logger.debug("Parsing %s (full)" % virtualfn)
+-        (fn, virtual, mc) = virtualfn2realfn(virtualfn)
+-        bb_data = self.load_bbfile(virtualfn, appends, virtonly=True)
+-        return bb_data[virtual]
+-
+-    def load_bbfile(self, bbfile, appends, virtonly = False, mc=None):
+-        """
+-        Load and parse one .bb build file
+-        Return the data and whether parsing resulted in the file being skipped
+-        """
+-
+-        if virtonly:
+-            (bbfile, virtual, mc) = virtualfn2realfn(bbfile)
+-            bb_data = self.databuilder.mcdata[mc].createCopy()
+-            bb_data.setVar("__ONLYFINALISE", virtual or "default")
+-            datastores = parse_recipe(bb_data, bbfile, appends, mc)
+-            return datastores
+-
+-        if mc is not None:
+-            bb_data = self.databuilder.mcdata[mc].createCopy()
+-            return parse_recipe(bb_data, bbfile, appends, mc)
+ 
+-        bb_data = self.data.createCopy()
+-        datastores = parse_recipe(bb_data, bbfile, appends)
+-
+-        for mc in self.databuilder.mcdata:
+-            if not mc:
+-                continue
+-            bb_data = self.databuilder.mcdata[mc].createCopy()
+-            newstores = parse_recipe(bb_data, bbfile, appends, mc)
+-            for ns in newstores:
+-                datastores["mc:%s:%s" % (mc, ns)] = newstores[ns]
+-
+-        return datastores
+-
+-class Cache(NoCache):
++class Cache(object):
+     """
+     BitBake Cache implementation
+     """
+     def __init__(self, databuilder, mc, data_hash, caches_array):
+-        super().__init__(databuilder)
+-        data = databuilder.data
++        self.databuilder = databuilder
++        self.data = databuilder.data
+ 
+         # Pass caches_array information into Cache Constructor
+         # It will be used later for deciding whether we
+@@ -356,7 +295,7 @@ class Cache(NoCache):
+         self.mc = mc
+         self.logger = PrefixLoggerAdapter("Cache: %s: " % (mc if mc else "default"), logger)
+         self.caches_array = caches_array
+-        self.cachedir = data.getVar("CACHE")
++        self.cachedir = self.data.getVar("CACHE")
+         self.clean = set()
+         self.checked = set()
+         self.depends_cache = {}
+@@ -486,7 +425,7 @@ class Cache(NoCache):
+         """Parse the specified filename, returning the recipe information"""
+         self.logger.debug("Parsing %s", filename)
+         infos = []
+-        datastores = self.load_bbfile(filename, appends, mc=self.mc)
++        datastores = self.databuilder.parseRecipeVariants(filename, appends, mc=self.mc)
+         depends = []
+         variants = []
+         # Process the "real" fn last so we can store variants list
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index ec86885220..fa9fd054c2 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -567,8 +567,7 @@ class CommandsSync:
+             envdata = bb.cache.parse_recipe(config_data, fn, appendfiles, mc)['']
+         else:
+             # Use the standard path
+-            parser = bb.cache.NoCache(command.cooker.databuilder)
+-            envdata = parser.loadDataFull(fn, appendfiles)
++            envdata = command.cooker.databuilder.parseRecipe(fn, appendfiles)
+         idx = command.remotedatastores.store(envdata)
+         return DataStoreConnectionHandle(idx)
+     parseRecipeFile.readonly = True
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 8a354fed7c..c322ab2ffb 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -466,3 +466,54 @@ class CookerDataBuilder(object):
+ 
+         return data
+ 
++    @staticmethod
++    def _parse_recipe(bb_data, bbfile, appends, mc=''):
++        bb_data.setVar("__BBMULTICONFIG", mc)
++
++        bbfile_loc = os.path.abspath(os.path.dirname(bbfile))
++        bb.parse.cached_mtime_noerror(bbfile_loc)
++
++        if appends:
++            bb_data.setVar('__BBAPPEND', " ".join(appends))
++        bb_data = bb.parse.handle(bbfile, bb_data)
++        return bb_data
++
++    def parseRecipeVariants(self, bbfile, appends, virtonly=False, mc=None):
++        """
++        Load and parse one .bb build file
++        Return the data and whether parsing resulted in the file being skipped
++        """
++
++        if virtonly:
++            (bbfile, virtual, mc) = bb.cache.virtualfn2realfn(bbfile)
++            bb_data = self.mcdata[mc].createCopy()
++            bb_data.setVar("__ONLYFINALISE", virtual or "default")
++            datastores = self._parse_recipe(bb_data, bbfile, appends, mc)
++            return datastores
++
++        if mc is not None:
++            bb_data = self.mcdata[mc].createCopy()
++            return self._parse_recipe(bb_data, bbfile, appends, mc)
++
++        bb_data = self.data.createCopy()
++        datastores = self._parse_recipe(bb_data, bbfile, appends)
++
++        for mc in self.mcdata:
++            if not mc:
++                continue
++            bb_data = self.mcdata[mc].createCopy()
++            newstores = self._parse_recipe(bb_data, bbfile, appends, mc)
++            for ns in newstores:
++                datastores["mc:%s:%s" % (mc, ns)] = newstores[ns]
++
++        return datastores
++
++    def parseRecipe(self, virtualfn, appends):
++        """
++        Return a complete set of data for fn.
++        To do this, we need to parse the file.
++        """
++        logger.debug("Parsing %s (full)" % virtualfn)
++        (fn, virtual, mc) = bb.cache.virtualfn2realfn(virtualfn)
++        bb_data = self.parseRecipeVariants(virtualfn, appends, virtonly=True)
++        return bb_data[virtual]
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 338d1fe36f..437f4a185c 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1610,9 +1610,8 @@ class RunQueue:
+             self.rqexe.finish()
+ 
+     def rq_dump_sigfn(self, fn, options):
+-        bb_cache = bb.cache.NoCache(self.cooker.databuilder)
+         mc = bb.runqueue.mc_from_tid(fn)
+-        the_data = bb_cache.loadDataFull(fn, self.cooker.collections[mc].get_file_appends(fn))
++        the_data = self.cooker.databuilder.parseRecipe(fn, self.cooker.collections[mc].get_file_appends(fn))
+         siggen = bb.parse.siggen
+         dataCaches = self.rqdata.dataCaches
+         siggen.dump_sigfn(fn, dataCaches, options)
+-- 
+2.34.1
 
-> Hi,
->
-> This question is related to Yocto Dunfell specifically.
->
-> I have certain distro features defined (by default) in our distro
-> include/conf file.
-> These distro features are required for certain machines and should not
-> be enabled for only one machine.
->
-
-For such cases Yocto have the COMBINED_FEATURES that can be more apropriate
-https://docs.yoctoproject.org/3.1.20/ref-manual/ref-variables.html#term-COM=
-BINED_FEATURES
-
-But if the future is only used in some machine maybe the MACHINE_FEATURES
-is more apropriate
-https://docs.yoctoproject.org/3.1.20/ref-manual/ref-variables.html#term-MAC=
-HINE_FEATURES
-
-In a perfect world the the DISTRO_FEATURES should be independent of the
-bsp/machine used
-https://docs.yoctoproject.org/3.1.20/ref-manual/ref-variables.html#term-DIS=
-TRO_FEATURES
-
-Jose
-
-For example, we have a distro feature such as "nand-squashfs".
-> So, in our distro.inc file we are including like this:
-> DISTRO_FEATURES_append =3D " nand-squashfs"
->
-> Since this distro.inc file is shared across 2-3 machines, this feature
-> will be available to all.
-> But we don't want to include it in the "xyz" machine.
->
-> So, can I do like this:
-> DISTRO_FEATURES_append =3D " nand-squashfs"
-> DISTRO_FEATURES_remove_xyz =3D " nand-squashfs"
->
-> If there is some other better way please suggest.
->
-> Thanks,
-> Pintu
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#11882):
-> https://lists.yoctoproject.org/g/linux-yocto/message/11882
-> Mute This Topic: https://lists.yoctoproject.org/mt/95020630/5052612
-> Group Owner: linux-yocto+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/linux-yocto/unsub [
-> quaresma.jose@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
-
---=20
-Best regards,
-
-Jos=C3=A9 Quaresma
-
---000000000000d45f1d05ed70fe75
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr">Hi=C2=A0Pintu,</div><br><div class=3D"gma=
-il_quote"><div dir=3D"ltr" class=3D"gmail_attr">Pintu Agarwal &lt;<a href=
-=3D"mailto:pintu.ping@gmail.com">pintu.ping@gmail.com</a>&gt; escreveu no d=
-ia segunda, 14/11/2022 =C3=A0(s) 16:35:<br></div><blockquote class=3D"gmail=
-_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204=
-,204);padding-left:1ex">Hi,<br>
-<br>
-This question is related to Yocto Dunfell specifically.<br>
-<br>
-I have certain distro features defined (by default) in our distro<br>
-include/conf file.<br>
-These distro features are required for certain machines and should not<br>
-be enabled for only one machine.<br></blockquote><div><br>For such cases Yo=
-cto have the COMBINED_FEATURES that can be more apropriate<br><a href=3D"ht=
-tps://docs.yoctoproject.org/3.1.20/ref-manual/ref-variables.html#term-COMBI=
-NED_FEATURES">https://docs.yoctoproject.org/3.1.20/ref-manual/ref-variables=
-.html#term-COMBINED_FEATURES</a><br><br>But if the future is only used in s=
-ome machine maybe the=C2=A0MACHINE_FEATURES is more apropriate<br><a href=
-=3D"https://docs.yoctoproject.org/3.1.20/ref-manual/ref-variables.html#term=
--MACHINE_FEATURES">https://docs.yoctoproject.org/3.1.20/ref-manual/ref-vari=
-ables.html#term-MACHINE_FEATURES</a><br><br>In a perfect world the the DIST=
-RO_FEATURES=C2=A0should be independent of the bsp/machine used<br><a href=
-=3D"https://docs.yoctoproject.org/3.1.20/ref-manual/ref-variables.html#term=
--DISTRO_FEATURES">https://docs.yoctoproject.org/3.1.20/ref-manual/ref-varia=
-bles.html#term-DISTRO_FEATURES</a><br><br>Jose</div><div><br></div><blockqu=
-ote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px=
- solid rgb(204,204,204);padding-left:1ex">
-For example, we have a distro feature such as &quot;nand-squashfs&quot;.<br=
->
-So, in our distro.inc file we are including like this:<br>
-DISTRO_FEATURES_append =3D &quot; nand-squashfs&quot;<br>
-<br>
-Since this distro.inc file is shared across 2-3 machines, this feature<br>
-will be available to all.<br>
-But we don&#39;t want to include it in the &quot;xyz&quot; machine.<br>
-<br>
-So, can I do like this:<br>
-DISTRO_FEATURES_append =3D &quot; nand-squashfs&quot;<br>
-DISTRO_FEATURES_remove_xyz =3D &quot; nand-squashfs&quot;<br>
-<br>
-If there is some other better way please suggest.<br>
-<br>
-Thanks,<br>
-Pintu<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#11882): <a href=3D"https://lists.yoctoproject.org/g/lin=
-ux-yocto/message/11882" rel=3D"noreferrer" target=3D"_blank">https://lists.=
-yoctoproject.org/g/linux-yocto/message/11882</a><br>
-Mute This Topic: <a href=3D"https://lists.yoctoproject.org/mt/95020630/5052=
-612" rel=3D"noreferrer" target=3D"_blank">https://lists.yoctoproject.org/mt=
-/95020630/5052612</a><br>
-Group Owner: <a href=3D"mailto:linux-yocto%2Bowner@lists.yoctoproject.org" =
-target=3D"_blank">linux-yocto+owner@lists.yoctoproject.org</a><br>
-Unsubscribe: <a href=3D"https://lists.yoctoproject.org/g/linux-yocto/unsub"=
- rel=3D"noreferrer" target=3D"_blank">https://lists.yoctoproject.org/g/linu=
-x-yocto/unsub</a> [<a href=3D"mailto:quaresma.jose@gmail.com" target=3D"_bl=
-ank">quaresma.jose@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
- class=3D"gmail_signature"><div dir=3D"ltr">Best regards,<div><br>Jos=C3=A9=
- Quaresma</div></div></div></div>
-
---000000000000d45f1d05ed70fe75--
 
