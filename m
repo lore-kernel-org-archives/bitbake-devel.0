@@ -2,59 +2,59 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6DEC433FE
-	for <webhook@archiver.kernel.org>; Tue, 15 Nov 2022 22:14:47 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web11.7538.1668550478294021640
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C49C433FE
+	for <webhook@archiver.kernel.org>; Wed, 16 Nov 2022 00:06:30 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web10.863.1668557187025157741
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 15 Nov 2022 14:14:38 -0800
+ Tue, 15 Nov 2022 16:06:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hR6ardEF;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f53.google.com with SMTP id w14so26742383wru.8
-        for <bitbake-devel@lists.openembedded.org>; Tue, 15 Nov 2022 14:14:38 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PtU5GB36;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f42.google.com with SMTP id c3-20020a1c3503000000b003bd21e3dd7aso361357wma.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 15 Nov 2022 16:06:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O2EqSttunXxt55rmgRdDbnVnoOgBy6uebt7WvkwE6Dw=;
-        b=hR6ardEFPbSESBHNeYa130dfYAhvcWrRJvwu8O6cYuPmic8dn9CdO7yX0t/R5p/Nmx
-         SjFedQSHw0PcBRY1NB85ZGxzmt8Nhv2OTQA0c4JHCs4sO89wEHmH+V3QC+RkdHxLRGF9
-         489+8RUxU3FwI3ICJEQbFL3VXoCziAVUz7xGs=
+        bh=MSxEpPdNCubm0mPUrSh2wIPBD6OrNlgA8ok7zMxGzW0=;
+        b=PtU5GB36we0p8RCvEj6Fn3eHJ+Ix2mwuiwSIBlnko4KIyv042zQbl8fc0JlAQu1BsB
+         X2b+gLV5jXMxAmPBiTQWaZTqc2Yf0VBy3JsYYKZ+Zz9em0OSzkcFdml9N95jEv95mrwM
+         tMN9VV0WZH4yKJdnfKDxWsNj5rPn8pQvu3/wo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O2EqSttunXxt55rmgRdDbnVnoOgBy6uebt7WvkwE6Dw=;
-        b=WKAYFaQWSE9dV+X9lkG2ZsMD0/OOldE1QRqXSXaUu6QI6cVFwYkTfB8ftIYe/Z805T
-         47YYPZwEzJPxY6eeVzYZBpUnTkAwg6EWa7vJ1m4qEKKvdmKpjwyWeYm9TDaClwxwbYRn
-         rZP8OR6xBmc771n+oRv6NML7T7OO2cnDp08BuYeQuFpKBz4SNZPb5N+S4shSumnwZMjL
-         lJMsLYZOeStqYpf3XPVvriZ/XKYtnl6Frs6kKvzu2kHHhbymYWmvzNr2ylnxiq2Pmawn
-         aoeMHymmJeQKX9QPZ2YJ99uOdkfW6Hbqq/QIeYfv6kHq/bq3rGyKXrWCK7S3F1D8Egzk
-         CWQA==
-X-Gm-Message-State: ANoB5pnJbYte+RU9gmZG6dLmgIStSdqKU40NrRJVOLEvYrJtZv/kTXsV
-	nOEF+dTjlRTqrvIU6TJdMD2ab66yz0xGKQ==
-X-Google-Smtp-Source: AA0mqf5UkVd8+ipoIjCwEBX9TqN9RR5TLzyMqe6pjozbqC6MzGS5qxEVrBZmc6LHdeXGlHcb87EF9A==
-X-Received: by 2002:a5d:4012:0:b0:22e:3ca6:d4ab with SMTP id n18-20020a5d4012000000b0022e3ca6d4abmr12693434wrp.658.1668550476029;
-        Tue, 15 Nov 2022 14:14:36 -0800 (PST)
+        bh=MSxEpPdNCubm0mPUrSh2wIPBD6OrNlgA8ok7zMxGzW0=;
+        b=zOPAPelhJHEV4q1iyqDpAaW5XMKzQ9AEGwX8H17/RIunXPAj8jcKzlgiVHpj2tuKC4
+         402VlSEkbpNgbpNVBQjqaNvSyAMqmlyCkboqNcMbqIXU1Sn8RNRvVpKY+I24Fd7WadBS
+         B1dFXeslTQd173y98YzQ/WnEhxZLgIfxGp7AihlZCXJ8nKbAzgCgSstMsybwFSlY7llo
+         e/MmogFwdJnkSxTd58VOgLN8PLVmP5tchN6+/oD/wxkjRVWV2/G8R+ihA3g8xxLrEW1k
+         NZ/ClDDfy/BbMN1ePTqL/oegOHC3pViUo9f7B2HWrxq5UiW9gk8vzyERKAvllFAGQ442
+         Wr7A==
+X-Gm-Message-State: ANoB5pka9RiTdptF0HukabR1n2TD68uvjcIg2PWQRO1Ie1TDsHvdF5P/
+	pxHeaVhFBBEXNof3BQifgC3uO74uc3pb+w==
+X-Google-Smtp-Source: AA0mqf5IZ9GDk0FCQ/CuiuzSmlI4OI2CLo03mu+HVoIzmgBNFesgllY6OY+jPzxanQULAwYsWjF24Q==
+X-Received: by 2002:a05:600c:2e51:b0:3cf:8a3a:9996 with SMTP id q17-20020a05600c2e5100b003cf8a3a9996mr409051wmf.89.1668557184236;
+        Tue, 15 Nov 2022 16:06:24 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:6779:84d:e47:6803])
-        by smtp.gmail.com with ESMTPSA id t11-20020a5d49cb000000b002383fc96509sm13285924wrs.47.2022.11.15.14.14.35
+        by smtp.gmail.com with ESMTPSA id h3-20020a05600c2ca300b003b49bd61b19sm297422wmc.15.2022.11.15.16.06.22
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Nov 2022 14:14:35 -0800 (PST)
+        Tue, 15 Nov 2022 16:06:23 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] cache/cookerdata: Move recipe parsing functions from cache to databuilder
-Date: Tue, 15 Nov 2022 22:14:33 +0000
-Message-Id: <20221115221433.2471258-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH v2] cache/cookerdata: Move recipe parsing functions from cache to databuilder
+Date: Wed, 16 Nov 2022 00:06:22 +0000
+Message-Id: <20221116000622.2480508-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 15 Nov 2022 22:14:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14084
+ <bitbake-devel@lists.openembedded.org>; Wed, 16 Nov 2022 00:06:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14085
 
 When 'NoCache' was written, databuilder/cookerdata didn't exist. It does
 now and the recipe parsing functionality contained in NoCache clearly
@@ -68,9 +68,12 @@ Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
  bin/bitbake-worker   |  3 +-
  lib/bb/cache.py      | 71 ++++----------------------------------------
  lib/bb/command.py    |  3 +-
+ lib/bb/cooker.py     |  3 +-
  lib/bb/cookerdata.py | 51 +++++++++++++++++++++++++++++++
  lib/bb/runqueue.py   |  3 +-
- 5 files changed, 59 insertions(+), 72 deletions(-)
+ 6 files changed, 60 insertions(+), 74 deletions(-)
+
+v2: Fix "bitbake -e <recipe>" reference to loadDataFull() in cooker.py
 
 diff --git a/bin/bitbake-worker b/bin/bitbake-worker
 index 7be39370b3..d54044f361 100755
@@ -208,6 +211,20 @@ index ec86885220..fa9fd054c2 100644
          idx = command.remotedatastores.store(envdata)
          return DataStoreConnectionHandle(idx)
      parseRecipeFile.readonly = True
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 1da2f03197..1af29f217d 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -617,8 +617,7 @@ class BBCooker:
+ 
+         if fn:
+             try:
+-                bb_caches = bb.cache.MulticonfigCache(self.databuilder, self.data_hash, self.caches_array)
+-                envdata = bb_caches[mc].loadDataFull(fn, self.collections[mc].get_file_appends(fn))
++                envdata = self.databuilder.parseRecipe(fn, self.collections[mc].get_file_appends(fn))
+             except Exception as e:
+                 parselog.exception("Unable to read %s", fn)
+                 raise
 diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
 index 8a354fed7c..c322ab2ffb 100644
 --- a/lib/bb/cookerdata.py
