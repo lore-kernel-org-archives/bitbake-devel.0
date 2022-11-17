@@ -2,162 +2,157 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E3DC43217
-	for <webhook@archiver.kernel.org>; Wed, 16 Nov 2022 12:21:34 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web08.6371.1668601288742599971
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0B2C43219
+	for <webhook@archiver.kernel.org>; Thu, 17 Nov 2022 15:29:34 +0000 (UTC)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web10.18836.1668698972556497435
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 16 Nov 2022 04:21:29 -0800
+ Thu, 17 Nov 2022 07:29:32 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TWS07NRa;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f44.google.com with SMTP id z14so29468157wrn.7
-        for <bitbake-devel@lists.openembedded.org>; Wed, 16 Nov 2022 04:21:28 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Ofz6fWZ1;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f46.google.com with SMTP id g12so4402377wrs.10
+        for <bitbake-devel@lists.openembedded.org>; Thu, 17 Nov 2022 07:29:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZbQYkP3NwOHXzDWb+uA5nYZvNwEXbNLkSXm0gN44v9k=;
-        b=TWS07NRaEzNZzXx+qPMiSljlgLxAneI7ESrnfgKEuJ9Cs6H1/zw8gUS5aOYWbI38we
-         MNRPhhRmSy+g2AaS1vNGYqJ6b7mIu9KWviN0q9OCpeiL5ajnZye8ukJxMsRuVt13Tkbd
-         jboE+VrLaSibh5uNKMBd++Ga/MkJM57DkeUkA=
+        bh=PX3GxPFqiDcbYTipsTgt+wBqsX/BStwJFOODAIlWUFs=;
+        b=Ofz6fWZ1m2dgU552S4wB3tn6tsJ2a+Y2gYnsoy9zWE1AfbyovUvWDCThag+kP7hoLR
+         SEZhMs/TNK776/ZH5cImZPMz6xm1wieWcBO/y39yjYqK7pekVQb93jyQptiv/vycrSQg
+         2E35hXWV1dKjEDtC+Mcb0CoWMJgRf0LxGUkRc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZbQYkP3NwOHXzDWb+uA5nYZvNwEXbNLkSXm0gN44v9k=;
-        b=LhtdBQ83MCQ9WxCR2uOc/S/9CmHolKAp2JIgTtbhzpBDh7Sc4qy0Uj4dlFJOtkkTAu
-         B9fEKh9BGEw0matrmZ0FzlRpalLDiDS3LOTVMvnFh2F4wzhvbhUkj2puV3UT9jL2ovmm
-         HV2f2uE/7VYUXBwASwo4pCbl9INUP97CUmgOnwQlxHQuYWe1uRVfJ3Qw8XjnANnqLYuy
-         2BHx6g2seIh3WY75SO/5nkP+kl92rg3B+19zIjAZPbnycEvRm1/Hl4yMpVbSYpGL1LnZ
-         vZArGTtI38M6RgJI1WpEdTIuq8NMB3BmZJLSIjh4W0YEOtmHqx6lsXMFTeoh3PsNy/uk
-         qhcA==
-X-Gm-Message-State: ANoB5pnQe1fvnA4FCwSoPPYO7qnKfY3Sm3F0eWFDkR0Fedt1tBYstYO7
-	dL6w5iS4vaq8OgjRvw8j86xUGNJHAfejEw==
-X-Google-Smtp-Source: AA0mqf6a2Ojib96CoirAiQNhbEmN4AveyLHQHyjc5VsxfKCh2NJtG3u7YUy4rBIg6a76bERTs9uRqA==
-X-Received: by 2002:a05:6000:12cf:b0:236:6e75:dc37 with SMTP id l15-20020a05600012cf00b002366e75dc37mr12839332wrx.504.1668601286447;
-        Wed, 16 Nov 2022 04:21:26 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:6779:84d:e47:6803])
-        by smtp.gmail.com with ESMTPSA id h5-20020a5d4fc5000000b0022cd96b3ba6sm17510604wrw.90.2022.11.16.04.21.25
+        bh=PX3GxPFqiDcbYTipsTgt+wBqsX/BStwJFOODAIlWUFs=;
+        b=JEGTJkCTp01gv4XrJIZffkjyPaPmj4GfZaQtRua2xdBe5OFLmub+ABL0mzRNJHifrj
+         oJWf6q/5VGagT0ekcW4hvGDgyRbcaVTjayKJAHZYzAuC/ysBQCypFKpNcL9R1nY/Gdr5
+         nWScnnEOWkjj+pWrG9XxHQpzmWDDjDTAus1PHHwhOcXlqC3OWTUXsg+78nHe5zTPWluR
+         cpt+nyRrvg33pYpNjIyPJVSV/au3JouLL1hCfGfypVRH4LXr/fWtAVhg5+JNpIhKV5Ms
+         vrX1zsrwznMhl/LZxc1FxUfhh9Bn9DjNh/imlCFgK4iAizevlR1czDrm9MMevrQt1ysW
+         JuJQ==
+X-Gm-Message-State: ANoB5pnP1yoTpfVPCJ9xEGaxJxvzlu6fin1E1YXYAn5dkPcTdTCoCKBQ
+	J+ehKIO6s9y7QsBcpTzU4sx8zQvAX+pTWw==
+X-Google-Smtp-Source: AA0mqf5REVKAh6MgL0d3RQr+etoQgrI5wgM+R9I1JMCvBq+BBHEPEmddWGdcQE5BuvG6dGthtEGC1A==
+X-Received: by 2002:adf:e4cf:0:b0:241:a047:d011 with SMTP id v15-20020adfe4cf000000b00241a047d011mr1823370wrm.258.1668698969792;
+        Thu, 17 Nov 2022 07:29:29 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:76d7:bdc9:5165:906c])
+        by smtp.gmail.com with ESMTPSA id j13-20020a5d604d000000b00236695ff94fsm1254306wrt.34.2022.11.17.07.29.29
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Nov 2022 04:21:25 -0800 (PST)
+        Thu, 17 Nov 2022 07:29:29 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/2] cache: Drop broken/unused code
-Date: Wed, 16 Nov 2022 12:21:24 +0000
-Message-Id: <20221116122125.2564989-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 1/3] server: Ensure cooker profiling works
+Date: Thu, 17 Nov 2022 15:29:26 +0000
+Message-Id: <20221117152928.2738113-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 16 Nov 2022 12:21:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14086
+ <bitbake-devel@lists.openembedded.org>; Thu, 17 Nov 2022 15:29:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14088
 
-Some parts of functions in Cache() were broken and unused, there was
-also a totally unused function. This was historical as a result of the
-cooker parsing process needing to handle cached entries in the main
-thread but parsing actions in seperate processes.
+The previous cleanups meant that when the cooker was started, profiling
+was always disabled as configuration was sent to the server later and this
+was too late to profile the main loop.
 
-Document the way it works, update the function name to be clear about
-what it now does and drop the old code which was unused.
+Pass the "profile" option over the server commandline so that we can
+profile cooker itself again, the setting can now take effect early enough.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cache.py  | 54 +++++++++++++++---------------------------------
- lib/bb/cooker.py |  4 ++--
- 2 files changed, 19 insertions(+), 39 deletions(-)
+ bin/bitbake-server       | 7 ++++---
+ lib/bb/main.py           | 2 +-
+ lib/bb/server/process.py | 8 +++++---
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 4d715e911d..22ca6f56e6 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -280,7 +280,11 @@ def variant2virtual(realfn, variant):
-         return "mc:" + elems[1] + ":" + realfn
-     return "virtual:" + variant + ":" + realfn
+diff --git a/bin/bitbake-server b/bin/bitbake-server
+index f53f88b6b0..825e9d56af 100755
+--- a/bin/bitbake-server
++++ b/bin/bitbake-server
+@@ -16,7 +16,7 @@ if sys.getfilesystemencoding() != "utf-8":
+     sys.exit("Please use a locale setting which supports UTF-8 (such as LANG=en_US.UTF-8).\nPython can't change the filesystem locale after loading so we need a UTF-8 when Python starts or things won't work.")
  
--
-+#
-+# Cooker calls cacheValid on its recipe list, then either calls loadCached
-+# from it's main thread or parse from separate processes to generate an up to
-+# date cache
-+#
- class Cache(object):
-     """
-     BitBake Cache implementation
-@@ -447,43 +451,19 @@ class Cache(object):
+ # Users shouldn't be running this code directly
+-if len(sys.argv) != 10 or not sys.argv[1].startswith("decafbad"):
++if len(sys.argv) != 11 or not sys.argv[1].startswith("decafbad"):
+     print("bitbake-server is meant for internal execution by bitbake itself, please don't use it standalone.")
+     sys.exit(1)
  
-         return infos
+@@ -28,7 +28,8 @@ logfile = sys.argv[4]
+ lockname = sys.argv[5]
+ sockname = sys.argv[6]
+ timeout = float(sys.argv[7])
+-xmlrpcinterface = (sys.argv[8], int(sys.argv[9]))
++profile = bool(int(sys.argv[8]))
++xmlrpcinterface = (sys.argv[9], int(sys.argv[10]))
+ if xmlrpcinterface[0] == "None":
+     xmlrpcinterface = (None, xmlrpcinterface[1])
  
--    def load(self, filename, appends):
-+    def loadCached(self, filename, appends):
-         """Obtain the recipe information for the specified filename,
--        using cached values if available, otherwise parsing.
--
--        Note that if it does parse to obtain the info, it will not
--        automatically add the information to the cache or to your
--        CacheData.  Use the add or add_info method to do so after
--        running this, or use loadData instead."""
--        cached = self.cacheValid(filename, appends)
--        if cached:
--            infos = []
--            # info_array item is a list of [CoreRecipeInfo, XXXRecipeInfo]
--            info_array = self.depends_cache[filename]
--            for variant in info_array[0].variants:
--                virtualfn = variant2virtual(filename, variant)
--                infos.append((virtualfn, self.depends_cache[virtualfn]))
--        else:
--            return self.parse(filename, appends, configdata, self.caches_array)
--
--        return cached, infos
--
--    def loadData(self, fn, appends, cacheData):
--        """Load the recipe info for the specified filename,
--        parsing and adding to the cache if necessary, and adding
--        the recipe information to the supplied CacheData instance."""
--        skipped, virtuals = 0, 0
--
--        cached, infos = self.load(fn, appends)
--        for virtualfn, info_array in infos:
--            if info_array[0].skipped:
--                self.logger.debug("Skipping %s: %s", virtualfn, info_array[0].skipreason)
--                skipped += 1
--            else:
--                self.add_info(virtualfn, info_array, cacheData, not cached)
--                virtuals += 1
--
--        return cached, skipped, virtuals
-+        using cached values.
-+        """
-+
-+        infos = []
-+        # info_array item is a list of [CoreRecipeInfo, XXXRecipeInfo]
-+        info_array = self.depends_cache[filename]
-+        for variant in info_array[0].variants:
-+            virtualfn = variant2virtual(filename, variant)
-+            infos.append((virtualfn, self.depends_cache[virtualfn]))
-+
-+        return infos
+@@ -49,5 +50,5 @@ logger = logging.getLogger("BitBake")
+ handler = bb.event.LogHandler()
+ logger.addHandler(handler)
  
-     def cacheValid(self, fn, appends):
-         """
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 1af29f217d..5a5ba7fb70 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -2287,8 +2287,8 @@ class CookerParser(object):
+-bb.server.process.execServer(lockfd, readypipeinfd, lockname, sockname, timeout, xmlrpcinterface)
++bb.server.process.execServer(lockfd, readypipeinfd, lockname, sockname, timeout, xmlrpcinterface, profile)
  
-     def load_cached(self):
-         for mc, cache, filename, appends in self.fromcache:
--            cached, infos = cache.load(filename, appends)
--            yield not cached, mc, infos
-+            infos = cache.loadCached(filename, appends)
-+            yield False, mc, infos
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index 93eda3632e..f56c3d46a2 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -429,7 +429,7 @@ def setup_bitbake(configParams, extrafeatures=None):
+                     logger.info("Starting bitbake server...")
+                     # Clear the event queue since we already displayed messages
+                     bb.event.ui_queue = []
+-                    server = bb.server.process.BitBakeServer(lock, sockname, featureset, configParams.server_timeout, configParams.xmlrpcinterface)
++                    server = bb.server.process.BitBakeServer(lock, sockname, featureset, configParams.server_timeout, configParams.xmlrpcinterface, configParams.profile)
  
-     def parse_generator(self):
-         empty = False
+                 else:
+                     logger.info("Reconnecting to bitbake server...")
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 5d02c0b9f5..afd77ac0a5 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -448,13 +448,14 @@ start_log_datetime_format = '%Y-%m-%d %H:%M:%S.%f'
+ 
+ class BitBakeServer(object):
+ 
+-    def __init__(self, lock, sockname, featureset, server_timeout, xmlrpcinterface):
++    def __init__(self, lock, sockname, featureset, server_timeout, xmlrpcinterface, profile):
+ 
+         self.server_timeout = server_timeout
+         self.xmlrpcinterface = xmlrpcinterface
+         self.featureset = featureset
+         self.sockname = sockname
+         self.bitbake_lock = lock
++        self.profile = profile
+         self.readypipe, self.readypipein = os.pipe()
+ 
+         # Place the log in the builddirectory alongside the lock file
+@@ -518,9 +519,9 @@ class BitBakeServer(object):
+         os.set_inheritable(self.bitbake_lock.fileno(), True)
+         os.set_inheritable(self.readypipein, True)
+         serverscript = os.path.realpath(os.path.dirname(__file__) + "/../../../bin/bitbake-server")
+-        os.execl(sys.executable, "bitbake-server", serverscript, "decafbad", str(self.bitbake_lock.fileno()), str(self.readypipein), self.logfile, self.bitbake_lock.name, self.sockname,  str(self.server_timeout or 0), str(self.xmlrpcinterface[0]), str(self.xmlrpcinterface[1]))
++        os.execl(sys.executable, "bitbake-server", serverscript, "decafbad", str(self.bitbake_lock.fileno()), str(self.readypipein), self.logfile, self.bitbake_lock.name, self.sockname,  str(self.server_timeout or 0), str(int(self.profile)), str(self.xmlrpcinterface[0]), str(self.xmlrpcinterface[1]))
+ 
+-def execServer(lockfd, readypipeinfd, lockname, sockname, server_timeout, xmlrpcinterface):
++def execServer(lockfd, readypipeinfd, lockname, sockname, server_timeout, xmlrpcinterface, profile):
+ 
+     import bb.cookerdata
+     import bb.cooker
+@@ -549,6 +550,7 @@ def execServer(lockfd, readypipeinfd, lockname, sockname, server_timeout, xmlrpc
+         try:
+             featureset = []
+             cooker = bb.cooker.BBCooker(featureset, server.register_idle_function)
++            cooker.configuration.profile = profile
+         except bb.BBHandledException:
+             return None
+         writer.send("r")
 -- 
 2.34.1
 
