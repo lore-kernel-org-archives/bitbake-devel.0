@@ -1,154 +1,83 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B482C4332F
-	for <webhook@archiver.kernel.org>; Mon, 21 Nov 2022 13:58:57 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web11.38913.1669039130786754484
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC64CC4332F
+	for <webhook@archiver.kernel.org>; Tue, 22 Nov 2022 23:08:20 +0000 (UTC)
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+ by mx.groups.io with SMTP id smtpd.web11.6915.1669158492486005874
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 21 Nov 2022 05:58:51 -0800
+ Tue, 22 Nov 2022 15:08:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=MwGMD3It;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5so8525920wmo.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 21 Nov 2022 05:58:50 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=6YWAscNd;
+ spf=softfail (domain: sakoman.com, ip: 209.85.216.46, mailfrom: steve@sakoman.com)
+Received: by mail-pj1-f46.google.com with SMTP id 71-20020a17090a09cd00b00218adeb3549so294960pjo.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 22 Nov 2022 15:08:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M3OqJpMh7iRp92vRFK91yx8pOBdPwYcN5SyKgsNe7XE=;
-        b=MwGMD3Itu9CRiy0Ch3wHc6k6bfRKaHQcfaijOercGZb9fncPzzKjzIDjbGc7bbXDou
-         ZUpiyrMDmRLijeMACFWkZ6t03CluGudWlpIhj6NdMjVl0R57z0+RYBUrzcAZvkFq3Qno
-         cZYN1ZYP7AUsZZlXJd+5ns5jgKaT3ipyk75yY=
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZWraxGIGzPP73dJSlTmVEQMC9J1kyd0y2H4g63wfaxA=;
+        b=6YWAscNdwlRG9wK8Hl54C8lLBSuGMJWB8PRja2ofRhcDkJ9HpsstLY9swClnrPdqzr
+         Sqx3Q5Y61osflEmEfI8Ug6nOX2+Hqrs0RdiIEgJ2Z8FCoPiIXA3EtZDlFf6xZMgdR0f9
+         zBhW2ygDD93Cm99yumuzuBwZYW5ZLH1P+zVZeS15RrfNYXV53Ryy42ErMt27DKfP22EM
+         telzLViRbED/GnaBbzOUSItrLxjuCrHaMYx0/18kL9dSoEkcrqrQEETDyATIdqpzSe72
+         rddhbWHtR4s95Z8r6eIRCWrWQwtn5XbnCUn54ALooqFQBDi11TSc0nCQxSHjxNxSp4Uw
+         9MnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M3OqJpMh7iRp92vRFK91yx8pOBdPwYcN5SyKgsNe7XE=;
-        b=jcoGdJSldOLcAyqLw0pZkbZfn9J4X3keDiZ4eh1jclvz12hXY2vn+Zp6TyXTJGN/Lp
-         XKACZhTJt6KlINZI4gvsTQ1MzLOQGbk70uKg0vaH4RBiTA5qwSCAdKlE6yaMZrBml8uh
-         1g16LKfVtGnx/aMO6GGONvwApKq1qmFFGN/f0kBxQ9ybWnIAqMyqznvGVf+rTO3+ayyg
-         EJ61EwQoHtr97deZIc1st/x3zoTp12KZ+PK/A2s+9l5B/4P96T5G/DP5Jtvi/zvnr8Rq
-         I0PJ0fAlXLtOCwqUKEqITxNJRNI8uSClD7KQXtcAMVDPZqRmYDpD7QcFtAGaZMzU4pR2
-         hU6Q==
-X-Gm-Message-State: ANoB5pm2fqBwYpGCW3yNeEtQDTzuKGgBvXZCr4ydGq2tzhmm9L53Y+DE
-	ahc3pmW9CO43tjlK3qgUO8P/W9Nhl96IWA==
-X-Google-Smtp-Source: AA0mqf4HLIC6+mI/sV5euu4EJYMOz/aXkR9M2q6C321VOxr4xZoCuSQ3f56X1/o+BxeaBuu0d3zCxw==
-X-Received: by 2002:a05:600c:3507:b0:3cf:8e62:f907 with SMTP id h7-20020a05600c350700b003cf8e62f907mr3714018wmq.7.1669039128743;
-        Mon, 21 Nov 2022 05:58:48 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:fff0:8f62:27ca:adb5])
-        by smtp.gmail.com with ESMTPSA id u10-20020a7bc04a000000b003c6bd12ac27sm13480083wmc.37.2022.11.21.05.58.48
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZWraxGIGzPP73dJSlTmVEQMC9J1kyd0y2H4g63wfaxA=;
+        b=GvFyX3IiGNsUai21hySI1E+OWuW8gYiAj2WAXhJEAOlZBHxIiX2plYuTx7AfYaG3nn
+         Zw80EMUcSSNDTWaEYDtIqQcCUyK9FnO3Az6O4UyeOGKWBvu/9K2RAi2fmLZjYqEAHcvz
+         Xk+o+yrnYXN5PfJi6ZffdHB5syUlogmnPU+ikAcPDl92Use+iTu1civ+bi8GRLOMyRmH
+         SlDrFMwNVWJBb6ydnIVCXgiQPbaJ0sHjtuTa5Bt26FvtBFl2md0X6YT+BRa/qIvtCA8X
+         DBnsNXBPLwhl3mjeII2gZY125YYFrhYt0D0aGgRzp+Dgmp87Bo9kojAuUhqsQoBauA7G
+         Cnew==
+X-Gm-Message-State: ANoB5pm8dnQ1seKLs7X26o00EgEHaSfC5PZuEXG2nWjW4/Zol1du/0R0
+	J0frML3Z/XDv63FXEGL3SPFoNkmx7LElDLJMu0Y=
+X-Google-Smtp-Source: AA0mqf4J2HvZawlvjIjjJXnZm8LgdKPJtXasaV4khFo0prPkmC92mmL+xnNn2NzDkgZ/nNCfeEUcPA==
+X-Received: by 2002:a17:90a:6f47:b0:218:910a:124b with SMTP id d65-20020a17090a6f4700b00218910a124bmr20123430pjk.16.1669158491027;
+        Tue, 22 Nov 2022 15:08:11 -0800 (PST)
+Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net. [72.253.6.214])
+        by smtp.gmail.com with ESMTPSA id p22-20020a170902a41600b001890cbd1ff1sm8581476plq.149.2022.11.22.15.08.09
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Nov 2022 05:58:48 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Tue, 22 Nov 2022 15:08:10 -0800 (PST)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] runqueue: Fix race issues around hash equivalence and sstate reuse
-Date: Mon, 21 Nov 2022 13:58:45 +0000
-Message-Id: <20221121135845.3428466-2-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221121135845.3428466-1-richard.purdie@linuxfoundation.org>
-References: <20221121135845.3428466-1-richard.purdie@linuxfoundation.org>
+Subject: [bitbake][dunfell][1.46][PATCH 0/2] Pull request (cover letter only)
+Date: Tue, 22 Nov 2022 13:08:03 -1000
+Message-Id: <cover.1669158342.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 21 Nov 2022 13:58:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14096
+ <bitbake-devel@lists.openembedded.org>; Tue, 22 Nov 2022 23:08:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14097
 
-We identified a use case where a native recipe (autoconf) was rebuilt
- with no change in output yet the sstate for do_package tasks wasn't
-being used.
+This should be the final pull request for the 3.1.21 release.
 
-The issue is that do_package tasks have a hard dependency on
-pseudo-native:do_populate_sysroot. That task was one of the many
-tasks being rehashed when autoconf's hash was changed.
+The following changes since commit 8ea8e443005ad92f4ad264d9abd9e90e33fb5c17:
 
-If update_tasks processed a recipe before it had processed pseudo-native,
-that recipe would be marked as not possible from sstate and would
-run the full tasks.
+  tests/fetch: Allow handling of a file:// url within a submodule (2022-10-27 16:38:59 +0100)
 
-The fix is to split the processing into two passes, first to handle
-the existing covered/notcovered updates, then in the second pass,
-check whether there are "harddep" issues.
+are available in the Git repository at:
 
-This defers the do_package tasks until after pseudo-native is installed
-from sstate as expected and everything works well again.
+  https://git.openembedded.org/bitbake-contrib stable/1.46-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-next
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/runqueue.py | 36 ++++++++++++++++++++----------------
- 1 file changed, 20 insertions(+), 16 deletions(-)
+Richard Purdie (2):
+  utils: Handle lockfile filenames that are too long for filesystems
+  utils: Fix lockfile path length issues
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index bcaaf70abd..2c1714da9d 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2508,17 +2508,6 @@ class RunQueueExecute:
-                 self.sq_buildable.remove(tid)
-             if tid in self.sq_running:
-                 self.sq_running.remove(tid)
--            harddepfail = False
--            for t in self.sqdata.sq_harddeps:
--                if tid in self.sqdata.sq_harddeps[t] and t in self.scenequeue_notcovered:
--                    harddepfail = True
--                    break
--            if not harddepfail and self.sqdata.sq_revdeps[tid].issubset(self.scenequeue_covered | self.scenequeue_notcovered):
--                if tid not in self.sq_buildable:
--                    self.sq_buildable.add(tid)
--            if not self.sqdata.sq_revdeps[tid]:
--                self.sq_buildable.add(tid)
--
-             if tid in self.sqdata.outrightfail:
-                 self.sqdata.outrightfail.remove(tid)
-             if tid in self.scenequeue_notcovered:
-@@ -2537,21 +2526,36 @@ class RunQueueExecute:
-             if tid in self.build_stamps:
-                 del self.build_stamps[tid]
- 
--            update_tasks.append((tid, harddepfail, tid in self.sqdata.valid))
-+            update_tasks.append(tid)
-+
-+        update_tasks2 = []
-+        for tid in update_tasks:
-+            harddepfail = False
-+            for t in self.sqdata.sq_harddeps:
-+                if tid in self.sqdata.sq_harddeps[t] and t in self.scenequeue_notcovered:
-+                    harddepfail = True
-+                    break
-+            if not harddepfail and self.sqdata.sq_revdeps[tid].issubset(self.scenequeue_covered | self.scenequeue_notcovered):
-+                if tid not in self.sq_buildable:
-+                    self.sq_buildable.add(tid)
-+            if not self.sqdata.sq_revdeps[tid]:
-+                self.sq_buildable.add(tid)
-+
-+            update_tasks2.append((tid, harddepfail, tid in self.sqdata.valid))
- 
--        if update_tasks:
-+        if update_tasks2:
-             self.sqdone = False
-             for mc in sorted(self.sqdata.multiconfigs):
--                for tid in sorted([t[0] for t in update_tasks]):
-+                for tid in sorted([t[0] for t in update_tasks2]):
-                     if mc_from_tid(tid) != mc:
-                         continue
-                     h = pending_hash_index(tid, self.rqdata)
-                     if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
-                         self.sq_deferred[tid] = self.sqdata.hashes[h]
-                         bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
--            update_scenequeue_data([t[0] for t in update_tasks], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
-+            update_scenequeue_data([t[0] for t in update_tasks2], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
- 
--        for (tid, harddepfail, origvalid) in update_tasks:
-+        for (tid, harddepfail, origvalid) in update_tasks2:
-             if tid in self.sqdata.valid and not origvalid:
-                 hashequiv_logger.verbose("Setscene task %s became valid" % tid)
-             if harddepfail:
+ lib/bb/utils.py | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
 -- 
-2.34.1
+2.25.1
 
 
