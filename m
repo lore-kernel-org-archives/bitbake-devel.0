@@ -1,83 +1,92 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC64CC4332F
-	for <webhook@archiver.kernel.org>; Tue, 22 Nov 2022 23:08:20 +0000 (UTC)
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
- by mx.groups.io with SMTP id smtpd.web11.6915.1669158492486005874
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29FBC433FE
+	for <webhook@archiver.kernel.org>; Wed, 23 Nov 2022 00:07:20 +0000 (UTC)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web11.8243.1669162036387865905
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 22 Nov 2022 15:08:12 -0800
+ Tue, 22 Nov 2022 16:07:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=6YWAscNd;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.46, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f46.google.com with SMTP id 71-20020a17090a09cd00b00218adeb3549so294960pjo.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 22 Nov 2022 15:08:12 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Ehafj/+K;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f49.google.com with SMTP id l14so8297597wrw.13
+        for <bitbake-devel@lists.openembedded.org>; Tue, 22 Nov 2022 16:07:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWraxGIGzPP73dJSlTmVEQMC9J1kyd0y2H4g63wfaxA=;
-        b=6YWAscNdwlRG9wK8Hl54C8lLBSuGMJWB8PRja2ofRhcDkJ9HpsstLY9swClnrPdqzr
-         Sqx3Q5Y61osflEmEfI8Ug6nOX2+Hqrs0RdiIEgJ2Z8FCoPiIXA3EtZDlFf6xZMgdR0f9
-         zBhW2ygDD93Cm99yumuzuBwZYW5ZLH1P+zVZeS15RrfNYXV53Ryy42ErMt27DKfP22EM
-         telzLViRbED/GnaBbzOUSItrLxjuCrHaMYx0/18kL9dSoEkcrqrQEETDyATIdqpzSe72
-         rddhbWHtR4s95Z8r6eIRCWrWQwtn5XbnCUn54ALooqFQBDi11TSc0nCQxSHjxNxSp4Uw
-         9MnQ==
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:date:cc:to:from
+         :subject:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=pb7OibdNPRu0B+KHT+Zp3MwaKux7lLZ8NssM4EUkPxE=;
+        b=Ehafj/+K4+zKcG/wkAmAt5BbuvgvZDOXI0XNRpbBT9mhRftuMvuhsF0LXQaSto6cNa
+         icKavadB3FxTd2lcU1On+iLVTxLEQ2f0xnoS87F67b4WOCbkDOTJ65ila4aJ5r/JFvzc
+         zCquZaI3sFj9NWEv0Nl+VAvZyU6jujx9zcNKw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWraxGIGzPP73dJSlTmVEQMC9J1kyd0y2H4g63wfaxA=;
-        b=GvFyX3IiGNsUai21hySI1E+OWuW8gYiAj2WAXhJEAOlZBHxIiX2plYuTx7AfYaG3nn
-         Zw80EMUcSSNDTWaEYDtIqQcCUyK9FnO3Az6O4UyeOGKWBvu/9K2RAi2fmLZjYqEAHcvz
-         Xk+o+yrnYXN5PfJi6ZffdHB5syUlogmnPU+ikAcPDl92Use+iTu1civ+bi8GRLOMyRmH
-         SlDrFMwNVWJBb6ydnIVCXgiQPbaJ0sHjtuTa5Bt26FvtBFl2md0X6YT+BRa/qIvtCA8X
-         DBnsNXBPLwhl3mjeII2gZY125YYFrhYt0D0aGgRzp+Dgmp87Bo9kojAuUhqsQoBauA7G
-         Cnew==
-X-Gm-Message-State: ANoB5pm8dnQ1seKLs7X26o00EgEHaSfC5PZuEXG2nWjW4/Zol1du/0R0
-	J0frML3Z/XDv63FXEGL3SPFoNkmx7LElDLJMu0Y=
-X-Google-Smtp-Source: AA0mqf4J2HvZawlvjIjjJXnZm8LgdKPJtXasaV4khFo0prPkmC92mmL+xnNn2NzDkgZ/nNCfeEUcPA==
-X-Received: by 2002:a17:90a:6f47:b0:218:910a:124b with SMTP id d65-20020a17090a6f4700b00218910a124bmr20123430pjk.16.1669158491027;
-        Tue, 22 Nov 2022 15:08:11 -0800 (PST)
-Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net. [72.253.6.214])
-        by smtp.gmail.com with ESMTPSA id p22-20020a170902a41600b001890cbd1ff1sm8581476plq.149.2022.11.22.15.08.09
-        for <bitbake-devel@lists.openembedded.org>
+        h=mime-version:user-agent:content-transfer-encoding:date:cc:to:from
+         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pb7OibdNPRu0B+KHT+Zp3MwaKux7lLZ8NssM4EUkPxE=;
+        b=BURgrMRCX5NxagCjHp5rdzndKrCOw6A5NbIDV4B5S7+sXRJj7HExQ969IZ1Qoki6Lb
+         aYr6H4QnfAz1LUz9Pcw7ZjhD4C8sQRf6BBV1LjfdiBIieuEoVKUGbl1FtX8klWU2GqHH
+         BqeXRlLfBx+E++DLQMltKA/X2pR+BqUFxdNzOnVHNGd0YZfOuDAArTeHyVHzIugncCIJ
+         QjLvKgBZifLH+Wo29+8nX9eLHpF599DXrvv+4PDOSPBOQ3gwlEpTHCkQA3o6rVRPClnV
+         /DtVXbg1wQ3ufbWiAltTUS8K/OFmsKDJos+eKOTtnozRaEz1cSyHnL3PpluicML9saLb
+         0xKw==
+X-Gm-Message-State: ANoB5pmSxn6yPcPCxA4wtZAz/GT4caZHpunY12OIyHKKHYcITwNtXfre
+	CREPYHD8ZxW1YvqauAjdvnfUxR+QpSCuZw==
+X-Google-Smtp-Source: AA0mqf7eRo0m8N6J5xSRpCdHEksoqiEkqecLhHDjqj+uzgXrRWjPV3itXUOyjUgAfzosr6l9QYlFZA==
+X-Received: by 2002:a05:6000:107:b0:22e:3460:5e28 with SMTP id o7-20020a056000010700b0022e34605e28mr3997711wrx.211.1669162034234;
+        Tue, 22 Nov 2022 16:07:14 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:978b:ac21:2786:e95b? ([2001:8b0:aba:5f3c:978b:ac21:2786:e95b])
+        by smtp.gmail.com with ESMTPSA id o1-20020a05600c4fc100b003cf6a55d8e8sm363672wmq.7.2022.11.22.16.07.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Nov 2022 15:08:10 -0800 (PST)
-From: Steve Sakoman <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 0/2] Pull request (cover letter only)
-Date: Tue, 22 Nov 2022 13:08:03 -1000
-Message-Id: <cover.1669158342.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 22 Nov 2022 16:07:12 -0800 (PST)
+Message-ID: <f963c6619df931162db7de468699d2aad0c1b76a.camel@linuxfoundation.org>
+Subject: Cache timings with various changes
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Date: Wed, 23 Nov 2022 00:07:11 +0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 22 Nov 2022 23:08:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14097
+ <bitbake-devel@lists.openembedded.org>; Wed, 23 Nov 2022 00:07:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14098
 
-This should be the final pull request for the 3.1.21 release.
+I've talked about changing the data we cache in various forums. These
+are some actual numbers from a local system (88 core):
 
-The following changes since commit 8ea8e443005ad92f4ad264d9abd9e90e33fb5c17:
+Patch                   Full reparse time    Cache load time    Cache size =
+(compressed)     Cache size (uncompressed)
+-----                   -----------------    ---------------    -----------=
+------------     -------------------------
+master baseline         5.732s               2.261s             N/A        =
+                 24M
+frozenset changes       4.326s               2.289s             N/A        =
+                 24M
+pickle in one           4.509s               2.177s             N/A        =
+                 24M
+compress with zstd      6.040s               2.204s             3.4M       =
+                 24M
+add hash data to cache  9.693s               4.327s             17M        =
+                 83M
 
-  tests/fetch: Allow handling of a file:// url within a submodule (2022-10-27 16:38:59 +0100)
+It seems the frozenset improvements I have speed things up nicely and
+look like a good change. The compression does slow things down, as does
+pickling the cache in one go.
 
-are available in the Git repository at:
+The patches are in poky-contrib rpurdie/t222. I'll post the frozenset
+one, the others look like they need more thought.
 
-  https://git.openembedded.org/bitbake-contrib stable/1.46-next
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-next
+Cheers,
 
-Richard Purdie (2):
-  utils: Handle lockfile filenames that are too long for filesystems
-  utils: Fix lockfile path length issues
+Richard
 
- lib/bb/utils.py | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
 
--- 
-2.25.1
 
 
