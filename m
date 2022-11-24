@@ -2,110 +2,98 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0D8C433FE
-	for <webhook@archiver.kernel.org>; Thu, 24 Nov 2022 15:13:51 +0000 (UTC)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web11.26195.1669302826021806667
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84839C4332F
+	for <webhook@archiver.kernel.org>; Thu, 24 Nov 2022 17:00:41 +0000 (UTC)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web11.28873.1669309240430745124
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 24 Nov 2022 07:13:46 -0800
+ Thu, 24 Nov 2022 09:00:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=FDjSkaJn;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f50.google.com with SMTP id q7so2001648wrr.8
-        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Nov 2022 07:13:45 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cNOUjI6W;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f52.google.com with SMTP id b12so3308599wrn.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Nov 2022 09:00:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VRYRgrBgIfQGSzf4KP6Gxu2US5LHV7YLzIjHXBVRjmo=;
-        b=FDjSkaJnKtnEpeJFsGhJlALs2c3iQXPhrqefs2U7c0BSgtflO7EZq2Qz0xwN8blLuX
-         NzNTy1fq88zIS0idG1UmNJvqH/ec4sUePfeCF1nYDpCYFmlmuBrJU4eQDWJvKPfFcUpM
-         04TihEGZlsb9s8ggYxeIpwcqhIupyh8sX3mW8=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EwKYqDdtMR6W+NJdVQESOck9O309Wvc59qf2/DJO26c=;
+        b=cNOUjI6Wrfg0rAfkRRvQQP5qzHSZmguyQjBMLWpzQNixgM4nFbaxcQKuqQL6y61LrA
+         db4OoSmO8x599h977KFRbcmA420pKucqkfjlgf72V1ivnUhsq9OT4ETmoCotz+vBIAv2
+         AI1XZQ7VSuAtNUUJ0Nnaf53es2TcwMhmkGlu8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VRYRgrBgIfQGSzf4KP6Gxu2US5LHV7YLzIjHXBVRjmo=;
-        b=7Nsdzqgm8w5CSlA7rPt/jENZ0/YrC91GKna9FLeWVgXsGQD5Bk1JoiZlJWOTPCD5Y6
-         H0kJUGBcFip2zzmSnFAc2pROtK7FIC3b76P1A/5rWzJ9LD4LFsFGhla0xAsmSVlHK2JL
-         jRRrS4WLZzkfH4vLQZIvg50zJBd8/s/EO2Dbo6JpMfw2e/ayeWN3ITfI7q7mq7gH90FX
-         g0az+pjl8GBdld/fVWsMyKarxNtkRutC/Ubg9HHpjjhyYnpbqhfH10SY2PLJ+MZyhZk7
-         xsgyiN9S1EYEcfWWZ3CBgq9c3aoOWuykHyywyLMr1AuZUXDHn84k+pPD+axedrZYMT2R
-         OgZQ==
-X-Gm-Message-State: ANoB5pmRsaIRdmezvOwjr28zNYmiJZShgIMO/c6RZOVdijTnQj9H2l4Z
-	0CKqgxGeZX/8gjrfu/luIBBjgQ==
-X-Google-Smtp-Source: AA0mqf5lXlXcSbgV4uuyUYaTa5yGaXC4A6jEAI+jpnb8nGLQGwlcsU9xzfz6oF7kvGEGFahcyQbxiw==
-X-Received: by 2002:adf:fe51:0:b0:22e:362e:570a with SMTP id m17-20020adffe51000000b0022e362e570amr19586685wrs.127.1669302824270;
-        Thu, 24 Nov 2022 07:13:44 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:4038:3d32:5f00:5957? ([2001:8b0:aba:5f3c:4038:3d32:5f00:5957])
-        by smtp.gmail.com with ESMTPSA id w5-20020adfde85000000b00241cbb7f15csm1535085wrl.106.2022.11.24.07.13.42
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EwKYqDdtMR6W+NJdVQESOck9O309Wvc59qf2/DJO26c=;
+        b=yCpqxKsI9frdY3CjWPrUGiY1dHbl0fV3hKQXsVNd6/QdMvtEbtwyvK/efW1Jdd39sW
+         YkRAgtGdeF6H+QiUxwKeR2udvafKkAoKI+h/FNo6UUadKaPqh61pfriI0tmCV7zSL2LG
+         sVWrBkfxqGJol2mWCqlm5sdtX2kmiRg9frT/YcfqFccTHIMI7canyAuWkhj28tjOxpAP
+         L6PA+7XXCcKyCnk0+G/mIIC1Af4d1WAqU/MSUrjOZP0WIHxDRSV6MHVDYxQnxh0kT+75
+         EjoVOKKEKCwHQboD29Rr++u9jgcYk2t/pescJqfOJzov6csu2FD5xvw3EfCw6iEmweqU
+         Riuw==
+X-Gm-Message-State: ANoB5pnzjSZO0qRXfbW2HpMWd5H7Qaed7H4uIeV3EY91oX+h9hgI9z7s
+	D/qGLzmCm8Q9iA3J9m99GH9rjn6PEhAjiw==
+X-Google-Smtp-Source: AA0mqf4gBsURla8rukTFDH9c7EKfn8m0EC6ZCEulGiBaKBJQBFy/3PMURj0dZ0XCIhAtMnM5UvE4AQ==
+X-Received: by 2002:a05:6000:1f91:b0:241:ba9b:b47e with SMTP id bw17-20020a0560001f9100b00241ba9bb47emr19931267wrb.96.1669309238221;
+        Thu, 24 Nov 2022 09:00:38 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:4038:3d32:5f00:5957])
+        by smtp.gmail.com with ESMTPSA id bs30-20020a056000071e00b002364c77bcacsm1731539wrb.38.2022.11.24.09.00.37
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Nov 2022 07:13:43 -0800 (PST)
-Message-ID: <f6fdcf752a1f69c9712b2124755a9c5f24242645.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] command.py: cleanup
- bb.cache.parse_recipe
+        Thu, 24 Nov 2022 09:00:37 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Chen, Qi" <Qi.Chen@windriver.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Cc: "Yang, Liezhi" <Liezhi.Yang@windriver.com>
-Date: Thu, 24 Nov 2022 15:13:42 +0000
-In-Reply-To: <CO6PR11MB560282F9B2FC30CCCA5803D9ED0F9@CO6PR11MB5602.namprd11.prod.outlook.com>
-References: <20221124091045.12018-1-Qi.Chen@windriver.com>
-	 <089c8b5944101a3ec48844fc744d7b6fd1558931.camel@linuxfoundation.org>
-	 <CO6PR11MB560282F9B2FC30CCCA5803D9ED0F9@CO6PR11MB5602.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] data_smart: Add debugging for overrides stability issue
+Date: Thu, 24 Nov 2022 17:00:36 +0000
+Message-Id: <20221124170036.3976664-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 24 Nov 2022 15:13:51 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14108
+ <bitbake-devel@lists.openembedded.org>; Thu, 24 Nov 2022 17:00:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14109
 
-Hi Qi,
+If someone is unfortunate enough to run into override recursion issues
+they're hard to debug with the existing message. We can at least show the
+values that OVERRIDES takes to show there is some problem and aid debugging.
 
-On Thu, 2022-11-24 at 12:17 +0000, Chen, Qi wrote:
-> I met the error on our layerindex.
->=20
-> Error message is as below.
-> NOTE: Starting bitbake server...
-> ERROR: Unable to read /home/oelayer/layerindex/git___lxgit_wrs_com_layers=
-_meta-arm/meta-arm/recipes-bsp/trusted
-> -firmware-m/trusted-firmware-m_1.6.0.bb: Traceback (most recent call last=
-):
->   File "/home/oelayer/layerindex/git___lxgit_wrs_com_bitbake/lib/bb/comma=
-nd.py", line 90, in runCommand
->     result =3D command_method(self, commandline)
->   File "/home/oelayer/layerindex/git___lxgit_wrs_com_bitbake/lib/bb/comma=
-nd.py", line 567, in parseRecipeFile
->     envdata =3D bb.cache.parse_recipe(config_data, fn, appendfiles, mc)['=
-']
-> AttributeError: module 'bb.cache' has no attribute 'parse_recipe'
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/data_smart.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks.
-
-I had a look at what could call parseRecipeFile(). I can see some
-commented out code in layerindex but it doesn't pass a config_data. The
-only other calls are from tinfoil's parse_recipe_file() function and
-none of those I can see pass config_data either.
-
-Can you see where the config_data is coming from?
-
-It looks like we've broken this at least once before:
-
-https://git.yoctoproject.org/poky/commit/bitbake/lib/bb/command.py?id=3D70e=
-e928f8f4152f198f4db61517c958d54f1c0a7
-
-so we really need to figure out what is using it and add a test to
-ensure coverage. Is this some local customisation you have to
-layerindex?
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 5415f2fccf..fd05451971 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -486,12 +486,14 @@ class DataSmart(MutableMapping):
+             return
+         if self.inoverride:
+             return
++        overrride_stack = []
+         for count in range(5):
+             self.inoverride = True
+             # Can end up here recursively so setup dummy values
+             self.overrides = []
+             self.overridesset = set()
+             self.overrides = (self.getVar("OVERRIDES") or "").split(":") or []
++            overrride_stack.append(self.overrides)
+             self.overridesset = set(self.overrides)
+             self.inoverride = False
+             self.expand_cache = {}
+@@ -501,7 +503,7 @@ class DataSmart(MutableMapping):
+             self.overrides = newoverrides
+             self.overridesset = set(self.overrides)
+         else:
+-            bb.fatal("Overrides could not be expanded into a stable state after 5 iterations, overrides must be being referenced by other overridden variables in some recursive fashion. Please provide your configuration to bitbake-devel so we can laugh, er, I mean try and understand how to make it work.")
++            bb.fatal("Overrides could not be expanded into a stable state after 5 iterations, overrides must be being referenced by other overridden variables in some recursive fashion. Please provide your configuration to bitbake-devel so we can laugh, er, I mean try and understand how to make it work. The list of failing override expansions: %s" % "\n".join(str(s) for s in overrride_stack))
+ 
+     def initVar(self, var):
+         self.expand_cache = {}
+-- 
+2.34.1
 
 
