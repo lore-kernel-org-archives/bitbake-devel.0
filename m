@@ -2,95 +2,154 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F3CC352A1
-	for <webhook@archiver.kernel.org>; Sun, 27 Nov 2022 21:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F7C46467
+	for <webhook@archiver.kernel.org>; Sun, 27 Nov 2022 21:36:15 +0000 (UTC)
 Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web10.101709.1669584157553707200
+ by mx.groups.io with SMTP id smtpd.web11.102069.1669584973731205105
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 27 Nov 2022 13:22:37 -0800
+ Sun, 27 Nov 2022 13:36:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=XSo9dwZb;
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Pc0Kv74S;
  spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f46.google.com with SMTP id a11-20020a05600c2d4b00b003cf6f5fd9f1so7134309wmg.2
-        for <bitbake-devel@lists.openembedded.org>; Sun, 27 Nov 2022 13:22:37 -0800 (PST)
+Received: by mail-wm1-f46.google.com with SMTP id c65-20020a1c3544000000b003cfffd00fc0so10247313wma.1
+        for <bitbake-devel@lists.openembedded.org>; Sun, 27 Nov 2022 13:36:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mI3jISLTK+kkR9Yv6KlZH1/2m8j8r2EVXQCk/A06LY8=;
-        b=XSo9dwZbruBXFl6hzuTy9xrx751uWZiSaCJ0jmUVcF9JRDWX59xsWZ5wtoLuvd8Qfl
-         1RKWqyfi9LivJ4nhRsaK4JDNnvDDtaW/08zBufc+u3Ybty+0BmUH0u8tKcEvYXkbBMCV
-         T4TXe9q1GCnVw+WXg4aHng5VoG+9fXC9pJh0Y=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NuGPkDb35+lGM/91pYwt7URM0NKYgGQbMmsKdKB2Wmk=;
+        b=Pc0Kv74SkAggNpmawv2Hjs6dzuFcfqbuzBV0v3mYFrR4m/pKyKYMqi0XEZ2UksGtyT
+         AO+BN0CfBPEKlXr6lE+Jb3A9JHRWhZG7jOdC2Bpscx9tsTZPTTLPzELm9gjF++gsn9iE
+         PhaG6OC52CHEOhJNbaUHDhaUmtr0JBPdJT+rk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mI3jISLTK+kkR9Yv6KlZH1/2m8j8r2EVXQCk/A06LY8=;
-        b=W4J/STqIzfW0o4X7BzSRl3Cc0BCCU4/uSfaDv3W96WHty0xUgph+D02OGvFGFdE8PL
-         UB7LrhBQCziYs/lQaMW7R0camerVIkdzgaC33+5yDmqJF+peUFw1Tc7mrj3Se/SmFXyX
-         kXPKekS1H2QnTZxvQZnDBOzBUsoVmc5sqT5yNnsDfpsM7SKHMh0XSnO7EjiHpNKrM34k
-         KyIiowSxhj4B7vOrfjg4byENCITVrqi4IRwff8ARQrg0je0buVJLWCjlbDold1ofOdy/
-         VfoJllUUU3Ux0HtpESwP+e3qHFGS3wfb29/Kw46mErjAWYrlmAsfSery/vV1lUhwt+om
-         CdVg==
-X-Gm-Message-State: ANoB5plTDUi1vjsakEjk+vC/U/7sJGoE4QpTbMpknsOgQf1DRiVMNQHL
-	9a6ycZ7sJPNawzT0g4UE49visY9KuNYG6g==
-X-Google-Smtp-Source: AA0mqf737BBTz1DowIUJGj4oYv8bgAfK3UMH4ToOmBdQ0K7wfJkCOkEA6JBd9MUAQwP7ClQrv2wozw==
-X-Received: by 2002:a1c:f616:0:b0:3cf:b1c2:c911 with SMTP id w22-20020a1cf616000000b003cfb1c2c911mr27748639wmc.16.1669584155585;
-        Sun, 27 Nov 2022 13:22:35 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NuGPkDb35+lGM/91pYwt7URM0NKYgGQbMmsKdKB2Wmk=;
+        b=Cg6VAdSB+rkn+C66t8uTZ3ZJ/PUa7hDvUxNZT+E5cZSKs0JCocOLTgUDS6kEp/JySq
+         BWcGzU2GUG7nhyaHYDuUiKYnE66IbsmkP1xgzh+Bdey4+Wddyxka2rwWCK6q3psHGtdp
+         zZO/dPqTjeKNsIY4O/1VpwlyyIHrZajepXitkORgAYxXDAsROPry7dRf1DPcHhoFGfsv
+         v+hrB11+QFNg8jNBqv9z/1rnBwCa9CGCCaEF55qh31wKwSP0GWSBc61ZHF5njEU+Z+Ek
+         MfT597esNQnu2DDK89X1QvfidT8YZzv+Ge5puxUWrZ2qWaP+3cy0heKvpM194TI2/yO5
+         j1Nw==
+X-Gm-Message-State: ANoB5pnhWkqWTWuE4wYEaxNUQbaVku8ZsXp58gJHY0yZsu7fWIQXM2Rl
+	tM5+5EwT+oTpzmoi0ow/nxzQTie1TePOMw==
+X-Google-Smtp-Source: AA0mqf6ntBoXYm2qUKr9K6Kr1Cx+dDVZ1TQq2rFePDuTLIQZ6Z3Q1qqa7R/X++oNwsEyL9kfCDwSwA==
+X-Received: by 2002:a7b:cbcb:0:b0:3cf:a83b:cf25 with SMTP id n11-20020a7bcbcb000000b003cfa83bcf25mr24008017wmi.170.1669584971600;
+        Sun, 27 Nov 2022 13:36:11 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:aafe:fe4:d699:e1e9])
-        by smtp.gmail.com with ESMTPSA id f13-20020a05600c4e8d00b003c6c182bef9sm21933787wmq.36.2022.11.27.13.22.35
+        by smtp.gmail.com with ESMTPSA id r11-20020a05600c35cb00b003a84375d0d1sm18262211wmq.44.2022.11.27.13.36.11
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Nov 2022 13:22:35 -0800 (PST)
+        Sun, 27 Nov 2022 13:36:11 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] BBHandler: Remove pointless global variable declarations
-Date: Sun, 27 Nov 2022 21:22:32 +0000
-Message-Id: <20221127212232.538210-2-richard.purdie@linuxfoundation.org>
+Subject: [PATCH RFC 1/2] parse: Add support for addpylib conf file directive
+Date: Sun, 27 Nov 2022 21:36:09 +0000
+Message-Id: <20221127213610.539976-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221127212232.538210-1-richard.purdie@linuxfoundation.org>
-References: <20221127212232.538210-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 27 Nov 2022 21:22:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14114
+ <bitbake-devel@lists.openembedded.org>; Sun, 27 Nov 2022 21:36:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14115
 
-These are static regex compilations which don't change or a standard module
-import (bb). There is noneed to declare them as global so drop the pointless
-code which doesn't do anything.
+For many years OE-Core has injected it's own python modules into the
+python namespace using an immediate expansion of a variable in base.bbclass.
+
+We really need this to become a first class citizen of the langauge, this new
+addpylib directive allows that. Usage is of the form:
+
+addpylib <directory> <namespace>
+
+The namespace is imported and if there is an attribute BBIMPORT, that
+list of names is iterated and imported too.
+
+This mirrors what OE-Core has done for a long time with one difference in
+implmentation, sys.path is only appended to. This means later imported
+namespaces can't overwrite an earlier one and can't overwrite the main
+python module space. In practice we've never done that and it isn't
+something we should encourage or support.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/parse/parse_py/BBHandler.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/parse/ast.py                  | 22 ++++++++++++++++++++++
+ lib/bb/parse/parse_py/ConfHandler.py |  6 ++++++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
-index 18e6868387..584966fea1 100644
---- a/lib/bb/parse/parse_py/BBHandler.py
-+++ b/lib/bb/parse/parse_py/BBHandler.py
-@@ -102,7 +102,7 @@ def get_statements(filename, absolute_filename, base_name):
-         return statements
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 9e0a0f5c98..7bfee9ed67 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -9,6 +9,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
  
- def handle(fn, d, include):
--    global __func_start_regexp__, __inherit_regexp__, __export_func_regexp__, __addtask_regexp__, __addhandler_regexp__, __infunc__, __body__, __residue__, __classname__
-+    global __infunc__, __body__, __residue__, __classname__
-     __body__ = []
-     __infunc__ = []
-     __classname__ = ""
-@@ -154,7 +154,7 @@ def handle(fn, d, include):
-     return d
++import sys
+ import bb
+ from bb import methodpool
+ from bb.parse import logger
+@@ -269,6 +270,24 @@ class BBHandlerNode(AstNode):
+             data.setVarFlag(h, "handler", 1)
+         data.setVar('__BBHANDLERS', bbhands)
  
- def feeder(lineno, s, fn, root, statements, eof=False):
--    global __func_start_regexp__, __inherit_regexp__, __export_func_regexp__, __addtask_regexp__, __addhandler_regexp__, __def_regexp__, __python_func_regexp__, __inpython__, __infunc__, __body__, bb, __residue__, __classname__
-+    global __inpython__, __infunc__, __body__, __residue__, __classname__
++class PyLibNode(AstNode):
++    def __init__(self, filename, lineno, libdir, namespace):
++        AstNode.__init__(self, filename, lineno)
++        self.libdir = libdir
++        self.namespace = namespace
++
++    def eval(self, data):
++        libdir = data.expand(self.libdir)
++        if libdir not in sys.path:
++            sys.path.append(libdir)
++        try:
++            bb.utils._context[self.namespace] = __import__(self.namespace)
++            toimport = getattr(bb.utils._context[self.namespace], "BBIMPORTS", [])
++            for i in toimport:
++                bb.utils._context[i.split(".", 1)[0]] = __import__(i)
++        except AttributeError as e:
++            bb.error("Error importing OE modules: %s" % str(e))
++
+ class InheritNode(AstNode):
+     def __init__(self, filename, lineno, classes):
+         AstNode.__init__(self, filename, lineno)
+@@ -320,6 +339,9 @@ def handleDelTask(statements, filename, lineno, m):
+ def handleBBHandlers(statements, filename, lineno, m):
+     statements.append(BBHandlerNode(filename, lineno, m.group(1)))
  
-     # Check tabs in python functions:
-     # - def py_funcname(): covered by __inpython__
++def handlePyLib(statements, filename, lineno, m):
++    statements.append(PyLibNode(filename, lineno, m.group(1), m.group(2)))
++
+ def handleInherit(statements, filename, lineno, m):
+     classes = m.group(1)
+     statements.append(InheritNode(filename, lineno, classes))
+diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
+index 451e68dd66..8c15e8d5b6 100644
+--- a/lib/bb/parse/parse_py/ConfHandler.py
++++ b/lib/bb/parse/parse_py/ConfHandler.py
+@@ -46,6 +46,7 @@ __require_regexp__ = re.compile( r"require\s+(.+)" )
+ __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
+ __unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
+ __unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.]+)\]$" )
++__addpylib_regexp__      = re.compile(r"addpylib\s+(.+)\s+(.+)" )
+ 
+ def init(data):
+     return
+@@ -189,6 +190,11 @@ def feeder(lineno, s, fn, statements):
+         ast.handleUnsetFlag(statements, fn, lineno, m)
+         return
+ 
++    m = __addpylib_regexp__.match(s)
++    if m:
++        ast.handlePyLib(statements, fn, lineno, m)
++        return
++
+     raise ParseError("unparsed line: '%s'" % s, fn, lineno);
+ 
+ # Add us to the handlers list
 -- 
 2.34.1
 
