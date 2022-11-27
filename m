@@ -2,41 +2,43 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F7C46467
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980E8C47089
 	for <webhook@archiver.kernel.org>; Sun, 27 Nov 2022 21:36:15 +0000 (UTC)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web11.102069.1669584973731205105
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web10.102005.1669584974175504554
  for <bitbake-devel@lists.openembedded.org>;
  Sun, 27 Nov 2022 13:36:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Pc0Kv74S;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f46.google.com with SMTP id c65-20020a1c3544000000b003cfffd00fc0so10247313wma.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Cfhjx1eN;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f46.google.com with SMTP id g12so14027944wrs.10
         for <bitbake-devel@lists.openembedded.org>; Sun, 27 Nov 2022 13:36:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NuGPkDb35+lGM/91pYwt7URM0NKYgGQbMmsKdKB2Wmk=;
-        b=Pc0Kv74SkAggNpmawv2Hjs6dzuFcfqbuzBV0v3mYFrR4m/pKyKYMqi0XEZ2UksGtyT
-         AO+BN0CfBPEKlXr6lE+Jb3A9JHRWhZG7jOdC2Bpscx9tsTZPTTLPzELm9gjF++gsn9iE
-         PhaG6OC52CHEOhJNbaUHDhaUmtr0JBPdJT+rk=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7jDLB0qfADVotKK75SLdB6UMTigVaU5exCLHYWfPg1Y=;
+        b=Cfhjx1eNoAm9B4ogjnmSZvCHV8jRO9me3pEnufbUvk2L5NrgyyKxlvyuynh48xbRZX
+         0F9D/CgETJJWPxoPG+MF2sXN3Jal2f0pZnXpnzV5smSBi67+XXjHVGcN0ZxO8VsSvr+O
+         YIfj1+T6vJ738MKMOpgIUPYOOPseY190HOwrM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NuGPkDb35+lGM/91pYwt7URM0NKYgGQbMmsKdKB2Wmk=;
-        b=Cg6VAdSB+rkn+C66t8uTZ3ZJ/PUa7hDvUxNZT+E5cZSKs0JCocOLTgUDS6kEp/JySq
-         BWcGzU2GUG7nhyaHYDuUiKYnE66IbsmkP1xgzh+Bdey4+Wddyxka2rwWCK6q3psHGtdp
-         zZO/dPqTjeKNsIY4O/1VpwlyyIHrZajepXitkORgAYxXDAsROPry7dRf1DPcHhoFGfsv
-         v+hrB11+QFNg8jNBqv9z/1rnBwCa9CGCCaEF55qh31wKwSP0GWSBc61ZHF5njEU+Z+Ek
-         MfT597esNQnu2DDK89X1QvfidT8YZzv+Ge5puxUWrZ2qWaP+3cy0heKvpM194TI2/yO5
-         j1Nw==
-X-Gm-Message-State: ANoB5pnhWkqWTWuE4wYEaxNUQbaVku8ZsXp58gJHY0yZsu7fWIQXM2Rl
-	tM5+5EwT+oTpzmoi0ow/nxzQTie1TePOMw==
-X-Google-Smtp-Source: AA0mqf6ntBoXYm2qUKr9K6Kr1Cx+dDVZ1TQq2rFePDuTLIQZ6Z3Q1qqa7R/X++oNwsEyL9kfCDwSwA==
-X-Received: by 2002:a7b:cbcb:0:b0:3cf:a83b:cf25 with SMTP id n11-20020a7bcbcb000000b003cfa83bcf25mr24008017wmi.170.1669584971600;
-        Sun, 27 Nov 2022 13:36:11 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7jDLB0qfADVotKK75SLdB6UMTigVaU5exCLHYWfPg1Y=;
+        b=ahnkZMX72tbUjMtZdNV6s81nElg/+BjwtOvnkvq9WKvgpQ72NwPgScedc4Dsaopk6m
+         dJTV5Ij+CxMO+mBrwNN5bDc78LE0rtTp9W8yGJG/K3bNIiFjOECCZTaRSRYmKAYMsv5/
+         7Z9S7RiD3QlFtkOkAL4NxFgJIDaVeL1+chjIrgal1b4bmRYSgUkVv4B9yR6FX41O7EC2
+         x8VRRH8l4ER+3OkM5ZyjzZTb2qfa5ilvS2npcq4x+NMplJ2siIPd/x4HJ7NAUfsjVYRO
+         wFyYvfo7cCZ6XQrr3WhNWF0h5rYUh8WSLK0tNpZtHk8diuWE07O90T0iciFNxiAJMMzx
+         gjEw==
+X-Gm-Message-State: ANoB5pkZ3RCx0hys+fqG/om3mlVCN2n+YlWJVLnO2tajL/3yEmyPDpVh
+	rFunzRaZuwnuMODo+85mai6eP5/ctQLcvQ==
+X-Google-Smtp-Source: AA0mqf6fUuoDks8bRlh2WbFw2HEMt7Wph7EwZmYg+KddfaQBXea7BEmXp6Yfc1r0K35h/CuaDalnBg==
+X-Received: by 2002:adf:d0c4:0:b0:242:cc3:d5ac with SMTP id z4-20020adfd0c4000000b002420cc3d5acmr4587998wrh.218.1669584972182;
+        Sun, 27 Nov 2022 13:36:12 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:aafe:fe4:d699:e1e9])
         by smtp.gmail.com with ESMTPSA id r11-20020a05600c35cb00b003a84375d0d1sm18262211wmq.44.2022.11.27.13.36.11
         for <bitbake-devel@lists.openembedded.org>
@@ -44,112 +46,191 @@ Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:aafe:fe4:d699:e1e9])
         Sun, 27 Nov 2022 13:36:11 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH RFC 1/2] parse: Add support for addpylib conf file directive
-Date: Sun, 27 Nov 2022 21:36:09 +0000
-Message-Id: <20221127213610.539976-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH RFC 2/2] ast/data: Add dependencies from python module functions
+Date: Sun, 27 Nov 2022 21:36:10 +0000
+Message-Id: <20221127213610.539976-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221127213610.539976-1-richard.purdie@linuxfoundation.org>
+References: <20221127213610.539976-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sun, 27 Nov 2022 21:36:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14115
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14116
 
-For many years OE-Core has injected it's own python modules into the
-python namespace using an immediate expansion of a variable in base.bbclass.
+Moving code into python modules is a very effective way to reduce parsing
+time and overhead in recipes. The downside has always been that any
+dependency information on which variables those functions access is lost
+and the hashes can therefore become less reliable.
 
-We really need this to become a first class citizen of the langauge, this new
-addpylib directive allows that. Usage is of the form:
+This patch adds parsing of the imported module functions and that dependency
+information is them injected back into the hash dependency information.
 
-addpylib <directory> <namespace>
-
-The namespace is imported and if there is an attribute BBIMPORT, that
-list of names is iterated and imported too.
-
-This mirrors what OE-Core has done for a long time with one difference in
-implmentation, sys.path is only appended to. This means later imported
-namespaces can't overwrite an earlier one and can't overwrite the main
-python module space. In practice we've never done that and it isn't
-something we should encourage or support.
+Intermodule function references are resolved to the full function
+call names in our module namespace to ensure interfunction dependencies
+are correctly handled too.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/parse/ast.py                  | 22 ++++++++++++++++++++++
- lib/bb/parse/parse_py/ConfHandler.py |  6 ++++++
- 2 files changed, 28 insertions(+)
+ lib/bb/codeparser.py |  2 ++
+ lib/bb/data.py       | 40 +++++++++++++++++++++++-----------------
+ lib/bb/parse/ast.py  | 40 +++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 64 insertions(+), 18 deletions(-)
 
+diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
+index 9d66d3ae41..e7d7ebe048 100644
+--- a/lib/bb/codeparser.py
++++ b/lib/bb/codeparser.py
+@@ -36,6 +36,8 @@ from bb.cache import MultiProcessCache
+ 
+ logger = logging.getLogger('BitBake.CodeParser')
+ 
++modulecode_deps = {}
++
+ def bbhash(s):
+     return hashlib.sha256(s.encode("utf-8")).hexdigest()
+ 
+diff --git a/lib/bb/data.py b/lib/bb/data.py
+index 22d314d6c2..ab1a5959ba 100644
+--- a/lib/bb/data.py
++++ b/lib/bb/data.py
+@@ -261,22 +261,9 @@ def emit_func_python(func, o=sys.__stdout__, d = init()):
+                newdeps |= set((d.getVarFlag(dep, "vardeps") or "").split())
+         newdeps -= seen
+ 
+-def build_dependencies(key, keys, shelldeps, varflagsexcl, ignored_vars, d):
++def build_dependencies(key, keys, mod_funcs, shelldeps, varflagsexcl, ignored_vars, d):
+     deps = set()
+     try:
+-        if key[-1] == ']':
+-            vf = key[:-1].split('[')
+-            if vf[1] == "vardepvalueexclude":
+-                return deps, ""
+-            value, parser = d.getVarFlag(vf[0], vf[1], False, retparser=True)
+-            deps |= parser.references
+-            deps = deps | (keys & parser.execs)
+-            deps -= ignored_vars
+-            return frozenset(deps), value
+-        varflags = d.getVarFlags(key, ["vardeps", "vardepvalue", "vardepsexclude", "exports", "postfuncs", "prefuncs", "lineno", "filename"]) or {}
+-        vardeps = varflags.get("vardeps")
+-        exclusions = varflags.get("vardepsexclude", "").split()
+-
+         def handle_contains(value, contains, exclusions, d):
+             newvalue = []
+             if value:
+@@ -294,6 +281,24 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, ignored_vars, d):
+                         newvalue.append("\n%s{%s} = Set" % (k, item))
+             return "".join(newvalue)
+ 
++        if key in mod_funcs:
++            exclusions = set()
++            moddep = bb.codeparser.modulecode_deps[key]
++            value = handle_contains("", moddep[3], exclusions, d)
++            return frozenset(moddep[0] - ignored_vars), value
++        if key[-1] == ']':
++            vf = key[:-1].split('[')
++            if vf[1] == "vardepvalueexclude":
++                return deps, ""
++            value, parser = d.getVarFlag(vf[0], vf[1], False, retparser=True)
++            deps |= parser.references
++            deps = deps | (keys & parser.execs)
++            deps -= ignored_vars
++            return frozenset(deps), value
++        varflags = d.getVarFlags(key, ["vardeps", "vardepvalue", "vardepsexclude", "exports", "postfuncs", "prefuncs", "lineno", "filename"]) or {}
++        vardeps = varflags.get("vardeps")
++        exclusions = varflags.get("vardepsexclude", "").split()
++
+         def handle_remove(value, deps, removes, d):
+             for r in sorted(removes):
+                 r2 = d.expandWithRefs(r, None)
+@@ -367,7 +372,8 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, ignored_vars, d):
+ 
+ def generate_dependencies(d, ignored_vars):
+ 
+-    keys = set(key for key in d if not key.startswith("__"))
++    mod_funcs = set(bb.codeparser.modulecode_deps.keys())
++    keys = set(key for key in d if not key.startswith("__")) | mod_funcs
+     shelldeps = set(key for key in d.getVar("__exportlist", False) if d.getVarFlag(key, "export", False) and not d.getVarFlag(key, "unexport", False))
+     varflagsexcl = d.getVar('BB_SIGNATURE_EXCLUDE_FLAGS')
+ 
+@@ -376,7 +382,7 @@ def generate_dependencies(d, ignored_vars):
+ 
+     tasklist = d.getVar('__BBTASKS', False) or []
+     for task in tasklist:
+-        deps[task], values[task] = build_dependencies(task, keys, shelldeps, varflagsexcl, ignored_vars, d)
++        deps[task], values[task] = build_dependencies(task, keys, mod_funcs, shelldeps, varflagsexcl, ignored_vars, d)
+         newdeps = deps[task]
+         seen = set()
+         while newdeps:
+@@ -385,7 +391,7 @@ def generate_dependencies(d, ignored_vars):
+             newdeps = set()
+             for dep in nextdeps:
+                 if dep not in deps:
+-                    deps[dep], values[dep] = build_dependencies(dep, keys, shelldeps, varflagsexcl, ignored_vars, d)
++                    deps[dep], values[dep] = build_dependencies(dep, keys, mod_funcs, shelldeps, varflagsexcl, ignored_vars, d)
+                 newdeps |=  deps[dep]
+             newdeps -= seen
+         #print "For %s: %s" % (task, str(deps[task]))
 diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 9e0a0f5c98..7bfee9ed67 100644
+index 7bfee9ed67..7dbb1adfa8 100644
 --- a/lib/bb/parse/ast.py
 +++ b/lib/bb/parse/ast.py
-@@ -9,6 +9,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
+@@ -10,6 +10,7 @@
  #
  
-+import sys
+ import sys
++import inspect
  import bb
  from bb import methodpool
  from bb.parse import logger
-@@ -269,6 +270,24 @@ class BBHandlerNode(AstNode):
-             data.setVarFlag(h, "handler", 1)
-         data.setVar('__BBHANDLERS', bbhands)
- 
-+class PyLibNode(AstNode):
-+    def __init__(self, filename, lineno, libdir, namespace):
-+        AstNode.__init__(self, filename, lineno)
-+        self.libdir = libdir
-+        self.namespace = namespace
+@@ -284,7 +285,44 @@ class PyLibNode(AstNode):
+             bb.utils._context[self.namespace] = __import__(self.namespace)
+             toimport = getattr(bb.utils._context[self.namespace], "BBIMPORTS", [])
+             for i in toimport:
+-                bb.utils._context[i.split(".", 1)[0]] = __import__(i)
++                base = i.split(".", 1)[0]
++                bb.utils._context[base] = __import__(i)
++                if "." in i:
++                    mod = getattr(bb.utils._context[base], i.split(".", 1)[1])
++                    funcs = dir(mod)
++                    for f in funcs:
++                        if f.startswith("_"):
++                            continue
++                        fcall = getattr(mod, f)
++                        if not callable(fcall):
++                            continue
++                        src = inspect.getsource(fcall)
++                        name = "%s.%s" % (i, f)
++                        parser = bb.codeparser.PythonParser(name, logger)
++                        parser.parse_python(src, filename=inspect.getfile(fcall), lineno=1)
++                        execs = parser.execs
++                        # Expand internal module exec references
++                        for e in parser.execs:
++                            if e in funcs:
++                                execs.remove(e)
++                                execs.add(i + "." + e)
++                        bb.codeparser.modulecode_deps[name] = [parser.references.copy(), execs, parser.var_execs.copy(), parser.contains.copy()]
++                        #bb.warn("%s: %s\nRefs:%s Execs: %s %s %s" % (name, src, parser.references, parser.execs, parser.var_execs, parser.contains))
 +
-+    def eval(self, data):
-+        libdir = data.expand(self.libdir)
-+        if libdir not in sys.path:
-+            sys.path.append(libdir)
-+        try:
-+            bb.utils._context[self.namespace] = __import__(self.namespace)
-+            toimport = getattr(bb.utils._context[self.namespace], "BBIMPORTS", [])
-+            for i in toimport:
-+                bb.utils._context[i.split(".", 1)[0]] = __import__(i)
-+        except AttributeError as e:
-+            bb.error("Error importing OE modules: %s" % str(e))
++            # Resolve intermodule references now, stack dependencies
++            found = True
++            while found:
++                found = False
++                funcs = set(bb.codeparser.modulecode_deps.keys())
++                for entry in bb.codeparser.modulecode_deps:
++                    for dup in (bb.codeparser.modulecode_deps[entry][1] & funcs):
++                        found = True
++                        bb.codeparser.modulecode_deps[entry][1].remove(dup)
++                        bb.codeparser.modulecode_deps[entry][0] |= bb.codeparser.modulecode_deps[dup][0]
++                        bb.codeparser.modulecode_deps[entry][1] |= bb.codeparser.modulecode_deps[dup][1]
++                        bb.codeparser.modulecode_deps[entry][2] |= bb.codeparser.modulecode_deps[dup][2]
++                        bb.codeparser.modulecode_deps[entry][3] |= bb.codeparser.modulecode_deps[dup][3]
 +
- class InheritNode(AstNode):
-     def __init__(self, filename, lineno, classes):
-         AstNode.__init__(self, filename, lineno)
-@@ -320,6 +339,9 @@ def handleDelTask(statements, filename, lineno, m):
- def handleBBHandlers(statements, filename, lineno, m):
-     statements.append(BBHandlerNode(filename, lineno, m.group(1)))
+         except AttributeError as e:
+             bb.error("Error importing OE modules: %s" % str(e))
  
-+def handlePyLib(statements, filename, lineno, m):
-+    statements.append(PyLibNode(filename, lineno, m.group(1), m.group(2)))
-+
- def handleInherit(statements, filename, lineno, m):
-     classes = m.group(1)
-     statements.append(InheritNode(filename, lineno, classes))
-diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
-index 451e68dd66..8c15e8d5b6 100644
---- a/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/lib/bb/parse/parse_py/ConfHandler.py
-@@ -46,6 +46,7 @@ __require_regexp__ = re.compile( r"require\s+(.+)" )
- __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
- __unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
- __unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.]+)\]$" )
-+__addpylib_regexp__      = re.compile(r"addpylib\s+(.+)\s+(.+)" )
- 
- def init(data):
-     return
-@@ -189,6 +190,11 @@ def feeder(lineno, s, fn, statements):
-         ast.handleUnsetFlag(statements, fn, lineno, m)
-         return
- 
-+    m = __addpylib_regexp__.match(s)
-+    if m:
-+        ast.handlePyLib(statements, fn, lineno, m)
-+        return
-+
-     raise ParseError("unparsed line: '%s'" % s, fn, lineno);
- 
- # Add us to the handlers list
 -- 
 2.34.1
 
