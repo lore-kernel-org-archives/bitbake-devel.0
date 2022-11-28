@@ -1,80 +1,112 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34BAC433FE
-	for <webhook@archiver.kernel.org>; Mon, 28 Nov 2022 18:22:31 +0000 (UTC)
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
- by mx.groups.io with SMTP id smtpd.web11.126126.1669659746166071338
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E6CC43217
+	for <webhook@archiver.kernel.org>; Mon, 28 Nov 2022 23:48:13 +0000 (UTC)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web10.135191.1669679287825634249
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 28 Nov 2022 10:22:26 -0800
+ Mon, 28 Nov 2022 15:48:08 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=B9wW/OTV;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.51, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f51.google.com with SMTP id o5-20020a17090a678500b00218cd5a21c9so10935776pjj.4
-        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Nov 2022 10:22:26 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=FJb+IyAb;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f43.google.com with SMTP id h11so12239060wrw.13
+        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Nov 2022 15:48:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        d=linuxfoundation.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=C9QKvu2qULAvEMutkhcjOfJMmdU3PWR2iofWF1+5IlY=;
-        b=B9wW/OTVOu7B+dsx2QkvEYtCXLcyNEaxc1DIgn9ha0HrfrTIbM74SNVv/q4OYQRjVx
-         8jcKiFBEVD96+MiVO+V9pZRXwbi4LRt5bMTCeNSekq5IEbk88FqyRbP9Lpx86stNuZlk
-         l+1vwnObJ7Bs2MIJvL1puzM2MmO+F4l1sEkp4XRucCnj67KCIdTxNBIe/mzZ0VkOCBlb
-         KqggzWT1faySB4KaREh1rrvJDbKowxnJ00dtDc1B7FP7NEaqYjG45O9vLyITRbVqT+J0
-         uHMW62WMl9IhxJbwG2KpofvtDbgVdZ4gbl80OUe+ocfUn6pnDdDbYhdaSQIv3MhWGcgJ
-         rAwg==
+        bh=Did4kpmIeEPkp4baTCUZbikNzT5HugTSBzsHSNjFFo4=;
+        b=FJb+IyAbGddZwQbRMleVaYmHDX0sgoWRRHdPkE1iqC4C2nwjHtrnlKcbRBlQTrhAvs
+         BIKC77mlpDa8u/2fo0A6vbJRRqY4YmxDKrOoC8OXXsjR85l486VuZCKuj7intjw+T9sd
+         CnnGwOfR18ONJd/+GcB7IfPE8YnFOiyo7/dos=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C9QKvu2qULAvEMutkhcjOfJMmdU3PWR2iofWF1+5IlY=;
-        b=kwRDC9KUCxSZx+Gva3zcGyCqBlSFy1hguU2Rx7uLH0mH2kX+VknIiXzXe7QBTEXrMP
-         bYzfvynneTnOP4zBa1o9ied+ezw6GEjVpfdu3Y6pyEbHIzv3yRfQC3G9sfo5zPNYaO0R
-         1icreLaGV+4dd+Feokh73JL4IQvYir2QUD7xcmy/V/dsLvM7mo+fRRF5y1a2HB9c68iY
-         jVs/josOMt6Zwlne2GZmSEIlbix/eITHpc4ZS3MonQA/eBqGiyRvht710/vGnuWULIt+
-         vJlM8fwrwhqkLx+xpkZxLHoxZRz2sZ+wYJnXg+ldRXyL+D306qaU3kNci1g2HJfGOlov
-         cGoA==
-X-Gm-Message-State: ANoB5pkyul6/Wi2J1jCILBNvbM4zFK5GpQnx8wu/kYODgHzN/by8clEu
-	gvwzF3UOKNwK/I4UiV1KYrTVJRPY0XFPkE7O2Qc=
-X-Google-Smtp-Source: AA0mqf46ZvohD4p7AcY7SXTGzOq2nw3FxT+Mn74StO9warxkGQ5xjIM6D/PlaH5lUY84xGpV/nPpTg==
-X-Received: by 2002:a17:902:f646:b0:189:3eb7:1c86 with SMTP id m6-20020a170902f64600b001893eb71c86mr29437464plg.53.1669659744988;
-        Mon, 28 Nov 2022 10:22:24 -0800 (PST)
-Received: from hexa.router0800d9.com (dhcp-72-253-6-214.hawaiiantel.net. [72.253.6.214])
-        by smtp.gmail.com with ESMTPSA id v6-20020a170902b7c600b00187197c4999sm9165791plz.167.2022.11.28.10.22.24
+        bh=Did4kpmIeEPkp4baTCUZbikNzT5HugTSBzsHSNjFFo4=;
+        b=13gK20Mrr33ltL4ZQdWbCyU1ZY9z5xqHs45zcqvgYB9XhENvvEKk+9i+1ND+tS+NmW
+         pLKkESM9wV8oBwqrxtBcoKcPc1nXS+nFBe+QdU3CKBvDkxVBgvKfxuBPUravGbAKcnPa
+         eUCh5r3f2nWhKBLU/3AMJAVl7sBBplzFThHX2nKB4XouM5IGxRI5EjkRqRAUqSfeoxqO
+         Ax5cBN4CfeU4CX2L3YzT01IeD6txTniLdKm1h1iX/vXK0hACYd9BU5kUfxM1WWMcAKJT
+         F0OVnArcBFW8wa1xrazppmF5/PgxKBIfsEpOI7Gq6tTyayM2NVTltfG+trD+j4A/TN6T
+         BZ2g==
+X-Gm-Message-State: ANoB5pmi81OwR/Da0oiYc2/aYERc1duT6uBY+gDqBzMgn/eKVFP+idsM
+	VHoK7Eb93LBRq/yqoIoXJcajou2HW6BKzw==
+X-Google-Smtp-Source: AA0mqf7Nhlp/8SNXALXNmhD7D+Zuh1RXEM2gLYnNMHtFMzv9yRv92GlWvXfziA6lEOfrIQ85cwXBeg==
+X-Received: by 2002:a5d:5a95:0:b0:241:65d4:8b41 with SMTP id bp21-20020a5d5a95000000b0024165d48b41mr31910958wrb.470.1669679286095;
+        Mon, 28 Nov 2022 15:48:06 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:426:d29f:e451:e2dd])
+        by smtp.gmail.com with ESMTPSA id q128-20020a1c4386000000b003c71358a42dsm99245wma.18.2022.11.28.15.48.05
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Nov 2022 10:22:24 -0800 (PST)
-From: Steve Sakoman <steve@sakoman.com>
+        Mon, 28 Nov 2022 15:48:05 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 0/1] Pull request (cover letter only)
-Date: Mon, 28 Nov 2022 08:22:20 -1000
-Message-Id: <cover.1669659695.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
+Subject: [PATCH] data_smart: Small cache reuse optimization
+Date: Mon, 28 Nov 2022 23:48:04 +0000
+Message-Id: <20221128234804.752271-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 28 Nov 2022 18:22:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14123
+ <bitbake-devel@lists.openembedded.org>; Mon, 28 Nov 2022 23:48:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14124
 
-The following changes since commit 72a3afd99e8b785cb2a2f687e71a58e08cdd9c74:
+Currently the expand cache doesn't work for "parser" return types, which
+is the main type used by the build_dependencies() call that we spend most
+of the time in when parsing. Tweak the code to cache the unexpanded value
+in the expand cache and hence allow reuse of the parser in other fast path
+cases for small speed gains.
 
-  runqueue: Fix race issues around hash equivalence and sstate reuse (2022-11-22 09:21:04 -1000)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/data_smart.py | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.0-next
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.0-next
-
-Pavel Zhukov (1):
-  gitsm: Fix regression in gitsm submodule path parsing
-
- lib/bb/fetch2/gitsm.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 246c446e4a..e2c93597e5 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -92,10 +92,11 @@ def infer_caller_details(loginfo, parent = False, varval = True):
+             loginfo['func'] = func
+ 
+ class VariableParse:
+-    def __init__(self, varname, d, val = None):
++    def __init__(self, varname, d, unexpanded_value = None, val = None):
+         self.varname = varname
+         self.d = d
+         self.value = val
++        self.unexpanded_value = unexpanded_value
+ 
+         self.references = set()
+         self.execs = set()
+@@ -447,9 +448,9 @@ class DataSmart(MutableMapping):
+     def expandWithRefs(self, s, varname):
+ 
+         if not isinstance(s, str): # sanity check
+-            return VariableParse(varname, self, s)
++            return VariableParse(varname, self, s, s)
+ 
+-        varparse = VariableParse(varname, self)
++        varparse = VariableParse(varname, self, s)
+ 
+         while s.find('${') != -1:
+             olds = s
+@@ -775,6 +776,9 @@ class DataSmart(MutableMapping):
+                 return None
+             cachename = var + "[" + flag + "]"
+ 
++        if not expand and retparser and cachename in self.expand_cache:
++            return self.expand_cache[cachename].unexpanded_value, self.expand_cache[cachename]
++
+         if expand and cachename in self.expand_cache:
+             return self.expand_cache[cachename].value
+ 
 -- 
-2.25.1
+2.34.1
 
 
