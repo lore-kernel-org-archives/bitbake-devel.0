@@ -1,276 +1,153 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6F9C433FE
-	for <webhook@archiver.kernel.org>; Mon, 28 Nov 2022 14:32:20 +0000 (UTC)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
- by mx.groups.io with SMTP id smtpd.web10.119166.1669645937812423601
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20D3C433FE
+	for <webhook@archiver.kernel.org>; Mon, 28 Nov 2022 14:50:20 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web10.119637.1669647019476225237
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 28 Nov 2022 06:32:18 -0800
+ Mon, 28 Nov 2022 06:50:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=q05zCweM;
- spf=pass (domain: gmail.com, ip: 209.85.218.45, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ej1-f45.google.com with SMTP id e27so26224466ejc.12
-        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Nov 2022 06:32:17 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ax/q9anj;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f48.google.com with SMTP id bx10so5133921wrb.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Nov 2022 06:50:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CQQg1jDCquSeJEgb3kgZ0wa+yvuqZbOZMFJ1xg77iTI=;
-        b=q05zCweMzC8JLmePyFI8T2rvj4USAVY0uDRfjIOROgBSX4CgLCMivS6VrOtYCz07E8
-         GwrqbpjoB8ZYBisLctb6Uy2ORaKKH2kRfycdT1tQ41hzKNrP4daIhPXuthAF0wcDL0wl
-         68Sd2IbvZCWu+UCgtrQ+666mH98vH/9haNEgXeEjnin88XTfW9BZAmhA44A+19YSoNmw
-         D0Uc2vVUiG1sSsOQDQ5TZ0OHvIbGk74mXZs5bEjdmw3+1U7l+Rm90DCzKofAjwvzZlNw
-         WInquh9t1RsnuqWzQlxK5WgcnKKYSBkcV1aR6txw7LPONdmRcfKuwdnVJFv0yPMz2dpr
-         ZMwQ==
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LFlVRzhXBvDtyITqi0gNN75HQnxiNgwz8qsyR7FEdQw=;
+        b=ax/q9anjLAleh+GhkquA+PZRId3WaFdzTxpSoSrYWKqO0E3wsntQSyLiG2qQYjpiQr
+         pqkAIA8dIfshEVFQenN27f0qLw0B+cm14iXweZ79YmaqzkZ3SvEz9cXx4d1y3z+8V5+a
+         kaVE4fkZfCTLSRgZlIVFiyvrE9vfQPtcHE+UY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CQQg1jDCquSeJEgb3kgZ0wa+yvuqZbOZMFJ1xg77iTI=;
-        b=aGRLUxKY5jTS1Gw2aUaTS8NjNPzMxJVMLRJOIyf9kyYABCYLMRiZesqKODWRlA/5p1
-         GP2Xj8ewhjTB5niuxO9ncWGnKlFYd9aq/a9x5pSt0JGtdiVl/kxsD710JgUUplKMmoaH
-         +NHo3L/PyYTfb943wheehzRo5RFD7MEUOOH6xjtLz9fUNEaeGMlT3WLis5bjQDx0T9NU
-         KR1Cwr0gWugufMyTtpvwYR/SBRK4JYuZ59veP29RzJ10+3wza672dpemM9+sMbXHZC7b
-         KP3uxDp9zN8tth1TulLy+Wt8Zxrj40in8NDmfQiQ3RhIbX71ZAig02EFM1EirPx4BU4C
-         y0IA==
-X-Gm-Message-State: ANoB5plFIIN9flq+FZWUpzkqiD+RIkcj+d654gNbA+ooKoqXAlMjNe64
-	nPv6scaGbzPIzfuBzNhpxa87KixHsEFAP/V9Swo=
-X-Google-Smtp-Source: AA0mqf7OJM/yCfECQBvmCNEY11PYJpf5zV0PCV1b4OPudUos13Rw/v4WHeTQ/3/cVR53D9+SRGY+zjGUnXNyQPQtJa4=
-X-Received: by 2002:a17:906:3952:b0:7b9:2a28:f6ff with SMTP id
- g18-20020a170906395200b007b92a28f6ffmr25018910eje.61.1669645935988; Mon, 28
- Nov 2022 06:32:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20221127213610.539976-1-richard.purdie@linuxfoundation.org> <20221127213610.539976-2-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20221127213610.539976-2-richard.purdie@linuxfoundation.org>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Mon, 28 Nov 2022 08:32:04 -0600
-Message-ID: <CAJdd5GbhgOf_9fKvk==RXLiOdW57DHvcdktDAsU6aaSDM-d3Qw@mail.gmail.com>
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LFlVRzhXBvDtyITqi0gNN75HQnxiNgwz8qsyR7FEdQw=;
+        b=ZDG4P890bCWKYAAIRrmNrFX9k7NX2o8wE+3JEowbq+Gbgj1HEAI/VxDgTj+Gd3Ge8v
+         Zp7+GyhO8fGQte0tvlzTkKIyFY/LHt7euS7WI/jV/05ib+FGhFqgjer/PtVCmWCUH0he
+         xBqCx+/jRtBFK2yAUFkzOdlVywH6m0fGrYOohvPH6xA8PMB899HfaksvJKlxUOROP939
+         2bgJbiDZAvgCtZ3hSECa8og5e4Yp9yVO7kKz/jO6Wr7ID8Om1RdW4mlh3qMKwN7Y+yd5
+         zawz16Qq4QzYJXyXWMR4u59BbLzQnJ5GSrCEe5C447gbNp0WVEmR++dtT3W7kZWz42Av
+         gzRA==
+X-Gm-Message-State: ANoB5pkahwVmOWVUWxHBrQazhLOVTzjgNAA+C/tC7gNjXE8/pygElfCC
+	wNaYVVpcnkv5ZvasubWmWdDXBQ==
+X-Google-Smtp-Source: AA0mqf6hNin/VR+8J8PPIfLc8U0cgYosK2IREzWBqV1X/c2ACo4tP29wEmBFcjp4xCxr+F7rOcWLqw==
+X-Received: by 2002:adf:d841:0:b0:236:5655:13a5 with SMTP id k1-20020adfd841000000b00236565513a5mr31107436wrl.477.1669647017792;
+        Mon, 28 Nov 2022 06:50:17 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:1da4:7286:b644:a924? ([2001:8b0:aba:5f3c:1da4:7286:b644:a924])
+        by smtp.gmail.com with ESMTPSA id v17-20020a05600c445100b003c64c186206sm16339096wmn.16.2022.11.28.06.50.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Nov 2022 06:50:17 -0800 (PST)
+Message-ID: <e24eafaaf45b8293be9a27a740c6dbdae2c9aba5.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH RFC 2/2] ast/data: Add dependencies from
  python module functions
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Joshua Watt <jpewhacker@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org
+Date: Mon, 28 Nov 2022 14:50:16 +0000
+In-Reply-To: <CAJdd5GbhgOf_9fKvk==RXLiOdW57DHvcdktDAsU6aaSDM-d3Qw@mail.gmail.com>
+References: <20221127213610.539976-1-richard.purdie@linuxfoundation.org>
+	 <20221127213610.539976-2-richard.purdie@linuxfoundation.org>
+	 <CAJdd5GbhgOf_9fKvk==RXLiOdW57DHvcdktDAsU6aaSDM-d3Qw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 28 Nov 2022 14:32:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14120
+ <bitbake-devel@lists.openembedded.org>; Mon, 28 Nov 2022 14:50:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14121
 
-On Sun, Nov 27, 2022 at 3:36 PM Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> Moving code into python modules is a very effective way to reduce parsing
-> time and overhead in recipes. The downside has always been that any
-> dependency information on which variables those functions access is lost
-> and the hashes can therefore become less reliable.
->
-> This patch adds parsing of the imported module functions and that dependency
-> information is them injected back into the hash dependency information.
->
-> Intermodule function references are resolved to the full function
-> call names in our module namespace to ensure interfunction dependencies
-> are correctly handled too.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/codeparser.py |  2 ++
->  lib/bb/data.py       | 40 +++++++++++++++++++++++-----------------
->  lib/bb/parse/ast.py  | 40 +++++++++++++++++++++++++++++++++++++++-
->  3 files changed, 64 insertions(+), 18 deletions(-)
->
-> diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-> index 9d66d3ae41..e7d7ebe048 100644
-> --- a/lib/bb/codeparser.py
-> +++ b/lib/bb/codeparser.py
-> @@ -36,6 +36,8 @@ from bb.cache import MultiProcessCache
->
->  logger = logging.getLogger('BitBake.CodeParser')
->
-> +modulecode_deps = {}
-> +
->  def bbhash(s):
->      return hashlib.sha256(s.encode("utf-8")).hexdigest()
->
-> diff --git a/lib/bb/data.py b/lib/bb/data.py
-> index 22d314d6c2..ab1a5959ba 100644
-> --- a/lib/bb/data.py
-> +++ b/lib/bb/data.py
-> @@ -261,22 +261,9 @@ def emit_func_python(func, o=sys.__stdout__, d = init()):
->                 newdeps |= set((d.getVarFlag(dep, "vardeps") or "").split())
->          newdeps -= seen
->
-> -def build_dependencies(key, keys, shelldeps, varflagsexcl, ignored_vars, d):
-> +def build_dependencies(key, keys, mod_funcs, shelldeps, varflagsexcl, ignored_vars, d):
->      deps = set()
->      try:
-> -        if key[-1] == ']':
-> -            vf = key[:-1].split('[')
-> -            if vf[1] == "vardepvalueexclude":
-> -                return deps, ""
-> -            value, parser = d.getVarFlag(vf[0], vf[1], False, retparser=True)
-> -            deps |= parser.references
-> -            deps = deps | (keys & parser.execs)
-> -            deps -= ignored_vars
-> -            return frozenset(deps), value
-> -        varflags = d.getVarFlags(key, ["vardeps", "vardepvalue", "vardepsexclude", "exports", "postfuncs", "prefuncs", "lineno", "filename"]) or {}
-> -        vardeps = varflags.get("vardeps")
-> -        exclusions = varflags.get("vardepsexclude", "").split()
-> -
->          def handle_contains(value, contains, exclusions, d):
->              newvalue = []
->              if value:
-> @@ -294,6 +281,24 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, ignored_vars, d):
->                          newvalue.append("\n%s{%s} = Set" % (k, item))
->              return "".join(newvalue)
->
-> +        if key in mod_funcs:
-> +            exclusions = set()
-> +            moddep = bb.codeparser.modulecode_deps[key]
-> +            value = handle_contains("", moddep[3], exclusions, d)
-> +            return frozenset(moddep[0] - ignored_vars), value
-> +        if key[-1] == ']':
-> +            vf = key[:-1].split('[')
-> +            if vf[1] == "vardepvalueexclude":
-> +                return deps, ""
-> +            value, parser = d.getVarFlag(vf[0], vf[1], False, retparser=True)
-> +            deps |= parser.references
-> +            deps = deps | (keys & parser.execs)
-> +            deps -= ignored_vars
-> +            return frozenset(deps), value
-> +        varflags = d.getVarFlags(key, ["vardeps", "vardepvalue", "vardepsexclude", "exports", "postfuncs", "prefuncs", "lineno", "filename"]) or {}
-> +        vardeps = varflags.get("vardeps")
-> +        exclusions = varflags.get("vardepsexclude", "").split()
-> +
->          def handle_remove(value, deps, removes, d):
->              for r in sorted(removes):
->                  r2 = d.expandWithRefs(r, None)
-> @@ -367,7 +372,8 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, ignored_vars, d):
->
->  def generate_dependencies(d, ignored_vars):
->
-> -    keys = set(key for key in d if not key.startswith("__"))
-> +    mod_funcs = set(bb.codeparser.modulecode_deps.keys())
-> +    keys = set(key for key in d if not key.startswith("__")) | mod_funcs
->      shelldeps = set(key for key in d.getVar("__exportlist", False) if d.getVarFlag(key, "export", False) and not d.getVarFlag(key, "unexport", False))
->      varflagsexcl = d.getVar('BB_SIGNATURE_EXCLUDE_FLAGS')
->
-> @@ -376,7 +382,7 @@ def generate_dependencies(d, ignored_vars):
->
->      tasklist = d.getVar('__BBTASKS', False) or []
->      for task in tasklist:
-> -        deps[task], values[task] = build_dependencies(task, keys, shelldeps, varflagsexcl, ignored_vars, d)
-> +        deps[task], values[task] = build_dependencies(task, keys, mod_funcs, shelldeps, varflagsexcl, ignored_vars, d)
->          newdeps = deps[task]
->          seen = set()
->          while newdeps:
-> @@ -385,7 +391,7 @@ def generate_dependencies(d, ignored_vars):
->              newdeps = set()
->              for dep in nextdeps:
->                  if dep not in deps:
-> -                    deps[dep], values[dep] = build_dependencies(dep, keys, shelldeps, varflagsexcl, ignored_vars, d)
-> +                    deps[dep], values[dep] = build_dependencies(dep, keys, mod_funcs, shelldeps, varflagsexcl, ignored_vars, d)
->                  newdeps |=  deps[dep]
->              newdeps -= seen
->          #print "For %s: %s" % (task, str(deps[task]))
-> diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-> index 7bfee9ed67..7dbb1adfa8 100644
-> --- a/lib/bb/parse/ast.py
-> +++ b/lib/bb/parse/ast.py
-> @@ -10,6 +10,7 @@
->  #
->
->  import sys
-> +import inspect
->  import bb
->  from bb import methodpool
->  from bb.parse import logger
-> @@ -284,7 +285,44 @@ class PyLibNode(AstNode):
->              bb.utils._context[self.namespace] = __import__(self.namespace)
->              toimport = getattr(bb.utils._context[self.namespace], "BBIMPORTS", [])
->              for i in toimport:
-> -                bb.utils._context[i.split(".", 1)[0]] = __import__(i)
-> +                base = i.split(".", 1)[0]
-> +                bb.utils._context[base] = __import__(i)
-> +                if "." in i:
-> +                    mod = getattr(bb.utils._context[base], i.split(".", 1)[1])
-> +                    funcs = dir(mod)
-> +                    for f in funcs:
-> +                        if f.startswith("_"):
-> +                            continue
-> +                        fcall = getattr(mod, f)
-> +                        if not callable(fcall):
-> +                            continue
-> +                        src = inspect.getsource(fcall)
+On Mon, 2022-11-28 at 08:32 -0600, Joshua Watt wrote:
+> On Sun, Nov 27, 2022 at 3:36 PM Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
+> > --- a/lib/bb/parse/ast.py
+> > +++ b/lib/bb/parse/ast.py
+> > @@ -10,6 +10,7 @@
+> >  #
+> >=20
+> >  import sys
+> > +import inspect
+> >  import bb
+> >  from bb import methodpool
+> >  from bb.parse import logger
+> > @@ -284,7 +285,44 @@ class PyLibNode(AstNode):
+> >              bb.utils._context[self.namespace] =3D __import__(self.name=
+space)
+> >              toimport =3D getattr(bb.utils._context[self.namespace], "B=
+BIMPORTS", [])
+> >              for i in toimport:
+> > -                bb.utils._context[i.split(".", 1)[0]] =3D __import__(i=
+)
+> > +                base =3D i.split(".", 1)[0]
+> > +                bb.utils._context[base] =3D __import__(i)
+> > +                if "." in i:
+> > +                    mod =3D getattr(bb.utils._context[base], i.split("=
+.", 1)[1])
+> > +                    funcs =3D dir(mod)
+> > +                    for f in funcs:
+> > +                        if f.startswith("_"):
+> > +                            continue
+> > +                        fcall =3D getattr(mod, f)
+> > +                        if not callable(fcall):
+> > +                            continue
+> > +                        src =3D inspect.getsource(fcall)
+>=20
+> While the text of a module should always be present, making python go
+> back to it is probably inefficient when it's already gone through the
+> effort of converting it to byte code (I beleive it has to go find the
+> corresponding .py file for the .pyc file it already loaded into
+> memory). Perhaps we can split out the part of PythonParser that deals
+> with the compiled AST to a new function and call that with inspect?
+>=20
+> Maybe something like:
+>=20
+>   bytecode =3D inspect.getmembers_static(fcall, "__code__")[0][1]
+>   parser.parse_python_ast(bytecode)
 
-While the text of a module should always be present, making python go
-back to it is probably inefficient when it's already gone through the
-effort of converting it to byte code (I beleive it has to go find the
-corresponding .py file for the .pyc file it already loaded into
-memory). Perhaps we can split out the part of PythonParser that deals
-with the compiled AST to a new function and call that with inspect?
+Sadly we need the text since PythonParser has it's own optimisations
+and hash lookups based upon that :/. I agree this is probably not as
+efficient as it should be though. We also still don't currently get the
+lineno information we need either.
 
-Maybe something like:
+>=20
+> > +                        name =3D "%s.%s" % (i, f)
+> > +                        parser =3D bb.codeparser.PythonParser(name, lo=
+gger)
+> > +                        parser.parse_python(src, filename=3Dinspect.ge=
+tfile(fcall), lineno=3D1)
+> > +                        execs =3D parser.execs
+> > +                        # Expand internal module exec references
+> > +                        for e in parser.execs:
+> > +                            if e in funcs:
+> > +                                execs.remove(e)
+>=20
+> You are modifying parser.execs in place which will ruin your
+> iteration.
 
-  bytecode = inspect.getmembers_static(fcall, "__code__")[0][1]
-  parser.parse_python_ast(bytecode)
+Well spotted. It was meant to be execs =3D parser.execs.copy() (see the
+other copy()'s of the other bits later.
 
-> +                        name = "%s.%s" % (i, f)
-> +                        parser = bb.codeparser.PythonParser(name, logger)
-> +                        parser.parse_python(src, filename=inspect.getfile(fcall), lineno=1)
-> +                        execs = parser.execs
-> +                        # Expand internal module exec references
-> +                        for e in parser.execs:
-> +                            if e in funcs:
-> +                                execs.remove(e)
+>  I think you probably want:
+>=20
+>  execs =3D {f"{i}.{e}" if e in funcs else e for e in parser.execs}
+>=20
+> Or if you don't want list comprehension:
+>=20
+>  execs =3D []
+>  for e in parse.execs:
+>    if e in funcs:
+>      execs.add(f"{i}.{e}")
+>   else:
+>      execs.add(e)
 
-You are modifying parser.execs in place which will ruin your
-iteration. I think you probably want:
+Cheers,
 
- execs = {f"{i}.{e}" if e in funcs else e for e in parser.execs}
-
-Or if you don't want list comprehension:
-
- execs = []
- for e in parse.execs:
-   if e in funcs:
-     execs.add(f"{i}.{e}")
-  else:
-     execs.add(e)
-
-> +                                execs.add(i + "." + e)
-> +                        bb.codeparser.modulecode_deps[name] = [parser.references.copy(), execs, parser.var_execs.copy(), parser.contains.copy()]
-> +                        #bb.warn("%s: %s\nRefs:%s Execs: %s %s %s" % (name, src, parser.references, parser.execs, parser.var_execs, parser.contains))
-> +
-> +            # Resolve intermodule references now, stack dependencies
-> +            found = True
-> +            while found:
-> +                found = False
-> +                funcs = set(bb.codeparser.modulecode_deps.keys())
-> +                for entry in bb.codeparser.modulecode_deps:
-> +                    for dup in (bb.codeparser.modulecode_deps[entry][1] & funcs):
-> +                        found = True
-> +                        bb.codeparser.modulecode_deps[entry][1].remove(dup)
-> +                        bb.codeparser.modulecode_deps[entry][0] |= bb.codeparser.modulecode_deps[dup][0]
-> +                        bb.codeparser.modulecode_deps[entry][1] |= bb.codeparser.modulecode_deps[dup][1]
-> +                        bb.codeparser.modulecode_deps[entry][2] |= bb.codeparser.modulecode_deps[dup][2]
-> +                        bb.codeparser.modulecode_deps[entry][3] |= bb.codeparser.modulecode_deps[dup][3]
-> +
->          except AttributeError as e:
->              bb.error("Error importing OE modules: %s" % str(e))
->
-> --
-> 2.34.1
->
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#14116): https://lists.openembedded.org/g/bitbake-devel/message/14116
-> Mute This Topic: https://lists.openembedded.org/mt/95297764/3616693
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWhacker@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+Richard
 
