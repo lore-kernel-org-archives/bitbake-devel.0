@@ -1,102 +1,127 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F718C4321E
-	for <webhook@archiver.kernel.org>; Fri,  2 Dec 2022 17:40:33 +0000 (UTC)
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
- by mx.groups.io with SMTP id smtpd.web10.82365.1670002828528993080
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED347C4332F
+	for <webhook@archiver.kernel.org>; Sun,  4 Dec 2022 22:32:00 +0000 (UTC)
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+ by mx.groups.io with SMTP id smtpd.web10.174.1670193113690916509
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 02 Dec 2022 09:40:29 -0800
+ Sun, 04 Dec 2022 14:31:54 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=j/Bar0EZ;
- spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 5D6041BF205;
-	Fri,  2 Dec 2022 17:40:26 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=Dy3bfDOQ;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.196, mailfrom: alexandre.belloni@bootlin.com)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id 6B308E0005;
+	Sun,  4 Dec 2022 22:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1670002826;
+	t=1670193111;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=StxsxlrpH7jfwLB+T0EroLzAPfW6RJlKlV//wi5KLBU=;
-	b=j/Bar0EZz0SkGlNip2gBUFfXNPY9J5vloHT6D1QVqdh7NnWzn6rT89zGtCXPLZqz3WXlnC
-	CSwE5Tg+By3qhOejihHjiCTfNsGhU3tboK6vG/goTWD1QgKwnv4U1WDNv8G0jsdV6gQjDr
-	IMys0GWnItQl9lC5ZcZrotJFrnvEY96YCfCzemFAOe8ZZANBzDmYkJRQWzLAZZzSJsASHk
-	+zrrHIPYoGFA2nwkc/rreXwYwk3HzT8pnx+88s8eq+SIpLTHyUgf+ZA44JtFLEzhGoNWvV
-	l/AXX5JsSkksr0j4/97zM7OezW9jHW0b8Ii/6tTYq5oG/1o34leKkx7p3a7Qew==
-From: michael.opdenacker@bootlin.com
-To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH] bitbake-user-manual: update references to Yocto Project manual
-Date: Fri,  2 Dec 2022 18:38:36 +0100
-Message-Id: <20221202173836.352854-1-michael.opdenacker@bootlin.com>
-X-Mailer: git-send-email 2.34.1
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XfRVb6/6BXz7QW/2d9H12FYQz0FVzszN4UzUPx9gjyw=;
+	b=Dy3bfDOQGdl/Cdv/A4Lg4Hh1X/Za9N8P7XynvcE2ea8I0D7WZwshJ7GVmabsYDSBWvbh5L
+	hovkX+X/DKO80IHgGB+fUn6sueR91N+uFrBFzoBytYvcVY7gBHH8vaMbZLZYuIy2R9BvWd
+	CI6JYHQ1AeRR9ePHRBMcmeYYgEED93YiX6/iCPTOXJ201vAFP/6URBHJmYtKDRDpRTYZzq
+	M5bOg9Syj3yXuDAAHucyNEAiMdcaHeh0SO/lj8DyxRspPNsZo6eim8+73909eWLv8tJNqA
+	kqQu3O8LvXNk+elVkARbrf1VAsmQ+FFDoK8ETHECJI153OUaBUC5DKEw2H1ksQ==
+Date: Sun, 4 Dec 2022 23:31:51 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH v2] cache/siggen: Simplify passing
+ basehash data into the cache
+Message-ID: <Y40f10T169tZBaSZ@mail.local>
+References: <20221201221736.1207775-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221201221736.1207775-1-richard.purdie@linuxfoundation.org>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 02 Dec 2022 17:40:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14132
+ <bitbake-devel@lists.openembedded.org>; Sun, 04 Dec 2022 22:32:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14133
 
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Hello Richard,
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
----
+I believe this caused the following bitbake-selftest failures:
+https://autobuilder.yoctoproject.org/typhoon/#/builders/79/builds/4467/steps/12/logs/stdio
+https://autobuilder.yoctoproject.org/typhoon/#builders/127/builds/559/steps/11/logs/stdio
+https://autobuilder.yoctoproject.org/typhoon/#builders/80/builds/4412/steps/11/logs/stdio
+https://autobuilder.yoctoproject.org/typhoon/#builders/87/builds/4493/steps/11/logs/stdio
+https://autobuilder.yoctoproject.org/typhoon/#/builders/86/builds/4434/steps/11/logs/stdio
 
-Please note that this update will work only when the next release is made, linking to
-https://docs.yoctoproject.org/dev-manual/python-development-shell.html#using-a-python-development-shell
+On 01/12/2022 22:17:36+0000, Richard Purdie wrote:
+> The basehash data is really internal bitbake data and passing an object
+> directly is more efficient than creating and then extracting variables.
+> 
+> This will match the format of other data we may optionally wish to
+> store in the cache so more to the more efficient method. Nothing I
+> can see is using this data today (and nothing should be).
+> 
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/cache.py  | 4 ++--
+>  lib/bb/siggen.py | 5 ++++-
+>  2 files changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+> index cb6cf21727..e1214d6ad2 100644
+> --- a/lib/bb/cache.py
+> +++ b/lib/bb/cache.py
+> @@ -28,7 +28,7 @@ import shutil
+>  
+>  logger = logging.getLogger("BitBake.Cache")
+>  
+> -__cache_version__ = "154"
+> +__cache_version__ = "155"
+>  
+>  def getCacheFile(path, filename, mc, data_hash):
+>      mcspec = ''
+> @@ -105,7 +105,7 @@ class CoreRecipeInfo(RecipeInfoCommon):
+>  
+>          self.tasks = metadata.getVar('__BBTASKS', False)
+>  
+> -        self.basetaskhashes = self.taskvar('BB_BASEHASH', self.tasks, metadata)
+> +        self.basetaskhashes = metadata.getVar('__siggen_basehashes', False)
+>          self.hashfilename = self.getvar('BB_HASHFILENAME', metadata)
+>  
+>          self.task_deps = metadata.getVar('_task_deps', False) or {'tasks': [], 'parents': {}}
+> diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+> index 72b906c153..34b71d596a 100644
+> --- a/lib/bb/siggen.py
+> +++ b/lib/bb/siggen.py
+> @@ -247,8 +247,11 @@ class SignatureGeneratorBasic(SignatureGenerator):
+>          #for task in self.taskdeps[fn]:
+>          #    self.dump_sigtask(fn, task, d.getVar("STAMP"), False)
+>  
+> +        basehashes = {}
+>          for task in taskdeps:
+> -            d.setVar("BB_BASEHASH:task-%s" % task, self.basehash[fn + ":" + task])
+> +            basehashes[task] = self.basehash[fn + ":" + task]
+> +
+> +        d.setVar("__siggen_basehashes", basehashes)
+>  
+>      def postparsing_clean_cache(self):
+>          #
+> -- 
+> 2.34.1
+> 
 
-Currently, the above link doesn't exist yet; it currently exists only in the "dev" docs:
-https://docs.yoctoproject.org/dev/dev-manual/python-development-shell.html#using-a-python-development-shell
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14130): https://lists.openembedded.org/g/bitbake-devel/message/14130
+> Mute This Topic: https://lists.openembedded.org/mt/95394525/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
-It would be nice for the "dev" version of the BitBake manual
-to point to the "dev" version of the Yocto manual, but
-that's limited to specific needs like this one, so I'm not sure
-that's worth implementing a change.
----
- doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 4 ++--
- doc/bitbake-user-manual/bitbake-user-manual-metadata.rst | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index 9c269ca8..f715dee5 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -740,7 +740,7 @@ Here is an example URL with both fetchers::
-        "
- 
- See :yocto_docs:`Creating Node Package Manager (NPM) Packages
--</dev-manual/common-tasks.html#creating-node-package-manager-npm-packages>`
-+</dev-manual/packages.html#creating-node-package-manager-npm-packages>`
- in the Yocto Project manual for details about using
- :yocto_docs:`devtool <https://docs.yoctoproject.org/ref-manual/devtool-reference.html>`
- to automatically create a recipe from an NPM URL.
-@@ -777,7 +777,7 @@ the package which has such dependencies, for example::
- Such a file can automatically be generated using
- :yocto_docs:`devtool <https://docs.yoctoproject.org/ref-manual/devtool-reference.html>`
- as described in the :yocto_docs:`Creating Node Package Manager (NPM) Packages
--</dev-manual/common-tasks.html#creating-node-package-manager-npm-packages>`
-+</dev-manual/packages.html#creating-node-package-manager-npm-packages>`
- section of the Yocto Project.
- 
- Other Fetchers
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-index b7c3d809..b839e669 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-@@ -1935,7 +1935,7 @@ Testing and Debugging BitBake Python code
- The OpenEmbedded build system implements a convenient ``pydevshell`` target which
- you can use to access the BitBake datastore and experiment with your own Python
- code. See :yocto_docs:`Using a Python Development Shell
--</dev-manual/common-tasks.html#using-a-python-development-shell>` in the Yocto
-+</dev-manual/python-development-shell.html#using-a-python-development-shell>` in the Yocto
- Project manual for details.
- 
- Task Checksums and Setscene
 -- 
-2.34.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
