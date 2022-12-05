@@ -1,101 +1,148 @@
-Return-Path: <debrabander@gmail.com>
+Return-Path: <marex@denx.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6906C4332F
-	for <webhook@archiver.kernel.org>; Mon,  5 Dec 2022 18:13:26 +0000 (UTC)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
- by mx.groups.io with SMTP id smtpd.web10.23144.1670264002708563894
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E2DC4321E
+	for <webhook@archiver.kernel.org>; Mon,  5 Dec 2022 22:00:47 +0000 (UTC)
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+ by mx.groups.io with SMTP id smtpd.web11.29922.1670277636642074825
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 05 Dec 2022 10:13:23 -0800
+ Mon, 05 Dec 2022 14:00:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=D54SDkdX;
- spf=pass (domain: gmail.com, ip: 209.85.218.49, mailfrom: debrabander@gmail.com)
-Received: by mail-ej1-f49.google.com with SMTP id b2so485386eja.7
-        for <bitbake-devel@lists.openembedded.org>; Mon, 05 Dec 2022 10:13:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V2elFf2jIUYh/3XqB6wn6ULsjEkKO8lxbKaZUCBuBmY=;
-        b=D54SDkdX0Ewl/ORIlAmr75T5hSMkT4E00vZHzDEh4AS5GB6Ew5PYediTOzGYgFggpE
-         /ChV7Af2rxzC9pU/Vnqekz6PWsKCWYZBxvbVYHycLrS3SCrrKXl8z4Kzl8MaPqYHBOg8
-         GQdkF7F9ApHnZN3myGhhId64oFXeMppghbs1fLlEol2M/d5SSHqxJS9vflGlcf0DlTBa
-         n4Uf5jO8zzXXeE0TEd0TWoTY8YTYs9Y7roD2xzw292sixhe2S0KQUEWzaP0fi5vdXlMv
-         /AdDMXdX/IAAwtGzjTwVM69qansQpn+pS7ykOistHWZ+/pEoNxGutJn4PU1RQOYjGhG4
-         wYsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V2elFf2jIUYh/3XqB6wn6ULsjEkKO8lxbKaZUCBuBmY=;
-        b=QYjvnvkjVn8rxpOvVMuJ6I3Duq7grUsZp529HM1KVOhRDoY38T6dzoZHBlKVNHxwCm
-         MmW+S+Obg/Ujk20Jr0lbEvJ3t62aWtQWrGwOdhg6qP/8NRjonE70UvGE1LiMDRwdG1X+
-         LMFWAIu8pLr2X+1KJ9oEiUAemKshFdHMRUEd8kXEmz6BhgTbOZqq77dom2YV6z3PzspS
-         HkApDoxDzOw2vNV7yV8ARuDGl2SPOCtiBpTV1fGBGjWYKTOvXYG5RuVoCZhc5QFQGnPg
-         pE6t6XREhH2YDMBzuGAzqNH/KLsAP0+/oWpEVk6YTSuPg/bs1NqIRAkJ9KYQ/9siurF0
-         jiSQ==
-X-Gm-Message-State: ANoB5plTz0EWxMPl+zjp2TsEDD4msLuo958eAqJ5E1VaZ8I11PcZ9cTD
-	FnLg96WO8rNGbbLNxt6BB9zJgdR0ELT/RA==
-X-Google-Smtp-Source: AA0mqf4ksCuAPVxo5hYceLyAweRgj76MtemDrxp0QlDmNCQ1xS529JHY3KQZ6fWshB8OjF712sRxkw==
-X-Received: by 2002:a17:907:1dd0:b0:7c0:9e28:e5eb with SMTP id og16-20020a1709071dd000b007c09e28e5ebmr20619381ejc.390.1670264001156;
-        Mon, 05 Dec 2022 10:13:21 -0800 (PST)
-Received: from polar.foobar.local (186-153-172-081.dynamic.caiway.nl. [81.172.153.186])
-        by smtp.gmail.com with ESMTPSA id kx4-20020a170907774400b0079e11b8e891sm6446542ejc.125.2022.12.05.10.13.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Dec 2022 10:13:20 -0800 (PST)
-From: Frank de Brabander <debrabander@gmail.com>
+ dkim=fail reason="body hash did not verify" header.i=@denx.de header.s=phobos-20191101 header.b=RBwXExWh;
+ spf=pass (domain: denx.de, ip: 85.214.62.61, mailfrom: marex@denx.de)
+Received: from tr.lan (ip-86-49-120-218.bb.vodafone.cz [86.49.120.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 1ED6283A1F;
+	Mon,  5 Dec 2022 23:00:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1670277634;
+	bh=vhgAKb7P6Ji8C8iY2xWivR9LPmPS/oQFjrEPHIG088Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RBwXExWhGxfCS1jxzhTETG2JJWYgZ+YrRDsPFeAkQ9JD6yhDB5UdHu1+8tV6T4IUl
+	 BZFEp7Nv5jiJIMd//7NU53rw8NIbaQWTE1oD5Cr+CeKMwgYbcTZZacqzr4+dvUu5UQ
+	 XzJfJccm5MjGrHGlAaFN1IP3jYFtQfbSx4wb98Oupn/gOunTrZ0Zu9JGXHRFloWHV9
+	 6wP8ufBkj+pwR0XxSYwmpxDCZShPPCUknd86m8f4bw4o/xEUjtedilj0zaxHA1FISl
+	 vki4XueRY/7pPZiur1R40p7FWn+1mMl2XEGcYQwqb1Y4NrK5xPi6JieB1kBaSA52sd
+	 Yl0iww1mZ+P8w==
+From: Marek Vasut <marex@denx.de>
 To: bitbake-devel@lists.openembedded.org
-Cc: Frank de Brabander <debrabander@gmail.com>
-Subject: [PATCH] README: improve explanation about running the testsuite
-Date: Mon,  5 Dec 2022 19:13:08 +0100
-Message-Id: <20221205181308.14562-1-debrabander@gmail.com>
-X-Mailer: git-send-email 2.20.1
+Cc: Marek Vasut <marex@denx.de>,
+	Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
+	Martin Jansa <Martin.Jansa@gmail.com>,
+	Mikko.Rapeli@bmw.de,
+	Quentin Schulz <foss+yocto@0leil.net>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [PATCH] fetch2/git: Prevent git fetcher from fetching gitlab repository metadata
+Date: Mon,  5 Dec 2022 23:00:19 +0100
+Message-Id: <20221205220019.19650-1-marex@denx.de>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 05 Dec 2022 18:13:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14136
+ <bitbake-devel@lists.openembedded.org>; Mon, 05 Dec 2022 22:00:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14137
 
-Explain how to run the testsuite clear enough so no external
-documentation is required.
+The bitbake git fetcher currently fetches 'refs/*:refs/*', i.e. every
+single object in the remote repository. This works poorly with gitlab
+and github, which use the remote git repository to track its metadata
+like merge requests, CI pipelines and such.
 
-Signed-off-by: Frank de Brabander <debrabander@gmail.com>
+Specifically, gitlab generates refs/merge-requests/*, refs/pipelines/*
+and refs/keep-around/* and they all contain massive amount of data that
+are useless for the bitbake build purposes. The amount of useless data
+can in fact be so massive (e.g. with FDO mesa.git repository) that some
+proxies may outright terminate the 'git fetch' connection, and make it
+appear as if bitbake got stuck on 'git fetch' with no output.
+
+To avoid fetching all these useless metadata, tweak the git fetcher such
+that it only fetches refs/heads/* and refs/tags/* . Avoid using negative
+refspecs as those are only available in new git versions.
+
+Per feedback on the ML, Gerrit may push commits outsides of branches or
+tags during CI runs, which currently works with the 'nobranch=3D1' fetche=
+r
+parameter. To retain this functionality, keep fetching everything in case
+the 'nobranch=3D1' is present. This still avoids fetching massive amount =
+of
+data in the common case, since 'nobranch=3D1' is rare. Update 'nobranch'
+documentation.
+
+Reviewed-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Signed-off-by: Marek Vasut <marex@denx.de>
 ---
- README | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Cc: Martin Jansa <Martin.Jansa@gmail.com>
+Cc: Mikko.Rapeli@bmw.de
+Cc: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Cc: Quentin Schulz <foss+yocto@0leil.net>
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+V1: - Add RB from Peter
+    - Keep fetching everything in case of nobranch=3D1
+    - Update nobranch documentation
+---
+ doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 4 ++--
+ lib/bb/fetch2/git.py                                     | 8 ++++++--
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/README b/README
-index 7b4a2b76..af23c9af 100644
---- a/README
-+++ b/README
-@@ -39,10 +39,21 @@ Source code:
- 
-     https://git.openembedded.org/bitbake/
- 
--Testing:
-+Testing
-+-------
- 
- Bitbake has a testsuite located in lib/bb/tests/ whichs aim to try and prevent regressions.
- You can run this with "bitbake-selftest". In particular the fetcher is well covered since
- it has so many corner cases. The datastore has many tests too. Testing with the testsuite is
- recommended before submitting patches, particularly to the fetcher and datastore. We also
- appreciate new test cases and may require them for more obscure issues.
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/d=
+oc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index 9c269ca8..e86a4d86 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -424,8 +424,8 @@ This fetcher supports the following parameters:
+=20
+ -  *"nobranch":* Tells the fetcher to not check the SHA validation for
+    the branch when set to "1". The default is "0". Set this option for
+-   the recipe that refers to the commit that is valid for a tag instead
+-   of the branch.
++   the recipe that refers to the commit that is valid for a any namespac=
+e
++   instead of the branch.
+=20
+ -  *"bareclone":* Tells the fetcher to clone a bare clone into the
+    destination directory without checking out a working tree. Only the
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 578edc59..c80e8e5c 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -44,7 +44,7 @@ Supported SRC_URI options are:
+=20
+ - nobranch
+    Don't check the SHA validation for branch. set this option for the re=
+cipe
+-   referring to commit which is valid in tag instead of branch.
++   referring to commit which is valid in any namespace instead of branch=
+.
+    The default is "0", set nobranch=3D1 if needed.
+=20
+ - usehead
+@@ -382,7 +382,11 @@ class Git(FetchMethod):
+               runfetchcmd("%s remote rm origin" % ud.basecmd, d, workdir=
+=3Dud.clonedir)
+=20
+             runfetchcmd("%s remote add --mirror=3Dfetch origin %s" % (ud=
+.basecmd, shlex.quote(repourl)), d, workdir=3Dud.clonedir)
+-            fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/*:ref=
+s/*" % (ud.basecmd, shlex.quote(repourl))
 +
-+To run the tests "zstd" and "git" must be installed. Git must be correctly configured, in
-+particular the user.email and user.name values must be set.
-+
-+The assumption is made that this testsuite is run from an initialized OpenEmbedded build
-+environment (i.e. `source oe-init-build-env` is used). If this is not the case, run the
-+testsuite as follows:
-+
-+    export PATH=$(pwd)/bin:$PATH
-+    bin/bitbake-selftest
--- 
-2.20.1
++            if ud.nobranch:
++                fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/*=
+:refs/*" % (ud.basecmd, shlex.quote(repourl))
++            else:
++                fetch_cmd =3D "LANG=3DC %s fetch -f --progress %s refs/h=
+eads/*:refs/heads/* refs/tags/*:refs/tags/*" % (ud.basecmd, shlex.quote(r=
+epourl))
+             if ud.proto.lower() !=3D 'file':
+                 bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
+             progresshandler =3D GitProgressHandler(d)
+--=20
+2.35.1
 
 
