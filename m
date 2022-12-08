@@ -1,71 +1,115 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80202C3A5A7
-	for <webhook@archiver.kernel.org>; Thu,  8 Dec 2022 16:04:27 +0000 (UTC)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
- by mx.groups.io with SMTP id smtpd.web10.18149.1670515458310264746
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68155C4332F
+	for <webhook@archiver.kernel.org>; Thu,  8 Dec 2022 17:36:28 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web11.21233.1670520983646830880
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 08 Dec 2022 08:04:18 -0800
+ Thu, 08 Dec 2022 09:36:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=K3/BHqxd;
- spf=pass (domain: gmail.com, ip: 209.85.208.181, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lj1-f181.google.com with SMTP id a19so2067262ljk.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 08 Dec 2022 08:04:18 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=a7xMNQE3;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f41.google.com with SMTP id f13-20020a1cc90d000000b003d08c4cf679so1577282wmb.5
+        for <bitbake-devel@lists.openembedded.org>; Thu, 08 Dec 2022 09:36:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8yk5JcXwRAceOqoIVvQQt22xh13dQAFKlMrHQJpm49E=;
-        b=K3/BHqxdGQFi36r6jsii49/kQB8LX5p1sZpt0qYDMsRv/PvIoq1G5JQTyqxx+0eF8D
-         1DnvP8l6lRn8Ly4z0ItyZuirRWYqSRyupO57MDu1qx0IQ8gg8nOAEOodjvPlmQ05u9f6
-         VMQaUq7dFax5OaVY9dnKgNNiu0rXpmDwR6Wh5KDw6TrvJeqIoit8HeZTpxPGxHGzbB+V
-         cUUojMWS5/ro5jrtIwlns2u2NN96PuuAvH00+BS+Tdm7YKwjQ1tAg61w7RN1EtNa+Ras
-         wY3V2hZ6JCxP/rlN0nRwFvYt4z1RFod0hdA0+FPKGembwpP5hJL8vGh+4BXhYae69DmN
-         sTtg==
+        d=linuxfoundation.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WWmgm3tpJHU733yVkCf83J2VgomCGkX/W0k8OSVFST8=;
+        b=a7xMNQE3fqBz8CvLHl1pMmD0Sp+1TwvyoiaQGh8sip2hGNqTGVgOfRjTM3oRZrW9SR
+         W6f2wn/7hiY/q1Q4GZpvZ2Kt7E6gTP9/YX5JNAFnwkocTulTCPuwJ1HX0DG+7aKTXtYq
+         fk+azWEaTx6UnFc+vFqC36MmAzxUeDI5jLUKE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8yk5JcXwRAceOqoIVvQQt22xh13dQAFKlMrHQJpm49E=;
-        b=ZzaiLfH+4JSfSR9r2rZxGaEaPUlj68Ib736KI4GYCo6dlD8hLchMLV0fymtMJhVYb4
-         h7mW815ucNtT7Ew4Blql7j9M20TNIauWka3Jzi5frcAr2DPMeIK8S7z/wiHTOYNN81Ws
-         oNwWM7AIkali9KrO/DN2eeclkA11ulRpfriYEFQk+7WBGzcFE6MAx/YYC3eDNErNN1xz
-         S3I2U8+XJgpcari3nTVPTBQmj1P5E5F2yG02IU0WcGO8M5ZSgPBHMJ9ES3J1hb5HNUBa
-         ZQX6dGarAYiuFoswHcZseJXHBq//gODfDexmnaTlPhK+3CiTnKXaYQbLOypGVo9v4OqA
-         7cOw==
-X-Gm-Message-State: ANoB5plXBbrSPbcK+O/OKs2rqUX1xE/m79ebGQLBbR/9eWq4URRRIuUT
-	Uj9nfMFVw3jrUS2vgRDWdPDiD/sH7ovu6JT+bbM=
-X-Google-Smtp-Source: AA0mqf7D/MTp+94XTff613UsIh5xxxPWA4ccyUt2Y6UfwcSiZVi/k0AvfyNcFT4oC1VN0FZX+3iZBhcRnMzDKpL7w24=
-X-Received: by 2002:a05:651c:c8f:b0:26d:d196:d04 with SMTP id
- bz15-20020a05651c0c8f00b0026dd1960d04mr31065092ljb.403.1670515456507; Thu, 08
- Dec 2022 08:04:16 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WWmgm3tpJHU733yVkCf83J2VgomCGkX/W0k8OSVFST8=;
+        b=JZb1C+e9UYMGAKt60GIPBP9dYs91xyIO7PBAr9wRGoOk8zB07BH3JOnLVjh9Pjpe/w
+         t2ySn2aCZ5b8xppKI93pf4jrA7+7aILr1oRddSX7bixF5QF33t2KX1xXVBirPS/CGgPq
+         HxaiMDxBsMif56FzLzFY0MPIAj4/XVwXJ/7uqbxhLXRTHz1/LejuIc8C9ME6Jz4QwaVg
+         nd6zfgMGj7flmcEJGObX+geMPC/a2YJBnfxcNGioZx3Z+7j01pkS2ns806BBpxz+pQgy
+         8P7WU0pr1fPt81Ucefwpv1O6QXLUS0ChPHifrzaI12KiJnekh7AOvt55QcxdvFx2+zNK
+         zn6g==
+X-Gm-Message-State: ANoB5pnLB1rVlo2Dlc3xkPZ1KjM3wT15MaaeWyI0E61exHeQGyi2UNlJ
+	vgOnAWQXSotyr1zXLYByl7ersaub/gPjJI1t
+X-Google-Smtp-Source: AA0mqf4bOodCoBmSpnGf6IJL7VyPmCH+ghIN1agVSi7+rKLHu89dSKJCotL/LcQQh7nKUgU7wITO2g==
+X-Received: by 2002:a05:600c:3799:b0:3d1:f74d:4f60 with SMTP id o25-20020a05600c379900b003d1f74d4f60mr2193642wmr.22.1670520981651;
+        Thu, 08 Dec 2022 09:36:21 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:50bb:c4ee:bb3b:bc91])
+        by smtp.gmail.com with ESMTPSA id bd10-20020a05600c1f0a00b003d070e45574sm5956409wmb.11.2022.12.08.09.36.20
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Dec 2022 09:36:20 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 1/2] main: Add timestamp to server retry messages
+Date: Thu,  8 Dec 2022 17:36:18 +0000
+Message-Id: <20221208173619.2382692-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20221208122131.2455528-1-alex@linutronix.de> <609ec123425599c724285de7c56b2150ec491d71.camel@linuxfoundation.org>
-In-Reply-To: <609ec123425599c724285de7c56b2150ec491d71.camel@linuxfoundation.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 8 Dec 2022 17:04:05 +0100
-Message-ID: <CANNYZj8_L+f5WO_R7j5dqrOEeOEfyQ1dtDv65RTnU4Q9pePvuw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch2/wget.py: correctly match versioned directories
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org, 
-	Alexander Kanavin <alex@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 08 Dec 2022 16:04:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14153
+ <bitbake-devel@lists.openembedded.org>; Thu, 08 Dec 2022 17:36:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14154
 
-On Thu, 8 Dec 2022 at 15:59, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
+We have timestamps in the server logs but we don't know which
+UI messages correlate to them. Add some timestamps to the messages
+which doesn't make them pretty but which might make it possible to
+debug problems.
 
-> There are tests and examples in lib/bb/tests/fetch.py, could we add
-> something for this case?
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/main.py | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Added. I completely forgot they exist :)
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index f56c3d46a2..6294b85cfd 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -17,6 +17,7 @@ import warnings
+ import fcntl
+ import time
+ import traceback
++import datetime
+ 
+ import bb
+ from bb import event
+@@ -384,6 +385,9 @@ def bitbake_main(configParams, configuration):
+ 
+     return 1
+ 
++def timestamp():
++    return datetime.datetime.now().strftime('%H:%M:%S.%f')
++
+ def setup_bitbake(configParams, extrafeatures=None):
+     # Ensure logging messages get sent to the UI as events
+     handler = bb.event.LogHandler()
+@@ -434,7 +438,7 @@ def setup_bitbake(configParams, extrafeatures=None):
+                 else:
+                     logger.info("Reconnecting to bitbake server...")
+                     if not os.path.exists(sockname):
+-                        logger.info("Previous bitbake instance shutting down?, waiting to retry...")
++                        logger.info("Previous bitbake instance shutting down?, waiting to retry... (%s)" % timestamp())
+                         i = 0
+                         lock = None
+                         # Wait for 5s or until we can get the lock
+@@ -459,9 +463,9 @@ def setup_bitbake(configParams, extrafeatures=None):
+                 retries -= 1
+                 tryno = 8 - retries
+                 if isinstance(e, (bb.server.process.ProcessTimeout, BrokenPipeError, EOFError, SystemExit)):
+-                    logger.info("Retrying server connection (#%d)..." % tryno)
++                    logger.info("Retrying server connection (#%d)... (%s)" % (tryno, timestamp()))
+                 else:
+-                    logger.info("Retrying server connection (#%d)... (%s)" % (tryno, traceback.format_exc()))
++                    logger.info("Retrying server connection (#%d)... (%s, %s)" % (tryno, traceback.format_exc(), timestamp()))
+ 
+             if not retries:
+                 bb.fatal("Unable to connect to bitbake server, or start one (server startup failures would be in bitbake-cookerdaemon.log).")
+-- 
+2.34.1
 
-Alex
 
