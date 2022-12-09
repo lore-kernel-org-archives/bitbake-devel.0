@@ -1,134 +1,242 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCECC4167B
-	for <webhook@archiver.kernel.org>; Fri,  9 Dec 2022 11:35:48 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web10.11045.1670585740772604747
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2191FC4332F
+	for <webhook@archiver.kernel.org>; Fri,  9 Dec 2022 14:42:14 +0000 (UTC)
+Received: from relay10.mail.gandi.net (relay10.mail.gandi.net [217.70.178.230])
+ by mx.groups.io with SMTP id smtpd.web10.2919.1670596929604161147
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 09 Dec 2022 03:35:41 -0800
+ Fri, 09 Dec 2022 06:42:10 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PPJGHaAe;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id 125-20020a1c0283000000b003d1e906ca23so3067916wmc.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Dec 2022 03:35:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3X5biCGHjMqM5zJfa88Q2z+vos4GxhzHu0JhDHdMzJo=;
-        b=PPJGHaAesRev8H8cMzAcUIn5fCLB5lUUD9UCwZIfEq9CJtmbvt6Fnwx+JRdEQ19o1m
-         Kzmnhs3zpvXscIuraXhob0PtwBSllhLS8zvT8DGqO0DciH0TsOH8ic2dNOou6lg+HXG7
-         MznJcAoDJLAVp54UCkxC9zPK+Aa7Ow1DGZTlM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3X5biCGHjMqM5zJfa88Q2z+vos4GxhzHu0JhDHdMzJo=;
-        b=y8pSAZj/aXsTDWZ7+Qfc3oEHv3QFK4LN1CxEjwmnZShlRHG4ouVrTBCZ1ErDc2MBgp
-         Nm7a7n/3dx8D2FutupaSLQ6YLASsgWmykIkY+L4TXFyDmmCiTNHQwaiZLWWFN4EXNQIf
-         t+qenmAGgh/6+BMX5EETvdz5e6htw1RPjZ1ylmvFw3kz6diApJKJl8Wsn5rXhPkZwVGQ
-         8v2r2BgOwcSHHlbqxelYHcpO9M08c2F5YS2R7cOAF5yrw5erh6M/JWlOgQpxyq/RkYnH
-         DHElDyKuJO7rvryq7J4++qxXbiou06/TxL59K/YTsOEwJ8lXjhBKD9SXXhTCF5W4xQ6M
-         7g3w==
-X-Gm-Message-State: ANoB5pkKha4vcrfnZlvGOhpcJuGwo4GdBy6cR9CMhdjngyq2YKZJraR4
-	3Qcd1Fb/mRNhaYlMKUh0lyqj/w==
-X-Google-Smtp-Source: AA0mqf5N2d9ogullCgF1JnPN+hECXjdN3Z5dGfcxRdm3/DP5DYvUgL+R7DyNn7qGX2pqGQ9JTRjg5w==
-X-Received: by 2002:a05:600c:783:b0:3d1:bf7c:3923 with SMTP id z3-20020a05600c078300b003d1bf7c3923mr4282400wmo.4.1670585739038;
-        Fri, 09 Dec 2022 03:35:39 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:9b77:8930:5aaa:e9c4? ([2001:8b0:aba:5f3c:9b77:8930:5aaa:e9c4])
-        by smtp.gmail.com with ESMTPSA id z5-20020a05600c0a0500b003b4cba4ef71sm9551416wmp.41.2022.12.09.03.35.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Dec 2022 03:35:38 -0800 (PST)
-Message-ID: <36bdfd79eb715671f4e298b3ab5004a986ff8394.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] cookerdata: Ensure layers use
- LAYERSERIES_COMPAT fairly
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Stefan =?ISO-8859-1?Q?M=FCller-Klieser?= <S.Mueller-Klieser@phytec.de>, 
-	"bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Fri, 09 Dec 2022 11:35:37 +0000
-In-Reply-To: <34f25e412b1d1f277e3f5e0915106f07ab0387b8.camel@phytec.de>
-References: <20221207124913.2108579-1-richard.purdie@linuxfoundation.org>
-	 <34f25e412b1d1f277e3f5e0915106f07ab0387b8.camel@phytec.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu1 
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=kLnCBhKw;
+ spf=pass (domain: bootlin.com, ip: 217.70.178.230, mailfrom: alexandre.belloni@bootlin.com)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id 6130524000F;
+	Fri,  9 Dec 2022 14:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1670596926;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Uu8icwP92e+dG4IoS0tRyJUJyC8sJMrOm/JVzQ/fy+o=;
+	b=kLnCBhKwhZrVvsZDzepRD7SVx5JovuDHiXI6VfsYe58usGRjdWmWsxS6QaK3ntXDI2qMzL
+	jAaZWtCGYf9WWsDk8LQZI5w/zp1hfNtVNK+UvTbETS4wR5U+XyjOAkVpFXrtCwnyqnVsO+
+	WbFAMZ+vmJx4g9fhj9t0iKecVX1H4xUCR44sUMTNHjC7zdBKPh5u6TBzT/wncBrrcXFimo
+	Mx+Qpr6nZM5QXraolvLaIKOwF4ONBYrjD8Lpg2GHO3ptImwJrrBP539b+7TkkpCxJxWQoE
+	fOKho0MizJgD++r7SELX34biFpUxqTqwzioF5HI0edk158AlswK0RU07tgdYxg==
+Date: Fri, 9 Dec 2022 15:42:06 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org,
+	Alexander Kanavin <alex@linutronix.de>
+Subject: Re: [bitbake-devel] [PATCH v3] fetch2/wget.py: correctly match
+ versioned directories
+Message-ID: <Y5NJPlVxNR7kQsG1@mail.local>
+References: <20221209085840.3733809-1-alex@linutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221209085840.3733809-1-alex@linutronix.de>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 09 Dec 2022 11:35:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14161
+ <bitbake-devel@lists.openembedded.org>; Fri, 09 Dec 2022 14:42:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14162
 
-Hi Stefan,
+This patch applied correctly but failed:
 
-On Fri, 2022-12-09 at 11:07 +0000, Stefan M=C3=BCller-Klieser wrote:
-> Am Mittwoch, dem 07.12.2022 um 12:49 +0000 schrieb Richard Purdie:
-> > > Some layers think they're going to be 'clever' and copy the values fr=
-om
->=20
-> as I am one of those "clever" guys...
+2022-12-09 13:21:18 (456 MB/s) - ‘/tmp/wget-index-ypaf69js/wget-listing-m180p7ds’ saved [34419/34419]
+--2022-12-09 13:21:18--  http://localhost:46501/files/v3.16/
+Resolving localhost (localhost)... ::1, 127.0.0.1
+Connecting to localhost (localhost)|::1|:46501... failed: Connection refused.
+Connecting to localhost (localhost)|127.0.0.1|:46501... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 17922 (18K) [text/html]
+Saving to: ‘/tmp/wget-index-3i6kh677/wget-listing-w93f0eg3’
 
-One of them, yes. You're not the only ones and the widespread adoption
-of this was a big part of the concern.
-
->=20
-> > > another layer, e.g. using ${LAYERSERIES_COMPAT_core}. The whole point=
- of
-> > > this mechanism is to make it clear which releases a layer supports an=
-d
->=20
-> FYI we "disabled" the mechanism because its not helping us. Support for u=
-s
-> means commit level verification for hw+sw, so we had to implement somethi=
-ng
-> else anyway.
-
-What you did was remove the indications of which releases your
-layer/branch was compatible with. I understand you may want to do other
-things as well but bypassing the checks really isn't in the spirit of
-what we were trying to do.
-
-> > > show when a layer master branch is bitrotting and is unmaintained.
->=20
-> I understand the argument especially for master
-
-There are a lot of layers out there which it is unclear what they're
-compatible with and I do think having layers clearly indicate
-compatibility (or not) with a given release series is a good thing.
-
-> > > Therefore add some code to avoid people doing this. I wish we didn't =
-have
-> > > to but...
->=20
-> I just noticed in the documentation the requirement for layer
-> compatible 2.0, enforcing that mechanism. I will fix it asap.
->=20
-> As, I guess, there are more cases like that in our layer, for
-> the future, instead of enforcing rules on the code level, it would
-> help us more to make the yocto compatibility layer program more
-> accessible. I tried several times on the management level to
-> get into the program, without success. Our company did
-> not fit into the existing categories. If you have an idea in that
-> direction, a PM would be appreciated.
-
-To use the Yocto Project Compatible branding/badge you need to be a
-member however you do not need to be a member to run the yocto-check-
-layer script yourself. You can say that the script passes, or to run it
-in automated CI and publish the result without any membership
-requirement.=C2=A0
-
-Is there something else we should be doing to make this more
-accessible? I'd be interested in what options could make membership
-more attractive to your management if you have any ideas.
-
-Cheers,
-
-Richard
+I suspect we can't connect to random ports on the AB
 
 
+On 09/12/2022 09:58:40+0100, Alexander Kanavin wrote:
+> When obtaining latest upstream versions, the code needs
+> to check if the existing tarball is in a versioned directory
+> (e.g. component-name/x.y/component-name-x.y.z.tar.gz) and
+> if it is, it needs to first obtain the list of all
+> such versioned directories and then check all of them by going
+> one step up in the directory hierarchy.
+> 
+> Existing code was returning a correct match when the component
+> name did not have numbers, e.g. a check on 'source/epiphany/43/'
+> would return 43, but was stopping too soon when the component
+> name itself had numbers ('source/libxml2/2.10/' would return libxml2).
+> 
+> This change ensures the last match is taken instead of the first.
+> 
+> Also, adjust the fetcher tests to check that versioned directories
+> are correctly traversed in this case (e.g. the step to go one level
+> up is taken and a new tarball is discovered in a different versioned
+> directory).
+> 
+> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+> ---
+>  bitbake/lib/bb/fetch2/wget.py                 |  4 +-
+>  .../software/libxml2/2.10/index.html          | 20 ++++++++++
+>  .../software/libxml2/2.9/index.html           | 40 +++++++++++++++++++
+>  .../software/libxml2/index.html               | 19 +++++++++
+>  bitbake/lib/bb/tests/fetch.py                 |  3 ++
+>  5 files changed, 84 insertions(+), 2 deletions(-)
+>  create mode 100644 bitbake/lib/bb/tests/fetch-testdata/software/libxml2/2.10/index.html
+>  create mode 100644 bitbake/lib/bb/tests/fetch-testdata/software/libxml2/2.9/index.html
+>  create mode 100644 bitbake/lib/bb/tests/fetch-testdata/software/libxml2/index.html
+> 
+> diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+> index 821afa5b58..7ccea3ad89 100644
+> --- a/bitbake/lib/bb/fetch2/wget.py
+> +++ b/bitbake/lib/bb/fetch2/wget.py
+> @@ -644,10 +644,10 @@ class Wget(FetchMethod):
+>              # search for version matches on folders inside the path, like:
+>              # "5.7" in http://download.gnome.org/sources/${PN}/5.7/${PN}-${PV}.tar.gz
+>              dirver_regex = re.compile(r"(?P<dirver>[^/]*(\d+\.)*\d+([-_]r\d+)*)/")
+> -            m = dirver_regex.search(path)
+> +            m = dirver_regex.findall(path)
+>              if m:
+>                  pn = d.getVar('PN')
+> -                dirver = m.group('dirver')
+> +                dirver = m[-1][0]
+>  
+>                  dirver_pn_regex = re.compile(r"%s\d?" % (re.escape(pn)))
+>                  if not dirver_pn_regex.search(dirver):
+> diff --git a/bitbake/lib/bb/tests/fetch-testdata/software/libxml2/2.10/index.html b/bitbake/lib/bb/tests/fetch-testdata/software/libxml2/2.10/index.html
+> new file mode 100644
+> index 0000000000..4e41af6d6a
+> --- /dev/null
+> +++ b/bitbake/lib/bb/tests/fetch-testdata/software/libxml2/2.10/index.html
+> @@ -0,0 +1,20 @@
+> +<!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width"><style type="text/css">body,html {background:#fff;font-family:"Bitstream Vera Sans","Lucida Grande","Lucida Sans Unicode",Lucidux,Verdana,Lucida,sans-serif;}tr:nth-child(even) {background:#f4f4f4;}th,td {padding:0.1em 0.5em;}th {text-align:left;font-weight:bold;background:#eee;border-bottom:1px solid #aaa;}#list {border:1px solid #aaa;width:100%;}a {color:#a33;}a:hover {color:#e33;}</style>
+> +
+> +<title>Index of /sources/libxml2/2.10/</title>
+> +</head><body><h1>Index of /sources/libxml2/2.10/</h1>
+> +<table id="list"><thead><tr><th style="width:55%"><a href="?C=N&amp;O=A">File Name</a>&nbsp;<a href="?C=N&amp;O=D">&nbsp;&darr;&nbsp;</a></th><th style="width:20%"><a href="?C=S&amp;O=A">File Size</a>&nbsp;<a href="?C=S&amp;O=D">&nbsp;&darr;&nbsp;</a></th><th style="width:25%"><a href="?C=M&amp;O=A">Date</a>&nbsp;<a href="?C=M&amp;O=D">&nbsp;&darr;&nbsp;</a></th></tr></thead>
+> +<tbody><tr><td class="link"><a href="../">Parent directory/</a></td><td class="size">-</td><td class="date">-</td></tr>
+> +<tr><td class="link"><a href="LATEST-IS-2.10.3" title="LATEST-IS-2.10.3">LATEST-IS-2.10.3</a></td><td class="size">2.5 MiB</td><td class="date">2022-Oct-14 12:55</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.0.news" title="libxml2-2.10.0.news">libxml2-2.10.0.news</a></td><td class="size">7.1 KiB</td><td class="date">2022-Aug-17 11:55</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.0.sha256sum" title="libxml2-2.10.0.sha256sum">libxml2-2.10.0.sha256sum</a></td><td class="size">174 B</td><td class="date">2022-Aug-17 11:55</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.0.tar.xz" title="libxml2-2.10.0.tar.xz">libxml2-2.10.0.tar.xz</a></td><td class="size">2.6 MiB</td><td class="date">2022-Aug-17 11:55</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.1.news" title="libxml2-2.10.1.news">libxml2-2.10.1.news</a></td><td class="size">455 B</td><td class="date">2022-Aug-25 11:33</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.1.sha256sum" title="libxml2-2.10.1.sha256sum">libxml2-2.10.1.sha256sum</a></td><td class="size">174 B</td><td class="date">2022-Aug-25 11:33</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.1.tar.xz" title="libxml2-2.10.1.tar.xz">libxml2-2.10.1.tar.xz</a></td><td class="size">2.6 MiB</td><td class="date">2022-Aug-25 11:33</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.2.news" title="libxml2-2.10.2.news">libxml2-2.10.2.news</a></td><td class="size">309 B</td><td class="date">2022-Aug-29 14:56</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.2.sha256sum" title="libxml2-2.10.2.sha256sum">libxml2-2.10.2.sha256sum</a></td><td class="size">174 B</td><td class="date">2022-Aug-29 14:56</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.2.tar.xz" title="libxml2-2.10.2.tar.xz">libxml2-2.10.2.tar.xz</a></td><td class="size">2.5 MiB</td><td class="date">2022-Aug-29 14:56</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.3.news" title="libxml2-2.10.3.news">libxml2-2.10.3.news</a></td><td class="size">294 B</td><td class="date">2022-Oct-14 12:55</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.3.sha256sum" title="libxml2-2.10.3.sha256sum">libxml2-2.10.3.sha256sum</a></td><td class="size">174 B</td><td class="date">2022-Oct-14 12:55</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.10.3.tar.xz" title="libxml2-2.10.3.tar.xz">libxml2-2.10.3.tar.xz</a></td><td class="size">2.5 MiB</td><td class="date">2022-Oct-14 12:55</td></tr>
+> +</tbody></table></body></html>
+> diff --git a/bitbake/lib/bb/tests/fetch-testdata/software/libxml2/2.9/index.html b/bitbake/lib/bb/tests/fetch-testdata/software/libxml2/2.9/index.html
+> new file mode 100644
+> index 0000000000..abdfdd0fa2
+> --- /dev/null
+> +++ b/bitbake/lib/bb/tests/fetch-testdata/software/libxml2/2.9/index.html
+> @@ -0,0 +1,40 @@
+> +<!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width"><style type="text/css">body,html {background:#fff;font-family:"Bitstream Vera Sans","Lucida Grande","Lucida Sans Unicode",Lucidux,Verdana,Lucida,sans-serif;}tr:nth-child(even) {background:#f4f4f4;}th,td {padding:0.1em 0.5em;}th {text-align:left;font-weight:bold;background:#eee;border-bottom:1px solid #aaa;}#list {border:1px solid #aaa;width:100%;}a {color:#a33;}a:hover {color:#e33;}</style>
+> +
+> +<title>Index of /sources/libxml2/2.9/</title>
+> +</head><body><h1>Index of /sources/libxml2/2.9/</h1>
+> +<table id="list"><thead><tr><th style="width:55%"><a href="?C=N&amp;O=A">File Name</a>&nbsp;<a href="?C=N&amp;O=D">&nbsp;&darr;&nbsp;</a></th><th style="width:20%"><a href="?C=S&amp;O=A">File Size</a>&nbsp;<a href="?C=S&amp;O=D">&nbsp;&darr;&nbsp;</a></th><th style="width:25%"><a href="?C=M&amp;O=A">Date</a>&nbsp;<a href="?C=M&amp;O=D">&nbsp;&darr;&nbsp;</a></th></tr></thead>
+> +<tbody><tr><td class="link"><a href="../">Parent directory/</a></td><td class="size">-</td><td class="date">-</td></tr>
+> +<tr><td class="link"><a href="LATEST-IS-2.9.14" title="LATEST-IS-2.9.14">LATEST-IS-2.9.14</a></td><td class="size">3.0 MiB</td><td class="date">2022-May-02 12:03</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.0.sha256sum" title="libxml2-2.9.0.sha256sum">libxml2-2.9.0.sha256sum</a></td><td class="size">87 B</td><td class="date">2022-Feb-14 18:27</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.0.tar.xz" title="libxml2-2.9.0.tar.xz">libxml2-2.9.0.tar.xz</a></td><td class="size">3.0 MiB</td><td class="date">2022-Feb-14 18:27</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.1.sha256sum" title="libxml2-2.9.1.sha256sum">libxml2-2.9.1.sha256sum</a></td><td class="size">87 B</td><td class="date">2022-Feb-14 18:28</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.1.tar.xz" title="libxml2-2.9.1.tar.xz">libxml2-2.9.1.tar.xz</a></td><td class="size">3.0 MiB</td><td class="date">2022-Feb-14 18:28</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.10.sha256sum" title="libxml2-2.9.10.sha256sum">libxml2-2.9.10.sha256sum</a></td><td class="size">88 B</td><td class="date">2022-Feb-14 18:42</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.10.tar.xz" title="libxml2-2.9.10.tar.xz">libxml2-2.9.10.tar.xz</a></td><td class="size">3.2 MiB</td><td class="date">2022-Feb-14 18:42</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.11.sha256sum" title="libxml2-2.9.11.sha256sum">libxml2-2.9.11.sha256sum</a></td><td class="size">88 B</td><td class="date">2022-Feb-14 18:43</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.11.tar.xz" title="libxml2-2.9.11.tar.xz">libxml2-2.9.11.tar.xz</a></td><td class="size">3.2 MiB</td><td class="date">2022-Feb-14 18:43</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.12.sha256sum" title="libxml2-2.9.12.sha256sum">libxml2-2.9.12.sha256sum</a></td><td class="size">88 B</td><td class="date">2022-Feb-14 18:45</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.12.tar.xz" title="libxml2-2.9.12.tar.xz">libxml2-2.9.12.tar.xz</a></td><td class="size">3.2 MiB</td><td class="date">2022-Feb-14 18:45</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.13.news" title="libxml2-2.9.13.news">libxml2-2.9.13.news</a></td><td class="size">26.6 KiB</td><td class="date">2022-Feb-20 12:42</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.13.sha256sum" title="libxml2-2.9.13.sha256sum">libxml2-2.9.13.sha256sum</a></td><td class="size">174 B</td><td class="date">2022-Feb-20 12:42</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.13.tar.xz" title="libxml2-2.9.13.tar.xz">libxml2-2.9.13.tar.xz</a></td><td class="size">3.1 MiB</td><td class="date">2022-Feb-20 12:42</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.14.news" title="libxml2-2.9.14.news">libxml2-2.9.14.news</a></td><td class="size">1.0 KiB</td><td class="date">2022-May-02 12:03</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.14.sha256sum" title="libxml2-2.9.14.sha256sum">libxml2-2.9.14.sha256sum</a></td><td class="size">174 B</td><td class="date">2022-May-02 12:03</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.14.tar.xz" title="libxml2-2.9.14.tar.xz">libxml2-2.9.14.tar.xz</a></td><td class="size">3.0 MiB</td><td class="date">2022-May-02 12:03</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.2.sha256sum" title="libxml2-2.9.2.sha256sum">libxml2-2.9.2.sha256sum</a></td><td class="size">87 B</td><td class="date">2022-Feb-14 18:30</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.2.tar.xz" title="libxml2-2.9.2.tar.xz">libxml2-2.9.2.tar.xz</a></td><td class="size">3.2 MiB</td><td class="date">2022-Feb-14 18:30</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.3.sha256sum" title="libxml2-2.9.3.sha256sum">libxml2-2.9.3.sha256sum</a></td><td class="size">87 B</td><td class="date">2022-Feb-14 18:31</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.3.tar.xz" title="libxml2-2.9.3.tar.xz">libxml2-2.9.3.tar.xz</a></td><td class="size">3.2 MiB</td><td class="date">2022-Feb-14 18:31</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.4.sha256sum" title="libxml2-2.9.4.sha256sum">libxml2-2.9.4.sha256sum</a></td><td class="size">87 B</td><td class="date">2022-Feb-14 18:33</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.4.tar.xz" title="libxml2-2.9.4.tar.xz">libxml2-2.9.4.tar.xz</a></td><td class="size">2.9 MiB</td><td class="date">2022-Feb-14 18:33</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.5.sha256sum" title="libxml2-2.9.5.sha256sum">libxml2-2.9.5.sha256sum</a></td><td class="size">87 B</td><td class="date">2022-Feb-14 18:35</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.5.tar.xz" title="libxml2-2.9.5.tar.xz">libxml2-2.9.5.tar.xz</a></td><td class="size">3.0 MiB</td><td class="date">2022-Feb-14 18:35</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.6.sha256sum" title="libxml2-2.9.6.sha256sum">libxml2-2.9.6.sha256sum</a></td><td class="size">87 B</td><td class="date">2022-Feb-14 18:36</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.6.tar.xz" title="libxml2-2.9.6.tar.xz">libxml2-2.9.6.tar.xz</a></td><td class="size">3.0 MiB</td><td class="date">2022-Feb-14 18:36</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.7.sha256sum" title="libxml2-2.9.7.sha256sum">libxml2-2.9.7.sha256sum</a></td><td class="size">87 B</td><td class="date">2022-Feb-14 18:37</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.7.tar.xz" title="libxml2-2.9.7.tar.xz">libxml2-2.9.7.tar.xz</a></td><td class="size">3.0 MiB</td><td class="date">2022-Feb-14 18:37</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.8.sha256sum" title="libxml2-2.9.8.sha256sum">libxml2-2.9.8.sha256sum</a></td><td class="size">87 B</td><td class="date">2022-Feb-14 18:39</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.8.tar.xz" title="libxml2-2.9.8.tar.xz">libxml2-2.9.8.tar.xz</a></td><td class="size">3.0 MiB</td><td class="date">2022-Feb-14 18:39</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.9.sha256sum" title="libxml2-2.9.9.sha256sum">libxml2-2.9.9.sha256sum</a></td><td class="size">87 B</td><td class="date">2022-Feb-14 18:40</td></tr>
+> +<tr><td class="link"><a href="libxml2-2.9.9.tar.xz" title="libxml2-2.9.9.tar.xz">libxml2-2.9.9.tar.xz</a></td><td class="size">3.0 MiB</td><td class="date">2022-Feb-14 18:40</td></tr>
+> +</tbody></table></body></html>
+> diff --git a/bitbake/lib/bb/tests/fetch-testdata/software/libxml2/index.html b/bitbake/lib/bb/tests/fetch-testdata/software/libxml2/index.html
+> new file mode 100644
+> index 0000000000..c183e06a55
+> --- /dev/null
+> +++ b/bitbake/lib/bb/tests/fetch-testdata/software/libxml2/index.html
+> @@ -0,0 +1,19 @@
+> +<!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width"><style type="text/css">body,html {background:#fff;font-family:"Bitstream Vera Sans","Lucida Grande","Lucida Sans Unicode",Lucidux,Verdana,Lucida,sans-serif;}tr:nth-child(even) {background:#f4f4f4;}th,td {padding:0.1em 0.5em;}th {text-align:left;font-weight:bold;background:#eee;border-bottom:1px solid #aaa;}#list {border:1px solid #aaa;width:100%;}a {color:#a33;}a:hover {color:#e33;}</style>
+> +
+> +<title>Index of /sources/libxml2/</title>
+> +</head><body><h1>Index of /sources/libxml2/</h1>
+> +<table id="list"><thead><tr><th style="width:55%"><a href="?C=N&amp;O=A">File Name</a>&nbsp;<a href="?C=N&amp;O=D">&nbsp;&darr;&nbsp;</a></th><th style="width:20%"><a href="?C=S&amp;O=A">File Size</a>&nbsp;<a href="?C=S&amp;O=D">&nbsp;&darr;&nbsp;</a></th><th style="width:25%"><a href="?C=M&amp;O=A">Date</a>&nbsp;<a href="?C=M&amp;O=D">&nbsp;&darr;&nbsp;</a></th></tr></thead>
+> +<tbody><tr><td class="link"><a href="../">Parent directory/</a></td><td class="size">-</td><td class="date">-</td></tr>
+> +<tr><td class="link"><a href="2.0/" title="2.0">2.0/</a></td><td class="size">-</td><td class="date">2009-Jul-14 13:04</td></tr>
+> +<tr><td class="link"><a href="2.1/" title="2.1">2.1/</a></td><td class="size">-</td><td class="date">2009-Jul-14 13:04</td></tr>
+> +<tr><td class="link"><a href="2.10/" title="2.10">2.10/</a></td><td class="size">-</td><td class="date">2022-Oct-14 12:55</td></tr>
+> +<tr><td class="link"><a href="2.2/" title="2.2">2.2/</a></td><td class="size">-</td><td class="date">2009-Jul-14 13:04</td></tr>
+> +<tr><td class="link"><a href="2.3/" title="2.3">2.3/</a></td><td class="size">-</td><td class="date">2009-Jul-14 13:05</td></tr>
+> +<tr><td class="link"><a href="2.4/" title="2.4">2.4/</a></td><td class="size">-</td><td class="date">2009-Jul-14 13:05</td></tr>
+> +<tr><td class="link"><a href="2.5/" title="2.5">2.5/</a></td><td class="size">-</td><td class="date">2009-Jul-14 13:05</td></tr>
+> +<tr><td class="link"><a href="2.6/" title="2.6">2.6/</a></td><td class="size">-</td><td class="date">2009-Jul-14 13:05</td></tr>
+> +<tr><td class="link"><a href="2.7/" title="2.7">2.7/</a></td><td class="size">-</td><td class="date">2022-Feb-14 18:24</td></tr>
+> +<tr><td class="link"><a href="2.8/" title="2.8">2.8/</a></td><td class="size">-</td><td class="date">2022-Feb-14 18:26</td></tr>
+> +<tr><td class="link"><a href="2.9/" title="2.9">2.9/</a></td><td class="size">-</td><td class="date">2022-May-02 12:04</td></tr>
+> +<tr><td class="link"><a href="cache.json" title="cache.json">cache.json</a></td><td class="size">22.8 KiB</td><td class="date">2022-Oct-14 12:55</td></tr>
+> +</tbody></table></body></html>
+> diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+> index 0af06e46e5..ad3d4dea7d 100644
+> --- a/bitbake/lib/bb/tests/fetch.py
+> +++ b/bitbake/lib/bb/tests/fetch.py
+> @@ -1401,6 +1401,9 @@ class FetchLatestVersionTest(FetcherTest):
+>          # http://www.cmake.org/files/v2.8/cmake-2.8.12.1.tar.gz
+>          ("cmake", "/files/v2.8/cmake-2.8.12.1.tar.gz", "", "")
+>              : "2.8.12.1",
+> +        # https://download.gnome.org/sources/libxml2/2.9/libxml2-2.9.14.tar.xz
+> +        ("libxml2", "/software/libxml2/2.9/libxml2-2.9.14.tar.xz", "", "")
+> +            : "2.10.3",
+>          #
+>          # packages with versions only in current directory
+>          #
+> -- 
+> 2.30.2
+> 
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14158): https://lists.openembedded.org/g/bitbake-devel/message/14158
+> Mute This Topic: https://lists.openembedded.org/mt/95556940/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
