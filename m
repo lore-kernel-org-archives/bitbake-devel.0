@@ -1,189 +1,134 @@
-Return-Path: <S.Mueller-Klieser@phytec.de>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15D2C4708E
-	for <webhook@archiver.kernel.org>; Fri,  9 Dec 2022 11:08:08 +0000 (UTC)
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
- by mx.groups.io with SMTP id smtpd.web10.10657.1670584077127878134
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCECC4167B
+	for <webhook@archiver.kernel.org>; Fri,  9 Dec 2022 11:35:48 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web10.11045.1670585740772604747
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 09 Dec 2022 03:07:58 -0800
+ Fri, 09 Dec 2022 03:35:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@phytec.de header.s=a4 header.b=Won/SdXi;
- spf=pass (domain: phytec.de, ip: 91.26.50.163, mailfrom: s.mueller-klieser@phytec.de)
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1670584074; x=1673176074;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=x1eRiqXi5P+s7nVVrTpvTsn4/6OeSRydIJ7gWmb9Lec=;
-	b=Won/SdXiqy3ljGub12oUjKb+iEpjcBGDngtqOuJR3OpytqHx4BLxrYce0d9X70up
-	kBtKKJ+n9jBHylpDIDNHWhcPNJICMIEyuI2Wx/4C+JaYRgdiGH4LNZxRkrRCYiMy
-	2MYgral2CtmsJEaUMDiCwyPE+7MG2/sQZfx9C8anxs8=;
-X-AuditID: ac14000a-833f270000003940-21-639317097ef9
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 0F.DF.14656.90713936; Fri,  9 Dec 2022 12:07:53 +0100 (CET)
-Received: from Berlix.phytec.de (172.25.0.12) by Berlix.phytec.de
- (172.25.0.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Fri, 9 Dec
- 2022 12:07:53 +0100
-Received: from Berlix.phytec.de ([fe80::61cc:ebf0:7375:8768]) by
- berlix.phytec.de ([fe80::197e:d26b:2ca:c7b4%4]) with mapi id 15.01.2375.018;
- Fri, 9 Dec 2022 12:07:53 +0100
-From: =?utf-8?B?U3RlZmFuIE3DvGxsZXItS2xpZXNlcg==?=
-	<S.Mueller-Klieser@phytec.de>
-To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PPJGHaAe;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f54.google.com with SMTP id 125-20020a1c0283000000b003d1e906ca23so3067916wmc.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Dec 2022 03:35:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3X5biCGHjMqM5zJfa88Q2z+vos4GxhzHu0JhDHdMzJo=;
+        b=PPJGHaAesRev8H8cMzAcUIn5fCLB5lUUD9UCwZIfEq9CJtmbvt6Fnwx+JRdEQ19o1m
+         Kzmnhs3zpvXscIuraXhob0PtwBSllhLS8zvT8DGqO0DciH0TsOH8ic2dNOou6lg+HXG7
+         MznJcAoDJLAVp54UCkxC9zPK+Aa7Ow1DGZTlM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3X5biCGHjMqM5zJfa88Q2z+vos4GxhzHu0JhDHdMzJo=;
+        b=y8pSAZj/aXsTDWZ7+Qfc3oEHv3QFK4LN1CxEjwmnZShlRHG4ouVrTBCZ1ErDc2MBgp
+         Nm7a7n/3dx8D2FutupaSLQ6YLASsgWmykIkY+L4TXFyDmmCiTNHQwaiZLWWFN4EXNQIf
+         t+qenmAGgh/6+BMX5EETvdz5e6htw1RPjZ1ylmvFw3kz6diApJKJl8Wsn5rXhPkZwVGQ
+         8v2r2BgOwcSHHlbqxelYHcpO9M08c2F5YS2R7cOAF5yrw5erh6M/JWlOgQpxyq/RkYnH
+         DHElDyKuJO7rvryq7J4++qxXbiou06/TxL59K/YTsOEwJ8lXjhBKD9SXXhTCF5W4xQ6M
+         7g3w==
+X-Gm-Message-State: ANoB5pkKha4vcrfnZlvGOhpcJuGwo4GdBy6cR9CMhdjngyq2YKZJraR4
+	3Qcd1Fb/mRNhaYlMKUh0lyqj/w==
+X-Google-Smtp-Source: AA0mqf5N2d9ogullCgF1JnPN+hECXjdN3Z5dGfcxRdm3/DP5DYvUgL+R7DyNn7qGX2pqGQ9JTRjg5w==
+X-Received: by 2002:a05:600c:783:b0:3d1:bf7c:3923 with SMTP id z3-20020a05600c078300b003d1bf7c3923mr4282400wmo.4.1670585739038;
+        Fri, 09 Dec 2022 03:35:39 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:9b77:8930:5aaa:e9c4? ([2001:8b0:aba:5f3c:9b77:8930:5aaa:e9c4])
+        by smtp.gmail.com with ESMTPSA id z5-20020a05600c0a0500b003b4cba4ef71sm9551416wmp.41.2022.12.09.03.35.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Dec 2022 03:35:38 -0800 (PST)
+Message-ID: <36bdfd79eb715671f4e298b3ab5004a986ff8394.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH] cookerdata: Ensure layers use
  LAYERSERIES_COMPAT fairly
-Thread-Topic: [bitbake-devel] [PATCH] cookerdata: Ensure layers use
- LAYERSERIES_COMPAT fairly
-Thread-Index: AQHZCjpZrtTmL7HvLU6UbbRFvH7Saq5lV4QA
-Date: Fri, 9 Dec 2022 11:07:53 +0000
-Message-ID: <34f25e412b1d1f277e3f5e0915106f07ab0387b8.camel@phytec.de>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Stefan =?ISO-8859-1?Q?M=FCller-Klieser?= <S.Mueller-Klieser@phytec.de>, 
+	"bitbake-devel@lists.openembedded.org"
+	 <bitbake-devel@lists.openembedded.org>
+Date: Fri, 09 Dec 2022 11:35:37 +0000
+In-Reply-To: <34f25e412b1d1f277e3f5e0915106f07ab0387b8.camel@phytec.de>
 References: <20221207124913.2108579-1-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20221207124913.2108579-1-richard.purdie@linuxfoundation.org>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.0.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7F650A0A449F9A4AA0277E07FA7EBFBB@phytec.de>
-Content-Transfer-Encoding: base64
+	 <34f25e412b1d1f277e3f5e0915106f07ab0387b8.camel@phytec.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkkeLIzCtJLcpLzFFi42JZI8nAo8slPjnZYMFCRovrR0MtfjybyOrA
-	5LF/7hp2j3MbVzAGMEVx2aSk5mSWpRbp2yVwZXS03mEp2OJa8fRCK1sD4wXnLkYODgkBE4nf
-	hwy7GLk4hAQWM0ncW7eGFcK5zyhxc/ImZghnA6PE5kVX2EA62ASCJDZ9FwaJiwjMY5TYM3cV
-	UxcjJ4ewQJzEzVMt7CC2iEC8xK73D9ggbCOJK082g9ksAioSB5bdAavhFXCT6PiznhnEFhLw
-	lPjf+ZEFxOYU8JJ4vvceWA2jgKzEhg3nwWqYBcQlNj37zgpiSwgISCzZAxGXEBCVePn4H1Rc
-	XuLErWlMIHcyC2hKrN+lD9FqIbF45mYWCFtRYkr3Q6gTBCVOznzCMoFRbBaSDbMQumch6Z6F
-	pHsWku4FjKyrGIVyM5OzU4sys/UKMipLUpP1UlI3MYKiSYSBawdj3xyPQ4xMHIyHGCU4mJVE
-	eJctm5gsxJuSWFmVWpQfX1Sak1p8iFGag0VJnPd+D1OikEB6YklqdmpqQWoRTJaJg1OqgdHx
-	/P8AM7bL7pt2bl+zvc+jzz5TMt+6znx5dOpjznv2Ey2SMnibm7VO9ylZfUhX/K7h4XVu1unN
-	Gw68uqVlxhL2p//lfOf2qtyda2SX5wk7BP5Ryft34aGkddxeTYkX/0U/LO7LLFzCzVPKOlX5
-	0OeD8v95lBesaOT7e6tx54F48Svyrw/JVyqxFGckGmoxFxUnAgBTp/KLlAIAAA==
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 09 Dec 2022 11:08:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14160
+ <bitbake-devel@lists.openembedded.org>; Fri, 09 Dec 2022 11:35:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14161
 
-SGkgUmljaGFyZCwKCkFtIE1pdHR3b2NoLCBkZW0gMDcuMTIuMjAyMiB1bSAxMjo0OSArMDAwMCBz
-Y2hyaWViIFJpY2hhcmQgUHVyZGllOgo+ID4gU29tZSBsYXllcnMgdGhpbmsgdGhleSdyZSBnb2lu
-ZyB0byBiZSAnY2xldmVyJyBhbmQgY29weSB0aGUgdmFsdWVzIGZyb20KCmFzIEkgYW0gb25lIG9m
-IHRob3NlICJjbGV2ZXIiIGd1eXMuLi4KCj4gPiBhbm90aGVyIGxheWVyLCBlLmcuIHVzaW5nICR7
-TEFZRVJTRVJJRVNfQ09NUEFUX2NvcmV9LiBUaGUgd2hvbGUgcG9pbnQgb2YKPiA+IHRoaXMgbWVj
-aGFuaXNtIGlzIHRvIG1ha2UgaXQgY2xlYXIgd2hpY2ggcmVsZWFzZXMgYSBsYXllciBzdXBwb3J0
-cyBhbmQKCkZZSSB3ZSAiZGlzYWJsZWQiIHRoZSBtZWNoYW5pc20gYmVjYXVzZSBpdHMgbm90IGhl
-bHBpbmcgdXMuIFN1cHBvcnQgZm9yIHVzCm1lYW5zIGNvbW1pdCBsZXZlbCB2ZXJpZmljYXRpb24g
-Zm9yIGh3K3N3LCBzbyB3ZSBoYWQgdG8gaW1wbGVtZW50IHNvbWV0aGluZwplbHNlIGFueXdheS4K
-Cj4gPiBzaG93IHdoZW4gYSBsYXllciBtYXN0ZXIgYnJhbmNoIGlzIGJpdHJvdHRpbmcgYW5kIGlz
-IHVubWFpbnRhaW5lZC4KCkkgdW5kZXJzdGFuZCB0aGUgYXJndW1lbnQgZXNwZWNpYWxseSBmb3Ig
-bWFzdGVyCgo+ID4gCj4gPiBUaGVyZWZvcmUgYWRkIHNvbWUgY29kZSB0byBhdm9pZCBwZW9wbGUg
-ZG9pbmcgdGhpcy4gSSB3aXNoIHdlIGRpZG4ndCBoYXZlCj4gPiB0byBidXQuLi4KCkkganVzdCBu
-b3RpY2VkIGluIHRoZSBkb2N1bWVudGF0aW9uIHRoZSByZXF1aXJlbWVudCBmb3IgbGF5ZXIKY29t
-cGF0aWJsZSAyLjAsIGVuZm9yY2luZyB0aGF0IG1lY2hhbmlzbS4gSSB3aWxsIGZpeCBpdCBhc2Fw
-LgoKQXMsIEkgZ3Vlc3MsIHRoZXJlIGFyZSBtb3JlIGNhc2VzIGxpa2UgdGhhdCBpbiBvdXIgbGF5
-ZXIsIGZvcgp0aGUgZnV0dXJlLCBpbnN0ZWFkIG9mIGVuZm9yY2luZyBydWxlcyBvbiB0aGUgY29k
-ZSBsZXZlbCwgaXQgd291bGQKaGVscCB1cyBtb3JlIHRvIG1ha2UgdGhlIHlvY3RvIGNvbXBhdGli
-aWxpdHkgbGF5ZXIgcHJvZ3JhbSBtb3JlCmFjY2Vzc2libGUuIEkgdHJpZWQgc2V2ZXJhbCB0aW1l
-cyBvbiB0aGUgbWFuYWdlbWVudCBsZXZlbCB0bwpnZXQgaW50byB0aGUgcHJvZ3JhbSwgd2l0aG91
-dCBzdWNjZXNzLiBPdXIgY29tcGFueSBkaWQKbm90IGZpdCBpbnRvIHRoZSBleGlzdGluZyBjYXRl
-Z29yaWVzLiBJZiB5b3UgaGF2ZSBhbiBpZGVhIGluIHRoYXQKZGlyZWN0aW9uLCBhIFBNIHdvdWxk
-IGJlIGFwcHJlY2lhdGVkLgoKUmVnYXJkcywgU3RlZmFuCgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBSaWNoYXJkIFB1cmRpZSA8cmljaGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4KPiA+
-IC0tLQo+ID4gwqBsaWIvYmIvY29va2VyZGF0YS5weSB8IDI5ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKy0tCj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCspLCAyIGRlbGV0
-aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvbGliL2JiL2Nvb2tlcmRhdGEucHkgYi9saWIv
-YmIvY29va2VyZGF0YS5weQo+ID4gaW5kZXggMjhjYjU5ZDgzYS4uODYwOTY4ZjJlOCAxMDA2NDQK
-PiA+IC0tLSBhL2xpYi9iYi9jb29rZXJkYXRhLnB5Cj4gPiArKysgYi9saWIvYmIvY29va2VyZGF0
-YS5weQo+ID4gQEAgLTM4Myw2ICszODMsOCBAQCBjbGFzcyBDb29rZXJEYXRhQnVpbGRlcihvYmpl
-Y3QpOgo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGFyc2Vsb2cuY3JpdGlj
-YWwoIlBsZWFzZSBjaGVjayBCQkxBWUVSUyBpbiAlcyIgJSAobGF5ZXJjb25mKSkKPiA+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJhaXNlIGJiLkJCSGFuZGxlZEV4Y2VwdGlvbigp
-Cj4gPiDCoAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbGF5ZXJzZXJpZXMgPSBOb25lCj4g
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb21wYXRfZW50cmllcyA9IHt9Cj4gPiDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgZm9yIGxheWVyIGluIGxheWVyczoKPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHBhcnNlbG9nLmRlYnVnMigiQWRkaW5nIGxheWVyICVzIiwgbGF5
-ZXIpCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAnSE9NRScgaW4gYXBw
-cm92ZWQgYW5kICd+JyBpbiBsYXllcjoKPiA+IEBAIC0zOTUsNiArMzk3LDIzIEBAIGNsYXNzIENv
-b2tlckRhdGFCdWlsZGVyKG9iamVjdCk6Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBkYXRhLmV4cGFuZFZhcnJlZignTEFZRVJESVInKQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgZGF0YS5leHBhbmRWYXJyZWYoJ0xBWUVSRElSX1JFJykKPiA+IMKgCj4g
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICMgU2FkbHkgd2UgY2FuJ3QgaGF2ZSBu
-aWNlIHRoaW5ncy4KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBTb21lIGxh
-eWVycyB0aGluayB0aGV5J3JlIGdvaW5nIHRvIGJlICdjbGV2ZXInIGFuZCBjb3B5IHRoZSB2YWx1
-ZXMgZnJvbQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIGFub3RoZXIgbGF5
-ZXIsIGUuZy4gdXNpbmcgJHtMQVlFUlNFUklFU19DT01QQVRfY29yZX0uIFRoZSB3aG9sZSBwb2lu
-dCBvZgo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIHRoaXMgbWVjaGFuaXNt
-IGlzIHRvIG1ha2UgaXQgY2xlYXIgd2hpY2ggcmVsZWFzZXMgYSBsYXllciBzdXBwb3J0cyBhbmQK
-PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBzaG93IHdoZW4gYSBsYXllciBt
-YXN0ZXIgYnJhbmNoIGlzIGJpdHJvdHRpbmcgYW5kIGlzIHVubWFpbnRhaW5lZC4KPiA+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBXZSB0aGVyZWZvcmUgYXZvaWQgcGVvcGxlIGRv
-aW5nIHRoaXMgaGVyZS4KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29sbGVj
-dGlvbnMgPSAoZGF0YS5nZXRWYXIoJ0JCRklMRV9DT0xMRUNUSU9OUycpIG9yICIiKS5zcGxpdCgp
-Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZvciBjIGluIGNvbGxlY3Rpb25z
-Ogo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbXBhdF9lbnRy
-eSA9IGRhdGEuZ2V0VmFyKCJMQVlFUlNFUklFU19DT01QQVRfJXMiICUgYykKPiA+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBjb21wYXRfZW50cnk6Cj4gPiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb21wYXRfZW50cmll
-c1tjXSA9IHNldChjb21wYXRfZW50cnkuc3BsaXQoKSkKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRhdGEuZGVsVmFyKCJMQVlFUlNFUklFU19DT01Q
-QVRfJXMiICUgYykKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgbm90IGxh
-eWVyc2VyaWVzOgo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGxh
-eWVyc2VyaWVzID0gc2V0KChkYXRhLmdldFZhcigiTEFZRVJTRVJJRVNfQ09SRU5BTUVTIikgb3Ig
-IiIpLnNwbGl0KCkpCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-aWYgbGF5ZXJzZXJpZXM6Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBkYXRhLmRlbFZhcigiTEFZRVJTRVJJRVNfQ09SRU5BTUVTIikKPiA+ICsKPiA+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkYXRhLmRlbFZhcignTEFZRVJESVJfUkUnKQo+ID4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRhdGEuZGVsVmFyKCdMQVlFUkRJUicpCj4gPiDCoAo+
-ID4gQEAgLTQxNSwxMyArNDM0LDE3IEBAIGNsYXNzIENvb2tlckRhdGFCdWlsZGVyKG9iamVjdCk6
-Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgaW52YWxpZDoKPiA+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJiLmZhdGFsKCJCQkZJTEVTX0RZTkFNSUMgZW50cmllcyBt
-dXN0IGJlIG9mIHRoZSBmb3JtIHshfTxjb2xsZWN0aW9uIG5hbWU+OjxmaWxlbmFtZQo+ID4gcGF0
-dGVybj4sIG5vdDpcbsKgwqDCoCAlcyIgJSAiXG7CoMKgwqAgIi5qb2luKGludmFsaWQpKQo+ID4g
-wqAKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGxheWVyc2VyaWVzID0gc2V0KChkYXRhLmdl
-dFZhcigiTEFZRVJTRVJJRVNfQ09SRU5BTUVTIikgb3IgIiIpLnNwbGl0KCkpCj4gPiDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgY29sbGVjdGlvbnNfdG1wID0gY29sbGVjdGlvbnNbOl0KPiA+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmb3IgYyBpbiBjb2xsZWN0aW9uczoKPiA+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbGxlY3Rpb25zX3RtcC5yZW1vdmUoYykKPiA+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIGMgaW4gY29sbGVjdGlvbnNfdG1wOgo+
-ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBiYi5mYXRhbCgiRm91
-bmQgZHVwbGljYXRlZCBCQkZJTEVfQ09MTEVDVElPTlMgJyVzJywgY2hlY2sgYmJsYXllcnMuY29u
-ZiBvciBsYXllci5jb25mCj4gPiB0byBmaXggaXQuIiAlIGMpCj4gPiAtwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIGNvbXBhdCA9IHNldCgoZGF0YS5nZXRWYXIoIkxBWUVSU0VSSUVTX0NP
-TVBBVF8lcyIgJSBjKSBvciAiIikuc3BsaXQoKSkKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgY29tcGF0ID0gc2V0KCkKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgaWYgYyBpbiBjb21wYXRfZW50cmllczoKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBjb21wYXQgPSBjb21wYXRfZW50cmllc1tjXQo+ID4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBjb21wYXQ6Cj4gPiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGF0YS5kZWxWYXIoIkxBWUVSU0VSSUVTX0NPTVBBVF8l
-cyIgJSBjKQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgY29tcGF0IGFu
-ZCBub3QgbGF5ZXJzZXJpZXM6Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIGJiLmZhdGFsKCJObyBjb3JlIGxheWVyIGZvdW5kIHRvIHdvcmsgd2l0aCBsYXllciAn
-JXMnLiBNaXNzaW5nIGVudHJ5IGluCj4gPiBiYmxheWVycy5jb25mPyIKPiA+ICUgYykKPiA+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIGNvbXBhdCBhbmQgbm90IChjb21wYXQg
-JiBsYXllcnNlcmllcyk6Cj4gPiBAQCAtNDMwLDYgKzQ1Myw4IEBAIGNsYXNzIENvb2tlckRhdGFC
-dWlsZGVyKG9iamVjdCk6Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbGlm
-IG5vdCBjb21wYXQgYW5kIG5vdCBkYXRhLmdldFZhcigiQkJfV09SS0VSQ09OVEVYVCIpOgo+ID4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBiYi53YXJuKCJMYXllciAl
-cyBzaG91bGQgc2V0IExBWUVSU0VSSUVTX0NPTVBBVF8lcyBpbiBpdHMgY29uZi9sYXllci5jb25m
-IGZpbGUgdG8KPiA+IGxpc3QKPiA+IHRoZSBjb3JlIGxheWVyIG5hbWVzIGl0IGlzIGNvbXBhdGli
-bGUgd2l0aC4iICUgKGMsIGMpKQo+ID4gwqAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRh
-dGEuc2V0VmFyKCJMQVlFUlNFUklFU19DT1JFTkFNRVMiLCAiICIuam9pbihsYXllcnNlcmllcykp
-Cj4gPiArCj4gPiDCoMKgwqDCoMKgwqDCoMKgIGlmIG5vdCBkYXRhLmdldFZhcigiQkJQQVRIIik6
-Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbXNnID0gIlRoZSBCQlBBVEggdmFyaWFibGUg
-aXMgbm90IHNldCIKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBub3QgbGF5ZXJjb25m
-Ogo+ID4gCj4gPiAtPS09LT0tPS09LT0tPS09LT0tPS09LQo+ID4gTGlua3M6IFlvdSByZWNlaXZl
-IGFsbCBtZXNzYWdlcyBzZW50IHRvIHRoaXMgZ3JvdXAuCj4gPiBWaWV3L1JlcGx5IE9ubGluZSAo
-IzE0MTQxKTogaHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC9t
-ZXNzYWdlLzE0MTQxCj4gPiBNdXRlIFRoaXMgVG9waWM6IGh0dHBzOi8vbGlzdHMub3BlbmVtYmVk
-ZGVkLm9yZy9tdC85NTUxNDQyOS8zNjE3MTU5Cj4gPiBHcm91cCBPd25lcjogYml0YmFrZS1kZXZl
-bCtvd25lckBsaXN0cy5vcGVuZW1iZWRkZWQub3JnCj4gPiBVbnN1YnNjcmliZTogaHR0cHM6Ly9s
-aXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC91bnN1YsKgW1MuTXVlbGxlci1L
-bGllc2VyQHBoeXRlYy5kZV0KPiA+IC09LT0tPS09LT0tPS09LT0tPS09LT0tCj4gPiAK
+Hi Stefan,
+
+On Fri, 2022-12-09 at 11:07 +0000, Stefan M=C3=BCller-Klieser wrote:
+> Am Mittwoch, dem 07.12.2022 um 12:49 +0000 schrieb Richard Purdie:
+> > > Some layers think they're going to be 'clever' and copy the values fr=
+om
+>=20
+> as I am one of those "clever" guys...
+
+One of them, yes. You're not the only ones and the widespread adoption
+of this was a big part of the concern.
+
+>=20
+> > > another layer, e.g. using ${LAYERSERIES_COMPAT_core}. The whole point=
+ of
+> > > this mechanism is to make it clear which releases a layer supports an=
+d
+>=20
+> FYI we "disabled" the mechanism because its not helping us. Support for u=
+s
+> means commit level verification for hw+sw, so we had to implement somethi=
+ng
+> else anyway.
+
+What you did was remove the indications of which releases your
+layer/branch was compatible with. I understand you may want to do other
+things as well but bypassing the checks really isn't in the spirit of
+what we were trying to do.
+
+> > > show when a layer master branch is bitrotting and is unmaintained.
+>=20
+> I understand the argument especially for master
+
+There are a lot of layers out there which it is unclear what they're
+compatible with and I do think having layers clearly indicate
+compatibility (or not) with a given release series is a good thing.
+
+> > > Therefore add some code to avoid people doing this. I wish we didn't =
+have
+> > > to but...
+>=20
+> I just noticed in the documentation the requirement for layer
+> compatible 2.0, enforcing that mechanism. I will fix it asap.
+>=20
+> As, I guess, there are more cases like that in our layer, for
+> the future, instead of enforcing rules on the code level, it would
+> help us more to make the yocto compatibility layer program more
+> accessible. I tried several times on the management level to
+> get into the program, without success. Our company did
+> not fit into the existing categories. If you have an idea in that
+> direction, a PM would be appreciated.
+
+To use the Yocto Project Compatible branding/badge you need to be a
+member however you do not need to be a member to run the yocto-check-
+layer script yourself. You can say that the script passes, or to run it
+in automated CI and publish the result without any membership
+requirement.=C2=A0
+
+Is there something else we should be doing to make this more
+accessible? I'd be interested in what options could make membership
+more attractive to your management if you have any ideas.
+
+Cheers,
+
+Richard
+
+
 
