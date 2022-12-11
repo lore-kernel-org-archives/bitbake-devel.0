@@ -2,190 +2,128 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18075C4332F
-	for <webhook@archiver.kernel.org>; Sun, 11 Dec 2022 16:12:54 +0000 (UTC)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web10.20125.1670775169265585154
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FB3C4332F
+	for <webhook@archiver.kernel.org>; Sun, 11 Dec 2022 16:13:33 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web11.19911.1670775203633125216
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 11 Dec 2022 08:12:49 -0800
+ Sun, 11 Dec 2022 08:13:23 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Go4HOtrh;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f48.google.com with SMTP id u12so9657813wrr.11
-        for <bitbake-devel@lists.openembedded.org>; Sun, 11 Dec 2022 08:12:49 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NOGshKsT;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f53.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so3191653wms.2
+        for <bitbake-devel@lists.openembedded.org>; Sun, 11 Dec 2022 08:13:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Tyimkye4JWGOFE6+DRsvxw2D60Ldem5gDb+iuzijmg=;
-        b=Go4HOtrhVZWITR6ilFh5k9mNVM/bJjULh1Sg0u78ajSC0J8rY1BibX2QgdzBFCorRa
-         tche0sWlrUCf6XInMEx0do+Xh5tRIhziApTCc9jD0NHY4SmL9dmtI82mSyDYCjPKTAOI
-         bd9c8eS22T8LATDCPVRyQEMviOzx971xKOdSk=
+        bh=WFawhiAhxrhKINfkzoggWK9OkLYGcUpFD4KHJ3NucBo=;
+        b=NOGshKsTdvSamNlMZPcbLzusl8iPhjkrNPyrqYhbPhx0TVkBbV7/YSIZoazlgE6Ax3
+         +XZwUInzSvKbxuJ/3WdiadUbLS5kIyPGyWoU2w+LcMLJLDauTwTFq+PWqxRy6xKwpgXh
+         tsGhNgWZMMl8AQY2Zbao9rRFpqkX/+zoIQQDs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Tyimkye4JWGOFE6+DRsvxw2D60Ldem5gDb+iuzijmg=;
-        b=YBDoyVm08FQIL+xawhL76gGjkR36duuU3844UEyJrqa8lFKF0vEhXJQUkEOtlrfDOw
-         YxaDVhScPJZc+yXzK4chyGVr5O7tdezy5029c9nk3DdJs5ozTV6TeATAClrumzpzMQ6s
-         JOMKHqY661jH4Z0my2d7x1ImtXibq7mcyAolg3b5X+lcBfsaQ1qr/pJSz43OcQ1D69hc
-         bIqmqbW40Xiz85D+89D3RGjVHX16b46VcrTL3W77Tu0KurOGN2i9MgYbhAjc3Dj0xREy
-         lt2gFz0BwvFJNqL95WiAS+ToosgZVVan4Dd0ZbdNzz96vwsbTogXDrcuWUf9xQZgFH4Q
-         5jQQ==
-X-Gm-Message-State: ANoB5pkh2QpisqkqyOn4gg/4enwVA3zmQ9lenkNFj+9OIgRwPQa4IrvW
-	1cBqPXNkJ8p4AB3aqWYmKZ31T8ghYDN1Lre5
-X-Google-Smtp-Source: AA0mqf5K0FmaBA/Xg9owuc5ppPVrH6GTma4fgfFaT4snmzktPyazWe2Ts/jqJvYq0RuQ11YkdKQyyg==
-X-Received: by 2002:adf:f58b:0:b0:242:5d8e:6c34 with SMTP id f11-20020adff58b000000b002425d8e6c34mr7965117wro.32.1670775167549;
-        Sun, 11 Dec 2022 08:12:47 -0800 (PST)
+        bh=WFawhiAhxrhKINfkzoggWK9OkLYGcUpFD4KHJ3NucBo=;
+        b=tFLWX6L+01uekATFd2SqDLryX+wFg4vKf9U8XZfet+fnAbDswJjr9NzRUh197zwpBG
+         5+aIasxKOdwVyuPi4I+dKo0vUwpnycFPYdvZaNq/3sEodequThD0EmUpz+n5WmYWta87
+         fxIHWzmrFD9xe/N19e5CfrDqX0RH1+Om3YYNRAoQdulA+A7sCt4bI6+kaIJRYB8nQqnr
+         K3PFQAmrixM0FMnE0BVTIsM42qeXsxHJiHbwqmvDdNzIDS4UqmbjyZoa03Dko6L8DByy
+         aOAZzRkeGZGz27hdBbXizJvS7CIwPxcO0k+fRDqL+ycNQkCcp1gshDRIkX9Y3XW2RLhN
+         1kFA==
+X-Gm-Message-State: ANoB5pncOaC8o82tDT2I2gM1WFZZvAtQhV/ak4FgwK0TSlSXctYmBnp7
+	KJGO6lLGB4CY31PzR6H73lfbBFvYja1ZXNUF
+X-Google-Smtp-Source: AA0mqf77f9Bf2fnHhcZpdigOFjpyHGhKBrP2YUZebhykggYWSysi5L3QdpQI2la7U9wS0Ha7WKafXw==
+X-Received: by 2002:a05:600c:2101:b0:3cf:e850:4451 with SMTP id u1-20020a05600c210100b003cfe8504451mr10254652wml.9.1670775201811;
+        Sun, 11 Dec 2022 08:13:21 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:db5:b2f0:a022:4502])
-        by smtp.gmail.com with ESMTPSA id bp8-20020a5d5a88000000b00241e8d00b79sm8371900wrb.54.2022.12.11.08.12.46
+        by smtp.gmail.com with ESMTPSA id bp3-20020a5d5a83000000b002415dd45320sm6561018wrb.112.2022.12.11.08.13.21
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Dec 2022 08:12:47 -0800 (PST)
+        Sun, 11 Dec 2022 08:13:21 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] siggen: Drop non-multiconfig aware siggen support
-Date: Sun, 11 Dec 2022 16:12:46 +0000
-Message-Id: <20221211161246.17726-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] build/siggen/runqueue: Drop do_setscene references
+Date: Sun, 11 Dec 2022 16:13:20 +0000
+Message-Id: <20221211161320.17794-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 11 Dec 2022 16:12:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14169
+ <bitbake-devel@lists.openembedded.org>; Sun, 11 Dec 2022 16:13:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14170
 
-All siggens in common use should now support multiconfig, drop the
-compatibility code.
+do_setscene was from a different era before our modern setscene
+per task code. It hasn't been used for years so remove some old
+obsolete references to it.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py       |  8 +++----
- lib/bb/siggen.py         | 49 ----------------------------------------
- lib/bb/tests/runqueue.py |  2 +-
- 3 files changed, 4 insertions(+), 55 deletions(-)
+ lib/bb/build.py    | 6 +++---
+ lib/bb/runqueue.py | 2 +-
+ lib/bb/siggen.py   | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index db706d0a3a..5ac191647c 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -782,7 +782,7 @@ def stamp_internal(taskname, d, file_name, baseonly=False, noextra=False):
+     When called in task context, d will be a data store, file_name will not be set
+     """
+     taskflagname = taskname
+-    if taskname.endswith("_setscene") and taskname != "do_setscene":
++    if taskname.endswith("_setscene"):
+         taskflagname = taskname.replace("_setscene", "")
+ 
+     if file_name:
+@@ -818,7 +818,7 @@ def stamp_cleanmask_internal(taskname, d, file_name):
+     When called in task context, d will be a data store, file_name will not be set
+     """
+     taskflagname = taskname
+-    if taskname.endswith("_setscene") and taskname != "do_setscene":
++    if taskname.endswith("_setscene"):
+         taskflagname = taskname.replace("_setscene", "")
+ 
+     if file_name:
+@@ -865,7 +865,7 @@ def make_stamp(task, d, file_name = None):
+ 
+     # If we're in task context, write out a signature file for each task
+     # as it completes
+-    if not task.endswith("_setscene") and task != "do_setscene" and not file_name:
++    if not task.endswith("_setscene") and not file_name:
+         stampbase = stamp_internal(task, d, None, True)
+         file_name = d.getVar('BB_FILENAME')
+         bb.parse.siggen.dump_sigtask(file_name, task, stampbase, True)
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index cc36b84781..7451e5c56b 100644
+index 7451e5c56b..63cce8184f 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -1245,9 +1245,8 @@ class RunQueueData:
-         return len(self.runtaskentries)
+@@ -1408,7 +1408,7 @@ class RunQueue:
+             logger.debug2("%s.%s is nostamp\n", fn, taskname)
+             return False
  
-     def prepare_task_hash(self, tid):
--        dc = bb.parse.siggen.get_data_caches(self.dataCaches, mc_from_tid(tid))
--        bb.parse.siggen.prep_taskhash(tid, self.runtaskentries[tid].depends, dc)
--        self.runtaskentries[tid].hash = bb.parse.siggen.get_taskhash(tid, self.runtaskentries[tid].depends, dc)
-+        bb.parse.siggen.prep_taskhash(tid, self.runtaskentries[tid].depends, self.dataCaches)
-+        self.runtaskentries[tid].hash = bb.parse.siggen.get_taskhash(tid, self.runtaskentries[tid].depends, self.dataCaches)
-         self.runtaskentries[tid].unihash = bb.parse.siggen.get_unihash(tid)
+-        if taskname != "do_setscene" and taskname.endswith("_setscene"):
++        if taskname.endswith("_setscene"):
+             return True
  
-     def dump_data(self):
-@@ -2434,8 +2433,7 @@ class RunQueueExecute:
-                 if self.rqdata.runtaskentries[p].depends and not self.rqdata.runtaskentries[tid].depends.isdisjoint(total):
-                     continue
-                 orighash = self.rqdata.runtaskentries[tid].hash
--                dc = bb.parse.siggen.get_data_caches(self.rqdata.dataCaches, mc_from_tid(tid))
--                newhash = bb.parse.siggen.get_taskhash(tid, self.rqdata.runtaskentries[tid].depends, dc)
-+                newhash = bb.parse.siggen.get_taskhash(tid, self.rqdata.runtaskentries[tid].depends, self.rqdata.dataCaches)
-                 origuni = self.rqdata.runtaskentries[tid].unihash
-                 newuni = bb.parse.siggen.get_unihash(tid)
-                 # FIXME, need to check it can come from sstate at all for determinism?
+         if cache is None:
 diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 3731cd6b69..be56b3a31c 100644
+index be56b3a31c..cdf7d03a34 100644
 --- a/lib/bb/siggen.py
 +++ b/lib/bb/siggen.py
-@@ -53,11 +53,6 @@ class SignatureGenerator(object):
-     """
-     name = "noop"
+@@ -429,7 +429,7 @@ class SignatureGeneratorBasicHash(SignatureGeneratorBasic):
+         return self.basehash[tid]
  
--    # If the derived class supports multiconfig datacaches, set this to True
--    # The default is False for backward compatibility with derived signature
--    # generators that do not understand multiconfig caches
--    supports_multiconfig_datacaches = False
--
-     def __init__(self, data):
-         self.basehash = {}
-         self.taskhash = {}
-@@ -128,38 +123,6 @@ class SignatureGenerator(object):
-     def set_setscene_tasks(self, setscene_tasks):
-         return
- 
--    @classmethod
--    def get_data_caches(cls, dataCaches, mc):
--        """
--        This function returns the datacaches that should be passed to signature
--        generator functions. If the signature generator supports multiconfig
--        caches, the entire dictionary of data caches is sent, otherwise a
--        special proxy is sent that support both index access to all
--        multiconfigs, and also direct access for the default multiconfig.
--
--        The proxy class allows code in this class itself to always use
--        multiconfig aware code (to ease maintenance), but derived classes that
--        are unaware of multiconfig data caches can still access the default
--        multiconfig as expected.
--
--        Do not override this function in derived classes; it will be removed in
--        the future when support for multiconfig data caches is mandatory
--        """
--        class DataCacheProxy(object):
--            def __init__(self):
--                pass
--
--            def __getitem__(self, key):
--                return dataCaches[key]
--
--            def __getattr__(self, name):
--                return getattr(dataCaches[mc], name)
--
--        if cls.supports_multiconfig_datacaches:
--            return dataCaches
--
--        return DataCacheProxy()
--
-     def exit(self):
-         return
- 
-@@ -298,11 +261,6 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         for dep in sorted(deps, key=clean_basepath):
-             (depmc, _, _, depmcfn) = bb.runqueue.split_tid_mcfn(dep)
-             depname = dataCaches[depmc].pkg_fn[depmcfn]
--            if not self.supports_multiconfig_datacaches and mc != depmc:
--                # If the signature generator doesn't understand multiconfig
--                # data caches, any dependency not in the same multiconfig must
--                # be skipped for backward compatibility
--                continue
-             if not self.rundep_check(fn, recipename, task, dep, depname, dataCaches):
-                 continue
-             if dep not in self.taskhash:
-@@ -726,13 +684,6 @@ class SignatureGeneratorTestEquivHash(SignatureGeneratorUniHashMixIn, SignatureG
-         self.server = data.getVar('BB_HASHSERVE')
-         self.method = "sstate_output_hash"
- 
--#
--# Dummy class used for bitbake-selftest
--#
--class SignatureGeneratorTestMulticonfigDepends(SignatureGeneratorBasicHash):
--    name = "TestMulticonfigDepends"
--    supports_multiconfig_datacaches = True
--
- def dump_this_task(outfile, d):
-     import bb.parse
-     fn = d.getVar("BB_FILENAME")
-diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
-index 061a5a1f80..cc87e8d6a8 100644
---- a/lib/bb/tests/runqueue.py
-+++ b/lib/bb/tests/runqueue.py
-@@ -288,7 +288,7 @@ class RunQueueTests(unittest.TestCase):
-         with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-             extraenv = {
-                 "BBMULTICONFIG" : "mc-1 mc_2",
--                "BB_SIGNATURE_HANDLER" : "TestMulticonfigDepends",
-+                "BB_SIGNATURE_HANDLER" : "basichash",
-                 "EXTRA_BBFILES": "${COREBASE}/recipes/fails-mc/*.bb",
-             }
-             tasks = self.run_bitbakecmd(["bitbake", "mc:mc-1:f1"], tempdir, "", extraenv=extraenv, cleanup=True)
+     def stampfile(self, stampbase, fn, taskname, extrainfo, clean=False):
+-        if taskname != "do_setscene" and taskname.endswith("_setscene"):
++        if taskname.endswith("_setscene"):
+             tid = fn + ":" + taskname[:-9]
+         else:
+             tid = fn + ":" + taskname
 -- 
 2.37.2
 
