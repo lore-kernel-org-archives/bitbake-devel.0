@@ -2,128 +2,214 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FB3C4332F
-	for <webhook@archiver.kernel.org>; Sun, 11 Dec 2022 16:13:33 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web11.19911.1670775203633125216
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E558C4167B
+	for <webhook@archiver.kernel.org>; Sun, 11 Dec 2022 17:26:04 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web10.21904.1670779562634862616
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 11 Dec 2022 08:13:23 -0800
+ Sun, 11 Dec 2022 09:26:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NOGshKsT;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f53.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so3191653wms.2
-        for <bitbake-devel@lists.openembedded.org>; Sun, 11 Dec 2022 08:13:23 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bByg9hiY;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f44.google.com with SMTP id o15so3385549wmr.4
+        for <bitbake-devel@lists.openembedded.org>; Sun, 11 Dec 2022 09:26:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WFawhiAhxrhKINfkzoggWK9OkLYGcUpFD4KHJ3NucBo=;
-        b=NOGshKsTdvSamNlMZPcbLzusl8iPhjkrNPyrqYhbPhx0TVkBbV7/YSIZoazlgE6Ax3
-         +XZwUInzSvKbxuJ/3WdiadUbLS5kIyPGyWoU2w+LcMLJLDauTwTFq+PWqxRy6xKwpgXh
-         tsGhNgWZMMl8AQY2Zbao9rRFpqkX/+zoIQQDs=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LzJKhI5x2wM0KlfreQ/LG9B3ZKXbCajAiy2YsNECXeQ=;
+        b=bByg9hiYylQSbUWir1krn8blXzF+1BHLsTm65J0P0VO1ClDa1jOoe4vjwUxSgV9KCP
+         iAs95O4QA+En+JZ09CvGV6w8rRjXZd2lpss+LSzJffbV3JSBdSoQRkhFvCLaXuv4Ku0z
+         l6qZugqMVKD3o3tbZrlbUba2445+feIwU9E3A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WFawhiAhxrhKINfkzoggWK9OkLYGcUpFD4KHJ3NucBo=;
-        b=tFLWX6L+01uekATFd2SqDLryX+wFg4vKf9U8XZfet+fnAbDswJjr9NzRUh197zwpBG
-         5+aIasxKOdwVyuPi4I+dKo0vUwpnycFPYdvZaNq/3sEodequThD0EmUpz+n5WmYWta87
-         fxIHWzmrFD9xe/N19e5CfrDqX0RH1+Om3YYNRAoQdulA+A7sCt4bI6+kaIJRYB8nQqnr
-         K3PFQAmrixM0FMnE0BVTIsM42qeXsxHJiHbwqmvDdNzIDS4UqmbjyZoa03Dko6L8DByy
-         aOAZzRkeGZGz27hdBbXizJvS7CIwPxcO0k+fRDqL+ycNQkCcp1gshDRIkX9Y3XW2RLhN
-         1kFA==
-X-Gm-Message-State: ANoB5pncOaC8o82tDT2I2gM1WFZZvAtQhV/ak4FgwK0TSlSXctYmBnp7
-	KJGO6lLGB4CY31PzR6H73lfbBFvYja1ZXNUF
-X-Google-Smtp-Source: AA0mqf77f9Bf2fnHhcZpdigOFjpyHGhKBrP2YUZebhykggYWSysi5L3QdpQI2la7U9wS0Ha7WKafXw==
-X-Received: by 2002:a05:600c:2101:b0:3cf:e850:4451 with SMTP id u1-20020a05600c210100b003cfe8504451mr10254652wml.9.1670775201811;
-        Sun, 11 Dec 2022 08:13:21 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LzJKhI5x2wM0KlfreQ/LG9B3ZKXbCajAiy2YsNECXeQ=;
+        b=7Mp1sYUdi35dcp2npW/kAinMttWHln1oLoTZm8MTmR8eZWIlq3OoA40x4FVOYHyjPr
+         N+mOfjwuSN5S4SiWtRddZquj7oBSWcCDENFUOI7dSkGti7t8frytFDfxFupmBrpFvcXm
+         35uQQwAJ3YP6eS4N1bevi8OvHwuCSM4WCi6B/QGqp8GClogIfXU8DZFNCX7ARp2brYn8
+         gzn/+t4NxJ+q28uUBOr1YYLyLivwCCeV9CE5jsVN3QS5QwW5QAoRdmqZ8Y6Dhyot4dL0
+         lBFphCqO7B01w2tk2DyAAZphbP8ChSZi5XKCIE+8lX680131SRbBJQLFm2rZAD4tO4oS
+         06Cg==
+X-Gm-Message-State: ANoB5pmIOLV/5Sr4e9STtyaOSMK0FgdLLU+VvIna/UOK8wMMi/SMfUt+
+	+b2FlhF70yGGRWMVxt3F9/VKPebz6pB1rs6V
+X-Google-Smtp-Source: AA0mqf43XFGqBhs5XBUff/YirtDISBq4f5TJnESGFy+Yrk1rixLDfWo+4NSlQIcmLk+rzrs+BoFkoA==
+X-Received: by 2002:a05:600c:3d12:b0:3cf:7903:5646 with SMTP id bh18-20020a05600c3d1200b003cf79035646mr10655804wmb.24.1670779560978;
+        Sun, 11 Dec 2022 09:26:00 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:db5:b2f0:a022:4502])
-        by smtp.gmail.com with ESMTPSA id bp3-20020a5d5a83000000b002415dd45320sm6561018wrb.112.2022.12.11.08.13.21
+        by smtp.gmail.com with ESMTPSA id l6-20020a1c7906000000b003cf4eac8e80sm7592804wme.23.2022.12.11.09.26.00
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Dec 2022 08:13:21 -0800 (PST)
+        Sun, 11 Dec 2022 09:26:00 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] build/siggen/runqueue: Drop do_setscene references
-Date: Sun, 11 Dec 2022 16:13:20 +0000
-Message-Id: <20221211161320.17794-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/4] siggen/runqueue: Switch to using RECIPE_SIGGEN_INFO feature for signature dumping
+Date: Sun, 11 Dec 2022 17:25:55 +0000
+Message-Id: <20221211172557.21956-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20221211172557.21956-1-richard.purdie@linuxfoundation.org>
+References: <20221211172557.21956-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 11 Dec 2022 16:13:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14170
+ <bitbake-devel@lists.openembedded.org>; Sun, 11 Dec 2022 17:26:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14172
 
-do_setscene was from a different era before our modern setscene
-per task code. It hasn't been used for years so remove some old
-obsolete references to it.
+Now that we have cache support for the taskdep/gendep/lookupcache data,
+we can switch to use that cooker feature and skip the secondary reparse to
+write the sig files. This does make the initial parse longer but means the
+secondary one isn't needed.
+
+At present parsing with the larger cache isn't optimal but we have plans
+in place which will make this faster than the current reparse code being
+removed here.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/build.py    | 6 +++---
- lib/bb/runqueue.py | 2 +-
- lib/bb/siggen.py   | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ lib/bb/main.py     |  5 +++++
+ lib/bb/runqueue.py | 34 ++++++----------------------------
+ lib/bb/siggen.py   | 39 +++++++++++++++++++--------------------
+ 3 files changed, 30 insertions(+), 48 deletions(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index db706d0a3a..5ac191647c 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -782,7 +782,7 @@ def stamp_internal(taskname, d, file_name, baseonly=False, noextra=False):
-     When called in task context, d will be a data store, file_name will not be set
-     """
-     taskflagname = taskname
--    if taskname.endswith("_setscene") and taskname != "do_setscene":
-+    if taskname.endswith("_setscene"):
-         taskflagname = taskname.replace("_setscene", "")
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index 1e38d04bcf..ee12256bc8 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -395,6 +395,11 @@ def setup_bitbake(configParams, extrafeatures=None):
+         # In status only mode there are no logs and no UI
+         logger.addHandler(handler)
  
-     if file_name:
-@@ -818,7 +818,7 @@ def stamp_cleanmask_internal(taskname, d, file_name):
-     When called in task context, d will be a data store, file_name will not be set
-     """
-     taskflagname = taskname
--    if taskname.endswith("_setscene") and taskname != "do_setscene":
-+    if taskname.endswith("_setscene"):
-         taskflagname = taskname.replace("_setscene", "")
- 
-     if file_name:
-@@ -865,7 +865,7 @@ def make_stamp(task, d, file_name = None):
- 
-     # If we're in task context, write out a signature file for each task
-     # as it completes
--    if not task.endswith("_setscene") and task != "do_setscene" and not file_name:
-+    if not task.endswith("_setscene") and not file_name:
-         stampbase = stamp_internal(task, d, None, True)
-         file_name = d.getVar('BB_FILENAME')
-         bb.parse.siggen.dump_sigtask(file_name, task, stampbase, True)
++    if configParams.dump_signatures:
++        if extrafeatures is None:
++            extrafeatures = []
++        extrafeatures.append(bb.cooker.CookerFeatures.RECIPE_SIGGEN_INFO)
++
+     if configParams.server_only:
+         featureset = []
+         ui_module = None
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 7451e5c56b..63cce8184f 100644
+index 991aa94f67..3f9c131fa0 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -1408,7 +1408,7 @@ class RunQueue:
-             logger.debug2("%s.%s is nostamp\n", fn, taskname)
-             return False
+@@ -1608,39 +1608,17 @@ class RunQueue:
+         else:
+             self.rqexe.finish()
  
--        if taskname != "do_setscene" and taskname.endswith("_setscene"):
-+        if taskname.endswith("_setscene"):
-             return True
+-    def rq_dump_sigfn(self, fn, options):
+-        mc = bb.runqueue.mc_from_tid(fn)
+-        the_data = self.cooker.databuilder.parseRecipe(fn, self.cooker.collections[mc].get_file_appends(fn))
+-        siggen = bb.parse.siggen
+-        dataCaches = self.rqdata.dataCaches
+-        siggen.dump_sigfn(fn, dataCaches, options)
+-
+     def dump_signatures(self, options):
+-        fns = set()
+-        bb.note("Reparsing files to collect dependency data")
++        if bb.cooker.CookerFeatures.RECIPE_SIGGEN_INFO not in self.cooker.featureset:
++            bb.fatal("The dump signatures functionality needs the RECIPE_SIGGEN_INFO feature enabled")
  
-         if cache is None:
++        bb.note("Writing task signature files")
+         for tid in self.rqdata.runtaskentries:
+-            fn = fn_from_tid(tid)
+-            fns.add(fn)
+-
+-        max_process = int(self.cfgData.getVar("BB_NUMBER_PARSE_THREADS") or os.cpu_count() or 1)
+-        # We cannot use the real multiprocessing.Pool easily due to some local data
+-        # that can't be pickled. This is a cheap multi-process solution.
+-        launched = []
+-        while fns:
+-            if len(launched) < max_process:
+-                p = Process(target=self.rq_dump_sigfn, args=(fns.pop(), options))
+-                p.start()
+-                launched.append(p)
+-            for q in launched:
+-                # The finished processes are joined when calling is_alive()
+-                if not q.is_alive():
+-                    launched.remove(q)
+-        for p in launched:
+-                p.join()
++            (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
++            dataCaches = self.rqdata.dataCaches
++            bb.parse.siggen.dump_sigtask(taskfn, taskname, dataCaches[mc].stamp[fn], True)
+ 
+         bb.parse.siggen.dump_sigs(self.rqdata.dataCaches, options)
+-
+         return
+ 
+     def print_diffscenetasks(self):
 diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index be56b3a31c..cdf7d03a34 100644
+index e57f1ffe69..6b73843c67 100644
 --- a/lib/bb/siggen.py
 +++ b/lib/bb/siggen.py
-@@ -429,7 +429,7 @@ class SignatureGeneratorBasicHash(SignatureGeneratorBasic):
-         return self.basehash[tid]
+@@ -335,8 +335,8 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         self.unihash_cache.copyfile(targetdir)
  
-     def stampfile(self, stampbase, fn, taskname, extrainfo, clean=False):
--        if taskname != "do_setscene" and taskname.endswith("_setscene"):
-+        if taskname.endswith("_setscene"):
-             tid = fn + ":" + taskname[:-9]
-         else:
-             tid = fn + ":" + taskname
+     def dump_sigtask(self, fn, task, stampbase, runtime):
+-
+         tid = fn + ":" + task
++        mc = bb.runqueue.mc_from_tid(fn)
+         referencestamp = stampbase
+         if isinstance(runtime, str) and runtime.startswith("customfile"):
+             sigfile = stampbase
+@@ -353,16 +353,27 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         data['task'] = task
+         data['basehash_ignore_vars'] = self.basehash_ignore_vars
+         data['taskhash_ignore_tasks'] = self.taskhash_ignore_tasks
+-        data['taskdeps'] = self.taskdeps[fn][task]
++        if hasattr(self, "datacaches"):
++            data['taskdeps'] = self.datacaches[mc].siggen_taskdeps[fn][task]
++        else:
++            data['taskdeps'] = self.taskdeps[fn][task]
+         data['basehash'] = self.basehash[tid]
+         data['gendeps'] = {}
+         data['varvals'] = {}
+-        data['varvals'][task] = self.lookupcache[fn][task]
+-        for dep in self.taskdeps[fn][task]:
+-            if dep in self.basehash_ignore_vars:
+-                continue
+-            data['gendeps'][dep] = self.gendeps[fn][dep]
+-            data['varvals'][dep] = self.lookupcache[fn][dep]
++        if hasattr(self, "datacaches"):
++            data['varvals'][task] = self.datacaches[mc].siggen_varvals[fn][task]
++            for dep in self.datacaches[mc].siggen_taskdeps[fn][task]:
++                if dep in self.basehash_ignore_vars:
++                   continue
++                data['gendeps'][dep] = self.datacaches[mc].siggen_gendeps[fn][dep]
++                data['varvals'][dep] = self.datacaches[mc].siggen_varvals[fn][dep]
++        else:
++            data['varvals'][task] = self.lookupcache[fn][task]
++            for dep in self.taskdeps[fn][task]:
++                if dep in self.basehash_ignore_vars:
++                    continue
++                data['gendeps'][dep] = self.gendeps[fn][dep]
++                data['varvals'][dep] = self.lookupcache[fn][dep]
+ 
+         if runtime and tid in self.taskhash:
+             data['runtaskdeps'] = self.runtaskdeps[tid]
+@@ -409,18 +420,6 @@ class SignatureGeneratorBasic(SignatureGenerator):
+                 pass
+             raise err
+ 
+-    def dump_sigfn(self, fn, dataCaches, options):
+-        if fn in self.taskdeps:
+-            for task in self.taskdeps[fn]:
+-                tid = fn + ":" + task
+-                mc = bb.runqueue.mc_from_tid(tid)
+-                if tid not in self.taskhash:
+-                    continue
+-                if dataCaches[mc].basetaskhash[tid] != self.basehash[tid]:
+-                    bb.error("Bitbake's cached basehash does not match the one we just generated (%s)!" % tid)
+-                    bb.error("The mismatched hashes were %s and %s" % (dataCaches[mc].basetaskhash[tid], self.basehash[tid]))
+-                self.dump_sigtask(fn, task, dataCaches[mc].stamp[fn], True)
+-
+ class SignatureGeneratorBasicHash(SignatureGeneratorBasic):
+     name = "basichash"
+ 
 -- 
 2.37.2
 
