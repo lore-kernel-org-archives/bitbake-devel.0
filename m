@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64DAC4332F
-	for <webhook@archiver.kernel.org>; Tue, 13 Dec 2022 19:40:19 +0000 (UTC)
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
- by mx.groups.io with SMTP id smtpd.web10.83594.1670960416703956562
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488C1C4332F
+	for <webhook@archiver.kernel.org>; Tue, 13 Dec 2022 21:46:10 +0000 (UTC)
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+ by mx.groups.io with SMTP id smtpd.web10.86817.1670967967354017607
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 13 Dec 2022 11:40:16 -0800
+ Tue, 13 Dec 2022 13:46:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=J+p+GkKu;
- spf=pass (domain: gmail.com, ip: 209.85.210.43, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f43.google.com with SMTP id r2-20020a9d7cc2000000b006718a7f7fbaso499386otn.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 13 Dec 2022 11:40:16 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=hykzO/rz;
+ spf=pass (domain: gmail.com, ip: 209.85.160.43, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-144b21f5e5fso14225475fac.12
+        for <bitbake-devel@lists.openembedded.org>; Tue, 13 Dec 2022 13:46:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sOBDWIW6gbisqm+8G0WDNuZHABCrhzhLnN/E/ASroxg=;
-        b=J+p+GkKuulpwPJC0zrStBcuOqV3bAel9BwKjrS4JgPppDNhJTAiy65JAzbfWTnv8w8
-         ygrb6baKC+u0vsMMYbChbfZHV98f9GTucEgOIWuTDsqfSJ/b5yqQtE0HsjIDovGPx4Ar
-         pZQ0lxoVQWXrfStmaSMpf/eWHmEQ5c4qgpKDWi3cXkZ8C5WeLwozGoLhVBwiOGtvwTuv
-         QnfwdXQSSvkxNUwZtfre2xekkpNBT6uQf97zc0tsubuBiqeqQ3hRVojNZ3swDnz1Tnjs
-         xzdixQrj7RIixBG/b/85uhlBn9OGh4UNf2htkKNLzQML62HOUzzvuN/seXqZTKT7jIag
-         DOmg==
+        bh=Lv/MvvV2M36o0gVK7HdlfoLKTrAMeCXBDyV4PosWDpU=;
+        b=hykzO/rzTkxcYaidVxhAYuJ3lFBmDDLAbDfYW7JCTsXu0orqF85Az4zXuYmSkiui0c
+         tWOfJvHmwD5rFGbsk3rcwjTJ9b8BrXyaD7yk+QOsgA3ESkruMcyXUWkoedxxmEIiVPgx
+         c/QrUFgy9pT3spMbNPhfqYqegpnY5GN+Tcm+cHxsTplcIFaFeEkLn80HHskC8obhWeER
+         WDE2+S8U/NbfaiW/921hgqROJuJjvwJU+Ed5D2dXS9s7AE1JtUA1OHbx7iSGtk6FDtyB
+         Kl++NzlocbFjHRGiO5Fq3eNd3Nsh2tjCltOzVpgw0ULVb06Xl150kJGXfWO4omFh1RA2
+         197g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sOBDWIW6gbisqm+8G0WDNuZHABCrhzhLnN/E/ASroxg=;
-        b=d4ahRZFgbIlLpUHy2Qp3mJyHb2t2xPQgEyb+O0vhu/JrhqZbrmO+qFgl+rO72SQfGD
-         dL2+owUOIHISwOeRnzex4Pb2Etno+04LsvC/bTkxzqenjNpp0j0EyIvK9nqZ7SQSl8EX
-         fSwVKa3zUlgms5XmEynxn66542Ke6TFTyHglh2LiaOfbCTqF9fmjnEZ7IN/6Om8M9jTW
-         lC+TZRLPqjlTaIoZ0cRNJ3UhbYFTUWMs0niBu9+LVp0mJrrwkwJlp4UNTEiRnRZyci+y
-         MLJKx5TNFLlOTtT4WL3GZ+pY2zu7jHz6cHLaavxGk9NEthpO1QMwH63o8HOAdaijAISv
-         tn8A==
-X-Gm-Message-State: ANoB5pmv/HaxzyKypN1bAf9Y8z3z/TGp/3+iPhF2fJRu2gD7v8FbHXRo
-	CDq3YfAS4KJbX4jK/wz/b5pKycQrvn0=
-X-Google-Smtp-Source: AA0mqf5qmrRT53e1QErdB9a29BZTcu16KEcP7RvmDwAXU8EHO37f90x8bMHKca4YjMk9YKsbCBcXVA==
-X-Received: by 2002:a9d:6e02:0:b0:670:5ae2:3e71 with SMTP id e2-20020a9d6e02000000b006705ae23e71mr13224530otr.37.1670960415037;
-        Tue, 13 Dec 2022 11:40:15 -0800 (PST)
+        bh=Lv/MvvV2M36o0gVK7HdlfoLKTrAMeCXBDyV4PosWDpU=;
+        b=QGbpgQarE85sy8RQZVrA4lZMWoPdhDmTXZlfnfm8YoShwXwQ6IJdWezz9WW8G/RPKO
+         He8acYlC4xpDnOhBsDpCWIDxzthxwfjI+6mv7J3DIM3OMJYc7jLnsB/j4l2ko5SvEFZe
+         5QxX8NhN6EAXn76l+NQyLoA0gOdZ2Eoyp2a5aE2/6ZgzAKmgq9Pf4Phn1jMnUdxFTYtZ
+         7qIJYSBp4Dsg92ZwlsCtFpDfRdWGX/32jKV6OUic8vcVZ73aXCabTZD31q38CBdwkyN2
+         2WIXuNSnnZTS2JE7QRbJDJDLBbemj5XsUtPk1jQx0jblZekS2xdcVtw6vFl15Z45F/ED
+         XTtA==
+X-Gm-Message-State: ANoB5pn808KZhG1gx5dwlUvp2Io0u9gIKX8HuY5/iqFJc5DIJLHw0uqd
+	8TLkhIT6jRK/7UgzT1JU8a0zt9fY0/Y=
+X-Google-Smtp-Source: AA0mqf5V6p+TyeUM8PyLQQDEync7rJhlkVwLR9wVt97rxdCWaM6se6wLhU/elfZLg8jUladkrzr1vg==
+X-Received: by 2002:a05:6870:1f11:b0:144:b331:bd2d with SMTP id pd17-20020a0568701f1100b00144b331bd2dmr11115071oab.33.1670967965818;
+        Tue, 13 Dec 2022 13:46:05 -0800 (PST)
 Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id q10-20020a9d4b0a000000b0066f09567827sm1530039otf.78.2022.12.13.11.40.14
+        by smtp.gmail.com with ESMTPSA id ba35-20020a056870c5a300b0013b9ee734dcsm1969559oab.35.2022.12.13.13.46.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Dec 2022 11:40:14 -0800 (PST)
+        Tue, 13 Dec 2022 13:46:05 -0800 (PST)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v3] bitbake: Convert to argparse
-Date: Tue, 13 Dec 2022 13:40:01 -0600
-Message-Id: <20221213194001.2588028-1-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v4] bitbake: Convert to argparse
+Date: Tue, 13 Dec 2022 15:45:50 -0600
+Message-Id: <20221213214550.2609969-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20221110170046.3295885-1-JPEWhacker@gmail.com>
 References: <20221110170046.3295885-1-JPEWhacker@gmail.com>
@@ -61,8 +61,8 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 13 Dec 2022 19:40:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14185
+ <bitbake-devel@lists.openembedded.org>; Tue, 13 Dec 2022 21:46:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14186
 
 Converts the main bitbake program to use argparse instead of the
 deprecated optparse.
@@ -75,11 +75,11 @@ parse_args().
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/main.py | 349 +++++++++++++++++++++--------------------
- 1 file changed, 178 insertions(+), 171 deletions(-)
+ bitbake/lib/bb/main.py | 346 +++++++++++++++++++++--------------------
+ 1 file changed, 175 insertions(+), 171 deletions(-)
 
 diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-index 1e38d04bcf..4ef0b1acbb 100755
+index 1e38d04bcf..0f849cd04c 100755
 --- a/bitbake/lib/bb/main.py
 +++ b/bitbake/lib/bb/main.py
 @@ -12,7 +12,7 @@
@@ -115,7 +115,7 @@ index 1e38d04bcf..4ef0b1acbb 100755
  
  def list_extension_modules(pkg, checkattr):
      """
-@@ -115,180 +115,187 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
+@@ -115,180 +115,184 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
  warnings.showwarning = _showwarning
  
  def create_bitbake_parser():
@@ -458,16 +458,13 @@ index 1e38d04bcf..4ef0b1acbb 100755
 -        options, targets = parser.parse_args(argv)
 +        options = parser.parse_intermixed_args(argv[1:])
 +
-+        import pprint
-+        pprint.pprint(vars(options))
-+
 +        if options.version:
 +            print("BitBake Build Tool Core version %s" % bb.__version__)
 +            sys.exit(0)
  
          if options.quiet and options.verbose:
              parser.error("options --quiet and --verbose are mutually exclusive")
-@@ -320,7 +327,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+@@ -320,7 +324,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
          else:
              options.xmlrpcinterface = (None, 0)
  
