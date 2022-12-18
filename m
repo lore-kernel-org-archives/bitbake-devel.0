@@ -2,56 +2,57 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A1BC4332F
-	for <webhook@archiver.kernel.org>; Sun, 18 Dec 2022 10:52:28 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web11.27333.1671360747222654189
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B54C4167B
+	for <webhook@archiver.kernel.org>; Sun, 18 Dec 2022 21:41:31 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web10.6933.1671399684736036048
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 18 Dec 2022 02:52:27 -0800
+ Sun, 18 Dec 2022 13:41:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Y8kLL6Wi;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id z8-20020a05600c220800b003d33b0bda11so4295198wml.0
-        for <bitbake-devel@lists.openembedded.org>; Sun, 18 Dec 2022 02:52:26 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=iK9jWy+G;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f53.google.com with SMTP id h10so7044738wrx.3
+        for <bitbake-devel@lists.openembedded.org>; Sun, 18 Dec 2022 13:41:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EUjS8k58gN7uEckWQPof8Epm2TIR4siY6pGqoUjBWxM=;
-        b=Y8kLL6WiTBF9ebYkHnj8lk+DXjnId9iyWFozCIG1BGe86jTetu7NUNhwLUUbod9/cj
-         57yOu8Lbl1FEEPsIfaBAu2m1QP2H5eXAMBF9BuUa/2Ir9B2KvUiE/WFSIE0YhRNczAgi
-         YMFoKtze3bjIIQm0m748myyPjaHq0kCvXeYZE=
+        bh=2fKcV+pawju/T5OvzAUwush+Z1OMXqxNgRQs0ACNwjk=;
+        b=iK9jWy+Gj+FeOYRV7WWE7eHqrrCB/8uuicYuQ8P5o+ibOQZyQw4hiqjGsmFbvSuA92
+         G2+d49CbpFNOdEbYRc9ViAaMyhhyihRa/iyu4ziwRiSMgONyJRxHQv790gW8nqhptgBl
+         4+n0qKRaDr+vmzszHQ5z2cRoj132WmkW1EQGg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=EUjS8k58gN7uEckWQPof8Epm2TIR4siY6pGqoUjBWxM=;
-        b=8B6Wcf7oRyhmWVQOe97xHzsO4983OuftrbyySQ1Ajgz5n+2OMBIISuPVhJFvUsrajy
-         znDGF/kvRqWnGGVClAUBZ6iZgLWQqUxJ7lKVlnyvLzonzba/VIlhWgkPAQ0Za130Od6V
-         jnqelBAQ8PHiGGSkwlUTNqAqh8Q438Een2fbO5NNEAV9GXe8fHUJcWVKw6WgI4ACqJuG
-         qb5Y+ElorEAYERhByfmf76Rcu/fMCyw7bA34wXiaXOiXMGNIIZMRByewur4EsnczqiHX
-         ADMJWxCQZfkpFpdEc+8qrzxQJ0W1gdo4PjWYUm/DHKmF+41uo6GLi48uplESHDaDAAQo
-         l4fg==
-X-Gm-Message-State: ANoB5pkitUQqyG9bmRQr4BwhVvj3HxGJ4FJvxhwak63HFSan7i6A3IJH
-	n9UUmLexS+bjruFwCTEG1hy1eA==
-X-Google-Smtp-Source: AA0mqf5nlFS+2zBfhHF8zzLNpO8wo+j4P1oJVhpd8aBvHVHEmeEJn0xjIOCjs2fDpTeBzVnvIdvTXQ==
-X-Received: by 2002:a05:600c:4e50:b0:3c6:e63e:23f6 with SMTP id e16-20020a05600c4e5000b003c6e63e23f6mr30327012wmq.37.1671360745516;
-        Sun, 18 Dec 2022 02:52:25 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:2302:f56e:c776:f5ed? ([2001:8b0:aba:5f3c:2302:f56e:c776:f5ed])
-        by smtp.gmail.com with ESMTPSA id i3-20020a05600c290300b003b4fdbb6319sm15426410wmd.21.2022.12.18.02.52.24
+        bh=2fKcV+pawju/T5OvzAUwush+Z1OMXqxNgRQs0ACNwjk=;
+        b=SfixvcnjGPl7eufy9rxcIfiaU07bj1a6cDl9xREhhRfjI548YSomlnBc2WdqeSaxXy
+         OOhY8VXJQ7gB+QOLsZgAj3GEPiniGWPw432FqLFzWddvFI69eXVmBeCboPCf/jrqymbI
+         5N4p9GPjGh1almalIc01mVyLU3P8sxFQ/EHIlV8p9LDrVMbchnI1BHI+giRLs9MzPg3d
+         +M7QMI42uM2GPPYrqQop50cIjv3nCois9Qx6QUm87/zTBgYRoUIiyqSKCngmPTYJX541
+         xHWPQCNPUXcTfNJbZ0Tb6sjhtBb5oVwRSLgWb/dBemf7NcVqRNcXOz5/AtA27TuLRlQz
+         asxg==
+X-Gm-Message-State: ANoB5pn4kkg7lNntwkCwStrN4j8J3NoH99vo2Sl8BKZm5TcSdAfYKVV+
+	ExFX6uTe+dZnaA4WXpoZejt3xA==
+X-Google-Smtp-Source: AA0mqf4TkARVHFFg+QeNGgKTyzpopiv8vZdoYt+aTIWzoqBV9P3J0IpjGiNXSFlq0LB/cIDOMDn/rA==
+X-Received: by 2002:adf:ea8f:0:b0:242:70f1:2134 with SMTP id s15-20020adfea8f000000b0024270f12134mr34178080wrm.60.1671399682689;
+        Sun, 18 Dec 2022 13:41:22 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:c6da:1aac:207:2ac7? ([2001:8b0:aba:5f3c:c6da:1aac:207:2ac7])
+        by smtp.gmail.com with ESMTPSA id u4-20020a5d4344000000b00242710c9910sm8182657wrr.8.2022.12.18.13.41.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Dec 2022 02:52:25 -0800 (PST)
-Message-ID: <7f41a5303bd062f1ccf828299b776532596360a5.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] README: add required python version for
- bitbake
+        Sun, 18 Dec 2022 13:41:22 -0800 (PST)
+Message-ID: <64b26408f1b87a4b8e58268cb9529e0952c30582.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] Enable to use some bitbake server
+ commands
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Frank de Brabander <debrabander@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Sun, 18 Dec 2022 10:52:24 +0000
-In-Reply-To: <20221212162616.16189-1-debrabander@gmail.com>
-References: <20221212162616.16189-1-debrabander@gmail.com>
+To: yosuke.nky@gmail.com, bitbake-devel@lists.openembedded.org
+Date: Sun, 18 Dec 2022 21:41:21 +0000
+In-Reply-To: <12037.1671292360153891865@lists.openembedded.org>
+References: 
+	<666017467d067ed9473268336311c98dcad4dcad.camel@linuxfoundation.org>
+	 <12037.1671292360153891865@lists.openembedded.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.1-0ubuntu1 
@@ -59,32 +60,36 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 18 Dec 2022 10:52:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14195
+ <bitbake-devel@lists.openembedded.org>; Sun, 18 Dec 2022 21:41:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14196
 
-On Mon, 2022-12-12 at 17:26 +0100, Frank de Brabander wrote:
-> Signed-off-by: Frank de Brabander <debrabander@gmail.com>
-> ---
->  README | 2 ++
->  1 file changed, 2 insertions(+)
+On Sat, 2022-12-17 at 07:52 -0800, yosuke.nky@gmail.com wrote:
+> > I'd like to understand which objects are being passed which can't
+> > be marshalled=20
+> AFAIK, the type for the objects which can't be marshelled is
+> `collections.defaultdict`.=C2=A0
 >=20
-> diff --git a/README b/README
-> index af23c9af..377d0032 100644
-> --- a/README
-> +++ b/README
-> @@ -13,6 +13,8 @@ Bitbake plain documentation can be found under the doc =
-directory or its integrat
->  html version at the Yocto Project website:
->      https://docs.yoctoproject.org
-> =20
-> +Bitbake requires Python version 3.8 or newer.
-> +
->  Contributing
->  ------------
-> =20
+> > =C2=A0I'm worried that two different behaviours between the transports
+> > where one silently drops data isn't a good idea.
+> I agree. need to see if there is a way to convert to marshallizable
+> object.=C2=A0
 
-I'm torn on this since it means we have to remember to patch the
-minimum version in another place when we do change it...
+It looks like we may just be able to add a dict() wrapper around the
+return values if these are all defaultdict objects?
+
+We also need to go through the code and make sure the code using these
+commands is not using functionality of the defaultdict.
+
+> > I'd also be interested to learn more about how you're using bitbake
+> > if you can share anything?
+> I'm developing bbclient that=C2=A0provides command interface for bitbake
+> server. I'm working this as an part of visual studio language server
+> for bitbake.
+> I'm sorry. Not very common use, I know=F0=9F=98=85
+
+It actually sounds quite interesting, it is something we've wondered
+about for a while. I'm curious to see how you get on! It is a use case
+I think bitbake should support.
 
 Cheers,
 
