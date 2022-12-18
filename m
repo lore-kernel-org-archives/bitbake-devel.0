@@ -2,42 +2,42 @@ Return-Path: <marex@denx.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B9DC4332F
-	for <webhook@archiver.kernel.org>; Sun, 18 Dec 2022 00:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7043C4332F
+	for <webhook@archiver.kernel.org>; Sun, 18 Dec 2022 00:10:44 +0000 (UTC)
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
- by mx.groups.io with SMTP id smtpd.web10.19829.1671322122451804484
+ by mx.groups.io with SMTP id smtpd.web10.19867.1671322237307599000
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 17 Dec 2022 16:08:43 -0800
+ Sat, 17 Dec 2022 16:10:37 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@denx.de header.s=phobos-20191101 header.b=AdOnmthl;
+ dkim=fail reason="body hash did not verify" header.i=@denx.de header.s=phobos-20191101 header.b=QMFvrnra;
  spf=pass (domain: denx.de, ip: 85.214.62.61, mailfrom: marex@denx.de)
 Received: from tr.lan (ip-86-49-120-218.bb.vodafone.cz [86.49.120.218])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
 	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 5395584E8F;
-	Sun, 18 Dec 2022 01:08:40 +0100 (CET)
+	by phobos.denx.de (Postfix) with ESMTPSA id A20EC82162;
+	Sun, 18 Dec 2022 01:10:35 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1671322120;
-	bh=smMbuSDJ+cPXgwcNl4/piH/+5HtdeLDQEve+aCC8sr4=;
+	s=phobos-20191101; t=1671322235;
+	bh=f5MHOf61ireUwtce3C6Y+bBxBy5W1HrZucv2WXRkU0Q=;
 	h=From:To:Cc:Subject:Date:From;
-	b=AdOnmthlD3z757MbajTy+pdu58MTAS4+zvRx4+eetiOikswdMUgBB7wj0hPejRXWK
-	 IVWpe4zD/PQeCjJMf+My4zItPx56DwwG8jA+VR+wvHJLYZgjOBK7hUNjzQcZF72b4L
-	 SHvzrP/HArl5bFijgqYQ7awsas8XDRimbsDWKqXccK3Ksr5myx9xjDmOkWcoqDmyHW
-	 hw8BAMQpe3au8dLDfxdsmn6T2aLFq3+8BGhAuZd0DX3RfNup8QztUzhW3luCc90PPi
-	 sJRIB0hLEj2EbG0yBS0g4CTtra+hpoBYgF7+T8wOuiT0RZt4aCk6+wKgDlxTSo87Mm
-	 x8zquR/CWTwGA==
+	b=QMFvrnrafiEaVc6zNeEuUAOl/MR983+MOc9ix7xD/37bV2/UrNXeK8gxitjRPqwa/
+	 tUaQpCFy0k472Bg9oe53vHcEb8A2hbecHDashepIEV/eJ56llEfsATJ0nWxbmUudsa
+	 h3jWeYREcm4D3WzRHWjNrIpnpFM0okicjzgz2oNPUMeE3MvW75GzA7BVoJQXZ46jN7
+	 Rie3LyQO0mtnbA24yZHq9TjNqRFQh3FnC7o+HPTrwS34jY0jUDIcYYBXXMKjweeXB8
+	 NmGVyBRG50M5m/L6yJ2sKSOJjd9YnjF8hgC93dyKYkyT6F06Vk9YBnhsEhsaADz5Ul
+	 XnRFyyTB9R68Q==
 From: Marek Vasut <marex@denx.de>
 To: bitbake-devel@lists.openembedded.org
 Cc: Marek Vasut <marex@denx.de>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Joshua Watt <JPEWhacker@gmail.com>,
-	Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
 	Quentin Schulz <foss+yocto@0leil.net>,
+	Joshua Watt <JPEWhacker@gmail.com>,
+	Martin Jansa <martin.jansa@gmail.com>,
+	Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
 	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [PATCH] fetch2/git: Clarify the meaning of namespace
-Date: Sun, 18 Dec 2022 01:08:37 +0100
-Message-Id: <20221218000837.157941-1-marex@denx.de>
+Subject: [PATCH v4] bitbake-user-manual: Document override :append, :prepend, :remove order
+Date: Sun, 18 Dec 2022 01:10:30 +0100
+Message-Id: <20221218001030.158054-1-marex@denx.de>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
@@ -46,63 +46,89 @@ Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 18 Dec 2022 00:08:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14193
+ <bitbake-devel@lists.openembedded.org>; Sun, 18 Dec 2022 00:10:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14194
 
-Namespace in this context means a branch, a tag, etc., clarify
-it in the description. Also, fix a typo "a any", replace with
-plain "any".
+The application order of override syntax :append, :prepend, :remove is
+inobvious and undocumented. The order does not match variable parse
+history, i.e. output of "bitbake -e", either.
 
-This patch is based of feedback on new applied patch
-d32e5b0e ("fetch2/git: Prevent git fetcher from fetching gitlab repositor=
-y metadata")
+Add note documenting the exact order in which :append, :prepend, :remove
+are applied to variable in lib/bb/data_smart.py getVarFlag(). Add note
+that this order does not match the variable parse history order. This
+is mostly to prevent others from running into this and scratching their
+heads, trying to find out what is going on.
 
+Reviewed-by: Quentin Schulz <foss+yocto@0leil.net>
 Signed-off-by: Marek Vasut <marex@denx.de>
 ---
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc: Joshua Watt <JPEWhacker@gmail.com>
+Cc: Martin Jansa <martin.jansa@gmail.com>
 Cc: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 Cc: Quentin Schulz <foss+yocto@0leil.net>
 Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 4 ++--
- lib/bb/fetch2/git.py                                     | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+V2: - Add RB from Quentin
+    - Mention un-remove implementation
+    - Reference :remove order in append/prepend override syntax
+V3: - Reword the note per suggestion from Quentin
+    - Use explicit FOOREMOVE per suggestion from Peter
+V4: - Rebase on latest bitbake, resend
+---
+ .../bitbake-user-manual-metadata.rst          | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/d=
-oc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index bd117190..c061bd70 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -424,8 +424,8 @@ This fetcher supports the following parameters:
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/d=
+oc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index b839e669..deb7afad 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -319,6 +319,10 @@ The variable ``D`` becomes "dvaladditional data".
 =20
- -  *"nobranch":* Tells the fetcher to not check the SHA validation for
-    the branch when set to "1". The default is "0". Set this option for
--   the recipe that refers to the commit that is valid for a any namespac=
-e
--   instead of the branch.
-+   the recipe that refers to the commit that is valid for any namespace
-+   (branch, tag, ...) instead of the branch.
+    You must control all spacing when you use the override syntax.
 =20
- -  *"bareclone":* Tells the fetcher to clone a bare clone into the
-    destination directory without checking out a working tree. Only the
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index c80e8e5c..2e3d3251 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -44,7 +44,8 @@ Supported SRC_URI options are:
++.. note::
++
++   The overrides are applied in this order, ":append", ":prepend", ":rem=
+ove".
++
+ It is also possible to append and prepend to shell functions and
+ BitBake-style Python functions. See the ":ref:`bitbake-user-manual/bitba=
+ke-user-manual-metadata:shell functions`" and ":ref:`bitbake-user-manual/=
+bitbake-user-manual-metadata:bitbake-style python functions`"
+ sections for examples.
+@@ -352,6 +356,28 @@ The variable ``FOO`` becomes
+ Like ":append" and ":prepend", ":remove" is applied at variable
+ expansion time.
 =20
- - nobranch
-    Don't check the SHA validation for branch. set this option for the re=
-cipe
--   referring to commit which is valid in any namespace instead of branch=
-.
-+   referring to commit which is valid in any namespace (branch, tag, ...=
-)
-+   instead of branch.
-    The default is "0", set nobranch=3D1 if needed.
++.. note::
++
++   The overrides are applied in this order, ":append", ":prepend", ":rem=
+ove".
++   This implies it is not possible to re-append previously removed strin=
+gs.
++   However, one can undo a ":remove" by using an intermediate variable w=
+hose
++   content is passed to the ":remove" so that modifying the intermediate
++   variable equals to keeping the string in::
++
++     FOOREMOVE =3D "123 456 789"
++     FOO:remove =3D "${FOOREMOVE}"
++     ...
++     FOOREMOVE =3D "123 789"
++
++   This expands to ``FOO:remove =3D "123 789"``.
++
++.. note::
++
++   Override application order may not match variable parse history, i.e.
++   the output of ``bitbake -e`` may contain ":remove" before ":append",
++   but the result will be removed string, because ":remove" is handled
++   last.
++
+ Override Style Operation Advantages
+ -----------------------------------
 =20
- - usehead
 --=20
 2.35.1
 
