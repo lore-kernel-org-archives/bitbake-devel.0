@@ -1,103 +1,90 @@
-Return-Path: <alp.oezmert@mercedes-benz.com>
+Return-Path: <yosuke.nky@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BC5C10F1B
-	for <webhook@archiver.kernel.org>; Mon, 19 Dec 2022 13:44:36 +0000 (UTC)
-Received: from mail-out.emea.daimler.com (mail-out.emea.daimler.com [141.113.1.132])
- by mx.groups.io with SMTP id smtpd.web11.22130.1671457470385724378
- for <bitbake-devel@lists.openembedded.org>;
- Mon, 19 Dec 2022 05:44:31 -0800
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@mercedes-benz.com header.s=s1-20210420-dai header.b=CY3rS3D5;
- spf=pass (domain: mercedes-benz.com, ip: 141.113.1.132, mailfrom: alp.oezmert@mercedes-benz.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=mercedes-benz.com; i=@mercedes-benz.com; q=dns/txt;
-  s=s1-20210420-DAI; t=1671457470;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-type:content-id:
-   content-transfer-encoding:mime-version;
-  bh=qRg6Ai2RX3THdKzbJ+bcT6lDroT3Q2Uz1KEa51aIOhU=;
-  b=CY3rS3D5DmwyzGAh0I2gng0nljmD/CV+EjPzFAiL4F02dOIOOR6Lb4uY
-   VUxTsK5aYkW8d2wK8l5moS/ThW3J11zfMWa4hAzQX1WViOxPxcA7Haw8Y
-   gD78AgLyv7M+q8EEuiL/f+yyE2FrmYE8mqk1gLTg5FzzlXOajX/AcOY46
-   mG4WKubiwVILaGH1e/g9bKQN00EySjbDS+qund+vQ3x1mwn6Jx0L04+F6
-   eD2/8I5Rlcf6yR73e/Gy8F2Y8kcihiamGMhdvB5Z7llTk9d5/Marf/OAI
-   UIM6DjwZr82LKAgM1cY+D9AOFglmTdWP7T5ZnaDrf/zZejCzUPcyWZRQg
-   w==;
-From: <alp.oezmert@mercedes-benz.com>
-To: <richard.purdie@linuxfoundation.org>,
-	<bitbake-devel@lists.openembedded.org>
-CC: <changhyeok.bae@mercedes-benz.com>
-Subject: Re: [bitbake-devel] [PATCH] wget: Add CHECKMD_wget option
-Thread-Topic: [bitbake-devel] [PATCH] wget: Add CHECKMD_wget option
-Thread-Index: AQHZE4ebhWCgVNbSp0WGf0mp421pIq50+eWAgAAuToA=
-Date: Mon, 19 Dec 2022 13:44:28 +0000
-Message-ID: <b1673e9c84e6591180a8c61bff567f2b277db8bf.camel@mercedes-benz.com>
-References: <a7e199839adbd9e003c04d1bd021f5f0d8f2cc3c.camel@mercedes-benz.com>
-	 <982d94511de46a7c9e7eed63c1c1cdc89d4ca816.camel@linuxfoundation.org>
-In-Reply-To: <982d94511de46a7c9e7eed63c1c1cdc89d4ca816.camel@linuxfoundation.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <819962282A0D0A4891875AF8480324C0@wp.corpintra.net>
-Content-Transfer-Encoding: base64
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D888C4167B
+	for <webhook@archiver.kernel.org>; Mon, 19 Dec 2022 13:48:36 +0000 (UTC)
+Subject: Re: [PATCH] Enable to use some bitbake server commands
+To: bitbake-devel@lists.openembedded.org
+From: yosuke.nky@gmail.com
+X-Originating-Location: Tokyo, JP (160.237.142.147)
+X-Originating-Platform: Linux Chrome 107
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
+Date: Mon, 19 Dec 2022 05:48:33 -0800
+References: <64b26408f1b87a4b8e58268cb9529e0952c30582.camel@linuxfoundation.org>
+In-Reply-To: <64b26408f1b87a4b8e58268cb9529e0952c30582.camel@linuxfoundation.org>
+Message-ID: <27383.1671457713988336797@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="25K33fAipqlyTcMTqDa2"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 19 Dec 2022 13:44:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14200
+ <bitbake-devel@lists.openembedded.org>; Mon, 19 Dec 2022 13:48:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14201
 
-SGVsbG8gYWxsIQ0KDQpPbiBNb24sIDIwMjItMTItMTkgYXQgMTA6NTggKzAwMDAsIFJpY2hhcmQg
-UHVyZGllIHdyb3RlOg0KPg0KPiBPbiBNb24sIDIwMjItMTItMTkgYXQgMDg6NTUgKzAwMDAsIGFs
-cC5vZXptZXJ0IHZpYQ0KPiBsaXN0cy5vcGVuZW1iZWRkZWQub3JnIHdyb3RlOg0KPiA+IGBDSEVD
-S0NNRF93Z2V0YCBkZWZpbmVzIGEgY29tbWFuZCB0aGF0IHRoZSB3Z2V0IGZldGNoZXIgbW9kdWxl
-IHdpbGwNCj4gPiBleGVjdXRlDQo+ID4gaW5zdGVhZCBvZiB0aGUgYnVpbHQtaW4gSFRUUCBjbGll
-bnQgd2hlbiBjaGVja2luZyBpZiBVUkxzIGV4aXN0Lg0KPg0KPiBUaGlzIHNheXMgd2hhdCB0aGUg
-cGF0Y2ggZG9lcywgYnV0IG5vdCB3aHkuIEkgY2FuIHJlYWQgdGhlIHBhdGNoIGFuZA0KPiBzZWUg
-d2hhdCB0aGUgY29kZSBjaGFuZ2UgaXMgYnV0IEkgY2FuJ3Qga25vdyB3aHkgd2UgbmVlZCB0byBz
-byB0aGlzDQo+IGluZm9ybWF0aW9uIGlzIG11Y2ggbW9yZSBpbXBvcnRhbnQgZm9yIHRoZSBjb21t
-aXQgbWVzc2FnZS4NCj4NCj4gPiAgVGhpcw0KPiA+IGFsbG93cyB0byBjb21wbGV0ZWx5IG1hdGNo
-IHRoZSBiZWhhdmlvciBvZiB0aGUgd2dldCBmZXRjaGVyDQo+ID4gaW5jbHVkaW5nIHByb3h5DQo+
-ID4gYW5kIGF1dGhlbnRpY2F0aW9uLg0KPg0KPiBXZSdyZSBjaGFuZ2luZyB0aGUgYmVoYXZpb3Vy
-IG9mIHRoZSB3Z2V0IGZldGNoZXIgdG8gbWF0Y2ggdGhlIHdnZXQNCj4gZmV0Y2hlcj8gVGhpcyBk
-b2Vzbid0IG1ha2UgYW55IHNlbnNlLg0KDQpUaGUgcHJvcG9zZWQgY2hhbmdlIGFkZHMgYW4gb3B0
-aW9uIHRvIGNoYW5nZSBiZWhhdmlvciBvZiB3Z2V0DQpmZXRjaGVyIG1vZHVsZSBgZmV0Y2gyL3dn
-ZXQucHlgIGR1cmluZyBjaGVja2luZyBzdGVwDQooYFdnZXQuY2hlY2tzdGF0dXNgIGZ1bmN0aW9u
-KSBzbyBpdCBjYW4gbWF0Y2ggdGhlIGZldGNoaW5nIGJlaGF2aW9yDQp0aGF0IHVzZXMgYC53Z2V0
-cmNgIC4NCg0KPiA+IEJ5IGRlZmF1bHQsIHRoaXMgb3B0aW9uIGlzIGVtcHR5LCBhbmQgd2dldCBm
-ZXRjaGVyIGJlaGF2aW9yIGlzIG5vdA0KPiA+IGNoYW5nZWQuDQo+DQo+IFdoeSBkbyB3ZSBuZWVk
-IHRoaXM/IFdoeSBjYW4ndCB0aGUgSFRUUCBjbGllbnQgYmUgdXNlZD8NCg0KRHVyaW5nIGRvd25s
-b2FkaW5nLCB0aGUgYHdnZXRgIGNvbW1hbmQgaXMgdXNlZCBhbmQgdGhpcyBpbmNsdWRlcyB0aGUN
-CmNvbmZpZ3VyYXRpb24gaW4gLndnZXRyYy4gRHVyaW5nIHRoZSBjaGVja2luZyB0aGF0IHByZWNl
-ZGVzDQpkb3dubG9hZGluZywgdGhlIGJ1aWx0LWluIEhUVFAtY2xpZW50IGlzIHVzZWQgYnV0IGl0
-IGRvZXNuJ3Qgc3VwcG9ydA0KYWxsIGNvbmZpZ3VyYXRpb25zIG9mIGB3Z2V0YCwgZm9yIGV4YW1w
-bGUgYXV0aGVudGljYXRpb24gd2l0aCBjbGllbnQNCmNlcnRpZmljYXRlcyBvciBwcm94eSBzZXR0
-aW5ncy4NCg0KPiBXaGF0IHRoaXMgYXBwZWFycyB0byBkbyBpcyBhZGQgdHdvIGRpZmZlcmVudCBj
-b2RlIHBhdGhzIG1lYW5pbmcgd2UNCj4gbmVlZA0KPiB0byBkb3VibGUgb3VyIHRlc3RpbmcuIEkg
-cmVhbGx5IGRvbid0IHdhbnQgdG8gZG8gdGhhdC4NCg0KVGhlIGNoYW5nZSBjb250YWlucyB0d28g
-bmV3IHRlc3QgY2FzZXMgdGhhdCBwYXNzOg0KDQpgYGANCi4vYmluL2JpdGJha2Utc2VsZnRlc3Qg
-LWsgdGVzdF93Z2V0X2NoZWNrc3RhdHVzX2V4dGVybmFsIC12DQpbLi4uXQ0KdGVzdF93Z2V0X2No
-ZWNrc3RhdHVzX2V4dGVybmFsX2F1dG8NCihiYi50ZXN0cy5mZXRjaC5GZXRjaENoZWNrU3RhdHVz
-VGVzdCkgLi4uIG9rDQp0ZXN0X3dnZXRfY2hlY2tzdGF0dXNfZXh0ZXJuYWxfd2dldA0KKGJiLnRl
-c3RzLmZldGNoLkZldGNoQ2hlY2tTdGF0dXNUZXN0KSAuLi4gb2sNCg0KLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
-UmFuIDIgdGVzdHMgaW4gMTMuNTEwcw0KDQpPSw0KYGBgDQoNCj4gQ2FuJ3QgdGhlIGluYnVpbHQg
-aHR0cCBjbGllbnQgY29kZSBiZSBmaXhlZCB0byB3b3JrIHdpdGggd2hhdGV2ZXINCj4gYXV0aC9w
-cm94eSBpc3N1ZSBJJ20gZ3Vlc3NpbmcgeW91J3JlIHJ1bm5pbmcgaW50bz8NCg0KQXMgZmFyIGFz
-IEkgY2FuIHRlbGwsIG5vdCBvbiB0aGUgc2hvcnQgdGVybS4NCg0KPiBDaGVlcnMsDQo+DQo+IFJp
-Y2hhcmQNCg0KTGV0IG1lIGtub3cgaWYgeW91IHdvdWxkIGxpa2UgdG8gaGF2ZSBjaGFuZ2VzIHRv
-IHRoZSBjb21taXQgbWVzc2FnZS4NCg0KQmVzdCByZWdhcmRzLA0KQWxwDQoNCi0tDQpEci4tSW5n
-LiBBbHAgw5Z6bWVydCB8IGFscC5vZXptZXJ0QG1lcmNlZGVzLWJlbnouY29tIHwgRXhwZXJ0IFNv
-ZnR3YXJlDQpFbmdpbmVlciB8IE1CaXRpb24gR21iSCB8IERvdmVzdHJhw59lIDEsIDEwNTg3IEJl
-cmxpbiwgR2VybWFueQ0KDQpHZXNjaMOkZnRzZsO8aHJlci9Cb2FyZCBvZiBEaXJlY3RvcnM6IEZy
-YW5rIFByZWlkZWwsIFN0ZXZlbiBCZW50bGV5LA0KRGFuaWVsIEJ1cmssIFJlZ2lzdGVyZ2VyaWNo
-dC9Db3VydCBvZiBSZWdpc3RyeTogQW10c2dlcmljaHQNCkNoYXJsb3R0ZW5idXJnIEhSQi1Oci4v
-Q29tbWVyY2lhbCBSZWdpc3RlciBOby46IDE4ODI0MSBCDQoNCg0KSWYgeW91IGFyZSBub3QgdGhl
-IGFkZHJlc3NlZSwgcGxlYXNlIGluZm9ybSB1cyBpbW1lZGlhdGVseSB0aGF0IHlvdSBoYXZlIHJl
-Y2VpdmVkIHRoaXMgZS1tYWlsIGJ5IG1pc3Rha2UsIGFuZCBkZWxldGUgaXQuIFdlIHRoYW5rIHlv
-dSBmb3IgeW91ciBzdXBwb3J0Lg0KDQo=
+--25K33fAipqlyTcMTqDa2
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+> It looks like we may just be able to add a dict() wrapper around the retu=
+rn values if these are all defaultdict objects?
+Sorry, I forgot that some commands return " collections.abc.KeysView ". The=
+refore, enable_marshel function in my patch is trying to cast list and dict=
+.
+For instance,=C2=A0dataStoreConnectorCmd returns " collections.abc.KeysView=
+ " when subcommand is "keys".
+However, dataStoreConnectorCmd has so many subcommands that we have not bee=
+n able to verify the return types of all of them.
+Perhaps we should consider removing dataStoreConnectorCmd from the scope of=
+ this patch, as we will look into how to fix it properly later.
+
+To make matters easier to understand, I created gits file for reproducing t=
+he error with tinfoil, not with my private work.
+https://gist.github.com/AngryMane/9e0f57dac862b209ae406a729c4fa4e5
+You can reproduce the error by following below steps.
+1.=C2=A0bitbake-error in my gist and copy it to bitbake/bin
+1. source oe-init-build env
+1. bitbake --server-only --bind localhost:8081
+1.bitbake-error
+
+Please note that this error occurs with only XMLRPCserver and ProcessServer=
+ doen't occur this error.
+In other words, the problem does not occur except in use cases where the bi=
+tbake --server-only option is used.
+
+--25K33fAipqlyTcMTqDa2
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<span style=3D"white-space: pre-wrap;">&gt; It looks like we may just be ab=
+le to add a dict() wrapper around the </span><span style=3D"white-space: pr=
+e-wrap;">return values if these are all defaultdict objects?<br /></span>So=
+rry, I forgot that some commands return "<span style=3D"color: #6e7781; fon=
+t-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Libera=
+tion Mono', monospace; font-size: 12px; white-space: pre;">collections.abc.=
+KeysView</span>". Therefore,&nbsp;<span style=3D"white-space: pre-wrap;">en=
+able_marshel function in </span>my patch is trying to cast list and dict.&n=
+bsp; &nbsp;<br />For instance,&nbsp;dataStoreConnectorCmd returns "<span st=
+yle=3D"color: #6e7781; font-family: ui-monospace, SFMono-Regular, 'SF Mono'=
+, Menlo, Consolas, 'Liberation Mono', monospace; font-size: 12px; white-spa=
+ce: pre;">collections.abc.KeysView</span>" when subcommand is "keys".&nbsp;=
+ &nbsp;<br />However, dataStoreConnectorCmd has so many subcommands that we=
+ have not been able to verify the return types of all of them.<br />Perhaps=
+ we should consider removing dataStoreConnectorCmd from the scope of this p=
+atch, as we will look into how to fix it properly later.<br /><br />To make=
+ matters easier to understand, I created gits file for reproducing the erro=
+r with tinfoil, not with my private work.<br /><a href=3D"https://gist.gith=
+ub.com/AngryMane/9e0f57dac862b209ae406a729c4fa4e5" target=3D"_blank" rel=3D=
+"noopener">https://gist.github.com/AngryMane/9e0f57dac862b209ae406a729c4fa4=
+e5</a><br />You can reproduce the error by following below steps.<br />1.&n=
+bsp;bitbake-error in my gist and copy it to bitbake/bin<br />1. source oe-i=
+nit-build env<br />1.&nbsp;<span style=3D"color: #24292f; font-family: ui-m=
+onospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', mo=
+nospace; font-size: 12px; white-space: pre;">bitbake --server-only --bind l=
+ocalhost:8081<br />1.bitbake-error</span><br /><br />Please note that this =
+error occurs with only XMLRPCserver and ProcessServer doen't occur this err=
+or.<br />In other words, the problem does not occur except in use cases whe=
+re the bitbake --server-only option is used.
+
+--25K33fAipqlyTcMTqDa2--
 
