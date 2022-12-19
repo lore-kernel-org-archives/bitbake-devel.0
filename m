@@ -1,95 +1,97 @@
-Return-Path: <alp.oezmert@mercedes-benz.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC36BC4332F
-	for <webhook@archiver.kernel.org>; Mon, 19 Dec 2022 08:55:24 +0000 (UTC)
-Received: from mail-out.emea.daimler.com (mail-out.emea.daimler.com [141.113.1.134])
- by mx.groups.io with SMTP id smtpd.web11.16874.1671440116583375068
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A94FC4167B
+	for <webhook@archiver.kernel.org>; Mon, 19 Dec 2022 10:58:55 +0000 (UTC)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web11.18362.1671447526322746661
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 19 Dec 2022 00:55:18 -0800
+ Mon, 19 Dec 2022 02:58:47 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@mercedes-benz.com header.s=s1-20210420-dai header.b=iTNoUyKn;
- spf=pass (domain: mercedes-benz.com, ip: 141.113.1.134, mailfrom: alp.oezmert@mercedes-benz.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=mercedes-benz.com; i=@mercedes-benz.com; q=dns/txt;
-  s=s1-20210420-DAI; t=1671440116;
-  h=from:to:cc:subject:date:message-id:content-type:
-   content-id:content-transfer-encoding:mime-version;
-  bh=a63iMzWp5kbqdZwYDJ4fpzIsZKlbnMkNwL5AeyJqaRo=;
-  b=iTNoUyKnZQZ49SsTZb1tToPelOZwrPVH43YI5M9g22MOCpAzXAvQeRvI
-   C6vH02yA1dm74w3I0nPeidb68ipfoGqW7sk3MeBI1OwVkLF2rz9nzN5wf
-   RWcAiEsXI3T5gmqOm2BU8nE4yn5ZOpzBu8tKeUdRwrjTrliW9r3coYA/e
-   6LACcdkd6RGE3gpr2HP+3xijD8o/ugDu2WK3a611Sgvuse2ZIgWecTo4K
-   P6LE2jx5ToaCSsXW/5XFyTQqCJ1L1q1V1U6If4I1xQXBPTP90tq3oqvTr
-   4WnPiNLu5qsNQv1p9/YjBrssMwI5g54d1sNJXjIljfIXQmhGDxD3EBonC
-   Q==;
-From: <alp.oezmert@mercedes-benz.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: <changhyeok.bae@mercedes-benz.com>
-Subject: [PATCH] wget: Add CHECKMD_wget option
-Thread-Topic: [PATCH] wget: Add CHECKMD_wget option
-Thread-Index: AQHZE4ebhWCgVNbSp0WGf0mp421pIg==
-Date: Mon, 19 Dec 2022 08:55:13 +0000
-Message-ID: <a7e199839adbd9e003c04d1bd021f5f0d8f2cc3c.camel@mercedes-benz.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AFBE52B190BB2348BDE7D9E642910782@wp.corpintra.net>
-Content-Transfer-Encoding: base64
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QVcBd3xW;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f43.google.com with SMTP id bx10so8275561wrb.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 19 Dec 2022 02:58:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iKNdydkMFMdICAKia3m3NJACh8FgaJGmbZJSTUxKpfI=;
+        b=QVcBd3xWwHnEHiglK1znMgKTbvA+qdsIkB/ujVidMPzglLzaRwshnq89NaE74hh5VM
+         5nULbWveFGW43ZDWxWs4phuaUznE7O2Bzpv4IZnvezue9hBlBixtMmSkK0f8z86Ah3f0
+         pg1qrTlh/zWJrODrCcl1f9R4r0Kx9ClqM6PNc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iKNdydkMFMdICAKia3m3NJACh8FgaJGmbZJSTUxKpfI=;
+        b=1JJBd7Y1sAVxhLKATokZtsMrT1CGuRQCetpQi9GLdTHpcGpdkg/1++yhWiVi03loBj
+         IUWyN1dEtTyhW5ykLHA7H2+9p4DeUeeqpsFotsdWIAWkgO6OJ+QtNwdhDQnmg51ljyao
+         VmRvzufwx+YW+5d4D9xpgTsLO61OQzR1zh/0MeriFM+N6swp1ouNlyWkZkaiLm+ap25G
+         dZJAUC/D3CQxWst/xrTo07hp3Jkc3Ik4x5quMvMEbYAK6zE0ADmgse+HzEgdfZSiIMTl
+         l2/WMJyIWaFPADIjYxzXjIVCDQeVU3hi7UPiAagdJwlUm4J5KggCyfW7rhtoDyOKWsIm
+         LPow==
+X-Gm-Message-State: ANoB5pngfp4HD7+fekpYZef7C0/ZDug76togRWe4lu7IqqRY7TUh7AtK
+	Wpks3mDa1NMPrHdUmDSqrkcgqw==
+X-Google-Smtp-Source: AA0mqf5IfK4fF4gez6oGjGkTi+icparcu/tLIBZWcqsnLnL2gDDP2x1VZjpZkCiBrzfWCnK7pS4sEA==
+X-Received: by 2002:a05:6000:1d9c:b0:242:7eb8:37bf with SMTP id bk28-20020a0560001d9c00b002427eb837bfmr28348515wrb.32.1671447524415;
+        Mon, 19 Dec 2022 02:58:44 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:ac4f:7328:1210:6c79? ([2001:8b0:aba:5f3c:ac4f:7328:1210:6c79])
+        by smtp.gmail.com with ESMTPSA id u18-20020adfeb52000000b002423dc3b1a9sm9618365wrn.52.2022.12.19.02.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Dec 2022 02:58:44 -0800 (PST)
+Message-ID: <982d94511de46a7c9e7eed63c1c1cdc89d4ca816.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] wget: Add CHECKMD_wget option
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: alp.oezmert@mercedes-benz.com, bitbake-devel@lists.openembedded.org
+Cc: changhyeok.bae@mercedes-benz.com
+Date: Mon, 19 Dec 2022 10:58:43 +0000
+In-Reply-To: <a7e199839adbd9e003c04d1bd021f5f0d8f2cc3c.camel@mercedes-benz.com>
+References: 
+	<a7e199839adbd9e003c04d1bd021f5f0d8f2cc3c.camel@mercedes-benz.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.1-0ubuntu1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 19 Dec 2022 08:55:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14197
+ <bitbake-devel@lists.openembedded.org>; Mon, 19 Dec 2022 10:58:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14198
 
-YENIRUNLQ01EX3dnZXRgIGRlZmluZXMgYSBjb21tYW5kIHRoYXQgdGhlIHdnZXQgZmV0Y2hlciBt
-b2R1bGUgd2lsbCBleGVjdXRlDQppbnN0ZWFkIG9mIHRoZSBidWlsdC1pbiBIVFRQIGNsaWVudCB3
-aGVuIGNoZWNraW5nIGlmIFVSTHMgZXhpc3QuIFRoaXMNCmFsbG93cyB0byBjb21wbGV0ZWx5IG1h
-dGNoIHRoZSBiZWhhdmlvciBvZiB0aGUgd2dldCBmZXRjaGVyIGluY2x1ZGluZyBwcm94eQ0KYW5k
-IGF1dGhlbnRpY2F0aW9uLg0KDQpCeSBkZWZhdWx0LCB0aGlzIG9wdGlvbiBpcyBlbXB0eSwgYW5k
-IHdnZXQgZmV0Y2hlciBiZWhhdmlvciBpcyBub3QgY2hhbmdlZC4NCg0KU2lnbmVkLW9mZi1ieTog
-QWxwIMOWem1lcnQgPGFscC5vZXptZXJ0QG1lcmNlZGVzLWJlbnouY29tPg0KLS0tDQogbGliL2Ji
-L2ZldGNoMi93Z2V0LnB5IHwgIDcgKysrKysrKw0KIGxpYi9iYi90ZXN0cy9mZXRjaC5weSB8IDE0
-ICsrKysrKysrKysrKysrDQogMiBmaWxlcyBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspDQoNCmRp
-ZmYgLS1naXQgYS9saWIvYmIvZmV0Y2gyL3dnZXQucHkgYi9saWIvYmIvZmV0Y2gyL3dnZXQucHkN
-CmluZGV4IDgyMWFmYTViLi41NmFmZDI0ZSAxMDA2NDQNCi0tLSBhL2xpYi9iYi9mZXRjaDIvd2dl
-dC5weQ0KKysrIGIvbGliL2JiL2ZldGNoMi93Z2V0LnB5DQpAQCAtMTUzLDYgKzE1MywxMyBAQCBj
-bGFzcyBXZ2V0KEZldGNoTWV0aG9kKToNCiAgICAgICAgIHJldHVybiBUcnVlDQoNCiAgICAgZGVm
-IGNoZWNrc3RhdHVzKHNlbGYsIGZldGNoLCB1ZCwgZCwgdHJ5X2FnYWluPVRydWUpOg0KKyAgICAg
-ICAgY2hlY2tjbWQgPSBkLmdldFZhcigiQ0hFQ0tDTURfd2dldCIpDQorICAgICAgICBpZiBjaGVj
-a2NtZDoNCisgICAgICAgICAgICBpZiBjaGVja2NtZCA9PSAiYXV0byI6DQorICAgICAgICAgICAg
-ICAgIGNoZWNrY21kID0gIiVzIC0tc3BpZGVyIC0tcXVpZXQiICUgc2VsZi5iYXNlY21kDQorICAg
-ICAgICAgICAgdXJpID0gdWQudXJsLnNwbGl0KCI7IilbMF0NCisgICAgICAgICAgICByZXR1cm4g
-b3Muc3lzdGVtKCIlcyAlcyIgJSAoY2hlY2tjbWQsIHVyaSkpID09IG9zLkVYX09LDQorDQogICAg
-ICAgICBjbGFzcyBIVFRQQ29ubmVjdGlvbkNhY2hlKGh0dHAuY2xpZW50LkhUVFBDb25uZWN0aW9u
-KToNCiAgICAgICAgICAgICBpZiBmZXRjaC5jb25uZWN0aW9uX2NhY2hlOg0KICAgICAgICAgICAg
-ICAgICBkZWYgY29ubmVjdChzZWxmKToNCmRpZmYgLS1naXQgYS9saWIvYmIvdGVzdHMvZmV0Y2gu
-cHkgYi9saWIvYmIvdGVzdHMvZmV0Y2gucHkNCmluZGV4IDBhZjA2ZTQ2Li42ZWI3N2U1YyAxMDA2
-NDQNCi0tLSBhL2xpYi9iYi90ZXN0cy9mZXRjaC5weQ0KKysrIGIvbGliL2JiL3Rlc3RzL2ZldGNo
-LnB5DQpAQCAtMTQ5OCw2ICsxNDk4LDIwIEBAIGNsYXNzIEZldGNoQ2hlY2tTdGF0dXNUZXN0KEZl
-dGNoZXJUZXN0KToNCiAgICAgICAgICAgICAgICAgcmV0ID0gbS5jaGVja3N0YXR1cyhmZXRjaCwg
-dWQsIHNlbGYuZCkNCiAgICAgICAgICAgICAgICAgc2VsZi5hc3NlcnRUcnVlKHJldCwgbXNnPSJV
-UkkgJXMsIGNhbid0IGNoZWNrIHN0YXR1cyIgJSAodSkpDQoNCisgICAgQHNraXBJZk5vTmV0d29y
-aygpDQorICAgIGRlZiB0ZXN0X3dnZXRfY2hlY2tzdGF0dXNfZXh0ZXJuYWxfd2dldChzZWxmKToN
-CisgICAgICAgICMgZXhjbHVkZSB0ZXN0IGNhc2UgZnRwOi8vIGFzIHdnZXQgaGFzIGJlZW4gb2Jz
-ZXJ2ZWQgdG8gd3JvbmdseSByZXR1cm4gJzgnDQorICAgICAgICBzZWxmLnRlc3Rfd2dldF91cmlz
-ID0gW3VyaSBmb3IgdXJpIGluIHNlbGYudGVzdF93Z2V0X3VyaXMgaWYgImZ0cDovLyIgbm90IGlu
-IHVyaV0NCisgICAgICAgIHNlbGYuZC5zZXRWYXIoIkNIRUNLQ01EX3dnZXQiLCAid2dldCAtLXNw
-aWRlciAtLXF1aWV0IikNCisgICAgICAgIHNlbGYudGVzdF93Z2V0X2NoZWNrc3RhdHVzKCkNCisN
-CisgICAgQHNraXBJZk5vTmV0d29yaygpDQorICAgIGRlZiB0ZXN0X3dnZXRfY2hlY2tzdGF0dXNf
-ZXh0ZXJuYWxfYXV0byhzZWxmKToNCisgICAgICAgICMgZXhjbHVkZSB0ZXN0IGNhc2UgZnRwOi8v
-IGFzIHdnZXQgaGFzIGJlZW4gb2JzZXJ2ZWQgdG8gd3JvbmdseSByZXR1cm4gJzgnDQorICAgICAg
-ICBzZWxmLnRlc3Rfd2dldF91cmlzID0gW3VyaSBmb3IgdXJpIGluIHNlbGYudGVzdF93Z2V0X3Vy
-aXMgaWYgImZ0cDovLyIgbm90IGluIHVyaV0NCisgICAgICAgIHNlbGYuZC5zZXRWYXIoIkNIRUNL
-Q01EX3dnZXQiLCAiYXV0byIpDQorICAgICAgICBzZWxmLnRlc3Rfd2dldF9jaGVja3N0YXR1cygp
-DQorDQogICAgIEBza2lwSWZOb05ldHdvcmsoKQ0KICAgICBkZWYgdGVzdF93Z2V0X2NoZWNrc3Rh
-dHVzX2Nvbm5lY3Rpb25fY2FjaGUoc2VsZik6DQogICAgICAgICBmcm9tIGJiLmZldGNoMiBpbXBv
-cnQgRmV0Y2hDb25uZWN0aW9uQ2FjaGUNCi0tDQoyLjM4LjENCg0KDQpJZiB5b3UgYXJlIG5vdCB0
-aGUgYWRkcmVzc2VlLCBwbGVhc2UgaW5mb3JtIHVzIGltbWVkaWF0ZWx5IHRoYXQgeW91IGhhdmUg
-cmVjZWl2ZWQgdGhpcyBlLW1haWwgYnkgbWlzdGFrZSwgYW5kIGRlbGV0ZSBpdC4gV2UgdGhhbmsg
-eW91IGZvciB5b3VyIHN1cHBvcnQuDQoNCg==
+On Mon, 2022-12-19 at 08:55 +0000, alp.oezmert via lists.openembedded.org w=
+rote:
+> `CHECKCMD_wget` defines a command that the wget fetcher module will execu=
+te
+> instead of the built-in HTTP client when checking if URLs exist.
+
+This says what the patch does, but not why. I can read the patch and
+see what the code change is but I can't know why we need to so this
+information is much more important for the commit message.
+
+>  This
+> allows to completely match the behavior of the wget fetcher including pro=
+xy
+> and authentication.
+
+We're changing the behaviour of the wget fetcher to match the wget
+fetcher? This doesn't make any sense.
+
+> By default, this option is empty, and wget fetcher behavior is not change=
+d.
+
+Why do we need this? Why can't the HTTP client be used?
+
+What this appears to do is add two different code paths meaning we need
+to double our testing. I really don't want to do that.
+
+Can't the inbuilt http client code be fixed to work with whatever
+auth/proxy issue I'm guessing you're running into?
+
+Cheers,
+
+Richard
 
