@@ -1,106 +1,121 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E44C4332F
-	for <webhook@archiver.kernel.org>; Tue, 20 Dec 2022 16:01:24 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web11.53894.1671552082950586127
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46771C4332F
+	for <webhook@archiver.kernel.org>; Tue, 20 Dec 2022 16:41:54 +0000 (UTC)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+ by mx.groups.io with SMTP id smtpd.web10.54865.1671554508838373803
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 20 Dec 2022 08:01:23 -0800
+ Tue, 20 Dec 2022 08:41:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=S8WK8Y7S;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id b24-20020a05600c4a9800b003d21efdd61dso9176065wmp.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 20 Dec 2022 08:01:22 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=BpB1WfGk;
+ spf=pass (domain: gmail.com, ip: 209.85.208.54, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ed1-f54.google.com with SMTP id r26so18263047edc.10
+        for <bitbake-devel@lists.openembedded.org>; Tue, 20 Dec 2022 08:41:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SEkIYpQt4PFHSIyVcgNZgdZhD9HuOLPl7a0eXfRyZD0=;
-        b=S8WK8Y7Sy/Svv/CoIL2Xj3tN1+aIm8JF1V/Ez22UPv2N5rtSj3MpYk0jM1WHyTsQ/p
-         XikNacUG1Zfw4kIn7I6Ad0skkXZXhVvVlwpProzyZhp9v5ZuccS2jILuivP5C8D5TtT8
-         uVAFTh9IDlas99j4dPNH6qhN5sMpk3tMjIaa4=
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vwpVZ63IXAVFAiTRQm2B6TKaTw5wBogNPEi63RtbusU=;
+        b=BpB1WfGkpBU0Xo9xDb5QqRe+7ttd7lv1lim5FgX2++OioNXe1FnLRo+/0iqFxYSa+X
+         Ma5iJpSccWZsd0hPVO+DumS3L2Gqsx2atFMLONEmgx2xgkRtmybc7KXEbiuWhiR+K/ux
+         sKAGurDUF6aTCSbAz/wDiVkn0zdd0+qe6ld+nLelyjobMUZxZTsFEKotAgH0GHAl1KX5
+         a0VYCt/QAlnCuc6TRW7tco0a1GHuxM3FOfBr7QhZWhZiPRMsO7J3bISMxdWTTqUKNhVv
+         JLbQvCR/xzG9HLPoq2CthUhCTmUVPC5g+HHPA8IPcw55b9yLpkJncnRmQbwnP3llKVuw
+         dhjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SEkIYpQt4PFHSIyVcgNZgdZhD9HuOLPl7a0eXfRyZD0=;
-        b=q/JWns4Hq6Ib/L8UEVbdCR9hbW5rOu4le4Eh93Lx3h3f2Oo4xfZDnYtlmpMOz/gQYV
-         qKYTKvBnILRMtd1vz/1rQFyClTOK6EwPQsHOMEPtYSMFRia17qJCrXDS/H6jxXjbU6DM
-         PLak5YE/R+L9c78ezjyABpujK53J3avjZyaw1QO09lpAjtRIegOzwoZBq6mDysk45mA8
-         tYDKgGHgfR6lWk2GW56mGJ1GqiosbES04p2wg+O8pTsqQ0rroC4PmvbWSs7nvKbE+sHI
-         9SbNNYb4aUCRPS33+egWcek95yOqmrjegS6rokt0BUTZwNxjdTHv+iLX3QddTCUWDPeV
-         Hp/Q==
-X-Gm-Message-State: ANoB5pkFrKSlmqYNkR/r8iB/ggD5WOD1lpjhrzaTbTghzUSTtebTwp5v
-	kh2vjTSWEcCkzfeBsUwNiNRmeg==
-X-Google-Smtp-Source: AA0mqf6EYu8EEyur4LsULz0hteX4nd3SW1ixfSTIV3rhVkn4CrUHZ3y9Wk8p6t0Mrz4WaI+eX7bz4Q==
-X-Received: by 2002:a05:600c:4f14:b0:3cf:e91d:f263 with SMTP id l20-20020a05600c4f1400b003cfe91df263mr35693499wmq.4.1671552081213;
-        Tue, 20 Dec 2022 08:01:21 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:1273:dbb7:632c:a9de? ([2001:8b0:aba:5f3c:1273:dbb7:632c:a9de])
-        by smtp.gmail.com with ESMTPSA id y20-20020a7bcd94000000b003c6b70a4d69sm15976719wmj.42.2022.12.20.08.01.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Dec 2022 08:01:20 -0800 (PST)
-Message-ID: <63cc3aef01919483dcbe92f0520cd5b06bbd3298.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] Enable to use some bitbake server
- commands
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: yosuke.nky@gmail.com, bitbake-devel@lists.openembedded.org
-Date: Tue, 20 Dec 2022 16:01:20 +0000
-In-Reply-To: <27383.1671457713988336797@lists.openembedded.org>
-References: 
-	<64b26408f1b87a4b8e58268cb9529e0952c30582.camel@linuxfoundation.org>
-	 <27383.1671457713988336797@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1-0ubuntu1 
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vwpVZ63IXAVFAiTRQm2B6TKaTw5wBogNPEi63RtbusU=;
+        b=qvxBQqIJTuPwQvG3xat9AB40zuK/Q0vTABQyUXxH9mbd2PTsr/Sfya8igrdf998PYq
+         dYQtmDizcq4Yf4PVpowSul3l0LSj+6i1hM3gUAM/lFdkXc9KEu3XKWCpwkBH1VJc6CYJ
+         QyrSeYq3dGXY4mJNjUpEMHkGswGIKaOJ0UMnewDhszoDmM2yWxqUZfa1OrKZ0UaxusUy
+         CI0JFO+Tyc5lFMuaYiiUZZP8nKjaRn8Nuxv14m+ieSEWzJ6U3s2f0/piqgUwYqJAuhT/
+         tKhCAT198MRuRdYFX6x/+RnYg+dV63r4OIj1rjuhaw/jbgM2K1kGCG4ni5/CJkWRkjRS
+         VVVg==
+X-Gm-Message-State: ANoB5plW3IQJg4ZCJqS38hDeJ22oyX3ATtWs7OjXEJVwQ0isUQNjQXnY
+	pCGG4OQ/UGXsPzoTuYLPsxH47E6NG4m/i1z6bxw=
+X-Google-Smtp-Source: AA0mqf7K3Pu4Ipu2QCe1JY9IDMWylUX052b1suD6mYxMbUl4/MwIIUV0JMiD/j2Cz3hoqKXcoSKgKRcK3KwMxl7G4s0=
+X-Received: by 2002:a05:6402:ea2:b0:46f:fe46:df81 with SMTP id
+ h34-20020a0564020ea200b0046ffe46df81mr4304083eda.56.1671554507253; Tue, 20
+ Dec 2022 08:41:47 -0800 (PST)
 MIME-Version: 1.0
+References: <20221220151604.415637-1-richard.purdie@linuxfoundation.org> <20221220151604.415637-4-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20221220151604.415637-4-richard.purdie@linuxfoundation.org>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Tue, 20 Dec 2022 10:41:35 -0600
+Message-ID: <CAJdd5GbfF8ppFL7QZZ3F-XQconAtx0=uDhHd6MbqncbRo_yFeA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 4/6] event: builtins fix for 'd' deletion
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 20 Dec 2022 16:01:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14215
+ <bitbake-devel@lists.openembedded.org>; Tue, 20 Dec 2022 16:41:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14216
 
-On Mon, 2022-12-19 at 05:48 -0800, yosuke.nky@gmail.com wrote:
-> > It looks like we may just be able to add a dict() wrapper around
-> > the return values if these are all defaultdict objects?
-> Sorry, I forgot that some commands return "collections.abc.KeysView".
-> Therefore,=C2=A0enable_marshel function in my patch is trying to cast lis=
-t
-> and dict.=C2=A0 =C2=A0
-> For instance,=C2=A0dataStoreConnectorCmd returns
-> "collections.abc.KeysView" when subcommand is "keys".=C2=A0 =C2=A0
-> However, dataStoreConnectorCmd has so many subcommands that we have
-> not been able to verify the return types of all of them.
-> Perhaps we should consider removing dataStoreConnectorCmd from the
-> scope of this patch, as we will look into how to fix it properly
-> later.
+On Tue, Dec 20, 2022 at 9:16 AM Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+>
+> I've been seeing event handlers where 'd' seems to disappear half way through
+> event handler execution. This is problematic when multiple threads are active
+> since this code assumes single threading. Add in a recursive lock to avoid
+> d being deleted from a context it shouldn't be.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/event.py | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/lib/bb/event.py b/lib/bb/event.py
+> index 21e9a1b025..5df5b3a3ee 100644
+> --- a/lib/bb/event.py
+> +++ b/lib/bb/event.py
+> @@ -68,6 +68,7 @@ _catchall_handlers = {}
+>  _eventfilter = None
+>  _uiready = False
+>  _thread_lock = threading.Lock()
+> +_builtins_lock = threading.RLock()
 
-I think that would make sense. We may end up having to document that
-the datastore connector can only be used on local connections as that
-functionality is much more complex that the others.
+Does this need to be a recursive lock?
 
-> To make matters easier to understand, I created gits file for
-> reproducing the error with tinfoil, not with my private work.
-> https://gist.github.com/AngryMane/9e0f57dac862b209ae406a729c4fa4e5
-> You can reproduce the error by following below steps.
-> 1.=C2=A0bitbake-error in my gist and copy it to bitbake/bin
-> 1. source oe-init-build env
-> 1.=C2=A0bitbake --server-only --bind localhost:8081
-> 1.bitbake-error
->=20
-> Please note that this error occurs with only XMLRPCserver and
-> ProcessServer doen't occur this error.
-> In other words, the problem does not occur except in use cases where
-> the bitbake --server-only option is used.
-
-Sounds good, thanks for putting that together, I'll have to take a
-look!
-
-Cheers,
-
-Richard
-
+>  _thread_lock_enabled = False
+>  _heartbeat_enabled = False
+>
+> @@ -93,6 +94,9 @@ def disable_heartbeat():
+>      _heartbeat_enabled = False
+>
+>  def execute_handler(name, handler, event, d):
+> +    if _thread_lock_enabled:
+> +        _builtins_lock.acquire()
+> +
+>      event.data = d
+>      addedd = False
+>      if 'd' not in builtins:
+> @@ -115,6 +119,9 @@ def execute_handler(name, handler, event, d):
+>          del event.data
+>          if addedd:
+>              del builtins['d']
+> +        if _thread_lock_enabled:
+> +            _builtins_lock.release()
+> +
+>
+>  def fire_class_handlers(event, d):
+>      if isinstance(event, logging.LogRecord):
+> --
+> 2.37.2
+>
+>
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14212): https://lists.openembedded.org/g/bitbake-devel/message/14212
+> Mute This Topic: https://lists.openembedded.org/mt/95787500/3616693
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWhacker@gmail.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+>
 
