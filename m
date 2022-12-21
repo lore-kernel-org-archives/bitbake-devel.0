@@ -2,208 +2,94 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885A6C4332F
-	for <webhook@archiver.kernel.org>; Wed, 21 Dec 2022 15:36:24 +0000 (UTC)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web10.21687.1671636981830323936
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F186C41535
+	for <webhook@archiver.kernel.org>; Wed, 21 Dec 2022 23:35:17 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web11.33950.1671665710834077800
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 21 Dec 2022 07:36:22 -0800
+ Wed, 21 Dec 2022 15:35:11 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hwHr0CMy;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f49.google.com with SMTP id y16so15347549wrm.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 21 Dec 2022 07:36:21 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CpaeC2c+;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f48.google.com with SMTP id i82-20020a1c3b55000000b003d1e906ca23so13456wma.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 21 Dec 2022 15:35:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1FRIx7g3fVuuqqeQjrNxSrr6Uzp6yf64O6D5gga4q4E=;
-        b=hwHr0CMyQCtQzO/PJwfiuyK1Xlqq3zhdkaK0bXZTJYl5lmBqS4QrScrJkixoUtt6vz
-         liFom/Qjo83Y3xMx9Qh1L8Xtd3zOcMcmZMxMKe1RpwVdomxI/pSn745StEZFQ+TVd5Cw
-         REv5jH7DURssAsDzATNQeCjvXN9HPw6fP5QXw=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z14wn+fdObnCb4A98XEBqYC6JuHymdEstH4/N/oFOos=;
+        b=CpaeC2c+KQ7WJsvjSDAgqFCk1I0xWRlA0aH9hweuM9N4Nehr2gFH3D9sWDY6T2nb5x
+         0e5u99Nmh+QMuIjHHcRqDCIANvrTqyAKouhRTHy9S13l2G5Z8y3COt6lM96BGIr+21pP
+         BxuevBI/iVbYTqR8grDWZbb5qBV91YRJnvnNM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1FRIx7g3fVuuqqeQjrNxSrr6Uzp6yf64O6D5gga4q4E=;
-        b=foktjf9PaZUVmhjhEG37n9vPMidQC/jWp+aw/1JVXFYDiZY9dQNdpjfmySCf8UXgLw
-         HJ9+sMUE47gF6D+OQQTd77DjAPnO27JaAoa8dnzFoeJzHkUwxfMdV9m+LeH8TFzsfE4i
-         wcEVRjlMdE4ZJtZ+mY5KD8XvRizQk6TnLzmNjUWOHPW9UPTtl2bGrYc3UHg4enLRcJPq
-         MdyOhpV9Vd99tg7bfQWWmrhFis9uGkgJ4BpaE9qLQoMiGsazYnzWQflXXEduyEBolJ89
-         LUZKEaPRvXvXM4FpxsejsJ6jrwN0APTRrSCA3p2YkxKis+hrLImf5U0Xh5x0XY7NcWPo
-         cP/w==
-X-Gm-Message-State: AFqh2kpwzvFGGx+tt1OSorqxOXuCxxxbW+FXSSCg9zJTjX2pIhq6BVL/
-	i12/iP8shveme6KbKo0IUfQwjCVfkKWdEPnB
-X-Google-Smtp-Source: AMrXdXvApl+wuKLEUqjzJIXAA1FRDCgSMB62tqGGCrPfiR+nDRCKLEj8e5rxY0SkgQIDud5ren9oUw==
-X-Received: by 2002:a05:6000:5ca:b0:24f:11eb:2988 with SMTP id bh10-20020a05600005ca00b0024f11eb2988mr1345116wrb.71.1671636979713;
-        Wed, 21 Dec 2022 07:36:19 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:e749:b020:2cdb:af31])
-        by smtp.gmail.com with ESMTPSA id k12-20020adff28c000000b0022e57e66824sm18035052wro.99.2022.12.21.07.36.19
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z14wn+fdObnCb4A98XEBqYC6JuHymdEstH4/N/oFOos=;
+        b=LBK5RUzUK+wTLcGGVJsPayipruzscrMfXn3KVzRaUBVaZOvRkS8jSwRfqtETz0wM9x
+         jDsOI+8KTIWFucTlcDh8VgS4aZCWIGPTQEgt6G/rhu4tINJC25RkGGoP1ntnwYdhSgOU
+         I1dfCv/Laj0cd/yqP/V8hmWboQTWzze0eT66TKfRQas31LVG+OBNQfmesoV/XyXs0c7M
+         iFjApcOHnXeG2k4Au7KQHZImNE9dWQVxlVnVyN/YxRbVPW16SJYcKAkwQ39ILItzZ5Vo
+         Pca4gC9Bm/UsdB7hP6qY/hD2R1MZXjYGQ/5nbmsKGRm5aWfkLtZwah++zrn345uKjyzc
+         Yt5Q==
+X-Gm-Message-State: AFqh2kr+Hurct1W5W67xSAGANAkHe1E4SaNdJR5pJqO7wqEklosliN65
+	AwMirAyUOBJV5OWP9o6DevOFFzcPs1oUwm8H
+X-Google-Smtp-Source: AMrXdXu7faXsI2i/CA0FQn7HCZYD7KDYv7ddM7WHTCtC3lS2yhctL2C6TGVfrb2U26YIgPBcvFTN/w==
+X-Received: by 2002:a1c:4c12:0:b0:3c6:e63e:89a6 with SMTP id z18-20020a1c4c12000000b003c6e63e89a6mr2861752wmf.2.1671665709205;
+        Wed, 21 Dec 2022 15:35:09 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:a8db:6d5d:f54f:c6b2])
+        by smtp.gmail.com with ESMTPSA id g15-20020a05600c310f00b003b47e75b401sm4063967wmo.37.2022.12.21.15.35.08
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Dec 2022 07:36:19 -0800 (PST)
+        Wed, 21 Dec 2022 15:35:08 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v2] event: Always use threadlock
-Date: Wed, 21 Dec 2022 15:36:18 +0000
-Message-Id: <20221221153618.504554-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/3] server/process: Improve exception logging
+Date: Wed, 21 Dec 2022 23:35:06 +0000
+Message-Id: <20221221233507.519249-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20221221233507.519249-1-richard.purdie@linuxfoundation.org>
+References: <20221221233507.519249-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 21 Dec 2022 15:36:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14226
+ <bitbake-devel@lists.openembedded.org>; Wed, 21 Dec 2022 23:35:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14228
 
-With the move to a server idle thread, we always need threading. The
-existing accessor functions could end up turning this off!
-
-I was going to hold the lock whilst changing it, check if the value
-was already set, cache the result and also fix the event code to always
-release the lock with a try/finally.
-
-Instead, disable the existing functions and use a with: block
-to handle the lock, keeping things much simpler.
+Currently if either idle functions loop suffers a traceback, it is
+silently dropped and there is no log message to say what happened.
+This change at least means the traceback is in the cooker log, making
+some debugging possible.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/event.py          | 51 +++++++++++++++++-----------------------
- lib/bb/server/process.py |  1 -
- lib/bb/tests/event.py    | 17 +-------------
- 3 files changed, 23 insertions(+), 46 deletions(-)
+ lib/bb/server/process.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-v2: Fix testcases
-
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index db90724444..603fcd7aee 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -68,16 +68,15 @@ _catchall_handlers = {}
- _eventfilter = None
- _uiready = False
- _thread_lock = threading.Lock()
--_thread_lock_enabled = False
- _heartbeat_enabled = False
- 
- def enable_threadlock():
--    global _thread_lock_enabled
--    _thread_lock_enabled = True
-+    # Always needed now
-+    return
- 
- def disable_threadlock():
--    global _thread_lock_enabled
--    _thread_lock_enabled = False
-+    # Always needed now
-+    return
- 
- def enable_heartbeat():
-     global _heartbeat_enabled
-@@ -179,36 +178,30 @@ def print_ui_queue():
- 
- def fire_ui_handlers(event, d):
-     global _thread_lock
--    global _thread_lock_enabled
- 
-     if not _uiready:
-         # No UI handlers registered yet, queue up the messages
-         ui_queue.append(event)
-         return
- 
--    if _thread_lock_enabled:
--        _thread_lock.acquire()
--
--    errors = []
--    for h in _ui_handlers:
--        #print "Sending event %s" % event
--        try:
--             if not _ui_logfilters[h].filter(event):
--                 continue
--             # We use pickle here since it better handles object instances
--             # which xmlrpc's marshaller does not. Events *must* be serializable
--             # by pickle.
--             if hasattr(_ui_handlers[h].event, "sendpickle"):
--                _ui_handlers[h].event.sendpickle((pickle.dumps(event)))
--             else:
--                _ui_handlers[h].event.send(event)
--        except:
--            errors.append(h)
--    for h in errors:
--        del _ui_handlers[h]
--
--    if _thread_lock_enabled:
--        _thread_lock.release()
-+    with _thread_lock:
-+        errors = []
-+        for h in _ui_handlers:
-+            #print "Sending event %s" % event
-+            try:
-+                 if not _ui_logfilters[h].filter(event):
-+                     continue
-+                 # We use pickle here since it better handles object instances
-+                 # which xmlrpc's marshaller does not. Events *must* be serializable
-+                 # by pickle.
-+                 if hasattr(_ui_handlers[h].event, "sendpickle"):
-+                    _ui_handlers[h].event.sendpickle((pickle.dumps(event)))
-+                 else:
-+                    _ui_handlers[h].event.send(event)
-+            except:
-+                errors.append(h)
-+        for h in errors:
-+            del _ui_handlers[h]
- 
- def fire(event, d):
-     """Fire off an Event"""
 diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 12dfb6ea19..51eb882092 100644
+index 51eb882092..a3f2829560 100644
 --- a/lib/bb/server/process.py
 +++ b/lib/bb/server/process.py
-@@ -150,7 +150,6 @@ class ProcessServer():
-         self.cooker.pre_serve()
+@@ -395,6 +395,7 @@ class ProcessServer():
+                     if not isinstance(exc, bb.BBHandledException):
+                         logger.exception('Running idle function')
+                     del self._idlefuns[function]
++                    serverlog("Exception %s broke the idle_thread, exiting" % traceback.format_exc())
+                     self.quit = True
  
-         bb.utils.set_process_name("Cooker")
--        bb.event.enable_threadlock()
- 
-         ready = []
-         newconnections = []
-diff --git a/lib/bb/tests/event.py b/lib/bb/tests/event.py
-index 4de4cced5e..d959f2d95d 100644
---- a/lib/bb/tests/event.py
-+++ b/lib/bb/tests/event.py
-@@ -451,10 +451,9 @@ class EventHandlingTest(unittest.TestCase):
-             and disable threadlocks tests """
-         bb.event.fire(bb.event.OperationStarted(), None)
- 
--    def test_enable_threadlock(self):
-+    def test_event_threadlock(self):
-         """ Test enable_threadlock method """
-         self._set_threadlock_test_mockups()
--        bb.event.enable_threadlock()
-         self._set_and_run_threadlock_test_workers()
-         # Calls to UI handlers should be in order as all the registered
-         # handlers for the event coming from the first worker should be
-@@ -462,20 +461,6 @@ class EventHandlingTest(unittest.TestCase):
-         self.assertEqual(self._threadlock_test_calls,
-                          ["w1_ui1", "w1_ui2", "w2_ui1", "w2_ui2"])
- 
--
--    def test_disable_threadlock(self):
--        """ Test disable_threadlock method """
--        self._set_threadlock_test_mockups()
--        bb.event.disable_threadlock()
--        self._set_and_run_threadlock_test_workers()
--        # Calls to UI handlers should be intertwined together. Thanks to the
--        # delay in the registered handlers for the event coming from the first
--        # worker, the event coming from the second worker starts being
--        # processed before finishing handling the first worker event.
--        self.assertEqual(self._threadlock_test_calls,
--                         ["w1_ui1", "w2_ui1", "w1_ui2", "w2_ui2"])
--
--
- class EventClassesTest(unittest.TestCase):
-     """ Event classes test class """
- 
+             if nextsleep is not None:
+@@ -424,6 +425,7 @@ class ProcessServer():
+                 except Exception as exc:
+                     if not isinstance(exc, bb.BBHandledException):
+                         logger.exception('Running heartbeat function')
++                    serverlog("Exception %s broke in idle_commands, exiting" % traceback.format_exc())
+                     self.quit = True
+         if nextsleep and bb.event._heartbeat_enabled and now + nextsleep > self.next_heartbeat:
+             # Shorten timeout so that we we wake up in time for
 -- 
 2.37.2
 
