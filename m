@@ -2,106 +2,94 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A305C46467
-	for <webhook@archiver.kernel.org>; Thu, 22 Dec 2022 23:47:34 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web11.60900.1671752850177943149
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9005EC4167B
+	for <webhook@archiver.kernel.org>; Thu, 22 Dec 2022 23:47:44 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.60849.1671752854374239049
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 22 Dec 2022 15:47:30 -0800
+ Thu, 22 Dec 2022 15:47:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=BrgdUntP;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f49.google.com with SMTP id o5-20020a05600c510500b003d21f02fbaaso5047511wms.4
-        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Dec 2022 15:47:29 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=RYwF1pwm;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f52.google.com with SMTP id bi26-20020a05600c3d9a00b003d3404a89faso4559612wmb.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Dec 2022 15:47:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rjUR8wW045Dmbgzbvu2jqdBO9AgPEXWTs4vUQPlmhSM=;
-        b=BrgdUntPSG4nmPkQLFhLvC7LW6I+FpfgpThlVc4aT0Lo7dnrlT2Uxefe+iG08xJqmf
-         dPLH3WCmN2DrXKccjSqEs77V7NTBpSaKFXszzJ0ytZl3CdnONKWs/h1TF36lf/jzGXwa
-         edrajH/0nOqpM2sYxBArc66ZwyjR6vYzGCrm8=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Yel8xUuSTh7qI0L/QoYQd90wgnTdh60jHGEUPsPnbNA=;
+        b=RYwF1pwmvbl5lftaxKq2aJe8dyb3VUG0THeQDmmkofahCSMNQCHrD82ndnAReFVGNo
+         s8vQ1L98OS7DopWDSMj5PUdwlMp2S7JASB9zpJpWNvXmXE/L6LF0zN6BKWo07PmpZVfE
+         LOF0US7vL8/d34hpSrrLJG5NtrOoAY24b+o6k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rjUR8wW045Dmbgzbvu2jqdBO9AgPEXWTs4vUQPlmhSM=;
-        b=MOtCRafGkjvUOTRCC5c7jT0QwRfayjj61jlGGZsqgsch0r+pVNrcJjsNXF/ZqQvb9x
-         6nqZKl27JfFBI4AFvuVJJ0/AJXPxIW2RhNxoIfEC3Qk4RlDGQrtzfTjf9342s8XnRp1z
-         UF2Ov1kLwingtkVjO/jh6hKNk3O4TVjPE89ILyUYWNkLVgGv/97mCutFP4QYN5LbA8LS
-         c35u0oUDdxcvUbFoaPt653j7xMdRmJnAlYKA86j4Lm8HlzTQhwRd8krIy359NRUfAqw0
-         YHVCAsuvTYekXWeNMjf46Pidoc0IgtXjMTWop4pDzQOFAgSRqx9ImKTRzIjqBdVDU5My
-         ib2g==
-X-Gm-Message-State: AFqh2kqyEd5G3vtLS+NgBg5sHGDmf8FDBC2JVQCHNNFJwMKy9rXWOUZu
-	YPV1L/4ZzrL55Pfu2wtQjMPOfFvPYAGzW38d
-X-Google-Smtp-Source: AMrXdXvSzknU4A988DZ0PpI6oXtpE+KXQcSO3rgnNM6US+NzePebuZwy1uSdEyXlZE5nj8ee0vNNhA==
-X-Received: by 2002:a05:600c:600a:b0:3d1:ed41:57c0 with SMTP id az10-20020a05600c600a00b003d1ed4157c0mr8406933wmb.30.1671752847802;
-        Thu, 22 Dec 2022 15:47:27 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yel8xUuSTh7qI0L/QoYQd90wgnTdh60jHGEUPsPnbNA=;
+        b=g7wE/YWMNfoMrz7W/oUJ1WJxspdkjXDpDpbDqvbLqJyF/WLWfXJ10Uq/mHAfVhN/kt
+         OU4+VXRsJnLe6fDDBsOxSGCe6MdFzKhli3qS7c2gSU7B4dlDkk8St+/R0wymvhhP+MNv
+         5CTVdObqozbTheL9R5lETwgQumzYimZSCIusUPQ+dftcMjvg46I4eeeyYTcZLRQPhWbV
+         Tcdy/Ke8+KQHh8suazyMwuWnOHaWCUjPMcccWsO5Ii3Ntp+31UxFioFTXgtPn7zzuraB
+         1J5av3pfAHEcdJzoGg2GxkbV3/19HYLjE8wt8i1EC0WozMkBFVsrAsUVIXuLg4mMPWES
+         nNiw==
+X-Gm-Message-State: AFqh2kqGTaPUDbP62sVAdk1jxBS+VkQoiQmJROmlZBadT5twVT3F99cm
+	6LWZrWayduviGGYWJfsmNZya+C0dxgEtOKLh
+X-Google-Smtp-Source: AMrXdXvhLSp0tIY8JhqNg6TF5PHukbxg/MtB7gH71x7MZoN6z1fJbxM4kOUsv4wZtKxIfd5nv6JxVg==
+X-Received: by 2002:a05:600c:4193:b0:3c6:e60f:3f4f with SMTP id p19-20020a05600c419300b003c6e60f3f4fmr5570810wmh.6.1671752852669;
+        Thu, 22 Dec 2022 15:47:32 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:bc21:fec7:83cf:e0c3])
-        by smtp.gmail.com with ESMTPSA id bd25-20020a05600c1f1900b003cfd4cf0761sm7322189wmb.1.2022.12.22.15.47.27
+        by smtp.gmail.com with ESMTPSA id bd25-20020a05600c1f1900b003cfd4cf0761sm7322189wmb.1.2022.12.22.15.47.32
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Dec 2022 15:47:27 -0800 (PST)
+        Thu, 22 Dec 2022 15:47:32 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 01/10] knotty: Ping the server/cooker periodically
-Date: Thu, 22 Dec 2022 23:47:17 +0000
-Message-Id: <20221222234726.579702-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 09/10] server/process: Improve exception logging
+Date: Thu, 22 Dec 2022 23:47:25 +0000
+Message-Id: <20221222234726.579702-9-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20221222234726.579702-1-richard.purdie@linuxfoundation.org>
+References: <20221222234726.579702-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 22 Dec 2022 23:47:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14231
+ <bitbake-devel@lists.openembedded.org>; Thu, 22 Dec 2022 23:47:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14238
 
-We've seeing failures where the UI hangs if the server disappears. Ping
-the cooker/server if we've not had any events in the last minute so we can
-check if it is still alive.
+Currently if either idle functions loop suffers a traceback, it is
+silently dropped and there is no log message to say what happened.
+This change at least means the traceback is in the cooker log, making
+some debugging possible.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/ui/knotty.py | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ lib/bb/server/process.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 61cf0a37f4..ab1a367be0 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -625,7 +625,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 63d37ae0d5..49cca8d23d 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -389,6 +389,7 @@ class ProcessServer():
+                     if not isinstance(exc, bb.BBHandledException):
+                         logger.exception('Running idle function')
+                     del self._idlefuns[function]
++                    serverlog("Exception %s broke the idle_thread, exiting" % traceback.format_exc())
+                     self.quit = True
  
-     printintervaldelta = 10 * 60 # 10 minutes
-     printinterval = printintervaldelta
--    lastprint = time.time()
-+    pinginterval = 1 * 60 # 1 minutes
-+    lastevent = lastprint = time.time()
- 
-     termfilter = tf(main, helper, console_handlers, params.options.quiet)
-     atexit.register(termfilter.finish)
-@@ -637,6 +638,14 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 printinterval += printintervaldelta
-             event = eventHandler.waitEvent(0)
-             if event is None:
-+                if (lastevent + pinginterval) <= time.time():
-+                    ret, error = server.runCommand(["ping"])
-+                    if error or not ret:
-+                        termfilter.clearFooter()
-+                        print("No reply after pinging server (%s, %s), exiting." % (str(error), str(ret)))
-+                        return_value = 3
-+                        main.shutdown = 2
-+                    lastevent = time.time()
-                 if main.shutdown > 1:
-                     break
-                 if not parseprogress:
-@@ -644,6 +653,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 event = eventHandler.waitEvent(0.25)
-                 if event is None:
-                     continue
-+            lastevent = time.time()
-             helper.eventHandler(event)
-             if isinstance(event, bb.runqueue.runQueueExitWait):
-                 if not main.shutdown:
+             # FIXME - the 1 is the inotify processing in cooker which always runs
+@@ -422,6 +423,7 @@ class ProcessServer():
+                 except Exception as exc:
+                     if not isinstance(exc, bb.BBHandledException):
+                         logger.exception('Running heartbeat function')
++                    serverlog("Exception %s broke in idle_commands, exiting" % traceback.format_exc())
+                     self.quit = True
+         if nextsleep and bb.event._heartbeat_enabled and now + nextsleep > self.next_heartbeat:
+             # Shorten timeout so that we we wake up in time for
 -- 
 2.37.2
 
