@@ -2,53 +2,53 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92479C3DA7D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AC3C4708D
 	for <webhook@archiver.kernel.org>; Thu, 22 Dec 2022 23:47:34 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.60902.1671752851328459093
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web11.60901.1671752850665460756
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 22 Dec 2022 15:47:31 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=AgT/NRyg;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id b24-20020a05600c4a9800b003d21efdd61dso2453560wmp.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Dec 2022 15:47:31 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hJynPUNK;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f41.google.com with SMTP id o15so2564662wmr.4
+        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Dec 2022 15:47:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=758nh+IjW+PDtVxDuFX7FJkJ6XmbtKXSkAdsuA5dm5M=;
-        b=AgT/NRyggBnXNMnlSm6DqjSYg4KR2O7yt6INUDboWud5MFzth2uVaHlcsGCKsAg9wD
-         DFgFWhOc5JrbEwRw4GxDadujPG/gPgq6WRGaT9f/nqVDnJqRDyhXQymDC8ErYDF3hbjA
-         PD8YI0JhoPYS1S1QmDijUbrG7yjtCY+uzYI+Q=
+        bh=dHHlILX9B2Dcb3I3IxVcze1ZIeSnGaT/zwJmYdZTp9I=;
+        b=hJynPUNKBJjdhgZ6eYj+FfJT6/vzyoVgW+ZGoUhEkwxJZt5Cp2SejXbrxJMq568AO1
+         jUvyapEnbppagpn5zGoM2FlSx6Dx7pKFbJzQSV+uwqcx2N8qOd+ak8iGO171sieOrEGX
+         Jur0xhS6TutqYFdc+cowtXV5q9WNmWe4n+QQc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=758nh+IjW+PDtVxDuFX7FJkJ6XmbtKXSkAdsuA5dm5M=;
-        b=I9YX8wavaofP4qCK5SSPUn/DyxZ3DzmvCzAu9LHukVTfmcSj6LqwP4H/Oa5r9okMoR
-         PEqG2FCPVICYOF1anVnKwFTc5K7biNLcvWLA5j1Ki/PLV4c43IImABrmkIhAnbiHbiRS
-         KC3reMMV613KMtagu8iTx+Wjhx0JG3egzf0u4In2xkfCCHU1/ugW8osMTArjgQYj7/k6
-         gRMn+e1sBFqBnzKJqN+cV/DqL3VMj5i+8DMIMVYSmq3iR15SY9CTtgIxxVKVBifGBoeG
-         iE0clINllvoPiVCbtIVvNt3f+BuHWQDW1bEykMAWPoFrtcn8r6LNPpIXzKygyb+N8Fex
-         ql9Q==
-X-Gm-Message-State: AFqh2kpvG9Iw8ojwttSeLdoSzpZMkStGIpFxw5Avb45V/9K2qKk8v6lm
-	otO9KKhaN71+d50bukzojgGwx/X5tGnK5GW3
-X-Google-Smtp-Source: AMrXdXtCTcwSMjul1A0pRtx4ASVz1XvnbeiVryayu952/h82kRB5L5Vg7K98/sfc00ju/DicZqHXzg==
-X-Received: by 2002:a7b:c3c9:0:b0:3d2:e28:647f with SMTP id t9-20020a7bc3c9000000b003d20e28647fmr6336037wmj.15.1671752849607;
-        Thu, 22 Dec 2022 15:47:29 -0800 (PST)
+        bh=dHHlILX9B2Dcb3I3IxVcze1ZIeSnGaT/zwJmYdZTp9I=;
+        b=CNo94XALtrDPpeL9W8uTjXEtDDxJARLm6zI2b0yETzDX6UYxRgNXNRh8jyS/EdeNk1
+         beAS/eQ55IVIhre37s4nnZyw7uFertwZ+KuS/Dn1Oi/0guPBFpuO0lIc1KzIzp8n2LEm
+         cF2dKPnO5o4hZOeeWapLDqiqAH9o+HEfO+iALi6CtnmU3kftzp4H6//517fDbAODrhHG
+         TL0qavOk6Hxf92UugF4Oa6akAnmphS9lSYolMlTHz79B9dawbeS6hWRFQry2Lwb940tW
+         JOCNjbsJvSMTH/Oe0MJPfwzYest1/cGfbl819FbhPDWys4YaiGJPWsQyEl34Fp9FxB3L
+         6hgA==
+X-Gm-Message-State: AFqh2kotMUe12MIh6Z5dBXeHvb0EddRZ7XVJ4YX5/aRjOPoiFAHnUpYl
+	BJRlVs1sLIQc8g1lO9rQRtZCMXVmp7xzB5WX
+X-Google-Smtp-Source: AMrXdXtIlNXwQDE22k4pcl4ysnJvSyReXtKPHpYQBCmrize1BWZ0EwUJ1WG7zcKW1zMcgDBZHqTfMA==
+X-Received: by 2002:a7b:c4d3:0:b0:3d3:5cd6:760 with SMTP id g19-20020a7bc4d3000000b003d35cd60760mr6403557wmk.20.1671752848941;
+        Thu, 22 Dec 2022 15:47:28 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:bc21:fec7:83cf:e0c3])
-        by smtp.gmail.com with ESMTPSA id bd25-20020a05600c1f1900b003cfd4cf0761sm7322189wmb.1.2022.12.22.15.47.29
+        by smtp.gmail.com with ESMTPSA id bd25-20020a05600c1f1900b003cfd4cf0761sm7322189wmb.1.2022.12.22.15.47.28
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Dec 2022 15:47:29 -0800 (PST)
+        Thu, 22 Dec 2022 15:47:28 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 04/10] server/process: Run idle commands in a separate idle thread
-Date: Thu, 22 Dec 2022 23:47:20 +0000
-Message-Id: <20221222234726.579702-4-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 03/10] event: builtins fix for 'd' deletion
+Date: Thu, 22 Dec 2022 23:47:19 +0000
+Message-Id: <20221222234726.579702-3-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221222234726.579702-1-richard.purdie@linuxfoundation.org>
 References: <20221222234726.579702-1-richard.purdie@linuxfoundation.org>
@@ -58,184 +58,186 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 22 Dec 2022 23:47:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14233
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14232
 
-When bitbake is off running heavier "idle" commands, it doesn't service it's
-command socket which means stopping/interrupting it is hard. It also means we
-can't "ping" from the UI to know if it is still alive.
+I've been seeing event handlers where 'd' seems to disappear half way through
+event handler execution. This is problematic when multiple threads are active
+since this code assumes single threading.
 
-For those reasons, split idle command execution into it's own thread.
+The easiest fix is to change the handler function calls to contain d as a
+parameter as we do elsewhere for other functions. This will break any non-text
+handlers but I was only able to spot one of those in runqueue. It will also
+break handlers than call functions that assume 'd' is in the global namespace
+but those failures should be obvious and we can fix those to pass d around.
 
-The commands are generally already self containted so this is easier than
-expected. We do have to be careful to only handle inotify poll() from a single
-thread at a time. It also means we always have to use a thread lock when sending
-events since both the idle thread and the command thread may generate log messages
-(and hence events). The patch does depend on a couple of previous fixes to the
-builtins locking in event.py and the heartbeat enable/disable changes.
+This solution avoids manipulating builtins which was always a horrible thing
+to do anyway and solves the issue without needing locking, thankfully.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/command.py        |  4 +--
- lib/bb/cooker.py         | 19 +++++++++----
- lib/bb/server/process.py | 60 +++++++++++++++++++++++++---------------
- 3 files changed, 54 insertions(+), 29 deletions(-)
+ lib/bb/event.py       | 18 ++++--------------
+ lib/bb/runqueue.py    |  2 +-
+ lib/bb/tests/color.py |  2 +-
+ lib/bb/tests/event.py | 21 +++++++++++----------
+ 4 files changed, 17 insertions(+), 26 deletions(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 0208e30ec4..20a8b86653 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -84,7 +84,7 @@ class Command:
-                 if not hasattr(command_method, 'readonly') or not getattr(command_method, 'readonly'):
-                     return None, "Not able to execute not readonly commands in readonly mode"
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 21e9a1b025..db90724444 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -71,11 +71,6 @@ _thread_lock = threading.Lock()
+ _thread_lock_enabled = False
+ _heartbeat_enabled = False
+ 
+-if hasattr(__builtins__, '__setitem__'):
+-    builtins = __builtins__
+-else:
+-    builtins = __builtins__.__dict__
+-
+ def enable_threadlock():
+     global _thread_lock_enabled
+     _thread_lock_enabled = True
+@@ -94,12 +89,8 @@ def disable_heartbeat():
+ 
+ def execute_handler(name, handler, event, d):
+     event.data = d
+-    addedd = False
+-    if 'd' not in builtins:
+-        builtins['d'] = d
+-        addedd = True
+     try:
+-        ret = handler(event)
++        ret = handler(event, d)
+     except (bb.parse.SkipRecipe, bb.BBHandledException):
+         raise
+     except Exception:
+@@ -113,8 +104,7 @@ def execute_handler(name, handler, event, d):
+         raise
+     finally:
+         del event.data
+-        if addedd:
+-            del builtins['d']
++
+ 
+ def fire_class_handlers(event, d):
+     if isinstance(event, logging.LogRecord):
+@@ -262,12 +252,12 @@ def register(name, handler, mask=None, filename=None, lineno=None, data=None):
+     if handler is not None:
+         # handle string containing python code
+         if isinstance(handler, str):
+-            tmp = "def %s(e):\n%s" % (name, handler)
++            tmp = "def %s(e, d):\n%s" % (name, handler)
              try:
--                self.cooker.process_inotify_updates()
-+                self.cooker.process_inotify_updates_apply()
-                 if getattr(command_method, 'needconfig', True):
-                     self.cooker.updateCacheSync()
-                 result = command_method(self, commandline)
-@@ -109,7 +109,7 @@ class Command:
+                 code = bb.methodpool.compile_cache(tmp)
+                 if not code:
+                     if filename is None:
+-                        filename = "%s(e)" % name
++                        filename = "%s(e, d)" % name
+                     code = compile(tmp, filename, "exec", ast.PyCF_ONLY_AST)
+                     if lineno is not None:
+                         ast.increment_lineno(code, lineno-1)
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index b9dd830b31..ce711b6252 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1511,7 +1511,7 @@ class RunQueue:
  
-     def runAsyncCommand(self):
-         try:
--            self.cooker.process_inotify_updates()
-+            self.cooker.process_inotify_updates_apply()
-             if self.cooker.state in (bb.cooker.state.error, bb.cooker.state.shutdown, bb.cooker.state.forceshutdown):
-                 # updateCache will trigger a shutdown of the parser
-                 # and then raise BBHandledException triggering an exit
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 815610ff82..1daa587ac5 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -220,6 +220,8 @@ class BBCooker:
-         bb.debug(1, "BBCooker startup complete %s" % time.time())
-         sys.stdout.flush()
+             if not self.dm_event_handler_registered:
+                  res = bb.event.register(self.dm_event_handler_name,
+-                                         lambda x: self.dm.check(self) if self.state in [runQueueRunning, runQueueCleanUp] else False,
++                                         lambda x, y: self.dm.check(self) if self.state in [runQueueRunning, runQueueCleanUp] else False,
+                                          ('bb.event.HeartbeatEvent',), data=self.cfgData)
+                  self.dm_event_handler_registered = True
  
-+        self.inotify_threadlock = threading.Lock()
-+
-     def init_configdata(self):
-         if not hasattr(self, "data"):
-             self.initConfigurationData()
-@@ -248,11 +250,18 @@ class BBCooker:
-         self.notifier = pyinotify.Notifier(self.watcher, self.notifications)
+diff --git a/lib/bb/tests/color.py b/lib/bb/tests/color.py
+index 88dd278006..bb70cb393d 100644
+--- a/lib/bb/tests/color.py
++++ b/lib/bb/tests/color.py
+@@ -20,7 +20,7 @@ class ProgressWatcher:
+     def __init__(self):
+         self._reports = []
  
-     def process_inotify_updates(self):
--        for n in [self.confignotifier, self.notifier]:
--            if n and n.check_events(timeout=0):
--                # read notified events and enqueue them
--                n.read_events()
--                n.process_events()
-+        with self.inotify_threadlock:
-+            for n in [self.confignotifier, self.notifier]:
-+                if n and n.check_events(timeout=0):
-+                    # read notified events and enqueue them
-+                    n.read_events()
-+
-+    def process_inotify_updates_apply(self):
-+        with self.inotify_threadlock:
-+            for n in [self.confignotifier, self.notifier]:
-+                if n and n.check_events(timeout=0):
-+                    n.read_events()
-+                    n.process_events()
+-    def handle_event(self, event):
++    def handle_event(self, event, d):
+         self._reports.append((event.progress, event.rate))
  
-     def config_notifications(self, event):
-         if event.maskname == "IN_Q_OVERFLOW":
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 91eb6e0ad9..6f43330fae 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -88,6 +88,7 @@ class ProcessServer():
-         self.maxuiwait = 30
-         self.xmlrpc = False
+     def reports(self):
+diff --git a/lib/bb/tests/event.py b/lib/bb/tests/event.py
+index 9ca7e9bc8e..4de4cced5e 100644
+--- a/lib/bb/tests/event.py
++++ b/lib/bb/tests/event.py
+@@ -157,7 +157,7 @@ class EventHandlingTest(unittest.TestCase):
+                                  self._test_process.event_handler,
+                                  event,
+                                  None)
+-        self._test_process.event_handler.assert_called_once_with(event)
++        self._test_process.event_handler.assert_called_once_with(event, None)
  
-+        self.idle = None
-         self._idlefuns = {}
+     def test_fire_class_handlers(self):
+         """ Test fire_class_handlers method """
+@@ -175,10 +175,10 @@ class EventHandlingTest(unittest.TestCase):
+         bb.event.fire_class_handlers(event1, None)
+         bb.event.fire_class_handlers(event2, None)
+         bb.event.fire_class_handlers(event2, None)
+-        expected_event_handler1 = [call(event1)]
+-        expected_event_handler2 = [call(event1),
+-                                   call(event2),
+-                                   call(event2)]
++        expected_event_handler1 = [call(event1, None)]
++        expected_event_handler2 = [call(event1, None),
++                                   call(event2, None),
++                                   call(event2, None)]
+         self.assertEqual(self._test_process.event_handler1.call_args_list,
+                          expected_event_handler1)
+         self.assertEqual(self._test_process.event_handler2.call_args_list,
+@@ -205,7 +205,7 @@ class EventHandlingTest(unittest.TestCase):
+         bb.event.fire_class_handlers(event2, None)
+         bb.event.fire_class_handlers(event2, None)
+         expected_event_handler1 = []
+-        expected_event_handler2 = [call(event1)]
++        expected_event_handler2 = [call(event1, None)]
+         self.assertEqual(self._test_process.event_handler1.call_args_list,
+                          expected_event_handler1)
+         self.assertEqual(self._test_process.event_handler2.call_args_list,
+@@ -223,7 +223,7 @@ class EventHandlingTest(unittest.TestCase):
+         self.assertEqual(result, bb.event.Registered)
+         bb.event.fire_class_handlers(event1, None)
+         bb.event.fire_class_handlers(event2, None)
+-        expected = [call(event1), call(event2)]
++        expected = [call(event1, None), call(event2, None)]
+         self.assertEqual(self._test_process.event_handler1.call_args_list,
+                          expected)
  
-         self.bitbake_lock = lock
-@@ -148,6 +149,7 @@ class ProcessServer():
-         self.cooker.pre_serve()
+@@ -237,7 +237,7 @@ class EventHandlingTest(unittest.TestCase):
+         self.assertEqual(result, bb.event.Registered)
+         bb.event.fire_class_handlers(event1, None)
+         bb.event.fire_class_handlers(event2, None)
+-        expected = [call(event1), call(event2), call(event1)]
++        expected = [call(event1, None), call(event2, None), call(event1, None)]
+         self.assertEqual(self._test_process.event_handler1.call_args_list,
+                          expected)
  
-         bb.utils.set_process_name("Cooker")
-+        bb.event.enable_threadlock()
+@@ -251,7 +251,7 @@ class EventHandlingTest(unittest.TestCase):
+         self.assertEqual(result, bb.event.Registered)
+         bb.event.fire_class_handlers(event1, None)
+         bb.event.fire_class_handlers(event2, None)
+-        expected = [call(event1), call(event2), call(event1), call(event2)]
++        expected = [call(event1,None), call(event2, None), call(event1, None), call(event2, None)]
+         self.assertEqual(self._test_process.event_handler1.call_args_list,
+                          expected)
  
-         ready = []
-         newconnections = []
-@@ -278,6 +280,9 @@ class ProcessServer():
+@@ -359,9 +359,10 @@ class EventHandlingTest(unittest.TestCase):
  
-             ready = self.idle_commands(.1, fds)
+         event1 = bb.event.ConfigParsed()
+         bb.event.fire(event1, None)
+-        expected = [call(event1)]
++        expected = [call(event1, None)]
+         self.assertEqual(self._test_process.event_handler1.call_args_list,
+                          expected)
++        expected = [call(event1)]
+         self.assertEqual(self._test_ui1.event.send.call_args_list,
+                          expected)
  
-+        if self.idle:
-+            self.idle.join()
-+
-         serverlog("Exiting (socket: %s)" % os.path.exists(self.sockname))
-         # Remove the socket file so we don't get any more connections to avoid races
-         # The build directory could have been renamed so if the file isn't the one we created
-@@ -352,33 +357,44 @@ class ProcessServer():
-                     msg.append(":\n%s" % procs)
-                 serverlog("".join(msg))
- 
-+    def idle_thread(self):
-+        while not self.quit:
-+            nextsleep = 0.1
-+            fds = []
-+            for function, data in list(self._idlefuns.items()):
-+                try:
-+                    retval = function(self, data, False)
-+                    if retval is False:
-+                        del self._idlefuns[function]
-+                        nextsleep = None
-+                    elif retval is True:
-+                        nextsleep = None
-+                    elif isinstance(retval, float) and nextsleep:
-+                        if (retval < nextsleep):
-+                            nextsleep = retval
-+                    elif nextsleep is None:
-+                        continue
-+                    else:
-+                        fds = fds + retval
-+                except SystemExit:
-+                    raise
-+                except Exception as exc:
-+                    if not isinstance(exc, bb.BBHandledException):
-+                        logger.exception('Running idle function')
-+                    del self._idlefuns[function]
-+                    self.quit = True
-+
-+            if nextsleep is not None:
-+                select.select(fds,[],[],nextsleep)[0]
-+
-     def idle_commands(self, delay, fds=None):
-         nextsleep = delay
-         if not fds:
-             fds = []
- 
--        for function, data in list(self._idlefuns.items()):
--            try:
--                retval = function(self, data, False)
--                if retval is False:
--                    del self._idlefuns[function]
--                    nextsleep = None
--                elif retval is True:
--                    nextsleep = None
--                elif isinstance(retval, float) and nextsleep:
--                    if (retval < nextsleep):
--                        nextsleep = retval
--                elif nextsleep is None:
--                    continue
--                else:
--                    fds = fds + retval
--            except SystemExit:
--                raise
--            except Exception as exc:
--                if not isinstance(exc, bb.BBHandledException):
--                    logger.exception('Running idle function')
--                del self._idlefuns[function]
--                self.quit = True
-+        if not self.idle:
-+            self.idle = threading.Thread(target=self.idle_thread)
-+            self.idle.start()
- 
-         # Create new heartbeat event?
-         now = time.time()
 -- 
 2.37.2
 
