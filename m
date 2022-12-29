@@ -2,53 +2,53 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F70FC4167B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA6CC46467
 	for <webhook@archiver.kernel.org>; Thu, 29 Dec 2022 17:07:43 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web11.209999.1672333660484354404
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web11.209996.1672333657013717810
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 29 Dec 2022 09:07:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=AdrdQNAB;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f45.google.com with SMTP id bx10so17932605wrb.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NIb4BdP1;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id y8so17878408wrl.13
         for <bitbake-devel@lists.openembedded.org>; Thu, 29 Dec 2022 09:07:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FotYd+yw6uokjiN37vk0vRJ4lgA31+9nocaqRYU1erg=;
-        b=AdrdQNABYwOgHia5iXDdc7oZlx86ZO86s6m/JTriA9HyzcnanyjnFmltVw3gDaMtWa
-         /DPwmu0z6wInGHb60QmJBAKT+fvIH0mssofaniozGJ84RfbcBie20EFDPXWxtUg3BjyO
-         ZLkAKmgLRyebFLjtgkmKUhJQPf1IqO1DrxG+8=
+        bh=10952peMSbCjNKygbzkhlQaifYsAkrqPX0YF0GHq3fU=;
+        b=NIb4BdP1BEw9cvUJUzKdF3Ej3AAcSgzPKjBnwnUbdBs79JAjaZSjHcxe4K31C7T9wO
+         v4X5n6++q3eD3+z59rYBf6IlMavXNw//JeKsi5cLkCfn/lxyRq6T47JUtVdyQGYV619l
+         TocedMMmbGUMcnXzzNPrlt20Ul3q0JY4GfinY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FotYd+yw6uokjiN37vk0vRJ4lgA31+9nocaqRYU1erg=;
-        b=I21ylo98XXKjVFZO6ruI5+QjvYGbBSaxxunI1UCWB/2AJ//6ySkt9K9qVIvSj3SG5j
-         fwq4RgqqCM4RlbPowUBo4YidQh3EtrdWAAcPXPawDCCR9PMFuBXuCKwL1URGKUIDeD2C
-         JQ6jwYGTkcqLhcHPNijfiDf8CW/guD974hgkvrwvnAk6yLxnBfx5fiRMRCZ4EtxF5c81
-         lrDcO9CSOofEDPpxtwFjMyfY7xfYlLEy16bkTgzTdFRm9Tf0DbrPJVVXJvyGJBnmQBfS
-         bBg9pvzwgPoBpnj91OBc2ZprKoDiJ5KcKpklY0myrqOP2wAwya+CSHelLpspNBWs+yj9
-         bsUw==
-X-Gm-Message-State: AFqh2krvp1ifoL1CZ3fenOH57xm7FKwpDbxQC1O8eBmjQ1NdzwjhhT6V
-	le8uk9Rg5/3PMCiE9Q303vmdkl9yVX/aWKSD
-X-Google-Smtp-Source: AMrXdXua/Bnf3WW6oPWuTX89AJAV2UHd00wfVl0Z6nHicrH59ee7A6G8Yzs6TPcKaXyqVVIHfn0+nw==
-X-Received: by 2002:a5d:45c8:0:b0:242:4c28:c9a9 with SMTP id b8-20020a5d45c8000000b002424c28c9a9mr17724510wrs.46.1672333658755;
-        Thu, 29 Dec 2022 09:07:38 -0800 (PST)
+        bh=10952peMSbCjNKygbzkhlQaifYsAkrqPX0YF0GHq3fU=;
+        b=W43n/fQjvfcxjPK6eng4ODAJhDsOZnbOfiTfilx7poIaO7plee6ZdfKBNX3cBvb6b2
+         ZVP0mOo8xbAtIYNrK/IwHYILub6td1XB9F9jN+iykGfWJkdE/xM5OjXkYyn8QYyyMXjs
+         8mN/z4oYKnzsJmjnJtzNRgUFZFzlRlX9EqXCdTZT7Oqwuh6pll3/Hh80mdfxkZejzydD
+         Aw6f3udH/ivka/ef2JGWNXcgI6EHNTYXVIOHJxgM1eu83rISj0zzNf8xK67je4WaMsvc
+         W9x2NR8acdmoilNQIkqGVQVWld0J6ptIx2Gj8orlNgw7PI9A4y5ShPX1ADRGuaUn88s2
+         GO4A==
+X-Gm-Message-State: AFqh2kqLMHzkr93nfy8nZZZ/K9V1+YKAYPfZNpT2GxU8Lc0eHG1a/SBN
+	4JZFsup6fPxQ0grKUTRAKK3FIRx+p45OH3/B
+X-Google-Smtp-Source: AMrXdXt2v2h10Ozbz48m846jnJK7z8KUKg/i4M9DYTvR5Gs7qvMam/Uhdzk0bgtgV4PdRQlbt75wXQ==
+X-Received: by 2002:a05:6000:1109:b0:28d:b028:b16 with SMTP id z9-20020a056000110900b0028db0280b16mr946819wrw.32.1672333659457;
+        Thu, 29 Dec 2022 09:07:39 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:43af:59a1:5bcf:54fb])
         by smtp.gmail.com with ESMTPSA id t12-20020a05600001cc00b0027b35baf811sm12308721wrx.57.2022.12.29.09.07.38
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Dec 2022 09:07:38 -0800 (PST)
+        Thu, 29 Dec 2022 09:07:39 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 13/15] cooker: Ensure we clean up active idle handlers
-Date: Thu, 29 Dec 2022 17:07:26 +0000
-Message-Id: <20221229170728.880367-14-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 14/15] cache: Drop reciever side counting for SiggenRecipeInfo
+Date: Thu, 29 Dec 2022 17:07:27 +0000
+Message-Id: <20221229170728.880367-15-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221229170728.880367-1-richard.purdie@linuxfoundation.org>
 References: <20221229170728.880367-1-richard.purdie@linuxfoundation.org>
@@ -58,113 +58,68 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 29 Dec 2022 17:07:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14257
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14256
 
-When the cooker shutdown method is called, ensure we clean up any
-active idle handlers before we exit as these could have trees of
-processes in them and these need to be notified and reaped.
-
-Ensure at actual shutdown when the idle loop has been terminated
-we don't trigger the idle loop call though as it will no longer
-be active at that point.
+Joshua Watt pointed out maintaining the counting on both sides of the
+connection isn't needed. Remove the receiver side counting and simplify
+the code, also allowing errors if the counts do go out of sync.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py         | 10 +++++++---
- lib/bb/server/process.py | 12 ++++++++----
- 2 files changed, 15 insertions(+), 7 deletions(-)
+ lib/bb/cache.py | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index ff7e48f6c0..a5a635858c 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -149,7 +149,7 @@ class BBCooker:
-     Manages one bitbake build run
-     """
+diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+index 3fc097241a..ee924b2d2b 100644
+--- a/lib/bb/cache.py
++++ b/lib/bb/cache.py
+@@ -285,7 +285,6 @@ class SiggenRecipeInfo(RecipeInfoCommon):
+         cls.save_map = {}
+         cls.save_count = 1
+         cls.restore_map = {}
+-        cls.restore_count = {}
  
--    def __init__(self, featureSet=None, idleCallBackRegister=None):
-+    def __init__(self, featureSet=None, idleCallBackRegister=None, waitIdle=None):
-         self.recipecaches = None
-         self.eventlog = None
-         self.skiplist = {}
-@@ -164,6 +164,7 @@ class BBCooker:
-         self.configuration = bb.cookerdata.CookerConfiguration()
- 
-         self.idleCallBackRegister = idleCallBackRegister
-+        self.waitIdle = waitIdle
- 
-         bb.debug(1, "BBCooker starting %s" % time.time())
-         sys.stdout.flush()
-@@ -1753,7 +1754,7 @@ class BBCooker:
-         return
- 
-     def post_serve(self):
--        self.shutdown(force=True)
-+        self.shutdown(force=True, idle=False)
-         prserv.serv.auto_shutdown()
-         if hasattr(bb.parse, "siggen"):
-             bb.parse.siggen.exit()
-@@ -1763,12 +1764,15 @@ class BBCooker:
-         if hasattr(self, "data"):
-             bb.event.fire(CookerExit(), self.data)
- 
--    def shutdown(self, force = False):
-+    def shutdown(self, force=False, idle=True):
-         if force:
-             self.state = state.forceshutdown
-         else:
-             self.state = state.shutdown
- 
-+        if idle:
-+            self.waitIdle(30)
-+
-         if self.parser:
-             self.parser.shutdown(clean=not force)
-             self.parser.final_cleanup()
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 3038c63f55..365758f85a 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -150,6 +150,11 @@ class ProcessServer():
- 
+     @classmethod
+     def _save(cls, deps):
+@@ -294,11 +293,13 @@ class SiggenRecipeInfo(RecipeInfoCommon):
+             return deps
+         for dep in deps:
+             fs = deps[dep]
+-            if fs in cls.save_map:
++            if fs is None:
++                ret.append((dep, None, None))
++            elif fs in cls.save_map:
+                 ret.append((dep, None, cls.save_map[fs]))
+             else:
+                 cls.save_map[fs] = cls.save_count
+-                ret.append((dep, fs, None))
++                ret.append((dep, fs, cls.save_count))
+                 cls.save_count = cls.save_count + 1
          return ret
  
-+    def wait_for_idle(self, timeout=30):
-+        # Wait for the idle loop to have cleared (30s max)
-+        self.is_idle.clear()
-+        self.is_idle.wait(timeout=timeout)
-+
-     def main(self):
-         self.cooker.pre_serve()
+@@ -309,18 +310,18 @@ class SiggenRecipeInfo(RecipeInfoCommon):
+             return deps
+         if pid not in cls.restore_map:
+             cls.restore_map[pid] = {}
+-            cls.restore_count[pid] = 1
+         map = cls.restore_map[pid]
+         for dep, fs, mapnum in deps:
+-            if mapnum:
++            if fs is None and mapnum is None:
++                ret[dep] = None
++            elif fs is None:
+                 ret[dep] = map[mapnum]
+             else:
+                 try:
+                     fs = cls.store[fs]
+                 except KeyError:
+                     cls.store[fs] = fs
+-                map[cls.restore_count[pid]] = fs
+-                cls.restore_count[pid] = cls.restore_count[pid] + 1
++                map[mapnum] = fs
+                 ret[dep] = fs
+         return ret
  
-@@ -174,8 +179,7 @@ class ProcessServer():
-                 self.controllersock = False
-             if self.haveui:
-                 # Wait for the idle loop to have cleared (30s max)
--                self.is_idle.clear()
--                self.is_idle.wait(timeout=30)
-+                self.wait_for_idle(30)
-                 if self.cooker.command.currentAsyncCommand is not None:
-                     serverlog("Idle loop didn't finish queued commands after 30s, exiting.")
-                     self.quit = True
-@@ -309,7 +313,7 @@ class ProcessServer():
-         self.sock.close()
- 
-         try:
--            self.cooker.shutdown(True)
-+            self.cooker.shutdown(True, idle=False)
-             self.cooker.notifier.stop()
-             self.cooker.confignotifier.stop()
-         except:
-@@ -607,7 +611,7 @@ def execServer(lockfd, readypipeinfd, lockname, sockname, server_timeout, xmlrpc
-         writer = ConnectionWriter(readypipeinfd)
-         try:
-             featureset = []
--            cooker = bb.cooker.BBCooker(featureset, server.register_idle_function)
-+            cooker = bb.cooker.BBCooker(featureset, server.register_idle_function, server.wait_for_idle)
-             cooker.configuration.profile = profile
-         except bb.BBHandledException:
-             return None
 -- 
 2.37.2
 
