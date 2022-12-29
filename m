@@ -2,53 +2,53 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6345BC54EBE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A30EC61DB3
 	for <webhook@archiver.kernel.org>; Thu, 29 Dec 2022 17:07:43 +0000 (UTC)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
- by mx.groups.io with SMTP id smtpd.web10.208595.1672333653668637530
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web10.208596.1672333654310683953
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 29 Dec 2022 09:07:33 -0800
+ Thu, 29 Dec 2022 09:07:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=f6ANp/rE;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f42.google.com with SMTP id y16so17910366wrm.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 29 Dec 2022 09:07:33 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=MoxetGh0;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f48.google.com with SMTP id z16so1435470wrw.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 29 Dec 2022 09:07:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rjUR8wW045Dmbgzbvu2jqdBO9AgPEXWTs4vUQPlmhSM=;
-        b=f6ANp/rEi7kjAaHx6AG3G4sHtD1LTN7NKZwtJvpTbkDkhmFieYtEN7pbaufcd3vnnG
-         3fSSQHGkIQyM+HsJQhFfZRxND6g+ieO2+aUANNDy3qH0bjtnfhsF/0LmVGZ9Nf+PnZ8I
-         tjP7QiQEwfgGAb1tIcRteLNS1dI3VJUcJ/rp0=
+        bh=mFin2loGDeMqi8JAlJmeDBXq8KlYP6njBHXSlSCNTrU=;
+        b=MoxetGh0xUzCwvmELfHoE513Xm+gGiBssRc9MtRXFuIHkSpOUoqTwK5dKo1c/iXpsT
+         xKMFiri+6z+EhJTZyXDZBOxVRK8kyNa8Vln3Ile57oFwOXgwGdA5uO4x0jcrmbsRJYE9
+         7MDyZ8Lc7FcANVd3CARZQNo80NHnPcvpzBeos=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rjUR8wW045Dmbgzbvu2jqdBO9AgPEXWTs4vUQPlmhSM=;
-        b=xZpe2+UT8X0TF9qmmYEzY64q+g4G1KIWhl0dlgZry0eJ+cVTBaxZ4P5lVkj7S0a57z
-         M6dmwXH5WTni4sjM6Jc7UgnWSgrNdi5x+iyXZvbn/vNwyk9TUdexuJYUDLFZCO28V5wJ
-         t4/UE0gAZ1qMyjh6EHv+/UVBmRgSeJWX4N8ZIRAGYAUNCCrMKMgjRVUZoYCgbFsvEVv1
-         zDR0r11Bx/jVNfQ/fy68b6L2CmD3Z0EdYl0rVMTP6wYllmvhYK6g63aoPeCiSAgpulvo
-         trxkrHRzlNf/+S+h3ByTujGHj3nxLcHFpXajMkMfCpRfrd4efV6f4ha1vQ1EZc07O05d
-         uOtQ==
-X-Gm-Message-State: AFqh2kqgyxsfaBfvZG9kJL6fuLJC9/XOm/AoB93gYgIy2XgPwz54U0Uw
-	S0OVf9nnYNRJ10V4YPOlm02CZCKHpN6TVEh/
-X-Google-Smtp-Source: AMrXdXvR54038f6lC2XX6/G2XX72PLOzQr0LRB6FWcPAU4zA3GyL7uNXNV5ZFCZ9tJh+IlABhhUNIw==
-X-Received: by 2002:a5d:6a43:0:b0:26a:298:f067 with SMTP id t3-20020a5d6a43000000b0026a0298f067mr18651677wrw.43.1672333652000;
+        bh=mFin2loGDeMqi8JAlJmeDBXq8KlYP6njBHXSlSCNTrU=;
+        b=LN/BpUyUqXhtNE1veSlDPy5yhwtGLKFk/mV2phRNUROi1qS4oshoDEp8KuZEfWcv6f
+         MRppkRsLlQwfAcAW4Ruspp/PSr7Y+VFRkjeAPgKBNpoFvjoEws66E1ccbhEPp9eoa0k4
+         zmejlMyV/9IaFi9hryrZeylVW3weooN0V6LdYLmqwqmlg+tp4L51L9C8OPIONo49GbYl
+         xSyRXoHZsKOrfCeEHUwLndjc1QLMG7jxwcCMJS6BOPuZe/cIEMkw7Q7rXqq+sKcE2t5U
+         y4Psq/kaXhbcyEJ83eAslBIdqW4j7/BgXCvd9WfmU9WPHrejxyakN4Yuud6SqOHNmaE7
+         IIqA==
+X-Gm-Message-State: AFqh2kpP3uPgnkiSmI/PpuWpXbJXTNy4z+JM0IJ/NSqQqFO6ebZr6GJa
+	Qkn1tnvUFSgfVkYNUHm4EXCKVlbK+qTr+1M4
+X-Google-Smtp-Source: AMrXdXsWQNJdQNW1Tdz2AGCNe5NjX/wpyXV7xpfFG9VVdQSP7AuCIyaqAnhFPeykw39sBIttzAs0RQ==
+X-Received: by 2002:a05:6000:18a6:b0:280:4a9:c8dd with SMTP id b6-20020a05600018a600b0028004a9c8ddmr13868698wri.18.1672333652570;
         Thu, 29 Dec 2022 09:07:32 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:43af:59a1:5bcf:54fb])
-        by smtp.gmail.com with ESMTPSA id t12-20020a05600001cc00b0027b35baf811sm12308721wrx.57.2022.12.29.09.07.31
+        by smtp.gmail.com with ESMTPSA id t12-20020a05600001cc00b0027b35baf811sm12308721wrx.57.2022.12.29.09.07.32
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Dec 2022 09:07:31 -0800 (PST)
+        Thu, 29 Dec 2022 09:07:32 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 03/15] knotty: Ping the server/cooker periodically
-Date: Thu, 29 Dec 2022 17:07:16 +0000
-Message-Id: <20221229170728.880367-4-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 04/15] event: Add enable/disable heartbeat code
+Date: Thu, 29 Dec 2022 17:07:17 +0000
+Message-Id: <20221229170728.880367-5-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221229170728.880367-1-richard.purdie@linuxfoundation.org>
 References: <20221229170728.880367-1-richard.purdie@linuxfoundation.org>
@@ -58,54 +58,105 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 29 Dec 2022 17:07:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14246
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14248
 
-We've seeing failures where the UI hangs if the server disappears. Ping
-the cooker/server if we've not had any events in the last minute so we can
-check if it is still alive.
+Currently heartbeat events are always generated by the server whilst it is
+active. Change this so they only appear when builds are running, which is
+when most code would expect to be executed. This removes a number of races
+around changes in the datastore which can happen outside of builds.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/ui/knotty.py | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ lib/bb/cooker.py         | 4 ++++
+ lib/bb/event.py          | 9 +++++++++
+ lib/bb/server/process.py | 4 ++--
+ 3 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 61cf0a37f4..ab1a367be0 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -625,7 +625,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index df31a413d7..527be2f649 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1467,6 +1467,7 @@ class BBCooker:
+         buildname = self.databuilder.mcdata[mc].getVar("BUILDNAME")
+         if fireevents:
+             bb.event.fire(bb.event.BuildStarted(buildname, [item]), self.databuilder.mcdata[mc])
++            bb.event.enable_heartbeat()
  
-     printintervaldelta = 10 * 60 # 10 minutes
-     printinterval = printintervaldelta
--    lastprint = time.time()
-+    pinginterval = 1 * 60 # 1 minutes
-+    lastevent = lastprint = time.time()
+         # Execute the runqueue
+         runlist = [[mc, item, task, fn]]
+@@ -1500,6 +1501,7 @@ class BBCooker:
+             if not retval:
+                 if fireevents:
+                     bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runtaskentries), buildname, item, failures, interrupted), self.databuilder.mcdata[mc])
++                    bb.event.disable_heartbeat()
+                 self.command.finishAsyncCommand(msg)
+                 # We trashed self.recipecaches above
+                 self.parsecache_valid = False
+@@ -1545,6 +1547,7 @@ class BBCooker:
+                     for mc in self.multiconfigs:
+                         bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runtaskentries), buildname, targets, failures, interrupted), self.databuilder.mcdata[mc])
+                 finally:
++                    bb.event.disable_heartbeat()
+                     self.command.finishAsyncCommand(msg)
+                 return False
+             if retval is True:
+@@ -1578,6 +1581,7 @@ class BBCooker:
  
-     termfilter = tf(main, helper, console_handlers, params.options.quiet)
-     atexit.register(termfilter.finish)
-@@ -637,6 +638,14 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 printinterval += printintervaldelta
-             event = eventHandler.waitEvent(0)
-             if event is None:
-+                if (lastevent + pinginterval) <= time.time():
-+                    ret, error = server.runCommand(["ping"])
-+                    if error or not ret:
-+                        termfilter.clearFooter()
-+                        print("No reply after pinging server (%s, %s), exiting." % (str(error), str(ret)))
-+                        return_value = 3
-+                        main.shutdown = 2
-+                    lastevent = time.time()
-                 if main.shutdown > 1:
-                     break
-                 if not parseprogress:
-@@ -644,6 +653,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 event = eventHandler.waitEvent(0.25)
-                 if event is None:
-                     continue
-+            lastevent = time.time()
-             helper.eventHandler(event)
-             if isinstance(event, bb.runqueue.runQueueExitWait):
-                 if not main.shutdown:
+         for mc in self.multiconfigs:
+             bb.event.fire(bb.event.BuildStarted(buildname, ntargets), self.databuilder.mcdata[mc])
++        bb.event.enable_heartbeat()
+ 
+         rq = bb.runqueue.RunQueue(self, self.data, self.recipecaches, taskdata, runlist)
+         if 'universe' in targets:
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 303b7a943f..db90724444 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -69,6 +69,7 @@ _eventfilter = None
+ _uiready = False
+ _thread_lock = threading.Lock()
+ _thread_lock_enabled = False
++_heartbeat_enabled = False
+ 
+ def enable_threadlock():
+     global _thread_lock_enabled
+@@ -78,6 +79,14 @@ def disable_threadlock():
+     global _thread_lock_enabled
+     _thread_lock_enabled = False
+ 
++def enable_heartbeat():
++    global _heartbeat_enabled
++    _heartbeat_enabled = True
++
++def disable_heartbeat():
++    global _heartbeat_enabled
++    _heartbeat_enabled = False
++
+ def execute_handler(name, handler, event, d):
+     event.data = d
+     try:
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 586d46af88..91eb6e0ad9 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -382,7 +382,7 @@ class ProcessServer():
+ 
+         # Create new heartbeat event?
+         now = time.time()
+-        if now >= self.next_heartbeat:
++        if bb.event._heartbeat_enabled and now >= self.next_heartbeat:
+             # We might have missed heartbeats. Just trigger once in
+             # that case and continue after the usual delay.
+             self.next_heartbeat += self.heartbeat_seconds
+@@ -396,7 +396,7 @@ class ProcessServer():
+                     if not isinstance(exc, bb.BBHandledException):
+                         logger.exception('Running heartbeat function')
+                     self.quit = True
+-        if nextsleep and now + nextsleep > self.next_heartbeat:
++        if nextsleep and bb.event._heartbeat_enabled and now + nextsleep > self.next_heartbeat:
+             # Shorten timeout so that we we wake up in time for
+             # the heartbeat.
+             nextsleep = self.next_heartbeat - now
 -- 
 2.37.2
 
