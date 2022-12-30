@@ -1,163 +1,125 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A30EC61DB3
-	for <webhook@archiver.kernel.org>; Thu, 29 Dec 2022 17:07:43 +0000 (UTC)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web10.208596.1672333654310683953
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E62DC4167B
+	for <webhook@archiver.kernel.org>; Fri, 30 Dec 2022 15:44:34 +0000 (UTC)
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web10.20723.1672415071119811657
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 29 Dec 2022 09:07:34 -0800
+ Fri, 30 Dec 2022 07:44:31 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=MoxetGh0;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f48.google.com with SMTP id z16so1435470wrw.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 29 Dec 2022 09:07:34 -0800 (PST)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=g3jFSm1q;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mFin2loGDeMqi8JAlJmeDBXq8KlYP6njBHXSlSCNTrU=;
-        b=MoxetGh0xUzCwvmELfHoE513Xm+gGiBssRc9MtRXFuIHkSpOUoqTwK5dKo1c/iXpsT
-         xKMFiri+6z+EhJTZyXDZBOxVRK8kyNa8Vln3Ile57oFwOXgwGdA5uO4x0jcrmbsRJYE9
-         7MDyZ8Lc7FcANVd3CARZQNo80NHnPcvpzBeos=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mFin2loGDeMqi8JAlJmeDBXq8KlYP6njBHXSlSCNTrU=;
-        b=LN/BpUyUqXhtNE1veSlDPy5yhwtGLKFk/mV2phRNUROi1qS4oshoDEp8KuZEfWcv6f
-         MRppkRsLlQwfAcAW4Ruspp/PSr7Y+VFRkjeAPgKBNpoFvjoEws66E1ccbhEPp9eoa0k4
-         zmejlMyV/9IaFi9hryrZeylVW3weooN0V6LdYLmqwqmlg+tp4L51L9C8OPIONo49GbYl
-         xSyRXoHZsKOrfCeEHUwLndjc1QLMG7jxwcCMJS6BOPuZe/cIEMkw7Q7rXqq+sKcE2t5U
-         y4Psq/kaXhbcyEJ83eAslBIdqW4j7/BgXCvd9WfmU9WPHrejxyakN4Yuud6SqOHNmaE7
-         IIqA==
-X-Gm-Message-State: AFqh2kpP3uPgnkiSmI/PpuWpXbJXTNy4z+JM0IJ/NSqQqFO6ebZr6GJa
-	Qkn1tnvUFSgfVkYNUHm4EXCKVlbK+qTr+1M4
-X-Google-Smtp-Source: AMrXdXsWQNJdQNW1Tdz2AGCNe5NjX/wpyXV7xpfFG9VVdQSP7AuCIyaqAnhFPeykw39sBIttzAs0RQ==
-X-Received: by 2002:a05:6000:18a6:b0:280:4a9:c8dd with SMTP id b6-20020a05600018a600b0028004a9c8ddmr13868698wri.18.1672333652570;
-        Thu, 29 Dec 2022 09:07:32 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:43af:59a1:5bcf:54fb])
-        by smtp.gmail.com with ESMTPSA id t12-20020a05600001cc00b0027b35baf811sm12308721wrx.57.2022.12.29.09.07.32
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Dec 2022 09:07:32 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 04/15] event: Add enable/disable heartbeat code
-Date: Thu, 29 Dec 2022 17:07:17 +0000
-Message-Id: <20221229170728.880367-5-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221229170728.880367-1-richard.purdie@linuxfoundation.org>
+  d=axis.com; q=dns/txt; s=axis-central1; t=1672415071;
+  x=1703951071;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=lcjkEOSKo/eo8FQuXcZQQ6/TUPjUl7IW4YBfiQyGqUY=;
+  b=g3jFSm1qYtsZZt3UFqyu8HKcnLzxoab/h5b2Vzw8hgOJ6ISczvYrZkaT
+   tB/K8jhqAYmGM9mSTZea3yNzDxKaNWUFCbv4yTMKsorTY95mPLCC7wt45
+   58jzmyKFX/Wx60/D2bdMYDlDMujIJAA27vGV+rCANEnBpj1oQEd71KRrn
+   nvU5Dvd/BqI7ZVrw9NMOBFuiNEu/gpiV+8dZrQCRIyQUtw+g+k4Y+z8TF
+   +452OTThVNv24bH7Dr7pID1HvWWiPCQZDMzW0g1W3FLcxtQpadphMppuO
+   WjtKw1ntSGoOqYn2v0D0BDiZrU1WChShaO2UPKQWfxHUKE4K9LeAi1Mqw
+   g==;
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: RE: [bitbake-devel] [PATCH 03/15] knotty: Ping the server/cooker
+ periodically
+Thread-Topic: [bitbake-devel] [PATCH 03/15] knotty: Ping the server/cooker
+ periodically
+Thread-Index: AQHZG6gUWwj7UuAFPk+ehS9R1tc1Pq6GkvvA
+Date: Fri, 30 Dec 2022 15:44:28 +0000
+Message-ID: <616e8bd535e74fd39d8ed3dab0840249@axis.com>
 References: <20221229170728.880367-1-richard.purdie@linuxfoundation.org>
+ <20221229170728.880367-4-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20221229170728.880367-4-richard.purdie@linuxfoundation.org>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.5.60]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 29 Dec 2022 17:07:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14248
+ <bitbake-devel@lists.openembedded.org>; Fri, 30 Dec 2022 15:44:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14259
 
-Currently heartbeat events are always generated by the server whilst it is
-active. Change this so they only appear when builds are running, which is
-when most code would expect to be executed. This removes a number of races
-around changes in the datastore which can happen outside of builds.
+> -----Original Message-----
+> From: bitbake-devel@lists.openembedded.org <bitbake-devel@lists.openembed=
+ded.org> On Behalf Of Richard Purdie
+> Sent: den 29 december 2022 18:07
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH 03/15] knotty: Ping the server/cooker per=
+iodically
+>=20
+> We've seeing failures where the UI hangs if the server disappears. Ping
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py         | 4 ++++
- lib/bb/event.py          | 9 +++++++++
- lib/bb/server/process.py | 4 ++--
- 3 files changed, 15 insertions(+), 2 deletions(-)
+Change " We've seeing" to either "We're seeing" or "We've seen".
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index df31a413d7..527be2f649 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1467,6 +1467,7 @@ class BBCooker:
-         buildname = self.databuilder.mcdata[mc].getVar("BUILDNAME")
-         if fireevents:
-             bb.event.fire(bb.event.BuildStarted(buildname, [item]), self.databuilder.mcdata[mc])
-+            bb.event.enable_heartbeat()
- 
-         # Execute the runqueue
-         runlist = [[mc, item, task, fn]]
-@@ -1500,6 +1501,7 @@ class BBCooker:
-             if not retval:
-                 if fireevents:
-                     bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runtaskentries), buildname, item, failures, interrupted), self.databuilder.mcdata[mc])
-+                    bb.event.disable_heartbeat()
-                 self.command.finishAsyncCommand(msg)
-                 # We trashed self.recipecaches above
-                 self.parsecache_valid = False
-@@ -1545,6 +1547,7 @@ class BBCooker:
-                     for mc in self.multiconfigs:
-                         bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runtaskentries), buildname, targets, failures, interrupted), self.databuilder.mcdata[mc])
-                 finally:
-+                    bb.event.disable_heartbeat()
-                     self.command.finishAsyncCommand(msg)
-                 return False
-             if retval is True:
-@@ -1578,6 +1581,7 @@ class BBCooker:
- 
-         for mc in self.multiconfigs:
-             bb.event.fire(bb.event.BuildStarted(buildname, ntargets), self.databuilder.mcdata[mc])
-+        bb.event.enable_heartbeat()
- 
-         rq = bb.runqueue.RunQueue(self, self.data, self.recipecaches, taskdata, runlist)
-         if 'universe' in targets:
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 303b7a943f..db90724444 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -69,6 +69,7 @@ _eventfilter = None
- _uiready = False
- _thread_lock = threading.Lock()
- _thread_lock_enabled = False
-+_heartbeat_enabled = False
- 
- def enable_threadlock():
-     global _thread_lock_enabled
-@@ -78,6 +79,14 @@ def disable_threadlock():
-     global _thread_lock_enabled
-     _thread_lock_enabled = False
- 
-+def enable_heartbeat():
-+    global _heartbeat_enabled
-+    _heartbeat_enabled = True
-+
-+def disable_heartbeat():
-+    global _heartbeat_enabled
-+    _heartbeat_enabled = False
-+
- def execute_handler(name, handler, event, d):
-     event.data = d
-     try:
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 586d46af88..91eb6e0ad9 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -382,7 +382,7 @@ class ProcessServer():
- 
-         # Create new heartbeat event?
-         now = time.time()
--        if now >= self.next_heartbeat:
-+        if bb.event._heartbeat_enabled and now >= self.next_heartbeat:
-             # We might have missed heartbeats. Just trigger once in
-             # that case and continue after the usual delay.
-             self.next_heartbeat += self.heartbeat_seconds
-@@ -396,7 +396,7 @@ class ProcessServer():
-                     if not isinstance(exc, bb.BBHandledException):
-                         logger.exception('Running heartbeat function')
-                     self.quit = True
--        if nextsleep and now + nextsleep > self.next_heartbeat:
-+        if nextsleep and bb.event._heartbeat_enabled and now + nextsleep > self.next_heartbeat:
-             # Shorten timeout so that we we wake up in time for
-             # the heartbeat.
-             nextsleep = self.next_heartbeat - now
--- 
-2.37.2
+> the cooker/server if we've not had any events in the last minute so we ca=
+n
+> check if it is still alive.
+>=20
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/ui/knotty.py | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+> index 61cf0a37f4..ab1a367be0 100644
+> --- a/lib/bb/ui/knotty.py
+> +++ b/lib/bb/ui/knotty.py
+> @@ -625,7 +625,8 @@ def main(server, eventHandler, params, tf =3D Termina=
+lFilter):
+>=20
+>      printintervaldelta =3D 10 * 60 # 10 minutes
+>      printinterval =3D printintervaldelta
+> -    lastprint =3D time.time()
+> +    pinginterval =3D 1 * 60 # 1 minutes
+
+Change "1 minutes" to "1 minute".
+
+> +    lastevent =3D lastprint =3D time.time()
+>=20
+>      termfilter =3D tf(main, helper, console_handlers, params.options.qui=
+et)
+>      atexit.register(termfilter.finish)
+> @@ -637,6 +638,14 @@ def main(server, eventHandler, params, tf =3D Termin=
+alFilter):
+>                  printinterval +=3D printintervaldelta
+>              event =3D eventHandler.waitEvent(0)
+>              if event is None:
+> +                if (lastevent + pinginterval) <=3D time.time():
+> +                    ret, error =3D server.runCommand(["ping"])
+> +                    if error or not ret:
+> +                        termfilter.clearFooter()
+> +                        print("No reply after pinging server (%s, %s), e=
+xiting." % (str(error), str(ret)))
+> +                        return_value =3D 3
+> +                        main.shutdown =3D 2
+> +                    lastevent =3D time.time()
+>                  if main.shutdown > 1:
+>                      break
+>                  if not parseprogress:
+> @@ -644,6 +653,7 @@ def main(server, eventHandler, params, tf =3D Termina=
+lFilter):
+>                  event =3D eventHandler.waitEvent(0.25)
+>                  if event is None:
+>                      continue
+> +            lastevent =3D time.time()
+>              helper.eventHandler(event)
+>              if isinstance(event, bb.runqueue.runQueueExitWait):
+>                  if not main.shutdown:
+> --
+> 2.37.2
+
+//Peter
 
 
