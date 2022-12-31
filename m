@@ -1,130 +1,115 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDE9C3DA7D
-	for <webhook@archiver.kernel.org>; Fri, 30 Dec 2022 15:46:24 +0000 (UTC)
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web10.20790.1672415174473856125
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75102C4332F
+	for <webhook@archiver.kernel.org>; Sat, 31 Dec 2022 16:59:02 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web10.45722.1672505932876185926
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Dec 2022 07:46:14 -0800
+ Sat, 31 Dec 2022 08:58:53 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=PBkOVZM3;
- spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=e37URGcs;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id ja17so17512726wmb.3
+        for <bitbake-devel@lists.openembedded.org>; Sat, 31 Dec 2022 08:58:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1672415174;
-  x=1703951174;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=wC4f9YROSbd5qBvmEy+ATubTpLWvRsaoJyqUv08aUPI=;
-  b=PBkOVZM33HmZvFI3Cgu9cvk7ce66Fi7ss3imDCxVr7Yjjbdg5IB0PyIb
-   Zc10SpL5iP/0CqGt6ySWhDbHa21pCbCr+FmoNv+ygHJK797+ruAUj23ut
-   2OtUts4sRw/yfHZa3ZwmtrdK8k00TEJ6aY9pay6wAJoMB/rx19XjIRp4I
-   8k9af2FGDhMhi92/5Z2phWI/xod3PzkaDn/3/W+Q/ZiboEVxPCY6djpX0
-   rUsWb2sf9TI41NKk7tHlcxfsvxDLzzLXg/VOmaghJCmeedMvHleS7chTe
-   9G4DwbruPPuyTnUbC/TQfZhYuRkMV3xZ8AZU5gy1rcnBPHOuXP6g8b89L
-   w==;
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [PATCH 14/15] cache: Drop reciever side counting
- for SiggenRecipeInfo
-Thread-Topic: [bitbake-devel] [PATCH 14/15] cache: Drop reciever side counting
- for SiggenRecipeInfo
-Thread-Index: AQHZG6guDvBN/HQ0fEKDp2T6TrxC3q6Gk+iw
-Date: Fri, 30 Dec 2022 15:46:12 +0000
-Message-ID: <01f95d7bd4764f0c814347d9b712b524@axis.com>
-References: <20221229170728.880367-1-richard.purdie@linuxfoundation.org>
- <20221229170728.880367-15-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20221229170728.880367-15-richard.purdie@linuxfoundation.org>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linuxfoundation.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QFl5FAdh2WnhMA0pZys+QDqkAiBAfGn7IY+3TA6sIKU=;
+        b=e37URGcs/BV22O+BKSnTkD4j1W4Rqc6qoW4zmujRXVOZPTMx3jmNC024bULRBet48M
+         KJ7oxVUHHzGOxk+j8NWc4H1WNoePaH507QxXXI21IS/GesngR9WIs4vcsEGkJd3ciNm6
+         1iNjaSax38UtnOih54m7g89v/BFhub7VydMg4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QFl5FAdh2WnhMA0pZys+QDqkAiBAfGn7IY+3TA6sIKU=;
+        b=46J444oeYGboRpaoxgaMwqtbjwgD6zn6jC1/fVl99779MGkj2Mlg9R0POh2YS6Tdcg
+         TAlWM2myE1800COqe4MTpQDK2quR1/SIwaRQ+eZ/SPxxmDoMEZ7XvHOndc7lliPEN0Kw
+         GLKZNd1CGMjv4s1WfM8SwviXW1HQldLVepAiK2FjJv9o87JAmauBtOsKIbHDE840ver0
+         tczLq9lqY2SU2sezENu1KpxSYX/S1eMy+wSGO5ROXtbz5HhUrIXKBXwE1ESMG2bloHUM
+         TloIrNK9NyORkTcv42OKVJKiAvmL5fpmtf+GxwIX+oydZhFYj1p9o45SJfA4COI7yE94
+         +MDg==
+X-Gm-Message-State: AFqh2kqf8S/UThb5blkBDJb9IL2lpAa70TFUavo0zmsGY9CzYPGwNVzg
+	CRoe+QEHAP/FPgvETnTocQoIXvgAZxKBcw1j
+X-Google-Smtp-Source: AMrXdXtm+jReVqTF9++64wwMUrCu4rbB6AAt80gy2YIQg41oZh5gSNkt7VrbVjuSiMTkrje2JWleSA==
+X-Received: by 2002:a05:600c:3ac8:b0:3d3:4ae6:a71b with SMTP id d8-20020a05600c3ac800b003d34ae6a71bmr25655975wms.2.1672505930815;
+        Sat, 31 Dec 2022 08:58:50 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:1a1f:74ee:21ca:3bb])
+        by smtp.gmail.com with ESMTPSA id a1-20020a05600c348100b003b47b80cec3sm36582812wmq.42.2022.12.31.08.58.50
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Dec 2022 08:58:50 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 00/11 v2] Bitbake server thread enabling
+Date: Sat, 31 Dec 2022 16:58:38 +0000
+Message-Id: <20221231165849.964169-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 30 Dec 2022 15:46:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14260
+ <bitbake-devel@lists.openembedded.org>; Sat, 31 Dec 2022 16:59:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14261
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-devel@lists.openembed=
-ded.org> On Behalf Of Richard Purdie
-> Sent: den 29 december 2022 18:07
-> To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [PATCH 14/15] cache: Drop reciever side counting=
- for SiggenRecipeInfo
+This series adds 'idle' thread support to bitbake. These changes have
+struggled a bit in testing as we're trying to add threading support to
+code which never had it originally. We've been aiming at this for
+some time (over a decade) but have reached the point where we need to 
+do it and deal with any issues arrising.
 
-Change "reciever" to "receiver".
+The 'idle' thread is badly named as it is where the "real work"
+of bitbake gets done, e.g. runqueue (task execution) is run as an 
+idle handler. We can worry about renaming things later, getting the
+basic changes working is my concern right now.
 
->=20
-> Joshua Watt pointed out maintaining the counting on both sides of the
-> connection isn't needed. Remove the receiver side counting and simplify
-> the code, also allowing errors if the counts do go out of sync.
->=20
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/cache.py | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
->=20
-> diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-> index 3fc097241a..ee924b2d2b 100644
-> --- a/lib/bb/cache.py
-> +++ b/lib/bb/cache.py
-> @@ -285,7 +285,6 @@ class SiggenRecipeInfo(RecipeInfoCommon):
->          cls.save_map =3D {}
->          cls.save_count =3D 1
->          cls.restore_map =3D {}
-> -        cls.restore_count =3D {}
->=20
->      @classmethod
->      def _save(cls, deps):
-> @@ -294,11 +293,13 @@ class SiggenRecipeInfo(RecipeInfoCommon):
->              return deps
->          for dep in deps:
->              fs =3D deps[dep]
-> -            if fs in cls.save_map:
-> +            if fs is None:
-> +                ret.append((dep, None, None))
-> +            elif fs in cls.save_map:
->                  ret.append((dep, None, cls.save_map[fs]))
->              else:
->                  cls.save_map[fs] =3D cls.save_count
-> -                ret.append((dep, fs, None))
-> +                ret.append((dep, fs, cls.save_count))
->                  cls.save_count =3D cls.save_count + 1
->          return ret
->=20
-> @@ -309,18 +310,18 @@ class SiggenRecipeInfo(RecipeInfoCommon):
->              return deps
->          if pid not in cls.restore_map:
->              cls.restore_map[pid] =3D {}
-> -            cls.restore_count[pid] =3D 1
->          map =3D cls.restore_map[pid]
->          for dep, fs, mapnum in deps:
-> -            if mapnum:
-> +            if fs is None and mapnum is None:
-> +                ret[dep] =3D None
-> +            elif fs is None:
->                  ret[dep] =3D map[mapnum]
->              else:
->                  try:
->                      fs =3D cls.store[fs]
->                  except KeyError:
->                      cls.store[fs] =3D fs
-> -                map[cls.restore_count[pid]] =3D fs
-> -                cls.restore_count[pid] =3D cls.restore_count[pid] + 1
-> +                map[mapnum] =3D fs
->                  ret[dep] =3D fs
->          return ret
->=20
-> --
-> 2.37.2
+The problem these changes solve:
+  * allows the UI to tell if the server is alive and still there
+    even when async commands are running
+  * allows the UI to interrupt the server and tell it to shutdown
+    (i.e. make Ctrl+C repsonsive from the UI)
+  * allow us to make progress on the various "bitbake hanging" bugs
+    we have where the UI can't connect
 
-//Peter
+There is much more work needed here and the code can be considerably
+cleaned up to make it clearer and most accessible, those changes
+can follow and build from this though.
+
+Thanks to Joshua Watt for some tweaks to improve the code.
+
+v2 changes the threading event into a condition and cleans up
+some locking on the idle functions. As part of the changes it made
+sense to reorderand clean up the series. One part of the previous
+series was merged to try and fix issues being seen with master.
+
+Richard Purdie (11):
+  knotty: Avoid looping with tracebacks
+  event: Add enable/disable heartbeat code
+  cooker/cookerdata: Rework the way the datastores are reset
+  server/process: Improve exception and idle function logging
+  command: Tweak finishAsyncCommand ordering to avoid races
+  cooker: Ensure commands clean up any parser processes
+  server/process: Improve idle loop exit code
+  event: Always use threadlock
+  server/process: Add locking around idle functions accesses
+  server/process: Run idle commands in a separate idle thread
+  knotty: Ping the server/cooker periodically
+
+ lib/bb/command.py             |  26 ++++----
+ lib/bb/cooker.py              |  58 +++++++++++-------
+ lib/bb/cookerdata.py          |  31 ++++++----
+ lib/bb/event.py               |  82 +++++++++++++------------
+ lib/bb/server/process.py      | 111 +++++++++++++++++++++++++---------
+ lib/bb/server/xmlrpcserver.py |   2 +-
+ lib/bb/tests/event.py         |  17 +-----
+ lib/bb/ui/knotty.py           |  16 +++--
+ 8 files changed, 207 insertions(+), 136 deletions(-)
+
+-- 
+2.37.2
 
 
