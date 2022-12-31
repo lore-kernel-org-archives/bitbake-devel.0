@@ -2,53 +2,53 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76172C4167B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2A2C3DA7A
 	for <webhook@archiver.kernel.org>; Sat, 31 Dec 2022 16:59:02 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web11.45612.1672505933951647862
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.45725.1672505936049422241
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 31 Dec 2022 08:58:58 -0800
+ Sat, 31 Dec 2022 08:58:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LiVP7RuG;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id m26-20020a05600c3b1a00b003d9811fcaafso11121491wms.5
-        for <bitbake-devel@lists.openembedded.org>; Sat, 31 Dec 2022 08:58:58 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PCAV0j/0;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f45.google.com with SMTP id b24-20020a05600c4a9800b003d21efdd61dso17659096wmp.3
+        for <bitbake-devel@lists.openembedded.org>; Sat, 31 Dec 2022 08:58:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oEXcLKOHfSMHOKaafg/oqFGDbhEob0mfkv3eOhYT4aw=;
-        b=LiVP7RuGQCGymamFzy3neIyDdbKqxFJWvlbiRVAOAx5akDfEtTB/9Wty+IAunYFABO
-         QtAHvPYC1YwXBSFRbLiQCHa6D6AvTxTKgec5VhREBuqxfDiAZdSWU774WFW89/+nKYyu
-         95y7ecFVRXDLf/uADegjQrvx3fsmE+0l+z5gY=
+        bh=tkaLMV/TXg2nYYXIFNhxmxwLEBZPUn1o58dOjIwSSU4=;
+        b=PCAV0j/06SDucy5QeOlMI/eJhQcEX/AtKqOrOahIe0QEUurKNUFoRviH1NY2YPlQOs
+         d6FQ6ZVLaA35sGlxVF+Xbgt+huc+ZW/l1f/SKDaBRqzS0AoNBbDCIL8dmA3s+/hgoIY2
+         70N1drdUJ/buzq4HRaErvAbvyEKSnT68xuAlY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oEXcLKOHfSMHOKaafg/oqFGDbhEob0mfkv3eOhYT4aw=;
-        b=otrYOkROUlv/fs+yvk1Vf8PX5cV/apjJ721GlwBXM+hVNGEY8yL2qhjdVRfZX1Gqt2
-         0SD51lamqqbn0uKi1klZYMHXalVylDOTAiyGdDvE5pJi1pb07iq65wA1u/aIhVhJzcyL
-         IIjrKqXrYAAIYhoMxfIKi1fMdV0EnlWE9FxJ4mxdPW3lEpKoZkoMrbLdwrFm4gdMQb3a
-         uScOqtWNv20oF1DoK4xkyMQmcC7sdCHP/TFXO11qeelHCqdV7i+1Ns71vwZfYE7V2xue
-         1oTMOkbGdbLklMSJ9OIRu9Q4tjTX41tkdaJ+iwdnA/vfGT7tdIsgUyPj+j7APRGFOLCF
-         DDRA==
-X-Gm-Message-State: AFqh2kr0wBG5rSxRXr7YYWclymps1I71ULKVC7vgzSYIFR3J0YFST00a
-	KfizdxKFQdyXBZZuE74e78X+uCvbJ6OhSyuO
-X-Google-Smtp-Source: AMrXdXsAqbeGjj/u6bfLGc3d9fSAmn900TFF54YaV8qZv6pLNOTnSSkoDsJiYbhGsuI6Kdwyd1VALg==
-X-Received: by 2002:a05:600c:3644:b0:3d2:39dc:4ab9 with SMTP id y4-20020a05600c364400b003d239dc4ab9mr28437408wmq.13.1672505937620;
-        Sat, 31 Dec 2022 08:58:57 -0800 (PST)
+        bh=tkaLMV/TXg2nYYXIFNhxmxwLEBZPUn1o58dOjIwSSU4=;
+        b=IRmPDUT6pgfiST4ukE9TtSv3fxMry+DOGQyBnUnDT3zbGtPxLuYgNWXMEewZv+eEWK
+         DuFcdARTqcJ+9bnqJQD4jj2th05hBxNAU+QnVXtRUWw+Dbf56teLW/AnTEsYpYZwUEhO
+         fv50NrBxiLbg2drNDS7LGrCGKBOXEEnVlYgHAnWulVUmiVx/5/jRJ5rED8+ZcnRWb/9o
+         +0lgsafo6g2yzOvAIvoM9vcqO2gsJ51RwU58s/xpbDLVWyq28oxwSwcB7o+pZfJHqbUq
+         83doOOqxx84tBss5uHj8LEKzxHU1VRtrXpOUrL3bxZFvtnkUrnfTuxYSJaU4BiFUJ4gI
+         lJjA==
+X-Gm-Message-State: AFqh2koI2U47LHq3Ic6WkAhprzaCebb+ZSG4tChEK0+ovPrLzixj866N
+	jSTjPNTDZcrzFAKjH2JWcdpxI9Cc7NAV/GKG
+X-Google-Smtp-Source: AMrXdXuy1J1Pem9QiLPonBEiFAZG0ShU4bbFZi6Un15vbz1AEaSt8XW39FJfmwTQsQscF2/3tsLq7g==
+X-Received: by 2002:a05:600c:42d5:b0:3d6:e790:c9a0 with SMTP id j21-20020a05600c42d500b003d6e790c9a0mr30904283wme.10.1672505934436;
+        Sat, 31 Dec 2022 08:58:54 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:1a1f:74ee:21ca:3bb])
-        by smtp.gmail.com with ESMTPSA id a1-20020a05600c348100b003b47b80cec3sm36582812wmq.42.2022.12.31.08.58.56
+        by smtp.gmail.com with ESMTPSA id a1-20020a05600c348100b003b47b80cec3sm36582812wmq.42.2022.12.31.08.58.53
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Dec 2022 08:58:57 -0800 (PST)
+        Sat, 31 Dec 2022 08:58:54 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 11/11] knotty: Ping the server/cooker periodically
-Date: Sat, 31 Dec 2022 16:58:49 +0000
-Message-Id: <20221231165849.964169-12-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 06/11] cooker: Ensure commands clean up any parser processes
+Date: Sat, 31 Dec 2022 16:58:44 +0000
+Message-Id: <20221231165849.964169-7-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221231165849.964169-1-richard.purdie@linuxfoundation.org>
 References: <20221231165849.964169-1-richard.purdie@linuxfoundation.org>
@@ -58,52 +58,30 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sat, 31 Dec 2022 16:59:02 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14271
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14268
 
-We're seeing failures where the UI hangs if the server disappears. Ping
-the cooker/server if we've not had any events in the last minute so we can
-check if it is still alive.
+When finishing a command, we need to ensure any parsing processes that may have
+been started are cleaned up before we reset the cooker state.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/ui/knotty.py | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ lib/bb/cooker.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 761c2dddaf..7370a1adfd 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -625,7 +625,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 7e0d6b47bf..adc232e288 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1768,6 +1768,9 @@ class BBCooker:
+             self.parser.final_cleanup()
  
-     printintervaldelta = 10 * 60 # 10 minutes
-     printinterval = printintervaldelta
--    lastprint = time.time()
-+    pinginterval = 1 * 60 # 1 minute
-+    lastevent = lastprint = time.time()
+     def finishcommand(self):
++        if hasattr(self.parser, 'shutdown'):
++            self.parser.shutdown(clean=False)
++            self.parser.final_cleanup()
+         self.state = state.initial
  
-     termfilter = tf(main, helper, console_handlers, params.options.quiet)
-     atexit.register(termfilter.finish)
-@@ -637,11 +638,20 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 printinterval += printintervaldelta
-             event = eventHandler.waitEvent(0)
-             if event is None:
-+                if (lastevent + pinginterval) <= time.time():
-+                    ret, error = server.runCommand(["ping"])
-+                    if error or not ret:
-+                        termfilter.clearFooter()
-+                        print("No reply after pinging server (%s, %s), exiting." % (str(error), str(ret)))
-+                        return_value = 3
-+                        main.shutdown = 2
-+                    lastevent = time.time()
-                 if not parseprogress:
-                     termfilter.updateFooter()
-                 event = eventHandler.waitEvent(0.25)
-                 if event is None:
-                     continue
-+            lastevent = time.time()
-             helper.eventHandler(event)
-             if isinstance(event, bb.runqueue.runQueueExitWait):
-                 if not main.shutdown:
+     def reset(self):
 -- 
 2.37.2
 
