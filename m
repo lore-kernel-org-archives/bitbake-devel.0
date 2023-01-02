@@ -1,113 +1,84 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <enguerrand.de-ribaucourt@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86065C3DA7A
-	for <webhook@archiver.kernel.org>; Mon,  2 Jan 2023 10:05:03 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web10.32577.1672653897588120391
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C7FC4708E
+	for <webhook@archiver.kernel.org>; Mon,  2 Jan 2023 14:24:14 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web11.36031.1672669443994905662
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 02 Jan 2023 02:04:58 -0800
+ Mon, 02 Jan 2023 06:24:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Hm5vtIQX;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id o15so20045906wmr.4
-        for <bitbake-devel@lists.openembedded.org>; Mon, 02 Jan 2023 02:04:57 -0800 (PST)
+ dkim=pass header.i=@savoirfairelinux.com header.s=dfc430d2-d198-11ec-948e-34200cb392d2 header.b=xn3mHU49;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: enguerrand.de-ribaucourt@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 415DD9C0846;
+	Mon,  2 Jan 2023 09:24:02 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id 6bLr4R5daeoz; Mon,  2 Jan 2023 09:24:01 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id AE18B9C083D;
+	Mon,  2 Jan 2023 09:24:01 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com AE18B9C083D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PBeJEyinj409I2yxFyBTJfr8d2maYR/J8WmfdGAYOBY=;
-        b=Hm5vtIQXlq81F9zHjkoI1dxigcx0Jaqn6hxtQPkCTvtQizNWS1PHwJ2/TRL2YI5BBZ
-         j82OVbU1+3PONGIddkMABBASV+SW4YI1iQ65nvUdB88RaMJ214QimZcJy4ocKCZL9mYM
-         nlZP9axmZKvI6B8/JVaQvLIOAhOM+n+TQDfuQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PBeJEyinj409I2yxFyBTJfr8d2maYR/J8WmfdGAYOBY=;
-        b=NyhVkPXpIPDfBurrg2BIT4LL/LOCXWAV8AvH5xgFvTTyBeOn84KGbnyl587irROxHY
-         WGodkWHJxxCpUzLG4ju8Ou6epkm9VA6Nn6xC8YheMj56Uf2LfjFXBRxuzIUdr25zK0pq
-         Kc8wPHP9kc5JxIXw16S9YU3pEFk1FEQYuwZCV9tEZtF2glRjGdedrnkzPqmP6Gmgmpjc
-         XD63GiCIs2m+DzwGf3UYedEx54e/+6A1qW0jet0tyU35Cex0EMihgJYP85Ez8RdLI3Bo
-         Zkt9Ug2eiz1ExBwYH7q3O700KPPTOmBLWamRFBFy8g5Z7MDnQmJB0K6HTQG/q1I3e69K
-         O3vw==
-X-Gm-Message-State: AFqh2kotlw/5yXrDwH9xq9sP2MWuI/zGBlw6gWDfmLHkTonKFxhnK4PO
-	13srupDpsIN7se+mH8rXTJNlYw==
-X-Google-Smtp-Source: AMrXdXsny1/02scz8bEDZL6ik4ugoSf54CMyZAg5nYqIEKqm5e2QrkKhoE22QXSzqK44vD1BGG7RRA==
-X-Received: by 2002:a05:600c:4255:b0:3d3:3d34:5d63 with SMTP id r21-20020a05600c425500b003d33d345d63mr29998843wmm.8.1672653895803;
-        Mon, 02 Jan 2023 02:04:55 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:409d:216c:1a2:8d83? ([2001:8b0:aba:5f3c:409d:216c:1a2:8d83])
-        by smtp.gmail.com with ESMTPSA id d22-20020a1c7316000000b003d9862ec435sm24825373wmb.20.2023.01.02.02.04.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jan 2023 02:04:55 -0800 (PST)
-Message-ID: <d0ef1d8f2b4b482c891ce33d7942724566538f71.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] cookerdata: Fix cache/reparsing issue
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Quentin Schulz <quentin.schulz@theobroma-systems.com>, Christopher
- Larson <kergoth@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Mon, 02 Jan 2023 10:04:54 +0000
-In-Reply-To: <b660011a-3526-3016-c3a9-0f7a6868f4ab@theobroma-systems.com>
-References: <20230101142509.1022073-1-richard.purdie@linuxfoundation.org>
-	 <59224516-17d8-4c43-9f2b-38c5034cfdba@Spark>
-	 <9d512b49ed3254cc9ef67f21cc1a0facdaff9479.camel@linuxfoundation.org>
-	 <b660011a-3526-3016-c3a9-0f7a6868f4ab@theobroma-systems.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1-0ubuntu1 
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1672669441; bh=oXoJL6E4keDsge+G8BDQvuNqXeYMZNsLxMS9HYULU7A=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=xn3mHU49gbzuEuwxs534JihggfAItAeJypCwxRC9NfWDv6cRULZsc9bvrbp38+5J9
+	 KYOh8ZKN21GLqPmZmpVgt7TlD4uQ1NgLMSLJBk31ruZfk5aomV96lXd5H6zzXM4q+q
+	 vuZBiH9DizxiTyRJGWnTtykyzlPBp+jat04eOOslPvvZCsgKAK+CR0HIBJ97FuIIyA
+	 iF4wz20Ptc1WGIqxZsCFaFeQ0S6387P2KO3C8I8AD5roNZfxwOnKs3E1jpJo7wEnvV
+	 RH2A5XTwV6s7j2o57bmqqvaO20wQYs1YNxxuvsmwlmdeASOzQTIQnioI6BxNZhXVq6
+	 Df3K2dnW7OLtQ==
+X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+	by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id f23upYqMJlLK; Mon,  2 Jan 2023 09:24:01 -0500 (EST)
+Received: from sfl-deribaucourt.rennes.sfl (lmontsouris-657-1-69-118.w80-15.abo.wanadoo.fr [80.15.101.118])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id E0CCA9C0814;
+	Mon,  2 Jan 2023 09:24:00 -0500 (EST)
+From: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: alex@linutronix.de,
+	richard.purdie@linuxfoundation.org,
+	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Subject: [PATCH] bitbake-layers: fix a typo
+Date: Mon,  2 Jan 2023 15:23:39 +0100
+Message-Id: <20230102142339.37005-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 02 Jan 2023 10:05:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14277
+ <bitbake-devel@lists.openembedded.org>; Mon, 02 Jan 2023 14:24:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14278
 
-On Mon, 2023-01-02 at 11:01 +0100, Quentin Schulz wrote:
-> Hi Richard,
->=20
-> On 1/2/23 01:50, Richard Purdie wrote:
-> > On Sun, 2023-01-01 at 09:55 -0700, Christopher Larson wrote:
-> > > On Jan 1, 2023 at 7:25 AM -0700, Richard Purdie
-> > > <richard.purdie@linuxfoundation.org>, wrote:
-> > > > When setting the LAYERSERIES_COMPAT and LAYERSERIES_CORENAMES
-> > > > variables,
-> > > > we need to be deterministic. The random ordering from the sets was
-> > > > causing
-> > > > unexpected reparses.
-> > > >=20
-> > > > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > > > ---
-> > > > lib/bb/cookerdata.py | 4 ++--
-> > > > 1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >=20
-> > > > diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-> > > > index b4e0c4216b..8198f509e2 100644
-> > > > --- a/lib/bb/cookerdata.py
-> > > > +++ b/lib/bb/cookerdata.py
-> > > > @@ -425,7 +425,7 @@ class CookerDataBuilder(object):
-> > > > data.delVar('LAYERDIR_RE')
-> > > > data.delVar('LAYERDIR')
-> > > > for c in compat_entries:
-> > > > - data.setVar("LAYERSERIES_COMPAT_%s" % c, compat_entries[c])
-> > > > + data.setVar("LAYERSERIES_COMPAT_%s" % c,
-> > > > sorted(compat_entries[c]))
-> > >=20
->=20
-> compat_entries and layerseries are sets set just a few lines above.=20
-> Would it make sense to actually have them sorted directly there instead=
+Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirf=
+airelinux.com>
+---
+ meta/lib/bblayers/makesetup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meta/lib/bblayers/makesetup.py b/meta/lib/bblayers/makesetup=
+.py
+index 22f89d81a4..834e9338bc 100644
+--- a/meta/lib/bblayers/makesetup.py
++++ b/meta/lib/bblayers/makesetup.py
+@@ -46,7 +46,7 @@ class MakeSetupPlugin(LayerPlugin):
+         return describe.strip()
 =20
-> of only when they are used?
->=20
-> https://git.openembedded.org/bitbake/tree/lib/bb/cookerdata.py#n418
-> https://git.openembedded.org/bitbake/tree/lib/bb/cookerdata.py#n421
+     def make_repo_config(self, destdir):
+-        """ This is a helper function for the writer plugins that discov=
+ers currently confugured layers.
++        """ This is a helper function for the writer plugins that discov=
+ers currently configured layers.
+         The writers do not have to use it, but it can save a bit of work=
+ and avoid duplicated code, hence it is
+         available here. """
+         repos =3D {}
+--=20
+2.25.1
 
-They're used as sets elsewhere and that is used to de-duplicate them so
-whilst I did wonder too, I ended up just sorting as we wrote strings
-back...
-
-Cheers,
-
-Richard
 
