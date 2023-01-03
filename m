@@ -1,100 +1,87 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307FEC53210
-	for <webhook@archiver.kernel.org>; Tue,  3 Jan 2023 18:49:38 +0000 (UTC)
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
- by mx.groups.io with SMTP id smtpd.web11.1801.1672771777324606663
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AE1C3DA7D
+	for <webhook@archiver.kernel.org>; Tue,  3 Jan 2023 22:24:43 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web10.1204.1672784681641012830
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 03 Jan 2023 10:49:37 -0800
+ Tue, 03 Jan 2023 14:24:42 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=LJuw9UfO;
- spf=pass (domain: bootlin.com, ip: 217.70.183.196, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 98242E0004;
-	Tue,  3 Jan 2023 18:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1672771775;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D+31F9+l392wzJ76OkhydQOnRHZNDlatTKs97OAfqm8=;
-	b=LJuw9UfOOwYpXOdVALoFD0FyH5iY2I9lA4GKNnIu44KM7O2MwWN86erueEywgDu49eD6Hg
-	d0cKd44TTfit5ib2xJQJxxlE/jSZN+K+TmRKgB6hkRZekjgGQa8Xi850Z3SLku0joJ37ut
-	FyyT8WJfCcZCDAdSpkf4fEmfYHDXXuPnvwmqBgOfSB5ypMu/7bSFOI0PsBw+mpa5UHNbnb
-	c/8FgBuAMa7Tu0wHZDexNd/cWrLHWWP15W8rtnAqqioTVklQzsqUmgfjZ12G2cFWRCnSv0
-	SEL0PfE29D1JLWLfWoodCL80GTKMTgtOo20xD6sv89Ai2+Fk6ZQkV3HjWrbstw==
-Message-ID: <0d696eac-7344-ddad-504b-08d8205f33c2@bootlin.com>
-Date: Tue, 3 Jan 2023 19:49:33 +0100
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Rx7bzcOf;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f46.google.com with SMTP id m26-20020a05600c3b1a00b003d9811fcaafso18277379wms.5
+        for <bitbake-devel@lists.openembedded.org>; Tue, 03 Jan 2023 14:24:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4c49jYClkhG05o52rdsi31lc97GSElcGsPy97Q+jhkM=;
+        b=Rx7bzcOfjiQKqOmFsrrOofRYNyYWAEog6fD5uBpToWbuKWGo03L6Yb/K6tNsTsUxdU
+         zojncivvtg9NWv0EfP0GFdunmfZn1QNy5TsZy81B8/nqOybozKDfDxSqIEhUR4CYuTA7
+         /oS48RC2boA+lYlg9Pa+QsB+3oz9/emf1xZfo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4c49jYClkhG05o52rdsi31lc97GSElcGsPy97Q+jhkM=;
+        b=RAG3d3zDtO8nLMJKssnVkd26fz51uTWfELnRqJ/a5O9x2Bns5ceB/KJqA2JpAXS/0l
+         0GAaM7rNvc2MRZq5P45yGxqBQGit2p64NiLSYSb3UmkmUuEhYqmObL3T424n5vNtOV3S
+         HKiKd5ImLOmVt2SppXulQMmiIj/2xi/iakaeEBiGvU3g0UiFDPGyKJPk01bRrptjyNN3
+         HlgDmylHPS3t2uZI1OAjcIhqF2BexcKRAc5wwsINsZ7auzX1B39Fr2g3nmDomo1bZSKa
+         hTGNA7HkeVcv77MhIXgznJlmhT0i7HgXajYtVmubQHK/oMjAp2MuSGJ5EfGggHhr1Lzp
+         eHqA==
+X-Gm-Message-State: AFqh2koQGXct6wcUI78kl4jKz+t6wi0QruVJdfP4BQMDxgMi6WfXLCUE
+	uUXqoWetGbuRKQ1gQbNPoFxmfQ==
+X-Google-Smtp-Source: AMrXdXuIoJYQPNgOhwx47hzQJwjrdu5rS/1sMnFUZnnlgJQjnB4YV791lgC49YeIfnbjGACtkdN4NA==
+X-Received: by 2002:a05:600c:5024:b0:3d3:55ad:a114 with SMTP id n36-20020a05600c502400b003d355ada114mr32939270wmr.38.1672784679485;
+        Tue, 03 Jan 2023 14:24:39 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:fcc2:4e85:26d2:6527? ([2001:8b0:aba:5f3c:fcc2:4e85:26d2:6527])
+        by smtp.gmail.com with ESMTPSA id bd25-20020a05600c1f1900b003cfd4cf0761sm48747842wmb.1.2023.01.03.14.24.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jan 2023 14:24:39 -0800 (PST)
+Message-ID: <dee6ed9a3beabd5cd18042c61b0dfd31c2c4ff8e.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] Typo on the BitBake Documentation
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: than.matos+bitbake@gmail.com, bitbake-devel@lists.openembedded.org
+Date: Tue, 03 Jan 2023 22:24:38 +0000
+In-Reply-To: <bWm9.1672174859052782246.2l5k@lists.openembedded.org>
+References: <bWm9.1672174859052782246.2l5k@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.1-0ubuntu1 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
-Subject: Re: [docs] [PATCH] doc: user-manual: intro: reword a sentence
-Content-Language: en-US
-To: quentin.schulz@theobroma-systems.com,
- Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
- than.matos+bitbake@gmail.com, Quentin Schulz <foss+yocto@0leil.net>
-References: <20230103-typo-202301-v1-0-bb5014c684d0@theobroma-systems.com>
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-In-Reply-To: <20230103-typo-202301-v1-0-bb5014c684d0@theobroma-systems.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 03 Jan 2023 18:49:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14284
+ <bitbake-devel@lists.openembedded.org>; Tue, 03 Jan 2023 22:24:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14285
 
+On Tue, 2022-12-27 at 13:00 -0800, than.matos+bitbake@gmail.com wrote:
+> I'm not sure if this is the right place to report and if I'm writing
+> in the wrong place, please feel free to remove this post.
+> =C2=A0
+> I'm also not a native of English, but I think there is a typo on the
+> BitBake documentation page.
+> =C2=A0
+> > You can obtain BitBake several different ways:
+> I feel like there is a missing `in` before the word `several`.
+> =C2=A0
+> Sorry to bother you!
 
-Am 03.01.23 um 18:59 schrieb Quentin Schulz via lists.yoctoproject.org:
-> It's been reported this sentence is a bit odd, so let's reword it.
->
-> Reported-by: than.matos+bitbake@gmail.com
-> Suggested-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> Cc: Quentin Schulz <foss+yocto@0leil.net>
-> Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-> ---
-> reword odd sentence
->
-> Cc: docs@lists.yoctoproject.org
-> Cc: bitbake-devel@lists.openembedded.org
-> ---
->   doc/bitbake-user-manual/bitbake-user-manual-intro.rst | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-> index 35ffb88b0..797feb516 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-> @@ -275,7 +275,7 @@ simple as ``busybox_%.bbappend`` to be entirely version independent.
->   Obtaining BitBake
->   =================
->   
-> -You can obtain BitBake several different ways:
-> +There are several different ways that BitBake can be obtained:
->   
->   -  **Cloning BitBake:** Using Git to clone the BitBake source code
->      repository is the recommended method for obtaining BitBake. Cloning
->
-> ---
-> base-commit: 367a83ed46c7fbcdd06579b6cc3a6e48a89ca7fb
-> change-id: 20230103-typo-202301-c5f8f3571209
->
-> Best regards,
+Thanks for reporting it.
 
+I'm a little torn on this. I am a native speaker and I'd have said it
+was probably sounds better as it is now. Adding "in" could likely be
+argued to me more grammatically correct and more formal for a written
+document but it doesn't feel quite right to me. I suspect it is one of
+those cases where there isn't a 100% correct answer.
 
-Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Thanks for the patch!
-Cheers
-Michael.
+Cheers,
 
--- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Richard
 
 
