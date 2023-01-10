@@ -2,105 +2,103 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8A2C54EBE
-	for <webhook@archiver.kernel.org>; Mon,  9 Jan 2023 14:40:09 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.73411.1673275200440689407
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E52C54EBE
+	for <webhook@archiver.kernel.org>; Tue, 10 Jan 2023 09:08:44 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.99489.1673341723407117391
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 09 Jan 2023 06:40:01 -0800
+ Tue, 10 Jan 2023 01:08:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile-fr.20210112.gappssmtp.com header.s=20210112 header.b=LR1eGFWD;
- spf=pass (domain: smile.fr, ip: 209.85.128.47, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f47.google.com with SMTP id ja17so6426023wmb.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Jan 2023 06:40:00 -0800 (PST)
+ dkim=pass header.i=@smile-fr.20210112.gappssmtp.com header.s=20210112 header.b=Zn0C/Q2F;
+ spf=pass (domain: smile.fr, ip: 209.85.128.52, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f52.google.com with SMTP id z8-20020a05600c220800b003d33b0bda11so640403wml.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 10 Jan 2023 01:08:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=smile-fr.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eCnR6731z1l6MsNDXcJcYMsDY+0v9elvQV8C/iDABZ4=;
-        b=LR1eGFWDzKiPPLFEcz6zQ1zlJb68b+nQdwb1mnzJC83nHPr18GyF155s+/nx7XqMc+
-         0FrJhvWvgRCqFn3T75M+N+wIo79k13S3jODZnmRn+BXUXpV+CSPgYGnygYR7OgkRKeiS
-         Gy8wmmxWDZCCXbx/3WdK8TIB0m1OhMCOcPoirSFFryYSuNwv3eGFVZLra8BkeLXzGTTs
-         7Pd54ZTOFrwOoJFPEt0owS5gW+AB5U6fGFGQGzRA5DmYJNSL0EE1MiOHJam45qBxhUCN
-         Wwa4kpHDlHeXB1EUji8HUHbBTcX+0mk8ktmDVlCSnVWSnULNrq+ggBEKWqVXppYIW6qz
-         DzLw==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7DW/u09C3Z7vWb2lBo8GG9aHFcP+g8zHXO3fWt15qac=;
+        b=Zn0C/Q2FNqrB45sajDJcPtzpEXuziBLTmjSJP85kZJusLBFZJhl+itiuTVkNR5LEoU
+         qqw4r2bifPC1UQ0q8KTXy3HsAN/dFPotsthtuxJHup8QrSpnYDSX0oWkBVBbREVrBjHq
+         RGL6tDvPvn7PUiB+xFbZgVz8DxZ27NwOwWC/dXwAM3RVN4n3IufTTiWSX/qGl1otfYOX
+         fyDq/HUs/ibmrbVKdiiTNNEWPtGn41KEfyi0DdTVYEkAEzIQeQivCgrU3js9QGpnn1oe
+         aRhkXF9LG+zV1NOFjZN49TR99BJSvYgUEIXUBYWmBYJtMG8P/YE0VSEWoEvYTR35zYQ9
+         uayw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eCnR6731z1l6MsNDXcJcYMsDY+0v9elvQV8C/iDABZ4=;
-        b=stTwGUPMytemCLBEAK3anFksboR3EdRvcW9rP8vp3RjoQ0ZK9oQy2gGN8PwIXagdTC
-         ia2HgUgpB8284QCSS7Fln70NdH88D3Y37ArzTLI0Bd5W1Xv+F2ataTgFJ9veyTjePGuO
-         eWhxvla/EfkL/G67H+sABe/4jP2FD5MBckCYLA51YlvQaCyaI8v2J/hVBGcAfij8Q8IG
-         HzC0TbsRcPscUSB7ea2SvYtfVyAfRNDYL/9ypwjWKawbk3gxpklKyo5P5RO6e1m4Rsi6
-         SmVBViXmkAYR/CXPgWnCvqVfp/xj+Wdt59X5b186OVzAekLz2OGr5MTu0Hjv4N70JgzY
-         I+nw==
-X-Gm-Message-State: AFqh2koBezDJ4teDNTX64EUowTiVUYoNgP0CVCtQwtYv6Zzsfep8Kyio
-	hzinte+NzEJhfyzJKmD2e5Vrjw==
-X-Google-Smtp-Source: AMrXdXv1IojSjhlV49mF8HYKC+RPI5lyBGTsDVe/w0K0oUlC7UHACt13gKMiQXp3XvG1S5uxQ9K6gw==
-X-Received: by 2002:a05:600c:1d0e:b0:3cf:7c8b:a7c7 with SMTP id l14-20020a05600c1d0e00b003cf7c8ba7c7mr46151213wms.39.1673275198922;
-        Mon, 09 Jan 2023 06:39:58 -0800 (PST)
-Received: from [192.168.0.28] (89-159-1-53.rev.numericable.fr. [89.159.1.53])
-        by smtp.gmail.com with ESMTPSA id c17-20020a5d4cd1000000b002365254ea42sm8770391wrt.1.2023.01.09.06.39.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jan 2023 06:39:58 -0800 (PST)
-Message-ID: <f7db8eb3-1b77-0045-676d-754b1882f2ed@smile.fr>
-Date: Mon, 9 Jan 2023 15:39:58 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [bitbake-devel] [PATCH] Group and reorder options in bitbake help
-Content-Language: en-US
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
- bitbake-devel@lists.openembedded.org
-References: <1737BD92075F06D0.26636@lists.openembedded.org>
- <bf7521d9-5a6d-c33d-53bc-01dbcfae91c3@smile.fr>
- <58bb68ffb87e64c7ad6f63bd08e33873c329aaf4.camel@linuxfoundation.org>
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7DW/u09C3Z7vWb2lBo8GG9aHFcP+g8zHXO3fWt15qac=;
+        b=IAZOIdhqJY9NvIfMJo+8zXpsmEzByp8Y0MNl5L3zh6uI08q4ds7k4qrKliu0cI8xK2
+         JzdBb+AghLNMi17gnROBl3Xl7tA1YbeE75443qLiUWQOwh7nVTnXJiG4AqcPrul/SqCq
+         C/dZAUFgtoQ4ZvDvEW+PN2RZT3yCmAE1E5K31GMjjBbGAvOw7020eC5P22J68b59Jubb
+         ZDkkto0avboz43VCker8DCqTyUsi1+BaCqXLam/63DkX1Mz6Fxjb2wrMh+mk3xikr61Y
+         9CXnhvOHd477ExfT/a3Qb9BvRridhiq6GieynB8a/g7V44v9V/qV3QtiZF5vltbNpSeb
+         8yIA==
+X-Gm-Message-State: AFqh2kpnn3gBBI9MJaZodiUl00fJsqB4s1UCgp/dczLxoA7O4hM0a7GL
+	hJrQf7kI9VXnUxnlDTmTdaw0dFW1I/TjJ9JD
+X-Google-Smtp-Source: AMrXdXtDFl3KRxH2V5hCTzlunwOIGsSiIwLoqDBna/uPfCCxbjVa80duD3iRQ7l7jVfHeIUZ0o3o7w==
+X-Received: by 2002:a05:600c:3509:b0:3cf:93de:14e8 with SMTP id h9-20020a05600c350900b003cf93de14e8mr47954864wmq.39.1673341721302;
+        Tue, 10 Jan 2023 01:08:41 -0800 (PST)
+Received: from P-ASN-ECS-830T8C3.numericable.fr (89-159-1-53.rev.numericable.fr. [89.159.1.53])
+        by smtp.gmail.com with ESMTPSA id j18-20020a05600c191200b003d9dee823a3sm14861694wmq.5.2023.01.10.01.08.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jan 2023 01:08:40 -0800 (PST)
 From: Yoann Congal <yoann.congal@smile.fr>
-Organization: Smile ECS
-In-Reply-To: <58bb68ffb87e64c7ad6f63bd08e33873c329aaf4.camel@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: bitbake-devel@lists.openembedded.org
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Subject: [PATCH] Move --buildfile help at the end of "Execution" group
+Date: Tue, 10 Jan 2023 10:08:11 +0100
+Message-Id: <20230110090811.558394-1-yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 09 Jan 2023 14:40:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14294
+ <bitbake-devel@lists.openembedded.org>; Tue, 10 Jan 2023 09:08:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14295
 
-On 1/9/23 15:22, Richard Purdie wrote:
-> On Fri, 2023-01-06 at 15:20 +0100, Yoann Congal wrote:
->> On 1/6/23 15:09, Yoann Congal via lists.openembedded.org wrote:
->>> Fixes [YOCTO #12018].
->>> 
->>> Also, I have included some small fixes: * added a '.' at the end
->>> of sentence where it was missing * split some long lines
->>> 
->>> Signed-off-by: Yoann Congal <yoann.congal@smile.fr> --- 
->>> lib/bb/main.py | 222
->>> +++++++++++++++++++++++++++---------------------- 1 file changed,
->>> 122 insertions(+), 100 deletions(-)
->> To help review/discussion, here the new generated output with the
->> patch applied. Please note there was a discussion in 
->> https://bugzilla.yoctoproject.org/show_bug.cgi?id=12018
-> 
-> This passed testing and has merged, thanks. I think the output does 
-> look a lot better.
+Often, '--buildfile/-b' is used to mean "Do not execute anything but
+this recipe", so it make sense to have it in the "Execution control
+options" group.
 
-Thanks!
+Fixes [YOCTO #12018].
 
-There was a suggestion from Ross in
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=12018#c9
+(Original suggestion by Ross Burton)
 
-I'll send another patch.
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ lib/bb/main.py | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-> 
-> Cheers,
-> 
-> Richard
-
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index 1c87a02d..92d8dc02 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -136,10 +136,6 @@ def create_bitbake_parser():
+                         help="Execute the specified task (default is 'build') for these target "
+                              "recipes (.bb files).")
+ 
+-    general_group.add_argument("-b", "--buildfile",
+-                        help="Execute tasks from a specific .bb recipe directly. WARNING: Does "
+-                             "not handle any dependencies from other recipes.")
+-
+     general_group.add_argument("-s", "--show-versions", action="store_true",
+                         help="Show current and preferred versions of all recipes.")
+ 
+@@ -227,6 +223,9 @@ def create_bitbake_parser():
+                         help="Set the exit code depending on whether upstream floating "
+                             "revisions have changed or not.")
+ 
++    exec_group.add_argument("-b", "--buildfile",
++                        help="Execute tasks from a specific .bb recipe directly. WARNING: Does "
++                             "not handle any dependencies from other recipes.")
+ 
+     logging_group.add_argument("-D", "--debug", action="count", default=0,
+                         help="Increase the debug level. You can specify this "
 -- 
-Yoann Congal
-Smile ECS - Tech Expert
+2.30.2
+
 
