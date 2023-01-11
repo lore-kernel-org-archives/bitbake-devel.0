@@ -2,135 +2,112 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6E6C5479D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2294C67871
 	for <webhook@archiver.kernel.org>; Wed, 11 Jan 2023 17:51:11 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web10.31119.1673459462869185826
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web11.31181.1673459462210592362
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 11 Jan 2023 09:51:03 -0800
+ Wed, 11 Jan 2023 09:51:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=UYH+lgAG;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f41.google.com with SMTP id i17-20020a05600c355100b003d99434b1cfso13331900wmq.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 11 Jan 2023 09:51:02 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZjUihHPY;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id d17so15864679wrs.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 11 Jan 2023 09:51:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=54OEdukqKEOfMbADDKl5J4CKxi77QrkgEnNnZwmTOS0=;
-        b=UYH+lgAGavmY7MsYYQhDf+7MFthS1GX1kkLY+DPKEy3QjvN3nvgGJnL2kMmUrWr5uq
-         0iy3zfsNrF+LgOCSEb1BT/1cQBYSIXT9MtSVvdwqoJjrN9CwRG+7XsOoPgBhqwz3GE5+
-         GcoeYgs0lgslED53dIHoIi4ka3sLfIRp/+1DM=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wSjAxRAQcksFAPSyh03+o7qUHlHIZkXm7wrlkoYL4yE=;
+        b=ZjUihHPY6m/6l66f7ukWfmzDI5E03cnRWVnRLqGVbOyqK9jQHgoNaSZGJq9hpgthcU
+         Yd+BLOITAUHAPPy34n4ytKRDCoR4PMNYVOL8XalhLuksOY3nCNnfBVcY+GgKRYlYKXBX
+         yGVJdPw09TpYnXh3yGb1fSpYpHvnIJWVvBZ8M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=54OEdukqKEOfMbADDKl5J4CKxi77QrkgEnNnZwmTOS0=;
-        b=LByWTxkZzYw4ZA6W0A1hQmIz33GyjtURrpdRRLsTKNXhXenqcZNYKaUtQ+lg1JK1x6
-         Ai7MjdJeXwS/yVF0TuDgk6D6XBVXpvx4HJcpFUKuDPszAlmWny6UHEr7oylfQV8uyUsM
-         iXbpPttGNaI48t/u9RGpC5hyFgc0RBpKzUJYLqJfC/ZzHiyBW6PXTEwE9z6WPJgQ/Dkz
-         cKvMthwQkz3nfL5ikqyDQL9i3NYN4Jc+SuZCvPpjZ9BYStCDYItR43LRvyIszQBKwydQ
-         dgPBXR5e0zIYg4w++3/DHMX/ZS3X48q8xG02NbkEmMQvp+MnyzB6XnboKq4buXGLBDLc
-         ko2w==
-X-Gm-Message-State: AFqh2kolpTY257/nYZ6QsDOqNiioNdAET+h3TrppqknafyZ+mtg8r46x
-	sPQP2c2kuIGcPC8JSi5zmTxj4b2J7DT+9U/k
-X-Google-Smtp-Source: AMrXdXtkt3+qRF7BZkZIqfdCLeZjjJlFHB1KJTG2l86FRlRaL7c2CcK0cJp0Of4VtKKZXlnmK2OhSw==
-X-Received: by 2002:a7b:cd99:0:b0:3d3:5506:1bac with SMTP id y25-20020a7bcd99000000b003d355061bacmr54065642wmj.30.1673459460664;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wSjAxRAQcksFAPSyh03+o7qUHlHIZkXm7wrlkoYL4yE=;
+        b=sY4ZxMKEfTqR+4114wILeKoT6PneQpxOhPuD6EiAL6XuAxAYfMVnNR+mXeOEN4atge
+         NMf029ja9jv9owpJHGADAecbRk5cw8C6gVKd1EFvIjoZLC+lOtgtxoHp85HkCKzNMsXZ
+         HHrwMoesTlf0y54PqQ+0gEtzPj4Yz1k9l4I60bzszF1Ll7Nw5UIi+u0fw7l00nBA7kWZ
+         o0GrpTbJwd6kzyqVF0NfW6tgFuyugjHesrfG5IaqpidTZlBHw0pKT+Zh+S5X7Hk2BWpE
+         1wmo4JVkueIKtaGXQ42NV6wg2o/to2ixdz6GVJJjdEaLPnlgbj2Shbjz9sKpki07bskN
+         aHOg==
+X-Gm-Message-State: AFqh2krcp9IU3P6oLrSrI7R5UOO+leQUi5rYjW95lsCub0TVPud8634s
+	/34pwCregDBYdymTLs5aUZgwC6sEvkJkOAtX
+X-Google-Smtp-Source: AMrXdXtXC/hEetvs1zt5WcLZyi91VWB9UTXi0nE07A5hdtBdokfxjXKJW6tyoqwFepOqYN2YYJl+4g==
+X-Received: by 2002:a5d:490c:0:b0:2bd:bf72:76f2 with SMTP id x12-20020a5d490c000000b002bdbf7276f2mr3619589wrq.14.1673459460125;
         Wed, 11 Jan 2023 09:51:00 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:a11f:4d56:748b:c178])
-        by smtp.gmail.com with ESMTPSA id j30-20020a05600c1c1e00b003d9f14e9085sm11689624wms.17.2023.01.11.09.51.00
+        by smtp.gmail.com with ESMTPSA id j30-20020a05600c1c1e00b003d9f14e9085sm11689624wms.17.2023.01.11.09.50.59
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jan 2023 09:51:00 -0800 (PST)
+        Wed, 11 Jan 2023 09:50:59 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/4] server/process: Move heartbeat to idle thread
-Date: Wed, 11 Jan 2023 17:50:56 +0000
-Message-Id: <20230111175058.1526619-2-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 1/4] tinfoil: Don't wait for events indefinitely
+Date: Wed, 11 Jan 2023 17:50:55 +0000
+Message-Id: <20230111175058.1526619-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230111175058.1526619-1-richard.purdie@linuxfoundation.org>
-References: <20230111175058.1526619-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 11 Jan 2023 17:51:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14302
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14301
 
-Rather than risk the heartbeat event code locking up the server control
-socket, handle it in the 'idle' thread with the other work. The aim
-is to remove it as a possible issue with some ongoing hangs.
+If for some reason the bitbake server dies, we shouldn't loop indefinitely
+waiting for events within tinfoil. Add a ping test and exit if things
+have somehow failed.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 44 ++++++++++++++++++++--------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ lib/bb/tinfoil.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index a44ec36139..588a3ae04d 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -441,6 +441,28 @@ class ProcessServer():
-                     serverlog("Exception %s broke the idle_thread, exiting" % traceback.format_exc())
-                     self.quit = True
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index 8978bb5261..91fbf1b13e 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -10,6 +10,7 @@
+ import logging
+ import os
+ import sys
++import time
+ import atexit
+ import re
+ from collections import OrderedDict, defaultdict
+@@ -729,6 +730,7 @@ class Tinfoil:
  
-+            # Create new heartbeat event?
-+            now = time.time()
-+            if bb.event._heartbeat_enabled and now >= self.next_heartbeat:
-+                # We might have missed heartbeats. Just trigger once in
-+                # that case and continue after the usual delay.
-+                self.next_heartbeat += self.heartbeat_seconds
-+                if self.next_heartbeat <= now:
-+                    self.next_heartbeat = now + self.heartbeat_seconds
-+                if hasattr(self.cooker, "data"):
-+                    heartbeat = bb.event.HeartbeatEvent(now)
-+                    try:
-+                        bb.event.fire(heartbeat, self.cooker.data)
-+                    except Exception as exc:
-+                        if not isinstance(exc, bb.BBHandledException):
-+                            logger.exception('Running heartbeat function')
-+                        serverlog("Exception %s broke in idle_thread, exiting" % traceback.format_exc())
-+                        self.quit = True
-+            if nextsleep and bb.event._heartbeat_enabled and now + nextsleep > self.next_heartbeat:
-+                # Shorten timeout so that we we wake up in time for
-+                # the heartbeat.
-+                nextsleep = self.next_heartbeat - now
-+
-             if time.time() > (lastdebug + 60):
-                 lastdebug = time.time()
-                 with bb.utils.lock_timeout(self._idlefuncsLock):
-@@ -459,28 +481,6 @@ class ProcessServer():
-             self.idle = threading.Thread(target=self.idle_thread)
-             self.idle.start()
- 
--        # Create new heartbeat event?
--        now = time.time()
--        if bb.event._heartbeat_enabled and now >= self.next_heartbeat:
--            # We might have missed heartbeats. Just trigger once in
--            # that case and continue after the usual delay.
--            self.next_heartbeat += self.heartbeat_seconds
--            if self.next_heartbeat <= now:
--                self.next_heartbeat = now + self.heartbeat_seconds
--            if hasattr(self.cooker, "data"):
--                heartbeat = bb.event.HeartbeatEvent(now)
--                try:
--                    bb.event.fire(heartbeat, self.cooker.data)
--                except Exception as exc:
--                    if not isinstance(exc, bb.BBHandledException):
--                        logger.exception('Running heartbeat function')
--                    serverlog("Exception %s broke in idle_commands, exiting" % traceback.format_exc())
--                    self.quit = True
--        if nextsleep and bb.event._heartbeat_enabled and now + nextsleep > self.next_heartbeat:
--            # Shorten timeout so that we we wake up in time for
--            # the heartbeat.
--            nextsleep = self.next_heartbeat - now
+         ret = self.run_command('buildTargets', targets, task)
+         if handle_events:
++            lastevent = time.time()
+             result = False
+             # Borrowed from knotty, instead somewhat hackily we use the helper
+             # as the object to store "shutdown" on
+@@ -741,6 +743,7 @@ class Tinfoil:
+                     try:
+                         event = self.wait_event(0.25)
+                         if event:
++                            lastevent = time.time()
+                             if event_callback and event_callback(event):
+                                 continue
+                             if helper.eventHandler(event):
+@@ -785,10 +788,13 @@ class Tinfoil:
+                                 self.logger.error(str(event))
+                                 result = False
+                                 break
 -
-         if nextsleep is not None:
-             if self.xmlrpc:
-                 nextsleep = self.xmlrpc.get_timeout(nextsleep)
+                         elif helper.shutdown > 1:
+                             break
+                         termfilter.updateFooter()
++                        if time.time() > (lastevent + (3*60)):
++                            if not self.run_command('ping', handle_events=False):
++                                print("\nUnable to ping server and no events, closing down...\n")
++                                return False
+                     except KeyboardInterrupt:
+                         termfilter.clearFooter()
+                         if helper.shutdown == 1:
 -- 
 2.37.2
 
