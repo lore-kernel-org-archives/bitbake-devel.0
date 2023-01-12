@@ -1,151 +1,147 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A38C54EBD
-	for <webhook@archiver.kernel.org>; Thu, 12 Jan 2023 12:50:58 +0000 (UTC)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web10.53875.1673527851913433382
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58742C54EBD
+	for <webhook@archiver.kernel.org>; Thu, 12 Jan 2023 13:44:08 +0000 (UTC)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web10.55018.1673531038297358916
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 12 Jan 2023 04:50:52 -0800
+ Thu, 12 Jan 2023 05:43:58 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cmF1/ITf;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f41.google.com with SMTP id e3so8760200wru.13
-        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Jan 2023 04:50:51 -0800 (PST)
+ dkim=pass header.i=@smile-fr.20210112.gappssmtp.com header.s=20210112 header.b=3qDBbpQp;
+ spf=pass (domain: smile.fr, ip: 209.85.221.50, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f50.google.com with SMTP id h16so18111022wrz.12
+        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Jan 2023 05:43:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Tqc/wyY8CZGEyCIFyh0P1UpHOlOlEFdBGFwTlPRNZ7A=;
-        b=cmF1/ITfjz4CMaFko5naMo91gjfglydYume0PnlmyNnmFv5PKybo/L6GNe28NiCxGF
-         wjL0MMqeNClOvNZK82XC/enhW0NjGvPsmtkNTizJdIrx/62WoJWaAqKjonCTjAOyhyzU
-         ATUZVicIqY/VEwVN1X8FMSolL7eIiRADLbFfU=
+        d=smile-fr.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:organization:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZMOtgcbnKGREhHihqBQlQC+Xr1cmMtxiRI5iaNwLAOw=;
+        b=3qDBbpQpwWBMJLkB7O0OdQ5LvmWZpaV4KMMv7CxCkBIT4977wNpeCFUxL8jv6HEueD
+         Bmh4iieBY1/280RLNqMExG4Hsiv5wr815P+hecZsArF79y1ltmr7UoZehbgvigxZl50q
+         6sTNymp4ImJaAYwlM8L9XISiSMnHdrTmR2JAg1Ym/myEYj3poq+Ugi8NEfL3Iz8eUHBq
+         93eo6Boni5JvX6UtqcW2UkrNZNfzGkNo4epfMhGqYyc/9lHLl2PONjBGI0hhW6loJwHL
+         Ojb+k1VraArZE3hEmNZRfqh44C6/DObSrJ6q+sKh05iiQUhjDw3jYc0TDmJyQFLa6rH9
+         tFzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Tqc/wyY8CZGEyCIFyh0P1UpHOlOlEFdBGFwTlPRNZ7A=;
-        b=WgXbUEbGQ0cHUUlvbQJ5fg1CLq4BtQlHjDlkExaKdhcKO4v36DhMF1bWGcqSasnlW3
-         KcNtZKnZqTdOHAU4XSn6WPO5NsxfchfwN75JQH880krduepiHidumQ6FYXCnriItMZGf
-         X0NODCu83Tgdb2tUrbHKOqJsvwbbSBpz1K9TR9U4eCOeaJE4+kg43Dyox+11AbfI9igl
-         Kw/O5zeqvabAl7e2iKM1ZV/QvnB73+9/xlY+W91PiswZqRdQzEatf0r3LPjqkdjTdf96
-         f7h0b+r4QhIcq83wXydJ5mtSJP/CIBIYu6HfjcPlKJQRij5i7J0EcHzsLQF7OVPFnkSe
-         Yhug==
-X-Gm-Message-State: AFqh2kp9On20q4aS5yR7jI+74MtulvSQSB2v7xbHQ+qfF1T7YzoK0Ru/
-	l7zDtdUs8/xbz4EoheTZVW54oA==
-X-Google-Smtp-Source: AMrXdXuHkyNGcUNiHLSyma6YZRow/jNWWBKTnho6FJ+f4cqgun907D/piJRlVeM0zmvJ6oznzvmGVw==
-X-Received: by 2002:a05:6000:1c05:b0:261:d8be:3046 with SMTP id ba5-20020a0560001c0500b00261d8be3046mr51597114wrb.0.1673527850057;
-        Thu, 12 Jan 2023 04:50:50 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:a64e:9cdc:56b5:438b? ([2001:8b0:aba:5f3c:a64e:9cdc:56b5:438b])
-        by smtp.gmail.com with ESMTPSA id m10-20020adff38a000000b002bc83b85180sm7864002wro.114.2023.01.12.04.50.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jan 2023 04:50:49 -0800 (PST)
-Message-ID: <ff985da2d6dc93e4a75adc94bb84ecd176f26495.camel@linuxfoundation.org>
+        h=content-transfer-encoding:in-reply-to:organization:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZMOtgcbnKGREhHihqBQlQC+Xr1cmMtxiRI5iaNwLAOw=;
+        b=tThE6lt8D+/xYKBsx9rX4RNLYLQckqH5fBKn2sS1M7w1m2plDwmaVzJ/+i+nEhu74y
+         0g9R/Eqj0iWmhenCTjeqNFoqIijfoZRYyDiNBrj1AtMlr3HnWcxg8GyZyS0ooSrOJesb
+         cAC0R8W2AUwxDyYZE1zfyZ0rfZRIzAZW0BMdQRvibLFE3sq5GeIkcdUP5KX7nGAlUZ/t
+         JaF6bIbSPKBT/BaPKDEz77ud4yXjpycbVgiPcndhNrHTzt+7aq6qmeStHg4fAM+vuasN
+         2s/+CgmGc2TwaiKP7JtAG+FZfbCsMlUqpy42+FmE/385tvigGbOjNvdOXWI954otf6lu
+         0U1w==
+X-Gm-Message-State: AFqh2kqEkNTacVCHFZyCxyedVBOQPG/348Fzckf49ZH65DAUtNggy9d2
+	lStCHkKU7/FnN0DSSb9tFD+BYQ==
+X-Google-Smtp-Source: AMrXdXveXy8JPAtRh1TRL1iMbpSJOru2nkkocVPPGIk1S4Lo9SeeIOaphK4JCpt34DWtLC1DR8HS4g==
+X-Received: by 2002:a05:6000:124e:b0:2bb:e9e6:ac26 with SMTP id j14-20020a056000124e00b002bbe9e6ac26mr9987251wrx.57.1673531036473;
+        Thu, 12 Jan 2023 05:43:56 -0800 (PST)
+Received: from [10.1.8.154] (static-css-ccs-204145.business.bouyguestelecom.com. [176.157.204.145])
+        by smtp.gmail.com with ESMTPSA id g14-20020a05600c4ece00b003d9ea176d54sm22839921wmq.27.2023.01.12.05.43.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jan 2023 05:43:56 -0800 (PST)
+Message-ID: <772dadde-b999-f88d-c38d-11d717dd0636@smile.fr>
+Date: Thu, 12 Jan 2023 14:43:55 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
 Subject: Re: [bitbake-devel] [PATCH] persist_data: Handle sqlite error when
  cachefile path is too long
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jose Quaresma <quaresma.jose@gmail.com>, Yoann Congal
-	 <yoann.congal@smile.fr>
+Content-Language: en-US
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+ Jose Quaresma <quaresma.jose@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org
-Date: Thu, 12 Jan 2023 12:50:48 +0000
-In-Reply-To: <CANPvuRku0dQQPQVX5Hxcw27zZQhLTM-3X0SAV0hZ4JTkVe26Ag@mail.gmail.com>
 References: <20230111223729.3472181-1-yoann.congal@smile.fr>
-	 <CANPvuRku0dQQPQVX5Hxcw27zZQhLTM-3X0SAV0hZ4JTkVe26Ag@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1-0ubuntu1 
-MIME-Version: 1.0
+ <CANPvuRku0dQQPQVX5Hxcw27zZQhLTM-3X0SAV0hZ4JTkVe26Ag@mail.gmail.com>
+ <ff985da2d6dc93e4a75adc94bb84ecd176f26495.camel@linuxfoundation.org>
+From: Yoann Congal <yoann.congal@smile.fr>
+Organization: Smile ECS
+In-Reply-To: <ff985da2d6dc93e4a75adc94bb84ecd176f26495.camel@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 12 Jan 2023 12:50:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14310
+ <bitbake-devel@lists.openembedded.org>; Thu, 12 Jan 2023 13:44:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14311
 
-On Thu, 2023-01-12 at 11:43 +0000, Jose Quaresma wrote:
-> Hi Yoann,
->=20
->=20
-> Yoann Congal <yoann.congal@smile.fr> escreveu no dia quarta, 11/01/2023 =
-=C3=A0(s) 22:38:
-> > Sqlite can't open the cachefile when its path is too long (>=3D 505 cha=
-r by
-> > my tests).
-> >=20
-> > We do have a path length check in sanity.bbclass but this code is calle=
-d
-> > before sanity checks.
-> >=20
-> > Treat the error in the exception instead of checking before hand in cas=
-e
-> > sqlite eventually fixes this.
-> >=20
-> > Fixes [YOCTO #12374]
-> >=20
-> > Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
-> > ---
-> > =C2=A0lib/bb/persist_data.py | 18 +++++++++++++++++-
-> > =C2=A01 file changed, 17 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/lib/bb/persist_data.py b/lib/bb/persist_data.py
-> > index ce84a158..a027f912 100644
-> > --- a/lib/bb/persist_data.py
-> > +++ b/lib/bb/persist_data.py
-> > @@ -249,4 +249,20 @@ def persist(domain, d):
-> >=20
-> > =C2=A0 =C2=A0 =C2=A0bb.utils.mkdirhier(cachedir)
-> > =C2=A0 =C2=A0 =C2=A0cachefile =3D os.path.join(cachedir, "bb_persist_da=
-ta.sqlite3")
-> > -=C2=A0 =C2=A0 return SQLTable(cachefile, domain)
-> > +
-> > +=C2=A0 =C2=A0 try:
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 return SQLTable(cachefile, domain)
-> > +=C2=A0 =C2=A0 except sqlite3.OperationalError:
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Sqlite fails to open database when its p=
-ath is too long.
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 # After testing, 504 is the biggest path l=
-ength that can be opened by
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 # sqlite.
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Note: This code is called before sanity.=
-bbclass and its path length
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 # check
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 max_len =3D 504
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 if len(cachefile) > max_len:
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 logger.critical("The path of=
- the cache file is too long "
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-f"({len(cachefile)} chars > {max_len}) to be opened by sqlite! "
-> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-f"Your cache file is \"{cachefile}\"")
-> >=20
->=20
->=20
-> As fair as I know bitbake don't use python fstrings=C2=A0anywhere=C2=A0
->=20
-> grep --include=3D\*.py =C2=A0-rnw bitbake/lib/ -e 'f".*"'=20
-> bitbake/lib/bb/data_smart.py:345: =C2=A0 =C2=A0 =C2=A0 =C2=A0"""Get the l=
-ine where a operation is made on a variable in file f"""
-> bitbake/lib/bb/main.py:135: =C2=A0 =C2=A0parser.add_option("-f", "--force=
-", action=3D"store_true", dest=3D"force", default=3DFalse,
-> bitbake/lib/bb/tests/runqueue.py:305: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0tasks =3D self.run_bitbakecmd(["bitbake", "mc:mc_2:a1", "-c", "compil=
-e", "-f"], tempdir, "", extraenv=3Dextraenv, cleanup=3DTrue)
-> bitbake/lib/pyinotify.py:2255: =C2=A0 =C2=A0parser.add_option("-f", "--ra=
-w-format", action=3D"store_true",
+On 1/12/23 13:50, Richard Purdie wrote:
+> On Thu, 2023-01-12 at 11:43 +0000, Jose Quaresma wrote:
+>> Hi Yoann,
+>>
+>>
+>> Yoann Congal <yoann.congal@smile.fr> escreveu no dia quarta, 11/01/2023 à(s) 22:38:
+>>> Sqlite can't open the cachefile when its path is too long (>= 505 char by
+>>> my tests).
+>>>
+>>> We do have a path length check in sanity.bbclass but this code is called
+>>> before sanity checks.
+>>>
+>>> Treat the error in the exception instead of checking before hand in case
+>>> sqlite eventually fixes this.
+>>>
+>>> Fixes [YOCTO #12374]
+>>>
+>>> Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+>>> ---
+>>>   lib/bb/persist_data.py | 18 +++++++++++++++++-
+>>>   1 file changed, 17 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/lib/bb/persist_data.py b/lib/bb/persist_data.py
+>>> index ce84a158..a027f912 100644
+>>> --- a/lib/bb/persist_data.py
+>>> +++ b/lib/bb/persist_data.py
+>>> @@ -249,4 +249,20 @@ def persist(domain, d):
+>>>
+>>>       bb.utils.mkdirhier(cachedir)
+>>>       cachefile = os.path.join(cachedir, "bb_persist_data.sqlite3")
+>>> -    return SQLTable(cachefile, domain)
+>>> +
+>>> +    try:
+>>> +        return SQLTable(cachefile, domain)
+>>> +    except sqlite3.OperationalError:
+>>> +        # Sqlite fails to open database when its path is too long.
+>>> +        # After testing, 504 is the biggest path length that can be opened by
+>>> +        # sqlite.
+>>> +        # Note: This code is called before sanity.bbclass and its path length
+>>> +        # check
+>>> +        max_len = 504
+>>> +        if len(cachefile) > max_len:
+>>> +            logger.critical("The path of the cache file is too long "
+>>> +                    f"({len(cachefile)} chars > {max_len}) to be opened by sqlite! "
+>>> +                    f"Your cache file is \"{cachefile}\"")
+>>>
+>>
+>>
+>> As fair as I know bitbake don't use python fstrings anywhere
+>>
+>> grep --include=\*.py  -rnw bitbake/lib/ -e 'f".*"'
+>> bitbake/lib/bb/data_smart.py:345:        """Get the line where a operation is made on a variable in file f"""
+>> bitbake/lib/bb/main.py:135:    parser.add_option("-f", "--force", action="store_true", dest="force", default=False,
+>> bitbake/lib/bb/tests/runqueue.py:305:            tasks = self.run_bitbakecmd(["bitbake", "mc:mc_2:a1", "-c", "compile", "-f"], tempdir, "", extraenv=extraenv, cleanup=True)
+>> bitbake/lib/pyinotify.py:2255:    parser.add_option("-f", "--raw-format", action="store_true",
+> 
+> We don't, no.
+> 
+> We do now meet the minimum python requirements so in theory we could
+> but it would mean the code can't be backported. A fix like this could
+> be useful in older releases so it is perhaps sticking to the older
+> syntax but I know others would prefer to be able to use it. I'm torn on
+> it...
 
-We don't, no.
+I really thought I saw some f-strings near this patch... But I guess I 
+mixed my codebases... sorry.
 
-We do now meet the minimum python requirements so in theory we could
-but it would mean the code can't be backported. A fix like this could
-be useful in older releases so it is perhaps sticking to the older
-syntax but I know others would prefer to be able to use it. I'm torn on
-it...
+I'm okay with sending a V2 based on "".format().
 
-
-Cheers,
-
-Richard
-
+-- 
+Yoann Congal
+Smile ECS - Tech Expert
 
