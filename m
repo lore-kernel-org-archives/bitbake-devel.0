@@ -1,111 +1,87 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB13C61DB3
-	for <webhook@archiver.kernel.org>; Thu, 12 Jan 2023 19:33:50 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web10.65841.1673552028228594268
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7913C46467
+	for <webhook@archiver.kernel.org>; Sat, 14 Jan 2023 14:12:12 +0000 (UTC)
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+ by mx.groups.io with SMTP id smtpd.web10.116406.1673705531146980983
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 12 Jan 2023 11:33:48 -0800
+ Sat, 14 Jan 2023 06:12:11 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile-fr.20210112.gappssmtp.com header.s=20210112 header.b=PYp/OHHy;
- spf=pass (domain: smile.fr, ip: 209.85.221.51, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f51.google.com with SMTP id v2so8119458wrw.10
-        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Jan 2023 11:33:47 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=mGNeysAs;
+ spf=softfail (domain: sakoman.com, ip: 209.85.216.54, mailfrom: steve@sakoman.com)
+Received: by mail-pj1-f54.google.com with SMTP id v13-20020a17090a6b0d00b00219c3be9830so27044369pjj.4
+        for <bitbake-devel@lists.openembedded.org>; Sat, 14 Jan 2023 06:12:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile-fr.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=btPC/9PejBkL54XLsET819ePIWUFrN30XcdRrFUvJNY=;
-        b=PYp/OHHy596cAClbRzGLi08blYf0cQboLh6tpzVWIu2QDM/vqxYG5r0I5FM0FZN0jZ
-         D/0jTKlu2TWKpYfNsTFUJh1efZhvPdecIMFpLkNKdPRvPbLrVfBTEGuxfWQVtKD57mJY
-         fwx9/UnOXdjLfqVpr3szZv4RVPpRB860HYqH5ehejLxKpVeHuTE4UiAzxB+5nHpy7kab
-         4G5767KnCqUIruXq122BC/Eums77MmQ1ZugDGwfLVNjfq9ZxpWIY9k7yGVMBmRDJzR/b
-         o+NnFMrfgxtvhbAomCF25jDeiZIQMgjugnXYfH8//pNNBDCXh2ir5PRARKQw3QydW7eP
-         TXew==
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DJAnNLGoqKymXphFOBlcwllMHawYl1RBvX3qcj9wq9c=;
+        b=mGNeysAszp/XCJtQf92ROJKtQQ4fuRb74KU87I5t3iytwzEoR3zFvRID0Y29yjfOfb
+         5AjPHMp7sgV6YHUJjzZzSo+K+fg/TNydBwRppGSmCcgR4nx4BlNpgp+bf8I4x1k0SdnC
+         wolzY1ZfVgkDMIq3VlciAQNz27K7opxDr/RZFoZF6+I/9EO5mQP/srdrlyiX/yuhvwqE
+         4i7WlRPxdG0LX8FQiZptdpvXli+C1+koleFrYGG0dkVwSk17hF7hZBJP/7pYduG3sFv1
+         ehgk9Jzlgha94uaikYhIpoXBQ7JNc2ppXjIWxA+XcagU62x0idAgdovJsg9Xe7vCUitP
+         rwwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=btPC/9PejBkL54XLsET819ePIWUFrN30XcdRrFUvJNY=;
-        b=ozLqFYwgY1qaMeFNquijG9TVdo75VWdm1lzX1spDijEEW9ob8MTV4qgQ+B8xx0wIO8
-         zFq88e5W/SSFtajEi8od0GUiEBGnLPQPesxxGre3rOP0AUGDmg1O5JAtN8WCdogS4vkP
-         ZDfcFzOikAQCX/1YPnu+FaFscDFLr+gaXeQZrXeufg+94SlFwqDgXlzd8tLXYP7D09SA
-         cN3GOXzxc4ZODmNTOHVqVVa4/L82ytQKEQ56krEezdtEihtzXwH0w1vdlFzOLzMMUiXW
-         qHGf2Tf8eHcHUK4iBeW8j8TogR5Od+V+9qGZ9LPEHKNlaN2zQogxiYu4DLFjB3/pgPmb
-         A7gg==
-X-Gm-Message-State: AFqh2ko3EdjfRsU92FrGETM1a5lI08rNDSEJPJmn2zgM/rjjev3yjqh6
-	OkXntqru42Q6tteI7QapMdjzdfS3fGUcHQF/
-X-Google-Smtp-Source: AMrXdXuL3Au4XFz45cvA/fdqUYejGi9YS5nPMiK85HNa28Mt01e1BoVGsXHpvjp5cf4+lJ5UxMJCwg==
-X-Received: by 2002:a5d:5910:0:b0:27c:7c2a:f700 with SMTP id v16-20020a5d5910000000b0027c7c2af700mr35325955wrd.8.1673552026010;
-        Thu, 12 Jan 2023 11:33:46 -0800 (PST)
-Received: from P-ASN-ECS-830T8C3.local ([2a04:cec0:1054:ad64:c3b0:9f95:abda:1115])
-        by smtp.gmail.com with ESMTPSA id q11-20020adf9dcb000000b00268aae5fb5bsm17488396wre.3.2023.01.12.11.33.45
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DJAnNLGoqKymXphFOBlcwllMHawYl1RBvX3qcj9wq9c=;
+        b=12NzIvP0etfhHsoXqZ12Q4Sk6ENKplrIzGUeBzxBFeBpi9yHvCfNdO16vbMR6iXGWa
+         PIMk7mgLGwuCkG1F1IJWM9LaHxTjjqxLT4gbj+G8nS+AAFNEPqQ7h4leX19D69vXODaO
+         fMhZSfOpeC2l1PM+3+/uQkhGW5N7wWlUvaCywgk3cCOITZDoFp5gGr6lXPwr+hxelxok
+         TZnbbcTQSoA3mdtDc//O5bI9L0xUW3sG7B2H15ZA1KBwTqwTF47QE1uABHTvgdBxmqSr
+         dPDo7RfGdjdG3L4WJhHcnYdniMuKtWrr9I/sfIyiqfvZJWSN+0jtHn8x257QOhs+VurI
+         lSHA==
+X-Gm-Message-State: AFqh2kpiGwdZ+Do8odBvKAScCbujycPYDu+6SiClN1kN8HlAGjxM3oXJ
+	m+jbLozI5WgyyzAF8N1/iubaq+56whjnBqXBLgU=
+X-Google-Smtp-Source: AMrXdXv5WaERswq2f2GXxPDJpUhNDmzA5Df8kW0a7ObGbAVJM0aKC/5AKS3aD7STg3vK+PTNwYtxWQ==
+X-Received: by 2002:a05:6a21:1509:b0:a7:c9a:73c with SMTP id nq9-20020a056a21150900b000a70c9a073cmr107684911pzb.2.1673705529848;
+        Sat, 14 Jan 2023 06:12:09 -0800 (PST)
+Received: from hexa.router0800d9.com (dhcp-72-253-5-74.hawaiiantel.net. [72.253.5.74])
+        by smtp.gmail.com with ESMTPSA id q2-20020a63cc42000000b004788780dd8esm12942463pgi.63.2023.01.14.06.12.08
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jan 2023 11:33:45 -0800 (PST)
-From: Yoann Congal <yoann.congal@smile.fr>
+        Sat, 14 Jan 2023 06:12:09 -0800 (PST)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Yoann Congal <yoann.congal@smile.fr>
-Subject: [PATCH v2] persist_data: Handle sqlite error when cachefile path is too long
-Date: Thu, 12 Jan 2023 20:32:55 +0100
-Message-Id: <20230112193255.38994-1-yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.30.2
+Subject: [bitbake][langdale][2.2][PATCH 0/2] Patch review
+Date: Sat, 14 Jan 2023 04:12:00 -1000
+Message-Id: <cover.1673705296.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 12 Jan 2023 19:33:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14312
+ <bitbake-devel@lists.openembedded.org>; Sat, 14 Jan 2023 14:12:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14313
 
-Sqlite can't open the cachefile when its path is too long (>= 505 char by
-my tests).
+We're seeing some race issues on the autobuilder where langdale builds are
+causing master builds to fail. This is likely due to langdale
+missing these patches.
 
-We do have a path length check in sanity.bbclass but this code is called
-before sanity checks.
+The following changes since commit f0f166aee766b4bb1f8cf8b35dfc7d406c75e6a4:
 
-Treat the error in the exception instead of checking before hand in case
-sqlite eventually fixes this.
+  gitsm: Fix regression in gitsm submodule path parsing (2023-01-06 17:27:39 +0000)
 
-Fixes [YOCTO #12374]
+are available in the Git repository at:
 
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- lib/bb/persist_data.py | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+  https://git.openembedded.org/bitbake-contrib stable/2.2-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.2-nut
 
-diff --git a/lib/bb/persist_data.py b/lib/bb/persist_data.py
-index ce84a158..bcca791e 100644
---- a/lib/bb/persist_data.py
-+++ b/lib/bb/persist_data.py
-@@ -249,4 +249,23 @@ def persist(domain, d):
- 
-     bb.utils.mkdirhier(cachedir)
-     cachefile = os.path.join(cachedir, "bb_persist_data.sqlite3")
--    return SQLTable(cachefile, domain)
-+
-+    try:
-+        return SQLTable(cachefile, domain)
-+    except sqlite3.OperationalError:
-+        # Sqlite fails to open database when its path is too long.
-+        # After testing, 504 is the biggest path length that can be opened by
-+        # sqlite.
-+        # Note: This code is called before sanity.bbclass and its path length
-+        # check
-+        max_len = 504
-+        if len(cachefile) > max_len:
-+            logger.critical("The path of the cache file is too long "
-+                    "({0} chars > {1}) to be opened by sqlite! "
-+                    "Your cache file is \"{2}\"".format(
-+                        len(cachefile),
-+                        max_len,
-+                        cachefile))
-+            sys.exit(1)
-+        else:
-+            raise
+Frank de Brabander (1):
+  process: log odd unlink events with bitbake.sock
+
+Richard Purdie (1):
+  server/process: Add bitbake.sock race handling
+
+ lib/bb/server/process.py | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
 -- 
-2.30.2
+2.25.1
 
 
