@@ -1,144 +1,98 @@
-Return-Path: <pavel@zhukoff.net>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65424C3DA78
-	for <webhook@archiver.kernel.org>; Tue, 17 Jan 2023 15:37:05 +0000 (UTC)
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
- by mx.groups.io with SMTP id smtpd.web11.199754.1673969824656473711
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7D3C38147
+	for <webhook@archiver.kernel.org>; Tue, 17 Jan 2023 23:13:40 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web10.2137.1673997215055858036
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Jan 2023 07:37:04 -0800
+ Tue, 17 Jan 2023 15:13:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@zhukoff.net header.s=fm3 header.b=rlkOgD36;
- spf=pass (domain: zhukoff.net, ip: 66.111.4.29, mailfrom: pavel@zhukoff.net)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 027F25C0111;
-	Tue, 17 Jan 2023 10:37:04 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 17 Jan 2023 10:37:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
-	cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1673969823; x=1674056223; bh=dG
-	EikX6zmYU0CmysaEjjrWQJCcnN1DMaFRrCtrfDw1s=; b=rlkOgD36wlvTpjo0zf
-	tWLAODffASgVY/6cJpNE+EvQ1IvKvCNwVON9Z18M6x7QfpKKdgKkqeF9QoQ9EHhW
-	t5Uk1bbbOKGRRFl2gRwsBA03NhIgBYowtkG5RzMMF91NnPwCfaBoYHEDPndbbXE3
-	V8izlXWKZMQlVgeIXMk2UpMjeLuCnaRXO+1XxCEKQLujzntQgXpG84sf7VxvIqQy
-	tKKktuNm310ud4v2UxXXTUEI/f72PiRy86+QJZEgdmpY36Ee8DohWBK5fN5rOMjn
-	jgoDWGSXqt83tAZkuWOhifnsALAbkPxjpbbkAfY0/SRDmgKlIPG9ou9/ojLVLU2U
-	ZAhA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; t=1673969823; x=1674056223; bh=dGEikX6zmYU0C
-	mysaEjjrWQJCcnN1DMaFRrCtrfDw1s=; b=b0MnjvgxzetgDt2NgkbgyeJ114AgD
-	jE/9avWP38lIDKLm0t/acwFBDIbju3DU4oWiBxBXfMYfiCy6836ELUP/AmHN8mbr
-	Xa0+4UirVmvpAg5nskkXK2f7LTQOydGzclnyGsUV9LWI1LFLp7OjxDRe7PYoEo+B
-	z98JRWAywQFKYKfXu/iXgyfWrzAHTBDTNsxc4mymPPeVbORGKyAYFuUDRFz8nB/d
-	HraFXp82c5RQH0WFkdzEWc+9bFCSHjDCOuoqJ0iJJPqWmLJ99i8XOGOffqoUcvwE
-	knj6qWEphFY4kGeQh+qWmsr8KOT1/P6OdlKWvshrVtMBEpe9eiL8A+JAw==
-X-ME-Sender: <xms:n8DGY_j3DMhtj5-WFPpEUwO_ooxFn3qR0ntHv2GmEl5B-hTCMPN2xg>
-    <xme:n8DGY8CA5MQsfJzHqCsCDeYwYIQjOq3qZ5sXod_WNAIHUGatdexTo8dgHNJXYW0fS
-    FdBIUeXA6IHkld4c38>
-X-ME-Received: <xmr:n8DGY_GpV0ljLGMh98ORKpHXb1-nMOdghJFfMoW1I8wKfwt80Z_wKpLHDe9k>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddtiedgjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpefrrghvvghlucgkhhhukhhovhcuoehprghvvghlseiihhhu
-    khhofhhfrdhnvghtqeenucggtffrrghtthgvrhhnpeeukeeuueegudfhheetgeekudekje
-    efkeeugefhledtueelgeeijeetffejvefhfeenucffohhmrghinhepihhmfhhrvggvugho
-    mhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehprghvvghlseiihhhukhhofhhfrdhnvght
-X-ME-Proxy: <xmx:n8DGY8RNEep4g5KJFGXepXcOUNH1GIHI_4Ancaf6ssog--RKI3OVzw>
-    <xmx:n8DGY8z4LxoghuSNQ3IPigQkC791dK9ohCSmybLl4VmWxxnxzbapuw>
-    <xmx:n8DGYy7T6gS1Lc_9ffouXH81sQ_4tJOV2pdGVdlvg1riDcvy0XYd_g>
-    <xmx:n8DGYya0-03RMEOi58WtLJHKa1WSB6Cn5d_ME8RdZ6JtIhIUE-5cJQ>
-Feedback-ID: ib94946c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 17 Jan 2023 10:37:03 -0500 (EST)
-From: Pavel Zhukov <pavel@zhukoff.net>
-To: bitbake-devel@lists.openembedded.org
-Cc: Pavel Zhukov <pavel@zhukoff.net>
-Subject: [PATCH 2/2] fetch2/tests: Add test for Mercurial
-Date: Tue, 17 Jan 2023 16:36:43 +0100
-Message-Id: <20230117153643.21716-2-pavel@zhukoff.net>
-X-Mailer: git-send-email 2.39.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ceYqTF1i;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f47.google.com with SMTP id l41-20020a05600c1d2900b003daf986faaeso291112wms.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Jan 2023 15:13:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S4Jk2wT4xGJprZuFi2zPtOwXAXI0zvfU1W67cHak9hQ=;
+        b=ceYqTF1iY3+M9+zARVX9oHp5ePDdxY5seEw4zWy6xdXA4f8QSHxT67EiJhrMHnjbHg
+         uXXT+7G92lEWm9OPKe3Q2CR45bdTvBaIG1zqkZgIjGVHBkLZWtreebqEtYNKGlWrMjf9
+         qPAYdbAEglhnWybqigOt9iAKGO1Sd3EclC+RE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=S4Jk2wT4xGJprZuFi2zPtOwXAXI0zvfU1W67cHak9hQ=;
+        b=Z5g6XDJnKZEChGwRtGMGBiuoCz4Sd3JIS1MDOl32liOYpKy9PRCF+TNK/HZQrbzTrS
+         uju0ULRv0LcvxXrZEokX5MoEueG883QP3rrSBkKzlGTUefBVRmQyTQrWdRywBLb/iMW5
+         Qq7xxa0bLWbk8kTD3O+ES9SZEB/T/Hjfu9hBvjjxhMMUaUDZUZ77xK9fo41qUirzlk+u
+         IVUeZ7ts6MRcI58oztmp3j/gZNSqLlqMHYPDM0mBZMe4aKNU7+ooUx3toEiHJ2XioQNG
+         3Z51iHRMHic38GVX0CMFsR0T+DK2KcWXjM+BqLAPvsqKua7liXdr6yrjDc3icQF5bB+i
+         R3UA==
+X-Gm-Message-State: AFqh2kquNlIRFoTiwESRdKT3pIi3OKFUItEduVl0eE8RK0JgWsyMzCcF
+	Su+fqNQuah8NWh4XNIUSouxbm5ZXkAa8nzPY
+X-Google-Smtp-Source: AMrXdXuMbSy4ENFMnjjhh13Xr3543MY9w8btJwjwGtSESMOFL7stTreJxtDNp08x9Vti7w6DfFDasg==
+X-Received: by 2002:a05:600c:1c1a:b0:3da:fbd2:a324 with SMTP id j26-20020a05600c1c1a00b003dafbd2a324mr4556803wms.36.1673997213113;
+        Tue, 17 Jan 2023 15:13:33 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:54cb:642:5dda:e3f7? ([2001:8b0:aba:5f3c:54cb:642:5dda:e3f7])
+        by smtp.gmail.com with ESMTPSA id c1-20020a05600c0a4100b003db0a08694bsm253441wmq.8.2023.01.17.15.13.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jan 2023 15:13:32 -0800 (PST)
+Message-ID: <c510d7c971e772ce0c2c50229862e2b475e5c4a3.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 1/2] fetch2: kill parameters in
+ uri_find_decoded
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Pavel Zhukov <pavel@zhukoff.net>, bitbake-devel@lists.openembedded.org
+Date: Tue, 17 Jan 2023 23:13:32 +0000
 In-Reply-To: <20230117153643.21716-1-pavel@zhukoff.net>
 References: <20230117153643.21716-1-pavel@zhukoff.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.1-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 17 Jan 2023 15:37:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14319
+ <bitbake-devel@lists.openembedded.org>; Tue, 17 Jan 2023 23:13:40 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14320
 
-Basic test for mercurial functionality including PREMIRRORONLY with
-disabled network
+On Tue, 2023-01-17 at 16:36 +0100, Pavel Zhukov wrote:
+> Fixes:
+>   File "/bitbake/./lib/bb/fetch2/__init__.py", line 446, in uri_replace
+>     if uri_decoded[loc][k] !=3D uri_find_decoded[loc][k]:
+> KeyError: 'module'
+>=20
+> Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
+> ---
+>  bitbake/lib/bb/fetch2/__init__.py | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__=
+init__.py
+> index 893ec6f6bd..b1cd6b25c2 100644
+> --- a/bitbake/lib/bb/fetch2/__init__.py
+> +++ b/bitbake/lib/bb/fetch2/__init__.py
+> @@ -469,6 +469,7 @@ def uri_replace(ud, uri_find, uri_replace, replacemen=
+ts, d, mirrortarball=3DNone):
+>                      basename =3D os.path.basename(mirrortarball)
+>                      # Kill parameters, they make no sense for mirror tar=
+balls
+>                      uri_decoded[5] =3D {}
+> +                    uri_find_decoded[5] =3D {}
+>                  elif ud.localpath and ud.method.supports_checksum(ud):
+>                      basename =3D os.path.basename(ud.localpath)
+>                  if basename:
 
-Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
----
- bitbake/lib/bb/tests/fetch.py | 44 +++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+The fix looks reasonable but is there a test we should be adding to
+cover this scenario?
 
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index ad3d4dea7d..2e5cd14205 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -2936,6 +2936,50 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
-         with self.assertRaises(bb.fetch2.NetworkAccess):
-             fetcher.download()
- 
-+class FetchPremirroronlyMercurialTest(FetcherTest):
-+    """ Test for premirrors with mercurial repos
-+        the test covers also basic hg:// clone (see fetch_and_create_tarball
-+    """
-+    def skipIfNoHg():
-+        import shutil
-+        if not shutil.which('hg'):
-+            return unittest.skip('Mercurial not installed')
-+        return lambda f: f
-+
-+    def setUp(self):
-+        super(FetchPremirroronlyMercurialTest, self).setUp()
-+        self.mirrordir = os.path.join(self.tempdir, "mirrors")
-+        os.mkdir(self.mirrordir)
-+        self.reponame = "libgnt"
-+        self.clonedir = os.path.join(self.tempdir, "hg")
-+        self.recipe_url = "hg://keep.imfreedom.org/libgnt;module=libgnt"
-+        self.d.setVar("SRCREV", "53e8b422faaf")
-+        self.mirrorname = "hg_libgnt_keep.imfreedom.org_.libgnt.tar.gz"
-+
-+    def fetch_and_create_tarball(self):
-+        """
-+        Ask bitbake to download repo and prepare mirror tarball for us
-+        """
-+        self.d.setVar("BB_GENERATE_MIRROR_TARBALLS", "1")
-+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
-+        fetcher.download()
-+        mirrorfile = os.path.join(self.d.getVar("DL_DIR"), self.mirrorname)
-+        self.assertTrue(os.path.exists(mirrorfile), "Mirror tarball {} has not been created".format(mirrorfile))
-+        ## moving tarball to mirror directory
-+        os.rename(mirrorfile, os.path.join(self.mirrordir, self.mirrorname))
-+        self.d.setVar("BB_GENERATE_MIRROR_TARBALLS", "0")
-+
-+
-+    @skipIfNoNetwork()
-+    @skipIfNoHg()
-+    def test_premirror_mercurial(self):
-+        self.fetch_and_create_tarball()
-+        self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
-+        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-+        self.d.setVar("BB_NO_NETWORK", "1")
-+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
-+        fetcher.download()
-+
- class FetchPremirroronlyBrokenTarball(FetcherTest):
- 
-     def setUp(self):
--- 
-2.39.0
+Cheers,
+
+Richard
 
 
