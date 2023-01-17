@@ -1,111 +1,99 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <pavel@zhukoff.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1669BC3DA78
-	for <webhook@archiver.kernel.org>; Sun, 15 Jan 2023 15:12:00 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web10.141819.1673795518383104266
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AFCC6379F
+	for <webhook@archiver.kernel.org>; Tue, 17 Jan 2023 15:37:05 +0000 (UTC)
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+ by mx.groups.io with SMTP id smtpd.web11.199752.1673969823677355135
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 15 Jan 2023 07:11:58 -0800
+ Tue, 17 Jan 2023 07:37:04 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=P7pQUzL3;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f53.google.com with SMTP id t5so20856221wrq.1
-        for <bitbake-devel@lists.openembedded.org>; Sun, 15 Jan 2023 07:11:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=66ppNuEnLmOis7JpxLUePoa/01lPn2sweNMeSpckOSA=;
-        b=P7pQUzL3KjQY4m/EXECtdnwfM7haMcn4nUoD+cgEVdxKDA7kQSDUi7VKfi0OSJ/t1i
-         gSO2QqHD3ABPf1oA2TmW0Sw/wf+8J1fVZnUKys2A3ju83yfYcAslEaqdPj1c9BxBKqMt
-         qRRPyjx/5Vh7cYHJDZJ0CnuzG5zMdnJXWiVWk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=66ppNuEnLmOis7JpxLUePoa/01lPn2sweNMeSpckOSA=;
-        b=HG0//sY13u4V1pAbiONhyPZEovn4IG4cXrqxFJHR27pvtSVT+uBpoam67za4SF1BYH
-         eamChN91T85tOvjBP7hXUGG33ZJdivp7m12jpu+z2YPbttemLgaa8e7I1yJccxc65Btt
-         S9ZVc44YwrnjfGHfdYxoALzQDVLK9hL4LWlJ3E03GjS3zrVoE8J4NoGt6JviYbf1xpiO
-         ULPtgYOESIFs8S6ge2iBWH8/29CbRPAOcYoOHA/ODyxnV30TlqEMVRgPEtDVi2JAh1hL
-         KCMWkS+EFxAfN89jwht2HCKOclzTgnsacQ4VAGKVzpHyPvaAbwEHmzfYsR4qjDSopxaj
-         BuVA==
-X-Gm-Message-State: AFqh2koEhISncK0NkoI6j/5stYKTXqTeV4DSeLZFDOKBRTB2Wrp9CaUk
-	eOE865llRLo+eJKh2M8LmG7A6ftKSqJ6mCOl
-X-Google-Smtp-Source: AMrXdXsZQmu2xhjUMKUcF1Bemfz30oMua3R1O2Ns4ujzM5VseTX862zEc6pt9ZNyAkljp9VITziDwQ==
-X-Received: by 2002:adf:e103:0:b0:26a:6e7d:5782 with SMTP id t3-20020adfe103000000b0026a6e7d5782mr54565746wrz.35.1673795516839;
-        Sun, 15 Jan 2023 07:11:56 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:c753:75fb:9583:e5c6? ([2001:8b0:aba:5f3c:c753:75fb:9583:e5c6])
-        by smtp.gmail.com with ESMTPSA id bu3-20020a056000078300b002bbe7efd88csm19296453wrb.41.2023.01.15.07.11.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jan 2023 07:11:56 -0800 (PST)
-Message-ID: <8b462325bfa33ffd6f62c558c0a521f5a5e6761a.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch2/wget: handle username/password
- in uri
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Kasper <kasper@krinvent.dk>, bitbake-devel@lists.openembedded.org
-Cc: Kasper Revsbech <kasper.revsbech.ext@siemensgamesa.com>
-Date: Sun, 15 Jan 2023 15:11:55 +0000
-In-Reply-To: <20221129132246.436271-1-kasper@krinvent.dk>
-References: <20221129132246.436271-1-kasper@krinvent.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1-0ubuntu1 
+ dkim=fail reason="signature has expired" header.i=@zhukoff.net header.s=fm3 header.b=xv7Uq/tg;
+ spf=pass (domain: zhukoff.net, ip: 66.111.4.29, mailfrom: pavel@zhukoff.net)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.nyi.internal (Postfix) with ESMTP id EAAA95C017C;
+	Tue, 17 Jan 2023 10:37:02 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 17 Jan 2023 10:37:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
+	cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:sender:subject:subject:to:to;
+	 s=fm3; t=1673969822; x=1674056222; bh=8AUyGqJVAAgAXPney4S4NulbB
+	psUlxzFaVRpA3YSIU8=; b=xv7Uq/tg3G1hNeXCshKwto1OeqqyON/i4gxn7ViPk
+	PDDGCvLTPOC/R4QaeuXyup6hZNqHhY8l6W4sve9MnB6Ck8C0aO1hM11A4iRWeU4v
+	PolgjZbqtSNFLISdj8oTpJbsEqLYKMpksS33HdOej+wPj1eUf6ZEpU5MLd7dOMTg
+	/zvPb5a5M5+FY3LATDjJH4Z706yn0MfZViETAxIJp5YNHzMguXe0LCDvmzSuY46k
+	JZOhVWt5pEOjUEc+VFxS2kk5LuJZzz5svcnGLW1CH1RhUygF9gQqmWtjH3uvFXYs
+	bK1ULKyKepGntGWKvyFpj27JHtansM26iVot9KStgwXGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1673969822; x=1674056222; bh=8AUyGqJVAAgAXPney4S4NulbBpsUlxzFaVR
+	pA3YSIU8=; b=VfCxiziggHvPtCLQiDkBY9Cik2wMCoRi4VCNkUecpSWuE+J4N1w
+	jquxd+Ad1/TvqnNyX46AukPmsHWAnkqj0126gfg2Vmw1dCOtP7LMXYVbZlIsVsar
+	S3F023ferT5DXaB1TuXx+nWcOY4e+3AwOcJUx4oTWXF7xJLkFefTDM4BKQ7P0Hwb
+	tBx1/hnBRaB0KhqNkaNZlZuPy2z9Dr2/76KIfx98HmwToBpcx15BP5Rh+WyNrNWu
+	zEDytwFRkbyiWCyUqAGOyPvl23Go6GKSn6fYmTrtmFMt9OkUqkytFSY26dqV7PVB
+	wAxK+D8s30pb2hMFdtr1vjAMhYKKRVR7QRQ==
+X-ME-Sender: <xms:nsDGY7EAvGRFvOJEoUYQcIE0dbgiIiWNOln-jGva8gbujTuZ8G8TmQ>
+    <xme:nsDGY4VtzTWSL83_zPkgB3J5kdy9U_RE84ufY_kw_Mci6gcJz-Ztz6t4Ku-qofETO
+    EbfCBdkELMOyZ1U5cg>
+X-ME-Received: <xmr:nsDGY9J32bzUfq8zC9ZtMCPClE3FtpxTH1g73g7CqKro7VcNPXL659YljP5o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddtiedgjeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpefrrghvvghlucgkhhhukhhovhcuoehprghvvghlseiihhhukhho
+    fhhfrdhnvghtqeenucggtffrrghtthgvrhhnpeevfeejkeejudegledtkeejhfettdefje
+    euffehieekvddugfdtffffledvvdefhfenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehprghvvghlseiihhhukhhofhhfrdhnvght
+X-ME-Proxy: <xmx:nsDGY5EcuqB2GBFxNJftEh8aQJgtM1MhnFMGpheu7Fb-G6MpotcOFg>
+    <xmx:nsDGYxU02PQBcwJe6az0nVyKMwfgwvc1vLy6af8tSpXEU_t1ft02Vw>
+    <xmx:nsDGY0OnGzmQX7LS0ES9Y7N3tgT027I4w9Fbn-ThDPoZb0au2301UQ>
+    <xmx:nsDGYyf9GlEHf1lTco4rJdih3HjE6WC7RQCwwnB4-p0mxJnLDYOR9Q>
+Feedback-ID: ib94946c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 17 Jan 2023 10:37:02 -0500 (EST)
+From: Pavel Zhukov <pavel@zhukoff.net>
+To: bitbake-devel@lists.openembedded.org
+Cc: Pavel Zhukov <pavel@zhukoff.net>
+Subject: [PATCH 1/2] fetch2: kill parameters in uri_find_decoded
+Date: Tue, 17 Jan 2023 16:36:42 +0100
+Message-Id: <20230117153643.21716-1-pavel@zhukoff.net>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 15 Jan 2023 15:12:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14317
+ <bitbake-devel@lists.openembedded.org>; Tue, 17 Jan 2023 15:37:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14318
 
-On Tue, 2022-11-29 at 14:22 +0100, Kasper wrote:
-> From: Kasper Revsbech <kasper.revsbech.ext@siemensgamesa.com>
->=20
-> In checkstatus() opener.open() is used to check if an artifact is availab=
-le.
-> The check fails if the uri contains username password in the format:
-> "username:password@hostname..". Moreover, the checkstatus function alread=
-y uses
-> the username from the "ud" object to craft a header, is username and pass=
-word is
-> provided.
->=20
-> This fix ensure the uri in the Requests object used does not contain user=
-name as
-> password.
->=20
-> Signed-off-by: Kasper Revsbech <kasper.revsbech.ext@siemensgamesa.com>
-> ---
->  lib/bb/fetch2/wget.py | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-> index 821afa5b..d9aaad6b 100644
-> --- a/lib/bb/fetch2/wget.py
-> +++ b/lib/bb/fetch2/wget.py
-> @@ -341,7 +341,8 @@ class Wget(FetchMethod):
->              opener =3D urllib.request.build_opener(*handlers)
-> =20
->              try:
-> -                uri =3D ud.url.split(";")[0]
-> +                uri_base =3D ud.url.split(";")[0]
-> +                uri =3D "{}://{}{}".format(urllib.parse.urlparse(uri_bas=
-e).scheme, ud.host, ud.path)
->                  r =3D urllib.request.Request(uri)
->                  r.get_method =3D lambda: "HEAD"
->                  # Some servers (FusionForge, as used on Alioth) require =
-that the
+Fixes:
+  File "/bitbake/./lib/bb/fetch2/__init__.py", line 446, in uri_replace
+    if uri_decoded[loc][k] != uri_find_decoded[loc][k]:
+KeyError: 'module'
 
-Didn't this merge back in December?
+Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-https://git.yoctoproject.org/poky/commit/bitbake/lib/bb/fetch2?id=3D89ccf60=
-3d8119c34f5398dbd737e6a0b805234d3
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 893ec6f6bd..b1cd6b25c2 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -469,6 +469,7 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
+                     basename = os.path.basename(mirrortarball)
+                     # Kill parameters, they make no sense for mirror tarballs
+                     uri_decoded[5] = {}
++                    uri_find_decoded[5] = {}
+                 elif ud.localpath and ud.method.supports_checksum(ud):
+                     basename = os.path.basename(ud.localpath)
+                 if basename:
+-- 
+2.39.0
 
-Cheers,
-
-Richard
 
