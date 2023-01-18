@@ -2,98 +2,121 @@ Return-Path: <pavel@zhukoff.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B817C004D4
-	for <webhook@archiver.kernel.org>; Wed, 18 Jan 2023 07:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6C9C004D4
+	for <webhook@archiver.kernel.org>; Wed, 18 Jan 2023 07:31:02 +0000 (UTC)
 Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
- by mx.groups.io with SMTP id smtpd.web11.10308.1674026898893564173
+ by mx.groups.io with SMTP id smtpd.web11.10328.1674027053017616753
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Jan 2023 23:28:19 -0800
+ Tue, 17 Jan 2023 23:30:53 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@zhukoff.net header.s=fm3 header.b=EICg9oSw;
+ dkim=fail reason="signature has expired" header.i=@zhukoff.net header.s=fm3 header.b=TWLvLClX;
  spf=pass (domain: zhukoff.net, ip: 64.147.123.25, mailfrom: pavel@zhukoff.net)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.west.internal (Postfix) with ESMTP id C4BD73200920;
-	Wed, 18 Jan 2023 02:28:15 -0500 (EST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 4E767320079B;
+	Wed, 18 Jan 2023 02:30:52 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Wed, 18 Jan 2023 02:28:15 -0500
+  by compute5.internal (MEProxy); Wed, 18 Jan 2023 02:30:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
-	cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-	:message-id:mime-version:reply-to:sender:subject:subject:to:to;
-	 s=fm3; t=1674026895; x=1674113295; bh=ZiQu+bcKPnYa21Bi6Fuk5JevL
-	wrEqTH8e4z9wKEuMBk=; b=EICg9oSwkz8eFtX2pBevwGXmDQ/1ERvdksESUN7FX
-	EL6784Zioc3+7GBZyww8OBJg0T6ZjQ7SHYg1Rqj6+RMtILj+wxybq8/seFR9B4sj
-	IfjTfMc0OJ2oAqRJDfsjGLn0DRS7Pr8To/1gDgCdPyscNRK4ScQoBNFdA15b0Mzq
-	M0C2NrDdwmhMHa3omTb5kxR2hJYcf45UbYs7BwVFGDeq2RmMw5RFVZUKV9I2SZTR
-	xGgV8ulJbp44dtD0BtqJOeukD4/GyfbutzA9VS54AjBmHGOOzJtiI2lJhazQ6k/0
-	iMAABSnG896NrWx+Um846pyev0e39Qi30vUfDgSnIdBkA==
+	cc:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1674027051; x=1674113451; bh=96
+	cMrQEjbqKtxvcAKTv+TsE/6q+1svOiYaqVVeQzQdQ=; b=TWLvLClXWEv3qr9pAJ
+	IRGs+XYW6RdiW6FenPz+jeVCDmBw+NwGG4RTQClPGOR+QtHe8pMirR8HYVFRbAGo
+	ENpWkOTHODNWpSimFkYyZ/mL5T/pqlLSbxSU1nvvQJQ9s8kONIFBuoIsDHgiYeDQ
+	RECmNj/7FOX4lJwvdn+fEkpzQb1aswXb8nIonuhwMsUbuom9Tu/7n9SESgwJeXfB
+	SzgM1bgQNgoYhX59vGSLNehK1umeQDjlYO9iXVoyJ2+VHnyLSBEkvFBIvwi4N+Lf
+	3gDQXv8+5iyznWS0FZnMKPmDpCKUUkZEznAnIDrsPw8uD9SGpmr+RHznnnV3+Wbd
+	zixQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1674026895; x=1674113295; bh=ZiQu+bcKPnYa21Bi6Fuk5JevLwrEqTH8e4z
-	9wKEuMBk=; b=osYy8SzmRPc1hCFWEvgdVUeqAGpmPPCd7bMphKmBRkqP5Bh6fPA
-	X/sPSiXhCh4V7GNsIfyp7iyUL7klehH3K8p0N3bpFBf3A8t9pEVyH4OgyDe/kXcP
-	BGySknEmTQa+sgEHtcGu1g6BFFKt2wvlNWERgn5JDysOMeNZ5XIVY35OZWlpy+IX
-	yuIE05bSKMPkeoAqpZRHqWU3AXENqPA1H3hCibjhbIUw1j18CdrxdABORGvPkxqy
-	6yFckKVcV1GngtyCliybMonVjUQdxbewmmottvd+BhZsaK5S1ESA4t6TcGzMfU8l
-	gjfjumJ41gEmE7/3+UI73H57ePJt0NidfPw==
-X-ME-Sender: <xms:j5_HYwS2_6K3ebMBU3LbCFkGicHvzSoIf8qIDP5zCdEy9OBnnqjemg>
-    <xme:j5_HY9wzDrAhTqH284Rxqav_yMKXhDQsLfEQ0A1TUWbTcr4vWXLBqWTYwaCGcJaYO
-    dv9Q4Ex733LsgM5D20>
-X-ME-Received: <xmr:j5_HY90U1EaxhmCusWrSC3yzCCoILzEeEXojn71XqljFK3LrQT2ye0Ev43sQ>
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm3; t=1674027051; x=1674113451; bh=96cMrQEjbqKtx
+	vcAKTv+TsE/6q+1svOiYaqVVeQzQdQ=; b=K89/6uNUOZfLlJgJDZl54bBz5E3yA
+	itj+gycMynX/cyU/nGCAOWeWj8Mj83UFKYpXjmxhWEHAQCvrh00s6ch5LFfvBI4+
+	CPuTkZbQDbqMzQwKiycnVNQYY5m9MvV15yJiczuDyFyXn52kup4b8xOpw6AKtXGe
+	WfYi73sYhmPkLjNlYd6sjWR+KY01457pWE6axLABffQHXsDirMNrkY8yDEWY5DZj
+	9F2ohKCagw0hLRbm7LK7OjL55oNa8K9LY3pBlTDf55s3YeTJtOrItGIWT0Scacaj
+	E/sDs6lZcSitkxJc3JU5sKpaVpf1V0aAB4DPCpk/4CQvegO/ReSr/ayjw==
+X-ME-Sender: <xms:K6DHY3-rj9gopsYoHSxtTiUIyTst87h1e1Qgym57liLz0cdzxHyEWA>
+    <xme:K6DHYzs7SsxwGbFOJB2knzDclUyiTaYnfoyICGVRvsTNQNdp9n8X2bv91DnfGeigV
+    X1oSym553yWvhAmlik>
+X-ME-Received: <xmr:K6DHY1CSlmiEBplA3hq-tng8w_M8Wn4x0CiB9KodJM430hkSNvvxZNKHXe6G366ED48eN3Cn>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddtjedgudduudcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekre
-    dtredttdenucfhrhhomheprfgrvhgvlhcukghhuhhkohhvuceophgrvhgvlhesiihhuhhk
-    ohhffhdrnhgvtheqnecuggftrfgrthhtvghrnhepveefjeekjedugeeltdekjefhtedtfe
-    ejueffheeikedvudfgtdffffelvddvfefhnecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomhepphgrvhgvlhesiihhuhhkohhffhdrnhgvth
-X-ME-Proxy: <xmx:j5_HY0DcqtmRb10rya4Spe6NvmKX8ozUhwlW02c7PVeCgB1IRvnkhQ>
-    <xmx:j5_HY5gL5fbfm1tImiThUDIyBfCGa1DkazZNUCY66oPvbGkfXqcz4A>
-    <xmx:j5_HYwoc9-jviPq_A-2J4x0iOIcKCmmEKkIxKt0bsGhqshCIH3uRcQ>
-    <xmx:j5_HY5IQikmUas6El6mR1Tl-3K1P2s6loGDcOMUFHbuo0VmFLBhtlQ>
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpehffgfhvfevufffohhrjgfkgggtsehttdertddtredtnecuhfhrohhmpefr
+    rghvvghlucgkhhhukhhovhcuoehprghvvghlseiihhhukhhofhhfrdhnvghtqeenucggtf
+    frrghtthgvrhhnpeevtefhffeludeuhedtgfevueeffeekudevieetffejhfekheevffeu
+    gfdtvdettdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehprghvvghlseiihhhukhhofhhfrdhnvght
+X-ME-Proxy: <xmx:K6DHYzeYM1ZaNExAat1XNBEHsbpm-FQrr3LfUtcqBLiXoKpW2t6KMg>
+    <xmx:K6DHY8P9sE_DQEO7N5NIIKyB0lDgRmly_UWLIfN2tq3S64ti0HiWRg>
+    <xmx:K6DHY1naA30tHRjrEQ7V8DRG47xHwQpFknT6FbEsvydmbOTc3rhmHA>
+    <xmx:K6DHY2WpJf5gR700tIC0HkAmb62nouWJx7JpquZP1L9WC6hqHJpV7A>
 Feedback-ID: ib94946c9:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 18 Jan 2023 02:28:14 -0500 (EST)
+ 18 Jan 2023 02:30:51 -0500 (EST)
+References: <20230117153643.21716-1-pavel@zhukoff.net>
+ <c510d7c971e772ce0c2c50229862e2b475e5c4a3.camel@linuxfoundation.org>
+User-agent: mu4e 1.8.13; emacs 28.2
 From: Pavel Zhukov <pavel@zhukoff.net>
-To: bitbake-devel@lists.openembedded.org
-Cc: Pavel Zhukov <pavel@zhukoff.net>
-Subject: [PATCH] fetch2/tests: Add parameter to recipe_uri
-Date: Wed, 18 Jan 2023 08:28:08 +0100
-Message-Id: <20230118072808.5895-1-pavel@zhukoff.net>
-X-Mailer: git-send-email 2.39.0
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH 1/2] fetch2: kill parameters in
+ uri_find_decoded
+Date: Wed, 18 Jan 2023 08:28:28 +0100
+Organization: Linux Private Site
+Reply-To: pavel@zhukoff.net
+In-reply-to: <c510d7c971e772ce0c2c50229862e2b475e5c4a3.camel@linuxfoundation.org>
+Message-ID: <87lem047v9.fsf@desktop.zhukoff.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 18 Jan 2023 07:28:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14321
+ <bitbake-devel@lists.openembedded.org>; Wed, 18 Jan 2023 07:31:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14322
 
-While the parameter is not required it allows testing of possible
-regression in fetcher code when parameter specified and mirrors are
-used.
 
-Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
----
- lib/bb/tests/fetch.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Richard Purdie <richard.purdie@linuxfoundation.org> writes:
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index ad3d4dea..4a10b16f 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2852,7 +2852,7 @@ class FetchPremirroronlyLocalTest(FetcherTest):
-         os.mkdir(self.mirrordir)
-         self.reponame = "bitbake"
-         self.gitdir = os.path.join(self.tempdir, "git", self.reponame)
--        self.recipe_url = "git://git.fake.repo/bitbake"
-+        self.recipe_url = "git://git.fake.repo/bitbake;branch=master"
-         self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-         self.d.setVar("BB_NO_NETWORK", "1")
-         self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
--- 
-2.39.0
+> On Tue, 2023-01-17 at 16:36 +0100, Pavel Zhukov wrote:
+>> Fixes:
+>>   File "/bitbake/./lib/bb/fetch2/__init__.py", line 446, in uri_replace
+>>     if uri_decoded[loc][k] != uri_find_decoded[loc][k]:
+>> KeyError: 'module'
+>> 
+>> Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
+>> ---
+>>  bitbake/lib/bb/fetch2/__init__.py | 1 +
+>>  1 file changed, 1 insertion(+)
+>> 
+>> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+>> index 893ec6f6bd..b1cd6b25c2 100644
+>> --- a/bitbake/lib/bb/fetch2/__init__.py
+>> +++ b/bitbake/lib/bb/fetch2/__init__.py
+>> @@ -469,6 +469,7 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
+>>                      basename = os.path.basename(mirrortarball)
+>>                      # Kill parameters, they make no sense for mirror tarballs
+>>                      uri_decoded[5] = {}
+>> +                    uri_find_decoded[5] = {}
+>>                  elif ud.localpath and ud.method.supports_checksum(ud):
+>>                      basename = os.path.basename(ud.localpath)
+>>                  if basename:
+>
+> The fix looks reasonable but is there a test we should be adding to
+> cover this scenario?
+Mercurial test (second patch in the series) covers this but it will be
+executed only if network enabled and mercurial installed so I've modified
+existing git premirror local test to cover this change as well:
+
+Subject: [PATCH] fetch2/tests: Add parameter to recipe_uri
+
+>
+> Cheers,
+>
+> Richard
 
 
