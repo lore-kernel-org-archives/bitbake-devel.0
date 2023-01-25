@@ -1,97 +1,108 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <ptsneves@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E358C27C76
-	for <webhook@archiver.kernel.org>; Wed, 25 Jan 2023 08:47:45 +0000 (UTC)
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
- by mx.groups.io with SMTP id smtpd.web10.41028.1674636460011957000
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BF0C54E94
+	for <webhook@archiver.kernel.org>; Wed, 25 Jan 2023 12:34:56 +0000 (UTC)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+ by mx.groups.io with SMTP id smtpd.web11.44042.1674650093469884915
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 25 Jan 2023 00:47:40 -0800
+ Wed, 25 Jan 2023 04:34:53 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=CR8nDP1v;
- spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 22AB620008;
-	Wed, 25 Jan 2023 08:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1674636457;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=SqPr6CFTf6bv7WfQaAX06Xv1zPKOcf7Vvz7r6KRcfZg=;
-	b=CR8nDP1va7r6pMurBZlR7VPoznSg+sbGBcdeaTUokkFo1lMyZCLtfXB5SfTbb7/EtZURez
-	hyyzYm6Dk9xCn85C0tHVbcY7SuruzBI4LMBcjo6B9eH4zInRfdAJGxPevBjwsOuLW/ZnbK
-	OaV4bBkb509y/+YkI4OOZBVFWbnlrq3Ecg7xrb172S+FDMtsORMxeBXVEaYZjSWWyfsDEr
-	uUnKTFZvam2Xfn2JuJw9HqVoXsjUWVH+JtbspQDdfhdFZ4xIjAGYEXowCbiP0OVI9iXl3A
-	WxDefOdV37Jk84yhlPm0/32XU0IAORfM8rStrWIgyZra5FA3jOEklJfQhRoM3A==
-From: michael.opdenacker@bootlin.com
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=mYYDP6JF;
+ spf=pass (domain: gmail.com, ip: 209.85.208.52, mailfrom: ptsneves@gmail.com)
+Received: by mail-ed1-f52.google.com with SMTP id x10so21622119edd.10
+        for <bitbake-devel@lists.openembedded.org>; Wed, 25 Jan 2023 04:34:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZcY5B5kAwJT+dZTAA8MPKpxs/JBSUazPrtvIoWLHiZ4=;
+        b=mYYDP6JFEIHEk5ZNCHyzgsaWSmiaqZL8QSpEiIbQfoJH1zrV1b3cilXQjI7wht6qvg
+         TjcdExHlbZJXXCjYWdpaG29Wmqz4xAmtj7fNXow9DvycPzyX4YPpTiG/1dN5sLH3Cd/o
+         rp4Wrd0J7XB54aDjFFms3NHH+vjZxpu0J6g7cPAsDRaTS7quJ5lcY4kWvsC7d5vNP7zb
+         q6DVzYY7em+60S2awc/RtBBC1blOy8LUMDYtXb6CICaJ10loJYhzIBLUP3MludnniWcv
+         uThxWzi7JFD6BkURVXsDjMNawzop2L664bvNGDH6gsmv3CtPKYgIN7bhowELjwB1pktw
+         G7Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZcY5B5kAwJT+dZTAA8MPKpxs/JBSUazPrtvIoWLHiZ4=;
+        b=S81qV8oV7XMQkDEAFsQQyoJ/lfMyQ+vlJDDyeQvuMQPgMDZL5dgDNJwBCXeHvjjfds
+         qXUNKxbQaVE5BPh3PoTcFKN4vYBrLTHFXtlHKXvrE6c78FPTZbvAzqDlCFLiditTSEsU
+         a6sDoIOY9yfPB/kxbSUKmkat22RCs0bJDjff0mLLKaf64CfcYmLh3chPNYKlOESnIEKf
+         /RjPt/ByRRdCj8bIoKZNkFMmGsbtzXmQBxZEA1uYkZprAWpMA4DG5t9Abqrh4ReVcHFH
+         jiAhsfYNmkurOyiXOX9XYdxLbWE9/ykq3F24F5MJgaktHy+yYyxvJlV0sQOb1B+INPCn
+         XGZQ==
+X-Gm-Message-State: AFqh2kpnAevjAUoH5BPeX3MYF87C8ILa/G/ycKZhrpqRaFTDTr4H32x9
+	R3LxJIW+uFBYM2Kt019X/BJtNJAbPA==
+X-Google-Smtp-Source: AMrXdXt7rxzwWr0Bx03ho8an3NFFrTh7Bc/88S2tv449Kp+ZHRGo17SLdox5aW8i5W4bbJmc9KYhfQ==
+X-Received: by 2002:a05:6402:5306:b0:49b:b274:b815 with SMTP id eo6-20020a056402530600b0049bb274b815mr35569066edb.39.1674650091747;
+        Wed, 25 Jan 2023 04:34:51 -0800 (PST)
+Received: from localhost.localdomain (031011128019.dynamic-3-poz-k-0-2-0.vectranet.pl. [31.11.128.19])
+        by smtp.gmail.com with ESMTPSA id t21-20020a056402021500b00488abbbadb3sm2276131edv.63.2023.01.25.04.34.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jan 2023 04:34:51 -0800 (PST)
+From: Paulo Neves <ptsneves@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH] knotty/uihelper: use monotonic time to report task duration
-Date: Wed, 25 Jan 2023 09:47:25 +0100
-Message-Id: <20230125084725.2262388-1-michael.opdenacker@bootlin.com>
-X-Mailer: git-send-email 2.37.2
+Cc: Paulo Neves <ptsneves@gmail.com>
+Subject: [PATCH 1/1] bitbake-getvar: Add a quiet command line argument
+Date: Wed, 25 Jan 2023 13:34:46 +0100
+Message-Id: <20230125123446.327354-1-ptsneves@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 25 Jan 2023 08:47:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14339
+ <bitbake-devel@lists.openembedded.org>; Wed, 25 Jan 2023 12:34:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14340
 
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+bitbake-getvar does not have a way to silence bitbake
+server's logger and that makes the tool hard to use for
+text processing. This is especially true when one wants to
+get a bitbake value to be piped to some other utility and
+instead we get uncontrolled logging messages or warnings
+together with bitbake's variable value.
 
-Without this, if the host machine is suspended to RAM,
-BitBake reports a task duration which includes the time
-the system remained suspended, not actually running the task.
+Example without quiet:
+bitbake-getvar --value MACHINE
+NOTE: Starting bitbake server...
+qemux86-64
 
-This is addressed by getting the time from a monotonic
-clock, which ignores time elapsed during suspend.
+With quiet:
+bitbake-getvar --value MACHINE --quiet
+qemux86-64
 
-This fixes [YOCTO 15015]
-
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-
+Signed-off-by: Paulo Neves <ptsneves@gmail.com>
 ---
+ bin/bitbake-getvar | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Note that while a successful build was obtained with this change,
-it might have side effects in places I didn't foresee (in logs?).
----
- lib/bb/ui/knotty.py   | 2 +-
- lib/bb/ui/uihelper.py | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 431baa15..3174d977 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -239,7 +239,7 @@ class TerminalFilter(object):
-         activetasks = self.helper.running_tasks
-         failedtasks = self.helper.failed_tasks
-         runningpids = self.helper.running_pids
--        currenttime = time.time()
-+        currenttime = time.monotonic()
-         if not self.lasttime or (currenttime - self.lasttime > 5):
-             self.helper.needUpdate = True
-             self.lasttime = currenttime
-diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
-index 82913e0d..5524f8d6 100644
---- a/lib/bb/ui/uihelper.py
-+++ b/lib/bb/ui/uihelper.py
-@@ -32,9 +32,9 @@ class BBUIHelper:
-         if isinstance(event, bb.build.TaskStarted):
-             tid = event._fn + ":" + event._task
-             if event._mc != "default":
--                self.running_tasks[tid] = { 'title' : "mc:%s:%s %s" % (event._mc, event._package, event._task), 'starttime' : time.time(), 'pid' : event.pid }
-+                self.running_tasks[tid] = { 'title' : "mc:%s:%s %s" % (event._mc, event._package, event._task), 'starttime' : time.monotonic(), 'pid' : event.pid }
-             else:
--                self.running_tasks[tid] = { 'title' : "%s %s" % (event._package, event._task), 'starttime' : time.time(), 'pid' : event.pid }
-+                self.running_tasks[tid] = { 'title' : "%s %s" % (event._package, event._task), 'starttime' : time.monotonic(), 'pid' : event.pid }
-             self.running_pids.append(tid)
-             self.pidmap[event.pid] = tid
-             self.needUpdate = True
+diff --git a/bin/bitbake-getvar b/bin/bitbake-getvar
+index 5435a8d79..4a9eb4f31 100755
+--- a/bin/bitbake-getvar
++++ b/bin/bitbake-getvar
+@@ -25,6 +25,7 @@ if __name__ == "__main__":
+     parser.add_argument('-u', '--unexpand', help='Do not expand the value (with --value)', action="store_true")
+     parser.add_argument('-f', '--flag', help='Specify a variable flag to query (with --value)', default=None)
+     parser.add_argument('--value', help='Only report the value, no history and no variable name', action="store_true")
++    parser.add_argument('-q', '--quiet', help='Silence bitbake server logging', action="store_true")
+     args = parser.parse_args()
+ 
+     if args.unexpand and not args.value:
+@@ -35,7 +36,7 @@ if __name__ == "__main__":
+         print("--flag only makes sense with --value")
+         sys.exit(1)
+ 
+-    with bb.tinfoil.Tinfoil(tracking=True) as tinfoil:
++    with bb.tinfoil.Tinfoil(tracking=True, setup_logging=not args.quiet) as tinfoil:
+         if args.recipe:
+             tinfoil.prepare(quiet=2)
+             d = tinfoil.parse_recipe(args.recipe)
 -- 
-2.37.2
+2.34.1
 
 
