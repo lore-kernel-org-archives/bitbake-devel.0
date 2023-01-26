@@ -1,93 +1,89 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69450C54E94
-	for <webhook@archiver.kernel.org>; Thu, 26 Jan 2023 08:41:52 +0000 (UTC)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
- by mx.groups.io with SMTP id smtpd.web11.69475.1674722503957820882
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869E7C54E94
+	for <webhook@archiver.kernel.org>; Thu, 26 Jan 2023 12:41:43 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web11.72627.1674736897620028744
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 26 Jan 2023 00:41:44 -0800
+ Thu, 26 Jan 2023 04:41:37 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=k8E+Ajcb;
- spf=pass (domain: gmail.com, ip: 209.85.167.54, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lf1-f54.google.com with SMTP id cf42so2034186lfb.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 00:41:43 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=T9K9gkIW;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f52.google.com with SMTP id l41-20020a05600c1d2900b003daf986faaeso1025084wms.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 04:41:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zOQwBqA2BA6koEkDvPvvnwciCDbSjRID3//l3kA4AVY=;
-        b=k8E+Ajcbln838QRvHZgAeEJYcQKAEbFn2Y2xwkVgV/ywfzq5ogUgpgmXZcwLuHUfeS
-         ZSYlw9IKvngr3xDjkThZFpknYv0InveKFn4nZzd5zj6RyjQbuRAVQrAWincOlXAZSv3t
-         jidH3iOMFaiJuBctr/dltuLvk+Jf7lKxfag8/DzwGgynb1cKD0GuWUNmUdwwC64wpjHy
-         Xn2mGlS1/oBHwfjy/uoyaOhYY24MwzmtNVv5vgqdg5SewHaA4Ar7imDzT7VBU6Rn2V6M
-         X1yG/VcoaRbatBBYdDySwUTQzD8zsEWERICWtJiafOjNsw+YUo2sAxac/Rw3ex0AtsUo
-         2yug==
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5sKa91EpWjbIB52JO+bJ2IYDZyXCt/RUQXMhmTxBs2Y=;
+        b=T9K9gkIWo368g9X3k+6IZ2ARm44J1Rz6X0vwhNw7qvgK9NHeDvkJQFhQvJTtgs+U2m
+         meHj31pJmE1TC5OwqxQF3mFLRmmoyfGDa9eKWkufiA/1VSMNFHEp731X7hiznPtW0XbE
+         o9zlz0gmno5HjgQB8L8WuTsvOfOb9d6ytLxKQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zOQwBqA2BA6koEkDvPvvnwciCDbSjRID3//l3kA4AVY=;
-        b=Fbgrn39oN5API2HZfYYkyx0toCJrOu4yQrRn74VtKuudjSVWwvawcGN3gajiKSgeMn
-         1KBI21nQZoY7GRJzUbvY/wEs6VzIyLnN5LkRnmcH5UMFvjPTAu49uacBysmn945GoRB0
-         7CKzPhGIRuZEGnAVENrS/8N7VKaPAlMrYcQsBggKEnt0DqyL8Y39jEvb9fmG9dCvARaF
-         2XyoICLd31Bj/VQFNFgGd4Vr7dSyt2UJR9BIKkVn8uKJrgHb6Kk+xxJkn6SU+lOkcv4C
-         hOjVva10B2tHp8dObxcFv2G82snSozCK6KMYm0W9whwYIVS1CNfZn8t5JqFQflISWg43
-         kJKg==
-X-Gm-Message-State: AFqh2koeBfxo2T/PKJq3RU0Ks1PxQ4/FR0U796k6c5cypJT19hk8yolM
-	dygI1fDeXEc1sJGjOOMEjALuY8pB2UdYRJmf2TI=
-X-Google-Smtp-Source: AMrXdXsng1Zb77nIVdA2bf3I+1KpCSITHeGbcoaMvgtZCh+TsPyqT4kn7Auu9S0sZaZ+gBeU4BjKzW3mi2YmLIvNyWc=
-X-Received: by 2002:ac2:48b9:0:b0:4d3:b528:99e8 with SMTP id
- u25-20020ac248b9000000b004d3b52899e8mr4073612lfg.2.1674722502039; Thu, 26 Jan
- 2023 00:41:42 -0800 (PST)
-MIME-Version: 1.0
-References: <Yyvr.1674722117946957577.GL4y@lists.openembedded.org>
-In-Reply-To: <Yyvr.1674722117946957577.GL4y@lists.openembedded.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 26 Jan 2023 09:41:30 +0100
-Message-ID: <CANNYZj_ZrA5XzBkDDZa+6QoYYtizQAnu1VAMCZuh1ZVUic6gUg@mail.gmail.com>
-Subject: Re: [bitbake-devel] Using bitbake as a native standalone package-manager
-To: aw@pionix.de
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5sKa91EpWjbIB52JO+bJ2IYDZyXCt/RUQXMhmTxBs2Y=;
+        b=qnNfMQu6XDYS7JKUOUyZ0epheGhyTeKBL7k+RqEHCi0FulWkLmi7U9U7katwd0l+fs
+         ssQs6PDuHlIUBVLuYTvcjzKIwiI+CH3rXEAOrDXOWrbNX9vfadnVbNEpxSIDJUr1elYQ
+         ifg0hvNy5Z779sTvskJzzmsx/JZS9SlfrOSz3MGtn7Hh6VkZu/6T4LbOu/n1B8KRR9Z1
+         LcS8TCJ847XGLF68WGOhKWXSBDxyw4lJdHFmD+Y63yCM9+gRPW9i1w3z2WmhksWWEDhS
+         n3/n+VAUDFSfuvSjINSUO8mvmsSK59Wl2r+StLWj0a1w9D0BBzzSg7DSXMuuM2NtuOfx
+         Nq1A==
+X-Gm-Message-State: AFqh2kqIOOLeZbZDbn9/FO5m5fBfC+960qG45f2k7EkHjNS6UnfMbhvK
+	A+xSmtMl0v9nSTgmgZEllMi1BA==
+X-Google-Smtp-Source: AMrXdXt8MTlOPp0tEdV1E/iu7zZ3RYUTcpbyb4uDdvfRYXbTNaxjAooCQuHAYAzlNQFJ6JoxLYqP5A==
+X-Received: by 2002:a05:600c:35d4:b0:3db:3694:b93c with SMTP id r20-20020a05600c35d400b003db3694b93cmr22794834wmq.15.1674736895751;
+        Thu, 26 Jan 2023 04:41:35 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:f2d7:e330:f537:35d8? ([2001:8b0:aba:5f3c:f2d7:e330:f537:35d8])
+        by smtp.gmail.com with ESMTPSA id e19-20020a05600c13d300b003daf98d7e35sm4403641wmg.14.2023.01.26.04.41.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jan 2023 04:41:35 -0800 (PST)
+Message-ID: <55d8dad421c8281356ff4510dcef0e016bf67dfb.camel@linuxfoundation.org>
+Subject: Re: [PATCH 5/6] data: Add sup0port for new BB_HASH_CODEPARSER_VALS
+ for cache optimisation
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Paulo Neves <paulo@myneves.com>
 Cc: bitbake-devel@lists.openembedded.org
+Date: Thu, 26 Jan 2023 12:41:34 +0000
+In-Reply-To: <b3c51ad7-da76-db80-d2ed-a2fa2df60518@myneves.com>
+References: <b3c51ad7-da76-db80-d2ed-a2fa2df60518@myneves.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.1-0ubuntu1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 08:41:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14345
+ <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 12:41:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14346
 
-You can certainly do it, but it's not a use case that is supported
-through the core layer. You need to make a minimal replacement for
-oe-core.
+On Wed, 2023-01-25 at 15:52 +0000, Paulo Neves wrote:
+> Perhaps BB_HASH_CODEPARSER_VALS could contain a list of flag names that
+> could then be iterated and the values retrieved safely.
 
-Alex
+That is definitely worth thinking about. The challenge is the added
+complexity and the extra variable lookups, particularly if people start
+to make the expressions more complex. I was trying to keep things
+simple!
 
-On Thu, 26 Jan 2023 at 09:35, aw via lists.openembedded.org
-<aw=3Dpionix.de@lists.openembedded.org> wrote:
->
-> Hi there,
->
-> is it possible to use bitbake as a standalone package-manager? Like a rep=
-lacement for tools like conan or vcpkg? Imagine having a software, which de=
-pends on a few other c/c++ libraries and you want to compile it natively on=
- a host system for the host system (so no cross-compilation). And for some =
-of the dependencies (like openssl) you want it to use the host libraries.
-> It that possible?
->
-> Thanks for this piece of software!
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#14344): https://lists.openembedded.org/g/bitbake-deve=
-l/message/14344
-> Mute This Topic: https://lists.openembedded.org/mt/96539650/1686489
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.k=
-anavin@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+> The current implementation will break if any forced value has a white
+> space or a '=3D' sign. If this variable is to appear in the manual at
+> least these constraints should documented.
+
+Right, I'm assuming that since we're controlling the substitutions, we
+can avoid issues like that relatively easily. Martin has run into some
+recipes which are doing .split("-") on PN though.
+
+I'll give this a bit more thought but I am leaning towards keeping
+things simple if we can.
+
+Cheers,
+
+Richard
+
 
