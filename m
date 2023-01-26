@@ -1,94 +1,99 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB8BC05027
-	for <webhook@archiver.kernel.org>; Thu, 26 Jan 2023 16:49:34 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.78829.1674751766808587979
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A462EC05027
+	for <webhook@archiver.kernel.org>; Thu, 26 Jan 2023 16:49:44 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.78839.1674751779710930323
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 26 Jan 2023 08:49:27 -0800
+ Thu, 26 Jan 2023 08:49:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Xkow7nqF;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id b7so2411243wrt.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 08:49:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lcX2ma48U7HVmAXlBt5OssRHIzPmImnmjFGKcr6NjLk=;
-        b=Xkow7nqF368p97QyTPynkFALXRPJPNhYssbkbPM/VVRNX/xTTbBsiFuoOd0K9glSpf
-         OfJ6uBOF5DKOgyzPz9uqxPvAF3w6/TqGZ2WdxvkrSABcNe9gElKE6k8b83md+zxGyZ8p
-         jkfw/JUBXK0BvNwiKipMq8+Cy4Tde/Y5HJwr0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lcX2ma48U7HVmAXlBt5OssRHIzPmImnmjFGKcr6NjLk=;
-        b=t+QIDoHVi89yJGUTqIR6jH2mTCwNUYQot/8RUxuWmbnZWCqLELPbPlmAxwHQnr6w8w
-         oDL3zMJHOYsP3S8gm7rq5qepS7NDqgZkGieT406htX4NCOUIlkQFpihLIyZUXpjhdBjF
-         LD6xyJzE9TAWMgX+G1Kv2cu19a/R1AZ212wM3vkVo3s5gHJ3M0NZnMsCabJj4TRydN+H
-         FQYuqsaZaokZPtMZgEeUG6RBMzh2lhVLY8q6lgTGGU9eQmoKcmUkS8XHhZLEiKC65DY+
-         sc0QCfvuulZsAPiK8QaFUUf0vk7/VFYPNYpWAJ1ES7CPoAuzSwtBwBxcwO4oPOIRxXJ/
-         Jw6g==
-X-Gm-Message-State: AFqh2kpGFfUD/ZkbwV85Hw53Yhap/pxbCRY2D0g93i6YPBON+JOrx7ep
-	VquCG8yWEEjCHmvcSDHkOdo9Nhggvt285/0m
-X-Google-Smtp-Source: AMrXdXvkQwKBtMylhjVcOIofZ5UJgfQ2xJ2WKpfc6kBWxXXKLMEu2GfmMZV1koTGLWEfvYjn6IVldA==
-X-Received: by 2002:a5d:61c5:0:b0:2bf:9608:57ee with SMTP id q5-20020a5d61c5000000b002bf960857eemr21480543wrv.21.1674751765284;
-        Thu, 26 Jan 2023 08:49:25 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:f2d7:e330:f537:35d8? ([2001:8b0:aba:5f3c:f2d7:e330:f537:35d8])
-        by smtp.gmail.com with ESMTPSA id r25-20020adfa159000000b00297dcfdc90fsm1802210wrr.24.2023.01.26.08.49.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 08:49:25 -0800 (PST)
-Message-ID: <89da9a63ec23872a2f2bb9d0865fe2547e190855.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] knotty/uihelper: use monotonic time to
- report task duration
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: michael.opdenacker@bootlin.com, bitbake-devel@lists.openembedded.org
-Date: Thu, 26 Jan 2023 16:49:24 +0000
-In-Reply-To: <20230125084725.2262388-1-michael.opdenacker@bootlin.com>
-References: <20230125084725.2262388-1-michael.opdenacker@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1-0ubuntu1 
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 940224B3;
+	Thu, 26 Jan 2023 08:50:20 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49B893F64C;
+	Thu, 26 Jan 2023 08:49:38 -0800 (PST)
+From: Ross Burton <ross.burton@arm.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: nd@arm.com
+Subject: [PATCH v2] bb/utils: include SSL certificate paths in export_proxies
+Date: Thu, 26 Jan 2023 16:49:34 +0000
+Message-Id: <20230126164934.1524945-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 16:49:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14351
+ <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 16:49:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14352
 
-On Wed, 2023-01-25 at 09:47 +0100, Michael Opdenacker via
-lists.openembedded.org wrote:
-> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
->=20
-> Without this, if the host machine is suspended to RAM,
-> BitBake reports a task duration which includes the time
-> the system remained suspended, not actually running the task.
->=20
-> This is addressed by getting the time from a monotonic
-> clock, which ignores time elapsed during suspend.
->=20
-> This fixes [YOCTO 15015]
->=20
-> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
->=20
-> ---
->=20
-> Note that while a successful build was obtained with this change,
-> it might have side effects in places I didn't foresee (in logs?).
+bb.utils.export_proxies() is a poor-man's alternative for the
+environment setup code in bb/fetch2, but it's used in several places
+where recipes want to download manually (such as cve-update-db-native).
 
-There was some discussion about this in the bugzilla entry. I'm worried
-that two different concepts of time inside bitbake is going to end up
-causing a lot of confusion for what is a relatively minor issue. As
-such I'd prefer not to do this.
+Notably, export_proxies() doesn't pass on the SSL certificate paths from
+the original environment, so if SSL_CERT_FILE needs to be set (for
+example, in a buildtools environment) then proxies work but SSL doesn't.
 
-Cheers,
+In an ideal world export_proxies and the same logic in fetch2 would
+merge, but until then we can add the SSL_CERT_ variables and duplicate
+the basic logic: check the datastore first and then the original
+environment for variables.
 
-Richard
+Also remove the return value as nothing ever checked it.
 
+[ YOCTO #15000 ]
+
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ bitbake/lib/bb/utils.py | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
+
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 8c791595730..4446997e42d 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -1699,23 +1699,20 @@ def disable_network(uid=3DNone, gid=3DNone):
+=20
+ def export_proxies(d):
+     """ export common proxies variables from datastore to environment ""=
+"
+-    import os
+=20
+     variables =3D ['http_proxy', 'HTTP_PROXY', 'https_proxy', 'HTTPS_PRO=
+XY',
+                     'ftp_proxy', 'FTP_PROXY', 'no_proxy', 'NO_PROXY',
+-                    'GIT_PROXY_COMMAND']
+-    exported =3D False
++                    'GIT_PROXY_COMMAND', 'SSL_CERT_FILE', 'SSL_CERT_DIR'=
+]
+=20
+-    for v in variables:
+-        if v in os.environ.keys():
+-            exported =3D True
+-        else:
+-            v_proxy =3D d.getVar(v)
+-            if v_proxy is not None:
+-                os.environ[v] =3D v_proxy
+-                exported =3D True
++    origenv =3D d.getVar("BB_ORIGENV")
++
++    for name in variables:
++        value =3D d.getVar(name)
++        if not value and origenv:
++            value =3D origenv.getVar(name)
++        if value:
++            os.environ[name] =3D value
+=20
+-    return exported
+=20
+=20
+ def load_plugins(logger, plugins, pluginpath):
+--=20
+2.34.1
 
 
