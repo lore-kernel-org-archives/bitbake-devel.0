@@ -1,89 +1,96 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <aw@pionix.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869E7C54E94
-	for <webhook@archiver.kernel.org>; Thu, 26 Jan 2023 12:41:43 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.web11.72627.1674736897620028744
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EACEC54E94
+	for <webhook@archiver.kernel.org>; Thu, 26 Jan 2023 14:21:44 +0000 (UTC)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+ by mx.groups.io with SMTP id smtpd.web11.74614.1674742894686885517
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 26 Jan 2023 04:41:37 -0800
+ Thu, 26 Jan 2023 06:21:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=T9K9gkIW;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f52.google.com with SMTP id l41-20020a05600c1d2900b003daf986faaeso1025084wms.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 04:41:37 -0800 (PST)
+ dkim=pass header.i=@pionix-de.20210112.gappssmtp.com header.s=20210112 header.b=uvDku2jC;
+ spf=pass (domain: pionix.de, ip: 209.85.208.179, mailfrom: anton.woellert@pionix.de)
+Received: by mail-lj1-f179.google.com with SMTP id p25so2002020ljn.12
+        for <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 06:21:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5sKa91EpWjbIB52JO+bJ2IYDZyXCt/RUQXMhmTxBs2Y=;
-        b=T9K9gkIWo368g9X3k+6IZ2ARm44J1Rz6X0vwhNw7qvgK9NHeDvkJQFhQvJTtgs+U2m
-         meHj31pJmE1TC5OwqxQF3mFLRmmoyfGDa9eKWkufiA/1VSMNFHEp731X7hiznPtW0XbE
-         o9zlz0gmno5HjgQB8L8WuTsvOfOb9d6ytLxKQ=
+        d=pionix-de.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QQ9GQybB6VIIIefdkg6JqmrcQGFVVN/pavN7Tspecec=;
+        b=uvDku2jCslZXtsqmNf8ORBOVbtIEPiImO29UnLdmvueZ9xaJWXrnQl5jr1pqAYhJk0
+         0/ETQhybG95hLAZIaKTASxm2eNpWdT3FnhqRTysZg/fHjNW+A9OLgKC/07Hypz/j/Ex2
+         KPP7TrF0/s4F/rFxGUWkD/wjCml2xwuesWPdRdfvE4GhREVipTTZc+FipMn4pZxMf/G1
+         JWdQvpbVLjMsXgdcQ+AjaVuIXbmAnuNqat4k70IiSryvXXRLgolRg1+RAM8Y6Oskuc13
+         ge6wizPSA/NLXA/NEjey1+BifHbt5p+50WvWAMPU1xIrYh4d8Ll2r79mD66Ae+vZq0l1
+         fiyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5sKa91EpWjbIB52JO+bJ2IYDZyXCt/RUQXMhmTxBs2Y=;
-        b=qnNfMQu6XDYS7JKUOUyZ0epheGhyTeKBL7k+RqEHCi0FulWkLmi7U9U7katwd0l+fs
-         ssQs6PDuHlIUBVLuYTvcjzKIwiI+CH3rXEAOrDXOWrbNX9vfadnVbNEpxSIDJUr1elYQ
-         ifg0hvNy5Z779sTvskJzzmsx/JZS9SlfrOSz3MGtn7Hh6VkZu/6T4LbOu/n1B8KRR9Z1
-         LcS8TCJ847XGLF68WGOhKWXSBDxyw4lJdHFmD+Y63yCM9+gRPW9i1w3z2WmhksWWEDhS
-         n3/n+VAUDFSfuvSjINSUO8mvmsSK59Wl2r+StLWj0a1w9D0BBzzSg7DSXMuuM2NtuOfx
-         Nq1A==
-X-Gm-Message-State: AFqh2kqIOOLeZbZDbn9/FO5m5fBfC+960qG45f2k7EkHjNS6UnfMbhvK
-	A+xSmtMl0v9nSTgmgZEllMi1BA==
-X-Google-Smtp-Source: AMrXdXt8MTlOPp0tEdV1E/iu7zZ3RYUTcpbyb4uDdvfRYXbTNaxjAooCQuHAYAzlNQFJ6JoxLYqP5A==
-X-Received: by 2002:a05:600c:35d4:b0:3db:3694:b93c with SMTP id r20-20020a05600c35d400b003db3694b93cmr22794834wmq.15.1674736895751;
-        Thu, 26 Jan 2023 04:41:35 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:f2d7:e330:f537:35d8? ([2001:8b0:aba:5f3c:f2d7:e330:f537:35d8])
-        by smtp.gmail.com with ESMTPSA id e19-20020a05600c13d300b003daf98d7e35sm4403641wmg.14.2023.01.26.04.41.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 04:41:35 -0800 (PST)
-Message-ID: <55d8dad421c8281356ff4510dcef0e016bf67dfb.camel@linuxfoundation.org>
-Subject: Re: [PATCH 5/6] data: Add sup0port for new BB_HASH_CODEPARSER_VALS
- for cache optimisation
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paulo Neves <paulo@myneves.com>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Thu, 26 Jan 2023 12:41:34 +0000
-In-Reply-To: <b3c51ad7-da76-db80-d2ed-a2fa2df60518@myneves.com>
-References: <b3c51ad7-da76-db80-d2ed-a2fa2df60518@myneves.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1-0ubuntu1 
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QQ9GQybB6VIIIefdkg6JqmrcQGFVVN/pavN7Tspecec=;
+        b=d8sixU85mDRTVRclkeJMSCK7AKoRbprgtYG506DuQg59YYcmyoSsz45pJ2/XFhtHqk
+         feWXq3AM6IxjxGN6UFViEI8bamFqyOYhBs4mJ64rlQbPie7th7xR3RwrAAZKq2x+mlmH
+         G7+lQl7N4UK1J0nQCARzVSqXdUXWduXDtEPKaDGD1fxb/QrvQX06zbBtMLEPWdVK0KJa
+         aSbuWs/U6jUwFFiJ78h0x6W0FnkEBZts9RCnwqwYtvAKs4l1b+eLDspoiA6EW74BUmco
+         TF/mfF58OZpe2RxJ3KB5fOA/u04SClv5o6nSLzXvQ6lBL/RkgTMmoh/HwdvXoOfRSDpf
+         WzAA==
+X-Gm-Message-State: AFqh2kp3ZmzqUyrECCb4lD7VwrTtVc+S6MoLhjjayzTw8mrZZr7vBQ7s
+	yErONjo84h1IuIanNIQT0VJGzR9KtJWG5flb4wRr9A==
+X-Google-Smtp-Source: AMrXdXuueU1sz+aW5tK095wQkCD8m3+g5lLtxPhIldu1aSFy09NG1mkZZQPQKvw0SNDlHl27IuPTwmIHnje5H1DWa+U=
+X-Received: by 2002:a05:651c:2106:b0:27f:cf81:cb9 with SMTP id
+ a6-20020a05651c210600b0027fcf810cb9mr1864041ljq.268.1674742892727; Thu, 26
+ Jan 2023 06:21:32 -0800 (PST)
 MIME-Version: 1.0
+References: <Yyvr.1674722117946957577.GL4y@lists.openembedded.org> <CANNYZj_ZrA5XzBkDDZa+6QoYYtizQAnu1VAMCZuh1ZVUic6gUg@mail.gmail.com>
+In-Reply-To: <CANNYZj_ZrA5XzBkDDZa+6QoYYtizQAnu1VAMCZuh1ZVUic6gUg@mail.gmail.com>
+From: Anton <aw@pionix.de>
+Date: Thu, 26 Jan 2023 15:21:21 +0100
+Message-ID: <CAMoDz1W_yqm1ZPSBwC9c9tTdpLTESUDJkpO5TrAT7pFgX5WGfA@mail.gmail.com>
+Subject: Re: [bitbake-devel] Using bitbake as a native standalone package-manager
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="0000000000003627e405f32b770a"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 12:41:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14346
+ <bitbake-devel@lists.openembedded.org>; Thu, 26 Jan 2023 14:21:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14347
 
-On Wed, 2023-01-25 at 15:52 +0000, Paulo Neves wrote:
-> Perhaps BB_HASH_CODEPARSER_VALS could contain a list of flag names that
-> could then be iterated and the values retrieved safely.
+--0000000000003627e405f32b770a
+Content-Type: text/plain; charset="UTF-8"
 
-That is definitely worth thinking about. The challenge is the added
-complexity and the extra variable lookups, particularly if people start
-to make the expressions more complex. I was trying to keep things
-simple!
+Thank you for your reply,
 
-> The current implementation will break if any forced value has a white
-> space or a '=3D' sign. If this variable is to appear in the manual at
-> least these constraints should documented.
+can you point me onto any guide about how to create such a minimal oe-core?
 
-Right, I'm assuming that since we're controlling the substitutions, we
-can avoid issues like that relatively easily. Martin has run into some
-recipes which are doing .split("-") on PN though.
+best, Anton
 
-I'll give this a bit more thought but I am leaning towards keeping
-things simple if we can.
+Am Do., 26. Jan. 2023 um 09:41 Uhr schrieb Alexander Kanavin <
+alex.kanavin@gmail.com>:
 
-Cheers,
+> You can certainly do it, but it's not a use case that is supported
+> through the core layer. You need to make a minimal replacement for
+> oe-core.
+>
 
-Richard
+--0000000000003627e405f32b770a
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div dir=3D"ltr"><div>Thank you for your reply,</div><div>=
+<br></div><div>can you point me onto any guide about how to create such a m=
+inimal oe-core?</div><div><br></div><div>best, Anton<br></div></div><br><di=
+v class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">Am Do., 26. J=
+an. 2023 um 09:41=C2=A0Uhr schrieb Alexander Kanavin &lt;<a href=3D"mailto:=
+alex.kanavin@gmail.com">alex.kanavin@gmail.com</a>&gt;:<br></div><blockquot=
+e class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px s=
+olid rgb(204,204,204);padding-left:1ex">You can certainly do it, but it&#39=
+;s not a use case that is supported<br>
+through the core layer. You need to make a minimal replacement for<br>
+oe-core.<br>
+</blockquote></div></div>
+
+--0000000000003627e405f32b770a--
 
