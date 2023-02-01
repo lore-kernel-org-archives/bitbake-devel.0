@@ -1,268 +1,122 @@
-Return-Path: <anders.joergensen@advent.energy>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83967C636D7
-	for <webhook@archiver.kernel.org>; Wed,  1 Feb 2023 13:59:32 +0000 (UTC)
-Subject: [PATCH] Add path control to BB_ALLOWED_NETWORKS
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78409C636CD
+	for <webhook@archiver.kernel.org>; Wed,  1 Feb 2023 14:20:32 +0000 (UTC)
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+ by mx.groups.io with SMTP id smtpd.web10.24280.1675261230146692401
+ for <bitbake-devel@lists.openembedded.org>;
+ Wed, 01 Feb 2023 06:20:30 -0800
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@snap.com header.s=google header.b=gTDdDYU1;
+ spf=pass (domain: snapchat.com, ip: 209.85.215.180, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-pg1-f180.google.com with SMTP id v3so12601141pgh.4
+        for <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 06:20:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=snap.com; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JwwC6coKoxd05wv6c+giFSjrZRe5yp6d9JXIP98qprg=;
+        b=gTDdDYU1c7nHpYdgDX+visVdXo4x8vdSpAAEnDDUJ4InTgST7l6m9r5qQhYbF/KViW
+         42ZMwswqeEWz7+l9dQqavqLS77R6PCYzjfYLHTTjWOZQoPMExgleTDNDOu9qU5tXdVeE
+         7XE0ShkRIIpjAVahWnsIUqCB6FZN3M/WMdzyw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JwwC6coKoxd05wv6c+giFSjrZRe5yp6d9JXIP98qprg=;
+        b=El3xqXTSqDxKBqZWec9OdaXuTUgfMxZnuf+3LcrKqDgiV4qz/4Jr/qxPkI3o799urJ
+         HI7m8uXx0pwPpqVnM+B3TUJvwWK8Am48B7HycL4XPgtXnriUJkPJsqj4tSiGfNZTxzP1
+         41sXs8uZzGFGvqokdCumnDvYT9b1j4noFXGrmQ+F+4idm4GLtH0DKFdGFx/OuACXAbzf
+         F/pzFozBxBnJjLgs4wd3ogEKdUN6DCSlhxACczapIURlD1C9ag9ZI5n5BRxEKImwW3bW
+         aBW6Rrlp/ePUfp1+3Do35oZqdcyckec006gAzYQKV7aKqotpqV4PJUAmRCDGAMrIWH4Z
+         b6PQ==
+X-Gm-Message-State: AO0yUKVdpnF9aV8e4y4+9BPDP+VdacyCQ2ZpQKWtYQlePq7sZYyhpQZ+
+	2HIMEeB3g+9N2kKsahiXVNCD24626tSyaLx3
+X-Google-Smtp-Source: AK7set+lLwaoAMw6XCy3Hrr4we4JH6ret4FyzhTTP/yw0cvKkqsEiNjP6e72BsiEvTxoNUWpli/Dwg==
+X-Received: by 2002:aa7:988b:0:b0:58b:5f9d:c2fe with SMTP id r11-20020aa7988b000000b0058b5f9dc2femr2479703pfl.29.1675261229281;
+        Wed, 01 Feb 2023 06:20:29 -0800 (PST)
+Received: from lj8k2dq3.sc-core.net ([213.86.25.14])
+        by smtp.gmail.com with ESMTPSA id q17-20020a62ae11000000b0057709fce782sm11585055pff.54.2023.02.01.06.20.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Feb 2023 06:20:28 -0800 (PST)
+From: ecordonnier@snap.com
 To: bitbake-devel@lists.openembedded.org
-From: =?UTF-8?B?QW5kZXJzIErDuHJnZW5zZW4=?= <anders.joergensen@advent.energy>
-X-Originating-Location: Copenhagen, Capital Region, DK (89.221.170.34)
-X-Originating-Platform: Linux Chrome 109
-User-Agent: GROUPS.IO Web Poster
+Cc: Etienne Cordonnier <ecordonnier@snap.com>,
+	JJ Robertson <jrobertson@snap.com>
+Subject: [PATCH] siggen: fix very inefficient string concatenation
+Date: Wed,  1 Feb 2023 15:19:00 +0100
+Message-Id: <20230201141900.1478768-1-ecordonnier@snap.com>
+X-Mailer: git-send-email 2.36.1.vfs.0.0
 MIME-Version: 1.0
-Date: Wed, 01 Feb 2023 05:59:26 -0800
-Message-ID: <xWAM.1675259966225954323.ROLQ@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="We82o80aDbstj4Y5lmLt"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 13:59:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14363
+ <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 14:20:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14364
 
---We82o80aDbstj4Y5lmLt
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Etienne Cordonnier <ecordonnier@snap.com>
 
-From: =3D?UTF-8?q?Anders=3D20J=3DC3=3DB8rgensen?=3D <anders.joergensen@adve=
-nt.energy>
-Date: Wed, 1 Feb 2023 13:08:11 +0100
-Subject: [PATCH] Add path control to BB_ALLOWED_NETWORKS
+As discussed in https://stackoverflow.com/a/4435752/1710392 , CPython
+has an optimization for statements in the form "a = a + b" or "a += b".
+It seems that this line does not get optimized, because it has a form a = a + b + c:
+data = data + "./" + f.split("/./")[1]
 
-Make it able to add path control to the allowed network, so e.g. it is only=
- possible to access own repositories at a given host
+For that reason, it does a copy of data for each iteration, potentially copying megabytes
+of data for each iteration.
 
-Eg.
-BB_ALLOWED_NETWORKS=3D"bitbucket.org/your_company"
-The fetcher will be able to download from bitbucket.org/your_company but no=
-t from bitbucket.org/other_company
+Changing this line causes SignatureGeneratorBasic::get_taskhash to take 0.06 seconds
+instead of 45 seconds on my test setup where SRC_URI points to a big directory.
+
+Note that PEP8 recommends explicitely not to use this optimization which is specific to CPython:
+"do not rely on CPython’s efficient implementation of in-place string concatenation for statements in the form a += b or a = a + b"
+
+However, the PEP8 recommended form using "join()" also does not avoid the copy and takes 45 seconds in my test setup:
+data = ''.join((data, "./", f.split("/./")[1]))
+
+I have changed the other lines to also use += for consistency only, however those were in the form a = a + b
+and were optimized already.
+
+Co-authored-by: JJ Robertson <jrobertson@snap.com>
+Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
 ---
-.../bitbake-user-manual-ref-variables.rst=C2=A0 =C2=A0 =C2=A0|=C2=A0 3 +++
-bitbake/lib/bb/fetch2/__init__.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0| 23 +++++++++++++++----
-bitbake/lib/bb/tests/fetch.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0| 12 ++++++++++
-3 files changed, 34 insertions(+), 4 deletions(-)
+ lib/bb/siggen.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variab=
-les.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables=
-.rst
-index af4ff9805c..7942cd2d3a 100644
---- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -84,6 +84,9 @@ overview of their function and contents.
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 0e79404f..26e0243b 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -349,19 +349,19 @@ class SignatureGeneratorBasic(SignatureGenerator):
+ 
+         data = self.basehash[tid]
+         for dep in self.runtaskdeps[tid]:
+-            data = data + self.get_unihash(dep)
++            data += self.get_unihash(dep)
+ 
+         for (f, cs) in self.file_checksum_values[tid]:
+             if cs:
+                 if "/./" in f:
+-                    data = data + "./" + f.split("/./")[1]
+-                data = data + cs
++                    data += "./" + f.split("/./")[1]
++                data += cs
+ 
+         if tid in self.taints:
+             if self.taints[tid].startswith("nostamp:"):
+-                data = data + self.taints[tid][8:]
++                data += self.taints[tid][8:]
+             else:
+-                data = data + self.taints[tid]
++                data += self.taints[tid]
+ 
+         h = hashlib.sha256(data.encode("utf-8")).hexdigest()
+         self.taskhash[tid] = h
+-- 
+2.36.1.vfs.0.0
 
--=C2=A0 Attempts to access networks not in the host list cause a failure.
-
-+=C2=A0 =C2=A0 =C2=A0 -=C2=A0 Limit path control is also possible like. ::
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 BB_ALLOWED_NETWORKS =3D "github.=
-com/your_project bitbucket.org/your_company"
-+
-Using :term:`BB_ALLOWED_NETWORKS` in conjunction with
-:term:`PREMIRRORS` is very useful. Adding the
-host you want to use to :term:`PREMIRRORS` results in the source code
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__in=
-it__.py
-index ac557176d7..69ad898464 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -1158,12 +1158,27 @@ def trusted_network(d, url):
-
-network =3D network.split(':')[0]
-network =3D network.lower()
-+=C2=A0 =C2=A0 path =3D path.lower()
-+
-+=C2=A0 =C2=A0 for host_path in trusted_hosts.split(" "):
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 host_path =3D host_path.lower()
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D False
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 split_data =3D host_path.split("/", 1)
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 host =3D split_data[0]
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 trusted_path =3D None
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if len(split_data) =3D=3D 2:
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 trusted_path =3D "/" + split_dat=
-a[1]
-
--=C2=A0 =C2=A0 for host in trusted_hosts.split(" "):
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 host =3D host.lower()
-if host.startswith("*.") and ("." + network).endswith(host[1:]):
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return True
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 if host =3D=3D network:
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D True
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 elif host =3D=3D network:
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D True
-+
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if trusted_path and is_trusted:
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if not path.startswith(trusted_p=
-ath):
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D Fal=
-se
-+
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if is_trusted:
-return True
-
-return False
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index 1152e89c0d..c641c1221e 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -1288,6 +1288,18 @@ class TrustedNetworksTest(FetcherTest):
-self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org server2.org server3.org")
-self.assertFalse(bb.fetch.trusted_network(self.d, url))
-
-+=C2=A0 =C2=A0 def test_trusted_network_path(self):
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Ensure trusted_network returns true when the=
- host and path IS in the list.
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 url =3D "git://Someserver.org/RightPath/foo;re=
-v=3D1;branch=3Dmaster"
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.d.setVar("BB_ALLOWED_NETWORKS", "server1.=
-org *.someserver.org/rightpath server2.org")
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(bb.fetch.trusted_network(self.=
-d, url))
-+
-+=C2=A0 =C2=A0 def test_untrusted_network_path(self):
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Ensure trusted_network returns False when th=
-e host is in list but the path is wrong.
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 url =3D "git://Someserver.org/WrongPath/foo;re=
-v=3D1;branch=3Dmaster"
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.d.setVar("BB_ALLOWED_NETWORKS", "server1.=
-org *.someserver.org/rightpath server2.org")
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertFalse(bb.fetch.trusted_network(self=
-.d, url))
-+
-class URLHandle(unittest.TestCase):
-
-datatable =3D {
---
-2.34.1
-
---We82o80aDbstj4Y5lmLt
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div>From: =3D?UTF-8?q?Anders=3D20J=3DC3=3DB8rgensen?=3D &lt;anders.joergen=
-sen@advent.energy&gt;</div>
-<div>Date: Wed, 1 Feb 2023 13:08:11 +0100</div>
-<div>Subject: [PATCH] Add path control to BB_ALLOWED_NETWORKS</div>
-<div>&nbsp;</div>
-<div>Make it able to add path control to the allowed network, so e.g. it is=
- only possible to access own repositories at a given host</div>
-<div>&nbsp;</div>
-<div>Eg.</div>
-<div>BB_ALLOWED_NETWORKS=3D"bitbucket.org/your_company"</div>
-<div>The fetcher will be able to download from bitbucket.org/your_company b=
-ut not from bitbucket.org/other_company</div>
-<div>---</div>
-<div>&nbsp;.../bitbake-user-manual-ref-variables.rst&nbsp; &nbsp; &nbsp;|&n=
-bsp; 3 +++</div>
-<div>&nbsp;bitbake/lib/bb/fetch2/__init__.py&nbsp; &nbsp; &nbsp; &nbsp; &nb=
-sp; &nbsp; &nbsp;| 23 +++++++++++++++----</div>
-<div>&nbsp;bitbake/lib/bb/tests/fetch.py&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
-&nbsp; &nbsp; &nbsp; &nbsp;| 12 ++++++++++</div>
-<div>&nbsp;3 files changed, 34 insertions(+), 4 deletions(-)</div>
-<div>&nbsp;</div>
-<div>diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-v=
-ariables.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-vari=
-ables.rst</div>
-<div>index af4ff9805c..7942cd2d3a 100644</div>
-<div>--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variable=
-s.rst</div>
-<div>+++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variable=
-s.rst</div>
-<div>@@ -84,6 +84,9 @@ overview of their function and contents.</div>
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp;-&nbsp; Attempts to access networks not in =
-the host list cause a failure.</div>
-<div>&nbsp;</div>
-<div>+&nbsp; &nbsp; &nbsp; -&nbsp; Limit path control is also possible like=
-. ::</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BB_ALLOWED_NETWORKS =3D "gi=
-thub.com/your_project bitbucket.org/your_company"</div>
-<div>+</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp;Using :term:`BB_ALLOWED_NETWORKS` in conjun=
-ction with</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp;:term:`PREMIRRORS` is very useful. Adding t=
-he</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp;host you want to use to :term:`PREMIRRORS` =
-results in the source code</div>
-<div>diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2=
-/__init__.py</div>
-<div>index ac557176d7..69ad898464 100644</div>
-<div>--- a/bitbake/lib/bb/fetch2/__init__.py</div>
-<div>+++ b/bitbake/lib/bb/fetch2/__init__.py</div>
-<div>@@ -1158,12 +1158,27 @@ def trusted_network(d, url):</div>
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp; &nbsp;network =3D network.split(':')[0]</div>
-<div>&nbsp; &nbsp; &nbsp;network =3D network.lower()</div>
-<div>+&nbsp; &nbsp; path =3D path.lower()</div>
-<div>+</div>
-<div>+&nbsp; &nbsp; for host_path in trusted_hosts.split(" "):</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; host_path =3D host_path.lower()</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; is_trusted =3D False</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; split_data =3D host_path.split("/", 1)</d=
-iv>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; host =3D split_data[0]</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; trusted_path =3D None</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; if len(split_data) =3D=3D 2:</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; trusted_path =3D "/" + spli=
-t_data[1]</div>
-<div>&nbsp;</div>
-<div>-&nbsp; &nbsp; for host in trusted_hosts.split(" "):</div>
-<div>-&nbsp; &nbsp; &nbsp; &nbsp; host =3D host.lower()</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if host.startswith("*.") and ("." + =
-network).endswith(host[1:]):</div>
-<div>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return True</div>
-<div>-&nbsp; &nbsp; &nbsp; &nbsp; if host =3D=3D network:</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; is_trusted =3D True</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; elif host =3D=3D network:</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; is_trusted =3D True</div>
-<div>+</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; if trusted_path and is_trusted:</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if not path.startswith(trus=
-ted_path):</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; is_trusted =
-=3D False</div>
-<div>+</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; if is_trusted:</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return True</div>
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp; &nbsp;return False</div>
-<div>diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetc=
-h.py</div>
-<div>index 1152e89c0d..c641c1221e 100644</div>
-<div>--- a/bitbake/lib/bb/tests/fetch.py</div>
-<div>+++ b/bitbake/lib/bb/tests/fetch.py</div>
-<div>@@ -1288,6 +1288,18 @@ class TrustedNetworksTest(FetcherTest):</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar("BB_ALLOWED_NETWORKS",=
- "server1.org server2.org server3.org")</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.assertFalse(bb.fetch.trusted_ne=
-twork(self.d, url))</div>
-<div>&nbsp;</div>
-<div>+&nbsp; &nbsp; def test_trusted_network_path(self):</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; # Ensure trusted_network returns true whe=
-n the host and path IS in the list.</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; url =3D "git://Someserver.org/RightPath/f=
-oo;rev=3D1;branch=3Dmaster"</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.d.setVar("BB_ALLOWED_NETWORKS", "ser=
-ver1.org *.someserver.org/rightpath server2.org")</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.assertTrue(bb.fetch.trusted_network(=
-self.d, url))</div>
-<div>+</div>
-<div>+&nbsp; &nbsp; def test_untrusted_network_path(self):</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; # Ensure trusted_network returns False wh=
-en the host is in list but the path is wrong.</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; url =3D "git://Someserver.org/WrongPath/f=
-oo;rev=3D1;branch=3Dmaster"</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.d.setVar("BB_ALLOWED_NETWORKS", "ser=
-ver1.org *.someserver.org/rightpath server2.org")</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.assertFalse(bb.fetch.trusted_network=
-(self.d, url))</div>
-<div>+</div>
-<div>&nbsp;class URLHandle(unittest.TestCase):</div>
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp; &nbsp;datatable =3D {</div>
-<div>--&nbsp;</div>
-<div>2.34.1</div>
-<div>&nbsp;</div>
-
---We82o80aDbstj4Y5lmLt--
 
