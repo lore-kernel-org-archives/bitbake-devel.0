@@ -1,116 +1,161 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE0EC636CD
-	for <webhook@archiver.kernel.org>; Wed,  1 Feb 2023 14:24:32 +0000 (UTC)
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
- by mx.groups.io with SMTP id smtpd.web11.24676.1675261464914751877
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED103C636D4
+	for <webhook@archiver.kernel.org>; Wed,  1 Feb 2023 21:30:56 +0000 (UTC)
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+ by mx.groups.io with SMTP id smtpd.web10.37352.1675287055201947072
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 01 Feb 2023 06:24:24 -0800
+ Wed, 01 Feb 2023 13:30:55 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=kbJEie15;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.175, mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f175.google.com with SMTP id m13so6691831plx.13
-        for <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 06:24:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UxwoxsvB1u/cAWvsx5xzs1Zvt8jb5yFQryyIIosCh0Y=;
-        b=kbJEie15kKeS2omNnRMr0XFFttfXKWrlBIy5wMhL5zF1d4VEolnxb8wK1i6eNXa6Lt
-         0gCcnUtWlerEXLkwNIzgdWuK+SvXg7U5qi4Ql/VXnIhfH4LYB4CtwH7/s+8GYcFYC1Vp
-         szcuuyCLuUNQUAOvxpgMK5DgebkDvRA9s8vCP15d1GOJ2/Pb2M29AeH0mHZOs3ZZINZD
-         VCHISrLLuZmGYlGsjRL1mygbiPBCzJ2NEsr78QGKwjuoe59KC+gul3Ktktg2ClJUW4DI
-         lA/vS2m4mJzJZN3WBr41Tjhf7VXP4yAX65GGK4LMFhHh/FaFrYHXac1icF9pZ6iFZO8G
-         atFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UxwoxsvB1u/cAWvsx5xzs1Zvt8jb5yFQryyIIosCh0Y=;
-        b=qieKKuQ32g8lWU6j7NapmGmFgIpQmBXctrBIGgZ7Ep1y+42Nve+CpOU+5TqLlkmyKf
-         B0Vu6yFzgm3tUvflkv00XI8eTTvPVpk5UOvCFFc6hkesWnffAnhFffIhUU905oorn3G3
-         46quk5Oy+AwA+f3R0NBzu17PNCNl323XAbX+66Q3eVgsquExhkuq5klbDUmMzDlu4f5m
-         KyMbvUBxNTIjX36lP7yxmzS20wPhBsHZDGKk5ppdn0pw0PclC6cC0pVMKHbR16I5S4nk
-         X9iJwECHEeJCCrTv2XeEp+n2wZ+SpfGTqnbcogzbiBres4D+fv0wF8oZQiST45TD6qYB
-         U9Hw==
-X-Gm-Message-State: AO0yUKWqpEO2rfP2uLrzmoIQXEFYrS8D+GCSxiTDQYnv05DHN2AdXfFz
-	JkkeManLt8jukhTOS3AcLOaso0a6AmFFzjRGj/U=
-X-Google-Smtp-Source: AK7set8sRCMDlsQMlRF0r/sRUxAPwKCWW8OW2GtfbHfReH0mB3tzggVJDsDo9j4ayKyJOg1evgMU7Q==
-X-Received: by 2002:a17:903:11c7:b0:196:489a:a79f with SMTP id q7-20020a17090311c700b00196489aa79fmr3502422plh.6.1675261463903;
-        Wed, 01 Feb 2023 06:24:23 -0800 (PST)
-Received: from hexa.router0800d9.com (dhcp-72-253-4-112.hawaiiantel.net. [72.253.4.112])
-        by smtp.gmail.com with ESMTPSA id e2-20020a170902744200b00186b7443082sm11788834plt.195.2023.02.01.06.24.22
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Feb 2023 06:24:23 -0800 (PST)
-From: Steve Sakoman <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][langdale][2.2][PATCH 2/2] fetch2/git: Clarify the meaning of namespace
-Date: Wed,  1 Feb 2023 04:24:13 -1000
-Message-Id: <a40fc6a3f774bcb28cf72701ac146ceb7ae8061a.1675261340.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1675261340.git.steve@sakoman.com>
-References: <cover.1675261340.git.steve@sakoman.com>
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=U5reqDMW;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: alexandre.belloni@bootlin.com)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id C46FEFF803;
+	Wed,  1 Feb 2023 21:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1675287053;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OMdruLaYZI8Vw56/JlD4MiV6cn/8NEK5lLoeO7krEto=;
+	b=U5reqDMWI8nssUd24Z7bQW9A2pL5kEKz1WHBAtVpRfk30XOasmXG4zpsLk29wrBM5ZQVh7
+	+Wug98h3WyoseQ4PrmzymgKA7J0suhuAZ3aJfl0aVwWe/2ByCvlP+bIG05is9d9PBmz5f0
+	vRIc9Zc0FUgLMtpJMq/LF10h5+K5nsWn1xscNwm/dUdyRrxMGYm5qUszM4huqMCqEE1nkU
+	w0Mf8sQeSCxLVUPDU8xBWc4Kk0qRiU013Tx9btgZrVw9kwnhbdI9b1ZjX3A7G7MJzpxyRg
+	/isnIsKTs5horQ7yGSKHt3/7SnUwkhQWwip5zGy07fcsNUTOc802Hvy2RVA7mQ==
+Date: Wed, 1 Feb 2023 22:30:52 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: anders.joergensen@advent.energy
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH] Add path control to BB_ALLOWED_NETWORKS
+Message-ID: <Y9raDFsNMvuuhBRI@mail.local>
+References: <xWAM.1675259966225954323.ROLQ@lists.openembedded.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <xWAM.1675259966225954323.ROLQ@lists.openembedded.org>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 14:24:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14367
+ <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 21:30:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14368
 
-From: Marek Vasut <marex@denx.de>
+Hello,
 
-Namespace in this context means a branch, a tag, etc., clarify
-it in the description. Also, fix a typo "a any", replace with
-plain "any".
+This patch doesn't apply, it is malformed
 
-This patch is based of feedback on new applied patch
-d32e5b0e ("fetch2/git: Prevent git fetcher from fetching gitlab repository metadata")
+On 01/02/2023 05:59:26-0800, Anders J�rgensen via lists.openembedded.org wrote:
+> From: =?UTF-8?q?Anders=20J=C3=B8rgensen?= <anders.joergensen@advent.energy>
+> Date: Wed, 1 Feb 2023 13:08:11 +0100
+> Subject: [PATCH] Add path control to BB_ALLOWED_NETWORKS
+> 
+> Make it able to add path control to the allowed network, so e.g. it is only possible to access own repositories at a given host
+> 
+> Eg.
+> BB_ALLOWED_NETWORKS="bitbucket.org/your_company"
+> The fetcher will be able to download from bitbucket.org/your_company but not from bitbucket.org/other_company
+> ---
+> .../bitbake-user-manual-ref-variables.rst� � �|� 3 +++
+> bitbake/lib/bb/fetch2/__init__.py� � � � � � �| 23 +++++++++++++++----
+> bitbake/lib/bb/tests/fetch.py� � � � � � � � �| 12 ++++++++++
+> 3 files changed, 34 insertions(+), 4 deletions(-)
+> 
+> diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> index af4ff9805c..7942cd2d3a 100644
+> --- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> +++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> @@ -84,6 +84,9 @@ overview of their function and contents.
+> 
+> -� Attempts to access networks not in the host list cause a failure.
+> 
+> +� � � -� Limit path control is also possible like. ::
+> +� � � � � � BB_ALLOWED_NETWORKS = "github.com/your_project bitbucket.org/your_company"
+> +
+> Using :term:`BB_ALLOWED_NETWORKS` in conjunction with
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit b4999425c812b25cb359d5163d11e3c1b030dc28)
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
----
- doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 4 ++--
- lib/bb/fetch2/git.py                                     | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+There are missing spaces here
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index e86a4d86..519aec9a 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -424,8 +424,8 @@ This fetcher supports the following parameters:
- 
- -  *"nobranch":* Tells the fetcher to not check the SHA validation for
-    the branch when set to "1". The default is "0". Set this option for
--   the recipe that refers to the commit that is valid for a any namespace
--   instead of the branch.
-+   the recipe that refers to the commit that is valid for any namespace
-+   (branch, tag, ...) instead of the branch.
- 
- -  *"bareclone":* Tells the fetcher to clone a bare clone into the
-    destination directory without checking out a working tree. Only the
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index c80e8e5c..2e3d3251 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -44,7 +44,8 @@ Supported SRC_URI options are:
- 
- - nobranch
-    Don't check the SHA validation for branch. set this option for the recipe
--   referring to commit which is valid in any namespace instead of branch.
-+   referring to commit which is valid in any namespace (branch, tag, ...)
-+   instead of branch.
-    The default is "0", set nobranch=1 if needed.
- 
- - usehead
+> :term:`PREMIRRORS` is very useful. Adding the
+> host you want to use to :term:`PREMIRRORS` results in the source code
+> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+> index ac557176d7..69ad898464 100644
+> --- a/bitbake/lib/bb/fetch2/__init__.py
+> +++ b/bitbake/lib/bb/fetch2/__init__.py
+> @@ -1158,12 +1158,27 @@ def trusted_network(d, url):
+> 
+> network = network.split(':')[0]
+> network = network.lower()
+> +� � path = path.lower()
+> +
+> +� � for host_path in trusted_hosts.split(" "):
+> +� � � � host_path = host_path.lower()
+> +� � � � is_trusted = False
+> +� � � � split_data = host_path.split("/", 1)
+> +� � � � host = split_data[0]
+> +� � � � trusted_path = None
+> +� � � � if len(split_data) == 2:
+> +� � � � � � trusted_path = "/" + split_data[1]
+> 
+> -� � for host in trusted_hosts.split(" "):
+> -� � � � host = host.lower()
+> if host.startswith("*.") and ("." + network).endswith(host[1:]):
+> -� � � � � � return True
+> -� � � � if host == network:
+> +� � � � � � is_trusted = True
+> +� � � � elif host == network:
+> +� � � � � � is_trusted = True
+> +
+> +� � � � if trusted_path and is_trusted:
+> +� � � � � � if not path.startswith(trusted_path):
+> +� � � � � � � � is_trusted = False
+> +
+> +� � � � if is_trusted:
+> return True
+> 
+> return False
+> diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+> index 1152e89c0d..c641c1221e 100644
+> --- a/bitbake/lib/bb/tests/fetch.py
+> +++ b/bitbake/lib/bb/tests/fetch.py
+> @@ -1288,6 +1288,18 @@ class TrustedNetworksTest(FetcherTest):
+> self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org server2.org server3.org")
+> self.assertFalse(bb.fetch.trusted_network(self.d, url))
+> 
+> +� � def test_trusted_network_path(self):
+> +� � � � # Ensure trusted_network returns true when the host and path IS in the list.
+> +� � � � url = "git://Someserver.org/RightPath/foo;rev=1;branch=master"
+> +� � � � self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org *.someserver.org/rightpath server2.org")
+> +� � � � self.assertTrue(bb.fetch.trusted_network(self.d, url))
+> +
+> +� � def test_untrusted_network_path(self):
+> +� � � � # Ensure trusted_network returns False when the host is in list but the path is wrong.
+> +� � � � url = "git://Someserver.org/WrongPath/foo;rev=1;branch=master"
+> +� � � � self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org *.someserver.org/rightpath server2.org")
+> +� � � � self.assertFalse(bb.fetch.trusted_network(self.d, url))
+> +
+> class URLHandle(unittest.TestCase):
+> 
+> datatable = {
+> --
+> 2.34.1
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14363): https://lists.openembedded.org/g/bitbake-devel/message/14363
+> Mute This Topic: https://lists.openembedded.org/mt/96676597/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+
+
 -- 
-2.25.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
