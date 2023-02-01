@@ -1,122 +1,90 @@
-Return-Path: <ecordonnier@snap.com>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78409C636CD
-	for <webhook@archiver.kernel.org>; Wed,  1 Feb 2023 14:20:32 +0000 (UTC)
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
- by mx.groups.io with SMTP id smtpd.web10.24280.1675261230146692401
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA0AC05027
+	for <webhook@archiver.kernel.org>; Wed,  1 Feb 2023 14:24:22 +0000 (UTC)
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+ by mx.groups.io with SMTP id smtpd.web11.24674.1675261460660344839
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 01 Feb 2023 06:20:30 -0800
+ Wed, 01 Feb 2023 06:24:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=gTDdDYU1;
- spf=pass (domain: snapchat.com, ip: 209.85.215.180, mailfrom: ecordonnier@snapchat.com)
-Received: by mail-pg1-f180.google.com with SMTP id v3so12601141pgh.4
-        for <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 06:20:30 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=r0UMy4SH;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.177, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f177.google.com with SMTP id 5so18608733plo.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 06:24:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JwwC6coKoxd05wv6c+giFSjrZRe5yp6d9JXIP98qprg=;
-        b=gTDdDYU1c7nHpYdgDX+visVdXo4x8vdSpAAEnDDUJ4InTgST7l6m9r5qQhYbF/KViW
-         42ZMwswqeEWz7+l9dQqavqLS77R6PCYzjfYLHTTjWOZQoPMExgleTDNDOu9qU5tXdVeE
-         7XE0ShkRIIpjAVahWnsIUqCB6FZN3M/WMdzyw=
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vOT1ZRP1XCXU8LBW7Rns4S/4rkghHvXYo9TNuq2xgMw=;
+        b=r0UMy4SH1C4wUFOHc/xMzAa0956wNkPBtyyoaGgOitG6RanbVgS8yf8kWwsXkSOGIJ
+         ks56hTN2QgmgD1qfNjLYuWrcM+uN5rroq/1eKcYs9sypRPe9RCOnaa8EMKFaRmE1V4JP
+         K4nTkREOREsmg+OZGBe8L0SVOGa+JrctST4/z2SqKec5X1OvZtXEc2siay3wSkR62XOz
+         AWaRuep977bm4JTiS2UyuzJryfubQLY9wXCLds3NkIQjzY1ZZC3k1KKG8fz5DWrLReJ2
+         0Z2NBCFvuy0h0rUkXfYXu+QNaGjG0Hea8R7TDLIKlTRGsc1ahNRNKdicCJrukmLf8j/0
+         YCkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JwwC6coKoxd05wv6c+giFSjrZRe5yp6d9JXIP98qprg=;
-        b=El3xqXTSqDxKBqZWec9OdaXuTUgfMxZnuf+3LcrKqDgiV4qz/4Jr/qxPkI3o799urJ
-         HI7m8uXx0pwPpqVnM+B3TUJvwWK8Am48B7HycL4XPgtXnriUJkPJsqj4tSiGfNZTxzP1
-         41sXs8uZzGFGvqokdCumnDvYT9b1j4noFXGrmQ+F+4idm4GLtH0DKFdGFx/OuACXAbzf
-         F/pzFozBxBnJjLgs4wd3ogEKdUN6DCSlhxACczapIURlD1C9ag9ZI5n5BRxEKImwW3bW
-         aBW6Rrlp/ePUfp1+3Do35oZqdcyckec006gAzYQKV7aKqotpqV4PJUAmRCDGAMrIWH4Z
-         b6PQ==
-X-Gm-Message-State: AO0yUKVdpnF9aV8e4y4+9BPDP+VdacyCQ2ZpQKWtYQlePq7sZYyhpQZ+
-	2HIMEeB3g+9N2kKsahiXVNCD24626tSyaLx3
-X-Google-Smtp-Source: AK7set+lLwaoAMw6XCy3Hrr4we4JH6ret4FyzhTTP/yw0cvKkqsEiNjP6e72BsiEvTxoNUWpli/Dwg==
-X-Received: by 2002:aa7:988b:0:b0:58b:5f9d:c2fe with SMTP id r11-20020aa7988b000000b0058b5f9dc2femr2479703pfl.29.1675261229281;
-        Wed, 01 Feb 2023 06:20:29 -0800 (PST)
-Received: from lj8k2dq3.sc-core.net ([213.86.25.14])
-        by smtp.gmail.com with ESMTPSA id q17-20020a62ae11000000b0057709fce782sm11585055pff.54.2023.02.01.06.20.27
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vOT1ZRP1XCXU8LBW7Rns4S/4rkghHvXYo9TNuq2xgMw=;
+        b=WAmAtYrwEeqZfhBc4PSUCSRyMiwQwDyJhn+ILF0/rLbi1RYRYZ2KsBE9sj3XCAhsCt
+         ztPcoDWJka8IXdNw/AnkgiBqBORBbM/SNqKgnmFm5wsAnBjYGhRa+TG9e6KXh5m2lzt7
+         VZZlyp3enRLVKljC/s2F9J/5Sn2fSteORJtR0apu2OdoBF9M4WszZIpX2/sIZgQC2n56
+         M4dWVUqxwj7Uvipfe2fbtpFKDYDJObDO5h0TzvFVsRVxuuEbW727uk3p7yZ97U1l+mve
+         MWHcG5pgodO/WIOtcjjPar1V4W9iscOGvgQa40+WZYsTeWlGfOXxh/AaM/+hP9TsySlC
+         lHuw==
+X-Gm-Message-State: AO0yUKWU7au+E40YJSyfulqHzrJ9zAn4iD07JGiUGXAnWBMPY5ZdB+3X
+	5F1g76aMPCRE+s5UxOtR4B/Har9ft93i7lPQPSc=
+X-Google-Smtp-Source: AK7set9IVYdplDpXhXoR6cn28/TrMDbNXQTMzc9J7W0GyZnCX5iRfy8TgSVj2StBt8sFXvAYz64AcA==
+X-Received: by 2002:a17:902:d2c9:b0:198:b284:c2f4 with SMTP id n9-20020a170902d2c900b00198b284c2f4mr1953038plc.61.1675261459502;
+        Wed, 01 Feb 2023 06:24:19 -0800 (PST)
+Received: from hexa.router0800d9.com (dhcp-72-253-4-112.hawaiiantel.net. [72.253.4.112])
+        by smtp.gmail.com with ESMTPSA id e2-20020a170902744200b00186b7443082sm11788834plt.195.2023.02.01.06.24.18
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Feb 2023 06:20:28 -0800 (PST)
-From: ecordonnier@snap.com
+        Wed, 01 Feb 2023 06:24:19 -0800 (PST)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Etienne Cordonnier <ecordonnier@snap.com>,
-	JJ Robertson <jrobertson@snap.com>
-Subject: [PATCH] siggen: fix very inefficient string concatenation
-Date: Wed,  1 Feb 2023 15:19:00 +0100
-Message-Id: <20230201141900.1478768-1-ecordonnier@snap.com>
-X-Mailer: git-send-email 2.36.1.vfs.0.0
+Subject: [bitbake][langdale][2.2][PATCH 0/2] Patch review
+Date: Wed,  1 Feb 2023 04:24:11 -1000
+Message-Id: <cover.1675261340.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 14:20:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14364
+ <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 14:24:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14365
 
-From: Etienne Cordonnier <ecordonnier@snap.com>
+Please review this set of patches for 2.2/langdale and have comments back by
+end of day Friday.
 
-As discussed in https://stackoverflow.com/a/4435752/1710392 , CPython
-has an optimization for statements in the form "a = a + b" or "a += b".
-It seems that this line does not get optimized, because it has a form a = a + b + c:
-data = data + "./" + f.split("/./")[1]
+Passed a-full on autobuilder:
 
-For that reason, it does a copy of data for each iteration, potentially copying megabytes
-of data for each iteration.
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/4871
 
-Changing this line causes SignatureGeneratorBasic::get_taskhash to take 0.06 seconds
-instead of 45 seconds on my test setup where SRC_URI points to a big directory.
+The following changes since commit 28ba566c25af72afe62ea3cb62b0bafeffc47de8:
 
-Note that PEP8 recommends explicitely not to use this optimization which is specific to CPython:
-"do not rely on CPython’s efficient implementation of in-place string concatenation for statements in the form a += b or a = a + b"
+  bb/utils: include SSL certificate paths in export_proxies (2023-01-30 08:37:04 +0000)
 
-However, the PEP8 recommended form using "join()" also does not avoid the copy and takes 45 seconds in my test setup:
-data = ''.join((data, "./", f.split("/./")[1]))
+are available in the Git repository at:
 
-I have changed the other lines to also use += for consistency only, however those were in the form a = a + b
-and were optimized already.
+  https://git.openembedded.org/bitbake-contrib stable/2.2-nut
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.2-nut
 
-Co-authored-by: JJ Robertson <jrobertson@snap.com>
-Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
----
- lib/bb/siggen.py | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Marek Vasut (2):
+  fetch2/git: Prevent git fetcher from fetching gitlab repository
+    metadata
+  fetch2/git: Clarify the meaning of namespace
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 0e79404f..26e0243b 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -349,19 +349,19 @@ class SignatureGeneratorBasic(SignatureGenerator):
- 
-         data = self.basehash[tid]
-         for dep in self.runtaskdeps[tid]:
--            data = data + self.get_unihash(dep)
-+            data += self.get_unihash(dep)
- 
-         for (f, cs) in self.file_checksum_values[tid]:
-             if cs:
-                 if "/./" in f:
--                    data = data + "./" + f.split("/./")[1]
--                data = data + cs
-+                    data += "./" + f.split("/./")[1]
-+                data += cs
- 
-         if tid in self.taints:
-             if self.taints[tid].startswith("nostamp:"):
--                data = data + self.taints[tid][8:]
-+                data += self.taints[tid][8:]
-             else:
--                data = data + self.taints[tid]
-+                data += self.taints[tid]
- 
-         h = hashlib.sha256(data.encode("utf-8")).hexdigest()
-         self.taskhash[tid] = h
+ doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 4 ++--
+ lib/bb/fetch2/git.py                                     | 9 +++++++--
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
 -- 
-2.36.1.vfs.0.0
+2.25.1
 
 
