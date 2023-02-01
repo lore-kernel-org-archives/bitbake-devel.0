@@ -1,126 +1,268 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <anders.joergensen@advent.energy>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10D0C54EAA
-	for <webhook@archiver.kernel.org>; Fri, 27 Jan 2023 18:28:41 +0000 (UTC)
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
- by mx.groups.io with SMTP id smtpd.web11.109920.1674844111752021532
- for <bitbake-devel@lists.openembedded.org>;
- Fri, 27 Jan 2023 10:28:32 -0800
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=WW+Tfne5;
- spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: michael.opdenacker@bootlin.com)
-Received: (Authenticated sender: michael.opdenacker@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 635F420007;
-	Fri, 27 Jan 2023 18:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1674844109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V1P2gt6Oo+l4W7hKD/MQEutW7QgWaivBqs3mXpr1S7A=;
-	b=WW+Tfne5ydaNJXur6AkmrWjKlNvuqDrHlVaCbfunhmoLYUFkCQFDmBIZQcztP3Lp7OmANh
-	D3z8c5ZJq6CxFg9D8+UMErXCYVK+QZ3FOO/M6VOQJ+B6LrE23gj6+FEGnIG63Tqf/xQXeY
-	B/q4iAsWT0I0oad1mzQc7oysq23HtAzFYPgDIleEpMsmDw7Tmq+avnAABfquApV+2puuVp
-	duI4IlM+ZawM7dCdgXZv2umziCS22FN6ElAH/IF6sw5/SscPsDetcWj+SnLB7HIEGCBBmG
-	3sUyc7ekho+T+dXPmis2yTmsokpY7kLwRawyf8I41KYq3y9YbTKFyJN6JDAIwg==
-From: michael.opdenacker@bootlin.com
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83967C636D7
+	for <webhook@archiver.kernel.org>; Wed,  1 Feb 2023 13:59:32 +0000 (UTC)
+Subject: [PATCH] Add path control to BB_ALLOWED_NETWORKS
 To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Michael Opdenacker <michael.opdenacker@bootlin.com>,
-	Joshua Watt <JPEWhacker@gmail.com>
-Subject: [PATCH] bitbake-user-manual: show how use BB_LOGCONFIG to log warnings
-Date: Fri, 27 Jan 2023 19:28:24 +0100
-Message-Id: <20230127182824.104830-1-michael.opdenacker@bootlin.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <45d84a3f5003bb58e14d51bbe4134e6aa46acde6.camel@linuxfoundation.org>
-References: <45d84a3f5003bb58e14d51bbe4134e6aa46acde6.camel@linuxfoundation.org>
+From: =?UTF-8?B?QW5kZXJzIErDuHJnZW5zZW4=?= <anders.joergensen@advent.energy>
+X-Originating-Location: Copenhagen, Capital Region, DK (89.221.170.34)
+X-Originating-Platform: Linux Chrome 109
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Wed, 01 Feb 2023 05:59:26 -0800
+Message-ID: <xWAM.1675259966225954323.ROLQ@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="We82o80aDbstj4Y5lmLt"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 27 Jan 2023 18:28:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14362
+ <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 13:59:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14363
 
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+--We82o80aDbstj4Y5lmLt
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Suggested-by: Joshua Watt <JPEWhacker@gmail.com>
+From: =3D?UTF-8?q?Anders=3D20J=3DC3=3DB8rgensen?=3D <anders.joergensen@adve=
+nt.energy>
+Date: Wed, 1 Feb 2023 13:08:11 +0100
+Subject: [PATCH] Add path control to BB_ALLOWED_NETWORKS
+
+Make it able to add path control to the allowed network, so e.g. it is only=
+ possible to access own repositories at a given host
+
+Eg.
+BB_ALLOWED_NETWORKS=3D"bitbucket.org/your_company"
+The fetcher will be able to download from bitbucket.org/your_company but no=
+t from bitbucket.org/other_company
 ---
- .../bitbake-user-manual-execution.rst         | 45 +++++++++++++++++--
- 1 file changed, 41 insertions(+), 4 deletions(-)
+.../bitbake-user-manual-ref-variables.rst=C2=A0 =C2=A0 =C2=A0|=C2=A0 3 +++
+bitbake/lib/bb/fetch2/__init__.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0| 23 +++++++++++++++----
+bitbake/lib/bb/tests/fetch.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0| 12 ++++++++++
+3 files changed, 34 insertions(+), 4 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-index f6ebf7ba..4fa3ca4b 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-@@ -656,7 +656,7 @@ builds are when execute, bitbake also supports user defined
- configuration of the `Python
- logging <https://docs.python.org/3/library/logging.html>`__ facilities
- through the :term:`BB_LOGCONFIG` variable. This
--variable defines a json or yaml `logging
-+variable defines a JSON or YAML `logging
- configuration <https://docs.python.org/3/library/logging.config.html>`__
- that will be intelligently merged into the default configuration. The
- logging configuration is merged using the following rules:
-@@ -690,9 +690,9 @@ logging configuration is merged using the following rules:
-    adds a filter called ``BitBake.defaultFilter``, both filters will be
-    applied to the logger
- 
--As an example, consider the following user logging configuration file
--which logs all Hash Equivalence related messages of VERBOSE or higher to
--a file called ``hashequiv.log`` ::
-+As a first example, you can create a ``hashequiv.json`` user logging
-+configuration file to log all Hash Equivalence related messages of ``VERBOSE``
-+or higher priority to a file called ``hashequiv.log``::
- 
-    {
-        "version": 1,
-@@ -721,3 +721,40 @@ a file called ``hashequiv.log`` ::
-            }
-        }
-    }
-+
-+Then set the :term:`BB_LOGCONFIG` variable in ``conf/local.conf``::
-+
-+   BB_LOGCONFIG = "hashequiv.json"
-+
-+Another example is this ``warn.json`` file to log all ``WARNING`` and
-+higher priority messages to a ``warn.log`` file::
-+
-+  {
-+      "version": 1,
-+      "formatters": {
-+          "warnlogFormatter": {
-+              "()": "bb.msg.BBLogFormatter",
-+              "format": "%(levelname)s: %(message)s"
-+          }
-+      },
-+
-+      "handlers": {
-+          "warnlog": {
-+              "class": "logging.FileHandler",
-+              "formatter": "warnlogFormatter",
-+              "level": "WARNING",
-+              "filename": "warn.log"
-+          }
-+      },
-+
-+      "loggers": {
-+          "BitBake": {
-+              "handlers": ["warnlog"]
-+          }
-+      },
-+
-+      "@disable_existing_loggers": false
-+  }
-+
-+Note that BitBake's helper classes for structured logging are implemented in
-+``lib/bb/msg.py``.
--- 
-2.37.2
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variab=
+les.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables=
+.rst
+index af4ff9805c..7942cd2d3a 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -84,6 +84,9 @@ overview of their function and contents.
 
+-=C2=A0 Attempts to access networks not in the host list cause a failure.
+
++=C2=A0 =C2=A0 =C2=A0 -=C2=A0 Limit path control is also possible like. ::
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 BB_ALLOWED_NETWORKS =3D "github.=
+com/your_project bitbucket.org/your_company"
++
+Using :term:`BB_ALLOWED_NETWORKS` in conjunction with
+:term:`PREMIRRORS` is very useful. Adding the
+host you want to use to :term:`PREMIRRORS` results in the source code
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__in=
+it__.py
+index ac557176d7..69ad898464 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -1158,12 +1158,27 @@ def trusted_network(d, url):
+
+network =3D network.split(':')[0]
+network =3D network.lower()
++=C2=A0 =C2=A0 path =3D path.lower()
++
++=C2=A0 =C2=A0 for host_path in trusted_hosts.split(" "):
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 host_path =3D host_path.lower()
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D False
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 split_data =3D host_path.split("/", 1)
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 host =3D split_data[0]
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 trusted_path =3D None
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if len(split_data) =3D=3D 2:
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 trusted_path =3D "/" + split_dat=
+a[1]
+
+-=C2=A0 =C2=A0 for host in trusted_hosts.split(" "):
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 host =3D host.lower()
+if host.startswith("*.") and ("." + network).endswith(host[1:]):
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return True
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 if host =3D=3D network:
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D True
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 elif host =3D=3D network:
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D True
++
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if trusted_path and is_trusted:
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if not path.startswith(trusted_p=
+ath):
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D Fal=
+se
++
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if is_trusted:
+return True
+
+return False
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index 1152e89c0d..c641c1221e 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -1288,6 +1288,18 @@ class TrustedNetworksTest(FetcherTest):
+self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org server2.org server3.org")
+self.assertFalse(bb.fetch.trusted_network(self.d, url))
+
++=C2=A0 =C2=A0 def test_trusted_network_path(self):
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Ensure trusted_network returns true when the=
+ host and path IS in the list.
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 url =3D "git://Someserver.org/RightPath/foo;re=
+v=3D1;branch=3Dmaster"
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.d.setVar("BB_ALLOWED_NETWORKS", "server1.=
+org *.someserver.org/rightpath server2.org")
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(bb.fetch.trusted_network(self.=
+d, url))
++
++=C2=A0 =C2=A0 def test_untrusted_network_path(self):
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Ensure trusted_network returns False when th=
+e host is in list but the path is wrong.
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 url =3D "git://Someserver.org/WrongPath/foo;re=
+v=3D1;branch=3Dmaster"
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.d.setVar("BB_ALLOWED_NETWORKS", "server1.=
+org *.someserver.org/rightpath server2.org")
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertFalse(bb.fetch.trusted_network(self=
+.d, url))
++
+class URLHandle(unittest.TestCase):
+
+datatable =3D {
+--
+2.34.1
+
+--We82o80aDbstj4Y5lmLt
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div>From: =3D?UTF-8?q?Anders=3D20J=3DC3=3DB8rgensen?=3D &lt;anders.joergen=
+sen@advent.energy&gt;</div>
+<div>Date: Wed, 1 Feb 2023 13:08:11 +0100</div>
+<div>Subject: [PATCH] Add path control to BB_ALLOWED_NETWORKS</div>
+<div>&nbsp;</div>
+<div>Make it able to add path control to the allowed network, so e.g. it is=
+ only possible to access own repositories at a given host</div>
+<div>&nbsp;</div>
+<div>Eg.</div>
+<div>BB_ALLOWED_NETWORKS=3D"bitbucket.org/your_company"</div>
+<div>The fetcher will be able to download from bitbucket.org/your_company b=
+ut not from bitbucket.org/other_company</div>
+<div>---</div>
+<div>&nbsp;.../bitbake-user-manual-ref-variables.rst&nbsp; &nbsp; &nbsp;|&n=
+bsp; 3 +++</div>
+<div>&nbsp;bitbake/lib/bb/fetch2/__init__.py&nbsp; &nbsp; &nbsp; &nbsp; &nb=
+sp; &nbsp; &nbsp;| 23 +++++++++++++++----</div>
+<div>&nbsp;bitbake/lib/bb/tests/fetch.py&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp;| 12 ++++++++++</div>
+<div>&nbsp;3 files changed, 34 insertions(+), 4 deletions(-)</div>
+<div>&nbsp;</div>
+<div>diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-v=
+ariables.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-vari=
+ables.rst</div>
+<div>index af4ff9805c..7942cd2d3a 100644</div>
+<div>--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variable=
+s.rst</div>
+<div>+++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variable=
+s.rst</div>
+<div>@@ -84,6 +84,9 @@ overview of their function and contents.</div>
+<div>&nbsp;</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp;-&nbsp; Attempts to access networks not in =
+the host list cause a failure.</div>
+<div>&nbsp;</div>
+<div>+&nbsp; &nbsp; &nbsp; -&nbsp; Limit path control is also possible like=
+. ::</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BB_ALLOWED_NETWORKS =3D "gi=
+thub.com/your_project bitbucket.org/your_company"</div>
+<div>+</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp;Using :term:`BB_ALLOWED_NETWORKS` in conjun=
+ction with</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp;:term:`PREMIRRORS` is very useful. Adding t=
+he</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp;host you want to use to :term:`PREMIRRORS` =
+results in the source code</div>
+<div>diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2=
+/__init__.py</div>
+<div>index ac557176d7..69ad898464 100644</div>
+<div>--- a/bitbake/lib/bb/fetch2/__init__.py</div>
+<div>+++ b/bitbake/lib/bb/fetch2/__init__.py</div>
+<div>@@ -1158,12 +1158,27 @@ def trusted_network(d, url):</div>
+<div>&nbsp;</div>
+<div>&nbsp; &nbsp; &nbsp;network =3D network.split(':')[0]</div>
+<div>&nbsp; &nbsp; &nbsp;network =3D network.lower()</div>
+<div>+&nbsp; &nbsp; path =3D path.lower()</div>
+<div>+</div>
+<div>+&nbsp; &nbsp; for host_path in trusted_hosts.split(" "):</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; host_path =3D host_path.lower()</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; is_trusted =3D False</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; split_data =3D host_path.split("/", 1)</d=
+iv>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; host =3D split_data[0]</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; trusted_path =3D None</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; if len(split_data) =3D=3D 2:</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; trusted_path =3D "/" + spli=
+t_data[1]</div>
+<div>&nbsp;</div>
+<div>-&nbsp; &nbsp; for host in trusted_hosts.split(" "):</div>
+<div>-&nbsp; &nbsp; &nbsp; &nbsp; host =3D host.lower()</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if host.startswith("*.") and ("." + =
+network).endswith(host[1:]):</div>
+<div>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return True</div>
+<div>-&nbsp; &nbsp; &nbsp; &nbsp; if host =3D=3D network:</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; is_trusted =3D True</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; elif host =3D=3D network:</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; is_trusted =3D True</div>
+<div>+</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; if trusted_path and is_trusted:</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if not path.startswith(trus=
+ted_path):</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; is_trusted =
+=3D False</div>
+<div>+</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; if is_trusted:</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return True</div>
+<div>&nbsp;</div>
+<div>&nbsp; &nbsp; &nbsp;return False</div>
+<div>diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetc=
+h.py</div>
+<div>index 1152e89c0d..c641c1221e 100644</div>
+<div>--- a/bitbake/lib/bb/tests/fetch.py</div>
+<div>+++ b/bitbake/lib/bb/tests/fetch.py</div>
+<div>@@ -1288,6 +1288,18 @@ class TrustedNetworksTest(FetcherTest):</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar("BB_ALLOWED_NETWORKS",=
+ "server1.org server2.org server3.org")</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.assertFalse(bb.fetch.trusted_ne=
+twork(self.d, url))</div>
+<div>&nbsp;</div>
+<div>+&nbsp; &nbsp; def test_trusted_network_path(self):</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; # Ensure trusted_network returns true whe=
+n the host and path IS in the list.</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; url =3D "git://Someserver.org/RightPath/f=
+oo;rev=3D1;branch=3Dmaster"</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.d.setVar("BB_ALLOWED_NETWORKS", "ser=
+ver1.org *.someserver.org/rightpath server2.org")</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.assertTrue(bb.fetch.trusted_network(=
+self.d, url))</div>
+<div>+</div>
+<div>+&nbsp; &nbsp; def test_untrusted_network_path(self):</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; # Ensure trusted_network returns False wh=
+en the host is in list but the path is wrong.</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; url =3D "git://Someserver.org/WrongPath/f=
+oo;rev=3D1;branch=3Dmaster"</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.d.setVar("BB_ALLOWED_NETWORKS", "ser=
+ver1.org *.someserver.org/rightpath server2.org")</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.assertFalse(bb.fetch.trusted_network=
+(self.d, url))</div>
+<div>+</div>
+<div>&nbsp;class URLHandle(unittest.TestCase):</div>
+<div>&nbsp;</div>
+<div>&nbsp; &nbsp; &nbsp;datatable =3D {</div>
+<div>--&nbsp;</div>
+<div>2.34.1</div>
+<div>&nbsp;</div>
+
+--We82o80aDbstj4Y5lmLt--
 
