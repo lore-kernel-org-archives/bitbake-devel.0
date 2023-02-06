@@ -2,114 +2,128 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CA5C636D7
-	for <webhook@archiver.kernel.org>; Wed,  1 Feb 2023 22:20:21 +0000 (UTC)
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
- by mx.groups.io with SMTP id smtpd.web10.187.1675290018120140412
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6B2C05027
+	for <webhook@archiver.kernel.org>; Mon,  6 Feb 2023 14:49:34 +0000 (UTC)
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+ by mx.groups.io with SMTP id smtpd.web10.54974.1675694965316173181
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 01 Feb 2023 14:20:18 -0800
+ Mon, 06 Feb 2023 06:49:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=OVaQC3Qq;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.42, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f42.google.com with SMTP id cl23-20020a17090af69700b0022c745bfdc3so23706pjb.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 14:20:18 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=J7sbnd0E;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.175, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f175.google.com with SMTP id 203so8550110pfx.6
+        for <bitbake-devel@lists.openembedded.org>; Mon, 06 Feb 2023 06:49:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bWrZeB/Xd0+B9SVmrKesxoO7xsGIQAnFNeeXfUbTjVo=;
-        b=OVaQC3QqkNWdm28akjzHcyIZQbgy7wyluYbmaywv3PO2vW14OTT8JmIMlR+Aii77MV
-         5ajtwprV0oAxEGSpFhsvQEjVs56GI8vBh0gN8Z+yYR2H2cVxYSp4v5nDn03tJbH25SU4
-         dKkfnbjUyHQLekRee4pIWRxwTWcwzJA8m/eJYKWJW1NqDkQEWMwYGfbZvUMYeXL8Fo1C
-         phP8Np5lKFhUmn8ui7idyrdFC22z1nc19KCaAoQXK0v5FEL8CfADDGLzklpgylsBE+2D
-         /rdWyJEfsFbDf/wYSgeCnBmQAr5G7lvLcK2PyzCsSVvSW/WhcWoJgZ2idDxsZUfaGnxB
-         BaWA==
+        bh=pK3SjbXBWmFtVR/ArT1F/MwZPxfmmG1xmcW6UY+T6qc=;
+        b=J7sbnd0E5NDloPGDboiQq5+Y0nyI/RGTXRI+2+KSjqWhrdKKPmtKOqTxTXUumntL74
+         nd7qcLPSBhh+hpeIDrkTgkm7gzs3GsfznzoNR9EbbTCazSk+7dUgFSYkYczNNCS+bnBc
+         ZvEtisBKafYeCR0lwgqyqkBQ7+H7aHU9lECIRsEga8mTMukUgwjGhtk1lHXf9iBGS8hX
+         Dc+Au05PX46l7B8UhmTVORQFdT454UqBs/VaIFw+9jqpOxaz8PtrZz4CKJ/kQ3F7iBWy
+         buKM5NqvcYPoZ1JczChr36ljaHyawlrSzPkF9dUJwLGjU9fqAiOM/40Ia7kHngfVi7sh
+         ckGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bWrZeB/Xd0+B9SVmrKesxoO7xsGIQAnFNeeXfUbTjVo=;
-        b=e2fbRkgvpJzBrxbafliZuHNUbfLpYPVBoKqo2zrnYYxUoMjBirDo3JbppezSI4LlZi
-         nMdUfmre2w8eqibQINFKfMDJChETuzVH2h/u3AvHRrPBenikSwv6OhF5RtMZzzhe7dnO
-         s89MGM3cPls91OVLcVbJk2cRffuCkV4h29Cq8oi7S7Gr1mryqdoNTEu/LqUCJcj8eOFs
-         fShdjgJucS01yAKb0Lh+B6LECkYW7/5ZFMxQL5uL4CGUFHzpzaxK4dw/adMUfj/EvMGk
-         65TCEo3DEm/13BEhWOrNxvtOMsD0bx5jRwkXyOYiLHxsAoFxRYr7dD9TDqvT2JVQpiQk
-         qKjw==
-X-Gm-Message-State: AO0yUKU96Hhqs84pIBBQIz5ThxBGl3M+jMI7rAM9Tb5m71zimV+fM238
-	YkfAI2oPLq9gwwOB+zuzgRLNSv67npKt9u19ils=
-X-Google-Smtp-Source: AK7set+a8xTdY8zEaaTgCtXc88o2vHIt2FD12ndi50/pcAuTg1zB0P7j3qyUHcgWnFCXrEfLUmdCvQ==
-X-Received: by 2002:a17:902:c94b:b0:194:4196:7dae with SMTP id i11-20020a170902c94b00b0019441967daemr4088957pla.3.1675290017040;
-        Wed, 01 Feb 2023 14:20:17 -0800 (PST)
+        bh=pK3SjbXBWmFtVR/ArT1F/MwZPxfmmG1xmcW6UY+T6qc=;
+        b=K3hGHJmz94sXVrzY7YIGowWMB4ReHHMKKS8gDFMJMzxVh5e/u+tCILI+q8UHVVvZMB
+         iiZU2/9lg5uZJlZBB3aO3d8mDt/oY44xON8+LrT227mPecFk3iIDx1VJTYIrV8qn6zks
+         jF4mMHu1rHlY+8dYXYN+FiiGBW1Z3y5fYwn59yD2748lhdh9it5GsViE4gwWfvsCnW0P
+         DiEDQs+knxzQTBVbjilazzJN4QPQ+CvRbT/PEabavIzGmrOuq/55/d8MTgtcUXcdOw8m
+         /98hOJoZCVJ5thtiEf9r2oSsA/bC7ZtAVyeb0Nb9msDqExeIs1WEolqfxe4kHI8wdaas
+         /XCg==
+X-Gm-Message-State: AO0yUKUWI2Srd7D3C/fDlPb8La/gbQPXqqu3apKbx7x2UpmORuTEUdc+
+	3oqzuH9T/e7cL3yC8grU+BcG4H375J3PuV1qoQ4=
+X-Google-Smtp-Source: AK7set/xdQ/nLqHwVKKxmvfX6whx4U2Peh11jXBIf9wTp7P0PqVq7cj9o9RQX9HxJND/2q8D5A3lFg==
+X-Received: by 2002:a05:6a00:228d:b0:58d:ac19:8950 with SMTP id f13-20020a056a00228d00b0058dac198950mr13525792pfe.33.1675694963993;
+        Mon, 06 Feb 2023 06:49:23 -0800 (PST)
 Received: from hexa.router0800d9.com (dhcp-72-253-4-112.hawaiiantel.net. [72.253.4.112])
-        by smtp.gmail.com with ESMTPSA id iw12-20020a170903044c00b00186acb14c4asm12294049plb.67.2023.02.01.14.20.16
+        by smtp.gmail.com with ESMTPSA id y5-20020a62b505000000b00588fb6fafe0sm7166994pfe.188.2023.02.06.06.49.22
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Feb 2023 14:20:16 -0800 (PST)
+        Mon, 06 Feb 2023 06:49:23 -0800 (PST)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 2/2] fetch2/git: Clarify the meaning of namespace
-Date: Wed,  1 Feb 2023 12:19:51 -1000
-Message-Id: <86f2fa5261da959cda706c794a0047e5e89d4d6b.1675289845.git.steve@sakoman.com>
+Subject: [bitbake][dunfell][1.46][PATCH] bb/utils: include SSL certificate paths in export_proxies
+Date: Mon,  6 Feb 2023 04:49:18 -1000
+Message-Id: <b858d1efc6f4345a77c28595afa8c85ee1294706.1675694307.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1675289845.git.steve@sakoman.com>
-References: <cover.1675289845.git.steve@sakoman.com>
+In-Reply-To: <cover.1675694307.git.steve@sakoman.com>
+References: <cover.1675694307.git.steve@sakoman.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 01 Feb 2023 22:20:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14371
+ <bitbake-devel@lists.openembedded.org>; Mon, 06 Feb 2023 14:49:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14372
 
-From: Marek Vasut <marex@denx.de>
+From: Ross Burton <ross.burton@arm.com>
 
-Namespace in this context means a branch, a tag, etc., clarify
-it in the description. Also, fix a typo "a any", replace with
-plain "any".
+bb.utils.export_proxies() is a poor-man's alternative for the
+environment setup code in bb/fetch2, but it's used in several places
+where recipes want to download manually (such as cve-update-db-native).
 
-This patch is based of feedback on new applied patch
-d32e5b0e ("fetch2/git: Prevent git fetcher from fetching gitlab repository metadata")
+Notably, export_proxies() doesn't pass on the SSL certificate paths from
+the original environment, so if SSL_CERT_FILE needs to be set (for
+example, in a buildtools environment) then proxies work but SSL doesn't.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
+In an ideal world export_proxies and the same logic in fetch2 would
+merge, but until then we can add the SSL_CERT_ variables and duplicate
+the basic logic: check the datastore first and then the original
+environment for variables.
+
+[ YOCTO #15000 ]
+
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit b4999425c812b25cb359d5163d11e3c1b030dc28)
+(cherry picked from commit c19035e8e71c419c5688a86bfc9c946c96f638e8)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 4 ++--
- lib/bb/fetch2/git.py                                     | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ lib/bb/utils.py | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index e86a4d86..519aec9a 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -424,8 +424,8 @@ This fetcher supports the following parameters:
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 82602466..1a5a0aae 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -1570,21 +1570,22 @@ def set_process_name(name):
  
- -  *"nobranch":* Tells the fetcher to not check the SHA validation for
-    the branch when set to "1". The default is "0". Set this option for
--   the recipe that refers to the commit that is valid for a any namespace
--   instead of the branch.
-+   the recipe that refers to the commit that is valid for any namespace
-+   (branch, tag, ...) instead of the branch.
+ # export common proxies variables from datastore to environment
+ def export_proxies(d):
+-    import os
++    """ export common proxies variables from datastore to environment """
  
- -  *"bareclone":* Tells the fetcher to clone a bare clone into the
-    destination directory without checking out a working tree. Only the
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 37b2a07d..5fff6966 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -44,7 +44,8 @@ Supported SRC_URI options are:
+     variables = ['http_proxy', 'HTTP_PROXY', 'https_proxy', 'HTTPS_PROXY',
+                     'ftp_proxy', 'FTP_PROXY', 'no_proxy', 'NO_PROXY',
+-                    'GIT_PROXY_COMMAND']
++                    'GIT_PROXY_COMMAND', 'SSL_CERT_FILE', 'SSL_CERT_DIR']
+     exported = False
  
- - nobranch
-    Don't check the SHA validation for branch. set this option for the recipe
--   referring to commit which is valid in any namespace instead of branch.
-+   referring to commit which is valid in any namespace (branch, tag, ...)
-+   instead of branch.
-    The default is "0", set nobranch=1 if needed.
+-    for v in variables:
+-        if v in os.environ.keys():
++    origenv = d.getVar("BB_ORIGENV")
++
++    for name in variables:
++        value = d.getVar(name)
++        if not value and origenv:
++            value = origenv.getVar(name)
++        if value:
++            os.environ[name] = value
+             exported = True
+-        else:
+-            v_proxy = d.getVar(v)
+-            if v_proxy is not None:
+-                os.environ[v] = v_proxy
+-                exported = True
  
- - usehead
+     return exported
+ 
 -- 
 2.25.1
 
