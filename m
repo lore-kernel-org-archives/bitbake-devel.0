@@ -1,83 +1,287 @@
-Return-Path: <george.kelly1097@gmail.com>
+Return-Path: <anders.joergensen@advent.energy>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3691EC05027
-	for <webhook@archiver.kernel.org>; Mon,  6 Feb 2023 19:11:56 +0000 (UTC)
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
- by mx.groups.io with SMTP id smtpd.web11.63116.1675710712160790590
- for <bitbake-devel@lists.openembedded.org>;
- Mon, 06 Feb 2023 11:11:52 -0800
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=YCRqR08P;
- spf=pass (domain: gmail.com, ip: 209.85.160.174, mailfrom: george.kelly1097@gmail.com)
-Received: by mail-qt1-f174.google.com with SMTP id g8so14045394qtq.13
-        for <bitbake-devel@lists.openembedded.org>; Mon, 06 Feb 2023 11:11:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EO/OoXHhMozQYC0vTCHk0BKdJOm1GGxtZpiA3FSS3vw=;
-        b=YCRqR08PjVlCuMqSgsMQjsHONl/9LXh2YbU1WsjY1G30Ehp4l64NfGcMkdPNNeQHW7
-         TGJfkdI/peL5axc2WHieNj8x5Krqsu17j+pujDwo+VIplJ1p3pPBSIa3mwYWNgm9dAca
-         3Dpbe3RXUdyzWh9rYVJ4YqmGZg18srg5fYHhi4g3zI6wc29oUPU1hNMqVkJKVPg9s6ld
-         eopKgCc+YZHVomukl8AFlqCmDY7ByJOIytDWd+30NUFCHlS/ZeIHR8/Z2s41deK4Nd1t
-         Hzn5SRdoD2A9ClcqSS6wxogzkKCXeeDuytJ9utbNWlI7xufN7h+Mv9M/qutmsWPocAge
-         2bRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EO/OoXHhMozQYC0vTCHk0BKdJOm1GGxtZpiA3FSS3vw=;
-        b=p4TBn9+L6MVsaDoTF3MzDU9slV2c4xLB+2mAMnX2cjRk70cmCHeh7ngANwH0mQ1ewj
-         nbgExLaELScEPfZbxH85FzMa5T06r7B2P8aENACS2z+xVcSJu781WKt7jBdZpA/gho3U
-         73/qhirrwumrO3I9tZ/AI5uulyIdMKPgMMXi9SuEziKgI5Emf5OX0+c0b2ZX6I0/BKs8
-         fSzWRt4WLQjg/Z33afly4gDeTGsPpC7cqRkqj5XobK809M/utJkRIfUkwj08L3j4UZo5
-         ZRJ83oO5vFwbxavR0jcOX+h/O6tcNNVA/SOSALBPCiPj0ZGjmV6XyY6/R2z/drrdVVSp
-         XaiQ==
-X-Gm-Message-State: AO0yUKW9uah4CaZ4kDvOiM4i4ao/0QXdiLcSpv4cjZ+bUG2sPE2xAvy7
-	5t+lbFbtTfkuCgexUEaZgl7MzuDAWf8=
-X-Google-Smtp-Source: AK7set/g3Q1ZttVhG5dLeAMZBubCMBQ/Xs+lhTwGyiq8t/jUJXc2mhPHIeGbvoLC2WwFh+O4u3G0TQ==
-X-Received: by 2002:a05:622a:44:b0:3b8:6043:daf8 with SMTP id y4-20020a05622a004400b003b86043daf8mr687300qtw.47.1675710710915;
-        Mon, 06 Feb 2023 11:11:50 -0800 (PST)
-Received: from gk-ubuntu.. (172-222-054-105.res.spectrum.com. [172.222.54.105])
-        by smtp.gmail.com with ESMTPSA id i18-20020ac80052000000b003b82489d8acsm7702100qtg.21.2023.02.06.11.11.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Feb 2023 11:11:50 -0800 (PST)
-From: George Kelly <george.kelly1097@gmail.com>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E29C636CC
+	for <webhook@archiver.kernel.org>; Tue,  7 Feb 2023 09:17:50 +0000 (UTC)
+Subject: [PATCH v2] fetch2: Add path control to BB_ALLOWED_NETWORKS #bitbake
 To: bitbake-devel@lists.openembedded.org
-Cc: George Kelly <george.kelly1097@gmail.com>
-Subject: [[bitbake][PATCH]] If you are behind a corporate proxy, the npm fetcher uses the proxy IP address already passed in the list of exports. However, it will error if the proxy injects its own root CA certificate. Thus, the NODE_EXTRA_CA_CERTS environment variable must be passed so the user can include their company's root CA as a trusted CA inside node's certificate store.
-Date: Mon,  6 Feb 2023 14:11:42 -0500
-Message-Id: <20230206191142.17353-1-george.kelly1097@gmail.com>
-X-Mailer: git-send-email 2.37.2
+From: =?UTF-8?B?QW5kZXJzIErDuHJnZW5zZW4=?= <anders.joergensen@advent.energy>
+X-Originating-Location: Copenhagen, Capital Region, DK (89.221.170.34)
+X-Originating-Platform: Linux Chrome 109
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Tue, 07 Feb 2023 01:17:44 -0800
+Message-ID: <tRzV.1675761464866849302.d3iU@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="9cYAOl8i9juUjJRNwllg"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 06 Feb 2023 19:11:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14373
+ <bitbake-devel@lists.openembedded.org>; Tue, 07 Feb 2023 09:17:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14374
 
-Signed-off-by: George Kelly <george.kelly1097@gmail.com>
+--9cYAOl8i9juUjJRNwllg
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+From d08ab52c29cda8969b9f9e198d1ef2fd11d06ca4 Mon Sep 17 00:00:00 2001
+From: =3D?UTF-8?q?Anders=3D20J=3DC3=3DB8rgensen?=3D <anders.joergensen@adve=
+nt.energy>
+Date: Wed, 1 Feb 2023 13:08:11 +0100
+Subject: [PATCH] fetch2: Add path control to BB_ALLOWED_NETWORKS
+
+Make it able to add path control to the allowed network, so e.g. it is only=
+ possible to access own repositories at a given host
+
+Eg.
+BB_ALLOWED_NETWORKS=3D"bitbucket.org/your_company"
+The fetcher will be able to download from bitbucket.org/your_company but no=
+t from bitbucket.org/other_company
+
+Signed-off-by: Anders Joergensen <anders.joergensen@advent.energy>
 ---
- lib/bb/fetch2/__init__.py | 1 +
- 1 file changed, 1 insertion(+)
+.../bitbake-user-manual-ref-variables.xml=C2=A0 =C2=A0 =C2=A0|=C2=A0 5 ++++
+lib/bb/fetch2/__init__.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0| 23 +++++++++++++++----
+lib/bb/tests/fetch.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 12 ++++++++++
+3 files changed, 36 insertions(+), 4 deletions(-)
 
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml =
+b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+index 66d8f844e..b0c129000 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+@@ -125,6 +125,11 @@
+BB_ALLOWED_NETWORKS =3D "*.gnu.org"
+</literallayout>
+</para></listitem>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 <listitem><para>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 Limit path control is also possible like. <literal=
+layout class=3D'monospaced'>
++=C2=A0 =C2=A0 =C2=A0BB_ALLOWED_NETWORKS =3D "github.com/your_project bitbu=
+cket.org/your_company"
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 </literallayout>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 </para></listitem>
+<listitem><para>
+Mirrors not in the host list are skipped and
+logged in debug.
 diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 5a7a6024..747356df 100644
+index 70387f52d..ce5ff6bd2 100644
 --- a/lib/bb/fetch2/__init__.py
 +++ b/lib/bb/fetch2/__init__.py
-@@ -851,6 +851,7 @@ FETCH_EXPORT_VARS = ['HOME', 'PATH',
-                      'DBUS_SESSION_BUS_ADDRESS',
-                      'P4CONFIG',
-                      'SSL_CERT_FILE',
-+                     'NODE_EXTRA_CA_CERTS',
-                      'AWS_PROFILE',
-                      'AWS_ACCESS_KEY_ID',
-                      'AWS_SECRET_ACCESS_KEY',
--- 
-2.37.2
+@@ -1071,12 +1071,27 @@ def trusted_network(d, url):
 
+network =3D network.split(':')[0]
+network =3D network.lower()
++=C2=A0 =C2=A0 path =3D path.lower()
++
++=C2=A0 =C2=A0 for host_path in trusted_hosts.split(" "):
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 host_path =3D host_path.lower()
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D False
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 split_data =3D host_path.split("/", 1)
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 host =3D split_data[0]
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 trusted_path =3D None
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if len(split_data) =3D=3D 2:
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 trusted_path =3D "/" + split_dat=
+a[1]
+
+-=C2=A0 =C2=A0 for host in trusted_hosts.split(" "):
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 host =3D host.lower()
+if host.startswith("*.") and ("." + network).endswith(host[1:]):
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return True
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 if host =3D=3D network:
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D True
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 elif host =3D=3D network:
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D True
++
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if trusted_path and is_trusted:
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if not path.startswith(trusted_p=
+ath):
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 is_trusted =3D Fal=
+se
++
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if is_trusted:
+return True
+
+return False
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 0fd2c0216..7d1651094 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -698,6 +698,18 @@ class TrustedNetworksTest(FetcherTest):
+self.d.setVar("BB_ALLOWED_NETWORKS", "server1.org server2.org server3.org")
+self.assertFalse(bb.fetch.trusted_network(self.d, url))
+
++=C2=A0 =C2=A0 def test_trusted_network_path(self):
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Ensure trusted_network returns true when the=
+ host and path IS in the list.
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 url =3D "git://Someserver.org/RightPath/foo;re=
+v=3D1;branch=3Dmaster"
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.d.setVar("BB_ALLOWED_NETWORKS", "server1.=
+org *.someserver.org/rightpath server2.org")
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(bb.fetch.trusted_network(self.=
+d, url))
++
++=C2=A0 =C2=A0 def test_untrusted_network_path(self):
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Ensure trusted_network returns False when th=
+e host is in list but the path is wrong.
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 url =3D "git://Someserver.org/WrongPath/foo;re=
+v=3D1;branch=3Dmaster"
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.d.setVar("BB_ALLOWED_NETWORKS", "server1.=
+org *.someserver.org/rightpath server2.org")
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertFalse(bb.fetch.trusted_network(self=
+.d, url))
++
+class URLHandle(unittest.TestCase):
+
+datatable =3D {
+--
+2.34.1
+
+--9cYAOl8i9juUjJRNwllg
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div>From d08ab52c29cda8969b9f9e198d1ef2fd11d06ca4 Mon Sep 17 00:00:00 2001=
+</div>
+<div>From: =3D?UTF-8?q?Anders=3D20J=3DC3=3DB8rgensen?=3D &lt;anders.joergen=
+sen@advent.energy&gt;</div>
+<div>Date: Wed, 1 Feb 2023 13:08:11 +0100</div>
+<div>Subject: [PATCH] fetch2: Add path control to BB_ALLOWED_NETWORKS</div>
+<div>&nbsp;</div>
+<div>Make it able to add path control to the allowed network, so e.g. it is=
+ only possible to access own repositories at a given host</div>
+<div>&nbsp;</div>
+<div>Eg.</div>
+<div>BB_ALLOWED_NETWORKS=3D"bitbucket.org/your_company"</div>
+<div>The fetcher will be able to download from bitbucket.org/your_company b=
+ut not from bitbucket.org/other_company</div>
+<div>&nbsp;</div>
+<div>Signed-off-by: Anders Joergensen &lt;anders.joergensen@advent.energy&g=
+t;</div>
+<div>---</div>
+<div>&nbsp;.../bitbake-user-manual-ref-variables.xml&nbsp; &nbsp; &nbsp;|&n=
+bsp; 5 ++++</div>
+<div>&nbsp;lib/bb/fetch2/__init__.py&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbs=
+p; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 23 +++++++++++++++----</div>
+<div>&nbsp;lib/bb/tests/fetch.py&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &=
+nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 12 ++++++++++</div>
+<div>&nbsp;3 files changed, 36 insertions(+), 4 deletions(-)</div>
+<div>&nbsp;</div>
+<div>diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables=
+.xml b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml</div>
+<div>index 66d8f844e..b0c129000 100644</div>
+<div>--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml</d=
+iv>
+<div>+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml</d=
+iv>
+<div>@@ -125,6 +125,11 @@</div>
+<div>&nbsp; &nbsp; &nbsp; BB_ALLOWED_NETWORKS =3D "*.gnu.org"</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/literallayout&gt;</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/para&gt;&lt;/listitem&gt;</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
+ &nbsp; &nbsp; &lt;listitem&gt;&lt;para&gt;</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
+ &nbsp; &nbsp; &nbsp; &nbsp; Limit path control is also possible like. &lt;=
+literallayout class=3D'monospaced'&gt;</div>
+<div>+&nbsp; &nbsp; &nbsp;BB_ALLOWED_NETWORKS =3D "github.com/your_project =
+bitbucket.org/your_company"</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
+ &nbsp; &nbsp; &nbsp; &nbsp; &lt;/literallayout&gt;</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
+ &nbsp; &nbsp; &nbsp; &nbsp; &lt;/para&gt;&lt;/listitem&gt;</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp; &nbsp;&lt;listitem&gt;&lt;para&gt;</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Mirrors not in the host list are skipped =
+and</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;logged in debug.</div>
+<div>diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py</di=
+v>
+<div>index 70387f52d..ce5ff6bd2 100644</div>
+<div>--- a/lib/bb/fetch2/__init__.py</div>
+<div>+++ b/lib/bb/fetch2/__init__.py</div>
+<div>@@ -1071,12 +1071,27 @@ def trusted_network(d, url):</div>
+<div>&nbsp;</div>
+<div>&nbsp; &nbsp; &nbsp;network =3D network.split(':')[0]</div>
+<div>&nbsp; &nbsp; &nbsp;network =3D network.lower()</div>
+<div>+&nbsp; &nbsp; path =3D path.lower()</div>
+<div>+</div>
+<div>+&nbsp; &nbsp; for host_path in trusted_hosts.split(" "):</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; host_path =3D host_path.lower()</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; is_trusted =3D False</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; split_data =3D host_path.split("/", 1)</d=
+iv>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; host =3D split_data[0]</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; trusted_path =3D None</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; if len(split_data) =3D=3D 2:</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; trusted_path =3D "/" + spli=
+t_data[1]</div>
+<div>&nbsp;</div>
+<div>-&nbsp; &nbsp; for host in trusted_hosts.split(" "):</div>
+<div>-&nbsp; &nbsp; &nbsp; &nbsp; host =3D host.lower()</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if host.startswith("*.") and ("." + =
+network).endswith(host[1:]):</div>
+<div>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return True</div>
+<div>-&nbsp; &nbsp; &nbsp; &nbsp; if host =3D=3D network:</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; is_trusted =3D True</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; elif host =3D=3D network:</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; is_trusted =3D True</div>
+<div>+</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; if trusted_path and is_trusted:</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if not path.startswith(trus=
+ted_path):</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; is_trusted =
+=3D False</div>
+<div>+</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; if is_trusted:</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return True</div>
+<div>&nbsp;</div>
+<div>&nbsp; &nbsp; &nbsp;return False</div>
+<div>diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py</div>
+<div>index 0fd2c0216..7d1651094 100644</div>
+<div>--- a/lib/bb/tests/fetch.py</div>
+<div>+++ b/lib/bb/tests/fetch.py</div>
+<div>@@ -698,6 +698,18 @@ class TrustedNetworksTest(FetcherTest):</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar("BB_ALLOWED_NETWORKS",=
+ "server1.org server2.org server3.org")</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.assertFalse(bb.fetch.trusted_ne=
+twork(self.d, url))</div>
+<div>&nbsp;</div>
+<div>+&nbsp; &nbsp; def test_trusted_network_path(self):</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; # Ensure trusted_network returns true whe=
+n the host and path IS in the list.</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; url =3D "git://Someserver.org/RightPath/f=
+oo;rev=3D1;branch=3Dmaster"</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.d.setVar("BB_ALLOWED_NETWORKS", "ser=
+ver1.org *.someserver.org/rightpath server2.org")</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.assertTrue(bb.fetch.trusted_network(=
+self.d, url))</div>
+<div>+</div>
+<div>+&nbsp; &nbsp; def test_untrusted_network_path(self):</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; # Ensure trusted_network returns False wh=
+en the host is in list but the path is wrong.</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; url =3D "git://Someserver.org/WrongPath/f=
+oo;rev=3D1;branch=3Dmaster"</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.d.setVar("BB_ALLOWED_NETWORKS", "ser=
+ver1.org *.someserver.org/rightpath server2.org")</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; self.assertFalse(bb.fetch.trusted_network=
+(self.d, url))</div>
+<div>+</div>
+<div>&nbsp;class URLHandle(unittest.TestCase):</div>
+<div>&nbsp;</div>
+<div>&nbsp; &nbsp; &nbsp;datatable =3D {</div>
+<div>--&nbsp;</div>
+<div>2.34.1</div>
+<div>&nbsp;</div>
+
+--9cYAOl8i9juUjJRNwllg--
 
