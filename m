@@ -1,88 +1,68 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <paulo@myneves.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F30C61DA4
-	for <webhook@archiver.kernel.org>; Fri, 10 Feb 2023 02:38:02 +0000 (UTC)
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
- by mx.groups.io with SMTP id smtpd.web10.4581.1675996680195229238
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129BDC636D4
+	for <webhook@archiver.kernel.org>; Fri, 10 Feb 2023 13:39:46 +0000 (UTC)
+Received: from mail-4317.proton.ch (mail-4317.proton.ch [185.70.43.17])
+ by mx.groups.io with SMTP id smtpd.web11.14536.1676036378903985717
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 09 Feb 2023 18:38:00 -0800
+ Fri, 10 Feb 2023 05:39:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=q3Xtofr8;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.51, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f51.google.com with SMTP id e10-20020a17090a630a00b0022bedd66e6dso8359253pjj.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 09 Feb 2023 18:38:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iDDqUSIven7VRYTaciUIEyZN3/ZpzwyD75cnDjgSV6E=;
-        b=q3Xtofr8HmiRloOLgNMzy8PQ/djydOjaM3Q2L9eFO0Ia4F5oMK3EqL2CZWrQGGnH3/
-         bgc6fzZOLZfjylGvGslD1VqbQ1TsZmTC0rwpLdrXbpYRXlaCKHqbmQI5tJoU/Xl1c7mQ
-         HUQ1zILNY32Gtulp7Pw5h3riedSc9jTUHa0/kOyetewT5vY75aXhfPHTP5PQ7m1qvxO0
-         25lPCTmL5G+gL+v102GlJ6ZsefPQCKGgE39T7yAT5gx+0DXe3X9bO5OaJHlyRPw/41RY
-         ld2zgwjjofs9LsesXHhT8JCwDTrP65TNCzCErxZOx+VZURlbz1DY09aBdXeUWgmra4zQ
-         ++eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iDDqUSIven7VRYTaciUIEyZN3/ZpzwyD75cnDjgSV6E=;
-        b=4p2gd3l1FUQdlWOIsqoZm7areg/KCB2FBbcu9pj+F/Iwyx2v2AHumxIWrGrMAYkla5
-         uO+5VyoI33AVRfPiDlzUqLWSgNSEabzx7JKbacB4ho+aeJkVoDte8bd2nFCtwbcn6GcN
-         nwnuxR5MLKbIM4BYLp9tzbrIeH6g7vAJQh7B6MX7XVf8aBYrqXj1JBSDTcKdfcFfuwCE
-         Ajqe23BH13ynS3LQIekahGAukGKiDQFIL2LNW7aeTJ1lIqFqT/XdZdCKcHOixODu2fR/
-         59XzpCtIS+/o3wS9HYwIZfkpjVeARahTzq7b63OZBPY7auyPpwtCxZkKgpXZ64xIvWn9
-         LbHg==
-X-Gm-Message-State: AO0yUKWEaBIXAGVtostOY2smudJB6Xp5BsWDDhVgquni91SKd+ZvnH2i
-	U3bIXS+Y84gT4EwoSpsZUJltsAoReME+vZI6LAw=
-X-Google-Smtp-Source: AK7set/i5BRLIgFr1sujeLCn7NhePm8YFd6swmRIb4S48SrHgkPpV4WHes3vvxgEj3kHeC3ft7GRLw==
-X-Received: by 2002:a17:90a:7f98:b0:230:f874:3600 with SMTP id m24-20020a17090a7f9800b00230f8743600mr12757832pjl.28.1675996678994;
-        Thu, 09 Feb 2023 18:37:58 -0800 (PST)
-Received: from hexa.router0800d9.com (dhcp-72-253-4-112.hawaiiantel.net. [72.253.4.112])
-        by smtp.gmail.com with ESMTPSA id p13-20020a63fe0d000000b004facf728b19sm1974224pgh.4.2023.02.09.18.37.58
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Feb 2023 18:37:58 -0800 (PST)
-From: Steve Sakoman <steve@sakoman.com>
+ dkim=fail reason="signature has expired" header.i=@myneves.com header.s=protonmail header.b=OcLbxt9Z;
+ spf=pass (domain: myneves.com, ip: 185.70.43.17, mailfrom: paulo@myneves.com)
+Date: Fri, 10 Feb 2023 13:39:26 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myneves.com;
+	s=protonmail; t=1676036375; x=1676295575;
+	bh=xRpanUN3+ZS604yK7epgoSd8VsAiBy9OE8XMTnEZTBE=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=OcLbxt9ZKw8Nfgeqxj9YYZcTYQ+ExkUhDlXS7d/Tjp6TX068qmc3Gg4hmj268mQOA
+	 uD4RID/aYORE8jA4wPCDyrNOV3JzD6j+LH0KkucdnUl5bydH6rI6qkPQlhxt+fgDUG
+	 1F76EzEU8gtpeZnQEkekcex0gMLv9i2cNGOmf7h0EzuCf1InqQCgJeGwLBhGoqCPve
+	 pL6bOjuAiYG8RrDCjLaCRbLvWJ9hbFEd4d+V4F7UdtIqCW+kzEqT5TIPuVaYlvW1ji
+	 VK3cMnTSYFgVy6ZZPuYWWk1pnzZGaVxBfd8jGdksCJpy2EyXZuZcZdBYRG8sdYHMRe
+	 VwQ4PRFo9r31A==
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH 0/3] Pull request (cover letter only)
-Date: Thu,  9 Feb 2023 16:37:55 -1000
-Message-Id: <cover.1675996551.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.25.1
+From: Paulo Neves <paulo@myneves.com>
+Cc: Paulo Neves <paulo@myneves.com>
+Subject: [PATCH 1/3] tests: Remove redundant lfs=1 URI paramter
+Message-ID: <20230210133921.1268885-1-paulo@myneves.com>
+Feedback-ID: 59941854:user:proton
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 10 Feb 2023 02:38:02 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14390
+ <bitbake-devel@lists.openembedded.org>; Fri, 10 Feb 2023 13:39:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14391
 
-This should be the final pull request for the dunfell 3.1.23 release.
+lfs=3D1 is assumed unless explicitly disabled with lfs=3D0
+This way we test the implicit case, which is also the
+default for most users.
 
-The following changes since commit c16d364dbf68d2a500fecaf8d6e6d62b11475d9f:
+Signed-off-by: Paulo Neves <paulo@myneves.com>
+---
+ lib/bb/tests/fetch.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  bb/utils: include SSL certificate paths in export_proxies (2023-02-06 23:42:50 +0000)
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index f3890321d..122d7e05f 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -2235,7 +2235,7 @@ class GitLfsTest(FetcherTest):
+     def test_lfs_enabled(self):
+         import shutil
 
-are available in the Git repository at:
+-        uri =3D 'git://%s;protocol=3Dfile;lfs=3D1;branch=3Dmaster' % self.=
+srcdir
++        uri =3D 'git://%s;protocol=3Dfile;branch=3Dmaster' % self.srcdir
+         self.d.setVar('SRC_URI', uri)
 
-  https://git.openembedded.org/bitbake-contrib stable/1.46-next
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/1.46-next
+         # Careful: suppress initial attempt at downloading until
+--
+2.34.1
 
-Charlie Davies (1):
-  bitbake: fetch/git: use shlex.quote() to support spaces in SRC_URI url
-
-Marek Vasut (2):
-  fetch2/git: Prevent git fetcher from fetching gitlab repository
-    metadata
-  fetch2/git: Clarify the meaning of namespace
-
- .../bitbake-user-manual-fetching.rst          |  4 ++--
- lib/bb/fetch2/git.py                          | 20 ++++++++++++-------
- 2 files changed, 15 insertions(+), 9 deletions(-)
-
--- 
-2.25.1
 
 
