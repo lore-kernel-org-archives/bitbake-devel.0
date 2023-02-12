@@ -2,70 +2,67 @@ Return-Path: <pedro.miguel.baptista@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08CBC636CC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFACCC61DA4
 	for <webhook@archiver.kernel.org>; Sun, 12 Feb 2023 00:21:01 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.2157.1676161256154660641
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.2156.1676161253844072769
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 11 Feb 2023 16:20:56 -0800
+ Sat, 11 Feb 2023 16:20:54 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=CBEsz4xD;
- spf=pass (domain: gmail.com, ip: 209.85.128.44, mailfrom: pedro.miguel.baptista@gmail.com)
-Received: by mail-wm1-f44.google.com with SMTP id j32-20020a05600c1c2000b003dc4fd6e61dso8840464wms.5
-        for <bitbake-devel@lists.openembedded.org>; Sat, 11 Feb 2023 16:20:55 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=fJ3pxfKx;
+ spf=pass (domain: gmail.com, ip: 209.85.128.52, mailfrom: pedro.miguel.baptista@gmail.com)
+Received: by mail-wm1-f52.google.com with SMTP id m20-20020a05600c3b1400b003e1e754657aso399924wms.2
+        for <bitbake-devel@lists.openembedded.org>; Sat, 11 Feb 2023 16:20:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LYj6W78EGBPa+ORRMzTskf/tadaf1RKLYnq2oFufxB8=;
-        b=CBEsz4xDDUN3b/WI1cHhI2Lt1Oy6Os2fEI5GhtJ4QaXt7NU9zK2sh7jsR7+6NF5lF8
-         9m1qXlOtN4gLDA5aZJ4LvyneCCMC/fj7H2ISqKWZ3Vn/6gS0xOH3o5PMvBRmBfyHVEHg
-         LGWTT2s/EUqn6QobtduvdNfSTaYvnBy+c05RvD8EZXGFJT/r7U03WZPUFSMs1OMrn5lF
-         k7gk8Z0nryS4z2Yle10SXo7aBEyRDkHeeHZ11WNBnvoNpRFRK/oaRHlj3TSoBSFsCogQ
-         p5cUkJ0u/5mEs5YZ8FalHA5gTQnjOFRqO15LskIyrxvjaGF4wKaMIil7+uJSi5U++wjo
-         zSRg==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=u4yMormXEVWKkqm2ofu7rt1tZdqU1ALrYK9tYrfatM8=;
+        b=fJ3pxfKxH2oH/2u++OoFAyCqIRNrQDtjRRVzQtQJfQtscz86MGL7rlK2nXu9v6Uc2R
+         Z7wJi4tpxML/5FUEyAmNxo/9HVs3FkSAsp4Nl1chtgtwRg2IwCTv5c+Azvz2/aFnv/90
+         3noFNSd4Gw2bBbyzTZMGwJJz/cV4PD6nvXv5VUnvpz/KHLCLznY7JWBt8KiHGBuVjYuJ
+         5ZDUqcqnhAHic9IsyVKjmoCcxD2SdGomLUL/uU9oMx/iu6i99Gvvp1XEsaGv6UZ1ajYn
+         HsATmujRwN4YHxDNoeF2GRwlbrOFmHVDS8PP9KNBUv85+/7g/lBZMC45PA1ckDmkn5ZL
+         R2Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LYj6W78EGBPa+ORRMzTskf/tadaf1RKLYnq2oFufxB8=;
-        b=nNvlvdDoqqNxPquRSU5c9BKKkMrz1PbQv7oqydJEZX/7XFAzGRPst+uRAxXkwcYCsp
-         VBQo7gvfKQc4yfWXl+4hilPTdH0npn7g/4pfJdhCtwBYxvoMT9rPKXH3fLNvSHGNTY3w
-         pDP5jyFBjmls1mBD4y415o0EP4OfytVuH7cdjKf6O+ez2vSSdwB3FCOzDfbo5Mt9A2JC
-         +XqMd96kN2T9vPqttf1zHzOhPRzzY62txc4oTpQrw7ndWL9WoFZa3csJHK3PrRWklKbg
-         dAQSvuYyqSfcJHPrs3lQTkL9Rgt70vOf/YxKx9Ruo6sxQDkuOjGPR4wVoJsjgD3LEl92
-         MAlA==
-X-Gm-Message-State: AO0yUKWObDF6VAPSIx1UiZqM6pblLuPLf9Vm5yR7LkG07JyTpBiOD63V
-	JeOy5n6IJI9XEm61qzxX08qG289RsbY=
-X-Google-Smtp-Source: AK7set86kBN+J8g4airS8SzzEXi+BrQg/Wsgq9A4AOzzjlfJt3Fir3uUj2zCHwffyzOAP35f8Aiu5Q==
-X-Received: by 2002:a05:600c:44c9:b0:3df:f9e9:7600 with SMTP id f9-20020a05600c44c900b003dff9e97600mr16156255wmo.25.1676161254488;
-        Sat, 11 Feb 2023 16:20:54 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u4yMormXEVWKkqm2ofu7rt1tZdqU1ALrYK9tYrfatM8=;
+        b=m1qLrJR145uASoWHx+YxK1JL2UXgQ6ykKdYoonQW6H54izua8+LGD8iWckVY+uDh3L
+         4AMFC+vQGLE7VIVfAhF/l7iNPmbC4Bcoa34nul6Lx6lqp7080pKOszr21n2EBL0i0oML
+         dSSyDWtOCxcrdAAFDyNpsAKvdo2HEQNVUCVw2VT6E7qo4xj4vebftiJ0jTosE9wTGK+5
+         rNkcojY2numPbPNHyGsuEKX9zTrCMVXo/E/b/KG/M/7z4biYIDB9XGJ6MkZ8gkCHIe3M
+         5T17AlTWoyRV9iUG+dUemS+xGFuZyrIElicNDiS/8Mh+YYa7IJbLnt4TKh2R7SZEhiJS
+         V2ew==
+X-Gm-Message-State: AO0yUKVH8YsD6RqJfS+Tn0jFR0NBeBCQNYAnSQL1zfEHlvtmewSo6VH5
+	RlEMEsaJOzVZTKZEXdZZBRzrE9sffcw=
+X-Google-Smtp-Source: AK7set/JLzhOIgEnMjR3dhTZ0c0UywE3L3Aj9kjSdl8of5WFssUKg9SFfCk5g7TFmg8Ms7uKpR4utA==
+X-Received: by 2002:a05:600c:998:b0:3dc:59ee:7978 with SMTP id w24-20020a05600c099800b003dc59ee7978mr15739639wmp.38.1676161252029;
+        Sat, 11 Feb 2023 16:20:52 -0800 (PST)
 Received: from localhost.localdomain (dsl-120-219.bl27.telepac.pt. [176.79.120.219])
-        by smtp.gmail.com with ESMTPSA id s21-20020a1cf215000000b003e001119927sm12232081wmc.24.2023.02.11.16.20.53
+        by smtp.gmail.com with ESMTPSA id s21-20020a1cf215000000b003e001119927sm12232081wmc.24.2023.02.11.16.20.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Feb 2023 16:20:54 -0800 (PST)
+        Sat, 11 Feb 2023 16:20:51 -0800 (PST)
 From: pedro.miguel.baptista@gmail.com
 To: bitbake-devel@lists.openembedded.org
 Cc: Pedro Baptista <pedro.miguel.baptista@gmail.com>
-Subject: [PATCH 2/2] action.py: add BUILDDIR in bblayers_conf path for remove-layer
-Date: Sun, 12 Feb 2023 00:20:24 +0000
-Message-Id: <20230212002024.5430-2-pedro.miguel.baptista@gmail.com>
+Subject: [PATCH 1/2] action.py: add BUILDDIR in bblayers_conf path for add-layer
+Date: Sun, 12 Feb 2023 00:20:23 +0000
+Message-Id: <20230212002024.5430-1-pedro.miguel.baptista@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230212002024.5430-1-pedro.miguel.baptista@gmail.com>
-References: <20230212002024.5430-1-pedro.miguel.baptista@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sun, 12 Feb 2023 00:21:01 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14395
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14394
 
 From: Pedro Baptista <pedro.miguel.baptista@gmail.com>
 
-By including the full path to bblayers.conf the remove-layer
+By including the full path to bblayers.conf the add-layer
 command can be executed from any location, not only from the
 build directory.
 
@@ -75,13 +72,13 @@ Signed-off-by: Pedro Baptista <pedro.miguel.baptista@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/bitbake/lib/bblayers/action.py b/bitbake/lib/bblayers/action.py
-index 76a2c5acd2..f26b34d0cb 100644
+index 454c251410..76a2c5acd2 100644
 --- a/bitbake/lib/bblayers/action.py
 +++ b/bitbake/lib/bblayers/action.py
-@@ -65,7 +65,7 @@ class ActionPlugin(LayerPlugin):
+@@ -37,7 +37,7 @@ class ActionPlugin(LayerPlugin):
+                 sys.stderr.write("Specified layer directory %s doesn't contain a conf/layer.conf file\n" % layerdir)
+                 return 1
  
-     def do_remove_layer(self, args):
-         """Remove one or more layers from bblayers.conf."""
 -        bblayers_conf = os.path.join('conf', 'bblayers.conf')
 +        bblayers_conf = os.path.join(os.environ['BUILDDIR'], 'conf', 'bblayers.conf')
          if not os.path.exists(bblayers_conf):
