@@ -1,175 +1,140 @@
-Return-Path: <chwprzem@amazon.com>
+Return-Path: <chris.laplante@agilent.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C81C6379F
-	for <webhook@archiver.kernel.org>; Mon, 13 Feb 2023 14:29:28 +0000 (UTC)
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
- by mx.groups.io with SMTP id smtpd.web10.15452.1676298560935741629
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6C5C636D4
+	for <webhook@archiver.kernel.org>; Mon, 13 Feb 2023 15:50:08 +0000 (UTC)
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (NAM11-CO1-obe.outbound.protection.outlook.com [40.107.220.82])
+ by mx.groups.io with SMTP id smtpd.web10.17801.1676303401502025171
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 13 Feb 2023 06:29:21 -0800
+ Mon, 13 Feb 2023 07:50:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@amazon.com header.s=amazon201209 header.b=Z+KKhnhL;
- spf=pass (domain: amazon.com, ip: 99.78.197.217, mailfrom: prvs=401ade437=chwprzem@amazon.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1676298561; x=1707834561;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   mime-version:subject;
-  bh=UFtvX77fkOoDUQRdg03CLYwXDDehhZwqIwPD65VYvsk=;
-  b=Z+KKhnhLRbCas1KEvuvgKHnUJEi7iZ52+I8r2UTLC8LepsO7tcD+1DgE
-   HAFgKq0a0POLlprg/em2Zn+idy9QAoALoXm0AhFuL/kY4SMNHqnGCZByp
-   OHj0odXRmbAy6HP7tSpNZIbH7qSLtrmdIP6uIw2q+1//SQ53PE/tTiBDk
-   U=;
-X-IronPort-AV: E=Sophos;i="5.97,294,1669075200"; 
-   d="scan'208,217";a="181257897"
-Subject: Re: [bitbake-devel] ERROR: unable to connect to bitbake server
-Thread-Topic: [bitbake-devel] ERROR: unable to connect to bitbake server
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-a893d89c.us-west-2.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 14:29:20 +0000
-Received: from EX13MTAUWB002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-	by email-inbound-relay-pdx-2b-m6i4x-a893d89c.us-west-2.amazon.com (Postfix) with ESMTPS id 204F040D42;
-	Mon, 13 Feb 2023 14:29:20 +0000 (UTC)
-Received: from EX19D004UWB001.ant.amazon.com (10.13.138.107) by
- EX13MTAUWB002.ant.amazon.com (10.43.161.202) with Microsoft SMTP Server (TLS)
- id 15.0.1497.45; Mon, 13 Feb 2023 14:29:19 +0000
-Received: from EX19D004UWB001.ant.amazon.com (10.13.138.107) by
- EX19D004UWB001.ant.amazon.com (10.13.138.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.24;
- Mon, 13 Feb 2023 14:29:18 +0000
-Received: from EX19D004UWB001.ant.amazon.com ([fe80::a32c:93ce:c070:c2be]) by
- EX19D004UWB001.ant.amazon.com ([fe80::a32c:93ce:c070:c2be%5]) with mapi id
- 15.02.1118.024; Mon, 13 Feb 2023 14:29:18 +0000
-From: "Chwiala, Przemyslaw [C]" <chwprzem@amazon.com>
-To: Mohammed Hassan <hassan@blazeautomation.com>,
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=wDGF8dpk;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.220.82, mailfrom: chris.laplante@agilent.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Pf+ZtKrD//0Pm5eeMPVtWoDF2wjgdjdgieIMeDo945276zBjkrp3CN2Jm6zq/dm833Wmvl2vv6abza73vXPk/m2l626InKEFurX9CXzH470IHlZvlfnMocJnTnH/BheN5c8Z+2p5D2jSrRUEWi6WRyo52ATxiZlty5vRKi1/XSBAfYshYDMWr3d5bx+l8Rp2CJFK0wry0MJtdXkAu8L+58ywkR21v/DS/xelHoUlNBiv3Z51iEM6iTh0ve37WrRqsW7BYp0SZEbpfSVDLtydSxpJwOs5F8zLI9YGDsHZ5sGH7hIBsyHOVPg5gmj91Y0ynNlgBjqFDtOcfd1nw6VuIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vyXXv3M89Rw5+b429n3r1HWhI5zJqllVwwXaZb1FIOo=;
+ b=fjrpR6fdMb+W9dk/t6mxkKgVjQxqODJZuUmBvJlcXDGzZvQ2X5nkodr0HypfeMx+P5uw3oJhp3gBGKXI+f48pyCnAXvOUHg+0LES/2+RChY9pGL/Eq9nUR6dolgZSvCxJWN+nTj3s58irBRFsUF9afzvjsQpbi2R8lLw9bStvtDDnIhVE/Ht5oFNQ4nhtmfIvGDpHx7ROGxbet0tcrQKHbO6r/yXAkrOXzWNxWc1H3H8lAALod+xbOK1fP6aLC8j8Aa0FkCKWBK9nDTv1zvY99R9SuDXnqjWs16wkpPYZTldEy7kBmxnhWDp/kQYG0UPDn7DLX0PUSvw2KVCvviJZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
+ dkim=pass header.d=agilent.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vyXXv3M89Rw5+b429n3r1HWhI5zJqllVwwXaZb1FIOo=;
+ b=wDGF8dpkfYpMwBU5Cz6/AS2DBWr/Rt0Mu8ddNBtfmfEFVCqbUYBBajQLP2kGgZwWaTggydDhPQJcCG2opxS+DuYbxoO0V6S4U94z/imMuPhjlbNf3x1AwWIjqc6uVTzV2+7dHGOuuo7IEs9vuG3qw1u7+fNLN3yI+Y/KcFBkb+efws8adu2rn/XzGyzyig8ckEpr92L9hODOK99gqvAgEzz1QjM+0ihoE4LufbkXsEO3/jA9/x2oXdYgnfvOlz9NcwRswW0EPmKAHkGrVoVzzciza50AZ9fiXkLA+BTpp6+vPkLVnHY+rVgj0hv1qpArMcxW/MTs0BG2whhZL1wvMA==
+Received: from DM8PR12MB5430.namprd12.prod.outlook.com (2603:10b6:8:28::6) by
+ BN9PR12MB5384.namprd12.prod.outlook.com (2603:10b6:408:105::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.24; Mon, 13 Feb
+ 2023 15:49:58 +0000
+Received: from DM8PR12MB5430.namprd12.prod.outlook.com
+ ([fe80::b856:1ad9:66fa:9560]) by DM8PR12MB5430.namprd12.prod.outlook.com
+ ([fe80::b856:1ad9:66fa:9560%8]) with mapi id 15.20.6086.024; Mon, 13 Feb 2023
+ 15:49:58 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: "chwprzem@amazon.com" <chwprzem@amazon.com>,
 	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-CC: Mohan Krishna Chepuri <mohan@blazeautomation.com>
-Thread-Index: AQHZP7da7iSjd5HggEa35wN2qssrUq7M74rF
-Date: Mon, 13 Feb 2023 14:29:18 +0000
-Message-ID: <5528f6fa6355443289b3cce7519429ca@amazon.com>
-References: <CAJz8rkeBnzNzKDXC82vCKZBCJpq6entnDO8cA9--N7C6S_YTXw@mail.gmail.com>
-In-Reply-To: <CAJz8rkeBnzNzKDXC82vCKZBCJpq6entnDO8cA9--N7C6S_YTXw@mail.gmail.com>
-Accept-Language: en-US, pl-PL
+Subject: RE: Custom event handler does not work
+Thread-Topic: Custom event handler does not work
+Thread-Index: AQHZP7RYyoxRvoWPbU626qqFDdT3lK7NBfOw
+Date: Mon, 13 Feb 2023 15:49:58 +0000
+Message-ID: 
+ <DM8PR12MB543087393CEA69A61F5860CA8BDD9@DM8PR12MB5430.namprd12.prod.outlook.com>
+References: <1dd67709f24d4a02b9597a7c7ef30b49@amazon.com>
+In-Reply-To: <1dd67709f24d4a02b9597a7c7ef30b49@amazon.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.43.160.120]
-Content-Type: multipart/alternative;
-	boundary="_000_5528f6fa6355443289b3cce7519429caamazoncom_"
+msip_labels: 
+ MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ActionId=c16f04d3-e158-4ed7-b14a-3cfa85e47935;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ContentBits=0;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Enabled=true;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Method=Standard;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Name=General;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SetDate=2023-02-13T15:48:56Z;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SiteId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=agilent.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR12MB5430:EE_|BN9PR12MB5384:EE_
+x-ms-office365-filtering-correlation-id: 33b0d5e0-4426-4b09-8c07-08db0dd9f582
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ cgR0jyN8PuoP1aG3QHAOItchDoQWmK5co7LcmLvU8SkLRl3t55323P0GxnBGItz6i2J+2Le7r1sSsWRm2CB/OseJ5L541vua28DlVV7r9HgNtEIIRbA/PmFdRlyL7OQvdYNDsECqv4bVdjdxOouhaabO24rytTJD7riMZNyIoG5PgBGaKNOd6ir/MM1F4dLCL/LckpmL87EbNGrocSiAwF8co9ZzLB4nsDt/ZEKb5SUbd9ba0HapF2O5RrT2aTdCYq/hz/OU9Z27ywqROG3RS85Ef/FpoIWBFC0XTwe9SQzJaPgHtPRQZJmOzj8yNBGUMTFDALw28vTg+sawiNBCg1Mf9mSI6yKt/2BQnOHZu+risHrMM6+P8UX8q/nxcFWHlSjPvJmnRDRw0PnA4NeLyo6WdXEKgAV3y/Q584iV498gcianCtlwUprtrG05ajhVQ/3g13RDTouWxmKY1EWvvAOIttKQDFAt0uy/c0ocBYClAXBBnS6nPGPpMEsZW3v8GDDnRVa/OlWD4HJQhukejDpIeFskRalANIxYULfnVl1IPVTtDr+vvBW+znqxbrdEs4QCBy2+TO+sYZkJAPwxX15PJsBRy1DsvOkGb3bKTeaD2bF9hbcSRSEwxLiVakmYDIsSD/s5Bjlfsj8asAq9I/931adaDQHPW7/c42bB8xo0gwslN9DhvUcQKYuHlYMVPcsydk0JK76TJOXYJCU6ag==
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5430.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(346002)(376002)(366004)(396003)(39860400002)(29502001)(451199018)(8676002)(122000001)(316002)(45080400002)(38070700005)(55016003)(41300700001)(110136005)(38100700002)(66476007)(66556008)(66446008)(76116006)(66946007)(64756008)(478600001)(33656002)(2906002)(71200400001)(8936002)(4744005)(5660300002)(52536014)(9686003)(7696005)(6506007)(186003)(86362001)(966005)(26005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?iso-8859-1?Q?M8SGKvZnO64C1O0dek3IYivydOaZQGqCI/utzd9+z0J5tJN+4EQ5/dQ0qU?=
+ =?iso-8859-1?Q?djCXSdc1QsM9m8lfv5IDlvwVo77m4BF3LCqwexAxvyp0GjmOIP2EO3iUAL?=
+ =?iso-8859-1?Q?lrwHU7Il1ZDTF4EPK/7Cah0igVDeANweYkiC7VzjPxwKzPBHxHXWtGB4Rl?=
+ =?iso-8859-1?Q?xZgm3K5TapVnZ4W+dVO+luK+ZrppfVUm2Nd+p86muqAaraQBkrDEKmWSye?=
+ =?iso-8859-1?Q?z32Y+HeEsDYUnlvtIEG3pqiaautvVHYrlO1s2x65+PVnJS+7j1LoilOFJz?=
+ =?iso-8859-1?Q?plSis4KQPXQVJ8vpvFRBU3cz4RMVD8svmlA7dhzZ8vh85quqp4HRxljnrs?=
+ =?iso-8859-1?Q?Fm0SMXHyvpaXYepPRqNTZUKsT/Xs2d8MVz7atyytO6+7eqOjzr50+wsx0Q?=
+ =?iso-8859-1?Q?GLl7zrrDaR9wyzdlq/W82Nqm6d4AUCUdGSGFPvLPOjqAdnJfEdl/54mmU/?=
+ =?iso-8859-1?Q?kcfQVPBjx1nox8cckCMyZW9SPtNF/WsIXyfu5UHH8hwWGocYPHM37jwNOn?=
+ =?iso-8859-1?Q?bTVMxdkmMHecFvxxt0l4W2L4rW6U3vDB/8Gx59hhEIC8ap/jYyzQ4YyJbi?=
+ =?iso-8859-1?Q?WrSrBdAZPlzrt27GmdabwrIsybo4y4Onb/qzMQFeyjrps6SdsMXITAXF/T?=
+ =?iso-8859-1?Q?D6AbyKsWzjN9R9KTciLDzGsydFXV6VtccdYabCCMIoiqhkzdIqydUmcPmt?=
+ =?iso-8859-1?Q?HEI5IJzFBdsvr3JBBZ8XL/nYcM6wr09yf76QlqPq+V0w7vU81W908kB+Az?=
+ =?iso-8859-1?Q?elGYOTrht4GjRzUsl97j1wT08iQBBYOJPC6StTPjnLgfEOFX0lAj8zbsZv?=
+ =?iso-8859-1?Q?Z5h8J1S5ooKVzcF2NfXTEzi93oKAHqdFkgxFRx/XrRWxbDwOyhEjQKknFT?=
+ =?iso-8859-1?Q?2nCWkNLCcaC0ceU63jjVFSWn7H8OLwidphNVNY/eaA8bzMZq4FG9AaGuUj?=
+ =?iso-8859-1?Q?RHbLolH88QXfB+xAoMkDPrDAbebEGHpsavZ3rONH1YdbKj2v8toj8lreBc?=
+ =?iso-8859-1?Q?RaDW5uQFABJbVcpg+LJonQ6OPPs4BF4ZPjAUvLMSsd3TT7QDPUI5DhDhkg?=
+ =?iso-8859-1?Q?TJFemd3QQGuvOp5fgRx4Rtwo8C/ZvFxyGEEOZoub03IKo5s/s8pQpQ7bPM?=
+ =?iso-8859-1?Q?Qkop4YmMsT6ik2rDIe5AbPGeELBWa7KayB9SvPb5aUvBOoJHzaFQGX8849?=
+ =?iso-8859-1?Q?LI/ZyYqD8GSQGQn84ybRrJ8nC7WjP0FIa57X/bPINeq+kUXANg/F6msIvc?=
+ =?iso-8859-1?Q?3dBu83mo2zdltkuT6LLO+KHC5IEtsyMncYlq/pskK40DvoAIrXvE+i9MaO?=
+ =?iso-8859-1?Q?73Q9azwq8zOIm+ibNYo27O+Yz9Gh/4P3ndc4ItL6d+NpgGGjaXcRWH/BhY?=
+ =?iso-8859-1?Q?QMY0XYpIUICCaGwZ1HB3E2wYGf1ci2DmfDfqi5gDOyi+0vabg1dnnmVvBA?=
+ =?iso-8859-1?Q?QhN2cIYoX16erxgFVDRuTAAJGYrGq+N3HIcTSsB7GImpsFejeKt11weX3b?=
+ =?iso-8859-1?Q?EB549jx+tkgCj4rIWcKLn2XSK5iYuhsDECQU3xq3al5kwTxgNooJ5kcBWo?=
+ =?iso-8859-1?Q?JIeHJw3xpZPbkV9ZZdjRW52A6p6qXrqR9TlVFXHpZ2fhsOJ4COKb6wQVgy?=
+ =?iso-8859-1?Q?MmeLEoRbjFRRupG6mkh4MEXHL8S2y+SaKeIH7zZhPnVzhF3Qu+vQBq+Q?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR12MB5430.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33b0d5e0-4426-4b09-8c07-08db0dd9f582
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2023 15:49:58.0782
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 36CCI6EnfXppQit61TPZw6Avf4ovcyyjLG9rB5CYI5pdFZR0Gbk4aGvdlwNottocK3fk0sNOFMsYhhUEuwe9AxNFHUou+BH1cLeWtqcHlKg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5384
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 13 Feb 2023 14:29:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14401
+ <bitbake-devel@lists.openembedded.org>; Mon, 13 Feb 2023 15:50:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14402
 
---_000_5528f6fa6355443289b3cce7519429caamazoncom_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+> I'm working on Yocto image based on=A0Kirkstone relese. I'm=A0trying to a=
+dd a
+> custom event handler to my image, to be able to catch=A0BuildCompleted
+> or=A0CookerExit event. Unfortunately I'm not able to catch those events a=
+s well
+> as any other event from list in
+> the=A0documentation=A0https://nam12.safelinks.protection.outlook.com/?url=
+=3Dhtt
+> ps%3A%2F%2Fdocs.yoctoproject.org%2Fbitbake%2F2.2%2Fbitbake-user-
+> manual%2Fbitbake-user-manual-
+> metadata.html%23events&data=3D05%7C01%7Cchris.laplante%40agilent.com%
+> 7C54cb5a85a0a141a4ce2d08db0dcc7ca0%7Ca9c0bc098b46420693512ba12f
+> b4a5c0%7C0%7C0%7C638118945468553260%7CUnknown%7CTWFpbGZsb3
+> d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0
+> %3D%7C3000%7C%7C%7C&sdata=3DlAYX30mAIMLWWaPWINyzQBDF%2FJ4SjB
+> EWpfeaqHF7oB8%3D&reserved=3D0
 
-Try to remove .lock files (if any) from your build directory
+IIRC those events need to be caught in a bbclass that you install globally =
+(e.g. using INHERIT in local.conf). They won't work at a per-recipe level.
 
-________________________________
-From: bitbake-devel@lists.openembedded.org <bitbake-devel@lists.openembedde=
-d.org> on behalf of Mohammed Hassan <hassan@blazeautomation.com>
-Sent: Monday, February 13, 2023 3:26:55 PM
-To: bitbake-devel@lists.openembedded.org
-Cc: Mohan Krishna Chepuri
-Subject: [EXTERNAL] [bitbake-devel] ERROR: unable to connect to bitbake ser=
-ver
-
-
-CAUTION: This email originated from outside of the organization. Do not cli=
-ck links or open attachments unless you can confirm the sender and know the=
- content is safe.
-
-
-
-Hi,
-
-I am trying to build an image file for my project but fail at the bitbake s=
-tep. but I receive the below error message.
-
-ERROR: Unable to connect to bitbake server, or start one (server startup fa=
-ilures would be in bitbake-cookerdaemon.log).
-
-Previously my senior had built the image and he has transferred the pre bui=
-lt zip file to me to make add custom packages as per our needs which i have=
- done but fail when connecting to the bitbake server.
-
-I think it is an issue with the TOKEN that gets authenticated when connecti=
-ng to the server but i get no error message regarding token mismatch.
-
-Please guide me.
-
-Thank you
-
---_000_5528f6fa6355443289b3cce7519429caamazoncom_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-</head>
-<body>
-<style type=3D"text/css" style=3D"display:none;"><!-- P {margin-top:0;margi=
-n-bottom:0;} --></style>
-<div id=3D"divtagdefaultwrapper" style=3D"font-size:12pt;color:#000000;font=
--family:Calibri,Helvetica,sans-serif;" dir=3D"ltr">
-<p>Try to remove .lock files (if any) from your build directory</p>
-</div>
-<hr style=3D"display:inline-block;width:98%" tabindex=3D"-1">
-<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" st=
-yle=3D"font-size:11pt" color=3D"#000000"><b>From:</b> bitbake-devel@lists.o=
-penembedded.org &lt;bitbake-devel@lists.openembedded.org&gt; on behalf of M=
-ohammed Hassan &lt;hassan@blazeautomation.com&gt;<br>
-<b>Sent:</b> Monday, February 13, 2023 3:26:55 PM<br>
-<b>To:</b> bitbake-devel@lists.openembedded.org<br>
-<b>Cc:</b> Mohan Krishna Chepuri<br>
-<b>Subject:</b> [EXTERNAL] [bitbake-devel] ERROR: unable to connect to bitb=
-ake server</font>
-<div>&nbsp;</div>
-</div>
-<div>
-<div class=3D"WordSection1">
-<table class=3D"MsoTableGrid" border=3D"1" cellspacing=3D"0" cellpadding=3D=
-"0" style=3D"border-collapse:collapse;border:none">
-<tbody>
-<tr style=3D"height:15.25pt">
-<td width=3D"711" valign=3D"top" style=3D"width:842.35pt;border:solid #ED7D=
-31 1.5pt;padding:0in 5.4pt 0in 5.4pt;height:15.25pt">
-<p><strong><span style=3D"background:#FFFF99">CAUTION</span></strong><span =
-style=3D"background:#FFFF99">: This email originated from outside of the or=
-ganization. Do not click links or open attachments unless you can confirm t=
-he sender and know the content is safe.</span><o:p></o:p></p>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<br>
-<div>
-<div dir=3D"ltr">
-<p>Hi,</p>
-<p>I am trying to build an image file for my project but fail at the bitbak=
-e step. but I receive the below error message.</p>
-<p>ERROR: Unable to connect to bitbake server, or start one (server startup=
- failures would be in bitbake-cookerdaemon.log).</p>
-<p>Previously my senior had built the image and he has transferred the pre =
-built zip file to me to make add custom packages as per our needs which i h=
-ave done but fail when connecting to the bitbake server.</p>
-<p>I think it is an issue with the TOKEN that gets authenticated when conne=
-cting to the server but i get no error message regarding token mismatch.</p=
->
-<p>Please guide me.</p>
-<p>Thank you</p>
-</div>
-</div>
-</div>
-</body>
-</html>
-
---_000_5528f6fa6355443289b3cce7519429caamazoncom_--
+Thanks,
+Chris
 
