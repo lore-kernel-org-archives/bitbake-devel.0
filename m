@@ -2,67 +2,67 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160BDC05027
-	for <webhook@archiver.kernel.org>; Tue, 14 Feb 2023 15:25:35 +0000 (UTC)
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
- by mx.groups.io with SMTP id smtpd.web11.9889.1676388333515012488
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A7CC05027
+	for <webhook@archiver.kernel.org>; Tue, 14 Feb 2023 15:28:55 +0000 (UTC)
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+ by mx.groups.io with SMTP id smtpd.web10.10123.1676388533445745013
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 14 Feb 2023 07:25:33 -0800
+ Tue, 14 Feb 2023 07:28:53 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=PM7Rxzwn;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.170, mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f170.google.com with SMTP id b5so17394230plz.5
-        for <bitbake-devel@lists.openembedded.org>; Tue, 14 Feb 2023 07:25:33 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=a5mAeElX;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.182, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f182.google.com with SMTP id w5so17379155plg.8
+        for <bitbake-devel@lists.openembedded.org>; Tue, 14 Feb 2023 07:28:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XOOE5zGuriRZbQbIM8OSrS+wXEwjZfCCDO3bCcFmEwA=;
-        b=PM7RxzwnDvKgcvQfII5MPllkQaEmiT/ApEVP0T/RHxQ5oyu4N531xCDKv1mF8pWnrs
-         r4ZbOqpp6tuc74yQlI6Ep/IM+ATYhSjEZKuYZByFG26IgdWz9kddDYKNcnacLkC/qYnF
-         yYc4KO7sf0DkLcM+HFffiRsSuXmtPfim4x6xPP0qSglNxh0lndAmt+4U69Rya/HtPswW
-         FskPLOorGIkgneFTLKQKRow02PLME6QE+xInuUlOP6CC3rJ+DcFUX7/MxsXkBRczgGJY
-         uRhICwmMhSGmuc6XOFeZzkQaPAJL56D/YutMGjKoaCvYuP2Ed3MSOv+By1qm+nn2ADFr
-         xoDw==
+        bh=rp86yPkudrRq6/6EkvY8obX3gbfSDtCSAiMRIEZ0eBU=;
+        b=a5mAeElXQuqkkhC4VLYcZdLrkl1N0whgpV77IaQh4PCMaJRLCqAh6b5IdYM7ewhg8E
+         Y3+eCMoqe52XcxzmySGBbhiibjoynE8TImG7g6r7/CKuQH2ulki6Pf16aLP1dWiS0gWK
+         fhCw+MfnEP9qeYShRdVCL8NufiFgvgV/z45laJJMXaocMvyPO1sa0LpBu1NiXyadBojX
+         kM+XG8AuCdM1bP52hJVkOrJldA4s7T20kYrBD/JgFdlGuwfbygrxg6JJkPTQhjSKrhtN
+         nVsDAzJwcBjL2usiPAJuC7RtMhjQB033P+8HFBU1NRQqmeZG2UQUmAVeOFlr7lkt2fZz
+         m53A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XOOE5zGuriRZbQbIM8OSrS+wXEwjZfCCDO3bCcFmEwA=;
-        b=08uv+0847KqPrK01aZhxXTKwMSRLhDfg6tSfGhk6SY0aSdjEbyljBa0JU4kX6NFINK
-         IcSUxu9GBb5EdBGi1FBK6dHl0UaK2c39HvXx22vYXI+vwSqcImz6iKznmEwUlWk5G2/Y
-         Phw68UHhc1FLhsB88wZQQix0jIiCrZwES0b/+QLBMT9Ct6gWwiaKTIYNVfms2jt+V/Mu
-         7g+AYhfjAkiheBxSqYAvKRJF71DL4Q26aE7NKUdx1UUOIvvSz4x8yKmBK0+OPR/aemQm
-         h2t0FPAqcc5s0asrVoaC/5yQLPt5nzhrZcQ3ZHol+0adEx/Nq9pW59zfIsgUHSisyVMw
-         KsMA==
-X-Gm-Message-State: AO0yUKU38rBUW+QPwBOh+oOFBuFvYSjAnAH2x2PRjlzn19XixcVoooAq
-	G5Gz6n23DftrBHBVi0ljcU/sfCDvwQxxeJFuB+M=
-X-Google-Smtp-Source: AK7set+LBEUzE2oTlzqSs0r5YaLQQBej9keoAOrygxXKnSs8L5poBKD63wCzNff2DIKKVDneXZy2Qw==
-X-Received: by 2002:a17:90a:199:b0:234:6a1:635d with SMTP id 25-20020a17090a019900b0023406a1635dmr3047553pjc.49.1676388332479;
-        Tue, 14 Feb 2023 07:25:32 -0800 (PST)
+        bh=rp86yPkudrRq6/6EkvY8obX3gbfSDtCSAiMRIEZ0eBU=;
+        b=PD0bQmTCIlMmfERy8Pdi/5TtE76Z8Z//WZnNtN3oyVxEhd4iLLyRDjLCJWng/3CSTK
+         RnJOkvIRB45LVfBW4kRt9znTho4zMbxWGeiHpaTTWQPpZc1yd/LQLE0qUWhsEepw8x9n
+         jVG2OXjo/CB6GA4nGUbv/5chE3aBvKuRLi3t/0mwNNEFVQeamXBaure3c3dahhqBqWJV
+         0GjVMDdKDFRXStJN/1uB0dwx7bj4jsfFzPJe9/2SOQtTLW5XzUTW77f2vNYQCJEuyei5
+         8B9Ug47Zk0/KlGaGOc51Tc3z2aPoWQKdLOJo0Thsc6zOGW2UxDqfuEt39ipeV20C32EX
+         jD/g==
+X-Gm-Message-State: AO0yUKVKhGnbyw/EEDYdwv1AaE1gDJfVuHc175tkYcX4o/UI1x4Yyaib
+	J0ons5n7HyqsJ5X7V/fmYNJFHNst204n1m+NP+U=
+X-Google-Smtp-Source: AK7set+lb6/Jy4QSgM1xLxgqKYZP+iSEiL1QaLfOY8hyXEs28VIilY5HeXxHhccirXzAQFN3Ne3mRA==
+X-Received: by 2002:a17:90b:4c09:b0:22b:b832:d32 with SMTP id na9-20020a17090b4c0900b0022bb8320d32mr2918239pjb.9.1676388532512;
+        Tue, 14 Feb 2023 07:28:52 -0800 (PST)
 Received: from hexa.router0800d9.com (dhcp-72-253-4-112.hawaiiantel.net. [72.253.4.112])
-        by smtp.gmail.com with ESMTPSA id s93-20020a17090a69e600b002339491ead6sm7914416pjj.5.2023.02.14.07.25.31
+        by smtp.gmail.com with ESMTPSA id m3-20020a17090a5a4300b00233cde36909sm5624203pji.21.2023.02.14.07.28.51
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Feb 2023 07:25:32 -0800 (PST)
+        Tue, 14 Feb 2023 07:28:52 -0800 (PST)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][langdale][2.2][PATCH 1/1] siggen: Fix inefficient string concatenation
-Date: Tue, 14 Feb 2023 05:25:23 -1000
-Message-Id: <592ee222a1c6da42925fb56801f226884b6724ec.1676388239.git.steve@sakoman.com>
+Subject: [bitbake][kirkstone][2.0][PATCH 1/4] siggen: Fix inefficient string concatenation
+Date: Tue, 14 Feb 2023 05:28:41 -1000
+Message-Id: <590ae6fde9da75db3a368e5c0d47920696c33ebf.1676388410.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1676388239.git.steve@sakoman.com>
-References: <cover.1676388239.git.steve@sakoman.com>
+In-Reply-To: <cover.1676388410.git.steve@sakoman.com>
+References: <cover.1676388410.git.steve@sakoman.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 14 Feb 2023 15:25:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14413
+ <bitbake-devel@lists.openembedded.org>; Tue, 14 Feb 2023 15:28:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14415
 
 From: Etienne Cordonnier <ecordonnier@snap.com>
 
@@ -96,10 +96,10 @@ Signed-off-by: Steve Sakoman <steve@sakoman.com>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 07bb5294..dd7039e5 100644
+index 9a20fc8e..cea3a538 100644
 --- a/lib/bb/siggen.py
 +++ b/lib/bb/siggen.py
-@@ -332,19 +332,19 @@ class SignatureGeneratorBasic(SignatureGenerator):
+@@ -329,19 +329,19 @@ class SignatureGeneratorBasic(SignatureGenerator):
  
          data = self.basehash[tid]
          for dep in self.runtaskdeps[tid]:
