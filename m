@@ -1,104 +1,122 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2890EC636D4
-	for <webhook@archiver.kernel.org>; Mon, 13 Feb 2023 23:37:31 +0000 (UTC)
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
- by mx.groups.io with SMTP id smtpd.web10.31349.1676331448048220664
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29CBC61DA4
+	for <webhook@archiver.kernel.org>; Tue, 14 Feb 2023 10:35:43 +0000 (UTC)
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+ by mx.groups.io with SMTP id smtpd.web11.3495.1676370941027751853
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 13 Feb 2023 15:37:28 -0800
+ Tue, 14 Feb 2023 02:35:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=VWnXdF5A;
- spf=pass (domain: bootlin.com, ip: 217.70.183.196, mailfrom: alexandre.belloni@bootlin.com)
-Received: (Authenticated sender: alexandre.belloni@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id B03B0E0003;
-	Mon, 13 Feb 2023 23:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1676331446;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aijXeimq118824vFGSE5EF0/391a4eppyTKMLs6L1Jw=;
-	b=VWnXdF5ASpfZxCoj6hr3pfB0WFkaqeD9TU+x3COCXa94Xa+YqplcgLc8WUytBSKiOXwTlJ
-	qdqyoQtOs/sObxNE+lMbyYhqSF9TK7C+D31cOuuTD/dCjpOEYoaAMEbKmsTV2yX/4NRKEh
-	vOxQfjtWg2+VaQWCCyiIe+mzchUVcoee84/zYDX//KUIQM3ZfIiKDb8VG0ko0A26Eqw2sB
-	FiMl6IFnznbVSs+4eBxhVnnSRKp9GbxU39NupSF1Ht6gNoPHb7+n63blfgDbM0VjiHhVIh
-	KqV9MdC2mVgNs9Yv4wj4XgCY5SgevaBKOWMSJ26x4y4QnYH2KjY77WKPfRNz5Q==
-Date: Tue, 14 Feb 2023 00:37:25 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Paulo Neves <paulo@myneves.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH 2/3] tests: Make test_lfs_enabled
- actually test git-lfs
-Message-ID: <Y+rJtR+pXaUUSSjK@mail.local>
-References: <20230210133921.1268885-1-paulo@myneves.com>
- <20230210133921.1268885-2-paulo@myneves.com>
+ dkim=pass header.i=@snap.com header.s=google header.b=JL2FkH/q;
+ spf=pass (domain: snapchat.com, ip: 209.85.215.172, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-pg1-f172.google.com with SMTP id u75so9930596pgc.10
+        for <bitbake-devel@lists.openembedded.org>; Tue, 14 Feb 2023 02:35:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=snap.com; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ca4R9ey8UNi4+ukv3IQKynP6TOvhiat844Dlc6FrIaU=;
+        b=JL2FkH/qhjR6qAIUgmlaeNCZDMgUhZBaRauap6ItwPKqBiBhUQQErgRQk3uHojTkPz
+         un1bzJTFzaND25DPifaEeizoz3ndXPzbdHAQCXu7lQnxZWwVcom4H2dhTpVZdb4yQGBS
+         ekjwIqZ3zayVvvdfwBd/awjrzPjQx48LT/L20=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ca4R9ey8UNi4+ukv3IQKynP6TOvhiat844Dlc6FrIaU=;
+        b=tGSAuCiRYMiYFDHe8DuiITYIfFWIjFaPSpNs75+VAtdQsLkVHoNvQHSNgmWi3oOH7y
+         uqGKvqxKfOjofLCt7FfMPAtVH8WlTuPJo1P6NcZKh0umxvSaFSfPetFNpiGZBttV8Yw7
+         GF7ZRDaRFcWjcsA3EckhQ+8b0uwSVkF6J3/gRxxOrnHzPUSIovFZCdHc3cfLMdlrn/xS
+         k0R87k8LUkv+M5uNNaYE3ELP4LNHYD/mY3pqpXboQJCgGPqfXo6tiW7dHVob1JSrcLgE
+         wTod9qsAuSTx3Y3LGUCQuABo9ckrg1S/ur1cQpqGovQqjp8Qughu1BFqxkT6Vx1dP/Xd
+         ycQw==
+X-Gm-Message-State: AO0yUKUki95zjCMtGajjn5tlgpPp9Afr48j1EIIkFHz+K43IRXiAAIpx
+	aXEwqv3lLUjjeEhu1Z5GEsT1XY12nFnnNPEKH3w=
+X-Google-Smtp-Source: AK7set/nvKCQbsTkFv8GGT339LlZt8oTJF2mlWlhy02f88x1AqZbWpMofHKNu2cnXIM+u4z4Y22BrQ==
+X-Received: by 2002:a62:1947:0:b0:5a7:a688:cd89 with SMTP id 68-20020a621947000000b005a7a688cd89mr1081451pfz.5.1676370940162;
+        Tue, 14 Feb 2023 02:35:40 -0800 (PST)
+Received: from lj8k2dq3.sc-core.net ([213.249.125.26])
+        by smtp.gmail.com with ESMTPSA id q23-20020a62e117000000b0058d91fb2239sm4365052pfh.63.2023.02.14.02.35.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Feb 2023 02:35:39 -0800 (PST)
+From: ecordonnier@snap.com
+To: bitbake-devel@lists.openembedded.org
+Cc: Etienne Cordonnier <ecordonnier@snap.com>,
+	JJ Robertson <jrobertson@snap.com>
+Subject: [kirkstone][2.0][PATCH] siggen: fix inefficient string concatenation
+Date: Tue, 14 Feb 2023 11:34:41 +0100
+Message-Id: <20230214103441.1516378-1-ecordonnier@snap.com>
+X-Mailer: git-send-email 2.36.1.vfs.0.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230210133921.1268885-2-paulo@myneves.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 13 Feb 2023 23:37:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14403
+ <bitbake-devel@lists.openembedded.org>; Tue, 14 Feb 2023 10:35:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14404
 
-Hello,
+From: Etienne Cordonnier <ecordonnier@snap.com>
 
-This fails on the AB with:
+As discussed in https://stackoverflow.com/a/4435752/1710392 , CPython
+has an optimization for statements in the form "a = a + b" or "a += b".
+It seems that this line does not get optimized, because it has a form a = a + b + c:
+data = data + "./" + f.split("/./")[1]
 
-FAIL: test_lfs_enabled (bb.tests.fetch.GitLfsTest)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/pokybuild/yocto-worker/oe-selftest-armhost/build/bitbake/lib/bb/tests/fetch.py", line 2246, in test_lfs_enabled
-    self.assertTrue(ud.method._find_git_lfs(self.d),
-AssertionError: False is not true : git-lfs not found. Cannot test git-lfs without git-lfs in the PATH
+For that reason, it does a copy of data for each iteration, potentially copying megabytes
+of data for each iteration.
 
+Changing this line causes SignatureGeneratorBasic::get_taskhash to take 0.06 seconds
+instead of 45 seconds on my test setup where SRC_URI points to a big directory.
 
-On 10/02/2023 13:39:32+0000, Paulo Neves wrote:
-> Due to the datastore not having the PATH variable set, _find_git_lfs
-> would never return true and thus fetcher's git lfs test logic was
-> unreachable.
-> 
-> Now we set PATH on the datastore of the test and if the test host has
-> git-lfs the test will actually test git-lfs logic.
-> 
-> Signed-off-by: Paulo Neves <paulo@myneves.com>
-> ---
->  lib/bb/tests/fetch.py | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-> index 122d7e05f..a9ad247d9 100644
-> --- a/lib/bb/tests/fetch.py
-> +++ b/lib/bb/tests/fetch.py
-> @@ -2237,6 +2237,7 @@ class GitLfsTest(FetcherTest):
-> 
->          uri = 'git://%s;protocol=file;branch=master' % self.srcdir
->          self.d.setVar('SRC_URI', uri)
-> +        self.d.setVar('PATH', os.environ.get('PATH'))
-> 
->          # Careful: suppress initial attempt at downloading until
->          # we know whether git-lfs is installed.
-> --
-> 2.34.1
-> 
-> 
+Note that PEP8 recommends explicitely not to use this optimization which is specific to CPython:
+"do not rely on CPython’s efficient implementation of in-place string concatenation for statements in the form a += b or a = a + b"
 
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#14392): https://lists.openembedded.org/g/bitbake-devel/message/14392
-> Mute This Topic: https://lists.openembedded.org/mt/96875983/3617179
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
+However, the PEP8 recommended form using "join()" also does not avoid the copy and takes 45 seconds in my test setup:
+data = ''.join((data, "./", f.split("/./")[1]))
 
+I have changed the other lines to also use += for consistency only, however those were in the form a = a + b
+and were optimized already.
 
+Co-authored-by: JJ Robertson <jrobertson@snap.com>
+Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
+---
+ lib/bb/siggen.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 130b38d8..2381edd2 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -328,19 +328,19 @@ class SignatureGeneratorBasic(SignatureGenerator):
+ 
+         data = self.basehash[tid]
+         for dep in self.runtaskdeps[tid]:
+-            data = data + self.get_unihash(dep)
++            data += self.get_unihash(dep)
+ 
+         for (f, cs) in self.file_checksum_values[tid]:
+             if cs:
+                 if "/./" in f:
+-                    data = data + "./" + f.split("/./")[1]
+-                data = data + cs
++                    data += "./" + f.split("/./")[1]
++                data += cs
+ 
+         if tid in self.taints:
+             if self.taints[tid].startswith("nostamp:"):
+-                data = data + self.taints[tid][8:]
++                data += self.taints[tid][8:]
+             else:
+-                data = data + self.taints[tid]
++                data += self.taints[tid]
+ 
+         h = hashlib.sha256(data.encode("utf-8")).hexdigest()
+         self.taskhash[tid] = h
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.36.1.vfs.0.0
+
 
