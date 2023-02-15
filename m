@@ -2,59 +2,59 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544A3C636D4
-	for <webhook@archiver.kernel.org>; Wed, 15 Feb 2023 21:37:13 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web11.5892.1676497032465831585
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B76C636D4
+	for <webhook@archiver.kernel.org>; Wed, 15 Feb 2023 22:48:23 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web10.7530.1676501293374494123
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 15 Feb 2023 13:37:12 -0800
+ Wed, 15 Feb 2023 14:48:13 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Bsg9f7F/;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f41.google.com with SMTP id he5so123798wmb.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 13:37:12 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Vxs9SKZw;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f54.google.com with SMTP id f23-20020a05600c491700b003dff4480a17so3100486wmp.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 14:48:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sEoWMSb1NTRNnY/4CNoAqktJrifjtXv+KZZDBzZDGKA=;
-        b=Bsg9f7F/YiLovWrh2oN6IehBYFXVj+inGMlkzQoI1FEFxtJo+w0bniprgrP0sL+sp5
-         y7ZvAQdU16GMttm6h25Nq+m0/adcyoqjmSzUOEoRtL0/4CWkTytb0sKP3Kxp40BScOv3
-         irrzhjSYJwq5udeURrA5POQ/miMKq5R+VBafk=
+        bh=GVjliL3PpDvayPn+CYLomkzFoce9ra4TIYjIeuRthPg=;
+        b=Vxs9SKZwA5CgAMA19jwYSl5ocmbO+CCSMYaMJWs7zWmishQFaD/HJnKbUADR4cnxIu
+         /Ody40Uo1vsyTjlVXmITp61TDcUZLf8GDRU5QrZ/qrdyCtxrxWRuP+lV05uSr3LhZ0Cs
+         Z61+zClXY+L7wQDpyXVZmaDdFv41pFFbPzT7I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sEoWMSb1NTRNnY/4CNoAqktJrifjtXv+KZZDBzZDGKA=;
-        b=7WcUCopMGl1QqCfg/9EvegxmPEbNwvLEjBPNtTyiFQmQ9MHUkzy79L4QcwLRsaUp0O
-         VjA9qnUjGnaFAkT7YbPIV/VQPppFuz7QCrAi3J3Q4UBO2mZMo14zOBvTpcm8h+2Y/gLh
-         Pw6bvn/MYJ06o0keywyZpmfvJ3jKk/cIFqGjkeIY0Px2OirxsKXo/jncgWL3Jj20Ul7Q
-         jPIdyYA0b58PuGXaYbagX9yNAnoKhbYot+Qh64LqazIUKkz+nZDquQo+XGA9lI2b2WqL
-         YgNVQh21DoP9t5nCLbpw8/bX275qmVMwCGGAKBBrcgcJ6E9+1zWyumqo3wjrM+IySiYZ
-         7e/Q==
-X-Gm-Message-State: AO0yUKXVvhlnKyZX42bReAs9tAQPIBTvD5t7t9lwOSQ/ZeqVAefTwDMB
-	l1S6iPnjQ32vGRyF0uZXw/n50PinM5VCIBV7
-X-Google-Smtp-Source: AK7set+8TJiXLv+Fyu00WRnThyrV6zXrfsxuFBVRuuYSzO+mSkuzF6qrmuZMxEO/5/NwQaJ1qBFvOg==
-X-Received: by 2002:a05:600c:91d:b0:3e2:636:24ac with SMTP id m29-20020a05600c091d00b003e2063624acmr1981888wmp.14.1676497030398;
-        Wed, 15 Feb 2023 13:37:10 -0800 (PST)
+        bh=GVjliL3PpDvayPn+CYLomkzFoce9ra4TIYjIeuRthPg=;
+        b=Plkg9R+YuJdUJHRXQ5oIxXpW9yBETvBFl19ehQK7zkjCJNsMeCZ6GxZiQH3UxY8Y42
+         2y9szf0O2YPGcjOW75TRaTVLM/sgZPs/9RtRYRqcZHRJp8BEo1sMZ0M4Hdzue55qDhYE
+         wUPrCAjs8+b4BuVxnNCP9XarJ3jWZos13SgMkAKeWF7EeAdzzgneG4OIQ+4qthha8cQd
+         E05X7xFUEONM3CLTYYgX+mAOUCdYr23z55Nmaef3nYbIqqVyVkI/Bw5r78fwyiCTTGyt
+         6ykZotOJ5UXpb+r0v0J7zAe+dOh2O84i5i4gB5SA/GiUTh2HYWFfxgTNJoSpEyhReMRT
+         8m6w==
+X-Gm-Message-State: AO0yUKX5HoAtWjP1Mv+Jr2Ee/2VfzUqgRDGClo740Rn/Cd8QKLLqfxVk
+	poo4MrAGQuewi7T+/rSzujtRDYq4/JD2tkVb
+X-Google-Smtp-Source: AK7set/eA0YrNgU+msxe364mOF2wTBVx0K9BBslwG0qU84uJOUn0RZBz3vrN08GyUBetL8TbqpMsTQ==
+X-Received: by 2002:a05:600c:3198:b0:3dc:4fd7:31f7 with SMTP id s24-20020a05600c319800b003dc4fd731f7mr3162599wmp.41.1676501291208;
+        Wed, 15 Feb 2023 14:48:11 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:d39a:5560:699e:2da6])
-        by smtp.gmail.com with ESMTPSA id m9-20020a7bca49000000b003c6bbe910fdsm3325795wml.9.2023.02.15.13.37.09
+        by smtp.gmail.com with ESMTPSA id l21-20020a05600c47d500b003db0bb81b6asm3187187wmo.1.2023.02.15.14.48.10
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Feb 2023 13:37:10 -0800 (PST)
+        Wed, 15 Feb 2023 14:48:10 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] data: Evaluate the value of export/unexport/network flags
-Date: Wed, 15 Feb 2023 21:37:09 +0000
-Message-Id: <20230215213709.247135-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH v2] data: Evaluate the value of export/unexport/network flags
+Date: Wed, 15 Feb 2023 22:48:10 +0000
+Message-Id: <20230215224810.253587-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 21:37:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14439
+ <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 22:48:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14440
 
 Currently the export/unexport/network flags are acted on only by presence
 or lack of in the data store. This is deliberate due to performance reasons
@@ -89,7 +89,7 @@ index a3ea5d9618..d743ff5105 100755
                          logger.debug("Attempting to disable network for %s" % taskname)
                          bb.utils.disable_network(uid, gid)
 diff --git a/lib/bb/data.py b/lib/bb/data.py
-index f3ae062022..42445245a4 100644
+index f3ae062022..3ee8f5e7db 100644
 --- a/lib/bb/data.py
 +++ b/lib/bb/data.py
 @@ -114,8 +114,8 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
@@ -109,8 +109,8 @@ index f3ae062022..42445245a4 100644
      return (key for key in d.keys() if not key.startswith('__') and
 -                                      d.getVarFlag(key, 'export', False) and
 -                                      not d.getVarFlag(key, 'unexport', False))
-+                                      bb.utils.to_boolean(d.getVarFlag(key, 'export', False)) and
-+                                      not bb.utils.to_boolean(d.getVarFlag(key, 'unexport', False)))
++                                      bb.utils.to_boolean(d.getVarFlag(key, 'export')) and
++                                      not bb.utils.to_boolean(d.getVarFlag(key, 'unexport')))
  
  def exported_vars(d):
      k = list(exported_keys(d))
