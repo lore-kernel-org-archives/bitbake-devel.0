@@ -2,136 +2,273 @@ Return-Path: <Martin.Jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB1AC64ED6
-	for <webhook@archiver.kernel.org>; Wed, 15 Feb 2023 10:46:26 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web10.12276.1676457978397532933
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E715CC636D4
+	for <webhook@archiver.kernel.org>; Wed, 15 Feb 2023 15:20:08 +0000 (UTC)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web11.17760.1676474402814867815
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 15 Feb 2023 02:46:18 -0800
+ Wed, 15 Feb 2023 07:20:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=mg4cROV9;
- spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f54.google.com with SMTP id f18-20020a7bcd12000000b003e206711347so233229wmj.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 02:46:18 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=ANjGPXnu;
+ spf=pass (domain: gmail.com, ip: 209.85.221.54, mailfrom: martin.jansa@gmail.com)
+Received: by mail-wr1-f54.google.com with SMTP id s13so1793521wrw.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 07:20:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xSZves06thaO4aoxibBtS0fO0Ge5/c7KJ4bVJ2tbPyc=;
-        b=mg4cROV9mS/uWeDZalZbghiy3MGe9txPQTGWRq0WPK2XMCVRjaz7JuASjpJKSJc9t3
-         YBKbFV1FdcjQJFyxROYJR0FRZ+Ou9XSTzenLrRxQ28P9u6Is56Ti8+2RFQe14NSLchl7
-         JchCw2zHzk7vX0QNyQFKpRNDm+ql1s2k+UojDESkhFRHXzerJZHr60FenNdoOpvmiYi7
-         C7JiX/USemW2PaJP0vwZFc80EMlcZA5JPQRrvkP/JC+ikOyZX2snpxMl/OPfvYmIt/1g
-         BCrs3oFCSy43nvTn4lya6g5/SqTlqGqvNxYuWk0dHL1/ZopbzggyhWEOCrl2b3O+Jnkw
-         gF/w==
+        bh=FPFhBVupcKJlD4o3qBU5jhbfQpZKEJcBUzSKRiPqjN0=;
+        b=ANjGPXnur0GqfRRjiJIkRsuI23/KHApBp2PdF3La8lS2uBT3w8NNq8y0mqkwoBQIf4
+         HC5o6BS9Zw4KfiYLosTg8IWgZ44qOAjDfXYq2OGSTpP2l6+Z/H7FLzYMBhAv7bPDSh9G
+         wFnSaL5+wqSLgedTqVaPYY3tmn7R8sN9CjClhW+y1xygmsE1QM7ggLhtmq53pgvblwkZ
+         uX36ia17pkqWoe0qiU/VmdThfbSeKMXBbgMGDjfB9CKXpmRK/MfOrAUxyZXCvTv3gcl9
+         yKMYu/BADlMrBlbMuW4RbGZaOuQvzdDuFnNhwyrj4zf2tXo8LdZ51X0ftV0PIq9Ssqgw
+         UKtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xSZves06thaO4aoxibBtS0fO0Ge5/c7KJ4bVJ2tbPyc=;
-        b=dvHg+/bnR3oj+CccB8m9En4JzWa/mrkqUPbEWTcycu08KKjzK9LOYHwdCroLcpbh7c
-         aKrB/Z0WIPaSQT+ulo6cRcN88ruX3DQut+57zA36VxQ7DUiuIbQ0yv5Wku8PcGyfpQ1A
-         mMKULJXQ+x4PEU/qzL1gLHy5PfkreaMEteKKW/ewK+iDde2GJAy13WHmQ0Us4CO8h96X
-         0ygu4BhpZu5M9Lj68t2eFkeaMe4NsoqTvbzfhO7vxfrkI61RbqmSNzVZ6MAumo6aDDzI
-         cCrNhWJwRSCjtQi4KT1Q83bA5l5u4r0EFLS7tUyfkMh8SdF/SpFENhSQ8Tf2B5q+ncjp
-         GUAA==
-X-Gm-Message-State: AO0yUKW8EodxZIprma0xT2LlskCYmMVgS3+0BGvUzWWTN1VaHsbJidWv
-	qHeEorJVjmTH7z/p0dQQDo9SIN9aMnlmaHD26aoPixpe6LQ=
-X-Google-Smtp-Source: AK7set8hKABEgSsle2GQ+u5LGcQwhbNPUtgUQnM/9mLAlxFIZdK7jxdCJ2gsKll9OqKAjBzE7Y+2ayKkz60/IDgDwBg=
-X-Received: by 2002:a05:600c:3b89:b0:3dc:5b14:8d56 with SMTP id
- n9-20020a05600c3b8900b003dc5b148d56mr164513wms.171.1676457976924; Wed, 15 Feb
- 2023 02:46:16 -0800 (PST)
+        bh=FPFhBVupcKJlD4o3qBU5jhbfQpZKEJcBUzSKRiPqjN0=;
+        b=5ymyG9ElTwF0i72wZL8NjNvFS1C2bYZNw2q0fSgagZ6kMul7G1fAzRjkZRdwUdSbN2
+         TZFHzT4la/+WtFCRBUQOWTR1k1bZzNAZJhZ5pW8C1muePwfluikvzh8kUxnJH+ZwpEKc
+         9XwP+KWJ4t+nyTsA5sqoz6J1NHPCuvrERnZdcTXwXKqLv83a5ZpDNqlK5baMCp80jwBF
+         fjLkFtZGD3QSVM7xeWmZXaT37zT4cSG/RQEpPLLMUrmwL0HR2ZWL1houxXgbA3ukt9L5
+         s+ax9Zx9IZJfDqSTdUCAWYcTMdgk4d/JwC+/XtONVKd61Fi9jHRwXyMPN9F+LS4pX0gW
+         gziQ==
+X-Gm-Message-State: AO0yUKWihUoSaAEnWRG5qTIxglStltuZDHhBwU6lzy3NgsXWXXJEHDDa
+	qiEfEorY2dckLxLegQVx9XD4kRVVDb5yZB5Vs34=
+X-Google-Smtp-Source: AK7set+93rZS3V/ch7xa3fjXoLBGTM1UN/OkdYqAV+oDj357W2V6bYu+Iv767MgNSUC7XOlTLuRciyzKg21DFZTo664=
+X-Received: by 2002:a5d:4202:0:b0:2c5:588b:a77d with SMTP id
+ n2-20020a5d4202000000b002c5588ba77dmr66703wrq.697.1676474401073; Wed, 15 Feb
+ 2023 07:20:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20221127214934.541723-1-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20221127214934.541723-1-richard.purdie@linuxfoundation.org>
+References: <20221212160334.54431-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20221212160334.54431-1-richard.purdie@linuxfoundation.org>
 From: Martin Jansa <martin.jansa@gmail.com>
-Date: Wed, 15 Feb 2023 11:46:04 +0100
-Message-ID: <CA+chaQcs0KVqKYA_FJnaTfmFk25F+XrxGRzofCo5eH9L-BGwfA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH RFC] data: Evaluate the value of
- export/unexport/network flags
+Date: Wed, 15 Feb 2023 16:19:47 +0100
+Message-ID: <CA+chaQdrzVxHjKGPGSaoWxkr_pYShj5z9o8QFV5b585cG-9Z7g@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] ast/data/codeparser: Add dependencies
+ from python module functions
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="00000000000032103f05f4baca7c"
+Content-Type: multipart/alternative; boundary="00000000000026adf005f4be9d54"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 10:46:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14433
+ <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 15:20:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14434
 
---00000000000032103f05f4baca7c
+--00000000000026adf005f4be9d54
 Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Nov 27, 2022 at 10:49 PM Richard Purdie <
+On Mon, Dec 12, 2022 at 5:03 PM Richard Purdie <
 richard.purdie@linuxfoundation.org> wrote:
 
-> Currently the export/unexport/network flags are acted on only by presence
-> or lack of in the data store. This is deliberate due to performance reasons
-> since a given recipe shell task might export ~80-90 variables and this
-> means
-> expanding flags for every one of them.
+> Moving code into python modules is a very effective way to reduce parsing
+> time and overhead in recipes. The downside has always been that any
+> dependency information on which variables those functions access is lost
+> and the hashes can therefore become less reliable.
 >
-> This does catch users unaware since values which expand to nothing don't
-> work
-> e.g. ${@""} and setting values to "0" wouldn't work either.
+> This patch adds parsing of the imported module functions and that
+> dependency
+> information is them injected back into the hash dependency information.
 >
-> The downside to this patch is slow down in parsing speed of around 4%.
+> Intermodule function references are resolved to the full function
+> call names in our module namespace to ensure interfunction dependencies
+> are correctly handled too.
 >
-> The network flag is easier to change and doesn't affect performance, it was
-> made to operate the same as export/unexport for consitency reasons.
+> (Bitbake rev: 605c478ce14cdc3c02d6ef6d57146a76d436a83c)
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+>
+...
+
+> diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+> index 862087c77d..375ba3cb79 100644
+> --- a/lib/bb/parse/ast.py
+> +++ b/lib/bb/parse/ast.py
+> @@ -290,6 +290,18 @@ class PyLibNode(AstNode):
+>              toimport = getattr(bb.utils._context[self.namespace],
+> "BBIMPORTS", [])
+>              for i in toimport:
+>                  bb.utils._context[self.namespace] =
+> __import__(self.namespace + "." + i)
+> +                mod = getattr(bb.utils._context[self.namespace], i)
+> +                fn = getattr(mod, "__file__")
+> +                funcs = {}
+> +                for f in dir(mod):
+> +                    if f.startswith("_"):
+> +                        continue
+> +                    fcall = getattr(mod, f)
+> +                    if not callable(fcall):
+> +                        continue
+> +                    funcs[f] = fcall
+> +                bb.codeparser.add_module_functions(fn, funcs, "%s.%s" %
+> (self.namespace, i))
+> +
+>          except AttributeError as e:
+>              bb.error("Error importing OE modules: %s" % str(e))
 >
 
-You already know my opinion, but for others on ML I'm in favor of this
-change.
+Hi,
 
-Parsing time is negligible compared to do_compile times in most of my
-builds.
+a while ago I've mentioned that after making syntax error in metadata I got
+no output at all from bitbake.
 
-Expanding this will allow to resolve e.g. icecc.bbclass to respect
-ICECC_DISABLED before enabling network in all tasks:
-https://lists.openembedded.org/g/openembedded-core/message/167731
-I already have such change for icecc.bbclass and will send it when/if this
-bitbake change is merged.
+I've narrowed it down to this chunk and the issue is that my syntax error
+was in qa.py and it was failing in:
+bb.utils._context[self.namespace] = __import__(self.namespace + "." + i)
 
-Thanks
-Cheers,
+without any output from bitbake (nor bitbake-cookerdaemon.log).
 
---00000000000032103f05f4baca7c
+If I add simple try-catch around this like:
+-                bb.utils._context[self.namespace] =
+__import__(self.namespace + "." + i)
++                try:
++                    bb.utils._context[self.namespace] =
+__import__(self.namespace + "." + i)
++                except Exception as e:
++                    bb.error("Error importing OE module %s: %s" % (i,
+str(e)))
++                    continue
+
+Then I immediately get expected syntax error:
+ERROR: Error importing OE module qa: invalid syntax (qa.py, line 229)
+(followed by many errors about missing qa "Exception: AttributeError:
+module 'oe' has no attribute 'qa'")
+
+Where would be the right place to handle this?
+
+If I break qa.py in langdale, I get reasonable error:
+$ echo "def break()" >> oe-core/meta/lib/oe/qa.py
+$ bitbake -k zlib-native
+ERROR: Unable to parse Var <OE_IMPORTED[:=]>
+Traceback (most recent call last):
+  File "Var <OE_IMPORTED[:=]>", line 1, in <module>
+  File
+"/OE/lge/build/webos/langdale/oe-core/meta/classes-global/base.bbclass",
+line 35, in oe_import(d=<bb.data_smart.DataSmart object at 0x7fa09b142790>):
+                 # Make a python object accessible from the metadata
+    >            bb.utils._context[toimport.split(".", 1)[0]] =
+__import__(toimport)
+             except AttributeError as e:
+bb.data_smart.ExpansionError: Failure expanding variable OE_IMPORTED[:=],
+expression was ${@oe_import(d)} which triggered exception SyntaxError:
+expected ':' (qa.py, line 222)
+The variable dependency chain for the failure is: OE_IMPORTED[:=]
+
+with master:
+$ time bitbake -DDDDDD -vvvvv zlib-native
+
+real    0m0.564s
+user    0m0.149s
+sys     0m0.033s
+
+--00000000000026adf005f4be9d54
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr">On Sun, Nov 27, 2022 at 10:49 PM Richard =
-Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">richard.pu=
-rdie@linuxfoundation.org</a>&gt; wrote:<br></div><div class=3D"gmail_quote"=
-><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border=
--left:1px solid rgb(204,204,204);padding-left:1ex">Currently the export/une=
-xport/network flags are acted on only by presence<br>
-or lack of in the data store. This is deliberate due to performance reasons=
+<div dir=3D"ltr"><div dir=3D"ltr">On Mon, Dec 12, 2022 at 5:03 PM Richard P=
+urdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">richard.pur=
+die@linuxfoundation.org</a>&gt; wrote:<br></div><div class=3D"gmail_quote">=
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex">Moving code into python m=
+odules is a very effective way to reduce parsing<br>
+time and overhead in recipes. The downside has always been that any<br>
+dependency information on which variables those functions access is lost<br=
+>
+and the hashes can therefore become less reliable.<br>
 <br>
-since a given recipe shell task might export ~80-90 variables and this mean=
-s<br>
-expanding flags for every one of them.<br>
+This patch adds parsing of the imported module functions and that dependenc=
+y<br>
+information is them injected back into the hash dependency information.<br>
 <br>
-This does catch users unaware since values which expand to nothing don&#39;=
-t work<br>
-e.g. ${@&quot;&quot;} and setting values to &quot;0&quot; wouldn&#39;t work=
- either.<br>
+Intermodule function references are resolved to the full function<br>
+call names in our module namespace to ensure interfunction dependencies<br>
+are correctly handled too.<br>
 <br>
-The downside to this patch is slow down in parsing speed of around 4%.<br>
+(Bitbake rev: 605c478ce14cdc3c02d6ef6d57146a76d436a83c)<br>
 <br>
-The network flag is easier to change and doesn&#39;t affect performance, it=
- was<br>
-made to operate the same as export/unexport for consitency reasons.<br></bl=
-ockquote><div><br></div><div>You already know my opinion, but for others on=
- ML I&#39;m in favor of this change.</div><div><br></div><div>Parsing time =
-is negligible compared to do_compile times in most of my builds.</div><div>=
-<br></div><div>Expanding this will allow to resolve e.g. icecc.bbclass to r=
-espect ICECC_DISABLED before enabling network in all tasks:</div><div><a hr=
-ef=3D"https://lists.openembedded.org/g/openembedded-core/message/167731">ht=
-tps://lists.openembedded.org/g/openembedded-core/message/167731</a><br></di=
-v><div>I already have such change for icecc.bbclass and will send it when/i=
-f this bitbake change is merged.</div><div><br></div><div>Thanks</div><div>=
-Cheers,</div></div></div>
+Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
+ndation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<b=
+r></blockquote><div>...=C2=A0</div><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
+-left:1ex">diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py<br>
+index 862087c77d..375ba3cb79 100644<br>
+--- a/lib/bb/parse/ast.py<br>
++++ b/lib/bb/parse/ast.py<br>
+@@ -290,6 +290,18 @@ class PyLibNode(AstNode):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0toimport =3D getattr(bb.uti=
+ls._context[self.namespace], &quot;BBIMPORTS&quot;, [])<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for i in toimport:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils._con=
+text[self.namespace] =3D __import__(self.namespace + &quot;.&quot; + i)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mod =3D getattr(bb=
+.utils._context[self.namespace], i)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fn =3D getattr(mod=
+, &quot;__file__&quot;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 funcs =3D {}<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 for f in dir(mod):=
+<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if f=
+.startswith(&quot;_&quot;):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 continue<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fcal=
+l =3D getattr(mod, f)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if n=
+ot callable(fcall):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 continue<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 func=
+s[f] =3D fcall<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.codeparser.add_=
+module_functions(fn, funcs, &quot;%s.%s&quot; % (self.namespace, i))<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0except AttributeError as e:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.error(&quot;Error import=
+ing OE modules: %s&quot; % str(e))<br></blockquote><div><br></div><div>Hi,<=
+/div><div><br></div><div>a while ago I&#39;ve mentioned that after making s=
+yntax error in metadata I got no output at all from bitbake.</div><div><br>=
+</div><div>I&#39;ve narrowed it down to this chunk and the issue is that my=
+ syntax error was in qa.py and it was failing in:</div><div>bb.utils._conte=
+xt[self.namespace] =3D __import__(self.namespace + &quot;.&quot; + i)<br></=
+div><div><br></div><div>without any output from bitbake (nor bitbake-cooker=
+daemon.log).</div><div><br></div><div>If I add simple try-catch around this=
+ like:</div><div>- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0b=
+b.utils._context[self.namespace] =3D __import__(self.namespace + &quot;.&qu=
+ot; + i)<br>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0try:<b=
+r>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb=
+.utils._context[self.namespace] =3D __import__(self.namespace + &quot;.&quo=
+t; + i)<br>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0except =
+Exception as e:<br>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0bb.error(&quot;Error importing OE module %s: %s&quot; % (i=
+, str(e)))<br>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0continue<br></div><div><br></div><div>Then I immediately get expe=
+cted syntax error:</div><div>ERROR: Error importing OE module qa: invalid s=
+yntax (qa.py, line 229)</div><div>(followed by many errors about missing qa=
+ &quot;Exception: AttributeError: module &#39;oe&#39; has no attribute &#39=
+;qa&#39;&quot;)</div><div><br></div><div>Where would be the right place to =
+handle this?</div><div><br></div><div>If I break qa.py in langdale, I get r=
+easonable error:</div><div>$ echo &quot;def break()&quot; &gt;&gt; oe-core/=
+meta/lib/oe/qa.py<br></div><div>$ bitbake -k zlib-native<br>ERROR: Unable t=
+o parse Var &lt;OE_IMPORTED[:=3D]&gt;<br>Traceback (most recent call last):=
+<br>=C2=A0 File &quot;Var &lt;OE_IMPORTED[:=3D]&gt;&quot;, line 1, in &lt;m=
+odule&gt;<br>=C2=A0 File &quot;/OE/lge/build/webos/langdale/oe-core/meta/cl=
+asses-global/base.bbclass&quot;, line 35, in oe_import(d=3D&lt;bb.data_smar=
+t.DataSmart object at 0x7fa09b142790&gt;):<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# Make a python object accessible from th=
+e metadata<br>=C2=A0 =C2=A0 &gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0b=
+b.utils._context[toimport.split(&quot;.&quot;, 1)[0]] =3D __import__(toimpo=
+rt)<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0except AttributeErro=
+r as e:<br>bb.data_smart.ExpansionError: Failure expanding variable OE_IMPO=
+RTED[:=3D], expression was ${@oe_import(d)} which triggered exception Synta=
+xError: expected &#39;:&#39; (qa.py, line 222)<br>The variable dependency c=
+hain for the failure is: OE_IMPORTED[:=3D]<br></div><div><br></div><div>wit=
+h master:</div><div>$ time bitbake -DDDDDD -vvvvv zlib-native<br><br>real =
+=C2=A0 =C2=A00m0.564s<br>user =C2=A0 =C2=A00m0.149s<br>sys =C2=A0 =C2=A0 0m=
+0.033s</div></div></div>
 
---00000000000032103f05f4baca7c--
+--00000000000026adf005f4be9d54--
 
