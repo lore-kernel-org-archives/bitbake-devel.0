@@ -1,129 +1,98 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <pedro.miguel.baptista@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B76C636D4
-	for <webhook@archiver.kernel.org>; Wed, 15 Feb 2023 22:48:23 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web10.7530.1676501293374494123
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1CCC636D4
+	for <webhook@archiver.kernel.org>; Wed, 15 Feb 2023 22:51:23 +0000 (UTC)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web11.7735.1676501479952587609
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 15 Feb 2023 14:48:13 -0800
+ Wed, 15 Feb 2023 14:51:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Vxs9SKZw;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id f23-20020a05600c491700b003dff4480a17so3100486wmp.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 14:48:12 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=AL9gNeLd;
+ spf=pass (domain: gmail.com, ip: 209.85.221.50, mailfrom: pedro.miguel.baptista@gmail.com)
+Received: by mail-wr1-f50.google.com with SMTP id h16so168569wrz.12
+        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 14:51:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GVjliL3PpDvayPn+CYLomkzFoce9ra4TIYjIeuRthPg=;
-        b=Vxs9SKZwA5CgAMA19jwYSl5ocmbO+CCSMYaMJWs7zWmishQFaD/HJnKbUADR4cnxIu
-         /Ody40Uo1vsyTjlVXmITp61TDcUZLf8GDRU5QrZ/qrdyCtxrxWRuP+lV05uSr3LhZ0Cs
-         Z61+zClXY+L7wQDpyXVZmaDdFv41pFFbPzT7I=
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rlFaKMwN+akowqBAljAuT0uSG6/31v06IdtJ9SOjbws=;
+        b=AL9gNeLd9UuCcRGwlmdnBCnXwAmj8+iLKqdtmXsbOFxHryAK3QX9bO+SHT/iAHK+Bf
+         bpbVFStFii+KMcNjskBj55TfZYuVntkwFicpJOsrAw0CkXXnfSsPwC4e2pfLSUdI5ik6
+         OKjrv0aDAgHxWmqVMdjfi15nr7gfoyCIwcPB55LqhSRfRohf/kXA7+q+A6E5fU501zxK
+         Wvjwjt+j1hF9dv3KdByrYfaFp8qYV9NG8g7iQ5H8rtw5hFrjo7NkrhPT9dqnSt9S0+iY
+         EqT1p/D44zmCsjH8vcv9tvwxcmM6ntCQcI/95hUTqmQ1s4ZfzQYk/EgWvnSCxdFYxnyQ
+         c6Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GVjliL3PpDvayPn+CYLomkzFoce9ra4TIYjIeuRthPg=;
-        b=Plkg9R+YuJdUJHRXQ5oIxXpW9yBETvBFl19ehQK7zkjCJNsMeCZ6GxZiQH3UxY8Y42
-         2y9szf0O2YPGcjOW75TRaTVLM/sgZPs/9RtRYRqcZHRJp8BEo1sMZ0M4Hdzue55qDhYE
-         wUPrCAjs8+b4BuVxnNCP9XarJ3jWZos13SgMkAKeWF7EeAdzzgneG4OIQ+4qthha8cQd
-         E05X7xFUEONM3CLTYYgX+mAOUCdYr23z55Nmaef3nYbIqqVyVkI/Bw5r78fwyiCTTGyt
-         6ykZotOJ5UXpb+r0v0J7zAe+dOh2O84i5i4gB5SA/GiUTh2HYWFfxgTNJoSpEyhReMRT
-         8m6w==
-X-Gm-Message-State: AO0yUKX5HoAtWjP1Mv+Jr2Ee/2VfzUqgRDGClo740Rn/Cd8QKLLqfxVk
-	poo4MrAGQuewi7T+/rSzujtRDYq4/JD2tkVb
-X-Google-Smtp-Source: AK7set/eA0YrNgU+msxe364mOF2wTBVx0K9BBslwG0qU84uJOUn0RZBz3vrN08GyUBetL8TbqpMsTQ==
-X-Received: by 2002:a05:600c:3198:b0:3dc:4fd7:31f7 with SMTP id s24-20020a05600c319800b003dc4fd731f7mr3162599wmp.41.1676501291208;
-        Wed, 15 Feb 2023 14:48:11 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:d39a:5560:699e:2da6])
-        by smtp.gmail.com with ESMTPSA id l21-20020a05600c47d500b003db0bb81b6asm3187187wmo.1.2023.02.15.14.48.10
-        for <bitbake-devel@lists.openembedded.org>
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rlFaKMwN+akowqBAljAuT0uSG6/31v06IdtJ9SOjbws=;
+        b=JW67B9GezVxOom//uIDEYX18Wjvy7W4ThBFpk66HSZARbenEEgjeB36qPOankHRTJh
+         /5IjyAxvr+0bnHilQG+VB2wkvUyS+JLlrdTNUU9ZLUynBjT///Vg0KhipYAVjSY0vup6
+         s4eAaqo7b5w00+YCOjTp12i1qLuvWxfx9TypIy96GSOUiyn8s8NlTm4iWqscv4Eh7pky
+         4A+V4xME9IzAqfcno4r6S+u6EuSvIO0hdskH8euSBdfkq7XWAo1yZ8S+KEj6rdaFbJCr
+         PrNOXDgQ0Q4pGETO38d/lYmlRBa+P+aEnwnfRL93fdaL7nElFiO639G3A0xG4LJaGtPj
+         dgTQ==
+X-Gm-Message-State: AO0yUKXXcQvQiW6RgOmj6+OtDBN7Sf/0MZWrdFhaofzgSJs/GhyLWfQm
+	1Ixiu64LsyILmOpjGk10wUzk1GZ3eIk=
+X-Google-Smtp-Source: AK7set+0545fvfzIyRluvQQ7DpGygGdPyOL+wuNyXzvLO+N+VDrYJK+gnO3NTh3k6hjowD8xH8bUVA==
+X-Received: by 2002:a5d:4b41:0:b0:2c5:4f41:e0 with SMTP id w1-20020a5d4b41000000b002c54f4100e0mr2714324wrs.62.1676501478056;
+        Wed, 15 Feb 2023 14:51:18 -0800 (PST)
+Received: from localhost.localdomain ([213.13.226.153])
+        by smtp.gmail.com with ESMTPSA id d1-20020adff841000000b002c5640f9bf9sm5294476wrq.85.2023.02.15.14.51.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Feb 2023 14:48:10 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Wed, 15 Feb 2023 14:51:17 -0800 (PST)
+From: pedro.miguel.baptista@gmail.com
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v2] data: Evaluate the value of export/unexport/network flags
-Date: Wed, 15 Feb 2023 22:48:10 +0000
-Message-Id: <20230215224810.253587-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.37.2
+Cc: Pedro Baptista <pedro.miguel.baptista@gmail.com>
+Subject: [bitbake][PATCHv3 1/2] action.py: add topdir in bblayers_conf path for add-layer
+Date: Wed, 15 Feb 2023 22:51:09 +0000
+Message-Id: <20230215225110.4288-1-pedro.miguel.baptista@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 22:48:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14440
+ <bitbake-devel@lists.openembedded.org>; Wed, 15 Feb 2023 22:51:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14441
 
-Currently the export/unexport/network flags are acted on only by presence
-or lack of in the data store. This is deliberate due to performance reasons
-since a given recipe shell task might export ~80-90 variables and this means
-expanding flags for every one of them.
+From: Pedro Baptista <pedro.miguel.baptista@gmail.com>
 
-This does catch users unaware since values which expand to nothing don't work
-e.g. ${@""} and setting values to "0" wouldn't work either.
+By including the full path to bblayers.conf the add-layer
+command can be executed from any location, not only from the
+build directory.
 
-The downside to this patch is slow down in parsing speed of around 4%.
-
-The network flag is easier to change and doesn't affect performance, it was
-made to operate the same as export/unexport for consitency reasons.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Pedro Baptista <pedro.miguel.baptista@gmail.com>
 ---
- bin/bitbake-worker |  2 +-
- lib/bb/data.py     | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ bitbake/lib/bblayers/action.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index a3ea5d9618..d743ff5105 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -269,7 +269,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, extraconfigdata, runtask):
+diff --git a/bitbake/lib/bblayers/action.py b/bitbake/lib/bblayers/action.py
+index 454c251410..d1ba101de2 100644
+--- a/bitbake/lib/bblayers/action.py
++++ b/bitbake/lib/bblayers/action.py
+@@ -11,6 +11,7 @@ import shutil
+ import sys
+ import tempfile
  
-                 bb.utils.set_process_name("%s:%s" % (the_data.getVar("PN"), taskname.replace("do_", "")))
++from bb.cookerdata import findTopdir
+ import bb.utils
  
--                if not the_data.getVarFlag(taskname, 'network', False):
-+                if not bb.utils.to_boolean(the_data.getVarFlag(taskname, 'network')):
-                     if bb.utils.is_local_uid(uid):
-                         logger.debug("Attempting to disable network for %s" % taskname)
-                         bb.utils.disable_network(uid, gid)
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index f3ae062022..3ee8f5e7db 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -114,8 +114,8 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
-     if d.getVarFlag(var, 'python', False) and func:
-         return False
+ from bblayers.common import LayerPlugin
+@@ -37,7 +38,7 @@ class ActionPlugin(LayerPlugin):
+                 sys.stderr.write("Specified layer directory %s doesn't contain a conf/layer.conf file\n" % layerdir)
+                 return 1
  
--    export = d.getVarFlag(var, "export", False)
--    unexport = d.getVarFlag(var, "unexport", False)
-+    export = bb.utils.to_boolean(d.getVarFlag(var, "export"))
-+    unexport = bb.utils.to_boolean(d.getVarFlag(var, "unexport"))
-     if not all and not export and not unexport and not func:
-         return False
- 
-@@ -188,8 +188,8 @@ def emit_env(o=sys.__stdout__, d = init(), all=False):
- 
- def exported_keys(d):
-     return (key for key in d.keys() if not key.startswith('__') and
--                                      d.getVarFlag(key, 'export', False) and
--                                      not d.getVarFlag(key, 'unexport', False))
-+                                      bb.utils.to_boolean(d.getVarFlag(key, 'export')) and
-+                                      not bb.utils.to_boolean(d.getVarFlag(key, 'unexport')))
- 
- def exported_vars(d):
-     k = list(exported_keys(d))
-@@ -375,7 +375,7 @@ def generate_dependencies(d, ignored_vars):
- 
-     mod_funcs = set(bb.codeparser.modulecode_deps.keys())
-     keys = set(key for key in d if not key.startswith("__")) | mod_funcs
--    shelldeps = set(key for key in d.getVar("__exportlist", False) if d.getVarFlag(key, "export", False) and not d.getVarFlag(key, "unexport", False))
-+    shelldeps = set(key for key in d.getVar("__exportlist", False) if bb.utils.to_boolean(d.getVarFlag(key, "export")) and not bb.utils.to_boolean(d.getVarFlag(key, "unexport")))
-     varflagsexcl = d.getVar('BB_SIGNATURE_EXCLUDE_FLAGS')
- 
-     codeparserd = d.createCopy()
+-        bblayers_conf = os.path.join('conf', 'bblayers.conf')
++        bblayers_conf = os.path.join(findTopdir(),'conf', 'bblayers.conf')
+         if not os.path.exists(bblayers_conf):
+             sys.stderr.write("Unable to find bblayers.conf\n")
+             return 1
 -- 
-2.37.2
+2.34.1
 
 
