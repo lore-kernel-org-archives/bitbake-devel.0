@@ -2,105 +2,104 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904C7C636D4
-	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 12:15:43 +0000 (UTC)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web10.5084.1676636135978585703
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D60BC636D4
+	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 12:17:23 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web10.5124.1676636233304029356
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 Feb 2023 04:15:36 -0800
+ Fri, 17 Feb 2023 04:17:13 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=IGn2lbd1;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f41.google.com with SMTP id a12so897636wro.7
-        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 04:15:35 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=exrtN/5b;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id z12-20020a1c4c0c000000b003e21e018039so2298437wmf.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 04:17:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+j8L+J8f8EhR6KrMrD0pZegrMQDLMc/3pe4WztKEkgY=;
-        b=IGn2lbd1x49ULPveYdcTbhhanhz/4N1qTXDEiUjDBSnR0CsKDGdKKmHRVF2kRUHFPM
-         4ygm7lOQbrt9FJLzJi9R+tY0PyjEyvtNd/SIwtQSc/jVlzSIVsn1XPZ6Xr8NuUWm/vha
-         dJK1UXEJTK+PbZJXdu4NLziG0i13t5KRFpExY=
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+qwjIEHwZV+4sID+H8F3yihgvQintkBhONwelsXKFig=;
+        b=exrtN/5bsMl5KvXXNutmNAo5bLYJaFXvzmbfhfvQbpbOhrvOkeYigKNwd/5J8guszB
+         2Dwmk2H95X/6hAf/O4yeV8R/rpZiWN0x4HD42XVdDUo/7K7FAyhYQzzNE1YXrWAVxMRj
+         sbgKEQSP5sz9dUDsCyyGs/gbh0Eip7dhAh3ug=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+j8L+J8f8EhR6KrMrD0pZegrMQDLMc/3pe4WztKEkgY=;
-        b=xcNNSUP1JGaZRACq69V2TcFvjuN07J262Phmux3pj64MavEsHBT6FZAdaJeGV1gHQX
-         TLH/6MOG6uQm5OSgYsBdZQMqXpXDj6tVaf8oEnKGB5zlgaBEu3uPiJ4oqbj3p1ZbEMHM
-         Xxa6OTLZXayOkk1srhCipodOAmlj0ptnk4lsA34hq6ZRtygLCM2AgBnUEJJHI9noQ1GX
-         54Ti/0svhiVPw1Di+UtKCRiJ3AYDuZyYEVv0ZP96xKDNGzieMCIZXug1faFpTuV0q5K9
-         AAQgLHcioAsQ86zdZ8sP6XNY+e5Hlk/o7nsVPja9NIMKygQsOFbEEpAHjfYayuVQ5mWw
-         /0pg==
-X-Gm-Message-State: AO0yUKVvvSRjzjkIiC4jTdPceEUSJ6NLXEj3OSbuiwZN3+X3gBQqcfE+
-	XBippCDWrYqrUbp8M9a0S7Pre/41t+G1zltj
-X-Google-Smtp-Source: AK7set/30OJZmuiYXS3N6z9AAmcq+Kfw9A0eviQc1+Y82XoHbDoSFZyyvDXjddDc4moY3nr03p/7dg==
-X-Received: by 2002:adf:f10a:0:b0:2c5:60e6:ebe with SMTP id r10-20020adff10a000000b002c560e60ebemr7831284wro.66.1676636133971;
-        Fri, 17 Feb 2023 04:15:33 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:33b5:dd6c:d0ba:e1ab])
-        by smtp.gmail.com with ESMTPSA id d8-20020adfe2c8000000b002c3ea5ebc73sm4047424wrj.101.2023.02.17.04.15.33
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+qwjIEHwZV+4sID+H8F3yihgvQintkBhONwelsXKFig=;
+        b=h6rOrw3eSlEWe6kzftsFgNwBY80f+iJlcMEZcKmB4Gp6i1IP0+QfgTzLvfc8nH7UEo
+         OpCvGefOA3L328J5/50W0tvXhEWmSgCCmQF7k5CeXIhNBw7mg2eBwQGDzPc7GYY8DT0b
+         AmQ6a9UaT+5ijXYWUejrV7GMWN+kwLUPaA1JP5oNm8oU72G5g7AYZY/D8gYfThBnVmF9
+         UfURukVR5vkNrsmVSjrN+xpdW0FHuahN+4pb8WODWyA3RTRY3fvetD/3tMHi7X8YXuHs
+         5LlvnqLJ9HpdC1vWUP9KVCSent0/lZNxYClABOxC0kGkqlywAF50MXqpKak5CIQ9MJUC
+         7Tag==
+X-Gm-Message-State: AO0yUKVVdNE9SD2frCuwmXazSgh518cLJ44MM5pjI9xXXxgzs76Xxwz3
+	seJmnNZd/Ekg8b5UxVAxmEKygQ==
+X-Google-Smtp-Source: AK7set+GOcCksvYvfBm08zRsmLnPkmo3qoSYT7mKdJ4v+tsgr1dJLGvqD/ArWTKoBuAky0MFa35ncw==
+X-Received: by 2002:a05:600c:4b1e:b0:3df:ee64:4814 with SMTP id i30-20020a05600c4b1e00b003dfee644814mr7391187wmp.20.1676636231409;
+        Fri, 17 Feb 2023 04:17:11 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:33b5:dd6c:d0ba:e1ab? ([2001:8b0:aba:5f3c:33b5:dd6c:d0ba:e1ab])
+        by smtp.gmail.com with ESMTPSA id s10-20020a7bc38a000000b003dc1a525f22sm4697205wmj.25.2023.02.17.04.17.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Feb 2023 04:15:33 -0800 (PST)
+        Fri, 17 Feb 2023 04:17:11 -0800 (PST)
+Message-ID: <284f2d153a21689fee82f913cd075b6b6d5622d6.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [RFC][PATCH] ast.py: catch SyntaxError from
+ imported modules as well
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Cc: Martin Jansa <martin.jansa@gmail.com>
-Subject: [PATCH] cookerdata: Improve early exception handling
-Date: Fri, 17 Feb 2023 12:15:32 +0000
-Message-Id: <20230217121532.340416-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.37.2
+To: Martin Jansa <Martin.Jansa@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Fri, 17 Feb 2023 12:17:10 +0000
+In-Reply-To: <20230215153523.2099173-1-Martin.Jansa@gmail.com>
+References: <1744089666E6B90B.5898@lists.openembedded.org>
+	 <20230215153523.2099173-1-Martin.Jansa@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.1-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 12:15:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14448
+ <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 12:17:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14449
 
-Martin Jansa reported that if you put a syntax error into an imported
-module such as qa.py in OE, no error is shown.
+On Wed, 2023-02-15 at 16:35 +0100, Martin Jansa wrote:
+> * before addpylib directive possible syntax error resulted in output like=
+ this:
+>   $ echo "def foo()" >> oe-core/meta/lib/oe/qa.py
+>   $ bitbake -k zlib-native
+>   ERROR: Unable to parse Var <OE_IMPORTED[:=3D]>
+>   Traceback (most recent call last):
+>     File "Var <OE_IMPORTED[:=3D]>", line 1, in <module>
+>     File "oe-core/meta/classes-global/base.bbclass", line 35, in oe_impor=
+t(d=3D<bb.data_smart.DataSmart object at 0x7fa09b142790>):
+>                    # Make a python object accessible from the metadata
+>       >            bb.utils._context[toimport.split(".", 1)[0]] =3D __imp=
+ort__(toimport)
+>                except AttributeError as e:
+>   bb.data_smart.ExpansionError: Failure expanding variable OE_IMPORTED[:=
+=3D], expression was ${@oe_import(d)} which triggered exception SyntaxError=
+: expected ':' (qa.py, line 222)
+>   The variable dependency chain for the failure is: OE_IMPORTED[:=3D]
+>=20
+> * now it wasn't showing any output at all when there was syntax error
+> * show error and name of the module which failed to be imported
+>   $ bitbake -k zlib-native
+>   ERROR: Error importing OE module qa: invalid syntax (qa.py, line 229)
+>=20
+> Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+> ---
+>  lib/bb/parse/ast.py | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
 
-Part of the issue appears to be that the catch_parse_error() decorator only
-catches certain exceptions and SyntaxError isn't one of them. As far as I can
-tell we should remove all the special cases and use the more advanced code
-in all cases, not just expansion errors.
+Thanks for reporting this. I looked into it a bit and in the end I've
+sent a different patch which should fix this and a number of other
+possible errors more generically.
 
-I confirmed this now prints a proper error message for a qa.py syntax error.
+I still don't know where the original errors are disappearing to though
+:(.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cookerdata.py | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+Cheers,
 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 1658bee93c..2d52ce4c8f 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -160,12 +160,7 @@ def catch_parse_error(func):
-     def wrapped(fn, *args):
-         try:
-             return func(fn, *args)
--        except IOError as exc:
--            import traceback
--            parselog.critical(traceback.format_exc())
--            parselog.critical("Unable to parse %s: %s" % (fn, exc))
--            raise bb.BBHandledException()
--        except bb.data_smart.ExpansionError as exc:
-+        except Exception as exc:
-             import traceback
- 
-             bbdir = os.path.dirname(__file__) + os.sep
-@@ -177,9 +172,6 @@ def catch_parse_error(func):
-                     break
-             parselog.critical("Unable to parse %s" % fn, exc_info=(exc_class, exc, tb))
-             raise bb.BBHandledException()
--        except bb.parse.ParseError as exc:
--            parselog.critical(str(exc))
--            raise bb.BBHandledException()
-     return wrapped
- 
- @catch_parse_error
--- 
-2.37.2
-
+Richard
 
