@@ -1,115 +1,92 @@
-Return-Path: <Martin.Jansa@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7746AC636D4
-	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 12:28:13 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web10.5264.1676636887809088597
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58D0C636D4
+	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 12:40:53 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web10.5442.1676637646674636737
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 Feb 2023 04:28:08 -0800
+ Fri, 17 Feb 2023 04:40:47 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=H1BrN9W8;
- spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f45.google.com with SMTP id t6-20020a7bc3c6000000b003dc57ea0dfeso810837wmj.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 04:28:07 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=afJIOBlS;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f48.google.com with SMTP id z12-20020a1c4c0c000000b003e21e018039so2344623wmf.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 04:40:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linuxfoundation.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zgw+bve2VqpP9lJVEPCnxr0diunocoCOH0D37tUaiO0=;
-        b=H1BrN9W85sXCiMQlpukxKyt23aUROTaLBdBHQ5t3UOTpir7eOQ/vWqv7nztu6W7GkD
-         ivxaVry4x8ilORCN27GSbBIPWis6L3qIZfkRBt+bjesH5W8fqJ9tNbD/Lh2Moj7Tu/tw
-         RjeB+/wqOWm+eStBv9wBt5bPDqI8vZMQ+8MZnkf+ovJjIxQKIKLu2eli/i79xTf1nNrA
-         okIVtYkH/elMvj+fMPz2E9yy/uYW//MnGzavq2wLsexYRhO6UTy7Te/LTgTFW8lIzY72
-         NqXKcejfRjGcwmwJggkkaYxzqLfQ5lBRcBXJw0NQpw75Q7YxZo50cAHWU5y6bYNwbGXz
-         1xKw==
+        bh=HWlz5fHz1hUj93G114Qsb/OswNDyU3zmK2++CnEqBww=;
+        b=afJIOBlSFXyHrNJZKFVl6bQqb8vmU6W1vM2tvBaYZtYaNyCi9P9qGxXweBAV6iipiW
+         gscOaGZfz/oW8iuraTsE9HxILPFRpn+kzfL76/oxzSc4KrT472OKYZANF5xtpY4qiIVg
+         YpvU9FsLPM07CNjUfu1wx+dHZDiPRUw29/uik=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zgw+bve2VqpP9lJVEPCnxr0diunocoCOH0D37tUaiO0=;
-        b=Z2/DMrDw/yc/KqzfHWzlW/0nYTMVxAfDYY8MNLiwZ9VkrlPl5FCrBWfCFCddZdlvaT
-         DRwCJRC9DxbIbyzpRj4srqI9iGkZgL5CHo/+h9MAjlx4wpW8SVyW8msQW8u0AR4/269o
-         +tB1fXUf0XwN7AApVg38teyh231iFPxoXvgeb6DoCRE0M2SNxRZpoNXLtz8whRi8vsrT
-         fUlBVxezMK0tPbjTpYocQWMPy4GZYG4w7zBwZzzx36y+LVO7eY/XTKvSPw8IBBbytknx
-         gwAwCMMzDCLiO4ajvGdODTfGaFja1VtRsQEnxaNwjFXsJRFljnNNP5oX+hDlZfUO5Mr1
-         +3Zg==
-X-Gm-Message-State: AO0yUKUtyaRWw/0KLO8Guz9V5ahPwQ1vU0TrShc8lstRKdou8HJDsHsx
-	n4bijQ2pM2dYIzp09wBgW3JuWYuxBhM=
-X-Google-Smtp-Source: AK7set8e0I82Rwx5I5seZj+Pph8LeUIjZy8ivGXcn849uF7C/hL/AYpDYKujEK1e2N1GshniwEPajA==
-X-Received: by 2002:a05:600c:4388:b0:3e2:10ef:51c8 with SMTP id e8-20020a05600c438800b003e210ef51c8mr4256810wmn.18.1676636886239;
-        Fri, 17 Feb 2023 04:28:06 -0800 (PST)
-Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
-        by smtp.gmail.com with ESMTPSA id o2-20020a05600c4fc200b003e2059c7978sm5577588wmq.36.2023.02.17.04.28.05
+        bh=HWlz5fHz1hUj93G114Qsb/OswNDyU3zmK2++CnEqBww=;
+        b=w9m9sjFayBPSrKZ9p6M9nTZkk/EKARJm2ryjBEFBXxcKr6ifFy8zNkn1zoeglRdLVq
+         ppPMqfYKn0B/9Q9b4pF0I1Rahc49WFrLilYq9YKPFqVwJHLOgV6qtfxNWogwuq4rgMzK
+         fTMSjGyM2vDSBoEByG4xLqMARva2U+1mNmTZ1DuVj/sxYrED4tkiiYzaboyu52YzaAIv
+         pKFFpSPu6hYvlsQmq22ZFB6Pc/1EzKXVTUfyhvkWAyecRItQYKxReN6bcPg14JYS0BPO
+         naEbsmNKRB3CJCWIGfbH6VFoQH2BXNRh+cT97zEgdv7/L5oo+XzZFme16I7EoJkNiMK/
+         1rDA==
+X-Gm-Message-State: AO0yUKWRRZ4wJIHbiWd2ViMMKBlCqG3uYawKozlQj17Nm6BC0IjcyCJI
+	S514VYJnX7NMxnXjR9Ee9IR/PeMZ0D2rYTRs
+X-Google-Smtp-Source: AK7set8MH/UGvdDVvc7gngTnByM4Px/cce6/CiM78OsMVotG3zX9Rxy1wsjDjO1IhsgZOcNeMI8vHg==
+X-Received: by 2002:a05:600c:4386:b0:3dc:19d1:3c1f with SMTP id e6-20020a05600c438600b003dc19d13c1fmr195745wmn.30.1676637644640;
+        Fri, 17 Feb 2023 04:40:44 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:33b5:dd6c:d0ba:e1ab])
+        by smtp.gmail.com with ESMTPSA id k37-20020a05600c1ca500b003dffe312925sm1182289wms.15.2023.02.17.04.40.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Feb 2023 04:28:05 -0800 (PST)
-From: Martin Jansa <martin.jansa@gmail.com>
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
+        Fri, 17 Feb 2023 04:40:44 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [1.46][PATCH] cooker: Drop sre_constants usage
-Date: Fri, 17 Feb 2023 13:27:58 +0100
-Message-Id: <20230217122758.3639957-1-Martin.Jansa@gmail.com>
-X-Mailer: git-send-email 2.39.2
+Cc: Martin Jansa <martin.jansa@gmail.com>
+Subject: [PATCH] cookerdata: Drop dubious exception handling code
+Date: Fri, 17 Feb 2023 12:40:43 +0000
+Message-Id: <20230217124043.341990-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 12:28:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14451
+ <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 12:40:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14453
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-
-As reported by Martin Jansa <Martin.Jansa@gmail.com>:
-
-bitbake/lib/bb/cooker.py:16: DeprecationWarning: module 'sre_constants' is deprecated
-  import sre_constants
-
-it's deprecated since 3.11 with:
-
-  https://github.com/python/cpython/issues/91308
-
-The correct replacement for our usage is re.error so use that instead.
+This code appears to be dangerous, it swallows exceptions, turning them into
+"handled" versions which then show no errors to the user. This is a pretty
+poor user experience and I can't see why this code should be swallowing
+such things. Drop the worst bits of code.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ lib/bb/cookerdata.py | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index ac54d4378..6743bce58 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -13,7 +13,6 @@ import sys, os, glob, os.path, re, time
- import itertools
- import logging
- import multiprocessing
--import sre_constants
- import threading
- from io import StringIO, UnsupportedOperation
- from contextlib import closing
-@@ -1795,7 +1794,7 @@ class CookerCollectFiles(object):
-                 try:
-                     re.compile(mask)
-                     bbmasks.append(mask)
--                except sre_constants.error:
-+                except re.error:
-                     collectlog.critical("BBMASK contains an invalid regular expression, ignoring: %s" % mask)
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 2d52ce4c8f..dc498c205a 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -294,14 +294,9 @@ class CookerDataBuilder(object):
+                 bb.event.fire(bb.event.MultiConfigParsed(mcdata), self.data)
  
-             # Then validate the combined regular expressions. This should never
-@@ -1803,7 +1802,7 @@ class CookerCollectFiles(object):
-             bbmask = "|".join(bbmasks)
-             try:
-                 bbmask_compiled = re.compile(bbmask)
--            except sre_constants.error:
-+            except re.error:
-                 collectlog.critical("BBMASK is not a valid regular expression, ignoring: %s" % bbmask)
-                 bbmask = None
+             self.data_hash = data_hash.hexdigest()
+-        except (SyntaxError, bb.BBHandledException):
+-            raise bb.BBHandledException()
+         except bb.data_smart.ExpansionError as e:
+             logger.error(str(e))
+             raise bb.BBHandledException()
+-        except Exception:
+-            logger.exception("Error parsing configuration files")
+-            raise bb.BBHandledException()
+ 
+         bb.codeparser.update_module_dependencies(self.data)
  
 -- 
-2.39.2
+2.37.2
 
 
