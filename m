@@ -2,78 +2,105 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D424C636D4
-	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 10:39:43 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web11.3850.1676630377495028118
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904C7C636D4
+	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 12:15:43 +0000 (UTC)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web10.5084.1676636135978585703
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 Feb 2023 02:39:37 -0800
+ Fri, 17 Feb 2023 04:15:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gZjRTH9N;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id ja15-20020a05600c556f00b003dc52fed235so513960wmb.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 02:39:37 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=IGn2lbd1;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f41.google.com with SMTP id a12so897636wro.7
+        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 04:15:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=P6M1JCZ3ubkblOkdNAKzkVsZ4w0M30frxIYS1y7R9wk=;
-        b=gZjRTH9N0TAnE/P6MBPwnIdDGrlPHHnFJWgtgfz/pNIOogXQkLxQKr6V2BngrEWF5E
-         nZMTSx7Bk2bpjJMzi3Vd/0LPLCg9wrjLyHPO/aBCKCZ5m9KnYgfT1i2pRoI8V2bOGJNF
-         lZqm5Mhs4l905oK9o+d2bB3tnshQpXZJlW7Xk=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+j8L+J8f8EhR6KrMrD0pZegrMQDLMc/3pe4WztKEkgY=;
+        b=IGn2lbd1x49ULPveYdcTbhhanhz/4N1qTXDEiUjDBSnR0CsKDGdKKmHRVF2kRUHFPM
+         4ygm7lOQbrt9FJLzJi9R+tY0PyjEyvtNd/SIwtQSc/jVlzSIVsn1XPZ6Xr8NuUWm/vha
+         dJK1UXEJTK+PbZJXdu4NLziG0i13t5KRFpExY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=P6M1JCZ3ubkblOkdNAKzkVsZ4w0M30frxIYS1y7R9wk=;
-        b=rm0Pbm5TYvmxDCYZxF0jyfPS1z0ZnUxX2K5TbwUpZolhty37+MwqXDdZQ7eNXov/+T
-         4swCYsouv6LtKWtZUthyiqL89x1lPzg8LzkNAaeuvoLUAtNmIHgFqORtvmnHGo97JcFI
-         D7GAgJ/vp8+5yIHfoNVavgxDyqWgJ1mib9Kk7jILFsqlqDeUpyfkzjEV+LFkkU1bPrYE
-         nMIzNTX9tct5TtOiP1/3gZEE/G8uh44n6PZmVR88Zp4iahcDvqKWy7uY8bkEBHztmKjJ
-         MLXYsJqvkmaS4JyFP8u8arYIKc/aUdu8x4WUNV3pz2h4IYv5VCOMzvbvhtQKKnW8wcKP
-         ZRtQ==
-X-Gm-Message-State: AO0yUKXuB/US84nG9r8cZ26MiTSmWTw9sfu+Zo8tF8/Y724ifwWZzmI7
-	5roetoNatqlhtIsbkWB7Pk5ZcGGinYjCz4Id
-X-Google-Smtp-Source: AK7set/1620DifF+Wr5Emq+j7PGAK0k4HLD+o1n4mUjVDCQLtAL1q9DqFPmkoOexxzKPxMItoFG+Dg==
-X-Received: by 2002:a05:600c:755:b0:3da:fd06:a6f1 with SMTP id j21-20020a05600c075500b003dafd06a6f1mr640418wmn.31.1676630375809;
-        Fri, 17 Feb 2023 02:39:35 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:33b5:dd6c:d0ba:e1ab? ([2001:8b0:aba:5f3c:33b5:dd6c:d0ba:e1ab])
-        by smtp.gmail.com with ESMTPSA id r18-20020a05600c459200b003dc4baaedd3sm9309660wmo.37.2023.02.17.02.39.35
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+j8L+J8f8EhR6KrMrD0pZegrMQDLMc/3pe4WztKEkgY=;
+        b=xcNNSUP1JGaZRACq69V2TcFvjuN07J262Phmux3pj64MavEsHBT6FZAdaJeGV1gHQX
+         TLH/6MOG6uQm5OSgYsBdZQMqXpXDj6tVaf8oEnKGB5zlgaBEu3uPiJ4oqbj3p1ZbEMHM
+         Xxa6OTLZXayOkk1srhCipodOAmlj0ptnk4lsA34hq6ZRtygLCM2AgBnUEJJHI9noQ1GX
+         54Ti/0svhiVPw1Di+UtKCRiJ3AYDuZyYEVv0ZP96xKDNGzieMCIZXug1faFpTuV0q5K9
+         AAQgLHcioAsQ86zdZ8sP6XNY+e5Hlk/o7nsVPja9NIMKygQsOFbEEpAHjfYayuVQ5mWw
+         /0pg==
+X-Gm-Message-State: AO0yUKVvvSRjzjkIiC4jTdPceEUSJ6NLXEj3OSbuiwZN3+X3gBQqcfE+
+	XBippCDWrYqrUbp8M9a0S7Pre/41t+G1zltj
+X-Google-Smtp-Source: AK7set/30OJZmuiYXS3N6z9AAmcq+Kfw9A0eviQc1+Y82XoHbDoSFZyyvDXjddDc4moY3nr03p/7dg==
+X-Received: by 2002:adf:f10a:0:b0:2c5:60e6:ebe with SMTP id r10-20020adff10a000000b002c560e60ebemr7831284wro.66.1676636133971;
+        Fri, 17 Feb 2023 04:15:33 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:33b5:dd6c:d0ba:e1ab])
+        by smtp.gmail.com with ESMTPSA id d8-20020adfe2c8000000b002c3ea5ebc73sm4047424wrj.101.2023.02.17.04.15.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Feb 2023 02:39:35 -0800 (PST)
-Message-ID: <2a98ca787e544740c2e09413ba215f08b4664822.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] ast/data/codeparser: Add dependencies
- from python module functions
+        Fri, 17 Feb 2023 04:15:33 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin Jansa <martin.jansa@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Fri, 17 Feb 2023 10:39:34 +0000
-In-Reply-To: <CA+chaQc28ET-4g5RqjLy_2DdgiNYd0JJq7FfqgYtDejnQtVLZg@mail.gmail.com>
-References: <20221212160334.54431-1-richard.purdie@linuxfoundation.org>
-	 <CA+chaQdrzVxHjKGPGSaoWxkr_pYShj5z9o8QFV5b585cG-9Z7g@mail.gmail.com>
-	 <1256aaa44ee27adace8686a37393d68d75cab1f9.camel@linuxfoundation.org>
-	 <CA+chaQc28ET-4g5RqjLy_2DdgiNYd0JJq7FfqgYtDejnQtVLZg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1-0ubuntu1 
+To: bitbake-devel@lists.openembedded.org
+Cc: Martin Jansa <martin.jansa@gmail.com>
+Subject: [PATCH] cookerdata: Improve early exception handling
+Date: Fri, 17 Feb 2023 12:15:32 +0000
+Message-Id: <20230217121532.340416-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 10:39:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14447
+ <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 12:15:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14448
 
-On Wed, 2023-02-15 at 17:45 +0100, Martin Jansa wrote:
-> No, I haven't seen any error in bitbake-cookerdaemon.log, see
-> attachment (created with this change reverted and the same syntax
-> error in qa.py).
+Martin Jansa reported that if you put a syntax error into an imported
+module such as qa.py in OE, no error is shown.
 
-Which makes me wonder where this error is actually ending up :/
+Part of the issue appears to be that the catch_parse_error() decorator only
+catches certain exceptions and SyntaxError isn't one of them. As far as I can
+tell we should remove all the special cases and use the more advanced code
+in all cases, not just expansion errors.
 
-Cheers,
+I confirmed this now prints a proper error message for a qa.py syntax error.
 
-Richard
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cookerdata.py | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
+
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 1658bee93c..2d52ce4c8f 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -160,12 +160,7 @@ def catch_parse_error(func):
+     def wrapped(fn, *args):
+         try:
+             return func(fn, *args)
+-        except IOError as exc:
+-            import traceback
+-            parselog.critical(traceback.format_exc())
+-            parselog.critical("Unable to parse %s: %s" % (fn, exc))
+-            raise bb.BBHandledException()
+-        except bb.data_smart.ExpansionError as exc:
++        except Exception as exc:
+             import traceback
+ 
+             bbdir = os.path.dirname(__file__) + os.sep
+@@ -177,9 +172,6 @@ def catch_parse_error(func):
+                     break
+             parselog.critical("Unable to parse %s" % fn, exc_info=(exc_class, exc, tb))
+             raise bb.BBHandledException()
+-        except bb.parse.ParseError as exc:
+-            parselog.critical(str(exc))
+-            raise bb.BBHandledException()
+     return wrapped
+ 
+ @catch_parse_error
+-- 
+2.37.2
 
 
