@@ -1,92 +1,93 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58D0C636D4
-	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 12:40:53 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web10.5442.1676637646674636737
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AD2C64EC4
+	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 14:24:54 +0000 (UTC)
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+ by mx.groups.io with SMTP id smtpd.web10.7463.1676643890702381195
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 Feb 2023 04:40:47 -0800
+ Fri, 17 Feb 2023 06:24:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=afJIOBlS;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id z12-20020a1c4c0c000000b003e21e018039so2344623wmf.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 04:40:46 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=U0day16p;
+ spf=softfail (domain: sakoman.com, ip: 209.85.216.42, mailfrom: steve@sakoman.com)
+Received: by mail-pj1-f42.google.com with SMTP id s4-20020a17090a764400b002349a303ca5so1432403pjl.4
+        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 06:24:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HWlz5fHz1hUj93G114Qsb/OswNDyU3zmK2++CnEqBww=;
-        b=afJIOBlSFXyHrNJZKFVl6bQqb8vmU6W1vM2tvBaYZtYaNyCi9P9qGxXweBAV6iipiW
-         gscOaGZfz/oW8iuraTsE9HxILPFRpn+kzfL76/oxzSc4KrT472OKYZANF5xtpY4qiIVg
-         YpvU9FsLPM07CNjUfu1wx+dHZDiPRUw29/uik=
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vKJsoxip/NCyRjWaErTn1jihCULsEcApKnvHh8KGkp0=;
+        b=U0day16pxl58EUNg4LFAivAshh0FpyrQRgpyL6pyYXYYD3ALV7P0DRkcRkhFJL2HCo
+         Qi+y76H1519JWRl+5LHWtQfmv9v/Gji1oSjWbVbFkEP5ivs/Cm9hhnCkmw32yCJq+a1X
+         jzBky1SSESLFLhEhRaY1S0zx+WC6mQJ+kDCZTc1q1j/djRVrJ/vAkH20z/bXmMkJSICo
+         brBWIKp5CsyuoW+I0iX2z9mzKwmdDtmoKzdSbJ49Xudtg4o3lJHPbTtQWMVfrH+LQNoN
+         aZKatklthEpy/HImaelw/MsFNLho8IFX7IwSsup4P6yGkS23hsV1IevSeF4tArXM/zJn
+         Z+8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HWlz5fHz1hUj93G114Qsb/OswNDyU3zmK2++CnEqBww=;
-        b=w9m9sjFayBPSrKZ9p6M9nTZkk/EKARJm2ryjBEFBXxcKr6ifFy8zNkn1zoeglRdLVq
-         ppPMqfYKn0B/9Q9b4pF0I1Rahc49WFrLilYq9YKPFqVwJHLOgV6qtfxNWogwuq4rgMzK
-         fTMSjGyM2vDSBoEByG4xLqMARva2U+1mNmTZ1DuVj/sxYrED4tkiiYzaboyu52YzaAIv
-         pKFFpSPu6hYvlsQmq22ZFB6Pc/1EzKXVTUfyhvkWAyecRItQYKxReN6bcPg14JYS0BPO
-         naEbsmNKRB3CJCWIGfbH6VFoQH2BXNRh+cT97zEgdv7/L5oo+XzZFme16I7EoJkNiMK/
-         1rDA==
-X-Gm-Message-State: AO0yUKWRRZ4wJIHbiWd2ViMMKBlCqG3uYawKozlQj17Nm6BC0IjcyCJI
-	S514VYJnX7NMxnXjR9Ee9IR/PeMZ0D2rYTRs
-X-Google-Smtp-Source: AK7set8MH/UGvdDVvc7gngTnByM4Px/cce6/CiM78OsMVotG3zX9Rxy1wsjDjO1IhsgZOcNeMI8vHg==
-X-Received: by 2002:a05:600c:4386:b0:3dc:19d1:3c1f with SMTP id e6-20020a05600c438600b003dc19d13c1fmr195745wmn.30.1676637644640;
-        Fri, 17 Feb 2023 04:40:44 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:33b5:dd6c:d0ba:e1ab])
-        by smtp.gmail.com with ESMTPSA id k37-20020a05600c1ca500b003dffe312925sm1182289wms.15.2023.02.17.04.40.44
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vKJsoxip/NCyRjWaErTn1jihCULsEcApKnvHh8KGkp0=;
+        b=mvbdfhtABRVcxJdFApMV34BORDDV1VF8CNZMiZeV+3v4CLdz6DWbrhtf/ZGP6f+BfL
+         g0qPRPZGKQQ956pNo2Llz+Wwge4keY5MSkF7tLJSjZlWSTYeWiZ1xAxifQ8qQhvbT/pP
+         +bbhfCQdYcE4Xk0UPusuf7BrRZ6+3kUzE+uet75NcycvwpomTPG7SR7X+hIdHAGMQ67K
+         Q+ktGu3nDa2bhAPGIyl75TucaObi9FcgWQR5WtFcHKNeL/1YaTyhVWUWaaQvH9a57T0w
+         09WYBVj6d/7jIE7WsvXxVYxUJshLJTa3rlbHLRAhzukIxoY+olhfYrqcNqa9KeVksAPl
+         bvEA==
+X-Gm-Message-State: AO0yUKVI2+lOlDJGocan8GMgF7H+LlbrtZE4ruriAW77vpcWJconRfkJ
+	xAVWxDN2R5JkftzTaGzRG+BK53WaVcBEdrWgxH4=
+X-Google-Smtp-Source: AK7set91Gxfq8OvPk1E5U6E3GjBxvjz9z1ytoxn9gnf+NMsMJKbZMg/QE34/JLgp3XjELoEffnUAEQ==
+X-Received: by 2002:a17:90b:4b41:b0:233:ebd4:301c with SMTP id mi1-20020a17090b4b4100b00233ebd4301cmr11159206pjb.1.1676643889385;
+        Fri, 17 Feb 2023 06:24:49 -0800 (PST)
+Received: from hexa.router0800d9.com (dhcp-72-253-4-112.hawaiiantel.net. [72.253.4.112])
+        by smtp.gmail.com with ESMTPSA id b12-20020a6567cc000000b004e28be19d1csm2909268pgs.32.2023.02.17.06.24.48
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Feb 2023 04:40:44 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Fri, 17 Feb 2023 06:24:48 -0800 (PST)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Martin Jansa <martin.jansa@gmail.com>
-Subject: [PATCH] cookerdata: Drop dubious exception handling code
-Date: Fri, 17 Feb 2023 12:40:43 +0000
-Message-Id: <20230217124043.341990-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.37.2
+Subject: [bitbake][kirkstone][2.0][PATCH 0/4] Pull request (cover letter only)
+Date: Fri, 17 Feb 2023 04:24:43 -1000
+Message-Id: <cover.1676643830.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 12:40:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14453
+ <bitbake-devel@lists.openembedded.org>; Fri, 17 Feb 2023 14:24:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14454
 
-This code appears to be dangerous, it swallows exceptions, turning them into
-"handled" versions which then show no errors to the user. This is a pretty
-poor user experience and I can't see why this code should be swallowing
-such things. Drop the worst bits of code.
+The following changes since commit 86f2fa5261da959cda706c794a0047e5e89d4d6b:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cookerdata.py | 5 -----
- 1 file changed, 5 deletions(-)
+  fetch2/git: Clarify the meaning of namespace (2023-02-01 09:03:36 -1000)
 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 2d52ce4c8f..dc498c205a 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -294,14 +294,9 @@ class CookerDataBuilder(object):
-                 bb.event.fire(bb.event.MultiConfigParsed(mcdata), self.data)
- 
-             self.data_hash = data_hash.hexdigest()
--        except (SyntaxError, bb.BBHandledException):
--            raise bb.BBHandledException()
-         except bb.data_smart.ExpansionError as e:
-             logger.error(str(e))
-             raise bb.BBHandledException()
--        except Exception:
--            logger.exception("Error parsing configuration files")
--            raise bb.BBHandledException()
- 
-         bb.codeparser.update_module_dependencies(self.data)
- 
+are available in the Git repository at:
+
+  https://git.openembedded.org/bitbake-contrib stable/2.0-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.0-next
+
+Etienne Cordonnier (1):
+  siggen: Fix inefficient string concatenation
+
+Marius Kriegerowski (1):
+  bitbake-diffsigs: Make PEP8 compliant
+
+Mark Hatle (1):
+  utils/ply: Update md5 to better report errors with hashlib
+
+Schmidt, Adriaan (1):
+  bitbake-diffsigs: break on first dependent task difference
+
+ bin/bitbake-diffsigs | 49 ++++++++++++++++++++++++--------------------
+ lib/bb/siggen.py     | 11 +++++-----
+ lib/bb/utils.py      |  7 ++++++-
+ lib/ply/yacc.py      |  7 +++++++
+ 4 files changed, 46 insertions(+), 28 deletions(-)
+
 -- 
-2.37.2
+2.34.1
 
 
