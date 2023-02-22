@@ -2,102 +2,270 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F55C61DA4
-	for <webhook@archiver.kernel.org>; Wed, 22 Feb 2023 12:03:16 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web11.6972.1677067387683746066
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD96C636D6
+	for <webhook@archiver.kernel.org>; Wed, 22 Feb 2023 14:51:57 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web11.10740.1677077516745914984
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 Feb 2023 04:03:08 -0800
+ Wed, 22 Feb 2023 06:51:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=I4ISTLeT;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f44.google.com with SMTP id o4so7485459wrs.4
-        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Feb 2023 04:03:07 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=BMggv16l;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f48.google.com with SMTP id i11so1839747wrp.5
+        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Feb 2023 06:51:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lW6E+mE7vxZcvWrVKhbKj0Fe3GdAf3zRTYTKkAZfl2M=;
-        b=I4ISTLeTES1H9AWL8tA7TW1PC8SKsDD6Ecv42aSiOqUvxFp1P1bXrfWmcS5JHM5Rkt
-         QWJniMZpYBeH3kIsRWKliYW2TG4h2QyvZMqt2Te6AA938FQD948SIzFBhjPk2UYFarrh
-         f4Y0VrgoIkJT4CJV9PqOcZsZXMEGIkbZM7Up4=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E/DURse6p7aY02tZcT2PK36/SAmdXQxVYmZlGMNyHgs=;
+        b=BMggv16lL/jVREYERiay1LmSuMADDCvJOu7BEoabK1xGnqbYr7WIE+670rFaKJbPeg
+         w1GUzHMcMAF0TRLNiuUphmn7R0rhGQ3jNPAGLPwZweAsskGz+vHHQltQTa7evrwKNTYU
+         Wznon44oL+ijB0xHcJ30Uc2SvY+lw8kdJ5u/o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lW6E+mE7vxZcvWrVKhbKj0Fe3GdAf3zRTYTKkAZfl2M=;
-        b=bAG3ddDKCXGhgccMyK6P5qhte0GTpQSkdufMLe8zg+L7NMj4aNiS4FSBY1oPPQ4aOU
-         TUTnOYrE/qXSrTFwqcNFtU83uBHE15frK76JyUDGELLbDRBCL+VawX+A0limcKYDaZly
-         tvuRCOgxP7b7Iur43RJjjazs9wjrrJmd4K42HljYLKjhwjxDiA23tbFwG1TYeqWw0pZY
-         UfjLEvwEPdhMMEbC9cFVmvVsFZIs3BN2jF0DDnNVU1UfYBWVKXBcuk4QeA5v9tC8nfuc
-         GaqaDZ22QAzkyRuhVU2HX6fVZq37AZXmlgFqxHhfkE3bYrxJULyL7DB9UeBx0M3ARZ4F
-         NBdw==
-X-Gm-Message-State: AO0yUKXUQP64PT3HuPz26k5p/66xImfUGstu1XaKKqtW/cUxIk1x51De
-	FD6SX2YG2QLYYhTK6s0q8zgr7gDWYReY83iL
-X-Google-Smtp-Source: AK7set/XRXE4MkopWo89m+KER5qkgEwqlELBMmFbBWOpqEZLoB/GGmmPBEZutOcM1o0qwKX6AgvDTQ==
-X-Received: by 2002:a05:6000:18cc:b0:2c3:f00c:ebaa with SMTP id w12-20020a05600018cc00b002c3f00cebaamr7374494wrq.4.1677067386117;
-        Wed, 22 Feb 2023 04:03:06 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:d5d1:6a95:9b62:17ab? ([2001:8b0:aba:5f3c:d5d1:6a95:9b62:17ab])
-        by smtp.gmail.com with ESMTPSA id u16-20020a05600c441000b003e21638c0edsm7721126wmn.45.2023.02.22.04.03.05
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E/DURse6p7aY02tZcT2PK36/SAmdXQxVYmZlGMNyHgs=;
+        b=pofB4zzx/+T3rVpJPfxFrmJcy/ULSufUFlEheBetnvFbiqw+sfs4JoKuF2u4yA8HMx
+         3igU/KHaKcanO2h3ZvbF4a1yJwNNsHrvYZLMXI8Inuygwb4uqAGxIWOpK5z7823AOreI
+         rc9LwgCFdj57CZWZrdbzK5NQVvcm7E65IeQc+04WonhxcZy569DMHNeACnU9TnGkHfaB
+         wTapLiVYFV0yLV31RnSiIu+9yDs34HGIQqJIeaJFmcGAIDth9zfH0bIUTOPg+W9ApJIg
+         QLBTgduFNH5YkYDhwiwSDWZr7B/QZ+ISRBnSjWd+msmAdPTDR/tFoLeWdb26GJFBBZL0
+         Znag==
+X-Gm-Message-State: AO0yUKXicTQBo9Ija6N4jhphRzQtagdfpVsvXAklECNVypBoJYGY1Ob5
+	OVuM7umWWicWosrcr4lcPLlFin69dtYqobOA
+X-Google-Smtp-Source: AK7set9cI5zHlGzefqbg8YMRk7EdohQNJ+dHiip5Vu6tw++ygBwdzZAyCFSsFjeKe18mnkBuKw/Q9g==
+X-Received: by 2002:adf:ef8e:0:b0:2c7:83b:9d20 with SMTP id d14-20020adfef8e000000b002c7083b9d20mr3330725wro.34.1677077514856;
+        Wed, 22 Feb 2023 06:51:54 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:d5d1:6a95:9b62:17ab])
+        by smtp.gmail.com with ESMTPSA id x17-20020adff651000000b002c563b124basm7787058wrp.103.2023.02.22.06.51.54
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Feb 2023 04:03:05 -0800 (PST)
-Message-ID: <7508e1a2be0154ba2357fe44e6d614428cbcb965.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 3/5] git: Remove is None check on
- _find_git_lfs
+        Wed, 22 Feb 2023 06:51:54 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paulo Neves <paulo@myneves.com>, bitbake-devel@lists.openembedded.org
-Date: Wed, 22 Feb 2023 12:03:05 +0000
-In-Reply-To: <20230217170009.58707-3-paulo@myneves.com>
-References: <20230217170009.58707-1-paulo@myneves.com>
-	 <20230217170009.58707-3-paulo@myneves.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1-0ubuntu1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 1/2] event/cooker/runqueue: Add ability to interrupt longer running code
+Date: Wed, 22 Feb 2023 14:51:52 +0000
+Message-Id: <20230222145153.581307-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 22 Feb 2023 12:03:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14476
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 Feb 2023 14:51:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14477
 
-On Fri, 2023-02-17 at 17:00 +0000, Paulo Neves wrote:
-> shutil.which returns None when the argument is not found.
-> As per documentation[1] None is evaluated to False and everything
-> else is True, so it is safe to have _find_git_lfs just return
-> the value of shutil.which
->=20
-> [1] https://docs.python.org/3/library/stdtypes.html#truth-value-testing
->=20
-> Signed-off-by: Paulo Neves <paulo@myneves.com>
-> ---
->  lib/bb/fetch2/git.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> index 2e3d32515..a3f29d2b9 100644
-> --- a/lib/bb/fetch2/git.py
-> +++ b/lib/bb/fetch2/git.py
-> @@ -687,7 +687,7 @@ class Git(FetchMethod):
->          Return True if git-lfs can be found, False otherwise.
->          """
->          import shutil
-> -        return shutil.which("git-lfs", path=3Dd.getVar('PATH')) is not N=
-one
-> +        return shutil.which("git-lfs", path=3Dd.getVar('PATH'))
->=20
->      def _get_repo_url(self, ud):
->          """
+Bitbake is now able to understand when a UI wants it to stop the current
+processing. There are some long running functions which currently have no
+mechanism to interrupt them however.
 
-I don't agree with this change since currently the function does return
-True/False as it says in the docstring but after your change, it
-returns other things.
+This patch adds a call, bb.event.check_for_interrupts(d) which can be
+placed in long running code and allows an internal state flag within
+bitbake to be checked. If set, that flag will trigger an exit.
 
-Yes, evaluating these in python will result in True/False and that is
-safe but that isn't what it is documented to return.
+This means that Ctrl+C can be made to work in a variety of places where
+it currently would not.
 
-Cheers,
+Long running event handlers in OE-Core can also then benefit from this
+new approach with the addition of the function call as well.
 
-Richard
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py   |  4 ++++
+ lib/bb/event.py    | 11 +++++++++++
+ lib/bb/runqueue.py | 15 +++++++++++++++
+ 3 files changed, 30 insertions(+)
+
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index b673fe10ee..c631ec7e6d 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -345,6 +345,7 @@ class BBCooker:
+         elif signum == signal.SIGHUP:
+             bb.warn("Cooker received SIGHUP, shutting down...")
+         self.state = state.forceshutdown
++        bb.event._should_exit.set()
+ 
+     def setFeatures(self, features):
+         # we only accept a new feature set if we're in state initial, so we can reset without problems
+@@ -1520,6 +1521,7 @@ class BBCooker:
+             msg = None
+             interrupted = 0
+             if halt or self.state == state.forceshutdown:
++                bb.event._should_exit.set()
+                 rq.finish_runqueue(True)
+                 msg = "Forced shutdown"
+                 interrupted = 2
+@@ -1760,6 +1762,7 @@ class BBCooker:
+             self.state = state.forceshutdown
+         else:
+             self.state = state.shutdown
++        bb.event._should_exit.set()
+ 
+         if self.parser:
+             self.parser.shutdown(clean=False)
+@@ -1770,6 +1773,7 @@ class BBCooker:
+             self.parser.shutdown(clean=False)
+             self.parser.final_cleanup()
+         self.state = state.initial
++        bb.event._should_exit.clear()
+ 
+     def reset(self):
+         if hasattr(bb.parse, "siggen"):
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 8b05f93e2f..37cc630c63 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -69,6 +69,7 @@ _eventfilter = None
+ _uiready = False
+ _thread_lock = threading.Lock()
+ _heartbeat_enabled = False
++_should_exit = threading.Event()
+ 
+ def enable_threadlock():
+     # Always needed now
+@@ -86,6 +87,16 @@ def disable_heartbeat():
+     global _heartbeat_enabled
+     _heartbeat_enabled = False
+ 
++#
++# In long running code, this function should be called periodically
++# to check if we should exit due to an interuption (.e.g Ctrl+C from the UI)
++#
++def check_for_interrupts(d):
++    global _should_exit
++    if _should_exit.is_set():
++        bb.warn("Exiting due to interrupt.")
++        raise bb.BBHandledException()
++
+ def execute_handler(name, handler, event, d):
+     event.data = d
+     try:
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index e5bd9311f2..e629ab7e7b 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -655,6 +655,7 @@ class RunQueueData:
+ 
+         self.init_progress_reporter.start()
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Step A - Work out a list of tasks to run
+         #
+@@ -803,6 +804,7 @@ class RunQueueData:
+         #self.dump_data()
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Resolve recursive 'recrdeptask' dependencies (Part B)
+         #
+@@ -899,6 +901,7 @@ class RunQueueData:
+             self.runtaskentries[tid].depends.difference_update(recursivetasksselfref)
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         #self.dump_data()
+ 
+@@ -980,6 +983,7 @@ class RunQueueData:
+                 mark_active(tid, 1)
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Step C - Prune all inactive tasks
+         #
+@@ -1019,6 +1023,7 @@ class RunQueueData:
+                 bb.msg.fatal("RunQueue", "Could not find any tasks with the tasknames %s to run within the recipes of the taskgraphs of the targets %s" % (str(self.cooker.configuration.runall), str(self.targets)))
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Handle runonly
+         if self.cooker.configuration.runonly:
+@@ -1059,6 +1064,7 @@ class RunQueueData:
+         logger.verbose("Assign Weightings")
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Generate a list of reverse dependencies to ease future calculations
+         for tid in self.runtaskentries:
+@@ -1066,6 +1072,7 @@ class RunQueueData:
+                 self.runtaskentries[dep].revdeps.add(tid)
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Identify tasks at the end of dependency chains
+         # Error on circular dependency loops (length two)
+@@ -1082,12 +1089,14 @@ class RunQueueData:
+         logger.verbose("Compute totals (have %s endpoint(s))", len(endpoints))
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Calculate task weights
+         # Check of higher length circular dependencies
+         self.runq_weight = self.calculate_task_weights(endpoints)
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Sanity Check - Check for multiple tasks building the same provider
+         for mc in self.dataCaches:
+@@ -1188,6 +1197,7 @@ class RunQueueData:
+ 
+         self.init_progress_reporter.next_stage()
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Iterate over the task list looking for tasks with a 'setscene' function
+         self.runq_setscene_tids = set()
+@@ -1200,6 +1210,7 @@ class RunQueueData:
+                 self.runq_setscene_tids.add(tid)
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Invalidate task if force mode active
+         if self.cooker.configuration.force:
+@@ -1216,6 +1227,7 @@ class RunQueueData:
+                     invalidate_task(fn + ":" + st, True)
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         # Create and print to the logs a virtual/xxxx -> PN (fn) table
+         for mc in taskData:
+@@ -1228,6 +1240,7 @@ class RunQueueData:
+                 bb.parse.siggen.tasks_resolved(virtmap, virtpnmap, self.dataCaches[mc])
+ 
+         self.init_progress_reporter.next_stage()
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         bb.parse.siggen.set_setscene_tasks(self.runq_setscene_tids)
+ 
+@@ -1240,6 +1253,7 @@ class RunQueueData:
+                     dealtwith.add(tid)
+                     todeal.remove(tid)
+                     self.prepare_task_hash(tid)
++                bb.event.check_for_interrupts(self.cooker.data)
+ 
+         bb.parse.siggen.writeout_file_checksum_cache()
+ 
+@@ -1483,6 +1497,7 @@ class RunQueue:
+         """
+ 
+         retval = True
++        bb.event.check_for_interrupts(self.cooker.data)
+ 
+         if self.state is runQueuePrepare:
+             # NOTE: if you add, remove or significantly refactor the stages of this
+-- 
+2.37.2
+
 
