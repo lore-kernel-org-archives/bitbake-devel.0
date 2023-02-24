@@ -2,116 +2,105 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2A2C61DA4
-	for <webhook@archiver.kernel.org>; Fri, 24 Feb 2023 13:41:20 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web11.17543.1677246076937656821
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C12C61DA3
+	for <webhook@archiver.kernel.org>; Fri, 24 Feb 2023 16:01:31 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web11.21340.1677254486708000392
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Feb 2023 05:41:17 -0800
+ Fri, 24 Feb 2023 08:01:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ig1pYsnM;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id bt28so7291339wrb.8
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 05:41:16 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=HeGoZmHK;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f48.google.com with SMTP id p3-20020a05600c358300b003e206711347so2053308wmq.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 08:01:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PpDTV7nyatgEunei0SW1KCBiDfi1VbfMfnr+PA/HJ4E=;
-        b=ig1pYsnMTncT2ceLfcV1MszfeaflSdRVoNxKXQmXzckUhrUcO62bvWU2DdrKLJTIrP
-         MsKr+PXMnJH7T0dgIJvbwymWNcesXFPxalxQ5ODrcUbXC4CMt9tMLavSw4cnry75ng6t
-         s8WaX8yg9K6kxEoSMaVBfdjPMLVGNJV8KLCRA=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O85blu3HoonFX6FaxBSyhrxxkj4QEzpy3SwhVcEuUrc=;
+        b=HeGoZmHKchiqlI64FKVOwh5S7Omsn2pPPiQ58wQU0x3XczbQnYuizH4sFM1nJaZgSz
+         2G5QghxC8sThz4Xch4D5EIS9OjFk9D5q3fEpAshZ9zdqLzuRZgVcrnSu6wFmTgirf++q
+         gx0yPhKj/vasZb7y+RZ5lIyaP8ueJVTKxEeKs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PpDTV7nyatgEunei0SW1KCBiDfi1VbfMfnr+PA/HJ4E=;
-        b=yPM0XwNi1eHDlJPPjKpSLiMvKN9Gp/3deHEWrmDn/nenagX8NyT218THCE8SYugaER
-         cV8HKVk7JCpIu4mp1EUODGMkrUqYGqTv84NvWJ5GqkwueA48Qhse4+imLNtUWmzpy7qy
-         9tk5lz71tfKEyLRsOgYaYVdxaEW4w3J03m6ZSpo9uo4qUzEtvNHa/ZutId4nvIKNAR4N
-         vgP8kusQtto1QF2YuI7mv7bXkagJv+IQ0Ms0vo9dC9jwYrXEhguj04vdljXJIGUKQvh7
-         hk1l1dxOW3B49Tfgg6iyJp86+P+vWlOPLPa6L0WVZhIlkUaqqND+ZzvcDf3JvXJgz2Oa
-         WSpw==
-X-Gm-Message-State: AO0yUKV+oA9pxjs487BJiILukdGURrV3YByiwSLgJ7SWPcNmQ4dfYtwz
-	7WiX2HGer4/kcBocLBI2dREO6Q==
-X-Google-Smtp-Source: AK7set8mHdpcdKhA5ynOadHoOiqJhFodTkCiZ1DXBpdWshiyqmgiN5qZUexaEhwo0+VQLRJGD5PlUA==
-X-Received: by 2002:a05:6000:1007:b0:2c3:da8a:192 with SMTP id a7-20020a056000100700b002c3da8a0192mr12730006wrx.15.1677246075209;
-        Fri, 24 Feb 2023 05:41:15 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:639b:9979:fd5f:bbb7? ([2001:8b0:aba:5f3c:639b:9979:fd5f:bbb7])
-        by smtp.gmail.com with ESMTPSA id u11-20020adfdb8b000000b002c54fb024b2sm17108090wri.61.2023.02.24.05.41.14
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O85blu3HoonFX6FaxBSyhrxxkj4QEzpy3SwhVcEuUrc=;
+        b=YUOpaeSDiYiN30caP7yObn2cH5NPSkFjtzBb5Zz5gLSF8uDN7y+D3KyYntV/O6SAsg
+         xsAZVC17xpC0tkv34fcxd/IFTurI8YCyfhq3oC0GaoGz1Y+L4RrSr0a8faEygSfLg0G3
+         /Sk6p8RCz8e1ubT1nGKLs4kVpOXixmSSUJtkrvfEBvVqKKUX1sME1t7gjvCI/+F92aYU
+         ceV8O43TDvWc7IaWvh6AJ1I2JBSqk2Jh5/ydmdNLKOPr3p3B3tkfXmgJJL7FQTIE1gL4
+         35jWY41cSjMrqMWDyiOQnt4boDkEmO95K/S5BxfD6YHL1dcgp75/G1LHuMy+QEmj/jpw
+         GyPA==
+X-Gm-Message-State: AO0yUKUb9iHS2Ymnyw04hRGfJyW/4fG4px1xEjWV2Z4xmhx0Cl4gDRFu
+	YJFECyXdCV+IEExFBAKejAz5NvYB7Zqg2C3N
+X-Google-Smtp-Source: AK7set8hh364z23NwgJT72EZn6UccBGCtYnfclHpudBecTTnm6Ly2B9AsBGzv35yn/pNM1ADnQ9WuQ==
+X-Received: by 2002:a05:600c:600a:b0:3dc:4316:52be with SMTP id az10-20020a05600c600a00b003dc431652bemr151912wmb.10.1677254483738;
+        Fri, 24 Feb 2023 08:01:23 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:639b:9979:fd5f:bbb7])
+        by smtp.gmail.com with ESMTPSA id 1-20020a05600c028100b003dc3f3d77e3sm3215403wmk.7.2023.02.24.08.01.23
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Feb 2023 05:41:14 -0800 (PST)
-Message-ID: <dc9bfbf315b36243781e012ac8117fb8acd59711.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Bitbake repo using the same tag name as branch
+        Fri, 24 Feb 2023 08:01:23 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin Jansa <Martin.Jansa@gmail.com>, bitbake-devel
- <bitbake-devel@lists.openembedded.org>, Lee Chee Yang
- <chee.yang.lee@intel.com>
-Cc: Michael Halstead <mhalstead@linuxfoundation.org>
-Date: Fri, 24 Feb 2023 13:41:14 +0000
-In-Reply-To: <CA+chaQcSZDgrbeZjOU+THvNTrQt+VzCUGg3p1FMVG9qiP4QDAw@mail.gmail.com>
-References: 
-	<CA+chaQcSZDgrbeZjOU+THvNTrQt+VzCUGg3p1FMVG9qiP4QDAw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1-0ubuntu1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 2/2] utils: Use internal fetcher function to avoid duplication
+Date: Fri, 24 Feb 2023 16:01:21 +0000
+Message-Id: <20230224160121.321885-2-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20230224160121.321885-1-richard.purdie@linuxfoundation.org>
+References: <20230224160121.321885-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 13:41:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14486
+ <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 16:01:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14488
 
-On Fri, 2023-02-24 at 12:09 +0100, Martin Jansa wrote:
-> Is there some reason why bitbake started to use tag name identical as
-> branch name from 2.0?
->=20
-> It happens only with 2.0 and 2.2, because previous 1.52 branch had
-> first release named 1.52.0 not 1.52:
-> commit c78ebac71ec976fdf27ea24767057882870f5c60 (tag: yocto-3.4, tag:
-> 2021-10-honister, tag: 1.52.0)
->=20
-> bitbake $ git show 1.52.0
-> tag 1.52.0
-> Tagger: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
-> Date: =C2=A0 Mon Oct 25 15:16:54 2021 -0700
->=20
-> Tagging for 1.52.0 (yocto-3.4)
->=20
-> This new scheme has small disadvantage:
->=20
-> bitbake $ git push github 2.0
-> error: src refspec 2.0 matches more than one
-> error: failed to push some refs to 'github.com:shr-
-> distribution/bitbake.git'
->=20
-> I can work around it by using refs/heads/2.0 and refs/tags/2.0 to
-> distinguish between them, but that's still a bit unusual and
-> unfortunate.
->=20
-> Adding Chee Yang Lee who authored these 2 tags (see another warning
-> there):
->=20
-> bitbake $ git show 2.0
-> warning: refname '2.0' is ambiguous.
-> tag 2.0
-> Tagger: Chee Yang Lee <chee.yang.lee@intel.com>
-> Date: =C2=A0 Mon Apr 25 22:27:04 2022 -0700
->=20
-> bitbake $ git show 2.2
-> warning: refname '2.2' is ambiguous.
-> tag 2.2
-> Tagger: Chee Yang Lee <chee.yang.lee@intel.com>
-> Date: =C2=A0 Sun Oct 23 20:33:14 2022 -0700
+We currently have two lists of "proxy" or "fetcher" environment exports.
+Make the one in utils match the one on the fetcher which has a more complete
+list of variables now.
 
-We should probably drop the 2.0 and 2.2 tags and put 2.0.0 and 2.2.0
-tags in place instead.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/utils.py | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-Cheers,
-
-Richard
-
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 4446997e42..0624a4f3e9 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -1698,22 +1698,11 @@ def disable_network(uid=None, gid=None):
+         f.write("%s %s 1" % (gid, gid))
+ 
+ def export_proxies(d):
++    from bb.fetch2 import get_fetcher_environment
+     """ export common proxies variables from datastore to environment """
+-
+-    variables = ['http_proxy', 'HTTP_PROXY', 'https_proxy', 'HTTPS_PROXY',
+-                    'ftp_proxy', 'FTP_PROXY', 'no_proxy', 'NO_PROXY',
+-                    'GIT_PROXY_COMMAND', 'SSL_CERT_FILE', 'SSL_CERT_DIR']
+-
+-    origenv = d.getVar("BB_ORIGENV")
+-
+-    for name in variables:
+-        value = d.getVar(name)
+-        if not value and origenv:
+-            value = origenv.getVar(name)
+-        if value:
+-            os.environ[name] = value
+-
+-
++    newenv = get_fetcher_environment(d)
++    for v in newenv:
++        os.environ[v] = newenv[v]
+ 
+ def load_plugins(logger, plugins, pluginpath):
+     def load_plugin(name):
+-- 
+2.37.2
 
 
