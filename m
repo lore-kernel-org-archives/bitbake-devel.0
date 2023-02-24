@@ -1,136 +1,214 @@
-Return-Path: <mac@mcrowe.com>
+Return-Path: <mark.asselstine@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F95C7EE2D
-	for <webhook@archiver.kernel.org>; Fri, 24 Feb 2023 16:51:11 +0000 (UTC)
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (NAM11-DM6-obe.outbound.protection.outlook.com [40.107.223.112])
- by mx.groups.io with SMTP id smtpd.web10.23078.1677257470347691245
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CF1C7EE23
+	for <webhook@archiver.kernel.org>; Fri, 24 Feb 2023 20:43:52 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.web11.29825.1677271427972643630
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Feb 2023 08:51:10 -0800
+ Fri, 24 Feb 2023 12:43:48 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@brightsigninfo.onmicrosoft.com header.s=selector2-brightsigninfo-onmicrosoft-com header.b=Mr5QmidM;
- spf=pass (domain: brightsign.biz, ip: 40.107.223.112, mailfrom: mcrowe@brightsign.biz)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g5rlDXdsZbMOQZgrpw4Q3JJ/QRFCveAW+GO4TUzcLtpxRj9wy/VYKCK+4fVp6hYbc86bzaWn38ogOoH6yoVoKJuqDARAZcwDRlQtx4NmZGMiZRY/9Q1bThQDisSjfMIlYYMZ5oqWy7UaS/MLne7/7vG+e5xggE6aBnGcbhx135gJQGHlyaBRyjkxg0kD/KRwRitsAE1Dvhxrcjvucj8BsUPkA3QsJ1ieZrff6jqvPVrqURmVHtcHrzoMImMf7oldLLwHZP/JfVn/qHzrNdjiFs25QU/5CLYrgTdyHyErBsVEtDg4X7prcpj2IDeKSTCO9np5tYPhp8f7mVYpbCWRHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tUuAxNQCfdbrkWmvSIYEA/umMVXXocpj4Hh13w2Qvuk=;
- b=E8l3oA4wTehc39gUUE43+SbF7Z56RRF4x6mYqG7iZQJtYkN3Iyj618G8FWuOISCiOZ5lHiHxp7rBWx2nO0sd7aWD0Q+HReu4HJYlklWUYtzSuJe0oRFJ3SyyZcdGufODBRIAIZttq1leefKd8s74vvi8RkPy8+CWsDyUP3aZhlz0uIszKOfteNK3r7aYsZAn2FdcjoV0+7aZV12Ypc+lHlf8pkBuke3xX0xPdOp97DNCxmoG8kmMnuYhg6tEErOcFcjcKa1GTk1TIH2AHsEG/nt6YFflpHIEH7LPt86qcfm5C8YcaTaGqBMxoNUsiXRQdfvfRAROa8tZte/qhoo4UQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 212.222.38.66) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=brightsign.biz; dmarc=fail (p=quarantine sp=quarantine pct=100)
- action=quarantine header.from=mcrowe.com; dkim=none (message not signed);
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=brightsigninfo.onmicrosoft.com; s=selector2-brightsigninfo-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tUuAxNQCfdbrkWmvSIYEA/umMVXXocpj4Hh13w2Qvuk=;
- b=Mr5QmidM75BfT9dyLhzUsTo4EYUAmO8JNFCVNW94+qNO2dyH4Dzrbwxeo9Gfvgc3pnOTVGEnUEOVC0Ok/eJX63loIH+xy7ulS3X3EP3JQm7M6oTj4ew9tJp6FQd17pC5Q/KM6KxhTc2Ku8aT3t+1Uc6P35oXwtFYZINbA7eSpTA=
-Received: from MW4PR03CA0281.namprd03.prod.outlook.com (2603:10b6:303:b5::16)
- by MW5PR22MB3734.namprd22.prod.outlook.com (2603:10b6:303:1aa::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.24; Fri, 24 Feb
- 2023 16:51:07 +0000
-Received: from MW2NAM04FT043.eop-NAM04.prod.protection.outlook.com
- (2603:10b6:303:b5:cafe::8a) by MW4PR03CA0281.outlook.office365.com
- (2603:10b6:303:b5::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.24 via Frontend
- Transport; Fri, 24 Feb 2023 16:51:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 212.222.38.66)
- smtp.mailfrom=brightsign.biz; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=mcrowe.com;
-Received-SPF: Pass (protection.outlook.com: domain of brightsign.biz
- designates 212.222.38.66 as permitted sender)
- receiver=protection.outlook.com; client-ip=212.222.38.66;
- helo=elite.brightsign; pr=C
-Received: from elite.brightsign (212.222.38.66) by
- MW2NAM04FT043.mail.protection.outlook.com (10.13.31.121) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6134.24 via Frontend Transport; Fri, 24 Feb 2023 16:51:06 +0000
-Received: from chuckie.brightsign ([fd44:d8b8:cab5:cb01::19] helo=chuckie)
-	by elite.brightsign with esmtp (Exim 4.92)
-	(envelope-from <mcrowe@brightsign.biz>)
-	id 1pVbHk-00096J-W1; Fri, 24 Feb 2023 16:51:05 +0000
-Received: from mac by chuckie with local (Exim 4.94.2)
-	(envelope-from <mcrowe@brightsign.biz>)
-	id 1pVbHk-001HEU-Oq; Fri, 24 Feb 2023 16:51:04 +0000
-From: Mike Crowe <mac@mcrowe.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Mike Crowe <mac@mcrowe.com>
-Subject: [PATCH] gitsm: Fix path construction for relative submodule URI
-Date: Fri, 24 Feb 2023 16:50:54 +0000
-Message-Id: <20230224165054.304484-1-mac@mcrowe.com>
+ dkim=pass header.i=@windriver.com header.s=pps06212021 header.b=YQ4fp3CK;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=1419724ccc=mark.asselstine@windriver.com)
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31OKLAfn006192
+	for <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 20:43:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com; h=from : to :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=PPS06212021;
+ bh=vvPEw5j8qway4kX0AEckLEkNoepn+PpFtKuj5P/5NPs=;
+ b=YQ4fp3CKdEc4shfsczFEg66wrYl7fGd6gXl+7Qszh4S3O8dF2l2aojXyT++r6RMRbZy0
+ uKjQl8LgW8aeybyyhnSrF6n0NOQaHlG+oLRERrzXAjcQLAai/dxI1SZFZNiwcBn2xllY
+ 78RrgYuiZNoEhMh3Bryu4TOBa1dZV/oxHhjLqi9lRHGIJD1Zz3nmHOGQxDwJQFd9E2OB
+ 0/cdAhLsmWYRv/twaGhh8iMicAIwi6PfY/VlVs9hQ+sbnDM1ykA66wavKzLwxxqjoRUQ
+ AWi9V/gtXkvoI9US7vSlbIYUEWTsq9mdY5ex6m6Dwkqb1ZbxU0P4TW1tz4M8LQHZ0Dkj jw== 
+Received: from ala-exchng02.corp.ad.wrs.com (unknown-82-254.windriver.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3ntpd3x608-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 20:43:46 +0000
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.18; Fri, 24 Feb 2023 12:43:45 -0800
+Received: from YOW-MASSELST-L1.corp.ad.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.17 via Frontend Transport; Fri, 24 Feb 2023 12:43:45 -0800
+From: Mark Asselstine <mark.asselstine@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] fetcher: npmsw: add more short forms for git operations
+Date: Fri, 24 Feb 2023 15:43:44 -0500
+Message-ID: <20230224204344.1919-1-mark.asselstine@windriver.com>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW2NAM04FT043:EE_|MW5PR22MB3734:EE_
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 011b9aa3-64b2-4020-30ca-08db1687527d
-X-MS-Exchange-SenderADCheck: 0
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	t2eg9OfXqukkNnoyb4mtfFNnPaM6S6rB69HaW/a+MiYfmcp1bLm1j7MOm10OBuwaC3HSHw/FZgsxRqSawegc3rsi463Is4mceYhx6bTzH32GATjNH50NLTIlrORjJP9nP4SL6izcu9d/3ZmY1XUwPgALzLF8LHlbf7JBeSyEkHjcCijjcwTb5e04+pcs6jonhZ/0Vwvkqwj7gzXYeIfRr5n0ffxoCpO2k4DOaF7TaQmH4a1fxPWRHiSzemsPnPKxSUweo1fpGR7qpuZGiUPZyu7ELbD+yUVkaPl1kdcx8n47q4rDCSp/L378+C1KuaTvJwuPnuSU3m85AghJ46BzQWKuu0j0+oaRKa4XmQQtqGUgenuf+uQ/9om5wd/ie8gK2IpmwyXUStY3CFlMOwIM1bj6/i2gvRbddbuClykXCtpXbVATTHl2LV8CAHg+O2tYNtw4vMJ71zfH3QjKrlySBxyznCHxTdvdkJf2UmB4wY4TYdPUYutDca2kJXi9QDv9Jr1tl6UBW89o435/OTJU9kth4lOVqKHks7dTzcHAVxONkcy/PYsEPoPa74XN4i9wYiVpxlg2iAmHhAw/boh4RfJKfXDvae4gN7chT/0quvh45yrP7R+c59D8EzmDGuwNeVYgqi7OKkgzF08NTvOVmQxYS5NudGsVWBpdTRNDz8PLJu6H7UIWWnY9/p9td8SxZFtlNbOndDdsIusSPezb2w==
-X-Forefront-Antispam-Report: 
-	CIP:212.222.38.66;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:elite.brightsign;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(39840400004)(396003)(346002)(136003)(376002)(451199018)(46966006)(36840700001)(66899018)(186003)(1076003)(6666004)(26005)(36860700001)(36756003)(81166007)(40480700001)(316002)(478600001)(356005)(82310400005)(83380400001)(336012)(426003)(2616005)(47076005)(42882007)(8936002)(9746002)(2906002)(83170400001)(9786002)(8676002)(5660300002)(4326008)(6916009)(41300700001)(70586007)(70206006)(36900700001);DIR:OUT;SFP:1102;
-X-OriginatorOrg: brightsign.biz
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2023 16:51:06.3389
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 011b9aa3-64b2-4020-30ca-08db1687527d
-X-MS-Exchange-CrossTenant-Id: 8fbcdf64-1ab8-47ce-bdc7-43e23b04fb3c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=8fbcdf64-1ab8-47ce-bdc7-43e23b04fb3c;Ip=[212.222.38.66];Helo=[elite.brightsign]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	MW2NAM04FT043.eop-NAM04.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR22MB3734
+X-Proofpoint-GUID: -roeJGhaJva5QnDo04IIsOM6BLCqnnff
+X-Proofpoint-ORIG-GUID: -roeJGhaJva5QnDo04IIsOM6BLCqnnff
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-24_15,2023-02-24_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 priorityscore=1501 bulkscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=906 clxscore=1011 lowpriorityscore=0 phishscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302240165
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 16:51:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14489
+ <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 20:43:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14490
 
-The submodule repository URI contains a path to something not
-necessarily on the local filesystem. This means that we can't use
-realpath to normalise it without risking getting bad results if the path
-happens to match something on the local filesystem. This situation can
-cause very confusing errors if that matching local path happens to be a
-symlink to somewhere else.
+From the npm-install documentation [1] the CLI provides a set of
+short forms when the install fetches from git. These include
 
-Using normpath rather than realpath means that the path simplification
-follows simple rules on the string rather than looking at the local
-filesystem and avoids problems.
+"github:"
+example: npm install github:mygithubuser/myproject
 
-Signed-off-by: Mike Crowe <mac@mcrowe.com>
-Co-authored-by: Dave Craig
+"gist:"
+example: npm install gist:101a11beef
+
+"gitlab:"
+example: npm install gitlab:mygitlabuser/myproject
+
+"bitbucket:"
+example: npm install bitbucket:mybitbucketuser/myproject
+
+Commit 1d8af6aed0a9 [fetch2: npmsw: Add support for github prefix in
+npm shrinkwrap version] by Stefan Herbrechtsmeier added support for
+the "github:" but the others would marked as 'Unsupported dependency'.
+
+The other prefixes are added in this commit, along with extending the
+tests to cover some of these.
+
+However, there is one more short form for github which npm-install
+allows which forgoes the prefix altogether.
+
+example: npm install mygithubuser/myproject
+
+Unfortunately this format is a bit problematic as it lacks any easily
+identifiable 'marker' to match against, and it could be either the
+github short form or install from folder format. Experimentation shows
+that the folder format requires a leading './' or '/', so we use this
+to rule out the ambiguity.
+
+If this approach to folder and github formats disambiguation is
+incorrect it won't matter anyways as the folder format is unrecognized
+by the code as-is and thus with this change or without, things would
+fail.
+
+Since we have to be less strict in the check for git operations we
+move it to be the last install format which we check, such that the
+less ambiguous formats can be sorted out first.
+
+[1] https://docs.npmjs.com/cli/v9/commands/npm-install
+
+[Yocto #14236]
+
+Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
 ---
- lib/bb/fetch2/gitsm.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/fetch2/npmsw.py | 26 +++++++++++++++++++-------
+ lib/bb/tests/fetch.py  | 39 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index fee40cdcb..f8e239bc5 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -90,7 +90,7 @@ class GitSM(Git):
-                 # Convert relative to absolute uri based on parent uri
-                 if  uris[m].startswith('..') or uris[m].startswith('./'):
-                     newud =3D copy.copy(ud)
--                    newud.path =3D os.path.realpath(os.path.join(newud.pat=
-h, uris[m]))
-+                    newud.path =3D os.path.normpath(os.path.join(newud.pat=
-h, uris[m]))
-                     uris[m] =3D Git._get_repo_url(self, newud)
-
-         for module in submodules:
---
+diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
+index a8c4d352..36fcbfba 100644
+--- a/lib/bb/fetch2/npmsw.py
++++ b/lib/bb/fetch2/npmsw.py
+@@ -129,10 +129,28 @@ class NpmShrinkWrap(FetchMethod):
+ 
+                 localpath = os.path.join(d.getVar("DL_DIR"), localfile)
+ 
++            # Handle local tarball and link sources
++            elif version.startswith("file"):
++                localpath = version[5:]
++                if not version.endswith(".tgz"):
++                    unpack = False
++
+             # Handle git sources
+-            elif version.startswith("git"):
++            elif version.startswith(("git", "bitbucket","gist")) or (
++                not version.endswith((".tgz", ".tar", ".tar.gz"))
++                and not version.startswith((".", "@", "/"))
++                and "/" in version
++            ):
+                 if version.startswith("github:"):
+                     version = "git+https://github.com/" + version[len("github:"):]
++                elif version.startswith("gist:"):
++                    version = "git+https://gist.github.com/" + version[len("gist:"):]
++                elif version.startswith("bitbucket:"):
++                    version = "git+https://bitbucket.org/" + version[len("bitbucket:"):]
++                elif version.startswith("gitlab:"):
++                    version = "git+https://gitlab.com/" + version[len("gitlab:"):]
++                elif not version.startswith(("git+","git:")):
++                    version = "git+https://github.com/" + version
+                 regex = re.compile(r"""
+                     ^
+                     git\+
+@@ -158,12 +176,6 @@ class NpmShrinkWrap(FetchMethod):
+ 
+                 url = str(uri)
+ 
+-            # Handle local tarball and link sources
+-            elif version.startswith("file"):
+-                localpath = version[5:]
+-                if not version.endswith(".tgz"):
+-                    unpack = False
+-
+             else:
+                 raise ParameterError("Unsupported dependency: %s" % name, ud.url)
+ 
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 54148b3f..73eefc59 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -2664,6 +2664,45 @@ class NPMTest(FetcherTest):
+         self.assertTrue(os.path.exists(os.path.join(self.sdir, 'node_modules', 'array-flatten', 'node_modules', 'content-type', 'package.json')))
+         self.assertTrue(os.path.exists(os.path.join(self.sdir, 'node_modules', 'array-flatten', 'node_modules', 'content-type', 'node_modules', 'cookie', 'package.json')))
+ 
++    @skipIfNoNpm()
++    @skipIfNoNetwork()
++    def test_npmsw_git(self):
++        swfile = self.create_shrinkwrap_file({
++            'dependencies': {
++                'cookie': {
++                    'version': 'github:jshttp/cookie.git#aec1177c7da67e3b3273df96cf476824dbc9ae09',
++                    'from': 'github:jshttp/cookie.git'
++                }
++            }
++        })
++        fetcher = bb.fetch.Fetch(['npmsw://' + swfile], self.d)
++        fetcher.download()
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'github.com.jshttp.cookie.git')))
++
++        swfile = self.create_shrinkwrap_file({
++            'dependencies': {
++                'cookie': {
++                    'version': 'jshttp/cookie.git#aec1177c7da67e3b3273df96cf476824dbc9ae09',
++                    'from': 'jshttp/cookie.git'
++                }
++            }
++        })
++        fetcher = bb.fetch.Fetch(['npmsw://' + swfile], self.d)
++        fetcher.download()
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'github.com.jshttp.cookie.git')))
++
++        swfile = self.create_shrinkwrap_file({
++            'dependencies': {
++                'nodejs': {
++                    'version': 'gitlab:gitlab-examples/nodejs.git#892a1f16725e56cc3a2cb0d677be42935c8fc262',
++                    'from': 'gitlab:gitlab-examples/nodejs'
++                }
++            }
++        })
++        fetcher = bb.fetch.Fetch(['npmsw://' + swfile], self.d)
++        fetcher.download()
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'gitlab.com.gitlab-examples.nodejs.git')))
++
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npmsw_dev(self):
+-- 
 2.30.2
 
-BrightSign considers your privacy to be very important. The emails you send=
- to us will be protected and secured. Furthermore, we will only use your em=
-ail and contact information for the reasons you sent them to us and for tra=
-cking how effectively we respond to your requests.
 
