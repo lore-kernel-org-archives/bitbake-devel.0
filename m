@@ -1,128 +1,126 @@
-Return-Path: <Martin.Jansa@gmail.com>
+Return-Path: <cal@brightsign.biz>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790F2C61DA3
-	for <webhook@archiver.kernel.org>; Fri, 24 Feb 2023 11:09:59 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.15176.1677236992670254408
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E334C61DA3
+	for <webhook@archiver.kernel.org>; Fri, 24 Feb 2023 11:31:09 +0000 (UTC)
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (NAM02-BN1-obe.outbound.protection.outlook.com [40.107.212.128])
+ by mx.groups.io with SMTP id smtpd.web10.15491.1677238260933529566
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Feb 2023 03:09:53 -0800
+ Fri, 24 Feb 2023 03:31:01 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=oqnoCS7e;
- spf=pass (domain: gmail.com, ip: 209.85.128.44, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f44.google.com with SMTP id o38-20020a05600c512600b003e8320d1c11so3980654wms.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 03:09:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UiAjp8GvwRIDlPvhCQENzMlSqXHlBPX17sVsXq9tFnc=;
-        b=oqnoCS7esNALqZAxVxDM4/7yjUKkCn3sCNJGxANESWDn420QSUkCleC33u8q8aOUvG
-         +qvCqG7kHt3wcWoF/77I5M0m54WyyRZEzluTRzifhGY9nf1bQK6ZVDjj5AhJ2ofHBN7X
-         d01Au1d+e8FAO+jQEGEoqzbYQunCvOAlhALLVammXzF2hHh2L3FEMp9SFMDPyIostT68
-         QOAr5HlW3Q4voCf41uxaVUy8zH08jVxhVXk9p5WSClc6k5FbZrllZ3GsTn7tyr2519Ec
-         Wr+wfGYtBgo4zhgxsj6hlSctrnCFPvU9pu+UttvjQz6OTtVohWZqBxMNIDWFoRvTvmCP
-         Z50Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UiAjp8GvwRIDlPvhCQENzMlSqXHlBPX17sVsXq9tFnc=;
-        b=OXuoIEMD2mYyhSH9FZw0EwgmzvYmWOuZPSBpaFB61eu3itNChfRE/29Mytk0/1neMw
-         Bf2nWbzc4SbYO7Ycm/pkWanJ0cy3CX69zQ1bem7IVi/ZMI12fFYBMwHwnTREosfl/6zW
-         NporsGy4LnyrVdppO/TKS0T5YdxxBF5eJ3EgUXmLEBu7j14a962UK13Ewg9t9oBtyJAW
-         xotfrGwcBaYMv8VXXOdQCjFYLXZHkNcbgN/dp1lhucPtTHK9S4jt5EbBegsGsdMjHt4K
-         HABs0sIh+bSuJEouAp5IHN9bgRSyovPG1FT+/Vstg/88uemMiduQu/IeAIVfJyE05fc0
-         jbpg==
-X-Gm-Message-State: AO0yUKUihw+GeTz0c6tVuyeINoIlz8UAjAIn6o160TDO658xIhS59UAf
-	KY+VOOWSG4YSoGwI1k3zBTII8K6XSwXCoAVMusQdiHduIGo=
-X-Google-Smtp-Source: AK7set/Wij8QKxeRJw407qipIDLUWCYQLBGUoRHsVcpYnid6lkQymHD72gGu+1pntioCQzOxLzH+FFNKc6V3CsoX8ZA=
-X-Received: by 2002:a05:600c:502c:b0:3df:fc69:e977 with SMTP id
- n44-20020a05600c502c00b003dffc69e977mr1174053wmr.5.1677236991051; Fri, 24 Feb
- 2023 03:09:51 -0800 (PST)
+ dkim=pass header.i=@brightsign.biz header.s=selector2 header.b=MHdNjSBW;
+ spf=pass (domain: brightsign.biz, ip: 40.107.212.128, mailfrom: cal@brightsign.biz)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LL9ZjLrSYdb+eB4LU+DyyTBP5a9g4xAvq/tKHkeRPN5AARGO9p6ER5ZusnDBLjOzFAxEjUyBl8mPUojL3sa/yZNNMiJhGCLU7/lSt83JYGInHAEeOpwXkImgUfK20x40WB1ouTbIV5s6Bn3zrFNr/IdLvZkjqPffpimsE2Aep1LaFtC+rVICOC85/AVUeu9TpCl+HG4oIGt36ThP1LLv1gv+EJOO9dAWgUcgtKdyZK7QeWs8qrG1f+yYas23w7eF0dru8UaP873mezID3e13bITIQmQ3HVyrxKHXN4QEyQ/IQ1m3ROONIz322FsUo1uwdQznu+p6yR3CZhY6BzRGEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lWPWsi+K8j7D/ZoDp9H9hOanIRXZI8OButiVaMntdEg=;
+ b=J0VuAiWsG+0nlH7guDsLhhLSjezhXz8XIdFscouW2ixz+1vQViLdzRYWMr1shO0eHmVw6TmH1Hmec4XkH9/lr1JAj4XGqHPjswe9mQuBMvSyCRc3fqzd5Ne5n3zH47JnPC19w0yCqf6TBc7Wd16F4vZqC5BraSSiYUUOT0tCrSUtO7SDZRMqfromMfWkPfr3sT2D3bQjFZ50HBH23+QtA87VimkG8m6x0A7KazYTtd0wJPiVeP177r3O1eUOPCFfIAVDSSm+kFLXZoLypqmTKHPQZxCXjsLWE+Y1PtW1WXu3XbCOQAzB6h7XZcTbfgZe4wZDCGh4a08azAely+iRjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 212.222.38.66) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=brightsign.biz; dmarc=pass (p=quarantine sp=quarantine pct=100)
+ action=none header.from=brightsign.biz; dkim=none (message not signed);
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=brightsign.biz;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lWPWsi+K8j7D/ZoDp9H9hOanIRXZI8OButiVaMntdEg=;
+ b=MHdNjSBWpz7sRbQQZqTpOlcKY3wVunbKskiCowRMt9oLP8kDPrbAEPuJBckps/gvgRXMbFSzOdxH/AbwGjS96dqbMV9aGenTLhLJ7H+B9Dwc9k7wv7u9hA/8i60ZhDvZLniT1eUx0SxMCJWvfUWWS0vCwn2x9MXDtW9R56TQ594eoyNxZwXn4Ei7YyfK63Moyh0b6AkMLNWQmw6gnogpaRq+7tXPg47+fK1wQ9fiSOg7f7RK6HdLl7ooNtLAdYcuqsECUWICYg4GRAMWMBD2VXVdM73ke3tQgLG5wNMdGdJ26JrILZRoiySnr0KuDT8EeTxYnEErhgH6zqZDEaf2DQ==
+Received: from MW4P220CA0030.NAMP220.PROD.OUTLOOK.COM (2603:10b6:303:115::35)
+ by DM4PR22MB3652.namprd22.prod.outlook.com (2603:10b6:8:64::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6134.24; Fri, 24 Feb 2023 11:30:57 +0000
+Received: from MW2NAM04FT028.eop-NAM04.prod.protection.outlook.com
+ (2603:10b6:303:115:cafe::5f) by MW4P220CA0030.outlook.office365.com
+ (2603:10b6:303:115::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.24 via Frontend
+ Transport; Fri, 24 Feb 2023 11:30:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 212.222.38.66)
+ smtp.mailfrom=brightsign.biz; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=brightsign.biz;
+Received-SPF: Pass (protection.outlook.com: domain of brightsign.biz
+ designates 212.222.38.66 as permitted sender)
+ receiver=protection.outlook.com; client-ip=212.222.38.66;
+ helo=elite.brightsign; pr=C
+Received: from elite.brightsign (212.222.38.66) by
+ MW2NAM04FT028.mail.protection.outlook.com (10.13.31.131) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6134.24 via Frontend Transport; Fri, 24 Feb 2023 11:30:55 +0000
+Received: from ukcam-caltinbasak01.brightsign ([fd44:d8b8:cab5:cb01::7b])
+	by elite.brightsign with esmtp (Exim 4.92)
+	(envelope-from <caltinbasak@brightsign.biz>)
+	id 1pVWHu-0004qX-IX; Fri, 24 Feb 2023 11:30:54 +0000
+Received: from cal by ukcam-caltinbasak01.brightsign with local (Exim 4.94.2)
+	(envelope-from <cal@ukcam-caltinbasak01.brightsign>)
+	id 1pVWHu-003Wtf-BB; Fri, 24 Feb 2023 11:30:54 +0000
+From: cal@brightsign.biz
+To: bitbake-devel@lists.openembedded.org
+Cc: Caner Altinbasak <cal@brightsign.biz>
+Subject: [PATCH] fetch2: Add GIT_CACHE_PATH and SSL_CERT_DIR into FETCH_EXPORT_VARS
+Date: Fri, 24 Feb 2023 11:30:32 +0000
+Message-Id: <20230224113032.841394-1-cal@brightsign.biz>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Fri, 24 Feb 2023 12:09:36 +0100
-Message-ID: <CA+chaQcSZDgrbeZjOU+THvNTrQt+VzCUGg3p1FMVG9qiP4QDAw@mail.gmail.com>
-Subject: Bitbake repo using the same tag name as branch
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
-	Lee Chee Yang <chee.yang.lee@intel.com>
-Content-Type: multipart/alternative; boundary="0000000000000e4aac05f5702bbe"
+Content-Transfer-Encoding: quoted-printable
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW2NAM04FT028:EE_|DM4PR22MB3652:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 7281105d-5037-4359-e2cf-08db165a9825
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	DBjvF4s2GkLWXSu9iExf3s2U7gCuhKK6Hlf157AI5ZBV6aIdtYnvkmwzQu5z7KionpuizrkFpq7tWGQOoOFqmjqfWRXdynZWmYW7s1LNF5kW2dlk1bbfELl0qa+noxdt6eTlITbU9tP/4/U3yAwMQ61Ey204RTQzXaX4jIX19tcAMnTH5dPs/U3nK5klPm5JwXnKI3miQnxUqJ5PmksdfRCqhppej920ZWFxQxKrM08LD3Hj5yMvVog1OgiADrDilYG8fuJnY1KGJYJWTqFjTuKAuHzk+bZAq5OjS1drS20NdEOFEkwm5zbnalKiaKv4QaxVrJWgtjsuzQN92dvteK2C/ni78LKjt3h8/ANAZ+lPQ9eaf+Tn3cneN1Q3lFyVgcZGk0K14CwxG9nGPSO8eBgFh+X+gLWeZC1EJyqPH3lTDfLXAlW75uMDCPrNcKFzPVa9/YdDudBj9zxmTp/pyFhrC95Jcr9MOvQyac1KHT+Ks6L2BB8vY4iMXN+Ekd/M7JamjukMvc7nLCfOSv9eYWvIaZYtnw+47oWl0vhcqDfOGZ4IoVYWv+2G4+1BnIxcDYuH0Ia6l10xvJayheEmQAtz4ocOrqBibDiIss40ooOlfrfnWGE6zwwqtUEMftc8Ocm57tkAwBibrQ2VZomHfb6YgMKOyZeJtFLFtrGb40m3Mn2UxEbk8uwJXS9SN6s41F5NV7YCNEMhYmBcp6TUSA==
+X-Forefront-Antispam-Report: 
+	CIP:212.222.38.66;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:elite.brightsign;PTR:ErrorRetry;CAT:NONE;SFS:(13230025)(4636009)(396003)(376002)(346002)(39830400003)(136003)(451199018)(46966006)(36840700001)(66899018)(36860700001)(4744005)(86362001)(82310400005)(2906002)(81166007)(336012)(478600001)(70036008)(186003)(9686003)(2616005)(47076005)(26005)(36756003)(40480700001)(356005)(83380400001)(70206006)(6666004)(41300700001)(4326008)(1076003)(107886003)(70586007)(8936002)(6916009)(316002)(9746002)(8676002)(9786002)(5660300002)(36900700001);DIR:OUT;SFP:1102;
+X-OriginatorOrg: brightsign.biz
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2023 11:30:55.8544
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7281105d-5037-4359-e2cf-08db165a9825
+X-MS-Exchange-CrossTenant-Id: 8fbcdf64-1ab8-47ce-bdc7-43e23b04fb3c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=8fbcdf64-1ab8-47ce-bdc7-43e23b04fb3c;Ip=[212.222.38.66];Helo=[elite.brightsign]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	MW2NAM04FT028.eop-NAM04.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR22MB3652
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 11:09:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14483
+ <bitbake-devel@lists.openembedded.org>; Fri, 24 Feb 2023 11:31:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14484
 
---0000000000000e4aac05f5702bbe
-Content-Type: text/plain; charset="UTF-8"
+From: Caner Altinbasak <cal@brightsign.biz>
 
-Is there some reason why bitbake started to use tag name identical as
-branch name from 2.0?
+These environment variables are needed by gclient and needed to be
+passed into fetcher.
+---
+ lib/bb/fetch2/__init__.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-It happens only with 2.0 and 2.2, because previous 1.52 branch had first
-release named 1.52.0 not 1.52:
-commit c78ebac71ec976fdf27ea24767057882870f5c60 (tag: yocto-3.4, tag:
-2021-10-honister, tag: 1.52.0)
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 747356dfa..cf65727a2 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -855,7 +855,9 @@ FETCH_EXPORT_VARS =3D ['HOME', 'PATH',
+                      'AWS_PROFILE',
+                      'AWS_ACCESS_KEY_ID',
+                      'AWS_SECRET_ACCESS_KEY',
+-                     'AWS_DEFAULT_REGION']
++                     'AWS_DEFAULT_REGION',
++                     'GIT_CACHE_PATH',
++                     'SSL_CERT_DIR']
 
-bitbake $ git show 1.52.0
-tag 1.52.0
-Tagger: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
-Date:   Mon Oct 25 15:16:54 2021 -0700
+ def get_fetcher_environment(d):
+     newenv =3D {}
+--
+2.30.2
 
-Tagging for 1.52.0 (yocto-3.4)
-
-This new scheme has small disadvantage:
-
-bitbake $ git push github 2.0
-error: src refspec 2.0 matches more than one
-error: failed to push some refs to 'github.com:shr-distribution/bitbake.git'
-
-I can work around it by using refs/heads/2.0 and refs/tags/2.0 to
-distinguish between them, but that's still a bit unusual and unfortunate.
-
-Adding Chee Yang Lee who authored these 2 tags (see another warning there):
-
-bitbake $ git show 2.0
-warning: refname '2.0' is ambiguous.
-tag 2.0
-Tagger: Chee Yang Lee <chee.yang.lee@intel.com>
-Date:   Mon Apr 25 22:27:04 2022 -0700
-
-bitbake $ git show 2.2
-warning: refname '2.2' is ambiguous.
-tag 2.2
-Tagger: Chee Yang Lee <chee.yang.lee@intel.com>
-Date:   Sun Oct 23 20:33:14 2022 -0700
-
---0000000000000e4aac05f5702bbe
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>Is there some reason why bitbake started to use tag n=
-ame identical as branch name from 2.0?</div><div><br></div><div>It happens =
-only with 2.0 and 2.2, because previous 1.52 branch had first release named=
- 1.52.0 not 1.52:</div><div>commit c78ebac71ec976fdf27ea24767057882870f5c60=
- (tag: yocto-3.4, tag: 2021-10-honister, tag: 1.52.0)<br></div><div><br></d=
-iv><div>bitbake $ git show 1.52.0<br>tag 1.52.0<br>Tagger: Vineela Tummalap=
-alli &lt;<a href=3D"mailto:vineela.tummalapalli@intel.com">vineela.tummalap=
-alli@intel.com</a>&gt;<br>Date: =C2=A0 Mon Oct 25 15:16:54 2021 -0700<br><b=
-r>Tagging for 1.52.0 (yocto-3.4)<br></div><div><br></div><div>This new sche=
-me has small disadvantage:</div><div><br></div>bitbake $ git push github 2.=
-0<br>error: src refspec 2.0 matches more than one<br>error: failed to push =
-some refs to &#39;github.com:shr-distribution/bitbake.git&#39;<br><div><br>=
-</div><div>I can work around it by using refs/heads/2.0 and refs/tags/2.0 t=
-o distinguish between them, but that&#39;s still a bit unusual and unfortun=
-ate.</div><div><br></div><div>Adding Chee Yang Lee who authored these 2 tag=
-s (see another warning there):</div><div><br></div><div>bitbake $ git show =
-2.0<br>warning: refname &#39;2.0&#39; is ambiguous.<br>tag 2.0<br>Tagger: C=
-hee Yang Lee &lt;<a href=3D"mailto:chee.yang.lee@intel.com">chee.yang.lee@i=
-ntel.com</a>&gt;<br>Date: =C2=A0 Mon Apr 25 22:27:04 2022 -0700<br></div><d=
-iv><br></div><div>bitbake $ git show 2.2<br>warning: refname &#39;2.2&#39; =
-is ambiguous.<br>tag 2.2<br>Tagger: Chee Yang Lee &lt;<a href=3D"mailto:che=
-e.yang.lee@intel.com">chee.yang.lee@intel.com</a>&gt;<br>Date: =C2=A0 Sun O=
-ct 23 20:33:14 2022 -0700<br></div></div>
-
---0000000000000e4aac05f5702bbe--
+BrightSign considers your privacy to be very important. The emails you send=
+ to us will be protected and secured. Furthermore, we will only use your em=
+ail and contact information for the reasons you sent them to us and for tra=
+cking how effectively we respond to your requests.
 
