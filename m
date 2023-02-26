@@ -2,83 +2,82 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F3FC64EC7
-	for <webhook@archiver.kernel.org>; Sat, 25 Feb 2023 16:50:39 +0000 (UTC)
-Received: from a11-6.smtp-out.amazonses.com (a11-6.smtp-out.amazonses.com [54.240.11.6])
- by mx.groups.io with SMTP id smtpd.web11.47255.1677342967918073631
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309B4C7EE2D
+	for <webhook@archiver.kernel.org>; Sun, 26 Feb 2023 12:09:05 +0000 (UTC)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web11.64150.1677413334616543642
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 25 Feb 2023 08:36:08 -0800
+ Sun, 26 Feb 2023 04:08:55 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@richelberger.com header.s=5u2mht5g5nbgnd5xxu4iibla5zobc5bd header.b=iTGNEoyy;
- spf=pass (domain: amazonses.com, ip: 54.240.11.6, mailfrom: 01000186896e845c-37272abb-a04f-4c1e-87ef-c0007b322ca0-000000@amazonses.com)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=5u2mht5g5nbgnd5xxu4iibla5zobc5bd; d=richelberger.com;
-	t=1677342967;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
-	bh=nWAxN80icACbBKqKGZdCqNq37bH69WjmNodOp54erRs=;
-	b=iTGNEoyy23DuLzye6jJufeEiPHPfZwYG8aWV3kuT8NtumDq2ExpV2TdJ3uE2nnRu
-	dvmqCEYmdurjZUDJSk+4RY6hhtzwjPztmVJe8tWPd1m8eEZ2WY/BeFtLCuxBuKzOC1Y
-	cQWtovlFLSYWarClVcbBX9LbQxK1LGebCFMXfj68=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1677342967;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
-	bh=nWAxN80icACbBKqKGZdCqNq37bH69WjmNodOp54erRs=;
-	b=iWp+/OwLmYjoIYTF0vbEv3HLQJBsEwy0K2c66YFMt7rFWNo9GnJdcKEnl6s5OauK
-	2co9dXBvdwTGT2IyfgbzYwTQq6i7sRX1/4iaXAt7klQbX1afrjPUcsG6mLCFBAd6WYY
-	owBNipDRiZsMmFB63LP7VsaI7EdKaSRqinoCumlQ=
-Subject: [PATCH] documentation: bitbake: add file-checksums to varflags section
-From: "Richard Elberger" <rich@richelberger.com>
-To: =?UTF-8?Q?bitbake-devel=40lists=2Eopenembedded=2Eorg?=
-  <bitbake-devel@lists.openembedded.org>
-Cc: =?UTF-8?Q?docs=40lists=2Eyoctoproject=2Eorg?=
-  <docs@lists.yoctoproject.org>, =?UTF-8?Q?Richard_Elberger?=
-  <rich@richelberger.com>
-Date: Sat, 25 Feb 2023 16:36:06 +0000
-Mime-Version: 1.0
-References: <20230225163601.377422-1-rich@richelberger.com>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHZSTdAIrouy/VPT9qxy+VNpMFPdw==
-Thread-Topic: [PATCH] documentation: bitbake: add file-checksums to varflags
- section
-X-Original-Mailer: git-send-email 2.34.1
-X-Wm-Sent-Timestamp: 1677342965
-Message-ID: <01000186896e845c-37272abb-a04f-4c1e-87ef-c0007b322ca0-000000@email.amazonses.com>
-Feedback-ID: 1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2023.02.25-54.240.11.6
-Content-Type: text/plain; charset=UTF-8
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=g9zjd+Eo;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f54.google.com with SMTP id l1so458872wry.12
+        for <bitbake-devel@lists.openembedded.org>; Sun, 26 Feb 2023 04:08:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mkvkUnV43m6JTfUskvORGohmEcjwdvhdAI56qa1QOp8=;
+        b=g9zjd+Eo0Tbj45ZBVDN+PQ4EPNfH3FIFaRkYNML/jo6TJCKORnnJyaXLNY4wsR3c3Z
+         5bqncnbe0z6luv7XrY8BR+kWfEMvZwd+YRswKzJid5c4l/lssGmNb3hpRHcnON05Hr4n
+         AUkdr7duvZJ9dHR1xEsduRsU1w+2cgshwqk8M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mkvkUnV43m6JTfUskvORGohmEcjwdvhdAI56qa1QOp8=;
+        b=zf3nDYo7+H5IHIh9waMWm1xAl6fiV009AGTm0kn7DxKW3aQJ7hRj2gVaSjdmoHE0sB
+         /nwHzZKdeYqZjYGa+unPsnR0dFeKKok3IdB7rsgUfS+RmlA5jrRp3rzL/gs+Zhenb7QO
+         +3Gkr8J+UYqv09Fq5NKhMt47rICxUgeFI5AHhHTx9G/l0FjCUyNykNvGZqArj5t+qXVR
+         cikX5HYAPb0y7Wl6Tl2VpSJgR8BpNZenHrkUH11MF66s+lP5EXx42t/Et56UGOswQenR
+         vN3u/nW1ApTojJ11ceKXGJCLLXaqjL/wA6NY2JsosO0orUCi8fteBSNBdDT6MZil1RcI
+         7Ggw==
+X-Gm-Message-State: AO0yUKXiUaH7B5K2xERGsZLGTymaOZK+bIjyBVtToahREamkt0YLIqeU
+	Nr2Px1fpZNxWPu4e4bdt+z11oHt6KeqULJg4
+X-Google-Smtp-Source: AK7set9iKYx/vSAYYxqxOugNOe9hEAoKFDNMcumfkrCW3SI2k8XErWTj+RpffTlKe+VM75G7B3tbag==
+X-Received: by 2002:adf:fbca:0:b0:2c5:899f:3412 with SMTP id d10-20020adffbca000000b002c5899f3412mr17236658wrs.26.1677413333166;
+        Sun, 26 Feb 2023 04:08:53 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:acca:18ee:3f6:d4ed? ([2001:8b0:aba:5f3c:acca:18ee:3f6:d4ed])
+        by smtp.gmail.com with ESMTPSA id f7-20020adffcc7000000b002c7163660a9sm4327832wrs.105.2023.02.26.04.08.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Feb 2023 04:08:52 -0800 (PST)
+Message-ID: <41b18bac009eb26cfbbccc4e179feabab0ebef53.camel@linuxfoundation.org>
+Subject: Re: [docs] [PATCH] documentation: bitbake: add file-checksums to
+ varflags section
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Richard Elberger <rich@richelberger.com>, 
+	"bitbake-devel@lists.openembedded.org"
+	 <bitbake-devel@lists.openembedded.org>
+Cc: "docs@lists.yoctoproject.org" <docs@lists.yoctoproject.org>
+Date: Sun, 26 Feb 2023 12:08:52 +0000
+In-Reply-To: <01000186896f2981-96e1cb88-396f-45d3-adb6-386dacf207ce-000000@email.amazonses.com>
+References: <20230224201426.357606-1-rich@richelberger.com>
+	  <010001868510232c-5929cc94-ce2e-4817-b311-3ea6f58a267c-000000@email.amazonses.com>
+	  <8ddacda7563bc605bae4686733d3e8bf72f0f9ed.camel@linuxfoundation.org>
+	  <169ccc6a-513e-88a0-b2e8-1c74b3aa2b5d@richelberger.com>
+	 <01000186896f2981-96e1cb88-396f-45d3-adb6-386dacf207ce-000000@email.amazonses.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.1-0ubuntu1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 25 Feb 2023 16:50:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14493
+ <bitbake-devel@lists.openembedded.org>; Sun, 26 Feb 2023 12:09:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14494
 
-Fixes [YOCTO #11605] by:=0D=0A=0D=0A- Adding definition of file-checksums=
- to Variable Flags section.=0D=0A- Describe data to add to list which add=
-s external file dependencies.=0D=0A- Write example on usage to prepend a =
-value to file-checksums list.=0D=0A=0D=0ASigned-off-by: Richard Elberger =
-<rich@richelberger.com>=0D=0A---=0D=0A .../bitbake-user-manual-metadata.r=
-st            | 17 +++++++++++++++++=0D=0A 1 file changed, 17 insertions(=
-+)=0D=0A=0D=0Adiff --git a/doc/bitbake-user-manual/bitbake-user-manual-me=
-tadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst=0D=0A=
-index deb7afad..ba8129af 100644=0D=0A--- a/doc/bitbake-user-manual/bitbak=
-e-user-manual-metadata.rst=0D=0A+++ b/doc/bitbake-user-manual/bitbake-use=
-r-manual-metadata.rst=0D=0A@@ -1496,6 +1496,23 @@ functionality of the ta=
-sk:=0D=0A    directory listed is used as the current working directory fo=
-r the=0D=0A    task.=0D=0A=20=0D=0A+- ``[file-checksums]``: Controls the =
-file dependencies for a task. The=0D=0A+  baseline file list is the set o=
-f files associated with=0D=0A+  :term:`SRC_URI`. May be used to set addit=
-ional dependencies on=0D=0A+  files not associated with :term:`SRC_URI`.=0D=
-=0A+=0D=0A+  The value set to the list is a file-boolean pair where the f=
-irst=0D=0A+  value is the file name and the second is whether or not it=0D=
-=0A+  physically exists on the filesystem. ::=0D=0A+=0D=0A+    do_configu=
-re[file-checksums] +=3D "${MY_DIRPATH}/my-file.txt:True"=0D=0A+=0D=0A+  I=
-t is important to record any paths which the task looked at and=0D=0A+  w=
-hich didn't exist. This means that if these do exist at a later=0D=0A+  t=
-ime, the task can be rerun with the new additional files. The=0D=0A+  "ex=
-ists" True or False value after the path allows this to be=0D=0A+  handle=
-d.=0D=0A+=0D=0A -  ``[lockfiles]``: Specifies one or more lockfiles to lo=
-ck while the=0D=0A    task executes. Only one task may hold a lockfile, a=
-nd any task that=0D=0A    attempts to lock an already locked file will bl=
-ock until the lock is=0D=0A--=20=0D=0A2.34.1=0D=0A=0D=0A
+On Sat, 2023-02-25 at 16:36 +0000, Richard Elberger wrote:
+> Hello Richard, I have added this, amended the commit, and sent through=
+=20
+> another patch.
+
+Thanks! I've merged it. If there are other tweaks others want to
+make/add we can build on this incrementally, it is great to get it
+documented.
+
+Cheers,
+
+Richard
 
