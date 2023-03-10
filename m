@@ -2,94 +2,97 @@ Return-Path: <Martin.Jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53674C6FA99
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536EAC6FD1E
 	for <webhook@archiver.kernel.org>; Fri, 10 Mar 2023 20:46:11 +0000 (UTC)
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web11.30870.1678481170380874227
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web10.30843.1678481168569897903
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Mar 2023 12:46:10 -0800
+ Fri, 10 Mar 2023 12:46:08 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=oKdLhQ6d;
- spf=pass (domain: gmail.com, ip: 209.85.128.50, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f50.google.com with SMTP id az36so4263531wmb.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Mar 2023 12:46:10 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=aBPNs9p9;
+ spf=pass (domain: gmail.com, ip: 209.85.221.52, mailfrom: martin.jansa@gmail.com)
+Received: by mail-wr1-f52.google.com with SMTP id t15so6192796wrz.7
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Mar 2023 12:46:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678481169;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9JiTWM+MdCg9IOgA/X0u2f0T1rgZVeqO24TUedvTmmc=;
-        b=oKdLhQ6d1DanPOBLWcBI4rFzgWSoxpnlgfxNUbD0DvwCEX/EsF6Cz0P/UN8ML3uFVg
-         k6+XmKUuEtUctzmk91gJBecS+wk/Qhft53PWUPoO5z2px7xhe2EAOh6SVewbcm70gKkR
-         2sCp8KSNUi7vE0EPJuDufFz4RcgXmrMHqG0SAvBV/fu6xNgAsLU3YrWnZR2uVNwSJPZh
-         27KcfT6WAo33LsVa3I5dU3NX1accPtJptXcUHwO0+aHQpUoudkXemdJLUE93NHZxuOCD
-         ZwJNujT56w2QUJ168QylwwjTcv9hyhq8IlvsuOXV1mmlx2u/RFipumnuR3BE0y678Dn/
-         a95A==
+        d=gmail.com; s=20210112; t=1678481167;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J+wr0y+3hDTDN/eAqmRT5JAzd57gK4wzuxLBf3VOBxc=;
+        b=aBPNs9p90QIvHWNySLUjR2qmPCKTJLvC4mPxct/AImjdqVVvfyhk/wkChsTrRbaSxJ
+         Gedtk28xZ5THEfkpGzIUQCBvmo2JmoLS2zR3gwCtv1OeVwDxtj9YqpyxpanwvtyqSwcX
+         k3U9AKuCLcVn1Fws2iUAyphsnXz3QTIuGfOpDQ7RJZHe+QDI09OgjF3P3ZhwOstJBoTR
+         P4CO1en0dls8lBBH/2EXJkiP1S5r2q5dRR8xVQ4utLFEu+PZBRDW/felhfpAQsvJIYKw
+         rJvO7Mg/mGu/t7OYpDUUFIDwYgO2YXzAXuHpe4A0PMG9R1PJ8Z6p6aAU0nh15eIr4qY3
+         F8MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678481169;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9JiTWM+MdCg9IOgA/X0u2f0T1rgZVeqO24TUedvTmmc=;
-        b=UehTQeECOG+1R2AU0k/tkLoBA++dxriCPN2pABN4RTa5/ptojxyhaI5zJTp2VU0mSz
-         uCB6xFSO74bKiOo6QT6UDi/95UdXNRD1ZJk2Sv1B2BgBzD+0+Kr4SyKvGljDhj29iaXI
-         iZp2uA9i9iCYAKYsnRejH3ysA/PBdQ4UgNbz+kReTlxndWJ50NdEU0+uLn13vmOenaHU
-         m5VgTnG81uD06CF54OivT1inOWy02zmslgMER11kE/jetffYb7iTsE4TPZqZYu4UUWaN
-         5oVyEWhmHtpTrrcGEiZZYZ62Ech7bQaifongNJvp6tNvWMXGevwaUK+ffvSoxNvfln1X
-         ZxfA==
-X-Gm-Message-State: AO0yUKVTe5jtHlsCZGzsHcG5CN7nmaY6VadlLWbF+KQ3mbsA9exYkW+O
-	/nv+5kjjbEoTQlbmyzMavvMHJB2PNr8=
-X-Google-Smtp-Source: AK7set8e9aHS66qEijLPrSgjb0p1ENJCJUISu//DTDwg5qsamOKPiPiIbIlHHU8JVjneCHV+4u0ErA==
-X-Received: by 2002:a05:600c:198e:b0:3dc:42d2:aee4 with SMTP id t14-20020a05600c198e00b003dc42d2aee4mr3999503wmq.25.1678481168873;
-        Fri, 10 Mar 2023 12:46:08 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678481167;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J+wr0y+3hDTDN/eAqmRT5JAzd57gK4wzuxLBf3VOBxc=;
+        b=jKeROc7XBKz4XI/d+0tAvfLikt1fb7oXPBfdhAohM0L6N6EOQjXWiKX4tORc/XiVY1
+         L9rO5gSS8FFQh3WnEklIgjaPOp5bnuG3rimrHiAjwIFYVMUyTEpzV/WuJNqZbU7FIN8D
+         JIlIm0dhPL4e1SpBAzEMwAypwmUO9skxBgcSoAjwXdHI2IWhG8WPvbXwWqokhHeW/e2B
+         DdU+VoOqWenR70Kp5QliLOnpzLDFDbijuAXI0tEcAKy6OypxbnUzjKzLlyRB9gIf4VQ8
+         WZjs9ZCs5xjPkmT+IE5ViX/AMyJOhs+XyAIIgHBqAW/HOrRHbcAtdVJ/DEQfAkcYi+VE
+         XUxQ==
+X-Gm-Message-State: AO0yUKUMvkzA7UZYUxBJk2UdKwBKb5SxXUVRl6x7zaTQAqaJe7doDcc8
+	lxSvNwyDlRJmqaXjRzVO6+RzM0CouZA=
+X-Google-Smtp-Source: AK7set+X/Xq2X/HyJ6xRXCV4P01Xp3wPJnXsYa4I+hYmFVaxTSstaxZbp8Nesng8pYQ0phpvJttAlw==
+X-Received: by 2002:adf:eec2:0:b0:2c7:4ec:8d79 with SMTP id a2-20020adfeec2000000b002c704ec8d79mr19541366wrp.21.1678481166898;
+        Fri, 10 Mar 2023 12:46:06 -0800 (PST)
 Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
-        by smtp.gmail.com with ESMTPSA id k12-20020a7bc30c000000b003dc522dd25esm861432wmj.30.2023.03.10.12.46.08
+        by smtp.gmail.com with ESMTPSA id a7-20020a5d5707000000b002c54f4d0f71sm676929wrv.38.2023.03.10.12.46.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Mar 2023 12:46:08 -0800 (PST)
+        Fri, 10 Mar 2023 12:46:06 -0800 (PST)
 From: Martin Jansa <martin.jansa@gmail.com>
 X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: steve@sakoman.com,
 	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [2.0][PATCH 2/4] cookerdata: Remove incorrect SystemExit usage
-Date: Fri, 10 Mar 2023 21:45:59 +0100
-Message-Id: <20230310204601.730833-2-Martin.Jansa@gmail.com>
+Subject: [2.0][PATCH 1/4] utils: Allow to_boolean to support int values
+Date: Fri, 10 Mar 2023 21:45:58 +0100
+Message-Id: <20230310204601.730833-1-Martin.Jansa@gmail.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230310204601.730833-1-Martin.Jansa@gmail.com>
-References: <20230310204601.730833-1-Martin.Jansa@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 10 Mar 2023 20:46:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14545
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14544
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Calling SystemExit doesn't work well with server/client usage since the string
-isn't printed to the right place. Use bb.fatal() instead which prints the right
-log output and raises and handled exception which then shows correctly on the
-UI.
+Some variables may be set as:
+
+X = 1
+
+as well the more usual
+
+X = "1"
+
+so add support to to_boolean to handle this case.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cookerdata.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/utils.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index fe5696c70..efa671aa0 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -435,7 +435,7 @@ class CookerDataBuilder(object):
-                 msg += (" and bitbake did not find a conf/bblayers.conf file in"
-                         " the expected location.\nMaybe you accidentally"
-                         " invoked bitbake from the wrong directory?")
--            raise SystemExit(msg)
-+            bb.fatal(msg)
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index bca4830f2..cdb3c6864 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -990,6 +990,9 @@ def to_boolean(string, default=None):
+     if not string:
+         return default
  
-         if not data.getVar("TOPDIR"):
-             data.setVar("TOPDIR", os.path.abspath(os.getcwd()))
++    if isinstance(string, int):
++        return string != 0
++
+     normalized = string.lower()
+     if normalized in ("y", "yes", "1", "true"):
+         return True
 -- 
 2.39.2
 
