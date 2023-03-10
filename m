@@ -2,97 +2,100 @@ Return-Path: <Martin.Jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4A5C6FA99
-	for <webhook@archiver.kernel.org>; Fri, 10 Mar 2023 20:45:41 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web10.30832.1678481135095935614
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCB5C6FD19
+	for <webhook@archiver.kernel.org>; Fri, 10 Mar 2023 20:45:51 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web11.30859.1678481141269229011
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Mar 2023 12:45:35 -0800
+ Fri, 10 Mar 2023 12:45:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=CfmrVWz1;
- spf=pass (domain: gmail.com, ip: 209.85.128.53, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f53.google.com with SMTP id az36so4262675wmb.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Mar 2023 12:45:34 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=PN5PKgTL;
+ spf=pass (domain: gmail.com, ip: 209.85.128.43, mailfrom: martin.jansa@gmail.com)
+Received: by mail-wm1-f43.google.com with SMTP id bg16-20020a05600c3c9000b003eb34e21bdfso7007319wmb.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Mar 2023 12:45:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678481133;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Xuet9e0HwGpmOG3ug9oYD6YSpptRFLHOOjlo8cEuhI=;
-        b=CfmrVWz1K4oJIiC2LV8e0zd8najft58T/VzW2be6Pqce7kwX1BRn2wJzWeBAuYAKha
-         CtK0CSRd8xgpLQeUW5uErts2vJeCH/qhxlcILeJDuNzegNy3mtZYPC4AdhTKSJ9zOsk9
-         xygb9zh0XMHNMdHYwfJjwn/jRDdArdKSngBajdOt+Add4DMl2vEHKWwUNeccqgtvh238
-         /opAqYsXrYhibVJeFtl6rSI2MITyGHfU0it4CR13XndSRMt32AClrloazWnzZ/oKCBec
-         FSvKMk1z4jAZp2XfG5NuyVpmUuBBr2+Xl3X7juiAawGBowrfs1dCKZu5g2GOd/IUNSda
-         Pmuw==
+        d=gmail.com; s=20210112; t=1678481140;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Conf+TDC0XsUvsiTqLoRskqAoimNbhMnt9hN5mXh/gQ=;
+        b=PN5PKgTLMl+8nfFEBmiRQuQw66L0EJf23/e2wlUelBp/UAPbABFm5BX7Z5nYGeFqzt
+         PjDCBTt4r+qN6ukxLZ1WJ4OCLxMJKeDFbYgb71/sorbnnTJm+fCGGV6eHoGOfdU7Puyv
+         INd2e90X2t8nBSwVfF01FKUvuk1GGzuk4/fZESgrFpQ8/wN7IeGwglD8Vv3wR4SqinYo
+         82eyopyPamvLyelDSYJvllzxEIFBNAIkbKanZCb6EmNvbNPY6r0+yPRE7HFQI03ijDgq
+         zRTfTcKS2hkmBuJSd9vA7qNv57Bkr6FlaPRPeo+T9feKHi1nkL5PhBvFbFy3mSrT1Lk0
+         o4MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678481133;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8Xuet9e0HwGpmOG3ug9oYD6YSpptRFLHOOjlo8cEuhI=;
-        b=FZ2G/ZUw7tqESHnmI45g0khd5LwGVhENvEZfXrg+YBSsmsuQZrQNZlz3Z4Jd1adC6r
-         LXcgx/R7iFI/DOZCQyTjbH7Mr6cH9f7z9KEX0aYIgq59K3oTZNKjvSGkJcpLFxfvZd5c
-         91S4eYaecUnUR4KIaYlbRDHfyKQ1tQuSoAokAbcRvq9NhfmoPABaWYGMKVrRMMZhjQjX
-         DPQ75ZrIkb/+d6hqZKTx1p1UcJJN3mKE3Ur3PJZhf8M1sCl4Bx6Lt03X48eAb648l1Um
-         2yUrcCeJtAblqsU83DMhqvR3h5SOS0vdeOaLpsyg1OV74MmAVsrHGDWUnh1iyzc79Pco
-         leBg==
-X-Gm-Message-State: AO0yUKU8xIkVUo6rYuoMZSK93FNrBUlfhaKKa4K8ofLFkDeKGB8b8g9q
-	L7I4HmfSainEg/WcMhKLbLfJZ8Yb8dw=
-X-Google-Smtp-Source: AK7set/r+FdwxOYf+XxjZRGfm5bxlUt4DyjwHeklDBoaRTTNZ+HwraCfvOsv2GI/sN9UY5KtRRSHoQ==
-X-Received: by 2002:a05:600c:4fc4:b0:3eb:2de8:b732 with SMTP id o4-20020a05600c4fc400b003eb2de8b732mr4360749wmq.0.1678481133381;
-        Fri, 10 Mar 2023 12:45:33 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678481140;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Conf+TDC0XsUvsiTqLoRskqAoimNbhMnt9hN5mXh/gQ=;
+        b=6wAAn7OmZaZmECdsGY2yOzjzwdQZmP0ZV/q9Qu73y8uvvhIQUS264DCDcQnHxkxI+i
+         DP2MNUxW9TBakD/nmZnmGGxUBwW4HIs+heof0eYas6I9zkpiBh9BYdzdj9uj+UhPIWyI
+         cao2rPdMxU3h2DgdUXmlFPuat11eEOlX6gFItnRV7aPRg4s8JwvDbUPm7XCrXrSli0Aj
+         kRR7HvbUT3n2RnIy4kohcipzsdRLNxbP1sRpvMg7pxBdIO72KmI8ySiyNrIWW5ndYSdb
+         hPCnvvi0AdzWVm4Iq62XM45CIUooVPVTqTDryYbm6Bwk1lO7ojECSe8ECh2H55mqzDsS
+         jqrw==
+X-Gm-Message-State: AO0yUKUhNggrS8anXA+9is9/PXfXeyVeLdfbp66SM3FFaBAxWawssGGk
+	GUIs/mEbmyNf8EBP4yq8yukkdFAKMLM=
+X-Google-Smtp-Source: AK7set93ERBmZOWhHpW8mxzY+BJCxrQWORR/t7AUmGhJwku6LXGeBh4VC4iy3GVGvERJBPcBP9dtrg==
+X-Received: by 2002:a05:600c:468e:b0:3e8:f27b:a92c with SMTP id p14-20020a05600c468e00b003e8f27ba92cmr4021702wmo.32.1678481139666;
+        Fri, 10 Mar 2023 12:45:39 -0800 (PST)
 Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
-        by smtp.gmail.com with ESMTPSA id x1-20020adff641000000b002c70c99db74sm660333wrp.86.2023.03.10.12.45.32
+        by smtp.gmail.com with ESMTPSA id h18-20020a5d4312000000b002c559626a50sm670976wrq.13.2023.03.10.12.45.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Mar 2023 12:45:32 -0800 (PST)
+        Fri, 10 Mar 2023 12:45:39 -0800 (PST)
 From: Martin Jansa <martin.jansa@gmail.com>
 X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: steve@sakoman.com,
 	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [2.2][PATCH 1/4] utils: Allow to_boolean to support int values
-Date: Fri, 10 Mar 2023 21:45:16 +0100
-Message-Id: <20230310204519.706973-1-Martin.Jansa@gmail.com>
+Subject: [2.2][PATCH 4/4] cookerdata: Drop dubious exception handling code
+Date: Fri, 10 Mar 2023 21:45:19 +0100
+Message-Id: <20230310204519.706973-4-Martin.Jansa@gmail.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230310204519.706973-1-Martin.Jansa@gmail.com>
+References: <20230310204519.706973-1-Martin.Jansa@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 10 Mar 2023 20:45:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14540
+ <bitbake-devel@lists.openembedded.org>; Fri, 10 Mar 2023 20:45:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14543
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Some variables may be set as:
-
-X = 1
-
-as well the more usual
-
-X = "1"
-
-so add support to to_boolean to handle this case.
+This code appears to be dangerous, it swallows exceptions, turning them into
+"handled" versions which then show no errors to the user. This is a pretty
+poor user experience and I can't see why this code should be swallowing
+such things. Drop the worst bits of code.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/utils.py | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/bb/cookerdata.py | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 3ce98d317..2f6d9229a 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -992,6 +992,9 @@ def to_boolean(string, default=None):
-     if not string:
-         return default
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 25eea827d..b4bfba335 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -294,14 +294,9 @@ class CookerDataBuilder(object):
+                 bb.event.fire(bb.event.MultiConfigParsed(self.mcdata), self.data)
  
-+    if isinstance(string, int):
-+        return string != 0
-+
-     normalized = string.lower()
-     if normalized in ("y", "yes", "1", "true"):
-         return True
+             self.data_hash = data_hash.hexdigest()
+-        except (SyntaxError, bb.BBHandledException):
+-            raise bb.BBHandledException()
+         except bb.data_smart.ExpansionError as e:
+             logger.error(str(e))
+             raise bb.BBHandledException()
+-        except Exception:
+-            logger.exception("Error parsing configuration files")
+-            raise bb.BBHandledException()
+ 
+ 
+         # Handle obsolete variable names
 -- 
 2.39.2
 
