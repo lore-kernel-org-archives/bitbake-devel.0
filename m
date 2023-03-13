@@ -1,139 +1,97 @@
-Return-Path: <troth@openavr.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DDEC61DA4
-	for <webhook@archiver.kernel.org>; Mon, 13 Mar 2023 13:35:25 +0000 (UTC)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.web10.19489.1678714522493811787
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373B4C6FD19
+	for <webhook@archiver.kernel.org>; Mon, 13 Mar 2023 16:47:06 +0000 (UTC)
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+ by mx.groups.io with SMTP id smtpd.web10.24959.1678726016831748181
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 13 Mar 2023 06:35:22 -0700
+ Mon, 13 Mar 2023 09:46:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@openavr-org.20210112.gappssmtp.com header.s=20210112 header.b=gYwX+06Z;
- spf=none, err=permanent DNS error (domain: openavr.org, ip: 209.85.221.43, mailfrom: troth@openavr.org)
-Received: by mail-wr1-f43.google.com with SMTP id l1so11317867wry.12
-        for <bitbake-devel@lists.openembedded.org>; Mon, 13 Mar 2023 06:35:22 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20210112.gappssmtp.com header.s=20210112 header.b=5MvLeQAn;
+ spf=softfail (domain: sakoman.com, ip: 209.85.216.42, mailfrom: steve@sakoman.com)
+Received: by mail-pj1-f42.google.com with SMTP id gp15-20020a17090adf0f00b0023d1bbd9f9eso2088631pjb.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 13 Mar 2023 09:46:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openavr-org.20210112.gappssmtp.com; s=20210112; t=1678714521;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N4Wk2pNTTaxdms/qCdLXML6PQfT1B7WJt/IioqgoYAk=;
-        b=gYwX+06Z7LpgRkBCGxNeVyDwxibQS54DO72+52NVe4XxfyXQVw1vFXBdbItVdopij7
-         br+pmIabapLo2v+PeRL3YoMNAQxc8IkITBrTcU0tZAc8UYySEKtMEnD/ex0NOTC1dxSY
-         7yytIwk+up4XgXnGttKesGapxqdh8vF8OMQaObAYESJ/eYlBRPKhDotnRwvxmYyJADIN
-         yQCqGKqfDHyyTQcqqxfNxTLM9t9D6qeRLV2ppCYziabfUGmHiQ724xKK2kN1iYnWNgE3
-         kq3XI8vQvrAw9jA9txQYDYAEcux25/nlBu5qEV4QxLcHOxdJFRWBbLLTHIN4IQOfUCut
-         cC8g==
+        d=sakoman-com.20210112.gappssmtp.com; s=20210112; t=1678726016;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0gZEDvMj/dsPEeHjEU9CWi4IxbJLYfNCssaygxZOWH4=;
+        b=5MvLeQAnlKnv++2o48ZIwtHXCfDH2GjJZK4EOWIgTLwxUxl5x7bFpjqxPTHwcmZ0tU
+         H/kkMRwwmI158WZ8vYHncESum3DI8ywC8fk7FfX+VXIWzU7aHa+fOfK4s8YzvBvoWrXE
+         2DZGQ3+X4dkHlQgKSPWXHZhgU1f0hJQTzyyFo/OYmDkqe0bo1zrDBv80saaRXQX4wphe
+         m3BWw8pG4MvwENFSbqR5CDERl7ZihkMQ4ad6d25oAcO3PTxBPpuISnjujJZ8U5yjybSq
+         cKrgWTtl00AouD6mBzBtW9AZfPxvgAEXz6U9ILuTK68H72vUqFP8Jjvwso9dQHRwZxa9
+         M5XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678714521;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N4Wk2pNTTaxdms/qCdLXML6PQfT1B7WJt/IioqgoYAk=;
-        b=A5Ulro6oFDUiADSCl03yoRxFcJ4V/p5UZHQvDcmmABsdVW4ZgkAQQ7H/7zbSvWXOTB
-         +A74udyu2CsXUafwzhAiwpVEKDOMrwK5P1lpKQTbybLk3kcUgDogBxG0/wJtOY5esbM0
-         ZwzqjsoyGTxM8lAge2mlC2aXMOoScQ1LCHgP7ODB+xIR/2dtdVvAKEql6BvibVNygLzF
-         4VJG2rW3VSrBzLlTArRWKQy/fTdDODcDZnaR9xMfGEhzv50x15l0ucYDY3vyZ4qj7UvH
-         1h7S0bcg/eaEKDSpqO+yztBE2+NCWhkS+HszGBkqQD9b1+ZuimZhP6XY8pJ76ZwbrCzU
-         t6WQ==
-X-Gm-Message-State: AO0yUKWkGsqYITwYUeh9sap351DiV7Ylli4/4XYMqHxhqD7dXgKofdE0
-	N/eBXI3MBHAq52LMbLrfGtVSPgirWsGx2ktKBsgMMQ==
-X-Google-Smtp-Source: AK7set8yyMUX88FU2Ze12mbsrcCqs0zgIS8V0blYKy5rRxXechk8CCbyi6WIALAXfMZEs7NvF1B/orgbbG7aaPnq8z8=
-X-Received: by 2002:a5d:50ca:0:b0:2cf:e6d0:6377 with SMTP id
- f10-20020a5d50ca000000b002cfe6d06377mr191297wrt.6.1678714520707; Mon, 13 Mar
- 2023 06:35:20 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1678726016;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0gZEDvMj/dsPEeHjEU9CWi4IxbJLYfNCssaygxZOWH4=;
+        b=q79Mc2NbEPxR5zYQWUDwElCIDthHmmn45SBgBkRAVJkXmCumrDbtXkv2drZ66S+Hh7
+         teuKNGjo64lBdhHwzqsOuZCvfmLAmwYbxavAxDfwZI6JE2sG7IO97aL77/7eKNg2X0q6
+         jfZgFeb/sMDWOzZnBLhdWNfR84aLtmUQUrwA1FyO6LMmmQvFcLiED0syTFjI8LaqSS8b
+         P37JWGbZFm5gSOVuci2KLxYICbThpv6PCegZZeIx03EFnayx1YEHcL/GguD83Vvf25bI
+         xbRgCtA/eIP940O/OWjs1aK09Gq1hJizBtSmH3dxH5Eh5eJsHHK1J3hFoB/QYt/ms/ok
+         zPAw==
+X-Gm-Message-State: AO0yUKWhOJpf2FZjiVhfnk4kehfqBkuHMe0fz5EsJquGXUd7T1r/U9eQ
+	3n5P18xDDvLhJXVLgFJTLoh6OYyHQFZubk+bNtA=
+X-Google-Smtp-Source: AK7set9JIS4tcBAebVrdYY3LWshrRBpEylbLRAJP0CNkJ9dJv3qRtDUH9iKbOeD4WuGpBmSS6VMqOA==
+X-Received: by 2002:a17:902:b48b:b0:19c:ff5d:1fd2 with SMTP id y11-20020a170902b48b00b0019cff5d1fd2mr7925132plr.8.1678726015639;
+        Mon, 13 Mar 2023 09:46:55 -0700 (PDT)
+Received: from hexa.router0800d9.com (dhcp-72-253-4-112.hawaiiantel.net. [72.253.4.112])
+        by smtp.gmail.com with ESMTPSA id g3-20020a170902740300b0019a8530c063sm113690pll.102.2023.03.13.09.46.54
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Mar 2023 09:46:55 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][langdale][2.2][PATCH 0/5] Pull request (cover letter only)
+Date: Mon, 13 Mar 2023 06:46:50 -1000
+Message-Id: <cover.1678725774.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <CAOj-5WB8oaXJ=rrXDNRYzhB92CgRrsutveMnWXhEpcEJKb60KA@mail.gmail.com>
-In-Reply-To: <CAOj-5WB8oaXJ=rrXDNRYzhB92CgRrsutveMnWXhEpcEJKb60KA@mail.gmail.com>
-From: "Theodore A. Roth" <troth@openavr.org>
-Date: Mon, 13 Mar 2023 07:35:09 -0600
-Message-ID: <CAFMvBt0jkfvDACAmWS6NNcUAv+DM=BMGHZS+MBnn0fYPohAJ5A@mail.gmail.com>
-Subject: Re: [bitbake-devel] discussion: git fetcher now needs either file://
- or -s
-To: Sam Liddicott <sam@liddicott.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 13 Mar 2023 13:35:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14551
+ <bitbake-devel@lists.openembedded.org>; Mon, 13 Mar 2023 16:47:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14552
 
-On Tue, Feb 28, 2023 at 6:36=E2=80=AFAM Sam Liddicott <sam@liddicott.com> w=
-rote:
->
-> These recent security changes to git prevent git.py cloning of local
-> repos that contain symlinks in the .git directories (e.g. a repo-tool
-> manifest checkout)
->
-> * https://github.com/git/git/commit/36596fd2dfa473cf1069d23776e62cc156e7b=
-5c6
->    clone: better handle symlinked files at .git/objects/
-> * https://github.com/git/git/commit/6f054f9fb3a501c35b55c65e547a244f14c38=
-d56
->    builtin/clone.c: disallow --local clones with symlinks
-> * https://github.com/git/git/commit/bffc762f87ae8d18c6001bf0044a760042457=
-54c
->    dir-iterator: prevent top-level symlinks without FOLLOW_SYMLINKS
->
-> To prevent some local clones from failing, the bitbake git fetcher
-> could use the -s like this:
->
-> -            clone_cmd =3D "LANG=3DC %s clone --bare --mirror \"%s\" %s
-> --progress" % (ud.basecmd, repourl, ud.clonedir)
-> +            clone_cmd =3D "LANG=3DC %s clone -s --bare --mirror \"%s\" %=
-s
-> --progress" % (ud.basecmd, repourl, ud.clonedir)
->
-> Instead of "-s", others may prefer to restore the url prefix file://
-> which also works,
->
-> -            if repourl.startswith("file://"):
-> -                repourl =3D repourl[7:]
->
-> I don't know which bests represents the original intention behind
-> removing file://, but "-s" gives a quicker clone of what for me is a
-> symlinked source repo anyway, and for the lifetime of a build I'm not
-> expecting the local original source repo to vanish in a way that will
-> affect the build.
->
-> Sam
+Passed a-full on autobuilder:
 
-My organisation is also experiencing this issue with recipes that
-contain SRC_URI values
-pointing to `file://` source that was checked out using the
-google-repo tool (which happens
-to create symlinks to `.git` living outside of the SRC_URI referenced
-git repository).
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/5030
 
-Our work around for this, is to have each developer impacted by this
-append `--no-local`
-to the `clone_cmd` as such:
+With the exception of a transient failure on oe-selftest-arm due to a
+temporary outage at gitlab.gnome.org.  Passed on subsequent retest.
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 5bb8393133..17c4b8ca18 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -373,6 +373,8 @@ class Git(FetchMethod):
-             clone_cmd =3D "LANG=3DC %s clone --bare --mirror %s %s
---progress" % (ud.basecmd, shlex.quote(repourl), ud.clonedir)
-             if ud.proto.lower() !=3D 'file':
-                 bb.fetch2.check_network_access(d, clone_cmd, ud.url)
-+            else:
-+                clone_cmd +=3D " --no-local"
-             progresshandler =3D GitProgressHandler(d)
-             runfetchcmd(clone_cmd, d, log=3Dprogresshandler)
+The following changes since commit 592ee222a1c6da42925fb56801f226884b6724ec:
 
-Digging into the git history for this functionality, it appears to
-have been introduced way back in 2012 to speed up cloning from local
-source repos (e.g. things like the kernel source). The work arounds
-provided above, would probably have a negative impact on that
-particular user case though.
+  siggen: Fix inefficient string concatenation (2023-02-06 04:34:02 -1000)
 
-Would really love to see a fix for this included in bitbake upstream
-so we don't have to manually patch.
+are available in the Git repository at:
 
-Ted Roth
+  https://git.openembedded.org/bitbake-contrib stable/2.2-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.2-next
+
+Frank de Brabander (1):
+  bin/utils: Ensure locale en_US.UTF-8 is available on the system
+
+Richard Purdie (4):
+  utils: Allow to_boolean to support int values
+  cookerdata: Remove incorrect SystemExit usage
+  cookerdata: Improve early exception handling
+  cookerdata: Drop dubious exception handling code
+
+ bin/bitbake          |  3 +--
+ bin/bitbake-server   |  5 +++--
+ bin/bitbake-worker   |  3 +--
+ lib/bb/cookerdata.py | 17 ++---------------
+ lib/bb/utils.py      | 19 +++++++++++++++++++
+ 5 files changed, 26 insertions(+), 21 deletions(-)
+
+-- 
+2.34.1
+
 
