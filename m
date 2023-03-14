@@ -1,260 +1,176 @@
-Return-Path: <mhalstead@linuxfoundation.org>
+Return-Path: <mark.asselstine@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8CDC6FD19
-	for <webhook@archiver.kernel.org>; Mon, 13 Mar 2023 17:06:16 +0000 (UTC)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
- by mx.groups.io with SMTP id smtpd.web10.25487.1678727173253829923
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88C5C05027
+	for <webhook@archiver.kernel.org>; Tue, 14 Mar 2023 19:20:36 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.web11.4094.1678821631064285252
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 13 Mar 2023 10:06:13 -0700
+ Tue, 14 Mar 2023 12:20:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fN2Yltnd;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.208.44, mailfrom: mhalstead@linuxfoundation.org)
-Received: by mail-ed1-f44.google.com with SMTP id fd5so17631944edb.7
-        for <bitbake-devel@lists.openembedded.org>; Mon, 13 Mar 2023 10:06:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1678727171;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xKNPejAplccT9OXQzxNClhWAcM7vE+H5uFlmDBZE1Tk=;
-        b=fN2YltndeKxTnlwmWVWlQWn0EbY/n0x+thcpftaybPyXY1K2SskGFx/f/WAECTetcW
-         iWWUYzfcyw2Cb5T2CH4wa2k/Jfi+RUTGQnulJv7cYWjRIhbYPNcBkreZmomxI9eZkr64
-         cecIe/lUm2+0QVv/12EGsfkAE5ZPqT7PyP3Y0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678727171;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xKNPejAplccT9OXQzxNClhWAcM7vE+H5uFlmDBZE1Tk=;
-        b=Br+OlYYFYJ7OW0Q3pZwuoTqxw4CRtsUPLaJ7wX5Vt+pgY/D6ncVPHl5iSrhFEfL9yZ
-         p6eMExPA2BpnxUsQGP/omJrtBFVk4oKqNM53o0oXzCLruehCTn/tVfONJMlGdGT0oZeQ
-         2tTtF9JhjMaOf5wRPnBtaGsW67ZI6RLiQ8HE+vP+BGOLykE4zBKaYfhve1wFa199mlVX
-         awjTgjzPtXSBCVWlAIecBW2vsslk0/nngeI2p6608J1Ti8mf+7jqOhN3iyaZ2GMToCV1
-         oYuZMKIWG4hfpyaJN4pQTag6PGZpyGPT1B0v82FHdLGcRi/u1gO6SUCLlIRkb7C/0J93
-         DiXg==
-X-Gm-Message-State: AO0yUKWh6XWEZZEgdtKdtvjky6BB5oSRDVIISap2aw1UKtodfcjgEADz
-	XE1kgR6n2Auq72RySN650FrpBqgCVfBsruDNPKcLOQ==
-X-Google-Smtp-Source: AK7set9jcRuoHhOos5/wy53EMjV3DVBsL+eXFMjont77z6moJFLWk5eK8XdB08Xd8lQ3A6sVfqf4R49P5IsfBqLVeZw=
-X-Received: by 2002:a50:d7cb:0:b0:4af:70a5:5609 with SMTP id
- m11-20020a50d7cb000000b004af70a55609mr5941541edj.1.1678727171400; Mon, 13 Mar
- 2023 10:06:11 -0700 (PDT)
+ dkim=pass header.i=@windriver.com header.s=pps06212021 header.b=jbZdP9KT;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=24370a3b27=mark.asselstine@windriver.com)
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32EJ0UbL018047
+	for <bitbake-devel@lists.openembedded.org>; Tue, 14 Mar 2023 12:20:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com; h=from : to :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=PPS06212021;
+ bh=kHdz7e/2lY30YaIsUu6tnmcl4eF47j1h0XNIfYpknHE=;
+ b=jbZdP9KTZVYJuCFMGRUWZMIX5sl5n7HnH7rl6BuNhkH8RoGwSSIK+SmZHZE/Hl3CMEdk
+ r370r+BLMCjYvd56ZuJw05TucJgiQdy/XJu/TmLCCWrDVtY/Ex9spUmelJUnvEjQ3SJj
+ /bAWhev1Icc6IZBQu3sBef0zPyjclYKweJTpTEFPhzmnQObHMGDBxAXdiILo8E92wOE9
+ XIlEYKmgByWJ9ydIqGbhbhMCktB6QF0cDd4SIn+cc/e2IpbbuQO05pn+FhLNs55jc4ij
+ 5wab9d5qdBNJ2FqKN5nokF1iK0T4nSmNvZxrnU/iCUdtr6IE3VcPCcsh3l2kOrtCcKkA XA== 
+Received: from ala-exchng02.corp.ad.wrs.com (unknown-82-254.windriver.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3p8t1r2vum-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Tue, 14 Mar 2023 12:20:30 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.18; Tue, 14 Mar 2023 12:20:29 -0700
+Received: from YOW-MASSELST-L1.corp.ad.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.17 via Frontend Transport; Tue, 14 Mar 2023 12:20:29 -0700
+From: Mark Asselstine <mark.asselstine@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH v3] build: Make python output print to stdout when running with -v (verbose)
+Date: Tue, 14 Mar 2023 15:20:27 -0400
+Message-ID: <20230314192027.8317-1-mark.asselstine@windriver.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <CA+chaQcSZDgrbeZjOU+THvNTrQt+VzCUGg3p1FMVG9qiP4QDAw@mail.gmail.com>
- <dc9bfbf315b36243781e012ac8117fb8acd59711.camel@linuxfoundation.org> <CANx9H-CBsaZv2t529XT4JhggHJHZZfbQr3wSDgX5LPcQ-Rop3w@mail.gmail.com>
-In-Reply-To: <CANx9H-CBsaZv2t529XT4JhggHJHZZfbQr3wSDgX5LPcQ-Rop3w@mail.gmail.com>
-From: Michael Halstead <mhalstead@linuxfoundation.org>
-Date: Mon, 13 Mar 2023 10:06:00 -0700
-Message-ID: <CADfgfoYqdF0UbmVxoem5we7Ovf7NnOpPS=cYK0VeR6Lc_fu8Kg@mail.gmail.com>
-Subject: Re: [bitbake-devel] Bitbake repo using the same tag name as branch
-To: Tim Orling <ticotimo@gmail.com>
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	Lee Chee Yang <chee.yang.lee@intel.com>, Martin Jansa <Martin.Jansa@gmail.com>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="000000000000b9f9fd05f6cb20f8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: KbLaDP0_Yr1o3fWlJUnrZuBJXUo66NBq
+X-Proofpoint-GUID: KbLaDP0_Yr1o3fWlJUnrZuBJXUo66NBq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-14_12,2023-03-14_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303140158
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 13 Mar 2023 17:06:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14554
+ <bitbake-devel@lists.openembedded.org>; Tue, 14 Mar 2023 19:20:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14555
 
---000000000000b9f9fd05f6cb20f8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+When tasks are run with -v (verbose) on the bitbake commandline, shell
+tasks print their stdout, python tasks do not.
 
-I've renamed these tags and kept everything else the same:
+This change redirects the python task's print output to an in memory
+buffer. After the task is executed the output is printed to stdout via
+the logger. This makes the python task behavior match the shell task
+behavior when running with -v. The contents of the task's log files
+remain unchanged after this change.
 
-2.0 -> 2.0.0
-2.2 -> 2.2.0
+This approach should keep the correct order in most cases, however, if
+the python task accesses the logger directly, that content will appear
+before other output. On the other hand, this change should negate the
+need for python tasks to access the logger directly.
 
-I left these much older tags alone:
+Special care is taken to save/restore the existing stdout and stderr
+and preventing sending output directly to the logger when there are
+"recursive" calls, for instance when a python function calls a shell
+function, avoiding printing things potentially out of order and/or
+multiple times.
 
-1.0
-1.1
-1.2
+The logging-test.bb in meta-selftest can be used to review this
+change. This has been tested with the full bblogging oeqa tests.
 
-On Fri, Mar 10, 2023 at 7:55=E2=80=AFPM Tim Orling <ticotimo@gmail.com> wro=
-te:
+[Yocto #14544]
 
->
->
-> On Fri, Feb 24, 2023 at 5:41 AM Richard Purdie <
-> richard.purdie@linuxfoundation.org> wrote:
->
->> On Fri, 2023-02-24 at 12:09 +0100, Martin Jansa wrote:
->> > Is there some reason why bitbake started to use tag name identical as
->> > branch name from 2.0?
->> >
->> > It happens only with 2.0 and 2.2, because previous 1.52 branch had
->> > first release named 1.52.0 not 1.52:
->> > commit c78ebac71ec976fdf27ea24767057882870f5c60 (tag: yocto-3.4, tag:
->> > 2021-10-honister, tag: 1.52.0)
->> >
->> > bitbake $ git show 1.52.0
->> > tag 1.52.0
->> > Tagger: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
->> > Date:   Mon Oct 25 15:16:54 2021 -0700
->> >
->> > Tagging for 1.52.0 (yocto-3.4)
->> >
->> > This new scheme has small disadvantage:
->> >
->> > bitbake $ git push github 2.0
->> > error: src refspec 2.0 matches more than one
->> > error: failed to push some refs to 'github.com:shr-
->> > distribution/bitbake.git'
->> >
->> > I can work around it by using refs/heads/2.0 and refs/tags/2.0 to
->> > distinguish between them, but that's still a bit unusual and
->> > unfortunate.
->> >
->> > Adding Chee Yang Lee who authored these 2 tags (see another warning
->> > there):
->> >
->> > bitbake $ git show 2.0
->> > warning: refname '2.0' is ambiguous.
->> > tag 2.0
->> > Tagger: Chee Yang Lee <chee.yang.lee@intel.com>
->> > Date:   Mon Apr 25 22:27:04 2022 -0700
->> >
->> > bitbake $ git show 2.2
->> > warning: refname '2.2' is ambiguous.
->> > tag 2.2
->> > Tagger: Chee Yang Lee <chee.yang.lee@intel.com>
->> > Date:   Sun Oct 23 20:33:14 2022 -0700
->>
->> We should probably drop the 2.0 and 2.2 tags and put 2.0.0 and 2.2.0
->> tags in place instead.
->>
->
-> I noticed this as well and this is solution I was hoping for.
->
->
->> Cheers,
->>
->> Richard
->>
->>
->>
->> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->> Links: You receive all messages sent to this group.
->> View/Reply Online (#14486):
->> https://lists.openembedded.org/g/bitbake-devel/message/14486
->> Mute This Topic: https://lists.openembedded.org/mt/97203651/924729
->> Group Owner: bitbake-devel+owner@lists.openembedded.org
->> Unsubscribe:
->> https://lists.openembedded.org/g/bitbake-devel/leave/10722602/924729/206=
-4237243/xyzzy
->> [ticotimo@gmail.com]
->> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->>
->>
+Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
+---
 
---=20
-Michael Halstead
-Linux Foundation / Yocto Project
-Systems Operations Engineer
+v3:
+ * returned the flush to always be run (see v2). After thinking about
+   this there is a slim possibility that the try hits and exception
+   before the first set of flush() calls which would result in no
+   flush() calls. So it is better to keep them as they were.
+ * fixed issues reported by oeqa bblogging tests, this required
+   a bit more handling for "recursive" calls. See the commit log
+   and code comments for details
+ * return "<mem>" when there is no 'name' member, as is the case
+   for io.StringIO, in StdoutNoopContextManager
+ * ran oeqa bblogging tests to up the confidence in this change
+   being in good shape
+ * I will follow this change with an update to the bblogging tests
+   to turn on the checks currently commented out due to lack of
+   python functions supporting -v
 
---000000000000b9f9fd05f6cb20f8
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+v2:
+ Richard, per your suggestions, I have added capturing stderr and also
+ storing and restoring the previous stdout and stderr. Since we are
+ already flushing stdout and stderr when verboseStdoutLogging I have
+ skipped the second flushes.
 
-<div dir=3D"ltr">I&#39;ve renamed these tags and kept everything else the=
-=C2=A0same:<div><br></div><div>2.0 -&gt; 2.0.0</div><div>2.2 -&gt; 2.2.0</d=
-iv><div><br></div><div>I left these much older tags alone:</div><div><br></=
-div><div>1.0<br>1.1<br>1.2<br></div></div><br><div class=3D"gmail_quote"><d=
-iv dir=3D"ltr" class=3D"gmail_attr">On Fri, Mar 10, 2023 at 7:55=E2=80=AFPM=
- Tim Orling &lt;<a href=3D"mailto:ticotimo@gmail.com">ticotimo@gmail.com</a=
->&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px=
- 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><di=
-v><br></div><div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"g=
-mail_attr">On Fri, Feb 24, 2023 at 5:41 AM Richard Purdie &lt;<a href=3D"ma=
-ilto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@l=
-inuxfoundation.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote=
-" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);=
-padding-left:1ex">On Fri, 2023-02-24 at 12:09 +0100, Martin Jansa wrote:<br=
->
-&gt; Is there some reason why bitbake started to use tag name identical as<=
-br>
-&gt; branch name from 2.0?<br>
-&gt; <br>
-&gt; It happens only with 2.0 and 2.2, because previous 1.52 branch had<br>
-&gt; first release named 1.52.0 not 1.52:<br>
-&gt; commit c78ebac71ec976fdf27ea24767057882870f5c60 (tag: yocto-3.4, tag:<=
-br>
-&gt; 2021-10-honister, tag: 1.52.0)<br>
-&gt; <br>
-&gt; bitbake $ git show 1.52.0<br>
-&gt; tag 1.52.0<br>
-&gt; Tagger: Vineela Tummalapalli &lt;<a href=3D"mailto:vineela.tummalapall=
-i@intel.com" target=3D"_blank">vineela.tummalapalli@intel.com</a>&gt;<br>
-&gt; Date: =C2=A0 Mon Oct 25 15:16:54 2021 -0700<br>
-&gt; <br>
-&gt; Tagging for 1.52.0 (yocto-3.4)<br>
-&gt; <br>
-&gt; This new scheme has small disadvantage:<br>
-&gt; <br>
-&gt; bitbake $ git push github 2.0<br>
-&gt; error: src refspec 2.0 matches more than one<br>
-&gt; error: failed to push some refs to &#39;github.com:shr-<br>
-&gt; distribution/bitbake.git&#39;<br>
-&gt; <br>
-&gt; I can work around it by using refs/heads/2.0 and refs/tags/2.0 to<br>
-&gt; distinguish between them, but that&#39;s still a bit unusual and<br>
-&gt; unfortunate.<br>
-&gt; <br>
-&gt; Adding Chee Yang Lee who authored these 2 tags (see another warning<br=
->
-&gt; there):<br>
-&gt; <br>
-&gt; bitbake $ git show 2.0<br>
-&gt; warning: refname &#39;2.0&#39; is ambiguous.<br>
-&gt; tag 2.0<br>
-&gt; Tagger: Chee Yang Lee &lt;<a href=3D"mailto:chee.yang.lee@intel.com" t=
-arget=3D"_blank">chee.yang.lee@intel.com</a>&gt;<br>
-&gt; Date: =C2=A0 Mon Apr 25 22:27:04 2022 -0700<br>
-&gt; <br>
-&gt; bitbake $ git show 2.2<br>
-&gt; warning: refname &#39;2.2&#39; is ambiguous.<br>
-&gt; tag 2.2<br>
-&gt; Tagger: Chee Yang Lee &lt;<a href=3D"mailto:chee.yang.lee@intel.com" t=
-arget=3D"_blank">chee.yang.lee@intel.com</a>&gt;<br>
-&gt; Date: =C2=A0 Sun Oct 23 20:33:14 2022 -0700<br>
-<br>
-We should probably drop the 2.0 and 2.2 tags and put 2.0.0 and 2.2.0<br>
-tags in place instead.<br>
-</blockquote><div dir=3D"auto"><br></div><div dir=3D"auto">I noticed this a=
-s well and this is solution I was hoping for.</div><div dir=3D"auto"><br></=
-div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bor=
-der-left:1px solid rgb(204,204,204);padding-left:1ex"><br>
-Cheers,<br>
-<br>
-Richard<br>
-<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#14486): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/14486" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/14486</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/97203651/9247=
-29" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt/=
-97203651/924729</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/leav=
-e/10722602/924729/2064237243/xyzzy" rel=3D"noreferrer" target=3D"_blank">ht=
-tps://lists.openembedded.org/g/bitbake-devel/leave/10722602/924729/20642372=
-43/xyzzy</a> [<a href=3D"mailto:ticotimo@gmail.com" target=3D"_blank">ticot=
-imo@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div></div>
-</blockquote></div><br clear=3D"all"><div><br></div><span class=3D"gmail_si=
-gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
-iv dir=3D"ltr">Michael Halstead<div>Linux Foundation / Yocto Project</div><=
-div>Systems Operations Engineer</div></div></div>
+ lib/bb/build.py | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
---000000000000b9f9fd05f6cb20f8--
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 5a172711..44d08f5c 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -25,6 +25,7 @@ import bb
+ import bb.msg
+ import bb.process
+ import bb.progress
++from io import StringIO
+ from bb import data, event, utils
+ 
+ bblogger = logging.getLogger('BitBake')
+@@ -177,7 +178,9 @@ class StdoutNoopContextManager:
+ 
+     @property
+     def name(self):
+-        return sys.stdout.name
++        if "name" in dir(sys.stdout):
++            return sys.stdout.name
++        return "<mem>"
+ 
+ 
+ def exec_func(func, d, dirs = None):
+@@ -296,9 +299,21 @@ def exec_func_python(func, d, runfile, cwd=None):
+         lineno = int(d.getVarFlag(func, "lineno", False))
+         bb.methodpool.insert_method(func, text, fn, lineno - 1)
+ 
++        if verboseStdoutLogging:
++            sys.stdout.flush()
++            sys.stderr.flush()
++            currout = sys.stdout
++            currerr = sys.stderr
++            sys.stderr = sys.stdout = execio = StringIO()
+         comp = utils.better_compile(code, func, "exec_func_python() autogenerated")
+         utils.better_exec(comp, {"d": d}, code, "exec_func_python() autogenerated")
+     finally:
++        if verboseStdoutLogging:
++            execio.flush()
++            logger.plain("%s" % execio.getvalue())
++            sys.stdout = currout
++            sys.stderr = currerr
++            execio.close()
+         # We want any stdout/stderr to be printed before any other log messages to make debugging
+         # more accurate. In some cases we seem to lose stdout/stderr entirely in logging tests without this.
+         sys.stdout.flush()
+@@ -441,7 +456,11 @@ exit $ret
+         if fakerootcmd:
+             cmd = [fakerootcmd, runfile]
+ 
+-    if verboseStdoutLogging:
++    # We only want to output to logger via LogTee if stdout is sys.__stdout__ (which will either
++    # be real stdout or subprocess PIPE or similar). In other cases we are being run "recursively",
++    # ie. inside another function, in which case stdout is already being captured so we don't
++    # want to Tee here as output would be printed twice, and out of order.
++    if verboseStdoutLogging and sys.stdout == sys.__stdout__:
+         logfile = LogTee(logger, StdoutNoopContextManager())
+     else:
+         logfile = StdoutNoopContextManager()
+-- 
+2.30.2
+
 
