@@ -1,82 +1,132 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <frederic.martinsons@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC94BC6FD1D
-	for <webhook@archiver.kernel.org>; Wed, 15 Mar 2023 18:09:15 +0000 (UTC)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
- by mx.groups.io with SMTP id smtpd.web11.627.1678903750675984992
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EC6C61DA4
+	for <webhook@archiver.kernel.org>; Wed, 15 Mar 2023 18:26:46 +0000 (UTC)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+ by mx.groups.io with SMTP id smtpd.web11.1099.1678904801555541940
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 15 Mar 2023 11:09:11 -0700
+ Wed, 15 Mar 2023 11:26:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=ivZur9St;
- spf=pass (domain: gmail.com, ip: 209.85.208.172, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lj1-f172.google.com with SMTP id g18so20387082ljl.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Mar 2023 11:09:10 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=ctwwSkhi;
+ spf=pass (domain: gmail.com, ip: 209.85.208.174, mailfrom: frederic.martinsons@gmail.com)
+Received: by mail-lj1-f174.google.com with SMTP id l22so2309482ljc.11
+        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Mar 2023 11:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678903749;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gdvv3DGNjZWDJ/i2niS/62XlI0N6WL0miQv3fEaCO1s=;
-        b=ivZur9Stc0RGeFLTEQhP18EGAClsUw5X+7pxkEkjQQfso0WJYzi651r6HplVLsCdHL
-         6K3qqNSLNi2pZoNwFG8G1AKsFwSdTQKu/HWAbOn8j7qgXkGlAvNAM+98oYdcQ/jfxJtW
-         GHCpbWCdcv3cOAhQKQM5jp6E8q7roCz92KHlcVFIIP7iw456pVeq+MXkcB0pvLentjGZ
-         n34L63ZcBSbzZR2DmG9uKMxyzSx4dggISMmA2sGmqG14MmU7KMf8gWajDkeJnrLyvclX
-         pZQ5jzjCyL/nV5VNnqtVy2hDFz3snDOj9ocYBYHWOrqUJthn5w6kkFP3zeMpd8QzfHg9
-         oFIA==
+        d=gmail.com; s=20210112; t=1678904800;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=o8Lqj+DTIVGrxADCo+5ATJs/kehLYTikSxfHiAJ0OP8=;
+        b=ctwwSkhi68sLwG2/ezMvEO9sJafTAYBZGWn/yt1KlnYb171fAlFBKsV7XFKayCua9+
+         yIulEYJiwEM2isKSJyUHdgWtwa3pMrfxO8TJh19LIyURChBfxdb60DOmLfux/8MrQxk6
+         4yG2y7THrxUPeDhuEm6AAKqRetipxm1y1z4JDhIuC0mC3DWxdPMUggmob/+RPo9n3j6a
+         d1ajsETzja7JEa7bUhinIZnamZ5T+KNgYMPaqVMEt/AFo8KiChfnsOaSh/CVOh5arvKA
+         go6gYGG8PNA+1eZ0YH4JZLR3Iz1h0n5fhinrR95N5jLjbuKNXO9Xz4a21McrW7dDme21
+         9yTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678903749;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gdvv3DGNjZWDJ/i2niS/62XlI0N6WL0miQv3fEaCO1s=;
-        b=YgLTU6+3WOYl1cAjF0FJludkap9+C9aGwLAnrVd3z5Z1YZCH+MWgrYqsxC7F4Ta0qv
-         F3LkS42SvsutTBnQdKYttDzt/+Wf+BL4HyAac0a09qdjueRu/7LnM5ojNkFjD9tV3BjM
-         GNRKlYBwoQU0vLXyMBgWBOSBFoYS2wnBN82X9be5QlUvHSV48sw+IO5Xm38Oq0pihP35
-         6Xe8vwvq4C/9iklmnKaOgfPvYVQ/0Ydt1jNw4XFZqCZfqbbs1MueDPjDfAiVHbACKRIx
-         T4ryXZ4k8boRGEg8WyKV9jVi2VhDqZnlJWbMiuC6Yzn6thix3CCRcrFGCCJyIdT0RqG0
-         Bs/w==
-X-Gm-Message-State: AO0yUKXWBlTcmDMgP5ye6sB9hvngdB7PHRGlTYAML9HeCM2y9pKzQubU
-	51KRPm+Ehr5sJyS7+chgtVcWLQzOjqZDZWvsK3s=
-X-Google-Smtp-Source: AK7set/obkHse4YBQ91/7KEHjegkOgrhJ3Q1bB5ysdDWiW9eGvU3qRv0/HvxXGrcqKHFf2VIhbGNaOD28nxn88rKDcQ=
-X-Received: by 2002:a2e:9113:0:b0:298:b3c7:293d with SMTP id
- m19-20020a2e9113000000b00298b3c7293dmr423492ljg.7.1678903748850; Wed, 15 Mar
- 2023 11:09:08 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1678904800;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o8Lqj+DTIVGrxADCo+5ATJs/kehLYTikSxfHiAJ0OP8=;
+        b=yZi+9VyC75umsaDCyQdGKWbJmLRjPMM2bMdAXfnkMAtIFyDDwpjknhNBaqQ2YzdwtW
+         ZwqjT0ZoxDu7KQBqStYEUXtb1EkHqoKQPn3FFsKe9fzyWIH/V8g6TA5MJi8XYcL99cOH
+         pGL9TdKRwMHkEHTnKW5xWOp1qg18xShswDX+EpY01hJ2l+3k07Y8AsNLe76LdfZY6jmI
+         PlfIpQIfTnbI+/FbKvNc9a+Mu4rGHe+Zxmi3re0rB2wmsEwvP6pTBoe7Cc0otCiUMmFI
+         TCg4VlEFU2a2Sry2CIO5ZBIPSuggPSeKD+NpCNW9AHW3XM8LIoQbyTEreys7ENz5gY2h
+         Kz2A==
+X-Gm-Message-State: AO0yUKXC8wx1p6eaiHInF6JbrTRYImYrTR7bRpYlGU6GM0wDAigEAo5O
+	zkbc8KHn+Ga/biiL/yZGwmBvxXtRzuOMEw7kKxE=
+X-Google-Smtp-Source: AK7set+iedhflbcZ1+jztjXV6jSHA9UYYyvSNxNIyOMWbC8cWEiNfhLJ4VLtnCffE/4IE48XIf1q1bslw/jY6upzVOs=
+X-Received: by 2002:a2e:a9a4:0:b0:295:acea:5884 with SMTP id
+ x36-20020a2ea9a4000000b00295acea5884mr1629808ljq.3.1678904799679; Wed, 15 Mar
+ 2023 11:26:39 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230315131513.50635-1-frederic.martinsons@gmail.com>
  <CAO5Uq5SC+x8khm5+g-ro9=H0obf1EoxpDMcjOcpPfbvtEJSK5w@mail.gmail.com>
  <CANNYZj9Vontf0wPV672yLwSvNZ_6__Fp8y0P1WJXnGVJcZqBWg@mail.gmail.com>
  <CA+chaQeZTRjUG4Dy+A89iZfG68DkQi3MT4kr3h=JH6K=iPMZmw@mail.gmail.com>
- <CAO5Uq5RK8o_he_741feA-NQT01-tgGnXhi8pgwYqFPpHqA+-UQ@mail.gmail.com> <CA+cAkepJt0FbV1Oq6ErCOA1qsa5DCmk=z9dACo+FrpCrj0vXvQ@mail.gmail.com>
-In-Reply-To: <CA+cAkepJt0FbV1Oq6ErCOA1qsa5DCmk=z9dACo+FrpCrj0vXvQ@mail.gmail.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 15 Mar 2023 19:08:57 +0100
-Message-ID: <CANNYZj9EWbPrg0ThbT=oM3RcN_UmC3y8yz-=OODOnMLKcMoq_w@mail.gmail.com>
+ <CAO5Uq5RK8o_he_741feA-NQT01-tgGnXhi8pgwYqFPpHqA+-UQ@mail.gmail.com>
+ <CA+cAkepJt0FbV1Oq6ErCOA1qsa5DCmk=z9dACo+FrpCrj0vXvQ@mail.gmail.com> <CANNYZj9EWbPrg0ThbT=oM3RcN_UmC3y8yz-=OODOnMLKcMoq_w@mail.gmail.com>
+In-Reply-To: <CANNYZj9EWbPrg0ThbT=oM3RcN_UmC3y8yz-=OODOnMLKcMoq_w@mail.gmail.com>
+From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
+Date: Wed, 15 Mar 2023 19:26:28 +0100
+Message-ID: <CA+cAkeoxvY6F+TySPXP1vDeUEiD14EZpxW06UM28DVd0G7KVjw@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH] fetch2: Add checksum capability for crate fetcher
-To: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
 Cc: Alex Kiernan <alex.kiernan@gmail.com>, Martin Jansa <martin.jansa@gmail.com>, 
 	bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/alternative; boundary="000000000000325a2405f6f47c00"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 15 Mar 2023 18:09:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14571
+ <bitbake-devel@lists.openembedded.org>; Wed, 15 Mar 2023 18:26:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14572
 
-On Wed, 15 Mar 2023 at 18:54, Fr=C3=A9d=C3=A9ric Martinsons
-<frederic.martinsons@gmail.com> wrote:
-> Alex, when you talk about updating librsvg and cargo crate updater, do yo=
-u mind elaborate?
+--000000000000325a2405f6f47c00
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-classes-recipe/cargo-update-recipe-crates.bbclass should be updated to
-write out not just the crate list into SRC_URI, but also their
-checksums (this is not hard because it works from Cargo.lock, and that
-already provides the checksums).
+Alright, I will add another patch for that in the coming days.
 
-Then the class should be used to update all recipes (e.g.
-python3-bcrypt, python3-cryptography) that use the crate:// fetcher.
+But I still need some answers to go further:
+    - Should checksum verification for crate fetcher be mandatory ?
+    - What about librsvg ? It doesn't include any crate:// but needs to
+inherit cargo_common, what should I do for this recipe ?
 
-Alex
+
+Le mer. 15 mars 2023, 19:09, Alexander Kanavin <alex.kanavin@gmail.com> a
+=C3=A9crit :
+
+> On Wed, 15 Mar 2023 at 18:54, Fr=C3=A9d=C3=A9ric Martinsons
+> <frederic.martinsons@gmail.com> wrote:
+> > Alex, when you talk about updating librsvg and cargo crate updater, do
+> you mind elaborate?
+>
+> classes-recipe/cargo-update-recipe-crates.bbclass should be updated to
+> write out not just the crate list into SRC_URI, but also their
+> checksums (this is not hard because it works from Cargo.lock, and that
+> already provides the checksums).
+>
+> Then the class should be used to update all recipes (e.g.
+> python3-bcrypt, python3-cryptography) that use the crate:// fetcher.
+>
+> Alex
+>
+
+--000000000000325a2405f6f47c00
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"auto">Alright, I will add another patch for th=
+at in the coming days.</div><div dir=3D"auto"><br></div><div dir=3D"auto">B=
+ut I still need some answers to go further:<br><div dir=3D"auto">=C2=A0 =C2=
+=A0 - Should checksum verification=C2=A0for crate fetcher=C2=A0be mandatory=
+ ?</div><div>=C2=A0 =C2=A0 - What about librsvg ? It doesn&#39;t include an=
+y crate:// but needs to inherit cargo_common, what should I do for this rec=
+ipe ?<br></div><div><br></div></div></div><br><div class=3D"gmail_quote"><d=
+iv dir=3D"ltr" class=3D"gmail_attr">Le mer. 15 mars 2023, 19:09, Alexander =
+Kanavin &lt;<a href=3D"mailto:alex.kanavin@gmail.com" target=3D"_blank">ale=
+x.kanavin@gmail.com</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=
+=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
+b(204,204,204);padding-left:1ex">On Wed, 15 Mar 2023 at 18:54, Fr=C3=A9d=C3=
+=A9ric Martinsons<br>
+&lt;<a href=3D"mailto:frederic.martinsons@gmail.com" rel=3D"noreferrer" tar=
+get=3D"_blank">frederic.martinsons@gmail.com</a>&gt; wrote:<br>
+&gt; Alex, when you talk about updating librsvg and cargo crate updater, do=
+ you mind elaborate?<br>
+<br>
+classes-recipe/cargo-update-recipe-crates.bbclass should be updated to<br>
+write out not just the crate list into SRC_URI, but also their<br>
+checksums (this is not hard because it works from Cargo.lock, and that<br>
+already provides the checksums).<br>
+<br>
+Then the class should be used to update all recipes (e.g.<br>
+python3-bcrypt, python3-cryptography) that use the crate:// fetcher.<br>
+<br>
+Alex<br>
+</blockquote></div>
+
+--000000000000325a2405f6f47c00--
 
