@@ -2,89 +2,104 @@ Return-Path: <ticotimo@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 030EFC76195
-	for <webhook@archiver.kernel.org>; Wed, 15 Mar 2023 01:33:42 +0000 (UTC)
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
- by mx.groups.io with SMTP id smtpd.web11.2023.1678844013371373863
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E480AC7618A
+	for <webhook@archiver.kernel.org>; Wed, 15 Mar 2023 01:33:41 +0000 (UTC)
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+ by mx.groups.io with SMTP id smtpd.web11.2024.1678844014556679441
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 14 Mar 2023 18:33:33 -0700
+ Tue, 14 Mar 2023 18:33:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=mOyOT0IK;
- spf=pass (domain: gmail.com, ip: 209.85.216.48, mailfrom: ticotimo@gmail.com)
-Received: by mail-pj1-f48.google.com with SMTP id om3-20020a17090b3a8300b0023efab0e3bfso159207pjb.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 14 Mar 2023 18:33:33 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=R8vaJJdO;
+ spf=pass (domain: gmail.com, ip: 209.85.210.174, mailfrom: ticotimo@gmail.com)
+Received: by mail-pf1-f174.google.com with SMTP id ay18so10855788pfb.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 14 Mar 2023 18:33:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678844012;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VIbQEp8c/bvCRBGeMiC274g2S8z8CKCav8uxzyMmd9w=;
-        b=mOyOT0IKdBDkkItit/f80lYeNtOZEELfDJVxZcpBor4NoKx95z5GKoLgE8KEhgzbAY
-         rgdkoeVotC6q+cv0fpxYU8bGrwIN9iyzgdXPEi6CNpSopONqnwWBi5ej6Et8hL8a0Ju6
-         iFpdDGomV8RbiRhUmtH1bJY7/VGYhquYOj8QNOz/iJMaNn3KLkOT0hrrkgxupFFiRfna
-         7ctOpr69gQzD0+y+sXRoWGbJ1t8lJuBeav+Z+/38vf/xSTycN7ge21idWETh670zP77P
-         luTxKs7IRik3K64yff7o1dF56YpUnTWTW3hKgotBD03NbtX5MwFwOoLPEuqivZRvUaYc
-         7Fyg==
+        d=gmail.com; s=20210112; t=1678844014;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WtFkEngGD6XHPAAJOyERVHg8tLZ1P0Ys/zpCRpjR0GQ=;
+        b=R8vaJJdOCcy0t0aWaz/diclpBwEqjLLGFYxIl2gTcyid5JB8O5LCCtxm7f1NLnGVLd
+         ovNR4AoSwYcrMjspl2lIWCsLy5gJjNQOw5NXbzsOQtAmmTfAGTTkopNyF2t2PCtDfiHc
+         zh4240zYm7SrN90jh77tKqGBSqHLBjkteEgLS1jQLjIg/3OYHDbH8CZHEE0q5FPOzncA
+         bJ7zdW7g+Apr0XeKKBCNCKKcDNyDwlXND4PrlLc+nKiTOO1mF6ezVaskYr1KeocuW4tw
+         KGFvDlPPNsBFx1kvz4AUJ0ebF87tf1me7n3hTYF8g6eA4hxr2jiGyJ4ad1cCZ6KxfUCH
+         QXVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678844012;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VIbQEp8c/bvCRBGeMiC274g2S8z8CKCav8uxzyMmd9w=;
-        b=Kt6vRFBIikAqF7tgYGXuOQEpF4CnibUvSf8zuuX2glB2OmLSiY1elVbRqx7ULd88wQ
-         Us4Cs+A6EPxGb/mZ6SHhUFNAIvHjuTt4MF5gVdKGlrvfWCHPAlbdcIzCnZCEIgLkEyB2
-         roVjcOuz5Lv6Pab3hxm+XfeGD1kk2A8jad+2ePiwz+mbaOcwvg+mvoJZ52o5P0z8g501
-         Tq+YkOgtPjmZ6RCChWv8kCKMIgwdnLLgiuPxHKrqrq8wpuBXcvRp7ZPgtsO8dAogub1c
-         NL6GzHRsDXGvgxV5f+DQ9GRWuRnhIpei+ncsnF+aOrsmhiPOGYVoWfq2lcKUB65npchd
-         SPpQ==
-X-Gm-Message-State: AO0yUKXMTlqxySVa9BUSLK7f5/IrltwOkoJGhDT/8d2kJBmN5XCTSJi2
-	BN2CCE1eUs9omewxuLC81Q/oEcrkxv8=
-X-Google-Smtp-Source: AK7set/jxiX0/RMspJXiw4076M0WmHOd6d0ZKjT1DdekVv+ac1Vi6XYDk0LycmDjCT4i1LiL69iSVw==
-X-Received: by 2002:a05:6a20:be24:b0:d4:5be:c578 with SMTP id ge36-20020a056a20be2400b000d405bec578mr9469759pzb.22.1678844011991;
-        Tue, 14 Mar 2023 18:33:31 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1678844014;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WtFkEngGD6XHPAAJOyERVHg8tLZ1P0Ys/zpCRpjR0GQ=;
+        b=M7aeaJqUG4f2Q50XE8MwzTMjWwnRaSk/WeHKEMTmsLknmA0SAPmQ6XW0LB/64xwBfs
+         53Fw0B86d5EHGjDQC7cZwDyX6TrHg29O6NUSu71jAyvfDPoqeP5Uo1mK/2YtWVTLgK38
+         Wykuudb/xvTNqgs6bYMEFLltE/4+HTHzRNUU2yzHpA+vwx+4OhBdXqr7k/TkcvJw6T73
+         J1QBxW9biZUNJoVPh/JIEMTKTITgl0HltPVKWGnktDpvYtu0dML6PLIw30ZV1V3SrsmN
+         PGBD6t3u442Zt4vGfDfFSenEbAjsoge9PwqcALCvsQ3U2c4VP7jm07M+n9VQ6gRrZ6yg
+         yBmg==
+X-Gm-Message-State: AO0yUKXu5nGb8Ea7sIum5W3ZH5vG0qoeC+UhdXKmiWsENX1RWoocepLH
+	pulPvLmpMQ3KrOsqmmzIj4J/T4Bo7lU=
+X-Google-Smtp-Source: AK7set9IX4hcrXYlrXOk3BBruR1AnOwFg3SuRSDr8LTFrDj8g/DDcvbn24C5grttEQXCxGbnD3GfDw==
+X-Received: by 2002:a62:1dd2:0:b0:625:6677:838a with SMTP id d201-20020a621dd2000000b006256677838amr3354830pfd.11.1678844013595;
+        Tue, 14 Mar 2023 18:33:33 -0700 (PDT)
 Received: from chiron.. ([2601:1c0:ca00:cea0:155f:ded0:e803:df3c])
-        by smtp.gmail.com with ESMTPSA id t21-20020a62ea15000000b00571cdbd0771sm397745pfh.102.2023.03.14.18.33.31
+        by smtp.gmail.com with ESMTPSA id t21-20020a62ea15000000b00571cdbd0771sm397745pfh.102.2023.03.14.18.33.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Mar 2023 18:33:31 -0700 (PDT)
+        Tue, 14 Mar 2023 18:33:33 -0700 (PDT)
 From: Tim Orling <ticotimo@gmail.com>
 X-Google-Original-From: Tim Orling <tim.orling@konsulko.com>
 To: bitbake-devel@lists.openembedded.org,
 	toaster@lists.yoctoproject.org
-Subject: [mickledore][2.4][PATCH 0/2] update toaster fixtures
-Date: Tue, 14 Mar 2023 18:33:04 -0700
-Message-Id: <cover.1678843397.git.tim.orling@konsulko.com>
+Subject: [mickledore][2.4][PATCH 1/2] toaster: update gen_fixtures.py for mickledore
+Date: Tue, 14 Mar 2023 18:33:05 -0700
+Message-Id: <a5bb47260f713344df360307ee713be846487310.1678843397.git.tim.orling@konsulko.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1678843397.git.tim.orling@konsulko.com>
+References: <cover.1678843397.git.tim.orling@konsulko.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 15 Mar 2023 01:33:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14560
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14561
 
-The toaster fixtures need to be updated for each stable release.
+Update for 'mickledore' 4.2.0 release and bitbake 2.4 branching.
+Drop 'langdale' as support will be ending soon.
+Update stable branches to latest patch release.
 
-These should be applied during or shortly after the 2.4 bitbake branching
-as part of the mickledore 4.2.0 release.
+Signed-off-by: Tim Orling <tim.orling@konsulko.com>
+---
+ lib/toaster/orm/fixtures/gen_fixtures.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Drop langdale since support is expected to end in May 2023 (if not in April).
-
-The following changes since commit b29f6e04091b6bfe697dc41c76880de466736fc3:
-
-  wget.py: Combine urlopener exceptions (2023-03-11 20:49:19 +0000)
-
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib timo/toaster-fixtures-mickledore
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=timo/toaster-fixtures-mickledore
-
-Tim Orling (2):
-  toaster: update gen_fixtures.py for mickledore
-  toaster: update fixtures for mickledore
-
- lib/toaster/orm/fixtures/gen_fixtures.py |  7 ++++---
- lib/toaster/orm/fixtures/oe-core.xml     | 12 ++++++------
- lib/toaster/orm/fixtures/poky.xml        | 18 +++++++++---------
- 3 files changed, 19 insertions(+), 18 deletions(-)
-
+diff --git a/lib/toaster/orm/fixtures/gen_fixtures.py b/lib/toaster/orm/fixtures/gen_fixtures.py
+index 69f557657..71afe3914 100755
+--- a/lib/toaster/orm/fixtures/gen_fixtures.py
++++ b/lib/toaster/orm/fixtures/gen_fixtures.py
+@@ -35,18 +35,19 @@ verbose = False
+ # [Codename, Yocto Project Version, Release Date, Current Version, Support Level, Poky Version, BitBake branch]
+ current_releases = [
+     # Release slot #1
+-    ['Kirkstone','4.0','April 2022','4.0.6 (December 2022)','Stable - Long Term Support (until Apr. 2024)','','2.0'],
++    ['Kirkstone','4.0','April 2022','4.0.8 (March 2023)','Stable - Long Term Support (until Apr. 2024)','','2.0'],
+     # Release slot #2 'local'
+     ['HEAD','HEAD','','Local Yocto Project','HEAD','','HEAD'],
+     # Release slot #3 'master'
+     ['Master','master','','Yocto Project master','master','','master'],
+     # Release slot #4
+-    ['Langdale','4.1','October 2022','4.1.2 (January 2023)','Support for 7 months (until May 2023)','','2.2'],
++    ['Mickledore','4.2','April 2023','4.2.0 (April 2023)','Support for 7 months (until October 2023)','','2.4'],
++#   ['Langdale','4.1','October 2022','4.1.2 (January 2023)','Support for 7 months (until May 2023)','','2.2'],
+ #   ['Honister','3.4','October 2021','3.4.2 (February 2022)','Support for 7 months (until May 2022)','26.0','1.52'],
+ #   ['Hardknott','3.3','April 2021','3.3.5 (March 2022)','Stable - Support for 13 months (until Apr. 2022)','25.0','1.50'],
+ #   ['Gatesgarth','3.2','Oct 2020','3.2.4 (May 2021)','EOL','24.0','1.48'],
+     # Optional Release slot #5
+-    ['Dunfell','3.1','April 2020','3.1.22 (January 2023)','Stable - Long Term Support (until Apr. 2024)','23.0','1.46'],
++    ['Dunfell','3.1','April 2020','3.1.23 (February 2023)','Stable - Long Term Support (until Apr. 2024)','23.0','1.46'],
+ ]
+ 
+ default_poky_layers = [
 -- 
 2.34.1
 
