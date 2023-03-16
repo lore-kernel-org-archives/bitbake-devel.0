@@ -1,125 +1,137 @@
-Return-Path: <frederic.martinsons@gmail.com>
+Return-Path: <jamestiotio@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D5AC6FD1D
-	for <webhook@archiver.kernel.org>; Wed, 15 Mar 2023 19:00:36 +0000 (UTC)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
- by mx.groups.io with SMTP id smtpd.web11.2139.1678906829409831755
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502B1C7618A
+	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 05:36:35 +0000 (UTC)
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+ by mx.groups.io with SMTP id smtpd.web10.5904.1678944986620926840
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 15 Mar 2023 12:00:29 -0700
+ Wed, 15 Mar 2023 22:36:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=SGehN7mN;
- spf=pass (domain: gmail.com, ip: 209.85.167.45, mailfrom: frederic.martinsons@gmail.com)
-Received: by mail-lf1-f45.google.com with SMTP id r27so25527137lfe.10
-        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Mar 2023 12:00:29 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=WFOR5t3o;
+ spf=pass (domain: gmail.com, ip: 209.85.216.46, mailfrom: jamestiotio@gmail.com)
+Received: by mail-pj1-f46.google.com with SMTP id j3-20020a17090adc8300b0023d09aea4a6so4187588pjv.5
+        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Mar 2023 22:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678906827;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8CAhyffd+l8/rFvPSjCdO4c/ymZWNfWSlOFbPyqCSTg=;
-        b=SGehN7mNVLQQfjYVtIdaxU/akDyZVqoafub+fnzIm7d948NMbmGKUXzGO/k+I33Esl
-         xNmyJwF9wvChHvRITWTK2m6U5Fu7PHfA61P9Be+fB3wIadAU2UKgSXdxYBF5+gLqCPes
-         q/sW7KObAxVzt35Z8LSTpsfbSKUpO9jdUGnyGLoIKgKAlLHv6pFoDZknCwTt6o5ZYYKU
-         dLUGyyGWLRY9oGll5txYiW6uUoEL+x0Yu466KLQRPZ2lMZZvnZGkDOez/vmlaFuwGEBD
-         JGUHIDnfLdtEUg9K7MK+iwWBkaKbL2J98BiaeZejBK/rJ6tHAu3jli9BHB8wVImkPtO4
-         8i6g==
+        d=gmail.com; s=20210112; t=1678944985;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IukSZo5LddHRgnKnMLIJWKmad/ijYgNrEQsIn2/BOiY=;
+        b=WFOR5t3oQ5F1t2HWHln2BTyXocQZIQIln3RQN1EdEaS8etXVu8jveja3cyolSpXRh3
+         eBg0zZ+9T5zSL7R8EflvuHNcStTwiTYwKdrS71uQcdyMO11pFOR6IWPMqhkJBdBkZ57Q
+         hshyUWqYeEIiMWmsZNN36RTTv4Lpmrd2+1aa5k5VxUbAp0i07R12N0WPgGdR2ORATe1d
+         5TJj/j8tS/r8tmERtylGseR/DDQjLp798IFp8su2T6z+O1d1L+T9RUHpi9y+2ymGhIOR
+         6EtF2AqwboS29dqzTAjgKiGfAP6RPvH60Ao+DzEt9l4nTQltLqrO6cI0pioKIRh33hKN
+         e61w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678906827;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20210112; t=1678944985;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8CAhyffd+l8/rFvPSjCdO4c/ymZWNfWSlOFbPyqCSTg=;
-        b=pTiLGuebDZLQ0Zw8kzEufD56chrR8HuP115a/I1ez36nHAm8X/mXadWHc1nbdLUJjL
-         4/jYhqlWJncHaPPpjT3rQxrqcUe+q9KOlUmpnyRO2duG6wMmwCSNKTMoyVYbaOo+W3Ll
-         dIuauQUuE4yzoXR3ghfIjxgovI1fDiv8RyRNOamHcmKaElLsGZbj6BhcnNrHu+Sja1IQ
-         HsKqodHfzBx7vTxrbebCvMJxOAwVoe1G0C4Ps61TIFUkL0ome69gJ+6qXhRW0ejcaD3B
-         eZ3CfMcxdKTu7SA39b+A/wHHXgFKCX3+JjHCVIPUIXTsqQjNTeS3jtEp2TPPbbJXQQW1
-         6a5A==
-X-Gm-Message-State: AO0yUKVnKvKb0XqKMruPJVX0r2MUgRSJkjuQ1hhLL9/QAvXZafmHpYNL
-	HozBUJMusB8+SXlLd72HLOCHtha94QB46Y1tWZk=
-X-Google-Smtp-Source: AK7set87IrNeZtWYnqnHHreMT1+yArG3vSlW6y8PXvxnthnnhmUPdO6zLgLERhFbc8x88RUMA4DCuTABWzjLEKVE2a0=
-X-Received: by 2002:ac2:43d4:0:b0:4e0:822f:9500 with SMTP id
- u20-20020ac243d4000000b004e0822f9500mr2326124lfl.12.1678906827462; Wed, 15
- Mar 2023 12:00:27 -0700 (PDT)
+        bh=IukSZo5LddHRgnKnMLIJWKmad/ijYgNrEQsIn2/BOiY=;
+        b=1VVi1D7NcuvORww1G5uPOLwfom2KYQwxuerc2H3uZpoCHDhAD8AanX/ZnsbjjsdTPu
+         gmooAK/RlSvSO87OAj2SMdBSDsK7RYY8BrjPqaVFFkENHPp2qQsXVqcTFtC4zwuKZ8Mp
+         H4jMbWMHEwetq1mxFxghRMMnIqzM8iiK9FKj+ziCApLX+kUooI8wqWm+th//wVAQvIpC
+         W/OsPM24ZX+p4NY9z+mXfMKLvzWE2zZAnk8TLSQONzIUGmsV4Gf/wEBZHJKdmW3exGCm
+         B1zOih2zJoQfW8mue/KToGPgmLHTBeMcdys5dDLkiEr+AxkoLkJNDFGZGCfq2GKC3MuC
+         xjNw==
+X-Gm-Message-State: AO0yUKUsuiPxaviVswHh0NkpyCFmMdrS6KbrNqgCz7uql6RM+unesugs
+	MmNf9JbAcyN/A405M8VTm90S1+0+LoVJuA==
+X-Google-Smtp-Source: AK7set+2Flb8V9mMfAwg0SH+7tMCcw4W8j4QY/FjCRlLL+h7DwFcdlNa8cbFixT1AXh0G+Cbl/2Q2Q==
+X-Received: by 2002:a05:6a20:c102:b0:cc:f214:2f33 with SMTP id bh2-20020a056a20c10200b000ccf2142f33mr1990719pzb.24.1678944985326;
+        Wed, 15 Mar 2023 22:36:25 -0700 (PDT)
+Received: from JRT-PC.lan ([103.252.200.22])
+        by smtp.gmail.com with ESMTPSA id t14-20020a62ea0e000000b006222a261188sm2251817pfh.62.2023.03.15.22.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Mar 2023 22:36:24 -0700 (PDT)
+From: James Raphael Tiovalen <jamestiotio@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: James Raphael Tiovalen <jamestiotio@gmail.com>
+Subject: [PATCH v2] ConfHandler: Allow the '@' character in variable flag names
+Date: Thu, 16 Mar 2023 13:35:57 +0800
+Message-Id: <20230316053557.183694-1-jamestiotio@gmail.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20230315131513.50635-1-frederic.martinsons@gmail.com>
- <CAO5Uq5SC+x8khm5+g-ro9=H0obf1EoxpDMcjOcpPfbvtEJSK5w@mail.gmail.com>
- <CANNYZj9Vontf0wPV672yLwSvNZ_6__Fp8y0P1WJXnGVJcZqBWg@mail.gmail.com>
- <CA+chaQeZTRjUG4Dy+A89iZfG68DkQi3MT4kr3h=JH6K=iPMZmw@mail.gmail.com>
- <CAO5Uq5RK8o_he_741feA-NQT01-tgGnXhi8pgwYqFPpHqA+-UQ@mail.gmail.com>
- <CA+cAkepJt0FbV1Oq6ErCOA1qsa5DCmk=z9dACo+FrpCrj0vXvQ@mail.gmail.com>
- <CANNYZj9EWbPrg0ThbT=oM3RcN_UmC3y8yz-=OODOnMLKcMoq_w@mail.gmail.com>
- <CA+cAkeoxvY6F+TySPXP1vDeUEiD14EZpxW06UM28DVd0G7KVjw@mail.gmail.com> <CANNYZj9msRQ5MnC9wHtD0w9zscDXeq2+dxt8fwzZzNnAcPquWg@mail.gmail.com>
-In-Reply-To: <CANNYZj9msRQ5MnC9wHtD0w9zscDXeq2+dxt8fwzZzNnAcPquWg@mail.gmail.com>
-From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
-Date: Wed, 15 Mar 2023 20:00:15 +0100
-Message-ID: <CA+cAkeoSQSPCyfQBrUcky0Og+SsqWDQiquV4YqspgqotVJV23A@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch2: Add checksum capability for crate fetcher
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: Alex Kiernan <alex.kiernan@gmail.com>, Martin Jansa <martin.jansa@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="0000000000000fdbd105f6f4f548"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 15 Mar 2023 19:00:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14575
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 05:36:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14576
 
---0000000000000fdbd105f6f4f548
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This patch enables the usage of the '@' character in variable flag
+names.
 
-Ok great, I have everything I need go further on this. Thank you all
+One use case of variable flags is to indicate and set the namespace of
+some systemd services/targets. The filenames of systemd services/targets
+might contain the '@' character if they are template unit files that can
+take in a single parameter/argument and be instanced multiple times, as
+indicated by systemd's official manual page.
 
-Le mer. 15 mars 2023, 19:47, Alexander Kanavin <alex.kanavin@gmail.com> a
-=C3=A9crit :
+This patch is successfully verified by creating a custom BitBake recipe
+that sets and unsets the value of a variable flag with the '@' character
+in its name and ensuring that no ParseError is being thrown. A
+regression test has also been added to `bb.parse`.
 
-> On Wed, 15 Mar 2023 at 19:26, Fr=C3=A9d=C3=A9ric Martinsons
-> <frederic.martinsons@gmail.com> wrote:
-> > But I still need some answers to go further:
-> >     - Should checksum verification for crate fetcher be mandatory ?
->
-> Yes.
->
-> >     - What about librsvg ? It doesn't include any crate:// but needs to
-> inherit cargo_common, what should I do for this recipe ?
->
-> I think this was mentioned by mistake. You might want to check if
-> meta-oe recipes would need fixing though.
->
-> Alex
->
+`bin/bitbake-selftest` has also been successfully executed and all tests
+passed.
 
---0000000000000fdbd105f6f4f548
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: James Raphael Tiovalen <jamestiotio@gmail.com>
+---
+v2:
+Add regression test.
+---
+ lib/bb/parse/parse_py/ConfHandler.py |  4 ++--
+ lib/bb/tests/parse.py                | 15 +++++++++++++++
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-<div dir=3D"auto">Ok great, I have everything I need go further on this. Th=
-ank you all=C2=A0</div><br><div class=3D"gmail_quote"><div dir=3D"ltr" clas=
-s=3D"gmail_attr">Le mer. 15 mars 2023, 19:47, Alexander Kanavin &lt;<a href=
-=3D"mailto:alex.kanavin@gmail.com" target=3D"_blank" rel=3D"noreferrer">ale=
-x.kanavin@gmail.com</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=
-=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
-ing-left:1ex">On Wed, 15 Mar 2023 at 19:26, Fr=C3=A9d=C3=A9ric Martinsons<b=
-r>
-&lt;<a href=3D"mailto:frederic.martinsons@gmail.com" rel=3D"noreferrer nore=
-ferrer" target=3D"_blank">frederic.martinsons@gmail.com</a>&gt; wrote:<br>
-&gt; But I still need some answers to go further:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0- Should checksum verification for crate fetcher be=
- mandatory ?<br>
-<br>
-Yes.<br>
-<br>
-&gt;=C2=A0 =C2=A0 =C2=A0- What about librsvg ? It doesn&#39;t include any c=
-rate:// but needs to inherit cargo_common, what should I do for this recipe=
- ?<br>
-<br>
-I think this was mentioned by mistake. You might want to check if<br>
-meta-oe recipes would need fixing though.<br>
-<br>
-Alex<br>
-</blockquote></div>
+diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
+index 30760672..f2b8a2c9 100644
+--- a/lib/bb/parse/parse_py/ConfHandler.py
++++ b/lib/bb/parse/parse_py/ConfHandler.py
+@@ -21,7 +21,7 @@ __config_regexp__  = re.compile( r"""
+     ^
+     (?P<exp>export\s+)?
+     (?P<var>[a-zA-Z0-9\-_+.${}/~:]+?)
+-    (\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?
++    (\[(?P<flag>[a-zA-Z0-9\-_+.@]+)\])?
+ 
+     \s* (
+         (?P<colon>:=) |
+@@ -45,7 +45,7 @@ __include_regexp__ = re.compile( r"include\s+(.+)" )
+ __require_regexp__ = re.compile( r"require\s+(.+)" )
+ __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
+ __unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
+-__unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.]+)\]$" )
++__unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.@]+)\]$" )
+ __addpylib_regexp__      = re.compile(r"addpylib\s+(.+)\s+(.+)" )
+ 
+ def init(data):
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index ee7f2534..dba77292 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -218,3 +218,18 @@ VAR = " \\
+         with self.assertRaises(bb.BBHandledException):
+             d = bb.parse.handle(f.name, self.d)['']
+ 
++
++    at_sign_in_var_flag = """
++A[flag@.service] = "nonet"
++B[flag@.target] = "ntb"
++
++unset A[flag@.service]
++"""
++    def test_parse_at_sign_in_var_flag(self):
++        f = self.parsehelper(self.at_sign_in_var_flag)
++        d = bb.parse.handle(f.name, self.d)['']
++        self.assertEqual(d.getVar("A"), None)
++        self.assertEqual(d.getVar("B"), None)
++        self.assertEqual(d.getVarFlag("A","flag@.service"), None)
++        self.assertEqual(d.getVarFlag("B","flag@.target"), "ntb")
++
+-- 
+2.39.2
 
---0000000000000fdbd105f6f4f548--
 
