@@ -2,332 +2,662 @@ Return-Path: <frederic.martinsons@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9E3C74A5B
-	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 12:37:17 +0000 (UTC)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
- by mx.groups.io with SMTP id smtpd.web11.10894.1678970227235788100
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDEAC74A5B
+	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 12:38:47 +0000 (UTC)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+ by mx.groups.io with SMTP id smtpd.web10.10971.1678970319117184485
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Mar 2023 05:37:07 -0700
+ Thu, 16 Mar 2023 05:38:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=Y/KmQYma;
- spf=pass (domain: gmail.com, ip: 209.85.208.182, mailfrom: frederic.martinsons@gmail.com)
-Received: by mail-lj1-f182.google.com with SMTP id h9so1527742ljq.2;
-        Thu, 16 Mar 2023 05:37:06 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=evjRuzhI;
+ spf=pass (domain: gmail.com, ip: 209.85.208.172, mailfrom: frederic.martinsons@gmail.com)
+Received: by mail-lj1-f172.google.com with SMTP id b10so1551422ljr.0;
+        Thu, 16 Mar 2023 05:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678970225;
+        d=gmail.com; s=20210112; t=1678970317;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=feTMGz5B121/r+nj9lgyMBZ9En8jZ7kh75F/1P74wY4=;
-        b=Y/KmQYmaLoGTX8MGJI0qZC/yQhiVRKFctYfSOkjc+rzQHp9CCzc3PGXr6Z3AvwKcMZ
-         pt2GqrESAwJadWDRqCAhKTdUq/rPu9N8/XO9KWcUNfxJ06GbEPeD6JDN0WW70f/ZS3Pr
-         f0fvwhhio8L7CVeulmvipbLRwj9fG4LjmRZhgLvdIs6txWQF/sq1hC07Y39QwsJM9KzY
-         RBa8qqMZkZGSkbsOqbT/DLCG9HJ0CS73GrS4Vo2JN3ZXFA5Pq/dE0Wcc6akfcelL1m1w
-         tuqWNFyX/iZ+EiGFM+iaFfhAiPjZ8zAve6Woo9n1bruBr58IkJ2SXnQhxByM4aUySJs/
-         OWzA==
+        bh=pRk+cWos17PGLd0y9Bd5BpeoL6MreNid6/7qvklF1sA=;
+        b=evjRuzhIEASArhTZN2Yj+U0gCoBZJ3JjqlpmmcpTPFPa9ijOgGFW7Or4Th5cjguplx
+         UKhos/ChjDBhmQ+Rw+VKec5CKXbDSOSHeoDdAlpVlpd2NOyqOoXK1DzOtGAFdQcMaFCu
+         PcytxfluY9nAPU+NDBZFKb6m4WU6swjobsp8YuNkVxHCd9W3PrE5g7aFpmtekIBT0iFg
+         GW+Ug02+Zx4sJXwY4H7KQfVg++EekmBzslG05yJURSE+RaKwERgtcLe7yCUUI9xXB5oe
+         l8HoPQQsNjz58HwlM859tWIU4cFfOHP3Uvs5jGapdJoYxnjj0z+l03fBVv9KsuBmlWIG
+         zsUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678970225;
+        d=1e100.net; s=20210112; t=1678970317;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=feTMGz5B121/r+nj9lgyMBZ9En8jZ7kh75F/1P74wY4=;
-        b=2jBhMjKdYE3g6s+jUKUtXG7GNIom5RFqyO3CpXy6j4hSXXSB1MWVxlbYyI7EgNf9kt
-         Jf0RSlPeK+XrGB1YSBbSkHEsNYhKuWhZi1Tu7+g4oCg9YMsUHt9t22SogOyeJnFFk7vn
-         EDtFA66+WmBMzVESEx6JN6SSufERvOoAlAqwA2yokVg1D02xGBmKpda8gxqPMZdcq4gT
-         L2pbXYFbzLp0v9YpFfHF1ZlFPy0noOaMEYvu8y08vmTknI6xwE0RDQ4mS88wk0wnhXDb
-         reObitLYGcZdZ6a9BbjaXmVh7GYQJrV0RjXa7Htf99sxxD3SKr2UWDlOvX1NIunL42P1
-         msNA==
-X-Gm-Message-State: AO0yUKVQBbCF2hul4y2iSWtNdS5ys5FOImSwfoIapUhtCAGoR3QK3uYy
-	PtelExgtuBFLz4hJwOErdH5Ri6Tyv0q3As573/c6fCp7
-X-Google-Smtp-Source: AK7set88+BbtGg5NI605BoGcCjKN91GSQC+3CEXdQlUNO5YmCV7kHQTK5H7WY2lJT4u6bRBv/XtABGBHY6BLgccGjoo=
+        bh=pRk+cWos17PGLd0y9Bd5BpeoL6MreNid6/7qvklF1sA=;
+        b=aFEJLwX3Tvo7IRx1AwW9MoHrRbusKL9uVXi3ON7hIrsj4K0UMZIw0j3jGKI5gTp3n6
+         diRuJ/iQOT6Ke/xMBv2+GVCFIB9AfsSPVi9V3gkj70XxYEvFesUvDZcKVGz9qISs/gfm
+         9C4CP0Ub6fmkk92PMUmXx2JsRR7FZP3RmDTK341Z/4AWoTgyq/Slbrtf7DYGSWbyNtc8
+         7oZcRggEM6MkBK4wBoamsQ6BTHYgMtNRjJWtl6TyFzW3d87dJWfbQWCeoLo5tZvE4yEI
+         FiJBaCv1ixyOwehFG2AAAdYwTHkpNJE13XY6gve6ELVY41I14QeMPQB4w+99vjb1F3LN
+         9xLw==
+X-Gm-Message-State: AO0yUKX2+n7SZZ2/PEiemOgPRGR3ifKkXFr8JbjcONRMCln2PJwQ4R+K
+	Pn9AwgDdtxRAlLGIjB+dPSGaAc9HBU1mt/8YD+TdwS1EdZU=
+X-Google-Smtp-Source: AK7set+BOTlGY2mPOt9eq6MmD7IrCHqYKkQPQiGz3PZ5GALOUCT0eSTH3RUf2QuW8LtDLGdBMc/DuoImt6SNNIb4NoY=
 X-Received: by 2002:a05:651c:490:b0:295:a82e:ec06 with SMTP id
- s16-20020a05651c049000b00295a82eec06mr2057356ljc.3.1678970224947; Thu, 16 Mar
- 2023 05:37:04 -0700 (PDT)
+ s16-20020a05651c049000b00295a82eec06mr2058570ljc.3.1678970316701; Thu, 16 Mar
+ 2023 05:38:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230316121249.28209-1-frederic.martinsons@gmail.com>
-In-Reply-To: <20230316121249.28209-1-frederic.martinsons@gmail.com>
+References: <20230316121249.28209-1-frederic.martinsons@gmail.com> <20230316121249.28209-2-frederic.martinsons@gmail.com>
+In-Reply-To: <20230316121249.28209-2-frederic.martinsons@gmail.com>
 From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
-Date: Thu, 16 Mar 2023 13:36:53 +0100
-Message-ID: <CA+cAkeoO-QE7-mJ=VDrw5hL0NMptR7N33x-tO-TZNc+G3WqsEQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] cargo-update-recipe-crates: generate checksum for
- each crates
+Date: Thu, 16 Mar 2023 13:38:25 +0100
+Message-ID: <CA+cAkeoDzQJb2qFq8V2D7kaC51q234t-DX-ddFaQSy7up=dtcg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] python3-bcrypt: add crates checksums
 To: openembedded-core@lists.openembedded.org
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000d8b88a05f703b7d0"
+Content-Type: multipart/alternative; boundary="00000000000050c25e05f703bd6d"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 12:37:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14589
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 12:38:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14590
 
---000000000000d8b88a05f703b7d0
+--00000000000050c25e05f703bd6d
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
 Sorry, I messed up with the different mailing list, this patch series
 should be for openembedded-core
 
-Le jeu. 16 mars 2023, 13:12, <frederic.martinsons@gmail.com> a =C3=A9crit :
+
+On Thu, 16 Mar 2023 at 13:12, <frederic.martinsons@gmail.com> wrote:
 
 > From: Frederic Martinsons <frederic.martinsons@gmail.com>
 >
-> This is related to checksum verification introduction from
->
-> https://patchwork.yoctoproject.org/project/bitbake/patch/20230315131513.5=
-0635-1-frederic.martinsons@gmail.com/
->
-> I also choose to raise an exception if:
->  - no crates can be found
->  - no Cargo.lock file exist
->
-> Otherwise the generated inc file will silently be emptied.
->
 > Signed-off-by: Frederic Martinsons <frederic.martinsons@gmail.com>
 > ---
->  .../cargo-update-recipe-crates.bbclass        | 44 +++++++++++++++++--
->  1 file changed, 40 insertions(+), 4 deletions(-)
+>  .../python/python3-bcrypt-crates.inc          | 149 ++++++++++++------
+>  1 file changed, 100 insertions(+), 49 deletions(-)
 >
-> diff --git a/meta/classes-recipe/cargo-update-recipe-crates.bbclass
-> b/meta/classes-recipe/cargo-update-recipe-crates.bbclass
-> index 697460d215..daa363b0dd 100644
-> --- a/meta/classes-recipe/cargo-update-recipe-crates.bbclass
-> +++ b/meta/classes-recipe/cargo-update-recipe-crates.bbclass
-> @@ -16,11 +16,14 @@
->  addtask do_update_crates after do_patch
->  do_update_crates[depends] =3D "python3-native:do_populate_sysroot"
->  do_update_crates[nostamp] =3D "1"
-> +do_update_crates[doc] =3D "Update the recipe by reading Cargo.lock and
-> write in ${THISDIR}/${BPN}-crates.inc"
+> diff --git a/meta/recipes-devtools/python/python3-bcrypt-crates.inc
+> b/meta/recipes-devtools/python/python3-bcrypt-crates.inc
+> index 65c7765f0c..1ff66269c4 100644
+> --- a/meta/recipes-devtools/python/python3-bcrypt-crates.inc
+> +++ b/meta/recipes-devtools/python/python3-bcrypt-crates.inc
+> @@ -1,53 +1,104 @@
+>  # Autogenerated with 'bitbake -c update_crates python3-bcrypt'
 >
->  # The directory where to search for Cargo.lock files
->  CARGO_LOCK_SRC_DIR ??=3D "${S}"
->
->  do_update_crates() {
-> +    TARGET_FILE=3D"${THISDIR}/${BPN}-crates.inc"
+> +# from src/_bcrypt/Cargo.lock
+>  SRC_URI += " \
+> -        crate://crates.io/autocfg/1.1.0 \
+> -        crate://crates.io/base64/0.13.0 \
+> -        crate://crates.io/bcrypt/0.13.0 \
+> -        crate://crates.io/bcrypt-pbkdf/0.8.1 \
+> -        crate://crates.io/bitflags/1.3.2 \
+> -        crate://crates.io/block-buffer/0.10.3 \
+> -        crate://crates.io/blowfish/0.9.1 \
+> -        crate://crates.io/byteorder/1.4.3 \
+> -        crate://crates.io/cfg-if/1.0.0 \
+> -        crate://crates.io/cipher/0.4.3 \
+> -        crate://crates.io/cpufeatures/0.2.5 \
+> -        crate://crates.io/crypto-common/0.1.6 \
+> -        crate://crates.io/digest/0.10.5 \
+> -        crate://crates.io/generic-array/0.14.6 \
+> -        crate://crates.io/getrandom/0.2.7 \
+> -        crate://crates.io/indoc/0.3.6 \
+> -        crate://crates.io/indoc-impl/0.3.6 \
+> -        crate://crates.io/inout/0.1.3 \
+> -        crate://crates.io/instant/0.1.12 \
+> -        crate://crates.io/libc/0.2.134 \
+> -        crate://crates.io/lock_api/0.4.9 \
+> -        crate://crates.io/once_cell/1.15.0 \
+> -        crate://crates.io/parking_lot/0.11.2 \
+> -        crate://crates.io/parking_lot_core/0.8.5 \
+> -        crate://crates.io/paste/0.1.18 \
+> -        crate://crates.io/paste-impl/0.1.18 \
+> -        crate://crates.io/pbkdf2/0.10.1 \
+> -        crate://crates.io/proc-macro-hack/0.5.19 \
+> -        crate://crates.io/proc-macro2/1.0.46 \
+> -        crate://crates.io/pyo3/0.15.2 \
+> -        crate://crates.io/pyo3-build-config/0.15.2 \
+> -        crate://crates.io/pyo3-macros/0.15.2 \
+> -        crate://crates.io/pyo3-macros-backend/0.15.2 \
+> -        crate://crates.io/quote/1.0.21 \
+> -        crate://crates.io/redox_syscall/0.2.16 \
+> -        crate://crates.io/scopeguard/1.1.0 \
+> -        crate://crates.io/sha2/0.10.6 \
+> -        crate://crates.io/smallvec/1.10.0 \
+> -        crate://crates.io/subtle/2.4.1 \
+> -        crate://crates.io/syn/1.0.102 \
+> -        crate://crates.io/typenum/1.15.0 \
+> -        crate://crates.io/unicode-ident/1.0.4 \
+> -        crate://crates.io/unindent/0.1.10 \
+> -        crate://crates.io/version_check/0.9.4 \
+> -        crate://crates.io/wasi/0.11.0+wasi-snapshot-preview1 \
+> -        crate://crates.io/winapi/0.3.9 \
+> -        crate://crates.io/winapi-i686-pc-windows-gnu/0.4.0 \
+> -        crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
+> -        crate://crates.io/zeroize/1.5.7 \
+> +    crate://crates.io/autocfg/1.1.0 \
+> +    crate://crates.io/base64/0.13.0 \
+> +    crate://crates.io/bcrypt/0.13.0 \
+> +    crate://crates.io/bcrypt-pbkdf/0.8.1 \
+> +    crate://crates.io/bitflags/1.3.2 \
+> +    crate://crates.io/block-buffer/0.10.3 \
+> +    crate://crates.io/blowfish/0.9.1 \
+> +    crate://crates.io/byteorder/1.4.3 \
+> +    crate://crates.io/cfg-if/1.0.0 \
+> +    crate://crates.io/cipher/0.4.3 \
+> +    crate://crates.io/cpufeatures/0.2.5 \
+> +    crate://crates.io/crypto-common/0.1.6 \
+> +    crate://crates.io/digest/0.10.5 \
+> +    crate://crates.io/generic-array/0.14.6 \
+> +    crate://crates.io/getrandom/0.2.7 \
+> +    crate://crates.io/indoc/0.3.6 \
+> +    crate://crates.io/indoc-impl/0.3.6 \
+> +    crate://crates.io/inout/0.1.3 \
+> +    crate://crates.io/instant/0.1.12 \
+> +    crate://crates.io/libc/0.2.134 \
+> +    crate://crates.io/lock_api/0.4.9 \
+> +    crate://crates.io/once_cell/1.15.0 \
+> +    crate://crates.io/parking_lot/0.11.2 \
+> +    crate://crates.io/parking_lot_core/0.8.5 \
+> +    crate://crates.io/paste/0.1.18 \
+> +    crate://crates.io/paste-impl/0.1.18 \
+> +    crate://crates.io/pbkdf2/0.10.1 \
+> +    crate://crates.io/proc-macro-hack/0.5.19 \
+> +    crate://crates.io/proc-macro2/1.0.46 \
+> +    crate://crates.io/pyo3/0.15.2 \
+> +    crate://crates.io/pyo3-build-config/0.15.2 \
+> +    crate://crates.io/pyo3-macros/0.15.2 \
+> +    crate://crates.io/pyo3-macros-backend/0.15.2 \
+> +    crate://crates.io/quote/1.0.21 \
+> +    crate://crates.io/redox_syscall/0.2.16 \
+> +    crate://crates.io/scopeguard/1.1.0 \
+> +    crate://crates.io/sha2/0.10.6 \
+> +    crate://crates.io/smallvec/1.10.0 \
+> +    crate://crates.io/subtle/2.4.1 \
+> +    crate://crates.io/syn/1.0.102 \
+> +    crate://crates.io/typenum/1.15.0 \
+> +    crate://crates.io/unicode-ident/1.0.4 \
+> +    crate://crates.io/unindent/0.1.10 \
+> +    crate://crates.io/version_check/0.9.4 \
+> +    crate://crates.io/wasi/0.11.0+wasi-snapshot-preview1 \
+> +    crate://crates.io/winapi/0.3.9 \
+> +    crate://crates.io/winapi-i686-pc-windows-gnu/0.4.0 \
+> +    crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
+> +    crate://crates.io/zeroize/1.5.7 \
+>  "
 > +
->      nativepython3 - <<EOF
->
->  def get_crates(f):
-> @@ -28,19 +31,52 @@ def get_crates(f):
->      c_list =3D '# from %s' % os.path.relpath(f, '${CARGO_LOCK_SRC_DIR}')
->      c_list +=3D '\nSRC_URI +=3D " \\\'
->      crates =3D tomllib.load(open(f, 'rb'))
-> -    for c in crates['package']:
-> -        if 'source' in c and 'crates.io' in c['source']:
-> +
-> +    # Build a list with crates info that have crates.io in the source
-> +    crates_candidates =3D list(filter(lambda c: 'crates.io' in
-> c.get('source', ''), crates['package']))
-> +
-> +    if not crates_candidates:
-> +        raise ValueError("Unable to find any candidate crates that use
-> crates.io")
-> +
-> +    # Build a list of crates name that have multiple version
-> +    crates_multiple_vers =3D []
-> +    tmp =3D []
-> +    for c in crates_candidates:
-> +        if c['name'] in tmp:
-> +            crates_multiple_vers.append(c['name'])
-> +        else:
-> +            tmp.append(c['name'])
-> +
-> +    # Update crates uri and their checksum, to avoid name clashing on th=
-e
-> checksum
-> +    # we need to rename crates of the same name but different version
-> +    cksum_list =3D ''
-> +    for c in crates_candidates:
-> +        if c['name'] in crates_multiple_vers:
-> +            rename =3D "%s-%s" % (c['name'], c['version'])
-> +            c_list +=3D '\n    crate://crates.io/%s/%s;name=3D%s \\\' %
-> (c['name'], c['version'], rename)
-> +        else:
-> +            rename =3D c['name']
->              c_list +=3D '\n    crate://crates.io/%s/%s \\\' % (c['name']=
-,
-> c['version'])
-> +        if 'checksum' in c:
-> +            cksum_list +=3D '\nSRC_URI[%s.sha256sum] =3D "%s"' % (rename=
-,
-> c['checksum'])
-> +
->      c_list +=3D '\n"\n'
-> +    c_list +=3D cksum_list
-> +    c_list +=3D '\n'
->      return c_list
->
->  import os
->  crates =3D "# Autogenerated with 'bitbake -c update_crates ${PN}'\n\n"
-> +found =3D False
->  for root, dirs, files in os.walk('${CARGO_LOCK_SRC_DIR}'):
->      for file in files:
->          if file =3D=3D 'Cargo.lock':
->              crates +=3D get_crates(os.path.join(root, file))
-> -open(os.path.join('${THISDIR}', '${BPN}'+"-crates.inc"),
-> 'w').write(crates)
-> -
-> +            found =3D True
-> +if not found:
-> +    raise ValueError("Unable to find Cargo.lock in ${CARGO_LOCK_SRC_DIR}=
-")
-> +open("${TARGET_FILE}", 'w').write(crates)
->  EOF
-> +
-> +    bbnote "Successfully update crates inside '${TARGET_FILE}'"
->  }
+> +SRC_URI[autocfg.sha256sum] =
+> "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
+> +SRC_URI[base64.sha256sum] =
+> "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
+> +SRC_URI[bcrypt.sha256sum] =
+> "a7e7c93a3fb23b2fdde989b2c9ec4dd153063ec81f408507f84c090cd91c6641"
+> +SRC_URI[bcrypt-pbkdf.sha256sum] =
+> "f4ef233ffa9cb9c7820b2b0e9efd0821ed180e866c9120ec9f45518659742074"
+> +SRC_URI[bitflags.sha256sum] =
+> "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
+> +SRC_URI[block-buffer.sha256sum] =
+> "69cce20737498f97b993470a6e536b8523f0af7892a4f928cceb1ac5e52ebe7e"
+> +SRC_URI[blowfish.sha256sum] =
+> "e412e2cd0f2b2d93e02543ceae7917b3c70331573df19ee046bcbc35e45e87d7"
+> +SRC_URI[byteorder.sha256sum] =
+> "14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610"
+> +SRC_URI[cfg-if.sha256sum] =
+> "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+> +SRC_URI[cipher.sha256sum] =
+> "d1873270f8f7942c191139cb8a40fd228da6c3fd2fc376d7e92d47aa14aeb59e"
+> +SRC_URI[cpufeatures.sha256sum] =
+> "28d997bd5e24a5928dd43e46dc529867e207907fe0b239c3477d924f7f2ca320"
+> +SRC_URI[crypto-common.sha256sum] =
+> "1bfb12502f3fc46cca1bb51ac28df9d618d813cdc3d2f25b9fe775a34af26bb3"
+> +SRC_URI[digest.sha256sum] =
+> "adfbc57365a37acbd2ebf2b64d7e69bb766e2fea813521ed536f5d0520dcf86c"
+> +SRC_URI[generic-array.sha256sum] =
+> "bff49e947297f3312447abdca79f45f4738097cc82b06e72054d2223f601f1b9"
+> +SRC_URI[getrandom.sha256sum] =
+> "4eb1a864a501629691edf6c15a593b7a51eebaa1e8468e9ddc623de7c9b58ec6"
+> +SRC_URI[indoc.sha256sum] =
+> "47741a8bc60fb26eb8d6e0238bbb26d8575ff623fdc97b1a2c00c050b9684ed8"
+> +SRC_URI[indoc-impl.sha256sum] =
+> "ce046d161f000fffde5f432a0d034d0341dc152643b2598ed5bfce44c4f3a8f0"
+> +SRC_URI[inout.sha256sum] =
+> "a0c10553d664a4d0bcff9f4215d0aac67a639cc68ef660840afe309b807bc9f5"
+> +SRC_URI[instant.sha256sum] =
+> "7a5bbe824c507c5da5956355e86a746d82e0e1464f65d862cc5e71da70e94b2c"
+> +SRC_URI[libc.sha256sum] =
+> "329c933548736bc49fd575ee68c89e8be4d260064184389a5b77517cddd99ffb"
+> +SRC_URI[lock_api.sha256sum] =
+> "435011366fe56583b16cf956f9df0095b405b82d76425bc8981c0e22e60ec4df"
+> +SRC_URI[once_cell.sha256sum] =
+> "e82dad04139b71a90c080c8463fe0dc7902db5192d939bd0950f074d014339e1"
+> +SRC_URI[parking_lot.sha256sum] =
+> "7d17b78036a60663b797adeaee46f5c9dfebb86948d1255007a1d6be0271ff99"
+> +SRC_URI[parking_lot_core.sha256sum] =
+> "d76e8e1493bcac0d2766c42737f34458f1c8c50c0d23bcb24ea953affb273216"
+> +SRC_URI[paste.sha256sum] =
+> "45ca20c77d80be666aef2b45486da86238fabe33e38306bd3118fe4af33fa880"
+> +SRC_URI[paste-impl.sha256sum] =
+> "d95a7db200b97ef370c8e6de0088252f7e0dfff7d047a28528e47456c0fc98b6"
+> +SRC_URI[pbkdf2.sha256sum] =
+> "271779f35b581956db91a3e55737327a03aa051e90b1c47aeb189508533adfd7"
+> +SRC_URI[proc-macro-hack.sha256sum] =
+> "dbf0c48bc1d91375ae5c3cd81e3722dff1abcf81a30960240640d223f59fe0e5"
+> +SRC_URI[proc-macro2.sha256sum] =
+> "94e2ef8dbfc347b10c094890f778ee2e36ca9bb4262e86dc99cd217e35f3470b"
+> +SRC_URI[pyo3.sha256sum] =
+> "d41d50a7271e08c7c8a54cd24af5d62f73ee3a6f6a314215281ebdec421d5752"
+> +SRC_URI[pyo3-build-config.sha256sum] =
+> "779239fc40b8e18bc8416d3a37d280ca9b9fb04bda54b98037bb6748595c2410"
+> +SRC_URI[pyo3-macros.sha256sum] =
+> "00b247e8c664be87998d8628e86f282c25066165f1f8dda66100c48202fdb93a"
+> +SRC_URI[pyo3-macros-backend.sha256sum] =
+> "5a8c2812c412e00e641d99eeb79dd478317d981d938aa60325dfa7157b607095"
+> +SRC_URI[quote.sha256sum] =
+> "bbe448f377a7d6961e30f5955f9b8d106c3f5e449d493ee1b125c1d43c2b5179"
+> +SRC_URI[redox_syscall.sha256sum] =
+> "fb5a58c1855b4b6819d59012155603f0b22ad30cad752600aadfcb695265519a"
+> +SRC_URI[scopeguard.sha256sum] =
+> "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
+> +SRC_URI[sha2.sha256sum] =
+> "82e6b795fe2e3b1e845bafcb27aa35405c4d47cdfc92af5fc8d3002f76cebdc0"
+> +SRC_URI[smallvec.sha256sum] =
+> "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
+> +SRC_URI[subtle.sha256sum] =
+> "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
+> +SRC_URI[syn.sha256sum] =
+> "3fcd952facd492f9be3ef0d0b7032a6e442ee9b361d4acc2b1d0c4aaa5f613a1"
+> +SRC_URI[typenum.sha256sum] =
+> "dcf81ac59edc17cc8697ff311e8f5ef2d99fcbd9817b34cec66f90b6c3dfd987"
+> +SRC_URI[unicode-ident.sha256sum] =
+> "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
+> +SRC_URI[unindent.sha256sum] =
+> "58ee9362deb4a96cef4d437d1ad49cffc9b9e92d202b6995674e928ce684f112"
+> +SRC_URI[version_check.sha256sum] =
+> "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
+> +SRC_URI[wasi.sha256sum] =
+> "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
+> +SRC_URI[winapi.sha256sum] =
+> "5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419"
+> +SRC_URI[winapi-i686-pc-windows-gnu.sha256sum] =
+> "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
+> +SRC_URI[winapi-x86_64-pc-windows-gnu.sha256sum] =
+> "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
+> +SRC_URI[zeroize.sha256sum] =
+> "c394b5bd0c6f669e7275d9c20aa90ae064cb22e75a1cad54e1b34088034b149f"
 > --
 > 2.34.1
 >
 >
 
---000000000000d8b88a05f703b7d0
+--00000000000050c25e05f703bd6d
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr">Sorry, I messed up with the different mai=
-ling list, this patch series should be for openembedded-core</div><div dir=
-=3D"auto"></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gm=
-ail_attr">Le jeu. 16 mars 2023, 13:12,  &lt;<a href=3D"mailto:frederic.mart=
-insons@gmail.com" target=3D"_blank">frederic.martinsons@gmail.com</a>&gt; a=
- =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" style=3D"marg=
-in:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1e=
-x">From: Frederic Martinsons &lt;<a href=3D"mailto:frederic.martinsons@gmai=
-l.com" rel=3D"noreferrer" target=3D"_blank">frederic.martinsons@gmail.com</=
-a>&gt;<br>
-<br>
-This is related to checksum verification introduction from<br>
-<a href=3D"https://patchwork.yoctoproject.org/project/bitbake/patch/2023031=
-5131513.50635-1-frederic.martinsons@gmail.com/" rel=3D"noreferrer noreferre=
-r" target=3D"_blank">https://patchwork.yoctoproject.org/project/bitbake/pat=
-ch/20230315131513.50635-1-frederic.martinsons@gmail.com/</a><br>
-<br>
-I also choose to raise an exception if:<br>
-=C2=A0- no crates can be found<br>
-=C2=A0- no Cargo.lock file exist<br>
-<br>
-Otherwise the generated inc file will silently be emptied.<br>
+<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr">Sorry, I messed up with =
+the different mailing list, this patch series should be for openembedded-co=
+re</div><br class=3D"gmail-Apple-interchange-newline"></div><br><div class=
+=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, 16 Mar 2023 =
+at 13:12, &lt;<a href=3D"mailto:frederic.martinsons@gmail.com">frederic.mar=
+tinsons@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote"=
+ style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);p=
+adding-left:1ex">From: Frederic Martinsons &lt;<a href=3D"mailto:frederic.m=
+artinsons@gmail.com" target=3D"_blank">frederic.martinsons@gmail.com</a>&gt=
+;<br>
 <br>
 Signed-off-by: Frederic Martinsons &lt;<a href=3D"mailto:frederic.martinson=
-s@gmail.com" rel=3D"noreferrer" target=3D"_blank">frederic.martinsons@gmail=
-.com</a>&gt;<br>
+s@gmail.com" target=3D"_blank">frederic.martinsons@gmail.com</a>&gt;<br>
 ---<br>
-=C2=A0.../cargo-update-recipe-crates.bbclass=C2=A0 =C2=A0 =C2=A0 =C2=A0 | 4=
-4 +++++++++++++++++--<br>
-=C2=A01 file changed, 40 insertions(+), 4 deletions(-)<br>
+=C2=A0.../python/python3-bcrypt-crates.inc=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 | 149 ++++++++++++------<br>
+=C2=A01 file changed, 100 insertions(+), 49 deletions(-)<br>
 <br>
-diff --git a/meta/classes-recipe/cargo-update-recipe-crates.bbclass b/meta/=
-classes-recipe/cargo-update-recipe-crates.bbclass<br>
-index 697460d215..daa363b0dd 100644<br>
---- a/meta/classes-recipe/cargo-update-recipe-crates.bbclass<br>
-+++ b/meta/classes-recipe/cargo-update-recipe-crates.bbclass<br>
-@@ -16,11 +16,14 @@<br>
-=C2=A0addtask do_update_crates after do_patch<br>
-=C2=A0do_update_crates[depends] =3D &quot;python3-native:do_populate_sysroo=
-t&quot;<br>
-=C2=A0do_update_crates[nostamp] =3D &quot;1&quot;<br>
-+do_update_crates[doc] =3D &quot;Update the recipe by reading Cargo.lock an=
-d write in ${THISDIR}/${BPN}-crates.inc&quot;<br>
+diff --git a/meta/recipes-devtools/python/python3-bcrypt-crates.inc b/meta/=
+recipes-devtools/python/python3-bcrypt-crates.inc<br>
+index 65c7765f0c..1ff66269c4 100644<br>
+--- a/meta/recipes-devtools/python/python3-bcrypt-crates.inc<br>
++++ b/meta/recipes-devtools/python/python3-bcrypt-crates.inc<br>
+@@ -1,53 +1,104 @@<br>
+=C2=A0# Autogenerated with &#39;bitbake -c update_crates python3-bcrypt&#39=
+;<br>
 <br>
-=C2=A0# The directory where to search for Cargo.lock files<br>
-=C2=A0CARGO_LOCK_SRC_DIR ??=3D &quot;${S}&quot;<br>
++# from src/_bcrypt/Cargo.lock<br>
+=C2=A0SRC_URI +=3D &quot; \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/autocfg/1.=
+1.0" rel=3D"noreferrer" target=3D"_blank">crates.io/autocfg/1.1.0</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/base64/0.1=
+3.0" rel=3D"noreferrer" target=3D"_blank">crates.io/base64/0.13.0</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/bcrypt/0.1=
+3.0" rel=3D"noreferrer" target=3D"_blank">crates.io/bcrypt/0.13.0</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/bcrypt-pbk=
+df/0.8.1" rel=3D"noreferrer" target=3D"_blank">crates.io/bcrypt-pbkdf/0.8.1=
+</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/bitflags/1=
+.3.2" rel=3D"noreferrer" target=3D"_blank">crates.io/bitflags/1.3.2</a> \<b=
+r>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/block-buff=
+er/0.10.3" rel=3D"noreferrer" target=3D"_blank">crates.io/block-buffer/0.10=
+.3</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/blowfish/0=
+.9.1" rel=3D"noreferrer" target=3D"_blank">crates.io/blowfish/0.9.1</a> \<b=
+r>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/byteorder/=
+1.4.3" rel=3D"noreferrer" target=3D"_blank">crates.io/byteorder/1.4.3</a> \=
 <br>
-=C2=A0do_update_crates() {<br>
-+=C2=A0 =C2=A0 TARGET_FILE=3D&quot;${THISDIR}/${BPN}-crates.inc&quot;<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0nativepython3 - &lt;&lt;EOF<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/cfg-if/1.0=
+.0" rel=3D"noreferrer" target=3D"_blank">crates.io/cfg-if/1.0.0</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/cipher/0.4=
+.3" rel=3D"noreferrer" target=3D"_blank">crates.io/cipher/0.4.3</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/cpufeature=
+s/0.2.5" rel=3D"noreferrer" target=3D"_blank">crates.io/cpufeatures/0.2.5</=
+a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/crypto-com=
+mon/0.1.6" rel=3D"noreferrer" target=3D"_blank">crates.io/crypto-common/0.1=
+.6</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/digest/0.1=
+0.5" rel=3D"noreferrer" target=3D"_blank">crates.io/digest/0.10.5</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/generic-ar=
+ray/0.14.6" rel=3D"noreferrer" target=3D"_blank">crates.io/generic-array/0.=
+14.6</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/getrandom/=
+0.2.7" rel=3D"noreferrer" target=3D"_blank">crates.io/getrandom/0.2.7</a> \=
 <br>
-=C2=A0def get_crates(f):<br>
-@@ -28,19 +31,52 @@ def get_crates(f):<br>
-=C2=A0 =C2=A0 =C2=A0c_list =3D &#39;# from %s&#39; % os.path.relpath(f, &#3=
-9;${CARGO_LOCK_SRC_DIR}&#39;)<br>
-=C2=A0 =C2=A0 =C2=A0c_list +=3D &#39;\nSRC_URI +=3D &quot; \\\&#39;<br>
-=C2=A0 =C2=A0 =C2=A0crates =3D tomllib.load(open(f, &#39;rb&#39;))<br>
--=C2=A0 =C2=A0 for c in crates[&#39;package&#39;]:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 if &#39;source&#39; in c and &#39;<a href=3D"h=
-ttp://crates.io" rel=3D"noreferrer noreferrer" target=3D"_blank">crates.io<=
-/a>&#39; in c[&#39;source&#39;]:<br>
-+<br>
-+=C2=A0 =C2=A0 # Build a list with crates info that have <a href=3D"http://=
-crates.io" rel=3D"noreferrer noreferrer" target=3D"_blank">crates.io</a> in=
- the source<br>
-+=C2=A0 =C2=A0 crates_candidates =3D list(filter(lambda c: &#39;<a href=3D"=
-http://crates.io" rel=3D"noreferrer noreferrer" target=3D"_blank">crates.io=
-</a>&#39; in c.get(&#39;source&#39;, &#39;&#39;), crates[&#39;package&#39;]=
-))<br>
-+<br>
-+=C2=A0 =C2=A0 if not crates_candidates:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 raise ValueError(&quot;Unable to find any cand=
-idate crates that use <a href=3D"http://crates.io" rel=3D"noreferrer norefe=
-rrer" target=3D"_blank">crates.io</a>&quot;)<br>
-+<br>
-+=C2=A0 =C2=A0 # Build a list of crates name that have multiple version<br>
-+=C2=A0 =C2=A0 crates_multiple_vers =3D []<br>
-+=C2=A0 =C2=A0 tmp =3D []<br>
-+=C2=A0 =C2=A0 for c in crates_candidates:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if c[&#39;name&#39;] in tmp:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 crates_multiple_vers.append(c[&#=
-39;name&#39;])<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 else:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 tmp.append(c[&#39;name&#39;])<br=
->
-+<br>
-+=C2=A0 =C2=A0 # Update crates uri and their checksum, to avoid name clashi=
-ng on the checksum<br>
-+=C2=A0 =C2=A0 # we need to rename crates of the same name but different ve=
-rsion<br>
-+=C2=A0 =C2=A0 cksum_list =3D &#39;&#39;<br>
-+=C2=A0 =C2=A0 for c in crates_candidates:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if c[&#39;name&#39;] in crates_multiple_vers:<=
-br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rename =3D &quot;%s-%s&quot; % (=
-c[&#39;name&#39;], c[&#39;version&#39;])<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 c_list +=3D &#39;\n=C2=A0 =C2=A0=
- crate://<a href=3D"http://crates.io/%s/%s;name=3D%s" rel=3D"noreferrer nor=
-eferrer" target=3D"_blank">crates.io/%s/%s;name=3D%s</a> \\\&#39; % (c[&#39=
-;name&#39;], c[&#39;version&#39;], rename)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 else:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rename =3D c[&#39;name&#39;]<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0c_list +=3D &#39;\n=C2=A0 =
-=C2=A0 crate://<a href=3D"http://crates.io/%s/%s" rel=3D"noreferrer norefer=
-rer" target=3D"_blank">crates.io/%s/%s</a> \\\&#39; % (c[&#39;name&#39;], c=
-[&#39;version&#39;])<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if &#39;checksum&#39; in c:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 cksum_list +=3D &#39;\nSRC_URI[%=
-s.sha256sum] =3D &quot;%s&quot;&#39; % (rename, c[&#39;checksum&#39;])<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0c_list +=3D &#39;\n&quot;\n&#39;<br>
-+=C2=A0 =C2=A0 c_list +=3D cksum_list<br>
-+=C2=A0 =C2=A0 c_list +=3D &#39;\n&#39;<br>
-=C2=A0 =C2=A0 =C2=A0return c_list<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/indoc/0.3.=
+6" rel=3D"noreferrer" target=3D"_blank">crates.io/indoc/0.3.6</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/indoc-impl=
+/0.3.6" rel=3D"noreferrer" target=3D"_blank">crates.io/indoc-impl/0.3.6</a>=
+ \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/inout/0.1.=
+3" rel=3D"noreferrer" target=3D"_blank">crates.io/inout/0.1.3</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/instant/0.=
+1.12" rel=3D"noreferrer" target=3D"_blank">crates.io/instant/0.1.12</a> \<b=
+r>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/libc/0.2.1=
+34" rel=3D"noreferrer" target=3D"_blank">crates.io/libc/0.2.134</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/lock_api/0=
+.4.9" rel=3D"noreferrer" target=3D"_blank">crates.io/lock_api/0.4.9</a> \<b=
+r>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/once_cell/=
+1.15.0" rel=3D"noreferrer" target=3D"_blank">crates.io/once_cell/1.15.0</a>=
+ \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/parking_lo=
+t/0.11.2" rel=3D"noreferrer" target=3D"_blank">crates.io/parking_lot/0.11.2=
+</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/parking_lo=
+t_core/0.8.5" rel=3D"noreferrer" target=3D"_blank">crates.io/parking_lot_co=
+re/0.8.5</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/paste/0.1.=
+18" rel=3D"noreferrer" target=3D"_blank">crates.io/paste/0.1.18</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/paste-impl=
+/0.1.18" rel=3D"noreferrer" target=3D"_blank">crates.io/paste-impl/0.1.18</=
+a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/pbkdf2/0.1=
+0.1" rel=3D"noreferrer" target=3D"_blank">crates.io/pbkdf2/0.10.1</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/proc-macro=
+-hack/0.5.19" rel=3D"noreferrer" target=3D"_blank">crates.io/proc-macro-hac=
+k/0.5.19</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/proc-macro=
+2/1.0.46" rel=3D"noreferrer" target=3D"_blank">crates.io/proc-macro2/1.0.46=
+</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/pyo3/0.15.=
+2" rel=3D"noreferrer" target=3D"_blank">crates.io/pyo3/0.15.2</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/pyo3-build=
+-config/0.15.2" rel=3D"noreferrer" target=3D"_blank">crates.io/pyo3-build-c=
+onfig/0.15.2</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/pyo3-macro=
+s/0.15.2" rel=3D"noreferrer" target=3D"_blank">crates.io/pyo3-macros/0.15.2=
+</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/pyo3-macro=
+s-backend/0.15.2" rel=3D"noreferrer" target=3D"_blank">crates.io/pyo3-macro=
+s-backend/0.15.2</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/quote/1.0.=
+21" rel=3D"noreferrer" target=3D"_blank">crates.io/quote/1.0.21</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/redox_sysc=
+all/0.2.16" rel=3D"noreferrer" target=3D"_blank">crates.io/redox_syscall/0.=
+2.16</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/scopeguard=
+/1.1.0" rel=3D"noreferrer" target=3D"_blank">crates.io/scopeguard/1.1.0</a>=
+ \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/sha2/0.10.=
+6" rel=3D"noreferrer" target=3D"_blank">crates.io/sha2/0.10.6</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/smallvec/1=
+.10.0" rel=3D"noreferrer" target=3D"_blank">crates.io/smallvec/1.10.0</a> \=
 <br>
-=C2=A0import os<br>
-=C2=A0crates =3D &quot;# Autogenerated with &#39;bitbake -c update_crates $=
-{PN}&#39;\n\n&quot;<br>
-+found =3D False<br>
-=C2=A0for root, dirs, files in os.walk(&#39;${CARGO_LOCK_SRC_DIR}&#39;):<br=
->
-=C2=A0 =C2=A0 =C2=A0for file in files:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if file =3D=3D &#39;Cargo.lock&#39;:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0crates +=3D get_crates(os.p=
-ath.join(root, file))<br>
--open(os.path.join(&#39;${THISDIR}&#39;, &#39;${BPN}&#39;+&quot;-crates.inc=
-&quot;), &#39;w&#39;).write(crates)<br>
--<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 found =3D True<br>
-+if not found:<br>
-+=C2=A0 =C2=A0 raise ValueError(&quot;Unable to find Cargo.lock in ${CARGO_=
-LOCK_SRC_DIR}&quot;)<br>
-+open(&quot;${TARGET_FILE}&quot;, &#39;w&#39;).write(crates)<br>
-=C2=A0EOF<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/subtle/2.4=
+.1" rel=3D"noreferrer" target=3D"_blank">crates.io/subtle/2.4.1</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/syn/1.0.10=
+2" rel=3D"noreferrer" target=3D"_blank">crates.io/syn/1.0.102</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/typenum/1.=
+15.0" rel=3D"noreferrer" target=3D"_blank">crates.io/typenum/1.15.0</a> \<b=
+r>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/unicode-id=
+ent/1.0.4" rel=3D"noreferrer" target=3D"_blank">crates.io/unicode-ident/1.0=
+.4</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/unindent/0=
+.1.10" rel=3D"noreferrer" target=3D"_blank">crates.io/unindent/0.1.10</a> \=
+<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/version_ch=
+eck/0.9.4" rel=3D"noreferrer" target=3D"_blank">crates.io/version_check/0.9=
+.4</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/wasi/0.11.=
+0+wasi-snapshot-preview1" rel=3D"noreferrer" target=3D"_blank">crates.io/wa=
+si/0.11.0+wasi-snapshot-preview1</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/winapi/0.3=
+.9" rel=3D"noreferrer" target=3D"_blank">crates.io/winapi/0.3.9</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/winapi-i68=
+6-pc-windows-gnu/0.4.0" rel=3D"noreferrer" target=3D"_blank">crates.io/wina=
+pi-i686-pc-windows-gnu/0.4.0</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/winapi-x86=
+_64-pc-windows-gnu/0.4.0" rel=3D"noreferrer" target=3D"_blank">crates.io/wi=
+napi-x86_64-pc-windows-gnu/0.4.0</a> \<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/zeroize/1.=
+5.7" rel=3D"noreferrer" target=3D"_blank">crates.io/zeroize/1.5.7</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/autocfg/1.1.0" rel=3D"no=
+referrer" target=3D"_blank">crates.io/autocfg/1.1.0</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/base64/0.13.0" rel=3D"no=
+referrer" target=3D"_blank">crates.io/base64/0.13.0</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/bcrypt/0.13.0" rel=3D"no=
+referrer" target=3D"_blank">crates.io/bcrypt/0.13.0</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/bcrypt-pbkdf/0.8.1" rel=
+=3D"noreferrer" target=3D"_blank">crates.io/bcrypt-pbkdf/0.8.1</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/bitflags/1.3.2" rel=3D"n=
+oreferrer" target=3D"_blank">crates.io/bitflags/1.3.2</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/block-buffer/0.10.3" rel=
+=3D"noreferrer" target=3D"_blank">crates.io/block-buffer/0.10.3</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/blowfish/0.9.1" rel=3D"n=
+oreferrer" target=3D"_blank">crates.io/blowfish/0.9.1</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/byteorder/1.4.3" rel=3D"=
+noreferrer" target=3D"_blank">crates.io/byteorder/1.4.3</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/cfg-if/1.0.0" rel=3D"nor=
+eferrer" target=3D"_blank">crates.io/cfg-if/1.0.0</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/cipher/0.4.3" rel=3D"nor=
+eferrer" target=3D"_blank">crates.io/cipher/0.4.3</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/cpufeatures/0.2.5" rel=
+=3D"noreferrer" target=3D"_blank">crates.io/cpufeatures/0.2.5</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/crypto-common/0.1.6" rel=
+=3D"noreferrer" target=3D"_blank">crates.io/crypto-common/0.1.6</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/digest/0.10.5" rel=3D"no=
+referrer" target=3D"_blank">crates.io/digest/0.10.5</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/generic-array/0.14.6" re=
+l=3D"noreferrer" target=3D"_blank">crates.io/generic-array/0.14.6</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/getrandom/0.2.7" rel=3D"=
+noreferrer" target=3D"_blank">crates.io/getrandom/0.2.7</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/indoc/0.3.6" rel=3D"nore=
+ferrer" target=3D"_blank">crates.io/indoc/0.3.6</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/indoc-impl/0.3.6" rel=3D=
+"noreferrer" target=3D"_blank">crates.io/indoc-impl/0.3.6</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/inout/0.1.3" rel=3D"nore=
+ferrer" target=3D"_blank">crates.io/inout/0.1.3</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/instant/0.1.12" rel=3D"n=
+oreferrer" target=3D"_blank">crates.io/instant/0.1.12</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/libc/0.2.134" rel=3D"nor=
+eferrer" target=3D"_blank">crates.io/libc/0.2.134</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/lock_api/0.4.9" rel=3D"n=
+oreferrer" target=3D"_blank">crates.io/lock_api/0.4.9</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/once_cell/1.15.0" rel=3D=
+"noreferrer" target=3D"_blank">crates.io/once_cell/1.15.0</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/parking_lot/0.11.2" rel=
+=3D"noreferrer" target=3D"_blank">crates.io/parking_lot/0.11.2</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/parking_lot_core/0.8.5" =
+rel=3D"noreferrer" target=3D"_blank">crates.io/parking_lot_core/0.8.5</a> \=
+<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/paste/0.1.18" rel=3D"nor=
+eferrer" target=3D"_blank">crates.io/paste/0.1.18</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/paste-impl/0.1.18" rel=
+=3D"noreferrer" target=3D"_blank">crates.io/paste-impl/0.1.18</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/pbkdf2/0.10.1" rel=3D"no=
+referrer" target=3D"_blank">crates.io/pbkdf2/0.10.1</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/proc-macro-hack/0.5.19" =
+rel=3D"noreferrer" target=3D"_blank">crates.io/proc-macro-hack/0.5.19</a> \=
+<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/proc-macro2/1.0.46" rel=
+=3D"noreferrer" target=3D"_blank">crates.io/proc-macro2/1.0.46</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/pyo3/0.15.2" rel=3D"nore=
+ferrer" target=3D"_blank">crates.io/pyo3/0.15.2</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/pyo3-build-config/0.15.2=
+" rel=3D"noreferrer" target=3D"_blank">crates.io/pyo3-build-config/0.15.2</=
+a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/pyo3-macros/0.15.2" rel=
+=3D"noreferrer" target=3D"_blank">crates.io/pyo3-macros/0.15.2</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/pyo3-macros-backend/0.15=
+.2" rel=3D"noreferrer" target=3D"_blank">crates.io/pyo3-macros-backend/0.15=
+.2</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/quote/1.0.21" rel=3D"nor=
+eferrer" target=3D"_blank">crates.io/quote/1.0.21</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/redox_syscall/0.2.16" re=
+l=3D"noreferrer" target=3D"_blank">crates.io/redox_syscall/0.2.16</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/scopeguard/1.1.0" rel=3D=
+"noreferrer" target=3D"_blank">crates.io/scopeguard/1.1.0</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/sha2/0.10.6" rel=3D"nore=
+ferrer" target=3D"_blank">crates.io/sha2/0.10.6</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/smallvec/1.10.0" rel=3D"=
+noreferrer" target=3D"_blank">crates.io/smallvec/1.10.0</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/subtle/2.4.1" rel=3D"nor=
+eferrer" target=3D"_blank">crates.io/subtle/2.4.1</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/syn/1.0.102" rel=3D"nore=
+ferrer" target=3D"_blank">crates.io/syn/1.0.102</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/typenum/1.15.0" rel=3D"n=
+oreferrer" target=3D"_blank">crates.io/typenum/1.15.0</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/unicode-ident/1.0.4" rel=
+=3D"noreferrer" target=3D"_blank">crates.io/unicode-ident/1.0.4</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/unindent/0.1.10" rel=3D"=
+noreferrer" target=3D"_blank">crates.io/unindent/0.1.10</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/version_check/0.9.4" rel=
+=3D"noreferrer" target=3D"_blank">crates.io/version_check/0.9.4</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/wasi/0.11.0+wasi-snapsho=
+t-preview1" rel=3D"noreferrer" target=3D"_blank">crates.io/wasi/0.11.0+wasi=
+-snapshot-preview1</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/winapi/0.3.9" rel=3D"nor=
+eferrer" target=3D"_blank">crates.io/winapi/0.3.9</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/winapi-i686-pc-windows-g=
+nu/0.4.0" rel=3D"noreferrer" target=3D"_blank">crates.io/winapi-i686-pc-win=
+dows-gnu/0.4.0</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/winapi-x86_64-pc-windows=
+-gnu/0.4.0" rel=3D"noreferrer" target=3D"_blank">crates.io/winapi-x86_64-pc=
+-windows-gnu/0.4.0</a> \<br>
++=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/zeroize/1.5.7" rel=3D"no=
+referrer" target=3D"_blank">crates.io/zeroize/1.5.7</a> \<br>
+=C2=A0&quot;<br>
 +<br>
-+=C2=A0 =C2=A0 bbnote &quot;Successfully update crates inside &#39;${TARGET=
-_FILE}&#39;&quot;<br>
-=C2=A0}<br>
++SRC_URI[autocfg.sha256sum] =3D &quot;d468802bab17cbc0cc575e9b053f41e72aa36=
+bfa6b7f55e3529ffa43161b97fa&quot;<br>
++SRC_URI[base64.sha256sum] =3D &quot;904dfeac50f3cdaba28fc6f57fdcddb75f49ed=
+61346676a78c4ffe55877802fd&quot;<br>
++SRC_URI[bcrypt.sha256sum] =3D &quot;a7e7c93a3fb23b2fdde989b2c9ec4dd153063e=
+c81f408507f84c090cd91c6641&quot;<br>
++SRC_URI[bcrypt-pbkdf.sha256sum] =3D &quot;f4ef233ffa9cb9c7820b2b0e9efd0821=
+ed180e866c9120ec9f45518659742074&quot;<br>
++SRC_URI[bitflags.sha256sum] =3D &quot;bef38d45163c2f1dde094a7dfd33ccf595c9=
+2905c8f8f4fdc18d06fb1037718a&quot;<br>
++SRC_URI[block-buffer.sha256sum] =3D &quot;69cce20737498f97b993470a6e536b85=
+23f0af7892a4f928cceb1ac5e52ebe7e&quot;<br>
++SRC_URI[blowfish.sha256sum] =3D &quot;e412e2cd0f2b2d93e02543ceae7917b3c703=
+31573df19ee046bcbc35e45e87d7&quot;<br>
++SRC_URI[byteorder.sha256sum] =3D &quot;14c189c53d098945499cdfa7ecc63567cf3=
+886b3332b312a5b4585d8d3a6a610&quot;<br>
++SRC_URI[cfg-if.sha256sum] =3D &quot;baf1de4339761588bc0619e3cbc0120ee582eb=
+b74b53b4efbf79117bd2da40fd&quot;<br>
++SRC_URI[cipher.sha256sum] =3D &quot;d1873270f8f7942c191139cb8a40fd228da6c3=
+fd2fc376d7e92d47aa14aeb59e&quot;<br>
++SRC_URI[cpufeatures.sha256sum] =3D &quot;28d997bd5e24a5928dd43e46dc529867e=
+207907fe0b239c3477d924f7f2ca320&quot;<br>
++SRC_URI[crypto-common.sha256sum] =3D &quot;1bfb12502f3fc46cca1bb51ac28df9d=
+618d813cdc3d2f25b9fe775a34af26bb3&quot;<br>
++SRC_URI[digest.sha256sum] =3D &quot;adfbc57365a37acbd2ebf2b64d7e69bb766e2f=
+ea813521ed536f5d0520dcf86c&quot;<br>
++SRC_URI[generic-array.sha256sum] =3D &quot;bff49e947297f3312447abdca79f45f=
+4738097cc82b06e72054d2223f601f1b9&quot;<br>
++SRC_URI[getrandom.sha256sum] =3D &quot;4eb1a864a501629691edf6c15a593b7a51e=
+ebaa1e8468e9ddc623de7c9b58ec6&quot;<br>
++SRC_URI[indoc.sha256sum] =3D &quot;47741a8bc60fb26eb8d6e0238bbb26d8575ff62=
+3fdc97b1a2c00c050b9684ed8&quot;<br>
++SRC_URI[indoc-impl.sha256sum] =3D &quot;ce046d161f000fffde5f432a0d034d0341=
+dc152643b2598ed5bfce44c4f3a8f0&quot;<br>
++SRC_URI[inout.sha256sum] =3D &quot;a0c10553d664a4d0bcff9f4215d0aac67a639cc=
+68ef660840afe309b807bc9f5&quot;<br>
++SRC_URI[instant.sha256sum] =3D &quot;7a5bbe824c507c5da5956355e86a746d82e0e=
+1464f65d862cc5e71da70e94b2c&quot;<br>
++SRC_URI[libc.sha256sum] =3D &quot;329c933548736bc49fd575ee68c89e8be4d26006=
+4184389a5b77517cddd99ffb&quot;<br>
++SRC_URI[lock_api.sha256sum] =3D &quot;435011366fe56583b16cf956f9df0095b405=
+b82d76425bc8981c0e22e60ec4df&quot;<br>
++SRC_URI[once_cell.sha256sum] =3D &quot;e82dad04139b71a90c080c8463fe0dc7902=
+db5192d939bd0950f074d014339e1&quot;<br>
++SRC_URI[parking_lot.sha256sum] =3D &quot;7d17b78036a60663b797adeaee46f5c9d=
+febb86948d1255007a1d6be0271ff99&quot;<br>
++SRC_URI[parking_lot_core.sha256sum] =3D &quot;d76e8e1493bcac0d2766c42737f3=
+4458f1c8c50c0d23bcb24ea953affb273216&quot;<br>
++SRC_URI[paste.sha256sum] =3D &quot;45ca20c77d80be666aef2b45486da86238fabe3=
+3e38306bd3118fe4af33fa880&quot;<br>
++SRC_URI[paste-impl.sha256sum] =3D &quot;d95a7db200b97ef370c8e6de0088252f7e=
+0dfff7d047a28528e47456c0fc98b6&quot;<br>
++SRC_URI[pbkdf2.sha256sum] =3D &quot;271779f35b581956db91a3e55737327a03aa05=
+1e90b1c47aeb189508533adfd7&quot;<br>
++SRC_URI[proc-macro-hack.sha256sum] =3D &quot;dbf0c48bc1d91375ae5c3cd81e372=
+2dff1abcf81a30960240640d223f59fe0e5&quot;<br>
++SRC_URI[proc-macro2.sha256sum] =3D &quot;94e2ef8dbfc347b10c094890f778ee2e3=
+6ca9bb4262e86dc99cd217e35f3470b&quot;<br>
++SRC_URI[pyo3.sha256sum] =3D &quot;d41d50a7271e08c7c8a54cd24af5d62f73ee3a6f=
+6a314215281ebdec421d5752&quot;<br>
++SRC_URI[pyo3-build-config.sha256sum] =3D &quot;779239fc40b8e18bc8416d3a37d=
+280ca9b9fb04bda54b98037bb6748595c2410&quot;<br>
++SRC_URI[pyo3-macros.sha256sum] =3D &quot;00b247e8c664be87998d8628e86f282c2=
+5066165f1f8dda66100c48202fdb93a&quot;<br>
++SRC_URI[pyo3-macros-backend.sha256sum] =3D &quot;5a8c2812c412e00e641d99eeb=
+79dd478317d981d938aa60325dfa7157b607095&quot;<br>
++SRC_URI[quote.sha256sum] =3D &quot;bbe448f377a7d6961e30f5955f9b8d106c3f5e4=
+49d493ee1b125c1d43c2b5179&quot;<br>
++SRC_URI[redox_syscall.sha256sum] =3D &quot;fb5a58c1855b4b6819d59012155603f=
+0b22ad30cad752600aadfcb695265519a&quot;<br>
++SRC_URI[scopeguard.sha256sum] =3D &quot;d29ab0c6d3fc0ee92fe66e2d99f700eab1=
+7a8d57d1c1d3b748380fb20baa78cd&quot;<br>
++SRC_URI[sha2.sha256sum] =3D &quot;82e6b795fe2e3b1e845bafcb27aa35405c4d47cd=
+fc92af5fc8d3002f76cebdc0&quot;<br>
++SRC_URI[smallvec.sha256sum] =3D &quot;a507befe795404456341dfab10cef66ead4c=
+041f62b8b11bbb92bffe5d0953e0&quot;<br>
++SRC_URI[subtle.sha256sum] =3D &quot;6bdef32e8150c2a081110b42772ffe7d7c9032=
+b606bc226c8260fd97e0976601&quot;<br>
++SRC_URI[syn.sha256sum] =3D &quot;3fcd952facd492f9be3ef0d0b7032a6e442ee9b36=
+1d4acc2b1d0c4aaa5f613a1&quot;<br>
++SRC_URI[typenum.sha256sum] =3D &quot;dcf81ac59edc17cc8697ff311e8f5ef2d99fc=
+bd9817b34cec66f90b6c3dfd987&quot;<br>
++SRC_URI[unicode-ident.sha256sum] =3D &quot;dcc811dc4066ac62f84f11307873c48=
+50cb653bfa9b1719cee2bd2204a4bc5dd&quot;<br>
++SRC_URI[unindent.sha256sum] =3D &quot;58ee9362deb4a96cef4d437d1ad49cffc9b9=
+e92d202b6995674e928ce684f112&quot;<br>
++SRC_URI[version_check.sha256sum] =3D &quot;49874b5167b65d7193b8aba1567f5c7=
+d93d001cafc34600cee003eda787e483f&quot;<br>
++SRC_URI[wasi.sha256sum] =3D &quot;9c8d87e72b64a3b4db28d11ce29237c246188f4f=
+51057d65a7eab63b7987e423&quot;<br>
++SRC_URI[winapi.sha256sum] =3D &quot;5c839a674fcd7a98952e593242ea400abe9399=
+2746761e38641405d28b00f419&quot;<br>
++SRC_URI[winapi-i686-pc-windows-gnu.sha256sum] =3D &quot;ac3b87c63620426dd9=
+b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6&quot;<br>
++SRC_URI[winapi-x86_64-pc-windows-gnu.sha256sum] =3D &quot;712e227841d057c1=
+ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f&quot;<br>
++SRC_URI[zeroize.sha256sum] =3D &quot;c394b5bd0c6f669e7275d9c20aa90ae064cb2=
+2e75a1cad54e1b34088034b149f&quot;<br>
 -- <br>
 2.34.1<br>
 <br>
-</blockquote></div>
-</div>
+</blockquote></div></div>
 
---000000000000d8b88a05f703b7d0--
+--00000000000050c25e05f703bd6d--
 
