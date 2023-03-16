@@ -1,141 +1,116 @@
-Return-Path: <jamestiotio@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F546C6FD19
-	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 16:57:27 +0000 (UTC)
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
- by mx.groups.io with SMTP id smtpd.web11.161.1678985845923347052
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102FFC6FD19
+	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 17:32:42 +0000 (UTC)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web11.260.1678987960712750184
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Mar 2023 09:57:25 -0700
+ Thu, 16 Mar 2023 10:32:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=NBPg8hpi;
- spf=pass (domain: gmail.com, ip: 209.85.214.170, mailfrom: jamestiotio@gmail.com)
-Received: by mail-pl1-f170.google.com with SMTP id le6so2407322plb.12
-        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 09:57:25 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LDkoBWLL;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f49.google.com with SMTP id p4so2246942wre.11
+        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 10:32:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678985845;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vMhDOqY5p0ZG9zQalQRF82Rb4B12Cfkh0EzRcLOJV0Y=;
-        b=NBPg8hpiv4yUj4o+H9yuVhS6jTgQU7lqV8Y2l5llg1g++qq6r0bxiCHFw+SAdnf8mT
-         BbN2Mnk/1PYgyVFRI9fapUyRCmZncOe6inE0ZKIWYdJWq5dCXFtzwiMDRmiv2S08NTAB
-         cQy5ydWd6hvz6dCxBjuqLICIFs0b2FqrvbYeUWitR6fXY4NC5LgZPdmDgXvC7n4sUcgy
-         o0aieuAZkW/AXe7rNSllDaWOrz3Sjlund0EzV7UB8zoVempDitPA+cePMFxPusD6H1NP
-         Muz9FdtF3KIAoxMnREz31LL875QbFHjEVqdGNVCXll84r8G+kpDsjBfNU3O3FuhjI+hq
-         ZL2A==
+        d=linuxfoundation.org; s=google; t=1678987959;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oUxBfaBXwdjmASeK3vRihDBphGgDzOBwE01e8pFyjDI=;
+        b=LDkoBWLLz+GxAEJsBfplUvwspym7dKzhTCbLOZA8ZcBKNjX2noXfBHm2tOaj5M0WaS
+         UkZicQwccgv7eqtZOzTYoOE6MIe81o2TWDf/5knz8Ku/hvkrCws13TbTv336A2QbPxw0
+         KwNrSSxmWM4wkKY7PrjzSGCwZFYm/lB6o3jV4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678985845;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vMhDOqY5p0ZG9zQalQRF82Rb4B12Cfkh0EzRcLOJV0Y=;
-        b=7LfU1mpqyOCk8GyV6fL0LCF6VrkJmetAbgquJfC9eoL/3tQmTI4CPVSkVp62n1JtFh
-         t1OYRdWHKhcXmGbLU0a3hZ6qddUK+Bqw5uSQiXscyaztU65ELgYKZ3pZ72qNrqfyhGjn
-         6U+Uif0NDqO2sJKM1DWCNoPcqFleZjsgmkjyY5AZhHkKpoArJFHXPMAGon6yKmehW7Ye
-         PRh6EK8QOAiL465O3w3ukWLEzN7gmI7aFmeE6Q87WFRv0kxz6jMpea0VlAsFdM/8eBJF
-         8PcFcGaE9QI6EGuZy7r7uLguLOeSvdIHv9uCCNDgAUXwHb3/HUwZJNuIUYB7hZv+ASen
-         uTmQ==
-X-Gm-Message-State: AO0yUKWdHXOcn5TULff6+r24XPlJ+OC8FJihhGgNgM2TqlRUh8k+Kfqg
-	halbkKLkl9y3ckip/vFSXfXN4j5Kjo2JHQ==
-X-Google-Smtp-Source: AK7set9/4NYo1ec/rbyOLdFt8Q/He0NjPgaz0XDTUcNJ5vTKCogpDF8D7NKyX1YP3b7xvXCkb9ujcw==
-X-Received: by 2002:a17:90b:1d06:b0:230:af67:b847 with SMTP id on6-20020a17090b1d0600b00230af67b847mr4817616pjb.31.1678985844716;
-        Thu, 16 Mar 2023 09:57:24 -0700 (PDT)
-Received: from JRT-PC.lan ([103.252.200.22])
-        by smtp.gmail.com with ESMTPSA id a19-20020a17090aa51300b00233db0db3dfsm3524504pjq.7.2023.03.16.09.57.23
+        d=1e100.net; s=20210112; t=1678987959;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oUxBfaBXwdjmASeK3vRihDBphGgDzOBwE01e8pFyjDI=;
+        b=YdgC1a1fCMwOGXWb0YRrjD+849i5S6gIkqkzR2Tq8YOxUnJi6/nz/LBy2cVy14vNyI
+         VMeiz4of26JmZSxFReG/BxyAgAg6d6Tm84wl1R49xaeqcHycmOOUfJDzy86frgk2CtzM
+         GpTZ/gfvBFtBagsAbLXAB1UUHp81dRmxgloJHNp3alJ7pKul/oGz7TE8/Xj4bAUlpj1+
+         no2ZAkm06p7zfOpJgjm4lqFo9MxBYvuZnMqdjSljIk4u6F1K4RPfT/kqKiAgRF/v7wOH
+         okhsUvvAtnku3wN4Dkl3Im4xTDwzB/0+kYnN3C9DoEvqz6R7cNi/5TwrxGU6ytDLxNzS
+         KeBQ==
+X-Gm-Message-State: AO0yUKVWtMIKGfdXsYDNl/JiFxFvQWL27iUql61QPj/uoExxF3NNA3GV
+	81i9tG82QUwRUhiDnLbK2zedzs0/7tUds3/0oxk=
+X-Google-Smtp-Source: AK7set9PKmaVy238yiMEJjEOZMc/UDkTd3aeRsRlx7M0ld2eThaFckEwNYYb6M2Niiqacplp5Vc6Gg==
+X-Received: by 2002:a5d:43d0:0:b0:2ce:a608:b5e3 with SMTP id v16-20020a5d43d0000000b002cea608b5e3mr5186982wrr.41.1678987958694;
+        Thu, 16 Mar 2023 10:32:38 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:4181:67:6e43:6a9])
+        by smtp.gmail.com with ESMTPSA id y4-20020a5d6144000000b002c8476dde7asm7797221wrt.114.2023.03.16.10.32.38
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Mar 2023 09:57:24 -0700 (PDT)
-From: James Raphael Tiovalen <jamestiotio@gmail.com>
+        Thu, 16 Mar 2023 10:32:38 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: James Raphael Tiovalen <jamestiotio@gmail.com>
-Subject: [PATCH v3] ConfHandler: Allow the '@' character in variable flag names
-Date: Fri, 17 Mar 2023 00:57:05 +0800
-Message-Id: <20230316165705.58445-1-jamestiotio@gmail.com>
-X-Mailer: git-send-email 2.39.2
+Subject: [PATCH] fetch2: Add autorev warning when it is set too late
+Date: Thu, 16 Mar 2023 17:32:37 +0000
+Message-Id: <20230316173237.200263-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 16:57:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14592
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 17:32:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14593
 
-This patch enables the usage of the '@' character in variable flag
-names.
+Bitbake expects a consistent metadata environment when it parses. There
+are plenty of ways you can set a recipe to autorev at a point where parts
+of the fetcher have already been triggered leading to obsure bugs which
+I struggled to debug, let alone anyone not familar with the code.
 
-One use case of variable flags is to assign the network namespaces of
-some systemd services/targets to configure other parts of the build
-process of some system. The filenames of systemd services/targets might
-contain the '@' character if they are template unit files that can take
-in a single parameter/argument and be instanced multiple times, as
-indicated by systemd's official manual page.
+If anyone is running into the message from the commit, the issue is
+likely one of timing. Keep in mind that the anonymous python code
+in base.bbclass will expand variables like FILESPATH, WORKDIR and others
+which contain PV. The recipe needs to be set to AUTOREV before that
+anonymous python runs.
 
-This patch is successfully verified by creating a custom BitBake recipe
-that sets and unsets the value of a variable flag with the '@' character
-in its name and ensuring that no ParseError is being thrown. A
-regression test has also been added to `bb.parse`.
+In particular, that means you can't set SRCREV = "${AUTOREV}" in other
+anonymous python, it needs to happen earlier.
 
-`bin/bitbake-selftest` has also been successfully executed and all tests
-passed.
-
-Signed-off-by: James Raphael Tiovalen <jamestiotio@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
-v3:
-Improve commit message to better convey the intent of this patch.
+ lib/bb/fetch2/__init__.py | 2 ++
+ lib/bb/parse/ast.py       | 3 +++
+ 2 files changed, 5 insertions(+)
 
-v2:
-Add regression test.
----
- lib/bb/parse/parse_py/ConfHandler.py |  4 ++--
- lib/bb/tests/parse.py                | 15 +++++++++++++++
- 2 files changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
-index 30760672..f2b8a2c9 100644
---- a/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/lib/bb/parse/parse_py/ConfHandler.py
-@@ -21,7 +21,7 @@ __config_regexp__  = re.compile( r"""
-     ^
-     (?P<exp>export\s+)?
-     (?P<var>[a-zA-Z0-9\-_+.${}/~:]+?)
--    (\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?
-+    (\[(?P<flag>[a-zA-Z0-9\-_+.@]+)\])?
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index cf65727a20..c8a6de62d0 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -753,6 +753,7 @@ def get_autorev(d):
+     #  only not cache src rev in autorev case
+     if d.getVar('BB_SRCREV_POLICY') != "cache":
+         d.setVar('BB_DONT_CACHE', '1')
++    d.setVar("__BBAUTOREV_SEEN", True)
+     return "AUTOINC"
  
-     \s* (
-         (?P<colon>:=) |
-@@ -45,7 +45,7 @@ __include_regexp__ = re.compile( r"include\s+(.+)" )
- __require_regexp__ = re.compile( r"require\s+(.+)" )
- __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
- __unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
--__unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.]+)\]$" )
-+__unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.@]+)\]$" )
- __addpylib_regexp__      = re.compile(r"addpylib\s+(.+)\s+(.+)" )
+ def get_srcrev(d, method_name='sortable_revision'):
+@@ -1219,6 +1220,7 @@ def srcrev_internal_helper(ud, d, name):
+     if srcrev == "INVALID" or not srcrev:
+         raise FetchError("Please set a valid SRCREV for url %s (possible key names are %s, or use a ;rev=X URL parameter)" % (str(attempts), ud.url), ud.url)
+     if srcrev == "AUTOINC":
++        d.setVar("__BBAUTOREV_ACTED_UPON", True)
+         srcrev = ud.method.latest_revision(ud, d, name)
  
- def init(data):
-diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-index ee7f2534..dba77292 100644
---- a/lib/bb/tests/parse.py
-+++ b/lib/bb/tests/parse.py
-@@ -218,3 +218,18 @@ VAR = " \\
-         with self.assertRaises(bb.BBHandledException):
-             d = bb.parse.handle(f.name, self.d)['']
+     return srcrev
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 375ba3cb79..206757d5ee 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -400,6 +400,9 @@ def finalize(fn, d, variant = None):
  
+         d.setVar('BBINCLUDED', bb.parse.get_file_depends(d))
+ 
++        if d.getVar('__BBAUTOREV_SEEN') and not d.getVar("__BBAUTOREV_ACTED_UPON"):
++            bb.fatal("AUTOREV/SRCPV set too late for the fetcher to work properly, please set the variables earlier in parsing. Erroring instead of later obtuse build failures.")
 +
-+    at_sign_in_var_flag = """
-+A[flag@.service] = "nonet"
-+B[flag@.target] = "ntb"
-+
-+unset A[flag@.service]
-+"""
-+    def test_parse_at_sign_in_var_flag(self):
-+        f = self.parsehelper(self.at_sign_in_var_flag)
-+        d = bb.parse.handle(f.name, self.d)['']
-+        self.assertEqual(d.getVar("A"), None)
-+        self.assertEqual(d.getVar("B"), None)
-+        self.assertEqual(d.getVarFlag("A","flag@.service"), None)
-+        self.assertEqual(d.getVarFlag("B","flag@.target"), "ntb")
-+
+         bb.event.fire(bb.event.RecipeParsed(fn), d)
+     finally:
+         bb.event.set_handlers(saved_handlers)
 -- 
-2.39.2
+2.38.1
 
 
