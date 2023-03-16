@@ -2,115 +2,97 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102FFC6FD19
-	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 17:32:42 +0000 (UTC)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web11.260.1678987960712750184
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F24C6FD19
+	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 17:42:42 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web11.518.1678988553854753911
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Mar 2023 10:32:41 -0700
+ Thu, 16 Mar 2023 10:42:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LDkoBWLL;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f49.google.com with SMTP id p4so2246942wre.11
-        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 10:32:40 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NIj7niTx;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f48.google.com with SMTP id x22so1819518wmj.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 10:42:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1678987959;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oUxBfaBXwdjmASeK3vRihDBphGgDzOBwE01e8pFyjDI=;
-        b=LDkoBWLLz+GxAEJsBfplUvwspym7dKzhTCbLOZA8ZcBKNjX2noXfBHm2tOaj5M0WaS
-         UkZicQwccgv7eqtZOzTYoOE6MIe81o2TWDf/5knz8Ku/hvkrCws13TbTv336A2QbPxw0
-         KwNrSSxmWM4wkKY7PrjzSGCwZFYm/lB6o3jV4=
+        d=linuxfoundation.org; s=google; t=1678988552;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uPe7X3gTZEaGz/aH66zPTuc1BNo3Rp7NgU57LzgW6II=;
+        b=NIj7niTxX9Nryfv/CVM1lEq2KnHAS6t8tIzWSnLKf6P0nyJ99TqIoz1Ig4a6qU2IP1
+         oe8bfE0I/ARbfjtz2r+eTsM5Ddns/P5/BWLYrlbO/OjKqtfGCKRX3fgJapoyCJEJDcHp
+         0RuAANHXTDxnMvVnQ+gko0mZqFhqydpH4ZwnA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678987959;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oUxBfaBXwdjmASeK3vRihDBphGgDzOBwE01e8pFyjDI=;
-        b=YdgC1a1fCMwOGXWb0YRrjD+849i5S6gIkqkzR2Tq8YOxUnJi6/nz/LBy2cVy14vNyI
-         VMeiz4of26JmZSxFReG/BxyAgAg6d6Tm84wl1R49xaeqcHycmOOUfJDzy86frgk2CtzM
-         GpTZ/gfvBFtBagsAbLXAB1UUHp81dRmxgloJHNp3alJ7pKul/oGz7TE8/Xj4bAUlpj1+
-         no2ZAkm06p7zfOpJgjm4lqFo9MxBYvuZnMqdjSljIk4u6F1K4RPfT/kqKiAgRF/v7wOH
-         okhsUvvAtnku3wN4Dkl3Im4xTDwzB/0+kYnN3C9DoEvqz6R7cNi/5TwrxGU6ytDLxNzS
-         KeBQ==
-X-Gm-Message-State: AO0yUKVWtMIKGfdXsYDNl/JiFxFvQWL27iUql61QPj/uoExxF3NNA3GV
-	81i9tG82QUwRUhiDnLbK2zedzs0/7tUds3/0oxk=
-X-Google-Smtp-Source: AK7set9PKmaVy238yiMEJjEOZMc/UDkTd3aeRsRlx7M0ld2eThaFckEwNYYb6M2Niiqacplp5Vc6Gg==
-X-Received: by 2002:a5d:43d0:0:b0:2ce:a608:b5e3 with SMTP id v16-20020a5d43d0000000b002cea608b5e3mr5186982wrr.41.1678987958694;
-        Thu, 16 Mar 2023 10:32:38 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:4181:67:6e43:6a9])
-        by smtp.gmail.com with ESMTPSA id y4-20020a5d6144000000b002c8476dde7asm7797221wrt.114.2023.03.16.10.32.38
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20210112; t=1678988552;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uPe7X3gTZEaGz/aH66zPTuc1BNo3Rp7NgU57LzgW6II=;
+        b=VrN7nhQ+/bNEIwQB00ORH7WjbArbaM+hexzDjxdjdP2cRj428blIUReClNZqX5V7YC
+         k+n6e6gOgP1U3Y5j5Oig0M4r8omSkWWQpBmjnbVBjro3TqNcbyzGe9DIF/EbuoJROhC5
+         87ZZQqFjdIVWeMs3zZkUOE283u1/mxd+ZpYpsAseql7JEx+KcDcJklp0pD17EUjwniGk
+         3FNSjKypARKgZmxfIqU+U4ELxEPELnizZptewZU98CrW4Zmx88Ksp0GgjfDoAfkxzI6l
+         mSsqL88XjIs5Hgg4zzvIbfnl9vaoT0fsPWBEBpuWiQJNdLNnzEgnJ99XId2UjUHTA/XH
+         RnvQ==
+X-Gm-Message-State: AO0yUKUme+01AOcL5rw5Hz0uSxolVvO3FbERnVxxwg5EXhKFY5veTNwe
+	CRK14kdrwSGcxJzSfpc3wlvlPrdizey/rTDJ/18=
+X-Google-Smtp-Source: AK7set/EuInATwgHNvGr+93BuEWgNJDjC0gfXUfshBcQv6+9qxIFljksp3X+w61bXHKrYjnvJQK5rQ==
+X-Received: by 2002:a05:600c:474c:b0:3ed:355c:4610 with SMTP id w12-20020a05600c474c00b003ed355c4610mr5915418wmo.35.1678988552284;
+        Thu, 16 Mar 2023 10:42:32 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:4181:67:6e43:6a9? ([2001:8b0:aba:5f3c:4181:67:6e43:6a9])
+        by smtp.gmail.com with ESMTPSA id bh10-20020a05600c3d0a00b003ed23e9e03bsm5623849wmb.46.2023.03.16.10.42.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Mar 2023 10:32:38 -0700 (PDT)
+        Thu, 16 Mar 2023 10:42:31 -0700 (PDT)
+Message-ID: <4a646f8e56f63a29fa11226a7e24037214a8a0ea.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v3] ConfHandler: Allow the '@' character
+ in variable flag names
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch2: Add autorev warning when it is set too late
-Date: Thu, 16 Mar 2023 17:32:37 +0000
-Message-Id: <20230316173237.200263-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.38.1
+To: James R T <jamestiotio@gmail.com>, bitbake-devel@lists.openembedded.org
+Date: Thu, 16 Mar 2023 17:42:31 +0000
+In-Reply-To: <20230316165705.58445-1-jamestiotio@gmail.com>
+References: <20230316165705.58445-1-jamestiotio@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.3-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 17:32:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14593
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 17:42:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14594
 
-Bitbake expects a consistent metadata environment when it parses. There
-are plenty of ways you can set a recipe to autorev at a point where parts
-of the fetcher have already been triggered leading to obsure bugs which
-I struggled to debug, let alone anyone not familar with the code.
+On Fri, 2023-03-17 at 00:57 +0800, James R T wrote:
+> This patch enables the usage of the '@' character in variable flag
+> names.
+>=20
+> One use case of variable flags is to assign the network namespaces of
+> some systemd services/targets to configure other parts of the build
+> process of some system. The filenames of systemd services/targets might
+> contain the '@' character if they are template unit files that can take
+> in a single parameter/argument and be instanced multiple times, as
+> indicated by systemd's official manual page.
+>=20
+> This patch is successfully verified by creating a custom BitBake recipe
+> that sets and unsets the value of a variable flag with the '@' character
+> in its name and ensuring that no ParseError is being thrown. A
+> regression test has also been added to `bb.parse`.
+>=20
+> `bin/bitbake-selftest` has also been successfully executed and all tests
+> passed.
+>=20
+> Signed-off-by: James Raphael Tiovalen <jamestiotio@gmail.com>
 
-If anyone is running into the message from the commit, the issue is
-likely one of timing. Keep in mind that the anonymous python code
-in base.bbclass will expand variables like FILESPATH, WORKDIR and others
-which contain PV. The recipe needs to be set to AUTOREV before that
-anonymous python runs.
 
-In particular, that means you can't set SRCREV = "${AUTOREV}" in other
-anonymous python, it needs to happen earlier.
+I'm torn on this. I can see why some people would like it, equally,
+restricting the character set does sometimes make parsing easier and
+gives us options in future to extend the syntax.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/__init__.py | 2 ++
- lib/bb/parse/ast.py       | 3 +++
- 2 files changed, 5 insertions(+)
+After some though, I did wonder if we should change things so that the
+first character has more restriction and @ is only allowed mid string
+as a compromise?
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index cf65727a20..c8a6de62d0 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -753,6 +753,7 @@ def get_autorev(d):
-     #  only not cache src rev in autorev case
-     if d.getVar('BB_SRCREV_POLICY') != "cache":
-         d.setVar('BB_DONT_CACHE', '1')
-+    d.setVar("__BBAUTOREV_SEEN", True)
-     return "AUTOINC"
- 
- def get_srcrev(d, method_name='sortable_revision'):
-@@ -1219,6 +1220,7 @@ def srcrev_internal_helper(ud, d, name):
-     if srcrev == "INVALID" or not srcrev:
-         raise FetchError("Please set a valid SRCREV for url %s (possible key names are %s, or use a ;rev=X URL parameter)" % (str(attempts), ud.url), ud.url)
-     if srcrev == "AUTOINC":
-+        d.setVar("__BBAUTOREV_ACTED_UPON", True)
-         srcrev = ud.method.latest_revision(ud, d, name)
- 
-     return srcrev
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 375ba3cb79..206757d5ee 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -400,6 +400,9 @@ def finalize(fn, d, variant = None):
- 
-         d.setVar('BBINCLUDED', bb.parse.get_file_depends(d))
- 
-+        if d.getVar('__BBAUTOREV_SEEN') and not d.getVar("__BBAUTOREV_ACTED_UPON"):
-+            bb.fatal("AUTOREV/SRCPV set too late for the fetcher to work properly, please set the variables earlier in parsing. Erroring instead of later obtuse build failures.")
-+
-         bb.event.fire(bb.event.RecipeParsed(fn), d)
-     finally:
-         bb.event.set_handlers(saved_handlers)
--- 
-2.38.1
+Cheers,
+
+Richard
 
 
