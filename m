@@ -1,47 +1,48 @@
-Return-Path: <frederic.martinsons@gmail.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14034C6FD19
-	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 08:20:26 +0000 (UTC)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
- by mx.groups.io with SMTP id smtpd.web11.7409.1678954817893564989
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1777DC6FD19
+	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 08:23:36 +0000 (UTC)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+ by mx.groups.io with SMTP id smtpd.web11.7448.1678955011358827363
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Mar 2023 01:20:18 -0700
+ Thu, 16 Mar 2023 01:23:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=aj9uAlE+;
- spf=pass (domain: gmail.com, ip: 209.85.208.174, mailfrom: frederic.martinsons@gmail.com)
-Received: by mail-lj1-f174.google.com with SMTP id b13so772544ljf.6
-        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 01:20:17 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=L9sO4Upl;
+ spf=pass (domain: gmail.com, ip: 209.85.167.41, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-lf1-f41.google.com with SMTP id r27so1261539lfe.10
+        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 01:23:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678954816;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dCUvdpkn8l01WuTwjikBAbAUtT2rRvhyHfTxFvf6+cM=;
-        b=aj9uAlE+06prvFzXlaE7bWzqIivuo5eMWDsaL+jQRcZdvrDqoOA7an3pnfsi3sXPBN
-         ecxIse4SN0ODv6qJ8JbA/rbU7smleou2359WH4X6XBzMu19VbbwDKgEApIbzNJr4o8JB
-         EdQKgaWoevn1r48mcO9TdN5lwXZRImsROoGVc9XAhgNXU6WpLWPjLKmoimkZ+jygb/Oo
-         1h3Oq3+thl/3Mczn07qUHF+edOZmeisDBy3R/d2whFHtNEcGsqkQA3C4YWWroos5bRGz
-         jmP1j3IFf4dLNFCjBh4qDmT7PYE+LM4lpwWZmGX6TGrjGhDqVpLAOBpmtXR7mFGAybEG
-         vAlg==
+        d=gmail.com; s=20210112; t=1678955009;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dXnZb/xsoqBw76oDpAJo2ui31Z+oF1+oRxzy0MSrfNg=;
+        b=L9sO4UplVb0ZiRbIEe4Hhp/tQ0O2B+NulLzEN2pOOq3BD8mlswZirRSaUM4gnBAOMH
+         Kd82uTw+SnUZmd76wfF+MrLTB62hyU5MZusz60a0asfECtqR591CQn4dVMenSHRP0JBH
+         ZPcUhiELskZwFlTNNsq2+J/Sy0ue5n+hCvmMntPARWXeWOjt2h3kUYpudfJl9oSHOWif
+         YRqqoeKKivwOtYsmXJR7bx5Iw4xfaOLF+gp+bC77MPTkAwbYKeru+euMO3ZGpLa/4fDL
+         1CZX9tjarzFksxPGrheiq2Ja6DHVyTV82Alu7pvDDVXPVodQZiYqWou8kBQhWvA7b2Cy
+         0oLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678954816;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dCUvdpkn8l01WuTwjikBAbAUtT2rRvhyHfTxFvf6+cM=;
-        b=HY157a8KLcQwitgSentCDiWV9OP1yOIaVNnHuXHGarjJfFQHb+KOKFUW9GtODD9Px7
-         96mVbfSFEaYMwamr30Qh/I8tbsQbVFsRdQWUAqSlx63WGX0Lo9PTydLyPaxvdvl1T1D8
-         scei44cgPdn7qg215u9+ZqI6Mkao1DIFlaoAPpLP92Nfn9uY+JjM69pSlAdxhGM8PaD+
-         pZI8vTd5S+tet4usr2lIW9r6sxAKLw0Wq9QvQnDCTYDdl+jW2BbDxMqppwuejNyGjG/r
-         ECiDTmOo0yCb50y/0qGZqWbuO70EeT104NWdWRd7FocWPlufpRbBW/10zuoMVYK15Gga
-         yrjg==
-X-Gm-Message-State: AO0yUKVnfjzgRV5fm1TykeyYQcW1uE0v3tL/WmcWZ6dfSkLu1zSiyAUx
-	k5oFN0eJ5D+DAbDtBKXX1BOM228/1VxkEt8REBKR2C/U8fk=
-X-Google-Smtp-Source: AK7set/CJf/o4pUF26EGBnLAImFhXpLa3PYR/L5C9r3vgJKttc3ZX/WaX5GXCSaRurDgutFheOaHsvwM11Le2Uve6B8=
-X-Received: by 2002:a2e:909a:0:b0:298:b32c:e4f9 with SMTP id
- l26-20020a2e909a000000b00298b32ce4f9mr1293815ljg.3.1678954815837; Thu, 16 Mar
- 2023 01:20:15 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1678955009;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dXnZb/xsoqBw76oDpAJo2ui31Z+oF1+oRxzy0MSrfNg=;
+        b=iMFims9G4ejhnL7W0qcIvKglLl+UV28qjczSGxSpdBBtEXbYx/YH1QQmkVHwFrZvKO
+         KD8so3XDL0GpZJMSk56bb93RgFu2tTUtk1hhPjohJcO1w5dIohp2Z8Za6v8e/OZEKs0P
+         bTbjk+ddukqeRojmXqpgJgRr82xsC0b/tEyI50+mMDxmJvWpFik03lHRCzt1OVk/YutK
+         p/GY6mRbPfMZVr3YXPGikhUfcaB07qt8Z74rpT4t8ZW0dcV2jXT3IiOFSETzLCBGYRs8
+         odAogbrKZXgeqrKt/jnUp5/jm91VgH9nX3wJytNaPYeDgpTeLK5T7JJFG85O6DgkhaVa
+         g64w==
+X-Gm-Message-State: AO0yUKUf3EJdfffuc6HWT8cYKNefOZw/Fe0Ej1YrmYGD/GAJSD9nHlLq
+	ZEw0OjzXNl383/Ci/yfcRumRYgwNzDOalNKwwTY=
+X-Google-Smtp-Source: AK7set8PkWLpm6n9utvZRQH1TYjfh6nNslYpodO+eIFU1ey1k9F5pp8POvaFu0azyeXIJY6LHpTPWQVkL6jNcB7oPWU=
+X-Received: by 2002:ac2:53ad:0:b0:4e8:3eda:4305 with SMTP id
+ j13-20020ac253ad000000b004e83eda4305mr2907457lfh.11.1678955009214; Thu, 16
+ Mar 2023 01:23:29 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230315131513.50635-1-frederic.martinsons@gmail.com>
  <CAO5Uq5SC+x8khm5+g-ro9=H0obf1EoxpDMcjOcpPfbvtEJSK5w@mail.gmail.com>
@@ -51,149 +52,49 @@ References: <20230315131513.50635-1-frederic.martinsons@gmail.com>
  <CA+cAkepJt0FbV1Oq6ErCOA1qsa5DCmk=z9dACo+FrpCrj0vXvQ@mail.gmail.com>
  <CANNYZj9EWbPrg0ThbT=oM3RcN_UmC3y8yz-=OODOnMLKcMoq_w@mail.gmail.com>
  <CA+cAkeoxvY6F+TySPXP1vDeUEiD14EZpxW06UM28DVd0G7KVjw@mail.gmail.com>
- <CANNYZj9msRQ5MnC9wHtD0w9zscDXeq2+dxt8fwzZzNnAcPquWg@mail.gmail.com> <174CACDDD2990A66.7968@lists.openembedded.org>
-In-Reply-To: <174CACDDD2990A66.7968@lists.openembedded.org>
-From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
-Date: Thu, 16 Mar 2023 09:20:04 +0100
-Message-ID: <CA+cAker=UA3mMte8-+ghj2y-r4x46Jre+ODo5m-4jn4bgr-bxg@mail.gmail.com>
+ <CANNYZj9msRQ5MnC9wHtD0w9zscDXeq2+dxt8fwzZzNnAcPquWg@mail.gmail.com>
+ <174CACDDD2990A66.7968@lists.openembedded.org> <CA+cAker=UA3mMte8-+ghj2y-r4x46Jre+ODo5m-4jn4bgr-bxg@mail.gmail.com>
+In-Reply-To: <CA+cAker=UA3mMte8-+ghj2y-r4x46Jre+ODo5m-4jn4bgr-bxg@mail.gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 16 Mar 2023 09:23:17 +0100
+Message-ID: <CANNYZj_2S+=MyyLtJC2Z8vV1TnEgY9gmX_uT_KC0hagpMi48Qg@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH] fetch2: Add checksum capability for crate fetcher
 To: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
-Cc: Alexander Kanavin <alex.kanavin@gmail.com>, Alex Kiernan <alex.kiernan@gmail.com>, 
-	Martin Jansa <martin.jansa@gmail.com>, bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="00000000000064596205f7002189"
+Cc: Alex Kiernan <alex.kiernan@gmail.com>, Martin Jansa <martin.jansa@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 08:20:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14577
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 08:23:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14578
 
---00000000000064596205f7002189
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hello Alexander,
-
-I almost finished the patch and I checked in meta-oe for recipes to be
-updated,
-I see two : python3-pyruvate and uutils-coreutils
-
-But those recipes don't inherit cargo-update-crates,  python3-pyruvate
-inherit
-python_setuptools3_rust and seems to have been written manually.
-And uutils-coreutils has been generated by cargo bitbake.
-
-Should I modify them to use the update class or should I put the checksum
-"by hand"?
-Moreover, since this dev will be cross dependent (impact on meta-oe,
-oe-core and bitbake)
-how do we proceed for the different patches to be merged at the same time?
-
-Le mer. 15 mars 2023, 20:00, Frederic Martinsons via lists.openembedded.org
-<frederic.martinsons=3Dgmail.com@lists.openembedded.org> a =C3=A9crit :
-
-> Ok great, I have everything I need go further on this. Thank you all
+On Thu, 16 Mar 2023 at 09:20, Fr=C3=A9d=C3=A9ric Martinsons
+<frederic.martinsons@gmail.com> wrote:
+> I almost finished the patch and I checked in meta-oe for recipes to be up=
+dated,
+> I see two : python3-pyruvate and uutils-coreutils
 >
-> Le mer. 15 mars 2023, 19:47, Alexander Kanavin <alex.kanavin@gmail.com> a
-> =C3=A9crit :
->
->> On Wed, 15 Mar 2023 at 19:26, Fr=C3=A9d=C3=A9ric Martinsons
->> <frederic.martinsons@gmail.com> wrote:
->> > But I still need some answers to go further:
->> >     - Should checksum verification for crate fetcher be mandatory ?
->>
->> Yes.
->>
->> >     - What about librsvg ? It doesn't include any crate:// but needs t=
-o
->> inherit cargo_common, what should I do for this recipe ?
->>
->> I think this was mentioned by mistake. You might want to check if
->> meta-oe recipes would need fixing though.
->>
->> Alex
->>
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#14575):
-> https://lists.openembedded.org/g/bitbake-devel/message/14575
-> Mute This Topic: https://lists.openembedded.org/mt/97626961/6213388
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> frederic.martinsons@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
+> But those recipes don't inherit cargo-update-crates,  python3-pyruvate in=
+herit
+> python_setuptools3_rust and seems to have been written manually.
+> And uutils-coreutils has been generated by cargo bitbake.
+> Should I modify them to use the update class or should I put the checksum=
+ "by hand"?
 
---00000000000064596205f7002189
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+You should convert them to use the official class. Maintaining long
+lists of checksums by hand does not scale.
 
-<div dir=3D"ltr"><div dir=3D"auto">Hello Alexander,<div dir=3D"auto"><br></=
-div><div dir=3D"auto">I almost finished the patch and I checked in meta-oe =
-for recipes to be updated,</div><div dir=3D"auto">I see two : python3-pyruv=
-ate and uutils-coreutils</div><div dir=3D"auto"><br></div><div dir=3D"auto"=
->But those recipes don&#39;t inherit cargo-update-crates,=C2=A0=C2=A0python=
-3-pyruvate inherit</div><div dir=3D"auto">python_setuptools3_rust and seems=
- to have been written manually.<br></div><div>And=C2=A0uutils-coreutils has=
- been generated by cargo bitbake.</div><div dir=3D"auto"><br></div><div dir=
-=3D"auto">Should I modify them to use the update class or should I put the =
-checksum &quot;by hand&quot;?</div><div dir=3D"auto">Moreover, since this d=
-ev will be cross dependent (impact on meta-oe, oe-core and bitbake)</div><d=
-iv dir=3D"auto">how do we proceed for the different patches to be merged at=
- the same time?=C2=A0</div></div></div><br><div class=3D"gmail_quote"><div =
-dir=3D"ltr" class=3D"gmail_attr">Le mer. 15 mars 2023, 20:00, Frederic Mart=
-insons via <a href=3D"http://lists.openembedded.org" target=3D"_blank">list=
-s.openembedded.org</a> &lt;frederic.martinsons=3D<a href=3D"mailto:gmail.co=
-m@lists.openembedded.org" target=3D"_blank">gmail.com@lists.openembedded.or=
-g</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" st=
-yle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padd=
-ing-left:1ex"><div dir=3D"auto">Ok great, I have everything I need go furth=
-er on this. Thank you all=C2=A0</div><br><div class=3D"gmail_quote"><div di=
-r=3D"ltr" class=3D"gmail_attr">Le mer. 15 mars 2023, 19:47, Alexander Kanav=
-in &lt;<a href=3D"mailto:alex.kanavin@gmail.com" rel=3D"noreferrer noreferr=
-er" target=3D"_blank">alex.kanavin@gmail.com</a>&gt; a =C3=A9crit=C2=A0:<br=
-></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;=
-border-left:1px solid rgb(204,204,204);padding-left:1ex">On Wed, 15 Mar 202=
-3 at 19:26, Fr=C3=A9d=C3=A9ric Martinsons<br>
-&lt;<a href=3D"mailto:frederic.martinsons@gmail.com" rel=3D"noreferrer nore=
-ferrer noreferrer" target=3D"_blank">frederic.martinsons@gmail.com</a>&gt; =
-wrote:<br>
-&gt; But I still need some answers to go further:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0- Should checksum verification for crate fetcher be=
- mandatory ?<br>
-<br>
-Yes.<br>
-<br>
-&gt;=C2=A0 =C2=A0 =C2=A0- What about librsvg ? It doesn&#39;t include any c=
-rate:// but needs to inherit cargo_common, what should I do for this recipe=
- ?<br>
-<br>
-I think this was mentioned by mistake. You might want to check if<br>
-meta-oe recipes would need fixing though.<br>
-<br>
-Alex<br>
-</blockquote></div>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#14575): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/14575" rel=3D"noreferrer noreferrer" target=3D"_blank">h=
-ttps://lists.openembedded.org/g/bitbake-devel/message/14575</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/97626961/6213=
-388" rel=3D"noreferrer noreferrer" target=3D"_blank">https://lists.openembe=
-dded.org/mt/97626961/6213388</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" rel=3D"noreferrer" target=3D"_blank">bitbake-devel+owner@lists.openembedd=
-ed.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer noreferrer" target=3D"_blank">https://lists.openembedd=
-ed.org/g/bitbake-devel/unsub</a> [<a href=3D"mailto:frederic.martinsons@gma=
-il.com" rel=3D"noreferrer" target=3D"_blank">frederic.martinsons@gmail.com<=
-/a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div>
+> Moreover, since this dev will be cross dependent (impact on meta-oe, oe-c=
+ore and bitbake)
+> how do we proceed for the different patches to be merged at the same time=
+?
 
---00000000000064596205f7002189--
+You should submit all needed patches at the same time to respective
+mailing lists. Cross-reference them in commit messages (e.g. mention
+where the other patches are), and integrators will be able to minimize
+the window of breakage.
+
+Alex
 
