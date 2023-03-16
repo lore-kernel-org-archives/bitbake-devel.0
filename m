@@ -1,98 +1,241 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F24C6FD19
-	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 17:42:42 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web11.518.1678988553854753911
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4C2C6FD1F
+	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 22:24:44 +0000 (UTC)
+Received: from relay11.mail.gandi.net (relay11.mail.gandi.net [217.70.178.231])
+ by mx.groups.io with SMTP id smtpd.web11.6068.1679005481605890919
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Mar 2023 10:42:34 -0700
+ Thu, 16 Mar 2023 15:24:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NIj7niTx;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id x22so1819518wmj.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 10:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1678988552;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uPe7X3gTZEaGz/aH66zPTuc1BNo3Rp7NgU57LzgW6II=;
-        b=NIj7niTxX9Nryfv/CVM1lEq2KnHAS6t8tIzWSnLKf6P0nyJ99TqIoz1Ig4a6qU2IP1
-         oe8bfE0I/ARbfjtz2r+eTsM5Ddns/P5/BWLYrlbO/OjKqtfGCKRX3fgJapoyCJEJDcHp
-         0RuAANHXTDxnMvVnQ+gko0mZqFhqydpH4ZwnA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678988552;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uPe7X3gTZEaGz/aH66zPTuc1BNo3Rp7NgU57LzgW6II=;
-        b=VrN7nhQ+/bNEIwQB00ORH7WjbArbaM+hexzDjxdjdP2cRj428blIUReClNZqX5V7YC
-         k+n6e6gOgP1U3Y5j5Oig0M4r8omSkWWQpBmjnbVBjro3TqNcbyzGe9DIF/EbuoJROhC5
-         87ZZQqFjdIVWeMs3zZkUOE283u1/mxd+ZpYpsAseql7JEx+KcDcJklp0pD17EUjwniGk
-         3FNSjKypARKgZmxfIqU+U4ELxEPELnizZptewZU98CrW4Zmx88Ksp0GgjfDoAfkxzI6l
-         mSsqL88XjIs5Hgg4zzvIbfnl9vaoT0fsPWBEBpuWiQJNdLNnzEgnJ99XId2UjUHTA/XH
-         RnvQ==
-X-Gm-Message-State: AO0yUKUme+01AOcL5rw5Hz0uSxolVvO3FbERnVxxwg5EXhKFY5veTNwe
-	CRK14kdrwSGcxJzSfpc3wlvlPrdizey/rTDJ/18=
-X-Google-Smtp-Source: AK7set/EuInATwgHNvGr+93BuEWgNJDjC0gfXUfshBcQv6+9qxIFljksp3X+w61bXHKrYjnvJQK5rQ==
-X-Received: by 2002:a05:600c:474c:b0:3ed:355c:4610 with SMTP id w12-20020a05600c474c00b003ed355c4610mr5915418wmo.35.1678988552284;
-        Thu, 16 Mar 2023 10:42:32 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:4181:67:6e43:6a9? ([2001:8b0:aba:5f3c:4181:67:6e43:6a9])
-        by smtp.gmail.com with ESMTPSA id bh10-20020a05600c3d0a00b003ed23e9e03bsm5623849wmb.46.2023.03.16.10.42.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Mar 2023 10:42:31 -0700 (PDT)
-Message-ID: <4a646f8e56f63a29fa11226a7e24037214a8a0ea.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v3] ConfHandler: Allow the '@' character
- in variable flag names
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: James R T <jamestiotio@gmail.com>, bitbake-devel@lists.openembedded.org
-Date: Thu, 16 Mar 2023 17:42:31 +0000
-In-Reply-To: <20230316165705.58445-1-jamestiotio@gmail.com>
-References: <20230316165705.58445-1-jamestiotio@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3-1 
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=f43oJmQJ;
+ spf=pass (domain: bootlin.com, ip: 217.70.178.231, mailfrom: alexandre.belloni@bootlin.com)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id B3B7E100002;
+	Thu, 16 Mar 2023 22:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1679005479;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BnS5ChYrymwE3ZbcsRSN1sGqJFDucor0cUYINLv4u5U=;
+	b=f43oJmQJNYO1u5o5PgpDupGsL0XyoTz+UHB598x7euVKQkUy7jKAzpliZYR4qBPTOQL/sV
+	sHXYUy6lCFCWThA2Ci01MT07pIVE5/iNMn6Xa1Kiu89PwzmSGMJgXx0BaZtBxpBbMVyjOE
+	gwVhf7+c9zPx95tq25gL6npF0o7leHUGQMVKEL/mQaJ6gfydieBtRXhVfvqaMM5AE2uE0O
+	YVwNnxkwr+L+JgKbasezg4bhvT1KLmc6Y3t5k8Fiz5Xuf1i3+bVAUbtJ5u6Ur0bjXr0rxF
+	H69/lsqSXcMxWS9puRGqlU2oN6TBiukovW+tBw9hSwvdYO4EMNbowfYHQefK3Q==
+Date: Thu, 16 Mar 2023 23:24:38 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Frederic Martinsons <frederic.martinsons@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH 2/3] python3-bcrypt: add crates checksums
+Message-ID: <202303162224382628594e@mail.local>
+References: <20230316121249.28209-1-frederic.martinsons@gmail.com>
+ <20230316121249.28209-2-frederic.martinsons@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230316121249.28209-2-frederic.martinsons@gmail.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 17:42:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14594
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 22:24:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14595
 
-On Fri, 2023-03-17 at 00:57 +0800, James R T wrote:
-> This patch enables the usage of the '@' character in variable flag
-> names.
->=20
-> One use case of variable flags is to assign the network namespaces of
-> some systemd services/targets to configure other parts of the build
-> process of some system. The filenames of systemd services/targets might
-> contain the '@' character if they are template unit files that can take
-> in a single parameter/argument and be instanced multiple times, as
-> indicated by systemd's official manual page.
->=20
-> This patch is successfully verified by creating a custom BitBake recipe
-> that sets and unsets the value of a variable flag with the '@' character
-> in its name and ensuring that no ParseError is being thrown. A
-> regression test has also been added to `bb.parse`.
->=20
-> `bin/bitbake-selftest` has also been successfully executed and all tests
-> passed.
->=20
-> Signed-off-by: James Raphael Tiovalen <jamestiotio@gmail.com>
+Hi,
+
+I carry this patch but this fails on the AB:
+
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/5059/steps/13/logs/stdio
+
+ERROR: python3-bcrypt-4.0.1-r0 do_fetch: No checksum specified for '/srv/autobuilder/autobuilder.yocto.io/current_sources/autocfg-1.1.0.crate', please add at least one to the recipe:
+SRC_URI[sha256sum] = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
+ERROR: python3-bcrypt-4.0.1-r0 do_fetch: Bitbake Fetcher Error: NoChecksumError('Missing SRC_URI checksum', 'https://crates.io/api/v1/crates/autocfg/1.1.0/download')
+
+On 16/03/2023 13:12:48+0100, Frederic Martinsons wrote:
+> From: Frederic Martinsons <frederic.martinsons@gmail.com>
+> 
+> Signed-off-by: Frederic Martinsons <frederic.martinsons@gmail.com>
+> ---
+>  .../python/python3-bcrypt-crates.inc          | 149 ++++++++++++------
+>  1 file changed, 100 insertions(+), 49 deletions(-)
+> 
+> diff --git a/meta/recipes-devtools/python/python3-bcrypt-crates.inc b/meta/recipes-devtools/python/python3-bcrypt-crates.inc
+> index 65c7765f0c..1ff66269c4 100644
+> --- a/meta/recipes-devtools/python/python3-bcrypt-crates.inc
+> +++ b/meta/recipes-devtools/python/python3-bcrypt-crates.inc
+> @@ -1,53 +1,104 @@
+>  # Autogenerated with 'bitbake -c update_crates python3-bcrypt'
+>  
+> +# from src/_bcrypt/Cargo.lock
+>  SRC_URI += " \
+> -        crate://crates.io/autocfg/1.1.0 \
+> -        crate://crates.io/base64/0.13.0 \
+> -        crate://crates.io/bcrypt/0.13.0 \
+> -        crate://crates.io/bcrypt-pbkdf/0.8.1 \
+> -        crate://crates.io/bitflags/1.3.2 \
+> -        crate://crates.io/block-buffer/0.10.3 \
+> -        crate://crates.io/blowfish/0.9.1 \
+> -        crate://crates.io/byteorder/1.4.3 \
+> -        crate://crates.io/cfg-if/1.0.0 \
+> -        crate://crates.io/cipher/0.4.3 \
+> -        crate://crates.io/cpufeatures/0.2.5 \
+> -        crate://crates.io/crypto-common/0.1.6 \
+> -        crate://crates.io/digest/0.10.5 \
+> -        crate://crates.io/generic-array/0.14.6 \
+> -        crate://crates.io/getrandom/0.2.7 \
+> -        crate://crates.io/indoc/0.3.6 \
+> -        crate://crates.io/indoc-impl/0.3.6 \
+> -        crate://crates.io/inout/0.1.3 \
+> -        crate://crates.io/instant/0.1.12 \
+> -        crate://crates.io/libc/0.2.134 \
+> -        crate://crates.io/lock_api/0.4.9 \
+> -        crate://crates.io/once_cell/1.15.0 \
+> -        crate://crates.io/parking_lot/0.11.2 \
+> -        crate://crates.io/parking_lot_core/0.8.5 \
+> -        crate://crates.io/paste/0.1.18 \
+> -        crate://crates.io/paste-impl/0.1.18 \
+> -        crate://crates.io/pbkdf2/0.10.1 \
+> -        crate://crates.io/proc-macro-hack/0.5.19 \
+> -        crate://crates.io/proc-macro2/1.0.46 \
+> -        crate://crates.io/pyo3/0.15.2 \
+> -        crate://crates.io/pyo3-build-config/0.15.2 \
+> -        crate://crates.io/pyo3-macros/0.15.2 \
+> -        crate://crates.io/pyo3-macros-backend/0.15.2 \
+> -        crate://crates.io/quote/1.0.21 \
+> -        crate://crates.io/redox_syscall/0.2.16 \
+> -        crate://crates.io/scopeguard/1.1.0 \
+> -        crate://crates.io/sha2/0.10.6 \
+> -        crate://crates.io/smallvec/1.10.0 \
+> -        crate://crates.io/subtle/2.4.1 \
+> -        crate://crates.io/syn/1.0.102 \
+> -        crate://crates.io/typenum/1.15.0 \
+> -        crate://crates.io/unicode-ident/1.0.4 \
+> -        crate://crates.io/unindent/0.1.10 \
+> -        crate://crates.io/version_check/0.9.4 \
+> -        crate://crates.io/wasi/0.11.0+wasi-snapshot-preview1 \
+> -        crate://crates.io/winapi/0.3.9 \
+> -        crate://crates.io/winapi-i686-pc-windows-gnu/0.4.0 \
+> -        crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
+> -        crate://crates.io/zeroize/1.5.7 \
+> +    crate://crates.io/autocfg/1.1.0 \
+> +    crate://crates.io/base64/0.13.0 \
+> +    crate://crates.io/bcrypt/0.13.0 \
+> +    crate://crates.io/bcrypt-pbkdf/0.8.1 \
+> +    crate://crates.io/bitflags/1.3.2 \
+> +    crate://crates.io/block-buffer/0.10.3 \
+> +    crate://crates.io/blowfish/0.9.1 \
+> +    crate://crates.io/byteorder/1.4.3 \
+> +    crate://crates.io/cfg-if/1.0.0 \
+> +    crate://crates.io/cipher/0.4.3 \
+> +    crate://crates.io/cpufeatures/0.2.5 \
+> +    crate://crates.io/crypto-common/0.1.6 \
+> +    crate://crates.io/digest/0.10.5 \
+> +    crate://crates.io/generic-array/0.14.6 \
+> +    crate://crates.io/getrandom/0.2.7 \
+> +    crate://crates.io/indoc/0.3.6 \
+> +    crate://crates.io/indoc-impl/0.3.6 \
+> +    crate://crates.io/inout/0.1.3 \
+> +    crate://crates.io/instant/0.1.12 \
+> +    crate://crates.io/libc/0.2.134 \
+> +    crate://crates.io/lock_api/0.4.9 \
+> +    crate://crates.io/once_cell/1.15.0 \
+> +    crate://crates.io/parking_lot/0.11.2 \
+> +    crate://crates.io/parking_lot_core/0.8.5 \
+> +    crate://crates.io/paste/0.1.18 \
+> +    crate://crates.io/paste-impl/0.1.18 \
+> +    crate://crates.io/pbkdf2/0.10.1 \
+> +    crate://crates.io/proc-macro-hack/0.5.19 \
+> +    crate://crates.io/proc-macro2/1.0.46 \
+> +    crate://crates.io/pyo3/0.15.2 \
+> +    crate://crates.io/pyo3-build-config/0.15.2 \
+> +    crate://crates.io/pyo3-macros/0.15.2 \
+> +    crate://crates.io/pyo3-macros-backend/0.15.2 \
+> +    crate://crates.io/quote/1.0.21 \
+> +    crate://crates.io/redox_syscall/0.2.16 \
+> +    crate://crates.io/scopeguard/1.1.0 \
+> +    crate://crates.io/sha2/0.10.6 \
+> +    crate://crates.io/smallvec/1.10.0 \
+> +    crate://crates.io/subtle/2.4.1 \
+> +    crate://crates.io/syn/1.0.102 \
+> +    crate://crates.io/typenum/1.15.0 \
+> +    crate://crates.io/unicode-ident/1.0.4 \
+> +    crate://crates.io/unindent/0.1.10 \
+> +    crate://crates.io/version_check/0.9.4 \
+> +    crate://crates.io/wasi/0.11.0+wasi-snapshot-preview1 \
+> +    crate://crates.io/winapi/0.3.9 \
+> +    crate://crates.io/winapi-i686-pc-windows-gnu/0.4.0 \
+> +    crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
+> +    crate://crates.io/zeroize/1.5.7 \
+>  "
+> +
+> +SRC_URI[autocfg.sha256sum] = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
+> +SRC_URI[base64.sha256sum] = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
+> +SRC_URI[bcrypt.sha256sum] = "a7e7c93a3fb23b2fdde989b2c9ec4dd153063ec81f408507f84c090cd91c6641"
+> +SRC_URI[bcrypt-pbkdf.sha256sum] = "f4ef233ffa9cb9c7820b2b0e9efd0821ed180e866c9120ec9f45518659742074"
+> +SRC_URI[bitflags.sha256sum] = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
+> +SRC_URI[block-buffer.sha256sum] = "69cce20737498f97b993470a6e536b8523f0af7892a4f928cceb1ac5e52ebe7e"
+> +SRC_URI[blowfish.sha256sum] = "e412e2cd0f2b2d93e02543ceae7917b3c70331573df19ee046bcbc35e45e87d7"
+> +SRC_URI[byteorder.sha256sum] = "14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610"
+> +SRC_URI[cfg-if.sha256sum] = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+> +SRC_URI[cipher.sha256sum] = "d1873270f8f7942c191139cb8a40fd228da6c3fd2fc376d7e92d47aa14aeb59e"
+> +SRC_URI[cpufeatures.sha256sum] = "28d997bd5e24a5928dd43e46dc529867e207907fe0b239c3477d924f7f2ca320"
+> +SRC_URI[crypto-common.sha256sum] = "1bfb12502f3fc46cca1bb51ac28df9d618d813cdc3d2f25b9fe775a34af26bb3"
+> +SRC_URI[digest.sha256sum] = "adfbc57365a37acbd2ebf2b64d7e69bb766e2fea813521ed536f5d0520dcf86c"
+> +SRC_URI[generic-array.sha256sum] = "bff49e947297f3312447abdca79f45f4738097cc82b06e72054d2223f601f1b9"
+> +SRC_URI[getrandom.sha256sum] = "4eb1a864a501629691edf6c15a593b7a51eebaa1e8468e9ddc623de7c9b58ec6"
+> +SRC_URI[indoc.sha256sum] = "47741a8bc60fb26eb8d6e0238bbb26d8575ff623fdc97b1a2c00c050b9684ed8"
+> +SRC_URI[indoc-impl.sha256sum] = "ce046d161f000fffde5f432a0d034d0341dc152643b2598ed5bfce44c4f3a8f0"
+> +SRC_URI[inout.sha256sum] = "a0c10553d664a4d0bcff9f4215d0aac67a639cc68ef660840afe309b807bc9f5"
+> +SRC_URI[instant.sha256sum] = "7a5bbe824c507c5da5956355e86a746d82e0e1464f65d862cc5e71da70e94b2c"
+> +SRC_URI[libc.sha256sum] = "329c933548736bc49fd575ee68c89e8be4d260064184389a5b77517cddd99ffb"
+> +SRC_URI[lock_api.sha256sum] = "435011366fe56583b16cf956f9df0095b405b82d76425bc8981c0e22e60ec4df"
+> +SRC_URI[once_cell.sha256sum] = "e82dad04139b71a90c080c8463fe0dc7902db5192d939bd0950f074d014339e1"
+> +SRC_URI[parking_lot.sha256sum] = "7d17b78036a60663b797adeaee46f5c9dfebb86948d1255007a1d6be0271ff99"
+> +SRC_URI[parking_lot_core.sha256sum] = "d76e8e1493bcac0d2766c42737f34458f1c8c50c0d23bcb24ea953affb273216"
+> +SRC_URI[paste.sha256sum] = "45ca20c77d80be666aef2b45486da86238fabe33e38306bd3118fe4af33fa880"
+> +SRC_URI[paste-impl.sha256sum] = "d95a7db200b97ef370c8e6de0088252f7e0dfff7d047a28528e47456c0fc98b6"
+> +SRC_URI[pbkdf2.sha256sum] = "271779f35b581956db91a3e55737327a03aa051e90b1c47aeb189508533adfd7"
+> +SRC_URI[proc-macro-hack.sha256sum] = "dbf0c48bc1d91375ae5c3cd81e3722dff1abcf81a30960240640d223f59fe0e5"
+> +SRC_URI[proc-macro2.sha256sum] = "94e2ef8dbfc347b10c094890f778ee2e36ca9bb4262e86dc99cd217e35f3470b"
+> +SRC_URI[pyo3.sha256sum] = "d41d50a7271e08c7c8a54cd24af5d62f73ee3a6f6a314215281ebdec421d5752"
+> +SRC_URI[pyo3-build-config.sha256sum] = "779239fc40b8e18bc8416d3a37d280ca9b9fb04bda54b98037bb6748595c2410"
+> +SRC_URI[pyo3-macros.sha256sum] = "00b247e8c664be87998d8628e86f282c25066165f1f8dda66100c48202fdb93a"
+> +SRC_URI[pyo3-macros-backend.sha256sum] = "5a8c2812c412e00e641d99eeb79dd478317d981d938aa60325dfa7157b607095"
+> +SRC_URI[quote.sha256sum] = "bbe448f377a7d6961e30f5955f9b8d106c3f5e449d493ee1b125c1d43c2b5179"
+> +SRC_URI[redox_syscall.sha256sum] = "fb5a58c1855b4b6819d59012155603f0b22ad30cad752600aadfcb695265519a"
+> +SRC_URI[scopeguard.sha256sum] = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
+> +SRC_URI[sha2.sha256sum] = "82e6b795fe2e3b1e845bafcb27aa35405c4d47cdfc92af5fc8d3002f76cebdc0"
+> +SRC_URI[smallvec.sha256sum] = "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
+> +SRC_URI[subtle.sha256sum] = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
+> +SRC_URI[syn.sha256sum] = "3fcd952facd492f9be3ef0d0b7032a6e442ee9b361d4acc2b1d0c4aaa5f613a1"
+> +SRC_URI[typenum.sha256sum] = "dcf81ac59edc17cc8697ff311e8f5ef2d99fcbd9817b34cec66f90b6c3dfd987"
+> +SRC_URI[unicode-ident.sha256sum] = "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
+> +SRC_URI[unindent.sha256sum] = "58ee9362deb4a96cef4d437d1ad49cffc9b9e92d202b6995674e928ce684f112"
+> +SRC_URI[version_check.sha256sum] = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
+> +SRC_URI[wasi.sha256sum] = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
+> +SRC_URI[winapi.sha256sum] = "5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419"
+> +SRC_URI[winapi-i686-pc-windows-gnu.sha256sum] = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
+> +SRC_URI[winapi-x86_64-pc-windows-gnu.sha256sum] = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
+> +SRC_URI[zeroize.sha256sum] = "c394b5bd0c6f669e7275d9c20aa90ae064cb22e75a1cad54e1b34088034b149f"
+> -- 
+> 2.34.1
+> 
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14585): https://lists.openembedded.org/g/bitbake-devel/message/14585
+> Mute This Topic: https://lists.openembedded.org/mt/97648804/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
 
-I'm torn on this. I can see why some people would like it, equally,
-restricting the character set does sometimes make parsing easier and
-gives us options in future to extend the syntax.
-
-After some though, I did wonder if we should change things so that the
-first character has more restriction and @ is only allowed mid string
-as a compromise?
-
-Cheers,
-
-Richard
-
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
