@@ -2,223 +2,139 @@ Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4C2C6FD1F
-	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 22:24:44 +0000 (UTC)
-Received: from relay11.mail.gandi.net (relay11.mail.gandi.net [217.70.178.231])
- by mx.groups.io with SMTP id smtpd.web11.6068.1679005481605890919
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9814AC6FD1F
+	for <webhook@archiver.kernel.org>; Thu, 16 Mar 2023 22:27:24 +0000 (UTC)
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+ by mx.groups.io with SMTP id smtpd.web10.6140.1679005643754358799
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 Mar 2023 15:24:42 -0700
+ Thu, 16 Mar 2023 15:27:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=f43oJmQJ;
- spf=pass (domain: bootlin.com, ip: 217.70.178.231, mailfrom: alexandre.belloni@bootlin.com)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=i8U+grki;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: alexandre.belloni@bootlin.com)
 Received: (Authenticated sender: alexandre.belloni@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id B3B7E100002;
-	Thu, 16 Mar 2023 22:24:38 +0000 (UTC)
+	by mail.gandi.net (Postfix) with ESMTPSA id 0BC6BC0006;
+	Thu, 16 Mar 2023 22:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1679005479;
+	t=1679005641;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BnS5ChYrymwE3ZbcsRSN1sGqJFDucor0cUYINLv4u5U=;
-	b=f43oJmQJNYO1u5o5PgpDupGsL0XyoTz+UHB598x7euVKQkUy7jKAzpliZYR4qBPTOQL/sV
-	sHXYUy6lCFCWThA2Ci01MT07pIVE5/iNMn6Xa1Kiu89PwzmSGMJgXx0BaZtBxpBbMVyjOE
-	gwVhf7+c9zPx95tq25gL6npF0o7leHUGQMVKEL/mQaJ6gfydieBtRXhVfvqaMM5AE2uE0O
-	YVwNnxkwr+L+JgKbasezg4bhvT1KLmc6Y3t5k8Fiz5Xuf1i3+bVAUbtJ5u6Ur0bjXr0rxF
-	H69/lsqSXcMxWS9puRGqlU2oN6TBiukovW+tBw9hSwvdYO4EMNbowfYHQefK3Q==
-Date: Thu, 16 Mar 2023 23:24:38 +0100
+	bh=K+aWUFjCniaHCzgiDr02hmgfSvtnWqBSv2Vzy3mAkJE=;
+	b=i8U+grkiM1E7kdVq4JpbGMU7mlPdx8bx2RAPvomkuMQdoG4t8A7rPccRwpnWaEl0k9eWy7
+	BXEFmD8Rm1Cf6RcDhJzuQSxJCSjTv3xloEmUZjBeBKhjwNPk9hNEAITbr40GHcIX6mPR6h
+	GriEiaV/YbSb9lOSvGW++vOSx+ug4HUtd9JJbhWV4656qeQN/yQ7joWZeg1g8uz2v+tIz4
+	LnCGusvIJy3D8UK/nLwDMIGTcfOJYv5S9uaRViMCtspSk4zAO7dS8qw6UHIYWF4UV5NcDX
+	RhIH5JRgd1mgs6sluVCBI0XCdrK0y0gOFVfuD1VBwrpNdxVXu1vWaS8b9LTxzA==
+Date: Thu, 16 Mar 2023 23:27:20 +0100
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 To: Frederic Martinsons <frederic.martinsons@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH 2/3] python3-bcrypt: add crates checksums
-Message-ID: <202303162224382628594e@mail.local>
+Subject: Re: [bitbake-devel] [PATCH 3/3] python3-cryptography: add crates
+ checksums
+Message-ID: <20230316222720d8ef23d8@mail.local>
 References: <20230316121249.28209-1-frederic.martinsons@gmail.com>
- <20230316121249.28209-2-frederic.martinsons@gmail.com>
+ <20230316121249.28209-3-frederic.martinsons@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230316121249.28209-2-frederic.martinsons@gmail.com>
+In-Reply-To: <20230316121249.28209-3-frederic.martinsons@gmail.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 22:24:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14595
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Mar 2023 22:27:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14596
 
-Hi,
+I got:
 
-I carry this patch but this fails on the AB:
+ERROR: python3-cryptography-39.0.2-r0 do_fetch: No checksum specified for '/srv/autobuilder/autobuilder.yocto.io/current_sources/Inflector-0.11.4.crate', please add at least one to the recipe:
+SRC_URI[sha256sum] = "fe438c63458706e03479442743baae6c88256498e6431708f6dfc520a26515d3"
+ERROR: python3-cryptography-39.0.2-r0 do_fetch: Bitbake Fetcher Error: NoChecksumError('Missing SRC_URI checksum', 'https://crates.io/api/v1/crates/Inflector/0.11.4/download')
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/5059/steps/13/logs/stdio
+https://autobuilder.yoctoproject.org/typhoon/#/builders/117/builds/2561/steps/12/logs/stdio
 
-ERROR: python3-bcrypt-4.0.1-r0 do_fetch: No checksum specified for '/srv/autobuilder/autobuilder.yocto.io/current_sources/autocfg-1.1.0.crate', please add at least one to the recipe:
-SRC_URI[sha256sum] = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
-ERROR: python3-bcrypt-4.0.1-r0 do_fetch: Bitbake Fetcher Error: NoChecksumError('Missing SRC_URI checksum', 'https://crates.io/api/v1/crates/autocfg/1.1.0/download')
-
-On 16/03/2023 13:12:48+0100, Frederic Martinsons wrote:
+On 16/03/2023 13:12:49+0100, Frederic Martinsons wrote:
 > From: Frederic Martinsons <frederic.martinsons@gmail.com>
 > 
 > Signed-off-by: Frederic Martinsons <frederic.martinsons@gmail.com>
 > ---
->  .../python/python3-bcrypt-crates.inc          | 149 ++++++++++++------
->  1 file changed, 100 insertions(+), 49 deletions(-)
+>  .../python/python3-cryptography-crates.inc    | 67 +++++++++++++++++++
+>  1 file changed, 67 insertions(+)
 > 
-> diff --git a/meta/recipes-devtools/python/python3-bcrypt-crates.inc b/meta/recipes-devtools/python/python3-bcrypt-crates.inc
-> index 65c7765f0c..1ff66269c4 100644
-> --- a/meta/recipes-devtools/python/python3-bcrypt-crates.inc
-> +++ b/meta/recipes-devtools/python/python3-bcrypt-crates.inc
-> @@ -1,53 +1,104 @@
->  # Autogenerated with 'bitbake -c update_crates python3-bcrypt'
->  
-> +# from src/_bcrypt/Cargo.lock
->  SRC_URI += " \
-> -        crate://crates.io/autocfg/1.1.0 \
-> -        crate://crates.io/base64/0.13.0 \
-> -        crate://crates.io/bcrypt/0.13.0 \
-> -        crate://crates.io/bcrypt-pbkdf/0.8.1 \
-> -        crate://crates.io/bitflags/1.3.2 \
-> -        crate://crates.io/block-buffer/0.10.3 \
-> -        crate://crates.io/blowfish/0.9.1 \
-> -        crate://crates.io/byteorder/1.4.3 \
-> -        crate://crates.io/cfg-if/1.0.0 \
-> -        crate://crates.io/cipher/0.4.3 \
-> -        crate://crates.io/cpufeatures/0.2.5 \
-> -        crate://crates.io/crypto-common/0.1.6 \
-> -        crate://crates.io/digest/0.10.5 \
-> -        crate://crates.io/generic-array/0.14.6 \
-> -        crate://crates.io/getrandom/0.2.7 \
-> -        crate://crates.io/indoc/0.3.6 \
-> -        crate://crates.io/indoc-impl/0.3.6 \
-> -        crate://crates.io/inout/0.1.3 \
-> -        crate://crates.io/instant/0.1.12 \
-> -        crate://crates.io/libc/0.2.134 \
-> -        crate://crates.io/lock_api/0.4.9 \
-> -        crate://crates.io/once_cell/1.15.0 \
-> -        crate://crates.io/parking_lot/0.11.2 \
-> -        crate://crates.io/parking_lot_core/0.8.5 \
-> -        crate://crates.io/paste/0.1.18 \
-> -        crate://crates.io/paste-impl/0.1.18 \
-> -        crate://crates.io/pbkdf2/0.10.1 \
-> -        crate://crates.io/proc-macro-hack/0.5.19 \
-> -        crate://crates.io/proc-macro2/1.0.46 \
-> -        crate://crates.io/pyo3/0.15.2 \
-> -        crate://crates.io/pyo3-build-config/0.15.2 \
-> -        crate://crates.io/pyo3-macros/0.15.2 \
-> -        crate://crates.io/pyo3-macros-backend/0.15.2 \
-> -        crate://crates.io/quote/1.0.21 \
-> -        crate://crates.io/redox_syscall/0.2.16 \
-> -        crate://crates.io/scopeguard/1.1.0 \
-> -        crate://crates.io/sha2/0.10.6 \
-> -        crate://crates.io/smallvec/1.10.0 \
-> -        crate://crates.io/subtle/2.4.1 \
-> -        crate://crates.io/syn/1.0.102 \
-> -        crate://crates.io/typenum/1.15.0 \
-> -        crate://crates.io/unicode-ident/1.0.4 \
-> -        crate://crates.io/unindent/0.1.10 \
-> -        crate://crates.io/version_check/0.9.4 \
-> -        crate://crates.io/wasi/0.11.0+wasi-snapshot-preview1 \
-> -        crate://crates.io/winapi/0.3.9 \
-> -        crate://crates.io/winapi-i686-pc-windows-gnu/0.4.0 \
-> -        crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
-> -        crate://crates.io/zeroize/1.5.7 \
-> +    crate://crates.io/autocfg/1.1.0 \
-> +    crate://crates.io/base64/0.13.0 \
-> +    crate://crates.io/bcrypt/0.13.0 \
-> +    crate://crates.io/bcrypt-pbkdf/0.8.1 \
-> +    crate://crates.io/bitflags/1.3.2 \
-> +    crate://crates.io/block-buffer/0.10.3 \
-> +    crate://crates.io/blowfish/0.9.1 \
-> +    crate://crates.io/byteorder/1.4.3 \
-> +    crate://crates.io/cfg-if/1.0.0 \
-> +    crate://crates.io/cipher/0.4.3 \
-> +    crate://crates.io/cpufeatures/0.2.5 \
-> +    crate://crates.io/crypto-common/0.1.6 \
-> +    crate://crates.io/digest/0.10.5 \
-> +    crate://crates.io/generic-array/0.14.6 \
-> +    crate://crates.io/getrandom/0.2.7 \
-> +    crate://crates.io/indoc/0.3.6 \
-> +    crate://crates.io/indoc-impl/0.3.6 \
-> +    crate://crates.io/inout/0.1.3 \
-> +    crate://crates.io/instant/0.1.12 \
-> +    crate://crates.io/libc/0.2.134 \
-> +    crate://crates.io/lock_api/0.4.9 \
-> +    crate://crates.io/once_cell/1.15.0 \
-> +    crate://crates.io/parking_lot/0.11.2 \
-> +    crate://crates.io/parking_lot_core/0.8.5 \
-> +    crate://crates.io/paste/0.1.18 \
-> +    crate://crates.io/paste-impl/0.1.18 \
-> +    crate://crates.io/pbkdf2/0.10.1 \
-> +    crate://crates.io/proc-macro-hack/0.5.19 \
-> +    crate://crates.io/proc-macro2/1.0.46 \
-> +    crate://crates.io/pyo3/0.15.2 \
-> +    crate://crates.io/pyo3-build-config/0.15.2 \
-> +    crate://crates.io/pyo3-macros/0.15.2 \
-> +    crate://crates.io/pyo3-macros-backend/0.15.2 \
-> +    crate://crates.io/quote/1.0.21 \
-> +    crate://crates.io/redox_syscall/0.2.16 \
-> +    crate://crates.io/scopeguard/1.1.0 \
-> +    crate://crates.io/sha2/0.10.6 \
-> +    crate://crates.io/smallvec/1.10.0 \
-> +    crate://crates.io/subtle/2.4.1 \
-> +    crate://crates.io/syn/1.0.102 \
-> +    crate://crates.io/typenum/1.15.0 \
-> +    crate://crates.io/unicode-ident/1.0.4 \
-> +    crate://crates.io/unindent/0.1.10 \
-> +    crate://crates.io/version_check/0.9.4 \
-> +    crate://crates.io/wasi/0.11.0+wasi-snapshot-preview1 \
-> +    crate://crates.io/winapi/0.3.9 \
-> +    crate://crates.io/winapi-i686-pc-windows-gnu/0.4.0 \
-> +    crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
-> +    crate://crates.io/zeroize/1.5.7 \
+> diff --git a/meta/recipes-devtools/python/python3-cryptography-crates.inc b/meta/recipes-devtools/python/python3-cryptography-crates.inc
+> index a0c8fa50c9..74f47897a6 100644
+> --- a/meta/recipes-devtools/python/python3-cryptography-crates.inc
+> +++ b/meta/recipes-devtools/python/python3-cryptography-crates.inc
+> @@ -69,3 +69,70 @@ SRC_URI += " \
+>      crate://crates.io/winapi-util/0.1.5 \
+>      crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
 >  "
 > +
+> +SRC_URI[Inflector.sha256sum] = "fe438c63458706e03479442743baae6c88256498e6431708f6dfc520a26515d3"
+> +SRC_URI[aliasable.sha256sum] = "250f629c0161ad8107cf89319e990051fae62832fd343083bea452d93e2205fd"
+> +SRC_URI[android_system_properties.sha256sum] = "819e7219dbd41043ac279b19830f2efc897156490d7fd6ea916720117ee66311"
+> +SRC_URI[asn1.sha256sum] = "2affba5e62ee09eeba078f01a00c4aed45ac4287e091298eccbb0d4802efbdc5"
+> +SRC_URI[asn1_derive.sha256sum] = "bfab79c195875e5aef2bd20b4c8ed8d43ef9610bcffefbbcf66f88f555cc78af"
 > +SRC_URI[autocfg.sha256sum] = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
-> +SRC_URI[base64.sha256sum] = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
-> +SRC_URI[bcrypt.sha256sum] = "a7e7c93a3fb23b2fdde989b2c9ec4dd153063ec81f408507f84c090cd91c6641"
-> +SRC_URI[bcrypt-pbkdf.sha256sum] = "f4ef233ffa9cb9c7820b2b0e9efd0821ed180e866c9120ec9f45518659742074"
+> +SRC_URI[base64.sha256sum] = "9e1b586273c5702936fe7b7d6896644d8be71e6314cfe09d3167c95f712589e8"
 > +SRC_URI[bitflags.sha256sum] = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
-> +SRC_URI[block-buffer.sha256sum] = "69cce20737498f97b993470a6e536b8523f0af7892a4f928cceb1ac5e52ebe7e"
-> +SRC_URI[blowfish.sha256sum] = "e412e2cd0f2b2d93e02543ceae7917b3c70331573df19ee046bcbc35e45e87d7"
-> +SRC_URI[byteorder.sha256sum] = "14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610"
+> +SRC_URI[bumpalo.sha256sum] = "37ccbd214614c6783386c1af30caf03192f17891059cecc394b4fb119e363de3"
+> +SRC_URI[cc.sha256sum] = "a20104e2335ce8a659d6dd92a51a767a0c062599c73b343fd152cb401e828c3d"
 > +SRC_URI[cfg-if.sha256sum] = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
-> +SRC_URI[cipher.sha256sum] = "d1873270f8f7942c191139cb8a40fd228da6c3fd2fc376d7e92d47aa14aeb59e"
-> +SRC_URI[cpufeatures.sha256sum] = "28d997bd5e24a5928dd43e46dc529867e207907fe0b239c3477d924f7f2ca320"
-> +SRC_URI[crypto-common.sha256sum] = "1bfb12502f3fc46cca1bb51ac28df9d618d813cdc3d2f25b9fe775a34af26bb3"
-> +SRC_URI[digest.sha256sum] = "adfbc57365a37acbd2ebf2b64d7e69bb766e2fea813521ed536f5d0520dcf86c"
-> +SRC_URI[generic-array.sha256sum] = "bff49e947297f3312447abdca79f45f4738097cc82b06e72054d2223f601f1b9"
-> +SRC_URI[getrandom.sha256sum] = "4eb1a864a501629691edf6c15a593b7a51eebaa1e8468e9ddc623de7c9b58ec6"
+> +SRC_URI[chrono.sha256sum] = "16b0a3d9ed01224b22057780a37bb8c5dbfe1be8ba48678e7bf57ec4b385411f"
+> +SRC_URI[codespan-reporting.sha256sum] = "3538270d33cc669650c4b093848450d380def10c331d38c768e34cac80576e6e"
+> +SRC_URI[core-foundation-sys.sha256sum] = "5827cebf4670468b8772dd191856768aedcb1b0278a04f989f7766351917b9dc"
+> +SRC_URI[cxx.sha256sum] = "5add3fc1717409d029b20c5b6903fc0c0b02fa6741d820054f4a2efa5e5816fd"
+> +SRC_URI[cxx-build.sha256sum] = "b4c87959ba14bc6fbc61df77c3fcfe180fc32b93538c4f1031dd802ccb5f2ff0"
+> +SRC_URI[cxxbridge-flags.sha256sum] = "69a3e162fde4e594ed2b07d0f83c6c67b745e7f28ce58c6df5e6b6bef99dfb59"
+> +SRC_URI[cxxbridge-macro.sha256sum] = "3e7e2adeb6a0d4a282e581096b06e1791532b7d576dcde5ccd9382acf55db8e6"
+> +SRC_URI[iana-time-zone.sha256sum] = "64c122667b287044802d6ce17ee2ddf13207ed924c712de9a66a5814d5b64765"
+> +SRC_URI[iana-time-zone-haiku.sha256sum] = "0703ae284fc167426161c2e3f1da3ea71d94b21bedbcc9494e92b28e334e3dca"
 > +SRC_URI[indoc.sha256sum] = "47741a8bc60fb26eb8d6e0238bbb26d8575ff623fdc97b1a2c00c050b9684ed8"
 > +SRC_URI[indoc-impl.sha256sum] = "ce046d161f000fffde5f432a0d034d0341dc152643b2598ed5bfce44c4f3a8f0"
-> +SRC_URI[inout.sha256sum] = "a0c10553d664a4d0bcff9f4215d0aac67a639cc68ef660840afe309b807bc9f5"
 > +SRC_URI[instant.sha256sum] = "7a5bbe824c507c5da5956355e86a746d82e0e1464f65d862cc5e71da70e94b2c"
-> +SRC_URI[libc.sha256sum] = "329c933548736bc49fd575ee68c89e8be4d260064184389a5b77517cddd99ffb"
+> +SRC_URI[js-sys.sha256sum] = "49409df3e3bf0856b916e2ceaca09ee28e6871cf7d9ce97a692cacfdb2a25a47"
+> +SRC_URI[libc.sha256sum] = "201de327520df007757c1f0adce6e827fe8562fbc28bfd9c15571c66ca1f5f79"
+> +SRC_URI[link-cplusplus.sha256sum] = "ecd207c9c713c34f95a097a5b029ac2ce6010530c7b49d7fea24d977dede04f5"
 > +SRC_URI[lock_api.sha256sum] = "435011366fe56583b16cf956f9df0095b405b82d76425bc8981c0e22e60ec4df"
-> +SRC_URI[once_cell.sha256sum] = "e82dad04139b71a90c080c8463fe0dc7902db5192d939bd0950f074d014339e1"
+> +SRC_URI[log.sha256sum] = "abb12e687cfb44aa40f41fc3978ef76448f9b6038cad6aef4259d3c095a2382e"
+> +SRC_URI[num-integer.sha256sum] = "225d3389fb3509a24c93f5c29eb6bde2586b98d9f016636dff58d7c6f7569cd9"
+> +SRC_URI[num-traits.sha256sum] = "578ede34cf02f8924ab9447f50c28075b4d3e5b269972345e7e0372b38c6cdcd"
+> +SRC_URI[once_cell.sha256sum] = "2f7254b99e31cad77da24b08ebf628882739a608578bb1bcdfc1f9c21260d7c0"
+> +SRC_URI[ouroboros.sha256sum] = "dfbb50b356159620db6ac971c6d5c9ab788c9cc38a6f49619fca2a27acb062ca"
+> +SRC_URI[ouroboros_macro.sha256sum] = "4a0d9d1a6191c4f391f87219d1ea42b23f09ee84d64763cd05ee6ea88d9f384d"
 > +SRC_URI[parking_lot.sha256sum] = "7d17b78036a60663b797adeaee46f5c9dfebb86948d1255007a1d6be0271ff99"
-> +SRC_URI[parking_lot_core.sha256sum] = "d76e8e1493bcac0d2766c42737f34458f1c8c50c0d23bcb24ea953affb273216"
+> +SRC_URI[parking_lot_core.sha256sum] = "60a2cfe6f0ad2bfc16aefa463b497d5c7a5ecd44a23efa72aa342d90177356dc"
 > +SRC_URI[paste.sha256sum] = "45ca20c77d80be666aef2b45486da86238fabe33e38306bd3118fe4af33fa880"
 > +SRC_URI[paste-impl.sha256sum] = "d95a7db200b97ef370c8e6de0088252f7e0dfff7d047a28528e47456c0fc98b6"
-> +SRC_URI[pbkdf2.sha256sum] = "271779f35b581956db91a3e55737327a03aa051e90b1c47aeb189508533adfd7"
-> +SRC_URI[proc-macro-hack.sha256sum] = "dbf0c48bc1d91375ae5c3cd81e3722dff1abcf81a30960240640d223f59fe0e5"
-> +SRC_URI[proc-macro2.sha256sum] = "94e2ef8dbfc347b10c094890f778ee2e36ca9bb4262e86dc99cd217e35f3470b"
+> +SRC_URI[pem.sha256sum] = "03c64931a1a212348ec4f3b4362585eca7159d0d09cbdf4a7f74f02173596fd4"
+> +SRC_URI[proc-macro-error.sha256sum] = "da25490ff9892aab3fcf7c36f08cfb902dd3e71ca0f9f9517bea02a73a5ce38c"
+> +SRC_URI[proc-macro-error-attr.sha256sum] = "a1be40180e52ecc98ad80b184934baf3d0d29f979574e439af5a55274b35f869"
+> +SRC_URI[proc-macro-hack.sha256sum] = "dc375e1527247fe1a97d8b7156678dfe7c1af2fc075c9a4db3690ecd2a148068"
+> +SRC_URI[proc-macro2.sha256sum] = "57a8eca9f9c4ffde41714334dee777596264c7825420f521abc92b5b5deb63a5"
 > +SRC_URI[pyo3.sha256sum] = "d41d50a7271e08c7c8a54cd24af5d62f73ee3a6f6a314215281ebdec421d5752"
 > +SRC_URI[pyo3-build-config.sha256sum] = "779239fc40b8e18bc8416d3a37d280ca9b9fb04bda54b98037bb6748595c2410"
 > +SRC_URI[pyo3-macros.sha256sum] = "00b247e8c664be87998d8628e86f282c25066165f1f8dda66100c48202fdb93a"
 > +SRC_URI[pyo3-macros-backend.sha256sum] = "5a8c2812c412e00e641d99eeb79dd478317d981d938aa60325dfa7157b607095"
-> +SRC_URI[quote.sha256sum] = "bbe448f377a7d6961e30f5955f9b8d106c3f5e449d493ee1b125c1d43c2b5179"
+> +SRC_URI[quote.sha256sum] = "8856d8364d252a14d474036ea1358d63c9e6965c8e5c1885c18f73d70bff9c7b"
 > +SRC_URI[redox_syscall.sha256sum] = "fb5a58c1855b4b6819d59012155603f0b22ad30cad752600aadfcb695265519a"
 > +SRC_URI[scopeguard.sha256sum] = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
-> +SRC_URI[sha2.sha256sum] = "82e6b795fe2e3b1e845bafcb27aa35405c4d47cdfc92af5fc8d3002f76cebdc0"
+> +SRC_URI[scratch.sha256sum] = "ddccb15bcce173023b3fedd9436f882a0739b8dfb45e4f6b6002bee5929f61b2"
 > +SRC_URI[smallvec.sha256sum] = "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
-> +SRC_URI[subtle.sha256sum] = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
-> +SRC_URI[syn.sha256sum] = "3fcd952facd492f9be3ef0d0b7032a6e442ee9b361d4acc2b1d0c4aaa5f613a1"
-> +SRC_URI[typenum.sha256sum] = "dcf81ac59edc17cc8697ff311e8f5ef2d99fcbd9817b34cec66f90b6c3dfd987"
-> +SRC_URI[unicode-ident.sha256sum] = "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
-> +SRC_URI[unindent.sha256sum] = "58ee9362deb4a96cef4d437d1ad49cffc9b9e92d202b6995674e928ce684f112"
+> +SRC_URI[syn.sha256sum] = "1f4064b5b16e03ae50984a5a8ed5d4f8803e6bc1fd170a3cda91a1be4b18e3f5"
+> +SRC_URI[termcolor.sha256sum] = "bab24d30b911b2376f3a13cc2cd443142f0c81dda04c118693e35b3835757755"
+> +SRC_URI[unicode-ident.sha256sum] = "84a22b9f218b40614adcb3f4ff08b703773ad44fa9423e4e0d346d5db86e4ebc"
+> +SRC_URI[unicode-width.sha256sum] = "c0edd1e5b14653f783770bce4a4dabb4a5108a5370a5f5d8cfe8710c361f6c8b"
+> +SRC_URI[unindent.sha256sum] = "e1766d682d402817b5ac4490b3c3002d91dfa0d22812f341609f97b08757359c"
 > +SRC_URI[version_check.sha256sum] = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
-> +SRC_URI[wasi.sha256sum] = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
+> +SRC_URI[wasm-bindgen.sha256sum] = "eaf9f5aceeec8be17c128b2e93e031fb8a4d469bb9c4ae2d7dc1888b26887268"
+> +SRC_URI[wasm-bindgen-backend.sha256sum] = "4c8ffb332579b0557b52d268b91feab8df3615f265d5270fec2a8c95b17c1142"
+> +SRC_URI[wasm-bindgen-macro.sha256sum] = "052be0f94026e6cbc75cdefc9bae13fd6052cdcaf532fa6c45e7ae33a1e6c810"
+> +SRC_URI[wasm-bindgen-macro-support.sha256sum] = "07bc0c051dc5f23e307b13285f9d75df86bfdf816c5721e573dec1f9b8aa193c"
+> +SRC_URI[wasm-bindgen-shared.sha256sum] = "1c38c045535d93ec4f0b4defec448e4291638ee608530863b1e2ba115d4fff7f"
 > +SRC_URI[winapi.sha256sum] = "5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419"
 > +SRC_URI[winapi-i686-pc-windows-gnu.sha256sum] = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
+> +SRC_URI[winapi-util.sha256sum] = "70ec6ce85bb158151cae5e5c87f95a8e97d2c0c4b001223f33a334e3ce5de178"
 > +SRC_URI[winapi-x86_64-pc-windows-gnu.sha256sum] = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
-> +SRC_URI[zeroize.sha256sum] = "c394b5bd0c6f669e7275d9c20aa90ae064cb22e75a1cad54e1b34088034b149f"
 > -- 
 > 2.34.1
 > 
@@ -226,8 +142,8 @@ On 16/03/2023 13:12:48+0100, Frederic Martinsons wrote:
 > 
 > -=-=-=-=-=-=-=-=-=-=-=-
 > Links: You receive all messages sent to this group.
-> View/Reply Online (#14585): https://lists.openembedded.org/g/bitbake-devel/message/14585
-> Mute This Topic: https://lists.openembedded.org/mt/97648804/3617179
+> View/Reply Online (#14586): https://lists.openembedded.org/g/bitbake-devel/message/14586
+> Mute This Topic: https://lists.openembedded.org/mt/97648805/3617179
 > Group Owner: bitbake-devel+owner@lists.openembedded.org
 > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
 > -=-=-=-=-=-=-=-=-=-=-=-
