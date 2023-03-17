@@ -1,335 +1,152 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <frederic.martinsons@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B4AC74A5B
-	for <webhook@archiver.kernel.org>; Fri, 17 Mar 2023 07:54:47 +0000 (UTC)
-Received: from relay11.mail.gandi.net (relay11.mail.gandi.net [217.70.178.231])
- by mx.groups.io with SMTP id smtpd.web10.14144.1679039682943929798
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33859C6FD1D
+	for <webhook@archiver.kernel.org>; Fri, 17 Mar 2023 08:08:17 +0000 (UTC)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+ by mx.groups.io with SMTP id smtpd.web10.14324.1679040494116211985
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 Mar 2023 00:54:43 -0700
+ Fri, 17 Mar 2023 01:08:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=AH9BfFxk;
- spf=pass (domain: bootlin.com, ip: 217.70.178.231, mailfrom: alexandre.belloni@bootlin.com)
-Received: (Authenticated sender: alexandre.belloni@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 9826C100002;
-	Fri, 17 Mar 2023 07:54:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1679039681;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8RLvoRNgcQVeEIsfbhlz0BtzDUfO6b95Gmr2SRjMuXc=;
-	b=AH9BfFxk3Zz7WacBmO1PCu/mla1ZeY2gN+R/HxKvoZpbMnFifROyjpjWuwLD4pONESzMGY
-	z5NspKmc6aeofjb9HuXC7konXh7NxTXDLDB2pKsYnbH7Z5aKTrF8v1KElLW7tdinghji+V
-	Xrga6g+pptJEk3gqO+7k9A2zhzbVbwufKapeei4OHRLzD56DpsCM3UbfojGXcicsjrAUuj
-	0TkAMeduS+EVa0wHdYNwIG+xnvptbnKjCHj+m6Nb0q2hiS+w9UOPEahcrBad21qo2qsst/
-	ITY25PZugTr8vZM86rrYb0eZW8HdIqogVxKgN75GveABphEKZ3JrrjU8q7sTQg==
-Date: Fri, 17 Mar 2023 08:54:40 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: =?iso-8859-1?Q?Fr=E9d=E9ric?= Martinsons <frederic.martinsons@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH 2/3] python3-bcrypt: add crates checksums
-Message-ID: <20230317075440fa660466@mail.local>
-References: <20230316121249.28209-1-frederic.martinsons@gmail.com>
- <20230316121249.28209-2-frederic.martinsons@gmail.com>
- <202303162224382628594e@mail.local>
- <CA+cAkeoPQSJqV_dJB_soCsd8av0u54C6BAx0zgXMcX3wC1eHBQ@mail.gmail.com>
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=nZPe6a2U;
+ spf=pass (domain: gmail.com, ip: 209.85.208.173, mailfrom: frederic.martinsons@gmail.com)
+Received: by mail-lj1-f173.google.com with SMTP id a32so4198137ljr.9
+        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Mar 2023 01:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679040492;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4dp+t6FF1w1d0dhtj7ZFYXXkYT9FffZnaulCmc+9+Rk=;
+        b=nZPe6a2Uy09O+vtay8s0XC/fPtNu56Q55iM/I8N+R6PvJbatP3mtTcvRfXMy//1ECw
+         oARNwSmqg70WphVuojvOm5SVPfqRhnnP0v/8zP/6fr4ylroArIyuLBMTt/J8JzLYOvbZ
+         duk+hc3Ev8bLuCFh87McKgZwECyvh1VM8QMgpr8fUB83Kd3mBd881RntqBkIciQ3s8SG
+         24Sfy2/N4HTvZqVTzi5/vTochTMCqIFV7FFYM/G0XXniYPj0cF408vXNfkM5W8vHGCeN
+         BDBrCAyFdy4FxnFmCdzKlQRQTTlKsG5aQBjlfB7I7C4KO/8hFjNqkcPgG0ASKtJSfGQA
+         Cn5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679040492;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4dp+t6FF1w1d0dhtj7ZFYXXkYT9FffZnaulCmc+9+Rk=;
+        b=v7bNvC10I6+Ezsul82Qp4ZKUg+c54XsKnX9iTKYZoUg4X370n93uz6kFyaF1UdJRck
+         9w5kQ32RxQ2JEMpmNOA8xu8ncBSFPnEkbGUMv8EAX5gQ2LyhxkvDGfJehva3Zi9Rdivx
+         qg8t/cdt0W/OFSn0fmeZBwJqQTBOb+VaeNOuONYGXr19/RYvNzo2cRFudjcAq/JrSmvB
+         YGgVjRgCdwExjASu9HhX2OLMEfWtdknhwONixEY+zY3VVlJDpD16khNIJhJaYxXkMkKV
+         JEg2tpYlfv+OuIwXZZ/dzzt6pRaUKvMsvsFKbt9321+x6DNmzEJ+4iKcwTXrM61p2JrX
+         hzog==
+X-Gm-Message-State: AO0yUKXKXiZ+kUBUDaVsc5Hz+U7fOHnWWoTK6Qe8o7QiMFCpHvSFDx6S
+	qtGjcwuAgA6sWv9F59+PlPyxWI7gtcp321qksEE=
+X-Google-Smtp-Source: AK7set/qfgBCc+OwzNmX5JKNSzIFIXYi0QNI3gcZMfquo4FhzQX2G1LtYuTOR4vriTahG0LEGl9jy0C+9VvNFcyMdA4=
+X-Received: by 2002:a2e:7316:0:b0:298:6f39:21de with SMTP id
+ o22-20020a2e7316000000b002986f3921demr747310ljc.3.1679040491882; Fri, 17 Mar
+ 2023 01:08:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+cAkeoPQSJqV_dJB_soCsd8av0u54C6BAx0zgXMcX3wC1eHBQ@mail.gmail.com>
+References: <20230316121249.28209-1-frederic.martinsons@gmail.com>
+ <20230316121249.28209-2-frederic.martinsons@gmail.com> <202303162224382628594e@mail.local>
+ <CA+cAkeoPQSJqV_dJB_soCsd8av0u54C6BAx0zgXMcX3wC1eHBQ@mail.gmail.com> <20230317075440fa660466@mail.local>
+In-Reply-To: <20230317075440fa660466@mail.local>
+From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
+Date: Fri, 17 Mar 2023 09:08:00 +0100
+Message-ID: <CA+cAkepXs-3_bGWWva8D3nQ2HFXhY1e0MWCHii02gT1Sd2cbaA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 2/3] python3-bcrypt: add crates checksums
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000150bd405f7141473"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 17 Mar 2023 07:54:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14600
+ <bitbake-devel@lists.openembedded.org>; Fri, 17 Mar 2023 08:08:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14601
 
-On 17/03/2023 07:27:41+0100, Fr�d�ric Martinsons wrote:
-> Argh :/
-> 
-> I tested with poky master (don't know if it was the right thing to do). Did
-> you apply
-> https://patchwork.yoctoproject.org/project/bitbake/patch/20230315131513.50635-1-frederic.martinsons@gmail.com/
-> 
+--000000000000150bd405f7141473
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-No, I don't carry this one as there were comments rejecting it
+On Fri, 17 Mar 2023 at 08:54, Alexandre Belloni <
+alexandre.belloni@bootlin.com> wrote:
 
-> and
-> https://patchwork.yoctoproject.org/project/bitbake/patch/20230316121215.28151-1-frederic.martinsons@gmail.com/
-> on bitbake ?
-> 
-> Sorry for that, I am not used to this workflow for submitting patches
-> through mails so I surely have made
-> mistakes and made things not clear
-> with dependencies between bitbake , openembedded-core and meta-openembedded.
-> 
-I would have preferred one complete series for bitbake and one for
-oe-core
-> 
-> 
-> On Thu, 16 Mar 2023 at 23:24, Alexandre Belloni <
-> alexandre.belloni@bootlin.com> wrote:
-> 
-> > Hi,
+> On 17/03/2023 07:27:41+0100, Fr=C3=A9d=C3=A9ric Martinsons wrote:
+> > Argh :/
 > >
-> > I carry this patch but this fails on the AB:
+> > I tested with poky master (don't know if it was the right thing to do).
+> Did
+> > you apply
 > >
+> https://patchwork.yoctoproject.org/project/bitbake/patch/20230315131513.5=
+0635-1-frederic.martinsons@gmail.com/
 > >
-> > https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/5059/steps/13/logs/stdio
-> >
-> > ERROR: python3-bcrypt-4.0.1-r0 do_fetch: No checksum specified for
-> > '/srv/autobuilder/autobuilder.yocto.io/current_sources/autocfg-1.1.0.crate',
-> > please add at least one to the recipe:
-> > SRC_URI[sha256sum] =
-> > "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
-> > ERROR: python3-bcrypt-4.0.1-r0 do_fetch: Bitbake Fetcher Error:
-> > NoChecksumError('Missing SRC_URI checksum', '
-> > https://crates.io/api/v1/crates/autocfg/1.1.0/download')
-> >
-> > On 16/03/2023 13:12:48+0100, Frederic Martinsons wrote:
-> > > From: Frederic Martinsons <frederic.martinsons@gmail.com>
-> > >
-> > > Signed-off-by: Frederic Martinsons <frederic.martinsons@gmail.com>
-> > > ---
-> > >  .../python/python3-bcrypt-crates.inc          | 149 ++++++++++++------
-> > >  1 file changed, 100 insertions(+), 49 deletions(-)
-> > >
-> > > diff --git a/meta/recipes-devtools/python/python3-bcrypt-crates.inc
-> > b/meta/recipes-devtools/python/python3-bcrypt-crates.inc
-> > > index 65c7765f0c..1ff66269c4 100644
-> > > --- a/meta/recipes-devtools/python/python3-bcrypt-crates.inc
-> > > +++ b/meta/recipes-devtools/python/python3-bcrypt-crates.inc
-> > > @@ -1,53 +1,104 @@
-> > >  # Autogenerated with 'bitbake -c update_crates python3-bcrypt'
-> > >
-> > > +# from src/_bcrypt/Cargo.lock
-> > >  SRC_URI += " \
-> > > -        crate://crates.io/autocfg/1.1.0 \
-> > > -        crate://crates.io/base64/0.13.0 \
-> > > -        crate://crates.io/bcrypt/0.13.0 \
-> > > -        crate://crates.io/bcrypt-pbkdf/0.8.1 \
-> > > -        crate://crates.io/bitflags/1.3.2 \
-> > > -        crate://crates.io/block-buffer/0.10.3 \
-> > > -        crate://crates.io/blowfish/0.9.1 \
-> > > -        crate://crates.io/byteorder/1.4.3 \
-> > > -        crate://crates.io/cfg-if/1.0.0 \
-> > > -        crate://crates.io/cipher/0.4.3 \
-> > > -        crate://crates.io/cpufeatures/0.2.5 \
-> > > -        crate://crates.io/crypto-common/0.1.6 \
-> > > -        crate://crates.io/digest/0.10.5 \
-> > > -        crate://crates.io/generic-array/0.14.6 \
-> > > -        crate://crates.io/getrandom/0.2.7 \
-> > > -        crate://crates.io/indoc/0.3.6 \
-> > > -        crate://crates.io/indoc-impl/0.3.6 \
-> > > -        crate://crates.io/inout/0.1.3 \
-> > > -        crate://crates.io/instant/0.1.12 \
-> > > -        crate://crates.io/libc/0.2.134 \
-> > > -        crate://crates.io/lock_api/0.4.9 \
-> > > -        crate://crates.io/once_cell/1.15.0 \
-> > > -        crate://crates.io/parking_lot/0.11.2 \
-> > > -        crate://crates.io/parking_lot_core/0.8.5 \
-> > > -        crate://crates.io/paste/0.1.18 \
-> > > -        crate://crates.io/paste-impl/0.1.18 \
-> > > -        crate://crates.io/pbkdf2/0.10.1 \
-> > > -        crate://crates.io/proc-macro-hack/0.5.19 \
-> > > -        crate://crates.io/proc-macro2/1.0.46 \
-> > > -        crate://crates.io/pyo3/0.15.2 \
-> > > -        crate://crates.io/pyo3-build-config/0.15.2 \
-> > > -        crate://crates.io/pyo3-macros/0.15.2 \
-> > > -        crate://crates.io/pyo3-macros-backend/0.15.2 \
-> > > -        crate://crates.io/quote/1.0.21 \
-> > > -        crate://crates.io/redox_syscall/0.2.16 \
-> > > -        crate://crates.io/scopeguard/1.1.0 \
-> > > -        crate://crates.io/sha2/0.10.6 \
-> > > -        crate://crates.io/smallvec/1.10.0 \
-> > > -        crate://crates.io/subtle/2.4.1 \
-> > > -        crate://crates.io/syn/1.0.102 \
-> > > -        crate://crates.io/typenum/1.15.0 \
-> > > -        crate://crates.io/unicode-ident/1.0.4 \
-> > > -        crate://crates.io/unindent/0.1.10 \
-> > > -        crate://crates.io/version_check/0.9.4 \
-> > > -        crate://crates.io/wasi/0.11.0+wasi-snapshot-preview1 \
-> > > -        crate://crates.io/winapi/0.3.9 \
-> > > -        crate://crates.io/winapi-i686-pc-windows-gnu/0.4.0 \
-> > > -        crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
-> > > -        crate://crates.io/zeroize/1.5.7 \
-> > > +    crate://crates.io/autocfg/1.1.0 \
-> > > +    crate://crates.io/base64/0.13.0 \
-> > > +    crate://crates.io/bcrypt/0.13.0 \
-> > > +    crate://crates.io/bcrypt-pbkdf/0.8.1 \
-> > > +    crate://crates.io/bitflags/1.3.2 \
-> > > +    crate://crates.io/block-buffer/0.10.3 \
-> > > +    crate://crates.io/blowfish/0.9.1 \
-> > > +    crate://crates.io/byteorder/1.4.3 \
-> > > +    crate://crates.io/cfg-if/1.0.0 \
-> > > +    crate://crates.io/cipher/0.4.3 \
-> > > +    crate://crates.io/cpufeatures/0.2.5 \
-> > > +    crate://crates.io/crypto-common/0.1.6 \
-> > > +    crate://crates.io/digest/0.10.5 \
-> > > +    crate://crates.io/generic-array/0.14.6 \
-> > > +    crate://crates.io/getrandom/0.2.7 \
-> > > +    crate://crates.io/indoc/0.3.6 \
-> > > +    crate://crates.io/indoc-impl/0.3.6 \
-> > > +    crate://crates.io/inout/0.1.3 \
-> > > +    crate://crates.io/instant/0.1.12 \
-> > > +    crate://crates.io/libc/0.2.134 \
-> > > +    crate://crates.io/lock_api/0.4.9 \
-> > > +    crate://crates.io/once_cell/1.15.0 \
-> > > +    crate://crates.io/parking_lot/0.11.2 \
-> > > +    crate://crates.io/parking_lot_core/0.8.5 \
-> > > +    crate://crates.io/paste/0.1.18 \
-> > > +    crate://crates.io/paste-impl/0.1.18 \
-> > > +    crate://crates.io/pbkdf2/0.10.1 \
-> > > +    crate://crates.io/proc-macro-hack/0.5.19 \
-> > > +    crate://crates.io/proc-macro2/1.0.46 \
-> > > +    crate://crates.io/pyo3/0.15.2 \
-> > > +    crate://crates.io/pyo3-build-config/0.15.2 \
-> > > +    crate://crates.io/pyo3-macros/0.15.2 \
-> > > +    crate://crates.io/pyo3-macros-backend/0.15.2 \
-> > > +    crate://crates.io/quote/1.0.21 \
-> > > +    crate://crates.io/redox_syscall/0.2.16 \
-> > > +    crate://crates.io/scopeguard/1.1.0 \
-> > > +    crate://crates.io/sha2/0.10.6 \
-> > > +    crate://crates.io/smallvec/1.10.0 \
-> > > +    crate://crates.io/subtle/2.4.1 \
-> > > +    crate://crates.io/syn/1.0.102 \
-> > > +    crate://crates.io/typenum/1.15.0 \
-> > > +    crate://crates.io/unicode-ident/1.0.4 \
-> > > +    crate://crates.io/unindent/0.1.10 \
-> > > +    crate://crates.io/version_check/0.9.4 \
-> > > +    crate://crates.io/wasi/0.11.0+wasi-snapshot-preview1 \
-> > > +    crate://crates.io/winapi/0.3.9 \
-> > > +    crate://crates.io/winapi-i686-pc-windows-gnu/0.4.0 \
-> > > +    crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
-> > > +    crate://crates.io/zeroize/1.5.7 \
-> > >  "
-> > > +
-> > > +SRC_URI[autocfg.sha256sum] =
-> > "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
-> > > +SRC_URI[base64.sha256sum] =
-> > "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
-> > > +SRC_URI[bcrypt.sha256sum] =
-> > "a7e7c93a3fb23b2fdde989b2c9ec4dd153063ec81f408507f84c090cd91c6641"
-> > > +SRC_URI[bcrypt-pbkdf.sha256sum] =
-> > "f4ef233ffa9cb9c7820b2b0e9efd0821ed180e866c9120ec9f45518659742074"
-> > > +SRC_URI[bitflags.sha256sum] =
-> > "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
-> > > +SRC_URI[block-buffer.sha256sum] =
-> > "69cce20737498f97b993470a6e536b8523f0af7892a4f928cceb1ac5e52ebe7e"
-> > > +SRC_URI[blowfish.sha256sum] =
-> > "e412e2cd0f2b2d93e02543ceae7917b3c70331573df19ee046bcbc35e45e87d7"
-> > > +SRC_URI[byteorder.sha256sum] =
-> > "14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610"
-> > > +SRC_URI[cfg-if.sha256sum] =
-> > "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
-> > > +SRC_URI[cipher.sha256sum] =
-> > "d1873270f8f7942c191139cb8a40fd228da6c3fd2fc376d7e92d47aa14aeb59e"
-> > > +SRC_URI[cpufeatures.sha256sum] =
-> > "28d997bd5e24a5928dd43e46dc529867e207907fe0b239c3477d924f7f2ca320"
-> > > +SRC_URI[crypto-common.sha256sum] =
-> > "1bfb12502f3fc46cca1bb51ac28df9d618d813cdc3d2f25b9fe775a34af26bb3"
-> > > +SRC_URI[digest.sha256sum] =
-> > "adfbc57365a37acbd2ebf2b64d7e69bb766e2fea813521ed536f5d0520dcf86c"
-> > > +SRC_URI[generic-array.sha256sum] =
-> > "bff49e947297f3312447abdca79f45f4738097cc82b06e72054d2223f601f1b9"
-> > > +SRC_URI[getrandom.sha256sum] =
-> > "4eb1a864a501629691edf6c15a593b7a51eebaa1e8468e9ddc623de7c9b58ec6"
-> > > +SRC_URI[indoc.sha256sum] =
-> > "47741a8bc60fb26eb8d6e0238bbb26d8575ff623fdc97b1a2c00c050b9684ed8"
-> > > +SRC_URI[indoc-impl.sha256sum] =
-> > "ce046d161f000fffde5f432a0d034d0341dc152643b2598ed5bfce44c4f3a8f0"
-> > > +SRC_URI[inout.sha256sum] =
-> > "a0c10553d664a4d0bcff9f4215d0aac67a639cc68ef660840afe309b807bc9f5"
-> > > +SRC_URI[instant.sha256sum] =
-> > "7a5bbe824c507c5da5956355e86a746d82e0e1464f65d862cc5e71da70e94b2c"
-> > > +SRC_URI[libc.sha256sum] =
-> > "329c933548736bc49fd575ee68c89e8be4d260064184389a5b77517cddd99ffb"
-> > > +SRC_URI[lock_api.sha256sum] =
-> > "435011366fe56583b16cf956f9df0095b405b82d76425bc8981c0e22e60ec4df"
-> > > +SRC_URI[once_cell.sha256sum] =
-> > "e82dad04139b71a90c080c8463fe0dc7902db5192d939bd0950f074d014339e1"
-> > > +SRC_URI[parking_lot.sha256sum] =
-> > "7d17b78036a60663b797adeaee46f5c9dfebb86948d1255007a1d6be0271ff99"
-> > > +SRC_URI[parking_lot_core.sha256sum] =
-> > "d76e8e1493bcac0d2766c42737f34458f1c8c50c0d23bcb24ea953affb273216"
-> > > +SRC_URI[paste.sha256sum] =
-> > "45ca20c77d80be666aef2b45486da86238fabe33e38306bd3118fe4af33fa880"
-> > > +SRC_URI[paste-impl.sha256sum] =
-> > "d95a7db200b97ef370c8e6de0088252f7e0dfff7d047a28528e47456c0fc98b6"
-> > > +SRC_URI[pbkdf2.sha256sum] =
-> > "271779f35b581956db91a3e55737327a03aa051e90b1c47aeb189508533adfd7"
-> > > +SRC_URI[proc-macro-hack.sha256sum] =
-> > "dbf0c48bc1d91375ae5c3cd81e3722dff1abcf81a30960240640d223f59fe0e5"
-> > > +SRC_URI[proc-macro2.sha256sum] =
-> > "94e2ef8dbfc347b10c094890f778ee2e36ca9bb4262e86dc99cd217e35f3470b"
-> > > +SRC_URI[pyo3.sha256sum] =
-> > "d41d50a7271e08c7c8a54cd24af5d62f73ee3a6f6a314215281ebdec421d5752"
-> > > +SRC_URI[pyo3-build-config.sha256sum] =
-> > "779239fc40b8e18bc8416d3a37d280ca9b9fb04bda54b98037bb6748595c2410"
-> > > +SRC_URI[pyo3-macros.sha256sum] =
-> > "00b247e8c664be87998d8628e86f282c25066165f1f8dda66100c48202fdb93a"
-> > > +SRC_URI[pyo3-macros-backend.sha256sum] =
-> > "5a8c2812c412e00e641d99eeb79dd478317d981d938aa60325dfa7157b607095"
-> > > +SRC_URI[quote.sha256sum] =
-> > "bbe448f377a7d6961e30f5955f9b8d106c3f5e449d493ee1b125c1d43c2b5179"
-> > > +SRC_URI[redox_syscall.sha256sum] =
-> > "fb5a58c1855b4b6819d59012155603f0b22ad30cad752600aadfcb695265519a"
-> > > +SRC_URI[scopeguard.sha256sum] =
-> > "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
-> > > +SRC_URI[sha2.sha256sum] =
-> > "82e6b795fe2e3b1e845bafcb27aa35405c4d47cdfc92af5fc8d3002f76cebdc0"
-> > > +SRC_URI[smallvec.sha256sum] =
-> > "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
-> > > +SRC_URI[subtle.sha256sum] =
-> > "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
-> > > +SRC_URI[syn.sha256sum] =
-> > "3fcd952facd492f9be3ef0d0b7032a6e442ee9b361d4acc2b1d0c4aaa5f613a1"
-> > > +SRC_URI[typenum.sha256sum] =
-> > "dcf81ac59edc17cc8697ff311e8f5ef2d99fcbd9817b34cec66f90b6c3dfd987"
-> > > +SRC_URI[unicode-ident.sha256sum] =
-> > "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
-> > > +SRC_URI[unindent.sha256sum] =
-> > "58ee9362deb4a96cef4d437d1ad49cffc9b9e92d202b6995674e928ce684f112"
-> > > +SRC_URI[version_check.sha256sum] =
-> > "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
-> > > +SRC_URI[wasi.sha256sum] =
-> > "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
-> > > +SRC_URI[winapi.sha256sum] =
-> > "5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419"
-> > > +SRC_URI[winapi-i686-pc-windows-gnu.sha256sum] =
-> > "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
-> > > +SRC_URI[winapi-x86_64-pc-windows-gnu.sha256sum] =
-> > "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
-> > > +SRC_URI[zeroize.sha256sum] =
-> > "c394b5bd0c6f669e7275d9c20aa90ae064cb22e75a1cad54e1b34088034b149f"
-> > > --
-> > > 2.34.1
-> > >
-> >
-> > >
-> > > -=-=-=-=-=-=-=-=-=-=-=-
-> > > Links: You receive all messages sent to this group.
-> > > View/Reply Online (#14585):
-> > https://lists.openembedded.org/g/bitbake-devel/message/14585
-> > > Mute This Topic: https://lists.openembedded.org/mt/97648804/3617179
-> > > Group Owner: bitbake-devel+owner@lists.openembedded.org
-> > > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> > alexandre.belloni@bootlin.com]
-> > > -=-=-=-=-=-=-=-=-=-=-=-
-> > >
-> >
-> >
-> > --
-> > Alexandre Belloni, co-owner and COO, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
-> >
+>
+> No, I don't carry this one as there were comments rejecting it
+>
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Ah ? It seems to me the latest comments on it was a go for applying.
+
+
+> > and
+> >
+> https://patchwork.yoctoproject.org/project/bitbake/patch/20230316121215.2=
+8151-1-frederic.martinsons@gmail.com/
+> > on bitbake ?
+> >
+> > Sorry for that, I am not used to this workflow for submitting patches
+> > through mails so I surely have made
+> > mistakes and made things not clear
+> > with dependencies between bitbake , openembedded-core and
+> meta-openembedded.
+> >
+> I would have preferred one complete series for bitbake and one for
+> oe-core
+>
+
+Yes, I'll resubmit a complete series to bitbake-devel, that will be cleaner=
+.
+
+--000000000000150bd405f7141473
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
+<div dir=3D"ltr" class=3D"gmail_attr">On Fri, 17 Mar 2023 at 08:54, Alexand=
+re Belloni &lt;<a href=3D"mailto:alexandre.belloni@bootlin.com">alexandre.b=
+elloni@bootlin.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote=
+" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);=
+padding-left:1ex">On 17/03/2023 07:27:41+0100, Fr=C3=A9d=C3=A9ric Martinson=
+s wrote:<br>
+&gt; Argh :/<br>
+&gt; <br>
+&gt; I tested with poky master (don&#39;t know if it was the right thing to=
+ do). Did<br>
+&gt; you apply<br>
+&gt; <a href=3D"https://patchwork.yoctoproject.org/project/bitbake/patch/20=
+230315131513.50635-1-frederic.martinsons@gmail.com/" rel=3D"noreferrer" tar=
+get=3D"_blank">https://patchwork.yoctoproject.org/project/bitbake/patch/202=
+30315131513.50635-1-frederic.martinsons@gmail.com/</a><br>
+&gt; <br>
+<br>
+No, I don&#39;t carry this one as there were comments rejecting it<br></blo=
+ckquote><div><br></div><div>Ah ? It seems to me the latest comments on it w=
+as a go for applying.</div><div>=C2=A0</div><blockquote class=3D"gmail_quot=
+e" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204)=
+;padding-left:1ex">
+&gt; and<br>
+&gt; <a href=3D"https://patchwork.yoctoproject.org/project/bitbake/patch/20=
+230316121215.28151-1-frederic.martinsons@gmail.com/" rel=3D"noreferrer" tar=
+get=3D"_blank">https://patchwork.yoctoproject.org/project/bitbake/patch/202=
+30316121215.28151-1-frederic.martinsons@gmail.com/</a><br>
+&gt; on bitbake ?<br>
+&gt; <br>
+&gt; Sorry for that, I am not used to this workflow for submitting patches<=
+br>
+&gt; through mails so I surely have made<br>
+&gt; mistakes and made things not clear<br>
+&gt; with dependencies between bitbake , openembedded-core and meta-openemb=
+edded.<br>
+&gt; <br>
+I would have preferred one complete series for bitbake and one for<br>
+oe-core<br></blockquote><div><br></div><div>Yes, I&#39;ll resubmit a comple=
+te series to bitbake-devel, that will be cleaner.</div></div></div>
+
+--000000000000150bd405f7141473--
 
