@@ -1,563 +1,261 @@
-Return-Path: <frederic.martinsons@gmail.com>
+Return-Path: <thilo.cestonaro@thalesgroup.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7A9C6FD20
-	for <webhook@archiver.kernel.org>; Tue, 21 Mar 2023 19:51:49 +0000 (UTC)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
- by mx.groups.io with SMTP id smtpd.web10.24456.1679428301407190071
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FEFC7619A
+	for <webhook@archiver.kernel.org>; Wed, 22 Mar 2023 08:37:22 +0000 (UTC)
+Received: from thsbbfxrt02p.thalesgroup.com (thsbbfxrt02p.thalesgroup.com [192.93.158.29])
+ by mx.groups.io with SMTP id smtpd.web11.37675.1679474240805521304
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 21 Mar 2023 12:51:41 -0700
+ Wed, 22 Mar 2023 01:37:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=N1Te+N27;
- spf=pass (domain: gmail.com, ip: 209.85.167.49, mailfrom: frederic.martinsons@gmail.com)
-Received: by mail-lf1-f49.google.com with SMTP id c29so3107243lfv.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 21 Mar 2023 12:51:41 -0700 (PDT)
+ dkim=pass header.i=@thalesgroup.com header.s=xrt20181201 header.b=RrMxW1Yh;
+ spf=pass (domain: thalesgroup.com, ip: 192.93.158.29, mailfrom: thilo.cestonaro@thalesgroup.com)
+Received: from thsbbfxrt02p.thalesgroup.com (localhost [127.0.0.1])
+	by localhost (Postfix) with SMTP id 4PhMKV2s8rzJpw3
+	for <bitbake-devel@lists.openembedded.org>; Wed, 22 Mar 2023 09:37:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thalesgroup.com;
+	s=xrt20181201; t=1679474238;
+	bh=gOAN3G8N0AzvAeGa1I/VMpbL3kKjZHAtzEErnWODwic=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:From;
+	b=RrMxW1YhgAmyw5kudjs5vdccMTkqhLWWMnD0LeOpACk3ePJqrstSVVU80PQf9axv3
+	 du7qLOlA4OorooxkpcBtym9cUBnif2E4WGiV6xpYDvno9CSKTakh/Mxm5RXnPQXhZF
+	 dkfrywqmii8qC8Aj2Nps93mlkoQFimdY8nQOyRiZUpYC9uvjcgR9i9ccmGwH+1h4aN
+	 svngOflXjTDJWcWBejVPZlUwtGNYQkGngQZPwthL88j+5PVG5/U7nzxr+H9WudE6bS
+	 Bob8TIr9r02sXBP/Qa6SiBZXulxgEktHwyMLATUYno/pys/6hzJT1RgBmFueGRZXWB
+	 dPJY79kXcfjTA==
+Authentication-Results: thsbbfxss02p.thalesgroup.com;
+	dkim=pass (1024-bit key; unprotected) header.d=thalesgroup.onmicrosoft.com header.i=@thalesgroup.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-thalesgroup-onmicrosoft-com header.b=Hr0lO9b3;
+	dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ty/t8ByiMNpVs8duyXFxC/c7Gm/zH5+fqZGr48sctVCSMJVu5H+8+LtORXNbj3z837ejnAsKVlAxbprJRlZYtGS4OU9ioQUcXUd5lQXuP1LNzxrZdQqA9gJwCLePS1g1C4X6jXAKhc/ECVgELQJ3DYJ6Km3TDTbmpqlYQ0hIClQaXhdYlMKasRFHbDrD+qJK1vmyNo3GZam3q1flB3PqLLfqPbAv7OWMYaae7RgFt48Wfy2c90zgXWi0Re77O2H4q07cibV2C/Ea9RcFNcq/SZt4QvDb7gGi2LM41OtjeyTh4NU8q1Cn+ciUmrfqHseP2W6ntwe9W6zLRrt+YfSiug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gOAN3G8N0AzvAeGa1I/VMpbL3kKjZHAtzEErnWODwic=;
+ b=n4bu+qFwBHHMTd56cmhzl+aNLXr/DFVARaVe+o1E4v2Udayn4yH32WjHQaMQFgAkBV2ckAoL1qiIjNUzbC/ai3z2+ySoSRkt9JsxGcISr2AI87Dqav1EIFBH0wmmP/oaQevX/wbDv6uAaUHl5G3wkGVXYTr6ZU3kLXGCVRX62zaJ3f8rsmJbwEPzvLY2F7zWA06QSZua29IMUsjQFFAyCMRLkulxfsLwNR/neTA7ijI0uW7Dxe5u7KLSRVJVfeZkvVkckW03Mv39jS+jZ9p+NSBwl9y/DAUuzE83D6AQK8jpf8NHq+4nqKnWH+AAUMhxadrrQxYey5jYggx24WjPqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=thalesgroup.com; dmarc=pass action=none
+ header.from=thalesgroup.com; dkim=pass header.d=thalesgroup.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679428299;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YSel2L0vP7gzZsMD6PsGl7Y8YrszWUIZL32QJqKa5zw=;
-        b=N1Te+N27I4oTFghQHnUs2xmv2mQT0o4OAiLmWkj2Dw2whtxO4xcVC/KEn7twFmaOhE
-         Ttk9iB1rq7kZWC5zjjf1Yl+ecbir/jlwp36tY0wdyQ5ZWZ00kL341639NsxQDysYGJo7
-         lSQVhCat1kvaYahxPWJw8ogdQko9lFpsqn5EnY947eM3LAJalbxV40dHmUgzwCOFd9F4
-         UqOQT2qqEFa7u7g09zuyLSe51ChoQapBqaaPh9mMxpymNRWZ6NEJwWUNc0lZIMljolRI
-         AY12PpCeBquM2XEZUgUSBQA5JgtXgoRbnrHO4mLn20a3ndHrOI9hmkNj/Oskx2mI65Xm
-         dV5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679428299;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YSel2L0vP7gzZsMD6PsGl7Y8YrszWUIZL32QJqKa5zw=;
-        b=HVXnwWtZNfrhSUxGk/R30StGIfvK6m3mbOXsraI5ASvsNKT7ADUt5kEBPdgq++MS8s
-         fWVsGXxA5d0ywHzlZgWOgN/MDy5qSnblknqGkmfiH7CA907Qw6v0PBxYh99QrC3ofTYS
-         3lgh2AxHJ8mHgP4whI1hkomAoBivkWnr87k00WbHkX5l1gRWPM3BiiNvbnXrKwPIdYk0
-         lzHCUWwXkMHeu7LYx7JjwVvRjwiWKtIvVHt7CQ0+4oJo9oTJ1vHOR7aY+lHkZfxWv3PZ
-         meACl51UfDThGY6sEz4QlapaPggtOqADrjPxKCpGXy49JZHiF8nAKXFxHOp2LkNUvLhU
-         tOEw==
-X-Gm-Message-State: AO0yUKX+eDKknvP+a9uVPc7kB2vCnjNQ56Y6LKEb7EzpmSRyZ6CEjGsz
-	bsoebqWRA1blR0UihCjdLay9slr6y51ftxhz1Tk=
-X-Google-Smtp-Source: AK7set/umYxUgSsDbiM7dg5ps8gyCynlishNwKoxjSgDwIHoQ007Ltm+WsbqLTi04ncA2aSwPZZdAkvVof5i2pOpH/w=
-X-Received: by 2002:ac2:508b:0:b0:4db:38ba:618d with SMTP id
- f11-20020ac2508b000000b004db38ba618dmr1158405lfm.12.1679428299213; Tue, 21
- Mar 2023 12:51:39 -0700 (PDT)
+ d=thalesgroup.onmicrosoft.com; s=selector2-thalesgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gOAN3G8N0AzvAeGa1I/VMpbL3kKjZHAtzEErnWODwic=;
+ b=Hr0lO9b3CgrPOd4ReayRLK+LeEFh7USrWfQRSa3ty2kfjjggj6fNIoSmNHlGVtjfYQYzNJQViqdF7o2auv7E1yPrnKa79IO/Q1Ux5AHZmTdBg9wEoAd5ktxVfh8q2yvhaeEiFIobSnQL81x11H4gMdpTRo3N0yU0DylRo+w0upc=
+From: CESTONARO Thilo <thilo.cestonaro@thalesgroup.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+CC: CESTONARO Thilo <thilo.cestonaro@thalesgroup.com>
+Subject: [PATCH] bitbake: git fetcher: use urllib quote ...
+Thread-Topic: [PATCH] bitbake: git fetcher: use urllib quote ...
+Thread-Index: AQHZXJldf+QDsiopm0ivvHOyUnSaEg==
+Date: Wed, 22 Mar 2023 08:37:15 +0000
+Message-ID: 
+ <PR0P264MB1882D9E54AD24DF72B9E65E5E9869@PR0P264MB1882.FRAP264.PROD.OUTLOOK.COM>
+Accept-Language: de-CH, en-US
+Content-Language: de-CH
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=thalesgroup.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PR0P264MB1882:EE_|MRZP264MB3098:EE_
+x-ms-office365-filtering-correlation-id: 208bc9cf-6335-485d-7963-08db2ab0a3c0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ sLBjsoBQx3vH6G5joVEEpA0xYURGDrt6tfgzzyau38EYOMk6Ru2m3jNvzP1lsXpJt5VYSN8ZuQ7nCkRwLexU9QiFOsg9mbaccz1EM4QYxMe+77LbxZs5AKsvK6eYzYlQHShPKriaqQXZ108RdesDioY6bG2T0xd52kVKh2DLHi2ylAyNQ+TG732AjxJPbbFW1/ZzerfTKB0SMd4tFmMoZcClbz33QY15BcF82czjJt6tlaqj4mpb3mPt9m1/BVxGCSQMbD0v5DBnAjvCufY91Sy69+vtL4jQADA1EOuQ3zPqGS05X7tUpxHVcJGa6XHvmLhSS/7D7FgHZ+ZDQPKeyvSytOtYJDQuEVbBAS/hkfwNAF3OsQtEMr1iVsdkk9nKSv3K03ptyZU6284QCIsTWMbtpatwTesDb5auOFJGwu6dFO0B3gEKUVw9+CMNwNej7OS4OvfxxusLE8KYwRRGRCjD+V/f7jqsehscSIHEGtjnb2ZvBaZBRk8EH738XKxD56rMzOIqNrYX4Ifl987Zy7abGmlkAr0XkRrvt/auvVNAeNmhBj27AfSgKwJUjyFlDro/YPVVnOKZQ3JBl1yPd+Gi31i+Rri9srJX71IV8dPCCZw29v9qP2mwYSbFhHnEeIrAa726fzJBKvCu0aa4U0uXGBP4Zadi42DHqdFG72Fz+tjGGt27LOqzcOltIUs0TGXGqb+DduWc2DsrDTeHhw==
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR0P264MB1882.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(376002)(39860400002)(136003)(366004)(451199018)(52536014)(8936002)(5660300002)(41300700001)(55016003)(82960400001)(33656002)(38070700005)(86362001)(38100700002)(122000001)(2906002)(4326008)(186003)(83380400001)(478600001)(107886003)(7696005)(9686003)(71200400001)(6506007)(26005)(19627405001)(316002)(8676002)(91956017)(76116006)(66446008)(6916009)(66946007)(66476007)(64756008)(66556008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?iso-8859-1?Q?CKezBTx0WJx9xtouH5Rg9+pVjlqBcERfOZ1Lar09FQDCd9OZpAzfK3rM/M?=
+ =?iso-8859-1?Q?Qw5xqnIQMUhOy5AWj/8QURcaMdlCDoffZNMVDbNSNltwPDnxr4Cs3J3R6z?=
+ =?iso-8859-1?Q?2LtY7MJtLBUvGKV//NXR+pj7g28Ee5V59M2FsYF8wtQtyMe1hbUe5Qv52S?=
+ =?iso-8859-1?Q?D8ipyqftAcnr6D/JMPOQ8OpJNH0wa0H2fafVrfsGZ3ush7lAE8Fviq7Ks9?=
+ =?iso-8859-1?Q?laSqE0knsKSFP88B5GJKheJIxJKM/UL6SK69tXH0RYLPqGMP/poYC9M4sW?=
+ =?iso-8859-1?Q?IBgXUXyDdlG6trrR9jVUIVKdRvqndTgyvnJyDw7hkH0HSKE2VjIsWb1Tfc?=
+ =?iso-8859-1?Q?8pBTNH82FzCWkmnXWSM7IYJmWaSFQ7moSHS4zqCCGgFH6ARd4A/NpvJGYd?=
+ =?iso-8859-1?Q?LedQsLds4XxJ6ux3phFJuDG0a59t/Tql4myzbSUtI8/MtRlXwrve4He7Ok?=
+ =?iso-8859-1?Q?S4+EpSfA6ZEx2mBmLPmnpxtDGKTb4rfEvnEBFU1dtLFg3UshhtD9m7ag5x?=
+ =?iso-8859-1?Q?K98aUGlb+C28pBn0bbmt+Zy6UF+AsViSqbT6trP5zbvD0aI3XiH6E5MHm2?=
+ =?iso-8859-1?Q?Z4AyuPs7SzVXoO3GgEBgN7o1tiDoaXd4pUQjQPgLq8h/Adaa9zU45yUzD/?=
+ =?iso-8859-1?Q?n73jJ3r5sNVJdE345aBOuNGu+PZiI98ewGgwOSAmOUBjTX01HXGQZfR5w+?=
+ =?iso-8859-1?Q?UGvSLDPsUSqXTggT3gCoajNko4H05sk/ek6XbxHnb6i3+1ZK7G+yKe/8M+?=
+ =?iso-8859-1?Q?NrrKRTlANPf8ehijFVOWotVC62LwicIwKJbVfRT4tPmzOQXqkvof4StzGZ?=
+ =?iso-8859-1?Q?0CzkiLksKauafy4qFEYpJw82RF8WG+Urr1ttaRAPAZKPxq079ysJh+2MdX?=
+ =?iso-8859-1?Q?R2PtvSbBv+9n2OZQ9tsrCWfmDwr8uPfqeAU0yBzdo5PsD3k5DSOx3c1uWn?=
+ =?iso-8859-1?Q?Vt99oy2dkULVM3vboHywUbm+N6wcazOOlTfjlV9/secOIiI3He2j3GsFAv?=
+ =?iso-8859-1?Q?2zUO7h5i0s+XydRgiDC/RdQX7HH1u/cbP3BbmR7eT96BjxjYzMgoRYdWz+?=
+ =?iso-8859-1?Q?QZhqWKAw93YKUFptOxoMuzEsmCDCn8QeP2s8UVa73uehxIPQVt93xp/e7M?=
+ =?iso-8859-1?Q?V0xy5XTwei2ZwV5+KyQ/vCT4c0Y/Yrtl3V0YBSYIU4HcybxAQHF89yMs5J?=
+ =?iso-8859-1?Q?Ej0Vra8KzXJCXGAQo5jZYbK9F2/vqS0SSJw9k2gfyTL/7kxDX+bRottl5a?=
+ =?iso-8859-1?Q?82ePUzDzN43Kdc+liXiO6hD8cizJlqECs4bZxyshNv6TVFgf9owQyuH84y?=
+ =?iso-8859-1?Q?mK4MxPYB/IYkLK3RV4EXUS7YRQouMQfDUHiNhybg6NVdk1xdHXgDes8T9t?=
+ =?iso-8859-1?Q?IGF275QK+sIrWbikm5E+fMpLNksjiHYPnL4JSCx1rGNIaB5K420ek9h88P?=
+ =?iso-8859-1?Q?+ekdLEaWiNT9847sv0dcWJGCjyKntLrszmCX+wdxPzDhNt4ckh18IdOdpG?=
+ =?iso-8859-1?Q?qyc9+ZnDFBB6F03D1DwD0bdHiaFU6mMw6BLjXKm0ikjJMz3hsTYo2+rdrx?=
+ =?iso-8859-1?Q?hW8saWB7HpXPvsNc4NXKfaWOPWIzpw/+fsvuiE/sGDbbs0hH4QJMXgn/m3?=
+ =?iso-8859-1?Q?VZFZM8w07it6tUuMPrtZty+BqQiPf62jIo3t1l4SfI6o+rO08tBc29+w?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: multipart/alternative;
+	boundary="_000_PR0P264MB1882D9E54AD24DF72B9E65E5E9869PR0P264MB1882FRAP_"
 MIME-Version: 1.0
-References: <20230317081916.1857201-1-frederic.martinsons@gmail.com>
- <CA+cAkep0W_Jjvvpg2OEm+DE6SDUB98-OnghOyytijbU1qC1B2A@mail.gmail.com>
- <CA+cAkeptpiiEmx=JdevFu3_gg5gn0+mBjKs6VJ4wdMgG_79Xsw@mail.gmail.com> <CANNYZj8QH=et-KTCU=d23Dm4Px7RdKjR5HHFctvKgCTBKPYKJw@mail.gmail.com>
-In-Reply-To: <CANNYZj8QH=et-KTCU=d23Dm4Px7RdKjR5HHFctvKgCTBKPYKJw@mail.gmail.com>
-From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
-Date: Tue, 21 Mar 2023 20:51:27 +0100
-Message-ID: <CA+cAkerq3f1naj61+EDLLqa=4_S-nnvFLfcVW=VRdqgk_3ZQBg@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH v2 1/3] fetch2: Add checksum capability for
- crate fetcher
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="0000000000003352ee05f76e5fb4"
+X-OriginatorOrg: Thalesgroup.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PR0P264MB1882.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 208bc9cf-6335-485d-7963-08db2ab0a3c0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2023 08:37:15.2655
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6e603289-5e46-4e26-ac7c-03a85420a9a5
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aShlKuk1jPURqjOpuM4FVpsDGKUlSyF/Gb0gIS/BS+tGovPxazLIoxmsMJgxq0o6fx1cpNjAvQgip8Blv2Pv9Lz7oTJeqFt35hTpvGHEENM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MRZP264MB3098
+X-PMX-Version: 6.4.8.2820816, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2023.3.22.83017, AntiVirus-Engine: 5.98.0, AntiVirus-Data: 2023.3.21.5980001
+X-Sophos-SenderHistory: ip=104.47.24.105,fs=27340,da=128188768,mc=800,sc=1,hc=799,sp=0,fso=127156493,re=155,sd=0,hd=30
+X-PMX-Spam: Gauge=X, Probability=10%, Report='
+ OBFU_SHORT_10CHARS 0.5, HTML_50_70 0.1, HTML_NO_HTTP 0.1, BODYTEXTH_SIZE_10000_LESS 0, BODYTEXTH_SIZE_3000_MORE 0, BODYTEXTP_SIZE_3000_LESS 0, BODY_SIZE_5000_5999 0, BODY_SIZE_7000_LESS 0, DKIM_SIGNATURE 0, DQ_S_H 0, KNOWN_MTA_TFX 0, NO_CTA_URI_FOUND 0, NO_URI_HTTPS 0, OBFUSCATION 0, SPF_SOFTFAIL 0, SXL_IP_TFX_WM 0, TEXT_DIRECTION 0, TEXT_DIR_LTR_ONLY 0, TO_NAME_IS_ADDY 0, WEBMAIL_SOURCE 0, __ANY_URI 0, __ARCAUTH_DKIM_PASSED 0, __ARCAUTH_DMARC_PASSED 0, __ARCAUTH_PASSED 0, __ARC_SEAL_MICROSOFT 0, __ARC_SIGNATURE_MICROSOFT 0, __AUTH_RES_DKIM_PASS 0, __BODY_NO_MAILTO 0, __BODY_TEXT_X4 0, __CC_NAME 0, __CC_NAME_DIFF_FROM_ACC 0, __CC_REAL_NAMES 0, __CT 0, __CTYPE_HAS_BOUNDARY 0, __CTYPE_MULTIPART 0, __CTYPE_MULTIPART_ALT 0, __DC_PHRASE 0, __DQ_IP_FSO_LARGE 0, __DQ_NEG_DOMAIN 0, __DQ_NEG_HEUR 0, __DQ_NEG_IP 0, __DQ_S_HIST_1 0, __DQ_S_IP_100K 0, __DQ_S_IP_1MO 0, __DQ_S_IP_2D 0,
+ __DQ_S_IP_HD_10_P 0, __DQ_S_IP_MC_100_P 0, __DQ_S_IP_MC_10_P 0, __DQ_S_IP_MC_1_P 0, __DQ_S_IP_MC_5_P 0, __DQ_S_IP_RE_100_P 0, __DQ_S_IP_SC_1_P 0, __DQ_S_IP_SP_0_P 0, __FROM_DOMAIN_IN_ANY_CC1 0, __FROM_DOMAIN_IN_RCPT 0, __FROM_NAME_NOT_IN_BODY 0, __FUR_HEADER 0, __FUR_RDNS_OUTLOOK 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_HTML 0, __HAS_MSGID 0, __HAS_X_FF_ASR 0, __HAS_X_FF_ASR_CAT 0, __HAS_X_FF_ASR_SFV 0, __HIDDEN_HTML_CONTENT 0, __HTML_ATTR_DIR 0, __HTML_DIR_LTR 0, __HTML_ENTITIES_X4 0, __HTML_TAG_DIV 0, __INVOICE_MULTILINGUAL 0, __MIME_HTML 0, __MIME_TEXT_H 0, __MIME_TEXT_H1 0, __MIME_TEXT_H2 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_TEXT_P2 0, __MIME_VERSION 0, __RDNS_WEBMAIL 0, __SANE_MSGID 0, __STOCK_PHRASE_7 0, __STYLE_RATWARE_NEG 0, __STYLE_TAG 0, __SUBJ_ALPHA_NEGATE 0, __SUBJ_STARTS_S_BRACKETS 0, __TAG_EXISTS_HTML 0, __TEXT_DIR_LTR 0, __TO_MALFORMED_2 0, __TO_NAME 0,
+ __TO_NO_NAME 0, __URI_MAILTO 0, __URI_NO_WWW 0, __URI_NS , __X_FF_ASR_SCL_NSP 0, __X_FF_ASR_SFV_NSPM 0'
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 21 Mar 2023 19:51:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14611
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 Mar 2023 08:37:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14612
 
---0000000000003352ee05f76e5fb4
-Content-Type: text/plain; charset="UTF-8"
+--_000_PR0P264MB1882D9E54AD24DF72B9E65E5E9869PR0P264MB1882FRAP_
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-I'm asking because I had a feedback from abelloni about the patch series to
-update
-openembedded-core concerning a build failure (
-https://lists.openembedded.org/g/bitbake-devel/topic/97648804#14600)
-and I think there was a misunderstanding about the "applicability" of some
-of bitbake's patches that
-was required to compile. And I don't know if I managed to clarify that (and
-if I understood well).
+to use the path url-compatible. This needs to happen before the shell quota=
+tion happens.
 
-Anyway, I wasn't aware that there is a feature freeze now, I'll wait for
-feedback then.
+Without this commit, spaces in the clone URL will be used as " " and not as=
+ "%20" which will fail.
+This commit changes the " " in the URL to "%20" when it is a http or https =
+url.
 
-Thanks Alex.
+Signed-off-by: Thilo Cestonaro <thilo.cestonaro@thalesgroup.com>
+---
+ lib/bb/fetch2/git.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Le mar. 21 mars 2023, 19:35, Alexander Kanavin <alex.kanavin@gmail.com> a
-=C3=A9crit :
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 578edc59..dc7f848d 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -66,6 +66,7 @@ import re
+ import shlex
+ import subprocess
+ import tempfile
++import urllib
+ import bb
+ import bb.progress
+ from contextlib import contextmanager
+@@ -697,7 +698,12 @@ class Git(FetchMethod):
+             username =3D ud.user + '@'
+         else:
+             username =3D ""
+-        return "%s://%s%s%s" % (ud.proto, username, ud.host, ud.path)
++
++        path =3D ud.path
++        if ud.proto in [ 'http', 'https' ]:
++            path =3D urllib.parse.quote(ud.path)
++
++        return "%s://%s%s%s" % (ud.proto, username, ud.host, path)
 
-> I believe all the patches are now in abelloni's staging branch:
-> https://git.yoctoproject.org/poky-contrib/log/?h=3Dabelloni/master-next
->
-> If they need a rework, or otherwise aren't suitable, you'll get feedback.
->
-> Note that we're in the feature freeze now; while this is a
-> comparatively low risk change (in my view), it may have to wait until
-> after mickledore's out.
->
-> Alex
->
-> On Tue, 21 Mar 2023 at 18:26, Frederic Martinsons
-> <frederic.martinsons@gmail.com> wrote:
-> >
-> > If dependencies between bitbake and other layers is an issue, I can
-> suppress the patch n2 of this
-> > series to disable the verification of the checksum, and wait for all
-> patches (bitbake, meta-oe and oe-core)
-> > to be applied.
-> > Finally, I would issue a new patch to make the checksum verification
-> mandatory.
-> >
-> > On Tue, 21 Mar 2023 at 18:02, Fr=C3=A9d=C3=A9ric Martinsons <
-> frederic.martinsons@gmail.com> wrote:
-> >>
-> >> Hello,
-> >>
-> >> Should I verify something more for this series?
-> >> I understood that it is a useful development to have in bitbake fetche=
-r
-> (but will break things if series in oe-core and meta-oe are not applied
-> after this one) and I'm wondering if something block the review / apply ?
-> >>
-> >> Please tell me, I'll do all my best to secure this.
-> >>
-> >> Have a good day.
-> >>
-> >> Le ven. 17 mars 2023, 09:19, <frederic.martinsons@gmail.com> a =C3=A9c=
-rit :
-> >>>
-> >>> From: Frederic Martinsons <frederic.martinsons@gmail.com>
-> >>>
-> >>> This change brings checksum verification of each crate
-> >>> in a recipe, e.g
-> >>>
-> >>> | SRC_URI +=3D " \
-> >>> |     crate://crates.io/aho-corasick/0.7.20 \
-> >>> |     crate://crates.io/atomic-waker/1.1.0 \
-> >>> |     crate://crates.io/cc/1.0.79 \
-> >>> | "
-> >>> |
-> >>> | SRC_URI[aho-corasick.sha256sum] =3D
-> "cc936419f96fa211c1b9166887b38e5e40b19958e5b895be7c1f93adec7071ac"
-> >>> | SRC_URI[atomic-waker.sha256sum] =3D
-> "debc29dde2e69f9e47506b525f639ed42300fc014a3e007832592448fa8e4599"
-> >>> | SRC_URI[cc.sha256sum] =3D
-> "50d30906286121d95be3d479533b458f87493b30a4b5f79a607db8f5d11aa91f"
-> >>>
-> >>> That will require to move the checksum initialization
-> >>> after the possible call to urldata_init method in order
-> >>> for the crate fetcher to parse the url.
-> >>>
-> >>> Another way of doing could have been implementing a decodeurl
-> >>> method that would have been specific for each fetcher class.
-> >>>
-> >>> Signed-off-by: Frederic Martinsons <frederic.martinsons@gmail.com>
-> >>> ---
-> >>>  lib/bb/fetch2/__init__.py | 12 ++++++------
-> >>>  lib/bb/tests/fetch.py     | 32 ++++++++++++++++++++++++++++++++
-> >>>  2 files changed, 38 insertions(+), 6 deletions(-)
-> >>>
-> >>> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> >>> index cf65727a..3ae83fa8 100644
-> >>> --- a/lib/bb/fetch2/__init__.py
-> >>> +++ b/lib/bb/fetch2/__init__.py
-> >>> @@ -1291,18 +1291,13 @@ class FetchData(object):
-> >>>
-> >>>              if checksum_name in self.parm:
-> >>>                  checksum_expected =3D self.parm[checksum_name]
-> >>> -            elif self.type not in ["http", "https", "ftp", "ftps",
-> "sftp", "s3", "az"]:
-> >>> +            elif self.type not in ["http", "https", "ftp", "ftps",
-> "sftp", "s3", "az", "crate"]:
-> >>>                  checksum_expected =3D None
-> >>>              else:
-> >>>                  checksum_expected =3D d.getVarFlag("SRC_URI",
-> checksum_name)
-> >>>
-> >>>              setattr(self, "%s_expected" % checksum_id,
-> checksum_expected)
-> >>>
-> >>> -        for checksum_id in CHECKSUM_LIST:
-> >>> -            configure_checksum(checksum_id)
-> >>> -
-> >>> -        self.ignore_checksums =3D False
-> >>> -
-> >>>          self.names =3D self.parm.get("name",'default').split(',')
-> >>>
-> >>>          self.method =3D None
-> >>> @@ -1324,6 +1319,11 @@ class FetchData(object):
-> >>>          if hasattr(self.method, "urldata_init"):
-> >>>              self.method.urldata_init(self, d)
-> >>>
-> >>> +        for checksum_id in CHECKSUM_LIST:
-> >>> +            configure_checksum(checksum_id)
-> >>> +
-> >>> +        self.ignore_checksums =3D False
-> >>> +
-> >>>          if "localpath" in self.parm:
-> >>>              # if user sets localpath for file, use it instead.
-> >>>              self.localpath =3D self.parm["localpath"]
-> >>> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-> >>> index 73eefc59..fd089bc8 100644
-> >>> --- a/lib/bb/tests/fetch.py
-> >>> +++ b/lib/bb/tests/fetch.py
-> >>> @@ -2377,6 +2377,13 @@ class CrateTest(FetcherTest):
-> >>>          d =3D self.d
-> >>>
-> >>>          fetcher =3D bb.fetch2.Fetch(uris, self.d)
-> >>> +        ud =3D fetcher.ud[fetcher.urls[0]]
-> >>> +
-> >>> +        self.assertIn("name", ud.parm)
-> >>> +        self.assertEqual(ud.parm["name"], "glob")
-> >>> +        self.assertIn("downloadfilename", ud.parm)
-> >>> +        self.assertEqual(ud.parm["downloadfilename"],
-> "glob-0.2.11.crate")
-> >>> +
-> >>>          fetcher.download()
-> >>>          fetcher.unpack(self.tempdir)
-> >>>          self.assertEqual(sorted(os.listdir(self.tempdir)),
-> ['cargo_home', 'download' , 'unpacked'])
-> >>> @@ -2394,6 +2401,19 @@ class CrateTest(FetcherTest):
-> >>>          d =3D self.d
-> >>>
-> >>>          fetcher =3D bb.fetch2.Fetch(uris, self.d)
-> >>> +        ud =3D fetcher.ud[fetcher.urls[0]]
-> >>> +
-> >>> +        self.assertIn("name", ud.parm)
-> >>> +        self.assertEqual(ud.parm["name"], "glob")
-> >>> +        self.assertIn("downloadfilename", ud.parm)
-> >>> +        self.assertEqual(ud.parm["downloadfilename"],
-> "glob-0.2.11.crate")
-> >>> +
-> >>> +        ud =3D fetcher.ud[fetcher.urls[1]]
-> >>> +        self.assertIn("name", ud.parm)
-> >>> +        self.assertEqual(ud.parm["name"], "time")
-> >>> +        self.assertIn("downloadfilename", ud.parm)
-> >>> +        self.assertEqual(ud.parm["downloadfilename"],
-> "time-0.1.35.crate")
-> >>> +
-> >>>          fetcher.download()
-> >>>          fetcher.unpack(self.tempdir)
-> >>>          self.assertEqual(sorted(os.listdir(self.tempdir)),
-> ['cargo_home', 'download' , 'unpacked'])
-> >>> @@ -2403,6 +2423,18 @@ class CrateTest(FetcherTest):
-> >>>          self.assertTrue(os.path.exists(self.tempdir +
-> "/cargo_home/bitbake/time-0.1.35/.cargo-checksum.json"))
-> >>>          self.assertTrue(os.path.exists(self.tempdir +
-> "/cargo_home/bitbake/time-0.1.35/src/lib.rs"))
-> >>>
-> >>> +    @skipIfNoNetwork()
-> >>> +    def test_crate_incorrect_cksum(self):
-> >>> +        uri =3D "crate://crates.io/aho-corasick/0.7.20"
-> >>> +        self.d.setVar('SRC_URI', uri)
-> >>> +        self.d.setVarFlag("SRC_URI", "aho-corasick.sha256sum",
-> hashlib.sha256("Invalid".encode("utf-8")).hexdigest())
-> >>> +
-> >>> +        uris =3D self.d.getVar('SRC_URI').split()
-> >>> +
-> >>> +        fetcher =3D bb.fetch2.Fetch(uris, self.d)
-> >>> +        with self.assertRaisesRegexp(bb.fetch2.FetchError, "Fetcher
-> failure for URL"):
-> >>> +            fetcher.download()
-> >>> +
-> >>>  class NPMTest(FetcherTest):
-> >>>      def skipIfNoNpm():
-> >>>          import shutil
-> >>> --
-> >>> 2.34.1
-> >>>
-> >
-> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> > Links: You receive all messages sent to this group.
-> > View/Reply Online (#14609):
-> https://lists.openembedded.org/g/bitbake-devel/message/14609
-> > Mute This Topic: https://lists.openembedded.org/mt/97668729/1686489
-> > Group Owner: bitbake-devel+owner@lists.openembedded.org
-> > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> alex.kanavin@gmail.com]
-> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> >
->
+     def _revision_key(self, ud, d, name):
+         """
+--
+2.37.2
 
---0000000000003352ee05f76e5fb4
-Content-Type: text/html; charset="UTF-8"
+
+--_000_PR0P264MB1882D9E54AD24DF72B9E65E5E9869PR0P264MB1882FRAP_
+Content-Type: text/html; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>I&#39;m asking because I had a feedback from abelloni=
- about the patch series to update<br></div><div>openembedded-core concernin=
-g a build failure (<a href=3D"https://lists.openembedded.org/g/bitbake-deve=
-l/topic/97648804#14600">https://lists.openembedded.org/g/bitbake-devel/topi=
-c/97648804#14600</a>)</div><div>and I think there was a misunderstanding ab=
-out the &quot;applicability&quot; of some of bitbake&#39;s patches that</di=
-v><div>was required to compile. And I don&#39;t know if I managed=C2=A0to c=
-larify that (and if I understood well).</div><div><br></div><div>Anyway, I =
-wasn&#39;t aware that there is a feature freeze now, I&#39;ll wait for feed=
-back then.</div><div><br></div><div>Thanks Alex.</div></div><div dir=3D"aut=
-o"></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_att=
-r">Le mar. 21 mars 2023, 19:35, Alexander Kanavin &lt;<a href=3D"mailto:ale=
-x.kanavin@gmail.com" target=3D"_blank">alex.kanavin@gmail.com</a>&gt; a =C3=
-=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0=
-px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">I=
- believe all the patches are now in abelloni&#39;s staging branch:<br>
-<a href=3D"https://git.yoctoproject.org/poky-contrib/log/?h=3Dabelloni/mast=
-er-next" rel=3D"noreferrer noreferrer" target=3D"_blank">https://git.yoctop=
-roject.org/poky-contrib/log/?h=3Dabelloni/master-next</a><br>
-<br>
-If they need a rework, or otherwise aren&#39;t suitable, you&#39;ll get fee=
-dback.<br>
-<br>
-Note that we&#39;re in the feature freeze now; while this is a<br>
-comparatively low risk change (in my view), it may have to wait until<br>
-after mickledore&#39;s out.<br>
-<br>
-Alex<br>
-<br>
-On Tue, 21 Mar 2023 at 18:26, Frederic Martinsons<br>
-&lt;<a href=3D"mailto:frederic.martinsons@gmail.com" rel=3D"noreferrer" tar=
-get=3D"_blank">frederic.martinsons@gmail.com</a>&gt; wrote:<br>
-&gt;<br>
-&gt; If dependencies between bitbake and other layers is an issue, I can su=
-ppress the patch n2 of this<br>
-&gt; series to disable the verification of the checksum, and wait for all p=
-atches (bitbake, meta-oe and oe-core)<br>
-&gt; to be applied.<br>
-&gt; Finally, I would issue a new patch to make the checksum verification m=
-andatory.<br>
-&gt;<br>
-&gt; On Tue, 21 Mar 2023 at 18:02, Fr=C3=A9d=C3=A9ric Martinsons &lt;<a hre=
-f=3D"mailto:frederic.martinsons@gmail.com" rel=3D"noreferrer" target=3D"_bl=
-ank">frederic.martinsons@gmail.com</a>&gt; wrote:<br>
-&gt;&gt;<br>
-&gt;&gt; Hello,<br>
-&gt;&gt;<br>
-&gt;&gt; Should I verify something more for this series?<br>
-&gt;&gt; I understood that it is a useful development to have in bitbake fe=
-tcher (but will break things if series in oe-core and meta-oe are not appli=
-ed after this one) and I&#39;m wondering if something block the review / ap=
-ply ?<br>
-&gt;&gt;<br>
-&gt;&gt; Please tell me, I&#39;ll do all my best to secure this.<br>
-&gt;&gt;<br>
-&gt;&gt; Have a good day.<br>
-&gt;&gt;<br>
-&gt;&gt; Le ven. 17 mars 2023, 09:19, &lt;<a href=3D"mailto:frederic.martin=
-sons@gmail.com" rel=3D"noreferrer" target=3D"_blank">frederic.martinsons@gm=
-ail.com</a>&gt; a =C3=A9crit :<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; From: Frederic Martinsons &lt;<a href=3D"mailto:frederic.marti=
-nsons@gmail.com" rel=3D"noreferrer" target=3D"_blank">frederic.martinsons@g=
-mail.com</a>&gt;<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; This change brings checksum verification of each crate<br>
-&gt;&gt;&gt; in a recipe, e.g<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; | SRC_URI +=3D &quot; \<br>
-&gt;&gt;&gt; |=C2=A0 =C2=A0 =C2=A0crate://<a href=3D"http://crates.io/aho-c=
-orasick/0.7.20" rel=3D"noreferrer noreferrer" target=3D"_blank">crates.io/a=
-ho-corasick/0.7.20</a> \<br>
-&gt;&gt;&gt; |=C2=A0 =C2=A0 =C2=A0crate://<a href=3D"http://crates.io/atomi=
-c-waker/1.1.0" rel=3D"noreferrer noreferrer" target=3D"_blank">crates.io/at=
-omic-waker/1.1.0</a> \<br>
-&gt;&gt;&gt; |=C2=A0 =C2=A0 =C2=A0crate://<a href=3D"http://crates.io/cc/1.=
-0.79" rel=3D"noreferrer noreferrer" target=3D"_blank">crates.io/cc/1.0.79</=
-a> \<br>
-&gt;&gt;&gt; | &quot;<br>
-&gt;&gt;&gt; |<br>
-&gt;&gt;&gt; | SRC_URI[aho-corasick.sha256sum] =3D &quot;cc936419f96fa211c1=
-b9166887b38e5e40b19958e5b895be7c1f93adec7071ac&quot;<br>
-&gt;&gt;&gt; | SRC_URI[atomic-waker.sha256sum] =3D &quot;debc29dde2e69f9e47=
-506b525f639ed42300fc014a3e007832592448fa8e4599&quot;<br>
-&gt;&gt;&gt; | SRC_URI[cc.sha256sum] =3D &quot;50d30906286121d95be3d479533b=
-458f87493b30a4b5f79a607db8f5d11aa91f&quot;<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; That will require to move the checksum initialization<br>
-&gt;&gt;&gt; after the possible call to urldata_init method in order<br>
-&gt;&gt;&gt; for the crate fetcher to parse the url.<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; Another way of doing could have been implementing a decodeurl<=
-br>
-&gt;&gt;&gt; method that would have been specific for each fetcher class.<b=
-r>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; Signed-off-by: Frederic Martinsons &lt;<a href=3D"mailto:frede=
-ric.martinsons@gmail.com" rel=3D"noreferrer" target=3D"_blank">frederic.mar=
-tinsons@gmail.com</a>&gt;<br>
-&gt;&gt;&gt; ---<br>
-&gt;&gt;&gt;=C2=A0 lib/bb/fetch2/__init__.py | 12 ++++++------<br>
-&gt;&gt;&gt;=C2=A0 lib/bb/tests/fetch.py=C2=A0 =C2=A0 =C2=A0| 32 ++++++++++=
-++++++++++++++++++++++<br>
-&gt;&gt;&gt;=C2=A0 2 files changed, 38 insertions(+), 6 deletions(-)<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init_=
-_.py<br>
-&gt;&gt;&gt; index cf65727a..3ae83fa8 100644<br>
-&gt;&gt;&gt; --- a/lib/bb/fetch2/__init__.py<br>
-&gt;&gt;&gt; +++ b/lib/bb/fetch2/__init__.py<br>
-&gt;&gt;&gt; @@ -1291,18 +1291,13 @@ class FetchData(object):<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if checksum_na=
-me in self.parm:<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-checksum_expected =3D self.parm[checksum_name]<br>
-&gt;&gt;&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 elif self.type not =
-in [&quot;http&quot;, &quot;https&quot;, &quot;ftp&quot;, &quot;ftps&quot;,=
- &quot;sftp&quot;, &quot;s3&quot;, &quot;az&quot;]:<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 elif self.type not =
-in [&quot;http&quot;, &quot;https&quot;, &quot;ftp&quot;, &quot;ftps&quot;,=
- &quot;sftp&quot;, &quot;s3&quot;, &quot;az&quot;, &quot;crate&quot;]:<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-checksum_expected =3D None<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 else:<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-checksum_expected =3D d.getVarFlag(&quot;SRC_URI&quot;, checksum_name)<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 setattr(self, =
-&quot;%s_expected&quot; % checksum_id, checksum_expected)<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 for checksum_id in CHECKSUM_LIST:=
-<br>
-&gt;&gt;&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 configure_checksum(=
-checksum_id)<br>
-&gt;&gt;&gt; -<br>
-&gt;&gt;&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.ignore_checksums =3D False<b=
-r>
-&gt;&gt;&gt; -<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.names =3D self.parm.get=
-(&quot;name&quot;,&#39;default&#39;).split(&#39;,&#39;)<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.method =3D None<br>
-&gt;&gt;&gt; @@ -1324,6 +1319,11 @@ class FetchData(object):<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if hasattr(self.method, &quo=
-t;urldata_init&quot;):<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.method.ur=
-ldata_init(self, d)<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 for checksum_id in CHECKSUM_LIST:=
-<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 configure_checksum(=
-checksum_id)<br>
-&gt;&gt;&gt; +<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.ignore_checksums =3D False<b=
-r>
-&gt;&gt;&gt; +<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if &quot;localpath&quot; in =
-self.parm:<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # if user sets=
- localpath for file, use it instead.<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.localpath=
- =3D self.parm[&quot;localpath&quot;]<br>
-&gt;&gt;&gt; diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py<br>
-&gt;&gt;&gt; index 73eefc59..fd089bc8 100644<br>
-&gt;&gt;&gt; --- a/lib/bb/tests/fetch.py<br>
-&gt;&gt;&gt; +++ b/lib/bb/tests/fetch.py<br>
-&gt;&gt;&gt; @@ -2377,6 +2377,13 @@ class CrateTest(FetcherTest):<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 d =3D self.d<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher =3D bb.fetch2.Fetch(=
-uris, self.d)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 ud =3D fetcher.ud[fetcher.urls[0]=
-]<br>
-&gt;&gt;&gt; +<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertIn(&quot;name&quot;, u=
-d.parm)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(ud.parm[&quot;na=
-me&quot;], &quot;glob&quot;)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertIn(&quot;downloadfilen=
-ame&quot;, ud.parm)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(ud.parm[&quot;do=
-wnloadfilename&quot;], &quot;glob-0.2.11.crate&quot;)<br>
-&gt;&gt;&gt; +<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.download()<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.unpack(self.tempdir)=
-<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(sorted(os.l=
-istdir(self.tempdir)), [&#39;cargo_home&#39;, &#39;download&#39; , &#39;unp=
-acked&#39;])<br>
-&gt;&gt;&gt; @@ -2394,6 +2401,19 @@ class CrateTest(FetcherTest):<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 d =3D self.d<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher =3D bb.fetch2.Fetch(=
-uris, self.d)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 ud =3D fetcher.ud[fetcher.urls[0]=
-]<br>
-&gt;&gt;&gt; +<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertIn(&quot;name&quot;, u=
-d.parm)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(ud.parm[&quot;na=
-me&quot;], &quot;glob&quot;)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertIn(&quot;downloadfilen=
-ame&quot;, ud.parm)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(ud.parm[&quot;do=
-wnloadfilename&quot;], &quot;glob-0.2.11.crate&quot;)<br>
-&gt;&gt;&gt; +<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 ud =3D fetcher.ud[fetcher.urls[1]=
-]<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertIn(&quot;name&quot;, u=
-d.parm)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(ud.parm[&quot;na=
-me&quot;], &quot;time&quot;)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertIn(&quot;downloadfilen=
-ame&quot;, ud.parm)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(ud.parm[&quot;do=
-wnloadfilename&quot;], &quot;time-0.1.35.crate&quot;)<br>
-&gt;&gt;&gt; +<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.download()<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.unpack(self.tempdir)=
-<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(sorted(os.l=
-istdir(self.tempdir)), [&#39;cargo_home&#39;, &#39;download&#39; , &#39;unp=
-acked&#39;])<br>
-&gt;&gt;&gt; @@ -2403,6 +2423,18 @@ class CrateTest(FetcherTest):<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(os.path.exis=
-ts(self.tempdir + &quot;/cargo_home/bitbake/time-0.1.35/.cargo-checksum.jso=
-n&quot;))<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(os.path.exis=
-ts(self.tempdir + &quot;/cargo_home/bitbake/time-0.1.35/src/<a href=3D"http=
-://lib.rs" rel=3D"noreferrer noreferrer" target=3D"_blank">lib.rs</a>&quot;=
-))<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 @skipIfNoNetwork()<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 def test_crate_incorrect_cksum(self):<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 uri =3D &quot;crate://<a href=3D"=
-http://crates.io/aho-corasick/0.7.20" rel=3D"noreferrer noreferrer" target=
-=3D"_blank">crates.io/aho-corasick/0.7.20</a>&quot;<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.d.setVar(&#39;SRC_URI&#39;, =
-uri)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.d.setVarFlag(&quot;SRC_URI&q=
-uot;, &quot;aho-corasick.sha256sum&quot;, hashlib.sha256(&quot;Invalid&quot=
-;.encode(&quot;utf-8&quot;)).hexdigest())<br>
-&gt;&gt;&gt; +<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 uris =3D self.d.getVar(&#39;SRC_U=
-RI&#39;).split()<br>
-&gt;&gt;&gt; +<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher =3D bb.fetch2.Fetch(uris,=
- self.d)<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 with self.assertRaisesRegexp(bb.f=
-etch2.FetchError, &quot;Fetcher failure for URL&quot;):<br>
-&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.download()<=
-br>
-&gt;&gt;&gt; +<br>
-&gt;&gt;&gt;=C2=A0 class NPMTest(FetcherTest):<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 def skipIfNoNpm():<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 import shutil<br>
-&gt;&gt;&gt; --<br>
-&gt;&gt;&gt; 2.34.1<br>
-&gt;&gt;&gt;<br>
-&gt;<br>
-&gt; -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-&gt; Links: You receive all messages sent to this group.<br>
-&gt; View/Reply Online (#14609): <a href=3D"https://lists.openembedded.org/=
-g/bitbake-devel/message/14609" rel=3D"noreferrer noreferrer" target=3D"_bla=
-nk">https://lists.openembedded.org/g/bitbake-devel/message/14609</a><br>
-&gt; Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/97668729=
-/1686489" rel=3D"noreferrer noreferrer" target=3D"_blank">https://lists.ope=
-nembedded.org/mt/97668729/1686489</a><br>
-&gt; Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedde=
-d.org" rel=3D"noreferrer" target=3D"_blank">bitbake-devel+owner@lists.opene=
-mbedded.org</a><br>
-&gt; Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel=
-/unsub" rel=3D"noreferrer noreferrer" target=3D"_blank">https://lists.opene=
-mbedded.org/g/bitbake-devel/unsub</a> [<a href=3D"mailto:alex.kanavin@gmail=
-.com" rel=3D"noreferrer" target=3D"_blank">alex.kanavin@gmail.com</a>]<br>
-&gt; -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-&gt;<br>
-</blockquote></div>
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
+ttom:0;} </style>
+</head>
+<body dir=3D"ltr">
+<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
+: 12pt; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);" class=
+=3D"elementToProof">
+<div class=3D"ContentPasted0">to use the path url-compatible. This needs to=
+ happen before the shell quotation happens.</div>
+<div class=3D"ContentPasted0"><br>
+</div>
+<div><span class=3D"x_ContentPasted0 x_elementToProof ContentPasted1" style=
+=3D"margin: 0px; color: rgb(0, 0, 0); text-align: left;">Without this commi=
+t, spaces in the clone URL will be used as &quot; &quot; and not as &quot;%=
+20&quot; which will fail.</span><br class=3D"ContentPasted1">
+<span class=3D"x_ContentPasted0 x_elementToProof ContentPasted1" style=3D"m=
+argin: 0px; color: rgb(0, 0, 0); text-align: left;">This commit changes the=
+ &quot; &quot; in the URL to &quot;%20&quot; when it is a http or https url=
+.</span><br class=3D"ContentPasted0">
+</div>
+<div><br>
+</div>
+<div class=3D"ContentPasted0">Signed-off-by: Thilo Cestonaro &lt;thilo.cest=
+onaro@thalesgroup.com&gt;</div>
+<div class=3D"ContentPasted0">---</div>
+<div class=3D"ContentPasted0">&nbsp;lib/bb/fetch2/git.py | 3 ++-</div>
+<div class=3D"ContentPasted0">&nbsp;1 file changed, 2 insertions(+), 1 dele=
+tion(-)</div>
+<div><br class=3D"ContentPasted0">
+</div>
+<div class=3D"ContentPasted0">diff --git a/lib/bb/fetch2/git.py b/lib/bb/fe=
+tch2/git.py</div>
+<div class=3D"ContentPasted0">index 578edc59..dc7f848d 100644</div>
+<div class=3D"ContentPasted0">--- a/lib/bb/fetch2/git.py</div>
+<div class=3D"ContentPasted0">+++ b/lib/bb/fetch2/git.py</div>
+<div class=3D"ContentPasted0">@@ -66,6 +66,7 @@ import re</div>
+<div class=3D"ContentPasted0">&nbsp;import shlex</div>
+<div class=3D"ContentPasted0">&nbsp;import subprocess</div>
+<div class=3D"ContentPasted0">&nbsp;import tempfile</div>
+<div class=3D"ContentPasted0">+import urllib</div>
+<div class=3D"ContentPasted0">&nbsp;import bb</div>
+<div class=3D"ContentPasted0">&nbsp;import bb.progress</div>
+<div class=3D"ContentPasted0">&nbsp;from contextlib import contextmanager</=
+div>
+<div class=3D"ContentPasted0">@@ -697,7 +698,12 @@ class Git(FetchMethod):<=
+/div>
+<div class=3D"ContentPasted0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nb=
+sp;username =3D ud.user + '@'</div>
+<div class=3D"ContentPasted0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;else:</div>
+<div class=3D"ContentPasted0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nb=
+sp;username =3D &quot;&quot;</div>
+<div class=3D"ContentPasted0">- &nbsp; &nbsp; &nbsp; &nbsp;return &quot;%s:=
+//%s%s%s&quot; % (ud.proto, username, ud.host, ud.path)</div>
+<div class=3D"ContentPasted0">+</div>
+<div class=3D"ContentPasted0">+ &nbsp; &nbsp; &nbsp; &nbsp;path =3D ud.path=
+</div>
+<div class=3D"ContentPasted0">+ &nbsp; &nbsp; &nbsp; &nbsp;if ud.proto in [=
+ 'http', 'https' ]:</div>
+<div class=3D"ContentPasted0">+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;pa=
+th =3D urllib.parse.quote(ud.path)</div>
+<div class=3D"ContentPasted0">+</div>
+<div class=3D"ContentPasted0">+ &nbsp; &nbsp; &nbsp; &nbsp;return &quot;%s:=
+//%s%s%s&quot; % (ud.proto, username, ud.host, path)</div>
+<div class=3D"ContentPasted0">&nbsp;</div>
+<div class=3D"ContentPasted0">&nbsp; &nbsp; &nbsp;def _revision_key(self, u=
+d, d, name):</div>
+<div class=3D"ContentPasted0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&quot;&quot=
+;&quot;</div>
+<div class=3D"ContentPasted0">-- </div>
+<div class=3D"ContentPasted0">2.37.2</div>
+<div><br>
+</div>
+</div>
+</body>
+</html>
 
---0000000000003352ee05f76e5fb4--
+--_000_PR0P264MB1882D9E54AD24DF72B9E65E5E9869PR0P264MB1882FRAP_--
 
