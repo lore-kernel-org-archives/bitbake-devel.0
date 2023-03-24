@@ -1,108 +1,83 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <troth@openavr.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA88C6FD1C
-	for <webhook@archiver.kernel.org>; Fri, 24 Mar 2023 10:13:26 +0000 (UTC)
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
- by mx.groups.io with SMTP id smtpd.web11.97245.1679652800398510861
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B215EC6FD1C
+	for <webhook@archiver.kernel.org>; Fri, 24 Mar 2023 19:51:06 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web10.6986.1679687464655772215
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Mar 2023 03:13:21 -0700
+ Fri, 24 Mar 2023 12:51:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=UGGIhroS;
- spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: alexandre.belloni@bootlin.com)
-Received: (Authenticated sender: alexandre.belloni@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id 52078FF804;
-	Fri, 24 Mar 2023 10:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1679652798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ATQ/3P8bkOnlbuKVZYuMsBrnqgd0t+V76ra2od13MyI=;
-	b=UGGIhroSf29Nll6138UfcGs+J9/2ODaKCxZkxsgeT2jedTaud4z/XVMInpo/JD75VmX+gI
-	Mkv0weAXs1z2UqiBkbjKqzDXlC+9KBuG3rq6fadYF+sb/uF7yI3dAWhTbnhNwogwmR3WMP
-	gF8W0mrBQ2xxGOT0VDe5s80o+uP9wkQ0SCMoP1d6cCPf7G8oiw7MzIZ6gNbtODFcgVQRNX
-	DtXESskKOd1XY8TbL62i0TcVzjezaC1NTBi2MvdMAFy3LHgThvXlponmAKHEkOlInAI+Sd
-	QMcSOa8jnIqx7dh/ssm9hYGiKg8EYkktXDXbz116m6TMnIpswxUDsT3fzIbGgg==
-Date: Fri, 24 Mar 2023 11:13:18 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: thilo.cestonaro@thalesgroup.com
-Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] bitbake: git fetcher: use urllib quote
- ...
-Message-ID: <202303241013185928d3b5@mail.local>
-References: <PR0P264MB1882D9E54AD24DF72B9E65E5E9869@PR0P264MB1882.FRAP264.PROD.OUTLOOK.COM>
+ dkim=pass header.i=@openavr-org.20210112.gappssmtp.com header.s=20210112 header.b=Ytg6vSlQ;
+ spf=none, err=permanent DNS error (domain: openavr.org, ip: 209.85.221.44, mailfrom: troth@openavr.org)
+Received: by mail-wr1-f44.google.com with SMTP id r29so2867617wra.13
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Mar 2023 12:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openavr-org.20210112.gappssmtp.com; s=20210112; t=1679687463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XGdJRkO/ps1+Ixooe8PJKtWCl+vINnqHn6Ob6epyUHY=;
+        b=Ytg6vSlQnY2+8BlMy7NJu5dUIcoT5NXGLE1R2bTfA/jfD0xwsvj4rOC0zW09rkYOH1
+         QjasvDtkTn9SAoMY/AwwBmGYTJUohRh27kgd2FATxAJ9N25xzTzHSM08y5q5RsQrUKTv
+         GTd0qrYuqknquAorLhzfSLYzgtvzIw1mLWXEvQaNMQ5mDasU/Mg+SA8UXTkIj7LHbAj5
+         qD954+iBhEoi9t0uDSuhVhmrbmrHo69lCFbbDnUe+nZyD0iBSx4xj7iSfiY//lZ3evi7
+         cpt9VoeJrAkBucM7PEGJpzbXhj9QmQMWdsKPH/PMX8GTAlN+ZOq8DQV+BKD/7JCs8o1N
+         4KgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679687463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XGdJRkO/ps1+Ixooe8PJKtWCl+vINnqHn6Ob6epyUHY=;
+        b=t14xMr/RiOINFqyD1b2BeEGwz5N66it2sSCHxolXolp9lBWAi7Q+vhNai8WWsvOtwu
+         cQOJggKTxAirZ8W+MbRFuOCr/kocBNLT5PZz+XYChWnG9/M2HPL2lrFZHrTB3omPTu8H
+         42oE1te86XZ3gX1ZDeal8sp2YeuAEs/MfMqCS9eJuSPdxKWcarKZiFGd9AL0RsqBYc+j
+         5ulWtupVAJ1IfYLlhLXdlIobote1M/YT/B9arXkJs83dkGiZe2fiwi5swNBtDJErDtRg
+         dnIejTGoEXMWMVcKKJ1g8M2FNrzQ63GficlWsTuvYXQ3XZtpKZ72O2+PbLW9wlEs3jeY
+         xbRA==
+X-Gm-Message-State: AAQBX9cAGAoQ2IzbVQCmEW8HcIyocnpgM6LE3H9ojowaDMOPGJUrXU5M
+	wtKRQDWgElZfcO2GeV9J4UgTBVqZuXVkAJ9H9vFjpQ==
+X-Google-Smtp-Source: AKy350Z3006Aqwx0N7D3WVFuuIEmCOuTZV2CnHRX79RbU8vo8EHiHMK0mNoHLesgXqC+BSCyzQnCfXdSJ/0MWci7WRQ=
+X-Received: by 2002:a05:6000:1a8d:b0:2cf:e75a:eaf0 with SMTP id
+ f13-20020a0560001a8d00b002cfe75aeaf0mr2912646wry.0.1679687462944; Fri, 24 Mar
+ 2023 12:51:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PR0P264MB1882D9E54AD24DF72B9E65E5E9869@PR0P264MB1882.FRAP264.PROD.OUTLOOK.COM>
+References: <cover.1679641659.git.liezhi.yang@windriver.com> <e763d75fb33b69bbfbf3350b2592b4eea7d3878d.1679641659.git.liezhi.yang@windriver.com>
+In-Reply-To: <e763d75fb33b69bbfbf3350b2592b4eea7d3878d.1679641659.git.liezhi.yang@windriver.com>
+From: "Theodore A. Roth" <troth@openavr.org>
+Date: Fri, 24 Mar 2023 13:50:51 -0600
+Message-ID: <CAFMvBt3DoQmj371=wjzTefmvKdXUFwZGjSXggGnFYgqcK=Ftaw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] fetch/git: Fix local clone url to make it work with repo
+To: Robert Yang <liezhi.yang@windriver.com>
+Cc: bitbake-devel@lists.openembedded.org, sam@liddicott.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 24 Mar 2023 10:13:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14617
+ <bitbake-devel@lists.openembedded.org>; Fri, 24 Mar 2023 19:51:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14618
 
-Hello,
+On Fri, Mar 24, 2023 at 1:09=E2=80=AFAM Robert Yang <liezhi.yang@windriver.=
+com> wrote:
+>
+> The "git clone /path/to/git/objects_symlink" couldn't work after the foll=
+owing
+> change:
+>
+> https://github.com/git/git/commit/6f054f9fb3a501c35b55c65e547a244f14c38d5=
+6
+>
+> But repo command manages the git repo as symlinks, so check whether the o=
+bjects
+> is an symlink to fix the problem:
+>
+> * Nothing is changed if git/objects is not a symlink
+> * Use "git clone file://" when git/objects is a symlink
+>
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 
-This doesn't apply on master, can you rebase?
-
-Thanks
-
-On 22/03/2023 08:37:15+0000, Thilo C. via lists.openembedded.org wrote:
-> to use the path url-compatible. This needs to happen before the shell quotation happens.
-> 
-> Without this commit, spaces in the clone URL will be used as " " and not as "%20" which will fail.
-> This commit changes the " " in the URL to "%20" when it is a http or https url.
-> 
-> Signed-off-by: Thilo Cestonaro <thilo.cestonaro@thalesgroup.com>
-> ---
->  lib/bb/fetch2/git.py | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> index 578edc59..dc7f848d 100644
-> --- a/lib/bb/fetch2/git.py
-> +++ b/lib/bb/fetch2/git.py
-> @@ -66,6 +66,7 @@ import re
->  import shlex
->  import subprocess
->  import tempfile
-> +import urllib
->  import bb
->  import bb.progress
->  from contextlib import contextmanager
-> @@ -697,7 +698,12 @@ class Git(FetchMethod):
->              username = ud.user + '@'
->          else:
->              username = ""
-> -        return "%s://%s%s%s" % (ud.proto, username, ud.host, ud.path)
-> +
-> +        path = ud.path
-> +        if ud.proto in [ 'http', 'https' ]:
-> +            path = urllib.parse.quote(ud.path)
-> +
-> +        return "%s://%s%s%s" % (ud.proto, username, ud.host, path)
-> 
->      def _revision_key(self, ud, d, name):
->          """
-> --
-> 2.37.2
-> 
-
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#14612): https://lists.openembedded.org/g/bitbake-devel/message/14612
-> Mute This Topic: https://lists.openembedded.org/mt/97773918/3617179
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
-
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Tested-by: Theodore A. Roth <troth@openavr.org>
 
