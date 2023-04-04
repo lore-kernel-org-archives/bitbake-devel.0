@@ -2,79 +2,78 @@ Return-Path: <akuster@mvista.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11333C6FD1D
-	for <webhook@archiver.kernel.org>; Tue,  4 Apr 2023 20:43:14 +0000 (UTC)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
- by mx.groups.io with SMTP id smtpd.web11.113799.1680640984247882866
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A17C76188
+	for <webhook@archiver.kernel.org>; Tue,  4 Apr 2023 21:08:44 +0000 (UTC)
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+ by mx.groups.io with SMTP id smtpd.web11.114392.1680642521793478575
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Apr 2023 13:43:04 -0700
+ Tue, 04 Apr 2023 14:08:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@mvista.com header.s=google header.b=SQVVDyES;
- spf=pass (domain: mvista.com, ip: 209.85.128.179, mailfrom: akuster@mvista.com)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5416698e889so639661287b3.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 04 Apr 2023 13:43:04 -0700 (PDT)
+ dkim=pass header.i=@mvista.com header.s=google header.b=HokoCN6X;
+ spf=pass (domain: mvista.com, ip: 209.85.167.177, mailfrom: akuster@mvista.com)
+Received: by mail-oi1-f177.google.com with SMTP id bx42so9695533oib.6
+        for <bitbake-devel@lists.openembedded.org>; Tue, 04 Apr 2023 14:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista.com; s=google; t=1680640983;
+        d=mvista.com; s=google; t=1680642521;
         h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=aeAbgl3+AM/klnCnfeIL3T0hjBLWtUJ4ISxBLDxqYps=;
-        b=SQVVDyESkmiQFj/7sk2YTM+mB8mBW1LHsss0frWaCvnsazh5k6FiC/ZYdknLKNR8Ps
-         s/Z4hr4JAIRlP2LI09/1q4/3MO9BNDqb6aqIVb1s614w9ESw/eC6pcBTj8EUhcJn4ecJ
-         7TI57lzOwCkYx5FujQF9Jb/+5JyYEhYfItSw8=
+        bh=s+JTWrCncDDrPUtdBtWgM4lKBNGuBoPyNo/jIPpvDB4=;
+        b=HokoCN6XEILgVR3iuwDyW2LcEEZL4mhdngHAncJDTzhvPIbV5FASrnmvDB2VJO8giL
+         GnXf/z/tjRoSVySZ1QmrMfSV+/V9RsAzIvnSfEDsEv0Bq4Yi72elgdOe3h0REUI1CMBY
+         qwG1IAgWhAbmlUo/PNnmJTcZGZhXtr/TD/Jl0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680640983;
+        d=1e100.net; s=20210112; t=1680642521;
         h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aeAbgl3+AM/klnCnfeIL3T0hjBLWtUJ4ISxBLDxqYps=;
-        b=YsMthNVbJiOPu7tefHzmW+JaiyWt9NsyPeVJYIAqvj6G0jFAJj5MCf/BoAialFOkIB
-         XT8zZhOL4yFG1QGU6gVJGbxWe12pyECKOLFD1vXT5T84qysN/hAs1A8Ef7W0yAp6X9D9
-         fkBw/T2lwSrkEYZX6CPZworCRNrhJDmcbfOlB9Rxz3TsThOKd7TSrgG370U0ChHE8la4
-         n27PUv2xMchcKXr8xMV7fgPVj6eS27lcDjrnSAT7yoO3vcrUC4UwdVJfRZwhwkFnc5qJ
-         MZpizTdASu40goHec+ik2NxyWrwzaUz6B2YeuvfiUs9xqy3FUeeXlPebFBtoVQB1mqfy
-         PahQ==
-X-Gm-Message-State: AAQBX9dXQehLCgxV4jSYTzAF/ZcmXpI0Hy56erBINaGCi9IJzh8dfRXU
-	YLxkK3T5+sxQxaV0vyvId3B6gw==
-X-Google-Smtp-Source: AKy350ZVTl8K8O6I+d+Kj6MHbGvXYZimTWSsp4Zr0ivu7ryGQei3Q3uk1lyScJqgBY2Rqk/sXSXymQ==
-X-Received: by 2002:a0d:e689:0:b0:52e:c985:f70d with SMTP id p131-20020a0de689000000b0052ec985f70dmr435460ywe.7.1680640983373;
-        Tue, 04 Apr 2023 13:43:03 -0700 (PDT)
+        bh=s+JTWrCncDDrPUtdBtWgM4lKBNGuBoPyNo/jIPpvDB4=;
+        b=3S55tjEUTdULq1as8QrEy+Icy+6wobC+8KgB7R490Fid5IGblNhPG5Tkpc9gergjDZ
+         DX4+Ae0O4ffBgzEZk1EDB3Fluc2iNBGEL7UGz8ImbE9FRzK3LPnmGGk1lFj8p1XR1GUq
+         rnqv3sKgzKMO5a6e3AEn5fQ11AAwln+Ry4fTjhI2BimJkuIpPKqzyyjsYXeTxtPMcvrj
+         7HP02Yyh1/QXwd+fuRFujSUMwYwPcUoO1He2RSYXlr6fWE/CLuJQtcayEx+Nc7Qt+6D4
+         BD2KWPZbyZEQIQwaiJcUBUee004jg8/3YIkATfJfq6dKYNuJo57HCkb8oqDbK+mu2IgS
+         7SJw==
+X-Gm-Message-State: AAQBX9f+I1ylf7ecrc5k/ODK29LhJZD8hM/BX37NddVjzpb/Tf8u8as5
+	SUNEky28G4oITzw18n2hjTtap+bYKMTR5FsiGQ1j1Q==
+X-Google-Smtp-Source: AKy350ZIztR510CRMLlD6y5wPwnhVpMmywKyBbpu+4RDMJ0wzbu02c+D4sFinhLzvOSKb9OFuxP0mg==
+X-Received: by 2002:a05:6808:2a84:b0:37a:b61b:2f8f with SMTP id fc4-20020a0568082a8400b0037ab61b2f8fmr1513154oib.54.1680642519595;
+        Tue, 04 Apr 2023 14:08:39 -0700 (PDT)
 Received: from ?IPV6:2600:1700:9190:ba10:36f6:c20d:238e:7162? ([2600:1700:9190:ba10:36f6:c20d:238e:7162])
-        by smtp.gmail.com with ESMTPSA id ck24-20020a05690c0b9800b00549143fb1a5sm2114724ywb.92.2023.04.04.13.43.02
+        by smtp.gmail.com with ESMTPSA id i2-20020a4aab02000000b005251e3f92ecsm5760783oon.47.2023.04.04.14.08.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Apr 2023 13:43:02 -0700 (PDT)
-Message-ID: <fc8a7686-5c56-c605-2d69-8afbb8b477d2@mvista.com>
-Date: Tue, 4 Apr 2023 16:43:02 -0400
+        Tue, 04 Apr 2023 14:08:38 -0700 (PDT)
+Message-ID: <68045681-5481-80f5-30f4-e15616503dcd@mvista.com>
+Date: Tue, 4 Apr 2023 17:08:37 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
 Subject: Re: [bitbake-devel] [PATCH] fetch2: Display all missing checksum at
  once
-To: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org, martin.jansa@gmail.com
+To: Martin Jansa <martin.jansa@gmail.com>
+Cc: Frederic Martinsons <frederic.martinsons@gmail.com>,
+ bitbake-devel@lists.openembedded.org
 References: <20230401152101.19037-1-frederic.martinsons@gmail.com>
  <7d59e968-1dea-acf1-6d18-59bb4fd35cb6@mvista.com>
- <CA+cAkepKcDJSYMq7tbY=27QTaMq8AQXHqevfmux4ka43A4htQQ@mail.gmail.com>
+ <CA+chaQcWaafMWnok=q+3SUcEj-+R99wxdC4JXpaM+rAGYCWhkg@mail.gmail.com>
 From: akuster <akuster@mvista.com>
-In-Reply-To: <CA+cAkepKcDJSYMq7tbY=27QTaMq8AQXHqevfmux4ka43A4htQQ@mail.gmail.com>
+In-Reply-To: <CA+chaQcWaafMWnok=q+3SUcEj-+R99wxdC4JXpaM+rAGYCWhkg@mail.gmail.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000d3d73505f888b8a7"
+	boundary="0000000000007aa52405f88914ac"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 04 Apr 2023 20:43:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14635
+ <bitbake-devel@lists.openembedded.org>; Tue, 04 Apr 2023 21:08:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14636
 
---000000000000d3d73505f888b8a7
+--0000000000007aa52405f88914ac
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-On 4/4/23 1:07 PM, Frédéric Martinsons wrote:
->
->
-> On Tue, 4 Apr 2023 at 18:50, akuster <akuster@mvista.com> wrote:
+On 4/4/23 1:07 PM, Martin Jansa wrote:
+> On Tue, Apr 4, 2023 at 6:50 PM akuster <akuster@mvista.com> wrote:
 >
 >
 >
@@ -92,38 +91,26 @@ On 4/4/23 1:07 PM, Frédéric Martinsons wrote:
 >     not?  I
 >     am not seeing any. Any ideas?
 >
->     I will be holding off branching meta-security until my 4 rust recipes
->     can build again.
 >
->     -armin
->
->
-> Hello,
->
-> This patch is only for showing all missing checksum on crates for a 
-> recipe.
-> To build the checskum list (with the version), you can use bitbake -c 
-> update_crates <your recipe>
-
-update_crates fails when it starts to traverse  into the vendor dir. It 
-can't parse the Cargo.toml files correctly.
-
-
-> and if you start from a pristine, you should have an error which will 
-> contain
-> all the data you want to copy/paste (if you have this present patch in 
-> bitbake)
->
-> The naming for pkg and version is already included in 
-> cargo-update-recipe-crates.bbclass 
-> <https://git.openembedded.org/openembedded-core/tree/meta/classes-recipe/cargo-update-recipe-crates.bbclass?id=1795e98a04ad09b011afcc7cc3bf6dc49475b19a> from oe-core 
-> master:
-> see 
+> name parameter with pkg version was added to bbclass in:
 > https://git.openembedded.org/openembedded-core/commit/?id=1795e98a04ad09b011afcc7cc3bf6dc49475b19a
 >
+> this change only allows all missing/incorrect checksums to be showsn 
+> at the same time, instead of one checksum per do_fetch failure.
+
+I get multiple hashes for the same package.
+
+SRC_URI[wasi.sha256sum] = 
+"1a143597ca7c7793eff794def352d41792a93c481eb1042423ff7ff72ba2c31f"
+SRC_URI[wasi.sha256sum] = 
+"cccddf32554fecc6acb585f82a32a72e28b48f8c4c1883ddfeeeaa96f7d8e519"
+
+so why no version info after the pkg name?
+
+-armin
 
 
---000000000000d3d73505f888b8a7
+--0000000000007aa52405f88914ac
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -201,14 +188,14 @@ yQnDtPyJ0DC4bVz9Z67nEFJcFTyrzbvo4sk9A8QKYANnjmCYPSEIlis8o7zERwxC/xNTgzAXzlDS
 z4PNrDvNN2gGMYICezCCAncCAQEweTBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQg
 SW5jMRkwFwYDVQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBTSEEyIEFz
 c3VyZWQgSUQgQ0ECEAGZ6IgbFv3Z3WMdR408snswDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcN
-AQkEMSIEIEB/DfIoN2qWqHElTsQ1N2sSW+Q0U98tiIoOSdSBC89BMBgGCSqGSIb3DQEJAzELBgkq
-hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDQwNDIwNDMwM1owaQYJKoZIhvcNAQkPMVwwWjAL
+AQkEMSIEIMFUzTFjdwkumXs1Mm60mnE6pmqhxMYN9K0NGx0YTxWyMBgGCSqGSIb3DQEJAzELBgkq
+hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDQwNDIxMDg0MVowaQYJKoZIhvcNAQkPMVwwWjAL
 BglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG
-9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQC0EVp70Bxd
-jEAfm94ihEX8J1WSCkmQVfIBk2sP5Xoig0YLumNZMvL1HZGmHapWpQFQImam7lKwhUWP+j7Xf47i
-l0UZIbC2igQ7JIbhWOz9fw2OFJZdbWr6rwdwUA6nMEEuSRnNEAnnLCwzK6aymjk731pnwb4s4EgZ
-lWHG/98JOe8thsQLCujxzqIworKyrH4h5CnGAxFuwvorgn5ZqRt2W0yXu22avk43QUBbdw4rWKX2
-RWSTAObJedDHlV//WHoeAVBk/hvDCpvcYCdYxJcvHkg1l7qYkhXomSAH+Pdnz5WwUS3hNAMsJ5xP
-Rts5nMuU8hmok5Ljq691q+LUDpXg
---000000000000d3d73505f888b8a7--
+9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQC1iDiGWNBc
+N7KSGBz1lCB6nkFfGOd7MVEuVMT10CRkFVLbpxfaEbtfXvi/cvD+RHLytrAgOgTae45KfujPMUGg
+PNOqQo3CiQ/qQpGb968Jz057UtnFLnTF09v+lmmoqJMOoGqjZ37xOejbgXtd81W+mw7LY/WW7cPa
+kI33BUiptXFesnjJFlRmMUlfop3hPlowFqz1/d/ZMLQiWLcKa7DgXh+m/yXC/7FI3CDxQ3L1rHbC
+sUrx2WjJQcFBZKUaxGwWFtBXY2R4/2O0wMhE286afIFw2Sxt1i2HMO/RARuhVqLuz/lDaB/wd7pj
+pRrNUXoI4ZHUzbJeSEH99GriUM+O
+--0000000000007aa52405f88914ac--
 
