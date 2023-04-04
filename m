@@ -1,179 +1,115 @@
-Return-Path: <Martin.Jansa@gmail.com>
+Return-Path: <ernstp@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61921C6FD1D
-	for <webhook@archiver.kernel.org>; Tue,  4 Apr 2023 21:35:54 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web11.115048.1680644153708204528
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED84BC6FD1D
+	for <webhook@archiver.kernel.org>; Tue,  4 Apr 2023 23:45:34 +0000 (UTC)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+ by mx.groups.io with SMTP id smtpd.web10.117987.1680651933095956760
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Apr 2023 14:35:54 -0700
+ Tue, 04 Apr 2023 16:45:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20210112 header.b=XoY45/qL;
- spf=pass (domain: gmail.com, ip: 209.85.128.41, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f41.google.com with SMTP id n10-20020a05600c4f8a00b003ee93d2c914so22279017wmq.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 04 Apr 2023 14:35:53 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20210112 header.b=o2evubzR;
+ spf=pass (domain: gmail.com, ip: 209.85.167.182, mailfrom: ernstp@gmail.com)
+Received: by mail-oi1-f182.google.com with SMTP id r14so19822852oiw.12
+        for <bitbake-devel@lists.openembedded.org>; Tue, 04 Apr 2023 16:45:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680644152; x=1683236152;
+        d=gmail.com; s=20210112; t=1680651932; x=1683243932;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zh6JtgJH1rXJ8TqrK+acbA5aBm+CNsXYM3nvFZp2JiM=;
-        b=XoY45/qLPqjOuXbySXaJptRAGe4XdrNVWPLobHLVFJtOVnaKbu0LRTLHhmVF0yMNFF
-         it3kYB1Mfs10/23uz2PAIXgjJX9zsRNCa8jq3BtIc8GdbeoAimpjelGydAHGhJWRzofc
-         DDphTc1XP/2t3vUdlPjoB4pTzjkGJnSOY8YQXQ0cPNjKT7+Mkz9viJuemOSYD0mvkvU2
-         /JGBiUpJvulE598KEsFxSyB4x/JBdqiyPSzsoqSWL0C4slSkmfGd7RMSsXOzdDRuDnVk
-         yY3Yio2R63nXfrgV34qxiL2VJKEiZEvLA8knSwK4f7WsYxS72FJExZvY8RBSALoH4eam
-         jzJw==
+        bh=u6VWbLIzWvJt5v/VrR/TfhrAFEr6Z3FaoMa6B1t3Cg4=;
+        b=o2evubzRHBOEZTTODXNzlwTuBrGGee0hR42Nts+qoB9D9WaYisY0O/N0LLZTKaZ0jy
+         Tt7karJpDwK75HaQYsOrdSFS4Irj+MYiRrSIR0uEyR8orcYQCarjHRCY7Peyx37Cm0pj
+         W0o4d3O9JnGVrRM0x4xSjiyqjIoL3ok/AzCKXJPGHHFp6VqzEObnML247pspGWQQxy0D
+         0P5kyvPUUCSd2rfuTxJdmYjmkBzJGpNIPxitd1eFlJRgRenTqXF3i8z9XIPJSa1Vkiw1
+         8W4KK4+KlQgSiBxs/cRF/pqZBAZFMszwEc0qZU4aWrqlf7ChuxMD7S8+5nG3OShZ96d3
+         +4iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680644152; x=1683236152;
+        d=1e100.net; s=20210112; t=1680651932; x=1683243932;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Zh6JtgJH1rXJ8TqrK+acbA5aBm+CNsXYM3nvFZp2JiM=;
-        b=2eh8BkglIcFl+BXGuRVroOhgEN4l7VwGtMMM83KEMzI43ieMGWQLr1zjyhAOEaFReG
-         wCz8UmfCQpbygvr1EfDZokAlQS33LUIzK1sTnSoh1EQ8apxA4PV48hpieUZhOx+b4mXT
-         4j/q1fVmqFuqDwpuWnLVbsJUf8cA1xM44iMPpIL012j5/qPKxtcTJb5S+k2ZK0vDfwK2
-         jbLlZPCjDASw9dgCzasWq+moiJ36Ul1LSXTbbG+NGyicC06wNouGHXdRxpWaj1vVVhIf
-         XZobC3GQAgkUUQydeqzPN68q/VkP/EVdYEkufnuauXLSSNezxeX1rfj+haSqJUm57jxa
-         9uKw==
-X-Gm-Message-State: AAQBX9ciFdGO16qLru7uWT8OhaSzLVty1w2CFwBMJr/EqTFaP7kWfO50
-	wAQDyDjSwgiYLnvKoJ8w/L7yH4GLtj4fn0ZE71w=
-X-Google-Smtp-Source: AKy350YnHiRuCpAIC2aUSjAztaIGBIiuvEFttMJn65h6j49OOHOB5Er04BhHJllm50DxPycrCziEw2ptnPgC4oibz/Q=
-X-Received: by 2002:a1c:ed02:0:b0:3f0:5beb:6d8 with SMTP id
- l2-20020a1ced02000000b003f05beb06d8mr1028463wmh.3.1680644151915; Tue, 04 Apr
- 2023 14:35:51 -0700 (PDT)
+        bh=u6VWbLIzWvJt5v/VrR/TfhrAFEr6Z3FaoMa6B1t3Cg4=;
+        b=3d8glDiDBrIUBmD4IVfXclyGaB8FDeyyNA1aXaoXHL7nWMBh4MpJpfGa4TW+fEtF5v
+         C06nvbtzTbZn0uxpSQKdahQyC93LXUS2DwyoOZoPk1ej1ttQehfEYCTSdMBBgJE2HCW6
+         jFX2regoarGokMrqfJJfnF0uMY+mombs525MbbPvxxhKIy1K0LnVM5+DedaTbP1fp3g1
+         cD6rnnKRBJy7AsYCmGI/QzmujqR7y/rUEdQv3nhJCv9vIBJU7Wt0wmA/UI3C8diqxbdy
+         wpTYz/uKUd3JMMoQ9iVqNQJOF1qNAVjt14NjP0f/g7i1wUlUFcJvm1ZCyyPNoUHfZT3K
+         qO8w==
+X-Gm-Message-State: AAQBX9d1saMSp69qyJGCk07X53vydCdDbv56ekzcfZbSCm6myxfWrsTB
+	/uFnhdHkA5OsLt3J3ySfJGFjJbPFwH5k4l8qQ1M=
+X-Google-Smtp-Source: AKy350aqVMIMcJYGtIdxXNXh9DU7IDBQiWQjJx70sf6L9SI15gRXttFrz9Otj83ZM/AGgrFd0seFDPqOXKqV7lK/e3k=
+X-Received: by 2002:a05:6808:2b0d:b0:388:5e96:2f6a with SMTP id
+ fe13-20020a0568082b0d00b003885e962f6amr355356oib.0.1680651932310; Tue, 04 Apr
+ 2023 16:45:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230401152101.19037-1-frederic.martinsons@gmail.com>
- <7d59e968-1dea-acf1-6d18-59bb4fd35cb6@mvista.com> <CA+chaQcWaafMWnok=q+3SUcEj-+R99wxdC4JXpaM+rAGYCWhkg@mail.gmail.com>
- <68045681-5481-80f5-30f4-e15616503dcd@mvista.com>
-In-Reply-To: <68045681-5481-80f5-30f4-e15616503dcd@mvista.com>
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Tue, 4 Apr 2023 23:35:33 +0200
-Message-ID: <CA+chaQead2PQ4yn7XSp-dejU+66kzROBOkAAeAJA42h=BSRLHg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch2: Display all missing checksum at once
-To: akuster <akuster@mvista.com>
-Cc: Frederic Martinsons <frederic.martinsons@gmail.com>, bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000ab380605f8897574"
+References: <43210b1ce3260a74b29f28db3125aad206612ac9.camel@infinera.com>
+In-Reply-To: <43210b1ce3260a74b29f28db3125aad206612ac9.camel@infinera.com>
+From: =?UTF-8?Q?Ernst_Sj=C3=B6strand?= <ernstp@gmail.com>
+Date: Wed, 5 Apr 2023 01:45:21 +0200
+Message-ID: <CAD=4a=VVXxX-OW2sSzsNaji8uqRsp15yxkYpgDZUgdwFqsK-qQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] building python-inflect ?
+To: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 04 Apr 2023 21:35:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14637
+ <bitbake-devel@lists.openembedded.org>; Tue, 04 Apr 2023 23:45:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14638
 
---000000000000ab380605f8897574
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I think you want to add
+inherit python_setuptools_build_meta
 
-On Tue, Apr 4, 2023 at 11:08=E2=80=AFPM akuster <akuster@mvista.com> wrote:
+Regards
+//Ernst
 
+Den tis 4 apr. 2023 kl 22:21 skrev Joakim Tjernlund
+<Joakim.Tjernlund@infinera.com>:
+>
+> Trying to make a .bb for python-inflect, https://github.com/jaraco/inflect but this pkg
+> does not have a setup.py, only a setup.cfg
+>
+> I do not speak python and cannot work out what to do, I got(can someone help me fill in the missing part?):
+>
+> SUMMARY = "A port of Ruby on Rails' inflection to Python."
+> HOMEPAGE = "https://pypi.org/project/inflect"
+> LICENSE = "MIT"
+> SECTION = "devel/python"
+> #LIC_FILES_CHKSUM = "file://LICENSE;md5=2fb6fa1a6f1792d78de19ad1bb653c31"
+> LIC_FILES_CHKSUM = "file://LICENSE;md5=7a7126e068206290f3fe9f8d6c713ea6"
+>
+> SRC_URI[md5sum] = "e7aad8f161ee9c85c7d125af69ae661f"
+> SRC_URI[sha256sum] = "f1a6bcb0105046f89619fde1a7d044c612c614c2d85ef182582d9dc9b86d309a"
+>
+> inherit pypi ptest
+>
+> SRC_URI +=" \
+>         file://run-ptest \
+> "
+> #DEPENDS = "python3-pydantic"
+> RDEPENDS:${PN} = "python3-pydantic"
+>
+> RDEPENDS:${PN}_ptest +=" \
+>         ${PYTHON_PN}_pytest \
+> "
+>
+> do_install_ptest() {
+>         cp -f ${S}/test_inflection.py ${D}${PTEST_PATH}/
+> }
 >
 >
-> On 4/4/23 1:07 PM, Martin Jansa wrote:
-> > On Tue, Apr 4, 2023 at 6:50=E2=80=AFPM akuster <akuster@mvista.com> wro=
-te:
-> >
-> >
-> >
-> >     On 4/1/23 11:21 AM, Frederic Martinsons wrote:
-> >     > From: Frederic Martinsons <frederic.martinsons@gmail.com>
-> >     >
-> >     > Instead of only display the first and stop.
-> >     > For recipe (crago based) that can contains several artifacts
-> >     > to fetch with their checksum, it will particularly handy
-> >     > to display all of missing one.
-> >     >
-> >     > An example of error message would be
-> >
-> >     I am confused. Is this patch supposed to add the pkg version or
-> >     not?  I
-> >     am not seeing any. Any ideas?
-> >
-> >
-> > name parameter with pkg version was added to bbclass in:
-> >
-> https://git.openembedded.org/openembedded-core/commit/?id=3D1795e98a04ad0=
-9b011afcc7cc3bf6dc49475b19a
-> >
-> > this change only allows all missing/incorrect checksums to be showsn
-> > at the same time, instead of one checksum per do_fetch failure.
+> RDEPENDS:${PN} += "${PYTHON_PN}-pytest"
 >
-> I get multiple hashes for the same package.
+> BBCLASSEXTEND = "native nativesdk"
 >
-> SRC_URI[wasi.sha256sum] =3D
-> "1a143597ca7c7793eff794def352d41792a93c481eb1042423ff7ff72ba2c31f"
-> SRC_URI[wasi.sha256sum] =3D
-> "cccddf32554fecc6acb585f82a32a72e28b48f8c4c1883ddfeeeaa96f7d8e519"
 >
-> so why no version info after the pkg name?
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14634): https://lists.openembedded.org/g/bitbake-devel/message/14634
+> Mute This Topic: https://lists.openembedded.org/mt/98068636/4947266
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [ernstp@gmail.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
 >
-
-Did you regenerate the SRC_URIs with updated bbclass? It works for me as in=
-:
-https://github.com/shr-project/meta-webosose/commit/84dc9f3cc3dd85facde07cc=
-ddce0b9f2bcd90d39
-
---000000000000ab380605f8897574
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr">On Tue, Apr 4, 2023 at 11:08=E2=80=AFPM a=
-kuster &lt;<a href=3D"mailto:akuster@mvista.com">akuster@mvista.com</a>&gt;=
- wrote:<br></div><div class=3D"gmail_quote"><blockquote class=3D"gmail_quot=
-e" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204)=
-;padding-left:1ex"><br>
-<br>
-On 4/4/23 1:07 PM, Martin Jansa wrote:<br>
-&gt; On Tue, Apr 4, 2023 at 6:50=E2=80=AFPM akuster &lt;<a href=3D"mailto:a=
-kuster@mvista.com" target=3D"_blank">akuster@mvista.com</a>&gt; wrote:<br>
-&gt;<br>
-&gt;<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0On 4/1/23 11:21 AM, Frederic Martinsons wrote:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0&gt; From: Frederic Martinsons &lt;<a href=3D"mailt=
-o:frederic.martinsons@gmail.com" target=3D"_blank">frederic.martinsons@gmai=
-l.com</a>&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0&gt; Instead of only display the first and stop.<br=
->
-&gt;=C2=A0 =C2=A0 =C2=A0&gt; For recipe (crago based) that can contains sev=
-eral artifacts<br>
-&gt;=C2=A0 =C2=A0 =C2=A0&gt; to fetch with their checksum, it will particul=
-arly handy<br>
-&gt;=C2=A0 =C2=A0 =C2=A0&gt; to display all of missing one.<br>
-&gt;=C2=A0 =C2=A0 =C2=A0&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0&gt; An example of error message would be<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0I am confused. Is this patch supposed to add the pk=
-g version or<br>
-&gt;=C2=A0 =C2=A0 =C2=A0not?=C2=A0 I<br>
-&gt;=C2=A0 =C2=A0 =C2=A0am not seeing any. Any ideas?<br>
-&gt;<br>
-&gt;<br>
-&gt; name parameter with pkg version was added to bbclass in:<br>
-&gt; <a href=3D"https://git.openembedded.org/openembedded-core/commit/?id=
-=3D1795e98a04ad09b011afcc7cc3bf6dc49475b19a" rel=3D"noreferrer" target=3D"_=
-blank">https://git.openembedded.org/openembedded-core/commit/?id=3D1795e98a=
-04ad09b011afcc7cc3bf6dc49475b19a</a><br>
-&gt;<br>
-&gt; this change only allows all missing/incorrect checksums to be showsn <=
-br>
-&gt; at the same time, instead of one checksum per do_fetch failure.<br>
-<br>
-I get multiple hashes for the same package.<br>
-<br>
-SRC_URI[wasi.sha256sum] =3D <br>
-&quot;1a143597ca7c7793eff794def352d41792a93c481eb1042423ff7ff72ba2c31f&quot=
-;<br>
-SRC_URI[wasi.sha256sum] =3D <br>
-&quot;cccddf32554fecc6acb585f82a32a72e28b48f8c4c1883ddfeeeaa96f7d8e519&quot=
-;<br>
-<br>
-so why no version info after the pkg name?<br></blockquote><div><br></div><=
-div>Did you regenerate the SRC_URIs with updated bbclass? It works for me a=
-s in:</div><div><a href=3D"https://github.com/shr-project/meta-webosose/com=
-mit/84dc9f3cc3dd85facde07ccddce0b9f2bcd90d39">https://github.com/shr-projec=
-t/meta-webosose/commit/84dc9f3cc3dd85facde07ccddce0b9f2bcd90d39</a></div></=
-div></div>
-
---000000000000ab380605f8897574--
 
