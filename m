@@ -1,141 +1,129 @@
-Return-Path: <enrico.scholz@sigma-chemnitz.de>
+Return-Path: <frederic.martinsons@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63842C7619A
-	for <webhook@archiver.kernel.org>; Wed,  5 Apr 2023 12:21:48 +0000 (UTC)
-Received: from smtpout.cvg.de (smtpout.cvg.de [87.128.211.67])
- by mx.groups.io with SMTP id smtpd.web10.128366.1680697294712201288
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471C5C76188
+	for <webhook@archiver.kernel.org>; Wed,  5 Apr 2023 12:22:08 +0000 (UTC)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+ by mx.groups.io with SMTP id smtpd.web10.128378.1680697326256703140
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 05 Apr 2023 05:21:39 -0700
+ Wed, 05 Apr 2023 05:22:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sigma-chemnitz.de header.s=v2022040800 header.b=bbVufIez;
- spf=pass (domain: sigma-chemnitz.de, ip: 87.128.211.67, mailfrom: enrico.scholz@sigma-chemnitz.de)
-Received: from mail-mta-3.intern.sigma-chemnitz.de (mail-mta-3.intern.sigma-chemnitz.de [192.168.12.71])
-	by mail-out-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 335CLV3r1308760
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>; Wed, 5 Apr 2023 14:21:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
-	s=v2022040800; t=1680697292;
-	bh=2XjsGxQkDVedLcTZGfx1j/yc1y0oM2nwQp+72ITIIJE=; l=3040;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bbVufIezIdRjIfEqMFh6jw3bbut9FcbqqLhqJaYyHfKt684WRHvYBlZSF629q7GbF
-	 ylIumMr26yFoaTxOck2WV+384cQOTtQZmtje4CiollneC8qsrULPTvn10mXzrZ/ZI7
-	 YAt7DQT+wuwhZkSS2v1NS8nVwiY1+/LzOMOirxiyoSKqfMNZZcf1lsyOyw2oppFP4r
-	 EX8+8kaVDiDesUaIUU4tb55fSr9kZfxS7gQq74vlHpEzIwlyFadpiubsEsqjljjxZ9
-	 AEELBT5tlnxmbY+RT4xuLyZKM67ojZyZr8tXI/z42q42xTXaZE7gfh9KXzJXoJZtJZ
-	 08wsZNrvmr7YQ==
-Received: from reddoxx.intern.sigma-chemnitz.de (reddoxx.sigma.local [192.168.16.32])
-	by mail-mta-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 335CLTY2402581
-	for <bitbake-devel@lists.openembedded.org> from enrico.scholz@sigma-chemnitz.de; Wed, 5 Apr 2023 14:21:30 +0200
-Received: from mail-msa-2.intern.sigma-chemnitz.de ([192.168.12.72])
-	by reddoxx.intern.sigma-chemnitz.de with ESMTP
-	id QVHZQKIE3J; Wed, 05 Apr 2023 14:21:28 +0200
-Received: from ensc-pc.intern.sigma-chemnitz.de (ensc-pc.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail-msa-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 335CLS1E1270256
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 5 Apr 2023 14:21:28 +0200
-Received: from ensc by ensc-pc.intern.sigma-chemnitz.de with local (Exim 4.96)
-	(envelope-from <ensc@sigma-chemnitz.de>)
-	id 1pk28m-00E5pF-1S;
-	Wed, 05 Apr 2023 14:21:28 +0200
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-To: bitbake-devel@lists.openembedded.org
-Cc: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Subject: [PATCH, v2] fetch2/crate: create versioned 'name' entries
-Date: Wed,  5 Apr 2023 14:21:25 +0200
-Message-Id: <20230405122125.3358972-1-enrico.scholz@sigma-chemnitz.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230405101609.3309660-1-enrico.scholz@sigma-chemnitz.de>
-References: <20230405101609.3309660-1-enrico.scholz@sigma-chemnitz.de>
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=JUP75Cbw;
+ spf=pass (domain: gmail.com, ip: 209.85.208.173, mailfrom: frederic.martinsons@gmail.com)
+Received: by mail-lj1-f173.google.com with SMTP id t14so37108703ljd.5
+        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 05:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680697324;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NzaEi5+8bQPDEAOKZdJsOsN4dF/o+BBwpM3a7kGxG0k=;
+        b=JUP75CbwiWJDK9puwRPeW6drZSqbnQ1e3tmWbDCloBtZOQM2ZTd+El4tbOhfF1L1Px
+         P3807588OTvyy3WokrEqn5jnudSM2ZdKq/KtfNOTXAKSU48kdcv1S6geRdR+fzADmQed
+         VFgt4/vGPRik8oeDvM+QfGzrVANaVG/BKQIgAvPDp380d/UiWTidmVhwNXIqzrKojXn0
+         /szoH063oHjiqgJheaXbMCdilcR93zojSG8N+KJrlyLCKkZsx6HDPodel/AtjkzrFDxO
+         9eMf4yhFJ6sg1DOmXQg3Fmrg8BC08pkHt8F/tmqFFJP7mh6qo+5phIuWSLlL1ML+dKP+
+         M8Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680697324;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NzaEi5+8bQPDEAOKZdJsOsN4dF/o+BBwpM3a7kGxG0k=;
+        b=Kuv4jDe63v2dBS9z8F12kmiAnF7R+jFqXUliKBRkM4Y66qHe7vaeLEBsY+kLXpb47F
+         i8A+NW8v5hWbm3hgrUx0eFQzOx4GoFy2lxGX83Ooj8xwcF+EVce2kM4JmnPvPPX88rsn
+         sehCGgYUru9XQva7n9+6eg3wppO1hBbb6EJo4ShBm+6kxcwJjco6lCsgejK2DuvBrjTv
+         umpmTYVJyXqhSaNXNvUJC30kPwzs6OCclE0jK3nbTostZriRmL7kMfDPlpPJFaZAzA1O
+         WerrFON5FrHn+IQxgJsKcautBb+U82FKXOUx77QBElYGtLn1VeR+a5z+sWR1Weo7OvBN
+         gclQ==
+X-Gm-Message-State: AAQBX9fPaPHQ1Ad5Hs5r3i3x9Drx1QTmb+YFN4YIj0eg2lyhfEJ9UYm9
+	XiQf1u0MYVmZtNIuTU8yu7SbdSla3wcje5uY9bY=
+X-Google-Smtp-Source: AKy350YOs2w6wjWyeQq/meZTMmnQt91Mzitab6qI8XiLN8rZ/YgMR1Bt7sbzba9Ftv36Nux2EsuEI4H6wFY9R/SNBuw=
+X-Received: by 2002:a05:651c:546:b0:2a2:35dd:4b30 with SMTP id
+ q6-20020a05651c054600b002a235dd4b30mr1010994ljp.3.1680697324107; Wed, 05 Apr
+ 2023 05:22:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-X-REDDOXX-Id: 642d67c85038ce378780cbe6
+References: <20230405101609.3309660-1-enrico.scholz@sigma-chemnitz.de>
+ <CA+cAkerT+8E=Td+HEzKw_O7Xa8LSdF1DZvjyf9Kze+XergaCNg@mail.gmail.com> <lyh6tucyz9.fsf@ensc-pc.intern.sigma-chemnitz.de>
+In-Reply-To: <lyh6tucyz9.fsf@ensc-pc.intern.sigma-chemnitz.de>
+From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
+Date: Wed, 5 Apr 2023 14:21:52 +0200
+Message-ID: <CA+cAkerceUTAyZ6DveoQF1d-i4nHg6f64UJ2PUr-=L0igeCsFg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] fetch:crate: create versioned 'name' entries
+To: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000fa7bee05f895d698"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 12:21:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14652
+ <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 12:22:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14653
 
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+--000000000000fa7bee05f895d698
+Content-Type: text/plain; charset="UTF-8"
 
-It is common for rust packages to depend on different versions of the
-same crate.  E.g.
+On Wed, 5 Apr 2023 at 14:09, Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+wrote:
 
-|    crate://crates.io/windows_x86_64_msvc/0.42.2 \
-|    crate://crates.io/windows_x86_64_msvc/0.48.0 \
+> > To bootstrap a cargo base recipe which have not this checksum list, below
+> > are
+> > the steps to make:
+> >   - make the recipe inherit cargo-update-recipe-crates
+> >   - remove all crate:// from your recipe
+> >   - create an empty ${BPN}-crates.inc file and make your recipe requires
+> it
+> >   - execute "bitbake -c update_crates your_recipe"
+>
+> This does not work.  This class requires Cargo.lock, but to have
+> Cargo.lock, do_compile() must be executed.  This fails when required
+> crates are not available yet.
+>
+>
+> Enrico
+>
 
-Identification only by the plain crate name makes the sha256sum
-ambiguous
+A rust project must have a Cargo.lock in its source (
+https://doc.rust-lang.org/cargo/faq.html#why-do-binaries-have-cargolock-in-version-control-but-not-libraries
+)
+unless it is a pure library but I don't see the use case of building a rust
+library that wouldn't be a simple
+crate on crates.io.
 
-| SRC_URI[windows_x86_64_msvc.sha256sum] = "9aec5da331524158c6d1a4ac0ab1541149c0b9505fde06423b02f5ef0106b9f0"
-| SRC_URI[windows_x86_64_msvc.sha256sum] = "1a515f5799fe4961cb532f983ce2b23082366b898e52ffbce459c86f67c8378a"
+--000000000000fa7bee05f895d698
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-and requires lot of manual work to fix the SRC_URI list.
+<div dir=3D"ltr"><div dir=3D"ltr"></div><br><div class=3D"gmail_quote"><div=
+ dir=3D"ltr" class=3D"gmail_attr">On Wed, 5 Apr 2023 at 14:09, Enrico Schol=
+z &lt;<a href=3D"mailto:enrico.scholz@sigma-chemnitz.de">enrico.scholz@sigm=
+a-chemnitz.de</a>&gt; wrote:</div><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
+-left:1ex">
+&gt; To bootstrap a cargo base recipe which have not this checksum list, be=
+low<br>
+&gt; are<br>
+&gt; the steps to make:<br>
+&gt;=C2=A0 =C2=A0- make the recipe inherit cargo-update-recipe-crates<br>
+&gt;=C2=A0 =C2=A0- remove all crate:// from your recipe<br>
+&gt;=C2=A0 =C2=A0- create an empty ${BPN}-crates.inc file and make your rec=
+ipe requires it<br>
+&gt;=C2=A0 =C2=A0- execute &quot;bitbake -c update_crates your_recipe&quot;=
+<br>
+<br>
+This does not work.=C2=A0 This class requires Cargo.lock, but to have<br>
+Cargo.lock, do_compile() must be executed.=C2=A0 This fails when required<b=
+r>
+crates are not available yet.<br>
+<br>
+<br>
+Enrico<br></blockquote><div>=C2=A0</div><div>A rust project must have a Car=
+go.lock in its source (<a href=3D"https://doc.rust-lang.org/cargo/faq.html#=
+why-do-binaries-have-cargolock-in-version-control-but-not-libraries">https:=
+//doc.rust-lang.org/cargo/faq.html#why-do-binaries-have-cargolock-in-versio=
+n-control-but-not-libraries</a>)</div><div>unless it is a pure library but =
+I don&#39;t see the use case of building a rust library that wouldn&#39;t b=
+e a simple</div><div>crate on <a href=3D"http://crates.io">crates.io</a>.</=
+div><div><br></div></div></div>
 
-Making the 'name' property unique by appending the version allows
-direct copy & paste of reported sha256sum errors to complete the
-crates list.
-
-Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
----
- lib/bb/fetch2/crate.py | 2 +-
- lib/bb/tests/fetch.py  | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
-index 590dc9c12681..a7021e5b367c 100644
---- a/lib/bb/fetch2/crate.py
-+++ b/lib/bb/fetch2/crate.py
-@@ -72,7 +72,7 @@ class Crate(Wget):
-         ud.url = "https://%s/%s/%s/download" % (host, name, version)
-         ud.parm['downloadfilename'] = "%s-%s.crate" % (name, version)
-         if 'name' not in ud.parm:
--            ud.parm['name'] = name
-+            ud.parm['name'] = '%s-%s' % (name, version)
- 
-         logger.debug2("Fetching %s to %s" % (ud.url, ud.parm['downloadfilename']))
- 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index da6716890070..6ef0836f2be9 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2380,7 +2380,7 @@ class CrateTest(FetcherTest):
-         ud = fetcher.ud[fetcher.urls[0]]
- 
-         self.assertIn("name", ud.parm)
--        self.assertEqual(ud.parm["name"], "glob")
-+        self.assertEqual(ud.parm["name"], "glob-0.2.11")
-         self.assertIn("downloadfilename", ud.parm)
-         self.assertEqual(ud.parm["downloadfilename"], "glob-0.2.11.crate")
- 
-@@ -2428,13 +2428,13 @@ class CrateTest(FetcherTest):
-         ud = fetcher.ud[fetcher.urls[0]]
- 
-         self.assertIn("name", ud.parm)
--        self.assertEqual(ud.parm["name"], "glob")
-+        self.assertEqual(ud.parm["name"], "glob-0.2.11")
-         self.assertIn("downloadfilename", ud.parm)
-         self.assertEqual(ud.parm["downloadfilename"], "glob-0.2.11.crate")
- 
-         ud = fetcher.ud[fetcher.urls[1]]
-         self.assertIn("name", ud.parm)
--        self.assertEqual(ud.parm["name"], "time")
-+        self.assertEqual(ud.parm["name"], "time-0.1.35")
-         self.assertIn("downloadfilename", ud.parm)
-         self.assertEqual(ud.parm["downloadfilename"], "time-0.1.35.crate")
- 
-@@ -2451,7 +2451,7 @@ class CrateTest(FetcherTest):
-     def test_crate_incorrect_cksum(self):
-         uri = "crate://crates.io/aho-corasick/0.7.20"
-         self.d.setVar('SRC_URI', uri)
--        self.d.setVarFlag("SRC_URI", "aho-corasick.sha256sum", hashlib.sha256("Invalid".encode("utf-8")).hexdigest())
-+        self.d.setVarFlag("SRC_URI", "aho-corasick-0.7.20.sha256sum", hashlib.sha256("Invalid".encode("utf-8")).hexdigest())
- 
-         uris = self.d.getVar('SRC_URI').split()
- 
--- 
-2.39.2
-
+--000000000000fa7bee05f895d698--
 
