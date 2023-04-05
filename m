@@ -1,262 +1,255 @@
-Return-Path: <akuster@mvista.com>
+Return-Path: <frederic.martinsons@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2039FC761A6
-	for <webhook@archiver.kernel.org>; Wed,  5 Apr 2023 11:38:18 +0000 (UTC)
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
- by mx.groups.io with SMTP id smtpd.web11.127635.1680694695189790528
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53867C76188
+	for <webhook@archiver.kernel.org>; Wed,  5 Apr 2023 12:03:58 +0000 (UTC)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+ by mx.groups.io with SMTP id smtpd.web11.128135.1680696237441753075
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 05 Apr 2023 04:38:15 -0700
+ Wed, 05 Apr 2023 05:03:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@mvista.com header.s=google header.b=IbbPJ2vb;
- spf=pass (domain: mvista.com, ip: 209.85.210.53, mailfrom: akuster@mvista.com)
-Received: by mail-ot1-f53.google.com with SMTP id r17-20020a05683002f100b006a131458abfso16270348ote.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 04:38:15 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=C7FP96NV;
+ spf=pass (domain: gmail.com, ip: 209.85.167.49, mailfrom: frederic.martinsons@gmail.com)
+Received: by mail-lf1-f49.google.com with SMTP id k37so46349651lfv.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 05:03:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista.com; s=google; t=1680694694;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=U2AMd4sZCYiMPRnKDy3/vHNaShi04shioTAy3tO1oi0=;
-        b=IbbPJ2vbxndXH4s84ylHZXq4ZUfPixIXJzdUeByE1fMbI1yNo7GSkbZWtBexMNPDST
-         Jh+3dxkhabQ12OsMcpkJxuFopPLIIhWkgK7jys57RIpe+i2ECIZK4umXmvbUvXXikXui
-         2MfOjgLes7WDL48Gc9RHw+y5zpCmj1ulZlqS8=
+        d=gmail.com; s=20210112; t=1680696236;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZR3NhzvNizMYfjCYbnn9FaOZ0KX5JeIvxEzecMVrPhU=;
+        b=C7FP96NVz6huD1gsj5g/ws6Gy7O1i7TarH7IXfSQ1FaLL602mSPW6EPoPpMNQPJ4aH
+         Jtat6mLI2/Cck9/uG9Uya0FSMpHvfqRv9yvwB+2SIMAYlAbFm6UAzJd0giwTtQvL3A3V
+         DGpMaHzD2SmHfQgNhIxesDr2KKSxU4e7hiYbWF1QU6lH+aV6tL4rYf5FZZjAzvKoE2+2
+         k6BusYV2AVlJwsPow8KyFHzooRqwdyDmDzXkv1stWxYBcHAUDqOME7HUdLY4Y+1bba+V
+         shP+Y7Kv6elY8tYHvEigoAm3PUZQV+heHUnHEeWv+uEgiLfYHWdbqaIsi2VePJqgpgyG
+         lVuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680694694;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U2AMd4sZCYiMPRnKDy3/vHNaShi04shioTAy3tO1oi0=;
-        b=uZ7DS9oec48+R6l9ZhFLB52C62jvdxZdS3aAq6MM8wW0tl0kDldIlWmPOh0XhCujlq
-         V/2KeLYQpJKcQZ+j6IsGuU0wRZW7af7wO4UpRMeExb8pGdb9Kn8MbktKrFVhC/beXWgQ
-         j4LtcCPiA7lYkG+LsDba2B5OzCJoC11wFtDp9YuIYB8iGchFzp8c9KSJPxw67aKqoZyU
-         ZypofI7BLwnVcfVMtnnODFrcTcFbaf0ULo8uxh4XrVgvDDa9N/uWqt+T3TEowTo3wBUW
-         L6H/db5rhbYZ037ZLrThUGf6UjUtBi2dda2hQpXL6EpQk7O5zp0XRIGDivNZfW99Ppq9
-         0eQw==
-X-Gm-Message-State: AAQBX9fXq+rDGY67+kaj6Ea0UtgWrKLm0WayJGglLTjpaIO3XFWaTpVD
-	Vkw/BvNOulXYZKfxHuccTEBQlA==
-X-Google-Smtp-Source: AKy350ZmmlaAB3/YOZ+VCTCX+fxZPTL+aoMZ2S7cK81VWwNjq2xuRm+IKCyM5GJHT9sxKZcqRBpXGA==
-X-Received: by 2002:a05:6830:1e24:b0:696:4ef5:e6ce with SMTP id t4-20020a0568301e2400b006964ef5e6cemr2363721otr.19.1680694694431;
-        Wed, 05 Apr 2023 04:38:14 -0700 (PDT)
-Received: from ?IPV6:2600:1700:9190:ba10:36f6:c20d:238e:7162? ([2600:1700:9190:ba10:36f6:c20d:238e:7162])
-        by smtp.gmail.com with ESMTPSA id c15-20020a9d6c8f000000b00690e21a46e1sm6618123otr.56.2023.04.05.04.38.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Apr 2023 04:38:14 -0700 (PDT)
-Message-ID: <dc11468e-92b7-ad73-bd88-bbf60e6a42b1@mvista.com>
-Date: Wed, 5 Apr 2023 07:38:13 -0400
+        d=1e100.net; s=20210112; t=1680696236;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZR3NhzvNizMYfjCYbnn9FaOZ0KX5JeIvxEzecMVrPhU=;
+        b=0MV16om0X14oYfagYM7x0Gd/U2a2krT/lp6/IiGY6KqEXoRMCHOZ0l77XkveCzvWcL
+         pu3lhTzoyvQq78V192UWT6X3Sq586Y/+4x//G3Y0w1uAps5KThPsBc/lvCfQkOK7/1gC
+         hRZokwpaQ8e26gk7o8hULpMmMQSVcUb55s3BrnTgtXNNuUcyvyX7V3ka6dAfcMnrYvaW
+         PdLSOVYdo+rhTTjEL5Lek4DVSdTeqULUjFZm+kT9neh+nBhA+5BG4XEvyiWoI0A+0uPp
+         8C/69/XWY3VsKfOmwTRbZYWmVoXChtqnHX8QBxDxwI6r79T7vT3jUw6u48DGDNnqhx8S
+         0IoQ==
+X-Gm-Message-State: AAQBX9f16qLU4YIUkIe8y9DuatqiDq+rRKHqEJ1CYodF3A/keOfrXAUM
+	YtU+4n+fAGwodNWU6mpFFCOvBEsCtdB+DwiMm90=
+X-Google-Smtp-Source: AKy350YiXlspYLlAZ9gGnwkIugqRlouaIY7xozsAmJVOEuF4auAnMkj0RbPN7ppq4yvPDLLn0x8jDUW6x13UmQmFyOQ=
+X-Received: by 2002:ac2:548f:0:b0:4e0:822f:9500 with SMTP id
+ t15-20020ac2548f000000b004e0822f9500mr1773944lfk.12.1680696235321; Wed, 05
+ Apr 2023 05:03:55 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [bitbake-devel] [PATCH] fetch2: Display all missing checksum at
- once
-To: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>,
- Martin Jansa <martin.jansa@gmail.com>
+References: <20230405101609.3309660-1-enrico.scholz@sigma-chemnitz.de>
+In-Reply-To: <20230405101609.3309660-1-enrico.scholz@sigma-chemnitz.de>
+From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
+Date: Wed, 5 Apr 2023 14:03:44 +0200
+Message-ID: <CA+cAkerT+8E=Td+HEzKw_O7Xa8LSdF1DZvjyf9Kze+XergaCNg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] fetch:crate: create versioned 'name' entries
+To: enrico.scholz@sigma-chemnitz.de
 Cc: bitbake-devel@lists.openembedded.org
-References: <20230401152101.19037-1-frederic.martinsons@gmail.com>
- <7d59e968-1dea-acf1-6d18-59bb4fd35cb6@mvista.com>
- <CA+chaQcWaafMWnok=q+3SUcEj-+R99wxdC4JXpaM+rAGYCWhkg@mail.gmail.com>
- <68045681-5481-80f5-30f4-e15616503dcd@mvista.com>
- <CA+chaQead2PQ4yn7XSp-dejU+66kzROBOkAAeAJA42h=BSRLHg@mail.gmail.com>
- <CA+cAkeqJmpO2A6-bERPJjTuKt+e-MLBAgtFB34UOSRCb=7hBMw@mail.gmail.com>
-From: akuster <akuster@mvista.com>
-In-Reply-To: <CA+cAkeqJmpO2A6-bERPJjTuKt+e-MLBAgtFB34UOSRCb=7hBMw@mail.gmail.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000004082d405f8953a7c"
+Content-Type: multipart/alternative; boundary="00000000000014ed8405f8959674"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 11:38:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14649
+ <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 12:03:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14650
 
---0000000000004082d405f8953a7c
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+--00000000000014ed8405f8959674
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
+There are multiple issues with this patch.
 
-On 4/5/23 1:20 AM, Frédéric Martinsons wrote:
-> I looked at the suricata recipe in meta-security and it didn't use 
-> cargo-update-recipes.bbclass
+First, this is not compatible with recipes which will override the name
+parameter in their crate:// entry like zvariant in meta-selftest layer.
 
-Right as the recipes existed long before this new class.
+Second, the cargo-update-recipe-crates class already did that modification
+for you (it set name parameter to be pkg-vers and it expect bitbake fetcher
+to respect that),
+by the way, the zavariant I talk about was built with usage of this class
 
->
-> You should modify your rust recipes to use this class and have access 
-> to "bitbake -c update_crates" .
->
-> You can take some examples from , i.e python3-cryptography in 
-> openembedded-core or python3-pyruvate
-> in meta-python.
->
-> The first issue you'll encounter is some kind of bootstrapping (since 
-> update_crates needs to fetch
-> to be able to write checksum but the fetcher needs the checksum ...). 
-> With this error , you'll
-> see all the data you need to add to the suricata-crates.inc.
->
-> For curiosity, I tested locally the modification of suricata and it 
-> seems that this package embeds
-> unexpected Cargo.lock format (in 
-> rust/vendor/alloc-no-stdlib/Cargo.lock) which doesn't contain
-> a source entry (the package doesn't have any dependency).
+Last, this modification makes the bitbake unit test fail.
 
-This is exactly where things stop for me and I start trying to work 
-around it.  Suricata is working on .11 and it looks better in the Crate 
-department. There git sources require bootstrapping which posses it own 
-challenges
+To bootstrap a cargo base recipe which have not this checksum list, below
+are
+the steps to make:
+  - make the recipe inherit cargo-update-recipe-crates
+  - remove all crate:// from your recipe
+  - create an empty ${BPN}-crates.inc file and make your recipe requires it
+  - execute "bitbake -c update_crates your_recipe"
+  - copy paste the output of bitbake about the missing checksums in your
+${BPN}-crates.inc
 
-> I don't know how to handle such a file (simply ignore it in the class 
-> instead of raising an error ?)
-
-There are mechanisms being used in other areas that allow for a recipe 
-to skip or ignore a condition.
-
-Thanks for taking a look, appreciate the support.
-
-BR,
-Armin
->
->
-> On Tue, 4 Apr 2023 at 23:35, Martin Jansa <martin.jansa@gmail.com> wrote:
->
->     On Tue, Apr 4, 2023 at 11:08 PM akuster <akuster@mvista.com> wrote:
->
->
->
->         On 4/4/23 1:07 PM, Martin Jansa wrote:
->         > On Tue, Apr 4, 2023 at 6:50 PM akuster <akuster@mvista.com>
->         wrote:
->         >
->         >
->         >
->         >     On 4/1/23 11:21 AM, Frederic Martinsons wrote:
->         >     > From: Frederic Martinsons <frederic.martinsons@gmail.com>
->         >     >
->         >     > Instead of only display the first and stop.
->         >     > For recipe (crago based) that can contains several
->         artifacts
->         >     > to fetch with their checksum, it will particularly handy
->         >     > to display all of missing one.
->         >     >
->         >     > An example of error message would be
->         >
->         >     I am confused. Is this patch supposed to add the pkg
->         version or
->         >     not?  I
->         >     am not seeing any. Any ideas?
->         >
->         >
->         > name parameter with pkg version was added to bbclass in:
->         >
->         https://git.openembedded.org/openembedded-core/commit/?id=1795e98a04ad09b011afcc7cc3bf6dc49475b19a
->         >
->         > this change only allows all missing/incorrect checksums to
->         be showsn
->         > at the same time, instead of one checksum per do_fetch failure.
->
->         I get multiple hashes for the same package.
->
->         SRC_URI[wasi.sha256sum] =
->         "1a143597ca7c7793eff794def352d41792a93c481eb1042423ff7ff72ba2c31f"
->         SRC_URI[wasi.sha256sum] =
->         "cccddf32554fecc6acb585f82a32a72e28b48f8c4c1883ddfeeeaa96f7d8e519"
->
->         so why no version info after the pkg name?
->
->
->     Did you regenerate the SRC_URIs with updated bbclass? It works for
->     me as in:
->     https://github.com/shr-project/meta-webosose/commit/84dc9f3cc3dd85facde07ccddce0b9f2bcd90d39
->
+And you should have a buildable cargo based recipe with these.
 
 
---0000000000004082d405f8953a7c
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
 
-MIIR4QYJKoZIhvcNAQcCoIIR0jCCEc4CAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg8qMIIGTjCCBTagAwIBAgIQBK55YGZmkBq5xX+mbFvczTANBgkqhkiG9w0BAQsFADBlMQswCQYD
-VQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3d3cuZGlnaWNlcnQuY29t
-MSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVkIElEIFJvb3QgQ0EwHhcNMTMxMTA1MTIwMDAwWhcN
-MjgxMTA1MTIwMDAwWjBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
-VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBTSEEyIEFzc3VyZWQgSUQg
-Q0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDc+BEjP2q178AneRstBYeiEEMx3w7U
-FRtPd6Qizj6McPC+B47dJyq8AR22LArK3WlYH0HtagUf2mN4WR4iLCv4un7JNTtW8R98Qn4lsCMZ
-xkU41z1E+SB8YK4csFoYBL6PO/ep8JSapgxjSbZBF1NAMr1P5lB6UB8lRejxia/N/17/UPPwFxH/
-vcWJ9b1iudj7jkUEhW2ZzcVITf0mqwI2Reo2119q4hqCQQrc6dn1kReOxiGtODwT5h5/ZpzVTdlG
-2vbPUqd9OyTDtMFRNcab69TvfuR7A+FEvXoLN+BPy4KKDXEY5KbgiSwb87JzPMGwkp4Yfb2rfcV9
-CKEswp9zAgMBAAGjggL4MIIC9DASBgNVHRMBAf8ECDAGAQH/AgEAMA4GA1UdDwEB/wQEAwIBhjA0
-BggrBgEFBQcBAQQoMCYwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTCBgQYD
-VR0fBHoweDA6oDigNoY0aHR0cDovL2NybDQuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0QXNzdXJlZElE
-Um9vdENBLmNybDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0QXNzdXJl
-ZElEUm9vdENBLmNybDAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggGzBgNVHSAEggGq
-MIIBpjCCAaIGCmCGSAGG/WwAAgQwggGSMCgGCCsGAQUFBwIBFhxodHRwczovL3d3dy5kaWdpY2Vy
-dC5jb20vQ1BTMIIBZAYIKwYBBQUHAgIwggFWHoIBUgBBAG4AeQAgAHUAcwBlACAAbwBmACAAdABo
-AGkAcwAgAEMAZQByAHQAaQBmAGkAYwBhAHQAZQAgAGMAbwBuAHMAdABpAHQAdQB0AGUAcwAgAGEA
-YwBjAGUAcAB0AGEAbgBjAGUAIABvAGYAIAB0AGgAZQAgAEQAaQBnAGkAQwBlAHIAdAAgAEMAUAAv
-AEMAUABTACAAYQBuAGQAIAB0AGgAZQAgAFIAZQBsAHkAaQBuAGcAIABQAGEAcgB0AHkAIABBAGcA
-cgBlAGUAbQBlAG4AdAAgAHcAaABpAGMAaAAgAGwAaQBtAGkAdAAgAGwAaQBhAGIAaQBsAGkAdAB5
-ACAAYQBuAGQAIABhAHIAZQAgAGkAbgBjAG8AcgBwAG8AcgBhAHQAZQBkACAAaABlAHIAZQBpAG4A
-IABiAHkAIAByAGUAZgBlAHIAZQBuAGMAZQAuMB0GA1UdDgQWBBTnAiOAAE/Y17yUC9k/dDlJMjyK
-eTAfBgNVHSMEGDAWgBRF66Kv9JLLgjEtUYunpyGd823IDzANBgkqhkiG9w0BAQsFAAOCAQEATtSJ
-J7n9HYd3fg8oBZDxCi/JOz69k5yQxq/6kVGHMlRr6MrBcVFcmY61+uBiGZmmB5p8Eyfb5QKihBLZ
-FfYKRFfENI9tcx861qABPd7jguRFa7LrJf2AXh05kL5bQvbOkWDj+aBWDEgQzjNoe82Tq/Bqy09Y
-D7l7XRsEgZ6nIuJXSSfukpMIvmkIUwI6Ll3IGfRQgE4C2bBdkbSTh/mWloFVQI5m7YLYuyhf7Uxh
-7QZYKBlTEUS8RyApsgRs2IlUmTt122d4LB6SeMZVPVgSETJuvUMMTTTbe8ZC2+y+q5thTAaS447f
-ISpQVwTAYKI11SSeZjcJSc/V+GWz4OJuwjCCA7cwggKfoAMCAQICEAzn4OUX2Eb+j+Vg/BvwMDkw
-DQYJKoZIhvcNAQEFBQAwZTELMAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcG
-A1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTEkMCIGA1UEAxMbRGlnaUNlcnQgQXNzdXJlZCBJRCBSb290
-IENBMB4XDTA2MTExMDAwMDAwMFoXDTMxMTExMDAwMDAwMFowZTELMAkGA1UEBhMCVVMxFTATBgNV
-BAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTEkMCIGA1UEAxMbRGln
-aUNlcnQgQXNzdXJlZCBJRCBSb290IENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-rQ4VzuRDgFyxh/O3YPlxEqWu3CaUiKr0zvUgOShYYAz4gNqpFZUyYTy1sSiEiorcnwoMgxd6j5Cs
-iud5U1wxhCr2D5gyNnbM3t08qKLvavsh8lJh358g1x/isdn+GGTSEltf+VgYNbxHzaE2+Wt/1LA4
-PsEbw4wz2dgvGP4oD7Ong9bDbkTAYTWWFv5ZnIt2bdfxoksNK/8LctqeYNCOkDXGeFWHIKHP5W0K
-yEl8MZgzbCLph9AyWqK6E4IR7TkXnZk6cqHm+qTZ1Rcxda6FfSKuPwFGhvYoecix2uRXF8R+HA6w
-tJKmVrO9spftqqfwt8WoP5UW0P+hlusIXxh3TwIDAQABo2MwYTAOBgNVHQ8BAf8EBAMCAYYwDwYD
-VR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUReuir/SSy4IxLVGLp6chnfNtyA8wHwYDVR0jBBgwFoAU
-Reuir/SSy4IxLVGLp6chnfNtyA8wDQYJKoZIhvcNAQEFBQADggEBAKIOvN/i7fDjcnN6ZJS/93Jm
-2DLkQnVirofr8tXZ3lazn8zOFCi5DZdgXBJMWOTTPYNJRViXNWkaqEfqVsZ5qxLYZ4GE338JPJTm
-uCYsIL09syiJ91//IuKXhB/pZe+H4N/BZ0mzXeuyCSrrJu14vn0/K/O3JjVtX4kBtklbnwEFm6s9
-JcHMtn/C8W+GxvpkaOuBLZTrQrf6jB7dYvG+UGe3bL3z8R9rDDYHFn83fKlbbXrxEkZgg9cnBL5L
-zpe+w2cqaBHfgOcMM2a/Ew0UbvN/H2MQHvqNGyVtbI+lt2EBsdKjJqEQcZ2t4sP5w5lRtysHCM4u
-5lCyp/oKRS+i8PIwggUZMIIEAaADAgECAhABmeiIGxb92d1jHUeNPLJ7MA0GCSqGSIb3DQEBCwUA
-MGUxCzAJBgNVBAYTAlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdp
-Y2VydC5jb20xJDAiBgNVBAMTG0RpZ2lDZXJ0IFNIQTIgQXNzdXJlZCBJRCBDQTAeFw0yMTEwMjkw
-MDAwMDBaFw0yMzEwMjcyMzU5NTlaMEAxGzAZBgNVBAMMEmFrdXN0ZXJAbXZpc3RhLmNvbTEhMB8G
-CSqGSIb3DQEJARYSYWt1c3RlckBtdmlzdGEuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB
-CgKCAQEA60Rtp117FyjzKFRYeZrx5QdhlSA7VUEQxYtnCtN656+u6Vjq/R0I4KAIMaAEOlS3Purp
-DrHBMf1gqCKZHdzCkmj5L8GtBkB6yT1NoJnBTH83TgLbRFPB3WnTFmWTSnBkFyyrkoc8JKIzu/p0
-CM/+pHHH9IR5lmzdraoKnHx9ZUwaNltEPZpDWo7zxqQXS+uToztNNuhYPOZhMQmGBVOzczliElcm
-+DOgmn89Va8QVYqzPglbvjsYSIk2kzaKVffLxyY2p0yvWY8w7CAEYk2gLfPuZiqIdXGYmEyKH86H
-27AP1uMrYQjEw1R9VY4JrpDLehuUs/RGYWyMAjfo1NDh0QIDAQABo4IB6DCCAeQwHwYDVR0jBBgw
-FoAU5wIjgABP2Ne8lAvZP3Q5STI8inkwHQYDVR0OBBYEFL0akMb3LmLy7bKAAO6QDtKy8WI7MAwG
-A1UdEwEB/wQCMAAwHQYDVR0RBBYwFIESYWt1c3RlckBtdmlzdGEuY29tMA4GA1UdDwEB/wQEAwIF
-oDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwQwYDVR0gBDwwOjA4BgpghkgBhv1sBAEB
-MCowKAYIKwYBBQUHAgEWHGh0dHBzOi8vd3d3LmRpZ2ljZXJ0LmNvbS9DUFMwgYUGA1UdHwR+MHww
-PKA6oDiGNmh0dHA6Ly9jcmwzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydFNIQTJBc3N1cmVkSURDQS0x
-LmNybDA8oDqgOIY2aHR0cDovL2NybDQuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0U0hBMkFzc3VyZWRJ
-RENBLTEuY3JsMHkGCCsGAQUFBwEBBG0wazAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNl
-cnQuY29tMEMGCCsGAQUFBzAChjdodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vRGlnaUNlcnRT
-SEEyQXNzdXJlZElEQ0EuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQCUY9qc+vTg/KOKUB9htYLvs1km
-5XF3yyLnIoMBvbmx4zatz0YddFP7UT0esHLGDEW2suAlq44A6SRd2fTUe0tyjGAxsblGwxKp0ypw
-p6xjYeJAkp0nEemsYGxGSOf1HP9BIT1bFT9CHHCoX26wxtf7RF2fePncJ4wPBxFzJdecBcKgL8uN
-yQnDtPyJ0DC4bVz9Z67nEFJcFTyrzbvo4sk9A8QKYANnjmCYPSEIlis8o7zERwxC/xNTgzAXzlDS
-8mJM7ja9otySdENt1tyty90IOWryaSvfeHDffO0YCDvbAVCcisvjni5esAu0sDrJr+ODF4laEVBF
-z4PNrDvNN2gGMYICezCCAncCAQEweTBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQg
-SW5jMRkwFwYDVQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBTSEEyIEFz
-c3VyZWQgSUQgQ0ECEAGZ6IgbFv3Z3WMdR408snswDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcN
-AQkEMSIEIG8x6ecSOm3hNC/M5HdSrr1y8fku/LMvOndBI88Q94PqMBgGCSqGSIb3DQEJAzELBgkq
-hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDQwNTExMzgxNFowaQYJKoZIhvcNAQkPMVwwWjAL
-BglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG
-9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCVyEVrBSlL
-tUenTKISXH8eIp6u/Qht3FEo9cRUPHK+Cwqa8xMkS26PLrnM7dC+n4FuBb+vPlCKGmbIHgj0qGOM
-7c6dA8a3pxWFtR0OZ92Oqa8zbI/29qQ7lObcUFxxWsEhjK+xqVa7oCpv2dZYmL8+RYz0igMSeQ4Q
-NVVcl1RZbJMiSu9B08UFHtWLqGbL7Jo6AxOUOM80Ts+yNvaz49vHsOGZby/6f8X3N3BajDfmQUBW
-OPfjoKzOGCWN6eTzujsg7W1By3vAvlC3/1yv6GVW/oJxtreMF1RpnpkykGp6OlLr6EVzYcfBPx5o
-E6HZjwhmYjXhQAYnCsJaFxGaYBkQ
---0000000000004082d405f8953a7c--
+On Wed, 5 Apr 2023 at 12:16, Enrico Scholz via lists.openembedded.org
+<enrico.scholz=sigma-chemnitz.de@lists.openembedded.org> wrote:
+
+> From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+>
+> It is common for rust packages to depend on different versions of the
+> same crate.  E.g.
+>
+> |    crate://crates.io/windows_x86_64_msvc/0.42.2 \
+> |    crate://crates.io/windows_x86_64_msvc/0.48.0 \
+>
+> Identification only by the plain crate name makes the sha256sum
+> ambiguous
+>
+> | SRC_URI[windows_x86_64_msvc.sha256sum] =
+> "9aec5da331524158c6d1a4ac0ab1541149c0b9505fde06423b02f5ef0106b9f0"
+> | SRC_URI[windows_x86_64_msvc.sha256sum] =
+> "1a515f5799fe4961cb532f983ce2b23082366b898e52ffbce459c86f67c8378a"
+>
+> and requires lot of manual work to fix the SRC_URI list.
+>
+> Making the 'name' property unique by appending the version allows
+> direct copy & paste of reported sha256sum errors to complete the
+> crates list.
+>
+> Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+> ---
+>  lib/bb/fetch2/crate.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
+> index 590dc9c12681..a7021e5b367c 100644
+> --- a/lib/bb/fetch2/crate.py
+> +++ b/lib/bb/fetch2/crate.py
+> @@ -72,7 +72,7 @@ class Crate(Wget):
+>          ud.url = "https://%s/%s/%s/download" % (host, name, version)
+>          ud.parm['downloadfilename'] = "%s-%s.crate" % (name, version)
+>          if 'name' not in ud.parm:
+> -            ud.parm['name'] = name
+> +            ud.parm['name'] = '%s-%s' % (name, version)
+>
+>          logger.debug2("Fetching %s to %s" % (ud.url,
+> ud.parm['downloadfilename']))
+>
+> --
+> 2.39.2
+>
+>
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14645):
+> https://lists.openembedded.org/g/bitbake-devel/message/14645
+> Mute This Topic: https://lists.openembedded.org/mt/98079257/6213388
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> frederic.martinsons@gmail.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+>
+>
+
+--00000000000014ed8405f8959674
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hello,<div><br></div><div>There are multiple issues with t=
+his patch.</div><div><br></div><div>First, this is not compatible with reci=
+pes which will override the name</div><div>parameter in their crate:// entr=
+y like zvariant in meta-selftest layer.</div><div><br></div><div>Second, th=
+e cargo-update-recipe-crates=C2=A0class already did that modification=C2=A0=
+</div><div>for you (it set name parameter to be pkg-vers and it expect bitb=
+ake fetcher to respect that),</div><div>by the way, the zavariant I talk ab=
+out was built with usage of this class</div><div><br></div><div>Last, this =
+modification=C2=A0makes the bitbake unit test fail.</div><div><br></div><di=
+v>To bootstrap=C2=A0a cargo base recipe which have not this checksum list, =
+below are</div><div>the steps to make:</div><div>=C2=A0 - make the recipe i=
+nherit cargo-update-recipe-crates</div><div>=C2=A0 - remove all crate:// fr=
+om your recipe</div><div>=C2=A0 - create an empty ${BPN}-crates.inc file an=
+d make your recipe requires it</div><div>=C2=A0 - execute &quot;bitbake -c =
+update_crates your_recipe&quot;</div><div>=C2=A0 - copy paste the output of=
+ bitbake about the missing checksums in your ${BPN}-crates.inc</div><div><b=
+r></div><div>And you should have a buildable cargo based recipe with these.=
+</div><div><br></div><div><br></div></div><br><div class=3D"gmail_quote"><d=
+iv dir=3D"ltr" class=3D"gmail_attr">On Wed, 5 Apr 2023 at 12:16, Enrico Sch=
+olz via <a href=3D"http://lists.openembedded.org">lists.openembedded.org</a=
+> &lt;enrico.scholz=3D<a href=3D"mailto:sigma-chemnitz.de@lists.openembedde=
+d.org">sigma-chemnitz.de@lists.openembedded.org</a>&gt; wrote:<br></div><bl=
+ockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-lef=
+t:1px solid rgb(204,204,204);padding-left:1ex">From: Enrico Scholz &lt;<a h=
+ref=3D"mailto:enrico.scholz@sigma-chemnitz.de" target=3D"_blank">enrico.sch=
+olz@sigma-chemnitz.de</a>&gt;<br>
+<br>
+It is common for rust packages to depend on different versions of the<br>
+same crate.=C2=A0 E.g.<br>
+<br>
+|=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/windows_x86_64_msvc/0.42=
+.2" rel=3D"noreferrer" target=3D"_blank">crates.io/windows_x86_64_msvc/0.42=
+.2</a> \<br>
+|=C2=A0 =C2=A0 crate://<a href=3D"http://crates.io/windows_x86_64_msvc/0.48=
+.0" rel=3D"noreferrer" target=3D"_blank">crates.io/windows_x86_64_msvc/0.48=
+.0</a> \<br>
+<br>
+Identification only by the plain crate name makes the sha256sum<br>
+ambiguous<br>
+<br>
+| SRC_URI[windows_x86_64_msvc.sha256sum] =3D &quot;9aec5da331524158c6d1a4ac=
+0ab1541149c0b9505fde06423b02f5ef0106b9f0&quot;<br>
+| SRC_URI[windows_x86_64_msvc.sha256sum] =3D &quot;1a515f5799fe4961cb532f98=
+3ce2b23082366b898e52ffbce459c86f67c8378a&quot;<br>
+<br>
+and requires lot of manual work to fix the SRC_URI list.<br>
+<br>
+Making the &#39;name&#39; property unique by appending the version allows<b=
+r>
+direct copy &amp; paste of reported sha256sum errors to complete the<br>
+crates list.<br>
+<br>
+Signed-off-by: Enrico Scholz &lt;<a href=3D"mailto:enrico.scholz@sigma-chem=
+nitz.de" target=3D"_blank">enrico.scholz@sigma-chemnitz.de</a>&gt;<br>
+---<br>
+=C2=A0lib/bb/fetch2/crate.py | 2 +-<br>
+=C2=A01 file changed, 1 insertion(+), 1 deletion(-)<br>
+<br>
+diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py<br>
+index 590dc9c12681..a7021e5b367c 100644<br>
+--- a/lib/bb/fetch2/crate.py<br>
++++ b/lib/bb/fetch2/crate.py<br>
+@@ -72,7 +72,7 @@ class Crate(Wget):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ud.url =3D &quot;https://%s/%s/%s/downloa=
+d&quot; % (host, name, version)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ud.parm[&#39;downloadfilename&#39;] =3D &=
+quot;%s-%s.crate&quot; % (name, version)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if &#39;name&#39; not in ud.parm:<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.parm[&#39;name&#39;] =3D name=
+<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.parm[&#39;name&#39;] =3D &#39=
+;%s-%s&#39; % (name, version)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.debug2(&quot;Fetching %s to %s&quo=
+t; % (ud.url, ud.parm[&#39;downloadfilename&#39;]))<br>
+<br>
+-- <br>
+2.39.2<br>
+<br>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#14645): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/14645" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/14645</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/98079257/6213=
+388" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
+/98079257/6213388</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:frederic.martinsons@gmail.com" tar=
+get=3D"_blank">frederic.martinsons@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
+
+--00000000000014ed8405f8959674--
 
