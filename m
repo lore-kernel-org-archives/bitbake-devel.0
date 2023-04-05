@@ -1,85 +1,133 @@
-Return-Path: <enrico.scholz@sigma-chemnitz.de>
+Return-Path: <frederic.martinsons@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B07C76188
-	for <webhook@archiver.kernel.org>; Wed,  5 Apr 2023 16:45:09 +0000 (UTC)
-Received: from smtpout.cvg.de (smtpout.cvg.de [87.128.211.67])
- by mx.groups.io with SMTP id smtpd.web10.135653.1680713103386423978
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EB2C76188
+	for <webhook@archiver.kernel.org>; Wed,  5 Apr 2023 17:05:59 +0000 (UTC)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+ by mx.groups.io with SMTP id smtpd.web11.136351.1680714357040293105
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 05 Apr 2023 09:45:07 -0700
+ Wed, 05 Apr 2023 10:05:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sigma-chemnitz.de header.s=v2022040800 header.b=B6tj0laO;
- spf=pass (domain: sigma-chemnitz.de, ip: 87.128.211.67, mailfrom: enrico.scholz@sigma-chemnitz.de)
-Received: from mail-mta-3.intern.sigma-chemnitz.de (mail-mta-3.intern.sigma-chemnitz.de [192.168.12.71])
-	by mail-out-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 335Gj0KA1310841
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>; Wed, 5 Apr 2023 18:45:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
-	s=v2022040800; t=1680713100;
-	bh=W+jRTVqnCyrtYFlRyDsRb067pxhBJDROeMH6cBjF/kw=; l=564;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To;
-	b=B6tj0laOZGDNSQ6DiGPXrRfdZEHfDvpAkdCQBYXmtbY2+WkIuqqIAqy8FJELmBGHz
-	 n1h+Pmy1WLsjkRkm87oWp4LPof8wUuOOFIDwZNqGVGCPzQcanz5/x13vBss/Ys/h16
-	 FyOch8U0sqYbcMwGj/dImqoLsezHqqbQKorWYW+Fi3ZRZfiJ9+Xk45Ff98ABx+Z9yX
-	 UoLu03SQNl10lxPPxYoUFnHx6Rldwdd/1z6ayG+4dhRhNbDJMQhc4D+CciOl3RvVZ0
-	 /KinhUVEC/BObP+0UXkM7T6PDSuxDdET0UWi7s4mDbtsT6vbbr0SXL3yoxYrIbNZZZ
-	 R00A5AdFm0S4g==
-Received: from reddoxx.intern.sigma-chemnitz.de (reddoxx.sigma.local [192.168.16.32])
-	by mail-mta-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 335GirDR409050
-	for <bitbake-devel@lists.openembedded.org> from enrico.scholz@sigma-chemnitz.de; Wed, 5 Apr 2023 18:44:54 +0200
-Received: from mail-msa-2.intern.sigma-chemnitz.de ([192.168.12.72])
-	by reddoxx.intern.sigma-chemnitz.de with ESMTP
-	id YS586P3ZHI; Wed, 05 Apr 2023 18:44:53 +0200
-Received: from ensc-pc.intern.sigma-chemnitz.de (ensc-pc.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail-msa-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 335Gir161272018
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 5 Apr 2023 18:44:53 +0200
-Received: from ensc by ensc-pc.intern.sigma-chemnitz.de with local (Exim 4.96)
-	(envelope-from <ensc@sigma-chemnitz.de>)
-	id 1pk6Fh-00Ekem-1d;
-	Wed, 05 Apr 2023 18:44:53 +0200
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-To: =?utf-8?B?RnLDqWTDqXJpYw==?= Martinsons <frederic.martinsons@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH] fetch:crate: create versioned 'name'
- entries
-References: <20230405101609.3309660-1-enrico.scholz@sigma-chemnitz.de>
-	<CA+cAkerT+8E=Td+HEzKw_O7Xa8LSdF1DZvjyf9Kze+XergaCNg@mail.gmail.com>
-	<lyh6tucyz9.fsf@ensc-pc.intern.sigma-chemnitz.de>
-	<CA+cAkerceUTAyZ6DveoQF1d-i4nHg6f64UJ2PUr-=L0igeCsFg@mail.gmail.com>
-	<lycz4icya8.fsf@ensc-pc.intern.sigma-chemnitz.de>
-	<17530ADB1695B5D1.3977@lists.openembedded.org>
-	<CA+cAkerZx=NLx_xiVU=gT9Pwuidv5iaW2PSCCtYaxqt-z-LqMw@mail.gmail.com>
-Date: Wed, 05 Apr 2023 18:44:53 +0200
-In-Reply-To: <CA+cAkerZx=NLx_xiVU=gT9Pwuidv5iaW2PSCCtYaxqt-z-LqMw@mail.gmail.com>
-	(=?utf-8?B?IkZyw6lkw6lyaWM=?= Martinsons"'s message of "Wed, 5 Apr 2023
- 18:28:51 +0200")
-Message-ID: <ly8rf6cm7u.fsf@ensc-pc.intern.sigma-chemnitz.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=KEFiUYkR;
+ spf=pass (domain: gmail.com, ip: 209.85.167.48, mailfrom: frederic.martinsons@gmail.com)
+Received: by mail-lf1-f48.google.com with SMTP id h11so40582892lfu.8
+        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 10:05:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680714355;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4BvfT+LSOZnWbWqwCIRfC5288MlrNuWLZc9ojidZ2hY=;
+        b=KEFiUYkRrd2IWwxdF7dm7S9PfZ645ZCkdvOnacipnhm7K5H8N/kkFO4LodNKfQ575Y
+         yXnDy8v+4ktfU6m4vedJvKeVFuxMRUi/iLKDlV530lm4VN/K2KQNaUVCbk05blAAStVd
+         0yQ+f85dSTdFjGxZwmUSSXVMB63XKcxAPmszfLB9VT9ArZ0g7VcbuzuItcvUAri6H9rI
+         ll52KJapZWdkXWGYafgffc1MI4c3ipAJiR8mMdFBr66g+8i781bvWRPew7ung5aISL6P
+         vMGiDlHgOEE28JWU7T1vfeTwBvdHPGCRthbM9JWORQUAi+sLGD/lF+67oHMF4QrLJms5
+         jinA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680714355;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4BvfT+LSOZnWbWqwCIRfC5288MlrNuWLZc9ojidZ2hY=;
+        b=Cb8kDNDQ33zWxpTVDJI1ww8kW4V+CsnK1Sp+Z5pYpnqHXmmAkzYXZqURaAKq0SrULK
+         0rQYT7jzI8TPTmkl1ngIgfmVS2AEI+TjHOOfu6ESalTCccFbySGqRYkHhREbjz88vw0k
+         AXIYtA3Je0keTHz9yUKhiFT9JJQX9/9lO9GzDgG3t4P9tWBkFTg4oO343nU3a/N86MA5
+         vtpmfsmRW4oMvrRmojM3cMsnE0COF6PwXNqMBv50vJN+Vl3/KwVlEnCjo6ZgqAuLk4uP
+         rI5QZ0O0qe+qKImfqMOvrL37xNqlk8/hE8wRQmjbUYQH1aSKKcFJ79L91m3rj43+baca
+         Nhvg==
+X-Gm-Message-State: AAQBX9dF/XWvvcD8sQ6kmWxpqVWsq1T6zoluQdpSl0mReapRVDIcyS1a
+	0UFREHhyE33dp0Maa1F+cOe+ITWGAEvamvoxESc=
+X-Google-Smtp-Source: AKy350YFvdeavo1giTiFm0trC5Y0MiE3X/cg4Iz8onBhD48K38HtjRVF3autBLGueRGK0Cz8YCmyGrvGvcuaSlmxkug=
+X-Received: by 2002:ac2:4196:0:b0:4d5:ca42:aeec with SMTP id
+ z22-20020ac24196000000b004d5ca42aeecmr2130358lfh.12.1680714355086; Wed, 05
+ Apr 2023 10:05:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-X-REDDOXX-Id: 642da5855038ce378780cd92
+References: <20230405101609.3309660-1-enrico.scholz@sigma-chemnitz.de>
+ <CA+cAkerT+8E=Td+HEzKw_O7Xa8LSdF1DZvjyf9Kze+XergaCNg@mail.gmail.com>
+ <lyh6tucyz9.fsf@ensc-pc.intern.sigma-chemnitz.de> <CA+cAkerceUTAyZ6DveoQF1d-i4nHg6f64UJ2PUr-=L0igeCsFg@mail.gmail.com>
+ <lycz4icya8.fsf@ensc-pc.intern.sigma-chemnitz.de> <17530ADB1695B5D1.3977@lists.openembedded.org>
+ <CA+cAkerZx=NLx_xiVU=gT9Pwuidv5iaW2PSCCtYaxqt-z-LqMw@mail.gmail.com> <ly8rf6cm7u.fsf@ensc-pc.intern.sigma-chemnitz.de>
+In-Reply-To: <ly8rf6cm7u.fsf@ensc-pc.intern.sigma-chemnitz.de>
+From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
+Date: Wed, 5 Apr 2023 19:05:43 +0200
+Message-ID: <CA+cAkeo9e9tUqizBJi=RM3S37j4N5VXm7Jdww_5PLxySU7GEqg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] fetch:crate: create versioned 'name' entries
+To: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="0000000000001a983b05f899ce77"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 16:45:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14661
+ <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 17:05:59 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14662
 
-Fr=C3=A9d=C3=A9ric Martinsons <frederic.martinsons@gmail.com> writes:
+--0000000000001a983b05f899ce77
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> No, I take that back, it should not be an issue since you set the name
-> only if it is not already there. But, to be sure, did you try to build
-> some existing cargo based recipe (zvariant but also python3-bcrypt for
-> example).
+Le mer. 5 avr. 2023, 18:45, Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+a =C3=A9crit :
 
-It will break cargo related recipes which were created between 2023-03-16
-and 2023-03-31.  Packages before this date do not contain sha256sum and
-after this date, they have an explicit 'name' (which matches the one
-generated by my patch).
+> Fr=C3=A9d=C3=A9ric Martinsons <frederic.martinsons@gmail.com> writes:
+>
+> > No, I take that back, it should not be an issue since you set the name
+> > only if it is not already there. But, to be sure, did you try to build
+> > some existing cargo based recipe (zvariant but also python3-bcrypt for
+> > example).
+>
+> It will break cargo related recipes which were created between 2023-03-16
+> and 2023-03-31.  Packages before this date do not contain sha256sum and
+> after this date, they have an explicit 'name' (which matches the one
+> generated by my patch).
+>
+>
+> Enrico
+>
 
+Ok, I guess these dates match my patches series, if I do things rights, I
+handle all the recipes I know of (in meta-openembedded and
+openembedded-core at least)
 
-Enrico
+>
+
+--0000000000001a983b05f899ce77
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto"><div><br><br><div class=3D"gmail_quote"><div dir=3D"ltr" =
+class=3D"gmail_attr">Le mer. 5 avr. 2023, 18:45, Enrico Scholz &lt;<a href=
+=3D"mailto:enrico.scholz@sigma-chemnitz.de">enrico.scholz@sigma-chemnitz.de=
+</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" sty=
+le=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Fr=C3=
+=A9d=C3=A9ric Martinsons &lt;<a href=3D"mailto:frederic.martinsons@gmail.co=
+m" target=3D"_blank" rel=3D"noreferrer">frederic.martinsons@gmail.com</a>&g=
+t; writes:<br>
+<br>
+&gt; No, I take that back, it should not be an issue since you set the name=
+<br>
+&gt; only if it is not already there. But, to be sure, did you try to build=
+<br>
+&gt; some existing cargo based recipe (zvariant but also python3-bcrypt for=
+<br>
+&gt; example).<br>
+<br>
+It will break cargo related recipes which were created between 2023-03-16<b=
+r>
+and 2023-03-31.=C2=A0 Packages before this date do not contain sha256sum an=
+d<br>
+after this date, they have an explicit &#39;name&#39; (which matches the on=
+e<br>
+generated by my patch).<br>
+<br>
+<br>
+Enrico<br></blockquote></div></div><div dir=3D"auto"><br></div><div dir=3D"=
+auto">Ok, I guess these dates match my patches series, if I do things right=
+s, I handle all the recipes I know of (in meta-openembedded and openembedde=
+d-core at least)=C2=A0</div><div dir=3D"auto"><div class=3D"gmail_quote"><b=
+lockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px =
+#ccc solid;padding-left:1ex">
+</blockquote></div></div></div>
+
+--0000000000001a983b05f899ce77--
 
