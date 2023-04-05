@@ -1,253 +1,115 @@
-Return-Path: <akuster@mvista.com>
+Return-Path: <frederic.martinsons@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A349C76188
-	for <webhook@archiver.kernel.org>; Wed,  5 Apr 2023 12:25:38 +0000 (UTC)
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
- by mx.groups.io with SMTP id smtpd.web10.128433.1680697532849385011
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64640C7619A
+	for <webhook@archiver.kernel.org>; Wed,  5 Apr 2023 12:50:28 +0000 (UTC)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+ by mx.groups.io with SMTP id smtpd.web10.128959.1680699021586234939
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 05 Apr 2023 05:25:33 -0700
+ Wed, 05 Apr 2023 05:50:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@mvista.com header.s=google header.b=AUP2oPkB;
- spf=pass (domain: mvista.com, ip: 209.85.128.177, mailfrom: akuster@mvista.com)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-54bfa5e698eso6899057b3.13
-        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 05:25:32 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=fu+2ZyIm;
+ spf=pass (domain: gmail.com, ip: 209.85.208.173, mailfrom: frederic.martinsons@gmail.com)
+Received: by mail-lj1-f173.google.com with SMTP id a11so37175325lji.6
+        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 05:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista.com; s=google; t=1680697532;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=0/EJQ/1WHM4qgOUQCq+mb1ySfvgpulzT8CYjGLBgFos=;
-        b=AUP2oPkBUnLqOZczOuRgtehwdMgxyxs/DlTsVl997VGkJ6mD0eAMoJICiIe3WA77sS
-         UuJyvkmBNwcpspthk1ILtsVq5HDMk0X/vPnHXXzQ5XBNKTiuQnCrfN6chZd24R8xr6U/
-         RtTTr3pfNgBm2A5ymGbrgtU5Sm5qiAzj5tm44=
+        d=gmail.com; s=20210112; t=1680699020;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FzquxmSXcut6nqmvks9tqckwxVaneuly2PvIzc+Z3Cg=;
+        b=fu+2ZyImEOTF4EcswtsOB2Cr2XaWZ8yGZ16f+91iFUyhl7yYCwcnfw8RAWtv8hS/tB
+         32Kr4LqTu4ZN6Vv+uBUR+AkNI7ELo2yV+DVJ64m6m+H7AwphWONKTnlUYLqrXy9yIkvm
+         LIJJGs+4edYMlNmGlW2vtSx8r+py2SM/rQpLD4/WyRobJohUPAyiJmYFvyAK36IBVItQ
+         FNMgZQqgkaA7kizcG2yQ7HLgs2pLoxEqwzWWUBskj/TJMHf1qoshIozPdyuWv4+xyjIh
+         hZw+mDLDFhoDC2AD+iMdDMNcHkBnEz/FkbhuYVts1+1U1UEilA+BPQIGvCK3atE/lYwA
+         Lo2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680697532;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0/EJQ/1WHM4qgOUQCq+mb1ySfvgpulzT8CYjGLBgFos=;
-        b=AP89qCVaq1TGKsDhOTKhuOkR6HqvzADcgRlNE4OXtQd470rPFy83nhJUPr8cWoO870
-         exbX1WICjTA2jLMNxr7HEUyHIuglSf9OhEwotgDJVfFxVUil0mE4Ea2YoyvzM/ewMdaU
-         DappAx/1/DsBo3thzD4LsPZuSQkQtchdoVLljrwxBtriUxRhxr+iF0u0NPKJ96i/q+zm
-         +w5C9lPUuC3sWAF3fxB8pQ4k/IJG43XyavnpPGqCo5cIGlMGSO6mLTac2JRPJaGnjulT
-         /detykfcHMPBnTjNjNAbWjckwNgw21Fbh/21pZVkVK5OgZ3KifUUQ7ESU3OA3LOMvHP1
-         wkTg==
-X-Gm-Message-State: AAQBX9cjtZS6ZvecxsFozO3sKi9baNStL56Og1+JkoiYIEP2KpWVjrXf
-	Yq6sZZiqPFvIFLaDxNgD6jrVaQ==
-X-Google-Smtp-Source: AKy350YMEEgbcEMSWaL7jX88aplhaBjbzngfS1nya/GvMsrlJHMf+q8X/YRrsj3nfMmxX2tXH0OzvA==
-X-Received: by 2002:a0d:eace:0:b0:541:826c:2106 with SMTP id t197-20020a0deace000000b00541826c2106mr5939389ywe.20.1680697531864;
-        Wed, 05 Apr 2023 05:25:31 -0700 (PDT)
-Received: from ?IPV6:2600:1700:9190:ba10:36f6:c20d:238e:7162? ([2600:1700:9190:ba10:36f6:c20d:238e:7162])
-        by smtp.gmail.com with ESMTPSA id 79-20020a811452000000b00545a081848csm3845789ywu.28.2023.04.05.05.25.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Apr 2023 05:25:31 -0700 (PDT)
-Message-ID: <d3bdc504-a8d2-b925-cfd4-78655df7e4cd@mvista.com>
-Date: Wed, 5 Apr 2023 08:25:30 -0400
+        d=1e100.net; s=20210112; t=1680699020;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FzquxmSXcut6nqmvks9tqckwxVaneuly2PvIzc+Z3Cg=;
+        b=R6wHrcIbf4yJ8vuSAxKu1OZQqIDD7mw1EbMfkYmlWpPrMwEz2l/VqW2w9juj4oyqWZ
+         kOSAI1N2aTsXSeDP4IUBzbmwAB+Z2Maz7XrKRh8mbm05eXMQwoS28LvAC1ji4j/y2Ljd
+         y8Z12I9w/JZDpd6R2wxgN6c1JFRq9wmMB2mT7XlbAnL6zpkqCQGlw/ZAV19MwwqGQQEg
+         RcWMkCiDpvt96s3yv4XXa8nBbehYD0jLKrNDq0s00blG7M05qwp0sFa1/SfvOg6o5CEH
+         5clkb8GwG3BVQojoq1GMiLUmTNrfRsLccDu4B0gDxaTvpyXrBKmhlNGSI2PErzaGqZCH
+         59dg==
+X-Gm-Message-State: AAQBX9f/22Ia4v3S5plS/p3BWm1PUfeE6DZwP2y5q2CovN6Akz/bC5J0
+	Fdfwhd1qlK+fXpmuO7Fv/xmYuodGH8K5txenlpo=
+X-Google-Smtp-Source: AKy350YwDMU3GywVZx2jJQcaOzFcXLY8AkuPPs8l8iIaaZ7FmyD4RObseQ9aDArjvNw7e9cb+Ws7AqT7TBsqmaOmHO8=
+X-Received: by 2002:a05:651c:546:b0:2a2:35dd:4b30 with SMTP id
+ q6-20020a05651c054600b002a235dd4b30mr1048027ljp.3.1680699019577; Wed, 05 Apr
+ 2023 05:50:19 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [bitbake-devel] [PATCH] fetch2: Display all missing checksum at
- once
-To: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>,
- Martin Jansa <martin.jansa@gmail.com>
+References: <20230405101609.3309660-1-enrico.scholz@sigma-chemnitz.de>
+ <CA+cAkerT+8E=Td+HEzKw_O7Xa8LSdF1DZvjyf9Kze+XergaCNg@mail.gmail.com>
+ <lyh6tucyz9.fsf@ensc-pc.intern.sigma-chemnitz.de> <CA+cAkerceUTAyZ6DveoQF1d-i4nHg6f64UJ2PUr-=L0igeCsFg@mail.gmail.com>
+ <lycz4icya8.fsf@ensc-pc.intern.sigma-chemnitz.de>
+In-Reply-To: <lycz4icya8.fsf@ensc-pc.intern.sigma-chemnitz.de>
+From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
+Date: Wed, 5 Apr 2023 14:50:08 +0200
+Message-ID: <CA+cAkeowGLd7K7b3kkvaVcE8=4b_Tx-WeAfFuddu+TZ9_9KtgA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] fetch:crate: create versioned 'name' entries
+To: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
 Cc: bitbake-devel@lists.openembedded.org
-References: <20230401152101.19037-1-frederic.martinsons@gmail.com>
- <7d59e968-1dea-acf1-6d18-59bb4fd35cb6@mvista.com>
- <CA+chaQcWaafMWnok=q+3SUcEj-+R99wxdC4JXpaM+rAGYCWhkg@mail.gmail.com>
- <68045681-5481-80f5-30f4-e15616503dcd@mvista.com>
- <CA+chaQead2PQ4yn7XSp-dejU+66kzROBOkAAeAJA42h=BSRLHg@mail.gmail.com>
- <CA+cAkeqJmpO2A6-bERPJjTuKt+e-MLBAgtFB34UOSRCb=7hBMw@mail.gmail.com>
-From: akuster <akuster@mvista.com>
-In-Reply-To: <CA+cAkeqJmpO2A6-bERPJjTuKt+e-MLBAgtFB34UOSRCb=7hBMw@mail.gmail.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000061eb4d05f895e3aa"
+Content-Type: multipart/alternative; boundary="000000000000094d7205f8963cd2"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 12:25:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14655
+ <bitbake-devel@lists.openembedded.org>; Wed, 05 Apr 2023 12:50:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14656
 
---00000000000061eb4d05f895e3aa
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+--000000000000094d7205f8963cd2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+It remains the problem with zvariant recipe in meta-selftest layer but I'll
+let others answer since they may have a bigger picture on that
 
+Le mer. 5 avr. 2023, 14:24, Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+a =C3=A9crit :
 
-On 4/5/23 1:20 AM, Frédéric Martinsons wrote:
-> I looked at the suricata recipe in meta-security and it didn't use 
-> cargo-update-recipes.bbclass
+> Fr=C3=A9d=C3=A9ric Martinsons <frederic.martinsons@gmail.com> writes:
 >
-> You should modify your rust recipes to use this class and have access 
-> to "bitbake -c update_crates" .
+> > A rust project must have a Cargo.lock in its source (
+> >
+> https://doc.rust-lang.org/cargo/faq.html#why-do-binaries-have-cargolock-i=
+n-version-control-but-not-libraries
 >
-> You can take some examples from , i.e python3-cryptography in 
-> openembedded-core or python3-pyruvate
-> in meta-python.
->
-> The first issue you'll encounter is some kind of bootstrapping (since 
-> update_crates needs to fetch
-> to be able to write checksum but the fetcher needs the checksum ...). 
-> With this error , you'll
-> see all the data you need to add to the suricata-crates.inc.
->
-> For curiosity, I tested locally the modification of suricata and it 
-> seems that this package embeds
-> unexpected Cargo.lock format (in 
-> rust/vendor/alloc-no-stdlib/Cargo.lock) which doesn't contain
-> a source entry (the package doesn't have any dependency).
-
-I deleted the Cargo.* in the offending crates ( I found another) and I 
-was able to finish running the update_creates. I notice "name" is now 
-part of the crates URI and the SRC_URI hashes. It wont build now but I 
-think I can work around that.
-
-- armin
->
-> I don't know how to handle such a file (simply ignore it in the class 
-> instead of raising an error ?)
+> It is recommended (due to documentation issues), but not required.
 >
 >
-> On Tue, 4 Apr 2023 at 23:35, Martin Jansa <martin.jansa@gmail.com> wrote:
->
->     On Tue, Apr 4, 2023 at 11:08 PM akuster <akuster@mvista.com> wrote:
->
->
->
->         On 4/4/23 1:07 PM, Martin Jansa wrote:
->         > On Tue, Apr 4, 2023 at 6:50 PM akuster <akuster@mvista.com>
->         wrote:
->         >
->         >
->         >
->         >     On 4/1/23 11:21 AM, Frederic Martinsons wrote:
->         >     > From: Frederic Martinsons <frederic.martinsons@gmail.com>
->         >     >
->         >     > Instead of only display the first and stop.
->         >     > For recipe (crago based) that can contains several
->         artifacts
->         >     > to fetch with their checksum, it will particularly handy
->         >     > to display all of missing one.
->         >     >
->         >     > An example of error message would be
->         >
->         >     I am confused. Is this patch supposed to add the pkg
->         version or
->         >     not?  I
->         >     am not seeing any. Any ideas?
->         >
->         >
->         > name parameter with pkg version was added to bbclass in:
->         >
->         https://git.openembedded.org/openembedded-core/commit/?id=1795e98a04ad09b011afcc7cc3bf6dc49475b19a
->         >
->         > this change only allows all missing/incorrect checksums to
->         be showsn
->         > at the same time, instead of one checksum per do_fetch failure.
->
->         I get multiple hashes for the same package.
->
->         SRC_URI[wasi.sha256sum] =
->         "1a143597ca7c7793eff794def352d41792a93c481eb1042423ff7ff72ba2c31f"
->         SRC_URI[wasi.sha256sum] =
->         "cccddf32554fecc6acb585f82a32a72e28b48f8c4c1883ddfeeeaa96f7d8e519"
->
->         so why no version info after the pkg name?
->
->
->     Did you regenerate the SRC_URIs with updated bbclass? It works for
->     me as in:
->     https://github.com/shr-project/meta-webosose/commit/84dc9f3cc3dd85facde07ccddce0b9f2bcd90d39
+> Enrico
 >
 
+--000000000000094d7205f8963cd2
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---00000000000061eb4d05f895e3aa
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+<div dir=3D"auto">It remains the problem with zvariant recipe in meta-selft=
+est layer but I&#39;ll let others answer since they may have a bigger pictu=
+re on that=C2=A0</div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=
+=3D"gmail_attr">Le mer. 5 avr. 2023, 14:24, Enrico Scholz &lt;<a href=3D"ma=
+ilto:enrico.scholz@sigma-chemnitz.de">enrico.scholz@sigma-chemnitz.de</a>&g=
+t; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" style=3D"=
+margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Fr=C3=A9d=C3=
+=A9ric Martinsons &lt;<a href=3D"mailto:frederic.martinsons@gmail.com" targ=
+et=3D"_blank" rel=3D"noreferrer">frederic.martinsons@gmail.com</a>&gt; writ=
+es:<br>
+<br>
+&gt; A rust project must have a Cargo.lock in its source (<br>
+&gt; <a href=3D"https://doc.rust-lang.org/cargo/faq.html#why-do-binaries-ha=
+ve-cargolock-in-version-control-but-not-libraries" rel=3D"noreferrer norefe=
+rrer" target=3D"_blank">https://doc.rust-lang.org/cargo/faq.html#why-do-bin=
+aries-have-cargolock-in-version-control-but-not-libraries</a><br>
+<br>
+It is recommended (due to documentation issues), but not required.<br>
+<br>
+<br>
+Enrico<br>
+</blockquote></div>
 
-MIIR4QYJKoZIhvcNAQcCoIIR0jCCEc4CAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg8qMIIGTjCCBTagAwIBAgIQBK55YGZmkBq5xX+mbFvczTANBgkqhkiG9w0BAQsFADBlMQswCQYD
-VQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3d3cuZGlnaWNlcnQuY29t
-MSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVkIElEIFJvb3QgQ0EwHhcNMTMxMTA1MTIwMDAwWhcN
-MjgxMTA1MTIwMDAwWjBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
-VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBTSEEyIEFzc3VyZWQgSUQg
-Q0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDc+BEjP2q178AneRstBYeiEEMx3w7U
-FRtPd6Qizj6McPC+B47dJyq8AR22LArK3WlYH0HtagUf2mN4WR4iLCv4un7JNTtW8R98Qn4lsCMZ
-xkU41z1E+SB8YK4csFoYBL6PO/ep8JSapgxjSbZBF1NAMr1P5lB6UB8lRejxia/N/17/UPPwFxH/
-vcWJ9b1iudj7jkUEhW2ZzcVITf0mqwI2Reo2119q4hqCQQrc6dn1kReOxiGtODwT5h5/ZpzVTdlG
-2vbPUqd9OyTDtMFRNcab69TvfuR7A+FEvXoLN+BPy4KKDXEY5KbgiSwb87JzPMGwkp4Yfb2rfcV9
-CKEswp9zAgMBAAGjggL4MIIC9DASBgNVHRMBAf8ECDAGAQH/AgEAMA4GA1UdDwEB/wQEAwIBhjA0
-BggrBgEFBQcBAQQoMCYwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTCBgQYD
-VR0fBHoweDA6oDigNoY0aHR0cDovL2NybDQuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0QXNzdXJlZElE
-Um9vdENBLmNybDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0QXNzdXJl
-ZElEUm9vdENBLmNybDAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggGzBgNVHSAEggGq
-MIIBpjCCAaIGCmCGSAGG/WwAAgQwggGSMCgGCCsGAQUFBwIBFhxodHRwczovL3d3dy5kaWdpY2Vy
-dC5jb20vQ1BTMIIBZAYIKwYBBQUHAgIwggFWHoIBUgBBAG4AeQAgAHUAcwBlACAAbwBmACAAdABo
-AGkAcwAgAEMAZQByAHQAaQBmAGkAYwBhAHQAZQAgAGMAbwBuAHMAdABpAHQAdQB0AGUAcwAgAGEA
-YwBjAGUAcAB0AGEAbgBjAGUAIABvAGYAIAB0AGgAZQAgAEQAaQBnAGkAQwBlAHIAdAAgAEMAUAAv
-AEMAUABTACAAYQBuAGQAIAB0AGgAZQAgAFIAZQBsAHkAaQBuAGcAIABQAGEAcgB0AHkAIABBAGcA
-cgBlAGUAbQBlAG4AdAAgAHcAaABpAGMAaAAgAGwAaQBtAGkAdAAgAGwAaQBhAGIAaQBsAGkAdAB5
-ACAAYQBuAGQAIABhAHIAZQAgAGkAbgBjAG8AcgBwAG8AcgBhAHQAZQBkACAAaABlAHIAZQBpAG4A
-IABiAHkAIAByAGUAZgBlAHIAZQBuAGMAZQAuMB0GA1UdDgQWBBTnAiOAAE/Y17yUC9k/dDlJMjyK
-eTAfBgNVHSMEGDAWgBRF66Kv9JLLgjEtUYunpyGd823IDzANBgkqhkiG9w0BAQsFAAOCAQEATtSJ
-J7n9HYd3fg8oBZDxCi/JOz69k5yQxq/6kVGHMlRr6MrBcVFcmY61+uBiGZmmB5p8Eyfb5QKihBLZ
-FfYKRFfENI9tcx861qABPd7jguRFa7LrJf2AXh05kL5bQvbOkWDj+aBWDEgQzjNoe82Tq/Bqy09Y
-D7l7XRsEgZ6nIuJXSSfukpMIvmkIUwI6Ll3IGfRQgE4C2bBdkbSTh/mWloFVQI5m7YLYuyhf7Uxh
-7QZYKBlTEUS8RyApsgRs2IlUmTt122d4LB6SeMZVPVgSETJuvUMMTTTbe8ZC2+y+q5thTAaS447f
-ISpQVwTAYKI11SSeZjcJSc/V+GWz4OJuwjCCA7cwggKfoAMCAQICEAzn4OUX2Eb+j+Vg/BvwMDkw
-DQYJKoZIhvcNAQEFBQAwZTELMAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcG
-A1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTEkMCIGA1UEAxMbRGlnaUNlcnQgQXNzdXJlZCBJRCBSb290
-IENBMB4XDTA2MTExMDAwMDAwMFoXDTMxMTExMDAwMDAwMFowZTELMAkGA1UEBhMCVVMxFTATBgNV
-BAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTEkMCIGA1UEAxMbRGln
-aUNlcnQgQXNzdXJlZCBJRCBSb290IENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-rQ4VzuRDgFyxh/O3YPlxEqWu3CaUiKr0zvUgOShYYAz4gNqpFZUyYTy1sSiEiorcnwoMgxd6j5Cs
-iud5U1wxhCr2D5gyNnbM3t08qKLvavsh8lJh358g1x/isdn+GGTSEltf+VgYNbxHzaE2+Wt/1LA4
-PsEbw4wz2dgvGP4oD7Ong9bDbkTAYTWWFv5ZnIt2bdfxoksNK/8LctqeYNCOkDXGeFWHIKHP5W0K
-yEl8MZgzbCLph9AyWqK6E4IR7TkXnZk6cqHm+qTZ1Rcxda6FfSKuPwFGhvYoecix2uRXF8R+HA6w
-tJKmVrO9spftqqfwt8WoP5UW0P+hlusIXxh3TwIDAQABo2MwYTAOBgNVHQ8BAf8EBAMCAYYwDwYD
-VR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUReuir/SSy4IxLVGLp6chnfNtyA8wHwYDVR0jBBgwFoAU
-Reuir/SSy4IxLVGLp6chnfNtyA8wDQYJKoZIhvcNAQEFBQADggEBAKIOvN/i7fDjcnN6ZJS/93Jm
-2DLkQnVirofr8tXZ3lazn8zOFCi5DZdgXBJMWOTTPYNJRViXNWkaqEfqVsZ5qxLYZ4GE338JPJTm
-uCYsIL09syiJ91//IuKXhB/pZe+H4N/BZ0mzXeuyCSrrJu14vn0/K/O3JjVtX4kBtklbnwEFm6s9
-JcHMtn/C8W+GxvpkaOuBLZTrQrf6jB7dYvG+UGe3bL3z8R9rDDYHFn83fKlbbXrxEkZgg9cnBL5L
-zpe+w2cqaBHfgOcMM2a/Ew0UbvN/H2MQHvqNGyVtbI+lt2EBsdKjJqEQcZ2t4sP5w5lRtysHCM4u
-5lCyp/oKRS+i8PIwggUZMIIEAaADAgECAhABmeiIGxb92d1jHUeNPLJ7MA0GCSqGSIb3DQEBCwUA
-MGUxCzAJBgNVBAYTAlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdp
-Y2VydC5jb20xJDAiBgNVBAMTG0RpZ2lDZXJ0IFNIQTIgQXNzdXJlZCBJRCBDQTAeFw0yMTEwMjkw
-MDAwMDBaFw0yMzEwMjcyMzU5NTlaMEAxGzAZBgNVBAMMEmFrdXN0ZXJAbXZpc3RhLmNvbTEhMB8G
-CSqGSIb3DQEJARYSYWt1c3RlckBtdmlzdGEuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB
-CgKCAQEA60Rtp117FyjzKFRYeZrx5QdhlSA7VUEQxYtnCtN656+u6Vjq/R0I4KAIMaAEOlS3Purp
-DrHBMf1gqCKZHdzCkmj5L8GtBkB6yT1NoJnBTH83TgLbRFPB3WnTFmWTSnBkFyyrkoc8JKIzu/p0
-CM/+pHHH9IR5lmzdraoKnHx9ZUwaNltEPZpDWo7zxqQXS+uToztNNuhYPOZhMQmGBVOzczliElcm
-+DOgmn89Va8QVYqzPglbvjsYSIk2kzaKVffLxyY2p0yvWY8w7CAEYk2gLfPuZiqIdXGYmEyKH86H
-27AP1uMrYQjEw1R9VY4JrpDLehuUs/RGYWyMAjfo1NDh0QIDAQABo4IB6DCCAeQwHwYDVR0jBBgw
-FoAU5wIjgABP2Ne8lAvZP3Q5STI8inkwHQYDVR0OBBYEFL0akMb3LmLy7bKAAO6QDtKy8WI7MAwG
-A1UdEwEB/wQCMAAwHQYDVR0RBBYwFIESYWt1c3RlckBtdmlzdGEuY29tMA4GA1UdDwEB/wQEAwIF
-oDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwQwYDVR0gBDwwOjA4BgpghkgBhv1sBAEB
-MCowKAYIKwYBBQUHAgEWHGh0dHBzOi8vd3d3LmRpZ2ljZXJ0LmNvbS9DUFMwgYUGA1UdHwR+MHww
-PKA6oDiGNmh0dHA6Ly9jcmwzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydFNIQTJBc3N1cmVkSURDQS0x
-LmNybDA8oDqgOIY2aHR0cDovL2NybDQuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0U0hBMkFzc3VyZWRJ
-RENBLTEuY3JsMHkGCCsGAQUFBwEBBG0wazAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNl
-cnQuY29tMEMGCCsGAQUFBzAChjdodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vRGlnaUNlcnRT
-SEEyQXNzdXJlZElEQ0EuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQCUY9qc+vTg/KOKUB9htYLvs1km
-5XF3yyLnIoMBvbmx4zatz0YddFP7UT0esHLGDEW2suAlq44A6SRd2fTUe0tyjGAxsblGwxKp0ypw
-p6xjYeJAkp0nEemsYGxGSOf1HP9BIT1bFT9CHHCoX26wxtf7RF2fePncJ4wPBxFzJdecBcKgL8uN
-yQnDtPyJ0DC4bVz9Z67nEFJcFTyrzbvo4sk9A8QKYANnjmCYPSEIlis8o7zERwxC/xNTgzAXzlDS
-8mJM7ja9otySdENt1tyty90IOWryaSvfeHDffO0YCDvbAVCcisvjni5esAu0sDrJr+ODF4laEVBF
-z4PNrDvNN2gGMYICezCCAncCAQEweTBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQg
-SW5jMRkwFwYDVQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBTSEEyIEFz
-c3VyZWQgSUQgQ0ECEAGZ6IgbFv3Z3WMdR408snswDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcN
-AQkEMSIEIKqi0MqYKlkVGZpcQPuzW6JSTUdmlO3KCVX46DIB905iMBgGCSqGSIb3DQEJAzELBgkq
-hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDQwNTEyMjUzMlowaQYJKoZIhvcNAQkPMVwwWjAL
-BglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG
-9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCkbPsAqTC/
-45zLnsKUm0AQr4UH84O/AkkyoiAPDa+Wn4qB/8ZfhAXhyu9YRWIyIHhT54j6BmYCMG66Ja5cxZLh
-3DtAMeRQMdsWyfrpMKSMAuHhWuK5XlnqgU4zk7FMWpN3YhH/BA9oLqEzNnH/LAtf6CY/qEC5Tkjt
-ZTrvdl+yLm9aUoa4jXaupkEXyl85AlKuqWlGzpP6gcTQ7Vm/fQFxJBFaREXwpOuYNrDxbTRub8jb
-/hI3XgX87pf7FT77M/Y1gnxuxyKE0A9qMjKs0LrpIDttu319zKHjj2wFreyyLlCOaFccecr01GxC
-WoLJpgd+9tq4dfT44G1BCfPqeKLq
---00000000000061eb4d05f895e3aa--
+--000000000000094d7205f8963cd2--
 
