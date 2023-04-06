@@ -1,129 +1,168 @@
-Return-Path: <Joakim.Tjernlund@infinera.com>
+Return-Path: <Martin.Jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1608CC76196
-	for <webhook@archiver.kernel.org>; Thu,  6 Apr 2023 15:27:26 +0000 (UTC)
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (NAM02-SN1-obe.outbound.protection.outlook.com [40.107.96.67])
- by mx.groups.io with SMTP id smtpd.web11.161507.1680794842802723063
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEA3C76196
+	for <webhook@archiver.kernel.org>; Thu,  6 Apr 2023 15:39:46 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web10.161791.1680795584943634398
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 06 Apr 2023 08:27:23 -0700
+ Thu, 06 Apr 2023 08:39:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@infinera.com header.s=selector2 header.b=lqWeTEDz;
- spf=pass (domain: infinera.com, ip: 40.107.96.67, mailfrom: joakim.tjernlund@infinera.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iqKjiEnOVGYFW8mWfMAYAwJ1Z+zr8V8WNSTEnCU5uz1xRgslwa29Ko+hh7nAjy5q0I1kVLYl/2OZ80Qbg6Of5k7ZCvt2c1o3q2mqWT3fFOzQnDKZOsPJt1uk6KjOcTb5YSyTx6oMF/8Zv++gy6CZ1TOs2LpnTPsCQHbIkEiKh+4GyQSfI/owy+SzhslumtjJUnMv5ukxcF4D2C3B9WQpcrutsvDvY+mwFviPHwE/JKUJNInKsjxpaHPlLKHyLRjOv2Vqyh1mrg5I2M25zQEwRQSby7pwAf1s9qt84swdiS/Mp4U3UR+WJyPZVLJ5aJkhjH9SpNtZr6GZMGWnzsvRMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I4lQqHxMzE1ShVeWoaMTCCmpDbX5UqzA7xMNFKhGFdo=;
- b=POHMuB7UjBIC+L43PbZ9ziC12zjCvJ6U9vYnlqq/fcj5dVFDQnFa32KdeY0hi+BFXrATYCfbiKHmoK7D28u8gwz/dwgFySJ6pHzw4SilOafuGp9TgVjNT+EdzfkhCvCZ7j+ePi2hf7ln/iaBkBNsafjao3GfMDmr13FjuwfOvsWvRWrZ9j4ro+V32HY72xvxKQjQJAJbcdfTp/2CdBZ3sXGnYZFOpoUN+71ZE3h9IFfq0QoFhQPHFv2c4MliU4Ty2lYvhcT8P+WSLh+DqWVHIuLWUyC3lpy2FFJNGdkM7bzl1GHoWM3kqnfk2SYfX0pWDagRx0yeGtAESzBVmElDzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=infinera.com; dmarc=pass action=none header.from=infinera.com;
- dkim=pass header.d=infinera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I4lQqHxMzE1ShVeWoaMTCCmpDbX5UqzA7xMNFKhGFdo=;
- b=lqWeTEDziKrzNLGwEbH0lOgNcWTvLBkpbTDoPjmAftyemRmyaGMcPKZxsxwcfWA2T0D4t4W3N3MlP8wLgk1AuB1lVt8yIjh8ikI38CvEWnaZqDKbmqpqJLK1NTSdwRiV0Fg7BixnECz4e3Qxiha+lOuW2n5MAKIzy4dg6Abf0RUZptwB3Yad0xpRIpgqbONx6K3DKfwvziyml+6qq+OR+diWid5Gtgbp43mPTGE5l8Kr4m74zpxUh6gDCHBUIVChIOHgJYmfQ3RHTBDBMzYkQ/Czi744wOcYabxjfoCGCUQG8vXA3slBdjjMgzQ/9mbTaWyYXwNAMzRHQWNE3gqXng==
-Received: from PH0PR10MB4615.namprd10.prod.outlook.com (2603:10b6:510:36::24)
- by PH0PR10MB5659.namprd10.prod.outlook.com (2603:10b6:510:fe::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.35; Thu, 6 Apr
- 2023 15:27:18 +0000
-Received: from PH0PR10MB4615.namprd10.prod.outlook.com
- ([fe80::75fa:a159:8722:b9f9]) by PH0PR10MB4615.namprd10.prod.outlook.com
- ([fe80::75fa:a159:8722:b9f9%6]) with mapi id 15.20.6277.031; Thu, 6 Apr 2023
- 15:27:16 +0000
-From: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Kirkstone : vs _ bugs
-Thread-Topic: Kirkstone : vs _ bugs
-Thread-Index: AQHZaJxFssg02YsUk06H5mCpUXx13w==
-Date: Thu, 6 Apr 2023 15:27:16 +0000
-Message-ID: <3bdf71527c3afcae7cd303826a3b59a52e28cc96.camel@infinera.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.48.0 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=infinera.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR10MB4615:EE_|PH0PR10MB5659:EE_
-x-ms-office365-filtering-correlation-id: 3a431506-c4c6-4868-78c9-08db36b36798
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- xFHd90F4at0LWD2igBLKOU4Hxr/N5teng5qDYTK2j03mlH1RYhUG73K82oJYtN4YB2VMkdMjSXUnd1FeQCDj3ZpFSTeG0nfj4wnVo83Qhc39utSvuKBnq9TIenN+FYBorGTNcqmmdBbm22VvPLRxMuou3aLAckL5YqCv1ol9gC4P2pTk3P0kIX3ba5kTwr9JhEkJZOlvTSmoxtosJarRn7brrJc2di/2hgjtyNBK+B7rvb6aIb6D3/h4YtKSFhK5JsN6kVLXDThip/asl7pSf1h73j2Y7rIYfu3P2k98fjUuotamNlXf4D0qMgHAGgVBfKIC2W7O3Be+4xFrJDsBNhvHvUjScbTen5nxjbIo0R6Er8RTEs2aCxEOBUi+B777dWayCw/AnpbIqydhUl9ko0QPsyNMFZL+kIsoVPwWknZd88ia5oQMjudHkuqGScao7fmA5OlhAj2qQamuIGrw9L1z/SbMTnKOGN7kcewaGiek/k3xN/F9NiH58ISjHvOtT5vUY1zYI3RTfq4v8cmA58hZ8NETValYBME+Cyl1ZZaY+tx1nAG5RPK7cM+ybKzCPQVfdVCr8TYm80Di3kds+X/O669tIH+svU3U6tEgV7Ok325NQYBpdED+fIJku098
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4615.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(396003)(136003)(346002)(366004)(39860400002)(451199021)(71200400001)(6486002)(36756003)(2616005)(86362001)(38100700002)(38070700005)(122000001)(6512007)(6506007)(186003)(91956017)(66556008)(8676002)(66446008)(66476007)(6916009)(66946007)(316002)(2906002)(64756008)(41300700001)(8936002)(4744005)(5660300002)(76116006)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?YzBmcnB5QjJzMkh2QnIzbmZQU3VNMEZacVA1MmFMaEdzdDdNVW9NdXVGQnZk?=
- =?utf-8?B?cmR5SW5kSTRUT2F2RG5oSDZBbGFpbG9JYXlLTG41ZzZ4c1lVSGU4ZVAzdnJM?=
- =?utf-8?B?cEM5OTlGanlWK0k5c2NqMkVHZWIxalpWb2JRdG9mZytPRmFlS0c5RVpZUk9S?=
- =?utf-8?B?S2tvbEhRUVNobTZCM2o4SnNmemZTUG9rUDltTERmR0N2dnJIU1h0OTJhQTRu?=
- =?utf-8?B?a1A0dWI4OTVqR09GV3YxRVBqZm5pOE43R3cvdTlRa21Lbkw2UVV4c2Q3VmU3?=
- =?utf-8?B?b2h5NVFnbjR6VHZncWZjVFYydXVkcW9nYm1zOU5uZWkwNW54aWZIUUxRcWw5?=
- =?utf-8?B?Q1JxOFFOaEpZaUZwSFlMMWxoeFFweTVSR2FGcTdzaWxTN0NpZC9hd280QkZo?=
- =?utf-8?B?b01aSTdnb1ZJZVpQY0hvMnVRdDZ4L3BpR0RCTjU1bEJtNmV3eG1QQko4VzJp?=
- =?utf-8?B?UUs4SjF2Mnc3SWdFOGVuSHBRL0tIYWQwWHZ5WDZjUThUdm1rTVRwYVdyQlhl?=
- =?utf-8?B?dEtBd25KcVNyTHdmQ0RiNE5BMnEwR0J3bWhGd0ZJeXFlZVgwRTNLdkZFdFJq?=
- =?utf-8?B?OFduTmRUY0t5WGJubFRuUW1pMlpTb3dNb2lJVUJtL0xXNmFQUWVNNFByR01H?=
- =?utf-8?B?c1RqeFBtRXpveXFxb0I4eGVWNDRNaHZPdmNHRXZzTVJKcisyQmNSWSs5MndF?=
- =?utf-8?B?a0JnV05KMmtVVlE0MExGdHJjS096ZU5ZOGxZeHQ1Nk43dldXTE5GeXZzSTh2?=
- =?utf-8?B?dmdDem1ncjQxaVRJL2Npa1BOSEFaTjhBY2FGNDlwRXZlSDRheUg3aDlxMTla?=
- =?utf-8?B?MkNjQXJxWmV1ejJiNHFraWlKN0lOeVUrbWg1azIxUlVMZ2FpMzBQTnNYMXNX?=
- =?utf-8?B?cmlrNWRTV0RNa2xCa0FTZU50aVhkRXV5UytLRHE3VWNycHpvQTFuRHY1VjhF?=
- =?utf-8?B?bHpRWEY4WEoyVk9RazFjbjBodFBXZVgvWnpKQW1tTHJEVGJoT3pPakcvZzU4?=
- =?utf-8?B?ak03Qk5IRDd4Uzd2QlllaTRSdmlDZVdhM2R6NjUwaGcvWmVYUnZRaS9iNWRp?=
- =?utf-8?B?c2pGdDVTYWdSeit3anZ1eUJFR0hneVgvVEhjekJpVXlQbm9acmdkc1ptSGlR?=
- =?utf-8?B?Q2lTMHk2SEowYy9Kc1VHU1hpbkc4T3o1a3ZpUGtFR0dCN2ovZTNyVEpHR0k5?=
- =?utf-8?B?TEZicC9UMjJreitoTGx5cnd1S0liQkliR1cwaUt5V2N4NlZiS0txMndjUVBF?=
- =?utf-8?B?dy9qTFF2TWgydlF5MEovVlIvV3Y2NEZnU3FxU3R0MUZUMHRYS2E1cjV6QWtV?=
- =?utf-8?B?dFFUdEhmTm1mUTFkT0Z6V3ZoRzJTQVJ0a3B0bmVTOGI0OG0yRE9hc2pSbCsx?=
- =?utf-8?B?NUpSUDRzQ1pHeVBoellmWnVzNTdwMFNDY0tMRENocUhtUUgycGNjTWJJTUt1?=
- =?utf-8?B?d1BRRjNkNGVLRUl3elJsZE1kN0JvYnE4YkEyNDkvYlptNnJVTjVDbkRPcXpC?=
- =?utf-8?B?d3M1MFU1Wk1CNjV0M2hJaWZDdXUzU2s3V1J5SVJyaWRjR1BkdHhiMHlpOTFh?=
- =?utf-8?B?cjFrbTJTa1gxRDJjRERidTd0clVlSFdZMEZDMURESUw2dW9hZEVVR25SUlQw?=
- =?utf-8?B?VUxoY3RjMktJWGIrRVVKalZ2N2JlMzF2N1R3YnRmMnU5WlVKZ2FjOUMzT0xP?=
- =?utf-8?B?TjRTWjV5TEMvZ3VwellWdzIzcU05TkUvZUNvZlBVNXpLSFJZOVhWTXdMbkNH?=
- =?utf-8?B?TFpja2xxUTlKMStFWEtsd0hDVEJDQ01zQ0NnbXpPekNSRnd0bGNaekhWRVhw?=
- =?utf-8?B?VmRrbEJsT3V5WG5TZlFQRHZLeStKTkJKYlNoRWRTNGg0Z2VXTUYya21QOE5r?=
- =?utf-8?B?TGpkNy9SVVhBQzFwQTRsdTF5TkxJRFNnd0FwMjFnZmY5TDVTU0t2QkJiVzI1?=
- =?utf-8?B?T3JmVDlQYzhRN3VoU0Z0V0s3eUcrcjJXNlU0UXBDWnNLbWw0eiszd3VIV0ls?=
- =?utf-8?B?eUkvMnQyTjJSRlAyMGlTc3gwWXVhMXNCdlEvaiswUzd6TWJkK0h6K2RsQ2gr?=
- =?utf-8?B?eG4yMlZyWFdobnQ1cERxdVhDVXNpWWJpLzBuV3l2NW1zQ0x6QnI4M0xnU0RU?=
- =?utf-8?B?azE0OVN2bzd0dU1DWmlDTmpDTUJRcFJ4UUlZekQvU0dOVWp5VFU4SDFyZ2hJ?=
- =?utf-8?Q?jt5LdMA/JJcP3tVGMuSNkhVksPFYCTMkPG6rg4pcAc25?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B05E24183FF863499E241D6EC8E187B1@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20210112 header.b=kd7bilbs;
+ spf=pass (domain: gmail.com, ip: 209.85.128.49, mailfrom: martin.jansa@gmail.com)
+Received: by mail-wm1-f49.google.com with SMTP id j18-20020a05600c1c1200b003ee5157346cso25766229wms.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Apr 2023 08:39:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680795583; x=1683387583;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fvZ0LtA1wmjFVHrBhUa7sdbU2yljbJ86M93Uv+8NV9A=;
+        b=kd7bilbspR3O9SnW+LX5K2KjLEJjyUvGbK8BdU8ryz2jbhSWlmECvH01NTiuNm4/lp
+         vSR9Clf/dU0AjULyQHJiZnNp/hfGq+GUWND4NdiiClhEesTEFsU3/arhibC3b2m1+jG3
+         JgOgf5YdolCS0auXZJWS75xW2q3EGCKgF2hgHJFD8pmk1FhqtZ1zazLmW066Ba5SRupy
+         SDaMnfmR5vCv/p8ZNUnuct8TMjLuSArwk8j8kd17dg1E3vzDSEqpJRS74q4CL6/0cbf5
+         8ehns5AoW0u+B0KM/laf9SYY67Se5Hhef7zvGwWV7Nllo75puHKoalm3FhwrT+ItKPYp
+         gxZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680795583; x=1683387583;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fvZ0LtA1wmjFVHrBhUa7sdbU2yljbJ86M93Uv+8NV9A=;
+        b=7IdTVSfgGCB5Tv3Xbll1zRmbF3PeCnbzcnYWLVSM2nskveDB5hhYywaJC8rrPP1305
+         mZ+k4eZYpFczxNKCb+0XxCO1HpCcbZTUDCsK1KM1s7qsjqxPNJSKepnZD05SvUL/eRdN
+         YWJlp/so+x+21BAl8DiW4KUx2L87WQiEBSc+UK+Hcc6jEH/hB2ld1GDyFLz3jE1WDRi/
+         RGP5mYoTZtFOf079GSCuEwA2oxwqFhFX0gs6xmZVQNd0KyydS99JuBqvyKIDhvNW7C8B
+         /2rBc6F407d50AI0Es0VXpPbI3QDgzEbTrx6gFLtKCTxkSHZmoPHYC4DO9Y/oj5nZDsJ
+         vMew==
+X-Gm-Message-State: AAQBX9eaEG+LVchZXYxLHiclmxt7qH+9hUWeJMwOBAhWhaABBIyI2gfz
+	3vKQ4WE6wOofNBtP9zuBsW0PPtF1/KHl1iu+1zQ=
+X-Google-Smtp-Source: AKy350at9E/IlfAnf6nShu06Syi3Ma57Xm6Wq3q94iOPPRARaO+4N6+S9YoxX5jQjPGzZq5+HXg9COug8Sbz1iJqi6k=
+X-Received: by 2002:a1c:4c19:0:b0:3ed:e577:49e9 with SMTP id
+ z25-20020a1c4c19000000b003ede57749e9mr2473845wmf.3.1680795583081; Thu, 06 Apr
+ 2023 08:39:43 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: infinera.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4615.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a431506-c4c6-4868-78c9-08db36b36798
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Apr 2023 15:27:16.7752
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NuuP4CyGA6ZDH6gQZwGkmKwTcUH/Nci6P0E7Xs+w3egZhq6dRZe9rcIf831UYNxBb0trJEdFOjyR5DACrd92Pw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5659
+References: <3bdf71527c3afcae7cd303826a3b59a52e28cc96.camel@infinera.com>
+In-Reply-To: <3bdf71527c3afcae7cd303826a3b59a52e28cc96.camel@infinera.com>
+From: Martin Jansa <martin.jansa@gmail.com>
+Date: Thu, 6 Apr 2023 17:39:24 +0200
+Message-ID: <CA+chaQfYR76=q44-5co7p56CNC7KBA=nQaAqh4nR=5wG4p5=tg@mail.gmail.com>
+Subject: Re: [bitbake-devel] Kirkstone : vs _ bugs
+To: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="000000000000ab6f9805f8acb7b3"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 06 Apr 2023 15:27:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14678
+ <bitbake-devel@lists.openembedded.org>; Thu, 06 Apr 2023 15:39:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14679
 
-UG9ydGluZyB0byBLaXJrc3RvbmUgSSBzdHVtYmxlZCBvdmVyIHRoaXM6DQogIFBSRUZFUlJFRF9W
-RVJTSU9OOnh5eiA9IDEuMi4zDQpkb2VzIG5vdCB3b3JrIGluIEtpcmtzdG9uZSBidXQgd29ya3Mg
-aW4gRHVuZmVsbCwgbmVlZCB0byByZXBsYWNlIDogd2l0aCBfDQoNCg0KRklMRVNfJHtQTn0gaXMg
-c2lsZW50bHkgaWdub3JlZCBpbiBLaXJrc3RvbmUsIHJlcGxhY2luZyBfIHdpdGggOiBtYWtlcyBi
-dWlsZCBoYXBweSBhZ2Fpbi4NCg0KSXQgaXMgdW5jbGVhciB0byBtZSB3aGVuIHRvIHVzZSA6IHZz
-LiBfIGluIFlvY3RvIGZvciBLaXJrc3RvbmUsIGlzIHRoZXJlIGEgbGlzdD8NCg0KIEpvY2tlDQo=
+--000000000000ab6f9805f8acb7b3
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+See openembedded-core/scripts/contrib/convert-overrides.py script which
+does most of the heavy lifting and there is a plenty of examples how to
+update the layers.
+
+> PREFERRED_VERSION:xyz =3D 1.2.3
+> does not work in Kirkstone but works in Dunfell,
+
+This is side effect of the bitbake change which replaces all ':' with "_"
+as a way to allow using new syntax with older bitbake, but unfortunately it
+replaces it everywhere (even where it shouldn't be used at all in first
+place), that's why it works in dunfell with older bitbake while kirkstone
+correctly refuses it.
+
+See
+https://git.openembedded.org/bitbake/commit/?h=3D1.46&id=3Da6d5fb7554e3cf07=
+1e453db56a1e7469ac44277c
+
+Regards,
+
+On Thu, Apr 6, 2023 at 5:27=E2=80=AFPM Joakim Tjernlund <
+Joakim.Tjernlund@infinera.com> wrote:
+
+> Porting to Kirkstone I stumbled over this:
+>   PREFERRED_VERSION:xyz =3D 1.2.3
+> does not work in Kirkstone but works in Dunfell, need to replace : with _
+>
+>
+> FILES_${PN} is silently ignored in Kirkstone, replacing _ with : makes
+> build happy again.
+>
+> It is unclear to me when to use : vs. _ in Yocto for Kirkstone, is there =
+a
+> list?
+>
+>  Jocke
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14678):
+> https://lists.openembedded.org/g/bitbake-devel/message/14678
+> Mute This Topic: https://lists.openembedded.org/mt/98107247/3617156
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> Martin.Jansa@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
+
+--000000000000ab6f9805f8acb7b3
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">See=C2=A0openembedded-core/scripts/contrib/convert-overrid=
+es.py script which does most of the heavy lifting and there is a plenty of =
+examples how to update the layers.<div><br></div><div>&gt; PREFERRED_VERSIO=
+N:xyz =3D 1.2.3</div>&gt; does not work in Kirkstone but works in Dunfell,<=
+div><br></div><div>This is side effect of the bitbake change which replaces=
+ all &#39;:&#39; with &quot;_&quot; as a way to allow using new syntax with=
+ older bitbake, but unfortunately it replaces it everywhere (even where it =
+shouldn&#39;t be used at all in first place), that&#39;s why it works in du=
+nfell with older bitbake while kirkstone correctly refuses it.</div><div><b=
+r></div><div>See=C2=A0<a href=3D"https://git.openembedded.org/bitbake/commi=
+t/?h=3D1.46&amp;id=3Da6d5fb7554e3cf071e453db56a1e7469ac44277c">https://git.=
+openembedded.org/bitbake/commit/?h=3D1.46&amp;id=3Da6d5fb7554e3cf071e453db5=
+6a1e7469ac44277c</a></div><div><br></div><div>Regards,</div></div><br><div =
+class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, Apr 6, =
+2023 at 5:27=E2=80=AFPM Joakim Tjernlund &lt;<a href=3D"mailto:Joakim.Tjern=
+lund@infinera.com">Joakim.Tjernlund@infinera.com</a>&gt; wrote:<br></div><b=
+lockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-le=
+ft:1px solid rgb(204,204,204);padding-left:1ex">Porting to Kirkstone I stum=
+bled over this:<br>
+=C2=A0 PREFERRED_VERSION:xyz =3D 1.2.3<br>
+does not work in Kirkstone but works in Dunfell, need to replace : with _<b=
+r>
+<br>
+<br>
+FILES_${PN} is silently ignored in Kirkstone, replacing _ with : makes buil=
+d happy again.<br>
+<br>
+It is unclear to me when to use : vs. _ in Yocto for Kirkstone, is there a =
+list?<br>
+<br>
+=C2=A0Jocke<br>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#14678): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/14678" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/14678</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/98107247/3617=
+156" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
+/98107247/3617156</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:Martin.Jansa@gmail.com" target=3D"=
+_blank">Martin.Jansa@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
+
+--000000000000ab6f9805f8acb7b3--
 
