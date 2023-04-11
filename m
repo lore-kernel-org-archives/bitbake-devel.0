@@ -1,120 +1,106 @@
-Return-Path: <kai.kang@eng.windriver.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5C7C7619A
-	for <webhook@archiver.kernel.org>; Tue, 11 Apr 2023 09:09:20 +0000 (UTC)
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.web10.9163.1681204154589452125
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCD6C77B6F
+	for <webhook@archiver.kernel.org>; Tue, 11 Apr 2023 16:50:53 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web11.19905.1681231845381158698
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 Apr 2023 02:09:14 -0700
+ Tue, 11 Apr 2023 09:50:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=pps06212021 header.b=MwMP4MBE;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=3465c4dfd5=kai.kang@windriver.com)
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33B8mJ1T027083
-	for <bitbake-devel@lists.openembedded.org>; Tue, 11 Apr 2023 02:09:14 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com; h=from : to :
- subject : date : message-id : mime-version : content-type; s=PPS06212021;
- bh=bLBbzjmiCzxCEjZy6C/Re4aFJgI8rCAMkimdwQHV430=;
- b=MwMP4MBEN5Zq3vfOGfha3RP09v26CkfaPGEj5LX0lMh+uM/QwJU8zTSinbzmezlvfxT7
- dxYSnKQ9MqDOahI2ihuAX8WQz0+607WyFi3MdxaSOQztmTuJE+0LD2uudcxOU3HNgd/r
- fXXzfizvyQ+xQfj5hZy5a12g2R3v1ZT+AsrhzIPWTkvJKfAFTuPTBbdA0Kh0wA6jYmkM
- eaIRe3Py8NEeRZjK/er/qnBrm1d8eiIKeTuELVEH6ZSz66pLlXglp3shZwCPDzTsdjV4
- s4Jvv7+WaGIyEkqnku6c/WpDk9RjBZEaYcidwvtIsEfnvQE/qqp3e20UXe3RBu/oNeBo 1w== 
-Received: from ala-exchng01.corp.ad.wrs.com (unknown-82-252.windriver.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3pu3j5jr8u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 11 Apr 2023 02:09:14 -0700
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 11 Apr 2023 02:09:13 -0700
-Received: from pek-lpg-core3.wrs.com (128.224.153.232) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.23 via Frontend Transport; Tue, 11 Apr 2023 02:09:12 -0700
-From: <kai.kang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH v2] bitbake: ConfHandler: Allow variable flag name with a single character
-Date: Tue, 11 Apr 2023 17:09:04 +0800
-Message-ID: <20230411090904.32065-1-kai.kang@windriver.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YCS2avQd;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f47.google.com with SMTP id hg25-20020a05600c539900b003f05a99a841so12611619wmb.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Apr 2023 09:50:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1681231844;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UGiTap8hIvsY5uMqLvaSU3s4KRq7D7yrXo1rDN4uCqY=;
+        b=YCS2avQdvbCJnU4HKVHoTgMLytBE9rpQmRXVYIqbYWPutwBZNdwGhzrDh0SztiJTOZ
+         K4e2Vg+Ins/5seAHuNz2Rc7whLJP9ZalRzXTXtBvipkaKnR1gm+vqtRg3mGjRMqNoKrM
+         NgIr0jd0n+SVncNG+hWA14Gnfr0jxk8ZFfWUg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681231844;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UGiTap8hIvsY5uMqLvaSU3s4KRq7D7yrXo1rDN4uCqY=;
+        b=vnV7bx4SHDU+ddxaaluf1Mcc85TiNBSzU/pVV5ELk1bwBckSKhDZ+VIRg7p4PkMywz
+         Z8xwxfleEhkMF0dRED4IcfNIV9Xo6MwMhZoJOS7hImPK46fnwkvwGbLMiCkkubruzUpQ
+         egwA8nlhdox74Zh74W85rKCMpUhrB0T1UxOKPKH6im62roVapthH8kd5/Ctn4FuFyRwW
+         G8y5zdhV1KrMtKS6zl+O2bwCTD5bz7iIl2H2SWzy7Ksa4iWFb6Sf9wIiSuCYOSeNI0lG
+         T9AI1mIMf7mHoRN4YjyJwpRue0k+Pok27Gba6vXxIKWZF2P7W7ep+aUlypNF7VNC7rhU
+         P3ow==
+X-Gm-Message-State: AAQBX9fn686VXeYtK+njvbdRcgOg/fYPTNgkBRfSixKcYKy+fyhSm2p+
+	FMhjAFIZFMAZ/Lls1kfgZ/1FofVHNi2Y/AAzS6w=
+X-Google-Smtp-Source: AKy350ZLXqI1zSrGqRsbsMvPRPgzrX4nSOYeB25vCtW/vJGoP5ohKlwDZf8QPILk9IsuaGTd/wHNhA==
+X-Received: by 2002:a1c:7c11:0:b0:3ed:2a91:3bc9 with SMTP id x17-20020a1c7c11000000b003ed2a913bc9mr8070178wmc.15.1681231843834;
+        Tue, 11 Apr 2023 09:50:43 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:d973:4e5f:b43e:78a5? ([2001:8b0:aba:5f3c:d973:4e5f:b43e:78a5])
+        by smtp.gmail.com with ESMTPSA id u14-20020a05600c00ce00b003ed243222adsm17452567wmm.42.2023.04.11.09.50.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 09:50:43 -0700 (PDT)
+Message-ID: <bed59afa659823a6656aa978168330642648811a.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] event: add bb.event.ParseError
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: "Yu, Mingli" <mingli.yu@eng.windriver.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 11 Apr 2023 17:50:42 +0100
+In-Reply-To: <20230410091900.2897894-1-mingli.yu@eng.windriver.com>
+References: <20230410091900.2897894-1-mingli.yu@eng.windriver.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.47.3-1 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-GUID: KL9qDjGX-sb8ucn3vuPvPVE6EYEbxd5J
-X-Proofpoint-ORIG-GUID: KL9qDjGX-sb8ucn3vuPvPVE6EYEbxd5J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-11_05,2023-04-06_03,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=988 phishscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 bulkscore=0
- spamscore=0 malwarescore=0 impostorscore=0 mlxscore=0 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2304110085
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 11 Apr 2023 09:09:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14692
+ <bitbake-devel@lists.openembedded.org>; Tue, 11 Apr 2023 16:50:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14693
 
-From: Kai Kang <kai.kang@windriver.com>
+On Mon, 2023-04-10 at 17:19 +0800, Yu, Mingli wrote:
+> From: Mingli Yu <mingli.yu@windriver.com>
+>=20
+> Add bb.event.ParseError to let error-report can catch this kind of error.
+>=20
+> Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+> ---
+>  lib/bb/cooker.py | 6 ++++--
+>  lib/bb/event.py  | 8 ++++++++
+>  2 files changed, 12 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+> index 1797a1d4..206f8ffb 100644
+> --- a/lib/bb/cooker.py
+> +++ b/lib/bb/cooker.py
+> @@ -2223,7 +2223,7 @@ class CookerParser(object):
+> =20
+>              self.results =3D itertools.chain(self.results, self.parse_ge=
+nerator())
+> =20
+> -    def shutdown(self, clean=3DTrue):
+> +    def shutdown(self, clean=3DTrue, eventmsg=3D""):
+>          if not self.toparse:
+>              return
+>          if self.haveshutdown:
+> @@ -2238,6 +2238,8 @@ class CookerParser(object):
+> =20
+>              bb.event.fire(event, self.cfgdata)
+>          else:
+> +            if eventmsg:
+> +                bb.event.fire(bb.event.ParseError(eventmsg), self.cfgdat=
+a)
+>              bb.error("Parsing halted due to errors, see error messages a=
+bove")
 
-Update regex pattern to allow variable flag name with a single character.
+Shouldn't this always fire the event even if there is no specific error
+message?
 
-Regression tests have also been updated in `bb.parse` and
-`bin/bitbake-selftest -k ParseTest` has been successfully executed.
+Cheers,
 
-Eliminate a trailing space as well.
-
-Signed-off-by: Kai Kang <kai.kang@windriver.com>
----
- bitbake/lib/bb/parse/parse_py/ConfHandler.py | 4 ++--
- bitbake/lib/bb/tests/parse.py                | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-index 05c627ec8b..7826dee7d3 100644
---- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-@@ -21,7 +21,7 @@ __config_regexp__  = re.compile( r"""
-     ^
-     (?P<exp>export\s+)?
-     (?P<var>[a-zA-Z0-9\-_+.${}/~:]+?)
--    (\[(?P<flag>[a-zA-Z0-9\-_+.][a-zA-Z0-9\-_+.@]+)\])?
-+    (\[(?P<flag>[a-zA-Z0-9\-_+.][a-zA-Z0-9\-_+.@]*)\])?
- 
-     \s* (
-         (?P<colon>:=) |
-@@ -103,7 +103,7 @@ def include_single_file(parentfn, fn, lineno, data, error_out):
- # We have an issue where a UI might want to enforce particular settings such as
- # an empty DISTRO variable. If configuration files do something like assigning
- # a weak default, it turns out to be very difficult to filter out these changes,
--# particularly when the weak default might appear half way though parsing a chain 
-+# particularly when the weak default might appear half way though parsing a chain
- # of configuration files. We therefore let the UIs hook into configuration file
- # parsing. This turns out to be a hard problem to solve any other way.
- confFilters = []
-diff --git a/bitbake/lib/bb/tests/parse.py b/bitbake/lib/bb/tests/parse.py
-index d27c7c6f15..a3165d95bd 100644
---- a/bitbake/lib/bb/tests/parse.py
-+++ b/bitbake/lib/bb/tests/parse.py
-@@ -222,6 +222,7 @@ VAR = " \\
-     at_sign_in_var_flag = """
- A[flag@.service] = "nonet"
- B[flag@.target] = "ntb"
-+C[f] = "flag"
- 
- unset A[flag@.service]
- """
-@@ -232,6 +233,7 @@ unset A[flag@.service]
-         self.assertEqual(d.getVar("B"), None)
-         self.assertEqual(d.getVarFlag("A","flag@.service"), None)
-         self.assertEqual(d.getVarFlag("B","flag@.target"), "ntb")
-+        self.assertEqual(d.getVarFlag("C","f"), "flag")
- 
-     def test_parse_invalid_at_sign_in_var_flag(self):
-         invalid_at_sign = self.at_sign_in_var_flag.replace("B[f", "B[@f")
--- 
-2.17.1
+Richard
 
 
