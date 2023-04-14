@@ -1,129 +1,80 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDF5C77B72
-	for <webhook@archiver.kernel.org>; Fri, 14 Apr 2023 16:08:22 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web11.14692.1681488492102046210
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE89C77B71
+	for <webhook@archiver.kernel.org>; Fri, 14 Apr 2023 16:44:52 +0000 (UTC)
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+ by mx.groups.io with SMTP id smtpd.web11.15709.1681490689436425761
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 14 Apr 2023 09:08:12 -0700
+ Fri, 14 Apr 2023 09:44:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@linuxfoundation.org header.s=google header.b=EVGp5eOy;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id d8-20020a05600c3ac800b003ee6e324b19so10058992wms.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 14 Apr 2023 09:08:11 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@sakoman-com.20221208.gappssmtp.com header.s=20221208 header.b=zoTsHp0Y;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.170, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-63b5312bd4fso2356183b3a.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 14 Apr 2023 09:44:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1681488490; x=1684080490;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dBxW/bCBTtCP3MfJZ7gIX4rtn9NfudHVAfeTEf4jreY=;
-        b=EVGp5eOyuzDAXvEMtKvxlE+2kHTcxwBcp2Msf651WaxOytYUcUQkigYyelZOH70Beg
-         XWcnaV1RxkhY5I83hb37X8rFKtzNzcDoUZGzeAPpiAd0SWUpsPuD6usnAbUW2qeYACQW
-         dDo3CM2E9XJLaGZvAoRoLztuTTgTTC3P5E+AY=
+        d=sakoman-com.20221208.gappssmtp.com; s=20221208; t=1681490688; x=1684082688;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PMq6/WbWluBx+41SwcWj7DrtA1/vsCvh932BZwsbEyk=;
+        b=zoTsHp0YmwhgRyihWzJK8s4idxCekizj+aEZtRuJUrKWUh3755DxkriPZUwzY7Yi6c
+         HQ578GKMRNznYoyhcz5TfOb1KZTdXvDKK8STcDq5GCgne8RVT3EHFZvIyPobUh8MwssR
+         yIudXvhhUFj+YWyMa8NBzzpG0q6TXEu7HEykpnqaXSAq6q0ATH0srLKEMDfQgDFj6rx6
+         yjO6enzVvlW1V6PGCU7MrYXhHRJfW2sttz24NUFmY0pRnCf8bWQMsaPmyiTP1Aw4yfM1
+         HZOBSRyxeHjtPiMR489esrXwrVrZSSFnwC0IGNnPb1rZoewKvAL3SyMIbaHDVZ75tYXJ
+         pkLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681488490; x=1684080490;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dBxW/bCBTtCP3MfJZ7gIX4rtn9NfudHVAfeTEf4jreY=;
-        b=YlAUf4X6/oCiRFJ3ouwNCVhkQI4K7boR3vlYUhfostWWDRqAHTM+1I7+VfrV8oWLp3
-         m4Dx7F/Qq8l7rTALxEu/mBBYkvwo+gwP2+G1xG4AUCTt5NMP2Tl3y5YPW74quMfqIKYC
-         4TDF+dUg4dOfV9GXkw7qYfoka0UoTtH33h7sBvOZQtM7TANv4TT1X9s8x3KL/s5/fclB
-         fHnfkrGNlsdtdWDqjTjhSzshROA8Aqz20DcijrWlLNlvWS5GIiYGC4p8mtI15tOKzZwX
-         L/6OaCgmz88ynMkF1pjoCnhe6zy9nlzvuTksD0q8s+v76KLJ4PpQewc4IGMLtCMeQVNx
-         wVNQ==
-X-Gm-Message-State: AAQBX9eIJoOOhDxCXSKB3FiCQBg+YbHga02uioG7OvFI8DjRUqsRS4cK
-	166ipyTtjphAsORWx6oTWSzlBQ==
-X-Google-Smtp-Source: AKy350YFqVvUR3thWwr4YYqrQtWDVp844g98Ql7rZFxe34bwj8RteAKP9QR0KgRkWR4YPfZ+9NRxwA==
-X-Received: by 2002:a7b:c7d4:0:b0:3eb:39e0:3530 with SMTP id z20-20020a7bc7d4000000b003eb39e03530mr4617568wmk.41.1681488490414;
-        Fri, 14 Apr 2023 09:08:10 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:4676:d773:dc86:c4a1? ([2001:8b0:aba:5f3c:4676:d773:dc86:c4a1])
-        by smtp.gmail.com with ESMTPSA id h13-20020a05600c2cad00b003ede2c4701dsm8184632wmc.14.2023.04.14.09.08.09
+        d=1e100.net; s=20221208; t=1681490688; x=1684082688;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PMq6/WbWluBx+41SwcWj7DrtA1/vsCvh932BZwsbEyk=;
+        b=SeFYrAe2NUhSat+0BJFp9XW6wvWt/iatgfm5WOSeIzSarg+NGcaIOfKB+dasISj1bB
+         UviVg1edSNuMgrojRiV3IjdVgOim5CG/6djk3ImcGN/zcpY6rlkOkZXiruGSKPb/eFG+
+         Ib6elRKCkYIpcogIEmCJX1XuvKouiZSLtQjOFdZUIxMsctO7vMUR+6UO3xNqK9nOw8qv
+         qwm1809qQ6T15um8ZPJyfhgCti+d9vksYN7VJlBdCbcb/fT209oWQzEwgr0Q91Gd7civ
+         zGB4T96bv8Wgn+jkCDo4xpJpIBlDeAT3FSo/8wUsA7gyGaCgC6SmlJcglNFrHEnLAXuL
+         wOuA==
+X-Gm-Message-State: AAQBX9dLOA4hYwTdF6F45GERvkI2SuFvQfSGVXIAd2CyviAXh7EavMKw
+	+XIg3fWCa9nRc/z5BwAzsUPByomu+TKhIY40Cog=
+X-Google-Smtp-Source: AKy350bXnI3eh0WaAq1qBYZGE0Pdf+/FjgyzZ05XIRzde8ADsgsYGIvGTI3M+CIwauASTAT/u1irbQ==
+X-Received: by 2002:a05:6a00:2e9b:b0:5a8:9858:750a with SMTP id fd27-20020a056a002e9b00b005a89858750amr6966364pfb.13.1681490688150;
+        Fri, 14 Apr 2023 09:44:48 -0700 (PDT)
+Received: from hexa.router0800d9.com (dhcp-72-253-4-112.hawaiiantel.net. [72.253.4.112])
+        by smtp.gmail.com with ESMTPSA id a22-20020a62e216000000b0063b642c5230sm1626192pfi.177.2023.04.14.09.44.47
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Apr 2023 09:08:09 -0700 (PDT)
-Message-ID: <80bc21e893c165f9ea24b125fed26fcf5cb305cd.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Problems having both git and npmsw sources in
- recipe #bitbake
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: public@smn.dk, bitbake-devel@lists.openembedded.org
-Date: Fri, 14 Apr 2023 17:08:08 +0100
-In-Reply-To: <ppBZ.1681472517878402202.SeyY@lists.openembedded.org>
-References: <ppBZ.1681472517878402202.SeyY@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.47.3-1 
+        Fri, 14 Apr 2023 09:44:47 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][langdale][2.2][PATCH 0/1] Pull request (cover letter only)
+Date: Fri, 14 Apr 2023 06:44:42 -1000
+Message-Id: <cover.1681490568.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 14 Apr 2023 16:08:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14700
+ <bitbake-devel@lists.openembedded.org>; Fri, 14 Apr 2023 16:44:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14701
 
-On Fri, 2023-04-14 at 04:41 -0700, public@smn.dk wrote:
-> I have posted the following topic under the group Openembedded-issues. I =
-am a little unsure if that is the right place, as there seems to be little =
-or no activity in that group?=C2=A0
->=20
-> Openembedded-issues@lists.openembedded.org | Problems having both git and=
- npmsw sources in recipe
->=20
-> Hi
->=20
-> I am experiencing problems with a recipe where I have both a git and a np=
-msw source in the SRC_URI. It seems that when the fetcher is fetching from =
-the shrinkwrap, the SRCREV variable has been deleted but it still ends up f=
-etching from the git source resulting in an error because SRCREV is undefin=
-ed.
->=20
-> The problem occurs because the Fetch class defaults to the value of SRC_U=
-RI if the urls parameter contains an empty list. The following change to th=
-e npmsw.py file seems to solve the problem:
->=20
-> diff --git a/bitbake/lib/bb/fetch2/npmsw.py b/bitbake/lib/bb/fetch2/npmsw=
-.py
-> index=C2=A0a8c4d3528f..4d700a537a=C2=A0100644
-> ---=C2=A0a/bitbake/lib/bb/fetch2/npmsw.py
-> +++=C2=A0b/bitbake/lib/bb/fetch2/npmsw.py
-> @@=C2=A0-193,7=C2=A0+193,9=C2=A0@@=C2=A0class=C2=A0NpmShrinkWrap(FetchMet=
-hod):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0# This fetcher reso=
-lves multiple URIs from a shrinkwrap file and then
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0# forwards it to a =
-proxy fetcher. The management of the donestamp file,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0# the lockfile and =
-the checksums are forwarded to the proxy fetcher.
-> - =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ud.proxy =3D Fetch([dep["url"=
-] for dep in ud.deps if dep["url"]], data)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0shrinkwrap_urls=C2=A0=3D=
-=C2=A0[dep["url"]=C2=A0for=C2=A0dep=C2=A0in=C2=A0ud.deps=C2=A0if=C2=A0dep["=
-url"]]
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if=C2=A0shrinkwrap_urls:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-ud.proxy=C2=A0=3D=C2=A0Fetch(shrinkwrap_urls,=C2=A0data)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ud.needdonestamp=C2=
-=A0=3D=C2=A0False
->=20
-> Are=C2=A0this=C2=A0change=C2=A0OK=C2=A0or=C2=A0can=C2=A0it=C2=A0result=C2=
-=A0in=C2=A0other=C2=A0issues?
->=20
-> Also more generally why does the Fetch class default to the value of SRC_=
-URI variable if the urls parameter contains an empty list? Isn't this a str=
-ange implementation? It also seems to result in issues if the shrinkwrap fi=
-le contains no dependencies.
->=20
-> Please note that I am fairly new to bitbake and completely new to the sou=
-rce code. :)
+The following changes since commit 88a9cc0318c6ef01976d8b09dfc1a92cf0a1e498:
 
-I think your patch is right. The Fetch class defaults to use SRC_URI
-for legacy reasons based on how things were abstracted and extended, it
-made sense at the time. I'm not sure if we still need it or not now.
+  toaster: Add refreshed oe-core and poky fixtures (2023-03-15 23:15:20 +0000)
 
-If you send the above patch as a proper patch we can test it and likely
-merge.
+are available in the Git repository at:
 
-Cheers,
+  https://git.openembedded.org/bitbake-contrib stable/2.2-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.2-next
 
-Richard
+Robert Yang (1):
+  fetch/git: Fix local clone url to make it work with repo
+
+ lib/bb/fetch2/git.py | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+-- 
+2.34.1
+
 
