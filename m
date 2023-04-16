@@ -1,92 +1,88 @@
-Return-Path: <enrico.scholz@sigma-chemnitz.de>
+Return-Path: <public@smn.dk>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA45C77B61
-	for <webhook@archiver.kernel.org>; Sun, 16 Apr 2023 09:19:25 +0000 (UTC)
-Received: from smtpout.cvg.de (smtpout.cvg.de [87.128.211.67])
- by mx.groups.io with SMTP id smtpd.web10.26112.1681636758273179950
- for <bitbake-devel@lists.openembedded.org>;
- Sun, 16 Apr 2023 02:19:23 -0700
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sigma-chemnitz.de header.s=v2022040800 header.b=FwAkDNwd;
- spf=pass (domain: sigma-chemnitz.de, ip: 87.128.211.67, mailfrom: enrico.scholz@sigma-chemnitz.de)
-Received: from mail-mta-3.intern.sigma-chemnitz.de (mail-mta-3.intern.sigma-chemnitz.de [192.168.12.71])
-	by mail-out-2.intern.sigma-chemnitz.de (8.17.1/8.17.1) with ESMTPS id 33G9JEbi1415152
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>; Sun, 16 Apr 2023 11:19:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
-	s=v2022040800; t=1681636754;
-	bh=/Wt0EFrbzRQaIti3S3B1/ieuvciMmfudA6FLEjaY+YA=; l=897;
-	h=From:To:Cc:Subject:Date;
-	b=FwAkDNwdLo+XBZ1CCQd+dgCSisBaFgRs9txpff/T4q8DgoIGZLOVaS5Nv8+RhGiLN
-	 /fiqjQx3jr3YSpJG83INljy1EGbX2zeZuB+h0J9ukgUD5LfPSTIRsJVIuTe73yUZb3
-	 u+84NLsZVLMKzIjmGi8GRdK+KPgZoOM66GQPnEARTCTYBmCoHL4/XcNklVMx1jWZ4L
-	 01kBsF5WMXDV3jmEwnHuXEhwlID5RVwRHsXfMcjR3onlf6cB9TVejSZ4f7uqY3qjAL
-	 1QxaTabYaMJpT5oQcKZEqmbUNO58URgiydfGaDUKrviT9TlJKvBueuF7k5wt3aWZlN
-	 mi1k3gG9fjxQA==
-Received: from reddoxx.intern.sigma-chemnitz.de (reddoxx.sigma.local [192.168.16.32])
-	by mail-mta-3.intern.sigma-chemnitz.de (8.17.1/8.17.1) with ESMTP id 33G9JBlr702034
-	for <bitbake-devel@lists.openembedded.org> from enrico.scholz@sigma-chemnitz.de; Sun, 16 Apr 2023 11:19:12 +0200
-Received: from mail-msa-3.intern.sigma-chemnitz.de ([192.168.12.73])
-	by reddoxx.intern.sigma-chemnitz.de with ESMTP
-	id WK4PIMQFK7; Sun, 16 Apr 2023 11:19:11 +0200
-Received: from ensc-pc.intern.sigma-chemnitz.de (ensc-pc.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail-msa-3.intern.sigma-chemnitz.de (8.15.2/8.15.2) with ESMTPS id 33G9JAjn1475663
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Sun, 16 Apr 2023 11:19:10 +0200
-Received: from ensc by ensc-pc.intern.sigma-chemnitz.de with local (Exim 4.96)
-	(envelope-from <ensc@sigma-chemnitz.de>)
-	id 1pnyXO-00BPz5-27;
-	Sun, 16 Apr 2023 11:19:10 +0200
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C59BC77B61
+	for <webhook@archiver.kernel.org>; Sun, 16 Apr 2023 19:56:58 +0000 (UTC)
+Subject: [PATCH] Recipes containing both git and npmsw sources in the SRC_URI fail during fetch from the shrinkwrap. It seems that when the fetcher is fetching from the shrinkwrap, the SRCREV variable has been deleted but it still ends up fetching from the git source resulting in an error because SRCREV is undefined. The root cause of this is that the Fetch class defaults to urls from the SRC_URI when the urls parameter contains an empty list. This patch will ensure that Fetch is not instantiated if the urls list is empty.
 To: bitbake-devel@lists.openembedded.org
-Cc: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Subject: [PATCH] cooker: do not abort on single ctrl-c
-Date: Sun, 16 Apr 2023 11:18:57 +0200
-Message-Id: <20230416091857.2721368-1-enrico.scholz@sigma-chemnitz.de>
-X-Mailer: git-send-email 2.39.2
+From: public@smn.dk
+X-Originating-Location: Birkerød, Capital Region, DK (130.228.29.38)
+X-Originating-Platform: Windows Chrome 112
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-X-REDDOXX-Id: 643bbd8f5038ce378780e9ec
+Date: Sun, 16 Apr 2023 12:56:52 -0700
+Message-ID: <hd1M.1681675012932104736.XKYK@lists.openembedded.org>
+Content-Type: multipart/mixed; boundary="VfpWm0gDele1PbNWGU66"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 16 Apr 2023 09:19:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14704
+ <bitbake-devel@lists.openembedded.org>; Sun, 16 Apr 2023 19:56:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14705
 
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+--VfpWm0gDele1PbNWGU66
+Content-Type: multipart/alternative; boundary="98jJfQ3WfSr5cp81qDdk"
 
-After b7ed7e9a815c4e10447fd499508be3dbb47f06e8 bitbake aborts immediately
-when a single ctrl-c is pressed.
+--98jJfQ3WfSr5cp81qDdk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Patch restores the previous behavior where a single ctrl-c waits for
-active tasks to finish.
+[PATCH] Recipes containing both git and npmsw sources in the SRC_URI fail d=
+uring fetch from the shrinkwrap. It seems that when the fetcher is fetching=
+ from the shrinkwrap, the SRCREV variable has been deleted but it still end=
+s up fetching from the git source resulting in an error because SRCREV is u=
+ndefined. The root cause of this is that the Fetch class defaults to urls f=
+rom the SRC_URI when the urls parameter contains an empty list. This patch =
+will ensure that Fetch is not instantiated if the urls list is empty.
 
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=15094
+--98jJfQ3WfSr5cp81qDdk
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
----
- lib/bb/cooker.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[PATCH] Recipes containing both git and npmsw sources in the SRC_URI fail d=
+uring fetch from the shrinkwrap. It seems that when the fetcher is fetching=
+ from the shrinkwrap, the SRCREV variable has been deleted but it still end=
+s up fetching from the git source resulting in an error because SRCREV is u=
+ndefined. The root cause of this is that the Fetch class defaults to urls f=
+rom the SRC_URI when the urls parameter contains an empty list. This patch =
+will ensure that Fetch is not instantiated if the urls list is empty.
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 1797a1d4ca5f..5b2791b2627a 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1764,9 +1764,9 @@ class BBCooker:
-     def shutdown(self, force=False):
-         if force:
-             self.state = state.forceshutdown
-+            bb.event._should_exit.set()
-         else:
-             self.state = state.shutdown
--        bb.event._should_exit.set()
- 
-         if self.parser:
-             self.parser.shutdown(clean=False)
--- 
-2.39.2
+--98jJfQ3WfSr5cp81qDdk--
 
+--VfpWm0gDele1PbNWGU66
+Content-Type: application/octet-stream; name="0001-Recipes-containing-both-git-and-npmsw-sources-in-the.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="0001-Recipes-containing-both-git-and-npmsw-sources-in-the.patch"
+
+RnJvbSA1NmE2ZTk3ODdhODdmNTdiOWNjOWRhMGY2ZjY0YWJjZDhhNGE0YTlhIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBTdmVuZCBNZXlsYW5kIE5pY29sYWlzZW4gPHN2ZW5kLm5pY29s
+YWlzZW5Abmt0cGhvdG9uaWNzLmNvbT4KRGF0ZTogU3VuLCAxNiBBcHIgMjAyMyAwMTo0MjoyNCAr
+MDIwMApTdWJqZWN0OiBbUEFUQ0hdIFJlY2lwZXMgY29udGFpbmluZyBib3RoIGdpdCBhbmQgbnBt
+c3cgc291cmNlcyBpbiB0aGUgU1JDX1VSSQogZmFpbCBkdXJpbmcgZmV0Y2ggZnJvbSB0aGUgc2hy
+aW5rd3JhcC4gSXQgc2VlbXMgdGhhdCB3aGVuIHRoZSBmZXRjaGVyIGlzCiBmZXRjaGluZyBmcm9t
+IHRoZSBzaHJpbmt3cmFwLCB0aGUgU1JDUkVWIHZhcmlhYmxlIGhhcyBiZWVuIGRlbGV0ZWQgYnV0
+IGl0CiBzdGlsbCBlbmRzIHVwIGZldGNoaW5nIGZyb20gdGhlIGdpdCBzb3VyY2UgcmVzdWx0aW5n
+IGluIGFuIGVycm9yIGJlY2F1c2UKIFNSQ1JFViBpcyB1bmRlZmluZWQuIFRoZSByb290IGNhdXNl
+IG9mIHRoaXMgaXMgdGhhdCB0aGUgRmV0Y2ggY2xhc3MgZGVmYXVsdHMKIHRvIHVybHMgZnJvbSB0
+aGUgU1JDX1VSSSB3aGVuIHRoZSB1cmxzIHBhcmFtZXRlciBjb250YWlucyBhbiBlbXB0eSBsaXN0
+LiBUaGlzCiBwYXRjaCB3aWxsIGVuc3VyZSB0aGF0IEZldGNoIGlzIG5vdCBpbnN0YW50aWF0ZWQg
+aWYgdGhlIHVybHMgbGlzdCBpcyBlbXB0eS4KClNpZ25lZC1vZmYtYnk6IFN2ZW5kIE1leWxhbmQg
+Tmljb2xhaXNlbiA8c3ZlbmQubmljb2xhaXNlbkBua3RwaG90b25pY3MuY29tPgotLS0KIGxpYi9i
+Yi9mZXRjaDIvbnBtc3cucHkgfCA0ICsrKy0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMo
+KyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9saWIvYmIvZmV0Y2gyL25wbXN3LnB5IGIv
+bGliL2JiL2ZldGNoMi9ucG1zdy5weQppbmRleCAzNmZjYmZiYS4uY2M4MTEwMGIgMTAwNjQ0Ci0t
+LSBhL2xpYi9iYi9mZXRjaDIvbnBtc3cucHkKKysrIGIvbGliL2JiL2ZldGNoMi9ucG1zdy5weQpA
+QCAtMjA1LDcgKzIwNSw5IEBAIGNsYXNzIE5wbVNocmlua1dyYXAoRmV0Y2hNZXRob2QpOgogICAg
+ICAgICAjIFRoaXMgZmV0Y2hlciByZXNvbHZlcyBtdWx0aXBsZSBVUklzIGZyb20gYSBzaHJpbmt3
+cmFwIGZpbGUgYW5kIHRoZW4KICAgICAgICAgIyBmb3J3YXJkcyBpdCB0byBhIHByb3h5IGZldGNo
+ZXIuIFRoZSBtYW5hZ2VtZW50IG9mIHRoZSBkb25lc3RhbXAgZmlsZSwKICAgICAgICAgIyB0aGUg
+bG9ja2ZpbGUgYW5kIHRoZSBjaGVja3N1bXMgYXJlIGZvcndhcmRlZCB0byB0aGUgcHJveHkgZmV0
+Y2hlci4KLSAgICAgICAgdWQucHJveHkgPSBGZXRjaChbZGVwWyJ1cmwiXSBmb3IgZGVwIGluIHVk
+LmRlcHMgaWYgZGVwWyJ1cmwiXV0sIGRhdGEpCisgICAgICAgIHNocmlua3dyYXBfdXJscyA9IFtk
+ZXBbInVybCJdIGZvciBkZXAgaW4gdWQuZGVwcyBpZiBkZXBbInVybCJdXQorICAgICAgICBpZiBz
+aHJpbmt3cmFwX3VybHM6CisgICAgICAgICAgICB1ZC5wcm94eSA9IEZldGNoKHNocmlua3dyYXBf
+dXJscywgZGF0YSkKICAgICAgICAgdWQubmVlZGRvbmVzdGFtcCA9IEZhbHNlCiAKICAgICBAc3Rh
+dGljbWV0aG9kCi0tIAoyLjM5LjIud2luZG93cy4xCgo=
+
+--VfpWm0gDele1PbNWGU66--
 
