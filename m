@@ -2,87 +2,112 @@ Return-Path: <public@smn.dk>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C59BC77B61
-	for <webhook@archiver.kernel.org>; Sun, 16 Apr 2023 19:56:58 +0000 (UTC)
-Subject: [PATCH] Recipes containing both git and npmsw sources in the SRC_URI fail during fetch from the shrinkwrap. It seems that when the fetcher is fetching from the shrinkwrap, the SRCREV variable has been deleted but it still ends up fetching from the git source resulting in an error because SRCREV is undefined. The root cause of this is that the Fetch class defaults to urls from the SRC_URI when the urls parameter contains an empty list. This patch will ensure that Fetch is not instantiated if the urls list is empty.
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D210C77B61
+	for <webhook@archiver.kernel.org>; Sun, 16 Apr 2023 20:07:18 +0000 (UTC)
+Subject: [PATCH] npmsw fetcher: Avoid instantiating Fetch class if url list is empty
 To: bitbake-devel@lists.openembedded.org
 From: public@smn.dk
 X-Originating-Location: Birkerød, Capital Region, DK (130.228.29.38)
 X-Originating-Platform: Windows Chrome 112
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Sun, 16 Apr 2023 12:56:52 -0700
-Message-ID: <hd1M.1681675012932104736.XKYK@lists.openembedded.org>
-Content-Type: multipart/mixed; boundary="VfpWm0gDele1PbNWGU66"
+Date: Sun, 16 Apr 2023 13:07:15 -0700
+Message-ID: <czCu.1681675635331210887.i1y4@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="KJTpFSHZcTDGtEytAGJT"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 16 Apr 2023 19:56:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14705
+ <bitbake-devel@lists.openembedded.org>; Sun, 16 Apr 2023 20:07:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14706
 
---VfpWm0gDele1PbNWGU66
-Content-Type: multipart/alternative; boundary="98jJfQ3WfSr5cp81qDdk"
-
---98jJfQ3WfSr5cp81qDdk
+--KJTpFSHZcTDGtEytAGJT
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-[PATCH] Recipes containing both git and npmsw sources in the SRC_URI fail d=
-uring fetch from the shrinkwrap. It seems that when the fetcher is fetching=
- from the shrinkwrap, the SRCREV variable has been deleted but it still end=
-s up fetching from the git source resulting in an error because SRCREV is u=
-ndefined. The root cause of this is that the Fetch class defaults to urls f=
-rom the SRC_URI when the urls parameter contains an empty list. This patch =
-will ensure that Fetch is not instantiated if the urls list is empty.
+Recipes containing both git and npmsw sources in the SRC_URI
+fail during fetch from the shrinkwrap. It seems that when the fetcher is
+fetching from the shrinkwrap, the SRCREV variable has been deleted but it
+still ends up fetching from the git source resulting in an error because
+SRCREV is undefined. The root cause of this is that the Fetch class default=
+s
+to urls from the SRC_URI when the urls parameter contains an empty list. Th=
+is
+patch will ensure that Fetch is not instantiated if the urls list is empty.
 
---98jJfQ3WfSr5cp81qDdk
+Signed-off-by: Svend Meyland Nicolaisen <public@smn.dk>
+---
+lib/bb/fetch2/npmsw.py | 4 +++-
+1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
+index 36fcbfba..cc81100b 100644
+--- a/lib/bb/fetch2/npmsw.py
++++ b/lib/bb/fetch2/npmsw.py
+@@ -205,7 +205,9 @@ class NpmShrinkWrap(FetchMethod):
+# This fetcher resolves multiple URIs from a shrinkwrap file and then
+# forwards it to a proxy fetcher. The management of the donestamp file,
+# the lockfile and the checksums are forwarded to the proxy fetcher.
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.proxy =3D Fetch([dep["url"] for dep in ud.d=
+eps if dep["url"]], data)
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 shrinkwrap_urls =3D [dep["url"] for dep in ud.=
+deps if dep["url"]]
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if shrinkwrap_urls:
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.proxy =3D Fetch(shrinkwrap_ur=
+ls, data)
+ud.needdonestamp =3D False
+
+@staticmethod
+--
+2.39.2.windows.1
+
+--KJTpFSHZcTDGtEytAGJT
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-[PATCH] Recipes containing both git and npmsw sources in the SRC_URI fail d=
-uring fetch from the shrinkwrap. It seems that when the fetcher is fetching=
- from the shrinkwrap, the SRCREV variable has been deleted but it still end=
-s up fetching from the git source resulting in an error because SRCREV is u=
-ndefined. The root cause of this is that the Fetch class defaults to urls f=
-rom the SRC_URI when the urls parameter contains an empty list. This patch =
-will ensure that Fetch is not instantiated if the urls list is empty.
+<div><br />Recipes containing both git and npmsw sources in the SRC_URI</di=
+v>
+<div>&nbsp;fail during fetch from the shrinkwrap. It seems that when the fe=
+tcher is</div>
+<div>&nbsp;fetching from the shrinkwrap, the SRCREV variable has been delet=
+ed but it</div>
+<div>&nbsp;still ends up fetching from the git source resulting in an error=
+ because</div>
+<div>&nbsp;SRCREV is undefined. The root cause of this is that the Fetch cl=
+ass defaults</div>
+<div>&nbsp;to urls from the SRC_URI when the urls parameter contains an emp=
+ty list. This</div>
+<div>&nbsp;patch will ensure that Fetch is not instantiated if the urls lis=
+t is empty.</div>
+<div>&nbsp;</div>
+<div>Signed-off-by: Svend Meyland Nicolaisen &lt;public@smn.dk&gt;</div>
+<div>---</div>
+<div>&nbsp;lib/bb/fetch2/npmsw.py | 4 +++-</div>
+<div>&nbsp;1 file changed, 3 insertions(+), 1 deletion(-)</div>
+<div>&nbsp;</div>
+<div>diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py</div>
+<div>index 36fcbfba..cc81100b 100644</div>
+<div>--- a/lib/bb/fetch2/npmsw.py</div>
+<div>+++ b/lib/bb/fetch2/npmsw.py</div>
+<div>@@ -205,7 +205,9 @@ class NpmShrinkWrap(FetchMethod):</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# This fetcher resolves multiple URI=
+s from a shrinkwrap file and then</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# forwards it to a proxy fetcher. Th=
+e management of the donestamp file,</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# the lockfile and the checksums are=
+ forwarded to the proxy fetcher.</div>
+<div>-&nbsp; &nbsp; &nbsp; &nbsp; ud.proxy =3D Fetch([dep["url"] for dep in=
+ ud.deps if dep["url"]], data)</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; shrinkwrap_urls =3D [dep["url"] for dep i=
+n ud.deps if dep["url"]]</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; if shrinkwrap_urls:</div>
+<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ud.proxy =3D Fetch(shrinkwr=
+ap_urls, data)</div>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ud.needdonestamp =3D False</div>
+<div>&nbsp;</div>
+<div>&nbsp; &nbsp; &nbsp;@staticmethod</div>
+<div>--&nbsp;</div>
+<div>2.39.2.windows.1</div>
+<div>&nbsp;</div>
 
---98jJfQ3WfSr5cp81qDdk--
-
---VfpWm0gDele1PbNWGU66
-Content-Type: application/octet-stream; name="0001-Recipes-containing-both-git-and-npmsw-sources-in-the.patch"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="0001-Recipes-containing-both-git-and-npmsw-sources-in-the.patch"
-
-RnJvbSA1NmE2ZTk3ODdhODdmNTdiOWNjOWRhMGY2ZjY0YWJjZDhhNGE0YTlhIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBTdmVuZCBNZXlsYW5kIE5pY29sYWlzZW4gPHN2ZW5kLm5pY29s
-YWlzZW5Abmt0cGhvdG9uaWNzLmNvbT4KRGF0ZTogU3VuLCAxNiBBcHIgMjAyMyAwMTo0MjoyNCAr
-MDIwMApTdWJqZWN0OiBbUEFUQ0hdIFJlY2lwZXMgY29udGFpbmluZyBib3RoIGdpdCBhbmQgbnBt
-c3cgc291cmNlcyBpbiB0aGUgU1JDX1VSSQogZmFpbCBkdXJpbmcgZmV0Y2ggZnJvbSB0aGUgc2hy
-aW5rd3JhcC4gSXQgc2VlbXMgdGhhdCB3aGVuIHRoZSBmZXRjaGVyIGlzCiBmZXRjaGluZyBmcm9t
-IHRoZSBzaHJpbmt3cmFwLCB0aGUgU1JDUkVWIHZhcmlhYmxlIGhhcyBiZWVuIGRlbGV0ZWQgYnV0
-IGl0CiBzdGlsbCBlbmRzIHVwIGZldGNoaW5nIGZyb20gdGhlIGdpdCBzb3VyY2UgcmVzdWx0aW5n
-IGluIGFuIGVycm9yIGJlY2F1c2UKIFNSQ1JFViBpcyB1bmRlZmluZWQuIFRoZSByb290IGNhdXNl
-IG9mIHRoaXMgaXMgdGhhdCB0aGUgRmV0Y2ggY2xhc3MgZGVmYXVsdHMKIHRvIHVybHMgZnJvbSB0
-aGUgU1JDX1VSSSB3aGVuIHRoZSB1cmxzIHBhcmFtZXRlciBjb250YWlucyBhbiBlbXB0eSBsaXN0
-LiBUaGlzCiBwYXRjaCB3aWxsIGVuc3VyZSB0aGF0IEZldGNoIGlzIG5vdCBpbnN0YW50aWF0ZWQg
-aWYgdGhlIHVybHMgbGlzdCBpcyBlbXB0eS4KClNpZ25lZC1vZmYtYnk6IFN2ZW5kIE1leWxhbmQg
-Tmljb2xhaXNlbiA8c3ZlbmQubmljb2xhaXNlbkBua3RwaG90b25pY3MuY29tPgotLS0KIGxpYi9i
-Yi9mZXRjaDIvbnBtc3cucHkgfCA0ICsrKy0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMo
-KyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9saWIvYmIvZmV0Y2gyL25wbXN3LnB5IGIv
-bGliL2JiL2ZldGNoMi9ucG1zdy5weQppbmRleCAzNmZjYmZiYS4uY2M4MTEwMGIgMTAwNjQ0Ci0t
-LSBhL2xpYi9iYi9mZXRjaDIvbnBtc3cucHkKKysrIGIvbGliL2JiL2ZldGNoMi9ucG1zdy5weQpA
-QCAtMjA1LDcgKzIwNSw5IEBAIGNsYXNzIE5wbVNocmlua1dyYXAoRmV0Y2hNZXRob2QpOgogICAg
-ICAgICAjIFRoaXMgZmV0Y2hlciByZXNvbHZlcyBtdWx0aXBsZSBVUklzIGZyb20gYSBzaHJpbmt3
-cmFwIGZpbGUgYW5kIHRoZW4KICAgICAgICAgIyBmb3J3YXJkcyBpdCB0byBhIHByb3h5IGZldGNo
-ZXIuIFRoZSBtYW5hZ2VtZW50IG9mIHRoZSBkb25lc3RhbXAgZmlsZSwKICAgICAgICAgIyB0aGUg
-bG9ja2ZpbGUgYW5kIHRoZSBjaGVja3N1bXMgYXJlIGZvcndhcmRlZCB0byB0aGUgcHJveHkgZmV0
-Y2hlci4KLSAgICAgICAgdWQucHJveHkgPSBGZXRjaChbZGVwWyJ1cmwiXSBmb3IgZGVwIGluIHVk
-LmRlcHMgaWYgZGVwWyJ1cmwiXV0sIGRhdGEpCisgICAgICAgIHNocmlua3dyYXBfdXJscyA9IFtk
-ZXBbInVybCJdIGZvciBkZXAgaW4gdWQuZGVwcyBpZiBkZXBbInVybCJdXQorICAgICAgICBpZiBz
-aHJpbmt3cmFwX3VybHM6CisgICAgICAgICAgICB1ZC5wcm94eSA9IEZldGNoKHNocmlua3dyYXBf
-dXJscywgZGF0YSkKICAgICAgICAgdWQubmVlZGRvbmVzdGFtcCA9IEZhbHNlCiAKICAgICBAc3Rh
-dGljbWV0aG9kCi0tIAoyLjM5LjIud2luZG93cy4xCgo=
-
---VfpWm0gDele1PbNWGU66--
+--KJTpFSHZcTDGtEytAGJT--
 
