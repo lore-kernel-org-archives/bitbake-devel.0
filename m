@@ -1,237 +1,935 @@
-Return-Path: <thilo.cestonaro@thalesgroup.com>
+Return-Path: <alberto@pianon.eu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32D2C6FD18
-	for <webhook@archiver.kernel.org>; Wed, 19 Apr 2023 12:22:59 +0000 (UTC)
-Received: from thsbbfxrt02p.thalesgroup.com (thsbbfxrt02p.thalesgroup.com [192.93.158.29])
- by mx.groups.io with SMTP id smtpd.web10.35988.1681906969372975723
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9269C77B72
+	for <webhook@archiver.kernel.org>; Thu, 20 Apr 2023 06:20:46 +0000 (UTC)
+Received: from server3.justice4all.it (server3.justice4all.it [95.217.19.36])
+ by mx.groups.io with SMTP id smtpd.web11.1971.1681971637121099034
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Apr 2023 05:22:50 -0700
+ Wed, 19 Apr 2023 23:20:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@thalesgroup.com header.s=xrt20181201 header.b=MEVPSN+9;
- spf=pass (domain: thalesgroup.com, ip: 192.93.158.29, mailfrom: thilo.cestonaro@thalesgroup.com)
-Received: from thsbbfxrt02p.thalesgroup.com (localhost [127.0.0.1])
-	by localhost (Postfix) with SMTP id 4Q1g0l3RtVzJpbM;
-	Wed, 19 Apr 2023 14:22:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thalesgroup.com;
-	s=xrt20181201; t=1681906967;
-	bh=iuky3WJzvwzi+Q9pHhwLgIRgUJlKdIdy0Nx5eLrIo+Y=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:From;
-	b=MEVPSN+9oTh4rR3aA9hHjOpSdQcnSlZRYpBP/E59VH7VgWABEFkvkiYjjesdZaG3G
-	 9VzVuHsPJPWcJ+fwm6MgGKpCBvEoDCpo7UTO3YFR3StZZQ+anVbN60UpzvoZZZ9Kc/
-	 hdc6S3A2H/zSM6U6OUZrHR3KSleFihVpU6pV6zP8KJmKsuZnxFsWMkBvX0aOFLuNSY
-	 +bE6KTw6b2RaBqRberaPB58qfB+Dl/QBitS0SFhpDbOOeGRkzhvoi/KahMzsa8x0ue
-	 AHBZj4I1p36sC+5CCd6u5ayO4u+xAPsfxkxcq8irsN2eh3gbbQ56d5nEJ6fWsR4lp+
-	 WF+KuWoZmq1fQ==
-Authentication-Results: thsbbfxss01p.thalesgroup.com;
-	dkim=pass (1024-bit key; unprotected) header.d=thalesgroup.onmicrosoft.com header.i=@thalesgroup.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-thalesgroup-onmicrosoft-com header.b=GvVwPMWJ;
-	dkim-atps=neutral
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m3VYe6LaTgh8HUeHkBVWJr45BdoAh+3NhgtjHZgZ2E9MaBtVJaAWFyXOsMy5ocKlIzhzGSdDY7sPKl/gpmeezIas8xzRvc1iLzyQMDR/wJGOKRj0hW6kF8/AspA5nFO4E31pfHABTAZpp8irZPH7gy0iwsiCjD7jbiFP+PPmjAhKIl/i5bG9l2os8cfjcWkHLYDC6ZpJLXUELlS7qGZkuPLx1YAKx9XmdQS+5cO8mAqpyK8AW/eI8oksbiDwH6ZiK6eidJgu9WdShanh45jOlmYhEI17QlAMrN8rHT68RnfqZwkt9Mtw2F85mA8vvu0Z0IbNT0lBKT4JiMEct8oJiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iuky3WJzvwzi+Q9pHhwLgIRgUJlKdIdy0Nx5eLrIo+Y=;
- b=P6a/Oq4u3Xmo/FNfd62d4XlZzd8RUWAfzCJvIBT06h5Vnf+x1N2DCfpWS9v3VID9FXXaFZPUSW2eRcRbbc5lTcPmtb9KdUC3gnyciUnyDsO4GByIIe50K1unTfLeoArF+E1HqbAy55lT1JkNz6t0ZULFbJmIwfzsR5hgB/jretBzK51kMwR30l0XCJQ9bAtAWlObsmNpZsOMUUvYhxlz5V/AswjGprZP6aROh3s2Su8G3vtF8YH7S7UTUnESxj0CMvvh5/eG/oeCOnhP7GKH5yw/uL8il1HB8yOQgmW5MpfG625+mnljj8GbRqPMTFcioQ9LGejp2lDf7Gkx+bEcfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=thalesgroup.com; dmarc=pass action=none
- header.from=thalesgroup.com; dkim=pass header.d=thalesgroup.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=thalesgroup.onmicrosoft.com; s=selector2-thalesgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iuky3WJzvwzi+Q9pHhwLgIRgUJlKdIdy0Nx5eLrIo+Y=;
- b=GvVwPMWJB6w/MWSiskQJLsYhFZOqi5sa7h04/+txqgU+pT1qS3mi4W/Wlk3opqPUWj/9HXrBseF0bpuBU1CwKzIfhfeNw0mU6Aofy39D7/hTZx/RVoCRIHR6D5gqmHAq1Vfwa09mLeU8we1CGafrfpWjMjXbkneN+eFoNhALxAo=
-From: CESTONARO Thilo <thilo.cestonaro@thalesgroup.com>
-To: Michael Opdenacker <michael.opdenacker@bootlin.com>
-CC: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: AW: [bitbake-devel] [PATCH] bitbake: git fetcher: use urllib quote
- ...
-Thread-Topic: [bitbake-devel] [PATCH] bitbake: git fetcher: use urllib quote
- ...
-Thread-Index: AQHZXJldf+QDsiopm0ivvHOyUnSaEq8GnCIAgCwdJSo=
-Date: Wed, 19 Apr 2023 12:22:44 +0000
-Message-ID: 
- <PR0P264MB188270D04F76005A7793A012E9629@PR0P264MB1882.FRAP264.PROD.OUTLOOK.COM>
-References: 
- <PR0P264MB1882D9E54AD24DF72B9E65E5E9869@PR0P264MB1882.FRAP264.PROD.OUTLOOK.COM>
- <29be3de3-8f66-6773-91c6-f0463d180d52@bootlin.com>
-In-Reply-To: <29be3de3-8f66-6773-91c6-f0463d180d52@bootlin.com>
-Accept-Language: de-CH, en-US
-Content-Language: de-CH
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-msip_labels: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=thalesgroup.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PR0P264MB1882:EE_|PAZP264MB3023:EE_
-x-ms-office365-filtering-correlation-id: f7e4918b-0a93-42b9-6ab5-08db40d0c756
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- SsktDeAxSc+OjoNf0fwxFjwqxrBaLZs4pHRKpuxa+cSPzi2FQvltXugPqqG1kb4knlrtr2qbbnlMLou3QikhYhtUT+9KGkwKred7FmG1YmL6EgVLgEHMtaCTzIVVIVAUBf2lVoRuhE6Dlqb1oNsQrODufjCPQ2nbPI2IVpe7JX9mAgsVLG9eXRizjNPEHnueC0OAadMAbhtqfwLkSSR3dYJPTwzgM6DIEhW7WZHOMpw2gtw1AVaftkG2kXyVZ6PRNIoGsFmfmaKTS0SiFtRJhLlHU20zxgImnN2sBz1AA1VBdix3CMV/9s8DRA+BNDw3KzDBq+eaJJPGUcMOkk/UQc6KWbtZBmM6Jm6fuOsMLcfX/w7IxZ7tk/wZfzglOuujIANpwvkCm42NgIiJXi0YIsvIgsE3qUABlQJK50kLIN9MbYSRi8oF5tCgJd3Ha5dY3xu3h6aEuE/s0TfnKGq8gCxmLjZ5Hkq2Gr/RXjLCCOpJvILzvQUC6AvW4L2cB2xSpf7MGXptvXxot1P/r/6fDxl1CCyjwP0CT2TzNQMlib0=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR0P264MB1882.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(366004)(376002)(396003)(39860400002)(451199021)(71200400001)(53546011)(9686003)(186003)(26005)(6506007)(7696005)(2906002)(66574015)(966005)(5660300002)(41300700001)(64756008)(4326008)(316002)(6916009)(66446008)(66476007)(66556008)(91956017)(76116006)(66946007)(8676002)(8936002)(52536014)(478600001)(45080400002)(82960400001)(38070700005)(38100700002)(86362001)(33656002)(83380400001)(122000001)(99936003)(55016003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?gxL6ojPvS4BkyADDmgnuE0ytLMqSWgeh0UkXi0r3ad9xlGTrfiRhYE3RjR?=
- =?iso-8859-1?Q?Utwzc4yk5d4U9bqlLLsL+61dCTaWLb4T15LVTNNYCVrB4VBCmFZaKxiP8M?=
- =?iso-8859-1?Q?u8waf09K/LS4wWXgGMoUDHJrittwhudY5V2u5ps8Ztv0QcvFnQWz+BVupW?=
- =?iso-8859-1?Q?m1L49bdx1TQOXVf6agrYc2WVyRtdG6NGde9rNJx9EGv0gmV2oJ3F5v98dY?=
- =?iso-8859-1?Q?S1XItSSe/lNeSYW3Z9xJ3h/k4wWMqpbA/JQsXnWn3o27I/buhlaMTDWaLv?=
- =?iso-8859-1?Q?9TjJEHkjAdXvF9esLfr0f1TKZrxkvaQzyYJUuBfgM07TSt0r+RD6m0u9Lc?=
- =?iso-8859-1?Q?+l3aqLRr8KyIIVx1CKTVDemSQ15cvgTaUN2YbLk36aYoN6gwyUSkaXLVUs?=
- =?iso-8859-1?Q?Em7Ckns0nDRmlbHfMX035NkGcUR5qoa25vSgyyq7ZdpoGby7YFOOPCKAMy?=
- =?iso-8859-1?Q?WSNFUqloFX/sbFxzI+OVJE6KqTHoqnSKYKwKCt29sn3vbmgTFv/Ulgo1cm?=
- =?iso-8859-1?Q?inkF0S+As56HtlERvi8jlFx81etRg4eIuuxeNDDJm4aQdZiBsygf4SFjkP?=
- =?iso-8859-1?Q?RS3996MbwYlwTtMqkzhDahBl/h91Hn3XEBRwZegoRTDMhaeo4lYi4rDKAn?=
- =?iso-8859-1?Q?NbGnUqXjz/o3J/ohmPCjAVeITZFCliDaOxMd42/d7LIqOZ0c1j4izdAfnm?=
- =?iso-8859-1?Q?kj0BOc1XHAGIw0oKrfw+ncHcq2CpSU/snssbM15FD2iDG1nmn4I/xbSCr4?=
- =?iso-8859-1?Q?BXdDl400uQJ8B7fu3XCQiJGtcmHaiGpiYedyhHce0eVdUzsq/WJZIJ9Yfw?=
- =?iso-8859-1?Q?E4EE+iZN3pFHDEna+72Q9QX1nkpSuYwuvNc/3RzJkmroEg6IQgxTDIbo//?=
- =?iso-8859-1?Q?o7Td7ZEkE9vD7xPuC99Kr1yVE8Nj3LpDXFRYdy/MS9FaOvcT+yFIvwndhC?=
- =?iso-8859-1?Q?ud25I7+DDtCg4FdvN5nOAydSXzzQWFS/Hc/hPcY5c+NFwkj+Q/1PfQJcwp?=
- =?iso-8859-1?Q?S+QHbidZ5sFlVLNTUnfqineWVaV1ySNqmrDgS9+m/gJ9I+WKSvLwfeThdL?=
- =?iso-8859-1?Q?wS316rBgRv7FjFWNE3w9i0k1DopavYBLcIax0L7XJP41ok1wz5fbJap2OF?=
- =?iso-8859-1?Q?AdSEJQZOXuboBW0Nn9vialz9E+8uG9KlTaPTmprlivDzGuOAESIUHX761+?=
- =?iso-8859-1?Q?jDHlAZtziobtbVBIkZOslAdlloRexYHRPed8Gd9ek5i7ym7dqwnDwWWYfE?=
- =?iso-8859-1?Q?gKyiFCLS9StcAIB2/HsADApHDSbfYA8gBPVtQApWUg2SA0uXSOEBdit6Gz?=
- =?iso-8859-1?Q?Fsfx9cu4b2ailXP1+TUpWuRiwtiKkzF8HDjTItFPyEswm0s6wkBUugWrp5?=
- =?iso-8859-1?Q?js6/v4L1raqt7YPiP3JdfYRUD9tGMcrDW3NSGjnL6THJg6jF7O0coeDmar?=
- =?iso-8859-1?Q?c19sbgvAmgtbvx0qbu1ymrdOkL9HVJ1Wf887o2QNbTO2XqXeNdkYlpz+/F?=
- =?iso-8859-1?Q?rkFcfeSg1MGoqfdQlVfYFRJUANLiF9REP0KkLe0cPOuACrr2OKte2JMlaq?=
- =?iso-8859-1?Q?dXFoNKgxS8XDTsD/b3sIz4MyAtlr3lvSFXPpmqk5c/G5lJjLMFYZ3WGozj?=
- =?iso-8859-1?Q?5kD/Jg7lCpGaG0aMuvpkRqUjc4W2ORSpMhdL/K/v5GyOQOGtCjti7FvQ?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: multipart/mixed;
-	boundary="_002_PR0P264MB188270D04F76005A7793A012E9629PR0P264MB1882FRAP_"
+ dkim=fail reason="signature has expired" header.i=@pianon.eu header.s=mail20151219 header.b=CII7UVHd;
+ spf=pass (domain: pianon.eu, ip: 95.217.19.36, mailfrom: alberto@pianon.eu)
+Received: from localhost (localhost [127.0.0.1])
+	by server3.justice4all.it (Postfix) with ESMTP id D83F15C0096;
+	Thu, 20 Apr 2023 08:20:33 +0200 (CEST)
+Authentication-Results: server3.justice4all.it (amavisd-new);
+	dkim=pass (1024-bit key) reason="pass (just generated, assumed good)"
+	header.d=pianon.eu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=pianon.eu; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:from:from; s=mail20151219; t=1681971632;
+	 x=1683786033; bh=fF8RkJSWDhMQ/21mC/0P1ci5GbVDXtcZy6ZDGICx+d4=; b=
+	CII7UVHd9u6juD8jy4MgpZT+v1xEeLvluQiaX7Z6QPec08/MY3t1x9LgLAp+5JTg
+	nVifV63I4fLUQuseTRrH+GTAHHbGSF4v/5xoYuf/G+EhJhrlcSnfQlIg4crh6lEu
+	F20WXmbpnHTNrJsxdeqF7SmRb9PUaJ03paKyBXQyG+4=
+X-Virus-Scanned: Debian amavisd-new at server3.justice4all.it
+Received: from server3.justice4all.it ([127.0.0.1])
+	by localhost (server3.justice4all.it [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id fhk08STZrQXd; Thu, 20 Apr 2023 08:20:32 +0200 (CEST)
+Received: from alberto-L140CU.. (ge-19-112-189.service.infuturo.it [151.19.112.189])
+	(Authenticated sender: alberto@pianon.eu)
+	by server3.justice4all.it (Postfix) with ESMTPSA id 926E15C0095;
+	Thu, 20 Apr 2023 08:20:30 +0200 (CEST)
+From: alberto@pianon.eu
+To: bitbake-devel@lists.openembedded.org
+Cc: richard.purdie@linuxfoundation.org,
+	jpewhacker@gmail.com,
+	carlo@piana.eu,
+	alberto@pianon.eu
+Subject: [PATCH] upstream source tracing: base process (patch 1/3)
+Date: Thu, 20 Apr 2023 08:20:24 +0200
+Message-Id: <20230420062024.134035-1-alberto@pianon.eu>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-OriginatorOrg: Thalesgroup.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PR0P264MB1882.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7e4918b-0a93-42b9-6ab5-08db40d0c756
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2023 12:22:44.4277
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6e603289-5e46-4e26-ac7c-03a85420a9a5
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: A2EwxBTj8f2KLMUmYKbkHmi55XkhXo+lR/b5SWZLNu8mg4qhGEGR9r9tDJsNpEABk4Bxk4GMc8fWKH0gMQ6LUfK1ImOTWAJNaieFD2mxldg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAZP264MB3023
-X-PMX-Version: 6.4.8.2820816, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2023.4.19.120917, AntiVirus-Engine: 6.0.0, AntiVirus-Data: 2023.4.19.600000
-X-Sophos-SenderHistory: ip=104.47.24.108,fs=562944,da=130621497,mc=19478,sc=5,hc=19473,sp=0,fso=130119437,re=158,sd=0,hd=30
-X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
- INVOICE_ATTACHMENT 0.1, HTML_00_01 0.05, HTML_00_10 0.05, ARCHIVE_ATTACHED 0, BODYTEXTP_SIZE_3000_LESS 0, BODY_ENDS_IN_URL 0, BODY_SIZE_3000_3999 0, BODY_SIZE_5000_LESS 0, BODY_SIZE_7000_LESS 0, DKIM_SIGNATURE 0, DQ_S_H 0, GZ_ATTACHED 0, IN_REP_TO 0, KNOWN_MTA_TFX 0, LEGITIMATE_SIGNS 0, MSG_THREAD 0, REFERENCES 0, SPF_SOFTFAIL 0, SUSP_DH_NEG 0, SXL_IP_TFX_WM 0, WEBMAIL_SOURCE 0, __ANY_URI 0, __ARCAUTH_DKIM_PASSED 0, __ARCAUTH_DMARC_PASSED 0, __ARCAUTH_PASSED 0, __ARC_SEAL_MICROSOFT 0, __ARC_SIGNATURE_MICROSOFT 0, __ATTACHMENT_NOT_IMG 0, __ATTACHMENT_SIZE_0_10K 0, __ATTACH_CTE_BASE64 0, __AUTH_RES_DKIM_PASS 0, __BODY_NO_MAILTO 0, __BOUNCE_CHALLENGE_SUBJ 0, __CC_NAME 0, __CP_URI_IN_BODY 0, __CT 0, __CTYPE_HAS_BOUNDARY 0, __CTYPE_MULTIPART 0, __CTYPE_MULTIPART_MIXED 0, __DQ_IP_FSO_LARGE 0, __DQ_NEG_DOMAIN 0, __DQ_NEG_HEUR 0, __DQ_NEG_IP 0, __DQ_S_HIST_1 0, __DQ_S_IP_1MO 0,
- __DQ_S_IP_HD_10_P 0, __DQ_S_IP_MC_100_P 0, __DQ_S_IP_MC_10_P 0, __DQ_S_IP_MC_1K_P 0, __DQ_S_IP_MC_1_P 0, __DQ_S_IP_MC_5_P 0, __DQ_S_IP_RE_100_P 0, __DQ_S_IP_SC_1_P 0, __DQ_S_IP_SC_5_P 0, __DQ_S_IP_SP_0_P 0, __FORWARDED_MSG 0, __FRAUD_REFNUM 0, __FUR_HEADER 0, __FUR_RDNS_OUTLOOK 0, __GZ_ATTACHED1 0, __GZ_ATTACHED2 0, __HAS_ATTACHMENT 0, __HAS_ATTACHMENT1 0, __HAS_ATTACHMENT2 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_REFERENCES 0, __HAS_X_FF_ASR 0, __HAS_X_FF_ASR_CAT 0, __HAS_X_FF_ASR_SFV 0, __HTTPS_URI 0, __INVOICE_MULTILINGUAL 0, __IN_REP_TO 0, __MAIL_CHAIN 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_TEXT_P2 0, __MIME_VERSION 0, __MULTIPLE_URI_TEXT 0, __NO_HTML_TAG_RAW 0, __RDNS_WEBMAIL 0, __REFERENCES 0, __SANE_MSGID 0, __SCAN_D_NEG 0, __SCAN_D_NEG_HEUR 0, __STOCK_PHRASE_7 0, __SUBJ_ALPHA_NEGATE 0, __SUBJ_REPLY 0, __TO_MALFORMED_2 0, __TO_NAME 0,
- __TO_NAME_DIFF_FROM_ACC 0, __TO_REAL_NAMES 0, __URI_IN_BODY 0, __URI_MAILTO 0, __URI_NOT_IMG 0, __URI_NS , __URI_WITHOUT_PATH 0, __URI_WITH_PATH 0, __X_FF_ASR_SCL_NSP 0, __X_FF_ASR_SFV_NSPM 0'
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Apr 2023 12:22:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14720
+ <bitbake-devel@lists.openembedded.org>; Thu, 20 Apr 2023 06:20:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14721
 
---_002_PR0P264MB188270D04F76005A7793A012E9629PR0P264MB1882FRAP_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Alberto Pianon <alberto@pianon.eu>
 
-Hi Michael
+License compliance, SBoM generation and CVE checking require to be able
+to trace each source file back to its corresponding upstream source. The
+current implementation of bb.fetch2 makes it difficult, especially when
+multiple sources are combined together.
 
-Sorry for the late answer.
-I'm currently trying to be able to directly send the patches via Git but ou=
-r IT does not allow it.
+This series of patches provides a solution to the issue by implementing
+a process that unpacks each SRC_URI element into a temporary directory,
+collects relevant provenance metadata on each source file, moves
+everything to the recipe rootdir, and saves metadata in a JSON file.
 
-So here is another try with Outlook. And hopefully it does not change anyth=
-ing, like last time. As I think it was Outlooks fault that the patch did no=
-t apply.
+The proposed solution is split into a series of patches, with the first
+patch containing required modifications to fetchers' code and a
+TraceUnpackBase class that implements the process, and the second patch
+implementing the data collecting logic in a separate TraceUnpack
+subclass. The final patch includes test data and test cases to
+demonstrate the solution's efficacy.
 
-This time I gzipped it. Hopefully this is ok for you!
+Signed-off-by: Alberto Pianon <alberto@pianon.eu>
+---
+ bin/bitbake-selftest        |   1 +
+ lib/bb/fetch2/__init__.py   |  57 +++++++-
+ lib/bb/fetch2/crate.py      |   2 +
+ lib/bb/fetch2/gitsm.py      |  24 +++-
+ lib/bb/fetch2/hg.py         |   1 +
+ lib/bb/fetch2/npm.py        |   1 +
+ lib/bb/fetch2/npmsw.py      |  26 +++-
+ lib/bb/fetch2/trace_base.py | 254 ++++++++++++++++++++++++++++++++++++
+ lib/bb/tests/trace_base.py  | 227 ++++++++++++++++++++++++++++++++
+ 9 files changed, 584 insertions(+), 9 deletions(-)
+ create mode 100644 lib/bb/fetch2/trace_base.py
+ create mode 100644 lib/bb/tests/trace_base.py
 
-Cheers
-Thilo
+diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
+index f25f23b1..6d60a5d2 100755
+--- a/bin/bitbake-selftest
++++ b/bin/bitbake-selftest
+@@ -31,6 +31,7 @@ tests =3D ["bb.tests.codeparser",
+          "bb.tests.runqueue",
+          "bb.tests.siggen",
+          "bb.tests.utils",
++         "bb.tests.trace_base",
+          "bb.tests.compression",
+          "hashserv.tests",
+          "layerindexlib.tests.layerindexobj",
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 1a86d8fd..96a7c7b0 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -27,6 +27,10 @@ import bb.persist_data, bb.utils
+ import bb.checksum
+ import bb.process
+ import bb.event
++try:
++    from .trace import TraceUnpack
++except (ModuleNotFoundError, ImportError):
++    from .trace_base import TraceUnpackBase as TraceUnpack
+=20
+ __version__ =3D "2"
+ _checksum_cache =3D bb.checksum.FileChecksumCache()
+@@ -1279,6 +1283,7 @@ class FetchData(object):
+         if not self.pswd and "pswd" in self.parm:
+             self.pswd =3D self.parm["pswd"]
+         self.setup =3D False
++        self.destdir =3D None
+=20
+         def configure_checksum(checksum_id):
+             if "name" in self.parm:
+@@ -1554,6 +1559,8 @@ class FetchMethod(object):
+             bb.utils.mkdirhier(unpackdir)
+         else:
+             unpackdir =3D rootdir
++        urldata.destdir =3D unpackdir
++        urldata.is_unpacked_archive =3D unpack and cmd
+=20
+         if not unpack or not cmd:
+             # If file =3D=3D dest, then avoid any copies, as we already =
+put the file into dest!
+@@ -1569,6 +1576,7 @@ class FetchMethod(object):
+                     if urlpath.find("/") !=3D -1:
+                         destdir =3D urlpath.rsplit("/", 1)[0] + '/'
+                         bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir=
+))
++                        urldata.destdir =3D "%s/%s" % (unpackdir, destdi=
+r)
+                 cmd =3D 'cp -fpPRH "%s" "%s"' % (file, destdir)
+=20
+         if not cmd:
+@@ -1852,26 +1860,69 @@ class Fetch(object):
+             if not ret:
+                 raise FetchError("URL %s doesn't work" % u, u)
+=20
+-    def unpack(self, root, urls=3DNone):
++    def unpack(self, root, urls=3DNone, is_module=3DFalse, checkout_dest=
+dir=3DNone):
+         """
+-        Unpack urls to root
++        Unpack urls to a tmp dir, trace, and then move everything to roo=
+t
++
++        is_module needs to be set to true when this method is recursivel=
+y called
++        by a fetcher's unpack method to unpack (sub)modules (gitsm, npms=
+w)
++
++        checkout_destdir needs to be passed when this method is recursiv=
+ely
++        called by gitsm fetcher
+         """
+=20
+         if not urls:
+             urls =3D self.urls
++        if is_module:
++            destdir =3D root
++        else:
++            trace =3D TraceUnpack(root, self.d)
++            destdir =3D trace.tmpdir
+=20
+         for u in urls:
+             ud =3D self.ud[u]
++            # absolute subdir, destsuffix and subpath params wouldn't wo=
+rk when
++            # unpacking in the tmp dir, convert them to relative paths
++            realroot =3D os.path.realpath(root)
++            params =3D [ 'subdir', 'destsuffix', 'subpath' ]
++            for p in params:
++                if not ud.parm.get(p):
++                    continue
++                if os.path.isabs(ud.parm[p]):
++                    realpath =3D os.path.realpath(ud.parm[p])
++                    if realpath.startswith(realroot):
++                        ud.parm[p] =3D os.path.relpath(realpath, realroo=
+t)
+             ud.setup_localpath(self.d)
++            ud.rootdir =3D root
++
++            if hasattr(ud, "checkout_destdir"):
++                ud.checkout_destdir =3D checkout_destdir
+=20
+             if ud.lockfile:
+                 lf =3D bb.utils.lockfile(ud.lockfile)
+=20
+-            ud.method.unpack(ud, root, self.d)
++            ud.method.unpack(ud, destdir, self.d)
+=20
+             if ud.lockfile:
+                 bb.utils.unlockfile(lf)
+=20
++            if is_module:
++                continue
++
++            if hasattr(ud, "nocheckout") and ud.nocheckout:
++                logger.warning(
++                    "Can't trace sources for"
++                    " %s because repo has not been checked out" % u)
++            else:
++                trace.commit(u, ud)
++
++            trace.move2root()
++
++        if is_module:
++            return
++        trace.write_data()
++        trace.close()
++
+     def clean(self, urls=3DNone):
+         """
+         Clean files that the fetcher gets or places
+diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
+index a7021e5b..93666de0 100644
+--- a/lib/bb/fetch2/crate.py
++++ b/lib/bb/fetch2/crate.py
+@@ -101,8 +101,10 @@ class Crate(Wget):
+         pn =3D d.getVar('BPN')
+         if pn =3D=3D ud.parm.get('name'):
+             cmd =3D "tar -xz --no-same-owner -f %s" % thefile
++            ud.destdir =3D rootdir
+         else:
+             cargo_bitbake =3D self._cargo_bitbake_path(rootdir)
++            ud.destdir =3D cargo_bitbake
+=20
+             cmd =3D "tar -xz --no-same-owner -f %s -C %s" % (thefile, ca=
+rgo_bitbake)
+=20
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index f8e239bc..c1d291a1 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -34,6 +34,11 @@ class GitSM(Git):
+         """
+         return ud.type in ['gitsm']
+=20
++    def urldata_init(self, ud, d):
++        super(GitSM, self).urldata_init(ud, d)
++        ud.module_data =3D []
++        ud.checkout_destdir =3D None
++
+     def process_submodules(self, ud, workdir, function, d):
+         """
+         Iterate over all of the submodules in this repository and execut=
+e
+@@ -138,6 +143,15 @@ class GitSM(Git):
+=20
+             function(ud, url, module, paths[module], workdir, ld)
+=20
++            if function.__name__ =3D=3D "unpack_submodules":
++                destdir =3D os.path.join(ud.checkout_destdir, paths[modu=
+le])
++                ud.module_data.append({
++                    "url": url,
++                    "destdir": destdir.rstrip("/"),
++                    "parent_destdir": ud.checkout_destdir.rstrip("/"),
++                    "revision": subrevision[module]
++                })
++
+         return submodules !=3D []
+=20
+     def need_update(self, ud, d):
+@@ -209,9 +223,13 @@ class GitSM(Git):
+             else:
+                 repo_conf =3D os.path.join(ud.destdir, '.git')
+=20
++            checkout_destdir =3D os.path.join(ud.checkout_destdir, modpa=
+th)
++
+             try:
+                 newfetch =3D Fetch([url], d, cache=3DFalse)
+-                newfetch.unpack(root=3Dos.path.dirname(os.path.join(repo=
+_conf, 'modules', module)))
++                newfetch.unpack(root=3Dos.path.dirname(os.path.join(repo=
+_conf, 'modules', module)), is_module=3DTrue, checkout_destdir=3Dcheckout=
+_destdir)
++                # add nested submodules' data
++                ud.module_data +=3D newfetch.ud[url].module_data
+             except Exception as e:
+                 logger.error('gitsm: submodule unpack failed: %s %s' % (=
+type(e).__name__, str(e)))
+                 raise
+@@ -233,6 +251,10 @@ class GitSM(Git):
+=20
+         Git.unpack(self, ud, destdir, d)
+=20
++        if not ud.checkout_destdir:
++            # for main git repo, checkout destdir correspond with unpack=
+ destdir
++            ud.checkout_destdir =3D ud.destdir
++
+         ret =3D self.process_submodules(ud, ud.destdir, unpack_submodule=
+s, d)
+=20
+         if not ud.bareclone and ret:
+diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
+index 063e1300..0fd69db7 100644
+--- a/lib/bb/fetch2/hg.py
++++ b/lib/bb/fetch2/hg.py
+@@ -242,6 +242,7 @@ class Hg(FetchMethod):
+         revflag =3D "-r %s" % ud.revision
+         subdir =3D ud.parm.get("destsuffix", ud.module)
+         codir =3D "%s/%s" % (destdir, subdir)
++        ud.destdir =3D codir
+=20
+         scmdata =3D ud.parm.get("scmdata", "")
+         if scmdata !=3D "nokeep":
+diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
+index 8a179a33..34e1f276 100644
+--- a/lib/bb/fetch2/npm.py
++++ b/lib/bb/fetch2/npm.py
+@@ -294,6 +294,7 @@ class Npm(FetchMethod):
+         destsuffix =3D ud.parm.get("destsuffix", "npm")
+         destdir =3D os.path.join(rootdir, destsuffix)
+         npm_unpack(ud.localpath, destdir, d)
++        ud.destdir =3D destdir
+=20
+     def clean(self, ud, d):
+         """Clean any existing full or partial download"""
+diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
+index 36fcbfba..79c369dc 100644
+--- a/lib/bb/fetch2/npmsw.py
++++ b/lib/bb/fetch2/npmsw.py
+@@ -66,6 +66,9 @@ class NpmShrinkWrap(FetchMethod):
+     def urldata_init(self, ud, d):
+         """Init npmsw specific variables within url data"""
+=20
++        # initialize module_data (for module source tracing)
++        ud.module_data =3D []
++
+         # Get the 'shrinkwrap' parameter
+         ud.shrinkwrap_file =3D re.sub(r"^npmsw://", "", ud.url.split(";"=
+)[0])
+=20
+@@ -250,20 +253,33 @@ class NpmShrinkWrap(FetchMethod):
+=20
+     def unpack(self, ud, rootdir, d):
+         """Unpack the downloaded dependencies"""
+-        destdir =3D d.getVar("S")
+-        destsuffix =3D ud.parm.get("destsuffix")
+-        if destsuffix:
+-            destdir =3D os.path.join(rootdir, destsuffix)
++        # rootdir param is a temporary dir. The real rootdir, where sour=
+ces are
++        # moved after being traced, is stored in ud.rootdir.
++        destsuffix =3D ud.parm.get("destsuffix") or os.path.relpath(d.ge=
+tVar("S"), ud.rootdir)
++        destdir =3D os.path.join(rootdir, destsuffix)
++        ud.destdir =3D destdir
+=20
+         bb.utils.mkdirhier(destdir)
+         bb.utils.copyfile(ud.shrinkwrap_file,
+                           os.path.join(destdir, "npm-shrinkwrap.json"))
+=20
++        for dep in ud.deps:
++            dep_destdir =3D os.path.join(destdir, dep["destsuffix"])
++            # to get parent destdir, we get rid of the last 2 path eleme=
+nts
++            # (node_modules/<module_name>)
++            dep_parent_destdir =3D "/".join(dep_destdir.split("/")[:-2])
++            ud.module_data.append({
++                "url": dep["url"] or dep["localpath"],
++                "destdir": dep_destdir.rstrip("/"),
++                "parent_destdir": dep_parent_destdir.rstrip("/"),
++                "revision": None
++            })
++
+         auto =3D [dep["url"] for dep in ud.deps if not dep["localpath"]]
+         manual =3D [dep for dep in ud.deps if dep["localpath"]]
+=20
+         if auto:
+-            ud.proxy.unpack(destdir, auto)
++            ud.proxy.unpack(destdir, auto, is_module=3DTrue)
+=20
+         for dep in manual:
+             depdestdir =3D os.path.join(destdir, dep["destsuffix"])
+diff --git a/lib/bb/fetch2/trace_base.py b/lib/bb/fetch2/trace_base.py
+new file mode 100644
+index 00000000..d94c72b7
+--- /dev/null
++++ b/lib/bb/fetch2/trace_base.py
+@@ -0,0 +1,254 @@
++"""Module implementing a base process for upstream source tracing
++for bb.fetch2.Fetch.unpack()
++
++The process consists of:
++
++- creating a temporary directory where each SRC_URI element is unpacked
++
++- collecting relevant metadata (provenance) for each source file and for=
+ every
++  upstream source component, that can be used later on for Software Comp=
+osition
++  Analysis, SBoM generation, etc.;
++
++- moving everything from the temporary directory to root, and iterate wi=
+th the
++  next SRC_URI element;
++
++- saving metadata in a json file after all elements have been processed.
++
++It assumes that:
++
++- fetchers store unpack destination dir in urldata.destdir;
++- gitsm and npmsw fetchers store module metadata in urldata.module_data,=
+ as a
++  list of dict elements in the following format:
++    [
++        {
++            "url": "<module url>",
++            "destdir": "<module destination path>",
++            "parent_destdir": "<parent module destination path>"
++            "revision": "<git submodule revision (only for gitsm, else N=
+one)>"
++        }, ...
++    ]
++- urldata.is_unpacked_archive (boolean) is set to True or False for "fil=
+e"
++  SRC_URI entries.
++"""
++
++# Copyright (C) 2023 Alberto Pianon <pianon@array.eu>
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++
++import os
++import json
++import tempfile
++
++import bb.utils
++import bb.compress.zstd
++
++class TraceException(Exception):
++    pass
++
++def scandir(path):
++    with os.scandir(path) as scan:
++        return { e.name: e for e in scan }
++
++def is_real_dir(e):
++    return e.is_dir() and not e.is_symlink()
++
++def is_real_and_nonempty_dir(e):
++    return is_real_dir(e) and scandir(e.path)
++
++def is_file_or_symlink(e):
++    return e.is_file() or e.is_symlink()
++
++def is_git_dir(e):
++    path_scandir =3D scandir(e.path)
++    if ".git" in path_scandir:
++        try:
++            bb.process.run(
++                ["git", "rev-parse", "--is-inside-work-tree"], cwd=3De.p=
+ath)
++            return True
++        except bb.process.ExecutionError:
++            return False
++    return False
++
++def check_is_real_dir(path, name):
++    if not os.path.exists(path) or os.path.islink(path) or os.path.isfil=
+e(path):
++        raise TraceException(
++            "%s path %s is not a directory" % (name, path))
++
++def move_contents(src_dir, dst_dir):
++    """Move and merge contents from src_dir to dst_dir
++
++    Conflict resolution criteria are explained in bb.tests.trace_base
++
++    It's optimized for fast execution time by using os.scandir and os.re=
+name, so
++    it requires that both src_dir and dst_dir reside in the same filesys=
+tem.
++    """
++
++    check_is_real_dir(src_dir, "Source")
++    check_is_real_dir(dst_dir, "Destination")
++
++    if os.lstat(src_dir).st_dev !=3D os.lstat(dst_dir).st_dev:
++        raise TraceException(
++            "Source %s and destination %s must be in the same filesystem=
+" %
++            (src_dir, dst_dir)
++        )
++
++    src_scandir =3D scandir(src_dir)
++    dst_scandir =3D scandir(dst_dir)
++
++    for src_name, src in src_scandir.items():
++        dst =3D dst_scandir.get(src_name)
++        if dst:
++            # handle conflicts
++            if is_real_dir(src) and is_real_and_nonempty_dir(dst):
++                if is_git_dir(src):
++                    bb.utils.prunedir(dst.path)
++                else:
++                    move_contents(src.path, dst.path)
++                    os.rmdir(src.path)
++                    continue
++            elif is_real_dir(src) and is_file_or_symlink(dst):
++                os.remove(dst.path)
++            elif is_file_or_symlink(src) and is_real_dir(dst):
++                try:
++                    os.rmdir(dst.path)
++                except OSError as e:
++                    if e.errno =3D=3D 39:
++                        raise TraceException(
++                            "Error while moving %s contents to %s, canno=
+t move"
++                            " %s to %s: source is a file or a symlink, w=
+hile"
++                            " destination is a non-empty directory."
++                            % (src_dir, dst_dir, src.path, dst.path)
++                        )
++                    else:
++                        raise e
++        dst_path =3D dst.path if dst else os.path.join(dst_dir, src_name=
+)
++        os.rename(src.path, dst_path)
++
++def findall_files_and_links(path, exclude=3D[], skip_git_submodules=3DFa=
+lse):
++    """recusively find all files and links in path, excluding dir and fi=
+le names
++    in exclude, and excluding git dirs if skip_git_submodules is set to =
+True.
++
++    Returns tuple of sorted lists of file and link paths (sorting is for
++    reproducibility in tests)
++    """
++    files =3D []
++    links =3D []
++    with os.scandir(path) as scan:
++        for e in scan:
++            if e.name in exclude:
++                continue
++            if e.is_symlink():
++                links.append(e.path)
++            elif e.is_file():
++                files.append(e.path)
++            elif e.is_dir():
++                if skip_git_submodules and is_git_dir(e):
++                    continue
++                _files, _links =3D findall_files_and_links(
++                        e.path, exclude, skip_git_submodules)
++                files +=3D _files
++                links +=3D _links
++    return sorted(files), sorted(links)
++
++class TraceUnpackBase:
++    """base class for implementing a process for upstream source tracing
++    See this module's help for more details on the process.
++
++    This base class implements the process but does not collect any data=
+. It is
++    intended to be subclassed in a separate 'trace' module, implementing
++    _collect_data() and _process_data() methods.
++
++    Method call order:
++        - __init__(): initialize tmpdir and td (trace data)
++        - for each SRC_URI entry unpack:
++          - commit(): go through all files in tmpdir (and in each module=
+ subdir
++            in case of gitsm and npmsw fecthers) and commit collected me=
+tadata
++            to td
++          - move2root(): moves all files from tmpdir to root
++        - write_data()
++        - close(): delete tmpdir and cache
++    """
++
++    def __init__(self, root, d):
++        """initialize properties and create temporary directory in root
++
++        Temporary unpack dir is created in 'root' to ensure they are in =
+the
++        same filesystem, so files can be quickly moved to 'root' after t=
+racing
++        """
++
++        self.root =3D root
++        self.d =3D d
++        self.td =3D {}
++        if not os.path.exists(root):
++            bb.utils.mkdirhier(root)
++        self.tmpdir =3D tempfile.mkdtemp(dir=3Droot)
++
++    def commit(self, u, ud):
++        """go through all files in tmpdir and commit collected metadata =
+to td.
++        dive into module subdirs in case of gitsm and npmsw fecthers
++
++        Params are:
++        - u -> str: src uri of the upstream repo/package that is being p=
+rocessed
++        - ud -> bb.fetch2.FetchData: src uri fetch data object; ud.url a=
+nd u do not correspond when git/npm modules are being processed, so we ne=
+ed both
++        """
++
++        exclude=3D['.git', '.hg', '.svn']
++
++        # exclude node_modules subdirs (will be separately parsed)
++        if ud.type in ['npm', 'npmsw']:
++            exclude.append('node_modules')
++        # exclude git submodules (will be separately parsed)
++        skip_git_submodules =3D (ud.type =3D=3D 'gitsm')
++
++        files, links =3D findall_files_and_links(
++            ud.destdir, exclude, skip_git_submodules)
++        self._collect_data(u, ud, files, links, ud.destdir)
++
++        if ud.type in ['gitsm', 'npmsw'] and ud.module_data:
++            self._process_module_data(ud)
++            for md in ud.module_data:
++                files, links =3D findall_files_and_links(
++                   md["destdir"], exclude, skip_git_submodules)
++                self._collect_data(
++                    md["url"], ud, files, links, md["destdir"], md)
++
++    def _process_module_data(self, ud):
++        """add parent module data to each module data item, to map depen=
+dencies
++        """
++        revision =3D ud.revisions[ud.names[0]] if ud.type =3D=3D 'gitsm'=
+ else None
++        indexed_md =3D { md["destdir"]: md for md in ud.module_data }
++        # add main git repo (gitsm) or npm-shrinkwrap.json (npmsw)
++        indexed_md.update({
++                ud.destdir.rstrip("/"): {"url": ud.url, "revision": revi=
+sion}
++        })
++        for md in ud.module_data:
++            md["parent_md"] =3D indexed_md[md["parent_destdir"]]
++
++    def move2root(self):
++        """move all files from temporary directory to root"""
++        move_contents(self.tmpdir, self.root)
++
++    def write_data(self):
++        self._process_data()
++        if not self.d.getVar("PN"):
++            return
++        path =3D "%s/temp/%s-%s.unpack.trace.json.zst" % (
++            self.root, self.d.getVar("PN"), self.d.getVar("PV"))
++        with bb.compress.zstd.open(path, "wt", encoding=3D"utf-8") as f:
++            json.dump(self.td, f)
++            f.flush()
++
++    def close(self):
++        os.rmdir(self.tmpdir)
++        del self.td
++
++    def _collect_data(self, u, ud, files, links, destdir, md=3DNone):
++        """
++        collect provenance metadata on the committed files. Not implemen=
+ted
++        """
++        pass
++
++    def _process_data(self):
++        """post-process self.td. Not implemented"""
++        pass
+\ No newline at end of file
+diff --git a/lib/bb/tests/trace_base.py b/lib/bb/tests/trace_base.py
+new file mode 100644
+index 00000000..d96fb2c7
+--- /dev/null
++++ b/lib/bb/tests/trace_base.py
+@@ -0,0 +1,227 @@
++
++# Copyright (C) 2023 Alberto Pianon <pianon@array.eu>
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++
++import os
++import re
++import unittest
++import tempfile
++from pathlib import Path
++import subprocess
++
++import bb
++
++def create_src_dst(tmpdir):
++    src_dir =3D os.path.join(tmpdir, "src/")
++    dst_dir =3D os.path.join(tmpdir, "dst/")
++    os.makedirs(src_dir)
++    os.makedirs(dst_dir)
++    return Path(src_dir), Path(dst_dir)
++
++def make_dirname(path):
++    dirname =3D os.path.dirname(path)
++    if dirname:
++        os.makedirs(dirname, exist_ok=3DTrue)
++
++def create_file(path, content):
++    make_dirname(path)
++    with open(path, "w") as f:
++        f.write(content)
++
++def create_link(path, target):
++    make_dirname(path)
++    os.symlink(target, path)
++
++def get_tree(path):
++    curdir =3D os.getcwd()
++    os.chdir(path)
++    tree =3D []
++    for root, dirs, files in os.walk("."):
++        for f in dirs + files:
++            tree.append(re.sub(r"^\.\/", "", os.path.join(root, f)))
++    os.chdir(curdir)
++    return sorted(tree)
++
++def read_file(path):
++    with open(path) as f:
++        return f.read()
++
++class MoveContentsTest(unittest.TestCase):
++    """
++    Test the following conflict resolution criteria:
++
++    - if a file (or symlink) exists both in src_dir and in dst_dir, the
++      file/symlink in dst_dir will be overwritten;
++
++    - if a subdirectory exists both in src_dir and in dst_dir, their con=
+tents
++      will be merged, and in case of file/symlink conflicts, files/symli=
+nks in
++      dst_dir will be overwritten - unless src_dir is a git repo; in  su=
+ch a
++      case, dst_dir will be pruned and src_dir will be moved to dst_dir,=
+ for
++      consistency with bb.fetch2.git.Git.unpack method's behavior (which=
+ prunes
++      clone dir if already existing, before cloning)
++
++    - if the same relative path exists both in src_dir and in dst_dir, b=
+ut the
++      path in src_dir is a directory and the path in dst_dir is a file/s=
+ymlink,
++      the latter will be overwritten;
++
++    - if instead the path in src_dir is a file and the path in dst_dir i=
+s a
++      directory, the latter will be overwritten only if it is empty, oth=
+erwise
++      an exception will be raised.
++    """
++
++    def test_dir_merge_and_file_overwrite(self):
++        with tempfile.TemporaryDirectory() as tmpdir:
++            src_dir, dst_dir =3D create_src_dst(tmpdir)
++            create_file(src_dir / "dir/subdir/file.txt", "new")
++            create_file(dst_dir / "dir/subdir/file.txt", "old")
++            create_file(dst_dir / "dir/subdir/file1.txt", "old")
++            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
++            expected_dst_tree =3D [
++                "dir",
++                "dir/subdir",
++                "dir/subdir/file.txt",
++                "dir/subdir/file1.txt"
++            ]
++            self.assertEqual(get_tree(src_dir), [])
++            self.assertEqual(get_tree(dst_dir), expected_dst_tree)
++            self.assertEqual(read_file(dst_dir / "dir/subdir/file.txt"),=
+ "new")
++            self.assertEqual(read_file(dst_dir / "dir/subdir/file1.txt")=
+, "old")
++
++    def test_file_vs_symlink_conflicts(self):
++        with tempfile.TemporaryDirectory() as tmpdir:
++            src_dir, dst_dir =3D create_src_dst(tmpdir)
++
++            create_file(src_dir / "dir/subdir/fileA.txt", "new")
++            create_file(src_dir / "dir/fileB.txt", "new")
++            create_link(src_dir / "file.txt", "dir/subdir/fileA.txt")
++
++            create_file(dst_dir / "dir/subdir/fileA.txt", "old")
++            create_link(dst_dir / "dir/fileB.txt", "subdir/fileA.txt")
++            create_file(dst_dir / "file.txt", "old")
++
++            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
++            self.assertEqual(get_tree(src_dir), [])
++            self.assertTrue(os.path.islink(dst_dir / "file.txt"))
++            self.assertEqual(
++                os.readlink(dst_dir / "file.txt"),
++                "dir/subdir/fileA.txt"
++            )
++            self.assertFalse(os.path.islink(dst_dir / "dir/fileB.txt"))
++            self.assertEqual(read_file(dst_dir / "dir/fileB.txt"), "new"=
+)
++
++    def test_dir_vs_file_conflict(self):
++        with tempfile.TemporaryDirectory() as tmpdir:
++            src_dir, dst_dir =3D create_src_dst(tmpdir)
++            create_file(src_dir / "items/item0/content.txt", "hello")
++            create_file(dst_dir / "items/item0", "there")
++            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
++            self.assertEqual(get_tree(src_dir), [])
++            self.assertTrue(os.path.isdir(dst_dir / "items/item0"))
++            self.assertEqual(
++                read_file(dst_dir / "items/item0/content.txt"), "hello")
++
++    def test_dir_vs_symlink_conflict(self):
++        with tempfile.TemporaryDirectory() as tmpdir:
++            src_dir, dst_dir =3D create_src_dst(tmpdir)
++            create_file(src_dir / "items/item0/content.txt", "hello")
++            create_file(dst_dir / "items/item1/content.txt", "there")
++            create_link(dst_dir / "items/item0", "item1")
++            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
++            self.assertEqual(get_tree(src_dir), [])
++            self.assertFalse(os.path.islink(dst_dir / "items/item0"))
++            self.assertEqual(
++                read_file(dst_dir / "items/item0/content.txt"), "hello")
++            self.assertEqual(
++                read_file(dst_dir / "items/item1/content.txt"), "there")
++
++    def test_symlink_vs_empty_dir_conflict(self):
++        with tempfile.TemporaryDirectory() as tmpdir:
++            src_dir, dst_dir =3D create_src_dst(tmpdir)
++            create_file(src_dir / "items/item1/content.txt", "there")
++            create_link(src_dir / "items/item0", "item1")
++            os.makedirs(dst_dir / "items/item0")
++            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
++            self.assertEqual(get_tree(src_dir), [])
++            self.assertTrue(os.path.islink(dst_dir / "items/item0"))
++            self.assertEqual(read_file(dst_dir / "items/item0/content.tx=
+t"), "there")
++
++    def test_symlink_vs_nonempty_dir_conflict(self):
++        with tempfile.TemporaryDirectory() as tmpdir:
++            src_dir, dst_dir =3D create_src_dst(tmpdir)
++            create_file(src_dir / "items/item1/content.txt", "there")
++            create_link(src_dir / "items/item0", "item1")
++            create_file(dst_dir / "items/item0/content.txt", "hello")
++            with self.assertRaises(bb.fetch2.trace_base.TraceException) =
+as context:
++                bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
++
++    def test_file_vs_empty_dir_conflict(self):
++        with tempfile.TemporaryDirectory() as tmpdir:
++            src_dir, dst_dir =3D create_src_dst(tmpdir)
++            create_file(src_dir / "items/item0", "test")
++            os.makedirs(dst_dir / "items/item0")
++            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
++            self.assertEqual(get_tree(src_dir), [])
++            self.assertTrue(os.path.isfile(dst_dir/ "items/item0"))
++
++    def test_file_vs_nonempty_dir_conflict(self):
++        with tempfile.TemporaryDirectory() as tmpdir:
++            src_dir, dst_dir =3D create_src_dst(tmpdir)
++            create_file(src_dir / "items/item0", "test")
++            create_file(dst_dir / "items/item0/content.txt", "test")
++            with self.assertRaises(bb.fetch2.trace_base.TraceException) =
+as context:
++                bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
++
++    def test_git_dir(self):
++        with tempfile.TemporaryDirectory() as tmpdir:
++            src_dir, dst_dir =3D create_src_dst(tmpdir)
++            git_repo =3D src_dir / "src/my_git_repo"
++            create_file(git_repo / "foo.txt", "hello")
++            subprocess.check_output(["git", "init"], cwd=3Dgit_repo)
++            create_file(dst_dir / "src/my_git_repo/content.txt", "there"=
+)
++            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
++            self.assertFalse(
++                os.path.exists(dst_dir / "src/my_git_repo/content.txt"))
++                # git clone dir should be pruned if already existing
++            self.assertEqual(
++                read_file(dst_dir / "src/my_git_repo/foo.txt"), "hello")
++            self.assertTrue(os.path.isdir(dst_dir / "src/my_git_repo/.gi=
+t"))
++
++
++class FindAllFilesAndLinksTest(unittest.TestCase):
++    """test if all files and links are correctly returned, and if specif=
+ic
++    file/dir names and git subdirs are correctly excluded"""
++
++    def test_findall_files_and_links(self):
++        with tempfile.TemporaryDirectory() as tmpdir:
++            tmpdir =3D Path(tmpdir)
++            files =3D {
++                str(tmpdir/"foo/example/example.txt"): "example",
++                str(tmpdir/"foo/foo.txt"): "foo",
++                str(tmpdir/"foo/foo2.txt"): "foo2",
++                str(tmpdir/"README"): "hello",
++            }
++            ignored =3D {
++                str(tmpdir/".git"): "fake",
++                str(tmpdir/"foo2/dummy"): "dummy"
++            }
++            allfiles =3D files.copy()
++            allfiles.update(ignored)
++            links =3D {
++                str(tmpdir/"example"): "foo/example", # link to dir
++                str(tmpdir/"example.txt"): "foo/example/example.txt", # =
+link to file
++            }
++            for path, content in allfiles.items():
++                create_file(path, content)
++            for path, target in links.items():
++                create_link(path, target)
++            subprocess.check_output(["git", "init"], cwd=3Dtmpdir/"foo2"=
+)
++            res_files, res_links =3D bb.fetch2.trace_base.findall_files_=
+and_links(
++                    tmpdir, exclude=3D['.git'], skip_git_submodules=3DTr=
+ue)
++            self.assertEqual(res_files, sorted(list(files.keys())))
++            self.assertEqual(res_links, sorted(list(links.keys())))
++
++
++if __name__ =3D=3D '__main__':
++    unittest.main()
+--=20
+2.34.1
 
-________________________________________
-Von: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Gesendet: Mittwoch, 22. M=E4rz 2023 11:40
-An: CESTONARO Thilo
-Cc: bitbake-devel@lists.openembedded.org
-Betreff: Re: [bitbake-devel] [PATCH] bitbake: git fetcher: use urllib quote=
- ...
-
-Hi Thilo,
-
-
-Thanks for the patch!
-
-
-On 22.03.23 at 09:37, Thilo C. via lists.openembedded.org wrote:
-> to use the path url-compatible. This needs to happen before the shell
-> quotation happens.
->
-> Without this commit, spaces in the clone URL will be used as " " and
-> not as "%20" which will fail.
-> This commit changes the " " in the URL to "%20" when it is a http or
-> https url.
->
-> Signed-off-by: Thilo Cestonaro <thilo.cestonaro@thalesgroup.com>
-
-
-Oops, are you sure it applies to the latest "master" branch? I tried and
-it didn't, though I don't see why...
-
-
-Another issue with your patch is the commit author name, which will be
-"Thilo C. via lists.openembedded.org
-<thilo.cestonaro=3Dthalesgroup.com@lists.openembedded.org>" instead of
-"Thilo Cestonaro <thilo.cestonaro@thalesgroup.com>".
-
-
-See
-https://www.openembedded.org/wiki/How_to_submit_a_patch_to_OpenEmbedded#Fix=
-ing_your_From_identity
-for details and a solution.
-
-
-Don't hesitate to try to send the patch again to me privately before
-resending to the mailing list...
-
-
-Thanks again
-Cheers
-Michael.
-
---
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
-
---_002_PR0P264MB188270D04F76005A7793A012E9629PR0P264MB1882FRAP_
-Content-Type: application/gzip;
-	name="0001-bitbake-git-fetcher-use-urllib-quote.patch.gz"
-Content-Description: 0001-bitbake-git-fetcher-use-urllib-quote.patch.gz
-Content-Disposition: attachment;
-	filename="0001-bitbake-git-fetcher-use-urllib-quote.patch.gz"; size=778;
-	creation-date="Wed, 19 Apr 2023 12:22:38 GMT";
-	modification-date="Wed, 19 Apr 2023 12:22:38 GMT"
-Content-Transfer-Encoding: base64
-
-H4sICH7aP2QAAzAwMDEtYml0YmFrZS1naXQtZmV0Y2hlci11c2UtdXJsbGliLXF1b3RlLnBhdGNo
-AJ1UXW+bMBR996+4ilQlER8BkpIErVOnTtkeVmlaO+2hqiobLsErwcw2ayvtx+8akqYP7UsBgX19
-zvHx9TUbrXYQYcHzZMXT1Wmez9fxIk14Eq9Fma95mgqBBZbL9LSAS9XAFbYQLyGKsv6BJIpitiGZ
-DK4rWSu4QGNVw7WCD9YFwvwQOLcVr9FsteraMFe7j+wzt0i8Dn1YwgYFqSVziOfZYpFFCXhRHEXs
-qhO/MbcZ3Hz/dH3x9RaEtILfE3ErLZRo8wp1Bp1B6HRdSwF/OmURwjBkzKp+wFYILbeVQwQ0NbWl
-qDF0ng00iIUBgla8bbEBgaXSA8lUWNe9IDFo+QPCkPIvaSvVWUKRAknupPXBtJyWC7LpyXmtGoSf
-P77BgyQVgc5LAdzAiG7eFNAo23dPkmgED5XMqwFaclmH7PooDXnFmy1JO13H3k/hxMn4QYDME5ZY
-HCprW1C6/xq3bvJ8JbcNFoEqy0A8vWfDgiBgQCmeCTHrM5/MaBPC9gn+wQq84SJIDKWscW+6cLsr
-G4PapdBMvKlPgAJrdP1JMGWskGUJQeA2lM9e1RevhplsCnyEhM/zKC0xDJPVMlknixioctLFwhl+
-Q5GR07dUz88hSJd+Ch69l0BduWuVtqCRHZqmqvHx2OtEqxVlzjyHLO5alwXm7QNDdT6Pi5fNkNhb
-3dNLdyZz1Vh8tK6a95h9ZMcbvkU9WFyvyJ2Xrtd+nDiXec2NgS/STjZuPZdIJVpMMwYvL6pB3fAd
-whl0Reh64MH4fHxEYW3wbdJoxIJDWKPtdEPlZ7LZ7MS4ewQnMCFhWpBV/jPRd5NVyti+4c7ilHnM
-Owj1h/PsMHSMyxIOWq7kb2Ds6nnsD18zhtvsCH4p1OeaxLTBsP8fTF6b9l3+BxUYEkT/RrjT+Fca
-quW7e3yaGKxLh/aBHkd9uQEjl70AWBLOl2HC2H/WYiRSgQUAAA==
-
---_002_PR0P264MB188270D04F76005A7793A012E9629PR0P264MB1882FRAP_--
 
