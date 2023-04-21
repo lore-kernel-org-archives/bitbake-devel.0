@@ -2,36 +2,37 @@ Return-Path: <alberto@pianon.eu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7779CC77B78
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B56C7618E
 	for <webhook@archiver.kernel.org>; Fri, 21 Apr 2023 07:05:50 +0000 (UTC)
 Received: from server3.justice4all.it (server3.justice4all.it [95.217.19.36])
- by mx.groups.io with SMTP id smtpd.web11.6036.1682060740126233007
+ by mx.groups.io with SMTP id smtpd.web11.6037.1682060746074498005
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 21 Apr 2023 00:05:42 -0700
+ Fri, 21 Apr 2023 00:05:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@pianon.eu header.s=mail20151219 header.b=ZmD4G6oS;
+ dkim=fail reason="signature has expired" header.i=@pianon.eu header.s=mail20151219 header.b=nBXYKmea;
  spf=pass (domain: pianon.eu, ip: 95.217.19.36, mailfrom: alberto@pianon.eu)
 Received: from localhost (localhost [127.0.0.1])
-	by server3.justice4all.it (Postfix) with ESMTP id 920A65C0096;
-	Fri, 21 Apr 2023 09:05:37 +0200 (CEST)
+	by server3.justice4all.it (Postfix) with ESMTP id 5498E5C0096;
+	Fri, 21 Apr 2023 09:05:43 +0200 (CEST)
 Authentication-Results: server3.justice4all.it (amavisd-new);
 	dkim=pass (1024-bit key) reason="pass (just generated, assumed good)"
 	header.d=pianon.eu
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=pianon.eu; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:from:from; s=mail20151219; t=1682060736;
-	 x=1683875137; bh=bsLf7PeJExiOzI3RP+0/wFDYVD5a/3OemTKvtLZuBqk=; b=
-	ZmD4G6oS+TaebIrEOwtu77ALTWCY4YZFHLcS251ZyPxPREzF9sg2qNq/5ElKXi3K
-	TFStDf1qkB7GrfcZutklLve05+RryrrphIVsyRWBQvqEnLCLHYwDNsXaNbumGpQP
-	PVuzmVWFk/l/crrFi7HCJ5NS8fWGdhGqx59aeKnXcso=
+	content-transfer-encoding:mime-version:references:in-reply-to
+	:x-mailer:message-id:date:date:subject:subject:from:from; s=
+	mail20151219; t=1682060742; x=1683875143; bh=ap58Bbtwa+fxUKWCJT/
+	R0qa1jdEXJdAoM10l7xlu5Pg=; b=nBXYKmeaJv8h4Vu8HOVq9qa7y2YeA5nt/1p
+	VbyB6zZOWncIvP9slPpA4u2lfUMWKnroOJcWg2RbnnLFrN8MX/21Rh4qmfhZFRsE
+	z4XJ80EKkTXTuuRRueBO+hb+MFDaq3R5+pvvzgpCI1GpKwVY20J+qTQoLbOYOATc
+	YwoacWhI=
 X-Virus-Scanned: Debian amavisd-new at server3.justice4all.it
 Received: from server3.justice4all.it ([127.0.0.1])
 	by localhost (server3.justice4all.it [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 8MwWop3yaDmb; Fri, 21 Apr 2023 09:05:36 +0200 (CEST)
+	with ESMTP id XvY86bQD8GRU; Fri, 21 Apr 2023 09:05:42 +0200 (CEST)
 Received: from alberto-L140CU.. (mi-18-8-191.service.infuturo.it [151.18.8.191])
 	(Authenticated sender: alberto@pianon.eu)
-	by server3.justice4all.it (Postfix) with ESMTPSA id 6C3475C0095;
-	Fri, 21 Apr 2023 09:05:32 +0200 (CEST)
+	by server3.justice4all.it (Postfix) with ESMTPSA id DE7035C0095;
+	Fri, 21 Apr 2023 09:05:38 +0200 (CEST)
 From: alberto@pianon.eu
 To: bitbake-devel@lists.openembedded.org
 Cc: richard.purdie@linuxfoundation.org,
@@ -39,397 +40,136 @@ Cc: richard.purdie@linuxfoundation.org,
 	carlo@piana.eu,
 	luca.ceresoli@bootlin.com,
 	Alberto Pianon <alberto@pianon.eu>
-Subject: [PATCH v2 1/3] upstream source tracing: base process
-Date: Fri, 21 Apr 2023 09:05:23 +0200
-Message-Id: <20230421070525.333494-1-alberto@pianon.eu>
+Subject: [PATCH v2 2/3] upstream source tracing: metadata collection
+Date: Fri, 21 Apr 2023 09:05:24 +0200
+Message-Id: <20230421070525.333494-2-alberto@pianon.eu>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230421070525.333494-1-alberto@pianon.eu>
+References: <20230421070525.333494-1-alberto@pianon.eu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 21 Apr 2023 07:05:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14727
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14728
 
 From: Alberto Pianon <alberto@pianon.eu>
 
-License compliance, SBoM generation and CVE checking require to be able
-to trace each source file back to its corresponding upstream source. The
-current implementation of bb.fetch2 makes it difficult, especially when
-multiple sources are combined together.
+This patch subclasses TraceUnpackBase by implementing _collect_data()
+and _process_data() methods, in order to implement upstream metadata
+collection logic for bb.fetch2.
 
-This patch provides an interface to solve the issue by implementing a
-process that unpacks each SRC_URI element into a temporary directory,
-creates an entrypoint to collect relevant provenance metadata on each
-source file, moves everything to the recipe rootdir, and saves metadata
-in a JSON file.
-
-This patch contains required modifications to fetchers' code plus a
-TraceUnpackBase class that implements the above described process. Data
-collection logic should be separately implemented by subclassing
-TraceUnpackBase, implementing _collect_data() and _process_data()
-methods.
-
-Splitting the above described solution in multiple patches aims
-at easing review and merge process, and also at decoupling the
-development of the data processing logic from the process that enables
-it.
+The final output is a compressed json file, stored in rootdir/temp. Data
+format is described in the help text of the trace module.
 
 Signed-off-by: Alberto Pianon <alberto@pianon.eu>
 ---
- bin/bitbake-selftest        |   1 +
- lib/bb/fetch2/__init__.py   |  55 +++++++-
- lib/bb/fetch2/crate.py      |   2 +
- lib/bb/fetch2/gitsm.py      |  24 +++-
- lib/bb/fetch2/hg.py         |   1 +
- lib/bb/fetch2/npm.py        |   1 +
- lib/bb/fetch2/npmsw.py      |  26 +++-
- lib/bb/fetch2/trace_base.py | 254 ++++++++++++++++++++++++++++++++++++
- lib/bb/tests/trace_base.py  | 227 ++++++++++++++++++++++++++++++++
- 9 files changed, 582 insertions(+), 9 deletions(-)
- create mode 100644 lib/bb/fetch2/trace_base.py
- create mode 100644 lib/bb/tests/trace_base.py
+ lib/bb/fetch2/__init__.py |   2 +-
+ lib/bb/fetch2/trace.py    | 534 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 535 insertions(+), 1 deletion(-)
+ create mode 100644 lib/bb/fetch2/trace.py
 
-diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
-index f25f23b1..6d60a5d2 100755
---- a/bin/bitbake-selftest
-+++ b/bin/bitbake-selftest
-@@ -31,6 +31,7 @@ tests =3D ["bb.tests.codeparser",
-          "bb.tests.runqueue",
-          "bb.tests.siggen",
-          "bb.tests.utils",
-+         "bb.tests.trace_base",
-          "bb.tests.compression",
-          "hashserv.tests",
-          "layerindexlib.tests.layerindexobj",
 diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 1a86d8fd..c4915208 100644
+index c4915208..d241ae0f 100644
 --- a/lib/bb/fetch2/__init__.py
 +++ b/lib/bb/fetch2/__init__.py
-@@ -28,6 +28,8 @@ import bb.checksum
+@@ -28,7 +28,7 @@ import bb.checksum
  import bb.process
  import bb.event
 =20
-+from .trace_base import TraceUnpackBase as TraceUnpack
-+
+-from .trace_base import TraceUnpackBase as TraceUnpack
++from .trace import TraceUnpack
+=20
  __version__ =3D "2"
  _checksum_cache =3D bb.checksum.FileChecksumCache()
-=20
-@@ -1279,6 +1281,7 @@ class FetchData(object):
-         if not self.pswd and "pswd" in self.parm:
-             self.pswd =3D self.parm["pswd"]
-         self.setup =3D False
-+        self.destdir =3D None
-=20
-         def configure_checksum(checksum_id):
-             if "name" in self.parm:
-@@ -1554,6 +1557,8 @@ class FetchMethod(object):
-             bb.utils.mkdirhier(unpackdir)
-         else:
-             unpackdir =3D rootdir
-+        urldata.destdir =3D unpackdir
-+        urldata.is_unpacked_archive =3D unpack and cmd
-=20
-         if not unpack or not cmd:
-             # If file =3D=3D dest, then avoid any copies, as we already =
-put the file into dest!
-@@ -1569,6 +1574,7 @@ class FetchMethod(object):
-                     if urlpath.find("/") !=3D -1:
-                         destdir =3D urlpath.rsplit("/", 1)[0] + '/'
-                         bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir=
-))
-+                        urldata.destdir =3D "%s/%s" % (unpackdir, destdi=
-r)
-                 cmd =3D 'cp -fpPRH "%s" "%s"' % (file, destdir)
-=20
-         if not cmd:
-@@ -1852,26 +1858,69 @@ class Fetch(object):
-             if not ret:
-                 raise FetchError("URL %s doesn't work" % u, u)
-=20
--    def unpack(self, root, urls=3DNone):
-+    def unpack(self, root, urls=3DNone, is_module=3DFalse, checkout_dest=
-dir=3DNone):
-         """
--        Unpack urls to root
-+        Unpack urls to a tmp dir, trace, and then move everything to roo=
-t
-+
-+        is_module needs to be set to true when this method is recursivel=
-y called
-+        by a fetcher's unpack method to unpack (sub)modules (gitsm, npms=
-w)
-+
-+        checkout_destdir needs to be passed when this method is recursiv=
-ely
-+        called by gitsm fetcher
-         """
-=20
-         if not urls:
-             urls =3D self.urls
-+        if is_module:
-+            destdir =3D root
-+        else:
-+            trace =3D TraceUnpack(root, self.d)
-+            destdir =3D trace.tmpdir
-=20
-         for u in urls:
-             ud =3D self.ud[u]
-+            # absolute subdir, destsuffix and subpath params wouldn't wo=
-rk when
-+            # unpacking in the tmp dir, convert them to relative paths
-+            realroot =3D os.path.realpath(root)
-+            params =3D [ 'subdir', 'destsuffix', 'subpath' ]
-+            for p in params:
-+                if not ud.parm.get(p):
-+                    continue
-+                if os.path.isabs(ud.parm[p]):
-+                    realpath =3D os.path.realpath(ud.parm[p])
-+                    if realpath.startswith(realroot):
-+                        ud.parm[p] =3D os.path.relpath(realpath, realroo=
-t)
-             ud.setup_localpath(self.d)
-+            ud.rootdir =3D root
-+
-+            if hasattr(ud, "checkout_destdir"):
-+                ud.checkout_destdir =3D checkout_destdir
-=20
-             if ud.lockfile:
-                 lf =3D bb.utils.lockfile(ud.lockfile)
-=20
--            ud.method.unpack(ud, root, self.d)
-+            ud.method.unpack(ud, destdir, self.d)
-=20
-             if ud.lockfile:
-                 bb.utils.unlockfile(lf)
-=20
-+            if is_module:
-+                continue
-+
-+            if hasattr(ud, "nocheckout") and ud.nocheckout:
-+                logger.warning(
-+                    "Can't trace sources for"
-+                    " %s because repo has not been checked out" % u)
-+            else:
-+                trace.commit(u, ud)
-+
-+            trace.move2root()
-+
-+        if is_module:
-+            return
-+        trace.write_data()
-+        trace.close()
-+
-     def clean(self, urls=3DNone):
-         """
-         Clean files that the fetcher gets or places
-diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
-index a7021e5b..93666de0 100644
---- a/lib/bb/fetch2/crate.py
-+++ b/lib/bb/fetch2/crate.py
-@@ -101,8 +101,10 @@ class Crate(Wget):
-         pn =3D d.getVar('BPN')
-         if pn =3D=3D ud.parm.get('name'):
-             cmd =3D "tar -xz --no-same-owner -f %s" % thefile
-+            ud.destdir =3D rootdir
-         else:
-             cargo_bitbake =3D self._cargo_bitbake_path(rootdir)
-+            ud.destdir =3D cargo_bitbake
-=20
-             cmd =3D "tar -xz --no-same-owner -f %s -C %s" % (thefile, ca=
-rgo_bitbake)
-=20
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index f8e239bc..c161d1f3 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -34,6 +34,11 @@ class GitSM(Git):
-         """
-         return ud.type in ['gitsm']
-=20
-+    def urldata_init(self, ud, d):
-+        super(GitSM, self).urldata_init(ud, d)
-+        ud.module_data =3D []
-+        ud.checkout_destdir =3D None
-+
-     def process_submodules(self, ud, workdir, function, d):
-         """
-         Iterate over all of the submodules in this repository and execut=
-e
-@@ -138,6 +143,15 @@ class GitSM(Git):
-=20
-             function(ud, url, module, paths[module], workdir, ld)
-=20
-+            if function.__name__ =3D=3D "unpack_submodules":
-+                destdir =3D os.path.join(ud.checkout_destdir, paths[modu=
-le])
-+                ud.module_data.append({
-+                    "url": url,
-+                    "destdir": destdir.rstrip("/"),
-+                    "parent_destdir": ud.checkout_destdir.rstrip("/"),
-+                    "revision": subrevision[module]
-+                })
-+
-         return submodules !=3D []
-=20
-     def need_update(self, ud, d):
-@@ -209,9 +223,13 @@ class GitSM(Git):
-             else:
-                 repo_conf =3D os.path.join(ud.destdir, '.git')
-=20
-+            checkout_destdir =3D os.path.join(ud.checkout_destdir, modpa=
-th)
-+
-             try:
-                 newfetch =3D Fetch([url], d, cache=3DFalse)
--                newfetch.unpack(root=3Dos.path.dirname(os.path.join(repo=
-_conf, 'modules', module)))
-+                newfetch.unpack(root=3Dos.path.dirname(os.path.join(repo=
-_conf, 'modules', module)), is_module=3DTrue, checkout_destdir=3Dcheckout=
-_destdir)
-+                # add nested submodules' data
-+                ud.module_data +=3D newfetch.ud[url].module_data
-             except Exception as e:
-                 logger.error('gitsm: submodule unpack failed: %s %s' % (=
-type(e).__name__, str(e)))
-                 raise
-@@ -233,6 +251,10 @@ class GitSM(Git):
-=20
-         Git.unpack(self, ud, destdir, d)
-=20
-+        if not ud.checkout_destdir:
-+            # for main git repo, checkout destdir corresponds with unpac=
-k destdir
-+            ud.checkout_destdir =3D ud.destdir
-+
-         ret =3D self.process_submodules(ud, ud.destdir, unpack_submodule=
-s, d)
-=20
-         if not ud.bareclone and ret:
-diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
-index 063e1300..0fd69db7 100644
---- a/lib/bb/fetch2/hg.py
-+++ b/lib/bb/fetch2/hg.py
-@@ -242,6 +242,7 @@ class Hg(FetchMethod):
-         revflag =3D "-r %s" % ud.revision
-         subdir =3D ud.parm.get("destsuffix", ud.module)
-         codir =3D "%s/%s" % (destdir, subdir)
-+        ud.destdir =3D codir
-=20
-         scmdata =3D ud.parm.get("scmdata", "")
-         if scmdata !=3D "nokeep":
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index 8a179a33..34e1f276 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -294,6 +294,7 @@ class Npm(FetchMethod):
-         destsuffix =3D ud.parm.get("destsuffix", "npm")
-         destdir =3D os.path.join(rootdir, destsuffix)
-         npm_unpack(ud.localpath, destdir, d)
-+        ud.destdir =3D destdir
-=20
-     def clean(self, ud, d):
-         """Clean any existing full or partial download"""
-diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
-index 36fcbfba..79c369dc 100644
---- a/lib/bb/fetch2/npmsw.py
-+++ b/lib/bb/fetch2/npmsw.py
-@@ -66,6 +66,9 @@ class NpmShrinkWrap(FetchMethod):
-     def urldata_init(self, ud, d):
-         """Init npmsw specific variables within url data"""
-=20
-+        # initialize module_data (for module source tracing)
-+        ud.module_data =3D []
-+
-         # Get the 'shrinkwrap' parameter
-         ud.shrinkwrap_file =3D re.sub(r"^npmsw://", "", ud.url.split(";"=
-)[0])
-=20
-@@ -250,20 +253,33 @@ class NpmShrinkWrap(FetchMethod):
-=20
-     def unpack(self, ud, rootdir, d):
-         """Unpack the downloaded dependencies"""
--        destdir =3D d.getVar("S")
--        destsuffix =3D ud.parm.get("destsuffix")
--        if destsuffix:
--            destdir =3D os.path.join(rootdir, destsuffix)
-+        # rootdir param is a temporary dir. The real rootdir, where sour=
-ces are
-+        # moved after being traced, is stored in ud.rootdir.
-+        destsuffix =3D ud.parm.get("destsuffix") or os.path.relpath(d.ge=
-tVar("S"), ud.rootdir)
-+        destdir =3D os.path.join(rootdir, destsuffix)
-+        ud.destdir =3D destdir
-=20
-         bb.utils.mkdirhier(destdir)
-         bb.utils.copyfile(ud.shrinkwrap_file,
-                           os.path.join(destdir, "npm-shrinkwrap.json"))
-=20
-+        for dep in ud.deps:
-+            dep_destdir =3D os.path.join(destdir, dep["destsuffix"])
-+            # to get parent destdir, we get rid of the last 2 path eleme=
-nts
-+            # (node_modules/<module_name>)
-+            dep_parent_destdir =3D "/".join(dep_destdir.split("/")[:-2])
-+            ud.module_data.append({
-+                "url": dep["url"] or dep["localpath"],
-+                "destdir": dep_destdir.rstrip("/"),
-+                "parent_destdir": dep_parent_destdir.rstrip("/"),
-+                "revision": None
-+            })
-+
-         auto =3D [dep["url"] for dep in ud.deps if not dep["localpath"]]
-         manual =3D [dep for dep in ud.deps if dep["localpath"]]
-=20
-         if auto:
--            ud.proxy.unpack(destdir, auto)
-+            ud.proxy.unpack(destdir, auto, is_module=3DTrue)
-=20
-         for dep in manual:
-             depdestdir =3D os.path.join(destdir, dep["destsuffix"])
-diff --git a/lib/bb/fetch2/trace_base.py b/lib/bb/fetch2/trace_base.py
+diff --git a/lib/bb/fetch2/trace.py b/lib/bb/fetch2/trace.py
 new file mode 100644
-index 00000000..d94c72b7
+index 00000000..5537775b
 --- /dev/null
-+++ b/lib/bb/fetch2/trace_base.py
-@@ -0,0 +1,254 @@
-+"""Module implementing a base process for upstream source tracing
-+for bb.fetch2.Fetch.unpack()
++++ b/lib/bb/fetch2/trace.py
+@@ -0,0 +1,534 @@
++"""
++Module implementing upstream source tracing process for do_unpack.
 +
-+The process consists of:
++For the general process design, see .trace_base module help texts.
 +
-+- creating a temporary directory where each SRC_URI element is unpacked
++The final output is a compressed json file, stored in <workdir>/temp for
++each recipe, with the following scheme:
 +
-+- collecting relevant metadata (provenance) for each source file and for=
- every
-+  upstream source component, that can be used later on for Software Comp=
-osition
-+  Analysis, SBoM generation, etc.;
++{
++    "<download location>": {
++        "download_location": "<download location>",
++        "src_uri": "<src_uri>",
++        "unexpanded_src_uri": "<unexpanded src uri>",
++        "checksums": {
++            "md5": "<package md5 checksum>",
++            "sha256": "<package sha256 checksum>"
++        },
++        "files": {
++            "<file/relpath/in/upstream>": {
++                "sha1": "<file sha1 checksum>",
++                "paths_in_workdir": [
++                    "<file/relpath//in/workdir>",
++                    "<other/file/relpath/in/workdir>"
++                ]
++            }
++        }
++    }
++}
 +
-+- moving everything from the temporary directory to root, and iterate wi=
-th the
-+  next SRC_URI element;
++NOTE: "download location" is used as main key/index and follows SPDX spe=
+cs, eg.:
++https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
++git+git://sourceware.org/git/bzip2-tests.git@f9061c030a25de5b6829e1abf37=
+3057309c734c0:
 +
-+- saving metadata in a json file after all elements have been processed.
++Special cases:
 +
-+It assumes that:
++- npmsw and gitsm fetchers generate and unpack multiple uris (one for th=
+e main
++  git repo (gitsm) or for the npm-shrinkwrap.json file (npmsw), and one =
+for each
++  (sub)module) from a single SRC_URI entry; each of such uris is represe=
+nted by
++  a separate download location in the json file, while they will all sha=
+re the
++  same SRC_URI entry
 +
-+- fetchers store unpack destination dir in urldata.destdir;
-+- gitsm and npmsw fetchers store module metadata in urldata.module_data,=
- as a
-+  list of dict elements in the following format:
-+    [
-+        {
-+            "url": "<module url>",
-+            "destdir": "<module destination path>",
-+            "parent_destdir": "<parent module destination path>"
-+            "revision": "<git submodule revision (only for gitsm, else N=
-one)>"
-+        }, ...
-+    ]
-+- urldata.is_unpacked_archive (boolean) is set to True or False for "fil=
-e"
-+  SRC_URI entries.
++- npmsw and gitsm fetchers collect also internal dependency information,=
+ which
++  are stored as a list of parent module download locations in the
++  "dependency_of" property for each download location
++
++- file:// SRC_URI entries are mapped each to a single download location,
++  and file's path in upstream sources is put directly in the download
++  location, in this way:
++  git+git://git.yoctoproject.org/poky@91d0157d6daf4ea61d6b4e090c0b682d3f=
+3ca60f#meta/recipes-extended/bzip2/bzip2/Makefile.am
++  In such case, the "<file/relpath/in/upstream>" key will be an empty st=
+ring "".
++  The latter does not hold for file:// SRC_URI pointing to a directory o=
+r to an
++  archive; in such cases, "<file/relpath/in/upstream>" will be relative =
+to the
++  directory or to the archive
++
++- if no download location is found for a file:// SRC_URI entry, a warnin=
+g is
++  logged and an "invalid" local download location is used, trying to map=
+ it at least to an existing local bblayer, if any
++
++- local absolute paths found SRC_URI entries are replaced by a placehold=
+er
++  ("<local-path>"), to allow reproducibility of json results, while the
++  corresponding unexpanded SRC_URI entry is also stored to allow to trac=
+e it
++  back to the corresponding recipe
++
++For more details and handled corner cases, see help texts in
++bb.tests.trace.TraceUnpackIntegrationTest and real-world data examples i=
+n
++lib/bb/tests/trace-testdata.
 +"""
 +
 +# Copyright (C) 2023 Alberto Pianon <pianon@array.eu>
@@ -438,501 +178,528 @@ e"
 +#
 +
 +import os
-+import json
-+import tempfile
++import re
++import logging
 +
++import bb.fetch2
 +import bb.utils
-+import bb.compress.zstd
++import bb.process
 +
-+class TraceException(Exception):
-+    pass
++from .trace_base import TraceUnpackBase, TraceException
 +
-+def scandir(path):
-+    with os.scandir(path) as scan:
-+        return { e.name: e for e in scan }
++logger =3D logging.getLogger("BitBake.Fetcher")
 +
-+def is_real_dir(e):
-+    return e.is_dir() and not e.is_symlink()
-+
-+def is_real_and_nonempty_dir(e):
-+    return is_real_dir(e) and scandir(e.path)
-+
-+def is_file_or_symlink(e):
-+    return e.is_file() or e.is_symlink()
-+
-+def is_git_dir(e):
-+    path_scandir =3D scandir(e.path)
-+    if ".git" in path_scandir:
-+        try:
-+            bb.process.run(
-+                ["git", "rev-parse", "--is-inside-work-tree"], cwd=3De.p=
-ath)
-+            return True
-+        except bb.process.ExecutionError:
-+            return False
-+    return False
-+
-+def check_is_real_dir(path, name):
-+    if not os.path.exists(path) or os.path.islink(path) or os.path.isfil=
-e(path):
-+        raise TraceException(
-+            "%s path %s is not a directory" % (name, path))
-+
-+def move_contents(src_dir, dst_dir):
-+    """Move and merge contents from src_dir to dst_dir
-+
-+    Conflict resolution criteria are explained in bb.tests.trace_base
-+
-+    It's optimized for fast execution time by using os.scandir and os.re=
-name, so
-+    it requires that both src_dir and dst_dir reside in the same filesys=
-tem.
++# function copied from https://git.openembedded.org/openembedded-core/pl=
+ain/meta/lib/oe/recipeutils.py?id=3Dad3736d9ca14cac14a7da22c1cfdeda219665=
+e6f
++# Copyright (C) 2013-2017 Intel Corporation
++def split_var_value(value, assignment=3DTrue):
 +    """
++    Split a space-separated variable's value into a list of items,
++    taking into account that some of the items might be made up of
++    expressions containing spaces that should not be split.
++    Parameters:
++        value:
++            The string value to split
++        assignment:
++            True to assume that the value represents an assignment
++            statement, False otherwise. If True, and an assignment
++            statement is passed in the first item in
++            the returned list will be the part of the assignment
++            statement up to and including the opening quote character,
++            and the last item will be the closing quote.
++    """
++    inexpr =3D 0
++    lastchar =3D None
++    out =3D []
++    buf =3D ''
++    for char in value:
++        if char =3D=3D '{':
++            if lastchar =3D=3D '$':
++                inexpr +=3D 1
++        elif char =3D=3D '}':
++            inexpr -=3D 1
++        elif assignment and char in '"\'' and inexpr =3D=3D 0:
++            if buf:
++                out.append(buf)
++            out.append(char)
++            char =3D ''
++            buf =3D ''
++        elif char.isspace() and inexpr =3D=3D 0:
++            char =3D ''
++            if buf:
++                out.append(buf)
++            buf =3D ''
++        buf +=3D char
++        lastchar =3D char
++    if buf:
++        out.append(buf)
 +
-+    check_is_real_dir(src_dir, "Source")
-+    check_is_real_dir(dst_dir, "Destination")
++    # Join together assignment statement and opening quote
++    outlist =3D out
++    if assignment:
++        assigfound =3D False
++        for idx, item in enumerate(out):
++            if '=3D' in item:
++                assigfound =3D True
++            if assigfound:
++                if '"' in item or "'" in item:
++                    outlist =3D [' '.join(out[:idx+1])]
++                    outlist.extend(out[idx+1:])
++                    break
++    return outlist
 +
-+    if os.lstat(src_dir).st_dev !=3D os.lstat(dst_dir).st_dev:
-+        raise TraceException(
-+            "Source %s and destination %s must be in the same filesystem=
-" %
-+            (src_dir, dst_dir)
++def get_unexp_src_uri(src_uri, d):
++    """get unexpanded src_uri"""
++    src_uris =3D d.getVar("SRC_URI").split() if d.getVar("SRC_URI") else=
+ []
++    if src_uri not in src_uris:
++        raise TraceException("%s does not exist in d.getVar('SRC_URI')" =
+% src_uri)
++    unexp_src_uris =3D split_var_value(
++        d.getVar("SRC_URI", expand=3DFalse), assignment=3DFalse)
++    for unexp_src_uri in unexp_src_uris:
++        if src_uri in d.expand(unexp_src_uri).split():
++            # some unexpanded src_uri with expressions may expand to mul=
+tiple
++            # lines/src_uris
++            return unexp_src_uri
++    return src_uri
++
++find_abs_path_regex =3D [
++    r"(?<=3D://)/[^;]+$",     # url path (as in file:/// or npmsw:///)
++    r"(?<=3D://)/[^;]+(?=3D;)", # url path followed by param
++    r"(?<=3D=3D)/[^;]+$",       # path in param
++    r"(?<=3D=3D)/[^;]+(?=3D;)",   # path in param followed by another pa=
+ram
++]
++find_abs_path_regex =3D [ re.compile(r) for r in find_abs_path_regex ]
++
++def get_clean_src_uri(src_uri):
++    """clean expanded src_uri from possible local absolute paths"""
++    for r in find_abs_path_regex:
++        src_uri =3D r.sub("<local-path>", src_uri)
++    return src_uri
++
++def get_dl_loc(local_dir):
++    """get git upstream download location and relpath in git repo for lo=
+cal_dir"""
++    # copied and adapted from https://git.yoctoproject.org/poky-contrib/=
+commit/?h=3Djpew/spdx-downloads&id=3D68c80f53e8c4f5fd2548773b450716a8027d=
+1822
++    # download location cache is implemented in TraceUnpack class
++
++    local_dir =3D os.path.realpath(local_dir)
++    try:
++        stdout, _ =3D bb.process.run(
++            ["git", "branch", "-qr", "--format=3D%(refname)", "--contain=
+s", "HEAD"],
++            cwd=3Dlocal_dir
 +        )
++        branches =3D stdout.splitlines()
++        branches.sort()
++        for b in branches:
++            if b.startswith("refs/remotes") and not b.startswith("refs/r=
+emotes/m/"):
++                # refs/remotes/m/ -> repo manifest remote, it's not a re=
+al
++                # remote (see https://stackoverflow.com/a/63483426)
++                remote =3D b.split("/")[2]
++                break
++        else:
++            return None, None
 +
-+    src_scandir =3D scandir(src_dir)
-+    dst_scandir =3D scandir(dst_dir)
++        stdout, _ =3D bb.process.run(
++            ["git", "remote", "get-url", remote], cwd=3Dlocal_dir
++        )
++        dl_loc =3D "git+" + stdout.strip()
 +
-+    for src_name, src in src_scandir.items():
-+        dst =3D dst_scandir.get(src_name)
-+        if dst:
-+            # handle conflicts
-+            if is_real_dir(src) and is_real_and_nonempty_dir(dst):
-+                if is_git_dir(src):
-+                    bb.utils.prunedir(dst.path)
-+                else:
-+                    move_contents(src.path, dst.path)
-+                    os.rmdir(src.path)
-+                    continue
-+            elif is_real_dir(src) and is_file_or_symlink(dst):
-+                os.remove(dst.path)
-+            elif is_file_or_symlink(src) and is_real_dir(dst):
-+                try:
-+                    os.rmdir(dst.path)
-+                except OSError as e:
-+                    if e.errno =3D=3D 39:
-+                        raise TraceException(
-+                            "Error while moving %s contents to %s, canno=
-t move"
-+                            " %s to %s: source is a file or a symlink, w=
-hile"
-+                            " destination is a non-empty directory."
-+                            % (src_dir, dst_dir, src.path, dst.path)
-+                        )
-+                    else:
-+                        raise e
-+        dst_path =3D dst.path if dst else os.path.join(dst_dir, src_name=
++        stdout, _ =3D bb.process.run(["git", "rev-parse", "HEAD"], cwd=3D=
+local_dir)
++        dl_loc =3D dl_loc + "@" + stdout.strip()
++
++        stdout, _ =3D bb.process.run(
++            ["git", "rev-parse", "--show-prefix"], cwd=3Dlocal_dir)
++        relpath =3D os.path.join(stdout.strip().rstrip("/"))
++
++        return dl_loc, relpath
++
++    except bb.process.ExecutionError:
++        return None, None
++
++def get_new_and_modified_files(git_dir):
++    """get list of untracked or uncommitted new or modified files in git=
+_dir"""
++    try:
++        bb.process.run(
++            ["git", "rev-parse", "--is-inside-work-tree"], cwd=3Dgit_dir=
 )
-+        os.rename(src.path, dst_path)
++    except bb.process.ExecutionError:
++        raise TraceException("%s is not a git repo" % git_dir)
++    stdout, _ =3D bb.process.run(["git", "status", "--porcelain"], cwd=3D=
+git_dir)
++    return [ line[3:] for line in stdout.rstrip().split("\n") ]
 +
-+def findall_files_and_links(path, exclude=3D[], skip_git_submodules=3DFa=
-lse):
-+    """recusively find all files and links in path, excluding dir and fi=
-le names
-+    in exclude, and excluding git dirs if skip_git_submodules is set to =
-True.
++def get_path_in_upstream(f, u, ud, destdir):
++    """get relative path in upstream package, relative to download locat=
+ion"""
++    relpath =3D os.path.relpath(f, destdir)
++    if ud.type =3D=3D "file":
++        is_unpacked_archive =3D getattr(ud, "is_unpacked_archive", False=
+)
++        if os.path.isdir(ud.localpath) or is_unpacked_archive:
++            return os.path.relpath(relpath, ud.path)
++        else:
++            # it's a file, its path is already in download location, lik=
+e
++            # in git+https://git.example.com/foo#example/foo.c so there =
+is
++            # no relative path to download location
++            return ""
++    elif ud.type =3D=3D "npmsw" and ud.url =3D=3D u:
++        # npm shrinkwrap file
++        return ""
++    else:
++        return relpath
 +
-+    Returns tuple of sorted lists of file and link paths (sorting is for
-+    reproducibility in tests)
-+    """
-+    files =3D []
-+    links =3D []
-+    with os.scandir(path) as scan:
-+        for e in scan:
-+            if e.name in exclude:
-+                continue
-+            if e.is_symlink():
-+                links.append(e.path)
-+            elif e.is_file():
-+                files.append(e.path)
-+            elif e.is_dir():
-+                if skip_git_submodules and is_git_dir(e):
-+                    continue
-+                _files, _links =3D findall_files_and_links(
-+                        e.path, exclude, skip_git_submodules)
-+                files +=3D _files
-+                links +=3D _links
-+    return sorted(files), sorted(links)
++def get_param(param, uri):
++    """get parameter value from uri string"""
++    match =3D re.search("(?<=3D;%s=3D)[^;]+" % param, uri)
++    if match:
++        return match[0]
++    return None
 +
-+class TraceUnpackBase:
-+    """base class for implementing a process for upstream source tracing
-+    See this module's help for more details on the process.
++class TraceUnpack(TraceUnpackBase):
++    """implement a process for upstream source tracing in do_unpack
 +
-+    This base class implements the process but does not collect any data=
-. It is
-+    intended to be subclassed in a separate 'trace' module, implementing
-+    _collect_data() and _process_data() methods.
++    Subclass of TraceUnpackBase, implementing _collect_data() and
++    _process_data() methods
++
++    See bb.trace.unpack_base module help for more details on the process=
+.
++
++    See bb.tests.trace.TraceUnpackIntegrationTest and data examples in
++    lib/bb/tests/trace-testdata for details on the output json data form=
+at.
 +
 +    Method call order:
-+        - __init__(): initialize tmpdir and td (trace data)
-+        - for each SRC_URI entry unpack:
-+          - commit(): go through all files in tmpdir (and in each module=
- subdir
-+            in case of gitsm and npmsw fecthers) and commit collected me=
-tadata
-+            to td
-+          - move2root(): moves all files from tmpdir to root
-+        - write_data()
-+        - close(): delete tmpdir and cache
++        1. __init__()
++        2. commit()
++        3. move2root()
++        4. write_data()
++        5. close()
++
++    Steps 2-3 need to be called for every unpacked src uri
 +    """
 +
 +    def __init__(self, root, d):
-+        """initialize properties and create temporary directory in root
++        """create temporary directory in root, and initialize cache"""
++        super(TraceUnpack, self).__init__(root, d)
 +
-+        Temporary unpack dir is created in 'root' to ensure they are in =
-the
-+        same filesystem, so files can be quickly moved to 'root' after t=
-racing
-+        """
-+
-+        self.root =3D root
-+        self.d =3D d
-+        self.td =3D {}
-+        if not os.path.exists(root):
-+            bb.utils.mkdirhier(root)
-+        self.tmpdir =3D tempfile.mkdtemp(dir=3Droot)
-+
-+    def commit(self, u, ud):
-+        """go through all files in tmpdir and commit collected metadata =
-to td.
-+        dive into module subdirs in case of gitsm and npmsw fecthers
-+
-+        Params are:
-+        - u -> str: src uri of the upstream repo/package that is being p=
-rocessed
-+        - ud -> bb.fetch2.FetchData: src uri fetch data object; ud.url a=
-nd u do not correspond when git/npm modules are being processed, so we ne=
-ed both
-+        """
-+
-+        exclude=3D['.git', '.hg', '.svn']
-+
-+        # exclude node_modules subdirs (will be separately parsed)
-+        if ud.type in ['npm', 'npmsw']:
-+            exclude.append('node_modules')
-+        # exclude git submodules (will be separately parsed)
-+        skip_git_submodules =3D (ud.type =3D=3D 'gitsm')
-+
-+        files, links =3D findall_files_and_links(
-+            ud.destdir, exclude, skip_git_submodules)
-+        self._collect_data(u, ud, files, links, ud.destdir)
-+
-+        if ud.type in ['gitsm', 'npmsw'] and ud.module_data:
-+            self._process_module_data(ud)
-+            for md in ud.module_data:
-+                files, links =3D findall_files_and_links(
-+                   md["destdir"], exclude, skip_git_submodules)
-+                self._collect_data(
-+                    md["url"], ud, files, links, md["destdir"], md)
-+
-+    def _process_module_data(self, ud):
-+        """add parent module data to each module data item, to map depen=
-dencies
-+        """
-+        revision =3D ud.revisions[ud.names[0]] if ud.type =3D=3D 'gitsm'=
- else None
-+        indexed_md =3D { md["destdir"]: md for md in ud.module_data }
-+        # add main git repo (gitsm) or npm-shrinkwrap.json (npmsw)
-+        indexed_md.update({
-+                ud.destdir.rstrip("/"): {"url": ud.url, "revision": revi=
-sion}
-+        })
-+        for md in ud.module_data:
-+            md["parent_md"] =3D indexed_md[md["parent_destdir"]]
-+
-+    def move2root(self):
-+        """move all files from temporary directory to root"""
-+        move_contents(self.tmpdir, self.root)
-+
-+    def write_data(self):
-+        self._process_data()
-+        if not self.d.getVar("PN"):
-+            return
-+        path =3D "%s/temp/%s-%s.unpack.trace.json.zst" % (
-+            self.root, self.d.getVar("PN"), self.d.getVar("PV"))
-+        with bb.compress.zstd.open(path, "wt", encoding=3D"utf-8") as f:
-+            json.dump(self.td, f)
-+            f.flush()
++        self.local_path_cache =3D {}
++        self.src_uri_cache =3D {}
++        self.upstr_data_cache =3D {}
++        self.package_checksums_cache =3D {}
++        self.git_dir_cache =3D {}
++        if d.getVar('BBLAYERS'):
++            self.layers =3D {
++                os.path.basename(l): os.path.realpath(l)
++                for l in d.getVar('BBLAYERS').split()
++            }
++        else:
++            self.layers =3D {}
 +
 +    def close(self):
-+        os.rmdir(self.tmpdir)
-+        del self.td
++        super(TraceUnpack, self).close()
++        del self.local_path_cache
++        del self.src_uri_cache
++        del self.upstr_data_cache
++        del self.package_checksums_cache
++        del self.layers
++
++    def _get_layer(self, local_path):
++        """get bb layer for local_path (must be a realpath)"""
++        for layer, layer_path in self.layers.items():
++            if local_path.startswith(layer_path):
++                return layer
++        return None
++
++    def _is_in_current_branch(self, file_relpath, git_dir):
++        """wrapper for get_new_and_modified_files(), using cache
++        for already processed git dirs"""
++        if git_dir not in self.git_dir_cache:
++            self.git_dir_cache[git_dir] =3D get_new_and_modified_files(g=
+it_dir)
++        new_and_modified_files =3D self.git_dir_cache[git_dir]
++        return file_relpath not in new_and_modified_files
++
++    def _get_dl_loc_and_layer(self, local_path):
++        """get downl. location, upstream relative path and layer for loc=
+al_path
++
++        Wrapper for get_dl_loc() and TraceUnpack._get_layer(), using cac=
+he for
++        already processed local paths, and handling also file local path=
+s and
++        not only dirs.
++        """
++        local_path =3D os.path.realpath(local_path)
++        if local_path not in self.local_path_cache:
++            if os.path.isdir(local_path):
++                dl_loc, relpath =3D get_dl_loc(local_path)
++                layer =3D self._get_layer(local_path)
++                self.local_path_cache[local_path] =3D (dl_loc, relpath, =
+layer)
++            else:
++                local_dir, basename =3D os.path.split(local_path)
++                dl_loc, dir_relpath, layer =3D self._get_dl_loc_and_laye=
+r(local_dir)
++                file_relpath =3D os.path.join(dir_relpath, basename) if =
+dir_relpath else None
++                if file_relpath:
++                    if local_path.endswith(file_relpath):
++                        git_dir =3D local_path[:-(len(file_relpath))].rs=
+trip("/")
++                    else:
++                        raise TraceException(
++                            "relative path %s is not in %s" %
++                            (file_relpath, local_path)
++                        )
++                    if not self._is_in_current_branch(file_relpath, git_=
+dir):
++                        # it's an untracked|new|modified file in the git=
+ repo,
++                        # so it does not come from a known source
++                        dl_loc =3D file_relpath =3D None
++                self.local_path_cache[local_path] =3D (dl_loc, file_relp=
+ath, layer)
++        return self.local_path_cache[local_path]
++
++    def _get_unexp_and_clean_src_uri(self, src_uri):
++        """get unexpanded and clean (i.e. w/o local paths) expanded src =
+uri
++
++        Wrapper for get_unexp_src_uri() and clean_src_uri(), using cache=
+ for
++        already processed src uris
++        """
++        if src_uri not in self.src_uri_cache:
++            try:
++                unexp_src_uri =3D get_unexp_src_uri(src_uri, self.d)
++            except TraceException:
++                unexp_src_uri =3D src_uri
++            clean_src_uri =3D get_clean_src_uri(src_uri)
++            self.src_uri_cache[src_uri] =3D (unexp_src_uri, clean_src_ur=
+i)
++        return self.src_uri_cache[src_uri]
++
++    def _get_package_checksums(self, ud):
++        """get package checksums for ud.url"""
++        if ud.url not in self.package_checksums_cache:
++            checksums =3D {}
++            if ud.method.supports_checksum(ud):
++                for checksum_id in bb.fetch2.CHECKSUM_LIST:
++                    expected_checksum =3D getattr(ud, "%s_expected" % ch=
+ecksum_id)
++                    if expected_checksum is None:
++                        continue
++                    checksums.update({checksum_id: expected_checksum})
++            self.package_checksums_cache[ud.url] =3D checksums
++        return self.package_checksums_cache[ud.url]
++
++    def _get_upstr_data(self, src_uri, ud, local_path, revision):
++        """get upstream data for src_uri
++
++        ud is required for non-file src_uris, while local_path is requir=
+ed for
++        file src_uris; revision is required for git submodule src_uris
++        """
++        if local_path:
++            # file src_uri
++            dl_loc, relpath, layer =3D self._get_dl_loc_and_layer(local_=
+path)
++            if dl_loc:
++                dl_loc +=3D "#" + relpath
++            else:
++                # we didn't find any download location so we set a fake =
+(but
++                # unique) one because we need to use it as key in the fi=
+nal json
++                # output
++                if layer:
++                    relpath_in_layer =3D os.path.relpath(
++                        os.path.realpath(local_path), self.layers[layer]=
+)
++                    dl_loc =3D "file://<local-path>/" + layer + "/" + re=
+lpath_in_layer
++                else:
++                    dl_loc =3D "file://" + local_path
++                    relpath =3D ""
++                logger.warning(
++                    "Can't find upstream source for %s, using %s as down=
+load location" %
++                    (local_path, dl_loc)
++                )
++            get_checksums =3D False
++        else:
++            # copied and adapted from https://git.yoctoproject.org/poky/=
+plain/meta/classes/create-spdx-2.2.bbclass
++            if ud.type =3D=3D "crate":
++                # crate fetcher converts crate:// urls to https://
++                this_ud =3D bb.fetch2.FetchData(ud.url, self.d)
++            elif src_uri !=3D ud.url:
++                # npmsw or gitsm module (src_uri !=3D ud.url)
++                if ud.type =3D=3D "gitsm" and revision:
++                    ld =3D self.d.createCopy()
++                    name =3D get_param("name", src_uri)
++                    v =3D ("SRCREV_%s" % name) if name else "SRCREV"
++                    ld.setVar(v, revision)
++                else:
++                    ld =3D self.d
++                this_ud =3D bb.fetch2.FetchData(src_uri, ld)
++            else:
++                this_ud =3D ud
++            dl_loc =3D this_ud.type
++            if dl_loc =3D=3D "gitsm":
++                dl_loc =3D "git"
++            proto =3D getattr(this_ud, "proto", None)
++            if proto is not None:
++                dl_loc =3D dl_loc + "+" + proto
++            dl_loc =3D dl_loc + "://" + this_ud.host + this_ud.path
++            if revision:
++                dl_loc =3D dl_loc + "@" + revision
++            elif this_ud.method.supports_srcrev():
++                dl_loc =3D dl_loc + "@" + this_ud.revisions[this_ud.name=
+s[0]]
++            layer =3D None
++            get_checksums =3D True
++        if dl_loc not in self.upstr_data_cache:
++            self.upstr_data_cache[dl_loc] =3D {
++                "download_location": dl_loc,
++            }
++            uri =3D ud.url if ud.type in ["gitsm", "npmsw"] else src_uri
++            unexp_src_uri, clean_src_uri =3D self._get_unexp_and_clean_s=
+rc_uri(uri)
++            self.upstr_data_cache[dl_loc].update({
++                "src_uri": clean_src_uri
++            })
++            if unexp_src_uri !=3D clean_src_uri:
++                self.upstr_data_cache[dl_loc].update({
++                    "unexpanded_src_uri": unexp_src_uri
++                })
++            if get_checksums:
++                checksums =3D self._get_package_checksums(ud or this_ud)
++                if checksums:
++                    self.upstr_data_cache[dl_loc].update({
++                        "checksums": checksums
++                    })
++            if layer:
++                self.upstr_data_cache[dl_loc].update({
++                    "layer": layer
++                })
++        return self.upstr_data_cache[dl_loc]
++
++    def _get_upstr_data_wrapper(self, u, ud, destdir, md):
++        """
++        wrapper for self._get_upstr_data(), handling npmsw and gitsm fet=
+chers
++        """
++        if md:
++            revision =3D md["revision"]
++            parent_url =3D md["parent_md"]["url"]
++            parent_revision =3D md["parent_md"]["revision"]
++        else:
++            revision =3D parent_url =3D parent_revision =3D None
++        if ud.type =3D=3D "npmsw" and ud.url =3D=3D u:
++            local_path =3D ud.shrinkwrap_file
++        elif ud.type =3D=3D "file":
++            local_path =3D ud.localpath
++        else:
++            local_path =3D None
++        upstr_data =3D self._get_upstr_data(u, ud, local_path, revision)
++        # get parent data
++        parent_is_shrinkwrap =3D (ud.type =3D=3D "npmsw" and parent_url =
+=3D=3D ud.url)
++        if ud.type in ["npmsw", "gitsm"] and parent_url and not parent_i=
+s_shrinkwrap:
++            parent_upstr_data =3D self._get_upstr_data(
++                    parent_url, ud, None, parent_revision)
++            dependency_of =3D upstr_data.setdefault("dependency_of", [])
++            dependency_of.append(parent_upstr_data["download_location"])
++        return upstr_data
 +
 +    def _collect_data(self, u, ud, files, links, destdir, md=3DNone):
++        """collect data for the "committed" src uri entry (u)
++
++        data are saved using path_in_workdir as index; for each path_in_=
+workdir,
++        sha1 checksum and upstream data are collected (from cache, if av=
+ailable,
++        because self._get_upstr_data_wrapper() uses a cache)
++
++        sha1 and upstream data are appended to a list for each path_in_w=
+orkdir,
++        because it may happen that a file unpacked from a src uri gets
++        overwritten by a subsequent src uri, from which a file with the =
+same
++        name/path is unpacked; the overwrite would be captured in the li=
+st.
++
++        At the end, all data will be processed and grouped by download l=
+ocation
++        by self._process_data(), that will keep only the last item of
++        sha1+upstream data list for each path_in_workdir
 +        """
-+        collect provenance metadata on the committed files. Not implemen=
-ted
-+        """
-+        pass
++        upstr_data =3D self._get_upstr_data_wrapper(u, ud, destdir, md)
++        for f in files:
++            sha1 =3D bb.utils.sha1_file(f)
++            path_in_workdir =3D os.path.relpath(f, self.tmpdir)
++            path_in_upstream =3D get_path_in_upstream(f, u, ud, destdir)
++            data =3D self.td.setdefault(path_in_workdir, [])
++            data.append({
++                "sha1": sha1,
++                "path_in_upstream": path_in_upstream,
++                "upstream": upstr_data,
++            })
++        for l in links:
++            link_target =3D os.readlink(l)
++            path_in_workdir =3D os.path.relpath(l, self.tmpdir)
++            path_in_upstream =3D get_path_in_upstream(l, u, ud, destdir)
++            data =3D self.td.setdefault(path_in_workdir, [])
++            data.append({
++                "symlink_to": link_target,
++                "path_in_upstream": path_in_upstream,
++                "upstream": upstr_data,
++            })
 +
 +    def _process_data(self):
-+        """post-process self.td. Not implemented"""
-+        pass
-\ No newline at end of file
-diff --git a/lib/bb/tests/trace_base.py b/lib/bb/tests/trace_base.py
-new file mode 100644
-index 00000000..d96fb2c7
---- /dev/null
-+++ b/lib/bb/tests/trace_base.py
-@@ -0,0 +1,227 @@
-+
-+# Copyright (C) 2023 Alberto Pianon <pianon@array.eu>
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+
-+import os
-+import re
-+import unittest
-+import tempfile
-+from pathlib import Path
-+import subprocess
-+
-+import bb
-+
-+def create_src_dst(tmpdir):
-+    src_dir =3D os.path.join(tmpdir, "src/")
-+    dst_dir =3D os.path.join(tmpdir, "dst/")
-+    os.makedirs(src_dir)
-+    os.makedirs(dst_dir)
-+    return Path(src_dir), Path(dst_dir)
-+
-+def make_dirname(path):
-+    dirname =3D os.path.dirname(path)
-+    if dirname:
-+        os.makedirs(dirname, exist_ok=3DTrue)
-+
-+def create_file(path, content):
-+    make_dirname(path)
-+    with open(path, "w") as f:
-+        f.write(content)
-+
-+def create_link(path, target):
-+    make_dirname(path)
-+    os.symlink(target, path)
-+
-+def get_tree(path):
-+    curdir =3D os.getcwd()
-+    os.chdir(path)
-+    tree =3D []
-+    for root, dirs, files in os.walk("."):
-+        for f in dirs + files:
-+            tree.append(re.sub(r"^\.\/", "", os.path.join(root, f)))
-+    os.chdir(curdir)
-+    return sorted(tree)
-+
-+def read_file(path):
-+    with open(path) as f:
-+        return f.read()
-+
-+class MoveContentsTest(unittest.TestCase):
-+    """
-+    Test the following conflict resolution criteria:
-+
-+    - if a file (or symlink) exists both in src_dir and in dst_dir, the
-+      file/symlink in dst_dir will be overwritten;
-+
-+    - if a subdirectory exists both in src_dir and in dst_dir, their con=
-tents
-+      will be merged, and in case of file/symlink conflicts, files/symli=
-nks in
-+      dst_dir will be overwritten - unless src_dir is a git repo; in  su=
-ch a
-+      case, dst_dir will be pruned and src_dir will be moved to dst_dir,=
- for
-+      consistency with bb.fetch2.git.Git.unpack method's behavior (which=
- prunes
-+      clone dir if already existing, before cloning)
-+
-+    - if the same relative path exists both in src_dir and in dst_dir, b=
-ut the
-+      path in src_dir is a directory and the path in dst_dir is a file/s=
-ymlink,
-+      the latter will be overwritten;
-+
-+    - if instead the path in src_dir is a file and the path in dst_dir i=
-s a
-+      directory, the latter will be overwritten only if it is empty, oth=
-erwise
-+      an exception will be raised.
-+    """
-+
-+    def test_dir_merge_and_file_overwrite(self):
-+        with tempfile.TemporaryDirectory() as tmpdir:
-+            src_dir, dst_dir =3D create_src_dst(tmpdir)
-+            create_file(src_dir / "dir/subdir/file.txt", "new")
-+            create_file(dst_dir / "dir/subdir/file.txt", "old")
-+            create_file(dst_dir / "dir/subdir/file1.txt", "old")
-+            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
-+            expected_dst_tree =3D [
-+                "dir",
-+                "dir/subdir",
-+                "dir/subdir/file.txt",
-+                "dir/subdir/file1.txt"
-+            ]
-+            self.assertEqual(get_tree(src_dir), [])
-+            self.assertEqual(get_tree(dst_dir), expected_dst_tree)
-+            self.assertEqual(read_file(dst_dir / "dir/subdir/file.txt"),=
- "new")
-+            self.assertEqual(read_file(dst_dir / "dir/subdir/file1.txt")=
-, "old")
-+
-+    def test_file_vs_symlink_conflicts(self):
-+        with tempfile.TemporaryDirectory() as tmpdir:
-+            src_dir, dst_dir =3D create_src_dst(tmpdir)
-+
-+            create_file(src_dir / "dir/subdir/fileA.txt", "new")
-+            create_file(src_dir / "dir/fileB.txt", "new")
-+            create_link(src_dir / "file.txt", "dir/subdir/fileA.txt")
-+
-+            create_file(dst_dir / "dir/subdir/fileA.txt", "old")
-+            create_link(dst_dir / "dir/fileB.txt", "subdir/fileA.txt")
-+            create_file(dst_dir / "file.txt", "old")
-+
-+            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
-+            self.assertEqual(get_tree(src_dir), [])
-+            self.assertTrue(os.path.islink(dst_dir / "file.txt"))
-+            self.assertEqual(
-+                os.readlink(dst_dir / "file.txt"),
-+                "dir/subdir/fileA.txt"
-+            )
-+            self.assertFalse(os.path.islink(dst_dir / "dir/fileB.txt"))
-+            self.assertEqual(read_file(dst_dir / "dir/fileB.txt"), "new"=
++        """group data by download location"""
++        # it reduces json file size and allows faster processing by crea=
+te-spdx
++        pd =3D self.upstr_data_cache
++        for workdir_path, data in self.td.items():
++            data =3D data[-1] # pick last overwrite of the file, if any
++            dl_loc =3D data["upstream"]["download_location"]
++            files =3D pd[dl_loc].setdefault("files", {})
++            path =3D data["path_in_upstream"]
++            if path in files:
++                files[path]["paths_in_workdir"].append(workdir_path)
++                # the same source file may be found in different locatio=
+ns in
++                # workdir, eg. with npmsw fetcher, where the same npm mo=
+dule
++                # may unpacked multiple times in different paths
++            else:
++                path_data =3D files[path] =3D {}
++                if data.get("sha1"):
++                    path_data.update({ "sha1": data["sha1"] })
++                elif data.get("symlink_to"):
++                    path_data.update({ "symlink_to": data["symlink_to"] =
+})
++                path_data.update({ "paths_in_workdir": [workdir_path] } =
 )
++        self.td =3D pd
 +
-+    def test_dir_vs_file_conflict(self):
-+        with tempfile.TemporaryDirectory() as tmpdir:
-+            src_dir, dst_dir =3D create_src_dst(tmpdir)
-+            create_file(src_dir / "items/item0/content.txt", "hello")
-+            create_file(dst_dir / "items/item0", "there")
-+            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
-+            self.assertEqual(get_tree(src_dir), [])
-+            self.assertTrue(os.path.isdir(dst_dir / "items/item0"))
-+            self.assertEqual(
-+                read_file(dst_dir / "items/item0/content.txt"), "hello")
-+
-+    def test_dir_vs_symlink_conflict(self):
-+        with tempfile.TemporaryDirectory() as tmpdir:
-+            src_dir, dst_dir =3D create_src_dst(tmpdir)
-+            create_file(src_dir / "items/item0/content.txt", "hello")
-+            create_file(dst_dir / "items/item1/content.txt", "there")
-+            create_link(dst_dir / "items/item0", "item1")
-+            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
-+            self.assertEqual(get_tree(src_dir), [])
-+            self.assertFalse(os.path.islink(dst_dir / "items/item0"))
-+            self.assertEqual(
-+                read_file(dst_dir / "items/item0/content.txt"), "hello")
-+            self.assertEqual(
-+                read_file(dst_dir / "items/item1/content.txt"), "there")
-+
-+    def test_symlink_vs_empty_dir_conflict(self):
-+        with tempfile.TemporaryDirectory() as tmpdir:
-+            src_dir, dst_dir =3D create_src_dst(tmpdir)
-+            create_file(src_dir / "items/item1/content.txt", "there")
-+            create_link(src_dir / "items/item0", "item1")
-+            os.makedirs(dst_dir / "items/item0")
-+            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
-+            self.assertEqual(get_tree(src_dir), [])
-+            self.assertTrue(os.path.islink(dst_dir / "items/item0"))
-+            self.assertEqual(read_file(dst_dir / "items/item0/content.tx=
-t"), "there")
-+
-+    def test_symlink_vs_nonempty_dir_conflict(self):
-+        with tempfile.TemporaryDirectory() as tmpdir:
-+            src_dir, dst_dir =3D create_src_dst(tmpdir)
-+            create_file(src_dir / "items/item1/content.txt", "there")
-+            create_link(src_dir / "items/item0", "item1")
-+            create_file(dst_dir / "items/item0/content.txt", "hello")
-+            with self.assertRaises(bb.fetch2.trace_base.TraceException) =
-as context:
-+                bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
-+
-+    def test_file_vs_empty_dir_conflict(self):
-+        with tempfile.TemporaryDirectory() as tmpdir:
-+            src_dir, dst_dir =3D create_src_dst(tmpdir)
-+            create_file(src_dir / "items/item0", "test")
-+            os.makedirs(dst_dir / "items/item0")
-+            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
-+            self.assertEqual(get_tree(src_dir), [])
-+            self.assertTrue(os.path.isfile(dst_dir/ "items/item0"))
-+
-+    def test_file_vs_nonempty_dir_conflict(self):
-+        with tempfile.TemporaryDirectory() as tmpdir:
-+            src_dir, dst_dir =3D create_src_dst(tmpdir)
-+            create_file(src_dir / "items/item0", "test")
-+            create_file(dst_dir / "items/item0/content.txt", "test")
-+            with self.assertRaises(bb.fetch2.trace_base.TraceException) =
-as context:
-+                bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
-+
-+    def test_git_dir(self):
-+        with tempfile.TemporaryDirectory() as tmpdir:
-+            src_dir, dst_dir =3D create_src_dst(tmpdir)
-+            git_repo =3D src_dir / "src/my_git_repo"
-+            create_file(git_repo / "foo.txt", "hello")
-+            subprocess.check_output(["git", "init"], cwd=3Dgit_repo)
-+            create_file(dst_dir / "src/my_git_repo/content.txt", "there"=
-)
-+            bb.fetch2.trace_base.move_contents(src_dir, dst_dir)
-+            self.assertFalse(
-+                os.path.exists(dst_dir / "src/my_git_repo/content.txt"))
-+                # git clone dir should be pruned if already existing
-+            self.assertEqual(
-+                read_file(dst_dir / "src/my_git_repo/foo.txt"), "hello")
-+            self.assertTrue(os.path.isdir(dst_dir / "src/my_git_repo/.gi=
-t"))
-+
-+
-+class FindAllFilesAndLinksTest(unittest.TestCase):
-+    """test if all files and links are correctly returned, and if specif=
-ic
-+    file/dir names and git subdirs are correctly excluded"""
-+
-+    def test_findall_files_and_links(self):
-+        with tempfile.TemporaryDirectory() as tmpdir:
-+            tmpdir =3D Path(tmpdir)
-+            files =3D {
-+                str(tmpdir/"foo/example/example.txt"): "example",
-+                str(tmpdir/"foo/foo.txt"): "foo",
-+                str(tmpdir/"foo/foo2.txt"): "foo2",
-+                str(tmpdir/"README"): "hello",
-+            }
-+            ignored =3D {
-+                str(tmpdir/".git"): "fake",
-+                str(tmpdir/"foo2/dummy"): "dummy"
-+            }
-+            allfiles =3D files.copy()
-+            allfiles.update(ignored)
-+            links =3D {
-+                str(tmpdir/"example"): "foo/example", # link to dir
-+                str(tmpdir/"example.txt"): "foo/example/example.txt", # =
-link to file
-+            }
-+            for path, content in allfiles.items():
-+                create_file(path, content)
-+            for path, target in links.items():
-+                create_link(path, target)
-+            subprocess.check_output(["git", "init"], cwd=3Dtmpdir/"foo2"=
-)
-+            res_files, res_links =3D bb.fetch2.trace_base.findall_files_=
-and_links(
-+                    tmpdir, exclude=3D['.git'], skip_git_submodules=3DTr=
-ue)
-+            self.assertEqual(res_files, sorted(list(files.keys())))
-+            self.assertEqual(res_links, sorted(list(links.keys())))
-+
-+
-+if __name__ =3D=3D '__main__':
-+    unittest.main()
 --=20
 2.34.1
 
