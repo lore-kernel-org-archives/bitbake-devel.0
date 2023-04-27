@@ -1,98 +1,94 @@
-Return-Path: <raj.khem@gmail.com>
+Return-Path: <alberto@pianon.eu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C726C77B61
-	for <webhook@archiver.kernel.org>; Thu, 27 Apr 2023 06:57:01 +0000 (UTC)
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
- by mx.groups.io with SMTP id smtpd.web10.14478.1682578615141695862
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B73CC77B7E
+	for <webhook@archiver.kernel.org>; Thu, 27 Apr 2023 07:02:41 +0000 (UTC)
+Received: from server3.justice4all.it (server3.justice4all.it [95.217.19.36])
+ by mx.groups.io with SMTP id smtpd.web11.14455.1682578956761784769
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 26 Apr 2023 23:56:55 -0700
+ Thu, 27 Apr 2023 00:02:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=fnsv4t5K;
- spf=pass (domain: gmail.com, ip: 209.85.161.53, mailfrom: raj.khem@gmail.com)
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-545d82e1a1bso2551842eaf.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 26 Apr 2023 23:56:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682578614; x=1685170614;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3mHVXcg2ajXphDZtpN70pJG0URE9UvoGnlzKD9EnmOI=;
-        b=fnsv4t5KvG4yKezHe7HWW1rDWEVC3Qcum4tlL7LJOLKCWYq2XxloYrBaROPV75UmeY
-         T4v/HO1btU0rifMjhpYlSd4Wywku14k5SAzxx+ARRopOg0t843dDhvvqAitArwSvZeGB
-         /fZSZ1fa1PqNYNRUAWKCpcN/TA98ZCdyQqpasdAMObaR6/sGSg36cSIioyRoF7nPA7VX
-         fW5fKCMRD6j8zVRkq4h1G+vKvTCLoXA3BmlZff1o4cV7mq5vHVA5Cb3w15msI19Ll022
-         mQxPmp/0++mESguKqCje2oY12tpNAeK1FePsRcvFw92BP18SIkK0oLAWapbCGSUz+F+G
-         KS6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682578614; x=1685170614;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3mHVXcg2ajXphDZtpN70pJG0URE9UvoGnlzKD9EnmOI=;
-        b=VuUwE+nOLn1iYiGzDlhhQP/uZCY5FzuUd/9LOvnQhsbfPKJRZuUK4T0I8T5KwlqL46
-         f0mioJ/WsafEg63eIup74lJum2a4PK16jD2spAg2aKTd3iefC1tv5wHvbiZQVj6CwwIV
-         DIgijSbIgliXNkLcd7EOTuQ/5NzQ8V921Nm61CisiXJtHEx+7SKMcl7+qQSXgaeJ57Q7
-         4r19nKJyWkFj5saGSJk0SK/qhm/ToYK9W4Sk3g0AURrHNyAruih9f2cythIsfp4UOpw3
-         ge94ky/AuBblaH0gpEV/8ngT3LvBHg5fzWgdv2a4K7F3ExrfxNll/vsnIo+ntgAQn5Lz
-         EYNA==
-X-Gm-Message-State: AC+VfDwisqRubLrRGy8ZCr8TqcpIX9ZjvCM2g7k+s7AGiFyfCuvcaDuw
-	GwR9y6086NvKNbLRyT6WHuFn8ME22cdQtdsLzC4=
-X-Google-Smtp-Source: ACHHUZ5i6GCz65551DUKZ34l74rMiOweTVAW7OEnx5P9Pzpb9HbLjUEmyoXchwiJjPm4za8/4tqs0RvEDrWdPyDTibM=
-X-Received: by 2002:aca:1303:0:b0:38e:3904:2db9 with SMTP id
- e3-20020aca1303000000b0038e39042db9mr179814oii.46.1682578613978; Wed, 26 Apr
- 2023 23:56:53 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@pianon.eu header.s=mail20151219 header.b=CqemiVMF;
+ spf=pass (domain: pianon.eu, ip: 95.217.19.36, mailfrom: alberto@pianon.eu)
+Received: from localhost (localhost [127.0.0.1])
+	by server3.justice4all.it (Postfix) with ESMTP id 625B95C0096;
+	Thu, 27 Apr 2023 09:02:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=pianon.eu; h=
+	message-id:references:in-reply-to:subject:subject:from:from:date
+	:date:content-transfer-encoding:content-type:content-type
+	:mime-version; s=mail20151219; t=1682578952; x=1684393353; bh=R5
+	SW/twq/M23gZeSyQzniTWTmSCdymAeFN2jJWn6hlI=; b=CqemiVMF5qDQ05urpP
+	xX4okCzN9oEGy7jN7wgjoQ4IlFWQ0zjGwf/0mCco2kI1pi+2UckzWosYFQXLokcM
+	+Q0yuETS72Gm51DzRo0un1rI/yY9FjSn5nwoboisLzxd2jCCSNGGQKlIcvjGigd3
+	aq7/giRGgE5pHPbZ7bQgHZ+Lc=
+X-Virus-Scanned: Debian amavisd-new at server3.justice4all.it
+Received: from server3.justice4all.it ([127.0.0.1])
+	by localhost (server3.justice4all.it [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id u2-fjThp8S3F; Thu, 27 Apr 2023 09:02:32 +0200 (CEST)
+Received: from pianon.eu (localhost [127.0.0.1])
+	(Authenticated sender: alberto@pianon.eu)
+	by server3.justice4all.it (Postfix) with ESMTPA id B5CD15C0095;
+	Thu, 27 Apr 2023 09:02:32 +0200 (CEST)
 MIME-Version: 1.0
-References: <20230420062113.134546-1-alberto@pianon.eu> <CAMKF1sre46PCJrhPcuHzYu8_uLHabY4S_+up5vwvyWnjmSeooA@mail.gmail.com>
- <8dfce9c36a557f67be4dc6d37417ac63@pianon.eu> <afcd01000f265238360efcdaecd16a4e@pianon.eu>
-In-Reply-To: <afcd01000f265238360efcdaecd16a4e@pianon.eu>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Wed, 26 Apr 2023 23:56:27 -0700
-Message-ID: <CAMKF1srdkydixmdbW4dm8egyNYHOxJ5kGoDtTt-WPB_zyWefig@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Date: Thu, 27 Apr 2023 09:02:32 +0200
+From: Alberto Pianon <alberto@pianon.eu>
+To: Khem Raj <raj.khem@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org,
+ richard.purdie@linuxfoundation.org, jpewhacker@gmail.com, carlo@piana.eu
 Subject: Re: [bitbake-devel] [PATCH] upstream source tracing: data collection
  (patch 2/3)
-To: Alberto Pianon <alberto@pianon.eu>
-Cc: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org, 
-	jpewhacker@gmail.com, carlo@piana.eu
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMKF1srdkydixmdbW4dm8egyNYHOxJ5kGoDtTt-WPB_zyWefig@mail.gmail.com>
+References: <20230420062113.134546-1-alberto@pianon.eu>
+ <CAMKF1sre46PCJrhPcuHzYu8_uLHabY4S_+up5vwvyWnjmSeooA@mail.gmail.com>
+ <8dfce9c36a557f67be4dc6d37417ac63@pianon.eu>
+ <afcd01000f265238360efcdaecd16a4e@pianon.eu>
+ <CAMKF1srdkydixmdbW4dm8egyNYHOxJ5kGoDtTt-WPB_zyWefig@mail.gmail.com>
+Message-ID: <023e253cd33ad1c75337c1641dc548fe@pianon.eu>
+X-Sender: alberto@pianon.eu
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Apr 2023 06:57:01 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14750
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Apr 2023 07:02:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14751
 
-On Wed, Apr 26, 2023 at 10:19=E2=80=AFPM Alberto Pianon <alberto@pianon.eu>=
- wrote:
->
-> Il 2023-04-27 07:14 Alberto Pianon ha scritto:
-> > Could you please check if this is really the case in your case?
-> > You'd need to go to meta/recipes-sato/matchbox-panel-2/files
-> > (check where the layer is located in your filesystem) and do
->
-> Of course it is located at
-> /mnt/b/yoe/master/sources/poky/meta/recipes-sato/m
-> atchbox-panel-2/files/0001-applets-systray-Allow-icons-to-be-smaller.patc=
-h
->
-> :)
->
-> Please check also the other two files for which you get the warnings
+Il 2023-04-27 08:56 Khem Raj ha scritto:
+> On Wed, Apr 26, 2023 at 10:19=E2=80=AFPM Alberto Pianon <alberto@pianon=
+.eu>=20
+> wrote:
+>>=20
+>> Il 2023-04-27 07:14 Alberto Pianon ha scritto:
+>> > Could you please check if this is really the case in your case?
+>> > You'd need to go to meta/recipes-sato/matchbox-panel-2/files
+>> > (check where the layer is located in your filesystem) and do
+>>=20
+>> Of course it is located at
+>> /mnt/b/yoe/master/sources/poky/meta/recipes-sato/m
+>> atchbox-panel-2/files/0001-applets-systray-Allow-icons-to-be-smaller.p=
+atch
+>>=20
+>> :)
+>>=20
+>> Please check also the other two files for which you get the warnings
+>=20
+> My distro uses git submodules at top level and poky is a submodule see
+> https://github.com/yoedistro/yoe-distro
+>=20
+> git rev-parse --is-inside-work-tree
+> true
+>=20
+> % git status
+> HEAD detached at 5a944d32a1
+> nothing to commit, working tree clean
+>=20
+>=20
 
-My distro uses git submodules at top level and poky is a submodule see
-https://github.com/yoedistro/yoe-distro
+so something's wrong... I'll build your distro and try to find the=20
+problem
+thanks
 
-git rev-parse --is-inside-work-tree
-true
-
-% git status
-HEAD detached at 5a944d32a1
-nothing to commit, working tree clean
-
-
->
-> thanks!
->
-> Alberto
+Alberto
 
