@@ -1,409 +1,432 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <frederic.martinsons@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE6CC77B7C
-	for <webhook@archiver.kernel.org>; Sat, 29 Apr 2023 20:22:37 +0000 (UTC)
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
- by mx.groups.io with SMTP id smtpd.web10.55871.1682799747212609177
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EA5C77B60
+	for <webhook@archiver.kernel.org>; Sun, 30 Apr 2023 10:01:11 +0000 (UTC)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+ by mx.groups.io with SMTP id smtpd.web11.65698.1682848862752454761
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 29 Apr 2023 13:22:28 -0700
+ Sun, 30 Apr 2023 03:01:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@axis.com header.s=axis-central1 header.b=TR0nltun;
- spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=pU8dzTvw;
+ spf=pass (domain: gmail.com, ip: 209.85.167.45, mailfrom: frederic.martinsons@gmail.com)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-4ec8149907aso1945278e87.1
+        for <bitbake-devel@lists.openembedded.org>; Sun, 30 Apr 2023 03:01:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1682799747;
-  x=1714335747;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:mime-version;
-  bh=36i3Hj4jEm0IgTli/QPWif84+QEdlv8whXXO7DMBxJk=;
-  b=TR0nltun4LhCn2uxePBG1vhI/X7nuQT2ntwFCOOxnXwVIVvh1yB9ft4c
-   8nx9r9SNvdBof6qtTjy5RJni+eEr21OzsgWCvNgHKzJ4IFTBt4BCjD7a8
-   8lsamPAc1F4k+Gn2y0dX2BD4B2OGvWg2RBfuc/HPWYECa0e4jereRauow
-   qyF2SOX1s2rSPdbCeif2jKjU+m6+8t876xsJBdzGH6RStekcGQJkzsZwO
-   t5tam2Xwrn7DgIlsyFtSIRxGf1kUkX1H9b9pIV1pluK2dCF11XOr9mzFV
-   sCAKWawRFVgBy9+9TG7QzNwuGMuxgipU2Lr2TboQISlyAkzJTEUWETl4x
-   Q==;
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GrwdwM2V0M6IcibkQHEFdg0zVZU9k8SI3wVJY3k1y+uELnk/N8NHMaqPC8A3LBhnjUs7I8dj+7pPUIBmhAplP3prmItYUAZggSFN7SrMN0MbMJFGzI4VbKjX+j8u7xoyDhKrbFYjU2UMUdp9DZ0VwGv9xr9bk1QThShfohs5V2VS/xDE/kZ5Gtm29MgMFxH9O1KP872vX0ALZ2zeZ/vHgeCoK7cJoPNtjsXUcwa9oDbC2NraATBT19+99aN6SAb4lrAmpqiNet1MrRKjG/8xghywLiTEF3I/PPULt3k4lS6xE+FqtTkGqIIXFDLQCcg9p23EGUim/RRn4cyDz/2fag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=36i3Hj4jEm0IgTli/QPWif84+QEdlv8whXXO7DMBxJk=;
- b=Wpoh9fz61vmkq2DRTT9z3wZOHXBEsInQ8t9rJSt5QOMEqIECF3ahlmrTf4hNlZ0y55zF3WCtl8t9A5oVnUdSXZ7LvKyWCWSzrxtfnQQ8CxMTyxd0vjbzCZLbWbIofTqQWnTShObVGHkU3EGdkqZc0Mxk4ItUPvc6nB2Y7zt6cKHroeZ2ZIZJp39Sj0bsdBkooNsnMAllmm6PqAUHHGwrNLH7OLMm5vmfJtXD9e8j3oOLlTINCS7PtTXZG3vU9qHBH0YEALSlHDfwpdflVtuvXdPv9vfwkhw6bHEFku/7YFmwzQdV8iESKdncK5tdi+IC8Hgh1csh7+BykDkTkGbuRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=axis365.onmicrosoft.com; s=selector2-axis365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=36i3Hj4jEm0IgTli/QPWif84+QEdlv8whXXO7DMBxJk=;
- b=p9Mdx8AuPiFhhFJiwN/ETXdTiVo3kMamv714UAnwwH+6toni0fgJYHT4rqsQz8PDzLT+D8aSCl4ejhGBAjl42p47Y3KiV0QxZW3X5PtVR6CdPjQvPSig0BSGSRtysPekms0iyGeERoyE0u3JYajzetoQmMoV/QnMm2SKu9qgY+g=
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: =?utf-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>,
-	"alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [master][mickledore][PATCH 2/2] fetch2/crate:
- Correct unpack for a crate that matches the recipe name
-Thread-Topic: [bitbake-devel] [master][mickledore][PATCH 2/2] fetch2/crate:
- Correct unpack for a crate that matches the recipe name
-Thread-Index: AQHZemaUMmrtrh8T9kGfLaVXF9d9ba9Ct+7A
-Date: Sat, 29 Apr 2023 20:22:21 +0000
-Message-ID: <DB5PR02MB102131AD2DC5782665B7B4DCEEF689@DB5PR02MB10213.eurprd02.prod.outlook.com>
-References: <20230429012329.1799116-1-pkj@axis.com>
- <20230429012329.1799116-2-pkj@axis.com>
- <CA+cAkepCzOPBQ8a_KrJcDyJycBcuX-b=ybSTLuGERWcrQ710Kg@mail.gmail.com>
-In-Reply-To: <CA+cAkepCzOPBQ8a_KrJcDyJycBcuX-b=ybSTLuGERWcrQ710Kg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB5PR02MB10213:EE_|DB9PR02MB9995:EE_
-x-ms-office365-filtering-correlation-id: 3b43e8b2-0e60-4f8a-d2b9-08db48ef700a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VrxWXN+w22gZkK+Y2rYwey/f26Vjly/qOkQrHVLJdFy89Y9/Qk8e6VcONpve4p9jQb0VOzc++0Qd16Pc53r0dAHG/AZ2Fva/Xk8V7BsotmRLufiqger/0NHYBOUe4LcqTwVnzOWrlH1PeP4pBZEO01HszY5uNhRmVIFFvSd9ARhurHqyxiFaE/9YkWABG+tAlpNRBrrE3wpEM82tTwc9CJ5XjM+/oY0ePU5y6lFHBhw2JQZ4QKB2qylAn++b9+DsweBRiARCpbIbFPPf7qEdU47nfyoFdPrvOwX896gJ1snuHuVmE1JETBu4vJtktFTme6thOIYDSZ8BOXhpK9KnPL3nV6NaxLakRy7kLYYCjbHpiOofNXYZXmg2veZxYxTA78cQyJvWFVLRfAtiCBFUbW5b3F5cwFWL536Pna0E0FuWMOVOls9G3CRdnwxxoHcgKORXM0CLsarilCJD8BN8WXz5OAxVHDb5GQqStcJkCM0e5mSjKGVPT7L4HO1eOYICa5lziythO2OfPdkeaagqFKoEjJr3ArPCaj3lrDHtSgCyRQcYAldlHBXpuNCBk0mpFI99wXIHdI1ApLZsKft9Qyr9ZCorHExc8kw6x6smV88=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB5PR02MB10213.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(376002)(396003)(346002)(39850400004)(136003)(451199021)(478600001)(2906002)(66946007)(66446008)(66476007)(66556008)(64756008)(76116006)(66574015)(166002)(110136005)(52536014)(33656002)(83380400001)(38100700002)(8936002)(8676002)(5660300002)(44832011)(38070700005)(41300700001)(122000001)(4326008)(316002)(966005)(71200400001)(66899021)(86362001)(7696005)(55016003)(186003)(53546011)(26005)(6506007)(9686003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TGFLSmlaeG5LdFRyWXJPSVFISU9aV2oyeUxHempDUWczQVpScDRJM2hJV0hY?=
- =?utf-8?B?T1RlM2ZkYVJQZFNteG9EQjYxeXFkS2ExVW9ReTBYSnZHeFg3WkJvYmFvbzJ2?=
- =?utf-8?B?RXdSZEFNblVUdnM5a1VpT3F4bGFoaWdjUVoweDFKeENWd084YUZhSU1wOXMr?=
- =?utf-8?B?RXhIcE1wRk4zc1hRblNxRTNGUFMwbHlCcnlzNDZvQXhhUC94ZUFLQnFia013?=
- =?utf-8?B?N2hsR0pTVXhVek9Xc3l0MitBd09ocksrb1FPcHNYMnBJMGtkS3dPL0lEMjlJ?=
- =?utf-8?B?NHBmeVR5czV3YzM3cmllRTQ2QTZLNWtDSkhQUmdoK3Rxb0w3Ny9NcEx3WHlG?=
- =?utf-8?B?c0RBMnRpdlBFSFFsN0tOR3IybjRqdCs1QVQ0UmFGSmpNcmJrcHNCcVozY3hi?=
- =?utf-8?B?MDVOdWZYNW5QL0VGZm16Vi9QWnYwOUJNRlR4N2N6bTBIM2FxMDB2KzlMM3V1?=
- =?utf-8?B?L20yYmxjUS9HbjBjYUhrV2NrQTZJVm9uYUpDVjVlbysxd2w2YlJ6V2R4T3Zt?=
- =?utf-8?B?L1Y3anBMRjZLYWwrTXRONHJRZ1dQdU03cjBqdSt4M1o0aytQcldqdjlBTkFY?=
- =?utf-8?B?cm5QYURGTENvOS82L1htaFNpaGpxTDIydEhUWjFwM1hQWmN2ZFNib2FJSWJk?=
- =?utf-8?B?NU5FU2toRmhjR2NyZElmUFFYaUd2eXhSaWJEZ21qeXo0eGlzeWNCbGRZbzZs?=
- =?utf-8?B?bjJWdnZhM093UG1nZUFoNVFzWkEwUGwzMnJMSEVqUmZwS2V6MFpLVVEyTWYw?=
- =?utf-8?B?NWttWnR0MERhZVpCOXpicmF0VUMybE10bUR6NytGZUFrSWcySXo0VE9ZOVUr?=
- =?utf-8?B?SC9xaXRZZnoveHZKS1g1dkU2SU5SZ3RYRUl5UVJPZmZuNHkxek1BQWhnMlFy?=
- =?utf-8?B?VUZqM3k5Slc4ckw5OHV2M0FIYlREVGh1SDV1ZWxUMThYODVjd2FuaHJzMS9N?=
- =?utf-8?B?NzZLbWVmNWJuOUVRK3V1ai9WTFBDcU8yK3lwcHExaXljTDRVeGdkNW4ySVBx?=
- =?utf-8?B?cSswY0t6SWh3VVQ5VzJKam56bmdXdG9lTFY2bkZ1M24wV0lJN2RtUVZwMndu?=
- =?utf-8?B?d0lxRlptaE1qeS8rVDdlajJZbCt2THRQbnlQK2loOVJPcWpsZVhtRFdmMldk?=
- =?utf-8?B?YTFuMXkvOW45cEI4ZGlaZmlEOTBVTXpMY0E3UGhVQWh1Z05hdGZQWGVGSjRy?=
- =?utf-8?B?MzRVZnE2bkhtakRxUUJ2eStzY0tCa0NKU0VUUUEvQjArU3FCbTJEaFlaMklK?=
- =?utf-8?B?WDZTNW9sdDliUFY5c25KdkZTdDUyOXQxbDFlUC94U3ZQODZOeVZ5TWgvQnJn?=
- =?utf-8?B?MS9LZVhsMVJSTWZzeFZ2aS91dEJFU0ZQNUtnNUkyTnl4MmhqV2VsR21aOTN1?=
- =?utf-8?B?MEtDU2owd0ZSMkx2MktEYy9MRHVVVGZ4U2V6cFZmZzZUREdPTnY0eTNXY0lH?=
- =?utf-8?B?dGZneFNwb01iSFREeDgwdngrMjhmRzhoTGJ6SkwvZ2dzTEpidkVKaHdLbmtK?=
- =?utf-8?B?ZHFVQkxRN043RU85YVE4YURjbDV2VEtvSFY5cy9sWmJ2b2tUbWMxNFRMV3dV?=
- =?utf-8?B?Q2JXY2hsbzFOQkw4MmN6a2lOWGVraDhlcjFneFA2d2p1T2ZOYXdUblRpOHZi?=
- =?utf-8?B?MHVSODluVkM3bUhwNFdZMzMzRGxsV3krK3NMd2ZlSVVOdEY3NVNZN3JNSWww?=
- =?utf-8?B?WFZEa3AzenlGOG85NThhZjVVYXpFZTVBRmZYQjZqV2Q5Ulo2OGdqNEovdGFB?=
- =?utf-8?B?Ly90Z1dvbmxYVnptREJjeHdMcTFBSlFTVmJ3TjdvMGgxSmUrK3ZPVm9YU3RI?=
- =?utf-8?B?K0RqdnpWZWZLUHRzZ0pkTFF6V0QxbDhUa0o5eTFRSHNCaWlPRUN5dkJtbmd1?=
- =?utf-8?B?ZkQxWlkyOG80VFNmRkJXMmxUSmd6Z3VWWllhaHk3b3dDYmJDanM4OEZSdDdM?=
- =?utf-8?B?U243N2dnTmlWcUJCdzZKcENnU0tPN0ZJVVE1V3FMSHc3ZmZGb2doV1o0MjRq?=
- =?utf-8?B?bHZXMy8rZ25LOEF2b0QvZXRRODJLM2NLTk91eVZ4WVVyQkxuRUREc0RWK3Fh?=
- =?utf-8?B?R3JIZGE3aXd6REZFbDQ5cklFSW5LTHp0dGpGTmxQaTNqRzk2eURST05VQzI3?=
- =?utf-8?Q?vwI8=3D?=
-Content-Type: multipart/alternative;
-	boundary="_000_DB5PR02MB102131AD2DC5782665B7B4DCEEF689DB5PR02MB10213eu_"
+        d=gmail.com; s=20221208; t=1682848861; x=1685440861;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BW82cv+vFgNwUXbMuDfl9G+i/pjK4Nxg8Q8aqeC2mZE=;
+        b=pU8dzTvwZJL3H5yWb76L5EigGyfqmiI0V9pVk/U4k4Asn4zR9VICDZDtlZCjOfi20U
+         6520yECfSat1dzmdBa1ArF+JgRB9i6w/gzhrs6M/xQ1dgwI2N5twkyYf7dUbRzl+g4vH
+         qamrKeVCzQZB8Y0eoPHHCXCcQ2cNK0glC00b7qlj3u1ZRGFmU9IGBAcK7ejm68iPMBa+
+         eM/Fv727k9K59MXacorSeq67jYQgLyo19Px9FOOm7m1O4Q0zILEbbFqQJOWEudRSvjpW
+         6bBZJQZtr2Qk4nJ4w+N1ht1vk+BFFClNq4PuFPsImL3VVRrr9R4BWD5SXwJeaHkQPC91
+         cgHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682848861; x=1685440861;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BW82cv+vFgNwUXbMuDfl9G+i/pjK4Nxg8Q8aqeC2mZE=;
+        b=h+/m/Pc8VX6+Il7EaUCVKQHYTkyQFN9UHIKbLOke2RNRHv8vNz66aogxZeAy082jEX
+         ZhPj3zVW6zmEen9z/7ASJy10P28+6E0gZSFH1C9oBRqugm4WKXJObJ3KhWqwqHwbEa9y
+         4P7jYNwNAsGSPNPJOQas6LSa5E27l9+0p+awui5AOnCoQ5GE1xMilpvZF+d4HZZXPuig
+         hGvFvgG7JcRm8HI786RhEy/Jwq694hgkh6SHK28DuhkngvGApQt2AqZJGrzamRM9uAbs
+         816STDHJz+hp4fPK4CvwPwi8DkTRbPJuXfJnCuLgCPik5FQTEk3/wVzCAcdlg/fHrK/q
+         tklQ==
+X-Gm-Message-State: AC+VfDzfvYKoe8v4P9XyoM9XV7qpBKCYgSZ5S1L/9yCqUYGPgEP/brCp
+	0U+TSRaitBUtIaSw4ey8dYpwXsdjh8pT4qzOj78=
+X-Google-Smtp-Source: ACHHUZ7Zx4MWIkP8IcQTGjlT2f6q21QD5KSMUjN0ib1TXAw2t3qeuEHfiJroZzVJVSGFc6R41Umf29wzm0pEAOaEGl8=
+X-Received: by 2002:ac2:5edd:0:b0:4eb:336c:f10 with SMTP id
+ d29-20020ac25edd000000b004eb336c0f10mr3176424lfq.57.1682848860500; Sun, 30
+ Apr 2023 03:01:00 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB5PR02MB10213.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b43e8b2-0e60-4f8a-d2b9-08db48ef700a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2023 20:22:21.6859
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pu2QfRIJstdygw7avTne/N43FoXS/nZeowJYIwULFW5+O9bq43dUfr/XWzAMsTCC
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB9995
+References: <20230429012329.1799116-1-pkj@axis.com> <20230429012329.1799116-2-pkj@axis.com>
+ <CA+cAkepCzOPBQ8a_KrJcDyJycBcuX-b=ybSTLuGERWcrQ710Kg@mail.gmail.com> <DB5PR02MB102131AD2DC5782665B7B4DCEEF689@DB5PR02MB10213.eurprd02.prod.outlook.com>
+In-Reply-To: <DB5PR02MB102131AD2DC5782665B7B4DCEEF689@DB5PR02MB10213.eurprd02.prod.outlook.com>
+From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
+Date: Sun, 30 Apr 2023 12:00:48 +0200
+Message-ID: <CA+cAkeo=yT-P0Q4z5Tya7nrszu0a3Zs-KSZpmjtWO0qH044h_A@mail.gmail.com>
+Subject: Re: [bitbake-devel] [master][mickledore][PATCH 2/2] fetch2/crate:
+ Correct unpack for a crate that matches the recipe name
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="0000000000008a782e05fa8ac88e"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 29 Apr 2023 20:22:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14761
+ <bitbake-devel@lists.openembedded.org>; Sun, 30 Apr 2023 10:01:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14762
 
---_000_DB5PR02MB102131AD2DC5782665B7B4DCEEF689DB5PR02MB10213eu_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+--0000000000008a782e05fa8ac88e
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-WWVzLiBXaGlsZSB0aGUgb3JpZ2luYWwgaXNzdWUgd2FzIHdyaXR0ZW4gYWJvdXQgbWlzc2luZyBj
-aGVja3N1bWluZywgd2hpY2ggd2FzIGZpeGVkIGJ5IHJlcXVpcmluZyBjaGVja3N1bXMgZm9yIHRo
-ZSBjcmF0ZSBVUklzIGluIHRoZSBTUkNfVVJJLCB0aGUgYWRkaXRpb25hbCBjb25jZXJuIHlvdSBy
-YWlzZWQgaXMgZml4ZWQgYnkgbXkgcGF0Y2guIEl0IHJlc3RvcmVzIHRoZSBzdXBwb3J0IGZvciB1
-c2luZyBhIGNyYXRlIGFzIHRoZSBtYWluIGNvbXBvbmVudCBmb3IgdGhlIHJlY2lwZS4gVGhpcyB3
-YXMgaW4gdGhlIGJiY2xhc3MgYWxsIGFsb25nLCBpdCBqdXN0IGJyb2tlIHdoZW4gdGhlIG5hbWVz
-IHdlcmUgY2hhbmdlZCB0byBpbmNsdWRlIHRoZSBjcmF0ZSB2ZXJzaW9ucy4NCg0KWW91IGNhbiBh
-Y3R1YWxseSB3b3JrYXJvdW5kIHRoZSBwcm9ibGVtIGJ5IHNldHRpbmcgUyA9ICIke0NBUkdPX1ZF
-TkRPUklOR19ESVJFQ1RPUll9LyR7QlB9IiwgYnV0IEkgYmVsaWV2ZSBpdCBpcyBiZXR0ZXIgdG8g
-cmVzdG9yZSB0aGUgaW50ZW5kZWQgZnVuY3Rpb25hbGl0eSBvZiB0aGUgYmJjbGFzcy4gSXQgYWxz
-byBtYWtlcyB0aGluZ3MgbXVjaCBtb3JlIGludHVpdGl2ZSB3aGVuIHVzaW5nIGRldnRvb2wgbW9k
-aWZ5IGZvciBzdWNoIGEgcmVjaXBlIHNpbmNlIHRoZSBzb3VyY2UgaXMgd2hlcmUgeW91IGV4cGVj
-dCBpdCB0byBiZS4NCg0KQEFsZXhhbmRyZSBCZWxsb25pOiBTaW5jZSBJIGFzc3VtZSBpdCB3aWxs
-IGJlIHlvdSB0aGF0IHB1bGxzIHRoaXMgaW50byB0ZXN0aW5nLCBmZWVsIGZyZWUgdG8gYWRkIHRo
-ZSBmb2xsb3dpbmcgdG8gdGhlIGNvbW1pdCBtZXNzYWdlOg0KDQpbWW9jdG8gIzE1MDEyXQ0KDQov
-L1BldGVyDQoNCkZyb206IEZyw6lkw6lyaWMgTWFydGluc29ucyA8ZnJlZGVyaWMubWFydGluc29u
-c0BnbWFpbC5jb20+DQpTZW50OiBkZW4gMjkgYXByaWwgMjAyMyAwODo0OA0KVG86IFBldGVyIEtq
-ZWxsZXJzdGVkdCA8cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPg0KQ2M6IGJpdGJha2UtZGV2
-ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KU3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBb
-bWFzdGVyXVttaWNrbGVkb3JlXVtQQVRDSCAyLzJdIGZldGNoMi9jcmF0ZTogQ29ycmVjdCB1bnBh
-Y2sgZm9yIGEgY3JhdGUgdGhhdCBtYXRjaGVzIHRoZSByZWNpcGUgbmFtZQ0KDQpIZWxsbyBQZXRl
-ciwNCg0KRG8geW91IHRoaW5rIGl0IHdpbGwgc29sdmUgdGhlIGlzc3VlIEkgbWVudGlvbmVkIHRo
-ZXJlPGh0dHBzOi8vYnVnemlsbGEueW9jdG9wcm9qZWN0Lm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTUw
-MTIjYzQ+ID8NCg0KT24gU2F0LCAyOSBBcHIgMjAyMyBhdCAwMzoyMywgUGV0ZXIgS2plbGxlcnN0
-ZWR0IDxwZXRlci5ramVsbGVyc3RlZHRAYXhpcy5jb208bWFpbHRvOnBldGVyLmtqZWxsZXJzdGVk
-dEBheGlzLmNvbT4+IHdyb3RlOg0KVGhlIGNyYXRlIGZldGNoZXIgaGFuZGxlcyBhIGNyYXRlIHdp
-dGggYSBuYW1lIHRoYXQgbWF0Y2hlcyB0aGUgcmVjaXBlJ3MNCm5hbWUgc3BlY2lhbGx5IGJ5IHBs
-YWNpbmcgdGhlIHVucGFja2VkIGNvZGUgaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5DQood2hpY2gg
-dHlwaWNhbGx5IGlzICR7U30pIHJhdGhlciB0aGFuIHRvZ2V0aGVyIHdpdGggdGhlIHNvdXJjZXMg
-Zm9yIHRoZQ0Kb3RoZXIgY3JhdGVzLiBUaGlzIGJyb2tlIHdoZW4gdGhlIFVSSSBuYW1lcyBmb3Ig
-YWxsIGNyYXRlcyB3ZXJlIGNoYW5nZWQNCnJlY2VudGx5IHRvIGluY2x1ZGUgdGhlIHZlcnNpb24g
-aW4gdGhlIG5hbWUuDQoNCkNvcnJlY3QgdGhlIGNyYXRlIGZldGNoZXIgdG8gdGVzdCBhZ2FpbnN0
-ICR7QlB9IGluc3RlYWQgb2YgJHtCUE59Lg0KQWxzbyBhZGQgYSB0ZXN0IGNhc2UgdG8gdGhlIHNl
-bGZ0ZXN0cyB0byBhdm9pZCB0aGlzIGJyZWFraW5nIGFnYWluLg0KDQpTaWduZWQtb2ZmLWJ5OiBQ
-ZXRlciBLamVsbGVyc3RlZHQgPHBldGVyLmtqZWxsZXJzdGVkdEBheGlzLmNvbTxtYWlsdG86cGV0
-ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPj4NCi0tLQ0KIGJpdGJha2UvbGliL2JiL2ZldGNoMi9j
-cmF0ZS5weSB8ICA0ICsrLS0NCiBiaXRiYWtlL2xpYi9iYi90ZXN0cy9mZXRjaC5weSAgfCAyNSAr
-KysrKysrKysrKysrKysrKysrKysrKysrDQogMiBmaWxlcyBjaGFuZ2VkLCAyNyBpbnNlcnRpb25z
-KCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYml0YmFrZS9saWIvYmIvZmV0Y2gy
-L2NyYXRlLnB5IGIvYml0YmFrZS9saWIvYmIvZmV0Y2gyL2NyYXRlLnB5DQppbmRleCAyYjhiNmJj
-N2ExLi4zMzEwZWQwMDUwIDEwMDY0NA0KLS0tIGEvYml0YmFrZS9saWIvYmIvZmV0Y2gyL2NyYXRl
-LnB5DQorKysgYi9iaXRiYWtlL2xpYi9iYi9mZXRjaDIvY3JhdGUucHkNCkBAIC05OCw4ICs5OCw4
-IEBAIGNsYXNzIENyYXRlKFdnZXQpOg0KICAgICAgICAgc2F2ZV9jd2QgPSBvcy5nZXRjd2QoKQ0K
-ICAgICAgICAgb3MuY2hkaXIocm9vdGRpcikNCg0KLSAgICAgICAgcG4gPSBkLmdldFZhcignQlBO
-JykNCi0gICAgICAgIGlmIHBuID09IHVkLnBhcm0uZ2V0KCduYW1lJyk6DQorICAgICAgICBicCA9
-IGQuZ2V0VmFyKCdCUCcpDQorICAgICAgICBpZiBicCA9PSB1ZC5wYXJtLmdldCgnbmFtZScpOg0K
-ICAgICAgICAgICAgIGNtZCA9ICJ0YXIgLXh6IC0tbm8tc2FtZS1vd25lciAtZiAlcyIgJSB0aGVm
-aWxlDQogICAgICAgICBlbHNlOg0KICAgICAgICAgICAgIGNhcmdvX2JpdGJha2UgPSBzZWxmLl9j
-YXJnb19iaXRiYWtlX3BhdGgocm9vdGRpcikNCmRpZmYgLS1naXQgYS9iaXRiYWtlL2xpYi9iYi90
-ZXN0cy9mZXRjaC5weSBiL2JpdGJha2UvbGliL2JiL3Rlc3RzL2ZldGNoLnB5DQppbmRleCA2ZWYw
-ODM2ZjJiLi4yM2JmYTc4OGRiIDEwMDY0NA0KLS0tIGEvYml0YmFrZS9saWIvYmIvdGVzdHMvZmV0
-Y2gucHkNCisrKyBiL2JpdGJha2UvbGliL2JiL3Rlc3RzL2ZldGNoLnB5DQpAQCAtMjM5MSw2ICsy
-MzkxLDMxIEBAIGNsYXNzIENyYXRlVGVzdChGZXRjaGVyVGVzdCk6DQogICAgICAgICBzZWxmLmFz
-c2VydFRydWUob3MucGF0aC5leGlzdHMoc2VsZi50ZW1wZGlyICsgIi9jYXJnb19ob21lL2JpdGJh
-a2UvZ2xvYi0wLjIuMTEvLmNhcmdvLWNoZWNrc3VtLmpzb24iKSkNCiAgICAgICAgIHNlbGYuYXNz
-ZXJ0VHJ1ZShvcy5wYXRoLmV4aXN0cyhzZWxmLnRlbXBkaXIgKyAiL2NhcmdvX2hvbWUvYml0YmFr
-ZS9nbG9iLTAuMi4xMS9zcmMvbGliLnJzPGh0dHA6Ly9saWIucnM+IikpDQoNCisgICAgQHNraXBJ
-Zk5vTmV0d29yaygpDQorICAgIGRlZiB0ZXN0X2NyYXRlX3VybF9tYXRjaGluZ19yZWNpcGUoc2Vs
-Zik6DQorDQorICAgICAgICBzZWxmLmQuc2V0VmFyKCdCUCcsICdnbG9iLTAuMi4xMScpDQorDQor
-ICAgICAgICB1cmkgPSAiY3JhdGU6Ly9jcmF0ZXMuaW8vZ2xvYi8wLjIuMTE8aHR0cDovL2NyYXRl
-cy5pby9nbG9iLzAuMi4xMT4iDQorICAgICAgICBzZWxmLmQuc2V0VmFyKCdTUkNfVVJJJywgdXJp
-KQ0KKw0KKyAgICAgICAgdXJpcyA9IHNlbGYuZC5nZXRWYXIoJ1NSQ19VUkknKS5zcGxpdCgpDQor
-ICAgICAgICBkID0gc2VsZi5kDQorDQorICAgICAgICBmZXRjaGVyID0gYmIuZmV0Y2gyLkZldGNo
-KHVyaXMsIHNlbGYuZCkNCisgICAgICAgIHVkID0gZmV0Y2hlci51ZFtmZXRjaGVyLnVybHNbMF1d
-DQorDQorICAgICAgICBzZWxmLmFzc2VydEluKCJuYW1lIiwgdWQucGFybSkNCisgICAgICAgIHNl
-bGYuYXNzZXJ0RXF1YWwodWQucGFybVsibmFtZSJdLCAiZ2xvYi0wLjIuMTEiKQ0KKyAgICAgICAg
-c2VsZi5hc3NlcnRJbigiZG93bmxvYWRmaWxlbmFtZSIsIHVkLnBhcm0pDQorICAgICAgICBzZWxm
-LmFzc2VydEVxdWFsKHVkLnBhcm1bImRvd25sb2FkZmlsZW5hbWUiXSwgImdsb2ItMC4yLjExLmNy
-YXRlIikNCisNCisgICAgICAgIGZldGNoZXIuZG93bmxvYWQoKQ0KKyAgICAgICAgZmV0Y2hlci51
-bnBhY2soc2VsZi50ZW1wZGlyKQ0KKyAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChzb3J0ZWQob3Mu
-bGlzdGRpcihzZWxmLnRlbXBkaXIpKSwgWydkb3dubG9hZCcsICdnbG9iLTAuMi4xMScsICd1bnBh
-Y2tlZCddKQ0KKyAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChzb3J0ZWQob3MubGlzdGRpcihzZWxm
-LnRlbXBkaXIgKyAiL2Rvd25sb2FkIikpLCBbJ2dsb2ItMC4yLjExLmNyYXRlJywgJ2dsb2ItMC4y
-LjExLmNyYXRlLmRvbmUnXSkNCisgICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZShvcy5wYXRoLmV4aXN0
-cyhzZWxmLnRlbXBkaXIgKyAiL2dsb2ItMC4yLjExL3NyYy9saWIucnM8aHR0cDovL2xpYi5ycz4i
-KSkNCisNCiAgICAgQHNraXBJZk5vTmV0d29yaygpDQogICAgIGRlZiB0ZXN0X2NyYXRlX3VybF9w
-YXJhbXMoc2VsZik6DQoNCg0KLT0tPS09LT0tPS09LT0tPS09LT0tPS0NCkxpbmtzOiBZb3UgcmVj
-ZWl2ZSBhbGwgbWVzc2FnZXMgc2VudCB0byB0aGlzIGdyb3VwLg0KVmlldy9SZXBseSBPbmxpbmUg
-KCMxNDc1OCk6IGh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2ZWwv
-bWVzc2FnZS8xNDc1OA0KTXV0ZSBUaGlzIFRvcGljOiBodHRwczovL2xpc3RzLm9wZW5lbWJlZGRl
-ZC5vcmcvbXQvOTg1NzEyNTcvNjIxMzM4OA0KR3JvdXAgT3duZXI6IGJpdGJha2UtZGV2ZWwrb3du
-ZXJAbGlzdHMub3BlbmVtYmVkZGVkLm9yZzxtYWlsdG86Yml0YmFrZS1kZXZlbCUyQm93bmVyQGxp
-c3RzLm9wZW5lbWJlZGRlZC5vcmc+DQpVbnN1YnNjcmliZTogaHR0cHM6Ly9saXN0cy5vcGVuZW1i
-ZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC91bnN1YiBbZnJlZGVyaWMubWFydGluc29uc0BnbWFp
-bC5jb208bWFpbHRvOmZyZWRlcmljLm1hcnRpbnNvbnNAZ21haWwuY29tPl0NCi09LT0tPS09LT0t
-PS09LT0tPS09LT0tDQo=
+Great, thanks Peter for the confirmation!
 
---_000_DB5PR02MB102131AD2DC5782665B7B4DCEEF689DB5PR02MB10213eu_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+Le sam. 29 avr. 2023, 22:22, Peter Kjellerstedt <peter.kjellerstedt@axis.co=
+m>
+a =C3=A9crit :
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpDb25zb2xhczsNCglwYW5vc2UtMToyIDEx
-IDYgOSAyIDIgNCAzIDIgNDt9DQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLw0KcC5Nc29Ob3JtYWws
-IGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbA0KCXttYXJnaW46MGNtOw0KCWZvbnQtc2l6ZTox
-MS4wcHQ7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQ0KYTpsaW5rLCBzcGFu
-Lk1zb0h5cGVybGluaw0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6Ymx1ZTsNCgl0
-ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30NCnNwYW4uRW1haWxTdHlsZTE4DQoJe21zby1zdHls
-ZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlm
-Ow0KCWNvbG9yOiM5NDM2MzQ7DQoJZm9udC13ZWlnaHQ6bm9ybWFsOw0KCWZvbnQtc3R5bGU6bm9y
-bWFsO30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5Ow0KCWZv
-bnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOw0KCW1zby1mYXJlYXN0LWxhbmd1YWdlOkVO
-LVVTO30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXplOjYxMi4wcHQgNzkyLjBwdDsNCgltYXJn
-aW46NzAuODVwdCA3MC44NXB0IDcwLjg1cHQgNzAuODVwdDt9DQpkaXYuV29yZFNlY3Rpb24xDQoJ
-e3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+
-DQo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPg0KPC94bWw+
-PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWxheW91dCB2OmV4
-dD0iZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4NCjwvbzpzaGFwZWxh
-eW91dD48L3htbD48IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5IGxhbmc9IlNWIiBsaW5rPSJi
-bHVlIiB2bGluaz0icHVycGxlIiBzdHlsZT0id29yZC13cmFwOmJyZWFrLXdvcmQiPg0KPGRpdiBj
-bGFzcz0iV29yZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVO
-LVVTIiBzdHlsZT0iY29sb3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+WWVz
-LiBXaGlsZSB0aGUgb3JpZ2luYWwgaXNzdWUgd2FzIHdyaXR0ZW4gYWJvdXQgbWlzc2luZyBjaGVj
-a3N1bWluZywgd2hpY2ggd2FzIGZpeGVkIGJ5IHJlcXVpcmluZyBjaGVja3N1bXMgZm9yIHRoZSBj
-cmF0ZSBVUklzIGluIHRoZSBTUkNfVVJJLCB0aGUgYWRkaXRpb25hbCBjb25jZXJuIHlvdQ0KIHJh
-aXNlZCBpcyBmaXhlZCBieSBteSBwYXRjaC4gSXQgcmVzdG9yZXMgdGhlIHN1cHBvcnQgZm9yIHVz
-aW5nIGEgY3JhdGUgYXMgdGhlIG1haW4gY29tcG9uZW50IGZvciB0aGUgcmVjaXBlLiBUaGlzIHdh
-cyBpbiB0aGUgYmJjbGFzcyBhbGwgYWxvbmcsIGl0IGp1c3QgYnJva2Ugd2hlbiB0aGUgbmFtZXMg
-d2VyZSBjaGFuZ2VkIHRvIGluY2x1ZGUgdGhlIGNyYXRlIHZlcnNpb25zLjxvOnA+PC9vOnA+PC9z
-cGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0i
-Y29sb3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8L286
-cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0
-eWxlPSJjb2xvcjojOTQzNjM0O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5Zb3UgY2FuIGFj
-dHVhbGx5IHdvcmthcm91bmQgdGhlIHByb2JsZW0gYnkgc2V0dGluZw0KPC9zcGFuPjxzcGFuIGxh
-bmc9IkVOLVVTIiBzdHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXM7Y29sb3I6Izk0MzYzNDttc28t
-ZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+UyA9ICZxdW90OyR7Q0FSR09fVkVORE9SSU5HX0RJUkVD
-VE9SWX0vJHtCUH0mcXVvdDs8L3NwYW4+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjoj
-OTQzNjM0O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj4sIGJ1dCBJIGJlbGlldmUgaXQgaXMg
-YmV0dGVyIHRvIHJlc3RvcmUgdGhlIGludGVuZGVkDQogZnVuY3Rpb25hbGl0eSBvZiB0aGUgYmJj
-bGFzcy4gSXQgYWxzbyBtYWtlcyB0aGluZ3MgbXVjaCBtb3JlIGludHVpdGl2ZSB3aGVuIHVzaW5n
-DQo8L3NwYW4+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LWZhbWlseTpDb25zb2xhcztj
-b2xvcjojOTQzNjM0O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5kZXZ0b29sIG1vZGlmeTwv
-c3Bhbj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5NDM2MzQ7bXNvLWZhcmVhc3Qt
-bGFuZ3VhZ2U6RU4tVVMiPiBmb3Igc3VjaCBhIHJlY2lwZSBzaW5jZSB0aGUgc291cmNlIGlzIHdo
-ZXJlIHlvdSBleHBlY3QgaXQgdG8gYmUuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojOTQzNjM0O21zby1m
-YXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5NDM2MzQ7
-bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPkBBbGV4YW5kcmUgQmVsbG9uaTogU2luY2UgSSBh
-c3N1bWUgaXQgd2lsbCBiZSB5b3UgdGhhdCBwdWxscyB0aGlzIGludG8gdGVzdGluZywgZmVlbCBm
-cmVlIHRvIGFkZCB0aGUgZm9sbG93aW5nIHRvIHRoZSBjb21taXQgbWVzc2FnZTo8bzpwPjwvbzpw
-Pjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5
-bGU9ImNvbG9yOiM5NDM2MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPjxvOnA+Jm5ic3A7
-PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVT
-IiBzdHlsZT0iY29sb3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+W1lvY3Rv
-ICMxNTAxMl08bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiM5NDM2MzQ7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6
-RU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iY29sb3I6Izk0MzYzNDttc28tZmFyZWFzdC1sYW5n
-dWFnZTpFTi1VUyI+Ly9QZXRlcjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iY29sb3I6Izk0MzYzNDttc28tZmFyZWFz
-dC1sYW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPGRpdiBzdHls
-ZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLWxlZnQ6c29saWQgYmx1ZSAxLjVwdDtwYWRkaW5nOjBjbSAw
-Y20gMGNtIDQuMHB0Ij4NCjxkaXY+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItdG9w
-OnNvbGlkICNFMUUxRTEgMS4wcHQ7cGFkZGluZzozLjBwdCAwY20gMGNtIDBjbSI+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48Yj48c3BhbiBsYW5nPSJFTi1VUyI+RnJvbTo8L3NwYW4+PC9iPjxzcGFu
-IGxhbmc9IkVOLVVTIj4gRnLDqWTDqXJpYyBNYXJ0aW5zb25zICZsdDtmcmVkZXJpYy5tYXJ0aW5z
-b25zQGdtYWlsLmNvbSZndDsNCjxicj4NCjxiPlNlbnQ6PC9iPiBkZW4gMjkgYXByaWwgMjAyMyAw
-ODo0ODxicj4NCjxiPlRvOjwvYj4gUGV0ZXIgS2plbGxlcnN0ZWR0ICZsdDtwZXRlci5ramVsbGVy
-c3RlZHRAYXhpcy5jb20mZ3Q7PGJyPg0KPGI+Q2M6PC9iPiBiaXRiYWtlLWRldmVsQGxpc3RzLm9w
-ZW5lbWJlZGRlZC5vcmc8YnI+DQo8Yj5TdWJqZWN0OjwvYj4gUmU6IFtiaXRiYWtlLWRldmVsXSBb
-bWFzdGVyXVttaWNrbGVkb3JlXVtQQVRDSCAyLzJdIGZldGNoMi9jcmF0ZTogQ29ycmVjdCB1bnBh
-Y2sgZm9yIGEgY3JhdGUgdGhhdCBtYXRjaGVzIHRoZSByZWNpcGUgbmFtZTxvOnA+PC9vOnA+PC9z
-cGFuPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
-OzwvbzpwPjwvcD4NCjxkaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGVsbG8gUGV0
-ZXIsPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PkRvIHlvdSB0aGluayBpdCB3aWxsIHNvbHZlIHRoZSBpc3N1ZSBJIG1lbnRpb25lZCZuYnNwOzxh
-IGhyZWY9Imh0dHBzOi8vYnVnemlsbGEueW9jdG9wcm9qZWN0Lm9yZy9zaG93X2J1Zy5jZ2k/aWQ9
-MTUwMTIjYzQiPnRoZXJlPC9hPiZuYnNwOz88bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2
-Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPk9uIFNhdCwgMjkgQXByIDIwMjMgYXQgMDM6
-MjMsIFBldGVyIEtqZWxsZXJzdGVkdCAmbHQ7PGEgaHJlZj0ibWFpbHRvOnBldGVyLmtqZWxsZXJz
-dGVkdEBheGlzLmNvbSI+cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPC9hPiZndDsgd3JvdGU6
-PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxibG9ja3F1b3RlIHN0eWxlPSJib3JkZXI6bm9uZTti
-b3JkZXItbGVmdDpzb2xpZCAjQ0NDQ0NDIDEuMHB0O3BhZGRpbmc6MGNtIDBjbSAwY20gNi4wcHQ7
-bWFyZ2luLWxlZnQ6NC44cHQ7bWFyZ2luLXJpZ2h0OjBjbSI+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-IiBzdHlsZT0ibWFyZ2luLWJvdHRvbToxMi4wcHQiPlRoZSBjcmF0ZSBmZXRjaGVyIGhhbmRsZXMg
-YSBjcmF0ZSB3aXRoIGEgbmFtZSB0aGF0IG1hdGNoZXMgdGhlIHJlY2lwZSdzPGJyPg0KbmFtZSBz
-cGVjaWFsbHkgYnkgcGxhY2luZyB0aGUgdW5wYWNrZWQgY29kZSBpbiB0aGUgY3VycmVudCBkaXJl
-Y3Rvcnk8YnI+DQood2hpY2ggdHlwaWNhbGx5IGlzICR7U30pIHJhdGhlciB0aGFuIHRvZ2V0aGVy
-IHdpdGggdGhlIHNvdXJjZXMgZm9yIHRoZTxicj4NCm90aGVyIGNyYXRlcy4gVGhpcyBicm9rZSB3
-aGVuIHRoZSBVUkkgbmFtZXMgZm9yIGFsbCBjcmF0ZXMgd2VyZSBjaGFuZ2VkPGJyPg0KcmVjZW50
-bHkgdG8gaW5jbHVkZSB0aGUgdmVyc2lvbiBpbiB0aGUgbmFtZS48YnI+DQo8YnI+DQpDb3JyZWN0
-IHRoZSBjcmF0ZSBmZXRjaGVyIHRvIHRlc3QgYWdhaW5zdCAke0JQfSBpbnN0ZWFkIG9mICR7QlBO
-fS48YnI+DQpBbHNvIGFkZCBhIHRlc3QgY2FzZSB0byB0aGUgc2VsZnRlc3RzIHRvIGF2b2lkIHRo
-aXMgYnJlYWtpbmcgYWdhaW4uPGJyPg0KPGJyPg0KU2lnbmVkLW9mZi1ieTogUGV0ZXIgS2plbGxl
-cnN0ZWR0ICZsdDs8YSBocmVmPSJtYWlsdG86cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tIiB0
-YXJnZXQ9Il9ibGFuayI+cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPC9hPiZndDs8YnI+DQot
-LS08YnI+DQombmJzcDtiaXRiYWtlL2xpYi9iYi9mZXRjaDIvY3JhdGUucHkgfCZuYnNwOyA0ICsr
-LS08YnI+DQombmJzcDtiaXRiYWtlL2xpYi9iYi90ZXN0cy9mZXRjaC5weSZuYnNwOyB8IDI1ICsr
-KysrKysrKysrKysrKysrKysrKysrKys8YnI+DQombmJzcDsyIGZpbGVzIGNoYW5nZWQsIDI3IGlu
-c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pPGJyPg0KPGJyPg0KZGlmZiAtLWdpdCBhL2JpdGJh
-a2UvbGliL2JiL2ZldGNoMi9jcmF0ZS5weSBiL2JpdGJha2UvbGliL2JiL2ZldGNoMi9jcmF0ZS5w
-eTxicj4NCmluZGV4IDJiOGI2YmM3YTEuLjMzMTBlZDAwNTAgMTAwNjQ0PGJyPg0KLS0tIGEvYml0
-YmFrZS9saWIvYmIvZmV0Y2gyL2NyYXRlLnB5PGJyPg0KKysrIGIvYml0YmFrZS9saWIvYmIvZmV0
-Y2gyL2NyYXRlLnB5PGJyPg0KQEAgLTk4LDggKzk4LDggQEAgY2xhc3MgQ3JhdGUoV2dldCk6PGJy
-Pg0KJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwO3NhdmVfY3dkID0gb3MuZ2V0Y3dk
-KCk8YnI+DQombmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7b3MuY2hkaXIocm9vdGRp
-cik8YnI+DQo8YnI+DQotJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IHBuID0gZC5nZXRWYXIo
-J0JQTicpPGJyPg0KLSZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyBpZiBwbiA9PSB1ZC5wYXJt
-LmdldCgnbmFtZScpOjxicj4NCismbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgYnAgPSBkLmdl
-dFZhcignQlAnKTxicj4NCismbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgaWYgYnAgPT0gdWQu
-cGFybS5nZXQoJ25hbWUnKTo8YnI+DQombmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-ICZuYnNwOyAmbmJzcDtjbWQgPSAmcXVvdDt0YXIgLXh6IC0tbm8tc2FtZS1vd25lciAtZiAlcyZx
-dW90OyAlIHRoZWZpbGU8YnI+DQombmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ZWxz
-ZTo8YnI+DQombmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDtj
-YXJnb19iaXRiYWtlID0gc2VsZi5fY2FyZ29fYml0YmFrZV9wYXRoKHJvb3RkaXIpPGJyPg0KZGlm
-ZiAtLWdpdCBhL2JpdGJha2UvbGliL2JiL3Rlc3RzL2ZldGNoLnB5IGIvYml0YmFrZS9saWIvYmIv
-dGVzdHMvZmV0Y2gucHk8YnI+DQppbmRleCA2ZWYwODM2ZjJiLi4yM2JmYTc4OGRiIDEwMDY0NDxi
-cj4NCi0tLSBhL2JpdGJha2UvbGliL2JiL3Rlc3RzL2ZldGNoLnB5PGJyPg0KKysrIGIvYml0YmFr
-ZS9saWIvYmIvdGVzdHMvZmV0Y2gucHk8YnI+DQpAQCAtMjM5MSw2ICsyMzkxLDMxIEBAIGNsYXNz
-IENyYXRlVGVzdChGZXRjaGVyVGVzdCk6PGJyPg0KJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-ICZuYnNwO3NlbGYuYXNzZXJ0VHJ1ZShvcy5wYXRoLmV4aXN0cyhzZWxmLnRlbXBkaXIgKyAmcXVv
-dDsvY2FyZ29faG9tZS9iaXRiYWtlL2dsb2ItMC4yLjExLy5jYXJnby1jaGVja3N1bS5qc29uJnF1
-b3Q7KSk8YnI+DQombmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7c2VsZi5hc3NlcnRU
-cnVlKG9zLnBhdGguZXhpc3RzKHNlbGYudGVtcGRpciArICZxdW90Oy9jYXJnb19ob21lL2JpdGJh
-a2UvZ2xvYi0wLjIuMTEvc3JjLzxhIGhyZWY9Imh0dHA6Ly9saWIucnMiIHRhcmdldD0iX2JsYW5r
-Ij5saWIucnM8L2E+JnF1b3Q7KSk8YnI+DQo8YnI+DQorJm5ic3A7ICZuYnNwOyBAc2tpcElmTm9O
-ZXR3b3JrKCk8YnI+DQorJm5ic3A7ICZuYnNwOyBkZWYgdGVzdF9jcmF0ZV91cmxfbWF0Y2hpbmdf
-cmVjaXBlKHNlbGYpOjxicj4NCis8YnI+DQorJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IHNl
-bGYuZC5zZXRWYXIoJ0JQJywgJ2dsb2ItMC4yLjExJyk8YnI+DQorPGJyPg0KKyZuYnNwOyAmbmJz
-cDsgJm5ic3A7ICZuYnNwOyB1cmkgPSAmcXVvdDtjcmF0ZTovLzxhIGhyZWY9Imh0dHA6Ly9jcmF0
-ZXMuaW8vZ2xvYi8wLjIuMTEiIHRhcmdldD0iX2JsYW5rIj5jcmF0ZXMuaW8vZ2xvYi8wLjIuMTE8
-L2E+JnF1b3Q7PGJyPg0KKyZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyBzZWxmLmQuc2V0VmFy
-KCdTUkNfVVJJJywgdXJpKTxicj4NCis8YnI+DQorJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-IHVyaXMgPSBzZWxmLmQuZ2V0VmFyKCdTUkNfVVJJJykuc3BsaXQoKTxicj4NCismbmJzcDsgJm5i
-c3A7ICZuYnNwOyAmbmJzcDsgZCA9IHNlbGYuZDxicj4NCis8YnI+DQorJm5ic3A7ICZuYnNwOyAm
-bmJzcDsgJm5ic3A7IGZldGNoZXIgPSBiYi5mZXRjaDIuRmV0Y2godXJpcywgc2VsZi5kKTxicj4N
-CismbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgdWQgPSBmZXRjaGVyLnVkW2ZldGNoZXIudXJs
-c1swXV08YnI+DQorPGJyPg0KKyZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyBzZWxmLmFzc2Vy
-dEluKCZxdW90O25hbWUmcXVvdDssIHVkLnBhcm0pPGJyPg0KKyZuYnNwOyAmbmJzcDsgJm5ic3A7
-ICZuYnNwOyBzZWxmLmFzc2VydEVxdWFsKHVkLnBhcm1bJnF1b3Q7bmFtZSZxdW90O10sICZxdW90
-O2dsb2ItMC4yLjExJnF1b3Q7KTxicj4NCismbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgc2Vs
-Zi5hc3NlcnRJbigmcXVvdDtkb3dubG9hZGZpbGVuYW1lJnF1b3Q7LCB1ZC5wYXJtKTxicj4NCism
-bmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgc2VsZi5hc3NlcnRFcXVhbCh1ZC5wYXJtWyZxdW90
-O2Rvd25sb2FkZmlsZW5hbWUmcXVvdDtdLCAmcXVvdDtnbG9iLTAuMi4xMS5jcmF0ZSZxdW90Oyk8
-YnI+DQorPGJyPg0KKyZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyBmZXRjaGVyLmRvd25sb2Fk
-KCk8YnI+DQorJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IGZldGNoZXIudW5wYWNrKHNlbGYu
-dGVtcGRpcik8YnI+DQorJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IHNlbGYuYXNzZXJ0RXF1
-YWwoc29ydGVkKG9zLmxpc3RkaXIoc2VsZi50ZW1wZGlyKSksIFsnZG93bmxvYWQnLCAnZ2xvYi0w
-LjIuMTEnLCAndW5wYWNrZWQnXSk8YnI+DQorJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IHNl
-bGYuYXNzZXJ0RXF1YWwoc29ydGVkKG9zLmxpc3RkaXIoc2VsZi50ZW1wZGlyICsgJnF1b3Q7L2Rv
-d25sb2FkJnF1b3Q7KSksIFsnZ2xvYi0wLjIuMTEuY3JhdGUnLCAnZ2xvYi0wLjIuMTEuY3JhdGUu
-ZG9uZSddKTxicj4NCismbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgc2VsZi5hc3NlcnRUcnVl
-KG9zLnBhdGguZXhpc3RzKHNlbGYudGVtcGRpciArICZxdW90Oy9nbG9iLTAuMi4xMS9zcmMvPGEg
-aHJlZj0iaHR0cDovL2xpYi5ycyIgdGFyZ2V0PSJfYmxhbmsiPmxpYi5yczwvYT4mcXVvdDspKTxi
-cj4NCis8YnI+DQombmJzcDsgJm5ic3A7ICZuYnNwO0Bza2lwSWZOb05ldHdvcmsoKTxicj4NCiZu
-YnNwOyAmbmJzcDsgJm5ic3A7ZGVmIHRlc3RfY3JhdGVfdXJsX3BhcmFtcyhzZWxmKTo8YnI+DQo8
-YnI+DQo8YnI+DQotPS09LT0tPS09LT0tPS09LT0tPS09LTxicj4NCkxpbmtzOiBZb3UgcmVjZWl2
-ZSBhbGwgbWVzc2FnZXMgc2VudCB0byB0aGlzIGdyb3VwLjxicj4NClZpZXcvUmVwbHkgT25saW5l
-ICgjMTQ3NTgpOiA8YSBocmVmPSJodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvZy9iaXRi
-YWtlLWRldmVsL21lc3NhZ2UvMTQ3NTgiIHRhcmdldD0iX2JsYW5rIj4NCmh0dHBzOi8vbGlzdHMu
-b3BlbmVtYmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2ZWwvbWVzc2FnZS8xNDc1ODwvYT48YnI+DQpN
-dXRlIFRoaXMgVG9waWM6IDxhIGhyZWY9Imh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9t
-dC85ODU3MTI1Ny82MjEzMzg4IiB0YXJnZXQ9Il9ibGFuayI+DQpodHRwczovL2xpc3RzLm9wZW5l
-bWJlZGRlZC5vcmcvbXQvOTg1NzEyNTcvNjIxMzM4ODwvYT48YnI+DQpHcm91cCBPd25lcjogPGEg
-aHJlZj0ibWFpbHRvOmJpdGJha2UtZGV2ZWwlMkJvd25lckBsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
-IiB0YXJnZXQ9Il9ibGFuayI+DQpiaXRiYWtlLWRldmVsK293bmVyQGxpc3RzLm9wZW5lbWJlZGRl
-ZC5vcmc8L2E+PGJyPg0KVW5zdWJzY3JpYmU6IDxhIGhyZWY9Imh0dHBzOi8vbGlzdHMub3BlbmVt
-YmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2ZWwvdW5zdWIiIHRhcmdldD0iX2JsYW5rIj4NCmh0dHBz
-Oi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2ZWwvdW5zdWI8L2E+IFs8YSBo
-cmVmPSJtYWlsdG86ZnJlZGVyaWMubWFydGluc29uc0BnbWFpbC5jb20iIHRhcmdldD0iX2JsYW5r
-Ij5mcmVkZXJpYy5tYXJ0aW5zb25zQGdtYWlsLmNvbTwvYT5dPGJyPg0KLT0tPS09LT0tPS09LT0t
-PS09LT0tPS08bzpwPjwvbzpwPjwvcD4NCjwvYmxvY2txdW90ZT4NCjwvZGl2Pg0KPC9kaXY+DQo8
-L2Rpdj4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
+> Yes. While the original issue was written about missing checksuming, whic=
+h
+> was fixed by requiring checksums for the crate URIs in the SRC_URI, the
+> additional concern you raised is fixed by my patch. It restores the suppo=
+rt
+> for using a crate as the main component for the recipe. This was in the
+> bbclass all along, it just broke when the names were changed to include t=
+he
+> crate versions.
+>
+>
+>
+> You can actually workaround the problem by setting S =3D
+> "${CARGO_VENDORING_DIRECTORY}/${BP}", but I believe it is better to
+> restore the intended functionality of the bbclass. It also makes things
+> much more intuitive when using devtool modify for such a recipe since the
+> source is where you expect it to be.
+>
+>
+>
+> @Alexandre Belloni: Since I assume it will be you that pulls this into
+> testing, feel free to add the following to the commit message:
+>
+>
+>
+> [Yocto #15012]
+>
+>
+>
+> //Peter
+>
+>
+>
+> *From:* Fr=C3=A9d=C3=A9ric Martinsons <frederic.martinsons@gmail.com>
+> *Sent:* den 29 april 2023 08:48
+> *To:* Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+> *Cc:* bitbake-devel@lists.openembedded.org
+> *Subject:* Re: [bitbake-devel] [master][mickledore][PATCH 2/2]
+> fetch2/crate: Correct unpack for a crate that matches the recipe name
+>
+>
+>
+> Hello Peter,
+>
+>
+>
+> Do you think it will solve the issue I mentioned there
+> <https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15012#c4> ?
+>
+>
+>
+> On Sat, 29 Apr 2023 at 03:23, Peter Kjellerstedt <
+> peter.kjellerstedt@axis.com> wrote:
+>
+> The crate fetcher handles a crate with a name that matches the recipe's
+> name specially by placing the unpacked code in the current directory
+> (which typically is ${S}) rather than together with the sources for the
+> other crates. This broke when the URI names for all crates were changed
+> recently to include the version in the name.
+>
+> Correct the crate fetcher to test against ${BP} instead of ${BPN}.
+> Also add a test case to the selftests to avoid this breaking again.
+>
+> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+> ---
+>  bitbake/lib/bb/fetch2/crate.py |  4 ++--
+>  bitbake/lib/bb/tests/fetch.py  | 25 +++++++++++++++++++++++++
+>  2 files changed, 27 insertions(+), 2 deletions(-)
+>
+> diff --git a/bitbake/lib/bb/fetch2/crate.py
+> b/bitbake/lib/bb/fetch2/crate.py
+> index 2b8b6bc7a1..3310ed0050 100644
+> --- a/bitbake/lib/bb/fetch2/crate.py
+> +++ b/bitbake/lib/bb/fetch2/crate.py
+> @@ -98,8 +98,8 @@ class Crate(Wget):
+>          save_cwd =3D os.getcwd()
+>          os.chdir(rootdir)
+>
+> -        pn =3D d.getVar('BPN')
+> -        if pn =3D=3D ud.parm.get('name'):
+> +        bp =3D d.getVar('BP')
+> +        if bp =3D=3D ud.parm.get('name'):
+>              cmd =3D "tar -xz --no-same-owner -f %s" % thefile
+>          else:
+>              cargo_bitbake =3D self._cargo_bitbake_path(rootdir)
+> diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.p=
+y
+> index 6ef0836f2b..23bfa788db 100644
+> --- a/bitbake/lib/bb/tests/fetch.py
+> +++ b/bitbake/lib/bb/tests/fetch.py
+> @@ -2391,6 +2391,31 @@ class CrateTest(FetcherTest):
+>          self.assertTrue(os.path.exists(self.tempdir +
+> "/cargo_home/bitbake/glob-0.2.11/.cargo-checksum.json"))
+>          self.assertTrue(os.path.exists(self.tempdir +
+> "/cargo_home/bitbake/glob-0.2.11/src/lib.rs"))
+>
+> +    @skipIfNoNetwork()
+> +    def test_crate_url_matching_recipe(self):
+> +
+> +        self.d.setVar('BP', 'glob-0.2.11')
+> +
+> +        uri =3D "crate://crates.io/glob/0.2.11"
+> +        self.d.setVar('SRC_URI', uri)
+> +
+> +        uris =3D self.d.getVar('SRC_URI').split()
+> +        d =3D self.d
+> +
+> +        fetcher =3D bb.fetch2.Fetch(uris, self.d)
+> +        ud =3D fetcher.ud[fetcher.urls[0]]
+> +
+> +        self.assertIn("name", ud.parm)
+> +        self.assertEqual(ud.parm["name"], "glob-0.2.11")
+> +        self.assertIn("downloadfilename", ud.parm)
+> +        self.assertEqual(ud.parm["downloadfilename"], "glob-0.2.11.crate=
+")
+> +
+> +        fetcher.download()
+> +        fetcher.unpack(self.tempdir)
+> +        self.assertEqual(sorted(os.listdir(self.tempdir)), ['download',
+> 'glob-0.2.11', 'unpacked'])
+> +        self.assertEqual(sorted(os.listdir(self.tempdir + "/download")),
+> ['glob-0.2.11.crate', 'glob-0.2.11.crate.done'])
+> +        self.assertTrue(os.path.exists(self.tempdir + "/glob-0.2.11/src/
+> lib.rs"))
+> +
+>      @skipIfNoNetwork()
+>      def test_crate_url_params(self):
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14758):
+> https://lists.openembedded.org/g/bitbake-devel/message/14758
+> Mute This Topic: https://lists.openembedded.org/mt/98571257/6213388
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> frederic.martinsons@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
 
---_000_DB5PR02MB102131AD2DC5782665B7B4DCEEF689DB5PR02MB10213eu_--
+--0000000000008a782e05fa8ac88e
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto">Great, thanks Peter for the confirmation!=C2=A0</div><br>=
+<div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">Le sam. 29=
+ avr. 2023, 22:22, Peter Kjellerstedt &lt;<a href=3D"mailto:peter.kjellerst=
+edt@axis.com">peter.kjellerstedt@axis.com</a>&gt; a =C3=A9crit=C2=A0:<br></=
+div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-lef=
+t:1px #ccc solid;padding-left:1ex">
+
+
+
+
+
+<div lang=3D"SV" link=3D"blue" vlink=3D"purple" style=3D"word-wrap:break-wo=
+rd">
+<div class=3D"m_1773404062454036438WordSection1">
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634">Yes. Wh=
+ile the original issue was written about missing checksuming, which was fix=
+ed by requiring checksums for the crate URIs in the SRC_URI, the additional=
+ concern you
+ raised is fixed by my patch. It restores the support for using a crate as =
+the main component for the recipe. This was in the bbclass all along, it ju=
+st broke when the names were changed to include the crate versions.<u></u><=
+u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634"><u></u>=
+=C2=A0<u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634">You can=
+ actually workaround the problem by setting
+</span><span lang=3D"EN-US" style=3D"font-family:Consolas;color:#943634">S =
+=3D &quot;${CARGO_VENDORING_DIRECTORY}/${BP}&quot;</span><span lang=3D"EN-U=
+S" style=3D"color:#943634">, but I believe it is better to restore the inte=
+nded
+ functionality of the bbclass. It also makes things much more intuitive whe=
+n using
+</span><span lang=3D"EN-US" style=3D"font-family:Consolas;color:#943634">de=
+vtool modify</span><span lang=3D"EN-US" style=3D"color:#943634"> for such a=
+ recipe since the source is where you expect it to be.<u></u><u></u></span>=
+</p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634"><u></u>=
+=C2=A0<u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634">@Alexan=
+dre Belloni: Since I assume it will be you that pulls this into testing, fe=
+el free to add the following to the commit message:<u></u><u></u></span></p=
+>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634"><u></u>=
+=C2=A0<u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634">[Yocto =
+#15012]<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634"><u></u>=
+=C2=A0<u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634">//Peter=
+<u></u><u></u></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#943634"><u></u>=
+=C2=A0<u></u></span></p>
+<div style=3D"border:none;border-left:solid blue 1.5pt;padding:0cm 0cm 0cm =
+4.0pt">
+<div>
+<div style=3D"border:none;border-top:solid #e1e1e1 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US">From:</span></b><span lang=
+=3D"EN-US"> Fr=C3=A9d=C3=A9ric Martinsons &lt;<a href=3D"mailto:frederic.ma=
+rtinsons@gmail.com" target=3D"_blank" rel=3D"noreferrer">frederic.martinson=
+s@gmail.com</a>&gt;
+<br>
+<b>Sent:</b> den 29 april 2023 08:48<br>
+<b>To:</b> Peter Kjellerstedt &lt;<a href=3D"mailto:peter.kjellerstedt@axis=
+.com" target=3D"_blank" rel=3D"noreferrer">peter.kjellerstedt@axis.com</a>&=
+gt;<br>
+<b>Cc:</b> <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=
+=3D"_blank" rel=3D"noreferrer">bitbake-devel@lists.openembedded.org</a><br>
+<b>Subject:</b> Re: [bitbake-devel] [master][mickledore][PATCH 2/2] fetch2/=
+crate: Correct unpack for a crate that matches the recipe name<u></u><u></u=
+></span></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+<div>
+<div>
+<p class=3D"MsoNormal">Hello Peter,<u></u><u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal">Do you think it will solve the issue I mentioned=C2=
+=A0<a href=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15012#c4"=
+ target=3D"_blank" rel=3D"noreferrer">there</a>=C2=A0?<u></u><u></u></p>
+</div>
+<div>
+<p class=3D"MsoNormal"><u></u>=C2=A0<u></u></p>
+</div>
+<div>
+<div>
+<p class=3D"MsoNormal">On Sat, 29 Apr 2023 at 03:23, Peter Kjellerstedt &lt=
+;<a href=3D"mailto:peter.kjellerstedt@axis.com" target=3D"_blank" rel=3D"no=
+referrer">peter.kjellerstedt@axis.com</a>&gt; wrote:<u></u><u></u></p>
+</div>
+<blockquote style=3D"border:none;border-left:solid #cccccc 1.0pt;padding:0c=
+m 0cm 0cm 6.0pt;margin-left:4.8pt;margin-right:0cm">
+<p class=3D"MsoNormal" style=3D"margin-bottom:12.0pt">The crate fetcher han=
+dles a crate with a name that matches the recipe&#39;s<br>
+name specially by placing the unpacked code in the current directory<br>
+(which typically is ${S}) rather than together with the sources for the<br>
+other crates. This broke when the URI names for all crates were changed<br>
+recently to include the version in the name.<br>
+<br>
+Correct the crate fetcher to test against ${BP} instead of ${BPN}.<br>
+Also add a test case to the selftests to avoid this breaking again.<br>
+<br>
+Signed-off-by: Peter Kjellerstedt &lt;<a href=3D"mailto:peter.kjellerstedt@=
+axis.com" target=3D"_blank" rel=3D"noreferrer">peter.kjellerstedt@axis.com<=
+/a>&gt;<br>
+---<br>
+=C2=A0bitbake/lib/bb/fetch2/crate.py |=C2=A0 4 ++--<br>
+=C2=A0bitbake/lib/bb/tests/fetch.py=C2=A0 | 25 +++++++++++++++++++++++++<br=
+>
+=C2=A02 files changed, 27 insertions(+), 2 deletions(-)<br>
+<br>
+diff --git a/bitbake/lib/bb/fetch2/crate.py b/bitbake/lib/bb/fetch2/crate.p=
+y<br>
+index 2b8b6bc7a1..3310ed0050 100644<br>
+--- a/bitbake/lib/bb/fetch2/crate.py<br>
++++ b/bitbake/lib/bb/fetch2/crate.py<br>
+@@ -98,8 +98,8 @@ class Crate(Wget):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0save_cwd =3D os.getcwd()<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0os.chdir(rootdir)<br>
+<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 pn =3D d.getVar(&#39;BPN&#39;)<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 if pn =3D=3D ud.parm.get(&#39;name&#39;):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 bp =3D d.getVar(&#39;BP&#39;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if bp =3D=3D ud.parm.get(&#39;name&#39;):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cmd =3D &quot;tar -xz --no-=
+same-owner -f %s&quot; % thefile<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cargo_bitbake =3D self._car=
+go_bitbake_path(rootdir)<br>
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py<=
+br>
+index 6ef0836f2b..23bfa788db 100644<br>
+--- a/bitbake/lib/bb/tests/fetch.py<br>
++++ b/bitbake/lib/bb/tests/fetch.py<br>
+@@ -2391,6 +2391,31 @@ class CrateTest(FetcherTest):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.assertTrue(os.path.exists(self.tempd=
+ir + &quot;/cargo_home/bitbake/glob-0.2.11/.cargo-checksum.json&quot;))<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.assertTrue(os.path.exists(self.tempd=
+ir + &quot;/cargo_home/bitbake/glob-0.2.11/src/<a href=3D"http://lib.rs" ta=
+rget=3D"_blank" rel=3D"noreferrer">lib.rs</a>&quot;))<br>
+<br>
++=C2=A0 =C2=A0 @skipIfNoNetwork()<br>
++=C2=A0 =C2=A0 def test_crate_url_matching_recipe(self):<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.d.setVar(&#39;BP&#39;, &#39;glob-0.2.11&#=
+39;)<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 uri =3D &quot;crate://<a href=3D"http://crates=
+.io/glob/0.2.11" target=3D"_blank" rel=3D"noreferrer">crates.io/glob/0.2.11=
+</a>&quot;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.d.setVar(&#39;SRC_URI&#39;, uri)<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 uris =3D self.d.getVar(&#39;SRC_URI&#39;).spli=
+t()<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 d =3D self.d<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher =3D bb.fetch2.Fetch(uris, self.d)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 ud =3D fetcher.ud[fetcher.urls[0]]<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertIn(&quot;name&quot;, ud.parm)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(ud.parm[&quot;name&quot;], &q=
+uot;glob-0.2.11&quot;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertIn(&quot;downloadfilename&quot;, ud=
+.parm)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(ud.parm[&quot;downloadfilenam=
+e&quot;], &quot;glob-0.2.11.crate&quot;)<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.download()<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.unpack(self.tempdir)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(sorted(os.listdir(self.tempdi=
+r)), [&#39;download&#39;, &#39;glob-0.2.11&#39;, &#39;unpacked&#39;])<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(sorted(os.listdir(self.tempdi=
+r + &quot;/download&quot;)), [&#39;glob-0.2.11.crate&#39;, &#39;glob-0.2.11=
+.crate.done&#39;])<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(os.path.exists(self.tempdir + =
+&quot;/glob-0.2.11/src/<a href=3D"http://lib.rs" target=3D"_blank" rel=3D"n=
+oreferrer">lib.rs</a>&quot;))<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0@skipIfNoNetwork()<br>
+=C2=A0 =C2=A0 =C2=A0def test_crate_url_params(self):<br>
+<br>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#14758): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/14758" target=3D"_blank" rel=3D"noreferrer">
+https://lists.openembedded.org/g/bitbake-devel/message/14758</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/98571257/6213=
+388" target=3D"_blank" rel=3D"noreferrer">
+https://lists.openembedded.org/mt/98571257/6213388</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank" rel=3D"noreferrer">
+bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" target=3D"_blank" rel=3D"noreferrer">
+https://lists.openembedded.org/g/bitbake-devel/unsub</a> [<a href=3D"mailto=
+:frederic.martinsons@gmail.com" target=3D"_blank" rel=3D"noreferrer">freder=
+ic.martinsons@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<u></u><u></u></p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</blockquote></div>
+
+--0000000000008a782e05fa8ac88e--
 
