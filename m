@@ -1,87 +1,184 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86279C77B73
-	for <webhook@archiver.kernel.org>; Mon,  1 May 2023 15:34:09 +0000 (UTC)
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
- by mx.groups.io with SMTP id smtpd.web11.97258.1682955245876926225
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C27C7EE21
+	for <webhook@archiver.kernel.org>; Mon,  1 May 2023 22:08:36 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web11.108978.1682978911610584420
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 May 2023 08:34:06 -0700
+ Mon, 01 May 2023 15:08:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20221208.gappssmtp.com header.s=20221208 header.b=Jb5QBTDi;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.170, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-63b87d23729so1821319b3a.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 01 May 2023 08:34:05 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@linuxfoundation.org header.s=google header.b=hdgP9wmm;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3f18dacd392so17278445e9.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 01 May 2023 15:08:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20221208.gappssmtp.com; s=20221208; t=1682955245; x=1685547245;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8l6hTh6Y0pFTEwJ7tV1+UymACa0ryGrCAIGFBiaxAK0=;
-        b=Jb5QBTDiofFC4P741qT9xaF/pNGzf0Xc6Sc0+YyyKTDTEVf3LALhj6HI18besG8umT
-         lCXaVkvZDZTC5P3qIEueKBAfI7BTCR4csb2Dfg8Bcac9P+lCJUU2nchoPnr5FMP+Izsd
-         lhaZsIQ96LC84ZN5nxJskVouxit09rvxZJRsaEy2Co2SjwNnmT+Br9+YJg5ThwBLXszB
-         C7IXRFR2DCWFPh+w5USv5oOxzExGt5ZcYtfSGqEA8mY7ZJO3K1+GTG5BrN51PqK3wuYy
-         uGg+o2OErwCAfXaylhWT8ACQuiFG2bkgVp+6TKSGEhkPdqEAEy2myi3pBhdxUTvW4xZX
-         3cpw==
+        d=linuxfoundation.org; s=google; t=1682978910; x=1685570910;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LJHIClP2N06TY5iU3qIdA5mlj/LgoW1hFx/cD5bPPQc=;
+        b=hdgP9wmmuZm3U5tbya1xBOlgGNmrsGB5xCVVSgjpb20H5kpDFrS/GeyC6rsqR1dq2B
+         9Uw+TiKlmcv8If909KXYzCyLzcBKjsGC9whJnDywd6jvHZ5GInAeYhh+ZB10c+43Mh6k
+         k5oEHQUbbUtPB4Oj6ENLCzIq6au/p0MCtjzyg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682955245; x=1685547245;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8l6hTh6Y0pFTEwJ7tV1+UymACa0ryGrCAIGFBiaxAK0=;
-        b=JywpRI+1eENAUMKY6WQ8BaMd+84hlqaUQUOyjDDvo8WiXhbu4JzlDXcrJebvADhzKZ
-         0E+KK3ENCIti+MJ1pULxxu4+1RwHAZQQVgDHZGKJxEBDcBOGkDVWIU22P2BBZ42Jqw8b
-         MFyMZteFz3Xu1YmlmAA3Twc4T/Af8ABRguJQForQbFeAY/7sNsUJFbqGllhRRSufKHod
-         97s90mdFC7ZqxAUo/YbC3fyuHqXzMaBrJiyjmyyCUCpLciGkoKtZUojKNEWMXaIvbiTW
-         7tHhGYYzBgmqkgTHSQwF6Dldl5FMtF5mzgsVoi7ZK0yfcAefWl+IZOrTvwGFeXmDHw6m
-         IqEA==
-X-Gm-Message-State: AC+VfDxtZQi6zygFE9DPFwLw1CErN+CZ+1VjJQPxWvrLSWqbjNe1xoUc
-	ahcsyKx/Ich8cavIszc5cjIC1Nlc2ZiAdiwsHqI=
-X-Google-Smtp-Source: ACHHUZ6VG552PBsM7kBABoSBLk4yagLFrtaHzUGVZYvRJsfDzzVwbn0vlF4Oa2ubwt/wbAFJD8SAkQ==
-X-Received: by 2002:a05:6a00:15c4:b0:63f:1eb3:824b with SMTP id o4-20020a056a0015c400b0063f1eb3824bmr21481409pfu.17.1682955244690;
-        Mon, 01 May 2023 08:34:04 -0700 (PDT)
-Received: from hexa.lan (rrcs-66-91-142-162.west.biz.rr.com. [66.91.142.162])
-        by smtp.gmail.com with ESMTPSA id p8-20020a62ab08000000b0062e0010c6c1sm19931957pff.164.2023.05.01.08.34.02
+        d=1e100.net; s=20221208; t=1682978910; x=1685570910;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LJHIClP2N06TY5iU3qIdA5mlj/LgoW1hFx/cD5bPPQc=;
+        b=Y997tz9n28Rrr/PKncLk6WrFTh9r+XS+CWMZIM/ph45eD2QIRMZqDXkIGyfHFxtGJD
+         8fGOxK8CkJAKebhZphjIz8I5CezQFmx0H+HOdRxMwyioRmDWF/OLuxz/hIsx78eaMWem
+         LcG3pOoCEI3drBzDwlqoGF+qbFV8BO+J7RXBWW+QcDlrcZkk8WWJW12L0/eDbXKJLEOC
+         KE1KSpBtREQed4lJCNUtPBjPspu5unwII0kVt0oXZ7nctMKk+4UFKewganjLYaEFatWd
+         7C9x3WQfjDdRrJgzLxYavWXF/VFsxSUgMlrpA/Z/lSGuxPu+GtVOlu6h+IUJSAUWyVmz
+         gxuw==
+X-Gm-Message-State: AC+VfDwK64LbDY3P51XOg0o0lZTodUBTG3Qe74AoLI/vnFJR81iDQl2y
+	ITICjusRJSauNr6vg4eTa9tsMN6WlVRJDkFIKg8=
+X-Google-Smtp-Source: ACHHUZ6LB3UrN5btsa9AZr78ZfpcaQa1VF0by5wB8c5HxPFY2/VaGev5ezpPraddpB9Z9QNESgDTug==
+X-Received: by 2002:a1c:f717:0:b0:3f1:7972:429d with SMTP id v23-20020a1cf717000000b003f17972429dmr10136642wmh.18.1682978909819;
+        Mon, 01 May 2023 15:08:29 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:9417:e142:e786:9868])
+        by smtp.gmail.com with ESMTPSA id 16-20020a05600c021000b003f339b2d06fsm5078428wmi.4.2023.05.01.15.08.29
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 May 2023 08:34:03 -0700 (PDT)
-From: Steve Sakoman <steve@sakoman.com>
+        Mon, 01 May 2023 15:08:29 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][dunfell][1.46][PATCH] tests/fetch.py: fix link to project documentation
-Date: Mon,  1 May 2023 05:33:56 -1000
-Message-Id: <4d45d9f9fbf36e0ff61be3c7a31a532b10c52f13.1682955165.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1682955165.git.steve@sakoman.com>
-References: <cover.1682955165.git.steve@sakoman.com>
+Subject: [PATCH] cooker: Log config and parse cache status changes
+Date: Mon,  1 May 2023 23:08:28 +0100
+Message-Id: <20230501220828.2781291-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 01 May 2023 15:34:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14763
+ <bitbake-devel@lists.openembedded.org>; Mon, 01 May 2023 22:08:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14764
 
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
+It can be hard to tell why bitbake does some things slowly. Log the changes
+to the base configuration and parse cache status so that it becomes clear
+from the logs when the cache invalidation causes a slowdown.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/tests/fetch.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/cooker.py | 39 +++++++++++++++++++++++++++------------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 420faa19..61dd5ccc 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1338,7 +1338,7 @@ class FetchCheckStatusTest(FetcherTest):
-                       "http://downloads.yoctoproject.org/releases/sato/sato-engine-0.2.tar.gz",
-                       "http://downloads.yoctoproject.org/releases/sato/sato-engine-0.3.tar.gz",
-                       "https://yoctoproject.org/",
--                      "https://yoctoproject.org/documentation",
-+                      "https://docs.yoctoproject.org/",
-                       "http://downloads.yoctoproject.org/releases/opkg/opkg-0.1.7.tar.gz",
-                       "http://downloads.yoctoproject.org/releases/opkg/opkg-0.3.0.tar.gz",
-                       "ftp://sourceware.org/pub/libffi/libffi-1.20.tar.gz",
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index f33bca4f86..554c7f10a5 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -151,6 +151,8 @@ class BBCooker:
+ 
+     def __init__(self, featureSet=None, server=None):
+         self.recipecaches = None
++        self.baseconfig_valid = False
++        self.parsecache_valid = False
+         self.eventlog = None
+         self.skiplist = {}
+         self.featureset = CookerFeatures()
+@@ -264,11 +266,25 @@ class BBCooker:
+                     n.read_events()
+                     n.process_events()
+ 
++    def _baseconfig_set(self, value):
++        if value and not self.baseconfig_valid:
++            bb.server.process.serverlog("Base config valid")
++        elif not value and self.baseconfig_valid:
++            bb.server.process.serverlog("Base config invalidated")
++        self.baseconfig_valid = value
++
++    def _parsecache_set(self, value):
++        if value and not self.parsecache_valid:
++            bb.server.process.serverlog("Parse cache valid")
++        elif not value and self.parsecache_valid:
++            bb.server.process.serverlog("Parse cache invalidated")
++        self.parsecache_valid = value
++
+     def config_notifications(self, event):
+         if event.maskname == "IN_Q_OVERFLOW":
+             bb.warn("inotify event queue overflowed, invalidating caches.")
+-            self.parsecache_valid = False
+-            self.baseconfig_valid = False
++            self._parsecache_set(False)
++            self._baseconfig_set(False)
+             bb.parse.clear_cache()
+             return
+         if not event.pathname in self.configwatcher.bbwatchedfiles:
+@@ -281,12 +297,12 @@ class BBCooker:
+                 bb.parse.clear_cache()
+         if not event.pathname in self.inotify_modified_files:
+             self.inotify_modified_files.append(event.pathname)
+-        self.baseconfig_valid = False
++        self._baseconfig_set(False)
+ 
+     def notifications(self, event):
+         if event.maskname == "IN_Q_OVERFLOW":
+             bb.warn("inotify event queue overflowed, invalidating caches.")
+-            self.parsecache_valid = False
++            self._parsecache_set(False)
+             bb.parse.clear_cache()
+             return
+         if event.pathname.endswith("bitbake-cookerdaemon.log") \
+@@ -300,7 +316,7 @@ class BBCooker:
+                 bb.parse.clear_cache()
+         if not event.pathname in self.inotify_modified_files:
+             self.inotify_modified_files.append(event.pathname)
+-        self.parsecache_valid = False
++        self._parsecache_set(False)
+ 
+     def add_filewatch(self, deps, watcher=None, dirs=False):
+         if not watcher:
+@@ -422,8 +438,8 @@ class BBCooker:
+         for mc in self.databuilder.mcdata.values():
+             self.add_filewatch(mc.getVar("__base_depends", False), self.configwatcher)
+ 
+-        self.baseconfig_valid = True
+-        self.parsecache_valid = False
++        self._baseconfig_set(True)
++        self._parsecache_set(False)
+ 
+     def handlePRServ(self):
+         # Setup a PR Server based on the new configuration
+@@ -489,7 +505,7 @@ class BBCooker:
+ 
+         self.handleCollections(self.data.getVar("BBFILE_COLLECTIONS"))
+ 
+-        self.parsecache_valid = False
++        self._parsecache_set(False)
+ 
+     def updateConfigOpts(self, options, environment, cmdline):
+         self.ui_cmdline = cmdline
+@@ -1509,7 +1525,7 @@ class BBCooker:
+                     bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runtaskentries), buildname, item, failures, interrupted), self.databuilder.mcdata[mc])
+                     bb.event.disable_heartbeat()
+                 # We trashed self.recipecaches above
+-                self.parsecache_valid = False
++                self._parsecache_set(False)
+                 self.configuration.limited_deps = False
+                 bb.parse.siggen.reset(self.data)
+                 if quietlog:
+@@ -1678,7 +1694,7 @@ class BBCooker:
+                 self.add_filewatch([[dirent]], dirs=True)
+ 
+             self.parser = CookerParser(self, mcfilelist, total_masked)
+-            self.parsecache_valid = True
++            self._parsecache_set(True)
+ 
+         self.state = state.parsing
+ 
+@@ -1796,8 +1812,7 @@ class BBCooker:
+            self.data = self.databuilder.data
+         # In theory tinfoil could have modified the base data before parsing,
+         # ideally need to track if anything did modify the datastore
+-        self.parsecache_valid = False
+-
++        self._parsecache_set(False)
+ 
+ class CookerExit(bb.event.Event):
+     """
 -- 
-2.34.1
+2.39.2
 
 
