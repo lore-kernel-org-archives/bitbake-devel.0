@@ -1,282 +1,252 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <katutxakurra@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7A8C77B78
-	for <webhook@archiver.kernel.org>; Thu,  4 May 2023 16:55:28 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web10.172.1683219318396605569
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C794C77B7C
+	for <webhook@archiver.kernel.org>; Tue,  9 May 2023 10:52:22 +0000 (UTC)
+Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
+ by mx.groups.io with SMTP id smtpd.web10.28780.1683629532598889712
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 04 May 2023 09:55:18 -0700
+ Tue, 09 May 2023 03:52:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@linuxfoundation.org header.s=google header.b=HbEc+tiW;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3f19afc4fbfso7747055e9.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 04 May 2023 09:55:18 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=DTROYDls;
+ spf=pass (domain: gmail.com, ip: 209.85.167.66, mailfrom: katutxakurra@gmail.com)
+Received: by mail-lf1-f66.google.com with SMTP id 2adb3069b0e04-4f24ceae142so2943562e87.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 09 May 2023 03:52:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1683219316; x=1685811316;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xUfG7X37rkHg3GekpoNey3bhZWrfh/NmwiFrmvlhq8s=;
-        b=HbEc+tiW118IYXxU+9NkKGLtcpsRggpoyMMBkiyxcYI/PJIWp5fAmVZtucdcLvHs29
-         cHF4VxKIqOY9r5AWufq4ghm854rXZskogmfeQMFBPVa7BBon2tvHX+470rbwwldRaIwq
-         k2BDR7qYMJm00y36rK/SFGBYZLq7rqUPzs6lM=
+        d=gmail.com; s=20221208; t=1683629530; x=1686221530;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LYZR/G37tnsP7yUGSmNpBPI4OE2VINyICKexijTrIrs=;
+        b=DTROYDlsDgqmcmOR7GstB2+LNruVopVjxIOB0RTGKvPhRwjRDtTqAktss106Po9sO3
+         PFjbHB/taWTc7jEOEjz1cN8DlmOK6wEXi6pAesiWa/SASeFz0QquXp9mNxbl6ChB1q+c
+         FR9toi6D92aUizGAKGiYklUroyemjADl3cOONpUyvRK/ERXFAmfAg6btb8WAIiwtwFJH
+         EedVvt2hicoVtyUTF+N8jn16jB8PNSuGqyts/q4emnuCWyPLNjC0BQCVOo3XvBszivtU
+         DdboDEGiDGlQtnsKmJ7fIwcBfFQ81pg7ovob6bjzcM97gOmFsDVXryhPjs7fFyWXipO9
+         7fBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683219316; x=1685811316;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xUfG7X37rkHg3GekpoNey3bhZWrfh/NmwiFrmvlhq8s=;
-        b=XD56SdOBPyeGQWsdGn8Mob4m+g4qSCYqpuC0eKGq/VFlvDsPApNPq8rjQoTNbLeOAb
-         LC1UdZWbnkM052wsk3ZAB7z9yZIFvNTT7T0/m12xa+t0L8iu/xQCAY9X+wdqeWEYxSK+
-         5S98Kyg4ZeulpMu1z2dJJo0Y3N+c4gtRdBwUjBbskc6e1Kd/iL5R8X+g2vYDuapc5D+m
-         FG6gERdObdYBsuS4+R2iHGf++04FSTkWbldnuiUiDr+pHOJrBZOvTs53Z2cMJYqZm40P
-         NFUKkWSRt33ezTE7PC5DQjScaZ13C88TqmFqZ8GqA2xFn2iF9rloMlyM+4487tdJCadx
-         dEfA==
-X-Gm-Message-State: AC+VfDzhO4KEtT6TNDVbqdGA81mncT6pCiDIC1YDjwGggKi3tWMglOSQ
-	krMtibfSivf5FWeZw3h+sWzHEdoTDr3MVfslsVEhrw==
-X-Google-Smtp-Source: ACHHUZ4JmCc/fFzND+BzKmiBaDTsTuD+JdS3+KyR5nF3RWayaO2eJMFSrkW0/kcAXYF0ivjFMhCe8Q==
-X-Received: by 2002:a7b:c349:0:b0:3f1:806d:33ad with SMTP id l9-20020a7bc349000000b003f1806d33admr240366wmj.6.1683219316233;
-        Thu, 04 May 2023 09:55:16 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:6749:5fda:5dc0:e535])
-        by smtp.gmail.com with ESMTPSA id 16-20020a05600c021000b003f198dfbbfcsm5455622wmi.19.2023.05.04.09.55.15
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 May 2023 09:55:15 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] tests/fetch: Default to https git protocol where possible
-Date: Thu,  4 May 2023 17:55:15 +0100
-Message-Id: <20230504165515.3075424-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20221208; t=1683629530; x=1686221530;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LYZR/G37tnsP7yUGSmNpBPI4OE2VINyICKexijTrIrs=;
+        b=DpkQTjlA/jTuz0GnaU+22jwEIKcXP4WVC0yGgjPAse0sW6GdWrwHA4rRIQdc3R/opY
+         cF/Fe0AgP+VxLH8GciZGpiS6thTIYy6qdzD7bWxKN0hXIwOPGI0gE4cBH1xNPs0EG+uo
+         Y9PTWqSN97qVhXKuOYuPoIJuLQtzW4rn6aGR3SDcWpsGROCAURyUmmFt24t0FJHNkOGf
+         fhJyu0jbPDVqOv+r+fuSmfcqDdmziBWQC2lfuXmRJ02/bL3xUmxrDfYTVBBBWibo4xqV
+         5t5iOXFIOP5X/gX/VH7hpmI9uLIYzu5O/20AjI6OQ6wzrFQDffnv+vyx3Lkwl/6AglKn
+         AR9A==
+X-Gm-Message-State: AC+VfDz0Z8zPdFAdIZkBuBe2YMHPHghwJ2KdqiJ8x0qFhLpgKlEIgqsW
+	7rq+8WxsU+gzqOL1ChTdbYqlTII6aaabWC+Nc4XlLkF7p62cvM1x
+X-Google-Smtp-Source: ACHHUZ5ZZZZDp00tW12ttiwhEM7uxcDYGaxvO8tNi8qZw2H1kuoDRzZGcxLbksXpOIu4QWXT2X484i92J8Skpj0XXOs=
+X-Received: by 2002:ac2:5fc8:0:b0:4ed:c3a1:752a with SMTP id
+ q8-20020ac25fc8000000b004edc3a1752amr538611lfg.45.1683629530190; Tue, 09 May
+ 2023 03:52:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Katu Txakur <katutxakurra@gmail.com>
+Date: Tue, 9 May 2023 12:52:00 +0200
+Message-ID: <CAM1ZcoXg6Sj7Y4Dd_7N3qFeKxqa5bktGP6G0JcG8qsL-aRN7DQ@mail.gmail.com>
+Subject: [bitbake-devel] Perforce.py password with #
+To: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="00000000000014969805fb408cd9"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 04 May 2023 16:55:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14767
+ <bitbake-devel@lists.openembedded.org>; Tue, 09 May 2023 10:52:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14768
 
-The recommendation from server maintainers is that the https protocol
-is both faster and more reliable than the dedicated git protocol at this point.
-Switch to it where possible.
+--00000000000014969805fb408cd9
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/tests/fetch.py | 58 +++++++++++++++++++++----------------------
- 1 file changed, 29 insertions(+), 29 deletions(-)
+Hi,
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 6ef0836f2b..532adb9414 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -535,7 +535,7 @@ class MirrorUriTest(FetcherTest):
- class GitDownloadDirectoryNamingTest(FetcherTest):
-     def setUp(self):
-         super(GitDownloadDirectoryNamingTest, self).setUp()
--        self.recipe_url = "git://git.openembedded.org/bitbake;branch=master"
-+        self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
-         self.recipe_dir = "git.openembedded.org.bitbake"
-         self.mirror_url = "git://github.com/openembedded/bitbake.git;protocol=https;branch=master"
-         self.mirror_dir = "github.com.openembedded.bitbake.git"
-@@ -583,7 +583,7 @@ class GitDownloadDirectoryNamingTest(FetcherTest):
- class TarballNamingTest(FetcherTest):
-     def setUp(self):
-         super(TarballNamingTest, self).setUp()
--        self.recipe_url = "git://git.openembedded.org/bitbake;branch=master"
-+        self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
-         self.recipe_tarball = "git2_git.openembedded.org.bitbake.tar.gz"
-         self.mirror_url = "git://github.com/openembedded/bitbake.git;protocol=https;branch=master"
-         self.mirror_tarball = "git2_github.com.openembedded.bitbake.git.tar.gz"
-@@ -617,7 +617,7 @@ class TarballNamingTest(FetcherTest):
- class GitShallowTarballNamingTest(FetcherTest):
-     def setUp(self):
-         super(GitShallowTarballNamingTest, self).setUp()
--        self.recipe_url = "git://git.openembedded.org/bitbake;branch=master"
-+        self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
-         self.recipe_tarball = "gitshallow_git.openembedded.org.bitbake_82ea737-1_master.tar.gz"
-         self.mirror_url = "git://github.com/openembedded/bitbake.git;protocol=https;branch=master"
-         self.mirror_tarball = "gitshallow_github.com.openembedded.bitbake.git_82ea737-1_master.tar.gz"
-@@ -652,7 +652,7 @@ class GitShallowTarballNamingTest(FetcherTest):
- class CleanTarballTest(FetcherTest):
-     def setUp(self):
-         super(CleanTarballTest, self).setUp()
--        self.recipe_url = "git://git.openembedded.org/bitbake"
-+        self.recipe_url = "git://git.openembedded.org/bitbake;protocol=https"
-         self.recipe_tarball = "git2_git.openembedded.org.bitbake.tar.gz"
- 
-         self.d.setVar('BB_GENERATE_MIRROR_TARBALLS', '1')
-@@ -1011,25 +1011,25 @@ class FetcherNetworkTest(FetcherTest):
- 
-     @skipIfNoNetwork()
-     def test_gitfetch(self):
--        url1 = url2 = "git://git.openembedded.org/bitbake;branch=master"
-+        url1 = url2 = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
-         self.gitfetcher(url1, url2)
- 
-     @skipIfNoNetwork()
-     def test_gitfetch_goodsrcrev(self):
-         # SRCREV is set but matches rev= parameter
--        url1 = url2 = "git://git.openembedded.org/bitbake;rev=270a05b0b4ba0959fe0624d2a4885d7b70426da5;branch=master"
-+        url1 = url2 = "git://git.openembedded.org/bitbake;rev=270a05b0b4ba0959fe0624d2a4885d7b70426da5;branch=master;protocol=https"
-         self.gitfetcher(url1, url2)
- 
-     @skipIfNoNetwork()
-     def test_gitfetch_badsrcrev(self):
-         # SRCREV is set but does not match rev= parameter
--        url1 = url2 = "git://git.openembedded.org/bitbake;rev=dead05b0b4ba0959fe0624d2a4885d7b70426da5;branch=master"
-+        url1 = url2 = "git://git.openembedded.org/bitbake;rev=dead05b0b4ba0959fe0624d2a4885d7b70426da5;branch=master;protocol=https"
-         self.assertRaises(bb.fetch.FetchError, self.gitfetcher, url1, url2)
- 
-     @skipIfNoNetwork()
-     def test_gitfetch_tagandrev(self):
-         # SRCREV is set but does not match rev= parameter
--        url1 = url2 = "git://git.openembedded.org/bitbake;rev=270a05b0b4ba0959fe0624d2a4885d7b70426da5;tag=270a05b0b4ba0959fe0624d2a4885d7b70426da5"
-+        url1 = url2 = "git://git.openembedded.org/bitbake;rev=270a05b0b4ba0959fe0624d2a4885d7b70426da5;tag=270a05b0b4ba0959fe0624d2a4885d7b70426da5;protocol=https"
-         self.assertRaises(bb.fetch.FetchError, self.gitfetcher, url1, url2)
- 
-     @skipIfNoNetwork()
-@@ -1038,7 +1038,7 @@ class FetcherNetworkTest(FetcherTest):
-         # `usehead=1' and instead fetch the specified SRCREV. See
-         # test_local_gitfetch_usehead() for a positive use of the usehead
-         # feature.
--        url = "git://git.openembedded.org/bitbake;usehead=1;branch=master"
-+        url = "git://git.openembedded.org/bitbake;usehead=1;branch=master;protocol=https"
-         self.assertRaises(bb.fetch.ParameterError, self.gitfetcher, url, url)
- 
-     @skipIfNoNetwork()
-@@ -1047,26 +1047,26 @@ class FetcherNetworkTest(FetcherTest):
-         # `usehead=1' and instead fetch the specified SRCREV. See
-         # test_local_gitfetch_usehead() for a positive use of the usehead
-         # feature.
--        url = "git://git.openembedded.org/bitbake;usehead=1;name=newName;branch=master"
-+        url = "git://git.openembedded.org/bitbake;usehead=1;name=newName;branch=master;protocol=https"
-         self.assertRaises(bb.fetch.ParameterError, self.gitfetcher, url, url)
- 
-     @skipIfNoNetwork()
-     def test_gitfetch_finds_local_tarball_for_mirrored_url_when_previous_downloaded_by_the_recipe_url(self):
--        recipeurl = "git://git.openembedded.org/bitbake;branch=master"
--        mirrorurl = "git://someserver.org/bitbake;branch=master"
-+        recipeurl = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
-+        mirrorurl = "git://someserver.org/bitbake;branch=master;protocol=https"
-         self.d.setVar("PREMIRRORS", "git://someserver.org/bitbake git://git.openembedded.org/bitbake")
-         self.gitfetcher(recipeurl, mirrorurl)
- 
-     @skipIfNoNetwork()
-     def test_gitfetch_finds_local_tarball_when_previous_downloaded_from_a_premirror(self):
--        recipeurl = "git://someserver.org/bitbake;branch=master"
-+        recipeurl = "git://someserver.org/bitbake;branch=master;protocol=https"
-         self.d.setVar("PREMIRRORS", "git://someserver.org/bitbake git://git.openembedded.org/bitbake")
-         self.gitfetcher(recipeurl, recipeurl)
- 
-     @skipIfNoNetwork()
-     def test_gitfetch_finds_local_repository_when_premirror_rewrites_the_recipe_url(self):
--        realurl = "git://git.openembedded.org/bitbake"
--        recipeurl = "git://someserver.org/bitbake"
-+        realurl = "https://git.openembedded.org/bitbake"
-+        recipeurl = "git://someserver.org/bitbake;protocol=https"
-         self.sourcedir = self.unpackdir.replace("unpacked", "sourcemirror.git")
-         os.chdir(self.tempdir)
-         self.git(['clone', realurl, self.sourcedir], cwd=self.tempdir)
-@@ -1076,9 +1076,9 @@ class FetcherNetworkTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_git_submodule(self):
-         # URL with ssh submodules
--        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=ssh-gitsm-tests;rev=049da4a6cb198d7c0302e9e8b243a1443cb809a7;branch=master"
-+        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=ssh-gitsm-tests;rev=049da4a6cb198d7c0302e9e8b243a1443cb809a7;branch=master;protocol=https"
-         # Original URL (comment this if you have ssh access to git.yoctoproject.org)
--        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master;rev=a2885dd7d25380d23627e7544b7bbb55014b16ee;branch=master"
-+        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master;rev=a2885dd7d25380d23627e7544b7bbb55014b16ee;branch=master;protocol=https"
-         fetcher = bb.fetch.Fetch([url], self.d)
-         fetcher.download()
-         # Previous cwd has been deleted
-@@ -1329,9 +1329,9 @@ class URLHandle(unittest.TestCase):
-        "http://www.google.com/index.html" : ('http', 'www.google.com', '/index.html', '', '', {}),
-        "cvs://anoncvs@cvs.handhelds.org/cvs;module=familiar/dist/ipkg" : ('cvs', 'cvs.handhelds.org', '/cvs', 'anoncvs', '', {'module': 'familiar/dist/ipkg'}),
-        "cvs://anoncvs:anonymous@cvs.handhelds.org/cvs;tag=V0-99-81;module=familiar/dist/ipkg" : ('cvs', 'cvs.handhelds.org', '/cvs', 'anoncvs', 'anonymous', collections.OrderedDict([('tag', 'V0-99-81'), ('module', 'familiar/dist/ipkg')])),
--       "git://git.openembedded.org/bitbake;branch=@foo" : ('git', 'git.openembedded.org', '/bitbake', '', '', {'branch': '@foo'}),
-+       "git://git.openembedded.org/bitbake;branch=@foo;protocol=https" : ('git', 'git.openembedded.org', '/bitbake', '', '', {'branch': '@foo', 'protocol' : 'https'}),
-        "file://somelocation;someparam=1": ('file', '', 'somelocation', '', '', {'someparam': '1'}),
--       r'git://s.o-me_ONE:!#$%^&*()-_={}[]\|:?,.<>~`@git.openembedded.org/bitbake;branch=main': ('git', 'git.openembedded.org', '/bitbake', 's.o-me_ONE', r'!#$%^&*()-_={}[]\|:?,.<>~`', {'branch': 'main'}),
-+       r'git://s.o-me_ONE:!#$%^&*()-_={}[]\|:?,.<>~`@git.openembedded.org/bitbake;branch=main;protocol=https': ('git', 'git.openembedded.org', '/bitbake', 's.o-me_ONE', r'!#$%^&*()-_={}[]\|:?,.<>~`', {'branch': 'main', 'protocol' : 'https'}),
-     }
-     # we require a pathname to encodeurl but users can still pass such urls to 
-     # decodeurl and we need to handle them
-@@ -1359,14 +1359,14 @@ class FetchLatestVersionTest(FetcherTest):
-             : "1.99.4",
-         # version pattern "vX.Y"
-         # mirror of git.infradead.org since network issues interfered with testing
--        ("mtd-utils", "git://git.yoctoproject.org/mtd-utils.git;branch=master", "ca39eb1d98e736109c64ff9c1aa2a6ecca222d8f", "")
-+        ("mtd-utils", "git://git.yoctoproject.org/mtd-utils.git;branch=master;protocol=https", "ca39eb1d98e736109c64ff9c1aa2a6ecca222d8f", "")
-             : "1.5.0",
-         # version pattern "pkg_name-X.Y"
-         # mirror of git://anongit.freedesktop.org/git/xorg/proto/presentproto since network issues interfered with testing
--        ("presentproto", "git://git.yoctoproject.org/bbfetchtests-presentproto;branch=master", "24f3a56e541b0a9e6c6ee76081f441221a120ef9", "")
-+        ("presentproto", "git://git.yoctoproject.org/bbfetchtests-presentproto;branch=master;protocol=https", "24f3a56e541b0a9e6c6ee76081f441221a120ef9", "")
-             : "1.0",
-         # version pattern "pkg_name-vX.Y.Z"
--        ("dtc", "git://git.yoctoproject.org/bbfetchtests-dtc.git;branch=master", "65cc4d2748a2c2e6f27f1cf39e07a5dbabd80ebf", "")
-+        ("dtc", "git://git.yoctoproject.org/bbfetchtests-dtc.git;branch=master;protocol=https", "65cc4d2748a2c2e6f27f1cf39e07a5dbabd80ebf", "")
-             : "1.4.0",
-         # combination version pattern
-         ("sysprof", "git://gitlab.gnome.org/GNOME/sysprof.git;protocol=https;branch=master", "cd44ee6644c3641507fb53b8a2a69137f2971219", "")
-@@ -1378,9 +1378,9 @@ class FetchLatestVersionTest(FetcherTest):
-             : "20120614",
-         # packages with a valid UPSTREAM_CHECK_GITTAGREGEX
-                 # mirror of git://anongit.freedesktop.org/xorg/driver/xf86-video-omap since network issues interfered with testing
--        ("xf86-video-omap", "git://git.yoctoproject.org/bbfetchtests-xf86-video-omap;branch=master", "ae0394e687f1a77e966cf72f895da91840dffb8f", r"(?P<pver>(\d+\.(\d\.?)*))")
-+        ("xf86-video-omap", "git://git.yoctoproject.org/bbfetchtests-xf86-video-omap;branch=master;protocol=https", "ae0394e687f1a77e966cf72f895da91840dffb8f", r"(?P<pver>(\d+\.(\d\.?)*))")
-             : "0.4.3",
--        ("build-appliance-image", "git://git.yoctoproject.org/poky;branch=master", "b37dd451a52622d5b570183a81583cc34c2ff555", r"(?P<pver>(([0-9][\.|_]?)+[0-9]))")
-+        ("build-appliance-image", "git://git.yoctoproject.org/poky;branch=master;protocol=https", "b37dd451a52622d5b570183a81583cc34c2ff555", r"(?P<pver>(([0-9][\.|_]?)+[0-9]))")
-             : "11.0.0",
-         ("chkconfig-alternatives-native", "git://github.com/kergoth/chkconfig;branch=sysroot;protocol=https", "cd437ecbd8986c894442f8fce1e0061e20f04dee", r"chkconfig\-(?P<pver>((\d+[\.\-_]*)+))")
-             : "1.3.59",
-@@ -2189,7 +2189,7 @@ class GitShallowTest(FetcherTest):
-         self.d.setVar('SRCREV', 'e5939ff608b95cdd4d0ab0e1935781ab9a276ac0')
-         self.d.setVar('BB_GIT_SHALLOW', '1')
-         self.d.setVar('BB_GENERATE_SHALLOW_TARBALLS', '1')
--        fetcher = bb.fetch.Fetch(["git://git.yoctoproject.org/fstests;branch=master"], self.d)
-+        fetcher = bb.fetch.Fetch(["git://git.yoctoproject.org/fstests;branch=master;protocol=https"], self.d)
-         fetcher.download()
- 
-         bb.utils.remove(self.dldir + "/*.tar.gz")
-@@ -2966,7 +2966,7 @@ class NPMTest(FetcherTest):
- class GitSharedTest(FetcherTest):
-     def setUp(self):
-         super(GitSharedTest, self).setUp()
--        self.recipe_url = "git://git.openembedded.org/bitbake;branch=master"
-+        self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
-         self.d.setVar('SRCREV', '82ea737a0b42a8b53e11c9cde141e9e9c0bd8c40')
-         self.d.setVar("__BBSRCREV_SEEN", "1")
- 
-@@ -2999,7 +2999,7 @@ class FetchPremirroronlyLocalTest(FetcherTest):
-         os.mkdir(self.mirrordir)
-         self.reponame = "bitbake"
-         self.gitdir = os.path.join(self.tempdir, "git", self.reponame)
--        self.recipe_url = "git://git.fake.repo/bitbake;branch=master"
-+        self.recipe_url = "git://git.fake.repo/bitbake;branch=master;protocol=https"
-         self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-         self.d.setVar("BB_NO_NETWORK", "1")
-         self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
-@@ -3053,7 +3053,7 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
-         self.reponame = "fstests"
-         self.clonedir = os.path.join(self.tempdir, "git")
-         self.gitdir = os.path.join(self.tempdir, "git", "{}.git".format(self.reponame))
--        self.recipe_url = "git://git.yoctoproject.org/fstests"
-+        self.recipe_url = "git://git.yoctoproject.org/fstests;protocol=https"
-         self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-         self.d.setVar("BB_NO_NETWORK", "0")
-         self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
-@@ -3135,7 +3135,7 @@ class FetchPremirroronlyBrokenTarball(FetcherTest):
-         os.mkdir(self.mirrordir)
-         self.reponame = "bitbake"
-         self.gitdir = os.path.join(self.tempdir, "git", self.reponame)
--        self.recipe_url = "git://git.fake.repo/bitbake"
-+        self.recipe_url = "git://git.fake.repo/bitbake;protocol=https"
-         self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-         self.d.setVar("BB_NO_NETWORK", "1")
-         self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
--- 
-2.39.2
+Using kirkstone branch, I've been trying to follow the Perforce
+documentation in
+https://docs.yoctoproject.org/bitbake/2.4/bitbake-user-manual/bitbake-user-manual-fetching.html#perforce-fetcher-p4
+and I've created the following recipe:
 
+#######################################
+DESCRIPTION = "Perforce fetch test"
+LICENSE = "CLOSED"
+
+SRCREV = "${AUTOREV}"
+FETCHCMD_p4 = "/usr/local/bin/p4"
+P4PASSWD = "mypassword#"
+P4PORT = "ssl:myserver:1666"
+P4USER = "myuser"
+P4DEPOT = "path_to_my_depot"
+
+SRC_URI = "p4://${P4USER}:${P4PASSWD}@${P4DEPOT}/..."
+
+PV = "p4-${SRCPV}"
+S = "${WORKDIR}/p4"
+######################################
+
+I get the following error because my password finishes with a #:
+
+user@pc:~/yocto/kirkstone/build$ bitbake  p4-test
+/usr/lib/python3/dist-packages/html5lib/_trie/_base.py:3:
+DeprecationWarning: Using or importing the ABCs from 'collections' instead
+of from 'collections.abc' is deprecated since Python 3.3, and in 3.10 it
+will stop working
+  from collections import Mapping
+Loading cache: 100%
+|##########################################################################################################################################################################|
+Time: 0:00:00
+Loaded 1628 entries from dependency cache.
+ERROR: /home/user/yocto/kirkstone/layers/meta-mylayer/recipes-custom/p4/
+p4-test_0.1.bb: Error executing a python function in <code>:
+                                        | ETA:  --:--:--
+
+The stack trace of python calls that resulted in this exception/failure was:
+File: '<code>', lineno: 3, function: <module>
+
+ 0001:__anon_20__home_user_yocto_kirkstone_poky_meta_conf_machine_include_arm_feature_arm_thumb_inc(d)
+
+ 0002:__anon_32__home_user_yocto_kirkstone_poky_meta_classes_patch_bbclass(d)
+ ***
+0003:__anon_762__home_user_yocto_kirkstone_poky_meta_classes_base_bbclass(d)
+
+ 0004:__anon_1135__home_user_yocto_kirkstone_poky_meta_classes_insane_bbclass(d)
+
+ 0005:__anon_1442__home_user_yocto_kirkstone_poky_meta_classes_insane_bbclass(d)
+
+ 0006:__anon_252__home_user_yocto_kirkstone_poky_meta_classes_package_bbclass(d)
+
+ 0007:__anon_723__home_user_yocto_kirkstone_poky_meta_classes_package_rpm_bbclass(d)
+File: '/home/user/yocto/kirkstone/poky/meta/classes/base.bbclass', lineno:
+635, function:
+__anon_762__home_user_yocto_kirkstone_poky_meta_classes_base_bbclass
+     0631:
+     0632:    needsrcrev = False
+     0633:    srcuri = d.getVar('SRC_URI')
+     0634:    for uri_string in srcuri.split():
+ *** 0635:        uri = bb.fetch.URI(uri_string)
+     0636:        # Also check downloadfilename as the URL path might not
+be useful for sniffing
+     0637:        path = uri.params.get("downloadfilename", uri.path)
+     0638:
+     0639:        # HTTP/FTP use the wget fetcher
+File: '/home/user/yocto/kirkstone/poky/bitbake/lib/bb/fetch2/__init__.py',
+lineno: 253, function: __init__
+     0249:            self.relative = True
+     0250:
+     0251:        if not self.relative:
+     0252:            self.hostname = urlp.hostname or ''
+ *** 0253:            self.port = urlp.port
+     0254:
+     0255:            self.userinfo += urlp.username or ''
+     0256:
+     0257:            if urlp.password:
+File: '/usr/lib/python3.8/urllib/parse.py', lineno: 177, function: port
+     0173:            try:
+     0174:                port = int(port, 10)
+     0175:            except ValueError:
+     0176:                message = f'Port could not be cast to integer
+value as {port!r}'
+ *** 0177:                raise ValueError(message) from None
+     0178:            if not ( 0 <= port <= 65535):
+     0179:                raise ValueError("Port out of range 0-65535")
+     0180:        return port
+     0181:
+Exception: ValueError: Port could not be cast to integer value as
+'mypassword'
+
+ERROR: Parsing halted due to errors, see error messages above
+
+Summary: There were 2 ERROR messages, returning a non-zero exit code.
+
+Note that in the Exception, the ValueError tries to parse my password,
+without the # as the port number.
+
+Thanks,
+Katu
+
+--00000000000014969805fb408cd9
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi,</div><div><br></div><div>Using kirkstone branch, =
+I&#39;ve been trying to follow the Perforce documentation in <a href=3D"htt=
+ps://docs.yoctoproject.org/bitbake/2.4/bitbake-user-manual/bitbake-user-man=
+ual-fetching.html#perforce-fetcher-p4">https://docs.yoctoproject.org/bitbak=
+e/2.4/bitbake-user-manual/bitbake-user-manual-fetching.html#perforce-fetche=
+r-p4</a> and I&#39;ve created the following recipe:</div><div><br></div><di=
+v>#######################################<br></div><div>DESCRIPTION =3D &qu=
+ot;Perforce fetch test&quot;<br>LICENSE =3D &quot;CLOSED&quot;<br><br>SRCRE=
+V =3D &quot;${AUTOREV}&quot;<br>FETCHCMD_p4 =3D &quot;/usr/local/bin/p4&quo=
+t;<br>P4PASSWD =3D &quot;mypassword#&quot;<br>P4PORT =3D &quot;ssl:myserver=
+:1666&quot;<br>P4USER =3D &quot;myuser&quot;<br>P4DEPOT =3D &quot;path_to_m=
+y_depot&quot;<br><br>SRC_URI =3D &quot;p4://${P4USER}:${P4PASSWD}@${P4DEPOT=
+}/...&quot;<br><br>PV =3D &quot;p4-${SRCPV}&quot;<br>S =3D &quot;${WORKDIR}=
+/p4&quot;</div><div>######################################</div><div><br></=
+div><div>I get the following error because my password finishes with a #:</=
+div><div><br></div><div>user@pc:~/yocto/kirkstone/build$ bitbake =C2=A0p4-t=
+est<br>/usr/lib/python3/dist-packages/html5lib/_trie/_base.py:3: Deprecatio=
+nWarning: Using or importing the ABCs from &#39;collections&#39; instead of=
+ from &#39;collections.abc&#39; is deprecated since Python 3.3, and in 3.10=
+ it will stop working<br>=C2=A0 from collections import Mapping<br>Loading =
+cache: 100% |##############################################################=
+###########################################################################=
+#################################| Time: 0:00:00<br>Loaded 1628 entries fro=
+m dependency cache.<br>ERROR: /home/user/yocto/kirkstone/layers/meta-mylaye=
+r/recipes-custom/p4/<a href=3D"http://p4-test_0.1.bb">p4-test_0.1.bb</a>: E=
+rror executing a python function in &lt;code&gt;: =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 | ETA: =C2=A0--:--:--<br><br>The stack trace of python ca=
+lls that resulted in this exception/failure was:<br>File: &#39;&lt;code&gt;=
+&#39;, lineno: 3, function: &lt;module&gt;<br>=C2=A0 =C2=A0 =C2=A00001:__an=
+on_20__home_user_yocto_kirkstone_poky_meta_conf_machine_include_arm_feature=
+_arm_thumb_inc(d)<br>=C2=A0 =C2=A0 =C2=A00002:__anon_32__home_user_yocto_ki=
+rkstone_poky_meta_classes_patch_bbclass(d)<br>=C2=A0*** 0003:__anon_762__ho=
+me_user_yocto_kirkstone_poky_meta_classes_base_bbclass(d)<br>=C2=A0 =C2=A0 =
+=C2=A00004:__anon_1135__home_user_yocto_kirkstone_poky_meta_classes_insane_=
+bbclass(d)<br>=C2=A0 =C2=A0 =C2=A00005:__anon_1442__home_user_yocto_kirksto=
+ne_poky_meta_classes_insane_bbclass(d)<br>=C2=A0 =C2=A0 =C2=A00006:__anon_2=
+52__home_user_yocto_kirkstone_poky_meta_classes_package_bbclass(d)<br>=C2=
+=A0 =C2=A0 =C2=A00007:__anon_723__home_user_yocto_kirkstone_poky_meta_class=
+es_package_rpm_bbclass(d)<br>File: &#39;/home/user/yocto/kirkstone/poky/met=
+a/classes/base.bbclass&#39;, lineno: 635, function: __anon_762__home_user_y=
+octo_kirkstone_poky_meta_classes_base_bbclass<br>=C2=A0 =C2=A0 =C2=A00631:<=
+br>=C2=A0 =C2=A0 =C2=A00632: =C2=A0 =C2=A0needsrcrev =3D False<br>=C2=A0 =
+=C2=A0 =C2=A00633: =C2=A0 =C2=A0srcuri =3D d.getVar(&#39;SRC_URI&#39;)<br>=
+=C2=A0 =C2=A0 =C2=A00634: =C2=A0 =C2=A0for uri_string in srcuri.split():<br=
+>=C2=A0*** 0635: =C2=A0 =C2=A0 =C2=A0 =C2=A0uri =3D bb.fetch.URI(uri_string=
+)<br>=C2=A0 =C2=A0 =C2=A00636: =C2=A0 =C2=A0 =C2=A0 =C2=A0# Also check down=
+loadfilename as the URL path might not be useful for sniffing<br>=C2=A0 =C2=
+=A0 =C2=A00637: =C2=A0 =C2=A0 =C2=A0 =C2=A0path =3D uri.params.get(&quot;do=
+wnloadfilename&quot;, uri.path)<br>=C2=A0 =C2=A0 =C2=A00638:<br>=C2=A0 =C2=
+=A0 =C2=A00639: =C2=A0 =C2=A0 =C2=A0 =C2=A0# HTTP/FTP use the wget fetcher<=
+br>File: &#39;/home/user/yocto/kirkstone/poky/bitbake/lib/bb/fetch2/__init_=
+_.py&#39;, lineno: 253, function: __init__<br>=C2=A0 =C2=A0 =C2=A00249: =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.relative =3D True<br>=C2=A0 =C2=
+=A0 =C2=A00250:<br>=C2=A0 =C2=A0 =C2=A00251: =C2=A0 =C2=A0 =C2=A0 =C2=A0if =
+not self.relative:<br>=C2=A0 =C2=A0 =C2=A00252: =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0self.hostname =3D urlp.hostname or &#39;&#39;<br>=C2=A0*** 02=
+53: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.port =3D urlp.port<br>=C2=
+=A0 =C2=A0 =C2=A00254:<br>=C2=A0 =C2=A0 =C2=A00255: =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0self.userinfo +=3D urlp.username or &#39;&#39;<br>=C2=
+=A0 =C2=A0 =C2=A00256:<br>=C2=A0 =C2=A0 =C2=A00257: =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0if urlp.password:<br>File: &#39;/usr/lib/python3.8/urll=
+ib/parse.py&#39;, lineno: 177, function: port<br>=C2=A0 =C2=A0 =C2=A00173: =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0try:<br>=C2=A0 =C2=A0 =C2=A00174: =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0port =3D int(port, 1=
+0)<br>=C2=A0 =C2=A0 =C2=A00175: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ex=
+cept ValueError:<br>=C2=A0 =C2=A0 =C2=A00176: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0message =3D f&#39;Port could not be cast to inte=
+ger value as {port!r}&#39;<br>=C2=A0*** 0177: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0raise ValueError(message) from None<br>=C2=A0 =
+=C2=A0 =C2=A00178: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if not ( 0 &lt;=
+=3D port &lt;=3D 65535):<br>=C2=A0 =C2=A0 =C2=A00179: =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0raise ValueError(&quot;Port out of range =
+0-65535&quot;)<br>=C2=A0 =C2=A0 =C2=A00180: =C2=A0 =C2=A0 =C2=A0 =C2=A0retu=
+rn port<br>=C2=A0 =C2=A0 =C2=A00181:<br>Exception: ValueError: Port could n=
+ot be cast to integer value as &#39;mypassword&#39;<br><br>ERROR: Parsing h=
+alted due to errors, see error messages above<br><br>Summary: There were 2 =
+ERROR messages, returning a non-zero exit code.</div><div><br></div><div>No=
+te that in the Exception, the ValueError tries to parse my password, withou=
+t the # as the port number.</div><div><br></div><div>Thanks,</div><div>Katu=
+<br></div></div>
+
+--00000000000014969805fb408cd9--
 
