@@ -1,808 +1,864 @@
-Return-Path: <randy.macleod@windriver.com>
+Return-Path: <Qi.Chen@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9FFC7EE23
-	for <webhook@archiver.kernel.org>; Sat, 20 May 2023 19:58:26 +0000 (UTC)
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.web11.4327.1684612697614104466
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A944EC7EE23
+	for <webhook@archiver.kernel.org>; Mon, 22 May 2023 02:17:26 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.web10.3873.1684721838283751755
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 20 May 2023 12:58:17 -0700
+ Sun, 21 May 2023 19:17:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@windriver.com header.s=pps06212021 header.b=WVFD5LER;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=450466cd42=randy.macleod@windriver.com)
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34KJvUMG024874
-	for <bitbake-devel@lists.openembedded.org>; Sat, 20 May 2023 12:58:17 -0700
+ dkim=fail reason="body hash did not verify" header.i=@windriver.com header.s=pps06212021 header.b=YoTtbhC4;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=450688913f=qi.chen@windriver.com)
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34M220EH019473
+	for <bitbake-devel@lists.openembedded.org>; Mon, 22 May 2023 02:17:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com; h=content-type :
  message-id : date : subject : to : cc : references : from : in-reply-to :
  mime-version; s=PPS06212021;
- bh=VrF9A+Z9RzNpg2hhLIez5IpqW9wPKec7dGcHRxYLCCQ=;
- b=WVFD5LER5ISv0wbvD8KcDadK37xgkQ4w1DXcxpM7QiEdgWyYjbRDi/TqPYLehoyny31l
- vrZ5YUEii0MuIgtaG0zxoLVvSBl/Y+sD2lliVojGiwvs1UxH3pseCKpMy52/GpGa2MXs
- z/0zp2V59eW41MCELfaInIL3xexcF2izHjthvftNLkf3fAZD7Lw+HWQ9yJ1k2Dnn2dIi
- f9GXJsEsBWklgBj53HQOz/3i2tI50A5RYJv0u/BNeZAV59dWaB5/EBExh1jZLCZ6CXx3
- cL5uA+GZZp9rCs1StOqD/mH6N5JdZxyDXJj6iHErDlOD8cZt3u54TgmtIWukhj1fIgW5 qg== 
+ bh=x5VfCWkYGRwDDq1ZQHeXoNNjz3Mp6L+tahj9k9WD0g0=;
+ b=YoTtbhC4CcBZ8nuZ2p0U5MceZOf/Nx47qfr8QOG7B26aC+KzcD8gnqQ4p+rnejn0Yn+0
+ zr0MHDnj/u6g37ka7KvwWsHp1Ic0pF7jF11B0OldCMWx+CZ0J02TjdJXAnF+SV8knnvB
+ 3SDwUxUyTubYGU9fQSzZKUSc8+YgxAX8nzppWS02kv2DaUjHgh7quZ/tiNVGeKiNZ6Z5
+ gmf4Z7WF/HOG3ink0pmkczX8y9GKgJly+tduQdy9v5rQkJ7YaBCJ4OLrKbIKn6h4hwNU
+ Bg4ofL38tKQF7lj0aQMowf7PcIx5JdBu7mMMVAvs39N2vUL6lZiH3TgaDfM13EAT1smP oA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3qpwqh87hs-1
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3qpn67hcjh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Sat, 20 May 2023 12:58:16 -0700
-Received: from m0250809.ppops.net (m0250809.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34KJwGoO025539
-	for <bitbake-devel@lists.openembedded.org>; Sat, 20 May 2023 12:58:16 -0700
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2173.outbound.protection.outlook.com [104.47.57.173])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3qpwqh87hr-1
+	for <bitbake-devel@lists.openembedded.org>; Mon, 22 May 2023 02:17:16 +0000
+Received: from m0250812.ppops.net (m0250812.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34M2Dtwb010157
+	for <bitbake-devel@lists.openembedded.org>; Mon, 22 May 2023 02:17:16 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2045.outbound.protection.outlook.com [104.47.51.45])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3qpn67hcjg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 20 May 2023 12:58:16 -0700
+	Mon, 22 May 2023 02:17:16 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M7MSteC2hQ/lPK2I2c+DEDYAQbg7E7WNP9kYxqTHybjg76H5w2HBj38NuGjSUDApgOreIyE61eGEk6Xc4xI2VT/Q2EY+oMLg5zfnj2HDC+Yh23NSTtAnFW8EJGIXnrQ9mo3tF2d1spuW8eYdCeyfnmdg1BBKpkBId8vL0bz/G7BYg8OXR5+kRyi1mL+FjFuwchGAyBrJ77yuN8J2HXBZX58cVUluEZE0Ep+J/qyxLaLrt+0TD6KBDrkwVsWHkQHIzXXh3ehveR8hr4EE8Pf/17duyWO46+vjY74+HdcxjjQ5+COcOf9BJRZElI0OJhOW/68lQdh9KZPlIqzwDvmDhA==
+ b=OKl7I/HoOj4EgqTWCLgZGHA97LBqhK33lHQN7tRySctr3VAmw2FLARSi0tCwBwlGFUBOoWsOAYLUJSAkGauFCeySsH4Z+Np3rMuVtXmTevrz5vhPqHaiohjq/2lWmkJexuzo2axkklMB6hHOdRhB8TGe3/n97supAuyW0w6ZWxOGvurEawLnPdzwpMVkI2b27ggk7R0OjADbPf9PTnHjiOCxxa3Zj4F06mcH51chUaxc7/HxNVY4j+qPZFsILhcrDCVDBUU5qn1P0C2XHAvdTi9QKe6O+HYW0l10vAv4zRqqMz//JozCbdUYp0N8vdcCbj8iuhQspeMiQ/Z0yTha5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VrF9A+Z9RzNpg2hhLIez5IpqW9wPKec7dGcHRxYLCCQ=;
- b=PbvT3ZmAs5MyILwgUkip5VU0Z51hX0TJJg1TuE8kjnFpcKHsKR2IcVAMgCYWTNk5fQ7++b/zY8nfiJZPtBTpFdRD1XEhxxMBYoDvABY2KSv9XsDb3WscnPlDIBZjnEQwaytuwqAwSwNh1OxvnsVEMARVaL3OEJofu9WvuJYPkUFvZiOL2FYwWw7nB07w9JJfP+VesYmuG3l3CHFdo/eX50ALRNQAt8/iFHRkt6PjSyhs61QZD1ILE8bxkvn4Cnlhz550Q9EUyac5eP2YE5erphVmJAIc4/xBABmBDY2dijptVrIObfeOOJ9HM6mDGsr3XOW2TDdjTaNPvlvV+gLPjw==
+ bh=x5VfCWkYGRwDDq1ZQHeXoNNjz3Mp6L+tahj9k9WD0g0=;
+ b=hoFz7dd93tDTo3D5nIku0X+lgJCGLR9rkxeXUYPmBgmwH3hurEkoZ/RbEX7XAi7dRBekmWjDkegia19m0HFOT1hr3cjq5sPD0ZeySe4gYNuz/W/gKT3qlrMrLoFIVIhLSsin+rA8GwpSf7Zg0bsK1yK/GbM6P0KbLfCHuo49UuOazqE3quRCrvmEdXs0aqRFHZLc58Oq6GxxGJzOU0Pkne6TPoZGGf+h3uAPl9Ga+TyPc5OXDNtSUM6eBWrtjLS4u7wOCvYhR3af20Mm6RzTGsx5InyCreERU1EflCxTAsCHTCOewN9HaYZjLR2X1aowv7A686GEYxNrY932CYx9Bg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=windriver.com; dmarc=pass action=none
  header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from DM6PR11MB3994.namprd11.prod.outlook.com (2603:10b6:5:193::19)
- by BL3PR11MB6412.namprd11.prod.outlook.com (2603:10b6:208:3bb::6) with
+Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
+ by IA0PR11MB7188.namprd11.prod.outlook.com (2603:10b6:208:440::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.17; Sat, 20 May
- 2023 19:58:11 +0000
-Received: from DM6PR11MB3994.namprd11.prod.outlook.com
- ([fe80::a2e6:a5d4:b628:fa7f]) by DM6PR11MB3994.namprd11.prod.outlook.com
- ([fe80::a2e6:a5d4:b628:fa7f%6]) with mapi id 15.20.6411.025; Sat, 20 May 2023
- 19:58:11 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.27; Mon, 22 May
+ 2023 02:17:12 +0000
+Received: from CO6PR11MB5602.namprd11.prod.outlook.com
+ ([fe80::fa8:8cc5:a5da:7e07]) by CO6PR11MB5602.namprd11.prod.outlook.com
+ ([fe80::fa8:8cc5:a5da:7e07%5]) with mapi id 15.20.6411.028; Mon, 22 May 2023
+ 02:17:12 +0000
 Content-Type: multipart/alternative;
- boundary="------------A5Pwo88g8koc3f0nA04JXkyv"
-Message-ID: <732553c1-870e-c794-c245-d664afa14343@windriver.com>
-Date: Sat, 20 May 2023 15:58:04 -0400
+ boundary="------------l8ppbDaQDTotzacr0RRRL7hJ"
+Message-ID: <5fb8eecc-135f-c34a-3d1a-1d4b9ae62509@windriver.com>
+Date: Mon, 22 May 2023 10:17:06 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
+ Thunderbird/102.9.0
 Subject: Re: [bitbake-devel] Bitbake PSI checker
-To: contrib@zhengqiu.net, Ola x Nilsson <ola.x.nilsson@axis.com>
+To: Randy MacLeod <randy.macleod@windriver.com>, contrib@zhengqiu.net,
+        Ola x Nilsson <ola.x.nilsson@axis.com>
 Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
-        bitbake-devel@lists.openembedded.org,
-        "Chen, Qi" <qi.chen@windriver.com>
+        bitbake-devel@lists.openembedded.org
 References: <jwq5yegq5h5.fsf@axis.com>
  <49ffc1db-9b43-e570-d726-dba12d560a30@windriver.com>
  <jwqfsdbo6w9.fsf@axis.com>
  <C2B324F8-26C0-4FD6-848C-1224EB502474@zhengqiu.net>
-Content-Language: en-CA
-From: Randy MacLeod <randy.macleod@windriver.com>
-In-Reply-To: <C2B324F8-26C0-4FD6-848C-1224EB502474@zhengqiu.net>
-X-ClientProxiedBy: PH0PR07CA0110.namprd07.prod.outlook.com
- (2603:10b6:510:4::25) To DM6PR11MB3994.namprd11.prod.outlook.com
- (2603:10b6:5:193::19)
+ <732553c1-870e-c794-c245-d664afa14343@windriver.com>
+Content-Language: en-US
+From: ChenQi <Qi.Chen@windriver.com>
+In-Reply-To: <732553c1-870e-c794-c245-d664afa14343@windriver.com>
+X-ClientProxiedBy: BY5PR03CA0016.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::26) To CO6PR11MB5602.namprd11.prod.outlook.com
+ (2603:10b6:303:13a::5)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR11MB3994:EE_|BL3PR11MB6412:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6f1c652-3860-4449-5937-08db596c8833
+X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|IA0PR11MB7188:EE_
+X-MS-Office365-Filtering-Correlation-Id: 39ca555d-c2b7-4e7b-8190-08db5a6aa721
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	nqcwKOy5OJnhPWhNlCKXEhAWIzGeyd6fPG8gu4HTIn63MtMrw7r4eG2yh51vNNT+oRyYU0qgfHFkeUcAn9D5GrnT0Fc38bdYiAJxD7IxJcaufhl857rYyamijeR3fSut5U2MtxT9/KU0xM1zdJiEJylxFWxOnazqnEw+MRYYVtErAoo8kUP+dzmCtdyKnaSstV/6vOrqsM2ZZI6xxkHzf9nbGk4+2yhRR1Xw33HwG7L6ic2AsipmGeQknxNwL1qpVGohufmYPbSVY6ilR/xI6Gz0RCyONRiHTNFE7A987/bF2I4uRxjA8mf2zC7x9m5/+k2TBKpFYC2azkfJgrdH2syNX9fF05j15ejaz1Q3Lx3d2/TxQ/Ilut3nvd1XoscjP0+kLGQtBngzdWWmyPZoJ/W47KvnBcpvO5+sA/ou2WyBhCxao1yg5HUkyzJyKYSiVKq8ujgB6J/GmGt5MO1dMEFBNC/y62Ah3+oIkJXFepjCOENT4F2RAFhklsZsa6NSySRg3JuPHhDepvrIKwGGD29w6ZvT697HM3Zt7JRJxiQeRL0FfgaKapcYLbbGpy9N1XGMnmHfqTqWjmC0flOR2iCtUfO+mQWz7f103NquWYdG/RmnaEQ4fGJcslyDygEPnmBGhhX5RhLvgJEcZdn0CUEFTyBVtV0b+SmPbfFR5j7Lypol6GO6Fb+mdVe8OgHJlHvFv/ATdOuzBNn0ew7kfw==
+	jjZNvP4LKauWQp7Nw5D7rpcYFYkF99kEUnPCCqHwIcVQW4Qp9qU67qP+mD29IWfccFNL15/0hUF0O42i0dCblNTFJ+GOaIKDBGaQqS1bpUpcEMuSteCJPDUfpuXqLZaO6ktxBMTK/qeUNOtUKZ7AHck8/jOU3QRuRwxKV+B6/IikBCPReDkRZZKi9Kp1SVgSRfJ4bqARHcnKqOUwx5UsBdsnA7dAznIbVE4u2yhsQz4/IVDxG3CuDSyE/ci3GOosoMvrFSrI7wC2h7hzHG87QgO7UAd/9nF8kwWPaIgrUkMdJlSQ6Y0XFjIJuQlIqsRe7k0mHIfoe3wQC9y4WAnhYdx+Nkz1SDGYTDt7xQW6ExDUgjLRiYwIN02PpbOB/4KwWSZMOlbXvDN9ZssN9NrRIeuSdocLMVl/IESIxulydekjfunjfuCrIDN+q+UlMqEMaT9Wa3/aLOjd8raM3zRcYjhZdZPtyDnDp6T8w69T7f7uCOAee7Ks1ejcf0Tlgur5xTtS/ljMLeBDl9CISRsWIB3816XAYh8JHtMG5Eu+2FBrkdYPT3/xEgDNWsRdrHyAt5wKBNw3KY6mhUtNqAjBjt/EYkSTa2K1Q1grINvXmcg8Z4JSoByI9Bdq9rqPP/FaVdL51a6GPZ8ElneFWa6Q/tbXMaB1yQ8k3sdJfziySIPth5tfadqLe9U1Bfw+k7j808bfWc0kIXmsN3r8MaZJ/g==
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3994.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(376002)(136003)(346002)(39840400004)(451199021)(83380400001)(33964004)(186003)(966005)(4001150100001)(6666004)(2616005)(478600001)(54906003)(6486002)(6506007)(6512007)(26005)(8936002)(53546011)(107886003)(30864003)(5660300002)(66556008)(8676002)(36756003)(6916009)(31696002)(41300700001)(38100700002)(66946007)(4326008)(2906002)(66476007)(166002)(316002)(31686004)(86362001)(66899021)(21314003)(43740500002)(45980500001)(579004);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(376002)(396003)(346002)(366004)(39840400004)(451199021)(8676002)(8936002)(83380400001)(5660300002)(53546011)(186003)(6512007)(6506007)(26005)(31696002)(2616005)(86362001)(166002)(38100700002)(41300700001)(6666004)(6486002)(478600001)(33964004)(966005)(4326008)(36756003)(66946007)(66476007)(66556008)(316002)(110136005)(4001150100001)(2906002)(30864003)(31686004)(66899021)(21314003)(45980500001)(43740500002)(579004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?NDRwR1BTcGJsd29jRUhwMWtNMktkRUdORnByU3lJZi9xUmxkYUpEQVlHTXV2?=
- =?utf-8?B?T1pVSTN1eU1KdDBCNVhuVVRVYXVHWHlwWlpkb2RVZnJyejdvZ2lZa2oyc0d1?=
- =?utf-8?B?UkVTK0xyTDllUnJ2MDlRZVMzTll6TE1JOHdoSG01WEwrMWxJVE9NREp6cVFp?=
- =?utf-8?B?Mjl0aUpIY01mTEtKR0FvSzNObTVVZ0l3N0pmQUNwRVpMMkpmZjExaHlqTFJK?=
- =?utf-8?B?WDZoeW5JcjNBbW5Da05zeXBlMHdZWlVqSENPS09CaDJPdXRPaTZCSmZtMEpT?=
- =?utf-8?B?cEV2VHN0aWtlQ0xYNEVBdmVJZHRzcEl3MHh5RDRJRDZZblJ5R1ZFVGVTY0dP?=
- =?utf-8?B?c1RpUGw4dk9zckhuVHRmejNhMTFnQXM4NjVPZEREQi9BQ2dvVHJkc0pnc0R6?=
- =?utf-8?B?eUtqTitZeU9vdjZmekxQR3crdU5iVHFrYkNhVDNuOTVFdlpjSVR1SGtSeW50?=
- =?utf-8?B?Vyt4ZDZMZlltQVZqVHpGaGFRbTNBa1ZHVnlENXd4NFYzM1lPbTg5Mm1NRUpt?=
- =?utf-8?B?ZnlYMExFdFc0MjNzNElEcVh6R3JpeGZrZUVkbW54U0gzTy8wb3ZWNjNQVmg4?=
- =?utf-8?B?bG5ldithaDN6Uy9iNkJWZ1U3QTdKcFRQZ0lqWVUvcUUwNzhjRkxaT1ZjMUY3?=
- =?utf-8?B?VnIvdm1GeEl4bHd0ODNuc08yZlNuL2xjNmFEU0I2MXhPM2t0WFZUU2F3VHBM?=
- =?utf-8?B?RTI0QVBONFJYWi9EUzcrQTl3eTNXa0MrWnRFclM1SFFJN3dGNkVnSHVnQTdy?=
- =?utf-8?B?ZlBYcHY4QWd1Mlh5cmVhaEcyaWRjOVkva2RnS3d5ZHJDNU9oMHd1MXBLT0Fh?=
- =?utf-8?B?c04rdHZhbU5FSFh3VFMvYWhYOGIrcWJCbStaQXQ5c3RtOFZ5ZE04UENDWitw?=
- =?utf-8?B?Nm41WnBDak02QjFzVWFVeFM4bFJTR0dIcUFSTU8wNmxZRmlXUWJCa2VCVWI4?=
- =?utf-8?B?NEk2Qjl2dklSTGZXL09qa05LTk51b3lMRzV6Tk9oSGtQYjdTb3BONkltK2Iy?=
- =?utf-8?B?d0FteTBhNUYxTllqTjR4VEUvcE0va3VNbGtra2E5ZUpiVEp0SjlWa1loa2Vm?=
- =?utf-8?B?NTJmNUo5dlhmOVJwYVRFMElFa0p1WXlUYUpKRVZRL291d28vUkkyV3BLQjYr?=
- =?utf-8?B?V3o3d09XQm00eFcyZmI0dmZ4NGo3aDFrUmIxSXZjUS9WSVpEVE9mRU5SN3Qw?=
- =?utf-8?B?aTVnbGM2WmM0bjQzTm9oeW5lTmdlVnRreDViVVROaW5Wa0JxYkV0RWVyaEtH?=
- =?utf-8?B?TzA1UFgyNTNmWGY4V2grcE9idUp1ME9yZGJjK2o1a2cxbHBOVXh1UW1XTXI4?=
- =?utf-8?B?TU1tcU5neWpraVpoc0hqMkpRajY4K1hNSTBYcFBSZUMwWjc1ejZ6WTZyVDVx?=
- =?utf-8?B?cmFISnhUOEFNQ21BZDRVaDVjWmJQVUdYNmZQQWpralRMN0toTWRKdmlTZVpP?=
- =?utf-8?B?aXRSMi9HeGNnZUxFcXMyK25Vakt4UHRySjV2NVVKc21tNjVzNWxoN3p4ME43?=
- =?utf-8?B?MlFBL1JrVUJ2R3VYVEMyTDFxSnFhM0lzbGZTQi9YMmZ3OWxxSHpxNldNa0Vy?=
- =?utf-8?B?SDNnUmlOcDVobllKNlhhRUJ5a2tsak1MNERKczFSVFJ4KzFzZWFkUUFndEtL?=
- =?utf-8?B?emtzdW1IMFM1QkNOQm1KNjFTU0lBSVVlTC83MXVocXRDdXRDbXlRQi9QbTdV?=
- =?utf-8?B?Mi9HLzJwZWlGMFJrQnRjUzhDZWpRK0g1QXBSTzVDOTl0NjZVTWlWbnpRRTBs?=
- =?utf-8?B?THhSM2RhbTM3RFNTQko2Qk5qVTVrRFBpZk9XQTR5MHF6UnViQWxDcngxaDVG?=
- =?utf-8?B?aXZzYXZ2dGRKY2hDbEZVRVBvWHJaRHFPbmZXQXBrUm8xZExKNUhkTXlWSUQz?=
- =?utf-8?B?b1dOTng2K1dkcHdFMmpYT2dkdytRNldSY3VpNy9meWRYcTlnVWNmTGdUMCtw?=
- =?utf-8?B?aXExY251cEJicElWdTZaSGVxbDN1SlQ0dDNDTkpuUmhvRFU1NW9zVEF2VjJk?=
- =?utf-8?B?R2NGQjR1UGxnY3IycHgrbGhuVW9XTzlTaUZad3E0UmdLM1RBanlhTkpHdXlz?=
- =?utf-8?B?RENqUlduNllmWitVSDFOSGhsZ0FqQThtZUxCZUcydjErTFg2SEltNXRVWVEw?=
- =?utf-8?B?c2E3SlBBKzVZK1VWU0c5NnVjV1NhSXRYRzU3REVvZE5ZTmNDbWM0eXZmUXkr?=
- =?utf-8?B?Y3c9PQ==?=
+	=?utf-8?B?dUFxMkRZQUpmTzM4b2l1TmNNTzF2Vzd6V2o4cmdweUZtT3NzSVdjV21ZZVJv?=
+ =?utf-8?B?RWFyNW1LWEF1aEJ2MGJabjZlNVE0ZXlERzNBa3lxS1dnWFpzS3RaVU1CWDRN?=
+ =?utf-8?B?YnNTMGpudkdhZlMyWGdYVmk3QzNQK2pUd3pqTWQzajlsSElMRXo4MURZc3Ny?=
+ =?utf-8?B?S2laYSt0dXVXT0g0TGtvc0V6M090OE4xbDd5WmFZZXhnSHVKTGlGd3RUeE1M?=
+ =?utf-8?B?bzBJQ1g3VGJnMDNtaHBpK1pmQXVXYkNCaVk2b1Z2dmg5VW1hclFPTmZ2OTQ5?=
+ =?utf-8?B?RURvTm1QSUN1dG9Qc2lGSHN2OGdpdllLZnRPdzNrK2xqMFhGR1dOMWNHSVlL?=
+ =?utf-8?B?U080NTNZR2tFQjhWL09IU0RzSVNmQSsyNWR4Kzc0d2lZdXV6VHFNelZTWCt4?=
+ =?utf-8?B?cUlFS2NLVDlGVUZBMk1EZjJaeHIzQ3VCR25kb0NneEkrb1drdHJrTTJKWGti?=
+ =?utf-8?B?Q0RhUHJCeVVpR1laL2ZvVkl5NThSdnM2Z0ZuK0xrRFR2OUFXYmxPMHRTQXY0?=
+ =?utf-8?B?cWd0VzFLSkR1aGUrcnFLSFRVUFZGcXF0ekhpVDRVL1AwRkFFclVGMmdLVWp1?=
+ =?utf-8?B?Mm1CbkFLMU15QlpPUXFUeDU5cjlRMlVSenYrRm1DQ1o1NXV2dVM5YkpONWRP?=
+ =?utf-8?B?aFBiWThxTlhXSDBnaVJGNjRtdUJHQ3FCNkk2ejJGUzdhaTBraU5BUnlXcTBO?=
+ =?utf-8?B?NWpxazlzZ0ZUQUk5aStoSGVHREFyUU5QcXdUMWkzcVRhVEE2L2tKN0NHRVYr?=
+ =?utf-8?B?Zmx2RWFxR2VUS0xqZUtKSk9CM3E3aW1MeHpJc2I1Q0hvMEM3Nytva1VqcXQ4?=
+ =?utf-8?B?THJHVUV0U0V1bGdZbWNWTVlJNzJXQzZsNm1qSXlBM1ZySlFzY1hEUE10aXF6?=
+ =?utf-8?B?UjRSOTJ6MHhid1R2c3l3cU10Q2E0Qmw2SzBQdXQxME5kMnFUOVhic0h5QWpk?=
+ =?utf-8?B?Y2JKckpJR0FSWHh4WDFtR2dqTXp2cVdxbEhNdFRFenF2SXFkdUpxaDltM2F5?=
+ =?utf-8?B?QzVPWnl3Q1o5ZC96b2M0SHIxNEt1bExvRS9yUU1LcDd0dEZtSnhBdFZZQWhl?=
+ =?utf-8?B?d296VW5ncnhKamorc1ZRNG9FaThmLy9DYkFYb1BVRVBLL3RwNExZSmtNN3Zu?=
+ =?utf-8?B?YmZ5dHBJQWFmVWJWWm1DaklsbXEyN3BUekxPMVh3cWdTb0cyZ0h1NEZaRCtL?=
+ =?utf-8?B?NzhMVU9LWkJtNmthSkV4dFNjTkh4QW9UZzdYMGhwZlRDVmFUNjU5SGl5ZWxa?=
+ =?utf-8?B?cVRUZVNOUDVzYWtTYjN5SFhLQzNBM2sweklhb1NtbmJNU3FRdzJsUjMrTHN0?=
+ =?utf-8?B?b3MzMlMrKy81dFFCRG1EK2pWbFpndHpHZVFicm16VWk3aUlTSFg5N0lPZG1Q?=
+ =?utf-8?B?aGIrY3AwdWVJb0k1d1BhZGtCUk5pZ2c1UFFZbWxwaTN1THYzR0crRkJWaVBh?=
+ =?utf-8?B?QkQrSVFSYjJGN0RHMlRSQzRSV1o3SmJHQlUrYkhVYlk4V1lsaUF4NjJ5bU9q?=
+ =?utf-8?B?M2xMeXMzd1dwQVQ0Nnpvc1grYVVsUlVmcjZRK0YvUzZSZnZsaEFmdzdUUTlG?=
+ =?utf-8?B?MEZoZ1JsZk13QnJRQWFKTFpzcjh0TkZMdXBDWUxmQ09kdjNidVQ4SHZkNVlY?=
+ =?utf-8?B?WGZiR2toTGtxaFR1eFA2Snc5NTQweVVBRXdPY0xUdlU5TlRHbHJYK0p5M1lF?=
+ =?utf-8?B?c2Y3NGxYTXBWZmJuSXoramw2ZGtudDBoT3Jmb3Q5RUM4S1ZGVEpLY052M2lF?=
+ =?utf-8?B?ems1bnhXcHFFU1lZZDBPd2lxRUJUZXd4L05xSlZnVTdlRmhJN0NCVUxWMUJE?=
+ =?utf-8?B?MUIrTGMvK3dETW1rb0xFWjQzZkdWTitISWVkR1o5RGRxN3pnN2JkWWNTeWhJ?=
+ =?utf-8?B?dEo1RWswMGVoNy9tYW53R3hZNTE1RmJKOHJqSHpjeTlwN2wxSkFGeDFNYmFV?=
+ =?utf-8?B?YjA0MWtZMWVzNU9SOGZUbXBzWEFISnpFckRudmVtclZQN0F4dVdyejlGWVB6?=
+ =?utf-8?B?TmVvRTFMTkpleXp1WWNlRjNwcEc1Yi8wMk1KTFZBY0U5bFNmZmsyNG85bW1L?=
+ =?utf-8?B?UEgvdkNQRXMzdlhYM2cxUTkrR3VGckF1UldVRmJoM2xBdVdMSGxGQ25Lc2F2?=
+ =?utf-8?Q?eiHwHs09ZeA+ozSDDTacJvn+L?=
 X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6f1c652-3860-4449-5937-08db596c8833
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3994.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39ca555d-c2b7-4e7b-8190-08db5a6aa721
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5602.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2023 19:58:10.9019
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2023 02:17:12.5850
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vPFINR42IacuhwVgWDHbcyiC+mwdu5i9l/MYD3yt/zETDJ7pCVqvjAHMEN5FE9MeRKCBN0io11jwb7+d9qoCIB0FCWLl7SXIcLR4ivBYdzQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR11MB6412
-X-Proofpoint-GUID: Kn4dT8f1zngqj0l24tzDUjFxHRTLS3KC
-X-Proofpoint-ORIG-GUID: D9UZEPcqJ6UoSGjkKR5acqCBj8CRdVa7
+X-MS-Exchange-CrossTenant-UserPrincipalName: ivKNUx8Ih7H4CbcWaxv3yuIlq7mGzXaDaGlGib+FA4wXB1CJagQ7bIFlAqGN2Vehjc/TUid0dpb8gRYc1mCtMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7188
+X-Proofpoint-GUID: ITvjGLEs8f2eMsGM9Jbim5EldC-UjbGV
+X-Proofpoint-ORIG-GUID: 6th_Rl5WK0YjCoL0Mvq49kL3IQzDnlfI
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-20_12,2023-05-17_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- adultscore=0 spamscore=0 impostorscore=0 mlxlogscore=999
- lowpriorityscore=0 clxscore=1011 bulkscore=0 priorityscore=1501
- phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2304280000 definitions=main-2305200177
+ definitions=2023-05-21_18,2023-05-17_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 impostorscore=0 mlxscore=0 malwarescore=0 adultscore=0
+ bulkscore=0 mlxlogscore=999 phishscore=0 clxscore=1015 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305220017
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 20 May 2023 19:58:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14791
+ <bitbake-devel@lists.openembedded.org>; Mon, 22 May 2023 02:17:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14792
 
---------------A5Pwo88g8koc3f0nA04JXkyv
+--------------l8ppbDaQDTotzacr0RRRL7hJ
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: base64
-X-MIME-Autoconverted: from 8bit to base64 by mx0a-0064b401.pphosted.com id 34KJvUMG024874
+X-MIME-Autoconverted: from 8bit to base64 by mx0a-0064b401.pphosted.com id 34M220EH019473
 
-T24gMjAyMi0xMi0xOSAxNDo0OSwgWmhlbmcgUWl1IHZpYSBsaXN0cy5vcGVuZW1iZWRkZWQu
-b3JnIHdyb3RlOg0KPg0KPg0KPj4gT24gRGVjIDE5LCAyMDIyLCBhdCA3OjUwIEFNLCBPbGEg
-eCBOaWxzc29uIDxvbGEueC5uaWxzc29uQGF4aXMuY29tPiANCj4+IHdyb3RlOg0KPj4NCj4+
-DQo+PiBPbiBNb24sIERlYyAxMiAyMDIyLCBSYW5keSBNYWNMZW9kIHdyb3RlOg0KPj4NCj4+
-PiBDQ2luZyBSaWNoYXJkDQo+Pj4NCj4+PiBPbiAyMDIyLTEyLTEyIDA1OjA3LCBPbGEgeCBO
-aWxzc29uIHZpYSBsaXN0cy5vcGVuZW1iZWRkZWQub3JnIHdyb3RlOg0KPj4+PiBIaSwNCj4+
-Pj4NCj4+Pj4gSSd2ZSBiZWVuIGxvb2tpbmcgaW50byB1c2luZyB0aGUgcHJlc3N1cmUgc3Rh
-bGwgaW5mb3JtYXRpb24gDQo+Pj4+IGF3YXJlbmVzcyBvZg0KPj4+PiBiaXRiYWtlDQo+Pj4g
-VGhhdCdzIGdvb2QgdG8gaGVhciBPbGEuDQo+Pj4+IMKgYnV0IEkgaGF2ZSBzb21lIHByb2Js
-ZW1zIGdldHRpbmcgaXQgdG8gd29yay4gwqBBY3R1YWxseSBJIHRoaW5rDQo+Pj4+IGl0IGp1
-c3QgZG9lc24ndCB3b3JrIGF0IGFsbC4NCj4+Pg0KPj4+IERvZXNuJ3Qgd29yayBhdCBhbGw/
-DQo+Pj4NCj4+PiBXZWxsIHRoYXQgd291bGQgYmUgc3VycHJpc2luZy4gU2VlIGJlbG93Lg0K
-Pj4NCj4+IE9LLCBpdCB3aWxsIG9jY2FzaW9uYWxseSBibG9jayBhIHRhc2suIEJ1dCBzaW5j
-ZSB0aGUgbmV4dCBhdHRlbXB0IHdpbGwNCj4+IGFsd2F5cyBiZSBhIHZlcnkgc2hvcnQgdGlt
-ZSBpbnRlcnZhbCBpdCB3aWxsIGFsbW9zdCBhbHdheXMgc3RhcnQgYSBuZXcNCj4+IHRhc2sg
-ZXZlbiBpZiB0aGUgcHJlc3N1cmUgaXMgaGlnaC4NCj4+IEF0IGxlYXN0IHRoaXMgaXMgd2hh
-dCBJIG9ic2VydmUgb24gbXkgc3lzdGVtLg0KPj4NCj4+IDxzbmlwPg0KPj4NCj4+PiAxLiBS
-YXRoZXIgdGhhbiBqdXN0IGtlZXAgdHJhY2sgb2YgdGhlIHByZXZpb3VzIHByZXNzdXJlIHZh
-bHVlcw0KPj4+IHNlZW4gbW9yZSB0aGFuIDEgc2Vjb25kIGFnbyBhcyBkb25lIGN1cnJlbnRs
-eToNCj4+Pg0KPj4+IMKgIMKgIMKgIGlmIG5vdyAtIHNlbGYucHJldl9wcmVzc3VyZV90aW1l
-ID4gMS4wOg0KPj4+DQo+Pj4gYW5kIGFsd2F5cyB1c2luZyB0aGF0IGFzIGEgcmVmZXJlbmNl
-LCB3ZSBjYW4NCj4+PiBzdG9yZSBzYXkgMTAgdmFsdWVzIHBlciBzZWNvbmQgYW5kIHVzZSB0
-aGF0IGFzIGEgcmVmZXJlbmNlLg0KPj4+DQo+Pj4gVGhlcmUgYXJlIHNvbWUgY2hhbGxlbmdl
-cyBpbiB0aGF0IGFwcHJvYWNoIGluIHRoYXQgd2UgZG9uJ3QgY29udHJvbA0KPj4+IGhvdyBv
+SGkgT2xhICYgUmFuZHksDQoNCkkganVzdCBjaGVja2VkIHRoZSBjb2RlcyBhbmQgSSB0aGlu
+ayBPbGEgaXMgcmlnaHQuIFRoZSBjdXJyZW50IFBTSSBjaGVjayANCmNhbm5vdCBibG9jayBz
+cGF3bmluZyBvZiBuZXcgdGFza3MgaWYgdGhlIHRpbWUgaW50ZXJ2YWwgaXMgc21hbGwgYmV0
+d2VlbiANCmN1cnJlbnQgY2hlY2sgYW5kIGxhc3QgY2hlY2suIEknbGwgc2VuZCBvdXQgYSBw
+YXRjaCB0byBmaXggdGhpcyBpc3N1ZS4NCg0KQWxzbywgSSBkb24ndCB0aGluayBjYWxjdWxh
+dGluZyB0aGUgdmFsdWUgdG9vIG9mdGVuIGlzIGEgZ29vZCBpZGVhLCBzbyANCkknbGwgY2hh
+bmdlIHRoZSBjaGVjayB0byBiZSA+MXMuDQoNClBsZWFzZSBoZWxwIHJldmlldyB0aGUgcGF0
+Y2guDQoNClJlZ2FyZHMsDQpRaQ0KDQoNCk9uIDUvMjEvMjMgMDM6NTgsIFJhbmR5IE1hY0xl
+b2Qgd3JvdGU6DQo+IE9uIDIwMjItMTItMTkgMTQ6NDksIFpoZW5nIFFpdSB2aWEgbGlzdHMu
+b3BlbmVtYmVkZGVkLm9yZyB3cm90ZToNCj4+DQo+Pg0KPj4+IE9uIERlYyAxOSwgMjAyMiwg
+YXQgNzo1MCBBTSwgT2xhIHggTmlsc3NvbiA8b2xhLngubmlsc3NvbkBheGlzLmNvbT4gDQo+
+Pj4gd3JvdGU6DQo+Pj4NCj4+Pg0KPj4+IE9uIE1vbiwgRGVjIDEyIDIwMjIsIFJhbmR5IE1h
+Y0xlb2Qgd3JvdGU6DQo+Pj4NCj4+Pj4gQ0NpbmcgUmljaGFyZA0KPj4+Pg0KPj4+PiBPbiAy
+MDIyLTEyLTEyIDA1OjA3LCBPbGEgeCBOaWxzc29uIHZpYSBsaXN0cy5vcGVuZW1iZWRkZWQu
+b3JnIHdyb3RlOg0KPj4+Pj4gSGksDQo+Pj4+Pg0KPj4+Pj4gSSd2ZSBiZWVuIGxvb2tpbmcg
+aW50byB1c2luZyB0aGUgcHJlc3N1cmUgc3RhbGwgaW5mb3JtYXRpb24gDQo+Pj4+PiBhd2Fy
+ZW5lc3Mgb2YNCj4+Pj4+IGJpdGJha2UNCj4+Pj4gVGhhdCdzIGdvb2QgdG8gaGVhciBPbGEu
+DQo+Pj4+PiDCoGJ1dCBJIGhhdmUgc29tZSBwcm9ibGVtcyBnZXR0aW5nIGl0IHRvIHdvcmsu
+IMKgQWN0dWFsbHkgSSB0aGluaw0KPj4+Pj4gaXQganVzdCBkb2Vzbid0IHdvcmsgYXQgYWxs
+Lg0KPj4+Pg0KPj4+PiBEb2Vzbid0IHdvcmsgYXQgYWxsPw0KPj4+Pg0KPj4+PiBXZWxsIHRo
+YXQgd291bGQgYmUgc3VycHJpc2luZy4gU2VlIGJlbG93Lg0KPj4+DQo+Pj4gT0ssIGl0IHdp
+bGwgb2NjYXNpb25hbGx5IGJsb2NrIGEgdGFzay4gQnV0IHNpbmNlIHRoZSBuZXh0IGF0dGVt
+cHQgd2lsbA0KPj4+IGFsd2F5cyBiZSBhIHZlcnkgc2hvcnQgdGltZSBpbnRlcnZhbCBpdCB3
+aWxsIGFsbW9zdCBhbHdheXMgc3RhcnQgYSBuZXcNCj4+PiB0YXNrIGV2ZW4gaWYgdGhlIHBy
+ZXNzdXJlIGlzIGhpZ2guDQo+Pj4gQXQgbGVhc3QgdGhpcyBpcyB3aGF0IEkgb2JzZXJ2ZSBv
+biBteSBzeXN0ZW0uDQo+Pj4NCj4+PiA8c25pcD4NCj4+Pg0KPj4+PiAxLiBSYXRoZXIgdGhh
+biBqdXN0IGtlZXAgdHJhY2sgb2YgdGhlIHByZXZpb3VzIHByZXNzdXJlIHZhbHVlcw0KPj4+
+PiBzZWVuIG1vcmUgdGhhbiAxIHNlY29uZCBhZ28gYXMgZG9uZSBjdXJyZW50bHk6DQo+Pj4+
+DQo+Pj4+IMKgIMKgIMKgIGlmIG5vdyAtIHNlbGYucHJldl9wcmVzc3VyZV90aW1lID4gMS4w
+Og0KPj4+Pg0KPj4+PiBhbmQgYWx3YXlzIHVzaW5nIHRoYXQgYXMgYSByZWZlcmVuY2UsIHdl
+IGNhbg0KPj4+PiBzdG9yZSBzYXkgMTAgdmFsdWVzIHBlciBzZWNvbmQgYW5kIHVzZSB0aGF0
+IGFzIGEgcmVmZXJlbmNlLg0KPj4+Pg0KPj4+PiBUaGVyZSBhcmUgc29tZSBjaGFsbGVuZ2Vz
+IGluIHRoYXQgYXBwcm9hY2ggaW4gdGhhdCB3ZSBkb24ndCBjb250cm9sDQo+Pj4+IGhvdyBv
 ZnRlbiB0aGUgZnVuY3Rpb24gaXMgY2FsbGVkLiBBdmVyYWdpbmcgb3ZlciB0aGUgbGFzdCAx
-MCBjYWxscw0KPj4+IGlzIHRlbXB0aW5nIGJ1dCBsaWtlbHkgaGFzIHNvbWUgZWRnZSBjYXNl
-cyBzdWNoIGFzIHdoZW4gdGhlcmUgYXJlDQo+Pj4gbG90cyBvZiB0YXNrcyBzdGFydGluZy9l
-bmRpbmcuDQo+Pj4NCj4+Pg0KPj4+IDIuIElmIHRoZXJlIGhhcyBiZWVuIGEgbG9uZyBkZWxh
-eSBzaW5jZSB0aGUgZnVuY3Rpb24gd2FzIGxhc3QgY2FsbGVkLA0KPj4+IHdlIGNvdWxkIGNo
-ZWNrIHRoZSBwcmVzc3VyZSwgc2xlZXAgZm9yIGEgc2hvcnQgcGVyaW9kIG9mIHRpbWUgYW5k
-IA0KPj4+IGNoZWNrIGl0DQo+Pj4gYWdhaW4uIFNvbWUgcGVvcGxlIHdvdWxkIG5vdCBsaWtl
-IHRoaXMgc2luY2UgaXQgd2lsbCBuZWVkbGVzc2x5IGRlbGF5DQo+Pj4gdGhlIGJ1aWxkDQo+
-Pj4gc28gd2UnZCBoYXZlIHRvIGtlZXAgdGhlIGRlbGF5IHRvIDwgMSBzZWNvbmQuIFRvbyBz
-aG9ydCBhIGRlbGF5IHdpbGwgDQo+Pj4gcmVkdWNlDQo+Pj4gdGhlIGFjY3VyYWN5IG9mIHRo
-ZSByZXN1bHQgYnV0IEkgc3VzcGVjdCB0aGF0IDAuMSBzZWNvbmRzIGlzIHN1ZmZpY2llbnQN
-Cj4+PiBmb3IgbW9zdA0KPj4+IHVzZXJzLiBXZSBjb3VsZCBhbHNvIGxvb2sgYXQgdGhlIGF2
-ZzEwIHZhbHVlIGluIHRoaXMgY2FzZSBvciBldmVuIHNvbWUNCj4+PiBjb21iaW5hdGlvbiBv
-Zg0KPj4+IGJvdGggdGhlIGN1cnJlbnQgY29udGVudGlvbiBhbmQgYXZnMTAuDQo+Pj4NCj4+
-Pg0KPj4+IDMuIEp1c3QgY2FsY3VsYXRlIHRoZSBwcmVzc3VyZSBwZXIgc2Vjb25kIGJ5Og0K
-Pj4+DQo+Pj4gwqDCoCAoIGN1cnJlbnQgcHJlc3N1cmUgLSBsYXN0IHByZXNzdXJlICkgLyAo
-bm93IC0gbGFzdF90aW1lKQ0KPj4+DQo+Pj4gVGhpcyBjb3VsZCBoYW5kbGXCoCBzaG9ydCB0
-aW1lIGRpZmZlcmVuY2VzIHN1Y2ggb3MgbWlsbGlzZWNvbmRzDQo+Pj4gYXMgd291bGQgYmUg
-YSAnY2hlYXAnIHdheSB0byBkZWFsIHdpdGggbG9uZyBkZWxheXMuIEluIHlvdXIgY2FzZSwN
-Cj4+PiB0aGUgcHJlc3N1cmUgd291bGQgYmU6DQo+Pj4NCj4+PiDCoCA5NzgwNzcuMCBpb19w
-cmVzc3VyZSAxMzUzODgyLjAgbWVtX3ByZXNzdXJlIDIwOTIyLjANCj4+Pg0KPj4+IGRpdmlk
-ZWQgYnkgfjE5IHNpbmNlIHRoZSBpbml0aWFsIHZhbHVlcyB3ZXJlIGNsb3NlIHRvIHplcm8u
-DQo+Pj4NCj4+PiBUaGVuIGZvciB0aGUgbmV4dCB0aW1lLCBqdXN0IDAuMSBzZWNvbmRzIGxh
-dGVyOg0KPj4+DQo+Pj4gMTY3MDg0MDA0Mi4zODQ1ODIgY3B1X3ByZXNzdXJlIDg5NzgwNzcu
-MCBpb19wcmVzc3VyZSAxMzUzODgyLjAgDQo+Pj4gbWVtX3ByZXNzdXJlIDIwOTIyLjANCj4+
-PiAxNjcwODQwMDQyLjM4NDU4MiBjcHUgaW8gwqBwcmVzc3VyZSBleGNlZWRlZCBvdmVyIDE4
-LjY3NzYyOSBzZWNvbmRzDQo+Pj4gMTY3MDg0MDA0Mi40ODY5NDYgY3B1X3ByZXNzdXJlIDQ2
-Ni4wIGlvX3ByZXNzdXJlIDMwNzkyLjAgDQo+Pj4gbWVtX3ByZXNzdXJlIDAuMA0KPj4+DQo+
-Pj4gTXVsdGlwbHlpbmcgYnkgMTAgb3IgZWFzeSBjYWxjdWxhdGlvbiwgdGhlIHdvdWxkIGJl
-IGEgcHJlc3N1cmU6DQo+Pj4NCj4+PiBjcHU6IDQ2NjAsIGlvOiAzMDc5MjAsIG1lbTogMC4N
-Cj4+Pg0KPj4+DQo+Pj4gRG8geW91IGhhdmUgYW5vdGhlciBpZGVhIG9yIGEgcHJlZmVyZW5j
-ZSBhcyB0byB3aGljaCBhcHByb2FjaCB3ZSB0YWtlPw0KPj4NCj4+IEkgdGhpbmsgMyBpcyBh
-IGdvb2QgZmlyc3Qgc3RlcC4gwqBVc2luZyBtdWx0aXBsZSBzYW1wbGVzIGNvdWxkIGltcHJv
-dmUNCj4+IG91ciBjYWxjdWxhdGVkICJhdmcxIiwgYnV0IGxldHMgZG8gdGhhdCBsYXRlciBp
-ZiBuZWVkZWQuDQo+DQo+IEkgYWdyZWU7IFJhbmR5IGFuZCBJIGhhdmUgYmVlbiB3b3JraW5n
-IG9uIHBhdGNoaW5nIG1ha2UgYW5kIGhhdmUgdGFrZW4gDQo+IGEgc2ltaWxhciBhcHByb2Fj
-aDoNCj4gbWFrZS5wbmcNCj4gWmhlbmdRMi9tYWtlIGF0IGNwdS1wcmVzc3VyZSANCj4gPGh0
-dHBzOi8vZ2l0aHViLmNvbS9aaGVuZ1EyL21ha2UvdHJlZS9jcHUtcHJlc3N1cmU+DQo+IGdp
+MCBjYWxscw0KPj4+PiBpcyB0ZW1wdGluZyBidXQgbGlrZWx5IGhhcyBzb21lIGVkZ2UgY2Fz
+ZXMgc3VjaCBhcyB3aGVuIHRoZXJlIGFyZQ0KPj4+PiBsb3RzIG9mIHRhc2tzIHN0YXJ0aW5n
+L2VuZGluZy4NCj4+Pj4NCj4+Pj4NCj4+Pj4gMi4gSWYgdGhlcmUgaGFzIGJlZW4gYSBsb25n
+IGRlbGF5IHNpbmNlIHRoZSBmdW5jdGlvbiB3YXMgbGFzdCBjYWxsZWQsDQo+Pj4+IHdlIGNv
+dWxkIGNoZWNrIHRoZSBwcmVzc3VyZSwgc2xlZXAgZm9yIGEgc2hvcnQgcGVyaW9kIG9mIHRp
+bWUgYW5kIA0KPj4+PiBjaGVjayBpdA0KPj4+PiBhZ2Fpbi4gU29tZSBwZW9wbGUgd291bGQg
+bm90IGxpa2UgdGhpcyBzaW5jZSBpdCB3aWxsIG5lZWRsZXNzbHkgZGVsYXkNCj4+Pj4gdGhl
+IGJ1aWxkDQo+Pj4+IHNvIHdlJ2QgaGF2ZSB0byBrZWVwIHRoZSBkZWxheSB0byA8IDEgc2Vj
+b25kLiBUb28gc2hvcnQgYSBkZWxheSANCj4+Pj4gd2lsbCByZWR1Y2UNCj4+Pj4gdGhlIGFj
+Y3VyYWN5IG9mIHRoZSByZXN1bHQgYnV0IEkgc3VzcGVjdCB0aGF0IDAuMSBzZWNvbmRzIGlz
+IHN1ZmZpY2llbnQNCj4+Pj4gZm9yIG1vc3QNCj4+Pj4gdXNlcnMuIFdlIGNvdWxkIGFsc28g
+bG9vayBhdCB0aGUgYXZnMTAgdmFsdWUgaW4gdGhpcyBjYXNlIG9yIGV2ZW4gc29tZQ0KPj4+
+PiBjb21iaW5hdGlvbiBvZg0KPj4+PiBib3RoIHRoZSBjdXJyZW50IGNvbnRlbnRpb24gYW5k
+IGF2ZzEwLg0KPj4+Pg0KPj4+Pg0KPj4+PiAzLiBKdXN0IGNhbGN1bGF0ZSB0aGUgcHJlc3N1
+cmUgcGVyIHNlY29uZCBieToNCj4+Pj4NCj4+Pj4gwqDCoCAoIGN1cnJlbnQgcHJlc3N1cmUg
+LSBsYXN0IHByZXNzdXJlICkgLyAobm93IC0gbGFzdF90aW1lKQ0KPj4+Pg0KPj4+PiBUaGlz
+IGNvdWxkIGhhbmRsZcKgIHNob3J0IHRpbWUgZGlmZmVyZW5jZXMgc3VjaCBvcyBtaWxsaXNl
+Y29uZHMNCj4+Pj4gYXMgd291bGQgYmUgYSAnY2hlYXAnIHdheSB0byBkZWFsIHdpdGggbG9u
+ZyBkZWxheXMuIEluIHlvdXIgY2FzZSwNCj4+Pj4gdGhlIHByZXNzdXJlIHdvdWxkIGJlOg0K
+Pj4+Pg0KPj4+PiDCoCA5NzgwNzcuMCBpb19wcmVzc3VyZSAxMzUzODgyLjAgbWVtX3ByZXNz
+dXJlIDIwOTIyLjANCj4+Pj4NCj4+Pj4gZGl2aWRlZCBieSB+MTkgc2luY2UgdGhlIGluaXRp
+YWwgdmFsdWVzIHdlcmUgY2xvc2UgdG8gemVyby4NCj4+Pj4NCj4+Pj4gVGhlbiBmb3IgdGhl
+IG5leHQgdGltZSwganVzdCAwLjEgc2Vjb25kcyBsYXRlcjoNCj4+Pj4NCj4+Pj4gMTY3MDg0
+MDA0Mi4zODQ1ODIgY3B1X3ByZXNzdXJlIDg5NzgwNzcuMCBpb19wcmVzc3VyZSAxMzUzODgy
+LjAgDQo+Pj4+IG1lbV9wcmVzc3VyZSAyMDkyMi4wDQo+Pj4+IDE2NzA4NDAwNDIuMzg0NTgy
+IGNwdSBpbyDCoHByZXNzdXJlIGV4Y2VlZGVkIG92ZXIgMTguNjc3NjI5IHNlY29uZHMNCj4+
+Pj4gMTY3MDg0MDA0Mi40ODY5NDYgY3B1X3ByZXNzdXJlIDQ2Ni4wIGlvX3ByZXNzdXJlIDMw
+NzkyLjAgDQo+Pj4+IG1lbV9wcmVzc3VyZSAwLjANCj4+Pj4NCj4+Pj4gTXVsdGlwbHlpbmcg
+YnkgMTAgb3IgZWFzeSBjYWxjdWxhdGlvbiwgdGhlIHdvdWxkIGJlIGEgcHJlc3N1cmU6DQo+
+Pj4+DQo+Pj4+IGNwdTogNDY2MCwgaW86IDMwNzkyMCwgbWVtOiAwLg0KPj4+Pg0KPj4+Pg0K
+Pj4+PiBEbyB5b3UgaGF2ZSBhbm90aGVyIGlkZWEgb3IgYSBwcmVmZXJlbmNlIGFzIHRvIHdo
+aWNoIGFwcHJvYWNoIHdlIHRha2U/DQo+Pj4NCj4+PiBJIHRoaW5rIDMgaXMgYSBnb29kIGZp
+cnN0IHN0ZXAuIMKgVXNpbmcgbXVsdGlwbGUgc2FtcGxlcyBjb3VsZCBpbXByb3ZlDQo+Pj4g
+b3VyIGNhbGN1bGF0ZWQgImF2ZzEiLCBidXQgbGV0cyBkbyB0aGF0IGxhdGVyIGlmIG5lZWRl
+ZC4NCj4+DQo+PiBJIGFncmVlOyBSYW5keSBhbmQgSSBoYXZlIGJlZW4gd29ya2luZyBvbiBw
+YXRjaGluZyBtYWtlIGFuZCBoYXZlIA0KPj4gdGFrZW4gYSBzaW1pbGFyIGFwcHJvYWNoOg0K
+Pj4gbWFrZS5wbmcNCj4+IFpoZW5nUTIvbWFrZSBhdCBjcHUtcHJlc3N1cmUgDQo+PiA8aHR0
+cHM6Ly9naXRodWIuY29tL1poZW5nUTIvbWFrZS90cmVlL2NwdS1wcmVzc3VyZT4NCj4+IGdp
 dGh1Yi5jb20gPGh0dHBzOi8vZ2l0aHViLmNvbS9aaGVuZ1EyL21ha2UvdHJlZS9jcHUtcHJl
-c3N1cmU+DQo+DQo+IDxodHRwczovL2dpdGh1Yi5jb20vWmhlbmdRMi9tYWtlL3RyZWUvY3B1
-LXByZXNzdXJlPg0KPiBBZGRpdGlvbmFsbHksIHdlIGZvdW5kIHRoYXQgd2hlbiB0aGUgcHJl
-c3N1cmUgcmVhZCBpcyB0b28gZnJlcXVlbnQsIHdlIA0KPiBtYXkgZ2V0IHRoZSBzYW1lIGNw
-dSBwcmVzc3VyZSBhcyBhbiByZXN1bHQsDQo+IGV2ZW4gaWYgdGhlIHByZXNzdXJlIGhhdmUg
-YWN0dWFsbHkgY2hhbmdlZC4gVGhpcyBpcyBsaWtlbHkgZHVlIHRvIHRoZSANCj4gcGVyIGNw
-dSB2YXJpYWJsZXMgdXNlZCBpbiB0aGUga2VybmVsLg0KPiBTbywgaW4gYWRkaXRpb24gdG8g
-dGhlIGFsZ29yaXRobSBSYW5keSB0YWxrZWQgYWJvdmUsIHdlIGFsc28gY29tcGFyZXMgDQo+
-IGlmIHRoZSBjcHUgcHJlc3N1cmUgaGFzIGJlZW4gY2hhbmdlZCwgaWYgbm90LA0KPiB3ZSB3
-aWxsIHJldHVybiB0aGUgbGFzdCByZXN1bHQgdGhhdCBoYXMgYmVlbiBwcm9kdWNlZC4NCj4N
-Cj4gSSB3aWxsIENDIHlvdSB3aGVuIEkgaGF2ZSBhIHBhdGNoLCBhbmQgeW91IGNhbiB0cnkg
-aXQgb3V0IGJlZm9yZSB0aGUgDQo+IGNvbW1pdCBnZXRzIG1lcmdlZCBpZiB5b3UgbGlrZS4N
-Cg0KDQpPbGEsDQoNCkRvZXMgUWkncyBwYXRjaCBiZWxvdyBoZWxwIGluIHlvdXIgc2l0dWF0
-aW9uPw0KDQpJIHN0aWxsIHdhbnQvaW50ZW50IHRvIGFkZCBhIGJpdGJha2UgUFNJIHRlc3Qg
-Y2FzZSB0aGF0IHVzZXMgc3RyZXNzLW5nIA0KdG8gaW5kdWNlIGxvYWQNCmFuZCBhIGxpZ2h0
-d2VpZ2h0IHNsZWVwIHRhc2sgYnV0IHRoZXJlIGFyZSBuZXZlciBlbm91Z2ggaG91cnMgaW4g
-dGhlIA0KZGF5L3dlZWsvLi4uDQoNClRoZSBiYXNpYyBpZGVhIGlzIHRvOg0KDQoxLiBSdW4g
-YSB0YXNrIHRoYXQganVzdCBzbGVlcHMgZm9yIHNheSAxMCBzZWNvbmRzIGFuZCBjb25maXJt
-IHRoYXQgdGhlIA0KYWN0dWFsDQpleGVjdXRpb24gdGltZSBpcyA8IDExIHNlY29uZHMgb3Ig
-c28uDQoNCjIuIHVzZSBzdHJlc3MgdG8gZ2V0IHRoZSBzeXN0ZW0gaW50byBhIENQVSBwcmVz
-c3VyZSBlbnZpcm9ubWVudCBhYm92ZQ0KdGhlIGN1cnJlbnQgdGhyZXNob2xkIGZvciBzYXkg
-MzAgc2Vjb25kcyBhbmQgc2ltdWx0YW5lb3VzbHkgLyBzaG9ydGx5IA0KdGhlcmUgYWZ0ZXIs
-DQpsYXVuY2ggdGhlIHNhbWUgc2xlZXAgdGFzayBhbmQgY29uZmlybSB0aGF0IHRoaXMgdGlt
-ZSwgdGhlIGFjdHVhbCANCmV4ZWN0dWlvbiB0aW1lIG9mDQp0aGUgbGF1bmNoIHRvIGNvbXBs
-ZXRpb24gdGltZSBpcyA0MCsgc2Vjb25kcy4NCg0KLi4vUmFuZHkgJ2dldHRpbmcgY2F1Z2h0
-IHVwIG9uIGVtYWlsIG9uIHRoZSB3ZWVrZW5kJyBNYWNMZW9kDQoNCg0K4p2vIGdpdCBzaG93
-IGJhOTRmOWEzYjE5NjBjYzBmZGM4MzFjMjBhOWQyZjhhZDI4OWYzMDcNCmNvbW1pdCBiYTk0
-ZjlhM2IxOTYwY2MwZmRjODMxYzIwYTlkMmY4YWQyODlmMzA3DQpBdXRob3I6IENoZW4gUWkg
-PFFpLkNoZW5Ad2luZHJpdmVyLmNvbT4NCkRhdGU6wqDCoCBUaHUgQXByIDYgMjM6MDc6MTQg
-MjAyMw0KDQogwqDCoMKgIGJpdGJha2U6IHJ1bnF1ZXVlOiBmaXggUFNJIGNoZWNrIGNhbGN1
-bGF0aW9uDQoNCiDCoMKgwqAgVGhlIGN1cnJlbnQgUFNJIGNoZWNrIGNhbGN1bGF0aW9uIGRv
-ZXMgbm90IHRha2UgaW50byBjb25zaWRlcmF0aW9uDQogwqDCoMKgIHRoZSBwb3NzaWJpbGl0
-eSBvZiB0aGUgdGltZSBpbnRlcnZhbCBiZXR3ZWVuIGxhc3QgY2hlY2sgYW5kIGN1cnJlbnQN
-CiDCoMKgwqAgY2hlY2sgYmVpbmcgbXVjaCBsYXJnZXIgdGhhbiAxcy4gSW4gZmFjdCwgdGhl
-IGN1cnJlbnQgYmVoYXZpb3IgZG9lcw0KIMKgwqDCoCBub3QgbWF0Y2ggd2hhdCB0aGUgbWFu
-dWFsIHNheXMgYWJvdXQgQkJfUFJFU1NVUkVfTUFYX1hYWCwgZXZlbiBpZg0KIMKgwqDCoCB0
-aGUgdmFsdWUgaXMgc2V0IHRvIHVwcGVyIGxpbWl0LCAxMDAwMDAwLCB3ZSBzdGlsbCBnZXQg
-bWFueSBibG9ja3MNCiDCoMKgwqAgb24gbmV3IHRhc2sgbGF1bmNoLiBUaGUgZGlmZmVyZW5j
-ZSBiZXR3ZWVuICd0b3RhbCcgc2hvdWxkIGJlIGRpdmlkZWQNCiDCoMKgwqAgYnkgdGhlIHRp
-bWUgaW50ZXJ2YWwgaWYgaXQncyBsYXJnZXIgdGhhbiAxcy4NCg0KIMKgwqDCoCAoQml0YmFr
-ZSByZXY6IGI0NzYzYzJjOTNlNzQ5NGUwYTI3ZjU5NzBjMTljMWFhYzY2YzIyOGIpDQoNCiDC
-oMKgwqAgU2lnbmVkLW9mZi1ieTogQ2hlbiBRaSA8UWkuQ2hlbkB3aW5kcml2ZXIuY29tPg0K
-IMKgwqDCoCBTaWduZWQtb2ZmLWJ5OiBSaWNoYXJkIFB1cmRpZSA8cmljaGFyZC5wdXJkaWVA
-bGludXhmb3VuZGF0aW9uLm9yZz4NCg0KDQrOlCBiaXRiYWtlL2xpYi9iYi9ydW5xdWV1ZS5w
-eQ0K4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSADQoNCuKUgOKUgOKU
+c3N1cmU+DQo+Pg0KPj4gPGh0dHBzOi8vZ2l0aHViLmNvbS9aaGVuZ1EyL21ha2UvdHJlZS9j
+cHUtcHJlc3N1cmU+DQo+PiBBZGRpdGlvbmFsbHksIHdlIGZvdW5kIHRoYXQgd2hlbiB0aGUg
+cHJlc3N1cmUgcmVhZCBpcyB0b28gZnJlcXVlbnQsIA0KPj4gd2UgbWF5IGdldCB0aGUgc2Ft
+ZSBjcHUgcHJlc3N1cmUgYXMgYW4gcmVzdWx0LA0KPj4gZXZlbiBpZiB0aGUgcHJlc3N1cmUg
+aGF2ZSBhY3R1YWxseSBjaGFuZ2VkLiBUaGlzIGlzIGxpa2VseSBkdWUgdG8gdGhlIA0KPj4g
+cGVyIGNwdSB2YXJpYWJsZXMgdXNlZCBpbiB0aGUga2VybmVsLg0KPj4gU28sIGluIGFkZGl0
+aW9uIHRvIHRoZSBhbGdvcml0aG0gUmFuZHkgdGFsa2VkIGFib3ZlLCB3ZSBhbHNvIGNvbXBh
+cmVzIA0KPj4gaWYgdGhlIGNwdSBwcmVzc3VyZSBoYXMgYmVlbiBjaGFuZ2VkLCBpZiBub3Qs
+DQo+PiB3ZSB3aWxsIHJldHVybiB0aGUgbGFzdCByZXN1bHQgdGhhdCBoYXMgYmVlbiBwcm9k
+dWNlZC4NCj4+DQo+PiBJIHdpbGwgQ0MgeW91IHdoZW4gSSBoYXZlIGEgcGF0Y2gsIGFuZCB5
+b3UgY2FuIHRyeSBpdCBvdXQgYmVmb3JlIHRoZSANCj4+IGNvbW1pdCBnZXRzIG1lcmdlZCBp
+ZiB5b3UgbGlrZS4NCj4NCj4NCj4gT2xhLA0KPg0KPiBEb2VzIFFpJ3MgcGF0Y2ggYmVsb3cg
+aGVscCBpbiB5b3VyIHNpdHVhdGlvbj8NCj4NCj4gSSBzdGlsbCB3YW50L2ludGVudCB0byBh
+ZGQgYSBiaXRiYWtlIFBTSSB0ZXN0IGNhc2UgdGhhdCB1c2VzIHN0cmVzcy1uZyANCj4gdG8g
+aW5kdWNlIGxvYWQNCj4gYW5kIGEgbGlnaHR3ZWlnaHQgc2xlZXAgdGFzayBidXQgdGhlcmUg
+YXJlIG5ldmVyIGVub3VnaCBob3VycyBpbiB0aGUgDQo+IGRheS93ZWVrLy4uLg0KPg0KPiBU
+aGUgYmFzaWMgaWRlYSBpcyB0bzoNCj4NCj4gMS4gUnVuIGEgdGFzayB0aGF0IGp1c3Qgc2xl
+ZXBzIGZvciBzYXkgMTAgc2Vjb25kcyBhbmQgY29uZmlybSB0aGF0IHRoZSANCj4gYWN0dWFs
+DQo+IGV4ZWN1dGlvbiB0aW1lIGlzIDwgMTEgc2Vjb25kcyBvciBzby4NCj4NCj4gMi4gdXNl
+IHN0cmVzcyB0byBnZXQgdGhlIHN5c3RlbSBpbnRvIGEgQ1BVIHByZXNzdXJlIGVudmlyb25t
+ZW50IGFib3ZlDQo+IHRoZSBjdXJyZW50IHRocmVzaG9sZCBmb3Igc2F5IDMwIHNlY29uZHMg
+YW5kIHNpbXVsdGFuZW91c2x5IC8gc2hvcnRseSANCj4gdGhlcmUgYWZ0ZXIsDQo+IGxhdW5j
+aCB0aGUgc2FtZSBzbGVlcCB0YXNrIGFuZCBjb25maXJtIHRoYXQgdGhpcyB0aW1lLCB0aGUg
+YWN0dWFsIA0KPiBleGVjdHVpb24gdGltZSBvZg0KPiB0aGUgbGF1bmNoIHRvIGNvbXBsZXRp
+b24gdGltZSBpcyA0MCsgc2Vjb25kcy4NCj4NCj4gLi4vUmFuZHkgJ2dldHRpbmcgY2F1Z2h0
+IHVwIG9uIGVtYWlsIG9uIHRoZSB3ZWVrZW5kJyBNYWNMZW9kDQo+DQo+DQo+IOKdryBnaXQg
+c2hvdyBiYTk0ZjlhM2IxOTYwY2MwZmRjODMxYzIwYTlkMmY4YWQyODlmMzA3DQo+IGNvbW1p
+dCBiYTk0ZjlhM2IxOTYwY2MwZmRjODMxYzIwYTlkMmY4YWQyODlmMzA3DQo+IEF1dGhvcjog
+Q2hlbiBRaSA8UWkuQ2hlbkB3aW5kcml2ZXIuY29tPg0KPiBEYXRlOsKgwqAgVGh1IEFwciA2
+IDIzOjA3OjE0IDIwMjMNCj4NCj4gwqDCoMKgIGJpdGJha2U6IHJ1bnF1ZXVlOiBmaXggUFNJ
+IGNoZWNrIGNhbGN1bGF0aW9uDQo+DQo+IMKgwqDCoCBUaGUgY3VycmVudCBQU0kgY2hlY2sg
+Y2FsY3VsYXRpb24gZG9lcyBub3QgdGFrZSBpbnRvIGNvbnNpZGVyYXRpb24NCj4gwqDCoMKg
+IHRoZSBwb3NzaWJpbGl0eSBvZiB0aGUgdGltZSBpbnRlcnZhbCBiZXR3ZWVuIGxhc3QgY2hl
+Y2sgYW5kIGN1cnJlbnQNCj4gwqDCoMKgIGNoZWNrIGJlaW5nIG11Y2ggbGFyZ2VyIHRoYW4g
+MXMuIEluIGZhY3QsIHRoZSBjdXJyZW50IGJlaGF2aW9yIGRvZXMNCj4gwqDCoMKgIG5vdCBt
+YXRjaCB3aGF0IHRoZSBtYW51YWwgc2F5cyBhYm91dCBCQl9QUkVTU1VSRV9NQVhfWFhYLCBl
+dmVuIGlmDQo+IMKgwqDCoCB0aGUgdmFsdWUgaXMgc2V0IHRvIHVwcGVyIGxpbWl0LCAxMDAw
+MDAwLCB3ZSBzdGlsbCBnZXQgbWFueSBibG9ja3MNCj4gwqDCoMKgIG9uIG5ldyB0YXNrIGxh
+dW5jaC4gVGhlIGRpZmZlcmVuY2UgYmV0d2VlbiAndG90YWwnIHNob3VsZCBiZSBkaXZpZGVk
+DQo+IMKgwqDCoCBieSB0aGUgdGltZSBpbnRlcnZhbCBpZiBpdCdzIGxhcmdlciB0aGFuIDFz
+Lg0KPg0KPiDCoMKgwqAgKEJpdGJha2UgcmV2OiBiNDc2M2MyYzkzZTc0OTRlMGEyN2Y1OTcw
+YzE5YzFhYWM2NmMyMjhiKQ0KPg0KPiDCoMKgwqAgU2lnbmVkLW9mZi1ieTogQ2hlbiBRaSA8
+UWkuQ2hlbkB3aW5kcml2ZXIuY29tPg0KPiDCoMKgwqAgU2lnbmVkLW9mZi1ieTogUmljaGFy
+ZCBQdXJkaWUgPHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+DQo+DQo+
+IM6UIGJpdGJha2UvbGliL2JiL3J1bnF1ZXVlLnB5DQo+IOKUgOKUgOKUgOKUgOKUgOKUgOKU
 gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
 gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
-gOKUgOKUkA0K4oCiIDE5ODogY2xhc3MgUnVuUXVldWVTY2hlZHVsZXIob2JqZWN0KTog4pSC
-DQrilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgA0KPg0KPiDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
 lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilJgNCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY3Vy
-cl9jcHVfcHJlc3N1cmUgPSANCmNwdV9wcmVzc3VyZV9mZHMucmVhZGxpbmUoKS5zcGxpdCgp
-WzRdLnNwbGl0KCI9IilbMV0NCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY3Vy
-cl9pb19wcmVzc3VyZSA9IA0KaW9fcHJlc3N1cmVfZmRzLnJlYWRsaW5lKCkuc3BsaXQoKVs0
-XS5zcGxpdCgiPSIpWzFdDQogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGN1cnJf
-bWVtb3J5X3ByZXNzdXJlID0gDQptZW1vcnlfcHJlc3N1cmVfZmRzLnJlYWRsaW5lKCkuc3Bs
-aXQoKVs0XS5zcGxpdCgiPSIpWzFdDQogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGV4Y2VlZHNfY3B1X3ByZXNzdXJlID3CoCBzZWxmLnJxLm1heF9jcHVfcHJlc3N1cmUgYW5k
-IA0KKGZsb2F0KGN1cnJfY3B1X3ByZXNzdXJlKSAtIGZsb2F0KHNlbGYucHJldl9jcHVfcHJl
-c3N1cmUpKSA+IA0Kc2VsZi5ycS5tYXhfY3B1X3ByZXNzdXJlDQogwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIGV4Y2VlZHNfaW9fcHJlc3N1cmUgPcKgIHNlbGYucnEubWF4X2lv
-X3ByZXNzdXJlIGFuZCANCihmbG9hdChjdXJyX2lvX3ByZXNzdXJlKSAtIGZsb2F0KHNlbGYu
-cHJldl9pb19wcmVzc3VyZSkpID4gDQpzZWxmLnJxLm1heF9pb19wcmVzc3VyZQ0KIMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBleGNlZWRzX21lbW9yeV9wcmVzc3VyZSA9IHNl
-bGYucnEubWF4X21lbW9yeV9wcmVzc3VyZSANCmFuZCAoZmxvYXQoY3Vycl9tZW1vcnlfcHJl
-c3N1cmUpIC0gZmxvYXQoc2VsZi5wcmV2X21lbW9yeV9wcmVzc3VyZSkpID4gDQpzZWxmLnJx
-Lm1heF9tZW1vcnlfcHJlc3N1cmUNCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-bm93ID0gdGltZS50aW1lKCkNCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYg
-bm93IC0gc2VsZi5wcmV2X3ByZXNzdXJlX3RpbWUgPiAxLjA6DQogwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHRkaWZmID0gbm93IC0gc2VsZi5wcmV2X3ByZXNzdXJlX3RpbWUN
-CiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgdGRpZmYgPiAxLjA6DQogwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZXhjZWVkc19jcHVfcHJlc3N1
-cmUgPSBzZWxmLnJxLm1heF9jcHVfcHJlc3N1cmUgYW5kIA0KKGZsb2F0KGN1cnJfY3B1X3By
-ZXNzdXJlKSAtIGZsb2F0KHNlbGYucHJldl9jcHVfcHJlc3N1cmUpKSAvIHRkaWZmID4gDQpz
-ZWxmLnJxLm1heF9jcHVfcHJlc3N1cmUNCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBleGNlZWRzX2lvX3ByZXNzdXJlID3CoCBzZWxmLnJxLm1heF9pb19wcmVz
-c3VyZSBhbmQgDQooZmxvYXQoY3Vycl9pb19wcmVzc3VyZSkgLSBmbG9hdChzZWxmLnByZXZf
-aW9fcHJlc3N1cmUpKSAvIHRkaWZmID4gDQpzZWxmLnJxLm1heF9pb19wcmVzc3VyZQ0KIMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGV4Y2VlZHNfbWVtb3J5X3By
-ZXNzdXJlID0gDQpzZWxmLnJxLm1heF9tZW1vcnlfcHJlc3N1cmUgYW5kIChmbG9hdChjdXJy
-X21lbW9yeV9wcmVzc3VyZSkgLSANCmZsb2F0KHNlbGYucHJldl9tZW1vcnlfcHJlc3N1cmUp
-KSAvIHRkaWZmID4gc2VsZi5ycS5tYXhfbWVtb3J5X3ByZXNzdXJlDQogwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5wcmV2X2NwdV9wcmVzc3VyZSA9IGN1
-cnJfY3B1X3ByZXNzdXJlDQogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgc2VsZi5wcmV2X2lvX3ByZXNzdXJlID0gY3Vycl9pb19wcmVzc3VyZQ0KIMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNlbGYucHJldl9tZW1vcnlfcHJlc3N1
-cmUgPSBjdXJyX21lbW9yeV9wcmVzc3VyZQ0KIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHNlbGYucHJldl9wcmVzc3VyZV90aW1lID0gbm93DQogwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVsc2U6DQogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgZXhjZWVkc19jcHVfcHJlc3N1cmUgPSBzZWxmLnJxLm1heF9jcHVf
-cHJlc3N1cmUgYW5kIA0KKGZsb2F0KGN1cnJfY3B1X3ByZXNzdXJlKSAtIGZsb2F0KHNlbGYu
-cHJldl9jcHVfcHJlc3N1cmUpKSA+IA0Kc2VsZi5ycS5tYXhfY3B1X3ByZXNzdXJlDQogwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZXhjZWVkc19pb19wcmVzc3Vy
-ZSA9wqAgc2VsZi5ycS5tYXhfaW9fcHJlc3N1cmUgYW5kIA0KKGZsb2F0KGN1cnJfaW9fcHJl
-c3N1cmUpIC0gZmxvYXQoc2VsZi5wcmV2X2lvX3ByZXNzdXJlKSkgPiANCnNlbGYucnEubWF4
-X2lvX3ByZXNzdXJlDQogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-ZXhjZWVkc19tZW1vcnlfcHJlc3N1cmUgPSANCnNlbGYucnEubWF4X21lbW9yeV9wcmVzc3Vy
-ZSBhbmQgKGZsb2F0KGN1cnJfbWVtb3J5X3ByZXNzdXJlKSAtIA0KZmxvYXQoc2VsZi5wcmV2
-X21lbW9yeV9wcmVzc3VyZSkpID4gc2VsZi5ycS5tYXhfbWVtb3J5X3ByZXNzdXJlDQogwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gKGV4Y2VlZHNfY3B1X3ByZXNzdXJlIG9yIGV4
-Y2VlZHNfaW9fcHJlc3N1cmUgb3IgDQpleGNlZWRzX21lbW9yeV9wcmVzc3VyZSkNCiDCoMKg
-wqDCoMKgwqDCoCByZXR1cm4gRmFsc2UNCg0KDQo+DQo+IFpRDQo+DQo+Pg0KPj4gL09sYQ0K
-Pj4NCj4+Pg0KPj4+IC4uL1JhbmR5DQo+Pj4NCj4+Pg0KPj4+Pg0KPj4+PiAvT2xhIE5pbHNz
-b24NCj4+Pj4NCj4+Pj4NCj4+Pj4NCj4+DQo+Pg0KPg0KPg0KPiAtPS09LT0tPS09LT0tPS09
-LT0tPS09LQ0KPiBMaW5rczogWW91IHJlY2VpdmUgYWxsIG1lc3NhZ2VzIHNlbnQgdG8gdGhp
-cyBncm91cC4NCj4gVmlldy9SZXBseSBPbmxpbmUgKCMxNDIwNik6aHR0cHM6Ly9saXN0cy5v
-cGVuZW1iZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC9tZXNzYWdlLzE0MjA2DQo+IE11dGUg
-VGhpcyBUb3BpYzpodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvbXQvOTU2MTgyOTkv
-MzYxNjc2NQ0KPiBHcm91cCBPd25lcjpiaXRiYWtlLWRldmVsK293bmVyQGxpc3RzLm9wZW5l
-bWJlZGRlZC5vcmcNCj4gVW5zdWJzY3JpYmU6aHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQu
-b3JnL2cvYml0YmFrZS1kZXZlbC91bnN1YiAgW3JhbmR5Lm1hY2xlb2RAd2luZHJpdmVyLmNv
-bV0NCj4gLT0tPS09LT0tPS09LT0tPS09LT0tPS0NCj4NCg0KLS0gDQojIFJhbmR5IE1hY0xl
-b2QNCiMgV2luZCBSaXZlciBMaW51eA0K
---------------A5Pwo88g8koc3f0nA04JXkyv
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJANCj4g4oCiIDE5ODog
+Y2xhc3MgUnVuUXVldWVTY2hlZHVsZXIob2JqZWN0KTog4pSCDQo+IOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+mA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY3Vycl9jcHVfcHJlc3N1cmUg
+PSANCj4gY3B1X3ByZXNzdXJlX2Zkcy5yZWFkbGluZSgpLnNwbGl0KClbNF0uc3BsaXQoIj0i
+KVsxXQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY3Vycl9pb19wcmVzc3Vy
+ZSA9IA0KPiBpb19wcmVzc3VyZV9mZHMucmVhZGxpbmUoKS5zcGxpdCgpWzRdLnNwbGl0KCI9
+IilbMV0NCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGN1cnJfbWVtb3J5X3By
+ZXNzdXJlID0gDQo+IG1lbW9yeV9wcmVzc3VyZV9mZHMucmVhZGxpbmUoKS5zcGxpdCgpWzRd
+LnNwbGl0KCI9IilbMV0NCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGV4Y2Vl
+ZHNfY3B1X3ByZXNzdXJlID3CoCBzZWxmLnJxLm1heF9jcHVfcHJlc3N1cmUgYW5kIA0KPiAo
+ZmxvYXQoY3Vycl9jcHVfcHJlc3N1cmUpIC0gZmxvYXQoc2VsZi5wcmV2X2NwdV9wcmVzc3Vy
+ZSkpID4gDQo+IHNlbGYucnEubWF4X2NwdV9wcmVzc3VyZQ0KPiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgZXhjZWVkc19pb19wcmVzc3VyZSA9wqAgc2VsZi5ycS5tYXhfaW9f
+cHJlc3N1cmUgYW5kIA0KPiAoZmxvYXQoY3Vycl9pb19wcmVzc3VyZSkgLSBmbG9hdChzZWxm
+LnByZXZfaW9fcHJlc3N1cmUpKSA+IA0KPiBzZWxmLnJxLm1heF9pb19wcmVzc3VyZQ0KPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZXhjZWVkc19tZW1vcnlfcHJlc3N1cmUg
+PSBzZWxmLnJxLm1heF9tZW1vcnlfcHJlc3N1cmUgDQo+IGFuZCAoZmxvYXQoY3Vycl9tZW1v
+cnlfcHJlc3N1cmUpIC0gZmxvYXQoc2VsZi5wcmV2X21lbW9yeV9wcmVzc3VyZSkpID4gDQo+
+IHNlbGYucnEubWF4X21lbW9yeV9wcmVzc3VyZQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgbm93ID0gdGltZS50aW1lKCkNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGlmIG5vdyAtIHNlbGYucHJldl9wcmVzc3VyZV90aW1lID4gMS4wOg0KPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdGRpZmYgPSBub3cgLSBzZWxmLnByZXZfcHJl
+c3N1cmVfdGltZQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgdGRpZmYg
+PiAxLjA6DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGV4Y2Vl
+ZHNfY3B1X3ByZXNzdXJlID0gc2VsZi5ycS5tYXhfY3B1X3ByZXNzdXJlIA0KPiBhbmQgKGZs
+b2F0KGN1cnJfY3B1X3ByZXNzdXJlKSAtIGZsb2F0KHNlbGYucHJldl9jcHVfcHJlc3N1cmUp
+KSAvIHRkaWZmIA0KPiA+IHNlbGYucnEubWF4X2NwdV9wcmVzc3VyZQ0KPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBleGNlZWRzX2lvX3ByZXNzdXJlID0gc2Vs
+Zi5ycS5tYXhfaW9fcHJlc3N1cmUgYW5kIA0KPiAoZmxvYXQoY3Vycl9pb19wcmVzc3VyZSkg
+LSBmbG9hdChzZWxmLnByZXZfaW9fcHJlc3N1cmUpKSAvIHRkaWZmID4gDQo+IHNlbGYucnEu
+bWF4X2lvX3ByZXNzdXJlDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIGV4Y2VlZHNfbWVtb3J5X3ByZXNzdXJlID0gDQo+IHNlbGYucnEubWF4X21lbW9yeV9w
+cmVzc3VyZSBhbmQgKGZsb2F0KGN1cnJfbWVtb3J5X3ByZXNzdXJlKSAtIA0KPiBmbG9hdChz
+ZWxmLnByZXZfbWVtb3J5X3ByZXNzdXJlKSkgLyB0ZGlmZiA+IHNlbGYucnEubWF4X21lbW9y
+eV9wcmVzc3VyZQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
+ZWxmLnByZXZfY3B1X3ByZXNzdXJlID0gY3Vycl9jcHVfcHJlc3N1cmUNCj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5wcmV2X2lvX3ByZXNzdXJlID0g
+Y3Vycl9pb19wcmVzc3VyZQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBzZWxmLnByZXZfbWVtb3J5X3ByZXNzdXJlID0gY3Vycl9tZW1vcnlfcHJlc3N1cmUN
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5wcmV2X3By
+ZXNzdXJlX3RpbWUgPSBub3cNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVs
+c2U6DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGV4Y2VlZHNf
+Y3B1X3ByZXNzdXJlID0gc2VsZi5ycS5tYXhfY3B1X3ByZXNzdXJlIA0KPiBhbmQgKGZsb2F0
+KGN1cnJfY3B1X3ByZXNzdXJlKSAtIGZsb2F0KHNlbGYucHJldl9jcHVfcHJlc3N1cmUpKSA+
+IA0KPiBzZWxmLnJxLm1heF9jcHVfcHJlc3N1cmUNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgZXhjZWVkc19pb19wcmVzc3VyZSA9IHNlbGYucnEubWF4X2lv
+X3ByZXNzdXJlIGFuZCANCj4gKGZsb2F0KGN1cnJfaW9fcHJlc3N1cmUpIC0gZmxvYXQoc2Vs
+Zi5wcmV2X2lvX3ByZXNzdXJlKSkgPiANCj4gc2VsZi5ycS5tYXhfaW9fcHJlc3N1cmUNCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZXhjZWVkc19tZW1vcnlf
+cHJlc3N1cmUgPSANCj4gc2VsZi5ycS5tYXhfbWVtb3J5X3ByZXNzdXJlIGFuZCAoZmxvYXQo
+Y3Vycl9tZW1vcnlfcHJlc3N1cmUpIC0gDQo+IGZsb2F0KHNlbGYucHJldl9tZW1vcnlfcHJl
+c3N1cmUpKSA+IHNlbGYucnEubWF4X21lbW9yeV9wcmVzc3VyZQ0KPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHJldHVybiAoZXhjZWVkc19jcHVfcHJlc3N1cmUgb3IgZXhjZWVkc19pb19w
+cmVzc3VyZSBvciANCj4gZXhjZWVkc19tZW1vcnlfcHJlc3N1cmUpDQo+IMKgwqDCoMKgwqDC
+oMKgIHJldHVybiBGYWxzZQ0KPg0KPg0KPj4NCj4+IFpRDQo+Pg0KPj4+DQo+Pj4gL09sYQ0K
+Pj4+DQo+Pj4+DQo+Pj4+IC4uL1JhbmR5DQo+Pj4+DQo+Pj4+DQo+Pj4+Pg0KPj4+Pj4gL09s
+YSBOaWxzc29uDQo+Pj4+Pg0KPj4+Pj4NCj4+Pj4+DQo+Pj4NCj4+Pg0KPj4NCj4+DQo+PiAt
+PS09LT0tPS09LT0tPS09LT0tPS09LQ0KPj4gTGlua3M6IFlvdSByZWNlaXZlIGFsbCBtZXNz
+YWdlcyBzZW50IHRvIHRoaXMgZ3JvdXAuDQo+PiBWaWV3L1JlcGx5IE9ubGluZSAoIzE0MjA2
+KTpodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvZy9iaXRiYWtlLWRldmVsL21lc3Nh
+Z2UvMTQyMDYNCj4+IE11dGUgVGhpcyBUb3BpYzpodHRwczovL2xpc3RzLm9wZW5lbWJlZGRl
+ZC5vcmcvbXQvOTU2MTgyOTkvMzYxNjc2NQ0KPj4gR3JvdXAgT3duZXI6Yml0YmFrZS1kZXZl
+bCtvd25lckBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQo+PiBVbnN1YnNjcmliZTpodHRwczov
+L2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvZy9iaXRiYWtlLWRldmVsL3Vuc3ViICBbcmFuZHku
+bWFjbGVvZEB3aW5kcml2ZXIuY29tXQ0KPj4gLT0tPS09LT0tPS09LT0tPS09LT0tPS0NCj4+
+DQo+DQo+IC0tIA0KPiAjIFJhbmR5IE1hY0xlb2QNCj4gIyBXaW5kIFJpdmVyIExpbnV4DQoN
+Cg==
+--------------l8ppbDaQDTotzacr0RRRL7hJ
 Content-Type: multipart/related;
- boundary="------------LwAXhQzI0I5c6e3VvMAtf5AF"
+ boundary="------------ObAEeLTTtDpRsTvcOOy2Do0Y"
 
---------------LwAXhQzI0I5c6e3VvMAtf5AF
+--------------ObAEeLTTtDpRsTvcOOy2Do0Y
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-MIME-Autoconverted: from 8bit to quoted-printable by mx0a-0064b401.pphosted.com id 34KJvUMG024874
+X-MIME-Autoconverted: from 8bit to quoted-printable by mx0a-0064b401.pphosted.com id 34M220EH019473
 
 <html><head>
 <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8">
   </head>
   <body>
-    <div class=3D"moz-cite-prefix">On 2022-12-19 14:49, Zheng Qiu via
-      lists.openembedded.org wrote:<br>
+    <div class=3D"moz-cite-prefix">Hi Ola &amp; Randy,</div>
+    <div class=3D"moz-cite-prefix"><br>
     </div>
-    <blockquote type=3D"cite" cite=3D"mid:C2B324F8-26C0-4FD6-848C-1224EB5=
-02474@zhengqiu.net">
+    <div class=3D"moz-cite-prefix">I just checked the codes and I think
+      Ola is right. The current PSI check cannot block spawning of new
+      tasks if the time interval is small between current check and last
+      check. I'll send out a patch to fix this issue.</div>
+    <div class=3D"moz-cite-prefix"><br>
+    </div>
+    <div class=3D"moz-cite-prefix">Also, I don't think calculating the
+      value too often is a good idea, so I'll change the check to be
+      &gt;1s.<br>
+    </div>
+    <div class=3D"moz-cite-prefix"><br>
+    </div>
+    <div class=3D"moz-cite-prefix">Please help review the patch.</div>
+    <div class=3D"moz-cite-prefix"><br>
+    </div>
+    <div class=3D"moz-cite-prefix">Regards,</div>
+    <div class=3D"moz-cite-prefix">Qi<br>
+    </div>
+    <div class=3D"moz-cite-prefix"><br>
+    </div>
+    <div class=3D"moz-cite-prefix"><br>
+    </div>
+    <div class=3D"moz-cite-prefix">On 5/21/23 03:58, Randy MacLeod wrote:=
+<br>
+    </div>
+    <blockquote type=3D"cite" cite=3D"mid:732553c1-870e-c794-c245-d664afa=
+14343@windriver.com">
      =20
-      <br>
-      <div><br>
-        <blockquote type=3D"cite">
-          <div>On Dec 19, 2022, at 7:50 AM, Ola x Nilsson
-            <a class=3D"moz-txt-link-rfc2396E" href=3D"mailto:ola.x.nilss=
-on@axis.com">&lt;ola.x.nilsson@axis.com&gt;</a> wrote:</div>
-          <br class=3D"Apple-interchange-newline">
-          <div><br style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <span style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none; float: none; display: inline
-              !important;">On Mon, Dec 12 2022, Randy MacLeod wrote:</spa=
-n><br style=3D"caret-color: rgb(0, 0, 0); font-family: Helvetica;
-              font-size: 12px; font-style: normal; font-variant-caps:
-              normal; font-weight: 400; letter-spacing: normal;
-              text-align: start; text-indent: 0px; text-transform: none;
-              white-space: normal; word-spacing: 0px;
-              -webkit-text-stroke-width: 0px; text-decoration: none;">
-            <br style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <blockquote type=3D"cite" style=3D"font-family: Helvetica;
-              font-size: 12px; font-style: normal; font-variant-caps:
-              normal; font-weight: 400; letter-spacing: normal; orphans:
-              auto; text-align: start; text-indent: 0px; text-transform:
-              none; white-space: normal; widows: auto; word-spacing:
-              0px; -webkit-text-size-adjust: auto;
-              -webkit-text-stroke-width: 0px; text-decoration: none;">CCi=
-ng
-              Richard<br>
-              <br>
-              On 2022-12-12 05:07, Ola x Nilsson via
-              lists.openembedded.org wrote:<br>
-              <blockquote type=3D"cite">Hi,<br>
-                <br>
-                I've been looking into using the pressure stall
-                information awareness of<br>
-                bitbake<br>
-              </blockquote>
-              That's good to hear Ola.<br>
-              <blockquote type=3D"cite">&nbsp;but I have some problems ge=
-tting
-                it to work. &nbsp;Actually I think<br>
-                it just doesn't work at all.<br>
-              </blockquote>
-              <br>
-              Doesn't work at all?<br>
-              <br>
-              Well that would be surprising. See below.<br>
-            </blockquote>
-            <br style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <span style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none; float: none; display: inline
-              !important;">OK, it will occasionally block a task. But
-              since the next attempt will</span><br style=3D"caret-color:
-              rgb(0, 0, 0); font-family: Helvetica; font-size: 12px;
-              font-style: normal; font-variant-caps: normal;
-              font-weight: 400; letter-spacing: normal; text-align:
-              start; text-indent: 0px; text-transform: none;
-              white-space: normal; word-spacing: 0px;
-              -webkit-text-stroke-width: 0px; text-decoration: none;">
-            <span style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none; float: none; display: inline
-              !important;">always be a very short time interval it will
-              almost always start a new</span><br style=3D"caret-color:
-              rgb(0, 0, 0); font-family: Helvetica; font-size: 12px;
-              font-style: normal; font-variant-caps: normal;
-              font-weight: 400; letter-spacing: normal; text-align:
-              start; text-indent: 0px; text-transform: none;
-              white-space: normal; word-spacing: 0px;
-              -webkit-text-stroke-width: 0px; text-decoration: none;">
-            <span style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none; float: none; display: inline
-              !important;">task even if the pressure is high.</span><br s=
-tyle=3D"caret-color: rgb(0, 0, 0); font-family: Helvetica;
-              font-size: 12px; font-style: normal; font-variant-caps:
-              normal; font-weight: 400; letter-spacing: normal;
-              text-align: start; text-indent: 0px; text-transform: none;
-              white-space: normal; word-spacing: 0px;
-              -webkit-text-stroke-width: 0px; text-decoration: none;">
-            <span style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none; float: none; display: inline
-              !important;">At least this is what I observe on my system.<=
-/span><br style=3D"caret-color: rgb(0, 0, 0); font-family: Helvetica;
-              font-size: 12px; font-style: normal; font-variant-caps:
-              normal; font-weight: 400; letter-spacing: normal;
-              text-align: start; text-indent: 0px; text-transform: none;
-              white-space: normal; word-spacing: 0px;
-              -webkit-text-stroke-width: 0px; text-decoration: none;">
-            <br style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <span style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none; float: none; display: inline
-              !important;">&lt;snip&gt;</span><br style=3D"caret-color:
-              rgb(0, 0, 0); font-family: Helvetica; font-size: 12px;
-              font-style: normal; font-variant-caps: normal;
-              font-weight: 400; letter-spacing: normal; text-align:
-              start; text-indent: 0px; text-transform: none;
-              white-space: normal; word-spacing: 0px;
-              -webkit-text-stroke-width: 0px; text-decoration: none;">
-            <br style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <blockquote type=3D"cite" style=3D"font-family: Helvetica;
-              font-size: 12px; font-style: normal; font-variant-caps:
-              normal; font-weight: 400; letter-spacing: normal; orphans:
-              auto; text-align: start; text-indent: 0px; text-transform:
-              none; white-space: normal; widows: auto; word-spacing:
-              0px; -webkit-text-size-adjust: auto;
-              -webkit-text-stroke-width: 0px; text-decoration: none;">1.
-              Rather than just keep track of the previous pressure
-              values<br>
-              seen more than 1 second ago as done currently:<br>
-              <br>
-              &nbsp; &nbsp; &nbsp; if now - self.prev_pressure_time &gt; =
-1.0:<br>
-              <br>
-              and always using that as a reference, we can<br>
-              store say 10 values per second and use that as a
-              reference.<br>
-              <br>
-              There are some challenges in that approach in that we
-              don't control<br>
-              how often the function is called. Averaging over the last
-              10 calls<br>
-              is tempting but likely has some edge cases such as when
-              there are<br>
-              lots of tasks starting/ending.<br>
-              <br>
-              <br>
-              2. If there has been a long delay since the function was
-              last called,<br>
-              we could check the pressure, sleep for a short period of
-              time and check it<br>
-              again. Some people would not like this since it will
-              needlessly delay<span class=3D"Apple-converted-space">&nbsp=
-;</span><br>
-              the build<br>
-              so we'd have to keep the delay to &lt; 1 second. Too short
-              a delay will reduce<br>
-              the accuracy of the result but I suspect that 0.1 seconds
-              is sufficient<span class=3D"Apple-converted-space">&nbsp;</=
-span><br>
-              for most<br>
-              users. We could also look at the avg10 value in this case
-              or even some<span class=3D"Apple-converted-space">&nbsp;</s=
-pan><br>
-              combination of<br>
-              both the current contention and avg10.<br>
-              <br>
-              <br>
-              3. Just calculate the pressure per second by:<br>
-              <br>
-              &nbsp;&nbsp; ( current pressure - last pressure ) / (now -
-              last_time)<br>
-              <br>
-              This could handle&nbsp; short time differences such os
-              milliseconds<br>
-              as would be a 'cheap' way to deal with long delays. In
-              your case,<br>
-              the pressure would be:<br>
-              <br>
-              &nbsp; 978077.0 io_pressure 1353882.0 mem_pressure 20922.0<=
-br>
-              <br>
-              divided by ~19 since the initial values were close to
-              zero.<br>
-              <br>
-              Then for the next time, just 0.1 seconds later:<br>
-              <br>
-              1670840042.384582 cpu_pressure 8978077.0 io_pressure
-              1353882.0 mem_pressure 20922.0<br>
-              1670840042.384582 cpu io &nbsp;pressure exceeded over 18.67=
-7629
-              seconds<br>
-              1670840042.486946 cpu_pressure 466.0 io_pressure 30792.0
-              mem_pressure 0.0<br>
-              <br>
-              Multiplying by 10 or easy calculation, the would be a
-              pressure:<br>
-              <br>
-              cpu: 4660, io: 307920, mem: 0.<br>
-              <br>
-              <br>
-              Do you have another idea or a preference as to which
-              approach we take?<br>
-            </blockquote>
-            <br style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <span style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none; float: none; display: inline
-              !important;">I think 3 is a good first step. &nbsp;Using
-              multiple samples could improve</span><br style=3D"caret-col=
-or: rgb(0, 0, 0); font-family: Helvetica;
-              font-size: 12px; font-style: normal; font-variant-caps:
-              normal; font-weight: 400; letter-spacing: normal;
-              text-align: start; text-indent: 0px; text-transform: none;
-              white-space: normal; word-spacing: 0px;
-              -webkit-text-stroke-width: 0px; text-decoration: none;">
-            <span style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none; float: none; display: inline
-              !important;">our calculated &quot;avg1&quot;, but lets do t=
-hat later
-              if needed.</span><br style=3D"caret-color: rgb(0, 0, 0);
-              font-family: Helvetica; font-size: 12px; font-style:
-              normal; font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-          </div>
-        </blockquote>
+      <div class=3D"moz-cite-prefix">On 2022-12-19 14:49, Zheng Qiu via
+        lists.openembedded.org wrote:<br>
+      </div>
+      <blockquote type=3D"cite" cite=3D"mid:C2B324F8-26C0-4FD6-848C-1224E=
+B502474@zhengqiu.net"> <br>
         <div><br>
-        </div>
-        <div>I agree; Randy and I have been working on patching make and
-          have taken a similar approach:</div>
-        <div>
-          <div style=3D"display: block;">
+          <blockquote type=3D"cite">
+            <div>On Dec 19, 2022, at 7:50 AM, Ola x Nilsson <a class=3D"m=
+oz-txt-link-rfc2396E" href=3D"mailto:ola.x.nilsson@axis.com" moz-do-not-s=
+end=3D"true">&lt;ola.x.nilsson@axis.com&gt;</a>
+              wrote:</div>
+            <br class=3D"Apple-interchange-newline">
+            <div><br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <span style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none; float: none; display: inline
+                !important;">On Mon, Dec 12 2022, Randy MacLeod wrote:</s=
+pan><br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <blockquote type=3D"cite" style=3D"font-family: Helvetica;
+                font-size: 12px; font-style: normal; font-variant-caps:
+                normal; font-weight: 400; letter-spacing: normal;
+                orphans: auto; text-align: start; text-indent: 0px;
+                text-transform: none; white-space: normal; widows: auto;
+                word-spacing: 0px; -webkit-text-size-adjust: auto;
+                -webkit-text-stroke-width: 0px; text-decoration: none;">C=
+Cing
+                Richard<br>
+                <br>
+                On 2022-12-12 05:07, Ola x Nilsson via
+                lists.openembedded.org wrote:<br>
+                <blockquote type=3D"cite">Hi,<br>
+                  <br>
+                  I've been looking into using the pressure stall
+                  information awareness of<br>
+                  bitbake<br>
+                </blockquote>
+                That's good to hear Ola.<br>
+                <blockquote type=3D"cite">&nbsp;but I have some problems
+                  getting it to work. &nbsp;Actually I think<br>
+                  it just doesn't work at all.<br>
+                </blockquote>
+                <br>
+                Doesn't work at all?<br>
+                <br>
+                Well that would be surprising. See below.<br>
+              </blockquote>
+              <br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <span style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none; float: none; display: inline
+                !important;">OK, it will occasionally block a task. But
+                since the next attempt will</span><br style=3D"caret-colo=
+r: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <span style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none; float: none; display: inline
+                !important;">always be a very short time interval it
+                will almost always start a new</span><br style=3D"caret-c=
+olor: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <span style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none; float: none; display: inline
+                !important;">task even if the pressure is high.</span><br=
+ style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <span style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none; float: none; display: inline
+                !important;">At least this is what I observe on my
+                system.</span><br style=3D"caret-color: rgb(0, 0, 0);
+                font-family: Helvetica; font-size: 12px; font-style:
+                normal; font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <span style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none; float: none; display: inline
+                !important;">&lt;snip&gt;</span><br style=3D"caret-color:
+                rgb(0, 0, 0); font-family: Helvetica; font-size: 12px;
+                font-style: normal; font-variant-caps: normal;
+                font-weight: 400; letter-spacing: normal; text-align:
+                start; text-indent: 0px; text-transform: none;
+                white-space: normal; word-spacing: 0px;
+                -webkit-text-stroke-width: 0px; text-decoration: none;">
+              <br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <blockquote type=3D"cite" style=3D"font-family: Helvetica;
+                font-size: 12px; font-style: normal; font-variant-caps:
+                normal; font-weight: 400; letter-spacing: normal;
+                orphans: auto; text-align: start; text-indent: 0px;
+                text-transform: none; white-space: normal; widows: auto;
+                word-spacing: 0px; -webkit-text-size-adjust: auto;
+                -webkit-text-stroke-width: 0px; text-decoration: none;">1.
+                Rather than just keep track of the previous pressure
+                values<br>
+                seen more than 1 second ago as done currently:<br>
+                <br>
+                &nbsp; &nbsp; &nbsp; if now - self.prev_pressure_time &gt=
+; 1.0:<br>
+                <br>
+                and always using that as a reference, we can<br>
+                store say 10 values per second and use that as a
+                reference.<br>
+                <br>
+                There are some challenges in that approach in that we
+                don't control<br>
+                how often the function is called. Averaging over the
+                last 10 calls<br>
+                is tempting but likely has some edge cases such as when
+                there are<br>
+                lots of tasks starting/ending.<br>
+                <br>
+                <br>
+                2. If there has been a long delay since the function was
+                last called,<br>
+                we could check the pressure, sleep for a short period of
+                time and check it<br>
+                again. Some people would not like this since it will
+                needlessly delay<span class=3D"Apple-converted-space">&nb=
+sp;</span><br>
+                the build<br>
+                so we'd have to keep the delay to &lt; 1 second. Too
+                short a delay will reduce<br>
+                the accuracy of the result but I suspect that 0.1
+                seconds is sufficient<span class=3D"Apple-converted-space=
+">&nbsp;</span><br>
+                for most<br>
+                users. We could also look at the avg10 value in this
+                case or even some<span class=3D"Apple-converted-space">&n=
+bsp;</span><br>
+                combination of<br>
+                both the current contention and avg10.<br>
+                <br>
+                <br>
+                3. Just calculate the pressure per second by:<br>
+                <br>
+                &nbsp;&nbsp; ( current pressure - last pressure ) / (now =
+-
+                last_time)<br>
+                <br>
+                This could handle&nbsp; short time differences such os
+                milliseconds<br>
+                as would be a 'cheap' way to deal with long delays. In
+                your case,<br>
+                the pressure would be:<br>
+                <br>
+                &nbsp; 978077.0 io_pressure 1353882.0 mem_pressure 20922.=
+0<br>
+                <br>
+                divided by ~19 since the initial values were close to
+                zero.<br>
+                <br>
+                Then for the next time, just 0.1 seconds later:<br>
+                <br>
+                1670840042.384582 cpu_pressure 8978077.0 io_pressure
+                1353882.0 mem_pressure 20922.0<br>
+                1670840042.384582 cpu io &nbsp;pressure exceeded over
+                18.677629 seconds<br>
+                1670840042.486946 cpu_pressure 466.0 io_pressure 30792.0
+                mem_pressure 0.0<br>
+                <br>
+                Multiplying by 10 or easy calculation, the would be a
+                pressure:<br>
+                <br>
+                cpu: 4660, io: 307920, mem: 0.<br>
+                <br>
+                <br>
+                Do you have another idea or a preference as to which
+                approach we take?<br>
+              </blockquote>
+              <br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <span style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none; float: none; display: inline
+                !important;">I think 3 is a good first step. &nbsp;Using
+                multiple samples could improve</span><br style=3D"caret-c=
+olor: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <span style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none; float: none; display: inline
+                !important;">our calculated &quot;avg1&quot;, but lets do=
+ that
+                later if needed.</span><br style=3D"caret-color: rgb(0, 0=
+,
+                0); font-family: Helvetica; font-size: 12px; font-style:
+                normal; font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+            </div>
+          </blockquote>
+          <div><br>
+          </div>
+          <div>I agree; Randy and I have been working on patching make
+            and have taken a similar approach:</div>
+          <div>
             <div style=3D"display: block;">
-              <div style=3D"-webkit-user-select: all; -webkit-user-drag:
-                element; display: inline-block;" class=3D"apple-rich-link=
-" draggable=3D"true" role=3D"link" data-url=3D"https://github.com/ZhengQ2=
-/make/tree/cpu-pressure"><a style=3D"border-radius:10px;font-family:-appl=
-e-system,
-                  Helvetica, Arial,
+              <div style=3D"display: block;">
+                <div style=3D"-webkit-user-select: all; -webkit-user-drag=
+:
+                  element; display: inline-block;" class=3D"apple-rich-li=
+nk" draggable=3D"true" role=3D"link" data-url=3D"https://github.com/Zheng=
+Q2/make/tree/cpu-pressure"><a style=3D"border-radius:10px;font-family:-ap=
+ple-system,
+                    Helvetica, Arial,
 sans-serif;display:block;-webkit-user-select:none;width:300px;user-select=
 :none;-webkit-user-modify:read-only;user-modify:read-only;overflow:hidden=
 ;text-decoration:none;" class=3D"lp-rich-link" rel=3D"nofollow" href=3D"h=
 ttps://github.com/ZhengQ2/make/tree/cpu-pressure" dir=3D"ltr" role=3D"but=
 ton" draggable=3D"false" width=3D"300" moz-do-not-send=3D"true">
-                  <table style=3D"table-layout:fixed;border-collapse:coll=
-apse;width:300px;background-color:#E5E6E9;font-family:-apple-system,
-                    Helvetica, Arial, sans-serif;" class=3D"lp-rich-link-=
-emailBaseTable" width=3D"300" cellspacing=3D"0" cellpadding=3D"0" border=3D=
-"0">
-                    <tbody>
-                      <tr>
-                        <td vertical-align=3D"center" align=3D"center"><i=
-mg style=3D"width:300px;filter:brightness(0.97);height:150px;" draggable=3D=
-"false" class=3D"lp-rich-link-mediaImage" alt=3D"make.png" src=3D"cid:par=
-t1.xD2RfWbS.LcQLGPdp@windriver.com" width=3D"300" height=3D"150"></td>
-                      </tr>
-                      <tr>
-                        <td vertical-align=3D"center">
-                          <table style=3D"font-family:-apple-system,
-                            Helvetica, Arial,
-                            sans-serif;table-layout:fixed;background-colo=
-r:rgba(229,
-                            230, 233, 1);" class=3D"lp-rich-link-captionB=
-ar" width=3D"300" cellspacing=3D"0" cellpadding=3D"0" bgcolor=3D"#E5E6E9"=
+                    <table style=3D"table-layout:fixed;border-collapse:co=
+llapse;width:300px;background-color:#E5E6E9;font-family:-apple-system,
+                      Helvetica, Arial, sans-serif;" class=3D"lp-rich-lin=
+k-emailBaseTable" width=3D"300" cellspacing=3D"0" cellpadding=3D"0" borde=
+r=3D"0">
+                      <tbody>
+                        <tr>
+                          <td vertical-align=3D"center" align=3D"center">=
+<img style=3D"width:300px;filter:brightness(0.97);height:150px;" draggabl=
+e=3D"false" class=3D"lp-rich-link-mediaImage" alt=3D"make.png" src=3D"cid=
+:part1.OuITs1fX.LCMBjGx4@windriver.com" width=3D"300" height=3D"150"></td=
 >
-                            <tbody>
-                              <tr>
-                                <td style=3D"padding:8px 0px 8px 0px;" cl=
-ass=3D"lp-rich-link-captionBar-textStackItem">
-                                  <div style=3D"max-width:100%;margin:0px
-                                    16px 0px 16px;overflow:hidden;" class=
-=3D"lp-rich-link-captionBar-textStack">
-                                    <div style=3D"word-wrap:break-word;fo=
-nt-weight:500;font-size:12px;overflow:hidden;text-overflow:ellipsis;text-=
-align:left;" class=3D"lp-rich-link-captionBar-textStack-topCaption-leadin=
-g"><a rel=3D"nofollow" href=3D"https://github.com/ZhengQ2/make/tree/cpu-p=
-ressure" style=3D"text-decoration: none" draggable=3D"false" moz-do-not-s=
-end=3D"true"><font style=3D"color: rgba(0, 0, 0,
-                                          0.847059);" color=3D"#272727">Z=
-hengQ2/make
-                                          at cpu-pressure</font></a></div=
->
-                                    <div style=3D"word-wrap:break-word;fo=
-nt-weight:400;font-size:11px;overflow:hidden;text-overflow:ellipsis;text-=
-align:left;" class=3D"lp-rich-link-captionBar-textStack-bottomCaption-lea=
-ding"><a rel=3D"nofollow" href=3D"https://github.com/ZhengQ2/make/tree/cp=
-u-pressure" style=3D"text-decoration: none" draggable=3D"false" moz-do-no=
-t-send=3D"true"><font style=3D"color: rgba(0, 0, 0,
-                                          0.498039);" color=3D"#808080">g=
-ithub.com</font></a></div>
-                                  </div>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </a></div>
+                        </tr>
+                        <tr>
+                          <td vertical-align=3D"center">
+                            <table style=3D"font-family:-apple-system,
+                              Helvetica, Arial,
+                              sans-serif;table-layout:fixed;background-co=
+lor:rgba(229,
+                              230, 233, 1);" class=3D"lp-rich-link-captio=
+nBar" width=3D"300" cellspacing=3D"0" cellpadding=3D"0" bgcolor=3D"#E5E6E=
+9">
+                              <tbody>
+                                <tr>
+                                  <td style=3D"padding:8px 0px 8px 0px;" =
+class=3D"lp-rich-link-captionBar-textStackItem">
+                                    <div style=3D"max-width:100%;margin:0=
+px
+                                      16px 0px 16px;overflow:hidden;" cla=
+ss=3D"lp-rich-link-captionBar-textStack">
+                                      <div style=3D"word-wrap:break-word;=
+font-weight:500;font-size:12px;overflow:hidden;text-overflow:ellipsis;tex=
+t-align:left;" class=3D"lp-rich-link-captionBar-textStack-topCaption-lead=
+ing"><a rel=3D"nofollow" href=3D"https://github.com/ZhengQ2/make/tree/cpu=
+-pressure" style=3D"text-decoration: none" draggable=3D"false" moz-do-not=
+-send=3D"true"><font style=3D"color: rgba(0, 0, 0,
+                                            0.847059);" color=3D"#272727"=
+>ZhengQ2/make
+                                            at cpu-pressure</font></a></d=
+iv>
+                                      <div style=3D"word-wrap:break-word;=
+font-weight:400;font-size:11px;overflow:hidden;text-overflow:ellipsis;tex=
+t-align:left;" class=3D"lp-rich-link-captionBar-textStack-bottomCaption-l=
+eading"><a rel=3D"nofollow" href=3D"https://github.com/ZhengQ2/make/tree/=
+cpu-pressure" style=3D"text-decoration: none" draggable=3D"false" moz-do-=
+not-send=3D"true"><font style=3D"color: rgba(0, 0, 0,
+                                            0.498039);" color=3D"#808080"=
+>github.com</font></a></div>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </a></div>
+              </div>
+              <div style=3D"display: block;">Additionally, we found that
+                when the pressure read is too frequent, we may get the
+                same cpu pressure as an result,&nbsp;</div>
+              <div style=3D"display: block;">even if the pressure have
+                actually changed. This is likely due to the per cpu
+                variables used in the kernel.</div>
+              <div style=3D"display: block;">So, in addition to the
+                algorithm Randy talked above, we also compares if the
+                cpu pressure has been changed, if not,</div>
+              <div style=3D"display: block;">we will return the last
+                result that has been produced.</div>
+              <div style=3D"display: block;"><br>
+              </div>
+              <div style=3D"display: block;">I will CC you when I have a
+                patch, and you can try it out before the commit gets
+                merged if you like.</div>
             </div>
-            <div style=3D"display: block;">Additionally, we found that
-              when the pressure read is too frequent, we may get the
-              same cpu pressure as an result,&nbsp;</div>
-            <div style=3D"display: block;">even if the pressure have
-              actually changed. This is likely due to the per cpu
-              variables used in the kernel.</div>
-            <div style=3D"display: block;">So, in addition to the
-              algorithm Randy talked above, we also compares if the cpu
-              pressure has been changed, if not,</div>
-            <div style=3D"display: block;">we will return the last result
-              that has been produced.</div>
-            <div style=3D"display: block;"><br>
-            </div>
-            <div style=3D"display: block;">I will CC you when I have a
-              patch, and you can try it out before the commit gets
-              merged if you like.</div>
           </div>
         </div>
-      </div>
-    </blockquote>
-    <p><br>
-    </p>
-    <p>Ola, <br>
-      <br>
-      Does Qi's patch below help in your situation?</p>
-    <p>I still want/intent to add a bitbake PSI test case that uses
-      stress-ng to induce load<br>
-      and a lightweight sleep task but there are never enough hours in
-      the day/week/...<br>
-      <br>
-      The basic idea is to:</p>
-    <p>1. Run a task that just sleeps for say 10 seconds and confirm
-      that the actual<br>
-      execution time is &lt; 11 seconds or so.<br>
-    </p>
-    <p>2. use stress to get the system into a CPU pressure environment
-      above<br>
-      the current threshold for say 30 seconds and simultaneously /
-      shortly there after, <br>
-      launch the same sleep task and confirm that this time, the actual
-      exectuion time of<br>
-      the launch to completion time is 40+ seconds.<br>
-    </p>
-    <p>../Randy 'getting caught up on email on the weekend' MacLeod</p>
-    <p><br>
-    </p>
-    <p>=E2=9D=AF git show ba94f9a3b1960cc0fdc831c20a9d2f8ad289f307<br>
-      commit ba94f9a3b1960cc0fdc831c20a9d2f8ad289f307<br>
-      Author: Chen Qi <a class=3D"moz-txt-link-rfc2396E" href=3D"mailto:Q=
-i.Chen@windriver.com">&lt;Qi.Chen@windriver.com&gt;</a><br>
-      Date:&nbsp;&nbsp; Thu Apr 6 23:07:14 2023<br>
-      <br>
-      &nbsp;&nbsp;&nbsp; bitbake: runqueue: fix PSI check calculation<br>
-      &nbsp;&nbsp; &nbsp;<br>
-      &nbsp;&nbsp;&nbsp; The current PSI check calculation does not take =
-into
-      consideration<br>
-      &nbsp;&nbsp;&nbsp; the possibility of the time interval between las=
-t check and
-      current<br>
-      &nbsp;&nbsp;&nbsp; check being much larger than 1s. In fact, the cu=
-rrent behavior
-      does<br>
-      &nbsp;&nbsp;&nbsp; not match what the manual says about BB_PRESSURE=
-_MAX_XXX, even
-      if<br>
-      &nbsp;&nbsp;&nbsp; the value is set to upper limit, 1000000, we sti=
-ll get many
-      blocks<br>
-      &nbsp;&nbsp;&nbsp; on new task launch. The difference between 'tota=
-l' should be
-      divided<br>
-      &nbsp;&nbsp;&nbsp; by the time interval if it's larger than 1s.<br>
-      &nbsp;&nbsp; &nbsp;<br>
-      &nbsp;&nbsp;&nbsp; (Bitbake rev: b4763c2c93e7494e0a27f5970c19c1aac6=
-6c228b)<br>
-      &nbsp;&nbsp; &nbsp;<br>
-      &nbsp;&nbsp;&nbsp; Signed-off-by: Chen Qi <a class=3D"moz-txt-link-=
-rfc2396E" href=3D"mailto:Qi.Chen@windriver.com">&lt;Qi.Chen@windriver.com=
-&gt;</a><br>
-      &nbsp;&nbsp;&nbsp; Signed-off-by: Richard Purdie
-      <a class=3D"moz-txt-link-rfc2396E" href=3D"mailto:richard.purdie@li=
-nuxfoundation.org">&lt;richard.purdie@linuxfoundation.org&gt;</a><br>
-      <br>
-      <br>
-      =CE=94 bitbake/lib/bb/runqueue.py<br>
+      </blockquote>
+      <p><br>
+      </p>
+      <p>Ola, <br>
+        <br>
+        Does Qi's patch below help in your situation?</p>
+      <p>I still want/intent to add a bitbake PSI test case that uses
+        stress-ng to induce load<br>
+        and a lightweight sleep task but there are never enough hours in
+        the day/week/...<br>
+        <br>
+        The basic idea is to:</p>
+      <p>1. Run a task that just sleeps for say 10 seconds and confirm
+        that the actual<br>
+        execution time is &lt; 11 seconds or so.<br>
+      </p>
+      <p>2. use stress to get the system into a CPU pressure environment
+        above<br>
+        the current threshold for say 30 seconds and simultaneously /
+        shortly there after, <br>
+        launch the same sleep task and confirm that this time, the
+        actual exectuion time of<br>
+        the launch to completion time is 40+ seconds.<br>
+      </p>
+      <p>../Randy 'getting caught up on email on the weekend' MacLeod</p>
+      <p><br>
+      </p>
+      <p>=E2=9D=AF git show ba94f9a3b1960cc0fdc831c20a9d2f8ad289f307<br>
+        commit ba94f9a3b1960cc0fdc831c20a9d2f8ad289f307<br>
+        Author: Chen Qi <a class=3D"moz-txt-link-rfc2396E" href=3D"mailto=
+:Qi.Chen@windriver.com" moz-do-not-send=3D"true">&lt;Qi.Chen@windriver.co=
+m&gt;</a><br>
+        Date:&nbsp;&nbsp; Thu Apr 6 23:07:14 2023<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; bitbake: runqueue: fix PSI check calculation<b=
+r>
+        &nbsp;&nbsp; &nbsp;<br>
+        &nbsp;&nbsp;&nbsp; The current PSI check calculation does not tak=
+e into
+        consideration<br>
+        &nbsp;&nbsp;&nbsp; the possibility of the time interval between l=
+ast check and
+        current<br>
+        &nbsp;&nbsp;&nbsp; check being much larger than 1s. In fact, the =
+current
+        behavior does<br>
+        &nbsp;&nbsp;&nbsp; not match what the manual says about BB_PRESSU=
+RE_MAX_XXX,
+        even if<br>
+        &nbsp;&nbsp;&nbsp; the value is set to upper limit, 1000000, we s=
+till get many
+        blocks<br>
+        &nbsp;&nbsp;&nbsp; on new task launch. The difference between 'to=
+tal' should be
+        divided<br>
+        &nbsp;&nbsp;&nbsp; by the time interval if it's larger than 1s.<b=
+r>
+        &nbsp;&nbsp; &nbsp;<br>
+        &nbsp;&nbsp;&nbsp; (Bitbake rev: b4763c2c93e7494e0a27f5970c19c1aa=
+c66c228b)<br>
+        &nbsp;&nbsp; &nbsp;<br>
+        &nbsp;&nbsp;&nbsp; Signed-off-by: Chen Qi <a class=3D"moz-txt-lin=
+k-rfc2396E" href=3D"mailto:Qi.Chen@windriver.com" moz-do-not-send=3D"true=
+">&lt;Qi.Chen@windriver.com&gt;</a><br>
+        &nbsp;&nbsp;&nbsp; Signed-off-by: Richard Purdie <a class=3D"moz-=
+txt-link-rfc2396E" href=3D"mailto:richard.purdie@linuxfoundation.org" moz=
+-do-not-send=3D"true">&lt;richard.purdie@linuxfoundation.org&gt;</a><br>
+        <br>
+        <br>
+        =CE=94 bitbake/lib/bb/runqueue.py<br>
 =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
 =94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
 =80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
@@ -829,223 +885,232 @@ nuxfoundation.org">&lt;richard.purdie@linuxfoundation.org&gt;</a><br>
 =80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
 =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
 =94=80=E2=94=80=E2=94=80<br>
-      <br>
-      =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+        <br>
+        =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
 =80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
 =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
 =94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90=
-<br>
-      =E2=80=A2 198: class RunQueueScheduler(object): =E2=94=82<br>
-      =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90<br>
+        =E2=80=A2 198: class RunQueueScheduler(object): =E2=94=82<br>
+        =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
 =80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
 =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
 =94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98=
-<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; curr_cpu_pressure =3D
-      cpu_pressure_fds.readline().split()[4].split(&quot;=3D&quot;)[1]<br=
->
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; curr_io_pressure =3D
-      io_pressure_fds.readline().split()[4].split(&quot;=3D&quot;)[1]<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; curr_memory_pressure =3D
-      memory_pressure_fds.readline().split()[4].split(&quot;=3D&quot;)[1]=
-<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; exceeds_cpu_pressure =3D&nbsp; self.rq.max_cpu_pr=
+=98<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; curr_cpu_pressure =3D
+        cpu_pressure_fds.readline().split()[4].split(&quot;=3D&quot;)[1]<=
+br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; curr_io_pressure =3D
+        io_pressure_fds.readline().split()[4].split(&quot;=3D&quot;)[1]<b=
+r>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; curr_memory_pressure =3D
+        memory_pressure_fds.readline().split()[4].split(&quot;=3D&quot;)[=
+1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_cpu_pressure =3D&nbsp; self.rq.max_cpu_=
+pressure
+        and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure))
+        &gt; self.rq.max_cpu_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_io_pressure =3D&nbsp; self.rq.max_io_pr=
 essure
-      and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure))
-      &gt; self.rq.max_cpu_pressure<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; exceeds_io_pressure =3D&nbsp; self.rq.max_io_pres=
-sure and
-      (float(curr_io_pressure) - float(self.prev_io_pressure)) &gt;
-      self.rq.max_io_pressure<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; exceeds_memory_pressure =3D
-      self.rq.max_memory_pressure and (float(curr_memory_pressure) -
-      float(self.prev_memory_pressure)) &gt; self.rq.max_memory_pressure<=
-br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; now =3D time.time()<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; if now - self.prev_pressure_time &gt; 1.0:<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; tdiff =3D now - self.prev_pressure_time<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; if tdiff &gt; 1.0:<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_cpu_pressure =3D&=
-nbsp;
-      self.rq.max_cpu_pressure and (float(curr_cpu_pressure) -
-      float(self.prev_cpu_pressure)) / tdiff &gt;
-      self.rq.max_cpu_pressure<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_io_pressure =3D&n=
-bsp; self.rq.max_io_pressure
-      and (float(curr_io_pressure) - float(self.prev_io_pressure)) /
-      tdiff &gt; self.rq.max_io_pressure<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_memory_pressure =3D
-      self.rq.max_memory_pressure and (float(curr_memory_pressure) -
-      float(self.prev_memory_pressure)) / tdiff &gt;
-      self.rq.max_memory_pressure<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self.prev_cpu_pressure =3D=
- curr_cpu_pressure<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self.prev_io_pressure =3D=
- curr_io_pressure<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self.prev_memory_pressure=
+        and (float(curr_io_pressure) - float(self.prev_io_pressure))
+        &gt; self.rq.max_io_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_memory_pressure =3D
+        self.rq.max_memory_pressure and (float(curr_memory_pressure) -
+        float(self.prev_memory_pressure)) &gt;
+        self.rq.max_memory_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; now =3D time.time()<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; if now - self.prev_pressure_time &gt; 1.0:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; tdiff =3D now - self.prev_pressure_time<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; if tdiff &gt; 1.0:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_cpu_pressure =3D=
+&nbsp;
+        self.rq.max_cpu_pressure and (float(curr_cpu_pressure) -
+        float(self.prev_cpu_pressure)) / tdiff &gt;
+        self.rq.max_cpu_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_io_pressure =3D=
+&nbsp;
+        self.rq.max_io_pressure and (float(curr_io_pressure) -
+        float(self.prev_io_pressure)) / tdiff &gt;
+        self.rq.max_io_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_memory_pressure=
  =3D
-      curr_memory_pressure<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self.prev_pressure_time =3D=
- now<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; else:<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_cpu_pressure =3D&=
-nbsp;
-      self.rq.max_cpu_pressure and (float(curr_cpu_pressure) -
-      float(self.prev_cpu_pressure)) &gt; self.rq.max_cpu_pressure<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_io_pressure =3D&n=
-bsp; self.rq.max_io_pressure
-      and (float(curr_io_pressure) - float(self.prev_io_pressure)) &gt;
-      self.rq.max_io_pressure<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_memory_pressure =3D
-      self.rq.max_memory_pressure and (float(curr_memory_pressure) -
-      float(self.prev_memory_pressure)) &gt; self.rq.max_memory_pressure<=
-br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-return (exceeds_cpu_pressure or exceeds_io_pressure or
-      exceeds_memory_pressure)<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return False<br>
-      <br>
-      <br>
-    </p>
-    <blockquote type=3D"cite" cite=3D"mid:C2B324F8-26C0-4FD6-848C-1224EB5=
-02474@zhengqiu.net">
-      <div>
+        self.rq.max_memory_pressure and (float(curr_memory_pressure) -
+        float(self.prev_memory_pressure)) / tdiff &gt;
+        self.rq.max_memory_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self.prev_cpu_pressure =
+=3D curr_cpu_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self.prev_io_pressure =3D=
+ curr_io_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self.prev_memory_pressu=
+re =3D
+        curr_memory_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self.prev_pressure_time=
+ =3D now<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp; else:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_cpu_pressure =3D=
+&nbsp;
+        self.rq.max_cpu_pressure and (float(curr_cpu_pressure) -
+        float(self.prev_cpu_pressure)) &gt; self.rq.max_cpu_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_io_pressure =3D=
+&nbsp;
+        self.rq.max_io_pressure and (float(curr_io_pressure) -
+        float(self.prev_io_pressure)) &gt; self.rq.max_io_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exceeds_memory_pressure=
+ =3D
+        self.rq.max_memory_pressure and (float(curr_memory_pressure) -
+        float(self.prev_memory_pressure)) &gt;
+        self.rq.max_memory_pressure<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+; return (exceeds_cpu_pressure or exceeds_io_pressure
+        or exceeds_memory_pressure)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return False<br>
+        <br>
+        <br>
+      </p>
+      <blockquote type=3D"cite" cite=3D"mid:C2B324F8-26C0-4FD6-848C-1224E=
+B502474@zhengqiu.net">
         <div>
-          <div style=3D"display: block;">
-            <div style=3D"display: block;"><br>
+          <div>
+            <div style=3D"display: block;">
+              <div style=3D"display: block;"><br>
+              </div>
+              <div style=3D"display: block;">ZQ</div>
             </div>
-            <div style=3D"display: block;">ZQ</div>
           </div>
+          <br>
+          <blockquote type=3D"cite">
+            <div><br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <span style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none; float: none; display: inline
+                !important;">/Ola</span><br style=3D"caret-color: rgb(0,
+                0, 0); font-family: Helvetica; font-size: 12px;
+                font-style: normal; font-variant-caps: normal;
+                font-weight: 400; letter-spacing: normal; text-align:
+                start; text-indent: 0px; text-transform: none;
+                white-space: normal; word-spacing: 0px;
+                -webkit-text-stroke-width: 0px; text-decoration: none;">
+              <br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <blockquote type=3D"cite" style=3D"font-family: Helvetica;
+                font-size: 12px; font-style: normal; font-variant-caps:
+                normal; font-weight: 400; letter-spacing: normal;
+                orphans: auto; text-align: start; text-indent: 0px;
+                text-transform: none; white-space: normal; widows: auto;
+                word-spacing: 0px; -webkit-text-size-adjust: auto;
+                -webkit-text-stroke-width: 0px; text-decoration: none;"><=
+br>
+                ../Randy<br>
+                <br>
+                <br>
+                <blockquote type=3D"cite"><br>
+                  /Ola Nilsson<br>
+                  <br>
+                  <br>
+                  <br>
+                </blockquote>
+              </blockquote>
+              <br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <br style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none;">
+              <span style=3D"caret-color: rgb(0, 0, 0); font-family:
+                Helvetica; font-size: 12px; font-style: normal;
+                font-variant-caps: normal; font-weight: 400;
+                letter-spacing: normal; text-align: start; text-indent:
+                0px; text-transform: none; white-space: normal;
+                word-spacing: 0px; -webkit-text-stroke-width: 0px;
+                text-decoration: none; float: none; display: inline
+                !important;"></span></div>
+          </blockquote>
         </div>
         <br>
-        <blockquote type=3D"cite">
-          <div><br style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <span style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none; float: none; display: inline
-              !important;">/Ola</span><br style=3D"caret-color: rgb(0, 0,
-              0); font-family: Helvetica; font-size: 12px; font-style:
-              normal; font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <br style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <blockquote type=3D"cite" style=3D"font-family: Helvetica;
-              font-size: 12px; font-style: normal; font-variant-caps:
-              normal; font-weight: 400; letter-spacing: normal; orphans:
-              auto; text-align: start; text-indent: 0px; text-transform:
-              none; white-space: normal; widows: auto; word-spacing:
-              0px; -webkit-text-size-adjust: auto;
-              -webkit-text-stroke-width: 0px; text-decoration: none;"><br=
->
-              ../Randy<br>
-              <br>
-              <br>
-              <blockquote type=3D"cite"><br>
-                /Ola Nilsson<br>
-                <br>
-                <br>
-                <br>
-              </blockquote>
-            </blockquote>
-            <br style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <br style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none;">
-            <span style=3D"caret-color: rgb(0, 0, 0); font-family:
-              Helvetica; font-size: 12px; font-style: normal;
-              font-variant-caps: normal; font-weight: 400;
-              letter-spacing: normal; text-align: start; text-indent:
-              0px; text-transform: none; white-space: normal;
-              word-spacing: 0px; -webkit-text-stroke-width: 0px;
-              text-decoration: none; float: none; display: inline
-              !important;"></span></div>
-        </blockquote>
-      </div>
-      <br>
-      <br>
-      <fieldset class=3D"moz-mime-attachment-header"></fieldset>
-      <pre class=3D"moz-quote-pre" wrap=3D"">-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+        <br>
+        <fieldset class=3D"moz-mime-attachment-header"></fieldset>
+        <pre class=3D"moz-quote-pre" wrap=3D"">-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
 -=3D-=3D-=3D-=3D-
 Links: You receive all messages sent to this group.
 View/Reply Online (#14206): <a class=3D"moz-txt-link-freetext" href=3D"ht=
-tps://lists.openembedded.org/g/bitbake-devel/message/14206">https://lists=
-.openembedded.org/g/bitbake-devel/message/14206</a>
+tps://lists.openembedded.org/g/bitbake-devel/message/14206" moz-do-not-se=
+nd=3D"true">https://lists.openembedded.org/g/bitbake-devel/message/14206<=
+/a>
 Mute This Topic: <a class=3D"moz-txt-link-freetext" href=3D"https://lists=
-.openembedded.org/mt/95618299/3616765">https://lists.openembedded.org/mt/=
-95618299/3616765</a>
-Group Owner: <a class=3D"moz-txt-link-abbreviated" href=3D"mailto:bitbake=
--devel+owner@lists.openembedded.org">bitbake-devel+owner@lists.openembedd=
-ed.org</a>
+.openembedded.org/mt/95618299/3616765" moz-do-not-send=3D"true">https://l=
+ists.openembedded.org/mt/95618299/3616765</a>
+Group Owner: <a class=3D"moz-txt-link-abbreviated moz-txt-link-freetext" =
+href=3D"mailto:bitbake-devel+owner@lists.openembedded.org" moz-do-not-sen=
+d=3D"true">bitbake-devel+owner@lists.openembedded.org</a>
 Unsubscribe: <a class=3D"moz-txt-link-freetext" href=3D"https://lists.ope=
-nembedded.org/g/bitbake-devel/unsub">https://lists.openembedded.org/g/bit=
-bake-devel/unsub</a> [<a class=3D"moz-txt-link-abbreviated" href=3D"mailt=
-o:randy.macleod@windriver.com">randy.macleod@windriver.com</a>]
+nembedded.org/g/bitbake-devel/unsub" moz-do-not-send=3D"true">https://lis=
+ts.openembedded.org/g/bitbake-devel/unsub</a> [<a class=3D"moz-txt-link-a=
+bbreviated moz-txt-link-freetext" href=3D"mailto:randy.macleod@windriver.=
+com" moz-do-not-send=3D"true">randy.macleod@windriver.com</a>]
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 
 </pre>
+      </blockquote>
+      <p><br>
+      </p>
+      <pre class=3D"moz-signature" cols=3D"72">--=20
+# Randy MacLeod
+# Wind River Linux</pre>
     </blockquote>
     <p><br>
     </p>
-    <pre class=3D"moz-signature" cols=3D"72">--=20
-# Randy MacLeod
-# Wind River Linux</pre>
   </body>
 </html>
---------------LwAXhQzI0I5c6e3VvMAtf5AF
+--------------ObAEeLTTtDpRsTvcOOy2Do0Y
 Content-Type: image/png; name="make.png"
 Content-Disposition: inline; filename="make.png"
-Content-Id: <part1.xD2RfWbS.LcQLGPdp@windriver.com>
+Content-Id: <part1.OuITs1fX.LCMBjGx4@windriver.com>
 Content-Transfer-Encoding: base64
 
 iVBORw0KGgoAAAANSUhEUgAABAAAAAIACAYAAAAczR65AAAAAXNSR0IArs4c6QAAAERlWElmTU0A
@@ -2942,7 +3007,7 @@ AS8CUgB4wdBHERABERABERABERABERABERABEYhWAlIAROuV1XmJgAiIgAiIgAiIgAiIgAiIgAiI
 gBcBKQC8YOijCIiACIiACIiACIiACIiACIiACEQrASkAovXK6rxEQAREQAREQAREQAREQAREQARE
 wIvA/w/WPVBHPjUtZwAAAABJRU5ErkJggg==
 
---------------LwAXhQzI0I5c6e3VvMAtf5AF--
+--------------ObAEeLTTtDpRsTvcOOy2Do0Y--
 
---------------A5Pwo88g8koc3f0nA04JXkyv--
+--------------l8ppbDaQDTotzacr0RRRL7hJ--
 
