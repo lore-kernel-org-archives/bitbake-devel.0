@@ -1,151 +1,159 @@
-Return-Path: <quirin.gylstorff@siemens.com>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DFDC77B73
-	for <webhook@archiver.kernel.org>; Mon, 22 May 2023 15:09:20 +0000 (UTC)
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (EUR02-DB5-obe.outbound.protection.outlook.com [40.107.249.65])
- by mx.groups.io with SMTP id smtpd.web10.24511.1684768155689867297
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E31FC77B75
+	for <webhook@archiver.kernel.org>; Mon, 22 May 2023 23:52:56 +0000 (UTC)
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+ by mx.groups.io with SMTP id smtpd.web10.7904.1684799574962026937
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 May 2023 08:09:16 -0700
+ Mon, 22 May 2023 16:52:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@siemens.com header.s=selector2 header.b=eDFlbCJG;
- spf=pass (domain: siemens.com, ip: 40.107.249.65, mailfrom: quirin.gylstorff@siemens.com)
+ dkim=pass header.i=@axis.com header.s=axis-central1 header.b=ktTIkHPU;
+ spf=pass (domain: axis.com, ip: 195.60.68.17, mailfrom: peter.kjellerstedt@axis.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; q=dns/txt; s=axis-central1; t=1684799575;
+  x=1716335575;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=zvMaAsnBLAM2vmq5yNhU7HwijZpyv2JhHCpy/3XI4sQ=;
+  b=ktTIkHPUAOxSRtXCIlNbuRu/bqFFFZv4zPmddDLgoyq8SMpVKo7bSiZX
+   bs3c4BOOlP1WlyKSBdDnP//kgEJFPXMfF8Sd5jWtHqWHqUCDzgouqOTAI
+   ugvSHywgjsTR+tCITS70WXQoLYWvRgJxKea7gARYJkmyQItoL+yZtF8HN
+   32ogqld/8Pnovtc3GmZyWUfxzq89RMvn74WR9xlHGsz9YbgPB/PcZtO4W
+   /LyiM6DSWYoa6oladiB2xCWhen7MmgDJVmLgTQTyi5xaBWA26qKgBmcds
+   V5o9LJMsVDvVH6HYqoMmqBIKJHRYe6rpIP7OtWrkgsn7jDAWuxnP7QGP4
+   g==;
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XbMvaoFPlI/bmRNfzNzYEx1b4GmWXt352S1AAg76tH90YX3/wzi1NRGD4qq+cBiHC7QH946yupGu740MIx4qgsQhGfUgRIeyLDrZwrPiT2PH65d0I3+26Q9D41SVIORH8JDuwCPBCwqwgXHwwxfE0ma7FJZ55DNrvU2n9SPRrh/B2QeasDTtOss3ZLW84Mm1w2RyAPV5N8I0elNOkLeYnKPgrhxRdoZ2T3KYoO0/D8IDyt79wchJ2BReLo8eYRX3nSfRPcZTxMilrzPZa9jIdvBmDWEcrORiqKk0uElLyP60SGmvtG2zYrTyk7si9Wtk/K6ZbbNUIEbdPE/XJj3Bug==
+ b=Dl/Wmcn5J22hYAtfLGezOfkggMkhZf+w2HDWdkW/29BtjSBNMcmS8+w3J1UoCquyQDJvIoMAcrbI1y0t/E3geDE3oZEVA+NcFhfVRx3l8EojPcnGJHzEkwyX26Pjrm7pOl6j+X5eMzK3K3qlcXRdSdIx4b/7x9q+l2+iYdDe66FoBAqwKTrLbZMEc8BJOA3tYrVuIIP35k7ZbJG60k8i/AkLFQNKblQ5jvQVnGrPZ4oalLx8DeDbKkGzYvhDTEThR2yuszIeg2Ls8JWcGS5SfhjnnMHP4XpBL9Q6oIMF749+eg8yi+24G2WioQKYP/i9RTxEskwGto3G3BqVsGVJ/A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9jaLerF638UHyn3Xhgt4+JPWZAmp3CYjksSgPUl5RV8=;
- b=g/G/GUspjSAsYi4RQOPN3Rq7VrvWZ7eeRQVsm2E1a13WNhPqIEvseujIJD/XGpEtWvy9lj8VTl9Fij19ShdnU9yoxIuoSr5f/7XVJd2sW4NHTv75sZeIJ/5R6nNl8lZZd2ewFeIpnZRvfVj3YWUo0dAY+uAU2vOQG+7LGX9dHuQ7x+O3T3yWJqxz6wJ/ATvCO0Vhvw9Du7tRpEcwo+uhRgcnJZhxL6eXDkDPz7d3hANdzT/YgnrFAJzTdtJe3WbizIkr+tsQdiSms7WMA1NzfxcEFxP/FYZFPB9HttEAckmJvk8TOm++OLV9vBjQvwoiIxEIaYY95/4fo1+djMESbA==
+ bh=zvMaAsnBLAM2vmq5yNhU7HwijZpyv2JhHCpy/3XI4sQ=;
+ b=Ik4/Vz3MyYTV8tMPPyX3SsYpySMyx+efvqXBeNbrKym2Hw6VoFo39PoPd3Zawtp1h/CXwZnqELF+L/JjebU1Pd7uBLCaK+gnSOFSrcBHqJMX2ZsS49wEA3VY3ADbj9OLuVvGX0TYxsfku8XfI65xcQttPPNptv3RSC0Tw9JIqfG/t6pO8nDCW5B+eHdiM8sNotivdp3T6XFB9A24qc6bf9maLqShNi7njm/+Ar1Un96535SFgjH4W0jHz7S5piPaLMLhOiDFvWiRTFQE2cau/0DWgbsm2xlTP57dGskjZB1OoYPSK8Rz500Mw1rXf0ojJwftSTPQajKRSRuoCPsTew==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
+ smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
+ dkim=pass header.d=axis.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=axis365.onmicrosoft.com; s=selector2-axis365-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9jaLerF638UHyn3Xhgt4+JPWZAmp3CYjksSgPUl5RV8=;
- b=eDFlbCJGrOmInCNvLu9Zr26SoeB2IT1QULgpuPyLJ7ZrteK3JhwQ0+tpMzQUlOdwlgfNhY0xlz2//fWPOuzMYVdGgq1zZvCAnP7a82iwrcVEbp3c+mNu7PjwG9WAWtMXMMhuFxSztxHIJx71s5bSYMr1URZ7qHkhweIuckEixG/b3pfezMD4LQ/QRE10QDDZBDG+Aav1qdzxXsGEBqBHJ6C/U7hEbn15S+Y2kKCKRHnDXGcpOJeQiL8b4Ub7kRTTUpo5hsc6PQQQas8tHpaW7zCwnhCsUBC/uJcmetrXhoe7crt0UT4YbT1Tu7KhUp8oaxBgb7w8bHz3X5pSHxz3Tg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from AM9PR10MB4085.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:1f9::22)
- by PAXPR10MB5407.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:284::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.27; Mon, 22 May
- 2023 15:09:13 +0000
-Received: from AM9PR10MB4085.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::f6d9:8120:2524:5b06]) by AM9PR10MB4085.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::f6d9:8120:2524:5b06%4]) with mapi id 15.20.6411.028; Mon, 22 May 2023
- 15:09:13 +0000
-Message-ID: <498156ab-3d9b-2d80-d9b0-18145b07cf77@siemens.com>
-Date: Mon, 22 May 2023 17:09:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US, de-DE
-To: bitbake-devel@lists.openembedded.org
-Cc: "Moessbauer, Felix (T RDA IOT SES-DE)" <felix.moessbauer@siemens.com>
-From: Gylstorff Quirin <quirin.gylstorff@siemens.com>
-Subject: Question related to MIRRORs with downloadfilename
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR03CA0292.namprd03.prod.outlook.com
- (2603:10b6:610:e6::27) To AM9PR10MB4085.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:1f9::22)
+ bh=zvMaAsnBLAM2vmq5yNhU7HwijZpyv2JhHCpy/3XI4sQ=;
+ b=SNEy5KHYEqchVbbyO4MyWTKSDzEuwf0cnT10shBCcdgewpSC5yCyQtScg1/dzq9ajGm92y64+/h3j3thPG2DJt+kLaqyTNZ24oj2nu+FSwcnFSQCDMuF33qNcMneDeTULxbk9EREAKLVHhwsvXYXYTjZfPr+hixumE2uzTXoUyU=
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: RE: [bitbake-devel] [master][mickledore][PATCH 1/2] fetch2/crate:
+ Simplify extraction of crate names and versions from URIs
+Thread-Topic: [bitbake-devel] [master][mickledore][PATCH 1/2] fetch2/crate:
+ Simplify extraction of crate names and versions from URIs
+Thread-Index: AQHZejk/QIndnbPjQU6WgL7r1QEbCq9nHCfw
+Date: Mon, 22 May 2023 23:52:50 +0000
+Message-ID: <DB5PR02MB10213D4D7A76EB1E3022196E3EF439@DB5PR02MB10213.eurprd02.prod.outlook.com>
+References: <175A434F8636122B.26969@lists.openembedded.org>
+In-Reply-To: <175A434F8636122B.26969@lists.openembedded.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axis.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB5PR02MB10213:EE_|DB4PR02MB8558:EE_
+x-ms-office365-filtering-correlation-id: 1cd17ae9-1d30-4ac4-9fc5-08db5b1fa6a5
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Mp/gupxurK2gpU9nsbsuqJkViDwiag2SxbZlV5rP3PL2hUjfurGXNVangFU1+pvaMOt7goQDh6aVvviFEyRfZazO3e06Smum85QCkQ2bs0tS17lhtpV8upHy+MOdAiIX3IG77Nu+vSssRoV7xqaoOZ5ycmtqcUfCqH8CCJIEswT4gZI0X+GWDTjdpTYx9nK+8GWCAwAWk79W0unFrYUZhLyORGMzCrQSJzVbd1VnTVS5sCLp84+B62tGl9ypAZDQlgV+wzV0PT3xqqAdE5e/MIjoqBp99FhLFBFsoQqXRPpieLfXk98NsucKXKJGP0dFjaoRS951qMLBXcM7ldg8RTuoLnWl1HFZXFRe0Vq1EMHJo9h7r7TD9nVNwhUxXI6zA+hrB3LcNbc32L1QB1KoV/aRSYuzOVE5fH/2UI+33r4oHKcJ+a7eQgHnM9wCEpIuRf3q8pY2HCCTYhezwk4GnndZAzHueeHXUbMPxlAn5jbhH76arCBMFfT/7AwuEBdmzaBkiqyZwQzkP9ygRO7zQAyZAoVLr69igtG1Ysh3TDXm+CoBK+fzMVVMHYKswZDmRAoCdmwQJXHxOoDD2U9H/0szpTUMLg2DJdkyar2uOHqbMYGWFfMjBus63AnNU9pK
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB5PR02MB10213.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(396003)(346002)(366004)(39850400004)(136003)(451199021)(8936002)(8676002)(52536014)(5660300002)(44832011)(83380400001)(53546011)(186003)(26005)(122000001)(9686003)(6506007)(86362001)(38100700002)(38070700005)(41300700001)(71200400001)(7696005)(55016003)(33656002)(478600001)(66946007)(66556008)(64756008)(66446008)(6916009)(66476007)(76116006)(316002)(2906002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Ld2hTYKa+r5k8IFdCLCsYW+0cIFH0+4BWSfbWpbXl/cnzY4VcNdoqUnCry3o?=
+ =?us-ascii?Q?SDV9GHskCqJ0dsz4JQihoGlMWqIDSi1I9jKxH3hU4UCcWCnMIZlqfPp8MNXm?=
+ =?us-ascii?Q?OSBBEVyy1/jz2I9ZUKKX0x5Lk1Ui7b1c+ZBgZqlq6+KcQyzCWsOU8Dt8nlGs?=
+ =?us-ascii?Q?yPsBhDMwtOqnbE7sFa3S0gd3aqaDifdJ0XbmtYG1xQVUUAzElGGlcLkBQK2O?=
+ =?us-ascii?Q?NlCdOFyAu80oFC+NHk8GIhQxvvgC9G5YRjPMpwwL5CQB5ZDcS7478RFhLbbi?=
+ =?us-ascii?Q?pJbT4jgcRTPOV7CkGYNLlhxS1F/2lFRKHnUaoiYTtCy8UociGjUIDyymsYmA?=
+ =?us-ascii?Q?F7oQyGJELyDTUn6cDF63OBnuHdyk8w2i26QxPGAKAHfIWWWlbJ5orXpIL7ve?=
+ =?us-ascii?Q?EGo6/nHt+A+euxNJLsKP1ylbUPYap4p/xSm6zmaCpJV/orXMBAVF0xHhmO7C?=
+ =?us-ascii?Q?BbgCfI5pRRYu49H0csS1G7F2hZNofYxD0/s2ccTmwiuRlH60BRKTZVgrWnRK?=
+ =?us-ascii?Q?o6iAKhhUiF+5g4usNxNylB8di76yC/jL4223OeVhbdpOauEcMht78OLOTBW+?=
+ =?us-ascii?Q?y17s/z1j3Rl41HKFhunzkjyqBy19EcRR8QE4GqvffKWz+ATvdL1qW6AYcgjf?=
+ =?us-ascii?Q?OPa/uemtqwaKVkC+9VtS4w5zakZK8WMWuYkgQcF5Zs6cPRJoqnpMggzaIAjk?=
+ =?us-ascii?Q?ciBPPVHxLpIQ3ycoTAuaYHdZ7Qom0hkupix4p5jHK7u+HiG1eeoN8+oeJcRE?=
+ =?us-ascii?Q?s+rTpay+Bzkxjw/6GxC1/CwmM+SMFzanUiu+2iGePf6vw1aI2RjQ0xtJXGRw?=
+ =?us-ascii?Q?3jbl+dz/sGzuW8igvYJdTucxWjDS1EUNVDQ0qhRZSnaVufm1IqdHjh8P4LcY?=
+ =?us-ascii?Q?E794ad64jYmFPU1YXOctsYpk+l2xO1EIlGdCGTw7GkAQLYeSHY+vPvN4Nz9D?=
+ =?us-ascii?Q?dJIuc1zrChk4NtgdY2DdK9l6PHNRgUqNmLU2PTdJs+1qvOiz4aV9eH/yTTgG?=
+ =?us-ascii?Q?HjvXs9FY5XrFFUA6CQEzMgy0hkm3J/i8RrrI8cHExszRhkVqKHjb8hw7453j?=
+ =?us-ascii?Q?fv24pDsoy8Ju5kqy/xSK39Z1q2fZIIb/UiusM3nZq+wV3V6RdhjPxYd1v1xg?=
+ =?us-ascii?Q?NlXp2nALrGZ5JWUjVhvoneVWbyNUlwc6uG+nXN+PpkFhQwyen+labS3sEFpz?=
+ =?us-ascii?Q?lYrm9LsZsppNRkHOGN1qrVD3b0fe5ac42arxHU8RWyUIXAmGYNtY3KMaQ4U4?=
+ =?us-ascii?Q?IKRo7zgmFUTLT/hyxFsUYf5ogDZgijSF+UBAXNBQkIbGPdPleMe+P3L6DoEu?=
+ =?us-ascii?Q?S1SDgwoI+WE/qv4VnNX4Olvtyjim8VwSpPY7RJYFgUALDYji/DrdC/J4eS51?=
+ =?us-ascii?Q?9RjR46O0X0u3YijyTondmsoVsrFHN48Xs+dUuxJY5D5BYo2q+EMEDc8gaMrI?=
+ =?us-ascii?Q?Tv9KMQzfWtulTtPp9PMTwIEzm69M7kKBoaqAOJUqTGHDAz+gWDNjw5rhvJHP?=
+ =?us-ascii?Q?0nb/ID1OmCpvqlmoOBUs/LjjAgRaP5nrvrW7fSIOYhqICjno6txtkifETEsP?=
+ =?us-ascii?Q?vHYH6GykO2o69JwwyI8=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9PR10MB4085:EE_|PAXPR10MB5407:EE_
-X-MS-Office365-Filtering-Correlation-Id: cd2fe8cf-5324-4a6c-98ed-08db5ad6807b
-X-LD-Processed: 38ae3bcd-9579-4fd4-adda-b42e1495d55a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	r/knWY+CrIjRTcNKJ4+uukuY5b747uxFxZEcepPNntQXTZjo4RHYucSEOc6cdi0l95vTIxlHof6BeX1Dkcu8aNYm8hpEYkEcPipq4busDB7ffvfZYdZigU/I/zoNGPnhZXV99XKTdpN4RJae/JglgHgV/8Efu/W9AIKpVsVECqPB0DIHksO12kVUGGeaC5lexQ1yur/kUQdN1+dS9Us7z7DnkNN1WSG7AVSc05PjJqVbXTHmjQF3kFTOyRZ9No+lCZPYBdxEntSyOvvne1iJUCKNtEAHql/8IeoG6CzmyR2lMJxKGCnFF2adUqejJkCIVyszay1Fr/ikrKGzNDwLoH8m9H1WMZCmfClcoflvL57WAaV348tfwcMXAed7+730IL2I+krmzoIpOAXbRlZkE74Bath44yQxYZOAI4YzZ95mr0/pXp1rvo+LLgS1QxHEwEaeJF95cHzY8pLpWm1iY1s+Wd7Zi/V6xLpouWkTLkK2O7j6TVZGrCRj7I/nIwd18f1tqyl46povUqkfjK3xtawaNNwgN+YlsTIgHVFSvAXCdc4Iu3sKHVnFIjuYYXIcPFxsLIHrIIVEMlbY5XgajrP+Rv9A2ztN+XHQRiT7MVQ=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR10MB4085.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(39860400002)(366004)(346002)(376002)(451199021)(2616005)(83380400001)(186003)(2906002)(4744005)(41300700001)(6916009)(4326008)(66556008)(66946007)(6486002)(66476007)(6666004)(316002)(478600001)(26005)(6512007)(6506007)(107886003)(5660300002)(8676002)(8936002)(31696002)(38100700002)(82960400001)(86362001)(36756003)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?bEJObk9VNFdFU201WERKTEMrN2FhRlZ2WXpHUzhDN3FnYk94VkQrRzFpTGRK?=
- =?utf-8?B?cXBpd3NPYkxHMXpNSjZMdktSSDV3VkdkZWdJQU9IU1dLV1lJNG5HbnU5b21o?=
- =?utf-8?B?L3ZPYUFXR3pjNEhLK0VXZGpWN1FZU0h3L3hIMjNyKzZ0Wi94R0tRYWlZZWpm?=
- =?utf-8?B?eVVzRUZnbTZkclpZbkg0ZWVYRUI2M3VYMVJsbWg4UkFibkFpc3hRdG8wcVZa?=
- =?utf-8?B?NW1tVDRFT0xvRUFmaEVkUHVXOXd5cEdaRmhGa3RGR3lBa09KaWVMcHRkS2gv?=
- =?utf-8?B?ajNjVTEvRWMzNnQ2Zm9BWFl0d1JVZEtUK1lEWFhlWjdjeEFwQWw4QVdHWC9a?=
- =?utf-8?B?UDNWa1lQdFE3T25Ja3ZTY0NMbm9PcWZndlpUMDlRNWsxUnRyakFEUHJxZHR0?=
- =?utf-8?B?TGVWNVNaMW1XRzZUWkJLaUVFMkUxczhTMW9VeFhQM1lQUC9SQjYvYTZDbkZP?=
- =?utf-8?B?dXd5TkJacmJSVE5qR1NYWlRMSTNlYkZBSnF2L0c1MHl2RlJaeTFDU1ZYU2w1?=
- =?utf-8?B?dzNudWJwdlJ1S1dUUFdCeUZwRTQyTjRNNHpOeTlmU1kxcHY0ZTlaUU82bFJ0?=
- =?utf-8?B?SndVWHptVEhONy9oeFpmS0FWQU1Oa3E3T09HdDBQOGhKaUNDaHo4azROVlZF?=
- =?utf-8?B?RFBoMzJ6WmxDZU92L0loVVdlTTc0bk1GOHJTSWZRWEdYdUVkU2ozeVRJbzlz?=
- =?utf-8?B?Q2IyYzIxOVVoSnBMUjNWT3FaYkVEdXBsOXFOTWhtKzVWRkdoay9NNlRDa3ZD?=
- =?utf-8?B?dHdBUDhXdEF4QU8wNGc5aGVDTUFxQ052Wm9JWHFXVTY1K2VtNWRaR1BrV0xW?=
- =?utf-8?B?VldtQ0FPMk5JOFlUN0MySkRNL25vWkJZclNobE55NUkwTWdzRTUwZk8xblBY?=
- =?utf-8?B?MkRoQXhnMElTcTl0V0llQVo5TWc1NTA0Tmw2TDIydlJxQTF3WjR3Ym9Bb2I1?=
- =?utf-8?B?Q3IxS3VhQjluY2ViVlVLZnFremFsSys3bGVoZ2FuWnI1NWRVSTUxUUx2dEM4?=
- =?utf-8?B?Y1VRT3ltMUdiWGFQSGFCNXRHUkRMTW5lZjY3UExMUWNGMG82dEVobVBCWDFB?=
- =?utf-8?B?NmplYmFGVHp6Q1J5OExnci9mM3VQZy9OeGFjK3lHdkN0VkFpNTJXOW9KY3gr?=
- =?utf-8?B?b3BVMEIyYVN6RTBoVXhLYjJOT3RvRXhGNGxVcFR3WkNkL25mYWtHd3pDZ041?=
- =?utf-8?B?Y1VPbzhnaXBlUkNqc2NaVmdWUHhVUlBzdmxwWlZlMHlxNXI4ME4xTWFxUjg5?=
- =?utf-8?B?K2s4L2c4d0gyUHR0L2ZWNWtoampDalBjU2ZSTmc2U1VvSEpoTGdXSkIxditT?=
- =?utf-8?B?Unp5eGFMN1YyazR3TGIybW1aVE1ER2EranBOY3k4eXFuVm1KbUEwaGcwNGZL?=
- =?utf-8?B?cmNZek9IejhzWkR6LzFOcXoxYUNlTGlrM2lZSm5NL2xRTitLMVNCdmhBUk0y?=
- =?utf-8?B?dnBVdVZpVzRLeisvN0JrRDNGY1c5ZEtvZWpjWXh6ckRRMS9LY1RzS0UvaEd5?=
- =?utf-8?B?RFgxelBKQm1kbUZ6NzlpVTFJNGU0ajBOeUNSK1hCWVpZdGJ2SHFMZklIeTM1?=
- =?utf-8?B?emk2SkNBektKbDdvWTZTMW9tRlRGUDVlQ2JVaU9nTXk2ajFiL3pPak5QcHZT?=
- =?utf-8?B?a2YzOFpJbGw4RlppejJ2MHprbzJJeGJ3QWdteXFkcC96Z1dJWHlxRTM1bGVt?=
- =?utf-8?B?REdUYmIxejJBZHRXaThBWTFCM2FrTFJGek5uNVprV2tZTFFENGswU1l5Uk5F?=
- =?utf-8?B?b3R2Uit5eklhcHR5NTVOdG1VMlNmeTNqNkhGZ3hvdndJWW5nNktiVkd1UHhN?=
- =?utf-8?B?amx1WmpMcVBRYjdCb0NHWnFsL0R3UmRnZEdrK0lHQnh5Y3p2OXBZZUhEUkVT?=
- =?utf-8?B?NEdmK3JzMDd0eXVLUnowcHlXQk94MEJzMWdZN2NOQ09FTGJmU1pwdjRyVThu?=
- =?utf-8?B?UzI2Qk0zL01Vclg4M2d4ak5rVTV5cVcyeVRZQ28yNDYvdGJVL21kbEtvNHZE?=
- =?utf-8?B?dFFKNUY5T1p1K3ROVkVYZzRyM3J6OFU2R2dTQUl0UUdNcDQzajdXN1pQbVJo?=
- =?utf-8?B?VjBCV01jeHcrWUdyeVdFZS91b2lPd05Nb0E3UmdEMC9DVWpoSWtEbStyNjBD?=
- =?utf-8?B?VUpVRjBXM0VoU0pGQTVIajEwMkF2cWlVTkdNbWJ4YlBoSzI0SnJUTEFrVit6?=
- =?utf-8?B?S2c9PQ==?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd2fe8cf-5324-4a6c-98ed-08db5ad6807b
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR10MB4085.EURPRD10.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2023 15:09:13.0924
+X-MS-Exchange-CrossTenant-AuthSource: DB5PR02MB10213.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cd17ae9-1d30-4ac4-9fc5-08db5b1fa6a5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2023 23:52:50.0542
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R/DAut7i3Hijjs9bgwCaDG53fGqFxf0KML/oIFXajKxP/3knGg2V7WdM2xO9yBGrNvnfg/qTkMm1tWOnxZebdhHli4Uv6IuFiOM8peJ5vjk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR10MB5407
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZS5llRlrmapZTdcXCKMcHZvml7gAKn34P8ALT6H9tttxX0yHdO1aPa6jZniCkoTQ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR02MB8558
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 22 May 2023 15:09:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14796
+ <bitbake-devel@lists.openembedded.org>; Mon, 22 May 2023 23:52:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14797
 
-Dear subscribers,
+*ping*
 
-we found the following behavior after using MIRRORS together with 
-DownloadfileName.
+Were there any problems with these two patches, or were they just missed?
 
-If you set a MIRROR the replaced URL will contain the downloadfilename 
-instead of original filename.
+//Peter
 
-E.g.
-
-SRC_URI = 
-"https://somewhere.org/example-1.0.0.tgz;downloadfilename=some-example-1.0.0.tgz"
-
-MIRROR = "https://.*/.*", "https://somemirror/.*"
-
-Will try to download
-
-"https://somemirror/some-example-1.0.0.tgz;downloadfilename=some-example-1.0.0.tgz"
-
-instead of
-
-"https://somemirror/example-1.0.0.tgz;downloadfilename=some-example-1.0.0.tgz"
-
-Is this behavior expected?
-
-Best regards,
-Quirin Gylstorff
-Siemens AG
-
+> -----Original Message-----
+> From: bitbake-devel@lists.openembedded.org <bitbake-
+> devel@lists.openembedded.org> On Behalf Of Peter Kjellerstedt
+> Sent: den 29 april 2023 03:23
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [master][mickledore][PATCH 1/2] fetch2/crate:
+> Simplify extraction of crate names and versions from URIs
+>=20
+> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+> ---
+>=20
+> @Steve Sakoman: Since this is a clean up patch, I will leave it up to
+> you to decide if you want to take it for Mickledore once it makes it
+> into master.
+>=20
+>  bitbake/lib/bb/fetch2/crate.py | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/bitbake/lib/bb/fetch2/crate.py
+> b/bitbake/lib/bb/fetch2/crate.py
+> index a7021e5b36..2b8b6bc7a1 100644
+> --- a/bitbake/lib/bb/fetch2/crate.py
+> +++ b/bitbake/lib/bb/fetch2/crate.py
+> @@ -59,11 +59,11 @@ class Crate(Wget):
+>          # version is expected to be the last token
+>          # but ignore possible url parameters which will be used
+>          # by the top fetcher class
+> -        version, _, _ =3D parts[len(parts) -1].partition(";")
+> +        version =3D parts[-1].split(";")[0]
+>          # second to last field is name
+> -        name =3D parts[len(parts) - 2]
+> +        name =3D parts[-2]
+>          # host (this is to allow custom crate registries to be specified
+> -        host =3D '/'.join(parts[2:len(parts) - 2])
+> +        host =3D '/'.join(parts[2:-2])
+>=20
+>          # if using upstream just fix it up nicely
+>          if host =3D=3D 'crates.io':
 
