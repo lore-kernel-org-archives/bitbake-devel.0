@@ -1,180 +1,170 @@
-Return-Path: <ola.x.nilsson@axis.com>
+Return-Path: <michalwsieron@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01607C77B7A
-	for <webhook@archiver.kernel.org>; Thu, 25 May 2023 08:19:18 +0000 (UTC)
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web11.6961.1685002748195537878
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EF0C77B7E
+	for <webhook@archiver.kernel.org>; Thu, 25 May 2023 10:21:28 +0000 (UTC)
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+ by mx.groups.io with SMTP id smtpd.web11.8360.1685010078472591987
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 25 May 2023 01:19:08 -0700
+ Thu, 25 May 2023 03:21:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=glY2/G36;
- spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: ola.x.nilsson@axis.com)
+ dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=eZ9io5da;
+ spf=pass (domain: gmail.com, ip: 209.85.218.50, mailfrom: michalwsieron@gmail.com)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-97000a039b2so77292766b.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 25 May 2023 03:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1685002749;
-  x=1716538749;
-  h=references:from:to:cc:subject:date:in-reply-to:
-   message-id:mime-version:content-transfer-encoding;
-  bh=SyweMZoH+dz7/tnHv+uVJyeoo+NVPTwo1onvvwf9CNE=;
-  b=glY2/G36tyGdW0HvLNBMr8MGYqOVxYGl6GCyGGqOYi21uFF80DqObfd5
-   Qq/QWK8HTVNH6w/tsDwrmJyjlEQEFqC+zLhw4YPzMsV7PLiWEMj1fS/uF
-   LPnrV9IjxrAoDoCquACclY034HKm90NtlOnQsf33d6JFpm/lgQUU0yOYP
-   O8GZTzUlOVkIPluKomV6YdjDOV0PL5In6wABnFFekXmJsQEN1awUm8ygT
-   0C7e1/9Zhz1un72jZfuRV68W/gRpOUboc2lbCMWs6zeJW/0Em202eYeHH
-   hSVQgerNpz6uEeFYhxoSL15MdWh9WyLrifQ+a9nGAxme9ItKI8WUv17I6
-   A==;
-References: <20230523020905.2911543-1-Qi.Chen@windriver.com>
- <a963a98b-0420-5785-b393-306ebbf6f230@windriver.com>
-User-agent: mu4e 1.8.14; emacs 29.0.60
-From: Ola x Nilsson <ola.x.nilsson@axis.com>
-To: <randy.macleod@windriver.com>
-CC: <Qi.Chen@windriver.com>, Randy MacLeod via lists.openembedded.org
-	<randy.macleod=windriver.com@lists.openembedded.org>,
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel][PATCH V2] runqueue.py: fix PSI check logic
-Date: Thu, 25 May 2023 10:17:48 +0200
-Organization: Axis Communications AB
-In-Reply-To: <a963a98b-0420-5785-b393-306ebbf6f230@windriver.com>
-Message-ID: <jwqilcg4ydl.fsf@axis.com>
+        d=gmail.com; s=20221208; t=1685010077; x=1687602077;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7PAzFDRCTl01gKJLFGjXzFUUJPNy/gtcy2mQfBLs2kM=;
+        b=eZ9io5da+zwB3sdBO7Lq7PILzIQJy51s+CWWqO0cfnKZy5E3yQ8RfqBZQCJRXr7Y8C
+         lHBnnqhl2i40xRjEsKaFr4uCafOc0wtoT9H1qveDWdIUo7q8xsQjjP1ExYWGqtacKo7j
+         W/Ve5yrq66rGERM3/h5rP8OZm+gcq9fVuy2wWgSFcxUIHwDUviF5eUw3bDZ0ELNDPHbs
+         IqGcMB4a5xa8zipCz7IuGsI+l9XCd1aGKZFUhiPxWJILx8RaaFY1+pos0Ep45toWW7fK
+         3l5gZalBskyfzf9ZgDT7UUHjs9BUfab2v+bPzaoWQjwP/PsSc4xw5awSfuwDV5O042F7
+         Szbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685010077; x=1687602077;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7PAzFDRCTl01gKJLFGjXzFUUJPNy/gtcy2mQfBLs2kM=;
+        b=IVGAXvCLzaptH9Oz+R49XOxRPfoswho0ZD92oB/7uVMAciQu2ftMxH9FBjVCezQiT/
+         Bb5rXZ1HHl1xGARRHP/SQIGFgZwOf6ggQmD8be+7bG9Q/hkU6tUmWwVlyJ5N5vk8OpOq
+         i6IBK8eVwDQuEqoaX6g3gO3ZGN0Gf9YkPg8E0X+1o150KD9hRDTjmgtaXND6WhUZUfJc
+         UxKOAongbXIQqmjCadEehJgfmvm5cYuu0iko5bbAg/EvKzffc2H6YHwPQPhEEhjwwcIL
+         NGVpF928Kh/w7KR7gkxRnawDokKCGbXpF8jhEs3WKfvXJtZrQCXjSHNZBmJu+7nLPR+6
+         zWSg==
+X-Gm-Message-State: AC+VfDyvKw8Wcod9M4eaEoC2ru/u46NQfj5Ngz121DvZR6WKRHKsqUrX
+	wfJc5D/Fe56VOsUh9QizrQO28kvDKepH/YsMjxxrlw==
+X-Google-Smtp-Source: ACHHUZ4UBQ50hH6AQyrAzgWaZSgWjPOFVFjDpePBKWZQzSnbcHiVXPoQL7tnv6Fd5COjBeXCDR0Bcg==
+X-Received: by 2002:a17:907:97cc:b0:965:f8b7:b0cd with SMTP id js12-20020a17090797cc00b00965f8b7b0cdmr1243314ejc.25.1685010076582;
+        Thu, 25 May 2023 03:21:16 -0700 (PDT)
+Received: from elitebook.emea.nsn-net.net (77-254-244-102.adsl.inetia.pl. [77.254.244.102])
+        by smtp.gmail.com with ESMTPSA id rv3-20020a17090710c300b0096f7b7b6f11sm649299ejb.106.2023.05.25.03.21.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 May 2023 03:21:16 -0700 (PDT)
+From: Michal Sieron <michalwsieron@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Michal Sieron <michalwsieron@gmail.com>,
+	Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>,
+	Mateusz Marciniec <mateuszmar2@gmail.com>
+Subject: [PATCH] bitbake: Add task timeout support
+Date: Thu, 25 May 2023 12:21:05 +0200
+Message-Id: <20230525102105.1480610-1-michalwsieron@gmail.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 25 May 2023 08:19:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14805
+ <bitbake-devel@lists.openembedded.org>; Thu, 25 May 2023 10:21:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14806
 
+By setting `BB_TASK_TIMEOUT` you can control timeout of for tasks.
+Using flags `BB_TASK_TIMEOUT[do_mytask]` you can override timeout
+settings for specific tasks.
 
-On Tue, May 23 2023, Randy MacLeod via lists.openembedded.org wrote:
+This is especially useful when some server doesn't work properly and
+`do_fetch` task takes too long. We may want to kill it early instead
+of waiting for a fetch that won't happen.
 
-> On 2023-05-22 22:09, Qi.Chen@windriver.com wrote:
->> From: Chen Qi<Qi.Chen@windriver.com>
->>
->> The current logic is not correct because if the time interval
->> between the current check and the last check is very small, the PSI
->> checker is not likely to block things even if the system is heavy
->> loaded.
->>
->> It's not good to calculate the value too often. So we change to a 1s
->> check. As a build will usually take at least minutes, using the 1s value
->> seems reasonable.
->
-> I don't have time to check today but I'm not convinced that this is true.
->
-> I suspect that in the typical case, it would be okay but there will be
-> workloads (perhaps rare workloads) where you want to check more often.
->
-> The 1 second intervals where we no longer launch new work may
-> result in a significantly longer build. IIRC, our benchmark was building
-> core-image-minimal on a 24 core system without PSI regulation and then
-> with it set to 300. I'd look at the elapsed time and the
-> buildchart/bootchart:
-> =C2=A0=C2=A0 scripts/pybootchartgui/README.pybootchart
->
-> Ola, have you been able to test this and if not, can you?
->
+Signed-off-by: Michal Sieron <michalwsieron@gmail.com>
+Signed-off-by: Tomasz Dziendzielski <tomasz.dziendzielski@gmail.com>
+Signed-off-by: Mateusz Marciniec <mateuszmar2@gmail.com>
+---
+ .../bitbake-user-manual-ref-variables.rst     |  7 +++
+ bitbake/lib/bb/build.py                       | 43 ++++++++++++++++++-
+ 2 files changed, 49 insertions(+), 1 deletion(-)
 
-This patch is identical to the V1 except for the commit message, so I
-consider it
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 01d4f8d14a..eaaa307960 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -686,6 +686,13 @@ overview of their function and contents.
+       in images is given a higher priority as compared to build tasks to
+       ensure that images do not suffer timeouts on loaded systems.
+ 
++   :term:`BB_TASK_TIMEOUT`
++      Specifies time after which still running tasks will be terminated.
++
++      Time is provided as an integer number of seconds.
++      You can set timeout for specific task using ``BB_TASK_TIMEOUT[do_mytask]``.
++      To remove timeout use an empty value ``BB_TASK_TIMEOUT = ""``.
++
+    :term:`BB_TASKHASH`
+       Within an executing task, this variable holds the hash of the task as
+       returned by the currently enabled signature generator.
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index 44d08f5c55..2057dd9415 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -17,6 +17,7 @@ import sys
+ import logging
+ import glob
+ import itertools
++import multiprocessing
+ import time
+ import re
+ import stat
+@@ -594,7 +595,7 @@ def _task_data(fn, task, d):
+     bb.data.expandKeys(localdata)
+     return localdata
+ 
+-def _exec_task(fn, task, d, quieterr):
++def __exec_task(fn, task, d, quieterr):
+     """Execute a BB 'task'
+ 
+     Execution of a task involves a bit more setup than executing a function,
+@@ -761,6 +762,46 @@ def _exec_task(fn, task, d, quieterr):
+ 
+     return 0
+ 
++def get_task_timeout(d, task):
++    # task specific timeout
++    timeout = d.getVarFlag("BB_TASK_TIMEOUT", task)
++
++    if timeout is None:
++        # any task timeout
++        timeout = d.getVar("BB_TASK_TIMEOUT")
++
++    if timeout is None or timeout == "":
++        return None
++    else:
++        try:
++            return int(timeout)
++        except ValueError as e:
++            raise ValueError("invalid `BB_TASK_TIMEOUT` value '%s'" % timeout)
++
++def _exec_task(fn, task, d, quieterr):
++    """Intermediate function between exec_task and __exec_task, to support task timeouts."""
++
++    def targetFunc(func):
++        def inner(*args, **kwargs):
++            sys.exit(func(*args, **kwargs))
++
++        return inner
++
++    try:
++        timeout = get_task_timeout(d, task)
++    except ValueError as e:
++        logger.error("%s: %s" % (d.getVar("PF"), e.args[0]))
++        return 1
++
++    task_proc = multiprocessing.Process(target=targetFunc(__exec_task), args=(fn, task, d, quieterr))
++    task_proc.start()
++    task_proc.join(timeout)
++    if task_proc.exitcode is None:
++        logger.error("timeout exceeded (%s s)" % (str(timeout)))
++        return 1
++    else:
++        return task_proc.exitcode
++
+ def exec_task(fn, task, d, profile = False):
+     try:
+         quieterr = False
+-- 
+2.40.1
 
-Tested-By: Ola Nilsson <ola.x.nilsson@axis.com>
-
-/Ola
-
-> All for today.
->
-> ../Randy
->
->
->>
->> Signed-off-by: Chen Qi<Qi.Chen@windriver.com>
->> ---
->>   bitbake/lib/bb/runqueue.py | 29 ++++++++++++++---------------
->>   1 file changed, 14 insertions(+), 15 deletions(-)
->>
->> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
->> index 02f1474540..4d49d25153 100644
->> --- a/bitbake/lib/bb/runqueue.py
->> +++ b/bitbake/lib/bb/runqueue.py
->> @@ -179,6 +179,7 @@ class RunQueueScheduler(object):
->>                       self.prev_memory_pressure =3D memory_pressure_fds.=
-readline().split()[4].split("=3D")[1]
->>                       self.prev_pressure_time =3D time.time()
->>                   self.check_pressure =3D True
->> +                self.psi_exceeded =3D False
->>               except:
->> bb.note("The /proc/pressure files can't be read. Continuing build
-> without monitoring pressure")
->>                   self.check_pressure =3D False
->> @@ -191,6 +192,10 @@ class RunQueueScheduler(object):
->>           BB_PRESSURE_MAX_{CPU|IO|MEMORY} are set, return True if above =
-threshold.
->>           """
->>           if self.check_pressure:
->> +            now =3D time.time()
->> +            tdiff =3D now - self.prev_pressure_time
->> +            if tdiff < 1.0:
->> +                return self.psi_exceeded
->>               with open("/proc/pressure/cpu") as cpu_pressure_fds, \
->>                   open("/proc/pressure/io") as io_pressure_fds, \
->>                   open("/proc/pressure/memory") as memory_pressure_fds:
->> @@ -198,21 +203,15 @@ class RunQueueScheduler(object):
->>                   curr_cpu_pressure =3D cpu_pressure_fds.readline().spli=
-t()[4].split("=3D")[1]
->>                   curr_io_pressure =3D io_pressure_fds.readline().split(=
-)[4].split("=3D")[1]
->>                   curr_memory_pressure =3D memory_pressure_fds.readline(=
-).split()[4].split("=3D")[1]
->> -                now =3D time.time()
->> -                tdiff =3D now - self.prev_pressure_time
->> -                if tdiff > 1.0:
->> - exceeds_cpu_pressure =3D self.rq.max_cpu_pressure and
-> (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) / tdiff >
-> self.rq.max_cpu_pressure
->> - exceeds_io_pressure =3D self.rq.max_io_pressure and
-> (float(curr_io_pressure) - float(self.prev_io_pressure)) / tdiff >
-> self.rq.max_io_pressure
->> - exceeds_memory_pressure =3D self.rq.max_memory_pressure and
-> (float(curr_memory_pressure) - float(self.prev_memory_pressure)) /
-> tdiff > self.rq.max_memory_pressure
->> -                    self.prev_cpu_pressure =3D curr_cpu_pressure
->> -                    self.prev_io_pressure =3D curr_io_pressure
->> -                    self.prev_memory_pressure =3D curr_memory_pressure
->> -                    self.prev_pressure_time =3D now
->> -                else:
->> - exceeds_cpu_pressure =3D self.rq.max_cpu_pressure and
-> (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) >
-> self.rq.max_cpu_pressure
->> - exceeds_io_pressure =3D self.rq.max_io_pressure and
-> (float(curr_io_pressure) - float(self.prev_io_pressure)) >
-> self.rq.max_io_pressure
->> - exceeds_memory_pressure =3D self.rq.max_memory_pressure and
-> (float(curr_memory_pressure) - float(self.prev_memory_pressure)) >
-> self.rq.max_memory_pressure
->> -            return (exceeds_cpu_pressure or exceeds_io_pressure or exce=
-eds_memory_pressure)
->> + exceeds_cpu_pressure =3D self.rq.max_cpu_pressure and
-> (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) / tdiff >
-> self.rq.max_cpu_pressure
->> + exceeds_io_pressure =3D self.rq.max_io_pressure and
-> (float(curr_io_pressure) - float(self.prev_io_pressure)) / tdiff >
-> self.rq.max_io_pressure
->> + exceeds_memory_pressure =3D self.rq.max_memory_pressure and
-> (float(curr_memory_pressure) - float(self.prev_memory_pressure)) /
-> tdiff > self.rq.max_memory_pressure
->> +                self.prev_cpu_pressure =3D curr_cpu_pressure
->> +                self.prev_io_pressure =3D curr_io_pressure
->> +                self.prev_memory_pressure =3D curr_memory_pressure
->> +                self.prev_pressure_time =3D now
->> +                self.psi_exceeded =3D exceeds_cpu_pressure or exceeds_i=
-o_pressure or exceeds_memory_pressure
->> +            return self.psi_exceeded
->>           return False
->>         def next_buildable_task(self):
-
-
---=20
-Ola x Nilsson
 
