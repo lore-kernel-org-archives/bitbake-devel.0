@@ -1,100 +1,104 @@
-Return-Path: <belouargamohamed@gmail.com>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3E8C77B73
-	for <webhook@archiver.kernel.org>; Wed, 31 May 2023 18:45:58 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web11.2437.1685558749026955019
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9693AC77B73
+	for <webhook@archiver.kernel.org>; Wed, 31 May 2023 18:47:08 +0000 (UTC)
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+ by mx.groups.io with SMTP id smtpd.web10.2538.1685558827770852104
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 31 May 2023 11:45:49 -0700
+ Wed, 31 May 2023 11:47:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=LhT/FxXc;
- spf=pass (domain: gmail.com, ip: 209.85.221.46, mailfrom: belouargamohamed@gmail.com)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-30aeee7c8a0so54227f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 31 May 2023 11:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685558747; x=1688150747;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1hC6HqyLjuwyvhLu0LLpZSDlo2wvGtic/KhURRPHCg0=;
-        b=LhT/FxXcW3rteV7UYi+RH27trHNopcif3lxOioH0QVl7G1qMY+3WgUmtC/ZF8Dstc5
-         LrkVpNnvvyVjsvYo/1bpiq5Dot7Yte7SMc365rtaWvN+d33XkWd71FXJMkPbz2TWKEdm
-         rI6bf5ZPKR4CkKJFwWhvEw84tdeaFDq6/lrUWb45/FC1xWCNiZSksse/eI7sNutdlkwF
-         mZ1Sl3xxwe9dI+E5JJxd1SioRe3GdRfYEWb5mQNz0eGWlMCv0Sb1UEByF32GzWfKSh8X
-         nJfgcjt70yS3luFwCMkudKuqtmq+LFcYhdeuzo0GzHWCF5EjQzbLaYulv0h/+yGFia+F
-         SwMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685558747; x=1688150747;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1hC6HqyLjuwyvhLu0LLpZSDlo2wvGtic/KhURRPHCg0=;
-        b=Fg82dOh5r+lbBULCn1ST1f3vfDgzNo27ooW9D5zqTIwnPSzG+JDyKUhYTRGVL+PNbu
-         zhr4Smac2stXRpyj2iZDRywvHrstVFIhBsnthn5rc3FznBlM0EfSZXOL3z+YzrwKz0Ry
-         GA7367PfRLM+XcGoG9J+cwTMSoJuZudfWISUaBsZQ3NkHTlYvFumlWSfnNlRlPsKeup/
-         3zVhjt7Fm2O6IFlNaK/ICa3eMuvbRZSln70QmjD2JwYu5cSCHNdbNv0NaqI1jLVYzMHg
-         XmfhzaoFOtSectwQzlVz0MBptkLjE0QIz0vJMFD1po/O7ZMoLj7KwCK3aj9N7Xptjhy/
-         hQuw==
-X-Gm-Message-State: AC+VfDwavjTiqDH9Z6kcbyHJaPxwAcyQ0cFjT9c1xoVHU6fxVI5VxEVN
-	fNyDyGkSmapY3iBCMf1uBiO8TkUzO9kS06v4
-X-Google-Smtp-Source: ACHHUZ7YNiSuU7zgD28FX0+SO2CrWaxkKMtctP4/TeRdnPfVJIgPbdq7d0+0qcqMq0JcHaRLVYEFDQ==
-X-Received: by 2002:a5d:6a86:0:b0:30a:bd8b:b102 with SMTP id s6-20020a5d6a86000000b0030abd8bb102mr5479433wru.19.1685558746781;
-        Wed, 31 May 2023 11:45:46 -0700 (PDT)
-Received: from localhost.localdomain (2a02-842a-002e-7001-cafa-c8b1-7dfd-80ae.rev.sfr.net. [2a02:842a:2e:7001:cafa:c8b1:7dfd:80ae])
-        by smtp.gmail.com with ESMTPSA id q7-20020adff507000000b0030add836194sm7723682wro.65.2023.05.31.11.45.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 11:45:46 -0700 (PDT)
-From: belouargamohamed@gmail.com
-X-Google-Original-From: m.belouarga@technologyandstrategy.com
-To: bitbake-devel@lists.openembedded.org
-Cc: f.lahoudere@technologyandstrategy.com,
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=Kj3Uy4PW;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: alexandre.belloni@bootlin.com)
+X-GND-Sasl: alexandre.belloni@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1685558825;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lPEvLEELRKdyCwZRjggTW1AJXp3jqOwF5Q7OKuibt4Y=;
+	b=Kj3Uy4PW1AXPYB6lJeo/E7SWsarxQIhGvWUbR13WvB8YuM9eU5dEJ2BIK5+DfusBWte2b/
+	Vsg1WhbGBrZPtkYHQ6J+K3C1vFJdoaY73/ChsqcO9N9MyBRyya9RYnuuRU8y4Zfd54MH68
+	EmXwI4M2QSaaRVPtNYgKJrCW9zPutaz2aj63HRDyNI7R4zuUFsqyXZJpaq9pain/EpyjBu
+	S/F8CUVVc+sTRfoE3OtZlm8ifvotoE4ydbY/tF3IrXwSQ/ER9hOXaRlOCkUKskTZCVXhtS
+	pv5S3xQnwUhPm1FCLvvYFusDg72pvbC4kl6iZ0Joq8TZmgx2UAOO8xrSs9Gdkw==
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5132F1BF204;
+	Wed, 31 May 2023 18:47:05 +0000 (UTC)
+Date: Wed, 31 May 2023 20:47:05 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: belouargamohamed@gmail.com
+Cc: bitbake-devel@lists.openembedded.org,
+	f.lahoudere@technologyandstrategy.com,
 	e.aubineau@technologyandstrategy.com,
 	j.guignard@technologyandstrategy.com,
 	BELOUARGA Mohamed <m.belouarga@technologyandstrategy.com>
-Subject: [master][PATCH] fetch2: npm: Remove special caracters that casauses recipe tool to fail
-Date: Wed, 31 May 2023 20:45:38 +0200
-Message-Id: <20230531184538.32843-1-m.belouarga@technologyandstrategy.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [bitbake-devel] [master][PATCH] fetch2: npmsw: Don't fetch dev
+ dependencies when they are not demanded
+Message-ID: <202305311847057862e591@mail.local>
+References: <20230530224254.43797-1-m.belouarga@technologyandstrategy.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230530224254.43797-1-m.belouarga@technologyandstrategy.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 31 May 2023 18:45:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14820
+ <bitbake-devel@lists.openembedded.org>; Wed, 31 May 2023 18:47:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14821
 
-From: BELOUARGA Mohamed <m.belouarga@technologyandstrategy.com>
+Hello,
 
-Packages like @(._.)/execute causes problems because they generate names
-that are not supported by yocto
+This doesn't apply on master at all, can you rebase?
 
-Signed-off-by: BELOUARGA Mohamed <m.belouarga@technologyandstrategy.com>
----
- lib/bb/fetch2/npm.py | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Thanks!
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index e6d0598f5d..f83485ad85 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -44,9 +44,12 @@ def npm_package(package):
-     """Convert the npm package name to remove unsupported character"""
-     # Scoped package names (with the @) use the same naming convention
-     # as the 'npm pack' command.
--    if package.startswith("@"):
--        return re.sub("/", "-", package[1:])
--    return package
-+    name = re.sub("/", "-", package)
-+    name = name.lower()
-+    name = re.sub(r"[^\-a-z0-9]", "", name)
-+    name = name.strip("-")
-+    return name
-+
- 
- def npm_filename(package, version):
-     """Get the filename of a npm package"""
+On 31/05/2023 00:42:54+0200, belouargamohamed@gmail.com wrote:
+> From: BELOUARGA Mohamed <m.belouarga@technologyandstrategy.com>
+> 
+> Dev dependencies should not be fetched only if it is specified in the
+> recipe.
+> 
+> Signed-off-by: BELOUARGA Mohamed <m.belouarga@technologyandstrategy.com>
+> ---
+>  lib/bb/fetch2/npmsw.py | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
+> index 359192a2..d89be10c 100644
+> --- a/lib/bb/fetch2/npmsw.py
+> +++ b/lib/bb/fetch2/npmsw.py
+> @@ -49,6 +49,8 @@ def foreach_dependencies(shrinkwrap, callback=None, dev=False):
+>          if package != "":
+>              name = package.split('node_modules/')[-1]
+>              package_infos = packages.get(package, {})
+> +            if dev == False and package_infos.get("dev", False):
+> +                continue
+>              callback(name, package_infos, package)
+>  
+>  class NpmShrinkWrap(FetchMethod):
+> -- 
+> 2.25.1
+> 
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14819): https://lists.openembedded.org/g/bitbake-devel/message/14819
+> Mute This Topic: https://lists.openembedded.org/mt/99230772/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+
+
 -- 
-2.25.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
