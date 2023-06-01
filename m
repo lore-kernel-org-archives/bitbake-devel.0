@@ -1,89 +1,75 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2019C77B73
-	for <webhook@archiver.kernel.org>; Wed, 31 May 2023 19:45:28 +0000 (UTC)
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
- by mx.groups.io with SMTP id smtpd.web11.3847.1685562321527203318
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE40C77B7A
+	for <webhook@archiver.kernel.org>; Thu,  1 Jun 2023 10:22:29 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+ by mx.groups.io with SMTP id smtpd.web11.27553.1685614945552460268
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 31 May 2023 12:45:21 -0700
+ Thu, 01 Jun 2023 03:22:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=ryrIskkg;
- spf=pass (domain: gmail.com, ip: 209.85.210.51, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6af6ec6d73bso91937a34.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 31 May 2023 12:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685562320; x=1688154320;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2rgmf4hD9gkc8dqiARW9PYSuG6ZhpliSokZvUMRaB5s=;
-        b=ryrIskkgL664bRz2NT6rCDf6XQ34lm4TvrIveI5RXyJ7G3YrZtXi9VVfQ/nG1ZFbaS
-         GY+GMv/AEQkH3r32XiV2b454+wlYeYotdZldFLVnK0cYO8u2JFixQf0p61bZB30XyX3x
-         BzYW4sB0ZlOBpv65ZcYJUv6sgBF29NlDUGl4XY/mCaFBGhnQS3VenWJo++mQbRrHaG6H
-         LWAqv4a9h0hYyHuAEZo5QsVaC672QkRu7C0XVCppztFRuqbdW92SAcG7TIedofzsQqo8
-         PDkRrZ6CYsNLq6/FfJQIU3oRmotXP09psJIec2nn+6FezSRqacwkj508+3rtaMkX7+PG
-         AtAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685562320; x=1688154320;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2rgmf4hD9gkc8dqiARW9PYSuG6ZhpliSokZvUMRaB5s=;
-        b=WjeoqQBkAnaaJOtLUp/k7a4apwZKxE/IquI1IM4NCY+11zaFxAdJzsZC7IOKyHkCq5
-         uAv3JjGQoDO/nm9+VlbLrplFaMOjUGjv8caixS5OFZ86Ppb/wMKDXCykhoaVIgWGozCx
-         Q5UiADgUsC5IEMnlRXegW+LazWEIBzfqlqkIq1UsA9Z+U3+F+s5uZLDSQG+gVV89UCb1
-         v+nGTo6xIb83+YkzZYuqEUP9x8mAjct5Prwei6E5Z4D+86yMGu3pcQFne9sC5H/hhzBk
-         31wPYhck64S8EBMBgTH2ra8yaT5A635N4dHC7I9QD4WtiImN6zQZAIJpdj2d6lADGoKy
-         nUCQ==
-X-Gm-Message-State: AC+VfDx0uLV+P5XQFePtm+/kCA2n+cQTl3vlbmY/tmQAhGF3K4Q4/xKA
-	u0LsgOvfZMa8d7d9Su1QxjZV3S4eK3A=
-X-Google-Smtp-Source: ACHHUZ74LKgPRMkui2xQWx1QJYwFbfdoAse84URyLWtxKHjvK+VhVUPsw2y3vpiOht+TO3SfbdtW9w==
-X-Received: by 2002:a05:6808:238d:b0:399:b7c3:66fb with SMTP id bp13-20020a056808238d00b00399b7c366fbmr4150170oib.58.1685562320067;
-        Wed, 31 May 2023 12:45:20 -0700 (PDT)
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id s125-20020acadb83000000b003982a8a1e3fsm914164oig.51.2023.05.31.12.45.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 12:45:19 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] server: Fix crash when checking lock file
-Date: Wed, 31 May 2023 14:45:15 -0500
-Message-Id: <20230531194515.3769828-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.33.0
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=Zi7e1g8z;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: alexandre.belloni@bootlin.com)
+X-GND-Sasl: alexandre.belloni@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1685614943;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IgZtdnAdUAZon0q0vCDNPQI7XDQ6+8goEpAJN+QUo1w=;
+	b=Zi7e1g8znGSZaStFYG8mb3EW5ijRKFx8uTPprE/98m1KMw1yEsqSsXakiTg9+493h6rVoU
+	T5UsKb60BMKbH31yFq0qqnM2w4biPE6eEGj7YvjOC3Ohxo2MpoaHv2HzZB032Cw2QjtqZq
+	Xwx4BDAV2pM1mc5I9/j//f8mbfGPjM47+770uhxmOdnt/lwxgbC5SnRvoI1P81/WVtcgPJ
+	rqeYVYKBV2xqNtxcmAjt2PisEb3YXOTi6s+vhvKKP+R7hmb2OPaE2WF3cxV2HKYuiSK4qZ
+	oQBGdZfBmVWj8NVan7LSFeYvrQo9TDx9hpi8Y4xE657yXdm2wigy3WWltOSOiQ==
+X-GND-Sasl: alexandre.belloni@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DDB154000D;
+	Thu,  1 Jun 2023 10:22:22 +0000 (UTC)
+Date: Thu, 1 Jun 2023 12:22:22 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: belouargamohamed@gmail.com
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [master][PATCH] fetch2: npmsw: Don't fetch dev
+ dependencies when they are not demanded
+Message-ID: <2023060110222211f35f6b@mail.local>
+References: <202305311847057862e591@mail.local>
+ <18872.1685559575756686252@lists.openembedded.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <18872.1685559575756686252@lists.openembedded.org>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 31 May 2023 19:45:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14823
+ <bitbake-devel@lists.openembedded.org>; Thu, 01 Jun 2023 10:22:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14824
 
-Fixes a crash when the server process attempts to check the PID of the
-lock file that resulted because an integer (os.getpid()) was attempting
-to be concatenated to a string
+On 31/05/2023 11:59:35-0700, belouargamohamed@gmail.com wrote:
+> Hey,
+> 
+> Before applying this patch, on other patch should be accepted first:
+> https://lists.openembedded.org/g/bitbake-devel/message/14815?p=%2C%2C%2C20%2C0%2C0%2C0%3A%3Arecentpostdate%2Fsticky%2C%2Cbelouarga%2C20%2C2%2C0%2C99163598
+> 
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/bb/server/process.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch is marked for kirkstone so it has been ignored. Can you send
+a series that can be applied on master?
 
-diff --git a/bitbake/lib/bb/server/process.py b/bitbake/lib/bb/server/process.py
-index db417c84280..7616ef53c89 100644
---- a/bitbake/lib/bb/server/process.py
-+++ b/bitbake/lib/bb/server/process.py
-@@ -375,7 +375,7 @@ class ProcessServer():
-                 lock = bb.utils.lockfile(lockfile, shared=False, retry=False, block=False)
-                 if not lock:
-                     newlockcontents = get_lock_contents(lockfile)
--                    if not newlockcontents[0].startswith([os.getpid() + "\n", os.getpid() + " "]):
-+                    if not newlockcontents[0].startswith([f"{os.getpid()}\n", f"{os.getpid()} "]):
-                         # A new server was started, the lockfile contents changed, we can exit
-                         serverlog("Lockfile now contains different contents, exiting: " + str(newlockcontents))
-                         return
+> Thanks
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14822): https://lists.openembedded.org/g/bitbake-devel/message/14822
+> Mute This Topic: https://lists.openembedded.org/mt/99230772/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+
+
 -- 
-2.33.0
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
