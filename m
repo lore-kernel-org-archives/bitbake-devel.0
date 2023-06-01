@@ -1,75 +1,100 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE40C77B7A
-	for <webhook@archiver.kernel.org>; Thu,  1 Jun 2023 10:22:29 +0000 (UTC)
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
- by mx.groups.io with SMTP id smtpd.web11.27553.1685614945552460268
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1913C77B7E
+	for <webhook@archiver.kernel.org>; Thu,  1 Jun 2023 12:34:59 +0000 (UTC)
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+ by mx.groups.io with SMTP id smtpd.web10.29860.1685622892095074722
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 01 Jun 2023 03:22:26 -0700
+ Thu, 01 Jun 2023 05:34:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=Zi7e1g8z;
- spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: alexandre.belloni@bootlin.com)
-X-GND-Sasl: alexandre.belloni@bootlin.com
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=pYggDFS2;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.196, mailfrom: michael.opdenacker@bootlin.com)
+X-GND-Sasl: michael.opdenacker@bootlin.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1685614943;
+	t=1685622890;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IgZtdnAdUAZon0q0vCDNPQI7XDQ6+8goEpAJN+QUo1w=;
-	b=Zi7e1g8znGSZaStFYG8mb3EW5ijRKFx8uTPprE/98m1KMw1yEsqSsXakiTg9+493h6rVoU
-	T5UsKb60BMKbH31yFq0qqnM2w4biPE6eEGj7YvjOC3Ohxo2MpoaHv2HzZB032Cw2QjtqZq
-	Xwx4BDAV2pM1mc5I9/j//f8mbfGPjM47+770uhxmOdnt/lwxgbC5SnRvoI1P81/WVtcgPJ
-	rqeYVYKBV2xqNtxcmAjt2PisEb3YXOTi6s+vhvKKP+R7hmb2OPaE2WF3cxV2HKYuiSK4qZ
-	oQBGdZfBmVWj8NVan7LSFeYvrQo9TDx9hpi8Y4xE657yXdm2wigy3WWltOSOiQ==
-X-GND-Sasl: alexandre.belloni@bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DDB154000D;
-	Thu,  1 Jun 2023 10:22:22 +0000 (UTC)
-Date: Thu, 1 Jun 2023 12:22:22 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: belouargamohamed@gmail.com
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [master][PATCH] fetch2: npmsw: Don't fetch dev
- dependencies when they are not demanded
-Message-ID: <2023060110222211f35f6b@mail.local>
-References: <202305311847057862e591@mail.local>
- <18872.1685559575756686252@lists.openembedded.org>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Eg43c7F09s22CYh6O9lqmCGX+9DymEl5PVOO+nbSSNE=;
+	b=pYggDFS2VpuZ+YAJCSIXeT+yf4oLgh3ZZzy2dplEwE9lnygT4LXqNYg3lTp8m7LBkOvD+c
+	sPCggtcSr1vgoMuglQijMFU5XVV5UTeIOLvvuxP5hXB8MAsciRbA/Aj5EoPCup4DzdQU8Q
+	CDpo22kMfk6DN5/G8Gs4iWA0MueeJ2dq0ghhnXeXtNFP17+3efL+luLUb071hT4k7NWNBC
+	5SVqShtBnEXWXxwzAtV7f4uFS2PPwYqNC1EmXkdiLi7QrZaV8QF9C/ew+4uBjLnso33weG
+	PmzKfBCY+XHP/XPamyisawDrd1Tn+mZDKxQdW2l3FuMvIo0ioP4uMxX4LHqOow==
+X-GND-Sasl: michael.opdenacker@bootlin.com
+X-GND-Sasl: michael.opdenacker@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 40CAFE0003;
+	Thu,  1 Jun 2023 12:34:48 +0000 (UTC)
+From: michael.opdenacker@bootlin.com
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	Michael Opdenacker <michael.opdenacker@bootlin.com>
+Subject: [PATCH] bitbake-user-manual: update releases.rst
+Date: Thu,  1 Jun 2023 14:34:38 +0200
+Message-Id: <20230601123438.2984206-1-michael.opdenacker@bootlin.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18872.1685559575756686252@lists.openembedded.org>
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 01 Jun 2023 10:22:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14824
+ <bitbake-devel@lists.openembedded.org>; Thu, 01 Jun 2023 12:34:59 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14825
 
-On 31/05/2023 11:59:35-0700, belouargamohamed@gmail.com wrote:
-> Hey,
-> 
-> Before applying this patch, on other patch should be accepted first:
-> https://lists.openembedded.org/g/bitbake-devel/message/14815?p=%2C%2C%2C20%2C0%2C0%2C0%3A%3Arecentpostdate%2Fsticky%2C%2Cbelouarga%2C20%2C2%2C0%2C99163598
-> 
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-This patch is marked for kirkstone so it has been ignored. Can you send
-a series that can be applied on master?
+- Move "langdale" link to outdated section
+- Add link to "mickledore" manual
+- Fix typo in "kirkstone" name
 
-> Thanks
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+---
+ doc/releases.rst | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#14822): https://lists.openembedded.org/g/bitbake-devel/message/14822
-> Mute This Topic: https://lists.openembedded.org/mt/99230772/3617179
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
-
-
+diff --git a/doc/releases.rst b/doc/releases.rst
+index 6a9774d4..b38b1c06 100644
+--- a/doc/releases.rst
++++ b/doc/releases.rst
+@@ -4,15 +4,15 @@
+ BitBake Supported Release Manuals
+ =================================
+ 
+-*****************************
+-Release Series 4.1 (langdale)
+-*****************************
++*******************************
++Release Series 4.2 (mickledore)
++*******************************
+ 
+-- :yocto_docs:`BitBake 2.2 User Manual </bitbake/2.2/>`
++- :yocto_docs:`BitBake 2.4 User Manual </bitbake/2.4/>`
+ 
+-*****************************
+-Release Series 4.0 (kirstone)
+-*****************************
++******************************
++Release Series 4.0 (kirkstone)
++******************************
+ 
+ - :yocto_docs:`BitBake 2.0 User Manual </bitbake/2.0/>`
+ 
+@@ -26,6 +26,12 @@ Release Series 3.1 (dunfell)
+ BitBake Outdated Release Manuals
+ ================================
+ 
++*****************************
++Release Series 4.1 (langdale)
++*****************************
++
++- :yocto_docs:`BitBake 2.2 User Manual </bitbake/2.2/>`
++
+ ******************************
+ Release Series 3.4 (honister)
+ ******************************
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
+
 
