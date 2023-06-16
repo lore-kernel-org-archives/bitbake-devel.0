@@ -1,335 +1,94 @@
-Return-Path: <wuzhenyu@ustc.edu>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3649FEB64DB
-	for <webhook@archiver.kernel.org>; Fri, 16 Jun 2023 06:44:21 +0000 (UTC)
-Received: from mail-m121145.qiye.163.com (mail-m121145.qiye.163.com [115.236.121.145])
- by mx.groups.io with SMTP id smtpd.web10.2935.1686897851783186927
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D810EB64D7
+	for <webhook@archiver.kernel.org>; Fri, 16 Jun 2023 07:38:01 +0000 (UTC)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web11.3357.1686901072267164242
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 15 Jun 2023 23:44:13 -0700
+ Fri, 16 Jun 2023 00:37:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: ustc.edu, ip: 115.236.121.145, mailfrom: wuzhenyu@ustc.edu)
-Received: from desktop (unknown [211.86.144.129])
-	by mail-m121145.qiye.163.com (Hmail) with ESMTPA id 89F838000C5
-	for <bitbake-devel@lists.openembedded.org>; Fri, 16 Jun 2023 14:44:05 +0800 (CST)
-Date: Fri, 16 Jun 2023 14:44:03 +0800
-From: Wu Zhenyu <wuzhenyu@ustc.edu>
-To: bitbake-devel@lists.openembedded.org
-Subject: Support packaging
-Message-ID: <gu3erz2kuwv6e4nijjwavi2pci2ohlfcoaornwyicfsufgii7p@wsazr62z42tf>
+ dkim=fail reason="signature has expired" header.i=@linuxfoundation.org header.s=google header.b=Qc063dVC;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3110a5f2832so1194223f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 16 Jun 2023 00:37:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1686901071; x=1689493071;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2ITHZwuccEIcRKPIF8XEy8d1xZWLHAVOjeScr+ZK4e0=;
+        b=Qc063dVCB9XPgxDilGyyUARdUEoD7UvohpwMEgKE1MaF5if3ZnfqDaZYz/qX2BWppl
+         89YfeFPrrtQ6Uf4k6+yR3cPyxK4HsM4eyOKvCICkt3Nr01ZdaT7XzoKJHHoTeTjr8B6E
+         hP4iemxSp0hMkisZZbDoHWx+a8gMS/o/Y4IMI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686901071; x=1689493071;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=2ITHZwuccEIcRKPIF8XEy8d1xZWLHAVOjeScr+ZK4e0=;
+        b=h9Ni7dlJyyH/XhwtMXMkduzlRyds9Z0ZqoyIsZp4XL8B6NCBWJ47+BhOq4J6vcRyl3
+         Ed1+Y7J13j+Pc0sscm5B7QSXHWWjBE/0KUxmicFe5pfQfjp+Ih55UNht1Xr/ih8Bgpho
+         K2YJUU3qA84P4b5sETu7Bg/TB5lWyzJifgZTP261oM8bupwVaSLDolEqJ74WRrZCL5Qa
+         uqo88s5nKdkP+mi4F+1pWbhXhW1pa28BA90jBJT3fdDDf2mpieX7wsnhyNb/HaeMAvLg
+         U8MzC6ukFfSB/JrKCeO6fOkplsNou6UhIe8PAmJKFSvU23P+nUtwguJW1/ZWhOKvuuVn
+         B+OQ==
+X-Gm-Message-State: AC+VfDzGUoobZ0TZXCosnVrhPgaTJ9bVYA/ben04e4OxBAos+u449qLr
+	Y2RN2deqBGBohMZQhKwWd6VeYmtn2TL+Jmor5Oc=
+X-Google-Smtp-Source: ACHHUZ6+tBLacB+wVdnRXsK0XmjsuziX5fbAVvK2MpO63lL6Qk1xpAOYiO3NiyNlkxcMOtQP7BWNZg==
+X-Received: by 2002:adf:f503:0:b0:311:ab6:1a8e with SMTP id q3-20020adff503000000b003110ab61a8emr824705wro.9.1686901070759;
+        Fri, 16 Jun 2023 00:37:50 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:b814:609:2b03:c353? ([2001:8b0:aba:5f3c:b814:609:2b03:c353])
+        by smtp.gmail.com with ESMTPSA id m6-20020a5d6246000000b0030e52d4c1bcsm23080361wrv.71.2023.06.16.00.37.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Jun 2023 00:37:50 -0700 (PDT)
+Message-ID: <243f996ab30e88244b73c0d6eb6c7d00e7766ac5.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] Support packaging
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Wu Zhenyu <wuzhenyu@ustc.edu>, bitbake-devel@lists.openembedded.org
+Date: Fri, 16 Jun 2023 08:37:49 +0100
+In-Reply-To: <gu3erz2kuwv6e4nijjwavi2pci2ohlfcoaornwyicfsufgii7p@wsazr62z42tf>
+References: 
+	<gu3erz2kuwv6e4nijjwavi2pci2ohlfcoaornwyicfsufgii7p@wsazr62z42tf>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGUJKVkkeTk1MT09NGkMfGVUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUlKSlVDTVVKT09VSklCWVdZFhoPEhUdFFlBWU9LSFVKSklISU5VSktLVUtZBg++
-X-HM-Tid: 0a88c2f2656cb03akuuu89f838000c5
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MD46Cxw6SD1RMhdDExosGSlO
-	HCwaFD1VSlVKTUNNQ0JMQ09NSU1MVTMWGhIXVQwOARMeFQIOOw4IDxhVHh8ORVlXWRILWUFZSUpK
-	VUNNVUpPT1VKSUJZV1kIAVlBTExOSjcG
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 16 Jun 2023 06:44:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14836
+ <bitbake-devel@lists.openembedded.org>; Fri, 16 Jun 2023 07:38:01 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14837
 
-use `python -m build` to package
----
- .gitignore               | 130 ++++++++++++++++++++++++++++++++++++++-
- lib/bb/server/process.py |   5 +-
- pyproject.toml           | 109 ++++++++++++++++++++++++++++++++
- 3 files changed, 240 insertions(+), 4 deletions(-)
- create mode 100644 pyproject.toml
+On Fri, 2023-06-16 at 14:44 +0800, Wu Zhenyu wrote:
+> use `python -m build` to package
+> ---
+>  .gitignore               | 130 ++++++++++++++++++++++++++++++++++++++-
+>  lib/bb/server/process.py |   5 +-
+>  pyproject.toml           | 109 ++++++++++++++++++++++++++++++++
+>  3 files changed, 240 insertions(+), 4 deletions(-)
+>  create mode 100644 pyproject.toml
 
-diff --git a/.gitignore b/.gitignore
-index fbf9eb2..c328bcd 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -1,9 +1,6 @@
--*.pyc
--*.pyo
- *~
- pyshtables.py
- /doc/manual/html/
--/build/
- /bin/bitbakec
- *.swp
- tags
-@@ -16,3 +13,130 @@ lib/toaster/contrib/tts/backlog.txt
- lib/toaster/contrib/tts/log/*
- lib/toaster/contrib/tts/.cache/*
- lib/bb/tests/runqueue-tests/bitbake-cookerdaemon.log
-+
-+# create by https://github.com/iamcco/coc-gitignore (Thu Jun 15 2023 22:34:35 GMT+0800 (China Standard Time))
-+# Python.gitignore:
-+# Byte-compiled / optimized / DLL files
-+__pycache__/
-+*.py[cod]
-+*$py.class
-+
-+# C extensions
-+*.so
-+
-+# Distribution / packaging
-+.Python
-+build/
-+develop-eggs/
-+dist/
-+downloads/
-+eggs/
-+.eggs/
-+lib/
-+lib64/
-+parts/
-+sdist/
-+var/
-+wheels/
-+pip-wheel-metadata/
-+share/python-wheels/
-+*.egg-info/
-+.installed.cfg
-+*.egg
-+MANIFEST
-+
-+# PyInstaller
-+#  Usually these files are written by a python script from a template
-+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-+*.manifest
-+*.spec
-+
-+# Installer logs
-+pip-log.txt
-+pip-delete-this-directory.txt
-+
-+# Unit test / coverage reports
-+htmlcov/
-+.tox/
-+.nox/
-+.coverage
-+.coverage.*
-+.cache
-+nosetests.xml
-+coverage.xml
-+*.cover
-+.hypothesis/
-+.pytest_cache/
-+
-+# Translations
-+*.mo
-+*.pot
-+
-+# Django stuff:
-+*.log
-+local_settings.py
-+db.sqlite3
-+db.sqlite3-journal
-+
-+# Flask stuff:
-+instance/
-+.webassets-cache
-+
-+# Scrapy stuff:
-+.scrapy
-+
-+# Sphinx documentation
-+docs/_build/
-+
-+# PyBuilder
-+target/
-+
-+# Jupyter Notebook
-+.ipynb_checkpoints
-+
-+# IPython
-+profile_default/
-+ipython_config.py
-+
-+# pyenv
-+.python-version
-+
-+# pipenv
-+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-+#   install all needed dependencies.
-+#Pipfile.lock
-+
-+# celery beat schedule file
-+celerybeat-schedule
-+
-+# SageMath parsed files
-+*.sage.py
-+
-+# Environments
-+.env
-+.venv
-+env/
-+venv/
-+ENV/
-+env.bak/
-+venv.bak/
-+
-+# Spyder project settings
-+.spyderproject
-+.spyproject
-+
-+# Rope project settings
-+.ropeproject
-+
-+# mkdocs documentation
-+/site
-+
-+# mypy
-+.mypy_cache/
-+.dmypy.json
-+dmypy.json
-+
-+# Pyre type checker
-+.pyre/
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 7616ef5..e5d1cbd 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -32,6 +32,7 @@ import stat
- import bb.server.xmlrpcserver
- from bb import daemonize
- from multiprocessing import queues
-+from shutil import which
- 
- logger = logging.getLogger('BitBake')
- 
-@@ -619,7 +620,9 @@ class BitBakeServer(object):
-         os.close(self.readypipe)
-         os.set_inheritable(self.bitbake_lock.fileno(), True)
-         os.set_inheritable(self.readypipein, True)
--        serverscript = os.path.realpath(os.path.dirname(__file__) + "/../../../bin/bitbake-server")
-+        serverscript = which("bitbake-server")
-+        if serverscript is None:
-+            serverscript = os.path.realpath(os.path.dirname(__file__) + "/../../../bin/bitbake-server")
-         os.execl(sys.executable, "bitbake-server", serverscript, "decafbad", str(self.bitbake_lock.fileno()), str(self.readypipein), self.logfile, self.bitbake_lock.name, self.sockname,  str(self.server_timeout or 0), str(int(self.profile)), str(self.xmlrpcinterface[0]), str(self.xmlrpcinterface[1]))
- 
- def execServer(lockfd, readypipeinfd, lockname, sockname, server_timeout, xmlrpcinterface, profile):
-diff --git a/pyproject.toml b/pyproject.toml
-new file mode 100644
-index 0000000..988cbb4
---- /dev/null
-+++ b/pyproject.toml
-@@ -0,0 +1,109 @@
-+[build-system]
-+requires = ["setuptools_scm[toml] >= 6.2"]
-+build-backend = "setuptools.build_meta"
-+
-+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
-+[project]
-+name = "bitbake"
-+description = ""
-+readme = "README.md"
-+requires-python = ">= 3.7"
-+keywords = ["yocto"]
-+version = "2.4.1"
-+classifiers = [
-+  "Development Status :: 3 - Alpha",
-+  "Intended Audience :: Developers",
-+  "Topic :: Software Development :: Build Tools",
-+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-+  "Operating System :: Microsoft :: Windows",
-+  "Operating System :: POSIX",
-+  "Operating System :: Unix",
-+  "Operating System :: MacOS",
-+  "Programming Language :: Python :: 3 :: Only",
-+  "Programming Language :: Python :: 3",
-+  "Programming Language :: Python :: 3.7",
-+  "Programming Language :: Python :: 3.8",
-+  "Programming Language :: Python :: 3.9",
-+  "Programming Language :: Python :: 3.10",
-+  "Programming Language :: Python :: 3.11",
-+  "Programming Language :: Python :: Implementation :: CPython",
-+  "Programming Language :: Python :: Implementation :: PyPy",
-+]
-+dynamic = ["optional-dependencies"]
-+
-+[[project.authors]]
-+name = "Tim Ansell"
-+email = "mithro@mithis.net"
-+
-+[[project.authors]]
-+name = "Phil Blundell"
-+email = "pb@handhelds.org"
-+
-+[[project.authors]]
-+name = "Seb Frankengul"
-+email = "seb@frankengul.org"
-+
-+[[project.authors]]
-+name = "Holger Freyther"
-+email = "holger@moiji-mobile.com"
-+
-+[[project.authors]]
-+name = "Marcin Juszkiewicz"
-+email = "marcin@juszkiewicz.com.pl"
-+
-+[[project.authors]]
-+name = "Chris Larson"
-+email = "kergoth@handhelds.org"
-+
-+[[project.authors]]
-+name = "Ulrich Luckas"
-+email = "luckas@musoft.de"
-+
-+[[project.authors]]
-+name = "Mickey Lauer"
-+email = "mickey@Vanille.de"
-+
-+[[project.authors]]
-+name = "Richard Purdie"
-+email = "rpurdie@rpsys.net"
-+
-+[[project.authors]]
-+name = "Holger Schurig"
-+email = "holgerschurig@gmx.de"
-+
-+[project.license]
-+text = "GPL v2"
-+
-+[project.urls]
-+Homepage = "https://docs.yoctoproject.org/bitbake"
-+Download = "https://git.openembedded.org/bitbake"
-+"Bug Report" = "https://bugzilla.yoctoproject.org"
-+Source = "https://git.openembedded.org/bitbake"
-+
-+[tool.setuptools]
-+script-files = [
-+  "bin/bitbake",
-+  "bin/bitbake-diffsigs",
-+  "bin/bitbake-dumpsig",
-+  "bin/bitbake-getvar",
-+  "bin/bitbake-hashclient",
-+  "bin/bitbake-hashserv",
-+  "bin/bitbake-layers",
-+  "bin/bitbake-prserv",
-+  "bin/bitbake-selftest",
-+  "bin/bitbake-server",
-+  "bin/bitbake-worker",
-+  "bin/git-make-shallow",
-+  "bin/toaster",
-+  "bin/toaster-eventreplay",
-+]
-+py-modules = ["codegen", "pyinotify"]
-+
-+[tool.setuptools.packages.find]
-+where = ["lib"]
-+
-+[tool.setuptools.data-files]
-+"share/man/man1" = ["doc/bitbake.1"]
-+
-+[tool.setuptools.dynamic.optional-dependencies.toaster]
-+file = "toaster-requirements.txt"
--- 
-2.40.1
+I believe we said no to this in bugzilla recently.
 
--- 
-Best Regards
-Wu Zhenyu
+The issue is that bitbake's version is tied to the release you're
+building. If you start including this on pypi or with packaging it with
+distros themselves, people will complain that the version doesn't match
+the one needed for the release they're currently building. Changing
+that requires API commitments we've not been able to make.
+
+Yes, multiple versions on pypi and selecting the one you want in a
+python venv would be nice and one way to avoid that but once in pypi,
+the support issues arising from people using it in a way we've not
+intended would likely outweigh that.
+
+By not having a pyproject.toml file, we make it clear that we don't
+support using bitbake in that way.
+
+Cheers,
+
+Richard
+
+
 
