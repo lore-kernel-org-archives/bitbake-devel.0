@@ -1,88 +1,99 @@
-Return-Path: <peter.hoyes@arm.com>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E43FEB64D7
-	for <webhook@archiver.kernel.org>; Fri, 16 Jun 2023 16:01:39 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.2519.1686931297434347935
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A76EB64DA
+	for <webhook@archiver.kernel.org>; Mon, 19 Jun 2023 16:06:35 +0000 (UTC)
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+ by mx.groups.io with SMTP id smtpd.web11.11390.1687190785738032662
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 16 Jun 2023 09:01:37 -0700
+ Mon, 19 Jun 2023 09:06:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDC341FB;
-	Fri, 16 Jun 2023 09:02:20 -0700 (PDT)
-Received: from [10.57.86.49] (unknown [10.57.86.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 700493F71E;
-	Fri, 16 Jun 2023 09:01:36 -0700 (PDT)
-Message-ID: <622e51b1-282b-c1c4-0bdc-3deec8cc76ce@arm.com>
-Date: Fri, 16 Jun 2023 17:01:31 +0100
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=LS65RebZ;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: michael.opdenacker@bootlin.com)
+X-GND-Sasl: michael.opdenacker@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1687190783;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vEH1E3JotfaNoDYE2DXPWWe5BNTvpbxLwHxtz5RSGaY=;
+	b=LS65RebZlOdLKP6o29XYYSjexBnfy0Bx2j2ZuHz5XWifKM71HEJx4QztfTQjgFBu61mm+t
+	UGBtBRpKT5tfxEBE774b0/csiN4KkMIQrsprK0lXAwldauzlhmM82L3i71z/Kj+zLAK2AU
+	9ramkpZGUWe0Bjhr/yWM6MYre+80fyntb2vUZnwI5MjJXIYj9tcEuVxM7d/KQPogRabYFE
+	kCM+LOpduo5WuHuVMGz4uoswsB7s/lyTV+xjkAHmaJtUsjggmL4wODKRKrl0szy5mGlpar
+	SngbQLTrhDndTGkf+BcpEIQHpaNVvZ6dnVcyyd+72a651NUCJB1C/tf1ipgxTQ==
+X-GND-Sasl: michael.opdenacker@bootlin.com
+X-GND-Sasl: michael.opdenacker@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 686E32000E;
+	Mon, 19 Jun 2023 16:06:23 +0000 (UTC)
+From: michael.opdenacker@bootlin.com
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	Michael Opdenacker <michael.opdenacker@bootlin.com>
+Subject: [PATCH] bitbake-user-manual: explicit variables taking a colon separated list
+Date: Mon, 19 Jun 2023 18:06:14 +0200
+Message-Id: <20230619160614.909233-1-michael.opdenacker@bootlin.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [bitbake-devel] [PATCH 5/5] bitbake: Bootstrap pytest for
- self-tests
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-References: <20230616123651.915234-1-peter.hoyes@arm.com>
- <20230616123651.915234-6-peter.hoyes@arm.com>
- <CANNYZj-5=DY7ZQYzBrp52cSyP3tA6H_Rn73FQgHrijWQqTye-g@mail.gmail.com>
-Content-Language: en-US
-From: Peter Hoyes <Peter.Hoyes@arm.com>
-In-Reply-To: <CANNYZj-5=DY7ZQYzBrp52cSyP3tA6H_Rn73FQgHrijWQqTye-g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 16 Jun 2023 16:01:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14845
+ <bitbake-devel@lists.openembedded.org>; Mon, 19 Jun 2023 16:06:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14846
 
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-On 16/06/2023 13:53, Alexander Kanavin wrote:
-> On Fri, 16 Jun 2023 at 14:38, Peter Hoyes <peter.hoyes@arm.com> wrote:
->> From: Peter Hoyes <Peter.Hoyes@arm.com>
->>
->> To support running the bitbake self-tests using pytest, add a
->> pytest.ini This enables these tests to be run using the following
->> command from the bitbake directory.
->>
->>    pytest
->>
->> For now, testpaths only includes the bitbake selftests.
->>
->> Add a note to the README.
->>   bitbake/lib/bb/tests/conftest.py | 8 ++++++++
->> diff --git a/bitbake/lib/bb/tests/conftest.py b/bitbake/lib/bb/tests/conftest.py
->> new file mode 100644
->> index 0000000000..59a8c6753b
->> --- /dev/null
->> +++ b/bitbake/lib/bb/tests/conftest.py
->> @@ -0,0 +1,8 @@
->> +import pathlib
->> +import pytest
->> +
->> +BB_BIN_PATH = pathlib.Path(__file__).parents[3].resolve() / 'bin'
->> +
->> +@pytest.fixture(autouse=True)
->> +def bitbake_path(monkeypatch):
->> +    monkeypatch.setenv('PATH', str(BB_BIN_PATH), prepend=':')
-> The addition and purpose of this file should be explained.
->
-> Alex
+[YOCTO #15128]
 
-"conftest.py" is a pytest feature [1] for test module-specific 
-configuration, which is ignored by unittest.
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+---
+ .../bitbake-user-manual-ref-variables.rst        | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-The intention here is to automatically configure the PATH to avoid extra 
-manual steps after checkout. I can either add a comment to this effect 
-in v2, or drop this file and require the user to manually configure the 
-PATH, as for bitbake-selftest.
-
-Peter
-
-[1] 
-https://docs.pytest.org/en/7.3.x/reference/fixtures.html#conftest-py-sharing-fixtures-across-multiple-files
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 01d4f8d1..ee5d7ba8 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -920,9 +920,9 @@ overview of their function and contents.
+       section.
+ 
+    :term:`BBPATH`
+-      Used by BitBake to locate class (``.bbclass``) and configuration
+-      (``.conf``) files. This variable is analogous to the ``PATH``
+-      variable.
++      A colon-separated list used by BitBake to locate class (``.bbclass``)
++      and configuration (``.conf``) files. This variable is analogous to the
++      ``PATH`` variable.
+ 
+       If you run BitBake from a directory outside of the build directory,
+       you must be sure to set :term:`BBPATH` to point to the build directory.
+@@ -1165,8 +1165,8 @@ overview of their function and contents.
+       order.
+ 
+    :term:`OVERRIDES`
+-      BitBake uses :term:`OVERRIDES` to control what variables are overridden
+-      after BitBake parses recipes and configuration files.
++      A colon-separated list that BitBake uses to control what variables are
++      overridden after BitBake parses recipes and configuration files.
+ 
+       Following is a simple example that uses an overrides list based on
+       machine architectures: OVERRIDES = "arm:x86:mips:powerpc" You can
+@@ -1225,9 +1225,9 @@ overview of their function and contents.
+          PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
+ 
+    :term:`PREFERRED_PROVIDERS`
+-      Determines which recipe should be given preference for cases where
+-      multiple recipes provide the same item. Functionally,
+-      :term:`PREFERRED_PROVIDERS` is identical to
++      A colon-separated list to determine which recipe should be given
++      preference for cases where multiple recipes provide the same item.
++      Functionally, :term:`PREFERRED_PROVIDERS` is identical to
+       :term:`PREFERRED_PROVIDER`. However, the :term:`PREFERRED_PROVIDERS` variable
+       lets you define preferences for multiple situations using the following
+       form::
+-- 
+2.34.1
 
 
