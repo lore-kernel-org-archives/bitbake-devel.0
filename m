@@ -1,86 +1,130 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BD8EB64D7
-	for <webhook@archiver.kernel.org>; Tue, 20 Jun 2023 13:58:26 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web10.11083.1687269504904161786
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83682EB64D7
+	for <webhook@archiver.kernel.org>; Tue, 20 Jun 2023 17:03:18 +0000 (UTC)
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+ by mx.groups.io with SMTP id smtpd.web11.1438.1687280587759015520
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 20 Jun 2023 06:58:25 -0700
+ Tue, 20 Jun 2023 10:03:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@linuxfoundation.org header.s=google header.b=UkkV4yzA;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-3f9189228bcso23282135e9.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 20 Jun 2023 06:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1687269503; x=1689861503;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=b25+YXQ2d4FjkNUp7tPXeaBpr5VP7hAzTgas+8asrlI=;
-        b=UkkV4yzAwTNzSbEYq72faeWcRFeNHpG054alCSfE36ncJlmvVihMO7xdezdnblsEQt
-         ufJNxbM7jNyxJNIHAwx28Kt/IpAlmaBsTvIU7EubGM66mTDrw6xWVYWfSUQkUHA/9Rlr
-         OG7wN+6MnMm22h58gQGpYzIFMJBgujv5gqL/c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687269503; x=1689861503;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b25+YXQ2d4FjkNUp7tPXeaBpr5VP7hAzTgas+8asrlI=;
-        b=a73cn3tXOcRKNffqCOc5HC6DBNhN9H5MbZr74QUk8jKXcGIRXmGVSQDBiTZPQT2WNK
-         l8baq9aoENjmclB8ciHK+Yf8Z0lRD0iPlVgxH75VKRQSrCJ42ZAohdgrpdbLea6lSlth
-         XIWgcYkdH+1Tx1S8Vra6VSdF+DW6gF5CgL7qM6MhAem8EV70QEr+2Iyw5Db8i2MCYpGR
-         Vy3ZA+z+Ochqulx33rQsELgUo+tgN0w7QXwWsU4buKlFPkYnzhjqoISwV9KQW5ukz22L
-         lzNtLa8jiwpvDkrxkLJqXERYsMv48SJLLnpr/RpjWzt72kBEQ9quMAXGIOgtzdr4uFsF
-         Vq6Q==
-X-Gm-Message-State: AC+VfDxebfWmwLDG1ybuFxQvjdEpWs3jyzPv2uzK6zN5b5810h4w5Iv9
-	+O563XXPWCm3EzAL8iNdyJR+Zt8KD8efPNGPO1s=
-X-Google-Smtp-Source: ACHHUZ53hG0fY2MiBsEbjkScgpT1pebv718JRnclCw7aHwfq3vvGYD3O+24FfBtThFFc1AHS0+vWpA==
-X-Received: by 2002:a1c:ed0b:0:b0:3f5:39:240c with SMTP id l11-20020a1ced0b000000b003f50039240cmr9293261wmh.27.1687269503145;
-        Tue, 20 Jun 2023 06:58:23 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:dcd0:3b81:1cae:b795])
-        by smtp.gmail.com with ESMTPSA id x23-20020a1c7c17000000b003f72468833esm2402169wmc.26.2023.06.20.06.58.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 06:58:22 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org
-Subject: [PATCH] doc: Document FILE_LAYERNAME
-Date: Tue, 20 Jun 2023 14:58:22 +0100
-Message-Id: <20230620135822.2802308-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.2
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=fFJwbt3G;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.195, mailfrom: michael.opdenacker@bootlin.com)
+X-GND-Sasl: michael.opdenacker@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1687280585;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EtawV1hFOgc6wK2ssxE4JTo35RtYrlZRK/+OUcYkHDM=;
+	b=fFJwbt3GJ3vhHOenbBrbm4QXUsOxcaMuc8xKgIWuoA2+GAdcPlHom6228UKF0MPdaf3jwF
+	F6I2Sz6QHoDRzorj6w919ok92WF3UT5j68+7OakEiWDT2CNpT5dhRJs762S+CTLdwvYmqI
+	WFzICDNTU0W3B1ZJaCvfi68qbQTf0crfZG9RJjv1XtAAlsQW8UdKdflvRU0QI3xKmiwd6/
+	lFHes5mwHip2Nj/QuFKh0C0/SQr9B81Ad+fufpCn6I1WLwQznhQ4tAe8GTGM37JHreYDV4
+	BwEk+PZqkcHMjYk3G1MUEWIPJVgAc8SI4dDYJoLLWi7T0BHpm5A+0X+d/ZUwHw==
+X-GND-Sasl: michael.opdenacker@bootlin.com
+X-GND-Sasl: michael.opdenacker@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D142260008;
+	Tue, 20 Jun 2023 17:03:04 +0000 (UTC)
+Message-ID: <1dbee557-023e-8b79-84f3-a93ef5a25a78@bootlin.com>
+Date: Tue, 20 Jun 2023 19:03:04 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
+Subject: Re: [bitbake-devel] [PATCH] bitbake-user-manual: explicit variables
+ taking a colon separated list
+Content-Language: en-US
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+References: <20230619160614.909233-1-michael.opdenacker@bootlin.com>
+ <20230620095230.3847067a@booty>
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Organization: Bootlin
+In-Reply-To: <20230620095230.3847067a@booty>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 20 Jun 2023 13:58:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14849
+ <bitbake-devel@lists.openembedded.org>; Tue, 20 Jun 2023 17:03:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14850
 
-Document the new variable.
+Hi Luca,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- .../bitbake-user-manual-ref-variables.rst                    | 5 +++++
- 1 file changed, 5 insertions(+)
+Thanks a lot for the review!
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index ee5d7ba8d4..337cfa3ed5 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -1072,6 +1072,11 @@ overview of their function and contents.
-       environment variable. The value is a colon-separated list of
-       directories that are searched left-to-right in order.
- 
-+   :term:`FILE_LAYERNAME`
-+      During parsing and task execution, this is set to the name of the
-+      layer containing the recipe file. Code can use this to identify which
-+      layer a recipe is from.
-+
-    :term:`GITDIR`
-       The directory in which a local copy of a Git repository is stored
-       when it is cloned.
+On 20.06.23 at 09:52, Luca Ceresoli wrote:
+> Hi Mike,
+>
+> On Mon, 19 Jun 2023 18:06:14 +0200
+> "Michael Opdenacker via lists.openembedded.org"
+> <michael.opdenacker=bootlin.com@lists.openembedded.org> wrote:
+>
+>> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+>>
+>> [YOCTO #15128]
+>>
+>> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+>> ---
+>>   .../bitbake-user-manual-ref-variables.rst        | 16 ++++++++--------
+>>   1 file changed, 8 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> index 01d4f8d1..ee5d7ba8 100644
+>> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> @@ -920,9 +920,9 @@ overview of their function and contents.
+>>         section.
+>>   
+>>      :term:`BBPATH`
+>> -      Used by BitBake to locate class (``.bbclass``) and configuration
+>> -      (``.conf``) files. This variable is analogous to the ``PATH``
+>> -      variable.
+>> +      A colon-separated list used by BitBake to locate class (``.bbclass``)
+>> +      and configuration (``.conf``) files. This variable is analogous to the
+>> +      ``PATH`` variable.
+>>   
+>>         If you run BitBake from a directory outside of the build directory,
+>>         you must be sure to set :term:`BBPATH` to point to the build directory.
+>> @@ -1165,8 +1165,8 @@ overview of their function and contents.
+>>         order.
+>>   
+>>      :term:`OVERRIDES`
+>> -      BitBake uses :term:`OVERRIDES` to control what variables are overridden
+>> -      after BitBake parses recipes and configuration files.
+>> +      A colon-separated list that BitBake uses to control what variables are
+>> +      overridden after BitBake parses recipes and configuration files.
+>>   
+>>         Following is a simple example that uses an overrides list based on
+>>         machine architectures: OVERRIDES = "arm:x86:mips:powerpc" You can
+>> @@ -1225,9 +1225,9 @@ overview of their function and contents.
+>>            PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
+>>   
+>>      :term:`PREFERRED_PROVIDERS`
+>> -      Determines which recipe should be given preference for cases where
+>> -      multiple recipes provide the same item. Functionally,
+>> -      :term:`PREFERRED_PROVIDERS` is identical to
+>> +      A colon-separated list to determine which recipe should be given
+>> +      preference for cases where multiple recipes provide the same item.
+>> +      Functionally, :term:`PREFERRED_PROVIDERS` is identical to
+>>         :term:`PREFERRED_PROVIDER`. However, the :term:`PREFERRED_PROVIDERS` variable
+>>         lets you define preferences for multiple situations using the following
+>>         form::
+> If I read the docs correctly, PREFERRED_PROVIDERS is not a
+> colon-separated list but rather a space-separated list [of
+> colon-separated pairs].
+
+
+Oops, you're right. bitbake/lib/bb/cooker.py confirms this.
+I'm sending an update.
+Thanks again
+Mike.
+
 -- 
-2.39.2
+Michael Opdenacker, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
