@@ -1,115 +1,80 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <wuzhenyu@ustc.edu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84EAEB64D7
-	for <webhook@archiver.kernel.org>; Fri, 23 Jun 2023 10:11:24 +0000 (UTC)
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
- by mx.groups.io with SMTP id smtpd.web11.38807.1687515078495666135
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36C9EB64D7
+	for <webhook@archiver.kernel.org>; Mon, 26 Jun 2023 09:36:12 +0000 (UTC)
+Received: from mail-m121145.qiye.163.com (mail-m121145.qiye.163.com [115.236.121.145])
+ by mx.groups.io with SMTP id smtpd.web10.3924.1687772170118101591
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 23 Jun 2023 03:11:19 -0700
+ Mon, 26 Jun 2023 02:36:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=S7Y5f28u;
- spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: michael.opdenacker@bootlin.com)
-X-GND-Sasl: michael.opdenacker@bootlin.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1687515076;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tr4l9lOvfHlLJxwekwqaQqycPsrfcjIhFUDTRuq/kJk=;
-	b=S7Y5f28uwnU/jlr0SGf2z7SAxzgdk9O8Z/aVmkz66FHItFLfTsfLPC+xgYsSi11YpEWmrE
-	4m3giVhCVVORmZIeSq9cUS5GvCpo7k+6SQLZbk0dzNPOg5asezdbrwcMdSoMdPLLSa0bNf
-	41dWCML8/93PlFxEN0d5xMTyIoDXSGPr4srnQCIz7LghJT+UM0ThiYOz+2PBwgSh8E7Bwu
-	CU5kfSChuzyZduVqXOIxpkky4syClWKTxYWn9wYfWSgeQvLQGKy/uEzsu019US2O918Pta
-	2ycxiwlzR74ntUS4VGBY68uHFPnPd3gupAIOlGQWSOQMfBPwUtdWi2PkWZT9Ow==
-X-GND-Sasl: michael.opdenacker@bootlin.com
-X-GND-Sasl: michael.opdenacker@bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id ADE0C4000F;
-	Fri, 23 Jun 2023 10:11:15 +0000 (UTC)
-Message-ID: <861e6ff6-c43b-8ee4-497b-ae8a128f4885@bootlin.com>
-Date: Fri, 23 Jun 2023 12:11:15 +0200
+ dkim=missing; spf=pass (domain: ustc.edu, ip: 115.236.121.145, mailfrom: wuzhenyu@ustc.edu)
+Received: from desktop (unknown [211.86.144.129])
+	by mail-m121145.qiye.163.com (Hmail) with ESMTPA id 206288000A9;
+	Mon, 26 Jun 2023 17:36:02 +0800 (CST)
+Date: Mon, 26 Jun 2023 17:36:01 +0800
+From: Wu Zhenyu <wuzhenyu@ustc.edu>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	bitbake-devel@lists.openembedded.org
+Cc: michael.opdenacker@bootlin.com
+Subject: Re: [bitbake-devel] Support packaging
+Message-ID: <b6paftjc3bwu3v3kp6zhjwvuahor5rbd6f2sni6opx6eolk23i@ckyfq6eitcym>
+References: <gu3erz2kuwv6e4nijjwavi2pci2ohlfcoaornwyicfsufgii7p@wsazr62z42tf>
+ <243f996ab30e88244b73c0d6eb6c7d00e7766ac5.camel@linuxfoundation.org>
+ <z5kafm2tlrwgx3fe7ayv4gf46yr2hn27kw77uj4cmdc4z4nrmz@et7mvmr7e4qs>
+ <9ff2cb26e2d63ba10255d665d44524ea7181f2d9.camel@linuxfoundation.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Cc: Quentin Schulz <foss+yocto@0leil.net>
-Subject: Re: [bitbake-devel] [PATCH] docs: bitbake-user-manual:
- bitbake-user-manual-hello: add links and highlights for variables
-Content-Language: en-US
-To: quentin.schulz@theobroma-systems.com, bitbake-devel@lists.openembedded.org
-References: <20230622-typos-202306-v1-1-dce56bcb2f37@theobroma-systems.com>
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-In-Reply-To: <20230622-typos-202306-v1-1-dce56bcb2f37@theobroma-systems.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ff2cb26e2d63ba10255d665d44524ea7181f2d9.camel@linuxfoundation.org>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGk1NVh1IHUwdT0JNGR1MQ1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUlKSlVDTVVKT09VSklCWVdZFhoPEhUdFFlBWU9LSFVKSktDSUNVSktLVUtZBg++
+X-HM-Tid: 0a88f70f68ddb03akuuu206288000a9
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PD46NAw6DD1MDEotGTEcNUwJ
+	LCkaFFZVSlVKTUNMTExJSk1JQ0lJVTMWGhIXVQwOARMeFQIOOw4IDxhVHh8ORVlXWRILWUFZSUpK
+	VUNNVUpPT1VKSUJZV1kIAVlBSUxMTjcG
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 23 Jun 2023 10:11:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14858
+ <bitbake-devel@lists.openembedded.org>; Mon, 26 Jun 2023 09:36:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14859
 
-Hi Quentin,
+> sounds really interesting and I'll have to take a look
 
-On 22.06.23 at 18:48, Quentin Schulz via lists.openembedded.org wrote:
-> Some variables are described in the glossary so add a term role to the
-> references. For the others, highlight them by surrounding them with
-> two backticks.
->
-> Cc: Quentin Schulz <foss+yocto@0leil.net>
-> Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-> ---
->   doc/bitbake-user-manual/bitbake-user-manual-hello.rst | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-hello.rst b/doc/bitbake-user-manual/bitbake-user-manual-hello.rst
-> index c8251d2a0..654196ca2 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-hello.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-hello.rst
-> @@ -209,12 +209,12 @@ Following is the complete "Hello World" example.
->   
->       .. note::
->   
-> -       Without a value for PN , the variables STAMP , T , and B , prevent more
-> -       than one recipe from working. You can fix this by either setting PN to
-> +       Without a value for :term:`PN`, the variables :term:`STAMP`, :term:`T`, and :term:`B`, prevent more
-> +       than one recipe from working. You can fix this by either setting :term:`PN` to
->          have a value similar to what OpenEmbedded and BitBake use in the default
-> -       bitbake.conf file (see previous example). Or, by manually updating each
-> -       recipe to set PN . You will also need to include PN as part of the STAMP
-> -       , T , and B variable definitions in the local.conf file.
-> +       ``bitbake.conf`` file (see previous example). Or, by manually updating each
-> +       recipe to set :term:`PN`. You will also need to include :term:`PN` as part of the :term:`STAMP`,
-> +       :term:`T`, and :term:`B` variable definitions in the ``local.conf`` file.
->   
->       The ``TMPDIR`` variable establishes a directory that BitBake uses
->       for build output and intermediate files other than the cached
-> @@ -319,9 +319,9 @@ Following is the complete "Hello World" example.
->   
->       .. note::
->   
-> -       We are setting both LAYERSERIES_CORENAMES and LAYERSERIES_COMPAT in this particular case, because we
-> +       We are setting both ``LAYERSERIES_CORENAMES`` and :term:`LAYERSERIES_COMPAT` in this particular case, because we
->          are using bitbake without OpenEmbedded.
-> -       You should usually just use LAYERSERIES_COMPAT to specify the OE-Core versions for which your layer
-> +       You should usually just use :term:`LAYERSERIES_COMPAT` to specify the OE-Core versions for which your layer
->          is compatible, and add the meta-openembedded layer to your project.
->   
->       You need to create the recipe file next. Inside your layer at the
->
-> ---
-> base-commit: 0556c7bdc82cf665faa141989f2e07dd59517735
-> change-id: 20230622-typos-202306-00945b0f2a25
+Thanks for your interest. What is your thought after taking a look?
 
+> There are some specific issues we'd need to solve if we were to put bitbake on PYPI
 
-Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Thanks!
-Michael.
+If you need some related help, you can @me.
+
+On Fri, Jun 23, 2023 at 10:21:45AM +0100, Richard Purdie wrote:
+> On Fri, 2023-06-23 at 17:13 +0800, Wu Zhenyu wrote:
+> > Hi, I create a language server for bitbake in <https://github.com/Freed-Wu/bitbake-language-server>.
+> > It really need bitbake as a python package to provide the full functions.
+> > Now I have to use <https://aur.archlinux.org/packages/python-bitbake> as a dependency.
+> > Can you rethink again about packaging it in PYPI?
+> 
+> A language server sounds really interesting and I'll have to take a
+> look. If we add it to PYPI, who is going to deal with the usability
+> issues I mentioned, the documentation problem and the resulting support
+> where people mismatch bitbake versions?
+> 
+> There are some specific issues we'd need to solve if we were to put
+> bitbake on PYPI and I'm not seeing any help or solutions being offered
+> to that :(. I'm burning out with the project as things stand, I don't
+> really want to create new issues.
+> 
+> Cheers,
+> 
+> Richard
+> 
+> 
+> 
 
 -- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Best Regards
+Wu Zhenyu
 
