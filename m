@@ -1,84 +1,84 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9E4EB64D7
-	for <webhook@archiver.kernel.org>; Fri, 30 Jun 2023 17:05:29 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.19342.1688144720133323136
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6069BEB64D7
+	for <webhook@archiver.kernel.org>; Fri, 30 Jun 2023 17:24:09 +0000 (UTC)
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+ by mx.groups.io with SMTP id smtpd.web11.19825.1688145845265293406
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Jun 2023 10:05:20 -0700
+ Fri, 30 Jun 2023 10:24:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@linuxfoundation.org header.s=google header.b=gVDtlho5;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3fbc0609cd6so18881605e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 30 Jun 2023 10:05:19 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@sakoman-com.20221208.gappssmtp.com header.s=20221208 header.b=vDonN1iZ;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.172, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-666e3b15370so1386558b3a.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 30 Jun 2023 10:24:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1688144718; x=1690736718;
+        d=sakoman-com.20221208.gappssmtp.com; s=20221208; t=1688145844; x=1690737844;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pa7JiXOmX78trrDHGxkbEPybq2X0QhNEYE2S0FjzWF0=;
-        b=gVDtlho5qbOr3+td4fPu9nUp/z2cR/FhLmVC6rLNegllMGZxlObRPCwhhaBAG2jXow
-         SLVaa5VIdinrHc4eBd8fTw31oWWWfYQ0EogwXv7iBtXVKERBv+YOS/XlnYfPVVMRuNaO
-         1huPs6x0HqsS+XmcM9MJ+LWDHmzkuOw0S5RII=
+        bh=UBdyQkK1IPqnWaiLh2MuN81HMWOE224I2mOwYaOH/II=;
+        b=vDonN1iZawN+YKkuFhTIR2LoHsqL6LqVkjGWWyd8ekDEfR2nOjDi0cwTZyWlA9vW2X
+         xtIlsYc3/YaAKoIDsRCQdIqJM1AFaIl3XmS1Dupt48wA5s4hnlZ6ykKnJDE1kFe5BvJ9
+         e3+WQydypqy3mFfZ+3Cpa0Lo3fgzHquSyV/RfvI5E3krJMSrcoUbxGuljNdv+IIg1t5A
+         5fk2OjgWf8KxlagczEDh1g+TYWzeg091/g+CdG80IvRFMUNOz/87+/k79F8b2tdcYLMu
+         7muKxqGOgyIUlLqsM+cYlqZil3yjCZJSf+riq5DYhxr28xgYP0xXkR7DwkYLAJZEXhYT
+         h6Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688144718; x=1690736718;
+        d=1e100.net; s=20221208; t=1688145844; x=1690737844;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pa7JiXOmX78trrDHGxkbEPybq2X0QhNEYE2S0FjzWF0=;
-        b=XZelwyMjAudkkgg6Y4Jyex9pU/tiywR75pj1YLMtoE/bArs7VtYwxVoVbJ/bSYGkF2
-         m+b5CxTySKYzbxpLuf67uUC8LCPKqfoI1a5eWSmAw88dKjocTSLIWIgOvjS5RidAT6k+
-         7sPZt5dHveDNF3Nhikiqz88YoL7Fl05hB+XbnaM7KMVD/8+gTjVmj5UVlc32Gus+RtqS
-         IErVqkISHgS3v3P5gSI0qoQ3dxMXDY8qK6PLRHVmDfNyYLXSAvwcUXk87/TY9VQjDDft
-         vX3q/6ylhWuFCpWKFNpnDlUConoPlbmgkIB7sBBxb/LJjvASQeAiKRPT/Xi54zqdg8vl
-         ZTDg==
-X-Gm-Message-State: AC+VfDzxeSjBtLPs8m91ll1NS37LSUG801jEUu/0hhuNF5BitPzeN7pV
-	P8kV5gQulKeGKVoqqKkZxV6NKscyJjl+O/W1PLg=
-X-Google-Smtp-Source: ACHHUZ4sBM78Ycx14IViSQO83QiexANxxDHO++tWiv2nu+kHIh+eJpfmGe1984johR26aItpbzCqkg==
-X-Received: by 2002:a7b:ce0a:0:b0:3fb:b1fd:4172 with SMTP id m10-20020a7bce0a000000b003fbb1fd4172mr2405851wmc.22.1688144718338;
-        Fri, 30 Jun 2023 10:05:18 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:6269:f4b4:b452:51cc])
-        by smtp.gmail.com with ESMTPSA id 13-20020a05600c240d00b003f7f2a1484csm19401809wmp.5.2023.06.30.10.05.17
+        bh=UBdyQkK1IPqnWaiLh2MuN81HMWOE224I2mOwYaOH/II=;
+        b=Hh22SV7E5UIlhj7hBRGj/w+aWOVAo4+s4OF+nAvlNRJUBls1UnhKheT5U0MzqBYBW9
+         wzVBowDVeygxwNaHn2f7DhMjhlmKzWRUTNlbMUGjSlXlw6pjvIye1zmOajRgybeWWhEu
+         1NYjKqNXvrEe17Kk6p1vNloPB6CfS39xWFlmaLZVh/5DeHI3Ow2lMBY9svPh+q+ODOBU
+         IThoBwksnCKwe+QvBIwvb46DXeMkodq67Q3UTg/SbHNq9APu4kii+uX2QjjXAy53LT3v
+         VPNJXXHsfai3C97DCt47qd4l1ZpUmpcc90eiHn0G6DJ1xgkhY9o3dUrylnBJ2+iBYdlT
+         RSNg==
+X-Gm-Message-State: ABy/qLbDE8B/ijjmv3Sv2kHOK87D1xnNqMB0mOlOFUcVnJsByAHwak+T
+	edLXj/fFYgHLNilgRfksvWq31V/Y4f84i6odymVgSQ==
+X-Google-Smtp-Source: APBJJlE3EzEZfadNwy4koWScv7gaJtFon26uU5/aD2P60840V1PSpHS8ohWYAFt33rJDS/8ehn9V0g==
+X-Received: by 2002:a05:6a00:248f:b0:668:852a:ffc4 with SMTP id c15-20020a056a00248f00b00668852affc4mr3794895pfv.4.1688145844078;
+        Fri, 30 Jun 2023 10:24:04 -0700 (PDT)
+Received: from hexa.router0800d9.com (dhcp-72-234-106-30.hawaiiantel.net. [72.234.106.30])
+        by smtp.gmail.com with ESMTPSA id d29-20020a631d5d000000b0051b8172fa68sm10788651pgm.38.2023.06.30.10.24.03
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 10:05:17 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Fri, 30 Jun 2023 10:24:03 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] cooker: Log when parsing starts in server log
-Date: Fri, 30 Jun 2023 18:05:17 +0100
-Message-Id: <20230630170517.2764827-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.2
+Subject: [bitbake][mickledore][2.4][PATCH 0/1] Pull request (cover letter only)
+Date: Fri, 30 Jun 2023 07:23:59 -1000
+Message-Id: <cover.1688145709.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 30 Jun 2023 17:05:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14871
+ <bitbake-devel@lists.openembedded.org>; Fri, 30 Jun 2023 17:24:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14872
 
-It is unclear from the server logs when parsing starts. We know that timeouts
-sometimes happen when parsing but it is unclear where in the code the delays
-are from. Adding this debug message to the server log should help narrow
-that down.
+Passed a-full on autobuilder:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py | 1 +
- 1 file changed, 1 insertion(+)
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/5547
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 0a21f1c2f8..11c9fa2c40 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1666,6 +1666,7 @@ class BBCooker:
-             self.updateCacheSync()
- 
-         if self.state != state.parsing and not self.parsecache_valid:
-+            bb.server.process.serverlog("Parsing started")
-             self.setupParserWatcher()
- 
-             bb.parse.siggen.reset(self.data)
+The following changes since commit d97d62e2cbe4bae17f0886f3b4759e8f9ba6d38c:
+
+  bitbake-user-manual: add BB_HASH_CODEPARSER_VALS (2023-04-22 10:29:49 +0100)
+
+are available in the Git repository at:
+
+  https://git.openembedded.org/bitbake-contrib stable/2.4-next
+  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.4-next
+
+Richard Purdie (1):
+  runqueue: Fix deferred task/multiconfig race issue
+
+ lib/bb/runqueue.py | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
 -- 
-2.39.2
+2.34.1
 
 
