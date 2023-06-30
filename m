@@ -2,82 +2,82 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A978C001B0
-	for <webhook@archiver.kernel.org>; Fri, 30 Jun 2023 16:58:49 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web11.19032.1688144321828355766
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9E4EB64D7
+	for <webhook@archiver.kernel.org>; Fri, 30 Jun 2023 17:05:29 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web10.19342.1688144720133323136
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Jun 2023 09:58:42 -0700
+ Fri, 30 Jun 2023 10:05:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@linuxfoundation.org header.s=google header.b=dD2UUgau;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3fbc0981743so19691615e9.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 30 Jun 2023 09:58:41 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@linuxfoundation.org header.s=google header.b=gVDtlho5;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3fbc0609cd6so18881605e9.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 30 Jun 2023 10:05:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1688144320; x=1690736320;
+        d=linuxfoundation.org; s=google; t=1688144718; x=1690736718;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c4Syuyo9ayb1lgWEm+3p6idII6KJ12Uheuvo2uQu2wg=;
-        b=dD2UUgau4+vp2bp5bGlmawF1+jqkCVXiee4LSQQC/U47NoHO4GqPIzuhi146UYT0HC
-         7EQERMQZF8TQdabVvtSYb/uXiv1/ITaEAmsUSw9edSrzWkYTMlug3DdPetvxBG5B8U+m
-         xxz25mH+yTbw4gzS9Y2luahHPCjrWIq68QlaU=
+        bh=Pa7JiXOmX78trrDHGxkbEPybq2X0QhNEYE2S0FjzWF0=;
+        b=gVDtlho5qbOr3+td4fPu9nUp/z2cR/FhLmVC6rLNegllMGZxlObRPCwhhaBAG2jXow
+         SLVaa5VIdinrHc4eBd8fTw31oWWWfYQ0EogwXv7iBtXVKERBv+YOS/XlnYfPVVMRuNaO
+         1huPs6x0HqsS+XmcM9MJ+LWDHmzkuOw0S5RII=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688144320; x=1690736320;
+        d=1e100.net; s=20221208; t=1688144718; x=1690736718;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c4Syuyo9ayb1lgWEm+3p6idII6KJ12Uheuvo2uQu2wg=;
-        b=dItpMBQTLzc31nFT3OCPMiX6kaoEoYijo9cpD2GTh06c0N7J3un4aFkvxVq5GtmH7P
-         W2I7eou6CilalYsIiKfvj3U5sZ+7vAX4Gvc25qMPHaUxmZ9DsR9JBbblC+xPpEmaH4/R
-         8PG2V/ayJ25a5VU935NAAuU58ryl2V5aKKLzYCKxcoaCT5t90DtO3XfHVobc90Hdnjgd
-         5MKnb76wIqxrJrLP/HunQJLxBMmXTOJhfdY17qZ9mApr05hx/IEm1b3KjGKuz6kOCHvS
-         ruf94yAUB3y5Sq/irOfEZoDc7dwXL7MFM51mUN4B2tHx5sAQ9ZgNIYKWRtvM9VqVsJ6Q
-         Nz1Q==
-X-Gm-Message-State: AC+VfDyTwMIQ/t/wiZ3jcsmRyDvZj1UYN3r+zTK/HZMD/474LdgWmt4q
-	19/8QT/8/2C/9v23x1lwl/2Fl5M+g3rLA8ffQa8=
-X-Google-Smtp-Source: ACHHUZ5S3l0DhMaPsULuomgU4hC7YL9/g+Z4kdnT75QeMUMoadhlmHXtcKMe+QyUcLqHV8FbdP7NVA==
-X-Received: by 2002:a05:600c:364f:b0:3f9:ba2:5d19 with SMTP id y15-20020a05600c364f00b003f90ba25d19mr2351120wmq.33.1688144319780;
-        Fri, 30 Jun 2023 09:58:39 -0700 (PDT)
+        bh=Pa7JiXOmX78trrDHGxkbEPybq2X0QhNEYE2S0FjzWF0=;
+        b=XZelwyMjAudkkgg6Y4Jyex9pU/tiywR75pj1YLMtoE/bArs7VtYwxVoVbJ/bSYGkF2
+         m+b5CxTySKYzbxpLuf67uUC8LCPKqfoI1a5eWSmAw88dKjocTSLIWIgOvjS5RidAT6k+
+         7sPZt5dHveDNF3Nhikiqz88YoL7Fl05hB+XbnaM7KMVD/8+gTjVmj5UVlc32Gus+RtqS
+         IErVqkISHgS3v3P5gSI0qoQ3dxMXDY8qK6PLRHVmDfNyYLXSAvwcUXk87/TY9VQjDDft
+         vX3q/6ylhWuFCpWKFNpnDlUConoPlbmgkIB7sBBxb/LJjvASQeAiKRPT/Xi54zqdg8vl
+         ZTDg==
+X-Gm-Message-State: AC+VfDzxeSjBtLPs8m91ll1NS37LSUG801jEUu/0hhuNF5BitPzeN7pV
+	P8kV5gQulKeGKVoqqKkZxV6NKscyJjl+O/W1PLg=
+X-Google-Smtp-Source: ACHHUZ4sBM78Ycx14IViSQO83QiexANxxDHO++tWiv2nu+kHIh+eJpfmGe1984johR26aItpbzCqkg==
+X-Received: by 2002:a7b:ce0a:0:b0:3fb:b1fd:4172 with SMTP id m10-20020a7bce0a000000b003fbb1fd4172mr2405851wmc.22.1688144718338;
+        Fri, 30 Jun 2023 10:05:18 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:6269:f4b4:b452:51cc])
-        by smtp.gmail.com with ESMTPSA id v2-20020a5d6102000000b003127a21e986sm18459211wrt.104.2023.06.30.09.58.39
+        by smtp.gmail.com with ESMTPSA id 13-20020a05600c240d00b003f7f2a1484csm19401809wmp.5.2023.06.30.10.05.17
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 09:58:39 -0700 (PDT)
+        Fri, 30 Jun 2023 10:05:17 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] server/process: Show command in timeout message
-Date: Fri, 30 Jun 2023 17:58:38 +0100
-Message-Id: <20230630165838.2764067-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] cooker: Log when parsing starts in server log
+Date: Fri, 30 Jun 2023 18:05:17 +0100
+Message-Id: <20230630170517.2764827-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 30 Jun 2023 16:58:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14870
+ <bitbake-devel@lists.openembedded.org>; Fri, 30 Jun 2023 17:05:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14871
 
-To learn more about the server timeout issues, be clear in the error
-message about which command is showing the timeout. It is currently
-unclear if this is the original command or a ping to the server.
+It is unclear from the server logs when parsing starts. We know that timeouts
+sometimes happen when parsing but it is unclear where in the code the delays
+are from. Adding this debug message to the server log should help narrow
+that down.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/process.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/cooker.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 7616ef53c8..4d4fa6d1be 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -502,7 +502,7 @@ class ServerCommunicator():
-     def runCommand(self, command):
-         self.connection.send(command)
-         if not self.recv.poll(30):
--            logger.info("No reply from server in 30s")
-+            logger.info("No reply from server in 30s (for command %s)" % command[0])
-             if not self.recv.poll(30):
-                 raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server (60s)")
-         ret, exc = self.recv.get()
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 0a21f1c2f8..11c9fa2c40 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1666,6 +1666,7 @@ class BBCooker:
+             self.updateCacheSync()
+ 
+         if self.state != state.parsing and not self.parsecache_valid:
++            bb.server.process.serverlog("Parsing started")
+             self.setupParserWatcher()
+ 
+             bb.parse.siggen.reset(self.data)
 -- 
 2.39.2
 
