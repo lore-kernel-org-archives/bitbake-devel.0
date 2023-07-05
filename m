@@ -1,84 +1,94 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <denis@denix.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E433EB64D7
-	for <webhook@archiver.kernel.org>; Fri, 30 Jun 2023 18:20:20 +0000 (UTC)
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
- by mx.groups.io with SMTP id smtpd.web10.21280.1688149209180338415
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5BBEB64DA
+	for <webhook@archiver.kernel.org>; Wed,  5 Jul 2023 21:55:46 +0000 (UTC)
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web10.7763.1688594140421236018
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Jun 2023 11:20:09 -0700
+ Wed, 05 Jul 2023 14:55:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@sakoman-com.20221208.gappssmtp.com header.s=20221208 header.b=YvUpN3Ni;
- spf=softfail (domain: sakoman.com, ip: 209.85.215.179, mailfrom: steve@sakoman.com)
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-55b0e7efb1cso1212541a12.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 30 Jun 2023 11:20:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20221208.gappssmtp.com; s=20221208; t=1688149208; x=1690741208;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UY+q8gts1IpuiMAt81pDFdMKBB/Qz89QXtpclEjZdDU=;
-        b=YvUpN3NiBL7b3Ze5SoI+k1yE6C7IpsGUvxS6BsBPwCkwJkamPhcLTsg/51N+Qi/u1B
-         SiZSWcid7HSPjzaDXVV0i/2fqPGtPZY9vEP30ZS8oq/9E0EJvDDDGx91lkfxpAJ4Ffm2
-         R/wHtC9fMy7QFigLMLOVREN4GoCB1lD7fDjWV2R6tVQ0Jfxb6cU4CHYszXqOOwVWNfMy
-         tE+85b4e1v2W4xGBwOedd6ja3rohxrKYZYsj5iFurR3EAhMnSSI9cDRYLiW9F8Fr4/+H
-         fawJAISCssyv18LPnSgXPSsD72sjy2HmQT21Kb7UlNsxgCWZErsZS78738OY9e1K1bZt
-         n/pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688149208; x=1690741208;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UY+q8gts1IpuiMAt81pDFdMKBB/Qz89QXtpclEjZdDU=;
-        b=c4XZV+Z2s8HDXeX6ZMn4T2zs8DY85/LFTtGKs6iZG6vJaNcVV3+yJg3XXfg1vta6CM
-         afRN8VB5CaE0bMkO7HsbFcsKCww8qRNndwC9AmZCLuCqlRD0lpPeAt1Aaq7yYCkHXNlD
-         KEjpayuDXLAxATn4XWfDfQIUnghTbB2OYtlEpTIEvyE3w2bTizLEaEoRA5B3R+hLkKxR
-         cZfpjslVgwT/XPafKTlIgvYo80wwXHJFCEtzya1pQVhdNi+CxQ+N7bXLrSCFYXrYRblg
-         tQtfJcTZ7iI0vhzzT8LIfvnLN7swn/TXj8L8usJc/30qhBRW6nd/6NWCxzLmY0XVnl/W
-         NIwg==
-X-Gm-Message-State: ABy/qLbz2OeNnUmLz/1cxdLtHzjU5+mYwu7B+Hg+lF8Fk7gYx8YULUbd
-	aFeD7G2zcV4TwCOCp4PhyLsB0z67agmdRF0m42mMPg==
-X-Google-Smtp-Source: APBJJlFs7bt1R5EHQNXlm4P5MATtN4gyK6lyIqiSd1+rg9KZsnnN3+02MoA1n8cbCUW6nNbJ4eZH0g==
-X-Received: by 2002:a17:90a:19c8:b0:262:e58e:a40 with SMTP id 8-20020a17090a19c800b00262e58e0a40mr2594677pjj.43.1688149207093;
-        Fri, 30 Jun 2023 11:20:07 -0700 (PDT)
-Received: from hexa.router0800d9.com (dhcp-72-234-106-30.hawaiiantel.net. [72.234.106.30])
-        by smtp.gmail.com with ESMTPSA id x13-20020a17090a1f8d00b0025bf9e02e1bsm11890393pja.51.2023.06.30.11.20.06
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 11:20:06 -0700 (PDT)
-From: Steve Sakoman <steve@sakoman.com>
+ dkim=missing; spf=pass (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 25B1940C50;
+	Wed,  5 Jul 2023 21:55:39 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id lki6gPJxxv6G; Wed,  5 Jul 2023 21:55:39 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-88-116.washdc.fios.verizon.net [100.15.88.116])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 0A56340C16;
+	Wed,  5 Jul 2023 21:55:37 +0000 (UTC)
+Received: from thorin.han-sole.ts.net (thorin.denix [192.168.30.9])
+	by mail.denix.org (Postfix) with ESMTP id A9810163B32;
+	Wed,  5 Jul 2023 17:55:37 -0400 (EDT)
+From: Denys Dmytriyenko <denis@denix.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 0/1] Pull request (cover letter only)
-Date: Fri, 30 Jun 2023 08:20:02 -1000
-Message-Id: <cover.1688149101.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Denys Dmytriyenko <denis@denix.org>,
+	Denys Dmytriyenko <denys@konsulko.com>
+Subject: [PATCH] runqueue: convert deferral messages from bb.note to bb.debug
+Date: Wed,  5 Jul 2023 21:55:33 +0000
+Message-Id: <20230705215533.327107-1-denis@denix.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 30 Jun 2023 18:20:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14874
+ <bitbake-devel@lists.openembedded.org>; Wed, 05 Jul 2023 21:55:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14875
 
-Passed a-full on autobuilder:
+Using multiconfig to target baremetal pieces of the system and building
+corresponding toolchains for them results in hundreds and hundreds of
+"Deferring %s after %s" and "Deferred task %s now buildable".
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/5551
+To clean up the output and to reduce risk of missing important warnings,
+convert these notice messages to debug messages.
 
-The following changes since commit 0c6f86b60cfba67c20733516957c0a654eb2b44c:
+Signed-off-by: Denys Dmytriyenko <denis@denix.org>
+Signed-off-by: Denys Dmytriyenko <denys@konsulko.com>
+---
+ lib/bb/runqueue.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-  bin/utils: Ensure locale en_US.UTF-8 is available on the system (2023-04-13 08:17:57 -1000)
-
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.0-next
-  http://cgit.openembedded.org/bitbake-contrib/log/?h=stable/2.0-next
-
-Richard Purdie (1):
-  runqueue: Fix deferred task/multiconfig race issue
-
- lib/bb/runqueue.py | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
--- 
-2.34.1
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 241a746e..a5164c9e 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1997,12 +1997,12 @@ class RunQueueExecute:
+                 # Allow the next deferred task to run. Any other deferre=
+d tasks should be deferred after that task.
+                 # We shouldn't allow all to run at once as it is prone t=
+o races.
+                 if not found:
+-                    bb.note("Deferred task %s now buildable" % t)
++                    bb.debug(1, "Deferred task %s now buildable" % t)
+                     del self.sq_deferred[t]
+                     update_scenequeue_data([t], self.sqdata, self.rqdata=
+, self.rq, self.cooker, self.stampcache, self, summary=3DFalse)
+                     found =3D t
+                 else:
+-                    bb.note("Deferring %s after %s" % (t, found))
++                    bb.debug(1, "Deferring %s after %s" % (t, found))
+                     self.sq_deferred[t] =3D found
+=20
+     def task_complete(self, task):
+@@ -2940,7 +2940,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooke=
+r, stampcache, sqrq):
+                 sqdata.hashes[h] =3D tid
+             else:
+                 sqrq.sq_deferred[tid] =3D sqdata.hashes[h]
+-                bb.note("Deferring %s after %s" % (tid, sqdata.hashes[h]=
+))
++                bb.debug(1, "Deferring %s after %s" % (tid, sqdata.hashe=
+s[h]))
+=20
+     update_scenequeue_data(sqdata.sq_revdeps, sqdata, rqdata, rq, cooker=
+, stampcache, sqrq, summary=3DTrue)
+=20
+--=20
+2.25.1
 
 
