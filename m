@@ -1,238 +1,100 @@
-Return-Path: <belouargamohamed@gmail.com>
+Return-Path: <dit.kozmaj@kynetics.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26458C0015E
-	for <webhook@archiver.kernel.org>; Tue, 25 Jul 2023 09:30:53 +0000 (UTC)
-Subject: Re: [PATCH] fetch2:init check if path is none before calculating checksums
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD26C0015E
+	for <webhook@archiver.kernel.org>; Tue, 25 Jul 2023 13:47:24 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web10.20761.1690292838282540085
+ for <bitbake-devel@lists.openembedded.org>;
+ Tue, 25 Jul 2023 06:47:18 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@kynetics.com header.s=google header.b=eirQyB5Y;
+ spf=pass (domain: kynetics.com, ip: 209.85.128.54, mailfrom: dit.kozmaj@kynetics.com)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3fbc12181b6so54743375e9.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 25 Jul 2023 06:47:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kynetics.com; s=google; t=1690292836; x=1690897636;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uZYWA6qB2mx//aN80PJn6UJjU+P7Q/XnQn7fmJXKjLQ=;
+        b=eirQyB5YPlv0LBGsCdj+ToZwFWKi43S1MGO0y+PWf3Y82isAqR35hLCJn0vsgEHRGj
+         gqeWUfmQsdbLdG7z1sJs2J0K/bqAbmCiFpMGfwgcsIb9ihH3Af/zKNLpJX7MElnVetmP
+         Xs7moG6Q5s13cbWV6dQroqx3dFMMC+xGmGzyw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690292836; x=1690897636;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uZYWA6qB2mx//aN80PJn6UJjU+P7Q/XnQn7fmJXKjLQ=;
+        b=ggIBx1yMt4Y6L9MWu+54YMb+SDzhp+kq5h7LOxeUJgIX99xXlBkE0u9y+CfPOZtnw8
+         gMS8KSa2l/9w4nxIWJ9O26ebQbEyNIzvIV+JBlGvLXjlDvTS9MNgRUWnUQyz3KXVWZfa
+         Doo/zuo+OIckfKr8w+s2WlNVAHIEVtrkwpt57lMFNJQYQYmlsCXAEspfkxiCz0/Pmh4V
+         bseq2/rhurxt2Osqt+kmkdkiE8n7DXjJu7gmuuawoRJlBDmLfon4Mq+8KiHfQekYEF3H
+         XwnH4LeuI2fHCXTVHChY+j5IuXIu1YMIZSYETfCPEbTFbupv/xR8ZCmBf1DzhvJLLaNW
+         JRjA==
+X-Gm-Message-State: ABy/qLYTK2f0U/FJZYoQZ8f0vfUNVgUO8WoYoU2BhJk98XLp0YVBmKLA
+	DSumLEg/JzYmFOy6RRHkiqkjR6dtOC+WaanDvds=
+X-Google-Smtp-Source: APBJJlEKb/hO3X0Hf/7L+G4M2+9p4M5KPRHPsoozuhfxI0J1fIy00n5I20vuzOFYK0j6FoOVS4hPHA==
+X-Received: by 2002:a05:600c:260d:b0:3f9:c82e:9d87 with SMTP id h13-20020a05600c260d00b003f9c82e9d87mr10193060wma.13.1690292836273;
+        Tue, 25 Jul 2023 06:47:16 -0700 (PDT)
+Received: from ip-172-31-5-183.eu-west-1.compute.internal (ec2-3-253-245-184.eu-west-1.compute.amazonaws.com. [3.253.245.184])
+        by smtp.gmail.com with ESMTPSA id m14-20020a7bcb8e000000b003fbc9371193sm13392761wmi.13.2023.07.25.06.47.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jul 2023 06:47:15 -0700 (PDT)
+From: dit.kozmaj@kynetics.com
 To: bitbake-devel@lists.openembedded.org
-From: belouargamohamed@gmail.com
-X-Originating-Location: Salon-de-Provence, Provence-Alpes-Côte d'Azur, FR (193.253.180.72)
-X-Originating-Platform: Linux Firefox 114
-User-Agent: GROUPS.IO Web Poster
+Cc: Dit Kozmaj <dit.kozmaj@kynetics.com>
+Subject: [PATCH] fetch2: Set maxsplit to match expected variables
+Date: Tue, 25 Jul 2023 13:47:10 +0000
+Message-Id: <20230725134710.85784-1-dit.kozmaj@kynetics.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Date: Tue, 25 Jul 2023 02:30:47 -0700
-References: <CA+cAker4N0v7BErjpeOpENg+L8ciDX_PU6i5jSRT-ZfecKFC1A@mail.gmail.com>
-In-Reply-To: <CA+cAker4N0v7BErjpeOpENg+L8ciDX_PU6i5jSRT-ZfecKFC1A@mail.gmail.com>
-Message-ID: <3920.1690277447202288940@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="KczK1bsOnlOWHpTQNRoL"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 25 Jul 2023 09:30:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14886
+ <bitbake-devel@lists.openembedded.org>; Tue, 25 Jul 2023 13:47:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14887
 
---KczK1bsOnlOWHpTQNRoL
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Dit Kozmaj <dit.kozmaj@kynetics.com>
 
-The error happens when I was testing if npm works better.
+Set the maxsplit value to match the expected number of variables.
+This also avoids an unnecessary split as the parameters are in the form 'key=value'
+and the 'value' could contain the '=' character.
 
-I just generated a recipe and a shrinkwrap using the command:
-- devtool add "npm://registry.npmjs.org;package=3Dexpress-ws;version=3D5.0.=
-2;"
-Then I built it with:
-- bitbake express-ws
-And this error happened:
-ERROR: express-ws-5.0.2-r0 do_create_spdx: Error executing a python functio=
-n in exec_func_python() autogenerated:
+Signed-off-by: Dit Kozmaj <dit.kozmaj@kynetics.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 2 +-
+ bitbake/lib/bb/tests/fetch.py     | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-The stack trace of python calls that resulted in this exception/failure was=
-:
-File: 'exec_func_python() autogenerated', lineno: 2, function: <module>
-0001:
-*** 0002:do_create_spdx(d)
-0003:
-File: '/home/twigabecomp/yocto/literal/debug/poky/meta/classes/create-spdx-=
-2.2.bbclass', lineno: 598, function: do_create_spdx
-0594:
-0595:=C2=A0=C2=A0=C2=A0 doc.packages.append(recipe)
-0596:=C2=A0=C2=A0=C2=A0 doc.add_relationship(doc, "DESCRIBES", recipe)
-0597:
-*** 0598:=C2=A0=C2=A0=C2=A0 add_download_packages(d, doc, recipe)
-0599:
-0600:=C2=A0=C2=A0=C2=A0 if process_sources(d) and include_sources:
-0601:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 recipe_archive =3D deploy_d=
-ir_spdx / "recipes" / (doc.name + ".tar.zst")
-0602:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 with optional_tarfile(recip=
-e_archive, archive_sources) as archive:
-File: '/home/twigabecomp/yocto/literal/debug/poky/meta/classes/create-spdx-=
-2.2.bbclass', lineno: 438, function: add_download_packages
-0434:
-0435:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if =
-f.method.supports_srcrev():
-0436:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 uri =3D uri + "@" + f.revisions[name]
-0437:
-*** 0438:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- if f.method.supports_checksum(f):
-0439:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 for checksum_id in CHECKSUM_LIST:
-0440:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if checksum_id.upper() not in=
- oe.spdx.SPDXPackage.ALLOWED_CHECKSUMS:
-0441:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 conti=
-nue
-0442:
-File: '/home/twigabecomp/yocto/literal/debug/poky/bitbake/lib/bb/fetch2/__i=
-nit__.py', lineno: 1406, function: supports_checksum
-1402:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Is localpath something that=
- can be represented by a checksum?
-1403:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 """
-1404:
-1405:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # We cannot compute checksu=
-ms for directories
-*** 1406:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if os.path.isdir(urldat=
-a.localpath):
-1407:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
-urn False
-1408:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return True
-1409:
-1410:=C2=A0=C2=A0=C2=A0 def recommends_checksum(self, urldata):
-File: '/usr/lib/python3.10/genericpath.py', lineno: 42, function: isdir
-0038:# can be true for the same path on systems that support symlinks
-0039:def isdir(s):
-0040:=C2=A0=C2=A0=C2=A0 """Return true if the pathname refers to an existin=
-g directory."""
-0041:=C2=A0=C2=A0=C2=A0 try:
-*** 0042:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 st =3D os.stat(s)
-0043:=C2=A0=C2=A0=C2=A0 except (OSError, ValueError):
-0044:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return False
-0045:=C2=A0=C2=A0=C2=A0 return stat.S_ISDIR(st.st_mode)
-0046:
-Exception: TypeError: stat: path should be string, bytes, os.PathLike or in=
-teger, not NoneType
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 3e6555bd67..79b289eaec 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -388,7 +388,7 @@ def decodeurl(url):
+             if s:
+                 if not '=' in s:
+                     raise MalformedUrl(url, "The URL: '%s' is invalid: parameter %s does not specify a value (missing '=')" % (url, s))
+-                s1, s2 = s.split('=')
++                s1, s2 = s.split('=', 1)
+                 p[s1] = s2
+ 
+     return type, host, urllib.parse.unquote(path), user, pswd, p
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index 61dd5cccaf..a261ad69d8 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -1197,6 +1197,7 @@ class URLHandle(unittest.TestCase):
+        "cvs://anoncvs:anonymous@cvs.handhelds.org/cvs;tag=V0-99-81;module=familiar/dist/ipkg" : ('cvs', 'cvs.handhelds.org', '/cvs', 'anoncvs', 'anonymous', collections.OrderedDict([('tag', 'V0-99-81'), ('module', 'familiar/dist/ipkg')])),
+        "git://git.openembedded.org/bitbake;branch=@foo" : ('git', 'git.openembedded.org', '/bitbake', '', '', {'branch': '@foo'}),
+        "file://somelocation;someparam=1": ('file', '', 'somelocation', '', '', {'someparam': '1'}),
++       "https://somesite.com/somerepo.git;user=anyUser:idtoken=1234" : ('https', 'somesite.com', '/somerepo.git', '', '', {'user': 'anyUser:idtoken=1234'}),
+     }
+     # we require a pathname to encodeurl but users can still pass such urls to 
+     # decodeurl and we need to handle them
+-- 
+2.25.1
 
-ERROR: Logfile of failure stored in: /home/twigabecomp/yocto/literal/debug/=
-build/tmp/work/core2-64-poky-linux/express-ws/5.0.2-r0/temp/log.do_create_s=
-pdx.3703234
-ERROR: Task (/home/twigabecomp/yocto/literal/debug/build/workspace/recipes/=
-express-ws/express-ws_5.0.2.bb:do_create_spdx) failed with exit code '1'
-
-Knowing that urldata =3D {'donestamp': None, 'needdonestamp': False, 'local=
-file': '', 'localpath': None, 'lockfile': None, 'mirrortarballs': [], 'base=
-name': None, 'basepath': None, 'type': 'npmsw', 'host': '', 'path': '/home/=
-twigabecomp/yocto/literal/debug/build/workspace/recipes/express-ws/express-=
-ws/npm-shrinkwrap.json', 'user': '', 'pswd': '', 'parm': OrderedDict(), 'da=
-te': '20230725', 'url': 'npmsw:///home/twigabecomp/yocto/literal/debug/buil=
-d/workspace/recipes/express-ws/express-ws/npm-shrinkwrap.json', 'setup': Fa=
-lse, 'names': ['default'], 'method': <bb.fetch2.npmsw.NpmShrinkWrap object =
-at 0x7f50d8c9d600>, 'shrinkwrap_file': '/home/twigabecomp/yocto/literal/deb=
-ug/build/workspace/recipes/express-ws/express-ws/npm-shrinkwrap.json', 'dev=
-': False, 'deps': [{'url': 'https://registry.npmjs.org/ws/-/ws-7.5.9.tgz;do=
-wnloadfilename=3Dnpm2/ws-7.5.9.tgz;sha512sum=3D17e3fd26297b52248a4a4a692220=
-fde1d374ec0c2f162c6f2c88f53a0d5197d18632e362a499d5f49ce30fa5eeaa601e8acc06b=
-d498d2e3af9705b97c0d4bbed', 'localpath': '/home/twigabecomp/yocto/literal/d=
-ebug/build/downloads/npm2/ws-7.5.9.tgz', 'extrapaths': ['/home/twigabecomp/=
-yocto/literal/debug/build/downloads/npm2/ws-7.5.9.tgz.resolved'], 'destsuff=
-ix': 'node_modules/ws', 'unpack': True}], 'proxy': <bb.fetch2.Fetch object =
-at 0x7f50d30ff250>, 'md5_name': 'md5sum', 'md5_expected': None, 'sha256_nam=
-e': 'sha256sum', 'sha256_expected': None, 'sha1_name': 'sha1sum', 'sha1_exp=
-ected': None, 'sha384_name': 'sha384sum', 'sha384_expected': None, 'sha512_=
-name': 'sha512sum', 'sha512_expected': None, 'ignore_checksums': False}
-
-I think this is a known issue of how npm dependencies are represented, beca=
-use the real localpath(s) is urldata.deps[i].localpath
-
-Mohamed BELOUARGA
-Thanks
-
---KczK1bsOnlOWHpTQNRoL
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-The error happens when I was testing if npm works better.<br /><br />I just=
- generated a recipe and a shrinkwrap using the command:<br />- devtool add =
-"npm://registry.npmjs.org;package=3Dexpress-ws;version=3D5.0.2;"<br />Then =
-I built it with:<br />- bitbake express-ws<br />And this error happened:<br=
- />ERROR: express-ws-5.0.2-r0 do_create_spdx: Error executing a python func=
-tion in exec_func_python() autogenerated:<br /><br />The stack trace of pyt=
-hon calls that resulted in this exception/failure was:<br />File: 'exec_fun=
-c_python() autogenerated', lineno: 2, function: &lt;module&gt;<br />&nbsp;&=
-nbsp;&nbsp;&nbsp; 0001:<br />&nbsp;*** 0002:do_create_spdx(d)<br />&nbsp;&n=
-bsp;&nbsp;&nbsp; 0003:<br />File: '/home/twigabecomp/yocto/literal/debug/po=
-ky/meta/classes/create-spdx-2.2.bbclass', lineno: 598, function: do_create_=
-spdx<br />&nbsp;&nbsp;&nbsp;&nbsp; 0594:<br />&nbsp;&nbsp;&nbsp;&nbsp; 0595=
-:&nbsp;&nbsp;&nbsp; doc.packages.append(recipe)<br />&nbsp;&nbsp;&nbsp;&nbs=
-p; 0596:&nbsp;&nbsp;&nbsp; doc.add_relationship(doc, "DESCRIBES", recipe)<b=
-r />&nbsp;&nbsp;&nbsp;&nbsp; 0597:<br />&nbsp;*** 0598:&nbsp;&nbsp;&nbsp; a=
-dd_download_packages(d, doc, recipe)<br />&nbsp;&nbsp;&nbsp;&nbsp; 0599:<br=
- />&nbsp;&nbsp;&nbsp;&nbsp; 0600:&nbsp;&nbsp;&nbsp; if process_sources(d) a=
-nd include_sources:<br />&nbsp;&nbsp;&nbsp;&nbsp; 0601:&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp; recipe_archive =3D deploy_dir_spdx / "recipes" / (do=
-c.name + ".tar.zst")<br />&nbsp;&nbsp;&nbsp;&nbsp; 0602:&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp; with optional_tarfile(recipe_archive, archive_sourc=
-es) as archive:<br />File: '/home/twigabecomp/yocto/literal/debug/poky/meta=
-/classes/create-spdx-2.2.bbclass', lineno: 438, function: add_download_pack=
-ages<br />&nbsp;&nbsp;&nbsp;&nbsp; 0434:<br />&nbsp;&nbsp;&nbsp;&nbsp; 0435=
-:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if f.me=
-thod.supports_srcrev():<br />&nbsp;&nbsp;&nbsp;&nbsp; 0436:&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-uri =3D uri + "@" + f.revisions[name]<br />&nbsp;&nbsp;&nbsp;&nbsp; 0437:<b=
-r />&nbsp;*** 0438:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp; if f.method.supports_checksum(f):<br />&nbsp;&nbsp;&nbsp;&nbsp; =
-0439:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp; for checksum_id in CHECKSUM_LIST:<br />&nbsp;&nbsp;&nb=
-sp;&nbsp; 0440:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if checksum_id.upper=
-() not in oe.spdx.SPDXPackage.ALLOWED_CHECKSUMS:<br />&nbsp;&nbsp;&nbsp;&nb=
-sp; 0441:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; co=
-ntinue<br />&nbsp;&nbsp;&nbsp;&nbsp; 0442:<br />File: '/home/twigabecomp/yo=
-cto/literal/debug/poky/bitbake/lib/bb/fetch2/__init__.py', lineno: 1406, fu=
-nction: supports_checksum<br />&nbsp;&nbsp;&nbsp;&nbsp; 1402:&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp; Is localpath something that can be represented=
- by a checksum?<br />&nbsp;&nbsp;&nbsp;&nbsp; 1403:&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp; """<br />&nbsp;&nbsp;&nbsp;&nbsp; 1404:<br />&nbsp;&nbsp=
-;&nbsp;&nbsp; 1405:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # We cannot c=
-ompute checksums for directories<br />&nbsp;*** 1406:&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp; if os.path.isdir(urldata.localpath):<br />&nbsp;&nbsp;=
-&nbsp;&nbsp; 1407:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp; return False<br />&nbsp;&nbsp;&nbsp;&nbsp; 1408:&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp; return True<br />&nbsp;&nbsp;&nbsp;&nbsp; 1409:<b=
-r />&nbsp;&nbsp;&nbsp;&nbsp; 1410:&nbsp;&nbsp;&nbsp; def recommends_checksu=
-m(self, urldata):<br />File: '/usr/lib/python3.10/genericpath.py', lineno: =
-42, function: isdir<br />&nbsp;&nbsp;&nbsp;&nbsp; 0038:# can be true for th=
-e same path on systems that support symlinks<br />&nbsp;&nbsp;&nbsp;&nbsp; =
-0039:def isdir(s):<br />&nbsp;&nbsp;&nbsp;&nbsp; 0040:&nbsp;&nbsp;&nbsp; ""=
-"Return true if the pathname refers to an existing directory."""<br />&nbsp=
-;&nbsp;&nbsp;&nbsp; 0041:&nbsp;&nbsp;&nbsp; try:<br />&nbsp;*** 0042:&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st =3D os.stat(s)<br />&nbsp;&nbsp;&nb=
-sp;&nbsp; 0043:&nbsp;&nbsp;&nbsp; except (OSError, ValueError):<br />&nbsp;=
-&nbsp;&nbsp;&nbsp; 0044:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return F=
-alse<br />&nbsp;&nbsp;&nbsp;&nbsp; 0045:&nbsp;&nbsp;&nbsp; return stat.S_IS=
-DIR(st.st_mode)<br />&nbsp;&nbsp;&nbsp;&nbsp; 0046:<br />Exception: TypeErr=
-or: stat: path should be string, bytes, os.PathLike or integer, not NoneTyp=
-e<br /><br />ERROR: Logfile of failure stored in: /home/twigabecomp/yocto/l=
-iteral/debug/build/tmp/work/core2-64-poky-linux/express-ws/5.0.2-r0/temp/lo=
-g.do_create_spdx.3703234<br />ERROR: Task (/home/twigabecomp/yocto/literal/=
-debug/build/workspace/recipes/express-ws/express-ws_5.0.2.bb:do_create_spdx=
-) failed with exit code '1'<br /><br /><br />Knowing that urldata =3D {'don=
-estamp': None, 'needdonestamp': False, 'localfile': '', 'localpath': None, =
-'lockfile': None, 'mirrortarballs': [], 'basename': None, 'basepath': None,=
- 'type': 'npmsw', 'host': '', 'path': '/home/twigabecomp/yocto/literal/debu=
-g/build/workspace/recipes/express-ws/express-ws/npm-shrinkwrap.json', 'user=
-': '', 'pswd': '', 'parm': OrderedDict(), 'date': '20230725', 'url': 'npmsw=
-:///home/twigabecomp/yocto/literal/debug/build/workspace/recipes/express-ws=
-/express-ws/npm-shrinkwrap.json', 'setup': False, 'names': ['default'], 'me=
-thod': &lt;bb.fetch2.npmsw.NpmShrinkWrap object at 0x7f50d8c9d600&gt;, 'shr=
-inkwrap_file': '/home/twigabecomp/yocto/literal/debug/build/workspace/recip=
-es/express-ws/express-ws/npm-shrinkwrap.json', 'dev': False, 'deps': [{'url=
-': 'https://registry.npmjs.org/ws/-/ws-7.5.9.tgz;downloadfilename=3Dnpm2/ws=
--7.5.9.tgz;sha512sum=3D17e3fd26297b52248a4a4a692220fde1d374ec0c2f162c6f2c88=
-f53a0d5197d18632e362a499d5f49ce30fa5eeaa601e8acc06bd498d2e3af9705b97c0d4bbe=
-d', 'localpath': '/home/twigabecomp/yocto/literal/debug/build/downloads/npm=
-2/ws-7.5.9.tgz', 'extrapaths': ['/home/twigabecomp/yocto/literal/debug/buil=
-d/downloads/npm2/ws-7.5.9.tgz.resolved'], 'destsuffix': 'node_modules/ws', =
-'unpack': True}], 'proxy': &lt;bb.fetch2.Fetch object at 0x7f50d30ff250&gt;=
-, 'md5_name': 'md5sum', 'md5_expected': None, 'sha256_name': 'sha256sum', '=
-sha256_expected': None, 'sha1_name': 'sha1sum', 'sha1_expected': None, 'sha=
-384_name': 'sha384sum', 'sha384_expected': None, 'sha512_name': 'sha512sum'=
-, 'sha512_expected': None, 'ignore_checksums': False}<br /><br />I think th=
-is is a known issue of how npm dependencies are represented, because the re=
-al localpath(s) is urldata.deps[i].localpath<br /><br />Mohamed BELOUARGA<b=
-r />Thanks
-
---KczK1bsOnlOWHpTQNRoL--
 
