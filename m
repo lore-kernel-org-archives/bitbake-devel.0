@@ -1,109 +1,90 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18ECDC0015E
-	for <webhook@archiver.kernel.org>; Fri, 28 Jul 2023 15:59:48 +0000 (UTC)
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
- by mx.groups.io with SMTP id smtpd.web11.36016.1690559979807951169
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F79C04A6A
+	for <webhook@archiver.kernel.org>; Fri, 28 Jul 2023 16:28:28 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web10.36363.1690561705920750593
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 28 Jul 2023 08:59:39 -0700
+ Fri, 28 Jul 2023 09:28:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20221208 header.b=IrnXNGqJ;
- spf=pass (domain: gmail.com, ip: 209.85.167.171, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3a44fae863fso1786876b6e.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 28 Jul 2023 08:59:39 -0700 (PDT)
+ dkim=pass header.i=@smile-fr.20221208.gappssmtp.com header.s=20221208 header.b=UxSQLXN8;
+ spf=pass (domain: smile.fr, ip: 209.85.221.45, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-307d58b3efbso2217388f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 28 Jul 2023 09:28:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690559978; x=1691164778;
+        d=smile-fr.20221208.gappssmtp.com; s=20221208; t=1690561704; x=1691166504;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FIpz9qHZTBY2aKVgpHqBxx+ELvmEZ8DxQJ69n9L3E+Q=;
-        b=IrnXNGqJkF9kPudOpJGlEbxTh5NXMNEWh3HVAIiOt74loKKvU/MoSwbINKT6H18igk
-         4iImDYmzyLweNBYILmt3bE1/VoihEwQb8KGvcJydjryAakY6GqUP7hDC2pOKuSuIARGO
-         uvU75EHAUOZDIbg0jkNsZUL33/C8iEf4uln3MfAZb0bEShX8X10Dx73aQa0sLcOhs/dx
-         wBkVjcEVp6vzfwRwC3JXZv20kZHFTHP8h+7T7VEpfe9ossPwT4oADzTj2h82+3c2gmxS
-         QF/pUvfIbqzl47hytAR2Nl/zjeJIbcvUXakrCzI48gHFUhqG/cWiO5dqm0lGefJ3oIEc
-         mxKA==
+        bh=gs9ligjdjRTPeOwTjEXdiIj/1KqGFEjojOteBvkg8dk=;
+        b=UxSQLXN8uU7D+Uz3bwthOLBm+M/RZCxrjLxl4m+Fk4/wK92Xs062SopENuZK0+5DJY
+         NjjnTqeitseK9cfLAhInzeV2hTiWj9SBwzo1FFqMbC243YWziCquY/tKiT6zLoJ1QGcm
+         cKeymtmkSqYp8qyxG9RtK/JRhNUgE44zCVCFgxSz3Om2Mwxrl9v9d6obUTkUEmp0qOuI
+         4djLObQNCCgi2QowJqfJgmqrJj/Wrk45q+JyOXwhB0D3YTFJw8I73Pvk2zOSQ5SkHm3G
+         zDuOjJfaevBC0kmfbrsGjwmSPg2/miXmnmxRHZYqp/PLU9nita1Rv2g6mZywIYxP99tl
+         URAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690559978; x=1691164778;
+        d=1e100.net; s=20221208; t=1690561704; x=1691166504;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FIpz9qHZTBY2aKVgpHqBxx+ELvmEZ8DxQJ69n9L3E+Q=;
-        b=EKo5cQbLRxxspL177XLPkF+lvtV5IHUB2s/z8JBqsFELdD26m1HfTDGBtG0y6kYw3x
-         MHG3RhNLkWl1UmYRAoDEcU9SbtkkpBlewSvjk6zfrH057Mn/ZOTALzbBUR4C32BmHHQ6
-         UIuzp3YUgBQ4b19aKPwTEF9tdcWGq0Bq0gp2j8J6Mj7IWcwbtl7jS04fzgikJ70pjY9F
-         eXJjA/W/xYrZY4IQdL0AC7SRoxvI/2Cv1MG0i6077R3At8uvjh0w6D1k3Yt0ua/0LcWm
-         Ah2jfySkSZNZCvHkCS8Xj2o2L85Gr1ANdZ0ymiEFf1/xSW4Lr9tXU4OyXRnohYnxRhV1
-         ZlVg==
-X-Gm-Message-State: ABy/qLZBfEz1Z/Twr1WmTZJbEigQZsW4E3OlcloEVgu3cg3vXYDwN558
-	ru4BT7M9NwxgjLIS9oyfE7ka4choFso=
-X-Google-Smtp-Source: APBJJlHFVfOwKdE3OjYi4EjyLkC6mcwNyJRAjdwb2riKUQ40KS1vikDSKsXhqEXPkrPG8GLCN7iTQA==
-X-Received: by 2002:a05:6808:19a6:b0:3a1:d3f0:32ed with SMTP id bj38-20020a05680819a600b003a1d3f032edmr3628235oib.23.1690559978437;
-        Fri, 28 Jul 2023 08:59:38 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::65c])
-        by smtp.gmail.com with ESMTPSA id bf33-20020a056808192100b003a37372e6b2sm1759840oib.21.2023.07.28.08.59.37
+        bh=gs9ligjdjRTPeOwTjEXdiIj/1KqGFEjojOteBvkg8dk=;
+        b=bxC2UJ0RBW2gVq3PZaRQiVRukoOkOpuouX/Kuj432Z7PsS/PewEEOr9XIs4TxO8ZZ4
+         P9Sr3GfHvFd/X4S3ZU9LGBVRrXNlHMl6XJhSsPnoj46j4MhYPuU/dCJtcD/6XOm8qcF7
+         jIA8mWjpv4vtwY/HIorOOkXA4YgDi+Nqf67Lk/hWWbOOUl2wdKHGRjhtwvbfilL/T3WW
+         yvMfmDvLWmoa07ayId2rH7AuXkfdLMeleLasMHNmsUkle0p+QYArbNq9RD7dkwiPwkWM
+         Z6mgvzDZ7LX6cPUF5PhoYS3H1mhdXJ72CIFFwPlPCOqkFJO2Z2hwq5sfwbeS72rJBwYS
+         3DrQ==
+X-Gm-Message-State: ABy/qLYLOSE+aVHp0FlO8g2iPQ1evkZloBljOFmd2YqJtViWpQhWLvCQ
+	1R66sk1Kmb9xIj4/WrYSo4QTlVag0CCg/Lokugs=
+X-Google-Smtp-Source: APBJJlHfIpO5Cd4nqCNMQOuG3gyo36B/8c8fG+JUGOwsQ0mfQ+Ehq7TmCNQc+t+tvXYhvuVL4/iruw==
+X-Received: by 2002:a5d:63d1:0:b0:315:901b:e795 with SMTP id c17-20020a5d63d1000000b00315901be795mr2223898wrw.13.1690561704029;
+        Fri, 28 Jul 2023 09:28:24 -0700 (PDT)
+Received: from P-ASN-ECS-830T8C3.numericable.fr ([89.159.1.53])
+        by smtp.gmail.com with ESMTPSA id x2-20020adfffc2000000b0031755da6a8asm5176622wrs.33.2023.07.28.09.28.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jul 2023 08:59:37 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+        Fri, 28 Jul 2023 09:28:23 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] contrib: vim: Fix up a few errors when reloading
-Date: Fri, 28 Jul 2023 09:59:31 -0600
-Message-Id: <20230728155931.40207-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.33.0
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Subject: [PATCH] fetch2/gitsm: Document that we won't support propagating user parameter
+Date: Fri, 28 Jul 2023 18:27:51 +0200
+Message-Id: <20230728162751.1683289-1-yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 28 Jul 2023 15:59:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14892
+ <bitbake-devel@lists.openembedded.org>; Fri, 28 Jul 2023 16:28:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14893
 
-Fixes a few errors when the bitbake indent plugin is reloaded:
- 1) Define functions with "!" so that vim doens't issue a warning when
-    they are replaced
- 2) Rename GetPythonIndent -> GetBBPythonIndent to prevent potential
-    conflict with other plugins
+[YOCTO #13550]
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
- contrib/vim/indent/bitbake.vim | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/bb/fetch2/gitsm.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/contrib/vim/indent/bitbake.vim b/contrib/vim/indent/bitbake.vim
-index 13810340..7ee9d699 100644
---- a/contrib/vim/indent/bitbake.vim
-+++ b/contrib/vim/indent/bitbake.vim
-@@ -40,7 +40,7 @@ set cpo&vim
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index f8e239bc5..47225b972 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -123,6 +123,12 @@ class GitSM(Git):
+             url += ";name=%s" % module
+             url += ";subpath=%s" % module
+             url += ";nobranch=1"
++            # Note that adding "user=" here to give credentials to the
++            # submodule is not supported. Since using SRC_URI to give git://
++            # URL a password is not supported, one have to use one of the
++            # recommended way (eg. ~/.netrc or SSH config) which does specify
++            # the user (See comment in git.py).
++            # So, we will not take patches adding "user=" support here.
  
- let s:maxoff = 50	" maximum number of lines to look backwards for ()
- 
--function GetPythonIndent(lnum)
-+function! GetBBPythonIndent(lnum)
- 
-   " If this line is explicitly joined: If the previous line was also joined,
-   " line it up with that one, otherwise add two 'shiftwidth'
-@@ -257,7 +257,7 @@ let b:did_indent = 1
- setlocal indentkeys+=0\"
- 
- 
--function BitbakeIndent(lnum)
-+function! BitbakeIndent(lnum)
-     if !has('syntax_items')
-         return -1
-     endif
-@@ -315,7 +315,7 @@ function BitbakeIndent(lnum)
-     endif
- 
-     if index(["bbPyDefRegion", "bbPyFuncRegion"], name) != -1
--        let ret = GetPythonIndent(a:lnum)
-+        let ret = GetBBPythonIndent(a:lnum)
-         " Should normally always be indented by at least one shiftwidth; but allow
-         " return of -1 (defer to autoindent) or -2 (force indent to 0)
-         if ret == 0
+             ld = d.createCopy()
+             # Not necessary to set SRC_URI, since we're passing the URI to
 -- 
-2.33.0
+2.30.2
 
 
