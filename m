@@ -1,89 +1,95 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954B4C001DF
-	for <webhook@archiver.kernel.org>; Tue,  1 Aug 2023 14:38:30 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.14474.1690900701057741913
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D300C001DF
+	for <webhook@archiver.kernel.org>; Tue,  1 Aug 2023 17:30:34 +0000 (UTC)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+ by mx.groups.io with SMTP id smtpd.web11.19446.1690911028073145936
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 01 Aug 2023 07:38:21 -0700
+ Tue, 01 Aug 2023 10:30:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=XJ17oXDx;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-307d20548adso5139030f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 01 Aug 2023 07:38:20 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20221208 header.b=SMv029Zz;
+ spf=pass (domain: gmail.com, ip: 209.85.208.175, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2b9bd59d465so90967231fa.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 01 Aug 2023 10:30:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1690900699; x=1691505499;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1690911026; x=1691515826;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9zQ4+h7HYsDcWko95jgu8wuevjqvDxJSY6eiOwUPJkE=;
-        b=XJ17oXDxDt7VJY5/KTTl9XeAHFh2edw1a8rqavjg29/bnijpiizlEruEpxiMpW9Pt2
-         X2Bfkx8JvI7gvdRGxTi8CN1QEQmGrtB4OzApe9BJQ8VKKzbD7PQ+MVfBI2R8ZMUmsYtz
-         dIQZefe8tXAfKGXOm5sH/kgoaLrj9tecMJw/Y=
+        bh=coy4/HeZRx6nF56HYQdTOD2V5/Fsdyx9A9jT1Dc8X+A=;
+        b=SMv029ZzzFlN+MA4NelYZvh+JnLTkgMBYbepl8KwGvPy8w1ciU5dUvgfFgTVx2oKN0
+         iYuGCsHhS3qknoxeu/wGJWbkzOeCnV5bjcd2nO4EadGdBFOe5oFjlIBV5n+FUHSpfxIR
+         NJdrd6BBrew7BI2ojzdVqwQbJR32iz+ldF6gQyTFE96h5TtWeoxXggnbtHS5WIXh6a+w
+         lJcl+z9LV7soFeJ0bzqkUDsirg+3Zp0ZnucYJ9h1Kjx3vNCCIkwjh6SOktV0klrNrql8
+         x4IDu5E7z2DkExbicIvL3u3ciqu9/jNqCNwfcLRWD7NU8NmmCF30/KKn8+gQCLH6GXQN
+         YQUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690900699; x=1691505499;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1690911026; x=1691515826;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9zQ4+h7HYsDcWko95jgu8wuevjqvDxJSY6eiOwUPJkE=;
-        b=ep019tqgKFpcslTrPYzjxQbycVdqbC9HZmg+ANGR18JrPyoVoPmvuCSPiuSKBDZ+IF
-         9BWJoN+70q/0N3krbsJQfdcCjYgbnN5RWTgDstBx9tETK2HLFS+YdJIbH1Dk+LR/7DLg
-         G2CmZ1orU7YAG7VUEM9urHGihhKONlTlgYf7pQQ7pBiPy4CKhHXT+R/p6hEniB6xMyBI
-         emZWAu4NAvbM0gaxHP9X6BBXa1JMzCBYTnWTJlpJyiUzQ94q9mBLUJUfLq6hgGTMF/dZ
-         5FZ8uyn3BDK/DjumxtrQPlTBRniNEX26Z0srPUq0qzV5Riq1IGGeO9MoTabn6xDSoyUO
-         jxaA==
-X-Gm-Message-State: ABy/qLaBeHElZChg7D+L5HZlaI2piOR3lsxr7gMF0+VrtgkVY+HnP1id
-	ylT6SMzg0GAUERyTFY0DTNqzP2EZGx0jxQGqopo=
-X-Google-Smtp-Source: APBJJlEBP17WZoBmJ4XHvT0NQ7K31MiaxSz6/+7oQrQ9wKEu2NdZqy9wq/ts4WV6ygCaJ2H8LCHAWA==
-X-Received: by 2002:adf:cd11:0:b0:317:597b:9f92 with SMTP id w17-20020adfcd11000000b00317597b9f92mr2471541wrm.57.1690900699327;
-        Tue, 01 Aug 2023 07:38:19 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:e3b7:1714:595d:8417])
-        by smtp.gmail.com with ESMTPSA id d14-20020adff2ce000000b003176053506fsm12572887wrp.99.2023.08.01.07.38.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Aug 2023 07:38:18 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Cc: Christopher Larson <kergoth@gmail.com>
-Subject: [PATCH 6/6] bb.tests.data: don't require the func flag for context functions
-Date: Tue,  1 Aug 2023 15:38:13 +0100
-Message-Id: <20230801143813.2206785-6-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230801143813.2206785-1-richard.purdie@linuxfoundation.org>
-References: <20230801143813.2206785-1-richard.purdie@linuxfoundation.org>
+        bh=coy4/HeZRx6nF56HYQdTOD2V5/Fsdyx9A9jT1Dc8X+A=;
+        b=UGJx7+cFHDtoX5XfE+EuDx+L5sNVmSw91/TWSdfNnOayiXUwoXXBKlGHcVw2/Yti7B
+         cwuFTyMyIT2zZTjM+vknKGz4FC3+EUg2yBoPT6doS7+2CHHzMibsNSwXetnGsNgj6ZA3
+         hEkYFJ03p3rAZYskfdQcy+aGlRw1VJ9ypbvrfjTtBwnRZQ76AZbgVxbeyn3CVDrunsUq
+         cFiZVe8mN8RfUF2zqMq+/HDXOwqhu4CnW5nmhrcSSw3DFoPv8R0d8J4GBPmivlveycXE
+         3Hu/zAY3LKSLN1Z1J7UgCt6tbEeowE1L4cl+Ep2xomJ9+LaigSHmnVVaXuPsW4y7anrC
+         cAAw==
+X-Gm-Message-State: ABy/qLbItdX9ojyWleD0z8DiOOwlXLy2H6x1fRF4x2aja9USiqw3BWVG
+	XPZeo1IjJmXC4vEPTpPPHhkPHr4jc4Pu6SE0IQE=
+X-Google-Smtp-Source: APBJJlGajEW7kychu7yTu41acnkN100989m3z7BZ/l6nUwveH01mAgE4cbNFHtulrk8/Mw/j9UePAjOpCc0qaSOvcrI=
+X-Received: by 2002:a05:651c:201:b0:2b9:ee3e:2412 with SMTP id
+ y1-20020a05651c020100b002b9ee3e2412mr3292760ljn.22.1690911026052; Tue, 01 Aug
+ 2023 10:30:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230801124715.752243-1-eekmecic@snap.com> <CANNYZj8mkTBNfevYz7eWr45D2renfen5FCLc1C6pMNHpUhd03A@mail.gmail.com>
+ <CACjag3tMLM_wHyVbSqD6sDHox-dCRjwNXgv-Q75bqfhLzo5eUw@mail.gmail.com>
+In-Reply-To: <CACjag3tMLM_wHyVbSqD6sDHox-dCRjwNXgv-Q75bqfhLzo5eUw@mail.gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 1 Aug 2023 19:30:14 +0200
+Message-ID: <CANNYZj-SKotv0PVL_vxcPhX-H+_q8KFQa9Hk4C2Es7kk4hKHPg@mail.gmail.com>
+Subject: Re: [bitbake-devel][PATCH v2] fetch2: add Google Cloud Platform (GCP) fetcher
+To: =?UTF-8?B?RW1pbCBFa21lxI1pxIc=?= <eekmecic@snap.com>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 01 Aug 2023 14:38:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14905
+ <bitbake-devel@lists.openembedded.org>; Tue, 01 Aug 2023 17:30:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14906
 
-From: Christopher Larson <kergoth@gmail.com>
+On Tue, 1 Aug 2023 at 16:30, Emil Ekme=C4=8Di=C4=87 <eekmecic@snap.com> wro=
+te:
 
-Update test_python_snippet_function_reference to not require the 'func'
-flag, now that we know the real function will be returned for context
-functions without the flag.
+> I am unsure of how (if?) BitBake verifies the integrity of source
+> tarballs downloaded from mirrors. We are not using it to fetch source,
+> only prebuilt artifacts. I took a look at the other two fetchers
+> that implement support for S3 and Azure and I don't see any differences
+> in how they would handle a supply chain attack of the type you
+> described. Please correct me if I'm wrong. Likewise please let me know
+> if there's something that needs to be implemented in the fetcher code
+> to prevent such an attack.
 
-Signed-off-by: Christopher Larson <kergoth@gmail.com>
----
- lib/bb/tests/data.py | 1 -
- 1 file changed, 1 deletion(-)
+Right, I thought you had actual recipes using the fetcher.
 
-diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
-index b7676859a6..98e430ce2a 100644
---- a/lib/bb/tests/data.py
-+++ b/lib/bb/tests/data.py
-@@ -80,7 +80,6 @@ class DataExpansions(unittest.TestCase):
-     def test_python_snippet_function_reference(self):
-         self.d.setVar("TESTVAL", "testvalue")
-         self.d.setVar("testfunc", 'd.getVar("TESTVAL")')
--        self.d.setVarFlag("testfunc", "func", "1")
-         context = bb.utils.get_context()
-         context["testfunc"] = lambda d: d.getVar("TESTVAL")
-         val = self.d.expand("${@testfunc(d)}")
--- 
-2.39.2
+I think this bit:
 
+    def recommends_checksum(self, urldata):
+        return True
+
+will require checksumming when the fetcher is used in a recipe. I
+don't actually know for sure what happens when the fetcher is used
+from sstate code and where is the code that prevents tampering with
+sstate objects.
+
+Given that the fetcher is the same 'class' as s3/azure - seems
+primarily intended for sstate mirrors, I'm not sure if it should have
+tests in bitbake/lib/bb/tests/fetch.py. Maybe RP can clarify.
+
+Otherwise, I'm fine with this.
+
+Alex
 
