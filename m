@@ -1,74 +1,97 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <eekmecic@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535B8C0015E
-	for <webhook@archiver.kernel.org>; Tue,  1 Aug 2023 13:19:00 +0000 (UTC)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
- by mx.groups.io with SMTP id smtpd.web11.12705.1690895934847807546
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD85CC001DF
+	for <webhook@archiver.kernel.org>; Tue,  1 Aug 2023 14:30:10 +0000 (UTC)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+ by mx.groups.io with SMTP id smtpd.web11.14436.1690900203778537649
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 01 Aug 2023 06:18:55 -0700
+ Tue, 01 Aug 2023 07:30:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20221208 header.b=VgllhCqw;
- spf=pass (domain: gmail.com, ip: 209.85.167.54, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-4fe0fe622c3so8839186e87.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 01 Aug 2023 06:18:54 -0700 (PDT)
+ dkim=pass header.i=@snap.com header.s=google header.b=cvrVelvm;
+ spf=pass (domain: snapchat.com, ip: 209.85.208.44, mailfrom: eekmecic@snapchat.com)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5221f3affe4so7716287a12.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 01 Aug 2023 07:30:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690895933; x=1691500733;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eIKKpf7pqCJlkbYT8x/Ig5CBOpuAlaohSbifjcnOq4k=;
-        b=VgllhCqwruw+VM5LEOdCJh4Dnh62twtkPjv3ReurKEAvD1u5CEXkcjEpkL09PFg3bL
-         sGygQ7Ryo1dB+kQ5XoBPlaXAbbUKIYvD4FrQ+Ge9ByKTzdIXs4NxobIu1TK7tGWsmTZQ
-         n/1Kcudj4Z7wo6Pxazi4+DrnE4kwGZnTlmtNm1mSGE/qjyOswgQqlVGXa4l1b2RDvReE
-         zkLH4kRZAt3pUUe4JrROOmv7D5zieOT0f5osEp0rDXsbTVdpu7yjpkm/KWBUt9LYxBPl
-         p3YfZgKSM1VlpB643cjFIfI9kOitP8Aiu1XT0rasIghef5MPGn0E7Pp7GHRfgSjMw4ah
-         s/rg==
+        d=snap.com; s=google; t=1690900202; x=1691505002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v40zSXDQ7/bhp8Nqz8KGeTssetu1UGhtY3YwvUkGH/M=;
+        b=cvrVelvmJiBKNPSh+ybI8FGjn1tbU4ieE0qeoe6DS6CjzoOYMd16af0NxbSssi+67V
+         zaPfSgwwPeKkEoCuiirqNa3IYpkoMcoWbnVYMi7sqPyutX7PGTC740hgCwgxdZVRCjPQ
+         O6Pd5QKFGNQiATSTjGEsvee9mQtXZDo06aKWc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690895933; x=1691500733;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eIKKpf7pqCJlkbYT8x/Ig5CBOpuAlaohSbifjcnOq4k=;
-        b=efbRngVKGbW+26W91DOSVTegp0q7c/kQr+6+CZ2Vpo748klW18ziGcX5v7d5LMPTtX
-         MYEJKqV66y0RSAeXH2lNrgiO+pV/bGM6FHFpcjI9XMbjiiC02xsIK+QYt80gLE2Pzuqq
-         HGl808KBLF4pUVE0YQMNbxCzBTp2V46aro02WG4mfT4zPjdEprMPi5+NIemqMdTa4abn
-         0strOQgkVYtLcm11XchoY+9h7KoMrpR3B+lkdPtG2/mRDxsLdErS8ayIU2hDBmrIs/en
-         a7Au+acIRldkaHrgU1cfrtTLua/9l5bshurqZESSU4Pm000+BAVY1XeOT1J5m9WcUDWt
-         qAwQ==
-X-Gm-Message-State: ABy/qLaR6k15xOoSslu6T9kHBiDPthSF4S8TX2uR33w9k1cC+pINfUiQ
-	hwKFx9sY/PE+HTKFHCHTIgfcGQ2O8xYEGLIcqpc=
-X-Google-Smtp-Source: APBJJlFe+GNlI9aihx61+3rDLVCtXqjV2jrNXtLGT8ZwiufsBtotaruqzWz2rG683G26eTcruKS4IezinnNvpgA/NSw=
-X-Received: by 2002:a2e:3817:0:b0:2b9:a28d:6495 with SMTP id
- f23-20020a2e3817000000b002b9a28d6495mr2772424lja.9.1690895932674; Tue, 01 Aug
- 2023 06:18:52 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1690900202; x=1691505002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v40zSXDQ7/bhp8Nqz8KGeTssetu1UGhtY3YwvUkGH/M=;
+        b=NF/Dfm/JgJCmHfccD/1T7zgn6GiIOBSIn+sXMS6CkDXyVoa3YQYEtvjvhbFM4SA0JC
+         QzTLpc7uTMyiKuUATSJJb9wDVqx1SP3M4+7tcudqXGSmAmCF19yc0CT8MFOP6ufTX9lD
+         SPxJ2aFDTswDvKRutqMuOcEQDuuECg4Rj2VLi3yPX/4LOGy+1zBkCpnsOds3jydS/mWC
+         FoHkpX4c74Zqrwxd31mWjaUPcP7UZdWjI3O7rToBfGnMWmU4YoQmYUpRVxW7EXRX1LHG
+         T6KcEG94Hi1kQsZ1qs1+AxLtJzrUvU+hJcHGReV4Pl1/cbKkDX+fjsLKlHijus3pkhJ8
+         45ew==
+X-Gm-Message-State: ABy/qLZvLV4tF0lYjnaKFLgEF7EJv+laGl3Y3PX/ysJDWL/uL6qWVCXR
+	AKgfd111VABhZK4TU/bQ8E7QepGKQVu989iOjGrX/A==
+X-Google-Smtp-Source: APBJJlGYB7X84zg+pyK5tjYBKKTNMfG8NVBnVSWDdYPxHfaHUhUk9qBW4H1vMuwHBYXUBqBLTtyK9UPP4ChPprPtS84=
+X-Received: by 2002:a17:906:3119:b0:99b:d4a0:1329 with SMTP id
+ 25-20020a170906311900b0099bd4a01329mr2506838ejx.38.1690900202036; Tue, 01 Aug
+ 2023 07:30:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230801124715.752243-1-eekmecic@snap.com>
-In-Reply-To: <20230801124715.752243-1-eekmecic@snap.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Tue, 1 Aug 2023 15:18:41 +0200
-Message-ID: <CANNYZj8mkTBNfevYz7eWr45D2renfen5FCLc1C6pMNHpUhd03A@mail.gmail.com>
+References: <20230801124715.752243-1-eekmecic@snap.com> <CANNYZj8mkTBNfevYz7eWr45D2renfen5FCLc1C6pMNHpUhd03A@mail.gmail.com>
+In-Reply-To: <CANNYZj8mkTBNfevYz7eWr45D2renfen5FCLc1C6pMNHpUhd03A@mail.gmail.com>
+From: =?UTF-8?B?RW1pbCBFa21lxI1pxIc=?= <eekmecic@snap.com>
+Date: Tue, 1 Aug 2023 16:29:49 +0200
+Message-ID: <CACjag3tMLM_wHyVbSqD6sDHox-dCRjwNXgv-Q75bqfhLzo5eUw@mail.gmail.com>
 Subject: Re: [bitbake-devel][PATCH v2] fetch2: add Google Cloud Platform (GCP) fetcher
-To: eekmecic@snap.com
+To: Alexander Kanavin <alex.kanavin@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 01 Aug 2023 13:19:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14898
+ <bitbake-devel@lists.openembedded.org>; Tue, 01 Aug 2023 14:30:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14899
 
-On Tue, 1 Aug 2023 at 14:47, eekmecic via lists.openembedded.org
-<eekmecic=snap.com@lists.openembedded.org> wrote:
-> e) Yes, the fetcher output is deterministic because it is downloading
-> tarballs from a bucket and not modifying them in any way.
+On Tue, Aug 1, 2023 at 3:18=E2=80=AFPM Alexander Kanavin <alex.kanavin@gmai=
+l.com> wrote:
+>
+> On Tue, 1 Aug 2023 at 14:47, eekmecic via lists.openembedded.org
+> <eekmecic=3Dsnap.com@lists.openembedded.org> wrote:
+> > e) Yes, the fetcher output is deterministic because it is downloading
+> > tarballs from a bucket and not modifying them in any way.
+>
+> Let's say there's a supply chain attack on the bucket side, and the
+> tarball has been replaced with a maliciously modified one. Will this
+> fetcher be able to detect and reject such a download? For http tarball
+> checksums are provided in the recipe. For git, the commit revision
+> doubles as an integrity checksum (we trust that the local git client
+> performs the check correctly). How is this handled here?
+>
+> Alex
 
-Let's say there's a supply chain attack on the bucket side, and the
-tarball has been replaced with a maliciously modified one. Will this
-fetcher be able to detect and reject such a download? For http tarball
-checksums are provided in the recipe. For git, the commit revision
-doubles as an integrity checksum (we trust that the local git client
-performs the check correctly). How is this handled here?
+This fetcher, in its current state, will not be able to detect a supply
+chain attack of the type you've described. It does no verification of
+any kind.
 
-Alex
+We are using this fetcher to support fetching sstate artifacts from a GCS
+bucket. From my understanding, these artifacts have signatures that are
+based on their inputs so BitBake would be able to verify that the
+expected signature matches the signature of the file downloaded by the
+fetcher.
+
+I am unsure of how (if?) BitBake verifies the integrity of source
+tarballs downloaded from mirrors. We are not using it to fetch source,
+only prebuilt artifacts. I took a look at the other two fetchers
+that implement support for S3 and Azure and I don't see any differences
+in how they would handle a supply chain attack of the type you
+described. Please correct me if I'm wrong. Likewise please let me know
+if there's something that needs to be implemented in the fetcher code
+to prevent such an attack.
+
+Emil
 
