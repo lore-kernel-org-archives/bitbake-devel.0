@@ -2,171 +2,152 @@ Return-Path: <Qi.Chen@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C9BC001DE
-	for <webhook@archiver.kernel.org>; Mon,  7 Aug 2023 06:30:01 +0000 (UTC)
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.web11.28533.1691389794976496170
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA23EB64DD
+	for <webhook@archiver.kernel.org>; Mon,  7 Aug 2023 09:07:12 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.web11.30063.1691399228620113513
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 06 Aug 2023 23:29:55 -0700
+ Mon, 07 Aug 2023 02:07:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@windriver.com header.s=PPS06212021 header.b=WeiGJ5Mq;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=75832b7afd=qi.chen@windriver.com)
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3775DWLd001474
-	for <bitbake-devel@lists.openembedded.org>; Sun, 6 Aug 2023 23:29:54 -0700
+ dkim=fail reason="dkim: body hash did not verify" header.i=@windriver.com header.s=PPS06212021 header.b=aFOuySsp;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=75832b7afd=qi.chen@windriver.com)
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3777nkaR001000
+	for <bitbake-devel@lists.openembedded.org>; Mon, 7 Aug 2023 09:07:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=content-type:message-id:date:subject:to:references:from
-	:in-reply-to:mime-version; s=PPS06212021; bh=PF7rGMpY1BCFvTxozlt
-	8w6GoOAdA67lomBwWZ29HBgs=; b=WeiGJ5MqpkbkfN7mL3gzEL2sHx3Je01CaAD
-	1Xl6lLeZWaNG8OlzsnNfTT5/j4an52DuDA6Q7/CX2Kt1pU33pIwMHgtBasc6cmra
-	GV71oqmEZ36z3zMhEPJ0w144Ll/zg0CwwhCn9bf6+Xs4QIdTZqRE7LSg/K2NkLvl
-	mKfYSBJ3KqlBHVKn6KDZUvmX7oNTEhdAgp9WldvNrDgDN+hXPIeQNLuLjjyE6qdV
-	BG+3xEvM5RVf9vs7DZ1f8QP4Jzo9hryURM1Ar/Ezx/egPdWvI92HcSoeebFQXbIA
-	M8kkDW0txNhsYFRIh/o55Ztsh7Q8Drq4b0NBa5yDcFfL0OXCf1g==
+	 h=message-id:date:subject:to:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	PPS06212021; bh=ie1c9tSMvqEwQy4gKxkn8JOja2uWcN5l6PhYxIVdtLo=; b=
+	aFOuySspL3ipRg9vLh1mBwv4Od8rMNLdFSay8Cx2AJgQ8SrIpMcdMrogZw75Plen
+	NRNGs2qeSQ9Sc1S/BuQnbkNmAn/O7ZiDsRVbo2AoMqdxEORT/3/B7ks2TdG37n8+
+	7PrTGOR18fwqT1Z2FchN8uRV/IBDf9kPORXKOUkqmcJOTPwWqsQJs4/LN35rmXtI
+	hHm1ZDF85ffS/WVwxw1+vgahxALKt67D3QvJpib94ZPgk7L0K7/tjdxuydXJOCur
+	1pa+uEJLzLZbLNCvUmFN4PgaUTr6JeEGVJ5ir/Z6Q4QAT87BpJE5tcV882xZrQum
+	+MH/IimhqC27SJiunNQQtg==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3s9nxfh2ag-1
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3s9dd61et5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Sun, 06 Aug 2023 23:29:53 -0700 (PDT)
-Received: from m0250809.ppops.net (m0250809.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.22/8.17.1.22) with ESMTP id 3776TrCV030966
-	for <bitbake-devel@lists.openembedded.org>; Sun, 6 Aug 2023 23:29:53 -0700
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3s9nxfh2ae-1
+	for <bitbake-devel@lists.openembedded.org>; Mon, 07 Aug 2023 09:07:07 +0000 (GMT)
+Received: from m0250812.ppops.net (m0250812.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.22/8.17.1.22) with ESMTP id 377976rb018344
+	for <bitbake-devel@lists.openembedded.org>; Mon, 7 Aug 2023 09:07:06 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2042.outbound.protection.outlook.com [104.47.56.42])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3s9dd61et3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 06 Aug 2023 23:29:53 -0700 (PDT)
+	Mon, 07 Aug 2023 09:07:06 +0000 (GMT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IxSkB60zRjxVNF1nHa4K3m8P/SodKpfDzQ04XNKu1Mb2Sbz/w16bBLR8VLQtPQQMDCXBLjzu99EDgrFVyEXqfz0/aMByWLk+1f292QJkE5YcCLIPe9FJSQgZGA2/ZIx0G/1IvSXeQHiI+x7TUm9HME4/whagKWS41nqxTG54flSoEqEQjNz6xLqggcr770nbDH5JtGKu2CJ0gCNic6JvU90GRek5OG4yEVm9+xPZk+UEYeoXNOnDWvKpjUIEKpAFMlhvYDzy19OUm9vKaa4iZqluCyAU+Fyf35umxVPLgFOLoGDZ924Lr/GWMQkWbPWJwEw6YxrHZnLj09UjmwmE3w==
+ b=djG8sasjVp92FnVkN+qV2y3VnB2tkhpcnvve+ma4xsz2IEd6X4feSYhATSoHz0EumfLoKcEQn49/uDn2ADWOQLpJN1Pcghn9+okz41GpDsTrRqOpZ7dUsXgx8P8tQc0R52WpZ+DDUiwHwqynQLnOUW4sUB1zSBh4EZiydw9b8yf0bMuPxkAUdTkh29uyi0rCtttWhkXwO0+4AUVNZBzSSSiu1u/v9aw698DaRYUDqWEs1w6oPznEKjhUe42iebMk2iAyyPgLpNHe1Kfhri2NSNso1UYxL4VibuRQzXCS5hgpWdXM6zu560B38rik8nILJz3rYv6wB2UaVg7DR3tyRA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PF7rGMpY1BCFvTxozlt8w6GoOAdA67lomBwWZ29HBgs=;
- b=g5ERXxhpS3pbshiIfXB7zXOwzuFE3BFUdAjk1kW3qBhLD5MJsKyVVG9E+6fCw/1dXi/Dz7I/TAy32MdNaPOyyJ6EPf6FaRXob6kkX+nZo6JzYdNDS7uM0q/ZXzSXcdDpxwbOjesF1eqrKziszcuLlEZjV1FQG4hHT+HF2U34BYBVar/jULKkaGkWoP2nF3cf8nTv27rStUMbShQT6/WkDNX4399UrW4JIMVDsUw04tVNrv31QUDhh0R5Q+MYUTWpSwI4AOSoF77SokZd4e21SkIBCjHx381VxwsCnW+Mg/NkXKKsGQbiGDRsz/ZeMlhf4G/ie6DBrPYWMqoa+VpTWA==
+ bh=ie1c9tSMvqEwQy4gKxkn8JOja2uWcN5l6PhYxIVdtLo=;
+ b=Jov8xQOinHR3xD89HjDXOaNoSwin6eRTisxn1PehIevI3c5i08Yvv4/92jDVxddrod9jFyYHdAHAsel6/XPuGtc2Y0mz2GatiN3SE7a52dv4uYpr5EFqBtp1JAMKC8wMl78jxrCZHOz8vkp6YJpxLhqbM2PLKdKG0Xs7LguLwGfC6bhDyI74qWd1tFIO/b5uuo+W2GIwrrcrt1XZ/rXNU3N5ww9ibGw8VI1shHhVRJqyuzH/1RaK5Lp/ykYUiv303yCDEsTZpLqwiCwV0LvLLhY84SG9zdd3oxEem1kxMZN7EQvmABOh/b1vItJpHrQgBcy44ybap391Wo6YdOcXZA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=windriver.com; dmarc=pass action=none
  header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
 Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
- by SA1PR11MB8277.namprd11.prod.outlook.com (2603:10b6:806:25a::17) with
+ by DS0PR11MB7684.namprd11.prod.outlook.com (2603:10b6:8:dd::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.29; Mon, 7 Aug
- 2023 06:29:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.25; Mon, 7 Aug
+ 2023 09:07:03 +0000
 Received: from CO6PR11MB5602.namprd11.prod.outlook.com
  ([fe80::86dd:2ee6:ac66:812d]) by CO6PR11MB5602.namprd11.prod.outlook.com
  ([fe80::86dd:2ee6:ac66:812d%4]) with mapi id 15.20.6652.026; Mon, 7 Aug 2023
- 06:29:47 +0000
-Content-Type: multipart/alternative;
- boundary="------------izxO1P0IPGnWhjWikCvt8yBe"
-Message-ID: <6d4f7509-4d9c-5e5d-49cc-5311ab15357b@windriver.com>
-Date: Mon, 7 Aug 2023 14:29:37 +0800
+ 09:07:03 +0000
+Message-ID: <1c7bfcd4-3880-55a0-61d0-06d934d3e98a@windriver.com>
+Date: Mon, 7 Aug 2023 17:06:54 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
 Subject: Re: [bitbake-devel][PATCH V4] runqueue.py: fix PSI check logic
+Content-Language: en-US
 To: Randy MacLeod <randy.macleod@windriver.com>,
         bitbake-devel@lists.openembedded.org,
         Richard Purdie <richard.purdie@linuxfoundation.org>
 References: <20230803075638.2355913-1-Qi.Chen@windriver.com>
  <ac05a465-6da7-3441-b45d-ab65c73f244d@windriver.com>
-Content-Language: en-US
 From: ChenQi <Qi.Chen@windriver.com>
 In-Reply-To: <ac05a465-6da7-3441-b45d-ab65c73f244d@windriver.com>
-X-ClientProxiedBy: SG2PR06CA0185.apcprd06.prod.outlook.com (2603:1096:4:1::17)
- To CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ClientProxiedBy: SG2PR01CA0143.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::23) To CO6PR11MB5602.namprd11.prod.outlook.com
+ (2603:10b6:303:13a::5)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|SA1PR11MB8277:EE_
-X-MS-Office365-Filtering-Correlation-Id: 07bb7cef-eb74-42b7-3673-08db970fb1fc
+X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|DS0PR11MB7684:EE_
+X-MS-Office365-Filtering-Correlation-Id: 74eb4068-797e-4954-0db8-08db9725aa4a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	4qBCLYNo1iPhYVUN3V2z8AGGH6WvC8nQI4GQBonK6IndT9iUSehL7fb68MtTu6C6Ba+mSAabZEsfT5fB9Fr4UCOH/l0Jwy26knMvKfAHGmVCgMNjMCheI9e9kwx43hEbttFKM6oDqoFE+Ki2ffSLgQwnVQvI8sT8UqNSkZG6XYcu2uoNdZltUIV5+hPhIp/7NYUFzJlEXcSi3h7qzYqSS7A6pJ64EeB5KrknhrMEYpF6Wdo3t5fHs/m+1cBXtXfvEldQyKfhBZfy1C9tNd77v9Q2rXIxeUx0//PBEHvP3iP4cat8aTv20ezcp4INhk4/583sGk3czqBsPprapCA4r82j9+9hhDn0cU5E05mBOSfxIEAJ4MxzQ5t4+F4IyRe1aJadz9tViiEy9hroWr2jdtH0HUBC69sKO8vvQkfVuKwZGWQKFYEo7myfmjILArUmNCbRKrjAAFrKQy4I8oJYTT8N4TyAPOScJVQsB1jI3v934QmKiBaMvGQP7VlnHQDkglD9dENkaupZBn4dAyxTmMzEHMAGhjogtjBvv5f0cqmeEnWxBQmh+2WMUNSBbkSyeKyp/+Anvu7lUrOPzyKv2+z2hYKzxW5TNMUvQYsjWqBaMd9wvqHmd0S8rhFY5+TEmp0RryJ5lmmjSoFgfFXN8ZbWcR5ZocxJFwumFz01g90=
+	RRoc/M3jkGXg9vSCf/Aht9B9PiJ9lVWafaeRw9q/UhgBPqu9ss6AidTZADFQw5NxW+POCMQugt/6K63kCRaqgfj8iNi9b9uhLAKILFQr+kWst2xnK03/msLCmGnyoIzl5T0qDFB2OFEEWIkVvU559Gh1l+M7mGWiHFOeUNP2PuSTPjZte6ufYE3gJFrz6RcMqnNAJCxR0ByPqXecvGQQ4c8hoyURW85L7TbcaHO0iFXZ9maExZN4uSkJBZ6OQ4CGlh9iijmoW9FVqDhpgULK1qO0/hI/MsRK6/m27HfrS3QaRDXORdjLC+/swAkTFeH1XrUlNaNwytkigQZ2NNSM/7iGnQgUXNzNRb4HbXLkAtCoBcHC4cfEJBwfKQaj7M46Cl4Th3jexp4S5YDfiZlZLBx8I1lnfrNZpGEYOCk6inR4FaxkAXPh22aLLeLBHT+QSiaPf7lZVPsZDTTnZ2varTs7CwXEnFMGRFFUwXO2ZjMVmsamQk7Jl3VJEcGODSmB6xhk1yUSf5VeJwKsBJKchoGa4Fa8sCfqDYoW+sy69DJQel5ROOEXCBJfvGDNlJsSxKHyMgdTliWwLG+l/wOi7dPSoA52FSImLgSgJY/1MyYVJdIucEkqQk69EAjp/MjLYl3/Uf+oiEKKG8mDrE/OzMd72KSU+dT4kaTqJJbMC8A=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39840400004)(346002)(136003)(376002)(366004)(396003)(451199021)(1800799003)(186006)(26005)(6506007)(41300700001)(53546011)(8936002)(8676002)(2906002)(36756003)(83380400001)(30864003)(2616005)(38100700002)(31696002)(86362001)(5660300002)(66946007)(66476007)(66556008)(478600001)(6512007)(110136005)(31686004)(33964004)(6486002)(6666004)(316002)(45080400002)(21314003)(45980500001)(43740500002)(559001)(579004);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(376002)(366004)(346002)(39850400004)(396003)(186006)(1800799003)(451199021)(83380400001)(31686004)(2616005)(110136005)(2906002)(30864003)(316002)(5660300002)(8936002)(8676002)(66946007)(66476007)(66556008)(38100700002)(86362001)(6512007)(478600001)(31696002)(6666004)(6486002)(41300700001)(36756003)(6506007)(45080400002)(26005)(53546011)(21314003)(43740500002)(45980500001)(579004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?V01aZnlGMHZDakJKdm5aMlBqWEQxSlAzQVRZdWlMYU9aejFuOTJDaTg4TEM1?=
- =?utf-8?B?ZkNPV3puQVo2VXVnWTRObFZNMGNRUFZjbUhsOFp0YkdRV2lXM0lIS213ZWdI?=
- =?utf-8?B?Q0p1S2dCU3dIMWhtLzlUcjdLamY5Wi90RTY2QzFlZmoydzBTNjFlNGRkR21C?=
- =?utf-8?B?WkhrQXdZQUhtNGhkbjJiTkxMOUg4OUF5WFNKZExhTGpsTkh1YlRtYnMyNzZi?=
- =?utf-8?B?dlB6ZVpHbmUyOFpBOUt4UHlQdkNkQ2c0VWw3RDEyMkMzYnNGZ0ZtVUVWMUFG?=
- =?utf-8?B?eFB6RlhSTkF2dCszN1RMcUNUOGtyUWpPMFE1MmtqTllidWhKTk13UTU2UU9W?=
- =?utf-8?B?dm9rM3NxWk5qSFcrbVBxUFVRUnh2TlQyYVRNKzdydGFiZkxqeDdKNDZJS3Jq?=
- =?utf-8?B?am9XTHFaQ3RkR1pJR2xTd21RK1d2b0lTc0p1Z1lWMXdiOXdleGZlZ3BkNXFV?=
- =?utf-8?B?anMzZE9WU1NEZVJ3YUJoQzhXK0tqTlBuc0FHNEsrSVZWa3AySExoRHVFRlNT?=
- =?utf-8?B?ZzhVOGhORDliWTJVeVp2MGVCQ3YyVmd0WWJCZEhyWHR6dXg0NXhBdlhUR1da?=
- =?utf-8?B?YWw4MnQ5dWhhSkh1RXg3TWhXbnU1QUZjWHZMRi9Vb3J3Rkg5eXpMeWVnOFVu?=
- =?utf-8?B?YlpWZXRWUEhzeE9rSS8xWHdGckdjYUxyOUpUZXErQTdTdnNaQURyc1NVK2xQ?=
- =?utf-8?B?Z2Rjd1I5Y1ZZS0JsWS95WS9IdGVKMUNxMTdsdldrNkZmSVZUL1lFQUMzSmVj?=
- =?utf-8?B?WjZNajFNVVc5MzhEWm9HKzhsSnk1VDVQRGJLRkVqY2UvTCtHM1QrcjZzUVJ1?=
- =?utf-8?B?aTJjUzMyWmhWeHJzc0FoektxQVUrSndwbXpadjVQRG1RTnRCZitGUmRSVFF1?=
- =?utf-8?B?THBaUEdCOFJWM0EwMkorY01lblRpMjlOdlRmR1FLNUltYzh0SjkxQVArUVhN?=
- =?utf-8?B?eUc3dWVFRjYva2VNRW5CTDZUbG9qa1RVZTJNYU1nWjIyOUdVMEthTy92bVE0?=
- =?utf-8?B?Mkp4RktwQ1lJL2JkZytmYUtCcm9kTk84SUVNZXk0QzhITlNmaEU1L0MvbWps?=
- =?utf-8?B?cVRYMWo0SUxQWFllL1dRUjNKdGUzTHdpdjh3cnBweWxCeEYzWFB4QXR5cHY1?=
- =?utf-8?B?aVFkWnoxcDA2czF6UFFweTQ2bk05UGttcG5VQXdVbWI1bGhQT0tMMWZlNStr?=
- =?utf-8?B?WGdtZU5zQTlRNXFibDQ0dmtOY2FXR1VSd0RJNUg5ODF4OXRtK0crZ1M5c3Z1?=
- =?utf-8?B?OW5KM1B2Z3Q1U0E2MEh5ODJoaElZQ3NYbW9FUDlmZDE5YytzN0hUaGxmKzQr?=
- =?utf-8?B?bW40UWtRQXVyNVNIYTVlZVdGbGZ6bW83aEpUZ2F0dFpFc3lQb1pOdjdweDhR?=
- =?utf-8?B?U1dYbmhjVnZISXJ4RnRNaC9Eem4rQzZpOE1OR2o1OVJTNE0vc1o1Q1Z2RDBr?=
- =?utf-8?B?dEdycnIyQWwxWG54QnZtSUhKS3BLMWRwcWJ4ZzRKZGlPMERGK1NDZWhGY2d4?=
- =?utf-8?B?eFhMSDVKQWpFMkFPeVExSlJCV040QklRU3kzT01ZVFFGdkVqSWFUREFVT2Qx?=
- =?utf-8?B?bkxuR3Y1SFdRNFBrUThLMHE4cmFYUk9NRC95bTUwTzJSSkdKNWh6NUNZWUpW?=
- =?utf-8?B?NlRycHdhM2FTTnRsakQ4Y0tNRDY0cDFEWFI0S0FXZ0lCNUZNWmdpdkovc0Fl?=
- =?utf-8?B?NVBBdEVSNmY4cUU2ck40NWhFdGIwM3RjU25mSEp4T01SSDVQYml0Z1g3R2JE?=
- =?utf-8?B?UlIyMFUvSmJuOHFVa3g2K0ZNajJ1Z2JxVEZaK2o5U1MyaE53WXpPY3VDSStm?=
- =?utf-8?B?dUtUcGd4VGlMWXlOcVpQc1p3L2Nrd3h1SXFFa1FTMWRCVFg1OFIxMEdHNFRs?=
- =?utf-8?B?YWJjaWRYdC9aUTB3dEx2U1NTOHFlTzNaVVZjcmtTMUZNKy9Hb09MbUZrOExB?=
- =?utf-8?B?NENWR1Vyb0RLNG9EMENja0kwdzZkK3dZZzJKZ3VQUzdpREhIWHpoUFlqWi93?=
- =?utf-8?B?TjZIaDZCM1hsWVhVY1lEbWdyVlM4NllWZDY1Zk50czZ5dWhUcUF1ZDhKSW1F?=
- =?utf-8?B?SFZzekRNNUdqTFI5SXlQVkVLNk8yOTh5QVBxN1ZaT29Xb0ZLY0ZldkV5bFpD?=
- =?utf-8?Q?vZKA4SyF2SpFTN83q2pFyN9U6?=
+	=?utf-8?B?UFY4c3ZHWnQ1eHVmbng1M21UMTNidTdsR0laYTNGNFZoT0lVSHNnekczc2hr?=
+ =?utf-8?B?cWNqTnU4VnZuNWlpTDNHNGJUT1U4RUhlTWpBejkyc1grdjFmeWQzSHNyMUtN?=
+ =?utf-8?B?bW9EdG5iK1FtR1BRelhXWGsvb2VEL1Izdy9rTzdkSFE4MWN3WWh4WXE0dE5v?=
+ =?utf-8?B?M0FuVXNaaVRveHdnYzkySXk0K0hMWThTbnpmRUlXUE5QNkV4bTg4Q1VYeVE4?=
+ =?utf-8?B?SU9rdW1WN1l5Qm9qb2s1V0oyNWN1bUcya1BLMXdjM1IzaFc1YmxtYVNjc0JS?=
+ =?utf-8?B?SSthQUY0Vi9MNVRmNjZ2YVBDaE9hSzlSS2hLUHpZZGJwSittVGtoc0lTUXAz?=
+ =?utf-8?B?SkFuY0craXpZV3pWbnBQQnZKYWRtVGV3VnpwYWR5aVpZajBWaWZ1RFFieHRq?=
+ =?utf-8?B?Qi9Oc0FGUmFzQWt0QUZEN2sxZXp4elFONkZTeWVEMjBFYkZ2N1Nra214QTdX?=
+ =?utf-8?B?Ry9EdUp0NkRreWJjMWw3VlgxVmlFQk5Bcm1ObVdraUI0b01oUnpKRFZDbnlk?=
+ =?utf-8?B?dk1POXloenFRNmpyQkhlbDEvemRLcVF0TWVUUmZUVlU4eWU1S2JkU2tvYVVV?=
+ =?utf-8?B?U3cxUVZXVzBtUDlDN042V201L25pdE5kVFNsczJaTXlRNFRLWEd2MlNDVWcw?=
+ =?utf-8?B?aytHRTZFZm1TbU5rQnEzbjV3ZUxkcHBtSXBFemFJYXI2UmlQbTZ5L1RlV2pi?=
+ =?utf-8?B?Z0FOUm1VVTRLdHdLeElHVzlOak4rQlZlQXZ0TFM2WHk4TERlWTN6cm5IbGRI?=
+ =?utf-8?B?NENSTDZxdXVwRzRQR2ZmNjFEaEhOZ0tnYnBYVUJOWFk4NXhqeSt5T01yanBE?=
+ =?utf-8?B?RDExNkM5eWJRQUJkNnlWcFdwWjhrL3l3V0FGRy9Ddm1uK0ZodC9hSHk0bExT?=
+ =?utf-8?B?ZzdYUzNyT0lXTVdIR1J3YTI2S1Y3bGdtNFlNWlV3dGU4K09MVXpYVy9HaWRD?=
+ =?utf-8?B?STNqTnZoWjlHbW5YWXNVU2lHUGtsZ0ZBbEh3VTh3TDdZQUFzempYODdZd2VV?=
+ =?utf-8?B?WUpKYU5tT1M4dlh2dGpiRk1BNldiem90dktBUDFGRkYwT0VwTXZCQmY1UlRT?=
+ =?utf-8?B?M2Z3TXhpdThiM2I2ZHNnQ1VmRU4vSTcyQkN5akpmVEd4b0llU0JtUVlrT1E3?=
+ =?utf-8?B?SklZOWJxQ2FaU0RZdHJpeWdlTjZpNnlEMlV2QnVieFIycFVkclNXeGYwS3VX?=
+ =?utf-8?B?Z0tIZnRzTk1mNlZXUFJzYVZDeHkzZFNJeHowQTdxWVBJVkJZTVlPbGVzeVJK?=
+ =?utf-8?B?WXU5MzFRSmZqSFZtQWZqNjBPSTIwNTBFTEVZM05ueWRuNVEyUWRrVDQ5a0F5?=
+ =?utf-8?B?dm10T2hheENVWEtRbkZwZGQ5RXpHbDFrMGpIZjRtcmEyQ09sRi9vVE15MEp2?=
+ =?utf-8?B?ZkhySE9LTVp1OGNqWEV0WnZMNkFzVXFKZzF5Rm9GUGNpc3pIVUM5TUJKRlBt?=
+ =?utf-8?B?UUhKOWJOa0ZqS041Q2o0cE1mWU9vQ2RkMHE3VGE4VUpsY0t0Nkg4TjVmbC9w?=
+ =?utf-8?B?VUZhMExieExXWXl3cE81dmd6WnUzUXVwQldaZkdISVQ5MGI4K05rREk5Rnhp?=
+ =?utf-8?B?WDJ2UEhaQjAwMFRES3d6eTBkdVZJT2VuSmVTZUVSMWtCN2VsbjRpc1NNSnVJ?=
+ =?utf-8?B?Q0pZRjRZUDk0cU40MlVJZUk4QXZkU0dWZkVrL1R4MWVnNXE3SVJnejBNa3I4?=
+ =?utf-8?B?Y3N6R20wLzRjb09YUEhvck95MzNDNCt3VVk3NmhLamM0ajN1aHhrTk03NDgy?=
+ =?utf-8?B?ajBiaTA5YVZoWVVrWUorZWVIb1lMVDRQSXJwQUl3SjBGYXBsSndheTU3TEJY?=
+ =?utf-8?B?ZEk4a3hrRUFDcW5GdjdCaVk5d2RIbEcvNXRqWEhCalRrQzFDNFhhR3VYVWZO?=
+ =?utf-8?B?WDR0Z0hTcjM3S0IrSThDTHFVRlpDR0ZkWkNtOWdtQkVOUnpQdm85YnNUQWpz?=
+ =?utf-8?B?Y05UVG1qSVU5TWlXelJndnloWnozdWdrZGxRRTRJdWRwb2dvelF3R0NPRUpS?=
+ =?utf-8?B?MW1rTC9kd2RuSld4a2trdlhEZmVpVCtRNXFVaEVkVFc5aEpuVVJrQ1NZR25S?=
+ =?utf-8?B?NWVIZWtndmk1Um1QcnVXUjluQjgyVXJKWC9lU3VDdnJGZUtnM3VqQmVBanJD?=
+ =?utf-8?Q?2tO4n5vEy0WfYjIaZXn0kyP98?=
 X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07bb7cef-eb74-42b7-3673-08db970fb1fc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74eb4068-797e-4954-0db8-08db9725aa4a
 X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5602.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2023 06:29:47.4960
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2023 09:07:03.4138
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ph2B7ZrClHRYlKTX1DGfeKHjjpmKzt80QHKMKSyiChTg3qdnkQE11m9KeANl50kFUoQc05R3GWyW038S6XK/vw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8277
-X-Proofpoint-GUID: xbtPgTlHlYGBAZXv1_Fh87j4zfxq4d1Z
-X-Proofpoint-ORIG-GUID: wOQ6lJpaAuuEYDI8eE1Rk8CU6s7gDmco
+X-MS-Exchange-CrossTenant-UserPrincipalName: AjWln15A3iKQOE0H0mHXqdsazcGDHh5ZGx7i/naWSe25VZ7276lQQOKG4Ceu0Jk6x1cRSOoru2CSY/PJpxCQEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7684
+X-Proofpoint-GUID: oyWDAzIag2z8zuA1bldGHDGLSc7dbXdz
+X-Proofpoint-ORIG-GUID: _WrlXQcHadjsRMhwjSxnzvcYwebL9lx9
 X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-07_04,2023-08-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- malwarescore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0 phishscore=0
- priorityscore=1501 suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2306200000
- definitions=main-2308070059
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-07_08,2023-08-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 lowpriorityscore=0 phishscore=0
+ spamscore=0 adultscore=0 clxscore=1015 bulkscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2306200000 definitions=main-2308070084
+Content-Transfer-Encoding: quoted-printable
+X-MIME-Autoconverted: from 8bit to quoted-printable by mx0a-0064b401.pphosted.com id 3777nkaR001000
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 07 Aug 2023 06:30:01 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14919
-
---------------izxO1P0IPGnWhjWikCvt8yBe
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-MIME-Autoconverted: from 8bit to quoted-printable by mx0a-0064b401.pphosted.com id 3775DWLd001474
-
-Hi Randy & Richard,
-
-The key problem here is that *it takes time for tasks to occupy=20
-resources*. And during that time, new tasks will be spawned. And this is=20
-the 'task spawning peaking issue' I referred to in the commit message.
-
-Even if we switch to a non-binary approach, as long as there's some=20
-criteria, this peaking issue will always be there. Because there will=20
-always exist a point where the load is 'low enough', or in other words,=20
-where 'things look good', and the new tasks start to spawn.
-
-I currently have no idea how we can solve this 'task spawning peaking=20
-issue'. Any suggestion?
-
-Regards,
-Qi
+ <bitbake-devel@lists.openembedded.org>; Mon, 07 Aug 2023 09:07:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14920
 
 On 8/6/23 01:29, Randy MacLeod wrote:
 > On 2023-08-03 03:56, Qi.Chen@windriver.com wrote:
@@ -179,6 +160,25 @@ On 8/6/23 01:29, Randy MacLeod wrote:
 > Agreed, there is a problem but we do have to be careful to not
 > a make things too slow since the goal is to have maximum throughput
 > without having too much congestion and cpu scheduling and IO latency.
+
+Hi Randy & Richard,
+
+Is the concern about the 1s blocking window?
+
+I'm thinking about making the blocking time calculated from the current=20
+pressure data & max setting value.
+
+The idea is (cur_pressure - max_value) / (cur_pressure + max_value). In=20
+this way, the blocking time is in the range (0, 1.0), the bigger=20
+cur_pressure exceeds the max setting, the longer tasks are blocked.
+
+What do you think?
+
+Regards,
+
+Qi
+
+
 >> In fact, if the time interval is very small, the result
 >> might be 0, resulting in any small value not having any effect.
 > Yes, the PSI variable are implemented as per cpu vars and
@@ -997,854 +997,4 @@ ceeds_memory_pressure)
 > # Wind River Linux
 
 
---------------izxO1P0IPGnWhjWikCvt8yBe
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-<html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  </head>
-  <body>
-    <div class="moz-cite-prefix">Hi Randy &amp; Richard,</div>
-    <div class="moz-cite-prefix"><br>
-    </div>
-    <div class="moz-cite-prefix">The key problem here is that <b>it
-        takes time for tasks to occupy resources</b>. And during that
-      time, new tasks will be spawned. And this is the 'task spawning
-      peaking issue' I referred to in the commit message.<br>
-    </div>
-    <div class="moz-cite-prefix"><br>
-    </div>
-    <div class="moz-cite-prefix">Even if we switch to a non-binary
-      approach, as long as there's some criteria, this peaking issue
-      will always be there. Because there will always exist a point
-      where the load is 'low enough', or in other words, where 'things
-      look good', and the new tasks start to spawn. <br>
-    </div>
-    <div class="moz-cite-prefix"><br>
-    </div>
-    <div class="moz-cite-prefix">I currently have no idea how we can
-      solve this 'task spawning peaking issue'. Any suggestion?</div>
-    <div class="moz-cite-prefix"><br>
-    </div>
-    <div class="moz-cite-prefix">Regards,</div>
-    <div class="moz-cite-prefix">Qi<br>
-    </div>
-    <div class="moz-cite-prefix"><br>
-    </div>
-    <div class="moz-cite-prefix">On 8/6/23 01:29, Randy MacLeod wrote:<br>
-    </div>
-    <blockquote type="cite" cite="mid:ac05a465-6da7-3441-b45d-ab65c73f244d@windriver.com">
-      
-      <div class="moz-cite-prefix">On 2023-08-03 03:56, <a class="moz-txt-link-abbreviated moz-txt-link-freetext" href="mailto:Qi.Chen@windriver.com" moz-do-not-send="true">Qi.Chen@windriver.com</a>
-        wrote:<br>
-      </div>
-      <blockquote type="cite" cite="mid:20230803075638.2355913-1-Qi.Chen@windriver.com">
-        <pre class="moz-quote-pre" wrap="">From: Chen Qi <a class="moz-txt-link-rfc2396E" href="mailto:Qi.Chen@windriver.com" moz-do-not-send="true">&lt;Qi.Chen@windriver.com&gt;</a>
-
-The current logic is not correct because if the time interval
-between the current check and the last check is very small, the PSI
-checker is not likely to block things even if the system is heavy
-loaded. </pre>
-      </blockquote>
-      Agreed, there is a problem but we do have to be careful to not<br>
-      a make things too slow since the goal is to have maximum
-      throughput<br>
-      without having too much congestion and cpu scheduling and IO
-      latency.<br>
-      <blockquote type="cite" cite="mid:20230803075638.2355913-1-Qi.Chen@windriver.com">
-        <pre class="moz-quote-pre" wrap="">In fact, if the time interval is very small, the result
-might be 0, resulting in any small value not having any effect.</pre>
-      </blockquote>
-      Yes, the PSI variable are implemented as per cpu vars and<br>
-      you can get the same result several times in a row, even when<br>
-      <p>there is lots of CPU pressure. Eg:<br>
-      </p>
-      <p>$ stress -c 25 -t 100 &amp;<br>
-        [1] 3851144<br>
-        stress: info: [3851144] dispatching hogs: 25 cpu, 0 io, 0 vm, 0
-        hdd<br>
-        $ for i in `seq 200`; do date +&quot;%Y-%m-%d %H:%M:%S.%N&quot; &gt;&gt;
-        /tmp/cpu; cat /proc/pressure/cpu &gt;&gt; /tmp/cpu ; done<br>
-        $ less /tmp/cpu <br>
-      </p>
-      <p>See (1) below.</p>
-      <p>I need to look at the PSI averaging algorithm again!<br>
-      </p>
-      <p><br>
-      </p>
-      <blockquote type="cite" cite="mid:20230803075638.2355913-1-Qi.Chen@windriver.com">
-        <pre class="moz-quote-pre" wrap="">To reproduce the current problem, set BB_PRESSURE_MAX_CPU/IO/MEMORY
-to &quot;1&quot;, and start a build. We can see there's more than one tasks
-running throughout the whole build process.
-
-This patch improves things a little bit. It will block task spawning
-for at least 1s if the limits are exceeded, this is to overcome the
-0 result issue. On the other hand, if the task spawning is not
-blocked, we check the pressure every time.
-
-However, even with this fix, we still have the task spawning peek issue.
-Because at some point, when the load is low enough, a few tasks will
-be spawned altogether.
-
-In summary, this patch improves the situation, but the peek task
-spawning peek issue is still there.</pre>
-      </blockquote>
-      Richard and I were talking about this and he suggested<br>
-      that we take a different approach of changing from a binary<br>
-      approach to one where if we're close (say withing 10%) of the
-      threshold, <br>
-      we tell the bitbake scheduler:<br>
-      <p>&nbsp;&quot; Things don't look good, can you ask me again in a little
-        while?&quot;</p>
-      <p><br>
-      </p>
-      Then if the congestion abates, we allow new task and if not, then<br>
-      we've avoided introducing new load as we are ramping up.<br>
-      Richard claims that this &quot;ask again in a while&quot; is something the<br>
-      <p>scheduler already has code for. <br>
-      </p>
-      <p><br>
-      </p>
-      This is essentially a smoothing algorithm, which I have little<br>
-      experience. I did, as a student decades ago, try to control the
-      temperator of <br>
-      a beaker of water and bring it from room temperature to a
-      predefined goal<br>
-      with minimal overshoot and reverberation! There are people with
-      expertise <br>
-      in this sort of thing, so if you are such a person, it would be
-      good to have <br>
-      you appear out of the Yocto woodwork!<br>
-      <p>I think we're doing something similar to the temperature
-        controlled beaker <br>
-        except it's a not a fixed thermal load but rather a continuously
-        changing one.</p>
-      <p><br>
-      </p>
-      <p>I'm not sure if I've written this down before but I think there
-        would<br>
-        be some benefit, at least for a self-test, to have a series of
-        stress-ng<br>
-        tasks that we put into a recipe. One would bring the system up
-        to<br>
-        just below CPU (IO) congestion and keep the system in that state
-        for a ~5-10<br>
-        minutes. Then we'd run another N (= 10?), short-lived (30 s?)
-        stress-ng -c<br>
-        tests all at once. If the pressure regulation were working well,<br>
-        the secondary stress-ng jobs would run serially and take
-        N*Timeout to be done.</p>
-      <p>Of course, on a loaded system such as the YP autobuilders, this
-        would take even longer<br>
-        but should never take &lt; N*Timeout seconds.<br>
-        <br>
-        While this sounds like a good test to me (and kind of fun!), we
-        should remind ourselfs<br>
-        that the larger task is to get make/ninja/cargo/etc to use a job
-        pool per bitbake instance <br>
-        and/or patch them to read PSI info.<br>
-        <br>
-        We'd still have the congestion onset/abatement problem with
-        those tools though<br>
-        so the problem is worth figuring out.</p>
-      <p>For now, I'd need to see the before and after times an
-        buildstats for a build of say core-image-minimal<br>
-        and/or poky world on a system that runs at 100% capacity for a
-        good part of the build without PSI<br>
-        regulation.<br>
-      </p>
-      <p>Data below. Sorry, I don't have time to analyze or graph it.<br>
-      </p>
-      <p><br>
-      </p>
-      <p>../Randy<br>
-      </p>
-      <blockquote type="cite" cite="mid:20230803075638.2355913-1-Qi.Chen@windriver.com">
-        <pre class="moz-quote-pre" wrap="">Signed-off-by: Chen Qi <a class="moz-txt-link-rfc2396E" href="mailto:Qi.Chen@windriver.com" moz-do-not-send="true">&lt;Qi.Chen@windriver.com&gt;</a>
----
- bitbake/lib/bb/runqueue.py | 33 ++++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
-
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 48788f4aa6..7c482a55f3 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -179,6 +179,7 @@ class RunQueueScheduler(object):
-                     self.prev_memory_pressure = memory_pressure_fds.readline().split()[4].split(&quot;=&quot;)[1]
-                     self.prev_pressure_time = time.time()
-                 self.check_pressure = True
-+                self.psi_exceeded = False
-             except:
-                 bb.note(&quot;The /proc/pressure files can't be read. Continuing build without monitoring pressure&quot;)
-                 self.check_pressure = False
-@@ -191,6 +192,14 @@ class RunQueueScheduler(object):
-         BB_PRESSURE_MAX_{CPU|IO|MEMORY} are set, return True if above threshold.
-         &quot;&quot;&quot;
-         if self.check_pressure:
-+            now = time.time()
-+            tdiff = now - self.prev_pressure_time
-+            # If task spawning has been blocked, block it for at least 1s;
-+            # otherwise, check the pressure ASAP. This is because if tdiff is very small
-+            # the result of (curr_xxx_pressure - prev_xxx_pressure) might be 0, resulting
-+            # in any small value not having effect.
-+            if self.psi_exceeded and tdiff &lt; 1.0:
-+                return self.psi_exceeded
-             with open(&quot;/proc/pressure/cpu&quot;) as cpu_pressure_fds, \
-                 open(&quot;/proc/pressure/io&quot;) as io_pressure_fds, \
-                 open(&quot;/proc/pressure/memory&quot;) as memory_pressure_fds:
-@@ -198,25 +207,19 @@ class RunQueueScheduler(object):
-                 curr_cpu_pressure = cpu_pressure_fds.readline().split()[4].split(&quot;=&quot;)[1]
-                 curr_io_pressure = io_pressure_fds.readline().split()[4].split(&quot;=&quot;)[1]
-                 curr_memory_pressure = memory_pressure_fds.readline().split()[4].split(&quot;=&quot;)[1]
--                now = time.time()
--                tdiff = now - self.prev_pressure_time
--                if tdiff &gt; 1.0:
--                    exceeds_cpu_pressure =  self.rq.max_cpu_pressure and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) / tdiff &gt; self.rq.max_cpu_pressure
--                    exceeds_io_pressure =  self.rq.max_io_pressure and (float(curr_io_pressure) - float(self.prev_io_pressure)) / tdiff &gt; self.rq.max_io_pressure
--                    exceeds_memory_pressure = self.rq.max_memory_pressure and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) / tdiff &gt; self.rq.max_memory_pressure
--                    self.prev_cpu_pressure = curr_cpu_pressure
--                    self.prev_io_pressure = curr_io_pressure
--                    self.prev_memory_pressure = curr_memory_pressure
--                    self.prev_pressure_time = now
--                else:
--                    exceeds_cpu_pressure =  self.rq.max_cpu_pressure and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) &gt; self.rq.max_cpu_pressure
--                    exceeds_io_pressure =  self.rq.max_io_pressure and (float(curr_io_pressure) - float(self.prev_io_pressure)) &gt; self.rq.max_io_pressure
--                    exceeds_memory_pressure = self.rq.max_memory_pressure and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) &gt; self.rq.max_memory_pressure
-+                exceeds_cpu_pressure =  self.rq.max_cpu_pressure and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) / tdiff &gt; self.rq.max_cpu_pressure
-+                exceeds_io_pressure =  self.rq.max_io_pressure and (float(curr_io_pressure) - float(self.prev_io_pressure)) / tdiff &gt; self.rq.max_io_pressure
-+                exceeds_memory_pressure = self.rq.max_memory_pressure and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) / tdiff &gt; self.rq.max_memory_pressure
-+                self.prev_cpu_pressure = curr_cpu_pressure
-+                self.prev_io_pressure = curr_io_pressure
-+                self.prev_memory_pressure = curr_memory_pressure
-+                self.prev_pressure_time = now
-+                self.psi_exceeded = exceeds_cpu_pressure or exceeds_io_pressure or exceeds_memory_pressure
-             pressure_state = (exceeds_cpu_pressure, exceeds_io_pressure, exceeds_memory_pressure)
-             if hasattr(self, &quot;pressure_state&quot;) and pressure_state != self.pressure_state:
-                 bb.note(&quot;Pressure status changed to CPU: %s, IO: %s, Mem: %s&quot; % pressure_state)
-             self.pressure_state = pressure_state
--            return (exceeds_cpu_pressure or exceeds_io_pressure or exceeds_memory_pressure)
-+            return self.psi_exceeded
-         return False
- 
-     def next_buildable_task(self):
-</pre>
-      </blockquote>
-      <p><br>
-      </p>
-      <p>1) <br>
-      </p>
-      <p>&nbsp;$ rg &quot;2023|some&quot; /tmp/cpu <br>
-        1:2023-08-03 21:29:06.026561191<br>
-        2:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        4:2023-08-03 21:29:06.031553426<br>
-        5:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        7:2023-08-03 21:29:06.035901497<br>
-        8:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        10:2023-08-03 21:29:06.040136284<br>
-        11:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        13:2023-08-03 21:29:06.043794493<br>
-        14:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        16:2023-08-03 21:29:06.047555871<br>
-        17:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        19:2023-08-03 21:29:06.051353279<br>
-        20:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        22:2023-08-03 21:29:06.055225669<br>
-        23:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        25:2023-08-03 21:29:06.059436263<br>
-        26:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        28:2023-08-03 21:29:06.063509822<br>
-        29:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        31:2023-08-03 21:29:06.067917089<br>
-        32:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        34:2023-08-03 21:29:06.071907717<br>
-        35:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        37:2023-08-03 21:29:06.075865773<br>
-        38:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        40:2023-08-03 21:29:06.079846668<br>
-        41:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        43:2023-08-03 21:29:06.083961331<br>
-        44:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        46:2023-08-03 21:29:06.087959027<br>
-        47:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        49:2023-08-03 21:29:06.091544025<br>
-        50:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        52:2023-08-03 21:29:06.095441172<br>
-        53:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        55:2023-08-03 21:29:06.099397076<br>
-        56:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        58:2023-08-03 21:29:06.103036659<br>
-        59:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        61:2023-08-03 21:29:06.106987290<br>
-        62:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        64:2023-08-03 21:29:06.110500839<br>
-        65:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        67:2023-08-03 21:29:06.113993363<br>
-        68:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        70:2023-08-03 21:29:06.117569797<br>
-        71:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        73:2023-08-03 21:29:06.121977963<br>
-        74:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        76:2023-08-03 21:29:06.125929934<br>
-        77:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        79:2023-08-03 21:29:06.130064807<br>
-        80:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        82:2023-08-03 21:29:06.134026786<br>
-        83:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        85:2023-08-03 21:29:06.137735375<br>
-        86:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        88:2023-08-03 21:29:06.141781398<br>
-        89:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        91:2023-08-03 21:29:06.145287007<br>
-        92:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        94:2023-08-03 21:29:06.149168307<br>
-        95:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        97:2023-08-03 21:29:06.152818060<br>
-        98:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        100:2023-08-03 21:29:06.156414605<br>
-        101:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        103:2023-08-03 21:29:06.160560201<br>
-        104:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        106:2023-08-03 21:29:06.164730602<br>
-        107:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        109:2023-08-03 21:29:06.168689146<br>
-        110:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        112:2023-08-03 21:29:06.172659034<br>
-        113:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        115:2023-08-03 21:29:06.176217293<br>
-        116:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        118:2023-08-03 21:29:06.179786393<br>
-        119:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        121:2023-08-03 21:29:06.183386966<br>
-        122:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        124:2023-08-03 21:29:06.186901117<br>
-        125:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        127:2023-08-03 21:29:06.191092359<br>
-        128:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        130:2023-08-03 21:29:06.194689321<br>
-        131:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        133:2023-08-03 21:29:06.198680598<br>
-        134:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        136:2023-08-03 21:29:06.202466314<br>
-        137:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        139:2023-08-03 21:29:06.206159217<br>
-        140:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        142:2023-08-03 21:29:06.210732253<br>
-        143:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        145:2023-08-03 21:29:06.214495861<br>
-        146:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        148:2023-08-03 21:29:06.218378986<br>
-        149:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        151:2023-08-03 21:29:06.222715102<br>
-        152:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        154:2023-08-03 21:29:06.226811631<br>
-        155:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        157:2023-08-03 21:29:06.231578359<br>
-        158:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        160:2023-08-03 21:29:06.235715687<br>
-        161:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        163:2023-08-03 21:29:06.239569685<br>
-        164:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        166:2023-08-03 21:29:06.243630675<br>
-        167:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        169:2023-08-03 21:29:06.247567397<br>
-        170:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        172:2023-08-03 21:29:06.251397908<br>
-        173:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        175:2023-08-03 21:29:06.255011706<br>
-        176:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        178:2023-08-03 21:29:06.258932029<br>
-        179:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        181:2023-08-03 21:29:06.262697913<br>
-        182:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        184:2023-08-03 21:29:06.266799173<br>
-        185:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        187:2023-08-03 21:29:06.270925022<br>
-        188:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        190:2023-08-03 21:29:06.275043244<br>
-        191:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        193:2023-08-03 21:29:06.278632334<br>
-        194:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        196:2023-08-03 21:29:06.282248451<br>
-        197:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        199:2023-08-03 21:29:06.285993782<br>
-        200:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        202:2023-08-03 21:29:06.290307906<br>
-        203:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        205:2023-08-03 21:29:06.294324211<br>
-        206:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        208:2023-08-03 21:29:06.298434915<br>
-        209:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        211:2023-08-03 21:29:06.302588527<br>
-        212:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        214:2023-08-03 21:29:06.306381068<br>
-        215:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        217:2023-08-03 21:29:06.310380335<br>
-        218:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        220:2023-08-03 21:29:06.315066360<br>
-        221:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        223:2023-08-03 21:29:06.319399493<br>
-        224:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        226:2023-08-03 21:29:06.323533769<br>
-        227:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        229:2023-08-03 21:29:06.327623574<br>
-        230:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        232:2023-08-03 21:29:06.331404094<br>
-        233:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        235:2023-08-03 21:29:06.335282298<br>
-        236:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        238:2023-08-03 21:29:06.339218007<br>
-        239:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        241:2023-08-03 21:29:06.343022226<br>
-        242:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        244:2023-08-03 21:29:06.346892658<br>
-        245:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        247:2023-08-03 21:29:06.350737213<br>
-        248:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        250:2023-08-03 21:29:06.354365299<br>
-        251:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        253:2023-08-03 21:29:06.358504205<br>
-        254:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        256:2023-08-03 21:29:06.362474648<br>
-        257:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        259:2023-08-03 21:29:06.366500614<br>
-        260:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        262:2023-08-03 21:29:06.370409578<br>
-        263:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        265:2023-08-03 21:29:06.374728115<br>
-        266:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        268:2023-08-03 21:29:06.379177687<br>
-        269:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        271:2023-08-03 21:29:06.382958096<br>
-        272:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        274:2023-08-03 21:29:06.386287192<br>
-        275:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        277:2023-08-03 21:29:06.390148390<br>
-        278:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        280:2023-08-03 21:29:06.393995408<br>
-        281:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        283:2023-08-03 21:29:06.397538386<br>
-        284:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        286:2023-08-03 21:29:06.401522567<br>
-        287:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        289:2023-08-03 21:29:06.405142382<br>
-        290:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        292:2023-08-03 21:29:06.408883272<br>
-        293:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        295:2023-08-03 21:29:06.412675078<br>
-        296:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        298:2023-08-03 21:29:06.416350916<br>
-        299:some avg10=0.00 avg60=0.00 avg300=0.00 total=38696165984<br>
-        301:2023-08-03 21:30:02.078140466<br>
-        302:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696853256<br>
-        304:2023-08-03 21:30:02.107326758<br>
-        305:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696855634<br>
-        307:2023-08-03 21:30:02.126028647<br>
-        308:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696856111<br>
-        310:2023-08-03 21:30:02.146028343<br>
-        311:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696858681<br>
-        313:2023-08-03 21:30:02.170021779<br>
-        314:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696861693<br>
-        316:2023-08-03 21:30:02.210054311<br>
-        317:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696865034<br>
-        319:2023-08-03 21:30:02.246006375<br>
-        320:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696867390<br>
-        322:2023-08-03 21:30:02.274025123<br>
-        323:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696870090<br>
-        325:2023-08-03 21:30:02.306023178<br>
-        326:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696873121<br>
-        328:2023-08-03 21:30:02.342042024<br>
-        329:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696876150<br>
-        331:2023-08-03 21:30:02.374045594<br>
-        332:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696878182<br>
-        334:2023-08-03 21:30:02.398024941<br>
-        335:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696880542<br>
-        337:2023-08-03 21:30:02.430025787<br>
-        338:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696884229<br>
-        340:2023-08-03 21:30:02.474025766<br>
-        341:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696886618<br>
-        343:2023-08-03 21:30:02.506036609<br>
-        344:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696889650<br>
-        346:2023-08-03 21:30:02.538005211<br>
-        347:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696892350<br>
-        349:2023-08-03 21:30:02.570002594<br>
-        350:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696895386<br>
-        352:2023-08-03 21:30:02.602024574<br>
-        353:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696897412<br>
-        355:2023-08-03 21:30:02.626006000<br>
-        356:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696899777<br>
-        358:2023-08-03 21:30:02.654031808<br>
-        359:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696901808<br>
-        361:2023-08-03 21:30:02.686002144<br>
-        362:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696904511<br>
-        364:2023-08-03 21:30:02.718074747<br>
-        365:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696908199<br>
-        367:2023-08-03 21:30:02.754015511<br>
-        368:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696910921<br>
-        370:2023-08-03 21:30:02.786022272<br>
-        371:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696913625<br>
-        373:2023-08-03 21:30:02.818041167<br>
-        374:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696916321<br>
-        376:2023-08-03 21:30:02.858023387<br>
-        377:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696919750<br>
-        379:2023-08-03 21:30:02.894034643<br>
-        380:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696922454<br>
-        382:2023-08-03 21:30:02.926147057<br>
-        383:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696925319<br>
-        385:2023-08-03 21:30:02.954068342<br>
-        386:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696927350<br>
-        388:2023-08-03 21:30:02.986088254<br>
-        389:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696930380<br>
-        391:2023-08-03 21:30:03.018103409<br>
-        392:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696933078<br>
-        394:2023-08-03 21:30:03.050077392<br>
-        395:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696935445<br>
-        397:2023-08-03 21:30:03.074114392<br>
-        398:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696938795<br>
-        400:2023-08-03 21:30:03.114035084<br>
-        401:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696940845<br>
-        403:2023-08-03 21:30:03.142015391<br>
-        404:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696943542<br>
-        406:2023-08-03 21:30:03.174031239<br>
-        407:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696946247<br>
-        409:2023-08-03 21:30:03.210113551<br>
-        410:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696949897<br>
-        412:2023-08-03 21:30:03.242035265<br>
-        413:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696952261<br>
-        415:2023-08-03 21:30:03.274046961<br>
-        416:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696954940<br>
-        418:2023-08-03 21:30:03.306028723<br>
-        419:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696957656<br>
-        421:2023-08-03 21:30:03.338077555<br>
-        422:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696960686<br>
-        424:2023-08-03 21:30:03.374073915<br>
-        425:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696963050<br>
-        427:2023-08-03 21:30:03.402047343<br>
-        428:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696966086<br>
-        430:2023-08-03 21:30:03.434032881<br>
-        431:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696968788<br>
-        433:2023-08-03 21:30:03.466032340<br>
-        434:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696970813<br>
-        436:2023-08-03 21:30:03.494068821<br>
-        437:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696973176<br>
-        439:2023-08-03 21:30:03.522161212<br>
-        440:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696975872<br>
-        442:2023-08-03 21:30:03.554050153<br>
-        443:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696978574<br>
-        445:2023-08-03 21:30:03.586065001<br>
-        446:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696980938<br>
-        448:2023-08-03 21:30:03.614119644<br>
-        449:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696983300<br>
-        451:2023-08-03 21:30:03.638144992<br>
-        452:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696986016<br>
-        454:2023-08-03 21:30:03.674118268<br>
-        455:some avg10=3.10 avg60=0.88 avg300=0.20 total=38696988717<br>
-        457:2023-08-03 21:30:03.710118733<br>
-        458:some avg10=3.99 avg60=1.11 avg300=0.25 total=38696991745<br>
-        460:2023-08-03 21:30:03.738066832<br>
-        461:some avg10=3.99 avg60=1.11 avg300=0.25 total=38696994115<br>
-        463:2023-08-03 21:30:03.770048303<br>
-        464:some avg10=3.99 avg60=1.11 avg300=0.25 total=38696996451<br>
-        466:2023-08-03 21:30:03.802092382<br>
-        467:some avg10=3.99 avg60=1.11 avg300=0.25 total=38696999169<br>
-        469:2023-08-03 21:30:03.826077226<br>
-        470:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697001198<br>
-        472:2023-08-03 21:30:03.858062788<br>
-        473:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697003903<br>
-        475:2023-08-03 21:30:03.890062930<br>
-        476:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697006941<br>
-        478:2023-08-03 21:30:03.922067512<br>
-        479:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697009971<br>
-        481:2023-08-03 21:30:03.958084669<br>
-        482:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697013322<br>
-        484:2023-08-03 21:30:03.994120043<br>
-        485:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697015378<br>
-        487:2023-08-03 21:30:04.018108794<br>
-        488:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697017409<br>
-        490:2023-08-03 21:30:04.042115598<br>
-        491:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697019438<br>
-        493:2023-08-03 21:30:04.066126937<br>
-        494:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697021470<br>
-        496:2023-08-03 21:30:04.090050277<br>
-        497:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697023835<br>
-        499:2023-08-03 21:30:04.122078760<br>
-        500:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697026530<br>
-        502:2023-08-03 21:30:04.158044418<br>
-        503:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697029229<br>
-        505:2023-08-03 21:30:04.186092879<br>
-        506:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697032540<br>
-        508:2023-08-03 21:30:04.233761652<br>
-        509:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697035931<br>
-        511:2023-08-03 21:30:04.262027484<br>
-        512:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697038637<br>
-        514:2023-08-03 21:30:04.294022638<br>
-        515:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697041335<br>
-        517:2023-08-03 21:30:04.322028009<br>
-        518:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697044038<br>
-        520:2023-08-03 21:30:04.354034481<br>
-        521:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697046391<br>
-        523:2023-08-03 21:30:04.386023486<br>
-        524:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697048757<br>
-        526:2023-08-03 21:30:04.414022848<br>
-        527:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697051459<br>
-        529:2023-08-03 21:30:04.442017832<br>
-        530:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697053484<br>
-        532:2023-08-03 21:30:04.466027364<br>
-        533:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697056162<br>
-        535:2023-08-03 21:30:04.502021088<br>
-        536:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697058883<br>
-        538:2023-08-03 21:30:04.534039153<br>
-        539:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697061578<br>
-        541:2023-08-03 21:30:04.566039103<br>
-        542:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697063939<br>
-        544:2023-08-03 21:30:04.598037462<br>
-        545:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697066641<br>
-        547:2023-08-03 21:30:04.629771191<br>
-        548:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697070011<br>
-        550:2023-08-03 21:30:04.666042007<br>
-        551:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697072371<br>
-        553:2023-08-03 21:30:04.698010368<br>
-        554:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697075069<br>
-        556:2023-08-03 21:30:04.722019998<br>
-        557:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697077770<br>
-        559:2023-08-03 21:30:04.762030636<br>
-        560:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697080474<br>
-        562:2023-08-03 21:30:04.786010720<br>
-        563:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697083181<br>
-        565:2023-08-03 21:30:04.818035029<br>
-        566:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697085877<br>
-        568:2023-08-03 21:30:04.854034446<br>
-        569:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697088575<br>
-        571:2023-08-03 21:30:04.882043053<br>
-        572:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697091289<br>
-        574:2023-08-03 21:30:04.922081980<br>
-        575:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697093316<br>
-        577:2023-08-03 21:30:04.927564632<br>
-        578:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697094670<br>
-        580:2023-08-03 21:30:04.962026471<br>
-        581:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697097373<br>
-        583:2023-08-03 21:30:04.990040191<br>
-        584:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697099739<br>
-        586:2023-08-03 21:30:05.014033886<br>
-        587:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697101764<br>
-        589:2023-08-03 21:30:05.039750750<br>
-        590:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697104463<br>
-        592:2023-08-03 21:30:05.074019117<br>
-        593:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697106610<br>
-        595:2023-08-03 21:30:05.110046072<br>
-        596:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697109855<br>
-        598:2023-08-03 21:30:05.138046014<br>
-        599:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697112555<br>
-        601:2023-08-03 21:30:05.166023497<br>
-        602:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697115232<br>
-        604:2023-08-03 21:30:05.206061564<br>
-        605:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697118239<br>
-        607:2023-08-03 21:30:05.238018646<br>
-        608:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697120933<br>
-        610:2023-08-03 21:30:05.270026372<br>
-        611:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697123957<br>
-        613:2023-08-03 21:30:05.302027288<br>
-        614:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697126663<br>
-        616:2023-08-03 21:30:05.334040250<br>
-        617:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697129338<br>
-        619:2023-08-03 21:30:05.360190632<br>
-        620:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697131047<br>
-        622:2023-08-03 21:30:05.390029162<br>
-        623:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697133747<br>
-        625:2023-08-03 21:30:05.414034794<br>
-        626:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697135782<br>
-        628:2023-08-03 21:30:05.427642722<br>
-        629:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697137467<br>
-        631:2023-08-03 21:30:05.458016115<br>
-        632:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697139828<br>
-        634:2023-08-03 21:30:05.486030455<br>
-        635:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697142173<br>
-        637:2023-08-03 21:30:05.514016836<br>
-        638:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697144890<br>
-        640:2023-08-03 21:30:05.546024372<br>
-        641:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697147583<br>
-        643:2023-08-03 21:30:05.584237211<br>
-        644:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697150280<br>
-        646:2023-08-03 21:30:05.614025918<br>
-        647:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697152856<br>
-        649:2023-08-03 21:30:05.646014419<br>
-        650:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697155334<br>
-        652:2023-08-03 21:30:05.670042958<br>
-        653:some avg10=3.99 avg60=1.11 avg300=0.25 total=38697157696<br>
-        655:2023-08-03 21:30:05.706027504<br>
-        656:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697160413<br>
-        658:2023-08-03 21:30:05.730024921<br>
-        659:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697163116<br>
-        661:2023-08-03 21:30:05.770026829<br>
-        662:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697165892<br>
-        664:2023-08-03 21:30:05.806011996<br>
-        665:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697168589<br>
-        667:2023-08-03 21:30:05.830011568<br>
-        668:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697171305<br>
-        670:2023-08-03 21:30:05.862039144<br>
-        671:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697173671<br>
-        673:2023-08-03 21:30:05.898008773<br>
-        674:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697177020<br>
-        676:2023-08-03 21:30:05.933796165<br>
-        677:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697179742<br>
-        679:2023-08-03 21:30:05.970058151<br>
-        680:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697182438<br>
-        682:2023-08-03 21:30:05.994037819<br>
-        683:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697184468<br>
-        685:2023-08-03 21:30:06.026022629<br>
-        686:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697187165<br>
-        688:2023-08-03 21:30:06.050024626<br>
-        689:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697189526<br>
-        691:2023-08-03 21:30:06.078013808<br>
-        692:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697192230<br>
-        694:2023-08-03 21:30:06.114030646<br>
-        695:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697194603<br>
-        697:2023-08-03 21:30:06.142038629<br>
-        698:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697197296<br>
-        700:2023-08-03 21:30:06.170044171<br>
-        701:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697199658<br>
-        703:2023-08-03 21:30:06.205670334<br>
-        704:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697202692<br>
-        706:2023-08-03 21:30:06.238037490<br>
-        707:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697206060<br>
-        709:2023-08-03 21:30:06.270024332<br>
-        710:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697208087<br>
-        712:2023-08-03 21:30:06.301784118<br>
-        713:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697211461<br>
-        715:2023-08-03 21:30:06.342039416<br>
-        716:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697214160<br>
-        718:2023-08-03 21:30:06.374013677<br>
-        719:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697216861<br>
-        721:2023-08-03 21:30:06.406040803<br>
-        722:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697219559<br>
-        724:2023-08-03 21:30:06.438006057<br>
-        725:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697222256<br>
-        727:2023-08-03 21:30:06.470026240<br>
-        728:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697225629<br>
-        730:2023-08-03 21:30:06.502024527<br>
-        731:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697228305<br>
-        733:2023-08-03 21:30:06.538033228<br>
-        734:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697230686<br>
-        736:2023-08-03 21:30:06.566028157<br>
-        737:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697233689<br>
-        739:2023-08-03 21:30:06.602025064<br>
-        740:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697236080<br>
-        742:2023-08-03 21:30:06.630027618<br>
-        743:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697238780<br>
-        745:2023-08-03 21:30:06.662010496<br>
-        746:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697241478<br>
-        748:2023-08-03 21:30:06.690014164<br>
-        749:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697243510<br>
-        751:2023-08-03 21:30:06.714031649<br>
-        752:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697246207<br>
-        754:2023-08-03 21:30:06.750026276<br>
-        755:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697248907<br>
-        757:2023-08-03 21:30:06.786014937<br>
-        758:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697251609<br>
-        760:2023-08-03 21:30:06.818017495<br>
-        761:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697254643<br>
-        763:2023-08-03 21:30:06.846013970<br>
-        764:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697256667<br>
-        766:2023-08-03 21:30:06.878168821<br>
-        767:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697259367<br>
-        769:2023-08-03 21:30:06.902022147<br>
-        770:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697262083<br>
-        772:2023-08-03 21:30:06.937999183<br>
-        773:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697264777<br>
-        775:2023-08-03 21:30:06.970022469<br>
-        776:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697267479<br>
-        778:2023-08-03 21:30:07.006018171<br>
-        779:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697270171<br>
-        781:2023-08-03 21:30:07.030035755<br>
-        782:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697272873<br>
-        784:2023-08-03 21:30:07.070024602<br>
-        785:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697275913<br>
-        787:2023-08-03 21:30:07.098024161<br>
-        788:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697277932<br>
-        790:2023-08-03 21:30:07.126038057<br>
-        791:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697280293<br>
-        793:2023-08-03 21:30:07.150014689<br>
-        794:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697282324<br>
-        796:2023-08-03 21:30:07.174011609<br>
-        797:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697284688<br>
-        799:2023-08-03 21:30:07.206006119<br>
-        800:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697287664<br>
-        802:2023-08-03 21:30:07.242013736<br>
-        803:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697290389<br>
-        805:2023-08-03 21:30:07.273763791<br>
-        806:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697293757<br>
-        808:2023-08-03 21:30:07.306027619<br>
-        809:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697296435<br>
-        811:2023-08-03 21:30:07.338033801<br>
-        812:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697299155<br>
-        814:2023-08-03 21:30:07.370014272<br>
-        815:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697301335<br>
-        817:2023-08-03 21:30:07.398049887<br>
-        818:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697303375<br>
-        820:2023-08-03 21:30:07.426030463<br>
-        821:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306238<br>
-        823:2023-08-03 21:30:07.446012112<br>
-        824:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        826:2023-08-03 21:30:07.449074039<br>
-        827:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        829:2023-08-03 21:30:07.452094902<br>
-        830:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        832:2023-08-03 21:30:07.455132499<br>
-        833:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        835:2023-08-03 21:30:07.458158709<br>
-        836:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        838:2023-08-03 21:30:07.461160555<br>
-        839:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        841:2023-08-03 21:30:07.464164844<br>
-        842:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        844:2023-08-03 21:30:07.467191143<br>
-        845:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        847:2023-08-03 21:30:07.470249391<br>
-        848:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        850:2023-08-03 21:30:07.473268040<br>
-        851:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        853:2023-08-03 21:30:07.476260894<br>
-        854:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        856:2023-08-03 21:30:07.479273385<br>
-        857:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        859:2023-08-03 21:30:07.482341558<br>
-        860:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        862:2023-08-03 21:30:07.485402936<br>
-        863:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        865:2023-08-03 21:30:07.488621116<br>
-        866:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        868:2023-08-03 21:30:07.491648106<br>
-        869:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        871:2023-08-03 21:30:07.494712160<br>
-        872:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        874:2023-08-03 21:30:07.497741518<br>
-        875:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        877:2023-08-03 21:30:07.500731815<br>
-        878:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        880:2023-08-03 21:30:07.503757142<br>
-        881:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        883:2023-08-03 21:30:07.506830439<br>
-        884:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        886:2023-08-03 21:30:07.509933769<br>
-        887:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        889:2023-08-03 21:30:07.512924245<br>
-        890:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        892:2023-08-03 21:30:07.515952487<br>
-        893:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        895:2023-08-03 21:30:07.519039796<br>
-        896:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        898:2023-08-03 21:30:07.522058287<br>
-        899:some avg10=4.71 avg60=1.34 avg300=0.30 total=38697306714<br>
-        <br>
-      </p>
-      <pre class="moz-signature" cols="72">-- 
-# Randy MacLeod
-# Wind River Linux</pre>
-    </blockquote>
-    <p><br>
-    </p>
-  </body>
-</html>
-
---------------izxO1P0IPGnWhjWikCvt8yBe--
 
