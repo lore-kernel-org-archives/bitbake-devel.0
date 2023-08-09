@@ -2,52 +2,52 @@ Return-Path: <eekmecic@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2070C0015E
-	for <webhook@archiver.kernel.org>; Wed,  9 Aug 2023 09:36:15 +0000 (UTC)
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
- by mx.groups.io with SMTP id smtpd.web11.84432.1691573774389568590
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F973EB64DD
+	for <webhook@archiver.kernel.org>; Wed,  9 Aug 2023 09:39:56 +0000 (UTC)
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+ by mx.groups.io with SMTP id smtpd.web11.84460.1691573989133218809
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 09 Aug 2023 02:36:14 -0700
+ Wed, 09 Aug 2023 02:39:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=EkontOzv;
- spf=pass (domain: snapchat.com, ip: 209.85.210.173, mailfrom: eekmecic@snapchat.com)
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-686d8c8fc65so4620027b3a.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Aug 2023 02:36:14 -0700 (PDT)
+ dkim=pass header.i=@snap.com header.s=google header.b=D33s1tN5;
+ spf=pass (domain: snapchat.com, ip: 209.85.167.178, mailfrom: eekmecic@snapchat.com)
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3a74d759bfcso4910730b6e.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Aug 2023 02:39:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google; t=1691573773; x=1692178573;
+        d=snap.com; s=google; t=1691573988; x=1692178788;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l3Rl6OP6fGGXWod8XZlcYOQyUlPeuI3rkPJt5uReirI=;
-        b=EkontOzvAbu6qPljFSkHAocVPHa7m+2qydMVXnvyCGzJ/AZ5Oj7ps0TRiogxGBRN9j
-         BF2LBuQSlvSEFZ6so5nWhhoOtZ/3voAi6Pl1V4iiqMgiAqVmDzmExdSLOXVwF3Ad6UEJ
-         rMvSN7VdO84LI36JEcp+dp9s+75a7TS1yANtk=
+        bh=xPpMXzTL0JFyOwMAa/VZA8Obd1rSD37LQzl9yxSuLDE=;
+        b=D33s1tN5vZM3SiDrifAP68TYxp+yOU0fCmA0ksrb6JxCSjb1KdSTJo+CVZX9E7Ds7Z
+         EQR+eEmCB/xmUyxYdk2DTIE5icxrfsFnodePpz864MRQPMFOgVaoUnI41I7lVyKR3fta
+         G8EvU/DcOSyUE6suM7lnI0OM7wf3MLj2gF08s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691573773; x=1692178573;
+        d=1e100.net; s=20221208; t=1691573988; x=1692178788;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=l3Rl6OP6fGGXWod8XZlcYOQyUlPeuI3rkPJt5uReirI=;
-        b=Y4v9Gik3GW/5MpVTSB+OQKB8H/bGcAwLV8sXnw3iavb2+JJcsQpy3ASFkoymaH14FQ
-         oyOBBHcnmOPpE7fSm2hYZ7Mg1/R2a/V+HbiL/FivAqdA4nD0IkdQmEQ8+0NrgnBdXk52
-         9LW0fhZrvFHgxdg6VwCTpI9VC0H6zDAefb6zLlXvKpROwqIPst8yBnERbFltn/BemVvm
-         MyS+93/ZaVZbdHRFdLDNOYUKpi3wc5Q+6bveKlnfYW522OCwkTVWF8Hkacdwc5bU9jDu
-         1jDjWwET0uV8XtjdgN792MJjqk+HIFzPI4Ly/DYuO/GUTh5EglXrYhnSUoh8aFarzdnu
-         YK8g==
-X-Gm-Message-State: AOJu0YwFx0PvMoPccFt7/55Smd1vZg/sdV4d6wOF8v/dDiYNpnXezhLb
-	f1z4RtjxJ51pTbjnXaJfVJnbf6Rk+cE39pNWBxMKiFjO
-X-Google-Smtp-Source: AGHT+IEUAb9V7tnE7U1RbvwByPIo/XPwBtr2MBTvweI3PAQGsNIXqhA0NuGjy3WeLKIkDj2MDx80cQ==
-X-Received: by 2002:a05:6a21:900c:b0:13f:bc16:c34e with SMTP id tq12-20020a056a21900c00b0013fbc16c34emr1467849pzb.41.1691573773300;
-        Wed, 09 Aug 2023 02:36:13 -0700 (PDT)
+        bh=xPpMXzTL0JFyOwMAa/VZA8Obd1rSD37LQzl9yxSuLDE=;
+        b=BltuCNyVHR3pfrfwn8qhe3/XJ4Yholt7D3fqyG7ctg4JWDE+TYxzo8+1NUeP0ACS2n
+         8FHQIqlsDGUhvw0+3ei1LLMC1xOA8q18RW23pu24GEDlQ3RMY9Xwm9cwy0YzoZXQW0jg
+         bxaqD5AK83IMETRjRmh93/BTH4/XPYphe661kMz+G/cHZwJzqItMvqSTrtbOyzqtgKTi
+         6Dtsg0IeqCkdEdrr3YFyDya/rsEze+4q8m2XabPpWmEF5oNefJQo5wKFEDWCmanopt9c
+         /Ntu2qxAwgwgdg5fJiZ+tZSutN2UD04yGspcat/prTphvUREYuR0uPSls2JnNs9IW+/v
+         7Gew==
+X-Gm-Message-State: AOJu0YwQ4oCanQ+/yDaK2EfSFKDsv4Sqs7Z0yrt+nzzojp7ZqvfutDN3
+	x+3y/2PgUJZm43dp4WqnZsLBiOdomPEDsJaZx7lh9Ecx
+X-Google-Smtp-Source: AGHT+IFiLFoNFzY9ixchbMh3DozxVwWluGf+QLMut0s+XLPZFAX29MuBkVLb4dlUtzby4OvzzhywHw==
+X-Received: by 2002:a05:6808:985:b0:3a7:215c:e3a with SMTP id a5-20020a056808098500b003a7215c0e3amr2225848oic.34.1691573987735;
+        Wed, 09 Aug 2023 02:39:47 -0700 (PDT)
 Received: from 4SK64Z2.sc-core.net ([144.232.179.190])
-        by smtp.gmail.com with ESMTPSA id n21-20020a637215000000b00564e80e81cesm5427223pgc.57.2023.08.09.02.36.12
+        by smtp.gmail.com with ESMTPSA id c15-20020a17090ab28f00b00260a5ecd273sm1006601pjr.1.2023.08.09.02.39.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Aug 2023 02:36:12 -0700 (PDT)
+        Wed, 09 Aug 2023 02:39:47 -0700 (PDT)
 From: eekmecic@snap.com
 To: bitbake-devel@lists.openembedded.org
 Cc: =?UTF-8?q?Emil=20Ekme=C4=8Di=C4=87?= <eekmecic@snap.com>
-Subject: [bitbake-devel][PATCH v5] fetch2: add Google Cloud Platform (GCP) fetcher
-Date: Wed,  9 Aug 2023 02:35:42 -0700
-Message-ID: <20230809093541.1212366-2-eekmecic@snap.com>
+Subject: [bitbake-devel][PATCH v6] fetch2: add Google Cloud Platform (GCP) fetcher
+Date: Wed,  9 Aug 2023 02:39:44 -0700
+Message-ID: <20230809093944.1214108-1-eekmecic@snap.com>
 X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -55,8 +55,8 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 09 Aug 2023 09:36:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14932
+ <bitbake-devel@lists.openembedded.org>; Wed, 09 Aug 2023 09:39:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14933
 
 From: Emil Ekmečić <eekmecic@snap.com>
 
@@ -127,10 +127,10 @@ tools during parse time. Please correct me if I'm wrong.
 
 Signed-off-by: Emil Ekmečić <eekmecic@snap.com>
 ---
- .../bitbake-user-manual-fetching.rst          |  36 ++++++
- lib/bb/fetch2/__init__.py                     |   4 +-
- lib/bb/fetch2/gcp.py                          | 104 ++++++++++++++++++
- 3 files changed, 143 insertions(+), 1 deletion(-)
+ .../bitbake-user-manual-fetching.rst          | 36 +++++++
+ lib/bb/fetch2/__init__.py                     |  4 +-
+ lib/bb/fetch2/gcp.py                          | 98 +++++++++++++++++++
+ 3 files changed, 137 insertions(+), 1 deletion(-)
  create mode 100644 lib/bb/fetch2/gcp.py
 
 diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
@@ -215,10 +215,10 @@ index 8afe012e..0a3d7a58 100644
 +methods.append(gcp.GCP())
 diff --git a/lib/bb/fetch2/gcp.py b/lib/bb/fetch2/gcp.py
 new file mode 100644
-index 00000000..6023d81e
+index 00000000..f42c81fd
 --- /dev/null
 +++ b/lib/bb/fetch2/gcp.py
-@@ -0,0 +1,104 @@
+@@ -0,0 +1,98 @@
 +"""
 +BitBake 'Fetch' implementation for Google Cloup Platform Storage.
 +
@@ -251,12 +251,6 @@ index 00000000..6023d81e
 +    """
 +    def __init__(self):
 +        self.gcp_client = None
-+
-+    def init(self, d):
-+        """
-+        Initialize GCP client.
-+        """
-+        self.get_gcp_client()
 +
 +    def supports(self, ud, d):
 +        """
