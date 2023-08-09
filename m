@@ -1,122 +1,129 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA76C04A6A
-	for <webhook@archiver.kernel.org>; Tue,  8 Aug 2023 20:05:52 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web10.72304.1691525148028957527
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4408C001B0
+	for <webhook@archiver.kernel.org>; Wed,  9 Aug 2023 01:52:03 +0000 (UTC)
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+ by mx.groups.io with SMTP id smtpd.web11.79314.1691545922589617523
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 08 Aug 2023 13:05:48 -0700
+ Tue, 08 Aug 2023 18:52:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=HjIUyJGP;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-3fe5c0e5747so1300845e9.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 08 Aug 2023 13:05:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1691525146; x=1692129946;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bS+tpB1GQA+AkbsiJwCq56b9QrMvmi9l25NrASrI/gU=;
-        b=HjIUyJGPvqYvO2tTe/sBFgb6bMqtBjlEpI2BWjBAIb7DeLzBkxO9GF8r0oV/Hd7bsq
-         pKd9DyKq8G4OjWiJOmHkeYEDktdRxTAp4jAEnl6XYOvr32ltG1+o3+ZNrH4FzRdGeCjH
-         aF+MSATQBjzvgPkEL1zBVZqG65NT39nFrEu9k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691525146; x=1692129946;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bS+tpB1GQA+AkbsiJwCq56b9QrMvmi9l25NrASrI/gU=;
-        b=eaRvqKPnHUhNx8xVkfs+RPs46UYez7FtXIpelKP0E9JLfcVEQJe14NKnrGw/CyMdrp
-         73FrYz+rLThoxB9UK+16hCZnCEuXmK++pbEODmDz/zhhDuxvgN0I4K4v9Qff1SNrTo+L
-         QbVFNgIxoLDmeAFYAKMSNxuoPfqIiUUl9I9isumzv97RLERkzvRUe2NmyUW95A9wyort
-         pCefmTRdO49mE64M38OYKPLkSjUn7A/EcmHYZNbYfSUKqjYKHUECeqKQjaGGiHtlYci1
-         lShzK89w9J8O9mp75mjsKNqaG1cfEm+OgvMQCxeka+bklR1dfcVGkrSJj/SWugoXcTdz
-         U4Lg==
-X-Gm-Message-State: AOJu0YzU9fLReyl0Lr5Ia+vn/e4Wri++8I0jsxRphhiJxs2ttnD4ObN0
-	xwxiQla1rZbsc13r0wvf/9BeiA==
-X-Google-Smtp-Source: AGHT+IGhrATKml67j5oFJlAQ6SAnykfwzGSErjSU3Q7l+hqUdEZH0EuDvmBUydMtH4K0wX2bcAGOFQ==
-X-Received: by 2002:a05:600c:ace:b0:3fb:416d:7324 with SMTP id c14-20020a05600c0ace00b003fb416d7324mr681302wmr.6.1691525146354;
-        Tue, 08 Aug 2023 13:05:46 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:d249:8c2a:f169:cb41? ([2001:8b0:aba:5f3c:d249:8c2a:f169:cb41])
-        by smtp.gmail.com with ESMTPSA id n4-20020a5d4204000000b003143867d2ebsm14430917wrq.63.2023.08.08.13.05.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Aug 2023 13:05:45 -0700 (PDT)
-Message-ID: <0dc5f0bfa8e48dee0c1b4aedb75285725054ca0b.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel][PATCH v3] fetch2: add Google Cloud Platform
- (GCP) fetcher
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: eekmecic@snap.com, Alexandre Belloni <alexandre.belloni@bootlin.com>
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=k7UAUzkS;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.196, mailfrom: alexandre.belloni@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 710D1E0005;
+	Wed,  9 Aug 2023 01:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1691545920;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=27+btHTHELNVkuwrY5Eswzz/qFbnRtNbjw6c5n7heMM=;
+	b=k7UAUzkSXSAS38oUDMe/u0XbnJUEowNpm2wJYVPgALf8e6nAK58R0MBom2y7/ORG51C4kL
+	5obwq56sE3zdt2w41yBpOl9uP6/VG9bOPqjCtcgT9xOhZnLriNDWIxKKeXYz5r/Pvk+BiQ
+	s4xq0jcq3TeHCZDD4DbMMiGvenzbce0aPq6pM9RMRCHdEoqFaCXSwJfTXIdhApH+iq5ZiH
+	FQwaImGF9Es2vuaB5dmJexwOWOykFNuBlC1yfEWRRTX/sY8d6NkUVWIVP78Cky/YcCLeb/
+	VwG2SbPWUvIGRG2hrzVJN2WV3401z0IzpFWbf0JyBVHTOzaQnLORIrb99Nc/+Q==
+Date: Wed, 9 Aug 2023 03:52:00 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Joshua Watt <JPEWhacker@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org
-Date: Tue, 08 Aug 2023 21:05:44 +0100
-In-Reply-To: <CACjag3vGrbb=aZq0hMfQUobbyzLn+5GD1Tj6pWze7zVOakWwqg@mail.gmail.com>
-References: <20230802130632.805865-1-eekmecic@snap.com>
-	 <202308072156510534a9ce@mail.local>
-	 <CACjag3vGrbb=aZq0hMfQUobbyzLn+5GD1Tj6pWze7zVOakWwqg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+Subject: Re: [bitbake-devel][PATCH] fetch2: git: Check if directory is a bare
+ git repo
+Message-ID: <2023080901520013144e1b@mail.local>
+References: <20230804155424.1502010-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230804155424.1502010-1-JPEWhacker@gmail.com>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 08 Aug 2023 20:05:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14929
+ <bitbake-devel@lists.openembedded.org>; Wed, 09 Aug 2023 01:52:03 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14930
 
-On Tue, 2023-08-08 at 12:25 +0200, Emil Ekme=C4=8Di=C4=87 via
-lists.openembedded.org wrote:
-> On Mon, Aug 7, 2023 at 11:56=E2=80=AFPM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> >=20
-> > Hello,
-> >=20
-> > On 02/08/2023 06:06:32-0700, Emil Ekme=C4=8Di=C4=87 via lists.openembed=
-ded.org wrote:
-> > > +import os
-> > > +import bb
-> > > +import urllib.parse, urllib.error
-> > > +from bb.fetch2 import FetchMethod
-> > > +from bb.fetch2 import FetchError
-> > > +from bb.fetch2 import logger
-> > > +from google.cloud import storage
-> >=20
-> > This fails on the autobuilders with:
-> >=20
-> >   File "/home/pokybuild/yocto-worker/a-full/build/bitbake/bin/bitbake-l=
-ayers", line 24, in <module>
-> >     import bb.tinfoil
-> >   File "/home/pokybuild/yocto-worker/a-full/build/bitbake/lib/bb/__init=
-__.py", line 139, in <module>
-> >     from bb import fetch2 as fetch
-> >   File "/home/pokybuild/yocto-worker/a-full/build/bitbake/lib/bb/fetch2=
-/__init__.py", line 1979, in <module>
-> >     from . import gcp
-> >   File "/home/pokybuild/yocto-worker/a-full/build/bitbake/lib/bb/fetch2=
-/gcp.py", line 26, in <module>
-> >     from google.cloud import storage
-> > ModuleNotFoundError: No module named 'google'
->=20
-> As noted in the comment at the top of the file and the documentation,
-> using the GCP fetcher requires the Python package to be installed.
-> I'm not sure the best way to handle this given that using the GCP
-> fetcher is optional. Other fetchers (S3, Azure) rely on third party
-> tools to be installed on the command line but no fetchers that I
-> found rely on Python packages to be installed.
->=20
-> I'm submitting an updated patch where the import statement is wrapped
-> in a try-catch block with a descriptive error message but I welcome
-> other approaches too.
+Hello Joshua,
 
-This will still mean that effectively anyone trying to use bitbake
-would be forced to install this python module which isn't acceptable.
+I'm fairly sure this causes the following bitbake-selftest failure:
 
-Instead I'd suggest moving the imports into the method calls. Whilst
-this may have some duplication of the imports, it will also allow
-things to work without forcing everyone to have this python module.
+https://autobuilder.yoctoproject.org/typhoon/#/builders/56/builds/2307/steps/11/logs/stdio
 
-Cheers,
+On 04/08/2023 09:54:24-0600, Joshua Watt wrote:
+> If the clone target directory exists, but isn't the valid top level of a
+> bare git repo, it needs to be erased and re-cloned. One example of how
+> this can happen is if a clone creates the directory, but then fails to
+> actual clone and make it a git repository. This left-over directory can
+> be particularly problematic if the download directory is a descent of
+> some top layer git repo (e.g. the default with poky), as the commands
+> that operate on the remote later will then mangle the layers git
+> repository instead of the download git repo.
+> 
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+>  bitbake/lib/bb/fetch2/git.py | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+> index 2a3c06fe4e9..112bed294f0 100644
+> --- a/bitbake/lib/bb/fetch2/git.py
+> +++ b/bitbake/lib/bb/fetch2/git.py
+> @@ -65,6 +65,7 @@ import fnmatch
+>  import os
+>  import re
+>  import shlex
+> +import shutil
+>  import subprocess
+>  import tempfile
+>  import bb
+> @@ -365,8 +366,29 @@ class Git(FetchMethod):
+>                  runfetchcmd(fetch_cmd, d, workdir=ud.clonedir)
+>          repourl = self._get_repo_url(ud)
+>  
+> +        needs_clone = False
+> +        if os.path.exists(ud.clonedir):
+> +            # The directory may exist, but not be the top level of a bare git
+> +            # repository in which case it needs to be deleted and re-cloned.
+> +            try:
+> +                # Since clones are bare, use --absolute-git-dir instead of --show-toplevel
+> +                output = runfetchcmd("LANG=C %s rev-parse --absolute-git-dir" % ud.basecmd, d, workdir=ud.clonedir)
+> +            except bb.fetch2.FetchError as e:
+> +                logger.warning("Unable to get top level for %s (not a git directory?): %s", ud.clonedir, e)
+> +                needs_clone = True
+> +            else:
+> +                toplevel = output.rstrip()
+> +                if os.path.abspath(toplevel) != os.path.abspath(ud.clonedir):
+> +                    logger.warning("Top level directory '%s' doesn't match expected '%s'. Re-cloning", toplevel, ud.clonedir)
+> +                    needs_clone = True
+> +
+> +            if needs_clone:
+> +                shutil.rmtree(ud.clonedir)
+> +        else:
+> +            needs_clone = True
+> +
+>          # If the repo still doesn't exist, fallback to cloning it
+> -        if not os.path.exists(ud.clonedir):
+> +        if needs_clone:
+>              # We do this since git will use a "-l" option automatically for local urls where possible,
+>              # but it doesn't work when git/objects is a symlink, only works when it is a directory.
+>              if repourl.startswith("file://"):
+> -- 
+> 2.33.0
+> 
 
-Richard
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14915): https://lists.openembedded.org/g/bitbake-devel/message/14915
+> Mute This Topic: https://lists.openembedded.org/mt/100548945/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
