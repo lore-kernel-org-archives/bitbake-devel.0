@@ -1,323 +1,95 @@
-Return-Path: <eekmecic@snap.com>
+Return-Path: <yang.xu@mediatek.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F973EB64DD
-	for <webhook@archiver.kernel.org>; Wed,  9 Aug 2023 09:39:56 +0000 (UTC)
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
- by mx.groups.io with SMTP id smtpd.web11.84460.1691573989133218809
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DED3C001B0
+	for <webhook@archiver.kernel.org>; Fri, 11 Aug 2023 02:21:40 +0000 (UTC)
+Received: from mailgw01.mediatek.com (mailgw01.mediatek.com [60.244.123.138])
+ by mx.groups.io with SMTP id smtpd.web10.35017.1691720498392510177
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 09 Aug 2023 02:39:49 -0700
+ Thu, 10 Aug 2023 19:21:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=D33s1tN5;
- spf=pass (domain: snapchat.com, ip: 209.85.167.178, mailfrom: eekmecic@snapchat.com)
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3a74d759bfcso4910730b6e.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Aug 2023 02:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google; t=1691573988; x=1692178788;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xPpMXzTL0JFyOwMAa/VZA8Obd1rSD37LQzl9yxSuLDE=;
-        b=D33s1tN5vZM3SiDrifAP68TYxp+yOU0fCmA0ksrb6JxCSjb1KdSTJo+CVZX9E7Ds7Z
-         EQR+eEmCB/xmUyxYdk2DTIE5icxrfsFnodePpz864MRQPMFOgVaoUnI41I7lVyKR3fta
-         G8EvU/DcOSyUE6suM7lnI0OM7wf3MLj2gF08s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691573988; x=1692178788;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xPpMXzTL0JFyOwMAa/VZA8Obd1rSD37LQzl9yxSuLDE=;
-        b=BltuCNyVHR3pfrfwn8qhe3/XJ4Yholt7D3fqyG7ctg4JWDE+TYxzo8+1NUeP0ACS2n
-         8FHQIqlsDGUhvw0+3ei1LLMC1xOA8q18RW23pu24GEDlQ3RMY9Xwm9cwy0YzoZXQW0jg
-         bxaqD5AK83IMETRjRmh93/BTH4/XPYphe661kMz+G/cHZwJzqItMvqSTrtbOyzqtgKTi
-         6Dtsg0IeqCkdEdrr3YFyDya/rsEze+4q8m2XabPpWmEF5oNefJQo5wKFEDWCmanopt9c
-         /Ntu2qxAwgwgdg5fJiZ+tZSutN2UD04yGspcat/prTphvUREYuR0uPSls2JnNs9IW+/v
-         7Gew==
-X-Gm-Message-State: AOJu0YwQ4oCanQ+/yDaK2EfSFKDsv4Sqs7Z0yrt+nzzojp7ZqvfutDN3
-	x+3y/2PgUJZm43dp4WqnZsLBiOdomPEDsJaZx7lh9Ecx
-X-Google-Smtp-Source: AGHT+IFiLFoNFzY9ixchbMh3DozxVwWluGf+QLMut0s+XLPZFAX29MuBkVLb4dlUtzby4OvzzhywHw==
-X-Received: by 2002:a05:6808:985:b0:3a7:215c:e3a with SMTP id a5-20020a056808098500b003a7215c0e3amr2225848oic.34.1691573987735;
-        Wed, 09 Aug 2023 02:39:47 -0700 (PDT)
-Received: from 4SK64Z2.sc-core.net ([144.232.179.190])
-        by smtp.gmail.com with ESMTPSA id c15-20020a17090ab28f00b00260a5ecd273sm1006601pjr.1.2023.08.09.02.39.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Aug 2023 02:39:47 -0700 (PDT)
-From: eekmecic@snap.com
-To: bitbake-devel@lists.openembedded.org
-Cc: =?UTF-8?q?Emil=20Ekme=C4=8Di=C4=87?= <eekmecic@snap.com>
-Subject: [bitbake-devel][PATCH v6] fetch2: add Google Cloud Platform (GCP) fetcher
-Date: Wed,  9 Aug 2023 02:39:44 -0700
-Message-ID: <20230809093944.1214108-1-eekmecic@snap.com>
-X-Mailer: git-send-email 2.41.0
+ dkim=pass header.i=@mediatek.com header.s=dk header.b=Gr4gFJsb;
+ spf=pass (domain: mediatek.com, ip: 60.244.123.138, mailfrom: yang.xu@mediatek.com)
+X-UUID: c727af7437ed11ee9cb5633481061a41-20230811
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=/Ys7a5zCIoIEGjhW+6n+W2Hfb2l1Unc0oVzwAfJYJH8=;
+	b=Gr4gFJsbcEtLeTC7vrDbsCPP48iY4+VGm9jglyYyAS65IH9b0RP+H9uyAoD45X47oLS+QdBKpji92kV2yNko3Ju+6QwDB8fkrOeB/lvWT9QZDyCzA1ExXip+SgDvX8IcNJM4LIC4WI9CnX65sSQM/24MbPZdj+74qOfCPobz5mY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.31,REQID:bf8fc7ed-50b0-4a2c-b7aa-a7d457535016,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:95,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:95
+X-CID-INFO: VERSION:1.1.31,REQID:bf8fc7ed-50b0-4a2c-b7aa-a7d457535016,IP:0,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:95,FILE:0,BULK:0,RULE:Spam_GS981B3D,ACTION
+	:quarantine,TS:95
+X-CID-META: VersionHash:0ad78a4,CLOUDID:b609341f-33fd-4aaa-bb43-d3fd68d9d5ae,B
+	ulkID:2308111021303PKLLM6L,BulkQuantity:0,Recheck:0,SF:17|19|48|29|28,TC:n
+	il,Content:0,EDM:-3,IP:nil,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+	,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,
+	TF_CID_SPAM_SDM,TF_CID_SPAM_ASC
+X-UUID: c727af7437ed11ee9cb5633481061a41-20230811
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
+	(envelope-from <yang.xu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 973245239; Fri, 11 Aug 2023 10:21:28 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 11 Aug 2023 10:21:27 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 11 Aug 2023 10:21:26 +0800
+From: <yang.xu@mediatek.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: <richard.purdie@linuxfoundation.org>, Yang Xu <yang.xu@mediatek.com>
+Subject: [PATCH] server/process: fix sig handle
+Date: Fri, 11 Aug 2023 02:20:46 +0000
+Message-ID: <20230811022046.7829-1-yang.xu@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 09 Aug 2023 09:39:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14933
+ <bitbake-devel@lists.openembedded.org>; Fri, 11 Aug 2023 02:21:40 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14934
 
-From: Emil Ekmečić <eekmecic@snap.com>
+From: Yang Xu <yang.xu@mediatek.com>
 
-This fetcher allows BitBake to fetch from a Google Cloud Storage
-bucket. The fetcher expects a gs:// URI of the following form:
+process.signal_received is a list for signum and not iterable,
+change a suitable method to handle sig.
 
-SSTATE_MIRRORS = "file://.* gs://<bucket name>/PATH"
-
-The fetcher uses the Google Cloud Storage Python Client, and
-expects it to be installed, configured, and authenticated prior
-to use.
-
-If accepted, this patch should merge in with the corresponding oe-core
-patch titled "Add GCP fetcher to list of supported protocols".
-
-Some comments on the patch:
-
-There is also documentation for the fetcher added to the User
-Manual. I'm still not completely sure about the recommends_checksum()
-being set to True. As I've noted in the mailing list, it will throw
-warnings if the fetcher is used in recipes without specifying a
-checksum. Please let me know if this is intended behavior or if it
-should be modified.
-
-Here is how this fetcher conforms to the fetcher expectations
-described at this link:
-https://git.yoctoproject.org/poky/tree/bitbake/lib/bb/fetch2/README
-
-a) Yes, network fetching only happens in the fetcher
-
-b) The fetcher has nothing to do with the unpack phase so there is no
-network access there
-
-c) This change doesn't affect the behavior of DL_DIR. The GCP fetcher
-only downloads to the DL_DIR in the same way that other fetchers,
-namely the S3 and Azure fetchers do.
-
-d) The fetcher is identical to the S3 and Azure fetchers in this
-context
-
-e) Yes, the fetcher output is deterministic because it is downloading
-tarballs from a bucket and not modifying them in any way.
-
-f) I set up a local proxy using tinyproxy and set the http_proxy
-variable to test whether the Python API respected the proxy. It
-appears that it did as I could see traffic passing through the
-proxy. I also did some searching online and found posts indicating
-that the Google Cloud Python APIs supported the classic Linux proxy
-variables, namely:
-  - https://github.com/googleapis/google-api-python-client/issues/1260
-
-g) Access is minimal, only checking if the file exists and downloading
-it if it does.
-
-h) Not applicable, BitBake already knows which version it wants and
-the version infomation is encoded in the filename. The fetcher has no
-concept of versions.
-
-i) Not applicable
-
-j) Not applicable
-
-k) No tests were added as part of this change. I didn't see any tests
-for the S3 or Azure changes either, is that OK?
-
-l) I'm not 100% familiar but I don't believe this fetcher is using any
-tools during parse time. Please correct me if I'm wrong.
-
-Signed-off-by: Emil Ekmečić <eekmecic@snap.com>
+Signed-off-by: Yang Xu <yang.xu@mediatek.com>
 ---
- .../bitbake-user-manual-fetching.rst          | 36 +++++++
- lib/bb/fetch2/__init__.py                     |  4 +-
- lib/bb/fetch2/gcp.py                          | 98 +++++++++++++++++++
- 3 files changed, 137 insertions(+), 1 deletion(-)
- create mode 100644 lib/bb/fetch2/gcp.py
+ lib/bb/server/process.py | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index c061bd70..f5723d67 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -688,6 +688,40 @@ Here is an example URL::
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 4d4fa6d1..f62faed0 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -860,11 +860,10 @@ class ConnectionWriter(object):
+                 process.queue_signals = True
+                 self._send(obj)
+                 process.queue_signals = False
+-                try:
+-                    for sig in process.signal_received.pop():
+-                        process.handle_sig(sig, None)
+-                except IndexError:
+-                    pass
++
++                while len(process.signal_received) > 0:
++                    sig = process.signal_received.pop()
++                    process.handle_sig(sig, None)
+         else:
+             self._send(obj)
  
- It can also be used when setting mirrors definitions using the :term:`PREMIRRORS` variable.
- 
-+.. _gcp-fetcher:
-+
-+GCP Fetcher (``gs://``)
-+--------------------------
-+
-+This submodule fetches data from a
-+`Google Cloud Storage Bucket <https://cloud.google.com/storage/docs/buckets>`__.
-+It uses the `Google Cloud Storage Python Client <https://cloud.google.com/python/docs/reference/storage/latest>`__
-+to check the status of objects in the bucket and download them.
-+The use of the Python client makes it substantially faster than using command
-+line tools such as gsutil.
-+
-+The fetcher requires the Google Cloud Storage Python Client to be installed, along
-+with the gsutil tool.
-+
-+The fetcher requires that the machine has valid credentials for accessing the
-+chosen bucket. Instructions for authentication can be found in the
-+`Google Cloud documentation <https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev>`__.
-+
-+The fetcher can be used for fetching sstate artifacts from a GCS bucket by
-+specifying the :term:`SSTATE_MIRRORS` variable as shown below::
-+
-+   SSTATE_MIRRORS ?= "\
-+       file://.* gs://<bucket name>/PATH \
-+   "
-+
-+The fetcher can also be used in recipes::
-+
-+   SRC_URI = "gs://<bucket name>/<foo_container>/<bar_file>"
-+
-+However, the checksum of the file should be also be provided::
-+
-+   SRC_URI[sha256sum] = "<sha256 string>"
-+
- .. _crate-fetcher:
- 
- Crate Fetcher (``crate://``)
-@@ -791,6 +825,8 @@ Fetch submodules also exist for the following:
- 
- -  OSC (``osc://``)
- 
-+-  S3 (``s3://``)
-+
- -  Secure FTP (``sftp://``)
- 
- -  Secure Shell (``ssh://``)
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 8afe012e..0a3d7a58 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1290,7 +1290,7 @@ class FetchData(object):
- 
-             if checksum_name in self.parm:
-                 checksum_expected = self.parm[checksum_name]
--            elif self.type not in ["http", "https", "ftp", "ftps", "sftp", "s3", "az", "crate"]:
-+            elif self.type not in ["http", "https", "ftp", "ftps", "sftp", "s3", "az", "crate", "gs"]:
-                 checksum_expected = None
-             else:
-                 checksum_expected = d.getVarFlag("SRC_URI", checksum_name)
-@@ -1973,6 +1973,7 @@ from . import npm
- from . import npmsw
- from . import az
- from . import crate
-+from . import gcp
- 
- methods.append(local.Local())
- methods.append(wget.Wget())
-@@ -1994,3 +1995,4 @@ methods.append(npm.Npm())
- methods.append(npmsw.NpmShrinkWrap())
- methods.append(az.Az())
- methods.append(crate.Crate())
-+methods.append(gcp.GCP())
-diff --git a/lib/bb/fetch2/gcp.py b/lib/bb/fetch2/gcp.py
-new file mode 100644
-index 00000000..f42c81fd
---- /dev/null
-+++ b/lib/bb/fetch2/gcp.py
-@@ -0,0 +1,98 @@
-+"""
-+BitBake 'Fetch' implementation for Google Cloup Platform Storage.
-+
-+Class for fetching files from Google Cloud Storage using the
-+Google Cloud Storage Python Client. The GCS Python Client must
-+be correctly installed, configured and authenticated prior to use.
-+Additionally, gsutil must also be installed.
-+
-+"""
-+
-+# Copyright (C) 2023, Snap Inc.
-+#
-+# Based in part on bb.fetch2.s3:
-+#    Copyright (C) 2017 Andre McCurdy
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Based on functions from the base bb module, Copyright 2003 Holger Schurig
-+
-+import os
-+import bb
-+import urllib.parse, urllib.error
-+from bb.fetch2 import FetchMethod
-+from bb.fetch2 import FetchError
-+from bb.fetch2 import logger
-+
-+class GCP(FetchMethod):
-+    """
-+    Class to fetch urls via GCP's Python API.
-+    """
-+    def __init__(self):
-+        self.gcp_client = None
-+
-+    def supports(self, ud, d):
-+        """
-+        Check to see if a given url can be fetched with GCP.
-+        """
-+        return ud.type in ['gs']
-+
-+    def recommends_checksum(self, urldata):
-+        return True
-+
-+    def urldata_init(self, ud, d):
-+        if 'downloadfilename' in ud.parm:
-+            ud.basename = ud.parm['downloadfilename']
-+        else:
-+            ud.basename = os.path.basename(ud.path)
-+
-+        ud.localfile = d.expand(urllib.parse.unquote(ud.basename))
-+
-+    def get_gcp_client(self):
-+        from google.cloud import storage
-+        self.gcp_client = storage.Client(project=None)
-+
-+    def download(self, ud, d):
-+        """
-+        Fetch urls using the GCP API.
-+        Assumes localpath was called first.
-+        """
-+        logger.debug2(f"Trying to download gs://{ud.host}{ud.path} to {ud.localpath}")
-+        if self.gcp_client is None:
-+            self.get_gcp_client()
-+
-+        bb.fetch2.check_network_access(d, "gsutil stat", ud.url)
-+
-+        # Path sometimes has leading slash, so strip it
-+        path = ud.path.lstrip("/")
-+        blob = self.gcp_client.bucket(ud.host).blob(path)
-+        blob.download_to_filename(ud.localpath)
-+
-+        # Additional sanity checks copied from the wget class (although there
-+        # are no known issues which mean these are required, treat the GCP API
-+        # tool with a little healthy suspicion).
-+        if not os.path.exists(ud.localpath):
-+            raise FetchError(f"The GCP API returned success for gs://{ud.host}{ud.path} but {ud.localpath} doesn't exist?!")
-+
-+        if os.path.getsize(ud.localpath) == 0:
-+            os.remove(ud.localpath)
-+            raise FetchError(f"The downloaded file for gs://{ud.host}{ud.path} resulted in a zero size file?! Deleting and failing since this isn't right.")
-+
-+        return True
-+
-+    def checkstatus(self, fetch, ud, d):
-+        """
-+        Check the status of a URL.
-+        """
-+        logger.debug2(f"Checking status of gs://{ud.host}{ud.path}")
-+        if self.gcp_client is None:
-+            self.get_gcp_client()
-+
-+        bb.fetch2.check_network_access(d, "gsutil stat", ud.url)
-+
-+        # Path sometimes has leading slash, so strip it
-+        path = ud.path.lstrip("/")
-+        if self.gcp_client.bucket(ud.host).blob(path).exists() == False:
-+            raise FetchError(f"The GCP API reported that gs://{ud.host}{ud.path} does not exist")
-+        else:
-+            return True
 -- 
-2.41.0
+2.25.1
 
 
