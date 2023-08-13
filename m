@@ -2,77 +2,94 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D88C001B0
-	for <webhook@archiver.kernel.org>; Sun, 13 Aug 2023 09:29:35 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.82468.1691918975099552365
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B60C001B0
+	for <webhook@archiver.kernel.org>; Sun, 13 Aug 2023 09:32:05 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web11.82371.1691919116640762375
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 13 Aug 2023 02:29:35 -0700
+ Sun, 13 Aug 2023 02:31:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=POXN3jHU;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-317798b359aso2951618f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Sun, 13 Aug 2023 02:29:34 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZTPA8hiX;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3fe426b8583so34265865e9.2
+        for <bitbake-devel@lists.openembedded.org>; Sun, 13 Aug 2023 02:31:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1691918973; x=1692523773;
+        d=linuxfoundation.org; s=google; t=1691919115; x=1692523915;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ItMKqdMOgw33ggodqciIAr3uZlY7JEQLnWIBwVjp5w=;
-        b=POXN3jHUiSsgthwuwIDV1hdpgkL1sYGKEkcPpNxDxOfegTW5J4mJYscHAlhwHHPA4e
-         IcgkgivxQkCa1tm/LGyw2mpd/ABJNbNF5BlgrVxYstdpingRg5DyxdjE2CnJ6CdOVJTz
-         GznhCJa/8pkzLU5Z72MzoMLDe5GmEthZQMkzQ=
+        bh=lNn0jfJrdmDy68NjEk7eWcCKOlVI19CdtLqutPLgEkU=;
+        b=ZTPA8hiXJ0pxAvchH/BJAtmbE0zUgS78BBYBVgE/8bxtvMivhWk22WHV55Cm7C49d2
+         mo94tl8jQB1DYL9N78/OYGVe0x0lHjCBoW+KeAyL1+suke2pi6ZEpPA3l7fChts0pI9N
+         s9xMZ2zwojb/g7h34cm7dDg+GopwioNPnDu50=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691918973; x=1692523773;
+        d=1e100.net; s=20221208; t=1691919115; x=1692523915;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ItMKqdMOgw33ggodqciIAr3uZlY7JEQLnWIBwVjp5w=;
-        b=DB477UDDEXooQlF29+TWZHv04tXUx8XfpwoGV5rCxheP0a0cAPhE0J6hHMeWyoyYuv
-         zVcSbkaxb64RvJAaDTLr5vDeHgCt3vI7+1wgwIdNlI1aJtYzPYqyebZ5mlurPkHH7BHS
-         Qz7omkwJjJopYsvEgzjMvt3a4uwK9dwT+Yhf+YbJoRGu2NS/dZq5eJY+ry6+wi4g1uUh
-         Fi8h84+TqKkJoVdRU137M7KI+bidiDvTJEKR9ADRcqmrDyifAjIYuePAEvzmTP/niq3y
-         kUpzUHWOE8Kdy1mUSUu2FUMyN+KknHl9mVKVOpstPYnhOhXAzIyk9Y5xkNUFOpOugDop
-         hpUA==
-X-Gm-Message-State: AOJu0Yy8Z8AgGqFCB+stgTUlrPwmFG97KSr6XY2jyDlwRYHk/mvqKZso
-	Joxq8pl+zeD6Q6IELGHVlvgtypqSZFXn2MTxwFY=
-X-Google-Smtp-Source: AGHT+IF/zq9KHISKKNCbB3NLnmufNLMJOiYG1sWY/Q8H1KClZOm4Pp0eqMSz3JY2ulahWlNmdK7zhQ==
-X-Received: by 2002:a5d:538f:0:b0:319:7428:9caa with SMTP id d15-20020a5d538f000000b0031974289caamr544230wrv.38.1691918972780;
-        Sun, 13 Aug 2023 02:29:32 -0700 (PDT)
+        bh=lNn0jfJrdmDy68NjEk7eWcCKOlVI19CdtLqutPLgEkU=;
+        b=bLaaxsITR3KUuUKWFEinB5XVZ20rRGvfZJeg6FQh5wJ8YWl1Ygux3FYpVluofpFPkh
+         bvfy1cyoC0+KH2hEQtv0fE2kbFV4Sh5iSC0NISrb+5XKcypN7JeM3/2BWWH2d2GP4HB1
+         +Alo6dbbd7BMTLo2NyIIeEf8RTu+WTZ6bsJRQAtFUMWXqFAIzVm597uNx2CC06cTC4vT
+         mh/a4UmjBdKS9+9tlTQH1MdnTqVVw0zOH0S8ENn25w2yD+j7tFyXoDgt0+hlKf9dTzZD
+         W2idqCeeB+TdHYcCR9QTfvDm2wZ5vnkW1isVqcckRgsVIxlJ6P6OuBwErjS2qFuNOO3e
+         ittw==
+X-Gm-Message-State: AOJu0YzaFEPebgGEajze2yQNK31LOW6TMYLnMyaEn/gQcbCIu1hZeEtI
+	JR48GFXwQNZ10QlaVqbA37c4elLcSmCp71I+8d0=
+X-Google-Smtp-Source: AGHT+IEkENnD87KzxsaKKdmYMo9U+OvfY2/9D9o1kquwuOLo2mfFXsFXEiVbY+uRrdqIOrjmupGgdw==
+X-Received: by 2002:a7b:cd99:0:b0:3fe:63ca:ccf6 with SMTP id y25-20020a7bcd99000000b003fe63caccf6mr5427681wmj.16.1691919114516;
+        Sun, 13 Aug 2023 02:31:54 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:17a:7286:2cf2:8a86])
-        by smtp.gmail.com with ESMTPSA id g13-20020a5d698d000000b003180027d67asm10922347wru.19.2023.08.13.02.29.31
+        by smtp.gmail.com with ESMTPSA id f9-20020a7bc8c9000000b003fe20533a1esm10821993wml.44.2023.08.13.02.31.53
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Aug 2023 02:29:32 -0700 (PDT)
+        Sun, 13 Aug 2023 02:31:53 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] siggen: Fix indentation
-Date: Sun, 13 Aug 2023 10:29:31 +0100
-Message-Id: <20230813092931.129442-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] siggen: Update debug
+Date: Sun, 13 Aug 2023 10:31:53 +0100
+Message-Id: <20230813093153.129876-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 13 Aug 2023 09:29:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14938
+ <bitbake-devel@lists.openembedded.org>; Sun, 13 Aug 2023 09:32:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14939
+
+The debug in the comments was out of date. It is still useful so update the
+code sample to the new code needed.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/siggen.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/siggen.py | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index d0a555654b..dcb1334e8d 100644
+index dcb1334e8d..879c136e18 100644
 --- a/lib/bb/siggen.py
 +++ b/lib/bb/siggen.py
-@@ -418,7 +418,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         data['varvals'][task] = self.datacaches[mc].siggen_varvals[mcfn][task]
-         for dep in self.datacaches[mc].siggen_taskdeps[mcfn][task]:
-             if dep in self.basehash_ignore_vars:
--               continue
-+                continue
-             data['gendeps'][dep] = self.datacaches[mc].siggen_gendeps[mcfn][dep]
-             data['varvals'][dep] = self.datacaches[mc].siggen_varvals[mcfn][dep]
+@@ -261,10 +261,6 @@ class SignatureGeneratorBasic(SignatureGenerator):
+             bb.warn("Error during finalise of %s" % mcfn)
+             raise
+ 
+-        #Slow but can be useful for debugging mismatched basehashes
+-        #for task in self.taskdeps[mcfn]:
+-        #    self.dump_sigtask(mcfn, task, d.getVar("STAMP"), False)
+-
+         basehashes = {}
+         for task in taskdeps:
+             basehashes[task] = self.basehash[mcfn + ":" + task]
+@@ -274,6 +270,11 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         d.setVar("__siggen_varvals", lookupcache)
+         d.setVar("__siggen_taskdeps", taskdeps)
+ 
++        #Slow but can be useful for debugging mismatched basehashes
++        #self.setup_datacache_from_datastore(mcfn, d)
++        #for task in taskdeps:
++        #    self.dump_sigtask(mcfn, task, d.getVar("STAMP"), False)
++
+     def setup_datacache_from_datastore(self, mcfn, d):
+         super().setup_datacache_from_datastore(mcfn, d)
  
 -- 
 2.39.2
