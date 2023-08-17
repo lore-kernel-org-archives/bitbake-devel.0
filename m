@@ -2,431 +2,169 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B044BC3DA65
-	for <webhook@archiver.kernel.org>; Thu, 17 Aug 2023 18:53:27 +0000 (UTC)
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
- by mx.groups.io with SMTP id smtpd.web10.1919.1692298404380260264
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDF2C531DF
+	for <webhook@archiver.kernel.org>; Thu, 17 Aug 2023 19:20:17 +0000 (UTC)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+ by mx.groups.io with SMTP id smtpd.web10.2649.1692300010320581280
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Aug 2023 11:53:24 -0700
+ Thu, 17 Aug 2023 12:20:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20221208 header.b=WZ91xztN;
- spf=pass (domain: gmail.com, ip: 209.85.167.178, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3a81154c570so58012b6e.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 17 Aug 2023 11:53:24 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20221208 header.b=M4+MRdKt;
+ spf=pass (domain: gmail.com, ip: 209.85.208.181, mailfrom: jpewhacker@gmail.com)
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2b9db1de50cso1975331fa.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 17 Aug 2023 12:20:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692298403; x=1692903203;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pQgku/aaO9aBcO94aVll4W+yqmpMnJ/8POnedvMm2x4=;
-        b=WZ91xztNkdrCTRTJph8g61zMoz3jVNF/DqwOLMjr1bdOgQ4qOAU++dlzOiRp5CjTON
-         1QwgPonAiVsrltudxTUbrLuRxMLgv63BsnjePV+bDkF8zYg33NUttb0G2xS4E3Jahjup
-         SzZzmBHlQ1V8foA+oii+pR2X6mTqFPdPJQ75YYKe92zokWd1yf+dfOIiy6A4SU4YrMeZ
-         b3HWaL+4JKGtXn9/pbNtL/WdVS/aBfe+gzpokXiRaojHb+8dKE5Z3UisWe/Ep/Ehwcx9
-         rtx16SYYwJY5j9L0QJkDOWbg5VQtcxdfU6XKuvFOttXGwZff+MC72gSYWTgUYwtII4nC
-         XILA==
+        d=gmail.com; s=20221208; t=1692300008; x=1692904808;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HbHNoLXU9sB25zjVyFt0LiRNZ9ldcacaODiUjZj+O9M=;
+        b=M4+MRdKtU3EtfFVAxkUSAeo7QWe4z25pbWZIudjSrQjODjzluoetot2MM9FqQFqpBT
+         L373MUTPqSZbge/+uaX+CtfraquZ7nK/3/ZZ+l6BKvAyNx3qNySEEIUPWwzlXq7aiTH7
+         BK92vZ4kcqMsKFVJZbcyRmJ3AAToI8rM6X+4h882/fNzw3tLimx6HWRyeH9HIP91DhqZ
+         Cnoy7ExuhM2rxbbt5DeAJNK7PdIvzbxyFoHWv6vJMzWJNHT2pt3eoKaRp2mkfpOfRIad
+         ub/ESnZF8m/0ze+vRmRaHtTWvF1aY2PXAFA8aom7R9ipDnDvqvSgcnSjwTdoef1lG116
+         7RKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692298403; x=1692903203;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pQgku/aaO9aBcO94aVll4W+yqmpMnJ/8POnedvMm2x4=;
-        b=cJEnjWqhSBlVyM66BH3pXBDYcdsDz2ypUJYUTdQ1OIqgoLHFDXwQCio096bgQ6O4A7
-         9XVXQ+cek4OxQTpBHjIPv2m/yCehbPc2S8WiTPOMjRtBZpou0/LbHMdajSkRpDZXWvg1
-         ZLrsEYEm6sFocbCpi1L7j7/m9Br2hJN2hACcGE8tllQ95VTabO3eTcFCYRJzh7p4O8/f
-         zOqRaXFvSwlO3AGn92sy3g/Laa5YjELQhvf+sEY7jujheEtsOzxNw5dNbHm5EMJT46GG
-         KKxY/vOjZfqRK0DQasweQUPea3C1lKdVLHxDPKbKWZf6OK0Jhf1a3HJIpeXiN1k/ZGKB
-         qNwA==
-X-Gm-Message-State: AOJu0YzHwScn0n8VJdMhfuHXvYyBNlh2cyJJHRfn4MWxtwb6FQeWnOMs
-	WKa54xhthvZqT23A+KKrj5hYqtMhX8k=
-X-Google-Smtp-Source: AGHT+IElveIFPndCoY50/pHhD8AAn0aTQuTNu1Zf2JrD5qg3G97N142d1K0prUzq5CGfOR//a2sqjg==
-X-Received: by 2002:a05:6808:140c:b0:3a7:4987:d4a with SMTP id w12-20020a056808140c00b003a749870d4amr481649oiv.9.1692298402992;
-        Thu, 17 Aug 2023 11:53:22 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::6897])
-        by smtp.gmail.com with ESMTPSA id fa19-20020a0568082a5300b003a7543bb635sm140851oib.22.2023.08.17.11.53.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 11:53:22 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: p.lobacz@welotec.com,
-	Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] Add xattr and acl libraries
-Date: Thu, 17 Aug 2023 12:53:18 -0600
-Message-Id: <20230817185318.1562354-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.33.0
+        d=1e100.net; s=20221208; t=1692300008; x=1692904808;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HbHNoLXU9sB25zjVyFt0LiRNZ9ldcacaODiUjZj+O9M=;
+        b=l1AOkeT0L0oWkY53A7YmwrRZJb+uA80gln9wRV2IeWBobW0Rr03yzT8r0Onb49yfL7
+         5RSw7gtdCNqp115AxCHlnFE+BQSUDvu2+MqH1PtzmvtoLFKdIsfqVi2P78a/qcMx14gS
+         pafVUJL1AN7UBFIyKdh3lxG8bI1xji0jmPH98QHD06KNibqTfKVDLX1YqwDEEoSQvxLW
+         Kk46m811xB8+fejx3db70Irk1NThFB2qVDHjIifTJsIPMtlW+/jlN1cXZsr16rzjKMFP
+         QsDWyt9u1IaV52YFN4dHLm1pypJjt785BplrvCCdk76yG0RiE/B7hXNfHas4EA6HHaeQ
+         MT8A==
+X-Gm-Message-State: AOJu0YxfNCk1LltTegBQ09M9FKqxMOdd7ctD5Xf7PZitKOrsWD1CUcVV
+	vfb0Med+wAGviLrh1tjG0pG5b9HDZa4xfZdygyE=
+X-Google-Smtp-Source: AGHT+IF+EL1RCVQAKWNgN3KlHtnGj8Zy2QggWrNTUPPk2NhWyKsVLrNVMpsS25WdMGyJgcJdHFDcG9HkatTsMD/br7A=
+X-Received: by 2002:a2e:b781:0:b0:2bb:9822:cad8 with SMTP id
+ n1-20020a2eb781000000b002bb9822cad8mr204090ljo.51.1692300007912; Thu, 17 Aug
+ 2023 12:20:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230804155424.1502010-1-JPEWhacker@gmail.com> <2023080901520013144e1b@mail.local>
+In-Reply-To: <2023080901520013144e1b@mail.local>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Thu, 17 Aug 2023 13:19:56 -0600
+Message-ID: <CAJdd5GYK-dr6vf3a_O_hgQ-gLt1WkHwcwwyH5fD4+d423MzAcg@mail.gmail.com>
+Subject: Re: [bitbake-devel][PATCH] fetch2: git: Check if directory is a bare
+ git repo
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 17 Aug 2023 18:53:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14950
+ <bitbake-devel@lists.openembedded.org>; Thu, 17 Aug 2023 19:20:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14951
 
-Adds Python wrappers around the xattr API from libc and the ACL API from
-libacl.
+Alexandre,
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/bb/acl.py   | 215 ++++++++++++++++++++++++++++++++++++++++
- bitbake/lib/bb/xattr.py | 126 +++++++++++++++++++++++
- 2 files changed, 341 insertions(+)
- create mode 100755 bitbake/lib/bb/acl.py
- create mode 100755 bitbake/lib/bb/xattr.py
+I'm not sure that's quite correct; I was able to run the test fine
+locally, and that failure looks like a 502 error from the server,
+which really shouldn't have anything to do with this patch?
 
-diff --git a/bitbake/lib/bb/acl.py b/bitbake/lib/bb/acl.py
-new file mode 100755
-index 00000000000..0f41b275cf6
---- /dev/null
-+++ b/bitbake/lib/bb/acl.py
-@@ -0,0 +1,215 @@
-+#! /usr/bin/env python3
-+#
-+# Copyright 2023 by Garmin Ltd. or its subsidiaries
-+#
-+# SPDX-License-Identifier: MIT
-+
-+
-+import sys
-+import ctypes
-+import os
-+import errno
-+import pwd
-+import grp
-+
-+libacl = ctypes.CDLL("libacl.so.1", use_errno=True)
-+
-+
-+ACL_TYPE_ACCESS = 0x8000
-+ACL_TYPE_DEFAULT = 0x4000
-+
-+ACL_FIRST_ENTRY = 0
-+ACL_NEXT_ENTRY = 1
-+
-+ACL_UNDEFINED_TAG = 0x00
-+ACL_USER_OBJ = 0x01
-+ACL_USER = 0x02
-+ACL_GROUP_OBJ = 0x04
-+ACL_GROUP = 0x08
-+ACL_MASK = 0x10
-+ACL_OTHER = 0x20
-+
-+ACL_READ = 0x04
-+ACL_WRITE = 0x02
-+ACL_EXECUTE = 0x01
-+
-+acl_t = ctypes.c_void_p
-+acl_entry_t = ctypes.c_void_p
-+acl_permset_t = ctypes.c_void_p
-+acl_perm_t = ctypes.c_uint
-+
-+acl_tag_t = ctypes.c_int
-+
-+libacl.acl_free.argtypes = [acl_t]
-+
-+
-+def acl_free(acl):
-+    libacl.acl_free(acl)
-+
-+
-+libacl.acl_get_file.restype = acl_t
-+libacl.acl_get_file.argtypes = [ctypes.c_char_p, ctypes.c_uint]
-+
-+
-+def acl_get_file(path, typ):
-+    acl = libacl.acl_get_file(os.fsencode(path), typ)
-+    if acl is None:
-+        err = ctypes.get_errno()
-+        raise OSError(err, os.strerror(err), str(path))
-+
-+    return acl
-+
-+
-+libacl.acl_get_entry.argtypes = [acl_t, ctypes.c_int, ctypes.c_void_p]
-+
-+
-+def acl_get_entry(acl, entry_id):
-+    entry = acl_entry_t()
-+    ret = libacl.acl_get_entry(acl, entry_id, ctypes.byref(entry))
-+    if ret < 0:
-+        err = ctypes.get_errno()
-+        raise OSError(err, os.strerror(err))
-+
-+    if ret == 0:
-+        return None
-+
-+    return entry
-+
-+
-+libacl.acl_get_tag_type.argtypes = [acl_entry_t, ctypes.c_void_p]
-+
-+
-+def acl_get_tag_type(entry_d):
-+    tag = acl_tag_t()
-+    ret = libacl.acl_get_tag_type(entry_d, ctypes.byref(tag))
-+    if ret < 0:
-+        err = ctypes.get_errno()
-+        raise OSError(err, os.strerror(err))
-+    return tag.value
-+
-+
-+libacl.acl_get_qualifier.restype = ctypes.c_void_p
-+libacl.acl_get_qualifier.argtypes = [acl_entry_t]
-+
-+
-+def acl_get_qualifier(entry_d):
-+    ret = libacl.acl_get_qualifier(entry_d)
-+    if ret is None:
-+        err = ctypes.get_errno()
-+        raise OSError(err, os.strerror(err))
-+    return ctypes.c_void_p(ret)
-+
-+
-+libacl.acl_get_permset.argtypes = [acl_entry_t, ctypes.c_void_p]
-+
-+
-+def acl_get_permset(entry_d):
-+    permset = acl_permset_t()
-+    ret = libacl.acl_get_permset(entry_d, ctypes.byref(permset))
-+    if ret < 0:
-+        err = ctypes.get_errno()
-+        raise OSError(err, os.strerror(err))
-+
-+    return permset
-+
-+
-+libacl.acl_get_perm.argtypes = [acl_permset_t, acl_perm_t]
-+
-+
-+def acl_get_perm(permset_d, perm):
-+    ret = libacl.acl_get_perm(permset_d, perm)
-+    if ret < 0:
-+        err = ctypes.get_errno()
-+        raise OSError(err, os.strerror(err))
-+    return bool(ret)
-+
-+
-+class Entry(object):
-+    def __init__(self, tag, qualifier, mode):
-+        self.tag = tag
-+        self.qualifier = qualifier
-+        self.mode = mode
-+
-+    def __str__(self):
-+        typ = ""
-+        qual = ""
-+        if self.tag == ACL_USER:
-+            typ = "user"
-+            qual = pwd.getpwuid(self.qualifier).pw_name
-+        elif self.tag == ACL_GROUP:
-+            typ = "group"
-+            qual = grp.getgrgid(self.qualifier).gr_name
-+        elif self.tag == ACL_USER_OBJ:
-+            typ = "user"
-+        elif self.tag == ACL_GROUP_OBJ:
-+            typ = "group"
-+        elif self.tag == ACL_MASK:
-+            typ = "mask"
-+        elif self.tag == ACL_OTHER:
-+            typ = "other"
-+
-+        r = "r" if self.mode & ACL_READ else "-"
-+        w = "w" if self.mode & ACL_WRITE else "-"
-+        x = "x" if self.mode & ACL_EXECUTE else "-"
-+
-+        return f"{typ}:{qual}:{r}{w}{x}"
-+
-+
-+class ACL(object):
-+    def __init__(self, acl):
-+        self.acl = acl
-+
-+    def __del__(self):
-+        acl_free(self.acl)
-+
-+    def entries(self):
-+        entry_id = ACL_FIRST_ENTRY
-+        while True:
-+            entry = acl_get_entry(self.acl, entry_id)
-+            if entry is None:
-+                break
-+
-+            permset = acl_get_permset(entry)
-+
-+            mode = 0
-+            for m in (ACL_READ, ACL_WRITE, ACL_EXECUTE):
-+                if acl_get_perm(permset, m):
-+                    mode |= m
-+
-+            qualifier = None
-+            tag = acl_get_tag_type(entry)
-+
-+            if tag == ACL_USER or tag == ACL_GROUP:
-+                qual = acl_get_qualifier(entry)
-+                qualifier = ctypes.cast(qual, ctypes.POINTER(ctypes.c_int))[0]
-+
-+            yield Entry(tag, qualifier, mode)
-+
-+            entry_id = ACL_NEXT_ENTRY
-+
-+    @classmethod
-+    def from_path(cls, path, typ):
-+        acl = acl_get_file(path, typ)
-+        return cls(acl)
-+
-+
-+def main():
-+    import argparse
-+    import pwd
-+    import grp
-+    from pathlib import Path
-+
-+    parser = argparse.ArgumentParser()
-+    parser.add_argument("path", help="File Path", type=Path)
-+
-+    args = parser.parse_args()
-+
-+    acl = ACL.from_path(args.path, ACL_TYPE_ACCESS)
-+    for entry in acl.entries():
-+        print(str(entry))
-+
-+    return 0
-+
-+
-+if __name__ == "__main__":
-+    sys.exit(main())
-diff --git a/bitbake/lib/bb/xattr.py b/bitbake/lib/bb/xattr.py
-new file mode 100755
-index 00000000000..7b634944a40
---- /dev/null
-+++ b/bitbake/lib/bb/xattr.py
-@@ -0,0 +1,126 @@
-+#! /usr/bin/env python3
-+#
-+# Copyright 2023 by Garmin Ltd. or its subsidiaries
-+#
-+# SPDX-License-Identifier: MIT
-+
-+import sys
-+import ctypes
-+import os
-+import errno
-+
-+libc = ctypes.CDLL("libc.so.6", use_errno=True)
-+fsencoding = sys.getfilesystemencoding()
-+
-+
-+libc.listxattr.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_size_t]
-+libc.llistxattr.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_size_t]
-+
-+
-+def listxattr(path, follow=True):
-+    func = libc.listxattr if follow else libc.llistxattr
-+
-+    os_path = os.fsencode(path)
-+
-+    while True:
-+        length = func(os_path, None, 0)
-+
-+        if length < 0:
-+            err = ctypes.get_errno()
-+            raise OSError(err, os.strerror(err), str(path))
-+
-+        if length == 0:
-+            return []
-+
-+        arr = ctypes.create_string_buffer(length)
-+
-+        read_length = func(os_path, arr, length)
-+        if read_length != length:
-+            # Race!
-+            continue
-+
-+        return [a.decode(fsencoding) for a in arr.raw.split(b"\x00") if a]
-+
-+
-+libc.getxattr.argtypes = [
-+    ctypes.c_char_p,
-+    ctypes.c_char_p,
-+    ctypes.c_char_p,
-+    ctypes.c_size_t,
-+]
-+libc.lgetxattr.argtypes = [
-+    ctypes.c_char_p,
-+    ctypes.c_char_p,
-+    ctypes.c_char_p,
-+    ctypes.c_size_t,
-+]
-+
-+
-+def getxattr(path, name, follow=True):
-+    func = libc.getxattr if follow else libc.lgetxattr
-+
-+    os_path = os.fsencode(path)
-+    os_name = os.fsencode(name)
-+
-+    while True:
-+        length = func(os_path, os_name, None, 0)
-+
-+        if length < 0:
-+            err = ctypes.get_errno()
-+            if err == errno.ENODATA:
-+                return None
-+            raise OSError(err, os.strerror(err), str(path))
-+
-+        if length == 0:
-+            return ""
-+
-+        arr = ctypes.create_string_buffer(length)
-+
-+        read_length = func(os_path, os_name, arr, length)
-+        if read_length != length:
-+            # Race!
-+            continue
-+
-+        return arr.raw
-+
-+
-+def get_all_xattr(path, follow=True):
-+    attrs = {}
-+
-+    names = listxattr(path, follow)
-+
-+    for name in names:
-+        value = getxattr(path, name, follow)
-+        if value is None:
-+            # This can happen if a value is erased after listxattr is called,
-+            # so ignore it
-+            continue
-+        attrs[name] = value
-+
-+    return attrs
-+
-+
-+def main():
-+    import argparse
-+    from pathlib import Path
-+
-+    parser = argparse.ArgumentParser()
-+    parser.add_argument("path", help="File Path", type=Path)
-+
-+    args = parser.parse_args()
-+
-+    attrs = get_all_xattr(args.path)
-+
-+    for name, value in attrs.items():
-+        try:
-+            value = value.decode(fsencoding)
-+        except UnicodeDecodeError:
-+            pass
-+
-+        print(f"{name} = {value}")
-+
-+    return 0
-+
-+
-+if __name__ == "__main__":
-+    sys.exit(main())
--- 
-2.33.0
-
+On Tue, Aug 8, 2023 at 7:52=E2=80=AFPM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> Hello Joshua,
+>
+> I'm fairly sure this causes the following bitbake-selftest failure:
+>
+> https://autobuilder.yoctoproject.org/typhoon/#/builders/56/builds/2307/st=
+eps/11/logs/stdio
+>
+> On 04/08/2023 09:54:24-0600, Joshua Watt wrote:
+> > If the clone target directory exists, but isn't the valid top level of =
+a
+> > bare git repo, it needs to be erased and re-cloned. One example of how
+> > this can happen is if a clone creates the directory, but then fails to
+> > actual clone and make it a git repository. This left-over directory can
+> > be particularly problematic if the download directory is a descent of
+> > some top layer git repo (e.g. the default with poky), as the commands
+> > that operate on the remote later will then mangle the layers git
+> > repository instead of the download git repo.
+> >
+> > Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> > ---
+> >  bitbake/lib/bb/fetch2/git.py | 24 +++++++++++++++++++++++-
+> >  1 file changed, 23 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.p=
+y
+> > index 2a3c06fe4e9..112bed294f0 100644
+> > --- a/bitbake/lib/bb/fetch2/git.py
+> > +++ b/bitbake/lib/bb/fetch2/git.py
+> > @@ -65,6 +65,7 @@ import fnmatch
+> >  import os
+> >  import re
+> >  import shlex
+> > +import shutil
+> >  import subprocess
+> >  import tempfile
+> >  import bb
+> > @@ -365,8 +366,29 @@ class Git(FetchMethod):
+> >                  runfetchcmd(fetch_cmd, d, workdir=3Dud.clonedir)
+> >          repourl =3D self._get_repo_url(ud)
+> >
+> > +        needs_clone =3D False
+> > +        if os.path.exists(ud.clonedir):
+> > +            # The directory may exist, but not be the top level of a b=
+are git
+> > +            # repository in which case it needs to be deleted and re-c=
+loned.
+> > +            try:
+> > +                # Since clones are bare, use --absolute-git-dir instea=
+d of --show-toplevel
+> > +                output =3D runfetchcmd("LANG=3DC %s rev-parse --absolu=
+te-git-dir" % ud.basecmd, d, workdir=3Dud.clonedir)
+> > +            except bb.fetch2.FetchError as e:
+> > +                logger.warning("Unable to get top level for %s (not a =
+git directory?): %s", ud.clonedir, e)
+> > +                needs_clone =3D True
+> > +            else:
+> > +                toplevel =3D output.rstrip()
+> > +                if os.path.abspath(toplevel) !=3D os.path.abspath(ud.c=
+lonedir):
+> > +                    logger.warning("Top level directory '%s' doesn't m=
+atch expected '%s'. Re-cloning", toplevel, ud.clonedir)
+> > +                    needs_clone =3D True
+> > +
+> > +            if needs_clone:
+> > +                shutil.rmtree(ud.clonedir)
+> > +        else:
+> > +            needs_clone =3D True
+> > +
+> >          # If the repo still doesn't exist, fallback to cloning it
+> > -        if not os.path.exists(ud.clonedir):
+> > +        if needs_clone:
+> >              # We do this since git will use a "-l" option automaticall=
+y for local urls where possible,
+> >              # but it doesn't work when git/objects is a symlink, only =
+works when it is a directory.
+> >              if repourl.startswith("file://"):
+> > --
+> > 2.33.0
+> >
+>
+> >
+> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> > Links: You receive all messages sent to this group.
+> > View/Reply Online (#14915): https://lists.openembedded.org/g/bitbake-de=
+vel/message/14915
+> > Mute This Topic: https://lists.openembedded.org/mt/100548945/3617179
+> > Group Owner: bitbake-devel+owner@lists.openembedded.org
+> > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex=
+andre.belloni@bootlin.com]
+> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> >
+>
+>
+> --
+> Alexandre Belloni, co-owner and COO, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
