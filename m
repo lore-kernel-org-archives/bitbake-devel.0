@@ -1,102 +1,98 @@
-Return-Path: <rs@ti.com>
+Return-Path: <paulo@myneves.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4296CEE4996
-	for <webhook@archiver.kernel.org>; Tue, 22 Aug 2023 01:42:46 +0000 (UTC)
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
- by mx.groups.io with SMTP id smtpd.web11.8262.1692668559376694045
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB2CEE49A5
+	for <webhook@archiver.kernel.org>; Tue, 22 Aug 2023 20:34:26 +0000 (UTC)
+Received: from mail-4022.proton.ch (mail-4022.proton.ch [185.70.40.22])
+ by mx.groups.io with SMTP id smtpd.web10.6964.1692736456215751988
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 21 Aug 2023 18:42:39 -0700
+ Tue, 22 Aug 2023 13:34:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@ti.com header.s=ti-com-17Q1 header.b=UbHPM1zo;
- spf=pass (domain: ti.com, ip: 198.47.19.141, mailfrom: rs@ti.com)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 37M1gbUw020536;
-	Mon, 21 Aug 2023 20:42:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1692668557;
-	bh=Kpl1PxTTs6udVMmma4fl+d8iFMh5VsAzsj9c+Qx5CPA=;
-	h=From:To:CC:Subject:Date;
-	b=UbHPM1zoY09cLN9wn8uolFIW1AkPPoFgWfH9Wt0IyqB6PFUV2nMRl7cScra7IMD1e
-	 IYaWjgC+ncxsBhrp9OawHfr9VJi1FO426VObg24nTs+IT1rB1/gCEmTIJXTNXQVOya
-	 mwoKMSZRdvU47RE4Ojo5i+HdCbDreK8r5vSY2K1U=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 37M1gbGh045953
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 21 Aug 2023 20:42:37 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
- Aug 2023 20:42:37 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 21 Aug 2023 20:42:37 -0500
-Received: from rs-desk.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-	by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 37M1gbQA090828;
-	Mon, 21 Aug 2023 20:42:37 -0500
-From: <rs@ti.com>
-To: <richard.purdie@linuxfoundation.org>
-CC: <bitbake-devel@lists.openembedded.org>, Randolph Sapp <rs@ti.com>
-Subject: [PATCHv2] gitsm: tolerate git-lfs in submodules
-Date: Mon, 21 Aug 2023 20:30:36 -0500
-Message-ID: <20230822013035.3185034-2-rs@ti.com>
-X-Mailer: git-send-email 2.41.0
+ dkim=pass header.i=@myneves.com header.s=protonmail2 header.b=PBsrIFqS;
+ spf=pass (domain: myneves.com, ip: 185.70.40.22, mailfrom: paulo@myneves.com)
+Date: Tue, 22 Aug 2023 20:33:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myneves.com;
+	s=protonmail2; t=1692736452; x=1692995652;
+	bh=qVPdX86H3Q0jlxNRU3m0rxjUUBP8rNQdInkw6Y0M3qI=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=PBsrIFqS+bVMsmkqOukuQO0GUuwFIdXk8yfLYykyXC9MAgdaSR1ZYLfMlaE+LBkfw
+	 r6jCoTZ13M5Aoae/vxXbdx2HDuWHuDpvHL/SC7Z4hM0PLLEfLectQLO0rGfaqK0KGj
+	 KZCjbDMfRiDI810llb7QcJYepjy4TN3+uR5fBhZ2BDF4bmvb9BWp48yMbZ0ObZck19
+	 MhqsFvylZwuzNU0hJIZ0srMjLswyYQYK3deYwkIO9s5P8QreX/p9Nf1fnM2wt2goRR
+	 0AL3+fgdzco8Wtkdt4ENrW8RUqgLQEIS5NT8Fvz29Ls8j84iHLwBbtAYDIFnNcDVn5
+	 EP9zhkJ5BNP2A==
+To: bitbake-devel@lists.openembedded.org
+From: Paulo Neves <paulo@myneves.com>
+Cc: Paulo Neves <paulo@myneves.com>
+Subject: [PATCH 1/1] siggen.py: Improve taskhash reproducibility
+Message-ID: <20230822203350.264625-1-paulo@myneves.com>
+Feedback-ID: 59941854:user:proton
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 22 Aug 2023 01:42:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14957
+ <bitbake-devel@lists.openembedded.org>; Tue, 22 Aug 2023 20:34:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14958
 
-From: Randolph Sapp <rs@ti.com>
+file checksums are part of the data checksummed
+to generate the task hash. The list of file checksums
+was not ordered.
 
-Explicitly pass down the lfs parameter from the source repo URI to
-submodules. Add smudge skip to final checkout phase to make sure we
-don't access the network here. Everything should have been fetched and
-setup from the lfs logic in the git fetcher at this point.
+In this commit we make sure the task hash checksum takes
+a list of checksum data that is ordered by unique file name
+thus guaranteeing reproducibility.
 
-May address [YOCTO #14938]; needs more testing.
-
-Signed-off-by: Randolph Sapp <rs@ti.com>
+Signed-off-by: Paulo Neves <paulo@myneves.com>
 ---
- lib/bb/fetch2/gitsm.py | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ lib/bb/siggen.py | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index 47225b97..a87361cc 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -123,6 +123,7 @@ class GitSM(Git):
-             url += ";name=%s" % module
-             url += ";subpath=%s" % module
-             url += ";nobranch=1"
-+            url += ";lfs=%s" % self._need_lfs(ud)
-             # Note that adding "user=" here to give credentials to the
-             # submodule is not supported. Since using SRC_URI to give git://
-             # URL a password is not supported, one have to use one of the
-@@ -242,10 +243,12 @@ class GitSM(Git):
-         ret = self.process_submodules(ud, ud.destdir, unpack_submodules, d)
- 
-         if not ud.bareclone and ret:
--            # All submodules should already be downloaded and configured in the tree.  This simply sets
--            # up the configuration and checks out the files.  The main project config should remain
--            # unmodified, and no download from the internet should occur.
--            runfetchcmd("%s submodule update --recursive --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
-+            # All submodules should already be downloaded and configured in the tree.  This simply
-+            # sets up the configuration and checks out the files.  The main project config should
-+            # remain unmodified, and no download from the internet should occur. As such, lfs smudge
-+            # should also be skipped as these files were already smudged in the fetch stage if lfs
-+            # was enabled.
-+            runfetchcmd("GIT_LFS_SKIP_SMUDGE=1 %s submodule update --recursive --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
- 
-     def implicit_urldata(self, ud, d):
-         import shutil, subprocess, tempfile
--- 
-2.41.0
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 879c136e1..b023b79ec 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -361,7 +361,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         for dep in sorted(self.runtaskdeps[tid]):
+             data +=3D self.get_unihash(dep[1])
+=20
+-        for (f, cs) in self.file_checksum_values[tid]:
++        for (f, cs) in sorted(self.file_checksum_values[tid], key=3Dclean_=
+checksum_file_path):
+             if cs:
+                 if "/./" in f:
+                     data +=3D "./" + f.split("/./")[1]
+@@ -426,7 +426,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         if runtime and tid in self.taskhash:
+             data['runtaskdeps'] =3D [dep[0] for dep in sorted(self.runtask=
+deps[tid])]
+             data['file_checksum_values'] =3D []
+-            for f,cs in self.file_checksum_values[tid]:
++            for f,cs in sorted(self.file_checksum_values[tid], key=3Dclean=
+_checksum_file_path):
+                 if "/./" in f:
+                     data['file_checksum_values'].append(("./" + f.split("/=
+./")[1], cs))
+                 else:
+@@ -745,6 +745,12 @@ class SignatureGeneratorTestEquivHash(SignatureGenerat=
+orUniHashMixIn, SignatureG
+         self.server =3D data.getVar('BB_HASHSERVE')
+         self.method =3D "sstate_output_hash"
+=20
++def clean_checksum_file_path(file_checksum_tuple):
++    f, cs =3D file_checksum_tuple
++    if "/./" in f:
++        return "./" + f.split("/./")[1]
++    return f
++
+ def dump_this_task(outfile, d):
+     import bb.parse
+     mcfn =3D d.getVar("BB_FILENAME")
+--=20
+2.34.1
+
 
 
