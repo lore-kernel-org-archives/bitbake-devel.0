@@ -2,42 +2,42 @@ Return-Path: <rs@ti.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1209CC3DA6F
-	for <webhook@archiver.kernel.org>; Wed, 23 Aug 2023 21:44:29 +0000 (UTC)
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
- by mx.groups.io with SMTP id smtpd.web11.663.1692827058781232060
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595FDC3DA66
+	for <webhook@archiver.kernel.org>; Wed, 23 Aug 2023 22:03:09 +0000 (UTC)
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+ by mx.groups.io with SMTP id smtpd.web10.1149.1692828179351827201
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Aug 2023 14:44:19 -0700
+ Wed, 23 Aug 2023 15:02:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@ti.com header.s=ti-com-17Q1 header.b=Kqotq9os;
- spf=pass (domain: ti.com, ip: 198.47.23.249, mailfrom: rs@ti.com)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 37NLiHEk085921;
-	Wed, 23 Aug 2023 16:44:17 -0500
+ dkim=fail reason="dkim: body hash did not verify" header.i=@ti.com header.s=ti-com-17Q1 header.b=Jbu76tV8;
+ spf=pass (domain: ti.com, ip: 198.47.19.142, mailfrom: rs@ti.com)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 37NM2vCY013925;
+	Wed, 23 Aug 2023 17:02:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1692827057;
-	bh=Onv2wJfREOYN9etq1oFqY6xqUqDTIf38YLXJHXMk/nk=;
+	s=ti-com-17Q1; t=1692828177;
+	bh=nouRb2dJBaRxYxzxCr2EcPUTRlDgl+ngHySn6c0hjA0=;
 	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Kqotq9osEeatiJIqn1W+kRdZLASgDaniNuRQEkaRjn3lxnBXPTYHnTzfS6DkbsjCG
-	 V+mVfltAm9um1+50uspT5ySLqkBzNB6hRuIKqRHwDfiC/flIZDXu4ATME8xeZl3Opd
-	 HXkt7/SmBwWMms4sfsS7yOl+iz/FWSNR0pwPPckY=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 37NLiHXO006335
+	b=Jbu76tV8b6I1SVqo3MFth67SgsnqC4oZ3P+3UNB/aNIcoPnQrahgkLr/ia6sse1T2
+	 4B9xh8sUV1YWIOEHlkL3JIe/+K3X2DjT9yLM8XWvhEspy+r5E4ABoi47ziTwETriBy
+	 NZ34wXpk0JLugt1sNxzZ1Z20T2ZF7ozwCYR8+cYs=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 37NM2vsY075529
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 23 Aug 2023 16:44:17 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 23
- Aug 2023 16:44:15 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+	Wed, 23 Aug 2023 17:02:57 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
  (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 23
+ Aug 2023 17:02:56 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 23 Aug 2023 16:44:15 -0500
-Received: from [128.247.81.144] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-	by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 37NLiFcP120003;
-	Wed, 23 Aug 2023 16:44:15 -0500
-Message-ID: <8d927140-8642-41a7-a18c-63d0e00e4170@ti.com>
-Date: Wed, 23 Aug 2023 16:44:15 -0500
+ Frontend Transport; Wed, 23 Aug 2023 17:02:57 -0500
+Received: from [128.247.81.144] (ileaxei01-snat.itg.ti.com [10.180.69.5])
+	by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 37NM2uj6007997;
+	Wed, 23 Aug 2023 17:02:57 -0500
+Message-ID: <0a74ac84-2855-4f9d-8552-a4c4fe12261a@ti.com>
+Date: Wed, 23 Aug 2023 17:02:56 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [EXTERNAL] Re: [bitbake-devel] [PATCH] bitbake-worker:
@@ -57,12 +57,12 @@ In-Reply-To: <151825c6950a24bd1614cdbbdb24c021ff664768.camel@linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Content-Transfer-Encoding: quoted-printable
-X-MIME-Autoconverted: from 8bit to quoted-printable by lelv0142.ext.ti.com id 37NLiHEk085921
+X-MIME-Autoconverted: from 8bit to quoted-printable by fllv0016.ext.ti.com id 37NM2vCY013925
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 23 Aug 2023 21:44:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14967
+ <bitbake-devel@lists.openembedded.org>; Wed, 23 Aug 2023 22:03:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14968
 
 On 8/23/23 16:40, Richard Purdie wrote:
 > On Wed, 2023-08-23 at 16:34 -0500, Randolph Sapp wrote:
@@ -97,10 +97,14 @@ at
 >=20
 > Do we really want to make it easier for people to ignore that set of
 > problems? :/
+>=20
+> People seem very very reluctant to try and fix any of these issues
+> properly and with the kinds of regulations coming in, this is a serious
+> issue whether people like it or not...
 
-I suppose not. Though it is a little rough to add a fetcher and class=20
-for every one-off build system that Google introduces for their shinny=20
-new product :P
+I would argue that as long as the 'network' flag exists people will just=20
+continue to ignore the real issue.
 
-Feel free to drop this patch. Just figured I would test the waters.
+The current proxy problem just makes it slightly more annoying for a=20
+small percentage of the people currently circumventing the issue.
 
