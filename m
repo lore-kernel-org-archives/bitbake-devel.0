@@ -1,256 +1,290 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DEBC3DA6F
-	for <webhook@archiver.kernel.org>; Thu, 24 Aug 2023 19:54:21 +0000 (UTC)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
- by mx.groups.io with SMTP id smtpd.web11.1187.1692906856768777302
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B46C6FA8F
+	for <webhook@archiver.kernel.org>; Thu, 24 Aug 2023 22:12:21 +0000 (UTC)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web10.537.1692915135706828762
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 24 Aug 2023 12:54:17 -0700
+ Thu, 24 Aug 2023 15:12:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20221208 header.b=CUzxESdI;
- spf=pass (domain: gmail.com, ip: 209.85.208.173, mailfrom: jpewhacker@gmail.com)
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2bcc331f942so3486531fa.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Aug 2023 12:54:16 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=V6hz4fWx;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-31768ce2e81so227001f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Aug 2023 15:12:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692906855; x=1693511655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J7dCeaZkkCCeu7PU/G+WAk/iFTiDLqOmiRAj1U7rBc8=;
-        b=CUzxESdIteolrwFQxdClUz2+umkY8qDnwEvVS96B6ziEluwnS0DtMoEQimXdxgUbRe
-         1uPXPr898tbuaiqmzprda/4bYYKZHwPwLbp4ZVPXoVTcpUJGUSc0VMxP3zCdaAMcZZll
-         Fi6fLxQWRwvBVYThm9dt2NF7EY/gN+QCYjsAV7st+xCTNLvGkY5onn5cc/xGRpN1NJDj
-         RSEZYX8nA9atTl5m8qt5DhVjhOa6KSMKnnajzdZUfcRStJL3Hu/f1m03AyJmkfVB1Z4G
-         Udj2uVg1lgJb4cTEmdqucl7yArwlf3/q+oBF2IYKwjgUAAm5vkZJSTZjEBuFeRgMLRQO
-         zYcA==
+        d=linuxfoundation.org; s=google; t=1692915134; x=1693519934;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8kG7NmuDEls4H4944cCyrcSirgC17gxRZw9rG+Wdj/c=;
+        b=V6hz4fWxNq+woA+rti4nXY4kIwcw4ebleJNF+XocvJWRoYSD80LGRQg7PRsOXQpDHI
+         jb7dpdkY7X0TW/i2TF1z9NylrFaw+JIMvEEGXGuDN1twOdkLJFPDBjq1RRH3VOxM+l42
+         JsS/tmvPnjNo1RZ7wepAuEFjjmXv6irgjwOGM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692906855; x=1693511655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J7dCeaZkkCCeu7PU/G+WAk/iFTiDLqOmiRAj1U7rBc8=;
-        b=HWeXgIuY+ksZVyOWt0bobBZemhtFyqq0uNujYySbcsp1AkKHGJagDK2z4voMtoNcqz
-         vqMUsqJrU0f5qjqpYP5UpTTBsKvwow9qiWB/Dyjzf95zz3NJuwEo5tEX0RjUFNnuqNMX
-         Qidl9pCAZcLqA5jCJtaNR+qRhfUqz9eXuTOr4CMGUPz1epuDdphXQSmaG7pfde0CyuHN
-         UrAHXCHxM/qUF/HRI4tTCfldZJm5FtZ2d0k1f0zhNSGNiESZBMHVGg8lNOYBDo2RCLhn
-         jtx3RVJZ9jss8YYSdp5Gth4Qyuw9xFmnhauyjxEpAsN2MPL0Vd/r9aEBdpt+gMvGsSTb
-         cuqg==
-X-Gm-Message-State: AOJu0YxnK7D9HLgP0o7qtgvKRW+ohCwk+1UB+DscWIFHiXYAGW/mIoz3
-	8lhlDdZ+crEcgtjQWnC7Q4MElxQacrrcYBG5X80=
-X-Google-Smtp-Source: AGHT+IHlwRjCRlXXP8MGXIA8vFYNol9R5gvxRmlxaYSZ3zS2YHmNCOrBp0CKX4S5k+mErPdXCMMoTqWswhMzS7c9iZ4=
-X-Received: by 2002:a05:651c:11c5:b0:2bc:e94e:fda0 with SMTP id
- z5-20020a05651c11c500b002bce94efda0mr952385ljo.5.1692906854562; Thu, 24 Aug
- 2023 12:54:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230804155424.1502010-1-JPEWhacker@gmail.com>
- <2023080901520013144e1b@mail.local> <CAJdd5GYK-dr6vf3a_O_hgQ-gLt1WkHwcwwyH5fD4+d423MzAcg@mail.gmail.com>
- <177C44DDA5F18A0D.21730@lists.openembedded.org> <202308191221252f22058b@mail.local>
-In-Reply-To: <202308191221252f22058b@mail.local>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Thu, 24 Aug 2023 13:54:02 -0600
-Message-ID: <CAJdd5GZtW8hpXgnKq3=X_ZS4F0UuSbaMT+=+0v+iDzOmxK306A@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH] fetch2: git: Check if directory is a bare
- git repo
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: bitbake-devel@lists.openembedded.org
+        d=1e100.net; s=20221208; t=1692915134; x=1693519934;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8kG7NmuDEls4H4944cCyrcSirgC17gxRZw9rG+Wdj/c=;
+        b=N/qEWI7P98Y6izC8eb76C6UauQOhRjTZVp+JM+UqHPvEa2d5iNaNtdBQ88td6PYKXn
+         gejs8KezYWxq9AaEdVm3IRtMMEj8jjodITMVNuHTNfCO/BPQhr/+pBdce2bSw9hSnfFq
+         FLaRJCst1ROv7wU5JndKMGOK032x8g7mTY3m1SmkeZOUcw+a9bi5HDiHuV1qHPyw3ogz
+         /47JENwv3ycLzsUVytcjfso7UsWTvbbmEjlJXl1zyItL77lBCNItk50jjIXFHILWARvk
+         HTwefAAzTbn8vCzZiQQr/O5bIvtJGykFUwB6qOKfKavn02EDWDPtpRTX26hvL2mrYkdX
+         PhKQ==
+X-Gm-Message-State: AOJu0YwihcFFOrSuNJunOqHXGv6108Da9XyrigiNpE+TvECNItsR0met
+	gVVQJJVw3T5iKhcHmG2nod6iAQ==
+X-Google-Smtp-Source: AGHT+IHQOt6rOfcgmhk8JOAc653F6Kn4wXNpO4ukdYCQNZOQmwPJv+DnHDHx/ww5fq+75egbOmxtwQ==
+X-Received: by 2002:adf:ec12:0:b0:313:e88d:e6cf with SMTP id x18-20020adfec12000000b00313e88de6cfmr13559393wrn.69.1692915134061;
+        Thu, 24 Aug 2023 15:12:14 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:5f51:6592:7dd5:4623? ([2001:8b0:aba:5f3c:5f51:6592:7dd5:4623])
+        by smtp.gmail.com with ESMTPSA id v1-20020adff681000000b00317eee26bf0sm331626wrp.69.2023.08.24.15.12.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Aug 2023 15:12:13 -0700 (PDT)
+Message-ID: <5c0b59c02a5ce3aa87439ee67ffe7c74e12be859.camel@linuxfoundation.org>
+Subject: Re: [PATCH v4 1/3] fetch2: Add support for upstream source tracing
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: alberto@pianon.eu, bitbake-devel@lists.openembedded.org
+Cc: jpewhacker@gmail.com, carlo@piana.eu, luca.ceresoli@bootlin.com, 
+	peter.kjellerstedt@axis.com
+Date: Thu, 24 Aug 2023 23:12:12 +0100
+In-Reply-To: <20230824155655.448755-1-alberto@pianon.eu>
+References: <20230824155655.448755-1-alberto@pianon.eu>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 24 Aug 2023 19:54:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14980
+ <bitbake-devel@lists.openembedded.org>; Thu, 24 Aug 2023 22:12:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14981
 
-On Sat, Aug 19, 2023 at 6:21=E2=80=AFAM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> This was because I didn't point to the correct build error:
-
-Yep, fixed in V2 (and I validated that the tests pass locally also)
-
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> ERROR: test_mirror_commit_exists (bb.tests.fetch.FetchPremirroronlyLocalT=
-est.test_mirror_commit_exists)
-> ----------------------------------------------------------------------
-> Traceback (most recent call last):
->   File "/home/pokybuild/yocto-worker/oe-selftest-fedora/build/bitbake/lib=
-/bb/tests/fetch.py", line 3075, in test_mirror_commit_exists
->     fetcher.download()
->   File "/home/pokybuild/yocto-worker/oe-selftest-fedora/build/bitbake/lib=
-/bb/fetch2/__init__.py", line 1746, in download
->     done =3D m.try_mirrors(self, ud, self.d, mirrors)
->            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->   File "/home/pokybuild/yocto-worker/oe-selftest-fedora/build/bitbake/lib=
-/bb/fetch2/__init__.py", line 1612, in try_mirrors
->     return bool(try_mirrors(fetch, d, urldata, mirrors, check))
->                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->   File "/home/pokybuild/yocto-worker/oe-selftest-fedora/build/bitbake/lib=
-/bb/fetch2/__init__.py", line 1136, in try_mirrors
->     ret =3D try_mirror_url(fetch, origud, uds[index], ld, check)
->           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->   File "/home/pokybuild/yocto-worker/oe-selftest-fedora/build/bitbake/lib=
-/bb/fetch2/__init__.py", line 1065, in try_mirror_url
->     origud.method.download(origud, ld)
->   File "/home/pokybuild/yocto-worker/oe-selftest-fedora/build/bitbake/lib=
-/bb/fetch2/git.py", line 401, in download
->     bb.fetch2.check_network_access(d, clone_cmd, ud.url)
->   File "/home/pokybuild/yocto-worker/oe-selftest-fedora/build/bitbake/lib=
-/bb/fetch2/__init__.py", line 944, in check_network_access
->     raise NetworkAccess(url, info)
-> bb.fetch2.NetworkAccess: Network access disabled through BB_NO_NETWORK (o=
-r set indirectly due to use of BB_FETCH_PREMIRRORONLY) but access requested=
- with command LANG=3DC git -c gc.autoDetach=3Dfalse -c core.pager=3Dcat clo=
-ne --bare --mirror https://git.fake.repo/bitbake /tmp/bitbake-fetch-xeon98f=
-f/download/git2/git.fake.repo.bitbake --progress (for url git://git.fake.re=
-po/bitbake;branch=3Dmaster;protocol=3Dhttps)
->
->
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/86/builds/5619/st=
-eps/11/logs/stdio
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/80/builds/5577/st=
-eps/11/logs/stdio
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/127/builds/1935/s=
-teps/11/logs/stdio
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/87/builds/5653/st=
-eps/11/logs/stdio
->
->
-> On 17/08/2023 22:14:34+0200, Alexandre Belloni via lists.openembedded.org=
- wrote:
-> > On 17/08/2023 13:19:56-0600, Joshua Watt wrote:
-> > > Alexandre,
-> > >
-> > > I'm not sure that's quite correct; I was able to run the test fine
-> > > locally, and that failure looks like a 502 error from the server,
-> > > which really shouldn't have anything to do with this patch?
-> > >
-> >
-> > I'm pretty sure you are right...
-> >
-> > > On Tue, Aug 8, 2023 at 7:52=E2=80=AFPM Alexandre Belloni
-> > > <alexandre.belloni@bootlin.com> wrote:
-> > > >
-> > > > Hello Joshua,
-> > > >
-> > > > I'm fairly sure this causes the following bitbake-selftest failure:
-> > > >
-> > > > https://autobuilder.yoctoproject.org/typhoon/#/builders/56/builds/2=
-307/steps/11/logs/stdio
-> > > >
-> > > > On 04/08/2023 09:54:24-0600, Joshua Watt wrote:
-> > > > > If the clone target directory exists, but isn't the valid top lev=
-el of a
-> > > > > bare git repo, it needs to be erased and re-cloned. One example o=
-f how
-> > > > > this can happen is if a clone creates the directory, but then fai=
-ls to
-> > > > > actual clone and make it a git repository. This left-over directo=
-ry can
-> > > > > be particularly problematic if the download directory is a descen=
-t of
-> > > > > some top layer git repo (e.g. the default with poky), as the comm=
-ands
-> > > > > that operate on the remote later will then mangle the layers git
-> > > > > repository instead of the download git repo.
-> > > > >
-> > > > > Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> > > > > ---
-> > > > >  bitbake/lib/bb/fetch2/git.py | 24 +++++++++++++++++++++++-
-> > > > >  1 file changed, 23 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2=
-/git.py
-> > > > > index 2a3c06fe4e9..112bed294f0 100644
-> > > > > --- a/bitbake/lib/bb/fetch2/git.py
-> > > > > +++ b/bitbake/lib/bb/fetch2/git.py
-> > > > > @@ -65,6 +65,7 @@ import fnmatch
-> > > > >  import os
-> > > > >  import re
-> > > > >  import shlex
-> > > > > +import shutil
-> > > > >  import subprocess
-> > > > >  import tempfile
-> > > > >  import bb
-> > > > > @@ -365,8 +366,29 @@ class Git(FetchMethod):
-> > > > >                  runfetchcmd(fetch_cmd, d, workdir=3Dud.clonedir)
-> > > > >          repourl =3D self._get_repo_url(ud)
-> > > > >
-> > > > > +        needs_clone =3D False
-> > > > > +        if os.path.exists(ud.clonedir):
-> > > > > +            # The directory may exist, but not be the top level =
-of a bare git
-> > > > > +            # repository in which case it needs to be deleted an=
-d re-cloned.
-> > > > > +            try:
-> > > > > +                # Since clones are bare, use --absolute-git-dir =
-instead of --show-toplevel
-> > > > > +                output =3D runfetchcmd("LANG=3DC %s rev-parse --=
-absolute-git-dir" % ud.basecmd, d, workdir=3Dud.clonedir)
-> > > > > +            except bb.fetch2.FetchError as e:
-> > > > > +                logger.warning("Unable to get top level for %s (=
-not a git directory?): %s", ud.clonedir, e)
-> > > > > +                needs_clone =3D True
-> > > > > +            else:
-> > > > > +                toplevel =3D output.rstrip()
-> > > > > +                if os.path.abspath(toplevel) !=3D os.path.abspat=
-h(ud.clonedir):
-> > > > > +                    logger.warning("Top level directory '%s' doe=
-sn't match expected '%s'. Re-cloning", toplevel, ud.clonedir)
-> > > > > +                    needs_clone =3D True
-> > > > > +
-> > > > > +            if needs_clone:
-> > > > > +                shutil.rmtree(ud.clonedir)
-> > > > > +        else:
-> > > > > +            needs_clone =3D True
-> > > > > +
-> > > > >          # If the repo still doesn't exist, fallback to cloning i=
+On Thu, 2023-08-24 at 17:56 +0200, alberto@pianon.eu wrote:
+> From: Alberto Pianon <alberto@pianon.eu>
+>=20
+> License compliance and SBoM generation require to be able to trace each
+> source file back to its corresponding upstream source. The current
+> implementation of bb.fetch2 makes it difficult, especially when multiple
+> upstream sources are combined together.
+>=20
+> This patch provides an interface to solve the issue by implementing a
+> process that unpacks each SRC_URI element into a temporary directory,
+> creates an entrypoint to collect relevant provenance metadata on each
+> source file, moves everything to the recipe rootdir, and saves metadata
+> in a JSON file.
+>=20
+> This patch contains required modifications to fetchers' code plus a
+> TraceUnpackBase class that implements the above described process. Data
+> collection logic should be separately implemented by subclassing
+> TraceUnpackBase, implementing _collect_data() and _process_data()
+> methods.
+>=20
+> Splitting the above described solution in multiple patches and in
+> multiple modules/classes aims at easing review and merge process, and
+> also at decoupling the development of the data collection logic from the
+> process that enables it.
+>=20
+> Signed-off-by: Alberto Pianon <alberto@pianon.eu>
+> ---
+>  bin/bitbake-selftest        |   1 +
+>  lib/bb/fetch2/__init__.py   |  55 +++++++-
+>  lib/bb/fetch2/crate.py      |   2 +
+>  lib/bb/fetch2/gitsm.py      |  24 +++-
+>  lib/bb/fetch2/hg.py         |   1 +
+>  lib/bb/fetch2/npm.py        |   1 +
+>  lib/bb/fetch2/npmsw.py      |  25 +++-
+>  lib/bb/fetch2/trace_base.py | 256 ++++++++++++++++++++++++++++++++++++
+>  lib/bb/tests/trace_base.py  | 227 ++++++++++++++++++++++++++++++++
+>  9 files changed, 583 insertions(+), 9 deletions(-)
+>  create mode 100644 lib/bb/fetch2/trace_base.py
+>  create mode 100644 lib/bb/tests/trace_base.py
+>=20
+> diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
+> index f25f23b1..6d60a5d2 100755
+> --- a/bin/bitbake-selftest
+> +++ b/bin/bitbake-selftest
+> @@ -31,6 +31,7 @@ tests =3D ["bb.tests.codeparser",
+>           "bb.tests.runqueue",
+>           "bb.tests.siggen",
+>           "bb.tests.utils",
+> +         "bb.tests.trace_base",
+>           "bb.tests.compression",
+>           "hashserv.tests",
+>           "layerindexlib.tests.layerindexobj",
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index e4c1d206..aef5fcb4 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -28,6 +28,8 @@ import bb.checksum
+>  import bb.process
+>  import bb.event
+> =20
+> +from .trace_base import TraceUnpackBase
+> +
+>  __version__ =3D "2"
+>  _checksum_cache =3D bb.checksum.FileChecksumCache()
+> =20
+> @@ -1279,6 +1281,7 @@ class FetchData(object):
+>          if not self.pswd and "pswd" in self.parm:
+>              self.pswd =3D self.parm["pswd"]
+>          self.setup =3D False
+> +        self.destdir =3D None
+> =20
+>          def configure_checksum(checksum_id):
+>              if "name" in self.parm:
+> @@ -1557,6 +1560,8 @@ class FetchMethod(object):
+>              bb.utils.mkdirhier(unpackdir)
+>          else:
+>              unpackdir =3D rootdir
+> +        urldata.destdir =3D unpackdir
+> +        urldata.is_unpacked_archive =3D unpack and cmd
+> =20
+>          if not unpack or not cmd:
+>              # If file =3D=3D dest, then avoid any copies, as we already =
+put the file into dest!
+> @@ -1572,6 +1577,7 @@ class FetchMethod(object):
+>                      if urlpath.find("/") !=3D -1:
+>                          destdir =3D urlpath.rsplit("/", 1)[0] + '/'
+>                          bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir=
+))
+> +                        urldata.destdir =3D "%s/%s" % (unpackdir, destdi=
+r)
+>                  cmd =3D 'cp -fpPRH "%s" "%s"' % (file, destdir)
+> =20
+>          if not cmd:
+> @@ -1855,26 +1861,69 @@ class Fetch(object):
+>              if not ret:
+>                  raise FetchError("URL %s doesn't work" % u, u)
+> =20
+> -    def unpack(self, root, urls=3DNone):
+> +    def unpack(self, root, urls=3DNone, is_module=3DFalse, checkout_dest=
+dir=3DNone):
+>          """
+> -        Unpack urls to root
+> +        Unpack urls to a tmp dir, trace, and then move everything to roo=
 t
-> > > > > -        if not os.path.exists(ud.clonedir):
-> > > > > +        if needs_clone:
-> > > > >              # We do this since git will use a "-l" option automa=
-tically for local urls where possible,
-> > > > >              # but it doesn't work when git/objects is a symlink,=
- only works when it is a directory.
-> > > > >              if repourl.startswith("file://"):
-> > > > > --
-> > > > > 2.33.0
-> > > > >
-> > > >
-> > > > >
-> > > > >
-> > > > >
-> > > >
-> > > >
-> > > > --
-> > > > Alexandre Belloni, co-owner and COO, Bootlin
-> > > > Embedded Linux and Kernel engineering
-> > > > https://bootlin.com
-> >
-> > --
-> > Alexandre Belloni, co-owner and COO, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
->
-> >
-> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> > Links: You receive all messages sent to this group.
-> > View/Reply Online (#14952): https://lists.openembedded.org/g/bitbake-de=
-vel/message/14952
-> > Mute This Topic: https://lists.openembedded.org/mt/100548945/3617179
-> > Group Owner: bitbake-devel+owner@lists.openembedded.org
-> > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex=
-andre.belloni@bootlin.com]
-> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> >
->
->
-> --
-> Alexandre Belloni, co-owner and COO, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> +
+> +        is_module needs to be set to true when this method is recursivel=
+y called
+> +        by a fetcher's unpack method to unpack (sub)modules (gitsm, npms=
+w)
+> +
+> +        checkout_destdir needs to be passed when this method is recursiv=
+ely
+> +        called by gitsm fetcher
+>          """
+> =20
+>          if not urls:
+>              urls =3D self.urls
+> +        if is_module:
+> +            destdir =3D root
+> +        else:
+> +            trace =3D TraceUnpackBase(root, self.d)
+> +            destdir =3D trace.tmpdir
+> =20
+>          for u in urls:
+>              ud =3D self.ud[u]
+> +            # absolute subdir, destsuffix and subpath params wouldn't wo=
+rk when
+> +            # unpacking in the tmp dir, convert them to relative paths
+> +            realroot =3D os.path.realpath(root)
+> +            params =3D [ 'subdir', 'destsuffix', 'subpath' ]
+> +            for p in params:
+> +                if not ud.parm.get(p):
+> +                    continue
+> +                if os.path.isabs(ud.parm[p]):
+> +                    realpath =3D os.path.realpath(ud.parm[p])
+> +                    if realpath.startswith(realroot):
+> +                        ud.parm[p] =3D os.path.relpath(realpath, realroo=
+t)
+>              ud.setup_localpath(self.d)
+> +            ud.rootdir =3D root
+> +
+> +            if hasattr(ud, "checkout_destdir"):
+> +                ud.checkout_destdir =3D checkout_destdir
+> =20
+>              if ud.lockfile:
+>                  lf =3D bb.utils.lockfile(ud.lockfile)
+> =20
+> -            ud.method.unpack(ud, root, self.d)
+> +            ud.method.unpack(ud, destdir, self.d)
+> =20
+>              if ud.lockfile:
+>                  bb.utils.unlockfile(lf)
+> =20
+> +            if is_module:
+> +                continue
+> +
+> +            if hasattr(ud, "nocheckout") and ud.nocheckout:
+> +                logger.warning(
+> +                    "Can't trace sources for"
+> +                    " %s because repo has not been checked out" % u)
+> +            else:
+> +                trace.commit(u, ud)
+> +
+> +            trace.move2root()
+> +
+> +        if is_module:
+> +            return
+> +        trace.write_data()
+> +        trace.close()
+> +
+>      def clean(self, urls=3DNone):
+>          """
+>          Clean files that the fetcher gets or places
+
+This patch takes a relatively clean function and adds logic which isn't
+particularly clear or easy to follow. For example why should the
+function skip the trace.commit() if it is a module? Surely you need the
+trace data for modules as well? I guess you collect this differently
+for things registered as modules?
+
+Other things which concern me:
+
+* backend specific parameters such as nocheckout are now appearing in
+the core function
+* we're switching absolute paths for relative paths for very unclear
+reasons which will make the code more fragile to changes
+* gitsm specific handling is being added to the core
+
+I was willing to accept intercept hooks on this code but this rewrites
+the code paths and the fetcher behaviour significantly in ways most of
+our users don't need or want.
+
+Whilst I know I did say to submit it, getting the code 1 working day
+before feature freeze does also limit my options somewhat in what I can
+do with it during review.
+
+
+I'm basically worried that this convolutes the unpack process so badly
+that nobody is going to be able to follow, maintain or modify this code
+in future. I know I can barely follow what this is doing and it won't
+encourage anyone else to touch it :(.
+
+
+I do understand why you want to do this but I'm not convinced that the
+project should be taking changes like this for what I personally think
+are very marginal gains.
+
+I appreciate from some legal perspectives, you feel you absolutely must
+resolve every file back to every original source but in reality for
+99.9% of our users, they just don't need to do this.
+
+This puts me in a really difficult position. I appreciate the work
+you've put into this and I do see what you want to do but in it's
+current form, I don't think I'll do the project any favours by
+accepting it.
+
+I do think there must be a way for improving the interface so that my
+concerns are alleviated and the risk is pushed to the people enabling
+it, but without diving into the code myself to try and illustrate that,
+I'm not sure how I can help us get there.
+
+Cheers,
+
+Richard
+
 
