@@ -1,97 +1,106 @@
-Return-Path: <rybczynska@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31D5C7113B
-	for <webhook@archiver.kernel.org>; Thu, 24 Aug 2023 09:42:54 +0000 (UTC)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
- by mx.groups.io with SMTP id smtpd.web11.7123.1692870168282298725
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B96C6FA8F
+	for <webhook@archiver.kernel.org>; Thu, 24 Aug 2023 10:33:15 +0000 (UTC)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+ by mx.groups.io with SMTP id smtpd.web11.7723.1692873188204439718
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 24 Aug 2023 02:42:48 -0700
+ Thu, 24 Aug 2023 03:33:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20221208 header.b=T0n+1pfj;
- spf=pass (domain: gmail.com, ip: 209.85.208.172, mailfrom: rybczynska@gmail.com)
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2bcd7a207f7so31875941fa.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Aug 2023 02:42:47 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YEfa0J9S;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.167.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-4ffae5bdc9aso8061434e87.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Aug 2023 03:33:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692870166; x=1693474966;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CawdxxtoRB2XaH3a2+v0yDla5XRmEtBVC3SD4Kz1TXU=;
-        b=T0n+1pfjXWFWhqDOOnsRtgBm4TG3vMLDjISW3lm7H/Dw4gMV+vjiRuffgiSk47HL1Q
-         EceegJpKUsRcXZdg+pWFVX+w7sEu2eqlMXrLSBPuOgT0/1p+CirGgFAda63QBwjXLilN
-         k8etqb5/znohOwy1ahKmx9NRt6caN44r1WC37zBlnuw5DJ72MB80YNo528X0IIj/s2yF
-         lJYdxonqwGF8vh6v3mbMpGg2r+R7uxbLdr5q7YM99OQGC15yn8F005omy6vmqzXaI0f9
-         22WYSoBSubtk2hIhz4Ym7/+sZbQJ25eUsjOP5lTAEeD3DqyrV2TduAkDgnftChM5BA0N
-         TlDQ==
+        d=linuxfoundation.org; s=google; t=1692873186; x=1693477986;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JLaVM+J6WkMlZ20EhZXIft66TJdZbPiF/2y+cVUFzW4=;
+        b=YEfa0J9SgkxNUKfiwSceW2GDJgh1c8lgqUfE4mZYgjwy1GF3V0lDEs+A6krXQc31ja
+         w9oSUrBoF6fuJlt5ceKuM/R5nBUZXKsV0PpialnhXX8/VNrFF8g+lXIjKqn6WPhcgn42
+         vDkY435yUJcOPaAHRWf4XMZ2b7uLxs8g0cdZ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692870166; x=1693474966;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CawdxxtoRB2XaH3a2+v0yDla5XRmEtBVC3SD4Kz1TXU=;
-        b=NVchdBGZy8a2dZqnI5gIEdRoqGp6w9jdoWjP7xeae3iO7ZGWlD0nZQ7VFsIx/HSxnO
-         IOzhv4iS5aowYbpo3aMEjCRaGUzh8VgusctYUUvTeiyGaJdYxgTV9jLorvOk/a+K2dbH
-         EKI6YfJNFZxGesfonaKMsxMgHKEi1Z3q6YV2Am7FmIVgbG7iX47r+0Q3X8jXeA1fvvVQ
-         J6z/hxF6ofRPupG//MT5rvyh9j1hM030XVziD2cgZRlJcDG0yPpZ/62fw5O+heElK+Mc
-         /Ts1sSRQbkZZ7VbuVBos27P6Xtowa3BQXBW2uNMzLhfpGufyd9UmcMIzMYqrt2n6Cyyt
-         VOnw==
-X-Gm-Message-State: AOJu0YyBHSR1LuZPIjR0YQOM34dhGkyvGBRFFOtsFmOgrOyd+xMroPT/
-	buhkSeMuwTg+lNQgX4ZLCWXxukBsk06rNKyZKOQ=
-X-Google-Smtp-Source: AGHT+IEwHFQDX7LrVRdQfxgWWIRYWVqoDT495XrGyD7FLStkKSMEm5C2AftwgYmxLkjseVsD7oxKPM72Yclry4+4sag=
-X-Received: by 2002:a2e:88cb:0:b0:2bc:be3c:9080 with SMTP id
- a11-20020a2e88cb000000b002bcbe3c9080mr8330890ljk.27.1692870166089; Thu, 24
- Aug 2023 02:42:46 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692873186; x=1693477986;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JLaVM+J6WkMlZ20EhZXIft66TJdZbPiF/2y+cVUFzW4=;
+        b=XNGS5MpePvZgaeU7f9q+kU3jXMKsPKNp96Fh+NCjqfqiQZm/q/dw08on11P298WSt1
+         2eHbxq/eKDBXkK0BV50zpYs9sIDlHR57BH8aAbFYtQzmkJ+amUzqkem2Ps+tCoJ/SHwb
+         sSKnZFyDPQtwi8T0oAh2ksqZkLnVKvatkAT25VUVqy5OqkFbnz0LK8ueifwNHy1l1Fi6
+         d90ExTGN+7vi6pmhTCPlfSqgX3hc4jkKll340QZTjBWINSbcrIYHiny4s334VMJ0tjYf
+         zcBFDfg+WxvsjBIRzJcxnLVFX5iUdt16kipMwnjX5VhZ/JE5nPOQZoZSj7dBAgfIGgo+
+         3RLw==
+X-Gm-Message-State: AOJu0Yz13VvEoGfOHVBUMaRBSGSDP5Ze6Rch0eBJ1oHUnhrmjdvDCdPu
+	nWpim4y4tbG8NUNkmUMYszRpcg==
+X-Google-Smtp-Source: AGHT+IHesGSjMmYLTA0WMEMrFArP3agJZq+MP6TdMHwCz9X7v3rvbl/nq63xv5b7EcamhIbQIm3p7w==
+X-Received: by 2002:a05:6512:1329:b0:4ff:a02e:a53f with SMTP id x41-20020a056512132900b004ffa02ea53fmr11253631lfu.52.1692873186168;
+        Thu, 24 Aug 2023 03:33:06 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:5461:c902:2158:9a5d? ([2001:8b0:aba:5f3c:5461:c902:2158:9a5d])
+        by smtp.gmail.com with ESMTPSA id a19-20020a5d4573000000b003143add4396sm21792450wrc.22.2023.08.24.03.33.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Aug 2023 03:33:05 -0700 (PDT)
+Message-ID: <26588a5e03f82a558bdcf705cc7b298931c9a59e.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 1/1] siggen.py: Improve taskhash
+ reproducibility
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: luca.ceresoli@bootlin.com, Paulo Neves <paulo@myneves.com>
+Cc: bitbake-devel@lists.openembedded.org
+Date: Thu, 24 Aug 2023 11:33:04 +0100
+In-Reply-To: <20230824095806.356563f2@booty>
+References: <20230822203350.264625-1-paulo@myneves.com>
+	 <20230824095806.356563f2@booty>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
 MIME-Version: 1.0
-References: <20230824081110.2851830-1-samantha.jalabert@syslinbit.com>
-In-Reply-To: <20230824081110.2851830-1-samantha.jalabert@syslinbit.com>
-From: Marta Rybczynska <rybczynska@gmail.com>
-Date: Thu, 24 Aug 2023 11:42:33 +0200
-Message-ID: <CAApg2=R2Opk75OqLRcLXBkaHv9WVFAXbnxS9t-PPi5AMywFwGw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] Fix disk space monitoring on cephfs
-To: Samantha Jalabert <samantha.jalabert@syslinbit.com>, bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000e6958f0603a80c59"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 24 Aug 2023 09:42:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14974
+ <bitbake-devel@lists.openembedded.org>; Thu, 24 Aug 2023 10:33:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14975
 
---000000000000e6958f0603a80c59
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2023-08-24 at 09:58 +0200, Luca Ceresoli via
+lists.openembedded.org wrote:
+> Hello Paulo,
+>=20
+> On Tue, 22 Aug 2023 20:33:58 +0000
+> "Paulo Neves" <paulo@myneves.com> wrote:
+>=20
+> > file checksums are part of the data checksummed
+> > to generate the task hash. The list of file checksums
+> > was not ordered.
+> >=20
+> > In this commit we make sure the task hash checksum takes
+> > a list of checksum data that is ordered by unique file name
+> > thus guaranteeing reproducibility.
+> >=20
+> > Signed-off-by: Paulo Neves <paulo@myneves.com>
+>=20
+> Lots of errors like the following on the autobuilders are possibly
+> caused by this patch:
+>=20
+> Hash for task dependency pseudo-native:do_populate_sysroot changed from f=
+4435f759ac00c51c07eaa840d9d61249f38f82d39a8dbffa4e8f599d874a3c6 to 07a20019=
+8639768d86d5c2c654fcbd0d4ea23d333e735848ac22c12474db1c2d
+> (and a lot more errors)
+>=20
+> Logs:
+>=20
+> https://autobuilder.yoctoproject.org/typhoon/#/builders/80/builds/5592/st=
+eps/14/logs/stdio
+> https://autobuilder.yoctoproject.org/typhoon/#/builders/79/builds/5646/st=
+eps/14/logs/stdio
+> https://autobuilder.yoctoproject.org/typhoon/#/builders/127/builds/1954/s=
+teps/15/logs/stdio
 
-On Thu, Aug 24, 2023 at 10:11=E2=80=AFAM Samantha Jalabert <
-samantha.jalabert@syslinbit.com> wrote:
+FWIW I had this patch in master-next and didn't see those issues so it
+is possibly a different change...
 
-> Error occured while running bitbake on cephfs:
->
-> WARNING: The free inode of path is running low (-0.001K left)
-> ERROR: Immediately halt since the disk space monitor action is "HALT"!
->
->
-This was our small Ceph issue I've mentioned during the call on Tuesday.
+Cheers,
 
-Kind regards,
-Marta
-
---000000000000e6958f0603a80c59
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">On Thu, Aug 24, 2023 at 10:11=E2=80=
-=AFAM Samantha Jalabert &lt;<a href=3D"mailto:samantha.jalabert@syslinbit.c=
-om">samantha.jalabert@syslinbit.com</a>&gt; wrote:<br></div><blockquote cla=
-ss=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid =
-rgb(204,204,204);padding-left:1ex">Error occured while running bitbake on c=
-ephfs:<br>
-<br>
-WARNING: The free inode of path is running low (-0.001K left)<br>
-ERROR: Immediately halt since the disk space monitor action is &quot;HALT&q=
-uot;!<br>
-<br></blockquote><div><br></div><div>This was our small Ceph issue I&#39;ve=
- mentioned during the call on Tuesday.</div><div><br></div><div>Kind regard=
-s,</div><div>Marta <br></div></div></div>
-
---000000000000e6958f0603a80c59--
+Richard
 
