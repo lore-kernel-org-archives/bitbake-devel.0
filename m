@@ -1,56 +1,56 @@
-Return-Path: <Markus.Niebel@ew.tq-group.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940EBC27C40
-	for <webhook@archiver.kernel.org>; Thu, 24 Aug 2023 08:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB77C7113B
+	for <webhook@archiver.kernel.org>; Thu, 24 Aug 2023 09:00:04 +0000 (UTC)
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
- by mx.groups.io with SMTP id smtpd.web11.6461.1692866467074284211
+ by mx.groups.io with SMTP id smtpd.web10.6523.1692865909267050982
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 24 Aug 2023 01:41:08 -0700
+ Thu, 24 Aug 2023 01:31:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@tq-group.com header.s=key1 header.b=a4No8qBE;
+ dkim=pass header.i=@tq-group.com header.s=key1 header.b=H5rcMVw5;
  spf=pass (domain: ew.tq-group.com, ip: 93.104.207.81, mailfrom: markus.niebel@ew.tq-group.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1692866467; x=1724402467;
+  t=1692865909; x=1724401909;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
   bh=kTReOQk4FKrvM6K4zsLaAzj5mRjFikYZ/ZYjawwq5UI=;
-  b=a4No8qBEHmooKERxnYJL+NYW4aaKNLccizH8EfOquSiWVN4X585dxyhB
-   QeJxiVadHLNAbMrFmEwSLw99cHqkfZJYct5RvMAeKYYe/c3PEWTKozBOo
-   pX6VfkakwfNryGygTK0K81wdVN/kBWlcIcy3rUxDmbLJNNJsC9obxtfGt
-   6fKVKHTjjg2VqAMCoSwfLv/8BvFMDEniX6vZ7dimcuyLAiUPFmEHD0+7k
-   s3mDqs8xlHwKIE7q4q6yZVEYJqzv31gfZ4GscfTVrSLpbzq1DDfHbv4nV
-   +z4MFQ8FX6/+JxJ78H7DTJqw9fFmxkCGirLvt3+rHIfeiOURB9Bd9QEbK
-   w==;
+  b=H5rcMVw5T5wnQflqTBoWKeUsPElY167OLL7qarHNBQ9RCMFPVBlVUAab
+   iFc2J5Z29Ii1lQyKkkj744BT0t8M/pLeZCcgETMND1kldaz5Q/4Mmz7Mh
+   nosR6wGfufMII27Axzh8AVdqJBIAaRr6b0n9c1Y+0bo2J5RS2jAsB+T9s
+   JXYiJnCs3rfWFl55Nhj1eeemnUdhmGYmlGJ/kjFt9pOHvpGM0o/fhY+Un
+   ZXwrhoABWiKrVPwtwakKdB+rTShqA4yGboDlqoQUqBOX+cfOX88/lxXHJ
+   mSShgHMLVzfzaFnwOEBjfeCYqonB8AsiNUKtKRuTDYN0/HTw94KK4UpNV
+   Q==;
 X-IronPort-AV: E=Sophos;i="6.01,195,1684792800"; 
-   d="scan'208";a="32603428"
+   d="scan'208";a="32603113"
 Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 24 Aug 2023 10:41:04 +0200
+  by mx1.tq-group.com with ESMTP; 24 Aug 2023 10:31:45 +0200
 Received: from NIEBEL-W3.tq-net.de (NIEBEL-W3.tq-net.de [10.123.53.155])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 51639280075;
-	Thu, 24 Aug 2023 10:41:04 +0200 (CEST)
-From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id AFC0C280075;
+	Thu, 24 Aug 2023 10:31:45 +0200 (CEST)
+From: "Markus Niebel" <Markus.Niebel@ew.tq-group.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: oss@ew.tq-group.com,
 	Paulo Neves <ptsneves@gmail.com>,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	Markus Niebel <Markus.Niebel@ew.tq-group.com>
 Subject: [kirkstone][2.0][PATCH] bitbake-getvar: Add a quiet command line argument
-Date: Thu, 24 Aug 2023 10:41:00 +0200
-Message-Id: <20230824084100.1822478-1-Markus.Niebel@ew.tq-group.com>
+Date: Thu, 24 Aug 2023 10:31:09 +0200
+Message-Id: <20230824083109.1821425-1-Markus.Niebel@ew.tq-group.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 24 Aug 2023 08:41:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14971
+ <bitbake-devel@lists.openembedded.org>; Thu, 24 Aug 2023 09:00:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14972
 
 From: Paulo Neves <ptsneves@gmail.com>
 
