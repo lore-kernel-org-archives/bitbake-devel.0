@@ -1,253 +1,213 @@
-Return-Path: <paulo@myneves.com>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCD7C727C7
-	for <webhook@archiver.kernel.org>; Fri, 25 Aug 2023 09:33:24 +0000 (UTC)
-Received: from mail-4022.proton.ch (mail-4022.proton.ch [185.70.40.22])
- by mx.groups.io with SMTP id smtpd.web11.9806.1692955996184907083
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D184C88CB2
+	for <webhook@archiver.kernel.org>; Fri, 25 Aug 2023 14:19:46 +0000 (UTC)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+ by mx.groups.io with SMTP id smtpd.web11.14715.1692973180162234356
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 25 Aug 2023 02:33:18 -0700
+ Fri, 25 Aug 2023 07:19:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@myneves.com header.s=protonmail2 header.b=SPwSwqUZ;
- spf=pass (domain: myneves.com, ip: 185.70.40.22, mailfrom: paulo@myneves.com)
-Date: Fri, 25 Aug 2023 09:33:02 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myneves.com;
-	s=protonmail2; t=1692955993; x=1693215193;
-	bh=EooSwzi4xVSlXzZtifbDONDY9E25Bd/7QR3oiQad1eQ=;
-	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=SPwSwqUZgwC4rvFhj3N6L37GFqCerJ0uk3Ks8PI3GGQ0oeA/DN8jD33Q6alkO1db6
-	 RhubBP5IuUP7Qb10Yl1mLDUeIQosDItO0lR5bU9pzbt6uf012y/Mf8igm9XDEUnMFU
-	 ErehPh4GMPO+mRqaiBSDdLTQqqQGPzNYfrFgmpHAYJr8gqUGjBxtxUAKdL4/tLitxJ
-	 evVrN3Ek9gVUF8LtGUJvWb2R2muMD6UWkxSbj/zA0K4jU/het6rP8GS270NSOHlzxY
-	 iT68mVy0GfH7EbPmyUPYohPZtsuSM5AA3MoRxOwhZpBgcDbcMVMBUsI0b8BbIF0Iqa
-	 5iYnf+ly1wxLA==
-To: Joshua Watt <JPEWhacker@gmail.com>, bitbake-devel@lists.openembedded.org
-From: Paulo Neves <paulo@myneves.com>
-Subject: Re: [bitbake-devel][PATCH v2] fetch2: git: Check if clone directory is a git repo
-Message-ID: <51263964-efa6-964b-a696-67fc5d22ab35@myneves.com>
-In-Reply-To: <177E95B06B95EDA3.23833@lists.openembedded.org>
-References: <20230804155424.1502010-1-JPEWhacker@gmail.com> <20230824195332.851528-1-JPEWhacker@gmail.com> <177E95B06B95EDA3.23833@lists.openembedded.org>
-Feedback-ID: 59941854:user:proton
+ dkim=pass header.i=@gmail.com header.s=20221208 header.b=UFBBdtbX;
+ spf=pass (domain: gmail.com, ip: 209.85.208.173, mailfrom: jpewhacker@gmail.com)
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2bbbda48904so14362291fa.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 25 Aug 2023 07:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692973178; x=1693577978;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e4OTnMKZCI5cxAds7RxeUZOLXu2KZu5Uw2WhA/aE7/w=;
+        b=UFBBdtbX2SFpT/DeCUc4smZeE6QxA/dvXlBpsd3EYafLighFYIkjx3+uw44NLXg23d
+         vqQeOcQZGgxI/s1BA/JXYgkJsi1XnBTBT/Bf4Dhz8xabHVFR8i9Vj8fSmq1dNDGxV25S
+         +smKjOCx63nDXxvov691pwewP4YFqtebY6MuPMIjiExsDhWem7epm42cqOd1gntseZJl
+         WDPKSn0HraFocNzpKupX1UY3bsH13RL7w7jlGWeP+CuBEJYRAoRsNDi3vDWXoOsHqo3N
+         hngcyByZsjwPIQgO38qoOEyipgpCIJ/cXa77EKaKz6Wyfxss3KVrq4WkwYkQTK3kIoGq
+         52Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692973178; x=1693577978;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e4OTnMKZCI5cxAds7RxeUZOLXu2KZu5Uw2WhA/aE7/w=;
+        b=LYAm5UMwXErID170F1WWVI8iELF294l+LXcjhW0sd7JR8DV92VvcIz3vHPKEsL0ba2
+         phjHAQN3A6PVO3CT6OmM4Su2zsZT/hg2eqWZKgQcoFgKs9LRuKb2v7WgCaiVgPLGmuid
+         AQXALZXZEahZcJ/DN1v4U9ucSYqHzReeCGb8zrwTlXXF1lM/oQOxhkmJOR4SBdGOB6gK
+         5xOLUwO4vVHG5ch3jQVSp4g94Cl/fJfpl8+Fkbe1FqFZPzmqUDwpYqcmW57/nvEaN6Ei
+         6xsO+YYh4Iy3rx/NA2rA+aacZb9DXSCR8Fu0sLawfwHl9d/JV2pAZLsBnYBId5cfWqQo
+         ZFGg==
+X-Gm-Message-State: AOJu0YzYsnGA9jeRQ48PdkguvzwxrQJ8QGSzk1wOuDKSLzdEDS9XKoYM
+	qOtjUcKPxsWed65JubWMhkHTbHuW2gjQ5Mi+oEk=
+X-Google-Smtp-Source: AGHT+IF3eDq4b0gpWUTg/n8vYjKrpn+x4QfUf1JiAZXccnQbxr5FMyciO5lyAJkTgT95oJtRdlLHVKJFRw65OBd4UKY=
+X-Received: by 2002:a2e:bb8a:0:b0:2bc:f78a:e5e0 with SMTP id
+ y10-20020a2ebb8a000000b002bcf78ae5e0mr1007440lje.43.1692973177795; Fri, 25
+ Aug 2023 07:19:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="b1_jMWmVMnhKhxFtX45kgZ7oOAFvZv2c2AZwG4O0QxPI"
+References: <20230804155424.1502010-1-JPEWhacker@gmail.com>
+ <20230824195332.851528-1-JPEWhacker@gmail.com> <50329c34-b057-3542-4c45-047e6b24169b@myneves.com>
+In-Reply-To: <50329c34-b057-3542-4c45-047e6b24169b@myneves.com>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Fri, 25 Aug 2023 08:19:25 -0600
+Message-ID: <CAJdd5GbTpHVu7cVWia8PHbjWV=cS7MESjJx3j810OU09F9nXEQ@mail.gmail.com>
+Subject: Re: [bitbake-devel][PATCH v2] fetch2: git: Check if clone directory
+ is a git repo
+To: Paulo Neves <paulo@myneves.com>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 25 Aug 2023 09:33:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14983
+ <bitbake-devel@lists.openembedded.org>; Fri, 25 Aug 2023 14:19:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14984
 
-This is a multi-part message in MIME format.
+On Fri, Aug 25, 2023 at 3:18=E2=80=AFAM Paulo Neves <paulo@myneves.com> wro=
+te:
+>
+> On 24/08/2023 21:53, Joshua Watt wrote:
+> > If the clone target directory exists and is a valid git repo, but the
+> > git directory is not a child, it needs to be erased and re-cloned. One
+> > example of how this can happen is if a clone creates the directory, but
+> > then fails to actual clone and make it a git repository. This left-over
+> > directory can be particularly problematic if the download directory is =
+a
+> > descent of some top layer git repo (e.g. the default with poky), as the
+> > commands that operate on the remote later will then mangle the layers
+> > git repository instead of the download git repo.
+> >
+> > Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> > ---
+> >   bitbake/lib/bb/fetch2/git.py | 30 +++++++++++++++++++++++++++++-
+> >   1 file changed, 29 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.p=
+y
+> > index 2a3c06fe4e9..33895e09b29 100644
+> > --- a/bitbake/lib/bb/fetch2/git.py
+> > +++ b/bitbake/lib/bb/fetch2/git.py
+> > @@ -65,6 +65,7 @@ import fnmatch
+> >   import os
+> >   import re
+> >   import shlex
+> > +import shutil
+> >   import subprocess
+> >   import tempfile
+> >   import bb
+> > @@ -365,8 +366,35 @@ class Git(FetchMethod):
+> >                   runfetchcmd(fetch_cmd, d, workdir=3Dud.clonedir)
+> >           repourl =3D self._get_repo_url(ud)
+> >
+> > +        needs_clone =3D False
+> > +        if os.path.exists(ud.clonedir):
+> > +            # The directory may exist, but not be the top level of a b=
+are git
+> > +            # repository in which case it needs to be deleted and re-c=
+loned.
+> > +            try:
+> > +                # Since clones can be bare, use --absolute-git-dir ins=
+tead of --show-toplevel
+> > +                output =3D runfetchcmd("LANG=3DC %s rev-parse --absolu=
+te-git-dir" % ud.basecmd, d, workdir=3Dud.clonedir)
+> > +            except bb.fetch2.FetchError as e:
+> > +                logger.warning("Unable to get top level for %s (not a =
+git directory?): %s", ud.clonedir, e)
+> > +                needs_clone =3D True
+> > +            else:
+> > +                toplevel =3D os.path.abspath(output.rstrip())
+> > +                abs_clonedir =3D os.path.abspath(ud.clonedir).rstrip('=
+/')
+> > +                # The top level Git directory must either be the clone=
+ directory
+> > +                # or a child of the clone directory. Any ancestor dire=
+ctory of
+> > +                # the clone directory is not valid as the Git director=
+y (and
+> > +                # probably belongs to some other unrelated repository)=
+, so a
+> > +                # clone is required
+> > +                if os.path.commonprefix([abs_clonedir, toplevel]) !=3D=
+ abs_clonedir:
+> > +                    logger.warning("Top level directory '%s' doesn't m=
+atch expected '%s'. Re-cloning", toplevel, ud.clonedir)
+> > +                    needs_clone =3D True
+> > +
+> > +            if needs_clone:
+> > +                shutil.rmtree(ud.clonedir)
+> > +        else:
+> > +            needs_clone =3D True
+> > +
+> >           # If the repo still doesn't exist, fallback to cloning it
+> > -        if not os.path.exists(ud.clonedir):
+> > +        if needs_clone:
+> >               # We do this since git will use a "-l" option automatical=
+ly for local urls where possible,
+> >               # but it doesn't work when git/objects is a symlink, only=
+ works when it is a directory.
+> >               if repourl.startswith("file://"):
+> > --
+> > 2.33.0
+> >
+> >
+> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> > Links: You receive all messages sent to this group.
+> > View/Reply Online (#14979): https://lists.openembedded.org/g/bitbake-de=
+vel/message/14979
+> > Mute This Topic: https://lists.openembedded.org/mt/100942876/4454782
+> > Group Owner: bitbake-devel+owner@lists.openembedded.org
+> > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [paul=
+o@myneves.com]
+> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> >
+> Is it possible to factor the try/except else to a function? Then we
+> would not need the else, and would just return immediately and have a
+> self contained code, which in my opinion is easier to read. I also think
+> f-string would be more readable for runfetchcmd. f-string are available
+> since python 3.6.
+>
+> Can you share the rationale for the else clause? I do not see anything
+> inside the else clause that might raise a FetchError, thus the else
+> clause is redundant.
 
---b1_jMWmVMnhKhxFtX45kgZ7oOAFvZv2c2AZwG4O0QxPI
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+The else clause is pretty much the entire reason for this patch in the
+first place :)
 
-T24gMjUvMDgvMjAyMyAxMToxOCwgUGF1bG8gTmV2ZXMgd3JvdGU6Cgo+IE9uIDI0LzA4LzIwMjMg
-MjE6NTMsIEpvc2h1YSBXYXR0IHdyb3RlOgo+Cj4+IElmIHRoZSBjbG9uZSB0YXJnZXQgZGlyZWN0
-b3J5IGV4aXN0cyBhbmQgaXMgYSB2YWxpZCBnaXQgcmVwbywgYnV0IHRoZQo+PiBnaXQgZGlyZWN0
-b3J5IGlzIG5vdCBhIGNoaWxkLCBpdCBuZWVkcyB0byBiZSBlcmFzZWQgYW5kIHJlLWNsb25lZC4g
-T25lCj4+IGV4YW1wbGUgb2YgaG93IHRoaXMgY2FuIGhhcHBlbiBpcyBpZiBhIGNsb25lIGNyZWF0
-ZXMgdGhlIGRpcmVjdG9yeSwgYnV0Cj4+IHRoZW4gZmFpbHMgdG8gYWN0dWFsIGNsb25lIGFuZCBt
-YWtlIGl0IGEgZ2l0IHJlcG9zaXRvcnkuIFRoaXMgbGVmdC1vdmVyCj4+IGRpcmVjdG9yeSBjYW4g
-YmUgcGFydGljdWxhcmx5IHByb2JsZW1hdGljIGlmIHRoZSBkb3dubG9hZCBkaXJlY3RvcnkgaXMg
-YQo+PiBkZXNjZW50IG9mIHNvbWUgdG9wIGxheWVyIGdpdCByZXBvIChlLmcuIHRoZSBkZWZhdWx0
-IHdpdGggcG9reSksIGFzIHRoZQo+PiBjb21tYW5kcyB0aGF0IG9wZXJhdGUgb24gdGhlIHJlbW90
-ZSBsYXRlciB3aWxsIHRoZW4gbWFuZ2xlIHRoZSBsYXllcnMKPj4gZ2l0IHJlcG9zaXRvcnkgaW5z
-dGVhZCBvZiB0aGUgZG93bmxvYWQgZ2l0IHJlcG8uCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEpvc2h1
-YSBXYXR0Cj4+IFs8SlBFV2hhY2tlckBnbWFpbC5jb20+XShtYWlsdG86SlBFV2hhY2tlckBnbWFp
-bC5jb20pCj4+IC0tLQo+PiAgIGJpdGJha2UvbGliL2JiL2ZldGNoMi9naXQucHkgfCAzMCArKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKy0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMjkgaW5zZXJ0
-aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYml0YmFrZS9saWIvYmIv
-ZmV0Y2gyL2dpdC5weSBiL2JpdGJha2UvbGliL2JiL2ZldGNoMi9naXQucHkKPj4gaW5kZXggMmEz
-YzA2ZmU0ZTkuLjMzODk1ZTA5YjI5IDEwMDY0NAo+PiAtLS0gYS9iaXRiYWtlL2xpYi9iYi9mZXRj
-aDIvZ2l0LnB5Cj4+ICsrKyBiL2JpdGJha2UvbGliL2JiL2ZldGNoMi9naXQucHkKPj4gQEAgLTY1
-LDYgKzY1LDcgQEAgaW1wb3J0IGZubWF0Y2gKPj4gICBpbXBvcnQgb3MKPj4gICBpbXBvcnQgcmUK
-Pj4gICBpbXBvcnQgc2hsZXgKPj4gK2ltcG9ydCBzaHV0aWwKPj4gICBpbXBvcnQgc3VicHJvY2Vz
-cwo+PiAgIGltcG9ydCB0ZW1wZmlsZQo+PiAgIGltcG9ydCBiYgo+PiBAQCAtMzY1LDggKzM2Niwz
-NSBAQCBjbGFzcyBHaXQoRmV0Y2hNZXRob2QpOgo+PiAgICAgICAgICAgICAgICAgICBydW5mZXRj
-aGNtZChmZXRjaF9jbWQsIGQsIHdvcmtkaXI9dWQuY2xvbmVkaXIpCj4+ICAgICAgICAgICByZXBv
-dXJsID0gc2VsZi5fZ2V0X3JlcG9fdXJsKHVkKQo+Pgo+PiArICAgICAgICBuZWVkc19jbG9uZSA9
-IEZhbHNlCj4+ICsgICAgICAgIGlmIG9zLnBhdGguZXhpc3RzKHVkLmNsb25lZGlyKToKPj4gKyAg
-ICAgICAgICAgICMgVGhlIGRpcmVjdG9yeSBtYXkgZXhpc3QsIGJ1dCBub3QgYmUgdGhlIHRvcCBs
-ZXZlbCBvZiBhIGJhcmUgZ2l0Cj4+ICsgICAgICAgICAgICAjIHJlcG9zaXRvcnkgaW4gd2hpY2gg
-Y2FzZSBpdCBuZWVkcyB0byBiZSBkZWxldGVkIGFuZCByZS1jbG9uZWQuCj4+ICsgICAgICAgICAg
-ICB0cnk6Cj4+ICsgICAgICAgICAgICAgICAgIyBTaW5jZSBjbG9uZXMgY2FuIGJlIGJhcmUsIHVz
-ZSAtLWFic29sdXRlLWdpdC1kaXIgaW5zdGVhZCBvZiAtLXNob3ctdG9wbGV2ZWwKPj4gKyAgICAg
-ICAgICAgICAgICBvdXRwdXQgPSBydW5mZXRjaGNtZCgiTEFORz1DICVzIHJldi1wYXJzZSAtLWFi
-c29sdXRlLWdpdC1kaXIiICUgdWQuYmFzZWNtZCwgZCwgd29ya2Rpcj11ZC5jbG9uZWRpcikKPj4g
-KyAgICAgICAgICAgIGV4Y2VwdCBiYi5mZXRjaDIuRmV0Y2hFcnJvciBhcyBlOgo+PiArICAgICAg
-ICAgICAgICAgIGxvZ2dlci53YXJuaW5nKCJVbmFibGUgdG8gZ2V0IHRvcCBsZXZlbCBmb3IgJXMg
-KG5vdCBhIGdpdCBkaXJlY3Rvcnk/KTogJXMiLCB1ZC5jbG9uZWRpciwgZSkKPj4gKyAgICAgICAg
-ICAgICAgICBuZWVkc19jbG9uZSA9IFRydWUKPj4gKyAgICAgICAgICAgIGVsc2U6Cj4+ICsgICAg
-ICAgICAgICAgICAgdG9wbGV2ZWwgPSBvcy5wYXRoLmFic3BhdGgob3V0cHV0LnJzdHJpcCgpKQo+
-PiArICAgICAgICAgICAgICAgIGFic19jbG9uZWRpciA9IG9zLnBhdGguYWJzcGF0aCh1ZC5jbG9u
-ZWRpcikucnN0cmlwKCcvJykKPj4gKyAgICAgICAgICAgICAgICAjIFRoZSB0b3AgbGV2ZWwgR2l0
-IGRpcmVjdG9yeSBtdXN0IGVpdGhlciBiZSB0aGUgY2xvbmUgZGlyZWN0b3J5Cj4+ICsgICAgICAg
-ICAgICAgICAgIyBvciBhIGNoaWxkIG9mIHRoZSBjbG9uZSBkaXJlY3RvcnkuIEFueSBhbmNlc3Rv
-ciBkaXJlY3Rvcnkgb2YKPj4gKyAgICAgICAgICAgICAgICAjIHRoZSBjbG9uZSBkaXJlY3Rvcnkg
-aXMgbm90IHZhbGlkIGFzIHRoZSBHaXQgZGlyZWN0b3J5IChhbmQKPj4gKyAgICAgICAgICAgICAg
-ICAjIHByb2JhYmx5IGJlbG9uZ3MgdG8gc29tZSBvdGhlciB1bnJlbGF0ZWQgcmVwb3NpdG9yeSks
-IHNvIGEKPj4gKyAgICAgICAgICAgICAgICAjIGNsb25lIGlzIHJlcXVpcmVkCj4+ICsgICAgICAg
-ICAgICAgICAgaWYgb3MucGF0aC5jb21tb25wcmVmaXgoW2Fic19jbG9uZWRpciwgdG9wbGV2ZWxd
-KSAhPSBhYnNfY2xvbmVkaXI6Cj4+ICsgICAgICAgICAgICAgICAgICAgIGxvZ2dlci53YXJuaW5n
-KCJUb3AgbGV2ZWwgZGlyZWN0b3J5ICclcycgZG9lc24ndCBtYXRjaCBleHBlY3RlZCAnJXMnLiBS
-ZS1jbG9uaW5nIiwgdG9wbGV2ZWwsIHVkLmNsb25lZGlyKQo+PiArICAgICAgICAgICAgICAgICAg
-ICBuZWVkc19jbG9uZSA9IFRydWUKPj4gKwo+PiArICAgICAgICAgICAgaWYgbmVlZHNfY2xvbmU6
-Cj4+ICsgICAgICAgICAgICAgICAgc2h1dGlsLnJtdHJlZSh1ZC5jbG9uZWRpcikKPj4gKyAgICAg
-ICAgZWxzZToKPj4gKyAgICAgICAgICAgIG5lZWRzX2Nsb25lID0gVHJ1ZQo+PiArCj4+ICAgICAg
-ICAgICAjIElmIHRoZSByZXBvIHN0aWxsIGRvZXNuJ3QgZXhpc3QsIGZhbGxiYWNrIHRvIGNsb25p
-bmcgaXQKPj4gLSAgICAgICAgaWYgbm90IG9zLnBhdGguZXhpc3RzKHVkLmNsb25lZGlyKToKPj4g
-KyAgICAgICAgaWYgbmVlZHNfY2xvbmU6Cj4+ICAgICAgICAgICAgICAgIyBXZSBkbyB0aGlzIHNp
-bmNlIGdpdCB3aWxsIHVzZSBhICItbCIgb3B0aW9uIGF1dG9tYXRpY2FsbHkgZm9yIGxvY2FsIHVy
-bHMgd2hlcmUgcG9zc2libGUsCj4+ICAgICAgICAgICAgICAgIyBidXQgaXQgZG9lc24ndCB3b3Jr
-IHdoZW4gZ2l0L29iamVjdHMgaXMgYSBzeW1saW5rLCBvbmx5IHdvcmtzIHdoZW4gaXQgaXMgYSBk
-aXJlY3RvcnkuCj4+ICAgICAgICAgICAgICAgaWYgcmVwb3VybC5zdGFydHN3aXRoKAo+PiBbImZp
-bGU6Ly8iXShmaWxlOi8vKQo+PiApOgo+PiAtLQo+PiAyLjMzLjAKPgo+IElzIGl0IHBvc3NpYmxl
-IHRvIGZhY3RvciB0aGUgdHJ5L2V4Y2VwdCBlbHNlIHRvIGEgZnVuY3Rpb24/IFRoZW4gd2UKPiB3
-b3VsZCBub3QgbmVlZCB0aGUgZWxzZSwgYW5kIHdvdWxkIGp1c3QgcmV0dXJuIGltbWVkaWF0ZWx5
-IGFuZCBoYXZlIGEKPiBzZWxmIGNvbnRhaW5lZCBjb2RlLCB3aGljaCBpbiBteSBvcGluaW9uIGlz
-IGVhc2llciB0byByZWFkLiBJIGFsc28gdGhpbmsKPiBmLXN0cmluZyB3b3VsZCBiZSBtb3JlIHJl
-YWRhYmxlIGZvciBydW5mZXRjaGNtZC4gZi1zdHJpbmcgYXJlIGF2YWlsYWJsZQo+IHNpbmNlIHB5
-dGhvbiAzLjYuCj4KPiBDYW4geW91IHNoYXJlIHRoZSByYXRpb25hbGUgZm9yIHRoZSBlbHNlIGNs
-YXVzZT8gSSBkbyBub3Qgc2VlIGFueXRoaW5nCj4gaW5zaWRlIHRoZSBlbHNlIGNsYXVzZSB0aGF0
-IG1pZ2h0IHJhaXNlIGEgRmV0Y2hFcnJvciwgdGh1cyB0aGUgZWxzZQo+IGNsYXVzZSBpcyByZWR1
-bmRhbnQuCj4KPiBBbm90aGVyIGNoYW5nZSBJIHN1Z2dlc3QgaXMgdG8gbW92ZSB0aGUgcm10cmVl
-IGluc2lkZSB0aGUgdXN1YWwKPiBuZWVkX2Nsb25lIGFuZCBpZ25vcmUgdGhlIGVycm9yIGlmIHRo
-ZSBwYXRoIGRvZXMgbm90IGV4aXN0LiBSZW1vdmVzCj4gYW5vdGhlciBjb25kaXRpb25hbC4KPgo+
-IEkgYWxzbyB0aGluayB1c2luZyBuZWVkc19jbG9uZSB0byBhc3NlcnQgd2hldGhlciB0aGUgcm10
-cmVlIHNob3VsZCBiZQo+IGRvbmUgaXMgY29uZnVzaW5nIEEgZGlmZmVyZW50IHZhcmlhYmxlIHNo
-b3VsZCBiZSB1c2VkIG9yIHVzZSBhCj4gZnVuY3Rpb24ncyByZXR1cm4gdmFsdWUuIEFsbCB0aGUg
-Y29kZSBpbnNpZGUgaWYKPiBvcy5wYXRoLmV4aXN0cyh1ZC5jbG9uZWRpcik6IGRlYWxzIHdpdGgg
-dGhlIG5lZWQgZm9yIHJlbW92YWwgYW5kIGFzIGEKPiBzaWRlIGVmZmVjdCB3aWxsIHRyaWdnZXIg
-dGhlIGNsb25lIGluIGFub3RoZXIgcGFydCBvZiB0aGUgY29kZS4KPgo+IC09LT0tPS09LT0tPS09
-LT0tPS09LT0tCj4gTGlua3M6IFlvdSByZWNlaXZlIGFsbCBtZXNzYWdlcyBzZW50IHRvIHRoaXMg
-Z3JvdXAuCj4gVmlldy9SZXBseSBPbmxpbmUgKCMxNDk4Mik6Cj4gaHR0cHM6Ly9saXN0cy5vcGVu
-ZW1iZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC9tZXNzYWdlLzE0OTgyCj4gTXV0ZSBUaGlzIFRv
-cGljOgo+IGh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9tdC8xMDA5NDI4NzYvNDQ1NDc4
-Mgo+IEdyb3VwIE93bmVyOgo+IGJpdGJha2UtZGV2ZWwrb3duZXJAbGlzdHMub3BlbmVtYmVkZGVk
-Lm9yZwo+IFVuc3Vic2NyaWJlOgo+IGh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9nL2Jp
-dGJha2UtZGV2ZWwvdW5zdWIKPiBbCj4gcGF1bG9AbXluZXZlcy5jb20KPiBdCj4gLT0tPS09LT0t
-PS09LT0tPS09LT0tPS0KCj4gQW5vdGhlciBjaGFuZ2UgSSBzdWdnZXN0IGlzIHRvIG1vdmUgdGhl
-IHJtdHJlZSBpbnNpZGUgdGhlIHVzdWFsCm5lZWRfY2xvbmUgYW5kIGlnbm9yZSB0aGUgZXJyb3Ig
-aWYgdGhlIHBhdGggZG9lcyBub3QgZXhpc3QuIFJlbW92ZXMKYW5vdGhlciBjb25kaXRpb25hbC4K
-CkRpc3JlZ2FyZCB0aGlzIGNvbW1lbnQuIEl0IGlzIGluY29ycmVjdC4=
+The problem is that the fetcher assumes that the simple existence of
+the download directory means it can can add a remote and clone there,
+but that is not true. If your clone directory is a subdirectory of
+another git repository, but not a git repository itself, bitbake will
+(incorrectly) add the remote the higher level git repos and fetch
+there, leaving it a mess.
 
---b1_jMWmVMnhKhxFtX45kgZ7oOAFvZv2c2AZwG4O0QxPI
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: base64
+More visually, if your layout is like this:
 
-PGh0bWw+PGhlYWQ+DQogICAgPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50
-PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgiLz4NCiAgPC9oZWFkPg0KICA8Ym9keT4NCiAgICA8
-ZGl2IGNsYXNzPSJtb3otY2l0ZS1wcmVmaXgiPk9uIDI1LzA4LzIwMjMgMTE6MTgsIFBhdWxvIE5l
-dmVzIHdyb3RlOjxici8+DQogICAgPC9kaXY+DQogICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIg
-Y2l0ZT0ibWlkOjE3N0U5NUIwNkI5NUVEQTMuMjM4MzNAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyI+
-DQogICAgICA8cHJlIGNsYXNzPSJtb3otcXVvdGUtcHJlIiB3cmFwPSIiPk9uIDI0LzA4LzIwMjMg
-MjE6NTMsIEpvc2h1YSBXYXR0IHdyb3RlOg0KPC9wcmU+DQogICAgICA8YmxvY2txdW90ZSB0eXBl
-PSJjaXRlIj4NCiAgICAgICAgPHByZSBjbGFzcz0ibW96LXF1b3RlLXByZSIgd3JhcD0iIj5JZiB0
-aGUgY2xvbmUgdGFyZ2V0IGRpcmVjdG9yeSBleGlzdHMgYW5kIGlzIGEgdmFsaWQgZ2l0IHJlcG8s
-IGJ1dCB0aGUNCmdpdCBkaXJlY3RvcnkgaXMgbm90IGEgY2hpbGQsIGl0IG5lZWRzIHRvIGJlIGVy
-YXNlZCBhbmQgcmUtY2xvbmVkLiBPbmUNCmV4YW1wbGUgb2YgaG93IHRoaXMgY2FuIGhhcHBlbiBp
-cyBpZiBhIGNsb25lIGNyZWF0ZXMgdGhlIGRpcmVjdG9yeSwgYnV0DQp0aGVuIGZhaWxzIHRvIGFj
-dHVhbCBjbG9uZSBhbmQgbWFrZSBpdCBhIGdpdCByZXBvc2l0b3J5LiBUaGlzIGxlZnQtb3Zlcg0K
-ZGlyZWN0b3J5IGNhbiBiZSBwYXJ0aWN1bGFybHkgcHJvYmxlbWF0aWMgaWYgdGhlIGRvd25sb2Fk
-IGRpcmVjdG9yeSBpcyBhDQpkZXNjZW50IG9mIHNvbWUgdG9wIGxheWVyIGdpdCByZXBvIChlLmcu
-IHRoZSBkZWZhdWx0IHdpdGggcG9reSksIGFzIHRoZQ0KY29tbWFuZHMgdGhhdCBvcGVyYXRlIG9u
-IHRoZSByZW1vdGUgbGF0ZXIgd2lsbCB0aGVuIG1hbmdsZSB0aGUgbGF5ZXJzDQpnaXQgcmVwb3Np
-dG9yeSBpbnN0ZWFkIG9mIHRoZSBkb3dubG9hZCBnaXQgcmVwby4NCg0KU2lnbmVkLW9mZi1ieTog
-Sm9zaHVhIFdhdHQgPGEgY2xhc3M9Im1vei10eHQtbGluay1yZmMyMzk2RSIgaHJlZj0ibWFpbHRv
-OkpQRVdoYWNrZXJAZ21haWwuY29tIj4mbHQ7SlBFV2hhY2tlckBnbWFpbC5jb20mZ3Q7PC9hPg0K
-LS0tDQogIGJpdGJha2UvbGliL2JiL2ZldGNoMi9naXQucHkgfCAzMCArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKy0NCiAgMSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyksIDEgZGVs
-ZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2JpdGJha2UvbGliL2JiL2ZldGNoMi9naXQucHkgYi9i
-aXRiYWtlL2xpYi9iYi9mZXRjaDIvZ2l0LnB5DQppbmRleCAyYTNjMDZmZTRlOS4uMzM4OTVlMDli
-MjkgMTAwNjQ0DQotLS0gYS9iaXRiYWtlL2xpYi9iYi9mZXRjaDIvZ2l0LnB5DQorKysgYi9iaXRi
-YWtlL2xpYi9iYi9mZXRjaDIvZ2l0LnB5DQpAQCAtNjUsNiArNjUsNyBAQCBpbXBvcnQgZm5tYXRj
-aA0KICBpbXBvcnQgb3MNCiAgaW1wb3J0IHJlDQogIGltcG9ydCBzaGxleA0KK2ltcG9ydCBzaHV0
-aWwNCiAgaW1wb3J0IHN1YnByb2Nlc3MNCiAgaW1wb3J0IHRlbXBmaWxlDQogIGltcG9ydCBiYg0K
-QEAgLTM2NSw4ICszNjYsMzUgQEAgY2xhc3MgR2l0KEZldGNoTWV0aG9kKToNCiAgICAgICAgICAg
-ICAgICAgIHJ1bmZldGNoY21kKGZldGNoX2NtZCwgZCwgd29ya2Rpcj11ZC5jbG9uZWRpcikNCiAg
-ICAgICAgICByZXBvdXJsID0gc2VsZi5fZ2V0X3JlcG9fdXJsKHVkKQ0KDQorICAgICAgICBuZWVk
-c19jbG9uZSA9IEZhbHNlDQorICAgICAgICBpZiBvcy5wYXRoLmV4aXN0cyh1ZC5jbG9uZWRpcik6
-DQorICAgICAgICAgICAgIyBUaGUgZGlyZWN0b3J5IG1heSBleGlzdCwgYnV0IG5vdCBiZSB0aGUg
-dG9wIGxldmVsIG9mIGEgYmFyZSBnaXQNCisgICAgICAgICAgICAjIHJlcG9zaXRvcnkgaW4gd2hp
-Y2ggY2FzZSBpdCBuZWVkcyB0byBiZSBkZWxldGVkIGFuZCByZS1jbG9uZWQuDQorICAgICAgICAg
-ICAgdHJ5Og0KKyAgICAgICAgICAgICAgICAjIFNpbmNlIGNsb25lcyBjYW4gYmUgYmFyZSwgdXNl
-IC0tYWJzb2x1dGUtZ2l0LWRpciBpbnN0ZWFkIG9mIC0tc2hvdy10b3BsZXZlbA0KKyAgICAgICAg
-ICAgICAgICBvdXRwdXQgPSBydW5mZXRjaGNtZCgmIzM0O0xBTkc9QyAlcyByZXYtcGFyc2UgLS1h
-YnNvbHV0ZS1naXQtZGlyJiMzNDsgJSB1ZC5iYXNlY21kLCBkLCB3b3JrZGlyPXVkLmNsb25lZGly
-KQ0KKyAgICAgICAgICAgIGV4Y2VwdCBiYi5mZXRjaDIuRmV0Y2hFcnJvciBhcyBlOg0KKyAgICAg
-ICAgICAgICAgICBsb2dnZXIud2FybmluZygmIzM0O1VuYWJsZSB0byBnZXQgdG9wIGxldmVsIGZv
-ciAlcyAobm90IGEgZ2l0IGRpcmVjdG9yeT8pOiAlcyYjMzQ7LCB1ZC5jbG9uZWRpciwgZSkNCisg
-ICAgICAgICAgICAgICAgbmVlZHNfY2xvbmUgPSBUcnVlDQorICAgICAgICAgICAgZWxzZToNCisg
-ICAgICAgICAgICAgICAgdG9wbGV2ZWwgPSBvcy5wYXRoLmFic3BhdGgob3V0cHV0LnJzdHJpcCgp
-KQ0KKyAgICAgICAgICAgICAgICBhYnNfY2xvbmVkaXIgPSBvcy5wYXRoLmFic3BhdGgodWQuY2xv
-bmVkaXIpLnJzdHJpcCgmIzM5Oy8mIzM5OykNCisgICAgICAgICAgICAgICAgIyBUaGUgdG9wIGxl
-dmVsIEdpdCBkaXJlY3RvcnkgbXVzdCBlaXRoZXIgYmUgdGhlIGNsb25lIGRpcmVjdG9yeQ0KKyAg
-ICAgICAgICAgICAgICAjIG9yIGEgY2hpbGQgb2YgdGhlIGNsb25lIGRpcmVjdG9yeS4gQW55IGFu
-Y2VzdG9yIGRpcmVjdG9yeSBvZg0KKyAgICAgICAgICAgICAgICAjIHRoZSBjbG9uZSBkaXJlY3Rv
-cnkgaXMgbm90IHZhbGlkIGFzIHRoZSBHaXQgZGlyZWN0b3J5IChhbmQNCisgICAgICAgICAgICAg
-ICAgIyBwcm9iYWJseSBiZWxvbmdzIHRvIHNvbWUgb3RoZXIgdW5yZWxhdGVkIHJlcG9zaXRvcnkp
-LCBzbyBhDQorICAgICAgICAgICAgICAgICMgY2xvbmUgaXMgcmVxdWlyZWQNCisgICAgICAgICAg
-ICAgICAgaWYgb3MucGF0aC5jb21tb25wcmVmaXgoW2Fic19jbG9uZWRpciwgdG9wbGV2ZWxdKSAh
-PSBhYnNfY2xvbmVkaXI6DQorICAgICAgICAgICAgICAgICAgICBsb2dnZXIud2FybmluZygmIzM0
-O1RvcCBsZXZlbCBkaXJlY3RvcnkgJiMzOTslcyYjMzk7IGRvZXNuJiMzOTt0IG1hdGNoIGV4cGVj
-dGVkICYjMzk7JXMmIzM5Oy4gUmUtY2xvbmluZyYjMzQ7LCB0b3BsZXZlbCwgdWQuY2xvbmVkaXIp
-DQorICAgICAgICAgICAgICAgICAgICBuZWVkc19jbG9uZSA9IFRydWUNCisNCisgICAgICAgICAg
-ICBpZiBuZWVkc19jbG9uZToNCisgICAgICAgICAgICAgICAgc2h1dGlsLnJtdHJlZSh1ZC5jbG9u
-ZWRpcikNCisgICAgICAgIGVsc2U6DQorICAgICAgICAgICAgbmVlZHNfY2xvbmUgPSBUcnVlDQor
-DQogICAgICAgICAgIyBJZiB0aGUgcmVwbyBzdGlsbCBkb2VzbiYjMzk7dCBleGlzdCwgZmFsbGJh
-Y2sgdG8gY2xvbmluZyBpdA0KLSAgICAgICAgaWYgbm90IG9zLnBhdGguZXhpc3RzKHVkLmNsb25l
-ZGlyKToNCisgICAgICAgIGlmIG5lZWRzX2Nsb25lOg0KICAgICAgICAgICAgICAjIFdlIGRvIHRo
-aXMgc2luY2UgZ2l0IHdpbGwgdXNlIGEgJiMzNDstbCYjMzQ7IG9wdGlvbiBhdXRvbWF0aWNhbGx5
-IGZvciBsb2NhbCB1cmxzIHdoZXJlIHBvc3NpYmxlLA0KICAgICAgICAgICAgICAjIGJ1dCBpdCBk
-b2VzbiYjMzk7dCB3b3JrIHdoZW4gZ2l0L29iamVjdHMgaXMgYSBzeW1saW5rLCBvbmx5IHdvcmtz
-IHdoZW4gaXQgaXMgYSBkaXJlY3RvcnkuDQogICAgICAgICAgICAgIGlmIHJlcG91cmwuc3RhcnRz
-d2l0aCg8YSBjbGFzcz0ibW96LXR4dC1saW5rLXJmYzIzOTZFIiBocmVmPSJmaWxlOi8vIj4mIzM0
-O2ZpbGU6Ly8mIzM0OzwvYT4pOg0KLS0NCjIuMzMuMA0KDQoNCg0KDQo8L3ByZT4NCiAgICAgIDwv
-YmxvY2txdW90ZT4NCiAgICAgIDxwcmUgY2xhc3M9Im1vei1xdW90ZS1wcmUiIHdyYXA9IiI+SXMg
-aXQgcG9zc2libGUgdG8gZmFjdG9yIHRoZSB0cnkvZXhjZXB0IGVsc2UgdG8gYSBmdW5jdGlvbj8g
-VGhlbiB3ZQ0Kd291bGQgbm90IG5lZWQgdGhlIGVsc2UsIGFuZCB3b3VsZCBqdXN0IHJldHVybiBp
-bW1lZGlhdGVseSBhbmQgaGF2ZSBhDQpzZWxmIGNvbnRhaW5lZCBjb2RlLCB3aGljaCBpbiBteSBv
-cGluaW9uIGlzIGVhc2llciB0byByZWFkLiBJIGFsc28gdGhpbmsNCmYtc3RyaW5nIHdvdWxkIGJl
-IG1vcmUgcmVhZGFibGUgZm9yIHJ1bmZldGNoY21kLiBmLXN0cmluZyBhcmUgYXZhaWxhYmxlDQpz
-aW5jZSBweXRob24gMy42Lg0KDQpDYW4geW91IHNoYXJlIHRoZSByYXRpb25hbGUgZm9yIHRoZSBl
-bHNlIGNsYXVzZT8gSSBkbyBub3Qgc2VlIGFueXRoaW5nDQppbnNpZGUgdGhlIGVsc2UgY2xhdXNl
-IHRoYXQgbWlnaHQgcmFpc2UgYSBGZXRjaEVycm9yLCB0aHVzIHRoZSBlbHNlDQpjbGF1c2UgaXMg
-cmVkdW5kYW50Lg0KDQpBbm90aGVyIGNoYW5nZSBJIHN1Z2dlc3QgaXMgdG8gbW92ZSB0aGUgcm10
-cmVlIGluc2lkZSB0aGUgdXN1YWwNCm5lZWRfY2xvbmUgYW5kIGlnbm9yZSB0aGUgZXJyb3IgaWYg
-dGhlIHBhdGggZG9lcyBub3QgZXhpc3QuIFJlbW92ZXMNCmFub3RoZXIgY29uZGl0aW9uYWwuDQoN
-CkkgYWxzbyB0aGluayB1c2luZyBuZWVkc19jbG9uZSB0byBhc3NlcnQgd2hldGhlciB0aGUgcm10
-cmVlIHNob3VsZCBiZQ0KZG9uZSBpcyBjb25mdXNpbmcgQSBkaWZmZXJlbnQgdmFyaWFibGUgc2hv
-dWxkIGJlIHVzZWQgb3IgdXNlIGENCmZ1bmN0aW9uJiMzOTtzIHJldHVybiB2YWx1ZS4gQWxsIHRo
-ZSBjb2RlIGluc2lkZSBpZg0Kb3MucGF0aC5leGlzdHModWQuY2xvbmVkaXIpOiBkZWFscyB3aXRo
-IHRoZSBuZWVkIGZvciByZW1vdmFsIGFuZCBhcyBhDQpzaWRlIGVmZmVjdCB3aWxsIHRyaWdnZXIg
-dGhlIGNsb25lIGluIGFub3RoZXIgcGFydCBvZiB0aGUgY29kZS4NCg0KDQoNCg0KLT0tPS09LT0t
-PS09LT0tPS09LT0tPS0NCkxpbmtzOiBZb3UgcmVjZWl2ZSBhbGwgbWVzc2FnZXMgc2VudCB0byB0
-aGlzIGdyb3VwLg0KVmlldy9SZXBseSBPbmxpbmUgKCMxNDk4Mik6IDxhIGNsYXNzPSJtb3otdHh0
-LWxpbmstZnJlZXRleHQiIGhyZWY9Imh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9nL2Jp
-dGJha2UtZGV2ZWwvbWVzc2FnZS8xNDk4MiI+aHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3Jn
-L2cvYml0YmFrZS1kZXZlbC9tZXNzYWdlLzE0OTgyPC9hPg0KTXV0ZSBUaGlzIFRvcGljOiA8YSBj
-bGFzcz0ibW96LXR4dC1saW5rLWZyZWV0ZXh0IiBocmVmPSJodHRwczovL2xpc3RzLm9wZW5lbWJl
-ZGRlZC5vcmcvbXQvMTAwOTQyODc2LzQ0NTQ3ODIiPmh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVk
-Lm9yZy9tdC8xMDA5NDI4NzYvNDQ1NDc4MjwvYT4NCkdyb3VwIE93bmVyOiA8YSBjbGFzcz0ibW96
-LXR4dC1saW5rLWFiYnJldmlhdGVkIiBocmVmPSJtYWlsdG86Yml0YmFrZS1kZXZlbCtvd25lckBs
-aXN0cy5vcGVuZW1iZWRkZWQub3JnIj5iaXRiYWtlLWRldmVsK293bmVyQGxpc3RzLm9wZW5lbWJl
-ZGRlZC5vcmc8L2E+DQpVbnN1YnNjcmliZTogPGEgY2xhc3M9Im1vei10eHQtbGluay1mcmVldGV4
-dCIgaHJlZj0iaHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC91
-bnN1YiI+aHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC91bnN1
-YjwvYT4gWzxhIGNsYXNzPSJtb3otdHh0LWxpbmstYWJicmV2aWF0ZWQiIGhyZWY9Im1haWx0bzpw
-YXVsb0BteW5ldmVzLmNvbSI+cGF1bG9AbXluZXZlcy5jb208L2E+XQ0KLT0tPS09LT0tPS09LT0t
-PS09LT0tPS0NCg0KPC9wcmU+DQogICAgPC9ibG9ja3F1b3RlPg0KICAgIDxwcmU+Jmd0OyBBbm90
-aGVyIGNoYW5nZSBJIHN1Z2dlc3QgaXMgdG8gbW92ZSB0aGUgcm10cmVlIGluc2lkZSB0aGUgdXN1
-YWwNCm5lZWRfY2xvbmUgYW5kIGlnbm9yZSB0aGUgZXJyb3IgaWYgdGhlIHBhdGggZG9lcyBub3Qg
-ZXhpc3QuIFJlbW92ZXMNCmFub3RoZXIgY29uZGl0aW9uYWwuDQoNCkRpc3JlZ2FyZCB0aGlzIGNv
-bW1lbnQuIEl0IGlzIGluY29ycmVjdC4NCjwvcHJlPg0KICANCg0KPC9ib2R5PjwvaHRtbD4=
+ poky <-- This is a git repository
+   build
+      downloads
+          git2
+            foo <-- This is NOT a git repository
 
+The old code would see that the foo directory existed, see that it was
+part of a git repo (poky!) add the remotes and start cloning objects
+into the poky git repo, which is not at all what we want.
 
---b1_jMWmVMnhKhxFtX45kgZ7oOAFvZv2c2AZwG4O0QxPI--
+The else clause corrects this as it makes the fetcher check if "foo"
+is not only a git repo, but that the it is the toplevel of a git repo
+(or at least that it's --git-dir is not a parent of that directory).
+If it's not, it deletes it because it's not a valid place to clone
+things into anymore.
 
+>
+> Another change I suggest is to move the rmtree inside the usual
+> need_clone and ignore the error if the path does not exist. Removes
+> another conditional.
+>
+> I also think using needs_clone to assert whether the rmtree should be
+> done is confusing A different variable should be used or use a
+> function's return value. All the code inside if
+> os.path.exists(ud.clonedir): deals with the need for removal and as a
+> side effect will trigger the clone in another part of the code.
+>
+>
+>
 
