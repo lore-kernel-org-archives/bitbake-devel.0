@@ -1,219 +1,99 @@
-Return-Path: <david.reyna@windriver.com>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422E9C83F13
-	for <webhook@archiver.kernel.org>; Mon, 28 Aug 2023 09:22:18 +0000 (UTC)
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.web10.9695.1693214537118827453
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B0AC71153
+	for <webhook@archiver.kernel.org>; Tue, 29 Aug 2023 14:39:00 +0000 (UTC)
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+ by mx.groups.io with SMTP id smtpd.web10.19109.1693319937044031406
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 28 Aug 2023 02:22:17 -0700
+ Tue, 29 Aug 2023 07:38:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=RaG/JcvO;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=7604d1df4d=david.reyna@windriver.com)
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 37S90JsG016424
-	for <bitbake-devel@lists.openembedded.org>; Mon, 28 Aug 2023 02:22:16 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=from:to:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PPS06212021; bh=GSKhTEoQ8z7DfhzdDXXchMw1Zw6+v7RS1/p4pc1t7aQ=; b=
-	RaG/JcvOa9ovRXGYsfq3x+NoiQFquEgdEDc47y25VqHiFnqjPIDGKhTJ0YGWPR9c
-	2hqw91KG8+57y5T2oO5otGX9wLjUPlFqQ4ieMOUMU6hY8Ds+eWuCKmj/13vUkVHB
-	4u1rGbA+/iSBSaCj7Zkb+TpFneNfDrqsSWv7TWLhux8nRwMQJ8iD6qopr6yEDBmN
-	hSiW+LKhi0nKXrDP2xwt09WDegnmCxyApIDoJABJIm2ndvG5CabzzEF9QdACNQfA
-	dspa9uAPdK3oxdsWtD+6hs+yNvCnAH1B9msRBPlUJnGfwHJLfPx3WgKWLffiwlZU
-	UcC7qrFMvNaXzsbYGM5UWg==
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3sqgwfh7jg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Mon, 28 Aug 2023 02:22:16 -0700 (PDT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Mon, 28 Aug 2023 02:22:15 -0700
-Received: from dreyna-honig-T5600.corp.ad.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.27 via Frontend Transport; Mon, 28 Aug 2023 02:22:15 -0700
-From: David Reyna <david.reyna@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH 1/3] toaster: Update to Django 4.2
-Date: Mon, 28 Aug 2023 01:45:18 -0700
-Message-ID: <214f487f8fa260b0d1bd557f51695751b2c5ecf8.1693212183.git.david.reyna@windriver.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1693212183.git.david.reyna@windriver.com>
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=DP2ArBq0;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: alexandre.belloni@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5FFBE2000B;
+	Tue, 29 Aug 2023 14:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1693319935;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GBAoMdY/QCCaZ7ElvWH1GTor+U6CBu1rWPo+TcI2qDg=;
+	b=DP2ArBq0Q558MjA1YFC+hRgUI9JeYmiGt3g3uZ3j257i4CwDl80//SfRKWely5QtvUnl6d
+	Qx/nkQNRGjNJ3NiqYs/10tPxBP2cmGM6SwksYaFpu5VKmMQscF1PJDTIomUtU4i+quwuCX
+	IGI4+vnbZaNoHwKTO8xuuZcpLcyOiWJYze4TDZH+M8muwY9WJ4AYB8FSHIJ38J9QdOIpGz
+	2cgPQKlhlxZW2U00bGXFGruamRsgMCbiQQ7A1WiN59bbSrNiONur1OPweawEUY95mR9cld
+	nrqlPSqwt603XtqWV59iSL2qyPExQlVtZOsGamof1j+NehBSQqLHA0lfCCneoA==
+Date: Tue, 29 Aug 2023 16:38:54 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: david.reyna@windriver.com
+Cc: bitbake-devel@lists.openembedded.org,
+	Kieran McNulty <Kieran.McNulty@windriver.com>
+Subject: Re: [bitbake-devel] [PATCH 0/3] toaster_cummulative_08282023
+Message-ID: <20230829143854845af1cb@mail.local>
 References: <cover.1693212183.git.david.reyna@windriver.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: L0nXZCqyphEXHgZFvYf2j3liX59OTbIf
-X-Proofpoint-ORIG-GUID: L0nXZCqyphEXHgZFvYf2j3liX59OTbIf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-28_06,2023-08-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=806
- lowpriorityscore=0 phishscore=0 malwarescore=0 bulkscore=0 adultscore=0
- suspectscore=0 priorityscore=1501 spamscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2308100000
- definitions=main-2308280085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1693212183.git.david.reyna@windriver.com>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 28 Aug 2023 09:22:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14986
+ <bitbake-devel@lists.openembedded.org>; Tue, 29 Aug 2023 14:39:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14989
 
-Update Toaster to support Django 4.2, to match current
-hosts and to address CVEs.
+Hello David,
 
-[YOCTO #15152]
+Please set you git configuration so your patches include a From: line,
+see https://www.openembedded.org/wiki/How_to_submit_a_patch_to_OpenEmbedded#Fixing_your_From_identity
 
-Signed-off-by: Kieran McNulty <Kieran.McNulty@windriver.com>
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
----
- lib/toaster/bldcollector/urls.py                           | 2 +-
- lib/toaster/bldcontrol/models.py                           | 4 ++--
- lib/toaster/toastergui/urls.py                             | 2 +-
- lib/toaster/toastergui/views.py                            | 4 ++--
- lib/toaster/toastergui/widgets.py                          | 5 +++--
- lib/toaster/toastermain/management/commands/checksocket.py | 4 ++--
- lib/toaster/toastermain/urls.py                            | 2 +-
- toaster-requirements.txt                                   | 2 +-
- 8 files changed, 13 insertions(+), 12 deletions(-)
+On 28/08/2023 01:45:17-0700, Reyna, David via lists.openembedded.org wrote:
+> toaster_cummulative_08282023
+> 
+> The following changes since commit c8e9590a376c0b63e38167dc522fac4cfbecb5d4:
+> 
+>   bitbake: Fix disk space monitoring on cephfs (2023-08-25 07:55:34 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   ssh://git@push.yoctoproject.org/poky-contrib dreyna/submit/dreyna/toaster/toaster_cummulative_08282023
+> 
+> David Reyna (3):
+>   toaster: Update to Django 4.2
+>   toaster: import only used layers
+>   toaster: accommodate missing 'Image Name' value in buildinfohelper
+> 
+>  lib/bb/ui/buildinfohelper.py                  | 13 ++++++++-
+>  lib/toaster/bldcollector/urls.py              |  2 +-
+>  lib/toaster/bldcontrol/models.py              |  4 +--
+>  lib/toaster/orm/models.py                     | 28 +++++++++----------
+>  lib/toaster/toastergui/urls.py                |  2 +-
+>  lib/toaster/toastergui/views.py               |  6 ++--
+>  lib/toaster/toastergui/widgets.py             |  5 ++--
+>  .../management/commands/buildimport.py        |  2 +-
+>  .../management/commands/checksocket.py        |  4 +--
+>  lib/toaster/toastermain/urls.py               |  2 +-
+>  toaster-requirements.txt                      |  2 +-
+>  11 files changed, 41 insertions(+), 29 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
 
-diff --git a/lib/toaster/bldcollector/urls.py b/lib/toaster/bldcollector/urls.py
-index efd67a81a54..3c34070351c 100644
---- a/lib/toaster/bldcollector/urls.py
-+++ b/lib/toaster/bldcollector/urls.py
-@@ -6,7 +6,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
- 
--from django.conf.urls import url
-+from django.urls import re_path as url
- 
- import bldcollector.views
- 
-diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
-index c2f302da24a..42750e7180a 100644
---- a/lib/toaster/bldcontrol/models.py
-+++ b/lib/toaster/bldcontrol/models.py
-@@ -4,7 +4,7 @@
- 
- from __future__ import unicode_literals
- from django.db import models
--from django.utils.encoding import force_text
-+from django.utils.encoding import force_str
- from orm.models import Project, Build, Layer_Version
- 
- import logging
-@@ -124,7 +124,7 @@ class BuildRequest(models.Model):
-         return self.brvariable_set.get(name="MACHINE").value
- 
-     def __str__(self):
--        return force_text('%s %s' % (self.project, self.get_state_display()))
-+        return force_str('%s %s' % (self.project, self.get_state_display()))
- 
- # These tables specify the settings for running an actual build.
- # They MUST be kept in sync with the tables in orm.models.Project*
-diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
-index d2df4e60488..bc3b0c79d82 100644
---- a/lib/toaster/toastergui/urls.py
-+++ b/lib/toaster/toastergui/urls.py
-@@ -6,7 +6,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
- 
--from django.conf.urls import url
-+from django.urls import re_path as url
- from django.views.generic import RedirectView
- 
- from toastergui import tables
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index a571b8cc18c..bf92510cdcd 100644
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -670,11 +670,11 @@ def xhr_dirinfo(request, build_id, target_id):
-     return HttpResponse(_get_dir_entries(build_id, target_id, top), content_type = "application/json")
- 
- from django.utils.functional import Promise
--from django.utils.encoding import force_text
-+from django.utils.encoding import force_str
- class LazyEncoder(json.JSONEncoder):
-     def default(self, obj):
-         if isinstance(obj, Promise):
--            return force_text(obj)
-+            return force_str(obj)
-         return super(LazyEncoder, self).default(obj)
- 
- from toastergui.templatetags.projecttags import filtered_filesizeformat
-diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
-index ceff52942ee..53696912a46 100644
---- a/lib/toaster/toastergui/widgets.py
-+++ b/lib/toaster/toastergui/widgets.py
-@@ -7,6 +7,7 @@
- #
- 
- from django.views.generic import View, TemplateView
-+from django.utils.decorators import method_decorator
- from django.views.decorators.cache import cache_control
- from django.shortcuts import HttpResponse
- from django.core.cache import cache
-@@ -63,8 +64,8 @@ class ToasterTable(TemplateView):
-         self.default_orderby = ""
- 
-     # prevent HTTP caching of table data
--    @cache_control(must_revalidate=True,
--                   max_age=0, no_store=True, no_cache=True)
-+    @method_decorator(cache_control(must_revalidate=True,
-+                   max_age=0, no_store=True, no_cache=True))
-     def dispatch(self, *args, **kwargs):
-         return super(ToasterTable, self).dispatch(*args, **kwargs)
- 
-diff --git a/lib/toaster/toastermain/management/commands/checksocket.py b/lib/toaster/toastermain/management/commands/checksocket.py
-index 811fd5d5161..b2c002da7aa 100644
---- a/lib/toaster/toastermain/management/commands/checksocket.py
-+++ b/lib/toaster/toastermain/management/commands/checksocket.py
-@@ -13,7 +13,7 @@ import errno
- import socket
- 
- from django.core.management.base import BaseCommand, CommandError
--from django.utils.encoding import force_text
-+from django.utils.encoding import force_str
- 
- DEFAULT_ADDRPORT = "0.0.0.0:8000"
- 
-@@ -51,7 +51,7 @@ class Command(BaseCommand):
-             if hasattr(err, 'errno') and err.errno in errors:
-                 errtext = errors[err.errno]
-             else:
--                errtext = force_text(err)
-+                errtext = force_str(err)
-             raise CommandError(errtext)
- 
-         self.stdout.write("OK")
-diff --git a/lib/toaster/toastermain/urls.py b/lib/toaster/toastermain/urls.py
-index 5fb520b384d..03603026688 100644
---- a/lib/toaster/toastermain/urls.py
-+++ b/lib/toaster/toastermain/urls.py
-@@ -6,7 +6,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
- 
--from django.conf.urls import include, url
-+from django.urls import re_path as url, include
- from django.views.generic import RedirectView, TemplateView
- from django.views.decorators.cache import never_cache
- import bldcollector.views
-diff --git a/toaster-requirements.txt b/toaster-requirements.txt
-index dedd423556a..c1f433f9ec6 100644
---- a/toaster-requirements.txt
-+++ b/toaster-requirements.txt
-@@ -1,3 +1,3 @@
--Django>3.2,<3.3
-+Django>4.2,<4.3
- beautifulsoup4>=4.4.0
- pytz
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14985): https://lists.openembedded.org/g/bitbake-devel/message/14985
+> Mute This Topic: https://lists.openembedded.org/mt/101006437/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+
+
 -- 
-2.20.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
