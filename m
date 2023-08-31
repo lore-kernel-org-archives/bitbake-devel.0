@@ -1,144 +1,201 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <paulo@myneves.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E06C83F01
-	for <webhook@archiver.kernel.org>; Thu, 31 Aug 2023 12:01:35 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web11.15066.1693483293724799607
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71C4C83F01
+	for <webhook@archiver.kernel.org>; Thu, 31 Aug 2023 12:21:35 +0000 (UTC)
+Received: from mail-40136.proton.ch (mail-40136.proton.ch [185.70.40.136])
+ by mx.groups.io with SMTP id smtpd.web10.15489.1693484490851380121
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 31 Aug 2023 05:01:34 -0700
+ Thu, 31 Aug 2023 05:21:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Ss5e0TxC;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-401d2e11dacso12279365e9.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 31 Aug 2023 05:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1693483292; x=1694088092; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NRHyXE2aRtyh7jYT8u2dXI5WQKPRII/9/Pp9zg1wjWA=;
-        b=Ss5e0TxCQ8bBQ1ztjlRF6ld5JmFbl6gz7iO74kZOSjbl0nShmk+apu57Ok1ZnzikNK
-         j6CwOTwwiLgZb7RhIOc4n+1cinj8HFq/mb+myUXY3Od1uyrDequh4q+nNINRnaNXojHX
-         DURvhuJOQgzWzp3VUKJPlekESbDvScHdxgf+A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693483292; x=1694088092;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NRHyXE2aRtyh7jYT8u2dXI5WQKPRII/9/Pp9zg1wjWA=;
-        b=lvssCYP/bS53waYGD4X52HNiELo5HyHv3lSKxgJHlwWeJmD1Ra4qV9HEYjW/6ThjHm
-         H89JM9rpOAyIA0JKJdS94+RN5SO/kgCBGbBbjwI3xjEnlwDJKw5GxlshFJkES3VjBu6K
-         J8nsmxBwx2dFvlOxC2m51KQwLekyUwGVv2N0iaAfKwewkxBrCjHIYw2QStXGmILYvh/C
-         SoTWhpt8WWGJZq9gD252leWu8WmtTCsiethNLV+NGvxLsrhYJPv2/9SL6lx85H3nwtDN
-         GDGlRA/rAk1cRV4oBicJsCCvtK/sYsZhhPF8jkX3qlO0GMWGc0SQNMPNYUts+eoKg/by
-         Pt5g==
-X-Gm-Message-State: AOJu0Yy842CnGA/JP2/eQF9RYwW1nlHANk11esEfVy4W4m6EmW9+R04r
-	dKc5+BRSniRymYnB9xyEXYZfTg==
-X-Google-Smtp-Source: AGHT+IGRGQWwEOpXgi9mG9GIW/ajASu3VPlPIHEIeuJwvNS7LVHLMTadjuBAX0f28W9nl/RiQ7jBxg==
-X-Received: by 2002:a5d:6045:0:b0:319:7537:b454 with SMTP id j5-20020a5d6045000000b003197537b454mr1733300wrt.28.1693483292014;
-        Thu, 31 Aug 2023 05:01:32 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:22b:9179:6474:7878? ([2001:8b0:aba:5f3c:22b:9179:6474:7878])
-        by smtp.gmail.com with ESMTPSA id j14-20020adfe50e000000b0031c52e81490sm1998832wrm.72.2023.08.31.05.01.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Aug 2023 05:01:31 -0700 (PDT)
-Message-ID: <6ea4d70d5bf116b389b7acbbe8825c55762d931d.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] command: Avoid time intensive
- distractions for ping
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Mikko Rapeli <mikko.rapeli@linaro.org>
+ dkim=pass header.i=@myneves.com header.s=protonmail2 header.b=kj+14noT;
+ spf=pass (domain: myneves.com, ip: 185.70.40.136, mailfrom: paulo@myneves.com)
+Date: Thu, 31 Aug 2023 12:21:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myneves.com;
+	s=protonmail2; t=1693484487; x=1693743687;
+	bh=jIYUd+7k5L+hMJPzgEFaBQ88ImsckmCnr3E2SCK2ACQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=kj+14noTZwqQ+BAMFgLte0A4IgBR+XDHGXTYSWslttSpmNl4q2GhUFbO2n8WbRPiQ
+	 qxxpgVq5ufRT5h6fWHR0lw8QK5pd6l9TzRpRTtgBcPNd9PdmoZOnNOlkriTH+MWWqd
+	 d6u6f9ksgXC2xftbd1IUtsHATKFt4KhTRN83Hjy7V7W88Nicb8JtcP3BozDl6pu48G
+	 JYgpWUDGyA1MHpIW/pDgapdgpYFNsOAhFxF3aChQNC6UoL5O5UvGMZpdmxTxUXP+W0
+	 KTPqQS0+fvS4V8LB/8sXSDnvb90LD+kcxYl1JdtKDDB/qYTaRiwUFm+v0ArTN7ojnT
+	 3lvCGWxVM5Gng==
+To: Joshua Watt <JPEWhacker@gmail.com>
+From: Paulo Neves <paulo@myneves.com>
 Cc: bitbake-devel@lists.openembedded.org
-Date: Thu, 31 Aug 2023 13:01:30 +0100
-In-Reply-To: <ZPB5zs4on6u4mOgd@nuoska>
-References: <20230830213303.2043607-1-richard.purdie@linuxfoundation.org>
-	 <ZPBUpN6GaATE+zbz@nuoska>
-	 <90096957449e6a35b3f2b349cb07132e0ef6a951.camel@linuxfoundation.org>
-	 <ZPB5zs4on6u4mOgd@nuoska>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+Subject: Re: [bitbake-devel][PATCH v2] fetch2: git: Check if clone directory is a git repo
+Message-ID: <9bf28e85-a821-0026-1802-457f87bfff2b@myneves.com>
+In-Reply-To: <CAJdd5GbTpHVu7cVWia8PHbjWV=cS7MESjJx3j810OU09F9nXEQ@mail.gmail.com>
+References: <20230804155424.1502010-1-JPEWhacker@gmail.com> <20230824195332.851528-1-JPEWhacker@gmail.com> <50329c34-b057-3542-4c45-047e6b24169b@myneves.com> <CAJdd5GbTpHVu7cVWia8PHbjWV=cS7MESjJx3j810OU09F9nXEQ@mail.gmail.com>
+Feedback-ID: 59941854:user:proton
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 31 Aug 2023 12:01:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14997
+ <bitbake-devel@lists.openembedded.org>; Thu, 31 Aug 2023 12:21:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14998
 
-On Thu, 2023-08-31 at 14:30 +0300, Mikko Rapeli wrote:
-> Hi,
->=20
-> On Thu, Aug 31, 2023 at 09:56:33AM +0100, Richard Purdie wrote:
-> > On Thu, 2023-08-31 at 11:51 +0300, Mikko Rapeli wrote:
-> > > Hi,
-> > >=20
-> > > On Wed, Aug 30, 2023 at 10:33:03PM +0100, Richard Purdie wrote:
-> > > > We noticed some users were seeing very slow ping response times whi=
-ch
-> > > > caused 'server timeout' issues. There were some function calls in r=
-unCommand
-> > > > which could be slow such as the inotify callback processing.
-> > >=20
-> > > I guess the error looks like:
-> > >=20
-> > > Timeout while waiting for a reply from the bitbake server (60s)
-> > >=20
-> > > and happens right after a succesful build to me when I try to run any=
- bitbake
-> > > command.
-> > >=20
-> > > Hope this fixes it. Thanks!
-> >=20
-> > That is the message however the cause may be different in your case. It
-> > sounds like the server may be taking a long time to shut down for you
-> > and it can't connect or start a new one whilst that is happening.
-> >=20
-> > If you have the bitbake-cookerdaemon log for your case I can see if
-> > that sheds any light if this doesn't work for you.
->=20
-> (Traceback (most recent call last):
->   File "/home/builder/src/base/poky/bitbake/lib/bb/server/process.py", li=
-ne 292, in main
->     self.command_channel_reply.send(self.cooker.command.runCommand(comman=
-d, self))
->   File "/home/builder/src/base/poky/bitbake/lib/bb/server/process.py", li=
-ne 868, in send
->     self._send(obj)
->   File "/home/builder/src/base/poky/bitbake/lib/bb/server/process.py", li=
-ne 847, in _send
->     self.writer.send_bytes(obj)
->   File "/usr/lib/python3.10/multiprocessing/connection.py", line 200, in =
-send_bytes
->     self._send_bytes(m[offset:offset + size])
->   File "/usr/lib/python3.10/multiprocessing/connection.py", line 411, in =
-_send_bytes
->     self._send(header + buf)
->   File "/usr/lib/python3.10/multiprocessing/connection.py", line 368, in =
-_send
->     n =3D write(self._handle, buf)
-> BrokenPipeError: [Errno 32] Broken pipe
-> )
-> 4131625 12:21:32.806544 Processing Client
-> 4131625 12:21:32.806635 Disconnecting Client (socket: True)
-> 4131625 12:21:32.807999 No timeout, exiting.
-> 4131625 12:21:32.908254 Exiting (socket: True)
-> 4131625 12:21:32.982669 More than one thread left?: [<_MainThread(MainThr=
-ead, started 140013699211712)>, <Thread(asyncio_0, started 140012031006272)=
->]
-> 4131625 12:21:34.433909 Exiting as we could obtain the lock
-> sys:1: ResourceWarning: unclosed file <_io.TextIOWrapper name=3D'/home/bu=
-ilder/src/base/build/bitbake-cookerdaemon.log' mode=3D'a+' encoding=3D'UTF-=
-8'>
->=20
-> I don't know what else to look for in the log.
+On 25/08/2023 16:19, Joshua Watt wrote:
+> On Fri, Aug 25, 2023 at 3:18=E2=80=AFAM Paulo Neves <paulo@myneves.com> w=
+rote:
+>> On 24/08/2023 21:53, Joshua Watt wrote:
+>>> If the clone target directory exists and is a valid git repo, but the
+>>> git directory is not a child, it needs to be erased and re-cloned. One
+>>> example of how this can happen is if a clone creates the directory, but
+>>> then fails to actual clone and make it a git repository. This left-over
+>>> directory can be particularly problematic if the download directory is =
+a
+>>> descent of some top layer git repo (e.g. the default with poky), as the
+>>> commands that operate on the remote later will then mangle the layers
+>>> git repository instead of the download git repo.
+>>>
+>>> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+>>> ---
+>>>    bitbake/lib/bb/fetch2/git.py | 30 +++++++++++++++++++++++++++++-
+>>>    1 file changed, 29 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.p=
+y
+>>> index 2a3c06fe4e9..33895e09b29 100644
+>>> --- a/bitbake/lib/bb/fetch2/git.py
+>>> +++ b/bitbake/lib/bb/fetch2/git.py
+>>> @@ -65,6 +65,7 @@ import fnmatch
+>>>    import os
+>>>    import re
+>>>    import shlex
+>>> +import shutil
+>>>    import subprocess
+>>>    import tempfile
+>>>    import bb
+>>> @@ -365,8 +366,35 @@ class Git(FetchMethod):
+>>>                    runfetchcmd(fetch_cmd, d, workdir=3Dud.clonedir)
+>>>            repourl =3D self._get_repo_url(ud)
+>>>
+>>> +        needs_clone =3D False
+>>> +        if os.path.exists(ud.clonedir):
+>>> +            # The directory may exist, but not be the top level of a b=
+are git
+>>> +            # repository in which case it needs to be deleted and re-c=
+loned.
+>>> +            try:
+>>> +                # Since clones can be bare, use --absolute-git-dir ins=
+tead of --show-toplevel
+>>> +                output =3D runfetchcmd("LANG=3DC %s rev-parse --absolu=
+te-git-dir" % ud.basecmd, d, workdir=3Dud.clonedir)
+>>> +            except bb.fetch2.FetchError as e:
+>>> +                logger.warning("Unable to get top level for %s (not a =
+git directory?): %s", ud.clonedir, e)
+>>> +                needs_clone =3D True
+>>> +            else:
+>>> +                toplevel =3D os.path.abspath(output.rstrip())
+>>> +                abs_clonedir =3D os.path.abspath(ud.clonedir).rstrip('=
+/')
+>>> +                # The top level Git directory must either be the clone=
+ directory
+>>> +                # or a child of the clone directory. Any ancestor dire=
+ctory of
+>>> +                # the clone directory is not valid as the Git director=
+y (and
+>>> +                # probably belongs to some other unrelated repository)=
+, so a
+>>> +                # clone is required
+>>> +                if os.path.commonprefix([abs_clonedir, toplevel]) !=3D=
+ abs_clonedir:
+>>> +                    logger.warning("Top level directory '%s' doesn't m=
+atch expected '%s'. Re-cloning", toplevel, ud.clonedir)
+>>> +                    needs_clone =3D True
+>>> +
+>>> +            if needs_clone:
+>>> +                shutil.rmtree(ud.clonedir)
+>>> +        else:
+>>> +            needs_clone =3D True
+>>> +
+>>>            # If the repo still doesn't exist, fallback to cloning it
+>>> -        if not os.path.exists(ud.clonedir):
+>>> +        if needs_clone:
+>>>                # We do this since git will use a "-l" option automatica=
+lly for local urls where possible,
+>>>                # but it doesn't work when git/objects is a symlink, onl=
+y works when it is a directory.
+>>>                if repourl.startswith("file://"):
+>>> --
+>>> 2.33.0
+>>>
+>>>
+>>>
+>>>
+>> Is it possible to factor the try/except else to a function? Then we
+>> would not need the else, and would just return immediately and have a
+>> self contained code, which in my opinion is easier to read. I also think
+>> f-string would be more readable for runfetchcmd. f-string are available
+>> since python 3.6.
+>>
+>> Can you share the rationale for the else clause? I do not see anything
+>> inside the else clause that might raise a FetchError, thus the else
+>> clause is redundant.
+> The else clause is pretty much the entire reason for this patch in the
+> first place :)
+>
+> The problem is that the fetcher assumes that the simple existence of
+> the download directory means it can can add a remote and clone there,
+> but that is not true. If your clone directory is a subdirectory of
+> another git repository, but not a git repository itself, bitbake will
+> (incorrectly) add the remote the higher level git repos and fetch
+> there, leaving it a mess.
+>
+> More visually, if your layout is like this:
+>
+>   poky <-- This is a git repository
+>     build
+>        downloads
+>            git2
+>              foo <-- This is NOT a git repository
+>
+> The old code would see that the foo directory existed, see that it was
+> part of a git repo (poky!) add the remotes and start cloning objects
+> into the poky git repo, which is not at all what we want.
+>
+> The else clause corrects this as it makes the fetcher check if "foo"
+> is not only a git repo, but that the it is the toplevel of a git repo
+> (or at least that it's --git-dir is not a parent of that directory).
+> If it's not, it deletes it because it's not a valid place to clone
+> things into anymore.
 
-What happened before that?
+I understand the conceptual point of the patch and I think it is valid.=20
+What i mean is that you do not need the else clause. The code under the=20
+else clause can continue inside the try clause and not change the logic.=20
+The try-else idiom is very unusual and represents a meaning which is not=20
+needed here: That the code inside the else should not trigger the except=20
+clause.
 
-The pipe error was the server trying to reply to the client but the
-client was gone. We should be able to see the command running before
-that and if it was a ping or not and the timestamps?
+>> Another change I suggest is to move the rmtree inside the usual
+>> need_clone and ignore the error if the path does not exist. Removes
+>> another conditional.
+>>
+>> I also think using needs_clone to assert whether the rmtree should be
+>> done is confusing A different variable should be used or use a
+>> function's return value. All the code inside if
+>> os.path.exists(ud.clonedir): deals with the need for removal and as a
+>> side effect will trigger the clone in another part of the code.
+>>
+>>
+>>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14984): https://lists.openembedded.org/g/bitbake-deve=
+l/message/14984
+> Mute This Topic: https://lists.openembedded.org/mt/100942876/4454782
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [paulo@=
+myneves.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
-Cheers,
 
-Richard
 
