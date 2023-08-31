@@ -1,109 +1,83 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0976C6FA8F
-	for <webhook@archiver.kernel.org>; Wed, 30 Aug 2023 21:33:11 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.2775.1693431186929972776
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06661C83F10
+	for <webhook@archiver.kernel.org>; Thu, 31 Aug 2023 08:51:55 +0000 (UTC)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+ by mx.groups.io with SMTP id smtpd.web11.12251.1693471913280516994
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 30 Aug 2023 14:33:07 -0700
+ Thu, 31 Aug 2023 01:51:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=APgl+5t4;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-401c90ed2ecso1475235e9.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 30 Aug 2023 14:33:06 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=oZStBMYl;
+ spf=pass (domain: linaro.org, ip: 209.85.167.50, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-500b0f06136so1211248e87.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 31 Aug 2023 01:51:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1693431185; x=1694035985; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oMs1hpZtgH4UO0xqM58batcJ/0mNQ+FU55vDdXuukxk=;
-        b=APgl+5t4i/Kodw+mpyVr5hXBJ0TpCvQQD8uq958j6zLCssEC2UcaSGNWd2RDKTMdXE
-         D23EfljNrn+OoY8h6sTkhTUfnnKf7qxHAh9+RYIaCirALLlozxQ59cxPn90tVAtNtStu
-         a0hgwKg2lN4j1TVnuRH+WO4B90QsDxMd8bfWc=
+        d=linaro.org; s=google; t=1693471911; x=1694076711; darn=lists.openembedded.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2cnhxBWA60xFQa62nLLiNJHLaMPqxBF/ufa/09C4OSo=;
+        b=oZStBMYliNQVgA3gkfSlZE+7vTIPdFRnfVTs0qr0ZQ4GclRjpfocFjsofBYlw+bgbY
+         NteNeUBhQHiUQnNqBMmVcuJJX2eWXYdDX3xvGu1GPRKrLmxClMM8DElQ73Eo07zITqUm
+         Gy/tUTuev0+skEzWA9A1/TmEP3dv4E+rG+dlrtntf/rmkuy/djeUj23/D5TU78inNfKw
+         JE25cay8WJk13prfXLyE0iN15I+X6dHEWSZY118Bd3hKgIYsJJaPf4ApCdIZuDRFWS/C
+         k1Cmpit88d8goND7OTRsZZFET+U0Uimn6/Sbv0cRynpCxUooSFTs3jZvAHtjHOA6qN2l
+         tLXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693431185; x=1694035985;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oMs1hpZtgH4UO0xqM58batcJ/0mNQ+FU55vDdXuukxk=;
-        b=MwPQyhuey50bXzCmXAOfKP28ZIFmOnrbzigN3fA/NCzEtvhaQli+8RLS6BZHl8DPoG
-         gU5mF6h8Uh7f4ARj22XZiFK2Jj1k8MOYOE922qDvu74+3sLe2zCYhik3tta/PGhEk45/
-         wppVYkybdUc0DChAjcLGEjXFqvuMHXwY9EZ2cLKl3g0kXtNCnM11PSLTGCv96oc99BmA
-         KX+Hf0mTYlsxTWgclUgKHyIb7Ec4ZsQeFAIqC5N7X9tWrqcma518ziD3wIEYDFC+rE6O
-         KbspZLvfNjXJJTn2PomPcZ9obF6gZMc3sTIe2rDQvybEN03uGhxxK7rRfWDmQ8Wxcn/O
-         rsLQ==
-X-Gm-Message-State: AOJu0YzDk7KOAyBkGtnl0RYCkw6lfdCs6q0pI9p3LhEXfMzk6welVNJj
-	YzQyTIsLceXTwkRyVi4JuHlfPWZQv9NFSrFRX/8=
-X-Google-Smtp-Source: AGHT+IHR3ELB4wVzu4F5XAuY4ylrXuxUKxlmJIIvtiCQ8mkfZy6UPHlWiwOSsF3+6i0n+4QlutR6zQ==
-X-Received: by 2002:a5d:6145:0:b0:319:6e6a:66e with SMTP id y5-20020a5d6145000000b003196e6a066emr3004557wrt.14.1693431184765;
-        Wed, 30 Aug 2023 14:33:04 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:22b:9179:6474:7878])
-        by smtp.gmail.com with ESMTPSA id j17-20020adff551000000b0031432f1528csm30639wrp.45.2023.08.30.14.33.03
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20221208; t=1693471911; x=1694076711;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2cnhxBWA60xFQa62nLLiNJHLaMPqxBF/ufa/09C4OSo=;
+        b=j9Ggn47JnCwlogGmmNguDAkZWKn7oE2+Dz3i3mIjbGQWVrY1sk4tRMS4wQOgYqBQqz
+         kS7rnLJzqx8XjwbytrZAdUNDxubz5Vs6z6gKBIQoKaDXNF81V4K35ImuiYYZ/4uA+cvm
+         7UYRwYRfoDNEhqEj57zWvBUnsfNWhkhimBbs/t0zXWzI63w81gbtulSZ+h31KUXLnMqV
+         rcHVYHn+QI7nMAmhyazbJhurB5IHoHleqvjLMbJXHgNLJsfcDdYwlAtgdJ9jy9wKRpLo
+         lr3LGSvjj3ClLZmZE3RvjBvw7WT829Ikr+bySNBWtgj6xDitY0S+uNu31bwzNQst75bQ
+         oFdw==
+X-Gm-Message-State: AOJu0YwZWOuhiofKgL/VLQb6izbjktNKfhd9SI/QN5YRuOZh6lyZ11jA
+	/keG92hEZjvR+U5DgoeyOe1xbQ==
+X-Google-Smtp-Source: AGHT+IGO+QTkWudvL3ppjtljVynSzrlpU5A3qmhu4RAw6ELSdDwun3Ch3pb1+jbfRPyMLMSSQtRjrg==
+X-Received: by 2002:a05:6512:2381:b0:500:aed0:cb1b with SMTP id c1-20020a056512238100b00500aed0cb1bmr4113221lfv.24.1693471911345;
+        Thu, 31 Aug 2023 01:51:51 -0700 (PDT)
+Received: from nuoska (dsl-olubng11-54f814-94.dhcp.inet.fi. [84.248.20.94])
+        by smtp.gmail.com with ESMTPSA id f24-20020a19ae18000000b004ff8631d6c0sm167788lfc.278.2023.08.31.01.51.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 14:33:04 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] command: Avoid time intensive distractions for ping
-Date: Wed, 30 Aug 2023 22:33:03 +0100
-Message-Id: <20230830213303.2043607-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.2
+        Thu, 31 Aug 2023 01:51:50 -0700 (PDT)
+Date: Thu, 31 Aug 2023 11:51:48 +0300
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH] command: Avoid time intensive
+ distractions for ping
+Message-ID: <ZPBUpN6GaATE+zbz@nuoska>
+References: <20230830213303.2043607-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230830213303.2043607-1-richard.purdie@linuxfoundation.org>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 30 Aug 2023 21:33:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14993
+ <bitbake-devel@lists.openembedded.org>; Thu, 31 Aug 2023 08:51:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/14994
 
-We noticed some users were seeing very slow ping response times which
-caused 'server timeout' issues. There were some function calls in runCommand
-which could be slow such as the inotify callback processing.
+Hi,
 
-Mark up the ping command such that it doesn't need configuration information,
-it is allowed on a readonly server and specifically skip the inofity processing
-too since ping would never need that.
+On Wed, Aug 30, 2023 at 10:33:03PM +0100, Richard Purdie wrote:
+> We noticed some users were seeing very slow ping response times which
+> caused 'server timeout' issues. There were some function calls in runCommand
+> which could be slow such as the inotify callback processing.
 
-This will hopefully resolve various ping timeout issues that were being reported.
+I guess the error looks like:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/command.py | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Timeout while waiting for a reply from the bitbake server (60s)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index a355f56c60..b494f84a0a 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -65,7 +65,7 @@ class Command:
-         command = commandline.pop(0)
- 
-         # Ensure cooker is ready for commands
--        if command != "updateConfig" and command != "setFeatures":
-+        if command not in ["updateConfig", "setFeatures", "ping"]:
-             try:
-                 self.cooker.init_configdata()
-                 if not self.remotedatastores:
-@@ -85,7 +85,8 @@ class Command:
-                 if not hasattr(command_method, 'readonly') or not getattr(command_method, 'readonly'):
-                     return None, "Not able to execute not readonly commands in readonly mode"
-             try:
--                self.cooker.process_inotify_updates_apply()
-+                if command != "ping":
-+                    self.cooker.process_inotify_updates_apply()
-                 if getattr(command_method, 'needconfig', True):
-                     self.cooker.updateCacheSync()
-                 result = command_method(self, commandline)
-@@ -169,6 +170,8 @@ class CommandsSync:
-         Allow a UI to check the server is still alive
-         """
-         return "Still alive!"
-+    ping.needconfig = False
-+    ping.readonly = True
- 
-     def stateShutdown(self, command, params):
-         """
--- 
-2.39.2
+and happens right after a succesful build to me when I try to run any bitbake
+command.
 
+Hope this fixes it. Thanks!
+
+-Mikko
 
