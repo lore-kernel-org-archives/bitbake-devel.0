@@ -1,88 +1,173 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <paulo@myneves.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DFCC71153
-	for <webhook@archiver.kernel.org>; Sat,  2 Sep 2023 10:55:18 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web11.6053.1693652112295809789
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22178C83F2C
+	for <webhook@archiver.kernel.org>; Sun,  3 Sep 2023 11:51:36 +0000 (UTC)
+Received: from mail-4317.proton.ch (mail-4317.proton.ch [185.70.43.17])
+ by mx.groups.io with SMTP id smtpd.web11.26013.1693741887175081221
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 02 Sep 2023 03:55:12 -0700
+ Sun, 03 Sep 2023 04:51:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fUjrN2Hl;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-401bbfc05fcso28892465e9.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 02 Sep 2023 03:55:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1693652110; x=1694256910; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7hcS58x8Clo7j9aWIoIPnlIw/opeaZooNIM/o3XSfOM=;
-        b=fUjrN2HlgfTZKORU5tLY/JqFlfLYky7P1otwNv1ZtStD1tzDGpqQRSGD1Pnh8N9wlR
-         lX8qrX/Zvgf5KMcMOSVqIxbku73un655Tm9PdlvpBByUJ4AOHXb+2OaZ4ebtyyairLxl
-         VkWtqhwkdhy3NwrPC920mzcSQ28Q8sGRQN7fU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693652110; x=1694256910;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7hcS58x8Clo7j9aWIoIPnlIw/opeaZooNIM/o3XSfOM=;
-        b=c+YK/m4+H0CxA1eQtVHemhxnMMCCAzJAR/QhOlbMW0juNf+eaE2vxQvbDsu3s9Orxj
-         5CThXO3V20ZZH/4gcoYkOMdW25bKKr3DQ6ezRcbTVr0yUWZxAGwDrcARsJuNWED1spug
-         gfEHGKFbcuHOM1y+IwTH1NoIGE+gZHKjW/i+NeeRT27kC1Ge4MwHVUqbyeVqLYOl9j0O
-         WQ3FNrdoXgpU4fry+Oy9GVZkHJgDamBPDmQ744Yh2pR5TklXTxHwl8mKJYVJRWpnwtDD
-         6XaYxBvPRQScYmtQsTY2iShGFjU7S5/PPlEsTmf/sVP57Exr5iximc0ZQTJlaA8RfSwk
-         VayA==
-X-Gm-Message-State: AOJu0YxrPAIdeucwRYCGdQaKq/ok+wVdu9kpAPC22XP4x4J9bjQp1eL6
-	eDyrZztlQeJw+Ax1jB9JMZmMQfgLUWpkYP+ewmw=
-X-Google-Smtp-Source: AGHT+IGvYeExIR8mkMzdPaGCYpy4vJz79WB6gVvh3b4QOvHZ/0N9wa3QhZOUhs38tirM+gIYJdMcIQ==
-X-Received: by 2002:a05:600c:d6:b0:401:c52c:5ed8 with SMTP id u22-20020a05600c00d600b00401c52c5ed8mr3620423wmm.13.1693652109988;
-        Sat, 02 Sep 2023 03:55:09 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:bb30:48fe:2031:d024])
-        by smtp.gmail.com with ESMTPSA id l7-20020a7bc447000000b003fe1fe56202sm7573643wmi.33.2023.09.02.03.55.09
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Sep 2023 03:55:09 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] doc: Document challenges of tags with git fetcher
-Date: Sat,  2 Sep 2023 11:55:08 +0100
-Message-Id: <20230902105508.2444252-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.2
+ dkim=pass header.i=@myneves.com header.s=protonmail2 header.b=S4IcmvS5;
+ spf=pass (domain: myneves.com, ip: 185.70.43.17, mailfrom: paulo@myneves.com)
+Date: Sun, 03 Sep 2023 11:51:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myneves.com;
+	s=protonmail2; t=1693741884; x=1694001084;
+	bh=YimWuVGNCgHLW12QQP8OYQjh/TX0APH+didjYtg0G/k=;
+	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=S4IcmvS58EVhaOheypjdnIOo6dBrvaG3tIPq4N0cxz9ogARe2i8oRxGVn1Q80t77u
+	 jOoO7Ix0hBcbr+ZX6qLJ6ALZr4ByBlhesXbqsPxyJYbnQ1Q/5M1GYvVj9F19HZVbmL
+	 JiXv77WTLNjGPXvlYduMDiov+H2/EPKT+Jx4XwtnYtAx5tvV2/0KKOThF7D4QPwiHH
+	 kCpqwaA1r5O2lmLFNd2yPHhoQ8rlLW1sMO5skR/GQQDcFh0vuM8OVleyxNOxO83RhG
+	 9GCimzz7Dc6EX4PM0JL5HcsyY0YFfrwYlo0SzV804dtQtgAVRPjKtSGEaE8YobRdPf
+	 kZhTikqO8skfQ==
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+From: paulo@myneves.com
+Subject: Re: [bitbake-devel] [PATCH] doc: Document challenges of tags with git fetcher
+Message-ID: <p49C3K6-e7Y5XOGJbRGBR3b4MDklGrvUTUoSWvtTLniijSQrbhaEj1YGapbgHDryQDV595xuOWw9kJwJEaUkP6uDkyNuclXwMQDPJMxYndg=@myneves.com>
+In-Reply-To: <20230902105508.2444252-1-richard.purdie@linuxfoundation.org>
+References: <20230902105508.2444252-1-richard.purdie@linuxfoundation.org>
+Feedback-ID: 59941854:user:proton
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/alternative;
+ boundary="b1_VsnJRqoQAv0ORmcvhIXeMGi5lH5JQfEoS5UWmdlbvQ"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 02 Sep 2023 10:55:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15004
+ <bitbake-devel@lists.openembedded.org>; Sun, 03 Sep 2023 11:51:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15005
 
-Using tags with the git fetcher may cause surprising behaviour. There
-are reasons for this, document them.
+This is a multi-part message in MIME format.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 7 +++++++
- 1 file changed, 7 insertions(+)
+--b1_VsnJRqoQAv0ORmcvhIXeMGi5lH5JQfEoS5UWmdlbvQ
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index f5723d6767..91538f4059 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -476,6 +476,13 @@ Here are some example URLs::
-    easy to share metadata without removing passwords. SSH keys, ``~/.netrc``
-    and ``~/.ssh/config`` files can be used as alternatives.
- 
-+Using tags with the git fetcher may cause surprising behaviour. Bitbake needs to
-+resolve the tag to a specific revision and to do that, it has to connect to and use
-+the upstream repository. This is because the revision tags point at can change and
-+we've cases of this happening in well known public repositories. This can mean many
-+more network connections than expected, source mirrors may be bypassed and recipes
-+may reparsed when not expected. For these reasons, whilst the fetcher can support
-+tags, we recommend being specific about revisions in recipes.
- 
- .. _gitsm-fetcher:
- 
--- 
-2.39.2
+T24gU2F0LCBTZXAgMiwgMjAyMyBhdCAxMjo1NSwgUmljaGFyZCBQdXJkaWUgPFtyaWNoYXJkLnB1
+cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnXShtYWlsdG86T24gU2F0LCBTZXAgMiwgMjAyMyBhdCAx
+Mjo1NSwgUmljaGFyZCBQdXJkaWUgPDxhIGhyZWY9KT4gd3JvdGU6Cgo+IFVzaW5nIHRhZ3Mgd2l0
+aCB0aGUgZ2l0IGZldGNoZXIgbWF5IGNhdXNlIHN1cnByaXNpbmcgYmVoYXZpb3VyLiBUaGVyZQo+
+IGFyZSByZWFzb25zIGZvciB0aGlzLCBkb2N1bWVudCB0aGVtLgo+Cj4gU2lnbmVkLW9mZi1ieTog
+UmljaGFyZCBQdXJkaWUgPHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmc+Cj4gLS0t
+Cj4gZG9jL2JpdGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC1mZXRjaGluZy5y
+c3QgfCA3ICsrKysrKysKPiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspCj4KPiBkaWZm
+IC0tZ2l0IGEvZG9jL2JpdGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC1mZXRj
+aGluZy5yc3QgYi9kb2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLWZl
+dGNoaW5nLnJzdAo+IGluZGV4IGY1NzIzZDY3NjcuLjkxNTM4ZjQwNTkgMTAwNjQ0Cj4gLS0tIGEv
+ZG9jL2JpdGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC1mZXRjaGluZy5yc3QK
+PiArKysgYi9kb2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLWZldGNo
+aW5nLnJzdAo+IEBAIC00NzYsNiArNDc2LDEzIEBAIEhlcmUgYXJlIHNvbWUgZXhhbXBsZSBVUkxz
+OjoKPiBlYXN5IHRvIHNoYXJlIG1ldGFkYXRhIHdpdGhvdXQgcmVtb3ZpbmcgcGFzc3dvcmRzLiBT
+U0gga2V5cywgYGB+Ly5uZXRyY2BgCj4gYW5kIGBgfi8uc3NoL2NvbmZpZ2BgIGZpbGVzIGNhbiBi
+ZSB1c2VkIGFzIGFsdGVybmF0aXZlcy4KPgo+ICtVc2luZyB0YWdzIHdpdGggdGhlIGdpdCBmZXRj
+aGVyIG1heSBjYXVzZSBzdXJwcmlzaW5nIGJlaGF2aW91ci4gQml0YmFrZSBuZWVkcyB0bwo+ICty
+ZXNvbHZlIHRoZSB0YWcgdG8gYSBzcGVjaWZpYyByZXZpc2lvbiBhbmQgdG8gZG8gdGhhdCwgaXQg
+aGFzIHRvIGNvbm5lY3QgdG8gYW5kIHVzZQo+ICt0aGUgdXBzdHJlYW0gcmVwb3NpdG9yeS4gVGhp
+cyBpcyBiZWNhdXNlIHRoZSByZXZpc2lvbiB0YWdzIHBvaW50IGF0IGNhbiBjaGFuZ2UgYW5kCj4g
+K3dlJ3ZlIGNhc2VzIG9mIHRoaXMgaGFwcGVuaW5nIGluIHdlbGwga25vd24gcHVibGljIHJlcG9z
+aXRvcmllcy4gVGhpcyBjYW4gbWVhbiBtYW55Cj4gK21vcmUgbmV0d29yayBjb25uZWN0aW9ucyB0
+aGFuIGV4cGVjdGVkLCBzb3VyY2UgbWlycm9ycyBtYXkgYmUgYnlwYXNzZWQgYW5kIHJlY2lwZXMK
+PiArbWF5Cj4KPj4gYW5kCj4+ICt3ZSd2ZSBjYXNlcyBvZiB0aGlzIGhhcHBlbmluZyBpbiB3ZWxs
+IGtub3duIHB1YmxpYyByZXBvc2l0b3JpZXMKPgo+IHJlcGFyc2VkIHdoZW4gbm90IGV4cGVjdGVk
+LiBGb3IgdGhlc2UgcmVhc29ucywgd2hpbHN0IHRoZSBmZXRjaGVyIGNhbiBzdXBwb3J0Cj4gK3Rh
+Z3MsIHdlIHJlY29tbWVuZCBiZWluZyBzcGVjaWZpYyBhYm91dCByZXZpc2lvbnMgaW4gcmVjaXBl
+cy4KPgo+IC4uIF9naXRzbS1mZXRjaGVyOgo+Cj4gLS0KPiAyLjM5LjIKPgo+IC09LT0tPS09LT0t
+PS09LT0tPS09LT0tCj4gTGlua3M6IFlvdSByZWNlaXZlIGFsbCBtZXNzYWdlcyBzZW50IHRvIHRo
+aXMgZ3JvdXAuCj4gVmlldy9SZXBseSBPbmxpbmUgKCMxNTAwNCk6IGh0dHBzOi8vbGlzdHMub3Bl
+bmVtYmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2ZWwvbWVzc2FnZS8xNTAwNAo+IE11dGUgVGhpcyBU
+b3BpYzogaHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL210LzEwMTExMTYwNy80NDU0Nzgy
+Cj4gR3JvdXAgT3duZXI6IGJpdGJha2UtZGV2ZWwrb3duZXJAbGlzdHMub3BlbmVtYmVkZGVkLm9y
+Zwo+IFVuc3Vic2NyaWJlOiBodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvZy9iaXRiYWtl
+LWRldmVsL2xlYXZlLzEyMDUxMjQ3LzQ0NTQ3ODIvMTA3MzYyMDI4L3h5enp5IFtwYXVsb0BteW5l
+dmVzLmNvbV0KPiAtPS09LT0tPS09LT0tPS09LT0tPS09LQoKPgoKPiBhbmQKPiArd2UndmUgY2Fz
+ZXMgb2YgdGhpcyBoYXBwZW5pbmcgaW4gd2VsbCBrbm93biBwdWJsaWMgcmVwb3NpdG9yaWVzCgpI
+aXN0b3JpY2FsbHkgdGhpcyBoYXBwZW5lZCB3aXRoIHdlbGwga25vd24gcHVibGljIHJlcG9zaXRv
+cmllcy4KCldoeSBjYW4gc291cmNlIG1pcnJvcnMgYmUgYnlwYXNzZWQ/IEJlY2F1c2UgdGhlIGhh
+c2ggY2hhbmdlZCBhbmQgdGhlIG1pcnJvciBkb2VzIG5vdCBoYXZlIGl0PyBJZiBzbyBpdCB3b3Vs
+ZCBiZSBuaWNlIHRvIGNsYXJpZnkgaXQu
+
+--b1_VsnJRqoQAv0ORmcvhIXeMGi5lH5JQfEoS5UWmdlbvQ
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
+
+PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5PiAgIDxkaXYgZGlyPSJhdXRvIj48c3BhbiBkaXI9ImF1
+dG8iIHN0eWxlPSJjb2xvcjogdmFyKC0tdGV4dC1jb2xvcik7Ij48Y2FyZXQ+PC9jYXJldD5PbiBT
+YXQsIFNlcCAyLCAyMDIzIGF0IDEyOjU1LCBSaWNoYXJkIFB1cmRpZSAmbHQ7PC9zcGFuPjxhIGNs
+YXNzPSIiIGhyZWY9Im1haWx0bzpPbiBTYXQsIFNlcCAyLCAyMDIzIGF0IDEyOjU1LCBSaWNoYXJk
+IFB1cmRpZSAmbHQ7Jmx0O2EgaHJlZj0iPnJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5v
+cmc8L2E+PHNwYW4gc3R5bGU9ImNvbG9yOiB2YXIoLS10ZXh0LWNvbG9yKTsiPiZndDsgd3JvdGU6
+PC9zcGFuPjxicj48L2Rpdj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIiBjbGFzcz0icHJvdG9ubWFp
+bF9xdW90ZSIgZGlyPSJhdXRvIj4gIFVzaW5nIHRhZ3Mgd2l0aCB0aGUgZ2l0IGZldGNoZXIgbWF5
+IGNhdXNlIHN1cnByaXNpbmcgYmVoYXZpb3VyLiBUaGVyZTxicj5hcmUgcmVhc29ucyBmb3IgdGhp
+cywgZG9jdW1lbnQgdGhlbS48YnI+PGJyPlNpZ25lZC1vZmYtYnk6IFJpY2hhcmQgUHVyZGllICZs
+dDtyaWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnJmd0Ozxicj4tLS08YnI+IGRvYy9i
+aXRiYWtlLXVzZXItbWFudWFsL2JpdGJha2UtdXNlci1tYW51YWwtZmV0Y2hpbmcucnN0IHwgNyAr
+KysrKysrPGJyPiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspPGJyPjxicj5kaWZmIC0t
+Z2l0IGEvZG9jL2JpdGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC1mZXRjaGlu
+Zy5yc3QgYi9kb2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLWZldGNo
+aW5nLnJzdDxicj5pbmRleCBmNTcyM2Q2NzY3Li45MTUzOGY0MDU5IDEwMDY0NDxicj4tLS0gYS9k
+b2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLWZldGNoaW5nLnJzdDxi
+cj4rKysgYi9kb2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLWZldGNo
+aW5nLnJzdDxicj5AQCAtNDc2LDYgKzQ3NiwxMyBAQCBIZXJlIGFyZSBzb21lIGV4YW1wbGUgVVJM
+czo6PGJyPiAgICBlYXN5IHRvIHNoYXJlIG1ldGFkYXRhIHdpdGhvdXQgcmVtb3ZpbmcgcGFzc3dv
+cmRzLiBTU0gga2V5cywgYGB+Ly5uZXRyY2BgPGJyPiAgICBhbmQgYGB+Ly5zc2gvY29uZmlnYGAg
+ZmlsZXMgY2FuIGJlIHVzZWQgYXMgYWx0ZXJuYXRpdmVzLjxicj48YnI+K1VzaW5nIHRhZ3Mgd2l0
+aCB0aGUgZ2l0IGZldGNoZXIgbWF5IGNhdXNlIHN1cnByaXNpbmcgYmVoYXZpb3VyLiBCaXRiYWtl
+IG5lZWRzIHRvPGJyPityZXNvbHZlIHRoZSB0YWcgdG8gYSBzcGVjaWZpYyByZXZpc2lvbiBhbmQg
+dG8gZG8gdGhhdCwgaXQgaGFzIHRvIGNvbm5lY3QgdG8gYW5kIHVzZTxicj4rdGhlIHVwc3RyZWFt
+IHJlcG9zaXRvcnkuIFRoaXMgaXMgYmVjYXVzZSB0aGUgcmV2aXNpb24gdGFncyBwb2ludCBhdCBj
+YW4gY2hhbmdlIGFuZDxicj4rd2UndmUgY2FzZXMgb2YgdGhpcyBoYXBwZW5pbmcgaW4gd2VsbCBr
+bm93biBwdWJsaWMgcmVwb3NpdG9yaWVzLiBUaGlzIGNhbiBtZWFuIG1hbnk8YnI+K21vcmUgbmV0
+d29yayBjb25uZWN0aW9ucyB0aGFuIGV4cGVjdGVkLCBzb3VyY2UgbWlycm9ycyBtYXkgYmUgYnlw
+YXNzZWQgYW5kIHJlY2lwZXM8YnI+K21heTxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNsYXNzPSJw
+cm90b25tYWlsX3F1b3RlIiBzdHlsZT0idW5pY29kZS1iaWRpOiBwbGFpbnRleHQ7ICBwYWRkaW5n
+OiAwcHggMHB4IDBweCAwLjZyZW0gIWltcG9ydGFudDsgbWFyZ2luOiAwcHggIWltcG9ydGFudDsg
+Ym9yZGVyLXN0eWxlOiBzb2xpZCAhaW1wb3J0YW50OyAgYm9yZGVyLWltYWdlOiBub25lICFpbXBv
+cnRhbnQ7IGJvcmRlci13aWR0aDogMHB4IDBweCAwcHggMXB4ICFpbXBvcnRhbnQ7IG1hcmdpbi1i
+bG9jazogMXJlbSAyMHB4ICFpbXBvcnRhbnQ7IG1hcmdpbi1pbmxpbmU6IDBweCAhaW1wb3J0YW50
+OyAgU2FuIEZyYW5jaXNjbyZxdW90OywgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjsgICAg
+IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IGF1dG87IHRleHQtYWxpZ246IHN0YXJ0
+OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5v
+cm1hbDsgd2lkb3dzOiBhdXRvOyB3b3JkLXNwYWNpbmc6IDBweDsgIC13ZWJraXQtdGV4dC1zaXpl
+LWFkanVzdDogbm9uZTsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29y
+YXRpb246IG5vbmU7Ij5hbmQ8YnIgc3R5bGU9InVuaWNvZGUtYmlkaTogcGxhaW50ZXh0OyAiPit3
+ZSd2ZSBjYXNlcyBvZiB0aGlzIGhhcHBlbmluZyBpbiB3ZWxsIGtub3duIHB1YmxpYyByZXBvc2l0
+b3JpZXM8L2Jsb2NrcXVvdGU+IHJlcGFyc2VkIHdoZW4gbm90IGV4cGVjdGVkLiBGb3IgdGhlc2Ug
+cmVhc29ucywgd2hpbHN0IHRoZSBmZXRjaGVyIGNhbiBzdXBwb3J0PGJyPit0YWdzLCB3ZSByZWNv
+bW1lbmQgYmVpbmcgc3BlY2lmaWMgYWJvdXQgcmV2aXNpb25zIGluIHJlY2lwZXMuPGJyPjxicj4g
+Li4gX2dpdHNtLWZldGNoZXI6PGJyPjxicj4tLTxicj4yLjM5LjI8YnI+PGJyPjxicj4tPS09LT0t
+PS09LT0tPS09LT0tPS09LTxicj5MaW5rczogWW91IHJlY2VpdmUgYWxsIG1lc3NhZ2VzIHNlbnQg
+dG8gdGhpcyBncm91cC48YnI+Vmlldy9SZXBseSBPbmxpbmUgKCMxNTAwNCk6IGh0dHBzOi8vbGlz
+dHMub3BlbmVtYmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2ZWwvbWVzc2FnZS8xNTAwNDxicj5NdXRl
+IFRoaXMgVG9waWM6IGh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9tdC8xMDExMTE2MDcv
+NDQ1NDc4Mjxicj5Hcm91cCBPd25lcjogYml0YmFrZS1kZXZlbCtvd25lckBsaXN0cy5vcGVuZW1i
+ZWRkZWQub3JnPGJyPlVuc3Vic2NyaWJlOiBodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcv
+Zy9iaXRiYWtlLWRldmVsL2xlYXZlLzEyMDUxMjQ3LzQ0NTQ3ODIvMTA3MzYyMDI4L3h5enp5IFtw
+YXVsb0BteW5ldmVzLmNvbV08YnI+LT0tPS09LT0tPS09LT0tPS09LT0tPS08YnI+PC9ibG9ja3F1
+b3RlPjxkaXYgZGlyPSJhdXRvIj48YnI+PC9kaXY+Jmd0OyZuYnNwOzxibG9ja3F1b3RlIHR5cGU9
+ImNpdGUiIGNsYXNzPSJwcm90b25tYWlsX3F1b3RlIiBzdHlsZT0idW5pY29kZS1iaWRpOiBwbGFp
+bnRleHQ7ICBwYWRkaW5nOiAwcHggMHB4IDBweCAwLjZyZW0gIWltcG9ydGFudDsgbWFyZ2luOiAw
+cHggIWltcG9ydGFudDsgYm9yZGVyLXN0eWxlOiBzb2xpZCAhaW1wb3J0YW50OyAgYm9yZGVyLWlt
+YWdlOiBub25lICFpbXBvcnRhbnQ7IGJvcmRlci13aWR0aDogMHB4IDBweCAwcHggMXB4ICFpbXBv
+cnRhbnQ7IG1hcmdpbi1ibG9jazogMXJlbSAyMHB4ICFpbXBvcnRhbnQ7IG1hcmdpbi1pbmxpbmU6
+IDBweCAhaW1wb3J0YW50OyAgU2FuIEZyYW5jaXNjbyZxdW90OywgSGVsdmV0aWNhLCBBcmlhbCwg
+c2Fucy1zZXJpZjsgICAgIGxldHRlci1zcGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IGF1dG87IHRl
+eHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsg
+d2hpdGUtc3BhY2U6IG5vcm1hbDsgd2lkb3dzOiBhdXRvOyB3b3JkLXNwYWNpbmc6IDBweDsgIC13
+ZWJraXQtdGV4dC1zaXplLWFkanVzdDogbm9uZTsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDog
+MHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7Ij5hbmQ8YnIgc3R5bGU9InVuaWNvZGUtYmlkaTog
+cGxhaW50ZXh0OyAiPit3ZSd2ZSBjYXNlcyBvZiB0aGlzIGhhcHBlbmluZyBpbiB3ZWxsIGtub3du
+IHB1YmxpYyByZXBvc2l0b3JpZXM8L2Jsb2NrcXVvdGU+SGlzdG9yaWNhbGx5IHRoaXMgaGFwcGVu
+ZWQgd2l0aCB3ZWxsIGtub3duJm5ic3A7cHVibGljIHJlcG9zaXRvcmllcy48ZGl2IGRpcj0iYXV0
+byI+PGJyPjwvZGl2PjxkaXYgZGlyPSJhdXRvIj5XaHkgY2FuIHNvdXJjZSBtaXJyb3JzIGJlIGJ5
+cGFzc2VkPyBCZWNhdXNlICZuYnNwO3RoZSBoYXNoIGNoYW5nZWQgYW5kIHRoZSBtaXJyb3IgZG9l
+cyBub3QgaGF2ZSBpdD8gSWYgc28gaXQgd291bGQgYmUgbmljZSB0byBjbGFyaWZ5IGl0LjxjYXJl
+dD48L2NhcmV0PjwvZGl2PjwvYm9keT48L2h0bWw+
+
+
+--b1_VsnJRqoQAv0ORmcvhIXeMGi5lH5JQfEoS5UWmdlbvQ--
 
 
