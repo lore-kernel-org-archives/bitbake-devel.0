@@ -1,173 +1,144 @@
-Return-Path: <paulo@myneves.com>
+Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22178C83F2C
-	for <webhook@archiver.kernel.org>; Sun,  3 Sep 2023 11:51:36 +0000 (UTC)
-Received: from mail-4317.proton.ch (mail-4317.proton.ch [185.70.43.17])
- by mx.groups.io with SMTP id smtpd.web11.26013.1693741887175081221
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F4DC71153
+	for <webhook@archiver.kernel.org>; Mon,  4 Sep 2023 06:47:11 +0000 (UTC)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+ by mx.groups.io with SMTP id smtpd.web10.42640.1693810028848562381
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 03 Sep 2023 04:51:28 -0700
+ Sun, 03 Sep 2023 23:47:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@myneves.com header.s=protonmail2 header.b=S4IcmvS5;
- spf=pass (domain: myneves.com, ip: 185.70.43.17, mailfrom: paulo@myneves.com)
-Date: Sun, 03 Sep 2023 11:51:17 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myneves.com;
-	s=protonmail2; t=1693741884; x=1694001084;
-	bh=YimWuVGNCgHLW12QQP8OYQjh/TX0APH+didjYtg0G/k=;
-	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=S4IcmvS58EVhaOheypjdnIOo6dBrvaG3tIPq4N0cxz9ogARe2i8oRxGVn1Q80t77u
-	 jOoO7Ix0hBcbr+ZX6qLJ6ALZr4ByBlhesXbqsPxyJYbnQ1Q/5M1GYvVj9F19HZVbmL
-	 JiXv77WTLNjGPXvlYduMDiov+H2/EPKT+Jx4XwtnYtAx5tvV2/0KKOThF7D4QPwiHH
-	 kCpqwaA1r5O2lmLFNd2yPHhoQ8rlLW1sMO5skR/GQQDcFh0vuM8OVleyxNOxO83RhG
-	 9GCimzz7Dc6EX4PM0JL5HcsyY0YFfrwYlo0SzV804dtQtgAVRPjKtSGEaE8YobRdPf
-	 kZhTikqO8skfQ==
-To: Richard Purdie <richard.purdie@linuxfoundation.org>, "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-From: paulo@myneves.com
-Subject: Re: [bitbake-devel] [PATCH] doc: Document challenges of tags with git fetcher
-Message-ID: <p49C3K6-e7Y5XOGJbRGBR3b4MDklGrvUTUoSWvtTLniijSQrbhaEj1YGapbgHDryQDV595xuOWw9kJwJEaUkP6uDkyNuclXwMQDPJMxYndg=@myneves.com>
-In-Reply-To: <20230902105508.2444252-1-richard.purdie@linuxfoundation.org>
-References: <20230902105508.2444252-1-richard.purdie@linuxfoundation.org>
-Feedback-ID: 59941854:user:proton
+ dkim=pass header.i=@linaro.org header.s=google header.b=iKlqryW3;
+ spf=pass (domain: linaro.org, ip: 209.85.167.50, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-50078eba7afso1750801e87.0
+        for <bitbake-devel@lists.openembedded.org>; Sun, 03 Sep 2023 23:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1693810027; x=1694414827; darn=lists.openembedded.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wMJFmu8I8LTHCZ1nj3NneK4XGyaPYnl6ZqTeno0x2RM=;
+        b=iKlqryW35vFiBGNTRq8kGNbHAb9B2LAeik1PJR2N1gmSJgtxQYAeU/3lXo3OOM8DWC
+         VZsp/lQgyOHHCmWw8zMGr9Cum7krG+BinaojCAu8bN/touNLewi/dZlsDxhQQSWKnXvp
+         5KbClEfdLbGYrBqkZ+CCOvqCAL6ZmeGCBQ4mMMMCYvzzvPf/c8THXn7QdyWfOxFDBjRn
+         CcGSF81eQBotomkXzjT1afoKV7P8/vi26HpU40pSoQvuS8wLHit84zmeOGnjXQ2IrWTe
+         lj8REVJJkdYGPQChqsNcjkxqFKP22k+XOE3/rIisqtgnxK69zSKlYOxmu4pybZNo+WqC
+         U5lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693810027; x=1694414827;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wMJFmu8I8LTHCZ1nj3NneK4XGyaPYnl6ZqTeno0x2RM=;
+        b=eaDsj0J01vNJj9kbI1/+PU3wV4b3ybgDRlBKXtkjBraomNkBwp3EVOV9WICPZfPrJC
+         l6vzfW0i2RzfwTCOpYK3aN/YjzxL38WFgl5tMil73C1Nuj3MubHMB2MySGw/e3QlOFpe
+         RAINb1P/t/TEoToD/FIXcjeYoNiyXb9tkwNu1VMsKHJZKKVe/+ALQ4qvduPnILsjIJQD
+         tNrklv4nwrq2yJB/THG1pKsNEYsVw4hI2jr/KQ+x+Q2DdGV/xRXczWBq0fhmOXGcMFR9
+         EXTjxz3nqncIOMw121RfpAp/s6mTGuFdqWNi80gPV9pEp7SsbakqkcIm2eg5AeK8sJt0
+         NRzw==
+X-Gm-Message-State: AOJu0YwvgFpTsYIjb9yXxF1WMLZMqpfMoAx8ONTqOz2HLW14JqSfOLlW
+	KD3zLXrQQ9c5Y/UtEK2/jAKM0g==
+X-Google-Smtp-Source: AGHT+IGxHVCIYVViXzO5vaCLt3U42xYQr6IPxY9mighhukZ2j5zpuZLx+zbd7AOYnpIPMrK3O666Kw==
+X-Received: by 2002:ac2:4f05:0:b0:4fb:8616:7a03 with SMTP id k5-20020ac24f05000000b004fb86167a03mr5876300lfr.4.1693810026843;
+        Sun, 03 Sep 2023 23:47:06 -0700 (PDT)
+Received: from nuoska (dc7g6tyjby-d304c4945t-3.rev.dnainternet.fi. [2001:14ba:16cb:a800:e107:c77f:6058:ee33])
+        by smtp.gmail.com with ESMTPSA id x18-20020a19f612000000b004fe37339f8esm1556193lfe.149.2023.09.03.23.47.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Sep 2023 23:47:06 -0700 (PDT)
+Date: Mon, 4 Sep 2023 09:47:04 +0300
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH] command: Avoid time intensive
+ distractions for ping
+Message-ID: <ZPV9aKltBIlkR3U/@nuoska>
+References: <20230830213303.2043607-1-richard.purdie@linuxfoundation.org>
+ <ZPBUpN6GaATE+zbz@nuoska>
+ <90096957449e6a35b3f2b349cb07132e0ef6a951.camel@linuxfoundation.org>
+ <ZPB5zs4on6u4mOgd@nuoska>
+ <6ea4d70d5bf116b389b7acbbe8825c55762d931d.camel@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="b1_VsnJRqoQAv0ORmcvhIXeMGi5lH5JQfEoS5UWmdlbvQ"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6ea4d70d5bf116b389b7acbbe8825c55762d931d.camel@linuxfoundation.org>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 03 Sep 2023 11:51:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15005
+ <bitbake-devel@lists.openembedded.org>; Mon, 04 Sep 2023 06:47:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15006
 
-This is a multi-part message in MIME format.
+Hi,
 
---b1_VsnJRqoQAv0ORmcvhIXeMGi5lH5JQfEoS5UWmdlbvQ
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+On Thu, Aug 31, 2023 at 01:01:30PM +0100, Richard Purdie wrote:
+> On Thu, 2023-08-31 at 14:30 +0300, Mikko Rapeli wrote:
+> > Hi,
+> > 
+> > On Thu, Aug 31, 2023 at 09:56:33AM +0100, Richard Purdie wrote:
+> > > On Thu, 2023-08-31 at 11:51 +0300, Mikko Rapeli wrote:
+> > > > Hi,
+> > > > 
+> > > > On Wed, Aug 30, 2023 at 10:33:03PM +0100, Richard Purdie wrote:
+> > > > > We noticed some users were seeing very slow ping response times which
+> > > > > caused 'server timeout' issues. There were some function calls in runCommand
+> > > > > which could be slow such as the inotify callback processing.
+> > > > 
+> > > > I guess the error looks like:
+> > > > 
+> > > > Timeout while waiting for a reply from the bitbake server (60s)
+> > > > 
+> > > > and happens right after a succesful build to me when I try to run any bitbake
+> > > > command.
+> > > > 
+> > > > Hope this fixes it. Thanks!
+> > > 
+> > > That is the message however the cause may be different in your case. It
+> > > sounds like the server may be taking a long time to shut down for you
+> > > and it can't connect or start a new one whilst that is happening.
+> > > 
+> > > If you have the bitbake-cookerdaemon log for your case I can see if
+> > > that sheds any light if this doesn't work for you.
+> > 
+> > (Traceback (most recent call last):
+> >   File "/home/builder/src/base/poky/bitbake/lib/bb/server/process.py", line 292, in main
+> >     self.command_channel_reply.send(self.cooker.command.runCommand(command, self))
+> >   File "/home/builder/src/base/poky/bitbake/lib/bb/server/process.py", line 868, in send
+> >     self._send(obj)
+> >   File "/home/builder/src/base/poky/bitbake/lib/bb/server/process.py", line 847, in _send
+> >     self.writer.send_bytes(obj)
+> >   File "/usr/lib/python3.10/multiprocessing/connection.py", line 200, in send_bytes
+> >     self._send_bytes(m[offset:offset + size])
+> >   File "/usr/lib/python3.10/multiprocessing/connection.py", line 411, in _send_bytes
+> >     self._send(header + buf)
+> >   File "/usr/lib/python3.10/multiprocessing/connection.py", line 368, in _send
+> >     n = write(self._handle, buf)
+> > BrokenPipeError: [Errno 32] Broken pipe
+> > )
+> > 4131625 12:21:32.806544 Processing Client
+> > 4131625 12:21:32.806635 Disconnecting Client (socket: True)
+> > 4131625 12:21:32.807999 No timeout, exiting.
+> > 4131625 12:21:32.908254 Exiting (socket: True)
+> > 4131625 12:21:32.982669 More than one thread left?: [<_MainThread(MainThread, started 140013699211712)>, <Thread(asyncio_0, started 140012031006272)>]
+> > 4131625 12:21:34.433909 Exiting as we could obtain the lock
+> > sys:1: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/builder/src/base/build/bitbake-cookerdaemon.log' mode='a+' encoding='UTF-8'>
+> > 
+> > I don't know what else to look for in the log.
+> 
+> What happened before that?
+> 
+> The pipe error was the server trying to reply to the client but the
+> client was gone. We should be able to see the command running before
+> that and if it was a ping or not and the timestamps?
 
-T24gU2F0LCBTZXAgMiwgMjAyMyBhdCAxMjo1NSwgUmljaGFyZCBQdXJkaWUgPFtyaWNoYXJkLnB1
-cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnXShtYWlsdG86T24gU2F0LCBTZXAgMiwgMjAyMyBhdCAx
-Mjo1NSwgUmljaGFyZCBQdXJkaWUgPDxhIGhyZWY9KT4gd3JvdGU6Cgo+IFVzaW5nIHRhZ3Mgd2l0
-aCB0aGUgZ2l0IGZldGNoZXIgbWF5IGNhdXNlIHN1cnByaXNpbmcgYmVoYXZpb3VyLiBUaGVyZQo+
-IGFyZSByZWFzb25zIGZvciB0aGlzLCBkb2N1bWVudCB0aGVtLgo+Cj4gU2lnbmVkLW9mZi1ieTog
-UmljaGFyZCBQdXJkaWUgPHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmc+Cj4gLS0t
-Cj4gZG9jL2JpdGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC1mZXRjaGluZy5y
-c3QgfCA3ICsrKysrKysKPiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspCj4KPiBkaWZm
-IC0tZ2l0IGEvZG9jL2JpdGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC1mZXRj
-aGluZy5yc3QgYi9kb2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLWZl
-dGNoaW5nLnJzdAo+IGluZGV4IGY1NzIzZDY3NjcuLjkxNTM4ZjQwNTkgMTAwNjQ0Cj4gLS0tIGEv
-ZG9jL2JpdGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC1mZXRjaGluZy5yc3QK
-PiArKysgYi9kb2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLWZldGNo
-aW5nLnJzdAo+IEBAIC00NzYsNiArNDc2LDEzIEBAIEhlcmUgYXJlIHNvbWUgZXhhbXBsZSBVUkxz
-OjoKPiBlYXN5IHRvIHNoYXJlIG1ldGFkYXRhIHdpdGhvdXQgcmVtb3ZpbmcgcGFzc3dvcmRzLiBT
-U0gga2V5cywgYGB+Ly5uZXRyY2BgCj4gYW5kIGBgfi8uc3NoL2NvbmZpZ2BgIGZpbGVzIGNhbiBi
-ZSB1c2VkIGFzIGFsdGVybmF0aXZlcy4KPgo+ICtVc2luZyB0YWdzIHdpdGggdGhlIGdpdCBmZXRj
-aGVyIG1heSBjYXVzZSBzdXJwcmlzaW5nIGJlaGF2aW91ci4gQml0YmFrZSBuZWVkcyB0bwo+ICty
-ZXNvbHZlIHRoZSB0YWcgdG8gYSBzcGVjaWZpYyByZXZpc2lvbiBhbmQgdG8gZG8gdGhhdCwgaXQg
-aGFzIHRvIGNvbm5lY3QgdG8gYW5kIHVzZQo+ICt0aGUgdXBzdHJlYW0gcmVwb3NpdG9yeS4gVGhp
-cyBpcyBiZWNhdXNlIHRoZSByZXZpc2lvbiB0YWdzIHBvaW50IGF0IGNhbiBjaGFuZ2UgYW5kCj4g
-K3dlJ3ZlIGNhc2VzIG9mIHRoaXMgaGFwcGVuaW5nIGluIHdlbGwga25vd24gcHVibGljIHJlcG9z
-aXRvcmllcy4gVGhpcyBjYW4gbWVhbiBtYW55Cj4gK21vcmUgbmV0d29yayBjb25uZWN0aW9ucyB0
-aGFuIGV4cGVjdGVkLCBzb3VyY2UgbWlycm9ycyBtYXkgYmUgYnlwYXNzZWQgYW5kIHJlY2lwZXMK
-PiArbWF5Cj4KPj4gYW5kCj4+ICt3ZSd2ZSBjYXNlcyBvZiB0aGlzIGhhcHBlbmluZyBpbiB3ZWxs
-IGtub3duIHB1YmxpYyByZXBvc2l0b3JpZXMKPgo+IHJlcGFyc2VkIHdoZW4gbm90IGV4cGVjdGVk
-LiBGb3IgdGhlc2UgcmVhc29ucywgd2hpbHN0IHRoZSBmZXRjaGVyIGNhbiBzdXBwb3J0Cj4gK3Rh
-Z3MsIHdlIHJlY29tbWVuZCBiZWluZyBzcGVjaWZpYyBhYm91dCByZXZpc2lvbnMgaW4gcmVjaXBl
-cy4KPgo+IC4uIF9naXRzbS1mZXRjaGVyOgo+Cj4gLS0KPiAyLjM5LjIKPgo+IC09LT0tPS09LT0t
-PS09LT0tPS09LT0tCj4gTGlua3M6IFlvdSByZWNlaXZlIGFsbCBtZXNzYWdlcyBzZW50IHRvIHRo
-aXMgZ3JvdXAuCj4gVmlldy9SZXBseSBPbmxpbmUgKCMxNTAwNCk6IGh0dHBzOi8vbGlzdHMub3Bl
-bmVtYmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2ZWwvbWVzc2FnZS8xNTAwNAo+IE11dGUgVGhpcyBU
-b3BpYzogaHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL210LzEwMTExMTYwNy80NDU0Nzgy
-Cj4gR3JvdXAgT3duZXI6IGJpdGJha2UtZGV2ZWwrb3duZXJAbGlzdHMub3BlbmVtYmVkZGVkLm9y
-Zwo+IFVuc3Vic2NyaWJlOiBodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcvZy9iaXRiYWtl
-LWRldmVsL2xlYXZlLzEyMDUxMjQ3LzQ0NTQ3ODIvMTA3MzYyMDI4L3h5enp5IFtwYXVsb0BteW5l
-dmVzLmNvbV0KPiAtPS09LT0tPS09LT0tPS09LT0tPS09LQoKPgoKPiBhbmQKPiArd2UndmUgY2Fz
-ZXMgb2YgdGhpcyBoYXBwZW5pbmcgaW4gd2VsbCBrbm93biBwdWJsaWMgcmVwb3NpdG9yaWVzCgpI
-aXN0b3JpY2FsbHkgdGhpcyBoYXBwZW5lZCB3aXRoIHdlbGwga25vd24gcHVibGljIHJlcG9zaXRv
-cmllcy4KCldoeSBjYW4gc291cmNlIG1pcnJvcnMgYmUgYnlwYXNzZWQ/IEJlY2F1c2UgdGhlIGhh
-c2ggY2hhbmdlZCBhbmQgdGhlIG1pcnJvciBkb2VzIG5vdCBoYXZlIGl0PyBJZiBzbyBpdCB3b3Vs
-ZCBiZSBuaWNlIHRvIGNsYXJpZnkgaXQu
+bitbake is quite sensitive to IO on my Ubuntu 22.04 build machine
+with zfs. This is how I trigger this reliably:
 
---b1_VsnJRqoQAv0ORmcvhIXeMGi5lH5JQfEoS5UWmdlbvQ
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: base64
+$ mv tmp foo ; rm -rf foo & bitbake image
+[1] 2709733
+Timeout while waiting for a reply from the bitbake server (60s)
 
-PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5PiAgIDxkaXYgZGlyPSJhdXRvIj48c3BhbiBkaXI9ImF1
-dG8iIHN0eWxlPSJjb2xvcjogdmFyKC0tdGV4dC1jb2xvcik7Ij48Y2FyZXQ+PC9jYXJldD5PbiBT
-YXQsIFNlcCAyLCAyMDIzIGF0IDEyOjU1LCBSaWNoYXJkIFB1cmRpZSAmbHQ7PC9zcGFuPjxhIGNs
-YXNzPSIiIGhyZWY9Im1haWx0bzpPbiBTYXQsIFNlcCAyLCAyMDIzIGF0IDEyOjU1LCBSaWNoYXJk
-IFB1cmRpZSAmbHQ7Jmx0O2EgaHJlZj0iPnJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5v
-cmc8L2E+PHNwYW4gc3R5bGU9ImNvbG9yOiB2YXIoLS10ZXh0LWNvbG9yKTsiPiZndDsgd3JvdGU6
-PC9zcGFuPjxicj48L2Rpdj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIiBjbGFzcz0icHJvdG9ubWFp
-bF9xdW90ZSIgZGlyPSJhdXRvIj4gIFVzaW5nIHRhZ3Mgd2l0aCB0aGUgZ2l0IGZldGNoZXIgbWF5
-IGNhdXNlIHN1cnByaXNpbmcgYmVoYXZpb3VyLiBUaGVyZTxicj5hcmUgcmVhc29ucyBmb3IgdGhp
-cywgZG9jdW1lbnQgdGhlbS48YnI+PGJyPlNpZ25lZC1vZmYtYnk6IFJpY2hhcmQgUHVyZGllICZs
-dDtyaWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnJmd0Ozxicj4tLS08YnI+IGRvYy9i
-aXRiYWtlLXVzZXItbWFudWFsL2JpdGJha2UtdXNlci1tYW51YWwtZmV0Y2hpbmcucnN0IHwgNyAr
-KysrKysrPGJyPiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspPGJyPjxicj5kaWZmIC0t
-Z2l0IGEvZG9jL2JpdGJha2UtdXNlci1tYW51YWwvYml0YmFrZS11c2VyLW1hbnVhbC1mZXRjaGlu
-Zy5yc3QgYi9kb2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLWZldGNo
-aW5nLnJzdDxicj5pbmRleCBmNTcyM2Q2NzY3Li45MTUzOGY0MDU5IDEwMDY0NDxicj4tLS0gYS9k
-b2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLWZldGNoaW5nLnJzdDxi
-cj4rKysgYi9kb2MvYml0YmFrZS11c2VyLW1hbnVhbC9iaXRiYWtlLXVzZXItbWFudWFsLWZldGNo
-aW5nLnJzdDxicj5AQCAtNDc2LDYgKzQ3NiwxMyBAQCBIZXJlIGFyZSBzb21lIGV4YW1wbGUgVVJM
-czo6PGJyPiAgICBlYXN5IHRvIHNoYXJlIG1ldGFkYXRhIHdpdGhvdXQgcmVtb3ZpbmcgcGFzc3dv
-cmRzLiBTU0gga2V5cywgYGB+Ly5uZXRyY2BgPGJyPiAgICBhbmQgYGB+Ly5zc2gvY29uZmlnYGAg
-ZmlsZXMgY2FuIGJlIHVzZWQgYXMgYWx0ZXJuYXRpdmVzLjxicj48YnI+K1VzaW5nIHRhZ3Mgd2l0
-aCB0aGUgZ2l0IGZldGNoZXIgbWF5IGNhdXNlIHN1cnByaXNpbmcgYmVoYXZpb3VyLiBCaXRiYWtl
-IG5lZWRzIHRvPGJyPityZXNvbHZlIHRoZSB0YWcgdG8gYSBzcGVjaWZpYyByZXZpc2lvbiBhbmQg
-dG8gZG8gdGhhdCwgaXQgaGFzIHRvIGNvbm5lY3QgdG8gYW5kIHVzZTxicj4rdGhlIHVwc3RyZWFt
-IHJlcG9zaXRvcnkuIFRoaXMgaXMgYmVjYXVzZSB0aGUgcmV2aXNpb24gdGFncyBwb2ludCBhdCBj
-YW4gY2hhbmdlIGFuZDxicj4rd2UndmUgY2FzZXMgb2YgdGhpcyBoYXBwZW5pbmcgaW4gd2VsbCBr
-bm93biBwdWJsaWMgcmVwb3NpdG9yaWVzLiBUaGlzIGNhbiBtZWFuIG1hbnk8YnI+K21vcmUgbmV0
-d29yayBjb25uZWN0aW9ucyB0aGFuIGV4cGVjdGVkLCBzb3VyY2UgbWlycm9ycyBtYXkgYmUgYnlw
-YXNzZWQgYW5kIHJlY2lwZXM8YnI+K21heTxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNsYXNzPSJw
-cm90b25tYWlsX3F1b3RlIiBzdHlsZT0idW5pY29kZS1iaWRpOiBwbGFpbnRleHQ7ICBwYWRkaW5n
-OiAwcHggMHB4IDBweCAwLjZyZW0gIWltcG9ydGFudDsgbWFyZ2luOiAwcHggIWltcG9ydGFudDsg
-Ym9yZGVyLXN0eWxlOiBzb2xpZCAhaW1wb3J0YW50OyAgYm9yZGVyLWltYWdlOiBub25lICFpbXBv
-cnRhbnQ7IGJvcmRlci13aWR0aDogMHB4IDBweCAwcHggMXB4ICFpbXBvcnRhbnQ7IG1hcmdpbi1i
-bG9jazogMXJlbSAyMHB4ICFpbXBvcnRhbnQ7IG1hcmdpbi1pbmxpbmU6IDBweCAhaW1wb3J0YW50
-OyAgU2FuIEZyYW5jaXNjbyZxdW90OywgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjsgICAg
-IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IGF1dG87IHRleHQtYWxpZ246IHN0YXJ0
-OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5v
-cm1hbDsgd2lkb3dzOiBhdXRvOyB3b3JkLXNwYWNpbmc6IDBweDsgIC13ZWJraXQtdGV4dC1zaXpl
-LWFkanVzdDogbm9uZTsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29y
-YXRpb246IG5vbmU7Ij5hbmQ8YnIgc3R5bGU9InVuaWNvZGUtYmlkaTogcGxhaW50ZXh0OyAiPit3
-ZSd2ZSBjYXNlcyBvZiB0aGlzIGhhcHBlbmluZyBpbiB3ZWxsIGtub3duIHB1YmxpYyByZXBvc2l0
-b3JpZXM8L2Jsb2NrcXVvdGU+IHJlcGFyc2VkIHdoZW4gbm90IGV4cGVjdGVkLiBGb3IgdGhlc2Ug
-cmVhc29ucywgd2hpbHN0IHRoZSBmZXRjaGVyIGNhbiBzdXBwb3J0PGJyPit0YWdzLCB3ZSByZWNv
-bW1lbmQgYmVpbmcgc3BlY2lmaWMgYWJvdXQgcmV2aXNpb25zIGluIHJlY2lwZXMuPGJyPjxicj4g
-Li4gX2dpdHNtLWZldGNoZXI6PGJyPjxicj4tLTxicj4yLjM5LjI8YnI+PGJyPjxicj4tPS09LT0t
-PS09LT0tPS09LT0tPS09LTxicj5MaW5rczogWW91IHJlY2VpdmUgYWxsIG1lc3NhZ2VzIHNlbnQg
-dG8gdGhpcyBncm91cC48YnI+Vmlldy9SZXBseSBPbmxpbmUgKCMxNTAwNCk6IGh0dHBzOi8vbGlz
-dHMub3BlbmVtYmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2ZWwvbWVzc2FnZS8xNTAwNDxicj5NdXRl
-IFRoaXMgVG9waWM6IGh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9tdC8xMDExMTE2MDcv
-NDQ1NDc4Mjxicj5Hcm91cCBPd25lcjogYml0YmFrZS1kZXZlbCtvd25lckBsaXN0cy5vcGVuZW1i
-ZWRkZWQub3JnPGJyPlVuc3Vic2NyaWJlOiBodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcv
-Zy9iaXRiYWtlLWRldmVsL2xlYXZlLzEyMDUxMjQ3LzQ0NTQ3ODIvMTA3MzYyMDI4L3h5enp5IFtw
-YXVsb0BteW5ldmVzLmNvbV08YnI+LT0tPS09LT0tPS09LT0tPS09LT0tPS08YnI+PC9ibG9ja3F1
-b3RlPjxkaXYgZGlyPSJhdXRvIj48YnI+PC9kaXY+Jmd0OyZuYnNwOzxibG9ja3F1b3RlIHR5cGU9
-ImNpdGUiIGNsYXNzPSJwcm90b25tYWlsX3F1b3RlIiBzdHlsZT0idW5pY29kZS1iaWRpOiBwbGFp
-bnRleHQ7ICBwYWRkaW5nOiAwcHggMHB4IDBweCAwLjZyZW0gIWltcG9ydGFudDsgbWFyZ2luOiAw
-cHggIWltcG9ydGFudDsgYm9yZGVyLXN0eWxlOiBzb2xpZCAhaW1wb3J0YW50OyAgYm9yZGVyLWlt
-YWdlOiBub25lICFpbXBvcnRhbnQ7IGJvcmRlci13aWR0aDogMHB4IDBweCAwcHggMXB4ICFpbXBv
-cnRhbnQ7IG1hcmdpbi1ibG9jazogMXJlbSAyMHB4ICFpbXBvcnRhbnQ7IG1hcmdpbi1pbmxpbmU6
-IDBweCAhaW1wb3J0YW50OyAgU2FuIEZyYW5jaXNjbyZxdW90OywgSGVsdmV0aWNhLCBBcmlhbCwg
-c2Fucy1zZXJpZjsgICAgIGxldHRlci1zcGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IGF1dG87IHRl
-eHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsg
-d2hpdGUtc3BhY2U6IG5vcm1hbDsgd2lkb3dzOiBhdXRvOyB3b3JkLXNwYWNpbmc6IDBweDsgIC13
-ZWJraXQtdGV4dC1zaXplLWFkanVzdDogbm9uZTsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDog
-MHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7Ij5hbmQ8YnIgc3R5bGU9InVuaWNvZGUtYmlkaTog
-cGxhaW50ZXh0OyAiPit3ZSd2ZSBjYXNlcyBvZiB0aGlzIGhhcHBlbmluZyBpbiB3ZWxsIGtub3du
-IHB1YmxpYyByZXBvc2l0b3JpZXM8L2Jsb2NrcXVvdGU+SGlzdG9yaWNhbGx5IHRoaXMgaGFwcGVu
-ZWQgd2l0aCB3ZWxsIGtub3duJm5ic3A7cHVibGljIHJlcG9zaXRvcmllcy48ZGl2IGRpcj0iYXV0
-byI+PGJyPjwvZGl2PjxkaXYgZGlyPSJhdXRvIj5XaHkgY2FuIHNvdXJjZSBtaXJyb3JzIGJlIGJ5
-cGFzc2VkPyBCZWNhdXNlICZuYnNwO3RoZSBoYXNoIGNoYW5nZWQgYW5kIHRoZSBtaXJyb3IgZG9l
-cyBub3QgaGF2ZSBpdD8gSWYgc28gaXQgd291bGQgYmUgbmljZSB0byBjbGFyaWZ5IGl0LjxjYXJl
-dD48L2NhcmV0PjwvZGl2PjwvYm9keT48L2h0bWw+
+I have rm_work enabled so tmp is not that big except for the deployed files.
 
+Cheers,
 
---b1_VsnJRqoQAv0ORmcvhIXeMGi5lH5JQfEoS5UWmdlbvQ--
-
+-Mikko
 
