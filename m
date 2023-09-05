@@ -1,73 +1,111 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A42C71153
-	for <webhook@archiver.kernel.org>; Mon,  4 Sep 2023 17:54:26 +0000 (UTC)
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
- by mx.groups.io with SMTP id smtpd.web10.3125.1693850057250318963
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF24C83F2C
+	for <webhook@archiver.kernel.org>; Tue,  5 Sep 2023 07:14:50 +0000 (UTC)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+ by mx.groups.io with SMTP id smtpd.web10.16044.1693898090110217968
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 04 Sep 2023 10:54:17 -0700
+ Tue, 05 Sep 2023 00:14:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=KIyw8e9X;
- spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9DF0A20007;
-	Mon,  4 Sep 2023 17:54:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1693850055;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=U2mVYUpKktpJDOLKeEFnWHNiL3rBZ/Nlx2sKFWTPt4A=;
-	b=KIyw8e9XuZLAlqZrCs5BlXu3LwU5hs37QupZbu5/fgS1dZitGgzN0ajvh1rDen0R14PRvF
-	dyWjO5Hlp1jU5SUos8TDgFhBwc9QeLtNLCuggc2yv1vS8D6d9S3PE9aZEccWr7rIhELrQV
-	jfYYoQH4BPUcOA128MIwGxXhESiQHd94X79UeM6HTevWnbhddH5crvbTxyTzRnODSiuV01
-	XWZIObJ8sXvkzdEVcAf6dRT+QFruyHA/j5U0/ADj+Zdlm61+zrnNwDGKR89s4REN6yfWAY
-	N1VC0kfWHLgWNI/JxeL3FNqruNH/RXcWDBSlIH5aMBt5uBj/FRfLTRyzP7xbdA==
-From: michael.opdenacker@bootlin.com
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QWX9/Wkw;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.167.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5008faf4456so3367086e87.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 05 Sep 2023 00:14:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1693898088; x=1694502888; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qgY7dnjqnr+Cwhy/9xmSGfMqzEMqpoxDGCST2aPJcwg=;
+        b=QWX9/WkwZg7OAlmhisqbW4UfpMoN8+5Zpe/JdhhiXlLHLv8D+yiTAKjWqRvyiKSnY0
+         cfoJoi5U/9vHi7IZa1Fi06/JWb6nV4KnO2wWVvtTR6wgZIYvkTQwVQeJxlo93Ld1OICu
+         YyES3/eHkjJfAoE6Rj7KxO6/RBJnchHrChbVU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693898088; x=1694502888;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qgY7dnjqnr+Cwhy/9xmSGfMqzEMqpoxDGCST2aPJcwg=;
+        b=Q6GlFtZNfNbTWGBMl2qWbhbPwFmx4ntykFMOelmwLkFdtAJRnWZTL22tJtnvdlMz40
+         qfJQugT0oYLJugyp7k/iPUbg56IDWly5dDHPSlKb7M+NLsWHiRfg3mcZAX/QZc96ODmE
+         UEt+f7x4IiDeP09SzI3bp5nyrIG70W+0mRN3m3iZsl5Enqb1/u21R5+d2bgUkNwPuDR0
+         fw/1mKj9Vj2S2CFtKhmRywkaaAp33HUrml3+SmlJ8Or36y/pj0WGUgrLRqg6Xpq1UL8E
+         9ydHTBED3pniZRMOXWc5rrMpVsg8QpD0+xp76MPNmyVILPVhllPBY8KzoWlkUGKfGw2f
+         AhEw==
+X-Gm-Message-State: AOJu0Yy+h+fa6+IJwHLDnp4qyKKrIgRuGafYGyfHB+ayt+3EKfdMJ9K5
+	BJVOYKgngMYaZjjoMbZY/+zaNXV0fm6UYlsu8oI=
+X-Google-Smtp-Source: AGHT+IEaVBh0ApYymE1g3Renq7WvOBjZ+i/szFWF1x3Qy6FflWW4xxioaXwm5CwUxbdqAE9yCQGbDQ==
+X-Received: by 2002:a05:6512:3083:b0:500:9524:f733 with SMTP id z3-20020a056512308300b005009524f733mr9568110lfd.20.1693898087620;
+        Tue, 05 Sep 2023 00:14:47 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:9cbb:8ec6:1cb5:104e])
+        by smtp.gmail.com with ESMTPSA id n23-20020a1c7217000000b003fee567235bsm19138161wmc.1.2023.09.05.00.14.47
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Sep 2023 00:14:47 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH] doc: bitbake-user-manual: remove reference to SSTATE_MIRRORS variable
-Date: Mon,  4 Sep 2023 19:53:52 +0200
-Message-Id: <20230904175352.52769-1-michael.opdenacker@bootlin.com>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH] server/process: Add more timing debug
+Date: Tue,  5 Sep 2023 08:14:46 +0100
+Message-Id: <20230905071446.2784798-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: michael.opdenacker@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 04 Sep 2023 17:54:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15012
+ <bitbake-devel@lists.openembedded.org>; Tue, 05 Sep 2023 07:14:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15013
 
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+It is helpful to have timestamps on the ping failures so that they
+can be matched against the bitbake logs. It is also useful to understand
+how long the server takes for form a reply verses when it is sent.
 
-This variable is implemented in OE-Core, and therefore
-only documented in the Yocto Project manual.
-
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ lib/bb/server/process.py | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index f5723d67..ec3797db 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -707,8 +707,9 @@ The fetcher requires that the machine has valid credentials for accessing the
- chosen bucket. Instructions for authentication can be found in the
- `Google Cloud documentation <https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev>`__.
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index f62faed000..40cb99bc97 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -38,8 +38,11 @@ logger = logging.getLogger('BitBake')
+ class ProcessTimeout(SystemExit):
+     pass
  
--The fetcher can be used for fetching sstate artifacts from a GCS bucket by
--specifying the :term:`SSTATE_MIRRORS` variable as shown below::
-+If it used from the OpenEmbedded build system, the fetcher can be used for
-+fetching sstate artifacts from a GCS bucket by specifying the
-+``SSTATE_MIRRORS`` variable as shown below::
++def currenttime():
++    return datetime.datetime.now().strftime('%H:%M:%S.%f')
++
+ def serverlog(msg):
+-    print(str(os.getpid()) + " " +  datetime.datetime.now().strftime('%H:%M:%S.%f') + " " + msg)
++    print(str(os.getpid()) + " " +  currenttime() + " " + msg)
+     sys.stdout.flush()
  
-    SSTATE_MIRRORS ?= "\
-        file://.* gs://<bucket name>/PATH \
+ #
+@@ -289,7 +292,9 @@ class ProcessServer():
+                     continue
+                 try:
+                     serverlog("Running command %s" % command)
+-                    self.command_channel_reply.send(self.cooker.command.runCommand(command, self))
++                    reply = self.cooker.command.runCommand(command, self)
++                    serverlog("Sending reply %s" % repr(reply))
++                    self.command_channel_reply.send(reply)
+                     serverlog("Command Completed (socket: %s)" % os.path.exists(self.sockname))
+                 except Exception as e:
+                    stack = traceback.format_exc()
+@@ -502,9 +507,9 @@ class ServerCommunicator():
+     def runCommand(self, command):
+         self.connection.send(command)
+         if not self.recv.poll(30):
+-            logger.info("No reply from server in 30s (for command %s)" % command[0])
++            logger.info("No reply from server in 30s (for command %s at %s)" % (command[0], currenttime()))
+             if not self.recv.poll(30):
+-                raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server (60s)")
++                raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server (60s at %s)" % currenttime())
+         ret, exc = self.recv.get()
+         # Should probably turn all exceptions in exc back into exceptions?
+         # For now, at least handle BBHandledException
 -- 
-2.34.1
+2.39.2
 
 
