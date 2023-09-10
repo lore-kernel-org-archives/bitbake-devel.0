@@ -1,96 +1,89 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <rs@ti.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59A0C71153
-	for <webhook@archiver.kernel.org>; Sun, 10 Sep 2023 19:36:11 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web11.43125.1694374565571693925
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAC6C71153
+	for <webhook@archiver.kernel.org>; Sun, 10 Sep 2023 19:37:21 +0000 (UTC)
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+ by mx.groups.io with SMTP id smtpd.web11.43150.1694374632823534190
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 10 Sep 2023 12:36:06 -0700
+ Sun, 10 Sep 2023 12:37:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cLnaUZJF;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-401bdff4cb4so40015005e9.3
-        for <bitbake-devel@lists.openembedded.org>; Sun, 10 Sep 2023 12:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1694374564; x=1694979364; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qLbg7Tm4O9z49qOYO6fB64s398BWArcUK5jKlS8nFAc=;
-        b=cLnaUZJFkt4OUfbPwK8bhQjSbJ+PY28DM3iw2TtN4+HE1uNRws6/GABT9dWfp6vO+k
-         p+D5YR4Ts75GyvwFqYatjS6/4rYuCcc3iDKnjplmdvkTu6YzlE77U8W1Gm4YCKMA7As2
-         PdY4vFVpVSAugG8k/7fK4xIKEEoqd5AZYVbSs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694374564; x=1694979364;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qLbg7Tm4O9z49qOYO6fB64s398BWArcUK5jKlS8nFAc=;
-        b=ruPRCyVUhVeeenFNuws4PX90EDnffw6cdV2N6RrgcBCglOpzyrj4iglEesTLuJsDge
-         Jlj6zyzWqBLok9BafNuhtGxiZk0QtSNIww7HXtcHcNWofXdF3dDLKBqeKxJ2t8W00J5E
-         kNPCEtfjN4lZfULZQCouH9BEyegJTSP5t4bCZPOkVaEoEw0vAbsy9Pjyd2vv3pJOX2+M
-         Dl2Fbq4ysApG/iCkkZGO3hS1FSScMHk+9ee2ForgxtoZXq+SXxYy9G8TMprGFivxxVEc
-         XSVZABIlsyFsgSABx4L/47ZDm5yXGRfcbiGIfd60y1Ngy4FY2nlMkcJ1Z4WClCMW9OiT
-         O/7A==
-X-Gm-Message-State: AOJu0Yy6wiELqHrQXlhI8LDSy6B1MNBZT5n5nb3hHcuV57JZjVIQ27eA
-	rfqEkroH07QnQZZvT0SldPr5RQ==
-X-Google-Smtp-Source: AGHT+IF4orQ+eyVmOAJcBUXvDp4tgTajof0KdCeyS6JvqrYLLEu8c5C4XEBFBfQTSPM6i64fTqxqrQ==
-X-Received: by 2002:a05:600c:ad3:b0:401:bcd9:4871 with SMTP id c19-20020a05600c0ad300b00401bcd94871mr7007841wmr.21.1694374563891;
-        Sun, 10 Sep 2023 12:36:03 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:5580:ed73:9c6:f365? ([2001:8b0:aba:5f3c:5580:ed73:9c6:f365])
-        by smtp.gmail.com with ESMTPSA id x5-20020a1c7c05000000b003fef5402d2dsm11175898wmc.8.2023.09.10.12.36.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Sep 2023 12:36:03 -0700 (PDT)
-Message-ID: <e791771b8eae8d0bac91bee84551795923d200d0.camel@linuxfoundation.org>
-Subject: Re: [PATCH] bitbake-worker: remove the network flag
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: rs@ti.com, alex.kanavin@gmail.com
-Cc: bitbake-devel@lists.openembedded.org, denis@denix.org, reatmon@ti.com
-Date: Sun, 10 Sep 2023 20:35:57 +0100
-In-Reply-To: <20230910191445.564413-2-rs@ti.com>
-References: <20230910191445.564413-2-rs@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+ dkim=pass header.i=@ti.com header.s=ti-com-17Q1 header.b=BegTJU02;
+ spf=pass (domain: ti.com, ip: 198.47.23.248, mailfrom: rs@ti.com)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 38AJb8GO018242;
+	Sun, 10 Sep 2023 14:37:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1694374628;
+	bh=mN1VaqnFnLN1OtO338jy37lrzrHGAaMhaJlcpTGOdzk=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=BegTJU02+GnXj17QOK0s2ZdIrEEvvRNgdRtCpqsGMyrUHua6FDix6Xf2IKHV/IDqC
+	 XEr5OEtIeBGgSy0o6FUvynLffJXLvJRaDWQSW47x7CYUczXg+no48e8boLgECNBj0D
+	 qydc5+UjoZrys9f3rONnX3LxC4GWjORr5BlOoJZ0=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 38AJb7f1050674
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 10 Sep 2023 14:37:07 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 10
+ Sep 2023 14:37:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 10 Sep 2023 14:37:07 -0500
+Received: from [128.247.81.144] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+	by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 38AJb7k5039211;
+	Sun, 10 Sep 2023 14:37:07 -0500
+Message-ID: <3a26f3d8-b0aa-4ebd-97bb-aaa36c5eed9d@ti.com>
+Date: Sun, 10 Sep 2023 14:37:07 -0500
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: [PATCH] bitbake-worker: remove the network flag
+Content-Language: en-US, en-US-large
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+CC: <richard.purdie@linuxfoundation.org>,
+        <bitbake-devel@lists.openembedded.org>, <denis@denix.org>,
+        <reatmon@ti.com>
+References: <20230910191445.564413-2-rs@ti.com>
+ <CANNYZj_SNEM1yGkF28vv=oa+89DKptxTJmVAA_mb8qCwBtYUdA@mail.gmail.com>
+From: Randolph Sapp <rs@ti.com>
+In-Reply-To: <CANNYZj_SNEM1yGkF28vv=oa+89DKptxTJmVAA_mb8qCwBtYUdA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 10 Sep 2023 19:36:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15020
+ <bitbake-devel@lists.openembedded.org>; Sun, 10 Sep 2023 19:37:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15021
 
-On Sun, 2023-09-10 at 14:14 -0500, rs@ti.com wrote:
-> From: Randolph Sapp <rs@ti.com>
->=20
-> The network flag does not respect proxies as the fetch stage does [1].
-> As such it only works for some users at the whim of the recipe writer.
->=20
-> This introduces an issue downstream as the build results are now
-> dependent on the network architecture of the builder, the recipe in
-> question, and the combination of proxy variables they choose to export
-> in addition to the normal host variables that affect builds (host tool
-> version, build environment, etc).
->=20
-> This is far more indeterminate than a build system that properly exports
-> proxy variables. If abuse of the network tag is an issue, then the
-> network tag should be removed in it's current state.
->=20
-> [1] https://lists.openembedded.org/g/bitbake-devel/topic/100924096
->=20
-> Signed-off-by: Randolph Sapp <rs@ti.com>
-> ---
->=20
-> The logical followup to my last patch, even if it does seem a little extr=
-eme.
+On 9/10/23 14:33, Alexander Kanavin wrote:
+> On Sun, 10 Sept 2023 at 21:15, <rs@ti.com> wrote:
+> 
+>> --  ``[network]``: When set to "1", allows a task to access the network. By
+>> -   default, only the ``do_fetch`` task is granted network access. Recipes
+>> -   shouldn't access the network outside of ``do_fetch`` as it usually
+>> -   undermines fetcher source mirroring, image and licence manifests, software
+>> -   auditing and supply chain security.
+> 
+> These reasons still stand.
+> 
+> The only correct solution is to write a fetcher that can be used in
+> SRC_URI. This was communicated to you previously. So please: lay out
+> what is it exactly you're doing outside of do_fetch that needs the
+> network, and we'll try to figure out how to engineer it with a
+> fetcher.
+> 
+> Alex
 
-My logical followup is to say no, I'm not merging this. The reason is
-self evident.
+I'm aware of the proper solution, but this will address the issues of 
+network flag abuse that other layers are introducing.
 
-We should ensure custom fetch code correctly accounts for proxies.
+My issue is that by exposing the network flag like this any layer can 
+come along an introduce build complications. If that's the case, why 
+expose this flag at all?
 
-Cheers,
-
-Richard
+Randolph
 
