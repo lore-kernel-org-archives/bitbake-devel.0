@@ -1,76 +1,107 @@
-Return-Path: <alberto@pianon.eu>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D304EE3F29
-	for <webhook@archiver.kernel.org>; Tue, 12 Sep 2023 20:55:46 +0000 (UTC)
-Received: from server3.justice4all.it (server3.justice4all.it [95.217.19.36])
- by mx.groups.io with SMTP id smtpd.web10.1776.1694552144368716942
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88A8EE3F29
+	for <webhook@archiver.kernel.org>; Tue, 12 Sep 2023 21:05:26 +0000 (UTC)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+ by mx.groups.io with SMTP id smtpd.web11.1940.1694552723548972774
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 12 Sep 2023 13:55:45 -0700
+ Tue, 12 Sep 2023 14:05:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pianon.eu header.s=mail20151219 header.b=0k98hdMo;
- spf=pass (domain: pianon.eu, ip: 95.217.19.36, mailfrom: alberto@pianon.eu)
-Received: from localhost (localhost [127.0.0.1])
-	by server3.justice4all.it (Postfix) with ESMTP id F0D895C0096;
-	Tue, 12 Sep 2023 22:55:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=pianon.eu; h=
-	message-id:subject:subject:from:from:date:date
-	:content-transfer-encoding:content-type:content-type
-	:mime-version; s=mail20151219; t=1694552141; x=1696366542; bh=LU
-	iOzwsoawSYoKtszjYTBaYmyxOHL9/m/9TvD0+yeXA=; b=0k98hdMo38sgEm86ys
-	wawkB61f7yyTjG4D6EWaoLIWPrq8vhsexP65B1EInWnUmKsXjWeUJGJgYi62ZhTx
-	YJ8cRQQbOLYbRZ0SQyOHR03A1EFPQ3AekE+N7Vls1QOaO36TJRz9E9JYZndOiwj6
-	eSCEW2gvr9DI5WFcExSq4PNQs=
-X-Virus-Scanned: Debian amavisd-new at server3.justice4all.it
-Received: from server3.justice4all.it ([127.0.0.1])
-	by localhost (server3.justice4all.it [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id HdZRooUbbRMn; Tue, 12 Sep 2023 22:55:41 +0200 (CEST)
-Received: from pianon.eu (localhost [127.0.0.1])
-	(Authenticated sender: alberto@pianon.eu)
-	by server3.justice4all.it (Postfix) with ESMTPA id 5B1365C0095;
-	Tue, 12 Sep 2023 22:55:41 +0200 (CEST)
+ dkim=pass header.i=@gmail.com header.s=20221208 header.b=JmOHrF2+;
+ spf=pass (domain: gmail.com, ip: 209.85.208.178, mailfrom: jpewhacker@gmail.com)
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2bcbfb3705dso98988351fa.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Sep 2023 14:05:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694552721; x=1695157521; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FR9wRDvyYZCsMY21vJIq90OXCwR+tA/3/R52+wPGDqM=;
+        b=JmOHrF2+EpE/PXx4NZ//MNheURWa5ROl0E8nn/DW2KMwEwNoman2ufrO4iFUMNhK+F
+         DBKYrvi6vte0ENNDUCdj4B/nFKLlWud0CmxTLrwy6ba0mBTrmAiJ9XY40jBLLVpyj7PC
+         /WuzzX00Hyrw5mpXUq/84NKesRBapgusKyD8XjgYcQDPfoKzzaYxoBPhD77xTKaHOJPW
+         QX7lwA1DRNXOnBhwH6KC/rEhH1ExM5nc0Off7AT2HveVR9ciXe7gOOeafQu58uI4gsG0
+         lgyBHTS8C/ivpjWCPw0+0HTjDDgY8VRDLPpryJjrjiUk3lQ0qgd62CDV7zwbcJCpbCin
+         z7Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694552721; x=1695157521;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FR9wRDvyYZCsMY21vJIq90OXCwR+tA/3/R52+wPGDqM=;
+        b=ktnEJF7+vtMEIqiYV0zv7VK1Y+zfVJBuWg5/Zl5XJSB10ZTWSCvCjylcPldXgNm/Ud
+         UPOdYaTGR6Ki+HGm8jlu2Pkk67JG2nhrKdOlXdJg44t9nG77fqX6GSYcRb8k/fjOamJx
+         tflFhkE8xh7gzKU/kDbhqx8eWK5G1wQdPbZDZlb5VMvGQrYtonCLltSb3X6/T74nZi82
+         OY80jCq9nMgV5xyVoFza/BOBke81jY1nWy4UEJGfMkp4bVGHYm7EjpkWyKrXfA+mvIlx
+         XX6+TGcvgQoaGuLoTw8lCgQ8S3acg+OP7vCiQoUn0aV2uKHOijSav62cHx5H2E0g29S9
+         aNkw==
+X-Gm-Message-State: AOJu0Yw5m8/0ZpnrhU25ZwUsqg6xKdB9UYmJfYFg/JbsoXLLosJtjhDV
+	joOy+2kTUkZ1TJC3MdbS+0Ado07T3JrEw/ndlJY=
+X-Google-Smtp-Source: AGHT+IHofePvVQVU895ffaVkpVMKzrFlXQt1ZloSFl7UK1nwK9z7TcAlmHTn/TYgD1zHb8hjG2lZLQMF79KKjZkkiMQ=
+X-Received: by 2002:a05:6512:686:b0:4fe:2c6:1d76 with SMTP id
+ t6-20020a056512068600b004fe02c61d76mr619167lfe.21.1694552721187; Tue, 12 Sep
+ 2023 14:05:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Tue, 12 Sep 2023 22:55:41 +0200
-From: Alberto Pianon <alberto@pianon.eu>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>, Bitbake Devel
- <bitbake-devel@lists.openembedded.org>
-Cc: 'Carlo Piana' <carlo@piana.eu>, Joshua Watt <jpewhacker@gmail.com>
-Subject: initial idea for hooks needed for source tracing
-Message-ID: <7f5d05fe554d232c300b2604addc452a@pianon.eu>
-X-Sender: alberto@pianon.eu
+References: <7f5d05fe554d232c300b2604addc452a@pianon.eu>
+In-Reply-To: <7f5d05fe554d232c300b2604addc452a@pianon.eu>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Tue, 12 Sep 2023 15:05:09 -0600
+Message-ID: <CAJdd5Gb5wn7GG-1T_5CYjyESdBXU1RGghVYkAtAwF_GNBpnayg@mail.gmail.com>
+Subject: Re: initial idea for hooks needed for source tracing
+To: Alberto Pianon <alberto@pianon.eu>
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	Bitbake Devel <bitbake-devel@lists.openembedded.org>, Carlo Piana <carlo@piana.eu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 12 Sep 2023 20:55:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15033
+ <bitbake-devel@lists.openembedded.org>; Tue, 12 Sep 2023 21:05:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15034
 
-Hi Richard,
+On Tue, Sep 12, 2023 at 2:55=E2=80=AFPM Alberto Pianon <alberto@pianon.eu> =
+wrote:
+>
+> Hi Richard,
+>
+> as I said at today's meeting there is no hurry, but right after the
+> meeting I had an idea and I wanted to fix it in my mind and test it
+> before losing it :)
+>
+> It's just a temporary/WIP patch, but it should not be too far from a
+> working implementation of the hooks we were talking about:
+>
+> http://cgit.openembedded.org/bitbake-contrib/commit/?h=3Dalpianon/srctrac=
+e4&id=3Decb065e7fe2eece566cd387e24abc3b6079146d8
+>
+> There is no interference nor modification to the unpack process any
+> more, just collection of needed metadata through the urldata object.
+> Modifications to the core unpack function are minimal and (I hope!)
+> straightforward, and there is no fetcher-specific logic in it ant more.
+>
+> When you find some time, could you please have a look and tell me if
+> this may be the right direction?
 
-as I said at today's meeting there is no hurry, but right after the 
-meeting I had an idea and I wanted to fix it in my mind and test it 
-before losing it :)
+I think this is much better; there's still a few rough edges
+(`function.__name__ =3D=3D "unpack_submodules"` is kinda gross :), but
+this is much simpler and I think easier to understand. Also, I feel
+like this is actually reasonably testable; presumably there would be
+some mechanism to "plug" a different Trace class in instead of the
+pre-canned one, and tests could be written that use a special test
+implementation of that class to verify that it is being called
+correctly. This also means your special source tracing classes can
+live elsewhere instead of needing to be integrated into bitbake
+immediately
 
-It's just a temporary/WIP patch, but it should not be too far from a 
-working implementation of the hooks we were talking about:
+My thoughts at least.
 
-http://cgit.openembedded.org/bitbake-contrib/commit/?h=alpianon/srctrace4&id=ecb065e7fe2eece566cd387e24abc3b6079146d8
-
-There is no interference nor modification to the unpack process any 
-more, just collection of needed metadata through the urldata object.
-Modifications to the core unpack function are minimal and (I hope!) 
-straightforward, and there is no fetcher-specific logic in it ant more.
-
-When you find some time, could you please have a look and tell me if 
-this may be the right direction?
-
-Thanks!
-
-Cheers
-
-Alberto
-
+>
+> Thanks!
+>
+> Cheers
+>
+> Alberto
+>
 
