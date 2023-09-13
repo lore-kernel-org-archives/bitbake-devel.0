@@ -1,319 +1,228 @@
-Return-Path: <martin.jansa@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED712CA5530
-	for <webhook@archiver.kernel.org>; Wed, 13 Sep 2023 09:42:43 +0000 (UTC)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
- by mx.groups.io with SMTP id smtpd.web11.7814.1694598154026319911
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E43AEDEC4A
+	for <webhook@archiver.kernel.org>; Wed, 13 Sep 2023 12:12:45 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web11.10255.1694607161664746342
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 13 Sep 2023 02:42:34 -0700
+ Wed, 13 Sep 2023 05:12:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20221208 header.b=LRea7iDa;
- spf=pass (domain: gmail.com, ip: 209.85.221.42, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-31fa666000dso3105838f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 02:42:33 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=iFztf8RK;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-401da71b7c5so76211275e9.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 05:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694598152; x=1695202952; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=V2IX38637BgGm2WMTwvCzuE5ERo62K/+qP3/0lSOqEU=;
-        b=LRea7iDari5JuyUqOfdWJ91Twn0iiH5aspRC11W0tad9RwhD76cENaKsnQJbxidlLq
-         OlUyb0ZfzyM66NWr7OZY+L99GH3m9rQt0ldlYROTB+zZua1VjU2+bFOOi/4djuETqjSl
-         8SDijdt4xK2qqGfxQNE8WBZzH3cEuO1Yn8QXPRiNf44ygblmafWlfFgZU2mfKlerST4t
-         TDJDOn83/5BcPCFb611SvdZfuLVxvlHXzIGQsDbVfpUwu/UNEaSZag11JMDkpfXVXm/l
-         J6jtV5dHbR3U3VgbaNTDJRfM2phXJ1ZYgD2aNz88PaDIAWrtmlsdFgcjbEUSM64w0NM1
-         r4Pw==
+        d=linuxfoundation.org; s=google; t=1694607160; x=1695211960; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=j5cDX1vzxJsLYsdCzAIQyBtNp/jr3ONagDcKwhmok+0=;
+        b=iFztf8RKVgV1m63682VffLeuTd/9+AT8R/Xkk0zaXfPXpDaXehnEfkGk5vRdVf8qm0
+         wvuTJ9qtX5BFDiI7vfJTho0FAiuE9C0ZmYK9SY7kzZKGVoByVYPRPaTB4y7z4+pD08CH
+         bEQ68dsncG4/jqyt2fg6cXFA08QxPWbVUXqQY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694598152; x=1695202952;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V2IX38637BgGm2WMTwvCzuE5ERo62K/+qP3/0lSOqEU=;
-        b=SEv5WGeeznOA3LW57ZNxNm9kR7ixycjp+ZyuAno0ziYGk/fy59hpFiYslgVzChfxMe
-         BOgH/fmwArxRvTVCD2ABkFYTOEwUQwB3xefjdDzAYBMC4QyHyNBlE47UsmeOSuY7VBsk
-         Y1xg6jpiLs3SeJrHvqMhPC7B9CoYTzqF7FrdTpYJpP9dHE9GIwo57q4zbgbBpXDnCl5U
-         Y+oNqeeZVk/BD7ifUCHw0z+14dWd/thrJhH6ioNeHf6H9BJ4T7LaTVAbOqIBjIzKzeai
-         +oZCgeiDWyxfTmmxwjgeHQNBHxpd2/aF01R0f48hwYkt1/ynGYGb08YZIM6hxZPy8JKo
-         SW4g==
-X-Gm-Message-State: AOJu0YxUqXbdIr8Z6k3ldXjhRfCt4plKXyyWAWB4GvDdQnxBHNqqGtLq
-	u6gz4dfKXigVeuspdSBslOW9b3p4KRIKLjLaLRI=
-X-Google-Smtp-Source: AGHT+IF6T+3koAk6G5rJTh4kmkxWCHOewoB8AnbQtOow5btMorkQ/EmgPx00feYMXnWKyEaOmoPMQtsP6XUaLbEdwUs=
-X-Received: by 2002:adf:f80b:0:b0:316:fb57:26d1 with SMTP id
- s11-20020adff80b000000b00316fb5726d1mr1701137wrp.8.1694598151674; Wed, 13 Sep
- 2023 02:42:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694607160; x=1695211960;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=j5cDX1vzxJsLYsdCzAIQyBtNp/jr3ONagDcKwhmok+0=;
+        b=UtgXjbEH+BQI9obOxpM48x67FbpdSWP5CA/12rbu0rAK4hm8s/P10hqodVZGz72xmU
+         4BRw3OOoZGAYyMYlrta693ph6n6tzZ9nyCzprtd3JZn8gWi9G976V7fruYg2OrEQmXad
+         aNfWCmLGblH1z8Uu8bbZAGwAkcWnvUQsFuO0Waf4VXBOeoh4vqNk7DdQ29OuxNPSEep5
+         KOzRfDx3ejXOJ86+UNZIvC9UY8thbWeXwY6hHuMDPxUZXT7Y1Tsl4aGdvDV18dPS44Y1
+         PibWNOlR6RuWXNiwIpVJxLR9n4lhyIsRwW1+Gecl5gNGJnGGeHKsBK5gTWmBDYZ2GC+D
+         zTOQ==
+X-Gm-Message-State: AOJu0Yz17fTFSVGDR15j4P14C1PRndlOcnmXm9FPIAVbiwjEOJYxZC6z
+	w/teGOalkHBnWaYbtpYMC5DLOw==
+X-Google-Smtp-Source: AGHT+IHzzClHeG79Ojf6f8TKFGhvQgKfvcZ/Ag+7fgUGZm4XsFqBry7tQsDZ8+QlNBUxRDsVcfBkdg==
+X-Received: by 2002:a05:600c:ac5:b0:401:d803:624f with SMTP id c5-20020a05600c0ac500b00401d803624fmr1778608wmr.4.1694607159869;
+        Wed, 13 Sep 2023 05:12:39 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:2a8:4888:9029:4207? ([2001:8b0:aba:5f3c:2a8:4888:9029:4207])
+        by smtp.gmail.com with ESMTPSA id f22-20020a1c6a16000000b003fbe4cecc3bsm1871629wmc.16.2023.09.13.05.12.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Sep 2023 05:12:39 -0700 (PDT)
+Message-ID: <fa1abc9099171f8fb26c60fd29bc4dfd15376f8a.camel@linuxfoundation.org>
+Subject: Re: initial idea for hooks needed for source tracing
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alberto Pianon <alberto@pianon.eu>, Bitbake Devel
+	 <bitbake-devel@lists.openembedded.org>
+Cc: 'Carlo Piana' <carlo@piana.eu>, Joshua Watt <jpewhacker@gmail.com>
+Date: Wed, 13 Sep 2023 13:12:38 +0100
+In-Reply-To: <7f5d05fe554d232c300b2604addc452a@pianon.eu>
+References: <7f5d05fe554d232c300b2604addc452a@pianon.eu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
 MIME-Version: 1.0
-References: <20230913084344.29928-1-mikko.rapeli@linaro.org>
- <969bbf65ba6459eedd8df5a3b2cc3f378fdf05d2.camel@linuxfoundation.org>
- <ZQF7NWTYQQvVX3JE@nuoska> <ee62b58ba8e8b1bd085631b8fdd55d0dad698b2e.camel@linuxfoundation.org>
-In-Reply-To: <ee62b58ba8e8b1bd085631b8fdd55d0dad698b2e.camel@linuxfoundation.org>
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Wed, 13 Sep 2023 11:42:15 +0200
-Message-ID: <CA+chaQdO_cYPxeT1Ss1GhYdcWRenBy+1eYUH4675YdChqeTY4Q@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] bitbake: fetch2: git: revert path checks
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: Mikko Rapeli <mikko.rapeli@linaro.org>, bitbake-devel@lists.openembedded.org, 
-	Joshua Watt <JPEWhacker@gmail.com>
-Content-Type: multipart/alternative; boundary="000000000000de21c606053a60e1"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 09:42:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15046
+ <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 12:12:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15047
 
---000000000000de21c606053a60e1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, 2023-09-12 at 22:55 +0200, Alberto Pianon wrote:
+> as I said at today's meeting there is no hurry, but right after the=20
+> meeting I had an idea and I wanted to fix it in my mind and test it=20
+> before losing it :)
+>=20
+> It's just a temporary/WIP patch, but it should not be too far from a=20
+> working implementation of the hooks we were talking about:
+>=20
+> http://cgit.openembedded.org/bitbake-contrib/commit/?h=3Dalpianon/srctrac=
+e4&id=3Decb065e7fe2eece566cd387e24abc3b6079146d8
+>=20
+> There is no interference nor modification to the unpack process any=20
+> more, just collection of needed metadata through the urldata object.
+> Modifications to the core unpack function are minimal and (I hope!)=20
+> straightforward, and there is no fetcher-specific logic in it ant more.
+>=20
+> When you find some time, could you please have a look and tell me if=20
+> this may be the right direction?
 
-FWIW: I'm also seeing warnings like:
+I think what we should do for now is something like the code below,
+basically to instrument the unpack process but not change it's code.
 
-WARNING: Top level directory
-'/data001/work/downloads/git2/git.libssh.org.projects.libssh.git' doesn't
-match expected
-'/mnt/mirror-write/downloads/git2/git.libssh.org.projects.libssh.git'.
-Re-cloning
+This leaves all the "messy" state engine pieces you need to your own
+backend where you can develop them as needed.
 
-Where /mnt/mirror-write/downloads/ is configured DL_DIR and
-/data001/work/downloads/ was probably the DL_DIR of the jenkins jobs which
-originally fetched the libssh and created the tarball with it for premirror=
-.
+Obviously you'd need to implement something to swap unpack_tracer to
+your own module but that shouldn't be too difficult to do. I don't
+really like globals but for this particular situation, it is probably
+inevitable. I am limiting the use of the global to __init__.py
+deliberately.
+
+I only converted crate.py as an example but I think this approach
+should work for the other modules too.
+
+Some general thoughts on various things:
+
+* destdir is a problematic name to have in the urldata object as it is
+easily confused with a concept used in do_install tasks. "unpackdir"
+would have been more accurate and less confusing. Obviously it could
+easily be renamed in your patches and it is following naming within the
+fetchers but I think it is better to use a clearer name. Something to
+keep in mind in the tracing code in general.
+
+* I don't like the parameters that were being added to unpack()
+(checkout_destdir and is_module) as their meaning is unclear and appear
+fetcher module specific. The intention of a generic "tracer" module
+pointer is clear.
+
+* As we discussed, the unpack to a temp location and move into position
+seemed like a good idea but the implementation is too complex
+unfortunately. Sorry to point in the wrong direction on that one.
+
+* Adding any kind of unpackdir derived directory to urldata in general
+seems like it is a bad idea as it is only valid for the life of the
+unpack() call. When I suggested poking into ud, I had something like
+the patch below in mind where we can use it to help the tracing without
+adding more parameters, instead using function calls.
+
+* Ultimately we may need to have some basic tracer by default, mainly
+to get a idea of the end result of the fetching. I remain unconvinced
+we need to map every file back to a specific entry in SRC_URI though.
+
+* Ideally the "unpack_type" parameter to DummyUnpackTracer might not be
+needed, or becomes optional.
+
 
 Cheers,
 
-On Wed, Sep 13, 2023 at 11:22=E2=80=AFAM Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+Richard
 
-> On Wed, 2023-09-13 at 12:04 +0300, Mikko Rapeli wrote:
-> > Hi,
-> >
-> > On Wed, Sep 13, 2023 at 09:51:39AM +0100, Richard Purdie wrote:
-> > > On Wed, 2023-09-13 at 11:43 +0300, Mikko Rapeli wrote:
-> > > > Commit 10f38157a069cb6938323cadd5e523037a29ace9
-> > > > triggers re-clones of uptodate repositories when their
-> > > > access path changes. This is wrong. It is enough that
-> > > > needed commits are found from the git repo. For example
-> > > > when same DL_DIR is accessed using two different paths
-> > > > due to a symlink, then the resulting absolute paths will
-> > > > differ but the content is the same. Trust the content.
-> > > >
-> > > > Avoids extra downloads of large repositories like linux-yocto
-> > > > for kernel when the local cache was already uptodate.
-> > > >
-> > > > Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
-> > > > ---
-> > > >  bitbake/lib/bb/fetch2/git.py | 14 +-------------
-> > > >  1 file changed, 1 insertion(+), 13 deletions(-)
-> > > >
-> > > > diff --git a/bitbake/lib/bb/fetch2/git.py
-> b/bitbake/lib/bb/fetch2/git.py
-> > > > index e11271b757..0c547ea303 100644
-> > > > --- a/bitbake/lib/bb/fetch2/git.py
-> > > > +++ b/bitbake/lib/bb/fetch2/git.py
-> > > > @@ -371,19 +371,7 @@ class Git(FetchMethod):
-> > > >              # The directory may exist, but not be the top level of
-> a bare git
-> > > >              # repository in which case it needs to be deleted and
-> re-cloned.
-> > > >              try:
-> > > > -                # Since clones can be bare, use --absolute-git-dir
-> instead of --show-toplevel
-> > > > -                output =3D runfetchcmd("LANG=3DC %s rev-parse
-> --absolute-git-dir" % ud.basecmd, d, workdir=3Dud.clonedir)
-> > > > -
-> > > > -                toplevel =3D os.path.abspath(output.rstrip())
-> > > > -                abs_clonedir =3D
-> os.path.abspath(ud.clonedir).rstrip('/')
-> > > > -                # The top level Git directory must either be the
-> clone directory
-> > > > -                # or a child of the clone directory. Any ancestor
-> directory of
-> > > > -                # the clone directory is not valid as the Git
-> directory (and
-> > > > -                # probably belongs to some other unrelated
-> repository), so a
-> > > > -                # clone is required
-> > > > -                if os.path.commonprefix([abs_clonedir, toplevel])
-> !=3D abs_clonedir:
-> > > > -                    logger.warning("Top level directory '%s'
-> doesn't match expected '%s'. Re-cloning", toplevel, ud.clonedir)
-> > > > -                    needs_clone =3D True
-> > > > +                runfetchcmd("LANG=3DC %s rev-parse
-> --absolute-git-dir" % ud.basecmd, d, workdir=3Dud.clonedir)
-> > > >              except bb.fetch2.FetchError as e:
-> > > >                  logger.warning("Unable to get top level for %s (no=
-t
-> a git directory?): %s", ud.clonedir, e)
-> > > >                  needs_clone =3D True
-> > >
-> > > Doesn't this give rise to some of the original issues (it could find =
-a
-> > > parent git repo instead of the one being cloned)?
-> >
-> > Yes, but this has not been a problem for me. Re-cloning existing fully
-> cached
-> > repositories is the effect I see.
-> >
-> > I think the git commit id and branch should decide if fetch or re-clone
-> steps are needed.
-> > The path of the repository should not matter. The git remotes also not.
-> Both of those can
-> > and do change.
->
-> In that case you're effectively sending a revert and we should probably
-> be clear about that...
->
-> We really need to find a way to resolve things for everyone.
->
-> Cheers,
->
-> Richard
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15045):
-> https://lists.openembedded.org/g/bitbake-devel/message/15045
-> Mute This Topic: https://lists.openembedded.org/mt/101333074/3617156
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe:
-> https://lists.openembedded.org/g/bitbake-devel/leave/8021546/3617156/1661=
-570722/xyzzy
-> [martin.jansa@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
 
---000000000000de21c606053a60e1
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>FWIW: I&#39;m also seeing warnings like:</div><div><b=
-r></div>WARNING: Top level directory &#39;/data001/work/downloads/git2/git.=
-libssh.org.projects.libssh.git&#39; doesn&#39;t match expected &#39;/mnt/mi=
-rror-write/downloads/git2/git.libssh.org.projects.libssh.git&#39;. Re-cloni=
-ng<br><div><br></div><div>Where /mnt/mirror-write/downloads/ is configured=
-=C2=A0DL_DIR and /data001/work/downloads/ was probably the DL_DIR of the je=
-nkins jobs which originally fetched the libssh and created the tarball with=
- it for premirror.</div><div><br></div><div>Cheers,</div></div><br><div cla=
-ss=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Wed, Sep 13, 20=
-23 at 11:22=E2=80=AFAM Richard Purdie &lt;<a href=3D"mailto:richard.purdie@=
-linuxfoundation.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br><=
-/div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bo=
-rder-left:1px solid rgb(204,204,204);padding-left:1ex">On Wed, 2023-09-13 a=
-t 12:04 +0300, Mikko Rapeli wrote:<br>
-&gt; Hi,<br>
-&gt; <br>
-&gt; On Wed, Sep 13, 2023 at 09:51:39AM +0100, Richard Purdie wrote:<br>
-&gt; &gt; On Wed, 2023-09-13 at 11:43 +0300, Mikko Rapeli wrote:<br>
-&gt; &gt; &gt; Commit 10f38157a069cb6938323cadd5e523037a29ace9<br>
-&gt; &gt; &gt; triggers re-clones of uptodate repositories when their<br>
-&gt; &gt; &gt; access path changes. This is wrong. It is enough that<br>
-&gt; &gt; &gt; needed commits are found from the git repo. For example<br>
-&gt; &gt; &gt; when same DL_DIR is accessed using two different paths<br>
-&gt; &gt; &gt; due to a symlink, then the resulting absolute paths will<br>
-&gt; &gt; &gt; differ but the content is the same. Trust the content.<br>
-&gt; &gt; &gt; <br>
-&gt; &gt; &gt; Avoids extra downloads of large repositories like linux-yoct=
-o<br>
-&gt; &gt; &gt; for kernel when the local cache was already uptodate.<br>
-&gt; &gt; &gt; <br>
-&gt; &gt; &gt; Signed-off-by: Mikko Rapeli &lt;<a href=3D"mailto:mikko.rape=
-li@linaro.org" target=3D"_blank">mikko.rapeli@linaro.org</a>&gt;<br>
-&gt; &gt; &gt; ---<br>
-&gt; &gt; &gt;=C2=A0 bitbake/lib/bb/fetch2/git.py | 14 +-------------<br>
-&gt; &gt; &gt;=C2=A0 1 file changed, 1 insertion(+), 13 deletions(-)<br>
-&gt; &gt; &gt; <br>
-&gt; &gt; &gt; diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/f=
-etch2/git.py<br>
-&gt; &gt; &gt; index e11271b757..0c547ea303 100644<br>
-&gt; &gt; &gt; --- a/bitbake/lib/bb/fetch2/git.py<br>
-&gt; &gt; &gt; +++ b/bitbake/lib/bb/fetch2/git.py<br>
-&gt; &gt; &gt; @@ -371,19 +371,7 @@ class Git(FetchMethod):<br>
-&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # The direct=
-ory may exist, but not be the top level of a bare git<br>
-&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # repository=
- in which case it needs to be deleted and re-cloned.<br>
-&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 try:<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # S=
-ince clones can be bare, use --absolute-git-dir instead of --show-toplevel<=
-br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 out=
-put =3D runfetchcmd(&quot;LANG=3DC %s rev-parse --absolute-git-dir&quot; % =
-ud.basecmd, d, workdir=3Dud.clonedir)<br>
-&gt; &gt; &gt; -<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 top=
-level =3D os.path.abspath(output.rstrip())<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 abs=
-_clonedir =3D os.path.abspath(ud.clonedir).rstrip(&#39;/&#39;)<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # T=
-he top level Git directory must either be the clone directory<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # o=
-r a child of the clone directory. Any ancestor directory of<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # t=
-he clone directory is not valid as the Git directory (and<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # p=
-robably belongs to some other unrelated repository), so a<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 # c=
-lone is required<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if =
-os.path.commonprefix([abs_clonedir, toplevel]) !=3D abs_clonedir:<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 logger.warning(&quot;Top level directory &#39;%s&#39; doesn&#39;=
-t match expected &#39;%s&#39;. Re-cloning&quot;, toplevel, ud.clonedir)<br>
-&gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 needs_clone =3D True<br>
-&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 run=
-fetchcmd(&quot;LANG=3DC %s rev-parse --absolute-git-dir&quot; % ud.basecmd,=
- d, workdir=3Dud.clonedir)<br>
-&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 except bb.fe=
-tch2.FetchError as e:<br>
-&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 logger.warning(&quot;Unable to get top level for %s (not a git director=
-y?): %s&quot;, ud.clonedir, e)<br>
-&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 needs_clone =3D True<br>
-&gt; &gt; <br>
-&gt; &gt; Doesn&#39;t this give rise to some of the original issues (it cou=
-ld find a<br>
-&gt; &gt; parent git repo instead of the one being cloned)?<br>
-&gt; <br>
-&gt; Yes, but this has not been a problem for me. Re-cloning existing fully=
- cached<br>
-&gt; repositories is the effect I see.<br>
-&gt; <br>
-&gt; I think the git commit id and branch should decide if fetch or re-clon=
-e steps are needed.<br>
-&gt; The path of the repository should not matter. The git remotes also not=
-. Both of those can<br>
-&gt; and do change.<br>
-<br>
-In that case you&#39;re effectively sending a revert and we should probably=
-<br>
-be clear about that...<br>
-<br>
-We really need to find a way to resolve things for everyone.<br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#15045): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/15045" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/15045</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/101333074/361=
-7156" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
-t/101333074/3617156</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/leav=
-e/8021546/3617156/1661570722/xyzzy" rel=3D"noreferrer" target=3D"_blank">ht=
-tps://lists.openembedded.org/g/bitbake-devel/leave/8021546/3617156/16615707=
-22/xyzzy</a> [<a href=3D"mailto:martin.jansa@gmail.com" target=3D"_blank">m=
-artin.jansa@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div>
-
---000000000000de21c606053a60e1--
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__in=
+it__.py
+index 0ead303ca16..2b8de4da10b 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -139,6 +139,25 @@ class MissingChecksumEvent(bb.event.Event):
+         self.checksums =3D checksums
+         bb.event.Event.__init__(self)
+=20
++class DummyUnpackTracer(object):
++
++    def start(self, unpackdir, urldata, d):
++        return
++
++    def start_url(self, url):
++        return
++
++    def unpack(self, unpack_type, destdir):
++        return
++
++    def finish_url(self, url):
++        return
++
++    def complete(self):
++        return
++
++unpack_tracer =3D DummyUnpackTracer()
++
+=20
+ class URI(object):
+     """
+@@ -1591,6 +1610,8 @@ class FetchMethod(object):
+                     if urlpath.find("/") !=3D -1:
+                         destdir =3D urlpath.rsplit("/", 1)[0] + '/'
+                         bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir))
++
++                ud.unpack_tracer.unpack("extract", destdir)
+                 cmd =3D 'cp -fpPRH "%s" "%s"' % (file, destdir)
+=20
+         if not cmd:
+@@ -1707,6 +1728,7 @@ class Fetch(object):
+             if url not in self.ud:
+                 try:
+                     self.ud[url] =3D FetchData(url, d, localonly)
++                    self.ud.unpack_tracer =3D unpack_tracer
+                 except NonLocalMethod:
+                     if localonly:
+                         self.ud[url] =3D None
+@@ -1882,6 +1904,8 @@ class Fetch(object):
+         if not urls:
+             urls =3D self.urls
+=20
++        unpack_tracer.start(root, self.ud, self.d)
++
+         for u in urls:
+             ud =3D self.ud[u]
+             ud.setup_localpath(self.d)
+@@ -1889,11 +1913,15 @@ class Fetch(object):
+             if ud.lockfile:
+                 lf =3D bb.utils.lockfile(ud.lockfile)
+=20
++            ud.unpack_tracer.start_url(u)
+             ud.method.unpack(ud, root, self.d)
++            ud.unpack_tracer.finish_url(u)
+=20
+             if ud.lockfile:
+                 bb.utils.unlockfile(lf)
+=20
++        unpack_tracer.complete()
++
+     def clean(self, urls=3DNone):
+         """
+         Clean files that the fetcher gets or places
+diff --git a/bitbake/lib/bb/fetch2/crate.py b/bitbake/lib/bb/fetch2/crate.p=
+y
+index 3310ed00506..7eb89d28429 100644
+--- a/bitbake/lib/bb/fetch2/crate.py
++++ b/bitbake/lib/bb/fetch2/crate.py
+@@ -100,10 +100,12 @@ class Crate(Wget):
+=20
+         bp =3D d.getVar('BP')
+         if bp =3D=3D ud.parm.get('name'):
++            ud.unpack_tracer.unpack("crate-extract", rootdir)
+             cmd =3D "tar -xz --no-same-owner -f %s" % thefile
+         else:
+             cargo_bitbake =3D self._cargo_bitbake_path(rootdir)
+=20
++            ud.unpack_tracer.unpack("cargo-extract", cargo_bitbake)
+             cmd =3D "tar -xz --no-same-owner -f %s -C %s" % (thefile, carg=
+o_bitbake)
+=20
+             # ensure we've got these paths made
 
