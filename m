@@ -1,357 +1,159 @@
-Return-Path: <rustyhowell@gmail.com>
+Return-Path: <alberto@pianon.eu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BC2EEB593
-	for <webhook@archiver.kernel.org>; Wed, 13 Sep 2023 05:09:41 +0000 (UTC)
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
- by mx.groups.io with SMTP id smtpd.web11.5107.1694581779496475996
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7B6EEB59A
+	for <webhook@archiver.kernel.org>; Wed, 13 Sep 2023 06:36:02 +0000 (UTC)
+Received: from server3.justice4all.it (server3.justice4all.it [95.217.19.36])
+ by mx.groups.io with SMTP id smtpd.web11.5807.1694586959021276557
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 12 Sep 2023 22:09:39 -0700
+ Tue, 12 Sep 2023 23:36:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20221208 header.b=Wg9QT8Rj;
- spf=pass (domain: gmail.com, ip: 209.85.210.177, mailfrom: rustyhowell@gmail.com)
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-68fac346f6aso3232944b3a.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Sep 2023 22:09:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694581778; x=1695186578; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4/8/YwGM0ImZtZnnhXcKPcMnNEOElDMQAUkWL+obSKw=;
-        b=Wg9QT8RjnodJT8YUZ4H+zzC+HZTD+/fld72/N9ZIcZVO8Zq3IuRFmC7OXSwQKTYGu2
-         Al79zAj27A8LpbYIMBCMJWvU8ji2f1G9OtYLaoA46OJ53aXiYaqC67K64Vs6ZaB09EyF
-         hY1qQEOjxp0r2SGBPY7YCR5TOsUsR4ZrdsAaLWwHD5+SPeYItR9eF8tolLOPWxs3m45J
-         5Eh/NM3UT/maXJQ0Jwsj6O4KlT8q7qrcgI0NBp/AQLDgM+cWipX84i2aIL3Q/ufCNefj
-         CQLROqxX5CfqO2uFKpeQ7ith3j8IXdkduuhU1F3nhdLmQ6r6gsPz/0elBUyJx1xvW2A7
-         D9xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694581778; x=1695186578;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4/8/YwGM0ImZtZnnhXcKPcMnNEOElDMQAUkWL+obSKw=;
-        b=W6Ps2l738YKwe9Ntz2IlZmlPF6pIgJGmYAqJNRWBNOHM6AcMAU/h7bNygfchGbQ+xl
-         cFVfo5NelXYCLhFOvoOA2V1zHP68c9R7/svRrR0C7t0sHMDv4Cb21Ogq87Pqysqdnbpw
-         3wrXySMspL1sMQ7bnoUxWKCikSZaqCT3t4TU0vGTdAZk+zvaX+fPFp2HZceIRwEV+p6/
-         048KQJrwu3YiACKeBsiwMtd9O21G19AmKRgiC8sLPdI1ZGSSEGntWsKEBVaIZqpXyNVu
-         U0n1JhmaICK3zpLzUfRI5hR5iNxLbSqC+a4Umk//Iw2DBnXfcPktVo743v6nTOnTwiGY
-         ycCw==
-X-Gm-Message-State: AOJu0YwMRGQaICzxJVr1xS8u9NrYP/leh3O0imDml+aoK9GCt/GYTo6b
-	ljVK01TV3u794swpRGsLDoTArXqLNDs6BA==
-X-Google-Smtp-Source: AGHT+IGbYGBli6hlfgtEsk1gavqIV31OMSMnwP79MivEmU9ChkP9/qfIssuQJb9UTJtSXrJsHj7MtA==
-X-Received: by 2002:a05:6a00:1a94:b0:68f:ee0e:95df with SMTP id e20-20020a056a001a9400b0068fee0e95dfmr1773553pfv.14.1694581778425;
-        Tue, 12 Sep 2023 22:09:38 -0700 (PDT)
-Received: from localhost.localdomain ([2605:a601:a937:b200:28d:855a:5806:ab1c])
-        by smtp.gmail.com with ESMTPSA id a4-20020a62bd04000000b0064f76992905sm8084415pff.202.2023.09.12.22.09.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Sep 2023 22:09:38 -0700 (PDT)
-From: Rusty Howell <rustyhowell@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Rusty Howell <rustyhowell@gmail.com>
-Subject: [PATCH] prserver: add self-tests
-Date: Tue, 12 Sep 2023 23:08:24 -0600
-Message-Id: <20230913050824.13599-1-rustyhowell@gmail.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=fail reason="dkim: body hash did not verify" header.i=@pianon.eu header.s=mail20151219 header.b=pJnVoutS;
+ spf=pass (domain: pianon.eu, ip: 95.217.19.36, mailfrom: alberto@pianon.eu)
+Received: from localhost (localhost [127.0.0.1])
+	by server3.justice4all.it (Postfix) with ESMTP id 832CD5C0096;
+	Wed, 13 Sep 2023 08:35:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=pianon.eu; h=
+	message-id:references:in-reply-to:subject:subject:from:from:date
+	:date:content-transfer-encoding:content-type:content-type
+	:mime-version; s=mail20151219; t=1694586955; x=1696401356; bh=vN
+	qYaFhu1hEDYoLsf4RV1vbTgdQLG38cn4fezkPpS4U=; b=pJnVoutSCCy3ctXSjq
+	OfD41Qyo6H9p4tOrRFckrkj7JMGj+RZI+YeI8JXTosCafpgFxEspzII0+WvD0cwE
+	paamht6Z+ztVkc7yTF9HLVO698DCpwpcHMq7H8ZIQIiAEFf3wtND83wS+djAQjJW
+	BewiyiRemxuMDHqSr4+KiwpuI=
+X-Virus-Scanned: Debian amavisd-new at server3.justice4all.it
+Received: from server3.justice4all.it ([127.0.0.1])
+	by localhost (server3.justice4all.it [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Y47OWknsej4U; Wed, 13 Sep 2023 08:35:55 +0200 (CEST)
+Received: from pianon.eu (localhost [127.0.0.1])
+	(Authenticated sender: alberto@pianon.eu)
+	by server3.justice4all.it (Postfix) with ESMTPA id 7E05A5C0095;
+	Wed, 13 Sep 2023 08:35:55 +0200 (CEST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Date: Wed, 13 Sep 2023 08:35:55 +0200
+From: Alberto Pianon <alberto@pianon.eu>
+To: Joshua Watt <JPEWhacker@gmail.com>
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, Bitbake Devel
+ <bitbake-devel@lists.openembedded.org>, Carlo Piana <carlo@piana.eu>
+Subject: Re: [bitbake-devel] initial idea for hooks needed for source tracing
+In-Reply-To: <CAJdd5Gbuc-ivs0LRTTefAoxp4QxLU7r4W3pD74sM+d73VBbpDA@mail.gmail.com>
+References: <7f5d05fe554d232c300b2604addc452a@pianon.eu>
+ <CAJdd5Gb5wn7GG-1T_5CYjyESdBXU1RGghVYkAtAwF_GNBpnayg@mail.gmail.com>
+ <9924500659de9ef4cf2b0c6e127fa27a@pianon.eu>
+ <CAJdd5Gbuc-ivs0LRTTefAoxp4QxLU7r4W3pD74sM+d73VBbpDA@mail.gmail.com>
+Message-ID: <44a71328fd7d39160747cb0e88beec1d@pianon.eu>
+X-Sender: alberto@pianon.eu
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 05:09:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15040
+ <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 06:36:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15041
 
-Add some self tests for the prserver. As changes are made to the prserver, the tests will
-help ensure that any behavioral changes are known, or that changes do not affect behavior.
 
-Signed-off-by: Rusty Howell <rustyhowell@gmail.com>
----
- .gitignore                           |   1 +
- bitbake/bin/bitbake-selftest         |   5 +-
- bitbake/lib/prserv/db.py             |   2 +-
- bitbake/lib/prserv/tests/.gitignore  |   2 +
- bitbake/lib/prserv/tests/__init__.py |   0
- bitbake/lib/prserv/tests/prserver.py | 213 +++++++++++++++++++++++++++
- 6 files changed, 221 insertions(+), 2 deletions(-)
- create mode 100644 bitbake/lib/prserv/tests/.gitignore
- create mode 100644 bitbake/lib/prserv/tests/__init__.py
- create mode 100644 bitbake/lib/prserv/tests/prserver.py
 
-diff --git a/.gitignore b/.gitignore
-index 8f48d452da..c227363e3c 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -36,3 +36,4 @@ _toaster_clones/
- downloads/
- sstate-cache/
- toaster.sqlite
-+.idea
-diff --git a/bitbake/bin/bitbake-selftest b/bitbake/bin/bitbake-selftest
-index f25f23b1ae..8b601aa2b8 100755
---- a/bitbake/bin/bitbake-selftest
-+++ b/bitbake/bin/bitbake-selftest
-@@ -16,6 +16,7 @@ try:
-     import bb
-     import hashserv
-     import layerindexlib
-+    import prserv
- except RuntimeError as exc:
-     sys.exit(str(exc))
- 
-@@ -35,7 +36,9 @@ tests = ["bb.tests.codeparser",
-          "hashserv.tests",
-          "layerindexlib.tests.layerindexobj",
-          "layerindexlib.tests.restapi",
--         "layerindexlib.tests.cooker"]
-+         "layerindexlib.tests.cooker",
-+         "prserv.tests.prserver",
-+        ]
- 
- for t in tests:
-     t = '.'.join(t.split('.')[:3])
-diff --git a/bitbake/lib/prserv/db.py b/bitbake/lib/prserv/db.py
-index b4bda7078c..8cefb28f16 100644
---- a/bitbake/lib/prserv/db.py
-+++ b/bitbake/lib/prserv/db.py
-@@ -71,7 +71,7 @@ class PRTable(object):
-     def sync(self):
-         if not self.read_only:
-             self.conn.commit()
--            self._execute("BEGIN EXCLUSIVE TRANSACTION")
-+            #self._execute("BEGIN EXCLUSIVE TRANSACTION")
- 
-     def sync_if_dirty(self):
-         if self.dirty:
-diff --git a/bitbake/lib/prserv/tests/.gitignore b/bitbake/lib/prserv/tests/.gitignore
-new file mode 100644
-index 0000000000..8609a37b69
---- /dev/null
-+++ b/bitbake/lib/prserv/tests/.gitignore
-@@ -0,0 +1,2 @@
-+*.log
-+*.db
-diff --git a/bitbake/lib/prserv/tests/__init__.py b/bitbake/lib/prserv/tests/__init__.py
-new file mode 100644
-index 0000000000..e69de29bb2
-diff --git a/bitbake/lib/prserv/tests/prserver.py b/bitbake/lib/prserv/tests/prserver.py
-new file mode 100644
-index 0000000000..52972bcf49
---- /dev/null
-+++ b/bitbake/lib/prserv/tests/prserver.py
-@@ -0,0 +1,213 @@
-+import os
-+import sys
-+import json
-+import socket
-+import logging
-+import itertools
-+import random
-+import unittest
-+
-+import sqlite3
-+import time
-+import bb
-+
-+
-+this_dir = os.path.abspath(os.path.dirname(__file__))
-+bitbake_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-+sys.path.insert(0, os.path.join(bitbake_dir, 'lib'))
-+import prserv
-+import prserv.serv
-+
-+HOST = "localhost"
-+PORT = 18585
-+
-+logger = logging.getLogger("prserv_unittest")
-+logger.setLevel(logging.DEBUG)
-+logger.addHandler(logging.FileHandler(os.path.join(this_dir, 'prserv_unittests.log'), mode='w'))
-+
-+logger.debug("-----------")
-+logger.debug("global setup")
-+logger.debug("bitbake_dir = %s", bitbake_dir)
-+logger.debug("this_dir = %s", this_dir)
-+
-+sock = None
-+conn = None
-+def setUpModule():
-+    global sock, conn
-+    logger.debug("setUpModule")
-+    dbfile = os.path.join(this_dir, 'pr_test.db')
-+    if os.path.exists(dbfile):
-+        os.remove(dbfile)
-+
-+    logfile = os.path.join(this_dir, 'prserv_daemon.log')
-+    logging.getLogger("BitBake.PRserv").setLevel(logging.DEBUG)
-+
-+    if os.path.exists(logfile):
-+        os.remove(logfile)
-+
-+    prserv.init_logger(os.path.abspath(logfile), "DEBUG")
-+    prserv.serv.start_daemon(dbfile, HOST, PORT, logfile)
-+    time.sleep(1)
-+
-+    conn = sqlite3.connect(dbfile, isolation_level="EXCLUSIVE", check_same_thread=False)
-+
-+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-+    sock.connect(('localhost', PORT))
-+    msg = b'PRSERVICE 1.0\n\n'
-+    sock.send(msg)
-+
-+
-+def tearDownModule():
-+    logger.debug("tearDownModule")
-+    sock.close()
-+    prserv.serv.stop_daemon(HOST, PORT)
-+
-+
-+class PRServerTest(unittest.TestCase):
-+    def setUp(self):
-+        logger.info("inst setUp()")
-+
-+    def tearDown(self):
-+        logger.info("inst tearDown()")
-+
-+    def ping(self):
-+        return True
-+
-+    def getPR(self, version: str, arch: str, checksum: str) -> int:
-+        bb.logger.info("getting PRAUTO")
-+
-+        p = {'get-pr': {'version': version, 'pkgarch': arch, 'checksum': checksum}}
-+        data = "%s\n" % json.dumps(p)
-+        sock.send(data.encode('utf-8'))
-+
-+        data = sock.recv(128)
-+        data = json.loads(data.decode('utf-8'))
-+        # Returns {'value': 1}
-+        return data['value']
-+
-+    def test_first_query(self):
-+        v = self.getPR("aaa", "bbb", "c")
-+        assert v == 0, 'v = %s' % v
-+
-+        v = self.getPR("aaa", "bbb", "c")
-+        assert v == 0
-+
-+        v = self.getPR("xyz", "y", "z")
-+        assert v == 0
-+
-+        v = self.getPR("xyz", "y", "z")
-+        assert v == 0
-+
-+    def test_bad_queries(self):
-+        assert self.ping()
-+        try:
-+            self.getPR("aaa", "bbb", "c")
-+            self.getPR("aaa", "bbb", "c")
-+            self.getPR("aaa", "bbb", "c")
-+            assert False, 'Should have gotten an error'
-+        except Exception:
-+            pass
-+
-+    def test_checksum_changes(self):
-+        assert self.ping()
-+
-+        v1 = self.getPR("pkg-a", "arm64", "hash-a")
-+        assert v1 == 0
-+
-+        v2 = self.getPR("pkg-a", "arm64", "hash-b")
-+        assert v2 == 1
-+
-+        v3 = self.getPR("pkg-a", "arm64", "hash-c")
-+        assert v3 == 2
-+
-+        v4 = self.getPR("pkg-a", "arm64", "hash-d")
-+        assert v4 == 3
-+
-+        v5 = self.getPR("pkg-a", "arm64", "hash-b")
-+        assert v5 == 4
-+
-+        v5 = self.getPR("pkg-a", "arm64", "hash-b")
-+        assert v5 == 4
-+
-+    def test_arch_changes(self):
-+        assert self.ping()
-+        v = self.getPR("pkg-b", "arm64", "hash-a")
-+        assert v == 0
-+        v = self.getPR("pkg-b", "imx8mm", "hash-a")
-+        assert v == 0
-+        v = self.getPR("pkg-b", "aarch64", "hash-a")
-+        assert v == 0
-+        v = self.getPR("pkg-b", "8086", "hash-a")
-+        assert v == 0
-+
-+    def test_autoinc(self):
-+        assert self.ping()
-+
-+        sha1 = "12345"
-+        sha2 = "23456"
-+        sha3 = "34567"
-+        v = self.getPR("AUTOINC-daemon-1.2.3+", "aarch64", "AUTOINC+%s" % sha1)
-+        self.assertEqual(v, 0)
-+
-+        v = self.getPR("AUTOINC-daemon-1.2.3+", "aarch64", "AUTOINC+%s" % sha2)
-+        self.assertEqual(v, 1)
-+
-+        v = self.getPR("AUTOINC-daemon-1.2.4+", "aarch64", "AUTOINC+%s" % sha1)
-+        self.assertEqual(v, 0)
-+
-+        v = self.getPR("AUTOINC-daemon-1.2.3+", "x86_64", "AUTOINC+%s" % sha1)
-+        self.assertEqual(v, 0)
-+
-+        v = self.getPR("AUTOINC-daemon-1.2.3+", "aarch64", "AUTOINC+%s" % sha3)
-+        self.assertEqual(v, 2)
-+
-+
-+    def test_full(self):
-+
-+        pkgs = ['pkg-x', 'pkg-y', 'pkg-z']
-+        arches = ['arm64', 'x86_64']
-+        hashes = ['hash-%d' % i for i in range(10)]
-+
-+        rand = random.Random(0)
-+
-+        # Populate database with basic stuff
-+        for pkg, arch in itertools.product(pkgs, arches):
-+            v = self.getPR(pkg, arch, "0")
-+            assert v is not None
-+
-+        # Populate database with random-ish stuff
-+        for _ in range(100):
-+            pkg = rand.choice(pkgs)
-+            arch = rand.choice(arches)
-+            hash_ = rand.choice(hashes)
-+            v = self.getPR(pkg, arch, hash_)
-+            assert v is not None
-+
-+        table = 'PRMAIN_nohist'
-+        old_versions = {}
-+        old_versions_2 = {}
-+
-+        for pkg, arch, hash_ in itertools.product(pkgs, arches, hashes):
-+            # verify that all OSv2 versions are less than the OSv1 version
-+            query = 'select ifnull(max(value),0) from %s where version=? AND pkgarch=?;' % table
-+            args = (pkg, arch)
-+            data = conn.execute(query, args)
-+
-+            row = data.fetchone()
-+            assert row is not None
-+            value = row[0]
-+
-+            k = '%s-%s' % (pkg, arch)
-+            old_v = old_versions.get(k, -1)
-+            assert value >= old_v, "%s %s: old_v=%s, new_v=%s" % (pkg, arch, old_v, value)
-+
-+            old_versions[k] = value
-+
-+            k2 = '%s-%s' % (pkg, arch)
-+            old_versions_2[k2] = value
-+
-+        print('\n')
-+
-+        for k in sorted(old_versions_2.keys()):
-+            v = old_versions_2[k]
-+            print("Max for %s is %s" % (k, v))
--- 
-2.25.1
+--=20
+Avv. Alberto Pianon
+Contr=C3=A0 Pedemuro San Biagio 45
+36100 Vicenza (Italy)
+Tel +39 0444 1836651
+Fax +39 0444 546505
+alberto@pianon.eu
 
+On 2023-09-13 00:01, Joshua Watt wrote:
+> On Tue, Sep 12, 2023 at 3:26=E2=80=AFPM Alberto Pianon <alberto@pianon.=
+eu>=20
+> wrote:
+>>=20
+>> On 2023-09-12 23:05, Joshua Watt wrote:
+>> > On Tue, Sep 12, 2023 at 2:55=E2=80=AFPM Alberto Pianon <alberto@pian=
+on.eu>
+>> > wrote:
+>> >>
+>> >> Hi Richard,
+>> >>
+>> >> as I said at today's meeting there is no hurry, but right after the
+>> >> meeting I had an idea and I wanted to fix it in my mind and test it
+>> >> before losing it :)
+>> >>
+>> >> It's just a temporary/WIP patch, but it should not be too far from =
+a
+>> >> working implementation of the hooks we were talking about:
+>> >>
+>> >> http://cgit.openembedded.org/bitbake-contrib/commit/?h=3Dalpianon/s=
+rctrace4&id=3Decb065e7fe2eece566cd387e24abc3b6079146d8
+>> >>
+>> >> There is no interference nor modification to the unpack process any
+>> >> more, just collection of needed metadata through the urldata object=
+.
+>> >> Modifications to the core unpack function are minimal and (I hope!)
+>> >> straightforward, and there is no fetcher-specific logic in it ant
+>> >> more.
+>> >>
+>> >> When you find some time, could you please have a look and tell me i=
+f
+>> >> this may be the right direction?
+>> >
+>> > I think this is much better; there's still a few rough edges
+>> > (`function.__name__ =3D=3D "unpack_submodules"` is kinda gross :),
+>>=20
+>>=20
+>> I know :) but I couldn't figure out something better off the top of my
+>> head...
+>>=20
+>> The thing is that "function" is passed to process_submodules:
+>> http://cgit.openembedded.org/bitbake-contrib/tree/lib/bb/fetch2/gitsm.=
+py?h=3Dalpianon/srctrace4&id=3Decb065e7fe2eece566cd387e24abc3b6079146d8#n=
+43
+>>=20
+>> and it's executed for each submodule:
+>> http://cgit.openembedded.org/bitbake-contrib/tree/lib/bb/fetch2/gitsm.=
+py?h=3Dalpianon/srctrace4&id=3Decb065e7fe2eece566cd387e24abc3b6079146d8#n=
+152
+>>=20
+>> I want to collect some metadata only when that "function" is
+>> "unpack_submodules" and not some other function.
+>>=20
+>> May you suggest a better way to do it? Maybe with inspect?
+>>=20
+>>=20
+>> > but this is much simpler and I think easier to understand.
+>>=20
+>> Thanks!
+>>=20
+>> > Also, I feel
+>> > like this is actually reasonably testable; presumably there would be
+>> > some mechanism to "plug" a different Trace class in instead of the
+>> > pre-canned one, and tests could be written that use a special test
+>> > implementation of that class to verify that it is being called
+>> > correctly. This also means your special source tracing classes can
+>> > live elsewhere instead of needing to be integrated into bitbake
+>> > immediately
+>>=20
+>> Yes, that was the idea. Maybe a variable where to store the module to
+>> load, like SRCTRACE_PYMODULE =3D "mybb.fetch2.trace"?
+>> And something like SRCTRACE_PYTEST =3D "mybb.tests.trace" for
+>> bitbake-selftest?
+>=20
+> Ya (assuming you meant SRCTRACE_PYMODULE in both places). You might
+> even be able to combine the ENABLE and PYMODULE (or maybe CLASS?) into
+> the same function. If the variable is empty do nothing, otherwise load
+> the class. I'm pretty sure we've done that elsewhere in the
+> codebase.... see siggen.py in bitbake where it loads a module using
+> import_module. IDK if you'll run into trouble with the import path
+> doing that or not.
+>=20
+
+Do you mean something like SRCTRACE_PYCLASS =3D "mybb.trace.TraceUnpack" =
+?
+
+And IIUC the test module should be a separately set anyway, like in
+SRCTRACE_PYTESTMODULE =3D "mybb.tests.trace_unpack"... or am I missing
+something?
+
+In any case I've seen the example in siggen.py and I will try to use
+it, thanks
 
