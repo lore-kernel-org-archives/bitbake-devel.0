@@ -2,66 +2,68 @@ Return-Path: <rustyhowell@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63049EEB592
-	for <webhook@archiver.kernel.org>; Wed, 13 Sep 2023 05:06:21 +0000 (UTC)
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
- by mx.groups.io with SMTP id smtpd.web10.5131.1694581575752503594
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BC2EEB593
+	for <webhook@archiver.kernel.org>; Wed, 13 Sep 2023 05:09:41 +0000 (UTC)
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+ by mx.groups.io with SMTP id smtpd.web11.5107.1694581779496475996
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 12 Sep 2023 22:06:15 -0700
+ Tue, 12 Sep 2023 22:09:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20221208 header.b=BsFsvZnJ;
- spf=pass (domain: gmail.com, ip: 209.85.214.171, mailfrom: rustyhowell@gmail.com)
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1c0ecb9a075so47485295ad.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Sep 2023 22:06:15 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20221208 header.b=Wg9QT8Rj;
+ spf=pass (domain: gmail.com, ip: 209.85.210.177, mailfrom: rustyhowell@gmail.com)
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-68fac346f6aso3232944b3a.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Sep 2023 22:09:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694581575; x=1695186375; darn=lists.openembedded.org;
+        d=gmail.com; s=20221208; t=1694581778; x=1695186578; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Ozlyhvs6/9h9Q+BYpckiklSHkgQKWbEXdiiFQBGWk4=;
-        b=BsFsvZnJOPMXQJiWDnce+rIprRfZHIoyMx/FEdr7FNGGgNBcamT4d1t6al9gX1d66Y
-         cO6g4C/jtnNJ83T0Z+qFQnwr6JmNFHuUHps97darxCnG4nocL414Bd42q1vxY/IaS0Fp
-         7yaixcaBCRGImXT0pKYN5cA6T6Uab7DI38yqNH227B75AVDb2KzYEgeU1if1ITMIcMLA
-         emmK4v/M7SHBgx3lH+RJctIIdt6CH/N/pEaaEJhu9KxVM17mSk2V5/1Ct4rOe3XpwO93
-         IrP2/hlH54dUnK785xDf6R58Tw3CpORp0/Cyraj/pDyLl5HxnoLEzDlnL52gRLt5psLB
-         6EWQ==
+        bh=4/8/YwGM0ImZtZnnhXcKPcMnNEOElDMQAUkWL+obSKw=;
+        b=Wg9QT8RjnodJT8YUZ4H+zzC+HZTD+/fld72/N9ZIcZVO8Zq3IuRFmC7OXSwQKTYGu2
+         Al79zAj27A8LpbYIMBCMJWvU8ji2f1G9OtYLaoA46OJ53aXiYaqC67K64Vs6ZaB09EyF
+         hY1qQEOjxp0r2SGBPY7YCR5TOsUsR4ZrdsAaLWwHD5+SPeYItR9eF8tolLOPWxs3m45J
+         5Eh/NM3UT/maXJQ0Jwsj6O4KlT8q7qrcgI0NBp/AQLDgM+cWipX84i2aIL3Q/ufCNefj
+         CQLROqxX5CfqO2uFKpeQ7ith3j8IXdkduuhU1F3nhdLmQ6r6gsPz/0elBUyJx1xvW2A7
+         D9xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694581575; x=1695186375;
+        d=1e100.net; s=20230601; t=1694581778; x=1695186578;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/Ozlyhvs6/9h9Q+BYpckiklSHkgQKWbEXdiiFQBGWk4=;
-        b=DRzlz8EGZIyqZk48a9dJrzT+26SiEUKUuaBRNbA5mlIQcGv3QoeMl9XX24UEYMqBw+
-         VOqBKzgXodANj+Q0NYwcYLCxGzL5uo7xHrfY9S7hOBDwrdxKkA1pefdtM/i0YCVRrobw
-         wDH2ZQYwj3qSXY/wRP96TD19zpf6qYwUmzJUwwyFvnKCyNSFYZ3BnNUVoyB6I6VQoK84
-         gZXFvcVKMdrsvkKSZva2Aa7C47vN+HOhfI5Us493q+dSDtQmN5zuVLQiW6xN8po9FNkX
-         X+eEZzLPNuZF1KJ1i3OEG/6EHz5s+qFm++BpyKkDcBOwHmBp3lMFee+Fxm/h3x8/g/15
-         oOgg==
-X-Gm-Message-State: AOJu0YzAve2gOXs/oIiTCvLzOB0v9j9PH0pc2w5LqhBS0C/DsR2HEkpG
-	eaPekhF3QnnYsvpy5BfRYzvOSsb6GP8ecQ==
-X-Google-Smtp-Source: AGHT+IEdGEFolpp03MbZYHoL59FhiNVrrbys2V0yxtUeF2vUz5gjxjfbZCLnQPgJrJaKjiwaPleY4A==
-X-Received: by 2002:a17:902:8491:b0:1c0:ecbb:1831 with SMTP id c17-20020a170902849100b001c0ecbb1831mr1511143plo.16.1694581574547;
-        Tue, 12 Sep 2023 22:06:14 -0700 (PDT)
+        bh=4/8/YwGM0ImZtZnnhXcKPcMnNEOElDMQAUkWL+obSKw=;
+        b=W6Ps2l738YKwe9Ntz2IlZmlPF6pIgJGmYAqJNRWBNOHM6AcMAU/h7bNygfchGbQ+xl
+         cFVfo5NelXYCLhFOvoOA2V1zHP68c9R7/svRrR0C7t0sHMDv4Cb21Ogq87Pqysqdnbpw
+         3wrXySMspL1sMQ7bnoUxWKCikSZaqCT3t4TU0vGTdAZk+zvaX+fPFp2HZceIRwEV+p6/
+         048KQJrwu3YiACKeBsiwMtd9O21G19AmKRgiC8sLPdI1ZGSSEGntWsKEBVaIZqpXyNVu
+         U0n1JhmaICK3zpLzUfRI5hR5iNxLbSqC+a4Umk//Iw2DBnXfcPktVo743v6nTOnTwiGY
+         ycCw==
+X-Gm-Message-State: AOJu0YwMRGQaICzxJVr1xS8u9NrYP/leh3O0imDml+aoK9GCt/GYTo6b
+	ljVK01TV3u794swpRGsLDoTArXqLNDs6BA==
+X-Google-Smtp-Source: AGHT+IGbYGBli6hlfgtEsk1gavqIV31OMSMnwP79MivEmU9ChkP9/qfIssuQJb9UTJtSXrJsHj7MtA==
+X-Received: by 2002:a05:6a00:1a94:b0:68f:ee0e:95df with SMTP id e20-20020a056a001a9400b0068fee0e95dfmr1773553pfv.14.1694581778425;
+        Tue, 12 Sep 2023 22:09:38 -0700 (PDT)
 Received: from localhost.localdomain ([2605:a601:a937:b200:28d:855a:5806:ab1c])
-        by smtp.gmail.com with ESMTPSA id q10-20020a170902daca00b001bdca6456b9sm9473535plx.17.2023.09.12.22.06.13
+        by smtp.gmail.com with ESMTPSA id a4-20020a62bd04000000b0064f76992905sm8084415pff.202.2023.09.12.22.09.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Sep 2023 22:06:14 -0700 (PDT)
+        Tue, 12 Sep 2023 22:09:38 -0700 (PDT)
 From: Rusty Howell <rustyhowell@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Rusty Howell <rustyhowell@gmail.com>
 Subject: [PATCH] prserver: add self-tests
-Date: Tue, 12 Sep 2023 23:06:09 -0600
-Message-Id: <20230913050609.13388-1-rustyhowell@gmail.com>
+Date: Tue, 12 Sep 2023 23:08:24 -0600
+Message-Id: <20230913050824.13599-1-rustyhowell@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 05:06:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15039
+ <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 05:09:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15040
 
 Add some self tests for the prserver. As changes are made to the prserver, the tests will
 help ensure that any behavioral changes are known, or that changes do not affect behavior.
+
+Signed-off-by: Rusty Howell <rustyhowell@gmail.com>
 ---
  .gitignore                           |   1 +
  bitbake/bin/bitbake-selftest         |   5 +-
