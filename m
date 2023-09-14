@@ -1,90 +1,135 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E6DEE0211
-	for <webhook@archiver.kernel.org>; Wed, 13 Sep 2023 21:51:15 +0000 (UTC)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web11.9879.1694641866602241880
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADC6CA0EF6
+	for <webhook@archiver.kernel.org>; Thu, 14 Sep 2023 05:17:18 +0000 (UTC)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+ by mx.groups.io with SMTP id smtpd.web10.5329.1694668636618708411
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 13 Sep 2023 14:51:06 -0700
+ Wed, 13 Sep 2023 22:17:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=C6jrlIGx;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-31c5c06e8bbso244663f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 14:51:06 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=SoZQrW6N;
+ spf=pass (domain: linaro.org, ip: 209.85.167.43, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-502e0b7875dso909356e87.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 22:17:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1694641865; x=1695246665; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1FO9iNAr7nx1IME674DJFdT3Nr2UuO7pZGUXyhrBcPo=;
-        b=C6jrlIGxDocz0ObHMRgeS23Sb4qSQ5USkFp0YFXxRsbpl8aYRat8IDp8EKyftXgtXO
-         fly808/4c0kAXnTvz4kok41MJYVw8eIL+7fx3fslyrLsxguFlQvX8pSegxZEbVAVjPFe
-         rg7cNjmaaeelZC6aYYs4QOSt3KGfVCCp6tjGw=
+        d=linaro.org; s=google; t=1694668635; x=1695273435; darn=lists.openembedded.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DFOXFTDhIKOkdzEU0+x2Lv+NJKj4ju60e6GlkAddqtE=;
+        b=SoZQrW6NNZ0I2ixkJGdiNuy3+B34vfYtEglaZxZ0w8h4dTB7ny2aGjePjtCijAfCej
+         N0XZVrXqWm+tRakKgKCwMIYtXJfOGoSq/vS5BjQogFcHjSGKuyFGAib9daCBDltxyhkW
+         jqYcmWzEixjGW/7ppX8dH8w41sO0ZGpj5FH3wknzax8nvo4F7HgOcyWRGYgxT2MStZDa
+         akfHYTAxpsPC7OZC/1tUHoJZeZUqRmLWqcbHAJGCgiWsgav91kMGVenfV6haGrykXHGN
+         xMynWYX4hLQnLA6OrhAYykBPlmrq49uf6MoHgYMYCwAqvsYEtoFjgsykiw/9XLBBMRlc
+         2fKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694641865; x=1695246665;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1FO9iNAr7nx1IME674DJFdT3Nr2UuO7pZGUXyhrBcPo=;
-        b=MMmz5Tc+PzRJKO3r3mpRnVJiktDHC2RYglPG9zWgGhucSAO7+2+oVWpn+VXLLz1b8l
-         vJ/Uf5gWW/FkiS9TzT6AfJeiG0/5rFUU88Xsb/YrvZon7gWVkCUhIu8wbeoxlzkmpT5A
-         PJ6/w8rbU7FvJOvYCRSiyXa8Ku+FGb3DLx//pK5BrrSj+1cSihoLUmtztkxeOtEvmVa/
-         P2HTwkVejtmM409rIqyCwoA+xNjSapEMZmDmEowG4ZFjlmFATPW3hCqq+NmjJ4J4jgWv
-         tpWzF4Zcd3BA++RFhXXglN7xIJQWvdHmGymsubR/ssGS/3hijLIj7bxYNASpas3DDNBJ
-         kOBw==
-X-Gm-Message-State: AOJu0YwgFRuW0FtEJ/OgkxWzfS4hp0RSdOHGgxHLjis9IYg+9HvomjkJ
-	Ksp6SQoF7SKAig6Jgk2pRwbikw==
-X-Google-Smtp-Source: AGHT+IE9TdN9rsn7ajb/C0Xy+MFJ1W42N2s6vQmb0BnlB1uYSGuZynYdejxn2LHsDu90/8O+ks6WTA==
-X-Received: by 2002:adf:d4cf:0:b0:311:3fdc:109d with SMTP id w15-20020adfd4cf000000b003113fdc109dmr3609835wrk.1.1694641864936;
-        Wed, 13 Sep 2023 14:51:04 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:a6e7:41e3:896b:6b97? ([2001:8b0:aba:5f3c:a6e7:41e3:896b:6b97])
-        by smtp.gmail.com with ESMTPSA id y15-20020a5d470f000000b0031981c500aasm4640wrq.25.2023.09.13.14.51.04
+        d=1e100.net; s=20230601; t=1694668635; x=1695273435;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DFOXFTDhIKOkdzEU0+x2Lv+NJKj4ju60e6GlkAddqtE=;
+        b=wZsbeum0os6udJIw3jZbV/dgJ+UPaPRdxJhvDJ1ENPF2eIMSzJNA6wQ9i3wQSljUaa
+         rWoSuZ3SX0CuA1b5NbX720onPyT4/EAszf5KAzK+54asfTi3R2eR7tE5nZypnZIcpnL7
+         i1igTjLydrJRA+DE16GjAsvPu9xtmSynRBzptxCH8mi/S2yimIGK0aU7dAYvbgE4G9ne
+         5SlFq0QPhbArefujyzkeuVTvhouabt7XMY2znetXmRZtZNOw2dBgk/q1H3hp6+0ilcUd
+         TdLyxUYQn+DiDhdCn16USyOVT9xmZ/1AwcabaijJKtzcg/TbHHLSbBhai5hZU7RMh38R
+         2bCQ==
+X-Gm-Message-State: AOJu0YxawB6h6mFKMg8pLoLGnVB+0i99pY4wo2nenV8/jQBMYdMQOKRy
+	UDBFklZ9JAR/d/tehC26js5a+A==
+X-Google-Smtp-Source: AGHT+IFak4bhU2n2QALwiNINQqpvyd3AsLNE0vKMzwdh0D1MdyrWeMCynbf6BEP0Flx8EDj/PeExRw==
+X-Received: by 2002:a05:6512:1585:b0:500:bf33:3add with SMTP id bp5-20020a056512158500b00500bf333addmr4963424lfb.47.1694668634658;
+        Wed, 13 Sep 2023 22:17:14 -0700 (PDT)
+Received: from nuoska (dc7g6tyjby-d304c4945t-3.rev.dnainternet.fi. [2001:14ba:16cb:a800:e107:c77f:6058:ee33])
+        by smtp.gmail.com with ESMTPSA id o18-20020a056512051200b00500b561285bsm120288lfb.292.2023.09.13.22.17.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 14:51:04 -0700 (PDT)
-Message-ID: <ba61cf89ade909db31dbb3131385b78fa62aa910.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] Adds vscode devcontainer support
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Matthias Schnelte <develop@schnelte.de>, 
-	bitbake-devel@lists.openembedded.org
-Date: Wed, 13 Sep 2023 22:51:03 +0100
-In-Reply-To: <29acfeb3-246f-4ddf-8701-a5ee6d7affaf@schnelte.de>
-References: <29acfeb3-246f-4ddf-8701-a5ee6d7affaf@schnelte.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.1-0ubuntu1 
+        Wed, 13 Sep 2023 22:17:13 -0700 (PDT)
+Date: Thu, 14 Sep 2023 08:17:11 +0300
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
+To: Joshua Watt <JPEWhacker@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel][PATCH 2/2] fetch2: git: Use path_is_descendant()
+ instead of path for repo check
+Message-ID: <ZQKXV0qhiVFkMXhS@nuoska>
+References: <20230913190425.3761792-1-JPEWhacker@gmail.com>
+ <20230913190425.3761792-3-JPEWhacker@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230913190425.3761792-3-JPEWhacker@gmail.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 13 Sep 2023 21:51:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15058
+ <bitbake-devel@lists.openembedded.org>; Thu, 14 Sep 2023 05:17:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15059
 
-T24gTW9uLCAyMDIzLTA5LTExIGF0IDE2OjEzICswMjAwLCBNYXR0aGlhcyBTY2huZWx0ZSB3cm90
-ZToKPiBWaXN1YWwgc3R1ZGlvIGNvZGUgaXMgaW5qZWN0aW5nIGEgZ2l0IGNyZWRlbnRpYWwgaGVs
-cGVyCj4gaW50byBldmVyeSBkZXYgY29udGFpbmVyLiBUaGlzIGhlbHBlciBpcyBmb3J3YXJkaW5n
-IHRoZSBnaXQgY3JlZGVudGlhbHMKPiBmcm9tIHRoZSBob3N0IGludG8gdGhlIGNvbnRhaW5lci4K
-PiAKPiBJbiBvcmRlciBmb3IgdGhpcyBoZWxwZXIgdG8gd29yayB0aGUgUkVNT1RFX0NPTlRBSU5F
-UlNfSVBDCj4gbmVlZHMgdG8gYmUgYXZhaWxhYmxlIGluIHRoZSBlbnZpcm9ubWVudCBmb3IgYWxs
-IGdpdCBvcGVyYXRpb25zCj4gdGhhdCByZXF1aXJlIGF1dGhlbnRpY2F0aW9uLgo+IC0tLQo+ICDC
-oGxpYi9iYi9mZXRjaDIvX19pbml0X18ucHkgfCAzICsrLQo+ICDCoDEgZmlsZSBjaGFuZ2VkLCAy
-IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvbGliL2JiL2Zl
-dGNoMi9fX2luaXRfXy5weSBiL2xpYi9iYi9mZXRjaDIvX19pbml0X18ucHkKPiBpbmRleCA3NjVh
-ZWRkNS4uNTUyYTA5MzkgMTAwNjQ0Cj4gLS0tIGEvbGliL2JiL2ZldGNoMi9fX2luaXRfXy5weQo+
-ICsrKyBiL2xpYi9iYi9mZXRjaDIvX19pbml0X18ucHkKPiBAQCAtODc0LDcgKzg3NCw4IEBAIEZF
-VENIX0VYUE9SVF9WQVJTID0gWydIT01FJywgJ1BBVEgnLAo+ICDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJ0FXU19TRUNSRVRfQUNDRVNTX0tFWScsCj4gIMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAnQVdTX0RFRkFVTFRfUkVHSU9O
-JywKPiAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICdHSVRfQ0FD
-SEVfUEFUSCcsCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJ1NT
-TF9DRVJUX0RJUiddCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-J1NTTF9DRVJUX0RJUicsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgJ1JFTU9URV9DT05UQUlORVJTX0lQQyddCj4gCj4gIMKgZGVmIGdldF9mZXRjaGVyX2Vudmly
-b25tZW50KGQpOgo+ICDCoMKgwqDCoCBuZXdlbnYgPSB7fQoKVGhpcyBwYXRjaCBpcyBtaXNzaW5n
-IGEgU2lnbmVkLW9mZi1ieSBsaW5lIGFuZCB0aGUgcGF0Y2ggaXRzZWxmIGlzIGFsc28KaGFzIGRh
-bWFnZWQgd2hpdGVzcGFjZSAobm90ZSB0aGUgbXVsdGlwbGUgc3BhY2VzIGluIGZyb250IG9mIGRl
-ZgpnZXRfZmV0Y2hlcl9lbnZpcm9ubWVudCkgc28gY2FuJ3QgYmUgYXBwbGllZCB1bmZvcnR1bmF0
-ZWx5LgoKQ2hlZXJzLAoKUmljaGFyZAo=
+Hi,
+
+On Wed, Sep 13, 2023 at 01:04:25PM -0600, Joshua Watt wrote:
+> Using path prefixes to check if the git directory is a descendant of the
+> clone directory can be easily confused with symlinkes and bind mounts,
+> causing directories to be deleted unnecessarily. Instead, use
+> bb.utils.path_is_descendant() which is immune to the these sorts of
+> problems.
+
+I'm confused by this. What is the original problem? Corrupt download cache git repo
+being confused with poky git tree when building in "poky/build" directory and downloads
+are in "poky/build/downloads"? And at the time of check we don't know if git commit, branch,
+or git remote have changed and we want to avoid full clone if possible?
+
+Cheers,
+
+-Mikko
+
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+>  bitbake/lib/bb/fetch2/git.py | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+> index e11271b757a..4385d0b37af 100644
+> --- a/bitbake/lib/bb/fetch2/git.py
+> +++ b/bitbake/lib/bb/fetch2/git.py
+> @@ -373,20 +373,17 @@ class Git(FetchMethod):
+>              try:
+>                  # Since clones can be bare, use --absolute-git-dir instead of --show-toplevel
+>                  output = runfetchcmd("LANG=C %s rev-parse --absolute-git-dir" % ud.basecmd, d, workdir=ud.clonedir)
+> +                toplevel = output.rstrip()
+>  
+> -                toplevel = os.path.abspath(output.rstrip())
+> -                abs_clonedir = os.path.abspath(ud.clonedir).rstrip('/')
+> -                # The top level Git directory must either be the clone directory
+> -                # or a child of the clone directory. Any ancestor directory of
+> -                # the clone directory is not valid as the Git directory (and
+> -                # probably belongs to some other unrelated repository), so a
+> -                # clone is required
+> -                if os.path.commonprefix([abs_clonedir, toplevel]) != abs_clonedir:
+> -                    logger.warning("Top level directory '%s' doesn't match expected '%s'. Re-cloning", toplevel, ud.clonedir)
+> +                if not bb.utils.path_is_descendant(toplevel, ud.clonedir):
+> +                    logger.warning("Top level directory '%s' is not a descendant of '%s'. Re-cloning", toplevel, ud.clonedir)
+>                      needs_clone = True
+>              except bb.fetch2.FetchError as e:
+>                  logger.warning("Unable to get top level for %s (not a git directory?): %s", ud.clonedir, e)
+>                  needs_clone = True
+> +            except FileNotFoundError as e:
+> +                logger.warning("%s", e)
+> +                needs_clone = True
+>  
+>              if needs_clone:
+>                  shutil.rmtree(ud.clonedir)
+> -- 
+> 2.34.1
+> 
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#15057): https://lists.openembedded.org/g/bitbake-devel/message/15057
+> Mute This Topic: https://lists.openembedded.org/mt/101344082/7159507
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [mikko.rapeli@linaro.org]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
 
