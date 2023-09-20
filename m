@@ -2,60 +2,60 @@ Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545BECE79AC
-	for <webhook@archiver.kernel.org>; Wed, 20 Sep 2023 07:41:22 +0000 (UTC)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
- by mx.groups.io with SMTP id smtpd.web10.31670.1695195678035418331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBCDCE79AB
+	for <webhook@archiver.kernel.org>; Wed, 20 Sep 2023 07:42:02 +0000 (UTC)
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+ by mx.groups.io with SMTP id smtpd.web11.31770.1695195712725734365
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 20 Sep 2023 00:41:18 -0700
+ Wed, 20 Sep 2023 00:41:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=Yr/Mavql;
- spf=pass (domain: snapchat.com, ip: 209.85.208.178, mailfrom: ecordonnier@snapchat.com)
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2c02e232c48so22507651fa.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 20 Sep 2023 00:41:17 -0700 (PDT)
+ dkim=pass header.i=@snap.com header.s=google header.b=fQawGujM;
+ spf=pass (domain: snapchat.com, ip: 209.85.208.51, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-52c4d3ff424so8131174a12.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 20 Sep 2023 00:41:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google; t=1695195676; x=1695800476; darn=lists.openembedded.org;
+        d=snap.com; s=google; t=1695195711; x=1695800511; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nI1wRwLArerz0eE1/8QFwnCKBuZb0fs6yFtQQE9QcTg=;
-        b=Yr/Mavql+kZXtqpqbyoIe9UtF2J0S4XKRPjYkAWoysYv+65QhHBvh+5fGCQjtOPJah
-         ksbYcskpNT1Rb2Eyz+EahTmuDbyFY7eD5z2dwBTAEvNB9RXpJ9YS2rste7H6ea8Gw2m/
-         4cj2gi/ZvG0r6n1sS7WSNtHHHRffK4yGBTJBM=
+        bh=FNYiUB3JGZgoJExQVQ//SFov5ioJzfwPeHmopZZMDqk=;
+        b=fQawGujMpeIfBW8FcRUuX2xHrTpCoeu0Kb3VDvorxF5VSILjpqFNma/3fznFk/I1K6
+         /y6y+ewDzPdBHsVJBzniFdamkdQRRQVwLHepMHWqWas1frF9wJJCmLZJL5DnuUa9Zisv
+         IfBRuv0GNvml/q4W+Tv5kE4cFWYj7gjdXOKV0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695195676; x=1695800476;
+        d=1e100.net; s=20230601; t=1695195711; x=1695800511;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=nI1wRwLArerz0eE1/8QFwnCKBuZb0fs6yFtQQE9QcTg=;
-        b=OtSld1bOc95KQoWuvApKA2ObFaoIfIKAm3AWZZdSSsJP+ronu5kjj20tXQekeomfcE
-         E3VVvEO49HpdS08prxMTHd+vPWQMVnVZwH7cTpX3ONWsBuOQxmbl5ltX0Ws/ForHyKDk
-         9dn2Fsb4qvtxmdKabt14Z3Wk6H/48A/2MVq0eJ8+9WaEKOCp3L0UarIeMdLfeFS/xJT7
-         aKi3LXWZb8BIrQP8r5Yuo9QcX5mGAYYjiXFaICosxjOFsE+5/SvoqDUxVChDtaKyK8RE
-         LhNCoYTGTCxl9dIqiuRD0nMDNLszmxUfL8RHiMK6YHGPelVtrUxNrThDq30K1rzeA+2v
-         lMJw==
-X-Gm-Message-State: AOJu0YwFQCbd/0eG0R6ByR8lozph9eszKzr7LFNhXNsQdOznPsktY3bs
-	gcuAxR13bqebWosM54nEVl54+e4bUE1uXPuSLe0=
-X-Google-Smtp-Source: AGHT+IGZHTCBBkaLdwayd3jUPcdGmEIelK9YAaqZ99z4FApMz96jiYRjiVKR3yssirw20YhC5Dk+5w==
-X-Received: by 2002:a2e:998c:0:b0:2c0:2ef8:9716 with SMTP id w12-20020a2e998c000000b002c02ef89716mr1479983lji.1.1695195675593;
-        Wed, 20 Sep 2023 00:41:15 -0700 (PDT)
-Received: from lj8k2dq3.sc-core.net ([85.237.126.22])
-        by smtp.gmail.com with ESMTPSA id p8-20020a1709061b4800b0099c53c44083sm8902610ejg.79.2023.09.20.00.41.14
+        bh=FNYiUB3JGZgoJExQVQ//SFov5ioJzfwPeHmopZZMDqk=;
+        b=TWWajG7es1Si2VybEEtcW6mFwvkY98YoxyNrEi2Qxb6eF5IRRSuBB73bKHlYAZvbZo
+         4/fH2ZPn4TirQwrddT8fFaN4aD2uqBOBoD+FppiLy/ZsWAUwbWuvqVhYegY6ozPN6LsJ
+         yTCA02V0xm2NxmVaUh/jbRQuhq7OeiOzQbEYYDJo1QVp8zkQU3Sv4VYGD0A7uvhnEzX5
+         UVPewqbFkRzcrpUDsey+VQP6yT7lAXUjfMBYQOPdiu/BB4TicYKtYJHS4Fm0NoJwPJCr
+         V5wYe/uksYVk+lKyrTChPSZjxVOiXWpM3U6KR0qF3QJUObzIo77ECEgJrp16jyM9+Qlg
+         0UBw==
+X-Gm-Message-State: AOJu0YzJDEGtZJgCWZZo/12u2ipLSINm/LuF6aiSxoTSHdBY4QHKWy2D
+	JUELWpB9DSEDtdGkI9qAo23OcmxYOcgfSgrpxN8=
+X-Google-Smtp-Source: AGHT+IEm5wh2+375dbHwrElGHvAX9qV/x4cruOMoA0SPEh95mIghwo0Nby1OmT9RdcWPbJDBAUXOZw==
+X-Received: by 2002:a50:e717:0:b0:530:8a59:a01d with SMTP id a23-20020a50e717000000b005308a59a01dmr1543632edn.27.1695195710834;
+        Wed, 20 Sep 2023 00:41:50 -0700 (PDT)
+Received: from lj8k2dq3.sc-core.net ([213.249.125.50])
+        by smtp.gmail.com with ESMTPSA id g16-20020a056402321000b00530cf354746sm5563430eda.48.2023.09.20.00.41.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 00:41:15 -0700 (PDT)
+        Wed, 20 Sep 2023 00:41:50 -0700 (PDT)
 From: ecordonnier@snap.com
 To: bitbake-devel@lists.openembedded.org
 Cc: Etienne Cordonnier <ecordonnier@snap.com>
-Subject: [bitbake-devel][PATCH v2] avoid some unnecessary copies
-Date: Wed, 20 Sep 2023 09:41:09 +0200
-Message-Id: <20230920074109.4047252-1-ecordonnier@snap.com>
+Subject: [bitbake-devel][PATCH v3] avoid some unnecessary copies
+Date: Wed, 20 Sep 2023 09:41:48 +0200
+Message-Id: <20230920074148.4047337-1-ecordonnier@snap.com>
 X-Mailer: git-send-email 2.36.1.vfs.0.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 20 Sep 2023 07:41:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15087
+ <bitbake-devel@lists.openembedded.org>; Wed, 20 Sep 2023 07:42:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15088
 
 From: Etienne Cordonnier <ecordonnier@snap.com>
 
@@ -137,7 +137,7 @@ index 451e6926..609e276f 100755
                      pass
              if len(self.queue):
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index c88d7129..fde6e4e9 100644
+index c88d7129..c40a3be2 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
 @@ -3159,7 +3159,7 @@ class runQueuePipe():
@@ -154,7 +154,7 @@ index c88d7129..fde6e4e9 100644
          start = len(self.queue)
          try:
 -            self.queue = self.queue + (self.input.read(102400) or b"")
-+            self.queue.extend((self.input.read(102400) or b""))
++            self.queue.extend(self.input.read(102400) or b"")
          except (OSError, IOError) as e:
              if e.errno != errno.EAGAIN:
                  raise
