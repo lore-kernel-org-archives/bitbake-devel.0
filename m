@@ -1,173 +1,131 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <gowrishankarstg@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF9DCE7A9D
-	for <webhook@archiver.kernel.org>; Mon, 25 Sep 2023 16:18:03 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.65221.1695658676285993490
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB47CE7AB1
+	for <webhook@archiver.kernel.org>; Mon, 25 Sep 2023 17:33:14 +0000 (UTC)
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+ by mx.groups.io with SMTP id smtpd.web11.67581.1695663185340920204
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 25 Sep 2023 09:17:56 -0700
+ Mon, 25 Sep 2023 10:33:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WYizMwNh;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4050bd2e33aso71513645e9.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 25 Sep 2023 09:17:56 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=OBevCrqU;
+ spf=pass (domain: gmail.com, ip: 209.85.215.176, mailfrom: gowrishankarstg@gmail.com)
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-578a62c088cso5965407a12.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 25 Sep 2023 10:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1695658674; x=1696263474; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WirMZ/jhknGI7G6srvM1jBBw2SkzKab7xxvvgLWyl3g=;
-        b=WYizMwNh6+78Ho892m5wR8ArKpz2I3gPy1WmtePyxb/eDQwEo/KZY+vuZ9YsE2gSBW
-         42gM2SqwVTtOG7v2768/22r5D1Y2OH1UjMaqWL+bOhiGp8zsznsZ7rTPMFAMrkWrqYKq
-         A1m626/X9PoywTs9PMACOD6Q9BNEODlMUhDlQ=
+        d=gmail.com; s=20230601; t=1695663184; x=1696267984; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PJJwIxit2Flj2brdL+c0or/vktXJiY6yl1or6zGnWqs=;
+        b=OBevCrqUsnMiTcfijF8vdphkL9VlPpU4oTkxdvfvW1yLKAMCAu6Ky62GNcjSQD/APM
+         j7BiDt2mfaOg6z4rTjCSvaECiRNgibzWOdRmP/CZEV7AVSJTSrBFdBmzt+frra4nZOXV
+         ZQag6kBn8sisfWAhKKsuirn1v+XqNDqc5MMN75uk2KjKwNvBqz2OfS+b1QnqzGms7FXB
+         ldcFWdcgh00gtbsIH/4/HEb7+Zvg0xf0PKL6imbE3m6PJ8yEzq9Qj+/oAyrrBlEqM+Af
+         8mqfggSRvgee6fuDHCfZoW26sxH4/1e75DvfqeOKbOGt7xIUVycIztiG2zDALOT7UvIr
+         0KVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695658674; x=1696263474;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WirMZ/jhknGI7G6srvM1jBBw2SkzKab7xxvvgLWyl3g=;
-        b=eZHpK5rLedVQuWEq0CSeZnklCrAJdMK56wUiKvXhDpUy7QQiv/Gb66FKNBr7f2/gwY
-         G3B++3hna0YWOdu5MaP0hsSjdwslenPzOfg3GtolVETw46K0Zp5TGU6Wef01Tz61I2dc
-         sS+ud79B4zIsBwbTaQ7bN0JZZ6f0ek9i/ibBatBprzU6Rm154+DS9kmwjJmpISTPBrWk
-         9Cr5Pfk7V8D0esOGT6Hr2oT3QAiQsunV9iDBogmZOL6dwvBfv0N7pDldDtwLdyuHQr59
-         JnQC5CF7ZoU+DS94bNZaAfURuAhnHDBX0NCq2a/t3utWaYZVea0iHlkgkB//FnJTVMN6
-         /oWw==
-X-Gm-Message-State: AOJu0YxO/Fa8/oqldKK5tbjJ++tXXOhJ7aniccpjj6Vmq7pW6VteS3Zq
-	AVgS9raXiRIw3i1r26s63f2W0w==
-X-Google-Smtp-Source: AGHT+IHmIHccZdgRYqciddnLWLaKsn/ygX4PWOKDJAd4axLycWTZx/5Vcwr/RslxYXOwYEdlfFgquw==
-X-Received: by 2002:a5d:4bc1:0:b0:315:9e1b:4ea6 with SMTP id l1-20020a5d4bc1000000b003159e1b4ea6mr7040676wrt.58.1695658674422;
-        Mon, 25 Sep 2023 09:17:54 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:dc0c:9197:530a:4339? ([2001:8b0:aba:5f3c:dc0c:9197:530a:4339])
-        by smtp.gmail.com with ESMTPSA id r2-20020adfe682000000b0031ff89af0e4sm12206321wrm.99.2023.09.25.09.17.53
+        d=1e100.net; s=20230601; t=1695663184; x=1696267984;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PJJwIxit2Flj2brdL+c0or/vktXJiY6yl1or6zGnWqs=;
+        b=vTUXsl9p5T8mg0MxoEgp65ohFeijtakOxB4flgf9KiCp5j2X3ttNqYvNJdLlM+NAHq
+         ReHgoVsYzbXBtgGCHEHCGF5N7DuKnnzJwiDXZ6J7hGnFL4dhjwsLnWhGDzDJhc2HiCN/
+         mLDKdZGms1hXdNmxUL+KFuF9rE2//YeoRNOdx2Wda861u7l5Uq52fs7auvdm4Adnfoe7
+         jWSeu/5Y3IXMMgnVrgwYZBwFOwYDWdtYc76aIB74lMKsGMMjdToag+nK0Vgl1eR3F6ck
+         3/YFGn3Vl98J3ly6Ii0ruX76ulzFLtdFzUa/wtTKL5LqCEQpA5PRmLmD6uP1kQ4bDAWB
+         h5jg==
+X-Gm-Message-State: AOJu0YyDcOKpc6ch5AF5kAlVsI7C4zuQIaCz6eZf5/ughTbUx6wk9gGu
+	7YbJhx8QSaoRbUvg2VSb7pu+CTTVwB1rgoDF
+X-Google-Smtp-Source: AGHT+IG0TUhgKHwR0VvTc7zSakL7o79y0CO7WUMCRC+eHLmj3/YNP92Vh9ubl5SMt/JfuxdYasxhxg==
+X-Received: by 2002:a17:90b:4d84:b0:269:a96:981a with SMTP id oj4-20020a17090b4d8400b002690a96981amr396963pjb.5.1695663184298;
+        Mon, 25 Sep 2023 10:33:04 -0700 (PDT)
+Received: from localhost.localdomain ([183.83.148.74])
+        by smtp.gmail.com with ESMTPSA id ne10-20020a17090b374a00b00277246e857esm4860677pjb.23.2023.09.25.10.33.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Sep 2023 09:17:54 -0700 (PDT)
-Message-ID: <4e46959768ee5e6cc6f72a42fa566db267dd5d38.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-getvar: Do not output anything
- with --value and undefined variable
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>, 
-	"bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Mon, 25 Sep 2023 17:17:53 +0100
-In-Reply-To: <DB5PR02MB1021356A2A4354ED39DB5CD96EFFCA@DB5PR02MB10213.eurprd02.prod.outlook.com>
-References: <20230925032246.1316597-1-pkj@axis.com>
-	 <2dfb0d4ca6650781ad55e6ba164da4e40d7b41f7.camel@linuxfoundation.org>
-	 <DB5PR02MB102138720B4A38345285D26BCEFFCA@DB5PR02MB10213.eurprd02.prod.outlook.com>
-	 <35b58142c73b9b22f960a87876f260d10c30b57c.camel@linuxfoundation.org>
-	 <DB5PR02MB1021381B9F45F71019B89C8FAEFFCA@DB5PR02MB10213.eurprd02.prod.outlook.com>
-	 <659f37fdb542e410ab6ed039d6cadb2403024350.camel@linuxfoundation.org>
-	 <DB5PR02MB1021356A2A4354ED39DB5CD96EFFCA@DB5PR02MB10213.eurprd02.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+        Mon, 25 Sep 2023 10:33:04 -0700 (PDT)
+From: Gowrishankar Saminathan <gowrishankarstg@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: gowrishankarstg@gmail.com
+Subject: [PATCH 1/1] runqueue: Fix task execution dependency issue
+Date: Mon, 25 Sep 2023 02:09:58 +0530
+Message-Id: <20230924203958.35361-1-gowrishankarstg@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 25 Sep 2023 16:18:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15121
+ <bitbake-devel@lists.openembedded.org>; Mon, 25 Sep 2023 17:33:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15122
 
-On Mon, 2023-09-25 at 16:00 +0000, Peter Kjellerstedt wrote:
-> > -----Original Message-----
-> > From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > Sent: den 25 september 2023 16:07
-> > To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>; bitbake-
-> > devel@lists.openembedded.org
-> > Subject: Re: [bitbake-devel] [PATCH] bitbake-getvar: Do not output
-> > anything with --value and undefined variable
-> >=20
-> > On Mon, 2023-09-25 at 13:55 +0000, Peter Kjellerstedt wrote:
-> > > > From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > > > On Mon, 2023-09-25 at 10:16 +0000, Peter Kjellerstedt wrote:
-> > > > > > -----Original Message-----
-> > > > > > From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > > > > > Sent: den 25 september 2023 11:22
-> > > > > > To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>;
-> > > > > > bitbake-devel@lists.openembedded.org
-> > > > > > Subject: Re: [bitbake-devel] [PATCH] bitbake-getvar: Do not
-> > > > > > output anything with --value and undefined variable
-> > > > > >=20
-> > > > > >=20
-> > > > >=20
-> > > > > My goal here was not really to be able to determine if the
-> > > > > variable is
-> > > > > defined or not
-> > > >=20
-> > > > I know, but that is an important detail and whilst it may not
-> > > > matter to
-> > > > you, it does matter a lot.
-> > >=20
-> > > Well, as I see it, with my change it _is_ now possible to make
-> > > the
-> > > distinction if you really care, where before you could only
-> > > assume
-> > > that a returned value of "None" actually meant that the variable
-> > > is
-> > > not defined.
-> >=20
-> > As things currently stand it is clear something went wrong through
-> > the
-> > process you yourself mentioned as how noticed. Once your proposed
-> > change merges, it becomes very unclear what is happening.
->=20
-> The documentation (i.e., `bitbake-getvar -h`) for --value states=20
-> "Only report the value, no history and no variable name". When I=20
-> read that, I instinctly assume that it will not output anything if=20
-> I ask for a variable that does not exist, not that it will output=20
-> something that looks like a valid value (i.e., "None"), but isn't.=20
+When the recipe metadata is updated, and the Sstate cache remains unchanged,
+a problem arises where tasks dependent on this particular task are found in
+both the 'covered' and 'notcovered' lists within the runqueue.
 
-Please stop trying to convince me the current behaviour is wrong. I've
-said multiple times, I agree. What I don't agree with is how you're
-fixing it.
+For instance, consider the example of 'base-passwd.bb:do_populate_sysroot',
+which serves as a dependent task for both 'systemd.bb:do_populate_sysroot' and
+'dbus.bb:do_populate_sysroot.' Due to the lack of ordered task ID storage in the runqueue,
+it often leads to the execution of 'systemd.bb::do_populate_sysroot' prior to
+'base-passwd.bb:do_populate_sysroot.' This results in 'systemd.bb:do_populate_sysroot'
+being erroneously flagged as 'notcovered' by the runqueue.
+Nevertheless, sstate later marks it as 'covered' if there is no change in the task output.
 
-> I would be fine with an error message to stderr, but then I would=20
-> assume the same result if bitbake-getvar is called without --value=20
-> for an undefined variable.
+To address this issue, this commit enhances the runqueue to store task IDs in an ordered list,
+ensuring tasks are carried out in their correct dependency order.
+This adjustment will execute 'base-passwd.bb:do_populate_sysroot' as the initial
+task and then 'systemd.bb:do_populate_sysroot.'
+This strategic execution ensures that 'systemd.bb:do_populate_sysroot' won't
+receive an incorrect 'notcovered' status, as 'base-passwd.bb:do_populate_sysroot'
+will have already been executed beforehand.
 
-I agree with that.
+Signed-off-by: Gowrishankar Saminathan <gowrishankarstg@gmail.com>
+---
+ lib/bb/runqueue.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
->  I would also prefer if it is possible to silence the error for the
-> case where you do not care if the variable is undefined.
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index c40a3be2..446b1667 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1789,7 +1789,7 @@ class RunQueueExecute:
+         self.sq_live = set()
+ 
+         self.updated_taskhash_queue = []
+-        self.pending_migrations = set()
++        self.pending_migrations = []
+ 
+         self.runq_buildable = set()
+         self.runq_running = set()
+@@ -2422,7 +2422,7 @@ class RunQueueExecute:
+ 
+     def process_possible_migrations(self):
+ 
+-        changed = set()
++        changed = []
+         toprocess = set()
+         for tid, unihash in self.updated_taskhash_queue.copy():
+             if tid in self.runq_running and tid not in self.runq_complete:
+@@ -2492,7 +2492,7 @@ class RunQueueExecute:
+                     #logger.debug("Task %s hash changes: %s->%s %s->%s" % (tid, orighash, newhash, origuni, newuni))
+                     self.rqdata.runtaskentries[tid].hash = newhash
+                     self.rqdata.runtaskentries[tid].unihash = newuni
+-                    changed.add(tid)
++                    changed.append(tid)
+ 
+                 next |= self.rqdata.runtaskentries[tid].revdeps
+                 total.remove(tid)
+@@ -2510,7 +2510,7 @@ class RunQueueExecute:
+             if tid not in self.rqdata.runq_setscene_tids:
+                 continue
+             if tid not in self.pending_migrations:
+-                self.pending_migrations.add(tid)
++                self.pending_migrations.append(tid)
+ 
+         update_tasks = []
+         for tid in self.pending_migrations.copy():
+-- 
+2.34.1
 
-I only agree with this if the user specifically asks for that behaviour
-as I think it is a perfect way to end up with obscure bugs otherwise.
-
-> Whether bitbake-getvar should actually fail with an error in case=20
-> the variable does not exist is more debatable. I can see use cases=20
-> both ways.
-
-I can see the use case both ways but I think the user has to
-specifically ask for undefined to result in "".
-
-> > I'm not disagreeing that it needs to be fixed somehow we agree on
-> > that
-> > and I've already said as much. What we disagree on is how to fix
-> > it. I
-> > disagree on this way of addressing it.
->=20
-> Based on my comments above, here is my suggestion:=20
->=20
-> When an undefined variable is requested, give an error message, e.g.:
->=20
-> $ bitbake-getvar UNDEFINED_VAR
-> The variable 'UNDEFINED_VAR' is not defined! [on stderr]
->=20
-> and set the exit code to 1. And the same result with --value:
->=20
-> $ bitbake-getvar --value UNDEFINED_VAR
-> The variable 'UNDEFINED_VAR' is not defined! [on stderr]
-
-That seems reasonable to me, without the "!" though.
-
-> If -s or --no-messages (borrowed from `grep`) is also specified, then
-> no error message is output and the exit code is 0.
-
-I'd suggest only a long option --ignore-undefined. That way when you
-see it in a shell script, you know exactly what risk is being taken.
-
-Cheers,
-
-Richard
 
