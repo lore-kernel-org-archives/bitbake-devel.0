@@ -1,119 +1,204 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BBFCE7A89
-	for <webhook@archiver.kernel.org>; Mon, 25 Sep 2023 09:22:20 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web10.56986.1695633736506999669
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AEDCE7A81
+	for <webhook@archiver.kernel.org>; Mon, 25 Sep 2023 10:16:40 +0000 (UTC)
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (EUR01-HE1-obe.outbound.protection.outlook.com [40.107.13.80])
+ by mx.groups.io with SMTP id smtpd.web10.57551.1695636989721988621
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 25 Sep 2023 02:22:16 -0700
+ Mon, 25 Sep 2023 03:16:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LhQZyil4;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-31ff985e292so5634786f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 25 Sep 2023 02:22:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1695633735; x=1696238535; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ikfEfmBrPvWEXZ8Uy6WGpzVyAdJPyzZ2daUuYq8IrN4=;
-        b=LhQZyil4Jf1waVZGvDbsKkE6aKOY/agyqi/BtxGm7lPJqpf0jc+FpOa4Pcw3ADywYw
-         JP97N7uIt30HJdn47IzOfdGWkvF0uJNIeI0VW4/tZ0Rw7aIeApLImkCDfv/BidCAme6T
-         ifur7vRmSTO0UzCjCFgakgOxq6MvI1cYsxTr4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695633735; x=1696238535;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ikfEfmBrPvWEXZ8Uy6WGpzVyAdJPyzZ2daUuYq8IrN4=;
-        b=C22WmrFLgCkXQkWswU9qIeRmoduD4BrXj1kDYWRyLOnu03LsZnXwHEb24z64UH/Soz
-         EMDjFV4yTuLk3P1bVcLn+Gb3SotqFidurL7dHhA3t1tSzkbrSK4I3qys+sMzz/lRdNMG
-         MnlYnJbR0poxew+2FxBQK+lO0we+UFKHwbgF2iSc03xkJCZ9Xez4Rl256zQxxbv0HNtO
-         ybpZ4mLH/Zsi0JYHVegYlHesepTeFe6TuUUbhCvmPDhc1qYTSmZRzp9Gy1YSPbzT2Uaj
-         /7ZNUZx69dYPUUPpCmHTxZJAgNU00e/NlehV2iQlnqUQg21ig6RdlLF/RaqHZ4NJNmQG
-         hZ9w==
-X-Gm-Message-State: AOJu0Yz6T6/bBYc644X125RFNFKPIK7cfA5Z3+WTjtQ2lNfmrRS/RQfL
-	/5xa34oTaDrvK0yNwzpIcFjDTw==
-X-Google-Smtp-Source: AGHT+IGbuDlsmwUmmJlst8Uj0Sqyyqc5L6Y72/N/VWeniTmT535f/9uYwX8DfbqR2QxTePOUWpfKZA==
-X-Received: by 2002:a05:6000:1c7:b0:320:6f4:a200 with SMTP id t7-20020a05600001c700b0032006f4a200mr5976273wrx.10.1695633734795;
-        Mon, 25 Sep 2023 02:22:14 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:dc0c:9197:530a:4339? ([2001:8b0:aba:5f3c:dc0c:9197:530a:4339])
-        by smtp.gmail.com with ESMTPSA id a3-20020a5d4d43000000b003177074f830sm11438032wru.59.2023.09.25.02.22.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Sep 2023 02:22:14 -0700 (PDT)
-Message-ID: <2dfb0d4ca6650781ad55e6ba164da4e40d7b41f7.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-getvar: Do not output anything
+ dkim=pass header.i=@axis.com header.s=selector1 header.b=Rxu4i0ZI;
+ spf=pass (domain: axis.com, ip: 40.107.13.80, mailfrom: peter.kjellerstedt@axis.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NyLwnKY7Fmvh9MqqjWXdRSdAqANh6fv+sPBq0qU1pKj4bP2TkbqDTY+GGPtYtUY3Zh05SOenjMjvvRJzJprllM/rEdOQdLiz/mFrq7Agks0qZ5BdtE7RYeJNDs8PP4X1iZwvsGkt0DdfVE3re9TNkNpmvzKJW3hjoAy7TiFp75uQkoa2SZWPDXUFE/fwWBWPMgm3wthJemiP32UJmWHQLi3VEr/lbUfgntvW0kzKBo+bJlY2HeMd/pwv+614ZpOJmBSG54paXjvk6HyAGqeg2dFjkDrGtaKY2JWn+Z4NDdHKsJlqYMXexGKydp6nj8yu0M2ZEaWZad3P4pHtp0ukrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aLEbSz0wiN5VmkDYNFAOrRuhWVSFfdh4y91iclLTj0o=;
+ b=JjN41K4HITo3e01jZYS7+1LCH2AJMAhiyPVh25HnKsyxzJzMKTllfX12ndaKYKajIrh5i5Br0mQpSloxmAlAPVKB9+k5pKpwF0YCETEG/wXyWIbyfif5C770xOafNz4mpculiHbEnE+Bf6mtPOBCV8xfbrIdpndUFRlhZnHoeJw8C7IUyXOkqaC4tKMFpcK83BWUd4mkk3DyMoq8Cee9ZimomHvqSCaeSpHy8n3Cgh53mAc9Ojxvtw7jvsU7iDFMr6PcMohlBlujcbQhxrKZIWHkob6JHrur0Kb54aZ50722HLlPPQ5YA2O7Pd5JjWtQFuRYIZvN5J4X1b2NGmTtEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
+ dkim=pass header.d=axis.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aLEbSz0wiN5VmkDYNFAOrRuhWVSFfdh4y91iclLTj0o=;
+ b=Rxu4i0ZIDPfag0j45uCXNGvz48jlnkoGGGE8y0V0G3mnGq8b9olhPRFpFrFkg/fX4hSvLPYc4vb5lxyQlJdxoDIC358Bqi6Ttc6JdSXlwQhw5Mw+EOlUA1aker4ggI8bJwrBcTxubpOQVFLx7RMeRB6FClhd1fOcNtD62H86siM=
+Received: from DB5PR02MB10213.eurprd02.prod.outlook.com (2603:10a6:10:4a8::17)
+ by DU0PR02MB8739.eurprd02.prod.outlook.com (2603:10a6:10:3ef::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.27; Mon, 25 Sep
+ 2023 10:16:26 +0000
+Received: from DB5PR02MB10213.eurprd02.prod.outlook.com
+ ([fe80::46e8:4a9e:ea9a:7861]) by DB5PR02MB10213.eurprd02.prod.outlook.com
+ ([fe80::46e8:4a9e:ea9a:7861%4]) with mapi id 15.20.6813.027; Mon, 25 Sep 2023
+ 10:16:26 +0000
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: RE: [bitbake-devel] [PATCH] bitbake-getvar: Do not output anything
  with --value and undefined variable
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Mon, 25 Sep 2023 10:22:13 +0100
-In-Reply-To: <20230925032246.1316597-1-pkj@axis.com>
+Thread-Topic: [bitbake-devel] [PATCH] bitbake-getvar: Do not output anything
+ with --value and undefined variable
+Thread-Index: AQHZ75HHLvUupXI6K0yyvOd1GScPw7ArSq9w
+Date: Mon, 25 Sep 2023 10:16:25 +0000
+Message-ID: 
+ <DB5PR02MB102138720B4A38345285D26BCEFFCA@DB5PR02MB10213.eurprd02.prod.outlook.com>
 References: <20230925032246.1316597-1-pkj@axis.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+ <2dfb0d4ca6650781ad55e6ba164da4e40d7b41f7.camel@linuxfoundation.org>
+In-Reply-To: 
+ <2dfb0d4ca6650781ad55e6ba164da4e40d7b41f7.camel@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axis.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB5PR02MB10213:EE_|DU0PR02MB8739:EE_
+x-ms-office365-filtering-correlation-id: 2a51d7eb-4797-4c22-79ab-08dbbdb079e0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ U435fk77TUoN53XmzF53uE363XxFuOaTMDew3kJG2jf7SmI80Bw2BDLPjtirBqAfhJhFSZym3WaOF7ft00YB4vFjfxn+YD8D64EbYCUsgONZtwUY3vQbspzytqBe1aAIb3cP8+AYUEE2nYuGFieWGZsrp6ykYU6gBy6fTbmdRTpd8Uidu10OqJ5qgt85Zn/QuSFXGlFoiM2GD9MiKCBKZCvOAeB9u/U4JwhFKfudBcxk/7Y40w2+3F+4/JJ1o6F9tKR4dR75rFVP5rhQN3kIzGXNAtmNq5W9DKk3iaf1a5Cy1YReDsd2GYGPigBJdNA4UE6T+gd5ZCQt8yFTg0glynEv5nqDPWT1tEkeWVyONB4BNCXKTNaZbkQJ6a92Hko0QbDLWEGff5FeBtMT0lLOZMDpkTMceUFVThk6BLWWf2GLLflmH6R1Kx3Ou7/5Tc7sjAqjumgZnOoM3cxQqfOJyV0bzRZzGHi+A6LgCo1Tp+D6z89NPhiRZOlloFus9VXiKIcgsMYEBNoEgrDDzo8nXTjqzCnD1bU4b9mj+ueHwPZAWMamDcGFl0qZ8Aeg091CgEXKNhRTvuhoWXSrp00De7f9CzLGnOl9m4DXi6KIdWeMOs9nvoyp6FZSpj7axnMq
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB5PR02MB10213.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(346002)(366004)(396003)(39860400002)(230922051799003)(186009)(451199024)(1800799009)(316002)(41300700001)(66556008)(66476007)(66446008)(64756008)(66946007)(76116006)(110136005)(9686003)(8936002)(8676002)(2906002)(44832011)(52536014)(478600001)(26005)(71200400001)(5660300002)(38070700005)(33656002)(38100700002)(6506007)(7696005)(53546011)(55016003)(86362001)(122000001)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?b0FPcjVOWE9JSlNLSEJsSVZHUHA1bHh3cDh1MWx3TWdOUlJvdVNwYi91TkJ3?=
+ =?utf-8?B?OFVyYVk0VkVNV1RKK1BFcmdhc2luTDEyMEp5ZHFUa1FyZkg3Smx6dWRYQjhn?=
+ =?utf-8?B?Mkc2NGpvdHdSaldMbXhzdFhOVnMzdng3TTQzby9WaVQrN3dwSXY3OHdLcjlo?=
+ =?utf-8?B?bThUYXJGdUJHcjV3RWprVHJWS0k0dTVha3F0S2ExdmdZdndUSE9aQlBJeGZV?=
+ =?utf-8?B?L1FFcmVRZUFxODFOcTBpVXd6Qnh1NEIwODdoNS9mVURlVDRYajBmTVZtTWhP?=
+ =?utf-8?B?K01NZmhoa3RNWUZaMmdZLzRxYUlKUEtZNDYyRHkvSFdhdGdqL21JQ2ZrTURa?=
+ =?utf-8?B?QzZaUGFFdnV1VkRCNUxGaHRHUWZjQ0Nucnc0WFhqUktJcTRsdFA1MTBTMEdX?=
+ =?utf-8?B?c1dmVTZOQUdZR1M3S0daY1hsZ29nQ21OZ1cyNjkvV2x0eW5rb0V0V1lWSk12?=
+ =?utf-8?B?ZUNLTURUdWJFbUhDbmVaOG8wazRYa1BRcEtqSEU3WE9hZjBsOFNvU0lWL2hV?=
+ =?utf-8?B?UFR4WEU2TmFHRTBUYlltY3dSQmtkSGUzK3JQMEp6Ukx0WlhhWm96Y0t1SnVG?=
+ =?utf-8?B?THlIVFNKSnNOVDFPMmFpT1FvNEZSQjRsL08wYWtxVTlOK09YVHc2clFTUC9Y?=
+ =?utf-8?B?ZTJWdVFENEpjSGdMcWo4WTJmOTQyUzVDclpKNThnTVVjeXpBUks3OHdMcVdm?=
+ =?utf-8?B?OU02eTdHMXhWZCtwM3JmdXREQ2Z3UDVMNFFLZFNkN2hyMzlHU2ZWTkZwbmZO?=
+ =?utf-8?B?cUJkZTBWZ1pYRFpsUGxLZ2RnTlVyTDZzOE8zVTlkb0syeVZSbnZyWlhiV2Vv?=
+ =?utf-8?B?SlNmdVVOUStBT3pTSnZIUytYQXd3aWs3K0pZUmsxcjRORnB0YXdLQmkzL1Ns?=
+ =?utf-8?B?SFpIZHBNREEzRWpXTFRZUTJiQjZ3UnhGam04MGtlTURtWDkwdnlvWmZwZmxS?=
+ =?utf-8?B?ZDBQODNobmNMNW43S21VVUdBOTZMVXBRb3NZV243R3krNzdmWVJUSkxBejBJ?=
+ =?utf-8?B?ZkNVbGJ4QVJ5ZG9RWHM1VEhYY2NsUjR5QTZZWWtmVWFkQkVwbXVHaEJiR25x?=
+ =?utf-8?B?dXRkb2RoanNGdGhPeGszVXVLaVB5dWRhaHRJaStHVEpIRjFpNkFIL3pKUEpt?=
+ =?utf-8?B?b0FYSUgxTUpobjRNZHovSmd0Y2dzMVVsS1RRb05YYzRKNGRZTzFPbldDKzlt?=
+ =?utf-8?B?NEdCaDJkaFdEcG5pc1gyTjBNUjEzOFpPZVJmMlpkSTZacldUZjVkVFNnWGlR?=
+ =?utf-8?B?OStqMTdjaTZjMFgwM2phOWtGdFM4eFhuQzhXZzM1bmJOTEUyTkVVMmhXVklK?=
+ =?utf-8?B?NHp6Q2RjU2xveEt4dGYzOGJybW55RW1JbkROQ1hDU1NIOFdDU2tDNER4bngz?=
+ =?utf-8?B?VjczWU1uM1JOM0g5L2NBdSt3eDBrUU8wb1lsQ0xHMXErcWRNMENZNXBZVmJt?=
+ =?utf-8?B?WENjYndvQklLNlI5amhEc04wb3pISDFKV2pTR1ZYRUV2d003a1Jqc3FZalNL?=
+ =?utf-8?B?YktHMWJhbGp6QTJxelFaOUROa015VGlZZmFqWkRXRHRQNGpnMDAwOGtDK1pP?=
+ =?utf-8?B?amxYbjZ6aldOZW84Z01aSlNaVnVndGZSUGhmODJmZEZ0MkNFa1BOSTdTMW1Y?=
+ =?utf-8?B?Nk9IV3hwTFNILzVaaXUwN2Q5TDZZR3crRU9ibmJGODJrQ1NFM3Q5TDEvOWZ6?=
+ =?utf-8?B?d200OE9ueFQ5ZWdNU1VUQTFSUURJUWdGY2JYSXBRV1c1c1dSQWN0anpFUndB?=
+ =?utf-8?B?dTl1U0NWMkJWZlVHQ0xrR0ZWc0NyVmlZbEc3bHZwQkl0VXdzOU9lZHdXWm9l?=
+ =?utf-8?B?a21qdWJKTXVPcTZqMlFoeUJhRFVLU0IwK1gvNnZHbGdTM2N6U05QT05yeXBL?=
+ =?utf-8?B?M01JMnhkRFZ4U1VWNVFXb2IxVE8wM0NlWDZKd3Y3NW53ZUwrWUVBREJJWjNG?=
+ =?utf-8?B?MkpBTWF0T1NvZnhSdXRZck1wNWtzeDd5bnlYM1Fudmk3U1ZTcWlYbkVhK2U1?=
+ =?utf-8?B?U012RGhGblpyRHd5SXdhZllPQUxlaVd2ZEtFbzlGanErankxekhyMWEydkV2?=
+ =?utf-8?B?RnVxeWtXODkrYUNhUy9lQ1JwNllnclJvUFRHOXZFOUpBVVlyWHFlS016aXM3?=
+ =?utf-8?Q?WTXk=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB5PR02MB10213.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a51d7eb-4797-4c22-79ab-08dbbdb079e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2023 10:16:25.9269
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6o14AqnCSPzsImlir/RZJoGq92H3vVvPdmyYLplQAWEWjTbfhRTdXGSUFr1RtwIV
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR02MB8739
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 25 Sep 2023 09:22:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15114
+ <bitbake-devel@lists.openembedded.org>; Mon, 25 Sep 2023 10:16:40 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15115
 
-On Mon, 2023-09-25 at 05:22 +0200, Peter Kjellerstedt wrote:
-> Rather than outputting the string "None" when an unknown variable is
-> used together with --value, output nothing. This is consistent with the
-> no --value case where only a comment stating that the variable is not
-> known is output.
->=20
-> This also means it is now possible to differentiate between an undefined
-> variable and an empty variable since the empty variable will be output
-> as a linefeed.
->=20
-> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> ---
->  bitbake/bin/bitbake-getvar | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->=20
-> diff --git a/bitbake/bin/bitbake-getvar b/bitbake/bin/bitbake-getvar
-> index 4a9eb4f311..806bbd8e4e 100755
-> --- a/bitbake/bin/bitbake-getvar
-> +++ b/bitbake/bin/bitbake-getvar
-> @@ -43,9 +43,12 @@ if __name__ =3D=3D "__main__":
->          else:
->              tinfoil.prepare(quiet=3D2, config_only=3DTrue)
->              d =3D tinfoil.config_data
-> +        value =3D None
->          if args.flag:
-> -            print(str(d.getVarFlag(args.variable, args.flag, expand=3D(n=
-ot args.unexpand))))
-> +            value =3D d.getVarFlag(args.variable, args.flag, expand=3D(n=
-ot args.unexpand))
->          elif args.value:
-> -            print(str(d.getVar(args.variable, expand=3D(not args.unexpan=
-d))))
-> +            value =3D d.getVar(args.variable, expand=3D(not args.unexpan=
-d))
->          else:
->              bb.data.emit_var(args.variable, d=3Dd, all=3DTrue)
-> +        if value is not None:
-> +            print(str(value))
-
-Whilst I can see where you're going with this, I'm worried users will
-be confused by it.
-
-getVar within bitbake returns None for things which do not exist. Not
-many users will notice the difference between linefeed output and no
-linefeed. It might be better to do something more obvious like an error
-exit code but that also has challenges. Variables not existing when the
-user expects them to is something we need to make really clear.
-
-It was issues like this which stopped us implementing bitbake-getvar
-for a lot of years too :/.
-
-Cheers,
-
-Richard
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmlj
+aGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gU2VudDogZGVuIDI1IHNlcHRlbWJl
+ciAyMDIzIDExOjIyDQo+IFRvOiBQZXRlciBLamVsbGVyc3RlZHQgPHBldGVyLmtqZWxsZXJzdGVk
+dEBheGlzLmNvbT47IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiBTdWJq
+ZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFtQQVRDSF0gYml0YmFrZS1nZXR2YXI6IERvIG5vdCBv
+dXRwdXQgYW55dGhpbmcgd2l0aCAtLXZhbHVlIGFuZCB1bmRlZmluZWQgdmFyaWFibGUNCj4gDQo+
+IE9uIE1vbiwgMjAyMy0wOS0yNSBhdCAwNToyMiArMDIwMCwgUGV0ZXIgS2plbGxlcnN0ZWR0IHdy
+b3RlOg0KPiA+IFJhdGhlciB0aGFuIG91dHB1dHRpbmcgdGhlIHN0cmluZyAiTm9uZSIgd2hlbiBh
+biB1bmtub3duIHZhcmlhYmxlIGlzDQo+ID4gdXNlZCB0b2dldGhlciB3aXRoIC0tdmFsdWUsIG91
+dHB1dCBub3RoaW5nLiBUaGlzIGlzIGNvbnNpc3RlbnQgd2l0aCB0aGUNCj4gPiBubyAtLXZhbHVl
+IGNhc2Ugd2hlcmUgb25seSBhIGNvbW1lbnQgc3RhdGluZyB0aGF0IHRoZSB2YXJpYWJsZSBpcyBu
+b3QNCj4gPiBrbm93biBpcyBvdXRwdXQuDQo+ID4NCj4gPiBUaGlzIGFsc28gbWVhbnMgaXQgaXMg
+bm93IHBvc3NpYmxlIHRvIGRpZmZlcmVudGlhdGUgYmV0d2VlbiBhbiB1bmRlZmluZWQNCj4gPiB2
+YXJpYWJsZSBhbmQgYW4gZW1wdHkgdmFyaWFibGUgc2luY2UgdGhlIGVtcHR5IHZhcmlhYmxlIHdp
+bGwgYmUgb3V0cHV0DQo+ID4gYXMgYSBsaW5lZmVlZC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IFBldGVyIEtqZWxsZXJzdGVkdCA8cGV0ZXIua2plbGxlcnN0ZWR0QGF4aXMuY29tPg0KPiA+IC0t
+LQ0KPiA+ICBiaXRiYWtlL2Jpbi9iaXRiYWtlLWdldHZhciB8IDcgKysrKystLQ0KPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlm
+ZiAtLWdpdCBhL2JpdGJha2UvYmluL2JpdGJha2UtZ2V0dmFyIGIvYml0YmFrZS9iaW4vYml0YmFr
+ZS1nZXR2YXINCj4gPiBpbmRleCA0YTllYjRmMzExLi44MDZiYmQ4ZTRlIDEwMDc1NQ0KPiA+IC0t
+LSBhL2JpdGJha2UvYmluL2JpdGJha2UtZ2V0dmFyDQo+ID4gKysrIGIvYml0YmFrZS9iaW4vYml0
+YmFrZS1nZXR2YXINCj4gPiBAQCAtNDMsOSArNDMsMTIgQEAgaWYgX19uYW1lX18gPT0gIl9fbWFp
+bl9fIjoNCj4gPiAgICAgICAgICBlbHNlOg0KPiA+ICAgICAgICAgICAgICB0aW5mb2lsLnByZXBh
+cmUocXVpZXQ9MiwgY29uZmlnX29ubHk9VHJ1ZSkNCj4gPiAgICAgICAgICAgICAgZCA9IHRpbmZv
+aWwuY29uZmlnX2RhdGENCj4gPiArICAgICAgICB2YWx1ZSA9IE5vbmUNCj4gPiAgICAgICAgICBp
+ZiBhcmdzLmZsYWc6DQo+ID4gLSAgICAgICAgICAgIHByaW50KHN0cihkLmdldFZhckZsYWcoYXJn
+cy52YXJpYWJsZSwgYXJncy5mbGFnLCBleHBhbmQ9KG5vdCBhcmdzLnVuZXhwYW5kKSkpKQ0KPiA+
+ICsgICAgICAgICAgICB2YWx1ZSA9IGQuZ2V0VmFyRmxhZyhhcmdzLnZhcmlhYmxlLCBhcmdzLmZs
+YWcsIGV4cGFuZD0obm90IGFyZ3MudW5leHBhbmQpKQ0KPiA+ICAgICAgICAgIGVsaWYgYXJncy52
+YWx1ZToNCj4gPiAtICAgICAgICAgICAgcHJpbnQoc3RyKGQuZ2V0VmFyKGFyZ3MudmFyaWFibGUs
+IGV4cGFuZD0obm90IGFyZ3MudW5leHBhbmQpKSkpDQo+ID4gKyAgICAgICAgICAgIHZhbHVlID0g
+ZC5nZXRWYXIoYXJncy52YXJpYWJsZSwgZXhwYW5kPShub3QgYXJncy51bmV4cGFuZCkpDQo+ID4g
+ICAgICAgICAgZWxzZToNCj4gPiAgICAgICAgICAgICAgYmIuZGF0YS5lbWl0X3ZhcihhcmdzLnZh
+cmlhYmxlLCBkPWQsIGFsbD1UcnVlKQ0KPiA+ICsgICAgICAgIGlmIHZhbHVlIGlzIG5vdCBOb25l
+Og0KPiA+ICsgICAgICAgICAgICBwcmludChzdHIodmFsdWUpKQ0KPiANCj4gV2hpbHN0IEkgY2Fu
+IHNlZSB3aGVyZSB5b3UncmUgZ29pbmcgd2l0aCB0aGlzLCBJJ20gd29ycmllZCB1c2VycyB3aWxs
+DQo+IGJlIGNvbmZ1c2VkIGJ5IGl0Lg0KDQpUb28gYmUgaG9uZXN0LCBJIGV4cGVjdCB0aGVtIHRv
+IGJlIG11Y2ggbW9yZSBjb25mdXNlZCBpZiB0aGV5IGdldCB0aGUgDQpzdHJpbmcgIk5vbmUiIGJh
+Y2sgd2hlbiBhc2tpbmcgZm9yIHRoZSB2YWx1ZSBvZiBhIHZhcmlhYmxlLCB3aGljaCANCmhhcHBl
+bnMgdG8gbm90IGJlIGRlZmluZWQuDQoNCj4gDQo+IGdldFZhciB3aXRoaW4gYml0YmFrZSByZXR1
+cm5zIE5vbmUgZm9yIHRoaW5ncyB3aGljaCBkbyBub3QgZXhpc3QuIE5vdA0KPiBtYW55IHVzZXJz
+IHdpbGwgbm90aWNlIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gbGluZWZlZWQgb3V0cHV0IGFuZCBu
+bw0KPiBsaW5lZmVlZC4gSXQgbWlnaHQgYmUgYmV0dGVyIHRvIGRvIHNvbWV0aGluZyBtb3JlIG9i
+dmlvdXMgbGlrZSBhbiBlcnJvcg0KPiBleGl0IGNvZGUgYnV0IHRoYXQgYWxzbyBoYXMgY2hhbGxl
+bmdlcy4gVmFyaWFibGVzIG5vdCBleGlzdGluZyB3aGVuIHRoZQ0KPiB1c2VyIGV4cGVjdHMgdGhl
+bSB0byBpcyBzb21ldGhpbmcgd2UgbmVlZCB0byBtYWtlIHJlYWxseSBjbGVhci4NCj4gDQo+IEl0
+IHdhcyBpc3N1ZXMgbGlrZSB0aGlzIHdoaWNoIHN0b3BwZWQgdXMgaW1wbGVtZW50aW5nIGJpdGJh
+a2UtZ2V0dmFyDQo+IGZvciBhIGxvdCBvZiB5ZWFycyB0b28gOi8uDQo+IA0KPiBDaGVlcnMsDQo+
+IA0KPiBSaWNoYXJkDQoNCk15IGdvYWwgaGVyZSB3YXMgbm90IHJlYWxseSB0byBiZSBhYmxlIHRv
+IGRldGVybWluZSBpZiB0aGUgdmFyaWFibGUgaXMgDQpkZWZpbmVkIG9yIG5vdCwgYnV0IHRvIG5v
+dCBnZXQgdGhlIHN0cmluZyAiTm9uZSIgYmFjayBhcyBhIHJlc3VsdCBvZiANCmFza2luZyBmb3Ig
+YW4gdW5kZWZpbmVkIHZhcmlhYmxlLCBiZWNhdXNlIHRoYXQgaXMgcmVhbGx5IHByb2JsZW1hdGlj
+IA0Kd2hlbiBgYml0YmFrZS1nZXR2YXIgLS12YWx1ZWAgaXMgdXNlZCBmcm9tIGEgc2NyaXB0IG9y
+IHNpbWlsYXIuIFRoaXMgDQppcyBiZWNhdXNlIHRoZXJlIGlzIG5vIHdheSB0byBkZXRlcm1pbmUg
+KGZyb20gdGhlIHZhbHVlKSB3aGV0aGVyIHRoZSANCnZhcmlhYmxlIGlzIHVuZGVmaW5lZCwgb3Ig
+aWYgaXQgaXMgZGVmaW5lZCBhbmQgaGFzIHRoZSBhY3R1YWwgdmFsdWUgDQoiTm9uZSIuDQoNCk15
+IGFzc3VtcHRpb24gaXMgdGhhdCBmb3IgbW9zdCBwZW9wbGUgdGhlIGRpZmZlcmVuY2Ugd2lsbCBu
+b3QgbWF0dGVyIGFuZCANCnRoZSByZWFzb24gZm9yIHRoYXQgaXMgdGhhdCBzaW5jZSBpZiB5b3Ug
+dXNlIGBiaXRiYWtlLWdldHZhciAtLXZhbHVlYCBpbiANCmEgc2NyaXB0IG9yIHNpbWlsYXIsIHlv
+dSB0eXBpY2FsbHkgc3RyaXAgdGhlIGxpbmVmZWVkIHRoYXQgaXMgb3V0cHV0IGFmdGVyIA0KdGhl
+IHZhcmlhYmxlIHNvIHlvdSBnZXQgdGhlIGFjdHVhbCB2YWx1ZSwgYW5kIHRoZW4gdGhlcmUgaXMg
+bm8gZGlmZmVyZW5jZSANCmluIHRoZSByZXN1bHQgd2hldGhlciB0aGVyZSB3YXMgYSBsaW5lZmVl
+ZCAoaWYgdGhlIHZhcmlhYmxlIHdhcyBkZWZpbmVkLCANCmJ1dCBlbXB0eSkgb3IgdGhlcmUgd2Fz
+IG5vIGxpbmVmZWVkIChpZiB0aGUgdmFyaWFibGUgd2FzIG5vdCBkZWZpbmVkKS4gSW4gDQpib3Ro
+IGNhc2VzIHRoZSByZXN1bHQgd2lsbCBiZSBhbiBlbXB0eSBzdHJpbmcuDQoNClRoZSByZWFzb24g
+SSBzdHVtYmxlZCB1cG9uIHRoaXMgd2FzIHRoYXQgSSB3YXMgd29ya2luZyBvbiBhIHNjcmlwdCB0
+aGF0IA0KdXNlcyBgYml0YmFrZS1nZXR2YXIgLS12YWx1ZWAgdG8gZ2V0IGEgdmFyaWFibGUgd2l0
+aCBhIHBhdGggdG8gYSBmaWxlLCANCmFuZCB0aGVuIG15IHNjcmlwdCBpcyBleHBlY3RlZCB0byBy
+ZWFkIHRoYXQgZmlsZS4gQW5kIEkgd2FzIGEgYml0IHN1cnByaXNlZCANCndoZW4gSSB0ZXN0ZWQg
+aXQgYW5kIEkgZ290IGFuIGVycm9yIHN0YXRpbmcgdGhhdCBpdCBmYWlsZWQgdG8gb3BlbiB0aGUg
+DQpmaWxlICJOb25lIi4uLg0KDQpOb3cgb2YgY291cnNlIEkgY2FuIHdyaXRlIHNvbWV0aGluZyBs
+aWtlOg0KDQoJbXlmaWxlPSQoYml0YmFrZS1nZXR2YXIgLS12YWx1ZSBNWUZJTEUpDQoJaWYgWyAi
+JG15ZmlsZSIgXSAmJiBbICIkbXlmaWxlIiAhPSBOb25lIF07IHRoZW4NCg0KYnV0IGl0IGZlZWxz
+IG11Y2ggbW9yZSBuYXR1cmFsIChzaGVsbCB3aXNlKSB0byBiZSBhYmxlIHRvIHdyaXRlOg0KDQoJ
+bXlmaWxlPSQoYml0YmFrZS1nZXR2YXIgLS12YWx1ZSBNWUZJTEUpDQoJaWYgWyAiJG15ZmlsZSIg
+XTsgdGhlbg0KDQphcyB0aGF0IG1hdGNoZXMgdGhlIGV4cGVjdGF0aW9ucyAodGhhdCBhdCBsZWFz
+dCBJIGhhdmUpIGZvciBhbGwgQ0xJIA0KY29tbWFuZHMgdGhhdCBhcmUgc3VwcG9zZWQgdG8gcmV0
+dXJuIGEgdmFsdWUgdGhhdCBtYXkgbm90IGV4aXN0Lg0KDQovL1BldGVyDQoNCg==
 
