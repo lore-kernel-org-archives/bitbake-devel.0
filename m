@@ -1,114 +1,70 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <wuzhenyu@ustc.edu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B85ACE79A1
-	for <webhook@archiver.kernel.org>; Mon, 25 Sep 2023 20:31:42 +0000 (UTC)
-Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
- by mx.groups.io with SMTP id smtpd.web10.2805.1695673895874468628
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A89E8181D
+	for <webhook@archiver.kernel.org>; Tue, 26 Sep 2023 05:37:38 +0000 (UTC)
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+ by mx.groups.io with SMTP id smtpd.web10.12533.1695706654619685194
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 25 Sep 2023 13:31:36 -0700
+ Mon, 25 Sep 2023 22:37:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=axis-central1 header.b=NQam4EHv;
- spf=pass (domain: axis.com, ip: 195.60.68.18, mailfrom: peter.kjellerstedt@axis.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1695673896;
-  x=1727209896;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WbzdHErN2BlVWaqVG6afJ198nZo5q2iZpIurWv36HIk=;
-  b=NQam4EHv8wFISgSPPRfRgGs0HFz0RWugyxazjsxA3yIOgUKcWiA3L4KA
-   7gOTHu2ydVLajcnM5NyQ/hxbaFJdmows7K/+xMgZBsLdY7V2Fy9wJAY+L
-   Q1Y3FCsWg+kkA3SrJQLpQwEwxsnxWkGkWWWU8W8dytU/YiOV6JZt0Oje9
-   pgAx1B35AQ7EacAHc1T4jXvIBHmUxGlKsDWIjZ2Oixdxj2S7kn1IJNnJL
-   xkddou5Txx9NFGF9sw/bWGGBIZuijYZaIoqGwuBKQ2ib0nprUCXxs0ok4
-   Zhc/mnsrapixG9wDtu3SPyTgT13lvWSduUHERTZ5SdO3H2DEVjaz+YRlQ
-   g==;
-From: Peter Kjellerstedt <pkj@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCHv2] bitbake-getvar: Add an option to specify a default value
-Date: Mon, 25 Sep 2023 22:31:28 +0200
-Message-ID: <20230925203128.73512-1-pkj@axis.com>
-X-Mailer: git-send-email 2.40.1
+ dkim=none (message not signed); spf=pass (domain: ustc.edu, ip: 115.236.118.111, mailfrom: wuzhenyu@ustc.edu)
+Received: from ustc.edu (localhost [127.0.0.1])
+	by mail-m12743.qiye.163.com (Hmail) with ESMTP id 036627E0332;
+	Tue, 26 Sep 2023 13:36:44 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <ADgAbwASGBcKbxctD6jRgaqX.1.1695706604007.Hmail.wuzhenyu@ustc.edu>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	bitbake-devel@lists.openembedded.org
+Cc: michael.opdenacker@bootlin.com
+Subject: =?UTF-8?B?UmU6IFtiaXRiYWtlLWRldmVsXSBTdXBwb3J0IHBhY2thZ2luZw==?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 114.214.233.200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Received: from wuzhenyu@ustc.edu( [114.214.233.200) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 26 Sep 2023 13:36:44 +0800 (GMT+08:00)
+From: =?UTF-8?B?5ZC05oyv5a6H?= <wuzhenyu@ustc.edu>
+Date: Tue, 26 Sep 2023 13:36:44 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTB1JVh1JHx5IHUNITUlNT1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKT1VJSk9VSUhIVUlLS1lXWRYaDxIVHRRZQVlPS0hVSkhDTEhKVUpLS1VLWQY+
+X-HM-Tid: 0a8acffa8535b216kuuu18ab7f0c5a1
+X-HM-MType: 1
+X-HM-NTES-SC: AL0_4z5B86Wr4Tz9jdMF+bhXMW6NuPBB0r+GVJOnLUWRjuB87raS907Coyc1na
+	e5RceMZFlUa6XMngDIxTyW3F/F6A43v9Y7N15HagS30UOZhYBVZ1oRpR/yAuatwlYk56106elPee
+	vl1r1a7opKw7fZj0d8RKedxMio1GI+Bn+HrBU=
+X-HM-Sender-Digest: e1kMHhlZQQ8JDh5XWRIfHhUPWUFZRzo*HDoZDDooPDkYMBkDGA8*TREp
+	HBoKI1VKVUpNQk5MS01NS09NS0pVMxYaEhdVDA4BEx4VAg47DggPGFUeHw5FWVdZEgtZQVlKSk9V
+	SUpPVUlISFVJS0tZV1kIAVlBSE5KSTcG
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 25 Sep 2023 20:31:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15125
+ <bitbake-devel@lists.openembedded.org>; Tue, 26 Sep 2023 05:37:38 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15126
 
-The default value is returned in case the specified variable or variable
-flag is not defined.
-
-In case no default option has been specified, bitbake-getvar fails with
-an error instead.
-
-Suggested-by: Mario Domenech Goulart <mario@parenteses.org>
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
-
-PATCHv2: New solution based on the discussion after the previous patch.
-
- bitbake/bin/bitbake-getvar | 36 +++++++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 9 deletions(-)
-
-diff --git a/bitbake/bin/bitbake-getvar b/bitbake/bin/bitbake-getvar
-index 4a9eb4f311..1c670e7b96 100755
---- a/bitbake/bin/bitbake-getvar
-+++ b/bitbake/bin/bitbake-getvar
-@@ -26,15 +26,16 @@ if __name__ == "__main__":
-     parser.add_argument('-f', '--flag', help='Specify a variable flag to query (with --value)', default=None)
-     parser.add_argument('--value', help='Only report the value, no history and no variable name', action="store_true")
-     parser.add_argument('-q', '--quiet', help='Silence bitbake server logging', action="store_true")
-+    parser.add_argument('-d', '--default', help='Default value returned in case variable is not defined',
-+                        default=None, const=True, required=False, nargs='?')
-     args = parser.parse_args()
- 
--    if args.unexpand and not args.value:
--        print("--unexpand only makes sense with --value")
--        sys.exit(1)
-+    if not args.value:
-+        if args.unexpand:
-+            sys.exit("--unexpand only makes sense with --value")
- 
--    if args.flag and not args.value:
--        print("--flag only makes sense with --value")
--        sys.exit(1)
-+        if args.flag:
-+            sys.exit("--flag only makes sense with --value")
- 
-     with bb.tinfoil.Tinfoil(tracking=True, setup_logging=not args.quiet) as tinfoil:
-         if args.recipe:
-@@ -43,9 +44,26 @@ if __name__ == "__main__":
-         else:
-             tinfoil.prepare(quiet=2, config_only=True)
-             d = tinfoil.config_data
-+
-+        value = None
-         if args.flag:
--            print(str(d.getVarFlag(args.variable, args.flag, expand=(not args.unexpand))))
--        elif args.value:
--            print(str(d.getVar(args.variable, expand=(not args.unexpand))))
-+            value = d.getVarFlag(args.variable, args.flag, expand=(not args.unexpand))
-+            if value is None:
-+                if args.default is None:
-+                    sys.exit(f"The flag '{args.flag}' is not defined for variable '{args.variable}'")
-+                elif isinstance(args.default, str):
-+                    value = args.default
-+        else:
-+            value = d.getVar(args.variable, expand=(not args.unexpand))
-+            if value is None:
-+                if args.default is None:
-+                    sys.exit(f"The variable '{args.variable}' is not defined")
-+                elif isinstance(args.default, str):
-+                    value = args.default
-+                    # Inject the default value, in case it is needed by bb.data.emit_var() below.
-+                    d.setVar(args.variable, value);
-+        if args.value:
-+            if value is not None:
-+                print(str(value))
-         else:
-             bb.data.emit_var(args.variable, d=d, all=True)
+SGV5LiBDYW4gW3RoaXMgbGFuZ3VhZ2Ugc2VydmVyXShodHRwczovL2dpdGh1Yi5jb20vRnJlZWQt
+V3UvYml0YmFrZS1sYW5ndWFnZS1zZXJ2ZXIpIGJlIGhvc3RlZCBvbiBodHRwczovL2dpdGh1Yi5j
+b20vb3BlbmVtYmVkZGVkID8KCjEuIEl0IGNhbiBpbXByb3ZlIHZpc2liaWxpdHkgdG8gbGV0IG1v
+cmUgcGVvcGxlIGtub3cgdGhlbS4KMi4gR2V0IG1vcmUgYnVnIHJlcG9ydHMgdG8gaW1wcm92ZSB0
+aGUgcHJvamVjdC4KMy4gSW5jcmVhc2UgYnVzIGZhY3Rvci4KCk9uIEZyaSwgSnVuIDIzLCAyMDIz
+IGF0IDEwOjIxOjQ1QU0gKzAxMDAsIFJpY2hhcmQgUHVyZGllIHdyb3RlOgo+IE9uIEZyaSwgMjAy
+My0wNi0yMyBhdCAxNzoxMyArMDgwMCwgV3UgWmhlbnl1IHdyb3RlOgo+ID4gSGksIEkgY3JlYXRl
+IGEgbGFuZ3VhZ2Ugc2VydmVyIGZvciBiaXRiYWtlIGluIDxodHRwczovL2dpdGh1Yi5jb20vRnJl
+ZWQtV3UvYml0YmFrZS1sYW5ndWFnZS1zZXJ2ZXI+Lgo+ID4gSXQgcmVhbGx5IG5lZWQgYml0YmFr
+ZSBhcyBhIHB5dGhvbiBwYWNrYWdlIHRvIHByb3ZpZGUgdGhlIGZ1bGwgZnVuY3Rpb25zLgo+ID4g
+Tm93IEkgaGF2ZSB0byB1c2UgPGh0dHBzOi8vYXVyLmFyY2hsaW51eC5vcmcvcGFja2FnZXMvcHl0
+aG9uLWJpdGJha2U+IGFzIGEgZGVwZW5kZW5jeS4KPiA+IENhbiB5b3UgcmV0aGluayBhZ2FpbiBh
+Ym91dCBwYWNrYWdpbmcgaXQgaW4gUFlQST8KPiAKPiBBIGxhbmd1YWdlIHNlcnZlciBzb3VuZHMg
+cmVhbGx5IGludGVyZXN0aW5nIGFuZCBJJ2xsIGhhdmUgdG8gdGFrZSBhCj4gbG9vay4gSWYgd2Ug
+YWRkIGl0IHRvIFBZUEksIHdobyBpcyBnb2luZyB0byBkZWFsIHdpdGggdGhlIHVzYWJpbGl0eQo+
+IGlzc3VlcyBJIG1lbnRpb25lZCwgdGhlIGRvY3VtZW50YXRpb24gcHJvYmxlbSBhbmQgdGhlIHJl
+c3VsdGluZyBzdXBwb3J0Cj4gd2hlcmUgcGVvcGxlIG1pc21hdGNoIGJpdGJha2UgdmVyc2lvbnM/
+Cj4gCj4gVGhlcmUgYXJlIHNvbWUgc3BlY2lmaWMgaXNzdWVzIHdlJ2QgbmVlZCB0byBzb2x2ZSBp
+ZiB3ZSB3ZXJlIHRvIHB1dAo+IGJpdGJha2Ugb24gUFlQSSBhbmQgSSdtIG5vdCBzZWVpbmcgYW55
+IGhlbHAgb3Igc29sdXRpb25zIGJlaW5nIG9mZmVyZWQKPiB0byB0aGF0IDooLiBJJ20gYnVybmlu
+ZyBvdXQgd2l0aCB0aGUgcHJvamVjdCBhcyB0aGluZ3Mgc3RhbmQsIEkgZG9uJ3QKPiByZWFsbHkg
+d2FudCB0byBjcmVhdGUgbmV3IGlzc3Vlcy4KPiAKPiBDaGVlcnMsCj4gCj4gUmljaGFyZAo+IAo+
+IAo+IAoKLS0gCkJlc3QgUmVnYXJkcwpXdSBaaGVueXUKCg0KDQo=
 
