@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55121E732F9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553FCE732F4
 	for <webhook@archiver.kernel.org>; Thu, 28 Sep 2023 17:06:09 +0000 (UTC)
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
- by mx.groups.io with SMTP id smtpd.web10.19054.1695920762078512614
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+ by mx.groups.io with SMTP id smtpd.web11.18861.1695920760363124549
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 28 Sep 2023 10:06:02 -0700
+ Thu, 28 Sep 2023 10:06:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=SF9a/P8K;
- spf=pass (domain: gmail.com, ip: 209.85.161.41, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-57bc2c2f13dso4123819eaf.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 28 Sep 2023 10:06:01 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Mmx575o+;
+ spf=pass (domain: gmail.com, ip: 209.85.210.44, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6c6368a1a97so207809a34.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 28 Sep 2023 10:06:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695920760; x=1696525560; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1695920759; x=1696525559; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=opxTwZ1am1DanXDb688FjBHsuGD2K0vtpsvToRLtLr8=;
-        b=SF9a/P8KHeoA3of4SDmZFKUAXEda43mECR1kpuCCcnNlkFWRJInCSsnS0A3vWSR2qu
-         5okNJFatKfIx4j2to21szxKkVIL5LMZZzHHSSGkZfaqh/PlA5sSIHiMhHDca3Nyw07Ul
-         j2LuaPtCWZ236tTSYNdIeiATU3aLEgkneKSh6Z0cuE3MQ7h8UhHNZ5GJ+0K1n2cDv4vS
-         ajXy7oQ3pa/GeEoa5miZVj3l1OQos6GlRhkKdJbNe1oU0Gpzu2L8WI7itJ00KOSW8h8q
-         UneRtTDvVQ+70+AvHXqTwU6hoz3LMdRLQsFy6qMxZGgNKKN01zwDAtGKpCXfYapsz7I3
-         fseQ==
+        bh=mniGGYwxo14cEdvMYuiYDZFic/qIn7vlBumgwms2QPY=;
+        b=Mmx575o+nH3jPTW1TvZfQqC1Y4VQwoFritgXDdX3nQPo8Q7Vlilsbqt37PVkjF5Jlt
+         KV5XjIJMdzOx1u3fVPLHtkLWusPCzYhTtLzDhX6MnRHuli2nvpv1bhUP3E+z9/qlYF18
+         gVK0gagpitIYE8N8qRi78pAHrDnhVq0uk16qwbZ1BeosfCCWOF8w9ekDFLBQ47K/du6x
+         +1/Da0yMOdHcDakPRA2c2UDl/krgyY9U4lEvwk8ufiPDhccm8S7mmttsDsbPQJawDD8G
+         gEbrsNMyt7Se/qjvXZPG1gEpr6ITBVFLoQnfCWZlXAl8LIJeOPr+ZnITbPBWCcOteZpd
+         +98A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695920760; x=1696525560;
+        d=1e100.net; s=20230601; t=1695920759; x=1696525559;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=opxTwZ1am1DanXDb688FjBHsuGD2K0vtpsvToRLtLr8=;
-        b=QaFysnBZxSs2hAb/AxOo1vsi4JmAyQdo4nrvzIpjWFDUfTQnCjQkK1u5b8Z3mEFW2B
-         Uryj4nnoZ+35BTPxs0XMooqkm+SOk0cgh0xASO+cQSnYI32Ni3BrWUdUFSG3oDX0HhTh
-         YQPA0wyqf4VPM2lPjB0JWz2ZmfVcKQ25lkM+AXZTOTxWTGFyKMh8VkjMGix1vkAadQME
-         SZb6XasZsWuMymLiH85YD6wECHe1RqFTbEv6KMk7KelF0c/vd0QDHfWiIU9Be3H6QhpB
-         /MBTf9gJYpe8+qJ8z8MCqqrXsa48pu0gAdk/1ZriKVCxogbQ4QwOXzZt54QVUMdW6C9U
-         kclw==
-X-Gm-Message-State: AOJu0YyNqkBhxR4fZqgiVVK8vreQ9w4DZRJCAntXaoDBL9fRmLc3y8vn
-	ReOoA5J0QWl1QKDKYKs621PF+zgphs4=
-X-Google-Smtp-Source: AGHT+IGi49CCN9TPeV0ZSqXHERtNdze1ltFwiTHXMTP7T8vhNpwaLXB9vxNhWMSoNNB/DC7zLo3gFA==
-X-Received: by 2002:a05:6870:d60e:b0:1dc:ddd0:6ee1 with SMTP id a14-20020a056870d60e00b001dcddd06ee1mr1866196oaq.38.1695920760560;
-        Thu, 28 Sep 2023 10:06:00 -0700 (PDT)
+        bh=mniGGYwxo14cEdvMYuiYDZFic/qIn7vlBumgwms2QPY=;
+        b=XenBk+lEzfxSNB1IoVmaIR3pqI3r/SxDHAyd4TMDobmzkmMTEmwdoSfYcOssYbEMV3
+         tAkTGmshQmt4ItjJVRgMet1JtnX0EEw/IKxLraEblKWnJzJTTLQUfpMP9lWgzxLu+xWe
+         tz31teAtVUwplsICgQ5DwGArENf6n/ftf8kqJVDTiQdGxoLJf2DrNBKpbev3CSwKwaLV
+         TYHRJZJDdO9bgFoz/X3lySxDNchJAa7Ux/CO78BvFFx+GkOshhhXAuorZWpypPdVglsH
+         gZYckpvjQdcPtL9Hi8xm+Onubf3HJ0bsDCFsik9xManEbhxWJEFAvGFUY3bxmiGJpkKQ
+         o90Q==
+X-Gm-Message-State: AOJu0YyNQFzXvDBx16BoZ6WV6ZTyqF4oLxmyl5E7WzhZnfhjBcmBwmFo
+	dP3Cohp9Oe2xI9iZwUcH1xtm+Orig2w=
+X-Google-Smtp-Source: AGHT+IE6nGwy/GvBhyvP4r7kyl4rQXTC0k35j9phIplPcVYYJXq/mWGlCbRKSfTdSGcRebI1bfKpuQ==
+X-Received: by 2002:a05:6870:e40e:b0:1b0:3f7f:673a with SMTP id n14-20020a056870e40e00b001b03f7f673amr1302319oag.25.1695920758903;
+        Thu, 28 Sep 2023 10:05:58 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::f27c])
-        by smtp.gmail.com with ESMTPSA id h3-20020a056870860300b001dd533c4bd1sm1389772oal.1.2023.09.28.10.05.59
+        by smtp.gmail.com with ESMTPSA id h3-20020a056870860300b001dd533c4bd1sm1389772oal.1.2023.09.28.10.05.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 10:05:59 -0700 (PDT)
+        Thu, 28 Sep 2023 10:05:57 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][RFC 3/5] bitbake-hashclient: Add remove subcommand
-Date: Thu, 28 Sep 2023 11:05:49 -0600
-Message-Id: <20230928170551.4193224-4-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][RFC 2/5] hashserv: Add remove API
+Date: Thu, 28 Sep 2023 11:05:48 -0600
+Message-Id: <20230928170551.4193224-3-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230928170551.4193224-1-JPEWhacker@gmail.com>
 References: <20230928170551.4193224-1-JPEWhacker@gmail.com>
@@ -62,74 +62,131 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 28 Sep 2023 17:06:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15145
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15144
 
-Adds a subcommand to invoke the remove API on the server
-
-[YOCTO #15064]
+Adds a `remove` API to the client and server that can be used to remove
+hash equivalence entries that match a particular critera
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/bin/bitbake-hashclient | 13 +++++++++++++
- bitbake/lib/hashserv/server.py | 10 +++++++---
- 2 files changed, 20 insertions(+), 3 deletions(-)
+ bitbake/lib/hashserv/client.py |  5 +++++
+ bitbake/lib/hashserv/server.py | 25 +++++++++++++++++++++++++
+ bitbake/lib/hashserv/tests.py  | 29 +++++++++++++++++++++++++++++
+ 3 files changed, 59 insertions(+)
 
-diff --git a/bitbake/bin/bitbake-hashclient b/bitbake/bin/bitbake-hashclient
-index 494f17592ac..d09104336ab 100755
---- a/bitbake/bin/bitbake-hashclient
-+++ b/bitbake/bin/bitbake-hashclient
-@@ -113,6 +113,14 @@ def main():
-                     with lock:
-                         pbar.update()
+diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
+index 2a3c1b662b6..7d2b9cb394f 100644
+--- a/bitbake/lib/hashserv/client.py
++++ b/bitbake/lib/hashserv/client.py
+@@ -97,6 +97,10 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         await self._set_mode(self.MODE_NORMAL)
+         return (await self.invoke({"backfill-wait": None}))["tasks"]
  
-+    def handle_remove(args, client):
-+        where = {k: v for k, v in args.where}
-+        if where:
-+            result = client.remove(where)
-+            print("Removed %d row(s)" % (result["count"]))
-+        else:
-+            print("No query specified")
++    async def remove(self, where):
++        await self._set_mode(self.MODE_NORMAL)
++        return await self.invoke({"remove": {"where": where}})
 +
-     parser = argparse.ArgumentParser(description='Hash Equivalence Client')
-     parser.add_argument('--address', default=DEFAULT_ADDRESS, help='Server address (default "%(default)s")')
-     parser.add_argument('--log', default='WARNING', help='Set logging level')
-@@ -137,6 +145,11 @@ def main():
-                                help='Include string in outhash')
-     stress_parser.set_defaults(func=handle_stress)
  
-+    remove_parser = subparsers.add_parser('remove', help="Remove hash entries")
-+    remove_parser.add_argument("--where", "-w", metavar="KEY VALUE", nargs=2, action="append", default=[],
-+                               help="Remove entries from table where KEY == VALUE")
-+    remove_parser.set_defaults(func=handle_remove)
-+
-     args = parser.parse_args()
+ class Client(bb.asyncrpc.Client):
+     def __init__(self):
+@@ -111,6 +115,7 @@ class Client(bb.asyncrpc.Client):
+             "get_stats",
+             "reset_stats",
+             "backfill_wait",
++            "remove",
+         )
  
-     logger = logging.getLogger('hashserv')
+     def _get_async_client(self):
 diff --git a/bitbake/lib/hashserv/server.py b/bitbake/lib/hashserv/server.py
-index 7e8aeefef30..99ba904b1f0 100644
+index d40a2ab8f88..7e8aeefef30 100644
 --- a/bitbake/lib/hashserv/server.py
 +++ b/bitbake/lib/hashserv/server.py
-@@ -516,13 +516,17 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-                 query = ('DELETE FROM %s WHERE ' % table_name) + ' AND '.join("%s=:%s" % (k, k) for k in where.keys())
-                 print(query)
-                 cursor.execute(query, where)
-+                return cursor.rowcount
+@@ -186,6 +186,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+                 'report-equiv': self.handle_equivreport,
+                 'reset-stats': self.handle_reset_stats,
+                 'backfill-wait': self.handle_backfill_wait,
++                'remove': self.handle_remove,
+             })
  
-+            return 0
+     def validate_proto_version(self):
+@@ -499,6 +500,30 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+         await self.backfill_queue.join()
+         self.write_message(d)
+ 
++    async def handle_remove(self, request):
++        condition = request["where"]
++        if not isinstance(condition, dict):
++            raise TypeError("Bad condition type %s" % type(condition))
 +
-+        count = 0
-         with closing(self.db.cursor()) as cursor:
--            do_remove(OUTHASH_TABLE_COLUMNS, "outhashes_v2", cursor)
--            do_remove(UNIHASH_TABLE_COLUMNS, "unihashes_v2", cursor)
-+            count += do_remove(OUTHASH_TABLE_COLUMNS, "outhashes_v2", cursor)
-+            count += do_remove(UNIHASH_TABLE_COLUMNS, "unihashes_v2", cursor)
-             self.db.commit()
- 
--        self.write_message({})
-+        self.write_message({"count": count})
- 
++        def do_remove(columns, table_name, cursor):
++            nonlocal condition
++            where = {}
++            for c in columns:
++                if c in condition and condition[c] is not None:
++                    where[c] = condition[c]
++
++            if where:
++                query = ('DELETE FROM %s WHERE ' % table_name) + ' AND '.join("%s=:%s" % (k, k) for k in where.keys())
++                print(query)
++                cursor.execute(query, where)
++
++        with closing(self.db.cursor()) as cursor:
++            do_remove(OUTHASH_TABLE_COLUMNS, "outhashes_v2", cursor)
++            do_remove(UNIHASH_TABLE_COLUMNS, "unihashes_v2", cursor)
++            self.db.commit()
++
++        self.write_message({})
++
      def query_equivalent(self, cursor, method, taskhash):
          # This is part of the inner loop and must be as fast as possible
+         cursor.execute(
+diff --git a/bitbake/lib/hashserv/tests.py b/bitbake/lib/hashserv/tests.py
+index f6b85aed85a..5f1ad585072 100644
+--- a/bitbake/lib/hashserv/tests.py
++++ b/bitbake/lib/hashserv/tests.py
+@@ -84,6 +84,7 @@ class HashEquivalenceCommonTests(object):
+ 
+         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
++        return taskhash, outhash, unihash
+ 
+     def test_create_equivalent(self):
+         # Tests that a second reported task with the same outhash will be
+@@ -125,6 +126,34 @@ class HashEquivalenceCommonTests(object):
+ 
+         self.assertClientGetHash(self.client, taskhash, unihash)
+ 
++    def test_remove_taskhash(self):
++        taskhash, outhash, unihash = self.test_create_hash()
++        self.client.remove({"taskhash": taskhash})
++        self.assertClientGetHash(self.client, taskhash, None)
++
++        result_outhash = self.client.get_outhash(self.METHOD, outhash, taskhash)
++        self.assertIsNone(result_outhash)
++
++    def test_remove_unihash(self):
++        taskhash, outhash, unihash = self.test_create_hash()
++        self.client.remove({"unihash": unihash})
++        self.assertClientGetHash(self.client, taskhash, None)
++
++    def test_remove_outhash(self):
++        taskhash, outhash, unihash = self.test_create_hash()
++        self.client.remove({"outhash": outhash})
++
++        result_outhash = self.client.get_outhash(self.METHOD, outhash, taskhash)
++        self.assertIsNone(result_outhash)
++
++    def test_remove_method(self):
++        taskhash, outhash, unihash = self.test_create_hash()
++        self.client.remove({"method": self.METHOD})
++        self.assertClientGetHash(self.client, taskhash, None)
++
++        result_outhash = self.client.get_outhash(self.METHOD, outhash, taskhash)
++        self.assertIsNone(result_outhash)
++
+     def test_huge_message(self):
+         # Simple test that hashes can be created
+         taskhash = 'c665584ee6817aa99edfc77a44dd853828279370'
 -- 
 2.34.1
 
