@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69486E732FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65454E732FD
 	for <webhook@archiver.kernel.org>; Thu, 28 Sep 2023 17:06:09 +0000 (UTC)
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
- by mx.groups.io with SMTP id smtpd.web10.19057.1695920765151788179
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+ by mx.groups.io with SMTP id smtpd.web10.19056.1695920763629337148
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 28 Sep 2023 10:06:05 -0700
+ Thu, 28 Sep 2023 10:06:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=KVkg1vbh;
- spf=pass (domain: gmail.com, ip: 209.85.160.49, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-1dcfb2a3282so5067149fac.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 28 Sep 2023 10:06:05 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=UwtIZkpT;
+ spf=pass (domain: gmail.com, ip: 209.85.167.179, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3ae2ec1a222so6193352b6e.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 28 Sep 2023 10:06:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695920764; x=1696525564; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1695920762; x=1696525562; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TgcnrNjvCa+O23jJRcO2GfBxbQCQ2CJH/XeNs8oGsOs=;
-        b=KVkg1vbhc3Y0QhjOZkyeH5FzWW0Fmm5hHQ4LXZFTe2GTrz6H53mFZ8fnfpE25ha/QY
-         tjaoH91h8s3kTv4GfKWpcosRtLaVaq2ULdwd0LZUoiQGyatkzeMKMNLdn6UVJIRkJwYc
-         2KWBfZomuAPnBq2sUY1lCrtoVNkwf86f4X5rJz3+IWRLiJC0bA6AVhROx7n06OmrnCdx
-         aJhl1aa0xTI/Hsof50gVcBp3pU2obGc71kc7GO8jPuiYOdMXJBCRTcOhcrtCv8i1iC+d
-         f+JiW8m6iAJXBW1IW6r7geAjBpJsR1vrY8m9n08lOAG6R5vxYjAze3/IHs8+8/+thJEL
-         +Wyw==
+        bh=UySHwEmjdXPUeKVRH4m+lSRLlgKpZJaTD/DUPenGqgM=;
+        b=UwtIZkpT8CmBduLHkgOhBZzDhRo4AOvin9sk/I+Tm+y1d0ixDuDE7E2Ua4ZOry5jTu
+         18XpLpQKndB8bz/6sHDPE9yhcrRQwEY9Uq3PvRdLxqHExskVDa/8X8mkXxFsxMEVx62y
+         gZTCXqzdZ7URIQJB/oADd1dDpXJQ8imVTpDKJg2bG2JOuOZbszNqBR2Zy0KYVNc1xxx3
+         GaYzrZhkNe5Nea9oBqy+rpu0z7nplLb6w8rLV0ZnYmG42EDgP7qxi/dp2QfcMqww+WgZ
+         H+oIROkJYC8djRN6Q37l9RnYKJgsDIraauEfuyG57lxhTtgi55dD43FuH6PG/e1CYb7+
+         SMhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695920764; x=1696525564;
+        d=1e100.net; s=20230601; t=1695920762; x=1696525562;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TgcnrNjvCa+O23jJRcO2GfBxbQCQ2CJH/XeNs8oGsOs=;
-        b=dUtj7TK6AfTe5WexHT700JjtY8IPJYHqHJULD7PNTniefX2GxP9LehoJuZrcmLdPGE
-         u4sEVx7rl78GnHTpECj9ODJ4FM7gzZ2yLfRLoyNzQq/1QlqbB5RcUxULxD7frU+tomKH
-         +Fku8Au6220YK7BaGnP5p057/XdL7TmQIERkfffpCLSKIElYLRhf96T+L2USVYxVYWZ9
-         vdssVKjHmyAoXjwdLrAahAVfXKX6V/hdnThu5aooq/4yla/YwhlX7MQfeSOrvS+saiDA
-         BIqqPXZ7DmHkjUsdRMXw/0XIjmgT/GfjuHMeUdi6rOuz40ArqORBh4eDEs4c3Pdx1zlk
-         QAAQ==
-X-Gm-Message-State: AOJu0Yz5amcFrtyOkDoyP69WuEqEZe8nhmw3aAu+CazlbyOMdtZlL+4I
-	d/is0Xl+zNcFI77vwC4CIRjDK4JncnU=
-X-Google-Smtp-Source: AGHT+IGri4lGwvotJcShi8OoP/b7VvfSyN2J3WUweha0lJoIIEW1pa0PVNCHHIOcMEHEY4hMYrrSkA==
-X-Received: by 2002:a05:6870:958b:b0:1bf:df47:7b5e with SMTP id k11-20020a056870958b00b001bfdf477b5emr1907390oao.16.1695920763774;
-        Thu, 28 Sep 2023 10:06:03 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::f27c])
-        by smtp.gmail.com with ESMTPSA id h3-20020a056870860300b001dd533c4bd1sm1389772oal.1.2023.09.28.10.06.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=UySHwEmjdXPUeKVRH4m+lSRLlgKpZJaTD/DUPenGqgM=;
+        b=HyQoLJagyg6nl0a0XYR3yexrtcrzTJwJpx9u1ZllQlWEPo4/HRtDS9AgO/Xi4jDEIg
+         k8za/CV0brLy2I9BweYqAIrHLRpmXScbOw0lHwIxC0inn0oJoEkenJC80JfpkkKZWuO8
+         RYB+zEaej3pDUp7aOGkaGb13WskW4NwKCT4wQtV6v3xamnZP7A2Lfx9vMEBphL9CASfD
+         RcWCLR+k9Say25uGg5t9AJLGpaXOJFC0iC9TpxZqDgJiX4b/KYYKFOdxr7PMC2bLdgPK
+         bd6xPN1VwpXAxqggFiCgLaEYrnnpRxbJLTC2hysKId5xWznWav/lR/gKqfhy+glR7X16
+         DCcA==
+X-Gm-Message-State: AOJu0Yw7jeEPrpwher+aUe/3htDFfugC89F67/eILAW6u6kcWUKIuXSh
+	6GuQFpcbdCMK8pBC0l6bO9dxKhR0pXg=
+X-Google-Smtp-Source: AGHT+IHxhNadFIZT5RA0Aqkhtg6Tjfar9yqd8VXeQJZABBMyvfoRKzGdp9/gc6L8wcU/E5aRn5jXgg==
+X-Received: by 2002:a05:6870:d38e:b0:1d0:c524:c05b with SMTP id k14-20020a056870d38e00b001d0c524c05bmr1973086oag.38.1695920762135;
         Thu, 28 Sep 2023 10:06:02 -0700 (PDT)
+Received: from localhost.localdomain ([2601:282:4300:19e0::f27c])
+        by smtp.gmail.com with ESMTPSA id h3-20020a056870860300b001dd533c4bd1sm1389772oal.1.2023.09.28.10.06.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Sep 2023 10:06:01 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][RFC 5/5] hashserv: Add websocket connection implementation
-Date: Thu, 28 Sep 2023 11:05:51 -0600
-Message-Id: <20230928170551.4193224-6-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][RFC 4/5] hashserv: tests: Add external database tests
+Date: Thu, 28 Sep 2023 11:05:50 -0600
+Message-Id: <20230928170551.4193224-5-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230928170551.4193224-1-JPEWhacker@gmail.com>
 References: <20230928170551.4193224-1-JPEWhacker@gmail.com>
@@ -62,137 +62,137 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 28 Sep 2023 17:06:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15147
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15146
 
-Adds support for the hash equivalence client to talk to a server over a
-websocket. Since websocket are already message orientated (as opposed to
-stream orientated like the other implementations), a new MessageParser()
-class is implemented for them (although, this class would work for any
-message orientation socket, not just websockets).
-
-Note that websocket support does require the 3rd party websockets python
-module be installed on the host, but it should not be required unless
-websockets are actually being used.
+Adds support for running the hash equivalence test suite against an
+external hash equivalence implementation.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/asyncrpc/client.py | 38 +++++++++++++++++++++++++++++++
- bitbake/lib/hashserv/__init__.py  |  9 ++++++++
- bitbake/lib/hashserv/client.py    |  1 +
- 3 files changed, 48 insertions(+)
+ bitbake/lib/hashserv/tests.py | 53 ++++++++++++++++++++++++++++-------
+ 1 file changed, 43 insertions(+), 10 deletions(-)
 
-diff --git a/bitbake/lib/bb/asyncrpc/client.py b/bitbake/lib/bb/asyncrpc/client.py
-index 335da09d8c6..b0892a82436 100644
---- a/bitbake/lib/bb/asyncrpc/client.py
-+++ b/bitbake/lib/bb/asyncrpc/client.py
-@@ -78,6 +78,35 @@ class StreamParser(object):
-             self.writer = None
+diff --git a/bitbake/lib/hashserv/tests.py b/bitbake/lib/hashserv/tests.py
+index 5f1ad585072..395fa451879 100644
+--- a/bitbake/lib/hashserv/tests.py
++++ b/bitbake/lib/hashserv/tests.py
+@@ -51,13 +51,20 @@ class HashEquivalenceTestSetup(object):
+         server.serve_as_process(prefunc=prefunc, args=(self.server_index,))
+         self.addCleanup(cleanup_server, server)
+ 
++        return server
++
++    def start_client(self, server_address):
+         def cleanup_client(client):
+             client.close()
+ 
+-        client = create_client(server.address)
++        client = create_client(server_address)
+         self.addCleanup(cleanup_client, client)
+ 
+-        return (client, server)
++        return client
++
++    def start_test_server(self):
++        server = self.start_server()
++        return server.address
+ 
+     def setUp(self):
+         if sys.version_info < (3, 5, 0):
+@@ -66,7 +73,9 @@ class HashEquivalenceTestSetup(object):
+         self.temp_dir = tempfile.TemporaryDirectory(prefix='bb-hashserv')
+         self.addCleanup(self.temp_dir.cleanup)
+ 
+-        (self.client, self.server) = self.start_server()
++        self.server_address = self.start_test_server()
++
++        self.client = self.start_client(self.server_address)
+ 
+     def assertClientGetHash(self, client, taskhash, unihash):
+         result = client.get_unihash(self.METHOD, taskhash)
+@@ -183,7 +192,7 @@ class HashEquivalenceCommonTests(object):
+ 
+     def test_stress(self):
+         def query_server(failures):
+-            client = Client(self.server.address)
++            client = Client(self.server_address)
+             try:
+                 for i in range(1000):
+                     taskhash = hashlib.sha256()
+@@ -222,8 +231,10 @@ class HashEquivalenceCommonTests(object):
+         # the side client. It also verifies that the results are pulled into
+         # the downstream database by checking that the downstream and side servers
+         # match after the downstream is done waiting for all backfill tasks
+-        (down_client, down_server) = self.start_server(upstream=self.server.address)
+-        (side_client, side_server) = self.start_server(dbpath=down_server.dbpath)
++        down_server = self.start_server(upstream=self.server_address)
++        down_client = self.start_client(down_server.address)
++        side_server = self.start_server(dbpath=down_server.dbpath)
++        side_client = self.start_client(side_server.address)
+ 
+         def check_hash(taskhash, unihash, old_sidehash):
+             nonlocal down_client
+@@ -328,14 +339,18 @@ class HashEquivalenceCommonTests(object):
+         self.assertEqual(result['method'], self.METHOD)
+ 
+     def test_ro_server(self):
+-        (ro_client, ro_server) = self.start_server(dbpath=self.server.dbpath, read_only=True)
++        rw_server = self.start_server()
++        rw_client = self.start_client(rw_server.address)
++
++        ro_server = self.start_server(dbpath=rw_server.dbpath, read_only=True)
++        ro_client = self.start_client(ro_server.address)
+ 
+         # Report a hash via the read-write server
+         taskhash = '35788efcb8dfb0a02659d81cf2bfd695fb30faf9'
+         outhash = '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f'
+         unihash = 'f46d3fbb439bd9b921095da657a4de906510d2cd'
+ 
+-        result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
++        result = rw_client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+ 
+         # Check the hash via the read-only server
+@@ -350,7 +365,7 @@ class HashEquivalenceCommonTests(object):
+             ro_client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
+ 
+         # Ensure that the database was not modified
+-        self.assertClientGetHash(self.client, taskhash2, None)
++        self.assertClientGetHash(rw_client, taskhash2, None)
  
  
-+class MessageParser(object):
-+    def __init__(self, socket, timeout):
-+        self.socket = socket
-+        self.timeout = timeout
-+
-+    async def setup_connection(self, proto_name, proto_version):
-+        await self.socket.send("%s %s" % (proto_name, proto_version))
-+
-+    async def invoke(self, msg):
-+        await self.socket.send(json.dumps(msg))
-+        try:
-+            message = await asyncio.wait_for(self.socket.recv(), self.timeout)
-+        except asyncio.TimeoutError:
-+            raise ConnectionError("Timed out waiting for server")
-+
-+        return json.loads(message)
-+
-+    async def close(self):
-+        if self.socket is not None:
-+            await self.socket.close()
-+            self.socket = None
-+
-+    async def send(self, msg):
-+        await self.socket.send(msg)
-+
-+    async def recv(self):
-+        return await self.socket.recv()
-+
-+
- class AsyncClient(object):
-     def __init__(self, proto_name, proto_version, logger, timeout=30):
-         self.socket = None
-@@ -111,6 +140,15 @@ class AsyncClient(object):
+     def test_slow_server_start(self):
+@@ -370,7 +385,7 @@ class HashEquivalenceCommonTests(object):
+         old_signal = signal.signal(signal.SIGTERM, do_nothing)
+         self.addCleanup(signal.signal, signal.SIGTERM, old_signal)
  
-         self._connect_sock = connect_sock
- 
-+    async def connect_websocket(self, uri):
-+        import websockets
+-        _, server = self.start_server(prefunc=prefunc)
++        server = self.start_server(prefunc=prefunc)
+         server.process.terminate()
+         time.sleep(30)
+         event.set()
+@@ -460,3 +475,21 @@ class TestHashEquivalenceTCPServer(HashEquivalenceTestSetup, HashEquivalenceComm
+         # If IPv6 is enabled, it should be safe to use localhost directly, in general
+         # case it is more reliable to resolve the IP address explicitly.
+         return socket.gethostbyname("localhost") + ":0"
 +
-+        async def connect_sock():
-+            websocket = await websockets.connect(uri)
-+            return MessageParser(websocket, self.timeout)
++class TestHashEquivalenceExternalServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
++    def start_test_server(self):
++        if 'BB_TEST_HASHSERV' not in os.environ:
++            self.skipTest('BB_TEST_HASHSERV not defined to test an external server')
 +
-+        self._connect_sock = connect_sock
++        return os.environ['BB_TEST_HASHSERV']
 +
-     async def setup_connection(self):
-         await self.socket.setup_connection(self.proto_name, self.proto_version)
- 
-diff --git a/bitbake/lib/hashserv/__init__.py b/bitbake/lib/hashserv/__init__.py
-index 9cb3fd57a51..aa5c7e736d7 100644
---- a/bitbake/lib/hashserv/__init__.py
-+++ b/bitbake/lib/hashserv/__init__.py
-@@ -11,9 +11,12 @@ import itertools
- import json
- 
- UNIX_PREFIX = "unix://"
-+WS_PREFIX = "ws://"
-+WSS_PREFIX = "wss://"
- 
- ADDR_TYPE_UNIX = 0
- ADDR_TYPE_TCP = 1
-+ADDR_TYPE_WS = 2
- 
- # The Python async server defaults to a 64K receive buffer, so we hardcode our
- # maximum chunk size. It would be better if the client and server reported to
-@@ -91,6 +94,8 @@ def setup_database(database, sync=True):
- def parse_address(addr):
-     if addr.startswith(UNIX_PREFIX):
-         return (ADDR_TYPE_UNIX, (addr[len(UNIX_PREFIX):],))
-+    elif addr.startswith(WS_PREFIX) or addr.startswith(WSS_PREFIX):
-+        return (ADDR_TYPE_WS, (addr,))
-     else:
-         m = re.match(r'\[(?P<host>[^\]]*)\]:(?P<port>\d+)$', addr)
-         if m is not None:
-@@ -137,6 +142,8 @@ def create_client(addr):
-     (typ, a) = parse_address(addr)
-     if typ == ADDR_TYPE_UNIX:
-         c.connect_unix(*a)
-+    elif typ == ADDR_TYPE_WS:
-+        c.connect_websocket(*a)
-     else:
-         c.connect_tcp(*a)
- 
-@@ -149,6 +156,8 @@ async def create_async_client(addr):
-     (typ, a) = parse_address(addr)
-     if typ == ADDR_TYPE_UNIX:
-         await c.connect_unix(*a)
-+    elif typ == ADDR_TYPE_WS:
-+        await c.connect_websocket(*a)
-     else:
-         await c.connect_tcp(*a)
- 
-diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
-index 7d2b9cb394f..c80aa32fa55 100644
---- a/bitbake/lib/hashserv/client.py
-+++ b/bitbake/lib/hashserv/client.py
-@@ -107,6 +107,7 @@ class Client(bb.asyncrpc.Client):
-         super().__init__()
-         self._add_methods(
-             "connect_tcp",
-+            "connect_websocket",
-             "get_unihash",
-             "report_unihash",
-             "report_unihash_equiv",
++    def start_server(self, *args, **kwargs):
++        self.skipTest('Cannot start local server when testing external servers')
++
++    def setUp(self):
++        super().setUp()
++        self.client.remove({"method": self.METHOD})
++
++    def tearDown(self):
++        self.client.remove({"method": self.METHOD})
++        super().tearDown()
 -- 
 2.34.1
 
