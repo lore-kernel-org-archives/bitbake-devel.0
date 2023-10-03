@@ -1,171 +1,309 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73965E7AD74
-	for <webhook@archiver.kernel.org>; Tue,  3 Oct 2023 15:57:13 +0000 (UTC)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
- by mx.groups.io with SMTP id smtpd.web11.111947.1696348623250973468
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9331DE7AD76
+	for <webhook@archiver.kernel.org>; Tue,  3 Oct 2023 16:05:33 +0000 (UTC)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+ by mx.groups.io with SMTP id smtpd.web10.112548.1696349131415821274
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 03 Oct 2023 08:57:03 -0700
+ Tue, 03 Oct 2023 09:05:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=YqZaORQd;
- spf=pass (domain: gmail.com, ip: 209.85.167.46, mailfrom: jpewhacker@gmail.com)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50336768615so1308436e87.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 03 Oct 2023 08:57:02 -0700 (PDT)
+ dkim=pass header.i=@snap.com header.s=google header.b=I/ANowNo;
+ spf=pass (domain: snapchat.com, ip: 209.85.208.44, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-53829312d12so6536917a12.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 03 Oct 2023 09:05:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696348621; x=1696953421; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0d0ZtIZ3AZejOyVmU6xLp/XW2qmtA+7tE0RbPYNvMkY=;
-        b=YqZaORQdVfwIv44zOdil+eR3F1jcosBdqGW/CpRfbC+uzVcyEQS9B60O/fpakJSYwH
-         K2+HFjr8t/L4QD3rPm7DBIMWcLv2pHxX9n8zyBnMQx46Q2QuZ3aITk8BUz53Ak3xxJvD
-         bAAvMVi8WJM7j4PtXd+ayRIKlgwrZ9RUrwB9yNoGzQTG9Xb9eLJ/pmDV/1nE3rrQyDTZ
-         DEVuxqj8bYigI0TBovoMQ0+yqQxYGu9F3L6t0ixqNUzZ9S0VxOHyJ1aBtATJeXFiQO0R
-         5t+7j+qt9rMC4ddMQctS35W+TeEN447ssGWUJ6vwoII7LeOXgb/qb6j7NT3OGynbrlIy
-         QgOA==
+        d=snap.com; s=google; t=1696349130; x=1696953930; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oEk8+hR/Di66jExwzcmvMwljHAfUwlBuN3/WeRjuKD8=;
+        b=I/ANowNoNIEmNiN8Yx2WfGSFG/pOJVsgKGmxcLdrFkYo0j77TvDpPo7AkyVAkpJAzq
+         I5ey5xySfIVZRslkX0Wels2iBKYsfzb7KmzGcoBfkBaxFZX7C9ayWKjExUjFnecsij2n
+         jGjIdHBwgHZNmSuqJx4RWWzRQsToos2L8BVIw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696348621; x=1696953421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0d0ZtIZ3AZejOyVmU6xLp/XW2qmtA+7tE0RbPYNvMkY=;
-        b=OETxf6zKRIvg+kno8o9DUMFdfKbOdCLhkx/eG9K7nqYNCEsZvkSuVNfPR1Pr1/ZaPg
-         ihH4wzgxgUkWKqBb/HoPN10lPUoBnam80ctvWCpxPrtW+v2k0fGTMwqPlgtMgkSZl3fs
-         f3bsmL4TnVZO0AzseZ8W19fJAMFURKe+1+I/ibctuKDM5TlYJSbFWiWhNs6TpZNa6z7z
-         7aWoi7bZBs8ycoDA40YXCQRD7A6pWR5bnxey8pXV3XSE23E5ielIALeUVI49iV4OWiwc
-         rGUNTgt2Z9O5he9v/RFsuvKi7howYsr8oHUGG6EDW+DraRs3iC7EuJeqUzMjDyfdDkzb
-         0aZQ==
-X-Gm-Message-State: AOJu0YyeaI/IX2D6gAYpRqKw0qweUWQ+RH7zfDVPMOsD3xkPnNGtKao6
-	YwdlS/hLRoSSC1D6gLEfhe2ue1eVkVnIxpX1yYg=
-X-Google-Smtp-Source: AGHT+IEQT2G8qF+vZ6MU23gAW8nTLOa409IjM4fVUJq03CoAcZ0yUTRFHU+B09iFvgZcY4/VtQ14T/L78OjlZj/i1bk=
-X-Received: by 2002:ac2:57c5:0:b0:503:3447:b704 with SMTP id
- k5-20020ac257c5000000b005033447b704mr10829097lfo.0.1696348621079; Tue, 03 Oct
- 2023 08:57:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696349130; x=1696953930;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oEk8+hR/Di66jExwzcmvMwljHAfUwlBuN3/WeRjuKD8=;
+        b=lpL9O4mjIPIAVmJV5ctLFI/RtCOwAuWCEw6N3hh5m1RJRVLtgOaGkr0t+fV7l7fsCr
+         dz0zP4si1dvxDuBi/NEqMX0UiAMXyjk3IiuUQLprjEohV0dobr/UlPs/hzm6GFFdOZHJ
+         7uv37ZW9EK5PN9W0oMdqCwhvwfP4LbvgU2CtaABDqrat2iV/jQKGKMZrbwjEiLLUTT4f
+         iEeq5wUdUXrKHenEwXAAj98Apl8PNFFLXQQ3DOsWNVf6c3tFoBA9+Dq0DqxHwLy1COHT
+         Nakbc+SJLRl6ISrHqVebEe5t6BYPhtEToSCwId8N2JRDH+BVANBby6DRy/tDSxYTUs9k
+         qODA==
+X-Gm-Message-State: AOJu0YyZGe2b7FIgLtZxRmWrnVUaVX8bbgdv+M9luRHJ6gqbHCqScL5l
+	sHLl5Aj4GdoOLE9dR6r7I+g8RbNEKXrdQWxGYc0H1A==
+X-Google-Smtp-Source: AGHT+IFltlog2LAeHHv1rdqesOACBuTmWRoSGuHxN78evFY/Rft8+eZC+nD9BnfVSN74HJaljvt5hiJ1FKayOBO3a20=
+X-Received: by 2002:a17:906:6a10:b0:9ad:8641:e91b with SMTP id
+ qw16-20020a1709066a1000b009ad8641e91bmr2551466ejc.11.1696349129647; Tue, 03
+ Oct 2023 09:05:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230929123706.454384-1-karim.benhoucine@landisgyr.com>
-In-Reply-To: <20230929123706.454384-1-karim.benhoucine@landisgyr.com>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Tue, 3 Oct 2023 09:56:49 -0600
-Message-ID: <CAJdd5GY4Z004TT9f3n+q3GZo8qKF_FyehEfWO_xENd-WH=nkKw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] hashserv: Fix read-only mode.
-To: "Ben Houcine, Karim" <Karim.benhoucine@landisgyr.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20230824083109.1821425-1-Markus.Niebel@ew.tq-group.com> <CANPvuR=8-BicdWNHsgmyBAZDHg7Phj9b2vhnzbo_xEaEb09b+Q@mail.gmail.com>
+In-Reply-To: <CANPvuR=8-BicdWNHsgmyBAZDHg7Phj9b2vhnzbo_xEaEb09b+Q@mail.gmail.com>
+From: Etienne Cordonnier <ecordonnier@snap.com>
+Date: Tue, 3 Oct 2023 18:05:18 +0200
+Message-ID: <CAHUKmYZxyNDG2yPQ3-rphzCjCJ=5mV0gA1avwOzdsy60VhtMQQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] [kirkstone][2.0][PATCH] bitbake-getvar: Add a
+ quiet command line argument
+To: Jose Quaresma <quaresma.jose@gmail.com>
+Cc: Markus Niebel <Markus.Niebel@ew.tq-group.com>, bitbake-devel@lists.openembedded.org, 
+	oss@ew.tq-group.com, Paulo Neves <ptsneves@gmail.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: multipart/alternative; boundary="0000000000004a2bfd0606d20fa9"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 03 Oct 2023 15:57:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15174
+ <bitbake-devel@lists.openembedded.org>; Tue, 03 Oct 2023 16:05:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15175
 
-On Fri, Sep 29, 2023 at 6:37=E2=80=AFAM Ben Houcine, Karim
-<Karim.benhoucine@landisgyr.com> wrote:
->
-> Signed-off-by: Karim Ben Houcine <karim.benhoucine@landisgyr.com>
-> ---
->  lib/hashserv/server.py | 55 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 54 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-> index d40a2ab8..56d76f1f 100644
-> --- a/lib/hashserv/server.py
-> +++ b/lib/hashserv/server.py
-> @@ -180,7 +180,11 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection=
-):
->              'get-stats': self.handle_get_stats,
->          })
->
-> -        if not read_only:
-> +        if read_only:
-> +            self.handlers.update({
-> +                'report': self.handle_readonly_report,
-> +            })
-> +        else:
->              self.handlers.update({
->                  'report': self.handle_report,
->                  'report-equiv': self.handle_equivreport,
-> @@ -453,6 +457,55 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection=
-):
->
->          self.write_message(d)
->
-> +
-> +    async def handle_readonly_report(self, data):
-> +        with closing(self.db.cursor()) as cursor:
-> +            outhash_data =3D {
-> +                'method': data['method'],
-> +                'outhash': data['outhash'],
-> +                'taskhash': data['taskhash'],
-> +                'created': datetime.now()
-> +            }
-> +
-> +            for k in ('owner', 'PN', 'PV', 'PR', 'task', 'outhash_siginf=
-o'):
-> +                if k in data:
-> +                    outhash_data[k] =3D data[k]
-> +
-> +            # Check if outhash is known
-> +            cursor.execute(
-> +                '''
-> +                SELECT outhashes_v2.taskhash AS taskhash, unihashes_v2.u=
-nihash AS unihash FROM outhashes_v2
-> +                INNER JOIN unihashes_v2 ON unihashes_v2.method=3Douthash=
-es_v2.method AND unihashes_v2.taskhash=3Douthashes_v2.taskhash
-> +                -- Select any matching output hash
-> +                WHERE outhashes_v2.method=3D:method AND outhashes_v2.out=
-hash=3D:outhash
-> +                -- Pick the oldest hash
-> +                ORDER BY outhashes_v2.created ASC
-> +                LIMIT 1
-> +                ''',
-> +                {
-> +                    'method': data['method'],
-> +                    'outhash': data['outhash'],
-> +                    'taskhash': data['taskhash'],
-> +                }
-> +            )
-> +            row =3D cursor.fetchone()
-> +            if row is not None:
-> +                # outhash is known =3D> corrects unihash
-> +                unihash =3D row['unihash']
-> +            else:
-> +                # outhash is unknown =3D> nothing to do
-> +                unihash =3D outhash_data['taskhash']
-> +
-> +
-> +            d =3D {
-> +                'taskhash': data['taskhash'],
-> +                'method': data['method'],
-> +                'unihash': unihash,
-> +            }
+--0000000000004a2bfd0606d20fa9
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Actually, I looked into this more and the above query is wrong. What
-we actually want is to call self.get_unihash() because that's all that
-the function would do anyway if the outhash wasn't inserted.
-Basically, take the last few lines of handle_report to a new function
-that can be called in the "report" RPC call when read-only
+Is there a technical issue preventing a merge of the patch, or is it
+delayed due to the current workload?
 
-> +
-> +        self.write_message(d)
-> +
-> +
->      async def handle_equivreport(self, data):
->          with closing(self.db.cursor()) as cursor:
->              insert_data =3D {
+Thanks,
+Etienne
+
+On Wed, Sep 6, 2023 at 6:41=E2=80=AFPM Jose Quaresma <quaresma.jose@gmail.c=
+om>
+wrote:
+
+> Gentle ping.
+>
+> Jose
+>
+> Markus Niebel <Markus.Niebel@ew.tq-group.com> escreveu no dia quinta,
+> 24/08/2023 =C3=A0(s) 09:59:
+>
+>> From: Paulo Neves <ptsneves@gmail.com>
+>>
+>> bitbake-getvar does not have a way to silence bitbake
+>> server's logger and that makes the tool hard to use for
+>> text processing. This is especially true when one wants to
+>> get a bitbake value to be piped to some other utility and
+>> instead we get uncontrolled logging messages or warnings
+>> together with bitbake's variable value.
+>>
+>> Example without quiet:
+>> bitbake-getvar --value MACHINE
+>> NOTE: Starting bitbake server...
+>> qemux86-64
+>>
+>> With quiet:
+>> bitbake-getvar --value MACHINE --quiet
+>> qemux86-64
+>>
+>> Signed-off-by: Paulo Neves <ptsneves@gmail.com>
+>> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> (cherry picked from commit af354e975d0b4c26d0e91e3c82946b093bc11b45)
+>> Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+>> ---
+>>  bin/bitbake-getvar | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/bin/bitbake-getvar b/bin/bitbake-getvar
+>> index 5435a8d7..4a9eb4f3 100755
+>> --- a/bin/bitbake-getvar
+>> +++ b/bin/bitbake-getvar
+>> @@ -25,6 +25,7 @@ if __name__ =3D=3D "__main__":
+>>      parser.add_argument('-u', '--unexpand', help=3D'Do not expand the
+>> value (with --value)', action=3D"store_true")
+>>      parser.add_argument('-f', '--flag', help=3D'Specify a variable flag=
+ to
+>> query (with --value)', default=3DNone)
+>>      parser.add_argument('--value', help=3D'Only report the value, no
+>> history and no variable name', action=3D"store_true")
+>> +    parser.add_argument('-q', '--quiet', help=3D'Silence bitbake server
+>> logging', action=3D"store_true")
+>>      args =3D parser.parse_args()
+>>
+>>      if args.unexpand and not args.value:
+>> @@ -35,7 +36,7 @@ if __name__ =3D=3D "__main__":
+>>          print("--flag only makes sense with --value")
+>>          sys.exit(1)
+>>
+>> -    with bb.tinfoil.Tinfoil(tracking=3DTrue) as tinfoil:
+>> +    with bb.tinfoil.Tinfoil(tracking=3DTrue, setup_logging=3Dnot args.q=
+uiet)
+>> as tinfoil:
+>>          if args.recipe:
+>>              tinfoil.prepare(quiet=3D2)
+>>              d =3D tinfoil.parse_recipe(args.recipe)
+>> --
+>> 2.25.1
+>>
+>>
+>>
+>>
+>>
+>
 > --
-> 2.25.1
+> Best regards,
 >
+> Jos=C3=A9 Quaresma
 >
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 > Links: You receive all messages sent to this group.
-> View/Reply Online (#15149): https://lists.openembedded.org/g/bitbake-deve=
-l/message/15149
-> Mute This Topic: https://lists.openembedded.org/mt/101656393/3616693
+> View/Reply Online (#15014):
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_g_bitbake-2Ddevel_message_15014&d=3DDwIFaQ&c=3DncDTmphkJTvjIDPh0hpF_4v=
+CHvabgGkICC2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3D28=
+o5PCk2_SvEBbgcSr9uFO2XInJr64bYAT2f-8b0pVLcGrT6qjQgpWJahSmuCsJm&s=3D1N6X7NJd=
+qFSuMeDnGQl04v2BtAMrwt-IEDztO_J3m-Y&e=3D
+> Mute This Topic:
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_mt_100931867_7048771&d=3DDwIFaQ&c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC=
+2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3D28o5PCk2_SvEB=
+bgcSr9uFO2XInJr64bYAT2f-8b0pVLcGrT6qjQgpWJahSmuCsJm&s=3DmEgzk6IU8WykrVV08Ko=
+z1q1uEH0YZkyqWJmZqD5qsfI&e=3D
 > Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWha=
-cker@gmail.com]
+> Unsubscribe:
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_g_bitbake-2Ddevel_unsub&d=3DDwIFaQ&c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGk=
+ICC2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3D28o5PCk2_S=
+vEBbgcSr9uFO2XInJr64bYAT2f-8b0pVLcGrT6qjQgpWJahSmuCsJm&s=3DkdUmyOXc4k-qkWGq=
+ZYP-xnO6SqTCMOYbkKpmeB7hnIw&e=3D
+> [ecordonnier@snap.com]
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 >
+>
+
+--0000000000004a2bfd0606d20fa9
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Is there a technical issue preventing a merge of the patch=
+, or is it delayed due to the current workload?<br><br>Thanks,<br>Etienne</=
+div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On=
+ Wed, Sep 6, 2023 at 6:41=E2=80=AFPM Jose Quaresma &lt;<a href=3D"mailto:qu=
+aresma.jose@gmail.com">quaresma.jose@gmail.com</a>&gt; wrote:<br></div><blo=
+ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
+:1px solid rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr"><span style=
+=3D"color:rgb(0,0,0)">Gentle ping.</span><br style=3D"color:rgb(0,0,0)"><br=
+ style=3D"color:rgb(0,0,0)"><span style=3D"color:rgb(0,0,0)">Jose</span><br=
+></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr"=
+>Markus Niebel &lt;<a href=3D"mailto:Markus.Niebel@ew.tq-group.com" target=
+=3D"_blank">Markus.Niebel@ew.tq-group.com</a>&gt; escreveu no dia quinta, 2=
+4/08/2023 =C3=A0(s) 09:59:<br></div><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
+-left:1ex">From: Paulo Neves &lt;<a href=3D"mailto:ptsneves@gmail.com" targ=
+et=3D"_blank">ptsneves@gmail.com</a>&gt;<br>
+<br>
+bitbake-getvar does not have a way to silence bitbake<br>
+server&#39;s logger and that makes the tool hard to use for<br>
+text processing. This is especially true when one wants to<br>
+get a bitbake value to be piped to some other utility and<br>
+instead we get uncontrolled logging messages or warnings<br>
+together with bitbake&#39;s variable value.<br>
+<br>
+Example without quiet:<br>
+bitbake-getvar --value MACHINE<br>
+NOTE: Starting bitbake server...<br>
+qemux86-64<br>
+<br>
+With quiet:<br>
+bitbake-getvar --value MACHINE --quiet<br>
+qemux86-64<br>
+<br>
+Signed-off-by: Paulo Neves &lt;<a href=3D"mailto:ptsneves@gmail.com" target=
+=3D"_blank">ptsneves@gmail.com</a>&gt;<br>
+Signed-off-by: Alexandre Belloni &lt;<a href=3D"mailto:alexandre.belloni@bo=
+otlin.com" target=3D"_blank">alexandre.belloni@bootlin.com</a>&gt;<br>
+(cherry picked from commit af354e975d0b4c26d0e91e3c82946b093bc11b45)<br>
+Signed-off-by: Markus Niebel &lt;<a href=3D"mailto:Markus.Niebel@ew.tq-grou=
+p.com" target=3D"_blank">Markus.Niebel@ew.tq-group.com</a>&gt;<br>
+---<br>
+=C2=A0bin/bitbake-getvar | 3 ++-<br>
+=C2=A01 file changed, 2 insertions(+), 1 deletion(-)<br>
+<br>
+diff --git a/bin/bitbake-getvar b/bin/bitbake-getvar<br>
+index 5435a8d7..4a9eb4f3 100755<br>
+--- a/bin/bitbake-getvar<br>
++++ b/bin/bitbake-getvar<br>
+@@ -25,6 +25,7 @@ if __name__ =3D=3D &quot;__main__&quot;:<br>
+=C2=A0 =C2=A0 =C2=A0parser.add_argument(&#39;-u&#39;, &#39;--unexpand&#39;,=
+ help=3D&#39;Do not expand the value (with --value)&#39;, action=3D&quot;st=
+ore_true&quot;)<br>
+=C2=A0 =C2=A0 =C2=A0parser.add_argument(&#39;-f&#39;, &#39;--flag&#39;, hel=
+p=3D&#39;Specify a variable flag to query (with --value)&#39;, default=3DNo=
+ne)<br>
+=C2=A0 =C2=A0 =C2=A0parser.add_argument(&#39;--value&#39;, help=3D&#39;Only=
+ report the value, no history and no variable name&#39;, action=3D&quot;sto=
+re_true&quot;)<br>
++=C2=A0 =C2=A0 parser.add_argument(&#39;-q&#39;, &#39;--quiet&#39;, help=3D=
+&#39;Silence bitbake server logging&#39;, action=3D&quot;store_true&quot;)<=
+br>
+=C2=A0 =C2=A0 =C2=A0args =3D parser.parse_args()<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0if args.unexpand and not args.value:<br>
+@@ -35,7 +36,7 @@ if __name__ =3D=3D &quot;__main__&quot;:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0print(&quot;--flag only makes sense with =
+--value&quot;)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0sys.exit(1)<br>
+<br>
+-=C2=A0 =C2=A0 with bb.tinfoil.Tinfoil(tracking=3DTrue) as tinfoil:<br>
++=C2=A0 =C2=A0 with bb.tinfoil.Tinfoil(tracking=3DTrue, setup_logging=3Dnot=
+ args.quiet) as tinfoil:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if args.recipe:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0tinfoil.prepare(quiet=3D2)<=
+br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0d =3D tinfoil.parse_recipe(=
+args.recipe)<br>
+-- <br>
+2.25.1<br>
+<br>
+<br>
+<br>
+<br>
+</blockquote></div><br clear=3D"all"><div><br></div><span class=3D"gmail_si=
+gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
+iv dir=3D"ltr">Best regards,<div><br>Jos=C3=A9 Quaresma</div></div></div>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#15014): <a href=3D"https://urldefense.proofpoint.com/v2=
+/url?u=3Dhttps-3A__lists.openembedded.org_g_bitbake-2Ddevel_message_15014&a=
+mp;d=3DDwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DA=
+hkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3D28o5PCk2_SvEBbgcSr9uFO2X=
+InJr64bYAT2f-8b0pVLcGrT6qjQgpWJahSmuCsJm&amp;s=3D1N6X7NJdqFSuMeDnGQl04v2BtA=
+Mrwt-IEDztO_J3m-Y&amp;e=3D" rel=3D"noreferrer" target=3D"_blank">https://ur=
+ldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded.org_g_bitba=
+ke-2Ddevel_message_15014&amp;d=3DDwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHva=
+bgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=
+=3D28o5PCk2_SvEBbgcSr9uFO2XInJr64bYAT2f-8b0pVLcGrT6qjQgpWJahSmuCsJm&amp;s=
+=3D1N6X7NJdqFSuMeDnGQl04v2BtAMrwt-IEDztO_J3m-Y&amp;e=3D</a> <br>
+Mute This Topic: <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dht=
+tps-3A__lists.openembedded.org_mt_100931867_7048771&amp;d=3DDwIFaQ&amp;c=3D=
+ncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Qj9TsR=
+ih1DULJTKUkSGa66m67E&amp;m=3D28o5PCk2_SvEBbgcSr9uFO2XInJr64bYAT2f-8b0pVLcGr=
+T6qjQgpWJahSmuCsJm&amp;s=3DmEgzk6IU8WykrVV08Koz1q1uEH0YZkyqWJmZqD5qsfI&amp;=
+e=3D" rel=3D"noreferrer" target=3D"_blank">https://urldefense.proofpoint.co=
+m/v2/url?u=3Dhttps-3A__lists.openembedded.org_mt_100931867_7048771&amp;d=3D=
+DwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonV=
+uMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3D28o5PCk2_SvEBbgcSr9uFO2XInJr64b=
+YAT2f-8b0pVLcGrT6qjQgpWJahSmuCsJm&amp;s=3DmEgzk6IU8WykrVV08Koz1q1uEH0YZkyqW=
+JmZqD5qsfI&amp;e=3D</a> <br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dhttps-=
+3A__lists.openembedded.org_g_bitbake-2Ddevel_unsub&amp;d=3DDwIFaQ&amp;c=3Dn=
+cDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Qj9TsRi=
+h1DULJTKUkSGa66m67E&amp;m=3D28o5PCk2_SvEBbgcSr9uFO2XInJr64bYAT2f-8b0pVLcGrT=
+6qjQgpWJahSmuCsJm&amp;s=3DkdUmyOXc4k-qkWGqZYP-xnO6SqTCMOYbkKpmeB7hnIw&amp;e=
+=3D" rel=3D"noreferrer" target=3D"_blank">https://urldefense.proofpoint.com=
+/v2/url?u=3Dhttps-3A__lists.openembedded.org_g_bitbake-2Ddevel_unsub&amp;d=
+=3DDwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbN=
+onVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3D28o5PCk2_SvEBbgcSr9uFO2XInJr=
+64bYAT2f-8b0pVLcGrT6qjQgpWJahSmuCsJm&amp;s=3DkdUmyOXc4k-qkWGqZYP-xnO6SqTCMO=
+YbkKpmeB7hnIw&amp;e=3D</a>=C2=A0 [<a href=3D"mailto:ecordonnier@snap.com" t=
+arget=3D"_blank">ecordonnier@snap.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
+
+--0000000000004a2bfd0606d20fa9--
 
