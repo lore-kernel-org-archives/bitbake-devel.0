@@ -1,101 +1,87 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76784E95A8E
-	for <webhook@archiver.kernel.org>; Mon,  9 Oct 2023 14:16:40 +0000 (UTC)
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
- by mx.groups.io with SMTP id smtpd.web11.62595.1696860994877128394
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F6AE95A9A
+	for <webhook@archiver.kernel.org>; Mon,  9 Oct 2023 15:08:20 +0000 (UTC)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+ by mx.groups.io with SMTP id smtpd.web10.64607.1696863644391527958
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 09 Oct 2023 07:16:34 -0700
+ Mon, 09 Oct 2023 08:00:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Y6j+EbTd;
- spf=pass (domain: gmail.com, ip: 209.85.160.47, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1dd54aca17cso3422028fac.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Oct 2023 07:16:34 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=PlYfL2Z5;
+ spf=pass (domain: gmail.com, ip: 209.85.208.43, mailfrom: bhstalel@gmail.com)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-53829312d12so12362098a12.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Oct 2023 08:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696860993; x=1697465793; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1696863642; x=1697468442; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BpEMtn8acfIwTHcmO45zmc44Zs94LR9/LqRY2ushHKE=;
-        b=Y6j+EbTdt0V1HwZWHOV251MCjMoV0HGhLLwV+/d9zGM/9vf9Dsy1cpETX4k4PJWlHj
-         O1CZkbuqXfuDNoRsIP+bg72IrM5rAlXGVFrHxzBhH6QozLb4odmJTkhX7oP5PL4/Sq2B
-         PzBWI3eRo55QX9xfK1uLN2s80WsTollaV/jeU0VTIZUVSbP9vbKIMlt0qB8CPm+cE3dC
-         QrteSfYSV+jj/XIJ3Z2UOobsbay5IMlR/bHA0WxKDM7rgGMrewWOLVqWNDnZFWjYJeH7
-         Vpgy6Qfpp1C2wXNcgsnnsu5s+l8c3OILzu6SSPF3YmA0aHarYZFPZ+7d9LqUw/NQX/uv
-         kQtA==
+        bh=ft5JjVkr9HoSedDv7ecTpn/jZNuRSgtV9hsVuP1NxR0=;
+        b=PlYfL2Z5j1Td9AiSmH3FuoFmW67RJgSwz5v9dDLqAFRyjhP2eRWoVePbmr02aTttOS
+         RXPwO1TYp75PUxwhIHhg/sO5ZBa2zalj9I2Q1LP8qk40FA1FvUMI28EoAi01ay3x0iGK
+         ms4KhXeb0Wi53H0YwcA0vJ5iqKG911eky2WWGcddHpFSp64l9LRDgiAx0WwfGbzWrzra
+         aInc73KD2XcztzL7u8EGJpyzOCD7BuUe3WxNfGAdDkQMBDfYA7DEAU1L/9Fa8Egyx/qM
+         bUAfNWL6khWpohcmeIelzX7pGY2nToehtive3tov116e7wbuuM8V9NmdYGMW5pBdQyEN
+         I7Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696860993; x=1697465793;
+        d=1e100.net; s=20230601; t=1696863642; x=1697468442;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BpEMtn8acfIwTHcmO45zmc44Zs94LR9/LqRY2ushHKE=;
-        b=p9aZ6zMt965wHE7Gli8Z9CSk6v3hIpf2aktGv69z+QayGYE0ya7y5WT8VAOgr1rchr
-         +a4ZpiAAqdyhEE/R5hgpbCLn2NdeACreTxZoi5ejtpb5JiC1hnTySxOh3IQYG8XD5dhU
-         zC6HlNr/H5GnFdZPz/0N2uV69739RVXHsIJDOcJ1h0mvkON5FHb9fgG/SPXddlwia9Mu
-         4/0vmpk1epv3vEX/KdyJ9COd8iIRA46qhJTmBz7WXdNP2zlekGsZWxK11q673bpI0IOK
-         ZEyilp8IrMkwLxjq53jZdQx90xqVI1dJwUFiFzhA1lVHRRGXorMyEHJA8jGFGyJcBxG9
-         QxQA==
-X-Gm-Message-State: AOJu0YzoRfxv95YRvQcgZ7aXIC62ySty1Ts52QVaTZR7P0i73q6cpDOq
-	XeZNaKHpPfIOQFRt9D3Ipv92LV3eFrs=
-X-Google-Smtp-Source: AGHT+IEnwY+AN+josWVbq/12ZJ06jHEuychO2pPxPo9lnKjjLfX9k7EJDThjXWhgX/bgPcqMHDNsfw==
-X-Received: by 2002:a05:6871:514:b0:1d6:4b84:c7ea with SMTP id s20-20020a056871051400b001d64b84c7eamr15983262oal.11.1696860991664;
-        Mon, 09 Oct 2023 07:16:31 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::589])
-        by smtp.gmail.com with ESMTPSA id hj15-20020a056870c90f00b001e5866deb6asm1486315oab.17.2023.10.09.07.16.30
+        bh=ft5JjVkr9HoSedDv7ecTpn/jZNuRSgtV9hsVuP1NxR0=;
+        b=IvmOaDOqWIYCrkpX6MMT2S1d4GRiwBRDoKA+SgNE2HLCenLX4CNnue1CzrqHMC2exc
+         Wx6XkfVoCi8dLqHQ4mUQaLC3e0dSdwz6Kz78elsBKDDeochXawDB+dsnohB6CImgIe+D
+         TZMVAfzat5yi9AEaktNA0sxN8vgdxJtcx8ypslffPrKd5NK5wKgACz7SY76gtJAMHvrF
+         KV8LuckMpDuvsSbsqm/za4t7H0Lh/e0SLHHt7ber5fcMVkRLfYHfTjctfTp34MxoiaMP
+         EwjtTTy5lR2l40+nABO+GJiwm+RIk09eRk3UFqcxD004CQfwJAIgNswSqZFRsM9ueBec
+         IIHg==
+X-Gm-Message-State: AOJu0Yx1P4kzUP5WPBRq3bhf0HeTuHLWSXU+6R7AskDNCBVo3oBRZ6Ju
+	qu/Qf0TfxggmP0fn1z4x3my20sdNXhWf/Q==
+X-Google-Smtp-Source: AGHT+IFvgA0VW7tLzJv2hui+6xWGPSBhfXHqB/CzKtAFItTr5Yu8vNzBsc3+V1AUshWEEtRdW0arBA==
+X-Received: by 2002:aa7:d3cb:0:b0:522:4764:8baa with SMTP id o11-20020aa7d3cb000000b0052247648baamr11540654edr.12.1696863642103;
+        Mon, 09 Oct 2023 08:00:42 -0700 (PDT)
+Received: from talel.sofia.local ([193.95.99.58])
+        by smtp.gmail.com with ESMTPSA id s21-20020aa7d795000000b0053613c8312bsm6224211edq.42.2023.10.09.08.00.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Oct 2023 07:16:30 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+        Mon, 09 Oct 2023 08:00:41 -0700 (PDT)
+From: "BELHADJ SALEM Talel" <bhstalel@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] hashserv: Rename clean_unused -> clean-unused
-Date: Mon,  9 Oct 2023 08:15:21 -0600
-Message-Id: <20231009141521.2491155-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Talel BELHAJSALEM <bhstalel@gmail.com>
+Subject: [PATCH] Fix find_bbfiles when BBFILES contains directory
+Date: Mon,  9 Oct 2023 15:59:18 +0100
+Message-Id: <20231009145918.900167-1-bhstalel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 09 Oct 2023 14:16:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15193
+ <bitbake-devel@lists.openembedded.org>; Mon, 09 Oct 2023 15:08:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15194
 
-Because it will bother me that it doesn't match the others
+When BBFILES in layer.conf contains a directory, this triggers find_bbfiles function
+which will fail on endswith that does not expect a list.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Talel BELHAJSALEM <bhstalel@gmail.com>
 ---
- bitbake/lib/hashserv/client.py | 2 +-
- bitbake/lib/hashserv/server.py | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/cooker.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
-index d5c981864a2..f676d267fac 100644
---- a/bitbake/lib/hashserv/client.py
-+++ b/bitbake/lib/hashserv/client.py
-@@ -107,7 +107,7 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 2adf4d297d..a354f2f0ab 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1827,7 +1827,7 @@ class CookerCollectFiles(object):
+             for ignored in ('SCCS', 'CVS', '.svn'):
+                 if ignored in dirs:
+                     dirs.remove(ignored)
+-            found += [os.path.join(dir, f) for f in files if (f.endswith(['.bb', '.bbappend']))]
++            found += [os.path.join(dir, f) for f in files if (f.endswith(tuple(['.bb', '.bbappend'])))]
  
-     async def clean_unused(self, max_age):
-         await self._set_mode(self.MODE_NORMAL)
--        return await self.send_message({"clean_unused": {"max_age_seconds": max_age}})
-+        return await self.send_message({"clean-unused": {"max_age_seconds": max_age}})
+         return found
  
- 
- class Client(bb.asyncrpc.Client):
-diff --git a/bitbake/lib/hashserv/server.py b/bitbake/lib/hashserv/server.py
-index b2ca357b2b1..45bf476bfef 100644
---- a/bitbake/lib/hashserv/server.py
-+++ b/bitbake/lib/hashserv/server.py
-@@ -187,7 +187,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-                 'reset-stats': self.handle_reset_stats,
-                 'backfill-wait': self.handle_backfill_wait,
-                 'remove': self.handle_remove,
--                'clean_unused': self.handle_clean_unused,
-+                'clean-unused': self.handle_clean_unused,
-             })
- 
-     def validate_proto_version(self):
 -- 
-2.34.1
+2.25.1
 
 
