@@ -1,118 +1,114 @@
-Return-Path: <bhstalel@gmail.com>
+Return-Path: <pavel@zhukoff.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EFDE95A9B
-	for <webhook@archiver.kernel.org>; Mon,  9 Oct 2023 15:28:10 +0000 (UTC)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
- by mx.groups.io with SMTP id smtpd.web11.65090.1696865288897585074
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B14CD610E
+	for <webhook@archiver.kernel.org>; Mon,  9 Oct 2023 17:23:11 +0000 (UTC)
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+ by mx.groups.io with SMTP id smtpd.web11.68874.1696872184665987204
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 09 Oct 2023 08:28:09 -0700
+ Mon, 09 Oct 2023 10:23:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=dyDZNUP3;
- spf=pass (domain: gmail.com, ip: 209.85.218.51, mailfrom: bhstalel@gmail.com)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-9936b3d0286so843744566b.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Oct 2023 08:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696865287; x=1697470087; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gCX+UFY8f/ESTYytEm14Vt91IfBJDcUg9X3w3TWNOoo=;
-        b=dyDZNUP3gWQcF1MFYOoQ9gpfvdava7SdCF4mIl7ZozTUThc+EwEEwQL/L3zOa9BVTM
-         Gl8Z8y1pYl4ERwE3t2bv2H6++NU5B4XKpzw1fkdktKS5V4zbtPZlM8cFeMQhfywVJSRQ
-         Mz+jrbwKf6vgrFCLhu7ea7t8BhMg5mWZ9sirJLF0UjZ07vpXhibSHQpVNnUj9oZoiYNx
-         ppP/JxlQ1Ph+VbwjVVx2DQ9+2CugNwIoGoyaD05sl68JHlFrSFvQwPMZ2J9gPsDL1RL0
-         /g31qVbruIYkpliwNKNvjm/RE8Iubouap3uYWV/ZnGSGEYdi6B6He3Cov+88VeH/FVCu
-         NSyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696865287; x=1697470087;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gCX+UFY8f/ESTYytEm14Vt91IfBJDcUg9X3w3TWNOoo=;
-        b=UNao93XmFCbdeQkYFKwZaI0un3IUZ15OTy9fayWtHUzR2jacu8qeKZmh+Yp5X7pT22
-         h3VXpDj4TxeSuAomhBfpYMRLxXfKk+JKATBX38NgCNPyFese9COdkqniXbmXEHxrzUq2
-         EufkTYuSfCwIE6yyJUgDhngSoYewuTWghDP2KqZFow49tRy+lmxdR1pf/Qm10mHqEJ1Q
-         6TcJvQgifxFGNhW8nql0txzyaBnlt2VuI4GvWZeATG3HN9XbZJQWnCP80AXAvtR8Ts6U
-         nwA75SArjg7Abq52ooKl+AnzQ+IpAxR3N3r8g5szQy7nbK/rPICu4ERkUc8H3GODnywi
-         EVPg==
-X-Gm-Message-State: AOJu0YyiXF04OiN+xjSBA05H00LxbOjSqHeRMxj8z6LCs8537xBUDxoU
-	DhaTp9279z+raQM7H5HEp/vjc5V+gD9WozLcOpo=
-X-Google-Smtp-Source: AGHT+IGqFyPVrqk4O2m/9NLZ0ofnUwneBNFK4Y4HRLsoZb8MlBVAtqkyBfc17vo+RiSiajMyBm0Op8JrzMrvvi1mo64=
-X-Received: by 2002:a17:907:c205:b0:9a5:c54f:da1c with SMTP id
- ti5-20020a170907c20500b009a5c54fda1cmr14375642ejc.47.1696865286950; Mon, 09
- Oct 2023 08:28:06 -0700 (PDT)
+ dkim=pass header.i=@zhukoff.net header.s=fm2 header.b=hcsmAk5f;
+ dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=Bai1oD3T;
+ spf=pass (domain: zhukoff.net, ip: 64.147.123.19, mailfrom: pavel@zhukoff.net)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.west.internal (Postfix) with ESMTP id AB4A83200AA7;
+	Mon,  9 Oct 2023 13:23:01 -0400 (EDT)
+Received: from imap50 ([10.202.2.100])
+  by compute4.internal (MEProxy); Mon, 09 Oct 2023 13:23:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
+	cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm2; t=1696872181; x=1696958581; bh=lf
+	4PGcbfuzBGdiQAveTU+3BrLDwCQeRvFpOGS9f/E7c=; b=hcsmAk5f2SYRzFaRnT
+	XMT+M0olvn4FUsNPPInc/CLMJQABV4rhsU9pX+H9EICjPKdpZ1hqb6154FIC6rxl
+	pO1C5cayhkqZ3oQh0hxK3yqgTXOFt5F89cg11eCuYkDKmJWdHz/LESnj8k1JXWMo
+	wSe1E80vlJKlKM3BaocieoJZNTFKHgcG0snanE0TdIeR8pWL2FHKmrb+5eiFGBWj
+	y6QbR5KOtj/GogabUu3F8JUo08tFylot58LcuLDru4nJ6o5LqVll/KVhoVwuzaiw
+	NyGmakmMTnGqBZpShxjGU6Ir0tVnFbWK8RVme2zQAQR9vNH9tr+H7UmxP9AKYZ9q
+	23aQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1696872181; x=1696958581; bh=lf4PGcbfuzBGd
+	iQAveTU+3BrLDwCQeRvFpOGS9f/E7c=; b=Bai1oD3Twlxly93dvw34gXOCzz97S
+	oZJnaciHdVdyUgl4gMXGbY/dL1obpPNNkk4GY1oxIM9c9aBcxrj5vrHLRA2Z9XeZ
+	wbyr0Py6qVAP5/itziNYT0Y1doe2jQRrfBLntXuyTsKt403d3znHINf5uyDsw3+U
+	+nrUBt7DLMHKlUEY+NM8KShXHPO0YVyqx8KPjMDNko3E+tjJt7XobVVjDpOBw2OL
+	zwuwZTiC5/i1Ik0cWcoDRvDG/eI3Qy93E6db++9YBY4+C+2EidnfARzVX2neBnyr
+	WwTDFNsmd7ds9OBEvo00MNVE83lm93oGKdY6Pp8LLhbQ9hNvYP3hO5i9Q==
+X-ME-Sender: <xms:9DYkZZw55hiF3T2W7QIAZsZUZG0zLHPvAEmzil-etixOmFw2BW9Wbw>
+    <xme:9DYkZZTLjh0leuDGvKZPcgsPrO77zSJo7eyH6os694gyVxYCEPs2dlhZgwTM98gMo
+    fHQxrb6lbohDeciRTg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrheefgdduuddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfgjfhffhffvufgtsegrtd
+    erreerredtnecuhfhrohhmpedfrfgrvhgvlhcukghhuhhkohhvfdcuoehprghvvghlseii
+    hhhukhhofhhfrdhnvghtqeenucggtffrrghtthgvrhhnpedtgfdvudejkeejgeevtedvie
+    dtteekvddtgfefudfhhfeiffeiteeutdeftdfhueenucffohhmrghinhepohhpvghnvghm
+    sggvugguvggurdhorhhgpdgvnhgushifihhthhdrsggsnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhepphgrvhgvlhesiihhuhhkohhffhdrnhgv
+    th
+X-ME-Proxy: <xmx:9DYkZTX-g9z-wZMQjjTq7giS73m_ypFnqH6i6tEqrFuyhveJs6U0KQ>
+    <xmx:9DYkZbhGVg74Ud0JCg9tOv0Qeb7CFEkS-jYUX91AZgiy_gfDPk_vuA>
+    <xmx:9DYkZbAwKZxBgSMFH_rVTz_F7kxvFwp1eVzcgfeFiFuPIaOD2QispA>
+    <xmx:9TYkZerM3DiGqC2Mwb9xnSqYa0cFPNDNYBEtHflpP5HZaCHQ4LLtIQ>
+Feedback-ID: ib94946c9:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id A6CB51700089; Mon,  9 Oct 2023 13:23:00 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-958-g1b1b911df8-fm-20230927.002-g1b1b911d
 MIME-Version: 1.0
-References: <20231009145918.900167-1-bhstalel@gmail.com> <bae7df5d-fbf2-48e1-b11a-dd0bf326f15c@theobroma-systems.com>
+Message-Id: <5d529ab9-6581-4225-b059-997a58f90c25@app.fastmail.com>
 In-Reply-To: <bae7df5d-fbf2-48e1-b11a-dd0bf326f15c@theobroma-systems.com>
-From: Talel BELHADJ SALEM <bhstalel@gmail.com>
-Date: Mon, 9 Oct 2023 16:27:55 +0100
-Message-ID: <CAOgG7m3ghptCHf10G3b8yhK=w8xe1t2r6VYk6-R1euPaNCfPxw@mail.gmail.com>
+References: <20231009145918.900167-1-bhstalel@gmail.com>
+ <bae7df5d-fbf2-48e1-b11a-dd0bf326f15c@theobroma-systems.com>
+Date: Mon, 09 Oct 2023 19:22:40 +0200
+From: "Pavel Zhukov" <pavel@zhukoff.net>
+To: quentin.schulz@theobroma-systems.com, bhstalel@gmail.com,
+ bitbake-devel@lists.openembedded.org
 Subject: Re: [bitbake-devel] [PATCH] Fix find_bbfiles when BBFILES contains directory
-To: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000a914fc06074a3c9b"
+Content-Type: multipart/alternative;
+ boundary=838435a500c84cadb3ae1d20cbb74715
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 09 Oct 2023 15:28:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15196
+ <bitbake-devel@lists.openembedded.org>; Mon, 09 Oct 2023 17:23:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15197
 
---000000000000a914fc06074a3c9b
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+--838435a500c84cadb3ae1d20cbb74715
+Content-Type: text/plain
 
-Hi Quentin,
+Looks like documentation doesn't support this but the code does...
+Simple test case can be useful.
 
-I am stress testing and analysing the source code to see how Bitbake
-behaves on different cases of layer.conf content.
-I am doing this to get familiar with the large code base quickly.
-
-I found `find_bbfiles` which clearly intended to find .bb files in a layer
-if no BBFILE_PATTERN is provided.
-
-I also noted this behavior:
-1. When layer.conf is empty, it gets added to bblayers.conf but show-layers
-will not show it (Logic as there is no BBFILE_COLLECTION) but why add it in
-the first place ?
-2. When only BBFILES is provided, bitbake will find the recipe, also will
-find the .bbclass even if the doc says that it needs BBPATH to find conf
-and classes ?
-3. This leads me to find_bbfiles, if BBFILES should not contain
-directories, I think this should be checked when adding the layer, or
-something like that.
-
-Is this all normal behavior ? Or am I missing something?
-What do you think?
-
-Kind regards
-Talel
-
-On Mon, Oct 9, 2023 at 4:16=E2=80=AFPM Quentin Schulz <
-quentin.schulz@theobroma-systems.com> wrote:
-
+-- 
+Pavel
+On Mon, Oct 9, 2023, at 17:16, Quentin Schulz via lists.openembedded.org wrote:
 > Hi Talel,
->
+> 
 > On 10/9/23 16:59, BELHADJ SALEM Talel via lists.openembedded.org wrote:
-> >
-> > When BBFILES in layer.conf contains a directory, this triggers
-> find_bbfiles function
+> > 
+> > When BBFILES in layer.conf contains a directory, this triggers find_bbfiles function
 > 1) BBFILES docs clearly specifies:
->
+> 
 > A space-separated list of recipe files BitBake uses to build software.
->
-> So I would say that giving it a directory is incorrect. If it is
+> 
+> So I would say that giving it a directory is incorrect. If it is 
 > supposed to be supported, then we need to fix the documentation.
->
+> 
 > What are you trying to do?
->
+> 
 > > which will fail on endswith that does not expect a list.
-> >
+> > 
 > > Signed-off-by: Talel BELHAJSALEM <bhstalel@gmail.com>
 > > ---
 > >   bitbake/lib/bb/cooker.py | 2 +-
 > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
+> > 
 > > diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
 > > index 2adf4d297d..a354f2f0ab 100644
 > > --- a/bitbake/lib/bb/cooker.py
@@ -121,92 +117,83 @@ quentin.schulz@theobroma-systems.com> wrote:
 > >               for ignored in ('SCCS', 'CVS', '.svn'):
 > >                   if ignored in dirs:
 > >                       dirs.remove(ignored)
-> > -            found +=3D [os.path.join(dir, f) for f in files if
-> (f.endswith(['.bb', '.bbappend']))]
-> > +            found +=3D [os.path.join(dir, f) for f in files if
-> (f.endswith(tuple(['.bb', '.bbappend'])))]
->
-> 2) Just replace the square brackets with parenthesis instead to save an
+> > -            found += [os.path.join(dir, f) for f in files if (f.endswith(['.bb', '.bbappend']))]
+> > +            found += [os.path.join(dir, f) for f in files if (f.endswith(tuple(['.bb', '.bbappend'])))]
+> 
+> 2) Just replace the square brackets with parenthesis instead to save an 
 > unnecessary array creation.
->
+> 
 > Cheers,
 > Quentin
->
+> 
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#15195): https://lists.openembedded.org/g/bitbake-devel/message/15195
+> Mute This Topic: https://lists.openembedded.org/mt/101854064/6390638
+> Group Owner: bitbake-devel+owner@lists.openembedded.org <mailto:bitbake-devel%2Bowner@lists.openembedded.org>
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [pavel@zhukoff.net]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+> 
 
---000000000000a914fc06074a3c9b
-Content-Type: text/html; charset="UTF-8"
+--838435a500c84cadb3ae1d20cbb74715
+Content-Type: text/html
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Hi=C2=A0Quentin,<div><br></div><div>I am stress testing an=
-d analysing the source code to see how Bitbake behaves=C2=A0on different ca=
-ses of layer.conf content.</div><div>I am doing this to get familiar with t=
-he large code base quickly.</div><div><br></div><div>I found `find_bbfiles`=
- which clearly intended to find .bb files in a layer if no BBFILE_PATTERN i=
-s provided.</div><div><br></div><div>I also noted this behavior:</div><div>=
-1. When layer.conf is empty, it gets added to bblayers.conf but show-layers=
- will not show it (Logic as there is no BBFILE_COLLECTION) but why add it i=
-n the first place ?</div><div>2. When only BBFILES=C2=A0is provided, bitbak=
-e will find the recipe, also will find the .bbclass even if the doc says th=
-at it needs BBPATH to find conf and classes ?</div><div>3. This leads me to=
- find_bbfiles, if BBFILES should not contain directories, I think this shou=
-ld be checked when adding the layer, or something=C2=A0like that.</div><div=
-><br></div><div>Is this all normal behavior ? Or am I=C2=A0missing somethin=
-g?</div><div><div>What do=C2=A0you think?</div><div><br></div></div><div>Ki=
-nd=C2=A0regards</div><div>Talel</div></div><br><div class=3D"gmail_quote"><=
-div dir=3D"ltr" class=3D"gmail_attr">On Mon, Oct 9, 2023 at 4:16=E2=80=AFPM=
- Quentin Schulz &lt;<a href=3D"mailto:quentin.schulz@theobroma-systems.com"=
->quentin.schulz@theobroma-systems.com</a>&gt; wrote:<br></div><blockquote c=
-lass=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px soli=
-d rgb(204,204,204);padding-left:1ex">Hi Talel,<br>
-<br>
-On 10/9/23 16:59, BELHADJ SALEM Talel via <a href=3D"http://lists.openembed=
-ded.org" rel=3D"noreferrer" target=3D"_blank">lists.openembedded.org</a> wr=
-ote:<br>
-&gt; <br>
-&gt; When BBFILES in layer.conf contains a directory, this triggers find_bb=
-files function<br>
-1) BBFILES docs clearly specifies:<br>
-<br>
-A space-separated list of recipe files BitBake uses to build software.<br>
-<br>
-So I would say that giving it a directory is incorrect. If it is <br>
-supposed to be supported, then we need to fix the documentation.<br>
-<br>
-What are you trying to do?<br>
-<br>
-&gt; which will fail on endswith that does not expect a list.<br>
-&gt; <br>
-&gt; Signed-off-by: Talel BELHAJSALEM &lt;<a href=3D"mailto:bhstalel@gmail.=
-com" target=3D"_blank">bhstalel@gmail.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 =C2=A0bitbake/lib/bb/cooker.py | 2 +-<br>
-&gt;=C2=A0 =C2=A01 file changed, 1 insertion(+), 1 deletion(-)<br>
-&gt; <br>
-&gt; diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py<br>
-&gt; index 2adf4d297d..a354f2f0ab 100644<br>
-&gt; --- a/bitbake/lib/bb/cooker.py<br>
-&gt; +++ b/bitbake/lib/bb/cooker.py<br>
-&gt; @@ -1827,7 +1827,7 @@ class CookerCollectFiles(object):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for ignored in (=
-&#39;SCCS&#39;, &#39;CVS&#39;, &#39;.svn&#39;):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if=
- ignored in dirs:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0dirs.remove(ignored)<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 found +=3D [os.path.join(di=
-r, f) for f in files if (f.endswith([&#39;.bb&#39;, &#39;.bbappend&#39;]))]=
-<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 found +=3D [os.path.join(di=
-r, f) for f in files if (f.endswith(tuple([&#39;.bb&#39;, &#39;.bbappend&#3=
-9;])))]<br>
-<br>
-2) Just replace the square brackets with parenthesis instead to save an <br=
->
-unnecessary array creation.<br>
-<br>
-Cheers,<br>
-Quentin<br>
-</blockquote></div>
-
---000000000000a914fc06074a3c9b--
+<!DOCTYPE html><html><head><title></title><style type=3D"text/css">p.Mso=
+Normal,p.MsoNoSpacing{margin:0}</style></head><body><div>Looks like docu=
+mentation doesn't support this but the code does...<br></div><div>Simple=
+ test case can be useful.<br></div><div><br></div><div>--&nbsp;<br></div=
+><div>Pavel</div><div>On Mon, Oct 9, 2023, at 17:16, Quentin Schulz via =
+lists.openembedded.org wrote:<br></div><blockquote type=3D"cite" id=3D"q=
+t" style=3D""><div>Hi Talel,<br></div><div><br></div><div>On 10/9/23 16:=
+59, BELHADJ SALEM Talel via lists.openembedded.org wrote:<br></div><div>=
+&gt;&nbsp;<br></div><div>&gt; When BBFILES in layer.conf contains a dire=
+ctory, this triggers find_bbfiles function<br></div><div>1) BBFILES docs=
+ clearly specifies:<br></div><div><br></div><div>A space-separated list =
+of recipe files BitBake uses to build software.<br></div><div><br></div>=
+<div>So I would say that giving it a directory is incorrect. If it is&nb=
+sp;<br></div><div>supposed to be supported, then we need to fix the docu=
+mentation.<br></div><div><br></div><div>What are you trying to do?<br></=
+div><div><br></div><div>&gt; which will fail on endswith that does not e=
+xpect a list.<br></div><div>&gt;&nbsp;<br></div><div>&gt; Signed-off-by:=
+ Talel BELHAJSALEM &lt;<a href=3D"mailto:bhstalel@gmail.com">bhstalel@gm=
+ail.com</a>&gt;<br></div><div>&gt; ---<br></div><div>&gt;&nbsp;&nbsp; bi=
+tbake/lib/bb/cooker.py | 2 +-<br></div><div>&gt;&nbsp;&nbsp; 1 file chan=
+ged, 1 insertion(+), 1 deletion(-)<br></div><div>&gt;&nbsp;<br></div><di=
+v>&gt; diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py<=
+br></div><div>&gt; index 2adf4d297d..a354f2f0ab 100644<br></div><div>&gt=
+; --- a/bitbake/lib/bb/cooker.py<br></div><div>&gt; +++ b/bitbake/lib/bb=
+/cooker.py<br></div><div>&gt; @@ -1827,7 +1827,7 @@ class CookerCollectF=
+iles(object):<br></div><div>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for ignored in ('SCCS', 'CV=
+S', '.svn'):<br></div><div>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if i=
+gnored in dirs:<br></div><div>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp; dirs.remove(ignored)<br></div><div>&gt; -&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; found +=3D [o=
+s.path.join(dir, f) for f in files if (f.endswith(['.bb', '.bbappend']))=
+]<br></div><div>&gt; +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp; found +=3D [os.path.join(dir, f) for f in files if (f.e=
+ndswith(tuple(['.bb', '.bbappend'])))]<br></div><div><br></div><div>2) J=
+ust replace the square brackets with parenthesis instead to save an&nbsp=
+;<br></div><div>unnecessary array creation.<br></div><div><br></div><div=
+>Cheers,<br></div><div>Quentin<br></div><div><br></div><div><br></div><d=
+iv>-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br></div><div>Links: Yo=
+u receive all messages sent to this group.<br></div><div>View/Reply Onli=
+ne (#15195):&nbsp;<a href=3D"https://lists.openembedded.org/g/bitbake-de=
+vel/message/15195">https://lists.openembedded.org/g/bitbake-devel/messag=
+e/15195</a><br></div><div>Mute This Topic:&nbsp;<a href=3D"https://lists=
+.openembedded.org/mt/101854064/6390638">https://lists.openembedded.org/m=
+t/101854064/6390638</a><br></div><div>Group Owner:&nbsp;<a href=3D"mailt=
+o:bitbake-devel%2Bowner@lists.openembedded.org">bitbake-devel+owner@list=
+s.openembedded.org</a><br></div><div>Unsubscribe:&nbsp;<a href=3D"https:=
+//lists.openembedded.org/g/bitbake-devel/unsub">https://lists.openembedd=
+ed.org/g/bitbake-devel/unsub</a> [<a href=3D"mailto:pavel@zhukoff.net">p=
+avel@zhukoff.net</a>]<br></div><div>-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-<br></div><div><br></div><div><br></div></blockquote><div><br><=
+/div></body></html>
+--838435a500c84cadb3ae1d20cbb74715--
 
