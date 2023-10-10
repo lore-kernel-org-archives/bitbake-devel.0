@@ -2,48 +2,48 @@ Return-Path: <pavel@zhukoff.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1720CD6918
-	for <webhook@archiver.kernel.org>; Tue, 10 Oct 2023 09:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300CACD691F
+	for <webhook@archiver.kernel.org>; Tue, 10 Oct 2023 09:47:07 +0000 (UTC)
 Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
- by mx.groups.io with SMTP id smtpd.web10.87346.1696930598197446769
+ by mx.groups.io with SMTP id smtpd.web10.87506.1696931223566000152
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 Oct 2023 02:36:38 -0700
+ Tue, 10 Oct 2023 02:47:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@zhukoff.net header.s=fm2 header.b=7FsHMHp/;
- dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=Fa6Ogcax;
+ dkim=pass header.i=@zhukoff.net header.s=fm2 header.b=T/mZ6XU9;
+ dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=PLg61znU;
  spf=pass (domain: zhukoff.net, ip: 64.147.123.19, mailfrom: pavel@zhukoff.net)
 Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.west.internal (Postfix) with ESMTP id 39D3E3200C00;
-	Tue, 10 Oct 2023 05:36:37 -0400 (EDT)
+	by mailout.west.internal (Postfix) with ESMTP id 64F9B3200A1A;
+	Tue, 10 Oct 2023 05:47:02 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Tue, 10 Oct 2023 05:36:37 -0400
+  by compute2.internal (MEProxy); Tue, 10 Oct 2023 05:47:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to; s=fm2; t=1696930596; x=1697016996; bh=+J/nzcMnqt
-	qD+wfhkz0d569AgjcrrjixZWAjHb0GgQA=; b=7FsHMHp/gTWpceeNNwDqBSQr2C
-	c8SlBvV6iKMQ9amRlfCQ0zgzBtRP1is8x4FELy5CCO8uw3Qtl9QJXaycaULiKlZ/
-	6VVYuTW8NGqJ2a36cv5MyJcd0/bsAR7KZhrSBq8Utx9VIZ1GuxkU4v0bGGK8mU6Y
-	BFwcZ4vbTKIvS/J7PQwovd/AH4VqvrBUtRw/FbEfDrjsBWzAThPhcF/k7Wubc7QW
-	CA2lMg4RqbPdlrb00kXm+LxQWaqWVZXV6yNGVO5/X5oUbXI5MURa46+NVNUfU1xo
-	mS76rdrDjc04PcGQ3UE7argM3zt5E9GRrKLv87w0/1FGD9F3ahCHUgmqn0HQ==
+	:subject:to:to; s=fm2; t=1696931221; x=1697017621; bh=fp89Rm6dzQ
+	T4UCQqXPhBOYCmowE6Sz01kl+nq9nsaBc=; b=T/mZ6XU9UmeNxg3/b7mHu4TJ8L
+	eEHxCgqYNF5vAgDt6mjtgWOixZsL5TV/Iiz0OXKjIxXkfEuM0fDVI+UoS98WaQy9
+	BY3mLiY2JkrxUF7DqX6UUr2byPsT0LEbzW5hu2HLen345XzLaTwXAwT7AOEAJz3d
+	zrd2ggJf17408WyJFWJSOcQJ6UoasTNwKXE/OeVstapJ6wBt0JYNDbGwbCS6OkWj
+	Mq0LR9hfTWzKWN6k31j5Ns4xHAa+bWiJe8mH9m1j0tZ8mmANI+zyzI58BARabBbG
+	3BMJBfGT1D076/Oe7GurMlZsUM2LKRlQwnfno/FnppBp7RDntfsmV6luvQJA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:message-id:mime-version:reply-to:sender:subject
 	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1696930596; x=1697016996; bh=+J/nzcMnqtqD+
-	wfhkz0d569AgjcrrjixZWAjHb0GgQA=; b=Fa6OgcaxN3BHcVce2SnzXu4Ma43I3
-	CFpgw/3EIYwogxKtx3pLAgjuoNLb0y5nhhQ3IoE+wwSuJIa3qoBxBNf9/y/A0L+V
-	Lu+bG1nujp2/RuJ5BErDG/zPlAZ/w2B+SnSMLreWMxer4i8N6w4l+RuhSbE0eeFe
-	62eeR5Te5CBpwq3Ter7hTY0O8UkICzBFBJ2c1OS2G1Qu7GVxQV9SjCQkH/q6URKm
-	Qh7rrM+IMwkejwPZRtKdsXFwBDA5ZkgkfDukCy0vtFOgB2ONMKTAbtxKRyDLDyjb
-	h3PvQof2sOh4Uzt9KfvqNJjXvN2kZr3rO69p2vzMTdK4si9lDfZHYjeLA==
-X-ME-Sender: <xms:JBslZd26PgobPcT19lowCFXH-80jpA9v6Y3qs2T1MLy0DBRxWE7C-Q>
-    <xme:JBslZUE6SuoJWokPOOq-iR6-dJTjFtqDFpnUquOO1ubEY5cOEp7f2zBHaMltu_yJE
-    3ZH-3dF3t4r_Qkx7wY>
-X-ME-Received: <xmr:JBslZd6LPXsLsjFC_ISkpbM0BRnuXfwXYYxig4mvzkWYyYjCiZfBor7VSK2uWZ2vUwl8-eb5R1Td>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrheehgddujecutefuodetggdotefrodftvf
+	:x-sasl-enc; s=fm2; t=1696931221; x=1697017621; bh=fp89Rm6dzQT4U
+	CQqXPhBOYCmowE6Sz01kl+nq9nsaBc=; b=PLg61znUeUX9oDLhucqrOq7sHonmJ
+	/gROiz8EsettKvzqr1DvaKtLgqkY1RVZ4L3JwTa7YClZ2L27gRVPd+XG8s9qmDTB
+	PRw8cu8psBEk3SPQmhm3qISP/Z04Fe7FuF1X9tTWsHzmN9F791iBLsSYU3+8DJON
+	NlLt8Q/ohKNJPgPYD6o6Zlfl2+q8QpQrAmM33H9uAt7m/LmxRw8rqqrn4CpJP2vf
+	NSsNGywna7hW9xUWY4qVMo/4d0sIzzv7cUY4bpy32JYq8Jx5Tc9dn/83LV+P6+yr
+	Wlm/z5eX7Ul+ald3C4yYpWCp6n2WsJKX28QygnOY0Ve4DC31/ErIDd4Hg==
+X-ME-Sender: <xms:lR0lZX92KrCT4sNIo8-UQhOGdISqJfb-6rF4_1ViN6fb5u9OMd2fAA>
+    <xme:lR0lZTuqlM_6eevMe5cKCbhkbOStjppZqHkeTgC2RlmTEkEPABYU7RkmkaIrUrrmu
+    x7ISMiCcquOtfxIS_4>
+X-ME-Received: <xmr:lR0lZVDVAQP6yxCFuJuVkh6I2_COYma1L4-ygqsXVGAVrBV-rfK0PGYcjApTfZakZwIkM_dJljUS>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrheehgddulecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtre
     dttdenucfhrhhomheprfgrvhgvlhcukghhuhhkohhvuceophgrvhgvlhesiihhuhhkohhf
@@ -51,38 +51,38 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrheehgddujecutefuodetggdote
     ekvdegjeevjeffiedtgedtfefhfeetnecuffhomhgrihhnpehprhhotggvshhsrdhruhhn
     necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgrvh
     gvlhesiihhuhhkohhffhdrnhgvth
-X-ME-Proxy: <xmx:JBslZa1taX4tNfddzYeV618WIYT2sCcfBsUjuPedKr6N4wNLf_nbeg>
-    <xmx:JBslZQHlLOmk9GGUxiPvvB9uwzOifNGt0M7FRdA5Fkmy6TkgUj2eYQ>
-    <xmx:JBslZb8DrxnGvDGyo95TsEao8jy19kf8XFOGAfgK2kixNFss4tQfSQ>
-    <xmx:JBslZbMGMV6N1lg5Harn-6-uYbiy09PuQxSjvWAkzDT7NKRYrOpMVQ>
+X-ME-Proxy: <xmx:lR0lZTcfEThfJ2jODnu7om7hv9G6JuNrKR2Nda0BDJtU0Y_-aPpXIw>
+    <xmx:lR0lZcN4TfZ3daUJsFsaYxb1MTl1jxX2C9LOFD144ieltenxhhEz8g>
+    <xmx:lR0lZVk5JmijW44ese1clySBFE3fqiqeGhQWrECQ9sNOqDFK9fjhhA>
+    <xmx:lR0lZWVMljNx1AetGo_Zk2IOrL1hDvNEo71dkhnlwoxpz1uVWGm23Q>
 Feedback-ID: ib94946c9:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 10 Oct 2023 05:36:35 -0400 (EDT)
+ 10 Oct 2023 05:47:01 -0400 (EDT)
 From: Pavel Zhukov <pavel@zhukoff.net>
 To: bitbake-devel@lists.openembedded.org
 Cc: Pavel Zhukov <pavel@zhukoff.net>
-Subject: [PATCH] tests/fetch.py: Add tests to cover multiple branch/name parameters
-Date: Tue, 10 Oct 2023 11:36:32 +0200
-Message-ID: <20231010093631.39912-2-pavel@zhukoff.net>
+Subject: [PATCH v2] tests/fetch.py: Add tests to cover multiple branch/name parameters
+Date: Tue, 10 Oct 2023 11:47:01 +0200
+Message-ID: <20231010094701.40733-1-pavel@zhukoff.net>
 X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 10 Oct 2023 09:36:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15201
+ <bitbake-devel@lists.openembedded.org>; Tue, 10 Oct 2023 09:47:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15202
 
 Create repository with few branches and test if fetcher can work
 with such repository as PREMIRROR
 
 Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
 ---
- bitbake/lib/bb/tests/fetch.py | 71 ++++++++++++++++++++++++++++++++---
- 1 file changed, 65 insertions(+), 6 deletions(-)
+ bitbake/lib/bb/tests/fetch.py | 75 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 69 insertions(+), 6 deletions(-)
 
 diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index eeb7a31471..5ba71265ae 100644
+index eeb7a31471..0e806c0ff7 100644
 --- a/bitbake/lib/bb/tests/fetch.py
 +++ b/bitbake/lib/bb/tests/fetch.py
 @@ -3042,9 +3042,11 @@ class FetchPremirroronlyLocalTest(FetcherTest):
@@ -127,7 +127,7 @@ index eeb7a31471..5ba71265ae 100644
      def test_mirror_commit_nonexistent(self):
          self.make_git_repo()
          self.d.setVar("SRCREV", "0"*40)
-@@ -3083,6 +3093,55 @@ class FetchPremirroronlyLocalTest(FetcherTest):
+@@ -3083,6 +3093,59 @@ class FetchPremirroronlyLocalTest(FetcherTest):
          with self.assertRaises(bb.fetch2.NetworkAccess):
              fetcher.download()
  
@@ -146,8 +146,12 @@ index eeb7a31471..5ba71265ae 100644
 +        self.assertTrue(os.path.exists(self.mirrorfile), "Mirror file doesn't exist")
 +        fetcher.download()
 +        fetcher.unpack(os.path.join(self.tempdir, "unpacked"))
-+        self.assertTrue(os.path.exists(os.path.join(self.tempdir, "unpacked", "git", self.testfilename)),\
-+                                                     "Repo has not been unpackaged properly!")
++        unpacked = os.path.join(self.tempdir, "unpacked", "git", self.testfilename)
++        self.assertTrue(os.path.exists(unpacked), "Repo has not been unpackaged properly!")
++        with open(unpacked, 'r') as f:
++            content = f.read()
++            ## We expect to see testbranch1 in the file, not master, not testbranch2
++            self.assertTrue(content.find("testbranch1") != -1, "Wrong branch has been checked out!")
 +
 +    def test_mirror_tarball_multiple_branches_nobranch(self):
 +        """
