@@ -1,193 +1,189 @@
-Return-Path: <pavel@zhukoff.net>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300CACD691F
-	for <webhook@archiver.kernel.org>; Tue, 10 Oct 2023 09:47:07 +0000 (UTC)
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
- by mx.groups.io with SMTP id smtpd.web10.87506.1696931223566000152
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D50CD80C4
+	for <webhook@archiver.kernel.org>; Tue, 10 Oct 2023 12:48:28 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web10.90436.1696942103678767542
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 Oct 2023 02:47:03 -0700
+ Tue, 10 Oct 2023 05:48:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@zhukoff.net header.s=fm2 header.b=T/mZ6XU9;
- dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=PLg61znU;
- spf=pass (domain: zhukoff.net, ip: 64.147.123.19, mailfrom: pavel@zhukoff.net)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.west.internal (Postfix) with ESMTP id 64F9B3200A1A;
-	Tue, 10 Oct 2023 05:47:02 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Tue, 10 Oct 2023 05:47:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to; s=fm2; t=1696931221; x=1697017621; bh=fp89Rm6dzQ
-	T4UCQqXPhBOYCmowE6Sz01kl+nq9nsaBc=; b=T/mZ6XU9UmeNxg3/b7mHu4TJ8L
-	eEHxCgqYNF5vAgDt6mjtgWOixZsL5TV/Iiz0OXKjIxXkfEuM0fDVI+UoS98WaQy9
-	BY3mLiY2JkrxUF7DqX6UUr2byPsT0LEbzW5hu2HLen345XzLaTwXAwT7AOEAJz3d
-	zrd2ggJf17408WyJFWJSOcQJ6UoasTNwKXE/OeVstapJ6wBt0JYNDbGwbCS6OkWj
-	Mq0LR9hfTWzKWN6k31j5Ns4xHAa+bWiJe8mH9m1j0tZ8mmANI+zyzI58BARabBbG
-	3BMJBfGT1D076/Oe7GurMlZsUM2LKRlQwnfno/FnppBp7RDntfsmV6luvQJA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1696931221; x=1697017621; bh=fp89Rm6dzQT4U
-	CQqXPhBOYCmowE6Sz01kl+nq9nsaBc=; b=PLg61znUeUX9oDLhucqrOq7sHonmJ
-	/gROiz8EsettKvzqr1DvaKtLgqkY1RVZ4L3JwTa7YClZ2L27gRVPd+XG8s9qmDTB
-	PRw8cu8psBEk3SPQmhm3qISP/Z04Fe7FuF1X9tTWsHzmN9F791iBLsSYU3+8DJON
-	NlLt8Q/ohKNJPgPYD6o6Zlfl2+q8QpQrAmM33H9uAt7m/LmxRw8rqqrn4CpJP2vf
-	NSsNGywna7hW9xUWY4qVMo/4d0sIzzv7cUY4bpy32JYq8Jx5Tc9dn/83LV+P6+yr
-	Wlm/z5eX7Ul+ald3C4yYpWCp6n2WsJKX28QygnOY0Ve4DC31/ErIDd4Hg==
-X-ME-Sender: <xms:lR0lZX92KrCT4sNIo8-UQhOGdISqJfb-6rF4_1ViN6fb5u9OMd2fAA>
-    <xme:lR0lZTuqlM_6eevMe5cKCbhkbOStjppZqHkeTgC2RlmTEkEPABYU7RkmkaIrUrrmu
-    x7ISMiCcquOtfxIS_4>
-X-ME-Received: <xmr:lR0lZVDVAQP6yxCFuJuVkh6I2_COYma1L4-ygqsXVGAVrBV-rfK0PGYcjApTfZakZwIkM_dJljUS>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrheehgddulecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtre
-    dttdenucfhrhhomheprfgrvhgvlhcukghhuhhkohhvuceophgrvhgvlhesiihhuhhkohhf
-    fhdrnhgvtheqnecuggftrfgrthhtvghrnhepgfevueelgeefiedtkeeiuefhkefhtdefvd
-    ekvdegjeevjeffiedtgedtfefhfeetnecuffhomhgrihhnpehprhhotggvshhsrdhruhhn
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgrvh
-    gvlhesiihhuhhkohhffhdrnhgvth
-X-ME-Proxy: <xmx:lR0lZTcfEThfJ2jODnu7om7hv9G6JuNrKR2Nda0BDJtU0Y_-aPpXIw>
-    <xmx:lR0lZcN4TfZ3daUJsFsaYxb1MTl1jxX2C9LOFD144ieltenxhhEz8g>
-    <xmx:lR0lZVk5JmijW44ese1clySBFE3fqiqeGhQWrECQ9sNOqDFK9fjhhA>
-    <xmx:lR0lZWVMljNx1AetGo_Zk2IOrL1hDvNEo71dkhnlwoxpz1uVWGm23Q>
-Feedback-ID: ib94946c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 10 Oct 2023 05:47:01 -0400 (EDT)
-From: Pavel Zhukov <pavel@zhukoff.net>
-To: bitbake-devel@lists.openembedded.org
-Cc: Pavel Zhukov <pavel@zhukoff.net>
-Subject: [PATCH v2] tests/fetch.py: Add tests to cover multiple branch/name parameters
-Date: Tue, 10 Oct 2023 11:47:01 +0200
-Message-ID: <20231010094701.40733-1-pavel@zhukoff.net>
-X-Mailer: git-send-email 2.41.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=H+5LslaJ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4065f29e933so54791535e9.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 10 Oct 2023 05:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1696942102; x=1697546902; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0RQ4O5BaljDNK+IJn/9nKy/jvcSjQgY18HnyML1xFNY=;
+        b=H+5LslaJ0yOUIUngBPv51mP18otkOzfpvkKT4B+uUSxKD53XenE8sVVqEIzl6OvLc5
+         lMQUmPrsQo/i+3Fjstv0EGzyz189f8qdpqNi4dCplONzWFP9b05TlEcCNHmBDA8mhkR7
+         Q9ZNmBSHIeLAj54ntNCSs17dhbQMeMSluMy00=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696942102; x=1697546902;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0RQ4O5BaljDNK+IJn/9nKy/jvcSjQgY18HnyML1xFNY=;
+        b=UMbsTAabEh8tUPy5uPccISy+VAtC2tAXFUBBVj6pQyUGR6CEQIFQmZsPL1VDU8R+We
+         r6yUd73AZYRKH8h4u6AuWzV4CzwhvTuD6IRNUxJkXsVx5gD/6AL6fvlpUo8KVELWvVCQ
+         UljxC21yM/o7as/Lxe2aJmVJ9OotXXd5lsBEg60dzK8tqZk27pbb0X22n5gWsEzCAOGG
+         dVDGtGIot+vJSCJNrR0aXXp6RvWHxa+71l2LjlWFlwMQTh7/kctCsoe4Wxz5DTwfqMTS
+         rp2tq0/IFnnbMP2Fo8ppn4KWNOFSgzHz/I0vaUUBF29anXmmLemPt5yqF/wvjxNLwMsQ
+         Nibw==
+X-Gm-Message-State: AOJu0Yx8DPL1P8xLNNQ7bYD4WIzb7iDv+iISgUtSFdgWiIP2hFDKKRLa
+	sILT77c0xixijBlRoWbq0Bkehg==
+X-Google-Smtp-Source: AGHT+IGxZJcwCQg4JkxCpOZDKkCIVue4cJ7anycXeJ4Sxzl1N/sk9Ur4xl8KjDWIXHG8ixPSBePCyA==
+X-Received: by 2002:a05:600c:b4b:b0:405:3f06:c084 with SMTP id k11-20020a05600c0b4b00b004053f06c084mr15403617wmr.13.1696942102043;
+        Tue, 10 Oct 2023 05:48:22 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:2892:849c:e303:df3f? ([2001:8b0:aba:5f3c:2892:849c:e303:df3f])
+        by smtp.gmail.com with ESMTPSA id l25-20020a1c7919000000b00405c7591b09sm14073902wme.35.2023.10.10.05.48.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Oct 2023 05:48:21 -0700 (PDT)
+Message-ID: <49ed9ab41a08e2665bc66080d1955d078cb2d888.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] Ensure that BBFILE_COLLECTIONS and
+ BBPATH exist at add-layers and parsing
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: BELHADJ SALEM Talel <bhstalel@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 10 Oct 2023 13:48:20 +0100
+In-Reply-To: <20231010014835.947330-1-bhstalel@gmail.com>
+References: <20231010014835.947330-1-bhstalel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 10 Oct 2023 09:47:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15202
+ <bitbake-devel@lists.openembedded.org>; Tue, 10 Oct 2023 12:48:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15203
 
-Create repository with few branches and test if fetcher can work
-with such repository as PREMIRROR
+On Tue, 2023-10-10 at 02:48 +0100, BELHADJ SALEM Talel wrote:
+> Empty layer.conf is added to bblayers.conf and not shown by show-layers.
+>=20
+> It will have no effect on BBFILES or BBPATH so no need to add it in the f=
+irst place.
+>=20
+> Other than this, when working with the layer.conf variables, I noticed th=
+e following:
+>=20
+> 1) No BBFILE_COLLECTIONS will lead to no effect for BBFILE_PATTERN, so BB=
+FILES on its own work well.
+> 2) No BBFILE_COLLECTIONS and no BBPATH with BBFILES set to a directoy wil=
+l work as well but custom inherits will fail only if the recipe matches: me=
+ta-*/*.bb.
+>    So checking on BBPATH will also fix this.
+>=20
+> In conclusion any messing around with layer.conf's variables will lead to=
+ unexpected behavior.
+>=20
+> Making sure BBFILE_COLLECTIONS exist will ensure:
+> 	- error if no LAYERSERIES_COMPAT
+> 	- error if no BBFILE_PATTERN
+> 	- warning if no BBFILES
+> 	- Layer shown in (bitbake-layers show-layers)
+>=20
+> Making sure BBPATH exist will ensure that classes and conf found regardle=
+ss of BBFILES content (it can be a directory that will trigger find_bbfiles=
+)
+>=20
+> Signed-off-by: Talel BELHAJSALEM <bhstalel@gmail.com>
+> ---
+>  bitbake/lib/bb/cooker.py       |  2 +-
+>  bitbake/lib/bb/cookerdata.py   |  7 ++++++-
+>  bitbake/lib/bblayers/action.py | 26 ++++++++++++++++++++++++++
+>  3 files changed, 33 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+> index 2adf4d297d..f163d3a2a3 100644
+> --- a/bitbake/lib/bb/cooker.py
+> +++ b/bitbake/lib/bb/cooker.py
+> @@ -1827,7 +1827,7 @@ class CookerCollectFiles(object):
+>              for ignored in ('SCCS', 'CVS', '.svn'):
+>                  if ignored in dirs:
+>                      dirs.remove(ignored)
+> -            found +=3D [os.path.join(dir, f) for f in files if (f.endswi=
+th(['.bb', '.bbappend']))]
+> +            found +=3D [os.path.join(dir, f) for f in files if (f.endswi=
+th(('.bb', '.bbappend')))]
+> =20
+>          return found
 
-Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
----
- bitbake/lib/bb/tests/fetch.py | 75 ++++++++++++++++++++++++++++++++---
- 1 file changed, 69 insertions(+), 6 deletions(-)
+I think this piece should become a separate commit.
 
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index eeb7a31471..0e806c0ff7 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -3042,9 +3042,11 @@ class FetchPremirroronlyLocalTest(FetcherTest):
-         self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-         self.d.setVar("BB_NO_NETWORK", "1")
-         self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
-+        self.mirrorname = "git2_git.fake.repo.bitbake.tar.gz"
-+        self.mirrorfile = os.path.join(self.mirrordir, self.mirrorname)
-+        self.testfilename = "bitbake-fetch.test"
- 
-     def make_git_repo(self):
--        self.mirrorname = "git2_git.fake.repo.bitbake.tar.gz"
-         recipeurl = "git:/git.fake.repo/bitbake"
-         os.makedirs(self.gitdir)
-         self.git_init(cwd=self.gitdir)
-@@ -3054,15 +3056,23 @@ class FetchPremirroronlyLocalTest(FetcherTest):
- 
-     def git_new_commit(self):
-         import random
--        testfilename = "bibake-fetch.test"
-         os.unlink(os.path.join(self.mirrordir, self.mirrorname))
--        with open(os.path.join(self.gitdir, testfilename), "w") as testfile:
--            testfile.write("Useless random data {}".format(random.random()))
--        self.git("add {}".format(testfilename), self.gitdir)
--        self.git("commit -a -m \"This random commit {}. I'm useless.\"".format(random.random()), self.gitdir)
-+        branch = self.git("branch --show-current", self.gitdir).split()
-+        with open(os.path.join(self.gitdir, self.testfilename), "w") as testfile:
-+            testfile.write("File {} from branch {}; Useless random data {}".format(self.testfilename, branch, random.random()))
-+        self.git("add {}".format(self.testfilename), self.gitdir)
-+        self.git("commit -a -m \"This random commit {} in branch {}. I'm useless.\"".format(random.random(), branch), self.gitdir)
-         bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
-         return self.git("rev-parse HEAD", self.gitdir).strip()
- 
-+    def git_new_branch(self, name):
-+        self.git_new_commit()
-+        head = self.git("rev-parse HEAD", self.gitdir).strip()
-+        self.git("checkout -b {}".format(name), self.gitdir)
-+        newrev = self.git_new_commit()
-+        self.git("checkout {}".format(head), self.gitdir)
-+        return newrev
-+
-     def test_mirror_commit_nonexistent(self):
-         self.make_git_repo()
-         self.d.setVar("SRCREV", "0"*40)
-@@ -3083,6 +3093,59 @@ class FetchPremirroronlyLocalTest(FetcherTest):
-         with self.assertRaises(bb.fetch2.NetworkAccess):
-             fetcher.download()
- 
-+    def test_mirror_tarball_multiple_branches(self):
-+        """
-+        test if PREMIRRORS can handle multiple name/branches correctly
-+        both branches have required revisions
-+        """
-+        self.make_git_repo()
-+        branch1rev = self.git_new_branch("testbranch1")
-+        branch2rev = self.git_new_branch("testbranch2")
-+        self.recipe_url = "git://git.fake.repo/bitbake;branch=testbranch1,testbranch2;protocol=https;name=branch1,branch2"
-+        self.d.setVar("SRCREV_branch1", branch1rev)
-+        self.d.setVar("SRCREV_branch2", branch2rev)
-+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
-+        self.assertTrue(os.path.exists(self.mirrorfile), "Mirror file doesn't exist")
-+        fetcher.download()
-+        fetcher.unpack(os.path.join(self.tempdir, "unpacked"))
-+        unpacked = os.path.join(self.tempdir, "unpacked", "git", self.testfilename)
-+        self.assertTrue(os.path.exists(unpacked), "Repo has not been unpackaged properly!")
-+        with open(unpacked, 'r') as f:
-+            content = f.read()
-+            ## We expect to see testbranch1 in the file, not master, not testbranch2
-+            self.assertTrue(content.find("testbranch1") != -1, "Wrong branch has been checked out!")
-+
-+    def test_mirror_tarball_multiple_branches_nobranch(self):
-+        """
-+        test if PREMIRRORS can handle multiple name/branches correctly
-+        Unbalanced name/branches raises ParameterError
-+        """
-+        self.make_git_repo()
-+        branch1rev = self.git_new_branch("testbranch1")
-+        branch2rev = self.git_new_branch("testbranch2")
-+        self.recipe_url = "git://git.fake.repo/bitbake;branch=testbranch1;protocol=https;name=branch1,branch2"
-+        self.d.setVar("SRCREV_branch1", branch1rev)
-+        self.d.setVar("SRCREV_branch2", branch2rev)
-+        with self.assertRaises(bb.fetch2.ParameterError):
-+            fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
-+
-+    def test_mirror_tarball_multiple_branches_norev(self):
-+        """
-+        test if PREMIRRORS can handle multiple name/branches correctly
-+        one of the branches specifies non existing SRCREV
-+        """
-+        self.make_git_repo()
-+        branch1rev = self.git_new_branch("testbranch1")
-+        branch2rev = self.git_new_branch("testbranch2")
-+        self.recipe_url = "git://git.fake.repo/bitbake;branch=testbranch1,testbranch2;protocol=https;name=branch1,branch2"
-+        self.d.setVar("SRCREV_branch1", branch1rev)
-+        self.d.setVar("SRCREV_branch2", "0"*40)
-+        fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
-+        self.assertTrue(os.path.exists(self.mirrorfile), "Mirror file doesn't exist")
-+        with self.assertRaises(bb.fetch2.NetworkAccess):
-+            fetcher.download()
-+
-+
- class FetchPremirroronlyNetworkTest(FetcherTest):
- 
-     def setUp(self):
--- 
-2.41.0
+> =20
+> diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
+> index ec3741cc1d..fd1e0cf06f 100644
+> --- a/bitbake/lib/bb/cookerdata.py
+> +++ b/bitbake/lib/bb/cookerdata.py
+> @@ -18,6 +18,7 @@ from functools import wraps
+>  import bb
+>  from bb import data
+>  import bb.parse
+> +from bblayers.action import ActionPlugin
+> =20
+>  logger      =3D logging.getLogger("BitBake")
+>  parselog    =3D logging.getLogger("BitBake.Parsing")
+> @@ -377,7 +378,11 @@ class CookerDataBuilder(object):
+>                      layer =3D layer.rstrip('/')
+>                  data.setVar('LAYERDIR', layer)
+>                  data.setVar('LAYERDIR_RE', re.escape(layer))
+> -                data =3D parse_config_file(os.path.join(layer, "conf", "=
+layer.conf"), data)
+> +                layer_conf =3D os.path.join(layer, "conf", "layer.conf")
+> +                res, msg =3D ActionPlugin.do_check_layer(layer_conf)
+> +                if not res:
+> +                    bb.fatal(msg)
+> +                data =3D parse_config_file(layer_conf, data)
+>                  data.expandVarref('LAYERDIR')
+>                  data.expandVarref('LAYERDIR_RE')
+> =20
+> diff --git a/bitbake/lib/bblayers/action.py b/bitbake/lib/bblayers/action=
+.py
+> index 454c251410..5a2fcf7f8f 100644
+> --- a/bitbake/lib/bblayers/action.py
+> +++ b/bitbake/lib/bblayers/action.py
+> @@ -23,6 +23,27 @@ def plugin_init(plugins):
+> =20
+> =20
+>  class ActionPlugin(LayerPlugin):
+> +
+> +    def do_check_layer(path):
+> +        """
+> +        make sure that BBFILE_COLLECTIONS and BBPATH are found in layer.=
+conf
+> +        they should exist in non-commented lines
+> +        """
+> +        def _is_found(var, line):
+> +                return var in line and not line.startswith('#')
+> +
+> +        with open(path) as layer_conf_fd:
+> +            lines =3D layer_conf_fd.readlines()
+> +            find_result =3D {}
+> +            for to_find in ['BBFILE_COLLECTIONS', 'BBPATH']:
+> +                for line in lines:
+> +                    find_result[to_find] =3D True if _is_found(to_find, =
+line) else False
+> +                    if find_result[to_find]:
+> +                        break
+> +                if not find_result[to_find]:
+> +                    return False, "Specified layer configuration %s does=
+n't contain %s\n" % (path, to_find)
+> +        return True, ""
+> +
 
+I don't think writing a new parser is a great idea. There are other
+ways we could detect if those variables were set/changed.
+
+I'd also question whether this is correct. It would be perfectly fine
+for a layer just to add python library files using addpylib for example
+and not set BB_FILE_COLLECTIONS or BBPATH.
+
+Cheers,
+
+Richard
 
