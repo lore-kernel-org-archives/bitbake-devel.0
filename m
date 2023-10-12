@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5181EC41513
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C072CDB474
 	for <webhook@archiver.kernel.org>; Thu, 12 Oct 2023 22:17:25 +0000 (UTC)
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
- by mx.groups.io with SMTP id smtpd.web10.25784.1697149040260621736
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+ by mx.groups.io with SMTP id smtpd.web11.25718.1697149035279993517
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 12 Oct 2023 15:17:20 -0700
+ Thu, 12 Oct 2023 15:17:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=KCmKV5EM;
- spf=pass (domain: gmail.com, ip: 209.85.160.51, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-1dd8304b980so858590fac.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Oct 2023 15:17:20 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=ZXcrPbrf;
+ spf=pass (domain: gmail.com, ip: 209.85.160.44, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1e19cb7829bso827092fac.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Oct 2023 15:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697149039; x=1697753839; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1697149034; x=1697753834; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZL3HYBqhnaYRY+C5+iQ36lUtqAuPpQYGlxKlziluuyY=;
-        b=KCmKV5EMIbPPPTfiE0qMj96wI4qNNUGhT4UcL1cXXWFhx5VaZTJ1wQTckM5q4QJb3l
-         70I1m0x6oaKP7GCakQnKnFtH2E1iNuibzAcuNb+/snvxXqWhxSHzz9DxurVFXI92aGxS
-         euiFeNVZljkB6S1ARcvkDIWGsMoVHL0zLnYVxNICPyXexJdM/SXPBtdOVLaZX/QO4HXE
-         hEMqQvdUCVokijNujszS2OE39H/rJKyWWZwQ3xWQ3s/3R2QbUpwakhbW2Ss46QLxoZJH
-         JlWxdn9JqDwLWMPGxLHEhaPG2Otj+OBx2xDTjwOb6Iz97mChCPHjUehAumRfmWIgCzya
-         tIYg==
+        bh=D8Xwg4jcVAbaTF/RS5lq0ebYMPWd8462CpU7mMbsAzo=;
+        b=ZXcrPbrflIgwLSDXr4mAN3SaYkp7rAKcDYgsu9CqXeMNLRfGA8jhOkzl8lAl+s69OM
+         5AeNvptWBrIPQ8Su+qeWQAX+ktYi34zYSw0aOS8zKS0Te8VLcyJFBHTu5ko8h0SvubZq
+         WHeUZo3sBF7oGoljhd1mcQjvt3FYTX5M3bd4EUBCO2Z2DlX92KFv8OAP7CUreIf95vCg
+         9EK9SFTV1NSAiSG7QoDQQwBZ44ZHyB8jhg7muzBu3md3Cevg4UGZwT87EfYcc8fifSjC
+         TJy2TzUuc+nqP9y6mN+fq2q2BnFECoR0janePxGdKrqD+Pwv4JWVL6NRAOawpCV2zo4P
+         U2eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697149039; x=1697753839;
+        d=1e100.net; s=20230601; t=1697149034; x=1697753834;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZL3HYBqhnaYRY+C5+iQ36lUtqAuPpQYGlxKlziluuyY=;
-        b=tCUGemaxjKxN+IuMMh1K6l09aMsbZO1JJ6tV/44mHWGXDH7bjezRADFRDwbEDOAspR
-         sJpua6ph7K7rEuwBK7GAC5BnymS++gK0WRllnldbMDcukH7xecn8KGdSJa7IL8H+IlZX
-         53LPpY/bMnfoodgmdkJS8pB2dXBYj95vo5Zoas3kztJWnhTm7Z/fzBwy7gjasVfCDC/e
-         zDHysbWbYcbaXftLr4GXpFpAisHCa+Lco6/JC/IzSeYIvuD+KM6070gZE3hqOWi1JdYu
-         rUxjsFovhEIqRS8BrT8YZU+wZUYjTzVgB3QlyS4z792Z02hdnRsr38Q8Za5mLbq6eiep
-         p45g==
-X-Gm-Message-State: AOJu0YzViUkHxlVB5zh2+MTCuW3FaIrGF43bkkuKM3Aal2maRrnIgV7+
-	Wc18t8OOX3l/K84fP1B9ZZ5CufJX08M=
-X-Google-Smtp-Source: AGHT+IHk3c1KMEsecP0/vWYuWt66SQnrNKfsmcMNhUviUycLPcckwn8RnNHvKwbMkZU2g32sNntgDw==
-X-Received: by 2002:a05:6870:1194:b0:1e9:bfe7:e842 with SMTP id 20-20020a056870119400b001e9bfe7e842mr2539538oau.32.1697149038982;
-        Thu, 12 Oct 2023 15:17:18 -0700 (PDT)
+        bh=D8Xwg4jcVAbaTF/RS5lq0ebYMPWd8462CpU7mMbsAzo=;
+        b=ZNHUzcTSRIrhDkFYkrB4uygIgq+ttZrkYAjlLbqs+RWxWqqz1Dp5vDobDjEB7p5Ilm
+         Uz4hJufzESJpk0wXxJ8I6jLiIjnqv85f5Vsr+ufg8WPxiYLQwTQkDribPBX1gTRUhkU1
+         lI7RpdE3kjxDTxHBjv/NfOIQix8GhbuyE/5V4cvGQCAxIU74r08QNSWeVN1kQ0Nb2NiJ
+         HOiI7vp4OdWx2MaNNR4OBIYsZq/nImqVM2wZR1AP8d8TV5NtRLOCG+PM/rWVlJMtxlst
+         cksabbtbSJH9bzZmxVVHGvVhJWzb5+zq1II5Nfds7IG5D94CIKpWQZEqt/yfMEOopMuI
+         ImOg==
+X-Gm-Message-State: AOJu0YzmN37oEgkv0fB4FF5eOJQXhTgQRP1C9Nzlc11wBSfsEFM93YvA
+	QxpeS3xWul9iE6bFp0U2qz5ATx3LcLI=
+X-Google-Smtp-Source: AGHT+IHHdnILsSa32zF3dVqnOStYCovXsni8FQ0RMk2UINUIZldhTB1MhYCDZdEcYWAZRtJikZwYXA==
+X-Received: by 2002:a05:6871:9185:b0:1e9:dae7:f58a with SMTP id ak5-20020a056871918500b001e9dae7f58amr458129oac.22.1697149033911;
+        Thu, 12 Oct 2023 15:17:13 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::8282])
-        by smtp.gmail.com with ESMTPSA id d22-20020a056870719600b001e195682b2esm524039oah.58.2023.10.12.15.17.17
+        by smtp.gmail.com with ESMTPSA id d22-20020a056870719600b001e195682b2esm524039oah.58.2023.10.12.15.17.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 15:17:17 -0700 (PDT)
+        Thu, 12 Oct 2023 15:17:12 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][RFC v2 11/18] hashserv: Implement read-only version of "report" RPC
-Date: Thu, 12 Oct 2023 16:16:48 -0600
-Message-Id: <20231012221655.632637-12-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][RFC v2 08/18] hashserv: Add SQLalchemy backend
+Date: Thu, 12 Oct 2023 16:16:45 -0600
+Message-Id: <20231012221655.632637-9-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231012221655.632637-1-JPEWhacker@gmail.com>
 References: <20231003145249.1166276-1-JPEWhacker@gmail.com>
@@ -63,89 +63,488 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 12 Oct 2023 22:17:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15229
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15226
 
-When the hash equivalence server is in read-only mode, it should still
-return a unihash for a given "report" call if there is one.
+Adds an SQLAlchemy backend to the server. While this database backend is
+slower than the more direct sqlite backend, it easily supports just
+about any SQL server, which is useful for large scale deployments.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/hashserv/server.py | 25 ++++++++++++++++++++++++-
- lib/hashserv/tests.py  |  4 ++--
- 2 files changed, 26 insertions(+), 3 deletions(-)
+ bin/bitbake-hashserv          |  12 ++
+ lib/bb/asyncrpc/connection.py |  11 +-
+ lib/hashserv/__init__.py      |  21 ++-
+ lib/hashserv/sqlalchemy.py    | 304 ++++++++++++++++++++++++++++++++++
+ lib/hashserv/tests.py         |  19 ++-
+ 5 files changed, 362 insertions(+), 5 deletions(-)
+ create mode 100644 lib/hashserv/sqlalchemy.py
 
-diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index f8ea649a..1299558e 100644
---- a/lib/hashserv/server.py
-+++ b/lib/hashserv/server.py
-@@ -124,6 +124,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-         self.max_chunk = bb.asyncrpc.DEFAULT_MAX_CHUNK
-         self.backfill_queue = backfill_queue
-         self.upstream = upstream
-+        self.read_only = read_only
+diff --git a/bin/bitbake-hashserv b/bin/bitbake-hashserv
+index a916a90c..59b8b07f 100755
+--- a/bin/bitbake-hashserv
++++ b/bin/bitbake-hashserv
+@@ -69,6 +69,16 @@ To bind to all addresses, leave the ADDRESS empty, e.g. "--bind :8686" or
+         action="store_true",
+         help="Disallow write operations from clients ($HASHSERVER_READ_ONLY)",
+     )
++    parser.add_argument(
++        "--db-username",
++        default=os.environ.get("HASHSERVER_DB_USERNAME", None),
++        help="Database username ($HASHSERVER_DB_USERNAME)",
++    )
++    parser.add_argument(
++        "--db-password",
++        default=os.environ.get("HASHSERVER_DB_PASSWORD", None),
++        help="Database password ($HASHSERVER_DB_PASSWORD)",
++    )
  
-         self.handlers.update(
-             {
-@@ -131,13 +132,15 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-                 "get-outhash": self.handle_get_outhash,
-                 "get-stream": self.handle_get_stream,
-                 "get-stats": self.handle_get_stats,
-+                # Not always read-only, but internally checks if the server is
-+                # read-only
-+                "report": self.handle_report,
-             }
-         )
+     args = parser.parse_args()
  
-         if not read_only:
-             self.handlers.update(
-                 {
--                    "report": self.handle_report,
-                     "report-equiv": self.handle_equivreport,
-                     "reset-stats": self.handle_reset_stats,
-                     "backfill-wait": self.handle_backfill_wait,
-@@ -283,7 +286,27 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+@@ -90,6 +100,8 @@ To bind to all addresses, leave the ADDRESS empty, e.g. "--bind :8686" or
+         args.database,
+         upstream=args.upstream,
+         read_only=read_only,
++        db_username=args.db_username,
++        db_password=args.db_password,
+     )
+     server.serve_forever()
+     return 0
+diff --git a/lib/bb/asyncrpc/connection.py b/lib/bb/asyncrpc/connection.py
+index a10628f7..7f0cf6ba 100644
+--- a/lib/bb/asyncrpc/connection.py
++++ b/lib/bb/asyncrpc/connection.py
+@@ -7,6 +7,7 @@
+ import asyncio
+ import itertools
+ import json
++from datetime import datetime
+ from .exceptions import ClientError, ConnectionClosedError
  
-         return "ok"
  
-+    async def report_readonly(self, data):
-+        method = data["method"]
-+        outhash = data["outhash"]
-+        taskhash = data["taskhash"]
+@@ -30,6 +31,12 @@ def chunkify(msg, max_chunk):
+         yield "\n"
+ 
+ 
++def json_serialize(obj):
++    if isinstance(obj, datetime):
++        return obj.isoformat()
++    raise TypeError("Type %s not serializeable" % type(obj))
 +
-+        info = await self.get_outhash(method, outhash, taskhash)
-+        if info:
-+            unihash = info["unihash"]
-+        else:
-+            unihash = data["unihash"]
 +
-+        return {
-+            "taskhash": taskhash,
-+            "method": method,
-+            "unihash": unihash,
-+        }
+ class StreamConnection(object):
+     def __init__(self, reader, writer, timeout, max_chunk=DEFAULT_MAX_CHUNK):
+         self.reader = reader
+@@ -42,7 +49,7 @@ class StreamConnection(object):
+         return self.writer.get_extra_info("peername")
+ 
+     async def send_message(self, msg):
+-        for c in chunkify(json.dumps(msg), self.max_chunk):
++        for c in chunkify(json.dumps(msg, default=json_serialize), self.max_chunk):
+             self.writer.write(c.encode("utf-8"))
+         await self.writer.drain()
+ 
+@@ -105,7 +112,7 @@ class WebsocketConnection(object):
+         return ":".join(str(s) for s in self.socket.remote_address)
+ 
+     async def send_message(self, msg):
+-        await self.send(json.dumps(msg))
++        await self.send(json.dumps(msg, default=json_serialize))
+ 
+     async def recv_message(self):
+         m = await self.recv()
+diff --git a/lib/hashserv/__init__.py b/lib/hashserv/__init__.py
+index 90d8cff1..9a8ee4e8 100644
+--- a/lib/hashserv/__init__.py
++++ b/lib/hashserv/__init__.py
+@@ -35,15 +35,32 @@ def parse_address(addr):
+         return (ADDR_TYPE_TCP, (host, int(port)))
+ 
+ 
+-def create_server(addr, dbname, *, sync=True, upstream=None, read_only=False):
++def create_server(
++    addr,
++    dbname,
++    *,
++    sync=True,
++    upstream=None,
++    read_only=False,
++    db_username=None,
++    db_password=None
++):
+     def sqlite_engine():
+         from .sqlite import DatabaseEngine
+ 
+         return DatabaseEngine(dbname, sync)
+ 
++    def sqlalchemy_engine():
++        from .sqlalchemy import DatabaseEngine
 +
-     async def handle_report(self, data):
-+        if self.read_only:
-+            return await self.report_readonly(data)
++        return DatabaseEngine(dbname, db_username, db_password)
 +
-         outhash_data = {
-             "method": data["method"],
-             "outhash": data["outhash"],
+     from . import server
+ 
+-    db_engine = sqlite_engine()
++    if "://" in dbname:
++        db_engine = sqlalchemy_engine()
++    else:
++        db_engine = sqlite_engine()
+ 
+     s = server.Server(db_engine, upstream=upstream, read_only=read_only)
+ 
+diff --git a/lib/hashserv/sqlalchemy.py b/lib/hashserv/sqlalchemy.py
+new file mode 100644
+index 00000000..3216621f
+--- /dev/null
++++ b/lib/hashserv/sqlalchemy.py
+@@ -0,0 +1,304 @@
++#! /usr/bin/env python3
++#
++# Copyright (C) 2023 Garmin Ltd.
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++
++import logging
++from datetime import datetime
++
++from sqlalchemy.ext.asyncio import create_async_engine
++from sqlalchemy.pool import NullPool
++from sqlalchemy import (
++    MetaData,
++    Column,
++    Table,
++    Text,
++    Integer,
++    UniqueConstraint,
++    DateTime,
++    Index,
++    select,
++    insert,
++    exists,
++    literal,
++    and_,
++    delete,
++)
++import sqlalchemy.engine
++from sqlalchemy.orm import declarative_base
++from sqlalchemy.exc import IntegrityError
++
++logger = logging.getLogger("hashserv.sqlalchemy")
++
++Base = declarative_base()
++
++
++class UnihashesV2(Base):
++    __tablename__ = "unihashes_v2"
++    id = Column(Integer, primary_key=True, autoincrement=True)
++    method = Column(Text, nullable=False)
++    taskhash = Column(Text, nullable=False)
++    unihash = Column(Text, nullable=False)
++
++    __table_args__ = (
++        UniqueConstraint("method", "taskhash"),
++        Index("taskhash_lookup_v3", "method", "taskhash"),
++    )
++
++
++class OuthashesV2(Base):
++    __tablename__ = "outhashes_v2"
++    id = Column(Integer, primary_key=True, autoincrement=True)
++    method = Column(Text, nullable=False)
++    taskhash = Column(Text, nullable=False)
++    outhash = Column(Text, nullable=False)
++    created = Column(DateTime)
++    owner = Column(Text)
++    PN = Column(Text)
++    PV = Column(Text)
++    PR = Column(Text)
++    task = Column(Text)
++    outhash_siginfo = Column(Text)
++
++    __table_args__ = (
++        UniqueConstraint("method", "taskhash", "outhash"),
++        Index("outhash_lookup_v3", "method", "outhash"),
++    )
++
++
++class DatabaseEngine(object):
++    def __init__(self, url, username=None, password=None):
++        self.logger = logger
++        self.url = sqlalchemy.engine.make_url(url)
++
++        if username is not None:
++            self.url = self.url.set(username=username)
++
++        if password is not None:
++            self.url = self.url.set(password=password)
++
++    async def create(self):
++        self.logger.info("Using database %s", self.url)
++        self.engine = create_async_engine(self.url, poolclass=NullPool)
++
++        async with self.engine.begin() as conn:
++            # Create tables
++            logger.info("Creating tables...")
++            await conn.run_sync(Base.metadata.create_all)
++
++    def connect(self, logger):
++        return Database(self.engine, logger)
++
++
++def map_row(row):
++    if row is None:
++        return None
++    return dict(**row._mapping)
++
++
++class Database(object):
++    def __init__(self, engine, logger):
++        self.engine = engine
++        self.db = None
++        self.logger = logger
++
++    async def __aenter__(self):
++        self.db = await self.engine.connect()
++        return self
++
++    async def __aexit__(self, exc_type, exc_value, traceback):
++        await self.close()
++
++    async def close(self):
++        await self.db.close()
++        self.db = None
++
++    async def get_unihash_by_taskhash_full(self, method, taskhash):
++        statement = (
++            select(
++                OuthashesV2,
++                UnihashesV2.unihash.label("unihash"),
++            )
++            .join(
++                UnihashesV2,
++                and_(
++                    UnihashesV2.method == OuthashesV2.method,
++                    UnihashesV2.taskhash == OuthashesV2.taskhash,
++                ),
++            )
++            .where(
++                OuthashesV2.method == method,
++                OuthashesV2.taskhash == taskhash,
++            )
++            .order_by(
++                OuthashesV2.created.asc(),
++            )
++            .limit(1)
++        )
++        self.logger.debug("%s", statement)
++        async with self.db.begin():
++            result = await self.db.execute(statement)
++            return map_row(result.first())
++
++    async def get_unihash_by_outhash(self, method, outhash):
++        statement = (
++            select(OuthashesV2, UnihashesV2.unihash.label("unihash"))
++            .join(
++                UnihashesV2,
++                and_(
++                    UnihashesV2.method == OuthashesV2.method,
++                    UnihashesV2.taskhash == OuthashesV2.taskhash,
++                ),
++            )
++            .where(
++                OuthashesV2.method == method,
++                OuthashesV2.outhash == outhash,
++            )
++            .order_by(
++                OuthashesV2.created.asc(),
++            )
++            .limit(1)
++        )
++        self.logger.debug("%s", statement)
++        async with self.db.begin():
++            result = await self.db.execute(statement)
++            return map_row(result.first())
++
++    async def get_outhash(self, method, outhash):
++        statement = (
++            select(OuthashesV2)
++            .where(
++                OuthashesV2.method == method,
++                OuthashesV2.outhash == outhash,
++            )
++            .order_by(
++                OuthashesV2.created.asc(),
++            )
++            .limit(1)
++        )
++
++        self.logger.debug("%s", statement)
++        async with self.db.begin():
++            result = await self.db.execute(statement)
++            return map_row(result.first())
++
++    async def get_equivalent_for_outhash(self, method, outhash, taskhash):
++        statement = (
++            select(
++                OuthashesV2.taskhash.label("taskhash"),
++                UnihashesV2.unihash.label("unihash"),
++            )
++            .join(
++                UnihashesV2,
++                and_(
++                    UnihashesV2.method == OuthashesV2.method,
++                    UnihashesV2.taskhash == OuthashesV2.taskhash,
++                ),
++            )
++            .where(
++                OuthashesV2.method == method,
++                OuthashesV2.outhash == outhash,
++                OuthashesV2.taskhash != taskhash,
++            )
++            .order_by(
++                OuthashesV2.created.asc(),
++            )
++            .limit(1)
++        )
++        self.logger.debug("%s", statement)
++        async with self.db.begin():
++            result = await self.db.execute(statement)
++            return map_row(result.first())
++
++    async def get_equivalent(self, method, taskhash):
++        statement = select(
++            UnihashesV2.unihash,
++            UnihashesV2.method,
++            UnihashesV2.taskhash,
++        ).where(
++            UnihashesV2.method == method,
++            UnihashesV2.taskhash == taskhash,
++        )
++        self.logger.debug("%s", statement)
++        async with self.db.begin():
++            result = await self.db.execute(statement)
++            return map_row(result.first())
++
++    async def remove(self, condition):
++        async def do_remove(table):
++            where = {}
++            for c in table.__table__.columns:
++                if c.key in condition and condition[c.key] is not None:
++                    where[c] = condition[c.key]
++
++            if where:
++                statement = delete(table).where(*[(k == v) for k, v in where.items()])
++                self.logger.debug("%s", statement)
++                async with self.db.begin():
++                    result = await self.db.execute(statement)
++                return result.rowcount
++
++            return 0
++
++        count = 0
++        count += await do_remove(UnihashesV2)
++        count += await do_remove(OuthashesV2)
++
++        return count
++
++    async def clean_unused(self, oldest):
++        statement = delete(OuthashesV2).where(
++            OuthashesV2.created < oldest,
++            ~(
++                select(UnihashesV2.id)
++                .where(
++                    UnihashesV2.method == OuthashesV2.method,
++                    UnihashesV2.taskhash == OuthashesV2.taskhash,
++                )
++                .limit(1)
++                .exists()
++            ),
++        )
++        self.logger.debug("%s", statement)
++        async with self.db.begin():
++            result = await self.db.execute(statement)
++            return result.rowcount
++
++    async def insert_unihash(self, method, taskhash, unihash):
++        statement = insert(UnihashesV2).values(
++            method=method,
++            taskhash=taskhash,
++            unihash=unihash,
++        )
++        self.logger.debug("%s", statement)
++        try:
++            async with self.db.begin():
++                await self.db.execute(statement)
++            return True
++        except IntegrityError:
++            logger.debug(
++                "%s, %s, %s already in unihash database", method, taskhash, unihash
++            )
++            return False
++
++    async def insert_outhash(self, data):
++        outhash_columns = set(c.key for c in OuthashesV2.__table__.columns)
++
++        data = {k: v for k, v in data.items() if k in outhash_columns}
++
++        if "created" in data and not isinstance(data["created"], datetime):
++            data["created"] = datetime.fromisoformat(data["created"])
++
++        statement = insert(OuthashesV2).values(**data)
++        self.logger.debug("%s", statement)
++        try:
++            async with self.db.begin():
++                await self.db.execute(statement)
++            return True
++        except IntegrityError:
++            logger.debug(
++                "%s, %s already in outhash database", data["method"], data["outhash"]
++            )
++            return False
 diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index 268b2700..e9a361dc 100644
+index 4c98a280..268b2700 100644
 --- a/lib/hashserv/tests.py
 +++ b/lib/hashserv/tests.py
-@@ -387,8 +387,8 @@ class HashEquivalenceCommonTests(object):
-         outhash2 = '3c979c3db45c569f51ab7626a4651074be3a9d11a84b1db076f5b14f7d39db44'
-         unihash2 = '90e9bc1d1f094c51824adca7f8ea79a048d68824'
+@@ -33,7 +33,7 @@ class HashEquivalenceTestSetup(object):
+     def start_server(self, dbpath=None, upstream=None, read_only=False, prefunc=server_prefunc):
+         self.server_index += 1
+         if dbpath is None:
+-            dbpath = os.path.join(self.temp_dir.name, "db%d.sqlite" % self.server_index)
++            dbpath = self.make_dbpath()
  
--        with self.assertRaises(ConnectionError):
--            ro_client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
-+        result = ro_client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
-+        self.assertEqual(result['unihash'], unihash2)
+         def cleanup_server(server):
+             if server.process.exitcode is not None:
+@@ -53,6 +53,9 @@ class HashEquivalenceTestSetup(object):
  
-         # Ensure that the database was not modified
-         self.assertClientGetHash(rw_client, taskhash2, None)
+         return server
+ 
++    def make_dbpath(self):
++        return os.path.join(self.temp_dir.name, "db%d.sqlite" % self.server_index)
++
+     def start_client(self, server_address):
+         def cleanup_client(client):
+             client.close()
+@@ -517,6 +520,20 @@ class TestHashEquivalenceWebsocketServer(HashEquivalenceTestSetup, HashEquivalen
+         return "ws://%s:0" % host
+ 
+ 
++class TestHashEquivalenceWebsocketsSQLAlchemyServer(TestHashEquivalenceWebsocketServer):
++    def setUp(self):
++        try:
++            import sqlalchemy
++            import aiosqlite
++        except ImportError as e:
++            self.skipTest(str(e))
++
++        super().setUp()
++
++    def make_dbpath(self):
++        return "sqlite+aiosqlite:///%s" % os.path.join(self.temp_dir.name, "db%d.sqlite" % self.server_index)
++
++
+ class TestHashEquivalenceExternalServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
+     def start_test_server(self):
+         if 'BB_TEST_HASHSERV' not in os.environ:
 -- 
 2.34.1
 
