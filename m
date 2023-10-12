@@ -1,130 +1,105 @@
-Return-Path: <ticotimo@gmail.com>
+Return-Path: <marlon.rodriguez-garcia@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51803C41513
-	for <webhook@archiver.kernel.org>; Thu, 12 Oct 2023 14:00:52 +0000 (UTC)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
- by mx.groups.io with SMTP id smtpd.web11.12252.1697119249621857967
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91AEC41513
+	for <webhook@archiver.kernel.org>; Thu, 12 Oct 2023 17:42:43 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web10.18959.1697132558360311028
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 12 Oct 2023 07:00:49 -0700
+ Thu, 12 Oct 2023 10:42:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=NaDvxc4r;
- spf=pass (domain: gmail.com, ip: 209.85.128.178, mailfrom: ticotimo@gmail.com)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5a7c7262d5eso12642857b3.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Oct 2023 07:00:49 -0700 (PDT)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=N5Em5BBZ;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: marlon.rodriguez-garcia@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 95DE29C2A80
+	for <bitbake-devel@lists.openembedded.org>; Thu, 12 Oct 2023 13:42:37 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id xQKNrD4utIUj; Thu, 12 Oct 2023 13:42:36 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id C3AD79C2D13;
+	Thu, 12 Oct 2023 13:42:36 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com C3AD79C2D13
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697119248; x=1697724048; darn=lists.openembedded.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Iv7qcWRQ3nI4oCThnku3f4gu+eRVeSqtXf5n9dHh6/s=;
-        b=NaDvxc4rE9Nkwsjws9uOXihYINGPVfbljbhscgsIBNunvt5J5KJNUyPuyt4waGL+zF
-         /PhdFaH8ZwXkqzawrMyyx7dooO9o1WdFhdfzayM9qDcfX2Fhr0qPzUvml+YTX7pcyVUD
-         jThLaSanSPWSFmp/Pc5q0YHZugrp/S5cvymx2Vm9sIuHvWflG/56byWGNEqnxo03mxnq
-         s4cLXmk1kpWdek6LBRZXE16XtQ1gq/TrhXmIEk0npmIfJiw/aWgaojctw8C/f0pVeSA2
-         e4PWBQpo8pcVviEJIdE6KuRr7S47OrRg7W+V1KNYgj1q4RT1FNLhbCSVWQtMf5buy0gi
-         Yb3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697119248; x=1697724048;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Iv7qcWRQ3nI4oCThnku3f4gu+eRVeSqtXf5n9dHh6/s=;
-        b=K5DWkO0slZCWNnmbOq+8iEBwtN7WrTvRuFnsbUJ4K9J5MhICvK8ZQjOG/tG4s4lRbp
-         J+tqvP8rohQBdROGiGsiR7huzvMxUvauc58G6i0XOBQVqwDbxUpqOnI5mMzZh3pE6tCH
-         ndgiiVSJ9iVA7VybTtbypMFU/oEPhQMAXeJ0LAo89A/qw0joL2nhTCyYeb5WQ3NsxGEu
-         iDLXfsCZt+BuebofvLDIpP5h52iiwg7B6npYd6fw0J+lUyCpKdA62fvU/Jxarh7iRCrU
-         30M3CjnruI07uYY+Xd/cJPI3S/htb+kh9MZVsOlGGS+XqtF20bAcWFslscIf1L3Kbwcl
-         Ma4A==
-X-Gm-Message-State: AOJu0YxsI5waxRsNh4Ff7MbXDbSbv42D4ETDJYor7tRHynvc1E6HchfY
-	ZFr19UAlGSg70PHyLZW5Se4cP783q1sakVoFiGdmJxLx
-X-Google-Smtp-Source: AGHT+IGYCkTymMKMn/q8GeKG3yJ8vYZweyy4TBYcFsfnXFeU1xrb51qull3IGnxFqoj7rSWLhBFm7J9c9WY2CpFFEm0=
-X-Received: by 2002:a81:7743:0:b0:594:f864:8507 with SMTP id
- s64-20020a817743000000b00594f8648507mr20736304ywc.51.1697119246922; Thu, 12
- Oct 2023 07:00:46 -0700 (PDT)
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1697132556; bh=CyDydiW0wwYubiDubc1Snf9ONXxvdksQ1r+7u3IJ2Yw=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=N5Em5BBZztvNw0zERh7ECb3pXUscYSOVkz4/7CQX5+oP07fhgj1LtJSsE9nbigOj5
+	 60PE6Oi/4tEDLZP2eqtetUxnSA8+exUTXxPxCigY8FcgsMpZ+0DR1C+DBlx0sUZ68/
+	 ZM3yMgKux6SyvvN1tjcpxqBTPzujmX1WjiR617gH9rohTFb1Tyu6ID6JvPrGZa3KdQ
+	 P4HuPGGvXj7iUWHaZI6qzR9C4oOvcdxJd7sK+/f3rdMcAhXTEm/W9H8AQlUWaI6CSJ
+	 bJ7nvmQZ7pYRzN2QwkJqBdfArVz/uhIW6ZRVMe54yMJk1fLa9NHDEn7/FT2b7gy/Ie
+	 +ApKnwnudfDDQ==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id K06rtUJRUqcR; Thu, 12 Oct 2023 13:42:36 -0400 (EDT)
+Received: from savoirfairelinux.mtl.sfl (unknown [192.168.51.254])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id B44159C2A80;
+	Thu, 12 Oct 2023 13:42:36 -0400 (EDT)
+From: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfairelinux.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfairelinux.com>
+Subject: [PATCH 2/3] toaster: updated bootstrap version
+Date: Thu, 12 Oct 2023 13:42:18 -0400
+Message-Id: <20231012174219.62435-2-marlon.rodriguez-garcia@savoirfairelinux.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231012174219.62435-1-marlon.rodriguez-garcia@savoirfairelinux.com>
+References: <20231012174219.62435-1-marlon.rodriguez-garcia@savoirfairelinux.com>
 MIME-Version: 1.0
-References: <CANx9H-COR1vLXqM8X-r+AhgdLK6M_K=+C-pSu3KL_KaHOX7ccQ@mail.gmail.com>
- <20679.1697118372515381220@lists.yoctoproject.org>
-In-Reply-To: <20679.1697118372515381220@lists.yoctoproject.org>
-From: Tim Orling <ticotimo@gmail.com>
-Date: Thu, 12 Oct 2023 07:00:35 -0700
-Message-ID: <CANx9H-CiJhhq9xHuXyRN0Yvh5ASkXLDWrUEc+D0FJCf4WSSEEA@mail.gmail.com>
-Subject: Fwd: Private: Re: [Toaster] [PATCH 3/3] toaster:update jquery and
- functional tests waiting time
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>, toaster@lists.yoctoproject.org
-Content-Type: multipart/alternative; boundary="000000000000dabb080607855d78"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 12 Oct 2023 14:00:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15213
+ <bitbake-devel@lists.openembedded.org>; Thu, 12 Oct 2023 17:42:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15214
 
---000000000000dabb080607855d78
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Updated bootstrap from version 3.3.6 to 3.3.7 to fix compatibility errors
+https://github.com/twbs/bootstrap/issues/16834
 
-Adding public mailing lists. Please remember to respond to all.
+Signed-off-by: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfai=
+relinux.com>
+---
+ .../toastergui/static/js/bootstrap.min.js     | Bin 36864 -> 37049 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
 
----------- Forwarded message ---------
-From: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfairelinux.com=
->
-Date: Thu, Oct 12, 2023 at 6:46=E2=80=AFAM
-Subject: Private: Re: [Toaster] [PATCH 3/3] toaster:update jquery and
-functional tests waiting time
-To: Tim Orling <ticotimo@gmail.com>
+diff --git a/lib/toaster/toastergui/static/js/bootstrap.min.js b/lib/toas=
+ter/toastergui/static/js/bootstrap.min.js
+index c4a924160de6bd6104dad160d379dfb7ffbe6185..2446398cfe6177172771488ec=
+9bbef5429050afd 100644
+GIT binary patch
+delta 835
+zcmZva&rcIU6vwmuVQJB#2B86ev@2P6Vck>(s!P`%@D~R$iXr?6hjw>%yVCBK-Knji
+z4RA1mgeZCO;srbzZ^{^>9!$J)l7B!$VgiXV@jt+6gK)sPOlIc$=3D6&Diz1daIr&pfm
+zEllEFYY)R*g4>Mg>1JU`jFW8!d(N0TpXM_XPCEv|f@Hcp&YG?uI0zRVD+*<w;Hg$&
+zQS5;qzD*_pU;W=3D3*|V&oD0*sqLMAJRc05ditON&`kW_H&0<Vg(IBbQk?H@0Y&c+Te
+zj5Hl(`k)-{Jt;;_t5C$__)!5VteQpYWX3MD6X%3V1?Da`8(Pf?TNjC$BF47G3Moy(
+zj%gUk;aS~Qi!Lk3nxvbSwyTsMny#72q1}joM^>OB$HlyGAfEgVZ+dA_8-o$Db^Mjr
+zPjSR}c-9g*oKD8~D3G<5mkdl#2AkZRshO6shsTJ-|94N;BA<hGSP}A=3Db&vQGtZ0BG
+zw3F8Oorc|nGne_m35^z#M;4|$)4N@$RLJX;&_tnb46X;g)DkS_r{Kvj4}GI-TTG>F
+z2CN~R#^}CNMEssjD2=3D{{UK|GTN|@Xl%LF|f2dnBlSYr*KE5~4ct_{8{1w2t5+5-YC
+zYbE&5944*kEi+Q09PN@cG<@@V4%HlSoJzao;<TkATaO-i7Y#*AO=3DG(t$Hg4du^g|;
+zdde#1a&ktpb=3D^gjxR`~X`Y>ZcpK;fp6;06~%f`n*NK8u|sGf)P+kY5ZYxmTt0Nw7D
+zU-<l?C|$5s*(TqrGjzIWe@+u?w!cPhZT?pXB~^}NX=3D)bUEObgS9(C2GRw`Nr(@HA3
+zM4tqz$k=3Dpp@~m7F7)d34UZc0Lvv7k$NkvW7e~@dAV~WOcX4iwOHO+n?$v*}EUrm`G
+AnE(I)
 
+delta 701
+zcmY*WO;6NN6wR9tJA(oeg@GuMsRmjoO-E%yiZc~4MojP{8jK_^I_>L+cG_|JN+isH
+zE(IebH*Q=3DQz=3DXZNg-W6>{Q<IZVf<JT*}E_%+JPAoS1<S6bMHClzPGE92P=3D`~4wQYF
+z8batKOdvaQiiM>KiEbehfp;mUUF8ZQQOhPKylDFzv234LU^d1l<!R5>d!%X=3Dz6nF{
+zIMD+Kmzy9Se;v!Rf)1*37&hY{>H5CE5tOCt$#Dd~o5twH{l}yIBf4m*{+OfsKF1b_
+z%kq^9r{{E0b37mWgk!}Wloz1Vl8yC+ZCGkKdQ7vhcDLZ&XK&XaO)Qo1G<L~(Y^Z@l
+zI6B_?JsJ(=3DVHCI1bBETV{bfvovfHEPYtF?JHo-+-bg*j@YcNx(NO@J+%^}m~)H4Ln
+zyBWAT6NfKdOrp_&51kVH2@d=3DRQl@JoxfhjwW=3DV4x^RiS->>2np%rms@EZ^Ed;MZ^)
+z)vl~1VP<j#R&TMLT6olP_c~DtzEKV^$JaHXa+8DT)DyZqHJ^kd`W#aa0`q+xF_RZe
+z_?l}^HXL%WsjniQ2KYVd)|FY}m1Ie9ut8+0Di=3Di0Fnmn7+SsBwi7fbGUW=3DQ8B^Y$r
+zdc(Xb{Y0Vp?R(u!_#|hZ#^6PD3pLTjx%o)LJY^qVN}wzhA8n_!JXY9Hgq72o5!(p=3D
+z&?Cev!stTkv>P~1I;SakVCUq4Te96VIYSKTN;)IgsjRFH>iHZVFl!)eEL`BUu&i(0
+Y-J$pP+5>m;xsa*sjiocRcM;<M0L}dC&j0`b
 
-Hello,
-The timing was added because when running the test after some click events
-the system takes a few seconds loading the next screen, in order to ensure
-the next element in the test procedure is ready, time was added.
+--=20
+2.34.1
 
-Bootstrap was updated to version 3.3.7 for compatibility issues with jquery=
-.
-
-Regarding to the test, there are some fails on test related to builds that
-will be addressed in future patch, the fix applied in this only targeted
-the test under functional folder and they are correct
-
-From the build directory on poky you can run the following command to
-validate the test outputs
-*EVENTREPLAY_DIR=3D./ TOASTER_BUILDSERVER=3D1
-DJANGO_SETTINGS_MODULE=3Dtoastermain.settings_test
-../bitbake/lib/toaster/manage.py test tests.db tests.commands tests.browser
-tests.functional tests.views *
-
-We will continue working in test completion and success in the following
-weeks until the process is completed. I will make sure to include more
-details in future patchs, thanks for the suggestions
-
---000000000000dabb080607855d78
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto">Adding public mailing lists. Please remember to respond t=
-o all.</div><div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"g=
-mail_attr">---------- Forwarded message ---------<br>From: <strong class=3D=
-"gmail_sendername" dir=3D"auto">Marlon Rodriguez Garcia</strong> <span dir=
-=3D"auto">&lt;<a href=3D"mailto:marlon.rodriguez-garcia@savoirfairelinux.co=
-m">marlon.rodriguez-garcia@savoirfairelinux.com</a>&gt;</span><br>Date: Thu=
-, Oct 12, 2023 at 6:46=E2=80=AFAM<br>Subject: Private: Re: [Toaster] [PATCH=
- 3/3] toaster:update jquery and functional tests waiting time<br>To: Tim Or=
-ling &lt;<a href=3D"mailto:ticotimo@gmail.com">ticotimo@gmail.com</a>&gt;<b=
-r></div><br><br>Hello, <br>The timing was added because when running the te=
-st after some click events the system takes a few seconds loading the next =
-screen, in order to ensure the next element in the test procedure is ready,=
- time was added.<br><br>Bootstrap was updated to version 3.3.7 for compatib=
-ility issues with jquery.<br><br>Regarding to the test, there are some fail=
-s on test related to builds that will be addressed in future patch, the fix=
- applied in this only targeted the test under functional folder and they ar=
-e correct=C2=A0<br><br>From the build directory on poky you can run the fol=
-lowing command to validate the test outputs <br><strong>EVENTREPLAY_DIR=3D.=
-/ TOASTER_BUILDSERVER=3D1 DJANGO_SETTINGS_MODULE=3Dtoastermain.settings_tes=
-t ../bitbake/lib/toaster/manage.py test tests.db tests.commands tests.brows=
-er tests.functional tests.views </strong> <br><br>We will continue working =
-in test completion and success in the following weeks until the process is =
-completed. I will make sure to include more details in future patchs, thank=
-s for the suggestions=C2=A0
-</div></div>
-
---000000000000dabb080607855d78--
 
