@@ -1,77 +1,91 @@
-Return-Path: <jlu@pengutronix.de>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDF6CDB47E
-	for <webhook@archiver.kernel.org>; Fri, 13 Oct 2023 08:22:38 +0000 (UTC)
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
- by mx.groups.io with SMTP id smtpd.web11.33945.1697185350657850996
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D76CCDB47E
+	for <webhook@archiver.kernel.org>; Fri, 13 Oct 2023 10:57:49 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web11.35791.1697194660172647754
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 13 Oct 2023 01:22:31 -0700
+ Fri, 13 Oct 2023 03:57:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: pengutronix.de, ip: 185.203.201.7, mailfrom: jlu@pengutronix.de)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <jlu@pengutronix.de>)
-	id 1qrDRE-0005WF-7U; Fri, 13 Oct 2023 10:22:28 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <jlu@pengutronix.de>)
-	id 1qrDRD-001LvN-Fa; Fri, 13 Oct 2023 10:22:27 +0200
-Received: from localhost ([127.0.0.1])
-	by ptz.office.stw.pengutronix.de with esmtp (Exim 4.94.2)
-	(envelope-from <jlu@pengutronix.de>)
-	id 1qrDRD-00FQRS-3y; Fri, 13 Oct 2023 10:22:27 +0200
-Message-ID: <fa678fac78b8a5ca915b24bb22ae2ff9f8b8f546.camel@pengutronix.de>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KNUmBGzz;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-405497850dbso20366275e9.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 13 Oct 2023 03:57:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1697194658; x=1697799458; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JqvhiTYJLdR7yF+08CRXiC7C7G32aI6U5/u7ENkAOhc=;
+        b=KNUmBGzzZ9REcqfbWDDrcceuFuAYiHJaAJ+MPIFxlRANqd9pjRD2UfaitiizF0NK4B
+         2YPsDlmmTZo5ouZDXDimlbQdFOo41634sHOleQ+Dm1f0rEG94ldfbnfxVibYe7QDcIj+
+         qMhUgSXg28kAXF7SOPuWsflwTny+rS6mUqPM8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697194658; x=1697799458;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JqvhiTYJLdR7yF+08CRXiC7C7G32aI6U5/u7ENkAOhc=;
+        b=PjLd7rhVrM9X6hnaX5sYimywObvJ/2Npj8KSllQwSnElRzHJbOvE8BIfH/OcJf7oQQ
+         +XoD22iT0cAkGCNXkg4EG4OLpnhYIQKch1RjikhZO7RlFn6Epd136XVhPU9xwXeIhkJC
+         kKFpnowWDln6VeAAIbse/Zepe+9GArcZ78JJjet2HBeoZk9724nKKe1PP5hf0dXgixAO
+         zCoDhDkqSAn2PzY8B44Ze5O48M16uXidfaAgFulDklRoGF8zLo3UWMTl7WtbdUswy8hs
+         rxPBkVHv5OorfoDZWUIxXaha3vcEfjYOiNJVY11Msx31xSZEB/g913Yx+QK5dXl+XG4k
+         wuag==
+X-Gm-Message-State: AOJu0Yw8L6FkJFl9rIDpEhminwtllYXWKhuZBEzpetfALZCr/IInDXXK
+	jsO8QoY5Kip0B8jyaJ94F9okwA==
+X-Google-Smtp-Source: AGHT+IHf4V3ZigvFmXhi0L5hcnO79a+lWJ9Qrh1ftChlEm9B07exgsHrBblnbQ5n1N8g3Vw3678dbg==
+X-Received: by 2002:a1c:6a17:0:b0:401:db82:3edf with SMTP id f23-20020a1c6a17000000b00401db823edfmr22927677wmc.39.1697194658578;
+        Fri, 13 Oct 2023 03:57:38 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:2c2a:1925:586b:5a77? ([2001:8b0:aba:5f3c:2c2a:1925:586b:5a77])
+        by smtp.gmail.com with ESMTPSA id x8-20020adfcc08000000b003296bb21c77sm19905982wrh.80.2023.10.13.03.57.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Oct 2023 03:57:38 -0700 (PDT)
+Message-ID: <fba1e4f303947c1701a2375321e6302a7d10a753.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH] Fix disk space monitoring on cephfs
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-To: Marta Rybczynska <rybczynska@gmail.com>, Samantha Jalabert
-	 <samantha.jalabert@syslinbit.com>, bitbake-devel@lists.openembedded.org
-Cc: Enrico =?ISO-8859-1?Q?J=F6rns?= <ejo@pengutronix.de>
-Date: Fri, 13 Oct 2023 10:22:26 +0200
-In-Reply-To: <CAApg2=R2Opk75OqLRcLXBkaHv9WVFAXbnxS9t-PPi5AMywFwGw@mail.gmail.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Jan Luebbe <jlu@pengutronix.de>, Marta Rybczynska
+ <rybczynska@gmail.com>,  Samantha Jalabert
+ <samantha.jalabert@syslinbit.com>, bitbake-devel@lists.openembedded.org
+Cc: Enrico =?ISO-8859-1?Q?J=F6rns?= <ejo@pengutronix.de>, Steve Sakoman
+	 <steve@sakoman.com>
+Date: Fri, 13 Oct 2023 11:57:37 +0100
+In-Reply-To: <fa678fac78b8a5ca915b24bb22ae2ff9f8b8f546.camel@pengutronix.de>
 References: <20230824081110.2851830-1-samantha.jalabert@syslinbit.com>
 	 <CAApg2=R2Opk75OqLRcLXBkaHv9WVFAXbnxS9t-PPi5AMywFwGw@mail.gmail.com>
-Autocrypt: addr=jlu@pengutronix.de; prefer-encrypt=mutual;
- keydata=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
+	 <fa678fac78b8a5ca915b24bb22ae2ff9f8b8f546.camel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0 (by Flathub.org) 
+User-Agent: Evolution 3.48.1-0ubuntu1 
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: jlu@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: bitbake-devel@lists.openembedded.org
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 13 Oct 2023 08:22:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15239
+ <bitbake-devel@lists.openembedded.org>; Fri, 13 Oct 2023 10:57:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15240
 
-On Thu, 2023-08-24 at 11:42 +0200, Marta Rybczynska wrote:
-> On Thu, Aug 24, 2023 at 10:11=E2=80=AFAM Samantha Jalabert <samantha.jala=
-bert@syslinbit.com> wrote:
-> > Error occured while running bitbake on cephfs:
+On Fri, 2023-10-13 at 10:22 +0200, Jan Luebbe wrote:
+> On Thu, 2023-08-24 at 11:42 +0200, Marta Rybczynska wrote:
+> > On Thu, Aug 24, 2023 at 10:11=E2=80=AFAM Samantha Jalabert <samantha.ja=
+labert@syslinbit.com> wrote:
+> > > Error occured while running bitbake on cephfs:
+> > >=20
+> > > WARNING: The free inode of path is running low (-0.001K left)
+> > > ERROR: Immediately halt since the disk space monitor action is "HALT"=
+!
 > >=20
-> > WARNING: The free inode of path is running low (-0.001K left)
-> > ERROR: Immediately halt since the disk space monitor action is "HALT"!
+> > This was our small Ceph issue I've mentioned during the call on Tuesday=
+.
 >=20
-> This was our small Ceph issue I've mentioned during the call on Tuesday.
+> We stumbled across this as well. Would this qualify for backporting? It c=
+herry-
+> picks cleanly to mickledore, kirkstone and dunfell.
 
-We stumbled across this as well. Would this qualify for backporting? It che=
-rry-
-picks cleanly to mickledore, kirkstone and dunfell.
+I'd say yes. I've copied Steve.
 
-Regards,
-Jan
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Cheers,
+
+Richard
 
