@@ -2,699 +2,731 @@ Return-Path: <ticotimo@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72D1CDB465
-	for <webhook@archiver.kernel.org>; Thu, 19 Oct 2023 17:12:31 +0000 (UTC)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
- by mx.groups.io with SMTP id smtpd.web11.33626.1697735549748504814
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FEECDB482
+	for <webhook@archiver.kernel.org>; Thu, 19 Oct 2023 18:01:52 +0000 (UTC)
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+ by mx.groups.io with SMTP id smtpd.web11.34915.1697738509797305694
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 19 Oct 2023 10:12:29 -0700
+ Thu, 19 Oct 2023 11:01:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Q4iSczjd;
- spf=pass (domain: gmail.com, ip: 209.85.128.169, mailfrom: ticotimo@gmail.com)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5a822f96aedso82623927b3.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Oct 2023 10:12:29 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Of3i2w2L;
+ spf=pass (domain: gmail.com, ip: 209.85.128.175, mailfrom: ticotimo@gmail.com)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5a81ab75f21so85335867b3.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Oct 2023 11:01:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697735549; x=1698340349; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EvtUbxUFEVHKQuGgps/IKHxxZ9a8Ip/1DNaP8InPKVc=;
-        b=Q4iSczjdnTE4Zsf4M4JkNXS8g0E6QpMtM3sq9emmpA4PWPtOvQq+2mvOKSv7TRCSr2
-         O7ARXPelVq1exiDsjIozGGfGKib0DJy9EwpmmCq2wUOT/xjJWz1LFaLwdWH5I2eF/NNG
-         0TjROHCq8iLjNN2fh1KALziw2w4HtSWNQjWpU5ht/zxBkzN1s3NPebbW4xjaRore46Nd
-         D11hpl4NsVW7L1GM02L3WQa1pTc0f4oL5VhF1liuH6ekhCkBTqVrUkOpvEr5vRfgV8Ew
-         VVrQkvfDD496mlgZzCX1RY42lX/FKJ2AyRw4tKJFF4uktL8nnCThtTRq5NAxRMGOwMdp
-         mmmQ==
+        d=gmail.com; s=20230601; t=1697738509; x=1698343309; darn=lists.openembedded.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O1S8Sb9TAGDjWYUvryvGqEdjag2E3Wm+7OehgshyhQc=;
+        b=Of3i2w2LAQNvvg2QTrkrxy8BLqx+06zIuHTr54VjhRgdBLi+DQMdhUEmjdAjOOoKEL
+         ZegfNqyvKqdsyGFR1Xp44EbkZ/eOgqctic5vmQO4W9el41uCeUTvkX7ooACap537ve5p
+         VFjteLW/fRUR3GmFS1lfw+KoiRvJprMsRclhvxxK78a9bq4VdT4pVuyea148Qwmrw84J
+         FP672r6CEns3jE2yp+X8Z9qifmbY40ekMEIOdRv1YwWMUZVFjnyp9qqvZeSCuusNYzPW
+         CIBNX+j3R7EmXDtn/ZChOqsZgN1DHq5h69L4GNEBdR+ninIYXkgtQrORzSiKTGZs4E05
+         PSqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697735549; x=1698340349;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EvtUbxUFEVHKQuGgps/IKHxxZ9a8Ip/1DNaP8InPKVc=;
-        b=HVvXTO4hvdzGxYmj2vtZhtrMIJhoj4TwExQAA55uhU085+CdLWeOXDwoVx2xpAhbS5
-         5MpWRNzMWgxUsmhrWP9AkS5C/j4wqDFmaO1QrF7m6xyzvqcxhhKN1zCu/YFzzz+2Tr1k
-         qgqA7bm8DfWIzlUs3VEm0NDuR6wNsPLFS4YO2Kxx9UDfNFlkI9LgGE/cWDMh+MX+fVoC
-         gs60gMcxchTxXHOf46u3C7IxEW6vvnugUnB17KQJO0aY2Nngw6ki/phTHCvDwq+1UJYn
-         3hoXqAVLMHlbPiWMG/yUvWqSBItJ043CTYlmMCOLSKDXG7mTWxMRbcej49sCSrnr4lPV
-         mbGg==
-X-Gm-Message-State: AOJu0YwnIxmXMnJphzHPaKN8nJyFFd9c1r/ceLxJdpaltB/xQd0OmzAj
-	PAGyzkB1WtAUWJTKluL8PGe2cJ450g6BnaUTa8DQoj1EsJb6cg==
-X-Google-Smtp-Source: AGHT+IGiriV3uqa4FS1D82qRmWPpyLj7LrREhsjZJciSFywQ1L2WdQS7sQJ7cS89RkgDpSPkNiYhdt+hXmufDXC2J6E=
-X-Received: by 2002:a81:5cc1:0:b0:59b:bed9:9a3a with SMTP id
- q184-20020a815cc1000000b0059bbed99a3amr3031471ywb.41.1697735548633; Thu, 19
- Oct 2023 10:12:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697738509; x=1698343309;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O1S8Sb9TAGDjWYUvryvGqEdjag2E3Wm+7OehgshyhQc=;
+        b=RAcvVnbYMcSER+kQscvILbr2Il+MFhoAIiyLoVBJN1SbJA3hSA0i1Chro4fJxSakcS
+         UhRNCIJ7ErmiqzufXkb2Lh67mW+USHbHyPdkvAM60BDCqrmNMB65RW/sfyOHNz9Gw3nu
+         FckYEw4XRlq8s2V7E6QNJ78FS5AIj9Oig/vdWFQ2OE92FM/b1Ab+BrRE+41w2M7DxJtW
+         AJqiQCijbjk5OTG67ZGLet0N0AXpxwginkhulSRd5Oa+kvzv5ApV4KC8YyG6hopUZT8I
+         V0Q3Os1IUcl8aUyc4/MSgDSJgROrqKg5TsXUREB2QsY5B7gR9UE5k+D4Lc4TaxRCfVMh
+         hNEA==
+X-Gm-Message-State: AOJu0YxpFKtaLPh7bhGhjyCffCnPEb/+P9oz2RsaAoaO71EI7MiK4+Sj
+	R0V+muK4ljVOCGjc7yrbBcxsPhDeX3DxDdxLRAs=
+X-Google-Smtp-Source: AGHT+IF2R1ysulCLKytrLfD1zc2Y1MxPrCazaSVD/rkeWEqxy0B1PlMQPlyYShyGad6q49WLFsCE3wG/UvooPyyFT/Y=
+X-Received: by 2002:a81:4996:0:b0:5a8:3550:61b2 with SMTP id
+ w144-20020a814996000000b005a8355061b2mr3250342ywa.29.1697738508651; Thu, 19
+ Oct 2023 11:01:48 -0700 (PDT)
 MIME-Version: 1.0
 References: <20231004134415.11070-1-alassane.yattara@savoirfairelinux.com>
  <178D4218DDB89A92.29357@lists.openembedded.org> <CANx9H-AsiPDOTScyii-FmBzWJQterFaE4bZSrSO+iTVkyQiwXg@mail.gmail.com>
- <479117960.680150.1697734280326.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <479117960.680150.1697734280326.JavaMail.zimbra@savoirfairelinux.com>
+ <479117960.680150.1697734280326.JavaMail.zimbra@savoirfairelinux.com> <178F917CE0158B76.20272@lists.yoctoproject.org>
+In-Reply-To: <178F917CE0158B76.20272@lists.yoctoproject.org>
 From: Tim Orling <ticotimo@gmail.com>
-Date: Thu, 19 Oct 2023 10:12:17 -0700
-Message-ID: <CANx9H-BWxMSHDfqKWnsg+H_t+rr+qt0bjkbODh6Ygr3VYMFCtw@mail.gmail.com>
+Date: Thu, 19 Oct 2023 11:01:37 -0700
+Message-ID: <CANx9H-Bi9eQJ=KnO0=hKaBzqYyYcYiWNjjwDoZcUqeRwf9C-qA@mail.gmail.com>
 Subject: Re: [Toaster] [bitbake-devel] [PATCH] toaster: Monitoring - implement
  Django logging system
-To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Cc: bitbake-devel@lists.openembedded.org, toaster@lists.yoctoproject.org
-Content-Type: multipart/alternative; boundary="0000000000004c8617060814dc1c"
+To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>, 
+	bitbake-devel@lists.openembedded.org, toaster@lists.yoctoproject.org
+Content-Type: multipart/alternative; boundary="000000000000bad1380608158c63"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 19 Oct 2023 17:12:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15266
+ <bitbake-devel@lists.openembedded.org>; Thu, 19 Oct 2023 18:01:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15267
 
---0000000000004c8617060814dc1c
+--000000000000bad1380608158c63
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Let me take a moment to say how great it is to have other folks looking at
-Toaster and to be able to discuss these issues with folks that understand
-Django.
+On Thu, Oct 19, 2023 at 10:12=E2=80=AFAM Tim Orling via lists.yoctoproject.=
+org
+<ticotimo=3Dgmail.com@lists.yoctoproject.org> wrote:
 
-On Thu, Oct 19, 2023 at 9:51=E2=80=AFAM Alassane Yattara <
-alassane.yattara@savoirfairelinux.com> wrote:
+> Let me take a moment to say how great it is to have other folks looking a=
+t
+> Toaster and to be able to discuss these issues with folks that understand
+> Django.
+>
+> On Thu, Oct 19, 2023 at 9:51=E2=80=AFAM Alassane Yattara <
+> alassane.yattara@savoirfairelinux.com> wrote:
+>
+>> Tim,
+>>
+>> Seem OpenEmbedded user has not permission to log into
+>> bitbake/lib/toaster/logs,
+>>
+>
+> This is probably not where we want the logs anyway.
+>
+>
+>> Yes, I can use BUILDDIR instead of BASE_DIR as logging directory, but
+>> there is no way to know if that work in container.
+>>
+>>
+> This is where we should put the logs most likely. It should be writable b=
+y
+> the container user.
+>
+>
+>> I'm trying to reproduce the issue, i cloned and run repos
+>> https://github.com/crops/toaster-container master,
+>> this pull crops/toaster:master, but I don't see logging system changes
+>> there.
+>>
+>>
+> The master branch container is failing, so it did not push a new containe=
+r
+> image.
+>
+>
+>> Question:
+>> - Is a way to pull a specific docker crops/toaster image that contain
+>> logging system changes ?
+>>
+>>
+>  I pushed a branch with the exact scripts I use locally to test Toaster
+> with the toaster-container.
+> https://github.com/moto-timo/toaster-container/tree/scripts
+>
+> You will need to run build-and-test.sh to have the absolute latest change=
+s
+> in bitbake "master".
+> It should stall at "Starting toaster...", so you will need to run "docker
+> logs toasterserver-<UUID>"
+> or whatever the container name is (docker ps -a will tell you).
+>
 
-> Tim,
->
-> Seem OpenEmbedded user has not permission to log into
-> bitbake/lib/toaster/logs,
->
-
-This is probably not where we want the logs anyway.
+docker logs toasterserver-<UUID> will allow you to see the otherwise hidden
+Python traceback.
 
 
-> Yes, I can use BUILDDIR instead of BASE_DIR as logging directory, but
-> there is no way to know if that work in container.
 >
+> You should be able to point your web browser at http://localhost:8000 and
+> see that toaster is in fact
+> running and has built "quilt-native"... but the traceback is throwing of
+> the bitbake/bin/toaster script's
+> check for whether toaster is running or not.
 >
-This is where we should put the logs most likely. It should be writable by
-the container user.
+
+Correction. I had a local (non containerized) Toaster instance also
+running. You should NOT be able to connect with the browser.
 
 
-> I'm trying to reproduce the issue, i cloned and run repos
-> https://github.com/crops/toaster-container master,
-> this pull crops/toaster:master, but I don't see logging system changes
-> there.
+> FWIW, you can make changes in the build-and-test.sh script to test a
+> different branch... I've done this
+> in the past when testing fixes. And examples of that usage are commented
+> out in the script:
+> #GITREPO=3D"git:yoctoproject.org/poky-contrib"
+> #BRANCH=3D"timo/hardknott/toaster-fixes"
 >
->
-The master branch container is failing, so it did not push a new container
-image.
-
-
-> Question:
-> - Is a way to pull a specific docker crops/toaster image that contain
-> logging system changes ?
->
->
- I pushed a branch with the exact scripts I use locally to test Toaster
-with the toaster-container.
-https://github.com/moto-timo/toaster-container/tree/scripts
-
-You will need to run build-and-test.sh to have the absolute latest changes
-in bitbake "master".
-It should stall at "Starting toaster...", so you will need to run "docker
-logs toasterserver-<UUID>"
-or whatever the container name is (docker ps -a will tell you).
-
-You should be able to point your web browser at http://localhost:8000 and
-see that toaster is in fact
-running and has built "quilt-native"... but the traceback is throwing of
-the bitbake/bin/toaster script's
-check for whether toaster is running or not.
-
-FWIW, you can make changes in the build-and-test.sh script to test a
-different branch... I've done this
-in the past when testing fixes. And examples of that usage are commented
-out in the script:
-#GITREPO=3D"git:yoctoproject.org/poky-contrib"
-#BRANCH=3D"timo/hardknott/toaster-fixes"
-
-Alassane
->
-> ----- Mail original -----
-> De: "Tim Orling" <ticotimo@gmail.com>
-> =C3=80: "Alassane Yattara" <alassane.yattara@savoirfairelinux.com>
-> Cc: bitbake-devel@lists.openembedded.org, toaster@lists.yoctoproject.org
-> Envoy=C3=A9: Jeudi 19 Octobre 2023 15:00:35
-> Objet: Re: [Toaster] [bitbake-devel] [PATCH] toaster: Monitoring -
-> implement Django logging system
->
-> Unfortunately, this commit has broken running in a container.
->
->
-> The system will start.
-> Traceback (most recent call last):
-> File "/usr/lib/python3.8/logging/config.py", line 563, in configure
-> handler =3D self.configure_handler(handlers[name])
-> File "/usr/lib/python3.8/logging/config.py", line 744, in
-> configure_handler
-> result =3D factory(**kwargs)
-> File "/usr/lib/python3.8/logging/handlers.py", line 200, in __init__
-> BaseRotatingHandler.__init__(self, filename, 'a', encoding, delay)
-> File "/usr/lib/python3.8/logging/handlers.py", line 55, in __init__
-> logging.FileHandler.__init__(self, filename, mode, encoding, delay)
-> File "/usr/lib/python3.8/logging/__init__.py", line 1147, in __init__
-> StreamHandler.__init__(self, self._open())
-> File "/usr/lib/python3.8/logging/__init__.py", line 1176, in _open
-> return open(self.baseFilename, self.mode, encoding=3Dself.encoding)
-> PermissionError: [Errno 13] Permission denied:
-> '/home/usersetup/poky/bitbake/lib/toaster/logs/api.log'
->
-> The above exception was the direct cause of the following exception:
->
-> Traceback (most recent call last):
-> File "/home/usersetup/poky/bitbake/bin/../lib/toaster/manage.py", line 16=
+> Alassane
+>>
+>> ----- Mail original -----
+>> De: "Tim Orling" <ticotimo@gmail.com>
+>> =C3=80: "Alassane Yattara" <alassane.yattara@savoirfairelinux.com>
+>> Cc: bitbake-devel@lists.openembedded.org, toaster@lists.yoctoproject.org
+>> Envoy=C3=A9: Jeudi 19 Octobre 2023 15:00:35
+>> Objet: Re: [Toaster] [bitbake-devel] [PATCH] toaster: Monitoring -
+>> implement Django logging system
+>>
+>> Unfortunately, this commit has broken running in a container.
+>>
+>>
+>> The system will start.
+>> Traceback (most recent call last):
+>> File "/usr/lib/python3.8/logging/config.py", line 563, in configure
+>> handler =3D self.configure_handler(handlers[name])
+>> File "/usr/lib/python3.8/logging/config.py", line 744, in
+>> configure_handler
+>> result =3D factory(**kwargs)
+>> File "/usr/lib/python3.8/logging/handlers.py", line 200, in __init__
+>> BaseRotatingHandler.__init__(self, filename, 'a', encoding, delay)
+>> File "/usr/lib/python3.8/logging/handlers.py", line 55, in __init__
+>> logging.FileHandler.__init__(self, filename, mode, encoding, delay)
+>> File "/usr/lib/python3.8/logging/__init__.py", line 1147, in __init__
+>> StreamHandler.__init__(self, self._open())
+>> File "/usr/lib/python3.8/logging/__init__.py", line 1176, in _open
+>> return open(self.baseFilename, self.mode, encoding=3Dself.encoding)
+>> PermissionError: [Errno 13] Permission denied:
+>> '/home/usersetup/poky/bitbake/lib/toaster/logs/api.log'
+>>
+>> The above exception was the direct cause of the following exception:
+>>
+>> Traceback (most recent call last):
+>> File "/home/usersetup/poky/bitbake/bin/../lib/toaster/manage.py", line
+>> 16, in <module>
+>> execute_from_command_line(sys.argv)
+>> File
+>> "/opt/venv/lib/python3.8/site-packages/django/core/management/__init__.p=
+y",
+>> line 442, in execute_from_command_line
+>> utility.execute()
+>> File
+>> "/opt/venv/lib/python3.8/site-packages/django/core/management/__init__.p=
+y",
+>> line 416, in execute
+>> django.setup()
+>> File "/opt/venv/lib/python3.8/site-packages/django/__init__.py", line 19=
 ,
-> in <module>
-> execute_from_command_line(sys.argv)
-> File
-> "/opt/venv/lib/python3.8/site-packages/django/core/management/__init__.py=
-",
-> line 442, in execute_from_command_line
-> utility.execute()
-> File
-> "/opt/venv/lib/python3.8/site-packages/django/core/management/__init__.py=
-",
-> line 416, in execute
-> django.setup()
-> File "/opt/venv/lib/python3.8/site-packages/django/__init__.py", line 19,
-> in setup
-> configure_logging(settings.LOGGING_CONFIG, settings.LOGGING)
-> File "/opt/venv/lib/python3.8/site-packages/django/utils/log.py", line 76=
-,
-> in configure_logging
-> logging_config_func(logging_settings)
-> File "/usr/lib/python3.8/logging/config.py", line 808, in dictConfig
-> dictConfigClass(config).configure()
-> File "/usr/lib/python3.8/logging/config.py", line 570, in configure
-> raise ValueError('Unable to configure handler '
-> ValueError: Unable to configure handler 'file_api'
->
-> The reason is that BASE_DIR is resolving to bitbake/lib/toaster and the
-> logs are in this case are attempting to write to a read only file system.
->
-> When running locally, this works, but perhaps is not where OpenEmbedded
-> users expect the logs to be:
-> $ ls bitbake/lib/toaster/logs
-> api.log toaster.log.2023-10-13 toaster.log.2023-10-16
-> django.log toaster.log.2023-10-14 toaster.log.2023-10-17
-> toaster.log toaster.log.2023-10-15
->
-> Previously, the logs were written into the build directory, like the
-> toaster_ui.log still is:
-> build-toaster-2/toaster_ui.log
->
-> This also pointed out an issue with the toaster script:
-> [ https://git.yoctoproject.org/poky/tree/bitbake/bin/toaster#n308 |
-> https://git.yoctoproject.org/poky/tree/bitbake/bin/toaster#n308 ]
-> When we have a Python trace back, the code is not catching that there was
-> a failure to fully start nor fail.
-> e.g. "Successful start." was not output, but neither was "Toaster build
-> server not started."
->
-> The health check in [
-> https://github.com/crops/toaster-container/blob/master/tests/runtests.sh#=
-L91
-> |
-> https://github.com/crops/toaster-container/blob/master/tests/runtests.sh#=
-L91
-> ] never sees "Successful start." so unfortunately, the test stage just
-> eventually times out.
->
-> On Wed, Oct 11, 2023 at 9:35 PM Tim Orling via [
-> http://lists.openembedded.org/ | lists.openembedded.org ] <ticotimo=3D [
-> mailto:gmail.com@lists.openembedded.org | gmail.com@lists.openembedded.or=
-g
-> ] > wrote:
->
->
->
-> i think this introduces a missing dependency in toaster-requirements.txt
-> on django-log-viewer or similar, as there is now a failure on [
-> https://github.com/crops/toaster-container |
-> https://github.com/crops/toaster-container ] for "master"
-> 03:55:49 E: 0.862 File "<frozen importlib._bootstrap>", line 1014, in
-> _gcd_import
-> 03:55:49 E: 0.862 File "<frozen importlib._bootstrap>", line 991, in
-> _find_and_load
-> 03:55:49 E: 0.862 File "<frozen importlib._bootstrap>", line 973, in
-> _find_and_load_unlocked
-> 03:55:49 E: 0.862 ModuleNotFoundError: No module named 'log_viewer'"
-> "
->
->
-> On Wed, Oct 4, 2023 at 6:45 AM Alassane Yattara < [ mailto:
-> alassane.yattara@savoirfairelinux.com |
-> alassane.yattara@savoirfairelinux.com ] > wrote:
->
->
-> ---
-> lib/toaster/bldcollector/views.py | 3 +
-> lib/toaster/logs/.gitignore | 1 +
-> lib/toaster/toastergui/views.py | 7 ++
-> lib/toaster/toastergui/widgets.py | 4 +
-> lib/toaster/toastermain/logs.py | 153 ++++++++++++++++++++++++++++
-> lib/toaster/toastermain/settings.py | 66 +++++-------
-> lib/toaster/toastermain/urls.py | 2 +
-> 7 files changed, 198 insertions(+), 38 deletions(-)
-> create mode 100644 lib/toaster/logs/.gitignore
-> create mode 100644 lib/toaster/toastermain/logs.py
->
-> diff --git a/lib/toaster/bldcollector/views.py
-> b/lib/toaster/bldcollector/views.py
-> index 04cd8b3d..bdf38ae6 100644
-> --- a/lib/toaster/bldcollector/views.py
-> +++ b/lib/toaster/bldcollector/views.py
-> @@ -14,8 +14,11 @@ import subprocess
-> import toastermain
-> from django.views.decorators.csrf import csrf_exempt
->
-> +from toastermain.logs import log_view_mixin
-> +
->
-> @csrf_exempt
-> +@log_view_mixin
-> def eventfile(request):
-> """ Receives a file by POST, and runs toaster-eventreply on this file """
-> if request.method !=3D "POST":
-> diff --git a/lib/toaster/logs/.gitignore b/lib/toaster/logs/.gitignore
-> new file mode 100644
-> index 00000000..e5ebf25a
-> --- /dev/null
-> +++ b/lib/toaster/logs/.gitignore
-> @@ -0,0 +1 @@
-> +*.log*
-> diff --git a/lib/toaster/toastergui/views.py
-> b/lib/toaster/toastergui/views.py
-> index 552ff164..cc8517ba 100644
-> --- a/lib/toaster/toastergui/views.py
-> +++ b/lib/toaster/toastergui/views.py
-> @@ -34,6 +34,8 @@ import mimetypes
->
-> import logging
->
-> +from toastermain.logs import log_view_mixin
-> +
-> logger =3D logging.getLogger("toaster")
->
-> # Project creation and managed build enable
-> @@ -56,6 +58,7 @@ class MimeTypeFinder(object):
-> return guessed_type
->
-> # single point to add global values into the context before rendering
-> +@log_view_mixin
-> def toaster_render(request, page, context):
-> context['project_enable'] =3D project_enable
-> context['project_specific'] =3D is_project_specific
-> @@ -665,6 +668,7 @@ def recipe_packages(request, build_id, recipe_id):
-> return response
->
-> from django.http import HttpResponse
-> +@log_view_mixin
-> def xhr_dirinfo(request, build_id, target_id):
-> top =3D request.GET.get('start', '/')
-> return HttpResponse(_get_dir_entries(build_id, target_id, top),
-> content_type =3D "application/json")
-> @@ -1612,6 +1616,7 @@ if True:
->
-> from django.views.decorators.csrf import csrf_exempt
-> @csrf_exempt
-> + @log_view_mixin
-> def xhr_testreleasechange(request, pid):
-> def response(data):
-> return HttpResponse(jsonfilter(data),
-> @@ -1648,6 +1653,7 @@ if True:
-> except Exception as e:
-> return response({"error": str(e) })
->
-> + @log_view_mixin
-> def xhr_configvaredit(request, pid):
-> try:
-> prj =3D Project.objects.get(id =3D pid)
-> @@ -1726,6 +1732,7 @@ if True:
-> return HttpResponse(json.dumps({"error":str(e) + "\n" +
-> traceback.format_exc()}), content_type =3D "application/json")
->
->
-> + @log_view_mixin
-> def customrecipe_download(request, pid, recipe_id):
-> recipe =3D get_object_or_404(CustomImageRecipe, pk=3Drecipe_id)
->
-> diff --git a/lib/toaster/toastergui/widgets.py
-> b/lib/toaster/toastergui/widgets.py
-> index 53696912..51ed153a 100644
-> --- a/lib/toaster/toastergui/widgets.py
-> +++ b/lib/toaster/toastergui/widgets.py
-> @@ -32,6 +32,7 @@ import re
-> import os
->
-> from toastergui.tablefilter import TableFilterMap
-> +from toastermain.logs import log_view_mixin
->
-> try:
-> from urllib import unquote_plus
-> @@ -84,6 +85,7 @@ class ToasterTable(TemplateView):
->
-> return context
->
-> + @log_view_mixin
-> def get(self, request, *args, **kwargs):
-> if request.GET.get('format', None) =3D=3D 'json':
->
-> @@ -414,6 +416,7 @@ class ToasterTypeAhead(View):
-> def __init__(self, *args, **kwargs):
-> super(ToasterTypeAhead, self).__init__()
->
-> + @log_view_mixin
-> def get(self, request, *args, **kwargs):
-> def response(data):
-> return HttpResponse(json.dumps(data,
-> @@ -469,6 +472,7 @@ class MostRecentBuildsView(View):
->
-> return False
->
-> + @log_view_mixin
-> def get(self, request, *args, **kwargs):
-> """
-> Returns a list of builds in JSON format.
-> diff --git a/lib/toaster/toastermain/logs.py
-> b/lib/toaster/toastermain/logs.py
-> new file mode 100644
-> index 00000000..f9953982
-> --- /dev/null
-> +++ b/lib/toaster/toastermain/logs.py
-> @@ -0,0 +1,153 @@
-> +#!/usr/bin/env python3
-> +# -*- coding: utf-8 -*-
-> +
-> +import logging
-> +import json
-> +from pathlib import Path
-> +from django.http import HttpRequest
-> +
-> +BASE_DIR =3D Path(__file__).resolve(strict=3DTrue).parent.parent
-> +
-> +
-> +def log_api_request(request, response, view, logger_name=3D'api'):
-> + """Helper function for LogAPIMixin"""
-> +
-> + repjson =3D {
-> + 'view': view,
-> + 'path': request.path,
-> + 'method': request.method,
-> + 'status': response.status_code
-> + }
-> +
-> + logger =3D logging.getLogger(logger_name)
-> + [ http://logger.info/ | logger.info ] (
-> + json.dumps(repjson, indent=3D4, separators=3D(", ", " : "))
-> + )
-> +
-> +
-> +def log_view_mixin(view):
-> + def log_view_request(*args, **kwargs):
-> + # get request from args else kwargs
-> + request =3D None
-> + if len(args) > 0:
-> + for req in args:
-> + if isinstance(req, HttpRequest):
-> + request =3D req
-> + break
-> + elif request is None:
-> + request =3D kwargs.get('request')
-> +
-> + response =3D view(*args, **kwargs)
-> + log_api_request(
-> + request, response, request.resolver_match.view_name, 'toaster')
-> + return response
-> + return log_view_request
-> +
-> +
-> +
-> +class LogAPIMixin:
-> + """Logs API requests
-> +
-> + tested with:
-> + - APIView
-> + - ModelViewSet
-> + - ReadOnlyModelViewSet
-> + - GenericAPIView
-> +
-> + Note: you can set `view_name` attribute in View to override
-> get_view_name()
-> + """
-> +
-> + def get_view_name(self):
-> + if hasattr(self, 'view_name'):
-> + return self.view_name
-> + return super().get_view_name()
-> +
-> + def finalize_response(self, request, response, *args, **kwargs):
-> + log_api_request(request, response, self.get_view_name())
-> + return super().finalize_response(request, response, *args, **kwargs)
-> +
-> +
-> +LOGGING_SETTINGS =3D {
-> + 'version': 1,
-> + 'disable_existing_loggers': False,
-> + 'filters': {
-> + 'require_debug_false': {
-> + '()': 'django.utils.log.RequireDebugFalse'
-> + }
-> + },
-> + 'formatters': {
-> + 'datetime': {
-> + 'format': '%(asctime)s %(levelname)s %(message)s'
-> + },
-> + 'verbose': {
-> + 'format': '{levelname} {asctime} {module} {name}.{funcName} {process:d}
-> {thread:d} {message}',
-> + 'datefmt': "%d/%b/%Y %H:%M:%S",
-> + 'style': '{',
-> + },
-> + 'api': {
-> + 'format': '\n{levelname} {asctime} {name}.{funcName}:\n{message}',
-> + 'style': '{'
-> + }
-> + },
-> + 'handlers': {
-> + 'mail_admins': {
-> + 'level': 'ERROR',
-> + 'filters': ['require_debug_false'],
-> + 'class': 'django.utils.log.AdminEmailHandler'
-> + },
-> + 'console': {
-> + 'level': 'DEBUG',
-> + 'class': 'logging.StreamHandler',
-> + 'formatter': 'datetime',
-> + },
-> + 'file_django': {
-> + 'level': 'INFO',
-> + 'class': 'logging.handlers.TimedRotatingFileHandler',
-> + 'filename': BASE_DIR / 'logs/django.log',
-> + 'when': 'D', # interval type
-> + 'interval': 1, # defaults to 1
-> + 'backupCount': 10, # how many files to keep
-> + 'formatter': 'verbose',
-> + },
-> + 'file_api': {
-> + 'level': 'INFO',
-> + 'class': 'logging.handlers.TimedRotatingFileHandler',
-> + 'filename': BASE_DIR / 'logs/api.log',
-> + 'when': 'D',
-> + 'interval': 1,
-> + 'backupCount': 10,
-> + 'formatter': 'verbose',
-> + },
-> + 'file_toaster': {
-> + 'level': 'INFO',
-> + 'class': 'logging.handlers.TimedRotatingFileHandler',
-> + 'filename': BASE_DIR / 'logs/toaster.log',
-> + 'when': 'D',
-> + 'interval': 1,
-> + 'backupCount': 10,
-> + 'formatter': 'verbose',
-> + },
-> + },
-> + 'loggers': {
-> + 'django.request': {
-> + 'handlers': ['file_django', 'console'],
-> + 'level': 'WARN',
-> + 'propagate': True,
-> + },
-> + 'django': {
-> + 'handlers': ['file_django', 'console'],
-> + 'level': 'WARNING',
-> + 'propogate': True,
-> + },
-> + 'toaster': {
-> + 'handlers': ['file_toaster'],
-> + 'level': 'INFO',
-> + 'propagate': False,
-> + },
-> + 'api': {
-> + 'handlers': ['file_api'],
-> + 'level': 'INFO',
-> + 'propagate': False,
-> + }
-> + }
-> +}
-> diff --git a/lib/toaster/toastermain/settings.py
-> b/lib/toaster/toastermain/settings.py
-> index 609c85d9..b083cf58 100644
-> --- a/lib/toaster/toastermain/settings.py
-> +++ b/lib/toaster/toastermain/settings.py
-> @@ -9,6 +9,8 @@
-> # Django settings for Toaster project.
->
-> import os
-> +from pathlib import Path
-> +from toastermain.logs import LOGGING_SETTINGS
->
-> DEBUG =3D True
->
-> @@ -186,7 +188,13 @@ TEMPLATES =3D [
-> 'django.template.loaders.app_directories.Loader',
-> #'django.template.loaders.eggs.Loader',
-> ],
-> - 'string_if_invalid': InvalidString("%s"),
-> + # [
-> https://docs.djangoproject.com/en/4.2/ref/templates/api/#how-invalid-vari=
-ables-are-handled
-> |
-> https://docs.djangoproject.com/en/4.2/ref/templates/api/#how-invalid-vari=
-ables-are-handled
-> ]
-> + # Generally, string_if_invalid should only be enabled in order to debug
-> + # a specific template problem, then cleared once debugging is complete.
-> + # If you assign a value other than '' to string_if_invalid,
-> + # you will experience rendering problems with these templates and sites=
+>> in setup
+>> configure_logging(settings.LOGGING_CONFIG, settings.LOGGING)
+>> File "/opt/venv/lib/python3.8/site-packages/django/utils/log.py", line
+>> 76, in configure_logging
+>> logging_config_func(logging_settings)
+>> File "/usr/lib/python3.8/logging/config.py", line 808, in dictConfig
+>> dictConfigClass(config).configure()
+>> File "/usr/lib/python3.8/logging/config.py", line 570, in configure
+>> raise ValueError('Unable to configure handler '
+>> ValueError: Unable to configure handler 'file_api'
+>>
+>> The reason is that BASE_DIR is resolving to bitbake/lib/toaster and the
+>> logs are in this case are attempting to write to a read only file system=
 .
-> + # 'string_if_invalid': InvalidString("%s"),
-> + 'string_if_invalid': "",
-> 'debug': DEBUG,
-> },
-> },
-> @@ -242,6 +250,9 @@ INSTALLED_APPS =3D (
-> 'django.contrib.humanize',
-> 'bldcollector',
-> 'toastermain',
-> +
-> + # 3rd-lib
-> + "log_viewer",
-> )
->
->
-> @@ -302,43 +313,22 @@ for t in os.walk(os.path.dirname(currentdir)):
-> # the site admins on every HTTP 500 error when DEBUG=3DFalse.
-> # See [ http://docs.djangoproject.com/en/dev/topics/logging |
-> http://docs.djangoproject.com/en/dev/topics/logging ] for
-> # more details on how to customize your logging configuration.
-> -LOGGING =3D {
-> - 'version': 1,
-> - 'disable_existing_loggers': False,
-> - 'filters': {
-> - 'require_debug_false': {
-> - '()': 'django.utils.log.RequireDebugFalse'
-> - }
-> - },
-> - 'formatters': {
-> - 'datetime': {
-> - 'format': '%(asctime)s %(levelname)s %(message)s'
-> - }
-> - },
-> - 'handlers': {
-> - 'mail_admins': {
-> - 'level': 'ERROR',
-> - 'filters': ['require_debug_false'],
-> - 'class': 'django.utils.log.AdminEmailHandler'
-> - },
-> - 'console': {
-> - 'level': 'DEBUG',
-> - 'class': 'logging.StreamHandler',
-> - 'formatter': 'datetime',
-> - }
-> - },
-> - 'loggers': {
-> - 'toaster' : {
-> - 'handlers': ['console'],
-> - 'level': 'DEBUG',
-> - },
-> - 'django.request': {
-> - 'handlers': ['console'],
-> - 'level': 'WARN',
-> - 'propagate': True,
-> - },
-> - }
-> -}
-> +LOGGING =3D LOGGING_SETTINGS
-> +
-> +# Build paths inside the project like this: BASE_DIR / 'subdir'.
-> +BASE_DIR =3D Path(__file__).resolve(strict=3DTrue).parent.parent
-> +
-> +# LOG VIEWER
-> +# [ https://pypi.org/project/django-log-viewer/ |
-> https://pypi.org/project/django-log-viewer/ ]
-> +LOG_VIEWER_FILES_PATTERN =3D '*.log*'
-> +LOG_VIEWER_FILES_DIR =3D os.path.join(BASE_DIR, 'logs')
-> +LOG_VIEWER_PAGE_LENGTH =3D 25 # total log lines per-page
-> +LOG_VIEWER_MAX_READ_LINES =3D 100000 # total log lines will be read
-> +LOG_VIEWER_PATTERNS =3D ['INFO', 'DEBUG', 'WARNING', 'ERROR', 'CRITICAL'=
-]
-> +
-> +# Optionally you can set the next variables in order to customize the
-> admin:
-> +LOG_VIEWER_FILE_LIST_TITLE =3D "Logs list"
-> +
->
-> if DEBUG and SQL_DEBUG:
-> LOGGING['loggers']['django.db.backends'] =3D {
-> diff --git a/lib/toaster/toastermain/urls.py
-> b/lib/toaster/toastermain/urls.py
-> index 03603026..3be46fcf 100644
-> --- a/lib/toaster/toastermain/urls.py
-> +++ b/lib/toaster/toastermain/urls.py
-> @@ -28,6 +28,8 @@ urlpatterns =3D [
-> # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
->
->
-> + url(r'^logs/', include('log_viewer.urls')),
-> +
-> # This is here to maintain backward compatibility and will be deprecated
-> # in the future.
-> url(r'^orm/eventfile$', bldcollector.views.eventfile),
-> --
-> 2.34.1
->
->
->
->
->
->
->
->
->
+>>
+>> When running locally, this works, but perhaps is not where OpenEmbedded
+>> users expect the logs to be:
+>> $ ls bitbake/lib/toaster/logs
+>> api.log toaster.log.2023-10-13 toaster.log.2023-10-16
+>> django.log toaster.log.2023-10-14 toaster.log.2023-10-17
+>> toaster.log toaster.log.2023-10-15
+>>
+>> Previously, the logs were written into the build directory, like the
+>> toaster_ui.log still is:
+>> build-toaster-2/toaster_ui.log
+>>
+>> This also pointed out an issue with the toaster script:
+>> [ https://git.yoctoproject.org/poky/tree/bitbake/bin/toaster#n308 |
+>> https://git.yoctoproject.org/poky/tree/bitbake/bin/toaster#n308 ]
+>> When we have a Python trace back, the code is not catching that there wa=
+s
+>> a failure to fully start nor fail.
+>> e.g. "Successful start." was not output, but neither was "Toaster build
+>> server not started."
+>>
+>> The health check in [
+>> https://github.com/crops/toaster-container/blob/master/tests/runtests.sh=
+#L91
+>> |
+>> https://github.com/crops/toaster-container/blob/master/tests/runtests.sh=
+#L91
+>> ] never sees "Successful start." so unfortunately, the test stage just
+>> eventually times out.
+>>
+>> On Wed, Oct 11, 2023 at 9:35 PM Tim Orling via [
+>> http://lists.openembedded.org/ | lists.openembedded.org ] <ticotimo=3D [
+>> mailto:gmail.com@lists.openembedded.org |
+>> gmail.com@lists.openembedded.org ] > wrote:
+>>
+>>
+>>
+>> i think this introduces a missing dependency in toaster-requirements.txt
+>> on django-log-viewer or similar, as there is now a failure on [
+>> https://github.com/crops/toaster-container |
+>> https://github.com/crops/toaster-container ] for "master"
+>> 03:55:49 E: 0.862 File "<frozen importlib._bootstrap>", line 1014, in
+>> _gcd_import
+>> 03:55:49 E: 0.862 File "<frozen importlib._bootstrap>", line 991, in
+>> _find_and_load
+>> 03:55:49 E: 0.862 File "<frozen importlib._bootstrap>", line 973, in
+>> _find_and_load_unlocked
+>> 03:55:49 E: 0.862 ModuleNotFoundError: No module named 'log_viewer'"
+>> "
+>>
+>>
+>> On Wed, Oct 4, 2023 at 6:45 AM Alassane Yattara < [ mailto:
+>> alassane.yattara@savoirfairelinux.com |
+>> alassane.yattara@savoirfairelinux.com ] > wrote:
+>>
+>>
+>> ---
+>> lib/toaster/bldcollector/views.py | 3 +
+>> lib/toaster/logs/.gitignore | 1 +
+>> lib/toaster/toastergui/views.py | 7 ++
+>> lib/toaster/toastergui/widgets.py | 4 +
+>> lib/toaster/toastermain/logs.py | 153 ++++++++++++++++++++++++++++
+>> lib/toaster/toastermain/settings.py | 66 +++++-------
+>> lib/toaster/toastermain/urls.py | 2 +
+>> 7 files changed, 198 insertions(+), 38 deletions(-)
+>> create mode 100644 lib/toaster/logs/.gitignore
+>> create mode 100644 lib/toaster/toastermain/logs.py
+>>
+>> diff --git a/lib/toaster/bldcollector/views.py
+>> b/lib/toaster/bldcollector/views.py
+>> index 04cd8b3d..bdf38ae6 100644
+>> --- a/lib/toaster/bldcollector/views.py
+>> +++ b/lib/toaster/bldcollector/views.py
+>> @@ -14,8 +14,11 @@ import subprocess
+>> import toastermain
+>> from django.views.decorators.csrf import csrf_exempt
+>>
+>> +from toastermain.logs import log_view_mixin
+>> +
+>>
+>> @csrf_exempt
+>> +@log_view_mixin
+>> def eventfile(request):
+>> """ Receives a file by POST, and runs toaster-eventreply on this file ""=
+"
+>> if request.method !=3D "POST":
+>> diff --git a/lib/toaster/logs/.gitignore b/lib/toaster/logs/.gitignore
+>> new file mode 100644
+>> index 00000000..e5ebf25a
+>> --- /dev/null
+>> +++ b/lib/toaster/logs/.gitignore
+>> @@ -0,0 +1 @@
+>> +*.log*
+>> diff --git a/lib/toaster/toastergui/views.py
+>> b/lib/toaster/toastergui/views.py
+>> index 552ff164..cc8517ba 100644
+>> --- a/lib/toaster/toastergui/views.py
+>> +++ b/lib/toaster/toastergui/views.py
+>> @@ -34,6 +34,8 @@ import mimetypes
+>>
+>> import logging
+>>
+>> +from toastermain.logs import log_view_mixin
+>> +
+>> logger =3D logging.getLogger("toaster")
+>>
+>> # Project creation and managed build enable
+>> @@ -56,6 +58,7 @@ class MimeTypeFinder(object):
+>> return guessed_type
+>>
+>> # single point to add global values into the context before rendering
+>> +@log_view_mixin
+>> def toaster_render(request, page, context):
+>> context['project_enable'] =3D project_enable
+>> context['project_specific'] =3D is_project_specific
+>> @@ -665,6 +668,7 @@ def recipe_packages(request, build_id, recipe_id):
+>> return response
+>>
+>> from django.http import HttpResponse
+>> +@log_view_mixin
+>> def xhr_dirinfo(request, build_id, target_id):
+>> top =3D request.GET.get('start', '/')
+>> return HttpResponse(_get_dir_entries(build_id, target_id, top),
+>> content_type =3D "application/json")
+>> @@ -1612,6 +1616,7 @@ if True:
+>>
+>> from django.views.decorators.csrf import csrf_exempt
+>> @csrf_exempt
+>> + @log_view_mixin
+>> def xhr_testreleasechange(request, pid):
+>> def response(data):
+>> return HttpResponse(jsonfilter(data),
+>> @@ -1648,6 +1653,7 @@ if True:
+>> except Exception as e:
+>> return response({"error": str(e) })
+>>
+>> + @log_view_mixin
+>> def xhr_configvaredit(request, pid):
+>> try:
+>> prj =3D Project.objects.get(id =3D pid)
+>> @@ -1726,6 +1732,7 @@ if True:
+>> return HttpResponse(json.dumps({"error":str(e) + "\n" +
+>> traceback.format_exc()}), content_type =3D "application/json")
+>>
+>>
+>> + @log_view_mixin
+>> def customrecipe_download(request, pid, recipe_id):
+>> recipe =3D get_object_or_404(CustomImageRecipe, pk=3Drecipe_id)
+>>
+>> diff --git a/lib/toaster/toastergui/widgets.py
+>> b/lib/toaster/toastergui/widgets.py
+>> index 53696912..51ed153a 100644
+>> --- a/lib/toaster/toastergui/widgets.py
+>> +++ b/lib/toaster/toastergui/widgets.py
+>> @@ -32,6 +32,7 @@ import re
+>> import os
+>>
+>> from toastergui.tablefilter import TableFilterMap
+>> +from toastermain.logs import log_view_mixin
+>>
+>> try:
+>> from urllib import unquote_plus
+>> @@ -84,6 +85,7 @@ class ToasterTable(TemplateView):
+>>
+>> return context
+>>
+>> + @log_view_mixin
+>> def get(self, request, *args, **kwargs):
+>> if request.GET.get('format', None) =3D=3D 'json':
+>>
+>> @@ -414,6 +416,7 @@ class ToasterTypeAhead(View):
+>> def __init__(self, *args, **kwargs):
+>> super(ToasterTypeAhead, self).__init__()
+>>
+>> + @log_view_mixin
+>> def get(self, request, *args, **kwargs):
+>> def response(data):
+>> return HttpResponse(json.dumps(data,
+>> @@ -469,6 +472,7 @@ class MostRecentBuildsView(View):
+>>
+>> return False
+>>
+>> + @log_view_mixin
+>> def get(self, request, *args, **kwargs):
+>> """
+>> Returns a list of builds in JSON format.
+>> diff --git a/lib/toaster/toastermain/logs.py
+>> b/lib/toaster/toastermain/logs.py
+>> new file mode 100644
+>> index 00000000..f9953982
+>> --- /dev/null
+>> +++ b/lib/toaster/toastermain/logs.py
+>> @@ -0,0 +1,153 @@
+>> +#!/usr/bin/env python3
+>> +# -*- coding: utf-8 -*-
+>> +
+>> +import logging
+>> +import json
+>> +from pathlib import Path
+>> +from django.http import HttpRequest
+>> +
+>> +BASE_DIR =3D Path(__file__).resolve(strict=3DTrue).parent.parent
+>> +
+>> +
+>> +def log_api_request(request, response, view, logger_name=3D'api'):
+>> + """Helper function for LogAPIMixin"""
+>> +
+>> + repjson =3D {
+>> + 'view': view,
+>> + 'path': request.path,
+>> + 'method': request.method,
+>> + 'status': response.status_code
+>> + }
+>> +
+>> + logger =3D logging.getLogger(logger_name)
+>> + [ http://logger.info/ | logger.info ] (
+>> + json.dumps(repjson, indent=3D4, separators=3D(", ", " : "))
+>> + )
+>> +
+>> +
+>> +def log_view_mixin(view):
+>> + def log_view_request(*args, **kwargs):
+>> + # get request from args else kwargs
+>> + request =3D None
+>> + if len(args) > 0:
+>> + for req in args:
+>> + if isinstance(req, HttpRequest):
+>> + request =3D req
+>> + break
+>> + elif request is None:
+>> + request =3D kwargs.get('request')
+>> +
+>> + response =3D view(*args, **kwargs)
+>> + log_api_request(
+>> + request, response, request.resolver_match.view_name, 'toaster')
+>> + return response
+>> + return log_view_request
+>> +
+>> +
+>> +
+>> +class LogAPIMixin:
+>> + """Logs API requests
+>> +
+>> + tested with:
+>> + - APIView
+>> + - ModelViewSet
+>> + - ReadOnlyModelViewSet
+>> + - GenericAPIView
+>> +
+>> + Note: you can set `view_name` attribute in View to override
+>> get_view_name()
+>> + """
+>> +
+>> + def get_view_name(self):
+>> + if hasattr(self, 'view_name'):
+>> + return self.view_name
+>> + return super().get_view_name()
+>> +
+>> + def finalize_response(self, request, response, *args, **kwargs):
+>> + log_api_request(request, response, self.get_view_name())
+>> + return super().finalize_response(request, response, *args, **kwargs)
+>> +
+>> +
+>> +LOGGING_SETTINGS =3D {
+>> + 'version': 1,
+>> + 'disable_existing_loggers': False,
+>> + 'filters': {
+>> + 'require_debug_false': {
+>> + '()': 'django.utils.log.RequireDebugFalse'
+>> + }
+>> + },
+>> + 'formatters': {
+>> + 'datetime': {
+>> + 'format': '%(asctime)s %(levelname)s %(message)s'
+>> + },
+>> + 'verbose': {
+>> + 'format': '{levelname} {asctime} {module} {name}.{funcName} {process:d=
+}
+>> {thread:d} {message}',
+>> + 'datefmt': "%d/%b/%Y %H:%M:%S",
+>> + 'style': '{',
+>> + },
+>> + 'api': {
+>> + 'format': '\n{levelname} {asctime} {name}.{funcName}:\n{message}',
+>> + 'style': '{'
+>> + }
+>> + },
+>> + 'handlers': {
+>> + 'mail_admins': {
+>> + 'level': 'ERROR',
+>> + 'filters': ['require_debug_false'],
+>> + 'class': 'django.utils.log.AdminEmailHandler'
+>> + },
+>> + 'console': {
+>> + 'level': 'DEBUG',
+>> + 'class': 'logging.StreamHandler',
+>> + 'formatter': 'datetime',
+>> + },
+>> + 'file_django': {
+>> + 'level': 'INFO',
+>> + 'class': 'logging.handlers.TimedRotatingFileHandler',
+>> + 'filename': BASE_DIR / 'logs/django.log',
+>> + 'when': 'D', # interval type
+>> + 'interval': 1, # defaults to 1
+>> + 'backupCount': 10, # how many files to keep
+>> + 'formatter': 'verbose',
+>> + },
+>> + 'file_api': {
+>> + 'level': 'INFO',
+>> + 'class': 'logging.handlers.TimedRotatingFileHandler',
+>> + 'filename': BASE_DIR / 'logs/api.log',
+>> + 'when': 'D',
+>> + 'interval': 1,
+>> + 'backupCount': 10,
+>> + 'formatter': 'verbose',
+>> + },
+>> + 'file_toaster': {
+>> + 'level': 'INFO',
+>> + 'class': 'logging.handlers.TimedRotatingFileHandler',
+>> + 'filename': BASE_DIR / 'logs/toaster.log',
+>> + 'when': 'D',
+>> + 'interval': 1,
+>> + 'backupCount': 10,
+>> + 'formatter': 'verbose',
+>> + },
+>> + },
+>> + 'loggers': {
+>> + 'django.request': {
+>> + 'handlers': ['file_django', 'console'],
+>> + 'level': 'WARN',
+>> + 'propagate': True,
+>> + },
+>> + 'django': {
+>> + 'handlers': ['file_django', 'console'],
+>> + 'level': 'WARNING',
+>> + 'propogate': True,
+>> + },
+>> + 'toaster': {
+>> + 'handlers': ['file_toaster'],
+>> + 'level': 'INFO',
+>> + 'propagate': False,
+>> + },
+>> + 'api': {
+>> + 'handlers': ['file_api'],
+>> + 'level': 'INFO',
+>> + 'propagate': False,
+>> + }
+>> + }
+>> +}
+>> diff --git a/lib/toaster/toastermain/settings.py
+>> b/lib/toaster/toastermain/settings.py
+>> index 609c85d9..b083cf58 100644
+>> --- a/lib/toaster/toastermain/settings.py
+>> +++ b/lib/toaster/toastermain/settings.py
+>> @@ -9,6 +9,8 @@
+>> # Django settings for Toaster project.
+>>
+>> import os
+>> +from pathlib import Path
+>> +from toastermain.logs import LOGGING_SETTINGS
+>>
+>> DEBUG =3D True
+>>
+>> @@ -186,7 +188,13 @@ TEMPLATES =3D [
+>> 'django.template.loaders.app_directories.Loader',
+>> #'django.template.loaders.eggs.Loader',
+>> ],
+>> - 'string_if_invalid': InvalidString("%s"),
+>> + # [
+>> https://docs.djangoproject.com/en/4.2/ref/templates/api/#how-invalid-var=
+iables-are-handled
+>> |
+>> https://docs.djangoproject.com/en/4.2/ref/templates/api/#how-invalid-var=
+iables-are-handled
+>> ]
+>> + # Generally, string_if_invalid should only be enabled in order to debu=
+g
+>> + # a specific template problem, then cleared once debugging is complete=
+.
+>> + # If you assign a value other than '' to string_if_invalid,
+>> + # you will experience rendering problems with these templates and
+>> sites.
+>> + # 'string_if_invalid': InvalidString("%s"),
+>> + 'string_if_invalid': "",
+>> 'debug': DEBUG,
+>> },
+>> },
+>> @@ -242,6 +250,9 @@ INSTALLED_APPS =3D (
+>> 'django.contrib.humanize',
+>> 'bldcollector',
+>> 'toastermain',
+>> +
+>> + # 3rd-lib
+>> + "log_viewer",
+>> )
+>>
+>>
+>> @@ -302,43 +313,22 @@ for t in os.walk(os.path.dirname(currentdir)):
+>> # the site admins on every HTTP 500 error when DEBUG=3DFalse.
+>> # See [ http://docs.djangoproject.com/en/dev/topics/logging |
+>> http://docs.djangoproject.com/en/dev/topics/logging ] for
+>> # more details on how to customize your logging configuration.
+>> -LOGGING =3D {
+>> - 'version': 1,
+>> - 'disable_existing_loggers': False,
+>> - 'filters': {
+>> - 'require_debug_false': {
+>> - '()': 'django.utils.log.RequireDebugFalse'
+>> - }
+>> - },
+>> - 'formatters': {
+>> - 'datetime': {
+>> - 'format': '%(asctime)s %(levelname)s %(message)s'
+>> - }
+>> - },
+>> - 'handlers': {
+>> - 'mail_admins': {
+>> - 'level': 'ERROR',
+>> - 'filters': ['require_debug_false'],
+>> - 'class': 'django.utils.log.AdminEmailHandler'
+>> - },
+>> - 'console': {
+>> - 'level': 'DEBUG',
+>> - 'class': 'logging.StreamHandler',
+>> - 'formatter': 'datetime',
+>> - }
+>> - },
+>> - 'loggers': {
+>> - 'toaster' : {
+>> - 'handlers': ['console'],
+>> - 'level': 'DEBUG',
+>> - },
+>> - 'django.request': {
+>> - 'handlers': ['console'],
+>> - 'level': 'WARN',
+>> - 'propagate': True,
+>> - },
+>> - }
+>> -}
+>> +LOGGING =3D LOGGING_SETTINGS
+>> +
+>> +# Build paths inside the project like this: BASE_DIR / 'subdir'.
+>> +BASE_DIR =3D Path(__file__).resolve(strict=3DTrue).parent.parent
+>> +
+>> +# LOG VIEWER
+>> +# [ https://pypi.org/project/django-log-viewer/ |
+>> https://pypi.org/project/django-log-viewer/ ]
+>> +LOG_VIEWER_FILES_PATTERN =3D '*.log*'
+>> +LOG_VIEWER_FILES_DIR =3D os.path.join(BASE_DIR, 'logs')
+>> +LOG_VIEWER_PAGE_LENGTH =3D 25 # total log lines per-page
+>> +LOG_VIEWER_MAX_READ_LINES =3D 100000 # total log lines will be read
+>> +LOG_VIEWER_PATTERNS =3D ['INFO', 'DEBUG', 'WARNING', 'ERROR', 'CRITICAL=
+']
+>> +
+>> +# Optionally you can set the next variables in order to customize the
+>> admin:
+>> +LOG_VIEWER_FILE_LIST_TITLE =3D "Logs list"
+>> +
+>>
+>> if DEBUG and SQL_DEBUG:
+>> LOGGING['loggers']['django.db.backends'] =3D {
+>> diff --git a/lib/toaster/toastermain/urls.py
+>> b/lib/toaster/toastermain/urls.py
+>> index 03603026..3be46fcf 100644
+>> --- a/lib/toaster/toastermain/urls.py
+>> +++ b/lib/toaster/toastermain/urls.py
+>> @@ -28,6 +28,8 @@ urlpatterns =3D [
+>> # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+>>
+>>
+>> + url(r'^logs/', include('log_viewer.urls')),
+>> +
+>> # This is here to maintain backward compatibility and will be deprecated
+>> # in the future.
+>> url(r'^orm/eventfile$', bldcollector.views.eventfile),
+>> --
+>> 2.34.1
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 > Links: You receive all messages sent to this group.
-> View/Reply Online (#5881):
-> https://lists.yoctoproject.org/g/toaster/message/5881
-> Mute This Topic: https://lists.yoctoproject.org/mt/102060497/7896845
+> View/Reply Online (#5884):
+> https://lists.yoctoproject.org/g/toaster/message/5884
+> Mute This Topic: https://lists.yoctoproject.org/mt/102060497/924729
 > Group Owner: toaster+owner@lists.yoctoproject.org
 > Unsubscribe: https://lists.yoctoproject.org/g/toaster/unsub [
-> alassane.yattara@savoirfairelinux.com]
+> ticotimo@gmail.com]
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 >
+>
 
---0000000000004c8617060814dc1c
+--000000000000bad1380608158c63
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>Let me take a moment to say how great it is to have o=
-ther folks looking at Toaster and to be able to discuss these issues with f=
-olks that understand Django.</div><br><div class=3D"gmail_quote"><div dir=
-=3D"ltr" class=3D"gmail_attr">On Thu, Oct 19, 2023 at 9:51=E2=80=AFAM Alass=
-ane Yattara &lt;<a href=3D"mailto:alassane.yattara@savoirfairelinux.com">al=
-assane.yattara@savoirfairelinux.com</a>&gt; wrote:<br></div><blockquote cla=
-ss=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid =
-rgb(204,204,204);padding-left:1ex">Tim,<br>
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
+<div dir=3D"ltr" class=3D"gmail_attr">On Thu, Oct 19, 2023 at 10:12=E2=80=
+=AFAM Tim Orling via <a href=3D"http://lists.yoctoproject.org">lists.yoctop=
+roject.org</a> &lt;ticotimo=3D<a href=3D"mailto:gmail.com@lists.yoctoprojec=
+t.org">gmail.com@lists.yoctoproject.org</a>&gt; wrote:<br></div><blockquote=
+ class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px so=
+lid rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr"><div>Let me take a =
+moment to say how great it is to have other folks looking at Toaster and to=
+ be able to discuss these issues with folks that understand Django.</div><b=
+r><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, =
+Oct 19, 2023 at 9:51=E2=80=AFAM Alassane Yattara &lt;<a href=3D"mailto:alas=
+sane.yattara@savoirfairelinux.com" target=3D"_blank">alassane.yattara@savoi=
+rfairelinux.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pad=
+ding-left:1ex">Tim,<br>
 <br>
 Seem OpenEmbedded user has not permission to log into bitbake/lib/toaster/l=
 ogs,<br></blockquote><div><br></div><div>This is probably not where we want=
@@ -721,25 +753,35 @@ Question: <br>
 ng system changes ?<br>
 <br></blockquote><div><br></div><div>=C2=A0I pushed a branch with the exact=
  scripts I use locally to test Toaster with the toaster-container.</div><di=
-v><a href=3D"https://github.com/moto-timo/toaster-container/tree/scripts">h=
-ttps://github.com/moto-timo/toaster-container/tree/scripts</a><br></div><di=
-v><br></div><div>You will need to run build-and-test.sh to have the absolut=
-e latest changes in bitbake &quot;master&quot;.</div><div>It should stall a=
-t &quot;Starting toaster...&quot;, so you will need to run &quot;docker log=
-s toasterserver-&lt;UUID&gt;&quot;</div><div>or whatever the container name=
- is (docker ps -a will tell you).</div><div><br></div><div>You should be ab=
-le to point your web browser at <a href=3D"http://localhost:8000">http://lo=
-calhost:8000</a> and see that toaster is in fact</div><div>running and has =
-built &quot;quilt-native&quot;... but the traceback is throwing of the bitb=
-ake/bin/toaster script&#39;s</div><div>check for whether toaster is running=
- or not.</div><div><br></div><div>FWIW, you can make changes in the build-a=
-nd-test.sh script to test a different branch... I&#39;ve done this</div><di=
-v>in the past when testing fixes. And examples of that usage are commented =
-out in the script:</div><div>#GITREPO=3D&quot;git:<a href=3D"http://yoctopr=
-oject.org/poky-contrib">yoctoproject.org/poky-contrib</a>&quot;<br>#BRANCH=
-=3D&quot;timo/hardknott/toaster-fixes&quot;</div><div><br></div><blockquote=
- class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px so=
-lid rgb(204,204,204);padding-left:1ex">
+v><a href=3D"https://github.com/moto-timo/toaster-container/tree/scripts" t=
+arget=3D"_blank">https://github.com/moto-timo/toaster-container/tree/script=
+s</a><br></div><div><br></div><div>You will need to run build-and-test.sh t=
+o have the absolute latest changes in bitbake &quot;master&quot;.</div><div=
+>It should stall at &quot;Starting toaster...&quot;, so you will need to ru=
+n &quot;docker logs toasterserver-&lt;UUID&gt;&quot;</div><div>or whatever =
+the container name is (docker ps -a will tell you).</div></div></div></bloc=
+kquote><div><br></div><div>docker logs toasterserver-&lt;UUID&gt; will allo=
+w you to see the otherwise hidden Python traceback.</div><div>=C2=A0</div><=
+blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
+eft:1px solid rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr"><div clas=
+s=3D"gmail_quote"><div><br></div><div>You should be able to point your web =
+browser at <a href=3D"http://localhost:8000" target=3D"_blank">http://local=
+host:8000</a> and see that toaster is in fact</div><div>running and has bui=
+lt &quot;quilt-native&quot;... but the traceback is throwing of the bitbake=
+/bin/toaster script&#39;s</div><div>check for whether toaster is running or=
+ not.</div></div></div></blockquote><div><br></div><div>Correction. I had a=
+ local (non containerized) Toaster instance also running. You should NOT be=
+ able to connect with the browser.=C2=A0</div><div><br></div><blockquote cl=
+ass=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid=
+ rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr"><div class=3D"gmail_qu=
+ote"><div><br></div><div>FWIW, you can make changes in the build-and-test.s=
+h script to test a different branch... I&#39;ve done this</div><div>in the =
+past when testing fixes. And examples of that usage are commented out in th=
+e script:</div><div>#GITREPO=3D&quot;git:<a href=3D"http://yoctoproject.org=
+/poky-contrib" target=3D"_blank">yoctoproject.org/poky-contrib</a>&quot;<br=
+>#BRANCH=3D&quot;timo/hardknott/toaster-fixes&quot;</div><div><br></div><bl=
+ockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-lef=
+t:1px solid rgb(204,204,204);padding-left:1ex">
 Alassane<br>
 <br>
 ----- Mail original -----<br>
@@ -1325,22 +1367,26 @@ url(r&#39;^orm/eventfile$&#39;, bldcollector.views.eventfile), <br>
 <br>
 <br>
 <br>
+<br>
+</blockquote></div></div>
+<br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 Links: You receive all messages sent to this group.<br>
-View/Reply Online (#5881): <a href=3D"https://lists.yoctoproject.org/g/toas=
-ter/message/5881" rel=3D"noreferrer" target=3D"_blank">https://lists.yoctop=
-roject.org/g/toaster/message/5881</a><br>
-Mute This Topic: <a href=3D"https://lists.yoctoproject.org/mt/102060497/789=
-6845" rel=3D"noreferrer" target=3D"_blank">https://lists.yoctoproject.org/m=
-t/102060497/7896845</a><br>
+View/Reply Online (#5884): <a href=3D"https://lists.yoctoproject.org/g/toas=
+ter/message/5884" rel=3D"noreferrer" target=3D"_blank">https://lists.yoctop=
+roject.org/g/toaster/message/5884</a><br>
+Mute This Topic: <a href=3D"https://lists.yoctoproject.org/mt/102060497/924=
+729" rel=3D"noreferrer" target=3D"_blank">https://lists.yoctoproject.org/mt=
+/102060497/924729</a><br>
 Group Owner: <a href=3D"mailto:toaster%2Bowner@lists.yoctoproject.org" targ=
 et=3D"_blank">toaster+owner@lists.yoctoproject.org</a><br>
 Unsubscribe: <a href=3D"https://lists.yoctoproject.org/g/toaster/unsub" rel=
 =3D"noreferrer" target=3D"_blank">https://lists.yoctoproject.org/g/toaster/=
-unsub</a> [<a href=3D"mailto:alassane.yattara@savoirfairelinux.com" target=
-=3D"_blank">alassane.yattara@savoirfairelinux.com</a>]<br>
+unsub</a> [<a href=3D"mailto:ticotimo@gmail.com" target=3D"_blank">ticotimo=
+@gmail.com</a>]<br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
 </blockquote></div></div>
 
---0000000000004c8617060814dc1c--
+--000000000000bad1380608158c63--
 
