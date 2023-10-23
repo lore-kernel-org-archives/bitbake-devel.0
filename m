@@ -1,191 +1,145 @@
-Return-Path: <ragesh.nair@duagon.com>
+Return-Path: <chris.laplante@agilent.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD9DCDB474
-	for <webhook@archiver.kernel.org>; Sat, 21 Oct 2023 01:11:13 +0000 (UTC)
-Received: from CHE01-GV0-obe.outbound.protection.outlook.com (CHE01-GV0-obe.outbound.protection.outlook.com [40.107.23.123])
- by mx.groups.io with SMTP id smtpd.web11.70294.1697850671504190264
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E255FC001E0
+	for <webhook@archiver.kernel.org>; Mon, 23 Oct 2023 15:02:31 +0000 (UTC)
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (NAM02-BN1-obe.outbound.protection.outlook.com [40.107.212.63])
+ by mx.groups.io with SMTP id smtpd.web10.122848.1698073346789642329
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Oct 2023 18:11:12 -0700
+ Mon, 23 Oct 2023 08:02:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@duagon.com header.s=selector1 header.b=Uu3AQSXP;
- dkim=pass header.i=@duagon.com header.s=selector1 header.b=Uu3AQSXP;
- dkim=fail reason="dkim: signature did not verify: crypto/rsa: verification error" header.i=@duagon.com header.s=selector1 header.b=LySmd+yZ;
- spf=pass (domain: duagon.com, ip: 40.107.23.123, mailfrom: ragesh.nair@duagon.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=duagon.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xj6z/tIQIB7kI0vc0le0QzWu/6/nBF0g2Sr+Fn6KWUM=;
- b=Uu3AQSXPztz57e6mYLvC82pghGB0afGuKxqNLboB/1WHVVn6XMQ/vCmPOW27jC5AwG5yOGmo33xsgIm3Phpzrm8LGIhLTm1KpoICRzfnvEt49eLomxGXRIiEPtmvBgpBRoxp3guavMuWCrly0v6Hdo4NCPseM5AoLNmH8+9PcTc=
-Received: from AS4P190CA0042.EURP190.PROD.OUTLOOK.COM (2603:10a6:20b:5d1::19)
- by ZR0P278MB0790.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:4e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.26; Sat, 21 Oct
- 2023 01:11:06 +0000
-Received: from AM4PEPF00027A65.eurprd04.prod.outlook.com
- (2603:10a6:20b:5d1:cafe::31) by AS4P190CA0042.outlook.office365.com
- (2603:10a6:20b:5d1::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.26 via Frontend
- Transport; Sat, 21 Oct 2023 01:11:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.38.86.34)
- smtp.mailfrom=duagon.com; dkim=pass (signature was verified)
- header.d=duagon.com;dmarc=pass action=none header.from=duagon.com;
-Received-SPF: Pass (protection.outlook.com: domain of duagon.com designates
- 194.38.86.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=194.38.86.34; helo=securemail.duagon.com; pr=C
-Received: from securemail.duagon.com (194.38.86.34) by
- AM4PEPF00027A65.mail.protection.outlook.com (10.167.16.86) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6907.20 via Frontend Transport; Sat, 21 Oct 2023 01:11:05 +0000
-Received: from securemail (localhost [127.0.0.1])
-	by securemail.duagon.com (Postfix) with SMTP id 4SC3LJ580pzxpC
-	for <bitbake-devel@lists.openembedded.org>; Sat, 21 Oct 2023 03:11:04 +0200 (CEST)
-Received: from CHE01-GV0-obe.outbound.protection.outlook.com (mail-gv0che01lp2041.outbound.protection.outlook.com [104.47.22.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by securemail.duagon.com (Postfix) with ESMTPS
-	for <bitbake-devel@lists.openembedded.org>; Sat, 21 Oct 2023 03:11:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=duagon.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xj6z/tIQIB7kI0vc0le0QzWu/6/nBF0g2Sr+Fn6KWUM=;
- b=Uu3AQSXPztz57e6mYLvC82pghGB0afGuKxqNLboB/1WHVVn6XMQ/vCmPOW27jC5AwG5yOGmo33xsgIm3Phpzrm8LGIhLTm1KpoICRzfnvEt49eLomxGXRIiEPtmvBgpBRoxp3guavMuWCrly0v6Hdo4NCPseM5AoLNmH8+9PcTc=
-Received: from AS9PR06CA0413.eurprd06.prod.outlook.com (2603:10a6:20b:461::22)
- by ZR0P278MB1153.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:55::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.29; Sat, 21 Oct
- 2023 01:11:01 +0000
-Received: from AMS0EPF00000195.eurprd05.prod.outlook.com
- (2603:10a6:20b:461:cafe::ee) by AS9PR06CA0413.outlook.office365.com
- (2603:10a6:20b:461::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.26 via Frontend
- Transport; Sat, 21 Oct 2023 01:11:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.79.222.204)
- smtp.mailfrom=duagon.com; dkim=fail (signature did not verify)
- header.d=duagon.com;dmarc=pass action=none header.from=duagon.com;
-Received-SPF: Pass (protection.outlook.com: domain of duagon.com designates
- 20.79.222.204 as permitted sender) receiver=protection.outlook.com;
- client-ip=20.79.222.204; helo=de2-emailsignatures-cloud.codetwo.com; pr=C
-Received: from de2-emailsignatures-cloud.codetwo.com (20.79.222.204) by
- AMS0EPF00000195.mail.protection.outlook.com (10.167.16.215) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6907.21 via Frontend Transport; Sat, 21 Oct 2023 01:11:00 +0000
-Received: from CHE01-GV0-obe.outbound.protection.outlook.com (104.47.22.41) by de2-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Sat, 21 Oct 2023 01:10:59 +0000
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=P3sXVEwn;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.212.63, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MNYwluue8R8jXbgSNhygy+hhAZiWvYB8CUdKqE+DvScD6smtYNv/nzD54iztYjPEzSRE/cs1hEF1IZjGJCpFWLl+rGI0KeY0LveKf05eyoJVWAfpp1n0pyQH3lfKk+3+oHejEVQO2vKzTx38tP4NEi17PEmofVcEZ5S5tVKh36eSBk2JKvC4N5Xd0ocn81BzExJM2ER74YzCZTfqXOO0aeH/NNVwXKxRoyJAsMAv5x6hmdlrH47GU+UzAwsoq/UIN8tkl3BQo9LPNs4WNzQc5wwyWCQlmi0xIfizvS+6XrT0VgdOiBIUoGMAwOwVX9t1yMdhcTIjiPAuVahK4eDwOQ==
+ b=Dy3tY7+YV8uo8EopR9zFBj4QiZ8eA12mjguCYGwNlx4fanvZWNQnKeaKhYfZ66nRa1LZYfmojGI/ijb8UxF36WY/q5rv0W3IbieocbW0SOerOrzSS6P+/h2Imt/AmzY0zM/ZQCJN5TERvNL9JHhRzay7azd04Ps8KFVQp1fITF9jm/poPVsGLTrzLkS8nEUJxSMxUU0K28uRb0HNPeXGZ8DjgMkyI4GNcNRqjFXwpk5VK1jp2YQxvkAFHb+BoKt+PB4Ph5cPzjT7KxqganIi2ic8zWHw8xiosRJAy6LZdCTTuhc+rQVLv/qt7iigfbLXAODjxUkK3KsWRSnzew6Spw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xj6z/tIQIB7kI0vc0le0QzWu/6/nBF0g2Sr+Fn6KWUM=;
- b=gUmb8sY6cFldQGMwHqnaaEy1zYIraUF9ViHGP5hdFNILmXLIDEYPJlqfcEbQXuEGMPdDTuU8WpajQQJk7HFxBOhYZ7uRzca/k5Wtxjjt9vojYKZkYBIcY7ddnT7/zOHdgubm2YnIJKU5LKauev/YpSLQn3rgZuv5GN1S1VSMmCHRd76pyKkk0C2vPLP6X8SisRXUKdcFsRg5F1s2Efbk80+T7Trv78mUoCrrXuX25o76aaOfwMupgVEhvhr/36a8IdR/FYOMVXALEuMhN4EisxzKXcatLZ45j9cEl7ZC5y5fQMra1UuO4Oc3YTVkJcet3iE8+yXz8N84y2h51sZfvA==
+ bh=MiP+5TTNY9H93AND8SJd2QMUNyqOV3vXpR/spItCc/M=;
+ b=d0gnhoeUATqIc7pxcGQrYTW/MrRkGgTsPOFKoAF00AH1uosJ13Ie+ET7gJxcHGoFx3nfT3Qkn7CusCXpQEXcKMJ+vAeLVs6VdHd6tKAEDHynXoCZ0KrNjedR+apMNkzwQ9GqUN2LgdbOWjEwrOqCcxoeS2cY6ADkTyRe1z1on+Y509SUWduNs48lU/ot/yHk2KS8j13HH0+buSvgTNLF3uxxVnJLAmwY4D43moYTcG1RW9U5f3zahgZHrJuw6dYzSphPuxR2QGobRl4gnjI8zVwz+7lgzJ5VDJnJDMBZ6uWdtf1GFUagNfo0Ognvwd0559LsCXHyv0MyVX8XoAX+pw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=duagon.com; dmarc=pass action=none header.from=duagon.com;
- dkim=pass header.d=duagon.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=duagon.com;
+ smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
+ dkim=pass header.d=agilent.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xj6z/tIQIB7kI0vc0le0QzWu/6/nBF0g2Sr+Fn6KWUM=;
- b=LySmd+yZDzk1I+C5nXgquufGyw2uyKfiRwS13zHQnz0QW7MIaQugoJArRWHYC7zTOqd4VogiuEVxyoDrzgy0csAA99FUm2/NgP/4opz8J+LaRlH022Q7nwB9gAJqL0mSrf7+HjgrMtGtwj7s445+Lnj6FbrUd9nP0pdHhxQVeBQ=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=duagon.com;
-Received: from ZR0P278MB0218.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:31::7) by
- GV0P278MB0951.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:52::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6907.26; Sat, 21 Oct 2023 01:10:52 +0000
-Received: from ZR0P278MB0218.CHEP278.PROD.OUTLOOK.COM
- ([fe80::80f1:e5bc:edec:d4de]) by ZR0P278MB0218.CHEP278.PROD.OUTLOOK.COM
- ([fe80::80f1:e5bc:edec:d4de%6]) with mapi id 15.20.6907.025; Sat, 21 Oct 2023
- 01:10:52 +0000
-Date: Sat, 21 Oct 2023 03:10:49 +0200
-From: Ragesh Nair <ragesh.nair@duagon.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch2/git: fix lfs fetch with destsuffix param
-Message-ID: <55f2587-4a5a-d635-7f1-f02ec6a5bebb@duagon.com>
-Content-Type: text/plain; charset="US-ASCII"
-X-ClientProxiedBy: AS4P250CA0012.EURP250.PROD.OUTLOOK.COM
- (2603:10a6:20b:5df::18) To ZR0P278MB0218.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:31::7)
+ bh=MiP+5TTNY9H93AND8SJd2QMUNyqOV3vXpR/spItCc/M=;
+ b=P3sXVEwnabi0BnTfqq6mPikY/ERJ64d6ap/Q9+199cRRvOKUwlJTGSmjPqhWK+iZzo/45tB0ybB2HnPggmtIThH0DqauBCf5RGq0989UHJm/IkiNkv6/3e4rcYxadvbxwNKRfp1mFLw4oW6WIys+y5as37ZeV45dJIyXUAlRGViH4ZUoAJeKbPEsAAxh2EafAUo7nCnbNSBaDAe0YxaUv9sGPTl9OxWJ51tZfUbZU0lQBwsk21ztOTloJFkCXAwnkDehY20aJXb8qjr1DCwXxaf/w2Fa8wfRn/setwipYi0lKoQ2dzmCfU4Hz3FNfqMplO+71AD59g0fAcco8tSqxw==
+Received: from DM8PR12MB5430.namprd12.prod.outlook.com (2603:10b6:8:28::6) by
+ BY5PR12MB4903.namprd12.prod.outlook.com (2603:10b6:a03:1d6::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.33; Mon, 23 Oct
+ 2023 15:02:23 +0000
+Received: from DM8PR12MB5430.namprd12.prod.outlook.com
+ ([fe80::1e30:3574:8cbc:7278]) by DM8PR12MB5430.namprd12.prod.outlook.com
+ ([fe80::1e30:3574:8cbc:7278%3]) with mapi id 15.20.6907.032; Mon, 23 Oct 2023
+ 15:02:23 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: RE: [bitbake-devel] [PATCH 2/3] codeparser/utils: clean up more
+ deprecated AST usages
+Thread-Topic: [bitbake-devel] [PATCH 2/3] codeparser/utils: clean up more
+ deprecated AST usages
+Thread-Index: AQHaA4WWlWH3MzjuuEyVZPlnAXHK1LBTU2+AgAQpQxA=
+Date: Mon, 23 Oct 2023 15:02:23 +0000
+Message-ID: 
+ <DM8PR12MB54309ED942CDD6873DE313A48BD8A@DM8PR12MB5430.namprd12.prod.outlook.com>
+References: <20231020184459.1420806-1-chris.laplante@agilent.com>
+ <20231020184459.1420806-2-chris.laplante@agilent.com>
+ <20231020232915d8ce06bb@mail.local>
+In-Reply-To: <20231020232915d8ce06bb@mail.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+ MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ActionId=b4ffa08b-185c-440a-bc98-243cae7efe9f;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ContentBits=0;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Enabled=true;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Method=Standard;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Name=General;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SetDate=2023-10-23T15:01:58Z;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SiteId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=agilent.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR12MB5430:EE_|BY5PR12MB4903:EE_
+x-ms-office365-filtering-correlation-id: 890ccada-c898-4a4b-be08-08dbd3d91016
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ ZWaLFj+kO+U96cNXKMp3BPZ5mUmkMq6Xrh5P90x9lKNjeUsmU2OJ1FccWltmHZxrotPxrUt/4UsKVcMDEFOO5BzgxnLEKMRuDYtpDxibqCuh2YhiLm83V+MHvJu5jzrYESOZLmb5YTBsrlYA9w8Db2rTK5Dd7m4Qokx+/oMcydiPOaA3i95PwnOn42M0stAxnhsxNonQPwXhOD6KC/lAXIP1+sP2b6bdg8C843gvMkeFX03P3Hy02WbZbkIwzPgrUDOEMkhCqgzKj+Uqcl22zeQ2gVHZERWiw8GrdKUG2yEA2IqEiJQijx8/6274BTPSiXfMQ/fuun1Ntdpiv/t+0vsnO3cZAeLe/EyU0lkiHxZi10QJ7viHnfTh5YIeAVdtxRMBCYpx9XtGchQuapcZItn7ENM6iaxc+CaTMLmEBONwyIaOc4MEOYO2tnUks3I2f0Dh+gZYxtyhuB7bnDq78dyc/Zg9FZU/Ek2bAAqrdg5P1UgdKKjOi1WvW4++NVn0EqVFKLZf314Wa9SJK6QPVndB+NIm+zrl95LUxolvm5KLU4V292QQOVXtYQK0LbOLdl83gE4AzXiVeghxwt8kogk/u2KTGzXMHJTmPXB7Lqgy6G7gwdPJwPcoRP23JyJt
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5430.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(396003)(346002)(39860400002)(366004)(230922051799003)(186009)(451199024)(1800799009)(64100799003)(38070700009)(38100700002)(2906002)(55016003)(4744005)(41300700001)(5660300002)(86362001)(52536014)(4326008)(8676002)(8936002)(33656002)(7696005)(6506007)(71200400001)(478600001)(26005)(122000001)(66476007)(66446008)(316002)(76116006)(64756008)(6916009)(66946007)(66556008)(9686003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?DjlalQLjas7qorDW/MIhHYoxjBKY2I4icV6hOxluHGdKrKAsSQVhVtz1CvF2?=
+ =?us-ascii?Q?lHooaAz4vLWPK28ANPV4/rHZsCoOYfcMOh2FZVro6ukyR52wu01cnf22GP3Z?=
+ =?us-ascii?Q?Hngn81ldFHISF+jUM/n134MTL3ItlLYZ1GtaJAoV9Ge5VpBIQwVNqOKW5ua2?=
+ =?us-ascii?Q?Mj0LZm/zDG5jphIUVLT8p/m6e6rXtN2Pmn0K43gunY5Do9lnLpJ9wcdyfeyJ?=
+ =?us-ascii?Q?9QT2p94JS606W9RzDN72mE4Qs+gUvGv1fvRJeG5+hVIGLT8FNWwEDelM2Cqy?=
+ =?us-ascii?Q?mK7eOC5/Nuy7SKiTqs/xfQHxRsx0TcqF1iR87v61DHOGjd+Pbmg/0JR5MR6H?=
+ =?us-ascii?Q?GK1Oh/JhahyQXss21bLY0o3R1NuhhcBZgarZYBP1gw3lifS/VtzZTK6pFaZk?=
+ =?us-ascii?Q?MYIzw/EPVtmLLItx1pCRCrQ/jF0ZQS7DM6W3EZfszcO0TQzRLo8ZTWYrbIFI?=
+ =?us-ascii?Q?npp/D5CUBKWcAmezJU7Mxd3ZKtYEjt6kvr8dHdRtBCZTOm20Amw1ldsLUkw5?=
+ =?us-ascii?Q?VgXCwrZlOJFthBH5BwU+k0RQmOt6Y6Yw5kL79H4uyBlHb1gR1Pdf4PxmgBsF?=
+ =?us-ascii?Q?hsVC2xJSvpP1nW+DC6lHPynAjFQOJ3bTvauTwbBrDF5yuELNZW1Dz3QxnJ2j?=
+ =?us-ascii?Q?V4HBQKbZUMkZLji1IsQiD9M4jXWcDnR/c0fS2r3FPuySdii+BIjYgZSIkDqU?=
+ =?us-ascii?Q?gZxDGYStlmFWpznqB5h4Ua30jqamsLvOKXvsQk6dah5bjsCjQTKElk4fVBUT?=
+ =?us-ascii?Q?5BI3Tvn5VekGduB8q/NuziWVeYIqwgkIv7kOD4A07YSMUIv5msefXMdxqiCZ?=
+ =?us-ascii?Q?7GV2WzjO2DGiYRgC7ibS/jJ+x/TCO4IHF1vsSBso/XRDuwzNiUUMUSXhqWDX?=
+ =?us-ascii?Q?9OPvgemx4LvnXRPhm7CbEJW7E8WgBb6tVvo/V0EU2whYmv4TtRMn2SnVIJDM?=
+ =?us-ascii?Q?A/48pw+69ipL9UdzRyHKxA8UCv6F6X0pl3S87abb2Bgz188Xc/J4IYcfEu/3?=
+ =?us-ascii?Q?X/dLIVbdZlGmxzOTdmJXqEUrAmqKcIhuMb8mc9xqp5aq7SERmWFryVvcLTuW?=
+ =?us-ascii?Q?DXJge7uDr8o2mWmEwo/OZj9XaUFaL4zjPV7kuxZIKRRKWy8K+EFvWTloXAnH?=
+ =?us-ascii?Q?qeKGv23V50EMDVbPuhqxEiFpTAxMjXUeqiWMr/a6hP76iJhR6UsAwnisxRwl?=
+ =?us-ascii?Q?V2zJyajRn21OYFgEtrpMfXEZbJOE+o5GbVXInme11z+4WhAn+JJdU0GXH4uY?=
+ =?us-ascii?Q?h2NEme/WBb02dYPfEHpql4WTS0kMQMTu3kNtT4/TQRZGCDvPwZ1602SVDg5t?=
+ =?us-ascii?Q?uOdsKdQjX0lCzjYTJIBQkw9/KYFgKyTl5UP+MfJDkLCHF363gZuYJ0pXHuoS?=
+ =?us-ascii?Q?9O9AfUww8EaOTE1CFWQUUTvnvGErH1XHMM8PYJPVJQ4X3yd0rFf+oI0+rlyU?=
+ =?us-ascii?Q?CUqO4DHfIKSe3FOjWDD2VmR/LXSoB94cNGsioYdOgwHwRBBe6sY2G50xA/wq?=
+ =?us-ascii?Q?iZdNF4X/2wK7Srxq4FR+/fYEwayRuMd8eXZzTfPx6Z5SHKF6AJYmGpVS6ohZ?=
+ =?us-ascii?Q?gvCMjmeeJUfinqNWz9tjrHdKkN2bh1/2ADBbEpO8?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic: 
-	ZR0P278MB0218:EE_|GV0P278MB0951:EE_|AMS0EPF00000195:EE_|ZR0P278MB1153:EE_|AM4PEPF00027A65:EE_|ZR0P278MB0790:EE_
-X-MS-Office365-Filtering-Correlation-Id: 900f515e-a33b-4397-6eae-08dbd1d299b2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- DTRRuurWlmkHi3+w6jeqR3iciOre2UdxCOINiOqV3be+foVklaNbjX54ogzvzqM6PyjEpEwydv1djeX7qsT/TD4sGKjeIJT8ZvpIpAO3Lofw7EGKbFvI4bRpfylMaiv882NSmjFOuPvVjOMCqQpTOi+cp7c6ZtNfvQSDuwtei9C9oPP8FYcgBAiJQZSSFruqWjBadGEMHxSElrhifAkvn0WXTjPPw44ooY4RhkkzbyhxtZ0lN2ZhJGlsxCS61aD5LHDuEJzi7QSH9usXMPEI+DnXXxiNf4kIKU+NBz//RnSfdz/SlLMU49zpoyNmXxHocldtoeVP2DOsSrGu5+LBWFo2+VnzmFpWlW6KlV02JImd8wKzRnIO4r6MBfq/R6nRSo3s2joBKV3ww0p01yUJKZIV0rAnSnAvI/3vLVeEZvVaxcHnjKVvvMVR/HAjXsRNxBroMEyyKWy15rDNzqquoL9ty+DHTr9litHSP/YHCrcbT3VfWpEIZrPfTWDSxM+xwTzq+ndJCTjawpvydye/1+5YWNqHVrPnt5pTesZO7fYB2zswPw/yi2g4dbzNVGok
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZR0P278MB0218.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(39850400004)(366004)(376002)(346002)(396003)(136003)(230922051799003)(1800799009)(186009)(64100799003)(451199024)(86362001)(2906002)(5660300002)(38100700002)(6506007)(6486002)(83380400001)(8676002)(8936002)(36756003)(41300700001)(44832011)(6916009)(316002)(66946007)(66556008)(66476007)(2616005)(6512007)(26005)(6666004)(478600001);DIR:OUT;SFP:1102;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB0951
-X-CodeTwo-MessageID: 216b3b55-687c-40bb-be4c-74e015f61773.20231021011059@de2-emailsignatures-cloud.codetwo.com
-X-CodeTwoProcessed: true
-X-EOPAttributedMessage: 1
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AMS0EPF00000195.eurprd05.prod.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
- 919c8cdf-372f-4826-3cad-08dbd1d291ba
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- 3o+hINL3bNNmDfRVXEuy7CfTwMVOkLcxnIHK2VkSnBe0PauE8SiCPXA1LH551YxCNl1MZjA74lMhoQ6li5r0y3dwiEpRyPCHx7AnKTnK784kt8g9EfU5miKUQ3kMnjy+S2mRwLVfrI+/w6MyMpSLvtJDCMwbMw7Zcbv7U/5amnDKs064anoPTai7Lo/ZiwQevfpOhtAGhvwSbXgjA0nx7D/b0d5fjgtqVU6m+2bigR2K7fvyT4QM8lZql4iaXElS2kLxOXwF/++wuosFqq+dx09zFHWpMaocZpi0lkaoo7NsIHur5LoB4KACtG/qgQIE+JqO3qe4cxk5iHnOpguPQbaOAWlxGty1KdCrFgavmq6cBxBv0XR1Qmzwb+R/gdwX8rA8GqpuCgLqkVXNx8EiTF3UbH59ZmQTW//BjSOQoA5sZiQurx1EXeRPYf6QFewBzY9qrjCLMSnyEHDi33WIRPkGZqCmMRnB0UBlHu+qm1mmWSLC8RQerx2hOZPb64giHvdau3j7zwsTVqmGOnbyvgcn3+vUxpqRVx1Kz0DCQYvcE7LPwr2lD73q8fMpM0VrmlFpOkjLGXb0VPfp3kbt0MuzWwSRwDhJKVHaQbTRhmiKHhawQYXZmb3Dlc6EUQ+Q0V3mJM6I2kFAH28ysjHZGn6VtZYINiSz1z2kEfAe5hdwNzFU5p0yURzsVPU7iAUYYukAacucBbyIyLW3hh4IBw==
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:20.79.222.204;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:de2-emailsignatures-cloud.codetwo.com;PTR:de2-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230031)(39850400004)(396003)(376002)(346002)(136003)(230922051799003)(451199024)(1800799009)(186009)(82310400011)(64100799003)(36840700001)(46966006)(6512007)(26005)(6666004)(2616005)(6506007)(6486002)(47076005)(336012)(83380400001)(478600001)(2906002)(70206006)(5660300002)(44832011)(41300700001)(70586007)(8676002)(8936002)(316002)(6916009)(86362001)(7596003)(7636003)(82740400003)(356005)(36860700001)(36756003)(40480700001);DIR:OUT;SFP:1102;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR0P278MB1153
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM4PEPF00027A65.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	ee1c9c33-556d-4660-c73c-08dbd1d296c5
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	JSK1rHT64ds3Bpven6vlm9EZV3++416YkvZDpfWaF/qWIohDwp4moVFDxR9GRPEoIqsPn9vH1yLgGtWk4G8gzg9BWKGhXLmwpmksiCo1o31Zr48T+yj93XjFoPe8TgwsDy6P9Q7FpsnU4IPEW9cDPnuTc1XBAByGHBwppLp9RlzqB+trt0yg7EIzVDouwFu4Uvqb76h5RL5rikpweH1lg71hklrVYR5L28m3rdezf9UAL+PH3H7wRbDspjr2gzcVrtrLM/Hwd23k5XbdczjTMe1NFbu5ypa0TbqeYxXFYuKpwig/87U6PIan5Jw9h72sV/zxTi8qJZekolEybSY+wDusP8WFXRKdYxk6jR2UwLiK5fR3CTb3LwT3oqIkkl9FdzQPFjZkRjIrxZl7RvrFo+hEt8TJELjKUPwL2NgLkSqoBbtX3nJdPdva3PwSpGUgPBNv4D5xHs9pql1WiU4iNig3J4QDDL6PVi3w0vALTQuXUPoqfh5A/BLOT2C8d8AWzZ3qYGLbRWyS6m/5IODsFS5zQyEr2nx4VvWT1nIriEsuNuRNu+2UuIjJmr1zxcbTrLSB2k3g+1h/R7I8UcU12DdWWCkdPTsDxtax3z5dZ+flDJT5aRvWhaUXjEMO0Iwtnx56HPjskhC1YX7wI0kS3OB9NP5pPmr0MGOJS/KHDGv3hTE1EKknazN3yNTeUXkPJ65Diyq5SsnXxGwa1u/6LE4zPOwxrCa4Uc2O0Kl6edlh6os8aeH021XG3GeuIjgw
-X-Forefront-Antispam-Report: 
-	CIP:194.38.86.34;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:securemail.duagon.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(136003)(396003)(346002)(39850400004)(376002)(230922051799003)(82310400011)(1800799009)(186009)(451199024)(64100799003)(36840700001)(46966006)(47076005)(2906002)(336012)(36860700001)(5660300002)(83380400001)(8676002)(44832011)(41300700001)(8936002)(6506007)(26005)(6512007)(2616005)(6666004)(40480700001)(86362001)(36756003)(6916009)(70206006)(70586007)(478600001)(82740400003)(6486002)(316002)(81166007)(36900700001);DIR:OUT;SFP:1102;
-X-OriginatorOrg: duagon.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2023 01:11:05.2033
+X-OriginatorOrg: agilent.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR12MB5430.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 890ccada-c898-4a4b-be08-08dbd3d91016
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2023 15:02:23.3765
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 900f515e-a33b-4397-6eae-08dbd1d299b2
-X-MS-Exchange-CrossTenant-Id: e5e7e96e-8a28-45d6-9093-a40dd5b51a57
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5e7e96e-8a28-45d6-9093-a40dd5b51a57;Ip=[194.38.86.34];Helo=[securemail.duagon.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	AM4PEPF00027A65.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR0P278MB0790
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 379P5nt0F7I4JXn78lPv9MFmb3T91irEndzDSIth1jW2WVOwnX2JJoQscfCstX050pMnUDLPJOPueif3ct4EuhWZxSBeQduUjHCArcpk24E=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4903
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 21 Oct 2023 01:11:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15273
+ <bitbake-devel@lists.openembedded.org>; Mon, 23 Oct 2023 15:02:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15274
 
-Pre-fetching of LFS blobs now also works if a destsuffix parameter is
-supplied.
+>=20
+> Traceback (most recent call last):
+>   File "/home/pokybuild/yocto-worker/musl-
+> qemux86/build/bitbake/bin/bitbake", line 21, in <module>
+>     import bb
+>   File "/home/pokybuild/yocto-worker/musl-
+> qemux86/build/bitbake/lib/bb/__init__.py", line 137, in <module>
+>     import bb.msg
+>   File "/home/pokybuild/yocto-worker/musl-
+> qemux86/build/bitbake/lib/bb/msg.py", line 20, in <module>
+>     import bb.event
+>   File "/home/pokybuild/yocto-worker/musl-
+> qemux86/build/bitbake/lib/bb/event.py", line 23, in <module>
+>     import bb.utils
+>   File "/home/pokybuild/yocto-worker/musl-
+> qemux86/build/bitbake/lib/bb/utils.py", line 1868, in <module>
+>     def ast_node_str_value(node: ast.AST) -> str | None:
+> TypeError: unsupported operand type(s) for |: 'type' and 'NoneType'
+>=20
 
-This also fixes issues with Yocto Kirkstone (and newer) builds, where
-fetching the LFS blobs is retried unsuccessfully during do_unpack, as
-network access is blocked for any task other than do_fetch.
+My mistake, that syntax was introduced in Python 3.10. I will resubmit.
 
-Signed-off-by: Ragesh Nair <ragesh.nair@duagon.com>
----
- lib/bb/fetch2/git.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index c7ed1f03..27a0d051 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -462,8 +462,8 @@ class Git(FetchMethod):
-                 # Only do this if the unpack resulted in a .git/lfs directory being
-                 # created; this only happens if at least one blob needed to be
-                 # downloaded.
--                if os.path.exists(os.path.join(tmpdir, "git", ".git", "lfs")):
--                    runfetchcmd("tar -cf - lfs | tar -xf - -C %s" % ud.clonedir, d, workdir="%s/git/.git" % tmpdir)
-+                if os.path.exists(os.path.join(ud.destdir, ".git", "lfs")):
-+                    runfetchcmd("tar -cf - lfs | tar -xf - -C %s" % ud.clonedir, d, workdir="%s/.git" % ud.destdir)
- 
-     def build_mirror_data(self, ud, d):
- 
--- 
-2.34.1
-
+Thanks,
+Chris
 
