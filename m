@@ -2,64 +2,61 @@ Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E0DC25B67
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE11C25B6B
 	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 14:13:57 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.201364.1698329634920909747
+ by mx.groups.io with SMTP id smtpd.web10.201360.1698329630500664340
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 26 Oct 2023 07:13:55 -0700
+ Thu, 26 Oct 2023 07:13:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=jJhcwfwb;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=x4WFab7s;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 311089C2BD5;
-	Thu, 26 Oct 2023 10:13:54 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id C35F59C279D;
+	Thu, 26 Oct 2023 10:13:49 -0400 (EDT)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id FU88j4mwfkCj; Thu, 26 Oct 2023 10:13:53 -0400 (EDT)
+ with ESMTP id V7fX2epAw0VP; Thu, 26 Oct 2023 10:13:48 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id B28449C2BF6;
-	Thu, 26 Oct 2023 10:13:53 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com B28449C2BF6
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1E74C9C2BD5;
+	Thu, 26 Oct 2023 10:13:48 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 1E74C9C2BD5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1698329633; bh=NzuNxM4wE0OFoYTR7HX2zx3eKx31JlgpCK6zh8E76NU=;
+	t=1698329628; bh=8ym42zoo+WidPdgMhxuC7AtOcHckYkV+n9gQQNFfZuM=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=jJhcwfwb9hwM0VOmBq9a4tvjNPzPZ8LWFYYUkDeWUxZq2rN6Xf5jhnoM5T6y5DcTv
-	 aAOjrMCDvighw7p+XGMmivByfj6nzSm4EWunfoM7oPD8lBm9x6MLwfekcaBPd55h5Z
-	 SbEfzK+W/tilNv7BIvZiHjWs6ESSDNDpqOSMjwaKez5twXLPLa6mFYMF03um25Yh41
-	 bt33p0EirFszS2NxlhtQjGyrnEtO9XAVbRCRrxewwHFRqcmPKfMvDcD+9Xdw67pOoL
-	 D/t8UbH1JgHh8u7e5aDdmN1K1P4zKwHrZScOuxT+D8iAax55+4jJBxO8HgS696ptZ3
-	 UhJFWvjLpHgYQ==
+	b=x4WFab7sh6sCS44zlSF2VPqS/5B6edSwrJAuyuAWbsjZBY4uPQE/a4VaOxs7Y7Ajm
+	 DTIzevYTGZplIDgjIQTld/YWJcAnEVeSW3NFeJ7MEzTY6ThF/w7RynkpjplIkjXV5D
+	 7RLQgM+kTcpLU3mIU9V0xBdu0JSxdfjpXvZpnGaBeSPOZcWyUSgHMb3KWAltk9S/la
+	 4DSn1VBiU9555AWjunBaNFMeKmfXL1LPT/vHeRdKfXM3Af/TKk+Nv0b8VpzzfTa2zR
+	 WyHcz9bvqJjNDqS4Geuq3hVOwsR8SgI0kGMteb4NCMhrWq5wtz10Be2yUSDhg+mDb/
+	 jDipTIbYoMU4g==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id XJGZgontSVSq; Thu, 26 Oct 2023 10:13:53 -0400 (EDT)
+ with ESMTP id GNEJ8p2HwwwK; Thu, 26 Oct 2023 10:13:48 -0400 (EDT)
 Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id B86179C2BD5;
-	Thu, 26 Oct 2023 10:13:52 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 4C3439C279D;
+	Thu, 26 Oct 2023 10:13:47 -0400 (EDT)
 From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Tim Orling <tim.orling@konsulko.com>,
 	Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH v2 3/3] Toaster: Bug-fix logging permission error in docker
-Date: Thu, 26 Oct 2023 15:13:38 +0100
-Message-Id: <20231026141338.800428-3-alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH v2 1/3] Toaster: Bug-fix logging permission error in docker
+Date: Thu, 26 Oct 2023 15:13:36 +0100
+Message-Id: <20231026141338.800428-1-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231026141338.800428-1-alassane.yattara@savoirfairelinux.com>
-References: <20231026141338.800428-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 26 Oct 2023 14:13:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15292
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15290
 
 From: Tim Orling <tim.orling@konsulko.com>
 
-Update toastermain, write logs to BUILDDIR
-Maybe we should use TOASTER_DIR which is set by bin/toaster
+toastermain: use BUILDDIR for logs
 
 Developer: Tim Orling
 Reviewer: Alassane Yattara
@@ -67,41 +64,80 @@ Reviewer: Alassane Yattara
 Signed-off-by: Tim Orling <tim.orling@konsulko.com>
 Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- bitbake/lib/toaster/toastermain/logs.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ bitbake/lib/toaster/toastermain/logs.py     | 10 ++++++----
+ bitbake/lib/toaster/toastermain/settings.py |  5 +++--
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/bitbake/lib/toaster/toastermain/logs.py b/bitbake/lib/toaste=
 r/toastermain/logs.py
-index 573fbef9e5..f8042db165 100644
+index b4910e4432..db5d459f9b 100644
 --- a/bitbake/lib/toaster/toastermain/logs.py
 +++ b/bitbake/lib/toaster/toastermain/logs.py
-@@ -110,7 +110,7 @@ LOGGING_SETTINGS =3D {
+@@ -1,12 +1,14 @@
+ #!/usr/bin/env python3
+ # -*- coding: utf-8 -*-
+=20
++import os
+ import logging
+ import json
+ from pathlib import Path
+ from django.http import HttpRequest
+=20
+-BASE_DIR =3D Path(__file__).resolve(strict=3DTrue).parent.parent
++#BASE_DIR =3D Path(__file__).resolve(strict=3DTrue).parent.parent
++BUILDDIR =3D os.environ.get("BUILDDIR")
+=20
+=20
+ def log_api_request(request, response, view, logger_name=3D'api'):
+@@ -108,7 +110,7 @@ LOGGING_SETTINGS =3D {
          'file_django': {
              'level': 'INFO',
              'class': 'logging.handlers.TimedRotatingFileHandler',
--            'filename': BUILDDIR / 'logs/django.log',
-+            'filename': BUILDDIR / 'toaster_django.log',
+-            'filename': BASE_DIR / 'logs/django.log',
++            'filename': BUILDDIR / 'logs/django.log',
              'when': 'D',  # interval type
              'interval': 1,  # defaults to 1
              'backupCount': 10,  # how many files to keep
-@@ -119,7 +119,7 @@ LOGGING_SETTINGS =3D {
+@@ -117,7 +119,7 @@ LOGGING_SETTINGS =3D {
          'file_api': {
              'level': 'INFO',
              'class': 'logging.handlers.TimedRotatingFileHandler',
--            'filename': BUILDDIR / 'logs/api.log',
-+            'filename': BUILDDIR / 'toaster_api.log',
+-            'filename': BASE_DIR / 'logs/api.log',
++            'filename': BUILDDIR / 'logs/api.log',
              'when': 'D',
              'interval': 1,
              'backupCount': 10,
-@@ -128,7 +128,7 @@ LOGGING_SETTINGS =3D {
+@@ -126,7 +128,7 @@ LOGGING_SETTINGS =3D {
          'file_toaster': {
              'level': 'INFO',
              'class': 'logging.handlers.TimedRotatingFileHandler',
--            'filename': BUILDDIR / 'logs/toaster.log',
-+            'filename': BUILDDIR / 'toaster.log',
+-            'filename': BASE_DIR / 'logs/toaster.log',
++            'filename': BUILDDIR / 'logs/toaster.log',
              'when': 'D',
              'interval': 1,
              'backupCount': 10,
+diff --git a/bitbake/lib/toaster/toastermain/settings.py b/bitbake/lib/to=
+aster/toastermain/settings.py
+index b083cf5885..50b873cb49 100644
+--- a/bitbake/lib/toaster/toastermain/settings.py
++++ b/bitbake/lib/toaster/toastermain/settings.py
+@@ -316,12 +316,13 @@ for t in os.walk(os.path.dirname(currentdir)):
+ LOGGING =3D LOGGING_SETTINGS
+=20
+ # Build paths inside the project like this: BASE_DIR / 'subdir'.
+-BASE_DIR =3D Path(__file__).resolve(strict=3DTrue).parent.parent
++#BASE_DIR =3D Path(__file__).resolve(strict=3DTrue).parent.parent
++BUILDDIR =3D os.environ.get("BUILDDIR")
+=20
+ # LOG VIEWER
+ # https://pypi.org/project/django-log-viewer/
+ LOG_VIEWER_FILES_PATTERN =3D '*.log*'
+-LOG_VIEWER_FILES_DIR =3D os.path.join(BASE_DIR, 'logs')
++LOG_VIEWER_FILES_DIR =3D os.path.join(BUILDDIR, 'logs')
+ LOG_VIEWER_PAGE_LENGTH =3D 25      # total log lines per-page
+ LOG_VIEWER_MAX_READ_LINES =3D 100000  # total log lines will be read
+ LOG_VIEWER_PATTERNS =3D ['INFO', 'DEBUG', 'WARNING', 'ERROR', 'CRITICAL'=
+]
 --=20
 2.34.1
 
