@@ -1,210 +1,240 @@
-Return-Path: <alassane.yattara@savoirfairelinux.com>
+Return-Path: <dburns@seegrid.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66DCC25B48
-	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 18:42:48 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.208704.1698345764923687305
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F84C25B6B
+	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 19:08:39 +0000 (UTC)
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+ by mx.groups.io with SMTP id smtpd.web11.79823.1698347312091294108
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 26 Oct 2023 11:42:46 -0700
+ Thu, 26 Oct 2023 12:08:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=eBdwC4d4;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 84DB29C296F;
-	Thu, 26 Oct 2023 14:42:43 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id oIv2adINVduc; Thu, 26 Oct 2023 14:42:42 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 993489C29B3;
-	Thu, 26 Oct 2023 14:42:42 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 993489C29B3
+ dkim=pass header.i=@seegrid.com header.s=google header.b=ceGaaDHZ;
+ spf=permerror, err=parse error for token &{10 18 _spf.google.com}: parse error for token &{10 18 _netblocks.google.com}: limit exceeded (domain: seegrid.com, ip: 209.85.219.43, mailfrom: dburns@seegrid.com)
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-66d32cc3957so2715046d6.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 26 Oct 2023 12:08:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1698345762; bh=nW9TyFpYGOLU8EGLfqJWMjjndGP6xNIUm7f/dh0Ahow=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=eBdwC4d4WmJLBssBQrqfQEjuRriINmXyTPwebsGMmxKhkovaHiYgvYCf6u0RyBPqT
-	 MIz6yAP6YsOZfsfxkyaN2X2W1eXXE7fLqiwwGIRNgCnj27BU8+euhdpabG0qP2zcZs
-	 S3WIwKj4x9cv5h857h15pZz0jIIJTpNwXjTvNkA3pOjCTFpSsjewNwqIRJ49zmjSVd
-	 K2zwceS7iEo2syQaJA5AV8n9Gv6jwfHrYMsIKDueKukQ4743KiFXupcGdV6hSY+RgN
-	 Hu+E6lWoyeWKOMK9esjxfU92xY5u51iWNH0mUjb93KcFPNcsZY+HCMmCuB3W6ZxRZM
-	 ay1nYbpEqLfDw==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id f-ZTtR5MvsJB; Thu, 26 Oct 2023 14:42:42 -0400 (EDT)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 7FFF49C296F;
-	Thu, 26 Oct 2023 14:42:42 -0400 (EDT)
-Date: Thu, 26 Oct 2023 14:42:42 -0400 (EDT)
-From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-To: Tim Orling <ticotimo@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
-	toaster <toaster@lists.yoctoproject.org>, 
-	Tim Orling <tim.orling@konsulko.com>
-Message-ID: <1501491700.143675.1698345762204.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <CANx9H-B_VfuVxHqK7F3M7+zy1OH0Thv41ZAZHCXUn_Nttpof9g@mail.gmail.com>
-References: <1791B341DCBB88FE.20272@lists.yoctoproject.org> <CANx9H-B_VfuVxHqK7F3M7+zy1OH0Thv41ZAZHCXUn_Nttpof9g@mail.gmail.com>
-Subject: Re: [Toaster] [PATCH] toaster: write logs to BUILDDIR
+        d=seegrid.com; s=google; t=1698347311; x=1698952111; darn=lists.openembedded.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ueQcMCRxdhJsoWlTGZcIzror17hXvQidsGRMCYym/hE=;
+        b=ceGaaDHZReZISNxbeKpMiJEXwcdrIxrAmzeMoM3moka+72O+3OSpHp7G+IKwvPH5wX
+         /GoGTMEDhSlm9h4AcSC6/13Dm/pp0JznX5FwhAoOmggXak4uLe0dMMQmpNX2HAOoiyQG
+         qXDAlXxDVS/UBfngWLrJiG3N5s2SybFh+i6tI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698347311; x=1698952111;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ueQcMCRxdhJsoWlTGZcIzror17hXvQidsGRMCYym/hE=;
+        b=uuHFWwk7H53ZvSqjKTGDPO0hCnzpHBKDaHXH8O6Ktv9j7EcRNJv39LtjWr7ZrbcCOY
+         6QI0C/KaqyRQnK7br2RobeOks4ZzULarjoqNCEd7KRoAxaCLK6xk1zrBpdpkoJkhiz0k
+         ExwKfEVgXeLm/GzDOwNON2GzeCnr04KxyPThBecKyX7f20iOPRznU8ZAgcUt7Kdc6GCH
+         +5zRZMMjx60xQWqaikjqVW6z2Y32IVgILL6rWwuzO+jWaB1wNUyC0B+feoiIhvUG0KRf
+         CuuOpFLeFW3C1y61XsDRwOSjM4zOkJtMwS6U0n29Lbcm6C8jsc6Sd0KilYoQPkxFUkbu
+         mGlQ==
+X-Gm-Message-State: AOJu0YzGtWhQBnRFUR/mParA1QEeTotGl01PC3dWV7IKGVBwz5rpVyF4
+	Y9YxNyMSyPhyl9/SxfnO4hQR5kL8jBLK/2l8wsiivNCI0GVSPBSBTDcfQQ==
+X-Google-Smtp-Source: AGHT+IGZYNTd1Ha2A3Rp4fzhGVs3fYOrj82aPJrv7syDlWrloxaObEaESupYP0+2PI8iLZnqaRIYrmzVAcy0tf+krEg=
+X-Received: by 2002:a05:6214:5691:b0:66d:1012:c16a with SMTP id
+ qm17-20020a056214569100b0066d1012c16amr595322qvb.1.1698347310905; Thu, 26 Oct
+ 2023 12:08:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Desone Burns <dburns@seegrid.com>
+Date: Thu, 26 Oct 2023 15:08:20 -0400
+Message-ID: <CAJZje+twx_dTXN-fwJA604NR6ELcensg63VOk1QJVELAGBpgPQ@mail.gmail.com>
+Subject: [PATCH v2] bitbake: fetch2: git: Add git-lfs install step
+To: bitbake-devel@lists.openembedded.org, Joseph Chafin <jchafin@seegrid.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.15_GA_4562 (ZimbraWebClient - GC117 (Linux)/8.8.15_GA_4570)
-Thread-Topic: toaster: write logs to BUILDDIR
-Thread-Index: FJduF9ij4WmSK0HIMfJvWhWQpzg9+g==
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 26 Oct 2023 18:42:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15297
+ <bitbake-devel@lists.openembedded.org>; Thu, 26 Oct 2023 19:08:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15298
 
-Tim,
+When downloading a Git repository containing an LFS, the Git hooks
+are not always initialized correctly to perform the download. This
+change updates the Git downloader to run the "git lfs install" command
+in order to "smudge" the LFS files. The tests have also been updated
+to do checks for situations in which git lfs is not installed, as
+the application was required to be installed for any of the tests
+to run previously.
 
-Normaly when you visit some pages, this action create and logs inside files=
- toaster.logs etc, in build/ dir.
+The Git LFS functionality was working to some degree previously,
+but this change also updates the fetcher to allow LFS downloads for
+nobranch SRC_URIs.
 
-I suppose issue is because BUILDDIR is empty, yes i got nothing when i $ech=
-o $BUILDDIR inside the container
+Signed-off-by: Desone Burns II <dburns@seegrid.com>
+---
+ bitbake/lib/bb/fetch2/git.py  | 14 ++++++--
+ bitbake/lib/bb/tests/fetch.py | 61 ++++++++++++++++++++---------------
+ 2 files changed, 47 insertions(+), 28 deletions(-)
 
------ Mail original -----
-De: "Tim Orling" <ticotimo@gmail.com>
-=C3=80: "alassane yattara" <alassane.yattara@savoirfairelinux.com>
-Cc: "bitbake-devel" <bitbake-devel@lists.openembedded.org>, "toaster" <toas=
-ter@lists.yoctoproject.org>, "Tim Orling" <tim.orling@konsulko.com>
-Envoy=C3=A9: Jeudi 26 Octobre 2023 18:54:13
-Objet: Re: [Toaster] [PATCH] toaster: write logs to BUILDDIR
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 27a0d05144..5fb573a381 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -52,6 +52,11 @@ Supported SRC_URI options are:
+    For local git:// urls to use the current branch HEAD as the
+revision for use with
+    AUTOREV. Implies nobranch.
 
-Allassane,
++- lfs
++    Enable the checkout to use LFS for large files. This will
+download all LFS files
++    in the download step, as the unpack step does not have network access.
++    The default is "1", set lfs=3D0 to skip.
++
+ """
 
-At least when running in the toaster-container, I'm seeing no logs, but
-links like "conf/toaster_api.log", but that file doesn't exist and is not
-downloadable.
+ # Copyright (C) 2005 Richard Purdie
+@@ -629,6 +634,8 @@ class Git(FetchMethod):
+                 raise bb.fetch2.FetchError("Repository %s has LFS
+content, install git-lfs on host to download (or set lfs=3D0 to ignore
+it)" % (repourl))
+             elif not need_lfs:
+                 bb.note("Repository %s has LFS content but it is not
+being fetched" % (repourl))
++            else:
++                runfetchcmd("%s lfs install" % ud.basecmd, d, workdir=3Dde=
+stdir)
 
-I tried a couple other changes on:
-https://git.yoctoproject.org/poky-contrib/log/?h=3Dtimo/toaster-logging-v3
-(one of which was present in your series earlier today).
+         if not ud.nocheckout:
+             if subpath:
+@@ -688,8 +695,11 @@ class Git(FetchMethod):
+         Check if the repository has 'lfs' (large file) content
+         """
 
-But I don't have experience with the log_viewer plugin and I'm not sure
-what is happening to cause the "conf/" to be prepended to the log links in
-the admin interface.
+-        # The bare clonedir doesn't use the remote names; it has the
+branch immediately.
+-        if wd =3D=3D ud.clonedir:
++        if ud.nobranch:
++            # If no branch is specified, use the current git commit
++            refname =3D self._build_revision(ud, d, ud.names[0])
++        elif wd =3D=3D ud.clonedir:
++            # The bare clonedir doesn't use the remote names; it has
+the branch immediately.
+             refname =3D ud.branches[ud.names[0]]
+         else:
+             refname =3D "origin/%s" % ud.branches[ud.names[0]]
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index 0e806c0ff7..c7a23407c1 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -2277,7 +2277,7 @@ class GitLfsTest(FetcherTest):
 
-On Thu, Oct 26, 2023 at 8:53=E2=80=AFAM Tim Orling via lists.yoctoproject.o=
-rg
-<ticotimo=3Dgmail.com@lists.yoctoproject.org> wrote:
+     @skipIfNoGitLFS()
+     @skipIfNoNetwork()
+-    def test_real_git_lfs_repo_succeeds(self):
++    def test_real_git_lfs_repo_skips(self):
+         self.d.setVar('SRC_URI',
+"git://gitlab.com/gitlab-examples/lfs.git;protocol=3Dhttps;branch=3Dmaster;=
+lfs=3D0")
+         f =3D self.get_real_git_lfs_file()
+         # This is the actual non-smudged placeholder file on the repo
+if git-lfs does not run
+@@ -2290,24 +2290,41 @@ class GitLfsTest(FetcherTest):
+         with open(f) as fh:
+             self.assertEqual(lfs_file, fh.read())
 
-> Fixes "2efb14648 toaster: Monitoring - implement Django logging system"
-> when
-> running in a container.
->
-> When running in a container, the previous approach of using BASE_DIR
-> is not a writable path. Also, we really do not want to be writing logs in=
-to
-> the source tree, as the BASE_DIR was resolving to bitbake/lib/toaster/log=
-s
->
-> Since Toaster is only ever running in an environment where oe-init-builde=
-nv
-> or similar has been sourced, we should instead write the logs to BUILDDIR=
-.
-> This is where the existing toaster_ui.log was already being written.
->
-> Drop the /logs/ directory, as it has not been created which also breaks
-> in a container environment. Instead, prepend the api.log, etc. with
-> "toaster_"
-> and write them alongside the existing toaster_ui.log
->
-> Signed-off-by: Tim Orling <tim.orling@konsulko.com>
-> ---
->  lib/toaster/toastermain/logs.py     | 9 +++++----
->  lib/toaster/toastermain/settings.py | 7 ++++---
->  2 files changed, 9 insertions(+), 7 deletions(-)
->
-> diff --git a/lib/toaster/toastermain/logs.py
-> b/lib/toaster/toastermain/logs.py
-> index b4910e443..5a296bc3f 100644
-> --- a/lib/toaster/toastermain/logs.py
-> +++ b/lib/toaster/toastermain/logs.py
-> @@ -1,12 +1,13 @@
->  #!/usr/bin/env python3
->  # -*- coding: utf-8 -*-
->
-> +import os
->  import logging
->  import json
->  from pathlib import Path
->  from django.http import HttpRequest
->
-> -BASE_DIR =3D Path(__file__).resolve(strict=3DTrue).parent.parent
-> +BUILDDIR =3D Path(os.environ.get('BUILDDIR'))
->
->
->  def log_api_request(request, response, view, logger_name=3D'api'):
-> @@ -108,7 +109,7 @@ LOGGING_SETTINGS =3D {
->          'file_django': {
->              'level': 'INFO',
->              'class': 'logging.handlers.TimedRotatingFileHandler',
-> -            'filename': BASE_DIR / 'logs/django.log',
-> +            'filename': BUILDDIR / 'toaster_django.log',
->              'when': 'D',  # interval type
->              'interval': 1,  # defaults to 1
->              'backupCount': 10,  # how many files to keep
-> @@ -117,7 +118,7 @@ LOGGING_SETTINGS =3D {
->          'file_api': {
->              'level': 'INFO',
->              'class': 'logging.handlers.TimedRotatingFileHandler',
-> -            'filename': BASE_DIR / 'logs/api.log',
-> +            'filename': BUILDDIR / 'toaster_api.log',
->              'when': 'D',
->              'interval': 1,
->              'backupCount': 10,
-> @@ -126,7 +127,7 @@ LOGGING_SETTINGS =3D {
->          'file_toaster': {
->              'level': 'INFO',
->              'class': 'logging.handlers.TimedRotatingFileHandler',
-> -            'filename': BASE_DIR / 'logs/toaster.log',
-> +            'filename': BUILDDIR / 'toaster.log',
->              'when': 'D',
->              'interval': 1,
->              'backupCount': 10,
-> diff --git a/lib/toaster/toastermain/settings.py
-> b/lib/toaster/toastermain/settings.py
-> index b083cf588..c65f4b630 100644
-> --- a/lib/toaster/toastermain/settings.py
-> +++ b/lib/toaster/toastermain/settings.py
-> @@ -315,13 +315,14 @@ for t in os.walk(os.path.dirname(currentdir)):
->  # more details on how to customize your logging configuration.
->  LOGGING =3D LOGGING_SETTINGS
->
-> -# Build paths inside the project like this: BASE_DIR / 'subdir'.
-> -BASE_DIR =3D Path(__file__).resolve(strict=3DTrue).parent.parent
-> +# Rather than using BASE_DIR inside the source tree, we use
-> +# BUILDDIR which is exported by the bitbake environment
-> +BUILDDIR =3D os.environ.get("BUILDDIR")
->
->  # LOG VIEWER
->  # https://pypi.org/project/django-log-viewer/
->  LOG_VIEWER_FILES_PATTERN =3D '*.log*'
-> -LOG_VIEWER_FILES_DIR =3D os.path.join(BASE_DIR, 'logs')
-> +LOG_VIEWER_FILES_DIR =3D BUILDDIR
->  LOG_VIEWER_PAGE_LENGTH =3D 25      # total log lines per-page
->  LOG_VIEWER_MAX_READ_LINES =3D 100000  # total log lines will be read
->  LOG_VIEWER_PATTERNS =3D ['INFO', 'DEBUG', 'WARNING', 'ERROR', 'CRITICAL'=
-]
-> --
-> 2.34.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#5896):
-> https://lists.yoctoproject.org/g/toaster/message/5896
-> Mute This Topic: https://lists.yoctoproject.org/mt/102202795/924729
-> Group Owner: toaster+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/toaster/unsub [
-> ticotimo@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
++    @skipIfNoGitLFS()
+     def test_lfs_enabled(self):
+         import shutil
+
+         uri =3D 'git://%s;protocol=3Dfile;lfs=3D1;branch=3Dmaster' % self.=
+srcdir
+         self.d.setVar('SRC_URI', uri)
+
+-        # Careful: suppress initial attempt at downloading until
+-        # we know whether git-lfs is installed.
+-        fetcher, ud =3D self.fetch(uri=3DNone, download=3DFalse)
+-        self.assertIsNotNone(ud.method._find_git_lfs)
++        # With git-lfs installed, test that we can fetch and unpack
++        fetcher, ud =3D self.fetch()
++        shutil.rmtree(self.gitdir, ignore_errors=3DTrue)
++        fetcher.unpack(self.d.getVar('WORKDIR'))
+
+-        # If git-lfs can be found, the unpack should be successful. Only
+-        # attempt this with the real live copy of git-lfs installed.
+-        if ud.method._find_git_lfs(self.d):
+-            fetcher.download()
+-            shutil.rmtree(self.gitdir, ignore_errors=3DTrue)
+-            fetcher.unpack(self.d.getVar('WORKDIR'))
++    @skipIfNoGitLFS()
++    def test_lfs_disabled(self):
++        import shutil
++
++        uri =3D 'git://%s;protocol=3Dfile;lfs=3D0;branch=3Dmaster' % self.=
+srcdir
++        self.d.setVar('SRC_URI', uri)
+
++        # Verify that the fetcher can survive even if the source
++        # repository has Git LFS usage configured.
++        fetcher, ud =3D self.fetch()
++        fetcher.unpack(self.d.getVar('WORKDIR'))
++
++    def test_lfs_enabled_not_installed(self):
++        import shutil
++
++        uri =3D 'git://%s;protocol=3Dfile;lfs=3D1;branch=3Dmaster' % self.=
+srcdir
++        self.d.setVar('SRC_URI', uri)
++
++        # Careful: suppress initial attempt at downloading
++        fetcher, ud =3D self.fetch(uri=3DNone, download=3DFalse)
++
++        # Artificially assert that git-lfs is not installed, so
++        # we can verify a failure to unpack in it's absence.
+         old_find_git_lfs =3D ud.method._find_git_lfs
+         try:
+             # If git-lfs cannot be found, the unpack should throw an error
+@@ -2319,29 +2336,21 @@ class GitLfsTest(FetcherTest):
+         finally:
+             ud.method._find_git_lfs =3D old_find_git_lfs
+
+-    def test_lfs_disabled(self):
++    def test_lfs_disabled_not_installed(self):
+         import shutil
+
+         uri =3D 'git://%s;protocol=3Dfile;lfs=3D0;branch=3Dmaster' % self.=
+srcdir
+         self.d.setVar('SRC_URI', uri)
+
+-        # In contrast to test_lfs_enabled(), allow the implicit download
+-        # done by self.fetch() to occur here. The point of this test case
+-        # is to verify that the fetcher can survive even if the source
+-        # repository has Git LFS usage configured.
+-        fetcher, ud =3D self.fetch()
+-        self.assertIsNotNone(ud.method._find_git_lfs)
++        # Careful: suppress initial attempt at downloading
++        fetcher, ud =3D self.fetch(uri=3DNone, download=3DFalse)
+
++        # Artificially assert that git-lfs is not installed, so
++        # we can verify a failure to unpack in it's absence.
+         old_find_git_lfs =3D ud.method._find_git_lfs
+         try:
+-            # If git-lfs can be found, the unpack should be successful. A
+-            # live copy of git-lfs is not required for this case, so
+-            # unconditionally forge its presence.
+-            ud.method._find_git_lfs =3D lambda d: True
+-            shutil.rmtree(self.gitdir, ignore_errors=3DTrue)
+-            fetcher.unpack(self.d.getVar('WORKDIR'))
+-            # If git-lfs cannot be found, the unpack should be successful
+-
++            # Even if git-lfs cannot be found, the unpack should be succes=
+sful
++            fetcher.download()
+             ud.method._find_git_lfs =3D lambda d: False
+             shutil.rmtree(self.gitdir, ignore_errors=3DTrue)
+             fetcher.unpack(self.d.getVar('WORKDIR'))
+--=20
+2.25.1
+
+
+--=20
+Desone Burns II
+Software Engineer III
+seegrid.com  =E2=80=A2  412-379-4500
+m: 623-258-7361
 
