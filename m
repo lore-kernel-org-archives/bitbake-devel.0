@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D32C001B0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B93C4167D
 	for <webhook@archiver.kernel.org>; Mon, 30 Oct 2023 19:18:24 +0000 (UTC)
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
- by mx.groups.io with SMTP id smtpd.web11.158506.1698693504177610665
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+ by mx.groups.io with SMTP id smtpd.web11.158499.1698693495870590823
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Oct 2023 12:18:24 -0700
+ Mon, 30 Oct 2023 12:18:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=U/A7i01V;
- spf=pass (domain: gmail.com, ip: 209.85.210.46, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6ce2c5b2154so3204574a34.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 12:18:24 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=mln3jYdp;
+ spf=pass (domain: gmail.com, ip: 209.85.210.47, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6cd33d51852so3338734a34.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 12:18:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698693503; x=1699298303; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1698693494; x=1699298294; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Zo93hmXviq3GO3T30OQUviOfJN4dY8uKv3CaLZSIZTQ=;
-        b=U/A7i01VhOqOORzMWqr6m5//u4aK9Eo47myNlwIli3nmNULaE6BbBTcPqX1pg5OikL
-         Qy3WwI+Hj0Xr5wN3rQR9pSPfxr3WxLZzLMfwMyjG30zLtq2Ch691CnKR+yec55sB8zNf
-         j0Evh7yMZuh6JyWZp8hByNq1FMdMcEllQdw13oyGH86Vjz0nSpNikq+WS1CKhjjzU39B
-         t4XKi10eKmiUJuHCYtovIAtV0mGiP+VCHNNqfTCgzjdy8kebV0I0l/Q1NcDRzsshWWvG
-         nrpxc/Zab7WzvDcMgVzxVVVGvKE5s8mnb1tMZEmjKjnknK34PChvlU9XNkWAWMJFwF74
-         E+cA==
+        bh=4XgxxU3VW5xXLq9wLhPYxLaZh2B/Nc+SXIjCtknIZMg=;
+        b=mln3jYdpTF/8M8ADqo8Hk6VmCnH+wQQuEJB8AP6Ea0Q6hVil2bpEt246lCc0D50Ssx
+         c/fDrrmIS5uRmzMWNX0F+FWkBpu7Eaxpx1p48BCyJPeZ74nKbNtqQXUbHqFIcU8a1qYH
+         +8K0p2YanBl4MUBHwcW4ACVhOogoUW7UdUocmFv0hilBJLE/Rggldj+i7p8ycV24oU14
+         37j+O93EaMXOguc/VrgFrldZElxzc9OxB+rYYxlqNSL/u3fR/gU+XBtWbcc0/NUYeh8a
+         jg1FEe1Zq6TCoLHUuH37RykBmMBXyysw/jxbFongOH5fOAqXZbNur85Q29OlZPCpsZri
+         0kGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698693503; x=1699298303;
+        d=1e100.net; s=20230601; t=1698693494; x=1699298294;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Zo93hmXviq3GO3T30OQUviOfJN4dY8uKv3CaLZSIZTQ=;
-        b=ap+z7P0K2Mi/bHhZf63HH32x37o290E6zRBvLE7Slpvu0wVKLQgJbdsB9sOO1Jm9Bu
-         MMW6Ov7afCPABWBX0+oriUkqIKEZf2TBpbIwpFsMUt+MX7Rt9WnacVGiHuTIO7+In0go
-         cy76C24LZBfhxWkxXKbRc43qkhrTFlDHnFzgKiBXw54nidyLX0/lU7cp8OW7Cf+uj1Wc
-         6zcnSSdLaVSvzEaFfaX8SQ70I1qOXSf+d3lZXhZ58YpG1CrayFROo5TVuNac43BZTWN5
-         0K3fI57n065rmFbSEZkeI56Qt+buywrCi9Dxdx2iI7GBIRubPFyV9SmPFDMCyWXd8J8H
-         4hyQ==
-X-Gm-Message-State: AOJu0YztvB8O+nxA9oUAnrN/XB4L9KHATHyH7ZdhWcV4K2qSEDAIodjp
-	R7f/9EORxZv3D+PER+2N6bNIzW+4190=
-X-Google-Smtp-Source: AGHT+IFI6DV+aPLdqRgpCAN2FS3EHVm02YEIGjjho+BXk8sA9gJKncD/8cbKdLpN2DGWcwFqgnFzgQ==
-X-Received: by 2002:a05:6830:4103:b0:6bf:1f5f:ed18 with SMTP id w3-20020a056830410300b006bf1f5fed18mr13920341ott.1.1698693502956;
-        Mon, 30 Oct 2023 12:18:22 -0700 (PDT)
+        bh=4XgxxU3VW5xXLq9wLhPYxLaZh2B/Nc+SXIjCtknIZMg=;
+        b=ugJ29aaa68ESF/ZIRr/vq5VRa08vntgC66PEw2QqRtLnZQQy/bzwG9wY4D96JOnaO2
+         TwxJezAivQ4d1OVgz3+ON8ny2Y/XRT2wkXTnUtq4MtNfE3x01THZBKfDNbfR4UufOVON
+         kQOSn6/kz9rASnZ0XFOvii+ikpcuBzKt3kB20hDzY6FiCv3nzrrc+TO6kf9lXby9J1x7
+         Hn61AHj9Mz/B9GGiusdCtbXinqS5AgfTJNF7IE+mgByE1MqN3+bxndU343wA1ftW7qjX
+         wyXk3OVHwclS6ChAscglJaY2on3lvvi8S1Rm8jAOcbefIEaoxz++mg6wToIDnzTb3bKl
+         4JEA==
+X-Gm-Message-State: AOJu0YxYGuzjL7q48RgFkOWwankzEBEdwZXwCgBTfrNlxWAeWaLPzES+
+	XVy7KQHXMP2ZaXKj4uP0EZsmCBZj/Mw=
+X-Google-Smtp-Source: AGHT+IGTGD6BhGDh4hpWIB3S/uhAS5V9SZcf09breu/z8N2gyY76yQ2MXLWv8ErZ1USOEAG4/drz/Q==
+X-Received: by 2002:a05:6830:3149:b0:6c4:be02:635f with SMTP id c9-20020a056830314900b006c4be02635fmr12713518ots.5.1698693494490;
+        Mon, 30 Oct 2023 12:18:14 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::6aa6])
-        by smtp.gmail.com with ESMTPSA id l38-20020a0568302b2600b006cd099bb052sm1510500otv.1.2023.10.30.12.18.21
+        by smtp.gmail.com with ESMTPSA id l38-20020a0568302b2600b006cd099bb052sm1510500otv.1.2023.10.30.12.18.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Oct 2023 12:18:22 -0700 (PDT)
+        Mon, 30 Oct 2023 12:18:13 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v3 22/22] hashserv: server: Add owner if user is logged in
-Date: Mon, 30 Oct 2023 13:17:28 -0600
-Message-Id: <20231030191728.1276805-23-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v3 16/22] hashserv: Add database column query API
+Date: Mon, 30 Oct 2023 13:17:22 -0600
+Message-Id: <20231030191728.1276805-17-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231030191728.1276805-1-JPEWhacker@gmail.com>
 References: <20231012221655.632637-1-JPEWhacker@gmail.com>
@@ -63,50 +63,144 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 19:18:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15324
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15318
 
-If a user is authenticated with the server, report them as the owner of
-a report
+Adds an API to retrieve the columns that can be queried on from the
+database backend. This prevents front end applications from needing to
+hardcode the query columns
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/hashserv/server.py | 3 +++
- lib/hashserv/tests.py  | 9 +++++++++
- 2 files changed, 12 insertions(+)
+ bin/bitbake-hashclient     |  7 +++++++
+ lib/hashserv/client.py     |  5 +++++
+ lib/hashserv/server.py     |  5 +++++
+ lib/hashserv/sqlalchemy.py | 10 ++++++++++
+ lib/hashserv/sqlite.py     |  7 +++++++
+ lib/hashserv/tests.py      |  8 ++++++++
+ 6 files changed, 42 insertions(+)
 
+diff --git a/bin/bitbake-hashclient b/bin/bitbake-hashclient
+index 5d65c7bc..58aa02ee 100755
+--- a/bin/bitbake-hashclient
++++ b/bin/bitbake-hashclient
+@@ -174,6 +174,10 @@ def main():
+         total_rows = sum(t["rows"] for t in usage.values())
+         print(f"Total rows: {total_rows}")
+ 
++    def handle_get_db_query_columns(args, client):
++        columns = client.get_db_query_columns()
++        print("\n".join(sorted(columns)))
++
+     parser = argparse.ArgumentParser(description='Hash Equivalence Client')
+     parser.add_argument('--address', default=DEFAULT_ADDRESS, help='Server address (default "%(default)s")')
+     parser.add_argument('--log', default='WARNING', help='Set logging level')
+@@ -239,6 +243,9 @@ def main():
+     db_usage_parser = subparsers.add_parser('get-db-usage', help="Database Usage")
+     db_usage_parser.set_defaults(func=handle_get_db_usage)
+ 
++    db_query_columns_parser = subparsers.add_parser('get-db-query-columns', help="Show columns that can be used in database queries")
++    db_query_columns_parser.set_defaults(func=handle_get_db_query_columns)
++
+     args = parser.parse_args()
+ 
+     logger = logging.getLogger('hashserv')
+diff --git a/lib/hashserv/client.py b/lib/hashserv/client.py
+index 0fda376f..bdf60f86 100644
+--- a/lib/hashserv/client.py
++++ b/lib/hashserv/client.py
+@@ -198,6 +198,10 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         await self._set_mode(self.MODE_NORMAL)
+         return (await self.invoke({"get-db-usage": {}}))["usage"]
+ 
++    async def get_db_query_columns(self):
++        await self._set_mode(self.MODE_NORMAL)
++        return (await self.invoke({"get-db-query-columns": {}}))["columns"]
++
+ 
+ class Client(bb.asyncrpc.Client):
+     def __init__(self, username=None, password=None):
+@@ -227,6 +231,7 @@ class Client(bb.asyncrpc.Client):
+             "delete_user",
+             "become_user",
+             "get_db_usage",
++            "get_db_query_columns",
+         )
+ 
+     def _get_async_client(self):
 diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index 5362457e..0c11e37b 100644
+index 0e36d13c..3bbcfcf2 100644
 --- a/lib/hashserv/server.py
 +++ b/lib/hashserv/server.py
-@@ -474,6 +474,9 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-             if k in data:
-                 outhash_data[k] = data[k]
+@@ -250,6 +250,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+                 "get-stream": self.handle_get_stream,
+                 "get-stats": self.handle_get_stats,
+                 "get-db-usage": self.handle_get_db_usage,
++                "get-db-query-columns": self.handle_get_db_query_columns,
+                 # Not always read-only, but internally checks if the server is
+                 # read-only
+                 "report": self.handle_report,
+@@ -571,6 +572,10 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+     async def handle_get_db_usage(self, request):
+         return {"usage": await self.db.get_usage()}
  
-+        if self.user:
-+            outhash_data["owner"] = self.user.username
++    @permissions(DB_ADMIN_PERM)
++    async def handle_get_db_query_columns(self, request):
++        return {"columns": await self.db.get_query_columns()}
 +
-         # Insert the new entry, unless it already exists
-         if await self.db.insert_outhash(outhash_data):
-             # If this row is new, check if it is equivalent to another
+     # The authentication API is always allowed
+     async def handle_auth(self, request):
+         username = str(request["username"])
+diff --git a/lib/hashserv/sqlalchemy.py b/lib/hashserv/sqlalchemy.py
+index 818b5195..cee04bff 100644
+--- a/lib/hashserv/sqlalchemy.py
++++ b/lib/hashserv/sqlalchemy.py
+@@ -415,3 +415,13 @@ class Database(object):
+                 }
+ 
+         return usage
++
++    async def get_query_columns(self):
++        columns = set()
++        for table in (UnihashesV2, OuthashesV2):
++            for c in table.__table__.columns:
++                if not isinstance(c.type, Text):
++                    continue
++                columns.add(c.key)
++
++        return list(columns)
+diff --git a/lib/hashserv/sqlite.py b/lib/hashserv/sqlite.py
+index e9ef38a1..f5c451f4 100644
+--- a/lib/hashserv/sqlite.py
++++ b/lib/hashserv/sqlite.py
+@@ -382,3 +382,10 @@ class Database(object):
+                     "rows": cursor.fetchone()[0],
+                 }
+         return usage
++
++    async def get_query_columns(self):
++        columns = set()
++        for name, typ, _ in UNIHASH_TABLE_DEFINITION + OUTHASH_TABLE_DEFINITION:
++            if typ.startswith("TEXT"):
++                columns.add(name)
++        return list(columns)
 diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index f0be8679..a9e6fdf9 100644
+index 9d5bec24..fc69acaf 100644
 --- a/lib/hashserv/tests.py
 +++ b/lib/hashserv/tests.py
-@@ -828,6 +828,15 @@ class HashEquivalenceCommonTests(object):
-         for col in columns:
-             self.client.remove({col: ""})
+@@ -776,6 +776,14 @@ class HashEquivalenceCommonTests(object):
+             self.assertIn("rows", usage[name])
+             self.assertTrue(isinstance(usage[name]["rows"], int))
  
-+    def test_auth_is_owner(self):
-+        admin_client = self.start_auth_server()
++    def test_get_db_query_columns(self):
++        columns = self.client.get_db_query_columns()
 +
-+        user = self.create_user("test-user", ["@read", "@report"])
-+        with self.auth_client(user) as client:
-+            taskhash, outhash, unihash = self.create_test_hash(client)
-+            data = client.get_taskhash(self.METHOD, taskhash, True)
-+            self.assertEqual(data["owner"], user["username"])
++        self.assertTrue(isinstance(columns, list))
++        self.assertTrue(len(columns) > 0)
 +
++        for col in columns:
++            self.client.remove({col: ""})
  
- class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
+ class TestHashEquivalenceUnixServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
      def get_server_addr(self, server_idx):
 -- 
 2.34.1
