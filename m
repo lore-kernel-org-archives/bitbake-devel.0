@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0CAC4167B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5272EC4708E
 	for <webhook@archiver.kernel.org>; Mon, 30 Oct 2023 19:18:24 +0000 (UTC)
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
- by mx.groups.io with SMTP id smtpd.web11.158505.1698693502863020017
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+ by mx.groups.io with SMTP id smtpd.web11.158501.1698693499927064155
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Oct 2023 12:18:22 -0700
+ Mon, 30 Oct 2023 12:18:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=eijR83QY;
- spf=pass (domain: gmail.com, ip: 209.85.210.41, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6ce31c4a653so3250248a34.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 12:18:22 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=iW97Zj5x;
+ spf=pass (domain: gmail.com, ip: 209.85.210.48, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6ce37683cf6so3333448a34.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 12:18:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698693501; x=1699298301; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1698693498; x=1699298298; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y3oSLM8FoWJdRGxDajV2BJx8pDQU3/Qx5klaEYYXV5o=;
-        b=eijR83QYVQ8VIefU0vc37pefPVJ+zKI20Pla+JQ6Ik9GDGR/Lvydc+7XqG40wZosm6
-         15SCLfNeVCQ1ccD6FdR6nTJhd9MOaSCt0W1efuhrZT22BDTvUJBJSYo7YIm9kgdgLpy/
-         J+arZBxbtqqDfCHkasyegBK/PXR2qTciYTcOTkK62x3woenhvyjU6j+iXlx1Ll67MeHE
-         XAY6KpBqLkwfJMLjBiRuKAqYvaPWWyeumHosd3RTdkTt9PbJEV3gqK9B22u08JAC+7MW
-         V+qsEu0gRShVNzGQyih42zWIEDNhlxAsCZGTTYyJM/VM6B7ELkL7ZTx6GWPX+EDKE+ex
-         0QXQ==
+        bh=ncOBBQVOKSJI4oIEZXme+bBgONZifXz6NgsuiVg1fgg=;
+        b=iW97Zj5xy03Vd9hTtansQ6c619msSsDcBB77HBKkTGL7lSrSFLxXPk+R1Xxx+pjbz6
+         nRlC0QlnP+gnE89tK1LarrmJ4tUr/zmBv2UbbQWdVUbCdrvY3YinX11eXlchPZQ1KqEw
+         2kHtP9Q16MAxaFr4QYEhnmfSbxDDUsP7mkVQR6H8nImBEUSs+GHKUTlb0jkrMgf1t/7u
+         s4kAOmH4comCL4y3v3PT4MB10vzmuszkbogOHt/R4+3R8oAt0qpIf4AEmW2TCxWjdlKn
+         ERSApy35wzWavCi+1shvP3/v4JWs3fVKSgZF3hdUAeQrRaAH0BBLn6Unkuejzusc6i0M
+         LEiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698693501; x=1699298301;
+        d=1e100.net; s=20230601; t=1698693498; x=1699298298;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y3oSLM8FoWJdRGxDajV2BJx8pDQU3/Qx5klaEYYXV5o=;
-        b=b87a8wU/OZ4ol6hGyT8QNYsRAsv/u4vc3gklszdFPe3Q/nsIKbO5PSuARrDuRsb40z
-         FA0kNIx9M1EAxuriPb9AwHby7nrF6ro7DHuxSnbLXx6X8k9fX6dS51rutbhYjDMkSgmg
-         jfN5jU9+E1HblcAO5+oxO0+I5CrojderYjwEcx/0OVmEcmBnUFY/9UlEu0My9fncBakd
-         ys7ihtB6OzcZ+oj6QgjjuB/jVNUetqJIT7KuMGIdNL5hgQzwq1zCiBBHehCTwjKYEm8b
-         k1RPFbUhHiWPk3NlfofnTwkfZ/jXyishQHAaExjsUafahMF9+BTiz7PgflRst0UQZzF6
-         F3aQ==
-X-Gm-Message-State: AOJu0YxnTLiRwmhmHeP6VI5rlkubousUZ+F1VbOL7QCZkF9mPSionwAy
-	CyjCdR4rc2UNVItF9DKwPIxIuiy7eOE=
-X-Google-Smtp-Source: AGHT+IF7/FFmpv5EWQ2a1iGQMGFLmUKgwCxB+Szcq9cyUD+hbCA5Hw7FYJIPBaBsFlu0SUXjBDKCLw==
-X-Received: by 2002:a05:6830:3494:b0:6b8:82ed:ea2e with SMTP id c20-20020a056830349400b006b882edea2emr14238779otu.4.1698693501668;
-        Mon, 30 Oct 2023 12:18:21 -0700 (PDT)
+        bh=ncOBBQVOKSJI4oIEZXme+bBgONZifXz6NgsuiVg1fgg=;
+        b=lDfUU3lbEPgNMZ093S19JHKM8C13oyPVtONVMdv51lHXFJWq1NrPCqfHqb/t92r9rf
+         alwBio/PA0CRAWUfLH1fMHWS/+z9SfyL/r1xkdeGhHmN9Sp3o5nHr7L22BQAZDvblySa
+         a5XenrlMAntKXgo+LrXgXcN8iLFF4EYzBZQShKUj8wM+t9te04y/DuV+X+GkofNKHT52
+         runHbdLW6QvkFrLOzRSIw7XvCQr3UKmbj4TGQ8HwoWpFCyHi//7+l95Tm5N9GrAGMMxl
+         0YsvZh2xDU+gP0HQtxABFZU2ejoHVtsYKuEN7tEX7wxEVLlveJopN7/iJ7xDJmAQiWoJ
+         0udw==
+X-Gm-Message-State: AOJu0YyXR19Ai+4QFdK6xMAVrNCq7KResoBt9v1zrekXSVCoJOiO/xaW
+	0qaluwbOhZTulkCb9U3xPy1Zkq782Ws=
+X-Google-Smtp-Source: AGHT+IFmtUe5DK57oOh9OG5FL3lw+2jCRQrDtgSjNS9TWc8fx9BHpwMetrN3m9jVjjRtavVms/6LMg==
+X-Received: by 2002:a05:6830:348f:b0:6d3:940:82fa with SMTP id c15-20020a056830348f00b006d3094082famr393105otu.12.1698693498693;
+        Mon, 30 Oct 2023 12:18:18 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::6aa6])
-        by smtp.gmail.com with ESMTPSA id l38-20020a0568302b2600b006cd099bb052sm1510500otv.1.2023.10.30.12.18.20
+        by smtp.gmail.com with ESMTPSA id l38-20020a0568302b2600b006cd099bb052sm1510500otv.1.2023.10.30.12.18.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Oct 2023 12:18:20 -0700 (PDT)
+        Mon, 30 Oct 2023 12:18:17 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v3 21/22] hashserv: Allow self-service deletion
-Date: Mon, 30 Oct 2023 13:17:27 -0600
-Message-Id: <20231030191728.1276805-22-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v3 19/22] bitbake-hashserver: Allow anonymous permissions to be space separated
+Date: Mon, 30 Oct 2023 13:17:25 -0600
+Message-Id: <20231030191728.1276805-20-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231030191728.1276805-1-JPEWhacker@gmail.com>
 References: <20231012221655.632637-1-JPEWhacker@gmail.com>
@@ -63,51 +63,32 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 19:18:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15323
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15321
 
-Allows users to self-service deletion of their own user accounts
-(meaning, they can delete their own accounts without special
-permissions).
+Space separation is more natural when setting the value from an
+environment variable, so allow that here for convenience.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/hashserv/server.py | 2 +-
- lib/hashserv/tests.py  | 7 +++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ bin/bitbake-hashserv | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index 3bbcfcf2..5362457e 100644
---- a/lib/hashserv/server.py
-+++ b/lib/hashserv/server.py
-@@ -708,7 +708,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-             "token": token,
-         }
+diff --git a/bin/bitbake-hashserv b/bin/bitbake-hashserv
+index 1085d058..c560b3e5 100755
+--- a/bin/bitbake-hashserv
++++ b/bin/bitbake-hashserv
+@@ -127,7 +127,10 @@ websocket, as in "wss://SERVER:PORT"
+     logger.addHandler(console)
  
--    @permissions(USER_ADMIN_PERM, allow_anon=False)
-+    @permissions(USER_ADMIN_PERM, allow_self_service=True, allow_anon=False)
-     async def handle_delete_user(self, request):
-         username = str(request["username"])
+     read_only = (os.environ.get("HASHSERVER_READ_ONLY", "0") == "1") or args.read_only
+-    anon_perms = args.anon_perms.split(",")
++    if "," in args.anon_perms:
++        anon_perms = args.anon_perms.split(",")
++    else:
++        anon_perms = args.anon_perms.split()
  
-diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index 5d209ffb..f0be8679 100644
---- a/lib/hashserv/tests.py
-+++ b/lib/hashserv/tests.py
-@@ -683,10 +683,13 @@ class HashEquivalenceCommonTests(object):
- 
-         user = self.create_user("test-user", [])
- 
--        # No self service
--        with self.auth_client(user) as client, self.assertRaises(InvokeError):
-+        # self service
-+        with self.auth_client(user) as client:
-             client.delete_user(user["username"])
- 
-+        self.assertIsNone(admin_client.get_user(user["username"]))
-+        user = self.create_user("test-user", [])
-+
-         with self.auth_perms() as client, self.assertRaises(InvokeError):
-             client.delete_user(user["username"])
- 
+     server = hashserv.create_server(
+         args.bind,
 -- 
 2.34.1
 
