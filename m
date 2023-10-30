@@ -2,187 +2,138 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C47C4167B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C45C4332F
 	for <webhook@archiver.kernel.org>; Mon, 30 Oct 2023 19:17:43 +0000 (UTC)
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
- by mx.groups.io with SMTP id smtpd.web11.158480.1698693461703001739
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+ by mx.groups.io with SMTP id smtpd.web11.158477.1698693456422297445
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Oct 2023 12:17:41 -0700
+ Mon, 30 Oct 2023 12:17:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=BnS3G5Do;
- spf=pass (domain: gmail.com, ip: 209.85.161.54, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5820299b99cso2936454eaf.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 12:17:41 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Cp/3hwvI;
+ spf=pass (domain: gmail.com, ip: 209.85.210.41, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6c0b8f42409so3353330a34.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 12:17:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698693460; x=1699298260; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1698693455; x=1699298255; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T+q+Jum3wcT/bW1MYDxLdu4U6YuIiAfM4cBVEFeVbAk=;
-        b=BnS3G5Do2y1DgM4l5Zu37ScUqv4VHRqkESaYIjdQ+8S6xZMmA2HDIzxlzIQr4cBcJS
-         m5IcqAFSReR5qqAuqQ42BW9EkmHBwVsNiI3PMu0gqfEGRkz+FQM3oo1eyBhnDuKoD0a3
-         dNso15rHNq0TvHPvZXtxIVOFv3y2z5igjRtPb2fVmmQBlrcrhOPgloOfYqx2qjygkZ4a
-         1e6Ykt5adjBPxC8jVdmMSU/nt8RWCsHuvEIxxDpGg6NBOBoExWtoewjSj4Xd5tNr5DxF
-         Kus8tuE+ncrB5ycS/JREDJB2Cacl63yublq3pw232UlBtO63I/z/wi9pk4yy9t8hh+nY
-         nIfQ==
+        bh=LX3suebB3xk5/vkFS3CoZlXw4vAQiSCXZ15ee6MqFzY=;
+        b=Cp/3hwvIhzbl0nwYZbineyLOgEpK47s2qa9ZmdhHwIHGzlXx5JJTGU+592KqWkeMZm
+         VLWFEZL5byioeASmZM2o62IUgGCGDFlJGlbxUmIGXL+uk44wtfWif75j5qquy7gw845q
+         29kw8pKuEdCyNGA0qo5VqA9B1W/l4RvCROVSKcWf+uwCnITKF+1Fd57UHoMwn5YIxbuf
+         1EgprTary24PzIymWJ8qdRj0+etQps12Xj6Ghz3KC0vUhjjiZ+QXPMO1BCBjP5c+8Bfn
+         4hP6ybbd12IhbbRRuYvGJRGefh6SArZtJ/i087tL2+8XdG8dBEB77ULgkVGOM44dhLK9
+         ALxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698693460; x=1699298260;
+        d=1e100.net; s=20230601; t=1698693455; x=1699298255;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=T+q+Jum3wcT/bW1MYDxLdu4U6YuIiAfM4cBVEFeVbAk=;
-        b=MBw+ysZ6ITKXPe79UpUGhD1DhzZpclUu0DvODGxKPTWvP8zT8tmxzm4t6qAqtKXx8X
-         fXyk9qHEr7c9brOJzr+jqjYnJc86/acFJJNhbECHL1xqDCU+vPWcyhdgYceKlZhupASW
-         IYJ+K8dPdNM71wCJ0bTE4LGqMzGJjaApgx+iiySnuX04TpEXFRbtnwQwsquEXnRGtOuz
-         npo4EWSX9BD6gaWo8lFvZBslzTj+JjjAD57PqDgxeR28WKwzNvHhuB9ydhERQxjNUmGu
-         9y4GgbMQZ1BVpCiQFIDsgVvggwm2KLMT6BK9xJqsBplmNes7wmVDHZC36RjmS/NSDv2/
-         sC8A==
-X-Gm-Message-State: AOJu0YziE6uXGC4oaV8lTl82ypqiHVUwHfJE1aWricjy2gqTOyjDHgzX
-	T834jx545TBmWnBwiJAEvKbIi0r+m14=
-X-Google-Smtp-Source: AGHT+IFrI7708XgbFsh3Sllhh2xuhMl1iL70jfJjRcszLUzbZiml1TxubQ56ql5X13ebsqNh2uVC0g==
-X-Received: by 2002:a05:6870:1816:b0:1e9:dfe6:38b4 with SMTP id t22-20020a056870181600b001e9dfe638b4mr331495oaf.15.1698693460348;
-        Mon, 30 Oct 2023 12:17:40 -0700 (PDT)
+        bh=LX3suebB3xk5/vkFS3CoZlXw4vAQiSCXZ15ee6MqFzY=;
+        b=XEL1rCGYnTHNM2BTYkzLTEsR210bTrppL5G9Y87XqIOZgKX7O4lU1RyeyubP1A2G3i
+         h1UzIcBRAZyVIckiKYFhEgKxBqaDFDNLaAJY3yAkgBE6LtP0gUO2CZLsw1RFozFSVhji
+         DLS9kRjY+xJUsKkdARMmHyCb12kuRqfkcJDB5z4U/HLIbFs7rhEI0Hn9Qlx0hzi7b07/
+         B+2gJO4+jaO3FqBbsATtNADIyw0IYWpZZJJnr/0mRNFKoCme3/cpNaNzApXVR222Waw7
+         Sa6GUWOiF0eskQDhvMqCAr2vDphbyy/5XlnkFc1+T05Q5uoAzZt0GqBOQkF22VezXlos
+         aUTQ==
+X-Gm-Message-State: AOJu0YzX54xCVGBTsPd+GXwwOasXnh6toEdqcfJWPfwrYhkAzhidE6y0
+	adIaM0FPY2rlh7wUbnM8g2OILgbsST8=
+X-Google-Smtp-Source: AGHT+IHT3huiOUuYvChz/QuIk6bf3QXAZLJXZPLDQhXbPp9qFw8tVBMY1ggsoGUe/dxVBKp+3NNuDA==
+X-Received: by 2002:a05:6830:4412:b0:6b9:e35e:8dd with SMTP id q18-20020a056830441200b006b9e35e08ddmr13516176otv.2.1698693455121;
+        Mon, 30 Oct 2023 12:17:35 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::6aa6])
-        by smtp.gmail.com with ESMTPSA id l38-20020a0568302b2600b006cd099bb052sm1510500otv.1.2023.10.30.12.17.39
+        by smtp.gmail.com with ESMTPSA id l38-20020a0568302b2600b006cd099bb052sm1510500otv.1.2023.10.30.12.17.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Oct 2023 12:17:39 -0700 (PDT)
+        Mon, 30 Oct 2023 12:17:34 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v3 03/22] asyncrpc: Add context manager API
-Date: Mon, 30 Oct 2023 13:17:09 -0600
-Message-Id: <20231030191728.1276805-4-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v3 00/22] Bitbake Hash Server WebSockets, Alternate Database Backend, and User Management
+Date: Mon, 30 Oct 2023 13:17:06 -0600
+Message-Id: <20231030191728.1276805-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231030191728.1276805-1-JPEWhacker@gmail.com>
+In-Reply-To: <20231012221655.632637-1-JPEWhacker@gmail.com>
 References: <20231012221655.632637-1-JPEWhacker@gmail.com>
- <20231030191728.1276805-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 19:17:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15305
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15302
 
-Adds context manager API for the asyncrcp client class which allow
-writing code that will automatically close the connection like so:
+This patch series reworks the bitbake asyncrpc API to add a WebSockets
+implementation for both the client and server. The hash equivalence
+server is updated to allow using this new API (the PR server can also be
+updated in the future if desired).
 
-    with hashserv.create_client(address) as client:
-       ...
+In addition, the database backed for the hash equivalence server is
+abstracted so that sqlalchemy can optionally be used instead of sqlite.
+This allows using "big metal" databases as the backend, which allows the
+hash equivalence server to scale to a large number of queries.
 
-Rework the bitbake-hashclient tool and PR server to use this new API to
-fix warnings about unclosed event loops when exiting
+Note that both websockets and sqlalchemy require 3rd party python
+modules to function. However, these modules are optional unless the user
+desires to use the APIs.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bin/bitbake-hashclient    | 36 +++++++++++++++++-------------------
- lib/bb/asyncrpc/client.py | 13 +++++++++++++
- lib/prserv/serv.py        |  6 +++---
- 3 files changed, 33 insertions(+), 22 deletions(-)
+Also, user management is added. This allows user accounts to be
+registered with the server and users can be given permissions to do
+certain operations on the server. Users are not (necessarily) required
+to login to access the server, as permissions can granted to anonymous
+users. The default permissions will give anonymous users the same
+permissions that they would have before user accounts were added so as
+to retain backward compatibility, but server admins will likely want to
+change this.
 
-diff --git a/bin/bitbake-hashclient b/bin/bitbake-hashclient
-index 3f265e8f..a02a65b9 100755
---- a/bin/bitbake-hashclient
-+++ b/bin/bitbake-hashclient
-@@ -56,25 +56,24 @@ def main():
-             nonlocal missed_hashes
-             nonlocal max_time
- 
--            client = hashserv.create_client(args.address)
--
--            for i in range(args.requests):
--                taskhash = hashlib.sha256()
--                taskhash.update(args.taskhash_seed.encode('utf-8'))
--                taskhash.update(str(i).encode('utf-8'))
-+            with hashserv.create_client(args.address) as client:
-+                for i in range(args.requests):
-+                    taskhash = hashlib.sha256()
-+                    taskhash.update(args.taskhash_seed.encode('utf-8'))
-+                    taskhash.update(str(i).encode('utf-8'))
- 
--                start_time = time.perf_counter()
--                l = client.get_unihash(METHOD, taskhash.hexdigest())
--                elapsed = time.perf_counter() - start_time
-+                    start_time = time.perf_counter()
-+                    l = client.get_unihash(METHOD, taskhash.hexdigest())
-+                    elapsed = time.perf_counter() - start_time
- 
--                with lock:
--                    if l:
--                        found_hashes += 1
--                    else:
--                        missed_hashes += 1
-+                    with lock:
-+                        if l:
-+                            found_hashes += 1
-+                        else:
-+                            missed_hashes += 1
- 
--                    max_time = max(elapsed, max_time)
--                    pbar.update()
-+                        max_time = max(elapsed, max_time)
-+                        pbar.update()
- 
-         max_time = 0
-         found_hashes = 0
-@@ -174,9 +173,8 @@ def main():
- 
-     func = getattr(args, 'func', None)
-     if func:
--        client = hashserv.create_client(args.address)
--
--        return func(args, client)
-+        with hashserv.create_client(args.address) as client:
-+            return func(args, client)
- 
-     return 0
- 
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-index 802c07df..009085c3 100644
---- a/lib/bb/asyncrpc/client.py
-+++ b/lib/bb/asyncrpc/client.py
-@@ -103,6 +103,12 @@ class AsyncClient(object):
-     async def ping(self):
-         return await self.invoke({"ping": {}})
- 
-+    async def __aenter__(self):
-+        return self
-+
-+    async def __aexit__(self, exc_type, exc_value, traceback):
-+        await self.close()
-+
- 
- class Client(object):
-     def __init__(self):
-@@ -153,3 +159,10 @@ class Client(object):
-         if sys.version_info >= (3, 6):
-             self.loop.run_until_complete(self.loop.shutdown_asyncgens())
-         self.loop.close()
-+
-+    def __enter__(self):
-+        return self
-+
-+    def __exit__(self, exc_type, exc_value, traceback):
-+        self.close()
-+        return False
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index ea793316..6168eb18 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -345,9 +345,9 @@ def auto_shutdown():
- def ping(host, port):
-     from . import client
- 
--    conn = client.PRClient()
--    conn.connect_tcp(host, port)
--    return conn.ping()
-+    with client.PRClient() as conn:
-+        conn.connect_tcp(host, port)
-+        return conn.ping()
- 
- def connect(host, port):
-     from . import client
+V3: Remove RFC status; patches are ready for review
+
+Joshua Watt (22):
+  asyncrpc: Abstract sockets
+  hashserv: Add websocket connection implementation
+  asyncrpc: Add context manager API
+  hashserv: tests: Add external database tests
+  asyncrpc: Prefix log messages with client info
+  bitbake-hashserv: Allow arguments from environment
+  hashserv: Abstract database
+  hashserv: Add SQLalchemy backend
+  hashserv: Implement read-only version of "report" RPC
+  asyncrpc: Add InvokeError
+  asyncrpc: client: Prevent double closing of loop
+  asyncrpc: client: Add disconnect API
+  hashserv: Add user permissions
+  hashserv: Add become-user API
+  hashserv: Add db-usage API
+  hashserv: Add database column query API
+  hashserv: test: Add bitbake-hashclient tests
+  bitbake-hashclient: Output stats in JSON format
+  bitbake-hashserver: Allow anonymous permissions to be space separated
+  hashserv: tests: Allow authentication for external server tests
+  hashserv: Allow self-service deletion
+  hashserv: server: Add owner if user is logged in
+
+ bin/bitbake-hashclient        | 145 +++++-
+ bin/bitbake-hashserv          | 132 ++++-
+ lib/bb/asyncrpc/__init__.py   |  33 +-
+ lib/bb/asyncrpc/client.py     | 120 ++---
+ lib/bb/asyncrpc/connection.py | 146 ++++++
+ lib/bb/asyncrpc/exceptions.py |  21 +
+ lib/bb/asyncrpc/serv.py       | 354 ++++++++-----
+ lib/hashserv/__init__.py      | 190 +++----
+ lib/hashserv/client.py        | 151 +++++-
+ lib/hashserv/server.py        | 951 +++++++++++++++++++++-------------
+ lib/hashserv/sqlalchemy.py    | 427 +++++++++++++++
+ lib/hashserv/sqlite.py        | 391 ++++++++++++++
+ lib/hashserv/tests.py         | 736 +++++++++++++++++++++++++-
+ lib/prserv/client.py          |   8 +-
+ lib/prserv/serv.py            |  37 +-
+ 15 files changed, 3038 insertions(+), 804 deletions(-)
+ create mode 100644 lib/bb/asyncrpc/connection.py
+ create mode 100644 lib/bb/asyncrpc/exceptions.py
+ create mode 100644 lib/hashserv/sqlalchemy.py
+ create mode 100644 lib/hashserv/sqlite.py
+
 -- 
 2.34.1
 
