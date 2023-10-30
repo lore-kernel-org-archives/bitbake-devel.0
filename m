@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10845C41535
-	for <webhook@archiver.kernel.org>; Mon, 30 Oct 2023 19:18:14 +0000 (UTC)
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
- by mx.groups.io with SMTP id smtpd.web10.158342.1698693490567107671
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAD0C4332F
+	for <webhook@archiver.kernel.org>; Mon, 30 Oct 2023 19:18:13 +0000 (UTC)
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+ by mx.groups.io with SMTP id smtpd.web10.158345.1698693493053837370
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Oct 2023 12:18:10 -0700
+ Mon, 30 Oct 2023 12:18:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=O+MoIqNM;
- spf=pass (domain: gmail.com, ip: 209.85.210.48, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6ce2eaf7c2bso3340683a34.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 12:18:10 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=H61witIk;
+ spf=pass (domain: gmail.com, ip: 209.85.210.49, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6ce2ea3a944so3227063a34.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 12:18:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698693489; x=1699298289; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1698693492; x=1699298292; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IBoF9jzhrTH8y4QaAGhK+D6ntMYK/OqwEm3pJB0/qQQ=;
-        b=O+MoIqNMnkRm6CbgKSG2ws2d0Tk+RSohRKxzu6gvgPsxA/r63icTopEBNNP0vYOxVN
-         CLQ6VfZwRUesG1yfj10j+FFEVGIf9Wu38zWvFOYw+Sw3A/VRBT09123MMRax4vt8XxEK
-         Djf7HCZTCn0Yns4+4bZtuzUqAoJ+95WpQyFa2sf/TGBs1eVn6517yx/7hOAth1jfBdBW
-         YfW86uQZGS/wLYNoWtfB/plfHl9LptTTpT6926GsPupbfmYmbyK//uBFxwWKqNwXzEQk
-         o1CHRvIc/QQ7Shk11Pwq8/fQOShPp0a43s/HYvcF07cUR3uyhn0pvZMIWgp9kOWC3Ajn
-         4Ppg==
+        bh=LMaD2LcS+WB6mKEELA4MB9hoLdwgCE4qLDVo1SSh9nQ=;
+        b=H61witIkNsEiGVVbQfDkT6WWVkDRNRWvxl1aI0iO51aWxSlURBInggP85vPQ/FmBx6
+         7UecXK7INbf9/wX22baw9/QpWNlv+8rPRI5kS47a939l6iIYFXv76NaDsRKhB90IjXyY
+         cwnRPnlPbK02THnckoV7u36Xwf0jvVOk0RjqKboVaTmV9nImxWDwXf1nKQmu2upwXuDO
+         MJhnU9sIGOIZyHQEMNZH4AneUgVRK/octGS8hlDu5hMwWSfSYfUpsGcNOg3ItSvnZimN
+         YWMHlDDxkb7KViH9DolzN00lb+Bu0tsgcy1MSE3GO9TbWzR+L/3lbL2jWiUcQudox45T
+         CBTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698693489; x=1699298289;
+        d=1e100.net; s=20230601; t=1698693492; x=1699298292;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IBoF9jzhrTH8y4QaAGhK+D6ntMYK/OqwEm3pJB0/qQQ=;
-        b=dCZDaKoZLTPyZoEfY28FDqt2G1YNdxy/Qky1pw86wnF06iIXfwiinkn15zLaWSuMZz
-         HBIBbiNZ96jE1lIC/4twX8Nl4ce5l++ej3Ezko2IazOfYSjf+56nGtbSlQ4b3QzqdXkU
-         bcEoNi3/dNKX+7Tj/K6DXu+fHr5YVqeV2RJ1UYrFOi2WU/FZXW+hJ8uWuMx/sXIOOTwo
-         01xNVcpLWB/XP+nvynPi10h90qBl3ZJ+WM6iH5R23/LhCTvHhjMG6M2pWszch85CRcjz
-         XKygrXlMZ8bzzvw0ka6qHeb0l1Gtxgc1Sjj+wgZi/NWXUsmKpehjY06bVIiDPjXxHPln
-         BG8A==
-X-Gm-Message-State: AOJu0YxHuY05uJz5QvPHcW35h6UcXMLuvicKJKdTAXnwi/HnIDlvwiVH
-	VKn9Yt4akFLcfqBHAV6KOkG832qWxa8=
-X-Google-Smtp-Source: AGHT+IFFF24c/B4ZERuzA9KeftDwEGzZQVZpipydd2bOzaQi4jy5wZOVywzxap4KjixjkjwUKkkmfg==
-X-Received: by 2002:a05:6830:14c6:b0:6bd:b0c9:a8d with SMTP id t6-20020a05683014c600b006bdb0c90a8dmr10408007otq.25.1698693489198;
-        Mon, 30 Oct 2023 12:18:09 -0700 (PDT)
+        bh=LMaD2LcS+WB6mKEELA4MB9hoLdwgCE4qLDVo1SSh9nQ=;
+        b=tApxUPIvdRS67wN9JKTApEwwtCuhEt73pGwFIhaXQi1qwXMbNo6V7UhHCbu8Xak6Su
+         +pFIRwSH5UAC9SfSTFY464edvLCKzb+wHAiRnqiOm6gUmc59CCl5Cy3L7jR1x7M49oBr
+         TVPZ3rh9AihObcEw96vn+q8H/doTloeLgdDmWdZ0maTkIP2LqLUgkeg0/9UDbDhPpPta
+         kG0QTNkLcrYx2ZOav/I4w3xQejw3Gy1bWCj5DWr6YBVMVBPsl71NooCI/yj6Fc+qllA2
+         r7ulsBm4AdmdNrgjDXCYH+opa/lboGAUYDT2HkZZs6oRiVgTroNHXR7cr13aLgtexLJl
+         OlDg==
+X-Gm-Message-State: AOJu0YylMd8kmLFOeL/k/LEm77GMeVdtydMu3Fioob/SspVOX+xYvU7g
+	JOoEV9nLvVJRBaqMgmt9B1RUlpBW69E=
+X-Google-Smtp-Source: AGHT+IFl65if5up1an+TWJieGOrQ26m6WPd/Se3O+mgoJRogC7pnV0+l5r/k6M+IvngT2kHWT9Jx1A==
+X-Received: by 2002:a05:6830:10c2:b0:6c0:9498:7a77 with SMTP id z2-20020a05683010c200b006c094987a77mr10349164oto.32.1698693491738;
+        Mon, 30 Oct 2023 12:18:11 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::6aa6])
-        by smtp.gmail.com with ESMTPSA id l38-20020a0568302b2600b006cd099bb052sm1510500otv.1.2023.10.30.12.18.07
+        by smtp.gmail.com with ESMTPSA id l38-20020a0568302b2600b006cd099bb052sm1510500otv.1.2023.10.30.12.18.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Oct 2023 12:18:08 -0700 (PDT)
+        Mon, 30 Oct 2023 12:18:11 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v3 12/22] asyncrpc: client: Add disconnect API
-Date: Mon, 30 Oct 2023 13:17:18 -0600
-Message-Id: <20231030191728.1276805-13-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v3 14/22] hashserv: Add become-user API
+Date: Mon, 30 Oct 2023 13:17:20 -0600
+Message-Id: <20231030191728.1276805-15-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231030191728.1276805-1-JPEWhacker@gmail.com>
 References: <20231012221655.632637-1-JPEWhacker@gmail.com>
@@ -62,47 +62,239 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 19:18:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15314
+ <bitbake-devel@lists.openembedded.org>; Mon, 30 Oct 2023 19:18:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15316
 
-Adds an API to explicitly disconnect a client. This can be useful for
-testing the auto-reconnect behavior of clients
+Adds API that allows a user admin to impersonate another user in the
+system. This makes it easier to write external services that have
+external authentication, since they can use a common user account to
+access the server, then impersonate the logged in user.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/asyncrpc/client.py | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ bin/bitbake-hashclient |  3 +++
+ lib/hashserv/client.py | 42 +++++++++++++++++++++++++++++++++++++-----
+ lib/hashserv/server.py | 18 ++++++++++++++++++
+ lib/hashserv/tests.py  | 39 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 97 insertions(+), 5 deletions(-)
 
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-index 628b90ee..0d7cd857 100644
---- a/lib/bb/asyncrpc/client.py
-+++ b/lib/bb/asyncrpc/client.py
-@@ -67,11 +67,14 @@ class AsyncClient(object):
-             self.socket = await self._connect_sock()
-             await self.setup_connection()
+diff --git a/bin/bitbake-hashclient b/bin/bitbake-hashclient
+index 328c15cd..cfbc197e 100755
+--- a/bin/bitbake-hashclient
++++ b/bin/bitbake-hashclient
+@@ -166,6 +166,7 @@ def main():
+     parser.add_argument('--log', default='WARNING', help='Set logging level')
+     parser.add_argument('--login', '-l', metavar="USERNAME", help="Authenticate as USERNAME")
+     parser.add_argument('--password', '-p', metavar="TOKEN", help="Authenticate using token TOKEN")
++    parser.add_argument('--become', '-b', metavar="USERNAME", help="Impersonate user USERNAME (if allowed) when performing actions")
+     parser.add_argument('--no-netrc', '-n', action="store_false", dest="netrc", help="Do not use .netrc")
  
--    async def close(self):
-+    async def disconnect(self):
-         if self.socket is not None:
-             await self.socket.close()
-             self.socket = None
+     subparsers = parser.add_subparsers()
+@@ -251,6 +252,8 @@ def main():
+     if func:
+         try:
+             with hashserv.create_client(args.address, login, password) as client:
++                if args.become:
++                    client.become_user(args.become)
+                 return func(args, client)
+         except bb.asyncrpc.InvokeError as e:
+             print(f"ERROR: {e}")
+diff --git a/lib/hashserv/client.py b/lib/hashserv/client.py
+index 6b2bf54d..0a281a9b 100644
+--- a/lib/hashserv/client.py
++++ b/lib/hashserv/client.py
+@@ -18,10 +18,11 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+     MODE_GET_STREAM = 1
  
-+    async def close(self):
-+        await self.disconnect()
+     def __init__(self, username=None, password=None):
+-        super().__init__('OEHASHEQUIV', '1.1', logger)
++        super().__init__("OEHASHEQUIV", "1.1", logger)
+         self.mode = self.MODE_NORMAL
+         self.username = username
+         self.password = password
++        self.saved_become_user = None
+ 
+     async def setup_connection(self):
+         await super().setup_connection()
+@@ -29,8 +30,13 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         self.mode = self.MODE_NORMAL
+         await self._set_mode(cur_mode)
+         if self.username:
++            # Save off become user temporarily because auth() resets it
++            become = self.saved_become_user
+             await self.auth(self.username, self.password)
+ 
++            if become:
++                await self.become_user(become)
 +
-     async def _send_wrapper(self, proc):
-         count = 0
-         while True:
-@@ -160,6 +163,9 @@ class Client(object):
-     def max_chunk(self, value):
-         self.client.max_chunk = value
+     async def send_stream(self, msg):
+         async def proc():
+             await self.socket.send(msg)
+@@ -100,7 +106,14 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+     async def get_outhash(self, method, outhash, taskhash, with_unihash=True):
+         await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke(
+-            {"get-outhash": {"outhash": outhash, "taskhash": taskhash, "method": method, "with_unihash": with_unihash}}
++            {
++                "get-outhash": {
++                    "outhash": outhash,
++                    "taskhash": taskhash,
++                    "method": method,
++                    "with_unihash": with_unihash,
++                }
++            }
+         )
  
-+    def disconnect(self):
-+        self.loop.run_until_complete(self.client.close())
+     async def get_stats(self):
+@@ -128,6 +141,7 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         result = await self.invoke({"auth": {"username": username, "token": token}})
+         self.username = username
+         self.password = token
++        self.saved_become_user = None
+         return result
+ 
+     async def refresh_token(self, username=None):
+@@ -136,13 +150,19 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         if username:
+             m["username"] = username
+         result = await self.invoke({"refresh-token": m})
+-        if self.username and result["username"] == self.username:
++        if (
++            self.username
++            and not self.saved_become_user
++            and result["username"] == self.username
++        ):
+             self.password = result["token"]
+         return result
+ 
+     async def set_user_perms(self, username, permissions):
+         await self._set_mode(self.MODE_NORMAL)
+-        return await self.invoke({"set-user-perms": {"username": username, "permissions": permissions}})
++        return await self.invoke(
++            {"set-user-perms": {"username": username, "permissions": permissions}}
++        )
+ 
+     async def get_user(self, username=None):
+         await self._set_mode(self.MODE_NORMAL)
+@@ -157,12 +177,23 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+ 
+     async def new_user(self, username, permissions):
+         await self._set_mode(self.MODE_NORMAL)
+-        return await self.invoke({"new-user": {"username": username, "permissions": permissions}})
++        return await self.invoke(
++            {"new-user": {"username": username, "permissions": permissions}}
++        )
+ 
+     async def delete_user(self, username):
+         await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke({"delete-user": {"username": username}})
+ 
++    async def become_user(self, username):
++        await self._set_mode(self.MODE_NORMAL)
++        result = await self.invoke({"become-user": {"username": username}})
++        if username == self.username:
++            self.saved_become_user = None
++        else:
++            self.saved_become_user = username
++        return result
 +
-     def close(self):
-         if self.loop:
-             self.loop.run_until_complete(self.client.close())
+ 
+ class Client(bb.asyncrpc.Client):
+     def __init__(self, username=None, password=None):
+@@ -190,6 +221,7 @@ class Client(bb.asyncrpc.Client):
+             "get_all_users",
+             "new_user",
+             "delete_user",
++            "become_user",
+         )
+ 
+     def _get_async_client(self):
+diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
+index 00ca1124..7bac7ab3 100644
+--- a/lib/hashserv/server.py
++++ b/lib/hashserv/server.py
+@@ -255,6 +255,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+                 "auth": self.handle_auth,
+                 "get-user": self.handle_get_user,
+                 "get-all-users": self.handle_get_all_users,
++                "become-user": self.handle_become_user,
+             }
+         )
+ 
+@@ -706,6 +707,23 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+ 
+         return {"username": username}
+ 
++    @permissions(USER_ADMIN_PERM, allow_anon=False)
++    async def handle_become_user(self, request):
++        username = str(request["username"])
++
++        user = await self.db.lookup_user(username)
++        if user is None:
++            raise bb.asyncrpc.InvokeError(f"User {username} doesn't exist")
++
++        self.user = user
++
++        self.logger.info("Became user %s", username)
++
++        return {
++            "username": self.user.username,
++            "permissions": self.return_perms(self.user.permissions),
++        }
++
+ 
+ class Server(bb.asyncrpc.AsyncServer):
+     def __init__(
+diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
+index f92f37c4..311b7b77 100644
+--- a/lib/hashserv/tests.py
++++ b/lib/hashserv/tests.py
+@@ -728,6 +728,45 @@ class HashEquivalenceCommonTests(object):
+             self.assertEqual(user["username"], "test-user")
+             self.assertEqual(user["permissions"], permissions)
+ 
++    def test_auth_become_user(self):
++        admin_client = self.start_auth_server()
++
++        user = admin_client.new_user("test-user", ["@read", "@report"])
++        user_info = user.copy()
++        del user_info["token"]
++
++        with self.auth_perms() as client, self.assertRaises(InvokeError):
++            client.become_user(user["username"])
++
++        with self.auth_perms("@user-admin") as client:
++            become = client.become_user(user["username"])
++            self.assertEqual(become, user_info)
++
++            info = client.get_user()
++            self.assertEqual(info, user_info)
++
++            # Verify become user is preserved across disconnect
++            client.disconnect()
++
++            info = client.get_user()
++            self.assertEqual(info, user_info)
++
++            # test-user doesn't have become_user permissions, so this should
++            # not work
++            with self.assertRaises(InvokeError):
++                client.become_user(user["username"])
++
++        # No self-service of become
++        with self.auth_client(user) as client, self.assertRaises(InvokeError):
++            client.become_user(user["username"])
++
++        # Give test user permissions to become
++        admin_client.set_user_perms(user["username"], ["@user-admin"])
++
++        # It's possible to become yourself (effectively a noop)
++        with self.auth_perms("@user-admin") as client:
++            become = client.become_user(client.username)
++
+ 
+ class TestHashEquivalenceUnixServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
+     def get_server_addr(self, server_idx):
 -- 
 2.34.1
 
