@@ -2,131 +2,125 @@ Return-Path: <ticotimo@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A039CC4332F
-	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 14:44:57 +0000 (UTC)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
- by mx.groups.io with SMTP id smtpd.web10.425.1698763490247830204
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF13C4332F
+	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 14:55:37 +0000 (UTC)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+ by mx.groups.io with SMTP id smtpd.web11.690.1698764130663852894
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Oct 2023 07:44:50 -0700
+ Tue, 31 Oct 2023 07:55:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=HHT2teVL;
- spf=pass (domain: gmail.com, ip: 209.85.219.179, mailfrom: ticotimo@gmail.com)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-d8a000f6a51so5090010276.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 07:44:50 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=PtgbZafG;
+ spf=pass (domain: gmail.com, ip: 209.85.219.172, mailfrom: ticotimo@gmail.com)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-d9ad90e1038so5259998276.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 07:55:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698763489; x=1699368289; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1698764130; x=1699368930; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=q9+CJ0n4k/ql7Dyzj0xuKkjLjm3QUN7o3U1HaucATvY=;
-        b=HHT2teVLZ4bquBq+RoikClUHmD4AC0bKjPIuv2H5xEc+psOwLNla3x3w9AvszAZftM
-         111UoKdu5F0gECViafwtOGgWWEbEBWIXyEsYLf7JoLcBVcriaegbgA4FCo2q4XV/GE77
-         8esY54RRDPcbigkfA3vku8OTGxvraPpWVAQBQ2jCMZfB6CrF4h/mqGgOaDhlrEZK5aZk
-         jJ3+G7Z3+4v19m8Eep661z/N9kmzyZu8zoOhucKwK3oyvS+n3CmxglnTF5MQo2Js//f5
-         djM/lHXBoHWsPQfK1JNC13J5czMSDFRx5GmqcSv4BkBUAI6sHDBtpIy1UKPFbSm7YXNy
-         jTpg==
+        bh=sMpNuSaNE5ozRgzGHpnVWxq0p5E0K619u2VGY0xUhOM=;
+        b=PtgbZafGJuqIqvMsGPQhmCd6LeQOl3OJQLd9as4LxrZIcZ9G7tEdRTi4t88SDdzVny
+         3wB+BYT839crvp4PD8Y0LxV6gvzFCM9eflzQEeiPgVSRb6B8poGRTOFTeyaO+zTXcozC
+         MbFVuaSDz8AbSRy8fLt2K9BFj+kShp9RsuIrF7XGNPvaMWRQ5ORWiV4829yqHQ2FGnP4
+         hucnNCnfeMvBc1fvuEt6RCdaW1pMx7qA20idruLxgWN7p2sWLZOjg3l43Xo9dK1JZBNj
+         065VlCmgffBk2neFmIbVca2p7NL9CyY3SFQM/nTS3ecDYNZTj1YWqQ+gXs3BN4Ayda7m
+         cZQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698763489; x=1699368289;
+        d=1e100.net; s=20230601; t=1698764130; x=1699368930;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=q9+CJ0n4k/ql7Dyzj0xuKkjLjm3QUN7o3U1HaucATvY=;
-        b=reW1ABVaCQ/aiUw83j0xjKHpgW0fMLv1K13Yh3la2mq17RbRjWLyZj2PFCRVG831WY
-         cA6Omug02CQvI6VdRsV8sQcVqi0k62sAYSUq3K6lZYG6kXzhG3XJKTjGiNCYUDSj8Y3R
-         XekCrnPfbRKssaXNFwIybeHxH1xAK23Nc47DGggp3pCva5KEYJJdkQNpwELYSipESaXX
-         6mhbl7iKIiB273+LkOJeLvGOgK0TzA+zdF/DWhhCdphqZCVHCciltI2m4NoW5+xRikAZ
-         njBp/JqIKkq5x/1+cUf+tfOyzJ0BcNEFxULmUb20d+w32PawNpl3TQPE6B8xEio0BjLE
-         nGZw==
-X-Gm-Message-State: AOJu0YzAnJfC0+6MWIIodArWoxe4M7ylu5gAHF0A1gvbGi8AfA16nOsL
-	+xieHKt//WrKYREMSfNEBF9Wkb7XeVeumPaQ6X2kKY3AjOtvdw==
-X-Google-Smtp-Source: AGHT+IFOe2eB4wyePbGxv9xZKAZ1Grb298VSxES6A8sp9zFBY0MAN4B4xH5vJQZz8DSC2ArEYb+GIyVCgIyYZBb3qXk=
-X-Received: by 2002:a5b:9d2:0:b0:d9a:642b:3500 with SMTP id
- y18-20020a5b09d2000000b00d9a642b3500mr11085637ybq.12.1698763489145; Tue, 31
- Oct 2023 07:44:49 -0700 (PDT)
+        bh=sMpNuSaNE5ozRgzGHpnVWxq0p5E0K619u2VGY0xUhOM=;
+        b=Uei5LL7ZYH1d6a2OyMAXWKCTF8btAUMVGEH2h2QdVjaPw5ixxy/DfczvXkIokoXz3H
+         uaD7gNWZnear9DPjb1TazQ3XoR1eW8qOy9hHqSxq4q52IUwk4GYmXB3jkXph1OrrAW+I
+         9rC0WfR5Ii2VtP4SzHFxPjZ4W74l6SllpOBbwXZAM3eX4Zf599HBHLodF2UZXJ1yP9el
+         yplCaiB5lIACAjp+t+uCcQ3gdf0Yi6q5Ci3oTwjQaWx0yGADcu5cty4YD7AD6wU4sxWl
+         eARm2J8ejPudjXQ6Xnvevitvd34AO/sif+YZypfSylI7YF6ylOvKNXoeIRI2jMKoBsim
+         EJtQ==
+X-Gm-Message-State: AOJu0YxPzWDeO/lToo1LEiUFpumIihsLyVfPcpKAAxEFbGEktxhntacG
+	oR+i9baMldBYCI3UGD6G4nprbC+AzVxyabyX3sk=
+X-Google-Smtp-Source: AGHT+IHGDXcIevCRZZdibj7S3w2/PgihqOvuV9Vo1jmkRlCzUpgIMJWf+s0IsesPBGKWhteOGqayLvroAYw6FYOnBVE=
+X-Received: by 2002:a25:ca0a:0:b0:da0:365c:ff67 with SMTP id
+ a10-20020a25ca0a000000b00da0365cff67mr11582138ybg.12.1698764129723; Tue, 31
+ Oct 2023 07:55:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231030195037.232912-1-alassane.yattara@savoirfairelinux.com> <20231030195037.232912-3-alassane.yattara@savoirfairelinux.com>
-In-Reply-To: <20231030195037.232912-3-alassane.yattara@savoirfairelinux.com>
+References: <20231030195037.232912-1-alassane.yattara@savoirfairelinux.com> <20231030195037.232912-5-alassane.yattara@savoirfairelinux.com>
+In-Reply-To: <20231030195037.232912-5-alassane.yattara@savoirfairelinux.com>
 From: Tim Orling <ticotimo@gmail.com>
-Date: Tue, 31 Oct 2023 07:44:38 -0700
-Message-ID: <CANx9H-C9TNSg+C0gZZZzBTPaiJwxhnq6PgQ-H2iGz63OqWgcxg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 3/8] Toaster: Bug-fix pytest and Failed:
- Database access not allowed
+Date: Tue, 31 Oct 2023 07:55:18 -0700
+Message-ID: <CANx9H-BdHGUs=n0LAMLpXR+5Fa3O9CCE7E+vjCULNrzvpdaixg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 5/8] Toaster: Bug-fix django.db.utils.IntegrityError:
+ Problem installing fixture
 To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Cc: bitbake-devel@lists.openembedded.org, toaster@lists.yoctoproject.org
-Content-Type: multipart/alternative; boundary="00000000000053f8ac060904321c"
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000826bc306090458b8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 14:44:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15341
+ <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 14:55:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15342
 
---00000000000053f8ac060904321c
+--000000000000826bc306090458b8
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, Oct 30, 2023 at 12:51=E2=80=AFPM Alassane Yattara <
 alassane.yattara@savoirfairelinux.com> wrote:
 
-> Remove load and create build environment from
-> tests/functional/functional_helpers
+> toastergui-unittest-data.xml fixture contains a release objects with
+> name=3D"master" or an release with same name seem existing
 >
-> We really need some explanation of why here. This seems like it is
-crippling the whole purpose of Toaster and hence the tests: running builds.
 
-If another commit is adding a different way of accomplishing the same
-thing, then that should be documented here.
+This is likely because we have a "master" release (the development branch)
+in both oe-core.xml and poky.xml
+https://git.openembedded.org/bitbake/tree/lib/toaster/orm/fixtures
 
-Can we not mark the class with @pytest.mark.django_db?
-" Remember that you can apply marks at the single test level, the class
-level, the module level, and dynamically in a hook or fixture."
-https://pytest-django.readthedocs.io/en/latest/helpers.html#markers
+Those fixtures are very important to provide the expected drop down
+menus for choosing a release for a project.
 
-If this code is really not needed, then an explanation of why it is not
-needed should be provided.
+- Change release name and fix bitbakeversion instead of bitbake_version
+>
 
+Good catch on the bad "orm.bitbake_version" field, that must have been a
+typo.
 
-
+>
 > Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+>
+Reviewed-by: Tim Orling <tim.orling@konsulko.com>
+
 > ---
->  lib/toaster/tests/functional/functional_helpers.py | 6 ------
->  1 file changed, 6 deletions(-)
+>  lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/lib/toaster/tests/functional/functional_helpers.py
-> b/lib/toaster/tests/functional/functional_helpers.py
-> index c3191f66..b80d403b 100644
-> --- a/lib/toaster/tests/functional/functional_helpers.py
-> +++ b/lib/toaster/tests/functional/functional_helpers.py
-> @@ -15,8 +15,6 @@ import time
->  import re
+> diff --git a/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml
+> b/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml
+> index 1d522f88..df106934 100644
+> --- a/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml
+> +++ b/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml
+> @@ -19,9 +19,9 @@
+>       <field type=3D"CharField" name=3D"description">poky_distro2
+> description</field>
+>    </object>
+>    <object pk=3D"1" model=3D"orm.release">
+> -     <field type=3D"CharField" name=3D"name">master</field>
+> +     <field type=3D"CharField" name=3D"name">foo_master</field>
+>       <field type=3D"CharField" name=3D"description">master project</fiel=
+d>
+> -     <field to=3D"orm.bitbake_version" name=3D"bitbake_version">1</field=
 >
->  from tests.browser.selenium_helpers_base import SeleniumTestCaseBase
-> -from tests.builds.buildtest import load_build_environment
-> -from bldcontrol.models import BuildEnvironment
->  from selenium.webdriver.common.by import By
->  from selenium.common.exceptions import NoSuchElementException
->
-> @@ -33,10 +31,6 @@ class SeleniumFunctionalTestCase(SeleniumTestCaseBase)=
-:
->              raise RuntimeError("Please initialise django with the tests
-> settings:  " \
->                  "DJANGO_SETTINGS_MODULE=3D'toastermain.settings_test'")
->
-> -        if BuildEnvironment.objects.count() =3D=3D 0:
-> -
-> BuildEnvironment.objects.create(betype=3DBuildEnvironment.TYPE_LOCAL)
-> -        load_build_environment()
-> -
->          # start toaster
->          cmd =3D "bash -c 'source toaster start'"
->          p =3D subprocess.Popen(
+> +     <field to=3D"orm.bitbakeversion" name=3D"bitbake_version">1</field>
+>    </object>
+>    <object pk=3D"1" model=3D"orm.project">
+>      <field type=3D"CharField" name=3D"name">a test project</field>
 > --
 > 2.34.1
 >
 >
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 > Links: You receive all messages sent to this group.
-> View/Reply Online (#15327):
-> https://lists.openembedded.org/g/bitbake-devel/message/15327
-> Mute This Topic: https://lists.openembedded.org/mt/102283458/924729
+> View/Reply Online (#15329):
+> https://lists.openembedded.org/g/bitbake-devel/message/15329
+> Mute This Topic: https://lists.openembedded.org/mt/102283461/924729
 > Group Owner: bitbake-devel+owner@lists.openembedded.org
 > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
 > ticotimo@gmail.com]
@@ -134,84 +128,82 @@ needed should be provided.
 >
 >
 
---00000000000053f8ac060904321c
+--000000000000826bc306090458b8
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
 <div dir=3D"ltr" class=3D"gmail_attr">On Mon, Oct 30, 2023 at 12:51=E2=80=
 =AFPM Alassane Yattara &lt;<a href=3D"mailto:alassane.yattara@savoirfaireli=
-nux.com" target=3D"_blank">alassane.yattara@savoirfairelinux.com</a>&gt; wr=
-ote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px=
- 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">Remove load=
- and create build environment from tests/functional/functional_helpers<br>
-<br></blockquote><div>We really need some explanation of why here. This see=
-ms like it is crippling the whole purpose of Toaster and hence the tests: r=
-unning builds.</div><div><br></div><div>If another commit is adding a diffe=
-rent way of accomplishing the same thing, then that should be documented he=
-re.</div><div><br></div><div>Can we not mark the class with=C2=A0<a class=
-=3D"gmail_plusreply" id=3D"plusReplyChip-1">@pytest.mark.django_db?</a></di=
-v><div>&quot;=C2=A0Remember that you can apply marks at the single test lev=
-el, the class level, the module level, and dynamically in a hook or fixture=
-.&quot;</div><div><a href=3D"https://pytest-django.readthedocs.io/en/latest=
-/helpers.html#markers">https://pytest-django.readthedocs.io/en/latest/helpe=
-rs.html#markers</a></div><div><br></div><div>If this code is really not nee=
-ded, then an explanation of why it is not needed should be provided.<br><a =
-class=3D"gmail_plusreply"><br></a></div><div>=C2=A0</div><blockquote class=
+nux.com">alassane.yattara@savoirfairelinux.com</a>&gt; wrote:<br></div><blo=
+ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
+:1px solid rgb(204,204,204);padding-left:1ex">toastergui-unittest-data.xml =
+fixture contains a release objects with<br>
+name=3D&quot;master&quot; or an release with same name seem existing<br></b=
+lockquote><div><br></div><div>This is likely because we have a &quot;master=
+&quot; release (the development branch) in both oe-core.xml and poky.xml=C2=
+=A0</div><div><a href=3D"https://git.openembedded.org/bitbake/tree/lib/toas=
+ter/orm/fixtures">https://git.openembedded.org/bitbake/tree/lib/toaster/orm=
+/fixtures</a><br></div><div><br></div><div>Those fixtures are very importan=
+t to provide the expected drop down menus=C2=A0for choosing a release for a=
+ project.</div><div><br></div><blockquote class=3D"gmail_quote" style=3D"ma=
+rgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=
+1ex">
+- Change release name and fix bitbakeversion instead of bitbake_version<br>=
+</blockquote><div><br></div><div>Good catch on the bad &quot;orm.bitbake_ve=
+rsion&quot; field, that must have been a typo.=C2=A0</div><blockquote class=
 =3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
 b(204,204,204);padding-left:1ex">
+<br>
 Signed-off-by: Alassane Yattara &lt;<a href=3D"mailto:alassane.yattara@savo=
 irfairelinux.com" target=3D"_blank">alassane.yattara@savoirfairelinux.com</=
-a>&gt;<br>
+a>&gt;<br></blockquote><div>Reviewed-by: Tim Orling &lt;<a href=3D"mailto:t=
+im.orling@konsulko.com">tim.orling@konsulko.com</a>&gt;=C2=A0</div><blockqu=
+ote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px=
+ solid rgb(204,204,204);padding-left:1ex">
 ---<br>
-=C2=A0lib/toaster/tests/functional/functional_helpers.py | 6 ------<br>
-=C2=A01 file changed, 6 deletions(-)<br>
+=C2=A0lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml | 4 ++--=
 <br>
-diff --git a/lib/toaster/tests/functional/functional_helpers.py b/lib/toast=
-er/tests/functional/functional_helpers.py<br>
-index c3191f66..b80d403b 100644<br>
---- a/lib/toaster/tests/functional/functional_helpers.py<br>
-+++ b/lib/toaster/tests/functional/functional_helpers.py<br>
-@@ -15,8 +15,6 @@ import time<br>
-=C2=A0import re<br>
+=C2=A01 file changed, 2 insertions(+), 2 deletions(-)<br>
 <br>
-=C2=A0from tests.browser.selenium_helpers_base import SeleniumTestCaseBase<=
-br>
--from tests.builds.buildtest import load_build_environment<br>
--from bldcontrol.models import BuildEnvironment<br>
-=C2=A0from <a href=3D"http://selenium.webdriver.common.by" rel=3D"noreferre=
-r" target=3D"_blank">selenium.webdriver.common.by</a> import By<br>
-=C2=A0from selenium.common.exceptions import NoSuchElementException<br>
-<br>
-@@ -33,10 +31,6 @@ class SeleniumFunctionalTestCase(SeleniumTestCaseBase):<=
-br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0raise RuntimeError(&quot;Pl=
-ease initialise django with the tests settings:=C2=A0 &quot; \<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;DJANGO_=
-SETTINGS_MODULE=3D&#39;toastermain.settings_test&#39;&quot;)<br>
-<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 if BuildEnvironment.objects.count() =3D=3D 0:<=
-br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 BuildEnvironment.objects.create(=
-betype=3DBuildEnvironment.TYPE_LOCAL)<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 load_build_environment()<br>
--<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# start toaster<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cmd =3D &quot;bash -c &#39;source toaster=
- start&#39;&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0p =3D subprocess.Popen(<br>
+diff --git a/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml b=
+/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml<br>
+index 1d522f88..df106934 100644<br>
+--- a/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml<br>
++++ b/lib/toaster/toastergui/fixtures/toastergui-unittest-data.xml<br>
+@@ -19,9 +19,9 @@<br>
+=C2=A0 =C2=A0 =C2=A0 &lt;field type=3D&quot;CharField&quot; name=3D&quot;de=
+scription&quot;&gt;poky_distro2 description&lt;/field&gt;<br>
+=C2=A0 =C2=A0&lt;/object&gt;<br>
+=C2=A0 =C2=A0&lt;object pk=3D&quot;1&quot; model=3D&quot;orm.release&quot;&=
+gt;<br>
+-=C2=A0 =C2=A0 =C2=A0&lt;field type=3D&quot;CharField&quot; name=3D&quot;na=
+me&quot;&gt;master&lt;/field&gt;<br>
++=C2=A0 =C2=A0 =C2=A0&lt;field type=3D&quot;CharField&quot; name=3D&quot;na=
+me&quot;&gt;foo_master&lt;/field&gt;<br>
+=C2=A0 =C2=A0 =C2=A0 &lt;field type=3D&quot;CharField&quot; name=3D&quot;de=
+scription&quot;&gt;master project&lt;/field&gt;<br>
+-=C2=A0 =C2=A0 =C2=A0&lt;field to=3D&quot;orm.bitbake_version&quot; name=3D=
+&quot;bitbake_version&quot;&gt;1&lt;/field&gt;<br>
++=C2=A0 =C2=A0 =C2=A0&lt;field to=3D&quot;orm.bitbakeversion&quot; name=3D&=
+quot;bitbake_version&quot;&gt;1&lt;/field&gt;<br>
+=C2=A0 =C2=A0&lt;/object&gt;<br>
+=C2=A0 =C2=A0&lt;object pk=3D&quot;1&quot; model=3D&quot;orm.project&quot;&=
+gt;<br>
+=C2=A0 =C2=A0 =C2=A0&lt;field type=3D&quot;CharField&quot; name=3D&quot;nam=
+e&quot;&gt;a test project&lt;/field&gt;<br>
 -- <br>
 2.34.1<br>
 <br>
 <br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 Links: You receive all messages sent to this group.<br>
-View/Reply Online (#15327): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/15327" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/15327</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/102283458/924=
+View/Reply Online (#15329): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/15329" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/15329</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/102283461/924=
 729" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/102283458/924729</a><br>
+/102283461/924729</a><br>
 Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
 " target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
 Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
@@ -222,5 +214,5 @@ nk">ticotimo@gmail.com</a>]<br>
 <br>
 </blockquote></div></div>
 
---00000000000053f8ac060904321c--
+--000000000000826bc306090458b8--
 
