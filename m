@@ -1,206 +1,220 @@
-Return-Path: <ticotimo@gmail.com>
+Return-Path: <marlon.rodriguez-garcia@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81476C4332F
-	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 14:22:21 +0000 (UTC)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
- by mx.groups.io with SMTP id smtpd.web10.187237.1698762139582749740
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C236C4167B
+	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 14:24:31 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web11.187705.1698762261492106885
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Oct 2023 07:22:19 -0700
+ Tue, 31 Oct 2023 07:24:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=cexcn5cU;
- spf=pass (domain: gmail.com, ip: 209.85.219.176, mailfrom: ticotimo@gmail.com)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-da37522a363so953660276.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 07:22:19 -0700 (PDT)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=G1Yv7xDE;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: marlon.rodriguez-garcia@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id D3BD29C0C3C;
+	Tue, 31 Oct 2023 10:24:20 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id 4BZl4GLeBt_t; Tue, 31 Oct 2023 10:24:18 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 8B0F29C2CD7;
+	Tue, 31 Oct 2023 10:24:18 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 8B0F29C2CD7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698762139; x=1699366939; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=izAmtFdHec0w07gUM/iS+7c01cli6V1h8FoVZmNC2+A=;
-        b=cexcn5cUUOwOZ0sNJWCVC5yaJJKvhj/K4UDFADyaTcdEDj6FnD8LTsVkCchugctZ+3
-         rEcssV8x2Npdaml5NMNXlWkptx/nOxOOPZqlP/QmKU1Z6Zes3hSIPiPR/DeoeR2Ge6dV
-         Eco7jR9dkcfjS2SkfxnBqNNmgzxuBzIDFPc4ya6sVBIqqzRCqiaF6+LSc8T2fVDAwK70
-         rNoFrQJywLUrlwM7k3fulKOCfko27Gh+5cMC1RgDDbtvPdHRjXduX0AoD9b0c13xHRg1
-         QraOw+zGyraaIn44dVHeawtcx+OuOMESbwtXdWgHrRinLer7p335ao2VcI8Kyv6zeDxg
-         f9fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698762139; x=1699366939;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=izAmtFdHec0w07gUM/iS+7c01cli6V1h8FoVZmNC2+A=;
-        b=MNgGQO33s/PpWIV/em2SXpKAtR5ftNVGuAQe62NvUhfTw/4EkeYTsxnufhcycaXs34
-         8bZHLEkih5mDggC+FqIgEwOJwoOEs2yN+xDfk4JbyytppaUvQYD6TUgw/OUjYvZdF72Y
-         NZNz7C5gE15kBNWRfvRflfMGUOPhAf1KnWsiO6LK1d55j3byRJL8amRfSrKy8fDY9E7G
-         gNk/wKwjkqkBSYCYwq6ayhglTAU4Jx/BzUPgUVxED2waNoYDTgdYrySVtn9+IqLATpc+
-         +3augdalc+ljcmlqiDWN0vETGRHtAru0z9Sz7S1f28dICW991MmmIAtPlJpBdqKfBdF0
-         qc0Q==
-X-Gm-Message-State: AOJu0YzOfcp/hq5/xL+Aa00sKm7LIy11G2umpeWZ9dIul+STV06PuDNy
-	ofssV6MA+q6UMWmrM5T+P5rUdmiuIIfah5QGx+NHICI+Ol0cMg==
-X-Google-Smtp-Source: AGHT+IEbwn+aGEGHwjAygtCmtc0gVVgfgPKJTROXFexiezeE/Zej92vOSQMpBIZOqOuAhBt4UQUTZhvnRO4Qnytf3nU=
-X-Received: by 2002:a25:77d3:0:b0:d81:51db:3292 with SMTP id
- s202-20020a2577d3000000b00d8151db3292mr14375723ybc.45.1698762138638; Tue, 31
- Oct 2023 07:22:18 -0700 (PDT)
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1698762258; bh=tXgvqcpS8oEsRMHXsbeVzGAVwGdTfUNIsrrm/qEUWbk=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=G1Yv7xDEum20bP5xaHDukAT7mY5lhfUTkCRkqjdhIJ6KsBNEzbTlBWhojfbIYEd9t
+	 /ViWQkaN/uvxcyfSTX8JcrFUlf3RPjKSpHQ208ViudxNl5PpGNuweXjgCKUnOYCbxL
+	 ByvzCedieZHd0t8cVZ4dBdb/ORC9rl7wq3id9098CsGPGvnExQNUIYyHNsCiwmz+9x
+	 bsFEAySXYGCBjsrP/L/k88XgrU74QRGsyWsnft1bYh7j340iRNMPkM0ig3ftySeNTy
+	 umtl1iIKnWh1ZCXex0gCqjtUie6WjJ+3EK0E2bGIGKi+vDxNXl9+yckzU1tJUiJnpC
+	 V7Z6uHQLfk2KQ==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id WCeO-ECS-CAU; Tue, 31 Oct 2023 10:24:18 -0400 (EDT)
+Received: from savoirfairelinux.mtl.sfl (unknown [192.168.51.254])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 648589C0C3C;
+	Tue, 31 Oct 2023 10:24:18 -0400 (EDT)
+From: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfairelinux.com>
+To: bitbake-devel@lists.openembedded.org,
+	toaster@lists.yoctoproject.org
+Cc: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfairelinux.com>
+Subject: [PATCH] toaster: replace deprecated tags ifequal and ifnotequal
+Date: Tue, 31 Oct 2023 10:24:16 -0400
+Message-Id: <20231031142416.19499-1-marlon.rodriguez-garcia@savoirfairelinux.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20231030195037.232912-1-alassane.yattara@savoirfairelinux.com>
-In-Reply-To: <20231030195037.232912-1-alassane.yattara@savoirfairelinux.com>
-From: Tim Orling <ticotimo@gmail.com>
-Date: Tue, 31 Oct 2023 07:22:07 -0700
-Message-ID: <CANx9H-BYBTED82qe32Ym0TwAZtB_kgB9WXu8RW7jP4D=Cm6VjA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 1/8] Toaster: Update toaster-requirements.txt
- to add pytest and some plugin's
-To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000d4e093060903e1d8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 14:22:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15337
+ <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 14:24:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15338
 
---000000000000d4e093060903e1d8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Tags ifequal and ifnotequal are deprecated and were removed on version 3.=
+1
+https://django.readthedocs.io/en/stable/releases/3.1.html#deprecated-feat=
+ures-3-1
 
-On Mon, Oct 30, 2023 at 12:51=E2=80=AFPM Alassane Yattara <
-alassane.yattara@savoirfairelinux.com> wrote:
+Signed-off-by: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfai=
+relinux.com>
+---
+ .../toastergui/templates/package_built_dependencies.html  | 8 ++++----
+ .../templates/package_included_dependencies.html          | 8 ++++----
+ .../templates/package_included_reverse_dependencies.html  | 4 ++--
+ bitbake/lib/toaster/toastergui/templates/recipe.html      | 4 ++--
+ bitbake/lib/toaster/toastergui/templates/target.html      | 4 ++--
+ 5 files changed, 14 insertions(+), 14 deletions(-)
 
-> The pytest framework makes it easy to write small, readable tests, and ca=
-n
-> scale
-> to support complex functional testing for applications and libraries.
-> - Pytest-html is a plugin for pytest that generates a HTML report for tes=
-t
-> results.
->
+diff --git a/bitbake/lib/toaster/toastergui/templates/package_built_depen=
+dencies.html b/bitbake/lib/toaster/toastergui/templates/package_built_dep=
+endencies.html
+index a5d5893571..2493954deb 100644
+--- a/bitbake/lib/toaster/toastergui/templates/package_built_dependencies=
+.html
++++ b/bitbake/lib/toaster/toastergui/templates/package_built_dependencies=
+.html
+@@ -18,7 +18,7 @@
+         </ul>
+         <div class=3D"tab-content">
+             <div class=3D"tab-pane active" id=3D"dependencies">
+-            {% ifequal runtime_deps|length 0 %}
++            {% if runtime_deps|length =3D=3D 0 %}
+                 <div class=3D"alert alert-info">
+                     <strong>{{package.fullpackagespec}}</strong> has no =
+runtime dependencies.
+                 </div>
+@@ -54,8 +54,8 @@
+ 						{% endfor %}
+                     </tbody>
+                 </table>
+-            {% endifequal %}
+-            {% ifnotequal other_deps|length 0 %}
++            {% endif %}
++            {% if other_deps|length !=3D 0 %}
+                 <h3>Other runtime relationships</h3>
+                 <table class=3D"table table-bordered table-hover">
+                     <thead>
+@@ -93,7 +93,7 @@
+                     	{% endfor %}
+                     </tbody>
+                 </table>
+-                {% endifnotequal %}
++                {% endif %}
+             </div> <!-- tab-pane -->
+         </div> <!-- tab-content -->
+ {% endblock tabcontent %}
+diff --git a/bitbake/lib/toaster/toastergui/templates/package_included_de=
+pendencies.html b/bitbake/lib/toaster/toastergui/templates/package_includ=
+ed_dependencies.html
+index 95e56ded26..1f5ed6d913 100644
+--- a/bitbake/lib/toaster/toastergui/templates/package_included_dependenc=
+ies.html
++++ b/bitbake/lib/toaster/toastergui/templates/package_included_dependenc=
+ies.html
+@@ -14,7 +14,7 @@
+     {% include "package_included_tabs.html" with active_tab=3D"dependenc=
+ies" %}
+     <div class=3D"tab-content">
+        <div class=3D"tab-pane active" id=3D"dependencies">
+-       {% ifnotequal runtime_deps|length 0 %}
++       {% if runtime_deps|length !=3D 0 %}
+             <table class=3D"table table-bordered table-hover">
+                 <thead>
+                     <tr>
+@@ -48,9 +48,9 @@
+             <div class=3D"alert alert-info">
+                 <strong>{{package.fullpackagespec}}</strong> has no runt=
+ime dependencies.
+             </div>
+-        {% endifnotequal %}
++        {% endif %}
+=20
+-        {% ifnotequal other_deps|length 0 %}
++        {% if other_deps|length !=3D 0 %}
+             <h3>Other runtime relationships</h3>
+             <table class=3D"table table-bordered table-hover">
+                 <thead>
+@@ -103,7 +103,7 @@
+                         {% endfor %}
+                 </tbody>
+             </table>
+-        {% endifnotequal %}
++        {% endif %}
+         </div> <!-- end tab-pane -->
+     </div> <!-- end tab content -->
+     {% endwith %}
+diff --git a/bitbake/lib/toaster/toastergui/templates/package_included_re=
+verse_dependencies.html b/bitbake/lib/toaster/toastergui/templates/packag=
+e_included_reverse_dependencies.html
+index fb310c7fc7..dae4549e21 100644
+--- a/bitbake/lib/toaster/toastergui/templates/package_included_reverse_d=
+ependencies.html
++++ b/bitbake/lib/toaster/toastergui/templates/package_included_reverse_d=
+ependencies.html
+@@ -15,7 +15,7 @@
+     <div class=3D"tab-content">
+         <div class=3D"tab-pane active" id=3D"brought-in-by">
+=20
+-        {% ifequal reverse_count 0 %}
++        {% if reverse_count =3D=3D 0 %}
+            <div class=3D"alert alert-info">
+                 <strong>{{package.fullpackagespec}}</strong> has no reve=
+rse runtime dependencies.
+             </div>
+@@ -43,7 +43,7 @@
+ 					{% endfor %}
+                 </tbody>
+             </table>
+-        {% endifequal %}
++        {% endif %}
+         </div> <!-- end tab-pane -->
+     </div> <!-- end tab content -->
+     {% endwith %}
+diff --git a/bitbake/lib/toaster/toastergui/templates/recipe.html b/bitba=
+ke/lib/toaster/toastergui/templates/recipe.html
+index 3f76e656fe..4b5301b548 100644
+--- a/bitbake/lib/toaster/toastergui/templates/recipe.html
++++ b/bitbake/lib/toaster/toastergui/templates/recipe.html
+@@ -186,9 +186,9 @@
+                         <i class=3D"icon-question-sign get-help hover-he=
+lp" title=3D"{{task.get_outcome_help}}"></i>
+                     </td>
+                     <td>
+-                        {% ifnotequal task.sstate_result task.SSTATE_NA =
+%}
++                        {% if task.sstate_result !=3D task.SSTATE_NA %}
+                             {{task.get_sstate_result_display}}
+-                        {% endifnotequal %}
++                        {% endif %}
+                     </td>
+=20
+                     </tr>
+diff --git a/bitbake/lib/toaster/toastergui/templates/target.html b/bitba=
+ke/lib/toaster/toastergui/templates/target.html
+index 1924a0dad7..d5f60e77a8 100644
+--- a/bitbake/lib/toaster/toastergui/templates/target.html
++++ b/bitbake/lib/toaster/toastergui/templates/target.html
+@@ -8,11 +8,11 @@
+=20
+ {% block nav-target %}
+   {% for t in build.get_sorted_target_list %}
+-    {% ifequal target.pk t.pk %}
++    {% if target.pk =3D=3D t.pk %}
+       <li class=3D"active"><a href=3D"{% url 'target' build.pk t.pk %}">=
+{{t.target}}</a><li>
+     {% else %}
+       <li><a href=3D"{% url 'target' build.pk t.pk %}">{{t.target}}</a><=
+li>
+-    {% endifequal %}
++    {% endif %}
+   {% endfor %}
+ {% endblock %}
+=20
+--=20
+2.34.1
 
-This may be useful for local testing, but we do not use HTML in general for
-test results on the AutoBuilder.
-
-
-> - Pytest-django allows us to test Django project/applications with the
-> pytest testing tool.
-> - Pytest-env is a pytest plugin that enables us to set environment
-> variables in a pytest.ini or pyproject.toml file
->
-> These two seem sensible.
-
-You didn't mention pytest-metadata, but it looks like it will be useful to
-report out the system configuration:
- https://pypi.org/project/pytest-metadata/
-
-Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
->
-
-Reviewed-by: Tim Orling <tim.orling@konsulko.com>
-
-
-> ---
->  toaster-requirements.txt | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/toaster-requirements.txt b/toaster-requirements.txt
-> index d8e48b7f..19bf6fd2 100644
-> --- a/toaster-requirements.txt
-> +++ b/toaster-requirements.txt
-> @@ -2,3 +2,8 @@ Django>4.2,<4.3
->  beautifulsoup4>=3D4.4.0
->  pytz
->  django-log-viewer=3D=3D1.1.7
-> +pytest=3D=3D7.4.2
-> +pytest-django=3D=3D4.5.2
-> +pytest-env=3D=3D1.1.0
-> +pytest-html=3D=3D4.0.2
-> +pytest-metadata=3D=3D3.0.0
-> --
-> 2.34.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15326):
-> https://lists.openembedded.org/g/bitbake-devel/message/15326
-> Mute This Topic: https://lists.openembedded.org/mt/102283457/924729
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> ticotimo@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
-
---000000000000d4e093060903e1d8
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">On Mon, Oct 30, 2023 at 12:51=E2=80=
-=AFPM Alassane Yattara &lt;<a href=3D"mailto:alassane.yattara@savoirfaireli=
-nux.com">alassane.yattara@savoirfairelinux.com</a>&gt; wrote:<br></div><blo=
-ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
-:1px solid rgb(204,204,204);padding-left:1ex">The pytest framework makes it=
- easy to write small, readable tests, and can scale<br>
-to support complex functional testing for applications and libraries.<br>
-- Pytest-html is a plugin for pytest that generates a HTML report for test =
-results.<br></blockquote><div><br></div><div>This may be useful for local t=
-esting, but we do not use HTML in general for test results on the AutoBuild=
-er.</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin=
-:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"=
->
-- Pytest-django allows us to test Django project/applications with the pyte=
-st testing tool.<br>
-- Pytest-env is a pytest plugin that enables us to set environment variable=
-s in a pytest.ini or pyproject.toml file<br>
-<br></blockquote><div>These two seem sensible.</div><div><br></div><div>You=
- didn&#39;t mention pytest-metadata, but it looks like it will be useful to=
- report out the system configuration:</div><div>=C2=A0<a href=3D"https://py=
-pi.org/project/pytest-metadata/">https://pypi.org/project/pytest-metadata/<=
-/a></div><div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0=
-px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-Signed-off-by: Alassane Yattara &lt;<a href=3D"mailto:alassane.yattara@savo=
-irfairelinux.com" target=3D"_blank">alassane.yattara@savoirfairelinux.com</=
-a>&gt;<br></blockquote><div><br></div><div>Reviewed-by: Tim Orling &lt;<a h=
-ref=3D"mailto:tim.orling@konsulko.com">tim.orling@konsulko.com</a>&gt;</div=
-><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px=
- 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
----<br>
-=C2=A0toaster-requirements.txt | 5 +++++<br>
-=C2=A01 file changed, 5 insertions(+)<br>
-<br>
-diff --git a/toaster-requirements.txt b/toaster-requirements.txt<br>
-index d8e48b7f..19bf6fd2 100644<br>
---- a/toaster-requirements.txt<br>
-+++ b/toaster-requirements.txt<br>
-@@ -2,3 +2,8 @@ Django&gt;4.2,&lt;4.3<br>
-=C2=A0beautifulsoup4&gt;=3D4.4.0<br>
-=C2=A0pytz<br>
-=C2=A0django-log-viewer=3D=3D1.1.7<br>
-+pytest=3D=3D7.4.2<br>
-+pytest-django=3D=3D4.5.2<br>
-+pytest-env=3D=3D1.1.0<br>
-+pytest-html=3D=3D4.0.2<br>
-+pytest-metadata=3D=3D3.0.0<br>
--- <br>
-2.34.1<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#15326): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/15326" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/15326</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/102283457/924=
-729" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/102283457/924729</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:ticotimo@gmail.com" target=3D"_bla=
-nk">ticotimo@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div></div>
-
---000000000000d4e093060903e1d8--
 
