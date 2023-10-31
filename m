@@ -1,464 +1,141 @@
-Return-Path: <ticotimo@gmail.com>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43465C4332F
-	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 16:04:38 +0000 (UTC)
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
- by mx.groups.io with SMTP id smtpd.web10.2754.1698768272498321001
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A50C41535
+	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 17:21:52 +0000 (UTC)
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+ by mx.groups.io with SMTP id smtpd.web10.1605.1698772906994185567
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Oct 2023 09:04:32 -0700
+ Tue, 31 Oct 2023 10:21:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=OD5Ahzr5;
- spf=pass (domain: gmail.com, ip: 209.85.219.170, mailfrom: ticotimo@gmail.com)
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-d9a518d66a1so5381415276.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 09:04:32 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=d0NkxOAP;
+ spf=pass (domain: gmail.com, ip: 209.85.210.49, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6cd1918afb2so3441671a34.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 10:21:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698768271; x=1699373071; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HhfSCEjcOCqZyBbxr/5EVsT8EhHNxCoHCds1XtCOYIY=;
-        b=OD5Ahzr5ldQpzNH7M81ymhJ3jDjrAeTZeCgbYBka7MA4lfceg/t90Q4KsChb4NFtON
-         mVsj6VNUBjPPYe/IrV0CgfavGuEn2Xr0gOGPSdsMlFfJYQMNeMX9+CqzW1sJBh2VlWpa
-         DtSasBdVHG1XGhQVX4VGvw3YNbHA7mGouyfiPz0kX5utpyai5lOOmX7H9DGjc2na9hvO
-         Lom4GL84Dlun/o52+vBsX3u5ZcZyUBKlCWSofqnAVMPf+GYXHrHZlAMF82LNG5qVRCsm
-         fB/fxZ80mAw3NAeL5emeXIgmji9DdH14AoYyy7CFmvB0diWU8rhdvleZW6ubU8WUoOmb
-         gBOA==
+        d=gmail.com; s=20230601; t=1698772905; x=1699377705; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z5pbbquth54vpte/xSeKvvbYGWq8C4eN6cfRRKv8puU=;
+        b=d0NkxOAPpL2JtuJLb9ijtzwVKLx9A1vNMfcy+Vd2FZ0YXCOrokxvKFj5uZT63W+ZvV
+         zi1j53SwVsfo9HjCobNGnyCvMoHhJfMZ8MZTSLH1eedI59iLPH/sFBdrwGuPI4hQZV4j
+         oXEBW8FMgKGAnnyDhJEEz7p29bvkuvWaCcKNLcxhmF6B9Dzf92LNKbutP32i9dfsRZX8
+         xGLYBMIaZEZxlsS62K4rRTVbmevmRpKw+0zTgYqi4SzJzKZxuG/ovi73LleooChkiXKT
+         LHOQOIIUD5/pBGau2iChd5p98ipmjJZVTTN8ms//wez7d/U09sQUF7Chm5SxHbKSvh/I
+         T6RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698768271; x=1699373071;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HhfSCEjcOCqZyBbxr/5EVsT8EhHNxCoHCds1XtCOYIY=;
-        b=UNPr0z62+3PSUJBSwilfGekebLxK/FNhzkkR8RWE4rYTuhsDGn7qWdb1+fhDL9K4mC
-         /F+ZmzADqo64qIu++RD2paqLJAV+4BUDwrVMVrTfCAJNsnewv6TWaiqQet+lM99CBaxZ
-         mw7q16GDgOM1kzGXZ56oeRmfgOWFq9iXpuBm1HzExxyiks8s/TjVz1fqmxBvSaxkSSQ6
-         XaceOqnb6g3WNeV9YWRwD5eQA18ha40QcCwTZnQ30CDptP+UxKkD7E/mJjYy/6oXcpNx
-         VoLpft5wVwY+jUzrKePkN+e9v8PZRZOv/QCw/zLcUDUscix90sgE7g0C0IXikamRWDpQ
-         Qo+w==
-X-Gm-Message-State: AOJu0Yzs8/Ytf410RCYv3nWX50bVbniea4mQav7wBb4/ylA/bzQkgNEZ
-	nyrsQFhuRy+pO1hSew0kpYLy3zhC5JWNU800HvaHiBjH1gs=
-X-Google-Smtp-Source: AGHT+IEi1ESVPISutJFjJMSMoZDPRz7liIwhvXh0vuymVvOLzSHo56KkFwocQrPo41LYslIQWjQ3ougXpN4RZBk72Uc=
-X-Received: by 2002:a25:690f:0:b0:da0:cbae:34ba with SMTP id
- e15-20020a25690f000000b00da0cbae34bamr11587742ybc.33.1698768271373; Tue, 31
- Oct 2023 09:04:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698772905; x=1699377705;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z5pbbquth54vpte/xSeKvvbYGWq8C4eN6cfRRKv8puU=;
+        b=Tnvv3ICFlA9BELQQdcQWhg/83ulGh718+Ir3KDIRD2Nk7JVilEJeGUaLAdHK+b2j8z
+         v2Rf0LptvDcnFQKOkPFm4hebCnr2nfXGKbhw+VFDVvxrH2kd+ZBT/lAbuCqF4nyVoUi9
+         S8tHlEwNelumXJB4eREZATm2e1MHOMrdIx8NRKNmhAp5CuZhTzAzrG9Xz2/Y8n/PIpLG
+         VHMKEv7Q3ORWlet6JwdUmMEm3jVJ1s0H6usu/Y9hTiUlDRuD3oi9KvPRb8cqTw01zq7n
+         5cxWSEynG6GIZ4kl9w+zYsbwH6Tf1ogv8UC2yVUHwIbAQJZ17ot1W1I/ZczrJp4WRKYU
+         8Afw==
+X-Gm-Message-State: AOJu0YxmET/ZB9oz5GIgxwRPpCVkB7eARzVSbAm+4LP2Ric7YBlMbAXA
+	VKimkalIygRgft/qkmggmIVG28gDglw=
+X-Google-Smtp-Source: AGHT+IGVTy7EiMA5GWCRZCreSPkMIB14Duj0KV9aQDYShk8RR+tmuoeKBD9KFxc1NkXXoBj3qKX3fg==
+X-Received: by 2002:a05:6830:14d6:b0:6c6:3ea5:cdbf with SMTP id t22-20020a05683014d600b006c63ea5cdbfmr13280973otq.28.1698772905143;
+        Tue, 31 Oct 2023 10:21:45 -0700 (PDT)
+Received: from localhost.localdomain ([2601:282:4300:19e0::6aa6])
+        by smtp.gmail.com with ESMTPSA id k6-20020a056830150600b006ce2e464a45sm282503otp.29.2023.10.31.10.21.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Oct 2023 10:21:44 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v4 00/22] Bitbake Hash Server WebSockets, Alternate Database Backend, and User Management
+Date: Tue, 31 Oct 2023 11:21:16 -0600
+Message-Id: <20231031172138.3577199-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231030191728.1276805-1-JPEWhacker@gmail.com>
+References: <20231030191728.1276805-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
-References: <20231030222618.404081-1-alassane.yattara@savoirfairelinux.com> <20231030222618.404081-3-alassane.yattara@savoirfairelinux.com>
-In-Reply-To: <20231030222618.404081-3-alassane.yattara@savoirfairelinux.com>
-From: Tim Orling <ticotimo@gmail.com>
-Date: Tue, 31 Oct 2023 09:04:19 -0700
-Message-ID: <CANx9H-Bmo+SfXNQYc=vCmro0aNLav5JHjdQuh=B=4k2CkGf2dg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 3/3] Toaster: Test jumbotron links visible
- and clickable
-To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Cc: bitbake-devel@lists.openembedded.org, toaster@lists.yoctoproject.org
-Content-Type: multipart/alternative; boundary="0000000000005ef9340609054fe2"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 16:04:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15349
+ <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 17:21:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15350
 
---0000000000005ef9340609054fe2
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This patch series reworks the bitbake asyncrpc API to add a WebSockets
+implementation for both the client and server. The hash equivalence
+server is updated to allow using this new API (the PR server can also be
+updated in the future if desired).
 
-On Mon, Oct 30, 2023 at 3:26=E2=80=AFPM Alassane Yattara <
-alassane.yattara@savoirfairelinux.com> wrote:
+In addition, the database backed for the hash equivalence server is
+abstracted so that sqlalchemy can optionally be used instead of sqlite.
+This allows using "big metal" databases as the backend, which allows the
+hash equivalence server to scale to a large number of queries.
 
-> Test that the followings link are visible and clickable:
->  - OpenEmbedded
->  - BitBake
->  - Yocto Project
->  - Read the Toaster manual
->  - Contribute to Toaster
->
-> Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-> ---
->  .../tests/browser/test_landing_page.py        | 89 ++++++++++++++++++-
->  1 file changed, 88 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/toaster/tests/browser/test_landing_page.py
-> b/lib/toaster/tests/browser/test_landing_page.py
-> index e731af22..ecbc0af3 100644
-> --- a/lib/toaster/tests/browser/test_landing_page.py
-> +++ b/lib/toaster/tests/browser/test_landing_page.py
-> @@ -12,7 +12,7 @@ from django.urls import reverse
->  from django.utils import timezone
->  from tests.browser.selenium_helpers import SeleniumTestCase
->
-> -from orm.models import Project, Build
-> +from orm.models import Layer, Layer_Version, Project, Build
->
->  class TestLandingPage(SeleniumTestCase):
->      """ Tests for redirects on the landing page """
-> @@ -61,6 +61,93 @@ class TestLandingPage(SeleniumTestCase):
->              '
-> http://docs.yoctoproject.org/toaster-manual/index.html#toaster-user-manua=
-l
-> ')
->          self.assertTrue("Documentation" in documentation_link.text)
->
-> +    def test_openembedded_jumbotron_link_visible_and_clickable(self):
-> +        """ Test OpenEmbedded link jumbotron is visible and clickable: "=
-""
-> +        self.get(reverse('landing'))
-> +        jumbotron =3D self.find('.jumbotron')
-> +
-> +        # check OpenEmbedded
-> +        openembedded =3D jumbotron.find_element_by_link_text('OpenEmbedd=
-ed')
-> +        self.assertTrue(openembedded.is_displayed())
-> +        openembedded.click()
-> +        self.assertTrue("openembedded.org" in self.driver.current_url)
-> +
-> +    def test_bitbake_jumbotron_link_visible_and_clickable(self):
-> +        """ Test BitBake link jumbotron is visible and clickable: """
-> +        self.get(reverse('landing'))
-> +        jumbotron =3D self.find('.jumbotron')
-> +
-> +        # check BitBake
-> +        bitbake =3D jumbotron.find_element_by_link_text('BitBake')
-> +        self.assertTrue(bitbake.is_displayed())
-> +        bitbake.click()
-> +        self.assertTrue("yoctoproject.org/software-item/bitbake" in
-> self.driver.current_url)
-> +
-> +    def test_yoctoproject_jumbotron_link_visible_and_clickable(self):
-> +        """ Test Yocto Project link jumbotron is visible and clickable:
-> """
-> +        self.get(reverse('landing'))
-> +        jumbotron =3D self.find('.jumbotron')
-> +
-> +        # check Yocto Project
-> +        yoctoproject =3D jumbotron.find_element_by_link_text('Yocto
-> Project')
-> +        self.assertTrue(yoctoproject.is_displayed())
-> +        yoctoproject.click()
-> +        self.assertTrue("yoctoproject.org" in self.driver.current_url)
-> +
-> +    def test_link_setup_usign_toaster_visible_and_clickable(self):
->
-Typo usign -> using
+Note that both websockets and sqlalchemy require 3rd party python
+modules to function. However, these modules are optional unless the user
+desires to use the APIs.
 
+Also, user management is added. This allows user accounts to be
+registered with the server and users can be given permissions to do
+certain operations on the server. Users are not (necessarily) required
+to login to access the server, as permissions can granted to anonymous
+users. The default permissions will give anonymous users the same
+permissions that they would have before user accounts were added so as
+to retain backward compatibility, but server admins will likely want to
+change this.
 
-> +        """ Test big magenta button setting up and using toaster link in
-> jumbotron
-> +            if visible and clickable
+V3: Remove RFC status; patches are ready for review
+V4: Fixed protocol breakage with mixing older and newer clients/servers
 
-Your patch has a trailing whitespace in the above line, please check for
-that.
+Joshua Watt (22):
+  asyncrpc: Abstract sockets
+  hashserv: Add websocket connection implementation
+  asyncrpc: Add context manager API
+  hashserv: tests: Add external database tests
+  asyncrpc: Prefix log messages with client info
+  bitbake-hashserv: Allow arguments from environment
+  hashserv: Abstract database
+  hashserv: Add SQLalchemy backend
+  hashserv: Implement read-only version of "report" RPC
+  asyncrpc: Add InvokeError
+  asyncrpc: client: Prevent double closing of loop
+  asyncrpc: client: Add disconnect API
+  hashserv: Add user permissions
+  hashserv: Add become-user API
+  hashserv: Add db-usage API
+  hashserv: Add database column query API
+  hashserv: test: Add bitbake-hashclient tests
+  bitbake-hashclient: Output stats in JSON format
+  bitbake-hashserver: Allow anonymous permissions to be space separated
+  hashserv: tests: Allow authentication for external server tests
+  hashserv: Allow self-service deletion
+  hashserv: server: Add owner if user is logged in
 
->
-> +        """
-> +        self.get(reverse('landing'))
-> +        jumbotron =3D self.find('.jumbotron')
-> +
-> +        # check Big magenta button
-> +        big_magenta_button =3D jumbotron.find_element_by_link_text(
-> +            'Toaster is ready to capture your command line builds'
-> +        )
-> +        self.assertTrue(big_magenta_button.is_displayed())
-> +        big_magenta_button.click()
-> +        self.assertTrue("
-> docs.yoctoproject.org/toaster-manual/setup-and-use.html#setting-up-and-us=
-ing-toaster"
-> in self.driver.current_url)
-> +
-> +    def
-> test_link_create_new_project_in_jumbotron_visible_and_clickable(self):
-> +        """ Test big blue button create new project jumbotron if visible
-> and clickable """
-> +        # Create a layer and a layer version to make visible the big blu=
-e
-> button
-> +        layer =3D Layer.objects.create(name=3D'bar')
-> +        Layer_Version.objects.create(layer=3Dlayer)
-> +
-> +        self.get(reverse('landing'))
-> +        jumbotron =3D self.find('.jumbotron')
-> +
-> +        # check Big Blue button
-> +        big_blue_button =3D jumbotron.find_element_by_link_text(
-> +            'Create your first Toaster project to run manage builds'
-> +        )
-> +        self.assertTrue(big_blue_button.is_displayed())
-> +        big_blue_button.click()
-> +        self.assertTrue("toastergui/newproject/" in
-> self.driver.current_url)
-> +
-> +    def test_toaster_manual_link_visible_and_clickable(self):
-> +        """ Test Read the Toaster manual link jumbotron is visible and
-> clickable: """
-> +        self.get(reverse('landing'))
-> +        jumbotron =3D self.find('.jumbotron')
-> +
-> +        # check Read the Toaster manual
-> +        toaster_manual =3D jumbotron.find_element_by_link_text('Read the
-> Toaster manual')
-> +        self.assertTrue(toaster_manual.is_displayed())
-> +        toaster_manual.click()
-> +        self.assertTrue("
-> https://docs.yoctoproject.org/toaster-manual/index.html#toaster-user-manu=
-al"
-> in self.driver.current_url)
-> +
-> +    def test_contrib_to_toaster_link_visible_and_clickable(self):
-> +        """ Test Contribute to Toaster link jumbotron is visible and
-> clickable: """
-> +        self.get(reverse('landing'))
-> +        jumbotron =3D self.find('.jumbotron')
-> +
-> +        # check Contribute to Toaster
-> +        contribute_to_toaster =3D
-> jumbotron.find_element_by_link_text('Contribute to Toaster')
-> +        self.assertTrue(contribute_to_toaster.is_displayed())
-> +        contribute_to_toaster.click()
-> +        self.assertTrue("wiki.yoctoproject.org/wiki/contribute_to_toaste=
-r"
-> in str(self.driver.current_url).lower())
-> +
->      def test_only_default_project(self):
->          """
->          No projects except default
-> --
-> 2.34.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15335):
-> https://lists.openembedded.org/g/bitbake-devel/message/15335
-> Mute This Topic: https://lists.openembedded.org/mt/102286646/924729
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> ticotimo@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
+ bin/bitbake-hashclient        | 145 +++++-
+ bin/bitbake-hashserv          | 132 ++++-
+ lib/bb/asyncrpc/__init__.py   |  33 +-
+ lib/bb/asyncrpc/client.py     | 120 ++---
+ lib/bb/asyncrpc/connection.py | 146 ++++++
+ lib/bb/asyncrpc/exceptions.py |  21 +
+ lib/bb/asyncrpc/serv.py       | 356 ++++++++-----
+ lib/hashserv/__init__.py      | 190 +++----
+ lib/hashserv/client.py        | 147 +++++-
+ lib/hashserv/server.py        | 951 +++++++++++++++++++++-------------
+ lib/hashserv/sqlalchemy.py    | 427 +++++++++++++++
+ lib/hashserv/sqlite.py        | 391 ++++++++++++++
+ lib/hashserv/tests.py         | 736 +++++++++++++++++++++++++-
+ lib/prserv/client.py          |   8 +-
+ lib/prserv/serv.py            |  37 +-
+ 15 files changed, 3034 insertions(+), 806 deletions(-)
+ create mode 100644 lib/bb/asyncrpc/connection.py
+ create mode 100644 lib/bb/asyncrpc/exceptions.py
+ create mode 100644 lib/hashserv/sqlalchemy.py
+ create mode 100644 lib/hashserv/sqlite.py
 
---0000000000005ef9340609054fe2
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+-- 
+2.34.1
 
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">On Mon, Oct 30, 2023 at 3:26=E2=80=AF=
-PM Alassane Yattara &lt;<a href=3D"mailto:alassane.yattara@savoirfairelinux=
-.com">alassane.yattara@savoirfairelinux.com</a>&gt; wrote:<br></div><blockq=
-uote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1p=
-x solid rgb(204,204,204);padding-left:1ex">Test that the followings link ar=
-e visible and clickable:<br>
-=C2=A0- OpenEmbedded<br>
-=C2=A0- BitBake<br>
-=C2=A0- Yocto Project<br>
-=C2=A0- Read the Toaster manual<br>
-=C2=A0- Contribute to Toaster<br>
-<br>
-Signed-off-by: Alassane Yattara &lt;<a href=3D"mailto:alassane.yattara@savo=
-irfairelinux.com" target=3D"_blank">alassane.yattara@savoirfairelinux.com</=
-a>&gt;<br>
----<br>
-=C2=A0.../tests/browser/test_landing_page.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 | 8=
-9 ++++++++++++++++++-<br>
-=C2=A01 file changed, 88 insertions(+), 1 deletion(-)<br>
-<br>
-diff --git a/lib/toaster/tests/browser/test_landing_page.py b/lib/toaster/t=
-ests/browser/test_landing_page.py<br>
-index e731af22..ecbc0af3 100644<br>
---- a/lib/toaster/tests/browser/test_landing_page.py<br>
-+++ b/lib/toaster/tests/browser/test_landing_page.py<br>
-@@ -12,7 +12,7 @@ from django.urls import reverse<br>
-=C2=A0from django.utils import timezone<br>
-=C2=A0from tests.browser.selenium_helpers import SeleniumTestCase<br>
-<br>
--from orm.models import Project, Build<br>
-+from orm.models import Layer, Layer_Version, Project, Build<br>
-<br>
-=C2=A0class TestLandingPage(SeleniumTestCase):<br>
-=C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot; Tests for redirects on the landing p=
-age &quot;&quot;&quot;<br>
-@@ -61,6 +61,93 @@ class TestLandingPage(SeleniumTestCase):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&#39;<a href=3D"http://docs=
-.yoctoproject.org/toaster-manual/index.html#toaster-user-manual" rel=3D"nor=
-eferrer" target=3D"_blank">http://docs.yoctoproject.org/toaster-manual/inde=
-x.html#toaster-user-manual</a>&#39;)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.assertTrue(&quot;Documentation&quot;=
- in documentation_link.text)<br>
-<br>
-+=C2=A0 =C2=A0 def test_openembedded_jumbotron_link_visible_and_clickable(s=
-elf):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot; Test OpenEmbedded link jumb=
-otron is visible and clickable: &quot;&quot;&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.get(reverse(&#39;landing&#39;))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 jumbotron =3D self.find(&#39;.jumbotron&#39;)<=
-br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # check OpenEmbedded<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 openembedded =3D jumbotron.find_element_by_lin=
-k_text(&#39;OpenEmbedded&#39;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(openembedded.is_displayed())<b=
-r>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 openembedded.click()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(&quot;<a href=3D"http://openem=
-bedded.org" rel=3D"noreferrer" target=3D"_blank">openembedded.org</a>&quot;=
- in self.driver.current_url)<br>
-+<br>
-+=C2=A0 =C2=A0 def test_bitbake_jumbotron_link_visible_and_clickable(self):=
-<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot; Test BitBake link jumbotron=
- is visible and clickable: &quot;&quot;&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.get(reverse(&#39;landing&#39;))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 jumbotron =3D self.find(&#39;.jumbotron&#39;)<=
-br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # check BitBake<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 bitbake =3D jumbotron.find_element_by_link_tex=
-t(&#39;BitBake&#39;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(bitbake.is_displayed())<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 bitbake.click()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(&quot;<a href=3D"http://yoctop=
-roject.org/software-item/bitbake" rel=3D"noreferrer" target=3D"_blank">yoct=
-oproject.org/software-item/bitbake</a>&quot; in self.driver.current_url)<br=
->
-+<br>
-+=C2=A0 =C2=A0 def test_yoctoproject_jumbotron_link_visible_and_clickable(s=
-elf):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot; Test Yocto Project link jum=
-botron is visible and clickable: &quot;&quot;&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.get(reverse(&#39;landing&#39;))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 jumbotron =3D self.find(&#39;.jumbotron&#39;)<=
-br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # check Yocto Project<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 yoctoproject =3D jumbotron.find_element_by_lin=
-k_text(&#39;Yocto Project&#39;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(yoctoproject.is_displayed())<b=
-r>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 yoctoproject.click()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(&quot;<a href=3D"http://yoctop=
-roject.org" rel=3D"noreferrer" target=3D"_blank">yoctoproject.org</a>&quot;=
- in self.driver.current_url)<br>
-+<br>
-+=C2=A0 =C2=A0 def test_link_setup_usign_toaster_visible_and_clickable(self=
-):<br></blockquote><div>Typo usign=C2=A0-&gt; using</div><div>=C2=A0</div><=
-blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
-eft:1px solid rgb(204,204,204);padding-left:1ex">
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot; Test big magenta button set=
-ting up and using toaster link in jumbotron<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if visible and clickable</blockq=
-uote><div>Your patch has a trailing whitespace in the above line, please ch=
-eck for that.=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:=
-0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">=
- <br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.get(reverse(&#39;landing&#39;))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 jumbotron =3D self.find(&#39;.jumbotron&#39;)<=
-br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # check Big magenta button<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 big_magenta_button =3D jumbotron.find_element_=
-by_link_text(<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 &#39;Toaster is ready to capture=
- your command line builds&#39;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 )<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(big_magenta_button.is_displaye=
-d())<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 big_magenta_button.click()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(&quot;<a href=3D"http://docs.y=
-octoproject.org/toaster-manual/setup-and-use.html#setting-up-and-using-toas=
-ter" rel=3D"noreferrer" target=3D"_blank">docs.yoctoproject.org/toaster-man=
-ual/setup-and-use.html#setting-up-and-using-toaster</a>&quot; in self.drive=
-r.current_url)<br>
-+<br>
-+=C2=A0 =C2=A0 def test_link_create_new_project_in_jumbotron_visible_and_cl=
-ickable(self):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot; Test big blue button create=
- new project jumbotron if visible and clickable &quot;&quot;&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Create a layer and a layer version to make v=
-isible the big blue button<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 layer =3D Layer.objects.create(name=3D&#39;bar=
-&#39;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 Layer_Version.objects.create(layer=3Dlayer)<br=
->
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.get(reverse(&#39;landing&#39;))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 jumbotron =3D self.find(&#39;.jumbotron&#39;)<=
-br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # check Big Blue button<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 big_blue_button =3D jumbotron.find_element_by_=
-link_text(<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 &#39;Create your first Toaster p=
-roject to run manage builds&#39;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 )<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(big_blue_button.is_displayed()=
-)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 big_blue_button.click()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(&quot;toastergui/newproject/&q=
-uot; in self.driver.current_url)<br>
-+<br>
-+=C2=A0 =C2=A0 def test_toaster_manual_link_visible_and_clickable(self):<br=
->
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot; Test Read the Toaster manua=
-l link jumbotron is visible and clickable: &quot;&quot;&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.get(reverse(&#39;landing&#39;))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 jumbotron =3D self.find(&#39;.jumbotron&#39;)<=
-br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # check Read the Toaster manual<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 toaster_manual =3D jumbotron.find_element_by_l=
-ink_text(&#39;Read the Toaster manual&#39;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(toaster_manual.is_displayed())=
-<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 toaster_manual.click()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(&quot;<a href=3D"https://docs.=
-yoctoproject.org/toaster-manual/index.html#toaster-user-manual" rel=3D"nore=
-ferrer" target=3D"_blank">https://docs.yoctoproject.org/toaster-manual/inde=
-x.html#toaster-user-manual</a>&quot; in self.driver.current_url)<br>
-+<br>
-+=C2=A0 =C2=A0 def test_contrib_to_toaster_link_visible_and_clickable(self)=
-:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot; Test Contribute to Toaster =
-link jumbotron is visible and clickable: &quot;&quot;&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.get(reverse(&#39;landing&#39;))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 jumbotron =3D self.find(&#39;.jumbotron&#39;)<=
-br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # check Contribute to Toaster<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 contribute_to_toaster =3D jumbotron.find_eleme=
-nt_by_link_text(&#39;Contribute to Toaster&#39;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(contribute_to_toaster.is_displ=
-ayed())<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 contribute_to_toaster.click()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(&quot;<a href=3D"http://wiki.y=
-octoproject.org/wiki/contribute_to_toaster" rel=3D"noreferrer" target=3D"_b=
-lank">wiki.yoctoproject.org/wiki/contribute_to_toaster</a>&quot; in str(sel=
-f.driver.current_url).lower())<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0def test_only_default_project(self):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0No projects except default<br>
--- <br>
-2.34.1<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#15335): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/15335" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/15335</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/102286646/924=
-729" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/102286646/924729</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:ticotimo@gmail.com" target=3D"_bla=
-nk">ticotimo@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div></div>
-
---0000000000005ef9340609054fe2--
 
