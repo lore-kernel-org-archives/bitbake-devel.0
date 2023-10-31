@@ -1,114 +1,100 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FECEC4167D
-	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 17:22:33 +0000 (UTC)
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
- by mx.groups.io with SMTP id smtpd.web11.1690.1698772945042904539
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 531FFC4167B
+	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 17:42:23 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web11.2215.1698774137444010833
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Oct 2023 10:22:25 -0700
+ Tue, 31 Oct 2023 10:42:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=ILmOHcdh;
- spf=pass (domain: gmail.com, ip: 209.85.167.174, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3b40d5ea323so3599881b6e.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 10:22:24 -0700 (PDT)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=qyYqXSHF;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id CE6EC9C2BE3
+	for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 13:42:16 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id E5Ve5wkdc4d6; Tue, 31 Oct 2023 13:42:16 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 56EB99C279F;
+	Tue, 31 Oct 2023 13:42:16 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 56EB99C279F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698772943; x=1699377743; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xleCVOaiuk+jamuqyn17pFhqNMF2hNul8RH+LBR3ufk=;
-        b=ILmOHcdhm3SzmQud9OmeTljfPyl7zwtBgW4EP6ktkCxZ63YkeXhoYMTTmcow8d1gRx
-         8XllycOPxNDbhqle7NCgLadYZiMPWxTar+GJpqIiIVkSh5gZ/FhVseMOcwb6HHKlPzCA
-         qYAaLUQLWVsvzdNDJhuXPVXOf6vZ/u6N6ZJGHS5tDD4svFRbP8sl7RDxJl3U8LLaA4db
-         6VTNvbfBArSJzjG93F8h9tC/9lM2WcKBRPE4vQ7Ot/4p0XCu2IiMDew12QswJ2zKEeA4
-         sNyF93pLZ1k7FEERg/bISvQORLUi2caVFMkSI04pYUWGnj+vhApRM/O945NZIQl5eplp
-         D7tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698772943; x=1699377743;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xleCVOaiuk+jamuqyn17pFhqNMF2hNul8RH+LBR3ufk=;
-        b=jro5xb+jehO42xh4fVUEg/R+h8n0o4u5pQw0cuCw/FT7PmJjQ7f3r/3YrZLMqJk+OE
-         v+8tEpOo2xHWPIFBQtyw9dheGBwUz3m+va2YxmCz7s7iK3j3hUL8fP7In37YWz0C4cRX
-         a5CUHDgtTH+aLziKa9zzAzX0ZCalgFgE7j1bF99AGflaxfSTVNP1XVl3OGwYGolnRB/z
-         XqN6H29XEJW9tiYGcRsF0ueoC6jDSC+qJFcc0I9njybb2rTW3471fb6k50T53XyelO5u
-         3AZ+mKj+FSuD6IlJx/nJpWCMIcilCZNE37wUJLC43716tFCi1hZd+2Bi3aiLCgsrPUXI
-         XbbQ==
-X-Gm-Message-State: AOJu0Yz359b0Dlzv1xWmlBqY+TmDsbSjtoYLtQpur3YYckzi4yhBKaAx
-	w4NRUq8vKzX4MqFCMb2XyfSsySeUZJg=
-X-Google-Smtp-Source: AGHT+IE0CZTg3ZoBVfjKaZSCaxQg2pXrOMADSKiGLCzs+LOEVfqZyrtAOcJUaOv3Vw0wOkqU2Rk35A==
-X-Received: by 2002:a05:6870:114f:b0:1c5:56f:ac08 with SMTP id 15-20020a056870114f00b001c5056fac08mr14299557oag.12.1698772943159;
-        Tue, 31 Oct 2023 10:22:23 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::6aa6])
-        by smtp.gmail.com with ESMTPSA id k6-20020a056830150600b006ce2e464a45sm282503otp.29.2023.10.31.10.22.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Oct 2023 10:22:21 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1698774136; bh=wIHbE11BWKitYZkfAFNEA6bXcaZDEe9cTiCXpyD4qwk=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=qyYqXSHFC0MMe26a76KVO6cgBq8o8d/ckREQMxVivYWlUX4hUAMajSKAGI3Wl1y78
+	 vBDHH4TbDT1PxZjGA38Drtla40rKQwCVD3P7yvk3hzZlRjDyQuH4KSem+Mw8nTsyqi
+	 moT8UPJ337x3U31KV75ExEQfd57AIPZfYzUAwtsNJb/4thaF/WZmI8Is0hsKdkFzAZ
+	 8dJ0otIwJ8tyHXlk19864AdutwjlrJLd2tMlLwrY2aCP6AtsTOydEcfcyvROZ0aciA
+	 e+Z11CgiTRMBd3DZh4JbiTlZ7AzWM1hXiGNEONE9FYqX1NLaaNgSqk5y4maaHrmfNw
+	 RA3qeNbZ3vpxw==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id mApAPMWBVFHC; Tue, 31 Oct 2023 13:42:16 -0400 (EDT)
+Received: from jedi.. (unknown [196.127.183.75])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 8C9699C2BE3;
+	Tue, 31 Oct 2023 13:42:15 -0400 (EDT)
+From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v4 21/22] hashserv: Allow self-service deletion
-Date: Tue, 31 Oct 2023 11:21:37 -0600
-Message-Id: <20231031172138.3577199-22-JPEWhacker@gmail.com>
+Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH v2 4/8] Toaster: fixed pytest error: Database access not allowed, use the "django_db"
+Date: Tue, 31 Oct 2023 18:41:59 +0100
+Message-Id: <20231031174159.696667-4-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231031172138.3577199-1-JPEWhacker@gmail.com>
-References: <20231030191728.1276805-1-JPEWhacker@gmail.com>
- <20231031172138.3577199-1-JPEWhacker@gmail.com>
+In-Reply-To: <20231031174159.696667-1-alassane.yattara@savoirfairelinux.com>
+References: <20231031174159.696667-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 17:22:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15371
+ <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 17:42:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15376
 
-Allows users to self-service deletion of their own user accounts
-(meaning, they can delete their own accounts without special
-permissions).
+Pytest failed on functional/test_functional_basic because database access=
+ not allowed
+- we should use "django_db" fixture to allowed db access
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Note: Pytest-django takes a conservative approach to enabling database ac=
+cess.
+By default your tests will fail if they try to access the database.
+Only if you explicitly request database access will this be allowed.
+
+https://pytest-django.readthedocs.io/en/latest/helpers.html#pytest-mark-d=
+jango-db-request-database-access
+
+Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- lib/hashserv/server.py | 2 +-
- lib/hashserv/tests.py  | 7 +++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ lib/toaster/tests/functional/test_functional_basic.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index d2fd75df..6da56df7 100644
---- a/lib/hashserv/server.py
-+++ b/lib/hashserv/server.py
-@@ -708,7 +708,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-             "token": token,
-         }
- 
--    @permissions(USER_ADMIN_PERM, allow_anon=False)
-+    @permissions(USER_ADMIN_PERM, allow_self_service=True, allow_anon=False)
-     async def handle_delete_user(self, request):
-         username = str(request["username"])
- 
-diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index 5d209ffb..f0be8679 100644
---- a/lib/hashserv/tests.py
-+++ b/lib/hashserv/tests.py
-@@ -683,10 +683,13 @@ class HashEquivalenceCommonTests(object):
- 
-         user = self.create_user("test-user", [])
- 
--        # No self service
--        with self.auth_client(user) as client, self.assertRaises(InvokeError):
-+        # self service
-+        with self.auth_client(user) as client:
-             client.delete_user(user["username"])
- 
-+        self.assertIsNone(admin_client.get_user(user["username"]))
-+        user = self.create_user("test-user", [])
-+
-         with self.auth_perms() as client, self.assertRaises(InvokeError):
-             client.delete_user(user["username"])
- 
--- 
+diff --git a/lib/toaster/tests/functional/test_functional_basic.py b/lib/=
+toaster/tests/functional/test_functional_basic.py
+index b0def544..7e9be91c 100644
+--- a/lib/toaster/tests/functional/test_functional_basic.py
++++ b/lib/toaster/tests/functional/test_functional_basic.py
+@@ -8,6 +8,7 @@
+ #
+=20
+ import re, time
++import pytest
+ from django.urls import reverse
+ from tests.functional.functional_helpers import SeleniumFunctionalTestCa=
+se
+ from orm.models import Project
+@@ -16,6 +17,7 @@ from selenium.webdriver.common.by import By
+ class FuntionalTestBasic(SeleniumFunctionalTestCase):
+=20
+ #   testcase (1514)
++    @pytest.mark.django_db
+     def test_create_slenium_project(self):
+         project_name =3D 'selenium-project'
+         self.get(reverse('newproject'))
+--=20
 2.34.1
 
 
