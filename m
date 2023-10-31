@@ -2,141 +2,129 @@ Return-Path: <ticotimo@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5914C41535
-	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 14:28:11 +0000 (UTC)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
- by mx.groups.io with SMTP id smtpd.web11.187798.1698762485195232658
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB34EC41535
+	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 14:39:47 +0000 (UTC)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+ by mx.groups.io with SMTP id smtpd.web10.287.1698763184125774962
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Oct 2023 07:28:05 -0700
+ Tue, 31 Oct 2023 07:39:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=dsqXwdyJ;
- spf=pass (domain: gmail.com, ip: 209.85.219.177, mailfrom: ticotimo@gmail.com)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-d9ace5370a0so4391875276.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 07:28:05 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=G7XN4zF3;
+ spf=pass (domain: gmail.com, ip: 209.85.219.182, mailfrom: ticotimo@gmail.com)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-da0344eb3fdso5268911276.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 07:39:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698762484; x=1699367284; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1698763183; x=1699367983; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=L8hvhYJucUVAduDy14mLjtnQ52I9vxkhADQgsshHfsk=;
-        b=dsqXwdyJG9lmNqr6qIuseT/i22lLwaPuFI1aHLL5z2fwmZQ8BSgFT/+us9Ou1cXhr7
-         ZTu9cz9yT+cG3DQi6QsrN9e+ILjHx/9Y/k6s6HLF6VZhFYcHeU+cMPRFMftwKXTQ/pDn
-         6k1Xym0PKsK6c+ydRRHkutatgbCPwV0nEUUoGW5IwCgH4IANf4uwT+13CgZxTTVGP00A
-         O1Ht7LHzvSUGCcw/RBaE12gGBOgZk5I93TSb3AB7aoclgwZmFcC8Pe0yGwgoI/ojQYSq
-         V7+YUuC7RFh/czqWC2KepoCxp7SyatpI1+uLC71z1IAzc9kAIn0TfDCifKWhzUKtKUAr
-         s0ZA==
+        bh=IvCNB/nbFRzkzFsO8mry+k+bJgl09nvZpLPp6e8FVJ4=;
+        b=G7XN4zF305y4dBA41qE2CW7YubvFMB0XxAo2aQDOd6t5UwmZv/nUslaDb5STr8aMsq
+         ThAvnpSKZMKgp3bL+pAmNxTaRwHLUfDKaD8pjsjpHhYJ8WENut46nbGXQAwJm0pS9rc9
+         bWr7CBxv9R3QNqPZ39o962qsx5PniucxgKoZHdErS0CLJ45NAm+TE0YgnYtOfOvF8kvZ
+         3FhhzQFOihc7BsSF1vWbqccoGxFuCh8KC0//2kE2CWMZssVF+F63gW8QWDWNxos4iA+A
+         rOzVnPBltxyJkeLyd/zOXwjWWJamYjLxAYm0qY0uQq5qYtwUOF381VDBaaxUVNOvDGqt
+         81PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698762484; x=1699367284;
+        d=1e100.net; s=20230601; t=1698763183; x=1699367983;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=L8hvhYJucUVAduDy14mLjtnQ52I9vxkhADQgsshHfsk=;
-        b=JiyJBXoPOcw+nfi5ObWv3wvfwoGlSOxWFB//O5cIb0dofm9dVXQmN1KmLwr6f/1jYE
-         xpLL2ytURLYZtmBKwGcEi01XckCUCLkk2XWXhtL1UhSBcNu6jY82ejbWS2+EYl+H+x4x
-         GfA97a+17zyfWC5rONBDMmqPrXPgmImxViwdenc9r8LboR1N/Y3KMSLiNpSQ9RAktfxT
-         2QMG56lCvgmuZQrrqH8QdTsU/gNblUoI2pyGUZqCGmJloUT4ttUaOowCrm62wsj0Uf/O
-         ULj6yyimIDWVHJ0mG3Pgo+Ybkk6w6G75+BKMK81OecutJfhP5WNpGBIWIPdxL4/gp58j
-         P9nQ==
-X-Gm-Message-State: AOJu0YwpdWazdM4V3LbcSJP5/9yqfeoQc6AawCUi/RKYmry6VS0X/LO2
-	ucee88darw4fJu+6VClOcGqp2SB2gpiW0BpyitPBysG8yig=
-X-Google-Smtp-Source: AGHT+IFgbh6+DPqZXFPsnnusfhOrGFcsEzd/Ex1GET6S8znFH2d7EPm+MZJZqzL3CLbBYJUNbfX2pRfTWIRXSQdSrpk=
-X-Received: by 2002:a25:83c1:0:b0:d9c:7c97:7fcd with SMTP id
- v1-20020a2583c1000000b00d9c7c977fcdmr10171785ybm.27.1698762484219; Tue, 31
- Oct 2023 07:28:04 -0700 (PDT)
+        bh=IvCNB/nbFRzkzFsO8mry+k+bJgl09nvZpLPp6e8FVJ4=;
+        b=Y91yFo/wFefLRqA7dSV1TWKVYOl/ZuEm07XAcQd0LorrJxebL6jqHchljZDbkCsMiU
+         mXrUT95Uei85EfFmbGFloMaT2OBhqsSAhbXHVotbn233UYX6z2G8y4uriTsyJlLksqVY
+         seNwPKQeYu3oDl29KoXEm2Nx8UnAEZDRhV1Xo4oRheNugVue7kTbEds1DRIxjB9/8Qow
+         DRTeAHeTqNuY7bpwd/VtbrAk3nD/huCG4ckkV/zld2pcE0Xvbq1nrVX/PVP4dI/hlj3a
+         bL139z4IDaQkhzs9da+2EOxS/uEESJOH/sYRK+ASsmjxjvS/OtEoYywjbSAJ7/IutjJn
+         7OeQ==
+X-Gm-Message-State: AOJu0YzP9dJTvp6xTRqhqC61J+UKmY2fKT4Q1q1RwHMq2JqIuF1lDTRs
+	SeKh3e1BP30ZrbsnSYd/rNitnGOzvhcU6NFrjhI=
+X-Google-Smtp-Source: AGHT+IEMcFx0eqio5Hryi8aX/WNMl40mesFLTkFnbAe75djv6HJ7qU92XcfEl326VfeFj7vSQdnV5wJnpOgogr8EycI=
+X-Received: by 2002:a25:d497:0:b0:da0:5ed8:ac72 with SMTP id
+ m145-20020a25d497000000b00da05ed8ac72mr12133187ybf.3.1698763182839; Tue, 31
+ Oct 2023 07:39:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231030195037.232912-1-alassane.yattara@savoirfairelinux.com> <20231030195037.232912-2-alassane.yattara@savoirfairelinux.com>
-In-Reply-To: <20231030195037.232912-2-alassane.yattara@savoirfairelinux.com>
+References: <20231030195037.232912-1-alassane.yattara@savoirfairelinux.com> <20231030195037.232912-4-alassane.yattara@savoirfairelinux.com>
+In-Reply-To: <20231030195037.232912-4-alassane.yattara@savoirfairelinux.com>
 From: Tim Orling <ticotimo@gmail.com>
-Date: Tue, 31 Oct 2023 07:27:53 -0700
-Message-ID: <CANx9H-DBH+GSL777XSVCRZf7uebo4kFRZ1hDAA_oJQu2Mp6C8g@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 2/8] Toaster: Update orm.models to catch
- error ProcessLookupError
+Date: Tue, 31 Oct 2023 07:39:31 -0700
+Message-ID: <CANx9H-AgobLnNY+2CivykboxKn2eZykYRo8uXit=UAhnZ8dzaw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 4/8] Toaster: fixed pytest error: Database
+ access not allowed, use the "django_db"
 To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 Cc: bitbake-devel@lists.openembedded.org, toaster@lists.yoctoproject.org
-Content-Type: multipart/alternative; boundary="0000000000006e06b7060903f6b5"
+Content-Type: multipart/alternative; boundary="000000000000121aad060904204a"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 14:28:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15339
+ <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 14:39:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15340
 
---0000000000006e06b7060903f6b5
+--000000000000121aad060904204a
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, Oct 30, 2023 at 12:51=E2=80=AFPM Alassane Yattara <
 alassane.yattara@savoirfairelinux.com> wrote:
 
-> Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+> Pytest failed on functional/test_functional_basic because database access
+> not allowed
+> - we should use "django_db" fixture to allowed db access
+>
+> Note: Pytest-django takes a conservative approach to enabling database
+> access.
+> By default your tests will fail if they try to access the database.
+> Only if you explicitly request database access will this be allowed.
+>
+> We're missing an opportunity to add a link to pytest.mark.django_db
+ documentation:
+https://pytest-django.readthedocs.io/en/latest/helpers.html#pytest-mark-dja=
+ngo-db-request-database-access
+
+This makes it easier for someone to review the change and for someone in
+the future to understand what it does.
+
+Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 > ---
->  lib/toaster/orm/models.py | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  lib/toaster/tests/functional/test_functional_basic.py | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-> index 0d503a51..4f6d2147 100644
-> --- a/lib/toaster/orm/models.py
-> +++ b/lib/toaster/orm/models.py
-> @@ -1389,9 +1389,6 @@ class Machine(models.Model):
->          return "Machine " + self.name + "(" + self.description + ")"
+> diff --git a/lib/toaster/tests/functional/test_functional_basic.py
+> b/lib/toaster/tests/functional/test_functional_basic.py
+> index b0def544..7e9be91c 100644
+> --- a/lib/toaster/tests/functional/test_functional_basic.py
+> +++ b/lib/toaster/tests/functional/test_functional_basic.py
+> @@ -8,6 +8,7 @@
+>  #
 >
+>  import re, time
+> +import pytest
+>  from django.urls import reverse
+>  from tests.functional.functional_helpers import SeleniumFunctionalTestCa=
+se
+>  from orm.models import Project
+> @@ -16,6 +17,7 @@ from selenium.webdriver.common.by import By
+>  class FuntionalTestBasic(SeleniumFunctionalTestCase):
 >
-> -
-> -
-> -
->  class BitbakeVersion(models.Model):
->
->      name =3D models.CharField(max_length=3D32, unique =3D True)
-> @@ -1838,6 +1835,7 @@ class LogMessage(models.Model):
->      def __str__(self):
->          return force_bytes('%s %s %s' % (self.get_level_display(),
-> self.message, self.build))
->
-> +
->
-
-Why the extra new lines? Is this a PEP-8 thing?
-
-
->  def invalidate_cache(**kwargs):
->      from django.core.cache import cache
->      try:
-> @@ -1845,6 +1843,7 @@ def invalidate_cache(**kwargs):
->      except Exception as e:
->        logger.warning("Problem with cache backend: Failed to clear cache:
-> %s" % e)
->
-> +
->  def signal_runbuilds():
->      """Send SIGUSR1 to runbuilds process"""
->      try:
-> @@ -1853,6 +1852,9 @@ def signal_runbuilds():
->              os.kill(int(pidf.read()), SIGUSR1)
->      except FileNotFoundError:
->          logger.info("Stopping existing runbuilds: no current process
-> found")
-> +    except ProcessLookupError:
+>  #   testcase (1514)
+> +    @pytest.mark.django_db
+>      def test_create_slenium_project(self):
 >
 
-We should at a minimum be doing a logger.warning here.
-
-ProcessLookupError here most likely means that a subprocess has failed or
-been killed and we should not just be ignoring that.
+This would be a great opportunity to fix the typo in the test name
+slenium -> selenium
 
 
-> +        pass
-> +
->
->  class Distro(models.Model):
->      search_allowed_fields =3D ["name", "description",
-> "layer_version__layer__name"]
+>          project_name =3D 'selenium-project'
+>          self.get(reverse('newproject'))
 > --
 > 2.34.1
 >
 >
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 > Links: You receive all messages sent to this group.
-> View/Reply Online (#15325):
-> https://lists.openembedded.org/g/bitbake-devel/message/15325
-> Mute This Topic: https://lists.openembedded.org/mt/102283456/924729
+> View/Reply Online (#15328):
+> https://lists.openembedded.org/g/bitbake-devel/message/15328
+> Mute This Topic: https://lists.openembedded.org/mt/102283460/924729
 > Group Owner: bitbake-devel+owner@lists.openembedded.org
 > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
 > ticotimo@gmail.com]
@@ -144,7 +132,7 @@ been killed and we should not just be ignoring that.
 >
 >
 
---0000000000006e06b7060903f6b5
+--000000000000121aad060904204a
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -153,83 +141,73 @@ Content-Transfer-Encoding: quoted-printable
 =AFPM Alassane Yattara &lt;<a href=3D"mailto:alassane.yattara@savoirfaireli=
 nux.com">alassane.yattara@savoirfairelinux.com</a>&gt; wrote:<br></div><blo=
 ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
-:1px solid rgb(204,204,204);padding-left:1ex">Signed-off-by: Alassane Yatta=
-ra &lt;<a href=3D"mailto:alassane.yattara@savoirfairelinux.com" target=3D"_=
-blank">alassane.yattara@savoirfairelinux.com</a>&gt;<br>
+:1px solid rgb(204,204,204);padding-left:1ex">Pytest failed on functional/t=
+est_functional_basic because database access not allowed<br>
+- we should use &quot;django_db&quot; fixture to allowed db access<br>
+<br>
+Note: Pytest-django takes a conservative approach to enabling database acce=
+ss.<br>
+By default your tests will fail if they try to access the database.<br>
+Only if you explicitly request database access will this be allowed.<br>
+<br></blockquote><div>We&#39;re missing an opportunity to add a link to=C2=
+=A0<a class=3D"gmail_plusreply" id=3D"plusReplyChip-0">pytest.mark.django_d=
+b </a>=C2=A0documentation:</div><div><a href=3D"https://pytest-django.readt=
+hedocs.io/en/latest/helpers.html#pytest-mark-django-db-request-database-acc=
+ess">https://pytest-django.readthedocs.io/en/latest/helpers.html#pytest-mar=
+k-django-db-request-database-access</a><br></div><div><br></div><div>This m=
+akes it easier for someone to review the change and for someone in the futu=
+re to understand what it does.</div><div><br></div><blockquote class=3D"gma=
+il_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,2=
+04,204);padding-left:1ex">
+Signed-off-by: Alassane Yattara &lt;<a href=3D"mailto:alassane.yattara@savo=
+irfairelinux.com" target=3D"_blank">alassane.yattara@savoirfairelinux.com</=
+a>&gt;<br>
 ---<br>
-=C2=A0lib/toaster/orm/models.py | 8 +++++---<br>
-=C2=A01 file changed, 5 insertions(+), 3 deletions(-)<br>
+=C2=A0lib/toaster/tests/functional/test_functional_basic.py | 2 ++<br>
+=C2=A01 file changed, 2 insertions(+)<br>
 <br>
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py<br>
-index 0d503a51..4f6d2147 100644<br>
---- a/lib/toaster/orm/models.py<br>
-+++ b/lib/toaster/orm/models.py<br>
-@@ -1389,9 +1389,6 @@ class Machine(models.Model):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return &quot;Machine &quot; + <a href=3D"=
-http://self.name" rel=3D"noreferrer" target=3D"_blank">self.name</a> + &quo=
-t;(&quot; + self.description + &quot;)&quot;<br>
+diff --git a/lib/toaster/tests/functional/test_functional_basic.py b/lib/to=
+aster/tests/functional/test_functional_basic.py<br>
+index b0def544..7e9be91c 100644<br>
+--- a/lib/toaster/tests/functional/test_functional_basic.py<br>
++++ b/lib/toaster/tests/functional/test_functional_basic.py<br>
+@@ -8,6 +8,7 @@<br>
+=C2=A0#<br>
 <br>
+=C2=A0import re, time<br>
++import pytest<br>
+=C2=A0from django.urls import reverse<br>
+=C2=A0from tests.functional.functional_helpers import SeleniumFunctionalTes=
+tCase<br>
+=C2=A0from orm.models import Project<br>
+@@ -16,6 +17,7 @@ from <a href=3D"http://selenium.webdriver.common.by" rel=
+=3D"noreferrer" target=3D"_blank">selenium.webdriver.common.by</a> import B=
+y<br>
+=C2=A0class FuntionalTestBasic(SeleniumFunctionalTestCase):<br>
 <br>
--<br>
--<br>
--<br>
-=C2=A0class BitbakeVersion(models.Model):<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0name =3D models.CharField(max_length=3D32, unique =3D T=
-rue)<br>
-@@ -1838,6 +1835,7 @@ class LogMessage(models.Model):<br>
-=C2=A0 =C2=A0 =C2=A0def __str__(self):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return force_bytes(&#39;%s %s %s&#39; % (=
-self.get_level_display(), self.message, self.build))<br>
-<br>
-+<br></blockquote><div><br></div><div>Why the extra new lines? Is this a PE=
-P-8 thing?</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D=
-"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-le=
-ft:1ex">
-=C2=A0def invalidate_cache(**kwargs):<br>
-=C2=A0 =C2=A0 =C2=A0from django.core.cache import cache<br>
-=C2=A0 =C2=A0 =C2=A0try:<br>
-@@ -1845,6 +1843,7 @@ def invalidate_cache(**kwargs):<br>
-=C2=A0 =C2=A0 =C2=A0except Exception as e:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0logger.warning(&quot;Problem with cache backend:=
- Failed to clear cache: %s&quot; % e)<br>
-<br>
-+<br>
-=C2=A0def signal_runbuilds():<br>
-=C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;Send SIGUSR1 to runbuilds process&quo=
-t;&quot;&quot;<br>
-=C2=A0 =C2=A0 =C2=A0try:<br>
-@@ -1853,6 +1852,9 @@ def signal_runbuilds():<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0os.kill(int(pidf.read()), S=
-IGUSR1)<br>
-=C2=A0 =C2=A0 =C2=A0except FileNotFoundError:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0<a href=3D"http://logger.info" rel=3D"nor=
-eferrer" target=3D"_blank">logger.info</a>(&quot;Stopping existing runbuild=
-s: no current process found&quot;)<br>
-+=C2=A0 =C2=A0 except ProcessLookupError:<br></blockquote><div><br></div><d=
-iv>We should at a minimum be doing a logger.warning here.</div><div><br></d=
-iv><div>ProcessLookupError here most likely means that a subprocess has fai=
-led or been killed and we should not just be ignoring that.</div><div>=C2=
-=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
-x;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 pass<br>
-+<br>
-<br>
-=C2=A0class Distro(models.Model):<br>
-=C2=A0 =C2=A0 =C2=A0search_allowed_fields =3D [&quot;name&quot;, &quot;desc=
-ription&quot;, &quot;layer_version__layer__name&quot;]<br>
+=C2=A0#=C2=A0 =C2=A0testcase (1514)<br>
++=C2=A0 =C2=A0 @pytest.mark.django_db<br>
+=C2=A0 =C2=A0 =C2=A0def test_create_slenium_project(self):<br></blockquote>=
+<div><br></div><div>This would be a great opportunity to fix the typo in th=
+e test name slenium=C2=A0-&gt; selenium</div><div>=C2=A0</div><blockquote c=
+lass=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px soli=
+d rgb(204,204,204);padding-left:1ex">
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0project_name =3D &#39;selenium-project&#3=
+9;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.get(reverse(&#39;newproject&#39;))<b=
+r>
 -- <br>
 2.34.1<br>
 <br>
 <br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 Links: You receive all messages sent to this group.<br>
-View/Reply Online (#15325): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/15325" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/15325</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/102283456/924=
+View/Reply Online (#15328): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/15328" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/15328</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/102283460/924=
 729" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/102283456/924729</a><br>
+/102283460/924729</a><br>
 Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
 " target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
 Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
@@ -240,5 +218,5 @@ nk">ticotimo@gmail.com</a>]<br>
 <br>
 </blockquote></div></div>
 
---0000000000006e06b7060903f6b5--
+--000000000000121aad060904204a--
 
