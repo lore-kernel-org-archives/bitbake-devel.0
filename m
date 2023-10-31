@@ -2,127 +2,181 @@ Return-Path: <ticotimo@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A86C4167D
-	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 14:59:57 +0000 (UTC)
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
- by mx.groups.io with SMTP id smtpd.web11.799.1698764389226539140
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC585C4332F
+	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 15:07:27 +0000 (UTC)
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+ by mx.groups.io with SMTP id smtpd.web10.1120.1698764847109986205
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Oct 2023 07:59:49 -0700
+ Tue, 31 Oct 2023 08:07:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=LNxnSphb;
- spf=pass (domain: gmail.com, ip: 209.85.219.175, mailfrom: ticotimo@gmail.com)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-d9ac31cb051so5180331276.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 07:59:49 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=XecpBsV3;
+ spf=pass (domain: gmail.com, ip: 209.85.210.51, mailfrom: ticotimo@gmail.com)
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6cd09663b1cso3340732a34.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 08:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698764388; x=1699369188; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1698764846; x=1699369646; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kx7ZuZOiOSQJH5RHWTz1tricbrMlHHXbhlScENcdNGQ=;
-        b=LNxnSphbINEnoC74J4hfxbtQk0XWeFHjEcc3eSqD/EBIN9h4Cg9pGxHkviKMaOE8Zg
-         LNuVdoWpiNcd9Y0tgkhQiyR3j/6C4X5Vwo5SMDpWaTQXHHoqB4MgXdmdkARCR5NxH+PD
-         cgHRJbOJmZtIeWn7FyyQyAOqlSCLIg7WuCGU3nmgD/bYrcyPgsq2q63Vh2LBMFRdjwwP
-         cO+D6KX39ORfJ4bHZruH+w1mEvJeNW9CQzqKcQjjlzpgEyrGbCPcCs/DQjA35+uNONFP
-         Jv+1npCm3kgLMABpwhvHxz5sOWkQFjdiHoHTPNZmFwtkI83zPC3rsfOxebV6IAi5wQOJ
-         PhDw==
+        bh=u3AVzxCXZgDaTuqM+Y+u+SYKPLmxAUTr6wOHu/vMFJo=;
+        b=XecpBsV3L77t6QCy4n2ZJMQcDFbdm0MbVAmMw4XO4ZxXV85x0rtajjChWYnfAQUpei
+         lSmBIJx8TIpDRU6tkMwNxZEhoidiUIUysUONd5VbF1ke9yvvFFqiGA9Mz3TFRcz8OGA5
+         f6hPzKW61zpwOZDNGCr5+xgQXyYZUG7ZuHcN5eYNpqZGcZb5mIVAyDsMkUGJus+UR6VN
+         Webj6Jz0IrbDU5jCBjf3LeXuvAtCwnLTFzJcXOLipLW8fF7Q0IuFfv97N3NA5/EZCQZY
+         L109C8mZ8w7TqNnHfwOjv63urQALyYfjAikUr9vohPCoHogD6jzZ+TLw1OxNSz0tfTiE
+         SgSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698764388; x=1699369188;
+        d=1e100.net; s=20230601; t=1698764846; x=1699369646;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Kx7ZuZOiOSQJH5RHWTz1tricbrMlHHXbhlScENcdNGQ=;
-        b=U+8aKvqEEP40fNdTLaTK3GsEfkqjsd3KKxdocVtvP1DJWD7n0T07bK4DS4Zz0raPII
-         JAfpPwI5bBsdMCWhbnjZDbgWrqh1rt9OZMn2CxJEJUJpwLJI6kQY/gJVC1Vx1JelX8+X
-         XMjcfsC+82F3xNHARAwBwgfHblPCEBqV6p2ytBAGfwsTBOgMJSVXB7XbALodB8YM1ST3
-         5Q3l9jmHuYQ9EEuZCtw3lIsgaxhfkViU35evZ6B4Y95uwr2MZ9CIHVR4xht8HK1kCUo2
-         jHkP4MV3sr5AyCcWsjg54ymFbevLSa6x8liEwNirBAXxa9cUMRz7ZAp6ciDa9mmZ9cKd
-         Zp+w==
-X-Gm-Message-State: AOJu0YymkX94AIZzLcFePQjaKShvNS6zal/uvfXKjOPM0vtrlLa4plYg
-	CnezYoe2taNnygTtyQ0TqNqL7uwuvPPamiHmRUz4eGzZQu0=
-X-Google-Smtp-Source: AGHT+IFLdTzXgWtW9sQ0eYYGlh/AxKhkQyH4kFB39Hlou111ZSYDFk4L8LT5wyAw+uPTBNpat8FPjaOhJlg6+e6VK+c=
-X-Received: by 2002:a25:2e0c:0:b0:d9a:4fa0:dca9 with SMTP id
- u12-20020a252e0c000000b00d9a4fa0dca9mr12099770ybu.25.1698764388360; Tue, 31
- Oct 2023 07:59:48 -0700 (PDT)
+        bh=u3AVzxCXZgDaTuqM+Y+u+SYKPLmxAUTr6wOHu/vMFJo=;
+        b=xAqeALX84uzUAQpXhKpn1SBDYCFAUwAShnQgrUCcbKQHZSSwnd2zu4LDeiWvRoMlHa
+         upekzGt72G1irKqkkCD4vn+MRSbBCU8Rr3T41abNkAN2og+mBKBdKEaphavBVp/CYN9x
+         XQ/+kqeYbDzwVzGudlusmSGO59weo7rCmnRYXU6i0O9aGZId3uPw57aiqogTViW2K6vF
+         OERiasuEZffFeSGA7WJ6osG8Q7x+bZkl/LxFw4d41deX5UGXsCAjOhlN9z96JjWo+8FE
+         jks3wxjl+1KDajvXuwNhM2TEmDf8Q6lU/tTenjeMugirralpZmeD1lZywtOj5osQ50sp
+         5N5g==
+X-Gm-Message-State: AOJu0YymhUUOb1oVHnHYM2vc6AO6M3Ewz9ixA7DTXT+AZ6Kw2nV0x6Zb
+	y6pbACeWJpmiF7qKFKiQFwC/DztXNhCOEnLZa4mb0fOJxzs=
+X-Google-Smtp-Source: AGHT+IEuipkXcXZg1S3SLZOn8W8L+Aur7dsejgyeNn2HH/nX/cvsmzcPIYRGD6PBbvlwN1LFndqIE8NORxpAH36htaM=
+X-Received: by 2002:a05:6830:43a6:b0:6bc:9824:5089 with SMTP id
+ s38-20020a05683043a600b006bc98245089mr15888672otv.4.1698764846368; Tue, 31
+ Oct 2023 08:07:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231030195132.235083-1-alassane.yattara@savoirfairelinux.com> <20231030195132.235083-6-alassane.yattara@savoirfairelinux.com>
-In-Reply-To: <20231030195132.235083-6-alassane.yattara@savoirfairelinux.com>
+References: <20231030195037.232912-1-alassane.yattara@savoirfairelinux.com> <20231030195037.232912-7-alassane.yattara@savoirfairelinux.com>
+In-Reply-To: <20231030195037.232912-7-alassane.yattara@savoirfairelinux.com>
 From: Tim Orling <ticotimo@gmail.com>
-Date: Tue, 31 Oct 2023 07:59:37 -0700
-Message-ID: <CANx9H-CqXf5eMtbBiMO1sS9VtmYShRv=WDNc3wX5d_ogKoWCcA@mail.gmail.com>
-Subject: Re: [Toaster] [PATCH 6/8] Toaster: Move toaster tests requirements in bitbake/lib/toaster/toaster-tests-requirements
+Date: Tue, 31 Oct 2023 08:07:15 -0700
+Message-ID: <CANx9H-BwNdO1LFzwuu1yEwJ_5ApTTCSuKssn6VUPp2T95MMMCg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 7/8] Toaster: fixed: Tests fail when
+ executed one after the other out of sequence
 To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Cc: toaster@lists.yoctoproject.org, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="000000000000ece7630609046734"
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000398cbe0609048379"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 14:59:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15343
+ <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 15:07:27 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15344
 
---000000000000ece7630609046734
+--000000000000398cbe0609048379
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, Oct 30, 2023 at 12:51=E2=80=AFPM Alassane Yattara <
 alassane.yattara@savoirfairelinux.com> wrote:
 
-> To make difference between bitbake and toaster python requirements,
-> a dedicated requirements file is created for toaster in root of toaster
-> dir.
+> As mentionned in earlier commit, pytest-django takes a conservative
+> approach
+> to enabling database access. By default our tests will fail if they try t=
+o
+> access
+> the database, Only if we explicitly request database access will this be
+> allowed,
+> using pytest marks to tell pytest-django our test needs database access.
+>
+> A side effect of pytest mark, is test_case method marked is execute out o=
+f
+> scope of its module class, which create an inconsistance sequence and mak=
+e
+> fails
+> followings tests.
+>
+> The scope of the ordering is global per default, e.g. tests with lower
+> ordinal
+> numbers are always executed before tests with higher numbers in the same
+> test session,
+> regardless of the module and class they reside in. This can be changed by
+> using
+> the --order-scope option from module pytest-order.
+>
+> To fix that i added execution order to tests suite using pytest-order.
 >
 >
-Since this is making a change to what was introduced in the first patch in
-this series, you should instead go back and fix that commit?
+This seems like a reasonable explanation of what is happening and why the
+change is being made.
 
 
 > Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-> ---
->  lib/toaster/tests/toaster-tests-requirements.txt | 5 +++++
->  toaster-requirements.txt                         | 5 -----
->  2 files changed, 5 insertions(+), 5 deletions(-)
 >
+Reviewed-by: Tim Orling <tim.orling@konsulko.com>
+
+> ---
+>  lib/toaster/tests/functional/test_functional_basic.py | 4 +++-
+>  lib/toaster/tests/toaster-tests-requirements.txt      | 1 +
+>  lib/toaster/tests/views/test_views.py                 | 2 ++
+>  3 files changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/lib/toaster/tests/functional/test_functional_basic.py
+> b/lib/toaster/tests/functional/test_functional_basic.py
+> index 7e9be91c..f558cce8 100644
+> --- a/lib/toaster/tests/functional/test_functional_basic.py
+> +++ b/lib/toaster/tests/functional/test_functional_basic.py
+> @@ -8,12 +8,14 @@
+>  #
+>
+>  import re, time
+> -import pytest
+>  from django.urls import reverse
+> +import pytest
+>  from tests.functional.functional_helpers import SeleniumFunctionalTestCa=
+se
+>  from orm.models import Project
+>  from selenium.webdriver.common.by import By
+>
+> +
+> +@pytest.mark.order("last")
+>  class FuntionalTestBasic(SeleniumFunctionalTestCase):
+>
+>  #   testcase (1514)
 > diff --git a/lib/toaster/tests/toaster-tests-requirements.txt
 > b/lib/toaster/tests/toaster-tests-requirements.txt
-> index f30ac070..7109c625 100644
+> index 7109c625..71cc0834 100644
 > --- a/lib/toaster/tests/toaster-tests-requirements.txt
 > +++ b/lib/toaster/tests/toaster-tests-requirements.txt
-> @@ -1 +1,6 @@
->  selenium>=3D4.13.0
-> +pytest=3D=3D7.4.2
-> +pytest-django=3D=3D4.5.2
-> +pytest-env=3D=3D1.1.0
-> +pytest-html=3D=3D4.0.2
-> +pytest-metadata=3D=3D3.0.0
-> diff --git a/toaster-requirements.txt b/toaster-requirements.txt
-> index 19bf6fd2..d8e48b7f 100644
-> --- a/toaster-requirements.txt
-> +++ b/toaster-requirements.txt
-> @@ -2,8 +2,3 @@ Django>4.2,<4.3
->  beautifulsoup4>=3D4.4.0
->  pytz
->  django-log-viewer=3D=3D1.1.7
-> -pytest=3D=3D7.4.2
-> -pytest-django=3D=3D4.5.2
-> -pytest-env=3D=3D1.1.0
-> -pytest-html=3D=3D4.0.2
-> -pytest-metadata=3D=3D3.0.0
+> @@ -4,3 +4,4 @@ pytest-django=3D=3D4.5.2
+>  pytest-env=3D=3D1.1.0
+>  pytest-html=3D=3D4.0.2
+>  pytest-metadata=3D=3D3.0.0
+> +pytest-order=3D=3D1.1.0
+> diff --git a/lib/toaster/tests/views/test_views.py
+> b/lib/toaster/tests/views/test_views.py
+> index 06bf6c20..349881eb 100644
+> --- a/lib/toaster/tests/views/test_views.py
+> +++ b/lib/toaster/tests/views/test_views.py
+> @@ -9,6 +9,7 @@
+>
+>  """Test cases for Toaster GUI and ReST."""
+>
+> +import pytest
+>  from django.test import TestCase
+>  from django.test.client import RequestFactory
+>  from django.urls import reverse
+> @@ -33,6 +34,7 @@ PROJECT_NAME2 =3D "test project 2"
+>  CLI_BUILDS_PROJECT_NAME =3D 'Command line builds'
+>
+>
+> +@pytest.mark.order(1)
+>  class ViewTests(TestCase):
+>      """Tests to verify view APIs."""
+>
 > --
 > 2.34.1
 >
 >
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 > Links: You receive all messages sent to this group.
-> View/Reply Online (#5909):
-> https://lists.yoctoproject.org/g/toaster/message/5909
-> Mute This Topic: https://lists.yoctoproject.org/mt/102283477/924729
-> Group Owner: toaster+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/toaster/unsub [
+> View/Reply Online (#15331):
+> https://lists.openembedded.org/g/bitbake-devel/message/15331
+> Mute This Topic: https://lists.openembedded.org/mt/102283465/924729
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
 > ticotimo@gmail.com]
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 >
 >
 
---000000000000ece7630609046734
+--000000000000398cbe0609048379
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -131,70 +185,125 @@ Content-Transfer-Encoding: quoted-printable
 =AFPM Alassane Yattara &lt;<a href=3D"mailto:alassane.yattara@savoirfaireli=
 nux.com">alassane.yattara@savoirfairelinux.com</a>&gt; wrote:<br></div><blo=
 ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
-:1px solid rgb(204,204,204);padding-left:1ex">To make difference between bi=
-tbake and toaster python requirements,<br>
-a dedicated requirements file is created for toaster in root of toaster dir=
-.<br>
-<br></blockquote><div><br></div><div>Since this is making a change to what =
-was introduced in the first patch in this series, you should instead go bac=
-k and fix that commit?</div><div>=C2=A0</div><blockquote class=3D"gmail_quo=
-te" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204=
-);padding-left:1ex">
+:1px solid rgb(204,204,204);padding-left:1ex">As mentionned in earlier comm=
+it, pytest-django takes a conservative approach<br>
+to enabling database access. By default our tests will fail if they try to =
+access<br>
+the database, Only if we explicitly request database access will this be al=
+lowed,<br>
+using pytest marks to tell pytest-django our test needs database access.<br=
+>
+<br>
+A side effect of pytest mark, is test_case method marked is execute out of<=
+br>
+scope of its module class, which create an inconsistance sequence and make =
+fails<br>
+followings tests.<br>
+<br>
+The scope of the ordering is global per default, e.g. tests with lower ordi=
+nal<br>
+numbers are always executed before tests with higher numbers in the same te=
+st session,<br>
+regardless of the module and class they reside in. This can be changed by u=
+sing<br>
+the --order-scope option from module pytest-order.<br>
+<br>
+To fix that i added execution order to tests suite using pytest-order.<br>
+<br></blockquote><div><br></div><div>This seems like a reasonable explanati=
+on of what is happening and why the change is being made.</div><div>=C2=A0<=
+/div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bo=
+rder-left:1px solid rgb(204,204,204);padding-left:1ex">
 Signed-off-by: Alassane Yattara &lt;<a href=3D"mailto:alassane.yattara@savo=
 irfairelinux.com" target=3D"_blank">alassane.yattara@savoirfairelinux.com</=
-a>&gt;<br>
+a>&gt;<br></blockquote><div>Reviewed-by: Tim Orling &lt;<a href=3D"mailto:t=
+im.orling@konsulko.com">tim.orling@konsulko.com</a>&gt;=C2=A0</div><blockqu=
+ote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px=
+ solid rgb(204,204,204);padding-left:1ex">
 ---<br>
-=C2=A0lib/toaster/tests/toaster-tests-requirements.txt | 5 +++++<br>
-=C2=A0toaster-requirements.txt=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 5 -----<br>
-=C2=A02 files changed, 5 insertions(+), 5 deletions(-)<br>
+=C2=A0lib/toaster/tests/functional/test_functional_basic.py | 4 +++-<br>
+=C2=A0lib/toaster/tests/toaster-tests-requirements.txt=C2=A0 =C2=A0 =C2=A0 =
+| 1 +<br>
+=C2=A0lib/toaster/tests/views/test_views.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 2 ++<br>
+=C2=A03 files changed, 6 insertions(+), 1 deletion(-)<br>
 <br>
+diff --git a/lib/toaster/tests/functional/test_functional_basic.py b/lib/to=
+aster/tests/functional/test_functional_basic.py<br>
+index 7e9be91c..f558cce8 100644<br>
+--- a/lib/toaster/tests/functional/test_functional_basic.py<br>
++++ b/lib/toaster/tests/functional/test_functional_basic.py<br>
+@@ -8,12 +8,14 @@<br>
+=C2=A0#<br>
+<br>
+=C2=A0import re, time<br>
+-import pytest<br>
+=C2=A0from django.urls import reverse<br>
++import pytest<br>
+=C2=A0from tests.functional.functional_helpers import SeleniumFunctionalTes=
+tCase<br>
+=C2=A0from orm.models import Project<br>
+=C2=A0from <a href=3D"http://selenium.webdriver.common.by" rel=3D"noreferre=
+r" target=3D"_blank">selenium.webdriver.common.by</a> import By<br>
+<br>
++<br>
++@pytest.mark.order(&quot;last&quot;)<br>
+=C2=A0class FuntionalTestBasic(SeleniumFunctionalTestCase):<br>
+<br>
+=C2=A0#=C2=A0 =C2=A0testcase (1514)<br>
 diff --git a/lib/toaster/tests/toaster-tests-requirements.txt b/lib/toaster=
 /tests/toaster-tests-requirements.txt<br>
-index f30ac070..7109c625 100644<br>
+index 7109c625..71cc0834 100644<br>
 --- a/lib/toaster/tests/toaster-tests-requirements.txt<br>
 +++ b/lib/toaster/tests/toaster-tests-requirements.txt<br>
-@@ -1 +1,6 @@<br>
-=C2=A0selenium&gt;=3D4.13.0<br>
-+pytest=3D=3D7.4.2<br>
-+pytest-django=3D=3D4.5.2<br>
-+pytest-env=3D=3D1.1.0<br>
-+pytest-html=3D=3D4.0.2<br>
-+pytest-metadata=3D=3D3.0.0<br>
-diff --git a/toaster-requirements.txt b/toaster-requirements.txt<br>
-index 19bf6fd2..d8e48b7f 100644<br>
---- a/toaster-requirements.txt<br>
-+++ b/toaster-requirements.txt<br>
-@@ -2,8 +2,3 @@ Django&gt;4.2,&lt;4.3<br>
-=C2=A0beautifulsoup4&gt;=3D4.4.0<br>
-=C2=A0pytz<br>
-=C2=A0django-log-viewer=3D=3D1.1.7<br>
--pytest=3D=3D7.4.2<br>
--pytest-django=3D=3D4.5.2<br>
--pytest-env=3D=3D1.1.0<br>
--pytest-html=3D=3D4.0.2<br>
--pytest-metadata=3D=3D3.0.0<br>
+@@ -4,3 +4,4 @@ pytest-django=3D=3D4.5.2<br>
+=C2=A0pytest-env=3D=3D1.1.0<br>
+=C2=A0pytest-html=3D=3D4.0.2<br>
+=C2=A0pytest-metadata=3D=3D3.0.0<br>
++pytest-order=3D=3D1.1.0<br>
+diff --git a/lib/toaster/tests/views/test_views.py b/lib/toaster/tests/view=
+s/test_views.py<br>
+index 06bf6c20..349881eb 100644<br>
+--- a/lib/toaster/tests/views/test_views.py<br>
++++ b/lib/toaster/tests/views/test_views.py<br>
+@@ -9,6 +9,7 @@<br>
+<br>
+=C2=A0&quot;&quot;&quot;Test cases for Toaster GUI and ReST.&quot;&quot;&qu=
+ot;<br>
+<br>
++import pytest<br>
+=C2=A0from django.test import TestCase<br>
+=C2=A0from django.test.client import RequestFactory<br>
+=C2=A0from django.urls import reverse<br>
+@@ -33,6 +34,7 @@ PROJECT_NAME2 =3D &quot;test project 2&quot;<br>
+=C2=A0CLI_BUILDS_PROJECT_NAME =3D &#39;Command line builds&#39;<br>
+<br>
+<br>
++@pytest.mark.order(1)<br>
+=C2=A0class ViewTests(TestCase):<br>
+=C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;Tests to verify view APIs.&quot;&quot=
+;&quot;<br>
+<br>
 -- <br>
 2.34.1<br>
 <br>
 <br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 Links: You receive all messages sent to this group.<br>
-View/Reply Online (#5909): <a href=3D"https://lists.yoctoproject.org/g/toas=
-ter/message/5909" rel=3D"noreferrer" target=3D"_blank">https://lists.yoctop=
-roject.org/g/toaster/message/5909</a><br>
-Mute This Topic: <a href=3D"https://lists.yoctoproject.org/mt/102283477/924=
-729" rel=3D"noreferrer" target=3D"_blank">https://lists.yoctoproject.org/mt=
-/102283477/924729</a><br>
-Group Owner: <a href=3D"mailto:toaster%2Bowner@lists.yoctoproject.org" targ=
-et=3D"_blank">toaster+owner@lists.yoctoproject.org</a><br>
-Unsubscribe: <a href=3D"https://lists.yoctoproject.org/g/toaster/unsub" rel=
-=3D"noreferrer" target=3D"_blank">https://lists.yoctoproject.org/g/toaster/=
-unsub</a> [<a href=3D"mailto:ticotimo@gmail.com" target=3D"_blank">ticotimo=
-@gmail.com</a>]<br>
+View/Reply Online (#15331): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/15331" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/15331</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/102283465/924=
+729" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
+/102283465/924729</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:ticotimo@gmail.com" target=3D"_bla=
+nk">ticotimo@gmail.com</a>]<br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 <br>
 </blockquote></div></div>
 
---000000000000ece7630609046734--
+--000000000000398cbe0609048379--
 
