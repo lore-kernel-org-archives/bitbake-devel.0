@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBCAC4167D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16265C4167B
 	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 17:22:23 +0000 (UTC)
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
- by mx.groups.io with SMTP id smtpd.web10.1625.1698772933719837323
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+ by mx.groups.io with SMTP id smtpd.web10.1630.1698772937560926615
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Oct 2023 10:22:13 -0700
+ Tue, 31 Oct 2023 10:22:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=iztlls60;
- spf=pass (domain: gmail.com, ip: 209.85.210.54, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6ce2c71c61fso3428065a34.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 10:22:13 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=lL4B9mZ2;
+ spf=pass (domain: gmail.com, ip: 209.85.210.41, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6cd33d51852so3998790a34.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 10:22:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698772932; x=1699377732; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1698772936; x=1699377736; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D16wZJQUUheeclWS5b/Afohjd7R2MAChGFIfCVFmAS4=;
-        b=iztlls60AW0wc+Xc5W0MaW3bSgmvCDceKoS98yGlirwhDPcbPbn1Tp0TdlDJy9PL8A
-         N1EJ8/jxbZmZEMejLzRZgYCrZfSS248BnyfH7yjEhhJTSyvGko0ckPlE+Tsw+qgrHHp6
-         xJPV6WkwbkTo4spT3BA0XX97pZ0JzbKfPmf1oNAkHhpRuiiznowUCZYzgPCMNhkEgIjJ
-         rzjCDAGVba+TV7I+oxs6HXvj2oPyoJjXUDX3GcHUdJ7GqFfj1PealStVoIUlz1XZt3J4
-         XQNOIb0K4Mg/GxBqn6LQU9n5Sg/N47qaRHhDQ0GexDg+SpVBKX1vEVBgMfcf/0SFVIjw
-         bFTw==
+        bh=Sb8Oz+vfrspWoVRMPfMobfEmIuUi+HH4bpY7OQ2q36w=;
+        b=lL4B9mZ2yOWtMnDTUrpIdkhI8US/Wy2s0qKI5J34fXMb4acSr38DF1fNNfafRghJcj
+         bmwjukxxmSml1MbgNSJWGbyR+xxGKarw3eVFcI7qd92s71QStPCjlolUk9gqh+vupYSX
+         Y/ooEEpFxMYnAvRQ1FxyHaMUeRhgYxohnfy1u91s8//6ADNnhq+KEGzx93KAdlTuEoZi
+         vVLjU8I0YQO1HNmh/1MKsB5X1F1YP9s2cpijH8N4k6EbJfUubAiMBrTKfXb7g+YrF+DO
+         E64DBs6V5SeVYgBrBjo7HCOePlyPQeJCRPEPMbRFop+UXAJzHYZh5igCnW9OPJclz0DT
+         UB/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698772932; x=1699377732;
+        d=1e100.net; s=20230601; t=1698772936; x=1699377736;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D16wZJQUUheeclWS5b/Afohjd7R2MAChGFIfCVFmAS4=;
-        b=n/we4Y+HQqJ1Tm7h3D4MQD5LouN0GFt2N+FFrFVrQs1/WXgxcOJCdAP5VNV8IN/esX
-         ElxMlzlazdFb2huNHpgZRKdQ3/3C3zOp6wBN8dwDnKrm94XS0iwaidU36Kd5qlI0dLjB
-         JHn9UttrN87JGMyhWNOnmHcMLcG8JwdXot+YUQPBgsjXYQxI9UnfaF5l6gPG+ODDCaav
-         75vqatXPb32UMuzCWwlzR+6ZhNewwFeNs6dzVyzMj9ynjeNkmTX2d3T9OqjT7zqooYrN
-         UOPQRZmhQlF0Na1+lKdtNbumHL8fLAIE4fj3OvjugSKLbdukqxgfLLQ5+gg2zuAtU1FK
-         bKWA==
-X-Gm-Message-State: AOJu0YwAG14h6FaxOqZi1ePuAePUhRMROi0MbPSrlryJjxOLe0xMQS2L
-	fS+zkrSba+vfJFqoKbIcYu8og2MjqFU=
-X-Google-Smtp-Source: AGHT+IFWaFiOMfHEjHI6R3KbzrVjuJiTYpioACUNKMg9j+TZaEOFlb7jHntfuedYNduc7z59jY0sLg==
-X-Received: by 2002:a05:6830:4ac:b0:6ce:25a2:67cf with SMTP id l12-20020a05683004ac00b006ce25a267cfmr11627874otd.26.1698772932444;
-        Tue, 31 Oct 2023 10:22:12 -0700 (PDT)
+        bh=Sb8Oz+vfrspWoVRMPfMobfEmIuUi+HH4bpY7OQ2q36w=;
+        b=ChIcLsZFIttUOFD0zdaATymn2cyj7gEwFTvhG/kX+r390Bo+WQ2yU8oFY1yQZzqmY9
+         yvd1sm5GfwvEHNHDbP9vw71YBviNtWrQKA6Hl1J/dkiKCE8Bc75wrVc2iX0iva3o5g5+
+         6WAwJLPtHOeuzDODMfKqkJJ9qIZc7mfK0YFrnZ67W/FmD/CvFLMcV6OmZP7biTDBVLDL
+         adwIZ0M+/dZnRr7KTRgoKodi9gnYZ48/eTEiee98aaziccbHCYakN6402EQZ6mXBuUM5
+         CTCJIdIt1WGvyVAAjpw38omNmO/VgLRCtWIbTaTglrCUME2nBtLX7URAy4NjelANUU7O
+         5OkA==
+X-Gm-Message-State: AOJu0YyP5fXjK2HIVHYiBsfYjNvJwjhilg+e+aibC2RsGdjG+XRBNPkc
+	bZok75TvF6hZN4xhLrj35IvqbyNEIis=
+X-Google-Smtp-Source: AGHT+IFFIu6ZMVgDIkaS77/vjxjqyIiIn5HSq/sqyUDOcIe3d3SEbSn/pfz7m1qtaf9UbdvN0ZGSlA==
+X-Received: by 2002:a9d:62d0:0:b0:6b7:4a52:a33a with SMTP id z16-20020a9d62d0000000b006b74a52a33amr12256480otk.14.1698772935761;
+        Tue, 31 Oct 2023 10:22:15 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::6aa6])
-        by smtp.gmail.com with ESMTPSA id k6-20020a056830150600b006ce2e464a45sm282503otp.29.2023.10.31.10.22.10
+        by smtp.gmail.com with ESMTPSA id k6-20020a056830150600b006ce2e464a45sm282503otp.29.2023.10.31.10.22.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Oct 2023 10:22:10 -0700 (PDT)
+        Tue, 31 Oct 2023 10:22:14 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v4 15/22] hashserv: Add db-usage API
-Date: Tue, 31 Oct 2023 11:21:31 -0600
-Message-Id: <20231031172138.3577199-16-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v4 17/22] hashserv: test: Add bitbake-hashclient tests
+Date: Tue, 31 Oct 2023 11:21:33 -0600
+Message-Id: <20231031172138.3577199-18-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231031172138.3577199-1-JPEWhacker@gmail.com>
 References: <20231030191728.1276805-1-JPEWhacker@gmail.com>
@@ -63,178 +63,403 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 17:22:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15365
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15367
 
-Adds an API to query the server for the usage of the database (e.g. how
-many rows are present in each table)
+The bitbake-hashclient command-line tool now has a lot more features
+which should be tested, so add some tests for them.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bin/bitbake-hashclient     | 16 ++++++++++++++++
- lib/hashserv/client.py     |  5 +++++
- lib/hashserv/server.py     |  5 +++++
- lib/hashserv/sqlalchemy.py | 14 ++++++++++++++
- lib/hashserv/sqlite.py     | 20 ++++++++++++++++++++
- lib/hashserv/tests.py      |  9 +++++++++
- 6 files changed, 69 insertions(+)
+ lib/hashserv/tests.py | 300 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 277 insertions(+), 23 deletions(-)
 
-diff --git a/bin/bitbake-hashclient b/bin/bitbake-hashclient
-index cfbc197e..5d65c7bc 100755
---- a/bin/bitbake-hashclient
-+++ b/bin/bitbake-hashclient
-@@ -161,6 +161,19 @@ def main():
-         r = client.delete_user(args.username)
-         print_user(r)
- 
-+    def handle_get_db_usage(args, client):
-+        usage = client.get_db_usage()
-+        print(usage)
-+        tables = sorted(usage.keys())
-+        print("{name:20}| {rows:20}".format(name="Table name", rows="Rows"))
-+        print(("-" * 20) + "+" + ("-" * 20))
-+        for t in tables:
-+            print("{name:20}| {rows:<20}".format(name=t, rows=usage[t]["rows"]))
-+        print()
-+
-+        total_rows = sum(t["rows"] for t in usage.values())
-+        print(f"Total rows: {total_rows}")
-+
-     parser = argparse.ArgumentParser(description='Hash Equivalence Client')
-     parser.add_argument('--address', default=DEFAULT_ADDRESS, help='Server address (default "%(default)s")')
-     parser.add_argument('--log', default='WARNING', help='Set logging level')
-@@ -223,6 +236,9 @@ def main():
-     delete_user_parser.add_argument("--username", "-u", help="Username", required=True)
-     delete_user_parser.set_defaults(func=handle_delete_user)
- 
-+    db_usage_parser = subparsers.add_parser('get-db-usage', help="Database Usage")
-+    db_usage_parser.set_defaults(func=handle_get_db_usage)
-+
-     args = parser.parse_args()
- 
-     logger = logging.getLogger('hashserv')
-diff --git a/lib/hashserv/client.py b/lib/hashserv/client.py
-index 90f1dd71..0c3f556a 100644
---- a/lib/hashserv/client.py
-+++ b/lib/hashserv/client.py
-@@ -186,6 +186,10 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-             self.saved_become_user = username
-         return result
- 
-+    async def get_db_usage(self):
-+        await self._set_mode(self.MODE_NORMAL)
-+        return (await self.invoke({"get-db-usage": {}}))["usage"]
-+
- 
- class Client(bb.asyncrpc.Client):
-     def __init__(self, username=None, password=None):
-@@ -214,6 +218,7 @@ class Client(bb.asyncrpc.Client):
-             "new_user",
-             "delete_user",
-             "become_user",
-+            "get_db_usage",
-         )
- 
-     def _get_async_client(self):
-diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index d506088e..4fec1556 100644
---- a/lib/hashserv/server.py
-+++ b/lib/hashserv/server.py
-@@ -249,6 +249,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-                 "get-outhash": self.handle_get_outhash,
-                 "get-stream": self.handle_get_stream,
-                 "get-stats": self.handle_get_stats,
-+                "get-db-usage": self.handle_get_db_usage,
-                 # Not always read-only, but internally checks if the server is
-                 # read-only
-                 "report": self.handle_report,
-@@ -566,6 +567,10 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-         oldest = datetime.now() - timedelta(seconds=-max_age)
-         return {"count": await self.db.clean_unused(oldest)}
- 
-+    @permissions(DB_ADMIN_PERM)
-+    async def handle_get_db_usage(self, request):
-+        return {"usage": await self.db.get_usage()}
-+
-     # The authentication API is always allowed
-     async def handle_auth(self, request):
-         username = str(request["username"])
-diff --git a/lib/hashserv/sqlalchemy.py b/lib/hashserv/sqlalchemy.py
-index bfd8a844..818b5195 100644
---- a/lib/hashserv/sqlalchemy.py
-+++ b/lib/hashserv/sqlalchemy.py
-@@ -27,6 +27,7 @@ from sqlalchemy import (
-     and_,
-     delete,
-     update,
-+    func,
- )
- import sqlalchemy.engine
- from sqlalchemy.orm import declarative_base
-@@ -401,3 +402,16 @@ class Database(object):
-         async with self.db.begin():
-             result = await self.db.execute(statement)
-             return result.rowcount != 0
-+
-+    async def get_usage(self):
-+        usage = {}
-+        async with self.db.begin() as session:
-+            for name, table in Base.metadata.tables.items():
-+                statement = select(func.count()).select_from(table)
-+                self.logger.debug("%s", statement)
-+                result = await self.db.execute(statement)
-+                usage[name] = {
-+                    "rows": result.scalar(),
-+                }
-+
-+        return usage
-diff --git a/lib/hashserv/sqlite.py b/lib/hashserv/sqlite.py
-index 414ee8ff..e9ef38a1 100644
---- a/lib/hashserv/sqlite.py
-+++ b/lib/hashserv/sqlite.py
-@@ -362,3 +362,23 @@ class Database(object):
-             )
-             self.db.commit()
-             return cursor.rowcount != 0
-+
-+    async def get_usage(self):
-+        usage = {}
-+        with closing(self.db.cursor()) as cursor:
-+            cursor.execute(
-+                """
-+                SELECT name FROM sqlite_schema WHERE type = 'table' AND name NOT LIKE 'sqlite_%'
-+                """
-+            )
-+            for row in cursor.fetchall():
-+                cursor.execute(
-+                    """
-+                    SELECT COUNT() FROM %s
-+                    """
-+                    % row["name"],
-+                )
-+                usage[row["name"]] = {
-+                    "rows": cursor.fetchone()[0],
-+                }
-+        return usage
 diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index 311b7b77..9d5bec24 100644
+index fc69acaf..a80ccd57 100644
 --- a/lib/hashserv/tests.py
 +++ b/lib/hashserv/tests.py
-@@ -767,6 +767,15 @@ class HashEquivalenceCommonTests(object):
-         with self.auth_perms("@user-admin") as client:
-             become = client.become_user(client.username)
+@@ -19,6 +19,14 @@ import unittest
+ import socket
+ import time
+ import signal
++import subprocess
++import json
++import re
++from pathlib import Path
++
++
++THIS_DIR = Path(__file__).parent
++BIN_DIR = THIS_DIR.parent.parent / "bin"
  
+ def server_prefunc(server, idx):
+     logging.basicConfig(level=logging.DEBUG, filename='bbhashserv-%d.log' % idx, filemode='w',
+@@ -103,8 +111,22 @@ class HashEquivalenceTestSetup(object):
+         result = client.get_unihash(self.METHOD, taskhash)
+         self.assertEqual(result, unihash)
+ 
++    def assertUserPerms(self, user, permissions):
++        with self.auth_client(user) as client:
++            info = client.get_user()
++            self.assertEqual(info, {
++                "username": user["username"],
++                "permissions": permissions,
++            })
++
++    def assertUserCanAuth(self, user):
++        with self.start_client(self.auth_server.address) as client:
++            client.auth(user["username"], user["token"])
++
++    def assertUserCannotAuth(self, user):
++        with self.start_client(self.auth_server.address) as client, self.assertRaises(InvokeError):
++            client.auth(user["username"], user["token"])
+ 
+-class HashEquivalenceCommonTests(object):
+     def create_test_hash(self, client):
+         # Simple test that hashes can be created
+         taskhash = '35788efcb8dfb0a02659d81cf2bfd695fb30faf9'
+@@ -117,6 +139,24 @@ class HashEquivalenceCommonTests(object):
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+         return taskhash, outhash, unihash
+ 
++    def run_hashclient(self, args, **kwargs):
++        try:
++            p = subprocess.run(
++                [BIN_DIR / "bitbake-hashclient"] + args,
++                stdout=subprocess.PIPE,
++                stderr=subprocess.STDOUT,
++                encoding="utf-8",
++                **kwargs
++            )
++        except subprocess.CalledProcessError as e:
++            print(e.output)
++            raise e
++
++        print(p.stdout)
++        return p
++
++
++class HashEquivalenceCommonTests(object):
+     def test_create_hash(self):
+         return self.create_test_hash(self.client)
+ 
+@@ -161,7 +201,7 @@ class HashEquivalenceCommonTests(object):
+         self.assertClientGetHash(self.client, taskhash, unihash)
+ 
+     def test_remove_taskhash(self):
+-        taskhash, outhash, unihash = self.test_create_hash()
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
+         result = self.client.remove({"taskhash": taskhash})
+         self.assertGreater(result["count"], 0)
+         self.assertClientGetHash(self.client, taskhash, None)
+@@ -170,13 +210,13 @@ class HashEquivalenceCommonTests(object):
+         self.assertIsNone(result_outhash)
+ 
+     def test_remove_unihash(self):
+-        taskhash, outhash, unihash = self.test_create_hash()
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
+         result = self.client.remove({"unihash": unihash})
+         self.assertGreater(result["count"], 0)
+         self.assertClientGetHash(self.client, taskhash, None)
+ 
+     def test_remove_outhash(self):
+-        taskhash, outhash, unihash = self.test_create_hash()
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
+         result = self.client.remove({"outhash": outhash})
+         self.assertGreater(result["count"], 0)
+ 
+@@ -184,7 +224,7 @@ class HashEquivalenceCommonTests(object):
+         self.assertIsNone(result_outhash)
+ 
+     def test_remove_method(self):
+-        taskhash, outhash, unihash = self.test_create_hash()
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
+         result = self.client.remove({"method": self.METHOD})
+         self.assertGreater(result["count"], 0)
+         self.assertClientGetHash(self.client, taskhash, None)
+@@ -193,7 +233,7 @@ class HashEquivalenceCommonTests(object):
+         self.assertIsNone(result_outhash)
+ 
+     def test_clean_unused(self):
+-        taskhash, outhash, unihash = self.test_create_hash()
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
+ 
+         # Clean the database, which should not remove anything because all hashes an in-use
+         result = self.client.clean_unused(0)
+@@ -497,7 +537,7 @@ class HashEquivalenceCommonTests(object):
+         admin_client = self.start_auth_server()
+ 
+         # Create hashes with non-authenticated server
+-        taskhash, outhash, unihash = self.test_create_hash()
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
+ 
+         # Validate hash can be retrieved using authenticated client
+         with self.auth_perms("@read") as client:
+@@ -534,14 +574,6 @@ class HashEquivalenceCommonTests(object):
+         with self.start_client(self.auth_server.address) as client, self.assertRaises(InvokeError):
+             client.refresh_token()
+ 
+-    def assertUserCanAuth(self, user):
+-        with self.start_client(self.auth_server.address) as client:
+-            client.auth(user["username"], user["token"])
+-
+-    def assertUserCannotAuth(self, user):
+-        with self.start_client(self.auth_server.address) as client, self.assertRaises(InvokeError):
+-            client.auth(user["username"], user["token"])
+-
+     def test_auth_self_token_refresh(self):
+         admin_client = self.start_auth_server()
+ 
+@@ -650,14 +682,6 @@ class HashEquivalenceCommonTests(object):
+         with self.auth_perms("@user-admin") as client, self.assertRaises(InvokeError):
+             client.delete_user(user["username"])
+ 
+-    def assertUserPerms(self, user, permissions):
+-        with self.auth_client(user) as client:
+-            info = client.get_user()
+-            self.assertEqual(info, {
+-                "username": user["username"],
+-                "permissions": permissions,
+-            })
+-
+     def test_auth_set_user_perms(self):
+         admin_client = self.start_auth_server()
+ 
+@@ -785,6 +809,236 @@ class HashEquivalenceCommonTests(object):
+         for col in columns:
+             self.client.remove({col: ""})
+ 
++
++class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
++    def get_server_addr(self, server_idx):
++        return "unix://" + os.path.join(self.temp_dir.name, 'sock%d' % server_idx)
++
++    def test_stats(self):
++        self.run_hashclient(["--address", self.server_address, "stats"], check=True)
++
++    def test_stress(self):
++        self.run_hashclient(["--address", self.server_address, "stress"], check=True)
++
++    def test_remove_taskhash(self):
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
++        self.run_hashclient([
++            "--address", self.server_address,
++            "remove",
++            "--where", "taskhash", taskhash,
++        ], check=True)
++        self.assertClientGetHash(self.client, taskhash, None)
++
++        result_outhash = self.client.get_outhash(self.METHOD, outhash, taskhash)
++        self.assertIsNone(result_outhash)
++
++    def test_remove_unihash(self):
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
++        self.run_hashclient([
++            "--address", self.server_address,
++            "remove",
++            "--where", "unihash", unihash,
++        ], check=True)
++        self.assertClientGetHash(self.client, taskhash, None)
++
++    def test_remove_outhash(self):
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
++        self.run_hashclient([
++            "--address", self.server_address,
++            "remove",
++            "--where", "outhash", outhash,
++        ], check=True)
++
++        result_outhash = self.client.get_outhash(self.METHOD, outhash, taskhash)
++        self.assertIsNone(result_outhash)
++
++    def test_remove_method(self):
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
++        self.run_hashclient([
++            "--address", self.server_address,
++            "remove",
++            "--where", "method", self.METHOD,
++        ], check=True)
++        self.assertClientGetHash(self.client, taskhash, None)
++
++        result_outhash = self.client.get_outhash(self.METHOD, outhash, taskhash)
++        self.assertIsNone(result_outhash)
++
++    def test_clean_unused(self):
++        taskhash, outhash, unihash = self.create_test_hash(self.client)
++
++        # Clean the database, which should not remove anything because all hashes an in-use
++        self.run_hashclient([
++            "--address", self.server_address,
++            "clean-unused", "0",
++        ], check=True)
++        self.assertClientGetHash(self.client, taskhash, unihash)
++
++        # Remove the unihash. The row in the outhash table should still be present
++        self.run_hashclient([
++            "--address", self.server_address,
++            "remove",
++            "--where", "unihash", unihash,
++        ], check=True)
++        result_outhash = self.client.get_outhash(self.METHOD, outhash, taskhash, False)
++        self.assertIsNotNone(result_outhash)
++
++        # Now clean with no minimum age which will remove the outhash
++        self.run_hashclient([
++            "--address", self.server_address,
++            "clean-unused", "0",
++        ], check=True)
++        result_outhash = self.client.get_outhash(self.METHOD, outhash, taskhash, False)
++        self.assertIsNone(result_outhash)
++
++    def test_refresh_token(self):
++        admin_client = self.start_auth_server()
++
++        user = admin_client.new_user("test-user", ["@read", "@report"])
++
++        p = self.run_hashclient([
++            "--address", self.auth_server.address,
++            "--login", user["username"],
++            "--password", user["token"],
++            "refresh-token"
++        ], check=True)
++
++        new_token = None
++        for l in p.stdout.splitlines():
++            l = l.rstrip()
++            m = re.match(r'Token: +(.*)$', l)
++            if m is not None:
++                new_token = m.group(1)
++
++        self.assertTrue(new_token)
++
++        print("New token is %r" % new_token)
++
++        self.run_hashclient([
++            "--address", self.auth_server.address,
++            "--login", user["username"],
++            "--password", new_token,
++            "get-user"
++        ], check=True)
++
++    def test_set_user_perms(self):
++        admin_client = self.start_auth_server()
++
++        user = admin_client.new_user("test-user", ["@read"])
++
++        self.run_hashclient([
++            "--address", self.auth_server.address,
++            "--login", admin_client.username,
++            "--password", admin_client.password,
++            "set-user-perms",
++            "-u", user["username"],
++            "@read", "@report",
++        ], check=True)
++
++        new_user = admin_client.get_user(user["username"])
++
++        self.assertEqual(set(new_user["permissions"]), {"@read", "@report"})
++
++    def test_get_user(self):
++        admin_client = self.start_auth_server()
++
++        user = admin_client.new_user("test-user", ["@read"])
++
++        p = self.run_hashclient([
++            "--address", self.auth_server.address,
++            "--login", admin_client.username,
++            "--password", admin_client.password,
++            "get-user",
++            "-u", user["username"],
++        ], check=True)
++
++        self.assertIn("Username:", p.stdout)
++        self.assertIn("Permissions:", p.stdout)
++
++        p = self.run_hashclient([
++            "--address", self.auth_server.address,
++            "--login", user["username"],
++            "--password", user["token"],
++            "get-user",
++        ], check=True)
++
++        self.assertIn("Username:", p.stdout)
++        self.assertIn("Permissions:", p.stdout)
++
++    def test_get_all_users(self):
++        admin_client = self.start_auth_server()
++
++        admin_client.new_user("test-user1", ["@read"])
++        admin_client.new_user("test-user2", ["@read"])
++
++        p = self.run_hashclient([
++            "--address", self.auth_server.address,
++            "--login", admin_client.username,
++            "--password", admin_client.password,
++            "get-all-users",
++        ], check=True)
++
++        self.assertIn("admin", p.stdout)
++        self.assertIn("test-user1", p.stdout)
++        self.assertIn("test-user2", p.stdout)
++
++    def test_new_user(self):
++        admin_client = self.start_auth_server()
++
++        p = self.run_hashclient([
++            "--address", self.auth_server.address,
++            "--login", admin_client.username,
++            "--password", admin_client.password,
++            "new-user",
++            "-u", "test-user",
++            "@read", "@report",
++        ], check=True)
++
++        new_token = None
++        for l in p.stdout.splitlines():
++            l = l.rstrip()
++            m = re.match(r'Token: +(.*)$', l)
++            if m is not None:
++                new_token = m.group(1)
++
++        self.assertTrue(new_token)
++
++        user = {
++            "username": "test-user",
++            "token": new_token,
++        }
++
++        self.assertUserPerms(user, ["@read", "@report"])
++
++    def test_delete_user(self):
++        admin_client = self.start_auth_server()
++
++        user = admin_client.new_user("test-user", ["@read"])
++
++        p = self.run_hashclient([
++            "--address", self.auth_server.address,
++            "--login", admin_client.username,
++            "--password", admin_client.password,
++            "delete-user",
++            "-u", user["username"],
++        ], check=True)
++
++
++        self.assertIsNone(admin_client.get_user(user["username"]))
++
 +    def test_get_db_usage(self):
-+        usage = self.client.get_db_usage()
++        p = self.run_hashclient([
++            "--address", self.server_address,
++            "get-db-usage",
++        ], check=True)
 +
-+        self.assertTrue(isinstance(usage, dict))
-+        for name in usage.keys():
-+            self.assertTrue(isinstance(usage[name], dict))
-+            self.assertIn("rows", usage[name])
-+            self.assertTrue(isinstance(usage[name]["rows"], int))
++    def test_get_db_query_columns(self):
++        p = self.run_hashclient([
++            "--address", self.server_address,
++            "get-db-query-columns",
++        ], check=True)
 +
- 
++
  class TestHashEquivalenceUnixServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
      def get_server_addr(self, server_idx):
+         return "unix://" + os.path.join(self.temp_dir.name, 'sock%d' % server_idx)
 -- 
 2.34.1
 
