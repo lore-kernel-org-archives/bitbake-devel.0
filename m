@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C45FC0018C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 069F3C4167D
 	for <webhook@archiver.kernel.org>; Wed,  1 Nov 2023 15:42:38 +0000 (UTC)
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
- by mx.groups.io with SMTP id smtpd.web10.10804.1698853354603050901
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+ by mx.groups.io with SMTP id smtpd.web11.10726.1698853353472220551
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 01 Nov 2023 08:42:34 -0700
+ Wed, 01 Nov 2023 08:42:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Ep4B5VSo;
- spf=pass (domain: gmail.com, ip: 209.85.167.172, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3b2e4107f47so4710480b6e.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 01 Nov 2023 08:42:34 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=PvBuO7f2;
+ spf=pass (domain: gmail.com, ip: 209.85.167.174, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3b565e35fedso1068803b6e.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 01 Nov 2023 08:42:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1698853352; x=1699458152; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D8Xwg4jcVAbaTF/RS5lq0ebYMPWd8462CpU7mMbsAzo=;
-        b=Ep4B5VSo8ZUnjC3LC4eP9F4PYn+xvftPDxKRzaKDAkc5CZvyU20o4kL+Urx3rQacF8
-         H0j2TO6Y2OzpmW8UXH/4faOcK3vBbU2YoWdwi9YCY9zDhwrEtsDR5UEi+z9Cc9IwfWLe
-         9rv9uLd/laXjpLe217kr2fPBscQlIDkAlyyV0lgbEw11HvUaJckh9nu9dLrHkj3m8FyB
-         8oajXlUQsi24yHzsw5q5wBcqZgJBukdLmrp7AmK0vKcW8tcbnwGe2Z+oqJBux/iAxMIT
-         GeyOIUCoxmds+VJZtxXE7qF/M6inafP1R3wIaz/luwvG87k8lqxSyAbp0K1dU7yBbyOD
-         4Xiw==
+        bh=eN5Ty6xmNhJ2tA9ccGwo2Q+D9/gJXA2reA/SA4EkJVg=;
+        b=PvBuO7f26RKgbJThk6KszZFKvIA5C6fW/kXk12TRjyddHbiUNeIdhNs4XlRBM0xR/p
+         eIv+Ji1O76ctPAT51IPVE20rfbGz3G2ZKPXovnp1MFerPQ3vR22ckgjbNboJRFqwLrLF
+         0CgBrlrVLAGOVXfVJigbnOnI94r29SMU194RZFsaSiuaaVBzHy+ZRE7E/lK5HvGV5xFa
+         b4Jt5GN1qIgi+YAOrjOz+ZtEGNuIW6nZyZtpXMWtSnOu5qJZFQMb4mCX77vMgRFo33CN
+         HVggXBzyDUiDAolrvBQwH+q4R/ydTUn14SaRKHMct2KCbuhMpcr1sgR3Fq0wGQRvOfgp
+         PR2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1698853352; x=1699458152;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D8Xwg4jcVAbaTF/RS5lq0ebYMPWd8462CpU7mMbsAzo=;
-        b=HdooC6t/rG75Bvtz8EDWH2EfVOlnopwMOCj5165sxbq4khwQ+2xQ04QpqgB+eyXWTC
-         KjPaULRXkhodwEkUs0HGjWsG3iL8c6w2Ldszzs4VqXYdFcG4/AcfINeMm38jEl/UP1n5
-         +jwte98eiFcu9v3mBIDgUuRhTeTQMtQa9hyfgTHIvSmKUYU/iKppDJU4OJVdgChvCydU
-         0swB93G7uPEC75CsYTqkWikLM6z96zS3soJhGjyoH+kOBAdQfy1aG+E+oHNEjTLbYpCK
-         0x6vl+WTrDIvPj+xyb5j4xJEVT04RpBT+Pj0DKPgn6LK8/YCaJAo3dz4Ju17+tHH5s1J
-         qeag==
-X-Gm-Message-State: AOJu0YzKBNHYjVkZFAGXeTBrdDbUIrAjiiRcV+Rhbmr9bRXXvfk2OgFS
-	9JkbruJ3CXAwzowl/9+YZrWkiSEYQCM=
-X-Google-Smtp-Source: AGHT+IHSx84ZIKf0qAMV1HrqGuAKzR+jHCUT33LRwYAxEFR8KKtCYofeX98i7iK3W6txiVf5hIrtOA==
-X-Received: by 2002:aca:1a09:0:b0:3b2:f50c:1ce5 with SMTP id a9-20020aca1a09000000b003b2f50c1ce5mr16398384oia.31.1698853352648;
-        Wed, 01 Nov 2023 08:42:32 -0700 (PDT)
+        bh=eN5Ty6xmNhJ2tA9ccGwo2Q+D9/gJXA2reA/SA4EkJVg=;
+        b=i/iFj4zz0wBqTk/29Vv8L9WO7yJPFTmqXVEVK2HHZLgCl2Me2SlVTYXSBpjfK99z+g
+         hqMdScmLrLm8VKdvJyPV+oVpvRCM0vgbrQft00FHJ5q1Jj1DtfoY5qnvkpyp2DogheLH
+         dhtVIc0FDKygr89W+FpBSN6YnsWNLCrhz6GBqttX3nUft1rv1T5uRYuagwIj+YrcrUuQ
+         Fzg+1csF9qlHIpPGCZYB4xMFwtvxO/42pULFd/LxpmyWaLoecUNPCS4ljFCA/DSB/OXB
+         V5t04TNb3OqreVcpC5mGUECZ2qCK9Tv3D7HgaWzzSJp2H0ITNKQY8Db9z5C9Xxz1MbLL
+         MmcQ==
+X-Gm-Message-State: AOJu0YwI8izQ8A3BacH/NoN7O9TZ6VTYwqbetPadcfdGtXOXw+c2CYQQ
+	xsk5lsVyk2QmNtnhN0x0McLoc+q2Naw=
+X-Google-Smtp-Source: AGHT+IH9fVaLAZMltKANSPT02lLWPUSdyylabvIA4Mml9oYJd0Tk/apss9JTt+lwXjTBTsfwdfnOAA==
+X-Received: by 2002:a05:6808:f8e:b0:3af:8050:369f with SMTP id o14-20020a0568080f8e00b003af8050369fmr19614018oiw.6.1698853351667;
+        Wed, 01 Nov 2023 08:42:31 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::6aa6])
-        by smtp.gmail.com with ESMTPSA id l9-20020aca1909000000b003ae36d664a9sm249651oii.39.2023.11.01.08.42.31
+        by smtp.gmail.com with ESMTPSA id l9-20020aca1909000000b003ae36d664a9sm249651oii.39.2023.11.01.08.42.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Nov 2023 08:42:32 -0700 (PDT)
+        Wed, 01 Nov 2023 08:42:30 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v5 08/22] hashserv: Add SQLalchemy backend
-Date: Wed,  1 Nov 2023 09:42:02 -0600
-Message-Id: <20231101154216.2758185-9-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v5 07/22] hashserv: Abstract database
+Date: Wed,  1 Nov 2023 09:42:01 -0600
+Message-Id: <20231101154216.2758185-8-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231101154216.2758185-1-JPEWhacker@gmail.com>
 References: <20231031172138.3577199-1-JPEWhacker@gmail.com>
@@ -62,489 +62,1080 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 01 Nov 2023 15:42:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15390
+ <bitbake-devel@lists.openembedded.org>; Wed, 01 Nov 2023 15:42:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15389
 
-Adds an SQLAlchemy backend to the server. While this database backend is
-slower than the more direct sqlite backend, it easily supports just
-about any SQL server, which is useful for large scale deployments.
+Abstracts the way the database backend is accessed by the hash
+equivalence server to make it possible to use other backends
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bin/bitbake-hashserv          |  12 ++
- lib/bb/asyncrpc/connection.py |  11 +-
- lib/hashserv/__init__.py      |  21 ++-
- lib/hashserv/sqlalchemy.py    | 304 ++++++++++++++++++++++++++++++++++
- lib/hashserv/tests.py         |  19 ++-
- 5 files changed, 362 insertions(+), 5 deletions(-)
- create mode 100644 lib/hashserv/sqlalchemy.py
+ lib/hashserv/__init__.py |  90 ++-----
+ lib/hashserv/server.py   | 491 +++++++++++++--------------------------
+ lib/hashserv/sqlite.py   | 259 +++++++++++++++++++++
+ 3 files changed, 439 insertions(+), 401 deletions(-)
+ create mode 100644 lib/hashserv/sqlite.py
 
-diff --git a/bin/bitbake-hashserv b/bin/bitbake-hashserv
-index a916a90c..59b8b07f 100755
---- a/bin/bitbake-hashserv
-+++ b/bin/bitbake-hashserv
-@@ -69,6 +69,16 @@ To bind to all addresses, leave the ADDRESS empty, e.g. "--bind :8686" or
-         action="store_true",
-         help="Disallow write operations from clients ($HASHSERVER_READ_ONLY)",
-     )
-+    parser.add_argument(
-+        "--db-username",
-+        default=os.environ.get("HASHSERVER_DB_USERNAME", None),
-+        help="Database username ($HASHSERVER_DB_USERNAME)",
-+    )
-+    parser.add_argument(
-+        "--db-password",
-+        default=os.environ.get("HASHSERVER_DB_PASSWORD", None),
-+        help="Database password ($HASHSERVER_DB_PASSWORD)",
-+    )
- 
-     args = parser.parse_args()
- 
-@@ -90,6 +100,8 @@ To bind to all addresses, leave the ADDRESS empty, e.g. "--bind :8686" or
-         args.database,
-         upstream=args.upstream,
-         read_only=read_only,
-+        db_username=args.db_username,
-+        db_password=args.db_password,
-     )
-     server.serve_forever()
-     return 0
-diff --git a/lib/bb/asyncrpc/connection.py b/lib/bb/asyncrpc/connection.py
-index a10628f7..7f0cf6ba 100644
---- a/lib/bb/asyncrpc/connection.py
-+++ b/lib/bb/asyncrpc/connection.py
-@@ -7,6 +7,7 @@
- import asyncio
- import itertools
- import json
-+from datetime import datetime
- from .exceptions import ClientError, ConnectionClosedError
- 
- 
-@@ -30,6 +31,12 @@ def chunkify(msg, max_chunk):
-         yield "\n"
- 
- 
-+def json_serialize(obj):
-+    if isinstance(obj, datetime):
-+        return obj.isoformat()
-+    raise TypeError("Type %s not serializeable" % type(obj))
-+
-+
- class StreamConnection(object):
-     def __init__(self, reader, writer, timeout, max_chunk=DEFAULT_MAX_CHUNK):
-         self.reader = reader
-@@ -42,7 +49,7 @@ class StreamConnection(object):
-         return self.writer.get_extra_info("peername")
- 
-     async def send_message(self, msg):
--        for c in chunkify(json.dumps(msg), self.max_chunk):
-+        for c in chunkify(json.dumps(msg, default=json_serialize), self.max_chunk):
-             self.writer.write(c.encode("utf-8"))
-         await self.writer.drain()
- 
-@@ -105,7 +112,7 @@ class WebsocketConnection(object):
-         return ":".join(str(s) for s in self.socket.remote_address)
- 
-     async def send_message(self, msg):
--        await self.send(json.dumps(msg))
-+        await self.send(json.dumps(msg, default=json_serialize))
- 
-     async def recv_message(self):
-         m = await self.recv()
 diff --git a/lib/hashserv/__init__.py b/lib/hashserv/__init__.py
-index 90d8cff1..9a8ee4e8 100644
+index 56b9c6bc..90d8cff1 100644
 --- a/lib/hashserv/__init__.py
 +++ b/lib/hashserv/__init__.py
-@@ -35,15 +35,32 @@ def parse_address(addr):
+@@ -6,7 +6,6 @@
+ import asyncio
+ from contextlib import closing
+ import re
+-import sqlite3
+ import itertools
+ import json
+ from urllib.parse import urlparse
+@@ -19,92 +18,34 @@ ADDR_TYPE_UNIX = 0
+ ADDR_TYPE_TCP = 1
+ ADDR_TYPE_WS = 2
+ 
+-UNIHASH_TABLE_DEFINITION = (
+-    ("method", "TEXT NOT NULL", "UNIQUE"),
+-    ("taskhash", "TEXT NOT NULL", "UNIQUE"),
+-    ("unihash", "TEXT NOT NULL", ""),
+-)
+-
+-UNIHASH_TABLE_COLUMNS = tuple(name for name, _, _ in UNIHASH_TABLE_DEFINITION)
+-
+-OUTHASH_TABLE_DEFINITION = (
+-    ("method", "TEXT NOT NULL", "UNIQUE"),
+-    ("taskhash", "TEXT NOT NULL", "UNIQUE"),
+-    ("outhash", "TEXT NOT NULL", "UNIQUE"),
+-    ("created", "DATETIME", ""),
+-
+-    # Optional fields
+-    ("owner", "TEXT", ""),
+-    ("PN", "TEXT", ""),
+-    ("PV", "TEXT", ""),
+-    ("PR", "TEXT", ""),
+-    ("task", "TEXT", ""),
+-    ("outhash_siginfo", "TEXT", ""),
+-)
+-
+-OUTHASH_TABLE_COLUMNS = tuple(name for name, _, _ in OUTHASH_TABLE_DEFINITION)
+-
+-def _make_table(cursor, name, definition):
+-    cursor.execute('''
+-        CREATE TABLE IF NOT EXISTS {name} (
+-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+-            {fields}
+-            UNIQUE({unique})
+-            )
+-        '''.format(
+-            name=name,
+-            fields=" ".join("%s %s," % (name, typ) for name, typ, _ in definition),
+-            unique=", ".join(name for name, _, flags in definition if "UNIQUE" in flags)
+-    ))
+-
+-
+-def setup_database(database, sync=True):
+-    db = sqlite3.connect(database)
+-    db.row_factory = sqlite3.Row
+-
+-    with closing(db.cursor()) as cursor:
+-        _make_table(cursor, "unihashes_v2", UNIHASH_TABLE_DEFINITION)
+-        _make_table(cursor, "outhashes_v2", OUTHASH_TABLE_DEFINITION)
+-
+-        cursor.execute('PRAGMA journal_mode = WAL')
+-        cursor.execute('PRAGMA synchronous = %s' % ('NORMAL' if sync else 'OFF'))
+-
+-        # Drop old indexes
+-        cursor.execute('DROP INDEX IF EXISTS taskhash_lookup')
+-        cursor.execute('DROP INDEX IF EXISTS outhash_lookup')
+-        cursor.execute('DROP INDEX IF EXISTS taskhash_lookup_v2')
+-        cursor.execute('DROP INDEX IF EXISTS outhash_lookup_v2')
+-
+-        # TODO: Upgrade from tasks_v2?
+-        cursor.execute('DROP TABLE IF EXISTS tasks_v2')
+-
+-        # Create new indexes
+-        cursor.execute('CREATE INDEX IF NOT EXISTS taskhash_lookup_v3 ON unihashes_v2 (method, taskhash)')
+-        cursor.execute('CREATE INDEX IF NOT EXISTS outhash_lookup_v3 ON outhashes_v2 (method, outhash)')
+-
+-    return db
+-
+ 
+ def parse_address(addr):
+     if addr.startswith(UNIX_PREFIX):
+-        return (ADDR_TYPE_UNIX, (addr[len(UNIX_PREFIX):],))
++        return (ADDR_TYPE_UNIX, (addr[len(UNIX_PREFIX) :],))
+     elif addr.startswith(WS_PREFIX) or addr.startswith(WSS_PREFIX):
+         return (ADDR_TYPE_WS, (addr,))
+     else:
+-        m = re.match(r'\[(?P<host>[^\]]*)\]:(?P<port>\d+)$', addr)
++        m = re.match(r"\[(?P<host>[^\]]*)\]:(?P<port>\d+)$", addr)
+         if m is not None:
+-            host = m.group('host')
+-            port = m.group('port')
++            host = m.group("host")
++            port = m.group("port")
+         else:
+-            host, port = addr.split(':')
++            host, port = addr.split(":")
+ 
          return (ADDR_TYPE_TCP, (host, int(port)))
  
  
--def create_server(addr, dbname, *, sync=True, upstream=None, read_only=False):
-+def create_server(
-+    addr,
-+    dbname,
-+    *,
-+    sync=True,
-+    upstream=None,
-+    read_only=False,
-+    db_username=None,
-+    db_password=None
-+):
-     def sqlite_engine():
-         from .sqlite import DatabaseEngine
- 
-         return DatabaseEngine(dbname, sync)
- 
-+    def sqlalchemy_engine():
-+        from .sqlalchemy import DatabaseEngine
+ def create_server(addr, dbname, *, sync=True, upstream=None, read_only=False):
++    def sqlite_engine():
++        from .sqlite import DatabaseEngine
 +
-+        return DatabaseEngine(dbname, db_username, db_password)
++        return DatabaseEngine(dbname, sync)
 +
      from . import server
+-    db = setup_database(dbname, sync=sync)
+-    s = server.Server(db, upstream=upstream, read_only=read_only)
++
++    db_engine = sqlite_engine()
++
++    s = server.Server(db_engine, upstream=upstream, read_only=read_only)
  
--    db_engine = sqlite_engine()
-+    if "://" in dbname:
-+        db_engine = sqlalchemy_engine()
-+    else:
-+        db_engine = sqlite_engine()
+     (typ, a) = parse_address(addr)
+     if typ == ADDR_TYPE_UNIX:
+@@ -120,6 +61,7 @@ def create_server(addr, dbname, *, sync=True, upstream=None, read_only=False):
  
-     s = server.Server(db_engine, upstream=upstream, read_only=read_only)
+ def create_client(addr):
+     from . import client
++
+     c = client.Client()
  
-diff --git a/lib/hashserv/sqlalchemy.py b/lib/hashserv/sqlalchemy.py
+     (typ, a) = parse_address(addr)
+@@ -132,8 +74,10 @@ def create_client(addr):
+ 
+     return c
+ 
++
+ async def create_async_client(addr):
+     from . import client
++
+     c = client.AsyncClient()
+ 
+     (typ, a) = parse_address(addr)
+diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
+index 928532c7..12255cc2 100644
+--- a/lib/hashserv/server.py
++++ b/lib/hashserv/server.py
+@@ -3,18 +3,16 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-from contextlib import closing, contextmanager
+ from datetime import datetime, timedelta
+-import enum
+ import asyncio
+ import logging
+ import math
+ import time
+-from . import create_async_client, UNIHASH_TABLE_COLUMNS, OUTHASH_TABLE_COLUMNS
++from . import create_async_client
+ import bb.asyncrpc
+ 
+ 
+-logger = logging.getLogger('hashserv.server')
++logger = logging.getLogger("hashserv.server")
+ 
+ 
+ class Measurement(object):
+@@ -104,229 +102,136 @@ class Stats(object):
+         return math.sqrt(self.s / (self.num - 1))
+ 
+     def todict(self):
+-        return {k: getattr(self, k) for k in ('num', 'total_time', 'max_time', 'average', 'stdev')}
+-
+-
+-@enum.unique
+-class Resolve(enum.Enum):
+-    FAIL = enum.auto()
+-    IGNORE = enum.auto()
+-    REPLACE = enum.auto()
+-
+-
+-def insert_table(cursor, table, data, on_conflict):
+-    resolve = {
+-        Resolve.FAIL: "",
+-        Resolve.IGNORE: " OR IGNORE",
+-        Resolve.REPLACE: " OR REPLACE",
+-    }[on_conflict]
+-
+-    keys = sorted(data.keys())
+-    query = 'INSERT{resolve} INTO {table} ({fields}) VALUES({values})'.format(
+-        resolve=resolve,
+-        table=table,
+-        fields=", ".join(keys),
+-        values=", ".join(":" + k for k in keys),
+-    )
+-    prevrowid = cursor.lastrowid
+-    cursor.execute(query, data)
+-    logging.debug(
+-        "Inserting %r into %s, %s",
+-        data,
+-        table,
+-        on_conflict
+-    )
+-    return (cursor.lastrowid, cursor.lastrowid != prevrowid)
+-
+-def insert_unihash(cursor, data, on_conflict):
+-    return insert_table(cursor, "unihashes_v2", data, on_conflict)
+-
+-def insert_outhash(cursor, data, on_conflict):
+-    return insert_table(cursor, "outhashes_v2", data, on_conflict)
+-
+-async def copy_unihash_from_upstream(client, db, method, taskhash):
+-    d = await client.get_taskhash(method, taskhash)
+-    if d is not None:
+-        with closing(db.cursor()) as cursor:
+-            insert_unihash(
+-                cursor,
+-                {k: v for k, v in d.items() if k in UNIHASH_TABLE_COLUMNS},
+-                Resolve.IGNORE,
+-            )
+-            db.commit()
+-    return d
+-
+-
+-class ServerCursor(object):
+-    def __init__(self, db, cursor, upstream):
+-        self.db = db
+-        self.cursor = cursor
+-        self.upstream = upstream
++        return {
++            k: getattr(self, k)
++            for k in ("num", "total_time", "max_time", "average", "stdev")
++        }
+ 
+ 
+ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+-    def __init__(self, socket, db, request_stats, backfill_queue, upstream, read_only):
+-        super().__init__(socket, 'OEHASHEQUIV', logger)
+-        self.db = db
++    def __init__(
++        self,
++        socket,
++        db_engine,
++        request_stats,
++        backfill_queue,
++        upstream,
++        read_only,
++    ):
++        super().__init__(socket, "OEHASHEQUIV", logger)
++        self.db_engine = db_engine
+         self.request_stats = request_stats
+         self.max_chunk = bb.asyncrpc.DEFAULT_MAX_CHUNK
+         self.backfill_queue = backfill_queue
+         self.upstream = upstream
+ 
+-        self.handlers.update({
+-            'get': self.handle_get,
+-            'get-outhash': self.handle_get_outhash,
+-            'get-stream': self.handle_get_stream,
+-            'get-stats': self.handle_get_stats,
+-        })
++        self.handlers.update(
++            {
++                "get": self.handle_get,
++                "get-outhash": self.handle_get_outhash,
++                "get-stream": self.handle_get_stream,
++                "get-stats": self.handle_get_stats,
++            }
++        )
+ 
+         if not read_only:
+-            self.handlers.update({
+-                'report': self.handle_report,
+-                'report-equiv': self.handle_equivreport,
+-                'reset-stats': self.handle_reset_stats,
+-                'backfill-wait': self.handle_backfill_wait,
+-                'remove': self.handle_remove,
+-                'clean-unused': self.handle_clean_unused,
+-            })
++            self.handlers.update(
++                {
++                    "report": self.handle_report,
++                    "report-equiv": self.handle_equivreport,
++                    "reset-stats": self.handle_reset_stats,
++                    "backfill-wait": self.handle_backfill_wait,
++                    "remove": self.handle_remove,
++                    "clean-unused": self.handle_clean_unused,
++                }
++            )
+ 
+     def validate_proto_version(self):
+-        return (self.proto_version > (1, 0) and self.proto_version <= (1, 1))
++        return self.proto_version > (1, 0) and self.proto_version <= (1, 1)
+ 
+     async def process_requests(self):
+-        if self.upstream is not None:
+-            self.upstream_client = await create_async_client(self.upstream)
+-        else:
+-            self.upstream_client = None
+-
+-        await super().process_requests()
++        async with self.db_engine.connect(self.logger) as db:
++            self.db = db
++            if self.upstream is not None:
++                self.upstream_client = await create_async_client(self.upstream)
++            else:
++                self.upstream_client = None
+ 
+-        if self.upstream_client is not None:
+-            await self.upstream_client.close()
++            try:
++                await super().process_requests()
++            finally:
++                if self.upstream_client is not None:
++                    await self.upstream_client.close()
+ 
+     async def dispatch_message(self, msg):
+         for k in self.handlers.keys():
+             if k in msg:
+-                self.logger.debug('Handling %s' % k)
+-                if 'stream' in k:
++                self.logger.debug("Handling %s" % k)
++                if "stream" in k:
+                     return await self.handlers[k](msg[k])
+                 else:
+-                    with self.request_stats.start_sample() as self.request_sample, \
+-                            self.request_sample.measure():
++                    with self.request_stats.start_sample() as self.request_sample, self.request_sample.measure():
+                         return await self.handlers[k](msg[k])
+ 
+         raise bb.asyncrpc.ClientError("Unrecognized command %r" % msg)
+ 
+     async def handle_get(self, request):
+-        method = request['method']
+-        taskhash = request['taskhash']
+-        fetch_all = request.get('all', False)
++        method = request["method"]
++        taskhash = request["taskhash"]
++        fetch_all = request.get("all", False)
+ 
+-        with closing(self.db.cursor()) as cursor:
+-            return await self.get_unihash(cursor, method, taskhash, fetch_all)
++        return await self.get_unihash(method, taskhash, fetch_all)
+ 
+-    async def get_unihash(self, cursor, method, taskhash, fetch_all=False):
++    async def get_unihash(self, method, taskhash, fetch_all=False):
+         d = None
+ 
+         if fetch_all:
+-            cursor.execute(
+-                '''
+-                SELECT *, unihashes_v2.unihash AS unihash FROM outhashes_v2
+-                INNER JOIN unihashes_v2 ON unihashes_v2.method=outhashes_v2.method AND unihashes_v2.taskhash=outhashes_v2.taskhash
+-                WHERE outhashes_v2.method=:method AND outhashes_v2.taskhash=:taskhash
+-                ORDER BY outhashes_v2.created ASC
+-                LIMIT 1
+-                ''',
+-                {
+-                    'method': method,
+-                    'taskhash': taskhash,
+-                }
+-
+-            )
+-            row = cursor.fetchone()
+-
++            row = await self.db.get_unihash_by_taskhash_full(method, taskhash)
+             if row is not None:
+                 d = {k: row[k] for k in row.keys()}
+             elif self.upstream_client is not None:
+                 d = await self.upstream_client.get_taskhash(method, taskhash, True)
+-                self.update_unified(cursor, d)
+-                self.db.commit()
++                await self.update_unified(d)
+         else:
+-            row = self.query_equivalent(cursor, method, taskhash)
++            row = await self.db.get_equivalent(method, taskhash)
+ 
+             if row is not None:
+                 d = {k: row[k] for k in row.keys()}
+             elif self.upstream_client is not None:
+                 d = await self.upstream_client.get_taskhash(method, taskhash)
+-                d = {k: v for k, v in d.items() if k in UNIHASH_TABLE_COLUMNS}
+-                insert_unihash(cursor, d, Resolve.IGNORE)
+-                self.db.commit()
++                await self.db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
+ 
+         return d
+ 
+     async def handle_get_outhash(self, request):
+-        method = request['method']
+-        outhash = request['outhash']
+-        taskhash = request['taskhash']
++        method = request["method"]
++        outhash = request["outhash"]
++        taskhash = request["taskhash"]
+         with_unihash = request.get("with_unihash", True)
+ 
+-        with closing(self.db.cursor()) as cursor:
+-            return await self.get_outhash(cursor, method, outhash, taskhash, with_unihash)
++        return await self.get_outhash(method, outhash, taskhash, with_unihash)
+ 
+-    async def get_outhash(self, cursor, method, outhash, taskhash, with_unihash=True):
++    async def get_outhash(self, method, outhash, taskhash, with_unihash=True):
+         d = None
+         if with_unihash:
+-            cursor.execute(
+-                '''
+-                SELECT *, unihashes_v2.unihash AS unihash FROM outhashes_v2
+-                INNER JOIN unihashes_v2 ON unihashes_v2.method=outhashes_v2.method AND unihashes_v2.taskhash=outhashes_v2.taskhash
+-                WHERE outhashes_v2.method=:method AND outhashes_v2.outhash=:outhash
+-                ORDER BY outhashes_v2.created ASC
+-                LIMIT 1
+-                ''',
+-                {
+-                    'method': method,
+-                    'outhash': outhash,
+-                }
+-            )
++            row = await self.db.get_unihash_by_outhash(method, outhash)
+         else:
+-            cursor.execute(
+-                """
+-                SELECT * FROM outhashes_v2
+-                WHERE outhashes_v2.method=:method AND outhashes_v2.outhash=:outhash
+-                ORDER BY outhashes_v2.created ASC
+-                LIMIT 1
+-                """,
+-                {
+-                    'method': method,
+-                    'outhash': outhash,
+-                }
+-            )
+-        row = cursor.fetchone()
++            row = await self.db.get_outhash(method, outhash)
+ 
+         if row is not None:
+             d = {k: row[k] for k in row.keys()}
+         elif self.upstream_client is not None:
+             d = await self.upstream_client.get_outhash(method, outhash, taskhash)
+-            self.update_unified(cursor, d)
+-            self.db.commit()
++            await self.update_unified(d)
+ 
+         return d
+ 
+-    def update_unified(self, cursor, data):
++    async def update_unified(self, data):
+         if data is None:
+             return
+ 
+-        insert_unihash(
+-            cursor,
+-            {k: v for k, v in data.items() if k in UNIHASH_TABLE_COLUMNS},
+-            Resolve.IGNORE
+-        )
+-        insert_outhash(
+-            cursor,
+-            {k: v for k, v in data.items() if k in OUTHASH_TABLE_COLUMNS},
+-            Resolve.IGNORE
+-        )
++        await self.db.insert_unihash(data["method"], data["taskhash"], data["unihash"])
++        await self.db.insert_outhash(data)
+ 
+     async def handle_get_stream(self, request):
+         await self.socket.send_message("ok")
+@@ -347,20 +252,16 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+                 request_measure = self.request_sample.measure()
+                 request_measure.start()
+ 
+-                if l == 'END':
++                if l == "END":
+                     break
+ 
+                 (method, taskhash) = l.split()
+-                #self.logger.debug('Looking up %s %s' % (method, taskhash))
+-                cursor = self.db.cursor()
+-                try:
+-                    row = self.query_equivalent(cursor, method, taskhash)
+-                finally:
+-                    cursor.close()
++                # self.logger.debug('Looking up %s %s' % (method, taskhash))
++                row = await self.db.get_equivalent(method, taskhash)
+ 
+                 if row is not None:
+-                    msg = row['unihash']
+-                    #self.logger.debug('Found equivalent task %s -> %s', (row['taskhash'], row['unihash']))
++                    msg = row["unihash"]
++                    # self.logger.debug('Found equivalent task %s -> %s', (row['taskhash'], row['unihash']))
+                 elif self.upstream_client is not None:
+                     upstream = await self.upstream_client.get_unihash(method, taskhash)
+                     if upstream:
+@@ -383,118 +284,81 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+         return "ok"
+ 
+     async def handle_report(self, data):
+-        with closing(self.db.cursor()) as cursor:
+-            outhash_data = {
+-                'method': data['method'],
+-                'outhash': data['outhash'],
+-                'taskhash': data['taskhash'],
+-                'created': datetime.now()
+-            }
++        outhash_data = {
++            "method": data["method"],
++            "outhash": data["outhash"],
++            "taskhash": data["taskhash"],
++            "created": datetime.now(),
++        }
+ 
+-            for k in ('owner', 'PN', 'PV', 'PR', 'task', 'outhash_siginfo'):
+-                if k in data:
+-                    outhash_data[k] = data[k]
+-
+-            # Insert the new entry, unless it already exists
+-            (rowid, inserted) = insert_outhash(cursor, outhash_data, Resolve.IGNORE)
+-
+-            if inserted:
+-                # If this row is new, check if it is equivalent to another
+-                # output hash
+-                cursor.execute(
+-                    '''
+-                    SELECT outhashes_v2.taskhash AS taskhash, unihashes_v2.unihash AS unihash FROM outhashes_v2
+-                    INNER JOIN unihashes_v2 ON unihashes_v2.method=outhashes_v2.method AND unihashes_v2.taskhash=outhashes_v2.taskhash
+-                    -- Select any matching output hash except the one we just inserted
+-                    WHERE outhashes_v2.method=:method AND outhashes_v2.outhash=:outhash AND outhashes_v2.taskhash!=:taskhash
+-                    -- Pick the oldest hash
+-                    ORDER BY outhashes_v2.created ASC
+-                    LIMIT 1
+-                    ''',
+-                    {
+-                        'method': data['method'],
+-                        'outhash': data['outhash'],
+-                        'taskhash': data['taskhash'],
+-                    }
+-                )
+-                row = cursor.fetchone()
++        for k in ("owner", "PN", "PV", "PR", "task", "outhash_siginfo"):
++            if k in data:
++                outhash_data[k] = data[k]
+ 
+-                if row is not None:
+-                    # A matching output hash was found. Set our taskhash to the
+-                    # same unihash since they are equivalent
+-                    unihash = row['unihash']
+-                    resolve = Resolve.IGNORE
+-                else:
+-                    # No matching output hash was found. This is probably the
+-                    # first outhash to be added.
+-                    unihash = data['unihash']
+-                    resolve = Resolve.IGNORE
+-
+-                    # Query upstream to see if it has a unihash we can use
+-                    if self.upstream_client is not None:
+-                        upstream_data = await self.upstream_client.get_outhash(data['method'], data['outhash'], data['taskhash'])
+-                        if upstream_data is not None:
+-                            unihash = upstream_data['unihash']
+-
+-
+-                insert_unihash(
+-                    cursor,
+-                    {
+-                        'method': data['method'],
+-                        'taskhash': data['taskhash'],
+-                        'unihash': unihash,
+-                    },
+-                    resolve
+-                )
+-
+-            unihash_data = await self.get_unihash(cursor, data['method'], data['taskhash'])
+-            if unihash_data is not None:
+-                unihash = unihash_data['unihash']
+-            else:
+-                unihash = data['unihash']
+-
+-            self.db.commit()
++        # Insert the new entry, unless it already exists
++        if await self.db.insert_outhash(outhash_data):
++            # If this row is new, check if it is equivalent to another
++            # output hash
++            row = await self.db.get_equivalent_for_outhash(
++                data["method"], data["outhash"], data["taskhash"]
++            )
+ 
+-            d = {
+-                'taskhash': data['taskhash'],
+-                'method': data['method'],
+-                'unihash': unihash,
+-            }
++            if row is not None:
++                # A matching output hash was found. Set our taskhash to the
++                # same unihash since they are equivalent
++                unihash = row["unihash"]
++            else:
++                # No matching output hash was found. This is probably the
++                # first outhash to be added.
++                unihash = data["unihash"]
++
++                # Query upstream to see if it has a unihash we can use
++                if self.upstream_client is not None:
++                    upstream_data = await self.upstream_client.get_outhash(
++                        data["method"], data["outhash"], data["taskhash"]
++                    )
++                    if upstream_data is not None:
++                        unihash = upstream_data["unihash"]
++
++            await self.db.insert_unihash(data["method"], data["taskhash"], unihash)
++
++        unihash_data = await self.get_unihash(data["method"], data["taskhash"])
++        if unihash_data is not None:
++            unihash = unihash_data["unihash"]
++        else:
++            unihash = data["unihash"]
+ 
+-        return d
++        return {
++            "taskhash": data["taskhash"],
++            "method": data["method"],
++            "unihash": unihash,
++        }
+ 
+     async def handle_equivreport(self, data):
+-        with closing(self.db.cursor()) as cursor:
+-            insert_data = {
+-                'method': data['method'],
+-                'taskhash': data['taskhash'],
+-                'unihash': data['unihash'],
+-            }
+-            insert_unihash(cursor, insert_data, Resolve.IGNORE)
+-            self.db.commit()
+-
+-            # Fetch the unihash that will be reported for the taskhash. If the
+-            # unihash matches, it means this row was inserted (or the mapping
+-            # was already valid)
+-            row = self.query_equivalent(cursor, data['method'], data['taskhash'])
+-
+-            if row['unihash'] == data['unihash']:
+-                self.logger.info('Adding taskhash equivalence for %s with unihash %s',
+-                                  data['taskhash'], row['unihash'])
+-
+-            d = {k: row[k] for k in ('taskhash', 'method', 'unihash')}
+-
+-        return d
++        await self.db.insert_unihash(data["method"], data["taskhash"], data["unihash"])
++
++        # Fetch the unihash that will be reported for the taskhash. If the
++        # unihash matches, it means this row was inserted (or the mapping
++        # was already valid)
++        row = await self.db.get_equivalent(data["method"], data["taskhash"])
++
++        if row["unihash"] == data["unihash"]:
++            self.logger.info(
++                "Adding taskhash equivalence for %s with unihash %s",
++                data["taskhash"],
++                row["unihash"],
++            )
+ 
++        return {k: row[k] for k in ("taskhash", "method", "unihash")}
+ 
+     async def handle_get_stats(self, request):
+         return {
+-            'requests': self.request_stats.todict(),
++            "requests": self.request_stats.todict(),
+         }
+ 
+     async def handle_reset_stats(self, request):
+         d = {
+-            'requests': self.request_stats.todict(),
++            "requests": self.request_stats.todict(),
+         }
+ 
+         self.request_stats.reset()
+@@ -502,7 +366,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+ 
+     async def handle_backfill_wait(self, request):
+         d = {
+-            'tasks': self.backfill_queue.qsize(),
++            "tasks": self.backfill_queue.qsize(),
+         }
+         await self.backfill_queue.join()
+         return d
+@@ -512,92 +376,63 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+         if not isinstance(condition, dict):
+             raise TypeError("Bad condition type %s" % type(condition))
+ 
+-        def do_remove(columns, table_name, cursor):
+-            nonlocal condition
+-            where = {}
+-            for c in columns:
+-                if c in condition and condition[c] is not None:
+-                    where[c] = condition[c]
+-
+-            if where:
+-                query = ('DELETE FROM %s WHERE ' % table_name) + ' AND '.join("%s=:%s" % (k, k) for k in where.keys())
+-                cursor.execute(query, where)
+-                return cursor.rowcount
+-
+-            return 0
+-
+-        count = 0
+-        with closing(self.db.cursor()) as cursor:
+-            count += do_remove(OUTHASH_TABLE_COLUMNS, "outhashes_v2", cursor)
+-            count += do_remove(UNIHASH_TABLE_COLUMNS, "unihashes_v2", cursor)
+-            self.db.commit()
+-
+-        return {"count": count}
++        return {"count": await self.db.remove(condition)}
+ 
+     async def handle_clean_unused(self, request):
+         max_age = request["max_age_seconds"]
+-        with closing(self.db.cursor()) as cursor:
+-            cursor.execute(
+-                """
+-                DELETE FROM outhashes_v2 WHERE created<:oldest AND NOT EXISTS (
+-                    SELECT unihashes_v2.id FROM unihashes_v2 WHERE unihashes_v2.method=outhashes_v2.method AND unihashes_v2.taskhash=outhashes_v2.taskhash LIMIT 1
+-                )
+-                """,
+-                {
+-                    "oldest": datetime.now() - timedelta(seconds=-max_age)
+-                }
+-            )
+-            count = cursor.rowcount
+-
+-        return {"count": count}
+-
+-    def query_equivalent(self, cursor, method, taskhash):
+-        # This is part of the inner loop and must be as fast as possible
+-        cursor.execute(
+-            'SELECT taskhash, method, unihash FROM unihashes_v2 WHERE method=:method AND taskhash=:taskhash',
+-            {
+-                'method': method,
+-                'taskhash': taskhash,
+-            }
+-        )
+-        return cursor.fetchone()
++        oldest = datetime.now() - timedelta(seconds=-max_age)
++        return {"count": await self.db.clean_unused(oldest)}
+ 
+ 
+ class Server(bb.asyncrpc.AsyncServer):
+-    def __init__(self, db, upstream=None, read_only=False):
++    def __init__(self, db_engine, upstream=None, read_only=False):
+         if upstream and read_only:
+-            raise bb.asyncrpc.ServerError("Read-only hashserv cannot pull from an upstream server")
++            raise bb.asyncrpc.ServerError(
++                "Read-only hashserv cannot pull from an upstream server"
++            )
+ 
+         super().__init__(logger)
+ 
+         self.request_stats = Stats()
+-        self.db = db
++        self.db_engine = db_engine
+         self.upstream = upstream
+         self.read_only = read_only
+         self.backfill_queue = None
+ 
+     def accept_client(self, socket):
+-        return ServerClient(socket, self.db, self.request_stats, self.backfill_queue, self.upstream, self.read_only)
++        return ServerClient(
++            socket,
++            self.db_engine,
++            self.request_stats,
++            self.backfill_queue,
++            self.upstream,
++            self.read_only,
++        )
+ 
+     async def backfill_worker_task(self):
+-        client = await create_async_client(self.upstream)
+-        try:
++        async with await create_async_client(
++            self.upstream
++        ) as client, self.db_engine.connect(logger) as db:
+             while True:
+                 item = await self.backfill_queue.get()
+                 if item is None:
+                     self.backfill_queue.task_done()
+                     break
++
+                 method, taskhash = item
+-                await copy_unihash_from_upstream(client, self.db, method, taskhash)
++                d = await client.get_taskhash(method, taskhash)
++                if d is not None:
++                    await db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
+                 self.backfill_queue.task_done()
+-        finally:
+-            await client.close()
+ 
+     def start(self):
+         tasks = super().start()
+         if self.upstream:
+             self.backfill_queue = asyncio.Queue()
+             tasks += [self.backfill_worker_task()]
++
++        self.loop.run_until_complete(self.db_engine.create())
++
+         return tasks
+ 
+     async def stop(self):
+diff --git a/lib/hashserv/sqlite.py b/lib/hashserv/sqlite.py
 new file mode 100644
-index 00000000..3216621f
+index 00000000..6809c537
 --- /dev/null
-+++ b/lib/hashserv/sqlalchemy.py
-@@ -0,0 +1,304 @@
++++ b/lib/hashserv/sqlite.py
+@@ -0,0 +1,259 @@
 +#! /usr/bin/env python3
 +#
 +# Copyright (C) 2023 Garmin Ltd.
 +#
 +# SPDX-License-Identifier: GPL-2.0-only
 +#
-+
++import sqlite3
 +import logging
-+from datetime import datetime
++from contextlib import closing
 +
-+from sqlalchemy.ext.asyncio import create_async_engine
-+from sqlalchemy.pool import NullPool
-+from sqlalchemy import (
-+    MetaData,
-+    Column,
-+    Table,
-+    Text,
-+    Integer,
-+    UniqueConstraint,
-+    DateTime,
-+    Index,
-+    select,
-+    insert,
-+    exists,
-+    literal,
-+    and_,
-+    delete,
++logger = logging.getLogger("hashserv.sqlite")
++
++UNIHASH_TABLE_DEFINITION = (
++    ("method", "TEXT NOT NULL", "UNIQUE"),
++    ("taskhash", "TEXT NOT NULL", "UNIQUE"),
++    ("unihash", "TEXT NOT NULL", ""),
 +)
-+import sqlalchemy.engine
-+from sqlalchemy.orm import declarative_base
-+from sqlalchemy.exc import IntegrityError
 +
-+logger = logging.getLogger("hashserv.sqlalchemy")
++UNIHASH_TABLE_COLUMNS = tuple(name for name, _, _ in UNIHASH_TABLE_DEFINITION)
 +
-+Base = declarative_base()
++OUTHASH_TABLE_DEFINITION = (
++    ("method", "TEXT NOT NULL", "UNIQUE"),
++    ("taskhash", "TEXT NOT NULL", "UNIQUE"),
++    ("outhash", "TEXT NOT NULL", "UNIQUE"),
++    ("created", "DATETIME", ""),
++    # Optional fields
++    ("owner", "TEXT", ""),
++    ("PN", "TEXT", ""),
++    ("PV", "TEXT", ""),
++    ("PR", "TEXT", ""),
++    ("task", "TEXT", ""),
++    ("outhash_siginfo", "TEXT", ""),
++)
 +
-+
-+class UnihashesV2(Base):
-+    __tablename__ = "unihashes_v2"
-+    id = Column(Integer, primary_key=True, autoincrement=True)
-+    method = Column(Text, nullable=False)
-+    taskhash = Column(Text, nullable=False)
-+    unihash = Column(Text, nullable=False)
-+
-+    __table_args__ = (
-+        UniqueConstraint("method", "taskhash"),
-+        Index("taskhash_lookup_v3", "method", "taskhash"),
-+    )
++OUTHASH_TABLE_COLUMNS = tuple(name for name, _, _ in OUTHASH_TABLE_DEFINITION)
 +
 +
-+class OuthashesV2(Base):
-+    __tablename__ = "outhashes_v2"
-+    id = Column(Integer, primary_key=True, autoincrement=True)
-+    method = Column(Text, nullable=False)
-+    taskhash = Column(Text, nullable=False)
-+    outhash = Column(Text, nullable=False)
-+    created = Column(DateTime)
-+    owner = Column(Text)
-+    PN = Column(Text)
-+    PV = Column(Text)
-+    PR = Column(Text)
-+    task = Column(Text)
-+    outhash_siginfo = Column(Text)
-+
-+    __table_args__ = (
-+        UniqueConstraint("method", "taskhash", "outhash"),
-+        Index("outhash_lookup_v3", "method", "outhash"),
++def _make_table(cursor, name, definition):
++    cursor.execute(
++        """
++        CREATE TABLE IF NOT EXISTS {name} (
++            id INTEGER PRIMARY KEY AUTOINCREMENT,
++            {fields}
++            UNIQUE({unique})
++            )
++        """.format(
++            name=name,
++            fields=" ".join("%s %s," % (name, typ) for name, typ, _ in definition),
++            unique=", ".join(
++                name for name, _, flags in definition if "UNIQUE" in flags
++            ),
++        )
 +    )
 +
 +
 +class DatabaseEngine(object):
-+    def __init__(self, url, username=None, password=None):
++    def __init__(self, dbname, sync):
++        self.dbname = dbname
 +        self.logger = logger
-+        self.url = sqlalchemy.engine.make_url(url)
-+
-+        if username is not None:
-+            self.url = self.url.set(username=username)
-+
-+        if password is not None:
-+            self.url = self.url.set(password=password)
++        self.sync = sync
 +
 +    async def create(self):
-+        self.logger.info("Using database %s", self.url)
-+        self.engine = create_async_engine(self.url, poolclass=NullPool)
++        db = sqlite3.connect(self.dbname)
++        db.row_factory = sqlite3.Row
 +
-+        async with self.engine.begin() as conn:
-+            # Create tables
-+            logger.info("Creating tables...")
-+            await conn.run_sync(Base.metadata.create_all)
++        with closing(db.cursor()) as cursor:
++            _make_table(cursor, "unihashes_v2", UNIHASH_TABLE_DEFINITION)
++            _make_table(cursor, "outhashes_v2", OUTHASH_TABLE_DEFINITION)
++
++            cursor.execute("PRAGMA journal_mode = WAL")
++            cursor.execute(
++                "PRAGMA synchronous = %s" % ("NORMAL" if self.sync else "OFF")
++            )
++
++            # Drop old indexes
++            cursor.execute("DROP INDEX IF EXISTS taskhash_lookup")
++            cursor.execute("DROP INDEX IF EXISTS outhash_lookup")
++            cursor.execute("DROP INDEX IF EXISTS taskhash_lookup_v2")
++            cursor.execute("DROP INDEX IF EXISTS outhash_lookup_v2")
++
++            # TODO: Upgrade from tasks_v2?
++            cursor.execute("DROP TABLE IF EXISTS tasks_v2")
++
++            # Create new indexes
++            cursor.execute(
++                "CREATE INDEX IF NOT EXISTS taskhash_lookup_v3 ON unihashes_v2 (method, taskhash)"
++            )
++            cursor.execute(
++                "CREATE INDEX IF NOT EXISTS outhash_lookup_v3 ON outhashes_v2 (method, outhash)"
++            )
 +
 +    def connect(self, logger):
-+        return Database(self.engine, logger)
-+
-+
-+def map_row(row):
-+    if row is None:
-+        return None
-+    return dict(**row._mapping)
++        return Database(logger, self.dbname)
 +
 +
 +class Database(object):
-+    def __init__(self, engine, logger):
-+        self.engine = engine
-+        self.db = None
++    def __init__(self, logger, dbname, sync=True):
++        self.dbname = dbname
 +        self.logger = logger
 +
++        self.db = sqlite3.connect(self.dbname)
++        self.db.row_factory = sqlite3.Row
++
 +    async def __aenter__(self):
-+        self.db = await self.engine.connect()
 +        return self
 +
 +    async def __aexit__(self, exc_type, exc_value, traceback):
 +        await self.close()
 +
 +    async def close(self):
-+        await self.db.close()
-+        self.db = None
++        self.db.close()
 +
 +    async def get_unihash_by_taskhash_full(self, method, taskhash):
-+        statement = (
-+            select(
-+                OuthashesV2,
-+                UnihashesV2.unihash.label("unihash"),
++        with closing(self.db.cursor()) as cursor:
++            cursor.execute(
++                """
++                SELECT *, unihashes_v2.unihash AS unihash FROM outhashes_v2
++                INNER JOIN unihashes_v2 ON unihashes_v2.method=outhashes_v2.method AND unihashes_v2.taskhash=outhashes_v2.taskhash
++                WHERE outhashes_v2.method=:method AND outhashes_v2.taskhash=:taskhash
++                ORDER BY outhashes_v2.created ASC
++                LIMIT 1
++                """,
++                {
++                    "method": method,
++                    "taskhash": taskhash,
++                },
 +            )
-+            .join(
-+                UnihashesV2,
-+                and_(
-+                    UnihashesV2.method == OuthashesV2.method,
-+                    UnihashesV2.taskhash == OuthashesV2.taskhash,
-+                ),
-+            )
-+            .where(
-+                OuthashesV2.method == method,
-+                OuthashesV2.taskhash == taskhash,
-+            )
-+            .order_by(
-+                OuthashesV2.created.asc(),
-+            )
-+            .limit(1)
-+        )
-+        self.logger.debug("%s", statement)
-+        async with self.db.begin():
-+            result = await self.db.execute(statement)
-+            return map_row(result.first())
++            return cursor.fetchone()
 +
 +    async def get_unihash_by_outhash(self, method, outhash):
-+        statement = (
-+            select(OuthashesV2, UnihashesV2.unihash.label("unihash"))
-+            .join(
-+                UnihashesV2,
-+                and_(
-+                    UnihashesV2.method == OuthashesV2.method,
-+                    UnihashesV2.taskhash == OuthashesV2.taskhash,
-+                ),
++        with closing(self.db.cursor()) as cursor:
++            cursor.execute(
++                """
++                SELECT *, unihashes_v2.unihash AS unihash FROM outhashes_v2
++                INNER JOIN unihashes_v2 ON unihashes_v2.method=outhashes_v2.method AND unihashes_v2.taskhash=outhashes_v2.taskhash
++                WHERE outhashes_v2.method=:method AND outhashes_v2.outhash=:outhash
++                ORDER BY outhashes_v2.created ASC
++                LIMIT 1
++                """,
++                {
++                    "method": method,
++                    "outhash": outhash,
++                },
 +            )
-+            .where(
-+                OuthashesV2.method == method,
-+                OuthashesV2.outhash == outhash,
-+            )
-+            .order_by(
-+                OuthashesV2.created.asc(),
-+            )
-+            .limit(1)
-+        )
-+        self.logger.debug("%s", statement)
-+        async with self.db.begin():
-+            result = await self.db.execute(statement)
-+            return map_row(result.first())
++            return cursor.fetchone()
 +
 +    async def get_outhash(self, method, outhash):
-+        statement = (
-+            select(OuthashesV2)
-+            .where(
-+                OuthashesV2.method == method,
-+                OuthashesV2.outhash == outhash,
++        with closing(self.db.cursor()) as cursor:
++            cursor.execute(
++                """
++                SELECT * FROM outhashes_v2
++                WHERE outhashes_v2.method=:method AND outhashes_v2.outhash=:outhash
++                ORDER BY outhashes_v2.created ASC
++                LIMIT 1
++                """,
++                {
++                    "method": method,
++                    "outhash": outhash,
++                },
 +            )
-+            .order_by(
-+                OuthashesV2.created.asc(),
-+            )
-+            .limit(1)
-+        )
-+
-+        self.logger.debug("%s", statement)
-+        async with self.db.begin():
-+            result = await self.db.execute(statement)
-+            return map_row(result.first())
++            return cursor.fetchone()
 +
 +    async def get_equivalent_for_outhash(self, method, outhash, taskhash):
-+        statement = (
-+            select(
-+                OuthashesV2.taskhash.label("taskhash"),
-+                UnihashesV2.unihash.label("unihash"),
++        with closing(self.db.cursor()) as cursor:
++            cursor.execute(
++                """
++                SELECT outhashes_v2.taskhash AS taskhash, unihashes_v2.unihash AS unihash FROM outhashes_v2
++                INNER JOIN unihashes_v2 ON unihashes_v2.method=outhashes_v2.method AND unihashes_v2.taskhash=outhashes_v2.taskhash
++                -- Select any matching output hash except the one we just inserted
++                WHERE outhashes_v2.method=:method AND outhashes_v2.outhash=:outhash AND outhashes_v2.taskhash!=:taskhash
++                -- Pick the oldest hash
++                ORDER BY outhashes_v2.created ASC
++                LIMIT 1
++                """,
++                {
++                    "method": method,
++                    "outhash": outhash,
++                    "taskhash": taskhash,
++                },
 +            )
-+            .join(
-+                UnihashesV2,
-+                and_(
-+                    UnihashesV2.method == OuthashesV2.method,
-+                    UnihashesV2.taskhash == OuthashesV2.taskhash,
-+                ),
-+            )
-+            .where(
-+                OuthashesV2.method == method,
-+                OuthashesV2.outhash == outhash,
-+                OuthashesV2.taskhash != taskhash,
-+            )
-+            .order_by(
-+                OuthashesV2.created.asc(),
-+            )
-+            .limit(1)
-+        )
-+        self.logger.debug("%s", statement)
-+        async with self.db.begin():
-+            result = await self.db.execute(statement)
-+            return map_row(result.first())
++            return cursor.fetchone()
 +
 +    async def get_equivalent(self, method, taskhash):
-+        statement = select(
-+            UnihashesV2.unihash,
-+            UnihashesV2.method,
-+            UnihashesV2.taskhash,
-+        ).where(
-+            UnihashesV2.method == method,
-+            UnihashesV2.taskhash == taskhash,
-+        )
-+        self.logger.debug("%s", statement)
-+        async with self.db.begin():
-+            result = await self.db.execute(statement)
-+            return map_row(result.first())
++        with closing(self.db.cursor()) as cursor:
++            cursor.execute(
++                "SELECT taskhash, method, unihash FROM unihashes_v2 WHERE method=:method AND taskhash=:taskhash",
++                {
++                    "method": method,
++                    "taskhash": taskhash,
++                },
++            )
++            return cursor.fetchone()
 +
 +    async def remove(self, condition):
-+        async def do_remove(table):
++        def do_remove(columns, table_name, cursor):
 +            where = {}
-+            for c in table.__table__.columns:
-+                if c.key in condition and condition[c.key] is not None:
-+                    where[c] = condition[c.key]
++            for c in columns:
++                if c in condition and condition[c] is not None:
++                    where[c] = condition[c]
 +
 +            if where:
-+                statement = delete(table).where(*[(k == v) for k, v in where.items()])
-+                self.logger.debug("%s", statement)
-+                async with self.db.begin():
-+                    result = await self.db.execute(statement)
-+                return result.rowcount
++                query = ("DELETE FROM %s WHERE " % table_name) + " AND ".join(
++                    "%s=:%s" % (k, k) for k in where.keys()
++                )
++                cursor.execute(query, where)
++                return cursor.rowcount
 +
 +            return 0
 +
 +        count = 0
-+        count += await do_remove(UnihashesV2)
-+        count += await do_remove(OuthashesV2)
++        with closing(self.db.cursor()) as cursor:
++            count += do_remove(OUTHASH_TABLE_COLUMNS, "outhashes_v2", cursor)
++            count += do_remove(UNIHASH_TABLE_COLUMNS, "unihashes_v2", cursor)
++            self.db.commit()
 +
 +        return count
 +
 +    async def clean_unused(self, oldest):
-+        statement = delete(OuthashesV2).where(
-+            OuthashesV2.created < oldest,
-+            ~(
-+                select(UnihashesV2.id)
-+                .where(
-+                    UnihashesV2.method == OuthashesV2.method,
-+                    UnihashesV2.taskhash == OuthashesV2.taskhash,
++        with closing(self.db.cursor()) as cursor:
++            cursor.execute(
++                """
++                DELETE FROM outhashes_v2 WHERE created<:oldest AND NOT EXISTS (
++                    SELECT unihashes_v2.id FROM unihashes_v2 WHERE unihashes_v2.method=outhashes_v2.method AND unihashes_v2.taskhash=outhashes_v2.taskhash LIMIT 1
 +                )
-+                .limit(1)
-+                .exists()
-+            ),
-+        )
-+        self.logger.debug("%s", statement)
-+        async with self.db.begin():
-+            result = await self.db.execute(statement)
-+            return result.rowcount
++                """,
++                {
++                    "oldest": oldest,
++                },
++            )
++            return cursor.rowcount
 +
 +    async def insert_unihash(self, method, taskhash, unihash):
-+        statement = insert(UnihashesV2).values(
-+            method=method,
-+            taskhash=taskhash,
-+            unihash=unihash,
-+        )
-+        self.logger.debug("%s", statement)
-+        try:
-+            async with self.db.begin():
-+                await self.db.execute(statement)
-+            return True
-+        except IntegrityError:
-+            logger.debug(
-+                "%s, %s, %s already in unihash database", method, taskhash, unihash
++        with closing(self.db.cursor()) as cursor:
++            prevrowid = cursor.lastrowid
++            cursor.execute(
++                """
++                INSERT OR IGNORE INTO unihashes_v2 (method, taskhash, unihash) VALUES(:method, :taskhash, :unihash)
++                """,
++                {
++                    "method": method,
++                    "taskhash": taskhash,
++                    "unihash": unihash,
++                },
 +            )
-+            return False
++            self.db.commit()
++            return cursor.lastrowid != prevrowid
 +
 +    async def insert_outhash(self, data):
-+        outhash_columns = set(c.key for c in OuthashesV2.__table__.columns)
-+
-+        data = {k: v for k, v in data.items() if k in outhash_columns}
-+
-+        if "created" in data and not isinstance(data["created"], datetime):
-+            data["created"] = datetime.fromisoformat(data["created"])
-+
-+        statement = insert(OuthashesV2).values(**data)
-+        self.logger.debug("%s", statement)
-+        try:
-+            async with self.db.begin():
-+                await self.db.execute(statement)
-+            return True
-+        except IntegrityError:
-+            logger.debug(
-+                "%s, %s already in outhash database", data["method"], data["outhash"]
-+            )
-+            return False
-diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index 4c98a280..268b2700 100644
---- a/lib/hashserv/tests.py
-+++ b/lib/hashserv/tests.py
-@@ -33,7 +33,7 @@ class HashEquivalenceTestSetup(object):
-     def start_server(self, dbpath=None, upstream=None, read_only=False, prefunc=server_prefunc):
-         self.server_index += 1
-         if dbpath is None:
--            dbpath = os.path.join(self.temp_dir.name, "db%d.sqlite" % self.server_index)
-+            dbpath = self.make_dbpath()
- 
-         def cleanup_server(server):
-             if server.process.exitcode is not None:
-@@ -53,6 +53,9 @@ class HashEquivalenceTestSetup(object):
- 
-         return server
- 
-+    def make_dbpath(self):
-+        return os.path.join(self.temp_dir.name, "db%d.sqlite" % self.server_index)
-+
-     def start_client(self, server_address):
-         def cleanup_client(client):
-             client.close()
-@@ -517,6 +520,20 @@ class TestHashEquivalenceWebsocketServer(HashEquivalenceTestSetup, HashEquivalen
-         return "ws://%s:0" % host
- 
- 
-+class TestHashEquivalenceWebsocketsSQLAlchemyServer(TestHashEquivalenceWebsocketServer):
-+    def setUp(self):
-+        try:
-+            import sqlalchemy
-+            import aiosqlite
-+        except ImportError as e:
-+            self.skipTest(str(e))
-+
-+        super().setUp()
-+
-+    def make_dbpath(self):
-+        return "sqlite+aiosqlite:///%s" % os.path.join(self.temp_dir.name, "db%d.sqlite" % self.server_index)
-+
-+
- class TestHashEquivalenceExternalServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
-     def start_test_server(self):
-         if 'BB_TEST_HASHSERV' not in os.environ:
++        data = {k: v for k, v in data.items() if k in OUTHASH_TABLE_COLUMNS}
++        keys = sorted(data.keys())
++        query = "INSERT OR IGNORE INTO outhashes_v2 ({fields}) VALUES({values})".format(
++            fields=", ".join(keys),
++            values=", ".join(":" + k for k in keys),
++        )
++        with closing(self.db.cursor()) as cursor:
++            prevrowid = cursor.lastrowid
++            cursor.execute(query, data)
++            self.db.commit()
++            return cursor.lastrowid != prevrowid
 -- 
 2.34.1
 
