@@ -1,200 +1,156 @@
-Return-Path: <alassane.yattara@savoirfairelinux.com>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E84C4332F
-	for <webhook@archiver.kernel.org>; Tue, 31 Oct 2023 18:45:23 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.3760.1698777918747394310
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F56C4332F
+	for <webhook@archiver.kernel.org>; Wed,  1 Nov 2023 13:17:10 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+ by mx.groups.io with SMTP id smtpd.web10.7015.1698844628859586372
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Oct 2023 11:45:19 -0700
+ Wed, 01 Nov 2023 06:17:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=CQ0FM7ZC;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1CE7A9C0BB2
-	for <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 14:45:18 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id cae9cRONNljK; Tue, 31 Oct 2023 14:45:17 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 616B79C2929;
-	Tue, 31 Oct 2023 14:45:17 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 616B79C2929
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1698777917; bh=MBSnmLTwcXDbaohcWaAGUlvvbZe6pLTYUEpAY3L08ZQ=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=CQ0FM7ZCy+cgNpX/uJX6CU4gMcgfgpr2f6EBDPF5rn+adtnqX+tn8WLlLSIZ3k56I
-	 iKrFP/bhHML9j8KVISpRowarKAKdbfKRQP7KYlbCTN7CumR3plpXZAIIQ0k/hRuocQ
-	 HdAOHmo3+3oQPDeEP/WgACkKlSdGmRuW8dq4FdNVnwUmtoXofDsDA6ckzX8BwiOK4k
-	 FsBhC//6gNbraZEN7Gxo3PBQ0p6vrcn40glrRSf3O6g7hhGcFxJaQDA5IdYsBIDEAe
-	 MaBpY58qu3OvB8uKd0Yl6PSMe9rCeJ8dvsFC3iNEWL1Z/wRn5ORoMzyO/8SHRLXsyq
-	 gyzzI+dM+S7oA==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id Dw1l6O6V08yH; Tue, 31 Oct 2023 14:45:17 -0400 (EDT)
-Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 1BDE69C0BB2;
-	Tue, 31 Oct 2023 14:45:15 -0400 (EDT)
-From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH v2 3/3] Toaster: Test jumbotron links visible and clickable
-Date: Tue, 31 Oct 2023 19:44:38 +0100
-Message-Id: <20231031184438.743924-1-alassane.yattara@savoirfairelinux.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=MeWkZvzs;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: alexandre.belloni@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C810040007;
+	Wed,  1 Nov 2023 13:17:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1698844627;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n69XDKGfmKSHijIRRhsJ7714ooqCapl8GiyDIfam+Hc=;
+	b=MeWkZvzskf65sdIkgcNRg0Kc8/B3Togz/5xfYAob/9CC+QPKvdjVB0d/wCQ/mnmzzkRUEW
+	Xz/+CDirJWe+vV7HTn9ZyJsPGK5JH5UmjUqAq5IjWYcttu5ay8gj6pEyR8VLpk5VX8sL2u
+	lGoJcEWT2iYT2nQOYkfGMa3IOuoynRxyV03KV2EK/3EdmaSWBeM+Ur3MjIfXcqaP4MAEGM
+	f9QjTn4YloVnZzkwr2KhCBdKAShB7NQStwyTyngK3VD5oHergg+4HMNNSMf1BE88S9N64z
+	DGgkly17byf35A5/D3dKoTLTXqdb+eep0dSUsmComKlfMn12afYnYCpwZuGXwQ==
+Date: Wed, 1 Nov 2023 14:17:06 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Joshua Watt <JPEWhacker@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel][PATCH v4 00/22] Bitbake Hash Server WebSockets,
+ Alternate Database Backend, and User Management
+Message-ID: <20231101131706602cf071@mail.local>
+References: <20231030191728.1276805-1-JPEWhacker@gmail.com>
+ <20231031172138.3577199-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231031172138.3577199-1-JPEWhacker@gmail.com>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 31 Oct 2023 18:45:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15379
+ <bitbake-devel@lists.openembedded.org>; Wed, 01 Nov 2023 13:17:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15380
 
-Test that the followings link are visible and clickable:
- - OpenEmbedded
- - BitBake
- - Yocto Project
- - Read the Toaster manual
- - Contribute to Toaster
+Hello Joshua,
 
- - Fixed typo: using instead of usign line:97
- - Remove whitespace
+This is causing warning on the AB:
 
-Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
----
- .../tests/browser/test_landing_page.py        | 89 ++++++++++++++++++-
- 1 file changed, 88 insertions(+), 1 deletion(-)
+WARNING: Error contacting Hash Equivalence Server hashserv.yocto.io:8686: Expecting value: line 1 column 1 (char 0)
 
-diff --git a/lib/toaster/tests/browser/test_landing_page.py b/lib/toaster=
-/tests/browser/test_landing_page.py
-index e731af22..756497bd 100644
---- a/lib/toaster/tests/browser/test_landing_page.py
-+++ b/lib/toaster/tests/browser/test_landing_page.py
-@@ -12,7 +12,7 @@ from django.urls import reverse
- from django.utils import timezone
- from tests.browser.selenium_helpers import SeleniumTestCase
-=20
--from orm.models import Project, Build
-+from orm.models import Layer, Layer_Version, Project, Build
-=20
- class TestLandingPage(SeleniumTestCase):
-     """ Tests for redirects on the landing page """
-@@ -61,6 +61,93 @@ class TestLandingPage(SeleniumTestCase):
-             'http://docs.yoctoproject.org/toaster-manual/index.html#toas=
-ter-user-manual')
-         self.assertTrue("Documentation" in documentation_link.text)
-=20
-+    def test_openembedded_jumbotron_link_visible_and_clickable(self):
-+        """ Test OpenEmbedded link jumbotron is visible and clickable: "=
-""
-+        self.get(reverse('landing'))
-+        jumbotron =3D self.find('.jumbotron')
-+
-+        # check OpenEmbedded
-+        openembedded =3D jumbotron.find_element_by_link_text('OpenEmbedd=
-ed')
-+        self.assertTrue(openembedded.is_displayed())
-+        openembedded.click()
-+        self.assertTrue("openembedded.org" in self.driver.current_url)
-+
-+    def test_bitbake_jumbotron_link_visible_and_clickable(self):
-+        """ Test BitBake link jumbotron is visible and clickable: """
-+        self.get(reverse('landing'))
-+        jumbotron =3D self.find('.jumbotron')
-+
-+        # check BitBake
-+        bitbake =3D jumbotron.find_element_by_link_text('BitBake')
-+        self.assertTrue(bitbake.is_displayed())
-+        bitbake.click()
-+        self.assertTrue("yoctoproject.org/software-item/bitbake" in self=
-.driver.current_url)
-+
-+    def test_yoctoproject_jumbotron_link_visible_and_clickable(self):
-+        """ Test Yocto Project link jumbotron is visible and clickable: =
-"""
-+        self.get(reverse('landing'))
-+        jumbotron =3D self.find('.jumbotron')
-+
-+        # check Yocto Project
-+        yoctoproject =3D jumbotron.find_element_by_link_text('Yocto Proj=
-ect')
-+        self.assertTrue(yoctoproject.is_displayed())
-+        yoctoproject.click()
-+        self.assertTrue("yoctoproject.org" in self.driver.current_url)
-+
-+    def test_link_setup_using_toaster_visible_and_clickable(self):
-+        """ Test big magenta button setting up and using toaster link in=
- jumbotron
-+            if visible and clickable
-+        """
-+        self.get(reverse('landing'))
-+        jumbotron =3D self.find('.jumbotron')
-+
-+        # check Big magenta button
-+        big_magenta_button =3D jumbotron.find_element_by_link_text(
-+            'Toaster is ready to capture your command line builds'
-+        )
-+        self.assertTrue(big_magenta_button.is_displayed())
-+        big_magenta_button.click()
-+        self.assertTrue("docs.yoctoproject.org/toaster-manual/setup-and-=
-use.html#setting-up-and-using-toaster" in self.driver.current_url)
-+
-+    def test_link_create_new_project_in_jumbotron_visible_and_clickable(=
-self):
-+        """ Test big blue button create new project jumbotron if visible=
- and clickable """
-+        # Create a layer and a layer version to make visible the big blu=
-e button
-+        layer =3D Layer.objects.create(name=3D'bar')
-+        Layer_Version.objects.create(layer=3Dlayer)
-+
-+        self.get(reverse('landing'))
-+        jumbotron =3D self.find('.jumbotron')
-+
-+        # check Big Blue button
-+        big_blue_button =3D jumbotron.find_element_by_link_text(
-+            'Create your first Toaster project to run manage builds'
-+        )
-+        self.assertTrue(big_blue_button.is_displayed())
-+        big_blue_button.click()
-+        self.assertTrue("toastergui/newproject/" in self.driver.current_=
-url)
-+
-+    def test_toaster_manual_link_visible_and_clickable(self):
-+        """ Test Read the Toaster manual link jumbotron is visible and c=
-lickable: """
-+        self.get(reverse('landing'))
-+        jumbotron =3D self.find('.jumbotron')
-+
-+        # check Read the Toaster manual
-+        toaster_manual =3D jumbotron.find_element_by_link_text('Read the=
- Toaster manual')
-+        self.assertTrue(toaster_manual.is_displayed())
-+        toaster_manual.click()
-+        self.assertTrue("https://docs.yoctoproject.org/toaster-manual/in=
-dex.html#toaster-user-manual" in self.driver.current_url)
-+
-+    def test_contrib_to_toaster_link_visible_and_clickable(self):
-+        """ Test Contribute to Toaster link jumbotron is visible and cli=
-ckable: """
-+        self.get(reverse('landing'))
-+        jumbotron =3D self.find('.jumbotron')
-+
-+        # check Contribute to Toaster
-+        contribute_to_toaster =3D jumbotron.find_element_by_link_text('C=
-ontribute to Toaster')
-+        self.assertTrue(contribute_to_toaster.is_displayed())
-+        contribute_to_toaster.click()
-+        self.assertTrue("wiki.yoctoproject.org/wiki/contribute_to_toaste=
-r" in str(self.driver.current_url).lower())
-+
-     def test_only_default_project(self):
-         """
-         No projects except default
---=20
-2.34.1
+https://autobuilder.yoctoproject.org/typhoon/#/builders/122/builds/3522/steps/12/logs/warnings
+https://autobuilder.yoctoproject.org/typhoon/#/builders/122/builds/3523/steps/17/logs/warnings
+https://autobuilder.yoctoproject.org/typhoon/#/builders/23/builds/8384/steps/14/logs/warnings
+https://autobuilder.yoctoproject.org/typhoon/#/builders/73/builds/7990/steps/13/logs/warnings
+https://autobuilder.yoctoproject.org/typhoon/#/builders/59/builds/7987/steps/12/logs/warnings
+https://autobuilder.yoctoproject.org/typhoon/#/builders/73/builds/7991/steps/13/logs/warnings
+https://autobuilder.yoctoproject.org/typhoon/#/builders/59/builds/7988/steps/12/logs/warnings
 
+
+
+
+
+On 31/10/2023 11:21:16-0600, Joshua Watt wrote:
+> This patch series reworks the bitbake asyncrpc API to add a WebSockets
+> implementation for both the client and server. The hash equivalence
+> server is updated to allow using this new API (the PR server can also be
+> updated in the future if desired).
+> 
+> In addition, the database backed for the hash equivalence server is
+> abstracted so that sqlalchemy can optionally be used instead of sqlite.
+> This allows using "big metal" databases as the backend, which allows the
+> hash equivalence server to scale to a large number of queries.
+> 
+> Note that both websockets and sqlalchemy require 3rd party python
+> modules to function. However, these modules are optional unless the user
+> desires to use the APIs.
+> 
+> Also, user management is added. This allows user accounts to be
+> registered with the server and users can be given permissions to do
+> certain operations on the server. Users are not (necessarily) required
+> to login to access the server, as permissions can granted to anonymous
+> users. The default permissions will give anonymous users the same
+> permissions that they would have before user accounts were added so as
+> to retain backward compatibility, but server admins will likely want to
+> change this.
+> 
+> V3: Remove RFC status; patches are ready for review
+> V4: Fixed protocol breakage with mixing older and newer clients/servers
+> 
+> Joshua Watt (22):
+>   asyncrpc: Abstract sockets
+>   hashserv: Add websocket connection implementation
+>   asyncrpc: Add context manager API
+>   hashserv: tests: Add external database tests
+>   asyncrpc: Prefix log messages with client info
+>   bitbake-hashserv: Allow arguments from environment
+>   hashserv: Abstract database
+>   hashserv: Add SQLalchemy backend
+>   hashserv: Implement read-only version of "report" RPC
+>   asyncrpc: Add InvokeError
+>   asyncrpc: client: Prevent double closing of loop
+>   asyncrpc: client: Add disconnect API
+>   hashserv: Add user permissions
+>   hashserv: Add become-user API
+>   hashserv: Add db-usage API
+>   hashserv: Add database column query API
+>   hashserv: test: Add bitbake-hashclient tests
+>   bitbake-hashclient: Output stats in JSON format
+>   bitbake-hashserver: Allow anonymous permissions to be space separated
+>   hashserv: tests: Allow authentication for external server tests
+>   hashserv: Allow self-service deletion
+>   hashserv: server: Add owner if user is logged in
+> 
+>  bin/bitbake-hashclient        | 145 +++++-
+>  bin/bitbake-hashserv          | 132 ++++-
+>  lib/bb/asyncrpc/__init__.py   |  33 +-
+>  lib/bb/asyncrpc/client.py     | 120 ++---
+>  lib/bb/asyncrpc/connection.py | 146 ++++++
+>  lib/bb/asyncrpc/exceptions.py |  21 +
+>  lib/bb/asyncrpc/serv.py       | 356 ++++++++-----
+>  lib/hashserv/__init__.py      | 190 +++----
+>  lib/hashserv/client.py        | 147 +++++-
+>  lib/hashserv/server.py        | 951 +++++++++++++++++++++-------------
+>  lib/hashserv/sqlalchemy.py    | 427 +++++++++++++++
+>  lib/hashserv/sqlite.py        | 391 ++++++++++++++
+>  lib/hashserv/tests.py         | 736 +++++++++++++++++++++++++-
+>  lib/prserv/client.py          |   8 +-
+>  lib/prserv/serv.py            |  37 +-
+>  15 files changed, 3034 insertions(+), 806 deletions(-)
+>  create mode 100644 lib/bb/asyncrpc/connection.py
+>  create mode 100644 lib/bb/asyncrpc/exceptions.py
+>  create mode 100644 lib/hashserv/sqlalchemy.py
+>  create mode 100644 lib/hashserv/sqlite.py
+> 
+> -- 
+> 2.34.1
+> 
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#15350): https://lists.openembedded.org/g/bitbake-devel/message/15350
+> Mute This Topic: https://lists.openembedded.org/mt/102302326/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
