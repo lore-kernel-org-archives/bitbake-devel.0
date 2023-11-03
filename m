@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B80BC4332F
-	for <webhook@archiver.kernel.org>; Fri,  3 Nov 2023 14:26:56 +0000 (UTC)
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
- by mx.groups.io with SMTP id smtpd.web11.52750.1699021613990425865
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5142FC4708E
+	for <webhook@archiver.kernel.org>; Fri,  3 Nov 2023 14:27:06 +0000 (UTC)
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+ by mx.groups.io with SMTP id smtpd.web11.52758.1699021620097002077
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 03 Nov 2023 07:26:54 -0700
+ Fri, 03 Nov 2023 07:27:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=MktOSY2S;
- spf=pass (domain: gmail.com, ip: 209.85.210.45, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6d2fedd836fso1242950a34.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 07:26:53 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=OFglxfhl;
+ spf=pass (domain: gmail.com, ip: 209.85.161.46, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5820299b99cso1521758eaf.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 07:27:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699021612; x=1699626412; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1699021619; x=1699626419; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oh4ehdeyVJMztzun9eRb3IQMbgLvjrtjA6KQFiUsvAM=;
-        b=MktOSY2SUzakzoAkRLztF9uJCFmBQMtumsoEyOdntfT3XmZuDvafFvAmRyWK3fb2cu
-         s2lgn6CfeJOLAaRLlH9r8o7PP2qQimNJcmGMJqRhaYgutCVTPDQEFr+DgTmBg44OJFrK
-         HINqdUQOvJEcdJKu4SeCxPPQUtna5b5J2UqaRmZuukFbDV9YOoLr1KCRDmhP1vV50IZq
-         sASFyfkbzrtvsOUbPSBvFvPRR6lyyJepsak3/+AWdO5J4nuxhuUSmlBjurPGbMv3WXzc
-         Rlapsia7ZN+smSF8U1PYVl2TV4YIxHU3u/ZOXjrXLAK0KDXRx4k17bAwOPRdrtXnhWDW
-         UatA==
+        bh=LprVoJlqanLaEQ7T60BP3dzic8sVKHsjRF04ubqiA0Q=;
+        b=OFglxfhlycss1iM+Tmwf/KoFUMPPsmHb8PLGBWrNziJn00ZFko18dP+SzJ0z1rEHF9
+         A4WN0bBXlVT/EHnJ8pKTo0w6diTz0Z2z+TURR64FE62MT7MeoFWWDxEpGO3PETY941Ek
+         Ag3MzquoNzJWQXPsbLFsA7n51MezEsUnco6cByQUza1RxBf3RZBAjSmtlyxS8qpmrC6C
+         YAJocOyZ/Aj2fmiE36zj64xsZgBGNLtlcpucmKiTG59qkq2E/N+sBEtYpoh/lTrvV96i
+         PHU7MNTsbGgPlqiUqDSS+6UxRgyaUsPNikU0i524dY1B/tJ4CpqefHHgRGo+chcxbLP2
+         sLfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699021612; x=1699626412;
+        d=1e100.net; s=20230601; t=1699021619; x=1699626419;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oh4ehdeyVJMztzun9eRb3IQMbgLvjrtjA6KQFiUsvAM=;
-        b=sWCIzEjLVTtjG6grDisg9M/b6mmVOBdP4KnOy8fZxN0RZ2j/OYR6txWpD+w1wpolGq
-         fl6E9fvo3IzCH2WI2ea3nkwIPARSrYY9WW5ESNd40ecTPsjse0DuIGCxdh6Guy3nHvMu
-         ok8CbFRH6UQCVQAKreR6MV7tF6rJB1VvU8AHvK0yP07tMcdMNjPawjyxjmOm1knHIG4V
-         RCRWPbvLtGNHMtO0SG0P085SaK7gtN0gNP/t76kI9ksHk6tFqZU3mD7dFPZsr3i+h807
-         W59GjUVgnbyCJz48B3j+Jg0CliKevums4yWnBtwWElBLlxmhn3LsvrXa+yR/jd7uF5jy
-         4X+Q==
-X-Gm-Message-State: AOJu0Yz7Q2LVLhNwOhiyKunUXyKkq/ZrqIQZiufjHsrlJx0ozPDAri7V
-	kAg5kE+CWDU4LwNumWz18v21gnPPsdE=
-X-Google-Smtp-Source: AGHT+IGe8aH4wT0AQOovVyal+wqKBhUo/TixaKCUiMVjBYo4ESn7LKgggFS9c0VCqVcSnY+yXmUNNQ==
-X-Received: by 2002:a05:6870:11cc:b0:1ea:323e:4f11 with SMTP id 12-20020a05687011cc00b001ea323e4f11mr19936420oav.3.1699021611977;
-        Fri, 03 Nov 2023 07:26:51 -0700 (PDT)
+        bh=LprVoJlqanLaEQ7T60BP3dzic8sVKHsjRF04ubqiA0Q=;
+        b=Nfn0uig7JRDOIAgxisGVfI3WKP0QgPHGTH/rVR9RZjeTg0OjPxYJbaWCoi34TQtfsh
+         Mn+y4nEmUV3dWhokgwR4QR+Ep4ezBv9YcQvHvw23qDztZEARUS8N8Z4JiLmZKhhVTBS2
+         41t+4r+QlBip8d0I8XIyf6LLRXzPFUsE3fNHGmtF33EYtOThSiwZsygUeHM8rZwD7RA7
+         oZA/piqUAZWajrpO87i6IlYXbDmFj5/z0QftOgriocQAIZ+iBP3AjEhwPMj36K2xEMtg
+         oz40ay23AjXH2QBteMt2ZS6SF3URspnnUbBm0C35VD5OMZ0BAQnPcqHEocLrdc8tzpwc
+         JScA==
+X-Gm-Message-State: AOJu0YzlJ8piI5NBUCMsjDOhjMTtnQvREklesu55i5fKvCkCbmdT4GzR
+	BvoF3q/sAf3vXFi+7j+Y0JZCcBGg+4o=
+X-Google-Smtp-Source: AGHT+IG71NGwP6s+hIZk1/S4VqFeDAoNjRh42q6Y/UFIms4hvUizQl9rPtUAZu5KeD8dT2HE4fFFLA==
+X-Received: by 2002:a05:6870:ac1f:b0:1f0:3fd5:9d5a with SMTP id kw31-20020a056870ac1f00b001f03fd59d5amr1565087oab.16.1699021618758;
+        Fri, 03 Nov 2023 07:26:58 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::2fe0])
-        by smtp.gmail.com with ESMTPSA id bb29-20020a056871b21d00b001dcde628a6fsm308272oac.42.2023.11.03.07.26.49
+        by smtp.gmail.com with ESMTPSA id bb29-20020a056871b21d00b001dcde628a6fsm308272oac.42.2023.11.03.07.26.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Nov 2023 07:26:49 -0700 (PDT)
+        Fri, 03 Nov 2023 07:26:57 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v6 02/22] hashserv: Add websocket connection implementation
-Date: Fri,  3 Nov 2023 08:26:20 -0600
-Message-Id: <20231103142640.1936827-3-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v6 06/22] bitbake-hashserv: Allow arguments from environment
+Date: Fri,  3 Nov 2023 08:26:24 -0600
+Message-Id: <20231103142640.1936827-7-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231103142640.1936827-1-JPEWhacker@gmail.com>
 References: <20231031172138.3577199-1-JPEWhacker@gmail.com>
@@ -62,280 +62,140 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 14:26:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15423
+ <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 14:27:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15427
 
-Adds support to the hash equivalence client and server to communicate
-over websockets. Since websockets are message orientated instead of
-stream orientated, and new connection class is needed to handle them.
-
-Note that websocket support does require the 3rd party websockets python
-module be installed on the host, but it should not be required unless
-websockets are actually being used.
+Allows the arguments to the bitbake-hashserv command to be specified in
+environment variables. This is a very common idiom when running services
+in containers as it allows the arguments to be specified from different
+sources as desired by the service administrator
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/asyncrpc/client.py     | 11 +++++++-
- lib/bb/asyncrpc/connection.py | 44 +++++++++++++++++++++++++++++
- lib/bb/asyncrpc/serv.py       | 53 ++++++++++++++++++++++++++++++++++-
- lib/hashserv/__init__.py      | 13 +++++++++
- lib/hashserv/client.py        |  1 +
- lib/hashserv/tests.py         | 17 +++++++++++
- 6 files changed, 137 insertions(+), 2 deletions(-)
+ bin/bitbake-hashserv | 80 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 60 insertions(+), 20 deletions(-)
 
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-index 7f33099b..802c07df 100644
---- a/lib/bb/asyncrpc/client.py
-+++ b/lib/bb/asyncrpc/client.py
-@@ -10,7 +10,7 @@ import json
- import os
- import socket
- import sys
--from .connection import StreamConnection, DEFAULT_MAX_CHUNK
-+from .connection import StreamConnection, WebsocketConnection, DEFAULT_MAX_CHUNK
- from .exceptions import ConnectionClosedError
- 
- 
-@@ -47,6 +47,15 @@ class AsyncClient(object):
- 
-         self._connect_sock = connect_sock
- 
-+    async def connect_websocket(self, uri):
-+        import websockets
-+
-+        async def connect_sock():
-+            websocket = await websockets.connect(uri, ping_interval=None)
-+            return WebsocketConnection(websocket, self.timeout)
-+
-+        self._connect_sock = connect_sock
-+
-     async def setup_connection(self):
-         # Send headers
-         await self.socket.send("%s %s" % (self.proto_name, self.proto_version))
-diff --git a/lib/bb/asyncrpc/connection.py b/lib/bb/asyncrpc/connection.py
-index c4fd2475..a10628f7 100644
---- a/lib/bb/asyncrpc/connection.py
-+++ b/lib/bb/asyncrpc/connection.py
-@@ -93,3 +93,47 @@ class StreamConnection(object):
-         if self.writer is not None:
-             self.writer.close()
-             self.writer = None
-+
-+
-+class WebsocketConnection(object):
-+    def __init__(self, socket, timeout):
-+        self.socket = socket
-+        self.timeout = timeout
-+
-+    @property
-+    def address(self):
-+        return ":".join(str(s) for s in self.socket.remote_address)
-+
-+    async def send_message(self, msg):
-+        await self.send(json.dumps(msg))
-+
-+    async def recv_message(self):
-+        m = await self.recv()
-+        return json.loads(m)
-+
-+    async def send(self, msg):
-+        import websockets.exceptions
-+
-+        try:
-+            await self.socket.send(msg)
-+        except websockets.exceptions.ConnectionClosed:
-+            raise ConnectionClosedError("Connection closed")
-+
-+    async def recv(self):
-+        import websockets.exceptions
-+
-+        try:
-+            if self.timeout < 0:
-+                return await self.socket.recv()
-+
-+            try:
-+                return await asyncio.wait_for(self.socket.recv(), self.timeout)
-+            except asyncio.TimeoutError:
-+                raise ConnectionError("Timed out waiting for data")
-+        except websockets.exceptions.ConnectionClosed:
-+            raise ConnectionClosedError("Connection closed")
-+
-+    async def close(self):
-+        if self.socket is not None:
-+            await self.socket.close()
-+            self.socket = None
-diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
-index 3e0d0632..dfb03773 100644
---- a/lib/bb/asyncrpc/serv.py
-+++ b/lib/bb/asyncrpc/serv.py
-@@ -12,7 +12,7 @@ import signal
- import socket
- import sys
- import multiprocessing
--from .connection import StreamConnection
-+from .connection import StreamConnection, WebsocketConnection
- from .exceptions import ClientError, ServerError, ConnectionClosedError
- 
- 
-@@ -178,6 +178,54 @@ class UnixStreamServer(StreamServer):
-         os.unlink(self.path)
- 
- 
-+class WebsocketsServer(object):
-+    def __init__(self, host, port, handler, logger):
-+        self.host = host
-+        self.port = port
-+        self.handler = handler
-+        self.logger = logger
-+
-+    def start(self, loop):
-+        import websockets.server
-+
-+        self.server = loop.run_until_complete(
-+            websockets.server.serve(
-+                self.client_handler,
-+                self.host,
-+                self.port,
-+                ping_interval=None,
-+            )
-+        )
-+
-+        for s in self.server.sockets:
-+            self.logger.debug("Listening on %r" % (s.getsockname(),))
-+
-+            # Enable keep alives. This prevents broken client connections
-+            # from persisting on the server for long periods of time.
-+            s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-+            s.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 30)
-+            s.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 15)
-+            s.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 4)
-+
-+        name = self.server.sockets[0].getsockname()
-+        if self.server.sockets[0].family == socket.AF_INET6:
-+            self.address = "ws://[%s]:%d" % (name[0], name[1])
-+        else:
-+            self.address = "ws://%s:%d" % (name[0], name[1])
-+
-+        return [self.server.wait_closed()]
-+
-+    async def stop(self):
-+        self.server.close()
-+
-+    def cleanup(self):
-+        pass
-+
-+    async def client_handler(self, websocket):
-+        socket = WebsocketConnection(websocket, -1)
-+        await self.handler(socket)
-+
-+
- class AsyncServer(object):
-     def __init__(self, logger):
-         self.logger = logger
-@@ -190,6 +238,9 @@ class AsyncServer(object):
-     def start_unix_server(self, path):
-         self.server = UnixStreamServer(path, self._client_handler, self.logger)
- 
-+    def start_websocket_server(self, host, port):
-+        self.server = WebsocketsServer(host, port, self._client_handler, self.logger)
-+
-     async def _client_handler(self, socket):
-         try:
-             client = self.accept_client(socket)
-diff --git a/lib/hashserv/__init__.py b/lib/hashserv/__init__.py
-index 3a401835..56b9c6bc 100644
---- a/lib/hashserv/__init__.py
-+++ b/lib/hashserv/__init__.py
-@@ -9,11 +9,15 @@ import re
+diff --git a/bin/bitbake-hashserv b/bin/bitbake-hashserv
+index 00af76b2..a916a90c 100755
+--- a/bin/bitbake-hashserv
++++ b/bin/bitbake-hashserv
+@@ -11,56 +11,96 @@ import logging
+ import argparse
  import sqlite3
- import itertools
- import json
-+from urllib.parse import urlparse
- 
- UNIX_PREFIX = "unix://"
-+WS_PREFIX = "ws://"
-+WSS_PREFIX = "wss://"
- 
- ADDR_TYPE_UNIX = 0
- ADDR_TYPE_TCP = 1
-+ADDR_TYPE_WS = 2
- 
- UNIHASH_TABLE_DEFINITION = (
-     ("method", "TEXT NOT NULL", "UNIQUE"),
-@@ -84,6 +88,8 @@ def setup_database(database, sync=True):
- def parse_address(addr):
-     if addr.startswith(UNIX_PREFIX):
-         return (ADDR_TYPE_UNIX, (addr[len(UNIX_PREFIX):],))
-+    elif addr.startswith(WS_PREFIX) or addr.startswith(WSS_PREFIX):
-+        return (ADDR_TYPE_WS, (addr,))
-     else:
-         m = re.match(r'\[(?P<host>[^\]]*)\]:(?P<port>\d+)$', addr)
-         if m is not None:
-@@ -103,6 +109,9 @@ def create_server(addr, dbname, *, sync=True, upstream=None, read_only=False):
-     (typ, a) = parse_address(addr)
-     if typ == ADDR_TYPE_UNIX:
-         s.start_unix_server(*a)
-+    elif typ == ADDR_TYPE_WS:
-+        url = urlparse(a[0])
-+        s.start_websocket_server(url.hostname, url.port)
-     else:
-         s.start_tcp_server(*a)
- 
-@@ -116,6 +125,8 @@ def create_client(addr):
-     (typ, a) = parse_address(addr)
-     if typ == ADDR_TYPE_UNIX:
-         c.connect_unix(*a)
-+    elif typ == ADDR_TYPE_WS:
-+        c.connect_websocket(*a)
-     else:
-         c.connect_tcp(*a)
- 
-@@ -128,6 +139,8 @@ async def create_async_client(addr):
-     (typ, a) = parse_address(addr)
-     if typ == ADDR_TYPE_UNIX:
-         await c.connect_unix(*a)
-+    elif typ == ADDR_TYPE_WS:
-+        await c.connect_websocket(*a)
-     else:
-         await c.connect_tcp(*a)
- 
-diff --git a/lib/hashserv/client.py b/lib/hashserv/client.py
-index 5f7d22ab..9542d72f 100644
---- a/lib/hashserv/client.py
-+++ b/lib/hashserv/client.py
-@@ -115,6 +115,7 @@ class Client(bb.asyncrpc.Client):
-         super().__init__()
-         self._add_methods(
-             "connect_tcp",
-+            "connect_websocket",
-             "get_unihash",
-             "report_unihash",
-             "report_unihash_equiv",
-diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index f343c586..01ffd52c 100644
---- a/lib/hashserv/tests.py
-+++ b/lib/hashserv/tests.py
-@@ -483,3 +483,20 @@ class TestHashEquivalenceTCPServer(HashEquivalenceTestSetup, HashEquivalenceComm
-         # If IPv6 is enabled, it should be safe to use localhost directly, in general
-         # case it is more reliable to resolve the IP address explicitly.
-         return socket.gethostbyname("localhost") + ":0"
+ import warnings
 +
+ warnings.simplefilter("default")
+ 
+-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'lib'))
++sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "lib"))
+ 
+ import hashserv
+ 
+ VERSION = "1.0.0"
+ 
+-DEFAULT_BIND = 'unix://./hashserve.sock'
++DEFAULT_BIND = "unix://./hashserve.sock"
+ 
+ 
+ def main():
+-    parser = argparse.ArgumentParser(description='Hash Equivalence Reference Server. Version=%s' % VERSION,
+-                                     epilog='''The bind address is the path to a unix domain socket if it is
+-                                               prefixed with "unix://". Otherwise, it is an IP address
+-                                               and port in form ADDRESS:PORT. To bind to all addresses, leave
+-                                               the ADDRESS empty, e.g. "--bind :8686". To bind to a specific
+-                                               IPv6 address, enclose the address in "[]", e.g.
+-                                               "--bind [::1]:8686"'''
+-                                     )
+-
+-    parser.add_argument('-b', '--bind', default=DEFAULT_BIND, help='Bind address (default "%(default)s")')
+-    parser.add_argument('-d', '--database', default='./hashserv.db', help='Database file (default "%(default)s")')
+-    parser.add_argument('-l', '--log', default='WARNING', help='Set logging level')
+-    parser.add_argument('-u', '--upstream', help='Upstream hashserv to pull hashes from')
+-    parser.add_argument('-r', '--read-only', action='store_true', help='Disallow write operations from clients')
++    parser = argparse.ArgumentParser(
++        description="Hash Equivalence Reference Server. Version=%s" % VERSION,
++        formatter_class=argparse.RawTextHelpFormatter,
++        epilog="""
++The bind address may take one of the following formats:
++    unix://PATH         - Bind to unix domain socket at PATH
++    ws://ADDRESS:PORT   - Bind to websocket on ADDRESS:PORT
++    ADDRESS:PORT        - Bind to raw TCP socket on ADDRESS:PORT
 +
-+class TestHashEquivalenceWebsocketServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
-+    def setUp(self):
-+        try:
-+            import websockets
-+        except ImportError as e:
-+            self.skipTest(str(e))
++To bind to all addresses, leave the ADDRESS empty, e.g. "--bind :8686" or
++"--bind ws://:8686". To bind to a specific IPv6 address, enclose the address in
++"[]", e.g. "--bind [::1]:8686" or "--bind ws://[::1]:8686"
++        """,
++    )
 +
-+        super().setUp()
++    parser.add_argument(
++        "-b",
++        "--bind",
++        default=os.environ.get("HASHSERVER_BIND", DEFAULT_BIND),
++        help='Bind address (default $HASHSERVER_BIND, "%(default)s")',
++    )
++    parser.add_argument(
++        "-d",
++        "--database",
++        default=os.environ.get("HASHSERVER_DB", "./hashserv.db"),
++        help='Database file (default $HASHSERVER_DB, "%(default)s")',
++    )
++    parser.add_argument(
++        "-l",
++        "--log",
++        default=os.environ.get("HASHSERVER_LOG_LEVEL", "WARNING"),
++        help='Set logging level (default $HASHSERVER_LOG_LEVEL, "%(default)s")',
++    )
++    parser.add_argument(
++        "-u",
++        "--upstream",
++        default=os.environ.get("HASHSERVER_UPSTREAM", None),
++        help="Upstream hashserv to pull hashes from ($HASHSERVER_UPSTREAM)",
++    )
++    parser.add_argument(
++        "-r",
++        "--read-only",
++        action="store_true",
++        help="Disallow write operations from clients ($HASHSERVER_READ_ONLY)",
++    )
+ 
+     args = parser.parse_args()
+ 
+-    logger = logging.getLogger('hashserv')
++    logger = logging.getLogger("hashserv")
+ 
+     level = getattr(logging, args.log.upper(), None)
+     if not isinstance(level, int):
+-        raise ValueError('Invalid log level: %s' % args.log)
++        raise ValueError("Invalid log level: %s" % args.log)
+ 
+     logger.setLevel(level)
+     console = logging.StreamHandler()
+     console.setLevel(level)
+     logger.addHandler(console)
+ 
+-    server = hashserv.create_server(args.bind, args.database, upstream=args.upstream, read_only=args.read_only)
++    read_only = (os.environ.get("HASHSERVER_READ_ONLY", "0") == "1") or args.read_only
 +
-+    def get_server_addr(self, server_idx):
-+        # Some hosts cause asyncio module to misbehave, when IPv6 is not enabled.
-+        # If IPv6 is enabled, it should be safe to use localhost directly, in general
-+        # case it is more reliable to resolve the IP address explicitly.
-+        host = socket.gethostbyname("localhost")
-+        return "ws://%s:0" % host
++    server = hashserv.create_server(
++        args.bind,
++        args.database,
++        upstream=args.upstream,
++        read_only=read_only,
++    )
+     server.serve_forever()
+     return 0
+ 
+ 
+-if __name__ == '__main__':
++if __name__ == "__main__":
+     try:
+         ret = main()
+     except Exception:
+         ret = 1
+         import traceback
++
+         traceback.print_exc()
+     sys.exit(ret)
 -- 
 2.34.1
 
