@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CC0C0018C
-	for <webhook@archiver.kernel.org>; Fri,  3 Nov 2023 14:27:16 +0000 (UTC)
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
- by mx.groups.io with SMTP id smtpd.web10.53505.1699021631921432564
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78075C4332F
+	for <webhook@archiver.kernel.org>; Fri,  3 Nov 2023 14:27:26 +0000 (UTC)
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+ by mx.groups.io with SMTP id smtpd.web11.52776.1699021645956533823
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 03 Nov 2023 07:27:12 -0700
+ Fri, 03 Nov 2023 07:27:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=IwTtEBcz;
- spf=pass (domain: gmail.com, ip: 209.85.160.51, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-1f03db0a410so1328411fac.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 07:27:11 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=FzJu0Xyi;
+ spf=pass (domain: gmail.com, ip: 209.85.210.53, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6ce532451c7so1148792a34.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 07:27:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699021630; x=1699626430; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1699021644; x=1699626444; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IBoF9jzhrTH8y4QaAGhK+D6ntMYK/OqwEm3pJB0/qQQ=;
-        b=IwTtEBczW/Qsv1NG+vy3CbuQ4+551uTpS+6Um/YHdBBzGzl0b4i4C7xGjDf+g4tl/U
-         COxvUiNRRApt34epLC9dlN3u1t4NUrxOZk9H3A9HZisgWCEFX2EAVD/rxz+7D7OQkCYx
-         94Pbi7nc0zBT2RUfn/XnHyDEXtazBJ5q/gmMfLT4me9RtYCUxb0RViF5UYGT3mXY8oir
-         ZxEGuRVHSqyYoiS9CmwzxTpDWM4iQfB8TLoaZFXqJiqhdja3Gy6NQHjr4fDFb44rxaSv
-         Xh2Ek8bA7CzQR85aPzzpwVhpzs/Rh8rYJ9jrWO8takMChsjfE9wHMFFq4dIwQ+CarnWx
-         MSSA==
+        bh=ncOBBQVOKSJI4oIEZXme+bBgONZifXz6NgsuiVg1fgg=;
+        b=FzJu0XyiKV9yjJRDHoUhgDzDuYErxwjIsHUrjYa3Ivp8L7G+D7B40vjt4qxppxGhCo
+         82bqFcQMzIkiWAYkVbdYvfOrypIQvG4BLfFuNNiaO4sqkrUzFmnBhDBj7iob4iE5K+s1
+         AcIg1GycUO9Dy1VO4wb08RRv/KTx30rPOSbveCws/iq2cPv+SFpNXHbbu7j1donY995f
+         Vj12AilJ/qmNUxoSHUEmN6oRpyZyN4PnpE08q/IrYRJvLhio+mQzbEdgjut18Jm/hlnH
+         lla95yVnNno9UrKjKfqQxHZ5j7g8D/KA54yg0UEToQScG0SW7Ql7WFJWdsF75JlkGKvr
+         658Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699021630; x=1699626430;
+        d=1e100.net; s=20230601; t=1699021644; x=1699626444;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IBoF9jzhrTH8y4QaAGhK+D6ntMYK/OqwEm3pJB0/qQQ=;
-        b=hmpckZQvjzEsPkIvWAsbGZWZkERTiMwTVkUOwXClXE+hEozAhC4IW+LcCShtR0ABhk
-         YDBvRY+oBUj+qaORB8YPLVaKNtQSL6TJ5YxMRJ5jlBQ8EiRJwIDFW6a4+MxIFwNz26Tj
-         rwvihf1MxW71xsGya5YgxO01vD26QDopq/1iv0YXnCFgA9umSELZem3CiU/ClzZHLSOw
-         JdduQCQJosc5s+RQZv24+erOFz6VZLm9u3RE37czYVifwcltrjz5ZDizlw/GXBqLjJPq
-         hpqEIgTVInG2NHQEcG4HYsFnSKK+h3knQoYRngN+WXJId1yIXn716WtfFwa8iaRHrusT
-         XB8w==
-X-Gm-Message-State: AOJu0YzXbEb17wxwz3TYDjBRRxucHSikDBOxug6lNIMrB5eI33+YxKg0
-	jh74o4IfEF/hGeUJo7lMn/qARGTcKOQ=
-X-Google-Smtp-Source: AGHT+IGoNPAF/qjoBdCsbMGnR/SIRISMYiKMxMbT60QhGMZ7BzsC8wig4os13JNGNtx7nsMhl5BiVg==
-X-Received: by 2002:a05:6870:1045:b0:1bb:a227:7008 with SMTP id 5-20020a056870104500b001bba2277008mr20735678oaj.3.1699021630605;
-        Fri, 03 Nov 2023 07:27:10 -0700 (PDT)
+        bh=ncOBBQVOKSJI4oIEZXme+bBgONZifXz6NgsuiVg1fgg=;
+        b=q8/mK0ErdSI45Ca1rC0I+zOERJ7A4DrZ8e1XuXgb8Tai3Eq4CYqnNX9pQ3bxCBCHFn
+         yvNOJNRn3ZgWb0nCC0riYWdTL1v+mSn7fgTzeU0gca8uO+9bLtE3cOTLCBCKZriMYWif
+         EbSXISK5X5GeBCzo4Zq22BCbaJGecKj5NlZMMh1v1YjYz/tyYhjjPqrQSnW2VGz5205J
+         KqtHffvrM16HaXs7SzzVkUnpAUYf9UcmB5gWFSh32ToghWSKDrz49sCWRhlJPyB1XDEa
+         4WKH+j+POrwoagtw82BD+dybbitD2Gbf6IvwxhgU4UrM3hQ8qms4w2n7RtVeuUeymTPn
+         nClg==
+X-Gm-Message-State: AOJu0Yyx0kS8Vmh8Bvi5J/d3BT+XKrAiQv7XXsMrQFVLlcFx4oVhZ54H
+	+dbi0j+1xFdZgbyeS1Tk3WpJHIyejpE=
+X-Google-Smtp-Source: AGHT+IEnPJR+JZaMZ4vH7aOw9xFTq5G9njKM41Bki5VhbEZHZAIDrhdul9S7o7TrCVW2YPnX/rtE1A==
+X-Received: by 2002:a05:6870:d8c8:b0:1ea:ce71:dd13 with SMTP id of8-20020a056870d8c800b001eace71dd13mr22820257oac.28.1699021644057;
+        Fri, 03 Nov 2023 07:27:24 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::2fe0])
-        by smtp.gmail.com with ESMTPSA id bb29-20020a056871b21d00b001dcde628a6fsm308272oac.42.2023.11.03.07.27.08
+        by smtp.gmail.com with ESMTPSA id bb29-20020a056871b21d00b001dcde628a6fsm308272oac.42.2023.11.03.07.27.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Nov 2023 07:27:09 -0700 (PDT)
+        Fri, 03 Nov 2023 07:27:22 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v6 12/22] asyncrpc: client: Add disconnect API
-Date: Fri,  3 Nov 2023 08:26:30 -0600
-Message-Id: <20231103142640.1936827-13-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v6 19/22] bitbake-hashserver: Allow anonymous permissions to be space separated
+Date: Fri,  3 Nov 2023 08:26:37 -0600
+Message-Id: <20231103142640.1936827-20-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231103142640.1936827-1-JPEWhacker@gmail.com>
 References: <20231031172138.3577199-1-JPEWhacker@gmail.com>
@@ -62,47 +62,33 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 14:27:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15433
+ <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 14:27:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15440
 
-Adds an API to explicitly disconnect a client. This can be useful for
-testing the auto-reconnect behavior of clients
+Space separation is more natural when setting the value from an
+environment variable, so allow that here for convenience.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/asyncrpc/client.py | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ bin/bitbake-hashserv | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-index 628b90ee..0d7cd857 100644
---- a/lib/bb/asyncrpc/client.py
-+++ b/lib/bb/asyncrpc/client.py
-@@ -67,11 +67,14 @@ class AsyncClient(object):
-             self.socket = await self._connect_sock()
-             await self.setup_connection()
+diff --git a/bin/bitbake-hashserv b/bin/bitbake-hashserv
+index 1085d058..c560b3e5 100755
+--- a/bin/bitbake-hashserv
++++ b/bin/bitbake-hashserv
+@@ -127,7 +127,10 @@ websocket, as in "wss://SERVER:PORT"
+     logger.addHandler(console)
  
--    async def close(self):
-+    async def disconnect(self):
-         if self.socket is not None:
-             await self.socket.close()
-             self.socket = None
+     read_only = (os.environ.get("HASHSERVER_READ_ONLY", "0") == "1") or args.read_only
+-    anon_perms = args.anon_perms.split(",")
++    if "," in args.anon_perms:
++        anon_perms = args.anon_perms.split(",")
++    else:
++        anon_perms = args.anon_perms.split()
  
-+    async def close(self):
-+        await self.disconnect()
-+
-     async def _send_wrapper(self, proc):
-         count = 0
-         while True:
-@@ -160,6 +163,9 @@ class Client(object):
-     def max_chunk(self, value):
-         self.client.max_chunk = value
- 
-+    def disconnect(self):
-+        self.loop.run_until_complete(self.client.close())
-+
-     def close(self):
-         if self.loop:
-             self.loop.run_until_complete(self.client.close())
+     server = hashserv.create_server(
+         args.bind,
 -- 
 2.34.1
 
