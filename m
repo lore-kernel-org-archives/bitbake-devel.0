@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93187C4167B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10E0C0018A
 	for <webhook@archiver.kernel.org>; Fri,  3 Nov 2023 14:27:36 +0000 (UTC)
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
- by mx.groups.io with SMTP id smtpd.web11.52781.1699021647706768052
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+ by mx.groups.io with SMTP id smtpd.web10.53518.1699021650416318110
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 03 Nov 2023 07:27:27 -0700
+ Fri, 03 Nov 2023 07:27:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=NudSbrHQ;
- spf=pass (domain: gmail.com, ip: 209.85.160.44, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1ea82246069so1106888fac.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 07:27:27 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Gf5fJjdu;
+ spf=pass (domain: gmail.com, ip: 209.85.160.42, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-1dd5b98d9aeso1049709fac.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 07:27:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699021646; x=1699626446; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1699021649; x=1699626449; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s7hvYoh2S6qbXj4C1x0DKttkX+x6keospN6NMFKw+qA=;
-        b=NudSbrHQIVRkAwIGQyRnlcXGqSxWAQMJhbLOEAR2m1s+ubUelRU8hmksSbOlSEywaE
-         fR76ylvxT5Eis31Frl1OOJu/lsNXDiP3lSae3z9Y7hwpQXRAeNo21KrDg3TfT9MtGZj9
-         eSmzub9sVJ8LC2VS5OSSTRE/LEoGtAyb11hIPvARsLl3g8HMQZKEbgZwcd7d8uJKWgU5
-         obujGEiLEarMWuPflvnQJu2wgOiF++EP0dXULGSqUkLB8pDDsCJj+T9I20aMusaxiAxF
-         g1N86Wbn0GAolFWjGY4BmU3T08yZULQY95Sr8Nc+WqgsxEKV6SbHUEnKehyHUo0c/pZn
-         ur2w==
+        bh=dVTBMHtw+uH3r7jWecPdi7Vx0WaVCrAE6gHZopCXLfU=;
+        b=Gf5fJjdufYhXz5x4stqypkFHIRGW6IPM4dRyXQ5N0m0avKRoBduDYHvfJ6OPlftNzJ
+         gH/iycXwWmy06d3VvlwmDaBdOD5t8fPSnlIlJ8W4DK7wGNNc6X0miOE1Xkq5riUtk9kV
+         F8w8r4JpEtEN3muUdqJVM4j85NVaDx839QdgkPKYnR83SLYLafrDRujKqIEOXzuyxw/o
+         pe414E3hg4oqWXfP76ZKbMR3z/cQkuC9iEuIcujD7QBk28qBRNa0v2ZNL7W/2LVQnA0l
+         Ieg79Ix7T7AmGlv+X+aHOfA8cvCyBOZShE3HM5j4IfQK710niaK8RHR98wSKDfWTlpS5
+         hB3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699021646; x=1699626446;
+        d=1e100.net; s=20230601; t=1699021649; x=1699626449;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=s7hvYoh2S6qbXj4C1x0DKttkX+x6keospN6NMFKw+qA=;
-        b=tDqtfHoYx61pAfufWO84dHPqmelyobo17ll9rRut9JYbgwPIMPOKHbkEswOXtg3DiH
-         YnPzS2qn/CSl65QPwS85uekE1MDPtzvji6KTm3bGfZy6XJlCzmoCvsDt0b8DyKCZtjjS
-         ODolVCXa1EuNsD4OGNZOAxK+JU9yc/NrGhi/uBd7cf0lQahtn8SEsMaELswjLK5dUHh9
-         4GmR9y3j18IMuvTLOH7c1LMZx73r6j8/EIPde24wL0s6IKVcrPER1viK+fAt6moKP4MP
-         xShhLqvqooUwrXzhLmmHlCwwX5yPW6+qDCAnbdpMl+xsmp6DG6avKdwo5RFtUVV22NRn
-         UAfg==
-X-Gm-Message-State: AOJu0YwZdqDazLOCWzHcfQIhH5QvEignFqpk56nHwCWX3DwKTpUo2VZ2
-	2B5p8+rdr3BsR9UKDM4KcRF9snz4I9A=
-X-Google-Smtp-Source: AGHT+IExUu+9P2Ci/PXZuFsC2MA9Jzif+tqzbw4D9kvwDdKP0KHzdkY0vJajXqqFJGpWq7hfnPXwWg==
-X-Received: by 2002:a05:6870:d88d:b0:1e9:9eba:327a with SMTP id oe13-20020a056870d88d00b001e99eba327amr28382526oac.28.1699021646257;
-        Fri, 03 Nov 2023 07:27:26 -0700 (PDT)
+        bh=dVTBMHtw+uH3r7jWecPdi7Vx0WaVCrAE6gHZopCXLfU=;
+        b=OGk/+nZHFPNToChSmcvT6XLaI8pRBQQ/E7lEwQlN/h2af3213Grc+7k/HkQrJdP2ph
+         TxOauKihf0e1QHX1WMhQMzed9W16obTRH0slzmfixsxGwLWN2A7wkAUxbnhpPvu96stL
+         2ltsH4A3iKKTS+wao/IfWTyK4pxCeNAXkkf3t797WZLDoDQrgFAo2HNcoP2+9OuMsflM
+         2A+vlVtbSuJthodUdkE9/sqxpQWiEymIZ+IuGNV12JpYiSLX/XPmvqf2RuY/nj+X8q1S
+         vZvRqHzPJRxc16Kz1Tc5aLE8X4U3A93zmLaCEMYT5MZ5W74VridC4uq13LrdpBaopyCl
+         WCsg==
+X-Gm-Message-State: AOJu0Ywo256yY0Joom6jyoclBhDnRqDvvIBe3eEU2ObKrJ954WR8ucbu
+	Zk4InzHlmVGWVhRHkdW2OguWVa73D7E=
+X-Google-Smtp-Source: AGHT+IE4bqXcCgUGQS/NKbf58AKIuGHxSSYAK3WyVXKiJbnjZ7AlNZUGraKC2fDu0H7OTXfX/ZetWQ==
+X-Received: by 2002:a05:6870:47a4:b0:1e9:7caa:896 with SMTP id c36-20020a05687047a400b001e97caa0896mr1329415oaq.13.1699021647784;
+        Fri, 03 Nov 2023 07:27:27 -0700 (PDT)
 Received: from localhost.localdomain ([2601:282:4300:19e0::2fe0])
-        by smtp.gmail.com with ESMTPSA id bb29-20020a056871b21d00b001dcde628a6fsm308272oac.42.2023.11.03.07.27.24
+        by smtp.gmail.com with ESMTPSA id bb29-20020a056871b21d00b001dcde628a6fsm308272oac.42.2023.11.03.07.27.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Nov 2023 07:27:24 -0700 (PDT)
+        Fri, 03 Nov 2023 07:27:26 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v6 20/22] hashserv: tests: Allow authentication for external server tests
-Date: Fri,  3 Nov 2023 08:26:38 -0600
-Message-Id: <20231103142640.1936827-21-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v6 21/22] hashserv: Allow self-service deletion
+Date: Fri,  3 Nov 2023 08:26:39 -0600
+Message-Id: <20231103142640.1936827-22-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231103142640.1936827-1-JPEWhacker@gmail.com>
 References: <20231031172138.3577199-1-JPEWhacker@gmail.com>
@@ -63,314 +63,51 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 14:27:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15441
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15443
 
-If BB_TEST_HASHSERV_USERNAME and BB_TEST_HASHSERV_PASSWORD are provided
-for a server admin user, the authentication tests for the external
-hashserver will run. In addition, any users that get created will now be
-deleted when the test finishes.
+Allows users to self-service deletion of their own user accounts
+(meaning, they can delete their own accounts without special
+permissions).
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/hashserv/tests.py | 109 ++++++++++++++++++++++++++++--------------
- 1 file changed, 74 insertions(+), 35 deletions(-)
+ lib/hashserv/server.py | 2 +-
+ lib/hashserv/tests.py  | 7 +++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
+index 8c3d20b6..439962f7 100644
+--- a/lib/hashserv/server.py
++++ b/lib/hashserv/server.py
+@@ -709,7 +709,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+             "token": token,
+         }
+ 
+-    @permissions(USER_ADMIN_PERM, allow_anon=False)
++    @permissions(USER_ADMIN_PERM, allow_self_service=True, allow_anon=False)
+     async def handle_delete_user(self, request):
+         username = str(request["username"])
+ 
 diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index 2d78f9e9..5d209ffb 100644
+index 5d209ffb..f0be8679 100644
 --- a/lib/hashserv/tests.py
 +++ b/lib/hashserv/tests.py
-@@ -84,17 +84,13 @@ class HashEquivalenceTestSetup(object):
-         return self.server.address
+@@ -683,10 +683,13 @@ class HashEquivalenceCommonTests(object):
  
-     def start_auth_server(self):
--        self.auth_server = self.start_server(self.server.dbpath, anon_perms=[], admin_username="admin", admin_password="password")
--        self.admin_client = self.start_client(self.auth_server.address, username="admin", password="password")
-+        auth_server = self.start_server(self.server.dbpath, anon_perms=[], admin_username="admin", admin_password="password")
-+        self.auth_server_address = auth_server.address
-+        self.admin_client = self.start_client(auth_server.address, username="admin", password="password")
-         return self.admin_client
+         user = self.create_user("test-user", [])
  
-     def auth_client(self, user):
--        return self.start_client(self.auth_server.address, user["username"], user["token"])
--
--    def auth_perms(self, *permissions):
--        self.client_index += 1
--        user = self.admin_client.new_user(f"user-{self.client_index}", permissions)
--        return self.auth_client(user)
-+        return self.start_client(self.auth_server_address, user["username"], user["token"])
+-        # No self service
+-        with self.auth_client(user) as client, self.assertRaises(InvokeError):
++        # self service
++        with self.auth_client(user) as client:
+             client.delete_user(user["username"])
  
-     def setUp(self):
-         if sys.version_info < (3, 5, 0):
-@@ -120,11 +116,11 @@ class HashEquivalenceTestSetup(object):
-             })
- 
-     def assertUserCanAuth(self, user):
--        with self.start_client(self.auth_server.address) as client:
-+        with self.start_client(self.auth_server_address) as client:
-             client.auth(user["username"], user["token"])
- 
-     def assertUserCannotAuth(self, user):
--        with self.start_client(self.auth_server.address) as client, self.assertRaises(InvokeError):
-+        with self.start_client(self.auth_server_address) as client, self.assertRaises(InvokeError):
-             client.auth(user["username"], user["token"])
- 
-     def create_test_hash(self, client):
-@@ -157,6 +153,26 @@ class HashEquivalenceTestSetup(object):
- 
- 
- class HashEquivalenceCommonTests(object):
-+    def auth_perms(self, *permissions):
-+        self.client_index += 1
-+        user = self.create_user(f"user-{self.client_index}", permissions)
-+        return self.auth_client(user)
-+
-+    def create_user(self, username, permissions, *, client=None):
-+        def remove_user(username):
-+            try:
-+                self.admin_client.delete_user(username)
-+            except bb.asyncrpc.InvokeError:
-+                pass
-+
-+        if client is None:
-+            client = self.admin_client
-+
-+        user = client.new_user(username, permissions)
-+        self.addCleanup(remove_user, username)
-+
-+        return user
-+
-     def test_create_hash(self):
-         return self.create_test_hash(self.client)
- 
-@@ -571,14 +587,14 @@ class HashEquivalenceCommonTests(object):
-     def test_auth_no_token_refresh_from_anon_user(self):
-         self.start_auth_server()
- 
--        with self.start_client(self.auth_server.address) as client, self.assertRaises(InvokeError):
-+        with self.start_client(self.auth_server_address) as client, self.assertRaises(InvokeError):
-             client.refresh_token()
- 
-     def test_auth_self_token_refresh(self):
-         admin_client = self.start_auth_server()
- 
-         # Create a new user with no permissions
--        user = admin_client.new_user("test-user", [])
++        self.assertIsNone(admin_client.get_user(user["username"]))
 +        user = self.create_user("test-user", [])
- 
-         with self.auth_client(user) as client:
-             new_user = client.refresh_token()
-@@ -601,7 +617,7 @@ class HashEquivalenceCommonTests(object):
-     def test_auth_token_refresh(self):
-         admin_client = self.start_auth_server()
- 
--        user = admin_client.new_user("test-user", [])
-+        user = self.create_user("test-user", [])
- 
++
          with self.auth_perms() as client, self.assertRaises(InvokeError):
-             client.refresh_token(user["username"])
-@@ -617,7 +633,7 @@ class HashEquivalenceCommonTests(object):
-     def test_auth_self_get_user(self):
-         admin_client = self.start_auth_server()
+             client.delete_user(user["username"])
  
--        user = admin_client.new_user("test-user", [])
-+        user = self.create_user("test-user", [])
-         user_info = user.copy()
-         del user_info["token"]
- 
-@@ -632,7 +648,7 @@ class HashEquivalenceCommonTests(object):
-     def test_auth_get_user(self):
-         admin_client = self.start_auth_server()
- 
--        user = admin_client.new_user("test-user", [])
-+        user = self.create_user("test-user", [])
-         user_info = user.copy()
-         del user_info["token"]
- 
-@@ -649,7 +665,7 @@ class HashEquivalenceCommonTests(object):
-     def test_auth_reconnect(self):
-         admin_client = self.start_auth_server()
- 
--        user = admin_client.new_user("test-user", [])
-+        user = self.create_user("test-user", [])
-         user_info = user.copy()
-         del user_info["token"]
- 
-@@ -665,7 +681,7 @@ class HashEquivalenceCommonTests(object):
-     def test_auth_delete_user(self):
-         admin_client = self.start_auth_server()
- 
--        user = admin_client.new_user("test-user", [])
-+        user = self.create_user("test-user", [])
- 
-         # No self service
-         with self.auth_client(user) as client, self.assertRaises(InvokeError):
-@@ -685,7 +701,7 @@ class HashEquivalenceCommonTests(object):
-     def test_auth_set_user_perms(self):
-         admin_client = self.start_auth_server()
- 
--        user = admin_client.new_user("test-user", [])
-+        user = self.create_user("test-user", [])
- 
-         self.assertUserPerms(user, [])
- 
-@@ -710,7 +726,7 @@ class HashEquivalenceCommonTests(object):
-     def test_auth_get_all_users(self):
-         admin_client = self.start_auth_server()
- 
--        user = admin_client.new_user("test-user", [])
-+        user = self.create_user("test-user", [])
- 
-         with self.auth_client(user) as client, self.assertRaises(InvokeError):
-             client.get_all_users()
-@@ -744,10 +760,10 @@ class HashEquivalenceCommonTests(object):
-         permissions.sort()
- 
-         with self.auth_perms() as client, self.assertRaises(InvokeError):
--            client.new_user("test-user", permissions)
-+            self.create_user("test-user", permissions, client=client)
- 
-         with self.auth_perms("@user-admin") as client:
--            user = client.new_user("test-user", permissions)
-+            user = self.create_user("test-user", permissions, client=client)
-             self.assertIn("token", user)
-             self.assertEqual(user["username"], "test-user")
-             self.assertEqual(user["permissions"], permissions)
-@@ -755,7 +771,7 @@ class HashEquivalenceCommonTests(object):
-     def test_auth_become_user(self):
-         admin_client = self.start_auth_server()
- 
--        user = admin_client.new_user("test-user", ["@read", "@report"])
-+        user = self.create_user("test-user", ["@read", "@report"])
-         user_info = user.copy()
-         del user_info["token"]
- 
-@@ -898,7 +914,7 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
-         user = admin_client.new_user("test-user", ["@read", "@report"])
- 
-         p = self.run_hashclient([
--            "--address", self.auth_server.address,
-+            "--address", self.auth_server_address,
-             "--login", user["username"],
-             "--password", user["token"],
-             "refresh-token"
-@@ -916,7 +932,7 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
-         print("New token is %r" % new_token)
- 
-         self.run_hashclient([
--            "--address", self.auth_server.address,
-+            "--address", self.auth_server_address,
-             "--login", user["username"],
-             "--password", new_token,
-             "get-user"
-@@ -928,7 +944,7 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
-         user = admin_client.new_user("test-user", ["@read"])
- 
-         self.run_hashclient([
--            "--address", self.auth_server.address,
-+            "--address", self.auth_server_address,
-             "--login", admin_client.username,
-             "--password", admin_client.password,
-             "set-user-perms",
-@@ -946,7 +962,7 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
-         user = admin_client.new_user("test-user", ["@read"])
- 
-         p = self.run_hashclient([
--            "--address", self.auth_server.address,
-+            "--address", self.auth_server_address,
-             "--login", admin_client.username,
-             "--password", admin_client.password,
-             "get-user",
-@@ -957,7 +973,7 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
-         self.assertIn("Permissions:", p.stdout)
- 
-         p = self.run_hashclient([
--            "--address", self.auth_server.address,
-+            "--address", self.auth_server_address,
-             "--login", user["username"],
-             "--password", user["token"],
-             "get-user",
-@@ -973,7 +989,7 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
-         admin_client.new_user("test-user2", ["@read"])
- 
-         p = self.run_hashclient([
--            "--address", self.auth_server.address,
-+            "--address", self.auth_server_address,
-             "--login", admin_client.username,
-             "--password", admin_client.password,
-             "get-all-users",
-@@ -987,7 +1003,7 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
-         admin_client = self.start_auth_server()
- 
-         p = self.run_hashclient([
--            "--address", self.auth_server.address,
-+            "--address", self.auth_server_address,
-             "--login", admin_client.username,
-             "--password", admin_client.password,
-             "new-user",
-@@ -1017,14 +1033,13 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
-         user = admin_client.new_user("test-user", ["@read"])
- 
-         p = self.run_hashclient([
--            "--address", self.auth_server.address,
-+            "--address", self.auth_server_address,
-             "--login", admin_client.username,
-             "--password", admin_client.password,
-             "delete-user",
-             "-u", user["username"],
-         ], check=True)
- 
--
-         self.assertIsNone(admin_client.get_user(user["username"]))
- 
-     def test_get_db_usage(self):
-@@ -1104,19 +1119,43 @@ class TestHashEquivalenceWebsocketsSQLAlchemyServer(TestHashEquivalenceWebsocket
- 
- 
- class TestHashEquivalenceExternalServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
--    def start_test_server(self):
--        if 'BB_TEST_HASHSERV' not in os.environ:
--            self.skipTest('BB_TEST_HASHSERV not defined to test an external server')
-+    def get_env(self, name):
-+        v = os.environ.get(name)
-+        if not v:
-+            self.skipTest(f'{name} not defined to test an external server')
-+        return v
- 
--        return os.environ['BB_TEST_HASHSERV']
-+    def start_test_server(self):
-+        return self.get_env('BB_TEST_HASHSERV')
- 
-     def start_server(self, *args, **kwargs):
-         self.skipTest('Cannot start local server when testing external servers')
- 
-+    def start_auth_server(self):
-+
-+        self.auth_server_address = self.server_address
-+        self.admin_client = self.start_client(
-+            self.server_address,
-+            username=self.get_env('BB_TEST_HASHSERV_USERNAME'),
-+            password=self.get_env('BB_TEST_HASHSERV_PASSWORD'),
-+        )
-+        return self.admin_client
-+
-     def setUp(self):
-         super().setUp()
-+        if "BB_TEST_HASHSERV_USERNAME" in os.environ:
-+            self.client = self.start_client(
-+                self.server_address,
-+                username=os.environ["BB_TEST_HASHSERV_USERNAME"],
-+                password=os.environ["BB_TEST_HASHSERV_PASSWORD"],
-+            )
-         self.client.remove({"method": self.METHOD})
- 
-     def tearDown(self):
-         self.client.remove({"method": self.METHOD})
-         super().tearDown()
-+
-+
-+    def test_auth_get_all_users(self):
-+        self.skipTest("Cannot test all users with external server")
-+
 -- 
 2.34.1
 
