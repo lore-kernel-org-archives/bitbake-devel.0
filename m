@@ -1,227 +1,176 @@
-Return-Path: <dburns@seegrid.com>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23429C4167D
-	for <webhook@archiver.kernel.org>; Fri,  3 Nov 2023 15:46:17 +0000 (UTC)
-Received: from mail-il1-f225.google.com (mail-il1-f225.google.com [209.85.166.225])
- by mx.groups.io with SMTP id smtpd.web11.56408.1699026375493653243
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE578C4332F
+	for <webhook@archiver.kernel.org>; Fri,  3 Nov 2023 20:32:19 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web11.63996.1699043530650572037
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 03 Nov 2023 08:46:15 -0700
+ Fri, 03 Nov 2023 13:32:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@seegrid.com header.s=google header.b=pGPTMyax;
- spf=permerror, err=parse error for token &{10 18 _spf.google.com}: parse error for token &{10 18 _netblocks.google.com}: limit exceeded (domain: seegrid.com, ip: 209.85.166.225, mailfrom: dburns@seegrid.com)
-Received: by mail-il1-f225.google.com with SMTP id e9e14a558f8ab-35948f3d2bfso1850595ab.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 08:46:15 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=AzVW1SUg;
+ spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: martin.jansa@gmail.com)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4083f61322fso18403985e9.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 13:32:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=seegrid.com; s=google; t=1699026375; x=1699631175; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mis8ltMGwwYSp7MKI5rGNzObaKInHkutUdT13ET2C74=;
-        b=pGPTMyaxoJNxR1blUBFTdM40jtRFw/PF4e8/J9/H1/bND2sH4FPj1Zs45IL8rjeJuY
-         NMoHVC2vgzh5N7uSwyPLKSgPhyvRss+F7deG+oCBXHLfhWMDak6U06wuSdg4ueVF9ZJY
-         uu+Jj0afqqqC201FTu7aVbfWH+crm9eKrwS+g=
+        d=gmail.com; s=20230601; t=1699043529; x=1699648329; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=B40EwuwD86SmMm4IW9XPx3GK6uwibaXiDmF58PFXYK4=;
+        b=AzVW1SUgR4gm8l6oV7yGfz7HbJMaGMRONegKmQo5QwK/2HEfGbfREQPkLXfVRf5fyp
+         iuBGNWGMzGox3sg3YGhL0mVdzFFWDyH0bS5Y7zhhv/yJpFVj1QyU0/aIVo8ZkM9yWVm5
+         Rj3UBEsLnHUgYSFJAb8mR3IT0R7RhJGlDacGWKQNogly+Fj2zWaetXYqSIEPF3cvK68K
+         DiDT7Dr/grivbzRfsWMd5DWmZBZmqcfjLjvqLtUuKqpKl6T8dNDO3ole3X5b/z4zbHgt
+         IWQLsoCusQVznJDctuXSJUCWCy4h7spW4AmqPTDGbHz/2EahFGB9y8ewBGIkg6V5vN/y
+         gxUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699026375; x=1699631175;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1699043529; x=1699648329;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Mis8ltMGwwYSp7MKI5rGNzObaKInHkutUdT13ET2C74=;
-        b=us1e/ZoXAU2Q5+VP/3KRgT2WKkf8+qBbcEgQoJdop9eFK1iBLEaycp8yhI+T3Nmxza
-         e0ZCN11g+csjsNH0NSLAxNBmzZ66LlqvScuELzzbhVoKzTfz4DexKdn6kVkf1w6nqjP4
-         1AaMrYxGIIw0g9uzRfZljg8QCWaiBqNlI9XKWzzQfuBP79BxMNW017km/dutDaabvDcD
-         U9KM4XKQoOgoBcqAVT0PGYMWLmT8MD0XZUeUIC3i9devulyAJPj7UfwQ1FpptdRtx/8b
-         2FrCqWmpvSr70MPdHx1YnzP3XPUvNgfIAYeabXkG6/qXd7lmztfp4hcQG+rIKIQGg97f
-         chEQ==
-X-Gm-Message-State: AOJu0Yx7UaG2yByrON9uSjvUzo6y7qDZtUJejyPVCgjsXD2ofQOZYINM
-	ZiG3KssaqowME3we61w+XtsuMp+hVYKDD1h9kq+eXIpdabqk817aqWkOxw==
-X-Google-Smtp-Source: AGHT+IGrCV+7tkQLmiAv/5Lc5rUASMlKQO5lGj7diBMkCQOzBEM3TeDeHiEpstxgxGhdkpyNq9zzh4ELvJGO
-X-Received: by 2002:a05:6602:5da:b0:7a6:a005:4984 with SMTP id w26-20020a05660205da00b007a6a0054984mr21391598iox.1.1699026374688;
-        Fri, 03 Nov 2023 08:46:14 -0700 (PDT)
-Received: from relay1.hq.seegrid.local ([50.205.9.50])
-        by smtp-relay.gmail.com with ESMTPS id b7-20020a029a07000000b0042b2b936ad6sm98675jal.72.2023.11.03.08.46.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Nov 2023 08:46:14 -0700 (PDT)
-X-Relaying-Domain: seegrid.com
-Received: from dburns-l5550.hsd1.pa.comcast.net (client-107.ovpn.hq.seegrid.lan [192.168.222.107])
-	by relay1.hq.seegrid.local (Postfix) with ESMTP id ABFA442003A;
-	Fri,  3 Nov 2023 11:46:13 -0400 (EDT)
-From: Desone Burns II <dburns@seegrid.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: jchafin@seegrid.com,
-	Desone Burns II <dburns@seegrid.com>
-Subject: [PATCH] bitbake: fetch2: git: Update Git-LFS download and tests
-Date: Fri,  3 Nov 2023 11:45:49 -0400
-Message-Id: <20231103154549.34555-1-dburns@seegrid.com>
-X-Mailer: git-send-email 2.25.1
+        bh=B40EwuwD86SmMm4IW9XPx3GK6uwibaXiDmF58PFXYK4=;
+        b=h4ce+LW/gYHtBfUUgjV4IJdDADTLl+F4jX6L2dMRNuMY/KOXes5HNepHAxYkaJU9gs
+         Xd8fAElzKNnBYKMpmmTxLKC+3z6c9d7Wfj6l9SCC2AoATyTIy2jg8adul0iJIaPERQDw
+         u6SOHKjHyrOIM2YsQIJJpa+uS78bar1fn27m98avsimRNMZSX/lqXYV55ad6/SClGJfA
+         UprPAtK0koY8/8uUiLFZe/OSPs2rUuDkZAlNIxYQATDCgLvddvacpHakzBlatzqX6Xn7
+         n/Bsqd/dNuqcZFCWJLnEYMOmIRmRDVYNtZLNPizn7/QqwSTEp7FCQY8P/1HSZNhqkh2c
+         txBA==
+X-Gm-Message-State: AOJu0Yy9Ko+H7HD/1RDQBxt0OTngIq5QAPWTsK1EV3w8dCENDXMe+UHg
+	LPWLDv9ITREjs3HXuBWxMbBjs716gXI7KoZzwBM=
+X-Google-Smtp-Source: AGHT+IFPOQO/hub/UNbuYpvf4IuWSXEV0y9o5OkXcBAEsl3MMsbx39KeEbQv7ZDywy+VtBCRud1qKwEPT0jv1ysiQ50=
+X-Received: by 2002:a05:600c:3d0e:b0:408:3bbd:4a82 with SMTP id
+ bh14-20020a05600c3d0e00b004083bbd4a82mr19095673wmb.15.1699043528635; Fri, 03
+ Nov 2023 13:32:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230824083109.1821425-1-Markus.Niebel@ew.tq-group.com>
+ <CANPvuR=8-BicdWNHsgmyBAZDHg7Phj9b2vhnzbo_xEaEb09b+Q@mail.gmail.com>
+ <CAHUKmYZxyNDG2yPQ3-rphzCjCJ=5mV0gA1avwOzdsy60VhtMQQ@mail.gmail.com> <0487b3b40205fd375fc981bfe9181034c4cb8e6e.camel@linuxfoundation.org>
+In-Reply-To: <0487b3b40205fd375fc981bfe9181034c4cb8e6e.camel@linuxfoundation.org>
+From: Martin Jansa <martin.jansa@gmail.com>
+Date: Fri, 3 Nov 2023 21:31:55 +0100
+Message-ID: <CA+chaQc9rKpo86Gqv=NBtpa16J6dZivdT=mST1WMXyia=J21vQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] [kirkstone][2.0][PATCH] bitbake-getvar: Add a
+ quiet command line argument
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: ecordonnier@snap.com, Jose Quaresma <quaresma.jose@gmail.com>, 
+	Steve Sakoman <steve@sakoman.com>, Markus Niebel <Markus.Niebel@ew.tq-group.com>, 
+	bitbake-devel@lists.openembedded.org, oss@ew.tq-group.com, 
+	Paulo Neves <ptsneves@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Content-Type: multipart/alternative; boundary="000000000000fb7968060945658f"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 15:46:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15444
+ <bitbake-devel@lists.openembedded.org>; Fri, 03 Nov 2023 20:32:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15445
 
-When downloading a Git repository containing an LFS, the Git hooks
-are not always initialized correctly to perform the download. This
-change updates the Git downloader to run the "git lfs install" command
-in order to "smudge" the LFS files. The tests have also been updated
-to do checks for situations in which git lfs is not installed, as
-the application was required to be installed for any of the tests
-to run previously.
+--000000000000fb7968060945658f
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Git LFS functionality was working to some degree previously,
-but this change also updates the fetcher to allow LFS downloads for
-nobranch SRC_URIs.
+Does it work with 2.0? With --quiet I'm seeing:
 
-Signed-off-by: Desone Burns II <dburns@seegrid.com>
----
- bitbake/lib/bb/fetch2/git.py  | 14 ++++++--
- bitbake/lib/bb/tests/fetch.py | 61 ++++++++++++++++++++---------------
- 2 files changed, 47 insertions(+), 28 deletions(-)
+Traceback (most recent call last):
+  File "bitbake/bin/bitbake-getvar", line 41, in <module>
+    tinfoil.prepare(quiet=3D2)
+  File "bitbake/lib/bb/tinfoil.py", line 389, in prepare
+    for handler in self.localhandlers:
+                   ^^^^^^^^^^^^^^^^^^
+AttributeError: 'Tinfoil' object has no attribute 'localhandlers'. Did you
+mean: 'oldhandlers'?
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 27a0d05144..5fb573a381 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -52,6 +52,11 @@ Supported SRC_URI options are:
-    For local git:// urls to use the current branch HEAD as the revision for use with
-    AUTOREV. Implies nobranch.
- 
-+- lfs
-+    Enable the checkout to use LFS for large files. This will download all LFS files
-+    in the download step, as the unpack step does not have network access.
-+    The default is "1", set lfs=0 to skip.
-+
- """
- 
- # Copyright (C) 2005 Richard Purdie
-@@ -629,6 +634,8 @@ class Git(FetchMethod):
-                 raise bb.fetch2.FetchError("Repository %s has LFS content, install git-lfs on host to download (or set lfs=0 to ignore it)" % (repourl))
-             elif not need_lfs:
-                 bb.note("Repository %s has LFS content but it is not being fetched" % (repourl))
-+            else:
-+                runfetchcmd("%s lfs install" % ud.basecmd, d, workdir=destdir)
- 
-         if not ud.nocheckout:
-             if subpath:
-@@ -688,8 +695,11 @@ class Git(FetchMethod):
-         Check if the repository has 'lfs' (large file) content
-         """
- 
--        # The bare clonedir doesn't use the remote names; it has the branch immediately.
--        if wd == ud.clonedir:
-+        if ud.nobranch:
-+            # If no branch is specified, use the current git commit
-+            refname = self._build_revision(ud, d, ud.names[0])
-+        elif wd == ud.clonedir:
-+            # The bare clonedir doesn't use the remote names; it has the branch immediately.
-             refname = ud.branches[ud.names[0]]
-         else:
-             refname = "origin/%s" % ud.branches[ud.names[0]]
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index 0e806c0ff7..c7a23407c1 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -2277,7 +2277,7 @@ class GitLfsTest(FetcherTest):
- 
-     @skipIfNoGitLFS()
-     @skipIfNoNetwork()
--    def test_real_git_lfs_repo_succeeds(self):
-+    def test_real_git_lfs_repo_skips(self):
-         self.d.setVar('SRC_URI', "git://gitlab.com/gitlab-examples/lfs.git;protocol=https;branch=master;lfs=0")
-         f = self.get_real_git_lfs_file()
-         # This is the actual non-smudged placeholder file on the repo if git-lfs does not run
-@@ -2290,24 +2290,41 @@ class GitLfsTest(FetcherTest):
-         with open(f) as fh:
-             self.assertEqual(lfs_file, fh.read())
- 
-+    @skipIfNoGitLFS()
-     def test_lfs_enabled(self):
-         import shutil
- 
-         uri = 'git://%s;protocol=file;lfs=1;branch=master' % self.srcdir
-         self.d.setVar('SRC_URI', uri)
- 
--        # Careful: suppress initial attempt at downloading until
--        # we know whether git-lfs is installed.
--        fetcher, ud = self.fetch(uri=None, download=False)
--        self.assertIsNotNone(ud.method._find_git_lfs)
-+        # With git-lfs installed, test that we can fetch and unpack
-+        fetcher, ud = self.fetch()
-+        shutil.rmtree(self.gitdir, ignore_errors=True)
-+        fetcher.unpack(self.d.getVar('WORKDIR'))
- 
--        # If git-lfs can be found, the unpack should be successful. Only
--        # attempt this with the real live copy of git-lfs installed.
--        if ud.method._find_git_lfs(self.d):
--            fetcher.download()
--            shutil.rmtree(self.gitdir, ignore_errors=True)
--            fetcher.unpack(self.d.getVar('WORKDIR'))
-+    @skipIfNoGitLFS()
-+    def test_lfs_disabled(self):
-+        import shutil
-+
-+        uri = 'git://%s;protocol=file;lfs=0;branch=master' % self.srcdir
-+        self.d.setVar('SRC_URI', uri)
- 
-+        # Verify that the fetcher can survive even if the source
-+        # repository has Git LFS usage configured.
-+        fetcher, ud = self.fetch()
-+        fetcher.unpack(self.d.getVar('WORKDIR'))
-+
-+    def test_lfs_enabled_not_installed(self):
-+        import shutil
-+
-+        uri = 'git://%s;protocol=file;lfs=1;branch=master' % self.srcdir
-+        self.d.setVar('SRC_URI', uri)
-+
-+        # Careful: suppress initial attempt at downloading
-+        fetcher, ud = self.fetch(uri=None, download=False)
-+
-+        # Artificially assert that git-lfs is not installed, so
-+        # we can verify a failure to unpack in it's absence.
-         old_find_git_lfs = ud.method._find_git_lfs
-         try:
-             # If git-lfs cannot be found, the unpack should throw an error
-@@ -2319,29 +2336,21 @@ class GitLfsTest(FetcherTest):
-         finally:
-             ud.method._find_git_lfs = old_find_git_lfs
- 
--    def test_lfs_disabled(self):
-+    def test_lfs_disabled_not_installed(self):
-         import shutil
- 
-         uri = 'git://%s;protocol=file;lfs=0;branch=master' % self.srcdir
-         self.d.setVar('SRC_URI', uri)
- 
--        # In contrast to test_lfs_enabled(), allow the implicit download
--        # done by self.fetch() to occur here. The point of this test case
--        # is to verify that the fetcher can survive even if the source
--        # repository has Git LFS usage configured.
--        fetcher, ud = self.fetch()
--        self.assertIsNotNone(ud.method._find_git_lfs)
-+        # Careful: suppress initial attempt at downloading
-+        fetcher, ud = self.fetch(uri=None, download=False)
- 
-+        # Artificially assert that git-lfs is not installed, so
-+        # we can verify a failure to unpack in it's absence.
-         old_find_git_lfs = ud.method._find_git_lfs
-         try:
--            # If git-lfs can be found, the unpack should be successful. A
--            # live copy of git-lfs is not required for this case, so
--            # unconditionally forge its presence.
--            ud.method._find_git_lfs = lambda d: True
--            shutil.rmtree(self.gitdir, ignore_errors=True)
--            fetcher.unpack(self.d.getVar('WORKDIR'))
--            # If git-lfs cannot be found, the unpack should be successful
--
-+            # Even if git-lfs cannot be found, the unpack should be successful
-+            fetcher.download()
-             ud.method._find_git_lfs = lambda d: False
-             shutil.rmtree(self.gitdir, ignore_errors=True)
-             fetcher.unpack(self.d.getVar('WORKDIR'))
--- 
-2.25.1
+So bitbake 2.0 probably needs the fix
+https://git.openembedded.org/bitbake/commit/?id=3D71ee69a20f21f3d37f4f060a7=
+d8e87d9f1dc6aa1
+from master as well.
 
+On Tue, Oct 3, 2023 at 6:35=E2=80=AFPM Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> On Tue, 2023-10-03 at 18:05 +0200, Etienne Cordonnier via
+> lists.openembedded.org wrote:
+> > Is there a technical issue preventing a merge of the patch, or is it
+> > delayed due to the current workload?
+>
+> There were recent changes in master in this behaviour and it may make
+> sense to fix things together with the recent changes?
+>
+> You should also copy Steve on LTS patches (added now).
+>
+> Cheers,
+>
+> Richard
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#15176):
+> https://lists.openembedded.org/g/bitbake-devel/message/15176
+> Mute This Topic: https://lists.openembedded.org/mt/100931867/3617156
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe:
+> https://lists.openembedded.org/g/bitbake-devel/leave/8021546/3617156/1661=
+570722/xyzzy
+> [martin.jansa@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
+
+--000000000000fb7968060945658f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Does it work with 2.0? With --quiet I&#39;m seeing:</=
+div><div><br></div>Traceback (most recent call last):<br>=C2=A0 File &quot;=
+bitbake/bin/bitbake-getvar&quot;, line 41, in &lt;module&gt;<br>=C2=A0 =C2=
+=A0 tinfoil.prepare(quiet=3D2)<br>=C2=A0 File &quot;bitbake/lib/bb/tinfoil.=
+py&quot;, line 389, in prepare<br>=C2=A0 =C2=A0 for handler in self.localha=
+ndlers:<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0^^^^^^^^^^^^^^^^^^<br>AttributeError: &#39;Tinfoil&#39; object has no=
+ attribute &#39;localhandlers&#39;. Did you mean: &#39;oldhandlers&#39;?<br=
+><div><br></div><div>So bitbake 2.0 probably needs the fix=C2=A0<a href=3D"=
+https://git.openembedded.org/bitbake/commit/?id=3D71ee69a20f21f3d37f4f060a7=
+d8e87d9f1dc6aa1">https://git.openembedded.org/bitbake/commit/?id=3D71ee69a2=
+0f21f3d37f4f060a7d8e87d9f1dc6aa1</a> from master as well.</div></div><br><d=
+iv class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, Oct =
+3, 2023 at 6:35=E2=80=AFPM Richard Purdie &lt;<a href=3D"mailto:richard.pur=
+die@linuxfoundation.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<=
+br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
+x;border-left:1px solid rgb(204,204,204);padding-left:1ex">On Tue, 2023-10-=
+03 at 18:05 +0200, Etienne Cordonnier via<br>
+<a href=3D"http://lists.openembedded.org" rel=3D"noreferrer" target=3D"_bla=
+nk">lists.openembedded.org</a> wrote:<br>
+&gt; Is there a technical issue preventing a merge of the patch, or is it<b=
+r>
+&gt; delayed due to the current workload?<br>
+<br>
+There were recent changes in master in this behaviour and it may make<br>
+sense to fix things together with the recent changes?<br>
+<br>
+You should also copy Steve on LTS patches (added now).<br>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#15176): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/15176" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/15176</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/100931867/361=
+7156" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
+t/100931867/3617156</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/leav=
+e/8021546/3617156/1661570722/xyzzy" rel=3D"noreferrer" target=3D"_blank">ht=
+tps://lists.openembedded.org/g/bitbake-devel/leave/8021546/3617156/16615707=
+22/xyzzy</a> [<a href=3D"mailto:martin.jansa@gmail.com" target=3D"_blank">m=
+artin.jansa@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
+
+--000000000000fb7968060945658f--
 
