@@ -2,56 +2,56 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947C7C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96392C4167B
 	for <webhook@archiver.kernel.org>; Wed,  8 Nov 2023 22:57:40 +0000 (UTC)
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
- by mx.groups.io with SMTP id smtpd.web11.107241.1699484251442201964
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+ by mx.groups.io with SMTP id smtpd.web11.107243.1699484254803375558
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 Nov 2023 14:57:31 -0800
+ Wed, 08 Nov 2023 14:57:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=HkEQgf+K;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.176, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6b709048f32so202831b3a.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 08 Nov 2023 14:57:31 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=gqIGEtcR;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.171, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6be1bc5aa1cso209038b3a.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 08 Nov 2023 14:57:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1699484250; x=1700089050; darn=lists.openembedded.org;
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1699484254; x=1700089054; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qYg9fv3tLieN0dx9Eik/95juA0EPVtwwmN3gy1bho4w=;
-        b=HkEQgf+KftGWVtPM/+Pqz8d416IMxlexPSwW4boP37NpecyESRQO5AV9UqXETyxtNe
-         dug6WhKN1fGxSyl7tnxguBceF9RXwP2iyITBgu+SelMiEz7YfVc1KIpQeTyCzVoO4Vsu
-         DukEKpkXyFb8/Wtn0h/nMYUb1pe/u/8SSJe+KC046trn+zcEI39ThItJ+WhHi3Xp6mAu
-         CZQsVtKNzc5ifF3/CBjyiwAyJIRvGn6YVy8rTtVG3Ctg9tXyjlaGxooMCUixoo4ZsdgZ
-         qwVdS/wPJCeJXylgMnqQFR3CUPNyzXpco/glAXQ5K3MTi57+gMVpT7tN4zUYZ2BCyseZ
-         65eQ==
+        bh=paRCHmTjl/nRAYAvObadS4SjMzK40IWkYOKYb8S02QE=;
+        b=gqIGEtcR2Pk2Zfsp0LQmKm6U4QLq9/oblSL1Euu5dlEZgkxtokJqvG2TKcN6BWCrFs
+         pQmHL9gRgYoVCFZ7SyrFf6Z9bzol26fUAYX2Scuaa5b0t6fgDJJ/sQJhc2JX/8o0MzqS
+         SKxx/U2NYdVOfXMm+5TuURykIeVtRtNHKwG9v4TxHKUJTDO9HfOIWOkXZ/xoiPoTP9q3
+         SrMuekzYuDU1sGr99ydG/IQS4TV7KH58RewqDB3Y6hiobAl4DZwh5JaeeXxPNG/i3Tiq
+         ZuECny0Fc4ntuY5ob8n+8TpPUVU+UKXhX3VTTexsi6Ulb1RcukwrWjuGQ3K5MP2qPno1
+         GJig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699484250; x=1700089050;
+        d=1e100.net; s=20230601; t=1699484254; x=1700089054;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qYg9fv3tLieN0dx9Eik/95juA0EPVtwwmN3gy1bho4w=;
-        b=W/hbporqNpHjQoE0lxbwGTD8qBLUOilwSPkuix7qgiLWCzhyhTViSg/zttlLCLXrqu
-         JhbKKX6vVViqXqKreIc+gGqNNwmgcJidrOHQM2JJCBU8qBo8/FDoxSV0UZb+C76Geswl
-         cWK8kHaeYCTmFZUJdbc6cJ7l1GBenNLYZ0WPApQHmyv+tOEmnCAm0mjm4paI4NopzWb+
-         TON9lFYFaKWFAbIWyHnmOHrfIHb6SXtJ0DuHKvc4f/A6Rcs0LT1CYASiSRIlBHhvD2nz
-         Tf2iSNa0iaD3ipCo3xgF+ieww5vs4KvGPqshKotMrB3SX+rzIk+IHwoO3Wybm947wQXI
-         p/OA==
-X-Gm-Message-State: AOJu0YyTrV21tU7fQ6aASg5DPGs2hLCi60JL1ibwXtHm30dMfyQDGXSO
-	jH+i1MyBQ4qm6eOQXOC7xnoeXtIq5Jh4GH2ac70/XQ==
-X-Google-Smtp-Source: AGHT+IHEgb9skNCGSBVUAALVs8G6k2PUvIZ74s4wSTTqWcFUFo2i1ad5LtJhlYUNa2OcXl2N7fjYdw==
-X-Received: by 2002:a05:6a00:134c:b0:6c3:4597:a936 with SMTP id k12-20020a056a00134c00b006c34597a936mr2994032pfu.30.1699484250495;
-        Wed, 08 Nov 2023 14:57:30 -0800 (PST)
+        bh=paRCHmTjl/nRAYAvObadS4SjMzK40IWkYOKYb8S02QE=;
+        b=gdfus3BMNs89qjjQN7eVww8sB8cmHu89gkAoqPTECnFD35CMG98/MehuQ4EGZNqjNB
+         0WdazMVxtuznKnHyYS2rH0eDN0KwfpRpz7mMjSRALyg+q38Cyp1Iq09IkDgQJD3MW5XI
+         9cDIJea6HGIn9mRbDBLK1Pw6KCL05I66PJaLgbI8BIow5NKl7ZOj1AvO1nLFDDUYnHrD
+         gZdLE6d/ihxZVKUOW69BCli+jZsFoOBj14o0Mw4ZQ5+r2KPH7DI4jY8DBFP18O0+HAq3
+         8CyFkkBldadHOBWbdHozFa9k8QyGXE3SSyDuba+AyVQ1xUcSVKV+0h09JpifawpseuQA
+         Wigg==
+X-Gm-Message-State: AOJu0YzhX9FUbc9m5tRf5HLMfB6lsmUJcETqZDlwlwpe0IDDuY/aRN5u
+	p4mJIJ0JTaksXpYZFokeKYdwvn+LJAmt3Tz+e5Gb3Q==
+X-Google-Smtp-Source: AGHT+IH6y/osyXYlEXFZe2kp1ynOji9AGEHY1D3s1CO5D7nQR9rUb2u51MB8Gd3suXqoaIhgxSCW3Q==
+X-Received: by 2002:a05:6a21:35c4:b0:180:d66b:7f1 with SMTP id ba4-20020a056a2135c400b00180d66b07f1mr3348991pzc.62.1699484253981;
+        Wed, 08 Nov 2023 14:57:33 -0800 (PST)
 Received: from hexa.lan (dhcp-72-234-108-41.hawaiiantel.net. [72.234.108.41])
-        by smtp.gmail.com with ESMTPSA id x6-20020a056a000bc600b006862b2a6b0dsm9798063pfu.15.2023.11.08.14.57.29
+        by smtp.gmail.com with ESMTPSA id x6-20020a056a000bc600b006862b2a6b0dsm9798063pfu.15.2023.11.08.14.57.33
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Nov 2023 14:57:30 -0800 (PST)
+        Wed, 08 Nov 2023 14:57:33 -0800 (PST)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 1/3] bitbake-getvar: Make --quiet work with --recipe
-Date: Wed,  8 Nov 2023 12:57:19 -1000
-Message-Id: <161ab0d5bab74732e12d490cee50e14295be0a9f.1699484095.git.steve@sakoman.com>
+Subject: [bitbake][kirkstone][2.0][PATCH 3/3] runqueue: convert deferral messages from bb.note to bb.debug
+Date: Wed,  8 Nov 2023 12:57:21 -1000
+Message-Id: <3505d8d8c02b041946670ab6bc5751e54fe292ff.1699484095.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1699484095.git.steve@sakoman.com>
 References: <cover.1699484095.git.steve@sakoman.com>
@@ -61,39 +61,54 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 08 Nov 2023 22:57:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15453
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15455
 
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+From: Denys Dmytriyenko <denis@denix.org>
 
-Initializing Tinfoil with setup_logging = False only has an effect when
-recipe parsing is not needed. To make it work regardless of if --recipe
-is used, manipulate the quiet parameter to Tinfoil.prepare() instead.
+Using multiconfig to target baremetal pieces of the system and building
+corresponding toolchains for them results in hundreds and hundreds of
+"Deferring %s after %s" and "Deferred task %s now buildable".
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To clean up the output and to reduce risk of missing important warnings,
+convert these notice messages to debug messages.
+
+Signed-off-by: Denys Dmytriyenko <denis@denix.org>
+Signed-off-by: Denys Dmytriyenko <denys@konsulko.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 71ee69a20f21f3d37f4f060a7d8e87d9f1dc6aa1)
+(cherry picked from commit 64bc00a46d1aacc23fe7e8d9a46a126f3a4bc318)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- bin/bitbake-getvar | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ lib/bb/runqueue.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/bin/bitbake-getvar b/bin/bitbake-getvar
-index 4a9eb4f3..13a317e1 100755
---- a/bin/bitbake-getvar
-+++ b/bin/bitbake-getvar
-@@ -36,9 +36,10 @@ if __name__ == "__main__":
-         print("--flag only makes sense with --value")
-         sys.exit(1)
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 46ff30a7..8605c46c 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1980,12 +1980,12 @@ class RunQueueExecute:
+                 # Allow the next deferred task to run. Any other deferred tasks should be deferred after that task.
+                 # We shouldn't allow all to run at once as it is prone to races.
+                 if not found:
+-                    bb.note("Deferred task %s now buildable" % t)
++                    bb.debug(1, "Deferred task %s now buildable" % t)
+                     del self.sq_deferred[t]
+                     update_scenequeue_data([t], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
+                     found = t
+                 else:
+-                    bb.note("Deferring %s after %s" % (t, found))
++                    bb.debug(1, "Deferring %s after %s" % (t, found))
+                     self.sq_deferred[t] = found
  
--    with bb.tinfoil.Tinfoil(tracking=True, setup_logging=not args.quiet) as tinfoil:
-+    quiet = args.quiet
-+    with bb.tinfoil.Tinfoil(tracking=True, setup_logging=not quiet) as tinfoil:
-         if args.recipe:
--            tinfoil.prepare(quiet=2)
-+            tinfoil.prepare(quiet=3 if quiet else 2)
-             d = tinfoil.parse_recipe(args.recipe)
-         else:
-             tinfoil.prepare(quiet=2, config_only=True)
+     def task_complete(self, task):
+@@ -2892,7 +2892,7 @@ def build_scenequeue_data(sqdata, rqdata, rq, cooker, stampcache, sqrq):
+                 sqdata.hashes[h] = tid
+             else:
+                 sqrq.sq_deferred[tid] = sqdata.hashes[h]
+-                bb.note("Deferring %s after %s" % (tid, sqdata.hashes[h]))
++                bb.debug(1, "Deferring %s after %s" % (tid, sqdata.hashes[h]))
+ 
+     update_scenequeue_data(sqdata.sq_revdeps, sqdata, rqdata, rq, cooker, stampcache, sqrq, summary=True)
+ 
 -- 
 2.34.1
 
