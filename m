@@ -1,146 +1,92 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6011EC4332F
-	for <webhook@archiver.kernel.org>; Thu,  9 Nov 2023 10:23:24 +0000 (UTC)
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
- by mx.groups.io with SMTP id smtpd.web10.118262.1699525393633876027
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726DAC4332F
+	for <webhook@archiver.kernel.org>; Thu,  9 Nov 2023 12:54:35 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web10.120425.1699534467485588906
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 09 Nov 2023 02:23:14 -0800
+ Thu, 09 Nov 2023 04:54:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=MMIAWS73;
- spf=pass (domain: bootlin.com, ip: 217.70.183.197, mailfrom: alexandre.belloni@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5A1DA1C0009;
-	Thu,  9 Nov 2023 10:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1699525391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0BJElcao1CdCYyFqIO6fwcsYj1cHxv1nl7SszyvEEKM=;
-	b=MMIAWS73poavYb/SUi0Cj46DJ/e1wbU4guMx433GSpgEX5sodz5EkJMmsu5Z7MamAumdDp
-	vQw4wh0nfGJjGhRuTm8rSXeqDZ09tWPK27xKIl7yh5pQWUKg6en3u2BSG3SgNnGDPpgSlQ
-	+qVzAl29N2FT8cpw8isbx3okPlWRXL7BT6iWS2qsSCWu1Jd7hkqPdCEFLsC4o8kXiWDaOt
-	xl10X9dISy7lTith+GkcYAsBpem4EYzOWcWTU67i6DqYHwF/iQB9jnk12XpeLUXSB2buSz
-	00/NVKmU7hQDWRMOeAQylVIhX+/Le1/fjJYm/Ay16s4ywto2M1BtJ1Qs60pc2A==
-Date: Thu, 9 Nov 2023 11:23:10 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Joshua Watt <JPEWhacker@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel][PATCH v6 00/22] Bitbake Hash Server WebSockets,
- Alternate Database Backend, and User Management
-Message-ID: <2023110910231011b66424@mail.local>
-References: <20231031172138.3577199-1-JPEWhacker@gmail.com>
- <20231103142640.1936827-1-JPEWhacker@gmail.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KDp0Sbes;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4094301d505so5477825e9.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 09 Nov 2023 04:54:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1699534466; x=1700139266; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3T4I2bFP+z2qZY/ctdiK08D6XzvAqsXW1aw0Xxov5B4=;
+        b=KDp0SbesEH5uoDWPvyOy8zLd4aKWP9EPBp2kXnQz5K43W0yAtZwpduHCrSlgkAhdXL
+         fzgMXCOC1ZjXEsNYs5QtPkeCq7qc4oQw8gYinJBQOu6cOiL3hc1NIAGhQs+mGBHCHDTU
+         clT+vWgcjnnQL67283i9FWRHvgS3+QKHb6YlI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699534466; x=1700139266;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3T4I2bFP+z2qZY/ctdiK08D6XzvAqsXW1aw0Xxov5B4=;
+        b=QBLfX0/h/H27rtG8VOy58rdvfpTs9hqKGFJGbLjKVKbP1wbjcAOsiusk9XQjdkix7T
+         nqud4tkeJcjlxl7jjSV1p26fVlZ8QJ0Wi4Zq6w+Yoi4oX8BUELYGhA5LcMxHN/cJdA4N
+         b9lKFE3sbNWzfcdNMw3cizv4fqy7ilAzT9C1CExnTXMCK6W/x09TPDRDTVEDypSKwjuv
+         jjG3PpeLo+yOucX1MFAFXqwLvggF1rAoRY6KzLnss59aGpjH2y9i3sTIsquFUhWBfrDa
+         WtBfshl3Wnojcp+UiqN6as2tJ9BWfFjcyzg1jW2BPL+99zsMdyYROcyXf1ZemaBPN56x
+         TPTg==
+X-Gm-Message-State: AOJu0YwjEC52gGnfNsGjWgL2VWMFsT8aDUEWn7nCYjF164Frotf0kAIH
+	lT2GrADq9OHbwMoV4xFiaiHPrQ==
+X-Google-Smtp-Source: AGHT+IHmLfpxj+XDpC31a2fgfS46pHkM5T+xSq0a0DX5jnzz3jxJFuMuMq42qTcgEkr/i/cMYsXhLg==
+X-Received: by 2002:a05:600c:4f93:b0:401:a0b1:aef6 with SMTP id n19-20020a05600c4f9300b00401a0b1aef6mr4790016wmq.2.1699534465739;
+        Thu, 09 Nov 2023 04:54:25 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:7d6a:4777:87ed:703e? ([2001:8b0:aba:5f3c:7d6a:4777:87ed:703e])
+        by smtp.gmail.com with ESMTPSA id f6-20020a05600c44c600b00401d8181f8bsm1981154wmo.25.2023.11.09.04.54.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Nov 2023 04:54:25 -0800 (PST)
+Message-ID: <caaec5d4adcae6b352c36256ac629ceca8a9cd51.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v3 4/4] Toaster: Toaster: Remove unused
+ sleep import from time
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Thu, 09 Nov 2023 12:54:24 +0000
+In-Reply-To: <20231102150227.363289-4-alassane.yattara@savoirfairelinux.com>
+References: <20231102150227.363289-1-alassane.yattara@savoirfairelinux.com>
+	 <20231102150227.363289-4-alassane.yattara@savoirfairelinux.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231103142640.1936827-1-JPEWhacker@gmail.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 09 Nov 2023 10:23:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15456
+ <bitbake-devel@lists.openembedded.org>; Thu, 09 Nov 2023 12:54:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15457
 
-Hello,
+On Thu, 2023-11-02 at 16:02 +0100, Alassane Yattara wrote:
+> Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+> ---
+>  lib/toaster/tests/browser/test_landing_page.py | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/lib/toaster/tests/browser/test_landing_page.py b/lib/toaster=
+/tests/browser/test_landing_page.py
+> index 756497bd..7b425344 100644
+> --- a/lib/toaster/tests/browser/test_landing_page.py
+> +++ b/lib/toaster/tests/browser/test_landing_page.py
+> @@ -7,7 +7,6 @@
+>  # Copyright (C) 2013-2016 Intel Corporation
+>  #
+> =20
+> -from time import sleep
+>  from django.urls import reverse
+>  from django.utils import timezone
+>  from tests.browser.selenium_helpers import SeleniumTestCase
 
-I missed it earlier but I got this:
-https://autobuilder.yoctoproject.org/typhoon/#/builders/82/builds/5673/steps/12/logs/stdio
+This line was added in 1/4 of the series. This should get squashed into
+1/4 and the series resent as 3 patches since it hasn't merged yet.
 
-On 03/11/2023 08:26:18-0600, Joshua Watt wrote:
-> This patch series reworks the bitbake asyncrpc API to add a WebSockets
-> implementation for both the client and server. The hash equivalence
-> server is updated to allow using this new API (the PR server can also be
-> updated in the future if desired).
-> 
-> In addition, the database backed for the hash equivalence server is
-> abstracted so that sqlalchemy can optionally be used instead of sqlite.
-> This allows using "big metal" databases as the backend, which allows the
-> hash equivalence server to scale to a large number of queries.
-> 
-> Note that both websockets and sqlalchemy require 3rd party python
-> modules to function. However, these modules are optional unless the user
-> desires to use the APIs.
-> 
-> Also, user management is added. This allows user accounts to be
-> registered with the server and users can be given permissions to do
-> certain operations on the server. Users are not (necessarily) required
-> to login to access the server, as permissions can granted to anonymous
-> users. The default permissions will give anonymous users the same
-> permissions that they would have before user accounts were added so as
-> to retain backward compatibility, but server admins will likely want to
-> change this.
-> 
-> V3: Remove RFC status; patches are ready for review
-> V4: Fixed protocol breakage with mixing older and newer clients/servers
-> V5: Fixed compatibility with Python 3.8
-> V6: Fixed protocol incompatibility when exiting stream state that broke
->     mixing older and new clients/servers
-> 
-> Joshua Watt (22):
->   asyncrpc: Abstract sockets
->   hashserv: Add websocket connection implementation
->   asyncrpc: Add context manager API
->   hashserv: tests: Add external database tests
->   asyncrpc: Prefix log messages with client info
->   bitbake-hashserv: Allow arguments from environment
->   hashserv: Abstract database
->   hashserv: Add SQLalchemy backend
->   hashserv: Implement read-only version of "report" RPC
->   asyncrpc: Add InvokeError
->   asyncrpc: client: Prevent double closing of loop
->   asyncrpc: client: Add disconnect API
->   hashserv: Add user permissions
->   hashserv: Add become-user API
->   hashserv: Add db-usage API
->   hashserv: Add database column query API
->   hashserv: test: Add bitbake-hashclient tests
->   bitbake-hashclient: Output stats in JSON format
->   bitbake-hashserver: Allow anonymous permissions to be space separated
->   hashserv: tests: Allow authentication for external server tests
->   hashserv: Allow self-service deletion
->   hashserv: server: Add owner if user is logged in
-> 
->  bin/bitbake-hashclient        | 145 +++++-
->  bin/bitbake-hashserv          | 132 ++++-
->  lib/bb/asyncrpc/__init__.py   |  33 +-
->  lib/bb/asyncrpc/client.py     | 120 ++---
->  lib/bb/asyncrpc/connection.py | 146 ++++++
->  lib/bb/asyncrpc/exceptions.py |  21 +
->  lib/bb/asyncrpc/serv.py       | 365 ++++++++-----
->  lib/hashserv/__init__.py      | 190 +++----
->  lib/hashserv/client.py        | 147 +++++-
->  lib/hashserv/server.py        | 952 +++++++++++++++++++++-------------
->  lib/hashserv/sqlalchemy.py    | 427 +++++++++++++++
->  lib/hashserv/sqlite.py        | 408 +++++++++++++++
->  lib/hashserv/tests.py         | 736 +++++++++++++++++++++++++-
->  lib/prserv/client.py          |   8 +-
->  lib/prserv/serv.py            |  37 +-
->  15 files changed, 3060 insertions(+), 807 deletions(-)
->  create mode 100644 lib/bb/asyncrpc/connection.py
->  create mode 100644 lib/bb/asyncrpc/exceptions.py
->  create mode 100644 lib/hashserv/sqlalchemy.py
->  create mode 100644 lib/hashserv/sqlite.py
-> 
-> -- 
-> 2.34.1
-> 
+Cheers,
 
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15421): https://lists.openembedded.org/g/bitbake-devel/message/15421
-> Mute This Topic: https://lists.openembedded.org/mt/102364903/3617179
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
-
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Richard
 
