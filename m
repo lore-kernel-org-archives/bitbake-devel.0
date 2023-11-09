@@ -2,93 +2,215 @@ Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F32C4167B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B25AC4167D
 	for <webhook@archiver.kernel.org>; Thu,  9 Nov 2023 22:15:30 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.14837.1699568124760222549
+ by mx.groups.io with SMTP id smtpd.web11.14836.1699568124088414983
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 09 Nov 2023 14:15:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=wAHVKJh5;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=k6werMnU;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id CD5B39C34B2
-	for <bitbake-devel@lists.openembedded.org>; Thu,  9 Nov 2023 17:15:23 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id B78629C34CB
+	for <bitbake-devel@lists.openembedded.org>; Thu,  9 Nov 2023 17:15:22 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id Q31qvlLYkji7; Thu,  9 Nov 2023 17:15:23 -0500 (EST)
+ with ESMTP id UrgkQWDxITxI; Thu,  9 Nov 2023 17:15:22 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 43BB09C2D22;
-	Thu,  9 Nov 2023 17:15:23 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 43BB09C2D22
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 0CF509C2D22;
+	Thu,  9 Nov 2023 17:15:22 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 0CF509C2D22
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1699568123; bh=PwLzQk6tNo/0wOagfMqwlwu6q8x6/om/Xt3pF54+ydw=;
+	t=1699568122; bh=eqbkR8nD5mdfw6OFyTWm9llMg0npwMTZmlZCcxBAXdA=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=wAHVKJh5nbMSOpoAim9xL/DsNjh9gyfNIyU0rXNtST/hbWetEMBrr1YQBN2DQOxaS
-	 xqAHkRAB7z1ZlL05ZgQ8jHxJjYMIaGqjhveq7shCHCw9h/n0rDM5l8SLyv0J6RsHRt
-	 s4iCxGDWWp2ZGvLVA0cMKRIHDO5IaepLL16zI/zmLnMC1/Ahfi2ogahnfbB86bN4QO
-	 yWau20DzYhgGYR55LE2nGHplkdtK42rfoT0H1PgnYDg6acQZWpQoyzQZ8coxX76Ohp
-	 Vzem8GAnZf7rL5QHpz3DaZe3ysN8RH+AZrqv+MSALng71TKYbNWZOnY8hB5A423bCy
-	 FiWVmxGv6HGzQ==
+	b=k6werMnU5cI5OiDggWFwZQ2BmUwKnx4IfCBq7WgAVi9aqBWxLNKHSSFBpXtv+Ismo
+	 npqoShHe/39fXmxq2/kHpyUdVKNvHQuopCJVdm9mCpif+OJor+AdnhEvYiHPRw7g80
+	 PXsVL3ax/lNhdW2iX/fwWg0peO0wEpVChrPgyZanQTu9B10DNnfw1OkyTxGDKTlOQQ
+	 zRFezWMShSegBQlSa20XfUtQhgzpP7PKe35MBZ3ALUxE5ykd3Xf/jiiQcVcvPJe5jN
+	 /06hT//PfvBsISKjD2vzd3GlAemCLKW5Uno2SKWl/fehL92yw5GQbElodT4Dw+MB6w
+	 K80rxdVLQCIkA==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id lx6rulK4paaH; Thu,  9 Nov 2023 17:15:23 -0500 (EST)
+ with ESMTP id ciwoefSiCaWU; Thu,  9 Nov 2023 17:15:22 -0500 (EST)
 Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 637339C2BAF;
-	Thu,  9 Nov 2023 17:15:22 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 2E1889C2BAF;
+	Thu,  9 Nov 2023 17:15:21 -0500 (EST)
 From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH v3 2/3] Toaster: Test create new project without project name
-Date: Thu,  9 Nov 2023 23:15:16 +0100
-Message-Id: <20231109221517.110357-2-alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH v3 1/3] Toaster: Write UI TestCase create new project
+Date: Thu,  9 Nov 2023 23:15:15 +0100
+Message-Id: <20231109221517.110357-1-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231109221517.110357-1-alassane.yattara@savoirfairelinux.com>
-References: <20231109221517.110357-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 09 Nov 2023 22:15:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15488
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15487
+
+Test create new project using:
+- Project Name: Any string
+- Release: Master/Kirkstone/Dunfell/Local
+- Merge Toaster settings: False/True
 
 Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- .../tests/functional/test_create_new_project.py | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ .../functional/test_create_new_project.py     | 134 ++++++++++++++++++
+ 1 file changed, 134 insertions(+)
+ create mode 100644 lib/toaster/tests/functional/test_create_new_project.=
+py
 
 diff --git a/lib/toaster/tests/functional/test_create_new_project.py b/li=
 b/toaster/tests/functional/test_create_new_project.py
-index 81355eaf..f33eb16d 100644
---- a/lib/toaster/tests/functional/test_create_new_project.py
+new file mode 100644
+index 00000000..81355eaf
+--- /dev/null
 +++ b/lib/toaster/tests/functional/test_create_new_project.py
-@@ -132,3 +132,20 @@ class TestCreateNewProject(SeleniumFunctionalTestCas=
-e):
-             release_title,
-             True,
-         )
+@@ -0,0 +1,134 @@
++#! /usr/bin/env python3 #
++# BitBake Toaster UI tests implementation
++#
++# Copyright (C) 2023 Savoir-faire Linux
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
 +
-+    def test_create_new_project_without_name(self):
-+        """ Test create new project without project name """
++import re
++import pytest
++from django.urls import reverse
++from selenium.webdriver.support.ui import Select
++from tests.functional.functional_helpers import SeleniumFunctionalTestCa=
+se
++from orm.models import Project
++from selenium.webdriver.common.by import By
++
++@pytest.mark.django_db
++class TestCreateNewProject(SeleniumFunctionalTestCase):
++
++    def _create_test_new_project(
++        self,
++        project_name,
++        release,
++        release_title,
++        merge_toaster_settings,
++    ):
++        """ Create/Test new project using:
++          - Project Name: Any string
++          - Release: Any string
++          - Merge Toaster settings: True or False
++        """
 +        self.get(reverse('newproject'))
++        self.driver.find_element(By.ID,
++                                 "new-project-name").send_keys(project_n=
+ame)
 +
 +        select =3D Select(self.find('#projectversion'))
-+        select.select_by_value(str(3))
++        select.select_by_value(release)
 +
-+        # Check input name has required attribute
-+        input_name =3D self.driver.find_element(By.ID, "new-project-name=
-")
-+        self.assertIsNotNone(input_name.get_attribute('required'),
-+                        'Input name has not required attribute')
++        # check merge toaster settings
++        checkbox =3D self.find('.checkbox-mergeattr')
++        if merge_toaster_settings:
++            if not checkbox.is_selected():
++                checkbox.click()
++        else:
++            if checkbox.is_selected():
++                checkbox.click()
 +
-+        # Check create button is disabled
-+        create_btn =3D self.driver.find_element(By.ID, "create-project-b=
-utton")
-+        self.assertIsNotNone(create_btn.get_attribute('disabled'),
-+                        'Create button is not disabled')
++        self.driver.find_element(By.ID, "create-project-button").click()
++
++        element =3D self.wait_until_visible('#project-created-notificati=
+on')
++        self.assertTrue(
++            self.element_exists('#project-created-notification'),=20
++            f"Project:{project_name} creation notification not shown"
++        )
++        self.assertTrue(
++            project_name in element.text,
++            f"New project name:{project_name} not in new project notific=
+ation"
++        )
++        self.assertTrue(
++            Project.objects.filter(name=3Dproject_name).count(),=20
++            f"New project:{project_name} not found in database"
++        )
++
++        # check release
++        self.assertTrue(re.search(
++            release_title,
++            self.driver.find_element(By.XPATH,
++                                     "//span[@id=3D'project-release-titl=
+e']"
++                                     ).text),
++                        'The project release is not defined')
++
++    def test_create_new_project_master(self):
++        """ Test create new project using:
++          - Project Name: Any string
++          - Release: Yocto Project master (option value: 3)
++          - Merge Toaster settings: False
++        """
++        release =3D '3'
++        release_title =3D 'Yocto Project master'
++        project_name =3D 'projectmaster'
++        self._create_test_new_project(
++            project_name,
++            release,
++            release_title,
++            False,
++        )
++
++    def test_create_new_project_kirkstone(self):
++        """ Test create new project using:
++          - Project Name: Any string
++          - Release: Yocto Project 4.0 "Kirkstone" (option value: 1)
++          - Merge Toaster settings: True
++        """
++        release =3D '1'
++        release_title =3D 'Yocto Project 4.0 "Kirkstone"'
++        project_name =3D 'projectkirkstone'
++        self._create_test_new_project(
++            project_name,
++            release,
++            release_title,
++            True,
++        )
++
++    def test_create_new_project_dunfull(self):
++        """ Test create new project using:
++          - Project Name: Any string
++          - Release: Yocto Project 3.1 "Dunfell" (option value: 5)
++          - Merge Toaster settings: False
++        """
++        release =3D '5'
++        release_title =3D 'Yocto Project 3.1 "Dunfell"'
++        project_name =3D 'projectdunfull'
++        self._create_test_new_project(
++            project_name,
++            release,
++            release_title,
++            False,
++        )
++   =20
++    def test_create_new_project_local(self):
++        """ Test create new project using:
++          - Project Name: Any string
++          - Release: Local Yocto Project (option value: 2)
++          - Merge Toaster settings: True
++        """
++        release =3D '2'
++        release_title =3D 'Local Yocto Project'
++        project_name =3D 'projectlocal'
++        self._create_test_new_project(
++            project_name,
++            release,
++            release_title,
++            True,
++        )
 --=20
 2.34.1
 
