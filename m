@@ -1,325 +1,193 @@
-Return-Path: <martin.jansa@gmail.com>
+Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB6EC4332F
-	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 14:06:55 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web11.28111.1699625210527744676
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7159C4332F
+	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 14:11:25 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web10.27968.1699625476273517588
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Nov 2023 06:06:50 -0800
+ Fri, 10 Nov 2023 06:11:17 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=QIXePYAG;
- spf=pass (domain: gmail.com, ip: 209.85.128.41, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-408425c7c10so15702145e9.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 06:06:50 -0800 (PST)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=lIiRTG9f;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id D49A39C2C19
+	for <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 09:11:14 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id gIC7vwP9XipF; Fri, 10 Nov 2023 09:11:14 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id E9C839C33AF;
+	Fri, 10 Nov 2023 09:11:13 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com E9C839C33AF
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699625208; x=1700230008; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mu7LHHoP0HSX6f0ME+xhNatwX7qkKCdeT2LyZRNdSdU=;
-        b=QIXePYAGdr1ga2zDQTNlbVmq7CqKF63oOtsHXfoSwKcNiL+5lumWU6hGBMPoJNS7Mf
-         d7zPsWiy3o5gm8q/XidAosmko7zN1dUy0SdbP2hlsrJ42Izwbh1o600itX1ykHYdCQwP
-         67ExnO6j5lcAyB2As9LZJHkkst2+VX+k83Ae4fHtcmJqAiXSZyd37Xb6coNb6Y1d5qHU
-         Vm3G/TxSrTF91IAtrmZu+UFSVdp+ayOvu1zqOwMIcPxA+uAykqDuEVO79ZGHuz8B7eFs
-         8oyjDEhCcbg9dDqrkc7qNcQFo3Ue5vEp5UYPt1tQcHuvgtU4pUMOao/ulQzkUseEYbTJ
-         s+9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699625208; x=1700230008;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Mu7LHHoP0HSX6f0ME+xhNatwX7qkKCdeT2LyZRNdSdU=;
-        b=p/E7FzgTFPcFIyUJDk2TTlK7g+coGO02r5MXPAguhbf2SW3akJCv/8DYZ51HuEbkjT
-         ZnYMe9HLkQRXcBXQxOIkPavYYVj02PmlYvXiAsq1v+j1mqVxSYsRNgfmjsX/0P+kj0i2
-         6WXgHNPz/PrPbreF74fW5hydfjC+QX7NZh5BVVgH010EfOuFQIKNd7H6kcQyqlzDXaFI
-         PdK3G8VPJ4wqicS3VvKBoabZWkjo5pQkHgxar3oc5mfUPt7mwuhxiiixO4dK8d+WJr+9
-         Eo+5V/O3w5aCGrZULW9YfQAOGFsFQvyfytLplzuKGnrQ/BnlHbDhUj2Mwfx6+XjAYAei
-         yYPA==
-X-Gm-Message-State: AOJu0YyAWif8bWTgqI50gKmO6idOkx0l8D12An+VGss2/HtPo/fhLd9L
-	RtBytin1Lrsx4XU13pNGKVcrJN9pnWGVzcL67PU=
-X-Google-Smtp-Source: AGHT+IFMEJLkmZoFgvnac17Ko0sBc6iXwFny7rLh6LA/rb6JEiFvM/h2TRAbEpClNRxTFPqxEL6LUwNx79ravFinOZ0=
-X-Received: by 2002:a05:600c:3511:b0:409:7900:f3d0 with SMTP id
- h17-20020a05600c351100b004097900f3d0mr7387428wmq.34.1699625208040; Fri, 10
- Nov 2023 06:06:48 -0800 (PST)
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1699625474; bh=B67Q3TzN2T4ZmgiDLZ4Q3vzbDKdfs2Fq809ve7xr4DI=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=lIiRTG9fmmhf1KgNERUOra4Npn+mywXkYkizvIJoMKH9QUZHIo4yREvaPZ/qmlYVh
+	 +nCO6T49TvtCwl7DXnMWy38qmd8LSRgt8c3ZM6yxh/dZFn4XPvtKSVUascJTOWU8pQ
+	 W8R0UNc6RysdBJqWzHUnFHCWWgLTdM/MQ4AwUzCW6KQ4D2vxcYJ/E6AOld9PyVNYe+
+	 u5QpR8Q+G0uVEkeRwwfmgDsNcItnhT451dt2KesSl0EDlMXJtSZl+0bobeSplxQP8M
+	 P/6U8wkLynjzDBoOJen/3WoqnG+LP5/VyssW463/uZovCFWtFJoB31js4kv51tGNyP
+	 VuMevAxHzIoLw==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id dhnARO_CNCJp; Fri, 10 Nov 2023 09:11:13 -0500 (EST)
+Received: from jedi.. (unknown [196.127.183.75])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 415799C2C19;
+	Fri, 10 Nov 2023 09:11:13 -0500 (EST)
+From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH] Toaster: Write UI TestCase > Delete project
+Date: Fri, 10 Nov 2023 15:11:08 +0100
+Message-Id: <20231110141108.253809-1-alassane.yattara@savoirfairelinux.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <17964777D58C012A.3202@lists.openembedded.org>
-In-Reply-To: <17964777D58C012A.3202@lists.openembedded.org>
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Fri, 10 Nov 2023 15:06:34 +0100
-Message-ID: <CA+chaQc3jWaE0Bto1MQFf45bUVdY_8UvAb9N1vFM=A1-Q_RnGA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [2.0][PATCH 1/5] runqueue: fix PSI check calculation
-To: martin.jansa@gmail.com
-Cc: bitbake-devel@lists.openembedded.org, steve@sakoman.com, 
-	Chen Qi <Qi.Chen@windriver.com>, Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	Randy Macleod <randy.macleod@windriver.com>
-Content-Type: multipart/alternative; boundary="000000000000c6d1590609ccd42e"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 14:06:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15499
+ <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 14:11:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15500
 
---000000000000c6d1590609ccd42e
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Test delete project:
+    - Check delete modal is visible
+    - Check delete modal has right text
+    - Confirm delete
+    - Check project is deleted
 
-I forgot to include [RFC] tag in the subject, because these changes might
-be a bit controversial.
+Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+---
+ .../tests/browser/test_delete_project.py      | 103 ++++++++++++++++++
+ 1 file changed, 103 insertions(+)
+ create mode 100644 lib/toaster/tests/browser/test_delete_project.py
 
-From my testing:
-https://github.com/shr-project/test-oe-build-time/commit/d5111f4472ac397c0f=
-1197eb6366ac7d2e56453f
-the reasonable pressure values for 2.0 (in kirkstone) and 2.6 (in nanbield)
-are significantly different due to these changes in PSI calculation and
-logic so while 1000 was reasonable value for my system in 2.0, I need
-100000 with 2.6.
+diff --git a/lib/toaster/tests/browser/test_delete_project.py b/lib/toast=
+er/tests/browser/test_delete_project.py
+new file mode 100644
+index 00000000..1941777c
+--- /dev/null
++++ b/lib/toaster/tests/browser/test_delete_project.py
+@@ -0,0 +1,103 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++# BitBake Toaster UI tests implementation
++#
++# Copyright (C) 2023 Savoir-faire Linux Inc
++#
++# SPDX-License-Identifier: GPL-2.0-only
++
++import pytest
++from django.urls import reverse
++from selenium.webdriver.support.ui import Select
++from tests.browser.selenium_helpers import SeleniumTestCase
++from orm.models import BitbakeVersion, Project, Release
++from selenium.webdriver.common.by import By
++
++class TestDeleteProject(SeleniumTestCase):
++
++    def setUp(self):
++        bitbake, _ =3D BitbakeVersion.objects.get_or_create(
++            name=3D"master",
++            giturl=3D"git://master",
++            branch=3D"master",
++            dirpath=3D"master")
++
++        self.release, _ =3D Release.objects.get_or_create(
++            name=3D"master",
++            description=3D"Yocto Project master",
++            branch_name=3D"master",
++            helptext=3D"latest",
++            bitbake_version=3Dbitbake)
++
++        Release.objects.get_or_create(
++            name=3D"foo",
++            description=3D"Yocto Project foo",
++            branch_name=3D"foo",
++            helptext=3D"latest",
++            bitbake_version=3Dbitbake)
++
++    @pytest.mark.django_db
++    def test_delete_project(self):
++        """ Test delete a project
++            - Check delete modal is visible
++            - Check delete modal has right text
++            - Confirm delete
++            - Check project is deleted
++        """
++        project_name =3D "project_to_delete"
++        url =3D reverse('newproject')
++        self.get(url)
++        self.enter_text('#new-project-name', project_name)
++        select =3D Select(self.find('#projectversion'))
++        select.select_by_value(str(self.release.pk))
++        self.click("#create-project-button")
++        # We should get redirected to the new project's page with the
++        # notification at the top
++        element =3D self.wait_until_visible('#project-created-notificati=
+on')
++        self.assertTrue(project_name in element.text,
++                        "New project name not in new project notificatio=
+n")
++        self.assertTrue(Project.objects.filter(name=3Dproject_name).coun=
+t(),
++                        "New project not found in database")
++
++        # Delete project
++        delete_project_link =3D self.driver.find_element(
++            By.XPATH, '//a[@href=3D"#delete-project-modal"]')
++        delete_project_link.click()
++       =20
++        # Check delete modal is visible
++        self.wait_until_visible('#delete-project-modal')
++
++        # Check delete modal has right text
++        modal_header_text =3D self.find('#delete-project-modal .modal-he=
+ader').text
++        self.assertTrue(
++            "Are you sure you want to delete this project?" in modal_hea=
+der_text,
++            "Delete project modal header text is wrong")
++
++        modal_body_text =3D self.find('#delete-project-modal .modal-body=
+').text
++        self.assertTrue(
++            "Cancel its builds currently in progress" in modal_body_text=
+,
++            "Modal body doesn't contain: Cancel its builds currently in =
+progress")
++        self.assertTrue(
++            "Remove its configuration information" in modal_body_text,
++            "Modal body doesn't contain: Remove its configuration inform=
+ation")
++        self.assertTrue(
++            "Remove its imported layers" in modal_body_text,
++            "Modal body doesn't contain: Remove its imported layers")
++        self.assertTrue(
++            "Remove its custom images" in modal_body_text,
++            "Modal body doesn't contain: Remove its custom images")
++        self.assertTrue(
++            "Remove all its build information" in modal_body_text,
++            "Modal body doesn't contain: Remove all its build informatio=
+n")
++
++        # Confirm delete
++        delete_btn =3D self.find('#delete-project-confirmed')
++        delete_btn.click()
++
++        # Check project is deleted
++        self.wait_until_visible('#change-notification')
++        delete_notification =3D self.find('#change-notification-msg')
++        self.assertTrue("You have deleted 1 project:" in delete_notifica=
+tion.text)
++        self.assertTrue(project_name in delete_notification.text)
++        self.assertFalse(Project.objects.filter(name=3Dproject_name).exi=
+sts(),
++                        "Project not deleted from database")
+--=20
+2.34.1
 
-I've backported these changes long time ago for my local builds to use the
-same PSI values for all builds.
-
-And the controversy is that backporting these will change the expected
-values (so kind of change in behavior which might not be suitable for
-stable release). But the commits make it sound as a bug in the logic, so we
-can also consider them as bug fixes.
-
-The change in expected pressure values was reported in:
-https://lists.openembedded.org/g/bitbake-devel/message/14942
-
-If it's not a bug to be fixed in 2.0 then maybe we should mention different
-PSI values in release notes for nanbield (I know I'm too late for that).
-
-Regards,
-
-On Fri, Nov 10, 2023 at 2:54=E2=80=AFPM Martin Jansa via lists.openembedded=
-.org
-<martin.jansa=3Dgmail.com@lists.openembedded.org> wrote:
-
-> From: Chen Qi <Qi.Chen@windriver.com>
->
-> The current PSI check calculation does not take into consideration
-> the possibility of the time interval between last check and current
-> check being much larger than 1s. In fact, the current behavior does
-> not match what the manual says about BB_PRESSURE_MAX_XXX, even if
-> the value is set to upper limit, 1000000, we still get many blocks
-> on new task launch. The difference between 'total' should be divided
-> by the time interval if it's larger than 1s.
->
-> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/runqueue.py | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-> index 8605c46c8..3e89c38bc 100644
-> --- a/lib/bb/runqueue.py
-> +++ b/lib/bb/runqueue.py
-> @@ -198,15 +198,20 @@ class RunQueueScheduler(object):
->                  curr_cpu_pressure =3D
-> cpu_pressure_fds.readline().split()[4].split("=3D")[1]
->                  curr_io_pressure =3D
-> io_pressure_fds.readline().split()[4].split("=3D")[1]
->                  curr_memory_pressure =3D
-> memory_pressure_fds.readline().split()[4].split("=3D")[1]
-> -                exceeds_cpu_pressure =3D  self.rq.max_cpu_pressure and
-> (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) >
-> self.rq.max_cpu_pressure
-> -                exceeds_io_pressure =3D  self.rq.max_io_pressure and
-> (float(curr_io_pressure) - float(self.prev_io_pressure)) >
-> self.rq.max_io_pressure
-> -                exceeds_memory_pressure =3D self.rq.max_memory_pressure =
-and
-> (float(curr_memory_pressure) - float(self.prev_memory_pressure)) >
-> self.rq.max_memory_pressure
->                  now =3D time.time()
-> -                if now - self.prev_pressure_time > 1.0:
-> +                tdiff =3D now - self.prev_pressure_time
-> +                if tdiff > 1.0:
-> +                    exceeds_cpu_pressure =3D  self.rq.max_cpu_pressure a=
-nd
-> (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) / tdiff >
-> self.rq.max_cpu_pressure
-> +                    exceeds_io_pressure =3D  self.rq.max_io_pressure and
-> (float(curr_io_pressure) - float(self.prev_io_pressure)) / tdiff >
-> self.rq.max_io_pressure
-> +                    exceeds_memory_pressure =3D self.rq.max_memory_press=
-ure
-> and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) /
-> tdiff > self.rq.max_memory_pressure
->                      self.prev_cpu_pressure =3D curr_cpu_pressure
->                      self.prev_io_pressure =3D curr_io_pressure
->                      self.prev_memory_pressure =3D curr_memory_pressure
->                      self.prev_pressure_time =3D now
-> +                else:
-> +                    exceeds_cpu_pressure =3D  self.rq.max_cpu_pressure a=
-nd
-> (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) >
-> self.rq.max_cpu_pressure
-> +                    exceeds_io_pressure =3D  self.rq.max_io_pressure and
-> (float(curr_io_pressure) - float(self.prev_io_pressure)) >
-> self.rq.max_io_pressure
-> +                    exceeds_memory_pressure =3D self.rq.max_memory_press=
-ure
-> and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) >
-> self.rq.max_memory_pressure
->              return (exceeds_cpu_pressure or exceeds_io_pressure or
-> exceeds_memory_pressure)
->          return False
->
-> --
-> 2.42.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15494):
-> https://lists.openembedded.org/g/bitbake-devel/message/15494
-> Mute This Topic: https://lists.openembedded.org/mt/102506693/3617156
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> martin.jansa@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
-
---000000000000c6d1590609ccd42e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">I forgot to include [RFC] tag in the subject, because thes=
-e changes might be a bit controversial.<div><br></div><div>From my testing:=
-</div><div><a href=3D"https://github.com/shr-project/test-oe-build-time/com=
-mit/d5111f4472ac397c0f1197eb6366ac7d2e56453f">https://github.com/shr-projec=
-t/test-oe-build-time/commit/d5111f4472ac397c0f1197eb6366ac7d2e56453f</a></d=
-iv><div>the reasonable pressure values for 2.0 (in kirkstone) and 2.6 (in n=
-anbield) are significantly different due to these changes in PSI calculatio=
-n and logic so while 1000 was reasonable value for my system in 2.0, I need=
- 100000 with 2.6.</div><div><br></div><div>I&#39;ve backported these change=
-s long time ago for my local builds to use the same PSI values for all buil=
-ds.</div><div><br></div><div>And the controversy is that backporting these =
-will change the expected values (so kind of change in behavior which might =
-not be suitable for stable release). But the commits make it sound as a bug=
- in the logic, so we can also consider them as bug fixes.</div><div><br></d=
-iv><div>The change in expected pressure values was reported in:</div><div><=
-a href=3D"https://lists.openembedded.org/g/bitbake-devel/message/14942">htt=
-ps://lists.openembedded.org/g/bitbake-devel/message/14942</a><br></div><div=
-><br></div><div>If it&#39;s not a bug to be fixed in 2.0 then maybe we shou=
-ld mention different PSI values in release notes for nanbield (I know I&#39=
-;m too late for that).</div><div><br></div><div>Regards,</div></div><br><di=
-v class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, Nov 1=
-0, 2023 at 2:54=E2=80=AFPM Martin Jansa via <a href=3D"http://lists.openemb=
-edded.org" target=3D"_blank">lists.openembedded.org</a> &lt;martin.jansa=3D=
-<a href=3D"mailto:gmail.com@lists.openembedded.org" target=3D"_blank">gmail=
-.com@lists.openembedded.org</a>&gt; wrote:<br></div><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
-204,204);padding-left:1ex">From: Chen Qi &lt;<a href=3D"mailto:Qi.Chen@wind=
-river.com" target=3D"_blank">Qi.Chen@windriver.com</a>&gt;<br>
-<br>
-The current PSI check calculation does not take into consideration<br>
-the possibility of the time interval between last check and current<br>
-check being much larger than 1s. In fact, the current behavior does<br>
-not match what the manual says about BB_PRESSURE_MAX_XXX, even if<br>
-the value is set to upper limit, 1000000, we still get many blocks<br>
-on new task launch. The difference between &#39;total&#39; should be divide=
-d<br>
-by the time interval if it&#39;s larger than 1s.<br>
-<br>
-Signed-off-by: Chen Qi &lt;<a href=3D"mailto:Qi.Chen@windriver.com" target=
-=3D"_blank">Qi.Chen@windriver.com</a>&gt;<br>
-Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
-ndation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<b=
-r>
----<br>
-=C2=A0lib/bb/runqueue.py | 13 +++++++++----<br>
-=C2=A01 file changed, 9 insertions(+), 4 deletions(-)<br>
-<br>
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py<br>
-index 8605c46c8..3e89c38bc 100644<br>
---- a/lib/bb/runqueue.py<br>
-+++ b/lib/bb/runqueue.py<br>
-@@ -198,15 +198,20 @@ class RunQueueScheduler(object):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0curr_cpu_pres=
-sure =3D cpu_pressure_fds.readline().split()[4].split(&quot;=3D&quot;)[1]<b=
-r>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0curr_io_press=
-ure =3D io_pressure_fds.readline().split()[4].split(&quot;=3D&quot;)[1]<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0curr_memory_p=
-ressure =3D memory_pressure_fds.readline().split()[4].split(&quot;=3D&quot;=
-)[1]<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exceeds_cpu_pressu=
-re =3D=C2=A0 self.rq.max_cpu_pressure and (float(curr_cpu_pressure) - float=
-(self.prev_cpu_pressure)) &gt; self.rq.max_cpu_pressure<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exceeds_io_pressur=
-e =3D=C2=A0 self.rq.max_io_pressure and (float(curr_io_pressure) - float(se=
-lf.prev_io_pressure)) &gt; self.rq.max_io_pressure<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exceeds_memory_pre=
-ssure =3D self.rq.max_memory_pressure and (float(curr_memory_pressure) - fl=
-oat(self.prev_memory_pressure)) &gt; self.rq.max_memory_pressure<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0now =3D time.=
-time()<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if now - self.prev=
-_pressure_time &gt; 1.0:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 tdiff =3D now - se=
-lf.prev_pressure_time<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if tdiff &gt; 1.0:=
-<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exce=
-eds_cpu_pressure =3D=C2=A0 self.rq.max_cpu_pressure and (float(curr_cpu_pre=
-ssure) - float(self.prev_cpu_pressure)) / tdiff &gt; self.rq.max_cpu_pressu=
-re<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exce=
-eds_io_pressure =3D=C2=A0 self.rq.max_io_pressure and (float(curr_io_pressu=
-re) - float(self.prev_io_pressure)) / tdiff &gt; self.rq.max_io_pressure<br=
->
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exce=
-eds_memory_pressure =3D self.rq.max_memory_pressure and (float(curr_memory_=
-pressure) - float(self.prev_memory_pressure)) / tdiff &gt; self.rq.max_memo=
-ry_pressure<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0self.prev_cpu_pressure =3D curr_cpu_pressure<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0self.prev_io_pressure =3D curr_io_pressure<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0self.prev_memory_pressure =3D curr_memory_pressure<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0self.prev_pressure_time =3D now<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 else:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exce=
-eds_cpu_pressure =3D=C2=A0 self.rq.max_cpu_pressure and (float(curr_cpu_pre=
-ssure) - float(self.prev_cpu_pressure)) &gt; self.rq.max_cpu_pressure<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exce=
-eds_io_pressure =3D=C2=A0 self.rq.max_io_pressure and (float(curr_io_pressu=
-re) - float(self.prev_io_pressure)) &gt; self.rq.max_io_pressure<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exce=
-eds_memory_pressure =3D self.rq.max_memory_pressure and (float(curr_memory_=
-pressure) - float(self.prev_memory_pressure)) &gt; self.rq.max_memory_press=
-ure<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return (exceeds_cpu_pressur=
-e or exceeds_io_pressure or exceeds_memory_pressure)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return False<br>
-<br>
--- <br>
-2.42.1<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#15494): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/15494" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/15494</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/102506693/361=
-7156" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
-t/102506693/3617156</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:martin.jansa@gmail.com" target=3D"=
-_blank">martin.jansa@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div>
-
---000000000000c6d1590609ccd42e--
 
