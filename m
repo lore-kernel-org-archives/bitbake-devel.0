@@ -2,57 +2,57 @@ Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2802C04A95
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDCEC04E83
 	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 13:54:55 +0000 (UTC)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
- by mx.groups.io with SMTP id smtpd.web10.27575.1699624492287621914
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+ by mx.groups.io with SMTP id smtpd.web11.27841.1699624490132443519
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Nov 2023 05:54:52 -0800
+ Fri, 10 Nov 2023 05:54:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=FHSREFiT;
- spf=pass (domain: gmail.com, ip: 209.85.218.44, mailfrom: martin.jansa@gmail.com)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-9dbb3e0ff65so326940466b.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 05:54:52 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=faSgUVY+;
+ spf=pass (domain: gmail.com, ip: 209.85.218.46, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-9e28724ac88so341238666b.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 05:54:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699624491; x=1700229291; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1699624488; x=1700229288; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=C/Ssk5ZljAlHZY1sVbMulbCihTS3HypldkckMP8jM9A=;
-        b=FHSREFiTTC3no9xG/FaXHaQuBKb4Bc4v4pVlvMpdUvV9HktdZvftR1hrWoBw5p5UKd
-         28QoFYE+F72qhvtKA8+3umxo9s1O0ZPhVN35Rw/nezux1HJUlgjhY6t5TNx7lx6NOmyb
-         AVoLZhOI+tb1ix1ZyRnJrShSJgJ/9m2OmwjbEIKUuq4jtUQPXbPYgSZwnJS2H6vLoa70
-         bb8O9niEk8tws6vsuwRuu4teBTeScFjPoOquIwXNiLals99NMdbEOs0/HY69fKij079W
-         jFjUCSmzn5Uml1Dy9JPjp3H6SAD31jBNLmLGfdODp9yfBUvevsDnpPRKwpjO/vUr5s58
-         73ag==
+        bh=bE4iSbRE95DYeQJn9m9ODF0mx/nr33IC05l3IylHnVg=;
+        b=faSgUVY+oOPmGD9W8lMZ7P/cXnd5IcaMXDaBSd5fOcSp8BwTaXwsNniXkcde40oT8K
+         q1YWfScGnw7B1gixHO5esUJuAgXcsQNi2nAipRoaUez0hyBBLZhPObgsbVrt0vY0NTy9
+         iZt0r4jpLk5asubAu88bpPlPqLFr6WKbFd2+36Ak2/TvHkmNJEih40ce9Iy8p0jCycDe
+         8jXeWDKJ1l6WyQ55lgHy4W6eZwgFgcImN1RTVahqqm8gQhq2IHQY58cF09Fxv51R8Na9
+         r4zRlckU0MXKjsbTZX3NZoXeLaawu1ABLdy6+EW6TVeIqA1r1bNwXDAAim5doUHShaFf
+         Gjig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699624491; x=1700229291;
+        d=1e100.net; s=20230601; t=1699624488; x=1700229288;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=C/Ssk5ZljAlHZY1sVbMulbCihTS3HypldkckMP8jM9A=;
-        b=LbHAiNAZaPQhiLLdE++trd9OzMZzhKXUIQMmmBwqFh7KvWSGweVnM5AfAui4ztPpEo
-         +RKuMdt4DekU++lrgMWWKv+RhLTxkM3KkVabyPrsJloa7nSraAur90h5gOJsMmdTEFCg
-         l+hmUQMwqgzPxXh5/LUpJXNQMnxvYEMol+uYr0Zfw4/VSlTNNKTTEASgiF4qoZzJPhzz
-         XRqPCsRYaGY+2qC/9M5RDejae/Sdsc7ACZd9AaA6hqamu+JzQTVnpNB5arTe74Q63BeC
-         q1OfZCqgnhpTgCvkuCexISl/kt1JwfdS62wbA0Jb/lAFQTY2p1SDnEXwWDf/84M2P+O2
-         gjcw==
-X-Gm-Message-State: AOJu0YxZIAq5+3deGuaIZTjiPH4Z6ecGQqcp8uqLJSJSDEP41e1q0xrP
-	ZOb2f9XlI8CrVih+QAz1qAK62R3++8U=
-X-Google-Smtp-Source: AGHT+IG/J3517KKxZRqOCKFpUkCWgvCsCgLJui71S1Ti7Ot04oc0FdWcIZ3tJApxtRJUTeeWODiJrA==
-X-Received: by 2002:a17:906:4a95:b0:9e5:fdd7:f521 with SMTP id x21-20020a1709064a9500b009e5fdd7f521mr1469820eju.41.1699624490766;
-        Fri, 10 Nov 2023 05:54:50 -0800 (PST)
+        bh=bE4iSbRE95DYeQJn9m9ODF0mx/nr33IC05l3IylHnVg=;
+        b=RuLuPDIi7RUjdBvvRg+AFh7sU+aEBGEHDoN5AqLSOv3Tj4JSgTsnmrpmHOjCVtWXfb
+         OdkXxXcgRZEf0Qt3bHJNvMqpCypv9rGKIqUBnADQMSs44vuqlKJD4WsuNjAzra7ldR4m
+         /gUBFxe9zVwZjgnoSJE0M9Fvl/J+f3FjL8S9Z3N+RpsIrAXSQprVB+qhWphpYtgaBBDN
+         /RIsN8pzzU4MunmF1M/rvPTp7JEWhl1EDvU777bYG+tgvUKmFJeJMuZYT695wzfcSK2/
+         TrGnZaiHEKL1BqU+j+z+PtaaGxonK1Gu32KUIvWUZjkppQLfEgfLtv/uInEUoneT5RWX
+         VH8Q==
+X-Gm-Message-State: AOJu0Yx2oVXYFVCcv6o5ACXiB40vngYJfD93IjJTTPSLt3wQoS2s7HzT
+	p+MhYGEqcG9cnM97gzb4dfgaJ4xBwXI=
+X-Google-Smtp-Source: AGHT+IGBV4Mt8nIT/m+VCC2SqmUzCYM0bJDbmz64CmPIbicyme1L4+cYgx0mgkIWhr9Jutg/mLdZJA==
+X-Received: by 2002:a17:907:7255:b0:9de:dc3d:3b2 with SMTP id ds21-20020a170907725500b009dedc3d03b2mr7228319ejc.16.1699624488384;
+        Fri, 10 Nov 2023 05:54:48 -0800 (PST)
 Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
-        by smtp.gmail.com with ESMTPSA id a17-20020a170906685100b009aa292a2df2sm3973000ejs.217.2023.11.10.05.54.50
+        by smtp.gmail.com with ESMTPSA id h13-20020a17090791cd00b009e5f5efac10sm1070923ejz.208.2023.11.10.05.54.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Nov 2023 05:54:50 -0800 (PST)
+        Fri, 10 Nov 2023 05:54:47 -0800 (PST)
 From: Martin Jansa <martin.jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: steve@sakoman.com,
-	Martin Jansa <Martin.Jansa@gmail.com>
-Subject: [2.0][PATCH 5/5] runqueue: show number of currently running bitbake threads when pressure changes
-Date: Fri, 10 Nov 2023 14:54:37 +0100
-Message-ID: <20231110135437.2902924-5-martin.jansa@gmail.com>
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [2.0][PATCH 2/5] runqueue: Add pressure change logging
+Date: Fri, 10 Nov 2023 14:54:34 +0100
+Message-ID: <20231110135437.2902924-2-martin.jansa@gmail.com>
 X-Mailer: git-send-email 2.42.1
 In-Reply-To: <20231110135437.2902924-1-martin.jansa@gmail.com>
 References: <20231110135437.2902924-1-martin.jansa@gmail.com>
@@ -62,37 +62,34 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 13:54:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15498
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15495
 
-From: Martin Jansa <Martin.Jansa@gmail.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-* it might be a bit confusing as it shows number of threads before making
-  the decision to start more tasks and also it can show only a few tasks
-  running, but not because of pressure when there just aren't many tasks
-  left or wait for their dependencies to be finished first
+It is currently hard to tell when bitbake is throttling task execution
+due to system pressure changes. Add notes to the console output to make
+this clearer, only generating output when the values change.
 
-* example output:
-  NOTE: Pressure status changed to CPU: True, IO: None, Mem: None (CPU: 297589.5/200000.0, IO: 5522.2/None, Mem: 779.2/None) - using 7/8 bitbake threads
-  NOTE: Pressure status changed to CPU: False, IO: None, Mem: None (CPU: 196381.2/200000.0, IO: 2667.9/None, Mem: 556.2/None) - using 2/8 bitbake threads
-
-Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/runqueue.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index e01c496c4..0b6eddd45 100644
+index 3e89c38bc..ab9e3fbe8 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -217,7 +217,7 @@ class RunQueueScheduler(object):
-             pressure_state = (exceeds_cpu_pressure, exceeds_io_pressure, exceeds_memory_pressure)
-             pressure_values = (round(cpu_pressure,1), self.rq.max_cpu_pressure, round(io_pressure,1), self.rq.max_io_pressure, round(memory_pressure,1), self.rq.max_memory_pressure)
-             if hasattr(self, "pressure_state") and pressure_state != self.pressure_state:
--                bb.note("Pressure status changed to CPU: %s, IO: %s, Mem: %s (CPU: %s/%s, IO: %s/%s, Mem: %s/%s)" % (pressure_state + pressure_values))
-+                bb.note("Pressure status changed to CPU: %s, IO: %s, Mem: %s (CPU: %s/%s, IO: %s/%s, Mem: %s/%s) - using %s/%s bitbake threads" % (pressure_state + pressure_values + (len(self.rq.runq_running.difference(self.rq.runq_complete)), self.rq.number_tasks)))
-             self.pressure_state = pressure_state
+@@ -212,6 +212,10 @@ class RunQueueScheduler(object):
+                     exceeds_cpu_pressure =  self.rq.max_cpu_pressure and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) > self.rq.max_cpu_pressure
+                     exceeds_io_pressure =  self.rq.max_io_pressure and (float(curr_io_pressure) - float(self.prev_io_pressure)) > self.rq.max_io_pressure
+                     exceeds_memory_pressure = self.rq.max_memory_pressure and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) > self.rq.max_memory_pressure
++            pressure_state = (exceeds_cpu_pressure, exceeds_io_pressure, exceeds_memory_pressure)
++            if hasattr(self, "pressure_state") and pressure_state != self.pressure_state:
++                bb.note("Pressure status changed to CPU: %s, IO: %s, Mem: %s" % pressure_state)
++            self.pressure_state = pressure_state
              return (exceeds_cpu_pressure or exceeds_io_pressure or exceeds_memory_pressure)
          return False
+ 
 -- 
 2.42.1
 
