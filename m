@@ -2,48 +2,48 @@ Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53638C4167D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D49C4167B
 	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 17:26:37 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.33672.1699637189492096419
+ by mx.groups.io with SMTP id smtpd.web10.33404.1699637193008219953
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Nov 2023 09:26:29 -0800
+ Fri, 10 Nov 2023 09:26:33 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=HFf07Meo;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=HeymXhCK;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id D032C9C34CE
-	for <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 12:26:28 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id E4F009C34E1
+	for <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 12:26:30 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 5NHgrM_K2hNK; Fri, 10 Nov 2023 12:26:28 -0500 (EST)
+ with ESMTP id sCeTMV66xJFF; Fri, 10 Nov 2023 12:26:30 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 591679C34CA;
-	Fri, 10 Nov 2023 12:26:28 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 591679C34CA
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 64B429C328E;
+	Fri, 10 Nov 2023 12:26:30 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 64B429C328E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1699637188; bh=dMSUvnJ4UdwccVBzbieZFfOxYEHmH/jbYoRYcw4DpHc=;
+	t=1699637190; bh=D6hVVQ74vLWWYu83dRv5PN2yvxmOqshCGPltwrl7t/Y=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=HFf07MeoV+vXee5A6K9KMEPKz6e6NfXtQ+EGmZomjb89X6+wyPAyZsuSBPs2wGd6D
-	 o2Uhf9fnfAc/DQDErG4HQ52QgVOahpt75x/0WGuXk0SzGPZ9/SrHbthO8OLm3XeWW8
-	 72RcenLniKudELSv1d0XwalFkIpRwOlLfWTFTBrpBM62sOYDYykcGlem8ML1AHKvox
-	 qQnDKF8j/uSJBAl19rxoFIMwuwq43NUY41mzaUpEAFwslgizygY9Ccxna3Ja4m61nJ
-	 YqY1ifT4UBWGuRz/2XjZfCETZiDoLEUPhefiESgtx+emrq4BuMrKI/jC5PxT3bjeMZ
-	 I9RoB0HzH+vRA==
+	b=HeymXhCKIgREXDnUTJJkWrfWKNXVMu/GcQ/M0yk/wdcr6BVJlFCuTi4vuU6Di7X57
+	 GVLDN1R1w5BVvYTW5kK4keBVw4WO5GNA7NVux35Q9muB+OVWJST+7v3EMnDXjpMfyg
+	 xkpJFsZgFnzEU6ggNKz0awmVnqOnXT9mazO6xYXAUMX24MtcnRCz9MrXrS+P8vrDxB
+	 v9oSeAiKBuHtsJBFUkfTxz51/zb+34B+rRC32D5Yd3oIDmwmI3TZsfbGJu002ulxwv
+	 lC4xGbO1h5x60lZC0jTcwhEaIVaymmw0phmh4HM5cpjDFqpNgQO9bYzBQdtShhC8tu
+	 XbIFhFe/Chd+w==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id rHSK-S2KSyZW; Fri, 10 Nov 2023 12:26:28 -0500 (EST)
+ with ESMTP id c6R6Ozh3qOLl; Fri, 10 Nov 2023 12:26:30 -0500 (EST)
 Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 7954C9C328E;
-	Fri, 10 Nov 2023 12:26:27 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id B6B899C34CE;
+	Fri, 10 Nov 2023 12:26:29 -0500 (EST)
 From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH 3/6] Toaster: Write UI TestCase -> Visualize all builds
-Date: Fri, 10 Nov 2023 18:26:17 +0100
-Message-Id: <20231110172620.396838-3-alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH 5/6] Toaster: Toaster: Write UI TestCase -> Visualize all builds
+Date: Fri, 10 Nov 2023 18:26:19 +0100
+Message-Id: <20231110172620.396838-5-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231110172620.396838-1-alassane.yattara@savoirfairelinux.com>
 References: <20231110172620.396838-1-alassane.yattara@savoirfairelinux.com>
@@ -53,79 +53,89 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 17:26:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15508
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15510
 
-Test the filtering on failure tasks column in the builds table on the all=
- builds page
+Test the edit column feature in the builds table on the all builds page
 
 Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- .../tests/browser/test_all_builds_page.py     | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ .../tests/browser/test_all_builds_page.py     | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
 diff --git a/lib/toaster/tests/browser/test_all_builds_page.py b/lib/toas=
 ter/tests/browser/test_all_builds_page.py
-index eb14f89d..81498aa8 100644
+index 90dcdd91..bd2b4799 100644
 --- a/lib/toaster/tests/browser/test_all_builds_page.py
 +++ b/lib/toaster/tests/browser/test_all_builds_page.py
-@@ -113,6 +113,20 @@ class TestAllBuildsPage(SeleniumTestCase):
-         # a particular build)
-         Target.objects.create(build=3Dbuild1, target=3D'foo')
-         Target.objects.create(build=3Dbuild2, target=3D'bar')
-+
-+        if kwargs:
-+            # Create kwargs.get('success') builds with success status wi=
-th target
-+            # and kwargs.get('failure') builds with failure status with =
-target
-+            for i in range(kwargs.get('success', 0)):
-+                build =3D Build.objects.create(**self.project1_build_suc=
-cess)
-+                Target.objects.create(build=3Dbuild,
-+                                      target=3Df'{i}_success_recipe',
-+                                      task=3Df'{i}_success_task')
-+            for i in range(kwargs.get('failure', 0)):
-+                build =3D Build.objects.create(**self.project1_build_fai=
-lure)
-+                Target.objects.create(build=3Dbuild,
-+                                      target=3Df'{i}_fail_recipe',
-+                                      task=3Df'{i}_fail_task')
-         return build1, build2
+@@ -362,3 +362,62 @@ class TestAllBuildsPage(SeleniumTestCase):
+         time.sleep(1)
+         self.assertTrue(len(self.find_all('#allbuildstable tbody tr')) =3D=
+=3D 6)
 =20
-     def test_show_tasks_with_suffix(self):
-@@ -248,3 +262,27 @@ class TestAllBuildsPage(SeleniumTestCase):
-         self.wait_until_present('#allbuildstable tbody tr')
-         rows =3D self.find_all('#allbuildstable tbody tr')
-         self.assertTrue(len(rows) >=3D 1)
-+
-+    def test_filtering_on_failure_tasks_column(self):
-+        """ Test the filtering on failure tasks column in the builds tab=
-le on the all builds page """
++    def test_builds_table_editColumn(self):
++        """ Test the edit column feature in the builds table on the all =
+builds page """
 +        self._get_create_builds(success=3D10, failure=3D10)
 +
++        def test_edit_column(check_box_id):
++            # Check that we can hide/show table column
++            check_box =3D self.find(f'#{check_box_id}')
++            th_class =3D str(check_box_id).replace('checkbox-', '')
++            if check_box.is_selected():
++                # check if column is visible in table
++                self.assertTrue(
++                    self.find(
++                        f'#allbuildstable thead th.{th_class}'
++                    ).is_displayed(),
++                    f"The {th_class} column is checked in EditColumn dro=
+pdown, but it's not visible in table"
++                )
++                check_box.click()
++                # check if column is hidden in table
++                self.assertFalse(
++                    self.find(
++                        f'#allbuildstable thead th.{th_class}'
++                    ).is_displayed(),
++                    f"The {th_class} column is unchecked in EditColumn d=
+ropdown, but it's visible in table"
++                )
++            else:
++                # check if column is hidden in table
++                self.assertFalse(
++                    self.find(
++                        f'#allbuildstable thead th.{th_class}'
++                    ).is_displayed(),
++                    f"The {th_class} column is unchecked in EditColumn d=
+ropdown, but it's visible in table"
++                )
++                check_box.click()
++                # check if column is visible in table
++                self.assertTrue(
++                    self.find(
++                        f'#allbuildstable thead th.{th_class}'
++                    ).is_displayed(),
++                    f"The {th_class} column is checked in EditColumn dro=
+pdown, but it's not visible in table"
++                )
 +        url =3D reverse('all-builds')
 +        self.get(url)
++        self.wait_until_present('#allbuildstable tbody tr')
 +
-+        # Check filtering on failure tasks column
-+        self.wait_until_present('#allbuildstable tbody tr')
-+        failed_tasks_filter =3D self.find('#failed_tasks_filter')
-+        failed_tasks_filter.click()
-+        # Check popup is visible
-+        time.sleep(1)
-+        self.wait_until_present('#filter-modal-allbuildstable')
-+        self.assertTrue(self.find('#filter-modal-allbuildstable').is_dis=
-played())
-+        # Check that we can filter by failure tasks
-+        build_without_failure_tasks =3D self.find('#failed_tasks_filter\=
-\:without_failed_tasks')
-+        build_without_failure_tasks.click()
-+        # click on apply button
-+        self.find('#filter-modal-allbuildstable .btn-primary').click()
-+        self.wait_until_present('#allbuildstable tbody tr')
-+        # Check if filter is applied, by checking if failed_tasks_filter=
- has btn-primary class
-+        self.assertTrue(self.find('#failed_tasks_filter').get_attribute(=
-'class').find('btn-primary') !=3D -1)
++        # Check edit column
++        edit_column =3D self.find('#edit-columns-button')
++        self.assertTrue(edit_column.is_displayed())
++        edit_column.click()
++        # Check dropdown is visible
++        self.wait_until_visible('ul.dropdown-menu.editcol')
++
++        # Check that we can hide the edit column
++        test_edit_column('checkbox-errors_no')
++        test_edit_column('checkbox-failed_tasks')
++        test_edit_column('checkbox-image_files')
++        test_edit_column('checkbox-project')
++        test_edit_column('checkbox-started_on')
++        test_edit_column('checkbox-time')
++        test_edit_column('checkbox-warnings_no')
 --=20
 2.34.1
 
