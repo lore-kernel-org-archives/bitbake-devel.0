@@ -1,274 +1,113 @@
-Return-Path: <alassane.yattara@savoirfairelinux.com>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4DBC4332F
-	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 13:34:35 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.27117.1699623273351803489
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E949C4332F
+	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 13:54:55 +0000 (UTC)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+ by mx.groups.io with SMTP id smtpd.web11.27840.1699624489014687284
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Nov 2023 05:34:34 -0800
+ Fri, 10 Nov 2023 05:54:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=okzaC1hL;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 4D1269C3290;
-	Fri, 10 Nov 2023 08:34:32 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id l_s-MeUknE8Q; Fri, 10 Nov 2023 08:34:31 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 481239C3423;
-	Fri, 10 Nov 2023 08:34:31 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 481239C3423
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=gD/7XR+O;
+ spf=pass (domain: gmail.com, ip: 209.85.218.44, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-9e62f903e88so102885966b.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 05:54:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1699623271; bh=O71drGUSYmUCQOT3+xew6QCiCwPwVZt/5BuLLiUwdhc=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=okzaC1hLovkws14OQApb1ty2h/Ir6lAGt9r3w1PPItg16S3X5zvxeIXnW++rnOJHs
-	 qKXuJerzd74TteJm0Vbe2FdwuWWdyFNRuwBpjnLFWoZndeykdqz0qhPzWF8Yzh3qCu
-	 zZp2r3JCEzSqdknYUfoTZv3ISmgNzmHZ//MWoRVG/VWy8jNmSg00V5cqKRCNYFs2ek
-	 NJpkne1ztTb6XzzB26rjIbnjdF2fpWUidOdp7APISD/REZfh1w3TMYc2yX8ea9KRoO
-	 bIgsHtTp32OKQvyYZOiGtmRb4UI3lkBAyrhWG9YnGeGaXT96DzmT6F85syAb1jlVE1
-	 qSeTurZo3aniw==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id mD-KErftcvqE; Fri, 10 Nov 2023 08:34:31 -0500 (EST)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 321649C3290;
-	Fri, 10 Nov 2023 08:34:31 -0500 (EST)
-Date: Fri, 10 Nov 2023 08:34:30 -0500 (EST)
-From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Message-ID: <545651085.595635.1699623270831.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <20231110080943ba6dd2d1@mail.local>
-References: <20231109221517.110357-1-alassane.yattara@savoirfairelinux.com> <20231110080943ba6dd2d1@mail.local>
-Subject: Re: [bitbake-devel] [PATCH v3 1/3] Toaster: Write UI TestCase
- create new project
+        d=gmail.com; s=20230601; t=1699624487; x=1700229287; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kz+QMGfoYENFiTP4A2/snXyk8OjWOYzYu3MEMUiaKqQ=;
+        b=gD/7XR+OCoDl9O12hyjyl69QlNxJtc6WCrsLIE2eG93w0VhGfbrUtlITtPVck/oSlD
+         nUe5N4jr4BosqgSwxKG+/8ydUdQQqeHxlUaKeFkQjs9tQJc2g9sUi4W6hgx9OtiAfjun
+         GbHCjM0mHoTuhaL4Ov0X6UWmDO/obTzCTxuYkhRZmaokeoaGenn6ANDgfL8+E8xMeGOy
+         d/ZJfzru8KpO5lKu2jf0JFN6u5w53ePDlwcT7+xd+EV9EJnt8LsP9JXZjSSNWL1KkPpB
+         wb0UetiHAXVOs+PhS+Um8rdbbVA9IUInW6mbGsnmNaoRSge2lipmWq4NrPfBFXmeEtJ1
+         LTgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699624487; x=1700229287;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Kz+QMGfoYENFiTP4A2/snXyk8OjWOYzYu3MEMUiaKqQ=;
+        b=LAGJMOjR+lX6HLkHRG7+9RxFtqCupeLxFM0akbNbwNcvph5c+cPeLTgOpFAY2iseIT
+         RPLIySly60G5qVlYd/CRV6m2ub9B7Baz5nE6RhQyDLwbt8XI2JxFq9wCQ91csBfBwhoJ
+         OJ6bWkPwZZ6jImfQEsWoK8wcMtHwca0S7bDfKw7xfXLGhyawO595/CFLdDMuPrKeNVUN
+         0bV0Iv1sQ8zEmuiw3KfDYZDVq76zT1bnR5i4LnMwG1QxmmIFZHBffL+ZW+YaXAjjUU3d
+         eza9vwbsrDqqIXDmjWI4CJBK8dZ4sZx5RqjpwMBeOwC46TV4fd9vT++dMgooPDT55ImD
+         eOcg==
+X-Gm-Message-State: AOJu0YzxnWnWnCUtuQmqodQ0vqh7nUgrAagTCiHBLTgjWaSj5tIutfmL
+	6LMRFyPUR/WsMJAbcu5f4i/bsPRv63E=
+X-Google-Smtp-Source: AGHT+IEDWNILRwLg9IzYLpjA+TBbhvVF+YYVYcGzrgKJoVtgGMBgs3b5C+TZUpouPPOJMB0hcG6UTQ==
+X-Received: by 2002:a17:906:ef0c:b0:9c4:344e:b496 with SMTP id f12-20020a170906ef0c00b009c4344eb496mr7196337ejs.11.1699624487380;
+        Fri, 10 Nov 2023 05:54:47 -0800 (PST)
+Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
+        by smtp.gmail.com with ESMTPSA id p27-20020a170906141b00b009adc5802d08sm3953133ejc.190.2023.11.10.05.54.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Nov 2023 05:54:46 -0800 (PST)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: steve@sakoman.com,
+	Chen Qi <Qi.Chen@windriver.com>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [2.0][PATCH 1/5] runqueue: fix PSI check calculation
+Date: Fri, 10 Nov 2023 14:54:33 +0100
+Message-ID: <20231110135437.2902924-1-martin.jansa@gmail.com>
+X-Mailer: git-send-email 2.42.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.15_GA_4562 (ZimbraWebClient - GC117 (Linux)/8.8.15_GA_4570)
-Thread-Topic: Toaster: Write UI TestCase create new project
-Thread-Index: O+mBWAuHi8FqfBlSMGXp8fcn7eN5BQ==
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 13:34:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15493
+ <bitbake-devel@lists.openembedded.org>; Fri, 10 Nov 2023 13:54:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15494
 
-Hello Alexander,
+From: Chen Qi <Qi.Chen@windriver.com>
 
-There is no difference, that's same patch.
-=20
-Sorry about duplicate, my commandeline '$git send-email' was block when sen=
-ding the patch series,
-I canceled the process, then try again, but the first patch 1/3 was already=
- sent in first process.
+The current PSI check calculation does not take into consideration
+the possibility of the time interval between last check and current
+check being much larger than 1s. In fact, the current behavior does
+not match what the manual says about BB_PRESSURE_MAX_XXX, even if
+the value is set to upper limit, 1000000, we still get many blocks
+on new task launch. The difference between 'total' should be divided
+by the time interval if it's larger than 1s.
 
-Thanks!
-Alassane.
------ Mail original -----
-De: "Alexandre Belloni via lists.openembedded.org" <alexandre.belloni=3Dboo=
-tlin.com@lists.openembedded.org>
-=C3=80: "Alassane Yattara" <alassane.yattara@savoirfairelinux.com>
-Cc: "bitbake-devel" <bitbake-devel@lists.openembedded.org>
-Envoy=C3=A9: Vendredi 10 Novembre 2023 09:09:43
-Objet: Re: [bitbake-devel] [PATCH v3 1/3] Toaster: Write UI TestCase create=
- new project
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/runqueue.py | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-Hello Alassane,
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 8605c46c8..3e89c38bc 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -198,15 +198,20 @@ class RunQueueScheduler(object):
+                 curr_cpu_pressure = cpu_pressure_fds.readline().split()[4].split("=")[1]
+                 curr_io_pressure = io_pressure_fds.readline().split()[4].split("=")[1]
+                 curr_memory_pressure = memory_pressure_fds.readline().split()[4].split("=")[1]
+-                exceeds_cpu_pressure =  self.rq.max_cpu_pressure and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) > self.rq.max_cpu_pressure
+-                exceeds_io_pressure =  self.rq.max_io_pressure and (float(curr_io_pressure) - float(self.prev_io_pressure)) > self.rq.max_io_pressure
+-                exceeds_memory_pressure = self.rq.max_memory_pressure and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) > self.rq.max_memory_pressure
+                 now = time.time()
+-                if now - self.prev_pressure_time > 1.0:
++                tdiff = now - self.prev_pressure_time
++                if tdiff > 1.0:
++                    exceeds_cpu_pressure =  self.rq.max_cpu_pressure and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) / tdiff > self.rq.max_cpu_pressure
++                    exceeds_io_pressure =  self.rq.max_io_pressure and (float(curr_io_pressure) - float(self.prev_io_pressure)) / tdiff > self.rq.max_io_pressure
++                    exceeds_memory_pressure = self.rq.max_memory_pressure and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) / tdiff > self.rq.max_memory_pressure
+                     self.prev_cpu_pressure = curr_cpu_pressure
+                     self.prev_io_pressure = curr_io_pressure
+                     self.prev_memory_pressure = curr_memory_pressure
+                     self.prev_pressure_time = now
++                else:
++                    exceeds_cpu_pressure =  self.rq.max_cpu_pressure and (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) > self.rq.max_cpu_pressure
++                    exceeds_io_pressure =  self.rq.max_io_pressure and (float(curr_io_pressure) - float(self.prev_io_pressure)) > self.rq.max_io_pressure
++                    exceeds_memory_pressure = self.rq.max_memory_pressure and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) > self.rq.max_memory_pressure
+             return (exceeds_cpu_pressure or exceeds_io_pressure or exceeds_memory_pressure)
+         return False
+ 
+-- 
+2.42.1
 
-On 09/11/2023 23:15:15+0100, Alassane Yattara wrote:
-> Test create new project using:
-> - Project Name: Any string
-> - Release: Master/Kirkstone/Dunfell/Local
-> - Merge Toaster settings: False/True
->=20
-> Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-> ---
-
-Please include a changelog here. At least, explain why you are sending
-multiple versions of the series on the same day, this would make the
-maintainers job easier.
-
-Thanks!
-
->  .../functional/test_create_new_project.py     | 134 ++++++++++++++++++
->  1 file changed, 134 insertions(+)
->  create mode 100644 lib/toaster/tests/functional/test_create_new_project.=
-py
->=20
-> diff --git a/lib/toaster/tests/functional/test_create_new_project.py b/li=
-b/toaster/tests/functional/test_create_new_project.py
-> new file mode 100644
-> index 00000000..81355eaf
-> --- /dev/null
-> +++ b/lib/toaster/tests/functional/test_create_new_project.py
-> @@ -0,0 +1,134 @@
-> +#! /usr/bin/env python3 #
-> +# BitBake Toaster UI tests implementation
-> +#
-> +# Copyright (C) 2023 Savoir-faire Linux
-> +#
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +
-> +import re
-> +import pytest
-> +from django.urls import reverse
-> +from selenium.webdriver.support.ui import Select
-> +from tests.functional.functional_helpers import SeleniumFunctionalTestCa=
-se
-> +from orm.models import Project
-> +from selenium.webdriver.common.by import By
-> +
-> +@pytest.mark.django_db
-> +class TestCreateNewProject(SeleniumFunctionalTestCase):
-> +
-> +    def _create_test_new_project(
-> +        self,
-> +        project_name,
-> +        release,
-> +        release_title,
-> +        merge_toaster_settings,
-> +    ):
-> +        """ Create/Test new project using:
-> +          - Project Name: Any string
-> +          - Release: Any string
-> +          - Merge Toaster settings: True or False
-> +        """
-> +        self.get(reverse('newproject'))
-> +        self.driver.find_element(By.ID,
-> +                                 "new-project-name").send_keys(project_n=
-ame)
-> +
-> +        select =3D Select(self.find('#projectversion'))
-> +        select.select_by_value(release)
-> +
-> +        # check merge toaster settings
-> +        checkbox =3D self.find('.checkbox-mergeattr')
-> +        if merge_toaster_settings:
-> +            if not checkbox.is_selected():
-> +                checkbox.click()
-> +        else:
-> +            if checkbox.is_selected():
-> +                checkbox.click()
-> +
-> +        self.driver.find_element(By.ID, "create-project-button").click()
-> +
-> +        element =3D self.wait_until_visible('#project-created-notificati=
-on')
-> +        self.assertTrue(
-> +            self.element_exists('#project-created-notification'),=20
-> +            f"Project:{project_name} creation notification not shown"
-> +        )
-> +        self.assertTrue(
-> +            project_name in element.text,
-> +            f"New project name:{project_name} not in new project notific=
-ation"
-> +        )
-> +        self.assertTrue(
-> +            Project.objects.filter(name=3Dproject_name).count(),=20
-> +            f"New project:{project_name} not found in database"
-> +        )
-> +
-> +        # check release
-> +        self.assertTrue(re.search(
-> +            release_title,
-> +            self.driver.find_element(By.XPATH,
-> +                                     "//span[@id=3D'project-release-titl=
-e']"
-> +                                     ).text),
-> +                        'The project release is not defined')
-> +
-> +    def test_create_new_project_master(self):
-> +        """ Test create new project using:
-> +          - Project Name: Any string
-> +          - Release: Yocto Project master (option value: 3)
-> +          - Merge Toaster settings: False
-> +        """
-> +        release =3D '3'
-> +        release_title =3D 'Yocto Project master'
-> +        project_name =3D 'projectmaster'
-> +        self._create_test_new_project(
-> +            project_name,
-> +            release,
-> +            release_title,
-> +            False,
-> +        )
-> +
-> +    def test_create_new_project_kirkstone(self):
-> +        """ Test create new project using:
-> +          - Project Name: Any string
-> +          - Release: Yocto Project 4.0 "Kirkstone" (option value: 1)
-> +          - Merge Toaster settings: True
-> +        """
-> +        release =3D '1'
-> +        release_title =3D 'Yocto Project 4.0 "Kirkstone"'
-> +        project_name =3D 'projectkirkstone'
-> +        self._create_test_new_project(
-> +            project_name,
-> +            release,
-> +            release_title,
-> +            True,
-> +        )
-> +
-> +    def test_create_new_project_dunfull(self):
-> +        """ Test create new project using:
-> +          - Project Name: Any string
-> +          - Release: Yocto Project 3.1 "Dunfell" (option value: 5)
-> +          - Merge Toaster settings: False
-> +        """
-> +        release =3D '5'
-> +        release_title =3D 'Yocto Project 3.1 "Dunfell"'
-> +        project_name =3D 'projectdunfull'
-> +        self._create_test_new_project(
-> +            project_name,
-> +            release,
-> +            release_title,
-> +            False,
-> +        )
-> +   =20
-> +    def test_create_new_project_local(self):
-> +        """ Test create new project using:
-> +          - Project Name: Any string
-> +          - Release: Local Yocto Project (option value: 2)
-> +          - Merge Toaster settings: True
-> +        """
-> +        release =3D '2'
-> +        release_title =3D 'Local Yocto Project'
-> +        project_name =3D 'projectlocal'
-> +        self._create_test_new_project(
-> +            project_name,
-> +            release,
-> +            release_title,
-> +            True,
-> +        )
-> --=20
-> 2.34.1
->=20
-
->=20
->=20
->=20
-
-
---=20
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
-
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-Links: You receive all messages sent to this group.
-View/Reply Online (#15490): https://lists.openembedded.org/g/bitbake-devel/=
-message/15490
-Mute This Topic: https://lists.openembedded.org/mt/102496102/7896845
-Group Owner: bitbake-devel+owner@lists.openembedded.org
-Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alassane=
-.yattara@savoirfairelinux.com]
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 
