@@ -2,58 +2,58 @@ Return-Path: <ticotimo@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C52C4332F
-	for <webhook@archiver.kernel.org>; Sat, 11 Nov 2023 19:19:06 +0000 (UTC)
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
- by mx.groups.io with SMTP id smtpd.web11.2194.1699730336757688997
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EF4C4332F
+	for <webhook@archiver.kernel.org>; Sat, 11 Nov 2023 19:19:16 +0000 (UTC)
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+ by mx.groups.io with SMTP id smtpd.web11.2198.1699730352854982817
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 11 Nov 2023 11:18:56 -0800
+ Sat, 11 Nov 2023 11:19:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=IN7JUUbd;
- spf=pass (domain: gmail.com, ip: 209.85.215.178, mailfrom: ticotimo@gmail.com)
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso2364487a12.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 11 Nov 2023 11:18:56 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=TH40lwau;
+ spf=pass (domain: gmail.com, ip: 209.85.216.45, mailfrom: ticotimo@gmail.com)
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-280cc5f3fdcso2696359a91.1
+        for <bitbake-devel@lists.openembedded.org>; Sat, 11 Nov 2023 11:19:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699730336; x=1700335136; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1699730352; x=1700335152; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N21WFUXBp4Q4FzSLy/qHaZ4iRrgQn/UAglG1WKi2obw=;
-        b=IN7JUUbdSNp04g6zJHycnZfvrVhMXCmiPr/GMeLOYFFqqWI/FcroPa7uB78Elu1P2P
-         4UMkxsk2Q0+qX2ioW4wIW1eAuZe4yyPyG2KXPjnrUZBm2VhPqrlSESW159SZ5l8MKuix
-         YvTR5m5xbquPIi7FkLNWXCPWJ/GxkIGW0UGQiTArCQck8TnxGepOnuEmQ2455NqKmdv9
-         1EiYty2REF/XUtEix2s7iIUriHp60N81xC6Gw0tYb4iyY6uW55ZwdRi99S1TG4vce9ZO
-         Ym3tELFuzJBJQ728Iz8Exa4Mfd9eDbEehy3MO6km+Krjaq0w+G6124xNmPseLlWDLjt9
-         x0LA==
+        bh=6lcimKX0lS1WF0t4vmyNpoJBPBwPFbiVJoafNRCkItU=;
+        b=TH40lwauwiBF4dbknDSRm5jngbs8/6g0u8tLxUSRSB8Natfg27bv5Zv9uIDPa1NIks
+         cSYoQP19dNL0dX2cgQlocirY2MwA967oU1IZEs8A/aoa11C1S8h7RUpsGJyjqrqmUOT8
+         FLgWVqEAU1OZqqnbMLhMS8nIYvNz6mFUGH694KOhCwFeMm9nFTIusqQwW9k3uZSMlHIl
+         dsvkGRfI39tAHeHKfUBGBuQBcf/JDFeofi4/fCY1rHND8mANSfcU50pP+ECuqVoNNVHA
+         ESV+PEtXcefLui6i4kL3NaIn2mBxFryw7K2AbKeu1Y9Jjq66/3FJ9P1mHZI85oY/hwz5
+         7O8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699730336; x=1700335136;
+        d=1e100.net; s=20230601; t=1699730352; x=1700335152;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N21WFUXBp4Q4FzSLy/qHaZ4iRrgQn/UAglG1WKi2obw=;
-        b=wj09QMuq7l24S1GwYb92col7kXbtdlwmj5qw7rg3ScJlku5kqfbaAkUbUti0F/SODw
-         r9GCdInNfRwshYPFU3C04C0NpEBCGLownyiYNi6iV6dKFyjF9RibCZZWNd+YNaiI2iuo
-         bZk76Dq8p6oF97nDpHMaf0adbq1tKR3td8G1WZE2shz17A481YtAtgJEzNGytlTWHG9z
-         Ir6msMskcm0k/gcQAd9oLLn2hv+LprVqj83v14nO1dWAWLJzQHO5pWsVVUiOM7oS8Etu
-         v7uuK31S9zyt9+hatIZegBDrJL1hoH36065veg/K59vRq0sV07Sop9TIu/LtIBydslp0
-         SogA==
-X-Gm-Message-State: AOJu0YzHD/O4jtPMBbfdBN8K8Lu1sC4iIa3+fnHldXOYoR2Pq0XeY1oA
-	FXDCmd7YxFHKdwrAuw2PvASrORdWlUSEtw==
-X-Google-Smtp-Source: AGHT+IGeIZgCvrKQYgBb5sFiKNyr2XkAlgSWhdjIJ+Bg/866aPS6WgjZAsrGgdOAmoSRYhdu5ZRHpg==
-X-Received: by 2002:a17:90b:3e89:b0:280:74fc:6545 with SMTP id rj9-20020a17090b3e8900b0028074fc6545mr2669128pjb.24.1699730335707;
-        Sat, 11 Nov 2023 11:18:55 -0800 (PST)
+        bh=6lcimKX0lS1WF0t4vmyNpoJBPBwPFbiVJoafNRCkItU=;
+        b=G6oXa1Bx1W/TFFbBNaz4ukuQemguYt461LcXu+G+ZgSVJFig1Wn2LevdgZZ9VIHJ6q
+         7H2rkDL6RXTDbPU+uIvPoOpLXCMXC3hM12KKoV35Cs9zkNlY4oP+Nl2tQskNZQIaQQnJ
+         LnH+0jgVXVSR0aoN+K/5dtdzuijDnL8HURtTP2exhhC0ftFlqsGMVrJAjorNZ4FDlsoC
+         0KKBq3fXOAO6ADo9j6Ukdox4OJmX5eo7oPB6smdapLUt7jMt3NVFSzgMFqbOMMrNmZKm
+         yNXjqmXyqMafd5qzjmfk+Aao37KSd9X6wKsAsgtSnWsDJA5nPWD7lD42uQyOKEe+uopQ
+         nZaQ==
+X-Gm-Message-State: AOJu0Yx+nSKG/sw7M6djaU4facDZF6fOHQDyor3XLSaSJzU4XhH8AWfX
+	YGKxHOVQ2PEJXqZvht9Eaj0HU/65BEZcDw==
+X-Google-Smtp-Source: AGHT+IE4wn0dduHk9jh0oi30DBv/UbfPAa5ULhifkpMjcEfjQ1Dq0xRK8fBiCJDaVvQS8TG5MxWvDw==
+X-Received: by 2002:a17:90b:350d:b0:280:f534:6b9c with SMTP id ls13-20020a17090b350d00b00280f5346b9cmr2069697pjb.21.1699730351904;
+        Sat, 11 Nov 2023 11:19:11 -0800 (PST)
 Received: from chiron.hsd1.or.comcast.net ([2601:1c0:ca00:cea0:3313:4488:79b1:32e])
-        by smtp.gmail.com with ESMTPSA id oo3-20020a17090b1c8300b0028328057c67sm1255997pjb.45.2023.11.11.11.18.55
+        by smtp.gmail.com with ESMTPSA id oo3-20020a17090b1c8300b0028328057c67sm1255997pjb.45.2023.11.11.11.19.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Nov 2023 11:18:55 -0800 (PST)
+        Sat, 11 Nov 2023 11:19:11 -0800 (PST)
 From: Tim Orling <ticotimo@gmail.com>
 X-Google-Original-From: Tim Orling <tim.orling@konsulko.com>
 To: bitbake-devel@lists.openembedded.org,
 	toaster@lists.yoctoproject.org
 Cc: Tim Orling <tim.orling@konsulko.com>
-Subject: [PATCH 2/3] toaster: fix obsolete use of find_element_by_link_text
-Date: Sat, 11 Nov 2023 11:17:55 -0800
-Message-Id: <20231111191754.2322314-2-tim.orling@konsulko.com>
+Subject: [PATCH 3/3] toaster: test_create_new_project typos, whitespace
+Date: Sat, 11 Nov 2023 11:17:57 -0800
+Message-Id: <20231111191754.2322314-3-tim.orling@konsulko.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231111191754.2322314-1-tim.orling@konsulko.com>
 References: <20231111191754.2322314-1-tim.orling@konsulko.com>
@@ -62,114 +62,64 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 11 Nov 2023 19:19:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15517
+ <bitbake-devel@lists.openembedded.org>; Sat, 11 Nov 2023 19:19:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15518
 
-The find_element_by_* commands were deprecated in 4.1.4 and have been
-removed in 4.3.0:
-https://github.com/SeleniumHQ/selenium/blob/selenium-4.3.0/py/CHANGES#L2
-as they relied on the use of APIs only intended for internal use.
-
-The recommended method is to use find_elements(By.*) instead.
-
-https://www.selenium.dev/documentation/webdriver/elements/finders/#find-elements-from-element
-
-Also fix some trailing whitespace errors.
+* Cleanup an extraneous # at the end of the hash bang line.
+* Cleanup some trailing whitespace errors.
+* Fix typo inf dunfull -> dunfell.
 
 Signed-off-by: Tim Orling <tim.orling@konsulko.com>
 ---
- .../tests/browser/test_landing_page.py        | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ .../tests/functional/test_create_new_project.py        | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/lib/toaster/tests/browser/test_landing_page.py b/lib/toaster/tests/browser/test_landing_page.py
-index e010c59c..7ec52a4b 100644
---- a/lib/toaster/tests/browser/test_landing_page.py
-+++ b/lib/toaster/tests/browser/test_landing_page.py
-@@ -10,6 +10,7 @@
- from django.urls import reverse
- from django.utils import timezone
- from tests.browser.selenium_helpers import SeleniumTestCase
-+from selenium.webdriver.common.by import By
+diff --git a/lib/toaster/tests/functional/test_create_new_project.py b/lib/toaster/tests/functional/test_create_new_project.py
+index a211d8b7..051709b4 100644
+--- a/lib/toaster/tests/functional/test_create_new_project.py
++++ b/lib/toaster/tests/functional/test_create_new_project.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python3 #
++#! /usr/bin/env python3
+ # BitBake Toaster UI tests implementation
+ #
+ # Copyright (C) 2023 Savoir-faire Linux
+@@ -49,7 +49,7 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
  
- from orm.models import Layer, Layer_Version, Project, Build
+         element = self.wait_until_visible('#project-created-notification')
+         self.assertTrue(
+-            self.element_exists('#project-created-notification'), 
++            self.element_exists('#project-created-notification'),
+             f"Project:{project_name} creation notification not shown"
+         )
+         self.assertTrue(
+@@ -57,7 +57,7 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
+             f"New project name:{project_name} not in new project notification"
+         )
+         self.assertTrue(
+-            Project.objects.filter(name=project_name).count(), 
++            Project.objects.filter(name=project_name).count(),
+             f"New project:{project_name} not found in database"
+         )
  
-@@ -52,11 +53,11 @@ class TestLandingPage(SeleniumTestCase):
+@@ -101,7 +101,7 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
+             True,
+         )
  
-         # check that the documentation link is visible
-         self.assertTrue(documentation_link.is_displayed())
--        
+-    def test_create_new_project_dunfull(self):
++    def test_create_new_project_dunfell(self):
+         """ Test create new project using:
+           - Project Name: Any string
+           - Release: Yocto Project 3.1 "Dunfell" (option value: 5)
+@@ -116,7 +116,7 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
+             release_title,
+             False,
+         )
+-    
 +
-         # check browser open new tab toaster manual when clicking on the documentation link
-         self.assertEqual(documentation_link.get_attribute('target') , '_blank')
-         self.assertEqual(
--            documentation_link.get_attribute('href'), 
-+            documentation_link.get_attribute('href'),
-             'http://docs.yoctoproject.org/toaster-manual/index.html#toaster-user-manual')
-         self.assertTrue("Documentation" in documentation_link.text)
- 
-@@ -66,7 +67,7 @@ class TestLandingPage(SeleniumTestCase):
-         jumbotron = self.find('.jumbotron')
- 
-         # check OpenEmbedded
--        openembedded = jumbotron.find_element_by_link_text('OpenEmbedded')
-+        openembedded = jumbotron.find_element(By.LINK_TEXT, 'OpenEmbedded')
-         self.assertTrue(openembedded.is_displayed())
-         openembedded.click()
-         self.assertTrue("openembedded.org" in self.driver.current_url)
-@@ -77,7 +78,7 @@ class TestLandingPage(SeleniumTestCase):
-         jumbotron = self.find('.jumbotron')
- 
-         # check BitBake
--        bitbake = jumbotron.find_element_by_link_text('BitBake')
-+        bitbake = jumbotron.find_element(By.LINK_TEXT, 'BitBake')
-         self.assertTrue(bitbake.is_displayed())
-         bitbake.click()
-         self.assertTrue("docs.yoctoproject.org/bitbake.html" in self.driver.current_url)
-@@ -88,7 +89,7 @@ class TestLandingPage(SeleniumTestCase):
-         jumbotron = self.find('.jumbotron')
- 
-         # check Yocto Project
--        yoctoproject = jumbotron.find_element_by_link_text('Yocto Project')
-+        yoctoproject = jumbotron.find_element(By.LINK_TEXT, 'Yocto Project')
-         self.assertTrue(yoctoproject.is_displayed())
-         yoctoproject.click()
-         self.assertTrue("yoctoproject.org" in self.driver.current_url)
-@@ -101,7 +102,7 @@ class TestLandingPage(SeleniumTestCase):
-         jumbotron = self.find('.jumbotron')
- 
-         # check Big magenta button
--        big_magenta_button = jumbotron.find_element_by_link_text(
-+        big_magenta_button = jumbotron.find_element(By.LINK_TEXT,
-             'Toaster is ready to capture your command line builds'
-         )
-         self.assertTrue(big_magenta_button.is_displayed())
-@@ -118,7 +119,7 @@ class TestLandingPage(SeleniumTestCase):
-         jumbotron = self.find('.jumbotron')
- 
-         # check Big Blue button
--        big_blue_button = jumbotron.find_element_by_link_text(
-+        big_blue_button = jumbotron.find_element(By.LINK_TEXT,
-             'Create your first Toaster project to run manage builds'
-         )
-         self.assertTrue(big_blue_button.is_displayed())
-@@ -131,7 +132,7 @@ class TestLandingPage(SeleniumTestCase):
-         jumbotron = self.find('.jumbotron')
- 
-         # check Read the Toaster manual
--        toaster_manual = jumbotron.find_element_by_link_text('Read the Toaster manual')
-+        toaster_manual = jumbotron.find_element(By.LINK_TEXT, 'Read the Toaster manual')
-         self.assertTrue(toaster_manual.is_displayed())
-         toaster_manual.click()
-         self.assertTrue("https://docs.yoctoproject.org/toaster-manual/index.html#toaster-user-manual" in self.driver.current_url)
-@@ -142,7 +143,7 @@ class TestLandingPage(SeleniumTestCase):
-         jumbotron = self.find('.jumbotron')
- 
-         # check Contribute to Toaster
--        contribute_to_toaster = jumbotron.find_element_by_link_text('Contribute to Toaster')
-+        contribute_to_toaster = jumbotron.find_element(By.LINK_TEXT, 'Contribute to Toaster')
-         self.assertTrue(contribute_to_toaster.is_displayed())
-         contribute_to_toaster.click()
-         self.assertTrue("wiki.yoctoproject.org/wiki/contribute_to_toaster" in str(self.driver.current_url).lower())
+     def test_create_new_project_local(self):
+         """ Test create new project using:
+           - Project Name: Any string
 -- 
 2.34.1
 
