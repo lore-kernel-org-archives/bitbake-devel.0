@@ -1,276 +1,121 @@
-Return-Path: <martin.jansa@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7F4C07548
-	for <webhook@archiver.kernel.org>; Wed, 15 Nov 2023 08:27:48 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web10.8767.1700036859375674948
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752DCC197A0
+	for <webhook@archiver.kernel.org>; Thu, 16 Nov 2023 16:52:39 +0000 (UTC)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web11.11776.1700153556954875931
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 15 Nov 2023 00:27:39 -0800
+ Thu, 16 Nov 2023 08:52:37 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=OfMMlJpy;
- spf=pass (domain: gmail.com, ip: 209.85.221.44, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-32fbf271346so3994753f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 15 Nov 2023 00:27:39 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=W/q0zfWH;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-32dcd3e5f3fso737713f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 16 Nov 2023 08:52:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700036858; x=1700641658; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EdP2aWp1iwRDQotkQvHoQt4EXPR2D+l7OyorpdBH5oo=;
-        b=OfMMlJpy+tXxyMMpnrTu+S1GmmdlumvlM1hHdQL65iAv/njCB7qT/HnE20eb/6BS4Z
-         SBmEZBrzqpCWo1poXM/L23i7pPjdE9agVovQFXfd2ihrSKt371c+4PzV9Xh4a792nUK4
-         Id+DxguQ9FgHNZ8SoUSwinlyCVbm4/ZoXUJ02Owisu78UtgsbPA5ch57wK5kprIpIIRg
-         Tdrclt9/RY8GBl2f0Uye1g9aazYNGV6kJk42WiZyWvnflYebBaDBbqUCHQQq2TytXTG6
-         VP7U+dYYbY4D9oxPQDfAX5YqjAkP+eNyJKkEITQbHUF/dShhPmYk645nm62qLZ/56ZtE
-         rwBw==
+        d=linuxfoundation.org; s=google; t=1700153555; x=1700758355; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/9rFzahN87ekWlMG/8Z2Tw88zsDy4cxP6900Fxjxplg=;
+        b=W/q0zfWHYQ3GnUx9GtOdLmHls7HH5fY3xqeLvf23AQTZ6i2AI60RbEzFArYftPF+N+
+         wNjyi06/PnVoB0l1QnZ/lj0Wum4wza0N65XCkdf/ueLRHEuEWiUgYZnqAYUE3U+T+4En
+         9jx0PrXoYuYaMfsNQf3VmeeAq/CwVTJlNhBYo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700036858; x=1700641658;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EdP2aWp1iwRDQotkQvHoQt4EXPR2D+l7OyorpdBH5oo=;
-        b=nSUkk1iZjozEbg4BvfyqNEyYdsVvLuSxXvI1Is8FsgjJb5z8a1r0lWQ0kj36cVcR+q
-         Qa6vfMlaizo/VyTZI8JZHAYcr+ZKZe8HalvMS4WYEAdeip083IXC5wpycu436ufcZme0
-         xyghaDEDMAyqQCPwNXR3Cx83F8FAmwHu3fLkej3cMa24wCNhrqMbfUFrbgCc6/pj/Agr
-         MIIthgTO1sGJUMd5DIzDnL7tYj45ATAjcEsWruAx2ddA6k76P/YgZGQ7hZGWQJN6bVQZ
-         Gk4WYqEg5nt7fVfkyf9DIsj71r/F+prvNgp2ZQm7G9g6FdeeivPPYt1qyMYQFlKiOIV7
-         yY5Q==
-X-Gm-Message-State: AOJu0YwEtWYgp1k/tjQN2Z5k8GctSVHE3LZJwWq4V3RQXnSRXwo4IjQT
-	FLAI1x49Whr6Nq/qovcmeQQLN9v3Khmg4qcq62g=
-X-Google-Smtp-Source: AGHT+IFGCqhYr9bq2/mf2O2el3eTM5SFigBqAUluOl8VPzQ5Fxi8VoGiOHMnt5hTc2oh5XMLBLtr8gzeHBwo5s76wy0=
-X-Received: by 2002:a5d:6d89:0:b0:32d:92fd:9f73 with SMTP id
- l9-20020a5d6d89000000b0032d92fd9f73mr9166860wrs.10.1700036857550; Wed, 15 Nov
- 2023 00:27:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700153555; x=1700758355;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/9rFzahN87ekWlMG/8Z2Tw88zsDy4cxP6900Fxjxplg=;
+        b=LfWHBGryZnnXakUq85OKIy4zY6RIXKAz3cSZRDLnw1m2RgpgSm/vcKCNnECRMnlXb8
+         IsfY6t8RzRyZtbbX6aHIZgckuSxWIMEq+0V55bZ0/40xSnIUktiF/FzT+y6WukonNHwy
+         n/yyhL7Jkvf2rIIKirAqYaRQBNgkYzwdfrp3tqGxQwYMmoemApqLihSdqrsgwaSv3q/4
+         yY8551C930y4kkYGUIV5czlZbG102cV8BP+2t1T0AeckNQr8D/JkWtJDR+zLlW5tKUd0
+         eax1qWvGgPWmJgE4gImkGCB/iOoyQS/nsEv+dxzBsMCDfObQsXKLnReLfoZ20mCxMlp+
+         ibug==
+X-Gm-Message-State: AOJu0YxevUTAaVda1Nan0uhX+8y+SQfk9yn1GszO2pGA1NNEOMpvFgDS
+	3+fP4+jTmge5RiYDz5c2Bcjop8l+f280DSflHJg=
+X-Google-Smtp-Source: AGHT+IF9A2nI0uhjEiWGO1KqH9Wn7tAWzDQGCPB6tSQmXq3ZcsYNwPtmVYXo6k2mBanUDsvJff0TUg==
+X-Received: by 2002:a5d:54c1:0:b0:32d:90f7:ce50 with SMTP id x1-20020a5d54c1000000b0032d90f7ce50mr11706675wrv.17.1700153554595;
+        Thu, 16 Nov 2023 08:52:34 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:f8ae:b070:36e4:3937])
+        by smtp.gmail.com with ESMTPSA id w3-20020a5d4b43000000b0032cc35c2ef7sm14108092wrs.29.2023.11.16.08.52.34
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Nov 2023 08:52:34 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] cooker: Add support for BB_DEFAULT_EVENTLOG
+Date: Thu, 16 Nov 2023 16:52:33 +0000
+Message-Id: <20231116165233.2862786-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20231110155009.941766-1-JPEWhacker@gmail.com>
-In-Reply-To: <20231110155009.941766-1-JPEWhacker@gmail.com>
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Wed, 15 Nov 2023 09:27:25 +0100
-Message-ID: <CA+chaQfJOuinDq4mb27KWOk7wtdToaLSSoqwSO4KEm5tQ0xVQA@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH] asyncrpc: Add option to set log level when
- running as a process
-To: Joshua Watt <JPEWhacker@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000ffddcc060a2cace4"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 15 Nov 2023 08:27:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15530
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 Nov 2023 16:52:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15531
 
---000000000000ffddcc060a2cace4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Currently it is only possible to specify an eventlog on the bitbake
+commandline. Add a variable that can be used in bitbake.conf so that
+we can log data by default more easily.
 
-Thanks!
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-Tested-by: Martin Jansa <Martin.Jansa@gmail.com>
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 4bf1809bc0..9f84030962 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -303,6 +303,10 @@ class BBCooker:
+         self.data_hash = self.databuilder.data_hash
+         self.extraconfigdata = {}
+ 
++        eventlog = self.data.getVar("BB_DEFAULT_EVENTLOG")
++        if not self.configuration.writeeventlog and eventlog:
++            self.setupEventLog(eventlog)
++
+         if consolelog:
+             self.data.setVar("BB_CONSOLELOG", consolelog)
+ 
+@@ -409,6 +413,18 @@ class BBCooker:
+ 
+         self._parsecache_set(False)
+ 
++    def setupEventLog(self, eventlog):
++        if self.eventlog and self.eventlog[0] != eventlog:
++            bb.event.unregister_UIHhandler(self.eventlog[1])
++        if not self.eventlog or self.eventlog[0] != eventlog:
++            # we log all events to a file if so directed
++            # register the log file writer as UI Handler
++            if not os.path.exists(os.path.dirname(eventlog)):
++                bb.utils.mkdirhier(os.path.dirname(eventlog))
++            writer = EventWriter(self, eventlog)
++            EventLogWriteHandler = namedtuple('EventLogWriteHandler', ['event'])
++            self.eventlog = (eventlog, bb.event.register_UIHhandler(EventLogWriteHandler(writer)))
++
+     def updateConfigOpts(self, options, environment, cmdline):
+         self.ui_cmdline = cmdline
+         clean = True
+@@ -428,14 +444,7 @@ class BBCooker:
+                 setattr(self.configuration, o, options[o])
+ 
+         if self.configuration.writeeventlog:
+-            if self.eventlog and self.eventlog[0] != self.configuration.writeeventlog:
+-                bb.event.unregister_UIHhandler(self.eventlog[1])
+-            if not self.eventlog or self.eventlog[0] != self.configuration.writeeventlog:
+-                # we log all events to a file if so directed
+-                # register the log file writer as UI Handler
+-                writer = EventWriter(self, self.configuration.writeeventlog)
+-                EventLogWriteHandler = namedtuple('EventLogWriteHandler', ['event'])
+-                self.eventlog = (self.configuration.writeeventlog, bb.event.register_UIHhandler(EventLogWriteHandler(writer)))
++            self.setupEventLog(self.configuration.writeeventlog)
+ 
+         bb.msg.loggerDefaultLogLevel = self.configuration.default_loglevel
+         bb.msg.loggerDefaultDomains = self.configuration.debug_domains
+-- 
+2.39.2
 
-On Fri, Nov 10, 2023 at 4:50=E2=80=AFPM Joshua Watt <JPEWhacker@gmail.com> =
-wrote:
-
-> When running an asyncrpc server as a subprocess, it is often desired to
-> run it with a lower logging level since the normal logging of clients
-> connecting and disconnecting is not desired.
->
-> As such, add an option to set the logging level of the server when
-> running as a subprocess and set the level to WARNING when starting a
-> local hashserver or PRserver
->
-> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> ---
->  lib/bb/asyncrpc/serv.py | 5 ++++-
->  lib/bb/cooker.py        | 2 +-
->  lib/prserv/serv.py      | 2 +-
->  3 files changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
-> index 5fed1730..f0be9a6c 100644
-> --- a/lib/bb/asyncrpc/serv.py
-> +++ b/lib/bb/asyncrpc/serv.py
-> @@ -322,7 +322,7 @@ class AsyncServer(object):
->          self.loop =3D asyncio.new_event_loop()
->          asyncio.set_event_loop(self.loop)
->
-> -    def serve_as_process(self, *, prefunc=3DNone, args=3D()):
-> +    def serve_as_process(self, *, prefunc=3DNone, args=3D(), log_level=
-=3DNone):
->          """
->          Serve requests in a child process
->          """
-> @@ -351,6 +351,9 @@ class AsyncServer(object):
->              if prefunc is not None:
->                  prefunc(self, *args)
->
-> +            if log_level is not None:
-> +                self.logger.setLevel(log_level)
-> +
->              self._serve_forever(tasks)
->
->              if sys.version_info >=3D (3, 6):
-> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-> index 9a3e32ac..4bf1809b 100644
-> --- a/lib/bb/cooker.py
-> +++ b/lib/bb/cooker.py
-> @@ -345,7 +345,7 @@ class BBCooker:
->                      sync=3DFalse,
->                      upstream=3Dupstream,
->                  )
-> -                self.hashserv.serve_as_process()
-> +                self.hashserv.serve_as_process(log_level=3Dlogging.WARNI=
-NG)
->              for mc in self.databuilder.mcdata:
->                  self.databuilder.mcorigdata[mc].setVar("BB_HASHSERVE",
-> self.hashservaddr)
->                  self.databuilder.mcdata[mc].setVar("BB_HASHSERVE",
-> self.hashservaddr)
-> diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-> index 6168eb18..62d3b5a0 100644
-> --- a/lib/prserv/serv.py
-> +++ b/lib/prserv/serv.py
-> @@ -130,7 +130,7 @@ class PRServSingleton(object):
->      def start(self):
->          self.prserv =3D PRServer(self.dbfile)
->          self.prserv.start_tcp_server(socket.gethostbyname(self.host),
-> self.port)
-> -        self.process =3D self.prserv.serve_as_process()
-> +        self.process =3D
-> self.prserv.serve_as_process(log_level=3Dlogging.WARNING)
->
->          if not self.prserv.address:
->              raise PRServiceConfigError
-> --
-> 2.34.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15505):
-> https://lists.openembedded.org/g/bitbake-devel/message/15505
-> Mute This Topic: https://lists.openembedded.org/mt/102509062/3617156
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> martin.jansa@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
-
---000000000000ffddcc060a2cace4
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Thanks!<div><br></div><div>Tested-by:=C2=A0Martin Jansa &l=
-t;<a href=3D"mailto:Martin.Jansa@gmail.com">Martin.Jansa@gmail.com</a>&gt;<=
-br></div></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gma=
-il_attr">On Fri, Nov 10, 2023 at 4:50=E2=80=AFPM Joshua Watt &lt;<a href=3D=
-"mailto:JPEWhacker@gmail.com">JPEWhacker@gmail.com</a>&gt; wrote:<br></div>=
-<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
-left:1px solid rgb(204,204,204);padding-left:1ex">When running an asyncrpc =
-server as a subprocess, it is often desired to<br>
-run it with a lower logging level since the normal logging of clients<br>
-connecting and disconnecting is not desired.<br>
-<br>
-As such, add an option to set the logging level of the server when<br>
-running as a subprocess and set the level to WARNING when starting a<br>
-local hashserver or PRserver<br>
-<br>
-Signed-off-by: Joshua Watt &lt;<a href=3D"mailto:JPEWhacker@gmail.com" targ=
-et=3D"_blank">JPEWhacker@gmail.com</a>&gt;<br>
----<br>
-=C2=A0lib/bb/asyncrpc/serv.py | 5 ++++-<br>
-=C2=A0lib/bb/cooker.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 | 2 +-<br>
-=C2=A0lib/prserv/serv.py=C2=A0 =C2=A0 =C2=A0 | 2 +-<br>
-=C2=A03 files changed, 6 insertions(+), 3 deletions(-)<br>
-<br>
-diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py<br>
-index 5fed1730..f0be9a6c 100644<br>
---- a/lib/bb/asyncrpc/serv.py<br>
-+++ b/lib/bb/asyncrpc/serv.py<br>
-@@ -322,7 +322,7 @@ class AsyncServer(object):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.loop =3D asyncio.new_event_loop()<br=
->
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0asyncio.set_event_loop(self.loop)<br>
-<br>
--=C2=A0 =C2=A0 def serve_as_process(self, *, prefunc=3DNone, args=3D()):<br=
->
-+=C2=A0 =C2=A0 def serve_as_process(self, *, prefunc=3DNone, args=3D(), log=
-_level=3DNone):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Serve requests in a child process<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;<br>
-@@ -351,6 +351,9 @@ class AsyncServer(object):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if prefunc is not None:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0prefunc(self,=
- *args)<br>
-<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if log_level is not None:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.logger.setLev=
-el(log_level)<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self._serve_forever(tasks)<=
-br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if sys.version_info &gt;=3D=
- (3, 6):<br>
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py<br>
-index 9a3e32ac..4bf1809b 100644<br>
---- a/lib/bb/cooker.py<br>
-+++ b/lib/bb/cooker.py<br>
-@@ -345,7 +345,7 @@ class BBCooker:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0sync=3DFalse,<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0upstream=3Dupstream,<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0)<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.hashserv.serv=
-e_as_process()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.hashserv.serv=
-e_as_process(log_level=3Dlogging.WARNING)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for mc in self.databuilder.=
-mcdata:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.databuil=
-der.mcorigdata[mc].setVar(&quot;BB_HASHSERVE&quot;, self.hashservaddr)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.databuil=
-der.mcdata[mc].setVar(&quot;BB_HASHSERVE&quot;, self.hashservaddr)<br>
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py<br>
-index 6168eb18..62d3b5a0 100644<br>
---- a/lib/prserv/serv.py<br>
-+++ b/lib/prserv/serv.py<br>
-@@ -130,7 +130,7 @@ class PRServSingleton(object):<br>
-=C2=A0 =C2=A0 =C2=A0def start(self):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.prserv =3D PRServer(self.dbfile)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.prserv.start_tcp_server(socket.getho=
-stbyname(self.host), self.port)<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.process =3D self.prserv.serve_as_process(=
-)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.process =3D self.prserv.serve_as_process(=
-log_level=3Dlogging.WARNING)<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if not self.prserv.address:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0raise PRServiceConfigError<=
-br>
--- <br>
-2.34.1<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#15505): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/15505" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/15505</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/102509062/361=
-7156" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
-t/102509062/3617156</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:martin.jansa@gmail.com" target=3D"=
-_blank">martin.jansa@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div>
-
---000000000000ffddcc060a2cace4--
 
