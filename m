@@ -2,80 +2,85 @@ Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A3BC61D92
-	for <webhook@archiver.kernel.org>; Tue, 21 Nov 2023 13:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477FCC61D96
+	for <webhook@archiver.kernel.org>; Tue, 21 Nov 2023 13:51:40 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.40820.1700574570828803925
+ by mx.groups.io with SMTP id smtpd.web10.40843.1700574697823412119
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 21 Nov 2023 05:49:30 -0800
+ Tue, 21 Nov 2023 05:51:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=pGXYpRbH;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=WpgzwcuQ;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 289619C36C5
-	for <bitbake-devel@lists.openembedded.org>; Tue, 21 Nov 2023 08:49:30 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2D80D9C3496
+	for <bitbake-devel@lists.openembedded.org>; Tue, 21 Nov 2023 08:51:37 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id do3BkO-UUsGo; Tue, 21 Nov 2023 08:49:29 -0500 (EST)
+ with ESMTP id q5YJ0FhZdkKT; Tue, 21 Nov 2023 08:51:36 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 57A269C36BF;
-	Tue, 21 Nov 2023 08:49:29 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 57A269C36BF
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 5AA0B9C3373;
+	Tue, 21 Nov 2023 08:51:36 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 5AA0B9C3373
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1700574569; bh=Wk62GNpVUpUQQt+o7mbmw2L5cAI/0JJJDkEv2MFP92Q=;
+	t=1700574696; bh=Y6q0/szke9Hv2egvcEYhi57k18HN1LYA/zjUDnTHL0U=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=pGXYpRbHL5Mwi12KepSL9rELbNm4O1jmSYlp7pKIBayGD8kpIbqlsxNM7S/KX4v1Y
-	 3WgKwIy/PZQ/PwGKkptkbUBayaRtIN2s/e+LPdaiSjmFKTn+hZGMHDoLZj3qFqQFu/
-	 KYwMAnTBewEi4jGsyyaOl9smcPfDYAk/erIvgrIbgrOc8UeoB7mVCsAkiL2OlJUbrC
-	 QkzvbmOS/F/KS+pVVZ3BeZQMOq0p4MxxqlmCtg1kQnpk0ZAJaajukcGGWyHL/PaJHv
-	 TMMS/EgsKurznX8lQQQPiD/GBMVL/V6AhBlQjEr9w/gXPV9pEmo5BPtaDXsesmddGQ
-	 89BV16rZhQc3A==
+	b=WpgzwcuQ6rCeh8KPENVy9fu73XT/5wcJ5qof/L90bCitux8cJnnCjtr6nmD66zXmf
+	 cM1e72qkyoks9xLih2TdEDoKE6hynRo7gc9CtGiQHW0ib7m1Q6drFui+LMDpan555X
+	 K6xMIs1hMCd15E02ARerf+V5/GCVn0pmOmpnoceR+6dCkvlDS0ufs5LGndqLR2j4mL
+	 5ZnDVGKgrfuZF11/JKrexQtkMYKiE+zrK6sqqawslEs9nyXtfJ9FyF+zazw3zZ1Y35
+	 Itc0Qi4jI5bvbZCCAZHX+GBYl2vB+oiUiMfdMxmUmSPUKKBWNCu/wh+btKi2Z7A9Nk
+	 BmbWla/yN73/Q==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id 5fecS5aAawBo; Tue, 21 Nov 2023 08:49:29 -0500 (EST)
+ with ESMTP id uQpBDCse_YXv; Tue, 21 Nov 2023 08:51:36 -0500 (EST)
 Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 5F20E9C3500;
-	Tue, 21 Nov 2023 08:49:28 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 5BC1B9C2B49;
+	Tue, 21 Nov 2023 08:51:35 -0500 (EST)
 From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH 2/4] Toaster: Write UI TestCase -> Check project header contains right items
-Date: Tue, 21 Nov 2023 14:49:16 +0100
-Message-Id: <20231121134918.101006-2-alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH 1/7] Toaster: Write UI TestCase -> Test project config tab navigation:
+Date: Tue, 21 Nov 2023 14:51:25 +0100
+Message-Id: <20231121135131.107330-1-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231121134918.101006-1-alassane.yattara@savoirfairelinux.com>
-References: <20231121134918.101006-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 21 Nov 2023 13:49:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15549
+ <bitbake-devel@lists.openembedded.org>; Tue, 21 Nov 2023 13:51:40 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15552
 
-Check page header in project page:
-  - AT LEFT -> Logo of Yocto project, displayed, clickable
-  - "Toaster"+" Information icon", displayed, clickable
-  - "Server Icon" + "All builds", displayed, clickable
-  - "Directory Icon" + "All projects", displayed, clickable
-  - "Book Icon" + "Documentation", displayed, clickable
-  - AT RIGHT -> button "New project", displayed, clickable
+- Check if the menu is displayed and contains the right elements:
+    - Configuration
+    - COMPATIBLE METADATA
+    - Custom images
+    - Image recipes
+    - Software recipes
+    - Machines
+    - Layers
+    - Distro
+    - EXTRA CONFIGURATION
+    - Bitbake variables
+    - Actions
+    - Delete project
 
 Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- .../tests/functional/test_project_page.py     | 142 ++++++++++++++++++
- 1 file changed, 142 insertions(+)
- create mode 100644 lib/toaster/tests/functional/test_project_page.py
+ .../test_project_page_tab_config.py           | 176 ++++++++++++++++++
+ 1 file changed, 176 insertions(+)
+ create mode 100644 lib/toaster/tests/functional/test_project_page_tab_co=
+nfig.py
 
-diff --git a/lib/toaster/tests/functional/test_project_page.py b/lib/toas=
-ter/tests/functional/test_project_page.py
+diff --git a/lib/toaster/tests/functional/test_project_page_tab_config.py=
+ b/lib/toaster/tests/functional/test_project_page_tab_config.py
 new file mode 100644
-index 00000000..f77437f0
+index 00000000..f0c6aacf
 --- /dev/null
-+++ b/lib/toaster/tests/functional/test_project_page.py
-@@ -0,0 +1,142 @@
++++ b/lib/toaster/tests/functional/test_project_page_tab_config.py
+@@ -0,0 +1,176 @@
 +#! /usr/bin/env python3 #
 +# BitBake Toaster UI tests implementation
 +#
@@ -84,18 +89,21 @@ index 00000000..f77437f0
 +# SPDX-License-Identifier: GPL-2.0-only
 +#
 +
++from time import sleep
 +import pytest
 +from django.urls import reverse
 +from selenium.webdriver.support.select import Select
++from selenium.common.exceptions import NoSuchElementException
 +from tests.functional.functional_helpers import SeleniumFunctionalTestCa=
 se
 +from selenium.webdriver.common.by import By
 +
 +
 +@pytest.mark.django_db
-+class TestProjectPage(SeleniumFunctionalTestCase):
++class TestProjectConfigTab(SeleniumFunctionalTestCase):
 +
 +    def setUp(self):
++        self.recipe =3D None
 +        super().setUp()
 +        release =3D '3'
 +        project_name =3D 'projectmaster'
@@ -135,100 +143,130 @@ ame)
 +
 +        self.driver.find_element(By.ID, "create-project-button").click()
 +
-+    def test_page_header_on_project_page(self):
-+        """ Check page header in project page:
-+          - AT LEFT -> Logo of Yocto project, displayed, clickable
-+          - "Toaster"+" Information icon", displayed, clickable
-+          - "Server Icon" + "All builds", displayed, clickable
-+          - "Directory Icon" + "All projects", displayed, clickable
-+          - "Book Icon" + "Documentation", displayed, clickable
-+          - AT RIGHT -> button "New project", displayed, clickable
++    @classmethod
++    def _wait_until_build(cls, state):
++        while True:
++            try:
++                last_build_state =3D cls.driver.find_element(
++                    By.XPATH,
++                    '//*[@id=3D"latest-builds"]/div[1]//div[@class=3D"bu=
+ild-state"]',
++                )
++                build_state =3D last_build_state.get_attribute(
++                    'data-build-state')
++                state_text =3D state.lower().split()
++                if any(x in str(build_state).lower() for x in state_text=
+):
++                    break
++            except NoSuchElementException:
++                continue
++            sleep(1)
++
++    def _create_builds(self):
++        # check search box can be use to build recipes
++        search_box =3D self.find('#build-input')
++        search_box.send_keys('core-image-minimal')
++        self.find('#build-button').click()
++        sleep(1)
++        self.wait_until_visible('#latest-builds')
++        # loop until reach the parsing state
++        self._wait_until_build('parsing starting cloning')
++        lastest_builds =3D self.driver.find_elements(
++            By.XPATH,
++            '//div[@id=3D"latest-builds"]/div',
++        )
++        last_build =3D lastest_builds[0]
++        self.assertTrue(
++            'core-image-minimal' in str(last_build.text)
++        )
++        cancel_button =3D last_build.find_element(
++            By.XPATH,
++            '//span[@class=3D"cancel-build-btn pull-right alert-link"]',
++        )
++        cancel_button.click()
++        sleep(1)
++        self._wait_until_build('cancelled')
++
++    def _get_tabs(self):
++        # tabs links list
++        return self.driver.find_elements(
++            By.XPATH,
++            '//div[@id=3D"project-topbar"]//li'
++        )
++
++    def _get_config_nav_item(self, index):
++        config_nav =3D self.find('#config-nav')
++        return config_nav.find_elements(By.TAG_NAME, 'li')[index]
++
++    def test_project_config_nav(self):
++        """ Test project config tab navigation:
++        - Check if the menu is displayed and contains the right elements=
+:
++            - Configuration
++            - COMPATIBLE METADATA
++            - Custom images
++            - Image recipes
++            - Software recipes
++            - Machines
++            - Layers
++            - Distro
++            - EXTRA CONFIGURATION
++            - Bitbake variables
++            - Actions
++            - Delete project
 +        """
 +        # navigate to the project page
 +        url =3D reverse("project", args=3D(1,))
 +        self.get(url)
 +
-+        # check page header
-+        # AT LEFT -> Logo of Yocto project
-+        logo =3D self.driver.find_element(
-+            By.XPATH,
-+            "//div[@class=3D'toaster-navbar-brand']",
-+        )
-+        logo_img =3D logo.find_element(By.TAG_NAME, 'img')
-+        self.assertTrue(logo_img.is_displayed(),
-+                        'Logo of Yocto project not found')
-+        self.assertTrue(
-+            '/static/img/logo.png' in str(logo_img.get_attribute('src'))=
-,
-+            'Logo of Yocto project not found'
-+        )
-+        # "Toaster"+" Information icon", clickable
-+        toaster =3D self.driver.find_element(
-+            By.XPATH,
-+            "//div[@class=3D'toaster-navbar-brand']//a[@class=3D'brand']=
-",
-+        )
-+        self.assertTrue(toaster.is_displayed(), 'Toaster not found')
-+        self.assertTrue(toaster.text =3D=3D 'Toaster')
-+        info_sign =3D self.find('.glyphicon-info-sign')
-+        self.assertTrue(info_sign.is_displayed())
++        # check if the menu is displayed
++        self.wait_until_visible('#config-nav')
 +
-+        # "Server Icon" + "All builds"
-+        all_builds =3D self.find('#navbar-all-builds')
-+        all_builds_link =3D all_builds.find_element(By.TAG_NAME, 'a')
-+        self.assertTrue("All builds" in all_builds_link.text)
-+        self.assertTrue(
-+            '/toastergui/builds/' in str(all_builds_link.get_attribute('=
-href'))
-+        )
-+        server_icon =3D all_builds.find_element(By.TAG_NAME, 'i')
-+        self.assertTrue(
-+            server_icon.get_attribute('class') =3D=3D 'glyphicon glyphic=
-on-tasks'
-+        )
-+        self.assertTrue(server_icon.is_displayed())
++        def _get_config_nav_item(index):
++            config_nav =3D self.find('#config-nav')
++            return config_nav.find_elements(By.TAG_NAME, 'li')[index]
 +
-+        # "Directory Icon" + "All projects"
-+        all_projects =3D self.find('#navbar-all-projects')
-+        all_projects_link =3D all_projects.find_element(By.TAG_NAME, 'a'=
-)
-+        self.assertTrue("All projects" in all_projects_link.text)
-+        self.assertTrue(
-+            '/toastergui/projects/' in str(all_projects_link.get_attribu=
-te(
-+                'href'))
-+        )
-+        dir_icon =3D all_projects.find_element(By.TAG_NAME, 'i')
-+        self.assertTrue(
-+            dir_icon.get_attribute('class') =3D=3D 'icon-folder-open'
-+        )
-+        self.assertTrue(dir_icon.is_displayed())
++        def check_config_nav_item(index, item_name, url):
++            item =3D _get_config_nav_item(index)
++            self.assertTrue(item_name in item.text)
++            self.assertTrue(item.get_attribute('class') =3D=3D 'active')
++            self.assertTrue(url in self.driver.current_url)
 +
-+        # "Book Icon" + "Documentation"
-+        toaster_docs_link =3D self.find('#navbar-docs')
-+        toaster_docs_link_link =3D toaster_docs_link.find_element(By.TAG=
-_NAME,
-+                                                                'a')
-+        self.assertTrue("Documentation" in toaster_docs_link_link.text)
++        # check if the menu contains the right elements
++        # COMPATIBLE METADATA
++        compatible_metadata =3D _get_config_nav_item(1)
 +        self.assertTrue(
-+            toaster_docs_link_link.get_attribute('href') =3D=3D 'http://=
-docs.yoctoproject.org/toaster-manual/index.html#toaster-user-manual'
++            "compatible metadata" in compatible_metadata.text.lower()
 +        )
-+        book_icon =3D toaster_docs_link.find_element(By.TAG_NAME, 'i')
++        # EXTRA CONFIGURATION
++        extra_configuration =3D _get_config_nav_item(8)
 +        self.assertTrue(
-+            book_icon.get_attribute('class') =3D=3D 'glyphicon glyphicon=
--book'
++            "extra configuration" in extra_configuration.text.lower()
 +        )
-+        self.assertTrue(book_icon.is_displayed())
++        # Actions
++        actions =3D _get_config_nav_item(10)
++        self.assertTrue("actions" in str(actions.text).lower())
 +
-+        # AT RIGHT -> button "New project"
-+        new_project_button =3D self.find('#new-project-button')
-+        self.assertTrue(new_project_button.is_displayed())
-+        self.assertTrue(new_project_button.text =3D=3D 'New project')
-+        new_project_button.click()
-+        self.assertTrue(
-+            '/toastergui/newproject/' in str(self.driver.current_url)
-+        )
++        conf_nav_list =3D [
++            [0, 'Configuration', f"/toastergui/project/1"],  # config
++            [2, 'Custom images', f"/toastergui/project/1/customimages"],=
+  # custom images
++            [3, 'Image recipes', f"/toastergui/project/1/images"],  # im=
+age recipes
++            [4, 'Software recipes', f"/toastergui/project/1/softwarereci=
+pes"],  # software recipes
++            [5, 'Machines', f"/toastergui/project/1/machines"],  # machi=
+nes
++            [6, 'Layers', f"/toastergui/project/1/layers"],  # layers
++            [7, 'Distro', f"/toastergui/project/1/distro"],  # distro
++            [9, 'BitBake variables', f"/toastergui/project/1/configurati=
+on"],  # bitbake variables
++        ]
++        for index, item_name, url in conf_nav_list:
++            item =3D _get_config_nav_item(index)
++            if item.get_attribute('class') !=3D 'active':
++                item.click()
++            check_config_nav_item(index, item_name, url)
 --=20
 2.34.1
 
