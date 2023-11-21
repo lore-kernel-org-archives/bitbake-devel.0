@@ -1,252 +1,169 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64076C2BB3F
-	for <webhook@archiver.kernel.org>; Mon, 20 Nov 2023 15:36:30 +0000 (UTC)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.web10.53193.1700494580586837057
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0D1C61D88
+	for <webhook@archiver.kernel.org>; Tue, 21 Nov 2023 01:35:46 +0000 (UTC)
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.41])
+ by mx.groups.io with SMTP id smtpd.web10.25128.1700530536793938414
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 20 Nov 2023 07:36:21 -0800
+ Mon, 20 Nov 2023 17:35:37 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZL176Hsm;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-32f7c44f6a7so3013553f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 20 Nov 2023 07:36:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1700494579; x=1701099379; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=F6L//t4Rb6okg4Stj+4RlmSLifLBY/afbulk8RXkk/M=;
-        b=ZL176Hsm1TO4c7oL0YexT+GYayM6OVm61qyNyGy5Mb9OuTyW+9tJ5+hQirTW4UEd4A
-         4wK8kVJfYt0vPKTp6y1IpT40+VfugrdXWIk0GSr0WIgZTpCLsk26Mz1kZFAP7RrSDYhs
-         q0J7sqtdwAOiVkGk+2bkgvkcpz+XoLcH0ezIs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700494579; x=1701099379;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F6L//t4Rb6okg4Stj+4RlmSLifLBY/afbulk8RXkk/M=;
-        b=iDpsQblZ6AUGMRjTSYHNAncXIj86y1uDzbdf6W1zC5AzUcZRIy320Iv1LD2BPAbC94
-         uCn16jnqM5kFdMvhgaZnd19TQ2yBAG22fYHxVo2JttkPqP7l0VsIBcDM8GejqNS6xl27
-         A/ihsLExC5CHJcRQ1judrHruuiKBBy60e4d7NEMZCXtqPthZ9nDD5lvNRaplYJ1siNxW
-         rZAHUmIbZFYRXttvtj8bHzpjGeI06iLXMXWDVqIBXnceh3TrxqiiGa0aNo5jJnljTK9f
-         uUTBTrqSPxxpaOgdmHpdWD6D/kcpUalNISR3BvhPDR+RfKM6L/85L9ldOysHhh/4NhNk
-         Ueqw==
-X-Gm-Message-State: AOJu0YxnddB59un/xWLdS0ApITmWf094tRcYiKrKCItbuK5oIPZ4gRiM
-	uxMTHm8hVNb47P5Zps6pGfiWWg==
-X-Google-Smtp-Source: AGHT+IGhxrJJOB2gns8ydGTyGGC3PYzZlaN4+jEE6esB0P3MLrNQyaxd0mN49dJo8YbPve+UrPaLlA==
-X-Received: by 2002:a05:6000:402a:b0:332:c4f7:1f83 with SMTP id cp42-20020a056000402a00b00332c4f71f83mr3132683wrb.7.1700494578871;
-        Mon, 20 Nov 2023 07:36:18 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:503c:cf74:300f:8e26? ([2001:8b0:aba:5f3c:503c:cf74:300f:8e26])
-        by smtp.gmail.com with ESMTPSA id f18-20020adfdb52000000b00332cbda1970sm890745wrj.30.2023.11.20.07.36.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Nov 2023 07:36:18 -0800 (PST)
-Message-ID: <d27a565ef33973d7a195b1d480e1480b6a4e38ab.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] npm/npmsw fetchers: Support for "offline"
- builds?
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Christian Eggers <ceggers@arri.de>, Markus Niebel
-	 <Markus.Niebel@ew.tq-group.com>, Martin Jansa <martin.jansa@gmail.com>
-Cc: Alexander Kanavin <alex.kanavin@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Mon, 20 Nov 2023 15:36:17 +0000
-In-Reply-To: <2178448.Icojqenx9y@n95hx1g2>
-References: <4851356.GXAFRqVoOG@n95hx1g2>
-	 <70e7245a5f6b37f9045027f90c665c244a28a234.camel@ew.tq-group.com>
-	 <CA+chaQeFGqnDbKav6JbXOO4ouqEVDvUNofuhM5A_+t7dv9n81A@mail.gmail.com>
-	 <2178448.Icojqenx9y@n95hx1g2>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=mV3wrhjP;
+ spf=pass (domain: axis.com, ip: 40.107.22.41, mailfrom: peter.kjellerstedt@axis.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XJL6urwTx5RKMCJuTmpUkbzmjS8jg00EVbOpFdSQXvLsHEkUm2Mpme0JGcZCnvoTWupBitIu75pf1pK03MoPD1uNregqMwaolLr5WpLNDTuErpbyca+NHLvA4PzqDh5iW1VPRVx4nGLxAH0J0ZqdunL2Q97yKLOyWzA7MLPNY2GYggWPJsuMJzCpDZNhdy4Flmo5RmVFhJylzwtoLTsMYHv3x1r1XWHBQF/Sv32b3ZvYBWZE1m5Alo570MNOfuMG5wqyGtXvZZz9ELjdJs3F9rN9T6gDxy5W6Vl39Jlkq2+TG3KKPvEAXOMfY8rKx2Y5/9mzFGj8LJPupeXVUxZ3Dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IfbNgVQGDm48WzDN/BasYWnjDXxk8EO3WVeqnZeivi8=;
+ b=FbchKLcBl81ZmnUd2A0T6lqS5cWm6PELvw+L7iEGLDl6FIHLF1ttO1JYdRHZ+nudvtsX1r0ADiiZ+x/yAAtft/MMlxe4UHUrMKYSZmihGk9s2YCiYg7/2Cuf2I4jvpjkckpdgC7WFa9+C8rN0gK4Kvdr/mYhwERh5AxBp1JceqKJjIxkK80mycF6dwcHT4MoKx7gHWDntPkSrUUMBoMDcJVi85sJ632fJ2hDvAQa8tw6QkmsL25xfYBnL1UHnH8jNDOE6UqMSzE7ZMhAzbOQI3Vyu3hFvIc+dgsg6TytRfnNdsVwDIFZyk/Malj84t4DSunFeoxMAgEE4Srdw+bGQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=axis.com; dmarc=fail (p=none sp=none pct=100) action=none
+ header.from=axis.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IfbNgVQGDm48WzDN/BasYWnjDXxk8EO3WVeqnZeivi8=;
+ b=mV3wrhjPMwMIDtt7FKA6JZPQo34aXxiUqApQl5OdqkEpbEWeigKZlM04tG0J0UKBfwSW5Nm/0qqzSYLmxXZ8a8zSNhAUi0hHANzT36iplrygrUQVE0DiLCnxs4Gq3yXs/g1PUMoJxlRndNuxFRUJkgFKF09BuksyYMvfqC2dYc8=
+Received: from AM6P194CA0055.EURP194.PROD.OUTLOOK.COM (2603:10a6:209:84::32)
+ by DB9PR02MB9875.eurprd02.prod.outlook.com (2603:10a6:10:461::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.27; Tue, 21 Nov
+ 2023 01:35:33 +0000
+Received: from AMS0EPF000001B6.eurprd05.prod.outlook.com
+ (2603:10a6:209:84:cafe::d2) by AM6P194CA0055.outlook.office365.com
+ (2603:10a6:209:84::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.26 via Frontend
+ Transport; Tue, 21 Nov 2023 01:35:33 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=axis.com;
+Received-SPF: Fail (protection.outlook.com: domain of axis.com does not
+ designate 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com;
+Received: from mail.axis.com (195.60.68.100) by
+ AMS0EPF000001B6.mail.protection.outlook.com (10.167.16.170) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7025.12 via Frontend Transport; Tue, 21 Nov 2023 01:35:32 +0000
+Received: from se-mail01w.axis.com (10.20.40.7) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 21 Nov
+ 2023 02:35:32 +0100
+Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Tue, 21 Nov 2023 02:35:32 +0100
+Received: from saur (saur.se.axis.com [10.92.3.10])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 2623EE18B
+	for <bitbake-devel@lists.openembedded.org>; Tue, 21 Nov 2023 02:35:32 +0100 (CET)
+Received: from saur.se.axis.com (localhost [127.0.0.1])
+	by saur (8.17.1/8.15.2) with ESMTPS id 3AL1ZWQn1059864
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Tue, 21 Nov 2023 02:35:32 +0100
+Received: (from pkj@localhost)
+	by saur.se.axis.com (8.17.1/8.17.1/Submit) id 3AL1ZVjK1059863
+	for bitbake-devel@lists.openembedded.org; Tue, 21 Nov 2023 02:35:31 +0100
+From: Peter Kjellerstedt <pkj@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] command: Make parseRecipeFile() handle virtual recipes correctly
+Date: Tue, 21 Nov 2023 02:35:29 +0100
+Message-ID: <20231121013529.1059847-1-pkj@axis.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF000001B6:EE_|DB9PR02MB9875:EE_
+X-MS-Office365-Filtering-Correlation-Id: fbcf66cb-a76a-46a7-bab3-08dbea322700
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	J13DSw70qPXikc2QwfMoQd8NxDocfDSfpJz6b7blmDnqqgsVFbDKvUcyV+pjATRgz3ZmWjWftMc33reLCwbaDL1TBj0pMxWu2VJdy52YK1Mi1GpMymr+6m7IDVpAc96gel6FtAXapcAwwSgPphmzETgk5RWQfJGWWnrdkIZYwe2O+VHQj9xEaQDqy0jzSdTYdDHK1RxE4BPVrn1VTqSM/c+Z90dxbYQeSwwTK5feEjg1C5EFPa7vAtnycWk2Sku4Yo2gwAeJ38mpBCtjBISjvj3k1nl5CIWtdUMpeFelAknMcbIkwQ4k0pAfoq02ZP2hx0rE+RA8IxzTQ4pDd+KOfrFf9nmYq+kjW5bpLJkKx4qPW+Giqwx+WsRC0ffoY9WWo8zLwkncbZQoaxkepXM3Hr5Nh7ATp5KHM3BMYj4jDG5RFKqNZDPlV6PG6c4nfo/dR0wnEwNBmuK9uJVhNTPxU6SSzWlAiwLcq4YYsKHdoqXbhRhIPY529mq/PXAxQ3XQsHXVJFGk0fkK6wd7w+9qMSytEUGppmYFL9WTwnBx+c5kJptGfRg6VqsYi2twj130RyC45rMH+Y6M8njzoYYKHBRywVyQvm7Fyq4PqOM5vEBtlrd9EV7fjh/WHa+e21cWG+KXp/tWoigC7YP+DqBTsKPgwdpIvGDJ04JYlutVLmpYSk3M4RIpNqYVc9sDQnX7YJci3SbCW6Qs4RIpq1OPOSDywoNYS6HIoglkb9GLpxL2EBKnreqTDOufRAvz2MBaBp1zqpflCm8hEKss9eQIVA==
+X-Forefront-Antispam-Report: 
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(376002)(39860400002)(346002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(82310400011)(40470700004)(36840700001)(46966006)(36860700001)(40480700001)(478600001)(316002)(8676002)(6916009)(82740400003)(8936002)(336012)(2616005)(70586007)(70206006)(426003)(42186006)(81166007)(356005)(83380400001)(47076005)(1076003)(2906002)(5660300002)(40460700003)(26005)(41300700001)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2023 01:35:32.6212
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbcf66cb-a76a-46a7-bab3-08dbea322700
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	AMS0EPF000001B6.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB9875
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 20 Nov 2023 15:36:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15541
+ <bitbake-devel@lists.openembedded.org>; Tue, 21 Nov 2023 01:35:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15542
 
-On Mon, 2023-11-20 at 14:25 +0100, Christian Eggers wrote:
-> On Monday, 20 November 2023, 14:14:32 CET, Martin Jansa wrote:
-> > On Mon, Nov 20, 2023 at 2:01=E2=80=AFPM Markus Niebel
-> > <Markus.Niebel@ew.tq-group.com>
-> > wrote:
-> >=20
-> > > Am Montag, dem 20.11.2023 um 13:19 +0100 schrieb Christian
-> > > Eggers:
-> > > >=20
-> > > > Hi Alex,
-> > > >=20
-> > > > On Monday, 20 November 2023, 12:05:28 CET, Alexander Kanavin
-> > > > wrote:
-> > > >=20
-> > > > >=20
-> _______________________________________________________=E2=80=8B
-> Christian	=C2=A0
-> Eggers
->=20
-> Software=C2=A0Engineer
-> =E2=80=8B
->=20
->=20
-> ARRI
-> Arnold=C2=A0&=C2=A0Richter=C2=A0Cine=C2=A0Technik=C2=A0GmbH=C2=A0&=C2=A0C=
-o.=C2=A0Betriebs=C2=A0KG=C2=A0
->=20
-> Arriweg=C2=A017	,=C2=A0
-> 83071	=C2=A0
-> Stephanskirchen
->=20
->=20
-> www.arri.com=C2=A0
->=20
-> +49=C2=A08036=C2=A03009-3118
-> CEggers@arri.de
->=20
->=20
->=20
->=20
-> =E2=80=8B
->=20
-> SkyPanel X
-> Get=C2=A0all=C2=A0the=C2=A0latest=C2=A0information=C2=A0from=C2=A0
-> www.arri.com,=C2=A0Facebook,=C2=A0Twitter,=C2=A0Instagram,=C2=A0LinkedIn=
-=C2=A0and=C2=A0YouTube=C2=A0and=C2=A0
-> X.
->=20
-> Arnold=C2=A0&=C2=A0Richter=C2=A0Cine=C2=A0Technik=C2=A0GmbH=C2=A0&=C2=A0C=
-o.=C2=A0Betriebs=C2=A0KG
-> Sitz:=C2=A0M=C3=BCnchen=C2=A0=E2=80=91=C2=A0Registergericht:=C2=A0Amtsger=
-icht=C2=A0M=C3=BCnchen=C2=A0=E2=80=91=C2=A0Handelsregiste
-> rnummer:=C2=A0HRA=C2=A057918
-> Pers=C3=B6nlich=C2=A0haftender=C2=A0Gesellschafter:=C2=A0Arnold=C2=A0&=C2=
-=A0Richter=C2=A0Cine=C2=A0Technik=C2=A0Gm
-> bH
-> Sitz:=C2=A0M=C3=BCnchen=C2=A0=E2=80=91=C2=A0Registergericht:=C2=A0Amtsger=
-icht=C2=A0M=C3=BCnchen=C2=A0=E2=80=91=C2=A0Handelsregiste
-> rnummer:=C2=A0HRB=C2=A054477
-> Gesch=C3=A4ftsf=C3=BChrer:=C2=A0Dr.=C2=A0Matthias=C2=A0Erb=C2=A0(Chairman=
-);=C2=A0Lars=C2=A0Weyer;=C2=A0Stephan=C2=A0Sch
-> enk;=C2=A0Walter=C2=A0Trauninger
->=20
-> =E2=80=8B
->=20
->=20
->=20
-> On Mon, 20 Nov 2023 at 11:59, Christian Eggers <ceggers@arri.de>
-> > > > wrote:
-> > > > >=20
-> > > > > > When having NPM based application in my SDK (e.g. quicktype
-> > > > > > [1],
-> > > > recipe is
-> > > > > > attached), the "fetch" tasks perform a full build of nodejs
-> > > > before starting
-> > > > > > the actual download of the quicktype sources. But building
-> > > > > > nodejs
-> > > > (and its
-> > > > > > dependencies) during the "fetch" stage, compromises my wish
-> > > > > > to
-> > > > perform the
-> > > > > > actual build in an offline environment.
-> > > > > >=20
-> > > > >=20
-> > > > > I'm not sure I understand what is being compromised here. If
-> > > > > you
-> > > > want an
-> > > > > offline build, throw away the sstate cache that was created
-> > > > > in the
-> > > > fetching
-> > > > > step, and nodejs will be again rebuilt together with
-> > > > > everything
-> > > > else.
-> > > >=20
-> > > > my intend is to run as few build scripts as possible as long as
-> > > > the
-> > > > build
-> > > > machine has access to the internet. For security reasons I
-> > > > would like
-> > > > to divide
-> > > > the build into two stages, one stage for downloading (with
-> > > > internet
-> > > > access enabled)
-> > > > and one stage for compiling (without internet access).
-> > > >=20
-> > > > While I highly trust the OpenEmbedded/Yocto projects, I fear
-> > > > that
-> > > > single upstream
-> > > > projects may become targets for supply chain attacks in the
-> > > > future.
-> > > > Running
-> > > > the package Makefiles/scripts etc. on a machine (e.g. docker)
-> > > > without
-> > > > network
-> > > > access reduces the possibility for manipulated packages to
-> > > > retrieve
-> > > > internal
-> > > > secrets and upload them to the internet.
-> > > >=20
-> > > > Are there any other use cases why people want to perform an
-> > > > "offline"
-> > > > build?
-> > > >=20
-> > >=20
-> > > At least offline builds are useful for release builds to make
-> > > sure no
-> > > recipe tries to bypass the normal fetch logic. We saw this
-> > > several
-> > > times in the past with silicon vendor stuff - recipes tried to
-> > > fetch
-> > > things during configuration or as part of compilation.
-> > >=20
-> > > Another thing I can imagine are builds against an internal
-> > > PREMIRROR
-> > > for several reasons.
-> > >=20
-> >=20
-> > Yes, but bitbake and oe do that automatically (even in "online"
-> > build) now
-> > with following changes:
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bitbake can now restrict network access i=
-n various tasks based
-> > on
-> > "network" flag as implemented in:
-> >=20
-> > https://git.openembedded.org/bitbake/commit/?id=3D0746b6a2a32fec4c18bf1=
-a52b1454ca4c04bf543
-> >=20
-> > https://git.openembedded.org/bitbake/commit/?id=3D9d6341df611a172509044=
-4f6f8eb0244aed08213
-> > =C2=A0=C2=A0=C2=A0=C2=A0and oe now enables network mostly only in do_fe=
-tch and few
-> > special
-> > tasks as implemented in:
-> >=20
-> > https://git.openembedded.org/openembedded-core/commit/?id=3D7ce1e88a3ad=
-85bbb925bb9f7167dc0a5fd1c27f4
-> >=20
-> > so unless your evil vendor doesn't enable network flag on (m)any
-> > tasks,
-> > they shouldn't be able to bypass the normal fetch logic.
->=20
-> If I had known all this before, this would have saved me some time
-> for the
-> complex setup of my (docker) build pipeline ...
->=20
-> With my concrete intend to improve security on my build machine,
-> being able
-> to ensure/enforce this behavior would be great
-> (bb.utils.disable_network only
-> produces a debug message if unshare() returned an error).
+Running `devtool search gcc` would result in errors like this for
+virtual recipes:
 
-When we implemented it, some of the commonly used distros we build on
-don't support it so we couldn't hard require it. I'd imagine that will
-change over time as the support improves. This was a compromise to
-allow us to improve but not force everyone into upgrading their host
-systems.
+  ERROR: When reparsing
+  .../meta/recipes-devtools/gcc/libgcc-initial_13.2.bb:do_populate_sysroot,
+  the basehash value changed from
+  b1cd809ed98cef9db0fb1b17d34c4083e739c336f9d5619b89715b0294d81af5 to
+  44c2f92781dc4a20e98b7bb4724e204e64b101905fa75e71241a574b725997dc. The
+  metadata is not deterministic and this needs to be fixed.
+  ERROR: The following commands may help:
+  ERROR: $ bitbake libgcc-initial -cdo_populate_sysroot -Snone
+  ERROR: Then:
+  ERROR: $ bitbake libgcc-initial -cdo_populate_sysroot -Sprintdiff
 
-Cheers,
+The reason was the newly introduced :layer-<layername> override, which
+is used, e.g., in meta/classes-global/insane.bbclass to add the
+patch-status QA test only for the meta layer:
 
-Richard
+  ERROR_QA:append:layer-core =3D " patch-status"
+
+When tinfoil parsed the recipes using the parseRecipeFile() function, it
+failed to properly identify the layername for virtual recipes, which
+resulted in the error above.
+
+The correct thing to do is to make parseRecipeFile() call
+bb.cache.virtualfn2realfn() to convert the virtual filename into a real
+filename and virtual class.
+
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---
+ bitbake/lib/bb/command.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index f2ee587161..79b6c0738f 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -550,8 +550,8 @@ class CommandsSync:
+         and return a datastore object representing the environment
+         for the recipe.
+         """
+-        fn =3D params[0]
+-        mc =3D bb.runqueue.mc_from_tid(fn)
++        virtualfn =3D params[0]
++        (fn, cls, mc) =3D bb.cache.virtualfn2realfn(virtualfn)
+         appends =3D params[1]
+         appendlist =3D params[2]
+         if len(params) > 3:
+@@ -574,10 +574,10 @@ class CommandsSync:
+         if config_data:
+             # We have to use a different function here if we're passing in=
+ a datastore
+             # NOTE: we took a copy above, so we don't do it here again
+-            envdata =3D command.cooker.databuilder._parse_recipe(config_da=
+ta, fn, appendfiles, mc, layername)['']
++            envdata =3D command.cooker.databuilder._parse_recipe(config_da=
+ta, fn, appendfiles, mc, layername)[cls]
+         else:
+             # Use the standard path
+-            envdata =3D command.cooker.databuilder.parseRecipe(fn, appendf=
+iles, layername)
++            envdata =3D command.cooker.databuilder.parseRecipe(virtualfn, =
+appendfiles, layername)
+         idx =3D command.remotedatastores.store(envdata)
+         return DataStoreConnectionHandle(idx)
+     parseRecipeFile.readonly =3D True
 
