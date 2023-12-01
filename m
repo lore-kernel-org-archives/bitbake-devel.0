@@ -1,130 +1,181 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB917C4167B
-	for <webhook@archiver.kernel.org>; Fri,  1 Dec 2023 17:54:50 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web11.6271.1701453281367816837
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF2BC4167B
+	for <webhook@archiver.kernel.org>; Fri,  1 Dec 2023 19:02:09 +0000 (UTC)
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+ by mx.groups.io with SMTP id smtpd.web10.1121.1701457326645337130
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 01 Dec 2023 09:54:41 -0800
+ Fri, 01 Dec 2023 11:02:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EaGfHRyK;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40b4c2ef5cdso20858735e9.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 01 Dec 2023 09:54:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1701453279; x=1702058079; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NCXLdgVyhxIzcRxnzHZqjE/nrOKm+rXwF36UoJYjQO8=;
-        b=EaGfHRyKWLBvu35SaOrd01TlV7f4e/0OazS3Z8mBUlgyIjuikgrvo3+w47lf889OD+
-         VKFMOSq2gAgIevjf95pyf1yVufc5XlsFOZa3yXFS/Q9aA9mBjVLOzEQx3c0cK3B+mKYu
-         TrTUF19uNybO1O9pYnAIZ/JH7yfx2FZcX51RE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701453279; x=1702058079;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NCXLdgVyhxIzcRxnzHZqjE/nrOKm+rXwF36UoJYjQO8=;
-        b=fYv4xI9vVF0QcVxIrj/YrjxzUPMxEB/VyxNIv2V9ZnXFVAVkofP2SwJ+9byFUvV8Yu
-         xxFzMLLTKYpsBB4+Okmg5N/AhNfLAoErYhgScfGyf9WJzsFDYQFSJy+mmOdjGRWMWuUf
-         m/wkB0lzOAfwkLz+r9bsg+y+ttVushcUnVswbSp+thV07auqvD3BDWkdGk+FzKehRrAw
-         GHMOdY3u0VeTslFRRJxQZi88t2KMlOnFpKrBBLfZUR3MDZkDSkVC7F+mcn34RTSXdWwA
-         QE/2RTv82cxkcY0yuTZ04JvjJpiLR9Jm6S2+KjRtFCltid2FRKRjwJM2z1fo3VVNtx8E
-         Ahtw==
-X-Gm-Message-State: AOJu0YxmR2y+q681Cvd/ArLEHcKnLdzzb7rs5J+q4pW4Ju+EbAUMfE+H
-	RF3fDuoLTW3wLmzeORfMi1wN8g==
-X-Google-Smtp-Source: AGHT+IF+2yyxupzUz6778Lx/JV3k1OMN/Fuz6pNZoB8NzH190NPagFE4tJmrOpOIj6qvvdjPitM2uA==
-X-Received: by 2002:a05:600c:1d9d:b0:40b:5e4a:4085 with SMTP id p29-20020a05600c1d9d00b0040b5e4a4085mr423174wms.165.1701453279407;
-        Fri, 01 Dec 2023 09:54:39 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:201d:dd04:f9b4:3c83? ([2001:8b0:aba:5f3c:201d:dd04:f9b4:3c83])
-        by smtp.gmail.com with ESMTPSA id iv7-20020a05600c548700b00405959469afsm6135619wmb.3.2023.12.01.09.54.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Dec 2023 09:54:39 -0800 (PST)
-Message-ID: <ce59da9ec69650d1b26da97b30d78c1ff62cab5f.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] AUTOREV, PREMIRRORS and unavailable upstream
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "MOESSBAUER, Felix" <felix.moessbauer@siemens.com>, 
-	"alex.kanavin@gmail.com"
-	 <alex.kanavin@gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
- <bitbake-devel@lists.openembedded.org>, "Kiszka, Jan"
- <jan.kiszka@siemens.com>,  "enrico.scholz@sigma-chemnitz.de"
- <enrico.scholz@sigma-chemnitz.de>
-Date: Fri, 01 Dec 2023 17:54:38 +0000
-In-Reply-To: <79097bd03a108ad216ee54df76629e820aec8566.camel@siemens.com>
-References: <5628c725-4b70-4db0-8db6-254d344b1e70@siemens.com>
-	 <d93bf7e3412237f73025b0749391d8aa55e9bac8.camel@linuxfoundation.org>
-	 <513a7d673eb8cdff5cc8ae0c5717ea3e81349da3.camel@siemens.com>
-	 <CANNYZj-7f=a9Bj2Ec83qS=vyCU10Wz2zdn-vqey0ThbHUjn=tA@mail.gmail.com>
-	 <79097bd03a108ad216ee54df76629e820aec8566.camel@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=MNeFYpa0;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: alexandre.belloni@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2F93CFF803;
+	Fri,  1 Dec 2023 19:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1701457324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GYjmdqt/qwfe3Gd2zgKYlXnMkxP/sbLWr+0lEqGMT04=;
+	b=MNeFYpa0nKidbaEzGmrUy69t8EJq9GB1oRfzvSKk2cBaWcZEg4ojIPSmR7P7TykV+f8PHC
+	bIYKvEOg90YRAhxCvIgBMt33gpJwpcEPsn8Kzhi3PnDtGewwgknunOIQoe2ye6Laml4T35
+	rBGAzUC6QVg0vk9TydbBzFeVy9eiIKMf4mi2VSeV0HBMvdm2+4mSRE9AMBGXmdohHuM1gK
+	1pubtU7Oh1Lcx5bxqCGwEnRvTVg0q6N3T8wxjl3OYwFGc5a3qdMPysdcKU/sUgLW5xhmeA
+	aGzMtHP8ZB83SNTZ6ORKJG6aM3cvCQj3LhQhY+Jqp5RpnKTO0OSo0pv9kUxRrg==
+Date: Fri, 1 Dec 2023 20:02:03 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH] runqueue: Improve inter setscene task
+ dependency handling
+Message-ID: <20231201190203a0cd89c1@mail.local>
+References: <20231129214644.536837-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231129214644.536837-1-richard.purdie@linuxfoundation.org>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 01 Dec 2023 17:54:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15602
+ <bitbake-devel@lists.openembedded.org>; Fri, 01 Dec 2023 19:02:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15603
 
-On Fri, 2023-12-01 at 12:29 +0000, MOESSBAUER, Felix wrote:
-> On Fri, 2023-12-01 at 13:15 +0100, Alexander Kanavin wrote:
-> > On Fri, 1 Dec 2023 at 13:05, Felix Moessbauer via
-> > lists.openembedded.org
-> > <felix.moessbauer=3Dsiemens.com@lists.openembedded.org> wrote:
-> > > there are more cases where direct access to upstream projects is
-> > > not
-> > > possible. Simply consider airgapped environments where all
-> > > resources
-> > > are accessed via local mirrors. I'm also a bit skeptic about the
-> > > definition of "latest". Git by itself is a decentralized VCS,
-> > > meaning
-> > > that there is no "global" latest, but just "latest" revisions of a
-> > > local copy (in contrast to e.g. SVN). These copies are just
-> > > eventually
-> > > consistent.
-> >=20
-> > Perhaps we need to step back and consider the reasons for using
-> > AUTOREV in an airgapped environment. What are they? Perhaps you can
-> > replace AUTOREV with external tool that updates SRCREV in the
-> > recipes?
->=20
-> I'm anyways not a fan of AUTOREV, as it is too much magic and somehow
-> unpredictable. However I cannot easily change upstream layers (with a
-> reasonable effort). By that, I might end up with combinations of an
-> isolated build where still autorevs are in use.
->=20
-> Maybe I was a bit too imprecise about the airgapped environments: I was
-> referring to environments where from time to time no direct access to
-> upstream is possible. In the end, this is also a supply chain
-> resilience topic: Upstream resources will not always be available (due
-> to maintenance, network issues, sporadic filtering on corporate
-> networks - yes, that's bad but daily business, ...). In the end, we
-> want to have a resilient build that is not susceptible to these single
-> points of failure.
->=20
-> And in addition, it blocks all users from locations where direct access
-> to an upstream resource is not possible, e.g. due to well-known
-> reasons.
+Hello Richard,
 
-This is what PREMIRRORS are for. They will be accessed and used first.
-This is how we cover the resilience issue.
+This caused all those failures:
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/6269
 
-There is a specific case of AUTOREV where it directly accesses SRC_URI
-and bypasses PREMIRRORS.
+On 29/11/2023 21:46:44+0000, Richard Purdie wrote:
+> The way the code currently handles dependencies between setscene tasks is fairly
+> poor, basically by deleting chunks of dependencies and adding reversed dependency
+> relationships.
+> 
+> This was once the best way to handle things but now a lot of the surrounding code
+> has changed and this approach is suboptimal and can be improved.
+> 
+> This change firstly adds debug logging for "hard" setscene task dependencies since
+> previously the codepaths were missing from logs making them very hard to read.
+> 
+> The changes to the setscene dependency graph are removed entirely this these altered
+> graphs were a significant source of problems. Instead, if a hard dependency is run
+> into, we mark the hard dependency as buildable and defer the task until the hard
+> dependencies are met.
+> 
+> The code now also skips the check_dependencies() code for hard dependencies since
+> previously that code was having to list all possible hard dependencies. We don't
+> need to do that as we can safely assume hard dependencies are required.
+> 
+> With these changes to runqueue's behaviour, we stand some chance of being able to
+> fix other bugs in OE-Core related to useradd for example.
+> 
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/runqueue.py | 31 ++++++++++++++++++++++---------
+>  1 file changed, 22 insertions(+), 9 deletions(-)
+> 
+> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+> index 02d7ff9768..8a5a2d2e9d 100644
+> --- a/lib/bb/runqueue.py
+> +++ b/lib/bb/runqueue.py
+> @@ -1813,6 +1813,7 @@ class RunQueueExecute:
+>          self.build_stamps2 = []
+>          self.failed_tids = []
+>          self.sq_deferred = {}
+> +        self.sq_needed_harddeps = set()
+>  
+>          self.stampcache = {}
+>  
+> @@ -2140,7 +2141,10 @@ class RunQueueExecute:
+>              # Find the next setscene to run
+>              for nexttask in self.sorted_setscene_tids:
+>                  if nexttask in self.sq_buildable and nexttask not in self.sq_running and self.sqdata.stamps[nexttask] not in self.build_stamps.values():
+> -                    if nexttask not in self.sqdata.unskippable and self.sqdata.sq_revdeps[nexttask] and self.sqdata.sq_revdeps[nexttask].issubset(self.scenequeue_covered) and self.check_dependencies(nexttask, self.sqdata.sq_revdeps[nexttask]):
+> +                    if nexttask not in self.sqdata.unskippable and self.sqdata.sq_revdeps[nexttask] and \
+> +                            nexttask not in self.sq_needed_harddeps and \
+> +                            self.sqdata.sq_revdeps[nexttask].issubset(self.scenequeue_covered) and \
+> +                            self.check_dependencies(nexttask, self.sqdata.sq_revdeps[nexttask]):
+>                          if nexttask not in self.rqdata.target_tids:
+>                              logger.debug2("Skipping setscene for task %s" % nexttask)
+>                              self.sq_task_skip(nexttask)
+> @@ -2148,6 +2152,18 @@ class RunQueueExecute:
+>                              if nexttask in self.sq_deferred:
+>                                  del self.sq_deferred[nexttask]
+>                              return True
+> +                    if nexttask in self.sqdata.sq_harddeps_rev and not self.sqdata.sq_harddeps_rev[nexttask].issubset(self.scenequeue_covered | self.scenequeue_notcovered):
+> +                        logger.debug2("Deferring %s due to hard dependencies" % nexttask)
+> +                        updated = False
+> +                        for dep in self.sqdata.sq_harddeps_rev[nexttask]:
+> +                            if dep not in self.sq_needed_harddeps:
+> +                                logger.debug2("Enabling task %s as it is a hard dependency" % dep)
+> +                                self.sq_buildable.add(dep)
+> +                                self.sq_needed_harddeps.add(dep)
+> +                                updated = True
+> +                        if updated:
+> +                            return True
+> +                        continue
+>                      # If covered tasks are running, need to wait for them to complete
+>                      for t in self.sqdata.sq_covered_tasks[nexttask]:
+>                          if t in self.runq_running and t not in self.runq_complete:
+> @@ -2780,6 +2796,7 @@ class SQData(object):
+>          self.sq_revdeps = {}
+>          # Injected inter-setscene task dependencies
+>          self.sq_harddeps = {}
+> +        self.sq_harddeps_rev = {}
+>          # Cache of stamp files so duplicates can't run in parallel
+>          self.stamps = {}
+>          # Setscene tasks directly depended upon by the build
+> @@ -2907,6 +2924,7 @@ def build_scenequeue_data(sqdata, rqdata, sqrq):
+>          idepends = rqdata.taskData[mc].taskentries[realtid].idepends
+>          sqdata.stamps[tid] = bb.parse.siggen.stampfile_mcfn(taskname, taskfn, extrainfo=False)
+>  
+> +        sqdata.sq_harddeps_rev[tid] = set()
+>          for (depname, idependtask) in idepends:
+>  
+>              if depname not in rqdata.taskData[mc].build_targets:
+> @@ -2919,20 +2937,15 @@ def build_scenequeue_data(sqdata, rqdata, sqrq):
+>              if deptid not in rqdata.runtaskentries:
+>                  bb.msg.fatal("RunQueue", "Task %s depends upon non-existent task %s:%s" % (realtid, depfn, idependtask))
+>  
+> +            logger.debug2("Adding hard setscene dependency %s for %s" % (deptid, tid))
+> +
+>              if not deptid in sqdata.sq_harddeps:
+>                  sqdata.sq_harddeps[deptid] = set()
+>              sqdata.sq_harddeps[deptid].add(tid)
+> -
+> -            sq_revdeps_squash[tid].add(deptid)
+> -            # Have to zero this to avoid circular dependencies
+> -            sq_revdeps_squash[deptid] = set()
+> +            sqdata.sq_harddeps_rev[tid].add(deptid)
+>  
+>      rqdata.init_progress_reporter.next_stage()
+>  
+> -    for task in sqdata.sq_harddeps:
+> -        for dep in sqdata.sq_harddeps[task]:
+> -            sq_revdeps_squash[dep].add(task)
+> -
+>      rqdata.init_progress_reporter.next_stage()
+>  
+>      #for tid in sq_revdeps_squash:
+> -- 
+> 2.39.2
+> 
 
-Basically people shouldn't rely on AUTOREV in production layers, its a
-nice tweak for local development use only.
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#15579): https://lists.openembedded.org/g/bitbake-devel/message/15579
+> Mute This Topic: https://lists.openembedded.org/mt/102881792/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/leave/10431315/3617179/474273136/xyzzy [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
-If you encounter a layer using AUTOREV and need to use it airgapped,
-you'd specific specific source revisions from your own distro or local
-config and complain to the author of the layer they're making your life
-hard.
 
-Cheers,
-
-Richard
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
