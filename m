@@ -1,209 +1,110 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B664C07E97
-	for <webhook@archiver.kernel.org>; Sun,  3 Dec 2023 19:56:46 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.47271.1701633398801314972
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5F4C4167B
+	for <webhook@archiver.kernel.org>; Mon,  4 Dec 2023 16:03:53 +0000 (UTC)
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+ by mx.groups.io with SMTP id smtpd.web10.73229.1701705831499802700
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 03 Dec 2023 11:56:39 -0800
+ Mon, 04 Dec 2023 08:03:51 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=BhMqUX9o;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-332fd78fa9dso3064545f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Sun, 03 Dec 2023 11:56:38 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=QkhnM/l1;
+ spf=pass (domain: gmail.com, ip: 209.85.210.53, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6d8751c8e7eso1890076a34.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 04 Dec 2023 08:03:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1701633397; x=1702238197; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ihklWlhLOtsdCyqUKWjuqGHsf+z4C+Pl+C7OXuYvq4c=;
-        b=BhMqUX9oNLhrTlEssS+CtosXBqQk5DeBbfS9G6c47MzVvzswvIEDZdah3bMjHpM2cC
-         gvOzVZTbhNKfHce9ho3qQqvYVGgTofgutIozkHprrkqrs0t+5/XMPxqIz0HE77/Jd9Bx
-         fslRFh/Og2ozc2q/g5HahK7vy4aQrUE8lVJec=
+        d=gmail.com; s=20230601; t=1701705829; x=1702310629; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4YWZSDhSPOKmhju5Bu4OGC1TaE8rYED83Dgmr5GMkeE=;
+        b=QkhnM/l1UV8Rh1OoTABxjLCOCoIwZKcsK2Zop4C6sqWihUPTqy72/4bXn66im2JfPb
+         P0zAT0QOYV5qIlAJYlFTMS8DUnKxYta97uZgGxjLVa4ZoCvsAwPknyu8Ll/EDQ6a2vJM
+         xM5mGX+9DqkZQ9nPzj4lphtVcQALNMIKX6A9olveI0IE/AP4uniojGbTN80g7T2ekMi5
+         s/QnEBYrGi5QkPnwfqvvbFlSOUgT28bl2hCW1/4uNI+UPIY/t22lfukNN2L/2EIfg7DU
+         JLgvSgXUo+aLoykBjrMsUb3YgzVWuETc98V3ZDLsp5vsjn5OEKkIlWPt1fq3oCAZwcp/
+         YX3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701633397; x=1702238197;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ihklWlhLOtsdCyqUKWjuqGHsf+z4C+Pl+C7OXuYvq4c=;
-        b=kQX0OwjJa56BaSrqLJiJs4FlO4/jiq9wCLguBbP8uB/RDtaLj8NARMoU1V7ZHii5jJ
-         mucyTkseC55PrpZ14jOM1HU0N+fZZlAOub9O59+0DBoA/SOptnLMTS3h7MJbErgaeksV
-         QALMI2PenKzwK2RMLtxFJh8Zlj4NhYB6bCK2/GJS+srHLR+/+47OCByRv2YHQbsUAuHQ
-         cD//9EpStzF2fjH4LavyQdPF5kl04QTsFxcL+tdrUruPwSEOawEdxxp70uECjRx6RYsz
-         +j8Q8wetSjcITiN2nxCBFOLgjjn5AbyvOuEE9b1mQK6zpdockvBzfQWlP7It9AoLlRE/
-         f2Eg==
-X-Gm-Message-State: AOJu0YxJlc9ERNS0DP2DQvhd2G+0m7DWXYPGxSFSHhMmFtM9HBEhrLQT
-	6oBdwzskT4ngHt3L+IuW8hCfH/cyvQcWziFbRLE=
-X-Google-Smtp-Source: AGHT+IEa3cS+8+2CdIb1qvrh87aKHViicvicxl6uQGFS+nV2MqGNzEdUhR0aQA2Lfr3/XD4Gs7BTWw==
-X-Received: by 2002:adf:ee41:0:b0:333:3117:c456 with SMTP id w1-20020adfee41000000b003333117c456mr1402952wro.231.1701633396705;
-        Sun, 03 Dec 2023 11:56:36 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:8764:964d:4cf8:1001])
-        by smtp.gmail.com with ESMTPSA id x18-20020adfffd2000000b00332fd9b2b52sm4291032wrs.104.2023.12.03.11.56.35
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1701705829; x=1702310629;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4YWZSDhSPOKmhju5Bu4OGC1TaE8rYED83Dgmr5GMkeE=;
+        b=oi3y0K+yIH3K2dSzmyuR/d1D9sR++EgQ48kpc0j8DrJZnsFrGd+DOfKPSGmEe043Bu
+         P7AiDIC8DPxDcoW43OAcXMnm7ZtydMChljkk7DpYOrGkQ/KGBKiBvvRhtASIRdlAKd0j
+         W+DTidrAoHaaTPV5R0dHWMBX1bJRPB5K6OHsK0xeYkeDwI+f31n+08QLvdWjdYmaocM0
+         015iuJ710CqItcqHNtU7wFfn/XHZ+VVajVmabPgLuXiZMP8qTuuWM3+69Znol860k+/g
+         9zm3TZMeGAlui8QaTvJ/AWx9ObBxy0Xz3rJmsIoiavNuZICfyFKszbFjf++fP7E3XDhe
+         +Z1w==
+X-Gm-Message-State: AOJu0Ywu59QpJb/tq6nXqd3bkPtq+D7/mYzegXeQLTAIvXImneJ/Sr9P
+	P3JoIDwl2xAQr22LKIjoyCNY5+sJ6OI=
+X-Google-Smtp-Source: AGHT+IEtA6Toq4RD9KS5Jvl6IKTF1TQ9ii5xZ8CX/wwmiu/xrgBk9DDDINe0tvf1w/5oqy2FNkbJjw==
+X-Received: by 2002:a05:6870:494b:b0:1fb:220f:4ec5 with SMTP id fl11-20020a056870494b00b001fb220f4ec5mr3282214oab.31.1701705829668;
+        Mon, 04 Dec 2023 08:03:49 -0800 (PST)
+Received: from localhost.localdomain ([2601:282:4300:19e0::9c3a])
+        by smtp.gmail.com with ESMTPSA id pk28-20020a0568704c1c00b001fafc32e808sm2161548oab.0.2023.12.04.08.03.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Dec 2023 11:56:36 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Mon, 04 Dec 2023 08:03:49 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v2] runqueue: Improve inter setscene task dependency handling
-Date: Sun,  3 Dec 2023 19:56:35 +0000
-Message-Id: <20231203195635.1157871-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.2
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] hashserv: sqlite: Ensure sync propagates to database connections
+Date: Mon,  4 Dec 2023 09:03:43 -0700
+Message-Id: <20231204160343.1373871-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 03 Dec 2023 19:56:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15605
+ <bitbake-devel@lists.openembedded.org>; Mon, 04 Dec 2023 16:03:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15606
 
-The way the code currently handles dependencies between setscene tasks is fairly
-poor, basically by deleting chunks of dependencies and adding reversed dependency
-relationships.
+When the sqlite database backend was restructured, the code to make the
+databases run in WAL mode and to control if sync() is called was
+accidentally dropped. This caused terrible database performance to the
+point that server timeouts were occurring causing really slow builds.
 
-This was once the best way to handle things but now a lot of the surrounding code
-has changed and this approach is suboptimal and can be improved.
+Fix this by properly enabling WAL mode and setting the synchronous flag
+as requested
 
-This change firstly adds debug logging for "hard" setscene task dependencies since
-previously the codepaths were missing from logs making them very hard to read.
-
-The changes to the setscene dependency graph are removed entirely this these altered
-graphs were a significant source of problems. Instead, if a hard dependency is run
-into, we mark the hard dependency as buildable and defer the task until the hard
-dependencies are met.
-
-The code now also skips the check_dependencies() code for hard dependencies since
-previously that code was having to list all possible hard dependencies. We don't
-need to do that as we can safely assume hard dependencies are required.
-
-With these changes to runqueue's behaviour, we stand some chance of being able to
-fix other bugs in OE-Core related to useradd for example.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/runqueue.py | 41 ++++++++++++++++++++++++++++-------------
- 1 file changed, 28 insertions(+), 13 deletions(-)
+ bitbake/lib/hashserv/sqlite.py | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-v2 - fix bug when rehashing occurs causing build failures those tasks not executing
-
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 02d7ff9768..864708ee4a 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1813,6 +1813,7 @@ class RunQueueExecute:
-         self.build_stamps2 = []
-         self.failed_tids = []
-         self.sq_deferred = {}
-+        self.sq_needed_harddeps = set()
+diff --git a/bitbake/lib/hashserv/sqlite.py b/bitbake/lib/hashserv/sqlite.py
+index f65036be939..f93cb2c1dd9 100644
+--- a/bitbake/lib/hashserv/sqlite.py
++++ b/bitbake/lib/hashserv/sqlite.py
+@@ -109,11 +109,11 @@ class DatabaseEngine(object):
+             )
  
-         self.stampcache = {}
+     def connect(self, logger):
+-        return Database(logger, self.dbname)
++        return Database(logger, self.dbname, self.sync)
  
-@@ -2140,7 +2141,10 @@ class RunQueueExecute:
-             # Find the next setscene to run
-             for nexttask in self.sorted_setscene_tids:
-                 if nexttask in self.sq_buildable and nexttask not in self.sq_running and self.sqdata.stamps[nexttask] not in self.build_stamps.values():
--                    if nexttask not in self.sqdata.unskippable and self.sqdata.sq_revdeps[nexttask] and self.sqdata.sq_revdeps[nexttask].issubset(self.scenequeue_covered) and self.check_dependencies(nexttask, self.sqdata.sq_revdeps[nexttask]):
-+                    if nexttask not in self.sqdata.unskippable and self.sqdata.sq_revdeps[nexttask] and \
-+                            nexttask not in self.sq_needed_harddeps and \
-+                            self.sqdata.sq_revdeps[nexttask].issubset(self.scenequeue_covered) and \
-+                            self.check_dependencies(nexttask, self.sqdata.sq_revdeps[nexttask]):
-                         if nexttask not in self.rqdata.target_tids:
-                             logger.debug2("Skipping setscene for task %s" % nexttask)
-                             self.sq_task_skip(nexttask)
-@@ -2148,6 +2152,18 @@ class RunQueueExecute:
-                             if nexttask in self.sq_deferred:
-                                 del self.sq_deferred[nexttask]
-                             return True
-+                    if nexttask in self.sqdata.sq_harddeps_rev and not self.sqdata.sq_harddeps_rev[nexttask].issubset(self.scenequeue_covered | self.scenequeue_notcovered):
-+                        logger.debug2("Deferring %s due to hard dependencies" % nexttask)
-+                        updated = False
-+                        for dep in self.sqdata.sq_harddeps_rev[nexttask]:
-+                            if dep not in self.sq_needed_harddeps:
-+                                logger.debug2("Enabling task %s as it is a hard dependency" % dep)
-+                                self.sq_buildable.add(dep)
-+                                self.sq_needed_harddeps.add(dep)
-+                                updated = True
-+                        if updated:
-+                            return True
-+                        continue
-                     # If covered tasks are running, need to wait for them to complete
-                     for t in self.sqdata.sq_covered_tasks[nexttask]:
-                         if t in self.runq_running and t not in self.runq_complete:
-@@ -2596,8 +2612,8 @@ class RunQueueExecute:
-         update_tasks2 = []
-         for tid in update_tasks:
-             harddepfail = False
--            for t in self.sqdata.sq_harddeps:
--                if tid in self.sqdata.sq_harddeps[t] and t in self.scenequeue_notcovered:
-+            for t in self.sqdata.sq_harddeps_rev[tid]:
-+                if t in self.scenequeue_notcovered:
-                     harddepfail = True
-                     break
-             if not harddepfail and self.sqdata.sq_revdeps[tid].issubset(self.scenequeue_covered | self.scenequeue_notcovered):
-@@ -2629,12 +2645,13 @@ class RunQueueExecute:
  
-         if changed:
-             self.stats.updateCovered(len(self.scenequeue_covered), len(self.scenequeue_notcovered))
-+            self.sq_needed_harddeps = set()
-             self.holdoff_need_update = True
+ class Database(object):
+-    def __init__(self, logger, dbname, sync=True):
++    def __init__(self, logger, dbname, sync):
+         self.dbname = dbname
+         self.logger = logger
  
-     def scenequeue_updatecounters(self, task, fail=False):
+@@ -121,6 +121,11 @@ class Database(object):
+         self.db.row_factory = sqlite3.Row
  
--        for dep in sorted(self.sqdata.sq_deps[task]):
--            if fail and task in self.sqdata.sq_harddeps and dep in self.sqdata.sq_harddeps[task]:
-+        if fail and task in self.sqdata.sq_harddeps:
-+            for dep in sorted(self.sqdata.sq_harddeps[task]):
-                 if dep in self.scenequeue_covered or dep in self.scenequeue_notcovered:
-                     # dependency could be already processed, e.g. noexec setscene task
-                     continue
-@@ -2644,6 +2661,7 @@ class RunQueueExecute:
-                 logger.debug2("%s was unavailable and is a hard dependency of %s so skipping" % (task, dep))
-                 self.sq_task_failoutright(dep)
-                 continue
-+        for dep in sorted(self.sqdata.sq_deps[task]):
-             if self.sqdata.sq_revdeps[dep].issubset(self.scenequeue_covered | self.scenequeue_notcovered):
-                 if dep not in self.sq_buildable:
-                     self.sq_buildable.add(dep)
-@@ -2780,6 +2798,7 @@ class SQData(object):
-         self.sq_revdeps = {}
-         # Injected inter-setscene task dependencies
-         self.sq_harddeps = {}
-+        self.sq_harddeps_rev = {}
-         # Cache of stamp files so duplicates can't run in parallel
-         self.stamps = {}
-         # Setscene tasks directly depended upon by the build
-@@ -2907,6 +2926,7 @@ def build_scenequeue_data(sqdata, rqdata, sqrq):
-         idepends = rqdata.taskData[mc].taskentries[realtid].idepends
-         sqdata.stamps[tid] = bb.parse.siggen.stampfile_mcfn(taskname, taskfn, extrainfo=False)
- 
-+        sqdata.sq_harddeps_rev[tid] = set()
-         for (depname, idependtask) in idepends:
- 
-             if depname not in rqdata.taskData[mc].build_targets:
-@@ -2919,20 +2939,15 @@ def build_scenequeue_data(sqdata, rqdata, sqrq):
-             if deptid not in rqdata.runtaskentries:
-                 bb.msg.fatal("RunQueue", "Task %s depends upon non-existent task %s:%s" % (realtid, depfn, idependtask))
- 
-+            logger.debug2("Adding hard setscene dependency %s for %s" % (deptid, tid))
+         with closing(self.db.cursor()) as cursor:
++            cursor.execute("PRAGMA journal_mode = WAL")
++            cursor.execute(
++                "PRAGMA synchronous = %s" % ("NORMAL" if sync else "OFF")
++            )
 +
-             if not deptid in sqdata.sq_harddeps:
-                 sqdata.sq_harddeps[deptid] = set()
-             sqdata.sq_harddeps[deptid].add(tid)
--
--            sq_revdeps_squash[tid].add(deptid)
--            # Have to zero this to avoid circular dependencies
--            sq_revdeps_squash[deptid] = set()
-+            sqdata.sq_harddeps_rev[tid].add(deptid)
+             cursor.execute("SELECT sqlite_version()")
  
-     rqdata.init_progress_reporter.next_stage()
- 
--    for task in sqdata.sq_harddeps:
--        for dep in sqdata.sq_harddeps[task]:
--            sq_revdeps_squash[dep].add(task)
--
-     rqdata.init_progress_reporter.next_stage()
- 
-     #for tid in sq_revdeps_squash:
+             version = []
 -- 
-2.39.2
+2.34.1
 
 
