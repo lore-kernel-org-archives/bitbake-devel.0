@@ -1,110 +1,82 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5F4C4167B
-	for <webhook@archiver.kernel.org>; Mon,  4 Dec 2023 16:03:53 +0000 (UTC)
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
- by mx.groups.io with SMTP id smtpd.web10.73229.1701705831499802700
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D6EC4167B
+	for <webhook@archiver.kernel.org>; Mon,  4 Dec 2023 22:49:15 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web11.84669.1701730148073197640
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 04 Dec 2023 08:03:51 -0800
+ Mon, 04 Dec 2023 14:49:08 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=QkhnM/l1;
- spf=pass (domain: gmail.com, ip: 209.85.210.53, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6d8751c8e7eso1890076a34.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 04 Dec 2023 08:03:51 -0800 (PST)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=eOb1jwON;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 68D749C31BC
+	for <bitbake-devel@lists.openembedded.org>; Mon,  4 Dec 2023 17:49:07 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id EF_kBjhlnRj2; Mon,  4 Dec 2023 17:49:07 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 27CF09C3D77;
+	Mon,  4 Dec 2023 17:49:07 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 27CF09C3D77
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701705829; x=1702310629; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4YWZSDhSPOKmhju5Bu4OGC1TaE8rYED83Dgmr5GMkeE=;
-        b=QkhnM/l1UV8Rh1OoTABxjLCOCoIwZKcsK2Zop4C6sqWihUPTqy72/4bXn66im2JfPb
-         P0zAT0QOYV5qIlAJYlFTMS8DUnKxYta97uZgGxjLVa4ZoCvsAwPknyu8Ll/EDQ6a2vJM
-         xM5mGX+9DqkZQ9nPzj4lphtVcQALNMIKX6A9olveI0IE/AP4uniojGbTN80g7T2ekMi5
-         s/QnEBYrGi5QkPnwfqvvbFlSOUgT28bl2hCW1/4uNI+UPIY/t22lfukNN2L/2EIfg7DU
-         JLgvSgXUo+aLoykBjrMsUb3YgzVWuETc98V3ZDLsp5vsjn5OEKkIlWPt1fq3oCAZwcp/
-         YX3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701705829; x=1702310629;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4YWZSDhSPOKmhju5Bu4OGC1TaE8rYED83Dgmr5GMkeE=;
-        b=oi3y0K+yIH3K2dSzmyuR/d1D9sR++EgQ48kpc0j8DrJZnsFrGd+DOfKPSGmEe043Bu
-         P7AiDIC8DPxDcoW43OAcXMnm7ZtydMChljkk7DpYOrGkQ/KGBKiBvvRhtASIRdlAKd0j
-         W+DTidrAoHaaTPV5R0dHWMBX1bJRPB5K6OHsK0xeYkeDwI+f31n+08QLvdWjdYmaocM0
-         015iuJ710CqItcqHNtU7wFfn/XHZ+VVajVmabPgLuXiZMP8qTuuWM3+69Znol860k+/g
-         9zm3TZMeGAlui8QaTvJ/AWx9ObBxy0Xz3rJmsIoiavNuZICfyFKszbFjf++fP7E3XDhe
-         +Z1w==
-X-Gm-Message-State: AOJu0Ywu59QpJb/tq6nXqd3bkPtq+D7/mYzegXeQLTAIvXImneJ/Sr9P
-	P3JoIDwl2xAQr22LKIjoyCNY5+sJ6OI=
-X-Google-Smtp-Source: AGHT+IEtA6Toq4RD9KS5Jvl6IKTF1TQ9ii5xZ8CX/wwmiu/xrgBk9DDDINe0tvf1w/5oqy2FNkbJjw==
-X-Received: by 2002:a05:6870:494b:b0:1fb:220f:4ec5 with SMTP id fl11-20020a056870494b00b001fb220f4ec5mr3282214oab.31.1701705829668;
-        Mon, 04 Dec 2023 08:03:49 -0800 (PST)
-Received: from localhost.localdomain ([2601:282:4300:19e0::9c3a])
-        by smtp.gmail.com with ESMTPSA id pk28-20020a0568704c1c00b001fafc32e808sm2161548oab.0.2023.12.04.08.03.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Dec 2023 08:03:49 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1701730147; bh=cZ/HAjIUty8oe60jm8VAiaBm1mpt2UtM83cgX+hS/aM=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=eOb1jwONp3fULvY96My0Svkuv5rg08OQSep0Le4olF3ZoLTNSGfNp0s4IHsIb7TPT
+	 wyfihyL70NMZsCCz20M69hUjCcDTYYk3ErE6BSAvF8QWIW+a9Jm30froMoyXMa3t3L
+	 WB1dEnm66u3lOH+6mIWvGP95wEduNd0dfRE80J11WPwl9zIe8l9dLhwjlg2a0MuVM8
+	 cXCDn2U8Pj00mccs4HoCzS7HX6K8j3ZL4G0aEabrDXA4Q6tiSMEd1DwAEv4Y+Oe4gK
+	 oxxuG6gpTMJNH7yIhTNdtOue7t+yH/P6pbWEc5b3vIOfPbH89VTiLk+y9zaMoIl/Du
+	 /YMVFbvURgeeg==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id y0u7D4TB_Wzd; Mon,  4 Dec 2023 17:49:07 -0500 (EST)
+Received: from jedi.. (unknown [196.127.183.75])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 84B7B9C31BC;
+	Mon,  4 Dec 2023 17:49:06 -0500 (EST)
+From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] hashserv: sqlite: Ensure sync propagates to database connections
-Date: Mon,  4 Dec 2023 09:03:43 -0700
-Message-Id: <20231204160343.1373871-1-JPEWhacker@gmail.com>
+Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH 3/3] toaster/test: from test_no_builds_message.py wait for the empty state div to appear
+Date: Mon,  4 Dec 2023 23:48:32 +0100
+Message-Id: <20231204224832.399005-3-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231204224832.399005-1-alassane.yattara@savoirfairelinux.com>
+References: <20231204224832.399005-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 04 Dec 2023 16:03:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15606
+ <bitbake-devel@lists.openembedded.org>; Mon, 04 Dec 2023 22:49:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15607
 
-When the sqlite database backend was restructured, the code to make the
-databases run in WAL mode and to control if sync() is called was
-accidentally dropped. This caused terrible database performance to the
-point that server timeouts were occurring causing really slow builds.
+From tests/browser/test_sample.py wait for the empty state div to appear
 
-Fix this by properly enabling WAL mode and setting the synchronous flag
-as requested
-
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- bitbake/lib/hashserv/sqlite.py | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ lib/toaster/tests/browser/test_sample.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/bitbake/lib/hashserv/sqlite.py b/bitbake/lib/hashserv/sqlite.py
-index f65036be939..f93cb2c1dd9 100644
---- a/bitbake/lib/hashserv/sqlite.py
-+++ b/bitbake/lib/hashserv/sqlite.py
-@@ -109,11 +109,11 @@ class DatabaseEngine(object):
-             )
- 
-     def connect(self, logger):
--        return Database(logger, self.dbname)
-+        return Database(logger, self.dbname, self.sync)
- 
- 
- class Database(object):
--    def __init__(self, logger, dbname, sync=True):
-+    def __init__(self, logger, dbname, sync):
-         self.dbname = dbname
-         self.logger = logger
- 
-@@ -121,6 +121,11 @@ class Database(object):
-         self.db.row_factory = sqlite3.Row
- 
-         with closing(self.db.cursor()) as cursor:
-+            cursor.execute("PRAGMA journal_mode = WAL")
-+            cursor.execute(
-+                "PRAGMA synchronous = %s" % ("NORMAL" if sync else "OFF")
-+            )
-+
-             cursor.execute("SELECT sqlite_version()")
- 
-             version = []
--- 
+diff --git a/lib/toaster/tests/browser/test_sample.py b/lib/toaster/tests=
+/browser/test_sample.py
+index 73973778..f04f1d9a 100644
+--- a/lib/toaster/tests/browser/test_sample.py
++++ b/lib/toaster/tests/browser/test_sample.py
+@@ -32,6 +32,7 @@ class TestSample(SeleniumTestCase):
+         """ Test that a message is shown when there are no builds """
+         url =3D reverse('all-builds')
+         self.get(url)
++        self.wait_until_visible('#empty-state-allbuildstable')  # wait f=
+or the empty state div to appear
+         div_msg =3D self.find('#empty-state-allbuildstable .alert-info')
+=20
+         msg =3D 'Sorry - no data found'
+--=20
 2.34.1
 
 
