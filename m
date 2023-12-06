@@ -2,111 +2,101 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2525BC4167B
-	for <webhook@archiver.kernel.org>; Wed,  6 Dec 2023 22:46:32 +0000 (UTC)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web10.51616.1701902782712455804
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A208C4167B
+	for <webhook@archiver.kernel.org>; Wed,  6 Dec 2023 23:02:22 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web10.58424.1701903735786110532
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 06 Dec 2023 14:46:23 -0800
+ Wed, 06 Dec 2023 15:02:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=A+A0zPH1;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3332f1512e8so286573f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 06 Dec 2023 14:46:22 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KCE15rgN;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40c19467a63so3777665e9.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 06 Dec 2023 15:02:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1701902781; x=1702507581; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MHWXHuxlJoE+v8dDdo0so6CfWV7LhdqVmlzpl2Rt9DI=;
-        b=A+A0zPH1fsNjnJRNixbRS/C15b5Be0VAO7ONKKB4vmadNg5OJyHU6QqQC/XBeH9Pue
-         cNT2MdNEoiMLRZsCEMIs7oSk154H7/DEGteeK3rziQnblUpEX/e627lekPgP5hEjPY0W
-         DSOW7E+ZUNQsuGcty4kDxA6+2KKhrtwYeI+u8=
+        d=linuxfoundation.org; s=google; t=1701903731; x=1702508531; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IMFeCT/5c3dJOTngXRl93lB/5Lto3LYmR6c8ftzDUXA=;
+        b=KCE15rgNJxRfBYFLE+Uw3mJiZOb1tcuLWhyLEE5hda2wLc0JiC8ZQB2MKxm4z2ftun
+         XpWyfC7Z/J/zM11JZzkSf5TvrFCGQXj1cN/fbwcDMCOBGyl4YKARjReiOhWUFkqTfG4+
+         tFFvTxDq2zsCGfW1IUtI+1QIkEr2Abkf9qTmY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701902781; x=1702507581;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MHWXHuxlJoE+v8dDdo0so6CfWV7LhdqVmlzpl2Rt9DI=;
-        b=qrrTlVp1y564cm0TOVQHFGnPHNAv4AoDH7MrEWezeZ3o4B2MJemsYMlOCXQM/uk8Rr
-         RppUW+XL9Gy1TjK78cYMfAMEpYOD2seYgLOAleWgA9wBa4LHLBJLgq6xbLqg5/ZXdjhw
-         3Kj/v82yJJTp5AdW4QnMqXYKi5KGuqesjxFWYZS2EYjjGn7talWDWzm7g5wDRtjv3Zcv
-         YVDWfqs8lM65zXqs5GeCNxK5pChuvaVzYqsXz0YXEr4ZwNZ9qzOFofuUX8AnLbRbpu5d
-         tXdEo6rumTNMHAFCgyYM1ZgEay5rkKwMOsCClo6B2WJChhC4wJ9AreG7u1r/FfUKMMd1
-         TLUg==
-X-Gm-Message-State: AOJu0YzklvqeaLuleG4rn+2Dj6kS97ll0bqNQoE2P0SsP+FJ+1HUNALQ
-	UZNnl8yWx6yuxNSrpDX00kFII7qXrCN29zBA4sk=
-X-Google-Smtp-Source: AGHT+IFIpZ5/M2i09L05c92seK6DG0bAcTOSiVCTzuNSrhcSCrSVX7Dm/zEJ0jvuiZGSC+UmiuhKDQ==
-X-Received: by 2002:a5d:42d1:0:b0:333:5448:a524 with SMTP id t17-20020a5d42d1000000b003335448a524mr1003386wrr.70.1701902780673;
-        Wed, 06 Dec 2023 14:46:20 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:30b4:b44a:2cc6:3876])
-        by smtp.gmail.com with ESMTPSA id r1-20020a5d4e41000000b0033330846e76sm677996wrt.86.2023.12.06.14.46.20
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1701903731; x=1702508531;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=IMFeCT/5c3dJOTngXRl93lB/5Lto3LYmR6c8ftzDUXA=;
+        b=IaUUWJREu89Yj77d8bjFYbkm85VEvlwjejmyED3K2xbkZIlAlTc8SulTjfe1+j/7fY
+         rMj4QQ2xOSNsCdyv3ppPk2q9yNJtnpwa3ZN/UdeWhVdoeZkogTxuJWGiSyfGCcSTViY/
+         8SJ3s1aGaj6vZUq3n/eoQ5uvHr9MflgGL30SxQhi4KzXQGYD9+5ldOFf1lI+9a7ecfE1
+         /2FLOb9fqlgZF0GuS0ZfDNHe/elLgEXjdj9U6olkf24BI74rPYwI2ltxCyox72vlvotu
+         qIoZgalXBKFm+0Dar7d0JL6hj5LwO3zibJjN81JGOQzujIWjCo9Hm9rjwycIVpjC5iGi
+         1wqQ==
+X-Gm-Message-State: AOJu0YwiI666cqbuW+7z/XYfP2Vd7QmNip3EQAhIbpJJLgoPQBcbyQkG
+	YbYyYhknL8HKy8BydC+7enQkBw==
+X-Google-Smtp-Source: AGHT+IGO5RL9x/DwFg895dYRxr3Qp0/pqyf37KYT+7B8qNlpASRfYUtTTSg3MOgAVR5Wolrzef/DbQ==
+X-Received: by 2002:a05:600c:1c8f:b0:40b:5e59:e9fc with SMTP id k15-20020a05600c1c8f00b0040b5e59e9fcmr896788wms.155.1701903730982;
+        Wed, 06 Dec 2023 15:02:10 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:30b4:b44a:2cc6:3876? ([2001:8b0:aba:5f3c:30b4:b44a:2cc6:3876])
+        by smtp.gmail.com with ESMTPSA id i22-20020a05600c355600b004083729fc14sm1066640wmq.20.2023.12.06.15.02.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 14:46:20 -0800 (PST)
+        Wed, 06 Dec 2023 15:02:10 -0800 (PST)
+Message-ID: <9e1be8c6a333fcbb50b7e6fdfab98094a341e025.camel@linuxfoundation.org>
+Subject: Re: [toaster][PATCHv3 3/3] toaster: Update eventreplay
+ functionality for new eventlog file structure
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] toaster-eventreplay: Remove ordering assumptions
-Date: Wed,  6 Dec 2023 22:46:19 +0000
-Message-Id: <20231206224619.1703343-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.2
+To: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfairelinux.com>, 
+	bitbake-devel@lists.openembedded.org, toaster@lists.yoctoproject.org
+Date: Wed, 06 Dec 2023 23:02:09 +0000
+In-Reply-To: <20231206224305.34686-4-marlon.rodriguez-garcia@savoirfairelinux.com>
+References: 
+	<20231206224305.34686-1-marlon.rodriguez-garcia@savoirfairelinux.com>
+	 <20231206224305.34686-4-marlon.rodriguez-garcia@savoirfairelinux.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 06 Dec 2023 22:46:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15626
+ <bitbake-devel@lists.openembedded.org>; Wed, 06 Dec 2023 23:02:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15627
 
-Currently the script assumes the variarables are dumped at the start of the
-file which is hard to arrange safely in the bitbake code and no longer a true
-assumption.
+On Wed, 2023-12-06 at 17:43 -0500, Marlon Rodriguez Garcia wrote:
+> Added class EventPlayer to list of libraries under bitbake/bb/ui/
+> Update file read functionality to match new eventlog format
+>=20
+> Exclude listing of files that don't contain the allvariables definitions =
+used to replay builds
+> This part of the feature should be revisited. Over a long period of time,=
+ the BB_DEFAULT_EVENTLOG
+> will exponentially increase the size of the log file and cause bottleneck=
+s when importing.
+>=20
+> Signed-off-by: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfai=
+relinux.com>
+> ---
+>  lib/bb/ui/eventreplay.py        |  85 +++++++++++++++++++++
+>  lib/toaster/toastergui/views.py | 131 ++++++++++++--------------------
+>  2 files changed, 132 insertions(+), 84 deletions(-)
+>  create mode 100644 lib/bb/ui/eventreplay.py
 
-Rewrite the code so that it can cope with different ordering and event files
-containing multiple builds.
+Our patches overlapped!
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- bin/toaster-eventreplay | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+I've merged a patch to fix toaster-eventreplay and it is slightly
+different to the code below. The major tweaks are handling a second
+'allvariables' entry and adding a eventfile.seek(0) to reset the stream
+before calling the player.
 
-diff --git a/bin/toaster-eventreplay b/bin/toaster-eventreplay
-index 404b61f516..f137c71d5c 100755
---- a/bin/toaster-eventreplay
-+++ b/bin/toaster-eventreplay
-@@ -45,7 +45,13 @@ class EventPlayer:
-         if not line:
-             return
-         try:
--            event_str = json.loads(line)['vars'].encode('utf-8')
-+            decodedline = json.loads(line)
-+            if 'allvariables' in decodedline:
-+                self.variables = decodedline['allvariables']
-+                return
-+            if not 'vars' in decodedline:
-+                raise ValueError
-+            event_str = decodedline['vars'].encode('utf-8')
-             event = pickle.loads(codecs.decode(event_str, 'base64'))
-             event_name = "%s.%s" % (event.__module__, event.__class__.__name__)
-             if event_name not in self.eventmask:
-@@ -99,8 +105,16 @@ class EventPlayer:
- def main(argv):
-     with open(argv[-1]) as eventfile:
-         # load variables from the first line
--        variables = json.loads(eventfile.readline().strip())['allvariables']
--
-+        variables = None
-+        while line := eventfile.readline().strip():
-+            try:
-+                variables = json.loads(line)['allvariables']
-+                break
-+            except (KeyError, json.JSONDecodeError):
-+                continue
-+        if not variables:
-+            sys.exit("Cannot find allvariables entry in event log file %s" % argv[-1])
-+        eventfile.seek(0)
-         params = namedtuple('ConfigParams', ['observe_only'])(True)
-         player = EventPlayer(eventfile, variables)
- 
--- 
-2.39.2
+We should probably have a standalone patch moving that code from
+toaster-eventreplay to lib/bb/ui/eventreplay.py and making it use it,
+when can then be followed by the patch below to have views.py use it as
+well?
+
+Cheers,
+
+Richard
 
 
