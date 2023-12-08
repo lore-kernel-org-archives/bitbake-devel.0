@@ -1,123 +1,93 @@
-Return-Path: <pavel@zhukoff.net>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B0AC4167B
-	for <webhook@archiver.kernel.org>; Fri,  8 Dec 2023 11:38:03 +0000 (UTC)
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
- by mx.groups.io with SMTP id smtpd.web10.28866.1702035478428247357
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3833BC4167B
+	for <webhook@archiver.kernel.org>; Fri,  8 Dec 2023 15:18:05 +0000 (UTC)
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+ by mx.groups.io with SMTP id smtpd.web10.38245.1702048681444231841
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 08 Dec 2023 03:37:58 -0800
+ Fri, 08 Dec 2023 07:18:01 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@zhukoff.net header.s=fm1 header.b=LT1fwNzp;
- dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=pIPzpFvq;
- spf=pass (domain: zhukoff.net, ip: 64.147.123.24, mailfrom: pavel@zhukoff.net)
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailout.west.internal (Postfix) with ESMTP id C34063200A89;
-	Fri,  8 Dec 2023 06:37:57 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Fri, 08 Dec 2023 06:37:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to; s=fm1; t=1702035477; x=1702121877; bh=XTR4ZLmjYs
-	Hu+0EEEnfhexPlpgC8a+Pfq8W9KTgqGiw=; b=LT1fwNzp+qlIZbRsAjghEl/qXY
-	+Aavol0sg7VhvICGWV01SruiDhJS1SN9Xc81xHjIidzH5GcrLmIvFfZ3mWCy0npF
-	l8uDwKoOUZy+NqXZebmk/+HqGiWEASiYo9l4Ih4uDBlGseltuzSosJ8Ghdk+Qz/i
-	pUE+dyyPuQsO8q1k/nVwQD/pc0Bw3ZBGCxsAiAL3f6naF6lQtIJPSAApEa6KHJCz
-	M9S+t3LeJ1Fw/ArtiX7IQHXlQbpPyGQ2Uehb8NV43gW6bVrWUg/d15TNlM3IQY9g
-	6rjOVxAXyr/+BbQwjg39M/IQTD2GTHox34pEm4XK9ea3aQdo4NgZ+ph/WbNA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1702035477; x=1702121877; bh=XTR4ZLmjYsHu+
-	0EEEnfhexPlpgC8a+Pfq8W9KTgqGiw=; b=pIPzpFvq9xQuMbvA1N4jxcYjFReCa
-	qF5cQSlzLhVHaOv1SAfnJ9B5v3yys1wJ9x56xvctZtyuweF0fZZaY6rVTNFr2J0g
-	hGu4JNLhxFRMvm6q56sByfa5m1U/AwN/1dUPK/6KIAXbA+14TZEE32XDvAiE/I3m
-	vJOCsL6XZy4LcZFMEDc6DIyftnKP59W/CwP9IFXJkYnkH/p4w8r2+r9yPUXSflMS
-	LX4zjNKyPBPVhfP4vK8dmEhFed+gYhnNNBN8q5nvVRhJx1Du2CfKcMaKZ3asN9ry
-	dtd7e26tU+NnZVhbAqFpyaQFG82LSZ1m5qZKHNpZyZ0LxD8q4SX1jdKUg==
-X-ME-Sender: <xms:FQBzZdOL1P-7NXx1K3I3IaYomaMoU26sFIeZObByOZh1kMK9LmgFuw>
-    <xme:FQBzZf82mQueW3Gqx_zZMHikuchJkIX9C5RCVkJJIiWkZcUCpR46luHaZSNElNlo7
-    1e4kynTNpqu4HPDh3U>
-X-ME-Received: <xmr:FQBzZcTcGWRHtAlFBj5aFd2A1hg-6zkygZBCAjplv-6OdYbZkc4DxVQKOuOve_6lg4LXnP4tnQru>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudekiedgfeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpefrrghvvghlucgkhhhukhhovhcuoehprghvvghlseiihhhukhho
-    fhhfrdhnvghtqeenucggtffrrghtthgvrhhnpeevfeejkeejudegledtkeejhfettdefje
-    euffehieekvddugfdtffffledvvdefhfenucevlhhushhtvghrufhiiigvpedtnecurfgr
-    rhgrmhepmhgrihhlfhhrohhmpehprghvvghlseiihhhukhhofhhfrdhnvght
-X-ME-Proxy: <xmx:FQBzZZuD7pylgECBbWop2VBP4r0bKUQP8wPdx_S-s_yqBgoXfRsgeQ>
-    <xmx:FQBzZVcP8xQ13qJrj2C45XYoZb5L-eP_fGOQ7et99oUnTuctwBQ7Rw>
-    <xmx:FQBzZV1OYGIctu-AOruuSuntDvQ_b5nIkhYuLpaHMpXwgHdhn0sLDQ>
-    <xmx:FQBzZVlOFMQJ9yzhMh8X2TMMVDdJJt6m6F22ptkFbuvRpDwxkDH5xw>
-Feedback-ID: ib94946c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 8 Dec 2023 06:37:56 -0500 (EST)
-From: Pavel Zhukov <pavel@zhukoff.net>
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=1fkLRynO;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.182, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6cea2a38b48so1712615b3a.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 08 Dec 2023 07:18:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1702048680; x=1702653480; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wom4Boz+0udlwMz8yNNL8vf7jIRJddM1wBMJBTpQY/M=;
+        b=1fkLRynO+ZePvvt4XKyBcS+QAn34sI+UDBSdc2dAhn33KgpaMoUJzgbGJqv1ELdLvR
+         xySCFeWxCW6dsj4vFEgpWOmF7/+cGl2J1wwyUYkTs/WxznmW+RFUydll4gdjNdcLIcLh
+         teJroEIwhI8yrn4vh5flgYYE5YLQnkBGiyM1cnCieIEKGn8VdMRA9U7O+YsP+8OUSy3X
+         UriMvit4KpnD0WmxNSObhEKKYTzsgnrv9i/3YXFjO+WcRZzsP5j/3qzOLzoklsos4o7C
+         l2M7iYoq1sOoXO9Yapbvm4ezInB2/bh14guCQKnxvPNAc0C5Sbb4dMOVsrOod6WG7WSG
+         CiyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702048680; x=1702653480;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wom4Boz+0udlwMz8yNNL8vf7jIRJddM1wBMJBTpQY/M=;
+        b=CCZg64wEDFbFMy+vA90llqGGYI2qXPCUHv2KUSCZtqzoV0zwp/7cntYRDRNvixXq3r
+         +uGHNwAmtx+DLIwkid0RiG2F96GjD+fbmT+2LLaRTO023JoGeDNFvlY3AvygB427pQkX
+         9NlsyT+wOQvma5AnBzdO6//8V8N4U8f1QRFJ3zFu6nTyWS57lH/4dpeOhaBcPMQwfFby
+         1uN4I4aUuexT6shEUmmnN/Yp0hdvIp6gXp++Of+gHsY/tEIBdMxEpJucpXERqOjSoRTP
+         Kaw60P47etNkoQ29KyWRvM5QuMlDYKmu9qt3vqLa/yti4Qw4bd0SUAe/ihA4bN7ri61h
+         fbEg==
+X-Gm-Message-State: AOJu0YyXcl8AEzmr/RMk5ADvIwej5zZI/h4Mp2ioqklN1KlwarP8jcO+
+	PMGT+lXK/FkbUPZWGkp5pnTfEYjtR7U0KYJKACk=
+X-Google-Smtp-Source: AGHT+IH0D3hJTwbaaanVymv1HJuyRhDJnnvT/x64gnpaAahT5rHpC1hfKyzQ1ZQCHjVEN08d6MQWVQ==
+X-Received: by 2002:a05:6a00:1742:b0:6ce:5288:f75c with SMTP id j2-20020a056a00174200b006ce5288f75cmr203049pfc.34.1702048680448;
+        Fri, 08 Dec 2023 07:18:00 -0800 (PST)
+Received: from hexa.lan (dhcp-72-234-108-41.hawaiiantel.net. [72.234.108.41])
+        by smtp.gmail.com with ESMTPSA id fb32-20020a056a002da000b006ce7ed5ba41sm1668431pfb.55.2023.12.08.07.17.59
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Dec 2023 07:18:00 -0800 (PST)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Pavel Zhukov <pavel@zhukoff.net>
-Subject: [PATCH] utils.py: Do not create directories with ${ in the name
-Date: Fri,  8 Dec 2023 12:37:24 +0100
-Message-ID: <20231208113723.766840-2-pavel@zhukoff.net>
-X-Mailer: git-send-email 2.41.0
+Subject: [bitbake][kirkstone][2.0][PATCH 0/5] Pull request (cover letter only)
+Date: Fri,  8 Dec 2023 05:17:53 -1000
+Message-Id: <cover.1702048336.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 08 Dec 2023 11:38:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15640
+ <bitbake-devel@lists.openembedded.org>; Fri, 08 Dec 2023 15:18:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15641
 
-In some cases ${ may not be expanded in the WORKDIR (one of the cases is
-undefined variable) and causes cryptic failures [1]. Guard this by
-erroring out if directory name contains ${
+Passed a-full on autobuilder:
 
-Fixes: [Yocto #15255]
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/6300
 
-[1]
-ERROR: x-native-1.0+${SRCPV}-r0 do_deploy_source_date_epoch: Error executing a python function in exec_func_python() autogenerated:
+The following changes since commit a7f6c3e67bd9170e93b2b94676e84018faf0df91:
 
-The stack trace of python calls that resulted in this exception/failure was:
-File: 'exec_func_python() autogenerated', lineno: 2, function: <module>
-     0001:
- *** 0002:sstate_hardcode_path(d)
-     0003:
-File: '/home/mischief/src/poky/meta/classes-global/sstate.bbclass', lineno: 654, function: sstate_hardcode_path
-     0650:    bb.note("Removing hardcoded paths from sstate package: '%s'" % (sstate_hardcode_cmd))
-     0651:    subprocess.check_output(sstate_hardcode_cmd, shell=True, cwd=sstate_builddir)
-     0652:
-     0653:        # If the fixmefn is empty, remove it..
- *** 0654:    if os.stat(fixmefn).st_size == 0:
-     0655:        os.remove(fixmefn)
-     0656:    else:
-     0657:        bb.note("Replacing absolute paths in fixmepath file: '%s'" % (sstate_filelist_relative_cmd))
-     0658:        subprocess.check_output(sstate_filelist_relative_cmd, shell=True)
-Exception: FileNotFoundError: [Errno 2] No such file or directory: '/home/mischief/src/poky/build/tmp/work/core2-64-poky-linux/x-native/1.0+${SRCPV}-r0/sstate-build-deploy_source_date_epoch/fixmepath'
+  Fix disk space monitoring on cephfs (2023-11-09 12:49:31 +0000)
 
-Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
----
- bitbake/lib/bb/utils.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+are available in the Git repository at:
 
-diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-index 61ffad92ce..d299b2efdb 100644
---- a/bitbake/lib/bb/utils.py
-+++ b/bitbake/lib/bb/utils.py
-@@ -759,7 +759,8 @@ def mkdirhier(directory):
-     """Create a directory like 'mkdir -p', but does not complain if
-     directory already exists like os.makedirs
-     """
--
-+    if directory.find('${') != -1:
-+        bb.fatal("Directory name {} contains unexpanded bitbake variable. This may cause build failures and WORKDIR polution.".format(directory))
-     try:
-         os.makedirs(directory)
-     except OSError as e:
+  https://git.openembedded.org/bitbake-contrib stable/2.0-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.0-next
+
+Chen Qi (2):
+  runqueue: fix PSI check calculation
+  runqueue.py: fix PSI check logic
+
+Martin Jansa (2):
+  runqueue: show more pressure data
+  runqueue: show number of currently running bitbake threads when
+    pressure changes
+
+Richard Purdie (1):
+  runqueue: Add pressure change logging
+
+ lib/bb/runqueue.py | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
 -- 
-2.41.0
+2.34.1
 
 
