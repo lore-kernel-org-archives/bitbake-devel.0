@@ -1,125 +1,123 @@
-Return-Path: <alassane.yattara@savoirfairelinux.com>
+Return-Path: <pavel@zhukoff.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E82C4167B
-	for <webhook@archiver.kernel.org>; Fri,  8 Dec 2023 01:56:49 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.10405.1702000608103209110
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B0AC4167B
+	for <webhook@archiver.kernel.org>; Fri,  8 Dec 2023 11:38:03 +0000 (UTC)
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+ by mx.groups.io with SMTP id smtpd.web10.28866.1702035478428247357
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 07 Dec 2023 17:56:48 -0800
+ Fri, 08 Dec 2023 03:37:58 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=nOMmO8Ux;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 6F8A79C33BA
-	for <bitbake-devel@lists.openembedded.org>; Thu,  7 Dec 2023 20:56:47 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id lP7AvXyThrXc; Thu,  7 Dec 2023 20:56:47 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1A0BB9C33E2;
-	Thu,  7 Dec 2023 20:56:47 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 1A0BB9C33E2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1702000607; bh=gn8j86AZLwDt86nV+sphGAC1IC5bGwhAumwhVMRr7LM=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=nOMmO8UxYQ0MMnDWT5WrON7bYGNAHXqhohDD2TaHk1zgLTVQIQkQLmHm2oKHnZlI9
-	 EkvuosQObl4ArQV+rDloD2t27xUqtq+zKYXllU1ajGYn5XI6aYEAjjMiecXdC22AZ+
-	 i51IVNdOWaOPJhn30IOMzF3vM2UGw6Ih2f2VEtQQi771prybXHuISl9VVy1PsqqVZR
-	 UDpsjeDgc5cGajonk3R+kIUrvtRys5+UmovEJiDlp0+l4X5TA4Q7VrCuwM6a9Bk+wU
-	 8HNVEvTtO9RjpgRyjS88mXXPhYUQsPAi6yZ6om+f5lT0X08Dl7k++todLJHXZGupax
-	 9YsYoxNngWFkg==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id nP-DzLV_lsid; Thu,  7 Dec 2023 20:56:47 -0500 (EST)
-Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 512FA9C33BA;
-	Thu,  7 Dec 2023 20:56:46 -0500 (EST)
-From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+ dkim=pass header.i=@zhukoff.net header.s=fm1 header.b=LT1fwNzp;
+ dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=pIPzpFvq;
+ spf=pass (domain: zhukoff.net, ip: 64.147.123.24, mailfrom: pavel@zhukoff.net)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailout.west.internal (Postfix) with ESMTP id C34063200A89;
+	Fri,  8 Dec 2023 06:37:57 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Fri, 08 Dec 2023 06:37:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:sender:subject
+	:subject:to:to; s=fm1; t=1702035477; x=1702121877; bh=XTR4ZLmjYs
+	Hu+0EEEnfhexPlpgC8a+Pfq8W9KTgqGiw=; b=LT1fwNzp+qlIZbRsAjghEl/qXY
+	+Aavol0sg7VhvICGWV01SruiDhJS1SN9Xc81xHjIidzH5GcrLmIvFfZ3mWCy0npF
+	l8uDwKoOUZy+NqXZebmk/+HqGiWEASiYo9l4Ih4uDBlGseltuzSosJ8Ghdk+Qz/i
+	pUE+dyyPuQsO8q1k/nVwQD/pc0Bw3ZBGCxsAiAL3f6naF6lQtIJPSAApEa6KHJCz
+	M9S+t3LeJ1Fw/ArtiX7IQHXlQbpPyGQ2Uehb8NV43gW6bVrWUg/d15TNlM3IQY9g
+	6rjOVxAXyr/+BbQwjg39M/IQTD2GTHox34pEm4XK9ea3aQdo4NgZ+ph/WbNA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1702035477; x=1702121877; bh=XTR4ZLmjYsHu+
+	0EEEnfhexPlpgC8a+Pfq8W9KTgqGiw=; b=pIPzpFvq9xQuMbvA1N4jxcYjFReCa
+	qF5cQSlzLhVHaOv1SAfnJ9B5v3yys1wJ9x56xvctZtyuweF0fZZaY6rVTNFr2J0g
+	hGu4JNLhxFRMvm6q56sByfa5m1U/AwN/1dUPK/6KIAXbA+14TZEE32XDvAiE/I3m
+	vJOCsL6XZy4LcZFMEDc6DIyftnKP59W/CwP9IFXJkYnkH/p4w8r2+r9yPUXSflMS
+	LX4zjNKyPBPVhfP4vK8dmEhFed+gYhnNNBN8q5nvVRhJx1Du2CfKcMaKZ3asN9ry
+	dtd7e26tU+NnZVhbAqFpyaQFG82LSZ1m5qZKHNpZyZ0LxD8q4SX1jdKUg==
+X-ME-Sender: <xms:FQBzZdOL1P-7NXx1K3I3IaYomaMoU26sFIeZObByOZh1kMK9LmgFuw>
+    <xme:FQBzZf82mQueW3Gqx_zZMHikuchJkIX9C5RCVkJJIiWkZcUCpR46luHaZSNElNlo7
+    1e4kynTNpqu4HPDh3U>
+X-ME-Received: <xmr:FQBzZcTcGWRHtAlFBj5aFd2A1hg-6zkygZBCAjplv-6OdYbZkc4DxVQKOuOve_6lg4LXnP4tnQru>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudekiedgfeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpefrrghvvghlucgkhhhukhhovhcuoehprghvvghlseiihhhukhho
+    fhhfrdhnvghtqeenucggtffrrghtthgvrhhnpeevfeejkeejudegledtkeejhfettdefje
+    euffehieekvddugfdtffffledvvdefhfenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehprghvvghlseiihhhukhhofhhfrdhnvght
+X-ME-Proxy: <xmx:FQBzZZuD7pylgECBbWop2VBP4r0bKUQP8wPdx_S-s_yqBgoXfRsgeQ>
+    <xmx:FQBzZVcP8xQ13qJrj2C45XYoZb5L-eP_fGOQ7et99oUnTuctwBQ7Rw>
+    <xmx:FQBzZV1OYGIctu-AOruuSuntDvQ_b5nIkhYuLpaHMpXwgHdhn0sLDQ>
+    <xmx:FQBzZVlOFMQJ9yzhMh8X2TMMVDdJJt6m6F22ptkFbuvRpDwxkDH5xw>
+Feedback-ID: ib94946c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 8 Dec 2023 06:37:56 -0500 (EST)
+From: Pavel Zhukov <pavel@zhukoff.net>
 To: bitbake-devel@lists.openembedded.org
-Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH] toaster/test: Fixes warnings in autobuilder
-Date: Fri,  8 Dec 2023 02:56:33 +0100
-Message-Id: <20231208015633.686774-1-alassane.yattara@savoirfairelinux.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Pavel Zhukov <pavel@zhukoff.net>
+Subject: [PATCH] utils.py: Do not create directories with ${ in the name
+Date: Fri,  8 Dec 2023 12:37:24 +0100
+Message-ID: <20231208113723.766840-2-pavel@zhukoff.net>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 08 Dec 2023 01:56:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15639
+ <bitbake-devel@lists.openembedded.org>; Fri, 08 Dec 2023 11:38:03 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15640
 
-../bitbake/lib/toaster/tests/functional/functional_helpers.py:66
-  /home/pokybuild/yocto-worker/toaster/build/bitbake/lib/toaster/tests/fu=
-nctional/functional_helpers.py:66: DeprecationWarning: invalid escape seq=
-uence '\s'
-    project_url=3Dre.search("(projectPageUrl\s:\s\")(.*)(\",)",rc)
+In some cases ${ may not be expanded in the WORKDIR (one of the cases is
+undefined variable) and causes cryptic failures [1]. Guard this by
+erroring out if directory name contains ${
 
-Traceback (most recent call last):
-  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
-    self.run()
-  File "/home/pokybuild/yocto-worker/toaster/build/bitbake/lib/toaster/te=
-sts/commands/test_runbuilds.py", line 39, in run
-    os.kill(int(pid), signal.SIGTERM)
-ProcessLookupError: [Errno 3] No such process
+Fixes: [Yocto #15255]
 
-Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+[1]
+ERROR: x-native-1.0+${SRCPV}-r0 do_deploy_source_date_epoch: Error executing a python function in exec_func_python() autogenerated:
+
+The stack trace of python calls that resulted in this exception/failure was:
+File: 'exec_func_python() autogenerated', lineno: 2, function: <module>
+     0001:
+ *** 0002:sstate_hardcode_path(d)
+     0003:
+File: '/home/mischief/src/poky/meta/classes-global/sstate.bbclass', lineno: 654, function: sstate_hardcode_path
+     0650:    bb.note("Removing hardcoded paths from sstate package: '%s'" % (sstate_hardcode_cmd))
+     0651:    subprocess.check_output(sstate_hardcode_cmd, shell=True, cwd=sstate_builddir)
+     0652:
+     0653:        # If the fixmefn is empty, remove it..
+ *** 0654:    if os.stat(fixmefn).st_size == 0:
+     0655:        os.remove(fixmefn)
+     0656:    else:
+     0657:        bb.note("Replacing absolute paths in fixmepath file: '%s'" % (sstate_filelist_relative_cmd))
+     0658:        subprocess.check_output(sstate_filelist_relative_cmd, shell=True)
+Exception: FileNotFoundError: [Errno 2] No such file or directory: '/home/mischief/src/poky/build/tmp/work/core2-64-poky-linux/x-native/1.0+${SRCPV}-r0/sstate-build-deploy_source_date_epoch/fixmepath'
+
+Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
 ---
- lib/toaster/tests/commands/test_runbuilds.py       | 13 ++++++++++---
- lib/toaster/tests/functional/functional_helpers.py |  2 +-
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ bitbake/lib/bb/utils.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/tests/commands/test_runbuilds.py b/lib/toaster/t=
-ests/commands/test_runbuilds.py
-index c77d6cf4..738d36e9 100644
---- a/lib/toaster/tests/commands/test_runbuilds.py
-+++ b/lib/toaster/tests/commands/test_runbuilds.py
-@@ -19,6 +19,10 @@ import time
- import subprocess
- import signal
-=20
-+import logging
-+
-+
-+logger =3D logging.getLogger("toaster")
-=20
- class KillRunbuilds(threading.Thread):
-     """ Kill the runbuilds process after an amount of time """
-@@ -34,9 +38,12 @@ class KillRunbuilds(threading.Thread):
-         pidfile_path =3D os.path.join(os.environ.get("BUILDDIR", "."),
-                                     ".runbuilds.pid")
-=20
--        with open(pidfile_path) as pidfile:
--            pid =3D pidfile.read()
--            os.kill(int(pid), signal.SIGTERM)
-+        try:
-+            with open(pidfile_path) as pidfile:
-+                pid =3D pidfile.read()
-+                os.kill(int(pid), signal.SIGTERM)
-+        except ProcessLookupError:
-+            logger.warning("Runbuilds not running or already killed")
-=20
-=20
- class TestCommands(TestCase):
-diff --git a/lib/toaster/tests/functional/functional_helpers.py b/lib/toa=
-ster/tests/functional/functional_helpers.py
-index b80d403b..1c535db6 100644
---- a/lib/toaster/tests/functional/functional_helpers.py
-+++ b/lib/toaster/tests/functional/functional_helpers.py
-@@ -62,7 +62,7 @@ class SeleniumFunctionalTestCase(SeleniumTestCaseBase):
-=20
-     def get_URL(self):
-          rc=3Dself.get_page_source()
--         project_url=3Dre.search("(projectPageUrl\s:\s\")(.*)(\",)",rc)
-+         project_url=3Dre.search(r"(projectPageUrl\s:\s\")(.*)(\",)",rc)
-          return project_url.group(2)
-=20
-=20
---=20
-2.34.1
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 61ffad92ce..d299b2efdb 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -759,7 +759,8 @@ def mkdirhier(directory):
+     """Create a directory like 'mkdir -p', but does not complain if
+     directory already exists like os.makedirs
+     """
+-
++    if directory.find('${') != -1:
++        bb.fatal("Directory name {} contains unexpanded bitbake variable. This may cause build failures and WORKDIR polution.".format(directory))
+     try:
+         os.makedirs(directory)
+     except OSError as e:
+-- 
+2.41.0
 
 
