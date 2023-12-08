@@ -2,1223 +2,721 @@ Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AE8C10DC3
-	for <webhook@archiver.kernel.org>; Fri,  8 Dec 2023 01:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66186C4167B
+	for <webhook@archiver.kernel.org>; Fri,  8 Dec 2023 01:56:09 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.10265.1702000412564188550
+ by mx.groups.io with SMTP id smtpd.web10.10310.1702000564868554340
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 07 Dec 2023 17:53:32 -0800
+ Thu, 07 Dec 2023 17:56:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=Zlgl1t0t;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=KFzuJHLs;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id CBFFB9C33BA
-	for <bitbake-devel@lists.openembedded.org>; Thu,  7 Dec 2023 20:53:31 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 3D3E89C3645
+	for <bitbake-devel@lists.openembedded.org>; Thu,  7 Dec 2023 20:56:04 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 0PPbllN2CEFu; Thu,  7 Dec 2023 20:53:29 -0500 (EST)
+ with ESMTP id PUytvKUgJowG; Thu,  7 Dec 2023 20:56:02 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 6FD0E9C33E2;
-	Thu,  7 Dec 2023 20:53:29 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 6FD0E9C33E2
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id A8FDA9C3472;
+	Thu,  7 Dec 2023 20:56:02 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com A8FDA9C3472
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1702000409; bh=pD2TC+aByrxAp1AwQjbm4/ivgOg7xUgsyRvZN6Wb2Sw=;
+	t=1702000562; bh=BZoqrlhmhQgYItHqJt2gV1Mjylnp8xiNnhj4p9+a8xg=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=Zlgl1t0tltYhg41+lxQyN0h7pqdKfdmNaLw5N7UqoY1mqJgZQBx7HtCEL92D53b2O
-	 dSZ3iD/5mvX75jCzL8qI1AVVCPZJC5Db5dQ6fh3tinbHEoEwzs38Azx34BDapje1SR
-	 ntnqrh8R8MuyIG9rVm8rekS8UmRR9+QhgHTm++nU4nUVt7cX8uk78bNIuBa+uMdlSS
-	 4ircsDA45ZOmI+3t32rg7xtQFMUSMkmNlTKuWQIqE8C4MGIUvEIUSGyAfkHRjALDt/
-	 WW+MqlVb/gqEv/GRnmVGumyp1u7ZJtgWz3QXGIwMTPSqkqX5qyjqMEnwkMpAXHFNEa
-	 837FvJ+6/5ZGg==
+	b=KFzuJHLsJIxz1RF/TNlG1NaXc79LZRKdYQCL/FAr/OXtvrRVX8GqVWG6LB4WSEVj7
+	 3FB0pot21XvHpiNWuP8rMlopmIJvOLESaWV6vxL+S9AoB9zCeKJsqllOpqBen+O66x
+	 g2MLKSxnNR3hFKQeqR3g0vNG/29geQJOV3jBwH62IrrcN7QJdo54AW7+1N/kPhGyIb
+	 KeUxWCASXSkEDGlEtZqLV/8yPbVsbkNiZZA83DnrErFoDTLYXMvmoCZsFoI8tsnCwV
+	 8YlTMFKIAUrYFW7oo5hWZuvSTx9q7i6uXja+JTW4AkoV5836Fwho1XcYVDkjpM2GVd
+	 IvSDDwRHQlgpA==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id iCIQkPJEpMEm; Thu,  7 Dec 2023 20:53:29 -0500 (EST)
+ with ESMTP id cLwUu5qM3td7; Thu,  7 Dec 2023 20:56:02 -0500 (EST)
 Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 4577F9C3472;
-	Thu,  7 Dec 2023 20:53:28 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id BFA9D9C33BA;
+	Thu,  7 Dec 2023 20:56:01 -0500 (EST)
 From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH 3/4] toaster/test: Refactorize tests/functional
-Date: Fri,  8 Dec 2023 02:53:18 +0100
-Message-Id: <20231208015319.677993-3-alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH] toaster/test: bug-fix tests writing files into /tmp on the autobuilders
+Date: Fri,  8 Dec 2023 02:55:57 +0100
+Message-Id: <20231208015557.684827-1-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231208015319.677993-1-alassane.yattara@savoirfairelinux.com>
-References: <20231208015319.677993-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 08 Dec 2023 01:53:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15636
+ <bitbake-devel@lists.openembedded.org>; Fri, 08 Dec 2023 01:56:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15638
 
-- Split testcases from test_project_page_tab_config into tow files
-- Added new testcases in test_project_config
-    - Test changing distro variable
-    - Test setting IMAGE_INSTALL:append variable
-    - Test setting PACKAGE_CLASSES variable
-    - Test creating new bitbake variable
+- Use build directory instead of /tmp
+- Better handle delay between driver actions
 
 Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- .../tests/functional/test_project_config.py   | 335 ++++++++++++
- .../test_project_page_tab_config.py           | 495 ++++++++----------
- 2 files changed, 554 insertions(+), 276 deletions(-)
- create mode 100644 lib/toaster/tests/functional/test_project_config.py
+ .../tests/browser/test_all_builds_page.py     |  4 +-
+ .../tests/browser/test_all_projects_page.py   | 45 ++++++++++---------
+ .../tests/browser/test_builddashboard_page.py |  4 +-
+ .../test_builddashboard_page_artifacts.py     |  4 +-
+ .../tests/browser/test_landing_page.py        | 33 ++++++++------
+ .../tests/browser/test_layerdetails_page.py   |  4 +-
+ .../browser/test_most_recent_builds_states.py |  1 -
+ .../browser/test_new_custom_image_page.py     |  3 +-
+ .../tests/browser/test_new_project_page.py    | 11 ++---
+ .../tests/browser/test_project_builds_page.py |  4 +-
+ .../tests/browser/test_project_config_page.py |  4 +-
+ .../tests/browser/test_toastertable_ui.py     |  4 +-
+ lib/toaster/tests/builds/buildtest.py         |  2 +-
+ lib/toaster/tests/functional/buffer           |  0
+ lib/toaster/tests/views/test_views.py         |  8 ++--
+ 15 files changed, 75 insertions(+), 56 deletions(-)
+ create mode 100644 lib/toaster/tests/functional/buffer
 
-diff --git a/lib/toaster/tests/functional/test_project_config.py b/lib/to=
-aster/tests/functional/test_project_config.py
-new file mode 100644
-index 00000000..2d162d81
---- /dev/null
-+++ b/lib/toaster/tests/functional/test_project_config.py
-@@ -0,0 +1,335 @@
-+#! /usr/bin/env python3 #
-+# BitBake Toaster UI tests implementation
-+#
-+# Copyright (C) 2023 Savoir-faire Linux
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+
-+import string
-+import random
-+import pytest
-+from django.urls import reverse
-+from selenium.webdriver import Keys
-+from selenium.webdriver.support.select import Select
-+from selenium.common.exceptions import TimeoutException
-+from tests.functional.functional_helpers import SeleniumFunctionalTestCa=
-se
-+from selenium.webdriver.common.by import By
-+
-+from .utils import get_projectId_from_url
-+
-+
-+@pytest.mark.django_db
-+@pytest.mark.order("last")
-+class TestProjectConfig(SeleniumFunctionalTestCase):
-+    project_id =3D None
-+    PROJECT_NAME =3D 'TestProjectConfig'
-+    INVALID_PATH_START_TEXT =3D 'The directory path should either start =
-with a /'
-+    INVALID_PATH_CHAR_TEXT =3D 'The directory path cannot include spaces=
- or ' \
-+        'any of these characters'
-+
-+    def _create_project(self, project_name):
-+        """ Create/Test new project using:
-+          - Project Name: Any string
-+          - Release: Any string
-+          - Merge Toaster settings: True or False
-+        """
-+        self.get(reverse('newproject'))
-+        self.wait_until_visible('#new-project-name', poll=3D2)
-+        self.find("#new-project-name").send_keys(project_name)
-+        select =3D Select(self.find("#projectversion"))
-+        select.select_by_value('3')
-+
-+        # check merge toaster settings
-+        checkbox =3D self.find('.checkbox-mergeattr')
-+        if not checkbox.is_selected():
-+            checkbox.click()
-+
-+        if self.PROJECT_NAME !=3D 'TestProjectConfig':
-+            # Reset project name if it's not the default one
-+            self.PROJECT_NAME =3D 'TestProjectConfig'
-+
-+        self.find("#create-project-button").click()
-+
-+        try:
-+            self.wait_until_visible('#hint-error-project-name', poll=3D2=
-)
-+            url =3D reverse('project', args=3D(TestProjectConfig.project=
-_id, ))
-+            self.get(url)
-+            self.wait_until_visible('#config-nav', poll=3D3)
-+        except TimeoutException:
-+            self.wait_until_visible('#config-nav', poll=3D3)
-+
-+    def _random_string(self, length):
-+        return ''.join(
-+            random.choice(string.ascii_letters) for _ in range(length)
-+        )
-+
-+    def _get_config_nav_item(self, index):
-+        config_nav =3D self.find('#config-nav')
-+        return config_nav.find_elements(By.TAG_NAME, 'li')[index]
-+
-+    def _navigate_bbv_page(self):
-+        """ Navigate to project BitBake variables page """
-+        # check if the menu is displayed
-+        if TestProjectConfig.project_id is None:
-+            self._create_project(project_name=3Dself._random_string(10))
-+            current_url =3D self.driver.current_url
-+            TestProjectConfig.project_id =3D get_projectId_from_url(curr=
-ent_url)
-+        else:
-+            url =3D reverse('projectconf', args=3D(TestProjectConfig.pro=
-ject_id,))
-+            self.get(url)
-+        self.wait_until_visible('#config-nav', poll=3D3)
-+        bbv_page_link =3D self._get_config_nav_item(9)
-+        bbv_page_link.click()
-+        self.wait_until_visible('#config-nav', poll=3D3)
-+
-+    def test_no_underscore_iamgefs_type(self):
-+        """
-+        Should not accept IMAGEFS_TYPE with an underscore
-+        """
-+        self._navigate_bbv_page()
-+        imagefs_type =3D "foo_bar"
-+
-+        self.wait_until_visible('#change-image_fstypes-icon', poll=3D2)
-+
-+        self.click('#change-image_fstypes-icon')
-+
-+        self.enter_text('#new-imagefs_types', imagefs_type)
-+
-+        element =3D self.wait_until_visible('#hintError-image-fs_type', =
-poll=3D2)
-+
-+        self.assertTrue(("A valid image type cannot include underscores"=
- in element.text),
-+                        "Did not find underscore error message")
-+
-+    def test_checkbox_verification(self):
-+        """
-+        Should automatically check the checkbox if user enters value
-+        text box, if value is there in the checkbox.
-+        """
-+        self._navigate_bbv_page()
-+
-+        imagefs_type =3D "btrfs"
-+
-+        self.wait_until_visible('#change-image_fstypes-icon', poll=3D2)
-+
-+        self.click('#change-image_fstypes-icon')
-+
-+        self.enter_text('#new-imagefs_types', imagefs_type)
-+
-+        checkboxes =3D self.driver.find_elements(By.XPATH, "//input[@cla=
-ss=3D'fs-checkbox-fstypes']")
-+
-+        for checkbox in checkboxes:
-+            if checkbox.get_attribute("value") =3D=3D "btrfs":
-+               self.assertEqual(checkbox.is_selected(), True)
-+
-+    def test_textbox_with_checkbox_verification(self):
-+        """
-+        Should automatically add or remove value in textbox, if user che=
-cks
-+        or unchecks checkboxes.
-+        """
-+        self._navigate_bbv_page()
-+
-+        self.wait_until_visible('#change-image_fstypes-icon', poll=3D2)
-+
-+        self.click('#change-image_fstypes-icon')
-+
-+        checkboxes_selector =3D '.fs-checkbox-fstypes'
-+
-+        self.wait_until_visible(checkboxes_selector, poll=3D2)
-+        checkboxes =3D self.find_all(checkboxes_selector)
-+
-+        for checkbox in checkboxes:
-+            if checkbox.get_attribute("value") =3D=3D "cpio":
-+               checkbox.click()
-+               element =3D self.driver.find_element(By.ID, 'new-imagefs_=
-types')
-+
-+               self.wait_until_visible('#new-imagefs_types', poll=3D2)
-+
-+               self.assertTrue(("cpio" in element.get_attribute('value')=
-,
-+                               "Imagefs not added into the textbox"))
-+               checkbox.click()
-+               self.assertTrue(("cpio" not in element.text),
-+                               "Image still present in the textbox")
-+
-+    def test_set_download_dir(self):
-+        """
-+        Validate the allowed and disallowed types in the directory field=
- for
-+        DL_DIR
-+        """
-+        self._navigate_bbv_page()
-+
-+        # activate the input to edit download dir
-+        try:
-+            change_dl_dir_btn =3D self.wait_until_visible('#change-dl_di=
-r-icon', poll=3D2)
-+        except TimeoutException:
-+            # If download dir is not displayed, test is skipped
-+            return True
-+        change_dl_dir_btn =3D self.wait_until_visible('#change-dl_dir-ic=
-on', poll=3D2)
-+        change_dl_dir_btn.click()
-+
-+        # downloads dir path doesn't start with / or ${...}
-+        input_field =3D self.wait_until_visible('#new-dl_dir', poll=3D2)
-+        input_field.clear()
-+        self.enter_text('#new-dl_dir', 'home/foo')
-+        element =3D self.wait_until_visible('#hintError-initialChar-dl_d=
-ir', poll=3D2)
-+
-+        msg =3D 'downloads directory path starts with invalid character =
-but ' \
-+            'treated as valid'
-+        self.assertTrue((self.INVALID_PATH_START_TEXT in element.text), =
-msg)
-+
-+        # downloads dir path has a space
-+        self.driver.find_element(By.ID, 'new-dl_dir').clear()
-+        self.enter_text('#new-dl_dir', '/foo/bar a')
-+
-+        element =3D self.wait_until_visible('#hintError-dl_dir', poll=3D=
-2)
-+        msg =3D 'downloads directory path characters invalid but treated=
- as valid'
-+        self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), m=
-sg)
-+
-+        # downloads dir path starts with ${...} but has a space
-+        self.driver.find_element(By.ID,'new-dl_dir').clear()
-+        self.enter_text('#new-dl_dir', '${TOPDIR}/down foo')
-+
-+        element =3D self.wait_until_visible('#hintError-dl_dir', poll=3D=
-2)
-+        msg =3D 'downloads directory path characters invalid but treated=
- as valid'
-+        self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), m=
-sg)
-+
-+        # downloads dir path starts with /
-+        self.driver.find_element(By.ID,'new-dl_dir').clear()
-+        self.enter_text('#new-dl_dir', '/bar/foo')
-+
-+        hidden_element =3D self.driver.find_element(By.ID,'hintError-dl_=
-dir')
-+        self.assertEqual(hidden_element.is_displayed(), False,
-+            'downloads directory path valid but treated as invalid')
-+
-+        # downloads dir path starts with ${...}
-+        self.driver.find_element(By.ID,'new-dl_dir').clear()
-+        self.enter_text('#new-dl_dir', '${TOPDIR}/down')
-+
-+        hidden_element =3D self.driver.find_element(By.ID,'hintError-dl_=
-dir')
-+        self.assertEqual(hidden_element.is_displayed(), False,
-+            'downloads directory path valid but treated as invalid')
-+
-+    def test_set_sstate_dir(self):
-+        """
-+        Validate the allowed and disallowed types in the directory field=
- for
-+        SSTATE_DIR
-+        """
-+        self._navigate_bbv_page()
-+
-+        try:
-+            self.wait_until_visible('#change-sstate_dir-icon', poll=3D2)
-+            self.click('#change-sstate_dir-icon')
-+        except TimeoutException:
-+            # If sstate_dir is not displayed, test is skipped
-+            return True
-+
-+        # path doesn't start with / or ${...}
-+        input_field =3D self.wait_until_visible('#new-sstate_dir', poll=3D=
-2)
-+        input_field.clear()
-+        self.enter_text('#new-sstate_dir', 'home/foo')
-+        element =3D self.wait_until_visible('#hintError-initialChar-ssta=
-te_dir', poll=3D2)
-+
-+        msg =3D 'sstate directory path starts with invalid character but=
- ' \
-+            'treated as valid'
-+        self.assertTrue((self.INVALID_PATH_START_TEXT in element.text), =
-msg)
-+
-+        # path has a space
-+        self.driver.find_element(By.ID, 'new-sstate_dir').clear()
-+        self.enter_text('#new-sstate_dir', '/foo/bar a')
-+
-+        element =3D self.wait_until_visible('#hintError-sstate_dir', pol=
-l=3D2)
-+        msg =3D 'sstate directory path characters invalid but treated as=
- valid'
-+        self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), m=
-sg)
-+
-+        # path starts with ${...} but has a space
-+        self.driver.find_element(By.ID,'new-sstate_dir').clear()
-+        self.enter_text('#new-sstate_dir', '${TOPDIR}/down foo')
-+
-+        element =3D self.wait_until_visible('#hintError-sstate_dir', pol=
-l=3D2)
-+        msg =3D 'sstate directory path characters invalid but treated as=
- valid'
-+        self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), m=
-sg)
-+
-+        # path starts with /
-+        self.driver.find_element(By.ID,'new-sstate_dir').clear()
-+        self.enter_text('#new-sstate_dir', '/bar/foo')
-+
-+        hidden_element =3D self.driver.find_element(By.ID, 'hintError-ss=
-tate_dir')
-+        self.assertEqual(hidden_element.is_displayed(), False,
-+            'sstate directory path valid but treated as invalid')
-+
-+        # paths starts with ${...}
-+        self.driver.find_element(By.ID, 'new-sstate_dir').clear()
-+        self.enter_text('#new-sstate_dir', '${TOPDIR}/down')
-+
-+        hidden_element =3D self.driver.find_element(By.ID, 'hintError-ss=
-tate_dir')
-+        self.assertEqual(hidden_element.is_displayed(), False,
-+            'sstate directory path valid but treated as invalid')
-+
-+    def _change_bbv_value(self, **kwargs):
-+        var_name, field, btn_id, input_id, value, save_btn, *_ =3D kwarg=
-s.values()
-+        """ Change bitbake variable value """
-+        self._navigate_bbv_page()
-+        self.wait_until_visible(f'#{btn_id}', poll=3D2)
-+        if kwargs.get('new_variable'):
-+            self.find(f"#{btn_id}").clear()
-+            self.enter_text(f"#{btn_id}", f"{var_name}")
-+        else:
-+            self.click(f'#{btn_id}')
-+            self.wait_until_visible(f'#{input_id}', poll=3D2)
-+
-+        if kwargs.get('is_select'):
-+            select =3D Select(self.find(f'#{input_id}'))
-+            select.select_by_visible_text(value)
-+        else:
-+            self.find(f"#{input_id}").clear()
-+            self.enter_text(f'#{input_id}', f'{value}')
-+        self.click(f'#{save_btn}')
-+        value_displayed =3D str(self.wait_until_visible(f'#{field}').tex=
-t).lower()
-+        msg =3D f'{var_name} variable not changed'
-+        self.assertTrue(str(value).lower() in value_displayed, msg)
-+
-+    def test_change_distro_var(self):
-+        """ Test changing distro variable """
-+        self._change_bbv_value(
-+            var_name=3D'DISTRO',
-+            field=3D'distro',
-+            btn_id=3D'change-distro-icon',
-+            input_id=3D'new-distro',
-+            value=3D'poky-changed',
-+            save_btn=3D"apply-change-distro",
-+        )
-+
-+    def test_set_image_install_append_var(self):
-+        """ Test setting IMAGE_INSTALL:append variable """
-+        self._change_bbv_value(
-+            var_name=3D'IMAGE_INSTALL:append',
-+            field=3D'image_install',
-+            btn_id=3D'change-image_install-icon',
-+            input_id=3D'new-image_install',
-+            value=3D'bash, apt, busybox',
-+            save_btn=3D"apply-change-image_install",
-+        )
-+
-+    def test_set_package_classes_var(self):
-+        """ Test setting PACKAGE_CLASSES variable """
-+        self._change_bbv_value(
-+            var_name=3D'PACKAGE_CLASSES',
-+            field=3D'package_classes',
-+            btn_id=3D'change-package_classes-icon',
-+            input_id=3D'package_classes-select',
-+            value=3D'package_deb',
-+            save_btn=3D"apply-change-package_classes",
-+            is_select=3DTrue,
-+        )
-+
-+    def test_create_new_bbv(self):
-+        """ Test creating new bitbake variable """
-+        self._change_bbv_value(
-+            var_name=3D'New_Custom_Variable',
-+            field=3D'configvar-list',
-+            btn_id=3D'variable',
-+            input_id=3D'value',
-+            value=3D'new variable value',
-+            save_btn=3D"add-configvar-button",
-+            new_variable=3DTrue
-+        )
-diff --git a/lib/toaster/tests/functional/test_project_page_tab_config.py=
- b/lib/toaster/tests/functional/test_project_page_tab_config.py
-index 23012d78..d911ff00 100644
---- a/lib/toaster/tests/functional/test_project_page_tab_config.py
-+++ b/lib/toaster/tests/functional/test_project_page_tab_config.py
-@@ -6,87 +6,81 @@
+diff --git a/lib/toaster/tests/browser/test_all_builds_page.py b/lib/toas=
+ter/tests/browser/test_all_builds_page.py
+index bfd8f3a4..7019b3db 100644
+--- a/lib/toaster/tests/browser/test_all_builds_page.py
++++ b/lib/toaster/tests/browser/test_all_builds_page.py
+@@ -7,6 +7,7 @@
  # SPDX-License-Identifier: GPL-2.0-only
  #
 =20
--from time import sleep
-+import string
-+import random
- import pytest
--from django.utils import timezone
++import os
+ import re
+=20
  from django.urls import reverse
- from selenium.webdriver import Keys
- from selenium.webdriver.support.select import Select
--from selenium.common.exceptions import NoSuchElementException
--from orm.models import Build, Project, Target
-+from selenium.common.exceptions import TimeoutException
-+from orm.models import Project
- from tests.functional.functional_helpers import SeleniumFunctionalTestCa=
-se
+@@ -27,7 +28,8 @@ class TestAllBuildsPage(SeleniumTestCase):
+     CLI_BUILDS_PROJECT_NAME =3D 'command line builds'
+=20
+     def setUp(self):
+-        bbv =3D BitbakeVersion.objects.create(name=3D'bbv1', giturl=3D'/=
+tmp/',
++        builldir =3D os.environ.get('BUILDDIR', './')
++        bbv =3D BitbakeVersion.objects.create(name=3D'bbv1', giturl=3Df'=
+{builldir}/',
+                                             branch=3D'master', dirpath=3D=
+'')
+         release =3D Release.objects.create(name=3D'release1',
+                                          bitbake_version=3Dbbv)
+diff --git a/lib/toaster/tests/browser/test_all_projects_page.py b/lib/to=
+aster/tests/browser/test_all_projects_page.py
+index a880dbcc..6540dfa9 100644
+--- a/lib/toaster/tests/browser/test_all_projects_page.py
++++ b/lib/toaster/tests/browser/test_all_projects_page.py
+@@ -7,8 +7,8 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+=20
++import os
+ import re
+-import time
+=20
+ from django.urls import reverse
+ from django.utils import timezone
+@@ -20,6 +20,7 @@ from orm.models import ProjectVariable
+=20
  from selenium.webdriver.common.by import By
 =20
-+from .utils import get_projectId_from_url, wait_until_build, wait_until_=
-build_cancelled
 +
+ class TestAllProjectsPage(SeleniumTestCase):
+     """ Browser tests for projects page /projects/ """
 =20
- @pytest.mark.django_db
-+@pytest.mark.order("last")
- class TestProjectConfigTab(SeleniumFunctionalTestCase):
-+    PROJECT_NAME =3D 'TestProjectConfigTab'
-+    project_id =3D None
+@@ -29,7 +30,8 @@ class TestAllProjectsPage(SeleniumTestCase):
 =20
--    def setUp(self):
--        self.recipe =3D None
--        super().setUp()
--        release =3D '3'
--        project_name =3D 'projectmaster'
--        self._create_test_new_project(
--            project_name,
--            release,
--            False,
--        )
--
--    def _create_test_new_project(
--        self,
--        project_name,
--        release,
--        merge_toaster_settings,
--    ):
-+    def _create_project(self, project_name):
-         """ Create/Test new project using:
-           - Project Name: Any string
-           - Release: Any string
-           - Merge Toaster settings: True or False
-         """
-         self.get(reverse('newproject'))
--        self.driver.find_element(By.ID,
--                                 "new-project-name").send_keys(project_n=
-ame)
--
--        select =3D Select(self.find('#projectversion'))
--        select.select_by_value(release)
-+        self.wait_until_visible('#new-project-name')
-+        self.find("#new-project-name").send_keys(project_name)
-+        select =3D Select(self.find("#projectversion"))
-+        select.select_by_value('3')
+     def setUp(self):
+         """ Add default project manually """
+-        project =3D Project.objects.create_project(self.CLI_BUILDS_PROJE=
+CT_NAME, None)
++        project =3D Project.objects.create_project(
++            self.CLI_BUILDS_PROJECT_NAME, None)
+         self.default_project =3D project
+         self.default_project.is_default =3D True
+         self.default_project.save()
+@@ -60,12 +62,14 @@ class TestAllProjectsPage(SeleniumTestCase):
 =20
-         # check merge toaster settings
-         checkbox =3D self.find('.checkbox-mergeattr')
--        if merge_toaster_settings:
--            if not checkbox.is_selected():
--                checkbox.click()
-+        if not checkbox.is_selected():
-+            checkbox.click()
-+
-+        if self.PROJECT_NAME !=3D 'TestProjectConfigTab':
-+            # Reset project name if it's not the default one
-+            self.PROJECT_NAME =3D 'TestProjectConfigTab'
-+
-+        self.find("#create-project-button").click()
-+
-+        try:
-+            self.wait_until_visible('#hint-error-project-name')
-+            url =3D reverse('project', args=3D(TestProjectConfigTab.proj=
-ect_id, ))
-+            self.get(url)
-+            self.wait_until_visible('#config-nav', poll=3D3)
-+        except TimeoutException:
-+            self.wait_until_visible('#config-nav', poll=3D3)
-+
-+    def _random_string(self, length):
-+        return ''.join(
-+            random.choice(string.ascii_letters) for _ in range(length)
-+        )
-+
-+    def _navigate_to_project_page(self):
-+        # Navigate to project page
-+        if TestProjectConfigTab.project_id is None:
-+            self._create_project(project_name=3Dself._random_string(10))
-+            current_url =3D self.driver.current_url
-+            TestProjectConfigTab.project_id =3D get_projectId_from_url(c=
-urrent_url)
-         else:
--            if checkbox.is_selected():
--                checkbox.click()
--
--        self.driver.find_element(By.ID, "create-project-button").click()
--
--    @classmethod
--    def _wait_until_build(cls, state):
--        while True:
--            try:
--                last_build_state =3D cls.driver.find_element(
--                    By.XPATH,
--                    '//*[@id=3D"latest-builds"]/div[1]//div[@class=3D"bu=
-ild-state"]',
--                )
--                build_state =3D last_build_state.get_attribute(
--                    'data-build-state')
--                state_text =3D state.lower().split()
--                if any(x in str(build_state).lower() for x in state_text=
-):
--                    break
--            except NoSuchElementException:
--                continue
--            sleep(1)
-+            url =3D reverse('project', args=3D(TestProjectConfigTab.proj=
-ect_id,))
-+            self.get(url)
-+        self.wait_until_visible('#config-nav')
+     def _add_non_default_project(self):
+         """ Add another project """
+-        bbv =3D BitbakeVersion.objects.create(name=3D'test bbv', giturl=3D=
+'/tmp/',
++        builldir =3D os.environ.get('BUILDDIR', './')
++        bbv =3D BitbakeVersion.objects.create(name=3D'test bbv', giturl=3D=
+f'{builldir}/',
+                                             branch=3D'master', dirpath=3D=
+'')
+         self.release =3D Release.objects.create(name=3D'test release',
+                                               branch_name=3D'master',
+                                               bitbake_version=3Dbbv)
+-        self.project =3D Project.objects.create_project(self.PROJECT_NAM=
+E, self.release)
++        self.project =3D Project.objects.create_project(
++            self.PROJECT_NAME, self.release)
+         self.project.is_default =3D False
+         self.project.save()
 =20
-     def _create_builds(self):
-         # check search box can be use to build recipes
-         search_box =3D self.find('#build-input')
-         search_box.send_keys('core-image-minimal')
-         self.find('#build-button').click()
--        sleep(1)
-         self.wait_until_visible('#latest-builds')
-         # loop until reach the parsing state
--        self._wait_until_build('parsing starting cloning')
-+        build_state =3D wait_until_build(self, 'parsing starting cloning=
-')
-         lastest_builds =3D self.driver.find_elements(
-             By.XPATH,
-             '//div[@id=3D"latest-builds"]/div',
-@@ -100,8 +94,9 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase)=
-:
-             '//span[@class=3D"cancel-build-btn pull-right alert-link"]',
-         )
-         cancel_button.click()
--        sleep(1)
--        self._wait_until_build('cancelled')
-+        if 'starting' not in build_state:  # change build state when can=
-celled in starting state
-+            wait_until_build_cancelled(self)
-+        return build_state
+@@ -77,7 +81,7 @@ class TestAllProjectsPage(SeleniumTestCase):
 =20
-     def _get_tabs(self):
-         # tabs links list
-@@ -114,64 +109,6 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
-e):
-         config_nav =3D self.find('#config-nav')
-         return config_nav.find_elements(By.TAG_NAME, 'li')[index]
+     def _get_row_for_project(self, project_name):
+         """ Get the HTML row for a project, or None if not found """
+-        self.wait_until_present('#projectstable tbody tr')
++        self.wait_until_visible('#projectstable tbody tr', poll=3D3)
+         rows =3D self.find_all('#projectstable tbody tr')
 =20
--    def _get_create_builds(self, **kwargs):
--        """ Create a build and return the build object """
--        # parameters for builds to associate with the projects
--        now =3D timezone.now()
--        release =3D '3'
--        project_name =3D 'projectmaster'
--        self._create_test_new_project(
--            project_name+"2",
--            release,
--            False,
--        )
--
--        self.project1_build_success =3D {
--            'project': Project.objects.get(id=3D1),
--            'started_on': now,
--            'completed_on': now,
--            'outcome': Build.SUCCEEDED
--        }
--
--        self.project1_build_failure =3D {
--            'project': Project.objects.get(id=3D1),
--            'started_on': now,
--            'completed_on': now,
--            'outcome': Build.FAILED
--        }
--        build1 =3D Build.objects.create(**self.project1_build_success)
--        build2 =3D Build.objects.create(**self.project1_build_failure)
--
--        # add some targets to these builds so they have recipe links
--        # (and so we can find the row in the ToasterTable corresponding =
-to
--        # a particular build)
--        Target.objects.create(build=3Dbuild1, target=3D'foo')
--        Target.objects.create(build=3Dbuild2, target=3D'bar')
--
--        if kwargs:
--            # Create kwargs.get('success') builds with success status wi=
-th target
--            # and kwargs.get('failure') builds with failure status with =
-target
--            for i in range(kwargs.get('success', 0)):
--                now =3D timezone.now()
--                self.project1_build_success['started_on'] =3D now
--                self.project1_build_success[
--                    'completed_on'] =3D now - timezone.timedelta(days=3D=
-i)
--                build =3D Build.objects.create(**self.project1_build_suc=
-cess)
--                Target.objects.create(build=3Dbuild,
--                                      target=3Df'{i}_success_recipe',
--                                      task=3Df'{i}_success_task')
--
--            for i in range(kwargs.get('failure', 0)):
--                now =3D timezone.now()
--                self.project1_build_failure['started_on'] =3D now
--                self.project1_build_failure[
--                    'completed_on'] =3D now - timezone.timedelta(days=3D=
-i)
--                build =3D Build.objects.create(**self.project1_build_fai=
-lure)
--                Target.objects.create(build=3Dbuild,
--                                      target=3Df'{i}_fail_recipe',
--                                      task=3Df'{i}_fail_task')
--        return build1, build2
--
-     def test_project_config_nav(self):
-         """ Test project config tab navigation:
-         - Check if the menu is displayed and contains the right elements=
-:
-@@ -188,13 +125,7 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
-e):
-             - Actions
-             - Delete project
-         """
--        # navigate to the project page
--        url =3D reverse("project", args=3D(1,))
--        self.get(url)
--
--        # check if the menu is displayed
--        self.wait_until_visible('#config-nav')
--
-+        self._navigate_to_project_page()
-         def _get_config_nav_item(index):
-             config_nav =3D self.find('#config-nav')
-             return config_nav.find_elements(By.TAG_NAME, 'li')[index]
-@@ -221,14 +152,14 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
-se):
-         self.assertTrue("actions" in str(actions.text).lower())
+         # find the row with a project name matching the one supplied
+@@ -108,7 +112,8 @@ class TestAllProjectsPage(SeleniumTestCase):
+         url =3D reverse('all-projects')
+         self.get(url)
 =20
-         conf_nav_list =3D [
--            [0, 'Configuration', f"/toastergui/project/1"],  # config
--            [2, 'Custom images', f"/toastergui/project/1/customimages"],=
-  # custom images
--            [3, 'Image recipes', f"/toastergui/project/1/images"],  # im=
-age recipes
--            [4, 'Software recipes', f"/toastergui/project/1/softwarereci=
-pes"],  # software recipes
--            [5, 'Machines', f"/toastergui/project/1/machines"],  # machi=
-nes
--            [6, 'Layers', f"/toastergui/project/1/layers"],  # layers
--            [7, 'Distro', f"/toastergui/project/1/distro"],  # distro
--            [9, 'BitBake variables', f"/toastergui/project/1/configurati=
-on"],  # bitbake variables
-+            [0, 'Configuration', f"/toastergui/project/{TestProjectConfi=
-gTab.project_id}"],  # config
-+            [2, 'Custom images', f"/toastergui/project/{TestProjectConfi=
-gTab.project_id}/customimages"],  # custom images
-+            [3, 'Image recipes', f"/toastergui/project/{TestProjectConfi=
-gTab.project_id}/images"],  # image recipes
-+            [4, 'Software recipes', f"/toastergui/project/{TestProjectCo=
-nfigTab.project_id}/softwarerecipes"],  # software recipes
-+            [5, 'Machines', f"/toastergui/project/{TestProjectConfigTab.=
-project_id}/machines"],  # machines
-+            [6, 'Layers', f"/toastergui/project/{TestProjectConfigTab.pr=
-oject_id}/layers"],  # layers
-+            [7, 'Distros', f"/toastergui/project/{TestProjectConfigTab.p=
-roject_id}/distros"],  # distro
-+            #  [9, 'BitBake variables', f"/toastergui/project/{TestProje=
-ctConfigTab.project_id}/configuration"],  # bitbake variables
-         ]
-         for index, item_name, url in conf_nav_list:
-             item =3D _get_config_nav_item(index)
-@@ -236,6 +167,96 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
-e):
-                 item.click()
-             check_config_nav_item(index, item_name, url)
+-        default_project_row =3D self._get_row_for_project(self.default_p=
+roject.name)
++        default_project_row =3D self._get_row_for_project(
++            self.default_project.name)
 =20
-+    def test_image_recipe_editColumn(self):
-+        """ Test the edit column feature in image recipe table on projec=
-t page """
-+        def test_edit_column(check_box_id):
-+            # Check that we can hide/show table column
-+            check_box =3D self.find(f'#{check_box_id}')
-+            th_class =3D str(check_box_id).replace('checkbox-', '')
-+            if check_box.is_selected():
-+                # check if column is visible in table
-+                self.assertTrue(
-+                    self.find(
-+                        f'#imagerecipestable thead th.{th_class}'
-+                    ).is_displayed(),
-+                    f"The {th_class} column is checked in EditColumn dro=
-pdown, but it's not visible in table"
-+                )
-+                check_box.click()
-+                # check if column is hidden in table
-+                self.assertFalse(
-+                    self.find(
-+                        f'#imagerecipestable thead th.{th_class}'
-+                    ).is_displayed(),
-+                    f"The {th_class} column is unchecked in EditColumn d=
-ropdown, but it's visible in table"
-+                )
-+            else:
-+                # check if column is hidden in table
-+                self.assertFalse(
-+                    self.find(
-+                        f'#imagerecipestable thead th.{th_class}'
-+                    ).is_displayed(),
-+                    f"The {th_class} column is unchecked in EditColumn d=
-ropdown, but it's visible in table"
-+                )
-+                check_box.click()
-+                # check if column is visible in table
-+                self.assertTrue(
-+                    self.find(
-+                        f'#imagerecipestable thead th.{th_class}'
-+                    ).is_displayed(),
-+                    f"The {th_class} column is checked in EditColumn dro=
-pdown, but it's not visible in table"
-+                )
-+
-+        self._navigate_to_project_page()
-+        # navigate to project image recipe page
-+        recipe_image_page_link =3D self._get_config_nav_item(3)
-+        recipe_image_page_link.click()
-+        self.wait_until_present('#imagerecipestable tbody tr')
-+
-+        # Check edit column
-+        edit_column =3D self.find('#edit-columns-button')
-+        self.assertTrue(edit_column.is_displayed())
-+        edit_column.click()
-+        # Check dropdown is visible
-+        self.wait_until_visible('ul.dropdown-menu.editcol')
-+
-+        # Check that we can hide the edit column
-+        test_edit_column('checkbox-get_description_or_summary')
-+        test_edit_column('checkbox-layer_version__get_vcs_reference')
-+        test_edit_column('checkbox-layer_version__layer__name')
-+        test_edit_column('checkbox-license')
-+        test_edit_column('checkbox-recipe-file')
-+        test_edit_column('checkbox-section')
-+        test_edit_column('checkbox-version')
-+
-+    def test_image_recipe_show_rows(self):
-+        """ Test the show rows feature in image recipe table on project =
-page """
-+        def test_show_rows(row_to_show, show_row_link):
-+            # Check that we can show rows =3D=3D row_to_show
-+            show_row_link.select_by_value(str(row_to_show))
-+            self.wait_until_visible('#imagerecipestable tbody tr')
-+            self.assertTrue(
-+                len(self.find_all('#imagerecipestable tbody tr')) =3D=3D=
- row_to_show
-+            )
-+
-+        self._navigate_to_project_page()
-+        # navigate to project image recipe page
-+        recipe_image_page_link =3D self._get_config_nav_item(3)
-+        recipe_image_page_link.click()
-+        self.wait_until_present('#imagerecipestable tbody tr')
-+
-+        show_rows =3D self.driver.find_elements(
-+            By.XPATH,
-+            '//select[@class=3D"form-control pagesize-imagerecipestable"=
-]'
-+        )
-+        # Check show rows
-+        for show_row_link in show_rows:
-+            show_row_link =3D Select(show_row_link)
-+            test_show_rows(10, show_row_link)
-+            test_show_rows(25, show_row_link)
-+            test_show_rows(50, show_row_link)
-+            test_show_rows(100, show_row_link)
-+            test_show_rows(150, show_row_link)
-+
-     def test_project_config_tab_right_section(self):
-         """ Test project config tab right section contains five blocks:
-             - Machine:
-@@ -257,35 +278,36 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
-se):
-                     - meta-poky
-                     - meta-yocto-bsp
-         """
--        # navigate to the project page
--        url =3D reverse("project", args=3D(1,))
--        self.get(url)
--
-+        # Create a new project for this test
-+        project_name =3D self._random_string(10)
-+        self._create_project(project_name=3Dproject_name)
-+        current_url =3D self.driver.current_url
-+        TestProjectConfigTab.project_id =3D get_projectId_from_url(curre=
-nt_url)
-+        url =3D current_url.split('?')[0]
-         # check if the menu is displayed
-         self.wait_until_visible('#project-page')
-         block_l =3D self.driver.find_element(
-             By.XPATH, '//*[@id=3D"project-page"]/div[2]')
--        machine =3D self.find('#machine-section')
--        distro =3D self.find('#distro-section')
-         most_built_recipes =3D self.driver.find_element(
-             By.XPATH, '//*[@id=3D"project-page"]/div[1]/div[3]')
-         project_release =3D self.driver.find_element(
-             By.XPATH, '//*[@id=3D"project-page"]/div[1]/div[4]')
-         layers =3D block_l.find_element(By.ID, 'layer-container')
+         self.assertNotEqual(default_project_row, None,
+                             'default project "cli builds" should be in p=
+age')
+@@ -128,7 +133,8 @@ class TestAllProjectsPage(SeleniumTestCase):
+         self.wait_until_visible("#projectstable tr")
 =20
--        def check_machine_distro(self, item_name, new_item_name, block):
-+        def check_machine_distro(self, item_name, new_item_name, block_i=
-d):
-+            block =3D self.find(f'#{block_id}')
-             title =3D block.find_element(By.TAG_NAME, 'h3')
-             self.assertTrue(item_name.capitalize() in title.text)
--            edit_btn =3D block.find_element(By.ID, f'change-{item_name}-=
-toggle')
-+            edit_btn =3D self.find(f'#change-{item_name}-toggle')
-             edit_btn.click()
--            sleep(1)
--            name_input =3D block.find_element(By.ID, f'{item_name}-chang=
-e-input')
-+            self.wait_until_visible(f'#{item_name}-change-input')
-+            name_input =3D self.find(f'#{item_name}-change-input')
-             name_input.clear()
-             name_input.send_keys(new_item_name)
--            change_btn =3D block.find_element(By.ID, f'{item_name}-chang=
-e-btn')
-+            change_btn =3D self.find(f'#{item_name}-change-btn')
-             change_btn.click()
--            sleep(1)
--            project_name =3D block.find_element(By.ID, f'project-{item_n=
-ame}-name')
-+            self.wait_until_visible(f'#project-{item_name}-name')
-+            project_name =3D self.find(f'#project-{item_name}-name')
-             self.assertTrue(new_item_name in project_name.text)
-             # check change notificaiton is displayed
-             change_notification =3D self.find('#change-notification')
-@@ -293,10 +315,30 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
-se):
-                 f'You have changed the {item_name} to: {new_item_name}' =
-in change_notification.text
+         # find the row for the default project
+-        default_project_row =3D self._get_row_for_project(self.default_p=
+roject.name)
++        default_project_row =3D self._get_row_for_project(
++            self.default_project.name)
+=20
+         # check the release text for the default project
+         selector =3D 'span[data-project-field=3D"release"] span.text-mut=
+ed'
+@@ -163,7 +169,8 @@ class TestAllProjectsPage(SeleniumTestCase):
+         self.wait_until_visible("#projectstable tr")
+=20
+         # find the row for the default project
+-        default_project_row =3D self._get_row_for_project(self.default_p=
+roject.name)
++        default_project_row =3D self._get_row_for_project(
++            self.default_project.name)
+=20
+         # check the machine cell for the default project
+         selector =3D 'span[data-project-field=3D"machine"] span.text-mut=
+ed'
+@@ -198,13 +205,15 @@ class TestAllProjectsPage(SeleniumTestCase):
+         self.get(reverse('all-projects'))
+=20
+         # find the row for the default project
+-        default_project_row =3D self._get_row_for_project(self.default_p=
+roject.name)
++        default_project_row =3D self._get_row_for_project(
++            self.default_project.name)
+=20
+         # check the link on the name field
+         selector =3D 'span[data-project-field=3D"name"] a'
+         element =3D default_project_row.find_element(By.CSS_SELECTOR, se=
+lector)
+         link_url =3D element.get_attribute('href').strip()
+-        expected_url =3D reverse('projectbuilds', args=3D(self.default_p=
+roject.id,))
++        expected_url =3D reverse(
++            'projectbuilds', args=3D(self.default_project.id,))
+         msg =3D 'link on default project name should point to builds but=
+ was %s' % link_url
+         self.assertTrue(link_url.endswith(expected_url), msg)
+=20
+@@ -227,7 +236,7 @@ class TestAllProjectsPage(SeleniumTestCase):
+         self.get(url)
+=20
+         # Chseck search box is present and works
+-        self.wait_until_present('#projectstable tbody tr')
++        self.wait_until_visible('#projectstable tbody tr', poll=3D3)
+         search_box =3D self.find('#search-input-projectstable')
+         self.assertTrue(search_box.is_displayed())
+=20
+@@ -235,8 +244,7 @@ class TestAllProjectsPage(SeleniumTestCase):
+         search_box.send_keys('test project 10')
+         search_btn =3D self.find('#search-submit-projectstable')
+         search_btn.click()
+-        self.wait_until_present('#projectstable tbody tr')
+-        time.sleep(1)
++        self.wait_until_visible('#projectstable tbody tr', poll=3D3)
+         rows =3D self.find_all('#projectstable tbody tr')
+         self.assertTrue(len(rows) =3D=3D 1)
+=20
+@@ -282,7 +290,7 @@ class TestAllProjectsPage(SeleniumTestCase):
+                 )
+         url =3D reverse('all-projects')
+         self.get(url)
+-        self.wait_until_present('#projectstable tbody tr')
++        self.wait_until_visible('#projectstable tbody tr', poll=3D3)
+=20
+         # Check edit column
+         edit_column =3D self.find('#edit-columns-button')
+@@ -305,19 +313,14 @@ class TestAllProjectsPage(SeleniumTestCase):
+         def test_show_rows(row_to_show, show_row_link):
+             # Check that we can show rows =3D=3D row_to_show
+             show_row_link.select_by_value(str(row_to_show))
+-            self.wait_until_present('#projectstable tbody tr')
+-            sleep_time =3D 1
+-            if row_to_show =3D=3D 150:
+-                # wait more time for 150 rows
+-                sleep_time =3D 2
+-            time.sleep(sleep_time)
++            self.wait_until_visible('#projectstable tbody tr', poll=3D3)
+             self.assertTrue(
+                 len(self.find_all('#projectstable tbody tr')) =3D=3D row=
+_to_show
              )
 =20
-+        def rebuild_from_most_build_recipes(recipe_list_items):
-+            checkbox =3D recipe_list_items[0].find_element(By.TAG_NAME, =
-'input')
-+            checkbox.click()
-+            build_btn =3D self.find('#freq-build-btn')
-+            build_btn.click()
-+            self.wait_until_visible('#latest-builds')
-+            build_state =3D wait_until_build(self, 'parsing starting clo=
-ning queued')
-+            lastest_builds =3D self.driver.find_elements(
-+                By.XPATH,
-+                '//div[@id=3D"latest-builds"]/div'
-+            )
-+            last_build =3D lastest_builds[0]
-+            self.assertTrue(len(lastest_builds) >=3D 2)
-+            cancel_button =3D last_build.find_element(
-+                By.XPATH,
-+                '//span[@class=3D"cancel-build-btn pull-right alert-link=
-"]',
-+            )
-+            cancel_button.click()
-+            if 'starting' not in build_state:  # change build state when=
- cancelled in starting state
-+                wait_until_build_cancelled(self)
-         # Machine
--        check_machine_distro(self, 'machine', 'qemux86-64', machine)
-+        check_machine_distro(self, 'machine', 'qemux86-64', 'machine-sec=
-tion')
-         # Distro
--        check_machine_distro(self, 'distro', 'poky-altcfg', distro)
-+        check_machine_distro(self, 'distro', 'poky-altcfg', 'distro-sect=
-ion')
+         url =3D reverse('all-projects')
+         self.get(url)
+-        self.wait_until_present('#projectstable tbody tr')
++        self.wait_until_visible('#projectstable tbody tr', poll=3D3)
 =20
-         # Project release
-         title =3D project_release.find_element(By.TAG_NAME, 'h3')
-@@ -304,7 +346,6 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
-):
-         self.assertTrue(
-             "Yocto Project master" in self.find('#project-release-title'=
-).text
-         )
--
-         # Layers
-         title =3D layers.find_element(By.TAG_NAME, 'h3')
-         self.assertTrue("Layers" in title.text)
-@@ -314,7 +355,9 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
-):
-         # meta-yocto-bsp
-         layers_list =3D layers.find_element(By.ID, 'layers-in-project-li=
-st')
-         layers_list_items =3D layers_list.find_elements(By.TAG_NAME, 'li=
-')
--        self.assertTrue(len(layers_list_items) =3D=3D 3)
-+        # remove all layers except the first three layers
-+        for i in range(3, len(layers_list_items)):
-+            layers_list_items[i].find_element(By.TAG_NAME, 'span').click=
-()
-         # check can add a layer if exists
-         add_layer_input =3D layers.find_element(By.ID, 'layer-add-input'=
+         show_rows =3D self.driver.find_elements(
+             By.XPATH,
+diff --git a/lib/toaster/tests/browser/test_builddashboard_page.py b/lib/=
+toaster/tests/browser/test_builddashboard_page.py
+index 1afa4a4d..b713f300 100644
+--- a/lib/toaster/tests/browser/test_builddashboard_page.py
++++ b/lib/toaster/tests/browser/test_builddashboard_page.py
+@@ -7,6 +7,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+=20
++import os
+ from django.urls import reverse
+ from django.utils import timezone
+=20
+@@ -21,7 +22,8 @@ class TestBuildDashboardPage(SeleniumTestCase):
+     """ Tests for the build dashboard /build/X """
+=20
+     def setUp(self):
+-        bbv =3D BitbakeVersion.objects.create(name=3D'bbv1', giturl=3D'/=
+tmp/',
++        builldir =3D os.environ.get('BUILDDIR', './')
++        bbv =3D BitbakeVersion.objects.create(name=3D'bbv1', giturl=3Df'=
+{builldir}/',
+                                             branch=3D'master', dirpath=3D=
+"")
+         release =3D Release.objects.create(name=3D'release1',
+                                          bitbake_version=3Dbbv)
+diff --git a/lib/toaster/tests/browser/test_builddashboard_page_artifacts=
+.py b/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py
+index adea2edb..675825bd 100644
+--- a/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py
++++ b/lib/toaster/tests/browser/test_builddashboard_page_artifacts.py
+@@ -7,6 +7,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+=20
++import os
+ from django.urls import reverse
+ from django.utils import timezone
+=20
+@@ -20,7 +21,8 @@ class TestBuildDashboardPageArtifacts(SeleniumTestCase)=
+:
+     """ Tests for artifacts on the build dashboard /build/X """
+=20
+     def setUp(self):
+-        bbv =3D BitbakeVersion.objects.create(name=3D'bbv1', giturl=3D'/=
+tmp/',
++        builldir =3D os.environ.get('BUILDDIR', './')
++        bbv =3D BitbakeVersion.objects.create(name=3D'bbv1', giturl=3Df'=
+{builldir}/',
+                                             branch=3D'master', dirpath=3D=
+"")
+         release =3D Release.objects.create(name=3D'release1',
+                                          bitbake_version=3Dbbv)
+diff --git a/lib/toaster/tests/browser/test_landing_page.py b/lib/toaster=
+/tests/browser/test_landing_page.py
+index ca0b2e63..f6649a3d 100644
+--- a/lib/toaster/tests/browser/test_landing_page.py
++++ b/lib/toaster/tests/browser/test_landing_page.py
+@@ -14,6 +14,7 @@ from selenium.webdriver.common.by import By
+=20
+ from orm.models import Layer, Layer_Version, Project, Build
+=20
++
+ class TestLandingPage(SeleniumTestCase):
+     """ Tests for redirects on the landing page """
+=20
+@@ -40,7 +41,7 @@ class TestLandingPage(SeleniumTestCase):
+=20
+         # check that the info sign is clickable
+         # and info modal is appearing when clicking on the info sign
+-        info_sign.click() # click on the info sign make attribute 'aria-=
+describedby' visible
++        info_sign.click()  # click on the info sign make attribute 'aria=
+-describedby' visible
+         info_model_id =3D info_sign.get_attribute('aria-describedby')
+         info_modal =3D self.find(f'#{info_model_id}')
+         self.assertTrue(info_modal.is_displayed())
+@@ -55,7 +56,7 @@ class TestLandingPage(SeleniumTestCase):
+         self.assertTrue(documentation_link.is_displayed())
+=20
+         # check browser open new tab toaster manual when clicking on the=
+ documentation link
+-        self.assertEqual(documentation_link.get_attribute('target') , '_=
+blank')
++        self.assertEqual(documentation_link.get_attribute('target'), '_b=
+lank')
+         self.assertEqual(
+             documentation_link.get_attribute('href'),
+             'http://docs.yoctoproject.org/toaster-manual/index.html#toas=
+ter-user-manual')
+@@ -81,7 +82,8 @@ class TestLandingPage(SeleniumTestCase):
+         bitbake =3D jumbotron.find_element(By.LINK_TEXT, 'BitBake')
+         self.assertTrue(bitbake.is_displayed())
+         bitbake.click()
+-        self.assertTrue("docs.yoctoproject.org/bitbake.html" in self.dri=
+ver.current_url)
++        self.assertTrue(
++            "docs.yoctoproject.org/bitbake.html" in self.driver.current_=
+url)
+=20
+     def test_yoctoproject_jumbotron_link_visible_and_clickable(self):
+         """ Test Yocto Project link jumbotron is visible and clickable: =
+"""
+@@ -103,11 +105,12 @@ class TestLandingPage(SeleniumTestCase):
+=20
+         # check Big magenta button
+         big_magenta_button =3D jumbotron.find_element(By.LINK_TEXT,
+-            'Toaster is ready to capture your command line builds'
+-        )
++                                                    'Toaster is ready to=
+ capture your command line builds'
++                                                    )
+         self.assertTrue(big_magenta_button.is_displayed())
+         big_magenta_button.click()
+-        self.assertTrue("docs.yoctoproject.org/toaster-manual/setup-and-=
+use.html#setting-up-and-using-toaster" in self.driver.current_url)
++        self.assertTrue(
++            "docs.yoctoproject.org/toaster-manual/setup-and-use.html#set=
+ting-up-and-using-toaster" in self.driver.current_url)
+=20
+     def test_link_create_new_project_in_jumbotron_visible_and_clickable(=
+self):
+         """ Test big blue button create new project jumbotron if visible=
+ and clickable """
+@@ -120,8 +123,8 @@ class TestLandingPage(SeleniumTestCase):
+=20
+         # check Big Blue button
+         big_blue_button =3D jumbotron.find_element(By.LINK_TEXT,
+-            'Create your first Toaster project to run manage builds'
+-        )
++                                                 'Create your first Toas=
+ter project to run manage builds'
++                                                 )
+         self.assertTrue(big_blue_button.is_displayed())
+         big_blue_button.click()
+         self.assertTrue("toastergui/newproject/" in self.driver.current_=
+url)
+@@ -132,10 +135,12 @@ class TestLandingPage(SeleniumTestCase):
+         jumbotron =3D self.find('.jumbotron')
+=20
+         # check Read the Toaster manual
+-        toaster_manual =3D jumbotron.find_element(By.LINK_TEXT, 'Read th=
+e Toaster manual')
++        toaster_manual =3D jumbotron.find_element(
++            By.LINK_TEXT, 'Read the Toaster manual')
+         self.assertTrue(toaster_manual.is_displayed())
+         toaster_manual.click()
+-        self.assertTrue("https://docs.yoctoproject.org/toaster-manual/in=
+dex.html#toaster-user-manual" in self.driver.current_url)
++        self.assertTrue(
++            "https://docs.yoctoproject.org/toaster-manual/index.html#toa=
+ster-user-manual" in self.driver.current_url)
+=20
+     def test_contrib_to_toaster_link_visible_and_clickable(self):
+         """ Test Contribute to Toaster link jumbotron is visible and cli=
+ckable: """
+@@ -143,10 +148,12 @@ class TestLandingPage(SeleniumTestCase):
+         jumbotron =3D self.find('.jumbotron')
+=20
+         # check Contribute to Toaster
+-        contribute_to_toaster =3D jumbotron.find_element(By.LINK_TEXT, '=
+Contribute to Toaster')
++        contribute_to_toaster =3D jumbotron.find_element(
++            By.LINK_TEXT, 'Contribute to Toaster')
+         self.assertTrue(contribute_to_toaster.is_displayed())
+         contribute_to_toaster.click()
+-        self.assertTrue("wiki.yoctoproject.org/wiki/contribute_to_toaste=
+r" in str(self.driver.current_url).lower())
++        self.assertTrue(
++            "wiki.yoctoproject.org/wiki/contribute_to_toaster" in str(se=
+lf.driver.current_url).lower())
+=20
+     def test_only_default_project(self):
+         """
+@@ -206,7 +213,7 @@ class TestLandingPage(SeleniumTestCase):
+=20
+         self.get(reverse('landing'))
+=20
+-        self.wait_until_visible("#latest-builds")
++        self.wait_until_visible("#latest-builds", poll=3D3)
+         elements =3D self.find_all('#allbuildstable')
+         self.assertEqual(len(elements), 1, 'should redirect to builds')
+         content =3D self.get_page_source()
+diff --git a/lib/toaster/tests/browser/test_layerdetails_page.py b/lib/to=
+aster/tests/browser/test_layerdetails_page.py
+index 27cda0f2..367c6179 100644
+--- a/lib/toaster/tests/browser/test_layerdetails_page.py
++++ b/lib/toaster/tests/browser/test_layerdetails_page.py
+@@ -106,7 +106,7 @@ class TestLayerDetailsPage(SeleniumTestCase):
+         for save_btn in self.find_all(".change-btn"):
+             save_btn.click()
+=20
+-        self.wait_until_visible("#save-changes-for-switch")
++        self.wait_until_visible("#save-changes-for-switch", poll=3D3)
+         btn_save_chg_for_switch =3D self.find("#save-changes-for-switch"=
 )
-         add_layer_input.send_keys('meta-oe')
-@@ -326,7 +369,7 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
-):
-         dropdown_item.click()
-         add_layer_btn =3D layers.find_element(By.ID, 'add-layer-btn')
-         add_layer_btn.click()
--        sleep(1)
-+        self.wait_until_visible('#layers-in-project-list')
-         # check layer is added
-         layers_list_items =3D layers_list.find_elements(By.TAG_NAME, 'li=
-')
-         self.assertTrue(len(layers_list_items) =3D=3D 4)
-@@ -334,48 +377,33 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
-se):
-         # Most built recipes
-         title =3D most_built_recipes.find_element(By.TAG_NAME, 'h3')
-         self.assertTrue("Most built recipes" in title.text)
--        # Create a new builds 5
--        self._create_builds()
-+        # Create a new builds
-+        build_state =3D self._create_builds()
+         btn_save_chg_for_switch.click()
+         self.wait_until_visible("#edit-layer-source")
+@@ -137,7 +137,7 @@ class TestLayerDetailsPage(SeleniumTestCase):
+         new_dir =3D "/home/test/my-meta-dir"
+         dir_input.send_keys(new_dir)
 =20
-         # Refresh the page
--        self.get(url)
-+        self.driver.get(url)
+-        self.wait_until_visible("#save-changes-for-switch")
++        self.wait_until_visible("#save-changes-for-switch", poll=3D3)
+         btn_save_chg_for_switch =3D self.find("#save-changes-for-switch"=
+)
+         btn_save_chg_for_switch.click()
+         self.wait_until_visible("#edit-layer-source")
+diff --git a/lib/toaster/tests/browser/test_most_recent_builds_states.py =
+b/lib/toaster/tests/browser/test_most_recent_builds_states.py
+index c13d328e..d7a4c345 100644
+--- a/lib/toaster/tests/browser/test_most_recent_builds_states.py
++++ b/lib/toaster/tests/browser/test_most_recent_builds_states.py
+@@ -6,7 +6,6 @@
+ #
+ # Copyright (C) 2013-2016 Intel Corporation
+ #
+-import time
+ from django.urls import reverse
+ from django.utils import timezone
+ from tests.browser.selenium_helpers import SeleniumTestCase
+diff --git a/lib/toaster/tests/browser/test_new_custom_image_page.py b/li=
+b/toaster/tests/browser/test_new_custom_image_page.py
+index f4d95b1a..4ad22c7a 100644
+--- a/lib/toaster/tests/browser/test_new_custom_image_page.py
++++ b/lib/toaster/tests/browser/test_new_custom_image_page.py
+@@ -45,10 +45,11 @@ class TestNewCustomImagePage(SeleniumTestCase):
+         )
 =20
--        sleep(1)  # wait for page to load
--        self.wait_until_visible('#project-page')
-+        self.wait_until_visible('#project-page', poll=3D3)
-         # check can select a recipe and build it
-         most_built_recipes =3D self.driver.find_element(
-             By.XPATH, '//*[@id=3D"project-page"]/div[1]/div[3]')
-         recipe_list =3D most_built_recipes.find_element(By.ID, 'freq-bui=
-ld-list')
-         recipe_list_items =3D recipe_list.find_elements(By.TAG_NAME, 'li=
-')
--        self.assertTrue(
--            len(recipe_list_items) > 0,
--            msg=3D"No recipes found in the most built recipes list",
--        )
--        checkbox =3D recipe_list_items[0].find_element(By.TAG_NAME, 'inp=
-ut')
--        checkbox.click()
--        build_btn =3D self.find('#freq-build-btn')
--        build_btn.click()
--        sleep(1)  # wait for page to load
--        self.wait_until_visible('#latest-builds')
--        self._wait_until_build('parsing starting cloning queueing')
--        lastest_builds =3D self.driver.find_elements(
--            By.XPATH,
--            '//div[@id=3D"latest-builds"]/div'
--        )
--        last_build =3D lastest_builds[0]
--        cancel_button =3D last_build.find_element(
--            By.XPATH,
--            '//span[@class=3D"cancel-build-btn pull-right alert-link"]',
--        )
--        cancel_button.click()
--        self.assertTrue(len(lastest_builds) =3D=3D 2)
-+        if 'starting' not in build_state:  # Build will not appear in th=
-e list if canceled in starting state
-+            self.assertTrue(
-+                len(recipe_list_items) > 0,
-+                msg=3D"No recipes found in the most built recipes list",
-+            )
-+            rebuild_from_most_build_recipes(recipe_list_items)
-+        else:
-+            self.assertTrue(
-+                len(recipe_list_items) =3D=3D 0,
-+                msg=3D"Recipes found in the most built recipes list",
-+            )
-=20
-     def test_project_page_tab_importlayer(self):
-         """ Test project page tab import layer """
--        # navigate to the project page
--        url =3D reverse("project", args=3D(1,))
--        self.get(url)
+         # add a fake image recipe to the layer that can be customised
++        builldir =3D os.environ.get('BUILDDIR', './')
+         self.recipe =3D Recipe.objects.create(
+             name=3D'core-image-minimal',
+             layer_version=3Dlayer_version,
+-            file_path=3D'/tmp/core-image-minimal.bb',
++            file_path=3Df'{builldir}/core-image-minimal.bb',
+             is_image=3DTrue
+         )
+         # create a tmp file for the recipe
+diff --git a/lib/toaster/tests/browser/test_new_project_page.py b/lib/toa=
+ster/tests/browser/test_new_project_page.py
+index f4b2708f..0c33c44f 100644
+--- a/lib/toaster/tests/browser/test_new_project_page.py
++++ b/lib/toaster/tests/browser/test_new_project_page.py
+@@ -6,8 +6,6 @@
+ #
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+-import time
 -
-+        self._navigate_to_project_page()
-         # navigate to "Import layers" tab
-         import_layers_tab =3D self._get_tabs()[2]
-         import_layers_tab.find_element(By.TAG_NAME, 'a').click()
-@@ -415,10 +443,10 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
-se):
+ from django.urls import reverse
+ from tests.browser.selenium_helpers import SeleniumTestCase
+ from selenium.webdriver.support.ui import Select
+@@ -54,13 +52,12 @@ class TestNewProjectPage(SeleniumTestCase):
+         select =3D Select(self.find('#projectversion'))
+         select.select_by_value(str(self.release.pk))
 =20
-     def test_project_page_custom_image_no_image(self):
-         """ Test project page tab "New custom image" when no custom imag=
-e """
--        # navigate to the project page
--        url =3D reverse("project", args=3D(1,))
--        self.get(url)
--
-+        project_name =3D self._random_string(10)
-+        self._create_project(project_name=3Dproject_name)
-+        current_url =3D self.driver.current_url
-+        TestProjectConfigTab.project_id =3D get_projectId_from_url(curre=
-nt_url)
-         # navigate to "Custom image" tab
-         custom_image_section =3D self._get_config_nav_item(2)
-         custom_image_section.click()
-@@ -433,8 +461,10 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
-e):
-         div_empty_msg =3D self.find('#empty-state-customimagestable')
-         link_create_custom_image =3D div_empty_msg.find_element(
-             By.TAG_NAME, 'a')
-+        last_project_id =3D Project.objects.get(name=3Dproject_name).id
-+        self.assertTrue(last_project_id is not None)
+-        time.sleep(1)
+         self.click("#create-project-button")
+-        time.sleep(2)
+=20
+         # We should get redirected to the new project's page with the
+         # notification at the top
+-        element =3D self.wait_until_visible('#project-created-notificati=
+on')
++        element =3D self.wait_until_visible(
++            '#project-created-notification', poll=3D3)
+=20
+         self.assertTrue(project_name in element.text,
+                         "New project name not in new project notificatio=
+n")
+@@ -91,9 +88,8 @@ class TestNewProjectPage(SeleniumTestCase):
+         radio.click()
+=20
+         self.click("#create-project-button")
+-        time.sleep(2)
+=20
+-        element =3D self.wait_until_visible('#hint-error-project-name')
++        element =3D self.wait_until_visible('#hint-error-project-name', =
+poll=3D3)
+=20
+         self.assertTrue(("Project names must be unique" in element.text)=
+,
+                         "Did not find unique project name error message"=
+)
+@@ -105,7 +101,6 @@ class TestNewProjectPage(SeleniumTestCase):
+         except InvalidElementStateException:
+             pass
+=20
+-        time.sleep(2)
          self.assertTrue(
--            f"/toastergui/project/1/newcustomimage" in str(
-+            f"/toastergui/project/{last_project_id}/newcustomimage" in s=
-tr(
-                 link_create_custom_image.get_attribute('href')
-             )
-         )
-@@ -451,11 +481,7 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
-e):
-             - Check image recipe build button works
-             - Check image recipe table features(show/hide column, pagina=
-tion)
-         """
--        # navigate to the project page
--        url =3D reverse("project", args=3D(1,))
--        self.get(url)
--        self.wait_until_visible('#config-nav')
--
-+        self._navigate_to_project_page()
-         # navigate to "Images section"
-         images_section =3D self._get_config_nav_item(3)
-         images_section.click()
-@@ -479,100 +505,17 @@ class TestProjectConfigTab(SeleniumFunctionalTestC=
-ase):
-             '//td[@class=3D"add-del-layers"]'
-         )
-         build_btn.click()
--        self._wait_until_build('parsing starting cloning')
-+        build_state =3D wait_until_build(self, 'parsing starting cloning=
- queued')
-         lastest_builds =3D self.driver.find_elements(
-             By.XPATH,
-             '//div[@id=3D"latest-builds"]/div'
-         )
-         self.assertTrue(len(lastest_builds) > 0)
--
--    def test_image_recipe_editColumn(self):
--        """ Test the edit column feature in image recipe table on projec=
-t page """
--        self._get_create_builds(success=3D10, failure=3D10)
--
--        def test_edit_column(check_box_id):
--            # Check that we can hide/show table column
--            check_box =3D self.find(f'#{check_box_id}')
--            th_class =3D str(check_box_id).replace('checkbox-', '')
--            if check_box.is_selected():
--                # check if column is visible in table
--                self.assertTrue(
--                    self.find(
--                        f'#imagerecipestable thead th.{th_class}'
--                    ).is_displayed(),
--                    f"The {th_class} column is checked in EditColumn dro=
-pdown, but it's not visible in table"
--                )
--                check_box.click()
--                # check if column is hidden in table
--                self.assertFalse(
--                    self.find(
--                        f'#imagerecipestable thead th.{th_class}'
--                    ).is_displayed(),
--                    f"The {th_class} column is unchecked in EditColumn d=
-ropdown, but it's visible in table"
--                )
--            else:
--                # check if column is hidden in table
--                self.assertFalse(
--                    self.find(
--                        f'#imagerecipestable thead th.{th_class}'
--                    ).is_displayed(),
--                    f"The {th_class} column is unchecked in EditColumn d=
-ropdown, but it's visible in table"
--                )
--                check_box.click()
--                # check if column is visible in table
--                self.assertTrue(
--                    self.find(
--                        f'#imagerecipestable thead th.{th_class}'
--                    ).is_displayed(),
--                    f"The {th_class} column is checked in EditColumn dro=
-pdown, but it's not visible in table"
--                )
--
--        url =3D reverse('projectimagerecipes', args=3D(1,))
--        self.get(url)
--        self.wait_until_present('#imagerecipestable tbody tr')
--
--        # Check edit column
--        edit_column =3D self.find('#edit-columns-button')
--        self.assertTrue(edit_column.is_displayed())
--        edit_column.click()
--        # Check dropdown is visible
--        self.wait_until_visible('ul.dropdown-menu.editcol')
--
--        # Check that we can hide the edit column
--        test_edit_column('checkbox-get_description_or_summary')
--        test_edit_column('checkbox-layer_version__get_vcs_reference')
--        test_edit_column('checkbox-layer_version__layer__name')
--        test_edit_column('checkbox-license')
--        test_edit_column('checkbox-recipe-file')
--        test_edit_column('checkbox-section')
--        test_edit_column('checkbox-version')
--
--    def test_image_recipe_show_rows(self):
--        """ Test the show rows feature in image recipe table on project =
-page """
--        self._get_create_builds(success=3D100, failure=3D100)
--
--        def test_show_rows(row_to_show, show_row_link):
--            # Check that we can show rows =3D=3D row_to_show
--            show_row_link.select_by_value(str(row_to_show))
--            self.wait_until_present('#imagerecipestable tbody tr')
--            sleep(1)
--            self.assertTrue(
--                len(self.find_all('#imagerecipestable tbody tr')) =3D=3D=
- row_to_show
--            )
--
--        url =3D reverse('projectimagerecipes', args=3D(2,))
--        self.get(url)
--        self.wait_until_present('#imagerecipestable tbody tr')
--
--        show_rows =3D self.driver.find_elements(
-+        last_build =3D lastest_builds[0]
-+        cancel_button =3D last_build.find_element(
-             By.XPATH,
--            '//select[@class=3D"form-control pagesize-imagerecipestable"=
-]'
-+            '//span[@class=3D"cancel-build-btn pull-right alert-link"]',
-         )
--        # Check show rows
--        for show_row_link in show_rows:
--            show_row_link =3D Select(show_row_link)
--            test_show_rows(10, show_row_link)
--            test_show_rows(25, show_row_link)
--            test_show_rows(50, show_row_link)
--            test_show_rows(100, show_row_link)
--            test_show_rows(150, show_row_link)
-+        cancel_button.click()
-+        if 'starting' not in build_state:  # change build state when can=
-celled in starting state
-+            wait_until_build_cancelled(self)
+             (Project.objects.filter(name=3Dproject_name).count() =3D=3D =
+1),
+             "New project not found in database")
+diff --git a/lib/toaster/tests/browser/test_project_builds_page.py b/lib/=
+toaster/tests/browser/test_project_builds_page.py
+index 51717e72..0dba33b9 100644
+--- a/lib/toaster/tests/browser/test_project_builds_page.py
++++ b/lib/toaster/tests/browser/test_project_builds_page.py
+@@ -7,6 +7,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+=20
++import os
+ import re
+=20
+ from django.urls import reverse
+@@ -22,7 +23,8 @@ class TestProjectBuildsPage(SeleniumTestCase):
+     CLI_BUILDS_PROJECT_NAME =3D 'command line builds'
+=20
+     def setUp(self):
+-        bbv =3D BitbakeVersion.objects.create(name=3D'bbv1', giturl=3D'/=
+tmp/',
++        builldir =3D os.environ.get('BUILDDIR', './')
++        bbv =3D BitbakeVersion.objects.create(name=3D'bbv1', giturl=3Df'=
+{builldir}/',
+                                             branch=3D'master', dirpath=3D=
+'')
+         release =3D Release.objects.create(name=3D'release1',
+                                          bitbake_version=3Dbbv)
+diff --git a/lib/toaster/tests/browser/test_project_config_page.py b/lib/=
+toaster/tests/browser/test_project_config_page.py
+index 7b21460e..b9de541e 100644
+--- a/lib/toaster/tests/browser/test_project_config_page.py
++++ b/lib/toaster/tests/browser/test_project_config_page.py
+@@ -7,6 +7,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+=20
++import os
+ from django.urls import reverse
+ from tests.browser.selenium_helpers import SeleniumTestCase
+=20
+@@ -22,7 +23,8 @@ class TestProjectConfigsPage(SeleniumTestCase):
+         'any of these characters'
+=20
+     def setUp(self):
+-        bbv =3D BitbakeVersion.objects.create(name=3D'bbv1', giturl=3D'/=
+tmp/',
++        builldir =3D os.environ.get('BUILDDIR', './')
++        bbv =3D BitbakeVersion.objects.create(name=3D'bbv1', giturl=3Df'=
+{builldir}/',
+                                             branch=3D'master', dirpath=3D=
+'')
+         release =3D Release.objects.create(name=3D'release1',
+                                          bitbake_version=3Dbbv)
+diff --git a/lib/toaster/tests/browser/test_toastertable_ui.py b/lib/toas=
+ter/tests/browser/test_toastertable_ui.py
+index e00c30a8..691aca1e 100644
+--- a/lib/toaster/tests/browser/test_toastertable_ui.py
++++ b/lib/toaster/tests/browser/test_toastertable_ui.py
+@@ -8,6 +8,7 @@
+ #
+=20
+ from datetime import datetime
++import os
+=20
+ from django.urls import reverse
+ from django.utils import timezone
+@@ -59,7 +60,8 @@ class TestToasterTableUI(SeleniumTestCase):
+         later =3D now + timezone.timedelta(hours=3D1)
+         even_later =3D later + timezone.timedelta(hours=3D1)
+=20
+-        bbv =3D BitbakeVersion.objects.create(name=3D'test bbv', giturl=3D=
+'/tmp/',
++        builldir =3D os.environ.get('BUILDDIR', './')
++        bbv =3D BitbakeVersion.objects.create(name=3D'test bbv', giturl=3D=
+f'{builldir}/',
+                                             branch=3D'master', dirpath=3D=
+'')
+         release =3D Release.objects.create(name=3D'test release',
+                                          branch_name=3D'master',
+diff --git a/lib/toaster/tests/builds/buildtest.py b/lib/toaster/tests/bu=
+ilds/buildtest.py
+index 53cd7a9f..c5596c4d 100644
+--- a/lib/toaster/tests/builds/buildtest.py
++++ b/lib/toaster/tests/builds/buildtest.py
+@@ -87,8 +87,8 @@ def load_build_environment():
+=20
+ class BuildTest(unittest.TestCase):
+=20
++    BUILDDIR =3D os.environ.get('BUILDDIR', '/.')
+     PROJECT_NAME =3D "Testbuild"
+-    BUILDDIR =3D "/tmp/build/"
+=20
+     def build(self, target):
+         # So that the buildinfo helper uses the test database'
+diff --git a/lib/toaster/tests/functional/buffer b/lib/toaster/tests/func=
+tional/buffer
+new file mode 100644
+index 00000000..e69de29b
+diff --git a/lib/toaster/tests/views/test_views.py b/lib/toaster/tests/vi=
+ews/test_views.py
+index 349881eb..49a51d02 100644
+--- a/lib/toaster/tests/views/test_views.py
++++ b/lib/toaster/tests/views/test_views.py
+@@ -9,6 +9,7 @@
+=20
+ """Test cases for Toaster GUI and ReST."""
+=20
++import os
+ import pytest
+ from django.test import TestCase
+ from django.test.client import RequestFactory
+@@ -39,6 +40,7 @@ class ViewTests(TestCase):
+     """Tests to verify view APIs."""
+=20
+     fixtures =3D ['toastergui-unittest-data']
++    builldir =3D os.environ.get('BUILDDIR')
+=20
+     def setUp(self):
+=20
+@@ -46,7 +48,7 @@ class ViewTests(TestCase):
+=20
+         self.recipe1 =3D Recipe.objects.get(pk=3D2)
+         # create a file and to recipe1 file_path
+-        file_path =3D f"/tmp/{self.recipe1.name.strip().replace(' ', '-'=
+)}.bb"
++        file_path =3D f"{self.builldir}/{self.recipe1.name.strip().repla=
+ce(' ', '-')}.bb"
+         with open(file_path, 'w') as f:
+             f.write('foo')
+         self.recipe1.file_path =3D file_path
+@@ -240,7 +242,7 @@ class ViewTests(TestCase):
+         recipe =3D CustomImageRecipe.objects.create(
+                      name=3Dname, project=3Dself.project,
+                      base_recipe=3Dself.recipe1,
+-                     file_path=3D"/tmp/testing",
++                     file_path=3Df"{self.builldir}/testing",
+                      layer_version=3Dself.customr.layer_version)
+         url =3D reverse('xhr_customrecipe_id', args=3D(recipe.id,))
+         response =3D self.client.delete(url)
+@@ -311,7 +313,7 @@ class ViewTests(TestCase):
+         """Download the recipe file generated for the custom image"""
+=20
+         # Create a dummy recipe file for the custom image generation to =
+read
+-        open("/tmp/a_recipe.bb", 'a').close()
++        open(f"{self.builldir}/a_recipe.bb", 'a').close()
+         response =3D self.client.get(reverse('customrecipedownload',
+                                            args=3D(self.project.id,
+                                                  self.customr.id)))
 --=20
 2.34.1
 
