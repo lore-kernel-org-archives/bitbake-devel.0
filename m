@@ -1,336 +1,84 @@
-Return-Path: <alassane.yattara@savoirfairelinux.com>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4051C41535
-	for <webhook@archiver.kernel.org>; Tue, 12 Dec 2023 14:17:31 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.2658.1702390649170810303
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5555C41535
+	for <webhook@archiver.kernel.org>; Tue, 12 Dec 2023 15:02:42 +0000 (UTC)
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+ by mx.groups.io with SMTP id smtpd.web10.3792.1702393361911977149
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 12 Dec 2023 06:17:29 -0800
+ Tue, 12 Dec 2023 07:02:42 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=B23S1oLa;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 7583F9C3279
-	for <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 09:17:28 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id sXvPTfLkNCwW; Tue, 12 Dec 2023 09:17:26 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 8A2389C3672;
-	Tue, 12 Dec 2023 09:17:26 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 8A2389C3672
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=otwCkR/W;
+ spf=softfail (domain: sakoman.com, ip: 209.85.215.170, mailfrom: steve@sakoman.com)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5c239897895so2857817a12.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 07:02:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1702390646; bh=8Ki5GrCQZ3KBQPZZM6sfbXpKH1jrTwhrBdCjwg3VWm8=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=B23S1oLaPu01woKWpJJkKil5KaPJql4McgauJZFb221R3LFK2wu286SJ0IdtQtkA7
-	 GC3Mx2MHbWUFQscHyte8qyJArC0JOk/+iTT4U6km/ht7glkS/wRmzF94WkHYlexIqw
-	 8DC7//ItS/V9dx+IphUhTMRWhgw2QuuM4GXAB+QRbhPc8ma3nfk4O6DXbciHYZIsNH
-	 qy0sV6yn8IX4V2d5cbAArCl0FobqHw7WAdd23gj2B2sd13cleZzPHoBD8Hjpl+De3A
-	 Aw2KguDhuDFePmg45juyIYaS8iEj4qaWyWfoPU8/CoUqhdE6wYFGJ4DV0grnid9ahs
-	 8+bZqKtZO/i8w==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id G4sKEcDxYq3g; Tue, 12 Dec 2023 09:17:26 -0500 (EST)
-Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id AD01A9C354B;
-	Tue, 12 Dec 2023 09:17:25 -0500 (EST)
-From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1702393360; x=1702998160; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=67y+4xIxPqQh1Ws6fyn3Y8cTerbdOFB6UTwHfKxONWc=;
+        b=otwCkR/WkvaZJekfkI2K9VWelVjKl1ZakWPm28Z/WQuhcWxJI6IDkVzA01dsF6qn3M
+         y2cq/bu8GIEXuqlktMqqs2Rdmt7N7hmbEGHA1dy0etPa2AAb8ERstStYCIuQhFpB5s2X
+         DSp2tHGvxDPlLOWLsW6e3lH4a4WJar0N4KYyqD0WWmar0BvBQwRIVilbpO1VP0oKOpme
+         rRhGuOgiXQCdfh+WWvycJLeZ91lcDvneimH9aisPejPAmeve5RHi518ouH8vDkG17lOG
+         563o/ROT+Vv9cK70c+tQ0dQxZk/QZ4vwNoFTKmeHJqdNy8I435aue9RiArFv3nWX39MB
+         xcag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702393360; x=1702998160;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=67y+4xIxPqQh1Ws6fyn3Y8cTerbdOFB6UTwHfKxONWc=;
+        b=lvh8j//qQ6XXSxBQG5/i8n4nrqA/SVC0TVj4J5DXAOaaCopTXzQyRR2DoclucKyzaj
+         zXDJngzj36l3X+QZTEYz4rE0/lh3/FUrJcEJyW6u7o0Eo8mUycqVbs8MmbSZwaiXU2eV
+         VzQonchvZTTl2PzGCdyvUi7ns6/YziUWObypPCR/QS4nPYl5dJ30AFjuasnCd9IBngUd
+         EARkhtKfU7tVGqjO4VZY6sRnevrFCYZ+yjrV0qWX4SRSy4oP6a3dG1HD28G7ACd8xt7V
+         SrvFKz0GmvSNTJ/MsMmdJIhrCJyh0JOnAIaw514IKOqcODDRKHQbt/KfcJBUwHktcNyR
+         zSkg==
+X-Gm-Message-State: AOJu0YzySvjeCQphYsMEwtUr0qEQk3Nsd92gq1sPAGJDjQhJLlD4qKwq
+	MzpAmP4uiHWbLh8sx+PVl+AkbtDx+l2xNdUry+g=
+X-Google-Smtp-Source: AGHT+IHSHqT+E1ZN2PXKuBRA9ld/cj1+O2JTLUurFqTd6zQnxqKlAXMwEU/vtqdJWUYvnAsPXkOXDQ==
+X-Received: by 2002:a17:90a:4983:b0:28a:81a2:422b with SMTP id d3-20020a17090a498300b0028a81a2422bmr1750015pjh.91.1702393360491;
+        Tue, 12 Dec 2023 07:02:40 -0800 (PST)
+Received: from hexa.router0800d9.com (dhcp-72-234-108-41.hawaiiantel.net. [72.234.108.41])
+        by smtp.gmail.com with ESMTPSA id q2-20020a17090a430200b0028a4c85a55csm7226415pjg.27.2023.12.12.07.02.38
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Dec 2023 07:02:39 -0800 (PST)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH 4/4] toaster/test: Fixes functional tests warning on autobuilder
-Date: Tue, 12 Dec 2023 15:17:08 +0100
-Message-Id: <20231212141708.19395-4-alassane.yattara@savoirfairelinux.com>
+Subject: [bitbake][nanbield][2.6][PATCH 0/1] Pull request (cover letter only)
+Date: Tue, 12 Dec 2023 05:02:33 -1000
+Message-Id: <cover.1702393185.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231212141708.19395-1-alassane.yattara@savoirfairelinux.com>
-References: <20231212141708.19395-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 14:17:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15654
+ <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 15:02:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15655
 
-tests/functional/test_project_config.py::TestProjectConfig::test_set_down=
-load_dir
-  /home/pokybuild/yocto-worker/toaster/build/buildtools/sysroots/x86_64-p=
-okysdk-linux/usr/lib/python3.11/unittest/case.py:678: DeprecationWarning:=
- It is deprecated to return a value that is not None from a test case (<b=
-ound method TestProjectConfig.test_set_download_dir of <toaster.tests.fun=
-ctional.test_project_config.TestProjectConfig testMethod=3Dtest_set_downl=
-oad_dir>>)
-    return self.run(*args, **kwds)
+Passed a-full on autobuilder:
 
-tests/functional/test_project_config.py::TestProjectConfig::test_set_ssta=
-te_dir
-  /home/pokybuild/yocto-worker/toaster/build/buildtools/sysroots/x86_64-p=
-okysdk-linux/usr/lib/python3.11/unittest/case.py:678: DeprecationWarning:=
- It is deprecated to return a value that is not None from a test case (<b=
-ound method TestProjectConfig.test_set_sstate_dir of <toaster.tests.funct=
-ional.test_project_config.TestProjectConfig testMethod=3Dtest_set_sstate_=
-dir>>)
-    return self.run(*args, **kwds)
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/6305
 
-Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
----
- .../tests/functional/test_project_config.py   | 164 +++++++++---------
- 1 file changed, 85 insertions(+), 79 deletions(-)
+The following changes since commit 936fcec41efacc4ce988c81882a9ae6403702bea:
 
-diff --git a/lib/toaster/tests/functional/test_project_config.py b/lib/to=
-aster/tests/functional/test_project_config.py
-index 2d162d81..dbee36aa 100644
---- a/lib/toaster/tests/functional/test_project_config.py
-+++ b/lib/toaster/tests/functional/test_project_config.py
-@@ -163,51 +163,53 @@ class TestProjectConfig(SeleniumFunctionalTestCase)=
-:
-             change_dl_dir_btn =3D self.wait_until_visible('#change-dl_di=
-r-icon', poll=3D2)
-         except TimeoutException:
-             # If download dir is not displayed, test is skipped
--            return True
--        change_dl_dir_btn =3D self.wait_until_visible('#change-dl_dir-ic=
-on', poll=3D2)
--        change_dl_dir_btn.click()
-+            change_dl_dir_btn =3D None
-=20
--        # downloads dir path doesn't start with / or ${...}
--        input_field =3D self.wait_until_visible('#new-dl_dir', poll=3D2)
--        input_field.clear()
--        self.enter_text('#new-dl_dir', 'home/foo')
--        element =3D self.wait_until_visible('#hintError-initialChar-dl_d=
-ir', poll=3D2)
-+        if change_dl_dir_btn:
-+            change_dl_dir_btn =3D self.wait_until_visible('#change-dl_di=
-r-icon', poll=3D2)
-+            change_dl_dir_btn.click()
-+
-+            # downloads dir path doesn't start with / or ${...}
-+            input_field =3D self.wait_until_visible('#new-dl_dir', poll=3D=
-2)
-+            input_field.clear()
-+            self.enter_text('#new-dl_dir', 'home/foo')
-+            element =3D self.wait_until_visible('#hintError-initialChar-=
-dl_dir', poll=3D2)
-=20
--        msg =3D 'downloads directory path starts with invalid character =
-but ' \
--            'treated as valid'
--        self.assertTrue((self.INVALID_PATH_START_TEXT in element.text), =
-msg)
-+            msg =3D 'downloads directory path starts with invalid charac=
-ter but ' \
-+                'treated as valid'
-+            self.assertTrue((self.INVALID_PATH_START_TEXT in element.tex=
-t), msg)
-=20
--        # downloads dir path has a space
--        self.driver.find_element(By.ID, 'new-dl_dir').clear()
--        self.enter_text('#new-dl_dir', '/foo/bar a')
-+            # downloads dir path has a space
-+            self.driver.find_element(By.ID, 'new-dl_dir').clear()
-+            self.enter_text('#new-dl_dir', '/foo/bar a')
-=20
--        element =3D self.wait_until_visible('#hintError-dl_dir', poll=3D=
-2)
--        msg =3D 'downloads directory path characters invalid but treated=
- as valid'
--        self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), m=
-sg)
-+            element =3D self.wait_until_visible('#hintError-dl_dir', pol=
-l=3D2)
-+            msg =3D 'downloads directory path characters invalid but tre=
-ated as valid'
-+            self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text=
-), msg)
-=20
--        # downloads dir path starts with ${...} but has a space
--        self.driver.find_element(By.ID,'new-dl_dir').clear()
--        self.enter_text('#new-dl_dir', '${TOPDIR}/down foo')
-+            # downloads dir path starts with ${...} but has a space
-+            self.driver.find_element(By.ID,'new-dl_dir').clear()
-+            self.enter_text('#new-dl_dir', '${TOPDIR}/down foo')
-=20
--        element =3D self.wait_until_visible('#hintError-dl_dir', poll=3D=
-2)
--        msg =3D 'downloads directory path characters invalid but treated=
- as valid'
--        self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), m=
-sg)
-+            element =3D self.wait_until_visible('#hintError-dl_dir', pol=
-l=3D2)
-+            msg =3D 'downloads directory path characters invalid but tre=
-ated as valid'
-+            self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text=
-), msg)
-=20
--        # downloads dir path starts with /
--        self.driver.find_element(By.ID,'new-dl_dir').clear()
--        self.enter_text('#new-dl_dir', '/bar/foo')
-+            # downloads dir path starts with /
-+            self.driver.find_element(By.ID,'new-dl_dir').clear()
-+            self.enter_text('#new-dl_dir', '/bar/foo')
-=20
--        hidden_element =3D self.driver.find_element(By.ID,'hintError-dl_=
-dir')
--        self.assertEqual(hidden_element.is_displayed(), False,
--            'downloads directory path valid but treated as invalid')
-+            hidden_element =3D self.driver.find_element(By.ID,'hintError=
--dl_dir')
-+            self.assertEqual(hidden_element.is_displayed(), False,
-+                'downloads directory path valid but treated as invalid')
-=20
--        # downloads dir path starts with ${...}
--        self.driver.find_element(By.ID,'new-dl_dir').clear()
--        self.enter_text('#new-dl_dir', '${TOPDIR}/down')
-+            # downloads dir path starts with ${...}
-+            self.driver.find_element(By.ID,'new-dl_dir').clear()
-+            self.enter_text('#new-dl_dir', '${TOPDIR}/down')
-=20
--        hidden_element =3D self.driver.find_element(By.ID,'hintError-dl_=
-dir')
--        self.assertEqual(hidden_element.is_displayed(), False,
--            'downloads directory path valid but treated as invalid')
-+            hidden_element =3D self.driver.find_element(By.ID,'hintError=
--dl_dir')
-+            self.assertEqual(hidden_element.is_displayed(), False,
-+                'downloads directory path valid but treated as invalid')
-=20
-     def test_set_sstate_dir(self):
-         """
-@@ -217,53 +219,57 @@ class TestProjectConfig(SeleniumFunctionalTestCase)=
-:
-         self._navigate_bbv_page()
-=20
-         try:
--            self.wait_until_visible('#change-sstate_dir-icon', poll=3D2)
-+            btn_chg_sstate_dir =3D self.wait_until_visible(
-+                '#change-sstate_dir-icon',
-+                poll=3D2
-+            )
-             self.click('#change-sstate_dir-icon')
-         except TimeoutException:
-             # If sstate_dir is not displayed, test is skipped
--            return True
--
--        # path doesn't start with / or ${...}
--        input_field =3D self.wait_until_visible('#new-sstate_dir', poll=3D=
-2)
--        input_field.clear()
--        self.enter_text('#new-sstate_dir', 'home/foo')
--        element =3D self.wait_until_visible('#hintError-initialChar-ssta=
-te_dir', poll=3D2)
--
--        msg =3D 'sstate directory path starts with invalid character but=
- ' \
--            'treated as valid'
--        self.assertTrue((self.INVALID_PATH_START_TEXT in element.text), =
-msg)
--
--        # path has a space
--        self.driver.find_element(By.ID, 'new-sstate_dir').clear()
--        self.enter_text('#new-sstate_dir', '/foo/bar a')
--
--        element =3D self.wait_until_visible('#hintError-sstate_dir', pol=
-l=3D2)
--        msg =3D 'sstate directory path characters invalid but treated as=
- valid'
--        self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), m=
-sg)
--
--        # path starts with ${...} but has a space
--        self.driver.find_element(By.ID,'new-sstate_dir').clear()
--        self.enter_text('#new-sstate_dir', '${TOPDIR}/down foo')
--
--        element =3D self.wait_until_visible('#hintError-sstate_dir', pol=
-l=3D2)
--        msg =3D 'sstate directory path characters invalid but treated as=
- valid'
--        self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), m=
-sg)
--
--        # path starts with /
--        self.driver.find_element(By.ID,'new-sstate_dir').clear()
--        self.enter_text('#new-sstate_dir', '/bar/foo')
--
--        hidden_element =3D self.driver.find_element(By.ID, 'hintError-ss=
-tate_dir')
--        self.assertEqual(hidden_element.is_displayed(), False,
--            'sstate directory path valid but treated as invalid')
--
--        # paths starts with ${...}
--        self.driver.find_element(By.ID, 'new-sstate_dir').clear()
--        self.enter_text('#new-sstate_dir', '${TOPDIR}/down')
--
--        hidden_element =3D self.driver.find_element(By.ID, 'hintError-ss=
-tate_dir')
--        self.assertEqual(hidden_element.is_displayed(), False,
--            'sstate directory path valid but treated as invalid')
-+            btn_chg_sstate_dir =3D None
-+
-+        if btn_chg_sstate_dir:  # Skip continuation if sstate_dir is not=
- displayed
-+            # path doesn't start with / or ${...}
-+            input_field =3D self.wait_until_visible('#new-sstate_dir', p=
-oll=3D2)
-+            input_field.clear()
-+            self.enter_text('#new-sstate_dir', 'home/foo')
-+            element =3D self.wait_until_visible('#hintError-initialChar-=
-sstate_dir', poll=3D2)
-+
-+            msg =3D 'sstate directory path starts with invalid character=
- but ' \
-+                'treated as valid'
-+            self.assertTrue((self.INVALID_PATH_START_TEXT in element.tex=
-t), msg)
-+
-+            # path has a space
-+            self.driver.find_element(By.ID, 'new-sstate_dir').clear()
-+            self.enter_text('#new-sstate_dir', '/foo/bar a')
-+
-+            element =3D self.wait_until_visible('#hintError-sstate_dir',=
- poll=3D2)
-+            msg =3D 'sstate directory path characters invalid but treate=
-d as valid'
-+            self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text=
-), msg)
-+
-+            # path starts with ${...} but has a space
-+            self.driver.find_element(By.ID,'new-sstate_dir').clear()
-+            self.enter_text('#new-sstate_dir', '${TOPDIR}/down foo')
-+
-+            element =3D self.wait_until_visible('#hintError-sstate_dir',=
- poll=3D2)
-+            msg =3D 'sstate directory path characters invalid but treate=
-d as valid'
-+            self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text=
-), msg)
-+
-+            # path starts with /
-+            self.driver.find_element(By.ID,'new-sstate_dir').clear()
-+            self.enter_text('#new-sstate_dir', '/bar/foo')
-+
-+            hidden_element =3D self.driver.find_element(By.ID, 'hintErro=
-r-sstate_dir')
-+            self.assertEqual(hidden_element.is_displayed(), False,
-+                'sstate directory path valid but treated as invalid')
-+
-+            # paths starts with ${...}
-+            self.driver.find_element(By.ID, 'new-sstate_dir').clear()
-+            self.enter_text('#new-sstate_dir', '${TOPDIR}/down')
-+
-+            hidden_element =3D self.driver.find_element(By.ID, 'hintErro=
-r-sstate_dir')
-+            self.assertEqual(hidden_element.is_displayed(), False,
-+                'sstate directory path valid but treated as invalid')
-=20
-     def _change_bbv_value(self, **kwargs):
-         var_name, field, btn_id, input_id, value, save_btn, *_ =3D kwarg=
-s.values()
---=20
+  SECURITY.md: add file (2023-10-24 12:50:27 +0100)
+
+are available in the Git repository at:
+
+  https://git.openembedded.org/bitbake-contrib stable/2.6-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.6-next
+
+Peter Kjellerstedt (1):
+  command: Make parseRecipeFile() handle virtual recipes correctly
+
+ lib/bb/command.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+-- 
 2.34.1
 
 
