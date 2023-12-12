@@ -1,82 +1,97 @@
-Return-Path: <quaresma.jose@gmail.com>
+Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBACC4332F
-	for <webhook@archiver.kernel.org>; Tue, 12 Dec 2023 11:35:05 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.16303.1702380897926031439
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB02C4332F
+	for <webhook@archiver.kernel.org>; Tue, 12 Dec 2023 14:17:31 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web11.2575.1702390645202734195
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 12 Dec 2023 03:34:58 -0800
+ Tue, 12 Dec 2023 06:17:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=iUlDLow1;
- spf=pass (domain: gmail.com, ip: 209.85.221.46, mailfrom: quaresma.jose@gmail.com)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-336346769faso271260f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 03:34:57 -0800 (PST)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=N07SEFhF;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 939059C3675
+	for <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 09:17:24 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id LHpk5EjWXYnS; Tue, 12 Dec 2023 09:17:24 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1C9599C354B;
+	Tue, 12 Dec 2023 09:17:24 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 1C9599C354B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702380896; x=1702985696; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mbNfy5WeKPyXiSlz384j6KshXzbzfH4BxqNJ6G9QmYg=;
-        b=iUlDLow1U3OM6kd/7whb8nry11ZMhJ2cybtlf82y+ogn9sz6ounOa1GUTdBQ1NsuIM
-         kwizMR0SwiM/cjQB7kjsJtVWwtTbfSxanf+orBltS2UHYBREFVcyg6ej4SU65Zby1Imy
-         9Z+HOB+bllV/iqbWCqQy0F40uVRvWx2jMZjElbqedupC4McaAcJeSQnMUuOCIjNiCmcQ
-         fZ1LLXfgUhHySSM5CVRs7CuagEfXRN6icL+BgTwrRiGu3gVhzE+SIeP2y5q7xvIii4w1
-         5j4meE+zJw9J/QNKQIermLmS9Bx9LQB+ADmRLGA5CsjlT3HccWn5tPgzEg64hzlrdMLB
-         b5Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702380896; x=1702985696;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mbNfy5WeKPyXiSlz384j6KshXzbzfH4BxqNJ6G9QmYg=;
-        b=l4V4eNaA3C5KwJkf+lyeV/D6ZxaVydYqiFQhzppC0BAcfsFSpzKw/aECSp18ve01Zw
-         LJxhzRCbKiFszZz7vJLKhf9obUuboBJH40O2mRCjhn2i55pXI4DY4x1zw7b3VL+pFBYF
-         kQe11emoV9V9cxy7WebOov89tknbRN2QPzddvBKYdnUl0llOAKRl9vc1tFiDjGRxLosZ
-         r6nabAHc5cTKAQmFu2+RB9wywCrKDiiWpVtpaz1261rdGh8ENADQSUZRS1udnqpwwMox
-         H2eLcupesZnmoRrK/GODYjwJrGvVE3IshA3QrxBAfyUXsBvy0IqtL0geARKGQUelGDAM
-         Eh6Q==
-X-Gm-Message-State: AOJu0YwWTuqlQSOASTQWSzzw4lUZXIuKY/2Y4FXOXzNQRjNJvAaZE1kB
-	95anLVh2D+hSM7R27GDH9MKN6lVhdIg=
-X-Google-Smtp-Source: AGHT+IH80tdY0VhThm160KXNDK/N9HNW67TeGwjttP97X7YKoN/ZZd6LExqykOpXX9vBQ9GL1axdkQ==
-X-Received: by 2002:a05:6000:90e:b0:336:b8d:6531 with SMTP id cw14-20020a056000090e00b003360b8d6531mr3027514wrb.100.1702380895793;
-        Tue, 12 Dec 2023 03:34:55 -0800 (PST)
-Received: from toster.lan (bl16-110-70.dsl.telepac.pt. [188.81.110.70])
-        by smtp.gmail.com with ESMTPSA id d12-20020adfa40c000000b003333fa3d043sm10720425wra.12.2023.12.12.03.34.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 03:34:54 -0800 (PST)
-From: Jose Quaresma <quaresma.jose@gmail.com>
-X-Google-Original-From: Jose Quaresma <jose.quaresma@foundries.io>
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1702390644; bh=BkeybDozN5OZVIQ0bVa2lGke12WHwRHsSfwhz4Ulb6c=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=N07SEFhF5R9jxcO14ei7/vXYHG1yRUgSlhqKeOb6QW/hFCAVdtO//BzkwSGA9+w+P
+	 mh7jyMo625cMLdckRNyCrFEqV0tU6IhS+ld61dwyXoy5LcyRByld98R59UvyzwPGp2
+	 aOQLzVjY/ci5zjOND0wJE2Qlc+N/+/x+yP1fZcH0Oi4j46sW6M8R0YW4xfiKhLqzJO
+	 kPS0z+YEdrA8GFnVurIHQwp+1M/1/22EO77Y5CmtK61WGnw5cZOceao3vwob/GDsQJ
+	 a9cQqy/3R4XuCq0QsmWC/i0QSr6BebrdfugdE8F8sL5psf9Haye5U5U7ufKwba9g0P
+	 dVk2u5mfHtZqw==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id dpLca8v09xxN; Tue, 12 Dec 2023 09:17:24 -0500 (EST)
+Received: from jedi.. (unknown [196.127.183.75])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 3D4069C3279;
+	Tue, 12 Dec 2023 09:17:23 -0500 (EST)
+From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Jose Quaresma <jose.quaresma@foundries.io>
-Subject: [PATCH] bitbake.conf remove duplicate PERSISTENT_DIR
-Date: Tue, 12 Dec 2023 11:34:36 +0000
-Message-ID: <20231212113436.629700-1-jose.quaresma@foundries.io>
-X-Mailer: git-send-email 2.43.0
+Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH 2/4] toaster/test: Handle ProcessLookupError, log warning in console
+Date: Tue, 12 Dec 2023 15:17:06 +0100
+Message-Id: <20231212141708.19395-2-alassane.yattara@savoirfairelinux.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231212141708.19395-1-alassane.yattara@savoirfairelinux.com>
+References: <20231212141708.19395-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 11:35:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15650
+ <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 14:17:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15652
 
-Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
+Note: While addressing warnings on the autobuilder, we encountered releva=
+nt warnings
+where attempts were made to terminate processes that were not running.
+
+To enhance visibility, we have opted to catch the ProcessLookupError exce=
+ption
+and log a warning in the console rather than suppressing it.
+
+Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- conf/bitbake.conf | 1 -
- 1 file changed, 1 deletion(-)
+ lib/toaster/tests/commands/test_runbuilds.py | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/conf/bitbake.conf b/conf/bitbake.conf
-index baf0a76f..2c1d8be2 100644
---- a/conf/bitbake.conf
-+++ b/conf/bitbake.conf
-@@ -42,5 +42,4 @@ T = "${WORKDIR}/temp"
- TARGET_ARCH = "${BUILD_ARCH}"
- TMPDIR = "${TOPDIR}/tmp"
- WORKDIR = "${TMPDIR}/work/${PF}"
--PERSISTENT_DIR = "${TMPDIR}/cache"
- GITPKGV = "${@bb.fetch2.get_srcrev(d, 'gitpkgv_revision')}"
--- 
-2.43.0
+diff --git a/lib/toaster/tests/commands/test_runbuilds.py b/lib/toaster/t=
+ests/commands/test_runbuilds.py
+index 738d36e9..849c227e 100644
+--- a/lib/toaster/tests/commands/test_runbuilds.py
++++ b/lib/toaster/tests/commands/test_runbuilds.py
+@@ -22,8 +22,6 @@ import signal
+ import logging
+=20
+=20
+-logger =3D logging.getLogger("toaster")
+-
+ class KillRunbuilds(threading.Thread):
+     """ Kill the runbuilds process after an amount of time """
+     def __init__(self, *args, **kwargs):
+@@ -43,7 +41,7 @@ class KillRunbuilds(threading.Thread):
+                 pid =3D pidfile.read()
+                 os.kill(int(pid), signal.SIGTERM)
+         except ProcessLookupError:
+-            logger.warning("Runbuilds not running or already killed")
++            logging.warning("Runbuilds not running or already killed")
+=20
+=20
+ class TestCommands(TestCase):
+--=20
+2.34.1
 
 
