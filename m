@@ -1,104 +1,78 @@
-Return-Path: <marlon.rodriguez-garcia@savoirfairelinux.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0CFC4332F
-	for <webhook@archiver.kernel.org>; Tue, 12 Dec 2023 20:05:36 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.6335.1702411529753598970
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FFDC4332F
+	for <webhook@archiver.kernel.org>; Tue, 12 Dec 2023 20:21:26 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.6808.1702412484756753324
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 12 Dec 2023 12:05:30 -0800
+ Tue, 12 Dec 2023 12:21:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=SvbbyxM3;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: marlon.rodriguez-garcia@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 82FD49C2795;
-	Tue, 12 Dec 2023 15:05:28 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id SrQR8uS8WKXi; Tue, 12 Dec 2023 15:05:28 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id EF8569C36BA;
-	Tue, 12 Dec 2023 15:05:27 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com EF8569C36BA
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=SEFA4YlP;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40c2d50bfbfso30322345e9.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 12:21:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1702411528; bh=TwXaLmMbZtOih2J/l9U9aDmbbJ4K1aYLn4ZeGOFXozE=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=SvbbyxM3b9e0rdG3w1Rc6rGae347yNW47Zqa4+2MR6PN923nCC01ds6x4Bu3t4ed/
-	 VtdnyJnmXGKOVbBBD7mi8XusT45oBnDC2wrYPNOMYOpsn+ksI2U/KkvACekvLVzdJJ
-	 YgCixXiPiGLFcRbQ3zCR1r32aRpKhuoMyBP+E+tdvLKjruQ4wMVrmOENfDP4XLQJhy
-	 JWJ0xAkaAX4AM4eSp/c1tYdegO9JWoQZ3GOM7UUZUBZRXg4DmziD7AqSaqVXIwQMlR
-	 StGnySJRvKGm8wdGX1WSQi8+B6nOrEiAZZXoQfCXt9R1Ew5UVNG1/eRLoqZR0T16+f
-	 /3gIcpdc6qU9g==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id hTIB0Cv-hFJW; Tue, 12 Dec 2023 15:05:27 -0500 (EST)
-Received: from savoirfairelinux.ht.home (modemcable141.201-58-74.mc.videotron.ca [74.58.201.141])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id CA3079C2795;
-	Tue, 12 Dec 2023 15:05:27 -0500 (EST)
-From: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfairelinux.com>
-To: bitbake-devel@lists.openembedded.org,
-	toaster@lists.yoctoproject.org
-Cc: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfairelinux.com>
-Subject: [PATCH] toaster: remove test and update setup to avoid rebuilding image
-Date: Tue, 12 Dec 2023 15:05:15 -0500
-Message-Id: <20231212200515.219392-1-marlon.rodriguez-garcia@savoirfairelinux.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
+        d=linuxfoundation.org; s=google; t=1702412483; x=1703017283; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=krzDQT0RBBU4EjJHms8MZMw24HNQOrw0D6//f6g1kAA=;
+        b=SEFA4YlPcHHilolr+ftI6vMcratbep/J/iKEMRUw5HZZ6lkdfIXELN4bTdQJXPPxoI
+         /asfjP8dh8qaPkq8WF1M+oqI32qLle4a7RwlGxlP7eeQkERuzHA34R0hPZy6vPXCF5z1
+         ZWmCd8xsSBbjH4v0sar2bMYAuX071fh1QkqI0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702412483; x=1703017283;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=krzDQT0RBBU4EjJHms8MZMw24HNQOrw0D6//f6g1kAA=;
+        b=V0ZwJYJLzMI8j1SXs2aoj2PklunJCzT4JKGL4+BAOWiJEMPjANY02+lujMvUUEyT/o
+         15FHfg5N/A1KNkyy3+m6kySXwd5F0Q5m1Io2uL8OrbkT5U8/CwFVpgM4iWjjSgcOT0mx
+         bAc26GfSU/EVT04K+sxwxjpDBjs8IgBEYFQiIt4xM167jTUmCh7htALazuaTBdxP80ww
+         2QLTi/rqkpoLiwIN+N+VyO/gYSWNStqFx4s4OHPlVnPgej5AhwBDjNqSWfD7uZXbUTx/
+         mkAfgVwhKdsNvUgIO3nl2kwVGhHOrE/nB2rghhmdXb3YuhCkGmQalvJFXtvK2Yow9u3Q
+         zcwg==
+X-Gm-Message-State: AOJu0YzG7WH0ghUZUGdAPqX9KsjpDv71P6eULeJj4/FjB13+9KvXm41i
+	zCvPxU0yQqWCTsAv85ZTzAxxKA==
+X-Google-Smtp-Source: AGHT+IGd4np9oa6DliItjZmoX2DcXcx3armFCQVxebPwBVcf8IGQUFSCV5Eju6szt5sjgvN55wGkSg==
+X-Received: by 2002:a05:600c:6985:b0:40c:25c1:bc03 with SMTP id fp5-20020a05600c698500b0040c25c1bc03mr3425898wmb.61.1702412483049;
+        Tue, 12 Dec 2023 12:21:23 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:aa7f:d5a2:dd4f:a965? ([2001:8b0:aba:5f3c:aa7f:d5a2:dd4f:a965])
+        by smtp.gmail.com with ESMTPSA id fl9-20020a05600c0b8900b0040b43da0bbasm17814602wmb.30.2023.12.12.12.21.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Dec 2023 12:21:22 -0800 (PST)
+Message-ID: <43e8207d9565b0de4a38002579d054e3d56fa149.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 1/4] toaster/test: bug-fix element click
+ intercepted in browser/test_layerdetails_page.py
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 12 Dec 2023 20:21:19 +0000
+In-Reply-To: <20231212141708.19395-1-alassane.yattara@savoirfairelinux.com>
+References: <20231212141708.19395-1-alassane.yattara@savoirfairelinux.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 20:05:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15656
+ <bitbake-devel@lists.openembedded.org>; Tue, 12 Dec 2023 20:21:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15657
 
-Update build test to fix setUp, by including the built, the system was re=
-building the image on every test, causing the database to lock
-Delete test for unique order, this test was the only test using the self.=
-built element and breaking the system.
+I tried this series on the autobuilder:
 
-Signed-off-by: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfai=
-relinux.com>
----
- lib/toaster/tests/builds/test_core_image_min.py | 12 ------------
- 1 file changed, 12 deletions(-)
+https://autobuilder.yoctoproject.org/typhoon/#/builders/161/builds/61/steps=
+/11/logs/stdio
 
-diff --git a/lib/toaster/tests/builds/test_core_image_min.py b/lib/toaste=
-r/tests/builds/test_core_image_min.py
-index dc1ad9da..c5bfdbfb 100644
---- a/lib/toaster/tests/builds/test_core_image_min.py
-+++ b/lib/toaster/tests/builds/test_core_image_min.py
-@@ -27,7 +27,6 @@ class BuildCoreImageMinimal(BuildTest):
-     """Build core-image-minimal and test the results"""
-=20
-     def setUp(self):
--        self.built =3D self.build("core-image-minimal")
-         self.completed_build =3D self.target_already_built("core-image-m=
-inimal")
-=20
-     # Check if build name is unique - tc_id=3D795
-@@ -47,17 +46,6 @@ class BuildCoreImageMinimal(BuildTest):
-                          total_builds,
-                          msg=3D'Build cooker log path is not unique')
-=20
--    # Check if task order is unique for one build - tc=3D824
--    def test_Task_Unique_Order(self):
--        total_task_order =3D Task.objects.filter(
--            build=3Dself.built).values('order').count()
--        distinct_task_order =3D Task.objects.filter(
--            build=3Dself.completed_build).values('order').distinct().cou=
-nt()
--
--        self.assertNotEqual(total_task_order,
--                         distinct_task_order,
--                         msg=3D'Errors task order is not unique')
--
-     # Check task order sequence for one build - tc=3D825
-     def test_Task_Order_Sequence(self):
-         cnt_err =3D []
---=20
-2.34.1
+(and builds 59, 60 and 62 also showed the same issue).
 
+I did also have trouble applying on of the patches on latest master,
+please ensure patches are sent against the branch HEAD.
+
+Cheers,
+
+Richard
 
