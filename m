@@ -1,67 +1,78 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77C8C4332F
-	for <webhook@archiver.kernel.org>; Wed, 13 Dec 2023 13:58:32 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web11.36178.1702475907796454531
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8395C4332F
+	for <webhook@archiver.kernel.org>; Wed, 13 Dec 2023 14:13:42 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web10.37035.1702476813695198749
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 13 Dec 2023 05:58:28 -0800
+ Wed, 13 Dec 2023 06:13:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CIHJ6sRy;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-32f8441dfb5so6364448f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 13 Dec 2023 05:58:27 -0800 (PST)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=Tnx7UvNY;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 5E4979C2A93;
+	Wed, 13 Dec 2023 09:13:32 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id NY6q_84xbheH; Wed, 13 Dec 2023 09:13:31 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 85BE39C34E7;
+	Wed, 13 Dec 2023 09:13:31 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 85BE39C34E7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1702475906; x=1703080706; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SWKi0VxyEEA44+pj9yy/Pz2Aj/N02U3hEj02lilnDg4=;
-        b=CIHJ6sRyzXDmlfF78S2Oqk7GbxAQdA8XFovnoLMfpVyHgYL/aFsBAdVurVemSPBuAu
-         Q4F6msJGxHbHFJhxUGjQGahb0q0p+jvsZRP5wbK3DW7GFCQgf0iMA5luFbh6Hx4OpZ3K
-         nR/XWZIaandjycibomKaSxks8i3ZG7K8vzYMQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702475906; x=1703080706;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SWKi0VxyEEA44+pj9yy/Pz2Aj/N02U3hEj02lilnDg4=;
-        b=gBKIKYDiubEyKw6qPix0u803+/CGLozYcDOuMQTQCAVorHJwKI/7GGOcviYUawoyLq
-         ec/pPiWeN2AbGfa0/3K+zVlrlh9sdoL2mhKuJKICTHjx/AiB5TvSWFiMuNjnQXWl+25J
-         y1cidlKNyt8DBBXwjlC9M2beQKfoBKCVDEqIlXez96zKfjK47LON+lcjP9bz8z0t5rul
-         bT/Dj4Gf/6/bVJww0/yqbU2dGGN4mFw9B10/LPNEzTFmENE9wv1A+C6n8H1wysyQuG4y
-         WmRvbL6eeIXyd3KBGwMu+9pUZE6I2ea0cfX/J5FX0qXYEitRXTa8WaVlekKe+pnHtXoq
-         7/SQ==
-X-Gm-Message-State: AOJu0Yy6YDEHLbw+65Y+k8IZ2gCok7fmP8TEfBYNBFswosbw53bnoMzt
-	JOV/n9pQcyxKUavXJsY45jATFA==
-X-Google-Smtp-Source: AGHT+IFLq/a8A6AkR6vPyJUONnO0IHKda2/1BBk1JwSHIbjboOSJQQsAybk+qNi6+0HCbSPO6Qou7g==
-X-Received: by 2002:a05:600c:2214:b0:40c:2680:de24 with SMTP id z20-20020a05600c221400b0040c2680de24mr3765478wml.39.1702475905702;
-        Wed, 13 Dec 2023 05:58:25 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:7173:bb34:6d69:83d3? ([2001:8b0:aba:5f3c:7173:bb34:6d69:83d3])
-        by smtp.gmail.com with ESMTPSA id m16-20020a05600c4f5000b0040c57e4ea28sm4014980wmq.17.2023.12.13.05.58.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 05:58:25 -0800 (PST)
-Message-ID: <bff0319360d0af67cd0d3ecdfb4a46e84445e2ac.camel@linuxfoundation.org>
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1702476811; bh=rIrZOLCEVFxBE1VSZL3jHtwGCT5LIL+a4o33bzxfHEs=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=Tnx7UvNYLDX63DH4LMU0QTwJtIZ9omOe4DTJz/bj908WJTecdqsjFCIDBBeds4W0B
+	 wozPK2uwtCrAAfhP+ZycVb/oBbWL3N0LHM3qhYu0ziGGxn02Yq/AjQyIeLebcby1aw
+	 bAi/JmES6OtqDAHXcqDohAghxw1PCi+hXqUJURXGFSmDsdVuIfD2WGo/ocvfYO9LIV
+	 bQGZpCb39p57NLP22NW7jFPKQ5TmaEyUdi/NPIPvXGNENC69hFQEOHRhFT2RcLc3N7
+	 G+UQrjAkMOKiHH+8pgX6O59iZBm6ampUhVieaLQht/RPpwkca+sLxqUY0xai6Lu/fL
+	 onMSJRoim34tQ==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id Sa2-ubLe9OAb; Wed, 13 Dec 2023 09:13:31 -0500 (EST)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 6A0799C2A93;
+	Wed, 13 Dec 2023 09:13:31 -0500 (EST)
+Date: Wed, 13 Dec 2023 09:13:31 -0500 (EST)
+From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Message-ID: <1058701702.76412.1702476811264.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <bff0319360d0af67cd0d3ecdfb4a46e84445e2ac.camel@linuxfoundation.org>
+References: <20231212141708.19395-1-alassane.yattara@savoirfairelinux.com> <20231212141708.19395-4-alassane.yattara@savoirfairelinux.com> <bff0319360d0af67cd0d3ecdfb4a46e84445e2ac.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH 4/4] toaster/test: Fixes functional
  tests warning on autobuilder
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Wed, 13 Dec 2023 13:58:24 +0000
-In-Reply-To: <20231212141708.19395-4-alassane.yattara@savoirfairelinux.com>
-References: <20231212141708.19395-1-alassane.yattara@savoirfairelinux.com>
-	 <20231212141708.19395-4-alassane.yattara@savoirfairelinux.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.15_GA_4562 (ZimbraWebClient - GC119 (Linux)/8.8.15_GA_4570)
+Thread-Topic: toaster/test: Fixes functional tests warning on autobuilder
+Thread-Index: 233KWwKHJIZtHbS8GrR0DHE6EJHetA==
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 13 Dec 2023 13:58:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15660
+ <bitbake-devel@lists.openembedded.org>; Wed, 13 Dec 2023 14:13:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15661
+
+Richard,
+
+Yes, you're right skiptest is another way, in fact I preferred this method =
+in a testcase,=20
+but to avoid 2 or more skipping inside tests, I chose if condition.
+
+Alassane
+----- Mail original -----
+De: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+=C3=80: "Alassane Yattara" <alassane.yattara@savoirfairelinux.com>, "bitbak=
+e-devel" <bitbake-devel@lists.openembedded.org>
+Envoy=C3=A9: Mercredi 13 D=C3=A9cembre 2023 14:58:24
+Objet: Re: [bitbake-devel] [PATCH 4/4] toaster/test: Fixes functional tests=
+ warning on autobuilder
 
 On Tue, 2023-12-12 at 15:17 +0100, Alassane Yattara wrote:
 > tests/functional/test_project_config.py::TestProjectConfig::test_set_down=
@@ -234,4 +245,15 @@ Cheers,
 
 Richard
 
+
+
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+Links: You receive all messages sent to this group.
+View/Reply Online (#15660): https://lists.openembedded.org/g/bitbake-devel/=
+message/15660
+Mute This Topic: https://lists.openembedded.org/mt/103130087/7896845
+Group Owner: bitbake-devel+owner@lists.openembedded.org
+Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/leave/12674735/=
+7896845/557127541/xyzzy [alassane.yattara@savoirfairelinux.com]
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 
