@@ -2,48 +2,48 @@ Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 246EFC41535
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A6FC46CA3
 	for <webhook@archiver.kernel.org>; Thu, 14 Dec 2023 22:12:13 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.41456.1702591930249506457
+ by mx.groups.io with SMTP id smtpd.web10.41459.1702591932816268560
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 Dec 2023 14:12:10 -0800
+ Thu, 14 Dec 2023 14:12:13 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=Hvs6Zg9B;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=ABsyIjQy;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 8D0F29C40CF
-	for <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 17:12:09 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 322DD9C40FA
+	for <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 17:12:12 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 8VBPoVLUvfii; Thu, 14 Dec 2023 17:12:08 -0500 (EST)
+ with ESMTP id Ic5bjrbNcNNV; Thu, 14 Dec 2023 17:12:11 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 8AC959C40F9;
-	Thu, 14 Dec 2023 17:12:08 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 8AC959C40F9
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 248E09C36B1;
+	Thu, 14 Dec 2023 17:12:11 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 248E09C36B1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1702591928; bh=8z/JCjGiQE23CMuro8C6VFlhZ2hmAYtLmEoV/5F5ido=;
+	t=1702591931; bh=8zZGUgXyv3I+GhyhYGfRkmBWkWzuQntx4Quq9pgEfp8=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=Hvs6Zg9B5OPUwlj+8Xjp0qvHhAmoTcZjnTrPucJW5M3POg1bVytsLkrQeqfE6IQyw
-	 IuqTW1S9GuCIb8PcJ20bHqD5dI9k6SdkXEBqKfeGirkIy4vBzhdvjwIB2yHuU1ja2F
-	 tINNuBprjuw7S8auUeLID0801Uaxq3dABmvv7CcCLjBP7a2XJAsPIiqdTBjb4pJutm
-	 E1/ElQ8NpbXPrFniVXhEiWYTCzGjO/7rn3dJtOeo0ALdVhM4QbtuBAChjataDzTi/J
-	 WsMQQhh30+CcKfqvQz+puzlFXfhFTFJAxiqGjM+ogF0MNQiNxrP/aXTV5SbOMoX/mo
-	 9kexCXBSdvnRA==
+	b=ABsyIjQyjQy6+LJ/D776G/Jzexc9jvZA371YQe+pvH6iPj6Ql2oHUO+EAfIScVtZb
+	 Np3JyI5v9osXLa9m1OJ0zbtqofJHDO/N/SfswtIOHvYLz5grv3de0IC5vD3r6K+Vuh
+	 pLqLGz4mK/7PHtYyHjuPtIm/HGvzpiGFM1Zw/ydhzhh/oerSfJ4VOI+HAHW8Ja0Jz4
+	 oEaVlgAvKRm6uA0zBqIo5uPjfEo+4TAyNwkmA2lbMKj84vIB9Yd0H5ioLcClXkFtIM
+	 8abCa1EjeVSP2zOLK9XmmCKnw+LoYSuHKmPQbBOfJR7dEnuZ8Z9KwmGKHEk5G5sKNy
+	 ZKIsZmTrwD5WQ==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id qRzZeSYOQ-5v; Thu, 14 Dec 2023 17:12:08 -0500 (EST)
+ with ESMTP id 2l8S7u00khYc; Thu, 14 Dec 2023 17:12:11 -0500 (EST)
 Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id AAA229C40F4;
-	Thu, 14 Dec 2023 17:12:07 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 536879C40F4;
+	Thu, 14 Dec 2023 17:12:10 -0500 (EST)
 From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH v2 4/6] toaster/test: Removed all time.sleep occurrence
-Date: Thu, 14 Dec 2023 23:11:55 +0100
-Message-Id: <20231214221157.604253-4-alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH v2 6/6] toaster/test: Bug-Fix testcase bitbake/lib/toaster/tests/functional/test_project_page_tab_config.py
+Date: Thu, 14 Dec 2023 23:11:57 +0100
+Message-Id: <20231214221157.604253-6-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231214221157.604253-1-alassane.yattara@savoirfairelinux.com>
 References: <20231214221157.604253-1-alassane.yattara@savoirfairelinux.com>
@@ -53,289 +53,409 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 22:12:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15679
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15681
 
-Use wait_until_visible instead of time.sleep to delay driver actions
+All issues and failures stemmed from a specific test case:
+test_project_config_tab_right_section in the file
+bitbake/lib/toaster/tests/functional/test_project_page_tab_config.py.
+
+This test was designed to verify whether the "Most built recipes"
+section on the project page correctly displays the latest and oldest
+recipes built by the user, irrespective of the build outcome (failed,
+        cancelled, succeeded, or errored).
+
+The errors and failures arose because the build process did not
+terminate as expected, particularly when attempting to build recipe
+images such as "core-image-minimal" or "bash." It was discovered that
+building a real recipe/image was unnecessary for the test's purpose.
+Instead, building a fake recipe like "foo" provided a reliable way to
+ensure the build would fail or be interrupted.
+
 Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- .../tests/functional/test_functional_basic.py | 39 ++++++++++---------
- 1 file changed, 20 insertions(+), 19 deletions(-)
+ .../tests/functional/test_project_page.py     |   2 +-
+ .../test_project_page_tab_config.py           | 186 +++++++++---------
+ 2 files changed, 95 insertions(+), 93 deletions(-)
 
-diff --git a/lib/toaster/tests/functional/test_functional_basic.py b/lib/=
-toaster/tests/functional/test_functional_basic.py
-index dcd84c3f..5d7a86bb 100644
---- a/lib/toaster/tests/functional/test_functional_basic.py
-+++ b/lib/toaster/tests/functional/test_functional_basic.py
-@@ -15,7 +15,7 @@ from orm.models import Project
+diff --git a/lib/toaster/tests/functional/test_project_page.py b/lib/toas=
+ter/tests/functional/test_project_page.py
+index 077badb0..82dca442 100644
+--- a/lib/toaster/tests/functional/test_project_page.py
++++ b/lib/toaster/tests/functional/test_project_page.py
+@@ -461,7 +461,7 @@ class TestProjectPage(SeleniumFunctionalTestCase):
+             '//td[@class=3D"add-del-layers"]//a[1]'
+         )
+         build_btn.click()
+-        build_state =3D wait_until_build(self, 'parsing starting cloning=
+ queued')
++        build_state =3D wait_until_build(self, 'queued cloning starting =
+parsing failed')
+         lastest_builds =3D self.driver.find_elements(
+             By.XPATH,
+             '//div[@id=3D"latest-builds"]/div'
+diff --git a/lib/toaster/tests/functional/test_project_page_tab_config.py=
+ b/lib/toaster/tests/functional/test_project_page_tab_config.py
+index d911ff00..4dbf5aeb 100644
+--- a/lib/toaster/tests/functional/test_project_page_tab_config.py
++++ b/lib/toaster/tests/functional/test_project_page_tab_config.py
+@@ -12,7 +12,7 @@ import pytest
+ from django.urls import reverse
+ from selenium.webdriver import Keys
+ from selenium.webdriver.support.select import Select
+-from selenium.common.exceptions import TimeoutException
++from selenium.common.exceptions import NoSuchElementException, TimeoutEx=
+ception
+ from orm.models import Project
+ from tests.functional.functional_helpers import SeleniumFunctionalTestCa=
+se
  from selenium.webdriver.common.by import By
+@@ -26,17 +26,18 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
+):
+     PROJECT_NAME =3D 'TestProjectConfigTab'
+     project_id =3D None
 =20
+-    def _create_project(self, project_name):
++    def _create_project(self, project_name, **kwargs):
+         """ Create/Test new project using:
+           - Project Name: Any string
+           - Release: Any string
+           - Merge Toaster settings: True or False
+         """
++        release =3D kwargs.get('release', '3')
+         self.get(reverse('newproject'))
+         self.wait_until_visible('#new-project-name')
+         self.find("#new-project-name").send_keys(project_name)
+         select =3D Select(self.find("#projectversion"))
+-        select.select_by_value('3')
++        select.select_by_value(release)
 =20
--@pytest.mark.order("last")
-+@pytest.mark.order("second_to_last")
- class FuntionalTestBasic(SeleniumFunctionalTestCase):
-=20
- #   testcase (1514)
-@@ -26,7 +26,6 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
-         self.driver.find_element(By.ID, "new-project-name").send_keys(pr=
-oject_name)
-         self.driver.find_element(By.ID, 'projectversion').click()
-         self.driver.find_element(By.ID, "create-project-button").click()
--        time.sleep(2)
-         element =3D self.wait_until_visible('#project-created-notificati=
-on')
-         self.assertTrue(self.element_exists('#project-created-notificati=
-on'),'Project creation notification not shown')
-         self.assertTrue(project_name in element.text,
-@@ -39,45 +38,50 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
-         self.get(reverse('all-projects'))
-         self.wait_until_visible('#projectstable')
-         self.find_element_by_link_text_in_table('projectstable', 'seleni=
-um-project').click()
--        time.sleep(2)
-+        self.wait_until_visible('#config-nav')
-         self.assertTrue(self.element_exists('#config-nav'),'Configuratio=
-n Tab does not exist')
-         project_URL=3Dself.get_URL()
-         self.driver.find_element(By.XPATH, '//a[@href=3D"'+project_URL+'=
-"]').click()
--        time.sleep(2)
-+        self.wait_until_visible('#config-nav')
+         # check merge toaster settings
+         checkbox =3D self.find('.checkbox-mergeattr')
+@@ -50,7 +51,7 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase):
+         self.find("#create-project-button").click()
 =20
          try:
-             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
-ul/li/a[@href=3D"+'"'+project_URL+'customimages/"'+"]").click()
--            time.sleep(2)
-+            self.wait_until_visible('#config-nav')
-             self.assertTrue(re.search("Custom images",self.driver.find_e=
-lement(By.XPATH, "//div[@class=3D'col-md-10']").text),'Custom images info=
-rmation is not loading properly')
-         except:
-             self.fail(msg=3D'No Custom images tab available')
-=20
-         try:
-             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
-ul/li/a[@href=3D"+'"'+project_URL+'images/"'+"]").click()
-+            self.wait_until_visible('#config-nav')
-             self.assertTrue(re.search("Compatible image recipes",self.dr=
-iver.find_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The Com=
-patible image recipes information is not loading properly')
-         except:
-             self.fail(msg=3D'No Compatible image tab available')
-=20
-         try:
-             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
-ul/li/a[@href=3D"+'"'+project_URL+'softwarerecipes/"'+"]").click()
-+            self.wait_until_visible('#config-nav')
-             self.assertTrue(re.search("Compatible software recipes",self=
-.driver.find_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The =
-Compatible software recipe information is not loading properly')
-         except:
-             self.fail(msg=3D'No Compatible software recipe tab available=
+-            self.wait_until_visible('#hint-error-project-name')
++            self.wait_until_visible('#hint-error-project-name', poll=3D3=
+)
+             url =3D reverse('project', args=3D(TestProjectConfigTab.proj=
+ect_id, ))
+             self.get(url)
+             self.wait_until_visible('#config-nav', poll=3D3)
+@@ -67,7 +68,8 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase):
+         if TestProjectConfigTab.project_id is None:
+             self._create_project(project_name=3Dself._random_string(10))
+             current_url =3D self.driver.current_url
+-            TestProjectConfigTab.project_id =3D get_projectId_from_url(c=
+urrent_url)
++            TestProjectConfigTab.project_id =3D get_projectId_from_url(
++                current_url)
+         else:
+             url =3D reverse('project', args=3D(TestProjectConfigTab.proj=
+ect_id,))
+             self.get(url)
+@@ -76,27 +78,30 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
+):
+     def _create_builds(self):
+         # check search box can be use to build recipes
+         search_box =3D self.find('#build-input')
+-        search_box.send_keys('core-image-minimal')
++        search_box.send_keys('foo')
+         self.find('#build-button').click()
+-        self.wait_until_visible('#latest-builds')
++        self.wait_until_present('#latest-builds')
+         # loop until reach the parsing state
+-        build_state =3D wait_until_build(self, 'parsing starting cloning=
 ')
++        wait_until_build(self, 'queued cloning starting parsing failed')
+         lastest_builds =3D self.driver.find_elements(
+             By.XPATH,
+             '//div[@id=3D"latest-builds"]/div',
+         )
+         last_build =3D lastest_builds[0]
+         self.assertTrue(
+-            'core-image-minimal' in str(last_build.text)
++            'foo' in str(last_build.text)
+         )
+-        cancel_button =3D last_build.find_element(
+-            By.XPATH,
+-            '//span[@class=3D"cancel-build-btn pull-right alert-link"]',
+-        )
+-        cancel_button.click()
+-        if 'starting' not in build_state:  # change build state when can=
+celled in starting state
+-            wait_until_build_cancelled(self)
+-        return build_state
++        last_build =3D lastest_builds[0]
++        try:
++            cancel_button =3D last_build.find_element(
++                By.XPATH,
++                '//span[@class=3D"cancel-build-btn pull-right alert-link=
+"]',
++            )
++            cancel_button.click()
++        except NoSuchElementException:
++            # Skip if the build is already cancelled
++            pass
++        wait_until_build_cancelled(self)
 =20
-         try:
-             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
-ul/li/a[@href=3D"+'"'+project_URL+'machines/"'+"]").click()
-+            self.wait_until_visible('#config-nav')
-             self.assertTrue(re.search("Compatible machines",self.driver.=
-find_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The Compatib=
-le machine information is not loading properly')
-         except:
-             self.fail(msg=3D'No Compatible machines tab available')
-=20
-         try:
-             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
-ul/li/a[@href=3D"+'"'+project_URL+'layers/"'+"]").click()
-+            self.wait_until_visible('#config-nav')
-             self.assertTrue(re.search("Compatible layers",self.driver.fi=
-nd_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The Compatible=
- layer information is not loading properly')
-         except:
-             self.fail(msg=3D'No Compatible layers tab available')
-=20
-         try:
-             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
-ul/li/a[@href=3D"+'"'+project_URL+'configuration"'+"]").click()
-+            self.wait_until_visible('#config-nav')
-             self.assertTrue(re.search("Bitbake variables",self.driver.fi=
-nd_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The Bitbake va=
-riables information is not loading properly')
-         except:
-             self.fail(msg=3D'No Bitbake variables tab available')
-@@ -86,16 +90,14 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
-     def test_review_configuration_information(self):
-         self.get('')
-         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
-/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
--        time.sleep(2)
-         self.wait_until_visible('#projectstable')
-         self.find_element_by_link_text_in_table('projectstable', 'seleni=
-um-project').click()
-         project_URL=3Dself.get_URL()
--        time.sleep(2)
-+        self.wait_until_visible('#config-nav')
-         try:
-            self.assertTrue(self.element_exists('#machine-section'),'Mach=
-ine section for the project configuration page does not exist')
-            self.assertTrue(re.search("qemux86-64",self.driver.find_eleme=
-nt(By.XPATH, "//span[@id=3D'project-machine-name']").text),'The machine t=
-ype is not assigned')
-            self.driver.find_element(By.XPATH, "//span[@id=3D'change-mach=
-ine-toggle']").click()
--           time.sleep(2)
-            self.wait_until_visible('#select-machine-form')
-            self.wait_until_visible('#cancel-machine-change')
-            self.driver.find_element(By.XPATH, "//form[@id=3D'select-mach=
-ine-form']/a[@id=3D'cancel-machine-change']").click()
-@@ -133,16 +135,14 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase=
+     def _get_tabs(self):
+         # tabs links list
+@@ -126,6 +131,7 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
 ):
-     def test_verify_machine_information(self):
-         self.get('')
-         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
-/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
--        time.sleep(2)
-         self.wait_until_visible('#projectstable')
-         self.find_element_by_link_text_in_table('projectstable', 'seleni=
-um-project').click()
--        time.sleep(2)
-+        self.wait_until_visible('#config-nav')
+             - Delete project
+         """
+         self._navigate_to_project_page()
++
+         def _get_config_nav_item(index):
+             config_nav =3D self.find('#config-nav')
+             return config_nav.find_elements(By.TAG_NAME, 'li')[index]
+@@ -152,13 +158,27 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
+se):
+         self.assertTrue("actions" in str(actions.text).lower())
 =20
-         try:
-             self.assertTrue(self.element_exists('#machine-section'),'Mac=
-hine section for the project configuration page does not exist')
-             self.assertTrue(re.search("qemux86-64",self.driver.find_elem=
-ent(By.ID, "project-machine-name").text),'The machine type is not assigne=
-d')
-             self.driver.find_element(By.ID, "change-machine-toggle").cli=
-ck()
--            time.sleep(2)
-             self.wait_until_visible('#select-machine-form')
-             self.wait_until_visible('#cancel-machine-change')
-             self.driver.find_element(By.ID, "cancel-machine-change").cli=
-ck()
-@@ -153,15 +153,14 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase=
+         conf_nav_list =3D [
+-            [0, 'Configuration', f"/toastergui/project/{TestProjectConfi=
+gTab.project_id}"],  # config
+-            [2, 'Custom images', f"/toastergui/project/{TestProjectConfi=
+gTab.project_id}/customimages"],  # custom images
+-            [3, 'Image recipes', f"/toastergui/project/{TestProjectConfi=
+gTab.project_id}/images"],  # image recipes
+-            [4, 'Software recipes', f"/toastergui/project/{TestProjectCo=
+nfigTab.project_id}/softwarerecipes"],  # software recipes
+-            [5, 'Machines', f"/toastergui/project/{TestProjectConfigTab.=
+project_id}/machines"],  # machines
+-            [6, 'Layers', f"/toastergui/project/{TestProjectConfigTab.pr=
+oject_id}/layers"],  # layers
+-            [7, 'Distros', f"/toastergui/project/{TestProjectConfigTab.p=
+roject_id}/distros"],  # distro
++            # config
++            [0, 'Configuration',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}"=
+],
++            # custom images
++            [2, 'Custom images',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+customimages"],
++            # image recipes
++            [3, 'Image recipes',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+images"],
++            # software recipes
++            [4, 'Software recipes',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+softwarerecipes"],
++            # machines
++            [5, 'Machines',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+machines"],
++            # layers
++            [6, 'Layers',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+layers"],
++            # distro
++            [7, 'Distros',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+distros"],
+             #  [9, 'BitBake variables', f"/toastergui/project/{TestProje=
+ctConfigTab.project_id}/configuration"],  # bitbake variables
+         ]
+         for index, item_name, url in conf_nav_list:
+@@ -281,15 +301,10 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
+se):
+         # Create a new project for this test
+         project_name =3D self._random_string(10)
+         self._create_project(project_name=3Dproject_name)
+-        current_url =3D self.driver.current_url
+-        TestProjectConfigTab.project_id =3D get_projectId_from_url(curre=
+nt_url)
+-        url =3D current_url.split('?')[0]
+         # check if the menu is displayed
+         self.wait_until_visible('#project-page')
+         block_l =3D self.driver.find_element(
+             By.XPATH, '//*[@id=3D"project-page"]/div[2]')
+-        most_built_recipes =3D self.driver.find_element(
+-            By.XPATH, '//*[@id=3D"project-page"]/div[1]/div[3]')
+         project_release =3D self.driver.find_element(
+             By.XPATH, '//*[@id=3D"project-page"]/div[1]/div[4]')
+         layers =3D block_l.find_element(By.ID, 'layer-container')
+@@ -315,26 +330,6 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
+e):
+                 f'You have changed the {item_name} to: {new_item_name}' =
+in change_notification.text
+             )
+=20
+-        def rebuild_from_most_build_recipes(recipe_list_items):
+-            checkbox =3D recipe_list_items[0].find_element(By.TAG_NAME, =
+'input')
+-            checkbox.click()
+-            build_btn =3D self.find('#freq-build-btn')
+-            build_btn.click()
+-            self.wait_until_visible('#latest-builds')
+-            build_state =3D wait_until_build(self, 'parsing starting clo=
+ning queued')
+-            lastest_builds =3D self.driver.find_elements(
+-                By.XPATH,
+-                '//div[@id=3D"latest-builds"]/div'
+-            )
+-            last_build =3D lastest_builds[0]
+-            self.assertTrue(len(lastest_builds) >=3D 2)
+-            cancel_button =3D last_build.find_element(
+-                By.XPATH,
+-                '//span[@class=3D"cancel-build-btn pull-right alert-link=
+"]',
+-            )
+-            cancel_button.click()
+-            if 'starting' not in build_state:  # change build state when=
+ cancelled in starting state
+-                wait_until_build_cancelled(self)
+         # Machine
+         check_machine_distro(self, 'machine', 'qemux86-64', 'machine-sec=
+tion')
+         # Distro
+@@ -374,32 +369,61 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
+se):
+         layers_list_items =3D layers_list.find_elements(By.TAG_NAME, 'li=
+')
+         self.assertTrue(len(layers_list_items) =3D=3D 4)
+=20
+-        # Most built recipes
+-        title =3D most_built_recipes.find_element(By.TAG_NAME, 'h3')
+-        self.assertTrue("Most built recipes" in title.text)
++    def test_most_build_recipes(self):
++        """ Test most build recipes block contains"""
++        def rebuild_from_most_build_recipes(recipe_list_items):
++            checkbox =3D recipe_list_items[0].find_element(By.TAG_NAME, =
+'input')
++            checkbox.click()
++            build_btn =3D self.find('#freq-build-btn')
++            build_btn.click()
++            self.wait_until_present('#latest-builds')
++            wait_until_build(self, 'queued cloning starting parsing fail=
+ed')
++            lastest_builds =3D self.driver.find_elements(
++                By.XPATH,
++                '//div[@id=3D"latest-builds"]/div'
++            )
++            self.assertTrue(len(lastest_builds) >=3D 2)
++            last_build =3D lastest_builds[0]
++            try:
++                cancel_button =3D last_build.find_element(
++                    By.XPATH,
++                    '//span[@class=3D"cancel-build-btn pull-right alert-=
+link"]',
++                )
++                cancel_button.click()
++            except NoSuchElementException:
++                # Skip if the build is already cancelled
++                pass
++            wait_until_build_cancelled(self)
++        # Create a new project for remaining asserts
++        project_name =3D self._random_string(10)
++        self._create_project(project_name=3Dproject_name, release=3D'2')
++        current_url =3D self.driver.current_url
++        TestProjectConfigTab.project_id =3D get_projectId_from_url(curre=
+nt_url)
++        url =3D current_url.split('?')[0]
++
+         # Create a new builds
+-        build_state =3D self._create_builds()
++        self._create_builds()
+=20
+-        # Refresh the page
++        # back to project page
+         self.driver.get(url)
+=20
+         self.wait_until_visible('#project-page', poll=3D3)
+-        # check can select a recipe and build it
++
++        # Most built recipes
+         most_built_recipes =3D self.driver.find_element(
+             By.XPATH, '//*[@id=3D"project-page"]/div[1]/div[3]')
+-        recipe_list =3D most_built_recipes.find_element(By.ID, 'freq-bui=
+ld-list')
++        title =3D most_built_recipes.find_element(By.TAG_NAME, 'h3')
++        self.assertTrue("Most built recipes" in title.text)
++        # check can select a recipe and build it
++        self.wait_until_visible('#freq-build-list', poll=3D3)
++        recipe_list =3D self.find('#freq-build-list')
+         recipe_list_items =3D recipe_list.find_elements(By.TAG_NAME, 'li=
+')
+-        if 'starting' not in build_state:  # Build will not appear in th=
+e list if canceled in starting state
+-            self.assertTrue(
+-                len(recipe_list_items) > 0,
+-                msg=3D"No recipes found in the most built recipes list",
+-            )
+-            rebuild_from_most_build_recipes(recipe_list_items)
+-        else:
+-            self.assertTrue(
+-                len(recipe_list_items) =3D=3D 0,
+-                msg=3D"Recipes found in the most built recipes list",
+-            )
++        self.assertTrue(
++            len(recipe_list_items) > 0,
++            msg=3D"Any recipes found in the most built recipes list",
++        )
++        rebuild_from_most_build_recipes(recipe_list_items)
++        TestProjectConfigTab.project_id =3D None  # reset project id
+=20
+     def test_project_page_tab_importlayer(self):
+         """ Test project page tab import layer """
+@@ -461,10 +485,9 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
+e):
+         div_empty_msg =3D self.find('#empty-state-customimagestable')
+         link_create_custom_image =3D div_empty_msg.find_element(
+             By.TAG_NAME, 'a')
+-        last_project_id =3D Project.objects.get(name=3Dproject_name).id
+-        self.assertTrue(last_project_id is not None)
++        self.assertTrue(TestProjectConfigTab.project_id is not None)
+         self.assertTrue(
+-            f"/toastergui/project/{last_project_id}/newcustomimage" in s=
+tr(
++            f"/toastergui/project/{TestProjectConfigTab.project_id}/newc=
+ustomimage" in str(
+                 link_create_custom_image.get_attribute('href')
+             )
+         )
+@@ -473,6 +496,7 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
 ):
-     def test_verify_most_built_recipes_information(self):
-         self.get('')
-         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
-/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
--        time.sleep(2)
-         self.wait_until_visible('#projectstable')
-         self.find_element_by_link_text_in_table('projectstable', 'seleni=
-um-project').click()
-+        self.wait_until_visible('#config-nav')
-         project_URL=3Dself.get_URL()
--        time.sleep(2)
-         try:
-             self.assertTrue(re.search("You haven't built any recipes yet=
-",self.driver.find_element(By.ID, "no-most-built").text),'Default message=
- of no builds is not present')
-             self.driver.find_element(By.XPATH, "//div[@id=3D'no-most-bui=
-lt']/p/a[@href=3D"+'"'+project_URL+'images/"'+"]").click()
--            time.sleep(2)
-+            self.wait_until_visible('#config-nav')
-             self.assertTrue(re.search("Compatible image recipes",self.dr=
-iver.find_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The Cho=
-ose a recipe to build link  is not working  properly')
-         except:
-             self.fail(msg=3D'No Most built information in project detail=
- page')
-@@ -170,10 +169,9 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase)=
-:
-     def test_verify_project_release_information(self):
-         self.get('')
-         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
-/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
--        time.sleep(2)
-         self.wait_until_visible('#projectstable')
-         self.find_element_by_link_text_in_table('projectstable', 'seleni=
-um-project').click()
--        time.sleep(2)
-+        self.wait_until_visible('#config-nav')
+                 link_create_custom_image.text
+             )
+         )
++        TestProjectConfigTab.project_id =3D None  # reset project id
 =20
-         try:
-             self.assertTrue(re.search("Yocto Project master",self.driver=
-.find_element(By.ID, "project-release-title").text),'The project release =
-is not defined')
-@@ -186,8 +184,8 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
-         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
-/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
-         self.wait_until_visible('#projectstable')
-         self.find_element_by_link_text_in_table('projectstable', 'seleni=
-um-project').click()
-+        self.wait_until_visible('#config-nav')
-         project_URL=3Dself.get_URL()
--        time.sleep(2)
-         try:
-            self.driver.find_element(By.XPATH, "//div[@id=3D'layer-contai=
-ner']")
-            self.assertTrue(re.search("3",self.driver.find_element(By.ID,=
- "project-layers-count").text),'There should be 3 layers listed in the la=
-yer count')
-@@ -215,16 +213,17 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase=
-):
-     def test_verify_project_detail_links(self):
-         self.get('')
-         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
-/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
--        time.sleep(2)
-         self.wait_until_visible('#projectstable')
-         self.find_element_by_link_text_in_table('projectstable', 'seleni=
-um-project').click()
-+        self.wait_until_visible('#config-nav')
-         project_URL=3Dself.get_URL()
--        time.sleep(2)
-         self.driver.find_element(By.XPATH, "//div[@id=3D'project-topbar'=
-]/ul[@class=3D'nav nav-tabs']/li[@id=3D'topbar-configuration-tab']/a[@hre=
-f=3D"+'"'+project_URL+'"'+"]").click()
-+        self.wait_until_visible('#config-nav')
-         self.assertTrue(re.search("Configuration",self.driver.find_eleme=
-nt(By.XPATH, "//div[@id=3D'project-topbar']/ul[@class=3D'nav nav-tabs']/l=
-i[@id=3D'topbar-configuration-tab']/a[@href=3D"+'"'+project_URL+'"'+"]").=
-text), 'Configuration tab in project topbar is misspelled')
-=20
-         try:
-             self.driver.find_element(By.XPATH, "//div[@id=3D'project-top=
-bar']/ul[@class=3D'nav nav-tabs']/li/a[@href=3D"+'"'+project_URL+'builds/=
-"'+"]").click()
-+            self.wait_until_visible('#project-topbar')
-             self.assertTrue(re.search("Builds",self.driver.find_element(=
-By.XPATH, "//div[@id=3D'project-topbar']/ul[@class=3D'nav nav-tabs']/li/a=
-[@href=3D"+'"'+project_URL+'builds/"'+"]").text), 'Builds tab in project =
-topbar is misspelled')
-             self.driver.find_element(By.XPATH, "//div[@id=3D'empty-state=
--projectbuildstable']")
-         except:
-@@ -232,6 +231,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
-=20
-         try:
-             self.driver.find_element(By.XPATH, "//div[@id=3D'project-top=
-bar']/ul[@class=3D'nav nav-tabs']/li/a[@href=3D"+'"'+project_URL+'importl=
-ayer"'+"]").click()
-+            self.wait_until_visible('#project-topbar')
-             self.assertTrue(re.search("Import layer",self.driver.find_el=
-ement(By.XPATH, "//div[@id=3D'project-topbar']/ul[@class=3D'nav nav-tabs'=
-]/li/a[@href=3D"+'"'+project_URL+'importlayer"'+"]").text), 'Import layer=
- tab in project topbar is misspelled')
-             self.driver.find_element(By.XPATH, "//fieldset[@id=3D'repo-s=
-elect']")
-             self.driver.find_element(By.XPATH, "//fieldset[@id=3D'git-re=
-po']")
-@@ -240,6 +240,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
-=20
-         try:
-             self.driver.find_element(By.XPATH, "//div[@id=3D'project-top=
-bar']/ul[@class=3D'nav nav-tabs']/li/a[@href=3D"+'"'+project_URL+'newcust=
-omimage/"'+"]").click()
-+            self.wait_until_visible('#project-topbar')
-             self.assertTrue(re.search("New custom image",self.driver.fin=
-d_element(By.XPATH, "//div[@id=3D'project-topbar']/ul[@class=3D'nav nav-t=
-abs']/li/a[@href=3D"+'"'+project_URL+'newcustomimage/"'+"]").text), 'New =
-custom image tab in project topbar is misspelled')
-             self.assertTrue(re.search("Select the image recipe you want =
-to customise",self.driver.find_element(By.XPATH, "//div[@class=3D'col-md-=
-12']/h2").text),'The new custom image tab is not loading correctly')
-         except:
+     def test_project_page_image_recipe(self):
+         """ Test project page section images
+@@ -497,25 +521,3 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
+e):
+         self.wait_until_visible('#imagerecipestable tbody tr')
+         rows =3D self.find_all('#imagerecipestable tbody tr')
+         self.assertTrue(len(rows) > 0)
+-
+-        # Test build button
+-        image_to_build =3D rows[0]
+-        build_btn =3D image_to_build.find_element(
+-            By.XPATH,
+-            '//td[@class=3D"add-del-layers"]'
+-        )
+-        build_btn.click()
+-        build_state =3D wait_until_build(self, 'parsing starting cloning=
+ queued')
+-        lastest_builds =3D self.driver.find_elements(
+-            By.XPATH,
+-            '//div[@id=3D"latest-builds"]/div'
+-        )
+-        self.assertTrue(len(lastest_builds) > 0)
+-        last_build =3D lastest_builds[0]
+-        cancel_button =3D last_build.find_element(
+-            By.XPATH,
+-            '//span[@class=3D"cancel-build-btn pull-right alert-link"]',
+-        )
+-        cancel_button.click()
+-        if 'starting' not in build_state:  # change build state when can=
+celled in starting state
+-            wait_until_build_cancelled(self)
 --=20
 2.34.1
 
