@@ -1,113 +1,109 @@
-Return-Path: <marlon.rodriguez-garcia@savoirfairelinux.com>
+Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E63C4167D
-	for <webhook@archiver.kernel.org>; Thu, 14 Dec 2023 19:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E263C4167D
+	for <webhook@archiver.kernel.org>; Thu, 14 Dec 2023 22:08:52 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.37928.1702583059696114010
+ by mx.groups.io with SMTP id smtpd.web11.41630.1702591729026108410
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 Dec 2023 11:44:20 -0800
+ Thu, 14 Dec 2023 14:08:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=swTJ7TP9;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: marlon.rodriguez-garcia@savoirfairelinux.com)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=qwQ8TuPE;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 64EF89C40EA;
-	Thu, 14 Dec 2023 14:44:18 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 160DE9C40CA
+	for <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 17:08:48 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id IrfwJSi9kdtX; Thu, 14 Dec 2023 14:44:17 -0500 (EST)
+ with ESMTP id b5C7QZ7j6TMJ; Thu, 14 Dec 2023 17:08:47 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id ACFA49C2C84;
-	Thu, 14 Dec 2023 14:44:17 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com ACFA49C2C84
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id BEBC89C40F3;
+	Thu, 14 Dec 2023 17:08:47 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com BEBC89C40F3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1702583057; bh=yQ2jHfkPsfuBKM7dsRvXxxOk9KOtAwXs78BMYDhIeX8=;
+	t=1702591727; bh=M5wLagbeoxpV/uu+nXOXFAf9oLjSF68FgWgu69c7T/4=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=swTJ7TP99adtO3wkXPwFGmoyTbYP8Q32jaxrpfELJ23eee0r3m00v3x2psSFvbCEf
-	 q2T/DTpMB/RcBUXibj43y7IEt6XcsFq5+6nOv/f8+H68djjoLOh6psrqRLbWnXrO0+
-	 vZWJTliuyZXBlgzL2kE7nONz4QWR0TvKze6S8gAuVZWzE932NNN9+TliDfzKCwq0+w
-	 p8lJbOmWEek06bw4ancTO0dJ9iHZ+t37aVLar0D+IxHJDl6htgldb6MqkXJz73ZJsx
-	 oxrTS8EUWF+vSSNRTrVpmlTR8BYCKvruu/iPo2kI7NZrbXoNDzZfPwpo/yBRKd5dpS
-	 bPxeEY4rJTm8Q==
+	b=qwQ8TuPEue3qwruVW6yRnM2F5w2IjY90ndt050zKRWi7+gKA22V6YfPGKNxRn0wNn
+	 nH5wEVgjPCkIKcrYYeL7cHD3112VW1DYqZ/oGT3W4Oos1+xVjWPqmpwc5yAGMAIrLg
+	 HFCLEJLAlcG8ll+rB5/MtPcEAYvW4FHY8qCEgTV1pAjfaUieetudzB3agAGMNglOlV
+	 +BAMtoS7jhHfBSrFomk7SeUOvjBiCuzpdXwViux2fYBDM+rJxzqrjaG0gxeLzJeDFB
+	 JPaZHyFYdEHcRfjmCLbOO0DUafDXGc7eUO2CNaAVa7ik9/Ghufdq+dKhsgbEkUMUuo
+	 qLUE0damL9BaQ==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id 5R0FjyGCAb0J; Thu, 14 Dec 2023 14:44:17 -0500 (EST)
-Received: from savoirfairelinux.ht.home (modemcable141.201-58-74.mc.videotron.ca [74.58.201.141])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 8632C9C0C12;
-	Thu, 14 Dec 2023 14:44:17 -0500 (EST)
-From: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfairelinux.com>
-To: bitbake-devel@lists.openembedded.org,
-	toaster@lists.yoctoproject.org
-Cc: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfairelinux.com>
-Subject: [PATCH] toaster: Added validation to stop import if there is a build in progress
-Date: Thu, 14 Dec 2023 14:44:09 -0500
-Message-Id: <20231214194409.16525-1-marlon.rodriguez-garcia@savoirfairelinux.com>
+ with ESMTP id Z_9G3DzWifPt; Thu, 14 Dec 2023 17:08:47 -0500 (EST)
+Received: from jedi.. (unknown [196.127.183.75])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id DA0569C40CA;
+	Thu, 14 Dec 2023 17:08:46 -0500 (EST)
+From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH 3/6] toaster/test: Added skip to run test on ElementClickInterceptedException
+Date: Thu, 14 Dec 2023 23:08:36 +0100
+Message-Id: <20231214220839.598125-3-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231214220839.598125-1-alassane.yattara@savoirfairelinux.com>
+References: <20231214220839.598125-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 19:44:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15669
+ <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 22:08:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15671
 
-Added validation to prevent simultaneous imports from running because the=
- database fails at runtime.
-The option to create a queue was taken into consideration. However, it wi=
-ll require the use of Celery https://pypi.org/project/celery/ or Backgrou=
-nd Task https://pypi.org/project/django-background-tasks/ which require t=
-he use of external services and multiple dependencies.
-If required we could explore the alternative in the future.
+On project layer page, element button(save changes for switch)
+not properly visible or just hidden by another element which cause
+follwing exception: ElementClickInterceptedException
 
-Signed-off-by: Marlon Rodriguez Garcia <marlon.rodriguez-garcia@savoirfai=
-relinux.com>
+Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- lib/toaster/toastergui/templates/command_line_builds.html | 6 +++++-
- lib/toaster/toastergui/views.py                           | 8 ++++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ lib/toaster/tests/browser/test_layerdetails_page.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/templates/command_line_builds.html b/=
-lib/toaster/toastergui/templates/command_line_builds.html
-index fcbe80d8..05db6727 100644
---- a/lib/toaster/toastergui/templates/command_line_builds.html
-+++ b/lib/toaster/toastergui/templates/command_line_builds.html
-@@ -152,7 +152,11 @@ function _ajax_update(file, all, dir){
-         type: "POST",
-         data: {file: file, all: all, dir: dir},
-         success:function(data){
--            window.location =3D '/toastergui/builds/'
-+            if (data['response']=3D=3D'building'){
-+                location.reload()
-+            } else {
-+                window.location =3D '/toastergui/builds/'
-+            }
-         },
-         complete:function(data){
-         },
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/vie=
-ws.py
-index 3b5b9f5b..40aed265 100644
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -2018,6 +2018,14 @@ class CommandLineBuilds(TemplateView):
-         logs_dir =3D request.POST.get('dir')
-         all_files =3D  request.POST.get('all')
+diff --git a/lib/toaster/tests/browser/test_layerdetails_page.py b/lib/to=
+aster/tests/browser/test_layerdetails_page.py
+index 9c8fcded..5be4ba0c 100644
+--- a/lib/toaster/tests/browser/test_layerdetails_page.py
++++ b/lib/toaster/tests/browser/test_layerdetails_page.py
+@@ -8,7 +8,7 @@
+ #
 =20
-+        # check if a build is already in progress
-+        if Build.objects.filter(outcome=3DBuild.IN_PROGRESS):
-+            messages.add_message(
-+                self.request,
-+                messages.ERROR,
-+                "A build is already in progress. Please wait for it to c=
-omplete before starting a new build."
-+            )
-+            return JsonResponse({'response': 'building'})
-         imported_files =3D EventLogsImports.objects.all()
-         try:
-             if all_files =3D=3D 'true':
+ from django.urls import reverse
+-from selenium.common.exceptions import TimeoutException
++from selenium.common.exceptions import ElementClickInterceptedException,=
+ TimeoutException
+ from tests.browser.selenium_helpers import SeleniumTestCase
+=20
+ from orm.models import Layer, Layer_Version, Project, LayerSource, Relea=
+se
+@@ -114,6 +114,9 @@ class TestLayerDetailsPage(SeleniumTestCase):
+             btn_save_chg_for_switch =3D self.wait_until_clickable(
+                 "#save-changes-for-switch", poll=3D3)
+             btn_save_chg_for_switch.click()
++        except ElementClickInterceptedException:
++            self.skipTest(
++                "save-changes-for-switch click intercepted. Element not =
+visible or maybe covered by another element.")
+         except TimeoutException:
+             self.skipTest(
+                 "save-changes-for-switch is not clickable within the spe=
+cified timeout.")
+@@ -151,6 +154,9 @@ class TestLayerDetailsPage(SeleniumTestCase):
+             btn_save_chg_for_switch =3D self.wait_until_clickable(
+                 "#save-changes-for-switch", poll=3D3)
+             btn_save_chg_for_switch.click()
++        except ElementClickInterceptedException:
++            self.skipTest(
++                "save-changes-for-switch click intercepted. Element not =
+properly visible or maybe behind another element.")
+         except TimeoutException:
+             self.skipTest(
+                 "save-changes-for-switch is not clickable within the spe=
+cified timeout.")
 --=20
 2.34.1
 
