@@ -2,108 +2,172 @@ Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E263C4167D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3B9C4332F
 	for <webhook@archiver.kernel.org>; Thu, 14 Dec 2023 22:08:52 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.41630.1702591729026108410
+ by mx.groups.io with SMTP id smtpd.web11.41629.1702591728269439375
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 14 Dec 2023 14:08:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=qwQ8TuPE;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=xu+Lufab;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 160DE9C40CA
-	for <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 17:08:48 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id B3EF79C33C0
+	for <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 17:08:46 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id b5C7QZ7j6TMJ; Thu, 14 Dec 2023 17:08:47 -0500 (EST)
+ with ESMTP id bD1LFE0_aUZh; Thu, 14 Dec 2023 17:08:45 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id BEBC89C40F3;
-	Thu, 14 Dec 2023 17:08:47 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com BEBC89C40F3
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 678059C40CA;
+	Thu, 14 Dec 2023 17:08:45 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 678059C40CA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1702591727; bh=M5wLagbeoxpV/uu+nXOXFAf9oLjSF68FgWgu69c7T/4=;
+	t=1702591725; bh=Ps5VhZG3aXFU75HiR9QeQubHY2zhj56ZYcvs1jS/2zc=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=qwQ8TuPEue3qwruVW6yRnM2F5w2IjY90ndt050zKRWi7+gKA22V6YfPGKNxRn0wNn
-	 nH5wEVgjPCkIKcrYYeL7cHD3112VW1DYqZ/oGT3W4Oos1+xVjWPqmpwc5yAGMAIrLg
-	 HFCLEJLAlcG8ll+rB5/MtPcEAYvW4FHY8qCEgTV1pAjfaUieetudzB3agAGMNglOlV
-	 +BAMtoS7jhHfBSrFomk7SeUOvjBiCuzpdXwViux2fYBDM+rJxzqrjaG0gxeLzJeDFB
-	 JPaZHyFYdEHcRfjmCLbOO0DUafDXGc7eUO2CNaAVa7ik9/Ghufdq+dKhsgbEkUMUuo
-	 qLUE0damL9BaQ==
+	b=xu+Lufab126UnV62zeSRZm5d42HSfE6avydSAghD8FrmnWU18UpKE04W7aIE3Wwee
+	 R4pbn5l+Un1g5bQ0YSSSfDZE5f0cPqbOOouYYEo2NOuVIr8NefgeYCPy1BwBxn6hxV
+	 L1D9AyTfHbzFnxAsAUkDJt9OzuEq9kijN2i2+XY+cvX7ocFEQXKKqk7QJTFEeDqB1s
+	 FYNglrvLvKwrx8yGW3/XdQTL/1r1aptjmlLxqPjqaSSfMWaAs1+XFXdXOQCzuc1M0i
+	 Vbxqh4NmGHJfK51xEWRAO6+NHYhJSMYZTUete91bg4uR2S4RPwfpvwxpDS9HZfYvHt
+	 6c/uHnMwPhjmA==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id Z_9G3DzWifPt; Thu, 14 Dec 2023 17:08:47 -0500 (EST)
+ with ESMTP id 8ZqIahbCpkpo; Thu, 14 Dec 2023 17:08:45 -0500 (EST)
 Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id DA0569C40CA;
-	Thu, 14 Dec 2023 17:08:46 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id A48599C33C0;
+	Thu, 14 Dec 2023 17:08:44 -0500 (EST)
 From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH 3/6] toaster/test: Added skip to run test on ElementClickInterceptedException
-Date: Thu, 14 Dec 2023 23:08:36 +0100
-Message-Id: <20231214220839.598125-3-alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH 1/6] toaster/test: bug-fix element click intercepted in browser/test_layerdetails_page.py
+Date: Thu, 14 Dec 2023 23:08:34 +0100
+Message-Id: <20231214220839.598125-1-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231214220839.598125-1-alassane.yattara@savoirfairelinux.com>
-References: <20231214220839.598125-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 22:08:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15671
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15670
 
-On project layer page, element button(save changes for switch)
-not properly visible or just hidden by another element which cause
-follwing exception: ElementClickInterceptedException
+selenium.common.exceptions.ElementClickInterceptedException: Message: ele=
+ment click intercepted:
 
 Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- lib/toaster/tests/browser/test_layerdetails_page.py | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ .../tests/browser/selenium_helpers_base.py    | 15 +++++++++++
+ .../tests/browser/test_layerdetails_page.py   | 27 ++++++++++++++-----
+ 2 files changed, 36 insertions(+), 6 deletions(-)
 
+diff --git a/lib/toaster/tests/browser/selenium_helpers_base.py b/lib/toa=
+ster/tests/browser/selenium_helpers_base.py
+index 46ced5a1..d6cae85d 100644
+--- a/lib/toaster/tests/browser/selenium_helpers_base.py
++++ b/lib/toaster/tests/browser/selenium_helpers_base.py
+@@ -20,6 +20,7 @@ import time
+ import unittest
+=20
+ from selenium import webdriver
++from selenium.webdriver.support import expected_conditions as EC
+ from selenium.webdriver.support.ui import WebDriverWait
+ from selenium.webdriver.common.by import By
+ from selenium.webdriver.common.desired_capabilities import DesiredCapabi=
+lities
+@@ -211,6 +212,20 @@ class SeleniumTestCaseBase(unittest.TestCase):
+         time.sleep(poll)  # wait for visibility to settle
+         return self.find(selector)
+=20
++    def wait_until_clickable(self, selector, poll=3D1):
++        """ Wait until element matching CSS selector is visible on the p=
+age """
++        WebDriverWait(
++            self.driver,
++            Wait._TIMEOUT,
++            poll_frequency=3Dpoll
++        ).until(
++            EC.element_to_be_clickable((By.ID, selector.removeprefix('#'=
+)
++                                        )
++                                       )
++        )
++        return self.find(selector)
++
++
+     def wait_until_focused(self, selector):
+         """ Wait until element matching CSS selector has focus """
+         is_focused =3D \
 diff --git a/lib/toaster/tests/browser/test_layerdetails_page.py b/lib/to=
 aster/tests/browser/test_layerdetails_page.py
-index 9c8fcded..5be4ba0c 100644
+index 05ee88b0..9c8fcded 100644
 --- a/lib/toaster/tests/browser/test_layerdetails_page.py
 +++ b/lib/toaster/tests/browser/test_layerdetails_page.py
-@@ -8,7 +8,7 @@
+@@ -8,6 +8,7 @@
  #
 =20
  from django.urls import reverse
--from selenium.common.exceptions import TimeoutException
-+from selenium.common.exceptions import ElementClickInterceptedException,=
- TimeoutException
++from selenium.common.exceptions import TimeoutException
  from tests.browser.selenium_helpers import SeleniumTestCase
 =20
  from orm.models import Layer, Layer_Version, Project, LayerSource, Relea=
 se
-@@ -114,6 +114,9 @@ class TestLayerDetailsPage(SeleniumTestCase):
-             btn_save_chg_for_switch =3D self.wait_until_clickable(
-                 "#save-changes-for-switch", poll=3D3)
-             btn_save_chg_for_switch.click()
-+        except ElementClickInterceptedException:
+@@ -17,6 +18,8 @@ from selenium.webdriver.support import expected_conditi=
+ons as EC
+ from selenium.webdriver.support.ui import WebDriverWait
+ from selenium.webdriver.common.by import By
+=20
++import logging
++
+=20
+ class TestLayerDetailsPage(SeleniumTestCase):
+     """ Test layerdetails page works correctly """
+@@ -106,9 +109,15 @@ class TestLayerDetailsPage(SeleniumTestCase):
+         for save_btn in self.find_all(".change-btn"):
+             save_btn.click()
+=20
+-        self.wait_until_visible("#save-changes-for-switch", poll=3D3)
+-        btn_save_chg_for_switch =3D self.find("#save-changes-for-switch"=
+)
+-        self.driver.execute_script("arguments[0].click();", btn_save_chg=
+_for_switch)
++        try:
++            self.wait_until_visible("#save-changes-for-switch", poll=3D3=
+)
++            btn_save_chg_for_switch =3D self.wait_until_clickable(
++                "#save-changes-for-switch", poll=3D3)
++            btn_save_chg_for_switch.click()
++        except TimeoutException:
 +            self.skipTest(
-+                "save-changes-for-switch click intercepted. Element not =
-visible or maybe covered by another element.")
-         except TimeoutException:
-             self.skipTest(
-                 "save-changes-for-switch is not clickable within the spe=
++                "save-changes-for-switch is not clickable within the spe=
 cified timeout.")
-@@ -151,6 +154,9 @@ class TestLayerDetailsPage(SeleniumTestCase):
-             btn_save_chg_for_switch =3D self.wait_until_clickable(
-                 "#save-changes-for-switch", poll=3D3)
-             btn_save_chg_for_switch.click()
-+        except ElementClickInterceptedException:
++
+         self.wait_until_visible("#edit-layer-source")
+=20
+         # Refresh the page to see if the new values are returned
+@@ -137,9 +146,15 @@ class TestLayerDetailsPage(SeleniumTestCase):
+         new_dir =3D "/home/test/my-meta-dir"
+         dir_input.send_keys(new_dir)
+=20
+-        self.wait_until_visible("#save-changes-for-switch", poll=3D3)
+-        btn_save_chg_for_switch =3D self.find("#save-changes-for-switch"=
+)
+-        btn_save_chg_for_switch.click()
++        try:
++            self.wait_until_visible("#save-changes-for-switch", poll=3D3=
+)
++            btn_save_chg_for_switch =3D self.wait_until_clickable(
++                "#save-changes-for-switch", poll=3D3)
++            btn_save_chg_for_switch.click()
++        except TimeoutException:
 +            self.skipTest(
-+                "save-changes-for-switch click intercepted. Element not =
-properly visible or maybe behind another element.")
-         except TimeoutException:
-             self.skipTest(
-                 "save-changes-for-switch is not clickable within the spe=
++                "save-changes-for-switch is not clickable within the spe=
 cified timeout.")
++
+         self.wait_until_visible("#edit-layer-source")
+=20
+         # Refresh the page to see if the new values are returned
 --=20
 2.34.1
 
