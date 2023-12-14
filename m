@@ -1,96 +1,166 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <quaresma.jose@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E74C4332F
-	for <webhook@archiver.kernel.org>; Thu, 14 Dec 2023 12:32:48 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web10.20911.1702557163381819232
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F34A6C4332F
+	for <webhook@archiver.kernel.org>; Thu, 14 Dec 2023 13:03:17 +0000 (UTC)
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+ by mx.groups.io with SMTP id smtpd.web10.21473.1702558997198575230
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 Dec 2023 04:32:43 -0800
+ Thu, 14 Dec 2023 05:03:17 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hKEx90gY;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40c32df9174so72316105e9.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 04:32:43 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=iLyLEzS2;
+ spf=pass (domain: gmail.com, ip: 209.85.167.176, mailfrom: quaresma.jose@gmail.com)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3b9e2d50e61so5673303b6e.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 05:03:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1702557162; x=1703161962; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=O5HfiuxlbKf0Ag2BY9diIKHUkshNr55nv6WRLFiZkSM=;
-        b=hKEx90gYC0+pWDyz6KeONLNDkUc0gHpBBS2MmH3I2BZfTX00pg42RRSoUoHne5ehbT
-         sPjXLRPkLumvZmN4ZS8p6wCsR8+PwLXFrTPQPJMXLZRkfK1xNLU/QzOt+orock35BfoM
-         xbGc0ATSLZDOeJ1zlW92Pkkm0IJdoebk6dkT0=
+        d=gmail.com; s=20230601; t=1702558996; x=1703163796; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dAN8XPDwtAvNtdTZt63HA1+ejvjdfH8mXaXIkERLY40=;
+        b=iLyLEzS2mb5ggjxXWrc43Wo7BElZU0GN72SWiEijtX7l81PpZfL/GdQlLVu+yqsISW
+         oOjfTxZHmQgDPwgDQZ4libKHBg0TX1H0PPlBWRoi+ztDhrI2aBwTa/Eb4tvLy24xsI3J
+         eJrxVXVqskC+f0SjTrpZRQntAN+J3qSoY+TU9oz8Nq0Ren3sca3zDpnapegUtbXVsegn
+         7Si4ZYIyLUiVZ2z6d2Pj3zPiP0zq3I//7yPFBZ44bYmFkepvjp45coSEdlxcBRFpSEra
+         nFOqPimROxMESkcKN3ZQ1WC/0M5et91EBiXc7724KZbrKDaXa4+kgswVa53HHII6nWQU
+         0a3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702557162; x=1703161962;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O5HfiuxlbKf0Ag2BY9diIKHUkshNr55nv6WRLFiZkSM=;
-        b=QpQLFItzT1NI6yrzBsbZNhf5Nj0sQ99TJo4gQNYRaC36sd+R6QL8kJvpSLBTXh1iDA
-         qkVWL4lhKoJafLOzsibiXJDjQmSXfU+bsZogP6sSy7e0T4X+Gm6sfFRk0Q2z2Wh6RqT/
-         B9tM2vL3hFev9cVbcRP/+1VV6V49gOCK0HIs8SzRPNgutfDB+1681BruyMznce4VMkOh
-         wDPv+agkBxzqPrOiFcxpr4KBae03mvMKBLa+sRqsdF50ah7OYB6OKiao1AFiKBWmUWNs
-         4A7ddqat4BBkUuOEjwMPLlenftDCv8xREZfQDt9yYgH1Q65ypzefIVDfqFsgQ95NVe96
-         Fxsw==
-X-Gm-Message-State: AOJu0YwMEBnWDP/bg4i/0JSPfqSTTHhX0v/wsw+kwHOIASbzJfCV3uwS
-	8ZH27vbDvPQIYA2MiCy+nDBDYfzdAktDg6PAG/Y=
-X-Google-Smtp-Source: AGHT+IHcB/Px131thLK15EUoZG19K6l1LBNshRzgwR/1lc78rDjLbHZ0teroplR/wP3nORQ1Ncng+w==
-X-Received: by 2002:a05:600c:524b:b0:40c:4857:e012 with SMTP id fc11-20020a05600c524b00b0040c4857e012mr2152695wmb.85.1702557161783;
-        Thu, 14 Dec 2023 04:32:41 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:e972:7f32:1182:98d2? ([2001:8b0:aba:5f3c:e972:7f32:1182:98d2])
-        by smtp.gmail.com with ESMTPSA id bd19-20020a05600c1f1300b0040839fcb217sm24802623wmb.8.2023.12.14.04.32.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 04:32:41 -0800 (PST)
-Message-ID: <08612b947964d6b22c8dbe6d3cc7188a1ae4b01d.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] bitbake.conf remove duplicate
- PERSISTENT_DIR
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jose Quaresma <quaresma.jose@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org, Jose Quaresma
-	 <jose.quaresma@foundries.io>
-Date: Thu, 14 Dec 2023 12:32:40 +0000
-In-Reply-To: <CANPvuRntahuGpsSVeFXRWSfna2o=hVuqZ2my_iUrAKeu+sAXLw@mail.gmail.com>
-References: <17A012684A72999E.8967@lists.openembedded.org>
-	 <CANPvuRntahuGpsSVeFXRWSfna2o=hVuqZ2my_iUrAKeu+sAXLw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+        d=1e100.net; s=20230601; t=1702558996; x=1703163796;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dAN8XPDwtAvNtdTZt63HA1+ejvjdfH8mXaXIkERLY40=;
+        b=UovLWvhlq9Nekng6RZGWID4mcYF7OuGAUQIbmU+xWojtOovr4gUJAjQBxbD42TXhxS
+         thNBDEGns8b2vvuhOHE1p0ZL/c/4eeawBsuMeceRcFkGsTqDj9VOc2cHzjpQKvryZ/mV
+         rvcNFRLZKBJkr3Fx8LZij0URjktiwnt7EFKl31gsKdg91kby4IaLaVr1KpiD/22yfYEq
+         zvneNk4mqJxMZOum8v3z2IxptgAil6oOvj154LT6POgLTzAoG16AAindMHCV0bJDqY5V
+         u3z8HzsavhQH5BITWzCj9b18DdRn7zGTBVltl/2X12kvVtS8UYTW7tMTknnRAFB8ZL3K
+         7PxA==
+X-Gm-Message-State: AOJu0YxFIHbfRp2y4wuwydqzGhtRGg7MhAxdsDRkn8AawZIe5t9m3hm2
+	Cd1kRbbKFjt+M6b8iIDsqdP+omJfGVKTX0tv2Dg=
+X-Google-Smtp-Source: AGHT+IG1RfdjGW2Js4NANZmraSoABAWhKaSDm1glzBZoP1aNC/PrbOvFZ3EZz1KeMBSaJ918nO0jDmwH+ipq5AVbCp4=
+X-Received: by 2002:a05:6808:1185:b0:3b9:e7ee:4973 with SMTP id
+ j5-20020a056808118500b003b9e7ee4973mr11513397oil.108.1702558996438; Thu, 14
+ Dec 2023 05:03:16 -0800 (PST)
 MIME-Version: 1.0
+References: <17A012684A72999E.8967@lists.openembedded.org> <CANPvuRntahuGpsSVeFXRWSfna2o=hVuqZ2my_iUrAKeu+sAXLw@mail.gmail.com>
+ <08612b947964d6b22c8dbe6d3cc7188a1ae4b01d.camel@linuxfoundation.org>
+In-Reply-To: <08612b947964d6b22c8dbe6d3cc7188a1ae4b01d.camel@linuxfoundation.org>
+From: Jose Quaresma <quaresma.jose@gmail.com>
+Date: Thu, 14 Dec 2023 13:03:05 +0000
+Message-ID: <CANPvuR=yQCznyniv52_HoBOu+NZ==o7qqio4CEscmwgFtPY+_Q@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] bitbake.conf remove duplicate PERSISTENT_DIR
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org, 
+	Jose Quaresma <jose.quaresma@foundries.io>
+Content-Type: multipart/alternative; boundary="000000000000312250060c77e878"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 12:32:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15667
+ <bitbake-devel@lists.openembedded.org>; Thu, 14 Dec 2023 13:03:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15668
 
-On Thu, 2023-12-14 at 09:13 +0000, Jose Quaresma wrote:
-> Hi,
->=20
-> This patch was merged in bitbake master:
->=20
-> f88f314c toaster: Commandline build import table improvements
-> -> 13cbc987 bitbake.conf remove duplicate PERSISTENT_DIR
-> da7f91d6 bitbake: toaster: add functional testing toaster error
-> details
->=20
-> but I can't see it on poky master:
->=20
-> 524255ad26 bitbake: toaster: Commandline build import table
-> improvements
-> dc608a5bbe bitbake: bitbake: toaster: add functional testing toaster
-> error details
-> 799c131d92 bitbake: toaster: remove test and update setup to avoid
-> rebuilding image
->=20
-> Is there a bug somewhere?
+--000000000000312250060c77e878
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-That file doesn't exist in poky since historically, two bitbake.conf
-files was considered confusing.
+Richard Purdie <richard.purdie@linuxfoundation.org> escreveu no dia quinta,
+14/12/2023 =C3=A0(s) 12:32:
 
-https://git.yoctoproject.org/poky-config/tree/combo-layer.conf#n8
+> On Thu, 2023-12-14 at 09:13 +0000, Jose Quaresma wrote:
+> > Hi,
+> >
+> > This patch was merged in bitbake master:
+> >
+> > f88f314c toaster: Commandline build import table improvements
+> > -> 13cbc987 bitbake.conf remove duplicate PERSISTENT_DIR
+> > da7f91d6 bitbake: toaster: add functional testing toaster error
+> > details
+> >
+> > but I can't see it on poky master:
+> >
+> > 524255ad26 bitbake: toaster: Commandline build import table
+> > improvements
+> > dc608a5bbe bitbake: bitbake: toaster: add functional testing toaster
+> > error details
+> > 799c131d92 bitbake: toaster: remove test and update setup to avoid
+> > rebuilding image
+> >
+> > Is there a bug somewhere?
+>
+> That file doesn't exist in poky since historically, two bitbake.conf
+> files was considered confusing.
+>
+> https://git.yoctoproject.org/poky-config/tree/combo-layer.conf#n8
 
-Cheers,
 
-Richard
+I didn't know this detail.
+Thanks
+
+
+>
+>
+> Cheers,
+>
+> Richard
+>
+
+
+--=20
+Best regards,
+
+Jos=C3=A9 Quaresma
+
+--000000000000312250060c77e878
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
+<div dir=3D"ltr" class=3D"gmail_attr">Richard Purdie &lt;<a href=3D"mailto:=
+richard.purdie@linuxfoundation.org">richard.purdie@linuxfoundation.org</a>&=
+gt; escreveu no dia quinta, 14/12/2023 =C3=A0(s) 12:32:<br></div><blockquot=
+e class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px s=
+olid rgb(204,204,204);padding-left:1ex">On Thu, 2023-12-14 at 09:13 +0000, =
+Jose Quaresma wrote:<br>
+&gt; Hi,<br>
+&gt; <br>
+&gt; This patch was merged in bitbake master:<br>
+&gt; <br>
+&gt; f88f314c toaster: Commandline build import table improvements<br>
+&gt; -&gt; 13cbc987 bitbake.conf remove duplicate PERSISTENT_DIR<br>
+&gt; da7f91d6 bitbake: toaster: add functional testing toaster error<br>
+&gt; details<br>
+&gt; <br>
+&gt; but I can&#39;t see it on poky master:<br>
+&gt; <br>
+&gt; 524255ad26 bitbake: toaster: Commandline build import table<br>
+&gt; improvements<br>
+&gt; dc608a5bbe bitbake: bitbake: toaster: add functional testing toaster<b=
+r>
+&gt; error details<br>
+&gt; 799c131d92 bitbake: toaster: remove test and update setup to avoid<br>
+&gt; rebuilding image<br>
+&gt; <br>
+&gt; Is there a bug somewhere?<br>
+<br>
+That file doesn&#39;t exist in poky since historically, two bitbake.conf<br=
+>
+files was considered confusing.<br>
+<br>
+<a href=3D"https://git.yoctoproject.org/poky-config/tree/combo-layer.conf#n=
+8" rel=3D"noreferrer" target=3D"_blank">https://git.yoctoproject.org/poky-c=
+onfig/tree/combo-layer.conf#n8</a></blockquote><div><br>I didn&#39;t know t=
+his detail.<br>Thanks<br>=C2=A0</div><blockquote class=3D"gmail_quote" styl=
+e=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddin=
+g-left:1ex"><br>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+</blockquote></div><br clear=3D"all"><div><br></div><span class=3D"gmail_si=
+gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
+iv dir=3D"ltr">Best regards,<div><br>Jos=C3=A9 Quaresma</div></div></div></=
+div>
+
+--000000000000312250060c77e878--
 
