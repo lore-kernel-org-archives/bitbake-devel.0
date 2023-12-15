@@ -2,181 +2,460 @@ Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3F2C46CA2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFF7C46CCD
 	for <webhook@archiver.kernel.org>; Fri, 15 Dec 2023 09:39:18 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.59362.1702633148707066983
+ by mx.groups.io with SMTP id smtpd.web11.59364.1702633151830413534
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 15 Dec 2023 01:39:09 -0800
+ Fri, 15 Dec 2023 01:39:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=fueFc1RB;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=aEjEdylh;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 88CAB9C3A2F
-	for <bitbake-devel@lists.openembedded.org>; Fri, 15 Dec 2023 04:39:07 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 394A99C33C0
+	for <bitbake-devel@lists.openembedded.org>; Fri, 15 Dec 2023 04:39:11 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id NcIleq0c8FrZ; Fri, 15 Dec 2023 04:39:05 -0500 (EST)
+ with ESMTP id ENurVbfG2Ici; Fri, 15 Dec 2023 04:39:10 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id C8C799C3644;
-	Fri, 15 Dec 2023 04:39:05 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com C8C799C3644
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 332369C117B;
+	Fri, 15 Dec 2023 04:39:10 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 332369C117B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1702633145; bh=ih9w2Scy9DCNRkoSq7IPdwljQInsZngHjyQrqADlDkY=;
+	t=1702633150; bh=7CrJoJDAPm72Y22bplJ8cy9CCOB4NwW8awAHi54WGXk=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=fueFc1RByM5eY6Gjwk+N4cSSYkz7sB1OPYOoeXu/9hHeWImqiFG/lLXHyyw/fY1lz
-	 RyTvKvwDKhlblhgcb5mK4DmZrbu1ShsQCfkmzvr6khKNoA3Wu7z5hIrex6TSFIbexD
-	 GOPEos1gdvGIZPjRxZa1pSNBdPAXpsZfR91yACivDWxDdB9Ee0xv+upyRDRepRKpKj
-	 2cXmMa+8KTEoqrEhHdVDqtdruVheUdgxvNptTczm2n1ZtELVb3M2h1e92bU/IEZH1i
-	 wuErHRxZQ2n5bdoqWeyjGW3xDyvrGttL94tQg40Vf7MHcrI/eDcz0nipnoiu/+0a1n
-	 VhtJgJ3O4elnQ==
+	b=aEjEdylhbHceCZYu+5pZ5rqlVSsv/6JFvQ2qI6ikk0fH0e6HALylaccdLW6dt86Rf
+	 fMprLQvWYRH8JxvgZjHgl5uEWb/x/7kS338KBgJ/Wr4inj8SUUdYpxw3dpcrkGPJHr
+	 oZztTlMv8x6cSNvuLz21bgYjxcl2XMGeew6BTBsFVNNgh8qh+5BmiHwQ6OSexvEQsX
+	 QlszzMZ7REPrbYc3MRanLw3w9eFyxrHi5AfrzOzQumHDK96x+WWxNoMMJd7cOGzEvC
+	 V2MFkn/X6XZCqu72IWfjyScSPnqG+zuTilSVNV4vPAkcxZXVTqOQTFGojHpv6j654x
+	 9G1KXg2sUhZ7w==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id IiLrnYLX03ET; Fri, 15 Dec 2023 04:39:05 -0500 (EST)
+ with ESMTP id 4TacV8Nk4Gmh; Fri, 15 Dec 2023 04:39:10 -0500 (EST)
 Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 02A499C3636;
-	Fri, 15 Dec 2023 04:39:04 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 495309C33C0;
+	Fri, 15 Dec 2023 04:39:09 -0500 (EST)
 From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH v3 1/5] toaster/test: bug-fix element click intercepted in browser/test_layerdetails_page.py
-Date: Fri, 15 Dec 2023 10:38:35 +0100
-Message-Id: <20231215093839.99358-1-alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH v3 5/5] toaster/test: Bug-Fix testcase from bitbake/lib/toaster/tests/functional/test_project_page_tab_config.py
+Date: Fri, 15 Dec 2023 10:38:39 +0100
+Message-Id: <20231215093839.99358-5-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231215093839.99358-1-alassane.yattara@savoirfairelinux.com>
+References: <20231215093839.99358-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 15 Dec 2023 09:39:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15684
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15686
 
-selenium.common.exceptions.ElementClickInterceptedException: Message: ele=
-ment click intercepted
+All issues and failures stemmed from a specific test case:
+test_project_config_tab_right_section in the file
+bitbake/lib/toaster/tests/functional/test_project_page_tab_config.py.
+
+This test was designed to verify whether the "Most built recipes"
+section on the project page correctly displays the latest and oldest
+recipes built by the user, irrespective of the build outcome (failed,
+cancelled, succeeded, or errored).
+
+The errors and failures arose because the build process did not
+terminate as expected, particularly when attempting to build recipe
+images such as "core-image-minimal" or "bash." It was discovered that
+building a real recipe/image was unnecessary for the test's purpose.
+Instead, building a fake recipe like "foo" provided a reliable way to
+ensure the build would fail or be interrupted.
 
 Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- .../tests/browser/selenium_helpers_base.py    | 15 +++++++++
- .../tests/browser/test_layerdetails_page.py   | 33 +++++++++++++++----
- 2 files changed, 42 insertions(+), 6 deletions(-)
+ .../tests/functional/test_project_page.py     |   2 +-
+ .../test_project_page_tab_config.py           | 186 +++++++++---------
+ 2 files changed, 95 insertions(+), 93 deletions(-)
 
-diff --git a/lib/toaster/tests/browser/selenium_helpers_base.py b/lib/toa=
-ster/tests/browser/selenium_helpers_base.py
-index 46ced5a1..d6cae85d 100644
---- a/lib/toaster/tests/browser/selenium_helpers_base.py
-+++ b/lib/toaster/tests/browser/selenium_helpers_base.py
-@@ -20,6 +20,7 @@ import time
- import unittest
-=20
- from selenium import webdriver
-+from selenium.webdriver.support import expected_conditions as EC
- from selenium.webdriver.support.ui import WebDriverWait
- from selenium.webdriver.common.by import By
- from selenium.webdriver.common.desired_capabilities import DesiredCapabi=
-lities
-@@ -211,6 +212,20 @@ class SeleniumTestCaseBase(unittest.TestCase):
-         time.sleep(poll)  # wait for visibility to settle
-         return self.find(selector)
-=20
-+    def wait_until_clickable(self, selector, poll=3D1):
-+        """ Wait until element matching CSS selector is visible on the p=
-age """
-+        WebDriverWait(
-+            self.driver,
-+            Wait._TIMEOUT,
-+            poll_frequency=3Dpoll
-+        ).until(
-+            EC.element_to_be_clickable((By.ID, selector.removeprefix('#'=
-)
-+                                        )
-+                                       )
-+        )
-+        return self.find(selector)
-+
-+
-     def wait_until_focused(self, selector):
-         """ Wait until element matching CSS selector has focus """
-         is_focused =3D \
-diff --git a/lib/toaster/tests/browser/test_layerdetails_page.py b/lib/to=
-aster/tests/browser/test_layerdetails_page.py
-index 05ee88b0..5be4ba0c 100644
---- a/lib/toaster/tests/browser/test_layerdetails_page.py
-+++ b/lib/toaster/tests/browser/test_layerdetails_page.py
-@@ -8,6 +8,7 @@
- #
-=20
+diff --git a/lib/toaster/tests/functional/test_project_page.py b/lib/toas=
+ter/tests/functional/test_project_page.py
+index 077badb0..82dca442 100644
+--- a/lib/toaster/tests/functional/test_project_page.py
++++ b/lib/toaster/tests/functional/test_project_page.py
+@@ -461,7 +461,7 @@ class TestProjectPage(SeleniumFunctionalTestCase):
+             '//td[@class=3D"add-del-layers"]//a[1]'
+         )
+         build_btn.click()
+-        build_state =3D wait_until_build(self, 'parsing starting cloning=
+ queued')
++        build_state =3D wait_until_build(self, 'queued cloning starting =
+parsing failed')
+         lastest_builds =3D self.driver.find_elements(
+             By.XPATH,
+             '//div[@id=3D"latest-builds"]/div'
+diff --git a/lib/toaster/tests/functional/test_project_page_tab_config.py=
+ b/lib/toaster/tests/functional/test_project_page_tab_config.py
+index d911ff00..4dbf5aeb 100644
+--- a/lib/toaster/tests/functional/test_project_page_tab_config.py
++++ b/lib/toaster/tests/functional/test_project_page_tab_config.py
+@@ -12,7 +12,7 @@ import pytest
  from django.urls import reverse
-+from selenium.common.exceptions import ElementClickInterceptedException,=
- TimeoutException
- from tests.browser.selenium_helpers import SeleniumTestCase
-=20
- from orm.models import Layer, Layer_Version, Project, LayerSource, Relea=
+ from selenium.webdriver import Keys
+ from selenium.webdriver.support.select import Select
+-from selenium.common.exceptions import TimeoutException
++from selenium.common.exceptions import NoSuchElementException, TimeoutEx=
+ception
+ from orm.models import Project
+ from tests.functional.functional_helpers import SeleniumFunctionalTestCa=
 se
-@@ -17,6 +18,8 @@ from selenium.webdriver.support import expected_conditi=
-ons as EC
- from selenium.webdriver.support.ui import WebDriverWait
  from selenium.webdriver.common.by import By
+@@ -26,17 +26,18 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
+):
+     PROJECT_NAME =3D 'TestProjectConfigTab'
+     project_id =3D None
 =20
-+import logging
-+
+-    def _create_project(self, project_name):
++    def _create_project(self, project_name, **kwargs):
+         """ Create/Test new project using:
+           - Project Name: Any string
+           - Release: Any string
+           - Merge Toaster settings: True or False
+         """
++        release =3D kwargs.get('release', '3')
+         self.get(reverse('newproject'))
+         self.wait_until_visible('#new-project-name')
+         self.find("#new-project-name").send_keys(project_name)
+         select =3D Select(self.find("#projectversion"))
+-        select.select_by_value('3')
++        select.select_by_value(release)
 =20
- class TestLayerDetailsPage(SeleniumTestCase):
-     """ Test layerdetails page works correctly """
-@@ -106,9 +109,18 @@ class TestLayerDetailsPage(SeleniumTestCase):
-         for save_btn in self.find_all(".change-btn"):
-             save_btn.click()
+         # check merge toaster settings
+         checkbox =3D self.find('.checkbox-mergeattr')
+@@ -50,7 +51,7 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase):
+         self.find("#create-project-button").click()
 =20
--        self.wait_until_visible("#save-changes-for-switch", poll=3D3)
--        btn_save_chg_for_switch =3D self.find("#save-changes-for-switch"=
+         try:
+-            self.wait_until_visible('#hint-error-project-name')
++            self.wait_until_visible('#hint-error-project-name', poll=3D3=
 )
--        self.driver.execute_script("arguments[0].click();", btn_save_chg=
-_for_switch)
+             url =3D reverse('project', args=3D(TestProjectConfigTab.proj=
+ect_id, ))
+             self.get(url)
+             self.wait_until_visible('#config-nav', poll=3D3)
+@@ -67,7 +68,8 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase):
+         if TestProjectConfigTab.project_id is None:
+             self._create_project(project_name=3Dself._random_string(10))
+             current_url =3D self.driver.current_url
+-            TestProjectConfigTab.project_id =3D get_projectId_from_url(c=
+urrent_url)
++            TestProjectConfigTab.project_id =3D get_projectId_from_url(
++                current_url)
+         else:
+             url =3D reverse('project', args=3D(TestProjectConfigTab.proj=
+ect_id,))
+             self.get(url)
+@@ -76,27 +78,30 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
+):
+     def _create_builds(self):
+         # check search box can be use to build recipes
+         search_box =3D self.find('#build-input')
+-        search_box.send_keys('core-image-minimal')
++        search_box.send_keys('foo')
+         self.find('#build-button').click()
+-        self.wait_until_visible('#latest-builds')
++        self.wait_until_present('#latest-builds')
+         # loop until reach the parsing state
+-        build_state =3D wait_until_build(self, 'parsing starting cloning=
+')
++        wait_until_build(self, 'queued cloning starting parsing failed')
+         lastest_builds =3D self.driver.find_elements(
+             By.XPATH,
+             '//div[@id=3D"latest-builds"]/div',
+         )
+         last_build =3D lastest_builds[0]
+         self.assertTrue(
+-            'core-image-minimal' in str(last_build.text)
++            'foo' in str(last_build.text)
+         )
+-        cancel_button =3D last_build.find_element(
+-            By.XPATH,
+-            '//span[@class=3D"cancel-build-btn pull-right alert-link"]',
+-        )
+-        cancel_button.click()
+-        if 'starting' not in build_state:  # change build state when can=
+celled in starting state
+-            wait_until_build_cancelled(self)
+-        return build_state
++        last_build =3D lastest_builds[0]
 +        try:
-+            self.wait_until_visible("#save-changes-for-switch", poll=3D3=
-)
-+            btn_save_chg_for_switch =3D self.wait_until_clickable(
-+                "#save-changes-for-switch", poll=3D3)
-+            btn_save_chg_for_switch.click()
-+        except ElementClickInterceptedException:
-+            self.skipTest(
-+                "save-changes-for-switch click intercepted. Element not =
-visible or maybe covered by another element.")
-+        except TimeoutException:
-+            self.skipTest(
-+                "save-changes-for-switch is not clickable within the spe=
-cified timeout.")
++            cancel_button =3D last_build.find_element(
++                By.XPATH,
++                '//span[@class=3D"cancel-build-btn pull-right alert-link=
+"]',
++            )
++            cancel_button.click()
++        except NoSuchElementException:
++            # Skip if the build is already cancelled
++            pass
++        wait_until_build_cancelled(self)
+=20
+     def _get_tabs(self):
+         # tabs links list
+@@ -126,6 +131,7 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
+):
+             - Delete project
+         """
+         self._navigate_to_project_page()
 +
-         self.wait_until_visible("#edit-layer-source")
+         def _get_config_nav_item(index):
+             config_nav =3D self.find('#config-nav')
+             return config_nav.find_elements(By.TAG_NAME, 'li')[index]
+@@ -152,13 +158,27 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
+se):
+         self.assertTrue("actions" in str(actions.text).lower())
 =20
-         # Refresh the page to see if the new values are returned
-@@ -137,9 +149,18 @@ class TestLayerDetailsPage(SeleniumTestCase):
-         new_dir =3D "/home/test/my-meta-dir"
-         dir_input.send_keys(new_dir)
+         conf_nav_list =3D [
+-            [0, 'Configuration', f"/toastergui/project/{TestProjectConfi=
+gTab.project_id}"],  # config
+-            [2, 'Custom images', f"/toastergui/project/{TestProjectConfi=
+gTab.project_id}/customimages"],  # custom images
+-            [3, 'Image recipes', f"/toastergui/project/{TestProjectConfi=
+gTab.project_id}/images"],  # image recipes
+-            [4, 'Software recipes', f"/toastergui/project/{TestProjectCo=
+nfigTab.project_id}/softwarerecipes"],  # software recipes
+-            [5, 'Machines', f"/toastergui/project/{TestProjectConfigTab.=
+project_id}/machines"],  # machines
+-            [6, 'Layers', f"/toastergui/project/{TestProjectConfigTab.pr=
+oject_id}/layers"],  # layers
+-            [7, 'Distros', f"/toastergui/project/{TestProjectConfigTab.p=
+roject_id}/distros"],  # distro
++            # config
++            [0, 'Configuration',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}"=
+],
++            # custom images
++            [2, 'Custom images',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+customimages"],
++            # image recipes
++            [3, 'Image recipes',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+images"],
++            # software recipes
++            [4, 'Software recipes',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+softwarerecipes"],
++            # machines
++            [5, 'Machines',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+machines"],
++            # layers
++            [6, 'Layers',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+layers"],
++            # distro
++            [7, 'Distros',
++                f"/toastergui/project/{TestProjectConfigTab.project_id}/=
+distros"],
+             #  [9, 'BitBake variables', f"/toastergui/project/{TestProje=
+ctConfigTab.project_id}/configuration"],  # bitbake variables
+         ]
+         for index, item_name, url in conf_nav_list:
+@@ -281,15 +301,10 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
+se):
+         # Create a new project for this test
+         project_name =3D self._random_string(10)
+         self._create_project(project_name=3Dproject_name)
+-        current_url =3D self.driver.current_url
+-        TestProjectConfigTab.project_id =3D get_projectId_from_url(curre=
+nt_url)
+-        url =3D current_url.split('?')[0]
+         # check if the menu is displayed
+         self.wait_until_visible('#project-page')
+         block_l =3D self.driver.find_element(
+             By.XPATH, '//*[@id=3D"project-page"]/div[2]')
+-        most_built_recipes =3D self.driver.find_element(
+-            By.XPATH, '//*[@id=3D"project-page"]/div[1]/div[3]')
+         project_release =3D self.driver.find_element(
+             By.XPATH, '//*[@id=3D"project-page"]/div[1]/div[4]')
+         layers =3D block_l.find_element(By.ID, 'layer-container')
+@@ -315,26 +330,6 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
+e):
+                 f'You have changed the {item_name} to: {new_item_name}' =
+in change_notification.text
+             )
 =20
--        self.wait_until_visible("#save-changes-for-switch", poll=3D3)
--        btn_save_chg_for_switch =3D self.find("#save-changes-for-switch"=
-)
--        btn_save_chg_for_switch.click()
-+        try:
-+            self.wait_until_visible("#save-changes-for-switch", poll=3D3=
-)
-+            btn_save_chg_for_switch =3D self.wait_until_clickable(
-+                "#save-changes-for-switch", poll=3D3)
-+            btn_save_chg_for_switch.click()
-+        except ElementClickInterceptedException:
-+            self.skipTest(
-+                "save-changes-for-switch click intercepted. Element not =
-properly visible or maybe behind another element.")
-+        except TimeoutException:
-+            self.skipTest(
-+                "save-changes-for-switch is not clickable within the spe=
-cified timeout.")
+-        def rebuild_from_most_build_recipes(recipe_list_items):
+-            checkbox =3D recipe_list_items[0].find_element(By.TAG_NAME, =
+'input')
+-            checkbox.click()
+-            build_btn =3D self.find('#freq-build-btn')
+-            build_btn.click()
+-            self.wait_until_visible('#latest-builds')
+-            build_state =3D wait_until_build(self, 'parsing starting clo=
+ning queued')
+-            lastest_builds =3D self.driver.find_elements(
+-                By.XPATH,
+-                '//div[@id=3D"latest-builds"]/div'
+-            )
+-            last_build =3D lastest_builds[0]
+-            self.assertTrue(len(lastest_builds) >=3D 2)
+-            cancel_button =3D last_build.find_element(
+-                By.XPATH,
+-                '//span[@class=3D"cancel-build-btn pull-right alert-link=
+"]',
+-            )
+-            cancel_button.click()
+-            if 'starting' not in build_state:  # change build state when=
+ cancelled in starting state
+-                wait_until_build_cancelled(self)
+         # Machine
+         check_machine_distro(self, 'machine', 'qemux86-64', 'machine-sec=
+tion')
+         # Distro
+@@ -374,32 +369,61 @@ class TestProjectConfigTab(SeleniumFunctionalTestCa=
+se):
+         layers_list_items =3D layers_list.find_elements(By.TAG_NAME, 'li=
+')
+         self.assertTrue(len(layers_list_items) =3D=3D 4)
+=20
+-        # Most built recipes
+-        title =3D most_built_recipes.find_element(By.TAG_NAME, 'h3')
+-        self.assertTrue("Most built recipes" in title.text)
++    def test_most_build_recipes(self):
++        """ Test most build recipes block contains"""
++        def rebuild_from_most_build_recipes(recipe_list_items):
++            checkbox =3D recipe_list_items[0].find_element(By.TAG_NAME, =
+'input')
++            checkbox.click()
++            build_btn =3D self.find('#freq-build-btn')
++            build_btn.click()
++            self.wait_until_present('#latest-builds')
++            wait_until_build(self, 'queued cloning starting parsing fail=
+ed')
++            lastest_builds =3D self.driver.find_elements(
++                By.XPATH,
++                '//div[@id=3D"latest-builds"]/div'
++            )
++            self.assertTrue(len(lastest_builds) >=3D 2)
++            last_build =3D lastest_builds[0]
++            try:
++                cancel_button =3D last_build.find_element(
++                    By.XPATH,
++                    '//span[@class=3D"cancel-build-btn pull-right alert-=
+link"]',
++                )
++                cancel_button.click()
++            except NoSuchElementException:
++                # Skip if the build is already cancelled
++                pass
++            wait_until_build_cancelled(self)
++        # Create a new project for remaining asserts
++        project_name =3D self._random_string(10)
++        self._create_project(project_name=3Dproject_name, release=3D'2')
++        current_url =3D self.driver.current_url
++        TestProjectConfigTab.project_id =3D get_projectId_from_url(curre=
+nt_url)
++        url =3D current_url.split('?')[0]
 +
-         self.wait_until_visible("#edit-layer-source")
+         # Create a new builds
+-        build_state =3D self._create_builds()
++        self._create_builds()
 =20
-         # Refresh the page to see if the new values are returned
+-        # Refresh the page
++        # back to project page
+         self.driver.get(url)
+=20
+         self.wait_until_visible('#project-page', poll=3D3)
+-        # check can select a recipe and build it
++
++        # Most built recipes
+         most_built_recipes =3D self.driver.find_element(
+             By.XPATH, '//*[@id=3D"project-page"]/div[1]/div[3]')
+-        recipe_list =3D most_built_recipes.find_element(By.ID, 'freq-bui=
+ld-list')
++        title =3D most_built_recipes.find_element(By.TAG_NAME, 'h3')
++        self.assertTrue("Most built recipes" in title.text)
++        # check can select a recipe and build it
++        self.wait_until_visible('#freq-build-list', poll=3D3)
++        recipe_list =3D self.find('#freq-build-list')
+         recipe_list_items =3D recipe_list.find_elements(By.TAG_NAME, 'li=
+')
+-        if 'starting' not in build_state:  # Build will not appear in th=
+e list if canceled in starting state
+-            self.assertTrue(
+-                len(recipe_list_items) > 0,
+-                msg=3D"No recipes found in the most built recipes list",
+-            )
+-            rebuild_from_most_build_recipes(recipe_list_items)
+-        else:
+-            self.assertTrue(
+-                len(recipe_list_items) =3D=3D 0,
+-                msg=3D"Recipes found in the most built recipes list",
+-            )
++        self.assertTrue(
++            len(recipe_list_items) > 0,
++            msg=3D"Any recipes found in the most built recipes list",
++        )
++        rebuild_from_most_build_recipes(recipe_list_items)
++        TestProjectConfigTab.project_id =3D None  # reset project id
+=20
+     def test_project_page_tab_importlayer(self):
+         """ Test project page tab import layer """
+@@ -461,10 +485,9 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
+e):
+         div_empty_msg =3D self.find('#empty-state-customimagestable')
+         link_create_custom_image =3D div_empty_msg.find_element(
+             By.TAG_NAME, 'a')
+-        last_project_id =3D Project.objects.get(name=3Dproject_name).id
+-        self.assertTrue(last_project_id is not None)
++        self.assertTrue(TestProjectConfigTab.project_id is not None)
+         self.assertTrue(
+-            f"/toastergui/project/{last_project_id}/newcustomimage" in s=
+tr(
++            f"/toastergui/project/{TestProjectConfigTab.project_id}/newc=
+ustomimage" in str(
+                 link_create_custom_image.get_attribute('href')
+             )
+         )
+@@ -473,6 +496,7 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
+):
+                 link_create_custom_image.text
+             )
+         )
++        TestProjectConfigTab.project_id =3D None  # reset project id
+=20
+     def test_project_page_image_recipe(self):
+         """ Test project page section images
+@@ -497,25 +521,3 @@ class TestProjectConfigTab(SeleniumFunctionalTestCas=
+e):
+         self.wait_until_visible('#imagerecipestable tbody tr')
+         rows =3D self.find_all('#imagerecipestable tbody tr')
+         self.assertTrue(len(rows) > 0)
+-
+-        # Test build button
+-        image_to_build =3D rows[0]
+-        build_btn =3D image_to_build.find_element(
+-            By.XPATH,
+-            '//td[@class=3D"add-del-layers"]'
+-        )
+-        build_btn.click()
+-        build_state =3D wait_until_build(self, 'parsing starting cloning=
+ queued')
+-        lastest_builds =3D self.driver.find_elements(
+-            By.XPATH,
+-            '//div[@id=3D"latest-builds"]/div'
+-        )
+-        self.assertTrue(len(lastest_builds) > 0)
+-        last_build =3D lastest_builds[0]
+-        cancel_button =3D last_build.find_element(
+-            By.XPATH,
+-            '//span[@class=3D"cancel-build-btn pull-right alert-link"]',
+-        )
+-        cancel_button.click()
+-        if 'starting' not in build_state:  # change build state when can=
+celled in starting state
+-            wait_until_build_cancelled(self)
 --=20
 2.34.1
 
