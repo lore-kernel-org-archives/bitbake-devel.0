@@ -2,48 +2,48 @@ Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14273C41535
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCE6C4167B
 	for <webhook@archiver.kernel.org>; Fri, 15 Dec 2023 09:39:18 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.58980.1702633148331047742
+ by mx.groups.io with SMTP id smtpd.web10.58982.1702633149215706316
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 15 Dec 2023 01:39:09 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=gZ69RMWh;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=C2foNSfx;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 01CF99C401F
-	for <bitbake-devel@lists.openembedded.org>; Fri, 15 Dec 2023 04:39:07 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 96FBF9C3FCA
+	for <bitbake-devel@lists.openembedded.org>; Fri, 15 Dec 2023 04:39:08 -0500 (EST)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id SbDyjUqvffb6; Fri, 15 Dec 2023 04:39:06 -0500 (EST)
+ with ESMTP id vQEdN2POiadO; Fri, 15 Dec 2023 04:39:07 -0500 (EST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id AFDA59C3A2F;
-	Fri, 15 Dec 2023 04:39:06 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com AFDA59C3A2F
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id B72199C3644;
+	Fri, 15 Dec 2023 04:39:07 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com B72199C3644
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1702633146; bh=BkeybDozN5OZVIQ0bVa2lGke12WHwRHsSfwhz4Ulb6c=;
+	t=1702633147; bh=r7CmKB75y2FeqiAGUVP9Z7UunBXwTbrQeKOyx1gFmBY=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=gZ69RMWhDy9smCRDs5orGAp4/sCJvb3aPAgkI6snZD//KW7oA0o80NPehzLnSf+0r
-	 bM2WKNjeK6+1uQuza15H0ihphgxqSBfVIB+p6l7Ot1qbLogr9rLiLF9EgktambHt1b
-	 lnZAjOuZaXXya7FLc1JtZoDPW8EXOt7sljrtT8k5QroKCCYav+Ygw9h+Q5ec2iR/9t
-	 vCnBUutPMAO4DjGzwyscPr2AY8jhTAyMDMnAkQKAJTdmW4ILq2FLvTQ6TEVbCrlziF
-	 LCHYxEWkkHDfTcLvCom5by+IeidFXaoSKA8GLHu2SYXkReWyfjCrzeQ2wQGI9Tchbx
-	 5gKMRZvMsFuOA==
+	b=C2foNSfxMuyW+gkZ9Htm8xbFjb7H3bBdg5Zv0KOaPxTLaOIIBjTrFTumcmcHv8O65
+	 zYBRmnnTxqTdV95FtW6j+bsmlc0u3BXCBbjHCvq9CFtzpCYQIC9Nxkzve/flcDiOX5
+	 +H9AOR81qFCq35BqWnrKYgG4L4SkYj/JV9Ty51xmvDfRM4AFDwK2OefcriG24EsGHC
+	 BFmc8q33YqPryvNDDXX9nJEQyU5KMv/3W13G5L8mgwbB6O86L/ra9n6ZVPdmvsWz7s
+	 f+FXeJdVjYMxiM7hvy6NTH27FvKF7/QRsPK15iPcNbx4zWWMo2xcb4OildPdHjuJ/Q
+	 rBkXz+zjjN1sQ==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id tkH_gZKQWQIk; Fri, 15 Dec 2023 04:39:06 -0500 (EST)
+ with ESMTP id Aucl34nx7G1l; Fri, 15 Dec 2023 04:39:07 -0500 (EST)
 Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 0F3149C3636;
-	Fri, 15 Dec 2023 04:39:05 -0500 (EST)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id F2DFD9C3636;
+	Fri, 15 Dec 2023 04:39:06 -0500 (EST)
 From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH v3 2/5] toaster/test: Handle ProcessLookupError, log warning in console
-Date: Fri, 15 Dec 2023 10:38:36 +0100
-Message-Id: <20231215093839.99358-2-alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH v3 3/5] toaster/test: Removed all time.sleep occurrences
+Date: Fri, 15 Dec 2023 10:38:37 +0100
+Message-Id: <20231215093839.99358-3-alassane.yattara@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231215093839.99358-1-alassane.yattara@savoirfairelinux.com>
 References: <20231215093839.99358-1-alassane.yattara@savoirfairelinux.com>
@@ -53,44 +53,288 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 15 Dec 2023 09:39:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15682
-
-Note: While addressing warnings on the autobuilder, we encountered releva=
-nt warnings
-where attempts were made to terminate processes that were not running.
-
-To enhance visibility, we have opted to catch the ProcessLookupError exce=
-ption
-and log a warning in the console rather than suppressing it.
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15683
 
 Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- lib/toaster/tests/commands/test_runbuilds.py | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ .../tests/functional/test_functional_basic.py | 39 ++++++++++---------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
 
-diff --git a/lib/toaster/tests/commands/test_runbuilds.py b/lib/toaster/t=
-ests/commands/test_runbuilds.py
-index 738d36e9..849c227e 100644
---- a/lib/toaster/tests/commands/test_runbuilds.py
-+++ b/lib/toaster/tests/commands/test_runbuilds.py
-@@ -22,8 +22,6 @@ import signal
- import logging
+diff --git a/lib/toaster/tests/functional/test_functional_basic.py b/lib/=
+toaster/tests/functional/test_functional_basic.py
+index dcd84c3f..5d7a86bb 100644
+--- a/lib/toaster/tests/functional/test_functional_basic.py
++++ b/lib/toaster/tests/functional/test_functional_basic.py
+@@ -15,7 +15,7 @@ from orm.models import Project
+ from selenium.webdriver.common.by import By
 =20
 =20
--logger =3D logging.getLogger("toaster")
--
- class KillRunbuilds(threading.Thread):
-     """ Kill the runbuilds process after an amount of time """
-     def __init__(self, *args, **kwargs):
-@@ -43,7 +41,7 @@ class KillRunbuilds(threading.Thread):
-                 pid =3D pidfile.read()
-                 os.kill(int(pid), signal.SIGTERM)
-         except ProcessLookupError:
--            logger.warning("Runbuilds not running or already killed")
-+            logging.warning("Runbuilds not running or already killed")
+-@pytest.mark.order("last")
++@pytest.mark.order("second_to_last")
+ class FuntionalTestBasic(SeleniumFunctionalTestCase):
 =20
+ #   testcase (1514)
+@@ -26,7 +26,6 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
+         self.driver.find_element(By.ID, "new-project-name").send_keys(pr=
+oject_name)
+         self.driver.find_element(By.ID, 'projectversion').click()
+         self.driver.find_element(By.ID, "create-project-button").click()
+-        time.sleep(2)
+         element =3D self.wait_until_visible('#project-created-notificati=
+on')
+         self.assertTrue(self.element_exists('#project-created-notificati=
+on'),'Project creation notification not shown')
+         self.assertTrue(project_name in element.text,
+@@ -39,45 +38,50 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
+         self.get(reverse('all-projects'))
+         self.wait_until_visible('#projectstable')
+         self.find_element_by_link_text_in_table('projectstable', 'seleni=
+um-project').click()
+-        time.sleep(2)
++        self.wait_until_visible('#config-nav')
+         self.assertTrue(self.element_exists('#config-nav'),'Configuratio=
+n Tab does not exist')
+         project_URL=3Dself.get_URL()
+         self.driver.find_element(By.XPATH, '//a[@href=3D"'+project_URL+'=
+"]').click()
+-        time.sleep(2)
++        self.wait_until_visible('#config-nav')
 =20
- class TestCommands(TestCase):
+         try:
+             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
+ul/li/a[@href=3D"+'"'+project_URL+'customimages/"'+"]").click()
+-            time.sleep(2)
++            self.wait_until_visible('#config-nav')
+             self.assertTrue(re.search("Custom images",self.driver.find_e=
+lement(By.XPATH, "//div[@class=3D'col-md-10']").text),'Custom images info=
+rmation is not loading properly')
+         except:
+             self.fail(msg=3D'No Custom images tab available')
+=20
+         try:
+             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
+ul/li/a[@href=3D"+'"'+project_URL+'images/"'+"]").click()
++            self.wait_until_visible('#config-nav')
+             self.assertTrue(re.search("Compatible image recipes",self.dr=
+iver.find_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The Com=
+patible image recipes information is not loading properly')
+         except:
+             self.fail(msg=3D'No Compatible image tab available')
+=20
+         try:
+             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
+ul/li/a[@href=3D"+'"'+project_URL+'softwarerecipes/"'+"]").click()
++            self.wait_until_visible('#config-nav')
+             self.assertTrue(re.search("Compatible software recipes",self=
+.driver.find_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The =
+Compatible software recipe information is not loading properly')
+         except:
+             self.fail(msg=3D'No Compatible software recipe tab available=
+')
+=20
+         try:
+             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
+ul/li/a[@href=3D"+'"'+project_URL+'machines/"'+"]").click()
++            self.wait_until_visible('#config-nav')
+             self.assertTrue(re.search("Compatible machines",self.driver.=
+find_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The Compatib=
+le machine information is not loading properly')
+         except:
+             self.fail(msg=3D'No Compatible machines tab available')
+=20
+         try:
+             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
+ul/li/a[@href=3D"+'"'+project_URL+'layers/"'+"]").click()
++            self.wait_until_visible('#config-nav')
+             self.assertTrue(re.search("Compatible layers",self.driver.fi=
+nd_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The Compatible=
+ layer information is not loading properly')
+         except:
+             self.fail(msg=3D'No Compatible layers tab available')
+=20
+         try:
+             self.driver.find_element(By.XPATH, "//*[@id=3D'config-nav']/=
+ul/li/a[@href=3D"+'"'+project_URL+'configuration"'+"]").click()
++            self.wait_until_visible('#config-nav')
+             self.assertTrue(re.search("Bitbake variables",self.driver.fi=
+nd_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The Bitbake va=
+riables information is not loading properly')
+         except:
+             self.fail(msg=3D'No Bitbake variables tab available')
+@@ -86,16 +90,14 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
+     def test_review_configuration_information(self):
+         self.get('')
+         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
+/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
+-        time.sleep(2)
+         self.wait_until_visible('#projectstable')
+         self.find_element_by_link_text_in_table('projectstable', 'seleni=
+um-project').click()
+         project_URL=3Dself.get_URL()
+-        time.sleep(2)
++        self.wait_until_visible('#config-nav')
+         try:
+            self.assertTrue(self.element_exists('#machine-section'),'Mach=
+ine section for the project configuration page does not exist')
+            self.assertTrue(re.search("qemux86-64",self.driver.find_eleme=
+nt(By.XPATH, "//span[@id=3D'project-machine-name']").text),'The machine t=
+ype is not assigned')
+            self.driver.find_element(By.XPATH, "//span[@id=3D'change-mach=
+ine-toggle']").click()
+-           time.sleep(2)
+            self.wait_until_visible('#select-machine-form')
+            self.wait_until_visible('#cancel-machine-change')
+            self.driver.find_element(By.XPATH, "//form[@id=3D'select-mach=
+ine-form']/a[@id=3D'cancel-machine-change']").click()
+@@ -133,16 +135,14 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase=
+):
+     def test_verify_machine_information(self):
+         self.get('')
+         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
+/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
+-        time.sleep(2)
+         self.wait_until_visible('#projectstable')
+         self.find_element_by_link_text_in_table('projectstable', 'seleni=
+um-project').click()
+-        time.sleep(2)
++        self.wait_until_visible('#config-nav')
+=20
+         try:
+             self.assertTrue(self.element_exists('#machine-section'),'Mac=
+hine section for the project configuration page does not exist')
+             self.assertTrue(re.search("qemux86-64",self.driver.find_elem=
+ent(By.ID, "project-machine-name").text),'The machine type is not assigne=
+d')
+             self.driver.find_element(By.ID, "change-machine-toggle").cli=
+ck()
+-            time.sleep(2)
+             self.wait_until_visible('#select-machine-form')
+             self.wait_until_visible('#cancel-machine-change')
+             self.driver.find_element(By.ID, "cancel-machine-change").cli=
+ck()
+@@ -153,15 +153,14 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase=
+):
+     def test_verify_most_built_recipes_information(self):
+         self.get('')
+         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
+/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
+-        time.sleep(2)
+         self.wait_until_visible('#projectstable')
+         self.find_element_by_link_text_in_table('projectstable', 'seleni=
+um-project').click()
++        self.wait_until_visible('#config-nav')
+         project_URL=3Dself.get_URL()
+-        time.sleep(2)
+         try:
+             self.assertTrue(re.search("You haven't built any recipes yet=
+",self.driver.find_element(By.ID, "no-most-built").text),'Default message=
+ of no builds is not present')
+             self.driver.find_element(By.XPATH, "//div[@id=3D'no-most-bui=
+lt']/p/a[@href=3D"+'"'+project_URL+'images/"'+"]").click()
+-            time.sleep(2)
++            self.wait_until_visible('#config-nav')
+             self.assertTrue(re.search("Compatible image recipes",self.dr=
+iver.find_element(By.XPATH, "//div[@class=3D'col-md-10']").text),'The Cho=
+ose a recipe to build link  is not working  properly')
+         except:
+             self.fail(msg=3D'No Most built information in project detail=
+ page')
+@@ -170,10 +169,9 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase)=
+:
+     def test_verify_project_release_information(self):
+         self.get('')
+         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
+/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
+-        time.sleep(2)
+         self.wait_until_visible('#projectstable')
+         self.find_element_by_link_text_in_table('projectstable', 'seleni=
+um-project').click()
+-        time.sleep(2)
++        self.wait_until_visible('#config-nav')
+=20
+         try:
+             self.assertTrue(re.search("Yocto Project master",self.driver=
+.find_element(By.ID, "project-release-title").text),'The project release =
+is not defined')
+@@ -186,8 +184,8 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
+         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
+/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
+         self.wait_until_visible('#projectstable')
+         self.find_element_by_link_text_in_table('projectstable', 'seleni=
+um-project').click()
++        self.wait_until_visible('#config-nav')
+         project_URL=3Dself.get_URL()
+-        time.sleep(2)
+         try:
+            self.driver.find_element(By.XPATH, "//div[@id=3D'layer-contai=
+ner']")
+            self.assertTrue(re.search("3",self.driver.find_element(By.ID,=
+ "project-layers-count").text),'There should be 3 layers listed in the la=
+yer count')
+@@ -215,16 +213,17 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase=
+):
+     def test_verify_project_detail_links(self):
+         self.get('')
+         self.driver.find_element(By.XPATH, "//div[@id=3D'global-nav']/ul=
+/li/a[@href=3D"+'"'+'/toastergui/projects/'+'"'+"]").click()
+-        time.sleep(2)
+         self.wait_until_visible('#projectstable')
+         self.find_element_by_link_text_in_table('projectstable', 'seleni=
+um-project').click()
++        self.wait_until_visible('#config-nav')
+         project_URL=3Dself.get_URL()
+-        time.sleep(2)
+         self.driver.find_element(By.XPATH, "//div[@id=3D'project-topbar'=
+]/ul[@class=3D'nav nav-tabs']/li[@id=3D'topbar-configuration-tab']/a[@hre=
+f=3D"+'"'+project_URL+'"'+"]").click()
++        self.wait_until_visible('#config-nav')
+         self.assertTrue(re.search("Configuration",self.driver.find_eleme=
+nt(By.XPATH, "//div[@id=3D'project-topbar']/ul[@class=3D'nav nav-tabs']/l=
+i[@id=3D'topbar-configuration-tab']/a[@href=3D"+'"'+project_URL+'"'+"]").=
+text), 'Configuration tab in project topbar is misspelled')
+=20
+         try:
+             self.driver.find_element(By.XPATH, "//div[@id=3D'project-top=
+bar']/ul[@class=3D'nav nav-tabs']/li/a[@href=3D"+'"'+project_URL+'builds/=
+"'+"]").click()
++            self.wait_until_visible('#project-topbar')
+             self.assertTrue(re.search("Builds",self.driver.find_element(=
+By.XPATH, "//div[@id=3D'project-topbar']/ul[@class=3D'nav nav-tabs']/li/a=
+[@href=3D"+'"'+project_URL+'builds/"'+"]").text), 'Builds tab in project =
+topbar is misspelled')
+             self.driver.find_element(By.XPATH, "//div[@id=3D'empty-state=
+-projectbuildstable']")
+         except:
+@@ -232,6 +231,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
+=20
+         try:
+             self.driver.find_element(By.XPATH, "//div[@id=3D'project-top=
+bar']/ul[@class=3D'nav nav-tabs']/li/a[@href=3D"+'"'+project_URL+'importl=
+ayer"'+"]").click()
++            self.wait_until_visible('#project-topbar')
+             self.assertTrue(re.search("Import layer",self.driver.find_el=
+ement(By.XPATH, "//div[@id=3D'project-topbar']/ul[@class=3D'nav nav-tabs'=
+]/li/a[@href=3D"+'"'+project_URL+'importlayer"'+"]").text), 'Import layer=
+ tab in project topbar is misspelled')
+             self.driver.find_element(By.XPATH, "//fieldset[@id=3D'repo-s=
+elect']")
+             self.driver.find_element(By.XPATH, "//fieldset[@id=3D'git-re=
+po']")
+@@ -240,6 +240,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
+=20
+         try:
+             self.driver.find_element(By.XPATH, "//div[@id=3D'project-top=
+bar']/ul[@class=3D'nav nav-tabs']/li/a[@href=3D"+'"'+project_URL+'newcust=
+omimage/"'+"]").click()
++            self.wait_until_visible('#project-topbar')
+             self.assertTrue(re.search("New custom image",self.driver.fin=
+d_element(By.XPATH, "//div[@id=3D'project-topbar']/ul[@class=3D'nav nav-t=
+abs']/li/a[@href=3D"+'"'+project_URL+'newcustomimage/"'+"]").text), 'New =
+custom image tab in project topbar is misspelled')
+             self.assertTrue(re.search("Select the image recipe you want =
+to customise",self.driver.find_element(By.XPATH, "//div[@class=3D'col-md-=
+12']/h2").text),'The new custom image tab is not loading correctly')
+         except:
 --=20
 2.34.1
 
