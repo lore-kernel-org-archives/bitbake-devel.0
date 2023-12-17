@@ -1,100 +1,83 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1264C4167B
-	for <webhook@archiver.kernel.org>; Fri, 15 Dec 2023 20:25:56 +0000 (UTC)
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
- by mx.groups.io with SMTP id smtpd.web10.76218.1702671950393359759
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0279BC3DA6E
+	for <webhook@archiver.kernel.org>; Sun, 17 Dec 2023 13:11:37 +0000 (UTC)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web11.18158.1702818692581408301
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 15 Dec 2023 12:25:50 -0800
+ Sun, 17 Dec 2023 05:11:32 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=cI0tApaF;
- spf=pass (domain: gmail.com, ip: 209.85.161.54, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5913e3a9e05so765024eaf.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 15 Dec 2023 12:25:50 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=O9jzsTMM;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3365424df34so1308878f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Sun, 17 Dec 2023 05:11:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702671948; x=1703276748; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aEupIvT25NZUh48/AwHC25aaJdlqeoMZaXHyDX1JOFA=;
-        b=cI0tApaF+O81NFtrqnTNg8Jvw5uNkZZBogkaV5jxQCSdLrsGjKVIjMy35KN0u8bsdT
-         LCnuVmByOaUCL1yHMkyFHZF42iul8cDspWlt+Iab/nlsdsIW26PjJYJ+wp0Y+Xoih9h7
-         h2Xl7NhRGmbHBtgm2S9M8/N7CpJBK3L/IYGr1/NF3+QPSAEkeIMUAqwxmBSEvOuHkCvK
-         j+YtFwoAdZ2bw2Z/fugJJf4FJMhqJmtOehbu39zxUAgdYtupATETFd+i+HIV/LH3bXBR
-         A0XZLuU8arye7tnvVxfA4rPqwJoUeXPsuJK0LoJBkeL9hmli0z8t6AkXdIcHNv3lfdcg
-         eQ5Q==
+        d=linuxfoundation.org; s=google; t=1702818691; x=1703423491; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=++Kptv4oR2kk7uDL2qnxcCcSFI1p+Fq3jW2RBFWta/8=;
+        b=O9jzsTMMt7iiByHnTwGZg+dC5xipZtlQd8AMtVKamc8EpBt/tUypU9lOvgJTI4ta1D
+         7Rb5VOJTKJoG/N6KbKvvP1a7PcjvmjQBQAav8ff9ZoJVp+csTaceOzs9EO+lXnmVGHqm
+         86auk7XyS9FKH4Z2QoHHyShxNV8QCxzd8aeZ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702671948; x=1703276748;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aEupIvT25NZUh48/AwHC25aaJdlqeoMZaXHyDX1JOFA=;
-        b=VBRcsR1h2LL512hSrnbHfISEVefpW7gea6T0ND2l8YegUoHy9U+fU2iG7qbR/bPgIS
-         N9GRFtnBI+riM80xmpsIMUmndn/Ed71veuAFoRNow0UdQz+yaQqE1XDizDlIu7S2MvGI
-         U6KjsrUsYFdpdUNOtEOQwOnU/N1BJw2y2OmWrtY8jJFMNLcrEGqeCVuTs0oy0UqrKdAb
-         HeejXA6JnPxw+1OkKJG5ZHy5/6s2nLN9Vx3JZk67ILFp1frjPSjB5Acz9wPstFg9iihL
-         Zw5jPynM5tAu889OkRA64XyfrLl0Cx9t3g50SM73pdd2tXtyM5Iu6rWXLI0tyjtwXcRY
-         PiAA==
-X-Gm-Message-State: AOJu0YzncKIH6C1MAy0iA910uIj5J5oSCnEOAedsDE6Ctl4PA51TELIs
-	2z5wqwPA8mSQKCXKPU3dwBBD8g5yfrA=
-X-Google-Smtp-Source: AGHT+IH93ij+nkFsR6e5hIIsGQ5LOvGgQKGwUa2dcWwpqAFDL/4ffLOZdWoDYWpnY1+DvymPjxRojQ==
-X-Received: by 2002:a05:6820:1627:b0:590:2b6d:a862 with SMTP id bb39-20020a056820162700b005902b6da862mr10399630oob.15.1702671948502;
-        Fri, 15 Dec 2023 12:25:48 -0800 (PST)
-Received: from localhost.localdomain ([2601:282:4300:19e0::35cb])
-        by smtp.gmail.com with ESMTPSA id 186-20020a4a06c3000000b00586c4324f5dsm3542672ooj.35.2023.12.15.12.25.47
+        d=1e100.net; s=20230601; t=1702818691; x=1703423491;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=++Kptv4oR2kk7uDL2qnxcCcSFI1p+Fq3jW2RBFWta/8=;
+        b=kT2C49qOd9IYqCiXfl3f9ZQx4WEHYzw3ntF/S4U1gdLhb0AX6P8WZAj+ca16ku5BOC
+         tBErCGwbR/phcB6FbIhls8mxtoch9x8EwCHKLL0rXd+WtwWf6cnjtHMJNbgxCIQZ6nSU
+         Lwph1EaqxEv1a1F5fl3s0vqkVdGkgvOGiO0nV1D9QDE8RBGXtQzkYZHnHNUJbhcBLDZY
+         JwdPfMUVAqR67J4Xfc5AdeI8HWCmswFdCxbe/AI/P6qqYSvOzwVeoKCf85vPN6gbfQyN
+         acF4wXcBIQ5BDam/aMjchu1RoQl5eUfvvRmfoqc2lIZUvyhU0I2WdnPovKHRdjoBGZgw
+         pY2w==
+X-Gm-Message-State: AOJu0YzlMG2Sb5vUkb6murPg1Qj9uFk+EN45jzwcreC5TrxQHGuefUDZ
+	U8M4dFpxFlchaRTh/AX5O09ccYVh+wHQMj8KMg4=
+X-Google-Smtp-Source: AGHT+IHMlfyMw6VynMpJV8utdPOTGpdYAyUEAgwXtrHmoi3k0HOAwBqe1hrjZmjtfpnuxSyuWF44Rg==
+X-Received: by 2002:adf:dd8a:0:b0:336:5fd5:6bd2 with SMTP id x10-20020adfdd8a000000b003365fd56bd2mr1293412wrl.127.1702818690503;
+        Sun, 17 Dec 2023 05:11:30 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:c690:9059:96b:687e])
+        by smtp.gmail.com with ESMTPSA id w6-20020a5d4046000000b003365637e113sm6069420wrp.113.2023.12.17.05.11.29
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 12:25:47 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+        Sun, 17 Dec 2023 05:11:30 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: ross.burton@arm.com,
-	Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bitbake-hashserv: Add description of permissions
-Date: Fri, 15 Dec 2023 13:25:42 -0700
-Message-Id: <20231215202542.2910797-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH] utils: Fix mkdir with PosixPath
+Date: Sun, 17 Dec 2023 13:11:29 +0000
+Message-Id: <20231217131129.3217772-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 15 Dec 2023 20:25:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15692
+ <bitbake-devel@lists.openembedded.org>; Sun, 17 Dec 2023 13:11:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15693
 
-Adds a text description of the possible permissions in the hash server
-help text
+Avoid:
+    Exception: AttributeError: 'PosixPath' object has no attribute 'find'
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/bin/bitbake-hashserv | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ lib/bb/utils.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/bin/bitbake-hashserv b/bitbake/bin/bitbake-hashserv
-index c560b3e58ac..c913c4e3c8e 100755
---- a/bitbake/bin/bitbake-hashserv
-+++ b/bitbake/bin/bitbake-hashserv
-@@ -53,6 +53,19 @@ mode with an SSL terminating load balancer in front of it (as this server does
- not implement SSL). Otherwise all usernames and passwords will be transmitted
- in the clear. When configured this way, clients can connect using a secure
- websocket, as in "wss://SERVER:PORT"
-+
-+The following permissions are supported by the server:
-+
-+    @none       - No permissions
-+    @read       - The ability to read equivalent hashes from the server
-+    @report     - The ability to report equivalent hashes to the server
-+    @db-admin   - Manage the hash database(s). This includes cleaning the
-+                  database, removing hashes, etc.
-+    @user-admin - The ability to manage user accounts. This includes, creating
-+                  users, deleting users, resetting login tokens, and assigning
-+                  permissions.
-+    @all        - All possible permissions, including any that may be added
-+                  in the future
-         """,
-     )
- 
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index d299b2efdb..52a136f809 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -759,7 +759,7 @@ def mkdirhier(directory):
+     """Create a directory like 'mkdir -p', but does not complain if
+     directory already exists like os.makedirs
+     """
+-    if directory.find('${') != -1:
++    if '${' in directory:
+         bb.fatal("Directory name {} contains unexpanded bitbake variable. This may cause build failures and WORKDIR polution.".format(directory))
+     try:
+         os.makedirs(directory)
 -- 
-2.34.1
+2.39.2
 
 
