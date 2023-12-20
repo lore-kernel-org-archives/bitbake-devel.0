@@ -1,86 +1,120 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <rybczynska@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D8AC46CCD
-	for <webhook@archiver.kernel.org>; Tue, 19 Dec 2023 15:08:50 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web11.15745.1702998525785647678
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991ECC3DA6E
+	for <webhook@archiver.kernel.org>; Wed, 20 Dec 2023 17:45:22 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web11.27568.1703094312641724018
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 19 Dec 2023 07:08:46 -0800
+ Wed, 20 Dec 2023 09:45:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=f0/oayLf;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40c2308faedso55490315e9.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 19 Dec 2023 07:08:45 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=e/pmqHzD;
+ spf=pass (domain: gmail.com, ip: 209.85.128.46, mailfrom: rybczynska@gmail.com)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40c6736d10fso73871375e9.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 20 Dec 2023 09:45:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1702998524; x=1703603324; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qrGG4m3Dvnx0JY0UNFf9rGZL5j9bB7jZMq7ONK062Xg=;
-        b=f0/oayLfu47LJKwq0mQsy3tUbdbzMiDDay1Fm+JmtTi+5eJubtkRMY+8ALAJ6ZLWCl
-         jXM/AjJtp5zE5QrlgF8ZkUtkxdvhgGSvzQAfodllnWJgowuJfaGhf+CV5CTRHAhsx+yg
-         MwTess68e7v2CA0SSyQttka7hw24LrQg0H4Yw=
+        d=gmail.com; s=20230601; t=1703094310; x=1703699110; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wfrP/23SrA4hrA7BhGmuLuMU6GuTsqkPhTej/R15ClU=;
+        b=e/pmqHzD/U6re7c+d5uxIEpfo/c9IguKwJ7Av/JExjN+R3sOf68UhwWkgKcvN2kyDf
+         R1OJQzUgTJXXD8T6aoja41opyDpBlcdWmtXYI+l3C7SjwweD2TOG1KBueXz/eWCvMqUQ
+         O2IkuBX6VqHQnNA/TX8kQJ5fjh3psbrklZc9FqQfsHKh2v6Xeb8ep6+lAsAWX3lkDEDY
+         PilKXhtjKtIp/kuAde8z9Q+3OHLFyyLOS0qNu6gqodxlCKhdxzG0HEkshVDL6yZ2ywKH
+         fI+D2sex/OHEX84v1OWGI4FsHwPdrT+3kyg6GrEkSLyjfE9WiZONEPzLNnOvNMz9iWnM
+         xyRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702998524; x=1703603324;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qrGG4m3Dvnx0JY0UNFf9rGZL5j9bB7jZMq7ONK062Xg=;
-        b=G8hap2PZkRgHtpL4WlQ3YS3XxrbA5+GaD3L/F9cF2PNkb2+lZZgWv3CtrHEndtcyWq
-         6mYgVJv7vxL+0xLeQctyGXLRi9djEyFAEiDsrpBl8QxZ2fuGsEXXw8tX4ovO9vTH4RoV
-         xvqa9LmD+t8dmyEUE6kAV6thYkKQ3877JRETw0EvEhFO7zEkOJbbeIRZNmu7nVpcuKGd
-         FCLLBlgFglTSzZyd8h81WsQToF7aXPVXsfxKjsx7kIAO7rPhjsbxkjwY1Mp0O9zdidkr
-         K4jL77DAw65MLlbgLB6TLsnc+IFB9gwIBqHY0MofV8JpvWjLgTWIADW56pFa54mQpyQ1
-         5ejg==
-X-Gm-Message-State: AOJu0YzO/ZMxVJCDYHX5Ad0dIsjCBBkitdvMGIH2s5ZFo7S2VeJfS7Gi
-	WF0kCqRyasfdkj02VaFZR0MkGf+Lpc8YKBhNFNk=
-X-Google-Smtp-Source: AGHT+IHovMdRA+r3U3QhJmeAtIunw1HANtIKlXs8Y8JfmY6VkbARwoGF7DuMUZqmI1mRA8s8vpqIXg==
-X-Received: by 2002:a05:600c:4e44:b0:40d:2b9a:85be with SMTP id e4-20020a05600c4e4400b0040d2b9a85bemr501587wmq.30.1702998524129;
-        Tue, 19 Dec 2023 07:08:44 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:b87d:537f:7c6:e419? ([2001:8b0:aba:5f3c:b87d:537f:7c6:e419])
-        by smtp.gmail.com with ESMTPSA id bg5-20020a05600c3c8500b0040c4c9c52a3sm3237118wmb.12.2023.12.19.07.08.43
+        d=1e100.net; s=20230601; t=1703094310; x=1703699110;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wfrP/23SrA4hrA7BhGmuLuMU6GuTsqkPhTej/R15ClU=;
+        b=neEB3cpiWzVQ/IDkD0pMqar3n9bjFQ5yLJDVdk0EkYcKDrHjl/MU6KhGpasaaatih+
+         OsmBhejLCZLJ7IVNI1n0Lhuf/+pT0HQCVjYx5w2Rwz6ZtypxBNnGxuSw0lqQAGya2U0e
+         EHLh2VeuRc3ukdldSq8EiFD0kSLnlAP6xWmVgkKpyUljnVZb6WYopxTMtl7YYEm8M/lG
+         yOC18lM2rJgNIHTwF+HF2Ye8ErfJXhUCvbLKwFc/rsKXDH/v96mwupR++U70BNi23AOK
+         KhbVyfpZ/ZHoIjO/nrR9xSGkZtvq7us9qZKZG/ZGRPA1sP3ptorCKExWOB2QhT+uJ8v+
+         XMig==
+X-Gm-Message-State: AOJu0YzMYDdLSJOST4KBwz32eBx9/9ukAtgkgX84EjUcvPNFiti38E+3
+	H2T4e97fu47Y5cYAX5fpMaeqQ8fvmGgcnw==
+X-Google-Smtp-Source: AGHT+IESJXmvnWrX1usoPDmQoSYGNhZf92YMPvQpooRjtYcVtkWA33Dok7g0Z1sKgZuYbgwO/3PfYA==
+X-Received: by 2002:a05:600c:a05:b0:40b:3d6e:16b7 with SMTP id z5-20020a05600c0a0500b0040b3d6e16b7mr57361wmp.33.1703094309830;
+        Wed, 20 Dec 2023 09:45:09 -0800 (PST)
+Received: from localhost.localdomain (91-161-217-16.subs.proxad.net. [91.161.217.16])
+        by smtp.gmail.com with ESMTPSA id p6-20020a05600c468600b004053e9276easm7992085wmo.32.2023.12.20.09.45.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 07:08:43 -0800 (PST)
-Message-ID: <05a7209c1684df4bd5c8e83b27742fdd7ba6c9e4.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] toaster/test: Bug-fix
- test_functional_basic, delay driver actions
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alassane Yattara <alassane.yattara@savoirfairelinux.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Tue, 19 Dec 2023 15:08:43 +0000
-In-Reply-To: <20231218214122.616407-1-alassane.yattara@savoirfairelinux.com>
-References: <20231218214122.616407-1-alassane.yattara@savoirfairelinux.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+        Wed, 20 Dec 2023 09:45:08 -0800 (PST)
+From: Marta Rybczynska <rybczynska@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Marta Rybczynska <rybczynska@gmail.com>,
+	Marta Rybczynska <marta.rybczynska@syslinbit.com>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [PATCH] toastergui: verify that an existing layer path is given
+Date: Wed, 20 Dec 2023 18:44:56 +0100
+Message-ID: <20231220174456.9277-1-rybczynska@gmail.com>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 19 Dec 2023 15:08:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15695
+ <bitbake-devel@lists.openembedded.org>; Wed, 20 Dec 2023 17:45:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15696
 
-On Mon, 2023-12-18 at 22:41 +0100, Alassane Yattara wrote:
-> The errors causing faileds on functional_basic are d=C3=BB to the delay b=
-etween actions,
-> increase between driver actions.
->=20
-> Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-> ---
->  .../tests/functional/test_functional_basic.py | 76 +++++++++----------
->  1 file changed, 38 insertions(+), 38 deletions(-)
+Verify that an existing layer path was given when adding a new
+layer.
 
-Thanks for this. I think it helps but there are still some test
-failures after applying it (fewer than before):
+Manually using the shell for globbing is unnecessary, use the glob
+function instead for cleaner code.
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/161/builds/101/step=
-s/11/logs/stdio
-https://autobuilder.yoctoproject.org/typhoon/#/builders/161/builds/102/step=
-s/12/logs/stdio
+Signed-off-by: Marta Rybczynska <marta.rybczynska@syslinbit.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/toaster/toastergui/api.py | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-Cheers,
+diff --git a/lib/toaster/toastergui/api.py b/lib/toaster/toastergui/api.py
+index b4cdc335..a06ffc00 100644
+--- a/lib/toaster/toastergui/api.py
++++ b/lib/toaster/toastergui/api.py
+@@ -11,7 +11,7 @@ import os
+ import re
+ import logging
+ import json
+-import subprocess
++import glob
+ from collections import Counter
+ 
+ from orm.models import Project, ProjectTarget, Build, Layer_Version
+@@ -234,13 +234,11 @@ class XhrSetDefaultImageUrl(View):
+ 
+ def scan_layer_content(layer,layer_version):
+     # if this is a local layer directory, we can immediately scan its content
+-    if layer.local_source_dir:
++    if os.path.isdir(layer.local_source_dir):
+         try:
+             # recipes-*/*/*.bb
+-            cmd = '%s %s' % ('ls', os.path.join(layer.local_source_dir,'recipes-*/*/*.bb'))
+-            recipes_list = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,stderr=subprocess.STDOUT).stdout.read()
+-            recipes_list = recipes_list.decode("utf-8").strip()
+-            if recipes_list and 'No such' not in recipes_list:
++            recipes_list = glob.glob(os.path.join(layer.local_source_dir, 'recipes-*/*/*.bb'))
++            for recipe in recipes_list:
+                 for recipe in recipes_list.split('\n'):
+                     recipe_path = recipe[recipe.rfind('recipes-'):]
+                     recipe_name = recipe[recipe.rfind('/')+1:].replace('.bb','')
+@@ -260,6 +258,9 @@ def scan_layer_content(layer,layer_version):
+ 
+         except Exception as e:
+             logger.warning("ERROR:scan_layer_content: %s" % e)
++    else:
++        logger.warning("ERROR: wrong path given")
++        raise KeyError("local_source_dir")
+ 
+ class XhrLayer(View):
+     """ Delete, Get, Add and Update Layer information
+-- 
+2.42.0
 
-Richard
 
