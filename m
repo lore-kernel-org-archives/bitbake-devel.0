@@ -1,119 +1,123 @@
-Return-Path: <rybczynska@gmail.com>
+Return-Path: <liezhi.yang@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991ECC3DA6E
-	for <webhook@archiver.kernel.org>; Wed, 20 Dec 2023 17:45:22 +0000 (UTC)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web11.27568.1703094312641724018
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD5AC35274
+	for <webhook@archiver.kernel.org>; Thu, 21 Dec 2023 04:40:37 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.web10.45238.1703133634456127358
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 20 Dec 2023 09:45:12 -0800
+ Wed, 20 Dec 2023 20:40:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=e/pmqHzD;
- spf=pass (domain: gmail.com, ip: 209.85.128.46, mailfrom: rybczynska@gmail.com)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40c6736d10fso73871375e9.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 20 Dec 2023 09:45:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703094310; x=1703699110; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wfrP/23SrA4hrA7BhGmuLuMU6GuTsqkPhTej/R15ClU=;
-        b=e/pmqHzD/U6re7c+d5uxIEpfo/c9IguKwJ7Av/JExjN+R3sOf68UhwWkgKcvN2kyDf
-         R1OJQzUgTJXXD8T6aoja41opyDpBlcdWmtXYI+l3C7SjwweD2TOG1KBueXz/eWCvMqUQ
-         O2IkuBX6VqHQnNA/TX8kQJ5fjh3psbrklZc9FqQfsHKh2v6Xeb8ep6+lAsAWX3lkDEDY
-         PilKXhtjKtIp/kuAde8z9Q+3OHLFyyLOS0qNu6gqodxlCKhdxzG0HEkshVDL6yZ2ywKH
-         fI+D2sex/OHEX84v1OWGI4FsHwPdrT+3kyg6GrEkSLyjfE9WiZONEPzLNnOvNMz9iWnM
-         xyRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703094310; x=1703699110;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wfrP/23SrA4hrA7BhGmuLuMU6GuTsqkPhTej/R15ClU=;
-        b=neEB3cpiWzVQ/IDkD0pMqar3n9bjFQ5yLJDVdk0EkYcKDrHjl/MU6KhGpasaaatih+
-         OsmBhejLCZLJ7IVNI1n0Lhuf/+pT0HQCVjYx5w2Rwz6ZtypxBNnGxuSw0lqQAGya2U0e
-         EHLh2VeuRc3ukdldSq8EiFD0kSLnlAP6xWmVgkKpyUljnVZb6WYopxTMtl7YYEm8M/lG
-         yOC18lM2rJgNIHTwF+HF2Ye8ErfJXhUCvbLKwFc/rsKXDH/v96mwupR++U70BNi23AOK
-         KhbVyfpZ/ZHoIjO/nrR9xSGkZtvq7us9qZKZG/ZGRPA1sP3ptorCKExWOB2QhT+uJ8v+
-         XMig==
-X-Gm-Message-State: AOJu0YzMYDdLSJOST4KBwz32eBx9/9ukAtgkgX84EjUcvPNFiti38E+3
-	H2T4e97fu47Y5cYAX5fpMaeqQ8fvmGgcnw==
-X-Google-Smtp-Source: AGHT+IESJXmvnWrX1usoPDmQoSYGNhZf92YMPvQpooRjtYcVtkWA33Dok7g0Z1sKgZuYbgwO/3PfYA==
-X-Received: by 2002:a05:600c:a05:b0:40b:3d6e:16b7 with SMTP id z5-20020a05600c0a0500b0040b3d6e16b7mr57361wmp.33.1703094309830;
-        Wed, 20 Dec 2023 09:45:09 -0800 (PST)
-Received: from localhost.localdomain (91-161-217-16.subs.proxad.net. [91.161.217.16])
-        by smtp.gmail.com with ESMTPSA id p6-20020a05600c468600b004053e9276easm7992085wmo.32.2023.12.20.09.45.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Dec 2023 09:45:08 -0800 (PST)
-From: Marta Rybczynska <rybczynska@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Marta Rybczynska <rybczynska@gmail.com>,
-	Marta Rybczynska <marta.rybczynska@syslinbit.com>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [PATCH] toastergui: verify that an existing layer path is given
-Date: Wed, 20 Dec 2023 18:44:56 +0100
-Message-ID: <20231220174456.9277-1-rybczynska@gmail.com>
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=axwiMVAg;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=0719406ea4=liezhi.yang@windriver.com)
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BL4eYlK005257;
+	Wed, 20 Dec 2023 20:40:34 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PPS06212021; bh=MhVx83Oj1pD500fkhdrN7JjPSsOpbSXpWfCL9Rtojvc=; b=
+	axwiMVAg+5RPt/pNW13BAcCOg27QeiC28cgSVtJGO0W8WoU129TgcH6Y5N5GQ8xj
+	rPFBD6x1q57bBKcjEj59s4zH0o45uFcxd+375n/XfV6x+lOvJTzhd3DczUhtoxWx
+	IrZJW41Itg+UCzEL/fo4CfRtn95YdEZu7k6QLQ3qvzb4uZe8sOUHwWuT7q0rhQF1
+	9t+MCHhx7SVmshNwjHIetjY6RrSorhkWnCkz8CRfvoqaISuNsQugM4HGDLUZa3bP
+	RpgWbN3ke/mp7IgwJV9uTNUDyOyPpZfrjMmdLrBh7tZQpDfl9gqBEZOQwpB8ATks
+	CWe6ymSSXNf/TcWvYwLUjw==
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3v1c9knd7j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Wed, 20 Dec 2023 20:40:33 -0800 (PST)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 20 Dec 2023 20:40:39 -0800
+Received: from ala-lpggp3.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 20 Dec 2023 20:40:39 -0800
+From: <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH 1/1] bitbake: event: Improve error message for eventhandler
+Date: Wed, 20 Dec 2023 20:40:32 -0800
+Message-ID: <2fd4acbc082469c6c665dc5499ea471d9223b42c.1703133461.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <cover.1703133461.git.liezhi.yang@windriver.com>
+References: <cover.1703133461.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: XMz0PRqXoArcbmh6Y7tn4xzQz9PhNadC
+X-Proofpoint-ORIG-GUID: XMz0PRqXoArcbmh6Y7tn4xzQz9PhNadC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-16_25,2023-11-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=987 clxscore=1011 bulkscore=0
+ impostorscore=0 malwarescore=0 suspectscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312210031
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 20 Dec 2023 17:45:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15696
+ <bitbake-devel@lists.openembedded.org>; Thu, 21 Dec 2023 04:40:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15697
 
-Verify that an existing layer path was given when adding a new
-layer.
+From: Robert Yang <liezhi.yang@windriver.com>
 
-Manually using the shell for globbing is unnecessary, use the glob
-function instead for cleaner code.
+* Before the erorr message was:
+ERROR: Unable to register event handler 'defaultbase_eventhandler':
+  File "/path/to/poky/meta/classes-global/base.bbclass", line 4
+    # SPDX-License-Identifier: MIT
+           ^^^^^
+SyntaxError: invalid syntax
 
-Signed-off-by: Marta Rybczynska <marta.rybczynska@syslinbit.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+This is hard to debug since the error line number 4 is incorrect, and nothing
+is wrong with the code in line 4.
+
+* Now the error message is:
+ERROR: Unable to register event handler '/path/to/poky/meta/classes-global/base.bbclass':
+  File "defaultbase_eventhandler", line 4
+    an error line
+       ^^^^^
+SyntaxError: invalid syntax
+
+This is much easier to debug.
+
+The filename and code doesn't match since the file usually contains more code
+than eventhandler, don't pass filename to compile() can fix the problem.
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- lib/toaster/toastergui/api.py | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ bitbake/lib/bb/event.py | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/lib/toaster/toastergui/api.py b/lib/toaster/toastergui/api.py
-index b4cdc335..a06ffc00 100644
---- a/lib/toaster/toastergui/api.py
-+++ b/lib/toaster/toastergui/api.py
-@@ -11,7 +11,7 @@ import os
- import re
- import logging
- import json
--import subprocess
-+import glob
- from collections import Counter
- 
- from orm.models import Project, ProjectTarget, Build, Layer_Version
-@@ -234,13 +234,11 @@ class XhrSetDefaultImageUrl(View):
- 
- def scan_layer_content(layer,layer_version):
-     # if this is a local layer directory, we can immediately scan its content
--    if layer.local_source_dir:
-+    if os.path.isdir(layer.local_source_dir):
-         try:
-             # recipes-*/*/*.bb
--            cmd = '%s %s' % ('ls', os.path.join(layer.local_source_dir,'recipes-*/*/*.bb'))
--            recipes_list = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,stderr=subprocess.STDOUT).stdout.read()
--            recipes_list = recipes_list.decode("utf-8").strip()
--            if recipes_list and 'No such' not in recipes_list:
-+            recipes_list = glob.glob(os.path.join(layer.local_source_dir, 'recipes-*/*/*.bb'))
-+            for recipe in recipes_list:
-                 for recipe in recipes_list.split('\n'):
-                     recipe_path = recipe[recipe.rfind('recipes-'):]
-                     recipe_name = recipe[recipe.rfind('/')+1:].replace('.bb','')
-@@ -260,6 +258,9 @@ def scan_layer_content(layer,layer_version):
- 
-         except Exception as e:
-             logger.warning("ERROR:scan_layer_content: %s" % e)
-+    else:
-+        logger.warning("ERROR: wrong path given")
-+        raise KeyError("local_source_dir")
- 
- class XhrLayer(View):
-     """ Delete, Get, Add and Update Layer information
+diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+index f8acacd80d1..2fbf1188d45 100644
+--- a/bitbake/lib/bb/event.py
++++ b/bitbake/lib/bb/event.py
+@@ -260,15 +260,17 @@ def register(name, handler, mask=None, filename=None, lineno=None, data=None):
+             try:
+                 code = bb.methodpool.compile_cache(tmp)
+                 if not code:
+-                    if filename is None:
+-                        filename = "%s(e, d)" % name
+-                    code = compile(tmp, filename, "exec", ast.PyCF_ONLY_AST)
++                    code = compile(tmp, name, "exec", ast.PyCF_ONLY_AST)
+                     if lineno is not None:
+                         ast.increment_lineno(code, lineno-1)
+-                    code = compile(code, filename, "exec")
++                    code = compile(code, name, "exec")
+                     bb.methodpool.compile_cache_add(tmp, code)
+             except SyntaxError:
+-                logger.error("Unable to register event handler '%s':\n%s", name,
++                if filename:
++                    err_msg= filename
++                else:
++                    err_msg = name
++                logger.error("Unable to register event handler '%s':\n%s", err_msg,
+                              ''.join(traceback.format_exc(limit=0)))
+                 _handlers[name] = noop
+                 return
 -- 
 2.42.0
 
