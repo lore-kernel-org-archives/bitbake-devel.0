@@ -1,158 +1,80 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <insu0.park@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D563CC46CD4
-	for <webhook@archiver.kernel.org>; Wed, 27 Dec 2023 11:28:40 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.web10.99941.1703676513819463198
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0C3C46CD2
+	for <webhook@archiver.kernel.org>; Wed, 27 Dec 2023 14:54:51 +0000 (UTC)
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+ by mx.groups.io with SMTP id smtpd.web10.103002.1703688883144143361
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 27 Dec 2023 03:28:34 -0800
+ Wed, 27 Dec 2023 06:54:43 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YaMsL9vL;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40d5a41143fso11661515e9.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 27 Dec 2023 03:28:33 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=JENAlA8a;
+ spf=pass (domain: gmail.com, ip: 209.85.210.181, mailfrom: insu0.park@gmail.com)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6d9b3a967dbso2097236b3a.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 27 Dec 2023 06:54:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1703676512; x=1704281312; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:date:cc:to:from
-         :subject:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fa4zZewjUa3VavVuhnocjU9ymX711ejaDLyVUXGClqg=;
-        b=YaMsL9vLi9NssrJpxg29CQM9jyYsebwj1ZeVKLMos6Hx3Nl5AEOmrpGHPgCr69gMRa
-         2TGANaAf5QOtfCNbHTP8BpMkrnco4mZxB9tL8h56sgNaeQj6iyKakjo2NEfdqQW4qwSa
-         Xp9pgIznKW/ZcKKXn2BveiQDkDTKVvwk55VPQ=
+        d=gmail.com; s=20230601; t=1703688882; x=1704293682; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sw7MqqooJz7x83DOEeePDjlUF0JD/DRb0A5cPq7QvGE=;
+        b=JENAlA8aee0HBLQZ2oTpiFsP6IyWi73MWnnXUbmaN3poq4k4DuI8FS9+xEEEz70VJp
+         NXT75rXD97hhaBw9gDkh1NA/h2A+xycdBnTamRaCQGfVLMWqqI6+UGlmoaB1FmYL6NfE
+         cyH2YQoqaKWlN0vlTqyIW3SwC3p8BJh8oRcXWG4GW+yE9dZ37TlFa70hb3j+EebJz64X
+         27RoziEaUDoGwcmfk4uYG17FHfAcHYENqEPQVpdV2EPNA2FFQUGYksjbu2XplJgiv88Z
+         dCVyn7KJ65rW6jJxkBcnob15a1kyGceY3yknO2GgFa9yZe/kEH85uiywU6FJtSjI6Jbt
+         cNEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703676512; x=1704281312;
-        h=mime-version:user-agent:content-transfer-encoding:date:cc:to:from
-         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fa4zZewjUa3VavVuhnocjU9ymX711ejaDLyVUXGClqg=;
-        b=aNz5G62mKBXD6PKKcLDmjVHFyqXGYNXhV5cXiKXJylctpr2N7nBzRtBbSCSisOgpZZ
-         ct5HkQKi2RuxoLkq8FCI2GmAAlFXU40s1KmAkqwRx/50n+QKi6ytWxWjybUfTsISdzwh
-         tIEd7PLpUrAF2dNE56OKhdx3XZzAiMW+lYWjY3rKmy5dYWnWNAG8M+Lkxpnwbhz3/ipr
-         unuNwaJ1eSpF/L1RWvLVF78TiKVdlTasvkWN2+gThW1BABuHWhHeYjDlPrZZPh9bkjX9
-         X8V/Gj8JsXIOuukmmraf+DrGATv9KAbtYE89pPkIQCG57DjFrEzDMPOh7U7HS93K08gT
-         w8wA==
-X-Gm-Message-State: AOJu0YzF4g7kGcy+2li4oJOKh/73eKYhNird0LXbrbs2Dp1Sktt16ONS
-	JOIHWeLAtrIsF4Lkd+264q7poNuyPg2Ow0nhlwFIP2cMZ2s=
-X-Google-Smtp-Source: AGHT+IFL/5XcbVpK9gmXc75PehUEZMXBxHcMWLE2ezbyC4sRIDfBEfzzVJ+fx+5HHvcM+Iol7ixeLQ==
-X-Received: by 2002:a05:600c:ac3:b0:40d:5c89:e256 with SMTP id c3-20020a05600c0ac300b0040d5c89e256mr744118wmr.186.1703676511793;
-        Wed, 27 Dec 2023 03:28:31 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:ed04:d745:dee2:d264? ([2001:8b0:aba:5f3c:ed04:d745:dee2:d264])
-        by smtp.gmail.com with ESMTPSA id cg10-20020a5d5cca000000b00336c120855dsm7108195wrb.84.2023.12.27.03.28.31
+        d=1e100.net; s=20230601; t=1703688882; x=1704293682;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sw7MqqooJz7x83DOEeePDjlUF0JD/DRb0A5cPq7QvGE=;
+        b=uW+IziZaa5YsI8lX/hzFAxwNhv5wc71/iz2VTNWX14nXZW1oZnIBCyZckGNuhs2Xmb
+         zfmJxSTf/jgvyQbx00vD+SeKl1IOwC1+qG0DVHXRoNzKB55GNz0wN8xSVybe2NEkLA15
+         Le3hFhMxtR1R4Gavu9ooCZw//AeetiRi9vqCQrV7UEMl+DhxhtufPdX6grQDfkLEpmdk
+         hxRy0nZg6Tv0rBkuyQCvEBZYYwrbUH9//FtpRqqVkxbQ3z+s5VP+AwFI3+xT568vtfGA
+         UMAhqvXRemeRAEZE5yhePTl95iELJewfbaMIn9f8rqOFphe6XSaaNl0Hy10ExZs8IBjR
+         JMdw==
+X-Gm-Message-State: AOJu0Yxdfd4IdBRbbsXnOGEn2m6S0p4N9O4BNjmDNm1Okbe68NJks+0P
+	qZR6cCgrn0cZdHwvRB2WYzjjeQjBcw4=
+X-Google-Smtp-Source: AGHT+IF5sUrFNjwxYm7yYWZz2CsPGkCmk7EIVwHZIOoMzYeCtwPbkfzSXZOLGYt3maLlKw+5qqw8lA==
+X-Received: by 2002:a05:6a20:7491:b0:190:17a6:24c1 with SMTP id p17-20020a056a20749100b0019017a624c1mr11963872pzd.74.1703688882239;
+        Wed, 27 Dec 2023 06:54:42 -0800 (PST)
+Received: from insu1park-bee-ccnc1.bee-live.svc.cluster.local ([27.122.242.65])
+        by smtp.gmail.com with ESMTPSA id 19-20020aa79253000000b006c3069547bfsm11734582pfp.79.2023.12.27.06.54.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Dec 2023 03:28:31 -0800 (PST)
-Message-ID: <5325820d4f9ca342498422d2427207e7d31270e0.camel@linuxfoundation.org>
-Subject: pthread_cancel bug on ubuntu2004/debian11
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Cc: openembedded-core <openembedded-core@lists.openembedded.org>
-Date: Wed, 27 Dec 2023 11:28:30 +0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+        Wed, 27 Dec 2023 06:54:41 -0800 (PST)
+From: Insu Park <insu0.park@gmail.com>
+To: bitbake-devel@lists.openembedded.org,
+	steve@sakoman.com
+Cc: Insu Park <insu0.park@gmail.com>
+Subject: [kirkstone][2.0][PATCH 0/1] Fix dependency handling bug of remove operator
+Date: Wed, 27 Dec 2023 23:54:17 +0900
+Message-Id: <20231227145418.8776-1-insu0.park@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 27 Dec 2023 11:28:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15704
+ <bitbake-devel@lists.openembedded.org>; Wed, 27 Dec 2023 14:54:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15705
 
-I wanted to write down some thoughts on this which I have all the
-pieces handy.
+This commit has merged on Sep 19 on the master branch. (b90520eedb1dbc7f6a3928d089fe74fafb864eb5)
+I think this bug should also be fixed on the LTS branches, kirkstone and dunfell.
+This bug is not that common within the meta layers under the Yocto projects, but could be a problem in production domains.
+I cherry-picked it by myself because it requires to resolve conflicts for each branch.
+Please see the details on the previous post: https://lists.openembedded.org/g/bitbake-devel/message/15082
 
-We saw a nightly layer check fail for meta-openembedded:
+Insu Park (1):
+  data: Add missing dependency handling of remove operator
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/121/builds/1798/ste=
-ps/21/logs/stdio
+ lib/bb/data.py             |  1 +
+ lib/bb/tests/codeparser.py | 26 ++++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
-INFO: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-INFO: ERROR: test_show_environment (common.CommonCheckLayer)
-INFO: ---------------------------------------------------------------------=
--
-INFO: Traceback (most recent call last):
-  File "/home/pokybuild/yocto-worker/check-layer-nightly/build/scripts/lib/=
-checklayer/cases/common.py", line 48, in test_show_environment
-    check_command('Layer %s failed to show environment.' % self.tc.layer['n=
-ame'],
-  File "/home/pokybuild/yocto-worker/check-layer-nightly/build/scripts/lib/=
-checklayer/__init__.py", line 287, in check_command
-    raise RuntimeError(msg)
-RuntimeError: Layer meta-gnome failed to show environment.
-Command: bitbake -e
-Output:
-libgcc_s.so.1 must be installed for pthread_cancel to work
-Aborted (core dumped)
-
-which unsurprisingly is on ubuntn 20.04. We've also seen issues like
-this on Debian 11.
-
-I noticed:
-
-https://stackoverflow.com/questions/64797838/libgcc-s-so-1-must-be-installe=
-d-for-pthread-cancel-to-work
-
-and:
-
-https://bugs.ams1.psf.io/issue42888
-
-which led me to try:
-ubuntu2004-ty-1:~$ wget https://bugs.ams1.psf.io/file50112/pthread_cancel_b=
-ug.py
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ echo $?
-0
-rpurdie@ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-libgcc_s.so.1 must be installed for pthread_cancel to work
-Aborted (core dumped)
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-libgcc_s.so.1 must be installed for pthread_cancel to work
-Aborted (core dumped)
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-libgcc_s.so.1 must be installed for pthread_cancel to work
-Aborted (core dumped)
-
-(1 in 4 success)
-
-Then adding to the script:
-import ctypes
-libgcc_s =3D ctypes.CDLL('libgcc_s.so.1')
-
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py=20
-ubuntu2004-ty-1:~$ python3 --version
-Python 3.8.10
-
-I also tried this on debian 11:
-
-debian11-ty-1:~$ python3 pthread_cancel_bug.py=20
-libgcc_s.so.1 must be installed for pthread_cancel to work
-Aborted
-
-debian11-ty-1:~$ python3 --version
-Python 3.9.2
-
-where the above workaround using ctypes also seems to work.
-
-I'm therefore tempted for python 3.8/3.9 to preload libgcc_s as a
-workaround for this...
-
-Cheers,
-
-Richard
-
+-- 
+2.25.1
 
 
