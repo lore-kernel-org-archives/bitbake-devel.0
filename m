@@ -1,189 +1,113 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <mark.asselstine@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AB5C3DA6E
-	for <webhook@archiver.kernel.org>; Thu, 28 Dec 2023 10:45:08 +0000 (UTC)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
- by mx.groups.io with SMTP id smtpd.web10.121043.1703760302863724840
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B422DC46CD3
+	for <webhook@archiver.kernel.org>; Thu, 28 Dec 2023 21:01:31 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.web11.131932.1703797282149803395
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 28 Dec 2023 02:45:03 -0800
+ Thu, 28 Dec 2023 13:01:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=U/BSrWQ5;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.208.181, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cca664b0dfso53373161fa.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 28 Dec 2023 02:45:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1703760301; x=1704365101; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5Z9Dc9Enp1M/nf03BB30Y2baXTZcjtTPxwskA8Sp9qo=;
-        b=U/BSrWQ5q2MA9r0MyXceb+4A0zOHCPy0lgLYyBdQVuZUs9hvAkWF6U46J2LFC5yPJ9
-         +FvnQ+sHJvv/x5dN0x9LjWTzBrcj6we9OG2HUijbJ6NMaNgTIOkpUi0H/opzJTom98WP
-         GWqn9Y4Fft6GEZEMqWJThuis0B5cjx7LHZJP4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703760301; x=1704365101;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5Z9Dc9Enp1M/nf03BB30Y2baXTZcjtTPxwskA8Sp9qo=;
-        b=VEl1s5Dwg9volj6aMb+tz5KRn2oCsA9d4XJgtDX3jYvxdQoUzMhcQHDyWvmpIUzGT2
-         qymISgCvgmfBCJ9VV3mRFOqm2DDn4c5n4b9LoAzZrj4mhqCxI8jFVeXbWW5JKHQqrnbA
-         CsVHXD9YCtJbNdbpXSF/4ZPX0lswqdpUFFYRZAqpZhWT3ngApKCb/gzwiIfjSixcgsoV
-         9u5Lt2pOhA3VLt7WeiZ/ZSCmlGaZEaBygjwackBVwUGI+35OXNAhhyj2HfA5vY8MsaR1
-         AN0s9QFTi0GmtLl/BwFOUlw5T03gvs6p5K1jTIyhYLoM+uUMKnVTFwosS49VVpRSEeNA
-         FAcA==
-X-Gm-Message-State: AOJu0Yy3D/lQ6vynG+VTYNSC4Alqas9GqOEiD5l2EM+BIjsOSd/qdxM8
-	pf41RzgoChjsp+Sv4NVo5Bof3voBdxEhqA==
-X-Google-Smtp-Source: AGHT+IEEROx1TcOn8UADDxm6waXMUmZta8NMsHGaElmcMAIu+umxpNrKRDnavFK3f6MxozPb7N7opg==
-X-Received: by 2002:ac2:55ae:0:b0:50e:7b6c:4a1e with SMTP id y14-20020ac255ae000000b0050e7b6c4a1emr1993476lfg.45.1703760300757;
-        Thu, 28 Dec 2023 02:45:00 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:7c86:799e:26ff:d556? ([2001:8b0:aba:5f3c:7c86:799e:26ff:d556])
-        by smtp.gmail.com with ESMTPSA id az11-20020a05600c600b00b0040d5c9ad678sm6465712wmb.26.2023.12.28.02.45.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Dec 2023 02:45:00 -0800 (PST)
-Message-ID: <8919f2990c1c8eace318a9075280a1b256c498c5.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v2 1/1] bitbake: event: Improve error
- message for eventhandler
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Thu, 28 Dec 2023 10:44:59 +0000
-In-Reply-To: <666b301d-e444-4a20-a5a9-602e56e773b5@windriver.com>
-References: <cover.1703602054.git.liezhi.yang@windriver.com>
-	 <fc7836bc2ab8d8eded60098081d74d427091ad74.1703602054.git.liezhi.yang@windriver.com>
-	 <eaf8b03af08d979f90db0eca8ac46281ae29436d.camel@linuxfoundation.org>
-	 <666b301d-e444-4a20-a5a9-602e56e773b5@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=X07mZxIH;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=1726e0f95c=mark.asselstine@windriver.com)
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BSL12pq014294;
+	Thu, 28 Dec 2023 21:01:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PPS06212021; bh=6euSS
+	4X+gsB0wbYjbYedHYEOTbDPSPsfYOy2/HgrYUE=; b=X07mZxIH3F30x0/ZJU8wx
+	u0VrdScjD0pysyvsl13ymn2wI/IzkhLz85i4/EHN1Ft+bznNJVC/B9bTkm/ySIKZ
+	ac80JogbQjrvCYLzO/F8HnZMOaAPEWf+wEGA8B5xMKz6tUJJdzI9bF5lLDS1p+L/
+	ZUox7jygQ6yDflNLxAG4FL6nLSp3zLRKcGOzrWBczWSudBI/Ms0d9XVlOMtD5T67
+	+gliFDtKXex0mVz+FFi+Gg6BWdNicbmDnuwb/O5QwIc14guUjyE9R5aPqSAQrYfN
+	qMAottJpkO7sj8b+pIhxD10jrvXkD+A3+1/VCAKb1nGQVTacRZHBg2dQdnI5+zYp
+	w==
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3v5mrxvpan-5
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 28 Dec 2023 21:01:20 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 28 Dec 2023 13:01:23 -0800
+Received: from YOW-MASSELST-L1.corp.ad.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 28 Dec 2023 13:01:23 -0800
+From: Mark Asselstine <mark.asselstine@windriver.com>
+To: <mark.asselstine@windriver.com>, <bitbake-devel@lists.openembedded.org>,
+        <richard.purdie@linuxfoundation.org>
+Subject: [PATCH 1/2] server/process: catch and expand multiprocessing connection exceptions
+Date: Thu, 28 Dec 2023 16:01:17 -0500
+Message-ID: <20231228210118.9273-1-mark.asselstine@windriver.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: _hKLaHdIImFUumLNakT98Y1q-ipKKzfd
+X-Proofpoint-GUID: _hKLaHdIImFUumLNakT98Y1q-ipKKzfd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-16_25,2023-11-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 clxscore=1011 lowpriorityscore=0
+ priorityscore=1501 impostorscore=0 suspectscore=0 mlxlogscore=915
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312280167
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 28 Dec 2023 10:45:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15712
+ <bitbake-devel@lists.openembedded.org>; Thu, 28 Dec 2023 21:01:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15713
 
-On Thu, 2023-12-28 at 15:15 +0800, Robert Yang wrote:
-> Hi RP,
->=20
-> On 12/28/23 07:42, Richard Purdie wrote:
-> > On Tue, 2023-12-26 at 07:11 -0800, Robert Yang via
-> > lists.openembedded.org wrote:
-> > > From: Robert Yang <liezhi.yang@windriver.com>
-> > >=20
-> > > * In python 3.10.9, the error message was:
-> > >    ERROR: Unable to register event handler 'defaultbase_eventhandler'=
-:
-> > >      File "/path/to/poky/meta/classes-global/base.bbclass", line 4
-> > >        # SPDX-License-Identifier: MIT
-> > >               ^^^^^
-> > >    SyntaxError: invalid syntax
-> > >=20
-> > >    This is hard to debug since the error line number 4 is incorrect, =
-but nothing
-> > >    is wrong with the code in line 4.
-> > >=20
-> > > * In python 3.8.10, the error message was:
-> > >    ERROR: Unable to register event handler 'defaultbase_eventhandler'=
-:
-> > >      File "/path/to/poky/meta/classes-global/base.bbclass", line 4
-> > >        an error line
-> > >           ^
-> > >    SyntaxError: invalid syntax
-> > >=20
-> > > * Now the error message and lineno is correct:
-> > >    ERROR: Unable to register event handler 'defaultbase_eventhandler'=
-:
-> > >    File "/path/to/poky/meta/classes-global/base.bbclass", line 256
-> > >        an error line
-> > >           ^^^^^
-> > >    SyntaxError: invalid syntax
-> > >=20
-> > > * Fixed it via:
-> > > - Don't pass filename to compile() to make it can report error code c=
-orrectly
-> > >    in both python 3.8.10 and 3.10.9.
-> > >=20
-> > > - Fix the lineno offset and filename in traceback message.
-> > >=20
-> > > Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> > > ---
-> > >   bitbake/lib/bb/event.py | 23 ++++++++++++++++++-----
-> > >   1 file changed, 18 insertions(+), 5 deletions(-)
-> > >=20
-> > > diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-> > > index f8acacd80d1..9eecb141379 100644
-> > > --- a/bitbake/lib/bb/event.py
-> > > +++ b/bitbake/lib/bb/event.py
-> > > @@ -260,16 +260,29 @@ def register(name, handler, mask=3DNone, filena=
-me=3DNone, lineno=3DNone, data=3DNone):
-> > >               try:
-> > >                   code =3D bb.methodpool.compile_cache(tmp)
-> > >                   if not code:
-> > > -                    if filename is None:
-> > > -                        filename =3D "%s(e, d)" % name
-> > > -                    code =3D compile(tmp, filename, "exec", ast.PyCF=
-_ONLY_AST)
-> > > +                    code =3D compile(tmp, name, "exec", ast.PyCF_ONL=
-Y_AST)
-> > >                       if lineno is not None:
-> > >                           ast.increment_lineno(code, lineno-1)
-> > > -                    code =3D compile(code, filename, "exec")
-> > > +                    code =3D compile(code, name, "exec")
-> > >                       bb.methodpool.compile_cache_add(tmp, code)
-> > >               except SyntaxError:
-> > > +                exc_lines =3D traceback.format_exc(limit=3D0).splitl=
-ines()
-> > > +                # Fix lineno offset manually since compile() cannot =
-handle it correctly
-> > > +                if filename and lineno:
-> > > +                    line_first =3D exc_lines[0]
-> > > +                    if 'File ' in line_first and ' line ' in line_fi=
-rst:
-> > > +                        lineno_new =3D line_first.split(' line ')[-1=
-]
-> > > +                        if lineno_new:
-> > > +                            lineno_new =3D int(lineno_new)
-> > > +                        lineno_new +=3D lineno - 1
-> > > +                        line_first =3D 'File "%s", line %d' % (filen=
-ame, lineno_new)
-> > > +                        # Fix filename
-> > > +                        exc_lines[0] =3D line_first.replace(name, fi=
-lename)
-> > > +                    else:
-> > > +                        logger.warning('Failed to fix lineno for %s:=
-%s' % (filename, name))
-> > > +
-> > >                   logger.error("Unable to register event handler '%s'=
-:\n%s", name,
-> > > -                             ''.join(traceback.format_exc(limit=3D0)=
-))
-> > > +                             '\n'.join(exc_lines))
-> > >                   _handlers[name] =3D noop
-> > >                   return
-> >=20
-> >=20
-> > This is better but I'm still wondering if we can improve. The other
-> > trick we could use is to inject "\n" characters into the start of the
-> > string you're compiling so the line numbers really match up. Would that
-> > work better?
->=20
-> If you meant the following line:
->=20
-> if 'File ' in line_first and ' line ' in line_first:
->=20
-> I can use re.match() to improve it and send a V3.
+Doing builds on systems with limited resources, or with high demand
+package builds such as chromium it isn't uncommon for the OOM Killer
+to be triggered and for bitbake-server to be selected as the process
+to be killed. When the bitbake-server does terminate unexpectedly due
+to the OOM Killer or otherwise, this currently results in a generic
+python traceback with little indication as to what has failed.
 
-I mean something like:
+Here we trap and raise the exceptions while extending the exception
+text in runCommand() to make it clear that this is most likely caused
+by the bitbake-server unexpectedly terminating.
 
-tmp =3D "\n" * (lineno-1) + tmp
+Callers of runCommand() should be updated to properly handle the
+BrokenPipeError and EOFError exceptions to avoid printing a python
+traceback, but even if they don't, the added text in the exceptions
+should provide some hints as to what might have caused the failure.
 
-which would increase the line numbers on the string to match the needed
-line numbers before we compile it.
+Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
+---
+ lib/bb/server/process.py | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Cheers,
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index d495ac62..6d77ce47 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -500,12 +500,18 @@ class ServerCommunicator():
+         self.recv = recv
+ 
+     def runCommand(self, command):
+-        self.connection.send(command)
++        try:
++            self.connection.send(command)
++        except BrokenPipeError as e:
++            raise BrokenPipeError("bitbake-server might have died or been forcibly stopped, ie. OOM killed") from e
+         if not self.recv.poll(30):
+             logger.info("No reply from server in 30s (for command %s at %s)" % (command[0], currenttime()))
+             if not self.recv.poll(30):
+                 raise ProcessTimeout("Timeout while waiting for a reply from the bitbake server (60s at %s)" % currenttime())
+-        ret, exc = self.recv.get()
++        try:
++            ret, exc = self.recv.get()
++        except EOFError as e:
++            raise EOFError("bitbake-server might have died or been forcibly stopped, ie. OOM killed") from e
+         # Should probably turn all exceptions in exc back into exceptions?
+         # For now, at least handle BBHandledException
+         if exc and ("BBHandledException" in exc or "SystemExit" in exc):
+-- 
+2.30.2
 
-Richard
 
