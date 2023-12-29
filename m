@@ -1,116 +1,126 @@
-Return-Path: <liezhi.yang@windriver.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F16EC47073
-	for <webhook@archiver.kernel.org>; Fri, 29 Dec 2023 06:06:54 +0000 (UTC)
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.web11.140294.1703830005054045812
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1C6C46CD3
+	for <webhook@archiver.kernel.org>; Fri, 29 Dec 2023 11:16:35 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web10.144616.1703848587142590302
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 28 Dec 2023 22:06:45 -0800
+ Fri, 29 Dec 2023 03:16:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=bLa+Fr52;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=17273a50bb=liezhi.yang@windriver.com)
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BT50A5i023573
-	for <bitbake-devel@lists.openembedded.org>; Fri, 29 Dec 2023 06:06:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=from:to:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PPS06212021; bh=rM5RLxfUIxpILMnW84znBQoeABSq3nMi66zYE5mT4cE=; b=
-	bLa+Fr52SzvvpvlfwAJp0K+g1pD3SwGOfRA/ROMoCjgkw9niVyVJzBtRBKWwzCT3
-	jjtiKFIRtAHEpFZrkSoAX5NyV9azzIy9qaqECq1wdy8HMdBTTyigS4fShun6o8BV
-	+aOcwltAd1o/JdPNqfGdGfJht+UGyhhPgAbD2q+o5IbLogeXRD6rAagQbH0afgsQ
-	+0D29oxgnnSWp0udvj5pRnOV1RB9JvFaXTpx7AP4xD63/JX/z5EwITXsez8odD7C
-	ZVy0eqEezlk7LMO/2imzN9z1xHZrTU6u279yt9IVTtJkKyDlw5uHjrfOfg2AgEFW
-	dK5Ffh9zw3GSyS3IXb9d6Q==
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3v5mrxw11d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Fri, 29 Dec 2023 06:06:44 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 28 Dec 2023 22:06:47 -0800
-Received: from ala-lpggp3.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 28 Dec 2023 22:06:47 -0800
-From: <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH v3 1/1] bitbake: event: Inject empty lines to make code match lineno in filename
-Date: Thu, 28 Dec 2023 22:06:42 -0800
-Message-ID: <b64c2496383eb263e6fd2d636ec7a2d88b424db6.1703829627.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <cover.1703829627.git.liezhi.yang@windriver.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KIEjtrmk;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40d5aa35b60so26736145e9.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 29 Dec 2023 03:16:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1703848585; x=1704453385; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n1tN4WQDobuti2bPQPs9zEHLngDN+3tFicAtoLS9gso=;
+        b=KIEjtrmkMsiUd9EyARZrzztIKB8G+bTRfz2Uc05/de5WTcA78Mt7XL1dvL/U2574rY
+         tYXHAxKr3j1xq7Y/zkNYZOz5pdG5lTCYR+ruNkexvi6X6V2Y0H8NyfmFWfQvZsQ+Cv/D
+         r2f0EhRo2rE3nCjh/u1s2ePjQq1KNyHcDJIfE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703848585; x=1704453385;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=n1tN4WQDobuti2bPQPs9zEHLngDN+3tFicAtoLS9gso=;
+        b=iB8ZBj9tfLbPmG+HgMSRnI9fyQhksfhf9HRFxLQntv9HjeRXiwyHVcOShADdfVlYTj
+         BEK93UnFxtoUY/Zno3c1JdC4oJXx8pPqxMENwxqGday4SQpR/oHKTGh4Tk6/18AQL9J+
+         XCDUAnmefaCcEXqJuqTLi5Zc1WN8xaCbIC5ksz7lzlgF8u/I49nuWwuaY3vLbKbcU0a0
+         yB7sajXMGPboxB+yzgC5ilssYdri1WNgz1s+5rQh1u5n8bjeiOn8pa1J4d2QmOjo3SMF
+         xm01Cw76JbMxkl1e05wNjLXsPtq0u6Bs1MY3PPeLm73xZtjaGo5jLdVJbWDWIr8Yswv7
+         6UFw==
+X-Gm-Message-State: AOJu0YxSlKX/WAH3MNfxJjjsRZ4Gqa60Qk5fUteDk79eGRkWTmXiCJTh
+	8oTkfeF5QnZohlZ4YfuExnnoFr5XBiV2rA==
+X-Google-Smtp-Source: AGHT+IELGxVgE5ZSdOEVkz+kgHiJ/CX66wQjo6JNLpeT3+3QJybPFPYcejm++NhYB2GwtBbZ7S2Jgw==
+X-Received: by 2002:a05:600c:22d2:b0:40d:6045:e847 with SMTP id 18-20020a05600c22d200b0040d6045e847mr954842wmg.88.1703848585240;
+        Fri, 29 Dec 2023 03:16:25 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:87c1:7de2:db24:7cc8? ([2001:8b0:aba:5f3c:87c1:7de2:db24:7cc8])
+        by smtp.gmail.com with ESMTPSA id fm9-20020a05600c0c0900b0040d570e8f50sm15585378wmb.12.2023.12.29.03.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Dec 2023 03:16:23 -0800 (PST)
+Message-ID: <35a13b43c34c7159be6ddc3e00266e01d7ba712a.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v3 1/1] bitbake: event: Inject empty
+ lines to make code match lineno in filename
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: liezhi.yang@windriver.com, bitbake-devel@lists.openembedded.org
+Date: Fri, 29 Dec 2023 11:16:22 +0000
+In-Reply-To: <b64c2496383eb263e6fd2d636ec7a2d88b424db6.1703829627.git.liezhi.yang@windriver.com>
 References: <cover.1703829627.git.liezhi.yang@windriver.com>
+	 <b64c2496383eb263e6fd2d636ec7a2d88b424db6.1703829627.git.liezhi.yang@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: yzM6PlKDg6h3bE9IzD4Qu7KD4Fn3QOJ8
-X-Proofpoint-GUID: yzM6PlKDg6h3bE9IzD4Qu7KD4Fn3QOJ8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-16_25,2023-11-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- bulkscore=0 adultscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2312290045
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 29 Dec 2023 06:06:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15717
+ <bitbake-devel@lists.openembedded.org>; Fri, 29 Dec 2023 11:16:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15719
 
-From: Robert Yang <liezhi.yang@windriver.com>
+On Thu, 2023-12-28 at 22:06 -0800, Robert Yang via
+lists.openembedded.org wrote:
+> From: Robert Yang <liezhi.yang@windriver.com>
+>=20
+> So that we can get the correct error messages.
+>=20
+> * In python 3.10.9, the error message was:
+>   ERROR: Unable to register event handler 'defaultbase_eventhandler':
+>     File "/path/to/poky/meta/classes-global/base.bbclass", line 4
+>       # SPDX-License-Identifier: MIT
+>              ^^^^^
+>   SyntaxError: invalid syntax
+>=20
+>   This is hard to debug since the error line number 4 is incorrect, but n=
+othing
+>   is wrong with the code in line 4.
+>=20
+> * Now the error message and lineno is correct:
+>   ERROR: Unable to register event handler 'defaultbase_eventhandler':
+>     File "/path/to/poky/meta/classes-global/base.bbclass", line 256
+>       an error line
+>          ^^^^^
+>   SyntaxError: invalid syntax
+>=20
+> And no impact on parsing time:
+> * Before:
+> $ rm -fr cache tmp; time bitbake -p
+> real    0m27.254s
+>=20
+> * Now:
+> $ rm -fr cache tmp; time bitbake -p
+> real    0m27.200s
+>=20
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>  bitbake/lib/bb/event.py | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+> index f8acacd80d1..7722258b7e8 100644
+> --- a/bitbake/lib/bb/event.py
+> +++ b/bitbake/lib/bb/event.py
+> @@ -257,6 +257,8 @@ def register(name, handler, mask=3DNone, filename=3DN=
+one, lineno=3DNone, data=3DNone):
+>          # handle string containing python code
+>          if isinstance(handler, str):
+>              tmp =3D "def %s(e, d):\n%s" % (name, handler)
+> +            # Inject empty lines to make code match lineno in filename
+> +            tmp =3D "\n" * (lineno-1) + tmp
+>              try:
+>                  code =3D bb.methodpool.compile_cache(tmp)
+>                  if not code:
 
-So that we can get the correct error messages.
+Looks good but don't you need remove the ast line number adjustment a
+few lines later as well?
 
-* In python 3.10.9, the error message was:
-  ERROR: Unable to register event handler 'defaultbase_eventhandler':
-    File "/path/to/poky/meta/classes-global/base.bbclass", line 4
-      # SPDX-License-Identifier: MIT
-             ^^^^^
-  SyntaxError: invalid syntax
+Should we put some tests into bitbake-selftest for this?
 
-  This is hard to debug since the error line number 4 is incorrect, but nothing
-  is wrong with the code in line 4.
+Cheers,
 
-* Now the error message and lineno is correct:
-  ERROR: Unable to register event handler 'defaultbase_eventhandler':
-    File "/path/to/poky/meta/classes-global/base.bbclass", line 256
-      an error line
-         ^^^^^
-  SyntaxError: invalid syntax
-
-And no impact on parsing time:
-* Before:
-$ rm -fr cache tmp; time bitbake -p
-real    0m27.254s
-
-* Now:
-$ rm -fr cache tmp; time bitbake -p
-real    0m27.200s
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/event.py | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-index f8acacd80d1..7722258b7e8 100644
---- a/bitbake/lib/bb/event.py
-+++ b/bitbake/lib/bb/event.py
-@@ -257,6 +257,8 @@ def register(name, handler, mask=None, filename=None, lineno=None, data=None):
-         # handle string containing python code
-         if isinstance(handler, str):
-             tmp = "def %s(e, d):\n%s" % (name, handler)
-+            # Inject empty lines to make code match lineno in filename
-+            tmp = "\n" * (lineno-1) + tmp
-             try:
-                 code = bb.methodpool.compile_cache(tmp)
-                 if not code:
--- 
-2.42.0
-
+Richard
 
