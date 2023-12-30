@@ -1,177 +1,83 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1F6C47073
-	for <webhook@archiver.kernel.org>; Sat, 30 Dec 2023 19:58:57 +0000 (UTC)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
- by mx.groups.io with SMTP id smtpd.web10.191444.1703966329428668422
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B700FC46CD2
+	for <webhook@archiver.kernel.org>; Sat, 30 Dec 2023 23:50:18 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web10.195785.1703980212099342825
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 30 Dec 2023 11:58:49 -0800
+ Sat, 30 Dec 2023 15:50:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=xDKl6w1O;
- spf=softfail (domain: sakoman.com, ip: 209.85.218.46, mailfrom: steve@sakoman.com)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a27bdd05fd5so42123266b.0
-        for <bitbake-devel@lists.openembedded.org>; Sat, 30 Dec 2023 11:58:49 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gX8udgUY;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40d5aef534eso38658035e9.0
+        for <bitbake-devel@lists.openembedded.org>; Sat, 30 Dec 2023 15:50:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1703966327; x=1704571127; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linuxfoundation.org; s=google; t=1703980210; x=1704585010; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2XKdYL/msvxZJWT0XzAZJLyt+7qBeqiJScr5pf5IV6E=;
-        b=xDKl6w1OZ8a8aNh22YM1nx5PAVE5W3o+ypH1BDnOv9xkI+frxAd/ju86UOWJ3OTawC
-         tBGUM6rFdOJmAeswB5Yf6SyuIzz5T2RxdpgOcvMkp75SlSSQdmw3IAcJnkpx9X5/tbyO
-         u5HPzEsFA8yrmB0f5Fm+DIxZ1pgWbmC9PZkwUVfKU8pJT17Hs+hxLIMilJZfLEoElaB2
-         eAme2DsqAV4kBHThza6Dd6DuPr5L8W5v7EqG6vASsxXMzTLCiJSlZsPWq/GllYRaFadj
-         q9PAM/TSVn4bejMRhWyMiXkl2PGXk3EeI/anRHnqxLeHuMGe4dBJayBejyIHsWAV0KBh
-         xhmg==
+        bh=5mV5kt/K36oyWxU7d64msVpEo86TSN6Co+UYVUwOE+c=;
+        b=gX8udgUYnfj6WSXOkic+SREEv4XKC3sdMmoPyqFeYy5v+JrwDbap3VV2KyWuRkBar3
+         RUfB+zr3TegCniNgOruUTWXaG8FTCRb/sqN4p2ap16k0kFB1Y3MjwW6eyxXy2dtdj9Zu
+         jXMOYpbLfX5j0BiYRpWhF9g7yQ2TkM5x7GHrM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703966327; x=1704571127;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2XKdYL/msvxZJWT0XzAZJLyt+7qBeqiJScr5pf5IV6E=;
-        b=YHVQvO3E66AEf8d82OvweSv+o3Q1juDdb48354NDsXWx3j8ngFEgNKkvMyDa2uP5SL
-         5kziZ/zPSEff4tPb5LF0oxJGZ6rwyG0RIlqS+g5rjhWMxcKVEGef/WUF+OWs9XnN9jHa
-         hD53xfhmqQVR/iEbzNOUTVZ3jzdiCaVhN2o6GrrNYPiuNNTcIpQUtOTm+d8But5TOKua
-         Sp5Jb669kWWbGwkGTvSyrtrkfiwFAAu3vT6t8LJcZnPae2fx6QaP5wFivRGRKSEo39E2
-         QwHt84f0+6ADSSIZf7bt8Wzaevne9LroCnsmYtKJS3jPMBZYhA67dgf04EGS18UL+wPt
-         cSkg==
-X-Gm-Message-State: AOJu0YzHLtn/rx8i/CcTvT0GVIvGDhD4vIrbpVWWGW4LNEyDp81ioO+U
-	ILGTEx1k9Aab3tLIV6oPvpDLkbuzhM5rHuNcaICERvtU+t+FMw==
-X-Google-Smtp-Source: AGHT+IEaC2GeVTNZILJhmieesEwcfjhtapV6xXX+MdTGQr/hvju8ruktJvnwCuOUMPvC8QKQYxIQwihSeb6ZM8xV4fA=
-X-Received: by 2002:a17:906:73c7:b0:a27:9a96:83c6 with SMTP id
- n7-20020a17090673c700b00a279a9683c6mr1226815ejl.44.1703966327441; Sat, 30 Dec
- 2023 11:58:47 -0800 (PST)
-MIME-Version: 1.0
-References: <5325820d4f9ca342498422d2427207e7d31270e0.camel@linuxfoundation.org>
- <CAJdd5GaP-v8rVuWNakWpkuGNgoaUA+N1tW2BESOmA96fAxabeA@mail.gmail.com> <388ea27fd963ab72dd3506204848979ee0f80904.camel@linuxfoundation.org>
-In-Reply-To: <388ea27fd963ab72dd3506204848979ee0f80904.camel@linuxfoundation.org>
-From: Steve Sakoman <steve@sakoman.com>
-Date: Sat, 30 Dec 2023 09:58:36 -1000
-Message-ID: <CAOSpxdYdBh_jGfbwDYQmKF0P1dGV6G0Tt5ru6g717JS3GpZT3A@mail.gmail.com>
-Subject: Re: [bitbake-devel] pthread_cancel bug on ubuntu2004/debian11
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: Joshua Watt <jpewhacker@gmail.com>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>, 
-	openembedded-core <openembedded-core@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1703980210; x=1704585010;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5mV5kt/K36oyWxU7d64msVpEo86TSN6Co+UYVUwOE+c=;
+        b=mw9gVy0JVnbJlRmZezFJwfhgV2MPxBtB+blXsevuoutHNjMNVeA/kQ58Zsrztp4Pek
+         RxoIjuzQpmJ2WzeZwR2l7NBksljpNETWqwIJXTE+92hVFL+71n7C+7TzFZ/C1w/QPPTh
+         8SOpCwXBIE5GPZBC7ICB0umwwTKUSK7CiZcKJXknHLrswEStr3mk0qU+vfntRMxJVOD3
+         zMJwkQZ4nvO04nNZNt+KDd6ruy8HKkjd1kErb1CsXBy+7Ky/R4XKLaxOvYhqYk2JdhGt
+         pUmgKhgGywA1ewooyHZoqn7AEiLs9EgY++eFDWdEivXdSIOqypZDDJcglcy1SHta9Dcs
+         55vw==
+X-Gm-Message-State: AOJu0Yw5lWR64UiFAHLDb/RgwOgNt9Msvg0B4sx7r1N75Tszo6LRWkAf
+	hlpq8390kKcPnmvkJPhHpLJLEDfx1j/nOagjPpzeKXR2YHQ=
+X-Google-Smtp-Source: AGHT+IGptx10jwgToKnl4r2rrJ/bRBQ0H+cBzZMy4CoeFpMYzuLZ0enHQGpObum877YWBEwDkS6i4Q==
+X-Received: by 2002:a7b:ca56:0:b0:40d:5c8e:345a with SMTP id m22-20020a7bca56000000b0040d5c8e345amr3545804wml.108.1703980210630;
+        Sat, 30 Dec 2023 15:50:10 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:cec3:25e9:1e4c:7e1c? ([2001:8b0:aba:5f3c:cec3:25e9:1e4c:7e1c])
+        by smtp.gmail.com with ESMTPSA id n33-20020a05600c502100b004030e8ff964sm43851460wmr.34.2023.12.30.15.50.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Dec 2023 15:50:10 -0800 (PST)
+Message-ID: <74ea71abd4a3fa563dad559af79bccb360706d96.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel][PATCH] fetch2/crate: Unpack into
+ CARGO_VENDORING_DIRECTORY
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alex Kiernan <alex.kiernan@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Sat, 30 Dec 2023 23:50:09 +0000
+In-Reply-To: <20231230154843.8086-1-alex.kiernan@gmail.com>
+References: <20231230154843.8086-1-alex.kiernan@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1-0ubuntu1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 30 Dec 2023 19:58:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15729
+ <bitbake-devel@lists.openembedded.org>; Sat, 30 Dec 2023 23:50:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15730
 
-On Sat, Dec 30, 2023 at 1:31=E2=80=AFAM Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> On Wed, 2023-12-27 at 11:30 -0700, Joshua Watt wrote:
-> > On Wed, Dec 27, 2023 at 4:28=E2=80=AFAM Richard Purdie
-> > <richard.purdie@linuxfoundation.org> wrote:
-> > >
-> > > I wanted to write down some thoughts on this which I have all the
-> > > pieces handy.
-> > >
-> > > We saw a nightly layer check fail for meta-openembedded:
-> > >
-> > > https://autobuilder.yoctoproject.org/typhoon/#/builders/121/builds/17=
-98/steps/21/logs/stdio
-> > >
-> > > INFO: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > INFO: ERROR: test_show_environment (common.CommonCheckLayer)
-> > > INFO: ---------------------------------------------------------------=
--------
-> > > INFO: Traceback (most recent call last):
-> > >   File "/home/pokybuild/yocto-worker/check-layer-nightly/build/script=
-s/lib/checklayer/cases/common.py", line 48, in test_show_environment
-> > >     check_command('Layer %s failed to show environment.' % self.tc.la=
-yer['name'],
-> > >   File "/home/pokybuild/yocto-worker/check-layer-nightly/build/script=
-s/lib/checklayer/__init__.py", line 287, in check_command
-> > >     raise RuntimeError(msg)
-> > > RuntimeError: Layer meta-gnome failed to show environment.
-> > > Command: bitbake -e
-> > > Output:
-> > > libgcc_s.so.1 must be installed for pthread_cancel to work
-> > > Aborted (core dumped)
-> > >
-> > > which unsurprisingly is on ubuntn 20.04. We've also seen issues like
-> > > this on Debian 11.
-> > >
-> > > I noticed:
-> > >
-> > > https://stackoverflow.com/questions/64797838/libgcc-s-so-1-must-be-in=
-stalled-for-pthread-cancel-to-work
-> > >
-> > > and:
-> > >
-> > > https://bugs.ams1.psf.io/issue42888
-> > >
-> > > which led me to try:
-> > > ubuntu2004-ty-1:~$ wget https://bugs.ams1.psf.io/file50112/pthread_ca=
-ncel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ echo $?
-> > > 0
-> > > rpurdie@ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > libgcc_s.so.1 must be installed for pthread_cancel to work
-> > > Aborted (core dumped)
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > libgcc_s.so.1 must be installed for pthread_cancel to work
-> > > Aborted (core dumped)
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > libgcc_s.so.1 must be installed for pthread_cancel to work
-> > > Aborted (core dumped)
-> > >
-> > > (1 in 4 success)
-> > >
-> > > Then adding to the script:
-> > > import ctypes
-> > > libgcc_s =3D ctypes.CDLL('libgcc_s.so.1')
-> > >
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 pthread_cancel_bug.py
-> > > ubuntu2004-ty-1:~$ python3 --version
-> > > Python 3.8.10
-> > >
-> > > I also tried this on debian 11:
-> > >
-> > > debian11-ty-1:~$ python3 pthread_cancel_bug.py
-> > > libgcc_s.so.1 must be installed for pthread_cancel to work
-> > > Aborted
-> > >
-> > > debian11-ty-1:~$ python3 --version
-> > > Python 3.9.2
-> > >
-> > > where the above workaround using ctypes also seems to work.
-> > >
-> > > I'm therefore tempted for python 3.8/3.9 to preload libgcc_s as a
-> > > workaround for this...
-> >
-> > Seems reasonable to me, as long as we can restrict it to a specific
-> > version range of python and have a nice comment explaining why
->
-> Patch tested, sent and I've applied it to older bitbake branches too in
-> the hope that it helps some of Steve's autobuilder failures too.
+On Sat, 2023-12-30 at 15:48 +0000, Alex Kiernan wrote:
+> The vendor directory is set in cargo_common, to work with rust 1.75.0 we
+> need to change the location, so use CARGO_VENDORING_DIRECTORY here.
+> Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
+> ---
+> Is this change allowed, or am I coupling repos in a bad way and should
+> hardcode `registry/src` (which is what I need it to be) here instead?
 
-I pulled the patch into my -nut branches when you posted it and have
-been testing too -- all looks fine from my perspective.
+We really need to find a better way. Bitbake isn't supposed to have
+"knowledge" of OE-Core outside the key variables it expects from
+bitbake.conf. CARGO* from class files aren't included in that.
 
-Thanks for merging!
+What we probably should do is set this in bitbake in the fetcher and
+then read the value in OE-Core.
 
-Steve
+Cheers,
+
+Richard
 
