@@ -1,120 +1,134 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7A3C3DA6E
-	for <webhook@archiver.kernel.org>; Sun, 31 Dec 2023 10:55:43 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web11.217898.1704020140989324376
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BC2C3DA6E
+	for <webhook@archiver.kernel.org>; Sun, 31 Dec 2023 16:13:35 +0000 (UTC)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+ by mx.groups.io with SMTP id smtpd.web11.222766.1704039208368948100
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 31 Dec 2023 02:55:41 -0800
+ Sun, 31 Dec 2023 08:13:28 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=iTTThOlA;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40d87ecf579so1605435e9.3
-        for <bitbake-devel@lists.openembedded.org>; Sun, 31 Dec 2023 02:55:40 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Fzc9+OuH;
+ spf=pass (domain: gmail.com, ip: 209.85.208.178, mailfrom: jpewhacker@gmail.com)
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ccba761783so62078241fa.1
+        for <bitbake-devel@lists.openembedded.org>; Sun, 31 Dec 2023 08:13:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1704020139; x=1704624939; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TImjjmi387IDH9/R9zyinJ2ysNkNsetF/wZTL8+7fvI=;
-        b=iTTThOlAgRhPlJhTFSkTpzfppuLrMvWU3okQTcJmEwCqX0ifY9TAmQOtwu9tFLc4a8
-         m3R2B6NgsNmwkOo5QcaxkS8fo5V7N/+xu9taddvW7JuLu+e83Nnipu9snAYCB0DXz5na
-         Kwg+qh/ZvBn8kn6zWprUjl8GlOV1ZsK13Q/Sc=
+        d=gmail.com; s=20230601; t=1704039206; x=1704644006; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZffSivKSxigZsE5GbJ/B0maCdtp4G7QTRMHfG+Q2XIc=;
+        b=Fzc9+OuHGLou86novLOK0Ia7zDNy/AvOCwZwxQq/iTg8mqKd+SUJkGgkx/hbTdcaiJ
+         l430ZozpO+RY9okLqcQ26MQ/f6a3SKsgL5dAiGBFZgTw7RC1BFoDCWmdkLpcJDLxt9SA
+         otls9CjFPg3Xb3BbB0NqNyG/T9sewCPXBMURomygzlGMsH8Dbndow/9CVzM3xU4oW7Ir
+         OKZzeA3qeRw/1mAvn44kkHoi/PtB2f0HLL6tBQVkeHUJoIWN3nYp4AxbM3LsOj22dR7N
+         vOkJkRlmo4DShvtC069s/VUNT+jnTDc4YfqB6/J09RtHgjzl2ZCalHkHVgth2BExkv++
+         EzNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704020139; x=1704624939;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=TImjjmi387IDH9/R9zyinJ2ysNkNsetF/wZTL8+7fvI=;
-        b=hHM2GEcoKEemAh+tnFTmJVbVvpYzNaqXHJhUgWT749HJ0gCY3ur5U5hMBXWmRsyxog
-         imEVmd3/iFdCQFLgLSfIn+Apd2Vd6aBPZTAhcOV5+Zk+tuc0YYL7HKsLUEvHUbJ2J/DG
-         bALquc6OCV0vhz4cC2SA3+ye+UMFH4f4ZX1WFnLc/i/JVf4VKQp+lc+dQB497E9zb68W
-         qrNRKgarHAegEq2V+MqAWsF5FN6crQ3+4VrBQyOCt6nMHCT7/k/GVLCWjI4eJEXRzziS
-         tN2oApx0MIn4nn5oAQvORCslweN078dv7PCQbpskS2KcMngE2LNotcZTlXx6XUNfERFT
-         ggxw==
-X-Gm-Message-State: AOJu0Yy1TQQKjYt4ZOD/DOL7cMd5ChcW13TaL3rnWjogqlFjz4pjr953
-	AbBNGEojYGmVIgeZD419TLXVleWeoszFQw==
-X-Google-Smtp-Source: AGHT+IE5HOjsf/i0kz4ND3wbLFyL056J/mrB/1s9Rpkh5L3u9l7LEXdjT7pXYLsej8gxHXbnRhfv5g==
-X-Received: by 2002:a05:600c:1f17:b0:40d:87d0:a309 with SMTP id bd23-20020a05600c1f1700b0040d87d0a309mr161968wmb.154.1704020138977;
-        Sun, 31 Dec 2023 02:55:38 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:c5f8:2676:155:a895? ([2001:8b0:aba:5f3c:c5f8:2676:155:a895])
-        by smtp.gmail.com with ESMTPSA id r14-20020a05600c458e00b0040d724896cbsm9319732wmo.18.2023.12.31.02.55.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Dec 2023 02:55:38 -0800 (PST)
-Message-ID: <367694c117d8ee8e0f253d592bd36122e0b4e47d.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel][PATCH] fetch2/crate: Unpack into
- CARGO_VENDORING_DIRECTORY
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alex Kiernan <alex.kiernan@gmail.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Sun, 31 Dec 2023 10:55:37 +0000
-In-Reply-To: <20231230154843.8086-1-alex.kiernan@gmail.com>
-References: <20231230154843.8086-1-alex.kiernan@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+        d=1e100.net; s=20230601; t=1704039206; x=1704644006;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZffSivKSxigZsE5GbJ/B0maCdtp4G7QTRMHfG+Q2XIc=;
+        b=oKIDxdagHMQF2ncnZ0ZXwWtWFjIhVmybwgwXkSCWlIDOtQEkLsgEcB8YtLdD4cPHtS
+         Mrfp9NH3BE+/o1juDI1HIancAQz1RQoDk0NmZ45vcTwmv6ti67vOewu3aX9MANrhbBl1
+         E6x6BMlqs22U+y8nE479btqAPfD5NRePJ4qZanAiDBgImdPmfSTPmvXw5YSMLEmDVRjE
+         2nBVgFS8JYLxON+FhAQtrIoRVtRbWWTvRgu3cTlQQmVRYGgbyH1LKPYWTdq0HSCWRHeP
+         S5o2EwWy1vPBY/QkxWh1SW5Do7rR3WYhDa9YTGpTFpXwt11RfP8GFMLgmLoJBtFnIqPN
+         iIhw==
+X-Gm-Message-State: AOJu0YwEdioZZwgg3AdIdsoRpQUmHhgYqcvHaYvmZe4XT6dQXLY3mMEM
+	VwBgkIQehtN7/Ytq1KVvRKjlgZDoH5gLtSx79zc=
+X-Google-Smtp-Source: AGHT+IEAHUDDEhDI39P25UByXPugvQaMZFEY7VfgMGLceMgD29h4bo0L8uK4XsHl6GgnSJV3g4cWfrHsAI93NBQJ6UM=
+X-Received: by 2002:a2e:8713:0:b0:2cc:fd69:8073 with SMTP id
+ m19-20020a2e8713000000b002ccfd698073mr626190lji.13.1704039206223; Sun, 31 Dec
+ 2023 08:13:26 -0800 (PST)
 MIME-Version: 1.0
+References: <CANNYZj-eNGeQhM6cVhPHF1WgG3d2_nu1bsobWXfW_3HmAWUVBg@mail.gmail.com>
+In-Reply-To: <CANNYZj-eNGeQhM6cVhPHF1WgG3d2_nu1bsobWXfW_3HmAWUVBg@mail.gmail.com>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Sun, 31 Dec 2023 09:13:16 -0700
+Message-ID: <CAJdd5GbWTeo9FSd_uE2Z0oaXv9M38e94EOq8jFJJu+7JOG6yRQ@mail.gmail.com>
+Subject: Re: bitbake/lib/hashserv/sqlite.py:294: DeprecationWarning: The
+ default datetime adapter is deprecated as of Python 3.12
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Content-Type: multipart/alternative; boundary="00000000000092034d060dd08b0d"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 31 Dec 2023 10:55:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15734
+ <bitbake-devel@lists.openembedded.org>; Sun, 31 Dec 2023 16:13:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15735
 
-On Sat, 2023-12-30 at 15:48 +0000, Alex Kiernan wrote:
-> The vendor directory is set in cargo_common, to work with rust 1.75.0 we
-> need to change the location, so use CARGO_VENDORING_DIRECTORY here.
-> Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
-> ---
-> Is this change allowed, or am I coupling repos in a bad way and should
-> hardcode `registry/src` (which is what I need it to be) here instead?
->=20
->  bitbake/lib/bb/fetch2/crate.py | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/bitbake/lib/bb/fetch2/crate.py b/bitbake/lib/bb/fetch2/crate=
-.py
-> index 01d49435c3e8..06963294ef35 100644
-> --- a/bitbake/lib/bb/fetch2/crate.py
-> +++ b/bitbake/lib/bb/fetch2/crate.py
-> @@ -23,8 +23,8 @@ class Crate(Wget):
-> =20
->      """Class to fetch crates via wget"""
-> =20
-> -    def _cargo_bitbake_path(self, rootdir):
-> -        return os.path.join(rootdir, "cargo_home", "bitbake")
-> +    def _cargo_bitbake_path(self, d):
-> +        return d.getVar('CARGO_VENDORING_DIRECTORY')
-> =20
->      def supports(self, ud, d):
->          """
-> @@ -103,7 +103,7 @@ class Crate(Wget):
->              cmd =3D "tar -xz --no-same-owner -f %s" % thefile
->              ud.unpack_tracer.unpack("crate-extract", rootdir)
->          else:
-> -            cargo_bitbake =3D self._cargo_bitbake_path(rootdir)
-> +            cargo_bitbake =3D self._cargo_bitbake_path(d)
->              ud.unpack_tracer.unpack("cargo-extract", cargo_bitbake)
-> =20
->              cmd =3D "tar -xz --no-same-owner -f %s -C %s" % (thefile, ca=
-rgo_bitbake)
-> @@ -134,7 +134,7 @@ class Crate(Wget):
->          # if we have metadata to write out..
->          if len(metadata) > 0:
->              cratepath =3D os.path.splitext(os.path.basename(thefile))[0]
-> -            bbpath =3D self._cargo_bitbake_path(rootdir)
-> +            bbpath =3D self._cargo_bitbake_path(d)
->              mdfile =3D '.cargo-checksum.json'
->              mdpath =3D os.path.join(bbpath, cratepath, mdfile)
->              with open(mdpath, "w") as f:
+--00000000000092034d060dd08b0d
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-FWIW this also breaks bitbake-selftest:
+Ah, I suspect they want you to register an explicit converter instead of
+relying on the default. I don't think that should be too hard to do. Would
+you be able to open a bug and assign it to me? I won't have computer access
+for a few days
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/87/builds/6261/step=
-s/11/logs/stdio
+On Sun, Dec 31, 2023, 2:39=E2=80=AFAM Alexander Kanavin <alex.kanavin@gmail=
+.com>
+wrote:
 
-Cheers,
+> Hello Joshua,
+>
+> I'm seeing this with python 3.12:
+>
+> /srv/work/alex/poky/bitbake/lib/hashserv/sqlite.py:294:
+> DeprecationWarning: The default datetime adapter is deprecated as of
+> Python 3.12; see the sqlite3 documentation for suggested replacement
+> recipes
+>   cursor.execute(query, data)
+>
+> The documentation that is supposed to help (but doesn't, not for me :) is=
+:
+>
+> https://docs.python.org/3/library/sqlite3.html#default-adapters-and-conve=
+rters-deprecated
+>
+> Just thought it would be good to address this warning well in advance
+> of it becoming a hard error.
+>
+> Alex
+>
 
-Richard
+--00000000000092034d060dd08b0d
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto">Ah, I suspect they want you to register an explicit conve=
+rter instead of relying on the default. I don&#39;t think that should be to=
+o hard to do. Would you be able to open a bug and assign it to me? I won&#3=
+9;t have computer access for a few days</div><br><div class=3D"gmail_quote"=
+><div dir=3D"ltr" class=3D"gmail_attr">On Sun, Dec 31, 2023, 2:39=E2=80=AFA=
+M Alexander Kanavin &lt;<a href=3D"mailto:alex.kanavin@gmail.com">alex.kana=
+vin@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" sty=
+le=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Hello =
+Joshua,<br>
+<br>
+I&#39;m seeing this with python 3.12:<br>
+<br>
+/srv/work/alex/poky/bitbake/lib/hashserv/sqlite.py:294:<br>
+DeprecationWarning: The default datetime adapter is deprecated as of<br>
+Python 3.12; see the sqlite3 documentation for suggested replacement<br>
+recipes<br>
+=C2=A0 cursor.execute(query, data)<br>
+<br>
+The documentation that is supposed to help (but doesn&#39;t, not for me :) =
+is:<br>
+<a href=3D"https://docs.python.org/3/library/sqlite3.html#default-adapters-=
+and-converters-deprecated" rel=3D"noreferrer noreferrer" target=3D"_blank">=
+https://docs.python.org/3/library/sqlite3.html#default-adapters-and-convert=
+ers-deprecated</a><br>
+<br>
+Just thought it would be good to address this warning well in advance<br>
+of it becoming a hard error.<br>
+<br>
+Alex<br>
+</blockquote></div>
+
+--00000000000092034d060dd08b0d--
 
