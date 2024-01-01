@@ -1,130 +1,100 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EC0C4706F
-	for <webhook@archiver.kernel.org>; Sun, 31 Dec 2023 20:28:16 +0000 (UTC)
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
- by mx.groups.io with SMTP id smtpd.web11.228198.1704054490095193236
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86517C47073
+	for <webhook@archiver.kernel.org>; Mon,  1 Jan 2024 18:31:01 +0000 (UTC)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+ by mx.groups.io with SMTP id smtpd.web11.11648.1704133856822755670
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 31 Dec 2023 12:28:10 -0800
+ Mon, 01 Jan 2024 10:30:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=XolqAUlL;
- spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: alexandre.belloni@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B7E7DC0002;
-	Sun, 31 Dec 2023 20:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1704054488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CputC1UvIOD4nLPTOkdul02zL6zrFpX5z6lCoPsZEKQ=;
-	b=XolqAUlLpXef/7nUENAsvffVcNKpteIUT/wQ+cl5clNK7Tc9MOfj5RzoagCZdFKN5rSOdM
-	gYgWQrsA/Twrlu0xdfpx+zcos/teYcdxNTYTUUjmDZImHbyb4jjCTRC8rR4CBdgEzXqsI8
-	dp9CnaU3AwqwJK72qvxCDlUBVbE3KbvJcDSy6UiFp2OdTebDwLntx1ZVmnqRbcrlAYxAJ5
-	HDLR2STbGZeWD9+cIQ1VN/xi1se9ypdX0SEIhwsDd+hLnvup4NzJYv4KCeJFDAB/2WsNEm
-	P7ZQ1VLMrnOtYuHOo92vwOFehRAh5HDIgkH8cN6VyTp55TAltS2ow+gomL6kqw==
-Date: Sun, 31 Dec 2023 21:28:07 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: liezhi.yang@windriver.com
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH v3 1/1] bitbake: event: Inject empty
- lines to make code match lineno in filename
-Message-ID: <202312312028077ba80d35@mail.local>
-References: <cover.1703829627.git.liezhi.yang@windriver.com>
- <b64c2496383eb263e6fd2d636ec7a2d88b424db6.1703829627.git.liezhi.yang@windriver.com>
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=kTkjg8Ql;
+ spf=pass (domain: gmail.com, ip: 209.85.208.180, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ccbded5aa4so63015341fa.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jan 2024 10:30:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704133855; x=1704738655; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y8aHedIGW+rxmokrNXUy9qovL9JdPIjUMxOFEjyVB9U=;
+        b=kTkjg8QlhaYElFO8LZspLjQgls07e0EGHNIR40hH9rzhD/v9cg4Vxs4bV1XbpKRiH9
+         ittJ8fSMNa5uYa+6IoFDpDzxvjjvt91New7CBdmpKrQCQ+n1GkjZIqbcAOgdi2is4clb
+         deOqdxx0qLUeYubkt6tdYsOg3Qv2hohEeHKhvLhiZez6HunPJFPeMbRCfeJs51XvB7YT
+         sa+3iKcqKO7GG/DIxky59fPMmq77zc0FOuoSa/PhP1S6YvYBC7/mzeeVdX7xDr998l+9
+         OwFfQe6jDTKZIJj9jwo+AgkRLGf5IpibKlhH1g5Ym7uPEt/e3z/n5jheNPbcFpllWOW3
+         8ijQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704133855; x=1704738655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y8aHedIGW+rxmokrNXUy9qovL9JdPIjUMxOFEjyVB9U=;
+        b=iAKv1Wfn63fD3EGHwg+csO5sCf0eiWNXbU5lf+6l+zaLDo6ITXoCseWX3RhC1SRueS
+         qJShHils2xUBtvwIhzSTzslS44JJP1DUIdAkCravCfXxvJYUPLJiE9Lmu0pKejdz5ffX
+         jgBQx3IZFUzloaUP+DQNuqFAKitmNLV4YwxZIO2xYjs78t8Ws4DxOLC9WMcGR+xsuvZL
+         TuCRAPSgmwTsQO4cIs8Pwj/rdGvO70uRsI45zX0T/rjkIWJVanmjMrGJMml29e+7sVqZ
+         B4/4egqF8vmsi8kmlca9qC04bACGmLBkWwpopKV97gjFq0K3SPwTbTOqLNAPlfPuMRhp
+         6yBg==
+X-Gm-Message-State: AOJu0Yzum+WnUiKEfVYZE84UECGs0kuqx98q3i938xkQeBGpGYSqJFK2
+	hhX3nREtGx74QpZRkIzyt9ON1rD0V/G0T90AD0g=
+X-Google-Smtp-Source: AGHT+IG6z2RPoFDaNnsmZwkChZCZaI2lDfJlyg+k99kFPJclUzGNmAjdxx3EOrc1MgQx070QHKcho2ue9Gzkrrd1VcU=
+X-Received: by 2002:a2e:b0ed:0:b0:2cc:b617:d2c0 with SMTP id
+ h13-20020a2eb0ed000000b002ccb617d2c0mr6306040ljl.90.1704133854728; Mon, 01
+ Jan 2024 10:30:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b64c2496383eb263e6fd2d636ec7a2d88b424db6.1703829627.git.liezhi.yang@windriver.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
+References: <CANNYZj-eNGeQhM6cVhPHF1WgG3d2_nu1bsobWXfW_3HmAWUVBg@mail.gmail.com>
+ <CAJdd5GbWTeo9FSd_uE2Z0oaXv9M38e94EOq8jFJJu+7JOG6yRQ@mail.gmail.com>
+In-Reply-To: <CAJdd5GbWTeo9FSd_uE2Z0oaXv9M38e94EOq8jFJJu+7JOG6yRQ@mail.gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 1 Jan 2024 19:30:43 +0100
+Message-ID: <CANNYZj89yvc0EPJL0iJVPY-XPFSfsgiUm4U87rW-kq2fAjSO-Q@mail.gmail.com>
+Subject: Re: bitbake/lib/hashserv/sqlite.py:294: DeprecationWarning: The
+ default datetime adapter is deprecated as of Python 3.12
+To: Joshua Watt <jpewhacker@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 31 Dec 2023 20:28:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15736
+ <bitbake-devel@lists.openembedded.org>; Mon, 01 Jan 2024 18:31:01 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15737
 
-This causes bitbake-selftest failures:
+Here:
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15333
 
-======================================================================
-ERROR: test_register_from_string (bb.tests.event.EventHandlingTest)
-Test register method receiving code in string
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/pokybuild/yocto-worker/oe-selftest-debian/build/bitbake/lib/bb/tests/event.py", line 121, in test_register_from_string
-    result = bb.event.register("string_handler", "    return True")
-  File "/home/pokybuild/yocto-worker/oe-selftest-debian/build/bitbake/lib/bb/event.py", line 261, in register
-    tmp = "\n" * (lineno-1) + tmp
-TypeError: unsupported operand type(s) for -: 'NoneType' and 'int'
+Alex
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/80/builds/6202/steps/11/logs/stdio
-
-On 28/12/2023 22:06:42-0800, Robert Yang via lists.openembedded.org wrote:
-> From: Robert Yang <liezhi.yang@windriver.com>
-> 
-> So that we can get the correct error messages.
-> 
-> * In python 3.10.9, the error message was:
->   ERROR: Unable to register event handler 'defaultbase_eventhandler':
->     File "/path/to/poky/meta/classes-global/base.bbclass", line 4
->       # SPDX-License-Identifier: MIT
->              ^^^^^
->   SyntaxError: invalid syntax
-> 
->   This is hard to debug since the error line number 4 is incorrect, but nothing
->   is wrong with the code in line 4.
-> 
-> * Now the error message and lineno is correct:
->   ERROR: Unable to register event handler 'defaultbase_eventhandler':
->     File "/path/to/poky/meta/classes-global/base.bbclass", line 256
->       an error line
->          ^^^^^
->   SyntaxError: invalid syntax
-> 
-> And no impact on parsing time:
-> * Before:
-> $ rm -fr cache tmp; time bitbake -p
-> real    0m27.254s
-> 
-> * Now:
-> $ rm -fr cache tmp; time bitbake -p
-> real    0m27.200s
-> 
-> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> ---
->  bitbake/lib/bb/event.py | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-> index f8acacd80d1..7722258b7e8 100644
-> --- a/bitbake/lib/bb/event.py
-> +++ b/bitbake/lib/bb/event.py
-> @@ -257,6 +257,8 @@ def register(name, handler, mask=None, filename=None, lineno=None, data=None):
->          # handle string containing python code
->          if isinstance(handler, str):
->              tmp = "def %s(e, d):\n%s" % (name, handler)
-> +            # Inject empty lines to make code match lineno in filename
-> +            tmp = "\n" * (lineno-1) + tmp
->              try:
->                  code = bb.methodpool.compile_cache(tmp)
->                  if not code:
-> -- 
-> 2.42.0
-> 
-
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15717): https://lists.openembedded.org/g/bitbake-devel/message/15717
-> Mute This Topic: https://lists.openembedded.org/mt/103413642/3617179
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
-
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+On Sun, 31 Dec 2023 at 17:13, Joshua Watt <jpewhacker@gmail.com> wrote:
+>
+> Ah, I suspect they want you to register an explicit converter instead of =
+relying on the default. I don't think that should be too hard to do. Would =
+you be able to open a bug and assign it to me? I won't have computer access=
+ for a few days
+>
+> On Sun, Dec 31, 2023, 2:39=E2=80=AFAM Alexander Kanavin <alex.kanavin@gma=
+il.com> wrote:
+>>
+>> Hello Joshua,
+>>
+>> I'm seeing this with python 3.12:
+>>
+>> /srv/work/alex/poky/bitbake/lib/hashserv/sqlite.py:294:
+>> DeprecationWarning: The default datetime adapter is deprecated as of
+>> Python 3.12; see the sqlite3 documentation for suggested replacement
+>> recipes
+>>   cursor.execute(query, data)
+>>
+>> The documentation that is supposed to help (but doesn't, not for me :) i=
+s:
+>> https://docs.python.org/3/library/sqlite3.html#default-adapters-and-conv=
+erters-deprecated
+>>
+>> Just thought it would be good to address this warning well in advance
+>> of it becoming a hard error.
+>>
+>> Alex
 
