@@ -2,61 +2,61 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96EDC46CD2
-	for <webhook@archiver.kernel.org>; Tue,  2 Jan 2024 22:59:10 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web11.1069.1704236347012369241
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2864C47074
+	for <webhook@archiver.kernel.org>; Thu,  4 Jan 2024 11:29:21 +0000 (UTC)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+ by mx.groups.io with SMTP id smtpd.web10.51950.1704367754604393741
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 02 Jan 2024 14:59:07 -0800
+ Thu, 04 Jan 2024 03:29:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cWscNXoh;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3373bc6d625so2040528f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 02 Jan 2024 14:59:06 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WezyQU/R;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.217.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-466faf5846eso84584137.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 04 Jan 2024 03:29:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1704236345; x=1704841145; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1704367753; x=1704972553; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lfyFCKIupoPFso0x7L/JeTax09rLZuAnjI9J/fHAyLU=;
-        b=cWscNXohxzZFWzHRCI7uBDp1FMQS0jcRHPveijwJiJjvcH8aL4+YHd6K/+RPKTJFge
-         /Mx7OkgGU4o44mJpvxNwXg9IJ4x9khyfaEmxb7k8E5fFUSSYGZ2zY6r3zOh4nfw1n9My
-         Mf2IgP8LN2GslJw/6yDCDGvIKr3ukGnMagHvQ=
+        bh=zTgxpT1OrW+IN586A0ZlmC/++agzYEkL7Bl5NrvZapw=;
+        b=WezyQU/RID8RrrivIXYvkIVUoVDPoKoBom0CscTtQ2AJfD3AqPjtoMuTxSOVjY4wgH
+         7jMANcgNjvZt9c/bB1VJDPwoARmQYcBrhFGQ4XMwYD9f1sL+EVPKHAbDEQybc5jBkaK2
+         Rz5wbvEur2RTX+kTK3kB1pBULUfubpvTtcJW8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704236345; x=1704841145;
+        d=1e100.net; s=20230601; t=1704367753; x=1704972553;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lfyFCKIupoPFso0x7L/JeTax09rLZuAnjI9J/fHAyLU=;
-        b=dHTIhgW6QT+8XuAbX/KPSjldZ4Ers4LWf/yt1YhJZ0gIK+cMEkOg3kW+s0a/E3a/9c
-         fersjJmmRuqPddkPhxK8lpjMQ1azE2EqKjYYo2GNhvQB38ObQjtk2rB3WdK09Qxybox/
-         AfGnFuyjfNyxOTc3tdzdRv5RcNoomN67BwWHgGc18AAsDPjGjXN+p5GBeX3CP1f1X5Dz
-         aG89Dll8r7CLwDvGANjjcEwksngmCF8DxDIourEm6kHj60SmqAJWoMBwKt2LT1hT2fdz
-         jFQoxSCnRgIxcJRuy/o2pnqq218o0F7Ym6LLYW9WiuEp0ICFX8NFF5oTkT+Ui3VYSOmE
-         hoDw==
-X-Gm-Message-State: AOJu0Yz6R5817RH6Z74Iuree96D3jIlbKFaE69nxgDAWUq5fvP3ra/Gm
-	qXeKbkcmzk8Amy+KEcb60m/nG3YhqfjS2JGC0W8W+3yT8m4=
-X-Google-Smtp-Source: AGHT+IEPI1POzrqg21CWCZhRhA6Y6ooAYazovIDLJydNI37QpLX2Q1OT5bdEzJ8VXNe0SCAybPNoAQ==
-X-Received: by 2002:a5d:65cc:0:b0:336:5e6c:a1ee with SMTP id e12-20020a5d65cc000000b003365e6ca1eemr10069637wrw.85.1704236345210;
-        Tue, 02 Jan 2024 14:59:05 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:8ee8:87cd:f714:75d2])
-        by smtp.gmail.com with ESMTPSA id y8-20020a056000108800b0033642a9a1eesm29297964wrw.21.2024.01.02.14.59.04
+        bh=zTgxpT1OrW+IN586A0ZlmC/++agzYEkL7Bl5NrvZapw=;
+        b=rpiM/Y9QgRJuVmifUx9wg4mm9TMs8TavvrDthXVK6QncDHqZR+/JfKXdkhiKaCDsq1
+         rkQO6I7EPAO9t7bRl7N5tfWcyH0psqMUBb4YYNlvn3hfbWMdMX4uayAKR1rEMPLnDqJ/
+         JXstJu037VIXp8Hi6nzSH6pFLxccdkYmLcrLJYs2jaDQ4NUSrFv+EYCCdewNzkp9dSQ+
+         tEJN0POlO7a3ivxlaCqjPtHZVANoC8r5xzJfcB3Na1iDFUl4exEmx9GG3VlZKB51SONM
+         +UcCrNhNYTntlGkcnz7m9AmTPAV8xciXzZF/+R7XtByeoOJhkyVLgKgOI4rLj0hSK1Qk
+         CT6Q==
+X-Gm-Message-State: AOJu0YwQvcqFuTiPjnHBzilbUlrVjlFobavwmHcd0P51CrzXH6+pmber
+	H15tNwHTBdmDhLrdddoVgEWGjmFC6XTdL9mua28aH3Qw8Hs=
+X-Google-Smtp-Source: AGHT+IGHjoYDL85ylXCSsov1P3eSVmdhMD3XINJpY00Ccsy9MeID+g0IrCgkPM7pvmwkuVWNeHTSsw==
+X-Received: by 2002:a05:6102:390d:b0:467:9973:2e75 with SMTP id e13-20020a056102390d00b0046799732e75mr263041vsu.11.1704367753410;
+        Thu, 04 Jan 2024 03:29:13 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:7c49:db55:5c5b:1a5b])
+        by smtp.gmail.com with ESMTPSA id x29-20020a056102091d00b00467639aaca3sm1157607vsh.4.2024.01.04.03.29.12
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 14:59:04 -0800 (PST)
+        Thu, 04 Jan 2024 03:29:13 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [RFC PATCH] ast/BBHandler: Add inherit_deferred support
-Date: Tue,  2 Jan 2024 22:59:03 +0000
-Message-Id: <20240102225903.2025526-1-richard.purdie@linuxfoundation.org>
+Subject: [RFC PATCH v2] ast/BBHandler: Add inherit_defer support
+Date: Thu,  4 Jan 2024 11:29:10 +0000
+Message-Id: <20240104112910.2256948-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 02 Jan 2024 22:59:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15738
+ <bitbake-devel@lists.openembedded.org>; Thu, 04 Jan 2024 11:29:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15739
 
-Add support for an inherit_deferred statement which works as
+Add support for an inherit_defer statement which works as
 inherit does but is only evaulated at the end of parsing.
 
 This allows conditional expressions to be evaulated 'late' meaning changes
@@ -77,6 +77,8 @@ Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
  lib/bb/parse/ast.py                | 22 ++++++++++++++++++++++
  lib/bb/parse/parse_py/BBHandler.py | 10 +++++++++-
  2 files changed, 31 insertions(+), 1 deletion(-)
+
+v2 - inherit_deferred -> inherit_defer
 
 diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
 index 6441c5cf7c..09dacbc44c 100644
@@ -126,14 +128,14 @@ index 6441c5cf7c..09dacbc44c 100644
  
      safe_d = d
 diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
-index 4d5b45e1ef..31a2ea5cac 100644
+index 4d5b45e1ef..cd1c998f8f 100644
 --- a/lib/bb/parse/parse_py/BBHandler.py
 +++ b/lib/bb/parse/parse_py/BBHandler.py
 @@ -21,6 +21,7 @@ from .ConfHandler import include, init
  
  __func_start_regexp__    = re.compile(r"(((?P<py>python(?=(\s|\()))|(?P<fr>fakeroot(?=\s)))\s*)*(?P<func>[\w\.\-\+\{\}\$:]+)?\s*\(\s*\)\s*{$" )
  __inherit_regexp__       = re.compile(r"inherit\s+(.+)" )
-+__inherit_def_regexp__   = re.compile(r"inherit_deferred\s+(.+)" )
++__inherit_def_regexp__   = re.compile(r"inherit_defer\s+(.+)" )
  __export_func_regexp__   = re.compile(r"EXPORT_FUNCTIONS\s+(.+)" )
  __addtask_regexp__       = re.compile(r"addtask\s+(?P<func>\w+)\s*((before\s*(?P<before>((.*(?=after))|(.*))))|(after\s*(?P<after>((.*(?=before))|(.*)))))*")
  __deltask_regexp__       = re.compile(r"deltask\s+(.+)")
