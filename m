@@ -1,118 +1,106 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB66DC3DA6E
-	for <webhook@archiver.kernel.org>; Fri,  5 Jan 2024 11:53:25 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web11.21829.1704455599678664498
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD636C4707B
+	for <webhook@archiver.kernel.org>; Fri,  5 Jan 2024 14:22:16 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web10.24449.1704464528450028408
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Jan 2024 03:53:20 -0800
+ Fri, 05 Jan 2024 06:22:08 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WBjtrIVe;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-336755f1688so1255437f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 05 Jan 2024 03:53:19 -0800 (PST)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=QOd+zrcX;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id BFEF19C32E2
+	for <bitbake-devel@lists.openembedded.org>; Fri,  5 Jan 2024 09:22:07 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id CRURm740AcJn; Fri,  5 Jan 2024 09:22:07 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 756FD9C36BF;
+	Fri,  5 Jan 2024 09:22:07 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 756FD9C36BF
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1704455598; x=1705060398; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UcN4T/H4Z4G3nXWBm3o13QS+AcPqSBU3kniYiRg8co4=;
-        b=WBjtrIVeiJejBVNtTXoNtna53pFgggFU5HGzsZeaDPLxUUJ2v0yTsN8oKD4YIg5Dlq
-         MctdDAjZ288vmwv1nDIWrBS2gspX9CFNvEaiG2iWsBoOkNkqNd1yRvK0mjRdsqa4TWdJ
-         +m8thW22uCO6lg84BmQj0O6zb9rN5+HizDb2w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704455598; x=1705060398;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UcN4T/H4Z4G3nXWBm3o13QS+AcPqSBU3kniYiRg8co4=;
-        b=CRZe6xAwlUizdeJWvnJhOAUP5MKizQUS16lGePMVKNNZJT7xrr2u3HS08YJEdRE8XT
-         FoqOiCOIaqug+xOKwaUXdWFxeL7nJbY/SHHL173lU1dOBWF/18Z9puHaZtZfgKeyt9lL
-         eTXg22+wmHpexU8YQ0nB4V1jXU4JdAad98eeVuDgNewPHhhynSj60xzqLNPipkt2vMe1
-         5gdBAVlPlFbv4bWIgEx0xsHI9APFV9KQZbO0rcSd4vaQ09/LcCwHR+J2+SejcMUYhM2s
-         9FzxIYcL/GhpMwDr4HBqaMBsB+2cnzkLqv4JHaeFoo/tMpie3bVk5hXiLEznUw0+OhTD
-         a3QA==
-X-Gm-Message-State: AOJu0YwSIN3qQPN46eYgqRiY2/2t05xFdNmEbBJYoYwTtELm5mFv2Vfl
-	3YpPPn9fb28yNZn25v85ERqSIDFH53C4jtwATvFRYjuyRIo=
-X-Google-Smtp-Source: AGHT+IHqoufydtlbHfB2wLA4rVYy6jAlAVyQlIKkMYqWmzUGzG5fvn0qSRDaYzJEIt9zs8O2Fk8uJg==
-X-Received: by 2002:a5d:4a92:0:b0:336:768f:f840 with SMTP id o18-20020a5d4a92000000b00336768ff840mr987646wrq.83.1704455597763;
-        Fri, 05 Jan 2024 03:53:17 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:8000:8a34:98ad:54c2])
-        by smtp.gmail.com with ESMTPSA id l3-20020a5d4bc3000000b00336843ae919sm1253546wrt.49.2024.01.05.03.53.17
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 03:53:17 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1704464527; bh=aRvGit+uCsedASZQbwgQKoVmmSUwBtAEJlW9TaYMzjw=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=QOd+zrcXWEu3gtVS+XUBoQj+pGafTx/A3s1BZ3whJqHofLNvCownF1R8QEbR+/qoV
+	 IqCnRkyid3aYeJWdmEih39PBzSXXvSTXPlIZKBt+bFkyvP/n+59RzqBwctJiEVxpW2
+	 RspIkuPuJ2ucTnIpE/idMChCDMfS2n2L7IG1qEGySSg0QZ3kKtz23h4NFF+SsfTIWN
+	 QvFUWIdEkwu3yiFc+fqEh5ck6XP1uNMRDM4vp2jPh8DecL1aJHujJPRtx3B5ZknMLw
+	 qAhhB27GDRSu6qazPWMQAb4EBDM9R2euCM1gq5P5XQmwh5OzFRer9FbGp2MhsZsjtk
+	 G7+j+DmfxvI+g==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id 8LS1YPgWvGRG; Fri,  5 Jan 2024 09:22:07 -0500 (EST)
+Received: from jedi.. (unknown [196.127.183.75])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 92DBC9C32E2;
+	Fri,  5 Jan 2024 09:22:06 -0500 (EST)
+From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] siggen: Ensure version of siggen is verified
-Date: Fri,  5 Jan 2024 11:53:16 +0000
-Message-Id: <20240105115316.2430989-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.2
+Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH 3/3] toaster/test: Delay driver first action on create new project page
+Date: Fri,  5 Jan 2024 15:21:50 +0100
+Message-Id: <20240105142150.539538-3-alassane.yattara@savoirfairelinux.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240105142150.539538-1-alassane.yattara@savoirfairelinux.com>
+References: <20240105142150.539538-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Jan 2024 11:53:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15742
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Jan 2024 14:22:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15745
 
-Since we need to change the form of the siggen function, we need to add versioning
-and some verison checks. This means if a newer bitbake is used with older metadata
-we can detect it.
+Wait for element visible on create new project page
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- lib/bb/command.py  |  1 +
- lib/bb/runqueue.py |  1 +
- lib/bb/siggen.py   | 10 ++++++++++
- 3 files changed, 12 insertions(+)
+ lib/toaster/tests/browser/test_new_project_page.py      | 1 +
+ lib/toaster/tests/functional/test_create_new_project.py | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 79b6c0738f..1fcb9bf14c 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -777,6 +777,7 @@ class CommandsAsync:
-         (mc, pn) = bb.runqueue.split_mc(params[0])
-         taskname = params[1]
-         sigs = params[2]
-+        bb.siggen.check_siggen_version(bb.siggen)
-         res = bb.siggen.find_siginfo(pn, taskname, sigs, command.cooker.databuilder.mcdata[mc])
-         bb.event.fire(bb.event.FindSigInfoResult(res), command.cooker.databuilder.mcdata[mc])
-         command.finishAsyncCommand()
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 51959231b7..9e3a87c0e8 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1760,6 +1760,7 @@ class RunQueue:
-         return invalidtasks
- 
-     def write_diffscenetasks(self, invalidtasks):
-+        bb.siggen.check_siggen_version(bb.siggen)
- 
-         # Define recursion callback
-         def recursecb(key, hash1, hash2):
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index b023b79eca..5a584cadf9 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -24,6 +24,16 @@ import hashserv.client
- logger = logging.getLogger('BitBake.SigGen')
- hashequiv_logger = logging.getLogger('BitBake.SigGen.HashEquiv')
- 
-+#find_siginfo and find_siginfo_version are set by the metadata siggen
-+# The minimum version of the find_siginfo function we need
-+find_siginfo_minversion = 2
-+
-+def check_siggen_version(siggen):
-+    if not hasattr(siggen, "find_siginfo_version"):
-+        bb.fatal("Siggen from metadata (OE-Core?) is too old, please update it (no version found)")
-+    if siggen.find_siginfo_version < siggen.find_siginfo_minversion:
-+        bb.fatal("Siggen from metadata (OE-Core?) is too old, please update it (%s vs %s)" % (siggen.find_siginfo_version, siggen.find_siginfo_minversion))
-+
- class SetEncoder(json.JSONEncoder):
-     def default(self, obj):
-         if isinstance(obj, set) or isinstance(obj, frozenset):
--- 
-2.39.2
+diff --git a/lib/toaster/tests/browser/test_new_project_page.py b/lib/toa=
+ster/tests/browser/test_new_project_page.py
+index 0c33c44f..70b55f3c 100644
+--- a/lib/toaster/tests/browser/test_new_project_page.py
++++ b/lib/toaster/tests/browser/test_new_project_page.py
+@@ -47,6 +47,7 @@ class TestNewProjectPage(SeleniumTestCase):
+=20
+         url =3D reverse('newproject')
+         self.get(url)
++        self.wait_until_visible('#new-project-name', poll=3D3)
+         self.enter_text('#new-project-name', project_name)
+=20
+         select =3D Select(self.find('#projectversion'))
+diff --git a/lib/toaster/tests/functional/test_create_new_project.py b/li=
+b/toaster/tests/functional/test_create_new_project.py
+index 9f880107..94d90459 100644
+--- a/lib/toaster/tests/functional/test_create_new_project.py
++++ b/lib/toaster/tests/functional/test_create_new_project.py
+@@ -32,6 +32,7 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
+           - Merge Toaster settings: True or False
+         """
+         self.get(reverse('newproject'))
++        self.wait_until_visible('#new-project-name', poll=3D3)
+         self.driver.find_element(By.ID,
+                                  "new-project-name").send_keys(project_n=
+ame)
+=20
+@@ -111,7 +112,7 @@ class TestCreateNewProject(SeleniumFunctionalTestCase=
+):
+         """
+         release =3D '5'
+         release_title =3D 'Yocto Project 3.1 "Dunfell"'
+-        project_name =3D 'projectdunfull'
++        project_name =3D 'projectdunfell'
+         self._create_test_new_project(
+             project_name,
+             release,
+--=20
+2.34.1
 
 
