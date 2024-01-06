@@ -1,87 +1,87 @@
-Return-Path: <alassane.yattara@savoirfairelinux.com>
+Return-Path: <vvavrychuk@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7C2C47077
-	for <webhook@archiver.kernel.org>; Fri,  5 Jan 2024 14:22:16 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.24385.1704464527177363070
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA137C46CD2
+	for <webhook@archiver.kernel.org>; Sat,  6 Jan 2024 20:24:06 +0000 (UTC)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+ by mx.groups.io with SMTP id smtpd.web11.1992.1704572639764305512
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Jan 2024 06:22:08 -0800
+ Sat, 06 Jan 2024 12:24:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=e0Q8msZb;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id BA5169C374B
-	for <bitbake-devel@lists.openembedded.org>; Fri,  5 Jan 2024 09:22:05 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id FfxLlfrpor7V; Fri,  5 Jan 2024 09:22:05 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 768579C36BF;
-	Fri,  5 Jan 2024 09:22:05 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 768579C36BF
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=YoQEUvjV;
+ spf=pass (domain: gmail.com, ip: 209.85.208.169, mailfrom: vvavrychuk@gmail.com)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cc7b9281d1so7190771fa.1
+        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Jan 2024 12:23:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1704464525; bh=zC8Xm5PNgHLrp/tyxGJR/FRG8sHStVe/P3PHe9xsRH4=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=e0Q8msZbFm6zo1ZikfGQDcG0aCzPISKGhDRGQ2w5cfZ1ikGd9hmQc/cJYQ3DAhnKo
-	 xQKoNXDhc1DpxqAZyX5ZFWKfUgLM3TkKCBzsijuDQqU5vFwiokNAzETLNzBHs5F5Rh
-	 F1RRarey7RTxDZtR2h0fBirJoh1tQZTRXW1LTZfb7dPDy+0IQvhpP8CBXHpatMDhbL
-	 xpfqN1wQJ/HfiV37xUu8N2sT2i1aqLyRG8I8zPA6L7h028/9KqO06l3AnrqynFedZx
-	 ynwKbuv3qawHjqtkLr4YZG+7y5BhnvndXrEg4pXxcc9eX47SsToAyJ6brrRtGqTGKf
-	 wzPgelzgAuLaA==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id PHypU9yt0gEu; Fri,  5 Jan 2024 09:22:05 -0500 (EST)
-Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 565DA9C32E2;
-	Fri,  5 Jan 2024 09:22:04 -0500 (EST)
-From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+        d=gmail.com; s=20230601; t=1704572637; x=1705177437; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RspbsAxp+mC8f7j95gljDrHR6V1JKjYCGnZ6Wwtzsak=;
+        b=YoQEUvjVdhAKuGNT92gpvsJwxv42fWM6Hp+bQ+XYTUA8Ked6dLKgRrNn0c3ZlX8d0Z
+         sfDx94DFA+PJ3pGgtRA0mHWWUjfkZtgfxPc+cXIof6dVWG2rmgauSYYpTw2yf1Ijt0in
+         t/I/cPwmjKd5ROP1utlQBXVQzz5IauZMOVbIlpvCFRMZj1HTMHzUofRmMGVe2LoH+zGY
+         g8B/gxu3lR53ZIOwGrbt/OEIookpmzn5kWUP7vwMk9Z1nmp/TMyd/wVHdfSQTeQ0Ugon
+         oqEVuhiC6OQdbFV6IkdzqqpXW2hw5B68ENMJ+DUrWNHErB3cbcOsQmhsCe6pKqTXwUTi
+         6uqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704572637; x=1705177437;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RspbsAxp+mC8f7j95gljDrHR6V1JKjYCGnZ6Wwtzsak=;
+        b=eWBHdmwCDQZL7Bhy+i2SfO8PC0H4If+bKCl8l95JeDFLHV0Vss2vANfoFenfRbSzS2
+         N2TDBtp+J1Y22rmbYRq2btsYE3gMVgkt9zfr8hv7izVP2bbkp74nzRKAAmHiPzmAKXq7
+         d13ZyzU4wRlVeNUX3hIIJNHxK+nHvyekBHT+CEPMcA5CicsG/D3V0ycFawkTvOYhwtKv
+         aEulLzY39pwR7HOyrWBQBsChK82oSvaZGfz4ObsEBGCVFTx0Y4R9XBFeTRwZk60vOvb8
+         cRaxRWnDgu1kBl4RJzhg+1cVkYcs1jes72wUu+i0Zxp4jzPwup21UafBjEmHQJ1KnYAS
+         J1Ww==
+X-Gm-Message-State: AOJu0YxHStwh8Wpma5pnFAct8ipaIBciPQeGWyfGyagHgYtXFuAnurHm
+	UoR+0xcuCnp3hrh2VrmnSGj1MbzPy+GxmA==
+X-Google-Smtp-Source: AGHT+IHhyadEO8LK8WS2ZIsZuBF/1WjdmJ6Spi2tP2+K/3Ic/RYb9p2onTLO85oDbwzujwzEqc3YLQ==
+X-Received: by 2002:a05:6512:48c:b0:50e:699b:55f with SMTP id v12-20020a056512048c00b0050e699b055fmr560400lfq.66.1704572637225;
+        Sat, 06 Jan 2024 12:23:57 -0800 (PST)
+Received: from LWO1-LHP-A10856.synapse.com ([185.219.78.170])
+        by smtp.gmail.com with ESMTPSA id s8-20020ac25fe8000000b0050e824e55fdsm619261lfg.107.2024.01.06.12.23.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jan 2024 12:23:56 -0800 (PST)
+From: Vasyl Vavrychuk <vvavrychuk@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH 1/3] toaster/test: Bug-fix on TestProjectConfigTab::test_image_recipe_show_rows
-Date: Fri,  5 Jan 2024 15:21:48 +0100
-Message-Id: <20240105142150.539538-1-alassane.yattara@savoirfairelinux.com>
+Cc: Vasyl Vavrychuk <vvavrychuk@gmail.com>
+Subject: [PATCH] bitbake.conf: add missing CACHE setting
+Date: Sat,  6 Jan 2024 22:23:43 +0200
+Message-Id: <20240106202343.704161-1-vvavrychuk@gmail.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Jan 2024 14:22:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15743
+ <bitbake-devel@lists.openembedded.org>; Sat, 06 Jan 2024 20:24:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15746
 
-Check some rows are visible in table instead of compare table row to
-row_to_show, because recipe image table sometime doesn't display full ava=
-iblable
-images
+Without it bitbake fails with
 
-Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+  ERROR: Please ensure CACHE is set to the cache directory for BitBake to use
+
+Signed-off-by: Vasyl Vavrychuk <vvavrychuk@gmail.com>
 ---
- lib/toaster/tests/functional/test_project_page_tab_config.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ conf/bitbake.conf | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/toaster/tests/functional/test_project_page_tab_config.py=
- b/lib/toaster/tests/functional/test_project_page_tab_config.py
-index ee1f5c4b..d027e0bc 100644
---- a/lib/toaster/tests/functional/test_project_page_tab_config.py
-+++ b/lib/toaster/tests/functional/test_project_page_tab_config.py
-@@ -254,8 +254,9 @@ class TestProjectConfigTab(SeleniumFunctionalTestCase=
-):
-             # Check that we can show rows =3D=3D row_to_show
-             show_row_link.select_by_value(str(row_to_show))
-             self.wait_until_visible('#imagerecipestable tbody tr')
-+            # check at least some rows are visible
-             self.assertTrue(
--                len(self.find_all('#imagerecipestable tbody tr')) =3D=3D=
- row_to_show
-+                len(self.find_all('#imagerecipestable tbody tr'))  > 0
-             )
-=20
-         self._navigate_to_project_page()
---=20
+diff --git a/conf/bitbake.conf b/conf/bitbake.conf
+index 2c1d8be2..f5a5a333 100644
+--- a/conf/bitbake.conf
++++ b/conf/bitbake.conf
+@@ -23,6 +23,7 @@ DEPENDS = ""
+ DEPLOY_DIR = "${TMPDIR}/deploy"
+ DEPLOY_DIR_IMAGE = "${DEPLOY_DIR}/images"
+ DL_DIR = "${TMPDIR}/downloads"
++CACHE = "${TMPDIR}/cache"
+ FILESPATH = "${FILE_DIRNAME}/${PF}:${FILE_DIRNAME}/${P}:${FILE_DIRNAME}/${PN}:${FILE_DIRNAME}/files:${FILE_DIRNAME}"
+ FILE_DIRNAME = "${@os.path.dirname(d.getVar('FILE', False))}"
+ IMAGE_CMD = "_NO_DEFINED_IMAGE_TYPES_"
+-- 
 2.34.1
 
 
