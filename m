@@ -1,101 +1,145 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C908AC3DA6E
-	for <webhook@archiver.kernel.org>; Mon,  8 Jan 2024 14:27:25 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web10.7952.1704724044600879825
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF626C3DA6E
+	for <webhook@archiver.kernel.org>; Mon,  8 Jan 2024 21:10:15 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web10.1022.1704748214902235211
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Jan 2024 06:27:24 -0800
+ Mon, 08 Jan 2024 13:10:15 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=hAg5GJ4g;
- spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40d60c49ee7so21736005e9.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 08 Jan 2024 06:27:24 -0800 (PST)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=aY0I8YRs;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2FE759C327C
+	for <bitbake-devel@lists.openembedded.org>; Mon,  8 Jan 2024 16:10:14 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id M9YwV09Xiq3D; Mon,  8 Jan 2024 16:10:13 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id C16C19C4165;
+	Mon,  8 Jan 2024 16:10:13 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com C16C19C4165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704724043; x=1705328843; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lmBWhkhhYdwXDnT5uZDZQfHSGCxyagA0gXlwAQj+Pic=;
-        b=hAg5GJ4g8VpjCbJxf7qpZtPFh3TboEb51mSswNzPEo7k7qZfg7xJ6p68C7g+bp5MuX
-         Edn3dIkN8u3o1gHLczc2kl97XHQS9FzXSmlX+h7H5msqWVUoP02CLwLD5mF+p3gNbsAl
-         3j4u+tvkaa1uastTYfjLA/QHnTNlXzxp/ZgJWM+mQZmCV0hVdRWEAy6jSogWbtgN1Wyn
-         e0e9K9+Fz+X1FkbB1JFDyI/qIMLwqhKU3398EkhLAgZV6M1Hlr5mitVrGr/0wtjVPwVL
-         BRcoIYsz/QU7gVHAML27sXpenI2QQJSMXB/0CMvCDhG4juG+Vouxb3zEkaOTfO/tF9GX
-         rMDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704724043; x=1705328843;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lmBWhkhhYdwXDnT5uZDZQfHSGCxyagA0gXlwAQj+Pic=;
-        b=cIXROg34zrK5tkcj8/qgx3nWf7pxhStW5aQqBkp9tbKc4IXSnI+m+DJD7mSDI0NWs0
-         0OT9vNM+8UyuAxCyQ3FNnbfVTDd/ZYN5FzBBGXdL8fbTHycPXNrDCXmB8iyf9hdjYTA2
-         XxzclUQQ8fElpR/Mmi6oVK1+4TIzy4ZX4y2qNOKePw85DqArGSPYPIjl3ayzSwOWVBOT
-         lBzsrAOy1Oy/GMgZRJUvqjOquSYuJlHtGA2fPiXvqQSFvLzmi1RDFLsqt0bsjf2a0qEN
-         NEjNxJDl+XB/rBnrBlqpn5bwPf1VQSVc43hr4kK94DYjKLKZ3+ALC7vqSKJE4LNZ27eI
-         mMHw==
-X-Gm-Message-State: AOJu0Yy9PuxaPDwlk8RlmUfsfei4wu44uYjFrLYqSiseZ6rjJ9NTO6VC
-	bV2rcjTvwKk7sNOgM6DDe5BKyBNkA0o=
-X-Google-Smtp-Source: AGHT+IHXPjwCnVJH/XFghLdevUaDgc1+Gmjc381WHM3GWnIBLx71Yp0IJzSJgz5casE4mEILAruL4w==
-X-Received: by 2002:a05:600c:1551:b0:40c:34e1:72ef with SMTP id f17-20020a05600c155100b0040c34e172efmr1875327wmg.84.1704724042775;
-        Mon, 08 Jan 2024 06:27:22 -0800 (PST)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id b22-20020a05600c4e1600b0040e4abe5386sm945355wmq.21.2024.01.08.06.27.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 06:27:21 -0800 (PST)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-X-Google-Original-From: Alexander Kanavin <alex@linutronix.de>
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1704748213; bh=kpj+6CIInwQFgN8SSYHTGNzQ3CjEKsnTJc/AuKY1yu8=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=aY0I8YRs5xKkD4trHwUfDuTxiHTd+EVreVzrrVpETO9xyFqCFTKNjQba1NotYCw+C
+	 t8M//9azhSprk1GlKbZSKCjvhgWdQ/hOmVXTTqrfQNeKKx0AT4vtuC0JODsOQRTmZC
+	 58ABQi9H8x+ZMdI7MWDSfLSYhmV2Y4SH0oaLtnddFSCiwuemPsTZXH25Q7PE7LDV6L
+	 qws8vP0q5Pl8SyuglwC5t5+IfKPhvNm8w5m+wHfCuKjBPdBwlgtXORMdmsZG4mRXC0
+	 vOgsi4oBZDbNfznSEpnyfNl/HBWLswg/XcZruIa3xOqnZSIg8P4jEC7FaRAkMGKBkj
+	 9q+wNl/8+H74g==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id 4yV7b8flGbSQ; Mon,  8 Jan 2024 16:10:13 -0500 (EST)
+Received: from jedi.. (unknown [196.127.183.75])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id E190C9C327C;
+	Mon,  8 Jan 2024 16:10:12 -0500 (EST)
+From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH 2/2] fetch/wget/checkstatus(): include the URL in debugging output about status check failure
-Date: Mon,  8 Jan 2024 15:26:48 +0100
-Message-Id: <20240108142648.2293370-2-alex@linutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240108142648.2293370-1-alex@linutronix.de>
-References: <20240108142648.2293370-1-alex@linutronix.de>
+Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH] toaster/test: Setup delay after drvier action self.get(url)
+Date: Mon,  8 Jan 2024 22:10:08 +0100
+Message-Id: <20240108211008.229698-1-alassane.yattara@savoirfairelinux.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 08 Jan 2024 14:27:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15751
+ <bitbake-devel@lists.openembedded.org>; Mon, 08 Jan 2024 21:10:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15752
 
-Previously the output wasn't useful for finding out what was the actual
-URL that failed, particularly in heavily multi-threaded invocations:
+Recurring test failures result from insufficient delays in driver actions=
+.
 
-DEBUG: checkstatus() urlopen failed: HTTP Error 404: Not Found
-
-With this change, the problem is described specifically:
-
-DEBUG: checkstatus() urlopen failed for http://cdn.jsdelivr.net/yocto/sstate/all/universal/4f/91/sstate:gettext-minimal-native:x86_64-linux:0.22.4:r0:x86_64:11:4f91b650ebd7be601cbd0e3a37a8cc6385a3f4ee616f931969b50709ed8bf044_create_spdx.tar.zst: HTTP Error 404: Not Found
-
-This will help with CDN cache tests in particular. When some object
-isn't available, we need to know why: 4xx error, 5xx error, timeout
-error or any other issue.
-
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
 ---
- bitbake/lib/bb/fetch2/wget.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/tests/browser/selenium_helpers_base.py      | 7 +++++++
+ lib/toaster/tests/browser/test_all_builds_page.py       | 4 +++-
+ lib/toaster/tests/browser/test_builddashboard_page.py   | 1 +
+ lib/toaster/tests/browser/test_new_custom_image_page.py | 1 +
+ 4 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index dc883176104..dc025800e65 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -375,7 +375,7 @@ class Wget(FetchMethod):
-                     return self.checkstatus(fetch, ud, d, False)
-                 else:
-                     # debug for now to avoid spamming the logs in e.g. remote sstate searches
--                    logger.debug2("checkstatus() urlopen failed: %s" % e)
-+                    logger.debug2("checkstatus() urlopen failed for %s: %s" % (uri,e))
-                     return False
- 
-         return True
--- 
-2.39.2
+diff --git a/lib/toaster/tests/browser/selenium_helpers_base.py b/lib/toa=
+ster/tests/browser/selenium_helpers_base.py
+index 562fedec..393be754 100644
+--- a/lib/toaster/tests/browser/selenium_helpers_base.py
++++ b/lib/toaster/tests/browser/selenium_helpers_base.py
+@@ -182,6 +182,13 @@ class SeleniumTestCaseBase(unittest.TestCase):
+         abs_url =3D '%s%s' % (self.live_server_url, url)
+         self.driver.get(abs_url)
+=20
++        try:  # Ensure page is loaded before proceeding
++            self.wait_until_visible("#global-nav", poll=3D3)
++        except NoSuchElementException:
++            self.driver.implicitly_wait(3)
++        except TimeoutException:
++            self.driver.implicitly_wait(3)
++
+     def find(self, selector):
+         """ Find single element by CSS selector """
+         return self.driver.find_element(By.CSS_SELECTOR, selector)
+diff --git a/lib/toaster/tests/browser/test_all_builds_page.py b/lib/toas=
+ter/tests/browser/test_all_builds_page.py
+index 7019b3db..ab6da821 100644
+--- a/lib/toaster/tests/browser/test_all_builds_page.py
++++ b/lib/toaster/tests/browser/test_all_builds_page.py
+@@ -224,6 +224,7 @@ class TestAllBuildsPage(SeleniumTestCase):
+=20
+         url =3D reverse('all-builds')
+         self.get(url)
++        self.wait_until_visible('#allbuildstable', poll=3D3)
+=20
+         # get the project name cells from the table
+         cells =3D self.find_all('#allbuildstable td[class=3D"project"]')
+@@ -232,7 +233,7 @@ class TestAllBuildsPage(SeleniumTestCase):
+=20
+         for cell in cells:
+             content =3D cell.get_attribute('innerHTML')
+-            help_icons =3D cell.find_elements_by_css_selector(selector)
++            help_icons =3D cell.find_elements(By.CSS_SELECTOR, selector)
+=20
+             if re.search(self.PROJECT_NAME, content):
+                 # no help icon next to non-cli project name
+@@ -256,6 +257,7 @@ class TestAllBuildsPage(SeleniumTestCase):
+=20
+         url =3D reverse('all-builds')
+         self.get(url)
++        self.wait_until_visible('#allbuildstable', poll=3D3)
+=20
+         # test recent builds area for successful build
+         element =3D self._get_build_time_element(build1)
+diff --git a/lib/toaster/tests/browser/test_builddashboard_page.py b/lib/=
+toaster/tests/browser/test_builddashboard_page.py
+index b713f300..d838ce36 100644
+--- a/lib/toaster/tests/browser/test_builddashboard_page.py
++++ b/lib/toaster/tests/browser/test_builddashboard_page.py
+@@ -162,6 +162,7 @@ class TestBuildDashboardPage(SeleniumTestCase):
+         """
+         url =3D reverse('builddashboard', args=3D(build.id,))
+         self.get(url)
++        self.wait_until_visible('#global-nav', poll=3D3)
+=20
+     def _get_build_dashboard_errors(self, build):
+         """
+diff --git a/lib/toaster/tests/browser/test_new_custom_image_page.py b/li=
+b/toaster/tests/browser/test_new_custom_image_page.py
+index 4ad22c7a..9f0b6397 100644
+--- a/lib/toaster/tests/browser/test_new_custom_image_page.py
++++ b/lib/toaster/tests/browser/test_new_custom_image_page.py
+@@ -90,6 +90,7 @@ class TestNewCustomImagePage(SeleniumTestCase):
+         """
+         url =3D reverse('newcustomimage', args=3D(self.project.id,))
+         self.get(url)
++        self.wait_until_visible('#global-nav', poll=3D3)
+=20
+         self.click('button[data-recipe=3D"%s"]' % self.recipe.id)
+=20
+--=20
+2.34.1
 
 
