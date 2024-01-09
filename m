@@ -1,100 +1,217 @@
-Return-Path: <alassane.yattara@savoirfairelinux.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7738C47077
-	for <webhook@archiver.kernel.org>; Tue,  9 Jan 2024 13:54:00 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.17186.1704808438743025418
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38F7C47073
+	for <webhook@archiver.kernel.org>; Tue,  9 Jan 2024 14:03:20 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web11.17233.1704808990628655730
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Jan 2024 05:53:59 -0800
+ Tue, 09 Jan 2024 06:03:11 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=t2s+m3ku;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 0D2919C0B24
-	for <bitbake-devel@lists.openembedded.org>; Tue,  9 Jan 2024 08:53:58 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id oWZm1Y1DQs5W; Tue,  9 Jan 2024 08:53:57 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id B95689C160A;
-	Tue,  9 Jan 2024 08:53:57 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com B95689C160A
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PQJIE61n;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e43e48a16so25769655e9.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jan 2024 06:03:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1704808437; bh=Y5b0afQttCY+9gE5JDU0ys2ArvraUmbad6XH03DefoE=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=t2s+m3kuYYsygWmQmqC8GUF+izCc+/dzs/SyZ6XTYIjeP98lLfZJSWnpBbmZNxRIl
-	 xhAo2L6i5PGKA4WLwPG9XVzeXtTpHXlljkdU/IYQ01jV95z4NVCBfat2rAKxoUllGc
-	 gPzWXCAoGNauKRKQSoKnCXV+bOYCBrpPsWIeIMjeLPqUYO6tHKoVGhnbudeDTjOTo5
-	 4fisYdOp6Th/zX1yueLRexgFzq+urzDVFpIafNxsua5riEt+p389ijMkrRpyOApyI2
-	 0e0soOkiASCfl1Wos7Fz16NaVLN3H1KsviLRj56dbZrCFBw4Mgx6fnJvfekHI8VjiM
-	 VS5cokK5og0ag==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id KOh4rOQaNa8j; Tue,  9 Jan 2024 08:53:57 -0500 (EST)
-Received: from jedi.. (unknown [196.127.183.75])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 2ED0C9C0B24;
-	Tue,  9 Jan 2024 08:53:57 -0500 (EST)
-From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+        d=linuxfoundation.org; s=google; t=1704808989; x=1705413789; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yd+ozBflBMAWaTQXpjINITpvNWvUcSUzM+l8OMkinto=;
+        b=PQJIE61n4q2nLl1UmYKtS4P/abUksDXImk9k9tcVllYTxgVx++uQXYjQQmiJfKHJek
+         J5lSyGdsCFz1eC36d94LVupiH2PeYlw/qA8fxADdeLFLhIalBq1NNp/WzAkYrU4wikTa
+         qHMZo5Fmmqu+qb4KXLLsaEI8NgtveFivLIzMU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704808989; x=1705413789;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yd+ozBflBMAWaTQXpjINITpvNWvUcSUzM+l8OMkinto=;
+        b=vcYEGzSIQ/zeEJ8q2wwFGhDvRoxEUpliUwwV6DYm2p/mrLrWX+suo9LkDctVWsQfMA
+         Cp4zwJbxkiNe2UVHzCCF9UbWPLluDGxWB1oee/l/iQn1Bp0OtP37duFyQeq1V2pSdAHP
+         bEg4u91iZQPJnw20rgYQDoqPKdnQDJSAnDbThp/rPc2J/wXa5EY1GAaUe9id+gpGHX6h
+         6UOHvUvGfG/kg7mMsqHkI2YgunObcQr5SvAC1Pb38cZnCnp3da4a6pWHYHM9xyt7Svq0
+         3ab4SX9Mwf4H50kvhFXiLcH5sBOVNr2YprV+a71x4QTUwa4Qn/womBdsWz4HLhobxavi
+         D3ew==
+X-Gm-Message-State: AOJu0YycqK+O5WTPzQzTHnRtl97IPI/aRXz6Hbi7cmr7xR1/VCgEeT9a
+	pq60vJhP7bwcQ1gjt0N5g994/ge08z0XMITifW09C7uJz6I=
+X-Google-Smtp-Source: AGHT+IGFDr0D74k/ZbAWkkAoQ9CKm59peS/i2OcYK0BV7xBWY5FxODMVg4crzOB3yhOdW5y1on+AoA==
+X-Received: by 2002:a1c:7208:0:b0:40e:4832:9fab with SMTP id n8-20020a1c7208000000b0040e48329fabmr1473154wmc.143.1704808988506;
+        Tue, 09 Jan 2024 06:03:08 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:494c:2c49:a717:e3aa])
+        by smtp.gmail.com with ESMTPSA id q7-20020a05600c46c700b0040e4733aecbsm3728086wmo.15.2024.01.09.06.03.06
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 06:03:07 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
-Subject: [PATCH v2 3/3] toaster/test: Bug-fix "element not interactable" in TestLayerDetailsPage::test_edit_layerdetails
-Date: Tue,  9 Jan 2024 14:53:52 +0100
-Message-Id: <20240109135352.416686-3-alassane.yattara@savoirfairelinux.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240109135352.416686-1-alassane.yattara@savoirfairelinux.com>
-References: <20240109135352.416686-1-alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH] ast: Fix EXPORT_FUNCTIONS bug
+Date: Tue,  9 Jan 2024 14:03:06 +0000
+Message-Id: <20240109140306.3012740-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 09 Jan 2024 13:54:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15760
+ <bitbake-devel@lists.openembedded.org>; Tue, 09 Jan 2024 14:03:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15761
 
-Failed: https://autobuilder.yoctoproject.org/typhoon/#/builders/161/build=
-s/143/steps/12/logs/stdio
+If you have two classes, both of which set EXPORT_FUNCTIONS for the same funciton
+and a standard funciton definition for the function that is exported, the export
+function can sometimes overwrite the standard one.
 
-Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+The issue is that the internal flag the code uses isn't ovweritten if the variable
+is giving a new value. Fix the issue by using a comment in the code that is injected
+so that we know if it is ours or not.
+
+Also add some testing for EXPORT_FUNCTIONS, not perfect but a start.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/toaster/tests/browser/test_layerdetails_page.py | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ lib/bb/parse/ast.py   |  9 ++--
+ lib/bb/tests/parse.py | 98 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 103 insertions(+), 4 deletions(-)
 
-diff --git a/lib/toaster/tests/browser/test_layerdetails_page.py b/lib/to=
-aster/tests/browser/test_layerdetails_page.py
-index 9deef670..5c29548b 100644
---- a/lib/toaster/tests/browser/test_layerdetails_page.py
-+++ b/lib/toaster/tests/browser/test_layerdetails_page.py
-@@ -64,7 +64,7 @@ class TestLayerDetailsPage(SeleniumTestCase):
-                            args=3D(self.project.pk,
-                                  self.imported_layer_version.pk))
-=20
--    def test_edit_layerdetails(self):
-+    def _edit_layerdetails(self):
-         """ Edit all the editable fields for the layer refresh the page =
-and
-         check that the new values exist"""
-=20
-@@ -168,6 +168,13 @@ class TestLayerDetailsPage(SeleniumTestCase):
-                         "Expected %s in the dir value for layer director=
-y" %
-                         new_dir)
-=20
-+    def test_edit_layerdetails_page(self):
-+        try:
-+            self._edit_layerdetails()
-+        except ElementClickInterceptedException:
-+            self.skipTest(
-+                "ElementClickInterceptedException occured. Element not v=
-isible or maybe covered by another element.")
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 09dacbc44c..7581d003fd 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -211,10 +211,12 @@ class ExportFuncsNode(AstNode):
+ 
+     def eval(self, data):
+ 
++        sentinel = "    # Export function set\n"
+         for func in self.n:
+             calledfunc = self.classname + "_" + func
+ 
+-            if data.getVar(func, False) and not data.getVarFlag(func, 'export_func', False):
++            basevar = data.getVar(func, False)
++            if basevar and sentinel not in basevar:
+                 continue
+ 
+             if data.getVar(func, False):
+@@ -231,12 +233,11 @@ class ExportFuncsNode(AstNode):
+             data.setVarFlag(func, "lineno", 1)
+ 
+             if data.getVarFlag(calledfunc, "python", False):
+-                data.setVar(func, "    bb.build.exec_func('" + calledfunc + "', d)\n", parsing=True)
++                data.setVar(func, sentinel + "    bb.build.exec_func('" + calledfunc + "', d)\n", parsing=True)
+             else:
+                 if "-" in self.classname:
+                    bb.fatal("The classname %s contains a dash character and is calling an sh function %s using EXPORT_FUNCTIONS. Since a dash is illegal in sh function names, this cannot work, please rename the class or don't use EXPORT_FUNCTIONS." % (self.classname, calledfunc))
+-                data.setVar(func, "    " + calledfunc + "\n", parsing=True)
+-            data.setVarFlag(func, 'export_func', '1')
++                data.setVar(func, sentinel + "    " + calledfunc + "\n", parsing=True)
+ 
+ class AddTaskNode(AstNode):
+     def __init__(self, filename, lineno, func, before, after):
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index 304bbbe222..72d1962e7e 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -243,3 +243,101 @@ unset A[flag@.service]
+         with self.assertRaises(bb.parse.ParseError):
+             d = bb.parse.handle(f.name, self.d)['']
+ 
++    export_function_recipe = """
++inherit someclass
++"""
 +
-     def test_delete_layer(self):
-         """ Delete the layer """
-=20
---=20
-2.34.1
++    export_function_recipe2 = """
++inherit someclass
++
++do_compile () {
++    false
++}
++
++python do_compilepython () {
++    bb.note("Something else")
++}
++
++"""
++    export_function_class = """
++someclass_do_compile() {
++    true
++}
++
++python someclass_do_compilepython () {
++    bb.note("Something")
++}
++
++EXPORT_FUNCTIONS do_compile do_compilepython
++"""
++
++    export_function_class2 = """
++secondclass_do_compile() {
++    true
++}
++
++python secondclass_do_compilepython () {
++    bb.note("Something")
++}
++
++EXPORT_FUNCTIONS do_compile do_compilepython
++"""
++
++    def test_parse_export_functions(self):
++        def check_function_flags(d):
++            self.assertEqual(d.getVarFlag("do_compile", "func"), 1)
++            self.assertEqual(d.getVarFlag("do_compilepython", "func"), 1)
++            self.assertEqual(d.getVarFlag("do_compile", "python"), None)
++            self.assertEqual(d.getVarFlag("do_compilepython", "python"), "1")
++
++        with tempfile.TemporaryDirectory() as tempdir:
++            self.d.setVar("__bbclasstype", "recipe")
++            recipename = tempdir + "/recipe.bb"
++            os.makedirs(tempdir + "/classes")
++            with open(tempdir + "/classes/someclass.bbclass", "w") as f:
++                f.write(self.export_function_class)
++                f.flush()
++            with open(tempdir + "/classes/secondclass.bbclass", "w") as f:
++                f.write(self.export_function_class2)
++                f.flush()
++
++            with open(recipename, "w") as f:
++                f.write(self.export_function_recipe)
++                f.flush()
++            os.chdir(tempdir)
++            d = bb.parse.handle(recipename, bb.data.createCopy(self.d))['']
++            self.assertIn("someclass_do_compile", d.getVar("do_compile"))
++            self.assertIn("someclass_do_compilepython", d.getVar("do_compilepython"))
++            check_function_flags(d)
++
++            recipename2 = tempdir + "/recipe2.bb"
++            with open(recipename2, "w") as f:
++                f.write(self.export_function_recipe2)
++                f.flush()
++
++            d = bb.parse.handle(recipename2, bb.data.createCopy(self.d))['']
++            self.assertNotIn("someclass_do_compile", d.getVar("do_compile"))
++            self.assertNotIn("someclass_do_compilepython", d.getVar("do_compilepython"))
++            self.assertIn("false", d.getVar("do_compile"))
++            self.assertIn("else", d.getVar("do_compilepython"))
++            check_function_flags(d)
++
++            with open(recipename, "a+") as f:
++                f.write("\ninherit secondclass\n")
++                f.flush()
++            with open(recipename2, "a+") as f:
++                f.write("\ninherit secondclass\n")
++                f.flush()
++
++            d = bb.parse.handle(recipename, bb.data.createCopy(self.d))['']
++            self.assertIn("secondclass_do_compile", d.getVar("do_compile"))
++            self.assertIn("secondclass_do_compilepython", d.getVar("do_compilepython"))
++            check_function_flags(d)
++
++            d = bb.parse.handle(recipename2, bb.data.createCopy(self.d))['']
++            self.assertNotIn("someclass_do_compile", d.getVar("do_compile"))
++            self.assertNotIn("someclass_do_compilepython", d.getVar("do_compilepython"))
++            self.assertIn("false", d.getVar("do_compile"))
++            self.assertIn("else", d.getVar("do_compilepython"))
++            check_function_flags(d)
++
+-- 
+2.39.2
 
 
