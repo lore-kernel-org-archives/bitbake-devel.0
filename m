@@ -1,217 +1,279 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E38F7C47073
-	for <webhook@archiver.kernel.org>; Tue,  9 Jan 2024 14:03:20 +0000 (UTC)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web11.17233.1704808990628655730
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECBCC46CD2
+	for <webhook@archiver.kernel.org>; Tue,  9 Jan 2024 14:10:00 +0000 (UTC)
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+ by mx.groups.io with SMTP id smtpd.web10.17602.1704809396858712575
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Jan 2024 06:03:11 -0800
+ Tue, 09 Jan 2024 06:09:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PQJIE61n;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e43e48a16so25769655e9.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jan 2024 06:03:10 -0800 (PST)
+ dkim=pass header.i=@snap.com header.s=google header.b=FsysEJsF;
+ spf=pass (domain: snapchat.com, ip: 209.85.218.52, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a28fb463a28so297817366b.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jan 2024 06:09:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1704808989; x=1705413789; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yd+ozBflBMAWaTQXpjINITpvNWvUcSUzM+l8OMkinto=;
-        b=PQJIE61n4q2nLl1UmYKtS4P/abUksDXImk9k9tcVllYTxgVx++uQXYjQQmiJfKHJek
-         J5lSyGdsCFz1eC36d94LVupiH2PeYlw/qA8fxADdeLFLhIalBq1NNp/WzAkYrU4wikTa
-         qHMZo5Fmmqu+qb4KXLLsaEI8NgtveFivLIzMU=
+        d=snap.com; s=google; t=1704809395; x=1705414195; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=W2t+VxBRJC7KiaZTBFMqafqjLx8n1CD7TzXKQgZYV24=;
+        b=FsysEJsFh/rszaXzZ3MSESvzIIkHTwwGLMRYtPzVDCjm1Rbz6BICsaN9TkFX0xRoO5
+         i0rhDwtl0MugK6BYlSwGwJTDbUDR5VTD8SkBOBBQRYlxXh1OoI4lsuJjcRg4gDUQ/WQQ
+         hsYX84adACGoMJU7kQszH/sBj7UTY8T6capIc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704808989; x=1705413789;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yd+ozBflBMAWaTQXpjINITpvNWvUcSUzM+l8OMkinto=;
-        b=vcYEGzSIQ/zeEJ8q2wwFGhDvRoxEUpliUwwV6DYm2p/mrLrWX+suo9LkDctVWsQfMA
-         Cp4zwJbxkiNe2UVHzCCF9UbWPLluDGxWB1oee/l/iQn1Bp0OtP37duFyQeq1V2pSdAHP
-         bEg4u91iZQPJnw20rgYQDoqPKdnQDJSAnDbThp/rPc2J/wXa5EY1GAaUe9id+gpGHX6h
-         6UOHvUvGfG/kg7mMsqHkI2YgunObcQr5SvAC1Pb38cZnCnp3da4a6pWHYHM9xyt7Svq0
-         3ab4SX9Mwf4H50kvhFXiLcH5sBOVNr2YprV+a71x4QTUwa4Qn/womBdsWz4HLhobxavi
-         D3ew==
-X-Gm-Message-State: AOJu0YycqK+O5WTPzQzTHnRtl97IPI/aRXz6Hbi7cmr7xR1/VCgEeT9a
-	pq60vJhP7bwcQ1gjt0N5g994/ge08z0XMITifW09C7uJz6I=
-X-Google-Smtp-Source: AGHT+IGFDr0D74k/ZbAWkkAoQ9CKm59peS/i2OcYK0BV7xBWY5FxODMVg4crzOB3yhOdW5y1on+AoA==
-X-Received: by 2002:a1c:7208:0:b0:40e:4832:9fab with SMTP id n8-20020a1c7208000000b0040e48329fabmr1473154wmc.143.1704808988506;
-        Tue, 09 Jan 2024 06:03:08 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:494c:2c49:a717:e3aa])
-        by smtp.gmail.com with ESMTPSA id q7-20020a05600c46c700b0040e4733aecbsm3728086wmo.15.2024.01.09.06.03.06
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 06:03:07 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] ast: Fix EXPORT_FUNCTIONS bug
-Date: Tue,  9 Jan 2024 14:03:06 +0000
-Message-Id: <20240109140306.3012740-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1704809395; x=1705414195;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W2t+VxBRJC7KiaZTBFMqafqjLx8n1CD7TzXKQgZYV24=;
+        b=tTsDuw9mS5+sHZV+5ZaUApfvJNivYmEtFGFmoulG/TqN8SvuwTwA7GJU9KeG0/0B1z
+         vZoI9FXsAGXL+s72h0s7fVJ5Iied7r1HQozrFawKxumG5ajB055gl4rdaSJdvYdl4pQ3
+         FLzmlpF05pBsD9VqpDd3ZuLDwU+m5756B+bNxGfhW56PH4JODjHiayHUD7zLwSHNZ5pH
+         YEQi6ykcHTc5+TNrdbZfFkNenilPpET9hkFbtX8Rib7BW7r+wkdnA6lKIOiC25PnqbzH
+         yyv9EWRy1trK0mlLOWYa4Dp7z59yU1mlobhI0zAxzxfWSBc1uUjfp2r/42es3IwWoWWK
+         qx+A==
+X-Gm-Message-State: AOJu0YyHkrW+k5fQ0RcvsczXyCUvz1YUeqASGtoLcXjqlvWfnNJ45M57
+	lmtwHr0MKi8ZBN5KDpWC/SnlouFPKb+yEJ3nejR+suxu8Kp6REiNOvmruPSgkLklzg==
+X-Google-Smtp-Source: AGHT+IHgWtfopiL6FtWwEZPf+WhQ3tAYs0tG1j13t1Xc5LoEm/PlpHgzkCh8MtyhLJCtq9dN1ZUl8bVmSugVmmUtil0=
+X-Received: by 2002:a17:906:f287:b0:a23:35d2:cf97 with SMTP id
+ gu7-20020a170906f28700b00a2335d2cf97mr542499ejb.64.1704809395173; Tue, 09 Jan
+ 2024 06:09:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230713105303.4105584-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20230713105303.4105584-1-richard.purdie@linuxfoundation.org>
+From: Etienne Cordonnier <ecordonnier@snap.com>
+Date: Tue, 9 Jan 2024 15:09:44 +0100
+Message-ID: <CAHUKmYZvYbs236DUrUna_SGRm-9R1SPkDAvZJn+XkrwJri2xNg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] runqueue: Add pressure change logging
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org, 
+	Randy MacLeod <Randy.MacLeod@windriver.com>
+Content-Type: multipart/alternative; boundary="000000000000692287060e83de31"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 09 Jan 2024 14:03:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15761
+ <bitbake-devel@lists.openembedded.org>; Tue, 09 Jan 2024 14:10:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15762
 
-If you have two classes, both of which set EXPORT_FUNCTIONS for the same funciton
-and a standard funciton definition for the function that is exported, the export
-function can sometimes overwrite the standard one.
+--000000000000692287060e83de31
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The issue is that the internal flag the code uses isn't ovweritten if the variable
-is giving a new value. Fix the issue by using a comment in the code that is injected
-so that we know if it is ours or not.
+Hi Richard,
+how much logging is this generating for your local builds? I'm
+using BB_PRESSURE_MAX_CPU=3D"500", and this patch generates hundreds of lin=
+es
+of logs during a typical build (on kirkstone 4.0.15). Is that the expected
+behavior? It makes it hard to read other logs.
 
-Also add some testing for EXPORT_FUNCTIONS, not perfect but a start.
+E.g. this incremental build with 300 tasks printed 280 lines of Pressure
+status change:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/parse/ast.py   |  9 ++--
- lib/bb/tests/parse.py | 98 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 103 insertions(+), 4 deletions(-)
+...
+NOTE: Pressure status changed to CPU: False, IO: None, Mem: None (CPU:
+495.3/500.0, IO: 1723.0/None, Mem: 0.0/None) - using 1/48 bitbake threads
+NOTE: Pressure status changed to CPU: True, IO: None, Mem: None (CPU:
+985.3/500.0, IO: 2201.8/None, Mem: 176.8/None) - using 1/48 bitbake threads
+NOTE: Pressure status changed to CPU: False, IO: None, Mem: None (CPU:
+420.8/500.0, IO: 0.0/None, Mem: 0.0/None) - using 1/48 bitbake threads
+NOTE: Pressure status changed to CPU: True, IO: None, Mem: None (CPU:
+4049.8/500.0, IO: 14719.7/None, Mem: 0.0/None) - using 1/48 bitbake threads
+NOTE: Pressure status changed to CPU: False, IO: None, Mem: None (CPU:
+0.0/500.0, IO: 0.0/None, Mem: 0.0/None) - using 1/48 bitbake threads
+NOTE: Pressure status changed to CPU: True, IO: None, Mem: None (CPU:
+21922.9/500.0, IO: 10137.8/None, Mem: 194.8/None) - using 1/48 bitbake
+threads
+NOTE: Tasks Summary: Attempted 928 tasks of which 635 didn't need to be
+rerun and all succeeded.
+...
 
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 09dacbc44c..7581d003fd 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -211,10 +211,12 @@ class ExportFuncsNode(AstNode):
- 
-     def eval(self, data):
- 
-+        sentinel = "    # Export function set\n"
-         for func in self.n:
-             calledfunc = self.classname + "_" + func
- 
--            if data.getVar(func, False) and not data.getVarFlag(func, 'export_func', False):
-+            basevar = data.getVar(func, False)
-+            if basevar and sentinel not in basevar:
-                 continue
- 
-             if data.getVar(func, False):
-@@ -231,12 +233,11 @@ class ExportFuncsNode(AstNode):
-             data.setVarFlag(func, "lineno", 1)
- 
-             if data.getVarFlag(calledfunc, "python", False):
--                data.setVar(func, "    bb.build.exec_func('" + calledfunc + "', d)\n", parsing=True)
-+                data.setVar(func, sentinel + "    bb.build.exec_func('" + calledfunc + "', d)\n", parsing=True)
-             else:
-                 if "-" in self.classname:
-                    bb.fatal("The classname %s contains a dash character and is calling an sh function %s using EXPORT_FUNCTIONS. Since a dash is illegal in sh function names, this cannot work, please rename the class or don't use EXPORT_FUNCTIONS." % (self.classname, calledfunc))
--                data.setVar(func, "    " + calledfunc + "\n", parsing=True)
--            data.setVarFlag(func, 'export_func', '1')
-+                data.setVar(func, sentinel + "    " + calledfunc + "\n", parsing=True)
- 
- class AddTaskNode(AstNode):
-     def __init__(self, filename, lineno, func, before, after):
-diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-index 304bbbe222..72d1962e7e 100644
---- a/lib/bb/tests/parse.py
-+++ b/lib/bb/tests/parse.py
-@@ -243,3 +243,101 @@ unset A[flag@.service]
-         with self.assertRaises(bb.parse.ParseError):
-             d = bb.parse.handle(f.name, self.d)['']
- 
-+    export_function_recipe = """
-+inherit someclass
-+"""
-+
-+    export_function_recipe2 = """
-+inherit someclass
-+
-+do_compile () {
-+    false
-+}
-+
-+python do_compilepython () {
-+    bb.note("Something else")
-+}
-+
-+"""
-+    export_function_class = """
-+someclass_do_compile() {
-+    true
-+}
-+
-+python someclass_do_compilepython () {
-+    bb.note("Something")
-+}
-+
-+EXPORT_FUNCTIONS do_compile do_compilepython
-+"""
-+
-+    export_function_class2 = """
-+secondclass_do_compile() {
-+    true
-+}
-+
-+python secondclass_do_compilepython () {
-+    bb.note("Something")
-+}
-+
-+EXPORT_FUNCTIONS do_compile do_compilepython
-+"""
-+
-+    def test_parse_export_functions(self):
-+        def check_function_flags(d):
-+            self.assertEqual(d.getVarFlag("do_compile", "func"), 1)
-+            self.assertEqual(d.getVarFlag("do_compilepython", "func"), 1)
-+            self.assertEqual(d.getVarFlag("do_compile", "python"), None)
-+            self.assertEqual(d.getVarFlag("do_compilepython", "python"), "1")
-+
-+        with tempfile.TemporaryDirectory() as tempdir:
-+            self.d.setVar("__bbclasstype", "recipe")
-+            recipename = tempdir + "/recipe.bb"
-+            os.makedirs(tempdir + "/classes")
-+            with open(tempdir + "/classes/someclass.bbclass", "w") as f:
-+                f.write(self.export_function_class)
-+                f.flush()
-+            with open(tempdir + "/classes/secondclass.bbclass", "w") as f:
-+                f.write(self.export_function_class2)
-+                f.flush()
-+
-+            with open(recipename, "w") as f:
-+                f.write(self.export_function_recipe)
-+                f.flush()
-+            os.chdir(tempdir)
-+            d = bb.parse.handle(recipename, bb.data.createCopy(self.d))['']
-+            self.assertIn("someclass_do_compile", d.getVar("do_compile"))
-+            self.assertIn("someclass_do_compilepython", d.getVar("do_compilepython"))
-+            check_function_flags(d)
-+
-+            recipename2 = tempdir + "/recipe2.bb"
-+            with open(recipename2, "w") as f:
-+                f.write(self.export_function_recipe2)
-+                f.flush()
-+
-+            d = bb.parse.handle(recipename2, bb.data.createCopy(self.d))['']
-+            self.assertNotIn("someclass_do_compile", d.getVar("do_compile"))
-+            self.assertNotIn("someclass_do_compilepython", d.getVar("do_compilepython"))
-+            self.assertIn("false", d.getVar("do_compile"))
-+            self.assertIn("else", d.getVar("do_compilepython"))
-+            check_function_flags(d)
-+
-+            with open(recipename, "a+") as f:
-+                f.write("\ninherit secondclass\n")
-+                f.flush()
-+            with open(recipename2, "a+") as f:
-+                f.write("\ninherit secondclass\n")
-+                f.flush()
-+
-+            d = bb.parse.handle(recipename, bb.data.createCopy(self.d))['']
-+            self.assertIn("secondclass_do_compile", d.getVar("do_compile"))
-+            self.assertIn("secondclass_do_compilepython", d.getVar("do_compilepython"))
-+            check_function_flags(d)
-+
-+            d = bb.parse.handle(recipename2, bb.data.createCopy(self.d))['']
-+            self.assertNotIn("someclass_do_compile", d.getVar("do_compile"))
-+            self.assertNotIn("someclass_do_compilepython", d.getVar("do_compilepython"))
-+            self.assertIn("false", d.getVar("do_compile"))
-+            self.assertIn("else", d.getVar("do_compilepython"))
-+            check_function_flags(d)
-+
--- 
-2.39.2
 
+On Thu, Jul 13, 2023 at 12:53=E2=80=AFPM Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> It is currently hard to tell when bitbake is throttling task execution
+> due to system pressure changes. Add notes to the console output to make
+> this clearer, only generating output when the values change.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/runqueue.py | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+> index 241a746ebb..020ad210d8 100644
+> --- a/lib/bb/runqueue.py
+> +++ b/lib/bb/runqueue.py
+> @@ -212,6 +212,10 @@ class RunQueueScheduler(object):
+>                      exceeds_cpu_pressure =3D  self.rq.max_cpu_pressure a=
+nd
+> (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) >
+> self.rq.max_cpu_pressure
+>                      exceeds_io_pressure =3D  self.rq.max_io_pressure and
+> (float(curr_io_pressure) - float(self.prev_io_pressure)) >
+> self.rq.max_io_pressure
+>                      exceeds_memory_pressure =3D self.rq.max_memory_press=
+ure
+> and (float(curr_memory_pressure) - float(self.prev_memory_pressure)) >
+> self.rq.max_memory_pressure
+> +            pressure_state =3D (exceeds_cpu_pressure, exceeds_io_pressur=
+e,
+> exceeds_memory_pressure)
+> +            if hasattr(self, "pressure_state") and pressure_state !=3D
+> self.pressure_state:
+> +                bb.note("Pressure status changed to CPU: %s, IO: %s, Mem=
+:
+> %s" % pressure_state)
+> +            self.pressure_state =3D pressure_state
+>              return (exceeds_cpu_pressure or exceeds_io_pressure or
+> exceeds_memory_pressure)
+>          return False
+>
+> --
+> 2.39.2
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#14881):
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_g_bitbake-2Ddevel_message_14881&d=3DDwIFaQ&c=3DncDTmphkJTvjIDPh0hpF_4v=
+CHvabgGkICC2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3D2-=
+D0LIZ9jb_OQ0moDf52X1uxL_mzlLgg8a-EtbfpZ_puk14Q5m5U-o6j9Z5SyEhW&s=3DHjxf_Hw5=
+nNdsxYpgqQ_Wqrx3puDIhkG90ziaM598yaA&e=3D
+> Mute This Topic:
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_mt_100117828_7048771&d=3DDwIFaQ&c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC=
+2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3D2-D0LIZ9jb_OQ=
+0moDf52X1uxL_mzlLgg8a-EtbfpZ_puk14Q5m5U-o6j9Z5SyEhW&s=3D3oXO64d9MSfEwmmOaRS=
+rprXDBuuz3pyuHrJ-kXt7UxA&e=3D
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe:
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_g_bitbake-2Ddevel_leave_12014517_7048771_89430669_xyzzy&d=3DDwIFaQ&c=
+=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRi=
+h1DULJTKUkSGa66m67E&m=3D2-D0LIZ9jb_OQ0moDf52X1uxL_mzlLgg8a-EtbfpZ_puk14Q5m5=
+U-o6j9Z5SyEhW&s=3Djyn0SAZ3VS4StYDnGqsmCY4F29xjKG26cMKCObc1fxw&e=3D
+> [ecordonnier@snap.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
+
+--000000000000692287060e83de31
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Richard,<br>how much logging is this generating for you=
+r=C2=A0local builds? I&#39;m using=C2=A0BB_PRESSURE_MAX_CPU=3D&quot;500&quo=
+t;, and this patch generates hundreds of lines of logs during a typical bui=
+ld (on kirkstone 4.0.15). Is that the expected behavior? It makes it hard t=
+o read other logs.<br><br>E.g. this incremental build with 300 tasks printe=
+d 280 lines of Pressure status change:<br><br>...<br>NOTE: Pressure status =
+changed to CPU: False, IO: None, Mem: None (CPU: 495.3/500.0, IO: 1723.0/No=
+ne, Mem: 0.0/None) - using 1/48 bitbake threads<br>NOTE: Pressure status ch=
+anged to CPU: True, IO: None, Mem: None (CPU: 985.3/500.0, IO: 2201.8/None,=
+ Mem: 176.8/None) - using 1/48 bitbake threads<br>NOTE: Pressure status cha=
+nged to CPU: False, IO: None, Mem: None (CPU: 420.8/500.0, IO: 0.0/None, Me=
+m: 0.0/None) - using 1/48 bitbake threads<br>NOTE: Pressure status changed =
+to CPU: True, IO: None, Mem: None (CPU: 4049.8/500.0, IO: 14719.7/None, Mem=
+: 0.0/None) - using 1/48 bitbake threads<br>NOTE: Pressure status changed t=
+o CPU: False, IO: None, Mem: None (CPU: 0.0/500.0, IO: 0.0/None, Mem: 0.0/N=
+one) - using 1/48 bitbake threads<br>NOTE: Pressure status changed to CPU: =
+True, IO: None, Mem: None (CPU: 21922.9/500.0, IO: 10137.8/None, Mem: 194.8=
+/None) - using 1/48 bitbake threads<br>NOTE: Tasks Summary: Attempted 928 t=
+asks of which 635 didn&#39;t need to be rerun and all succeeded.<br>...<br>=
+<br></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_at=
+tr">On Thu, Jul 13, 2023 at 12:53=E2=80=AFPM Richard Purdie &lt;<a href=3D"=
+mailto:richard.purdie@linuxfoundation.org">richard.purdie@linuxfoundation.o=
+rg</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margi=
+n:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex=
+">It is currently hard to tell when bitbake is throttling task execution<br=
+>
+due to system pressure changes. Add notes to the console output to make<br>
+this clearer, only generating output when the values change.<br>
+<br>
+Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
+ndation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;<b=
+r>
+---<br>
+=C2=A0lib/bb/runqueue.py | 4 ++++<br>
+=C2=A01 file changed, 4 insertions(+)<br>
+<br>
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py<br>
+index 241a746ebb..020ad210d8 100644<br>
+--- a/lib/bb/runqueue.py<br>
++++ b/lib/bb/runqueue.py<br>
+@@ -212,6 +212,10 @@ class RunQueueScheduler(object):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0exceeds_cpu_pressure =3D=C2=A0 self.rq.max_cpu_pressure and (float(curr_=
+cpu_pressure) - float(self.prev_cpu_pressure)) &gt; self.rq.max_cpu_pressur=
+e<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0exceeds_io_pressure =3D=C2=A0 self.rq.max_io_pressure and (float(curr_io=
+_pressure) - float(self.prev_io_pressure)) &gt; self.rq.max_io_pressure<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0exceeds_memory_pressure =3D self.rq.max_memory_pressure and (float(curr_=
+memory_pressure) - float(self.prev_memory_pressure)) &gt; self.rq.max_memor=
+y_pressure<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pressure_state =3D (exceeds_cpu_=
+pressure, exceeds_io_pressure, exceeds_memory_pressure)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if hasattr(self, &quot;pressure_=
+state&quot;) and pressure_state !=3D self.pressure_state:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.note(&quot;Pres=
+sure status changed to CPU: %s, IO: %s, Mem: %s&quot; % pressure_state)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.pressure_state =3D pressure=
+_state<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return (exceeds_cpu_pressur=
+e or exceeds_io_pressure or exceeds_memory_pressure)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return False<br>
+<br>
+-- <br>
+2.39.2<br>
+<br>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#14881): <a href=3D"https://urldefense.proofpoint.com/v2=
+/url?u=3Dhttps-3A__lists.openembedded.org_g_bitbake-2Ddevel_message_14881&a=
+mp;d=3DDwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DA=
+hkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3D2-D0LIZ9jb_OQ0moDf52X1ux=
+L_mzlLgg8a-EtbfpZ_puk14Q5m5U-o6j9Z5SyEhW&amp;s=3DHjxf_Hw5nNdsxYpgqQ_Wqrx3pu=
+DIhkG90ziaM598yaA&amp;e=3D" rel=3D"noreferrer" target=3D"_blank">https://ur=
+ldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded.org_g_bitba=
+ke-2Ddevel_message_14881&amp;d=3DDwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHva=
+bgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=
+=3D2-D0LIZ9jb_OQ0moDf52X1uxL_mzlLgg8a-EtbfpZ_puk14Q5m5U-o6j9Z5SyEhW&amp;s=
+=3DHjxf_Hw5nNdsxYpgqQ_Wqrx3puDIhkG90ziaM598yaA&amp;e=3D</a> <br>
+Mute This Topic: <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dht=
+tps-3A__lists.openembedded.org_mt_100117828_7048771&amp;d=3DDwIFaQ&amp;c=3D=
+ncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Qj9TsR=
+ih1DULJTKUkSGa66m67E&amp;m=3D2-D0LIZ9jb_OQ0moDf52X1uxL_mzlLgg8a-EtbfpZ_puk1=
+4Q5m5U-o6j9Z5SyEhW&amp;s=3D3oXO64d9MSfEwmmOaRSrprXDBuuz3pyuHrJ-kXt7UxA&amp;=
+e=3D" rel=3D"noreferrer" target=3D"_blank">https://urldefense.proofpoint.co=
+m/v2/url?u=3Dhttps-3A__lists.openembedded.org_mt_100117828_7048771&amp;d=3D=
+DwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonV=
+uMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3D2-D0LIZ9jb_OQ0moDf52X1uxL_mzlLg=
+g8a-EtbfpZ_puk14Q5m5U-o6j9Z5SyEhW&amp;s=3D3oXO64d9MSfEwmmOaRSrprXDBuuz3pyuH=
+rJ-kXt7UxA&amp;e=3D</a> <br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dhttps-=
+3A__lists.openembedded.org_g_bitbake-2Ddevel_leave_12014517_7048771_8943066=
+9_xyzzy&amp;d=3DDwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&=
+amp;r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3D2-D0LIZ9jb_OQ0m=
+oDf52X1uxL_mzlLgg8a-EtbfpZ_puk14Q5m5U-o6j9Z5SyEhW&amp;s=3Djyn0SAZ3VS4StYDnG=
+qsmCY4F29xjKG26cMKCObc1fxw&amp;e=3D" rel=3D"noreferrer" target=3D"_blank">h=
+ttps://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded.or=
+g_g_bitbake-2Ddevel_leave_12014517_7048771_89430669_xyzzy&amp;d=3DDwIFaQ&am=
+p;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_=
+Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3D2-D0LIZ9jb_OQ0moDf52X1uxL_mzlLgg8a-Etbfp=
+Z_puk14Q5m5U-o6j9Z5SyEhW&amp;s=3Djyn0SAZ3VS4StYDnGqsmCY4F29xjKG26cMKCObc1fx=
+w&amp;e=3D</a>=C2=A0 [<a href=3D"mailto:ecordonnier@snap.com" target=3D"_bl=
+ank">ecordonnier@snap.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
+
+--000000000000692287060e83de31--
 
