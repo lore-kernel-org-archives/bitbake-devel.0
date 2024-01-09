@@ -1,102 +1,95 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alassane.yattara@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7703C46CD2
-	for <webhook@archiver.kernel.org>; Tue,  9 Jan 2024 14:13:00 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web10.17688.1704809575259631169
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA0CC46CD2
+	for <webhook@archiver.kernel.org>; Tue,  9 Jan 2024 16:27:41 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web11.20966.1704817656693133108
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Jan 2024 06:12:55 -0800
+ Tue, 09 Jan 2024 08:27:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Fy8TzHjX;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40d60c49ee7so34131055e9.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jan 2024 06:12:55 -0800 (PST)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=MhC6EazK;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: alassane.yattara@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 0AACD9C2AA0
+	for <bitbake-devel@lists.openembedded.org>; Tue,  9 Jan 2024 11:27:36 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id ej3obuw_Rkr0; Tue,  9 Jan 2024 11:27:35 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 847489C0AAC;
+	Tue,  9 Jan 2024 11:27:35 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 847489C0AAC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1704809574; x=1705414374; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wazP445OTSlGetWyotZWbeBouSxTOV7JusIATcLCd2c=;
-        b=Fy8TzHjXepllaWYzNRXJpANyYOUaWl1v5Jg822wDnoyc+qEFihNbvGiAboaAp1ynQ7
-         RJtPdUsu2Gv5EmNZvF3gbf/4DhiLW4Ygq9U/eH7GALDe/PmU9MFAA8rF6GL1g3S44guT
-         ei9n85JUtqguv5TySAgw0fb/c/cRB5v13xryo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704809574; x=1705414374;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wazP445OTSlGetWyotZWbeBouSxTOV7JusIATcLCd2c=;
-        b=oWJmOJsT18S2VhCh9b6AB/JfRt92MKAezqUE/mL6RyN8ZkWZgYKBaatWIxbqtMICp7
-         i4Iw1jFbOQB69cLH3EKuiv3GeJmgAQxvmGdajD9zKrQ+LegUu3HqQZlFvwA4CLEehiDY
-         P99Jo/SAlDWvVL4jMDDQsvZoGJzO1Sx0lj7qvboGLUsUS16XY4DJJYa/10JWzNrgvb5z
-         aVJy/vhf4eDdS9vxkV/oEJ9Dd056DPTs0+D7Zq8F+0nIbw4s3+ks1DihD1EjohMgwTZh
-         uQ5hVXjohRxjlZvd6sBIZsxZ4o5BWaH5ofa2N7OXty8tBZg33OwL/qwjTdwn3XT6FWpc
-         utGA==
-X-Gm-Message-State: AOJu0Yxnwe3yhZxOAmgKvn6qaU1ptgbtTZD5m8zYiaCc7f/Xg+A5kgPV
-	nhcbKDSlhiE7BjP5t9ckWTiX/OvvyFMVqg==
-X-Google-Smtp-Source: AGHT+IHp/yDbrXJLT0ajQgUdKFlxQL2vm4AUNmXI69MiKv1f73xsI/mknobbxlm4XxcFG+1udWHyPQ==
-X-Received: by 2002:a05:600c:b49:b0:40e:4686:a59f with SMTP id k9-20020a05600c0b4900b0040e4686a59fmr1861637wmr.41.1704809573755;
-        Tue, 09 Jan 2024 06:12:53 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:494c:2c49:a717:e3aa? ([2001:8b0:aba:5f3c:494c:2c49:a717:e3aa])
-        by smtp.gmail.com with ESMTPSA id e13-20020a05600c4e4d00b0040d79907acasm15067342wmq.26.2024.01.09.06.12.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 06:12:52 -0800 (PST)
-Message-ID: <15224f4fe986ab3508c1d0dc3d9b33b0b3e2e9c0.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] runqueue: Add pressure change logging
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Etienne Cordonnier <ecordonnier@snap.com>
-Cc: bitbake-devel@lists.openembedded.org, Randy MacLeod
-	 <Randy.MacLeod@windriver.com>
-Date: Tue, 09 Jan 2024 14:12:52 +0000
-In-Reply-To: <CAHUKmYZvYbs236DUrUna_SGRm-9R1SPkDAvZJn+XkrwJri2xNg@mail.gmail.com>
-References: <20230713105303.4105584-1-richard.purdie@linuxfoundation.org>
-	 <CAHUKmYZvYbs236DUrUna_SGRm-9R1SPkDAvZJn+XkrwJri2xNg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1704817655; bh=UkLfyjM4OdlRSPJ5BcZXvkIWvhyghgi/K4h0N5TTjBk=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=MhC6EazKzjuPYYzNu0vkZdon/BHurzZjznaXfkfQyK8mdqa7SzgiBhVMTL0S/yXin
+	 0cxRs3jvv5Uok70RCZEORhbZ9XomQnPFkBMBsHJnc/0TT4M9Bi3QZiXZBoe7DNtb+r
+	 nyVQgQLmRgLnK1XexH4BzHK8pn4MV2OPLR0J+z0fILSw1cgsF76nGueWubGyavGZiN
+	 t/pbR2YYSDMh3397pwRsbaGRnwgjh9XTfzgb+lwcitMT8EohfAl6UE1CZxXd42DoaT
+	 bU7pp0HMv4hcNlIpIr497TjcdiHSwNjcmj/DwsUevKLpa05as/BCzWWQbqnRLc9xkm
+	 jCGesHz2+j9Jg==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id pC2U75RSORrv; Tue,  9 Jan 2024 11:27:35 -0500 (EST)
+Received: from jedi.. (unknown [196.127.183.75])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id A9FC49C08FE;
+	Tue,  9 Jan 2024 11:27:34 -0500 (EST)
+From: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+Subject: [PATCH v3 2/4] toaster/test: bug-fix "#hint-error-project-name" should be visible
+Date: Tue,  9 Jan 2024 17:27:27 +0100
+Message-Id: <20240109162729.531311-2-alassane.yattara@savoirfairelinux.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240109162729.531311-1-alassane.yattara@savoirfairelinux.com>
+References: <20240109162729.531311-1-alassane.yattara@savoirfairelinux.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 09 Jan 2024 14:13:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15763
+ <bitbake-devel@lists.openembedded.org>; Tue, 09 Jan 2024 16:27:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15765
 
-On Tue, 2024-01-09 at 15:09 +0100, Etienne Cordonnier wrote:
-> how much logging is this generating for your=C2=A0local builds? I'm
-> using=C2=A0BB_PRESSURE_MAX_CPU=3D"500", and this patch generates hundreds=
- of
-> lines of logs during a typical build (on kirkstone 4.0.15). Is that
-> the expected behavior? It makes it hard to read other logs.
->=20
-> E.g. this incremental build with 300 tasks printed 280 lines of
-> Pressure status change:
->=20
-> ...
-> NOTE: Pressure status changed to CPU: False, IO: None, Mem: None (CPU: 49=
-5.3/500.0, IO: 1723.0/None, Mem: 0.0/None) - using 1/48 bitbake threads
-> NOTE: Pressure status changed to CPU: True, IO: None, Mem: None (CPU: 985=
-.3/500.0, IO: 2201.8/None, Mem: 176.8/None) - using 1/48 bitbake threads
-> NOTE: Pressure status changed to CPU: False, IO: None, Mem: None (CPU: 42=
-0.8/500.0, IO: 0.0/None, Mem: 0.0/None) - using 1/48 bitbake threads
-> NOTE: Pressure status changed to CPU: True, IO: None, Mem: None (CPU: 404=
-9.8/500.0, IO: 14719.7/None, Mem: 0.0/None) - using 1/48 bitbake threads
-> NOTE: Pressure status changed to CPU: False, IO: None, Mem: None (CPU: 0.=
-0/500.0, IO: 0.0/None, Mem: 0.0/None) - using 1/48 bitbake threads
-> NOTE: Pressure status changed to CPU: True, IO: None, Mem: None (CPU: 219=
-22.9/500.0, IO: 10137.8/None, Mem: 194.8/None) - using 1/48 bitbake threads
-> NOTE: Tasks Summary: Attempted 928 tasks of which 635 didn't need to be r=
-erun and all succeeded.
-> ...
+Failed: https://autobuilder.yoctoproject.org/typhoon/#/builders/161/build=
+s/142
 
-It does add a lot of logging. I was torn on adding it but we have
-struggled to get the log levels right and this information is useful as
-you often need it to get the pressure values right. I'm torn on it.
+Signed-off-by: Alassane Yattara <alassane.yattara@savoirfairelinux.com>
+---
+ lib/toaster/tests/browser/test_new_project_page.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Cheers,
-
-Richard
-
+diff --git a/lib/toaster/tests/browser/test_new_project_page.py b/lib/toa=
+ster/tests/browser/test_new_project_page.py
+index 70b55f3c..458bb653 100644
+--- a/lib/toaster/tests/browser/test_new_project_page.py
++++ b/lib/toaster/tests/browser/test_new_project_page.py
+@@ -79,6 +79,7 @@ class TestNewProjectPage(SeleniumTestCase):
+=20
+         url =3D reverse('newproject')
+         self.get(url)
++        self.wait_until_visible('#new-project-name', poll=3D3)
+=20
+         self.enter_text('#new-project-name', project_name)
+=20
+@@ -90,7 +91,8 @@ class TestNewProjectPage(SeleniumTestCase):
+=20
+         self.click("#create-project-button")
+=20
+-        element =3D self.wait_until_visible('#hint-error-project-name', =
+poll=3D3)
++        self.wait_until_present('#hint-error-project-name', poll=3D3)
++        element =3D self.find('#hint-error-project-name')
+=20
+         self.assertTrue(("Project names must be unique" in element.text)=
+,
+                         "Did not find unique project name error message"=
+)
+--=20
+2.34.1
 
 
