@@ -1,104 +1,81 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0280C4706C
-	for <webhook@archiver.kernel.org>; Fri, 12 Jan 2024 12:13:43 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web11.5634.1705061618007088353
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A81E4C4706C
+	for <webhook@archiver.kernel.org>; Fri, 12 Jan 2024 12:27:53 +0000 (UTC)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+ by mx.groups.io with SMTP id smtpd.web11.5835.1705062468136364243
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Jan 2024 04:13:38 -0800
+ Fri, 12 Jan 2024 04:27:48 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NV6KjvoM;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-336dcebcdb9so5666014f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Jan 2024 04:13:37 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=TUNeQCWu;
+ spf=pass (domain: gmail.com, ip: 209.85.167.53, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-50ea98440a7so6621064e87.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Jan 2024 04:27:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1705061616; x=1705666416; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QlwSxZFZlb1ukhYeOk6vWmv3npBW5FlaUPVfT/btBE0=;
-        b=NV6KjvoM68/RoTzahP6BLjQs1DciNxwy7Po9ZcdGJMyF0j9laSBiFbAIgcNqfluxkO
-         bUv2HYQ2tcyQ284/HdacabFgCtO15tRBWnZhlfiPWl970y7qCcX4m1PLy7pXlcZVzOlz
-         eixOKzXv8woc0q5df837MldqYaYpC9hjHs5Ow=
+        d=gmail.com; s=20230601; t=1705062466; x=1705667266; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=EoY0vIByT//n+K9EwXns7JxHV9jIqVMi5spQJYzWjkE=;
+        b=TUNeQCWuxYd8RfUbZDIqVmF5Y+zu6NoyhZy8plzhmoImhA+W2EatqBUr/DeXflQNRf
+         NDOjBFZpQdzf7WJ5Kb9+RPfkEyHsApXHIBz7t1KwrUtV5Ci+cgyxFrcj2WSg9e7Jzzqf
+         pvM1izNo45EIlpIJPzwy3R2UfbPiDFoRaG5JXOD1hSibPq3N2pJuH6qfYK4a6Td12kSI
+         101E+sE+UP/9dyVt78iQ0IBOD6k0jVfcjyqa8JVh+fQAy42tu0E2E/rTXvYaywzMitB8
+         nZ6NzefAvcam2pHXGAmb4HKuwhrDdA9OXss/MbWdyLD9qZrHPHq0pqsoCJWXpYZtdPz2
+         kOAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705061616; x=1705666416;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=QlwSxZFZlb1ukhYeOk6vWmv3npBW5FlaUPVfT/btBE0=;
-        b=LISVS2ErkT1e5kDyfEVdNhXjnB1n5msnXYkpxR6GrzzI8t+fhHKrx7u+WzkLGuatZi
-         OszuXgFk3Rd9JKsVC461ofRxEJZ5g4g181FAZ1KWuNqJAnIHlp8akD/jcYhrGss8Ywnc
-         lUstDF9eQ9eZHa8b9k3DKtOhOx3rfFgBeqcnPFC0STZiCh0jC/NiE52J/q7lSyeuHDJA
-         EBaKNjVUuAJ+MpaEfc/VoZrXirJe/HzRzXI1nsKxU8NSpef5VGBSGpuZ1YGS8wJZPkq4
-         RGVXWOj7koxY0RjToCYD097RWRek2hPAtpnuNCQ0DJPImm/VsD6N87BT0Y/15Gxk1bhZ
-         hCng==
-X-Gm-Message-State: AOJu0Yyc50tDJqg2kFOwSKNlccevcwsQ9ZN+4aAFn6YVWkiwt4HErVni
-	u+Go3QnxO5a1S3DvzrXf1a9N06aXkttqBw==
-X-Google-Smtp-Source: AGHT+IGOBU47xR/6jG/Yu6F7pDVGbmwW2mi/5oydZQ4TiQaekG9qRW3044qqEKtNe+gn/O+cXO0ErQ==
-X-Received: by 2002:a05:600c:4487:b0:40e:5a7f:dde with SMTP id e7-20020a05600c448700b0040e5a7f0ddemr349823wmo.259.1705061616062;
-        Fri, 12 Jan 2024 04:13:36 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:54d1:179:7c44:2de? ([2001:8b0:aba:5f3c:54d1:179:7c44:2de])
-        by smtp.gmail.com with ESMTPSA id v4-20020a05600c470400b0040e5945307esm5664295wmo.40.2024.01.12.04.13.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 04:13:35 -0800 (PST)
-Message-ID: <0186f166a0ded0d97d5e19f64a3dd8e5ad44a92f.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] regression of 'world' performance?
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alexander Kanavin <alex.kanavin@gmail.com>, bitbake-devel
-	 <bitbake-devel@lists.openembedded.org>
-Date: Fri, 12 Jan 2024 12:13:34 +0000
-In-Reply-To: <CANNYZj86b3GMtSVZMn8744HjMSMQVkzuXBTikLf4dFV0ULsvqg@mail.gmail.com>
-References: 
-	<CANNYZj86b3GMtSVZMn8744HjMSMQVkzuXBTikLf4dFV0ULsvqg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+        d=1e100.net; s=20230601; t=1705062466; x=1705667266;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EoY0vIByT//n+K9EwXns7JxHV9jIqVMi5spQJYzWjkE=;
+        b=YeMaCGmDx8eICNYGqYwb6ZGaYjYQBZ5NGDKKOskFAxZuuIu1EVxYVf3ZV6vufFLxjA
+         NK++EYP7Uexe/Y+b29N6GKEgxkPqnvafsr7CLuseesX1i2+UnS/O6p1PpKHmQPyQAHIs
+         Izdjhi8/FnSeYPdMSbQJWsOcS313U/kX+Mrh1DzxbCbns4rUFO+udM0aD7Xr8egJtCAk
+         mRMQczOR8PayVYUjKEKQ2L9V+m6t/sHkisQCpbGwsAeC9vLxGuERKpvOSdWEdNAyEhag
+         2ObdwCAGIeqXkay6lJKhC3EwokFATUnloPpx7b+ASs/7bSJdsbr8tVsLlsMpZih+iSx7
+         /LmQ==
+X-Gm-Message-State: AOJu0YzHQ4MY+VH7d1a4sLbI006HwA5rRar2Bfd/pHX1OmyzqKAQGzz1
+	+kUJqrS5SSFiATuI8AG4mw2iF0GBLtx5Qs5pkvI=
+X-Google-Smtp-Source: AGHT+IFGzWQaHawYFGA5gC3JvIh8LJhhmoBJD3LQNHnxe/d44RHNykQS4rda+XLZGiHBkc9PJ/ivnSTaGRk+Hc9eVvk=
+X-Received: by 2002:a05:6512:3d1:b0:50e:7a09:8a6f with SMTP id
+ w17-20020a05651203d100b0050e7a098a6fmr370406lfp.139.1705062466067; Fri, 12
+ Jan 2024 04:27:46 -0800 (PST)
 MIME-Version: 1.0
+References: <CANNYZj86b3GMtSVZMn8744HjMSMQVkzuXBTikLf4dFV0ULsvqg@mail.gmail.com>
+ <0186f166a0ded0d97d5e19f64a3dd8e5ad44a92f.camel@linuxfoundation.org>
+In-Reply-To: <0186f166a0ded0d97d5e19f64a3dd8e5ad44a92f.camel@linuxfoundation.org>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 12 Jan 2024 13:27:34 +0100
+Message-ID: <CANNYZj-cqQVJcs3AUvzE=Lw+mYMUWZO8JW1N-Ukz6BK3H2rchQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] regression of 'world' performance?
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Jan 2024 12:13:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15786
+ <bitbake-devel@lists.openembedded.org>; Fri, 12 Jan 2024 12:27:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15787
 
-On Fri, 2024-01-12 at 11:57 +0100, Alexander Kanavin wrote:
-> there seems to be a noticeable slowdown in bitbake doing world builds,
-> particularly when layers in meta-oe are added to it. I've locally
-> observed Cooker process spinning at 100% while no or few tasks get
-> executed, apparently deciding what to do next, and it is noticeable in
-> autobuilder too, e.g. right now:
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/88/builds/3515
->=20
-> I'd like to profile what is happening, but not sure where to start. Sugge=
-stions?
+On Fri, 12 Jan 2024 at 13:13, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> So nothing specific I can suggest but just my observations/thoughts.
+>
+> You could pull the event log json file from the build and "replay" it
+> with some new viewer tool to see if there is any specific delay
+> involved between task executions. The events should be in there to
+> allow that.
 
-I've noticed a few slow builds too but I'm not convinced it is bitbake.
+The troubling part is, I've seen cooker at 100% cpu and not
+progressing for minutes locally, on an unloaded machine. Then it
+spawns some tasks, which quickly complete, then it does nothing again
+for some time. So these might be several different sources of slowness
+we're observing. The meta-oe build I've pointed to had just about 6000
+tasks completed after some 6 hours, which is surely much slower than
+the machine is capable of (and there were no competing builds in that
+time).
 
-We observed a qemuarm-oecore build take 19 hours and of that,
-nativesdk-gcc (for i686) took 6 hours.
-
-It is likely that something else on the machine (maybe in another
-build) is probably taking up much of the CPU capacity, e.g. rust
-building or something.
-
-The reason I mention the nativesdk-gcc above is that at the point that
-is executed, bitbake is pretty much out the equation, it is just
-processing logs. Whilst it is possible bitbake is slowing it down, I
-find that unlikely and there is probably some other factor at play.
-
-It is worth noting that there is only one build currently running on
-alma9-ty-1 where the above build is and there are quite often multiple
-tasks completing each second when it updates.
-
-So nothing specific I can suggest but just my observations/thoughts.
-
-You could pull the event log json file from the build and "replay" it
-with some new viewer tool to see if there is any specific delay
-involved between task executions. The events should be in there to
-allow that.
-
-Cheers,
-
-Richard
+Alex
 
