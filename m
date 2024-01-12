@@ -2,160 +2,224 @@ Return-Path: <roro.cui@broadcom.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66357C4706C
-	for <webhook@archiver.kernel.org>; Fri, 12 Jan 2024 17:29:25 +0000 (UTC)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
- by mx.groups.io with SMTP id smtpd.web11.13541.1705080557021847045
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D81BC4706C
+	for <webhook@archiver.kernel.org>; Fri, 12 Jan 2024 17:37:15 +0000 (UTC)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+ by mx.groups.io with SMTP id smtpd.web10.13983.1705081028014445300
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Jan 2024 09:29:17 -0800
+ Fri, 12 Jan 2024 09:37:08 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@broadcom.com header.s=google header.b=PBPvBDue;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: broadcom.com, ip: 209.85.167.51, mailfrom: roro.cui@broadcom.com)
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50e78f1f41fso7118549e87.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Jan 2024 09:29:16 -0800 (PST)
+ dkim=pass header.i=@broadcom.com header.s=google header.b=CBGn9hqP;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: broadcom.com, ip: 209.85.167.52, mailfrom: roro.cui@broadcom.com)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50eabd1c701so8151484e87.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Jan 2024 09:37:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1705080555; x=1705685355; darn=lists.openembedded.org;
+        d=broadcom.com; s=google; t=1705081026; x=1705685826; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=d9KXshIHZkjNIH+EGjVQf4EcxgPOCju6MUIN/SLcCtc=;
-        b=PBPvBDuenu/Bkz02e/7IQtevll1sEbffX98xJ8BB5FQHRlOotntC1kD2RgGHvr9H39
-         Sov+Z4vLaqbiNrp45z1C2z7lsBFS4rFf1AIqS3vcQpI4OVOHIixrlwAobjm4ZhuMY7s5
-         8x63dcB5YRBqB6JkfhuPlujYgaFW38iAPiHL0=
+        bh=TuNTbIKU6WpY/oI7f8uDRgL3polhUsj+eh3Q53ofVDw=;
+        b=CBGn9hqPD508+wt/VxUNQW6Ttz/Rij/QxQvF8I3QXmCNKKzMyuKVBqspmAQXcrN9Xe
+         opdWG20sABkfu6AUj6TVAWMXMSZuMN7flk8VLdgIGz81D5KTLrf9S4/HN4591Q31HX3O
+         zg2a2xTaHdcLOQbKicsXMO1cETvSbBVE5+Itc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705080555; x=1705685355;
+        d=1e100.net; s=20230601; t=1705081026; x=1705685826;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=d9KXshIHZkjNIH+EGjVQf4EcxgPOCju6MUIN/SLcCtc=;
-        b=uaAykALcT5WDdYYyKnVpQVJDk4d1Ju3dvy980EVS/7y+JnZPzMJvcbAFf3HkwJ6GkC
-         FPaNejeCH9pvV/Y1DH5qb0Rm28EOrqhqrZNlBQNugLrIO3wU7B6OWV4I1RcWDW0xjoti
-         XvvZLXrpK2SfdwKluTIj6/ck5tDFAO013Wr9yd9KZ7ofK8mD45Q16pqp25ipU2IL0qQL
-         a8eczEc3bVE1xZFbaWl15d+8Onzps7Mhow0VmZnW4fgNJiC3jDCjEnXuqeI/tTPtX3FU
-         f+ZMvPJjKY/GOxCU8Bjz6/wAc3k95g+z8iqH7G90ENfJPSvsTpQkrIXrLVAQgTgdUvu0
-         LAvQ==
-X-Gm-Message-State: AOJu0Yxhs7vg3fX6jxr8TXV679nlAvKNPkre7+zWLOR080gzZn0GMjJy
-	vdrSo63YqSk6k850hArIab1JjBpsD7nHaWdDx3iRxV0fAdH1qIYw42KOh9cEXESyXj4OhhY7etX
-	2KgLrDnOS5ZL0wUDl0ley7bITNMWsV1G38IonusFgLcZUxs8t
-X-Google-Smtp-Source: AGHT+IHvQ+9q4sJZmWr2ZxIpKw+02797qDxXLp3vaRgJ8qWq0vFbDokQ5bEVHeHvhIKOZIp9O0Za+uKMWDFZsNB0Gfk=
-X-Received: by 2002:a05:6512:3d29:b0:50e:771a:9ff9 with SMTP id
- d41-20020a0565123d2900b0050e771a9ff9mr1061482lfv.78.1705080555129; Fri, 12
- Jan 2024 09:29:15 -0800 (PST)
+        bh=TuNTbIKU6WpY/oI7f8uDRgL3polhUsj+eh3Q53ofVDw=;
+        b=ll/gHXYDsePxcMKPIkqAxI79pYmWTR5faAOn7nX5BeB2ChBWwaJC4jwt6XY8Yt2NwZ
+         e3+tfiR5E5raQxac5/Tu/b9sD2RbgW1la06LHHX8mRk3LSBikcHKShuYHiW7vR+3VySR
+         ZeS/nbO6EVn0DSMfpT5JduBp/2FYeoRvc6ZkZBsAHYr9iIEq/NHPBv/2J4ptnqDi+X8n
+         /6+SDD4Hc/X8DSOXGNU4Gcn2WHCT8FaM1JuBN+6Gwv80WIa4wN5PiHrBpoYfv+fVCuN+
+         ev4UkO2nQkEGg+lMg8c59c1XZ/U8B3DjpgYyZvUtnOsRK5ZtJAOuxMKrHWsNUDoRwB2D
+         0A4A==
+X-Gm-Message-State: AOJu0Ywik2tya/OvOgDM5Xc8rJO1+d3mUQyrhykGafTSscGuaN1qdRqS
+	8q/4Mv3H/C80YLylUI12RPQzFFxMI/N3KU7+L1kE1zFrAEM3Q6IPtl4/1qFF2R+jXVmdQsWpMOe
+	y+T46AeKyLHVvk9rQj+2Hd6GGrlG0/Nn1vckXH8/DCQPu4iVmAFA0ozfzTiOfjA==
+X-Google-Smtp-Source: AGHT+IG8CA19gjp+9sSC18hy79IurlohWsB1SXbDmaMkNvQ8rF4yHaMfZ515ickS+Gy4suzL41PzlhEqg3qUsjVj7Qg=
+X-Received: by 2002:a05:6512:60a:b0:50e:6878:a715 with SMTP id
+ b10-20020a056512060a00b0050e6878a715mr780207lfe.48.1705081026056; Fri, 12 Jan
+ 2024 09:37:06 -0800 (PST)
 MIME-Version: 1.0
 References: <CAHBa6FM=C=yZYEVY8yp_j8rXkZ2Fq=n-4b78N2uiFS7=6rgpOw@mail.gmail.com>
- <ff0dc8f8d2d4fd86e8d9483004ee02191aa94d64.camel@linuxfoundation.org>
-In-Reply-To: <ff0dc8f8d2d4fd86e8d9483004ee02191aa94d64.camel@linuxfoundation.org>
+ <ff0dc8f8d2d4fd86e8d9483004ee02191aa94d64.camel@linuxfoundation.org> <17A9A9BBB897E15F.31870@lists.openembedded.org>
+In-Reply-To: <17A9A9BBB897E15F.31870@lists.openembedded.org>
 From: Roro Cui <roro.cui@broadcom.com>
-Date: Fri, 12 Jan 2024 12:29:02 -0500
-Message-ID: <CAHBa6FMEC87fYKwq6Ux02727nrwxi7=TZo6B7imRjWHMD1UtiA@mail.gmail.com>
+Date: Fri, 12 Jan 2024 12:36:54 -0500
+Message-ID: <CAHBa6FPyPG9oHroszumiFT-TahsmPWV8a6NNJ4e8Di48608O4g@mail.gmail.com>
 Subject: Re: [bitbake-devel] Got "ValueError: filedescriptor out of range in
  select" on bitbake v1.46.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
+To: roro.cui@broadcom.com
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	bitbake-devel@lists.openembedded.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000d3ab4c060ec3001f"
+	boundary="000000000000e636bb060ec31cff"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Jan 2024 17:29:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15791
+ <bitbake-devel@lists.openembedded.org>; Fri, 12 Jan 2024 17:37:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15792
 
---000000000000d3ab4c060ec3001f
-Content-Type: multipart/alternative; boundary="000000000000cda11a060ec30005"
+--000000000000e636bb060ec31cff
+Content-Type: multipart/alternative; boundary="000000000000df73a4060ec31c53"
 
---000000000000cda11a060ec30005
+--000000000000df73a4060ec31c53
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 hi, Richard
 
-Thank you for your reply.
-I tried BB_NUMBER_THREADS before,  that does not work, since this issue
-happens during 'parsing recipes' stage.
-But I guess BB_NUMBER_PARSE_THREADS will work, let me try it.
-Will update you soon.
-roro
+Setting BB_NUMBER_PARSE_THREADS to 256 fixes my issue.
+I am going to tune that value to see which max number triggers this kind of
+problem.
 
-On Fri, Jan 12, 2024 at 12:23=E2=80=AFPM Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+Thank you very much for your help.
+Roro
 
-> On Fri, 2024-01-12 at 11:40 -0500, Roro Cui via lists.openembedded.org
-> wrote:
-> > hi, Dear Sir or Madam
-> >
-> > I hit this issue when building the target in yocto dunfell on our new
-> server(512 cpu cores)
-> > The cooker daemon process quits abnormally. Here is the output
-> >
-> > Command Completed
-> > Running command ['getVariable', 'BBINCLUDELOGS']
-> > Command Completed
-> > Running command ['getVariable', 'BBINCLUDELOGS_LINES']
-> > Command Completed
-> > Running command ['getSetVariable', 'BB_CONSOLELOG']
-> > Command Completed
-> > Running command ['getSetVariable', 'BB_LOGCONFIG']
-> > Command Completed
-> > Running command ['getUIHandlerNum']
-> > Command Completed
-> > Running command ['setEventMask', 1, 20, {'BitBake.RunQueue.HashEquiv':
-> 19, 'BitBake.SigGen.HashEquiv': 19}, ['bb.runqueue.runQueueExitWait',
-> 'bb.event.LogExecTTY', 'logging.LogRecord', 'bb.build.TaskFailed',
-> 'bb.build.TaskBase', 'bb.event.ParseStarted', 'bb.event.ParseProgress',
-> 'bb.event.ParseCompleted', 'bb.event.CacheLoadStarted',
-> 'bb.event.CacheLoadProgress', 'bb.event.CacheLoadCompleted',
-> 'bb.command.CommandFailed', 'bb.command.CommandExit',
-> 'bb.command.CommandCompleted', 'bb.cooker.CookerExit',
-> 'bb.event.MultipleProviders', 'bb.event.NoProvider',
-> 'bb.runqueue.sceneQueueTaskStarted', 'bb.runqueue.runQueueTaskStarted',
-> 'bb.runqueue.runQueueTaskFailed', 'bb.runqueue.sceneQueueTaskFailed',
-> 'bb.event.BuildBase', 'bb.build.TaskStarted', 'bb.build.TaskSucceeded',
-> 'bb.build.TaskFailedSilent', 'bb.build.TaskProgress',
-> 'bb.event.ProcessStarted', 'bb.event.ProcessProgress',
-> 'bb.event.ProcessFinished']]
-> > Command Completed
-> > Running command ['setConfig', 'cmd', 'fetch']
-> > Command Completed
-> > Running command ['buildTargets', ['quilt-native'], 'fetch']
-> > Command Completed
-> > Process ProcessServer-1:
-> > Traceback (most recent call last):
-> >   File "/usr/lib/python3.8/multiprocessing/process.py", line 315, in
-> _bootstrap
-> >     self.run()
-> >   File
-> "/local/home1/rorocui/yocto/gr_ml_20240105/openembedded-core/bitbake/lib/=
-bb/server/process.py",
-> line 115, in run
-> >     ret =3D self.main()
-> >   File
-> "/local/home1/rorocui/yocto/gr_ml_20240105/openembedded-core/bitbake/lib/=
-bb/server/process.py",
-> line 232, in main
-> >     ready =3D self.idle_commands(.1, fds)
-> >   File
-> "/local/home1/rorocui/yocto/gr_ml_20240105/openembedded-core/bitbake/lib/=
-bb/server/process.py",
-> line 334, in idle_commands
-> >     return select.select(fds,[],[],nextsleep)[0]
-> > ValueError: filedescriptor out of range in select()
-> > Var <PATH[:=3D]>:1: SyntaxWarning: "is not" with a literal. Did you mea=
-n
-> "!=3D"?
-> >
-> > Is this a known issue?
->
-> It isn't an issue we've been tracking, no. It sounds like your 512 core
-> machine has probably run more tasks that bitbake can manage correctly.
-> Try lower values of BB_NUMBER_THREADS and BB_NUMBER_PARSE_THREADS?
->
-> You could also open a bug in bugzilla. There are probably ways to
-> improve the code to avoid select() calls but those will be invasive.
->
-> Cheers,
->
-> Richard
->
 
+On Fri, Jan 12, 2024 at 12:29=E2=80=AFPM Roro Cui via lists.openembedded.or=
+g
+<roro.cui=3Dbroadcom.com@lists.openembedded.org> wrote:
+
+> hi, Richard
+>
+> Thank you for your reply.
+> I tried BB_NUMBER_THREADS before,  that does not work, since this issue
+> happens during 'parsing recipes' stage.
+> But I guess BB_NUMBER_PARSE_THREADS will work, let me try it.
+> Will update you soon.
+> roro
+>
+> On Fri, Jan 12, 2024 at 12:23=E2=80=AFPM Richard Purdie <
+> richard.purdie@linuxfoundation.org> wrote:
+>
+>> On Fri, 2024-01-12 at 11:40 -0500, Roro Cui via lists.openembedded.org
+>> wrote:
+>> > hi, Dear Sir or Madam
+>> >
+>> > I hit this issue when building the target in yocto dunfell on our new
+>> server(512 cpu cores)
+>> > The cooker daemon process quits abnormally. Here is the output
+>> >
+>> > Command Completed
+>> > Running command ['getVariable', 'BBINCLUDELOGS']
+>> > Command Completed
+>> > Running command ['getVariable', 'BBINCLUDELOGS_LINES']
+>> > Command Completed
+>> > Running command ['getSetVariable', 'BB_CONSOLELOG']
+>> > Command Completed
+>> > Running command ['getSetVariable', 'BB_LOGCONFIG']
+>> > Command Completed
+>> > Running command ['getUIHandlerNum']
+>> > Command Completed
+>> > Running command ['setEventMask', 1, 20, {'BitBake.RunQueue.HashEquiv':
+>> 19, 'BitBake.SigGen.HashEquiv': 19}, ['bb.runqueue.runQueueExitWait',
+>> 'bb.event.LogExecTTY', 'logging.LogRecord', 'bb.build.TaskFailed',
+>> 'bb.build.TaskBase', 'bb.event.ParseStarted', 'bb.event.ParseProgress',
+>> 'bb.event.ParseCompleted', 'bb.event.CacheLoadStarted',
+>> 'bb.event.CacheLoadProgress', 'bb.event.CacheLoadCompleted',
+>> 'bb.command.CommandFailed', 'bb.command.CommandExit',
+>> 'bb.command.CommandCompleted', 'bb.cooker.CookerExit',
+>> 'bb.event.MultipleProviders', 'bb.event.NoProvider',
+>> 'bb.runqueue.sceneQueueTaskStarted', 'bb.runqueue.runQueueTaskStarted',
+>> 'bb.runqueue.runQueueTaskFailed', 'bb.runqueue.sceneQueueTaskFailed',
+>> 'bb.event.BuildBase', 'bb.build.TaskStarted', 'bb.build.TaskSucceeded',
+>> 'bb.build.TaskFailedSilent', 'bb.build.TaskProgress',
+>> 'bb.event.ProcessStarted', 'bb.event.ProcessProgress',
+>> 'bb.event.ProcessFinished']]
+>> > Command Completed
+>> > Running command ['setConfig', 'cmd', 'fetch']
+>> > Command Completed
+>> > Running command ['buildTargets', ['quilt-native'], 'fetch']
+>> > Command Completed
+>> > Process ProcessServer-1:
+>> > Traceback (most recent call last):
+>> >   File "/usr/lib/python3.8/multiprocessing/process.py", line 315, in
+>> _bootstrap
+>> >     self.run()
+>> >   File
+>> "/local/home1/rorocui/yocto/gr_ml_20240105/openembedded-core/bitbake/lib=
+/bb/server/process.py",
+>> line 115, in run
+>> >     ret =3D self.main()
+>> >   File
+>> "/local/home1/rorocui/yocto/gr_ml_20240105/openembedded-core/bitbake/lib=
+/bb/server/process.py",
+>> line 232, in main
+>> >     ready =3D self.idle_commands(.1, fds)
+>> >   File
+>> "/local/home1/rorocui/yocto/gr_ml_20240105/openembedded-core/bitbake/lib=
+/bb/server/process.py",
+>> line 334, in idle_commands
+>> >     return select.select(fds,[],[],nextsleep)[0]
+>> > ValueError: filedescriptor out of range in select()
+>> > Var <PATH[:=3D]>:1: SyntaxWarning: "is not" with a literal. Did you me=
+an
+>> "!=3D"?
+>> >
+>> > Is this a known issue?
+>>
+>> It isn't an issue we've been tracking, no. It sounds like your 512 core
+>> machine has probably run more tasks that bitbake can manage correctly.
+>> Try lower values of BB_NUMBER_THREADS and BB_NUMBER_PARSE_THREADS?
+>>
+>> You could also open a bug in bugzilla. There are probably ways to
+>> improve the code to avoid select() calls but those will be invasive.
+>>
+>> Cheers,
+>>
+>> Richard
+>>
+>
+>
+> --
+>
+> Regards
+>
+> Roro Cui
+>
+> Principal Software Engineer, Software Engineering |  STB & CM
+>
+>  *Broadcom*
+>
+>
+>
+> *office:* 678.475.2897(X72897) |  *fax:* 678.475.2888
+>
+> 4385 River Green Parkway  |  Duluth, GA 30096
+>
+> roro.cui@broadcom.com <danny.zhang@broadcom.com>   |   broadcom.com
+>
+>
+>
+>
+> This electronic communication and the information and any files
+> transmitted with it, or attached to it, are confidential and are intended
+> solely for the use of the individual or entity to whom it is addressed an=
+d
+> may contain information that is confidential, legally privileged, protect=
+ed
+> by privacy laws, or otherwise restricted from disclosure to anyone else. =
+If
+> you are not the intended recipient or the person responsible for deliveri=
+ng
+> the e-mail to the intended recipient, you are hereby notified that any us=
+e,
+> copying, distributing, dissemination, forwarding, printing, or copying of
+> this e-mail is strictly prohibited. If you received this e-mail in error,
+> please return the e-mail to the sender, delete it from your computer, and
+> destroy any printed copy of it.
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#15791):
+> https://lists.openembedded.org/g/bitbake-devel/message/15791
+> Mute This Topic: https://lists.openembedded.org/mt/103686457/8130911
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> roro.cui@broadcom.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
 
 --=20
 
@@ -194,22 +258,35 @@ please return the e-mail to the sender, delete it from your computer, and=
 =20
 destroy any printed copy of it.
 
---000000000000cda11a060ec30005
+--000000000000df73a4060ec31c53
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">hi, Richard<div><br></div><div>Thank you for your reply.=
-=C2=A0</div><div>I tried BB_NUMBER_THREADS before,=C2=A0 that does not work=
-, since=C2=A0this issue happens during &#39;parsing recipes&#39; stage.</di=
-v><div>But I guess BB_NUMBER_PARSE_THREADS will work, let me try it.</div><=
-div>Will update you soon.</div><div>roro</div></div><br><div class=3D"gmail=
-_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, Jan 12, 2024 at 12:23=
-=E2=80=AFPM Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfounda=
-tion.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><block=
-quote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1=
-px solid rgb(204,204,204);padding-left:1ex">On Fri, 2024-01-12 at 11:40 -05=
-00, Roro Cui via <a href=3D"http://lists.openembedded.org" rel=3D"noreferre=
-r" target=3D"_blank">lists.openembedded.org</a> wrote:<br>
+<div dir=3D"ltr">hi, Richard<div><br></div><div>Setting=C2=A0<span style=3D=
+"color:rgb(80,0,80)">BB_NUMBER_PARSE_THREADS to 256 fixes my issue.</span><=
+/div><div><font color=3D"#500050">I am going to tune that value to see whic=
+h max number triggers this kind of problem.</font></div><div><font color=3D=
+"#500050"><br></font></div><div><font color=3D"#500050">Thank you very much=
+ for your help.</font></div><div><font color=3D"#500050">Roro<br></font><di=
+v><br></div></div></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" cla=
+ss=3D"gmail_attr">On Fri, Jan 12, 2024 at 12:29=E2=80=AFPM Roro Cui via <a =
+href=3D"http://lists.openembedded.org">lists.openembedded.org</a> &lt;roro.=
+cui=3D<a href=3D"mailto:broadcom.com@lists.openembedded.org">broadcom.com@l=
+ists.openembedded.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_qu=
+ote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,20=
+4);padding-left:1ex"><div dir=3D"ltr">hi, Richard<div><br></div><div>Thank =
+you for your reply.=C2=A0</div><div>I tried BB_NUMBER_THREADS before,=C2=A0=
+ that does not work, since=C2=A0this issue happens during &#39;parsing reci=
+pes&#39; stage.</div><div>But I guess BB_NUMBER_PARSE_THREADS will work, le=
+t me try it.</div><div>Will update you soon.</div><div>roro</div></div><br>=
+<div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, Ja=
+n 12, 2024 at 12:23=E2=80=AFPM Richard Purdie &lt;<a href=3D"mailto:richard=
+.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@linuxfoundati=
+on.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"m=
+argin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left=
+:1ex">On Fri, 2024-01-12 at 11:40 -0500, Roro Cui via <a href=3D"http://lis=
+ts.openembedded.org" rel=3D"noreferrer" target=3D"_blank">lists.openembedde=
+d.org</a> wrote:<br>
 &gt; hi, Dear Sir or Madam<br>
 &gt; <br>
 &gt; I hit this issue when building the target in yocto dunfell on our new =
@@ -287,6 +364,78 @@ Cheers,<br>
 Richard<br>
 </blockquote></div><br clear=3D"all"><div><br></div><span class=3D"gmail_si=
 gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
+iv dir=3D"ltr"><div><div dir=3D"ltr"><div dir=3D"ltr"><p><a name=3D"m_-9160=
+988132575224215_SignatureSanitizer_SafeHtmlFilter_UNIQUE_ID_SafeHtmlFilter_=
+UNIQUE_ID_SafeHtmlFilter__MailAutoSig">Regards</a></p>
+
+<p>Roro Cui</p>
+
+<p>Principal<span style=3D"font-size:12.8px">=C2=A0Software Engineer</span>=
+<span style=3D"color:rgb(102,102,102);font-family:Arial,sans-serif;font-siz=
+e:10pt;line-height:12pt">, Software
+Engineering |=C2=A0 STB &amp; CM</span><br></p><p style=3D"line-height:12pt=
+"></p>
+
+<p style=3D"line-height:12pt"><b><span style=3D"font-size:10pt;font-family:=
+Arial,&quot;sans-serif&quot;;color:rgb(102,102,102)">=C2=A0</span></b><b st=
+yle=3D"line-height:12pt;font-size:12.8px"><span style=3D"font-size:10pt;fon=
+t-family:Arial,&quot;sans-serif&quot;;color:rgb(102,102,102)">Broadcom</spa=
+n></b></p><p style=3D"line-height:12pt"></p>
+
+<p style=3D"line-height:12pt"><b><span style=3D"font-size:10pt;font-family:=
+Arial,&quot;sans-serif&quot;;color:rgb(102,102,102)">=C2=A0</span></b></p>
+
+<p style=3D"line-height:12pt"><b><span style=3D"font-size:10pt;font-family:=
+Arial,&quot;sans-serif&quot;;color:rgb(102,102,102)">office:</span></b><spa=
+n style=3D"font-size:10pt;font-family:Arial,&quot;sans-serif&quot;;color:rg=
+b(102,102,102)"> 678.475.2897(X72897) |=C2=A0=C2=A0<b>fax:</b>
+678.475.2888</span></p>
+
+<p style=3D"line-height:12pt"><span style=3D"font-size:10pt;font-family:Ari=
+al,&quot;sans-serif&quot;;color:rgb(102,102,102)">4385 River Green Parkway=
+=C2=A0
+|=C2=A0 Duluth, GA 30096</span></p>
+
+<p style=3D"line-height:12pt"><span style=3D"font-size:10pt;font-family:Ari=
+al,&quot;sans-serif&quot;;color:rgb(102,102,102)">roro.cui<a href=3D"mailto=
+:danny.zhang@broadcom.com" target=3D"_blank">@broadcom.com</a>=C2=A0=C2=A0
+|=C2=A0=C2=A0 <a href=3D"http://broadcom.com" target=3D"_blank">broadcom.co=
+m</a></span></p>
+
+<p><br><br></p></div></div></div></div></div>
+
+<br>
+<span style=3D"background-color:rgb(255,255,255)"><font size=3D"2">This ele=
+ctronic communication and the information and any files transmitted with it=
+, or attached to it, are confidential and are intended solely for the use o=
+f the individual or entity to whom it is addressed and may contain informat=
+ion that is confidential, legally privileged, protected by privacy laws, or=
+ otherwise restricted from disclosure to anyone else. If you are not the in=
+tended recipient or the person responsible for delivering the e-mail to the=
+ intended recipient, you are hereby notified that any use, copying, distrib=
+uting, dissemination, forwarding, printing, or copying of this e-mail is st=
+rictly prohibited. If you received this e-mail in error, please return the =
+e-mail to the sender, delete it from your computer, and destroy any printed=
+ copy of it.</font></span>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#15791): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/15791" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/15791</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/103686457/813=
+0911" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
+t/103686457/8130911</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:roro.cui@broadcom.com" target=3D"_=
+blank">roro.cui@broadcom.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div><br clear=3D"all"><div><br></div><span class=3D"gmail_si=
+gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
 iv dir=3D"ltr"><div><div dir=3D"ltr"><div dir=3D"ltr"><p><a name=3D"Signatu=
 reSanitizer_SafeHtmlFilter_UNIQUE_ID_SafeHtmlFilter_UNIQUE_ID_SafeHtmlFilte=
 r__MailAutoSig">Regards</a></p>
@@ -340,9 +489,9 @@ uting, dissemination, forwarding, printing, or copying of this e-mail is st=
 rictly prohibited. If you received this e-mail in error, please return the =
 e-mail to the sender, delete it from your computer, and destroy any printed=
  copy of it.</font></span>
---000000000000cda11a060ec30005--
+--000000000000df73a4060ec31c53--
 
---000000000000d3ab4c060ec3001f
+--000000000000e636bb060ec31cff
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -413,14 +562,14 @@ kDsy3X7Prqaqaetff5GjI2Ttnvv0mWlxwLFOz/HzBSzWp9YneFG45IKXp4yRSQDjb9USiCSnXNdq
 fo+2QPus07NLVJ7qItYjlECi8rdFCLKMPwBsJSWHgElBqRp8bNAxggJtMIICaQIBATBrMFsxCzAJ
 BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWdu
 IEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwDfS7SIPcFCWuFyE0wDQYJYIZIAWUDBAIB
-BQCggdQwLwYJKoZIhvcNAQkEMSIEINEegxx7YRqPTIzp+gnIsAxjqJRypFbr88t++AJEPn7dMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDExMjE3MjkxNVowaQYJ
+BQCggdQwLwYJKoZIhvcNAQkEMSIEIIavsIz+DIxC9kTkMLjGIMeIbGf1GiyGzDcXxNd8d62KMBgG
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDExMjE3MzcwNlowaQYJ
 KoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggq
 hkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0B
-AQEFAASCAQApM2RDBjSs/dIfhm8Q8GScLC5ZzGhsPdcMhGVFFEq17kGDEIYm0taqpIgrYfT8fCVT
-1zRItCM9VxGXKhifQVcsOiX6KV7y/aLbuExlsfFK6k+wy98XBpJF/p2opTeCvrgABZschyaXbiv2
-7M6F1LqzmUKPnxx5LgfgtM27bfGU1O+zQhDBN0JE66Pb9ZS+hRb/xWfGbGaY6qySvlu/IiLqeEJf
-oSS53BgwDDrGfqiKEsFdaHXhxlcSzI2LmvcDpiJs4jGrYKq0dWR6WtrNLEuMh1hSZ48z3GhPAiRD
-w+6WZqkEh6cylgb4/yoMUr+j2t2IbGpJlKugyW/NdkaLO9Mu
---000000000000d3ab4c060ec3001f--
+AQEFAASCAQC7vedOv7tdZlnUp4Ra6+rKm5V42wxzNxqXkLHuXkqpMESi69RLX1Fmn0eQXf1OjXGU
+FfAKrYj2KnCghAuMkEXv5Cm06Fl6/h/npKKL+C3jEbeqpM7woUXV431kdMUrAo61azt+6VN8yXTV
+vLGtU0qD4GVbAuVDbJMPPeQWVD06LDHIhEGbroleKUrKSG+Yxxd4raHUPcclrZJAFg//Kx93Z3hs
+8+79h2xIdfQ6BHKq9WlniPDrBFBjPGzyRyG1fMkuf3KrHLkPWdViEt7vVEUpxBX8eu4me8dIB7M0
+2ovQfR5bw+n8+nhmWF/iX0B/GLTh6wyTwhUat54A2uevMU3H
+--000000000000e636bb060ec31cff--
 
