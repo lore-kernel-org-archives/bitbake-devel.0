@@ -1,99 +1,140 @@
-Return-Path: <joe.slater@windriver.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 817BEC47DAF
-	for <webhook@archiver.kernel.org>; Thu, 18 Jan 2024 17:38:26 +0000 (UTC)
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.web11.19645.1705599503997715171
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D21C47DD6
+	for <webhook@archiver.kernel.org>; Fri, 19 Jan 2024 09:38:16 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web10.18470.1705657087367993349
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 18 Jan 2024 09:38:24 -0800
+ Fri, 19 Jan 2024 01:38:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=nFeWMAyY;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=1747397340=joe.slater@windriver.com)
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40I6fBYJ023396
-	for <bitbake-devel@lists.openembedded.org>; Thu, 18 Jan 2024 17:38:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=PPS06212021; bh=e/LFV
-	0YgcZ1EmA0dDjp7s8G+tYzGijLMbgHxMUshgQk=; b=nFeWMAyYjV2Hyd9YJHc2u
-	QOv0z4E5jwJq7DaCG1DYekHbgQ6LUiGy2TAOjWHZ+fMEVsDuc8ioxItCS9qA9BgS
-	8+ms/IjcljQ0W3ZRE8i7wW1Y9lhuNdFSTAnJWoIal/PXf7eW7BdaONxNk2FwhBcv
-	zcpnatcjtr5a4Pm+TcXjfDkBQiiBPakxjiy88m85lKLKxPW0E/RFUlio9egA8tOZ
-	ShhHfeAmiAMwROelI7wrIq7s9TDkG9GaDI+29SJVp2wn6FQzny66HuRGhinxeZ9b
-	DtPLchlgm1J3A7BNyvSuIJ0qWRbrK9HsQOlf5raOQKh3TGTXshrxzdQWmVVKc0zd
-	w==
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3vkhg661wj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Thu, 18 Jan 2024 17:38:22 +0000 (GMT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 18 Jan 2024 09:38:32 -0800
-Received: from ala-jslater-lx2.corp.ad.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 18 Jan 2024 09:38:32 -0800
-From: <joe.slater@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: <joe.slater@windriver.com>, <randy.macleod@windriver.com>
-Subject: [bitbake][PATCH 1/1] utils.py: add ifVarInRange()
-Date: Thu, 18 Jan 2024 09:38:21 -0800
-Message-ID: <20240118173821.1579936-1-joe.slater@windriver.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=C6K5kKA5;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40e60e137aaso6118015e9.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 19 Jan 2024 01:38:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1705657086; x=1706261886; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XPV1BgdZmxobgc5irr4ljL7Uv9VjPEbb6B7MVlFaiEA=;
+        b=C6K5kKA5CfHNsNi5Xtoshvl9S/h8Bp51tnskDuIH4WZnRu8pXzW6Pkhjv8K4b5P2ag
+         6q1ujC3sGYingDA7oFdz0KZ3OxlDp8uGfoTjsesqs6rnOpqfjNo1UjVjKQJC1WXrABUz
+         uXlDFnwwQQatsUG3XELpYZU5NlmmUdWiDC/AM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705657086; x=1706261886;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XPV1BgdZmxobgc5irr4ljL7Uv9VjPEbb6B7MVlFaiEA=;
+        b=PcF+9p22lfHQhJBxdyqIVeaqBKSLoewA6WT10e7iv9tJdqQiru/5wlpmCNFkNdU7UJ
+         aKh3n6LLWusQp9WtFQF6Gt1PtkrceL0xbLO+0z8/kq16YOXAh9/5bRJbpXmZkNtHDYnB
+         02UWNntjIeF73D05W9wqmGj1VPoXbyqzX5rDyX9k6M1A5uDiMiMvZFYpcoKS2QyzpesV
+         qP1SskR5gbzlLrgEhFHO16H6NvjS6tLQ80SRvuFEGETORtxtRd0L4Tc4fbFQhze3VU9M
+         8QG0hdQXhjO8/sQUMrJ7a0H9BUMEiwTyIZjfoAdteRpoX8+jyaQeGcCTBLMPEgkS7Wxl
+         Ktkg==
+X-Gm-Message-State: AOJu0Yw4rJs1Qz+08gynWVVvZv/BFTudWveUhz/J6IwvllgSjqjgi+tS
+	5R1pZTvWPdVbeg5UIgAM7T1xBOlObKXov2hliLJWnFmkBAnip9PY1JgM+541/ZcnmakRX4vdq9S
+	f
+X-Google-Smtp-Source: AGHT+IFIvPyDaQlaYl7/t8jRp6jNPyBsogq/V4o/VMJDYOAhOtIQjxhECoFyYStCbn9u2MXP9SNFmA==
+X-Received: by 2002:a05:600c:458f:b0:40d:2921:2a55 with SMTP id r15-20020a05600c458f00b0040d29212a55mr1293760wmo.21.1705657085666;
+        Fri, 19 Jan 2024 01:38:05 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:bdad:632e:4428:9197? ([2001:8b0:aba:5f3c:bdad:632e:4428:9197])
+        by smtp.gmail.com with ESMTPSA id n19-20020a05600c501300b0040e813f1f31sm12807167wmr.25.2024.01.19.01.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jan 2024 01:38:05 -0800 (PST)
+Message-ID: <9f13c76e74d43cf0da4e9ee5815fbdc6038d84ae.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [bitbake][PATCH 1/1] utils.py: add
+ ifVarInRange()
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: joe.slater@windriver.com, bitbake-devel@lists.openembedded.org
+Cc: randy.macleod@windriver.com
+Date: Fri, 19 Jan 2024 09:38:04 +0000
+In-Reply-To: <20240118173821.1579936-1-joe.slater@windriver.com>
+References: <20240118173821.1579936-1-joe.slater@windriver.com>
+Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
+ YNvg==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: Uk_wNvpXk6IqMkpjM06-1eKcBXE_DCMC
-X-Proofpoint-GUID: Uk_wNvpXk6IqMkpjM06-1eKcBXE_DCMC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-18_08,2024-01-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxlogscore=678
- suspectscore=0 bulkscore=0 malwarescore=0 adultscore=0 clxscore=1011
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401180127
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 18 Jan 2024 17:38:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15796
+ <bitbake-devel@lists.openembedded.org>; Fri, 19 Jan 2024 09:38:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15797
 
-From: Joe Slater <joe.slater@windriver.com>
+Hi Joe,
 
-Add a function returning a value based on whether a
-bitbake variable is in a numeric range.
+On Thu, 2024-01-18 at 09:38 -0800, Joe Slater via
+lists.openembedded.org wrote:
+> From: Joe Slater <joe.slater@windriver.com>
+>=20
+> Add a function returning a value based on whether a
+> bitbake variable is in a numeric range.
+>=20
+> Signed-off-by: Joe Slater <joe.slater@windriver.com>
+> ---
+>  lib/bb/utils.py | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+> index 068b631c..76f08623 100644
+> --- a/lib/bb/utils.py
+> +++ b/lib/bb/utils.py
+> @@ -1810,6 +1810,17 @@ def is_local_uid(uid=3D''):
+>                  return True
+>      return False
+> =20
+> +def ifVarInRange(d, var, first=3D1, last=3D0, tval=3D"", fval=3D""):
+> +    """
+> +    Return a value depending on whether a bitbake variable is in a numer=
+ic
+> +    range.  Conventionally, 0 as the emd pf the range matches all values=
+.
 
-Signed-off-by: Joe Slater <joe.slater@windriver.com>
----
- lib/bb/utils.py | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+"the emd pf"?
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 068b631c..76f08623 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -1810,6 +1810,17 @@ def is_local_uid(uid=''):
-                 return True
-     return False
- 
-+def ifVarInRange(d, var, first=1, last=0, tval="", fval=""):
-+    """
-+    Return a value depending on whether a bitbake variable is in a numeric
-+    range.  Conventionally, 0 as the emd pf the range matches all values.
-+    """
-+    try:
-+        v = int(d.getVar(var))
-+    except:
-+        return fval
-+    return tval if v >= first and (v <= last or last == 0) else fval
-+
- def mkstemp(suffix=None, prefix=None, dir=None, text=False):
-     """
-     Generates a unique filename, independent of time.
--- 
-2.25.1
+the end of?
+
+
+> +    """
+> +    try:
+> +        v =3D int(d.getVar(var))
+> +    except:
+> +        return fval
+> +    return tval if v >=3D first and (v <=3D last or last =3D=3D 0) else =
+fval
+> +
+>  def mkstemp(suffix=3DNone, prefix=3DNone, dir=3DNone, text=3DFalse):
+>      """
+>      Generates a unique filename, independent of time.
+
+
+If we're going to add something like this, I think the api needs a bit
+of work. I'd probably expect an ifXXX function to return a True/False.
+I'd guess that is what tval and fval represent but it took me a minute
+to realise that. Wouldn't they actually default to True and False?
+
+There is no mention of Int or numeric in the function name and python
+could easily use floats in situations like this.
+
+So just to be clear I'm not really sold on the function name, the
+default values or the names of the parameters. The typos also need
+fixing. It all feels a bit rushed.
+
+Cheers,
+
+Richard
+
+
+
 
 
