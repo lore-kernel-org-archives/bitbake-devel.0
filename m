@@ -1,269 +1,222 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <Qi.Chen@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D06C46CD2
-	for <webhook@archiver.kernel.org>; Tue, 30 Jan 2024 08:10:25 +0000 (UTC)
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
- by mx.groups.io with SMTP id smtpd.web11.13563.1706602218868096994
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF1DC46CD2
+	for <webhook@archiver.kernel.org>; Tue, 30 Jan 2024 11:12:26 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.web11.15725.1706613140330798241
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 30 Jan 2024 00:10:19 -0800
+ Tue, 30 Jan 2024 03:12:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=B0ZEQv+Y;
- spf=pass (domain: bootlin.com, ip: 217.70.183.197, mailfrom: alexandre.belloni@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 436BF1C0003;
-	Tue, 30 Jan 2024 08:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706602216;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4hNZMDYEasHkKCpyxshITX+3blN+op90NWjCjHfGmwg=;
-	b=B0ZEQv+YmwFtjSMkEyxfavQC5NwB06QoKpt1dIB9+9TeohswpEK22kpe/EbquuS4oxV8UT
-	t9vMkw/Oyx5UYhfFIBqm0M9vaR1n5SjT/XRcYJNO+LUy0Sc7GyyU8rkRcdVhYFUi9lG+Ni
-	k0uJDLnyjzrz4mkW+NXOCSeynFIk7/TlxESP4CdUeYBI+ASb4xU8eauA/RjLosmpKQ6ghS
-	PbG2UYx4BQAvTWRG00FrNr2BlRxrhoEmPcq2i+nAHo+/l27s2I9wTckQ83gPCgyTy+oCpm
-	tdNj5RiwlC8qgKB5Guh/4Safq/fIrX9L38yAmlT5fa8DOxkxT2NkmeT2PDycjg==
-Date: Tue, 30 Jan 2024 09:10:16 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Joshua Watt <JPEWhacker@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel][PATCH 2/2] hashserv: Add Client Pool
-Message-ID: <2024013008101674311323@mail.local>
-References: <20240129194208.4096506-1-JPEWhacker@gmail.com>
- <20240129194208.4096506-2-JPEWhacker@gmail.com>
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=QWioHsOg;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=275922e335=qi.chen@windriver.com)
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40U4U1HD004564
+	for <bitbake-devel@lists.openembedded.org>; Tue, 30 Jan 2024 11:12:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:subject:date:message-id:content-transfer-encoding
+	:content-type:mime-version; s=PPS06212021; bh=prkQHm6S7eTu0Ur9Gq
+	3OXITIGzVoj6k+cNDquqNylWs=; b=QWioHsOgBg7/swxurhjErfoDfIIzko68dZ
+	LFe2w3gMOQPoIGfrI0RWawK1MxEbdumTZCNrG5ohvrbT1sRtyHyoU4aeG3GQCJZ4
+	SSY+6XfDeSTJdFelodw4C9wqAy175emcswXI9YtafFOe4Er6pG6LI7OfL2GUgbM+
+	OIIbV79FjQTnjN8k/DgVuYKY4GTd8eZbMmWKvRC/T/fWK8gK3Rja7lDKd56MZEYK
+	g99qlYHgq5iHBAG/PGj48O/z8AZdidGf9CHhzzF1amB7X41lYw4/6k65Utu/T9zD
+	R0VppqfefK29HR84KC8oqhQz5+JvtxxKj92MMXdNnfhSvvUvmRmA==
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2101.outbound.protection.outlook.com [104.47.70.101])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3vvrt62twc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Tue, 30 Jan 2024 11:12:19 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WEX7JJ4YjPrY7NXpfb/8DmqjXHV0YuQf0Rk1fJOZQYSoPS8aYG5b6PNSvIzXijEsDyhdutla1RDuxeSRulcZ3MB4Wot2JX69te9OBss1qh3sTUvDfgzZP/m3/nSTGgSk9kZSBs235iG/slPSiml9y0xLx3kYlFDCVXLTiLmRd9uH+BPqmpJ/fyc2i8WneVxAUiTLGhFgYQ57SeENyuzBjp8wPbsNY1/X/9EkVd4coQLiTt9s8c4XOPdlpnwNmvQbsIYPT4NCrE3oRqjjq/4QkSEZVfucgQurtSF4RBMLPclX5J4vgwnYVTdD1wqUXEYLSMuFUFzcp6eGEvN67I+YUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=prkQHm6S7eTu0Ur9Gq3OXITIGzVoj6k+cNDquqNylWs=;
+ b=VWIN2Ml7gsDjztUShIc4J9TyLQZ+kygiBvEqPWFEeiHphS5Qxk7Hc58nOajRfBCsH2omgxfxAE8yflDeHH1WKy1QlkuERr47lMRQeIFilX1gOxCGfvk3nyEehBtN0cOSfv0CK9niJsxBSMzyfVdMjpI9FQfZJBU+Hs2cbBOCk/42ncb2r/UQzatdgDUyxHPDAK2nUO35LGaJWDNM4NyxIzh27GgbGdmkAtT0qO0i6xf0FpElEW1BjFiVSD/XvcqiM7lsf2gTlh8vT9xJ9HsRMr2GmJG6TwW8d36A7wpmR4x/PSpjfr5Qr5EvFSKyF9zjLqTV8NSB/I0PDWCD75PY3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
+ by DM8PR11MB5576.namprd11.prod.outlook.com (2603:10b6:8:37::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Tue, 30 Jan
+ 2024 11:12:15 +0000
+Received: from CO6PR11MB5602.namprd11.prod.outlook.com
+ ([fe80::5d84:2b01:5029:9315]) by CO6PR11MB5602.namprd11.prod.outlook.com
+ ([fe80::5d84:2b01:5029:9315%7]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
+ 11:12:14 +0000
+From: Qi.Chen@windriver.com
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake-devel][PATCH] fetch2/git.py: fix the try_premirror logic
+Date: Tue, 30 Jan 2024 19:11:58 +0800
+Message-Id: <20240130111158.1077626-1-Qi.Chen@windriver.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0019.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:190::10) To CO6PR11MB5602.namprd11.prod.outlook.com
+ (2603:10b6:303:13a::5)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240129194208.4096506-2-JPEWhacker@gmail.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|DM8PR11MB5576:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1a37485d-f06b-4ce3-d1c7-08dc2184500b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	7n2oMEEUI8Mh/X4tizs6X/VMv0EbeM/dOQwQr1ailsyJ38UbC0ETlJOCMp4QWM5ZaLef+htJLrhFkoFEbweM54Sg5KnCyUVj3zLjPIfLxv+OsW7ZjMIsidTSqfBYeLspCsMqnn6Cqxc+PR7ck9k81Re1VUf6XIRKum2+UOm68uYr9UMkrzZSfdPtrQJL0zfCELn90GuX8Dhmn2BSc/2shfaGrp9X/vcSuJE+tUli0mzI+lhDA0uoxkTJ4t+RUmG4PgRL5daCcz5yYwRkmfMc+oTSs8a2j7vK282McPuoNEdTPIhhFL7/7/VN2O9UGCzGdyVNxCWKe8nxxSVJu6ObgUM1FdfRR42AczaXBIpY4IbGDwqdhTsPZX/n4ISyZR2AvaPCl/XZj2/DanX2kIu3H5nhCEl/q5ZDTBIk7HBjWONFCcj+yytfbgeTVJaNK7wTYxaoojA3UAizdlUzn3c7BpA1GCb/YhR1o3epKH3X30d7g5aSTEyY/h9oBVab4fTKfBS2DAKtFzA8/NgZy9IYKx/UXMXQ7nKZSM7JZpDeTTrsmCYQIDwmrpMpuhb8Obu1DZal9DlwmBhDn+WkHwVVexcf+2sojirv7ADOCirI7aMq2QjLgGeqkqtVYrDXHYxL
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39850400004)(136003)(346002)(396003)(376002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(2616005)(1076003)(86362001)(36756003)(41300700001)(83380400001)(38100700002)(478600001)(6486002)(8676002)(66556008)(66476007)(9686003)(66946007)(26005)(6512007)(2906002)(316002)(6666004)(6506007)(52116002)(5660300002)(8936002)(6916009)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?7ceft/QXAHNfNkiJh1F/1MEHWcyNewk9ZwJkBadODlSvkV94dGDvipCZCKJi?=
+ =?us-ascii?Q?m+bo+JDi+PlAWkVaXYsBFabSC/ow2hcoET8HJtfVkq9MpzQmGyXjxWou0dDt?=
+ =?us-ascii?Q?oWDxYnRYUsX3J/YbPw6BNsWOauYOwTH3fnCzfiWECW/Od06NsUMGcfYzB6nY?=
+ =?us-ascii?Q?ZmI7dyCam2YojENuRj8rpHilt76zYJpzG6BNQx8BtMivSpfVbIiSduhEFCTy?=
+ =?us-ascii?Q?x+nU5Ij3K16+WLEP37lQdJXgPY6PA5OQvKa6pnKxb44c5kwES7mQRXNHklDB?=
+ =?us-ascii?Q?BGtu80GN5t6DPh7llpfMzw2I/WEP5EpLYnmU/ooWedKKDpPvooCspVTAbhRi?=
+ =?us-ascii?Q?RGVh+nTBEPXVcsSYdleQZwtJN9baZVa/97pPDnvxGweTwxRezoebtYvxDQ3h?=
+ =?us-ascii?Q?gcI2rfStZpfWMH9k2TOUJXkdJCpePU72B3bHdKDVxOksKiBLcCAN+iF7Bj6J?=
+ =?us-ascii?Q?MZxIjHWNTrRQU3aJ5K96GGSJzA0j404XO1YT3MEJfWrazPX2ctBRgWhOwNQP?=
+ =?us-ascii?Q?lpT9i+E5TFOipAtIit1sdDsNcP7wQ+qKLEOnqpAKnsDmdywRHunQUXp3NzKD?=
+ =?us-ascii?Q?RKHDkaksMj1FUaAYLqf5smabAgI15rsgpyQ+N1KiHm+/iUXBBfYzsbqZbI+Q?=
+ =?us-ascii?Q?P9QAPuwh26F+Wg596ZxLtYWuPLE1d/tGsmy1sby2QpH3VycSf/g6D71ERPJV?=
+ =?us-ascii?Q?bRlzQx9d8PDZd836CRHZ6aOOHXhn0z20t6qPi4/PuLNFlnzQbkCGuj67ar3M?=
+ =?us-ascii?Q?f8oQGlQFb2ta6STKGmWmR5Fn7Iy/Xs+RHyPkBBtj6h/aQDDyHn/ej/6qRts3?=
+ =?us-ascii?Q?1/tLZQ5tOq45n486ddyo7+mhTxoeKjEZdItbVZQZyfM/JsXNDaCEz98xyPKo?=
+ =?us-ascii?Q?/yUja+rbM05NuidLJsUqF45eJW8+Hh8en8i7hlH3iyNzIThiw+2sjcJT+VjE?=
+ =?us-ascii?Q?7ClCZniUF1//5ZlxjaLT51yY2G9T/WQiNn0PgEu5ifFBQfjB5/LIqV/QKfxf?=
+ =?us-ascii?Q?LneSoItt2Xcj3qktyufo5QzzNwd4L2Kw2lpvxuOgeFl7nGMrQbZbOyzvw/n0?=
+ =?us-ascii?Q?BUqZ5BM2o7ZEEJoUu3sPKDg3CuAVpIcRwOP/5ktLaR1bTT6eDOlm2inrQMKJ?=
+ =?us-ascii?Q?qOstb3/92Wy9UlOPk3cFeTn7gPK++pqNt3f7Dl41A3H9r6/t2wi65IVinwab?=
+ =?us-ascii?Q?ZTzX+MUVLRcJgZOxGXrvq51oAJMVSYfka8ZpWL+ww2seTkGnL8R2+MRP8eex?=
+ =?us-ascii?Q?mYk5s1WmUWGd6rbUXDfWwbAi1W6M1QFShGCC7+joIHkhQDYqV9CXNvkGEam5?=
+ =?us-ascii?Q?NW8TjMbPnFu72YCFamm5Tg9cxCDUGGJoVimfMhne0+fB9pDhHEttcCpkxe9V?=
+ =?us-ascii?Q?Bi8r64x7lK4y2q9QemjdUOeHKsWCMoEXouUvmzHlctXN3Z7Kb8WKrYV3bMjS?=
+ =?us-ascii?Q?i0nLdAMG7h02hTD1WRxWQp0P3zDkoNdjzBcPtXPCWX50bt809nPWNvJTA6O0?=
+ =?us-ascii?Q?5R48pGLvgfH1pXVYzak75xPwkdGMVPTpQokSsrjRNWhrwMtx+qged+YwLaz3?=
+ =?us-ascii?Q?7XiKEg9+LE7KlH+2fml16oCgTUhRTJaT5IFF2OP0?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a37485d-f06b-4ce3-d1c7-08dc2184500b
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5602.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 11:12:14.4073
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fMZdUPCAbPGm0Ad+4hFk3InzYeISLRvbcVvZgn0Lc40Eh8rcP0Sf5xYx9+wktyI24RNsfzUPvEel8qr0KRhs9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR11MB5576
+X-Proofpoint-ORIG-GUID: YqsM_8H_T84_aLXhwp-1EIMrCdOdEZPW
+X-Proofpoint-GUID: YqsM_8H_T84_aLXhwp-1EIMrCdOdEZPW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-30_05,2024-01-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 adultscore=0 spamscore=0 malwarescore=0
+ clxscore=1011 bulkscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2401300081
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 30 Jan 2024 08:10:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15805
+ <bitbake-devel@lists.openembedded.org>; Tue, 30 Jan 2024 11:12:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15806
 
-bitbake-selftest failed:
+From: Chen Qi <Qi.Chen@windriver.com>
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/80/builds/6308/steps/11/logs/stdio
+For gitsm recipes, it's possible that some URL is used more than once.
+e.g.,
+A -> B:rev1 (B is a submodule of A)
+A -> C (C is a submodule of A)
+C -> B:rev2 (B is a submodule of C)
+A anc C are both using B as submodules, but on different revs.
+Now if we have:
+B:rev1 -> D
+B:rev2 -> E
+Then, the mirror will not be fully used.
+Say we have all repo mirrors for A, B, C, D, E, then in theory it's not
+necessary to reach out to any network for downloading. But it's not the
+case. After downloading B(rev1) and its submodule D from mirrors, the fetch
+process continues to download C, thus B(rev2) and E. Now it finds that B
+needs an update because its submodule E needs an update. Of course this is
+true because E is not downloaded yet. Now the problem comes to whether to
+use mirror or not. The git.py defines try_premirror to return 'False' when
+the ud.clonedir exists. As B has been cloned, the ud.clonedir exists and
+try_mirror returns False, resulting in not using mirror and going to upstream
+directly.
 
+We can see that the mirrors are not fully used. This is usually not problem,
+as the cost is only some network download. But in case the following two
+settings are there, we get errors.
+BB_NO_NETWORK = "0"
+BB_ALLOWED_NETWORKS = "*.some.allowed.domain"
+In such case, the gitsm recipe A will fail to fetch. Note that all contents
+that A needs are in mirrors and now it's failing to fetch. This is unexpected.
 
-On 29/01/2024 12:42:08-0700, Joshua Watt wrote:
-> Implements a Client Pool derived from the AsyncRPC client pool that
-> allows querying for multiple equivalent hashes in parallel
-> 
-> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> ---
->  bitbake/lib/hashserv/client.py | 80 ++++++++++++++++++++++++++++++++
->  bitbake/lib/hashserv/tests.py  | 83 ++++++++++++++++++++++++++++++++++
->  2 files changed, 163 insertions(+)
-> 
-> diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
-> index 35a97687fbe..41784b3fb6a 100644
-> --- a/bitbake/lib/hashserv/client.py
-> +++ b/bitbake/lib/hashserv/client.py
-> @@ -228,3 +228,83 @@ class Client(bb.asyncrpc.Client):
->  
->      def _get_async_client(self):
->          return AsyncClient(self.username, self.password)
-> +
-> +
-> +class ClientPool(bb.asyncrpc.ClientPool):
-> +    def __init__(
-> +        self,
-> +        address,
-> +        max_clients,
-> +        *,
-> +        username=None,
-> +        password=None,
-> +        become=None,
-> +    ):
-> +        super().__init__(max_clients)
-> +        self.address = address
-> +        self.username = username
-> +        self.password = password
-> +        self.become = become
-> +
-> +    async def _new_client(self):
-> +        client = await create_async_client(
-> +            self.address,
-> +            username=self.username,
-> +            password=self.password,
-> +        )
-> +        if self.become:
-> +            await client.become_user(self.become)
-> +        return client
-> +
-> +    def _run_key_tasks(self, queries, call):
-> +        results = {key: None for key in queries.keys()}
-> +
-> +        def make_task(key, args):
-> +            async def task(client):
-> +                nonlocal results
-> +                unihash = await call(client, args)
-> +                results[key] = unihash
-> +
-> +            return task
-> +
-> +        def gen_tasks():
-> +            for key, args in queries.items():
-> +                yield make_task(key, args)
-> +
-> +        self.run_tasks(gen_tasks())
-> +        return results
-> +
-> +    def get_unihashes(self, queries):
-> +        """
-> +        Query multiple unihashes in parallel.
-> +
-> +        The queries argument is a dictionary with arbitrary key. The values
-> +        must be a tuple of (method, taskhash).
-> +
-> +        Returns a dictionary with a corresponding key for each input key, and
-> +        the value is the queried unihash (which might be none if the query
-> +        failed)
-> +        """
-> +
-> +        async def call(client, args):
-> +            method, taskhash = args
-> +            return await client.get_unihash(method, taskhash)
-> +
-> +        return self._run_key_tasks(queries, call)
-> +
-> +    def unihashes_exist(self, queries):
-> +        """
-> +        Query multiple unihash existence checks in parallel.
-> +
-> +        The queries argument is a dictionary with arbitrary key. The values
-> +        must be a unihash.
-> +
-> +        Returns a dictionary with a corresponding key for each input key, and
-> +        the value is True or False if the unihash is known by the server (or
-> +        None if there was a failure)
-> +        """
-> +
-> +        async def call(client, unihash):
-> +            return await client.unihash_exists(unihash)
-> +
-> +        return self._run_key_tasks(queries, call)
-> diff --git a/bitbake/lib/hashserv/tests.py b/bitbake/lib/hashserv/tests.py
-> index 869f7636c53..d8cf4b421bb 100644
-> --- a/bitbake/lib/hashserv/tests.py
-> +++ b/bitbake/lib/hashserv/tests.py
-> @@ -8,6 +8,7 @@
->  from . import create_server, create_client
->  from .server import DEFAULT_ANON_PERMS, ALL_PERMISSIONS
->  from bb.asyncrpc import InvokeError
-> +from .client import ClientPool
->  import hashlib
->  import logging
->  import multiprocessing
-> @@ -549,6 +550,88 @@ class HashEquivalenceCommonTests(object):
->          # shares a taskhash with Task 2
->          self.assertClientGetHash(self.client, taskhash2, unihash2)
->  
-> +
-> +    def test_client_pool_get_unihashes(self):
-> +        TEST_INPUT = (
-> +            # taskhash                                   outhash                                                            unihash
-> +            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
-> +            # Duplicated taskhash with multiple output hashes and unihashes.
-> +            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
-> +            # Equivalent hash
-> +            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
-> +            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
-> +            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
-> +            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
-> +            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
-> +        )
-> +        EXTRA_QUERIES = (
-> +            "6b6be7a84ab179b4240c4302518dc3f6",
-> +        )
-> +
-> +        with ClientPool(self.server_address, 10) as client_pool:
-> +            for taskhash, outhash, unihash in TEST_INPUT:
-> +                self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-> +
-> +            query = {idx: (self.METHOD, data[0]) for idx, data in enumerate(TEST_INPUT)}
-> +            for idx, taskhash in enumerate(EXTRA_QUERIES):
-> +                query[idx + len(TEST_INPUT)] = (self.METHOD, taskhash)
-> +
-> +            result = client_pool.get_unihashes(query)
-> +
-> +            self.assertDictEqual(result, {
-> +                0: "218e57509998197d570e2c98512d0105985dffc9",
-> +                1: "218e57509998197d570e2c98512d0105985dffc9",
-> +                2: "218e57509998197d570e2c98512d0105985dffc9",
-> +                3: "3b5d3d83f07f259e9086fcb422c855286e18a57d",
-> +                4: "f46d3fbb439bd9b921095da657a4de906510d2cd",
-> +                5: "f46d3fbb439bd9b921095da657a4de906510d2cd",
-> +                6: "05d2a63c81e32f0a36542ca677e8ad852365c538",
-> +                7: None,
-> +            })
-> +
-> +    def test_client_pool_unihash_exists(self):
-> +        TEST_INPUT = (
-> +            # taskhash                                   outhash                                                            unihash
-> +            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
-> +            # Duplicated taskhash with multiple output hashes and unihashes.
-> +            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
-> +            # Equivalent hash
-> +            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
-> +            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
-> +            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
-> +            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
-> +            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
-> +        )
-> +        EXTRA_QUERIES = (
-> +            "6b6be7a84ab179b4240c4302518dc3f6",
-> +        )
-> +
-> +        result_unihashes = set()
-> +
-> +
-> +        with ClientPool(self.server_address, 10) as client_pool:
-> +            for taskhash, outhash, unihash in TEST_INPUT:
-> +                result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-> +                result_unihashes.add(result["unihash"])
-> +
-> +            query = {}
-> +            expected = {}
-> +
-> +            for _, _, unihash in TEST_INPUT:
-> +                idx = len(query)
-> +                query[idx] = unihash
-> +                expected[idx] = unihash in result_unihashes
-> +
-> +
-> +            for unihash in EXTRA_QUERIES:
-> +                idx = len(query)
-> +                query[idx] = unihash
-> +                expected[idx] = False
-> +
-> +            result = client_pool.unihashes_exist(query)
-> +            self.assertDictEqual(result, expected)
-> +
-> +
->      def test_auth_read_perms(self):
->          admin_client = self.start_auth_server()
->  
-> -- 
-> 2.34.1
-> 
+Note that the different revs of the same repo in gitsm recipe is not the only
+way to reveal this problem. For example, there might be a recipe call B that
+uses B:rev3. Check the protobuf and grpc recipes as an example.
 
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15804): https://lists.openembedded.org/g/bitbake-devel/message/15804
-> Mute This Topic: https://lists.openembedded.org/mt/104039098/3617179
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
+For now, we can use the following steps to reproduce this issue. To be clear,
+the grpc recipe in meta-oe is now 1.60.0.
+1. Add in local.conf:
+   DL_DIR = "${TOPDIR}/downloads-premirror"
+   bitbake grpc -c fetch
+2. Comment out the DL_DIR setting in local.conf and add the following lines:
+   PREMIRRORS:append = " \
+     git://.*/.* git://${TOPDIR}/downloads-premirror/git2/MIRRORNAME;protocol=file \n \
+     gitsm://.*/.* gitsm://${TOPDIR}/downloads-premirror/git2/MIRRORNAME;protocol=file \n \
+   "
+3. Set BB_NO_NETWORK = "1" and then 'bitbake grpc -c fetch'.
+   This command succeeds and this shows that the premirror holds everything we need.
+4. Add the following lines and then 'bitbake grpc -c fetch'.
+   BB_NO_NETWORK = "0"
+   BB_ALLOWED_NETWORKS = "*.some.domain"
 
+After step 4, the error message is as below:
+ERROR: grpc-1.60.0-r0 do_fetch: The URL: 'gitsm://github.com/protocolbuffers/protobuf.git;protocol=https;name=third_party/protobuf;subpath=third_party/protobuf;nobranch=1;lfs=True;bareclone=1;nobranch=1' is not trusted and cannot be used
 
+I guess that the try_premirror codes in git fetcher (fetch2/git.py) are assuming
+that the clonedir syncs with the mirror repo. That's only reason I can think of
+for why it returns 'False' if the clonedir exists. The assumption is wrong. The
+mirror could well be updated via automation tools or some project-level setup
+tools. Yet, it's returning True when BB_FETCH_PREMIRRORONLY is set, regardless
+of whether the clonedir exists. This means it does know that the mirror could be
+updated. It seems that it treats using mirror as some kind of 'best effort'. Anyway,
+the codes' logic is just contradicting with itself.
+
+If the mirror can be possibly updated, then it should be tried regardless of whether
+the clonedir exists. So we should remove the try_premirror codes here and use the
+default one (in __init__.py), which always returns True.
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ lib/bb/fetch2/git.py | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 7aa3fd9e5..62618012b 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -353,15 +353,6 @@ class Git(FetchMethod):
+     def tarball_need_update(self, ud):
+         return ud.write_tarballs and not os.path.exists(ud.fullmirror)
+ 
+-    def try_premirror(self, ud, d):
+-        # If we don't do this, updating an existing checkout with only premirrors
+-        # is not possible
+-        if bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
+-            return True
+-        if os.path.exists(ud.clonedir):
+-            return False
+-        return True
+-
+     def download(self, ud, d):
+         """Fetch url"""
+ 
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
+
 
