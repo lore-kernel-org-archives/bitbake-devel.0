@@ -1,223 +1,307 @@
-Return-Path: <pavel@zhukoff.net>
+Return-Path: <fbberton@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E40C47258
-	for <webhook@archiver.kernel.org>; Wed, 31 Jan 2024 07:50:45 +0000 (UTC)
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
- by mx.groups.io with SMTP id smtpd.web10.9431.1706687436812074063
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514D5C47258
+	for <webhook@archiver.kernel.org>; Wed, 31 Jan 2024 08:49:16 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web11.10027.1706690949314571738
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 30 Jan 2024 23:50:37 -0800
+ Wed, 31 Jan 2024 00:49:09 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@zhukoff.net header.s=fm3 header.b=q90aumaW;
- dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=O48cYp2r;
- spf=pass (domain: zhukoff.net, ip: 64.147.123.20, mailfrom: pavel@zhukoff.net)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.west.internal (Postfix) with ESMTP id 995F43200906;
-	Wed, 31 Jan 2024 02:50:35 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute4.internal (MEProxy); Wed, 31 Jan 2024 02:50:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zhukoff.net; h=
-	cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1706687435; x=1706773835; bh=UBakMUmyeB
-	Hdwj/o2miOCDIGWl6dHYmwtQNRo3KxfP4=; b=q90aumaW5WBKOSX14FiHtZ+RiY
-	SxhA7DgKx5C2X2aWcwHxhZpV0hxBZu+VfwLGazV9dn6AV/Ghd5wylAAK3m2zNhDe
-	869f5+WR7ZUGuClrCm+HgJINC3DFXQNzO8sESdfn6uaGvm2gA8bgCN8iPZczrB1w
-	aAVYe0BRZZgpym9WoUMpJRCe+DCmmQJUH8u/O1c1bGO2eku3oLS1Nk62y7YEp2PL
-	61GWSy/pdDtQqqDU3S+IzC2E750Jfn9XhgiCcHKQdDEj/Yo0F2gqOZUCaRPRuiRv
-	s9Q/AbJ6ZEDQvA1ZStB3Lr+vz8TTYaF7NDR95E4B/D+xwE5lk66jqqg3HSMg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706687435; x=1706773835; bh=UBakMUmyeBHdwj/o2miOCDIGWl6d
-	HYmwtQNRo3KxfP4=; b=O48cYp2rwDkIYvER00OpOv2QTfQaLIdv6qj3BVTafUjH
-	bZZxKOUSmFadMe6iDhiD7/7P8/P0+lwzIP3dKuyPJVdB5RZKL8fGQab+P6kPcPQ4
-	ntSiDw72GGHOXndtyan4S/OPWFVYXjTKCGqhlW4jF8zTAUGK46PhGQWCgrBSyIaX
-	a4SFn45ierGJKXg3m4io8e3GXCT5ItdEiGsXt3ghdrTW1sdsxNrCYeLb71EPUWgM
-	s0HI09HbuLYUa0950tRNpe0946IjXfiQiNGL1NcvLzyh2Shz7KkOoiBbJ7C+oLgk
-	S8umTfWw2KlDCu0GvBaRsyTbs44Kt5iWy/hR9DPdCA==
-X-ME-Sender: <xms:yvu5ZfloeKWHVtmrDNlGPi_RqN6nB7AiX9T2QlWIvU0inXrp0f8NRg>
-    <xme:yvu5ZS2EFp58tGqLzgDpCBJnS9oR5jbsbTsVFVJUPKKWT2F7N9tOxHGHm1AI1kLEv
-    tlH_3MuFAX69qFLL8A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtkedguddutdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhepofgfggfkjghffffhvffutgesrg
-    dtreerreertdenucfhrhhomhepfdfrrghvvghlucgkhhhukhhovhdfuceophgrvhgvlhes
-    iihhuhhkohhffhdrnhgvtheqnecuggftrfgrthhtvghrnhepjeduveehhfetkedvfedvie
-    evtedtheekffejueejiefhudehgeffjeelvdeghedvnecuffhomhgrihhnpehophgvnhgv
-    mhgsvgguuggvugdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehprghvvghlseiihhhukhhofhhfrdhnvght
-X-ME-Proxy: <xmx:yvu5ZVoNM2E8UPicGHpMImlivoSYFlfeYxGSwKXmE6t8fEkt88HqZg>
-    <xmx:yvu5ZXn3luC_4pDr531M8_x6Kpx6q3NyxROPyadukBlVdP9QRrKmnA>
-    <xmx:yvu5Zd3YbZAC1xwGTmiwDbthgj83FwmUEwDxME_BzYHps_UFAgZf8w>
-    <xmx:y_u5Za-7LjnRPBSTWW0eOtgXT-QOarYTdBhi5hNpHIhI_JmA_t1nMg>
-Feedback-ID: ib94946c9:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 937BEB6008D; Wed, 31 Jan 2024 02:50:34 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
-MIME-Version: 1.0
-Message-Id: <bce7631f-04c8-40f0-848d-5a4a4e2fd454@app.fastmail.com>
-In-Reply-To: <0b842389-284d-0709-1dd8-ad63e2f8921f@windriver.com>
-References: <20240127121536.2849664-2-pavel@zhukoff.net>
- <0b842389-284d-0709-1dd8-ad63e2f8921f@windriver.com>
-Date: Wed, 31 Jan 2024 08:50:14 +0100
-From: "Pavel Zhukov" <pavel@zhukoff.net>
-To: Qi.Chen@windriver.com, bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH 1/2] fetch2/git.py: Fetch mirror into HEAD
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=WAVAyBD+;
+ spf=pass (domain: gmail.com, ip: 209.85.221.45, mailfrom: fbberton@gmail.com)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33b01484cd7so431335f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 31 Jan 2024 00:49:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706690947; x=1707295747; darn=lists.openembedded.org;
+        h=in-reply-to:from:content-language:references:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XsTDZqnsA53tSjPODvt389c1dM/ICHj3QU6mYzBNEOg=;
+        b=WAVAyBD+2r7nMFkTV1WADz90Rh7uVPLGfh7HSmDLFGg7ZBWyOTflet61BI8BNX+zmT
+         NF7azXjercpW062uHHnSy7D3XQcw7l8LAxNksVz2UFjIBBHBYQT+suCcJGSUNAk6LXiO
+         fHgvakXv1uodudCFK/eNtZ7l0hehlQQzgd1m72xGSm5zuLT3zXatLaQtUwpvzPt8nKmd
+         o9w7pF9wxySR3d4s/8875HWo9vtjvLJpKS9fBSuHtv30Wty2LGDJwfVGjowqSSNiWai/
+         1eDmySApxmPxPetc67fgY5ggnBvivzmHEMHczcn1mUvrt4xt8T+SGP0V58N6e/mfLmlc
+         6zug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706690947; x=1707295747;
+        h=in-reply-to:from:content-language:references:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XsTDZqnsA53tSjPODvt389c1dM/ICHj3QU6mYzBNEOg=;
+        b=qx/9XogTabEKB9FgXHAA4Hlxgr4SSWWj6D37DgfbviWTvS2CvGJJWicHoCqtf9znxf
+         Ne8xkQS/rpGPPNh4VNoURIMQvzdoKSFm7k0umoQ13ocETN6S+uueOT4NusfzM0gMms4L
+         EmVBEDr6Kr3wls34j61i0LV0p5dfVGx2ZpAHVZnjuWFH08elSEdIsmsFq5uuF55kVmNn
+         7V22PwjCuHgK6r+I9nyrbO39YrMnHR1O3o48jnPfOpa2jAGKpUz614ySDF36Wp1lp+u3
+         nEObYYVB64/cmPcfa/zvbIo4dwrkigpSKiN738S0zA3aGMI1HxiQ8xFAsIWoWMikVStg
+         3XHQ==
+X-Gm-Message-State: AOJu0Yyl0aHHJ4k8WfImCrHRL1/4dRlXg0N+Y0U9r8T4e9Mn8/uep90p
+	taoH9a7jIqkuS2DvfRPIzVqHSd9EoU3fHIdVddkGwPGOkXM0rraKbaE3ASjX
+X-Google-Smtp-Source: AGHT+IFESO0V4cBlJM2ffzQCyJKrA3jXqIb5O6xlPR4i26Y8tcCva0C0VjrMU/tPgyvTlGRsRMy6IA==
+X-Received: by 2002:adf:ea0d:0:b0:33a:fc8c:1dab with SMTP id q13-20020adfea0d000000b0033afc8c1dabmr578862wrm.67.1706690947080;
+        Wed, 31 Jan 2024 00:49:07 -0800 (PST)
+Received: from [10.190.5.29] ([213.205.68.220])
+        by smtp.gmail.com with ESMTPSA id eo6-20020a056000428600b0033af5086c2dsm5440926wrb.58.2024.01.31.00.49.06
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jan 2024 00:49:06 -0800 (PST)
 Content-Type: multipart/alternative;
- boundary=91c02e43e1c646fb848363c6b148c342
+ boundary="------------L468iJR5KWY5vCKgqQ4mCEj6"
+Message-ID: <9c14808b-798a-48d2-89ab-0e74483d26f3@gmail.com>
+Date: Wed, 31 Jan 2024 08:49:06 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bitbake-devel][kirkstone][2.0][PATCH] utils: Add
+ enable_loopback_networking()
+To: bitbake-devel@lists.openembedded.org
+References: <20240109100753.147890-1-fabio.berton@criticaltechworks.com>
+Content-Language: en-US
+From: Fabio Berton <fbberton@gmail.com>
+In-Reply-To: <20240109100753.147890-1-fabio.berton@criticaltechworks.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 31 Jan 2024 07:50:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15814
+ <bitbake-devel@lists.openembedded.org>; Wed, 31 Jan 2024 08:49:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15815
 
---91c02e43e1c646fb848363c6b148c342
-Content-Type: text/plain
+This is a multi-part message in MIME format.
+--------------L468iJR5KWY5vCKgqQ4mCEj6
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-BB_FETCH_PREMIRRORONLY  is not hard requirement here. 
-any usage of PREMIRRORS causes failure on second fetch but it's hidden by fetching from upstream iif available n most cases.
+Hi!
+Can this patch be backported to Kirkstone or is it a change that cannot 
+be backported?
 
--- 
-Pavel
+Thanks
 
-On Wed, Jan 31, 2024, at 04:49, Chen Qi via lists.openembedded.org wrote:
-> On 1/27/24 20:15, Pavel Zhukov wrote:
-> > Fix the issue with using of (pre)mirror in case if clonedir exists but
-> > outdated.
-> 
-> If I understand it right, the error only appears when 
-> BB_FETCH_PREMIRRORONLY is set, right?
-> 
-> If so, could you please update the commit message to include this 
-> information?
-> 
-> Regards,
-> 
-> Qi
-> 
-> > Previous version of the code fetched new mirror content into FETCH_HEAD
-> > instead of branch which caused refetch from the upstream. Add new remote
-> > add fetch from it instead so the ref can be found by "_contains_ref"
-> >
-> > Fixes [Yocto #15369]
-> >
-> > Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
-> > ---
-> >   bitbake/lib/bb/fetch2/git.py | 6 +++++-
-> >   1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-> > index 0deeb5cee1..b4497911f1 100644
-> > --- a/bitbake/lib/bb/fetch2/git.py
-> > +++ b/bitbake/lib/bb/fetch2/git.py
-> > @@ -375,7 +375,11 @@ class Git(FetchMethod):
-> >               else:
-> >                   tmpdir = tempfile.mkdtemp(dir=d.getVar('DL_DIR'))
-> >                   runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=tmpdir)
-> > -                fetch_cmd = "LANG=C %s fetch -f --progress %s " % (ud.basecmd, shlex.quote(tmpdir))
-> > +                output = runfetchcmd("%s remote" % ud.basecmd, d, quiet=True, workdir=ud.clonedir)
-> > +                if 'mirror' in output:
-> > +                    runfetchcmd("%s remote rm mirror" % ud.basecmd, d, workdir=ud.clonedir)
-> > +                runfetchcmd("%s remote add --mirror=fetch mirror %s" % (ud.basecmd, tmpdir), d, workdir=ud.clonedir)
-> > +                fetch_cmd = "LANG=C %s fetch -f --update-head-ok  --progress mirror " % (ud.basecmd)
-> >                   runfetchcmd(fetch_cmd, d, workdir=ud.clonedir)
-> >           repourl = self._get_repo_url(ud)
-> >   
-> >
-> > 
-> >
-> 
-> 
-> 
+On 1/9/2024 10:07 AM, Fabio Berton via lists.openembedded.org wrote:
+> From: Mattias Jernberg<mattiasj@axis.com>
+>
+> It can be used to enable the loopback interface, typically after calling
+> disable_network().
+>
+> Also correct a typo in a debug message.
+>
+> Signed-off-by: Mattias Jernberg<mattias.jernberg@axis.com>
+> Signed-off-by: Peter Kjellerstedt<peter.kjellerstedt@axis.com>
+> Signed-off-by: Richard Purdie<richard.purdie@linuxfoundation.org>
+> (cherry picked from commit 0d317209d4234c5f05a9fcdc13c52f502f104018)
+> Signed-off-by: Fabio Berton<fabio.berton@criticaltechworks.com>
+> ---
+>   lib/bb/utils.py | 42 +++++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 41 insertions(+), 1 deletion(-)
+>
+> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+> index 3f7f82d1..d09e1782 100644
+> --- a/lib/bb/utils.py
+> +++ b/lib/bb/utils.py
+> @@ -30,6 +30,8 @@ import collections
+>   import copy
+>   import ctypes
+>   import random
+> +import socket
+> +import struct
+>   import tempfile
+>   from subprocess import getstatusoutput
+>   from contextlib import contextmanager
+> @@ -1627,6 +1629,44 @@ def set_process_name(name):
+>       except:
+>           pass
+>
+> +def enable_loopback_networking():
+> +    # From bits/ioctls.h
+> +    SIOCGIFFLAGS = 0x8913
+> +    SIOCSIFFLAGS = 0x8914
+> +    SIOCSIFADDR = 0x8916
+> +    SIOCSIFNETMASK = 0x891C
+> +
+> +    # if.h
+> +    IFF_UP = 0x1
+> +    IFF_RUNNING = 0x40
+> +
+> +    # bits/socket.h
+> +    AF_INET = 2
+> +
+> +    # char ifr_name[IFNAMSIZ=16]
+> +    ifr_name = struct.pack("@16s", b"lo")
+> +    def netdev_req(fd, req, data = b""):
+> +        # Pad and add interface name
+> +        data = ifr_name + data + (b'\x00' * (16 - len(data)))
+> +        # Return all data after interface name
+> +        return fcntl.ioctl(fd, req, data)[16:]
+> +
+> +    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_IP) as sock:
+> +        fd = sock.fileno()
+> +
+> +        # struct sockaddr_in ifr_addr { unsigned short family; uint16_t sin_port ; uint32_t in_addr; }
+> +        req = struct.pack("@H", AF_INET) + struct.pack("=H4B", 0, 127, 0, 0, 1)
+> +        netdev_req(fd, SIOCSIFADDR, req)
+> +
+> +        # short ifr_flags
+> +        flags = struct.unpack_from('@h', netdev_req(fd, SIOCGIFFLAGS))[0]
+> +        flags |= IFF_UP | IFF_RUNNING
+> +        netdev_req(fd, SIOCSIFFLAGS, struct.pack('@h', flags))
+> +
+> +        # struct sockaddr_in ifr_netmask
+> +        req = struct.pack("@H", AF_INET) + struct.pack("=H4B", 0, 255, 0, 0, 0)
+> +        netdev_req(fd, SIOCSIFNETMASK, req)
+> +
+>   def disable_network(uid=None, gid=None):
+>       """
+>       Disable networking in the current process if the kernel supports it, else
+> @@ -1648,7 +1688,7 @@ def disable_network(uid=None, gid=None):
+>
+>       ret = libc.unshare(CLONE_NEWNET | CLONE_NEWUSER)
+>       if ret != 0:
+> -        logger.debug("System doesn't suport disabling network without admin privs")
+> +        logger.debug("System doesn't support disabling network without admin privs")
+>           return
+>       with open("/proc/self/uid_map", "w") as f:
+>           f.write("%s %s 1" % (uid, uid))
+> --
+> 2.25.1
+>
+> The information in this communication may contain confidential or legally privileged information. It is intended solely for the use of the individual or entity it addresses and others authorized to receive it. If you are not an intended recipient, you are hereby notified that any disclosure, copying, distribution or action in reliance on the contents of this information is strictly prohibited and may be unlawful. If you have received this communication by error, please notify us immediately by responding to this e-mail and then delete it from your system. Critical TechWorks is not liable for the proper and complete transmission of the information in this communication nor for any delay in its receipt
+>
+> This e-mail is environmentally friendly, just like Critical TechWorks, which lives in a paper-free atmosphere. Therefore, please consider the environment before printing it!
+>
 > -=-=-=-=-=-=-=-=-=-=-=-
 > Links: You receive all messages sent to this group.
-> View/Reply Online (#15813): https://lists.openembedded.org/g/bitbake-devel/message/15813
-> Mute This Topic: https://lists.openembedded.org/mt/103994536/6390638
-> Group Owner: bitbake-devel+owner@lists.openembedded.org <mailto:bitbake-devel%2Bowner@lists.openembedded.org>
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [pavel@zhukoff.net]
+> View/Reply Online (#15757):https://lists.openembedded.org/g/bitbake-devel/message/15757
+> Mute This Topic:https://lists.openembedded.org/mt/103617369/6083838
+> Group Owner:bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe:https://lists.openembedded.org/g/bitbake-devel/unsub  [fbberton@gmail.com]
 > -=-=-=-=-=-=-=-=-=-=-=-
-> 
-> 
+>
+--------------L468iJR5KWY5vCKgqQ4mCEj6
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---91c02e43e1c646fb848363c6b148c342
-Content-Type: text/html
-Content-Transfer-Encoding: quoted-printable
+<!DOCTYPE html>
+<html data-lt-installed="true">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body style="padding-bottom: 1px;">
+    <p>Hi!<br>
+      Can this patch be backported to Kirkstone or is it a change that
+      cannot be backported?</p>
+    <p>Thanks<br>
+    </p>
+    <div class="moz-cite-prefix">On 1/9/2024 10:07 AM, Fabio Berton via
+      lists.openembedded.org wrote:<br>
+    </div>
+    <blockquote type="cite"
+cite="mid:20240109100753.147890-1-fabio.berton@criticaltechworks.com">
+      <pre class="moz-quote-pre" wrap="">From: Mattias Jernberg <a class="moz-txt-link-rfc2396E" href="mailto:mattiasj@axis.com">&lt;mattiasj@axis.com&gt;</a>
 
-<!DOCTYPE html><html><head><title></title><style type=3D"text/css">p.Mso=
-Normal,p.MsoNoSpacing{margin:0}</style></head><body><div>BB_FETCH_PREMIR=
-RORONLY&nbsp; is not hard requirement here.&nbsp;<br></div><div>any usag=
-e of PREMIRRORS causes failure on second fetch but it's hidden by fetchi=
-ng from upstream iif available n most cases.<br></div><div><br></div><di=
-v>--&nbsp;<br></div><div>Pavel</div><div><br></div><div>On Wed, Jan 31, =
-2024, at 04:49, Chen Qi via lists.openembedded.org wrote:<br></div><bloc=
-kquote type=3D"cite" id=3D"qt" style=3D""><div>On 1/27/24 20:15, Pavel Z=
-hukov wrote:<br></div><div>&gt; Fix the issue with using of (pre)mirror =
-in case if clonedir exists but<br></div><div>&gt; outdated.<br></div><di=
-v><br></div><div>If I understand it right, the error only appears when&n=
-bsp;<br></div><div>BB_FETCH_PREMIRRORONLY is set, right?<br></div><div><=
-br></div><div>If so, could you please update the commit message to inclu=
-de this&nbsp;<br></div><div>information?<br></div><div><br></div><div>Re=
-gards,<br></div><div><br></div><div>Qi<br></div><div><br></div><div>&gt;=
- Previous version of the code fetched new mirror content into FETCH_HEAD=
-<br></div><div>&gt; instead of branch which caused refetch from the upst=
-ream. Add new remote<br></div><div>&gt; add fetch from it instead so the=
- ref can be found by "_contains_ref"<br></div><div>&gt;<br></div><div>&g=
-t; Fixes [Yocto #15369]<br></div><div>&gt;<br></div><div>&gt; Signed-off=
--by: Pavel Zhukov &lt;<a href=3D"mailto:pavel@zhukoff.net">pavel@zhukoff=
-.net</a>&gt;<br></div><div>&gt; ---<br></div><div>&gt;&nbsp;&nbsp; bitba=
-ke/lib/bb/fetch2/git.py | 6 +++++-<br></div><div>&gt;&nbsp;&nbsp; 1 file=
- changed, 5 insertions(+), 1 deletion(-)<br></div><div>&gt;<br></div><di=
-v>&gt; diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2=
-/git.py<br></div><div>&gt; index 0deeb5cee1..b4497911f1 100644<br></div>=
-<div>&gt; --- a/bitbake/lib/bb/fetch2/git.py<br></div><div>&gt; +++ b/bi=
-tbake/lib/bb/fetch2/git.py<br></div><div>&gt; @@ -375,7 +375,11 @@ class=
- Git(FetchMethod):<br></div><div>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else:<br></div><div>&g=
-t;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tmpdir =3D tempfile.mkdtemp(dir=3D=
-d.getVar('DL_DIR'))<br></div><div>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p; runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=3Dtmpdir)<br></=
-div><div>&gt; -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fetch_cmd =3D "LANG=3DC %s fetch -f --=
-progress %s " % (ud.basecmd, shlex.quote(tmpdir))<br></div><div>&gt; +&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp; output =3D runfetchcmd("%s remote" % ud.basecmd, d, qui=
-et=3DTrue, workdir=3Dud.clonedir)<br></div><div>&gt; +&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
- if 'mirror' in output:<br></div><div>&gt; +&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp; runfetchcmd("%s remote rm mirror" % ud.basecmd, d, workdi=
-r=3Dud.clonedir)<br></div><div>&gt; +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; runfetchcmd("%s =
-remote add --mirror=3Dfetch mirror %s" % (ud.basecmd, tmpdir), d, workdi=
-r=3Dud.clonedir)<br></div><div>&gt; +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fetch_cmd =3D "L=
-ANG=3DC %s fetch -f --update-head-ok&nbsp; --progress mirror " % (ud.bas=
-ecmd)<br></div><div>&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; runfetchcmd=
-(fetch_cmd, d, workdir=3Dud.clonedir)<br></div><div>&gt;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; repourl =3D self._get_repo_=
-url(ud)<br></div><div>&gt;&nbsp;&nbsp;&nbsp;<br></div><div>&gt;<br></div=
-><div>&gt;&nbsp;<br></div><div>&gt;<br></div><div><br></div><div><br></d=
-iv><div><br></div><div>-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>=
-</div><div>Links: You receive all messages sent to this group.<br></div>=
-<div>View/Reply Online (#15813):&nbsp;<a href=3D"https://lists.openembed=
-ded.org/g/bitbake-devel/message/15813">https://lists.openembedded.org/g/=
-bitbake-devel/message/15813</a><br></div><div>Mute This Topic:&nbsp;<a h=
-ref=3D"https://lists.openembedded.org/mt/103994536/6390638">https://list=
-s.openembedded.org/mt/103994536/6390638</a><br></div><div>Group Owner:&n=
-bsp;<a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org">bitb=
-ake-devel+owner@lists.openembedded.org</a><br></div><div>Unsubscribe:&nb=
-sp;<a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsub">http=
-s://lists.openembedded.org/g/bitbake-devel/unsub</a> [<a href=3D"mailto:=
-pavel@zhukoff.net">pavel@zhukoff.net</a>]<br></div><div>-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br></div><div><br></div><div><br></div></b=
-lockquote><div><br></div></body></html>
---91c02e43e1c646fb848363c6b148c342--
+It can be used to enable the loopback interface, typically after calling
+disable_network().
+
+Also correct a typo in a debug message.
+
+Signed-off-by: Mattias Jernberg <a class="moz-txt-link-rfc2396E" href="mailto:mattias.jernberg@axis.com">&lt;mattias.jernberg@axis.com&gt;</a>
+Signed-off-by: Peter Kjellerstedt <a class="moz-txt-link-rfc2396E" href="mailto:peter.kjellerstedt@axis.com">&lt;peter.kjellerstedt@axis.com&gt;</a>
+Signed-off-by: Richard Purdie <a class="moz-txt-link-rfc2396E" href="mailto:richard.purdie@linuxfoundation.org">&lt;richard.purdie@linuxfoundation.org&gt;</a>
+(cherry picked from commit 0d317209d4234c5f05a9fcdc13c52f502f104018)
+Signed-off-by: Fabio Berton <a class="moz-txt-link-rfc2396E" href="mailto:fabio.berton@criticaltechworks.com">&lt;fabio.berton@criticaltechworks.com&gt;</a>
+---
+ lib/bb/utils.py | 42 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
+
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 3f7f82d1..d09e1782 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -30,6 +30,8 @@ import collections
+ import copy
+ import ctypes
+ import random
++import socket
++import struct
+ import tempfile
+ from subprocess import getstatusoutput
+ from contextlib import contextmanager
+@@ -1627,6 +1629,44 @@ def set_process_name(name):
+     except:
+         pass
+
++def enable_loopback_networking():
++    # From bits/ioctls.h
++    SIOCGIFFLAGS = 0x8913
++    SIOCSIFFLAGS = 0x8914
++    SIOCSIFADDR = 0x8916
++    SIOCSIFNETMASK = 0x891C
++
++    # if.h
++    IFF_UP = 0x1
++    IFF_RUNNING = 0x40
++
++    # bits/socket.h
++    AF_INET = 2
++
++    # char ifr_name[IFNAMSIZ=16]
++    ifr_name = struct.pack("@16s", b"lo")
++    def netdev_req(fd, req, data = b""):
++        # Pad and add interface name
++        data = ifr_name + data + (b'\x00' * (16 - len(data)))
++        # Return all data after interface name
++        return fcntl.ioctl(fd, req, data)[16:]
++
++    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_IP) as sock:
++        fd = sock.fileno()
++
++        # struct sockaddr_in ifr_addr { unsigned short family; uint16_t sin_port ; uint32_t in_addr; }
++        req = struct.pack("@H", AF_INET) + struct.pack("=H4B", 0, 127, 0, 0, 1)
++        netdev_req(fd, SIOCSIFADDR, req)
++
++        # short ifr_flags
++        flags = struct.unpack_from('@h', netdev_req(fd, SIOCGIFFLAGS))[0]
++        flags |= IFF_UP | IFF_RUNNING
++        netdev_req(fd, SIOCSIFFLAGS, struct.pack('@h', flags))
++
++        # struct sockaddr_in ifr_netmask
++        req = struct.pack("@H", AF_INET) + struct.pack("=H4B", 0, 255, 0, 0, 0)
++        netdev_req(fd, SIOCSIFNETMASK, req)
++
+ def disable_network(uid=None, gid=None):
+     """
+     Disable networking in the current process if the kernel supports it, else
+@@ -1648,7 +1688,7 @@ def disable_network(uid=None, gid=None):
+
+     ret = libc.unshare(CLONE_NEWNET | CLONE_NEWUSER)
+     if ret != 0:
+-        logger.debug("System doesn't suport disabling network without admin privs")
++        logger.debug("System doesn't support disabling network without admin privs")
+         return
+     with open("/proc/self/uid_map", "w") as f:
+         f.write("%s %s 1" % (uid, uid))
+--
+2.25.1
+
+The information in this communication may contain confidential or legally privileged information. It is intended solely for the use of the individual or entity it addresses and others authorized to receive it. If you are not an intended recipient, you are hereby notified that any disclosure, copying, distribution or action in reliance on the contents of this information is strictly prohibited and may be unlawful. If you have received this communication by error, please notify us immediately by responding to this e-mail and then delete it from your system. Critical TechWorks is not liable for the proper and complete transmission of the information in this communication nor for any delay in its receipt
+
+This e-mail is environmentally friendly, just like Critical TechWorks, which lives in a paper-free atmosphere. Therefore, please consider the environment before printing it!
+</pre>
+      <br>
+      <fieldset class="moz-mime-attachment-header"></fieldset>
+      <pre class="moz-quote-pre" wrap="">
+-=-=-=-=-=-=-=-=-=-=-=-
+Links: You receive all messages sent to this group.
+View/Reply Online (#15757): <a class="moz-txt-link-freetext" href="https://lists.openembedded.org/g/bitbake-devel/message/15757">https://lists.openembedded.org/g/bitbake-devel/message/15757</a>
+Mute This Topic: <a class="moz-txt-link-freetext" href="https://lists.openembedded.org/mt/103617369/6083838">https://lists.openembedded.org/mt/103617369/6083838</a>
+Group Owner: <a class="moz-txt-link-abbreviated" href="mailto:bitbake-devel+owner@lists.openembedded.org">bitbake-devel+owner@lists.openembedded.org</a>
+Unsubscribe: <a class="moz-txt-link-freetext" href="https://lists.openembedded.org/g/bitbake-devel/unsub">https://lists.openembedded.org/g/bitbake-devel/unsub</a> [<a class="moz-txt-link-abbreviated" href="mailto:fbberton@gmail.com">fbberton@gmail.com</a>]
+-=-=-=-=-=-=-=-=-=-=-=-
+
+</pre>
+    </blockquote>
+  </body>
+  <lt-container></lt-container>
+</html>
+
+--------------L468iJR5KWY5vCKgqQ4mCEj6--
 
