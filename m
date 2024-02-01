@@ -1,217 +1,206 @@
-Return-Path: <Qi.Chen@windriver.com>
+Return-Path: <sam@liddicott.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3A6C47258
-	for <webhook@archiver.kernel.org>; Thu,  1 Feb 2024 03:31:18 +0000 (UTC)
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.web10.7745.1706758277155275150
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B711C47DDF
+	for <webhook@archiver.kernel.org>; Thu,  1 Feb 2024 11:15:51 +0000 (UTC)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+ by mx.groups.io with SMTP id smtpd.web10.13134.1706786147677014676
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 31 Jan 2024 19:31:17 -0800
+ Thu, 01 Feb 2024 03:15:48 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=jaldy2sH;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=276184b32d=qi.chen@windriver.com)
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41125UGO025555
-	for <bitbake-devel@lists.openembedded.org>; Wed, 31 Jan 2024 19:31:17 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=from:to:subject:date:message-id:content-transfer-encoding
-	:content-type:mime-version; s=PPS06212021; bh=tthfk7lUuSy/In55rl
-	uhxDNDi+Xkn6RtuH+gc04oxAc=; b=jaldy2sHwQhSA813PEIubw3BSEpbzZ69SL
-	d8Y2c9jWZexd2u0Jgz71FJ8aNXfRossLMQLVA+vAAFMtIAPaTo0WKdXcXCZggJEi
-	ezXOo6dES8MbsDVnBeiIab/xZeT/uQ25ESbhGsxPZkeMwjFEqd0pP67TZGSGOqVy
-	mgg7+d8DxsYZ3olkkNDBXY0um/vBrlpMLS8XlybtnIMyMTpTPHwMdN20oqnCuVAj
-	T8LAN+Rh0NDZJZzKs+wDG1NnzeFheBKxRr4697ZryQUHs1b/RUzLgUZ38CrooNK5
-	wzRkhgkCHR6LFvRHtrBRgJOKpB7Bf/4grYjoIaOkhTUs4Hx++4aQ==
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3w0276g1q4-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Wed, 31 Jan 2024 19:31:16 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VsKiCYikddBnmLd4SKONhKg5QG+ZX0+rHLUskYEqFRoeJPm2klUrUhtM6PoIkbuj3+b4eJR3vskqXZMFjalIh+w9iHtB16ibNMiGfdSZTwUpCPw7I+lHJ4rP9bGcT9z6S9wzd9rZj/zptqKMVi5AjqJQvyRSdldOvqEcqK2wMkBOlmbqdkbRewYFEjXQ9dqgD7bdPh1QBesbr4qGTyMMrR31se+6kF9waRNpGtFt94d2L60TcvGYZqBS2sB8wwoLmyNjBd+/sfjA6U+nvqttJnXPsnh9cnqzi9rYwn8jSLNRkj7d4hypB28cRlaHwctBrdENTT2D6PJwv2AzfGoY+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tthfk7lUuSy/In55rluhxDNDi+Xkn6RtuH+gc04oxAc=;
- b=BoGXxsWrLwMc4HRZZc6/k45f2bzXnXM5/64izbKbK8KdC1Dt34f+xVEOHs8joCAvXz9QeXjsRsTvzMzht8HMuxSV3Hi+0yRpwOYU2HHJGgMnRd6GmyV6Xj6rO1Ns6Suq+U/rjinHb+Jjh97asXN6wH+HDADyNe6mmytMu8siDFIVeVmAoFiOt8v++ckUoDRNLWGjaNuRX08LoiIQ+cjAyA0qzG+zhPN3uurhoCgWS4RvqFDJpaaUTJLR3Z+eNfdz7H5dxulQ+48UE95E5YhXkhTZDy51pXnDP3qJuRz/674G9z1A+LjplYFiaL1Vwb1ptl8AgQdtTu7d5Q5a68TC4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
- by PH7PR11MB8598.namprd11.prod.outlook.com (2603:10b6:510:2fd::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22; Thu, 1 Feb
- 2024 03:31:13 +0000
-Received: from CO6PR11MB5602.namprd11.prod.outlook.com
- ([fe80::5d84:2b01:5029:9315]) by CO6PR11MB5602.namprd11.prod.outlook.com
- ([fe80::5d84:2b01:5029:9315%7]) with mapi id 15.20.7249.025; Thu, 1 Feb 2024
- 03:31:13 +0000
-From: Qi.Chen@windriver.com
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake-devel][PATCH 1/3] fetch2/git.py: fix a corner case in try_premirror
-Date: Wed, 31 Jan 2024 19:30:58 -0800
-Message-ID: <20240201033100.3617421-1-Qi.Chen@windriver.com>
-X-Mailer: git-send-email 2.42.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0P220CA0013.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:41b::20) To CO6PR11MB5602.namprd11.prod.outlook.com
- (2603:10b6:303:13a::5)
+ dkim=pass header.i=@liddicott-com.20230601.gappssmtp.com header.s=20230601 header.b=lzwmXTqF;
+ spf=none, err=SPF record not found (domain: liddicott.com, ip: 209.85.208.170, mailfrom: sam@liddicott.com)
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2cf588c4dbcso10527911fa.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 01 Feb 2024 03:15:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=liddicott-com.20230601.gappssmtp.com; s=20230601; t=1706786146; x=1707390946; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8JpHQ9/pUz0/OCDhRjLdCFN8GHqtDhXw/U1dfX7XSjY=;
+        b=lzwmXTqFZFFr4FtT5xZM4f+qT7rvkr7Gyi6lgN4qDjvGsqimQ61hI9AGVWc2SNhERI
+         XtE6jChvoUBvmgSVyuEVTYJSsSB2NKsAXuEXX/VI9ZXR0tFi5ctHDWLDuLnGo14lSKi5
+         X0AO4u48FuKVNH5udmnkbLl/SKum6az1XYdfACgoJHjyT78PBVTK/TY3WFFhsB+VVVoN
+         o4WFIiU5nPRFRUcMu+t7qqDhUsry/2G1D3EgoIrjqXef2JnQoDBpZ100xlFplZinBx/R
+         VLdqjS0sWuYRaYtHKeBctqUCH7Knlp32v+LX9eWiKhVpWo0yIa6ZIJNXjffiyGadip0p
+         v9IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706786146; x=1707390946;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8JpHQ9/pUz0/OCDhRjLdCFN8GHqtDhXw/U1dfX7XSjY=;
+        b=q2tArWA29+Y2tGaPg86Rl8yqrdO7s7aW2KSTCZTujXvgBxJmH+XTZ0puBd0TjQ/59Y
+         0q+bAtdUC9LiyL7QQCpkJNwIrw3Z+O356KKqx+8KIeEuaIOV3NWwOivRtmemm3n5H28q
+         DTnjY6wacNUAO4q84rHuPMD1jFo/VS7UdTgVSwwjC7C+CfxIOeVpI+CoNF5O5S9VB8K+
+         Jy4RDskttAnsk/i9jtoBteu9RQP+mkHi4XRLEtMVzlrLrrpLZFZ1E3KRfHozLNGlgpYb
+         gVmCgLxzTn1BWGFPq8ieqqEriKaChtMDdc1abgbn6irV08KDr8DduJhPNXivqrAvaexA
+         QWHA==
+X-Gm-Message-State: AOJu0Yw9MiWU6NGxxq22d26en6E+9TIwgIJUhnfnToif+Rzjiig+BEoH
+	sM2/YmLqQaIexZrWBxStcLM52n3czQZJBAF6oPve5YWGYOTojI4QNY2+DhUYen2jNuSFmi4Mk1E
+	C8t8t7/TnwGDcRn/bfEzWnArhf3A7Ptxr1G7q
+X-Google-Smtp-Source: AGHT+IHTMLgt+DWNTzq0bzt+26BiS1aFulEeBfAjkeh74PjH6zNbRwC5qh+34K+oU8qABiw/iPKNDfrqRm4M22BuNOk=
+X-Received: by 2002:a2e:92c6:0:b0:2cf:56b:18c6 with SMTP id
+ k6-20020a2e92c6000000b002cf056b18c6mr2913383ljh.50.1706786145221; Thu, 01 Feb
+ 2024 03:15:45 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|PH7PR11MB8598:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45575933-3e7e-4ec9-b583-08dc22d63da6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	CvdwHDgoKrVD0YLNUaZzHZiHzZUsbEdVCRodKxQc4/uylp/UPGb5EckyKoPu4h6orKbeyqxVMF6kGTgtR+q1w5NGNZEKGipcRg6HrRdFuN0/++PNDH5/nj62LzXhAvFxICWYQ3+UZxOspNLlGymUUuRx+FSodCsfYS8bFuu9z/m0R28xKBZGm1+bMWUIGkgzIdHQvRmhZ1DDtrOWnHKq7QERsDN/GVe54sf1jsZq+TNhvnXgb2w8jLFC6sgAb+i2Pv0hi5PD1cl3eAr3gmonUSrxrfeJp7KeidvQBJ+mJn1M4jP0k8+T+MmsCW4vYX1xpnpqHLwvJYyGR7/JgbdIhAsO8i94TXe65aSsewa8YUnoY1/TG1aa12QJ8iXtCKz06fkAWo99LRR/Q/MuaRG6y85aFer0r/I7IPnIdY0iOZbr6dlkdMR4MddyZ1Nbrr4UHBJ3qJIgOazwNXn6jIS7GDWxmus+iz9WFqx1LYJwJG5HthVpu9LcXzBcaEpvCEMk2BY/pjq8Ar+wo5UFSusXNSkLd3U8/Oh9Uk0EHuD2HW5u0IUqD7RUPKxAn1VAwwzVYLfGYATelHrej+l9Fg3iXpAhy6JlHHA+9pTkBmpwWKOozDYCrLeZdPFwtWWDVyvg
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39850400004)(396003)(136003)(366004)(346002)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(38350700005)(26005)(6486002)(66946007)(478600001)(5660300002)(2906002)(83380400001)(9686003)(6666004)(66476007)(6506007)(8676002)(52116002)(6916009)(8936002)(316002)(2616005)(6512007)(1076003)(66556008)(38100700002)(86362001)(36756003)(41300700001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?RrvUZ8Nh7lcixs4jntXlPxMyz2n1qYv4HfkbjyS9JhAEmxn5IJXhpURCbSEC?=
- =?us-ascii?Q?h/Uj1AFf1j8Ko9SkbApq7/T9DL6RrSFFd3YujhV5MGgnG9Rk39qeTSjt5nT8?=
- =?us-ascii?Q?2rYELAprUoJi7oH9WvwzDF+soWk41FRFtPlt5iVsqT86j6Kb0ClIBw6jQdC4?=
- =?us-ascii?Q?o2hzKqt6hNbI1aNDx92/DnHroXhbWr46CBneegurheLESfAXgl2SvBI5UUz+?=
- =?us-ascii?Q?N5vffpWSa9e1aOemoeZuioDsAPVc8EVSc+oQ/d8tWdTNz913sKZc4qzAK5Ga?=
- =?us-ascii?Q?+/T751IUnV6oKQCe+F6VMjbf94QRgR0vus5lgPsbZGdyOHxFo5uY1BmkykhW?=
- =?us-ascii?Q?GM3ekDl9plRP9FSgIde9fYqUq1z7BN5o3eNT+cvT6WgiYHxsJ+g5HIWxD53c?=
- =?us-ascii?Q?XVZYzO2rl8p/KV0fAWNyAu2cas0qtrWjyxVeqqW0sGYWWHltPFe1U6qSnN2+?=
- =?us-ascii?Q?0voN7b/Sf+LXFLvuG2AzjDe8BFjFY9i0DCHJD49UM76ktsu08khFYOE7aMQH?=
- =?us-ascii?Q?p233Y/O+LUIvVN2eyRQw3jn26DmBuxzxBvSddmdCrXBZ+RTikKIB0XT6+AVY?=
- =?us-ascii?Q?0AuYcaIR7GcOAWzOTJBtk55Uta2TObwk/oLT8DmrZGKGyxqjWcgQAqNvBIXA?=
- =?us-ascii?Q?RKVhfY2KTjHMb+CmBZCRKF7fb9QGBaks+qUR8DcGjhblfA3eKpu7ReiPD/Tq?=
- =?us-ascii?Q?6eCinwH39mngGvsXlGydPLI/M+CsnpP8VBL/jUBXPstxIl34q1yvbiALQ7DI?=
- =?us-ascii?Q?ayjpJVuYrWDLstcFDq8jZdQ2pURegoj3EwwfcvevO7wy/jJ74JkPs06XkMxK?=
- =?us-ascii?Q?HK9dAMzLJ1aRtSVMrqHEKvVMLMNN+uSOkRwYEr9CcqiCMdWfHZV0XBY9pgpo?=
- =?us-ascii?Q?U1b9y7HsNBuctT7tShx9zIuTsPZ1ZCgsRKTyGMx7wMckouqEMtmY23p3/t0U?=
- =?us-ascii?Q?hBsd2HpSFIbJ+JvY0L6C+PvEfD5ulI8pYKfLQWnOarSeibOZMShyhmb47S4t?=
- =?us-ascii?Q?OFncuFg92Jr9o7Vfr7yI72CtB1xm6AeY9Jgiz3p7abNb+ApV4+/HpGSGaony?=
- =?us-ascii?Q?ks0K+MNfiGQcgsV9VCcp4ovcZhDAH0v2743gHbreAMou83Nk/EPheH3BfJbh?=
- =?us-ascii?Q?35dXCWr2BqslGIwuW3M83B9Eo8OyO8dn10HOmue57NvNPH0QJtURY8GReArr?=
- =?us-ascii?Q?C1efiNsoH5riF/wfYU2tAy1oTVIiMC//LuHscX16gRn1QhJldxqPIOMLEda6?=
- =?us-ascii?Q?ANEjwTTsqfegBm/B9YdUe+O4gyfNvueThRTWrJdAw0Fab7rnBjHzhNIw+A4Q?=
- =?us-ascii?Q?DB8eTppMP0WxDYIw62rkqIG+e61nZs+p6lfuifRW5mHMh//FLGT8bgMZhCsI?=
- =?us-ascii?Q?QunK3nl5GA/sryB87YI1N/3F/HRD54yKpZCLnb7XMEHhSG7UBbtF0I22oqeS?=
- =?us-ascii?Q?0dt1dR6U+RCjJfGPY+smRZyfudZnsmNAj9mNzLSv2YPqa7gYhUuGcnhwcoho?=
- =?us-ascii?Q?bEDAdAVval/aC3fFwxMVmIvSaFGStd7+87d1PobY7bZvxHXxeBpJoAGEDtgH?=
- =?us-ascii?Q?TZCzxcpt+vriuwCWOSVYxCtde+7N1pqQhuuRErQJ?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45575933-3e7e-4ec9-b583-08dc22d63da6
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5602.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 03:31:13.3395
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 93yxo0SZm5TzFDeWeAWfAUKSNr9UKoPUE5gKHjPJ6ywp1bPv6Twir8fk1DRJTfcrGInpm7q8c7hgVh5kdl4OkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8598
-X-Proofpoint-GUID: TheyGmzc5P0EV41boyBhH1mgdZixHnoE
-X-Proofpoint-ORIG-GUID: TheyGmzc5P0EV41boyBhH1mgdZixHnoE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_10,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxlogscore=999 lowpriorityscore=0 bulkscore=0 malwarescore=0 spamscore=0
- phishscore=0 impostorscore=0 clxscore=1015 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2401190000
- definitions=main-2402010026
+References: <20240201033100.3617421-1-Qi.Chen@windriver.com> <20240201033100.3617421-3-Qi.Chen@windriver.com>
+In-Reply-To: <20240201033100.3617421-3-Qi.Chen@windriver.com>
+From: Sam Liddicott <sam@liddicott.com>
+Date: Thu, 1 Feb 2024 11:15:08 +0000
+Message-ID: <CAOj-5WBWkddTbtEXiHvKZvCjbxijaC244N07TwniJDM8ZR8ftw@mail.gmail.com>
+Subject: Re: [bitbake-devel][PATCH 3/3] fetch2/git.py: add comment in try_premirrors
+To: Qi.Chen@windriver.com
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000e4d7a30610501d2f"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 01 Feb 2024 03:31:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15817
+ <bitbake-devel@lists.openembedded.org>; Thu, 01 Feb 2024 11:15:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15819
 
-From: Chen Qi <Qi.Chen@windriver.com>
+--000000000000e4d7a30610501d2f
+Content-Type: text/plain; charset="UTF-8"
 
-For gitsm recipes, it's possible that some URL is used more than once.
-e.g.,
-A -> B:rev1 (B is a submodule of A)
-A -> C (C is a submodule of A)
-C -> B:rev2 (B is a submodule of C)
-A anc C are both using B as submodules, but on different revs.
-Now if we have:
-B:rev1 -> D
-B:rev2 -> E
-Then, the mirror will not be fully used.
-Say we have all repo mirrors for A, B, C, D, E, then in theory it's not
-necessary to reach out to any network for downloading. But it's not the
-case. After downloading B(rev1) and its submodule D from mirrors, the fetch
-process continues to download C, thus B(rev2) and E. Now it finds that B
-needs an update because its submodule E needs an update. Of course this is
-true because E is not downloaded yet. Now the problem comes to whether to
-use mirror or not. The git.py defines try_premirror to return 'False' when
-the ud.clonedir exists. As B has been cloned, the ud.clonedir exists and
-try_mirror returns False, resulting in not using mirror and going to upstream
-directly.
+This reminds me of a case while using a kirkstone branch, where a git
+submodule was the same repo but a different branch as the parent module,
+and the fetcher was not able to complete even without mirrors.
 
-We can see that the mirrors are not fully used. This is usually not problem,
-as the cost is only some network download. But in case the following two
-settings are there, we get errors.
-BB_NO_NETWORK = "0"
-BB_ALLOWED_NETWORKS = "*.some.allowed.domain"
-In such case, the gitsm recipe A will fail to fetch. Note that all contents
-that A needs are in mirrors and now it's failing to fetch. This is unexpected.
+It was a go project where vendor modules were kept in a branch whose name
+was vendor/ prefixed to the branch of the main project. This allowed the
+module dependencies to be regulated (and not fetched during compile) while
+still being associated with the project branch without tainting the project
+branch or history - but it meant that the fetcher would hang.
 
-Note that the different revs of the same repo in gitsm recipe is not the only
-way to reveal this problem. For example, there might be a recipe call B that
-uses B:rev3. Check the protobuf and grpc recipes as an example.
+Would these changes address that?
 
-For now, we can use the following steps to reproduce this issue. To be clear,
-the grpc recipe in meta-oe is now 1.60.0.
-1. Add in local.conf:
-   DL_DIR = "${TOPDIR}/downloads-premirror"
-   bitbake grpc -c fetch
-2. Comment out the DL_DIR setting in local.conf and add the following lines:
-   PREMIRRORS:append = " \
-     git://.*/.* git://${TOPDIR}/downloads-premirror/git2/MIRRORNAME;protocol=file \n \
-     gitsm://.*/.* gitsm://${TOPDIR}/downloads-premirror/git2/MIRRORNAME;protocol=file \n \
-   "
-3. Set BB_NO_NETWORK = "1" and then 'bitbake grpc -c fetch'.
-   This command succeeds and this shows that the premirror holds everything we need.
-4. Add the following lines and then 'bitbake grpc -c fetch'.
-   BB_NO_NETWORK = "0"
-   BB_ALLOWED_NETWORKS = "*.some.domain"
+Sam
 
-After step 4, the error message is as below:
-ERROR: grpc-1.60.0-r0 do_fetch: The URL: 'gitsm://github.com/protocolbuffers/protobuf.git;protocol=https;name=third_party/protobuf;subpath=third_party/protobuf;nobranch=1;lfs=True;bareclone=1;nobranch=1' is not trusted and cannot be used
+On Thu, 1 Feb 2024 at 03:31, Chen Qi via lists.openembedded.org <Qi.Chen=
+windriver.com@lists.openembedded.org> wrote:
 
-This patch fixes this problem by handling this corner case, that is, if the URL is
-not trusted from the settings of BB_NO_NETWORK and BB_ALLOWED_NETWORKS, then we should
-try premirrors because trying to reach upstream is destined to fail.
+> From: Chen Qi <Qi.Chen@windriver.com>
+>
+> The purpose of ensuring 'incremental fetch' is not easy to see from
+> the codes. So add comments to explain this.
+>
+> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+> ---
+>  bitbake/lib/bb/fetch2/git.py | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+> index 322a9366da..fa8c597ea2 100644
+> --- a/bitbake/lib/bb/fetch2/git.py
+> +++ b/bitbake/lib/bb/fetch2/git.py
+> @@ -361,6 +361,11 @@ class Git(FetchMethod):
+>          # we need to try premirrors first as using upstream is destined
+> to fail.
+>          if not trusted_network(d, ud.url):
+>              return True
+> +        # the following check is to ensure incremental fetch in
+> downloads, this is
+> +        # because the premirror might be old and does not contain the new
+> rev required,
+> +        # and this will cause a total removal and new clone. So if we can
+> reach to
+> +        # network, we prefer upstream over premirror, though the
+> premirror might contain
+> +        # the new rev.
+>          if os.path.exists(ud.clonedir):
+>              return False
+>          return True
+> --
+> 2.42.0
+>
+>
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#15818):
+> https://lists.openembedded.org/g/bitbake-devel/message/15818
+> Mute This Topic: https://lists.openembedded.org/mt/104090273/7497305
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> sam@liddicott.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+>
+>
 
-Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
----
- bitbake/lib/bb/fetch2/git.py | 6 ++++++
- 1 file changed, 6 insertions(+)
+--000000000000e4d7a30610501d2f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 0deeb5cee1..322a9366da 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -87,6 +87,7 @@ from contextlib import contextmanager
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import runfetchcmd
- from   bb.fetch2 import logger
-+from   bb.fetch2 import trusted_network
- 
- 
- sha1_re = re.compile(r'^[0-9a-f]{40}$')
-@@ -355,6 +356,11 @@ class Git(FetchMethod):
-         # is not possible
-         if bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
-             return True
-+        # If the url is not in trusted network, that is, BB_NO_NETWORK is set to 0
-+        # and BB_ALLOWED_NETWORKS does not contain the host that ud.url uses, then
-+        # we need to try premirrors first as using upstream is destined to fail.
-+        if not trusted_network(d, ud.url):
-+            return True
-         if os.path.exists(ud.clonedir):
-             return False
-         return True
--- 
-2.42.0
+<div dir=3D"ltr">This reminds me of a case while using a kirkstone branch, =
+where a git submodule was the same repo but a different branch as the paren=
+t module, and the fetcher was not able to complete even without mirrors.<di=
+v><div><br></div><div>It was a go project where vendor modules were kept in=
+ a branch whose name was vendor/ prefixed to the branch of the main project=
+. This allowed the module dependencies to be regulated (and not fetched dur=
+ing compile) while still being associated with the project branch without t=
+ainting the project branch or history - but it meant that the fetcher would=
+ hang.</div></div><div><br></div><div>Would these changes address that?</di=
+v><div><br></div><div>Sam</div></div><br><div class=3D"gmail_quote"><div di=
+r=3D"ltr" class=3D"gmail_attr">On Thu, 1 Feb 2024 at 03:31, Chen Qi via <a =
+href=3D"http://lists.openembedded.org">lists.openembedded.org</a> &lt;Qi.Ch=
+en=3D<a href=3D"mailto:windriver.com@lists.openembedded.org">windriver.com@=
+lists.openembedded.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_q=
+uote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,2=
+04);padding-left:1ex">From: Chen Qi &lt;<a href=3D"mailto:Qi.Chen@windriver=
+.com" target=3D"_blank">Qi.Chen@windriver.com</a>&gt;<br>
+<br>
+The purpose of ensuring &#39;incremental fetch&#39; is not easy to see from=
+<br>
+the codes. So add comments to explain this.<br>
+<br>
+Signed-off-by: Chen Qi &lt;<a href=3D"mailto:Qi.Chen@windriver.com" target=
+=3D"_blank">Qi.Chen@windriver.com</a>&gt;<br>
+---<br>
+=C2=A0bitbake/lib/bb/fetch2/git.py | 5 +++++<br>
+=C2=A01 file changed, 5 insertions(+)<br>
+<br>
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py<br=
+>
+index 322a9366da..fa8c597ea2 100644<br>
+--- a/bitbake/lib/bb/fetch2/git.py<br>
++++ b/bitbake/lib/bb/fetch2/git.py<br>
+@@ -361,6 +361,11 @@ class Git(FetchMethod):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# we need to try premirrors first as usin=
+g upstream is destined to fail.<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if not trusted_network(d, ud.url):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return True<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # the following check is to ensure incremental=
+ fetch in downloads, this is<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # because the premirror might be old and does =
+not contain the new rev required,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # and this will cause a total removal and new =
+clone. So if we can reach to<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # network, we prefer upstream over premirror, =
+though the premirror might contain<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 # the new rev.<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if os.path.exists(ud.clonedir):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return False<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return True<br>
+-- <br>
+2.42.0<br>
+<br>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#15818): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/15818" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/15818</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/104090273/749=
+7305" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
+t/104090273/7497305</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:sam@liddicott.com" target=3D"_blan=
+k">sam@liddicott.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
 
+--000000000000e4d7a30610501d2f--
 
