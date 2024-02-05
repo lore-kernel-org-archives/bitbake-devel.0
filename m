@@ -1,200 +1,179 @@
-Return-Path: <nvhieudt11@gmail.com>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997BFC4828D
-	for <webhook@archiver.kernel.org>; Mon,  5 Feb 2024 11:31:15 +0000 (UTC)
-Subject: [PATCH] Support add-layer to prepend
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE02C48295
+	for <webhook@archiver.kernel.org>; Mon,  5 Feb 2024 15:42:47 +0000 (UTC)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+ by mx.groups.io with SMTP id smtpd.web10.66048.1707147758051559802
+ for <bitbake-devel@lists.openembedded.org>;
+ Mon, 05 Feb 2024 07:42:38 -0800
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=lW0iFjIR;
+ spf=pass (domain: gmail.com, ip: 209.85.167.54, mailfrom: martin.jansa@gmail.com)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50eac018059so5517216e87.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 05 Feb 2024 07:42:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707147756; x=1707752556; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hmCW3+au6tlEav+YOtml7EAl1mjnMW1RQcErQP7CNYA=;
+        b=lW0iFjIROQIG119F5JItvSVL5gTs3yAYq4Vwbld0mPPY7i2FsfqfKOfLCzGkv63Qi8
+         K/Xekep0VCd+DJ3qH+zrkvWRVFael696UFpacgQu1+3hmEjG6J4+4SzjUyDD9c5TJ/Dd
+         5y8dOsoITQ9U0YuIfJxKicup9cUyk7Zt2cld1+zIBGACsBRMUcJf4sXW50pUHIaO4r+s
+         8vraU7o91N8HNOEbq6r/yCg4dNPgcEb+HQRSJIPylQBCTwZOPaudsyRBgBf/K160X+Kv
+         hkkU++GKJZbNrkq6gk8fBjX/etRCz7FS7FRBkrB1UQujASuqpi9H4HYIZ4gl8g459nRT
+         fuvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707147756; x=1707752556;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hmCW3+au6tlEav+YOtml7EAl1mjnMW1RQcErQP7CNYA=;
+        b=hCxBvIzwg+BmAYLyaNClhpfmyG8Nit1n9KB41iuoIzzl4t/VwQX3ryaXFOFtgkYL1o
+         yxX1vwVEOfDnSdzu8zTZH//m1GCkdSuqDjWzzUgTARaIw9Xo2aEfMHOw50g9Gq7yaLM7
+         dHXznz9bH+Mf2FxJSJLeJECHizrrMZWfIuMHALVkSyauU2VMcD7z6klxNPVhoJeG1BvM
+         sGDMdIF+D4bNWW1bmROsK1MROcTYC7oHHcK/PnQbmfjRXR6tOYUfWlaA2JHO19BTzOq6
+         Mf9QDl5gE62gP444Q4BH1zwtUy67ImQDesCbF+h/fwJEUioOjU/l8/FhsRSc+hdyMheL
+         +gVw==
+X-Gm-Message-State: AOJu0Yx9G8TEliHHxu0wNi3vXvZ1i7Cl9+dnHwxgV4DdzGf2G7OvsTj6
+	kLEg7dMTM/FGgJzrsGUp6Ba1WKrDSzB3Ptoo0Z1zxZCOe3Yr9VKlblSVX+ul
+X-Google-Smtp-Source: AGHT+IEcGr/P1dw7O50wKluUMQzQBrMH+XTM7fLUsozeMUqziy+e+1+Amgr/W4wbhcAeb252YTQJbw==
+X-Received: by 2002:ac2:5de2:0:b0:511:5423:848d with SMTP id z2-20020ac25de2000000b005115423848dmr1238406lfq.60.1707147755961;
+        Mon, 05 Feb 2024 07:42:35 -0800 (PST)
+Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
+        by smtp.gmail.com with ESMTPSA id cw10-20020a170907160a00b00a3493e2dbfesm4462209ejd.53.2024.02.05.07.42.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 07:42:35 -0800 (PST)
+From: Martin Jansa <martin.jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-From: nvhieudt11@gmail.com
-X-Originating-Location: (203.247.149.151)
-X-Originating-Platform: Windows Chrome 121
-User-Agent: GROUPS.IO Web Poster
+Cc: Martin Jansa <martin.jansa@gmail.com>
+Subject: [PATCH] bitbake-diffsigs: fix walking the task dependencies and show better error
+Date: Mon,  5 Feb 2024 16:42:32 +0100
+Message-ID: <20240205154232.441704-1-martin.jansa@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Date: Mon, 05 Feb 2024 03:31:13 -0800
-Message-ID: <HOgI.1707132673041693756.jdfH@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="5YgT0DAhNJNV9pbf87VL"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 05 Feb 2024 11:31:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15823
+ <bitbake-devel@lists.openembedded.org>; Mon, 05 Feb 2024 15:42:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15824
 
---5YgT0DAhNJNV9pbf87VL
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+* when comparing 2 tmp/stamps/*do_configure.sigdata* I got
+  TypeError("filename must be a str or bytes object, or a file")
+  but both files I was comparing were
+  Zstandard compressed data (v0.8+), Dictionary ID: None
+  according to "file"
 
-As you know, layer order in BBLAYERS can affect in parsing recipes process,
-in some cases, users want to add a layer on the top of BBLAYERS variable
+  with TypeError catched to show which file it failed to open I got better
+  error which shows it was trying to read "do_prepare_recipe_sysroot.sigdata"
+  file now and after a while you might notice that it's not just the expected
+  file, but a dict with 'path', 'sstate', 'time'.
 
-So, add "--prepend" option for bitbake-layers to support add-layer to prepe=
-nd
+  Fix that in bitbake-diffsigs but keep the TypeError and add OSError
+  in case it will eventually walk on file which isn't zstd compressed
+  pipecompress throws CompressionError.
 
-Signed-off-by: Hieu Van Nguyen <hieu2.nguyen@lge.com>
+ERROR: Failed to open {'path': '5.15.do_prepare_recipe_sysroot.sigdata.99b12a401341a0df7c3553cb00c87a7674295496bd5c25ed71764ee0d0fb8eb8', 'sstate': False, 'time': 1707136354.991718}: filename must be a str or bytes object, or a file
+Traceback (most recent call last):
+  File "bitbake/bin/bitbake-diffsigs", line 192, in <module>
+    output = bb.siggen.compare_sigfiles(options.sigdatafile1, options.sigdatafile2, recursecb, color=color)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "bitbake/lib/bb/siggen.py", line 1039, in compare_sigfiles
+    recout = recursecb(dep, a[dep], b[dep])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "bitbake/bin/bitbake-diffsigs", line 102, in recursecb
+    out2 = bb.siggen.compare_sigfiles(hashfiles[hash1], hashfiles[hash2], recursecb, color=color)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "bitbake/lib/bb/siggen.py", line 857, in compare_sigfiles
+    raise err
+  File "bitbake/lib/bb/siggen.py", line 853, in compare_sigfiles
+    with bb.compress.zstd.open(a, "rt", encoding="utf-8", num_threads=1) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "bitbake/lib/bb/compress/zstd.py", line 12, in open
+    return bb.compress._pipecompress.open_wrap(ZstdFile, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "bitbake/lib/bb/compress/_pipecompress.py", line 59, in open_wrap
+    raise TypeError("filename must be a str or bytes object, or a file")
+TypeError: filename must be a str or bytes object, or a file
+
+* if I replace zstd file with just plaintext it fails with:
+  $ echo foo > foo
+  $ echo foo > bar
+  $ bitbake-diffsigs foo bar
+  zstd: /*stdin*\: unsupported format
+  ERROR: Process died with 1
+  sys:1: ResourceWarning: unclosed file <_io.BufferedReader name='foo'>
+
+  with this change it shows the name of the file which it failed to uncompress:
+
+  $ bitbake-diffsigs foo bar
+  zstd: /*stdin*\: unsupported format
+  ERROR: Failed to open sigdata file 'foo': Process died with 1
+  ERROR: Process died with 1
+  sys:1: ResourceWarning: unclosed file <_io.BufferedReader name='foo'>
 ---
-lib/bb/utils.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 | 7 +++++--
-lib/bblayers/action.py | 3 ++-
-2 files changed, 7 insertions(+), 3 deletions(-)
+ bin/bitbake-diffsigs |  2 +-
+ lib/bb/siggen.py     | 24 ++++++++++++++++++------
+ 2 files changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 068b631c..086f1cc8 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -1412,7 +1412,7 @@ def edit_metadata_file(meta_file, variables, varfunc)=
-:
-return updated
-
--def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=3DNone):
-+def edit_bblayers_conf(bblayers_conf, add, remove, prepend=3DNone, edit_cb=
-=3DNone):
-"""Edit bblayers.conf, adding and/or removing layers
-Parameters:
-bblayers_conf: path to bblayers.conf file to edit
-@@ -1482,7 +1482,10 @@ def edit_bblayers_conf(bblayers_conf, add, remove, e=
-dit_cb=3DNone):
-for addlayer in addlayers:
-if addlayer not in bblayers:
-updated =3D True
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bbla=
-yers.append(addlayer)
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if p=
-repend:
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 bblayers.insert(0,addlayer)
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 else=
-:
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 bblayers.append(addlayer)
-del addlayers[:]
-
-if edit_cb:
-diff --git a/lib/bblayers/action.py b/lib/bblayers/action.py
-index a8f26993..57d7195c 100644
---- a/lib/bblayers/action.py
-+++ b/lib/bblayers/action.py
-@@ -49,7 +49,7 @@ class ActionPlugin(LayerPlugin):
-shutil.copy2(bblayers_conf, backup)
-
-try:
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 notadded, _ =3D bb.utils.edit_bb=
-layers_conf(bblayers_conf, layerdirs, None)
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 notadded, _ =3D bb.utils.edit_bb=
-layers_conf(bblayers_conf, layerdirs, None, args.prepend)
-self.tinfoil.modified_files()
-if not (args.force or notadded):
-try:
-@@ -267,6 +267,7 @@ build results (as the layer priority order has effectiv=
-ely changed).
-def register_commands(self, sp):
-parser_add_layer =3D self.add_command(sp, 'add-layer', self.do_add_layer, p=
-arserecipes=3DFalse)
-parser_add_layer.add_argument('layerdir', nargs=3D'+', help=3D'Layer direct=
-ory/directories to add')
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 parser_add_layer.add_argument('--prepend', act=
-ion=3D'store_true', help=3D'Prepend layer directory/directories')
-
-parser_remove_layer =3D self.add_command(sp, 'remove-layer', self.do_remove=
-_layer, parserecipes=3DFalse)
-parser_remove_layer.add_argument('layerdir', nargs=3D'+', help=3D'Layer dir=
-ectory/directories to remove (wildcards allowed, enclose in quotes to avoid=
- shell expansion)')
---
+diff --git a/bin/bitbake-diffsigs b/bin/bitbake-diffsigs
+index a8f49191b..8202c7862 100755
+--- a/bin/bitbake-diffsigs
++++ b/bin/bitbake-diffsigs
+@@ -99,7 +99,7 @@ def recursecb(key, hash1, hash2):
+     elif hash2 not in hashfiles:
+         recout.append("Unable to find matching sigdata for %s with hash %s" % (key, hash2))
+     else:
+-        out2 = bb.siggen.compare_sigfiles(hashfiles[hash1], hashfiles[hash2], recursecb, color=color)
++        out2 = bb.siggen.compare_sigfiles(hashfiles[hash1]['path'], hashfiles[hash2]['path'], recursecb, color=color)
+         for change in out2:
+             for line in change.splitlines():
+                 recout.append('    ' + line)
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 5a584cadf..58854aee7 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -849,10 +849,18 @@ def compare_sigfiles(a, b, recursecb=None, color=False, collapsed=False):
+         formatparams.update(values)
+         return formatstr.format(**formatparams)
+ 
+-    with bb.compress.zstd.open(a, "rt", encoding="utf-8", num_threads=1) as f:
+-        a_data = json.load(f, object_hook=SetDecoder)
+-    with bb.compress.zstd.open(b, "rt", encoding="utf-8", num_threads=1) as f:
+-        b_data = json.load(f, object_hook=SetDecoder)
++    try:
++        with bb.compress.zstd.open(a, "rt", encoding="utf-8", num_threads=1) as f:
++            a_data = json.load(f, object_hook=SetDecoder)
++    except (TypeError, OSError) as err:
++        bb.error("Failed to open sigdata file '%s': %s" % (a, str(err)))
++        raise err
++    try:
++        with bb.compress.zstd.open(b, "rt", encoding="utf-8", num_threads=1) as f:
++            b_data = json.load(f, object_hook=SetDecoder)
++    except (TypeError, OSError) as err:
++        bb.error("Failed to open sigdata file '%s': %s" % (b, str(err)))
++        raise err
+ 
+     for data in [a_data, b_data]:
+         handle_renames(data)
+@@ -1090,8 +1098,12 @@ def calc_taskhash(sigdata):
+ def dump_sigfile(a):
+     output = []
+ 
+-    with bb.compress.zstd.open(a, "rt", encoding="utf-8", num_threads=1) as f:
+-        a_data = json.load(f, object_hook=SetDecoder)
++    try:
++        with bb.compress.zstd.open(a, "rt", encoding="utf-8", num_threads=1) as f:
++            a_data = json.load(f, object_hook=SetDecoder)
++    except (TypeError, OSError) as err:
++        bb.error("Failed to open sigdata file '%s': %s" % (a, str(err)))
++        raise err
+ 
+     handle_renames(a_data)
+ 
+-- 
 2.43.0
 
---5YgT0DAhNJNV9pbf87VL
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div>As you know, layer order in BBLAYERS can affect in parsing recipes pro=
-cess,</div>
-<div>in some cases, users want to add a layer on the top of BBLAYERS variab=
-le</div>
-<div>&nbsp;</div>
-<div>So, add "--prepend" option for bitbake-layers to support add-layer to =
-prepend</div>
-<div>&nbsp;</div>
-<div>Signed-off-by: Hieu Van Nguyen &lt;hieu2.nguyen@lge.com&gt;</div>
-<div>---</div>
-<div>&nbsp;lib/bb/utils.py&nbsp; &nbsp; &nbsp; &nbsp; | 7 +++++--</div>
-<div>&nbsp;lib/bblayers/action.py | 3 ++-</div>
-<div>&nbsp;2 files changed, 7 insertions(+), 3 deletions(-)</div>
-<div>&nbsp;</div>
-<div>diff --git a/lib/bb/utils.py b/lib/bb/utils.py</div>
-<div>index 068b631c..086f1cc8 100644</div>
-<div>--- a/lib/bb/utils.py</div>
-<div>+++ b/lib/bb/utils.py</div>
-<div>@@ -1412,7 +1412,7 @@ def edit_metadata_file(meta_file, variables, var=
-func):</div>
-<div>&nbsp; &nbsp; &nbsp;return updated</div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
-<div>-def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=3DNone):</=
-div>
-<div>+def edit_bblayers_conf(bblayers_conf, add, remove, prepend=3DNone, ed=
-it_cb=3DNone):</div>
-<div>&nbsp; &nbsp; &nbsp;"""Edit bblayers.conf, adding and/or removing laye=
-rs</div>
-<div>&nbsp; &nbsp; &nbsp;Parameters:</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;bblayers_conf: path to bblayers.conf=
- file to edit</div>
-<div>@@ -1482,7 +1482,10 @@ def edit_bblayers_conf(bblayers_conf, add, remo=
-ve, edit_cb=3DNone):</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;for addlayer in addlay=
-ers:</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if addla=
-yer not in bblayers:</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
-&nbsp;updated =3D True</div>
-<div>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
- bblayers.append(addlayer)</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
- if prepend:</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
- &nbsp; &nbsp; bblayers.insert(0,addlayer)</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
- else:</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
- &nbsp; &nbsp; bblayers.append(addlayer)</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;del addlayers[:]</div>
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if edit_cb:</div>
-<div>diff --git a/lib/bblayers/action.py b/lib/bblayers/action.py</div>
-<div>index a8f26993..57d7195c 100644</div>
-<div>--- a/lib/bblayers/action.py</div>
-<div>+++ b/lib/bblayers/action.py</div>
-<div>@@ -49,7 +49,7 @@ class ActionPlugin(LayerPlugin):</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;shutil.copy2(bblayers_conf, backup)<=
-/div>
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;try:</div>
-<div>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; notadded, _ =3D bb.utils.ed=
-it_bblayers_conf(bblayers_conf, layerdirs, None)</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; notadded, _ =3D bb.utils.ed=
-it_bblayers_conf(bblayers_conf, layerdirs, None, args.prepend)</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.tinfoil.modified_=
-files()</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if not (args.force or =
-notadded):</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;try:</di=
-v>
-<div>@@ -267,6 +267,7 @@ build results (as the layer priority order has eff=
-ectively changed).</div>
-<div>&nbsp; &nbsp; &nbsp;def register_commands(self, sp):</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;parser_add_layer =3D self.add_comman=
-d(sp, 'add-layer', self.do_add_layer, parserecipes=3DFalse)</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;parser_add_layer.add_argument('layer=
-dir', nargs=3D'+', help=3D'Layer directory/directories to add')</div>
-<div>+&nbsp; &nbsp; &nbsp; &nbsp; parser_add_layer.add_argument('--prepend'=
-, action=3D'store_true', help=3D'Prepend layer directory/directories')</div=
->
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;parser_remove_layer =3D self.add_com=
-mand(sp, 'remove-layer', self.do_remove_layer, parserecipes=3DFalse)</div>
-<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;parser_remove_layer.add_argument('la=
-yerdir', nargs=3D'+', help=3D'Layer directory/directories to remove (wildca=
-rds allowed, enclose in quotes to avoid shell expansion)')</div>
-<div>--&nbsp;</div>
-<div>2.43.0</div>
-
---5YgT0DAhNJNV9pbf87VL--
 
