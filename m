@@ -1,93 +1,131 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC573C48297
-	for <webhook@archiver.kernel.org>; Tue,  6 Feb 2024 15:56:47 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web10.25032.1707235005759891345
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E151CC4828D
+	for <webhook@archiver.kernel.org>; Tue,  6 Feb 2024 16:31:17 +0000 (UTC)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+ by mx.groups.io with SMTP id smtpd.web11.25780.1707237076288428309
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 06 Feb 2024 07:56:47 -0800
+ Tue, 06 Feb 2024 08:31:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=O6JnIBm8;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40ff802496cso1995885e9.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Feb 2024 07:56:45 -0800 (PST)
+ dkim=pass header.i=@snap.com header.s=google header.b=R6NQkfCA;
+ spf=pass (domain: snapchat.com, ip: 209.85.218.45, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a383016f428so87193966b.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Feb 2024 08:31:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1707235004; x=1707839804; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=41/yAwQ3hOw5e52+vKfZ5h1Ted0s6a53ikvn77Lfl6A=;
-        b=O6JnIBm8D0Y8oHsKazSMdmQKFfdijGhvL+KfnRCr9D+FJiHx5CbSfbfAUYuyrXB+OV
-         JFkIzgO7hqwyKngsuTx2IpsYtT43KPr/xX+FH5fVbb0ACxRUlGU936YnVFZWW7Q+GJSV
-         CyZv6itwxzg8dKX3V0K9gKFDt7xiCaE7Q4WV4=
+        d=snap.com; s=google; t=1707237075; x=1707841875; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tf40gq0yEgsOu5skpIZ+Wz3t+ah5AeX23qvZBaJyuRw=;
+        b=R6NQkfCALXyKHyhb2YIq09WKdrrWNDX5MKX/biDy/aSUkTfnPA1ouI/Rhk+8siAEqg
+         BKRcDClKoCbOJePGuuan+Su9PnzE+jDupPVG4BjTgL5UEnLfz63kFZ99n/c1Lnv9dguk
+         YMsiXtLhm1s4D2G7wyIO4XMcg2VUQTKbTVUPk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707235004; x=1707839804;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=41/yAwQ3hOw5e52+vKfZ5h1Ted0s6a53ikvn77Lfl6A=;
-        b=i+0ihXsDjTqrfwmCdy2d7YtIgITVo9nWwjWSOXQPTvJ/mxHanB+byXlTE8ZezCOGbC
-         P71Za8TPiMbgECzPv4OaqMZtHu6dllUxgghKmgjwjFb37vbt7hruK9pO+WzlekqV6JHE
-         feL8cbxKMR3dKWUVUrgqgFmtQ+Jpn7fVmiCtljxK1fdT+iq3b3UEVQx5XOMAj7JOs2Mi
-         mMuOYofu+H2pHixy6A8+9mQQA7/wH8/c7GVw+nTHCVnh0WlOdkts62IX3vQJPDx610Mk
-         6CBhcFcmF6czzt4IRvmi6JmlvWeSoGSP3Uf9Da/dhvgSlCfXTw3jYadbUNcq2LHuL57M
-         uOPQ==
-X-Gm-Message-State: AOJu0YzJDqZpS8yRdD0gdZJh/53xNW12x+O/RH3htLtkvv5coi/Tpe0T
-	MtYrA4c4gCtmiCvJHfWztTCc8BuBgLcJN4bHumWJa3FCHckGda5O5ymQLwmgvPk=
-X-Google-Smtp-Source: AGHT+IGJQjxAdPmb0cr6zUeX47ioznvWJgLf/iEi1o8MUEZ6nHplpotr04AUg6f1V1esmvLJsdvP7w==
-X-Received: by 2002:a05:600c:4688:b0:40f:d1e4:6074 with SMTP id p8-20020a05600c468800b0040fd1e46074mr2014921wmo.8.1707235003844;
-        Tue, 06 Feb 2024 07:56:43 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:45c0:34a2:1eea:2530? ([2001:8b0:aba:5f3c:45c0:34a2:1eea:2530])
-        by smtp.gmail.com with ESMTPSA id t9-20020a05600c450900b0040fd18f231fsm2445647wmo.3.2024.02.06.07.56.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 07:56:43 -0800 (PST)
-Message-ID: <dfe902c9baab3bdc38bb7afae1455565ab8c0117.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] lib/bb: Drop BBFILE_PRIORITY support
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Etienne Cordonnier <ecordonnier@snap.com>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Tue, 06 Feb 2024 15:56:42 +0000
-In-Reply-To: <CAHUKmYbjs=_ijo2Jy5a1JCx5jrSJB5Ucoza99yBL2ya+qvwpRg@mail.gmail.com>
-References: <20240206121528.2581233-1-richard.purdie@linuxfoundation.org>
-	 <CAHUKmYbjs=_ijo2Jy5a1JCx5jrSJB5Ucoza99yBL2ya+qvwpRg@mail.gmail.com>
-Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
- YNvg==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0-1 
+        d=1e100.net; s=20230601; t=1707237075; x=1707841875;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Tf40gq0yEgsOu5skpIZ+Wz3t+ah5AeX23qvZBaJyuRw=;
+        b=Xyc7XEDH9HbDDcpscE9gWO1q/MOxUU+YiGhLU2PSVbYTLgT7Z0GLXVWIGq/ncRqaGu
+         +wjAs3jNSTIqOntFWZ108yBTm+aTw0MKTXdkontJysQzFwrBtQpkoJE6d0xYEu4F6nOL
+         I55GKH/26RvwqphEKPsniRtTkkr1Yzt4Vn6CgY8xB0Gz4uuzggQEOZn5EDDmxEMO6frT
+         RFaDb4fWJQIqeT3WVGf8qGSyejWf9oFdvAahINtiygc+aT+UaQZTpKRAxIn6M/xwzeA+
+         7KyBeeb/eJkm2oi65D/8aji4nlZTU8idjsVuP0N3acHeRz93GuWZYGYVCtTXLwHxbQKr
+         9yGg==
+X-Gm-Message-State: AOJu0YwgBJlLcuZ1k2pZx/JOByvotMF1SxGOiizLIWd6igABMK34o4Me
+	rq6rc7v8NxUX9IJZeVxovoyM/puQBpOy+vO6qgsnfGhkkXtIzlqPLrkjHGNJuOAil2+6n8Ixhvp
+	khXs0xKZyKO9aRND7LROaZjOLoQBBl2c1dYRCJQ==
+X-Google-Smtp-Source: AGHT+IF9TRWQQUxizxdYS3xLtq5hAha2A9nWNYGk6/EaHkF7bpzIQal1uOG+1rkWcl0Skii9sbfKEqZ+C/FsHD3CGpo=
+X-Received: by 2002:a17:906:e209:b0:a37:2c28:d5da with SMTP id
+ gf9-20020a170906e20900b00a372c28d5damr2194384ejb.9.1707237074675; Tue, 06 Feb
+ 2024 08:31:14 -0800 (PST)
 MIME-Version: 1.0
+References: <20240206121528.2581233-1-richard.purdie@linuxfoundation.org>
+ <CAHUKmYbjs=_ijo2Jy5a1JCx5jrSJB5Ucoza99yBL2ya+qvwpRg@mail.gmail.com> <dfe902c9baab3bdc38bb7afae1455565ab8c0117.camel@linuxfoundation.org>
+In-Reply-To: <dfe902c9baab3bdc38bb7afae1455565ab8c0117.camel@linuxfoundation.org>
+From: Etienne Cordonnier <ecordonnier@snap.com>
+Date: Tue, 6 Feb 2024 17:31:03 +0100
+Message-ID: <CAHUKmYY1fMCiNq36MzoeuQ5EKQYm_ZAEkkDuRUTeg94a+ZnubQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] lib/bb: Drop BBFILE_PRIORITY support
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="00000000000062e1190610b91ba2"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 06 Feb 2024 15:56:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15831
+ <bitbake-devel@lists.openembedded.org>; Tue, 06 Feb 2024 16:31:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15832
 
-On Tue, 2024-02-06 at 16:26 +0100, Etienne Cordonnier wrote:
-> Hi Richard, there is a word missing in the commit message:
-> "=C2=A0The functionality had a and place" -> "the functionality had a tim=
-e and place"
-> Also a typo: "comparibility" -> "=C2=A0compatibility=C2=A0"
+--00000000000062e1190610b91ba2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, I'll tweak those on the branch.
+Is the BBFILE_PRIORITY not controlling the order in which bbappends from
+different layers gets applied? I thought it was important e.g. when
+applying kernel configuration files (the last one to be applied override
+the previous ones).
 
-> What is the correct way to set layer priorities after this patch (I'm=C2=
-=A0
-> asking because the BSP I'm using makes use of BBFILE_PRIORITY)?
+On Tue, Feb 6, 2024 at 4:56=E2=80=AFPM Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-It may set it, but what is it trying to achieve by setting it?
+> On Tue, 2024-02-06 at 16:26 +0100, Etienne Cordonnier wrote:
+> > Hi Richard, there is a word missing in the commit message:
+> > " The functionality had a and place" -> "the functionality had a time
+> and place"
+> > Also a typo: "comparibility" -> " compatibility "
+>
+> Thanks, I'll tweak those on the branch.
+>
+> > What is the correct way to set layer priorities after this patch (I'm
+> > asking because the BSP I'm using makes use of BBFILE_PRIORITY)?
+>
+> It may set it, but what is it trying to achieve by setting it?
+>
+> As far as I know, the potential issue is needing to set specific
+> PREFERRED_VERSION entries where older recipes need to be used.
+>
+> Cheers,
+>
+> Richard
+>
 
-As far as I know, the potential issue is needing to set specific
-PREFERRED_VERSION entries where older recipes need to be used.
+--00000000000062e1190610b91ba2
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
+<div dir=3D"ltr">Is the BBFILE_PRIORITY not controlling the order in which =
+bbappends from different layers gets applied? I thought it was important e.=
+g. when applying kernel configuration files (the last one to be applied ove=
+rride the previous ones).<br></div><br><div class=3D"gmail_quote"><div dir=
+=3D"ltr" class=3D"gmail_attr">On Tue, Feb 6, 2024 at 4:56=E2=80=AFPM Richar=
+d Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">richard.=
+purdie@linuxfoundation.org</a>&gt; wrote:<br></div><blockquote class=3D"gma=
+il_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,2=
+04,204);padding-left:1ex">On Tue, 2024-02-06 at 16:26 +0100, Etienne Cordon=
+nier wrote:<br>
+&gt; Hi Richard, there is a word missing in the commit message:<br>
+&gt; &quot;=C2=A0The functionality had a and place&quot; -&gt; &quot;the fu=
+nctionality had a time and place&quot;<br>
+&gt; Also a typo: &quot;comparibility&quot; -&gt; &quot;=C2=A0compatibility=
+=C2=A0&quot;<br>
+<br>
+Thanks, I&#39;ll tweak those on the branch.<br>
+<br>
+&gt; What is the correct way to set layer priorities after this patch (I&#3=
+9;m=C2=A0<br>
+&gt; asking because the BSP I&#39;m using makes use of BBFILE_PRIORITY)?<br=
+>
+<br>
+It may set it, but what is it trying to achieve by setting it?<br>
+<br>
+As far as I know, the potential issue is needing to set specific<br>
+PREFERRED_VERSION entries where older recipes need to be used.<br>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+</blockquote></div>
 
-Richard
+--00000000000062e1190610b91ba2--
 
