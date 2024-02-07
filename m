@@ -1,139 +1,113 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <sgw@bigsur.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B66C4828D
-	for <webhook@archiver.kernel.org>; Wed,  7 Feb 2024 19:49:30 +0000 (UTC)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
- by mx.groups.io with SMTP id smtpd.web10.7851.1707335364527279534
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E6FC4828F
+	for <webhook@archiver.kernel.org>; Wed,  7 Feb 2024 22:22:02 +0000 (UTC)
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+ by mx.groups.io with SMTP id smtpd.web10.3707.1707344521492414545
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 07 Feb 2024 11:49:24 -0800
+ Wed, 07 Feb 2024 14:22:01 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=JWlh7lB1;
- spf=pass (domain: gmail.com, ip: 209.85.167.44, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5116643c64eso1846179e87.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 07 Feb 2024 11:49:24 -0800 (PST)
+ dkim=pass header.i=@bigsur.com header.s=bigsur.com header.b=hfhrvQPf;
+ spf=pass (domain: bigsur.com, ip: 209.85.215.173, mailfrom: sgw@bigsur.com)
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5d8df2edd29so802105a12.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 07 Feb 2024 14:22:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707335363; x=1707940163; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eH9aWWacBUmYVnTlaHsBGER3ptUSm9rGNvDXBeYjOhg=;
-        b=JWlh7lB13aeX2Ssnk3DElI9cUQFcQvJz1MSgUeQ7MML4DksptgKyr1DKxtr8TLvSRQ
-         CaniI2nI9GXsaD+GjSnIb7ygFVEdYJZ8Ws03dw5OMLT+1h9N/t2G0DpTXG8nTAyFXRaI
-         yzyg5DTdL+RFCN9U2rBY1yCPVEiw1UmiOCkD9jIs9W/pToa1l6eS5mrzsy7moR67HrYT
-         dmNyCVqP+kE6ZGCR5MUvrbAZTDVfuQHZI0eKi/dzTY3MIAzHZ+wXDy3rkC90EAckPlFt
-         MKNT90fDJQpi++AsD8cp0cInNI2sNe1dBGhx7f3IWUGINCsEWMr1tMUJikYVockC5RTx
-         H69A==
+        d=bigsur.com; s=bigsur.com; t=1707344520; x=1707949320; darn=lists.openembedded.org;
+        h=content-transfer-encoding:subject:from:cc:content-language:to
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hN2ZVKMV8vODCPWpoBXTUPOUy0x3HlRH9tzRofTQOU0=;
+        b=hfhrvQPfr7R8jYv4FgZlpompzI7OimTWyGgGO9OBWHlHm841kZxpMKxlRkKZop3NvN
+         poStzr5Edf9AZP9/NqL1rr9fyeKMAerVHzsGWSRIgtZ85LB3sbIfS3RcM1ZvRdkI2zdP
+         Jb/nWsEXn5tdmb4cRx1zlSggu+HXL/STITuDY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707335363; x=1707940163;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eH9aWWacBUmYVnTlaHsBGER3ptUSm9rGNvDXBeYjOhg=;
-        b=VRT+2lfj6lKF/PSpo+j/Flv1QtmTZAi+avCjcar3HQqs4U4Ai6YG+SggFxX3RTlQtB
-         rfLCtP4QIuBq79kr/rGkObe9vsfKMfglU4NPG8rBvotMyDMRWN1RyuUeY8Uw8S4w7xCb
-         dLkBtQ4OUJmOEQIuNQ5/G9M6Y9iFTbgP6xb3NtbAaepDtR/GH4BU83bVCDkFd3YUpZp+
-         uKMZwdgICCvKKzPkQj8n+tqe0De6mMOd/Abjv5ihz033IgEJZQHkdmQQ+dsVxX49hAkh
-         msCyeGO3jqbUZ03eVmusxDMsJKSRRG3eDtelP2QtoBzrNBttGv3fz04MFN9Bc/3PZz8i
-         v04Q==
-X-Gm-Message-State: AOJu0Yxis5cMU4FiLhidAfjx8eeeb/x4tLXrQ8FecCU2DUqKLemeM1lp
-	05TAPfgKYxC9ULxPLWY2wnwadRBrUe95c66OKxsionpOUYXaCeDpBFu9xkXLBPB9P8DWwIuRc0F
-	r2+oFc3KJJRbAayt59FKZ0W73HV8=
-X-Google-Smtp-Source: AGHT+IHQDtZhzmDJ7F9ps/ZzogdWiIDT5jRWn4D0L5dPGky+4/TxWBNNm9aNu+ScZJqcTEPpgqZ0G9ZgwZkvQm+ypX4=
-X-Received: by 2002:ac2:5327:0:b0:511:3aad:388a with SMTP id
- f7-20020ac25327000000b005113aad388amr4370771lfh.61.1707335362411; Wed, 07 Feb
- 2024 11:49:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707344520; x=1707949320;
+        h=content-transfer-encoding:subject:from:cc:content-language:to
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hN2ZVKMV8vODCPWpoBXTUPOUy0x3HlRH9tzRofTQOU0=;
+        b=Fekjkjg1WsvryPqQJ/BNqbr5CJiEQpbqbbI2sHEpyyFO55f6UPAubp2ZbMt3PzUF/u
+         poLkxzUR65S8xy1Gf7nY68R9nMb2d3qtaOF0dLM3hNDnhnveRobzR6E3snp5WkoJO4T8
+         /j0RG19j8EOnjOlVyGOkJLKdyIruQiK8FKsQ6YSXFheHtHAcho2wccEvnf5iXJRqKi7U
+         800rq26Uw6V4xdzcOYy+Xyu514Tm6GDBS9jpaZs7idYAAQwNUgnEXQOsao5FFVlk6WZW
+         dSGMLS9fonLc/ANp3ugq7rriiT/eFae9Zq4jLG4O6IDYen1x1iJm9FN1NBRb/l6GLHQE
+         37Gg==
+X-Gm-Message-State: AOJu0YzMJsuCeMpCq0IvWUw3Ox7qMZdbYA2eXxRsmFEKwtyy6PX7FoHY
+	f8GunZtGXSzoAxJdTlF8RWhKXEQa0uNAD1Uxpj4m+nyF6LNgYnrNOShktaPkGYn3KYNuR0zuX5M
+	=
+X-Google-Smtp-Source: AGHT+IEAb3cpW4u4BaNjVKpx431WA3jYdOm6bq/NEGhk/2h/D/AcOulIeIzAW9cfBugo/1+zB7iHUg==
+X-Received: by 2002:a05:6a20:9f8b:b0:19c:7b2b:6cbf with SMTP id mm11-20020a056a209f8b00b0019c7b2b6cbfmr6746912pzb.47.1707344520038;
+        Wed, 07 Feb 2024 14:22:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU5jfjJ6cVfgVDsmQNWGBhTCwLoTKlRN3LIp3w9OboJAq1etd40horEnXURmFn8fFQ3D2+gNE1xLw2ZJSg0sXnCex1blxVjn/7NQk+J6WKA/sm696+VcWbyATLwNvHXi34mgg==
+Received: from [192.168.134.2] ([69.9.134.55])
+        by smtp.gmail.com with ESMTPSA id k4-20020a63ba04000000b005c1ce3c960bsm1977540pgf.50.2024.02.07.14.21.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Feb 2024 14:21:59 -0800 (PST)
+Message-ID: <f8f81126-3fec-4dbd-8088-64d615879167@bigsur.com>
+Date: Wed, 7 Feb 2024 14:21:57 -0800
 MIME-Version: 1.0
-References: <20240207172121.4044574-1-ross.burton@arm.com>
-In-Reply-To: <20240207172121.4044574-1-ross.burton@arm.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 7 Feb 2024 20:49:11 +0100
-Message-ID: <CANNYZj_vLSgRzA6EE5v0dccF8hs+DD3Gwxfs5ATCVGnszW++Nw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-layers: add show-machines command
-To: Ross Burton <ross.burton@arm.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org
+Content-Language: en-US
+Cc: randy.macleod@windriver.com
+From: Saul Wold <sgw@bigsur.com>
+Subject: Underscore vs Dash in bbclass filenames
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 07 Feb 2024 19:49:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15835
+ <bitbake-devel@lists.openembedded.org>; Wed, 07 Feb 2024 22:22:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15836
 
-I have to ask. How useful is this really, if it's a bare list of .conf
-files with no help for choosing from them?
 
-Sample output :)
-https://www.irccloud.com/pastebin/3MmYNuAD/
+I was looking into Bug 14235 [0] and had initial patch based on Randy's 
+original recommendation of using dash (-) which was a basic 
+python/tinfoil script to check existing bbclasses in the BBPATH.
 
-Should we think of useful metadata to go with this, similar to
-templates improvements I posted a few days ago?
+It was pointed out that the bbclass name is prepended to exported 
+function and that would cause problems for SHELL functions as dash is 
+not allowed in the shell function name.
 
-Alex
+On further investigation this of course becomes a more nuanced problem, 
+so I considered an alternative approach for setting up a warning in 
+bitbake itself.  There is currently an error check in bitbake's ast.py 
+ExportFuncsNode() code. The code below would warnonce() for other 
+bbclasses that have a dash and are not in a NO_WARN_BBCLASSES list.
 
-On Wed, 7 Feb 2024 at 18:21, Ross Burton <ross.burton@arm.com> wrote:
->
-> From: Ross Burton <ross.burton@arm.com>
->
-> Add a show-machines command to list all of the available machines in the
-> currently configured layers.
->
-> By default it includes the layer name, but for machine-readable uses
-> this can be hidden by passing --bare.
->
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
-> ---
->  bitbake/lib/bblayers/query.py | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/bitbake/lib/bblayers/query.py b/bitbake/lib/bblayers/query.py
-> index bfc18a75939..3080763abfd 100644
-> --- a/bitbake/lib/bblayers/query.py
-> +++ b/bitbake/lib/bblayers/query.py
-> @@ -10,6 +10,7 @@ import logging
->  import sys
->  import os
->  import re
-> +import pathlib
->
->  import bb.utils
->
-> @@ -515,6 +516,19 @@ NOTE: .bbappend files can impact the dependencies.
->
->              logger.plain("%s %s %s" % (f, keyword, best_realfn))
->
-> +    def do_show_machines(self, args):
-> +        """List the machines available in the currently configured layers."""
-> +
-> +        for layer_dir in self.bblayers:
-> +            layer_name = self.get_layer_name(layer_dir)
-> +
-> +            for p in sorted(pathlib.Path(layer_dir).glob("conf/machine/*.conf")):
-> +                if args.bare:
-> +                    logger.plain("%s" % (p.stem))
-> +                else:
-> +                    logger.plain("%s (%s)" % (p.stem, layer_name))
-> +
-> +
->      def register_commands(self, sp):
->          self.add_command(sp, 'show-layers', self.do_show_layers, parserecipes=False)
->
-> @@ -540,3 +554,6 @@ NOTE: .bbappend files can impact the dependencies.
->          parser_show_cross_depends = self.add_command(sp, 'show-cross-depends', self.do_show_cross_depends)
->          parser_show_cross_depends.add_argument('-f', '--filenames', help='show full file path', action='store_true')
->          parser_show_cross_depends.add_argument('-i', '--ignore', help='ignore dependencies on items in the specified layer(s) (split multiple layer names with commas, no spaces)', metavar='LAYERNAME')
-> +
-> +        parser_show_machines = self.add_command(sp, "show-machines", self.do_show_machines)
-> +        parser_show_machines.add_argument('-b', '--bare', help='output just the machine names, not the source layer', action='store_true')
-> --
-> 2.34.1
->
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15833): https://lists.openembedded.org/g/bitbake-devel/message/15833
-> Mute This Topic: https://lists.openembedded.org/mt/104222816/1686489
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.kanavin@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+At some point in the future this warning can be changed to an error.
+I also noticed that the Regular Expressions defined in ast.py could be 
+tightened up slightly, there are a couple that use \s (general string) 
+vs \w which limits some special symbols, in order to limit dashes from 
+appearing in function names in bbclasses.
+
+This is not for the current Scarthgap release.
+
+diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py 
+b/bitbake/lib/bb/parse/parse_py/BBHandler.py
+index cd1c998f8f8..faf6e9ede63 100644
+--- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
++++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
+@@ -116,6 +116,9 @@ def handle(fn, d, include, baseconfig=False):
+      init(d)
+
+      if ext == ".bbclass":
++        nowarn_bbclass_list = d.getVar('NOWARN_DASH_BBCLASSES')
++        if '-' in root and root not in nowarn_bbclass_list:
++            bb.warnonce("%s contains dash ('-') in name which is not 
+safe" % base_name)
+          __classname__ = root
+          __inherit_cache = d.getVar('__inherit_cache', False) or []
+          if not fn in __inherit_cache:
+
+
+Thoughts from the bitbake team on this approach?
+
+
+[0] https://bugzilla.yoctoproject.org/show_bug.cgi?id=14235
+
+Sau!
+
 
