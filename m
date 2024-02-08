@@ -1,73 +1,171 @@
-Return-Path: <enrico.scholz@sigma-chemnitz.de>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0A7C48260
-	for <webhook@archiver.kernel.org>; Thu,  8 Feb 2024 15:39:48 +0000 (UTC)
-Received: from smtpout.cvg.de (smtpout.cvg.de [87.128.211.67])
- by mx.groups.io with SMTP id smtpd.web11.20605.1707406775324746420
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36447C4828F
+	for <webhook@archiver.kernel.org>; Thu,  8 Feb 2024 18:02:27 +0000 (UTC)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+ by mx.groups.io with SMTP id smtpd.web11.1022.1707415345483419521
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 08 Feb 2024 07:39:41 -0800
+ Thu, 08 Feb 2024 10:02:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@sigma-chemnitz.de header.s=v2022040800 header.b=Kncqvc0p;
- spf=pass (domain: sigma-chemnitz.de, ip: 87.128.211.67, mailfrom: enrico.scholz@sigma-chemnitz.de)
-Received: from mail-mta-2.intern.sigma-chemnitz.de (mail-mta-2.intern.sigma-chemnitz.de [192.168.12.70])
-	by mail-out-3.intern.sigma-chemnitz.de (8.17.1/8.17.1) with ESMTPS id 418FdV5L503377
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>; Thu, 8 Feb 2024 16:39:31 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
-	s=v2022040800; t=1707406771;
-	bh=cUH/d0fNdnL4ztsMezM+QArZUrS2kjrs+bcDqZGLLwQ=; l=335;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=Kncqvc0pjB3J/juQoRmPDQMzVfYLuyOAXv0jabXIPw4+TjPMpzn0cYyLOz/O7OjdD
-	 mE4UZhSbV/sm18Rq/rwfrV/fjpk5IulcsVJGNCHR+m240lJ8jbmmi8jtEyf5NkWqLJ
-	 xqj76hRpVvQeK6RR+RV7Ia9xI6lPPxF72Qx/PB2vLqPx0aXB4NU25rAie+yAxqDQgE
-	 OAPOuDskpixiiN1VGQWcXnBRpiX4eHVYxRC5gh5QxjGx1+5NIRUKt6iJR1Th+XKPvK
-	 ESLVThqca7YBMfaq2f3ihioh8EekpDc+roDyDi9SKIdsfcBqBgEqjWhmZ/A+C0ucnB
-	 vJcJtLA8/zLcw==
-Received: from reddoxx.intern.sigma-chemnitz.de (reddoxx.sigma.local [192.168.16.32])
-	by mail-mta-2.intern.sigma-chemnitz.de (8.17.1/8.17.1) with ESMTP id 418FdTYs948654
-	for <bitbake-devel@lists.openembedded.org> from enrico.scholz@sigma-chemnitz.de; Thu, 8 Feb 2024 16:39:29 +0100
-Received: from mail-msa-2.intern.sigma-chemnitz.de ([192.168.12.72])
-	by reddoxx.intern.sigma-chemnitz.de with ESMTP
-	id DPP60VD9S8; Thu, 08 Feb 2024 16:39:19 +0100
-Received: from ensc-pc.intern.sigma-chemnitz.de (ensc-pc.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail-msa-2.intern.sigma-chemnitz.de (8.17.1/8.17.1) with ESMTPS id 418FdJTo731320
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Thu, 8 Feb 2024 16:39:19 +0100
-Received: from ensc by ensc-pc.intern.sigma-chemnitz.de with local (Exim 4.97.1)
-	(envelope-from <ensc@sigma-chemnitz.de>)
-	id 1rY6Uh-0000000E7Js-2KyN;
-	Thu, 08 Feb 2024 16:39:19 +0100
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-To: "Saul Wold" <sgw@bigsur.com>
-Cc: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org,
-        randy.macleod@windriver.com
-Subject: Re: [bitbake-devel] Underscore vs Dash in bbclass filenames
-In-Reply-To: <f8f81126-3fec-4dbd-8088-64d615879167@bigsur.com> (Saul Wold's
-	message of "Wed, 7 Feb 2024 14:21:57 -0800")
-References: <f8f81126-3fec-4dbd-8088-64d615879167@bigsur.com>
-Date: Thu, 08 Feb 2024 16:39:19 +0100
-Message-ID: <lya5obge3c.fsf@ensc-pc.intern.sigma-chemnitz.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=FoNim5VX;
+ spf=pass (domain: gmail.com, ip: 209.85.167.48, mailfrom: jpewhacker@gmail.com)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51168572090so127128e87.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 08 Feb 2024 10:02:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707415344; x=1708020144; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7hg0QDCUlj3szaJtKd767L1ihlZg6Ih3TS8kGJ1Tt1Q=;
+        b=FoNim5VXZfwNL3nMkxql1a9XX6cvKlbBqKXr0/12sLKPz2BgCbeZdqo/aC0eSqxegC
+         jzk9/afJLeFDiOfo8i81/JPybmpcOBb3CzEJN344OV+DjnI8w2Bwl91OqyOjxznfb6Js
+         BlZmhUODixmCVluEzPhaJQveYtxr5GezP3oBsgh5zmDtYDcujGo3hhZZ/2mwb1qek1i/
+         H/78YeGRgeR9viRbKyLbtAAioIyFPumK9B5P435Sp9EE+sMRmTFcQKBkkwRWuz/2w2YI
+         CcXG7U7B9W43Bd7LVHSmxUtOh3ito+ApV99rLDrodS8/8IiZyCZDnZkF7X61WANssg2L
+         lvuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707415344; x=1708020144;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7hg0QDCUlj3szaJtKd767L1ihlZg6Ih3TS8kGJ1Tt1Q=;
+        b=RDBWYiL4KPEU2Qzs2n8CxnYVHa8W3/AAqY+WGBDEZApKcPVFY2EtsqoH1UOqcwmz6x
+         Tuto4YAGGheOPeGFhki+Zvr3uhcr8+ay+N+HzvUHGBM6yT77U5pcbx1Y7lNcOmoHEssn
+         Xzc6pTksaiKJSXqb9uqJ/gaUvdNdk9Phm5yM5F8AfYVxvhI3/I0Z2e+QkurfGwttaXeE
+         K5O4fEXK4TaSjoHbPc0hjBXFRPhZLlKPYKC7kMXSVnFFqWQlvhHNUGD0pX3C1Pl3hsjG
+         Zunc/sOqoQMiTCOA13ikOKuQP7vipL+dZrLV/1BHrUjttPtlNvlqbYY1adqRkqGQ8YI0
+         w4Cg==
+X-Gm-Message-State: AOJu0Yy4m2WjJOJ0jEB1AhK3yltKHmROD3+mEPg1GpjEph8Yb+SRbnFy
+	wVsPS6Mpzo/Rg/BF6XTIj40w1ZO1q76Xz4Sxw5ZNwpd9ERgcI46igwyxkjxxUFQBoSRljAzq3s1
+	PmvZWZkJ1s9uEK2mkVaLqHUjqtvo=
+X-Google-Smtp-Source: AGHT+IGc/6IgsbG59RLbYQgeEUWyN7Jcbny/rgoS4RbCMrEMzmK80Yh+ziv3khadQUme84RvP6O0TeKyF9Sp5EsCIN0=
+X-Received: by 2002:a05:6512:684:b0:511:6711:1604 with SMTP id
+ t4-20020a056512068400b0051167111604mr4463013lfe.52.1707415343366; Thu, 08 Feb
+ 2024 10:02:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-X-REDDOXX-Id: 65c4f5a7a867f08c5db42a49
+References: <20240208134322.3936320-1-tobias.hagelborn@axis.com>
+In-Reply-To: <20240208134322.3936320-1-tobias.hagelborn@axis.com>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Thu, 8 Feb 2024 11:02:11 -0700
+Message-ID: <CAJdd5GZ4jF3Unx8072JTtQzFbN3VZ=J-Vi86cNhwUfki_kPr3w@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] hashserv: Postgres adaptations for
+ ignoring duplicate inserts
+To: Tobias Hagelborn <tobias.hagelborn@axis.com>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 08 Feb 2024 15:39:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15843
+ <bitbake-devel@lists.openembedded.org>; Thu, 08 Feb 2024 18:02:27 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15844
 
-"Saul Wold" <sgw@bigsur.com> writes:
+On Thu, Feb 8, 2024 at 6:43=E2=80=AFAM Tobias Hagelborn
+<tobias.hagelborn@axis.com> wrote:
+>
+> From: Tobias Hagelborn <tobiasha@axis.com>
+>
+> Hash Equivalence server performs unconditional insert also of duplicate
+> hash entries. This causes excessive error log entries in Postgres.
+> Rather ignore the duplicate inserts.
+>
+> The alternate behavior should be isolated to the postgres
+> engine type.
 
-> I was looking into Bug 14235 [0] and had initial patch based on
-> Randy's original recommendation of using dash (-) which was a basic
-> python/tinfoil script to check existing bbclasses in the BBPATH.
+Thanks. General approach seems fine, but we need to make sure the
+function return codes are correct still, see below.
 
-why not make it like rust and replace '-' by '_' when generating symbols?
+>
+> Signed-off-by: Tobias Hagelborn <tobias.hagelborn@axis.com>
+> ---
+>
+> I have only had the opportunity to validate against Postgres DB.
+>
+>  lib/hashserv/sqlalchemy.py | 33 +++++++++++++++++++++++++++------
+>  1 file changed, 27 insertions(+), 6 deletions(-)
+>
+> diff --git a/lib/hashserv/sqlalchemy.py b/lib/hashserv/sqlalchemy.py
+> index cee04bff..af9da80d 100644
+> --- a/lib/hashserv/sqlalchemy.py
+> +++ b/lib/hashserv/sqlalchemy.py
+> @@ -32,6 +32,7 @@ from sqlalchemy import (
+>  import sqlalchemy.engine
+>  from sqlalchemy.orm import declarative_base
+>  from sqlalchemy.exc import IntegrityError
+> +from sqlalchemy.dialects.postgresql import insert as postgres_insert
+>
+>  Base =3D declarative_base()
+>
+> @@ -287,11 +288,23 @@ class Database(object):
+>              return result.rowcount
+>
+>      async def insert_unihash(self, method, taskhash, unihash):
+> -        statement =3D insert(UnihashesV2).values(
+> -            method=3Dmethod,
+> -            taskhash=3Dtaskhash,
+> -            unihash=3Dunihash,
+> -        )
+> +        # Postgres specific ignore on insert duplicate
+> +        if self.engine.name =3D=3D 'postgresql':
+> +            statement =3D postgres_insert(UnihashesV2).values(
+> +                method=3Dmethod,
+> +                taskhash=3Dtaskhash,
+> +                unihash=3Dunihash,
+> +            )
+> +            statement =3D statement.on_conflict_do_nothing(
+> +                index_elements=3D("method", "taskhash")
+> +            )
+> +        else:
+> +            statement =3D insert(UnihashesV2).values(
+> +                method=3Dmethod,
+> +                taskhash=3Dtaskhash,
+> +                unihash=3Dunihash,
+> +            )
+> +
 
+Do you need to check the rowcount from the execution result in order
+to know if you should return True of False in the function? I didn't
+bother doing that before because it would raise an IntergrityError,
+but with the "do nothing" I'm not sure that will happen anymore.
 
-Enrico
+>          self.logger.debug("%s", statement)
+>          try:
+>              async with self.db.begin():
+> @@ -311,7 +324,15 @@ class Database(object):
+>          if "created" in data and not isinstance(data["created"], datetim=
+e):
+>              data["created"] =3D datetime.fromisoformat(data["created"])
+>
+> -        statement =3D insert(OuthashesV2).values(**data)
+> +        # Postgres specific ignore on insert duplicate
+> +        if self.engine.name =3D=3D 'postgresql':
+> +            statement =3D postgres_insert(OuthashesV2).values(**data)
+> +            statement =3D statement.on_conflict_do_nothing(
+> +                index_elements=3D("method", "taskhash", "outhash")
+> +            )
+> +        else:
+> +            statement =3D insert(OuthashesV2).values(**data)
+> +
+>          self.logger.debug("%s", statement)
+>          try:
+>              async with self.db.begin():
+
+Same here
+
+> --
+> 2.30.2
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#15842): https://lists.openembedded.org/g/bitbake-deve=
+l/message/15842
+> Mute This Topic: https://lists.openembedded.org/mt/104238536/3616693
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWha=
+cker@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
