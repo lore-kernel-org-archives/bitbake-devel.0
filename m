@@ -1,314 +1,191 @@
-Return-Path: <sam@liddicott.com>
+Return-Path: <tobias.hagelborn@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A87C4828F
-	for <webhook@archiver.kernel.org>; Thu,  8 Feb 2024 21:22:27 +0000 (UTC)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
- by mx.groups.io with SMTP id smtpd.web10.1573.1707427347078959451
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABF0C48297
+	for <webhook@archiver.kernel.org>; Fri,  9 Feb 2024 09:14:55 +0000 (UTC)
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (EUR02-AM0-obe.outbound.protection.outlook.com [40.107.247.40])
+ by mx.groups.io with SMTP id smtpd.web10.7801.1707470093533857225
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 08 Feb 2024 13:22:27 -0800
+ Fri, 09 Feb 2024 01:14:54 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@liddicott-com.20230601.gappssmtp.com header.s=20230601 header.b=temBBcZz;
- spf=none, err=SPF record not found (domain: liddicott.com, ip: 209.85.208.50, mailfrom: sam@liddicott.com)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5602500d1a6so481082a12.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 08 Feb 2024 13:22:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=liddicott-com.20230601.gappssmtp.com; s=20230601; t=1707427345; x=1708032145; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kDv2UQRFaidEVuofQSyghIb9798B7gMr8tLfhHdS04w=;
-        b=temBBcZz8K5dkejr5hjj6lSqRk/mm2dZwM7gGqBXJWBV/wCkSvfHXn0RBgqgjwYqW3
-         wBmLw/azR6yUA1zywQb4s3l26PbMTT/8srss7SSRxClWfy0b0nxDemXPhUkHJR0e1Pzd
-         fGsy53CKmAajNwLRsPEMHvnwyEjz5K2dgOIuFUUhLAPTsCyZg1J7lllhmwBjrrcmS9EQ
-         Wrwmza6NmqX1AjnfHhVvxa38x7Ugws+7qGw1FFVC1pmzqMvI7cQN4ppUIwevmqtjzf6c
-         Tgsqke8FJzycYhfxIhV/XiuIg8Y+DY/wAWqae8l8H84NXo5SjlQ+Cf88D94CyhPOyL7R
-         aqSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707427345; x=1708032145;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kDv2UQRFaidEVuofQSyghIb9798B7gMr8tLfhHdS04w=;
-        b=I9dKV7nBf1yMeHS8fEaiz5HLctx26T9UTeRXjGyb2dokhAwarzOLbyRzbCdlk2qrhZ
-         6MKBbA4J8Pang6L7mbUQZqzC+TTeK0/X9NssaVNNU/MXm0+2XFW1AOcGXerK6ebipUQx
-         SeL8kFypaXQ7XQ3aEh3W0IJk3CUIcOko4kasMPASJmlTSSyHgzDhpEwYKay0nZWqKvaq
-         JXysIoFbcoX1pC6/jr7EhEr3qxQzbkFJcla0XXP8AkJc4YZbAxaZmwUVWTsjUcK82Q7D
-         nk+T1L0VnDouchMjlq8Ms6U+vB0bI40NWrsyxGSVlKayfp8bgAYLbLRAIiatazh543Dy
-         Y1uw==
-X-Gm-Message-State: AOJu0YxP0n8bctkM0zH+sIBhKM92yr59lxOjvK7FP1XXwR7mbvHdxL6h
-	07+IvpF/zIxaV33FarUAjtzZ3gyuCxC7xSXbbfy8prDqB3eoHqRt55szdDTiNl9jdjaY6sdjBga
-	h+fq9BWBsk7mkmK4ULY0tHarxOG9Llh84AHCu
-X-Google-Smtp-Source: AGHT+IGxHxxLl/YKfgcJEObdv+0mfCB/bzbgShvwEIZJoJDJOEVWwEbwr/+DN5/4kb1GBeAbnFgXIc9KHXVeM9I3pEY=
-X-Received: by 2002:aa7:d902:0:b0:561:1364:bd06 with SMTP id
- a2-20020aa7d902000000b005611364bd06mr283661edr.29.1707427345043; Thu, 08 Feb
- 2024 13:22:25 -0800 (PST)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=RAReRM+C;
+ spf=pass (domain: axis.com, ip: 40.107.247.40, mailfrom: tobias.hagelborn@axis.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iCtypMgNlzlrR+J2YYRopZHHfAQRkdaVJ7GBwQ2v0fFQ5YyViLjUm2MW7lvSB7Yd0L/ru6SDah5JNC1wYU2jnCB1Isq8NGjsudF+yt4l8CnsL2vc2pIBcwyfj7OHC4OuZ0clXsjCV0TBgkag6t1++zM0/jFnhIjXzaU9ikcLAJ0awQTW9AaWvpdEbC/kLG9Voj2zMIM+9dRbWAAyhqF/0q1LaPDIJLTAXI/gae+RAhUK23022dKdYtfJ74UlQdRUmJlIUVFyhezCEOS2fSF2I+KiO8T0olUAUMrYBgmrDOQ1I8Sm3c6b9dBqB0Zo31e+WDjPtP2ZHBun1d2zPI0bUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Lxx/tGn8xa41mZ2hMAPrXxtQHhNMIpKWoleJo8KyyIE=;
+ b=IE0cgL+LFg/yKs69kxeqs3ACkg9JmLKkNER8prTmzehtern684+YQ/weIQI1vuiXGzBmgk+YrQNKOfY3zVhc+pA6VtRnC0oUxPwF8VTkb5YViZqOLU5LXPYF8B3yE6Iz+l02Wa6VTJCaDr6XFwhDi8x6HwB0wZ7HQZ/mbd+L6HYlivbskYpA4ngiPX6hZVmsoQJpgwCFqVpIEkZnIXQDPGA7Qe4k5d1mEiF63pFRijBPocNE73Cul0IAxLMgy7LW6YGIRCOglqFkGBIkoOgZ9JOU7IZQRXK6k0lzamklUlM8spif/USbDIuDR7Hn9XafZnJ0fVnECx7DAgythUbIbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=axis.com; dmarc=fail (p=none sp=none pct=100) action=none
+ header.from=axis.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Lxx/tGn8xa41mZ2hMAPrXxtQHhNMIpKWoleJo8KyyIE=;
+ b=RAReRM+CarYpz4PGvn5ziTUogRrrPWRuvG3Y5UQDWalwTVKMVFRA1j26S3Psv8G/QWlA8AzSIJpNX9TmFoeQPfw39/HlOQgC9QA00aFWXo3jMRl/ZsD//hqz0F0kWNvrzlsXkHvDCNIWIRRw8L/psqB5+TFh/2Jw14OSWGvGpMM=
+Received: from DB8P191CA0007.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:130::17)
+ by AM7PR02MB6292.eurprd02.prod.outlook.com (2603:10a6:20b:1c0::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.26; Fri, 9 Feb
+ 2024 09:14:50 +0000
+Received: from DU2PEPF0001E9C5.eurprd03.prod.outlook.com
+ (2603:10a6:10:130:cafe::31) by DB8P191CA0007.outlook.office365.com
+ (2603:10a6:10:130::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36 via Frontend
+ Transport; Fri, 9 Feb 2024 09:14:50 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=axis.com;
+Received-SPF: Fail (protection.outlook.com: domain of axis.com does not
+ designate 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com;
+Received: from mail.axis.com (195.60.68.100) by
+ DU2PEPF0001E9C5.mail.protection.outlook.com (10.167.8.74) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Fri, 9 Feb 2024 09:14:50 +0000
+Received: from se-mail01w.axis.com (10.20.40.7) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 9 Feb
+ 2024 10:14:49 +0100
+Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Fri, 9 Feb 2024 10:14:49 +0100
+Received: from pc37511-1950.se.axis.com (pc37511-1950.se.axis.com [10.94.62.3])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 912D213420
+	for <bitbake-devel@lists.openembedded.org>; Fri,  9 Feb 2024 10:14:49 +0100 (CET)
+Received: by pc37511-1950.se.axis.com (Postfix, from userid 11324)
+	id 8B3E0B257EA; Fri,  9 Feb 2024 10:14:49 +0100 (CET)
+From: Tobias Hagelborn <tobiasha@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH v2] hashserv: Postgres adaptations for ignoring duplicate inserts
+Date: Fri, 9 Feb 2024 10:14:43 +0100
+Message-ID: <20240209091443.2737892-1-tobiasha@axis.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <f8f81126-3fec-4dbd-8088-64d615879167@bigsur.com>
- <lya5obge3c.fsf@ensc-pc.intern.sigma-chemnitz.de> <17B1FF6690DC06E7.12768@lists.openembedded.org>
- <DB5PR02MB10213640DC0E0573DB9445CAFEF442@DB5PR02MB10213.eurprd02.prod.outlook.com>
-In-Reply-To: <DB5PR02MB10213640DC0E0573DB9445CAFEF442@DB5PR02MB10213.eurprd02.prod.outlook.com>
-From: Sam Liddicott <sam@liddicott.com>
-Date: Thu, 8 Feb 2024 21:21:48 +0000
-Message-ID: <CAOj-5WArhvQ5msLi2DO+opMg0m+8+9qR_eOKekZ4ZvuoqzOTJA@mail.gmail.com>
-Subject: Re: [bitbake-devel] Underscore vs Dash in bbclass filenames
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Cc: "enrico.scholz@sigma-chemnitz.de" <enrico.scholz@sigma-chemnitz.de>, Saul Wold <sgw@bigsur.com>, 
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>, 
-	"richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>, 
-	"randy.macleod@windriver.com" <randy.macleod@windriver.com>
-Content-Type: multipart/alternative; boundary="00000000000061b2880610e568c5"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PEPF0001E9C5:EE_|AM7PR02MB6292:EE_
+X-MS-Office365-Filtering-Correlation-Id: 90713217-9f8c-4aa0-d73e-08dc294f91a0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	HRGY/lsTy+sFWFEDb2lNa0uklfbL0sHP4ocx2KvWHpOT1AWKYoIaEdgp2A5EqwL79eRMW1tHUj9nuA8GJAlNyjsGmwRxeOR9uHZlcMrLJP7Siz+WWqqqCC0ViQcpMyLLNkWv2hXMGjxjXv8RVRMRi8vymhuiuwselVRsp7/m++hnSVBnrOhG7/KQogXeCpMH4xkUnP4feYhRFOcq5Ln9SGjVSDO3iIxUMukCKKhuy4CttRvCKpM8KehpHz/nnpnH/l39HsA3wf4L2hk+aPEVyewO28GSGxxUdkkg18cAliQ3k1RzED6ehqjk4scyHRkHGCETBIZn+atpeGtG0gMlFA9mExr8BStPH4gINc8RBrdJRxrAv6Lj1iQZCPk5SjJCUzrF+0z0bpWarutNETicnlNuvwhXy437NbXQMYbAcjk+/mZPl4ra5SEf6UzIl6HKKLXer8/nG1+r+jU4Knw9kKvbBvIS6HCUCxnjFH7ch21nP5QJfFXV5tbVQIRRth+StzKNkLXC/4HLEH4wOThUsMgdxvdlB0o/Nm7ozKmxd4SE9wJuV5IoiHEndsxnl6GSpjooLz8oUcSyw65bytDHeo0Q3G791loz+ohjQtkNZZg=
+X-Forefront-Antispam-Report: 
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39850400004)(376002)(396003)(136003)(346002)(230922051799003)(451199024)(82310400011)(186009)(64100799003)(1800799012)(46966006)(40470700004)(36840700001)(2906002)(70206006)(70586007)(8676002)(8936002)(6916009)(5660300002)(36756003)(41300700001)(426003)(336012)(6266002)(1076003)(2616005)(26005)(82740400003)(81166007)(356005)(83380400001)(42186006)(478600001)(6666004)(316002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 09:14:50.1535
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90713217-9f8c-4aa0-d73e-08dc294f91a0
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DU2PEPF0001E9C5.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR02MB6292
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 08 Feb 2024 21:22:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15847
+ <bitbake-devel@lists.openembedded.org>; Fri, 09 Feb 2024 09:14:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15848
 
---00000000000061b2880610e568c5
-Content-Type: text/plain; charset="UTF-8"
+Hash Equivalence server performs unconditional insert also of duplicate
+hash entries. This causes excessive error log entries in Postgres.
+Rather ignore the duplicate inserts.
 
-Whatever you do I wish that there is some simple text-only non-python
-ini-type declaration file to declare these settings, rules & capabilities.
+The alternate behavior should be isolated to the postgres
+engine type.
 
-My meta-build-tools have to parse the python or look for specific git
-commits to decide whether or not to use : or _ as the override separator in
-the generated conf files (e.g. local.conf), and more of this sort of thing
-is going to be painful for the next decade. As an example of the
-worst case, tools can't tell if the "current distro" is a sanity-supported
-distro without first running bitbake.
+Signed-off-by: Tobias Hagelborn <tobiasha@axis.com>
+---
 
-I don't think I can even tell what the release code-name is without looking
-at git revisions in the oe-embedded layer.
+Updated return codes based on rows updated according to review comments.
 
-Sam
+ lib/hashserv/sqlalchemy.py | 41 ++++++++++++++++++++++++++++----------
+ 1 file changed, 31 insertions(+), 10 deletions(-)
 
-On Thu, 8 Feb 2024 at 21:16, Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-wrote:
+diff --git a/lib/hashserv/sqlalchemy.py b/lib/hashserv/sqlalchemy.py
+index cee04bff..b17a1762 100644
+--- a/lib/hashserv/sqlalchemy.py
++++ b/lib/hashserv/sqlalchemy.py
+@@ -32,6 +32,7 @@ from sqlalchemy import (
+ import sqlalchemy.engine
+ from sqlalchemy.orm import declarative_base
+ from sqlalchemy.exc import IntegrityError
++from sqlalchemy.dialects.postgresql import insert as postgres_insert
+=20
+ Base =3D declarative_base()
+=20
+@@ -287,16 +288,28 @@ class Database(object):
+             return result.rowcount
+=20
+     async def insert_unihash(self, method, taskhash, unihash):
+-        statement =3D insert(UnihashesV2).values(
+-            method=3Dmethod,
+-            taskhash=3Dtaskhash,
+-            unihash=3Dunihash,
+-        )
++        # Postgres specific ignore on insert duplicate
++        if self.engine.name =3D=3D 'postgresql':
++            statement =3D postgres_insert(UnihashesV2).values(
++                method=3Dmethod,
++                taskhash=3Dtaskhash,
++                unihash=3Dunihash,
++            )
++            statement =3D statement.on_conflict_do_nothing(
++                index_elements=3D("method", "taskhash")
++            )
++        else:
++            statement =3D insert(UnihashesV2).values(
++                method=3Dmethod,
++                taskhash=3Dtaskhash,
++                unihash=3Dunihash,
++            )
++
+         self.logger.debug("%s", statement)
+         try:
+             async with self.db.begin():
+-                await self.db.execute(statement)
+-            return True
++                result =3D await self.db.execute(statement)
++                return result.rowcount !=3D 0
+         except IntegrityError:
+             self.logger.debug(
+                 "%s, %s, %s already in unihash database", method, taskhash=
+, unihash
+@@ -311,12 +324,20 @@ class Database(object):
+         if "created" in data and not isinstance(data["created"], datetime)=
+:
+             data["created"] =3D datetime.fromisoformat(data["created"])
+=20
+-        statement =3D insert(OuthashesV2).values(**data)
++        # Postgres specific ignore on insert duplicate
++        if self.engine.name =3D=3D 'postgresql':
++            statement =3D postgres_insert(OuthashesV2).values(**data)
++            statement =3D statement.on_conflict_do_nothing(
++                index_elements=3D("method", "taskhash", "outhash")
++            )
++        else:
++            statement =3D insert(OuthashesV2).values(**data)
++
+         self.logger.debug("%s", statement)
+         try:
+             async with self.db.begin():
+-                await self.db.execute(statement)
+-            return True
++                result =3D await self.db.execute(statement)
++                return result.rowcount !=3D 0
+         except IntegrityError:
+             self.logger.debug(
+                 "%s, %s already in outhash database", data["method"], data=
+["outhash"]
+--=20
+2.30.2
 
-> > -----Original Message-----
-> > From: bitbake-devel@lists.openembedded.org <bitbake-
-> > devel@lists.openembedded.org> On Behalf Of Peter Kjellerstedt
-> > Sent: den 8 februari 2024 22:09
-> > To: enrico.scholz@sigma-chemnitz.de; Saul Wold <sgw@bigsur.com>
-> > Cc: bitbake-devel@lists.openembedded.org;
-> > richard.purdie@linuxfoundation.org; randy.macleod@windriver.com
-> > Subject: Re: [bitbake-devel] Underscore vs Dash in bbclass filenames
-> >
-> > > -----Original Message-----
-> > > From: bitbake-devel@lists.openembedded.org <bitbake-
-> > > devel@lists.openembedded.org> On Behalf Of Enrico Scholz via
-> > > lists.openembedded.org
-> > > Sent: den 8 februari 2024 16:39
-> > > To: Saul Wold <sgw@bigsur.com>
-> > > Cc: bitbake-devel@lists.openembedded.org;
-> > > richard.purdie@linuxfoundation.org; randy.macleod@windriver.com
-> > > Subject: Re: [bitbake-devel] Underscore vs Dash in bbclass filenames
-> > >
-> > > "Saul Wold" <sgw@bigsur.com> writes:
-> > >
-> > > > I was looking into Bug 14235 [0] and had initial patch based on
-> > > > Randy's original recommendation of using dash (-) which was a basic
-> > > > python/tinfoil script to check existing bbclasses in the BBPATH.
-> > >
-> > > why not make it like rust and replace '-' by '_' when generating
-> > > symbols?
-> > >
-> > > Enrico
-> >
-> > Taken alone that would open up for problems in case there is both a
-> > foo_bar.bbclass and a foo-bar.bbclass (which is kind of ridiculous, but
-> > it is at least a theoretical problem). However, if you combine it with
-> > the rule that classes should only use dashes in their names, then it
-> > should work.
-> >
-> > Actually, if we want bbclass names to only use dashes, what I would
-> > suggest (and this may sound odd to some given the recent discussion on
-> > breaking changes that I have been involved in on the
-> > openembedded-architecture list) would be to change the bitbake syntax
-> > to only allow alphanumeric characters and dashes in bbclass names. This
-> > may sound like a huge breaking change, but it actually isn't. As long
-> > as Enrico's suggestion is implemented, it is then just to change all
-> > class names in OE Core, meta-openembedded, etc. Yes, this will break
-> > other layers, but changing them is trivial. And if one has layers that
-> > need to work both with nanbield and master for a transition period (like
-> > we would have), it is easy to just add some oneliner wrapper classes in
-> > one of one's own layers for the new names that inherit the old classes.
-> >
-> > At least I find that a lot more appealing than adding some check script
-> > with a lot of hardcoded exceptions for the currently existing classes.
-> >
-> > I realize it is probably too late to do something like this for
-> Scarthgap,
-> > but I think it should be considered for Scarthgap's successor (what ever
-> > it will be called).
-> >
-> > //Peter
->
-> I forgot to say that regardless of whether the syntax is changed or not,
-> I would really like to see Enrico's suggestion implemented for Scarthgap.
-> That would make it a lot easier to transition to the new naming of
-> bbclasses even if the new naming policy isn't a hard rule in Scarthgap.
->
-> //Peter
->
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15846):
-> https://lists.openembedded.org/g/bitbake-devel/message/15846
-> Mute This Topic: https://lists.openembedded.org/mt/104228800/7497305
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> sam@liddicott.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
->
-
---00000000000061b2880610e568c5
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Whatever you do I wish that there is some simple text-only=
- non-python ini-type declaration file to declare these settings, rules &amp=
-; capabilities.<div><br></div><div>My meta-build-tools have to parse the py=
-thon or look for specific git commits to decide whether or not to use : or =
-_ as the override separator in the generated conf files (e.g. local.conf), =
-and more of this sort of thing is going to be painful for the next decade. =
-As an example of the worst=C2=A0case, tools can&#39;t tell if the &quot;cur=
-rent distro&quot; is a sanity-supported distro without first running=C2=A0b=
-itbake.</div><div><br></div><div>I don&#39;t think I can even tell what the=
- release code-name is without looking at git revisions in the oe-embedded l=
-ayer.</div><div><br></div><div>Sam</div></div><br><div class=3D"gmail_quote=
-"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, 8 Feb 2024 at 21:16, Peter =
-Kjellerstedt &lt;<a href=3D"mailto:peter.kjellerstedt@axis.com">peter.kjell=
-erstedt@axis.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" =
-style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pa=
-dding-left:1ex">&gt; -----Original Message-----<br>
-&gt; From: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=
-=3D"_blank">bitbake-devel@lists.openembedded.org</a> &lt;bitbake-<br>
-&gt; <a href=3D"mailto:devel@lists.openembedded.org" target=3D"_blank">deve=
-l@lists.openembedded.org</a>&gt; On Behalf Of Peter Kjellerstedt<br>
-&gt; Sent: den 8 februari 2024 22:09<br>
-&gt; To: <a href=3D"mailto:enrico.scholz@sigma-chemnitz.de" target=3D"_blan=
-k">enrico.scholz@sigma-chemnitz.de</a>; Saul Wold &lt;<a href=3D"mailto:sgw=
-@bigsur.com" target=3D"_blank">sgw@bigsur.com</a>&gt;<br>
-&gt; Cc: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"=
-_blank">bitbake-devel@lists.openembedded.org</a>;<br>
-&gt; <a href=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank=
-">richard.purdie@linuxfoundation.org</a>; <a href=3D"mailto:randy.macleod@w=
-indriver.com" target=3D"_blank">randy.macleod@windriver.com</a><br>
-&gt; Subject: Re: [bitbake-devel] Underscore vs Dash in bbclass filenames<b=
-r>
-&gt; <br>
-&gt; &gt; -----Original Message-----<br>
-&gt; &gt; From: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" tar=
-get=3D"_blank">bitbake-devel@lists.openembedded.org</a> &lt;bitbake-<br>
-&gt; &gt; <a href=3D"mailto:devel@lists.openembedded.org" target=3D"_blank"=
->devel@lists.openembedded.org</a>&gt; On Behalf Of Enrico Scholz via<br>
-&gt; &gt; <a href=3D"http://lists.openembedded.org" rel=3D"noreferrer" targ=
-et=3D"_blank">lists.openembedded.org</a><br>
-&gt; &gt; Sent: den 8 februari 2024 16:39<br>
-&gt; &gt; To: Saul Wold &lt;<a href=3D"mailto:sgw@bigsur.com" target=3D"_bl=
-ank">sgw@bigsur.com</a>&gt;<br>
-&gt; &gt; Cc: <a href=3D"mailto:bitbake-devel@lists.openembedded.org" targe=
-t=3D"_blank">bitbake-devel@lists.openembedded.org</a>;<br>
-&gt; &gt; <a href=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_=
-blank">richard.purdie@linuxfoundation.org</a>; <a href=3D"mailto:randy.macl=
-eod@windriver.com" target=3D"_blank">randy.macleod@windriver.com</a><br>
-&gt; &gt; Subject: Re: [bitbake-devel] Underscore vs Dash in bbclass filena=
-mes<br>
-&gt; &gt;<br>
-&gt; &gt; &quot;Saul Wold&quot; &lt;<a href=3D"mailto:sgw@bigsur.com" targe=
-t=3D"_blank">sgw@bigsur.com</a>&gt; writes:<br>
-&gt; &gt;<br>
-&gt; &gt; &gt; I was looking into Bug 14235 [0] and had initial patch based=
- on<br>
-&gt; &gt; &gt; Randy&#39;s original recommendation of using dash (-) which =
-was a basic<br>
-&gt; &gt; &gt; python/tinfoil script to check existing bbclasses in the BBP=
-ATH.<br>
-&gt; &gt;<br>
-&gt; &gt; why not make it like rust and replace &#39;-&#39; by &#39;_&#39; =
-when generating<br>
-&gt; &gt; symbols?<br>
-&gt; &gt;<br>
-&gt; &gt; Enrico<br>
-&gt; <br>
-&gt; Taken alone that would open up for problems in case there is both a<br=
->
-&gt; foo_bar.bbclass and a foo-bar.bbclass (which is kind of ridiculous, bu=
-t<br>
-&gt; it is at least a theoretical problem). However, if you combine it with=
-<br>
-&gt; the rule that classes should only use dashes in their names, then it<b=
-r>
-&gt; should work.<br>
-&gt; <br>
-&gt; Actually, if we want bbclass names to only use dashes, what I would<br=
->
-&gt; suggest (and this may sound odd to some given the recent discussion on=
- <br>
-&gt; breaking changes that I have been involved in on the <br>
-&gt; openembedded-architecture list) would be to change the bitbake syntax =
-<br>
-&gt; to only allow alphanumeric characters and dashes in bbclass names. Thi=
-s <br>
-&gt; may sound like a huge breaking change, but it actually isn&#39;t. As l=
-ong <br>
-&gt; as Enrico&#39;s suggestion is implemented, it is then just to change a=
-ll <br>
-&gt; class names in OE Core, meta-openembedded, etc. Yes, this will break <=
-br>
-&gt; other layers, but changing them is trivial. And if one has layers that=
- <br>
-&gt; need to work both with nanbield and master for a transition period (li=
-ke<br>
-&gt; we would have), it is easy to just add some oneliner wrapper classes i=
-n<br>
-&gt; one of one&#39;s own layers for the new names that inherit the old cla=
-sses.<br>
-&gt; <br>
-&gt; At least I find that a lot more appealing than adding some check scrip=
-t<br>
-&gt; with a lot of hardcoded exceptions for the currently existing classes.=
-<br>
-&gt; <br>
-&gt; I realize it is probably too late to do something like this for Scarth=
-gap,<br>
-&gt; but I think it should be considered for Scarthgap&#39;s successor (wha=
-t ever<br>
-&gt; it will be called).<br>
-&gt; <br>
-&gt; //Peter<br>
-<br>
-I forgot to say that regardless of whether the syntax is changed or not, <b=
-r>
-I would really like to see Enrico&#39;s suggestion implemented for Scarthga=
-p.<br>
-That would make it a lot easier to transition to the new naming of <br>
-bbclasses even if the new naming policy isn&#39;t a hard rule in Scarthgap.=
-<br>
-<br>
-//Peter<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#15846): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/15846" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/15846</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/104228800/749=
-7305" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
-t/104228800/7497305</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:sam@liddicott.com" target=3D"_blan=
-k">sam@liddicott.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div>
-
---00000000000061b2880610e568c5--
 
