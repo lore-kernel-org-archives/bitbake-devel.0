@@ -2,66 +2,58 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8615FC48297
-	for <webhook@archiver.kernel.org>; Fri,  9 Feb 2024 16:22:17 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web11.15980.1707495727002998453
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6170C4828F
+	for <webhook@archiver.kernel.org>; Fri,  9 Feb 2024 16:55:07 +0000 (UTC)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web10.17293.1707497701140652328
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 09 Feb 2024 08:22:07 -0800
+ Fri, 09 Feb 2024 08:55:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LgxDg/nP;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40fd72f7125so9623415e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Feb 2024 08:22:06 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=e+2EQdMl;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33b697a4a26so105130f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Feb 2024 08:55:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1707495725; x=1708100525; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1707497699; x=1708102499; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=TGPg2lbxZE/0otFBy6vaxOXIC4rq33UmOSbjRG2wE18=;
-        b=LgxDg/nPxV7IhDFpsG+JtC/v7EKsqzahvU1hPJNSc58p57w+NQ5RdM02WKKU33aJNS
-         eoer1+WrVBrszcNis9A2qPk9mQ9MO+qCoSlYs+0Ro9NyUa0RELyIstb+N4gAdFETn611
-         ustZvvwNHkMgX1ZveAbBxHcJWy0YwX441zc0Q=
+        bh=64tVAaA5iCgXYdl+qgiWDHAZlpJEW9rnwPtCEe7LeJ4=;
+        b=e+2EQdMlkM9jYvSutj8L0rV4N8VgHJeGF8PXjWG93Kx4yEC2T7DgpzRX1it90B8+IJ
+         YZWedtqHvck+GJv5hZOi5/h3EOGkl3BEV4KJTwXe8OS+Q+AukHYW9agcFxwZE04Zt6ma
+         AzV0bq083Gr1saf8hHGNLjBbAlUyIQD4769pE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707495725; x=1708100525;
+        d=1e100.net; s=20230601; t=1707497699; x=1708102499;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TGPg2lbxZE/0otFBy6vaxOXIC4rq33UmOSbjRG2wE18=;
-        b=esE9uaDh+GOGb3HxldylldrbodkntEOO8wU5Lv4zV+c9XB3gsnIVCrp7S8MLacDjg5
-         zK/nun1FJYLY6GDMR05G1bc6xK240fw7nWuqmWaFfzmeJlSsnJtD+0Ozej5XFQEW49Ug
-         vciBSriU1wPbRGS3N+Zgqk+VwyB53bTnT8L3FCyXEKoQMu8cvGMnvLjaoL1/w5s4fh4O
-         ovCnaU5Wm8wf6EeAiJrK3tdGQU7YwDH2UDmfDf4ktOh49pweWlIpRROkcd5reKs7kEJM
-         swML75+JdGvXuGygC5bIEwuLf6sTCusapHZbbJIdd7s9S4YbOI8C2mv4xXEPE9PHF35X
-         Hz8w==
-X-Gm-Message-State: AOJu0YxgYOGHAgPtVjGvtdHR7sh+aXBDFaPQsl61FmPOR8zsj8M+xAlG
-	MPTaaQR+tKflJcE1V/hBcinhLiKLLJX7fFx3E2h86LI5yd+XX5iSnujhWc62kiE=
-X-Google-Smtp-Source: AGHT+IF1MRqjx0cXEp98KT79U7Jz4b/r8knp/0vZnqSwBjznBcNJigJVUgDmNriPAhqZhrrLNtmwBw==
-X-Received: by 2002:a05:600c:310c:b0:410:4a3:1ae7 with SMTP id g12-20020a05600c310c00b0041004a31ae7mr1576802wmo.17.1707495725418;
-        Fri, 09 Feb 2024 08:22:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV1gbgvEill4ZvEzD7f7TM9imV3PJpjOn1wYb/vl6GYGWtUzjjVghYJDsCW/vuajduEMgvghUpDuU01W4nOKGKE1XgmybaoS7jOhW/EnWbRx5MWJpo=
+        bh=64tVAaA5iCgXYdl+qgiWDHAZlpJEW9rnwPtCEe7LeJ4=;
+        b=JcJ5mTJOVpJ/XRQKnvliLga8OdFKGkgoyFc4n7cgbzg0SawgQALhSm28DIV2JeoGZ9
+         NbJYiqAWqMcyVg8dqHe4zmvLTpJXcISpW8y5ZDQlvnCpCHCptSz8XZrVrwqkMbmu+tmA
+         7339en8c1w207PilxtnIwu3zOyxnnp+Y+LPRcmZ+9eXnnNNxAUeDzxiGBGF2VUXQ1/B8
+         1+zomxD1MoKaUJ662dZUvoK1nlbZVUq8FJcEaGU70toAfHToUYz9bK6CtNmNZaq0Xkyh
+         y0h8/6NHcK0FJ9KQ48a+lv2TL1z82fap3mTMblLLHtv6N7nzq8XUCNBDncZURLE8U032
+         8hAQ==
+X-Gm-Message-State: AOJu0YxieYMtYPqd6PsLVML8XAjeH7Z6gyHUhv/S/j+69Gk0ZWowzeVB
+	jD9+39AUbslDxirZ7X2vpHUGgzowYkoQW4oTn1X4JCF0g01fkab2sBhC9xh2Y0A=
+X-Google-Smtp-Source: AGHT+IGIXlGOiBAK6qC5D5FicwcoCNXkrFDkPRM8yzhlljON41TnadMRqiTJEoi7dIYYAXOL7JCjBg==
+X-Received: by 2002:a5d:4a8a:0:b0:33b:4197:75dc with SMTP id o10-20020a5d4a8a000000b0033b419775dcmr1558899wrq.14.1707497699571;
+        Fri, 09 Feb 2024 08:54:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU1htLU3dol29YFvJR6F/74mdqn3lOYQyuKuuIl0rzE1RO9BKYZuCbDlho1t9RZ4aJDO6h//X/IE+3BqLDLBZ2FTtl6N92X56o4NRh9bEvzDpsyvcLfEYsxbPzy
 Received: from ?IPv6:2001:8b0:aba:5f3c:47e1:ee11:154c:e6b3? ([2001:8b0:aba:5f3c:47e1:ee11:154c:e6b3])
-        by smtp.gmail.com with ESMTPSA id j16-20020a05600c1c1000b0040ee51f1025sm1131807wms.43.2024.02.09.08.22.04
+        by smtp.gmail.com with ESMTPSA id d23-20020adfa357000000b0033ae50e2c6asm2241701wrb.83.2024.02.09.08.54.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 08:22:05 -0800 (PST)
-Message-ID: <cf9339c32c0923068f0e4ae81fe1ebdb8153b20a.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] regression of 'world' performance?
+        Fri, 09 Feb 2024 08:54:59 -0800 (PST)
+Message-ID: <c4af944d35b8c0fe23dd7fd2aea744f121c9f7b4.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] Underscore vs Dash in bbclass filenames
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: Khem Raj <raj.khem@gmail.com>, bitbake-devel
-	 <bitbake-devel@lists.openembedded.org>
-Date: Fri, 09 Feb 2024 16:22:04 +0000
-In-Reply-To: <CANNYZj-3QDJMcqaVTSj+XRZo140O-hg5K9kM8e0mtF7yp=P9Tg@mail.gmail.com>
-References: 
-	<CANNYZj86b3GMtSVZMn8744HjMSMQVkzuXBTikLf4dFV0ULsvqg@mail.gmail.com>
-	 <0186f166a0ded0d97d5e19f64a3dd8e5ad44a92f.camel@linuxfoundation.org>
-	 <CANNYZj-cqQVJcs3AUvzE=Lw+mYMUWZO8JW1N-Ukz6BK3H2rchQ@mail.gmail.com>
-	 <CAMKF1soqnpKYkcGzkS1A2UGGiy7_Vbzym06rARRTqCnUc7gsCw@mail.gmail.com>
-	 <CANNYZj_r2S7b+3r4CEz8cGZSqT_wa785p1BtpZxb60CVvZJcAg@mail.gmail.com>
-	 <947006112712dcca07c607eb6b49b7e4e475c3d9.camel@linuxfoundation.org>
-	 <CANNYZj-V_bH-uVUBXmER30GxMLrfKN6g=pY-VSsgEfT6Fm7e_g@mail.gmail.com>
-	 <829c8fff2e6735297f036fdb878f4d244cf08f91.camel@linuxfoundation.org>
-	 <CANNYZj-3QDJMcqaVTSj+XRZo140O-hg5K9kM8e0mtF7yp=P9Tg@mail.gmail.com>
+To: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>, Saul Wold
+ <sgw@bigsur.com>
+Cc: bitbake-devel@lists.openembedded.org, randy.macleod@windriver.com
+Date: Fri, 09 Feb 2024 16:54:58 +0000
+In-Reply-To: <lya5obge3c.fsf@ensc-pc.intern.sigma-chemnitz.de>
+References: <f8f81126-3fec-4dbd-8088-64d615879167@bigsur.com>
+	 <lya5obge3c.fsf@ensc-pc.intern.sigma-chemnitz.de>
 Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
@@ -77,79 +69,37 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 09 Feb 2024 16:22:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15860
+ <bitbake-devel@lists.openembedded.org>; Fri, 09 Feb 2024 16:55:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15861
 
-On Fri, 2024-02-09 at 17:16 +0100, Alexander Kanavin wrote:
-> On Fri, 9 Feb 2024 at 17:06, Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
-> > Iterating 28k entries isn't an issue for python. Yes, it will be "slow"
-> > when you put logging around it but I doubt it is the real problem.
-> >=20
-> > What is more likely is one of the calls like:
-> >=20
-> > self.check_dependencies(xxx)
-> >=20
-> > getting called once per entry and that call being slow.
-> >=20
-> > Can you try the profile -P data please. If it doesn't make sense, share
-> > it somewhere and I'll take a look.
+On Thu, 2024-02-08 at 16:39 +0100, Enrico Scholz wrote:
+> "Saul Wold" <sgw@bigsur.com> writes:
 >=20
-> I get:
+> > I was looking into Bug 14235 [0] and had initial patch based on
+> > Randy's original recommendation of using dash (-) which was a basic
+> > python/tinfoil script to check existing bbclasses in the BBPATH.
 >=20
-> Parsing of 2966 .bb files complete (0 cached, 2966 parsed). 4758
-> targets, 129 skipped, 0 masked, 0 errors.
-> ERROR: Command execution failed: Traceback (most recent call last):
->   File "/srv/work/alex/poky/bitbake/lib/bb/cooker.py", line 2284, in pars=
-e_next
->     parsed, mc, result =3D next(self.results)
->                          ^^^^^^^^^^^^^^^^^^
-> StopIteration
->=20
-> During handling of the above exception, another exception occurred:
->=20
-> Traceback (most recent call last):
->   File "/srv/work/alex/poky/bitbake/lib/bb/command.py", line 122, in
-> runAsyncCommand
->     self.cooker.updateCache()
->   File "/srv/work/alex/poky/bitbake/lib/bb/cooker.py", line 1635, in upda=
-teCache
->     if not self.parser.parse_next():
->            ^^^^^^^^^^^^^^^^^^^^^^^^
->   File "/srv/work/alex/poky/bitbake/lib/bb/cooker.py", line 2293, in pars=
-e_next
->     self.shutdown()
->   File "/srv/work/alex/poky/bitbake/lib/bb/cooker.py", line 2244, in shut=
-down
->     bb.utils.process_profilelog(profiles, pout =3D pout)
->   File "/srv/work/alex/poky/bitbake/lib/bb/utils.py", line 1159, in
-> process_profilelog
->     p =3D pstats.Stats(*fn, stream=3Dpout)
->         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->   File "/usr/lib/python3.11/pstats.py", line 116, in __init__
->     self.add(*args)
->   File "/usr/lib/python3.11/pstats.py", line 174, in add
->     item =3D Stats(item)
->            ^^^^^^^^^^^
->   File "/usr/lib/python3.11/pstats.py", line 115, in __init__
->     self.init(arg)
->   File "/usr/lib/python3.11/pstats.py", line 129, in init
->     self.load_stats(arg)
->   File "/usr/lib/python3.11/pstats.py", line 143, in load_stats
->     self.stats =3D marshal.load(f)
->                  ^^^^^^^^^^^^^^^
-> EOFError: EOF read where object expected
+> why not make it like rust and replace '-' by '_' when generating symbols?
 
+Symbol mangling works ok since the user never needs to reference the
+output version.
 
-That is very unexpected. I just tested "bitbake bash -P" myself and it
-did work out ok. The stack trace doesn't really make sense to me so no
-sure what is going on or why this is failing :(
+In our case you could have a class with one format and function names
+using both dashes and underscores. I think that could get very
+confusing since you could declare it with one name and call it with
+another.
 
-That does look like it might be the post processing code failing (it
-saves the results in binary, then loads and processes the logs to be
-human readable as it exits).
+There could be a case for assisting a transition with some kind of
+translation but once you limit the usage like this, I think it may be
+better just to ask users to convert.
+
+This assumes we do need to "fix" this problem, which I remain unsure
+about.
 
 Cheers,
 
 Richard
+
+
+
 
