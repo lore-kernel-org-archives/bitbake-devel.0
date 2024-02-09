@@ -1,191 +1,144 @@
-Return-Path: <tobias.hagelborn@axis.com>
+Return-Path: <toni.lammi@kone.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABF0C48297
-	for <webhook@archiver.kernel.org>; Fri,  9 Feb 2024 09:14:55 +0000 (UTC)
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (EUR02-AM0-obe.outbound.protection.outlook.com [40.107.247.40])
- by mx.groups.io with SMTP id smtpd.web10.7801.1707470093533857225
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975A8C48297
+	for <webhook@archiver.kernel.org>; Fri,  9 Feb 2024 13:06:26 +0000 (UTC)
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (EUR02-DB5-obe.outbound.protection.outlook.com [40.107.249.80])
+ by mx.groups.io with SMTP id smtpd.web10.10759.1707483981306725497
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 09 Feb 2024 01:14:54 -0800
+ Fri, 09 Feb 2024 05:06:21 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=RAReRM+C;
- spf=pass (domain: axis.com, ip: 40.107.247.40, mailfrom: tobias.hagelborn@axis.com)
+ dkim=pass header.i=@kone.com header.s=selector1 header.b=B0etXGlJ;
+ spf=pass (domain: kone.com, ip: 40.107.249.80, mailfrom: toni.lammi@kone.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iCtypMgNlzlrR+J2YYRopZHHfAQRkdaVJ7GBwQ2v0fFQ5YyViLjUm2MW7lvSB7Yd0L/ru6SDah5JNC1wYU2jnCB1Isq8NGjsudF+yt4l8CnsL2vc2pIBcwyfj7OHC4OuZ0clXsjCV0TBgkag6t1++zM0/jFnhIjXzaU9ikcLAJ0awQTW9AaWvpdEbC/kLG9Voj2zMIM+9dRbWAAyhqF/0q1LaPDIJLTAXI/gae+RAhUK23022dKdYtfJ74UlQdRUmJlIUVFyhezCEOS2fSF2I+KiO8T0olUAUMrYBgmrDOQ1I8Sm3c6b9dBqB0Zo31e+WDjPtP2ZHBun1d2zPI0bUg==
+ b=RNXnMveuLlyM9qRBkNQlJC8CGMU7+F4x3kR1IaHcYqluSL1ObcGY2ydqbMF1pixUfm5vQKoNqiKgM9d3UR8Tz14+cGQYC1Fwsmc/BfJF7O10pV7QL48VV1Fvl92Wsmig78iZ1voFreoT2GmGmxQEbudJMHmxv8VCXntMqNMnWwsuYPqtHvBoYyuzzln0XuklkqyNHaH392A75Q9LB72cpnnPta44X8iT3b3sKBXgQM3lBOvpJt/QjR+Tz/ZUhY0ZRSo5sU/sHvKRuW30K3wFmKGn3r8KRPZI3Uk8pSSzFOvfbKSgKgwXrvIzrPhjzv9S3SoWrtmTiOQb/atIW9JHAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Lxx/tGn8xa41mZ2hMAPrXxtQHhNMIpKWoleJo8KyyIE=;
- b=IE0cgL+LFg/yKs69kxeqs3ACkg9JmLKkNER8prTmzehtern684+YQ/weIQI1vuiXGzBmgk+YrQNKOfY3zVhc+pA6VtRnC0oUxPwF8VTkb5YViZqOLU5LXPYF8B3yE6Iz+l02Wa6VTJCaDr6XFwhDi8x6HwB0wZ7HQZ/mbd+L6HYlivbskYpA4ngiPX6hZVmsoQJpgwCFqVpIEkZnIXQDPGA7Qe4k5d1mEiF63pFRijBPocNE73Cul0IAxLMgy7LW6YGIRCOglqFkGBIkoOgZ9JOU7IZQRXK6k0lzamklUlM8spif/USbDIuDR7Hn9XafZnJ0fVnECx7DAgythUbIbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=axis.com; dmarc=fail (p=none sp=none pct=100) action=none
- header.from=axis.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ bh=EeEFR10ni+vR3UcFEXPpVT6WHCmBC51Ki5GjFpPCCFA=;
+ b=n/5ypurNWl0pdeLqtvAzWa8xUZLheRnEBJcMMgmzcF1xcrdQRJrnh0uyerMvf+HFN5PtbxTvVOn6QCS61mdz/If+HI38DlHQUHm+vcNdLGRlVvWGa2A52Vd3EH+5zTWcGiS69EXe3tlw5fMxpg5/gZlRloyaxEAy9FcFH/x0OzckAXEzkX+eT0ZTmCVaD6zO1jWYA63BboXz5ciT+XSqVf2NLzphhcqaL8qJhL2VjIBSbG5MIGNot3dhKPZoYaD3i7DqeF/RkxwOnMqrjSkYpErapsHgQsv8G2RoNWX4tVFLgZAsFsZarumN7eOfKDgEL82eyoe/IgRDDkaErq5YBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kone.com; dmarc=pass action=none header.from=kone.com;
+ dkim=pass header.d=kone.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kone.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Lxx/tGn8xa41mZ2hMAPrXxtQHhNMIpKWoleJo8KyyIE=;
- b=RAReRM+CarYpz4PGvn5ziTUogRrrPWRuvG3Y5UQDWalwTVKMVFRA1j26S3Psv8G/QWlA8AzSIJpNX9TmFoeQPfw39/HlOQgC9QA00aFWXo3jMRl/ZsD//hqz0F0kWNvrzlsXkHvDCNIWIRRw8L/psqB5+TFh/2Jw14OSWGvGpMM=
-Received: from DB8P191CA0007.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:130::17)
- by AM7PR02MB6292.eurprd02.prod.outlook.com (2603:10a6:20b:1c0::19) with
+ bh=EeEFR10ni+vR3UcFEXPpVT6WHCmBC51Ki5GjFpPCCFA=;
+ b=B0etXGlJN34HYBenKz6I2SfIt5PZiKs2KZMHwEUgQVZEMKWverUVv9ePg7gU6PktTlhbl5iP1v9XnHOoxBb+o/PySSR290fwiLxUN7hxjQX9Fcyl+Kt11z588jctOwBcZqJWUrph11rFVp6ULPG/qjNGmFg/vXEZ0jRo3Fcn3vBDHobxIb+X2WVcxFwEJtqS2FmIKe7LedHYVXui9HSx8yJc2ylDwmCQGcS21GPLtDw++mUTg0VMbQVtfcqLrcDLAkyCwiI+5PwVrKA21TeF9ETH3Nr09OuizzifkI+59Aswo+dooUjeV0zo3tTC0dCsrS8IPbRRK31mTE9M8/DJkg==
+Received: from DU0PR07MB8715.eurprd07.prod.outlook.com (2603:10a6:10:319::19)
+ by DUZPR07MB9997.eurprd07.prod.outlook.com (2603:10a6:10:4ae::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.26; Fri, 9 Feb
- 2024 09:14:50 +0000
-Received: from DU2PEPF0001E9C5.eurprd03.prod.outlook.com
- (2603:10a6:10:130:cafe::31) by DB8P191CA0007.outlook.office365.com
- (2603:10a6:10:130::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36 via Frontend
- Transport; Fri, 9 Feb 2024 09:14:50 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=axis.com;
-Received-SPF: Fail (protection.outlook.com: domain of axis.com does not
- designate 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com;
-Received: from mail.axis.com (195.60.68.100) by
- DU2PEPF0001E9C5.mail.protection.outlook.com (10.167.8.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7249.19 via Frontend Transport; Fri, 9 Feb 2024 09:14:50 +0000
-Received: from se-mail01w.axis.com (10.20.40.7) by se-mail02w.axis.com
- (10.20.40.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 9 Feb
- 2024 10:14:49 +0100
-Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
- Transport; Fri, 9 Feb 2024 10:14:49 +0100
-Received: from pc37511-1950.se.axis.com (pc37511-1950.se.axis.com [10.94.62.3])
-	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 912D213420
-	for <bitbake-devel@lists.openembedded.org>; Fri,  9 Feb 2024 10:14:49 +0100 (CET)
-Received: by pc37511-1950.se.axis.com (Postfix, from userid 11324)
-	id 8B3E0B257EA; Fri,  9 Feb 2024 10:14:49 +0100 (CET)
-From: Tobias Hagelborn <tobiasha@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH v2] hashserv: Postgres adaptations for ignoring duplicate inserts
-Date: Fri, 9 Feb 2024 10:14:43 +0100
-Message-ID: <20240209091443.2737892-1-tobiasha@axis.com>
-X-Mailer: git-send-email 2.30.2
-MIME-Version: 1.0
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.44; Fri, 9 Feb
+ 2024 13:06:17 +0000
+Received: from DU0PR07MB8715.eurprd07.prod.outlook.com
+ ([fe80::25d3:745:fffa:83f1]) by DU0PR07MB8715.eurprd07.prod.outlook.com
+ ([fe80::25d3:745:fffa:83f1%5]) with mapi id 15.20.7270.024; Fri, 9 Feb 2024
+ 13:06:17 +0000
+From: "Lammi Toni (EXT)" <toni.lammi@kone.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] support temporary AWS credentials
+Thread-Topic: [PATCH] support temporary AWS credentials
+Thread-Index: AdpbK5sk4T698EbGQ4a2gNqDfSrSsQ==
+Date: Fri, 9 Feb 2024 13:06:17 +0000
+Message-ID: 
+ <DU0PR07MB8715C1A2BFF38213A93DD589EC4B2@DU0PR07MB8715.eurprd07.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kone.com;
+x-ms-traffictypediagnostic: DU0PR07MB8715:EE_|DUZPR07MB9997:EE_
+x-ms-office365-filtering-correlation-id: 7e0e68f2-0434-48df-41d6-08dc296fe6f0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ iKjYeJds0nUXRDepvE4rbeYA1le+S1BMNM5/m0Hxm9dMGgMjcXhZXDfuTnieK8SU3GgHwcfQhGi/+erMuBSGokwSkKMfTrgbyfadiR29r0X2G8E5YzPPy3sONA/PfFzcU1rErsu4hQdJnlO3rq2iOPNVe6W+ajeK1RXgMIwHmjQbQUKPobFyLRJkkbjzWzzJkK22I76fQQ46/5O24feg7J8k64J/gAdUpu79Qypjcb1vyzwOqiiS38K1WnsQQA+vqOP0GTCuxSuWTO1I6YPaxR4eNRGivjaChlvcG/1jBZ5/PoCrlqoj+RXnG4W5QRQKHvCUBDMcDDm6uSulxJQ4g+1cUYW9uGYOWKPgzg5CNzBWXIyM+AKRbZh5hqKGfeicY1nSpscClUjhClomFY27n5BBH9kPpyBE0d0S8bFrp/YmI6m7WvE5v1zQ1SmepySvvFTDWTX2y8j3moucgQakThVHYFKHyzHptrJ349iCU3lcMy2f2/Bd5gDmvDvB0BSp57L72v49jAfbg2mGDTLi6tonVZSewQ0f/2eKZo/+WfYq0ysXyQ8ByipsjsoafZlpmLN8qWH+xFZe67WqG5EbvWIrOpBO7xTUs/zmfGqWeXYjMmMGbUgqNFMUCiofsQb4
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR07MB8715.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(39860400002)(136003)(376002)(396003)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(64756008)(55016003)(66556008)(66446008)(66476007)(6916009)(66946007)(316002)(76116006)(41300700001)(71200400001)(2906002)(4744005)(5660300002)(8676002)(8936002)(9686003)(38070700009)(6506007)(7696005)(53546011)(86362001)(33656002)(478600001)(26005)(52536014)(38100700002)(122000001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?S/21e9T0O9yXB7bUJb4raL9V+TpzEcCsf5suDcFGlq2G/vPCAdY8XvBvNdAG?=
+ =?us-ascii?Q?68iy+TJ98037CQ1Wu7xgsxveiqkR4X6xNTKV7L5wF/7nGOl9kdAjkcsqOtzq?=
+ =?us-ascii?Q?RXB4K80UQRR/7PTlGkpFNqfFtx/k1Oi91y6krxTrlEx6rsFIdU8CQE7NyySV?=
+ =?us-ascii?Q?asFxQM5t2OMZVRcsP+GqhnsBK+eOTVpOYMxanuelvWaAL+DcDVOeSsqZmgc2?=
+ =?us-ascii?Q?EVFXVEpIjkbaeLKhnU5euNHFDCWwfKsFYj7N/yDfJPBxjkHe7Hmosk/i6mRH?=
+ =?us-ascii?Q?oL5hQO+BKGKqho7JVGHruA27+fnTMZ4ZrDHjxSRu/iOAf3K35/JBhc/Z3S5q?=
+ =?us-ascii?Q?GiQz549adJGf1ScMy29NhxOOPJ0QNMvPEQTNkUCywBXouhnMPICHVLk68osW?=
+ =?us-ascii?Q?L/scgVD2qGzUxyAr6q+6XNAhyauwglJFZW//srBKqErRr9aprEzEMM5/Bvrw?=
+ =?us-ascii?Q?E3zwEMIhQ3nfEOmIs2MsmdIwFQK4amQYr10ILqtc9XvH0yc+PK6PGbhxjlRQ?=
+ =?us-ascii?Q?GxEc++1+QMywJbPfSahOKQn6p/U+P67VZ/4mWr5+0CthGv8Dr8KFOOUbdO/4?=
+ =?us-ascii?Q?eg2kuNs7q38ECPM73yA1gdhN8Y+j1GEq1Tm+I6H3K7/sJWocVJbNCQyl7LKM?=
+ =?us-ascii?Q?El48p1d/XoQ+QNehMo9HsdNmzfTONvlUgei2H0vN/lO7Fd9qPScUconvk/1b?=
+ =?us-ascii?Q?8pGlQeSSI9Gmg4loU5/Xn/l6Q/rz/3SPZodSvtkhqkQU/zXxzCpilgmbY3MY?=
+ =?us-ascii?Q?IxXXJPFbPh0qgKuzg5azW8KlKew1iS4E83L1wORCfIMLCs6P8Rjb6EjFsHHs?=
+ =?us-ascii?Q?wmn6bk3GyW3ANJ9GXub0kngcei2GWSsz7F8oET+C13Xy6JKVz3P1n3FtGW+z?=
+ =?us-ascii?Q?GE89jCO/+7u1Jfdk9DC3MtXMj04gCgu15TwIpAaexMFq/hnefBH/Zyo4/uSE?=
+ =?us-ascii?Q?1AR72qmkLp0tNfwicGl2Ksm4MNnR5ZhhVVIq2cSH9CNiDACD5aJ/qvx4SFQi?=
+ =?us-ascii?Q?DEz0CJyKh6TW6PcCa01IqXIts2fEImTCx7qxsp5ABKsDRI8h2h8y4SrLxVZN?=
+ =?us-ascii?Q?NdVkoTcScFS02ndipm0Bau+yKOrIHFzbeg/dSmm003xVUnvmE0ZZ/cWP10WK?=
+ =?us-ascii?Q?8y6+eA8F7VZ8lo0HStRB0EXA3AhVHH5dgoLyGdoMWCc+jVED00dMS2cNfE2k?=
+ =?us-ascii?Q?0pFn5CNczEhUiLulkfLCV3/q2mptfRVf05Qmu41+LnX+Iy1TJet0m+zV7VLe?=
+ =?us-ascii?Q?l6ktXSvK1mnVx+mTZ1RzvsJZ7mXfpPWUgwzhjb+KrYj3xXLewXa6zhQRvaii?=
+ =?us-ascii?Q?vTVrTmPrVHVfIW/VSuTlwvIUu0S8jie28/T0tOM4j/xE+gVilkb5EgaXk/sD?=
+ =?us-ascii?Q?JIIWTSlm3utbgQt/y8VO4SJXjUUMLkoY46AXrLm/1Lc8xWYXdXcCYyZ8oR+M?=
+ =?us-ascii?Q?r/Phzv4IRKDBkgJRMfrCyWKlX9KAnZMS4gy+294DfetvtFERlRQHeeBioEdd?=
+ =?us-ascii?Q?P6wED3KUwbyOj8kKf5NWRRhp6J70KcGbEHm2+RYYApT+bLmia4d2NS74xRnR?=
+ =?us-ascii?Q?mYBcnGbThfYBMMZNm6feDRaPLB4vyQJTG3RhPYU2?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D33890B572032D4BBEEEDA6FADEA6C9A@eurprd07.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PEPF0001E9C5:EE_|AM7PR02MB6292:EE_
-X-MS-Office365-Filtering-Correlation-Id: 90713217-9f8c-4aa0-d73e-08dc294f91a0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	HRGY/lsTy+sFWFEDb2lNa0uklfbL0sHP4ocx2KvWHpOT1AWKYoIaEdgp2A5EqwL79eRMW1tHUj9nuA8GJAlNyjsGmwRxeOR9uHZlcMrLJP7Siz+WWqqqCC0ViQcpMyLLNkWv2hXMGjxjXv8RVRMRi8vymhuiuwselVRsp7/m++hnSVBnrOhG7/KQogXeCpMH4xkUnP4feYhRFOcq5Ln9SGjVSDO3iIxUMukCKKhuy4CttRvCKpM8KehpHz/nnpnH/l39HsA3wf4L2hk+aPEVyewO28GSGxxUdkkg18cAliQ3k1RzED6ehqjk4scyHRkHGCETBIZn+atpeGtG0gMlFA9mExr8BStPH4gINc8RBrdJRxrAv6Lj1iQZCPk5SjJCUzrF+0z0bpWarutNETicnlNuvwhXy437NbXQMYbAcjk+/mZPl4ra5SEf6UzIl6HKKLXer8/nG1+r+jU4Knw9kKvbBvIS6HCUCxnjFH7ch21nP5QJfFXV5tbVQIRRth+StzKNkLXC/4HLEH4wOThUsMgdxvdlB0o/Nm7ozKmxd4SE9wJuV5IoiHEndsxnl6GSpjooLz8oUcSyw65bytDHeo0Q3G791loz+ohjQtkNZZg=
-X-Forefront-Antispam-Report: 
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39850400004)(376002)(396003)(136003)(346002)(230922051799003)(451199024)(82310400011)(186009)(64100799003)(1800799012)(46966006)(40470700004)(36840700001)(2906002)(70206006)(70586007)(8676002)(8936002)(6916009)(5660300002)(36756003)(41300700001)(426003)(336012)(6266002)(1076003)(2616005)(26005)(82740400003)(81166007)(356005)(83380400001)(42186006)(478600001)(6666004)(316002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 09:14:50.1535
+MIME-Version: 1.0
+X-OriginatorOrg: kone.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR07MB8715.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e0e68f2-0434-48df-41d6-08dc296fe6f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Feb 2024 13:06:17.1936
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90713217-9f8c-4aa0-d73e-08dc294f91a0
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DU2PEPF0001E9C5.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR02MB6292
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2bb82c64-2eb1-43f7-8862-fdc1d2333b50
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qzOi1ebausny6FFlA537A5VeUvfaJlxpaYsK5AABvEvy8DRXjLkT/4I372KcJMPmdtAtkUv/YRVhp8dvjcGxTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR07MB9997
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 09 Feb 2024 09:14:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15848
+ <bitbake-devel@lists.openembedded.org>; Fri, 09 Feb 2024 13:06:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15849
 
-Hash Equivalence server performs unconditional insert also of duplicate
-hash entries. This causes excessive error log entries in Postgres.
-Rather ignore the duplicate inserts.
+From e3c222d1f6d1a234ca3a3a4ff353549d276c5320 Mon Sep 17 00:00:00 2001
+From: Toni Lammi <toni.lammi@kone.com>
+Date: Fri, 9 Feb 2024 08:40:29 +0200
+Subject: [PATCH] support temporary AWS credentials
 
-The alternate behavior should be isolated to the postgres
-engine type.
+Support AWS_SESSION_TOKEN which is used in temporary
+AWS credentials.
 
-Signed-off-by: Tobias Hagelborn <tobiasha@axis.com>
+Fixes [YOCTO #15384].
+
+Signed-off-by: Toni Lammi <toni.lammi@kone.com>
+Reported-by: Toni Lammi <toni.lammi@tl-software.fi>
 ---
+ bitbake/lib/bb/fetch2/__init__.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-Updated return codes based on rows updated according to review comments.
-
- lib/hashserv/sqlalchemy.py | 41 ++++++++++++++++++++++++++++----------
- 1 file changed, 31 insertions(+), 10 deletions(-)
-
-diff --git a/lib/hashserv/sqlalchemy.py b/lib/hashserv/sqlalchemy.py
-index cee04bff..b17a1762 100644
---- a/lib/hashserv/sqlalchemy.py
-+++ b/lib/hashserv/sqlalchemy.py
-@@ -32,6 +32,7 @@ from sqlalchemy import (
- import sqlalchemy.engine
- from sqlalchemy.orm import declarative_base
- from sqlalchemy.exc import IntegrityError
-+from sqlalchemy.dialects.postgresql import insert as postgres_insert
-=20
- Base =3D declarative_base()
-=20
-@@ -287,16 +288,28 @@ class Database(object):
-             return result.rowcount
-=20
-     async def insert_unihash(self, method, taskhash, unihash):
--        statement =3D insert(UnihashesV2).values(
--            method=3Dmethod,
--            taskhash=3Dtaskhash,
--            unihash=3Dunihash,
--        )
-+        # Postgres specific ignore on insert duplicate
-+        if self.engine.name =3D=3D 'postgresql':
-+            statement =3D postgres_insert(UnihashesV2).values(
-+                method=3Dmethod,
-+                taskhash=3Dtaskhash,
-+                unihash=3Dunihash,
-+            )
-+            statement =3D statement.on_conflict_do_nothing(
-+                index_elements=3D("method", "taskhash")
-+            )
-+        else:
-+            statement =3D insert(UnihashesV2).values(
-+                method=3Dmethod,
-+                taskhash=3Dtaskhash,
-+                unihash=3Dunihash,
-+            )
-+
-         self.logger.debug("%s", statement)
-         try:
-             async with self.db.begin():
--                await self.db.execute(statement)
--            return True
-+                result =3D await self.db.execute(statement)
-+                return result.rowcount !=3D 0
-         except IntegrityError:
-             self.logger.debug(
-                 "%s, %s, %s already in unihash database", method, taskhash=
-, unihash
-@@ -311,12 +324,20 @@ class Database(object):
-         if "created" in data and not isinstance(data["created"], datetime)=
-:
-             data["created"] =3D datetime.fromisoformat(data["created"])
-=20
--        statement =3D insert(OuthashesV2).values(**data)
-+        # Postgres specific ignore on insert duplicate
-+        if self.engine.name =3D=3D 'postgresql':
-+            statement =3D postgres_insert(OuthashesV2).values(**data)
-+            statement =3D statement.on_conflict_do_nothing(
-+                index_elements=3D("method", "taskhash", "outhash")
-+            )
-+        else:
-+            statement =3D insert(OuthashesV2).values(**data)
-+
-         self.logger.debug("%s", statement)
-         try:
-             async with self.db.begin():
--                await self.db.execute(statement)
--            return True
-+                result =3D await self.db.execute(statement)
-+                return result.rowcount !=3D 0
-         except IntegrityError:
-             self.logger.debug(
-                 "%s, %s already in outhash database", data["method"], data=
-["outhash"]
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__in=
+it__.py
+index 677968a6a9..ac0f4dfa1d 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -875,6 +875,7 @@ FETCH_EXPORT_VARS =3D ['HOME', 'PATH',
+                      'AWS_ROLE_ARN',
+                      'AWS_WEB_IDENTITY_TOKEN_FILE',
+                      'AWS_DEFAULT_REGION',
++                     'AWS_SESSION_TOKEN',
+                      'GIT_CACHE_PATH',
+                      'REMOTE_CONTAINERS_IPC',
+                      'SSL_CERT_DIR']
 --=20
-2.30.2
+2.43.0
 
 
