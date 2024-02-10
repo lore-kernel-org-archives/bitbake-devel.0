@@ -2,319 +2,100 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5A4C48260
-	for <webhook@archiver.kernel.org>; Sat, 10 Feb 2024 20:53:03 +0000 (UTC)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web10.23777.1707598381859691824
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91784C48260
+	for <webhook@archiver.kernel.org>; Sat, 10 Feb 2024 23:04:54 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web10.26810.1707606286506638980
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 10 Feb 2024 12:53:02 -0800
+ Sat, 10 Feb 2024 15:04:47 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=XuO6EL9m;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4108c9700a9so5250155e9.1
-        for <bitbake-devel@lists.openembedded.org>; Sat, 10 Feb 2024 12:53:01 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LqGuc3sA;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41093f79f05so4048745e9.3
+        for <bitbake-devel@lists.openembedded.org>; Sat, 10 Feb 2024 15:04:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1707598380; x=1708203180; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ErcBsvXh0tGith7TiVLDHx3BpuaIyYrIwpBH0baEffI=;
-        b=XuO6EL9mmbGv2zqYcc7JAP2aixWhOHJ5wTWq0miJgjWHVZ2JT/Zj80CLCfWDh+qYLK
-         qxuWjyXAKah9UGiqNhOYJ2QKE2SlknCSjsJTacCGd9V2b/ToPkySpgZP+TIW6Ffz2EW1
-         nASqz4AjE0Cp1rj7ZUbIlX15dXfM7EzeBeMC8=
+        d=linuxfoundation.org; s=google; t=1707606285; x=1708211085; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iC0dKmMMtABQ3gCVNSpJASFDkl1swI/FAbyEF7gGGdQ=;
+        b=LqGuc3sAHmXjE4EFiTtyD+RuOp74ZI/u7NxOYVW2S1gDT64nAjn66veX4sGm2Rj5hw
+         08BDMZQbOnwRILjPMvePRKDAuecmEwul+340PxxNDh9Rt4hMMY6v48XZUf34HPLfLjYv
+         nZupX9QPubHGk7tNrK5IRVVkhrw8YIaBXY4E0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707598380; x=1708203180;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ErcBsvXh0tGith7TiVLDHx3BpuaIyYrIwpBH0baEffI=;
-        b=pyZH8nQj36zXNEoOaQhJI4LD1EYyESnYyPXTXGYFbp9cznaevVy9+dF7tTnXKEaoxn
-         uPRi41VIvWYGWBq1/cVAfMpsigIc9J2jUdYmp0CZ3nkVQRQCFss2HVvviOCoNaDBqNli
-         b3cmoeDGbgG0cJcUmMDeMvQTNi7ysM/cvTDSY+y2Xh9zqUDrC+UzooIvpA42YTwQmgiU
-         hHxDTo0YVMuCJcgxbR6jlUdhiTybherCqDzbY7J4q9oUwhnpbx9scBnKNC6nOqf7SRtT
-         iDRdLQrVb7xuPG3P5UKTcRXAa4cDxL2pwbjYtjYJOJAFUz89YT5bV7cSzaQ0VXHUa+I6
-         aZ1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUEPrGGy1OvrjdOphSG/88BZbqHKIQ0/X+sngiTkIDjMum9KHy3P+VaBhv6yqziEwUVN+9MytqJN8wFPotQiAFCsZxxJGtZKW+FTNpznzHwQhXo6y0=
-X-Gm-Message-State: AOJu0Yz07N7rfhrk4Ds8fRI1u0s9ecO+3AlaZGync8EYnEqDR8QWy9LA
-	UXHHyzm886POdfmtjBLXQmzQmpRlRjOAGr4u0I1bCdN1DnywFIbp9WHJVbr0/ZE=
-X-Google-Smtp-Source: AGHT+IGcLVixU3mNlZyy/7zdOgOlxk2qa65xPPouDMr7smlJunvkB5BdGOnakIcHpeHWxn34qUgYOg==
-X-Received: by 2002:a05:600c:16c9:b0:40e:f154:752 with SMTP id l9-20020a05600c16c900b0040ef1540752mr2448180wmn.20.1707598379857;
-        Sat, 10 Feb 2024 12:52:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU/AOCemP1+Vtw9AJRz6WHQ0Sl3ST8DxRA67EmEwT0c8lBMjlNoTMGFh1vwGi1TDry1ylODEko0+lHV5rPzM9BYgjaYgMa2i2ufejMi+x03/truiCzgIhEwls0ki1LFqjUIJOXay8Aa9w3AjuJCVMgFHWO2mT5WrhgJdWSUvpHX2HQ8wPbNNoAXlQ==
-Received: from ?IPv6:2001:8b0:aba:5f3c:c350:b3c8:3bca:cef1? ([2001:8b0:aba:5f3c:c350:b3c8:3bca:cef1])
-        by smtp.gmail.com with ESMTPSA id jz15-20020a05600c580f00b004101f27737asm4156579wmb.29.2024.02.10.12.52.59
+        d=1e100.net; s=20230601; t=1707606285; x=1708211085;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iC0dKmMMtABQ3gCVNSpJASFDkl1swI/FAbyEF7gGGdQ=;
+        b=h8gUtr6tJtOmRX+L617u21DCj62xJorPpa7lRphmNYuSivZQKFNXJ90RXAko37gYFK
+         ySO4sbqjF2WH3mKhRX4BbDpLf7qtDnCl7exBsvLjXD68BwNphwzIHEUTQslKn/kiWHJ5
+         FvyO/63ArYDU+HmIpmQrlaOpWPVwqrBo7TsYGjbUxCqEACeXg2HIYmfJSgycfZ/OnIQx
+         EkP3LzY6LnMg+v515NgJpMXGPxAeSRx8Mn2OHYSOClyXblOprsf2ev7Nn566Bn6LlEM6
+         eok72R6DDa2Af/fvGJBYHWmWddGJmMmuXeluMLXoITMncJXuwu/5PYet0Fi2D6MvFwEZ
+         FWCw==
+X-Gm-Message-State: AOJu0Yyq4eOcS1u8u8KfDGX6wIYAQtwKATHcH6X4rG3dPqsmZ04m5X60
+	wRx1G/w1+TYH5XqP7FKubvzOK+qA4ZswaSCBdHnnCssUsb/6QLWvKIqjbpzW01Jbi0LqrndmN/u
+	F
+X-Google-Smtp-Source: AGHT+IEfeYBtcGU7CLqeX0fEijIt7of7i0sCDXKvzATn6YKzk+ZvQFFjSwVvO8KoVWtbZDXvCP+E5A==
+X-Received: by 2002:a05:600c:3d87:b0:410:9198:d18a with SMTP id bi7-20020a05600c3d8700b004109198d18amr2082368wmb.24.1707606284599;
+        Sat, 10 Feb 2024 15:04:44 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:c350:b3c8:3bca:cef1])
+        by smtp.gmail.com with ESMTPSA id n11-20020a05600c3b8b00b004105017f83fsm4486793wms.31.2024.02.10.15.04.44
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Feb 2024 12:52:59 -0800 (PST)
-Message-ID: <7bb8798da40488ad8f79f472775e2ee2c2a9c8e2.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] regression of 'world' performance?
+        Sat, 10 Feb 2024 15:04:44 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: Khem Raj <raj.khem@gmail.com>, bitbake-devel
- <bitbake-devel@lists.openembedded.org>, Randy MacLeod
- <rwmacleod@gmail.com>,  Mark Hatle <mark.hatle@kernel.crashing.org>
-Date: Sat, 10 Feb 2024 20:52:58 +0000
-In-Reply-To: <17B29B2072FF51A8.14481@lists.openembedded.org>
-References: 
-	<CANNYZj86b3GMtSVZMn8744HjMSMQVkzuXBTikLf4dFV0ULsvqg@mail.gmail.com>
-	 <0186f166a0ded0d97d5e19f64a3dd8e5ad44a92f.camel@linuxfoundation.org>
-	 <CANNYZj-cqQVJcs3AUvzE=Lw+mYMUWZO8JW1N-Ukz6BK3H2rchQ@mail.gmail.com>
-	 <CAMKF1soqnpKYkcGzkS1A2UGGiy7_Vbzym06rARRTqCnUc7gsCw@mail.gmail.com>
-	 <CANNYZj_r2S7b+3r4CEz8cGZSqT_wa785p1BtpZxb60CVvZJcAg@mail.gmail.com>
-	 <947006112712dcca07c607eb6b49b7e4e475c3d9.camel@linuxfoundation.org>
-	 <CANNYZj-V_bH-uVUBXmER30GxMLrfKN6g=pY-VSsgEfT6Fm7e_g@mail.gmail.com>
-	 <829c8fff2e6735297f036fdb878f4d244cf08f91.camel@linuxfoundation.org>
-	 <CANNYZj-3QDJMcqaVTSj+XRZo140O-hg5K9kM8e0mtF7yp=P9Tg@mail.gmail.com>
-	 <cf9339c32c0923068f0e4ae81fe1ebdb8153b20a.camel@linuxfoundation.org>
-	 <17B24084174823DE.15017@lists.openembedded.org>
-	 <CANNYZj-gbs6UmzcKaBt4DQ7G08EdJUNXZWWu3W8G=YJUub0gKg@mail.gmail.com>
-	 <17B255DB2CE33879.588@lists.openembedded.org>
-	 <17B257441406400D.588@lists.openembedded.org>
-	 <17B2894C95E031D0.14481@lists.openembedded.org>
-	 <17B29B2072FF51A8.14481@lists.openembedded.org>
-Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
- YNvg==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0-1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 2/2] runqueue: Optimise performance of setscene task execution
+Date: Sat, 10 Feb 2024 23:04:42 +0000
+Message-Id: <20240210230442.3633663-2-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240210230442.3633663-1-richard.purdie@linuxfoundation.org>
+References: <20240210230442.3633663-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 10 Feb 2024 20:53:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15875
+ <bitbake-devel@lists.openembedded.org>; Sat, 10 Feb 2024 23:04:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15877
 
-On Sat, 2024-02-10 at 20:42 +0000, Richard Purdie via
-lists.openembedded.org wrote:
-> On Sat, 2024-02-10 at 15:16 +0000, Richard Purdie via
-> lists.openembedded.org wrote:
-> > On Fri, 2024-02-09 at 23:59 +0000, Richard Purdie via
-> > lists.openembedded.org wrote:
-> > > On Fri, 2024-02-09 at 23:33 +0000, Richard Purdie via
-> > > lists.openembedded.org wrote:
-> > > > On Fri, 2024-02-09 at 21:44 +0100, Alexander Kanavin wrote:
-> > > > > On Fri, 9 Feb 2024 at 18:02, Alexander Kanavin via
-> > > > > lists.openembedded.org <alex.kanavin=3Dgmail.com@lists.openembedd=
-ed.org>
-> > > > > wrote:
-> > > > > > I worked around it by running 'bitbake world' without -P so it =
-could
-> > > > > > parse recipes successfully, then re-running with -P against pre=
--parsed
-> > > > > > data. So profiles are being collected now.
-> > > > >=20
-> > > > > Here it is: https://drive.google.com/file/d/1bM1MGJWU5uWRf6kE6AaE=
-NQLQKIbopnGW/view?usp=3Dsharing
-> > > > >=20
-> > > > > I pressed ctrl-c after some 20 minutes - I took a look into it th=
-en
-> > > > > but somehow couldn't find anything related to execute(). The two
-> > > > > collected profiles seemingly are just waiting on select().
-> > > >=20
-> > > > This didn't make much sense to me so I ended up going digging.
-> > > >=20
-> > > > The traceback you showed is reproducible if you trigger parsing whi=
-le
-> > > > using -P so a bug needs fixing there. You can avoid it with somethi=
-ng
-> > > > like:
-> > > >=20
-> > > > bitbake -p
-> > > > bitbake world -nP
-> > > >=20
-> > > > However what I've then realised is that when we added the second th=
-read
-> > > > to cooker, we only dump the performance data for one of the threads=
-,
-> > > > not the other.
-> > > >=20
-> > > > So I suspect we need to fix the profiling to dump the stats on the
-> > > > second thread, then we'll see what the real issue is.
-> > > >=20
-> > > > I can confirm that bitbake world -nP is running much slower than it
-> > > > should, even just for oe-core.
-> > >=20
-> > > I've sent a patch to add the profiling for the other thread. With tha=
-t
-> > > applied and a simple "bitbake bash -nP", profile-mainloop.log.process=
-ed
-> > > contains:
-> > >=20
-> > >    Ordered by: cumulative time
-> > >=20
-> > >    ncalls  tottime  percall  cumtime  percall filename:lineno(functio=
-n)
-> > >         1    0.240    0.240  104.476  104.476 /media/build/poky/bitba=
-ke/lib/bb/server/process.py:421(idle_thread_internal)
-> > >     12663   75.679    0.006   75.679    0.006 {built-in method select=
-.select}
-> > >     13842    0.036    0.000   26.361    0.002 /media/build/poky/bitba=
-ke/lib/bb/cooker.py:1474(buildTargetsIdle)
-> > >     13842    0.017    0.000   26.324    0.002 /media/build/poky/bitba=
-ke/lib/bb/runqueue.py:1624(execute_runqueue)
-> > >     13842    0.214    0.000   26.306    0.002 /media/build/poky/bitba=
-ke/lib/bb/runqueue.py:1523(_execute_runqueue)
-> > >     13842    0.274    0.000   23.590    0.002 /media/build/poky/bitba=
-ke/lib/bb/runqueue.py:2147(execute)
-> > >      1621    6.623    0.004   15.030    0.009 /media/build/poky/bitba=
-ke/lib/bb/runqueue.py:2418(build_taskdepdata)
-> > >   1338979    3.250    0.000    5.513    0.000 /media/build/poky/bitba=
-ke/lib/bb/runqueue.py:2407(filtermcdeps)
-> > >    211156    0.633    0.000    3.877    0.000 /media/build/poky/bitba=
-ke/lib/bb/runqueue.py:3217(read)
-> > >     25898    0.058    0.000    3.213    0.000 /media/build/poky/bitba=
-ke/lib/bb/runqueue.py:1419(read_workers)
-> > >     37063    0.252    0.000    2.876    0.000 /media/build/poky/bitba=
-ke/lib/bb/event.py:190(fire_ui_handlers)
-> > >      1686    0.029    0.000    2.870    0.002 /media/build/poky/bitba=
-ke/lib/bb/runqueue.py:1328(send_pickled_data)
-> > >   1411556    1.677    0.000    2.704    0.000 /media/build/poky/bitba=
-ke/lib/bb/runqueue.py:56(split_tid_mcfn)
-> > > 8982/8940    0.016    0.000    1.936    0.000 /media/build/poky/bitba=
-ke/lib/bb/event.py:217(fire)
-> > >   2284982    1.234    0.000    1.924    0.000 /media/build/poky/bitba=
-ke/lib/bb/runqueue.py:41(mc_from_tid)
-> > >       979    0.002    0.000    1.906    0.002 /media/build/poky/bitba=
-ke/lib/bb/command.py:110(runAsyncCommand)
-> > >      1686    1.852    0.001    1.852    0.001 {method 'write' of '_io=
-.BufferedWriter' objects}
-> > >=20
-> > >=20
-> > > which even without a world build, says some interesting things about
-> > > the 1.3 million calls to filtermcdeps and the time spend in
-> > > build_taskdepdata.
-> >=20
-> > I was curious about the time spent in build_taskdepdata() since we can
-> > fix that. I'll send a patch out shortly but with it applied, the above
-> > becomes:
-> >=20
-> >    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
-> >         1    0.268    0.268   93.061   93.061 /media/build/poky/bitbake=
-/lib/bb/server/process.py:426(idle_thread_internal)
-> >     16033   78.812    0.005   78.812    0.005 {built-in method select.s=
-elect}
-> >     16876    0.038    0.000   11.875    0.001 /media/build/poky/bitbake=
-/lib/bb/cooker.py:1474(buildTargetsIdle)
-> >     16876    0.019    0.000   11.835    0.001 /media/build/poky/bitbake=
-/lib/bb/runqueue.py:1624(execute_runqueue)
-> >     16876    0.084    0.000   11.816    0.001 /media/build/poky/bitbake=
-/lib/bb/runqueue.py:1523(_execute_runqueue)
-> >     16876    0.274    0.000    9.231    0.001 /media/build/poky/bitbake=
-/lib/bb/runqueue.py:2149(execute)
-> >    201858    0.615    0.000    3.589    0.000 /media/build/poky/bitbake=
-/lib/bb/runqueue.py:3227(read)
-> >     32302    0.062    0.000    2.924    0.000 /media/build/poky/bitbake=
-/lib/bb/runqueue.py:1419(read_workers)
-> >     37041    0.217    0.000    2.616    0.000 /media/build/poky/bitbake=
-/lib/bb/event.py:190(fire_ui_handlers)
-> >      1686    0.021    0.000    2.606    0.002 /media/build/poky/bitbake=
-/lib/bb/runqueue.py:1328(send_pickled_data)
-> >      1686    1.837    0.001    1.837    0.001 {method 'write' of '_io.B=
-ufferedWriter' objects}
-> >       979    0.002    0.000    1.827    0.002 /media/build/poky/bitbake=
-/lib/bb/command.py:110(runAsyncCommand)
-> > 8960/8929    0.015    0.000    1.798    0.000 /media/build/poky/bitbake=
-/lib/bb/event.py:217(fire)
-> >      1621    1.355    0.001    1.491    0.001 /media/build/poky/bitbake=
-/lib/bb/runqueue.py:2436(build_taskdepdata)
-> >     17943    0.144    0.000    1.451    0.000 /media/build/poky/bitbake=
-/lib/bb/cooker.py:113(send)
-> >     28081    0.022    0.000    1.354    0.000 /media/build/poky/bitbake=
-/lib/bb/event.py:237(fire_from_worker)
-> > [...]
-> >      3657    0.078    0.000    0.085    0.000 /media/build/poky/bitbake=
-/lib/bb/runqueue.py:2409(filtermcdeps)
-> >=20
-> > i.e. 1.3 million function calls to filtermcdeps becomes 3657, so
-> > probably a valid speedup.
-> >=20
-> > There is probably something different Alex is running into in his build
-> > so I'll wait for the data for that case.
-> >=20
-> > I'd note that whilst the performance logging patch does work, it can
-> > mean the cooker is slow to shut down so if the mainloop file isn't
-> > there, wait for the cooker to exit.
->=20
-> I did try a world build under dryrun and the profile for that is
-> interesting:
->=20
->    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
->         1    1.965    1.965 2141.353 2141.353 /media/build/poky/bitbake/l=
-ib/bb/server/process.py:421(idle_thread_internal)
->     79527    0.362    0.000 2029.951    0.026 /media/build/poky/bitbake/l=
-ib/bb/cooker.py:1474(buildTargetsIdle)
->     79527    0.202    0.000 2029.579    0.026 /media/build/poky/bitbake/l=
-ib/bb/runqueue.py:1624(execute_runqueue)
->     79527    1.243    0.000 2029.377    0.026 /media/build/poky/bitbake/l=
-ib/bb/runqueue.py:1523(_execute_runqueue)
->     79527  820.305    0.010 2007.390    0.025 /media/build/poky/bitbake/l=
-ib/bb/runqueue.py:2149(execute)
->     64340    6.256    0.000  702.802    0.011 /media/build/poky/bitbake/l=
-ib/bb/runqueue.py:286(next)
->     34291  386.267    0.011  696.392    0.020 /media/build/poky/bitbake/l=
-ib/bb/runqueue.py:225(next_buildable_task)
->     32188  174.899    0.005  185.634    0.006 /media/build/poky/bitbake/l=
-ib/bb/runqueue.py:2436(build_taskdepdata)
-> 147477450   90.392    0.000  156.644    0.000 /media/build/poky/bitbake/l=
-ib/bb/runqueue.py:38(taskname_from_tid)
->     32279    1.105    0.000  142.652    0.004 /media/build/poky/bitbake/l=
-ib/bb/runqueue.py:1328(send_pickled_data)
->     37605  100.098    0.003  100.098    0.003 {built-in method select.sel=
-ect}
->     32279   92.282    0.003   92.282    0.003 {method 'write' of '_io.Buf=
-feredWriter' objects}
->    703235    6.748    0.000   83.246    0.000 /media/build/poky/bitbake/l=
-ib/bb/event.py:190(fire_ui_handlers)
->     34309   77.040    0.002   77.040    0.002 {method 'difference' of 'se=
-t' objects}
->    117124    0.501    0.000   76.536    0.001 /media/build/poky/bitbake/l=
-ib/bb/runqueue.py:1419(read_workers)
->    197389    7.075    0.000   76.379    0.000 /media/build/poky/bitbake/l=
-ib/bb/runqueue.py:3228(read)
-> 149286630   66.616    0.000   66.616    0.000 {method 'rsplit' of 'str' o=
-bjects}
->    341878   52.515    0.000   52.515    0.000 {built-in method _pickle.du=
-mps}
-> 111790/109676    0.394    0.000   51.501    0.000 /media/build/poky/bitba=
-ke/lib/bb/event.py:217(fire)
->     68594   46.275    0.001   46.275    0.001 {method 'difference_update'=
- of 'set' objects}
->    591445    0.700    0.000   43.421    0.000 /media/build/poky/bitbake/l=
-ib/bb/event.py:237(fire_from_worker)
->    309599    3.991    0.000   42.746    0.000 /media/build/poky/bitbake/l=
-ib/bb/cooker.py:113(send)
->     34308   25.668    0.001   25.668    0.001 {method 'intersection_updat=
-e' of 'set' objects}
-> 16970/15322   23.129    0.001   23.278    0.002 /media/build/poky/bitbake=
-/lib/bb/runqueue.py:2683(scenequeue_updatecounters)
-> 16739/15091    0.023    0.000   23.236    0.002 /media/build/poky/bitbake=
-/lib/bb/runqueue.py:2748(sq_task_failoutright)
->     71163    0.436    0.000   20.433    0.000 /media/build/poky/bitbake/l=
-ib/bb/server/process.py:880(send)
->     71163    0.534    0.000   17.511    0.000 /media/build/poky/bitbake/l=
-ib/bb/server/process.py:874(_send)
->     71163    0.422    0.000   16.073    0.000 /usr/lib/python3.11/multipr=
-ocessing/connection.py:182(send_bytes)
->=20
-> in particular the 147 million calls to taskname_from_tid(). Definitely
-> something to be done in there.
+"time bitbake world -n" shows a lot of time being spent trying to execute the
+setscene tasks when many of them are being skipped due to not being present.
 
-Looking at the code, people have altered next_buildable_task() to add
-per task thread limits and pressure regulation and they don't realise
-how often that function can be called or how fast it really needs to
-be. Note that the profile above doesn't include pressure regulation but
-if it did, it would be much worse.
+The challenge is the "return True" back into the mainloop restarts the search
+back at the start of the task list particularly when there are large numbers of
+deferred tasks due to hard dependencies.
 
-It can be reworked but it isn't trivial.
+In this case we can use continue to continue within the list at the expense of
+not returning so quickly to loop back through the main loop. This does significantly
+improve performance in real world usage scenarios and we can probably afford the
+potential loop starvation.
 
-Cheers,
+Thanks for the suggestion from Alexander Kanavin.
 
-Richard
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/runqueue.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 95cab5132f..85669b80ee 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2204,7 +2204,9 @@ class RunQueueExecute:
+                     if nexttask in self.sqdata.outrightfail:
+                         logger.debug2('No package found, so skipping setscene task %s', nexttask)
+                         self.sq_task_failoutright(nexttask)
+-                        return True
++                        # Technically we should return True here but that would then start the task list back at the start
++                        # which is really bad for performance ("time bitbake world -n"). Instead, keep our place in the tasklist.
++                        continue
+                     if nexttask in self.sqdata.unskippable:
+                         logger.debug2("Setscene task %s is unskippable" % nexttask)
+                     task = nexttask
+-- 
+2.40.1
 
 
