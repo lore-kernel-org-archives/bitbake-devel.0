@@ -2,59 +2,58 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B55C48260
-	for <webhook@archiver.kernel.org>; Tue, 13 Feb 2024 12:31:54 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web11.10537.1707827511930056754
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7578C48260
+	for <webhook@archiver.kernel.org>; Tue, 13 Feb 2024 12:41:44 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.10433.1707828101106435116
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 13 Feb 2024 04:31:52 -0800
+ Tue, 13 Feb 2024 04:41:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JWdamuWN;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33b1d7f736bso601414f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 13 Feb 2024 04:31:51 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cMZPHACV;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-411c93e1cd8so2165315e9.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 13 Feb 2024 04:41:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1707827510; x=1708432310; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1707828099; x=1708432899; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=D+oo5lgpewic2PUvCT0WNUyi4z1ufQGkbq6cllCGNX8=;
-        b=JWdamuWNodIfAoqdgA8ASxA3LuboTfztJDJab6CYp+a6kMsp4WLHhEmFpsmQnwKIAc
-         7j5PiR0O+WQughYdx+EHha176z+F4ZeZ3ljGNBHN7dO2Pg5CAQD8a+X9E2x5LEs6WLvH
-         NJdwUi7Q9gsaA6c6J1r/5rRvglPrXaD3vminE=
+        bh=ogLVTBF0Jnf6eosYjz4lSY5s1jxSOHoUDRdQif5FhfA=;
+        b=cMZPHACVGu62wj+7eS66zJUS8AAGP0hHdvbvlz+rPPZ3kRQqmb3EupqraZwplAEKD0
+         JDjCcBrpYPwYaA/djdZ8U+BOtuLpSbvIjqmMp3OpV5MzlYQoBgGGnYfT5rGAGIfGY4nt
+         diuMbqgdtr+Ev84Q2Eurk3AoV8MFbRs+UlDZM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707827510; x=1708432310;
+        d=1e100.net; s=20230601; t=1707828099; x=1708432899;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D+oo5lgpewic2PUvCT0WNUyi4z1ufQGkbq6cllCGNX8=;
-        b=g+Ps0ytkfEvZz39j74IUsOA4EO4TW23FT9y2P3QcaoXG0osHdgFXdbaVUQB+tydLXD
-         z+Rp8R0fFKNCaa1RrZClXgOr3132+xqUCjSwcR8nwbDeexPVRAKbzlsI+N690Crmu3JC
-         4jzsI5Np/Nv0l4GH5D9v0ugWtCWkg0ku0jERSMAtur9RWFaGdjjfkDAl0+1EO0n8flJs
-         wKlumOTxRH6DX8cwrYw1w4WrqpMaVBe9xpBCkeBhOd2WmSJ9HAH0d6+z0UiNbXFWsE/p
-         Tvkk4WZ5sCPc1IsfA2OdA8ix2c3DhRfr0IySjqOzaYrR/hVykiKpoHBKIOhO/fxW9j0S
-         E3vw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTsuPilH37pUZl3dSGyBq2SVsHakuGuWDlOBnpluzXRiGCNkxDdHIXGbhwUMTqyu2JJCUB+NUWmU2oNnwCcp606Ojsrqvw+Ilh5JSYawaBRgtuRyc=
-X-Gm-Message-State: AOJu0YzGw7t/94thoVWWTnt95RC4JrNbIa8P4bO6xROob16Z3mNv4RZ8
-	PwgKtGH038q+ClwzNQOOu9U3T+fdclPjmuOR2R18FLOIAv7nbk1LEDymQsosP8c=
-X-Google-Smtp-Source: AGHT+IEw1FD6m0pcLSkLV4r2C90F2PGp22Ya/EK/USWG5t7yXDGagrXyvHqYkSyCXJrQBMWRt0Kj2w==
-X-Received: by 2002:a5d:4384:0:b0:33b:65a7:6b87 with SMTP id i4-20020a5d4384000000b0033b65a76b87mr6740613wrq.49.1707827510370;
-        Tue, 13 Feb 2024 04:31:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV5fWYpllLIYstI2p6boKuusdHPMb5VzuSPMfxxfCbNij4wdqNMidIXypi3NlfqRxXyk4kFW8EjEfgJTAZVRIxVndrM0/IeuoQPe8DYCj6fiGGd47O3X6K58mnD1ZLaZL1gs76N0kvFF1rPBpwdm+dKPJOUNZBAec3SH0tqDV8A6rVoOqhyjj2bfe9AuJR6Y/6oX5hP2eBhF8Ed6JBP5/XnuA==
+        bh=ogLVTBF0Jnf6eosYjz4lSY5s1jxSOHoUDRdQif5FhfA=;
+        b=OnOetYJav6AzIhUXgnqwwPV7Y0sNkd/c6Rs80nKM7CFOds2/bqU8oEjIZ3a5duAKPl
+         B6RExUsBnE2MAYPGrXHWpBkDDEWJOWGNN18p5ZWUJ2O1P66A+8w4/XwEIHP0lDAUjk2p
+         5YfhIOIKak1d6Bxew2+zqFJ9GvcgFw8Rq7Ou782ZhjQ0lhq9IF78OTgqkkXoCek7XAxW
+         FmCgj5+n737T17OQIXAW4ruwsUO+u5RxVt8DXD2dI/O2diOUCly9sKkN7dTB0TFKMmLZ
+         O7mdQkdnVgODUib8pye5J1NrcMYF1jVlitPZ++N3T/GByIxTugybh2LSmoM5+vMMAT2Q
+         vxYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVSQZcDAf9pexDNCa5LAMsMmTINIsqyPE5oUO3d5XDeQJNhcT5sWFtPco8mEsjKzRzxYIcz/AOLQ0SltpNZGQqfa9rtfXV98CnmYyeHhXhVSOcue5Y=
+X-Gm-Message-State: AOJu0YxulzVIEAsE5znOqRpIQ8gpfMKwgjBSdzCCW9k7oshPYa++PX0h
+	I63aYnHoSH0DiwGBdg4h/AhPQigJySgd7Q1NRbK1svkxQJj8HEQ7aFlFQoNDlLc=
+X-Google-Smtp-Source: AGHT+IGd7hGYoEAr0KBjrynBaNf5GTt6cysVjnbjZZppkauMgkQ86idw9g24at26SHXwZBJR48k3Jw==
+X-Received: by 2002:a05:600c:4fc3:b0:410:d877:2478 with SMTP id o3-20020a05600c4fc300b00410d8772478mr2137692wmq.11.1707828099596;
+        Tue, 13 Feb 2024 04:41:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVBMQbKiKWYcIF/1hACpDiL7FBKUfxd1bzC0fLDaIgT7jLX7wvPLGJYPAZz6ElSrcVUfa5SGaNRlrVr6gW7pP+3XxKFnZ/XjZgvaZVM/ZgBBX1/NanpxUAxdWvPS01fsWDTX5vjnr6r966C7Wh/mwV50Zmx0LoM6osYMH49u6hAXVyX/RZHVjEoDA==
 Received: from ?IPv6:2001:8b0:aba:5f3c:61a5:11c7:4181:c4a3? ([2001:8b0:aba:5f3c:61a5:11c7:4181:c4a3])
-        by smtp.gmail.com with ESMTPSA id cf2-20020a5d5c82000000b0033b7263702csm8896880wrb.29.2024.02.13.04.31.49
+        by smtp.gmail.com with ESMTPSA id 4-20020a05600c028400b00411a0477755sm3496208wmk.9.2024.02.13.04.41.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 04:31:49 -0800 (PST)
-Message-ID: <fae38d5027c2e752e6dae639d3230989cbd48aff.camel@linuxfoundation.org>
+        Tue, 13 Feb 2024 04:41:39 -0800 (PST)
+Message-ID: <6f3ad1da428dc3023c30daa521ae97b89c21abd9.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] regression of 'world' performance?
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Ross Burton <Ross.Burton@arm.com>, Alexander Kanavin
-	 <alex.kanavin@gmail.com>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
 Cc: Khem Raj <raj.khem@gmail.com>, bitbake-devel
  <bitbake-devel@lists.openembedded.org>, Randy MacLeod
  <rwmacleod@gmail.com>,  Mark Hatle <mark.hatle@kernel.crashing.org>
-Date: Tue, 13 Feb 2024 12:31:49 +0000
-In-Reply-To: <2EFB6610-C5FF-4CA0-9309-596601D44393@arm.com>
+Date: Tue, 13 Feb 2024 12:41:38 +0000
+In-Reply-To: <CANNYZj8qZ4-nyGu53HsV8sJLCfBxmBuDeCD1cq7raSsby-_1=w@mail.gmail.com>
 References: 
 	<CANNYZj86b3GMtSVZMn8744HjMSMQVkzuXBTikLf4dFV0ULsvqg@mail.gmail.com>
 	 <0186f166a0ded0d97d5e19f64a3dd8e5ad44a92f.camel@linuxfoundation.org>
@@ -74,7 +73,8 @@ References:
 	 <17B29B2072FF51A8.14481@lists.openembedded.org>
 	 <7bb8798da40488ad8f79f472775e2ee2c2a9c8e2.camel@linuxfoundation.org>
 	 <CANNYZj_gJnswnprhj-bM9fhaJwv4phi-Mi6WJbX90wAw3shZEA@mail.gmail.com>
-	 <2EFB6610-C5FF-4CA0-9309-596601D44393@arm.com>
+	 <b30b09d3a164e2425c8d0d43df495ea8bcb08679.camel@linuxfoundation.org>
+	 <CANNYZj8qZ4-nyGu53HsV8sJLCfBxmBuDeCD1cq7raSsby-_1=w@mail.gmail.com>
 Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
@@ -90,30 +90,79 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 13 Feb 2024 12:31:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15886
+ <bitbake-devel@lists.openembedded.org>; Tue, 13 Feb 2024 12:41:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15887
 
-On Tue, 2024-02-13 at 10:49 +0000, Ross Burton wrote:
-> What might be useful here is finding a host distro with Python=C2=A0
-> 3.12 (or using our buildtools), as Python 3.12 has perf integration:
+On Tue, 2024-02-13 at 10:42 +0100, Alexander Kanavin wrote:
+> On Tue, 13 Feb 2024 at 09:57, Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
 >=20
-> https://docs.python.org/3/howto/perf_profiling.html
+> > The patches fix low hanging issues but I suspect there is more we
+> > could/should do in this code.
 >=20
-> Perf=E2=80=99s direct profiling might be more accessible and accurate tha=
-n=C2=A0
-> the profiling built into bitbake.
+> Thanks, I confirm that after replacing the previous 'return True ->
+> continue' patch with the latest one, the profile is similar to that
+> patch:
 >=20
+> Tue Feb 13 10:29:59 2024    profile-mainloop.log
+>=20
+>          171090640 function calls (170677396 primitive calls) in
+> 1000.777 seconds
+>=20
+>    Ordered by: internal time
+>=20
+>    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+>     35784  301.390    0.008  509.820    0.014
+> /srv/work/alex/poky/bitbake/lib/bb/runqueue.py:225(next_buildable_task)
+>     34092  164.164    0.005  171.500    0.005
+> /srv/work/alex/poky/bitbake/lib/bb/runqueue.py:2438(build_taskdepdata)
+>     35787  120.062    0.003  120.062    0.003 {method 'difference' of
+> 'set' objects}
+>     71572   55.117    0.001   55.117    0.001 {method
+> 'difference_update' of 'set' objects}
+> 17639/15964   49.593    0.003   49.869    0.003
+> /srv/work/alex/poky/bitbake/lib/bb/runqueue.py:2686(scenequeue_updatecoun=
+ters)
+>     34096   44.287    0.001   44.287    0.001 {method 'write' of
+> '_io.BufferedWriter' objects}
+>    298936   43.070    0.000   43.070    0.000 {built-in method _pickle.du=
+mps}
+>     52656   39.374    0.001  936.397    0.018
+> /srv/work/alex/poky/bitbake/lib/bb/runqueue.py:2150(execute)
+>     35787   21.456    0.001   21.456    0.001 {method
+> 'intersection_update' of 'set' objects}
+>     35783   10.646    0.000   10.646    0.000 {method 'index' of 'list' o=
+bjects}
+>    314739    7.954    0.000    8.176    0.000 {built-in method io.open}
+>  90090452    7.660    0.000    7.660    0.000 {method 'append' of
+> 'list' objects}
+>=20
+>=20
+> There's only appending to list which is still done tens of millions of
+> times, not sure if that's a concern. The bulk of it is in
+> build_taskdepdata().
 
-The profiling "built into bitbake" is using python's own internal
-performance code using cprofile and pstats so those are deterministic
-profiles with exact call counts.
+We can work out how it compares to what we'd expect. If you generate
+task-depends.dot and count the number of dependencies between tasks,
+I'd expect the number of appends in build_taskdepdata to be be
+approximately:
 
-perf is statistical profiler so it will show information differently as
-averages.
+No. Tasks * No. Dependencies * 0.5
 
-Both have a time and a place and it could be interesting, just flagging
-the difference (and that we're using python's own profiling tooling for
-this).
+The half is assuming that the number of dependencies a task as scales
+linearly which it doesn't but should give a rough number. It certainly
+shouldn't be more than tasks * dependencies as an upper bound.
+
+> I first noticed the issue when working on python 3.12 upgrade by the
+> way: this version has a higher amount of breaking changes that has
+> been typical (this was noticeable already in plain oe-core builds), so
+> as a courtesy to those taking care of meta-oe I've decided to fix
+> everything there as well. Which meant adding all meta-oe layers, and
+> running bitbake -k world with that.
+
+Thanks for doing that, it is appreciated. I think it is also good to
+flag the poor performance as there is something we can do about this
+case.
 
 Cheers,
 
