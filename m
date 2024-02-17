@@ -1,242 +1,228 @@
-Return-Path: <Qi.Chen@windriver.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C71C48BC3
-	for <webhook@archiver.kernel.org>; Sun, 18 Feb 2024 02:30:19 +0000 (UTC)
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.web11.11555.1708223412044475625
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A39EC4829E
+	for <webhook@archiver.kernel.org>; Sun, 18 Feb 2024 07:27:21 +0000 (UTC)
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+ by mx.groups.io with SMTP id smtpd.web11.8549.1708211774674030990
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 17 Feb 2024 18:30:12 -0800
+ Sat, 17 Feb 2024 15:16:15 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=pxz/+Kfs;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=2778647e52=qi.chen@windriver.com)
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41I2S2Qd007565
-	for <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 02:30:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=message-id:date:subject:to:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=
-	PPS06212021; bh=SriTAdKpDcIinXIRc7lZSIxq/SKbKVKF29BBR0S8eqo=; b=
-	pxz/+KfshklXuRnn2eQYtX0u+V/gMsmf7UPEz1ens5+rJ9hunjn+TtVG3Y+pjJhD
-	PtaAjedSIot/TxOvoxUlgCmlB+IX8qAaLXeis0kvryariUoqWj2YPDwVt+3Roj6U
-	B+gYAz89Mb9BjFRK99ZgfWxYeAuRljRL7RVxoywbORnMYN9hRRQqOXCX3PNr57AN
-	cpncDDPDom9x45LxkqSqb81+Uzthv3CyzMwrOV9e2Cio96ZAgMwprYCwWvG+btxa
-	ASU1xZ/CmvjV5XOwXnUnTw6f9KUMFQPqCV4HWkN/25NDyvb4dmS0ZnBaTveEn+O+
-	0vce0j7JCoamginvhHUpwQ==
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3waks68mtq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 02:30:10 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wd9wwu1FcUI2Ce61v2rRYh2AjUqfsNtsxnXCm5jlIbuRjlthKNHE4yeBKaAiFaIA4IT+sZY6tem8zmSEOYTZTqLfpEr8oDpwnc2rfQAof1FB7jeucI7kLObWybm88XMbHDr9GYUDn9LXAPiUFBgh05jERHrzabTaaclYP27RxVSsMTbG919CUMyBLmClOjSd/XxLq7qyzBg7yCyujKE/BTHeJSUf6RXIMl9OCYcfDTnbTi3xhTtHYRF3xm8dE5D/z1B9aLmQ3/c7CyG+Qin/8qPH4Adp5sxfY1mokpHj62dC2p0P2lLWhGvbZ5/UblaJZqoINwBydl+USvH4Y/frJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SriTAdKpDcIinXIRc7lZSIxq/SKbKVKF29BBR0S8eqo=;
- b=ay6i6c8iGegDa9P8fg9i/ZYmclZkfM/uJbqX/QYecqICO6JYMJEt5FH3mNug7G9+HSkFrJiDBqdvSiIrlUXG/Yk/EP9UgpC2jHnl3XFB4yPG8WGc+w6fSjQuzT+EUITzUBNi774RhxLjnV5gctKFgxDfbaFeEAu9D1BO4rvUf90zwrfBdjgUmdzPzLcQr//5LaX1EKufY8BahbX1pGYOimJk6leOup26ZU6tMB9NCGdZ6DFA9DJtKek+A5ELEf/EulbTiK2DlWQ+7WLpjofvucpWPpq9wlfSG4OI1YGuINVmf/64dLZt/sI1kTaMJApXQZfjLRkRPsG4k8LssiRqMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
- by PH8PR11MB7047.namprd11.prod.outlook.com (2603:10b6:510:215::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.32; Sun, 18 Feb
- 2024 02:30:05 +0000
-Received: from CO6PR11MB5602.namprd11.prod.outlook.com
- ([fe80::5d84:2b01:5029:9315]) by CO6PR11MB5602.namprd11.prod.outlook.com
- ([fe80::5d84:2b01:5029:9315%7]) with mapi id 15.20.7292.029; Sun, 18 Feb 2024
- 02:30:05 +0000
-Message-ID: <163e8e4c-60a1-912b-072a-89fadfe1e519@windriver.com>
-Date: Sun, 18 Feb 2024 10:30:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [bitbake-devel][PATCH 1/3] fetch2/git.py: fix a corner case in
- try_premirror
-To: bitbake-devel@lists.openembedded.org
-References: <20240201033100.3617421-1-Qi.Chen@windriver.com>
-Content-Language: en-US
-From: ChenQi <Qi.Chen@windriver.com>
-In-Reply-To: <20240201033100.3617421-1-Qi.Chen@windriver.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TY2PR02CA0023.apcprd02.prod.outlook.com
- (2603:1096:404:56::35) To CO6PR11MB5602.namprd11.prod.outlook.com
- (2603:10b6:303:13a::5)
+ dkim=pass header.i=@posteo.net header.s=2017 header.b=qNDmKSsx;
+ spf=pass (domain: posteo.net, ip: 185.67.36.66, mailfrom: simone.weiss@posteo.net)
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id C453A240103
+	for <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 00:16:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1708211772; bh=XY89p/M7cKBLdvrC/CePGU3aLJHizHAndFcsyOmjxVE=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:From;
+	b=qNDmKSsxhPS5AcIFmNWuZUvmxDLpoQ+PJyl9+MN3IyLj4dI9gTYLRJJhoIdj7ncbH
+	 IKORNRQt217H0avcP7cSK0Cd3ZIeMLgmUp12tt6f5Vavxwj3IzKN3nAUB+mB9/yS9+
+	 ELjhQYji9djIRdzMBVtejXVcZswYiB+1UDgERyBnJnXCFLyypcfWm8NLPilPuNPj99
+	 Coo8puiACJjm5YDrOo/A35xhsBZsanYWtknD6Hj5GXDQ52r4XNJewEp6/bzPVPSVJy
+	 /GEIJBgZk9SnXaLC1lCCJc0mlRcbBEXjnnXU/FGsB8ZLU1TqQfq5wtoOL+g0VtsbAk
+	 uhvXY7fyRWqKg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Tcl6M1WjYz9rxB;
+	Sun, 18 Feb 2024 00:16:11 +0100 (CET)
+Message-ID: <446975960dee95ef716c493650099c56e77582b3.camel@posteo.net>
+Subject: Re: [docs] [PATCH v2] bitbake: doc: Add section for variable context
+From: =?UTF-8?B?U2ltb25lIFdlacOf?= <simone.weiss@posteo.net>
+To: Simone =?ISO-8859-1?Q?Wei=DF?= <simone.p.weiss@posteo.com>, 
+	bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org
+Date: Sat, 17 Feb 2024 23:16:10 +0000
+In-Reply-To: <17B4A1C770848659.28679@lists.yoctoproject.org>
+References: <17B4A1C770848659.28679@lists.yoctoproject.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|PH8PR11MB7047:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8763b52e-b536-4128-418b-08dc3029846d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	qMoukTlxFh4DH2t4ep/weZ6C0T4GogqI+Ihv/GCVIGTkJc7I3PP+PCva0bGoqzoJ9wauPjuxmwNRTDw39BW7mpKpg25p/DvYO8bg2gbwDdB1D/dN3xEwUXPeBUQikgMl2CqC9DSJECk2hQXxqCJllaiZBTxu1TRBhLrYgi2DpVpcX/Lhdn6MwpNnw+y6m2cqQKpKp6Zx+VNJfKBq7Iw1b265R3rafeerL/Xb+hOz/rUGIThvv7IuyUUBw83t7hfPLBZIMfe+m48TRA/C4/7uY0CDpf1Isw3TA5Bhuy+SUyyJXOqVEbuWoZzG9U7YE+jh3f/Yq9j3Ha09KSVSZPjVOGWfJSBmjMn31cLyTrX+ObKOIbWziKbbN2of41Jj4C9ACrd835yJfoDc8Bt5jL9TZYc4wdO1OZvsox83UN8AwSWYA8k9sEMjKvLevgBiWxAUaYffzXP+BrzoSbgx38++gxL9B5nGpE9066R/ZeLtr8UNEsnfsR9OOMjL9gdHqoR1pE+Eizy4wfthS+gYB4z++PKmWD6LJ7k04F923o2sOlQ=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(376002)(39840400004)(136003)(366004)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(6512007)(6666004)(6506007)(316002)(6486002)(966005)(478600001)(53546011)(66556008)(66476007)(6916009)(2906002)(8676002)(66899024)(66946007)(8936002)(41300700001)(5660300002)(31696002)(86362001)(38100700002)(36756003)(2616005)(26005)(83380400001)(31686004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?Q1E3cjNkc0ZQV3ZlVnp2MXZCcTJTUDkydzVMOVhXak9xcUVmTnlHcFlLaWRp?=
- =?utf-8?B?MHhRQUJZekNGT1lHYjQvSFozY2JyMnA4bkNoTjVnSGZrNmE1bjZwczFlWDlw?=
- =?utf-8?B?a2l3NkNvaG5icW92SUZYYlo2S0FDaWpaQTFZZExNYU5KSUliUlYvZnE4MW13?=
- =?utf-8?B?UHNuR1pPRy8wblNwUXRrN0JNZUxybHR4RDQ0d2FTUDA1RUV0SjJudjRjU0FG?=
- =?utf-8?B?MXpXRTRjUis0UkJRSlV3V25Gd0EwMy9wUnVkbkhEMmROdWwrV1pERklEdFlR?=
- =?utf-8?B?U2Q0clJpVkM0RmNzenYrNklYazlZekFkZVEzVzVUYkwrU0dZazJTaExKaTVH?=
- =?utf-8?B?Y1hvZzNGdmtYWUczMkZDbXJHeTNJREg0bVlDa3lPczg5aVAzV0l1dUFEVlE5?=
- =?utf-8?B?eFBvWjUrTmJzRVhsZVlRS3hVU3RKNGZma1Q0SHhpTzdPd0x6ajRzTjRZbHNo?=
- =?utf-8?B?d3RmcWNDTVE3RnZIK1hNUTlpbVpFVUlIN1ExZHpTYjZ4d01TUUxrdFZaME9O?=
- =?utf-8?B?WUlaenBpM1lNVEVNNmlCYjZJNXlkdTJoY2pRZUVHekhWYzRSWFhoTWdJY3hN?=
- =?utf-8?B?VXRNU0kvTFBpYitTaWdpSnpSdmZJamlhRktGMzRwamtkZzhNd1IwVDB3WGwv?=
- =?utf-8?B?bW9LWEExUTZRWHV5bUE0WFVMSjN2RXcyUlVBU25QZFB0eE13TGM4c0V6amtu?=
- =?utf-8?B?RXVjVGRkRmRSOWF6dHJRMTZ2OE5mK01nTktMby96MVJuY3FwdWt3UWUvT0tH?=
- =?utf-8?B?alhwM2d3THBHOXpmM0VHVm1ud1VoZFNNdjBsKzFPWTA2TERDOEYwVHF2Z3lX?=
- =?utf-8?B?K1JKcVMxUVFBWHBtZGNrTDl0YWZ0SkthODhudi9xQ2RKQ0doYkQ4SHNONTRJ?=
- =?utf-8?B?T1VLUEFYVFRvVWRuOEdYOS81dk12c2s4cktnR0xBQkdvWEFlYXZsZWt3a2Jx?=
- =?utf-8?B?anYxY0tRL0lURHlHQlFjdHBZZlgwS3c0RDM1YjZRak5SN0NIMHoyaVFNSG94?=
- =?utf-8?B?UGZVc25UOFZJWGhGSW5wYkVLVXdURnVNdWMvMW5IZGgwSDRlRkk0WWpFZUNL?=
- =?utf-8?B?N00weFBrNExWaXk0bmhTWVJabDl3Z3RQa3VDZVhqbWNuRUdnbGErMGRNTmU5?=
- =?utf-8?B?cTcva3VHNVlMck1oL3RBM2M1NkFKVUk1M29TbGNsaDQvKy9MNmliU2FNQ3FP?=
- =?utf-8?B?TzVEcDIxVHVJSmk5Zk95NUgxakhmbXFTSVJSNmxhcGdqV2pOeGUyc0V1ZjJT?=
- =?utf-8?B?VmgrZnhrbHo3WTFmMlA4YlRyQmtQTG5mdVd5UE41YW16NW1DbDNBZEtweHNn?=
- =?utf-8?B?MVRuRHBLYVJvMHBrWWxIZmZSQWFyT3FoSHAzZ2Uzc3JkNi9lbVcwVmQyYTd3?=
- =?utf-8?B?ZzNRVEx1Q3l0WkJrU2xuT0o1SGlnNUhNYVk2c2czdDd1UXBLM2J6ZXd5bXRP?=
- =?utf-8?B?azNpV0dlRlFlVjBscVZObXZpNk0rb1IrbXo1QmRtWnh6bU5rOEVNUU9VNGd1?=
- =?utf-8?B?bGdpUHQ1OFMvUXp2VlJEVTFMUGs3VVR0U0pGbDUzMUpQS3A2S1lHK2lQK0dp?=
- =?utf-8?B?dm94SVZieFBFMHZkaFJScmY5aStaYUdwZjA5YUNUYnZVbStrQkUrRHcvdkNQ?=
- =?utf-8?B?ZGMyMUJrYmRvM3BSN2ZLNGpxUDBYZGh1T0t1bDVlRmFxQW9sL2E2dVh6aHZG?=
- =?utf-8?B?bUZrV25lYnh1M3dvTlVpQWRDQTFnMVdGYW5KWDdUK3NERDNvMUM5N1VvNmMz?=
- =?utf-8?B?Z3BVTzJubVdKSE1CR3l3a2w4QUdyL0dUelF5K082MXpKQ1JlcGpjczVLN3JL?=
- =?utf-8?B?L2Y4b3lzMmJnSk51TnkzajRpcU5JeUd4Q0V2R3lySU5WdkdoL3FUUnBjNW5s?=
- =?utf-8?B?L1pJUmlSUWw5VVVzMUlselFxa00rZVhKUkRKUE9nRkhUc01yOXZTMUE1VWR4?=
- =?utf-8?B?UHRXcXI2dHRNaExWK1lhRFdXd2QxNWR2WHVLL3Q5R1FERzhEbTVKWTFEU0hE?=
- =?utf-8?B?V2tCUlEvUEg2VTZ3Y2RVRVhUanhkL05HMDU4RkxCMS91VVdQNCt3d0JYbVlS?=
- =?utf-8?B?Wjdyd3lrUjdxcTBRRGNCTWQ4YmZrZXcrUE5hL0cxV2lyL09LVlY1VStSTXF6?=
- =?utf-8?Q?DQTBaokGIMOCd8AqqhduwmPub?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8763b52e-b536-4128-418b-08dc3029846d
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5602.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2024 02:30:05.5174
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BanAnK4xC/ruZNyNKMsMBIP/UOXjzz9n6vb7s2xqMFu7CHzmlQuBy7qbbv6mRsCR8b0ON5XrugsR7l5ioO5hXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7047
-X-Proofpoint-ORIG-GUID: SyGQBWeT5lSiDTWkiPnEzX6jBa64IrDj
-X-Proofpoint-GUID: SyGQBWeT5lSiDTWkiPnEzX6jBa64IrDj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-17_23,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- impostorscore=0 clxscore=1015 phishscore=0 spamscore=0 mlxlogscore=999
- suspectscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402180016
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 02:30:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15910
+ <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 07:27:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15911
 
-ping
-
-On 2/1/24 11:30, Chen Qi via lists.openembedded.org wrote:
-> From: Chen Qi <Qi.Chen@windriver.com>
->
-> For gitsm recipes, it's possible that some URL is used more than once.
-> e.g.,
-> A -> B:rev1 (B is a submodule of A)
-> A -> C (C is a submodule of A)
-> C -> B:rev2 (B is a submodule of C)
-> A anc C are both using B as submodules, but on different revs.
-> Now if we have:
-> B:rev1 -> D
-> B:rev2 -> E
-> Then, the mirror will not be fully used.
-> Say we have all repo mirrors for A, B, C, D, E, then in theory it's not
-> necessary to reach out to any network for downloading. But it's not the
-> case. After downloading B(rev1) and its submodule D from mirrors, the fetch
-> process continues to download C, thus B(rev2) and E. Now it finds that B
-> needs an update because its submodule E needs an update. Of course this is
-> true because E is not downloaded yet. Now the problem comes to whether to
-> use mirror or not. The git.py defines try_premirror to return 'False' when
-> the ud.clonedir exists. As B has been cloned, the ud.clonedir exists and
-> try_mirror returns False, resulting in not using mirror and going to upstream
-> directly.
->
-> We can see that the mirrors are not fully used. This is usually not problem,
-> as the cost is only some network download. But in case the following two
-> settings are there, we get errors.
-> BB_NO_NETWORK = "0"
-> BB_ALLOWED_NETWORKS = "*.some.allowed.domain"
-> In such case, the gitsm recipe A will fail to fetch. Note that all contents
-> that A needs are in mirrors and now it's failing to fetch. This is unexpected.
->
-> Note that the different revs of the same repo in gitsm recipe is not the only
-> way to reveal this problem. For example, there might be a recipe call B that
-> uses B:rev3. Check the protobuf and grpc recipes as an example.
->
-> For now, we can use the following steps to reproduce this issue. To be clear,
-> the grpc recipe in meta-oe is now 1.60.0.
-> 1. Add in local.conf:
->     DL_DIR = "${TOPDIR}/downloads-premirror"
->     bitbake grpc -c fetch
-> 2. Comment out the DL_DIR setting in local.conf and add the following lines:
->     PREMIRRORS:append = " \
->       git://.*/.* git://${TOPDIR}/downloads-premirror/git2/MIRRORNAME;protocol=file \n \
->       gitsm://.*/.* gitsm://${TOPDIR}/downloads-premirror/git2/MIRRORNAME;protocol=file \n \
->     "
-> 3. Set BB_NO_NETWORK = "1" and then 'bitbake grpc -c fetch'.
->     This command succeeds and this shows that the premirror holds everything we need.
-> 4. Add the following lines and then 'bitbake grpc -c fetch'.
->     BB_NO_NETWORK = "0"
->     BB_ALLOWED_NETWORKS = "*.some.domain"
->
-> After step 4, the error message is as below:
-> ERROR: grpc-1.60.0-r0 do_fetch: The URL: 'gitsm://github.com/protocolbuffers/protobuf.git;protocol=https;name=third_party/protobuf;subpath=third_party/protobuf;nobranch=1;lfs=True;bareclone=1;nobranch=1' is not trusted and cannot be used
->
-> This patch fixes this problem by handling this corner case, that is, if the URL is
-> not trusted from the settings of BB_NO_NETWORK and BB_ALLOWED_NETWORKS, then we should
-> try premirrors because trying to reach upstream is destined to fail.
->
-> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+On Sat, 2024-02-17 at 11:07 +0000, Simone Wei=C3=9F wrote:
+> From: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
+>=20
+> This is inspired by the same section in the yocto-docs. It aims to
+> provide
+> information in what contexts(recipes, .conf, bbclass,...) a variable is
+> usually
+> used. For that I tried to group similar variables, so that a short
+> overview is
+> given. This was inspired by [YOCTO #14072], but of course does not
+> implement a
+> warning if a variable is used in an unintended context.
+>=20
+> Signed-off-by: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
 > ---
->   bitbake/lib/bb/fetch2/git.py | 6 ++++++
->   1 file changed, 6 insertions(+)
->
-> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-> index 0deeb5cee1..322a9366da 100644
-> --- a/bitbake/lib/bb/fetch2/git.py
-> +++ b/bitbake/lib/bb/fetch2/git.py
-> @@ -87,6 +87,7 @@ from contextlib import contextmanager
->   from   bb.fetch2 import FetchMethod
->   from   bb.fetch2 import runfetchcmd
->   from   bb.fetch2 import logger
-> +from   bb.fetch2 import trusted_network
->   
->   
->   sha1_re = re.compile(r'^[0-9a-f]{40}$')
-> @@ -355,6 +356,11 @@ class Git(FetchMethod):
->           # is not possible
->           if bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
->               return True
-> +        # If the url is not in trusted network, that is, BB_NO_NETWORK is set to 0
-> +        # and BB_ALLOWED_NETWORKS does not contain the host that ud.url uses, then
-> +        # we need to try premirrors first as using upstream is destined to fail.
-> +        if not trusted_network(d, ud.url):
-> +            return True
->           if os.path.exists(ud.clonedir):
->               return False
->           return True
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15817): https://lists.openembedded.org/g/bitbake-devel/message/15817
-> Mute This Topic: https://lists.openembedded.org/mt/104090271/7304865
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [Qi.Chen@eng.windriver.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+> =C2=A0...bake-user-manual-ref-variables-context.rst | 89 ++++++++++++++++=
++++
+> =C2=A0doc/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> =C2=A02 files changed, 90 insertions(+)
+> =C2=A0create mode 100644 doc/bitbake-user-manual/bitbake-user-manual-ref-
+> variables-context.rst
+>=20
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-
+> context.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-
+> context.rst
+> new file mode 100644
+> index 00000000..8252889e
+> --- /dev/null
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-
+> context.rst
+> @@ -0,0 +1,89 @@
+> +.. SPDX-License-Identifier: CC-BY-SA-2.0-UK
+> +
+> +****************
+> +Variable Context
+> +****************
+> +
+> +Variables might only have an impact or can be used in certain contexts.
+> Some
+> +should only be used in global files like ``.conf``, while others are
+> intended only
+> +for local files like ``.bb``. This chapter aims to describe some
+> important variable
+> +contexts.
+> +
+> +.. _ref-varcontext-configuration:
+> +
+> +BitBake's own configuration
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> +
+> +Variables starting with ``BB_`` usually configure the behaviour of
+> BitBake itself.
+> +For example, one could configure:
+> +
+> +- System resources, like disk space to be used
+> (:term:`BB_DISKMON_DIRS`),
+> +=C2=A0 or the number of tasks to be run in parallel by BitBake
+> (:term:`BB_NUMBER_THREADS`).
+> +
+> +- How the fetchers shall behave, e.g., :term:`BB_FETCH_PREMIRRORONLY`
+> is used
+> +=C2=A0 by BitBake to determine if BitBake's fetcher shall search only
+> +=C2=A0 :term:`PREMIRRORS` for files.
+> +
+> +Those variables are usually configured globally.
+> +
+> +BitBake configuration
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +There are variables:
+> +
+> +- Like :term:`B` or :term:`T`, that are used to specify directories
+> used by
+> +=C2=A0 BitBake during the build of a particular recipe. Those variables =
+are
+> +=C2=A0 specified in ``bitbake.conf``. Some, like :term:`B`, are quite of=
+ten
+> +=C2=A0 overwritten in recipes.
+> +
+> +- Starting with ``FAKEROOT``, to configure how the ``fakeroot`` command
+> is
+> +=C2=A0 handled. Those are usually set by ``bitbake.conf`` and might get
+> adapted in a
+> +=C2=A0 ``bbclass``.
+> +
+> +- Detailing where BitBake will store and fetch information from, for
+> +=C2=A0 data reuse between build runs like :term:`CACHE`, :term:`DL_DIR` =
+or
+> +=C2=A0 :term:`PERSISTENT_DIR`. Those are usually global.
+> +
+> +
+> +Layers and files
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Variables starting with ``LAYER`` configure how BitBake handles layers.
+> +Additionally, variables starting with ``BB`` configure how layers and
+> files are
+> +handled. For example:
+> +
+> +- :term:`LAYERDEPENDS` is used to configure on which layers a given
+> layer
+> +=C2=A0 depends.
+> +
+> +- The configured layers are contained in :term:`BBLAYERS` and files in
+> +=C2=A0 :term:`BBFILES`.
+> +
+> +Those variables are often used in the files ``layer.conf`` and
+> ``bblayers.conf``.
+> +
+> +Recipes and packages
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Variables handling recipes and packages can be split into:
+> +
+> +- :term:`PN`, :term:`PV` or :term:`PF` for example, contain information
+> about
+> +=C2=A0 the name or revision of a recipe or package. Usually, the default=
+ set
+> in
+> +=C2=A0 ``bitbake.conf`` is used, but those are from time to time overwri=
+tten
+> in
+> +=C2=A0 recipes.
+> +
+> +- :term:`SUMMARY`, :term:`DESCRIPTION`, :term:`LICENSE` or
+> :term:`HOMEPAGE`
+> +=C2=A0 contain the expected information and should be set specifically f=
+or
+> every
+> +=C2=A0 recipe.
+> +
+> +- In recipes, variables are also used to control build and runtime
+> +=C2=A0 dependencies between recipes/packages with other recipes/packages=
+.
+> The
+> +=C2=A0 most common should be: :term:`PROVIDES`, :term:`RPROVIDES`,
+> :term:`DEPENDS`,
+> +=C2=A0 and :term:`RDEPENDS`.
+> +
+> +- There are further variables starting with ``SRC`` that specify the
+> sources in
+> +=C2=A0 a recipe like :term:`SRC_URI` or :term:`SRCDATE`. Those are also
+> usually set
+> +=C2=A0 in recipes.
+> +
+> +- Which version or=C2=A0provider of a recipe should be given preference =
+when
+> +=C2=A0 multiple recipes would provide the same item, is controlled by
+> variables
+> +=C2=A0 starting with ``PREFERRED_``. Those are normally set in the
+> configuration
+> +=C2=A0 files of a ``MACHINE`` or ``DISTRO``.
+> diff --git a/doc/index.rst b/doc/index.rst
+> index 3ff8b158..ee1660ac 100644
+> --- a/doc/index.rst
+> +++ b/doc/index.rst
+> @@ -13,6 +13,7 @@ BitBake User Manual
+> =C2=A0=C2=A0=C2=A0 bitbake-user-manual/bitbake-user-manual-intro
+> =C2=A0=C2=A0=C2=A0 bitbake-user-manual/bitbake-user-manual-execution
+> =C2=A0=C2=A0=C2=A0 bitbake-user-manual/bitbake-user-manual-metadata
+> +=C2=A0=C2=A0 bitbake-user-manual/bitbake-user-manual-ref-variables-conte=
+xt
+> =C2=A0=C2=A0=C2=A0 bitbake-user-manual/bitbake-user-manual-fetching
+> =C2=A0=C2=A0=C2=A0 bitbake-user-manual/bitbake-user-manual-ref-variables
+> =C2=A0=C2=A0=C2=A0 bitbake-user-manual/bitbake-user-manual-hello
+>=20
+>=20
+>=20
+I forgot to mentioned it in the commit message. Once this is good and
+merged, I would reference it in the yocto-docs as well. A picture
+showcasing this further as described by Quentin in [1] is also a good
+idea, I just think that this might better be placed in another section,
+maybe as an extension after the section 4.8 (Bitbake task map) in the
+yocto-docs.
+And thanks for the helpful reviews on v1!
 
+[1]:https://lists.yoctoproject.org/g/docs/message/4837
 
