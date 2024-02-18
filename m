@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE5CC48BF8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3637C54766
 	for <webhook@archiver.kernel.org>; Sun, 18 Feb 2024 20:08:04 +0000 (UTC)
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
- by mx.groups.io with SMTP id smtpd.web11.25651.1708286881319476516
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+ by mx.groups.io with SMTP id smtpd.web11.25654.1708286883375541698
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 18 Feb 2024 12:08:01 -0800
+ Sun, 18 Feb 2024 12:08:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=hKA6zUtx;
- spf=pass (domain: gmail.com, ip: 209.85.166.41, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7c3e01a7fe0so172941339f.2
-        for <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 12:08:01 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Yi3hQkdU;
+ spf=pass (domain: gmail.com, ip: 209.85.166.43, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7c457b8ef7cso142242939f.2
+        for <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 12:08:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708286879; x=1708891679; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1708286881; x=1708891681; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NjgoUuru/5mh1737D5tbdwzUctpUmZzvxjF8D9ZkMhc=;
-        b=hKA6zUtxlfnujWP4AfNg4pthmrt/pwM/VRXYOwJ3SW9m/IPOZcwzXhKRplJWZDRvGc
-         m7FkwnijWw61j3fjGPRvbDjkebay9DTwM2djfAvzEXaYiblNzmXP9Jina8hdMiP89qYW
-         RK/QTIdMvfQkgeRjS8eRskp/630eFEppMf7ROS5jHVSI1u/BgC9NkSfiXP0PkM1nsVmB
-         pfXUQDE8wJXmdtvV3HVp46YW4/I2Z4w10+CfJCrFOWw2F6JEmwARL373E1DHNOsnQhFS
-         D2HLHKqMxi7oUVjbfQ0GJmJE0yCAk30musYh5uNFeIwc1/92QuHnn3HhgjbxQmEGbItY
-         /dqg==
+        bh=IGm+CR07IVTaqD5fHQ5Z3Ej7Lcj09MmUmOV6eyrsNLo=;
+        b=Yi3hQkdUS/d3GoECgKvrqznJ/9gPd5QgMmXaPNYJRWjQtq9+CFo3MRiRyKwc4JqeZA
+         xqB66UxPnfWf2bZXEJbOD4E78mw1nPVX4FAcxj9Qu0RK5wjsj+MnzYCUER5z2dIxCqYa
+         INbXMve9akX9pHHxueAlRr7a6H52OQ6ORRrx5uPJrMXC7bvQ0KNOSmUxe1Hh5xyN/5eA
+         w+FpIj0xE4HHQtU07WQSl9GEzTR7NYkhiwPujcphjyy4lfTOpcXAmCYFb+G5I5oVW94P
+         0Zyd3pa59yKTCihTPAdAW0a0k6ClGkT8UVSjeIEaYNsB7BL4e270yhBVs1oKi4OVlPhH
+         NLjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708286879; x=1708891679;
+        d=1e100.net; s=20230601; t=1708286881; x=1708891681;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NjgoUuru/5mh1737D5tbdwzUctpUmZzvxjF8D9ZkMhc=;
-        b=DOdLD0OrW8Aml9A9IHoRBo6AzK9VMJC6iS8vhkTKGJb6sFYpYyQa3H1Hn4/nXV0G1Q
-         SYzKDpjaLrBrdwiOmtyPpL1Nj9Pk0CDgoX5MERpYbZnmIPpS7hLJgojCm4023sL/qRsO
-         BJqVyHkyId8oDIqYpQe9v58SahSyRbfdEsJbpty8a6AdleHPxLQmfZ4ICSDLfjMePHST
-         a845SABS/c0C7CQpmI94auPZPaodqfPjcUPk2/45Q56ftSNX39lK0krb9pE3Y6kXFX95
-         1qev3iOqRqMp2tznjSJViWpaD5EsPNtOeBXOvJV3EkmvOgzpyr4ip4ZgQ5Eh/A3BDLvJ
-         gcbA==
-X-Gm-Message-State: AOJu0YwabN97EU1T/8zhhzkHd3ijE9tUZv53iMyctJEYnOM5IWDrIumK
-	NoZWLWOoOwlTMg748hf1yQfpbCR4xHzFwNhrZ3mL4dUV4Mw7hsOIQCM3cH5x
-X-Google-Smtp-Source: AGHT+IHSM2UTNW4IoL3x7OlgKT+1M8VWRSFWUioXAxR750MGbOKOGV/pbTWxGRowyxAf19te/TD7Pw==
-X-Received: by 2002:a05:6602:809:b0:7c7:28dd:2b4e with SMTP id z9-20020a056602080900b007c728dd2b4emr7369969iow.13.1708286878883;
-        Sun, 18 Feb 2024 12:07:58 -0800 (PST)
+        bh=IGm+CR07IVTaqD5fHQ5Z3Ej7Lcj09MmUmOV6eyrsNLo=;
+        b=NC+wiJAwNKFA3UUkwgPIafF38EahQRWv2oUPm0Mijj77Rf8Qu8FuCM8+ZWDvlxWMPK
+         oZS01tBRUXxXcrxth58bqzqDOQdtFh+ZEfPSAtteeCVDBjnXXH5AThnKiREaYh8GoEqn
+         GvNAWQEZ9FXQbf7kmVIdEEYwSrsxdaNueoTomhs8zGigyiehAoSFcvs99q/7UGtSFnwq
+         FXcH3H3tDwJiXqxco0zZS/IEXuysEDw5wdpG0qmL0zy3ZOoZ6Jxjk42kTaE7lNTvm7st
+         80HLTpcuASENmR1us+JLVQVtw59rQN+LfTxKBborxns1sVQudeaLwJt83lfKJrhotcxW
+         qUPw==
+X-Gm-Message-State: AOJu0Ywl9jl4GQ7swrnFBCRTDd5iB4Xnb1BPyhTGgQJQ1W/RY+6KM6WD
+	W7kbS30TZgGO/Vys0h9+Oj5+Hr3mCWFWqnVzJ2jOYQL2lPKJCVqdKfCjguUw
+X-Google-Smtp-Source: AGHT+IFM8Ltc6dB5k0fXiBc0Sqv9UvpKjEYUWjLjaLHobU6FT42Er1qIFcHEkiHn7VESzfCWzLN1Kg==
+X-Received: by 2002:a05:6602:2741:b0:7c4:75b7:ff82 with SMTP id b1-20020a056602274100b007c475b7ff82mr12655556ioe.20.1708286881532;
+        Sun, 18 Feb 2024 12:08:01 -0800 (PST)
 Received: from localhost.localdomain ([2601:282:4300:19e0::44fb])
         by smtp.gmail.com with ESMTPSA id u6-20020a02aa86000000b004741e1544b6sm549278jai.81.2024.02.18.12.07.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Feb 2024 12:07:58 -0800 (PST)
+        Sun, 18 Feb 2024 12:07:59 -0800 (PST)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH 4/5] hashserv: Add Client Pool
-Date: Sun, 18 Feb 2024 13:07:42 -0700
-Message-Id: <20240218200743.2982923-5-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH 5/5] siggen: Add parallel query API
+Date: Sun, 18 Feb 2024 13:07:43 -0700
+Message-Id: <20240218200743.2982923-6-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240218200743.2982923-1-JPEWhacker@gmail.com>
 References: <20240218200743.2982923-1-JPEWhacker@gmail.com>
@@ -62,206 +62,208 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 20:08:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15920
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15921
 
-Implements a Client Pool derived from the AsyncRPC client pool that
-allows querying for multiple equivalent hashes in parallel
+Implements a new API called get_unihashes() that allows for querying
+multiple unihashes in parallel.
+
+The API is also reworked to make it easier for derived classes to
+interface with the new API in a consistent manner. Instead of overriding
+get_unihash() to add custom handling for local hash calculating (e.g.
+caches) derived classes should now override get_cached_unihash(), and
+return the local unihash or None if there isn't one.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/hashserv/client.py | 80 ++++++++++++++++++++++++++++++++
- bitbake/lib/hashserv/tests.py  | 83 ++++++++++++++++++++++++++++++++++
- 2 files changed, 163 insertions(+)
+ bitbake/lib/bb/siggen.py | 121 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 87 insertions(+), 34 deletions(-)
 
-diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
-index daf1e128423..b269879ecfd 100644
---- a/bitbake/lib/hashserv/client.py
-+++ b/bitbake/lib/hashserv/client.py
-@@ -283,3 +283,83 @@ class Client(bb.asyncrpc.Client):
+diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+index 58854aee76c..e1a4fa2cdd1 100644
+--- a/bitbake/lib/bb/siggen.py
++++ b/bitbake/lib/bb/siggen.py
+@@ -102,9 +102,18 @@ class SignatureGenerator(object):
+             if flag:
+                 self.datacaches[mc].stamp_extrainfo[mcfn][t] = flag
  
-     def _get_async_client(self):
-         return AsyncClient(self.username, self.password)
++    def get_cached_unihash(self, tid):
++        return None
 +
-+
-+class ClientPool(bb.asyncrpc.ClientPool):
-+    def __init__(
-+        self,
-+        address,
-+        max_clients,
-+        *,
-+        username=None,
-+        password=None,
-+        become=None,
-+    ):
-+        super().__init__(max_clients)
-+        self.address = address
-+        self.username = username
-+        self.password = password
-+        self.become = become
-+
-+    async def _new_client(self):
-+        client = await create_async_client(
-+            self.address,
-+            username=self.username,
-+            password=self.password,
-+        )
-+        if self.become:
-+            await client.become_user(self.become)
-+        return client
-+
-+    def _run_key_tasks(self, queries, call):
-+        results = {key: None for key in queries.keys()}
-+
-+        def make_task(key, args):
-+            async def task(client):
-+                nonlocal results
-+                unihash = await call(client, args)
-+                results[key] = unihash
-+
-+            return task
-+
-+        def gen_tasks():
-+            for key, args in queries.items():
-+                yield make_task(key, args)
-+
-+        self.run_tasks(gen_tasks())
-+        return results
-+
-+    def get_unihashes(self, queries):
-+        """
-+        Query multiple unihashes in parallel.
-+
-+        The queries argument is a dictionary with arbitrary key. The values
-+        must be a tuple of (method, taskhash).
-+
-+        Returns a dictionary with a corresponding key for each input key, and
-+        the value is the queried unihash (which might be none if the query
-+        failed)
-+        """
-+
-+        async def call(client, args):
-+            method, taskhash = args
-+            return await client.get_unihash(method, taskhash)
-+
-+        return self._run_key_tasks(queries, call)
-+
-+    def unihashes_exist(self, queries):
-+        """
-+        Query multiple unihash existence checks in parallel.
-+
-+        The queries argument is a dictionary with arbitrary key. The values
-+        must be a unihash.
-+
-+        Returns a dictionary with a corresponding key for each input key, and
-+        the value is True or False if the unihash is known by the server (or
-+        None if there was a failure)
-+        """
-+
-+        async def call(client, unihash):
-+            return await client.unihash_exists(unihash)
-+
-+        return self._run_key_tasks(queries, call)
-diff --git a/bitbake/lib/hashserv/tests.py b/bitbake/lib/hashserv/tests.py
-index fbbe81512a0..0809453cf87 100644
---- a/bitbake/lib/hashserv/tests.py
-+++ b/bitbake/lib/hashserv/tests.py
-@@ -8,6 +8,7 @@
- from . import create_server, create_client
- from .server import DEFAULT_ANON_PERMS, ALL_PERMISSIONS
- from bb.asyncrpc import InvokeError
-+from .client import ClientPool
- import hashlib
- import logging
- import multiprocessing
-@@ -554,6 +555,88 @@ class HashEquivalenceCommonTests(object):
-         # shares a taskhash with Task 2
-         self.assertClientGetHash(self.client, taskhash2, unihash2)
+     def get_unihash(self, tid):
++        unihash = self.get_cached_unihash(tid)
++        if unihash:
++            return unihash
+         return self.taskhash[tid]
  
++    def get_unihashes(self, tids):
++        return {tid: self.get_unihash(tid) for tid in tids}
 +
-+    def test_client_pool_get_unihashes(self):
-+        TEST_INPUT = (
-+            # taskhash                                   outhash                                                            unihash
-+            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
-+            # Duplicated taskhash with multiple output hashes and unihashes.
-+            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
-+            # Equivalent hash
-+            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
-+            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
-+            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
-+            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
-+            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
-+        )
-+        EXTRA_QUERIES = (
-+            "6b6be7a84ab179b4240c4302518dc3f6",
-+        )
-+
-+        with ClientPool(self.server_address, 10) as client_pool:
-+            for taskhash, outhash, unihash in TEST_INPUT:
-+                self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-+
-+            query = {idx: (self.METHOD, data[0]) for idx, data in enumerate(TEST_INPUT)}
-+            for idx, taskhash in enumerate(EXTRA_QUERIES):
-+                query[idx + len(TEST_INPUT)] = (self.METHOD, taskhash)
-+
-+            result = client_pool.get_unihashes(query)
-+
-+            self.assertDictEqual(result, {
-+                0: "218e57509998197d570e2c98512d0105985dffc9",
-+                1: "218e57509998197d570e2c98512d0105985dffc9",
-+                2: "218e57509998197d570e2c98512d0105985dffc9",
-+                3: "3b5d3d83f07f259e9086fcb422c855286e18a57d",
-+                4: "f46d3fbb439bd9b921095da657a4de906510d2cd",
-+                5: "f46d3fbb439bd9b921095da657a4de906510d2cd",
-+                6: "05d2a63c81e32f0a36542ca677e8ad852365c538",
-+                7: None,
-+            })
-+
-+    def test_client_pool_unihash_exists(self):
-+        TEST_INPUT = (
-+            # taskhash                                   outhash                                                            unihash
-+            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
-+            # Duplicated taskhash with multiple output hashes and unihashes.
-+            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
-+            # Equivalent hash
-+            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
-+            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
-+            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
-+            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
-+            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
-+        )
-+        EXTRA_QUERIES = (
-+            "6b6be7a84ab179b4240c4302518dc3f6",
-+        )
-+
-+        result_unihashes = set()
-+
-+
-+        with ClientPool(self.server_address, 10) as client_pool:
-+            for taskhash, outhash, unihash in TEST_INPUT:
-+                result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-+                result_unihashes.add(result["unihash"])
-+
-+            query = {}
-+            expected = {}
-+
-+            for _, _, unihash in TEST_INPUT:
-+                idx = len(query)
-+                query[idx] = unihash
-+                expected[idx] = unihash in result_unihashes
-+
-+
-+            for unihash in EXTRA_QUERIES:
-+                idx = len(query)
-+                query[idx] = unihash
-+                expected[idx] = False
-+
-+            result = client_pool.unihashes_exist(query)
-+            self.assertDictEqual(result, expected)
-+
-+
-     def test_auth_read_perms(self):
-         admin_client = self.start_auth_server()
+     def prep_taskhash(self, tid, deps, dataCaches):
+         return
  
+@@ -524,28 +533,37 @@ class SignatureGeneratorUniHashMixIn(object):
+         super().__init__(data)
+ 
+     def get_taskdata(self):
+-        return (self.server, self.method, self.extramethod) + super().get_taskdata()
++        return (self.server, self.method, self.extramethod, self.max_parallel) + super().get_taskdata()
+ 
+     def set_taskdata(self, data):
+-        self.server, self.method, self.extramethod = data[:3]
+-        super().set_taskdata(data[3:])
++        self.server, self.method, self.extramethod, self.max_parallel = data[:4]
++        super().set_taskdata(data[4:])
+ 
+     def client(self):
+         if getattr(self, '_client', None) is None:
+             self._client = hashserv.create_client(self.server)
+         return self._client
+ 
++    def client_pool(self):
++        if getattr(self, '_client_pool', None) is None:
++            self._client_pool = hashserv.client.ClientPool(self.server, self.max_parallel)
++        return self._client_pool
++
+     def reset(self, data):
+-        if getattr(self, '_client', None) is not None:
+-            self._client.close()
+-            self._client = None 
++        self.__close_clients()
+         return super().reset(data)
+ 
+     def exit(self):
++        self.__close_clients()
++        return super().exit()
++
++    def __close_clients(self):
+         if getattr(self, '_client', None) is not None:
+             self._client.close()
+             self._client = None
+-        return super().exit()
++        if getattr(self, '_client_pool', None) is not None:
++            self._client_pool.close()
++            self._client_pool = None
+ 
+     def get_stampfile_hash(self, tid):
+         if tid in self.taskhash:
+@@ -578,7 +596,7 @@ class SignatureGeneratorUniHashMixIn(object):
+             return None
+         return unihash
+ 
+-    def get_unihash(self, tid):
++    def get_cached_unihash(self, tid):
+         taskhash = self.taskhash[tid]
+ 
+         # If its not a setscene task we can return
+@@ -593,40 +611,74 @@ class SignatureGeneratorUniHashMixIn(object):
+             self.unihash[tid] = unihash
+             return unihash
+ 
+-        # In the absence of being able to discover a unique hash from the
+-        # server, make it be equivalent to the taskhash. The unique "hash" only
+-        # really needs to be a unique string (not even necessarily a hash), but
+-        # making it match the taskhash has a few advantages:
+-        #
+-        # 1) All of the sstate code that assumes hashes can be the same
+-        # 2) It provides maximal compatibility with builders that don't use
+-        #    an equivalency server
+-        # 3) The value is easy for multiple independent builders to derive the
+-        #    same unique hash from the same input. This means that if the
+-        #    independent builders find the same taskhash, but it isn't reported
+-        #    to the server, there is a better chance that they will agree on
+-        #    the unique hash.
+-        unihash = taskhash
++        return None
+ 
+-        try:
+-            method = self.method
+-            if tid in self.extramethod:
+-                method = method + self.extramethod[tid]
+-            data = self.client().get_unihash(method, self.taskhash[tid])
+-            if data:
+-                unihash = data
++    def _get_method(self, tid):
++        method = self.method
++        if tid in self.extramethod:
++            method = method + self.extramethod[tid]
++
++        return method
++
++    def get_unihash(self, tid):
++        return self.get_unihashes([tid])[tid]
++
++    def get_unihashes(self, tids):
++        """
++        For a iterable of tids, returns a dictionary that maps each tid to a
++        unihash
++        """
++        result = {}
++        queries = {}
++        query_result = {}
++
++        for tid in tids:
++            unihash = self.get_cached_unihash(tid)
++            if unihash:
++                result[tid] = unihash
++            else:
++                queries[tid] = (self._get_method(tid), self.taskhash[tid])
++
++        if len(queries) == 0:
++            return result
++
++        if self.max_parallel <= 1 or len(queries) <= 1:
++            # No parallelism required. Make the query serially with the single client
++            for tid, args in queries.items():
++                query_result[tid] = self.client().get_unihash(*args)
++        else:
++            query_result = self.client_pool().get_unihashes(queries)
++
++        for tid, unihash in query_result.items():
++            # In the absence of being able to discover a unique hash from the
++            # server, make it be equivalent to the taskhash. The unique "hash" only
++            # really needs to be a unique string (not even necessarily a hash), but
++            # making it match the taskhash has a few advantages:
++            #
++            # 1) All of the sstate code that assumes hashes can be the same
++            # 2) It provides maximal compatibility with builders that don't use
++            #    an equivalency server
++            # 3) The value is easy for multiple independent builders to derive the
++            #    same unique hash from the same input. This means that if the
++            #    independent builders find the same taskhash, but it isn't reported
++            #    to the server, there is a better chance that they will agree on
++            #    the unique hash.
++            taskhash = self.taskhash[tid]
++            if unihash:
+                 # A unique hash equal to the taskhash is not very interesting,
+                 # so it is reported it at debug level 2. If they differ, that
+                 # is much more interesting, so it is reported at debug level 1
+                 hashequiv_logger.bbdebug((1, 2)[unihash == taskhash], 'Found unihash %s in place of %s for %s from %s' % (unihash, taskhash, tid, self.server))
+             else:
+                 hashequiv_logger.debug2('No reported unihash for %s:%s from %s' % (tid, taskhash, self.server))
+-        except ConnectionError as e:
+-            bb.warn('Error contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
++                unihash = taskhash
+ 
+-        self.set_unihash(tid, unihash)
+-        self.unihash[tid] = unihash
+-        return unihash
++
++            self.set_unihash(tid, unihash)
++            self.unihash[tid] = unihash
++            result[tid] = unihash
++
++        return result
+ 
+     def report_unihash(self, path, task, d):
+         import importlib
+@@ -754,6 +806,7 @@ class SignatureGeneratorTestEquivHash(SignatureGeneratorUniHashMixIn, SignatureG
+         super().init_rundepcheck(data)
+         self.server = data.getVar('BB_HASHSERVE')
+         self.method = "sstate_output_hash"
++        self.max_parallel = 1
+ 
+ def clean_checksum_file_path(file_checksum_tuple):
+     f, cs = file_checksum_tuple
 -- 
 2.34.1
 
