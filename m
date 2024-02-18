@@ -2,57 +2,57 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C980AC54766
-	for <webhook@archiver.kernel.org>; Sun, 18 Feb 2024 23:00:15 +0000 (UTC)
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
- by mx.groups.io with SMTP id smtpd.web10.29044.1708297208134139715
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD61C48BC4
+	for <webhook@archiver.kernel.org>; Sun, 18 Feb 2024 23:00:25 +0000 (UTC)
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+ by mx.groups.io with SMTP id smtpd.web10.29052.1708297217529528527
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 18 Feb 2024 15:00:08 -0800
+ Sun, 18 Feb 2024 15:00:17 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=KJWZH7tT;
- spf=pass (domain: gmail.com, ip: 209.85.166.50, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7c72294e3d1so131429439f.1
-        for <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 15:00:08 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=SLghGPY9;
+ spf=pass (domain: gmail.com, ip: 209.85.166.44, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7c72294e3d1so131437439f.1
+        for <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 15:00:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708297206; x=1708902006; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1708297216; x=1708902016; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GaTwCVBHiMp2WMJhdaju/OW/ME4sPP5hS8BJw1s907w=;
-        b=KJWZH7tTHfMqYiEcqM0FehHl/u8MCsMLjRdvFHw/GBWf/8k1bOAkMDHnqwEPshZjyh
-         cl7IxTLvfC775H6DlNQfOTVTEBlidAEH7sfusY6P6YYSwSRkn1/wzKN22BuhMbs6Pt+f
-         vgFaRvIG+Fpg1KJHUbStnOG945BN1PkcVn4XOzxNOzzASI32tSQu0nbk1Z7UcoyCNdJc
-         E2RVJ4oX6O4wAMUAGPSb/E0RDJbSWgbiFEt2iIS0nNj0q/fU8nqfc8p2AKRt7qI2B0LZ
-         uW5+NwhOjoIo6m6oVcr8sFqML5X/ap6rKp/Pnp84VdBkV0450vDEcl0tmx44Kiiz8G5C
-         gFdQ==
+        bh=WHn2D0/VtGPjS10/2+oeAuTdZ83vrklXRpiSkiY31og=;
+        b=SLghGPY9KZT+7EOOEBJZ5S1PkLRWyETbB/tF+zaJ5ruav6SZds1YsB2V1XoXKcIXfd
+         FnM14MYUoc9uQkOhQULcnI9MNHcuxZyhT5uPQVCJ0DCHhG8f1DVKyrrVZPXdV0tKHHm2
+         MR7m9yrlEoJpBLEvQb5jerbmjTXpIoQSRGJSqDWD8QYMZ8cNPydTC6j8FHGtmNyERtnf
+         zjgosLj7RMmkkAa9UPQjz78ofbK2At6wN58WK8xjgMdrMfTlOQTM5tZlcRIy+SEBrSZn
+         hQMXDRra/BSQfFTZCC14L6raReZv5b/Yv5d/Hv3Y2cf6tbAE9oPnJi80OhRjZh5Xy8M+
+         5uPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708297206; x=1708902006;
+        d=1e100.net; s=20230601; t=1708297216; x=1708902016;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GaTwCVBHiMp2WMJhdaju/OW/ME4sPP5hS8BJw1s907w=;
-        b=fxbxr/looFjk1BM2mjXVpcZZdM/6HbUYx2ESJ11WfgoLCryRSNrI4BzkP4I4lKUbrH
-         rW3/6iMCIQRDHiXr5P8jJGsnH1gdUHOTCPcosF//2iEHTYiVX7dSC5oNlcp74L67VjcX
-         qEVWxC0DsjQ5GtcD///8CEtKTQecsWZgM15KL4vYPwkcSCQ6j8n5wOyz5H0Uyg269xto
-         eSTgoLze7DNtiqXIcEZIlGTkq0Se2Z2/jFvXJ5/Yj5y8tq9XJeSoM9S9pMDgvix+/51t
-         00jUFGdWNU0N9Evy9FJ6SOWSGBQ03VNFZ2/OOdbDpbvBj2XpliQTAi0/BdBqJRyqeblo
-         +fXQ==
-X-Gm-Message-State: AOJu0YxKQ0V3drgItUs1DpD3KvgI/prpjr/gVbG9p30jn0a2PNLkEkMa
-	MVIgeWRo+Fk/0e/nsWLF9SnsKe0FRUApLRrNzgrRHACqL0GzcE9LHc82P5BZ
-X-Google-Smtp-Source: AGHT+IH4FbQ9KT7sy4tZfztv4Q/fY7dHpCocs9tr61uThv/zfe5JCwXfZkB8OHLDa4zQHKiATtespw==
-X-Received: by 2002:a6b:6d16:0:b0:7c7:22c3:12a0 with SMTP id a22-20020a6b6d16000000b007c722c312a0mr11258iod.13.1708297205734;
-        Sun, 18 Feb 2024 15:00:05 -0800 (PST)
+        bh=WHn2D0/VtGPjS10/2+oeAuTdZ83vrklXRpiSkiY31og=;
+        b=qYZhZWCMSptPR68FXzS4sRgDWZGayv5kPGHVAoEbdOEHc2yxpAmwBbhkmrtNus6kfj
+         4jedlTA6Q/QEDU7EHTjlR9C+MxKOjzfnYumx+FgNKV7MVat3JMBCfL04GUEgKFO9RHv7
+         iiJJLODzUpzQxLzSjDr65n4bsxKyx9DBuM+eRJntohe+VD7n4LA7je90mdWBbMdsxmi3
+         LtXFopJmJ0dFKMuvpEzYNUqK+gg7mQadogyFDZ2kpx0Uw7hBz0qhK5VjukwlAs8Tlrkp
+         Y6wppp+oo7UJIhgWzltRM6FyJWeB5BMoGiLJ+lL3N59TcpaObmmWYOnmHsLEKzLTATDF
+         pSkQ==
+X-Gm-Message-State: AOJu0Yy07Xmw2p+14GRTSr9Nlz+fSgOVg66hHfL3TPN1lHo0xC+g+3sb
+	22NVB1KuN4fRMUJbtY69b//PVcXzFo9Aid3sUwLGkeKD3q1176m2us0SLvBA
+X-Google-Smtp-Source: AGHT+IEBqyQn6rhU7G0XlUu0e/tZdmIF9nNiiIPxlg9mtznpPw5qSaFjmvbekSKPcPXEeWCFNCG/lA==
+X-Received: by 2002:a5e:9901:0:b0:7c4:7a26:60fd with SMTP id t1-20020a5e9901000000b007c47a2660fdmr12278027ioj.16.1708297215746;
+        Sun, 18 Feb 2024 15:00:15 -0800 (PST)
 Received: from localhost.localdomain ([2601:282:4300:19e0::44fb])
-        by smtp.gmail.com with ESMTPSA id n3-20020a02cc03000000b004712a778fb4sm1214848jap.28.2024.02.18.15.00.04
+        by smtp.gmail.com with ESMTPSA id n3-20020a02cc03000000b004712a778fb4sm1214848jap.28.2024.02.18.15.00.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Feb 2024 15:00:05 -0800 (PST)
+        Sun, 18 Feb 2024 15:00:14 -0800 (PST)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v2 2/8] hashserv: sqlalchemy: Use _execute() helper
-Date: Sun, 18 Feb 2024 15:59:47 -0700
-Message-Id: <20240218225953.2997239-3-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v2 7/8] siggen: Add parallel unihash exist API
+Date: Sun, 18 Feb 2024 15:59:52 -0700
+Message-Id: <20240218225953.2997239-8-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240218225953.2997239-1-JPEWhacker@gmail.com>
 References: <20240218200743.2982923-1-JPEWhacker@gmail.com>
@@ -62,408 +62,66 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 23:00:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15924
+ <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 23:00:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15929
 
-Use the _execute() helper to execute queries. This helper does the
-logging of the statement that was being done manually everywhere.
+Adds API to query if unihashes are known to the server in parallel
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/hashserv/sqlalchemy.py | 297 ++++++++++++++---------------
- 1 file changed, 140 insertions(+), 157 deletions(-)
+ bitbake/lib/bb/siggen.py | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/bitbake/lib/hashserv/sqlalchemy.py b/bitbake/lib/hashserv/sqlalchemy.py
-index 89a6b86d9d8..873547809a0 100644
---- a/bitbake/lib/hashserv/sqlalchemy.py
-+++ b/bitbake/lib/hashserv/sqlalchemy.py
-@@ -233,124 +233,113 @@ class Database(object):
-         return row.value
+diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+index e1a4fa2cdd1..3ab8431a089 100644
+--- a/bitbake/lib/bb/siggen.py
++++ b/bitbake/lib/bb/siggen.py
+@@ -530,6 +530,11 @@ class SignatureGeneratorBasicHash(SignatureGeneratorBasic):
+ class SignatureGeneratorUniHashMixIn(object):
+     def __init__(self, data):
+         self.extramethod = {}
++        # NOTE: The cache only tracks hashes that exist. Hashes that don't
++        # exist are always queries from the server since it is possible for
++        # hashes to appear over time, but much less likely for them to
++        # disappear
++        self.unihash_exists_cache = set()
+         super().__init__(data)
  
-     async def get_unihash_by_taskhash_full(self, method, taskhash):
--        statement = (
--            select(
--                OuthashesV2,
--                UnihashesV3.unihash.label("unihash"),
--            )
--            .join(
--                UnihashesV3,
--                and_(
--                    UnihashesV3.method == OuthashesV2.method,
--                    UnihashesV3.taskhash == OuthashesV2.taskhash,
--                ),
--            )
--            .where(
--                OuthashesV2.method == method,
--                OuthashesV2.taskhash == taskhash,
--            )
--            .order_by(
--                OuthashesV2.created.asc(),
--            )
--            .limit(1)
--        )
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                select(
-+                    OuthashesV2,
-+                    UnihashesV3.unihash.label("unihash"),
-+                )
-+                .join(
-+                    UnihashesV3,
-+                    and_(
-+                        UnihashesV3.method == OuthashesV2.method,
-+                        UnihashesV3.taskhash == OuthashesV2.taskhash,
-+                    ),
-+                )
-+                .where(
-+                    OuthashesV2.method == method,
-+                    OuthashesV2.taskhash == taskhash,
-+                )
-+                .order_by(
-+                    OuthashesV2.created.asc(),
-+                )
-+                .limit(1)
-+            )
-             return map_row(result.first())
+     def get_taskdata(self):
+@@ -620,6 +625,33 @@ class SignatureGeneratorUniHashMixIn(object):
  
-     async def get_unihash_by_outhash(self, method, outhash):
--        statement = (
--            select(OuthashesV2, UnihashesV3.unihash.label("unihash"))
--            .join(
--                UnihashesV3,
--                and_(
--                    UnihashesV3.method == OuthashesV2.method,
--                    UnihashesV3.taskhash == OuthashesV2.taskhash,
--                ),
--            )
--            .where(
--                OuthashesV2.method == method,
--                OuthashesV2.outhash == outhash,
--            )
--            .order_by(
--                OuthashesV2.created.asc(),
--            )
--            .limit(1)
--        )
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                select(OuthashesV2, UnihashesV3.unihash.label("unihash"))
-+                .join(
-+                    UnihashesV3,
-+                    and_(
-+                        UnihashesV3.method == OuthashesV2.method,
-+                        UnihashesV3.taskhash == OuthashesV2.taskhash,
-+                    ),
-+                )
-+                .where(
-+                    OuthashesV2.method == method,
-+                    OuthashesV2.outhash == outhash,
-+                )
-+                .order_by(
-+                    OuthashesV2.created.asc(),
-+                )
-+                .limit(1)
-+            )
-             return map_row(result.first())
+         return method
  
-     async def get_outhash(self, method, outhash):
--        statement = (
--            select(OuthashesV2)
--            .where(
--                OuthashesV2.method == method,
--                OuthashesV2.outhash == outhash,
--            )
--            .order_by(
--                OuthashesV2.created.asc(),
--            )
--            .limit(1)
--        )
--
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                select(OuthashesV2)
-+                .where(
-+                    OuthashesV2.method == method,
-+                    OuthashesV2.outhash == outhash,
-+                )
-+                .order_by(
-+                    OuthashesV2.created.asc(),
-+                )
-+                .limit(1)
-+            )
-             return map_row(result.first())
++    def unihashes_exist(self, query):
++        if len(query) == 0:
++            return {}
++
++        uncached_query = {}
++        result = {}
++        for key, unihash in query.items():
++            if unihash in self.unihash_exists_cache:
++                result[key] = True
++            else:
++                uncached_query[key] = unihash
++
++        if self.max_parallel <= 1 or len(uncached_query) <= 1:
++            # No parallelism required. Make the query serially with the single client
++            uncached_result = {
++                key: self.client().unihash_exists(value) for key, value in uncached_query.items()
++            }
++        else:
++            uncached_result = self.client_pool().unihashes_exist(uncached_query)
++
++        for key, exists in uncached_result.items():
++            if exists:
++                self.unihash_exists_cache.add(query[key])
++            result[key] = exists
++
++        return result
++
+     def get_unihash(self, tid):
+         return self.get_unihashes([tid])[tid]
  
-     async def get_equivalent_for_outhash(self, method, outhash, taskhash):
--        statement = (
--            select(
--                OuthashesV2.taskhash.label("taskhash"),
--                UnihashesV3.unihash.label("unihash"),
--            )
--            .join(
--                UnihashesV3,
--                and_(
--                    UnihashesV3.method == OuthashesV2.method,
--                    UnihashesV3.taskhash == OuthashesV2.taskhash,
--                ),
--            )
--            .where(
--                OuthashesV2.method == method,
--                OuthashesV2.outhash == outhash,
--                OuthashesV2.taskhash != taskhash,
--            )
--            .order_by(
--                OuthashesV2.created.asc(),
--            )
--            .limit(1)
--        )
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                select(
-+                    OuthashesV2.taskhash.label("taskhash"),
-+                    UnihashesV3.unihash.label("unihash"),
-+                )
-+                .join(
-+                    UnihashesV3,
-+                    and_(
-+                        UnihashesV3.method == OuthashesV2.method,
-+                        UnihashesV3.taskhash == OuthashesV2.taskhash,
-+                    ),
-+                )
-+                .where(
-+                    OuthashesV2.method == method,
-+                    OuthashesV2.outhash == outhash,
-+                    OuthashesV2.taskhash != taskhash,
-+                )
-+                .order_by(
-+                    OuthashesV2.created.asc(),
-+                )
-+                .limit(1)
-+            )
-             return map_row(result.first())
- 
-     async def get_equivalent(self, method, taskhash):
--        statement = select(
--            UnihashesV3.unihash,
--            UnihashesV3.method,
--            UnihashesV3.taskhash,
--        ).where(
--            UnihashesV3.method == method,
--            UnihashesV3.taskhash == taskhash,
--        )
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                select(
-+                    UnihashesV3.unihash,
-+                    UnihashesV3.method,
-+                    UnihashesV3.taskhash,
-+                ).where(
-+                    UnihashesV3.method == method,
-+                    UnihashesV3.taskhash == taskhash,
-+                )
-+            )
-             return map_row(result.first())
- 
-     async def remove(self, condition):
-         async def do_remove(table):
-             where = _make_condition_statement(table, condition)
-             if where:
--                statement = delete(table).where(*where)
--                self.logger.debug("%s", statement)
-                 async with self.db.begin():
--                    result = await self.db.execute(statement)
-+                    result = await self._execute(delete(table).where(*where))
-                 return result.rowcount
- 
-             return 0
-@@ -417,21 +406,21 @@ class Database(object):
-             return result.rowcount
- 
-     async def clean_unused(self, oldest):
--        statement = delete(OuthashesV2).where(
--            OuthashesV2.created < oldest,
--            ~(
--                select(UnihashesV3.id)
--                .where(
--                    UnihashesV3.method == OuthashesV2.method,
--                    UnihashesV3.taskhash == OuthashesV2.taskhash,
--                )
--                .limit(1)
--                .exists()
--            ),
--        )
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                delete(OuthashesV2).where(
-+                    OuthashesV2.created < oldest,
-+                    ~(
-+                        select(UnihashesV3.id)
-+                        .where(
-+                            UnihashesV3.method == OuthashesV2.method,
-+                            UnihashesV3.taskhash == OuthashesV2.taskhash,
-+                        )
-+                        .limit(1)
-+                        .exists()
-+                    ),
-+                )
-+            )
-             return result.rowcount
- 
-     async def insert_unihash(self, method, taskhash, unihash):
-@@ -461,11 +450,9 @@ class Database(object):
-         if "created" in data and not isinstance(data["created"], datetime):
-             data["created"] = datetime.fromisoformat(data["created"])
- 
--        statement = insert(OuthashesV2).values(**data)
--        self.logger.debug("%s", statement)
-         try:
-             async with self.db.begin():
--                await self.db.execute(statement)
-+                await self._execute(insert(OuthashesV2).values(**data))
-             return True
-         except IntegrityError:
-             self.logger.debug(
-@@ -474,16 +461,16 @@ class Database(object):
-             return False
- 
-     async def _get_user(self, username):
--        statement = select(
--            Users.username,
--            Users.permissions,
--            Users.token,
--        ).where(
--            Users.username == username,
--        )
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                select(
-+                    Users.username,
-+                    Users.permissions,
-+                    Users.token,
-+                ).where(
-+                    Users.username == username,
-+                )
-+            )
-             return result.first()
- 
-     async def lookup_user_token(self, username):
-@@ -496,70 +483,66 @@ class Database(object):
-         return map_user(await self._get_user(username))
- 
-     async def set_user_token(self, username, token):
--        statement = (
--            update(Users)
--            .where(
--                Users.username == username,
--            )
--            .values(
--                token=token,
--            )
--        )
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                update(Users)
-+                .where(
-+                    Users.username == username,
-+                )
-+                .values(
-+                    token=token,
-+                )
-+            )
-             return result.rowcount != 0
- 
-     async def set_user_perms(self, username, permissions):
--        statement = (
--            update(Users)
--            .where(Users.username == username)
--            .values(permissions=" ".join(permissions))
--        )
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                update(Users)
-+                .where(Users.username == username)
-+                .values(permissions=" ".join(permissions))
-+            )
-             return result.rowcount != 0
- 
-     async def get_all_users(self):
--        statement = select(
--            Users.username,
--            Users.permissions,
--        )
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                select(
-+                    Users.username,
-+                    Users.permissions,
-+                )
-+            )
-             return [map_user(row) for row in result]
- 
-     async def new_user(self, username, permissions, token):
--        statement = insert(Users).values(
--            username=username,
--            permissions=" ".join(permissions),
--            token=token,
--        )
--        self.logger.debug("%s", statement)
-         try:
-             async with self.db.begin():
--                await self.db.execute(statement)
-+                await self._execute(
-+                    insert(Users).values(
-+                        username=username,
-+                        permissions=" ".join(permissions),
-+                        token=token,
-+                    )
-+                )
-             return True
-         except IntegrityError as e:
-             self.logger.debug("Cannot create new user %s: %s", username, e)
-             return False
- 
-     async def delete_user(self, username):
--        statement = delete(Users).where(Users.username == username)
--        self.logger.debug("%s", statement)
-         async with self.db.begin():
--            result = await self.db.execute(statement)
-+            result = await self._execute(
-+                delete(Users).where(Users.username == username)
-+            )
-             return result.rowcount != 0
- 
-     async def get_usage(self):
-         usage = {}
-         async with self.db.begin() as session:
-             for name, table in Base.metadata.tables.items():
--                statement = select(func.count()).select_from(table)
--                self.logger.debug("%s", statement)
--                result = await self.db.execute(statement)
-+                result = await self._execute(
-+                    statement=select(func.count()).select_from(table)
-+                )
-                 usage[name] = {
-                     "rows": result.scalar(),
-                 }
 -- 
 2.34.1
 
