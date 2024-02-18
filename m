@@ -2,57 +2,58 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBBDC48BF6
-	for <webhook@archiver.kernel.org>; Sun, 18 Feb 2024 12:43:42 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.web10.16956.1708260217897431005
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1588FC48BF6
+	for <webhook@archiver.kernel.org>; Sun, 18 Feb 2024 17:36:34 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web11.22499.1708277791976769413
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 18 Feb 2024 04:43:38 -0800
+ Sun, 18 Feb 2024 09:36:33 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Lb0TnRaW;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40fd2f7ef55so25039565e9.0
-        for <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 04:43:37 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dYs4fv8n;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41262ec677fso2897985e9.1
+        for <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 09:36:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1708260216; x=1708865016; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1708277790; x=1708882590; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1q8cxHBJlCZj7d/NehpIVPaBvx5XUUTmHBh9LbVnxE0=;
-        b=Lb0TnRaWXMfF0O6gHC9Ej3zDKiwijB1bAYzC7q5Xcj/ZcsxD/qpAVVGX8wPDFbXDWf
-         f25s3l3j8fWPOBKroQ0JZJHa6tJ82Vjzsrq8eAopMKtNcmbaWLYu81gjCehx7cNhkN4E
-         vd6HgmpEGqFzbP9NuXADBce+QvYoRmCjBnFb0=
+        bh=MrX5WrC57cJzYBoTFJmdRkFp0DuA7Tgzq4aeZQNIMLI=;
+        b=dYs4fv8nB7bCkWRwW5zzIYq9ELr4fd9A3Bf0mMDpSJFkOPfJyHaAgwFHpMqyj8fHAE
+         b/BodH0WTg+C4T9aHuAYMXIrzUulqaJOfFeZenGrEtU/f2qz6VzBmSRLrk8l8YLsIGXs
+         bXe53jr+J8ooZeMLQBEH5wWNzYYg4yI910Nmg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708260216; x=1708865016;
+        d=1e100.net; s=20230601; t=1708277790; x=1708882590;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1q8cxHBJlCZj7d/NehpIVPaBvx5XUUTmHBh9LbVnxE0=;
-        b=gjP+nfpQ6rDqz1Ciox6Br7yiFro4maMLCVSy/wh4RYk0nGyzaYru6Exl4n8kk6phlX
-         BzZMUiAoy9bjxFEpMhItWl5aAFMiAbF+YBIhMGuyDZliUExudVqx1VsoRCVGRe3kYUBf
-         sENDRg9G9izQBwfPudXjaV1TVMxexIbQ2rmekrHGJpj94LBwfUk0jF+PoY1whjZ3XALy
-         iAm9+kQjWmfhgtnCpKAFVtA3UsBXOuyM0/lUdJCwRzVYjpW/peQ1u6ng93Mahzs+WE/N
-         6xRCLwER6iBMomAVS/0/WfOmZpDYDigXcSqZPOaZcpXF/OCwux3arx/WlonNXjy5D4tr
-         jxZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+NYpyz1bJ3KEM/exLMus+SalvoiX9ebdRJ9uKZx7UTTc5aFNMPvss5CudxlWVKW9oVWbMiy4ZgWSGl0pCt4rd5xEOh3xPKNpgaTahPbjmLzrCEZE=
-X-Gm-Message-State: AOJu0Yz9x+OZQi52bsoHCF5PjmIhMOWcTuu/Aj7iuKKyXHOCkTsYsuUk
-	g4gPgVSA4Hw3Bef6lIOUQnw6SDY50SurkVzfUhdPS2YZ92gRrc08yqM+r4DiegE=
-X-Google-Smtp-Source: AGHT+IGrbv6HNoAOSaDK1Nx15eQOEu/J3NeDmANX2SW68zZYsLWLEP3gTViKT105j/nE0SW9Hnz78w==
-X-Received: by 2002:adf:efd2:0:b0:33d:201f:ea9d with SMTP id i18-20020adfefd2000000b0033d201fea9dmr5271759wrp.2.1708260216002;
-        Sun, 18 Feb 2024 04:43:36 -0800 (PST)
+        bh=MrX5WrC57cJzYBoTFJmdRkFp0DuA7Tgzq4aeZQNIMLI=;
+        b=H9iUgF5ABVogXvn3hkM70VDSyKDXfUZWolVPW4xMf3hPmIKlJpzATME+Gp5K+V0H0t
+         RL2oYGT8dAf+1UNc48QZF6MkoGK0ViGmt5QMz2n2Fx0GgJbTB6r5a3Jn+7qzFPryO91+
+         Rq2eL0c1SdVeaZyPAp2m9BYXu1RDfozlPaGIw9DZUfYdhhBT0gddi7rgBrUIYSajKCw1
+         TF31oCHdHqZBD4s0zR1QZjcZHma+ZWK3wB7gQeb23C7OI/WFxHigW3Y7Sxugoq+ha2eR
+         VCZg/Mk2qpp6eQ9zrMpUfKFC8KtMS3bnBI19yRlbw7fZnKArM83wDVC+2+UgiF3stxlX
+         /6xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWdVaSZQknumneqjuEaFXa6VU0IUwNMEsGVFsz5xWFvGB1d1q7trDgKuN9Z3+0yO5yLs6EoS5iYdVLwR3otMoFmFxqr63ro3N7Azv5JgzJ6RU/Ivks=
+X-Gm-Message-State: AOJu0YzZKu+ExaiwkuYy2JH6+LwuTFdjoMk/BDTEAqWa39R3ZMGZQikE
+	vW6MdyZi1RkldBuKa+mmLtJHyiZ0m5ppTCe5DDcffvdKAgn4PgYxSGRVCOnTIRU=
+X-Google-Smtp-Source: AGHT+IHz6N3Nkx5ZRRJtxOWBpQ0m0cWSf1UlkI9vCmm4P2ssXToBKTcegIRxIedrr9sd6n50N/snlw==
+X-Received: by 2002:adf:f187:0:b0:33d:82a:14af with SMTP id h7-20020adff187000000b0033d082a14afmr5953546wro.64.1708277790034;
+        Sun, 18 Feb 2024 09:36:30 -0800 (PST)
 Received: from ?IPv6:2001:8b0:aba:5f3c:3d44:5cd8:cef2:3070? ([2001:8b0:aba:5f3c:3d44:5cd8:cef2:3070])
-        by smtp.gmail.com with ESMTPSA id g11-20020a05600c310b00b0041264edf506sm645018wmo.38.2024.02.18.04.43.35
+        by smtp.gmail.com with ESMTPSA id u10-20020a5d6daa000000b0033d170a5d6dsm7884124wrs.98.2024.02.18.09.36.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Feb 2024 04:43:35 -0800 (PST)
-Message-ID: <6f2645a7c4db2ae149d387544d2b94209cfed3f4.camel@linuxfoundation.org>
+        Sun, 18 Feb 2024 09:36:29 -0800 (PST)
+Message-ID: <7461170e0a5ee05698999ab57e53586ab95fd09b.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH 1/1] taskexp_ncurses: ncurses version of
  taskexp.py
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: david.reyna@windriver.com, bitbake-devel@lists.openembedded.org
-Date: Sun, 18 Feb 2024 12:43:34 +0000
-In-Reply-To: <c3864291243d501bcaae5ed79cb1fd4577ac324a.1708252029.git.David.Reyna@windriver.com>
+Date: Sun, 18 Feb 2024 17:36:28 +0000
+In-Reply-To: <17B4F59E3ECA4807.31287@lists.openembedded.org>
 References: <cover.1708252029.git.David.Reyna@windriver.com>
 	 <c3864291243d501bcaae5ed79cb1fd4577ac324a.1708252029.git.David.Reyna@windriver.com>
+	 <17B4F59E3ECA4807.31287@lists.openembedded.org>
 Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
@@ -68,88 +69,96 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 12:43:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15914
+ <bitbake-devel@lists.openembedded.org>; Sun, 18 Feb 2024 17:36:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15915
 
-On Sun, 2024-02-18 at 02:41 -0800, Reyna, David via
+On Sun, 2024-02-18 at 12:43 +0000, Richard Purdie via
 lists.openembedded.org wrote:
-> From: David Reyna <David.Reyna@windriver.com>
+> On Sun, 2024-02-18 at 02:41 -0800, Reyna, David via
+> lists.openembedded.org wrote:
+> > From: David Reyna <David.Reyna@windriver.com>
+> >=20
+> > * Create an ncurses version of the GTK app "taskexp.py".
+> > * Add these additional features:
+> > =C2=A0 - Sort tasks in recipes by their dependency order
+> > =C2=A0 - Print individual and/or recipe-wide dependencies to a file
+> > =C2=A0 - Add a wild card filter
+> > =C2=A0 - Show the target recipes on BOLD
+> > * Provide a GUI self test
+> > * Provide a non-ncurses self test for ptest
+> >=20
+> > Signed-off-by: David Reyna <David.Reyna@windriver.com>
+> > ---
+> > =C2=A0lib/bb/ui/taskexp_ncurses.py | 1511
+> > ++++++++++++++++++++++++++++++++++
+> > =C2=A01 file changed, 1511 insertions(+)
+> > =C2=A0create mode 100755 bitbake/lib/bb/ui/taskexp_ncurses.py
+> >=20
+> > diff --git a/lib/bb/ui/taskexp_ncurses.py
+> > b/lib/bb/ui/taskexp_ncurses.py
+> > new file mode 100755
+> > index 00000000000..ffa91ea1044
+> > --- /dev/null
+> > +++ b/lib/bb/ui/taskexp_ncurses.py
+> > @@ -0,0 +1,1511 @@
+> > +#
+> > +# BitBake Graphical ncurses-based Dependency Explorer
+> > +#=C2=A0=C2=A0 * Based on the GTK implementation
+> > +#=C2=A0=C2=A0 * Intended to run on any Linux host
+> > +#
+> > +# Copyright (C) 2007=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Ross Bu=
+rton
+> > +# Copyright (C) 2007 - 2008 Richard Purdie
+> > +# Copyright (C) 2022 - 2024 David Reyna
+> > +#
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +#
+> > +
+> > +#
+> > +# Execution example:
+> > +#=C2=A0=C2=A0 $ bitbake -g -u taskexp_ncurses.py acl zlib
+> > +#
+> > +# Self-test example (executes a script of GUI actions):
+> > +#=C2=A0=C2=A0 $ TASK_EXP_UNIT_TEST=3D1 bitbake -g -u taskexp_ncurses.p=
+y zlib
+> > acl
+> > +#=C2=A0=C2=A0 ...
+> > +#=C2=A0=C2=A0 $ echo $?
+> > +#=C2=A0=C2=A0 0
+> > +#=C2=A0=C2=A0 $ TASK_EXP_UNIT_TEST=3D1 bitbake -g -u taskexp_ncurses.p=
+y zlib
+> > acl
+> > foo
+> > +#=C2=A0=C2=A0 ERROR: Nothing PROVIDES 'foo'. Close matches:
+> > +#=C2=A0=C2=A0 ofono
+> > +#=C2=A0=C2=A0 $ echo $?
+> > +#=C2=A0=C2=A0 1
+> > +#
+> > +# Self-test with no terminal example (only tests dependency fetch
+> > from bitbake):
+> > +#=C2=A0=C2=A0 $ TASK_EXP_UNIT_TEST_NOTERM=3D1 bitbake -g -u
+> > taskexp_ncurses.py_2
+> > quilt
+> > +#=C2=A0=C2=A0 $ echo $?
+> > +#=C2=A0=C2=A0 0
 >=20
-> * Create an ncurses version of the GTK app "taskexp.py".
-> * Add these additional features:
-> =C2=A0 - Sort tasks in recipes by their dependency order
-> =C2=A0 - Print individual and/or recipe-wide dependencies to a file
-> =C2=A0 - Add a wild card filter
-> =C2=A0 - Show the target recipes on BOLD
-> * Provide a GUI self test
-> * Provide a non-ncurses self test for ptest
+> Thanks for this David, it is nice to see this ready to go in :)
 >=20
-> Signed-off-by: David Reyna <David.Reyna@windriver.com>
-> ---
-> =C2=A0lib/bb/ui/taskexp_ncurses.py | 1511
-> ++++++++++++++++++++++++++++++++++
-> =C2=A01 file changed, 1511 insertions(+)
-> =C2=A0create mode 100755 bitbake/lib/bb/ui/taskexp_ncurses.py
+> I did make one small tweak to the patch when I queued it to drop the
+> .py and .py_2 from the above command examples since it caused them
+> not
+> to work.
 >=20
-> diff --git a/lib/bb/ui/taskexp_ncurses.py
-> b/lib/bb/ui/taskexp_ncurses.py
-> new file mode 100755
-> index 00000000000..ffa91ea1044
-> --- /dev/null
-> +++ b/lib/bb/ui/taskexp_ncurses.py
-> @@ -0,0 +1,1511 @@
-> +#
-> +# BitBake Graphical ncurses-based Dependency Explorer
-> +#=C2=A0=C2=A0 * Based on the GTK implementation
-> +#=C2=A0=C2=A0 * Intended to run on any Linux host
-> +#
-> +# Copyright (C) 2007=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Ross Burt=
-on
-> +# Copyright (C) 2007 - 2008 Richard Purdie
-> +# Copyright (C) 2022 - 2024 David Reyna
-> +#
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +
-> +#
-> +# Execution example:
-> +#=C2=A0=C2=A0 $ bitbake -g -u taskexp_ncurses.py acl zlib
-> +#
-> +# Self-test example (executes a script of GUI actions):
-> +#=C2=A0=C2=A0 $ TASK_EXP_UNIT_TEST=3D1 bitbake -g -u taskexp_ncurses.py =
-zlib acl
-> +#=C2=A0=C2=A0 ...
-> +#=C2=A0=C2=A0 $ echo $?
-> +#=C2=A0=C2=A0 0
-> +#=C2=A0=C2=A0 $ TASK_EXP_UNIT_TEST=3D1 bitbake -g -u taskexp_ncurses.py =
-zlib acl
-> foo
-> +#=C2=A0=C2=A0 ERROR: Nothing PROVIDES 'foo'. Close matches:
-> +#=C2=A0=C2=A0 ofono
-> +#=C2=A0=C2=A0 $ echo $?
-> +#=C2=A0=C2=A0 1
-> +#
-> +# Self-test with no terminal example (only tests dependency fetch
-> from bitbake):
-> +#=C2=A0=C2=A0 $ TASK_EXP_UNIT_TEST_NOTERM=3D1 bitbake -g -u taskexp_ncur=
-ses.py_2
-> quilt
-> +#=C2=A0=C2=A0 $ echo $?
-> +#=C2=A0=C2=A0 0
+> I've also queued a script to autobuilder-helper to allow us to run
+> these tests.
 
-Thanks for this David, it is nice to see this ready to go in :)
+That helper script didn't work. I do now have the tests working but it
+took hours to get it to work correctly due to the lack of a suitably
+capable terminal in the test environment on the autobuilder.
 
-I did make one small tweak to the patch when I queued it to drop the
-.py and .py_2 from the above command examples since it caused them not
-to work.
-
-I've also queued a script to autobuilder-helper to allow us to run
-these tests.
+I did want to see us resolve this though!
 
 Cheers,
 
 Richard
-
-
-
 
