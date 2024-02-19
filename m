@@ -1,120 +1,121 @@
-Return-Path: <nvhieudt11@gmail.com>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AD5C48BF8
-	for <webhook@archiver.kernel.org>; Mon, 19 Feb 2024 16:51:32 +0000 (UTC)
-Subject: Re: [PATCH] Support add-layer to prepend
-To: bitbake-devel@lists.openembedded.org
-From: nvhieudt11@gmail.com
-X-Originating-Location: Ho Chi Minh City, Ho Chi Minh, VN (14.191.161.197)
-X-Originating-Platform: Windows Chrome 121
-User-Agent: GROUPS.IO Web Poster
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BF6C48BF8
+	for <webhook@archiver.kernel.org>; Mon, 19 Feb 2024 18:44:56 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+ by mx.groups.io with SMTP id smtpd.web11.2090.1708368287856828591
+ for <bitbake-devel@lists.openembedded.org>;
+ Mon, 19 Feb 2024 10:44:48 -0800
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=bXWRDOQ+;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 17F6840004;
+	Mon, 19 Feb 2024 18:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708368285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TtbmV7e6KznixlxXlKgaxCZCpvJWhOS1gc/GL+uaHnk=;
+	b=bXWRDOQ+XsDt55/pw/y5Tyy2zR3O0cYz1TW4Ld8sxRw6V5F30VdXLw0dGohYMlos/+DYNS
+	eHlb4ID5pyOjA0SUv/6QAKyRN1KN9W1aGIMaRxhnOU++N23o0kQotbaW0HiMnp+DCQ0QBm
+	yGXfQtcObz9zdR07FoFmSo/kpnl1qnIUsB0baZq4N+RUVWNLAHxFHRUUzg77YNfrFdUQdM
+	We2ESxoXBOht5LcJpFZdYjKL7xzhKp0wNgW01iP+CpWBQLC2oCBdkaL4LUNVjC4jNYq1yK
+	DgxeZcePZp2SKc4liW2avsu4yuOAkcSMZwpy1txMsv4iYi1APkSgPiGT2Ca8GA==
+Message-ID: <192680d9-bb72-44ab-84cd-40972ba78417@bootlin.com>
+Date: Mon, 19 Feb 2024 19:44:44 +0100
 MIME-Version: 1.0
-Date: Mon, 19 Feb 2024 08:51:25 -0800
-References: <202402072236195f1ece48@mail.local>
-In-Reply-To: <202402072236195f1ece48@mail.local>
-Message-ID: <16399.1708361485507574514@lists.openembedded.org>
-Content-Type: multipart/mixed; boundary="i2nDO2l5kgJnIf3BWQVW"
+User-Agent: Mozilla Thunderbird
+Cc: docs@lists.yoctoproject.org, bitbake-devel@lists.openembedded.org
+Subject: Re: [docs] [PATCH v2] bitbake: doc: Add section for variable context
+Content-Language: en-US
+To: =?UTF-8?Q?Simone_Wei=C3=9F?= <simone.p.weiss@posteo.com>
+References: <20240217110704.49901-1-simone.p.weiss@posteo.com>
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Organization: Bootlin
+In-Reply-To: <20240217110704.49901-1-simone.p.weiss@posteo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: michael.opdenacker@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 19 Feb 2024 16:51:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15942
+ <bitbake-devel@lists.openembedded.org>; Mon, 19 Feb 2024 18:44:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15943
 
---i2nDO2l5kgJnIf3BWQVW
-Content-Type: multipart/alternative; boundary="MB4i5tIHl1wzPetyV5n3"
+Hi Simone,
 
---MB4i5tIHl1wzPetyV5n3
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Many thanks for the updates!
 
-Hi Alexandre Belloni,
+On 2/17/24 at 12:07, Simone Weiß wrote:
+> From: Simone Weiß <simone.p.weiss@posteo.com>
+>
+> This is inspired by the same section in the yocto-docs. It aims to provide
+> information in what contexts(recipes, .conf, bbclass,...) a variable is usually
+> used. For that I tried to group similar variables, so that a short overview is
+> given. This was inspired by [YOCTO #14072], but of course does not implement a
+> warning if a variable is used in an unintended context.
+>
+> Signed-off-by: Simone Weiß <simone.p.weiss@posteo.com>
+> ---
+>   ...bake-user-manual-ref-variables-context.rst | 89 +++++++++++++++++++
+>   doc/index.rst                                 |  1 +
+>   2 files changed, 90 insertions(+)
+>   create mode 100644 doc/bitbake-user-manual/bitbake-user-manual-ref-variables-context.rst
+>
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-context.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-context.rst
+> new file mode 100644
+> index 00000000..8252889e
+> --- /dev/null
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-context.rst
+> @@ -0,0 +1,89 @@
+> +.. SPDX-License-Identifier: CC-BY-SA-2.0-UK
 
-Sorry for the late reply.
-I'm not sure why you can't apply my patch. I tried applying it again and th=
-ere was no problem.
-I'd like to attach my patch, could you please check it again (0001-bitbake-=
-Support-add-layer-to-prepend.patch)
-https://github.com/hieunv0828/bitbake/commit/fc670b7ba577958eb18b108458f24f=
-d2c260e225
 
-Thanks!
-Hieu
+Oops, I overlooked this. The license doesn't match the one in the other 
+documents. I'm not sure this matters though...
 
---MB4i5tIHl1wzPetyV5n3
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+> +
+> +****************
+> +Variable Context
+> +****************
 
-Hi&nbsp;<span style=3D"white-space-collapse: preserve;">Alexandre Belloni,<=
-br /></span><br />Sorry for the late reply.<br />I'm not sure why you can't=
- apply my patch. I tried applying it again and there was no problem.<br />I=
-'d like to attach my patch, could you please check it again (0001-bitbake-S=
-upport-add-layer-to-prepend.patch)<br /><a href=3D"https://github.com/hieun=
-v0828/bitbake/commit/fc670b7ba577958eb18b108458f24fd2c260e225" target=3D"_b=
-lank" rel=3D"noopener">https://github.com/hieunv0828/bitbake/commit/fc670b7=
-ba577958eb18b108458f24fd2c260e225</a><br /><br />Thanks!<br />Hieu
 
---MB4i5tIHl1wzPetyV5n3--
+Oops, another issue: your section doesn't appear in the top left menu, 
+and when I look at it, it doesn't have any numbering.
+I guess this happens because you didn't start your section with the same 
+headers as the other documents.
 
---i2nDO2l5kgJnIf3BWQVW
-Content-Type: application/octet-stream; name="0001-bitbake-Support-add-layer-to-prepend.patch"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="0001-bitbake-Support-add-layer-to-prepend.patch"
+Using the same headers as in the previous document fixes the trouble:
 
-RnJvbSBmYzY3MGI3YmE1Nzc5NThlYjE4YjEwODQ1OGYyNGZkMmMyNjBlMjI1IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQ0KRnJvbTogSGlldSBWYW4gTmd1eWVuIDxoaWV1Mi5uZ3V5ZW5AbGdlLmNv
-bT4NCkRhdGU6IE1vbiwgNSBGZWIgMjAyNCAwODowMTo0MyArMDAwMA0KU3ViamVjdDogW1BBVENI
-XSBiaXRiYWtlOiBTdXBwb3J0IGFkZC1sYXllciB0byBwcmVwZW5kDQoNCkFzIHlvdSBrbm93LCBs
-YXllciBvcmRlciBpbiBCQkxBWUVSUyBjYW4gYWZmZWN0IGluIHBhcnNpbmcgcmVjaXBlcyBwcm9j
-ZXNzLA0KaW4gc29tZSBjYXNlcywgdXNlcnMgd2FudCB0byBhZGQgYSBsYXllciBvbiB0aGUgdG9w
-IG9mIEJCTEFZRVJTIHZhcmlhYmxlDQoNClNvLCBhZGQgIi0tcHJlcGVuZCIgb3B0aW9uIGZvciBi
-aXRiYWtlLWxheWVycyB0byBzdXBwb3J0IGFkZC1sYXllciB0byBwcmVwZW5kDQoNClNpZ25lZC1v
-ZmYtYnk6IEhpZXUgVmFuIE5ndXllbiA8aGlldTIubmd1eWVuQGxnZS5jb20+DQotLS0NCiBsaWIv
-YmIvdXRpbHMucHkgICAgICAgIHwgNyArKysrKy0tDQogbGliL2JibGF5ZXJzL2FjdGlvbi5weSB8
-IDMgKystDQogMiBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0p
-DQoNCmRpZmYgLS1naXQgYS9saWIvYmIvdXRpbHMucHkgYi9saWIvYmIvdXRpbHMucHkNCmluZGV4
-IDA2OGI2MzFjLi4wODZmMWNjOCAxMDA2NDQNCi0tLSBhL2xpYi9iYi91dGlscy5weQ0KKysrIGIv
-bGliL2JiL3V0aWxzLnB5DQpAQCAtMTQxMiw3ICsxNDEyLDcgQEAgZGVmIGVkaXRfbWV0YWRhdGFf
-ZmlsZShtZXRhX2ZpbGUsIHZhcmlhYmxlcywgdmFyZnVuYyk6DQogICAgIHJldHVybiB1cGRhdGVk
-DQogDQogDQotZGVmIGVkaXRfYmJsYXllcnNfY29uZihiYmxheWVyc19jb25mLCBhZGQsIHJlbW92
-ZSwgZWRpdF9jYj1Ob25lKToNCitkZWYgZWRpdF9iYmxheWVyc19jb25mKGJibGF5ZXJzX2NvbmYs
-IGFkZCwgcmVtb3ZlLCBwcmVwZW5kPU5vbmUsIGVkaXRfY2I9Tm9uZSk6DQogICAgICIiIkVkaXQg
-YmJsYXllcnMuY29uZiwgYWRkaW5nIGFuZC9vciByZW1vdmluZyBsYXllcnMNCiAgICAgUGFyYW1l
-dGVyczoNCiAgICAgICAgIGJibGF5ZXJzX2NvbmY6IHBhdGggdG8gYmJsYXllcnMuY29uZiBmaWxl
-IHRvIGVkaXQNCkBAIC0xNDgyLDcgKzE0ODIsMTAgQEAgZGVmIGVkaXRfYmJsYXllcnNfY29uZihi
-YmxheWVyc19jb25mLCBhZGQsIHJlbW92ZSwgZWRpdF9jYj1Ob25lKToNCiAgICAgICAgICAgICBm
-b3IgYWRkbGF5ZXIgaW4gYWRkbGF5ZXJzOg0KICAgICAgICAgICAgICAgICBpZiBhZGRsYXllciBu
-b3QgaW4gYmJsYXllcnM6DQogICAgICAgICAgICAgICAgICAgICB1cGRhdGVkID0gVHJ1ZQ0KLSAg
-ICAgICAgICAgICAgICAgICAgYmJsYXllcnMuYXBwZW5kKGFkZGxheWVyKQ0KKyAgICAgICAgICAg
-ICAgICAgICAgaWYgcHJlcGVuZDoNCisgICAgICAgICAgICAgICAgICAgICAgICBiYmxheWVycy5p
-bnNlcnQoMCxhZGRsYXllcikNCisgICAgICAgICAgICAgICAgICAgIGVsc2U6DQorICAgICAgICAg
-ICAgICAgICAgICAgICAgYmJsYXllcnMuYXBwZW5kKGFkZGxheWVyKQ0KICAgICAgICAgICAgIGRl
-bCBhZGRsYXllcnNbOl0NCiANCiAgICAgICAgIGlmIGVkaXRfY2I6DQpkaWZmIC0tZ2l0IGEvbGli
-L2JibGF5ZXJzL2FjdGlvbi5weSBiL2xpYi9iYmxheWVycy9hY3Rpb24ucHkNCmluZGV4IGE4ZjI2
-OTkzLi41N2Q3MTk1YyAxMDA2NDQNCi0tLSBhL2xpYi9iYmxheWVycy9hY3Rpb24ucHkNCisrKyBi
-L2xpYi9iYmxheWVycy9hY3Rpb24ucHkNCkBAIC00OSw3ICs0OSw3IEBAIGNsYXNzIEFjdGlvblBs
-dWdpbihMYXllclBsdWdpbik6DQogICAgICAgICBzaHV0aWwuY29weTIoYmJsYXllcnNfY29uZiwg
-YmFja3VwKQ0KIA0KICAgICAgICAgdHJ5Og0KLSAgICAgICAgICAgIG5vdGFkZGVkLCBfID0gYmIu
-dXRpbHMuZWRpdF9iYmxheWVyc19jb25mKGJibGF5ZXJzX2NvbmYsIGxheWVyZGlycywgTm9uZSkN
-CisgICAgICAgICAgICBub3RhZGRlZCwgXyA9IGJiLnV0aWxzLmVkaXRfYmJsYXllcnNfY29uZihi
-YmxheWVyc19jb25mLCBsYXllcmRpcnMsIE5vbmUsIGFyZ3MucHJlcGVuZCkNCiAgICAgICAgICAg
-ICBzZWxmLnRpbmZvaWwubW9kaWZpZWRfZmlsZXMoKQ0KICAgICAgICAgICAgIGlmIG5vdCAoYXJn
-cy5mb3JjZSBvciBub3RhZGRlZCk6DQogICAgICAgICAgICAgICAgIHRyeToNCkBAIC0yNjcsNiAr
-MjY3LDcgQEAgYnVpbGQgcmVzdWx0cyAoYXMgdGhlIGxheWVyIHByaW9yaXR5IG9yZGVyIGhhcyBl
-ZmZlY3RpdmVseSBjaGFuZ2VkKS4NCiAgICAgZGVmIHJlZ2lzdGVyX2NvbW1hbmRzKHNlbGYsIHNw
-KToNCiAgICAgICAgIHBhcnNlcl9hZGRfbGF5ZXIgPSBzZWxmLmFkZF9jb21tYW5kKHNwLCAnYWRk
-LWxheWVyJywgc2VsZi5kb19hZGRfbGF5ZXIsIHBhcnNlcmVjaXBlcz1GYWxzZSkNCiAgICAgICAg
-IHBhcnNlcl9hZGRfbGF5ZXIuYWRkX2FyZ3VtZW50KCdsYXllcmRpcicsIG5hcmdzPScrJywgaGVs
-cD0nTGF5ZXIgZGlyZWN0b3J5L2RpcmVjdG9yaWVzIHRvIGFkZCcpDQorICAgICAgICBwYXJzZXJf
-YWRkX2xheWVyLmFkZF9hcmd1bWVudCgnLS1wcmVwZW5kJywgYWN0aW9uPSdzdG9yZV90cnVlJywg
-aGVscD0nUHJlcGVuZCBsYXllciBkaXJlY3RvcnkvZGlyZWN0b3JpZXMnKQ0KIA0KICAgICAgICAg
-cGFyc2VyX3JlbW92ZV9sYXllciA9IHNlbGYuYWRkX2NvbW1hbmQoc3AsICdyZW1vdmUtbGF5ZXIn
-LCBzZWxmLmRvX3JlbW92ZV9sYXllciwgcGFyc2VyZWNpcGVzPUZhbHNlKQ0KICAgICAgICAgcGFy
-c2VyX3JlbW92ZV9sYXllci5hZGRfYXJndW1lbnQoJ2xheWVyZGlyJywgbmFyZ3M9JysnLCBoZWxw
-PSdMYXllciBkaXJlY3RvcnkvZGlyZWN0b3JpZXMgdG8gcmVtb3ZlICh3aWxkY2FyZHMgYWxsb3dl
-ZCwgZW5jbG9zZSBpbiBxdW90ZXMgdG8gYXZvaWQgc2hlbGwgZXhwYW5zaW9uKScpDQotLSANCjIu
-NDMuMA0KDQo=
+================
+Variable Context
+================
 
---i2nDO2l5kgJnIf3BWQVW--
+....
+
+BitBake's own configuration
+===========================
+
+> +
+> +Variables might only have an impact or can be used in certain contexts. Some
+> +should only be used in global files like ``.conf``, while others are intended only
+> +for local files like ``.bb``. This chapter aims to describe some important variable
+> +contexts.
+> +
+> +.. _ref-varcontext-configuration:
+
+Why this anchor? Do you plan to make references to it elsewhere? Just to 
+double check...
+Cheers
+Michael.
+
+-- 
+Michael Opdenacker, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
