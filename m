@@ -1,103 +1,120 @@
-Return-Path: <rybczynska@gmail.com>
+Return-Path: <nvhieudt11@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C144FC48BF8
-	for <webhook@archiver.kernel.org>; Mon, 19 Feb 2024 13:43:41 +0000 (UTC)
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
- by mx.groups.io with SMTP id smtpd.web11.41534.1708350216093083352
- for <bitbake-devel@lists.openembedded.org>;
- Mon, 19 Feb 2024 05:43:36 -0800
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=EGgCE2Gk;
- spf=pass (domain: gmail.com, ip: 209.85.210.173, mailfrom: rybczynska@gmail.com)
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e32a92e0fdso313312b3a.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 19 Feb 2024 05:43:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708350215; x=1708955015; darn=lists.openembedded.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=crwhSeal2LZks12/y9c82r/cdfuhVyxb7rxm4ormLQk=;
-        b=EGgCE2Gkd7eafMisoavTj0qOcaL2mnYdfHeZHFqloxnkrcH55t69KY/WmEFbl+Vlm7
-         p+8phlW0AZGImKXWby+Aok/52XbRX57kw16jhHc6wHJIhyRP+OH5HhTmD8ogB5PCK4wY
-         758gpL01xtej91JtOWCvpadUh7B1A/BZy8QbwEsMEBvhI+TQWMucSMBoCrHu4NfmVfSb
-         /clTQhu1cU/t74IysQWH1EHU/4bCV1cTPBYUSft/l6rnWiYXDj+bt6GYe7/DsUzodGFr
-         00llCKHsl7aR11VmMUoPrkp3MlA2o/vr6phmmZ/+0zjADBk+XkVOcS0rbnQ+MHvAFbyw
-         4kqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708350215; x=1708955015;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=crwhSeal2LZks12/y9c82r/cdfuhVyxb7rxm4ormLQk=;
-        b=Ie9mnRnRe8A9T1Xmqod33ec7IM8esCdkPiy/FyOlwnQUIEW3j4T9ISh8bstgfFUhMZ
-         IF8yVXJkv2GrGxb3rDXT+H6k+8JIPwPd5rwhy7j++4Hovty0NYOVU2efwWjgUR2qT7CD
-         rr9dBZlBIPUmEBFOkAZxlOWb40Y+Tl7UDI634cdqMJ7gqfIVNKFjeFWsSZlWJtTL/DO+
-         E+aIsgTpZFeQV+cYtafp9Pu3T+7CkqL1Z87mUDsoXUA6XkbRGHo01ddaL6kSj2NkuQuL
-         9qnL8sP3a28Dz5yY2fS9PLOEZ+/57PdbIHdf5RgpgwMExbZxmAX2Xs74qjTgITRnmSic
-         sPCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZqyNghDgj4/gsQOUyDRB9XcY8hlKAVvQmrUiXyniH5YiI6IslL+2B71HlWoCS5FRIfguBgK0ChLJGjv8C6fnhFcOtiVYWPtS0BHonizwfxWpC8ao=
-X-Gm-Message-State: AOJu0YzUILu5bvB+XwRlarJ34vSpO3TYmWaoVb7AzyG8HDBovQTTWJUD
-	duVALQIbNkefcWvsWrCuMewCYFvvR2VC0wRuf5CDAAydWcoo1eMPAiE+cGCjFGqsHNRiddP91sN
-	HzKMg8+uIIhaQ4jV/606FgH05OiI=
-X-Google-Smtp-Source: AGHT+IESShPUxIRQURrNPgn7VWIkmxb/BC5FbdyqHY2s0ua1C5j9QKau7MWqbmSMNTw03kpS9VxE4V6H6ac+8KTzu7M=
-X-Received: by 2002:a17:902:e84e:b0:1db:de64:97ac with SMTP id
- t14-20020a170902e84e00b001dbde6497acmr3805520plg.15.1708350215169; Mon, 19
- Feb 2024 05:43:35 -0800 (PST)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AD5C48BF8
+	for <webhook@archiver.kernel.org>; Mon, 19 Feb 2024 16:51:32 +0000 (UTC)
+Subject: Re: [PATCH] Support add-layer to prepend
+To: bitbake-devel@lists.openembedded.org
+From: nvhieudt11@gmail.com
+X-Originating-Location: Ho Chi Minh City, Ho Chi Minh, VN (14.191.161.197)
+X-Originating-Platform: Windows Chrome 121
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-From: Marta Rybczynska <rybczynska@gmail.com>
-Date: Mon, 19 Feb 2024 14:43:23 +0100
-Message-ID: <CAApg2=R-9zcMJOSDQXyZpGPG6KfACeFh4=_xn0tn0gqza6APyg@mail.gmail.com>
-Subject: YOCTO PROJECT SECURITY ADVISORY 2024-01-19
-To: yocto-security@lists.yoctoproject.org, 
-	bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+Date: Mon, 19 Feb 2024 08:51:25 -0800
+References: <202402072236195f1ece48@mail.local>
+In-Reply-To: <202402072236195f1ece48@mail.local>
+Message-ID: <16399.1708361485507574514@lists.openembedded.org>
+Content-Type: multipart/mixed; boundary="i2nDO2l5kgJnIf3BWQVW"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 19 Feb 2024 13:43:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15941
+ <bitbake-devel@lists.openembedded.org>; Mon, 19 Feb 2024 16:51:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15942
 
-YOCTO PROJECT SECURITY ADVISORY 2024-01-19
+--i2nDO2l5kgJnIf3BWQVW
+Content-Type: multipart/alternative; boundary="MB4i5tIHl1wzPetyV5n3"
 
-References: CVE-2024-25626 (HIGH severity, CVSS 8.8)
+--MB4i5tIHl1wzPetyV5n3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-A remote execution vulnerability has been discovered in the Toaster
-web application
-included into bitbake, which is in turn a component of the Yocto
-Project. An attacker
-could craft an HTTP request that causes a run of attacker-controlled
-command in the shell
-running in with Toaster permissions. This issue does not require authorization.
+Hi Alexandre Belloni,
 
-Toaster is a web interface of Bitbake. It is disabled by default,
-users need to launch
-it explicitly. It should not be accessible from public or untrusted networks.
+Sorry for the late reply.
+I'm not sure why you can't apply my patch. I tried applying it again and th=
+ere was no problem.
+I'd like to attach my patch, could you please check it again (0001-bitbake-=
+Support-add-layer-to-prepend.patch)
+https://github.com/hieunv0828/bitbake/commit/fc670b7ba577958eb18b108458f24f=
+d2c260e225
 
-Users not using Toaster are not affected by this vulnerability.
+Thanks!
+Hieu
 
-Command line builds are not affected.
+--MB4i5tIHl1wzPetyV5n3
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Solution: Update to Yocto Project 5.0, 3.1.31, 4.0.16, 4.3.2, or to
-the current git versions.
+Hi&nbsp;<span style=3D"white-space-collapse: preserve;">Alexandre Belloni,<=
+br /></span><br />Sorry for the late reply.<br />I'm not sure why you can't=
+ apply my patch. I tried applying it again and there was no problem.<br />I=
+'d like to attach my patch, could you please check it again (0001-bitbake-S=
+upport-add-layer-to-prepend.patch)<br /><a href=3D"https://github.com/hieun=
+v0828/bitbake/commit/fc670b7ba577958eb18b108458f24fd2c260e225" target=3D"_b=
+lank" rel=3D"noopener">https://github.com/hieunv0828/bitbake/commit/fc670b7=
+ba577958eb18b108458f24fd2c260e225</a><br /><br />Thanks!<br />Hieu
 
-Workarounds:
- - Make sure Toaster is listening on local interfaces only.
- - Run Toaster as a separate user with minimal permissions.
+--MB4i5tIHl1wzPetyV5n3--
 
-Thanks: The Yocto Project would like to to thank Michael Blunt for a
-responsable disclosure.
+--i2nDO2l5kgJnIf3BWQVW
+Content-Type: application/octet-stream; name="0001-bitbake-Support-add-layer-to-prepend.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="0001-bitbake-Support-add-layer-to-prepend.patch"
 
-References:
-https://git.openembedded.org/bitbake/commit/?id=fe0881615896de844141393b21a121f7c3fa9d16
-https://git.openembedded.org/bitbake/commit/?id=94e88efa9dbefd37f1d48459ade19797b6034b84
-https://github.com/yoctoproject/poky/security/advisories/GHSA-75xw-78mm-72r4
+RnJvbSBmYzY3MGI3YmE1Nzc5NThlYjE4YjEwODQ1OGYyNGZkMmMyNjBlMjI1IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQ0KRnJvbTogSGlldSBWYW4gTmd1eWVuIDxoaWV1Mi5uZ3V5ZW5AbGdlLmNv
+bT4NCkRhdGU6IE1vbiwgNSBGZWIgMjAyNCAwODowMTo0MyArMDAwMA0KU3ViamVjdDogW1BBVENI
+XSBiaXRiYWtlOiBTdXBwb3J0IGFkZC1sYXllciB0byBwcmVwZW5kDQoNCkFzIHlvdSBrbm93LCBs
+YXllciBvcmRlciBpbiBCQkxBWUVSUyBjYW4gYWZmZWN0IGluIHBhcnNpbmcgcmVjaXBlcyBwcm9j
+ZXNzLA0KaW4gc29tZSBjYXNlcywgdXNlcnMgd2FudCB0byBhZGQgYSBsYXllciBvbiB0aGUgdG9w
+IG9mIEJCTEFZRVJTIHZhcmlhYmxlDQoNClNvLCBhZGQgIi0tcHJlcGVuZCIgb3B0aW9uIGZvciBi
+aXRiYWtlLWxheWVycyB0byBzdXBwb3J0IGFkZC1sYXllciB0byBwcmVwZW5kDQoNClNpZ25lZC1v
+ZmYtYnk6IEhpZXUgVmFuIE5ndXllbiA8aGlldTIubmd1eWVuQGxnZS5jb20+DQotLS0NCiBsaWIv
+YmIvdXRpbHMucHkgICAgICAgIHwgNyArKysrKy0tDQogbGliL2JibGF5ZXJzL2FjdGlvbi5weSB8
+IDMgKystDQogMiBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0p
+DQoNCmRpZmYgLS1naXQgYS9saWIvYmIvdXRpbHMucHkgYi9saWIvYmIvdXRpbHMucHkNCmluZGV4
+IDA2OGI2MzFjLi4wODZmMWNjOCAxMDA2NDQNCi0tLSBhL2xpYi9iYi91dGlscy5weQ0KKysrIGIv
+bGliL2JiL3V0aWxzLnB5DQpAQCAtMTQxMiw3ICsxNDEyLDcgQEAgZGVmIGVkaXRfbWV0YWRhdGFf
+ZmlsZShtZXRhX2ZpbGUsIHZhcmlhYmxlcywgdmFyZnVuYyk6DQogICAgIHJldHVybiB1cGRhdGVk
+DQogDQogDQotZGVmIGVkaXRfYmJsYXllcnNfY29uZihiYmxheWVyc19jb25mLCBhZGQsIHJlbW92
+ZSwgZWRpdF9jYj1Ob25lKToNCitkZWYgZWRpdF9iYmxheWVyc19jb25mKGJibGF5ZXJzX2NvbmYs
+IGFkZCwgcmVtb3ZlLCBwcmVwZW5kPU5vbmUsIGVkaXRfY2I9Tm9uZSk6DQogICAgICIiIkVkaXQg
+YmJsYXllcnMuY29uZiwgYWRkaW5nIGFuZC9vciByZW1vdmluZyBsYXllcnMNCiAgICAgUGFyYW1l
+dGVyczoNCiAgICAgICAgIGJibGF5ZXJzX2NvbmY6IHBhdGggdG8gYmJsYXllcnMuY29uZiBmaWxl
+IHRvIGVkaXQNCkBAIC0xNDgyLDcgKzE0ODIsMTAgQEAgZGVmIGVkaXRfYmJsYXllcnNfY29uZihi
+YmxheWVyc19jb25mLCBhZGQsIHJlbW92ZSwgZWRpdF9jYj1Ob25lKToNCiAgICAgICAgICAgICBm
+b3IgYWRkbGF5ZXIgaW4gYWRkbGF5ZXJzOg0KICAgICAgICAgICAgICAgICBpZiBhZGRsYXllciBu
+b3QgaW4gYmJsYXllcnM6DQogICAgICAgICAgICAgICAgICAgICB1cGRhdGVkID0gVHJ1ZQ0KLSAg
+ICAgICAgICAgICAgICAgICAgYmJsYXllcnMuYXBwZW5kKGFkZGxheWVyKQ0KKyAgICAgICAgICAg
+ICAgICAgICAgaWYgcHJlcGVuZDoNCisgICAgICAgICAgICAgICAgICAgICAgICBiYmxheWVycy5p
+bnNlcnQoMCxhZGRsYXllcikNCisgICAgICAgICAgICAgICAgICAgIGVsc2U6DQorICAgICAgICAg
+ICAgICAgICAgICAgICAgYmJsYXllcnMuYXBwZW5kKGFkZGxheWVyKQ0KICAgICAgICAgICAgIGRl
+bCBhZGRsYXllcnNbOl0NCiANCiAgICAgICAgIGlmIGVkaXRfY2I6DQpkaWZmIC0tZ2l0IGEvbGli
+L2JibGF5ZXJzL2FjdGlvbi5weSBiL2xpYi9iYmxheWVycy9hY3Rpb24ucHkNCmluZGV4IGE4ZjI2
+OTkzLi41N2Q3MTk1YyAxMDA2NDQNCi0tLSBhL2xpYi9iYmxheWVycy9hY3Rpb24ucHkNCisrKyBi
+L2xpYi9iYmxheWVycy9hY3Rpb24ucHkNCkBAIC00OSw3ICs0OSw3IEBAIGNsYXNzIEFjdGlvblBs
+dWdpbihMYXllclBsdWdpbik6DQogICAgICAgICBzaHV0aWwuY29weTIoYmJsYXllcnNfY29uZiwg
+YmFja3VwKQ0KIA0KICAgICAgICAgdHJ5Og0KLSAgICAgICAgICAgIG5vdGFkZGVkLCBfID0gYmIu
+dXRpbHMuZWRpdF9iYmxheWVyc19jb25mKGJibGF5ZXJzX2NvbmYsIGxheWVyZGlycywgTm9uZSkN
+CisgICAgICAgICAgICBub3RhZGRlZCwgXyA9IGJiLnV0aWxzLmVkaXRfYmJsYXllcnNfY29uZihi
+YmxheWVyc19jb25mLCBsYXllcmRpcnMsIE5vbmUsIGFyZ3MucHJlcGVuZCkNCiAgICAgICAgICAg
+ICBzZWxmLnRpbmZvaWwubW9kaWZpZWRfZmlsZXMoKQ0KICAgICAgICAgICAgIGlmIG5vdCAoYXJn
+cy5mb3JjZSBvciBub3RhZGRlZCk6DQogICAgICAgICAgICAgICAgIHRyeToNCkBAIC0yNjcsNiAr
+MjY3LDcgQEAgYnVpbGQgcmVzdWx0cyAoYXMgdGhlIGxheWVyIHByaW9yaXR5IG9yZGVyIGhhcyBl
+ZmZlY3RpdmVseSBjaGFuZ2VkKS4NCiAgICAgZGVmIHJlZ2lzdGVyX2NvbW1hbmRzKHNlbGYsIHNw
+KToNCiAgICAgICAgIHBhcnNlcl9hZGRfbGF5ZXIgPSBzZWxmLmFkZF9jb21tYW5kKHNwLCAnYWRk
+LWxheWVyJywgc2VsZi5kb19hZGRfbGF5ZXIsIHBhcnNlcmVjaXBlcz1GYWxzZSkNCiAgICAgICAg
+IHBhcnNlcl9hZGRfbGF5ZXIuYWRkX2FyZ3VtZW50KCdsYXllcmRpcicsIG5hcmdzPScrJywgaGVs
+cD0nTGF5ZXIgZGlyZWN0b3J5L2RpcmVjdG9yaWVzIHRvIGFkZCcpDQorICAgICAgICBwYXJzZXJf
+YWRkX2xheWVyLmFkZF9hcmd1bWVudCgnLS1wcmVwZW5kJywgYWN0aW9uPSdzdG9yZV90cnVlJywg
+aGVscD0nUHJlcGVuZCBsYXllciBkaXJlY3RvcnkvZGlyZWN0b3JpZXMnKQ0KIA0KICAgICAgICAg
+cGFyc2VyX3JlbW92ZV9sYXllciA9IHNlbGYuYWRkX2NvbW1hbmQoc3AsICdyZW1vdmUtbGF5ZXIn
+LCBzZWxmLmRvX3JlbW92ZV9sYXllciwgcGFyc2VyZWNpcGVzPUZhbHNlKQ0KICAgICAgICAgcGFy
+c2VyX3JlbW92ZV9sYXllci5hZGRfYXJndW1lbnQoJ2xheWVyZGlyJywgbmFyZ3M9JysnLCBoZWxw
+PSdMYXllciBkaXJlY3RvcnkvZGlyZWN0b3JpZXMgdG8gcmVtb3ZlICh3aWxkY2FyZHMgYWxsb3dl
+ZCwgZW5jbG9zZSBpbiBxdW90ZXMgdG8gYXZvaWQgc2hlbGwgZXhwYW5zaW9uKScpDQotLSANCjIu
+NDMuMA0KDQo=
 
-Timeline:
-19-November-2023 Information received by the Yocto Project Security team
-21-November-2023 Issue confirmed by the Yocto Project
-23-November-2023 Issue repriduced by the Yocto Project
-20-December-2023 Fix pushed to the bitbake git repository
-04-January-2024 A regression fix pushed to the bitbake git repository
-16-February-2024 CVE entry has been assigned
-19-February-2024 The issue has been made public and advisory published
+--i2nDO2l5kgJnIf3BWQVW--
 
