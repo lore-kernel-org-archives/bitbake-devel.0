@@ -1,135 +1,132 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F70C48BC3
-	for <webhook@archiver.kernel.org>; Tue, 20 Feb 2024 15:36:16 +0000 (UTC)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
- by mx.groups.io with SMTP id smtpd.web10.16007.1708443366748517901
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D886C48BC3
+	for <webhook@archiver.kernel.org>; Wed, 21 Feb 2024 13:21:07 +0000 (UTC)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+ by mx.groups.io with SMTP id smtpd.web10.12694.1708521666577434057
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 20 Feb 2024 07:36:07 -0800
+ Wed, 21 Feb 2024 05:21:06 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Su+Nq7Wd;
- spf=pass (domain: gmail.com, ip: 209.85.167.54, mailfrom: jpewhacker@gmail.com)
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-512a65cd2c7so3752526e87.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 20 Feb 2024 07:36:06 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=IF2uCrbf;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.208.175, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d243797703so34122841fa.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 21 Feb 2024 05:21:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708443365; x=1709048165; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3ZV8iPD/3OXaorv9HXeupXEvXKbYihwuhZJmnnyV5gw=;
-        b=Su+Nq7WdqLloWaJkNmcQoIdZDlAWwhO80vBi1+p6djZYQcv5VBiwubnon/juHMF31a
-         FwhGHB7oQl41r+ID/if7lkpD5YBHfl9Wq3HrJEflbv2JNsJgmghKjC14rf+AS57IgDZE
-         JOfmJBa79u3Fi8uNZki9ikCcAlgYr8SS2UnX8TekTFwxEcr6JS6HTeG6U2KZc4pTXnbV
-         lny69kTyHoinURRYcQlT4tx+e0VSyaqF1VUBxR5MycWldXSnYipo+/fLDVx/QgF39+7e
-         UF08ihs+AmfRrxsL7LV186iaiqrzmJbljUuGKnWVFqHQtDOVTgFnRDBA54y2r1uAzAbn
-         QYaw==
+        d=linuxfoundation.org; s=google; t=1708521664; x=1709126464; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7EOtWq3zwJA13VMB1p0mHo18zUOx7Yd3PtwAlknCNNU=;
+        b=IF2uCrbfIym5PPCahJo5EO5Z4/9DeuR1ut9Q4OVZ1tr6MfCyXvC+38LYU0Sf9O39pK
+         AWEEA8AwL4KQtJ4X52Dux9y8e67AoyXIE67i9WjcRJjmTNNvVHc/aUWN/zrWdK779lOo
+         NdCCw/0pH/AuOAbJmOtG6NdU/Rz4x0TT7olFQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708443365; x=1709048165;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3ZV8iPD/3OXaorv9HXeupXEvXKbYihwuhZJmnnyV5gw=;
-        b=oMrXBxxEwCX94Q8RW1c2bVSIHf7jMLq5P/b7KOK2Y145rE1gdtli9Rw3hvARFtto6r
-         6I1MdTv0TSdziKoeidXBUxNTwkPV5qARtNfDax5doG7TRRRTQTritGtAxPPkZIEs//eU
-         Va5idvOBXH8OrO0iMvjrxOKeYCy69/0Jz8qObgdN+7W29znJoznP14KJMOEjNnrcaM56
-         /ftMUeXhaIjAvj/NQ6tAUX9bWhsTrO4JDKoCQQgxjbyKgiPDk6iFL8SMica7wjuh5M9f
-         zk/KtAk12OTYDi6it97sOd4MSeXi+nQUO2Gaz8x0FQeiUkNANaSfyptjCja7r8ThTbjn
-         d0rw==
-X-Gm-Message-State: AOJu0YzryMlhA6zLIwa92y1yFnU+hv8IQmXVvdzpr9hmk5OY8sWm6gWB
-	WQx6jKo1ObPfLFUw7SQvklW3nDk4weQQAc7HHPB1y3+BPcl9QDhMOZN1joc2nC5u2ZtbVy3qKK+
-	7zBPgbWcsZ0QOhhxouZ9bPagj98N5uPn3
-X-Google-Smtp-Source: AGHT+IE/LeIoPzZuMXhSE4ENBwXElPl2hAGEQ0MY2KTwHJbNQ/EJ1tdguDG/iEEul/fwEaO1aAB8Fqq0Kxek1G3zjLQ=
-X-Received: by 2002:a05:6512:402:b0:512:b24c:dba with SMTP id
- u2-20020a056512040200b00512b24c0dbamr3590147lfk.60.1708443364659; Tue, 20 Feb
- 2024 07:36:04 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708521664; x=1709126464;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7EOtWq3zwJA13VMB1p0mHo18zUOx7Yd3PtwAlknCNNU=;
+        b=GBAdKVI2pn6FswxpQdV3w9/4ybffjs0Mm+aDaNwa7IjUOGSxKl78vgYR14l7zDFMTO
+         GWzpbvqu/MxPM4b9L0YlX8GOizF8CW3Wt4bHtqcu1O2DookY5isKKzL8+DreqmguunzF
+         fN4bDim3qPwAu3KZbjDWfgcbfvr2yosTwHo2Cr2qIXmekEZ3uZ3UhEVu5G5I5J3fOP6Z
+         jk8v6ZpjrmjGzCqXmYv0F0r/cnHkWpDMzTHCrvXWJ2BiVQILJBZwVRNloCqZSuwdlt5F
+         V3qju9eFa7RUPoxC7RJlXgbPWaeLYaqeQhtGgWH96Ho4wXdYX77nK61l7FpjgVD6LW0P
+         wiNQ==
+X-Gm-Message-State: AOJu0YyUE0VX7nrHNOAu4kYUsHjilX/6RbTQLMrRIP5uOJqWKWaxMxNf
+	oYhJdibNBEdgHyHKmAdaQ49BvU2djHSOTlydYtBG0UduAaZIsriUcYhLXArr93NYRATU5hIeg54
+	5
+X-Google-Smtp-Source: AGHT+IFw0es5jaGbogJrgvn6JJ2QOwxwW0/zNsp3RHR5hwPtO4ZFRTbG1urt+lWduMmuzz6pG6TxQQ==
+X-Received: by 2002:a05:651c:509:b0:2d2:215e:157c with SMTP id o9-20020a05651c050900b002d2215e157cmr10626239ljp.7.1708521664290;
+        Wed, 21 Feb 2024 05:21:04 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:f7eb:cc84:5778:9052])
+        by smtp.gmail.com with ESMTPSA id bg22-20020a05600c3c9600b0040fc56712e8sm18395431wmb.17.2024.02.21.05.21.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 05:21:03 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Cc: randy.macleod@windriver.com
+Subject: [PATCH] runqueue: Add support for BB_LOADFACTOR_MAX
+Date: Wed, 21 Feb 2024 13:21:03 +0000
+Message-Id: <20240221132103.794574-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-References: <20240220062705.3611869-1-tobiasha@axis.com>
-In-Reply-To: <20240220062705.3611869-1-tobiasha@axis.com>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Tue, 20 Feb 2024 08:35:52 -0700
-Message-ID: <CAJdd5GaHiakYT4W0kaVhp6NvU4nBccR6MKHtjR_YsMehi-Lg6w@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] Re-enable connection pooling with psycopg
- 3 driver
-To: Tobias Hagelborn <tobias.hagelborn@axis.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 20 Feb 2024 15:36:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15949
+ <bitbake-devel@lists.openembedded.org>; Wed, 21 Feb 2024 13:21:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15950
 
-On Mon, Feb 19, 2024 at 11:27=E2=80=AFPM Tobias Hagelborn
-<tobias.hagelborn@axis.com> wrote:
->
-> Re-enable connection pooling in case `postgresql+psygopg` driver
-> is used. Async connection pooling is supported in psycopg 3 [psycopg]
-> driver in SQLAlchemy.
->
-> Signed-off-by: Tobias Hagelborn <tobiasha@axis.com>
-> ---
->
-> Connection pooling was disabled since asyncpg does not support it.
-> With psycopg3 driver it is possible to re-enable connection pooling again=
-.
->
-> I wanted to show that it is possible to get the performance back again
-> and avoid using other, more complex deployments such as pgbouncer to
-> achieve connection pooling.
->
-> Checking the driver url is possibly a bit hackish.
-> Having some command line parameter would result in a larger change
-> and also force the user to know which drivers do support pooling properly=
-.
->
-> I tested this setup with some of my stress tests and with a batch of buil=
-ds
-> and it seems to hold.
->
->  lib/hashserv/sqlalchemy.py | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/hashserv/sqlalchemy.py b/lib/hashserv/sqlalchemy.py
-> index b17a17621..e33527e80 100644
-> --- a/lib/hashserv/sqlalchemy.py
-> +++ b/lib/hashserv/sqlalchemy.py
-> @@ -93,7 +93,11 @@ class DatabaseEngine(object):
->
->      async def create(self):
->          self.logger.info("Using database %s", self.url)
-> -        self.engine =3D create_async_engine(self.url, poolclass=3DNullPo=
-ol)
-> +        if self.url.drivername =3D=3D 'postgresql+psycopg':
-> +            # Psygopg 3 (psygopg) driver can handle async connection poo=
-ling
-> +            self.engine =3D create_async_engine(self.url)
-> +        else:
-> +            self.engine =3D create_async_engine(self.url, poolclass=3DNu=
-llPool)
+Some ditros don't enable /proc/pressure and it tends to be those which we
+see bitbake timeout issues on, seemingly as load gets too high and the bitbake
+processes don't get scheduled in for minutes at a time.
 
-This approach is fine with me. If we need an argument in the future we
-can make one that does "yes", "no", "auto" options. Do you happen to
-know if this is version dependent or if it's just because I didn't
-test with the psycopg driver?
+Add support for stopping running extra tasks if the system load average goes
+above a certain threshold by setting BB_LOADFACTOR_MAX.
 
->
->          async with self.engine.begin() as conn:
->              # Create tables
-> --
-> 2.30.2
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#15944): https://lists.openembedded.org/g/bitbake-deve=
-l/message/15944
-> Mute This Topic: https://lists.openembedded.org/mt/104463321/3616693
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWha=
-cker@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+The value used is scaled by CPU number, so a value of 1 would be when
+the load average equals the number of cpu cores of the system, under one
+only starts tasks when the load average is below the number of cores.
+
+This means you can centrally set a value such as 1.5 which will then
+scale correctly to different sized machines with differing numbers
+of CPUs.
+
+The pressure regulation is probably more accurate and responsive, however
+our graphs do show singificant load spikes on some workers and this
+patch is aimed at trying to avoid those.
+
+Pressure regulation is used where available in preference to this load
+factor regulation when both are set.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/runqueue.py | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index e86ccd8c61..6987de3e29 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -220,6 +220,16 @@ class RunQueueScheduler(object):
+                 bb.note("Pressure status changed to CPU: %s, IO: %s, Mem: %s (CPU: %s/%s, IO: %s/%s, Mem: %s/%s) - using %s/%s bitbake threads" % (pressure_state + pressure_values + (len(self.rq.runq_running.difference(self.rq.runq_complete)), self.rq.number_tasks)))
+             self.pressure_state = pressure_state
+             return (exceeds_cpu_pressure or exceeds_io_pressure or exceeds_memory_pressure)
++        elif self.rq.max_loadfactor:
++            limit = False
++            loadfactor = float(os.getloadavg()[0]) / os.cpu_count()
++            # bb.warn("Comparing %s to %s" % (loadfactor, self.rq.max_loadfactor))
++            if loadfactor > self.rq.max_loadfactor:
++                limit = True
++            if hasattr(self, "loadfactor_limit") and limit != self.loadfactor_limit:
++                bb.note("Load average limiting set to %s as load average: %s - using %s/%s bitbake threads" % (limit, loadfactor, len(self.rq.runq_running.difference(self.rq.runq_complete)), self.rq.number_tasks))
++            self.loadfactor_limit = limit
++            return limit
+         return False
+ 
+     def next_buildable_task(self):
+@@ -1822,6 +1832,7 @@ class RunQueueExecute:
+         self.max_cpu_pressure = self.cfgData.getVar("BB_PRESSURE_MAX_CPU")
+         self.max_io_pressure = self.cfgData.getVar("BB_PRESSURE_MAX_IO")
+         self.max_memory_pressure = self.cfgData.getVar("BB_PRESSURE_MAX_MEMORY")
++        self.max_loadfactor = self.cfgData.getVar("BB_LOADFACTOR_MAX")
+ 
+         self.sq_buildable = set()
+         self.sq_running = set()
+@@ -1875,6 +1886,11 @@ class RunQueueExecute:
+                 bb.fatal("Invalid BB_PRESSURE_MAX_MEMORY %s, minimum value is %s." % (self.max_memory_pressure, lower_limit))
+             if self.max_memory_pressure > upper_limit:
+                 bb.warn("Your build will be largely unregulated since BB_PRESSURE_MAX_MEMORY is set to %s. It is very unlikely that such high pressure will be experienced." % (self.max_io_pressure))
++
++        if self.max_loadfactor:
++            self.max_loadfactor = float(self.max_loadfactor)
++            if self.max_loadfactor <= 0:
++                bb.fatal("Invalid BB_LOADFACTOR_MAX %s, needs to be greater than zero." % (self.max_loadfactor))
+             
+         # List of setscene tasks which we've covered
+         self.scenequeue_covered = set()
+-- 
+2.40.1
+
 
