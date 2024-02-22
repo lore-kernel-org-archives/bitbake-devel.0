@@ -1,229 +1,180 @@
-Return-Path: <philip.lorenz@bmw.de>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D8BC54788
-	for <webhook@archiver.kernel.org>; Thu, 22 Feb 2024 13:15:47 +0000 (UTC)
-Received: from esa9.hc324-48.eu.iphmx.com (esa9.hc324-48.eu.iphmx.com [207.54.69.27])
- by mx.groups.io with SMTP id smtpd.web10.12368.1708607740826668298
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203ECC5478C
+	for <webhook@archiver.kernel.org>; Thu, 22 Feb 2024 22:32:01 +0000 (UTC)
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+ by mx.groups.io with SMTP id smtpd.web11.26322.1708641117617222414
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 22 Feb 2024 05:15:41 -0800
+ Thu, 22 Feb 2024 14:31:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bmw.de header.s=mailing1 header.b=jRleCkzQ;
- spf=pass (domain: bmw.de, ip: 207.54.69.27, mailfrom: prvs=775af2a5b=philip.lorenz@bmw.de)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=XbvTVtap;
+ spf=pass (domain: gmail.com, ip: 209.85.166.45, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7c3e4290f5fso7607239f.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Feb 2024 14:31:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-  t=1708607741; x=1740143741;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1suLbVdtVXeayr7g+xM4dAWGEsS9ZfPhW2e0IWb5QeY=;
-  b=jRleCkzQbsQ+XdZ/A9qlpWxpls5WRJDQGZGxcHqXqIgRWgiSI8qVTlUn
-   /jQY4vPiiumauSCsY2I3CgdETXIgEr7XU4rPRvDy1A0kfYeA1xxUMUY2Z
-   KbZ4PRikMuipTybCSOvS6FiOxgGBSJ2sXhgVn6KydUdmBB+v/AxgjWXUj
-   8=;
-X-CSE-ConnectionGUID: /qRpOP3ORhSSvzMVh3KEvw==
-X-CSE-MsgGUID: gDXPlWD6TbCpmh5dEoPIzg==
-Received: from esagw5.bmwgroup.com (HELO esagw5.muc) ([160.46.252.46]) by
- esa9.hc324-48.eu.iphmx.com with ESMTP/TLS; 22 Feb 2024 14:15:38 +0100
-Received: from esabb2.muc ([160.50.100.34])  by esagw5.muc with ESMTP/TLS;
- 22 Feb 2024 14:15:36 +0100
-Received: from smucmp10e.bmwgroup.net (HELO SMUCMP10E.europe.bmw.corp) ([10.30.13.87])
- by esabb2.muc with ESMTP/TLS; 22 Feb 2024 14:15:36 +0100
-Received: from localhost.localdomain (10.30.85.211) by SMUCMP10E.europe.bmw.corp
- (2a03:1e80:a15:58f::2027) with Microsoft SMTP Server (version=TLS;
- Thu, 22 Feb 2024 14:15:35 +0100
-From: Philip Lorenz <philip.lorenz@bmw.de>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Philip Lorenz <philip.lorenz@bmw.de>
-Subject: [PATCH] fetch2: Ensure that git LFS objects are available
-Date: Thu, 22 Feb 2024 14:14:47 +0100
-Message-ID: <20240222131447.1609110-1-philip.lorenz@bmw.de>
-X-Mailer: git-send-email 2.43.2
+        d=gmail.com; s=20230601; t=1708641116; x=1709245916; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iScEZByyO/SKo225bRjmwcSnHFUrtJt7ZgL3yQO6nUk=;
+        b=XbvTVtap7DBbUwFw9RAiZfvw8hSEAs4Um0ywQ4N6BEBKC/kAZP1C0Ykw0m0o4tujVS
+         Y1Psh21D54Nf9hLcsbCxXNaOHnrjpyjCY6FEDvTHn+fUTsSta3GSJMv/3C3vSNwMSqrY
+         P5LPsPhnYbtrJm505VTRDf07yjGG3PbKkr8zZIZcNh36LIQ3dQm6t3QoY7kXGyKziNjX
+         9VP21ZZn3uAhT2CjRkdF/HAdWnc1573UVR+SLD5c8eaFao7iKSTGiZafDWl8BQIT2x/J
+         PdJJIdPdlGsRf4aelxAeXex9fcwE0mczeUxz/54c5A1kjdq9mjOd3p/0HZ3MyE6/4Qkv
+         SqIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708641116; x=1709245916;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iScEZByyO/SKo225bRjmwcSnHFUrtJt7ZgL3yQO6nUk=;
+        b=NXAUtLCJ1zrX+Z0oEs3mx+T8T6Nv9G69PNtuT9zS0RpgFWh1Q18beeNwh7C2XSOMFj
+         EEHy7qfu4ph4Ixz+PXTwqS5AcFqzT9N3F+GKT++qvVU8i1YxcfkIobWicx2CkAnoFMIg
+         LWsyn43LXbpSwpYv66BIx8nKfbjyuo2TNlAmQrlURqit4ynfauKI3BXeknLeD/Z2cZXS
+         Zb00Ezv7ddCrQbz8liMW95QFs9AmUNJ6SZ2oWMrADqAd/Eur74jukmtTWdCBNk3eTIVk
+         lkNLYaiOb0MCIIvuEfDhvvKIsq2wzbi7VL1L+phPKoY8u2xj9a7jS3L1bYptT7Bkaoo0
+         VCxg==
+X-Gm-Message-State: AOJu0Yy1afSmGSA9cVKzUeLlnQGBwuw+YCv7OfYp5I3MdPmg1LrhFGDz
+	LZsXDPJ3n2Cb5dU13ZI6N7dubMaN9UOr4eFfXkk4FZpVpP52w//UsraCljLA
+X-Google-Smtp-Source: AGHT+IGk1dACzKRQxh9bIjkORyV3JMJI6A1fTVsx8AzyAGF9iygUqDpPn2QjOqNAg0lySydAPTkjJw==
+X-Received: by 2002:a6b:5817:0:b0:7c7:798a:a64a with SMTP id m23-20020a6b5817000000b007c7798aa64amr245429iob.21.1708641115478;
+        Thu, 22 Feb 2024 14:31:55 -0800 (PST)
+Received: from localhost.localdomain ([2601:282:4300:19e0::25d7])
+        by smtp.gmail.com with ESMTPSA id cu14-20020a05663848ce00b00474100af2dfsm3283031jab.54.2024.02.22.14.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 14:31:54 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] asyncrpc: Add support for server headers
+Date: Thu, 22 Feb 2024 15:31:48 -0700
+Message-Id: <20240222223148.3949435-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SMUCMP03G.europe.bmw.corp (2a03:1e80:a15:58f::225b) To
- SMUCMP10E.europe.bmw.corp (2a03:1e80:a15:58f::2027)
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 22 Feb 2024 13:15:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15952
+ <bitbake-devel@lists.openembedded.org>; Thu, 22 Feb 2024 22:32:01 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15953
 
-The current implementation only performs a git lfs fetch alongside of a
-regular git fetch. This causes issues when the downloaded revision is
-already part of the fetched repository (e.g. because of moving back in
-history or the updated revision already being part of the repository at
-the time of the initial clone).
+Adds support for asyncrpc servers to send connection headers to clients
+on connection. Since this is a breaking protocol change, clients must
+opt-in to expect headers from the server, corresponding to a version
+bump in the client protocol.
 
-Fix this by explicitly checking whether the required LFS objects are
-available in the downloade directory before confirming that a downloaded
-repository is up-to-date.
-
-This issue previously went unnoticed as git lfs would silently fetch the
-missing objects during the `unpack` task. With network isolation turned
-on, this no longer works, and unpacking fails.
-
-Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/fetch2/git.py  | 45 ++++++++++++++++++++++++++++++++++++--
- lib/bb/tests/fetch.py | 51 +++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 90 insertions(+), 6 deletions(-)
+ bitbake/lib/bb/asyncrpc/client.py | 33 ++++++++++++++++++++++++++++++-
+ bitbake/lib/bb/asyncrpc/serv.py   | 16 +++++++++++++--
+ 2 files changed, 46 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index df33fb6a..b43ee0da 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -325,7 +325,10 @@ class Git(FetchMethod):
-         return ud.clonedir
+diff --git a/bitbake/lib/bb/asyncrpc/client.py b/bitbake/lib/bb/asyncrpc/client.py
+index a6228bb0ba0..29a5ab76aa9 100644
+--- a/bitbake/lib/bb/asyncrpc/client.py
++++ b/bitbake/lib/bb/asyncrpc/client.py
+@@ -17,13 +17,24 @@ from .exceptions import ConnectionClosedError, InvokeError
  
-     def need_update(self, ud, d):
--        return self.clonedir_need_update(ud, d) or self.shallow_tarball_need_update(ud) or self.tarball_need_update(ud)
-+        return self.clonedir_need_update(ud, d) \
-+                or self.shallow_tarball_need_update(ud) \
-+                or self.tarball_need_update(ud) \
-+                or self.lfs_need_update(ud, d)
  
-     def clonedir_need_update(self, ud, d):
-         if not os.path.exists(ud.clonedir):
-@@ -337,6 +340,15 @@ class Git(FetchMethod):
-                 return True
-         return False
+ class AsyncClient(object):
+-    def __init__(self, proto_name, proto_version, logger, timeout=30):
++    def __init__(
++        self,
++        proto_name,
++        proto_version,
++        logger,
++        timeout=30,
++        server_headers=False,
++        headers={},
++    ):
+         self.socket = None
+         self.max_chunk = DEFAULT_MAX_CHUNK
+         self.proto_name = proto_name
+         self.proto_version = proto_version
+         self.logger = logger
+         self.timeout = timeout
++        self.needs_server_headers = server_headers
++        self.server_headers = {}
++        self.headers = headers
  
-+    def lfs_need_update(self, ud, d):
-+        if self.clonedir_need_update(ud, d):
-+            return True
+     async def connect_tcp(self, address, port):
+         async def connect_sock():
+@@ -61,9 +72,29 @@ class AsyncClient(object):
+     async def setup_connection(self):
+         # Send headers
+         await self.socket.send("%s %s" % (self.proto_name, self.proto_version))
++        await self.socket.send(
++            "needs-headers: %s" % ("true" if self.needs_server_headers else "false")
++        )
++        for k, v in self.headers.items():
++            await self.socket.send("%s: %s" % (k, v))
 +
-+        for name in ud.names:
-+            if not self._lfs_objects_downloaded(ud, d, name, ud.clonedir):
-+                return True
-+        return False
-+
-     def clonedir_need_shallow_revs(self, ud, d):
-         for rev in ud.shallow_revs:
-             try:
-@@ -467,7 +479,7 @@ class Git(FetchMethod):
-             if missing_rev:
-                 raise bb.fetch2.FetchError("Unable to find revision %s even from upstream" % missing_rev)
+         # End of headers
+         await self.socket.send("")
  
--        if self._contains_lfs(ud, d, ud.clonedir) and self._need_lfs(ud):
-+        if self.lfs_need_update(ud, d):
-             # Unpack temporary working copy, use it to run 'git checkout' to force pre-fetching
-             # of all LFS blobs needed at the srcrev.
-             #
-@@ -710,6 +722,35 @@ class Git(FetchMethod):
-             raise bb.fetch2.FetchError("The command '%s' gave output with more then 1 line unexpectedly, output: '%s'" % (cmd, output))
-         return output.split()[0] != "0"
++        self.server_headers = {}
++        if self.needs_server_headers:
++            while True:
++                line = await self.socket.recv()
++                if not line:
++                    # End headers
++                    break
++                tag, value = line.split(":", 1)
++                self.server_headers[tag.lower()] = value.strip()
++
++    async def get_header(self, tag, default):
++        await self.connect()
++        return self.server_headers.get(tag, default)
++
+     async def connect(self):
+         if self.socket is None:
+             self.socket = await self._connect_sock()
+diff --git a/bitbake/lib/bb/asyncrpc/serv.py b/bitbake/lib/bb/asyncrpc/serv.py
+index f0be9a6cdb2..a66117acad1 100644
+--- a/bitbake/lib/bb/asyncrpc/serv.py
++++ b/bitbake/lib/bb/asyncrpc/serv.py
+@@ -39,10 +39,14 @@ class AsyncServerConnection(object):
+                 "address": socket.address,
+             },
+         )
++        self.client_headers = {}
  
-+    def _lfs_objects_downloaded(self, ud, d, name, wd):
-+        """
-+        Verifies whether the LFS objects for requested revisions have already been downloaded
-+        """
-+        # Bail out early if this repository doesn't use LFS
-+        if not self._need_lfs(ud) or not self._contains_lfs(ud, d, wd):
-+            return True
-+
-+        # The Git LFS specification specifies ([1]) the LFS folder layout so it should be safe to check for file
-+        # existence.
-+        # [1] https://github.com/git-lfs/git-lfs/blob/main/docs/spec.md#intercepting-git
-+        cmd = "%s lfs ls-files -l %s" \
-+                % (ud.basecmd, ud.revisions[name])
-+        output = runfetchcmd(cmd, d, quiet=True, workdir=wd).rstrip()
-+        # Do not do any further matching if no objects are managed by LFS
-+        if not output:
-+            return True
-+
-+        # Match all lines beginning with the hexadecimal OID
-+        oid_regex = re.compile("^(([a-fA-F0-9]{2})([a-fA-F0-9]{2})[A-Fa-f0-9]+)")
-+        for line in output.split("\n"):
-+            oid = re.search(oid_regex, line)
-+            if not oid:
-+                bb.warn("git lfs ls-files output '%s' did not match expected format." % line)
-+            if not os.path.exists(os.path.join(wd, "lfs", "objects", oid.group(2), oid.group(3), oid.group(1))):
-+                return False
-+
-+        return True
-+
-     def _need_lfs(self, ud):
-         return ud.parm.get("lfs", "1") == "1"
+     async def close(self):
+         await self.socket.close()
  
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 5ed5b560..e988e26c 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -6,6 +6,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
++    async def handle_headers(self, headers):
++        return {}
++
+     async def process_requests(self):
+         try:
+             self.logger.info("Client %r connected" % (self.socket.address,))
+@@ -64,12 +68,20 @@ class AsyncServerConnection(object):
+                 )
+                 return
  
-+import contextlib
- import unittest
- import hashlib
- import tempfile
-@@ -2261,10 +2262,14 @@ class GitLfsTest(FetcherTest):
+-            # Read headers. Currently, no headers are implemented, so look for
+-            # an empty line to signal the end of the headers
++            # Read headers
++            self.client_headers = {}
+             while True:
+                 header = await self.socket.recv()
+                 if not header:
++                    # Empty line. End of headers
+                     break
++                tag, value = header.split(":", 1)
++                self.client_headers[tag.lower()] = value.strip()
++
++            if self.client_headers.get("needs-headers", "false") == "true":
++                for k, v in (await self.handle_headers(self.client_headers)).items():
++                    await self.socket.send("%s: %s" % (k, v))
++                await self.socket.send("")
  
-         bb.utils.mkdirhier(self.srcdir)
-         self.git_init(cwd=self.srcdir)
--        with open(os.path.join(self.srcdir, '.gitattributes'), 'wt') as attrs:
--            attrs.write('*.mp3 filter=lfs -text')
--        self.git(['add', '.gitattributes'], cwd=self.srcdir)
--        self.git(['commit', '-m', "attributes", '.gitattributes'], cwd=self.srcdir)
-+        self.commit_file('.gitattributes', '*.mp3 filter=lfs -text')
-+
-+    def commit_file(self, filename, content):
-+        with open(os.path.join(self.srcdir, filename), "w") as f:
-+            f.write(content)
-+        self.git(["add", filename], cwd=self.srcdir)
-+        self.git(["commit", "-m", "Change"], cwd=self.srcdir)
-+        return self.git(["rev-parse", "HEAD"], cwd=self.srcdir).strip()
- 
-     def fetch(self, uri=None, download=True):
-         uris = self.d.getVar('SRC_URI').split()
-@@ -2284,6 +2289,44 @@ class GitLfsTest(FetcherTest):
-         unpacked_lfs_file = os.path.join(self.d.getVar('WORKDIR'), 'git', "Cat_poster_1.jpg")
-         return unpacked_lfs_file
- 
-+    @skipIfNoGitLFS()
-+    def test_fetch_lfs_on_srcrev_change(self):
-+        """Test if fetch downloads missing LFS objects when a different revision within an existing repository is requested"""
-+        self.git(["lfs", "install", "--local"], cwd=self.srcdir)
-+
-+        @contextlib.contextmanager
-+        def hide_upstream_repository():
-+            """Hide the upstream repository to make sure that git lfs cannot pull from it"""
-+            temp_name = self.srcdir + ".bak"
-+            os.rename(self.srcdir, temp_name)
-+            try:
-+                yield
-+            finally:
-+                os.rename(temp_name, self.srcdir)
-+
-+        def fetch_and_verify(revision, filename, content):
-+            self.d.setVar('SRCREV', revision)
-+            fetcher, ud = self.fetch()
-+
-+            with hide_upstream_repository():
-+                workdir = self.d.getVar('WORKDIR')
-+                fetcher.unpack(workdir)
-+
-+                with open(os.path.join(workdir, "git", filename)) as f:
-+                    self.assertEqual(f.read(), content)
-+
-+        commit_1 = self.commit_file("a.mp3", "version 1")
-+        commit_2 = self.commit_file("a.mp3", "version 2")
-+
-+        self.d.setVar('SRC_URI', "git://%s;protocol=file;lfs=1;branch=master" % self.srcdir)
-+
-+        # Seed the local download folder by fetching the latest commit and verifying that the LFS contents are
-+        # available even when the upstream repository disappears.
-+        fetch_and_verify(commit_2, "a.mp3", "version 2")
-+        # Verify that even when an older revision is fetched, the needed LFS objects are fetched into the download
-+        # folder.
-+        fetch_and_verify(commit_1, "a.mp3", "version 1")
-+
-     @skipIfNoGitLFS()
-     @skipIfNoNetwork()
-     def test_real_git_lfs_repo_succeeds_without_lfs_param(self):
+             # Handle messages
+             while True:
 -- 
-2.43.2
+2.34.1
 
 
