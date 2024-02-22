@@ -1,290 +1,229 @@
-Return-Path: <yang.xu@mediatek.com>
+Return-Path: <philip.lorenz@bmw.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99110C48BF8
-	for <webhook@archiver.kernel.org>; Thu, 22 Feb 2024 06:08:35 +0000 (UTC)
-Received: from mailgw02.mediatek.com (mailgw02.mediatek.com [210.61.82.184])
- by mx.groups.io with SMTP id smtpd.web10.7267.1708582113273045480
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D8BC54788
+	for <webhook@archiver.kernel.org>; Thu, 22 Feb 2024 13:15:47 +0000 (UTC)
+Received: from esa9.hc324-48.eu.iphmx.com (esa9.hc324-48.eu.iphmx.com [207.54.69.27])
+ by mx.groups.io with SMTP id smtpd.web10.12368.1708607740826668298
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 21 Feb 2024 22:08:33 -0800
+ Thu, 22 Feb 2024 05:15:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@mediatek.com header.s=dk header.b=CLWLl/Hs;
- dkim=fail reason="dkim: body hash did not verify" header.i=@mediateko365.onmicrosoft.com header.s=selector2-mediateko365-onmicrosoft-com header.b=SguA7xHF;
- spf=pass (domain: mediatek.com, ip: 210.61.82.184, mailfrom: yang.xu@mediatek.com)
-X-UUID: ca659b2ad14811eea4ad694c3f9da370-20240222
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:To:From; bh=luS+a/F7eRoXgHnJrA1Ux9GLqKVcD7DkNPEGIeaFfo0=;
-	b=CLWLl/Hs/GXyN7EH/yycL4iwwpsBz3fApRys5Ep8ea7JoLZVhe1Oik5oZg+UhH+NWagfXlUr1WuhwSz2jqHs4HJkXZjyldZd52ydIhjJIzbSBMqUO2TbseGYJkJZpC55Te4aaFHHq7KS6I1ibYsWobFnLCQmAaC+5+8fxjjZ0Gc=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:c33d3846-ec2d-4eae-b401-7326037cce0d,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:1db92d84-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:0,Content:0,EDM:-3,IP:nil,URL
-	:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1
-	,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: ca659b2ad14811eea4ad694c3f9da370-20240222
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
-	(envelope-from <yang.xu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2088763545; Thu, 22 Feb 2024 14:08:25 +0800
-Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 22 Feb 2024 14:08:24 +0800
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 22 Feb 2024 14:08:24 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h9CbeMUYfB6ceOgpOp4g9N/mxpL9gaq594KGxCcBbiiILsbPS/tKXtCu9DX6pnzMfyN4mxCXh+ZV15WhXXD91JtMIU3vJHReZD6NK3dOQis3kaYeKM/MQ0VoCfD4tWLSkZr/8oKXAaZknjfrJHk9Of2HKwPQi+Qn3S1Py1FxJk0Bsm/PKdgh98yngvn7KxWzESZUNdwrKMacmjuRQ3xo1A05E+nvU7xpBZVy3mnzbg2PngNBrCShwLLPJ9IwsT0ddxBcDx83j8IxXmu/xSRjeH74xus/nZsEoMSxVl/esNQVvLcr84qhHJo/xtckezXmiUALYDw1EGQP5Bgk5hBZGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HQTQBvKAJZh/XShhUFDJ+jEY2DFvvwlUOPGGkhLy7IA=;
- b=nUVCwWcvXA3z3O08H+CpFRJ7BqaFICa7sCV2AmfCQPaydlpVP7ussQFNh+cUsEc+BQ/p7qenHyaa2CAzJT9ZJmpw8kzeNQJFpCcf4Nr0eWkZHxzE+SYnvgmSb/ChOIdF/vIsM//Aw1Gax5BSgRPnbAXn2qXobl7FZqXDz1brmOqqVPNz0nAl5StX6lLytCr5K5C4YBSRHRZsGU9apfaUsZV1wPvD5jo9uSAPSS82V9INfigKIsMNz2FR/W5D523A12u1hdaH6zh3V+jRMeWi5sixpI552RP0YedMMc2nc1++FGLAeQd1CPitdXmACTWg4nmEF2e3Biex/xqN1JSOeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
+ dkim=pass header.i=@bmw.de header.s=mailing1 header.b=jRleCkzQ;
+ spf=pass (domain: bmw.de, ip: 207.54.69.27, mailfrom: prvs=775af2a5b=philip.lorenz@bmw.de)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HQTQBvKAJZh/XShhUFDJ+jEY2DFvvwlUOPGGkhLy7IA=;
- b=SguA7xHF0BRr2Z651pA0Uu1rR1CkaKPeS7s0Drw5dRLnO0RSKjTQutFETQ5AlwNHEWXHoZOAGVgcrrehTSMbzzSDLu2Qc+dSInkOi6q+dmLGw7eyQxihWHcQU1Qy+GSOhw4fL8sSibhRQuNwrUEQegV2PH1e+Ggjez+etLCqiA0=
-Received: from TYZPR03MB6717.apcprd03.prod.outlook.com (2603:1096:400:1f2::7)
- by SI2PR03MB5643.apcprd03.prod.outlook.com (2603:1096:4:12f::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Thu, 22 Feb
- 2024 06:08:22 +0000
-Received: from TYZPR03MB6717.apcprd03.prod.outlook.com
- ([fe80::d77e:5419:7cae:7b82]) by TYZPR03MB6717.apcprd03.prod.outlook.com
- ([fe80::d77e:5419:7cae:7b82%6]) with mapi id 15.20.7292.036; Thu, 22 Feb 2024
- 06:08:21 +0000
-From: =?utf-8?B?WWFuZyBYdSAo5b6Q5omsKQ==?= <Yang.Xu@mediatek.com>
-To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-worker: Fix silent hang issue
- caused by unexpected stdout content
-Thread-Topic: [bitbake-devel] [PATCH] bitbake-worker: Fix silent hang issue
- caused by unexpected stdout content
-Thread-Index: AQHaVbtBXichxdXYLUSyjkEnnK1b5LD60K6AgBsu7AA=
-Date: Thu, 22 Feb 2024 06:08:21 +0000
-Message-ID: <aca5f3feb93c42bb1178a4622d1423aa4c2d2b06.camel@mediatek.com>
-References: <20240202093602.25618-1-yang.xu@mediatek.com>
-	 <dc3e8b3949f3208910cd41da56cc8f1c84bcfb81.camel@linuxfoundation.org>
-In-Reply-To: <dc3e8b3949f3208910cd41da56cc8f1c84bcfb81.camel@linuxfoundation.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR03MB6717:EE_|SI2PR03MB5643:EE_
-x-ms-office365-filtering-correlation-id: 643485b2-912b-469a-af70-08dc336cac37
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: flLlIGDrBtJ6NKURlftONBy9gKETsqmEx3BzLi286DCuQOEIONO4liwxgoKPWnrK8kHes/Le3w9qCpa4otM3dMeTPK1+GMVFqud3ujbJipaLyO7LvTKWfVOUaH5tr5+Z66yvYhQ8Zmowv/Cd0xfHsB7xB51krRAlpEymu4HUSnuHCtuG5mnBYiuLxu7F9BVHzgZIri5wp2KuQneafFPLKxJBzeE/Bco+DfWAJA2T5PBPQeOv+YNTV8GZKk3YcIzK0GuJWkcUt0cBW8r3VzMMYhZlrtY5uWMncGCAEsrwHzMo+7h+in1ceb+qhsId/JD7BVzsJeitM84hG0Hf/wvZowRmvrk5x0wIydLa0ja2eQMsIJSNDzNStDMwg1mWossoGdtPNd4k36lIqI6kRg3ZNsA7km0RN2jDP9CCOrsFcAoSOzeCc3TWUtGcKYhGvuenpObGMXrP4d44myhs8RqskGbmSvZK51OWHDmeSGb3aiIgHvLFzLqICncd/GqNp6RT+fo9yvXl3Ns0DbljsoMhje+nNFAihF1mPFfph+uAynUc1nTXuVym8dEn5bR6IeZlcJ1LNjbZwK36k84M7AxpfAK7/XARy/UmiZZpMFg8Um9xuaQadjmMrsGJTDpqAnUt
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6717.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?blpWOU1YUFhUWm9jOHF3QjBrNEJ1Z1A5TTVQQXpKQjlwbXN2UTlZSzNiUy9O?=
- =?utf-8?B?WFFEVm03cE5PNUt2cEVJQ0UzaGJPQ1BLSjhWZWFBYW50cDZVWHFyOXBoekRL?=
- =?utf-8?B?Y1A0VVdudmJjTFR4amN2cDBzT3dmYjhOdkhWdWtzL0F6SkowUVBYaVVsckpF?=
- =?utf-8?B?NXlGQ25tSmR1NEUyZlQ2MDNQTm9KblNUdHRtMzJOSWNXakUydTdxM0kvdGpa?=
- =?utf-8?B?UWdzOWx0MVFFd3ZuWDRpSXhsSVZmY1JETG04UXBwclN4TEk5Q0ZGaFJrRS9P?=
- =?utf-8?B?bFYzQ01iQiszM3RYakdDR3RNY3p2dWxpZUZFdVZwdDhhUW9MWXl0dCtVK0tu?=
- =?utf-8?B?Z0U4RkxiV2JYYkVCanViOXgrd2pWYkp2MlRLL0JMeVhqT2VsNm9hQTF3dndZ?=
- =?utf-8?B?Yzhid1lwczZaSzBzRmg1OVJJSUkzcnprMGdPcWw1V2pRRGNLNzgzRWtzK0dR?=
- =?utf-8?B?MUVneW5IZWYvVVFGbXBIZ1JWajR3MHlTQmYxMkFSYW9Eb3ltT3NHMnE2cWFr?=
- =?utf-8?B?eDIzc3BYOGYyZ09ZSThPUjhFaXF4QmFMK0lzUXY5R1JMaTJCOXJkNkRFVFpx?=
- =?utf-8?B?SlRiNWFKSEpTSXEySTNkKzlLZVlpYXRrQm51RTJ4R3ZKdGNWNTNuMDRnNTZj?=
- =?utf-8?B?TDk2REthUEIzUS9GSHlKUUt6am1iUkJCUFh1TTBERjJ3OS9GTFoxMUp1bXIr?=
- =?utf-8?B?dmp4dXZzcHhzekN3dGg0NDVPUEtNZFBSYU9VVVVuZ252bElGcEs5ZHd2OTda?=
- =?utf-8?B?bytNQXFhMVNBejNjK1BkN0llUThiektRU3JQQ3lVQlNwelFXUTZjajViamZQ?=
- =?utf-8?B?dXlxVkVIWlB4alhVcXNhUGswWWJWVWJGT0ZGd3dsQW1VODZOcU92NXJqam1G?=
- =?utf-8?B?ajlHUDVjQi9LZEhUcW5nRnArYm9FYkk0cFdJQ2tHaTNTb3Ayb1pEWklJNWpL?=
- =?utf-8?B?TjRsY3phWTdMaHVmaVZqQmswTGttT0w0ZWMxNSszbVErSmN2V3BHdGtJZkJ2?=
- =?utf-8?B?ZUcxaDZ2Qi8xRlpucUZGSGd5OGo2eVJpY0dSUlVjcWJQM1Yyc0t4QTBhVDF0?=
- =?utf-8?B?WmxhaU9adm1SQUlYUElvZ29mbnRqVkpTc3lkYm41ZzhGMkd6YllobGNmdVdt?=
- =?utf-8?B?VkhOc3hjdzNJeWZJdEticDF2SSt6eHVtekZuZ0toRXBBNUxBYW95c25ZQWdm?=
- =?utf-8?B?SU02UVpOMitDcTdiU091QnVkeWRIbk41V3ZNVFY1NjhwdHhtUHRCd2EvVUgw?=
- =?utf-8?B?K2hnMFdrejg4YUgxUGY1SmdiWWdaK3V3NnM4ZVhyNWsycklkY0lpZktaVmRs?=
- =?utf-8?B?bDByd0IrUkVGcFd3aEpnNGxmZmkwWjVBeHFrRGhrWm1EMWY1YnprRnVhbTA0?=
- =?utf-8?B?MUhrcWZuazRjUTU0aERFK0JyUS8rek9IdUk2Vjd6a2VXLzVzMVdPWUVmNFE5?=
- =?utf-8?B?am5iNDJ0U0FzYm9Mcy9GUFByMHpza3BpaDJEMnhZVGRXb2pKdDI4Y0FMazhO?=
- =?utf-8?B?M3IvZENrVHpXTnhXdklZTTRFYnE2MHJaMitSa1FoMHVLbDhNYVRKVU1iYm5j?=
- =?utf-8?B?UFdIR1EyVXoxWitXZEUrVjJrZDZQRzl2U1V3ZGZmK2d0YTZMRkhQcVZMUGhE?=
- =?utf-8?B?R3F6WHVtUEtScHpaM1FCeG9PWTlYK1Ixemg1ZGQrTlFraU8rNWtmMys5UXF4?=
- =?utf-8?B?NmRwbWJEdTZ5MDZHUmtBQStRRGM1NzlZcnNpOFZuLzBqek5iQXdVOUJ3UFE1?=
- =?utf-8?B?RU4vMEFYK1Q5c3VvakViNHhsZlBWQzd4U3dDYUFIUmFYMnlucUpUbFdnTHVB?=
- =?utf-8?B?NTZrclRCekFRRnBGdGQ2TjRqMUZrL0RWcmQ3dWxwU2pHNFdIc2ZvQlBqcG43?=
- =?utf-8?B?UlNtWDJ3TFVHN1JSRVdvS0FZd1dnODQrRUhkWk9LQWZSakNieTVNaVJHbk9F?=
- =?utf-8?B?Y0tkbXcyYlpneWVmUDNZRTFCcVBUdEZud040NnByaTVjTzY3ZzRrWXNlYkJ2?=
- =?utf-8?B?YUdoaEhadjhtUlF4OUwvRUprYmduMFNock1xSGt3YjBheUkzUy9teEhJa0hl?=
- =?utf-8?B?b3ZTekRQVFJKZTgveU5jNFU0Y0pxRmN4TkdxaFFZMC81ZU9ScW9EUkNEbE5j?=
- =?utf-8?B?UTVzZE85RGYxclhJcm4zKzRySVpnN1YxRlQ4OGRXYmptcm0vZC9WdzNhejlO?=
- =?utf-8?B?R1E9PQ==?=
-Content-Type: multipart/alternative;
-	boundary="_000_aca5f3feb93c42bb1178a4622d1423aa4c2d2b06camelmediatekco_"
+  d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
+  t=1708607741; x=1740143741;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1suLbVdtVXeayr7g+xM4dAWGEsS9ZfPhW2e0IWb5QeY=;
+  b=jRleCkzQbsQ+XdZ/A9qlpWxpls5WRJDQGZGxcHqXqIgRWgiSI8qVTlUn
+   /jQY4vPiiumauSCsY2I3CgdETXIgEr7XU4rPRvDy1A0kfYeA1xxUMUY2Z
+   KbZ4PRikMuipTybCSOvS6FiOxgGBSJ2sXhgVn6KydUdmBB+v/AxgjWXUj
+   8=;
+X-CSE-ConnectionGUID: /qRpOP3ORhSSvzMVh3KEvw==
+X-CSE-MsgGUID: gDXPlWD6TbCpmh5dEoPIzg==
+Received: from esagw5.bmwgroup.com (HELO esagw5.muc) ([160.46.252.46]) by
+ esa9.hc324-48.eu.iphmx.com with ESMTP/TLS; 22 Feb 2024 14:15:38 +0100
+Received: from esabb2.muc ([160.50.100.34])  by esagw5.muc with ESMTP/TLS;
+ 22 Feb 2024 14:15:36 +0100
+Received: from smucmp10e.bmwgroup.net (HELO SMUCMP10E.europe.bmw.corp) ([10.30.13.87])
+ by esabb2.muc with ESMTP/TLS; 22 Feb 2024 14:15:36 +0100
+Received: from localhost.localdomain (10.30.85.211) by SMUCMP10E.europe.bmw.corp
+ (2a03:1e80:a15:58f::2027) with Microsoft SMTP Server (version=TLS;
+ Thu, 22 Feb 2024 14:15:35 +0100
+From: Philip Lorenz <philip.lorenz@bmw.de>
+To: <bitbake-devel@lists.openembedded.org>
+CC: Philip Lorenz <philip.lorenz@bmw.de>
+Subject: [PATCH] fetch2: Ensure that git LFS objects are available
+Date: Thu, 22 Feb 2024 14:14:47 +0100
+Message-ID: <20240222131447.1609110-1-philip.lorenz@bmw.de>
+X-Mailer: git-send-email 2.43.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6717.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 643485b2-912b-469a-af70-08dc336cac37
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Feb 2024 06:08:21.8357
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 86IJssjjEMQLZ+oAsmySnXYELZmT13yi+FduHz/GZKMCYjFPJnjLMZWhb9963AQljbxWVEd3cOEkcBfKsmJXpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR03MB5643
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SMUCMP03G.europe.bmw.corp (2a03:1e80:a15:58f::225b) To
+ SMUCMP10E.europe.bmw.corp (2a03:1e80:a15:58f::2027)
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 22 Feb 2024 06:08:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15951
+ <bitbake-devel@lists.openembedded.org>; Thu, 22 Feb 2024 13:15:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15952
 
---_000_aca5f3feb93c42bb1178a4622d1423aa4c2d2b06camelmediatekco_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+The current implementation only performs a git lfs fetch alongside of a
+regular git fetch. This causes issues when the downloaded revision is
+already part of the fetched repository (e.g. because of moving back in
+history or the updated revision already being part of the repository at
+the time of the initial clone).
 
-U29ycnksIEkgbm90aWNlZCB0aGlzIHBhdGNoIGhhcyBub3QgYmVlbiBtZXJnZWQuIElzIHRoZXJl
-IGFueSBmdXJ0aGVyIHdvcmsgdGhhdCBJIG5lZWQgdG8gY29tcGxldGU/DQpPciBpcyBiaXRiYWtl
-IHBsYW5uaW5nIHRvIHN3dGljaCB0byB0aGUgc29sdXRpb24gdGhhdCBkb2VzIG5vdCB1c2Ugc3Rk
-aW4vc3Rkb3V0IGRpcmVjdGx5Lg0KDQpUaGFuayB5b3UNCg0KT24gU3VuLCAyMDI0LTAyLTA0IGF0
-IDIzOjAxICswMDAwLCBSaWNoYXJkIFB1cmRpZSB3cm90ZToNCg0KPiBUaGlzIHBhdGNoIGFkZHJl
-c3NlcyBhbiBpc3N1ZSBpbiBiaXRiYWtlLXdvcmtlciB3aGVyZSBzdGRvdXQsDQoNCj4gcmVzZXJ2
-ZWQgZm9yIHN0YXR1cyByZXBvcnRpbmcsIGlzIGltcHJvcGVybHkgYWNjZXNzZWQgYnkgY2hpbGQg
-cHJvY2Vzc2VzLg0KDQo+DQoNCj4gVGhlIHByb2JsZW0gb2NjdXJzIGR1cmluZyB0aGUgZXhlY3V0
-aW9uIG9mIHBhcnNlUmVjaXBlLA0KDQo+IHdoaWNoIGNhbGxzIGFub255bW91cyBmdW5jdGlvbnMu
-IElmIHRoZXNlIGZ1bmN0aW9ucyB1c2UgcHJpbnQtbGlrZSBvcGVyYXRpb25zLA0KDQo+IHRoZXkg
-Y2FuIGluYWR2ZXJ0ZW50bHkgb3V0cHV0IGRhdGEgdG8gc3Rkb3V0LiBUaGlzIHVuZXhwZWN0ZWQg
-ZGF0YSBjYW4gY2F1c2UNCg0KPiB0aGUgcnVucXVldWUgdG8gaGFuZyBzaWxlbnRseSwgaWYgdGhl
-IHN0ZG91dCBidWZmZXIgaXMgZmx1c2hlZA0KDQo+IGJlZm9yZSBleGVjX3Rhc2sgaXMgZXhlY3V0
-ZWQuDQoNCj4NCg0KPiBUbyBwcmV2ZW50IHRoaXMsIHRoZSBwYXRjaCByZWRpcmVjdHMgc3Rkb3V0
-IHRvIC9kZXYvbnVsbCBhbmQgZW5zdXJlcyBpdCBpcw0KDQo+IGZsdXNoZWQgcHJpb3IgdG8gdGhl
-IGV4ZWN1dGlvbiBvZiBleGVjX3Rhc2suDQoNCj4NCg0KPiBTaWduZWQtb2ZmLWJ5OiBZYW5nIFh1
-IDx5YW5nLnh1QG1lZGlhdGVrLmNvbT4NCg0KPiAtLS0NCg0KPiAgYmluL2JpdGJha2Utd29ya2Vy
-IHwgMTIgKysrKysrKysrLS0tDQoNCj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyks
-IDMgZGVsZXRpb25zKC0pDQoNCj4NCg0KPiBkaWZmIC0tZ2l0IGEvYmluL2JpdGJha2Utd29ya2Vy
-IGIvYmluL2JpdGJha2Utd29ya2VyDQoNCj4gaW5kZXggZWJhOWM1NjIuLjBiYTE4NTcyIDEwMDc1
-NQ0KDQo+IC0tLSBhL2Jpbi9iaXRiYWtlLXdvcmtlcg0KDQo+ICsrKyBiL2Jpbi9iaXRiYWtlLXdv
-cmtlcg0KDQo+IEBAIC0yMzcsOSArMjM3LDExIEBAIGRlZiBmb3JrX29mZl90YXNrKGNmZywgZGF0
-YSwgZGF0YWJ1aWxkZXIsIHdvcmtlcmRhdGEsIGV4dHJhY29uZmlnZGF0YSwgcnVudGFzayk6DQoN
-Cj4gICAgICAgICAgICAgICMgTGV0IFNJR0hVUCBleGl0IGFzIFNJR1RFUk0NCg0KPiAgICAgICAg
-ICAgICAgc2lnbmFsLnNpZ25hbChzaWduYWwuU0lHSFVQLCBzaWd0ZXJtX2hhbmRsZXIpDQoNCj4N
-Cg0KPiAtICAgICAgICAgICAgIyBObyBzdGRpbg0KDQo+IC0gICAgICAgICAgICBuZXdzaSA9IG9z
-Lm9wZW4ob3MuZGV2bnVsbCwgb3MuT19SRFdSKQ0KDQo+IC0gICAgICAgICAgICBvcy5kdXAyKG5l
-d3NpLCBzeXMuc3RkaW4uZmlsZW5vKCkpDQoNCj4gKyAgICAgICAgICAgICMgTm8gc3RkaW4gJiBz
-dGRvdXQNCg0KPiArICAgICAgICAgICAgIyBzdGRvdXQgaXMgdXNlZCBhcyBhIHN0YXR1cyByZXBv
-cnQgY2hhbm5lbCBhbmQgbXVzdCBub3QgYmUgdXNlZCBieSBjaGlsZCBwcm9jZXNzZXMuDQoNCj4g
-KyAgICAgICAgICAgIGR1bWJpbyA9IG9zLm9wZW4ob3MuZGV2bnVsbCwgb3MuT19SRFdSKQ0KDQo+
-ICsgICAgICAgICAgICBvcy5kdXAyKGR1bWJpbywgc3lzLnN0ZGluLmZpbGVubygpKQ0KDQo+ICsg
-ICAgICAgICAgICBvcy5kdXAyKGR1bWJpbywgc3lzLnN0ZG91dC5maWxlbm8oKSkNCg0KPg0KDQo+
-ICAgICAgICAgICAgICBpZiB1bWFzazoNCg0KPiAgICAgICAgICAgICAgICAgIG9zLnVtYXNrKHVt
-YXNrKQ0KDQo+IEBAIC0zMDUsNiArMzA3LDEwIEBAIGRlZiBmb3JrX29mZl90YXNrKGNmZywgZGF0
-YSwgZGF0YWJ1aWxkZXIsIHdvcmtlcmRhdGEsIGV4dHJhY29uZmlnZGF0YSwgcnVudGFzayk6DQoN
-Cj4gICAgICAgICAgICAgICAgICBpZiBub3QgcXVpZXRlcnJvcnM6DQoNCj4gICAgICAgICAgICAg
-ICAgICAgICAgbG9nZ2VyLmNyaXRpY2FsKHRyYWNlYmFjay5mb3JtYXRfZXhjKCkpDQoNCj4gICAg
-ICAgICAgICAgICAgICBvcy5fZXhpdCgxKQ0KDQo+ICsNCg0KPiArICAgICAgICAgICAgc3lzLnN0
-ZG91dC5mbHVzaCgpDQoNCj4gKyAgICAgICAgICAgIHN5cy5zdGRlcnIuZmx1c2goKQ0KDQo+ICsN
-Cg0KPiAgICAgICAgICAgICAgdHJ5Og0KDQo+ICAgICAgICAgICAgICAgICAgaWYgZHJ5X3J1bjoN
-Cg0KPiAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gMA0KDQoNClRoaXMgbG9va3MgbGlrZSBh
-IGdvb2QgY2F0Y2guDQoNCg0KSSdtIHdvbmRlcmluZyBpZiB3ZSBzaG91bGQgY2hhbmdlIHRoZSBj
-b2RlIHRvIHVzZSBhIGRpZmZlcmVudCBmaWxlDQoNCmRlc2NyaXB0b3IgZm9yIHRoZSBjb21tdW5p
-Y2F0aW9uIGFuZCBsZWF2ZSBzdGRvdXQvc3RkZXJyIGFsb25lDQoNCmluc3RlYWQuLi4NCg0KDQpD
-aGVlcnMsDQoNCg0KUmljaGFyZA0KDQoNCg0K
+Fix this by explicitly checking whether the required LFS objects are
+available in the downloade directory before confirming that a downloaded
+repository is up-to-date.
 
---_000_aca5f3feb93c42bb1178a4622d1423aa4c2d2b06camelmediatekco_
-Content-Type: text/html; charset="utf-8"
-Content-ID: <8E1E51AAA07B2149A7F274679AA1CBB7@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+This issue previously went unnoticed as git lfs would silently fetch the
+missing objects during the `unpack` task. With network isolation turned
+on, this no longer works, and unpacking fails.
 
-PGh0bWwgZGlyPSJsdHIiPg0KPGhlYWQ+DQo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUi
-IGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+DQo8L2hlYWQ+DQo8Ym9keSBzdHls
-ZT0idGV4dC1hbGlnbjpsZWZ0OyBkaXJlY3Rpb246bHRyOyI+DQo8ZGl2PlNvcnJ5LCBJIG5vdGlj
-ZWQgdGhpcyBwYXRjaCBoYXMgbm90IGJlZW4gbWVyZ2VkLiBJcyB0aGVyZSBhbnkgZnVydGhlciB3
-b3JrIHRoYXQgSSBuZWVkIHRvIGNvbXBsZXRlPzwvZGl2Pg0KPGRpdj5PciBpcyBiaXRiYWtlIHBs
-YW5uaW5nIHRvIHN3dGljaCB0byB0aGUgc29sdXRpb24gdGhhdCBkb2VzIG5vdCB1c2Ugc3RkaW4v
-c3Rkb3V0IGRpcmVjdGx5LjwvZGl2Pg0KPGRpdj48YnI+DQo8L2Rpdj4NCjxkaXY+VGhhbmsgeW91
-PC9kaXY+DQo8ZGl2Pjxicj4NCjwvZGl2Pg0KPGRpdj5PbiBTdW4sIDIwMjQtMDItMDQgYXQgMjM6
-MDEgKzAwMDAsIFJpY2hhcmQgUHVyZGllIHdyb3RlOjwvZGl2Pg0KPGJsb2NrcXVvdGUgdHlwZT0i
-Y2l0ZSIgc3R5bGU9Im1hcmdpbjowIDAgMCAuOGV4OyBib3JkZXItbGVmdDoycHggIzcyOWZjZiBz
-b2xpZDtwYWRkaW5nLWxlZnQ6MWV4Ij4NCjxwcmU+Jmd0OyBUaGlzIHBhdGNoIGFkZHJlc3NlcyBh
-biBpc3N1ZSBpbiBiaXRiYWtlLXdvcmtlciB3aGVyZSBzdGRvdXQsPC9wcmU+DQo8cHJlPiZndDsg
-cmVzZXJ2ZWQgZm9yIHN0YXR1cyByZXBvcnRpbmcsIGlzIGltcHJvcGVybHkgYWNjZXNzZWQgYnkg
-Y2hpbGQgcHJvY2Vzc2VzLjwvcHJlPg0KPHByZT4mZ3Q7IDwvcHJlPg0KPHByZT4mZ3Q7IFRoZSBw
-cm9ibGVtIG9jY3VycyBkdXJpbmcgdGhlIGV4ZWN1dGlvbiBvZiBwYXJzZVJlY2lwZSw8L3ByZT4N
-CjxwcmU+Jmd0OyB3aGljaCBjYWxscyBhbm9ueW1vdXMgZnVuY3Rpb25zLiBJZiB0aGVzZSBmdW5j
-dGlvbnMgdXNlIHByaW50LWxpa2Ugb3BlcmF0aW9ucyw8L3ByZT4NCjxwcmU+Jmd0OyB0aGV5IGNh
-biBpbmFkdmVydGVudGx5IG91dHB1dCBkYXRhIHRvIHN0ZG91dC4gVGhpcyB1bmV4cGVjdGVkIGRh
-dGEgY2FuIGNhdXNlPC9wcmU+DQo8cHJlPiZndDsgdGhlIHJ1bnF1ZXVlIHRvIGhhbmcgc2lsZW50
-bHksIGlmIHRoZSBzdGRvdXQgYnVmZmVyIGlzIGZsdXNoZWQ8L3ByZT4NCjxwcmU+Jmd0OyBiZWZv
-cmUgZXhlY190YXNrIGlzIGV4ZWN1dGVkLjwvcHJlPg0KPHByZT4mZ3Q7IDwvcHJlPg0KPHByZT4m
-Z3Q7IFRvIHByZXZlbnQgdGhpcywgdGhlIHBhdGNoIHJlZGlyZWN0cyBzdGRvdXQgdG8gL2Rldi9u
-dWxsIGFuZCBlbnN1cmVzIGl0IGlzPC9wcmU+DQo8cHJlPiZndDsgZmx1c2hlZCBwcmlvciB0byB0
-aGUgZXhlY3V0aW9uIG9mIGV4ZWNfdGFzay48L3ByZT4NCjxwcmU+Jmd0OyA8L3ByZT4NCjxwcmU+
-Jmd0OyBTaWduZWQtb2ZmLWJ5OiBZYW5nIFh1ICZsdDt5YW5nLnh1QG1lZGlhdGVrLmNvbSZndDs8
-L3ByZT4NCjxwcmU+Jmd0OyAtLS08L3ByZT4NCjxwcmU+Jmd0OyAgYmluL2JpdGJha2Utd29ya2Vy
-IHwgMTIgKysrKysrKysrLS0tPC9wcmU+DQo8cHJlPiZndDsgIDEgZmlsZSBjaGFuZ2VkLCA5IGlu
-c2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pPC9wcmU+DQo8cHJlPiZndDsgPC9wcmU+DQo8cHJl
-PiZndDsgZGlmZiAtLWdpdCBhL2Jpbi9iaXRiYWtlLXdvcmtlciBiL2Jpbi9iaXRiYWtlLXdvcmtl
-cjwvcHJlPg0KPHByZT4mZ3Q7IGluZGV4IGViYTljNTYyLi4wYmExODU3MiAxMDA3NTU8L3ByZT4N
-CjxwcmU+Jmd0OyAtLS0gYS9iaW4vYml0YmFrZS13b3JrZXI8L3ByZT4NCjxwcmU+Jmd0OyArKysg
-Yi9iaW4vYml0YmFrZS13b3JrZXI8L3ByZT4NCjxwcmU+Jmd0OyBAQCAtMjM3LDkgKzIzNywxMSBA
-QCBkZWYgZm9ya19vZmZfdGFzayhjZmcsIGRhdGEsIGRhdGFidWlsZGVyLCB3b3JrZXJkYXRhLCBl
-eHRyYWNvbmZpZ2RhdGEsIHJ1bnRhc2spOjwvcHJlPg0KPHByZT4mZ3Q7ICAgICAgICAgICAgICAj
-IExldCBTSUdIVVAgZXhpdCBhcyBTSUdURVJNPC9wcmU+DQo8cHJlPiZndDsgICAgICAgICAgICAg
-IHNpZ25hbC5zaWduYWwoc2lnbmFsLlNJR0hVUCwgc2lndGVybV9oYW5kbGVyKTwvcHJlPg0KPHBy
-ZT4mZ3Q7ICA8L3ByZT4NCjxwcmU+Jmd0OyAtICAgICAgICAgICAgIyBObyBzdGRpbjwvcHJlPg0K
-PHByZT4mZ3Q7IC0gICAgICAgICAgICBuZXdzaSA9IG9zLm9wZW4ob3MuZGV2bnVsbCwgb3MuT19S
-RFdSKTwvcHJlPg0KPHByZT4mZ3Q7IC0gICAgICAgICAgICBvcy5kdXAyKG5ld3NpLCBzeXMuc3Rk
-aW4uZmlsZW5vKCkpPC9wcmU+DQo8cHJlPiZndDsgKyAgICAgICAgICAgICMgTm8gc3RkaW4gJmFt
-cDsgc3Rkb3V0PC9wcmU+DQo8cHJlPiZndDsgKyAgICAgICAgICAgICMgc3Rkb3V0IGlzIHVzZWQg
-YXMgYSBzdGF0dXMgcmVwb3J0IGNoYW5uZWwgYW5kIG11c3Qgbm90IGJlIHVzZWQgYnkgY2hpbGQg
-cHJvY2Vzc2VzLjwvcHJlPg0KPHByZT4mZ3Q7ICsgICAgICAgICAgICBkdW1iaW8gPSBvcy5vcGVu
-KG9zLmRldm51bGwsIG9zLk9fUkRXUik8L3ByZT4NCjxwcmU+Jmd0OyArICAgICAgICAgICAgb3Mu
-ZHVwMihkdW1iaW8sIHN5cy5zdGRpbi5maWxlbm8oKSk8L3ByZT4NCjxwcmU+Jmd0OyArICAgICAg
-ICAgICAgb3MuZHVwMihkdW1iaW8sIHN5cy5zdGRvdXQuZmlsZW5vKCkpPC9wcmU+DQo8cHJlPiZn
-dDsgIDwvcHJlPg0KPHByZT4mZ3Q7ICAgICAgICAgICAgICBpZiB1bWFzazo8L3ByZT4NCjxwcmU+
-Jmd0OyAgICAgICAgICAgICAgICAgIG9zLnVtYXNrKHVtYXNrKTwvcHJlPg0KPHByZT4mZ3Q7IEBA
-IC0zMDUsNiArMzA3LDEwIEBAIGRlZiBmb3JrX29mZl90YXNrKGNmZywgZGF0YSwgZGF0YWJ1aWxk
-ZXIsIHdvcmtlcmRhdGEsIGV4dHJhY29uZmlnZGF0YSwgcnVudGFzayk6PC9wcmU+DQo8cHJlPiZn
-dDsgICAgICAgICAgICAgICAgICBpZiBub3QgcXVpZXRlcnJvcnM6PC9wcmU+DQo8cHJlPiZndDsg
-ICAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmNyaXRpY2FsKHRyYWNlYmFjay5mb3JtYXRfZXhj
-KCkpPC9wcmU+DQo8cHJlPiZndDsgICAgICAgICAgICAgICAgICBvcy5fZXhpdCgxKTwvcHJlPg0K
-PHByZT4mZ3Q7ICs8L3ByZT4NCjxwcmU+Jmd0OyArICAgICAgICAgICAgc3lzLnN0ZG91dC5mbHVz
-aCgpPC9wcmU+DQo8cHJlPiZndDsgKyAgICAgICAgICAgIHN5cy5zdGRlcnIuZmx1c2goKTwvcHJl
-Pg0KPHByZT4mZ3Q7ICs8L3ByZT4NCjxwcmU+Jmd0OyAgICAgICAgICAgICAgdHJ5OjwvcHJlPg0K
-PHByZT4mZ3Q7ICAgICAgICAgICAgICAgICAgaWYgZHJ5X3J1bjo8L3ByZT4NCjxwcmU+Jmd0OyAg
-ICAgICAgICAgICAgICAgICAgICByZXR1cm4gMDwvcHJlPg0KPHByZT48YnI+PC9wcmU+DQo8cHJl
-PlRoaXMgbG9va3MgbGlrZSBhIGdvb2QgY2F0Y2guJm5ic3A7PC9wcmU+DQo8cHJlPjxicj48L3By
-ZT4NCjxwcmU+SSdtIHdvbmRlcmluZyBpZiB3ZSBzaG91bGQgY2hhbmdlIHRoZSBjb2RlIHRvIHVz
-ZSBhIGRpZmZlcmVudCBmaWxlPC9wcmU+DQo8cHJlPmRlc2NyaXB0b3IgZm9yIHRoZSBjb21tdW5p
-Y2F0aW9uIGFuZCBsZWF2ZSBzdGRvdXQvc3RkZXJyIGFsb25lPC9wcmU+DQo8cHJlPmluc3RlYWQu
-Li48L3ByZT4NCjxwcmU+PGJyPjwvcHJlPg0KPHByZT5DaGVlcnMsPC9wcmU+DQo8cHJlPjxicj48
-L3ByZT4NCjxwcmU+UmljaGFyZDwvcHJlPg0KPHByZT48YnI+PC9wcmU+DQo8cHJlPjxicj48L3By
-ZT4NCjxwcmU+PGJyPjwvcHJlPg0KPC9ibG9ja3F1b3RlPg0KPC9ib2R5Pg0KPC9odG1sPg0KPCEt
-LXR5cGU6dGV4dC0tPjwhLS17LS0+PHByZT4qKioqKioqKioqKioqIE1FRElBVEVLIENvbmZpZGVu
-dGlhbGl0eSBOb3RpY2UgKioqKioqKioqKioqKioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250
-YWluZWQgaW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRz
-KSBtYXkgYmUgY29uZmlkZW50aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3
-aXNlDQpleGVtcHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMg
-aW50ZW5kZWQgdG8gYmUgDQpjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVu
-dChzKS4gQW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCBy
-ZXRhaW5pbmcgb3IgY29weWluZyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFj
-aG1lbnRzKSBieSB1bmludGVuZGVkIHJlY2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVk
-IGFuZCBtYXkgDQpiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBp
-ZW50IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlIA0KdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0
-aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0KaW1tZWRpYXRl
-bHkgKGJ5IHJlcGx5aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQgYWxsIGNvcGll
-cyBvZiANCnRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIg
-c3lzdGVtLCBhbmQgZG8gbm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0
-byBhbnkgb3RoZXIgcGVyc29uLiBUaGFuayB5b3UhDQo8L3ByZT48IS0tfS0tPg==
+Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
+---
+ lib/bb/fetch2/git.py  | 45 ++++++++++++++++++++++++++++++++++++--
+ lib/bb/tests/fetch.py | 51 +++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 90 insertions(+), 6 deletions(-)
 
---_000_aca5f3feb93c42bb1178a4622d1423aa4c2d2b06camelmediatekco_--
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index df33fb6a..b43ee0da 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -325,7 +325,10 @@ class Git(FetchMethod):
+         return ud.clonedir
+ 
+     def need_update(self, ud, d):
+-        return self.clonedir_need_update(ud, d) or self.shallow_tarball_need_update(ud) or self.tarball_need_update(ud)
++        return self.clonedir_need_update(ud, d) \
++                or self.shallow_tarball_need_update(ud) \
++                or self.tarball_need_update(ud) \
++                or self.lfs_need_update(ud, d)
+ 
+     def clonedir_need_update(self, ud, d):
+         if not os.path.exists(ud.clonedir):
+@@ -337,6 +340,15 @@ class Git(FetchMethod):
+                 return True
+         return False
+ 
++    def lfs_need_update(self, ud, d):
++        if self.clonedir_need_update(ud, d):
++            return True
++
++        for name in ud.names:
++            if not self._lfs_objects_downloaded(ud, d, name, ud.clonedir):
++                return True
++        return False
++
+     def clonedir_need_shallow_revs(self, ud, d):
+         for rev in ud.shallow_revs:
+             try:
+@@ -467,7 +479,7 @@ class Git(FetchMethod):
+             if missing_rev:
+                 raise bb.fetch2.FetchError("Unable to find revision %s even from upstream" % missing_rev)
+ 
+-        if self._contains_lfs(ud, d, ud.clonedir) and self._need_lfs(ud):
++        if self.lfs_need_update(ud, d):
+             # Unpack temporary working copy, use it to run 'git checkout' to force pre-fetching
+             # of all LFS blobs needed at the srcrev.
+             #
+@@ -710,6 +722,35 @@ class Git(FetchMethod):
+             raise bb.fetch2.FetchError("The command '%s' gave output with more then 1 line unexpectedly, output: '%s'" % (cmd, output))
+         return output.split()[0] != "0"
+ 
++    def _lfs_objects_downloaded(self, ud, d, name, wd):
++        """
++        Verifies whether the LFS objects for requested revisions have already been downloaded
++        """
++        # Bail out early if this repository doesn't use LFS
++        if not self._need_lfs(ud) or not self._contains_lfs(ud, d, wd):
++            return True
++
++        # The Git LFS specification specifies ([1]) the LFS folder layout so it should be safe to check for file
++        # existence.
++        # [1] https://github.com/git-lfs/git-lfs/blob/main/docs/spec.md#intercepting-git
++        cmd = "%s lfs ls-files -l %s" \
++                % (ud.basecmd, ud.revisions[name])
++        output = runfetchcmd(cmd, d, quiet=True, workdir=wd).rstrip()
++        # Do not do any further matching if no objects are managed by LFS
++        if not output:
++            return True
++
++        # Match all lines beginning with the hexadecimal OID
++        oid_regex = re.compile("^(([a-fA-F0-9]{2})([a-fA-F0-9]{2})[A-Fa-f0-9]+)")
++        for line in output.split("\n"):
++            oid = re.search(oid_regex, line)
++            if not oid:
++                bb.warn("git lfs ls-files output '%s' did not match expected format." % line)
++            if not os.path.exists(os.path.join(wd, "lfs", "objects", oid.group(2), oid.group(3), oid.group(1))):
++                return False
++
++        return True
++
+     def _need_lfs(self, ud):
+         return ud.parm.get("lfs", "1") == "1"
+ 
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 5ed5b560..e988e26c 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -6,6 +6,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
++import contextlib
+ import unittest
+ import hashlib
+ import tempfile
+@@ -2261,10 +2262,14 @@ class GitLfsTest(FetcherTest):
+ 
+         bb.utils.mkdirhier(self.srcdir)
+         self.git_init(cwd=self.srcdir)
+-        with open(os.path.join(self.srcdir, '.gitattributes'), 'wt') as attrs:
+-            attrs.write('*.mp3 filter=lfs -text')
+-        self.git(['add', '.gitattributes'], cwd=self.srcdir)
+-        self.git(['commit', '-m', "attributes", '.gitattributes'], cwd=self.srcdir)
++        self.commit_file('.gitattributes', '*.mp3 filter=lfs -text')
++
++    def commit_file(self, filename, content):
++        with open(os.path.join(self.srcdir, filename), "w") as f:
++            f.write(content)
++        self.git(["add", filename], cwd=self.srcdir)
++        self.git(["commit", "-m", "Change"], cwd=self.srcdir)
++        return self.git(["rev-parse", "HEAD"], cwd=self.srcdir).strip()
+ 
+     def fetch(self, uri=None, download=True):
+         uris = self.d.getVar('SRC_URI').split()
+@@ -2284,6 +2289,44 @@ class GitLfsTest(FetcherTest):
+         unpacked_lfs_file = os.path.join(self.d.getVar('WORKDIR'), 'git', "Cat_poster_1.jpg")
+         return unpacked_lfs_file
+ 
++    @skipIfNoGitLFS()
++    def test_fetch_lfs_on_srcrev_change(self):
++        """Test if fetch downloads missing LFS objects when a different revision within an existing repository is requested"""
++        self.git(["lfs", "install", "--local"], cwd=self.srcdir)
++
++        @contextlib.contextmanager
++        def hide_upstream_repository():
++            """Hide the upstream repository to make sure that git lfs cannot pull from it"""
++            temp_name = self.srcdir + ".bak"
++            os.rename(self.srcdir, temp_name)
++            try:
++                yield
++            finally:
++                os.rename(temp_name, self.srcdir)
++
++        def fetch_and_verify(revision, filename, content):
++            self.d.setVar('SRCREV', revision)
++            fetcher, ud = self.fetch()
++
++            with hide_upstream_repository():
++                workdir = self.d.getVar('WORKDIR')
++                fetcher.unpack(workdir)
++
++                with open(os.path.join(workdir, "git", filename)) as f:
++                    self.assertEqual(f.read(), content)
++
++        commit_1 = self.commit_file("a.mp3", "version 1")
++        commit_2 = self.commit_file("a.mp3", "version 2")
++
++        self.d.setVar('SRC_URI', "git://%s;protocol=file;lfs=1;branch=master" % self.srcdir)
++
++        # Seed the local download folder by fetching the latest commit and verifying that the LFS contents are
++        # available even when the upstream repository disappears.
++        fetch_and_verify(commit_2, "a.mp3", "version 2")
++        # Verify that even when an older revision is fetched, the needed LFS objects are fetched into the download
++        # folder.
++        fetch_and_verify(commit_1, "a.mp3", "version 1")
++
+     @skipIfNoGitLFS()
+     @skipIfNoNetwork()
+     def test_real_git_lfs_repo_succeeds_without_lfs_param(self):
+-- 
+2.43.2
 
 
