@@ -2,136 +2,139 @@ Return-Path: <tobias.hagelborn@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B61C5478C
-	for <webhook@archiver.kernel.org>; Fri, 23 Feb 2024 10:58:46 +0000 (UTC)
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.57])
- by mx.groups.io with SMTP id smtpd.web11.8145.1708685920553524718
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F7BC54798
+	for <webhook@archiver.kernel.org>; Fri, 23 Feb 2024 13:27:47 +0000 (UTC)
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (EUR02-DB5-obe.outbound.protection.outlook.com [40.107.249.65])
+ by mx.groups.io with SMTP id smtpd.web10.10464.1708694860446646575
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 23 Feb 2024 02:58:41 -0800
+ Fri, 23 Feb 2024 05:27:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=selector1 header.b=gqKZAnc1;
- spf=pass (domain: axis.com, ip: 40.107.8.57, mailfrom: tobias.hagelborn@axis.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=l9uD5De9;
+ spf=pass (domain: axis.com, ip: 40.107.249.65, mailfrom: tobias.hagelborn@axis.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N3Zckj13z92A+OFtVxEtdQMdXula9RwE74ljdfQeCy3GB8+EDZp2TRuKj7ldwwlYF8iajL7+z/TPvCv8qXLk3BH/VDWu0VX8t6YVProQYWUgZQESRia86ZVWxxQxX0knMjUiX5RkpWDVen3tvaQG4p84Mm8kaygL1M1nvBOYdKR6AaNAV0qXRg3lbY9CrrqwATJ/9R75F0UmqGmaeNmrn5ztmSY5ql9dQtqJJ/rxUa9u6aE+7ap5LVKfNp6wo0VkStHvrhhVQANBJlloV5PqiklFfFqTmspkhMvhQvYovmWr3uh599q7JkigglgSxhxnrCn6e6Q0YdlMGBKKXCK2RA==
+ b=ae8VdhGMICElRzPv7hBY0c0LLAvSHaQ+y3RxVhgowlLFWhUyMMJohvfOuefFOapHv+Tz28QtKTawA+lXENWZ17QOZcY02E630iXACmA2CQim3SyxpEqcKEhNo41cZWikYJVCRMo8+5y2jFRzAHyQDksDFalaKoJbcyx6E49G0DFtCi/T76cp4UYoHvv6c75HBafqTvbvqj9SpQ6jqSk+sOx1EFQkPqWePqzSuj+Gm9oehmgm858vYChsYdVmH1tvUD9paLpoeAU9aTbvIuxjALXwo8iMuH1ECyxpVNNY8djsqYaJIXady2+JU7IyH0L+3h8ict9+ueURqjYe+iExDw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zM1IJdW93fntaqZFXphfD5HeCfqrGkMZeO3ZTXMhcSA=;
- b=DivF7Lc7j+zKRgmDM0L3+NdNrFvxop2x+u1/gacvKz1+YfwjybviMjJrnG51esyVPAiDlae2APQOo8MCt4NBYPo9XAi9LbkBBAm3ti9oIEI1snhw+3TyyvB4DFwSQwDKOaM92w60DM+39ZpOUFnPVT3ovPWpnjeh0krMaemVLXTvoSi0UsKmGLkS1KOBCA2XfFiXRxyNwncDon9O4TZGPYInJ2Z74sYHlt7/a2zWvgkRHvajJLXpui0/XqRyz63J9c3DGkvzU60lAV9Nvy0ouJxWaE6jPLCBA6ikrHXLuAI3hpz+PvBFWHrMHjURcBqD31zsMEnDGtiIy3rudCI0bQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
+ bh=ytSS+RtXMl92aF+GCFfKBxmSEGmaS+uOwfunwzogDbc=;
+ b=QnTQ6PCE0y/00m4i/XjbiJxyGNs0Ki7EKa+jyP5hkaAh0kyw8VDHrCzRV3C/d1qjqLA4okoICEcmlUX3ti4s7/xjaBYSe5pbM/mvbcTIZl4JQJvcQE8rpEpCfLOUf55WmoBks23+4TdgodQJz8XnVG9tLIrxF4+Hcqf0/MX+2lAlcndkuuE7u085x7zmGqzxaIwctzeQuHYw50/ODd/GIaXhb+beNjy8QB/juK2hk9fG5D8BvavqbvpWTiBn6FcL5hnf6RaGEJJ8CrrO9jlDyrR3FcCHlUtn4n7t+OG9uHH7az5eKSisKQ2iKzaCRvCYsLoEDIstBELxNZ8hxeZOCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=axis.com; dmarc=fail (p=none sp=none pct=100) action=none
+ header.from=axis.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zM1IJdW93fntaqZFXphfD5HeCfqrGkMZeO3ZTXMhcSA=;
- b=gqKZAnc1MuyqjBMkevzDzzSVgKTVa4xczOTcQQULXjRIeB47VyggGDTqBHxDG4tBZPmdWVIdgPVU3F2IFS598aLLnxkX6cT1bLb5jjr7vB/fDGECr873kB5L9DQzogbc8AaL1B0YqNvLMvViY2LOYHII570gdPNeSBUNfApk9zA=
-Received: from AS8PR02MB9483.eurprd02.prod.outlook.com (2603:10a6:20b:5a6::5)
- by DB4PR02MB9647.eurprd02.prod.outlook.com (2603:10a6:10:3f1::15) with
+ bh=ytSS+RtXMl92aF+GCFfKBxmSEGmaS+uOwfunwzogDbc=;
+ b=l9uD5De9Qfj1WieiVzhOI3BlnWM5KuKxbYS4qrQN41IbnKjlsb82aLsuYzTKrQbU8I5tWdsn4fBhlRwz9/YSe2boYM1x4K8YzXo/0TF4uAqhuwk6Yyk5YWk6iruYSodPXDWJYaFVTYmV1eVAU8Sr5H0LSwxsbHH+rcoRo6H0Yk0=
+Received: from DB8PR03CA0014.eurprd03.prod.outlook.com (2603:10a6:10:be::27)
+ by DBAPR02MB6341.eurprd02.prod.outlook.com (2603:10a6:10:19e::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Fri, 23 Feb
- 2024 10:58:36 +0000
-Received: from AS8PR02MB9483.eurprd02.prod.outlook.com
- ([fe80::13e3:1d0:81cf:64f4]) by AS8PR02MB9483.eurprd02.prod.outlook.com
- ([fe80::13e3:1d0:81cf:64f4%3]) with mapi id 15.20.7316.023; Fri, 23 Feb 2024
- 10:58:36 +0000
-From: Tobias Hagelborn <Tobias.Hagelborn@axis.com>
-To: Joshua Watt <jpewhacker@gmail.com>
-CC: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] Re-enable connection pooling with psycopg
- 3 driver
-Thread-Topic: [bitbake-devel] [PATCH] Re-enable connection pooling with
- psycopg 3 driver
-Thread-Index: AQHaZBKGbDNneVst2kCTI+VUO0lvT7EXwnyY
-Date: Fri, 23 Feb 2024 10:58:36 +0000
-Message-ID: 
- <AS8PR02MB94833C59F481899B382B8842EC552@AS8PR02MB9483.eurprd02.prod.outlook.com>
-References: <20240220062705.3611869-1-tobiasha@axis.com>
- <CAJdd5GaHiakYT4W0kaVhp6NvU4nBccR6MKHtjR_YsMehi-Lg6w@mail.gmail.com>
-In-Reply-To: 
- <CAJdd5GaHiakYT4W0kaVhp6NvU4nBccR6MKHtjR_YsMehi-Lg6w@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS8PR02MB9483:EE_|DB4PR02MB9647:EE_
-x-ms-office365-filtering-correlation-id: 6f169d34-4ce1-4deb-241a-08dc345e6273
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- i2USgeadnGh1NhmoiT9KnCFVsWSGwN90GEq+cD0fCHhkvxHE94I5TS3MmtHwIRR1AKbIfkFfrPAdkyHoyhp5iAKr0Vd3tzfmonUQv7zT1Qp4AgYn3fePFrCJdee4n2zRElTFjiOco7+3m87Z/5nJQ/XuBLmExsRrQXX9/E2FMUbodf0lIvnVZAdoY5yYKVOw1U9qLtVkXO52oa65Tp1x6sy75l0ci9gMs8rjj/KF3KgJzSbYmElNjT6NeS3/kNA5xEFyxtTpBeWkU6kl0x+n0IngDY+14ZQhLzUFMipv5LlEptnw3Mn1hOpm/dK7+0tzC6AsK5xW/XVCi9JRIqH2fkG+SZZiTPZz6Mvi9eaAbJRfWFKNK6dlVDeT062+MH8H7MUcmkOe7tNJcKERTgZX95Add2TrP2JUwMIL6drOfdKqpfHbWApOnu07+AK3OeEuAQMgNzfTUWx2cLqNLrnFsYJ/uy1XM8EcE5u2qa1ZKlLMCrGGn9VEGad5H7nb96kSvnrGW+60DuIgEmDDu0n3jkW6FNv2u4C4F5nluVWScYZR1YW/9jtA0KbQy7OT3diP0cnTlK2dew6MqZfNr8OXC/n0lSaOdBYAC/DZZ7L81Ns=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR02MB9483.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?STgYkBvNn1LHpOM6nEvkEWOCyQuXLgXrCMG2sS/n5wUMxLSRDTG4n58fth?=
- =?iso-8859-1?Q?88frU/8IfhTp4LWxZGKhZqruuinOn29zpnt6v0rkkxhe7YldHsUpvn92hi?=
- =?iso-8859-1?Q?3pr6FDwOJjcHW2H0yN2LmiRRkfAU1J6IlaaqynsSvkQ6HrPwVdYbe/Dikd?=
- =?iso-8859-1?Q?P6iemjB9gr0vhtpQ5CYyg92js/WwbQenU9d8dCc1svt8WdKkIopT96h3pS?=
- =?iso-8859-1?Q?qEC8jkx3ku0gGso64oaYd0sx4yKvpluz2aIrwfoqTn245VOi9H14j3yRoX?=
- =?iso-8859-1?Q?G2k312ERpoCW/pW8nfzr3rBNNrlY03xcLWLm+Rxf4X8dVaR9bgY9B+Pf9X?=
- =?iso-8859-1?Q?A3a7pCzfGxP6N8hEM5p6llNRiTzzsDEJEiwEUnhHXs3Rok72M1suEkqKw4?=
- =?iso-8859-1?Q?eK5V5GUSv0p/kjqVxvX5y6br+5IfD+EYsi9R28vOdmX+Rgt54VV7ZjLDxv?=
- =?iso-8859-1?Q?nkjBKDW/gkjNNXSGMIE7OL2V6DOSMmlUHM279ccGIB6l+t2ngj9ZmnEEe+?=
- =?iso-8859-1?Q?h2qL6zNboXt2F6vbYodCl0mP9FWUbBhUQtD9RwQE9BRqijXCYuiVfgdi7y?=
- =?iso-8859-1?Q?gEQB3UVLWRvXahatGpL8g8BH1M/1l+0ly5NE4ulgz+F3b16SlDhQfrY0j2?=
- =?iso-8859-1?Q?at4UO17zGrARJ/3eBWtn5gvmaRc3G+lImXfDhXAG4EhAS+t5d33SUDPnrq?=
- =?iso-8859-1?Q?23WJHrxXlZtvjbfBPvICs/1t0hL1i8SZu1XtEO7RFO+JFVfyYTzfn54zjt?=
- =?iso-8859-1?Q?K7VQdjmLIE8l1Q9cLM30uF2/tumGYSHslgQP9L7kmY6M16WXddhfZDpkmg?=
- =?iso-8859-1?Q?0zBUJ7VFcDm91+W6ob3qmZqvCWlqWJccPM5NZBw6OFKXRWnoQwabjSFryu?=
- =?iso-8859-1?Q?L0uSTBNKr5ji6ne5ylkfJaX/cTfTTrADz8kBnscxHhp9KpeEgVtTcR2N4D?=
- =?iso-8859-1?Q?psUBU+6dcPYP/SLNUV3K/4gn6m5f8RgSdKEi8EN/QDIMKL9cUseNsjoR4N?=
- =?iso-8859-1?Q?t/2tTWZyJB/PLudDiyLar54S6BawUsF8V15w3jJuPcET4f5KspNQtI9KYK?=
- =?iso-8859-1?Q?Agkll/CpJLgN6VGoEgzMV91ulbyEgHawSrlY9tiLY/K93nrnDrvJRONpGH?=
- =?iso-8859-1?Q?4UTJsv4fsGZ6JBNHJ6+wwAcRvuU0+CROSIhkBDLMEth378FfdEKxjABoGF?=
- =?iso-8859-1?Q?+JvjW2rAeO1v2mARgfzxCJNxAthYD4VHOghk6kIh8JQg8OL+UutvuawZw0?=
- =?iso-8859-1?Q?IMJXnPdjaDV0EerQmHEs8S2ApvwdG24uCweqDkfIiz6aDn1bMHCc6Mesnd?=
- =?iso-8859-1?Q?7rQWCN6LMUwf3CoCBaPhzh1B44thMudRylwTUTra5Lpvmyqndw514ZZ+jg?=
- =?iso-8859-1?Q?TxNABmHXuk2sDx2qxBKXurJHXbmKBy97LIrmH2LUnTJi0S4lC6Weh7JlJL?=
- =?iso-8859-1?Q?rqQelZLdWgRB8AZfKBAavLdKsbodbHABBg8I1Qiq/4b7TswvBWt/La+hhb?=
- =?iso-8859-1?Q?I/7POMJS+/iAVhfbtO16vpCx5K10rLk8zk0hiWZpj3awZptMuBJKHYAqXF?=
- =?iso-8859-1?Q?gT+JxxdjLArmHfrjpKYumnTKzZztFrL0GThMh0ycVasoyff6bGzi6fvc8s?=
- =?iso-8859-1?Q?MqGynl7IPZxGY=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.37; Fri, 23 Feb
+ 2024 13:27:36 +0000
+Received: from DB1PEPF000509F8.eurprd02.prod.outlook.com
+ (2603:10a6:10:be:cafe::ce) by DB8PR03CA0014.outlook.office365.com
+ (2603:10a6:10:be::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.44 via Frontend
+ Transport; Fri, 23 Feb 2024 13:27:35 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=axis.com;
+Received-SPF: Fail (protection.outlook.com: domain of axis.com does not
+ designate 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com;
+Received: from mail.axis.com (195.60.68.100) by
+ DB1PEPF000509F8.mail.protection.outlook.com (10.167.242.154) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Fri, 23 Feb 2024 13:27:34 +0000
+Received: from SE-MAIL21W.axis.com (10.20.40.16) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 23 Feb
+ 2024 14:27:33 +0100
+Received: from se-mail01w.axis.com (10.20.40.7) by SE-MAIL21W.axis.com
+ (10.20.40.16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 23 Feb
+ 2024 14:27:33 +0100
+Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Fri, 23 Feb 2024 14:27:33 +0100
+Received: from pc37511-1950.se.axis.com (pc37511-1950.se.axis.com [10.94.62.3])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 550A214E60
+	for <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 14:27:33 +0100 (CET)
+Received: by pc37511-1950.se.axis.com (Postfix, from userid 11324)
+	id 500C4B257EA; Fri, 23 Feb 2024 14:27:33 +0100 (CET)
+From: Tobias Hagelborn <tobiasha@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH v2] hashserv: Re-enable connection pooling with psycopg 3 driver
+Date: Fri, 23 Feb 2024 14:27:31 +0100
+Message-ID: <20240223132731.2164299-1-tobiasha@axis.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509F8:EE_|DBAPR02MB6341:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8b33ebfa-9307-477c-6ade-08dc347331cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	DMhvYD9Olam+MRg3ZZTK3ajQn4lGNxgmaM0DRNIo/8LHIGsN3A5g1Fk6BVWDe5yeBh3e0H/2+U0Or6Y9K3PkArzYdIRWc0If8C8YgYzCaJidU+PLR2CXtG63RLKClUL4v8df3Qk8Wh1zjSrY+B+TlxL6KKsgfbZulukW4ZllYLpoo0/JhGj84huNz6ayeM8Oj/7HBQf+pNr7oQg3E8DHfxugUZD6B3/DpcN/lxquDuHBKoNM7iKcGBzbVS3h7Y8WvUNqZUAL0liTf+lz7YIYTrcWjcvz/fPFtHAQ95G3C0lyMJyvT0RLNfN/uGaWPhpf7UPTKfWF5f1KT6D/ONYAxWm4mGd+ev37ueTT6VKmWJySi2IVCl9Oj2W92LGrD2ZZ5HNjURqQTrsIAtmMuBXFo7uarYA7LXmUhQljL46GzMBEPy3vAuqmSKIE5uEI1U6oJfhWoY8nj594Rv+kdomGRliX7lgSZPLlRjUocjhz1FZ/wj96Ctg88tKW2SXs9oDS37b0FoRU8R3q6r+QC2iaRqICK7bMxKfHePTHIa3s0B3YzFByJNiRc/UAeNRc5aNq13EkH9opZzdZTbihvSa+2/Q+mN6oEtvE3w/c8F8DsV0qG4Pz6lwWq1KvLDUASdJfOArFC4Tnn4ziEaf4egrkzfgew8mrDVkRa90+mqqoq3I=
+X-Forefront-Antispam-Report: 
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006);DIR:OUT;SFP:1101;
 X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB9483.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f169d34-4ce1-4deb-241a-08dc345e6273
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2024 10:58:36.3003
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 13:27:34.0284
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wAO81Qt7nEeDqPAnM8/iMXBXRAk/3bjw3TOWh9b6ELCXQPi6MvNQI8LS8DvWJl7iIPHxTYKhnJXQcRQvEVGg8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR02MB9647
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b33ebfa-9307-477c-6ade-08dc347331cb
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DB1PEPF000509F8.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR02MB6341
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 10:58:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15954
+ <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 13:27:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15955
 
-=0A=
-=A0>This approach is fine with me. If we need an argument in the future we=
-=0A=
->can make one that does "yes", "no", "auto" options. Do you happen to=0A=
->know if this is version dependent or if it's just because I didn't=0A=
->test with the psycopg driver?=0A=
-=0A=
-Since I saw your commit earlier on removing the use of pool [1] , I assumed=
- asyncpg did not support it and it also seems to be aligned with whatever w=
-as written in different forums.=0A=
-I have only tested psycopg v3 (package: psycopg) and verified that this wor=
-ks.=0A=
-I intend to commit a new patch-set since the default pool is very limited. =
-I suggest allowing an unlimited pool size when required.=0A=
-=0A=
-[1] https://github.com/JoshuaWatt/bb-hashserver/commit/1a5483d0d96e2a429b1a=
-f0dca5a523955c8aeb1f=0A=
+Re-enable connection pooling in case `postgresql+psygopg` driver
+is used. Async connection pooling is supported in psycopg 3 [psycopg]
+driver in SQLAlchemy. Allow the connection pool to grow to
+arbitrary size.
+
+Signed-off-by: Tobias Hagelborn <tobiasha@axis.com>
+---
+
+Added unlimited pool size.
+Validated with local stress tests and real builds.
+
+ lib/hashserv/sqlalchemy.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/lib/hashserv/sqlalchemy.py b/lib/hashserv/sqlalchemy.py
+index fc3ae3d33..f7b0226a7 100644
+--- a/lib/hashserv/sqlalchemy.py
++++ b/lib/hashserv/sqlalchemy.py
+@@ -129,7 +129,11 @@ class DatabaseEngine(object):
+             return inspect(conn).has_table(name)
+=20
+         self.logger.info("Using database %s", self.url)
+-        self.engine =3D create_async_engine(self.url, poolclass=3DNullPool=
+)
++        if self.url.drivername =3D=3D 'postgresql+psycopg':
++            # Psygopg 3 (psygopg) driver can handle async connection pooli=
+ng
++            self.engine =3D create_async_engine(self.url, max_overflow=3D-=
+1)
++        else:
++            self.engine =3D create_async_engine(self.url, poolclass=3DNull=
+Pool)
+=20
+         async with self.engine.begin() as conn:
+             # Create tables
+--=20
+2.30.2
+
 
