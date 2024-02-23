@@ -1,219 +1,126 @@
-Return-Path: <simone.p.weiss@posteo.com>
+Return-Path: <tim.orling@konsulko.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1F2C5478C
-	for <webhook@archiver.kernel.org>; Fri, 23 Feb 2024 19:21:07 +0000 (UTC)
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
- by mx.groups.io with SMTP id smtpd.web10.3723.1708716057710209922
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509C3C5478C
+	for <webhook@archiver.kernel.org>; Fri, 23 Feb 2024 21:00:08 +0000 (UTC)
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+ by mx.groups.io with SMTP id smtpd.web11.5970.1708722007873870240
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 23 Feb 2024 11:20:58 -0800
+ Fri, 23 Feb 2024 13:00:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@posteo.com header.s=2017 header.b=HZz018wo;
- spf=pass (domain: posteo.com, ip: 185.67.36.66, mailfrom: simone.p.weiss@posteo.com)
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 81B5E240104
-	for <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 20:20:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.com; s=2017;
-	t=1708716055; bh=L2ajYHeHHMekHvVsuMxsXJLxC7f3cUf5Wn/SzWsvc2A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=HZz018wo/w0Du9b0PznJmcbCPCXiEcytTXZORzfSaodfTyydmIJCO3mIRP9mNijzp
-	 YYIlpPmV2iJpiYNUnPZwxCrreFCCqm7f1ejGi2q8gbfWqQ3BFabMqt2GvHxH60HwEa
-	 7u9DulGZdbu6onNp1OI40UJK9muQAGvxOc4o5BUpOK+EbUh+mzxHzXhpNNgRg1Wrdj
-	 /OiQ+oG0fd7HCi3/D0zruyCTwC2Q6pHSpnJn3PPSdeeHmTZ6Fw2TuYB58lkx5+E5S/
-	 rLGfAxyd9Jhb3krFSMLDSKXdpT0iBxb375q6iV7mJjLqhUMx2BlGlXL1sXMaDwMC/F
-	 cz5VhZjh+NvlQ==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ThKc54G6wz9rxP;
-	Fri, 23 Feb 2024 20:20:53 +0100 (CET)
-From: simone.p.weiss@posteo.com
+ dkim=pass header.i=@konsulko.com header.s=google header.b=PABcCg1j;
+ spf=pass (domain: konsulko.com, ip: 209.85.214.180, mailfrom: tim.orling@konsulko.com)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1db6e0996ceso10417275ad.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 13:00:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google; t=1708722006; x=1709326806; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YId+dsYEm2phJIe8Sp/c+R9hKKWUiZHahtMr69uQhKI=;
+        b=PABcCg1j2hZF80N/TcCVQdqLzXY/r71bpunRjzo8pVOBXTiqD2AnYYvd6ObuaBcX5M
+         oYH1QgZr8Ul7nR95NZOfVLfvynqu0TIfKAslUDUE69J8exuQ4dwoLR6TYd2jmsJIQt/v
+         Dn5WWS85g1T31HaSvsP2jm5BOn9subNHIYmrI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708722006; x=1709326806;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YId+dsYEm2phJIe8Sp/c+R9hKKWUiZHahtMr69uQhKI=;
+        b=wWqGHSp6tmALoO7y1lknmMV/tSzalH2IdvADX89zvs+OwzNLRaAsTImv+IlW23HU9u
+         rGCCFhYrx7rkBaSsysdxtxpJmNr/ptWORUNHx/Vr//7zN4hAPaXtFyh/tZmuuPdQMepX
+         kNx3XV/sTWPIBPOInp4H3yT5pb95lZ/9NE99i8d1Pe7HeiG8CFUSbe5NoYTv7IV7P2h8
+         WwjWXL3yvxugO5D+8d6u6eyIEG3Yx3xg6SBjeCUGs9fSFMA1LH1AUZzjb70/F3QHOnTL
+         vU0Z6RnZ3i6bBSKP6/nsp8yyWHiRZudqhBsnXnrLG+CGJST+VZFXxR2pMw89P0xGByBp
+         gCzA==
+X-Gm-Message-State: AOJu0YzqJX8d8gTOmVDPvvuyRdL4KT0DEKuk8xU8Kk9+wqmO9bcBQ5b6
+	a9qhqLX+3X87eIUFIxsoAXVid2E8PygJAyy77eu5uN3R3wlcJPNREs827MctgN+GDlg+xTeLBAL
+	HlZQ=
+X-Google-Smtp-Source: AGHT+IGe/dOaLkiKaKzNwyrOBS0elLo/2VRnHe4j5VEoBREN/E5Cxg89Rru3L79ww6al4YvhjFz9rA==
+X-Received: by 2002:a17:902:e743:b0:1db:f941:c9a with SMTP id p3-20020a170902e74300b001dbf9410c9amr1366821plf.45.1708722006186;
+        Fri, 23 Feb 2024 13:00:06 -0800 (PST)
+Received: from localhost ([2601:1c0:ca01:19f0::d846])
+        by smtp.gmail.com with ESMTPSA id h15-20020a170902f7cf00b001d8fe6cd0f0sm12018235plw.150.2024.02.23.13.00.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 13:00:05 -0800 (PST)
+From: Tim Orling <tim.orling@konsulko.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	=?UTF-8?q?Simone=20Wei=C3=9F?= <simone.p.weiss@posteo.com>,
-	Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH v3] bitbake: doc: Add section for variable context
-Date: Fri, 23 Feb 2024 19:20:47 +0000
-Message-Id: <20240223192047.7431-1-simone.p.weiss@posteo.com>
+Cc: Mark Hatle <mark.hatle@kernel.crashing.org>,
+	Mark Hatle <mark.hatle@amd.com>,
+	Tim Orling <tim.orling@konsulko.com>
+Subject: [PATCH] layerindexlib: fix missing layer branch backtrace
+Date: Fri, 23 Feb 2024 12:58:35 -0800
+Message-Id: <20240223205833.2442592-1-tim.orling@konsulko.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 19:21:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15956
+ <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 21:00:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15957
 
-From: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
+When a LayerBranch (a specific layer at a specific release) does not
+exist in the layerindex database ("Layerindex Metadata"), the dependency
+would throw a backtrace. Instead fail early and provide an error message.
 
-This is inspired by the same section in the yocto-docs. It aims to provid=
-e
-information in what contexts(recipes, .conf, bbclass,...) a variable is u=
-sually
-used. For that I tried to group similar variables, so that a short overvi=
-ew is
-given. This was inspired by [YOCTO #14072], but of course does not implem=
-ent a
-warning if a variable is used in an unintended context.
+Since layerindexlib will also check the local layers, inform the user that
+a local checkout might resolve the situation. Recommend that they reach
+out to the layer maintainers and layer index admins to properly fix it for
+everyone.
 
-Signed-off-by: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+While we are here, remove some trailing whitespace.
+
+[YOCTO #15365]
+[YOCTO #13954]
+
+Signed-off-by: Tim Orling <tim.orling@konsulko.com>
 ---
+ lib/layerindexlib/__init__.py | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-Notes to v3:=20
-- Applied the fixes suggested in review (thanks for the patch! I hope add=
-ing the
-  Signed-off like this during squashing is fine)
-- For the ref label, I plan to come up with an svg that illustrates tasks=
-,
-  recipes, classes, conf (thanks Quentin for the suggestion), but in a ge=
-neric
-  way and add it to the Concepts section, I want to add a ref from there.
-=20
- ...bake-user-manual-ref-variables-context.rst | 91 +++++++++++++++++++
- doc/index.rst                                 |  1 +
- 2 files changed, 92 insertions(+)
- create mode 100644 doc/bitbake-user-manual/bitbake-user-manual-ref-varia=
-bles-context.rst
-
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-co=
-ntext.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-con=
-text.rst
-new file mode 100644
-index 00000000..e9c454ba
---- /dev/null
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-context.r=
-st
-@@ -0,0 +1,91 @@
-+.. SPDX-License-Identifier: CC-BY-2.5
+diff --git a/lib/layerindexlib/__init__.py b/lib/layerindexlib/__init__.py
+index ac03d8987..8b3af156b 100644
+--- a/lib/layerindexlib/__init__.py
++++ b/lib/layerindexlib/__init__.py
+@@ -178,9 +178,9 @@ class LayerIndex():
+         '''Load the layerindex.
+ 
+            indexURI - An index to load.  (Use multiple calls to load multiple indexes)
+-           
 +
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+Variable Context
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+            reload - If reload is True, then any previously loaded indexes will be forgotten.
+-           
 +
-+|
-+
-+Variables might only have an impact or can be used in certain contexts. =
-Some
-+should only be used in global files like ``.conf``, while others are int=
-ended only
-+for local files like ``.bb``. This chapter aims to describe some importa=
-nt variable
-+contexts.
-+
-+.. _ref-varcontext-configuration:
-+
-+BitBake's own configuration
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-+
-+Variables starting with ``BB_`` usually configure the behaviour of BitBa=
-ke itself.
-+For example, one could configure:
-+
-+- System resources, like disk space to be used (:term:`BB_DISKMON_DIRS`)=
-,
-+  or the number of tasks to be run in parallel by BitBake (:term:`BB_NUM=
-BER_THREADS`).
-+
-+- How the fetchers shall behave, e.g., :term:`BB_FETCH_PREMIRRORONLY` is=
- used
-+  by BitBake to determine if BitBake's fetcher shall search only
-+  :term:`PREMIRRORS` for files.
-+
-+Those variables are usually configured globally.
-+
-+BitBake configuration
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+There are variables:
-+
-+- Like :term:`B` or :term:`T`, that are used to specify directories used=
- by
-+  BitBake during the build of a particular recipe. Those variables are
-+  specified in ``bitbake.conf``. Some, like :term:`B`, are quite often
-+  overwritten in recipes.
-+
-+- Starting with ``FAKEROOT``, to configure how the ``fakeroot`` command =
-is
-+  handled. Those are usually set by ``bitbake.conf`` and might get adapt=
-ed in a
-+  ``bbclass``.
-+
-+- Detailing where BitBake will store and fetch information from, for
-+  data reuse between build runs like :term:`CACHE`, :term:`DL_DIR` or
-+  :term:`PERSISTENT_DIR`. Those are usually global.
-+
-+
-+Layers and files
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+Variables starting with ``LAYER`` configure how BitBake handles layers.
-+Additionally, variables starting with ``BB`` configure how layers and fi=
-les are
-+handled. For example:
-+
-+- :term:`LAYERDEPENDS` is used to configure on which layers a given laye=
-r
-+  depends.
-+
-+- The configured layers are contained in :term:`BBLAYERS` and files in
-+  :term:`BBFILES`.
-+
-+Those variables are often used in the files ``layer.conf`` and ``bblayer=
-s.conf``.
-+
-+Recipes and packages
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+Variables handling recipes and packages can be split into:
-+
-+- :term:`PN`, :term:`PV` or :term:`PF` for example, contain information =
-about
-+  the name or revision of a recipe or package. Usually, the default set =
-in
-+  ``bitbake.conf`` is used, but those are from time to time overwritten =
-in
-+  recipes.
-+
-+- :term:`SUMMARY`, :term:`DESCRIPTION`, :term:`LICENSE` or :term:`HOMEPA=
-GE`
-+  contain the expected information and should be set specifically for ev=
-ery
-+  recipe.
-+
-+- In recipes, variables are also used to control build and runtime
-+  dependencies between recipes/packages with other recipes/packages. The
-+  most common should be: :term:`PROVIDES`, :term:`RPROVIDES`, :term:`DEP=
-ENDS`,
-+  and :term:`RDEPENDS`.
-+
-+- There are further variables starting with ``SRC`` that specify the sou=
-rces in
-+  a recipe like :term:`SRC_URI` or :term:`SRCDATE`. Those are also usual=
-ly set
-+  in recipes.
-+
-+- Which version or=C2=A0provider of a recipe should be given preference =
-when
-+  multiple recipes would provide the same item, is controlled by variabl=
-es
-+  starting with ``PREFERRED_``. Those are normally set in the configurat=
-ion
-+  files of a ``MACHINE`` or ``DISTRO``.
-diff --git a/doc/index.rst b/doc/index.rst
-index 3ff8b158..ee1660ac 100644
---- a/doc/index.rst
-+++ b/doc/index.rst
-@@ -13,6 +13,7 @@ BitBake User Manual
-    bitbake-user-manual/bitbake-user-manual-intro
-    bitbake-user-manual/bitbake-user-manual-execution
-    bitbake-user-manual/bitbake-user-manual-metadata
-+   bitbake-user-manual/bitbake-user-manual-ref-variables-context
-    bitbake-user-manual/bitbake-user-manual-fetching
-    bitbake-user-manual/bitbake-user-manual-ref-variables
-    bitbake-user-manual/bitbake-user-manual-hello
---=20
-2.39.2
+            load - List of elements to load.  Default loads all items.
+                   Note: plugs may ignore this.
+ 
+@@ -383,7 +383,14 @@ layerBranches set.  If not, they are effectively blank.'''
+ 
+                 # Get a list of dependencies and then recursively process them
+                 for layerdependency in layerbranch.index.layerDependencies_layerBranchId[layerbranch.id]:
+-                    deplayerbranch = layerdependency.dependency_layerBranch
++                    try:
++                        deplayerbranch = layerdependency.dependency_layerBranch
++                    except AttributeError as e:
++                            logger.error('LayerBranch does not exist for dependent layer {}:{}\n' \
++                                '       Cannot continue successfully.\n' \
++                                '       You might be able to resolve this by checking out the layer locally.\n' \
++                                '       Consider reaching out the to the layer maintainers or the layerindex admins' \
++                                .format(layerdependency.dependency.name, layerbranch.branch.name))
+ 
+                     if ignores and deplayerbranch.layer.name in ignores:
+                         continue
+@@ -846,7 +853,7 @@ class LayerIndexObj():
+                     continue
+ 
+                 for layerdependency in layerbranch.index.layerDependencies_layerBranchId[layerbranch.id]:
+-                    deplayerbranch = layerdependency.dependency_layerBranch
++                    deplayerbranch = layerdependency.dependency_layerBranch or None
+ 
+                     if ignores and deplayerbranch.layer.name in ignores:
+                         continue
+-- 
+2.34.1
 
 
