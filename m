@@ -1,140 +1,219 @@
-Return-Path: <tobias.hagelborn@axis.com>
+Return-Path: <simone.p.weiss@posteo.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F7BC54798
-	for <webhook@archiver.kernel.org>; Fri, 23 Feb 2024 13:27:47 +0000 (UTC)
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (EUR02-DB5-obe.outbound.protection.outlook.com [40.107.249.65])
- by mx.groups.io with SMTP id smtpd.web10.10464.1708694860446646575
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1F2C5478C
+	for <webhook@archiver.kernel.org>; Fri, 23 Feb 2024 19:21:07 +0000 (UTC)
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+ by mx.groups.io with SMTP id smtpd.web10.3723.1708716057710209922
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 23 Feb 2024 05:27:41 -0800
+ Fri, 23 Feb 2024 11:20:58 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=l9uD5De9;
- spf=pass (domain: axis.com, ip: 40.107.249.65, mailfrom: tobias.hagelborn@axis.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ae8VdhGMICElRzPv7hBY0c0LLAvSHaQ+y3RxVhgowlLFWhUyMMJohvfOuefFOapHv+Tz28QtKTawA+lXENWZ17QOZcY02E630iXACmA2CQim3SyxpEqcKEhNo41cZWikYJVCRMo8+5y2jFRzAHyQDksDFalaKoJbcyx6E49G0DFtCi/T76cp4UYoHvv6c75HBafqTvbvqj9SpQ6jqSk+sOx1EFQkPqWePqzSuj+Gm9oehmgm858vYChsYdVmH1tvUD9paLpoeAU9aTbvIuxjALXwo8iMuH1ECyxpVNNY8djsqYaJIXady2+JU7IyH0L+3h8ict9+ueURqjYe+iExDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ytSS+RtXMl92aF+GCFfKBxmSEGmaS+uOwfunwzogDbc=;
- b=QnTQ6PCE0y/00m4i/XjbiJxyGNs0Ki7EKa+jyP5hkaAh0kyw8VDHrCzRV3C/d1qjqLA4okoICEcmlUX3ti4s7/xjaBYSe5pbM/mvbcTIZl4JQJvcQE8rpEpCfLOUf55WmoBks23+4TdgodQJz8XnVG9tLIrxF4+Hcqf0/MX+2lAlcndkuuE7u085x7zmGqzxaIwctzeQuHYw50/ODd/GIaXhb+beNjy8QB/juK2hk9fG5D8BvavqbvpWTiBn6FcL5hnf6RaGEJJ8CrrO9jlDyrR3FcCHlUtn4n7t+OG9uHH7az5eKSisKQ2iKzaCRvCYsLoEDIstBELxNZ8hxeZOCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=axis.com; dmarc=fail (p=none sp=none pct=100) action=none
- header.from=axis.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ytSS+RtXMl92aF+GCFfKBxmSEGmaS+uOwfunwzogDbc=;
- b=l9uD5De9Qfj1WieiVzhOI3BlnWM5KuKxbYS4qrQN41IbnKjlsb82aLsuYzTKrQbU8I5tWdsn4fBhlRwz9/YSe2boYM1x4K8YzXo/0TF4uAqhuwk6Yyk5YWk6iruYSodPXDWJYaFVTYmV1eVAU8Sr5H0LSwxsbHH+rcoRo6H0Yk0=
-Received: from DB8PR03CA0014.eurprd03.prod.outlook.com (2603:10a6:10:be::27)
- by DBAPR02MB6341.eurprd02.prod.outlook.com (2603:10a6:10:19e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.37; Fri, 23 Feb
- 2024 13:27:36 +0000
-Received: from DB1PEPF000509F8.eurprd02.prod.outlook.com
- (2603:10a6:10:be:cafe::ce) by DB8PR03CA0014.outlook.office365.com
- (2603:10a6:10:be::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.44 via Frontend
- Transport; Fri, 23 Feb 2024 13:27:35 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=axis.com;
-Received-SPF: Fail (protection.outlook.com: domain of axis.com does not
- designate 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com;
-Received: from mail.axis.com (195.60.68.100) by
- DB1PEPF000509F8.mail.protection.outlook.com (10.167.242.154) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Fri, 23 Feb 2024 13:27:34 +0000
-Received: from SE-MAIL21W.axis.com (10.20.40.16) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 23 Feb
- 2024 14:27:33 +0100
-Received: from se-mail01w.axis.com (10.20.40.7) by SE-MAIL21W.axis.com
- (10.20.40.16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 23 Feb
- 2024 14:27:33 +0100
-Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
- Transport; Fri, 23 Feb 2024 14:27:33 +0100
-Received: from pc37511-1950.se.axis.com (pc37511-1950.se.axis.com [10.94.62.3])
-	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 550A214E60
-	for <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 14:27:33 +0100 (CET)
-Received: by pc37511-1950.se.axis.com (Postfix, from userid 11324)
-	id 500C4B257EA; Fri, 23 Feb 2024 14:27:33 +0100 (CET)
-From: Tobias Hagelborn <tobiasha@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH v2] hashserv: Re-enable connection pooling with psycopg 3 driver
-Date: Fri, 23 Feb 2024 14:27:31 +0100
-Message-ID: <20240223132731.2164299-1-tobiasha@axis.com>
-X-Mailer: git-send-email 2.30.2
+ dkim=fail reason="dkim: body hash did not verify" header.i=@posteo.com header.s=2017 header.b=HZz018wo;
+ spf=pass (domain: posteo.com, ip: 185.67.36.66, mailfrom: simone.p.weiss@posteo.com)
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 81B5E240104
+	for <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 20:20:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.com; s=2017;
+	t=1708716055; bh=L2ajYHeHHMekHvVsuMxsXJLxC7f3cUf5Wn/SzWsvc2A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=HZz018wo/w0Du9b0PznJmcbCPCXiEcytTXZORzfSaodfTyydmIJCO3mIRP9mNijzp
+	 YYIlpPmV2iJpiYNUnPZwxCrreFCCqm7f1ejGi2q8gbfWqQ3BFabMqt2GvHxH60HwEa
+	 7u9DulGZdbu6onNp1OI40UJK9muQAGvxOc4o5BUpOK+EbUh+mzxHzXhpNNgRg1Wrdj
+	 /OiQ+oG0fd7HCi3/D0zruyCTwC2Q6pHSpnJn3PPSdeeHmTZ6Fw2TuYB58lkx5+E5S/
+	 rLGfAxyd9Jhb3krFSMLDSKXdpT0iBxb375q6iV7mJjLqhUMx2BlGlXL1sXMaDwMC/F
+	 cz5VhZjh+NvlQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ThKc54G6wz9rxP;
+	Fri, 23 Feb 2024 20:20:53 +0100 (CET)
+From: simone.p.weiss@posteo.com
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	=?UTF-8?q?Simone=20Wei=C3=9F?= <simone.p.weiss@posteo.com>,
+	Michael Opdenacker <michael.opdenacker@bootlin.com>
+Subject: [PATCH v3] bitbake: doc: Add section for variable context
+Date: Fri, 23 Feb 2024 19:20:47 +0000
+Message-Id: <20240223192047.7431-1-simone.p.weiss@posteo.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF000509F8:EE_|DBAPR02MB6341:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b33ebfa-9307-477c-6ade-08dc347331cb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	DMhvYD9Olam+MRg3ZZTK3ajQn4lGNxgmaM0DRNIo/8LHIGsN3A5g1Fk6BVWDe5yeBh3e0H/2+U0Or6Y9K3PkArzYdIRWc0If8C8YgYzCaJidU+PLR2CXtG63RLKClUL4v8df3Qk8Wh1zjSrY+B+TlxL6KKsgfbZulukW4ZllYLpoo0/JhGj84huNz6ayeM8Oj/7HBQf+pNr7oQg3E8DHfxugUZD6B3/DpcN/lxquDuHBKoNM7iKcGBzbVS3h7Y8WvUNqZUAL0liTf+lz7YIYTrcWjcvz/fPFtHAQ95G3C0lyMJyvT0RLNfN/uGaWPhpf7UPTKfWF5f1KT6D/ONYAxWm4mGd+ev37ueTT6VKmWJySi2IVCl9Oj2W92LGrD2ZZ5HNjURqQTrsIAtmMuBXFo7uarYA7LXmUhQljL46GzMBEPy3vAuqmSKIE5uEI1U6oJfhWoY8nj594Rv+kdomGRliX7lgSZPLlRjUocjhz1FZ/wj96Ctg88tKW2SXs9oDS37b0FoRU8R3q6r+QC2iaRqICK7bMxKfHePTHIa3s0B3YzFByJNiRc/UAeNRc5aNq13EkH9opZzdZTbihvSa+2/Q+mN6oEtvE3w/c8F8DsV0qG4Pz6lwWq1KvLDUASdJfOArFC4Tnn4ziEaf4egrkzfgew8mrDVkRa90+mqqoq3I=
-X-Forefront-Antispam-Report: 
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 13:27:34.0284
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b33ebfa-9307-477c-6ade-08dc347331cb
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DB1PEPF000509F8.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR02MB6341
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 13:27:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15955
+ <bitbake-devel@lists.openembedded.org>; Fri, 23 Feb 2024 19:21:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15956
 
-Re-enable connection pooling in case `postgresql+psygopg` driver
-is used. Async connection pooling is supported in psycopg 3 [psycopg]
-driver in SQLAlchemy. Allow the connection pool to grow to
-arbitrary size.
+From: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
 
-Signed-off-by: Tobias Hagelborn <tobiasha@axis.com>
+This is inspired by the same section in the yocto-docs. It aims to provid=
+e
+information in what contexts(recipes, .conf, bbclass,...) a variable is u=
+sually
+used. For that I tried to group similar variables, so that a short overvi=
+ew is
+given. This was inspired by [YOCTO #14072], but of course does not implem=
+ent a
+warning if a variable is used in an unintended context.
+
+Signed-off-by: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 ---
 
-Added unlimited pool size.
-Validated with local stress tests and real builds.
-
- lib/hashserv/sqlalchemy.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/lib/hashserv/sqlalchemy.py b/lib/hashserv/sqlalchemy.py
-index fc3ae3d33..f7b0226a7 100644
---- a/lib/hashserv/sqlalchemy.py
-+++ b/lib/hashserv/sqlalchemy.py
-@@ -129,7 +129,11 @@ class DatabaseEngine(object):
-             return inspect(conn).has_table(name)
+Notes to v3:=20
+- Applied the fixes suggested in review (thanks for the patch! I hope add=
+ing the
+  Signed-off like this during squashing is fine)
+- For the ref label, I plan to come up with an svg that illustrates tasks=
+,
+  recipes, classes, conf (thanks Quentin for the suggestion), but in a ge=
+neric
+  way and add it to the Concepts section, I want to add a ref from there.
 =20
-         self.logger.info("Using database %s", self.url)
--        self.engine =3D create_async_engine(self.url, poolclass=3DNullPool=
-)
-+        if self.url.drivername =3D=3D 'postgresql+psycopg':
-+            # Psygopg 3 (psygopg) driver can handle async connection pooli=
-ng
-+            self.engine =3D create_async_engine(self.url, max_overflow=3D-=
-1)
-+        else:
-+            self.engine =3D create_async_engine(self.url, poolclass=3DNull=
-Pool)
-=20
-         async with self.engine.begin() as conn:
-             # Create tables
+ ...bake-user-manual-ref-variables-context.rst | 91 +++++++++++++++++++
+ doc/index.rst                                 |  1 +
+ 2 files changed, 92 insertions(+)
+ create mode 100644 doc/bitbake-user-manual/bitbake-user-manual-ref-varia=
+bles-context.rst
+
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-co=
+ntext.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-con=
+text.rst
+new file mode 100644
+index 00000000..e9c454ba
+--- /dev/null
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables-context.r=
+st
+@@ -0,0 +1,91 @@
++.. SPDX-License-Identifier: CC-BY-2.5
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++Variable Context
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++|
++
++Variables might only have an impact or can be used in certain contexts. =
+Some
++should only be used in global files like ``.conf``, while others are int=
+ended only
++for local files like ``.bb``. This chapter aims to describe some importa=
+nt variable
++contexts.
++
++.. _ref-varcontext-configuration:
++
++BitBake's own configuration
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
++
++Variables starting with ``BB_`` usually configure the behaviour of BitBa=
+ke itself.
++For example, one could configure:
++
++- System resources, like disk space to be used (:term:`BB_DISKMON_DIRS`)=
+,
++  or the number of tasks to be run in parallel by BitBake (:term:`BB_NUM=
+BER_THREADS`).
++
++- How the fetchers shall behave, e.g., :term:`BB_FETCH_PREMIRRORONLY` is=
+ used
++  by BitBake to determine if BitBake's fetcher shall search only
++  :term:`PREMIRRORS` for files.
++
++Those variables are usually configured globally.
++
++BitBake configuration
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++There are variables:
++
++- Like :term:`B` or :term:`T`, that are used to specify directories used=
+ by
++  BitBake during the build of a particular recipe. Those variables are
++  specified in ``bitbake.conf``. Some, like :term:`B`, are quite often
++  overwritten in recipes.
++
++- Starting with ``FAKEROOT``, to configure how the ``fakeroot`` command =
+is
++  handled. Those are usually set by ``bitbake.conf`` and might get adapt=
+ed in a
++  ``bbclass``.
++
++- Detailing where BitBake will store and fetch information from, for
++  data reuse between build runs like :term:`CACHE`, :term:`DL_DIR` or
++  :term:`PERSISTENT_DIR`. Those are usually global.
++
++
++Layers and files
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++Variables starting with ``LAYER`` configure how BitBake handles layers.
++Additionally, variables starting with ``BB`` configure how layers and fi=
+les are
++handled. For example:
++
++- :term:`LAYERDEPENDS` is used to configure on which layers a given laye=
+r
++  depends.
++
++- The configured layers are contained in :term:`BBLAYERS` and files in
++  :term:`BBFILES`.
++
++Those variables are often used in the files ``layer.conf`` and ``bblayer=
+s.conf``.
++
++Recipes and packages
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++Variables handling recipes and packages can be split into:
++
++- :term:`PN`, :term:`PV` or :term:`PF` for example, contain information =
+about
++  the name or revision of a recipe or package. Usually, the default set =
+in
++  ``bitbake.conf`` is used, but those are from time to time overwritten =
+in
++  recipes.
++
++- :term:`SUMMARY`, :term:`DESCRIPTION`, :term:`LICENSE` or :term:`HOMEPA=
+GE`
++  contain the expected information and should be set specifically for ev=
+ery
++  recipe.
++
++- In recipes, variables are also used to control build and runtime
++  dependencies between recipes/packages with other recipes/packages. The
++  most common should be: :term:`PROVIDES`, :term:`RPROVIDES`, :term:`DEP=
+ENDS`,
++  and :term:`RDEPENDS`.
++
++- There are further variables starting with ``SRC`` that specify the sou=
+rces in
++  a recipe like :term:`SRC_URI` or :term:`SRCDATE`. Those are also usual=
+ly set
++  in recipes.
++
++- Which version or=C2=A0provider of a recipe should be given preference =
+when
++  multiple recipes would provide the same item, is controlled by variabl=
+es
++  starting with ``PREFERRED_``. Those are normally set in the configurat=
+ion
++  files of a ``MACHINE`` or ``DISTRO``.
+diff --git a/doc/index.rst b/doc/index.rst
+index 3ff8b158..ee1660ac 100644
+--- a/doc/index.rst
++++ b/doc/index.rst
+@@ -13,6 +13,7 @@ BitBake User Manual
+    bitbake-user-manual/bitbake-user-manual-intro
+    bitbake-user-manual/bitbake-user-manual-execution
+    bitbake-user-manual/bitbake-user-manual-metadata
++   bitbake-user-manual/bitbake-user-manual-ref-variables-context
+    bitbake-user-manual/bitbake-user-manual-fetching
+    bitbake-user-manual/bitbake-user-manual-ref-variables
+    bitbake-user-manual/bitbake-user-manual-hello
 --=20
-2.30.2
+2.39.2
 
 
