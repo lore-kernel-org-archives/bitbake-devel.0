@@ -2,57 +2,57 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7FDC54E51
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF4AC5478C
 	for <webhook@archiver.kernel.org>; Tue, 27 Feb 2024 22:04:51 +0000 (UTC)
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
- by mx.groups.io with SMTP id smtpd.web11.2224.1709071485817156863
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+ by mx.groups.io with SMTP id smtpd.web10.2143.1709071485648114572
  for <bitbake-devel@lists.openembedded.org>;
  Tue, 27 Feb 2024 14:04:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=IPfSAv8m;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.173, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e4c359e48aso3100632b3a.1
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=lt2RoKVz;
+ spf=softfail (domain: sakoman.com, ip: 209.85.167.173, mailfrom: steve@sakoman.com)
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3bbc649c275so2438080b6e.0
         for <bitbake-devel@lists.openembedded.org>; Tue, 27 Feb 2024 14:04:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1709071485; x=1709676285; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RqKOw1uhQzbEcZlLZczArygnCwYvkY6zV5GdIcqo6do=;
-        b=IPfSAv8mlsDz5T5Go7Grr8ViQql1SXQcEspJ5rrGSWX7B1H5HjWeYX8OUxZdc1sWBg
-         EiBYLaF2qLtJMJQzv1Ar01s9KPylYO5Uo5bGPbI3X+S44MbkHw4dCCAei+OCB1ZA8l/8
-         YalxopZLZCqrpUeLt2VlxQSZNiAkc3YP1R5DzTb2IslrYmMP+C7HegYUzj2C+pCP1zXx
-         R78B1+tHeOvHgFQaHSGvpTpRJ94ZngIb0ps1Z760kHV54JG2Ef+HCoHxAEbOQalE/LqF
-         rXv/pP37qDLPmA0HbDzV5xwCL/cUrK9C+eARk0y4JlL+6ptH/3mIvowQWX6/tMmVnkvo
-         QhWA==
+        bh=skqpA8dwO4nqyqGt21HDGobZuOo8BOSXp1xQG2u+Xkc=;
+        b=lt2RoKVzsje+h1zqcB++LNo9mIty0nxXKwctJmm2sudig+/7V1D4vvR0sZqmZBDTnN
+         acDm2mr4ecgyOWyqNe+QiD5EbfE5431eWLGQ4nyocJ/ezC23B2/iaiAHToxoH7fWjySl
+         nLvztmclePa/Kb4EhMp+XHwJFRjHCG6GmNJYxnMSt6eYqhG/rMQlo/oAtI8dNRxrQ578
+         M5S+2Vly58rsxWRK8uKUkdQIq+o7EjoHbkAJ4/AMOAxnhA4e/HC9DyRCa5RJzjqUDffM
+         tfs/JpWH364QdTfh1ug0QyzQ1IRBg3bxuarJyfPfYpSWjTs2Pim60KBGlhV7lj8pdstD
+         VF1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1709071485; x=1709676285;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RqKOw1uhQzbEcZlLZczArygnCwYvkY6zV5GdIcqo6do=;
-        b=SjMxxC1RxmQRUaOsshi9izeQZ2nJTFUFFxEQHp+S4lBwDcKroDNJdlPTdRXNsqz2iq
-         f/jsib8Sb5yQNOcQeS7+KG1J/KFsjgTjEhYncHkVSPb0oBnPPVT1nxs2ePc31gJlfwCF
-         hQT2WyaixbGvAOZuVBXOsRsrIBy4siqiIPc56uHODi9cLx4XwvbCdZwTUpNQcD/iM6uR
-         67itvr8slBcLgCa7x7Z0hT5Fg2OwHUR+Cdk1BhmWawDAUn+JaviZII2cBB4X8/xgYNgj
-         JJh98pfyG2naz0TGoKjVF2U9sq7MRsU9miNFVAvxhbZxBMvnmA4jqJGHPSgLlMOOsIZK
-         Kzgw==
-X-Gm-Message-State: AOJu0Yw0QurOG30kYIMC8MnXnmUYjzkXnYwOdbG1smrtHvO8LxjjnvAE
-	dHlZ9osCybAAiGYBpworXzK55h+XjF5RCW2o/l8eqJ+V0XSwrQFX/poFu/rp5splPPm1BfGyeOl
-	qst4=
-X-Google-Smtp-Source: AGHT+IGaqIn+///cUz7zVB1GanxFLmqYZdBfu7k8lpwWFmBK7KujJomkknW8vwZgw2ozk/brgPrDpg==
-X-Received: by 2002:a05:6a00:13a1:b0:6e5:55b9:b64 with SMTP id t33-20020a056a0013a100b006e555b90b64mr1906298pfg.1.1709071485081;
-        Tue, 27 Feb 2024 14:04:45 -0800 (PST)
+        bh=skqpA8dwO4nqyqGt21HDGobZuOo8BOSXp1xQG2u+Xkc=;
+        b=E31JS0T7FzWQ8HTI9v0xbxAayuh8wttLQRo0ya0lmuwxU1q10M2kmCMduVqtyq+SEl
+         oj3afCSt8fG5DX5IEZ1fmJKuDbWC2ehCi6xpcX7X/J8XmJy4zPsTiFmjVWfyU6KZfbYk
+         2Ode//YUxQc1Y24xi6FPfoZEPhDKvCA5NOYGFqc3NPVYhqfyEln8QkTyd0xckHoPzR9J
+         NkAYqaa2tABBdyfF95YQ6ajKcZHN0xE/vZ0esTHqEVOuiJAqO20HVfckguWzOOj4Slo/
+         yTKj4bl4DPdlAwAxuZxydVN/4n669vPWrECBjyGmIJ42A7WqSZrTHc9rDWoUZ0P+Rr7m
+         hrcw==
+X-Gm-Message-State: AOJu0YxtICezay71zshn1+l8kAR2olsgUYf9BoSbzNu89lCMpXzE22qD
+	PkWA0ALzj9CaQNNleeH3yMjOjxJ/V6NehsVF2hBJqm916jQ50kLc88+gNmQsn19PiFmsfQcqtZC
+	+m3E=
+X-Google-Smtp-Source: AGHT+IFChllsgextrgxBmXDijMNwgLYimcsNfp6RiITY5AOtchRRHoFK98K1F8/pKVwVCyVjqrATKQ==
+X-Received: by 2002:a05:6808:14d1:b0:3c1:9333:9bf4 with SMTP id f17-20020a05680814d100b003c193339bf4mr3965038oiw.6.1709071483242;
+        Tue, 27 Feb 2024 14:04:43 -0800 (PST)
 Received: from hexa.router0800d9.com (dhcp-72-234-108-41.hawaiiantel.net. [72.234.108.41])
-        by smtp.gmail.com with ESMTPSA id t13-20020a056a0021cd00b006e50c0d6421sm5059772pfj.11.2024.02.27.14.04.44
+        by smtp.gmail.com with ESMTPSA id t13-20020a056a0021cd00b006e50c0d6421sm5059772pfj.11.2024.02.27.14.04.42
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 14:04:44 -0800 (PST)
+        Tue, 27 Feb 2024 14:04:42 -0800 (PST)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 5/6] tests/fetch: Add real git lfs tests and decorator
-Date: Tue, 27 Feb 2024 12:04:24 -1000
-Message-Id: <2a6fd774405a58f3ef2953a0dc3eca063e0cf890.1709071317.git.steve@sakoman.com>
+Subject: [bitbake][kirkstone][2.0][PATCH 4/6] tests/fetch: git-lfs restore _find_git_lfs
+Date: Tue, 27 Feb 2024 12:04:23 -1000
+Message-Id: <1d5d4a46c772f44ab652f95b37f508b890828e67.1709071317.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1709071317.git.steve@sakoman.com>
 References: <cover.1709071317.git.steve@sakoman.com>
@@ -62,101 +62,82 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 27 Feb 2024 22:04:51 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15971
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15970
 
 From: Paulo Neves <paulo@myneves.com>
 
-Added tests that verify that git-lfs works with an actual
-real git-lfs server. This was not previously the case because
-the repo in the test was a simulation of git-lfs but not
-a real git lfs repo.
+Not restoring the mocked _find_git_lfs leads to other tests
+failing.
 
-The 2 added tests are almost the same but test that the
-git lfs file checkout is successfult with or without the
-lfs=1 flag. The lfs=1 URI parameter is a quirk that triggers
-2 different code paths for git lfs.
-
-lfs=1, when used on git lfs repositories triggers the git lfs
-downloading at the fetch bare stage.
-
-lfs query parameter unset triggers the git lfs downloading only
-on checkout as an implicit behavior of git. This leads to possible
-network access on the unpack stage and outside the DL_DIR.
-
-lfs=0 actually disables git-lfs functionality even if supported.
-
-(cherry picked from commit d2be7f7f652360f13cd66d0850f3e19ffe2afb0a)
+(cherry picked from commit 70f848631450bd723c223227c21c60e815ee033d)
 
 Signed-off-by: Paulo Neves <paulo@myneves.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/tests/fetch.py | 44 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ lib/bb/tests/fetch.py | 40 ++++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
 
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 743d3e3ff..847a35602 100644
+index 7bace415d..743d3e3ff 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -2159,6 +2159,12 @@ class GitShallowTest(FetcherTest):
-         self.assertIn("fstests.doap", dir)
+@@ -2210,12 +2210,16 @@ class GitLfsTest(FetcherTest):
+             shutil.rmtree(self.gitdir, ignore_errors=True)
+             fetcher.unpack(self.d.getVar('WORKDIR'))
  
- class GitLfsTest(FetcherTest):
-+    def skipIfNoGitLFS():
-+        import shutil
-+        if not shutil.which('git-lfs'):
-+            return unittest.skip('git-lfs not installed')
-+        return lambda f: f
-+
-     def setUp(self):
-         FetcherTest.setUp(self)
+-        # If git-lfs cannot be found, the unpack should throw an error
+-        with self.assertRaises(bb.fetch2.FetchError):
+-            fetcher.download()
+-            ud.method._find_git_lfs = lambda d: False
+-            shutil.rmtree(self.gitdir, ignore_errors=True)
+-            fetcher.unpack(self.d.getVar('WORKDIR'))
++        old_find_git_lfs = ud.method._find_git_lfs
++        try:
++            # If git-lfs cannot be found, the unpack should throw an error
++            with self.assertRaises(bb.fetch2.FetchError):
++                fetcher.download()
++                ud.method._find_git_lfs = lambda d: False
++                shutil.rmtree(self.gitdir, ignore_errors=True)
++                fetcher.unpack(self.d.getVar('WORKDIR'))
++        finally:
++            ud.method._find_git_lfs = old_find_git_lfs
  
-@@ -2192,6 +2198,44 @@ class GitLfsTest(FetcherTest):
-         ud = fetcher.ud[uri]
-         return fetcher, ud
- 
-+    def get_real_git_lfs_file(self):
-+        self.d.setVar('PATH', os.environ.get('PATH'))
-+        fetcher, ud = self.fetch()
-+        fetcher.unpack(self.d.getVar('WORKDIR'))
-+        unpacked_lfs_file = os.path.join(self.d.getVar('WORKDIR'), 'git', "Cat_poster_1.jpg")
-+        return unpacked_lfs_file
-+
-+    @skipIfNoGitLFS()
-+    @skipIfNoNetwork()
-+    def test_real_git_lfs_repo_succeeds_without_lfs_param(self):
-+        self.d.setVar('SRC_URI', "git://gitlab.com/gitlab-examples/lfs.git;protocol=https;branch=master")
-+        f = self.get_real_git_lfs_file()
-+        self.assertTrue(os.path.exists(f))
-+        self.assertEqual("c0baab607a97839c9a328b4310713307", bb.utils.md5_file(f))
-+
-+    @skipIfNoGitLFS()
-+    @skipIfNoNetwork()
-+    def test_real_git_lfs_repo_succeeds(self):
-+        self.d.setVar('SRC_URI', "git://gitlab.com/gitlab-examples/lfs.git;protocol=https;branch=master;lfs=1")
-+        f = self.get_real_git_lfs_file()
-+        self.assertTrue(os.path.exists(f))
-+        self.assertEqual("c0baab607a97839c9a328b4310713307", bb.utils.md5_file(f))
-+
-+    @skipIfNoGitLFS()
-+    @skipIfNoNetwork()
-+    def test_real_git_lfs_repo_succeeds(self):
-+        self.d.setVar('SRC_URI', "git://gitlab.com/gitlab-examples/lfs.git;protocol=https;branch=master;lfs=0")
-+        f = self.get_real_git_lfs_file()
-+        # This is the actual non-smudged placeholder file on the repo if git-lfs does not run
-+        lfs_file = (
-+                   'version https://git-lfs.github.com/spec/v1\n'
-+                   'oid sha256:34be66b1a39a1955b46a12588df9d5f6fc1da790e05cf01f3c7422f4bbbdc26b\n'
-+                   'size 11423554\n'
-+        )
-+
-+        with open(f) as fh:
-+            self.assertEqual(lfs_file, fh.read())
-+
-     def test_lfs_enabled(self):
+     def test_lfs_disabled(self):
          import shutil
+@@ -2230,17 +2234,21 @@ class GitLfsTest(FetcherTest):
+         fetcher, ud = self.fetch()
+         self.assertIsNotNone(ud.method._find_git_lfs)
  
+-        # If git-lfs can be found, the unpack should be successful. A
+-        # live copy of git-lfs is not required for this case, so
+-        # unconditionally forge its presence.
+-        ud.method._find_git_lfs = lambda d: True
+-        shutil.rmtree(self.gitdir, ignore_errors=True)
+-        fetcher.unpack(self.d.getVar('WORKDIR'))
++        old_find_git_lfs = ud.method._find_git_lfs
++        try:
++            # If git-lfs can be found, the unpack should be successful. A
++            # live copy of git-lfs is not required for this case, so
++            # unconditionally forge its presence.
++            ud.method._find_git_lfs = lambda d: True
++            shutil.rmtree(self.gitdir, ignore_errors=True)
++            fetcher.unpack(self.d.getVar('WORKDIR'))
++            # If git-lfs cannot be found, the unpack should be successful
+ 
+-        # If git-lfs cannot be found, the unpack should be successful
+-        ud.method._find_git_lfs = lambda d: False
+-        shutil.rmtree(self.gitdir, ignore_errors=True)
+-        fetcher.unpack(self.d.getVar('WORKDIR'))
++            ud.method._find_git_lfs = lambda d: False
++            shutil.rmtree(self.gitdir, ignore_errors=True)
++            fetcher.unpack(self.d.getVar('WORKDIR'))
++        finally:
++            ud.method._find_git_lfs = old_find_git_lfs
+ 
+ class GitURLWithSpacesTest(FetcherTest):
+     test_git_urls = {
 -- 
 2.34.1
 
