@@ -1,236 +1,181 @@
-Return-Path: <philip.lorenz@bmw.de>
+Return-Path: <quentin.schulz@theobroma-systems.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08136C5478C
-	for <webhook@archiver.kernel.org>; Tue, 27 Feb 2024 06:18:49 +0000 (UTC)
-Received: from esa6.hc324-48.eu.iphmx.com (esa6.hc324-48.eu.iphmx.com [207.54.71.69])
- by mx.groups.io with SMTP id smtpd.web10.6881.1709014723279126649
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF00C54798
+	for <webhook@archiver.kernel.org>; Tue, 27 Feb 2024 16:38:42 +0000 (UTC)
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.132])
+ by mx.groups.io with SMTP id smtpd.web11.16662.1709051918221442207
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 26 Feb 2024 22:18:44 -0800
+ Tue, 27 Feb 2024 08:38:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bmw.de header.s=mailing1 header.b=C3FoWSAM;
- spf=pass (domain: bmw.de, ip: 207.54.71.69, mailfrom: prvs=780903e03=philip.lorenz@bmw.de)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-  t=1709014724; x=1740550724;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ORJadGx0wC+vJofh4vONIFmNDljvAVjl+Cugkk/ZABE=;
-  b=C3FoWSAM878TZakilcfcRAylrQUJ4sFOVmlCRPygTLVuZVYtVV7kKnop
-   +lYgRLUWuP6fYHukDPWS+XhcuNbvMpVP/gFwzjv6B2fIpl5bUocBbmojI
-   pDWQlpJHI2rwE/9z2Z0GeT/Qx+wnhlsbqZPJhm4Buq3B6lYmJpbsxsGhW
-   8=;
-X-CSE-ConnectionGUID: FO11hKMqRkWvTDgbSbKTqw==
-X-CSE-MsgGUID: tDWjFVVCTIm6A16ukiwjmg==
-Received: from esagw2.bmwgroup.com (HELO esagw2.muc) ([160.46.252.38]) by
- esa6.hc324-48.eu.iphmx.com with ESMTP/TLS; 27 Feb 2024 07:18:43 +0100
-Received: from esabb6.muc ([160.50.100.50])  by esagw2.muc with ESMTP/TLS;
- 27 Feb 2024 07:18:44 +0100
-Received: from smucmp10e.bmwgroup.net (HELO SMUCMP10E.europe.bmw.corp) ([10.30.13.87])
- by esabb6.muc with ESMTP/TLS; 27 Feb 2024 07:18:44 +0100
-Received: from localhost.localdomain (10.30.85.207) by SMUCMP10E.europe.bmw.corp
- (2a03:1e80:a15:58f::2027) with Microsoft SMTP Server (version=TLS;
- Tue, 27 Feb 2024 07:18:43 +0100
-From: Philip Lorenz <philip.lorenz@bmw.de>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Philip Lorenz <philip.lorenz@bmw.de>, Steve Sakoman <steve@sakoman.com>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [kirkstone][PATCH 3/3] fetch2: Ensure that git LFS objects are available
-Date: Tue, 27 Feb 2024 07:18:08 +0100
-Message-ID: <20240227061808.3394661-3-philip.lorenz@bmw.de>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240227061808.3394661-1-philip.lorenz@bmw.de>
-References: <20240227061808.3394661-1-philip.lorenz@bmw.de>
+ dkim=fail reason="dkim: body hash did not verify" header.i=@theobroma-systems.com header.s=selector1 header.b=jUcLIppE;
+ spf=pass (domain: theobroma-systems.com, ip: 40.107.21.132, mailfrom: quentin.schulz@theobroma-systems.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WjHbagYCcNWsfWDDsE5zOsmJ15uo4ikCb9P7Pu7wCoy7D3nYfhfRv+D9f2jDTu5TkFwJJZrcgu+qiDvriYai5nfEAPDy9kYb0K0Xt/ZC4P5xlliWgtLWzV+inE0m3O0G2442LUCweAiv9ftv84nxLn1dreLacn/CKvSFFBl7XGcDGB03duciH+MSVJ40Itp16TIXp2dtWUx95vvFe0XRL7GZAkn43iB/LHQsV1ifHgUo4EuZsJZaFdmXmVJCO5tejQCFqacmZyxx5d/oPJ4NcrXbjNhz5uwnQGsi2P2qzYbbfLeqlqU700oPLSUqH1BIegw3ugaqcghtVRzBBic9bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yksNt4Djh90slrVZXyURWTIgsEm28YajQ8Ip+OefFsk=;
+ b=nqUNtQxzYdDvuAakHJbVFStGHwcWXeTVotxW1J/CBQ1EsIWLUzQ7b6URX41GyvYhECypHU+iXOlXuhdLC+zgNTiRYaJwwm6jS1tgYvzLcl6f+z/WmvyhMx/vHOJ0OV0caVWkvIRvDtMYh2VMvwvJ2LHqXps7rodPfdk3IS4h+NkzZO8hoUFhgaa05X4mdi7qm/j6m0ysA87lU3DyMidxJR6HAnFf65NjkgYIBqkJz/7PEv4hHTxZlFLBGnFFpsA3YYFQr16LokQPs0ydV3RFHANK7r2e5Ey5nv70Ty6YeER7MnV135XDEUeQVCWStCxMTtUPjWybyZ8H+AphM8tnsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
+ header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=theobroma-systems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yksNt4Djh90slrVZXyURWTIgsEm28YajQ8Ip+OefFsk=;
+ b=jUcLIppExpX8y1bVoepoqD7VI8y4hlKGQhe+XQkXdG5nR3sh8CG+iN5E/0Niudw1M3nYLkKkNx7DwUDYxHZdHGjufMypiS0c9h+pz+jDI+LHktRfrKdgbNRbjYDMAHkQ23UJ688HELrUK9eOaUJjILW78hlR6rPp5kk4DMutbmSOJOcgrLinlCnLv8JLfx4UDZt3WXB3k2JilN1wyB/26+tDKo7n87geDQVTvhWTV9hQ9fL6pPW7Ce4z2FAe9Q9kfrREnhENKWtQMsD7HZY7cR8ZKaE72RLzIk3+ZhWZHISMRXs7GtA1/B+ymp0bpsARnV2CyCpYKyAXWNqhMVzK1w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
+Received: from DU2PR04MB8536.eurprd04.prod.outlook.com (2603:10a6:10:2d7::10)
+ by VI0PR04MB10253.eurprd04.prod.outlook.com (2603:10a6:800:23e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Tue, 27 Feb
+ 2024 16:38:33 +0000
+Received: from DU2PR04MB8536.eurprd04.prod.outlook.com
+ ([fe80::550d:ad96:e3cb:9a6e]) by DU2PR04MB8536.eurprd04.prod.outlook.com
+ ([fe80::550d:ad96:e3cb:9a6e%5]) with mapi id 15.20.7316.035; Tue, 27 Feb 2024
+ 16:38:33 +0000
+Message-ID: <ce7e0116-69e9-4103-874b-c1f16d0a64e6@theobroma-systems.com>
+Date: Tue, 27 Feb 2024 17:38:31 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [docs] [bitbake-devel] [PATCH v3] bitbake: doc: Add section for
+ variable context
+Content-Language: en-US
+To: michael.opdenacker@bootlin.com, =?UTF-8?Q?Simone_Wei=C3=9F?=
+ <simone.p.weiss@posteo.com>
+CC: docs@lists.yoctoproject.org, bitbake-devel@lists.openembedded.org
+References: <20240223192047.7431-1-simone.p.weiss@posteo.com>
+ <0a3f67b7-06ea-4dc0-bdf6-506098cf46b2@bootlin.com>
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+In-Reply-To: <0a3f67b7-06ea-4dc0-bdf6-506098cf46b2@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: FR4P281CA0129.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b9::12) To DU2PR04MB8536.eurprd04.prod.outlook.com
+ (2603:10a6:10:2d7::10)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SMUCMP04G.europe.bmw.corp (2a03:1e80:a15:58f::217e) To
- SMUCMP10E.europe.bmw.corp (2a03:1e80:a15:58f::2027)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8536:EE_|VI0PR04MB10253:EE_
+X-MS-Office365-Filtering-Correlation-Id: 328ecff5-32b6-46c5-99e9-08dc37b289a9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	cqHCZWptTEw9QX1PbaBG9DRWdZcsoLx4m3hUoGhfvfJoUNts2EECA1GlS/v+1KmphuYOQiami0QYSLT+3qLFoXjVEfNt4XNPPDY3Qpt4JbcOqSdGTLlxf3UrxRMqb/aPN2QwN8fdsU2/62YnMI5ereWxwBKP8DBFB/idnZdtkmS75BUrCQvuAjjYAOGr6he+m8JXTtYUF07T8+RbAEWF6RxZlBdxEUFBrwKr1slYcQ3Y+9JymfKRQUIr1YRS5BcZ0paVsVPnwdlsDqNRH1QPciIlyFMx+c8CMdQI3b34BixaWhi5/PSv1Hl6NI38BR7qy1G1STGe3qXTRLa3HMb3VXYUJlgRE3B75M8cBqmdv3x2sV775YCo94bhUad7Id/71aOsq+kTRCrp/sC0N+t057NhV8a+l4cgqQPUrBETyS2l8wSzwUvJFzd9inqApAArH+x/3uZdVT0s8HghhiiSH1gBNACPwtVx7Mc4e4J3B2JDGY/FJgqSCtKwyxabreU0kn5BYttXVyaSuqUgZKr/BH3QnXiJ02R7MyQWOY4NGfAi9/Nj5T/gzE7qnVJsirkRTQyaX94saLw5ul5zZotOfxV9a5ccGAbhlBBHpQWLatKF5fQsodT4iU1g1NeXB9y7302iUxy9Gj0tUz6zyTKTp3nmayut52gKQMwBSaaeFss=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8536.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230273577357003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?BGdKkn/2oNeelzxBID4rlOcCUxTFxpabZXmCNIopHozEozAbiUjLPnbxSGcH?=
+ =?us-ascii?Q?ESGzEmRoOrAUwzqUGAuMCBCJ3R1jH0pR629GiM8e1oUhHLuzCN1x8YyMhvRV?=
+ =?us-ascii?Q?aH+TFPvw93OnsYBZZDXzczmgBn3IHh8Qgmqpj6FVxSndr5FYcrfIgJKdpnyQ?=
+ =?us-ascii?Q?bnAJkZLMO9FOHON/fMDPgJeavVoIN6brQSy8VfbVF68n0+3DRLUTLdbHVIJs?=
+ =?us-ascii?Q?e4c8NV3nWV+QW5ZMuKB6iTV148gp5cZG9yIwXpBn4KtMBCxFqUfS04C6dx6x?=
+ =?us-ascii?Q?/kE+H3xSTVCsER2pa0KeZoe8w/fq29FA4G0ypUuAKOczXOmvaW8LG6Aod645?=
+ =?us-ascii?Q?R3bMjUl+n2XqX79UXuQ88eSjCI4YHFsaKSjDax8pEtQ8sI90OezdQf5jSZJD?=
+ =?us-ascii?Q?th7fl5mbtGZHOz5t//o90HtyTru/PidyZeytUZDbhtvJGGzbSWgRIjThzT/h?=
+ =?us-ascii?Q?Pxq3l+zzjBtHQ6uZHsfnukqjwzujEUuhMjgM/0VaBrqwa4DMXSpecKbWA3YR?=
+ =?us-ascii?Q?pZhxwRUtts1t8cyq+lj238K/D2ALuQ1ctPmnS2978+39ErMyL70pxMaelLyF?=
+ =?us-ascii?Q?R5V8d8G7D5PUuvcE5AIPBAwMJF7WssCwcrv7qiywvi3K1dbDZw6Yukbe9yz9?=
+ =?us-ascii?Q?g+onLPNarnpWrfZ8IMHWbVVlTzObg6235ehXD2HpDLTvXvAlYPzSjjpUNaow?=
+ =?us-ascii?Q?K2LxVlwIGzCS//6LRNY5KeMfGMw+K8PwiiXHumAb8BVlzfEhghEDBkrUnPD1?=
+ =?us-ascii?Q?qe0GxXCiszsXxnbryxddl5ZFRECiI1bwuerTsb7VZ1u8CNH2EnABwABeNzcu?=
+ =?us-ascii?Q?CxW4RX96EiOkSuAu9Wzbgsq6X6TZTKXl7XtcHBBzBZgQEJsNMHBAf3EzBfqu?=
+ =?us-ascii?Q?2Wd3wI35QEj+9x8XeGx5vwLtCVf27wmfDISk2OggJ1VB4U1YbGQ3XIA/rEwI?=
+ =?us-ascii?Q?sMUPuBhT0Q5zyPtxRlNy4QMbIuY0ivJEtKrWjEu8a7Se2npFNGAMNdpy2qy8?=
+ =?us-ascii?Q?k1Owh+VwmYftDljxDOY/vLKBr4W+9lNTL9s/upKCmLAAVKull56f8IC7bKFw?=
+ =?us-ascii?Q?p8w3ZDUGmpag1LIgft1r731/jjrTPcVJc10rlEddL83WODPtmVzbKMyeXigv?=
+ =?us-ascii?Q?gaiiOAznQY8Bk3urdt0g08XMxf881tiWROSk21JxKoGcqHY1qWWk3rb1Tm/D?=
+ =?us-ascii?Q?2SQWvrJG8T8912Frr4zB13lRNgOnrJWkTwYKuTadL0+SUKwludB47DiIsGoD?=
+ =?us-ascii?Q?q8apzAfcF+WgKyfx6wHjAh8pjiEW+GULMaY2JBOxHZG2IClVeYzpQeQpHE+j?=
+ =?us-ascii?Q?HPVSjPUk0Vq4ehZCugX1PBTAq3bd5Ji2axWUFBUplbgC/msasi26uL8Z85xH?=
+ =?us-ascii?Q?BhH9nEF0qnqkK0Jf7pFUcBk2MPFjLdb2QZGTr5TpBZayzdza4s8emSIzACyw?=
+ =?us-ascii?Q?Eg23KNjQ9ccAe/Vxj5EQDSkBQvwDJfpPRFn8g3A3L+MGyARt48kpccvVJzGr?=
+ =?us-ascii?Q?80NVMcrGGld9tYKResPtcWWs71GAIsG8zh1mKLTDt3LLegZoEuyDbDkEjE/j?=
+ =?us-ascii?Q?iffZ9SReX0GL7mx/ndVGQrWLbzs5IjDbXeaMgByl2IecxXJHUfZkcd4+8Gib?=
+ =?us-ascii?Q?EPCSRurTyN4wqJymrkRLFH0=3D?=
+X-OriginatorOrg: theobroma-systems.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 328ecff5-32b6-46c5-99e9-08dc37b289a9
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8536.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 16:38:33.4640
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +PaBcoNlIrnL9fz7orut9GfbBHo8cfcBThnLsBIxDD/Kx7Ioxf8n+SRa6f+9cLRitTophylw/UBOYGwFJNstzCCA82sNe+mcrs1SltjTrer+Xd+YB2ZUSJgHr3e6pFjE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10253
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 27 Feb 2024 06:18:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15962
+ <bitbake-devel@lists.openembedded.org>; Tue, 27 Feb 2024 16:38:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15964
 
-The current implementation only performs a git lfs fetch alongside of a
-regular git fetch. This causes issues when the downloaded revision is
-already part of the fetched repository (e.g. because of moving back in
-history or the updated revision already being part of the repository at
-the time of the initial clone).
+Hi all,
 
-Fix this by explicitly checking whether the required LFS objects are
-available in the downloade directory before confirming that a downloaded
-repository is up-to-date.
+On 2/26/24 15:16, Michael Opdenacker via lists.yoctoproject.org wrote:
+> Hi Simone,
+>=20
+> On 2/23/24 at 20:20, Simone Wei=C3=9F wrote:
+>> From: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
+>>
+>> This is inspired by the same section in the yocto-docs. It aims to=20
+>> provide
+>> information in what contexts(recipes, .conf, bbclass,...) a variable=20
+>> is usually
+>> used. For that I tried to group similar variables, so that a short=20
+>> overview is
+>> given. This was inspired by [YOCTO #14072], but of course does not=20
+>> implement a
+>> warning if a variable is used in an unintended context.
+>>
+>> Signed-off-by: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
+>> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+>> ---
+>>
+>> Notes to v3:
+>> - Applied the fixes suggested in review (thanks for the patch! I hope=20
+>> adding the
+>> =C2=A0=C2=A0 Signed-off like this during squashing is fine)
+>> - For the ref label, I plan to come up with an svg that illustrates=20
+>> tasks,
+>> =C2=A0=C2=A0 recipes, classes, conf (thanks Quentin for the suggestion),=
+ but in=20
+>> a generic
+>> =C2=A0=C2=A0 way and add it to the Concepts section, I want to add a ref=
+ from=20
+>> there.
+>> =C2=A0 ...bake-user-manual-ref-variables-context.rst | 91 ++++++++++++++=
++++++
+>> =C2=A0 doc/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 =
+1 +
+>> =C2=A0 2 files changed, 92 insertions(+)
+>> =C2=A0 create mode 100644=20
+>> doc/bitbake-user-manual/bitbake-user-manual-ref-variables-context.rst
+>=20
+>=20
+> Thanks for this new update of this worthy addition to the BitBake=20
+> documentation! Everything looks good now.
+> Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-This issue previously went unnoticed as git lfs would silently fetch the
-missing objects during the `unpack` task. With network isolation turned
-on, this no longer works, and unpacking fails.
+Reviewed-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-(cherry picked from commit cfae1556bf671acec119a6c8bbc4b667a856b9ae)
+A section on task context would be nice but it can come up in a later=20
+patch I guess.
 
-Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
----
- lib/bb/fetch2/git.py  | 45 ++++++++++++++++++++++++++++++++++++--
- lib/bb/tests/fetch.py | 51 +++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 90 insertions(+), 6 deletions(-)
+Thanks!
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 4d6e57ad..9ecc855a 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -307,7 +307,10 @@ class Git(FetchMethod):
-         return ud.clonedir
- 
-     def need_update(self, ud, d):
--        return self.clonedir_need_update(ud, d) or self.shallow_tarball_need_update(ud) or self.tarball_need_update(ud)
-+        return self.clonedir_need_update(ud, d) \
-+                or self.shallow_tarball_need_update(ud) \
-+                or self.tarball_need_update(ud) \
-+                or self.lfs_need_update(ud, d)
- 
-     def clonedir_need_update(self, ud, d):
-         if not os.path.exists(ud.clonedir):
-@@ -319,6 +322,15 @@ class Git(FetchMethod):
-                 return True
-         return False
- 
-+    def lfs_need_update(self, ud, d):
-+        if self.clonedir_need_update(ud, d):
-+            return True
-+
-+        for name in ud.names:
-+            if not self._lfs_objects_downloaded(ud, d, name, ud.clonedir):
-+                return True
-+        return False
-+
-     def clonedir_need_shallow_revs(self, ud, d):
-         for rev in ud.shallow_revs:
-             try:
-@@ -406,7 +418,7 @@ class Git(FetchMethod):
-             if missing_rev:
-                 raise bb.fetch2.FetchError("Unable to find revision %s even from upstream" % missing_rev)
- 
--        if self._contains_lfs(ud, d, ud.clonedir) and self._need_lfs(ud):
-+        if self.lfs_need_update(ud, d):
-             # Unpack temporary working copy, use it to run 'git checkout' to force pre-fetching
-             # of all LFS blobs needed at the srcrev.
-             #
-@@ -649,6 +661,35 @@ class Git(FetchMethod):
-             raise bb.fetch2.FetchError("The command '%s' gave output with more then 1 line unexpectedly, output: '%s'" % (cmd, output))
-         return output.split()[0] != "0"
- 
-+    def _lfs_objects_downloaded(self, ud, d, name, wd):
-+        """
-+        Verifies whether the LFS objects for requested revisions have already been downloaded
-+        """
-+        # Bail out early if this repository doesn't use LFS
-+        if not self._need_lfs(ud) or not self._contains_lfs(ud, d, wd):
-+            return True
-+
-+        # The Git LFS specification specifies ([1]) the LFS folder layout so it should be safe to check for file
-+        # existence.
-+        # [1] https://github.com/git-lfs/git-lfs/blob/main/docs/spec.md#intercepting-git
-+        cmd = "%s lfs ls-files -l %s" \
-+                % (ud.basecmd, ud.revisions[name])
-+        output = runfetchcmd(cmd, d, quiet=True, workdir=wd).rstrip()
-+        # Do not do any further matching if no objects are managed by LFS
-+        if not output:
-+            return True
-+
-+        # Match all lines beginning with the hexadecimal OID
-+        oid_regex = re.compile("^(([a-fA-F0-9]{2})([a-fA-F0-9]{2})[A-Fa-f0-9]+)")
-+        for line in output.split("\n"):
-+            oid = re.search(oid_regex, line)
-+            if not oid:
-+                bb.warn("git lfs ls-files output '%s' did not match expected format." % line)
-+            if not os.path.exists(os.path.join(wd, "lfs", "objects", oid.group(2), oid.group(3), oid.group(1))):
-+                return False
-+
-+        return True
-+
-     def _need_lfs(self, ud):
-         return ud.parm.get("lfs", "1") == "1"
- 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 847a3560..5aa3e464 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -6,6 +6,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
- 
-+import contextlib
- import unittest
- import hashlib
- import tempfile
-@@ -2182,10 +2183,14 @@ class GitLfsTest(FetcherTest):
- 
-         bb.utils.mkdirhier(self.srcdir)
-         self.git_init(cwd=self.srcdir)
--        with open(os.path.join(self.srcdir, '.gitattributes'), 'wt') as attrs:
--            attrs.write('*.mp3 filter=lfs -text')
--        self.git(['add', '.gitattributes'], cwd=self.srcdir)
--        self.git(['commit', '-m', "attributes", '.gitattributes'], cwd=self.srcdir)
-+        self.commit_file('.gitattributes', '*.mp3 filter=lfs -text')
-+
-+    def commit_file(self, filename, content):
-+        with open(os.path.join(self.srcdir, filename), "w") as f:
-+            f.write(content)
-+        self.git(["add", filename], cwd=self.srcdir)
-+        self.git(["commit", "-m", "Change"], cwd=self.srcdir)
-+        return self.git(["rev-parse", "HEAD"], cwd=self.srcdir).strip()
- 
-     def fetch(self, uri=None, download=True):
-         uris = self.d.getVar('SRC_URI').split()
-@@ -2205,6 +2210,44 @@ class GitLfsTest(FetcherTest):
-         unpacked_lfs_file = os.path.join(self.d.getVar('WORKDIR'), 'git', "Cat_poster_1.jpg")
-         return unpacked_lfs_file
- 
-+    @skipIfNoGitLFS()
-+    def test_fetch_lfs_on_srcrev_change(self):
-+        """Test if fetch downloads missing LFS objects when a different revision within an existing repository is requested"""
-+        self.git(["lfs", "install", "--local"], cwd=self.srcdir)
-+
-+        @contextlib.contextmanager
-+        def hide_upstream_repository():
-+            """Hide the upstream repository to make sure that git lfs cannot pull from it"""
-+            temp_name = self.srcdir + ".bak"
-+            os.rename(self.srcdir, temp_name)
-+            try:
-+                yield
-+            finally:
-+                os.rename(temp_name, self.srcdir)
-+
-+        def fetch_and_verify(revision, filename, content):
-+            self.d.setVar('SRCREV', revision)
-+            fetcher, ud = self.fetch()
-+
-+            with hide_upstream_repository():
-+                workdir = self.d.getVar('WORKDIR')
-+                fetcher.unpack(workdir)
-+
-+                with open(os.path.join(workdir, "git", filename)) as f:
-+                    self.assertEqual(f.read(), content)
-+
-+        commit_1 = self.commit_file("a.mp3", "version 1")
-+        commit_2 = self.commit_file("a.mp3", "version 2")
-+
-+        self.d.setVar('SRC_URI', "git://%s;protocol=file;lfs=1;branch=master" % self.srcdir)
-+
-+        # Seed the local download folder by fetching the latest commit and verifying that the LFS contents are
-+        # available even when the upstream repository disappears.
-+        fetch_and_verify(commit_2, "a.mp3", "version 2")
-+        # Verify that even when an older revision is fetched, the needed LFS objects are fetched into the download
-+        # folder.
-+        fetch_and_verify(commit_1, "a.mp3", "version 1")
-+
-     @skipIfNoGitLFS()
-     @skipIfNoNetwork()
-     def test_real_git_lfs_repo_succeeds_without_lfs_param(self):
--- 
-2.43.2
+By the way, I had an old doc build lying around and just git pull my=20
+local branch + applying this patch and somehow the navbar was not=20
+updated to contain this new section, I had to remove the build dir and=20
+compile it from scratch. I'm wondering if we aren't missing something=20
+somewhere so that this navbar is updated whenever it needs to?
 
+Cheers,
+Quentin
 
