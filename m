@@ -1,128 +1,132 @@
-Return-Path: <sam@liddicott.com>
+Return-Path: <cordlandwehr@kde.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF44EC5478C
-	for <webhook@archiver.kernel.org>; Wed, 28 Feb 2024 15:32:34 +0000 (UTC)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
- by mx.groups.io with SMTP id smtpd.web11.16372.1709134347042146876
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2EBC54E41
+	for <webhook@archiver.kernel.org>; Wed, 28 Feb 2024 18:30:47 +0000 (UTC)
+Received: from letterbox.kde.org (letterbox.kde.org [46.43.1.242])
+ by mx.groups.io with SMTP id smtpd.web11.4371.1709145044658758009
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 28 Feb 2024 07:32:27 -0800
+ Wed, 28 Feb 2024 10:30:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@liddicott-com.20230601.gappssmtp.com header.s=20230601 header.b=ISYC8iHr;
- spf=none, err=SPF record not found (domain: liddicott.com, ip: 209.85.218.50, mailfrom: sam@liddicott.com)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a43fc42e697so92223666b.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 28 Feb 2024 07:32:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=liddicott-com.20230601.gappssmtp.com; s=20230601; t=1709134345; x=1709739145; darn=lists.openembedded.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OP3bnfUUUcS2B0HGQ5a8OUwoxjP14dDmBa6CEJIJfyk=;
-        b=ISYC8iHrZKia+UYLccNTs5yS8bFeKMopN2aP1bdEaGL6rYLMyoAel71GWrqskg3wGp
-         t4N7kgcb9vGYbIQQSx1dcD2N9AC8YtBe7cwX2peI3YMkXWqGixVOryOgsBjw/1s2tVK5
-         ILaL4wMNNtbjoCZsd6m0RZ5/w+CLoL0/Mm7eUQytEmBUCMsdLYrGDx1q/uGeUfBMjrIW
-         pI44SzMjDcFFNpNNq/G3X0dh5zIC9WhTb1UuL3u0TmJYjRhn0FqJpvG6U9GbYv5lgQnd
-         AJax66B6UccdnFwfGCK0By/AjX+ERfhEhax5/7MJdp7niMLYUBZnX4GSu/5eqPUsJI7f
-         PZvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709134345; x=1709739145;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OP3bnfUUUcS2B0HGQ5a8OUwoxjP14dDmBa6CEJIJfyk=;
-        b=cqcbesIx7mm0T5ikGEt+ydRrquuYHz4YYJP8j3HgP5fkNCORAw27C0WPekbu8KH5Gk
-         oZWC3rR2yv8oNGQlNZSZMdwnESyecj+OvATvDVMpcFTEbL8V3xtfZYGHf7fpzV+eJPQH
-         QVABLluMmSuvYcQQnLKd3w8TDEJo0usiFmxQoEq1iZcoQ4SL4+JPdljtvKnzxmdMfZrS
-         F+WUan8MN92JUvkNmyFgezpdARqovzwAi98joHY0Usa2W4cozlnn3TLstmjvVXX5AmdD
-         LttGjpbGCZoowH04IvM6/ew9XoTOHrCjdmpXVMOKZX1nrdQMgq3p80MaPGMMZt9taAUW
-         4KzA==
-X-Gm-Message-State: AOJu0YyQ6/lioyNeyg2xNaXx8BcnxrBh0Y3hEITM5AyALmJZ92BHMGCC
-	5jcAQTPGwk3UahWEFj5qxoI15nAN2ZWLSgnR7ZMzRmFzIyFgGMUzzrJE3VRFAmpBXmaNkrqjyMb
-	wPLHlePfWcWIOSRUguzVUkfXKHjzhKbEPldb8iDGlJR1tx3j+zA==
-X-Google-Smtp-Source: AGHT+IHM8F7jOCaWSlbCum0DgjXeLHvVuM/k9+X3y16isSCIkKqlnUUuoOjfYwFlsdXnKvHpMGwkjcNDw4cT9kTKHyo=
-X-Received: by 2002:a17:906:228a:b0:a41:2f5e:f9b4 with SMTP id
- p10-20020a170906228a00b00a412f5ef9b4mr27989eja.59.1709134344587; Wed, 28 Feb
- 2024 07:32:24 -0800 (PST)
+ dkim=pass header.i=@kde.org header.s=users header.b=PbLD1upc;
+ spf=pass (domain: kde.org, ip: 46.43.1.242, mailfrom: cordlandwehr@kde.org)
+Received: from [IPv6:::1] (unknown [IPv6:2a01:599:612:7563:5f7d:47ab:abdd:6b1e])
+	(Authenticated sender: cordlandwehr)
+	by letterbox.kde.org (Postfix) with ESMTPSA id E531F33F3EF;
+	Wed, 28 Feb 2024 18:30:41 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kde.org; s=users;
+	t=1709145042; bh=4PR2bdl0+Gc4jAQ1X+tMlrZFu4SBkFEZVgC56UFlSyQ=;
+	h=Date:From:To:Subject:In-Reply-To:References:From;
+	b=PbLD1upcd+ZJ2Yx9STz5cHygOMY3rIdeQBkknox7Hk4zKTYYy8r38Q0a54qiDgLcc
+	 lmEcsB6we4moGmw+KbK5wb/DCDaFY1eUWQKYRn+3r/rwrHojyCKWOhdj0bhSAj0xvo
+	 sFG+9Lxnr4miTrSRIUijK3uMF1frqwEL9Uibt7zLezAA3XFGVODpiF0FJdVwrrXqxn
+	 PlaVYQdYvRutMgZ2js36qkmDWgTahx3OkCFXIS6lz6HAqIT/PCqLuo9blFhpuIH/dN
+	 Ft/4dEpnHrX5QzE2BZufJ0gGBkeW5Szd15eTduMPf7eBB+qmZawnkplwLOk3yndZeQ
+	 3oNvYJf4dyMAA==
+Date: Wed, 28 Feb 2024 19:30:37 +0100
+From: Andreas Cord-Landwehr <cordlandwehr@kde.org>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+ Andreas Cord-Landwehr <cordlandwehr@kde.org>,
+ bitbake-devel@lists.openembedded.org
+Subject: =?US-ASCII?Q?Re=3A_=5Bbitbake-devel=5D_=5BPATCH=5D_fetch2/gitsm=2E?= =?US-ASCII?Q?py=3A_handle_spaces_in_git_repository_paths?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <abb50c8c7e143d2e7154d3ab89a240fc2a5ce981.camel@linuxfoundation.org>
+References: <20240227173527.726401-1-cordlandwehr@kde.org> <abb50c8c7e143d2e7154d3ab89a240fc2a5ce981.camel@linuxfoundation.org>
+Message-ID: <6D17B283-88D3-40D5-8BB9-AFA2CFA493EC@kde.org>
 MIME-Version: 1.0
-From: Sam Liddicott <sam@liddicott.com>
-Date: Wed, 28 Feb 2024 15:31:48 +0000
-Message-ID: <CAOj-5WALHrqvDkVbSe4YdjF-Ad-D=Qn4DQNYAhSg5Sw3fzKxDQ@mail.gmail.com>
-Subject: pseudo abort with req '/proc/self/fd/3'
-To: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="0000000000007ba0c7061272d94a"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 28 Feb 2024 15:32:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15975
+ <bitbake-devel@lists.openembedded.org>; Wed, 28 Feb 2024 18:30:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15976
 
---0000000000007ba0c7061272d94a
-Content-Type: text/plain; charset="UTF-8"
+Hi Richard, thank you for the fast response!
+At the moment I only have access to a closed server (AzureDevOps based) wh=
+ich allows creation of repositories with spaces=2E For GitHub eg=2E I check=
+ed that they replace spaces with a hyphen and so avoid any problems=2E Prob=
+ably a simple rewrite rule may work though=2E=2E=2E? But I do not have a st=
+able server at hand that I could offer as a permanent source for tests=2E B=
+ut I will check if I can find a solution=2E
 
-On a kirkstone build I just got an unexpected and reproducible do_install
-abort:
+Regarding the issue itself=2E Already the git fetcher requires %20 spaces =
+to be encoded as %2520 in SRC_URI statements=2E So I expected that URLs are=
+ always expected to be double encoded=2E Is that not the case?
 
-| abort()ing pseudo client by server request. See
-https://wiki.yoctoproject.org/wiki/Pseudo_Abort for more details on this.
-... path mismatch [1 link]: ino 594677 db '/.../common/config/private' req
-'/proc/self/fd/3'
-A conflict with /proc is most surprising, why is that even in the pseudo
-database?
+Best regards,
+Andreas
 
-Adding this line to the global config fixed it consistently:
-PSEUDO_IGNORE_PATHS:append=",/proc,/dev,/sys"
-
-But I wondered how there was a conflict, and then I looked again at the
-abort message.
-
-Is it possible that pseudo only uses inode number without the dev node as
-the key?
-
-           struct stat {
-               dev_t     st_dev;         /* ID of device containing file */
-               ino_t     st_ino;         /* Inode number */
-
-I would think that only the combination of both is unique across the system.
-
-If dev_t is not part of the key, then I suggest that all paths are ignored
-that are not on the same dev_t as the workspace.
-
-Sam
-
---0000000000007ba0c7061272d94a
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">On a kirkstone build I just got an unexpected and reproduc=
-ible do_install abort:<div><br></div><div><code class=3D"gmail-code gmail-c=
-ss-1o5d2cw" style=3D"font-family:SFMono-Medium,&quot;SF Mono&quot;,&quot;Se=
-goe UI Mono&quot;,&quot;Roboto Mono&quot;,&quot;Ubuntu Mono&quot;,Menlo,Con=
-solas,Courier,monospace;font-size:0.875em;color:rgb(23,43,77);border-style:=
-none;display:inline;padding:2px 0.5ch 2px 0.5ch;overflow:auto;background-im=
-age:initial;background-position:initial;background-size:initial;background-=
-repeat:initial;background-origin:initial;background-clip:initial;line-heigh=
-t:1.33333;letter-spacing:-0.07px">| abort()ing pseudo client by server requ=
-est. See <a href=3D"https://wiki.yoctoproject.org/wiki/Pseudo_Abort">https:=
-//wiki.yoctoproject.org/wiki/Pseudo_Abort</a> for more details on this.
-...
-path mismatch [1 link]: ino 594677 db &#39;/.../common/config/private&#39; =
-req &#39;/proc/self/fd/3&#39;
-
-</code><div>A conflict=C2=A0with=C2=A0/proc is most surprising, why is that=
- even in the pseudo database?</div></div><div><br></div><div>Adding this li=
-ne to the global config fixed it consistently:</div><div>PSEUDO_IGNORE_PATH=
-S:append=3D&quot;,/proc,/dev,/sys&quot;<br></div><div><br></div><div>But I =
-wondered how there was a conflict, and then I looked again at the abort mes=
-sage.</div><div><br></div><div>Is it possible that pseudo only uses inode n=
-umber without the dev node as the key?</div><div><br></div><div>=C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0struct stat {<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_t =C2=A0 =C2=A0 st_dev; =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 /* ID of device containing file */<br>=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ino_t =C2=A0 =C2=A0 st_ino; =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 /* Inode number */<br></div><div><br></div><div>I would think=
- that only the combination of both is unique across the system.</div><div><=
-br></div><div>If dev_t is not part of the key, then I suggest that all path=
-s are ignored that are not on the same dev_t as the workspace.</div><div><b=
-r></div><div>Sam</div></div>
-
---0000000000007ba0c7061272d94a--
+Am 28=2E Februar 2024 10:21:19 MEZ schrieb Richard Purdie <richard=2Epurdi=
+e@linuxfoundation=2Eorg>:
+>On Tue, 2024-02-27 at 18:35 +0100, Andreas Cord-Landwehr wrote:
+>> Handle encoding of spaces for the obscure but real-world scenario of
+>> having a git repository with submodules, where the urls to submodules
+>> contain spaces, eg=2E https://example=2Ecom/foo/repo%20with%20space=2Eg=
+it
+>>=20
+>> Git submodules are referenced with single escaping, yet the fetcher
+>> requires double-escaping of spaces=2E
+>>=20
+>> Signed-off-by: Andreas Cord-Landwehr <cordlandwehr@kde=2Eorg>
+>> ---
+>> =C2=A0bitbake/lib/bb/fetch2/gitsm=2Epy | 6 ++++++
+>> =C2=A01 file changed, 6 insertions(+)
+>>=20
+>> diff --git a/bitbake/lib/bb/fetch2/gitsm=2Epy b/bitbake/lib/bb/fetch2/g=
+itsm=2Epy
+>> index f7f3af7212=2E=2Ee37be055eb 100644
+>> --- a/bitbake/lib/bb/fetch2/gitsm=2Epy
+>> +++ b/bitbake/lib/bb/fetch2/gitsm=2Epy
+>> @@ -23,6 +23,7 @@ import copy
+>> =C2=A0import shutil
+>> =C2=A0import tempfile
+>> =C2=A0from=C2=A0=C2=A0 bb=2Efetch2=2Egit import Git
+>> +from=C2=A0=C2=A0 bb=2Efetch2 import URI
+>> =C2=A0from=C2=A0=C2=A0 bb=2Efetch2 import runfetchcmd
+>> =C2=A0from=C2=A0=C2=A0 bb=2Efetch2 import logger
+>> =C2=A0from=C2=A0=C2=A0 bb=2Efetch2 import Fetch
+>> @@ -93,6 +94,11 @@ class GitSM(Git):
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 newud=2Epath =3D os=2Ep=
+ath=2Enormpath(os=2Epath=2Ejoin(newud=2Epath, uris[m]))
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 uris[m] =3D Git=2E_get_=
+repo_url(self, newud)
+>> =C2=A0
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 # Double-encode before handing over to git to handle =
+spaces in URLs
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 double_encoded_uri =3D URI(uris[m])
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 double_encoded_uri=2Epath =3D double_encoded_uri=2Epa=
+th_quoted
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 uris[m] =3D str(double_encoded_uri)
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for module in submodul=
+es:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 # Translate the module url into a SRC_URI
+>
+>Thanks for the patch, I think this may need some work though=2E
+>
+>Double encoding feels like a workaround for the issue and this probably
+>needs a different fix where we only decode the data once=2E That is
+>likely more invasive but ultimately more correct else I worry we'd have
+>to triple encode second level submodules or other horrible things=2E
+>
+>Also is there a testcase we could add to bitbake-selftest to cover
+>this? The fetcher is tricky to work on due to all the corner cases so
+>we do try to cover them in the testsuite=2E
+>
+>Cheers,
+>
+>Richard
+>
+>
+>
 
