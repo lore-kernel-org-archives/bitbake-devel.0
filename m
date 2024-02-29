@@ -1,150 +1,98 @@
-Return-Path: <sam@liddicott.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30B2C54E41
-	for <webhook@archiver.kernel.org>; Thu, 29 Feb 2024 15:14:33 +0000 (UTC)
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
- by mx.groups.io with SMTP id smtpd.web10.27562.1709219665564973161
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1F7C54798
+	for <webhook@archiver.kernel.org>; Thu, 29 Feb 2024 21:57:30 +0000 (UTC)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+ by mx.groups.io with SMTP id smtpd.web10.7931.1709243841682281637
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 29 Feb 2024 07:14:26 -0800
+ Thu, 29 Feb 2024 13:57:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@liddicott-com.20230601.gappssmtp.com header.s=20230601 header.b=L87q44mI;
- spf=none, err=SPF record not found (domain: liddicott.com, ip: 209.85.208.52, mailfrom: sam@liddicott.com)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56682b85220so1875643a12.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 29 Feb 2024 07:14:25 -0800 (PST)
+ dkim=pass header.i=@smile-fr.20230601.gappssmtp.com header.s=20230601 header.b=12s3Ev03;
+ spf=pass (domain: smile.fr, ip: 209.85.208.173, mailfrom: yoann.congal@smile.fr)
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d28387db09so16189801fa.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 29 Feb 2024 13:57:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=liddicott-com.20230601.gappssmtp.com; s=20230601; t=1709219663; x=1709824463; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hcFvbh9wLpVWzj3oP5o7u9ykdCTuhmRxu6cvD3lO0No=;
-        b=L87q44mIZ7C0sqah8hUp5fh5+K0xAbvmPRw/i0HytK+PjUULsbt+Yj1TTisWGx2EHe
-         /JZrP2L8laN1XZ1j4d+niPdmjkqwrNz8r5mb2/57ok2ZWZMtn3gy1ZHRlfRhcKxDWbCh
-         lBrS5qguZ3oR0NAi3FBKa3UQjm4+xixorVOYkjOEQvfz4GawQGmFjMB8HLX2q+Myc572
-         5pmT5KzyHA/YcY8EwYqKH1WCgWkblwcsDav4DeYq9ITRrNRA2aGBnvYSSpFlou3qzB/k
-         p+v/jjdbFAZWoLO8qMOtVIj6zL6wtGOG/mMLnxJ7llUb5FeAeuoWBSHI57KQNcmMf2wA
-         wh8Q==
+        d=smile-fr.20230601.gappssmtp.com; s=20230601; t=1709243839; x=1709848639; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gdKUmz4HeFHfziiMVS36QCn9KKKnthduqvZwo/oHQKw=;
+        b=12s3Ev03zIivvuvo/AbHxzeLPCn70wA4VtTlWkWyhXDgj9hgTte9SMIpuGyWjT7k6e
+         HQ2yCLaSwhoF2+Ab8GHXKBA3gWcxyyVzp9Tsx24Mdp5N2upGKXEJpvNRImeEbnc2gVQP
+         i0dxD++y3fPCjrq8HOEaU8P2TLT2pYmDGLI+bXkXQ9ePJ5/44NJtSr4/+WTcRwzAb/3w
+         og6wutJm5nuCMsH/hnpzzER5bITa+zkJ1Rn3C/vDwbpQLlre9rOgyWljoVkb1SgzoxGZ
+         ViTXfOcp2K/WoREozebiPvUQRU2J1B22zRcIAYVdjZeAQT0Sno9aJiJAIy5orhsdr9RQ
+         IwJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709219663; x=1709824463;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1709243839; x=1709848639;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hcFvbh9wLpVWzj3oP5o7u9ykdCTuhmRxu6cvD3lO0No=;
-        b=N3sOSPqzn+pzxWX9IBfDyKwAtnPvuU+CgCnBr7bSzFeRj3b8/x4HMnaUPGkG3AsIp4
-         VWrM65LOW6W3OvqqJiGyboOv2tF0v3j5uEENCboY9yz+2kH0rkguPjjbNk1r8pYirNW+
-         +5b/O/Dz8O20iDN7FCUDQinpBt6ZB4HP40Fxn/4y9+vUPsoMgF/iMSFZNJ+9EuZyqE7O
-         WoMBFYCCDUDM9hvqVNwldE5VcowXCIYs5YoWpERTDRvWNdRiF+UU6iKPaHk5PFoqM5OS
-         ZOQHCJqWLJNLD4lHFhAhAGpZZgG1H4uPkyq4JtPdtpnpn9gJc8FatKEu35eePjOKg3SC
-         N6sw==
-X-Gm-Message-State: AOJu0Yzc6cUkx+VH5fH34/oKKdnhk+DyUdp7xWLrUXTwzj9agum7EtnM
-	rZLj9pJMrbvxcl6Qe522plvO9p43xpNFYb0rLdCTCG0t1eV2Z9N3+Wy2XwqEzzOaScxVy8e/6GW
-	VTUQ8vo+glGDXfklu3V+xmX4IddGt8KqXzpvf
-X-Google-Smtp-Source: AGHT+IFZ8Rc4ckhPph00hxsUIPDll43A30Za+ZgetOeOz0TzYbYAjANfvZdb3J7ldKBSjMIHeE3YbsnYXyF9xPKP5as=
-X-Received: by 2002:a17:906:f198:b0:a42:e079:f94d with SMTP id
- gs24-20020a170906f19800b00a42e079f94dmr1879348ejb.57.1709219663466; Thu, 29
- Feb 2024 07:14:23 -0800 (PST)
+        bh=gdKUmz4HeFHfziiMVS36QCn9KKKnthduqvZwo/oHQKw=;
+        b=IHPcZOhBcGuNHQAFgORXQfGhagh30xu2uXq3jq4J3Uhp3rd9Cn1yNr37Prgx7pj6hc
+         izo7VXrViwT9iTEPOoOq0BcwUy7IN6enzsOJKqlCVOFE5V+NRKYrVM4VclRFiDO1yFEr
+         9d5DlCZ+n+evabslUmSMR3mEd3PvzU2rxtNCq/g54RnlB6zpuhL3ALZ0IMmTreJ0oJjA
+         ZtRx0Z1B4p+DQZYNflLhcD31Iy8Fiy+zxfsM8XWmruou+Jy2cpK2oTW3PmSMPQhhZ51A
+         u4W7qfjUmITUhOkPDVBS7BQOR2yMGysQJ2h0RIn7LSYQXoGbJFW/jKMCce7Nu81xbDrh
+         AqPA==
+X-Gm-Message-State: AOJu0Yx0udyvEgZ275JrUW+XK/Og7o7NYXXIWZqPY+lICWJIRGn6iYHp
+	ERcSsOf2dtZk2hxhMS/RKaIkSHCMzq978DaXqt3uMBnAw9CGHQM8m+WnqHaFqfKo+x9NZifzrmE
+	zuX4=
+X-Google-Smtp-Source: AGHT+IEi+44Li83aHvvpyvNt7c2DyNXPGKULZN/A2zPgree512J25ilAbVp4t+bBkuLkLr3Ye7KF+Q==
+X-Received: by 2002:a2e:7309:0:b0:2d1:1ef3:3c84 with SMTP id o9-20020a2e7309000000b002d11ef33c84mr2249500ljc.28.1709243839125;
+        Thu, 29 Feb 2024 13:57:19 -0800 (PST)
+Received: from P-ASN-ECS-830T8C3.local ([89.159.1.53])
+        by smtp.gmail.com with ESMTPSA id fa24-20020a05600c519800b00412c3a5d4f3sm896128wmb.30.2024.02.29.13.57.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 13:57:18 -0800 (PST)
+From: Yoann Congal <yoann.congal@smile.fr>
+To: bitbake-devel@lists.openembedded.org
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Subject: [PATCH] prserv/serv: Fix a PID file removal race on prserv stop
+Date: Thu, 29 Feb 2024 22:56:39 +0100
+Message-Id: <20240229215638.516053-1-yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <17B810A24531435C.23432@lists.openembedded.org>
- <CAOj-5WAohNpyHRFFWbBkm2CWnFnfzAit4Kxm2=9WsbKcSPeb+Q@mail.gmail.com> <fc3346c4a626f8a5cdb5805c2ea8b666065fc86f.camel@linuxfoundation.org>
-In-Reply-To: <fc3346c4a626f8a5cdb5805c2ea8b666065fc86f.camel@linuxfoundation.org>
-From: Sam Liddicott <sam@liddicott.com>
-Date: Thu, 29 Feb 2024 15:13:47 +0000
-Message-ID: <CAOj-5WAfNxb45fpSbaJ0EyVtTHMs4wXbF4NYpR_1EKx=Tk4raw@mail.gmail.com>
-Subject: Re: [bitbake-devel] pseudo abort with req '/proc/self/fd/3'
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000e261c0061286b63e"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 29 Feb 2024 15:14:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15980
+ <bitbake-devel@lists.openembedded.org>; Thu, 29 Feb 2024 21:57:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15981
 
---000000000000e261c0061286b63e
-Content-Type: text/plain; charset="UTF-8"
+A race condition has happened where the exiting server removed the PID
+file between the existence check and the removal, resulting in a
+FileNotFoundError exception.
 
-Won't the symlink target have its own db entry when resolved?
+The fix is to ignore the FileNotFoundError exception, the existence
+check is now redundant so remove it to simplify.
 
-Or if not, how should we cope with the inode clashes across different file
-systems?
+Fixes [YOCTO #14341]
 
-On Thu, 29 Feb 2024 at 10:31, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ lib/prserv/serv.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> On Wed, 2024-02-28 at 22:56 +0000, Sam Liddicott wrote:
-> > Despite my hints I don't think it is safe to use dev_t as part of the
-> > key because I don't think it is guaranteed to be consistent across
-> > reboots or even remounts for the case where temporary file system
-> > mounts (e.g. overlayfs) might be in use for the build workspace or
-> > subdirs.
-> >
-> > (I am using bind mounting in a mount namespace during bitbake to make
-> > sure all workspaces appear as the same path in order to get better
-> > caching of sstate artifacts compile and install steps).
-> >
-> > So maybe we want to limit pseudo caching only to the workdir
-> > filesystem by default, but certainly exclude /proc /dev etc
->
-> Unfortunately it isn't that simple. /proc/ can contain links and
-> references to other places on the system.
->
-> Even with your example, /proc/self/fd/3 might be a file in workdir
-> which has been opened by a process and given a file descriptor. If you
-> perform an ownership/mode change on that /proc entry, pseudo does need
-> to intercept it and apply it to the file in workdir.
->
-> So whilst /dev and /sys are perhaps arguable, we do have to look at
-> proc.
->
-> Cheers,
->
-> Richard
->
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index 62d3b5a0..5fc8863f 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -262,8 +262,11 @@ def stop_daemon(host, port):
+             os.kill(pid, signal.SIGTERM)
+             time.sleep(0.1)
+ 
+-        if os.path.exists(pidfile):
++        try:
+             os.remove(pidfile)
++        except FileNotFoundError:
++            # The PID file might have been removed by the exiting process
++            pass
+ 
+     except OSError as e:
+         err = str(e)
+-- 
+2.39.2
 
---000000000000e261c0061286b63e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Won&#39;t the symlink target have its own db entry when re=
-solved?<div><br></div><div>Or if not, how should we cope with the inode cla=
-shes across different file systems?</div></div><br><div class=3D"gmail_quot=
-e"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, 29 Feb 2024 at 10:31, Rich=
-ard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org">richar=
-d.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><blockquote class=3D"g=
-mail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204=
-,204,204);padding-left:1ex">On Wed, 2024-02-28 at 22:56 +0000, Sam Liddicot=
-t wrote:<br>
-&gt; Despite my hints I don&#39;t think it is safe to use dev_t as part of =
-the<br>
-&gt; key because I don&#39;t think it is guaranteed to be consistent across=
-<br>
-&gt; reboots or even remounts for the case where temporary file system<br>
-&gt; mounts (e.g. overlayfs) might be in use for the build workspace or<br>
-&gt; subdirs.<br>
-&gt; <br>
-&gt; (I am using bind mounting in a mount namespace during bitbake to make<=
-br>
-&gt; sure all workspaces appear as the same path in order to get better<br>
-&gt; caching of sstate artifacts compile and install steps).<br>
-&gt; <br>
-&gt; So maybe we want to limit pseudo caching only to the workdir<br>
-&gt; filesystem by default, but certainly exclude /proc /dev etc<br>
-<br>
-Unfortunately it isn&#39;t that simple. /proc/ can contain links and<br>
-references to other places on the system.<br>
-<br>
-Even with your example, /proc/self/fd/3 might be a file in workdir<br>
-which has been opened by a process and given a file descriptor. If you<br>
-perform an ownership/mode change on that /proc entry, pseudo does need<br>
-to intercept it and apply it to the file in workdir.<br>
-<br>
-So whilst /dev and /sys are perhaps arguable, we do have to look at<br>
-proc.<br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-</blockquote></div>
-
---000000000000e261c0061286b63e--
 
