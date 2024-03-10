@@ -1,100 +1,99 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <technophil98@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76F3C5475B
-	for <webhook@archiver.kernel.org>; Fri,  8 Mar 2024 15:31:17 +0000 (UTC)
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
- by mx.groups.io with SMTP id smtpd.web10.24785.1709911868983780110
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F65FC54791
+	for <webhook@archiver.kernel.org>; Sun, 10 Mar 2024 03:33:20 +0000 (UTC)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+ by mx.groups.io with SMTP id smtpd.web11.27640.1710041598992378925
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 08 Mar 2024 07:31:09 -0800
+ Sat, 09 Mar 2024 19:33:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=ljab5FU5;
- spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 941EE20007;
-	Fri,  8 Mar 2024 15:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709911866;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mEemjvatO4F/9qDhot2+sEkQwUi950sfVQrMlJX996A=;
-	b=ljab5FU5lEcmhcIVo9O8pIAxPVxlffmFMaVu0yqubQehQ17MFPiMwPbBMEpcuW8aCBDHJd
-	XhicfXfyJh5jD7svHGGCcph7x3jEdA/Ai0oEiO/9+ErMr08x7Tt6Hhgjz2/4LKjgFWVqLT
-	jzgS7XEttzjXqPT7v3V+2dHLcbgE5+pa6/i0CkWEdqm5Gs7buXIwfLl91gwNWaveZ12cr3
-	rloaI1fGNF8EiH4BxOvRIkmn6U5wNKY53/L18qdPK+0rvLL35hbPnjK/vClebi+/DgiMYj
-	dG8iegNzw5P1Uk1/QBCDe1lmAcE8F4koguEM2puKRrx0A3KVNjzaRbNaTVLjPg==
-Message-ID: <f7290592-375e-448d-a33d-6c806c6fc36b@bootlin.com>
-Date: Fri, 8 Mar 2024 16:31:06 +0100
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=lkDR7VNy;
+ spf=pass (domain: gmail.com, ip: 209.85.160.173, mailfrom: technophil98@gmail.com)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-42a0ba5098bso25731391cf.0
+        for <bitbake-devel@lists.openembedded.org>; Sat, 09 Mar 2024 19:33:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710041597; x=1710646397; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fdFRJAlUKOSAtXtLX14S0Mtk8VfosTV/BW2gAdEwGXo=;
+        b=lkDR7VNyuaCuFTwlKwBv9mkxji8tqYAjnJHtFZ7+NizLXROW/ZdQ8PMwng6BkMEc/y
+         xKqrlHya4iQ+El3xJm7aH6Mn1Xk/Th/TAYaD4Q9n0gp8HG5VbpZ+rpQzKX7YkcWjd57J
+         fexZOKRTj+QpXNvPo/68u5mLV+PuOWqR7l3hrlNtzzRlGi++L8QKdMRgaulnJnNI1K8Z
+         yrZD7oPCbJnHwhOEvbpn9jICRUqeRlEzmo7YN43VZW0+J3VEIJwNmrFHddcMu2O7//+Y
+         UeMlSWi27nkwxj/fZWrrzMbVaaiXJxi9e8YZYm5Jv2dywEil02utl2oSQyn/XzRl5hnx
+         BETg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710041597; x=1710646397;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fdFRJAlUKOSAtXtLX14S0Mtk8VfosTV/BW2gAdEwGXo=;
+        b=VlDYVMXktHCE3bcXUuDCmTGyAJO6Zvldzi4QC+SwGXvyNgW8O06KtW/rVjwlYU0UYE
+         40D4CG3I9FxsGaYi+bYzLVIWCpRoXZVzj8o+x49SwSULkNqUnrD2QZqjOjmtvVyWbKkE
+         AmBQ9zpN3rx6VEbgobzv7tak7HDHb0ejTq2yoatzH8MMC0Gm0oM8Pq++q6dYPovxm0lx
+         mD4JyxQDnFBpJIQ12TR+lk9HefY4UzLQilUVvfFqfSuWUhXXBFGp9sXRxo6evN7XIHXy
+         FsUeKNCSz8BJaTs8vPyQMHnv+dCK7/8gUzCkwHGbyey8Vg/3Lhju27M4cUX7Dl67AizN
+         u+2A==
+X-Gm-Message-State: AOJu0YyLGeHyMhgzLU3smyqXodRD0sfzjv+ucW++80EOJlFyE5IRQIfF
+	7zuqCdSi5i2NA8w+SeN2/ybIbFKY0BmLxut/hD06rmGCBAXo+3pZzkNeavhROwk=
+X-Google-Smtp-Source: AGHT+IEgMkd49NFxrY1xHJLlqVse/KqJGdwEPaDltGfkgJEGsl98aYvR7+sNOgVEc972UAOAYFH1WQ==
+X-Received: by 2002:a05:622a:ce:b0:42f:2170:4967 with SMTP id p14-20020a05622a00ce00b0042f21704967mr4288440qtw.30.1710041597062;
+        Sat, 09 Mar 2024 19:33:17 -0800 (PST)
+Received: from obacon-Precision-3640-Tower.GENETEC.COM ([68.67.62.2])
+        by smtp.gmail.com with ESMTPSA id f1-20020ac87f01000000b0042f37ebfbf2sm1294983qtk.5.2024.03.09.19.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Mar 2024 19:33:16 -0800 (PST)
+From: Philippe Rivest <technophil98@gmail.com>
+X-Google-Original-From: Philippe Rivest <privest@genetec.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Philippe Rivest <technophil98@gmail.com>,
+	Philippe Rivest <privest@genetec.com>
+Subject: [PATCH] bitbake: fetch2/git: Escape parentheses in git src name
+Date: Sat,  9 Mar 2024 22:33:14 -0500
+Message-Id: <20240310033314.110796-1-privest@genetec.com>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH] prserv: remove dead code in exception
- handling
-Content-Language: en-US
-To: Joshua Watt <jpewhacker@gmail.com>
-References: <20240306171144.1874798-1-michael.opdenacker@bootlin.com>
- <CAJdd5GZ1RkHzaFhSmVYZmBsK=z9Y3Sge5d5=-SdsJjneiOp1gg@mail.gmail.com>
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-In-Reply-To: <CAJdd5GZ1RkHzaFhSmVYZmBsK=z9Y3Sge5d5=-SdsJjneiOp1gg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: michael.opdenacker@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 08 Mar 2024 15:31:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15995
+ <bitbake-devel@lists.openembedded.org>; Sun, 10 Mar 2024 03:33:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/15996
 
-Hi Joshua
+From: Philippe Rivest <technophil98@gmail.com>
 
-On 3/7/24 at 00:31, Joshua Watt wrote:
-> On Wed, Mar 6, 2024 at 10:12 AM Michael Opdenacker via
-> lists.openembedded.org
-> <michael.opdenacker=bootlin.com@lists.openembedded.org> wrote:
->> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
->>
->> As explained in https://docs.python.org/3/reference/compound_stmts.html#else-clause,
->> the code after the "else" statement won't be run as there is a "return"
->> in the "try" block.
->>
->> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
->>
->> ---
->>
->> See the whole code on
->> https://git.openembedded.org/bitbake/tree/lib/prserv/serv.py#n38
->> ---
->>   lib/prserv/serv.py | 2 --
->>   1 file changed, 2 deletions(-)
->>
->> diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
->> index 5fc8863f7..5032f7cd7 100644
->> --- a/lib/prserv/serv.py
->> +++ b/lib/prserv/serv.py
->> @@ -40,8 +40,6 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
->>           except:
->>               self.table.sync()
->>               raise
->> -        else:
->> -            self.table.sync_if_dirty()
-> It is correct this will not run, should self.table.sync() be in a
-> finally block instead to make sure the DB is always synced? (the
-> except can also be removed then)
+FIXES [YOCTO #15404]
 
-I've implemented this simplification, but it would cause to run 
-"self.table.sync()" even when no exception is caught. That wasn't the 
-case before. Is that what you were suggesting?
+When using git fetcher on a repo with parentheses in its URL, the
+invocation of the git clone command will fail. The clone directory
+is not quoted thus the shell will return an error and won't execute
+the command.
 
-Happy to submit my change if you agree!
-Cheers
-Michael.
+(Bitbake rev: b5624ee5643d881afa004571a096a189ab5389b5)
 
+Cc: Philippe Rivest <privest@genetec.com>
+
+Signed-off-by: Philippe Rivest <technophil98@gmail.com>
+---
+ bitbake/lib/bb/fetch2/git.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index b9dc576d47..6170da7fa6 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -277,7 +277,7 @@ class Git(FetchMethod):
+                     ud.unresolvedrev[name] = ud.revisions[name]
+                 ud.revisions[name] = self.latest_revision(ud, d, name)
+ 
+-        gitsrcname = '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.').replace(' ','_'))
++        gitsrcname = '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.').replace(' ','_').replace('(', '_').replace(')', '_'))
+         if gitsrcname.startswith('.'):
+             gitsrcname = gitsrcname[1:]
+ 
 -- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.40.0
 
 
