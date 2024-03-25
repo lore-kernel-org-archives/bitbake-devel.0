@@ -2,117 +2,85 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6847EC54E71
-	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 13:50:51 +0000 (UTC)
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
- by mx.groups.io with SMTP id smtpd.web11.13760.1711115443956889325
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DB5C6FD1F
+	for <webhook@archiver.kernel.org>; Mon, 25 Mar 2024 15:56:53 +0000 (UTC)
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+ by mx.groups.io with SMTP id smtpd.web10.56159.1711382212119039096
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 22 Mar 2024 06:50:44 -0700
+ Mon, 25 Mar 2024 08:56:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=l6e7RKzD;
- spf=pass (domain: gmail.com, ip: 209.85.166.43, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7d026c0a08aso68219239f.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 22 Mar 2024 06:50:43 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=fylmCd+V;
+ spf=pass (domain: gmail.com, ip: 209.85.166.50, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7d05484dd40so23484839f.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 25 Mar 2024 08:56:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711115442; x=1711720242; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1711382211; x=1711987011; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=b4OhbdXlXs8JgG1OUDlSeb77p1J5Ro0A7r3KN2aNhv4=;
-        b=l6e7RKzDk3v/f3qGt5QFy8YDHNExkO5kT/fzZFhZuyZh6NbbyTiGZgW4YMWF83MQpQ
-         EyQe94ieyvec3whKoWaXpgWG4q/nuZ74vlCV+jaW25boc3hoDZF5Fqwd7+xITQIyyMFc
-         lgsABXGfcqP0q/8zzD4I+/5Sb1L57WT5RE5pzGJpuJA/6crjoF2aexwtZTGgLGPUZLf7
-         ZElVFfSYXf/zr3UT6RD0Ng59NYKjI5MbKyPio+59Fx2M98jOPV64wO3/xu9GHJhFwAnT
-         fM4okQhWfKPrCgacqGudAn1D/Jt5jaTmjqm+XAwngaiE8iW3YC0H7dX83uCf5l8JXF5u
-         Mb6w==
+        bh=lYAFv6Z2WE6T2z9zhHB1zqeB+YtvozkHsR2EkTr3k64=;
+        b=fylmCd+V3fKpPnt/8E4lkfInDxYnddXDNCCppmwsAG7HCbSOGyVM+yj/GlQOULrz6F
+         ABiDRRFirn521SY8mDCnKXjnbwd6Wgzv8cRZXL8NHcs8dZHAp0XU2WNyh2QC4a7L8x13
+         PTVpM+L70UuG63coWpi4AbzgbbA1/ziOS97hzzpmeHY2If8Snuuz0L7p5vY4/B/yPoCh
+         TBlyj2OwhSHRq8szIfns0JDL7ARrFTJA2ZNqd7IH249lt9IwmK79en3NFMKlZ6r/cZGD
+         Rxw1HOWtEY8rDMy3QD1JqIyZKR0K7K/D40ByMAqx98fHln84Y0wRE8QL2I/JTpA0ANYO
+         bHXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711115442; x=1711720242;
+        d=1e100.net; s=20230601; t=1711382211; x=1711987011;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=b4OhbdXlXs8JgG1OUDlSeb77p1J5Ro0A7r3KN2aNhv4=;
-        b=udnXIe7WLBXI2ew8ugZ5hcKh8gAGRJmIU8ElLDe7H6TQWCUv75Ge3N+ia8M+eGYOuk
-         ruOJDzuHX6B8F7yPW25fpzhm8eSuRl6XamdqLNi5DxpI0LWn+b0kZEF/WPgCpMn2SYUK
-         Dg9zql8lOF7rzZg6VR6ucYdhVcEJ1qztqpbqeiDov0ofQaLvyZiYt0UNBYAFXvExid/r
-         +9CBJ1fUS5OAWlCepUWYmhOW9kNlA/fvCk3Mq/R5Q+goS6CobNSRQ552kVGQrzXGlf6i
-         Ee2gPuonBDlK0G7JQBa3HQlbKds3UQaxqABGqeyGQjckuiYdgQ9uBiFszPARGKdyCzOW
-         3aBA==
-X-Gm-Message-State: AOJu0YyyZdwC67BV2XRTnXVhwoEkiiuedrPozmLw1nw4J+dtjN7rtAYf
-	HBfjAmYTD6uP196JNuXfvGRkAZoeO/hgFvaiDFHr/rj/DOP1cPmP2vx4GHDO
-X-Google-Smtp-Source: AGHT+IHhspBqPfvWwv6SSkpc7V8epWSD0wcf3U15MGKGc4Q0R7wl5TG8qj+AumxZqiVkqFCOcNeNrQ==
-X-Received: by 2002:a6b:7502:0:b0:7cc:fbd:270f with SMTP id l2-20020a6b7502000000b007cc0fbd270fmr2565476ioh.6.1711115442039;
-        Fri, 22 Mar 2024 06:50:42 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::dd43])
-        by smtp.gmail.com with ESMTPSA id s21-20020a5eaa15000000b007d02d0b2d3dsm502203ioe.34.2024.03.22.06.50.41
+        bh=lYAFv6Z2WE6T2z9zhHB1zqeB+YtvozkHsR2EkTr3k64=;
+        b=ESWMMiIxMOEzr5c6N26CB5oi7ld7Drkl714Efhe0AY9aLHzkf5VVnwbux+MtDXCaYr
+         Ur2iVTvEO5G7wfwX8D9XZjWEI8yf2nyZMzd1gxL37DuFJl7j3M8+qF3c4BZv6jEu9rMH
+         KL5ZxUzejIZGkw3Fd5hORde19fBREoUj70jmrniLkR433DjD2ANwShmL99Oj1kAeyxjQ
+         /DOXiwqItDpm12MEayVvhSr0QF15ulW/u9u8FTg/AJBU2afL4AAYTvei0TVA+Atm9W5G
+         u52U/J1QjfeMrJ7gTgS38fBEFjM02FFX/E2tZ1JONYzni5Au1GkSAEmAI4mHCmfL5kHP
+         fdsg==
+X-Gm-Message-State: AOJu0YyhqMwR7d7K7/HRsX0lwO8WwVPWaNvFDoQWTCjOd76GWiL9mYK+
+	QJ47D71qSUINi9K2AIWlr+1wmy5uVLuqmISjicnuHtE00wr/MzsdeJl3hKVm
+X-Google-Smtp-Source: AGHT+IHIhgVtpBvtA6SNoCo9ufnHCgfU22CWtIpT2DA+zNu9bttHLkZPTIqAlV1p2GcDTY4NASN5TA==
+X-Received: by 2002:a05:6602:1b46:b0:7cf:3d3:7549 with SMTP id dl6-20020a0566021b4600b007cf03d37549mr133675iob.15.1711382210706;
+        Mon, 25 Mar 2024 08:56:50 -0700 (PDT)
+Received: from localhost.localdomain ([2601:282:4300:19e0::78ab])
+        by smtp.gmail.com with ESMTPSA id t23-20020a02ccb7000000b00476c56069e7sm2286260jap.105.2024.03.25.08.56.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 06:50:41 -0700 (PDT)
+        Mon, 25 Mar 2024 08:56:42 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] siggen: Add support for hashserve credentials
-Date: Fri, 22 Mar 2024 07:50:35 -0600
-Message-Id: <20240322135035.1113817-1-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] bitbake-hashclient: Warn on bad .netrc
+Date: Mon, 25 Mar 2024 09:56:32 -0600
+Message-Id: <20240325155632.2002975-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 22 Mar 2024 13:50:51 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16012
+ <bitbake-devel@lists.openembedded.org>; Mon, 25 Mar 2024 15:56:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16013
 
-Adds support for hashserver credentials to be specified in the
-SignatureGenerator
+If there is an error parsing .netrc, warn the user on stderr
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/bb/siggen.py | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ bitbake/bin/bitbake-hashclient | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index 3ab8431a089..2a0ecf57e16 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -535,23 +535,34 @@ class SignatureGeneratorUniHashMixIn(object):
-         # hashes to appear over time, but much less likely for them to
-         # disappear
-         self.unihash_exists_cache = set()
-+        self.username = None
-+        self.password = None
-         super().__init__(data)
+diff --git a/bitbake/bin/bitbake-hashclient b/bitbake/bin/bitbake-hashclient
+index 47dd27cd3c2..610787ed2b0 100755
+--- a/bitbake/bin/bitbake-hashclient
++++ b/bitbake/bin/bitbake-hashclient
+@@ -346,6 +346,8 @@ def main():
+                 login, _, password = auth
+         except FileNotFoundError:
+             pass
++        except netrc.NetrcParseError as e:
++            sys.stderr.write(f"Error parsing {e.filename}:{e.lineno}: {e.msg}\n")
  
-     def get_taskdata(self):
--        return (self.server, self.method, self.extramethod, self.max_parallel) + super().get_taskdata()
-+        return (self.server, self.method, self.extramethod, self.max_parallel, self.username, self.password) + super().get_taskdata()
- 
-     def set_taskdata(self, data):
--        self.server, self.method, self.extramethod, self.max_parallel = data[:4]
--        super().set_taskdata(data[4:])
-+        self.server, self.method, self.extramethod, self.max_parallel, self.username, self.password = data[:6]
-+        super().set_taskdata(data[6:])
-+
-+    def get_hashserv_creds(self):
-+        if self.username and self.password:
-+            return {
-+                "username": self.username,
-+                "password": self.password,
-+            }
-+
-+        return {}
- 
-     def client(self):
-         if getattr(self, '_client', None) is None:
--            self._client = hashserv.create_client(self.server)
-+            self._client = hashserv.create_client(self.server, **self.get_hashserv_creds())
-         return self._client
- 
-     def client_pool(self):
-         if getattr(self, '_client_pool', None) is None:
--            self._client_pool = hashserv.client.ClientPool(self.server, self.max_parallel)
-+            self._client_pool = hashserv.client.ClientPool(self.server, self.max_parallel, **self.get_hashserv_creds())
-         return self._client_pool
- 
-     def reset(self, data):
+     func = getattr(args, 'func', None)
+     if func:
 -- 
 2.34.1
 
