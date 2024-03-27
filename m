@@ -1,129 +1,142 @@
-Return-Path: <rustyhowell@gmail.com>
+Return-Path: <simone.p.weiss@posteo.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562A6C47DD9
-	for <webhook@archiver.kernel.org>; Wed, 27 Mar 2024 06:43:44 +0000 (UTC)
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
- by mx.groups.io with SMTP id smtpd.web11.31299.1711521823899268532
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBA0C54E67
+	for <webhook@archiver.kernel.org>; Wed, 27 Mar 2024 19:55:09 +0000 (UTC)
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+ by mx.groups.io with SMTP id smtpd.web10.3363.1711569306068279560
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 26 Mar 2024 23:43:43 -0700
+ Wed, 27 Mar 2024 12:55:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=cLb202JD;
- spf=pass (domain: gmail.com, ip: 209.85.214.174, mailfrom: rustyhowell@gmail.com)
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e00d1e13a2so40700405ad.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 26 Mar 2024 23:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711521823; x=1712126623; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fq+XEjQbdfWBCmjJQysgVIDAqaYffmlnUc5HIViOb1M=;
-        b=cLb202JDzPqAYFQZhTb0t+KqM/P640cj+DYMvh2MhDkam/H3qVgzl74qZGtpspKb7K
-         3uCBl68sJJfmKY6c6iobecqxCqVS6xwSl9Qi+pbdy6N8EK+A/A8y6wnMIU0eaS1IjjM1
-         bAdGwVB3MpyNX8vaejfFQbr3TSpI/1DA6Py4XZY+62Ru/81Oy+St4oh3TKIiCe78kqFr
-         +eNw16C+m5blQcgMrOH6nTiQrvVDP1FrjbJFBhu9jltMOnexsNJ5lLVUCxcC9agFp+HN
-         DOZ3mxZKSQLIrgH7GLtghB6QbyxWuYvJEWLoxIQ0KoE+kK2NXo156yItiSTQIUIIyKSi
-         AOzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711521823; x=1712126623;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Fq+XEjQbdfWBCmjJQysgVIDAqaYffmlnUc5HIViOb1M=;
-        b=JSRSONncXKKlU0qhPOuuPJhBY3dRTSQtUnNqmGfRZkpMW4G5kBOKKo/rJubfKvDvrc
-         ch6RBYoekzAo01yFr2YJJOU+iqzLA0hB0soMYnL+OzqA3vZyruUN5S4Sc8PPK9DvLmeV
-         g4DjzSRpZEtk0GzXsup4ZRyb/LZ40wfaaKbZI1nUPmAPfyQWrumdmaxGBy/KxbsmIe89
-         hsRLhXmWgk2g5nNtmREWtuZJk1GXlFddIH7tTm4qAs94B7hXjo07D3xyg54uRGy8zAJs
-         +5D7cdsiCskYlPVwT7FBntpTLa12sSWFVXw+f+GfglXguuSnBnJyr2IkYxksS786WuRH
-         ZcWA==
-X-Gm-Message-State: AOJu0YwYAzj6YVSgSyD/WGRvsCXmgP4M2uq4Po6sMoAj1NkLSWtQ/rsl
-	qoBkxseIRILgBWef5n98G6LrdmhBDVF400tGiVwuThCDhrWK2Qkd1O7wjWaE
-X-Google-Smtp-Source: AGHT+IEjZWVYHp8oksV2KH7m1X6FiSluVIH6P6bHlch8pkwwyWOc4JPrELEOyNzFLLl/nL21yvoweg==
-X-Received: by 2002:a17:903:1d1:b0:1e0:e6b4:76ab with SMTP id e17-20020a17090301d100b001e0e6b476abmr2556271plh.0.1711521822963;
-        Tue, 26 Mar 2024 23:43:42 -0700 (PDT)
-Received: from sirius.wirepathsystems.local ([2605:a601:a937:b200:4692:7e25:dd73:b0b])
-        by smtp.gmail.com with ESMTPSA id d15-20020a170902cecf00b001defd404efdsm5502747plg.13.2024.03.26.23.43.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 23:43:42 -0700 (PDT)
-From: Rusty Howell <rustyhowell@gmail.com>
+ dkim=fail reason="dkim: body hash did not verify" header.i=@posteo.com header.s=2017 header.b=PFjwX4Yf;
+ spf=pass (domain: posteo.com, ip: 185.67.36.65, mailfrom: simone.p.weiss@posteo.com)
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 048BE240027
+	for <bitbake-devel@lists.openembedded.org>; Wed, 27 Mar 2024 20:55:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.com; s=2017;
+	t=1711569304; bh=07h3Hz1IWmj2EV8yzkuucDJFg74SK3rTTkB9UwZETLY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=PFjwX4YfOwNYuw+MKkI14g/C7cR8iXigHMWnNMhltlPVbAonkEYWi5Un6kbqJ6PCf
+	 llSXHamps0YFIB4AeiTiSQEWsVVhLFhUBUskSYpJN2fL1SMCSySH/Tf06eSs/IBhsc
+	 QuyiEtUj1NXGFjfAkn1B1HC1AXMvl/p4TnLoTZdyP3OfTtxvQIpP+weFqhtmF49+rr
+	 t7QqlBY/rdkzeyurEws1ZTDhMc4EmQHMPYaLFMQqPQ6ifxsnXHiRkISfDRvuG4Cgqh
+	 fk/QJwlVemBCEiegqkWrCkKdUaikNy7Y+kZCUW98N9nuWotS5L2St721MH4ALyN7Qb
+	 6BF+cgO0zPVuA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4V4cpG5RbPz6tmv;
+	Wed, 27 Mar 2024 20:55:02 +0100 (CET)
+From: simone.p.weiss@posteo.com
 To: bitbake-devel@lists.openembedded.org
-Cc: Rusty Howell <rustyhowell@gmail.com>
-Subject: [PATCH] bitbake: bitbake-prserv: add nodaemon option
-Date: Wed, 27 Mar 2024 00:43:32 -0600
-Message-Id: <20240327064332.3381069-1-rustyhowell@gmail.com>
-X-Mailer: git-send-email 2.25.1
+Cc: =?UTF-8?q?Simone=20Wei=C3=9F?= <simone.p.weiss@posteo.com>
+Subject: [PATCH v2] bitbake-layers: add/remove option to not use tinfoil
+Date: Wed, 27 Mar 2024 19:54:10 +0000
+Message-Id: <20240327195409.8095-1-simone.p.weiss@posteo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 27 Mar 2024 06:43:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16016
+ <bitbake-devel@lists.openembedded.org>; Wed, 27 Mar 2024 19:55:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16017
 
-Add a --nodaemon option to the prserver so it stays in the foreground
-and does not fork and exit.
+From: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
 
-There are several reasons why one would prefer to run the prserver in the
-foreground and not as a daemon.  Systemd documentation indicates that non-forking
-processes are preferred over forking/daemonized ones. Other use cases include
-running the prserver in a docker container and put in a k8s cluster.
+Fixes [YOCTO #15417]
 
-Signed-off-by: Rusty Howell <rustyhowell@gmail.com>
+When a layer adds a new dependency after it was added to a conf, it can n=
+ot be
+removed w/o this dependency in the setup. Even the dependent layer can no=
+t be
+added, as the tinfoil setup will fail.
+Add an option to not perform the tinfoil at all, the use will be at own r=
+isk,
+i.e. the added layers might not parse properly afterwards.
+
+Signed-off-by: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
 ---
- bin/bitbake-prserv |  4 ++++
- lib/prserv/serv.py | 16 ++++++++++++++++
- 2 files changed, 20 insertions(+)
+v2: Rename option to be more meaningful.
+ bin/bitbake-layers     | 14 ++++++++++----
+ lib/bblayers/action.py |  6 ++++--
+ 2 files changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/bin/bitbake-prserv b/bin/bitbake-prserv
-index 5be42f3c..0d755fcb 100755
---- a/bin/bitbake-prserv
-+++ b/bin/bitbake-prserv
-@@ -32,6 +32,8 @@ def main():
-                       dest="logfile", type="string", default="prserv.log")
-     parser.add_option("--loglevel", help="logging level, i.e. CRITICAL, ERROR, WARNING, INFO, DEBUG",
-                       action = "store", type="string", dest="loglevel", default = "INFO")
-+    parser.add_option("--nodaemon", help="Run prserver in foreground",
-+                      action="store_true", dest="nodaemon")
-     parser.add_option("--start", help="start daemon",
-                       action="store_true", dest="start")
-     parser.add_option("--stop", help="stop daemon",
-@@ -50,6 +52,8 @@ def main():
-         ret=prserv.serv.start_daemon(options.dbfile, options.host, options.port,os.path.abspath(options.logfile), options.read_only)
-     elif options.stop:
-         ret=prserv.serv.stop_daemon(options.host, options.port)
-+    elif options.nodaemon:
-+        ret=prserv.serv.start_nodaemon(options.dbfile, options.host, options.port, options.read_only)
-     else:
-         ret=parser.print_help()
-     return ret
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index 5fc8863f..111e6e9f 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -207,6 +207,22 @@ def run_as_daemon(func, pidfile, logfile):
-     os.remove(pidfile)
-     os._exit(0)
- 
-+
-+def start_nodaemon(dbfile, host, port, read_only=False):
-+    ip = socket.gethostbyname(host)
-+    dbfile = os.path.abspath(dbfile)
-+    # Ensure logging makes it to the logfile
-+    streamhandler = logging.StreamHandler()
-+    streamhandler.setLevel(logging.DEBUG)
-+    formatter = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
-+    streamhandler.setFormatter(formatter)
-+    logger.addHandler(streamhandler)
-+
-+    server = PRServer(dbfile, read_only=read_only)
-+    server.start_tcp_server(ip, port)
-+    server.serve_forever()
-+
-+
- def start_daemon(dbfile, host, port, logfile, read_only=False):
-     ip = socket.gethostbyname(host)
-     pidfile = PIDPREFIX % (ip, port)
--- 
-2.25.1
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index d4b1d1aa..f7ed5ce0 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -34,6 +34,7 @@ def main():
+     parser.add_argument('-d', '--debug', help=3D'Enable debug output', a=
+ction=3D'store_true')
+     parser.add_argument('-q', '--quiet', help=3D'Print only errors', act=
+ion=3D'store_true')
+     parser.add_argument('-F', '--force', help=3D'Force add without recip=
+e parse verification', action=3D'store_true')
++    parser.add_argument('-S', '--skip_parse_tests', help=3D'Force run wi=
+thout parsing the layers, this might cause later failures.', action=3D'st=
+ore_true')
+     parser.add_argument('--color', choices=3D['auto', 'always', 'never']=
+, default=3D'auto', help=3D'Colorize output (where %(metavar)s is %(choic=
+es)s)', metavar=3D'COLOR')
+=20
+     global_args, unparsed_args =3D parser.parse_known_args()
+@@ -59,16 +60,21 @@ def main():
+     plugins =3D []
+     tinfoil =3D bb.tinfoil.Tinfoil(tracking=3DTrue)
+     tinfoil.logger.setLevel(logger.getEffectiveLevel())
+-    try:
++    if global_args.skip_parse_tests:
++        bbpath_string =3D []
++    else:
+         tinfoil.prepare(True)
+-        for path in ([topdir] +
+-                    tinfoil.config_data.getVar('BBPATH').split(':')):
++        bbpath_string =3D tinfoil.config_data.getVar('BBPATH').split(':'=
+)
++        print(bbpath_string)
++   =20
++    try:=20
++        for path in ([topdir] + bbpath_string):
+             pluginpath =3D os.path.join(path, 'lib', 'bblayers')
+             bb.utils.load_plugins(logger, plugins, pluginpath)
+=20
+         registered =3D False
+         for plugin in plugins:
+-            if hasattr(plugin, 'tinfoil_init'):
++            if hasattr(plugin, 'tinfoil_init') and not global_args.skip_=
+parse_tests:
+                 plugin.tinfoil_init(tinfoil)
+             if hasattr(plugin, 'register_commands'):
+                 registered =3D True
+diff --git a/lib/bblayers/action.py b/lib/bblayers/action.py
+index a8f26993..5aecc452 100644
+--- a/lib/bblayers/action.py
++++ b/lib/bblayers/action.py
+@@ -50,8 +50,8 @@ class ActionPlugin(LayerPlugin):
+=20
+         try:
+             notadded, _ =3D bb.utils.edit_bblayers_conf(bblayers_conf, l=
+ayerdirs, None)
+-            self.tinfoil.modified_files()
+-            if not (args.force or notadded):
++            if not (args.force or notadded or args.skip_parse_tests):
++                self.tinfoil.modified_files()
+                 try:
+                     self.tinfoil.run_command('parseConfiguration')
+                 except (bb.tinfoil.TinfoilUIException, bb.BBHandledExcep=
+tion):
+@@ -83,6 +83,8 @@ class ActionPlugin(LayerPlugin):
+                 layerdir =3D os.path.abspath(item)
+             layerdirs.append(layerdir)
+         (_, notremoved) =3D bb.utils.edit_bblayers_conf(bblayers_conf, N=
+one, layerdirs)
++        if args.skip_parse_tests:
++            return 0
+         self.tinfoil.modified_files()
+         if notremoved:
+             for item in notremoved:
+--=20
+2.39.2
 
 
