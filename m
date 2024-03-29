@@ -2,37 +2,37 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27D9CD1290
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47B8C6FD1F
 	for <webhook@archiver.kernel.org>; Fri, 29 Mar 2024 14:40:28 +0000 (UTC)
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
- by mx.groups.io with SMTP id smtpd.web11.30.1711723226900425625
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+ by mx.groups.io with SMTP id smtpd.web11.29.1711723226797452240
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 29 Mar 2024 07:40:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=iRBZlO0r;
- spf=pass (domain: bootlin.com, ip: 217.70.183.197, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DAB491C0004;
-	Fri, 29 Mar 2024 14:40:24 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=HSJQZWtJ;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4E6CA1BF208;
+	Fri, 29 Mar 2024 14:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
 	t=1711723225;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kIqlDTmbuOku3ZrgLpiHPjTlKJMFSBs+xT4l136LKwo=;
-	b=iRBZlO0rClYSW9J+w40ja/E90zn1oKJb1wYF/8be6ggPpDGIzPHTl4TPfjxMxc8c4aBG8g
-	8t4vLh0+Z14i10Z8ew6TLoE0OVo9GH+mCYvEMMVZS4yoKRopI3JZ8KeFvcxA1+RsE32ccW
-	EmhmxGmJlDZwWIG24jd5YuER+gNChikZNaswKTcNdxjfX4nUEtpftJ9JAszckEaR4FqOtB
-	QUDfVE7VGyb1tbC7cepmzZKqZbEhKgvqw8g2OIaj5Ve8aRQL2AyBrqqZfaC5wt7e4lglwa
-	74dhs9z9Z+DSDsgi/ahZNlqIRxE3fDJu4ndrCB+Deyxz9escB9YQM+Is4Id50A==
+	bh=jIi0PgcRS/G7nxYlWgyv44S0FvzjWMMYTYeBCYU6K9Q=;
+	b=HSJQZWtJfe3TiE+wyeEpg6G1jHBL31LT6fTmRzrSovTbWDIH6SHNc86iE+Y0FSjXXQxb5z
+	miE1kzrDzjPZA8ndgkJ10pImq7geSB+Q/w4U0IfFYEu+n4Xh8jyjO/VJfBFoHNWOkKq42K
+	vAtL2mpHEuKnqGMHR5zx2/E74xZIlvEIA4pBhSPcoX71cRK5kmUaHML1aDxbVXtXE5D/6Z
+	x7cnedklsm799OsSOqa0Vfz/1frbFXHefiG5v+LyXJ6wCBToa2cZXTcbzarF+rVw/Hm9zS
+	CPB6icCxUW/qywlaAy7a+QY1jdlNKrmoh/TcFjOHNYIAJNZDuVhbrinROA4AQQ==
 From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
 Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
 	Joshua Watt <JPEWhacker@gmail.com>,
 	Tim Orling <ticotimo@gmail.com>
-Subject: [PATCH 05/12] asyncrpc: include parse_address from hashserv
-Date: Fri, 29 Mar 2024 15:39:49 +0100
-Message-Id: <20240329143956.1602707-6-michael.opdenacker@bootlin.com>
+Subject: [PATCH 06/12] prserv: capitalization and spacing improvements
+Date: Fri, 29 Mar 2024 15:39:50 +0100
+Message-Id: <20240329143956.1602707-7-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240329143956.1602707-1-michael.opdenacker@bootlin.com>
 References: <20240329143956.1602707-1-michael.opdenacker@bootlin.com>
@@ -43,106 +43,255 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 29 Mar 2024 14:40:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16028
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16027
 
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-Moving the code and related definitions from
-hashserv/__init__.py to asyncrpc/client.py,
-allowing this function to be used in other asyncrpc clients.
+Choosing only one style of capitalization
+Add extra space after some commas too
+Remove idle spaces
 
 Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Suggested-by: Joshua Watt <JPEWhacker@gmail.com>
+Cc: Joshua Watt <JPEWhacker@gmail.com>
 Cc: Tim Orling <ticotimo@gmail.com>
 ---
- lib/bb/asyncrpc/client.py | 23 +++++++++++++++++++++++
- lib/hashserv/__init__.py  | 27 +--------------------------
- 2 files changed, 24 insertions(+), 26 deletions(-)
+ lib/prserv/__init__.py |  2 +-
+ lib/prserv/db.py       | 56 +++++++++++++++++++++---------------------
+ lib/prserv/serv.py     | 10 ++++----
+ 3 files changed, 34 insertions(+), 34 deletions(-)
 
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-index 29a5ab76aa..a350b4fb12 100644
---- a/lib/bb/asyncrpc/client.py
-+++ b/lib/bb/asyncrpc/client.py
-@@ -10,11 +10,34 @@ import json
- import os
- import socket
- import sys
-+import re
- import contextlib
- from threading import Thread
- from .connection import StreamConnection, WebsocketConnection, DEFAULT_MAX_CHUNK
- from .exceptions import ConnectionClosedError, InvokeError
+diff --git a/lib/prserv/__init__.py b/lib/prserv/__init__.py
+index 5790a8db1e..0e0aa34d0e 100644
+--- a/lib/prserv/__init__.py
++++ b/lib/prserv/__init__.py
+@@ -7,7 +7,7 @@
+ __version__ = "1.0.0"
  
-+UNIX_PREFIX = "unix://"
-+WS_PREFIX = "ws://"
-+WSS_PREFIX = "wss://"
-+
-+ADDR_TYPE_UNIX = 0
-+ADDR_TYPE_TCP = 1
-+ADDR_TYPE_WS = 2
-+
-+def parse_address(addr):
-+    if addr.startswith(UNIX_PREFIX):
-+        return (ADDR_TYPE_UNIX, (addr[len(UNIX_PREFIX) :],))
-+    elif addr.startswith(WS_PREFIX) or addr.startswith(WSS_PREFIX):
-+        return (ADDR_TYPE_WS, (addr,))
-+    else:
-+        m = re.match(r"\[(?P<host>[^\]]*)\]:(?P<port>\d+)$", addr)
-+        if m is not None:
-+            host = m.group("host")
-+            port = m.group("port")
-+        else:
-+            host, port = addr.split(":")
-+
-+        return (ADDR_TYPE_TCP, (host, int(port)))
+ import os, time
+-import sys,logging
++import sys, logging
  
- class AsyncClient(object):
-     def __init__(
-diff --git a/lib/hashserv/__init__.py b/lib/hashserv/__init__.py
-index 552a33278f..74367eb6b4 100644
---- a/lib/hashserv/__init__.py
-+++ b/lib/hashserv/__init__.py
-@@ -5,39 +5,14 @@
+ def init_logger(logfile, loglevel):
+     numeric_level = getattr(logging, loglevel.upper(), None)
+diff --git a/lib/prserv/db.py b/lib/prserv/db.py
+index 0859cf4f2c..7bc2b2dc2d 100644
+--- a/lib/prserv/db.py
++++ b/lib/prserv/db.py
+@@ -38,9 +38,9 @@ class PRTable(object):
+         self.read_only = read_only
+         self.dirty = False
+         if nohist:
+-            self.table = "%s_nohist" % table 
++            self.table = "%s_nohist" % table
+         else:
+-            self.table = "%s_hist" % table 
++            self.table = "%s_hist" % table
  
- import asyncio
- from contextlib import closing
--import re
- import itertools
- import json
- from collections import namedtuple
- from urllib.parse import urlparse
--
--UNIX_PREFIX = "unix://"
--WS_PREFIX = "ws://"
--WSS_PREFIX = "wss://"
--
--ADDR_TYPE_UNIX = 0
--ADDR_TYPE_TCP = 1
--ADDR_TYPE_WS = 2
-+from bb.asyncrpc.client import parse_address, ADDR_TYPE_UNIX, ADDR_TYPE_WS
+         if self.read_only:
+             table_exists = self._execute(
+@@ -78,7 +78,7 @@ class PRTable(object):
+             self.sync()
+             self.dirty = False
  
- User = namedtuple("User", ("username", "permissions"))
+-    def _getValueHist(self, version, pkgarch, checksum):
++    def _get_value_hist(self, version, pkgarch, checksum):
+         data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
+                            (version, pkgarch, checksum))
+         row=data.fetchone()
+@@ -87,7 +87,7 @@ class PRTable(object):
+         else:
+             #no value found, try to insert
+             if self.read_only:
+-                data = self._execute("SELECT ifnull(max(value)+1,0) FROM %s where version=? AND pkgarch=?;" % (self.table),
++                data = self._execute("SELECT ifnull(max(value)+1, 0) FROM %s where version=? AND pkgarch=?;" % (self.table),
+                                    (version, pkgarch))
+                 row = data.fetchone()
+                 if row is not None:
+@@ -96,9 +96,9 @@ class PRTable(object):
+                     return 0
  
--
--def parse_address(addr):
--    if addr.startswith(UNIX_PREFIX):
--        return (ADDR_TYPE_UNIX, (addr[len(UNIX_PREFIX) :],))
--    elif addr.startswith(WS_PREFIX) or addr.startswith(WSS_PREFIX):
--        return (ADDR_TYPE_WS, (addr,))
--    else:
--        m = re.match(r"\[(?P<host>[^\]]*)\]:(?P<port>\d+)$", addr)
--        if m is not None:
--            host = m.group("host")
--            port = m.group("port")
--        else:
--            host, port = addr.split(":")
--
--        return (ADDR_TYPE_TCP, (host, int(port)))
--
--
- def create_server(
-     addr,
-     dbname,
+             try:
+-                self._execute("INSERT INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1,0) from %s where version=? AND pkgarch=?));"
+-                           % (self.table,self.table),
+-                           (version,pkgarch, checksum,version, pkgarch))
++                self._execute("INSERT INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1, 0) from %s where version=? AND pkgarch=?));"
++                           % (self.table, self.table),
++                           (version, pkgarch, checksum, version, pkgarch))
+             except sqlite3.IntegrityError as exc:
+                 logger.error(str(exc))
+ 
+@@ -112,10 +112,10 @@ class PRTable(object):
+             else:
+                 raise prserv.NotFoundError
+ 
+-    def _getValueNohist(self, version, pkgarch, checksum):
++    def _get_value_no_hist(self, version, pkgarch, checksum):
+         data=self._execute("SELECT value FROM %s \
+                             WHERE version=? AND pkgarch=? AND checksum=? AND \
+-                            value >= (select max(value) from %s where version=? AND pkgarch=?);" 
++                            value >= (select max(value) from %s where version=? AND pkgarch=?);"
+                             % (self.table, self.table),
+                             (version, pkgarch, checksum, version, pkgarch))
+         row=data.fetchone()
+@@ -124,7 +124,7 @@ class PRTable(object):
+         else:
+             #no value found, try to insert
+             if self.read_only:
+-                data = self._execute("SELECT ifnull(max(value)+1,0) FROM %s where version=? AND pkgarch=?;" % (self.table),
++                data = self._execute("SELECT ifnull(max(value)+1, 0) FROM %s where version=? AND pkgarch=?;" % (self.table),
+                                    (version, pkgarch))
+                 row = data.fetchone()
+                 if row is not None:
+@@ -133,8 +133,8 @@ class PRTable(object):
+                     return 0
+ 
+             try:
+-                self._execute("INSERT OR REPLACE INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1,0) from %s where version=? AND pkgarch=?));"
+-                               % (self.table,self.table),
++                self._execute("INSERT OR REPLACE INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1, 0) from %s where version=? AND pkgarch=?));"
++                               % (self.table, self.table),
+                                (version, pkgarch, checksum, version, pkgarch))
+             except sqlite3.IntegrityError as exc:
+                 logger.error(str(exc))
+@@ -150,17 +150,17 @@ class PRTable(object):
+             else:
+                 raise prserv.NotFoundError
+ 
+-    def getValue(self, version, pkgarch, checksum):
++    def get_value(self, version, pkgarch, checksum):
+         if self.nohist:
+-            return self._getValueNohist(version, pkgarch, checksum)
++            return self._get_value_no_hist(version, pkgarch, checksum)
+         else:
+-            return self._getValueHist(version, pkgarch, checksum)
++            return self._get_value_hist(version, pkgarch, checksum)
+ 
+-    def _importHist(self, version, pkgarch, checksum, value):
++    def _import_hist(self, version, pkgarch, checksum, value):
+         if self.read_only:
+             return None
+ 
+-        val = None 
++        val = None
+         data = self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
+                            (version, pkgarch, checksum))
+         row = data.fetchone()
+@@ -183,27 +183,27 @@ class PRTable(object):
+                 val = row[0]
+         return val
+ 
+-    def _importNohist(self, version, pkgarch, checksum, value):
++    def _import_no_hist(self, version, pkgarch, checksum, value):
+         if self.read_only:
+             return None
+ 
+         try:
+             #try to insert
+             self._execute("INSERT INTO %s VALUES (?, ?, ?, ?);"  % (self.table),
+-                           (version, pkgarch, checksum,value))
++                           (version, pkgarch, checksum, value))
+         except sqlite3.IntegrityError as exc:
+             #already have the record, try to update
+             try:
+-                self._execute("UPDATE %s SET value=? WHERE version=? AND pkgarch=? AND checksum=? AND value<?"  
++                self._execute("UPDATE %s SET value=? WHERE version=? AND pkgarch=? AND checksum=? AND value<?"
+                               % (self.table),
+-                               (value,version,pkgarch,checksum,value))
++                               (value, version, pkgarch, checksum, value))
+             except sqlite3.IntegrityError as exc:
+                 logger.error(str(exc))
+ 
+         self.dirty = True
+ 
+         data = self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=? AND value>=?;" % self.table,
+-                            (version,pkgarch,checksum,value))
++                            (version, pkgarch, checksum, value))
+         row=data.fetchone()
+         if row is not None:
+             return row[0]
+@@ -212,13 +212,13 @@ class PRTable(object):
+ 
+     def importone(self, version, pkgarch, checksum, value):
+         if self.nohist:
+-            return self._importNohist(version, pkgarch, checksum, value)
++            return self._import_no_hist(version, pkgarch, checksum, value)
+         else:
+-            return self._importHist(version, pkgarch, checksum, value)
++            return self._import_hist(version, pkgarch, checksum, value)
+ 
+     def export(self, version, pkgarch, checksum, colinfo):
+         metainfo = {}
+-        #column info 
++        #column info
+         if colinfo:
+             metainfo["tbl_name"] = self.table
+             metainfo["core_ver"] = prserv.__version__
+@@ -238,7 +238,7 @@ class PRTable(object):
+ 
+         if self.nohist:
+             sqlstmt = "SELECT T1.version, T1.pkgarch, T1.checksum, T1.value FROM %s as T1, \
+-                    (SELECT version,pkgarch,max(value) as maxvalue FROM %s GROUP BY version,pkgarch) as T2 \
++                    (SELECT version, pkgarch, max(value) as maxvalue FROM %s GROUP BY version, pkgarch) as T2 \
+                     WHERE T1.version=T2.version AND T1.pkgarch=T2.pkgarch AND T1.value=T2.maxvalue " % (self.table, self.table)
+         else:
+             sqlstmt = "SELECT * FROM %s as T1 WHERE 1=1 " % self.table
+@@ -302,7 +302,7 @@ class PRData(object):
+     def disconnect(self):
+         self.connection.close()
+ 
+-    def __getitem__(self,tblname):
++    def __getitem__(self, tblname):
+         if not isinstance(tblname, str):
+             raise TypeError("tblname argument must be a string, not '%s'" %
+                             type(tblname))
+@@ -316,4 +316,4 @@ class PRData(object):
+         if tblname in self._tables:
+             del self._tables[tblname]
+         logger.info("drop table %s" % (tblname))
+-        self.connection.execute("DROP TABLE IF EXISTS %s;" % tblname) 
++        self.connection.execute("DROP TABLE IF EXISTS %s;" % tblname)
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index eafa76673c..242cd11a5a 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -50,7 +50,7 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+ 
+         response = None
+         try:
+-            value = self.server.table.getValue(version, pkgarch, checksum)
++            value = self.server.table.get_value(version, pkgarch, checksum)
+             response = {"value": value}
+         except prserv.NotFoundError:
+             self.logger.error("can not find value for (%s, %s)",version, checksum)
+@@ -173,16 +173,16 @@ def run_as_daemon(func, pidfile, logfile):
+     # potentially hanging on a pipe. Handle both cases.
+     si = open("/dev/null", "r")
+     try:
+-        os.dup2(si.fileno(),sys.stdin.fileno())
++        os.dup2(si.fileno(), sys.stdin.fileno())
+     except (AttributeError, io.UnsupportedOperation):
+         sys.stdin = si
+     so = open(logfile, "a+")
+     try:
+-        os.dup2(so.fileno(),sys.stdout.fileno())
++        os.dup2(so.fileno(), sys.stdout.fileno())
+     except (AttributeError, io.UnsupportedOperation):
+         sys.stdout = so
+     try:
+-        os.dup2(so.fileno(),sys.stderr.fileno())
++        os.dup2(so.fileno(), sys.stderr.fileno())
+     except (AttributeError, io.UnsupportedOperation):
+         sys.stderr = so
+ 
+@@ -253,7 +253,7 @@ def stop_daemon(host, port):
+             portstr = "Wrong port? Other ports listening at %s: %s" % (host, " ".join(ports))
+ 
+         sys.stderr.write("pidfile %s does not exist. Daemon not running? %s\n"
+-                         % (pidfile,portstr))
++                         % (pidfile, portstr))
+         return 1
+ 
+     try:
 -- 
 2.34.1
 
