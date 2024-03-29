@@ -2,37 +2,37 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47B8C6FD1F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E29CD1291
 	for <webhook@archiver.kernel.org>; Fri, 29 Mar 2024 14:40:28 +0000 (UTC)
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
- by mx.groups.io with SMTP id smtpd.web11.29.1711723226797452240
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+ by mx.groups.io with SMTP id smtpd.web11.25.1711723225272335395
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 29 Mar 2024 07:40:27 -0700
+ Fri, 29 Mar 2024 07:40:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=HSJQZWtJ;
- spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4E6CA1BF208;
-	Fri, 29 Mar 2024 14:40:25 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=fc0blRhq;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4DEE7C0005;
+	Fri, 29 Mar 2024 14:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711723225;
+	t=1711723223;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jIi0PgcRS/G7nxYlWgyv44S0FvzjWMMYTYeBCYU6K9Q=;
-	b=HSJQZWtJfe3TiE+wyeEpg6G1jHBL31LT6fTmRzrSovTbWDIH6SHNc86iE+Y0FSjXXQxb5z
-	miE1kzrDzjPZA8ndgkJ10pImq7geSB+Q/w4U0IfFYEu+n4Xh8jyjO/VJfBFoHNWOkKq42K
-	vAtL2mpHEuKnqGMHR5zx2/E74xZIlvEIA4pBhSPcoX71cRK5kmUaHML1aDxbVXtXE5D/6Z
-	x7cnedklsm799OsSOqa0Vfz/1frbFXHefiG5v+LyXJ6wCBToa2cZXTcbzarF+rVw/Hm9zS
-	CPB6icCxUW/qywlaAy7a+QY1jdlNKrmoh/TcFjOHNYIAJNZDuVhbrinROA4AQQ==
+	bh=xHnx3AYMKTLPfPEJ1mMEUn5TKsr/3wVscnGR7vucOkI=;
+	b=fc0blRhqQaaaQCZrAXsxwvEdhfsQU+JgncPB1VSVIcj+/WquASHCc5qomENugXXWXTNPUL
+	oPDtw5aGMGVnVAXK9ynfS8qPS3PUiMPrtOyfAYz/Qn21Zpnil5EAoEfpdgyGwhCNFizc0y
+	Xz/oBRXFMNpfsuQFl0W0QFBFiHNX17r4RVjVRT2UWmkd3LpSizJA/QKlLGhFgiWfHsoeAu
+	qjaIZ4MkvC5z/9fqfI8KCC/lwetPc2+7Yf1MwfWCDeQilmnKb/oMMrZQ0k09CIzsAl+hhl
+	48pzP5ysgukn54/sSb+pOROjNFfk3+2L1uDieVhxANYkDFHfeiflO/OTXSGwGQ==
 From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
 Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
 	Joshua Watt <JPEWhacker@gmail.com>,
 	Tim Orling <ticotimo@gmail.com>
-Subject: [PATCH 06/12] prserv: capitalization and spacing improvements
-Date: Fri, 29 Mar 2024 15:39:50 +0100
-Message-Id: <20240329143956.1602707-7-michael.opdenacker@bootlin.com>
+Subject: [PATCH 03/12] bitbake-prserv: replace deprecated optparse by argparse
+Date: Fri, 29 Mar 2024 15:39:47 +0100
+Message-Id: <20240329143956.1602707-4-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240329143956.1602707-1-michael.opdenacker@bootlin.com>
 References: <20240329143956.1602707-1-michael.opdenacker@bootlin.com>
@@ -43,255 +43,134 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 29 Mar 2024 14:40:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16027
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16025
 
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-Choosing only one style of capitalization
-Add extra space after some commas too
-Remove idle spaces
+optparse is deprecated since Python 2.7
+
+Note that this is neither supposed to change the options
+supported by bitbake-prserv nor the way they are interpreted.
+
+Note that in the "--help" output, long options are now reported
+for example as "--host HOST" instead of "--host=HOST" but
+both are equivalent anyway, as they already were with optparse.
 
 Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 Cc: Joshua Watt <JPEWhacker@gmail.com>
 Cc: Tim Orling <ticotimo@gmail.com>
 ---
- lib/prserv/__init__.py |  2 +-
- lib/prserv/db.py       | 56 +++++++++++++++++++++---------------------
- lib/prserv/serv.py     | 10 ++++----
- 3 files changed, 34 insertions(+), 34 deletions(-)
+ bin/bitbake-prserv | 82 +++++++++++++++++++++++++++++++---------------
+ 1 file changed, 55 insertions(+), 27 deletions(-)
 
-diff --git a/lib/prserv/__init__.py b/lib/prserv/__init__.py
-index 5790a8db1e..0e0aa34d0e 100644
---- a/lib/prserv/__init__.py
-+++ b/lib/prserv/__init__.py
+diff --git a/bin/bitbake-prserv b/bin/bitbake-prserv
+index 8c3808fb20..ad0a069401 100755
+--- a/bin/bitbake-prserv
++++ b/bin/bitbake-prserv
 @@ -7,7 +7,7 @@
- __version__ = "1.0.0"
  
- import os, time
--import sys,logging
-+import sys, logging
+ import os
+ import sys,logging
+-import optparse
++import argparse
+ import warnings
+ warnings.simplefilter("default")
  
- def init_logger(logfile, loglevel):
-     numeric_level = getattr(logging, loglevel.upper(), None)
-diff --git a/lib/prserv/db.py b/lib/prserv/db.py
-index 0859cf4f2c..7bc2b2dc2d 100644
---- a/lib/prserv/db.py
-+++ b/lib/prserv/db.py
-@@ -38,9 +38,9 @@ class PRTable(object):
-         self.read_only = read_only
-         self.dirty = False
-         if nohist:
--            self.table = "%s_nohist" % table 
-+            self.table = "%s_nohist" % table
-         else:
--            self.table = "%s_hist" % table 
-+            self.table = "%s_hist" % table
+@@ -16,40 +16,68 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "lib
+ import prserv
+ import prserv.serv
  
-         if self.read_only:
-             table_exists = self._execute(
-@@ -78,7 +78,7 @@ class PRTable(object):
-             self.sync()
-             self.dirty = False
+-__version__="1.0.0"
++VERSION = "1.1.0"
  
--    def _getValueHist(self, version, pkgarch, checksum):
-+    def _get_value_hist(self, version, pkgarch, checksum):
-         data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
-                            (version, pkgarch, checksum))
-         row=data.fetchone()
-@@ -87,7 +87,7 @@ class PRTable(object):
-         else:
-             #no value found, try to insert
-             if self.read_only:
--                data = self._execute("SELECT ifnull(max(value)+1,0) FROM %s where version=? AND pkgarch=?;" % (self.table),
-+                data = self._execute("SELECT ifnull(max(value)+1, 0) FROM %s where version=? AND pkgarch=?;" % (self.table),
-                                    (version, pkgarch))
-                 row = data.fetchone()
-                 if row is not None:
-@@ -96,9 +96,9 @@ class PRTable(object):
-                     return 0
+ PRHOST_DEFAULT="0.0.0.0"
+ PRPORT_DEFAULT=8585
  
-             try:
--                self._execute("INSERT INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1,0) from %s where version=? AND pkgarch=?));"
--                           % (self.table,self.table),
--                           (version,pkgarch, checksum,version, pkgarch))
-+                self._execute("INSERT INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1, 0) from %s where version=? AND pkgarch=?));"
-+                           % (self.table, self.table),
-+                           (version, pkgarch, checksum, version, pkgarch))
-             except sqlite3.IntegrityError as exc:
-                 logger.error(str(exc))
+ def main():
+-    parser = optparse.OptionParser(
+-        version="Bitbake PR Service Core version %s, %%prog version %s" % (prserv.__version__, __version__),
+-        usage = "%prog < --start | --stop > [options]")
++    parser = argparse.ArgumentParser(
++        description="BitBake PR Server. Version=%s" % VERSION,
++        formatter_class=argparse.RawTextHelpFormatter)
  
-@@ -112,10 +112,10 @@ class PRTable(object):
-             else:
-                 raise prserv.NotFoundError
+-    parser.add_option("-f", "--file", help="database filename(default: prserv.sqlite3)", action="store",
+-                      dest="dbfile", type="string", default="prserv.sqlite3")
+-    parser.add_option("-l", "--log", help="log filename(default: prserv.log)", action="store",
+-                      dest="logfile", type="string", default="prserv.log")
+-    parser.add_option("--loglevel", help="logging level, i.e. CRITICAL, ERROR, WARNING, INFO, DEBUG",
+-                      action = "store", type="string", dest="loglevel", default = "INFO")
+-    parser.add_option("--start", help="start daemon",
+-                      action="store_true", dest="start")
+-    parser.add_option("--stop", help="stop daemon",
+-                      action="store_true", dest="stop")
+-    parser.add_option("--host", help="ip address to bind", action="store",
+-                      dest="host", type="string", default=PRHOST_DEFAULT)
+-    parser.add_option("--port", help="port number(default: 8585)", action="store",
+-                      dest="port", type="int", default=PRPORT_DEFAULT)
+-    parser.add_option("-r", "--read-only", help="open database in read-only mode",
+-                      action="store_true")
++    parser.add_argument(
++        "-f",
++        "--file",
++        default="prserv.sqlite3",
++        help="database filename (default: prserv.sqlite3)",
++    )
++    parser.add_argument(
++        "-l",
++        "--log",
++        default="prserv.log",
++        help="log filename(default: prserv.log)",
++    )
++    parser.add_argument(
++        "--loglevel",
++        default="INFO",
++        help="logging level, i.e. CRITICAL, ERROR, WARNING, INFO, DEBUG",
++    )
++    parser.add_argument(
++        "--start",
++        action="store_true",
++        help="start daemon",
++    )
++    parser.add_argument(
++        "--stop",
++        action="store_true",
++        help="stop daemon",
++    )
++    parser.add_argument(
++        "--host",
++        help="ip address to bind",
++        default=PRHOST_DEFAULT,
++    )
++    parser.add_argument(
++        "--port",
++        type=int,
++        default=PRPORT_DEFAULT,
++        help="port number (default: 8585)",
++    )
++    parser.add_argument(
++        "-r",
++        "--read-only",
++        action="store_true",
++        help="open database in read-only mode",
++    )
  
--    def _getValueNohist(self, version, pkgarch, checksum):
-+    def _get_value_no_hist(self, version, pkgarch, checksum):
-         data=self._execute("SELECT value FROM %s \
-                             WHERE version=? AND pkgarch=? AND checksum=? AND \
--                            value >= (select max(value) from %s where version=? AND pkgarch=?);" 
-+                            value >= (select max(value) from %s where version=? AND pkgarch=?);"
-                             % (self.table, self.table),
-                             (version, pkgarch, checksum, version, pkgarch))
-         row=data.fetchone()
-@@ -124,7 +124,7 @@ class PRTable(object):
-         else:
-             #no value found, try to insert
-             if self.read_only:
--                data = self._execute("SELECT ifnull(max(value)+1,0) FROM %s where version=? AND pkgarch=?;" % (self.table),
-+                data = self._execute("SELECT ifnull(max(value)+1, 0) FROM %s where version=? AND pkgarch=?;" % (self.table),
-                                    (version, pkgarch))
-                 row = data.fetchone()
-                 if row is not None:
-@@ -133,8 +133,8 @@ class PRTable(object):
-                     return 0
+-    options, args = parser.parse_args(sys.argv)
+-    prserv.init_logger(os.path.abspath(options.logfile),options.loglevel)
++    args = parser.parse_args()
++    prserv.init_logger(os.path.abspath(args.log), args.loglevel)
  
-             try:
--                self._execute("INSERT OR REPLACE INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1,0) from %s where version=? AND pkgarch=?));"
--                               % (self.table,self.table),
-+                self._execute("INSERT OR REPLACE INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1, 0) from %s where version=? AND pkgarch=?));"
-+                               % (self.table, self.table),
-                                (version, pkgarch, checksum, version, pkgarch))
-             except sqlite3.IntegrityError as exc:
-                 logger.error(str(exc))
-@@ -150,17 +150,17 @@ class PRTable(object):
-             else:
-                 raise prserv.NotFoundError
- 
--    def getValue(self, version, pkgarch, checksum):
-+    def get_value(self, version, pkgarch, checksum):
-         if self.nohist:
--            return self._getValueNohist(version, pkgarch, checksum)
-+            return self._get_value_no_hist(version, pkgarch, checksum)
-         else:
--            return self._getValueHist(version, pkgarch, checksum)
-+            return self._get_value_hist(version, pkgarch, checksum)
- 
--    def _importHist(self, version, pkgarch, checksum, value):
-+    def _import_hist(self, version, pkgarch, checksum, value):
-         if self.read_only:
-             return None
- 
--        val = None 
-+        val = None
-         data = self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
-                            (version, pkgarch, checksum))
-         row = data.fetchone()
-@@ -183,27 +183,27 @@ class PRTable(object):
-                 val = row[0]
-         return val
- 
--    def _importNohist(self, version, pkgarch, checksum, value):
-+    def _import_no_hist(self, version, pkgarch, checksum, value):
-         if self.read_only:
-             return None
- 
-         try:
-             #try to insert
-             self._execute("INSERT INTO %s VALUES (?, ?, ?, ?);"  % (self.table),
--                           (version, pkgarch, checksum,value))
-+                           (version, pkgarch, checksum, value))
-         except sqlite3.IntegrityError as exc:
-             #already have the record, try to update
-             try:
--                self._execute("UPDATE %s SET value=? WHERE version=? AND pkgarch=? AND checksum=? AND value<?"  
-+                self._execute("UPDATE %s SET value=? WHERE version=? AND pkgarch=? AND checksum=? AND value<?"
-                               % (self.table),
--                               (value,version,pkgarch,checksum,value))
-+                               (value, version, pkgarch, checksum, value))
-             except sqlite3.IntegrityError as exc:
-                 logger.error(str(exc))
- 
-         self.dirty = True
- 
-         data = self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=? AND value>=?;" % self.table,
--                            (version,pkgarch,checksum,value))
-+                            (version, pkgarch, checksum, value))
-         row=data.fetchone()
-         if row is not None:
-             return row[0]
-@@ -212,13 +212,13 @@ class PRTable(object):
- 
-     def importone(self, version, pkgarch, checksum, value):
-         if self.nohist:
--            return self._importNohist(version, pkgarch, checksum, value)
-+            return self._import_no_hist(version, pkgarch, checksum, value)
-         else:
--            return self._importHist(version, pkgarch, checksum, value)
-+            return self._import_hist(version, pkgarch, checksum, value)
- 
-     def export(self, version, pkgarch, checksum, colinfo):
-         metainfo = {}
--        #column info 
-+        #column info
-         if colinfo:
-             metainfo["tbl_name"] = self.table
-             metainfo["core_ver"] = prserv.__version__
-@@ -238,7 +238,7 @@ class PRTable(object):
- 
-         if self.nohist:
-             sqlstmt = "SELECT T1.version, T1.pkgarch, T1.checksum, T1.value FROM %s as T1, \
--                    (SELECT version,pkgarch,max(value) as maxvalue FROM %s GROUP BY version,pkgarch) as T2 \
-+                    (SELECT version, pkgarch, max(value) as maxvalue FROM %s GROUP BY version, pkgarch) as T2 \
-                     WHERE T1.version=T2.version AND T1.pkgarch=T2.pkgarch AND T1.value=T2.maxvalue " % (self.table, self.table)
-         else:
-             sqlstmt = "SELECT * FROM %s as T1 WHERE 1=1 " % self.table
-@@ -302,7 +302,7 @@ class PRData(object):
-     def disconnect(self):
-         self.connection.close()
- 
--    def __getitem__(self,tblname):
-+    def __getitem__(self, tblname):
-         if not isinstance(tblname, str):
-             raise TypeError("tblname argument must be a string, not '%s'" %
-                             type(tblname))
-@@ -316,4 +316,4 @@ class PRData(object):
-         if tblname in self._tables:
-             del self._tables[tblname]
-         logger.info("drop table %s" % (tblname))
--        self.connection.execute("DROP TABLE IF EXISTS %s;" % tblname) 
-+        self.connection.execute("DROP TABLE IF EXISTS %s;" % tblname)
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index eafa76673c..242cd11a5a 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -50,7 +50,7 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
- 
-         response = None
-         try:
--            value = self.server.table.getValue(version, pkgarch, checksum)
-+            value = self.server.table.get_value(version, pkgarch, checksum)
-             response = {"value": value}
-         except prserv.NotFoundError:
-             self.logger.error("can not find value for (%s, %s)",version, checksum)
-@@ -173,16 +173,16 @@ def run_as_daemon(func, pidfile, logfile):
-     # potentially hanging on a pipe. Handle both cases.
-     si = open("/dev/null", "r")
-     try:
--        os.dup2(si.fileno(),sys.stdin.fileno())
-+        os.dup2(si.fileno(), sys.stdin.fileno())
-     except (AttributeError, io.UnsupportedOperation):
-         sys.stdin = si
-     so = open(logfile, "a+")
-     try:
--        os.dup2(so.fileno(),sys.stdout.fileno())
-+        os.dup2(so.fileno(), sys.stdout.fileno())
-     except (AttributeError, io.UnsupportedOperation):
-         sys.stdout = so
-     try:
--        os.dup2(so.fileno(),sys.stderr.fileno())
-+        os.dup2(so.fileno(), sys.stderr.fileno())
-     except (AttributeError, io.UnsupportedOperation):
-         sys.stderr = so
- 
-@@ -253,7 +253,7 @@ def stop_daemon(host, port):
-             portstr = "Wrong port? Other ports listening at %s: %s" % (host, " ".join(ports))
- 
-         sys.stderr.write("pidfile %s does not exist. Daemon not running? %s\n"
--                         % (pidfile,portstr))
-+                         % (pidfile, portstr))
-         return 1
- 
-     try:
+-    if options.start:
+-        ret=prserv.serv.start_daemon(options.dbfile, options.host, options.port,os.path.abspath(options.logfile), options.read_only)
+-    elif options.stop:
+-        ret=prserv.serv.stop_daemon(options.host, options.port)
++    if args.start:
++        ret=prserv.serv.start_daemon(args.file, args.host, args.port, os.path.abspath(args.log), args.read_only)
++    elif args.stop:
++        ret=prserv.serv.stop_daemon(args.host, args.port)
+     else:
+         ret=parser.print_help()
+     return ret
 -- 
 2.34.1
 
