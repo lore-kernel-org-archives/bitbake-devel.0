@@ -1,83 +1,142 @@
-Return-Path: <contact@allwright.io>
+Return-Path: <simone.p.weiss@posteo.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8613FC6FD1F
-	for <webhook@archiver.kernel.org>; Sat, 30 Mar 2024 16:24:09 +0000 (UTC)
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
- by mx.groups.io with SMTP id smtpd.web11.674.1711815846503219192
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D1CCD1288
+	for <webhook@archiver.kernel.org>; Sat, 30 Mar 2024 16:47:19 +0000 (UTC)
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+ by mx.groups.io with SMTP id smtpd.web11.1160.1711817238507875535
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 30 Mar 2024 09:24:06 -0700
+ Sat, 30 Mar 2024 09:47:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@allwright-io.20230601.gappssmtp.com header.s=20230601 header.b=dJSnYkF3;
- spf=pass (domain: allwright.io, ip: 209.85.161.49, mailfrom: contact@allwright.io)
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5a4d3b82e53so1532355eaf.0
-        for <bitbake-devel@lists.openembedded.org>; Sat, 30 Mar 2024 09:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=allwright-io.20230601.gappssmtp.com; s=20230601; t=1711815845; x=1712420645; darn=lists.openembedded.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KPQ5v0ijZqe8eG0W0+3EdeKdBhs/kcdSpG0Kw2BQb5g=;
-        b=dJSnYkF34S2ZNfYXCTb3wuVhTAWodMQZbo0zb8YxXCqeSz23YeRsrri+S28udMacSh
-         LsG7TYKAK3/PdE7ZoZKyE2SALppwDndqudV6Ys/kkCIj6109zbhYZ/zMHLNH+RP7Yuj7
-         a3U9xSwlN+ux1OxtqozevePuba+hz3ypybilLPv5uDc/Ba5Ob0Znc7yplT2GcxvBCj2r
-         qvalcHhtoSuN6bMrVaizNYkzONZ7Ms5x0TQDaPlEPd+BWVNk59ryk/9Wxvn61w+0DxEW
-         FS7nrzqH1jtSG9NpsLfdh9eVvy/hRJlauzXrBO26fuGWmuJTkDQFOi7OKJBOikfrfoLv
-         JkiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711815845; x=1712420645;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KPQ5v0ijZqe8eG0W0+3EdeKdBhs/kcdSpG0Kw2BQb5g=;
-        b=bPFNlXLEsi+8/FcknK6tmwX13j91qXUYNAjVbXzhnN+0c9SzqHBOKUP+VLIvOs2lRZ
-         YaYp2ZLr3LatVf3dEaFhE7M/1E6iELTiwY+xBq3AkalRV8o/Spgsu5UfkJw3LbCu7y1I
-         sES9SWGsHN/n0AC2wuOEV1Upo5Z0bo6tOnbGzbSoMsB6g6ghcAyN8jCVX8oelkgNZAvO
-         g1hfMaPV9AgeFJ1FJ/ZAX3S5xVmlxuzcgC85wUfVkRy+WfWrRevi1c6WzBqC+SnRWRlC
-         BPAfQRg4kPpMGKGwiD36ODmzA5YDDsj3rpzk/VJMtuhUkQHIMoj14vGMu4UfxL3j84FR
-         yHSQ==
-X-Gm-Message-State: AOJu0YwDbcEAGPqhUCpZbO78EBP26vOtEwHpGubVX58iGLmbAqn3UUzc
-	S31GfycneN0ZCHf17skZkbgD/O/GIH1f1jKbZpWSe7ojGTbtyNjLzuPMNJ9RZTN7ZLw2oX6bLOp
-	6hYXA8uw2vi2wguvlS23cRGxRWJX851W4cosOdRQ96Tmsl1OjMAY=
-X-Google-Smtp-Source: AGHT+IE+grYVDDSchHJm7Tg5M+Ftx1S+g73n3N9vgELrlf9TG74R3Gr5W0nRoxa/HMwvILkmDyffx1OGedwJnh9le98=
-X-Received: by 2002:a05:6870:c155:b0:222:8961:43fa with SMTP id
- g21-20020a056870c15500b00222896143famr1777805oad.15.1711815845585; Sat, 30
- Mar 2024 09:24:05 -0700 (PDT)
-MIME-Version: 1.0
-From: Michael Allwright <contact@allwright.io>
-Date: Sat, 30 Mar 2024 17:24:35 +0100
-Message-ID: <CAB=oyq5pDsWAsV79tfNagh=AyYiOVhTQPKH-HSbegd5LPNJa6w@mail.gmail.com>
-Subject: Change location of pyshtables.py / bitbake-cookerdaemon.log
+ dkim=fail reason="dkim: body hash did not verify" header.i=@posteo.com header.s=2017 header.b=LKpJpinm;
+ spf=pass (domain: posteo.com, ip: 185.67.36.66, mailfrom: simone.p.weiss@posteo.com)
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 58CCC240103
+	for <bitbake-devel@lists.openembedded.org>; Sat, 30 Mar 2024 17:47:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.com; s=2017;
+	t=1711817236; bh=hndWQS9sAVvOqKlhSwX+b+YYUA6jP3jI/w7oDYIdqLI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=LKpJpinmFNzbOs3KK2zBCxbUXKjyLvqwVye8jqMq+1dd+mEwhy1U2RfuJJ8SsqrE5
+	 gmXGcXHpB4mvp7vxeI/kTkhBapwCv/gUKPqM+aFi+KWP8m5KHU8SJnqYqrPfbbQl5l
+	 xQdMba9poUBF+OtVXxbqwx0DaLB9ErZYTTO+1hRyr7hdNdXUt9R2QdL2jX2I0+kYnJ
+	 87FQOtyhdBsvEySkxj+9qZ8nVLptQFXtBjH+vee/UQqObYCjFraNPCNiXceFUfj89V
+	 U1ffAWECczABFoDmYkgh0ETk7sp0FIxfPyRT7IK7JoQ80hzmuASa+ZLdVZaXlIgLLJ
+	 GYf4bQbgFTJIw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4V6NVC4CSfz9rxK;
+	Sat, 30 Mar 2024 17:47:15 +0100 (CET)
+From: simone.p.weiss@posteo.com
 To: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="00000000000065c80d0614e32fc4"
+Cc: =?UTF-8?q?Simone=20Wei=C3=9F?= <simone.p.weiss@posteo.com>
+Subject: [PATCH] bitbake-layers: add/remove option to not use tinfoil
+Date: Sat, 30 Mar 2024 16:46:40 +0000
+Message-Id: <20240330164640.7270-1-simone.p.weiss@posteo.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 30 Mar 2024 16:24:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16037
+ <bitbake-devel@lists.openembedded.org>; Sat, 30 Mar 2024 16:47:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16038
 
---00000000000065c80d0614e32fc4
-Content-Type: text/plain; charset="UTF-8"
+From: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
 
-Hello,
+Fixes [YOCTO #15417]
 
-Is it possible to change the location of pyshtables.py or
-bitbake-cookerdaemon.log. I know it is a bit finicky, but too many of these
-files start to clog up one's workspace after a while.
+When a layer adds a new dependency after it was added to a conf, it can n=
+ot be
+removed w/o this dependency in the setup. Even the dependent layer can no=
+t be
+added, as the tinfoil setup will fail.
+Add an option to not perform the tinfoil at all, the use will be at own r=
+isk,
+i.e. the added layers might not parse properly afterwards.
+This is not merged into the force options as it even changes the loading =
+of
+plugins from other layers and is hence even more invasive as force.
 
-Kind regards,
+Signed-off-by: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
+---
+ bin/bitbake-layers     | 13 +++++++++----
+ lib/bblayers/action.py |  6 ++++--
+ 2 files changed, 13 insertions(+), 6 deletions(-)
 
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index d4b1d1aa..f5002861 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -34,6 +34,7 @@ def main():
+     parser.add_argument('-d', '--debug', help=3D'Enable debug output', a=
+ction=3D'store_true')
+     parser.add_argument('-q', '--quiet', help=3D'Print only errors', act=
+ion=3D'store_true')
+     parser.add_argument('-F', '--force', help=3D'Force add without recip=
+e parse verification', action=3D'store_true')
++    parser.add_argument('-S', '--skip_parse_tests', help=3D'Force run wi=
+thout parsing the layers, this might cause later failures.', action=3D'st=
+ore_true')
+     parser.add_argument('--color', choices=3D['auto', 'always', 'never']=
+, default=3D'auto', help=3D'Colorize output (where %(metavar)s is %(choic=
+es)s)', metavar=3D'COLOR')
+=20
+     global_args, unparsed_args =3D parser.parse_known_args()
+@@ -59,16 +60,20 @@ def main():
+     plugins =3D []
+     tinfoil =3D bb.tinfoil.Tinfoil(tracking=3DTrue)
+     tinfoil.logger.setLevel(logger.getEffectiveLevel())
+-    try:
++    if global_args.skip_parse_tests:
++        bbpaths =3D []
++    else:
+         tinfoil.prepare(True)
+-        for path in ([topdir] +
+-                    tinfoil.config_data.getVar('BBPATH').split(':')):
++        bbpaths =3D tinfoil.config_data.getVar('BBPATH').split(':')
++   =20
++    try:=20
++        for path in ([topdir] + bbpaths):
+             pluginpath =3D os.path.join(path, 'lib', 'bblayers')
+             bb.utils.load_plugins(logger, plugins, pluginpath)
+=20
+         registered =3D False
+         for plugin in plugins:
+-            if hasattr(plugin, 'tinfoil_init'):
++            if hasattr(plugin, 'tinfoil_init') and not global_args.skip_=
+parse_tests:
+                 plugin.tinfoil_init(tinfoil)
+             if hasattr(plugin, 'register_commands'):
+                 registered =3D True
+diff --git a/lib/bblayers/action.py b/lib/bblayers/action.py
+index a8f26993..5aecc452 100644
+--- a/lib/bblayers/action.py
++++ b/lib/bblayers/action.py
+@@ -50,8 +50,8 @@ class ActionPlugin(LayerPlugin):
+=20
+         try:
+             notadded, _ =3D bb.utils.edit_bblayers_conf(bblayers_conf, l=
+ayerdirs, None)
+-            self.tinfoil.modified_files()
+-            if not (args.force or notadded):
++            if not (args.force or notadded or args.skip_parse_tests):
++                self.tinfoil.modified_files()
+                 try:
+                     self.tinfoil.run_command('parseConfiguration')
+                 except (bb.tinfoil.TinfoilUIException, bb.BBHandledExcep=
+tion):
+@@ -83,6 +83,8 @@ class ActionPlugin(LayerPlugin):
+                 layerdir =3D os.path.abspath(item)
+             layerdirs.append(layerdir)
+         (_, notremoved) =3D bb.utils.edit_bblayers_conf(bblayers_conf, N=
+one, layerdirs)
++        if args.skip_parse_tests:
++            return 0
+         self.tinfoil.modified_files()
+         if notremoved:
+             for item in notremoved:
+--=20
+2.39.2
 
-Michael
-
---00000000000065c80d0614e32fc4
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hello,<div><br></div><div>Is it possible to change the loc=
-ation of pyshtables.py or bitbake-cookerdaemon.log. I know it is a bit fini=
-cky, but too many of these files=C2=A0start to clog up one&#39;s workspace =
-after a while.</div><div><br></div><div>Kind regards,</div><div><br></div><=
-div><br></div><div>Michael</div></div>
-
---00000000000065c80d0614e32fc4--
 
