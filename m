@@ -1,103 +1,92 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2036FCD11DD
-	for <webhook@archiver.kernel.org>; Fri, 29 Mar 2024 14:48:19 +0000 (UTC)
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
- by mx.groups.io with SMTP id smtpd.web10.257.1711723692089035044
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AABC6FD1F
+	for <webhook@archiver.kernel.org>; Sat, 30 Mar 2024 16:21:59 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.605.1711815711699456777
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 29 Mar 2024 07:48:12 -0700
+ Sat, 30 Mar 2024 09:21:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=hHYiLQ6F;
- spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A98A3C0009
-	for <bitbake-devel@lists.openembedded.org>; Fri, 29 Mar 2024 14:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711723690;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S/p1ElKmG5jjbKWtEnAWjfsX77jhDljOARi5R1izfuI=;
-	b=hHYiLQ6FJCouHzJyt2lF67YfgUdMaM6gFmh0auMZmYDCtKZd2ihgL99NqMNocrPZKB3Vot
-	RrtOL6j3oudSoOhEeuwEaF2oxN51Nhr8Xr0q/tO1A6CrRa+nZmgf3hS1RBxsn5eP0uEl/5
-	xjAbaHRhSh2VrUsyFQ9H7k8HwEYUN7hrJjuNx6q9W7+7bl4Yt7XlobRz1ttpCUqezJxPWH
-	Si36UabhdQd5NfER6dRshXmRrPtrfAi69mqCDBWiTiA9NDADlUzoqHpVekV/iLOlCUsTTb
-	+uVEIZtweinm2qon95dDVN39v9/SvzQ8IoCj9e365ZaljN4wnQPW0leb9JfnFQ==
-Message-ID: <d9f7b03e-ed50-4796-8605-d6c1c253f4c7@bootlin.com>
-Date: Fri, 29 Mar 2024 15:48:10 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH 00/12] prserv: add support for an
- "upstream" server
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gMcXkxhD;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4155bc0cf9cso2447475e9.0
+        for <bitbake-devel@lists.openembedded.org>; Sat, 30 Mar 2024 09:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1711815710; x=1712420510; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KpwFeaRnOFNYUnjlEeirlDic11q/U9QUQhvnvThIJQ4=;
+        b=gMcXkxhDCmAcfEpuMtSv+U4o9V+xjGgavr6BjCP6bpKZ7F5xbWncamkAo3Unt8j2aa
+         1hZejq2e54VayVMhKD2SvijpJ1rwXohXb2nCfJWNAEja/J30TLaY7+T/fBN9zr+n2Te5
+         KAB114pF24YrZ+JsHJJ5NGBcleCvtmTPCGGB0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711815710; x=1712420510;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KpwFeaRnOFNYUnjlEeirlDic11q/U9QUQhvnvThIJQ4=;
+        b=fYzN0FfeTTQKhJxhUtm5vaBaoSUTAWk9r5Eh+qAYkaq67hTk+kgmGrT6oK+WQgTJ+r
+         NmlzVy5nA8BpmH9pJ1gOklGelaxrKuKhrPqi28nHw0LlgrJTnh/N3x0P6Br/eIgd4ZvM
+         SAbFoiZs9cHxEvhuBB4IUvM9q22zv5BDShm0dGmbbMbW000EOsI4venPhK4OrXMIjtwJ
+         C6dFlBlKiP/Wut8vdnFCim6iElGPqhopqR6J/NmCL4ROEXkSoi6iitzNnStxmTLderMC
+         X1+LNq+0U5wKaYSjFI0Jsn9yabZBHdYfKmPt9z8NzgGomCvZ/UwZrHMAQJAnrLL3Pl6C
+         eVzA==
+X-Gm-Message-State: AOJu0Yzxm1thff6vX0dHDsKgsY/lpABFX3VW7rWI1bN31ryhywhkpzvz
+	14tGvcNX/2NApwOcfm0Tt5DUImWBMGNriIFxbOzaOX7t/QfmaOdLuxRdDASXg39xVQT4YBhz503
+	9
+X-Google-Smtp-Source: AGHT+IFoU5rJQ4fOlUBxclcpSSLFGIGaaPYtZ5TnxtwT3pYukZfEOwfZEujRJOGeecXcp2sHPFfDYA==
+X-Received: by 2002:a05:600c:1989:b0:414:835:6ed2 with SMTP id t9-20020a05600c198900b0041408356ed2mr4021379wmq.35.1711815709964;
+        Sat, 30 Mar 2024 09:21:49 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:71ca:5c3d:96bc:4b3d])
+        by smtp.gmail.com with ESMTPSA id g16-20020a05600c311000b004148670f9ecsm9038245wmo.23.2024.03.30.09.21.49
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Mar 2024 09:21:49 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-References: <17C14331A9F4EAD6.31455@lists.openembedded.org>
-Content-Language: en-US
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-In-Reply-To: <17C14331A9F4EAD6.31455@lists.openembedded.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: michael.opdenacker@bootlin.com
+Subject: [PATCH] process: Ensure writes to connect pipes are flushed
+Date: Sat, 30 Mar 2024 16:21:48 +0000
+Message-Id: <20240330162148.1101054-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.40.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 29 Mar 2024 14:48:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16035
+ <bitbake-devel@lists.openembedded.org>; Sat, 30 Mar 2024 16:21:59 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16036
 
+In looking into a bitbake 'hang' on the autobuilders, it looked
+very much like the server had finished a computation and was looping
+at idle but the UI didn't see it. Adding in some os.fsync() calls should
+help avoid this potential problem (but may cause other timeout/IO load
+issues unfortunately).
 
-On 3/29/24 at 15:39, Michael Opdenacker via lists.openembedded.org wrote:
-> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
->
-> This makes it possible to customize an "upstream" distribution
-> by modifying local packages. If the "upstream" package bears
-> revision "x", the local one will have revision "x.y", this
-> having priority over the upstream one.
->
-> Take advantage of this work to clean-up and update the prserv code too.
->
-> Michael Opdenacker (12):
->    prserv: simplify the PRServerClient() interface
->    prserv: use double quotes by default
->    bitbake-prserv: replace deprecated optparse by argparse
->    prserv: use self.logger instead of logger directly
->    asyncrpc: include parse_address from hashserv
->    prserv: capitalization and spacing improvements
->    prserv: fix read_only test
->    prserv: add extra requests
->    prserv: remove redundant exception handler
->    prserv: correct error message
->    prserv: remove unnecessary code
->    prserv: add "upstream" server support
->
->   bin/bitbake-prserv        |  99 ++++++++++++-----
->   lib/bb/asyncrpc/client.py |  23 ++++
->   lib/hashserv/__init__.py  |  27 +----
->   lib/prserv/__init__.py    |  21 +++-
->   lib/prserv/client.py      |  42 +++++--
->   lib/prserv/db.py          | 176 ++++++++++++++++++++---------
->   lib/prserv/serv.py        | 228 ++++++++++++++++++++++++++++----------
->   7 files changed, 434 insertions(+), 182 deletions(-)
+The exception handling is needed since some writes cause the pipe to
+close immediately so the flush would error.
 
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/server/process.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Note that this code has a remaining issue that appears sometimes.
-
-Even though the revision stored in the database was indeed "0.3", I 
-eventually got this package name:
-tmp/deploy/ipk/core2-64/hello-dev_1.0-r0.0.30000000000000004_core2-64.ipk
-
-This may be an issue in OE-core, in the way the "0.3" value can be 
-treated by default as a float by Python3, and then converted into an 
-incorrect string when creating the output package name. Investigating, 
-but if you already know where this happens, I'm interested!
-
-Cheers
-Michael.
-
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index 76b189291d..d0825582b5 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -867,6 +867,10 @@ class ConnectionWriter(object):
+         gc.disable()
+         with bb.utils.lock_timeout(self.wlock):
+             self.writer.send_bytes(obj)
++            try:
++                os.fsync(self.fileno())
++            except OSError:
++                pass
+         gc.enable()
+ 
+     def send(self, obj):
 -- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.40.1
 
 
