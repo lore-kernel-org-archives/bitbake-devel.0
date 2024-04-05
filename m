@@ -2,107 +2,156 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7825ECD11C2
-	for <webhook@archiver.kernel.org>; Fri,  5 Apr 2024 16:41:38 +0000 (UTC)
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
- by mx.groups.io with SMTP id smtpd.web11.17397.1712335297652128482
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78409CD11C2
+	for <webhook@archiver.kernel.org>; Fri,  5 Apr 2024 16:41:48 +0000 (UTC)
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+ by mx.groups.io with SMTP id smtpd.web11.17400.1712335299781837837
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Apr 2024 09:41:37 -0700
+ Fri, 05 Apr 2024 09:41:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=McwKGi9P;
- spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 52FFC20007;
-	Fri,  5 Apr 2024 16:41:35 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=dTOvpO7s;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CFDF91BF207;
+	Fri,  5 Apr 2024 16:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712335295;
+	t=1712335298;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Ee1kDCzQvMPwkMrS2XhnH2CV0NwfcwQU5MC8GCawW+k=;
-	b=McwKGi9PQ6WRv7yVMW2zRFsDUavaoUdKkXseVelOxrJQQyBP/q6n71wUJPOxkbcP+9p2JX
-	4kyloGhqZKZKLSdsA2RHZv7xXg/RtR4KLWYLtZJOOMco3e9eqQFWBt3Na76g4i2da2fojk
-	24gDJ+x0RIvQi/xGAPGBsSpoVj6iFdwCvL4Sdd2ietEH0In7tfmlHFzTDCpwxRybb7t9Jk
-	LHg5mffSfQ8I+GcM4Duen+r5f/c5JAEVscqUUJ/jmORGHaIx7RzNO7S+HPWGgkoMucKOri
-	dHhb3fN4S15cEoqIAtC3q8XyXAXc0QG/5orTIuYd6aRH8V4lj2bjBGj58ygz8w==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D121oOMAnQx2s3DAmEE2+o9eIQCqENaK5db9wZMf7LU=;
+	b=dTOvpO7sxd203pO9JTFo1tWWoA0VBNkkWe6At5k4wV24Wdjq7KxANOA9NcMljgZPuYFz1a
+	sPsNU3CqWTqj63rnbVbBnSkHNVRrv6+fp2lAfDFYWiRMS0yZczqrhU96vxrozb39SQtgQQ
+	u2wZnE9Xs0oPYbXpECGeU94KOJGF5oKvrAAuwAzf5q1eO92/Mc3KDqy+aQlZqhtxjhGJUQ
+	oRrXog8IMDqY5uZD7U4/xnRVQyV2JQv5wwgpnl8LabiP8/EFlmUbVSU+Cj+Xs/wY4t2reP
+	fgcrMOHNo2h0wtb0h0C+WmQApOhrG4pdEv74jIahFofCpiE4JPPvh63khRewpQ==
 From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
-Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH v2 00/12] prserv: add support for an "upstream" server
-Date: Fri,  5 Apr 2024 18:41:13 +0200
-Message-Id: <20240405164125.1652579-1-michael.opdenacker@bootlin.com>
+Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
+	Joshua Watt <JPEWhacker@gmail.com>,
+	Tim Orling <ticotimo@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v2 01/12] prserv: simplify the PRServerClient() interface
+Date: Fri,  5 Apr 2024 18:41:14 +0200
+Message-Id: <20240405164125.1652579-2-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240405164125.1652579-1-michael.opdenacker@bootlin.com>
+References: <20240405164125.1652579-1-michael.opdenacker@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: michael.opdenacker@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Apr 2024 16:41:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16048
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Apr 2024 16:41:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16049
 
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-This makes it possible to customize an "upstream" distribution
-by modifying local packages. If the "upstream" package bears
-revision "x", the local one will have revision "x.y", this
-having priority over the upstream one.
+serv.py: simplify the PRServerClient() interface by passing the
+server object instead of multiple arguments, and then retrieving
+the data through this object.
 
-Multiple levels of upstream servers are supported, so "x.y.z" revisions
-are possible too.
+This replicates what is done for ServerClient() in hashserv/server.py
 
-Take advantage of this work to clean-up and update the prserv code too.
-
-Manual "sanity" tests have been run so far but automated tests
-(based on Python unittest, as for the hash server tests)
-are being prepared for the next iteration.
-
-Code reviews are welcome, especially for more Pythonic
-ways of implementing some details.
-
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Cc: Tim Orling <ticotimo@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
+ lib/prserv/serv.py | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Changes in V2:
-- Add this new commit:
-  prserv: remove unused "hist" mode in the database backend
-- Squash commit "prserv: fix read_only test" into
-  commit "prserv: simplify the PRServerClient() interface"
-  (Reported by Richard Purdie)
-- Fix the code to support increasing "x.y.z" values, thus
-  supporting several levels of upstream servers.
-- db.py: remove duplicate definition of find_max_value() function in db.py
-- prserv.py: remove tabs before comments (Python didn't complain)
-- db.py: now stores the revision ("value") as TEXT.
-  This way we can store "1.0" without having it transformed to "1"
-  when the default type was INTEGER.
-- This allows to fix a regression when the first packages were created
-  with 'r0.1' instead of 'r0.0' initially.
-- find_max_value: now returns None instead of '0' when no value is found
-  Before we couldn't tell the difference between a '0'
-  max value and the absence of such a value.
-
-Michael Opdenacker (12):
-  prserv: simplify the PRServerClient() interface
-  prserv: use double quotes by default
-  bitbake-prserv: replace deprecated optparse by argparse
-  prserv: use self.logger instead of logger directly
-  asyncrpc: include parse_address from hashserv
-  prserv: capitalization and spacing improvements
-  prserv: remove unused "hist" mode in the database backend
-  prserv: add extra requests
-  prserv: remove redundant exception handler
-  prserv: correct error message
-  prserv: remove unnecessary code
-  prserv: add "upstream" server support
-
- bin/bitbake-prserv        |  99 ++++++++++-----
- lib/bb/asyncrpc/client.py |  23 ++++
- lib/hashserv/__init__.py  |  27 +---
- lib/prserv/__init__.py    |  21 +++-
- lib/prserv/client.py      |  42 +++++--
- lib/prserv/db.py          | 251 +++++++++++++++++---------------------
- lib/prserv/serv.py        | 219 ++++++++++++++++++++++++---------
- 7 files changed, 415 insertions(+), 267 deletions(-)
-
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index 5fc8863f70..28af636966 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -20,16 +20,16 @@ PIDPREFIX = "/tmp/PRServer_%s_%s.pid"
+ singleton = None
+ 
+ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+-    def __init__(self, socket, table, read_only):
+-        super().__init__(socket, 'PRSERVICE', logger)
++    def __init__(self, socket, server):
++        super().__init__(socket, 'PRSERVICE', server.logger)
++        self.server = server
++
+         self.handlers.update({
+             'get-pr': self.handle_get_pr,
+             'import-one': self.handle_import_one,
+             'export': self.handle_export,
+             'is-readonly': self.handle_is_readonly,
+         })
+-        self.table = table
+-        self.read_only = read_only
+ 
+     def validate_proto_version(self):
+         return (self.proto_version == (1, 0))
+@@ -38,10 +38,10 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+         try:
+             return await super().dispatch_message(msg)
+         except:
+-            self.table.sync()
++            self.server.table.sync()
+             raise
+         else:
+-            self.table.sync_if_dirty()
++            self.server.table.sync_if_dirty()
+ 
+     async def handle_get_pr(self, request):
+         version = request['version']
+@@ -50,7 +50,7 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+ 
+         response = None
+         try:
+-            value = self.table.getValue(version, pkgarch, checksum)
++            value = self.server.table.getValue(version, pkgarch, checksum)
+             response = {'value': value}
+         except prserv.NotFoundError:
+             logger.error("can not find value for (%s, %s)",version, checksum)
+@@ -61,13 +61,13 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+ 
+     async def handle_import_one(self, request):
+         response = None
+-        if not self.read_only:
++        if not self.server.read_only:
+             version = request['version']
+             pkgarch = request['pkgarch']
+             checksum = request['checksum']
+             value = request['value']
+ 
+-            value = self.table.importone(version, pkgarch, checksum, value)
++            value = self.server.table.importone(version, pkgarch, checksum, value)
+             if value is not None:
+                 response = {'value': value}
+ 
+@@ -80,7 +80,7 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+         colinfo = request['colinfo']
+ 
+         try:
+-            (metainfo, datainfo) = self.table.export(version, pkgarch, checksum, colinfo)
++            (metainfo, datainfo) = self.server.table.export(version, pkgarch, checksum, colinfo)
+         except sqlite3.Error as exc:
+             logger.error(str(exc))
+             metainfo = datainfo = None
+@@ -88,7 +88,7 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+         return {'metainfo': metainfo, 'datainfo': datainfo}
+ 
+     async def handle_is_readonly(self, request):
+-        return {'readonly': self.read_only}
++        return {'readonly': self.server.read_only}
+ 
+ class PRServer(bb.asyncrpc.AsyncServer):
+     def __init__(self, dbfile, read_only=False):
+@@ -98,7 +98,7 @@ class PRServer(bb.asyncrpc.AsyncServer):
+         self.read_only = read_only
+ 
+     def accept_client(self, socket):
+-        return PRServerClient(socket, self.table, self.read_only)
++        return PRServerClient(socket, self)
+ 
+     def start(self):
+         tasks = super().start()
 -- 
 2.34.1
 
