@@ -2,35 +2,38 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E59CD129D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE11CD129F
 	for <webhook@archiver.kernel.org>; Fri,  5 Apr 2024 16:41:48 +0000 (UTC)
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
- by mx.groups.io with SMTP id smtpd.web11.17406.1712335303784749590
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+ by mx.groups.io with SMTP id smtpd.web11.17401.1712335299854770441
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Apr 2024 09:41:44 -0700
+ Fri, 05 Apr 2024 09:41:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=Qa7dObPy;
- spf=pass (domain: bootlin.com, ip: 217.70.183.197, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EF3021C0007;
-	Fri,  5 Apr 2024 16:41:41 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=moZr1o5q;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4B8A020003;
+	Fri,  5 Apr 2024 16:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712335302;
+	t=1712335298;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9kc1/iybPzPLhXi5jfyE4FbmtnulaZ7/i+rcd+Cu+gs=;
-	b=Qa7dObPy9YWCRWsjNZ2Qd6I9MUm9KBe0FmragwDD51a0Kg5X6KMfKrhYHbQU0coqTPGoEI
-	WOdqIjeGtTN/ED4wU5AOnMkNttEliZfwoEj/Y5RkgjoF0UTI7lrFjOfUHjVsRsEYZnRLUL
-	USteX7Pn2Bb1zMi4PIGAPmGZw0IcNZS1f8M7M/3bGxQQMe8jSqIAGaD4bwaS/F71L73uPE
-	ZLe91tqYspif9w4BpvJqMFFSppC+m7aTI73aFCNUhKxyeIjrFFNo0le6GVt2v8+diT3Fi8
-	le8Pdc4y+VNoprD7No60msBDFiDkDACl7Lj165kZT5B3061s8pSTDE3WPNyiHQ==
+	bh=vzJAsLHO0PdQWtxIN3rBMCpjEgtaLqecdv74Kd2qSDc=;
+	b=moZr1o5qQwazQvlDkXZj8NMYYVQAWMONxmAVcaUu3ini8GlbqI5Crb48mGLpAj32A9d+WT
+	dTVZn/vGPjRhJ5/CuWXntSaToqSR1exNZ317OYV+pE76k4bHXf+zmhn5FC8zLhy1rzVtV+
+	Gqk/OmTrk8DDbgJtAzObsc87ZuTyI3mJHPpSQeMBw/p37f7bkXJNjmm3XMlb6Ms9yLJYWi
+	b3kQZVUQZEgnVxX+owdnjs5pxxw8dUim1xB/5lFTE9aJ07dywXC08WHahHxvRUYwvvf2TD
+	BXNbFKkMF/MLYoYNXZIluBbz1Rk9z1WnD4KKpPziGkXAUnBPoft833WHcUiiZw==
 From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
-Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH v2 07/12] prserv: remove unused "hist" mode in the database backend
-Date: Fri,  5 Apr 2024 18:41:20 +0200
-Message-Id: <20240405164125.1652579-8-michael.opdenacker@bootlin.com>
+Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
+	Joshua Watt <JPEWhacker@gmail.com>,
+	Tim Orling <ticotimo@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v2 02/12] prserv: use double quotes by default
+Date: Fri,  5 Apr 2024 18:41:15 +0200
+Message-Id: <20240405164125.1652579-3-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240405164125.1652579-1-michael.opdenacker@bootlin.com>
 References: <20240405164125.1652579-1-michael.opdenacker@bootlin.com>
@@ -41,185 +44,358 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 05 Apr 2024 16:41:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16055
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16050
 
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-The database was always created in "no_hist" mode.
-Suppress the idle code to make db.py easier to maintain
+To aligh with the hashserv code
 
 Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Cc: Tim Orling <ticotimo@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
- lib/prserv/db.py | 109 ++++-------------------------------------------
- 1 file changed, 9 insertions(+), 100 deletions(-)
+ bin/bitbake-prserv     |  4 +--
+ lib/prserv/__init__.py |  4 +--
+ lib/prserv/client.py   | 20 ++++++-------
+ lib/prserv/db.py       | 32 ++++++++++-----------
+ lib/prserv/serv.py     | 64 +++++++++++++++++++++---------------------
+ 5 files changed, 62 insertions(+), 62 deletions(-)
 
+diff --git a/bin/bitbake-prserv b/bin/bitbake-prserv
+index 5be42f3ce5..8c3808fb20 100755
+--- a/bin/bitbake-prserv
++++ b/bin/bitbake-prserv
+@@ -11,14 +11,14 @@ import optparse
+ import warnings
+ warnings.simplefilter("default")
+ 
+-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)),'lib'))
++sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "lib"))
+ 
+ import prserv
+ import prserv.serv
+ 
+ __version__="1.0.0"
+ 
+-PRHOST_DEFAULT='0.0.0.0'
++PRHOST_DEFAULT="0.0.0.0"
+ PRPORT_DEFAULT=8585
+ 
+ def main():
+diff --git a/lib/prserv/__init__.py b/lib/prserv/__init__.py
+index 38ced818ad..5790a8db1e 100644
+--- a/lib/prserv/__init__.py
++++ b/lib/prserv/__init__.py
+@@ -12,8 +12,8 @@ import sys,logging
+ def init_logger(logfile, loglevel):
+     numeric_level = getattr(logging, loglevel.upper(), None)
+     if not isinstance(numeric_level, int):
+-        raise ValueError('Invalid log level: %s' % loglevel)
+-    FORMAT = '%(asctime)-15s %(message)s'
++        raise ValueError("Invalid log level: %s" % loglevel)
++    FORMAT = "%(asctime)-15s %(message)s"
+     logging.basicConfig(level=numeric_level, filename=logfile, format=FORMAT)
+ 
+ class NotFoundError(Exception):
+diff --git a/lib/prserv/client.py b/lib/prserv/client.py
+index 6b81356fac..7bc5188c53 100644
+--- a/lib/prserv/client.py
++++ b/lib/prserv/client.py
+@@ -11,40 +11,40 @@ logger = logging.getLogger("BitBake.PRserv")
+ 
+ class PRAsyncClient(bb.asyncrpc.AsyncClient):
+     def __init__(self):
+-        super().__init__('PRSERVICE', '1.0', logger)
++        super().__init__("PRSERVICE", "1.0", logger)
+ 
+     async def getPR(self, version, pkgarch, checksum):
+         response = await self.invoke(
+-            {'get-pr': {'version': version, 'pkgarch': pkgarch, 'checksum': checksum}}
++            {"get-pr": {"version": version, "pkgarch": pkgarch, "checksum": checksum}}
+         )
+         if response:
+-            return response['value']
++            return response["value"]
+ 
+     async def importone(self, version, pkgarch, checksum, value):
+         response = await self.invoke(
+-            {'import-one': {'version': version, 'pkgarch': pkgarch, 'checksum': checksum, 'value': value}}
++            {"import-one": {"version": version, "pkgarch": pkgarch, "checksum": checksum, "value": value}}
+         )
+         if response:
+-            return response['value']
++            return response["value"]
+ 
+     async def export(self, version, pkgarch, checksum, colinfo):
+         response = await self.invoke(
+-            {'export': {'version': version, 'pkgarch': pkgarch, 'checksum': checksum, 'colinfo': colinfo}}
++            {"export": {"version": version, "pkgarch": pkgarch, "checksum": checksum, "colinfo": colinfo}}
+         )
+         if response:
+-            return (response['metainfo'], response['datainfo'])
++            return (response["metainfo"], response["datainfo"])
+ 
+     async def is_readonly(self):
+         response = await self.invoke(
+-            {'is-readonly': {}}
++            {"is-readonly": {}}
+         )
+         if response:
+-            return response['readonly']
++            return response["readonly"]
+ 
+ class PRClient(bb.asyncrpc.Client):
+     def __init__(self):
+         super().__init__()
+-        self._add_methods('getPR', 'importone', 'export', 'is_readonly')
++        self._add_methods("getPR", "importone", "export", "is_readonly")
+ 
+     def _get_async_client(self):
+         return PRAsyncClient()
 diff --git a/lib/prserv/db.py b/lib/prserv/db.py
-index 7bc2b2dc2d..5a7cb7e993 100644
+index b4bda7078c..0859cf4f2c 100644
 --- a/lib/prserv/db.py
 +++ b/lib/prserv/db.py
-@@ -21,26 +21,12 @@ sqlversion = sqlite3.sqlite_version_info
- if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
-     raise Exception("sqlite3 version 3.3.0 or later is required.")
+@@ -64,7 +64,7 @@ class PRTable(object):
+             try:
+                 return self.conn.execute(*query)
+             except sqlite3.OperationalError as exc:
+-                if 'is locked' in str(exc) and end > time.time():
++                if "is locked" in str(exc) and end > time.time():
+                     continue
+                 raise exc
  
--#
--# "No History" mode - for a given query tuple (version, pkgarch, checksum),
--# the returned value will be the largest among all the values of the same
--# (version, pkgarch). This means the PR value returned can NOT be decremented.
--#
--# "History" mode - Return a new higher value for previously unseen query
--# tuple (version, pkgarch, checksum), otherwise return historical value.
--# Value can decrement if returning to a previous build.
--#
--
- class PRTable(object):
--    def __init__(self, conn, table, nohist, read_only):
-+    def __init__(self, conn, table, read_only):
-         self.conn = conn
--        self.nohist = nohist
-         self.read_only = read_only
-         self.dirty = False
--        if nohist:
--            self.table = "%s_nohist" % table
--        else:
--            self.table = "%s_hist" % table
-+        self.table = table
- 
-         if self.read_only:
-             table_exists = self._execute(
-@@ -78,41 +64,7 @@ class PRTable(object):
-             self.sync()
-             self.dirty = False
- 
--    def _get_value_hist(self, version, pkgarch, checksum):
--        data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
--                           (version, pkgarch, checksum))
--        row=data.fetchone()
--        if row is not None:
--            return row[0]
--        else:
--            #no value found, try to insert
--            if self.read_only:
--                data = self._execute("SELECT ifnull(max(value)+1, 0) FROM %s where version=? AND pkgarch=?;" % (self.table),
--                                   (version, pkgarch))
--                row = data.fetchone()
--                if row is not None:
--                    return row[0]
--                else:
--                    return 0
--
--            try:
--                self._execute("INSERT INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1, 0) from %s where version=? AND pkgarch=?));"
--                           % (self.table, self.table),
--                           (version, pkgarch, checksum, version, pkgarch))
--            except sqlite3.IntegrityError as exc:
--                logger.error(str(exc))
--
--            self.dirty = True
--
--            data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
--                               (version, pkgarch, checksum))
--            row=data.fetchone()
--            if row is not None:
--                return row[0]
--            else:
--                raise prserv.NotFoundError
--
--    def _get_value_no_hist(self, version, pkgarch, checksum):
-+    def get_value(self, version, pkgarch, checksum):
-         data=self._execute("SELECT value FROM %s \
-                             WHERE version=? AND pkgarch=? AND checksum=? AND \
-                             value >= (select max(value) from %s where version=? AND pkgarch=?);"
-@@ -150,40 +102,7 @@ class PRTable(object):
-             else:
-                 raise prserv.NotFoundError
- 
--    def get_value(self, version, pkgarch, checksum):
--        if self.nohist:
--            return self._get_value_no_hist(version, pkgarch, checksum)
--        else:
--            return self._get_value_hist(version, pkgarch, checksum)
--
--    def _import_hist(self, version, pkgarch, checksum, value):
--        if self.read_only:
--            return None
--
--        val = None
--        data = self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
--                           (version, pkgarch, checksum))
--        row = data.fetchone()
--        if row is not None:
--            val=row[0]
--        else:
--            #no value found, try to insert
--            try:
--                self._execute("INSERT INTO %s VALUES (?, ?, ?, ?);"  % (self.table),
--                           (version, pkgarch, checksum, value))
--            except sqlite3.IntegrityError as exc:
--                logger.error(str(exc))
--
--            self.dirty = True
--
--            data = self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
--                           (version, pkgarch, checksum))
--            row = data.fetchone()
--            if row is not None:
--                val = row[0]
--        return val
--
--    def _import_no_hist(self, version, pkgarch, checksum, value):
-+    def importone(self, version, pkgarch, checksum, value):
-         if self.read_only:
-             return None
- 
-@@ -210,12 +129,6 @@ class PRTable(object):
-         else:
-             return None
- 
--    def importone(self, version, pkgarch, checksum, value):
--        if self.nohist:
--            return self._import_no_hist(version, pkgarch, checksum, value)
--        else:
--            return self._import_hist(version, pkgarch, checksum, value)
--
-     def export(self, version, pkgarch, checksum, colinfo):
+@@ -220,18 +220,18 @@ class PRTable(object):
          metainfo = {}
-         #column info
-@@ -236,12 +149,9 @@ class PRTable(object):
+         #column info 
+         if colinfo:
+-            metainfo['tbl_name'] = self.table
+-            metainfo['core_ver'] = prserv.__version__
+-            metainfo['col_info'] = []
++            metainfo["tbl_name"] = self.table
++            metainfo["core_ver"] = prserv.__version__
++            metainfo["col_info"] = []
+             data = self._execute("PRAGMA table_info(%s);" % self.table)
+             for row in data:
+                 col = {}
+-                col['name'] = row['name']
+-                col['type'] = row['type']
+-                col['notnull'] = row['notnull']
+-                col['dflt_value'] = row['dflt_value']
+-                col['pk'] = row['pk']
+-                metainfo['col_info'].append(col)
++                col["name"] = row["name"]
++                col["type"] = row["type"]
++                col["notnull"] = row["notnull"]
++                col["dflt_value"] = row["dflt_value"]
++                col["pk"] = row["pk"]
++                metainfo["col_info"].append(col)
+ 
          #data info
          datainfo = []
+@@ -261,12 +261,12 @@ class PRTable(object):
+         else:
+             data = self._execute(sqlstmt)
+         for row in data:
+-            if row['version']:
++            if row["version"]:
+                 col = {}
+-                col['version'] = row['version']
+-                col['pkgarch'] = row['pkgarch']
+-                col['checksum'] = row['checksum']
+-                col['value'] = row['value']
++                col["version"] = row["version"]
++                col["pkgarch"] = row["pkgarch"]
++                col["checksum"] = row["checksum"]
++                col["value"] = row["value"]
+                 datainfo.append(col)
+         return (metainfo, datainfo)
  
--        if self.nohist:
--            sqlstmt = "SELECT T1.version, T1.pkgarch, T1.checksum, T1.value FROM %s as T1, \
--                    (SELECT version, pkgarch, max(value) as maxvalue FROM %s GROUP BY version, pkgarch) as T2 \
--                    WHERE T1.version=T2.version AND T1.pkgarch=T2.pkgarch AND T1.value=T2.maxvalue " % (self.table, self.table)
--        else:
--            sqlstmt = "SELECT * FROM %s as T1 WHERE 1=1 " % self.table
-+        sqlstmt = "SELECT T1.version, T1.pkgarch, T1.checksum, T1.value FROM %s as T1, \
-+                (SELECT version, pkgarch, max(value) as maxvalue FROM %s GROUP BY version, pkgarch) as T2 \
-+                WHERE T1.version=T2.version AND T1.pkgarch=T2.pkgarch AND T1.value=T2.maxvalue " % (self.table, self.table)
-         sqlarg = []
-         where = ""
-         if version:
-@@ -280,9 +190,8 @@ class PRTable(object):
+@@ -275,7 +275,7 @@ class PRTable(object):
+         for line in self.conn.iterdump():
+             writeCount = writeCount + len(line) + 1
+             fd.write(line)
+-            fd.write('\n')
++            fd.write("\n")
+         return writeCount
  
  class PRData(object):
-     """Object representing the PR database"""
--    def __init__(self, filename, nohist=True, read_only=False):
-+    def __init__(self, filename, read_only=False):
-         self.filename=os.path.abspath(filename)
--        self.nohist=nohist
-         self.read_only = read_only
-         #build directory hierarchy
-         try:
-@@ -309,7 +218,7 @@ class PRData(object):
-         if tblname in self._tables:
-             return self._tables[tblname]
-         else:
--            tableobj = self._tables[tblname] = PRTable(self.connection, tblname, self.nohist, self.read_only)
-+            tableobj = self._tables[tblname] = PRTable(self.connection, tblname, self.read_only)
-             return tableobj
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index 28af636966..49f5ae36db 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -21,14 +21,14 @@ singleton = None
  
-     def __delitem__(self, tblname):
+ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+     def __init__(self, socket, server):
+-        super().__init__(socket, 'PRSERVICE', server.logger)
++        super().__init__(socket, "PRSERVICE", server.logger)
+         self.server = server
+ 
+         self.handlers.update({
+-            'get-pr': self.handle_get_pr,
+-            'import-one': self.handle_import_one,
+-            'export': self.handle_export,
+-            'is-readonly': self.handle_is_readonly,
++            "get-pr": self.handle_get_pr,
++            "import-one": self.handle_import_one,
++            "export": self.handle_export,
++            "is-readonly": self.handle_is_readonly,
+         })
+ 
+     def validate_proto_version(self):
+@@ -44,14 +44,14 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+             self.server.table.sync_if_dirty()
+ 
+     async def handle_get_pr(self, request):
+-        version = request['version']
+-        pkgarch = request['pkgarch']
+-        checksum = request['checksum']
++        version = request["version"]
++        pkgarch = request["pkgarch"]
++        checksum = request["checksum"]
+ 
+         response = None
+         try:
+             value = self.server.table.getValue(version, pkgarch, checksum)
+-            response = {'value': value}
++            response = {"value": value}
+         except prserv.NotFoundError:
+             logger.error("can not find value for (%s, %s)",version, checksum)
+         except sqlite3.Error as exc:
+@@ -62,22 +62,22 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+     async def handle_import_one(self, request):
+         response = None
+         if not self.server.read_only:
+-            version = request['version']
+-            pkgarch = request['pkgarch']
+-            checksum = request['checksum']
+-            value = request['value']
++            version = request["version"]
++            pkgarch = request["pkgarch"]
++            checksum = request["checksum"]
++            value = request["value"]
+ 
+             value = self.server.table.importone(version, pkgarch, checksum, value)
+             if value is not None:
+-                response = {'value': value}
++                response = {"value": value}
+ 
+         return response
+ 
+     async def handle_export(self, request):
+-        version = request['version']
+-        pkgarch = request['pkgarch']
+-        checksum = request['checksum']
+-        colinfo = request['colinfo']
++        version = request["version"]
++        pkgarch = request["pkgarch"]
++        checksum = request["checksum"]
++        colinfo = request["colinfo"]
+ 
+         try:
+             (metainfo, datainfo) = self.server.table.export(version, pkgarch, checksum, colinfo)
+@@ -85,10 +85,10 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+             logger.error(str(exc))
+             metainfo = datainfo = None
+ 
+-        return {'metainfo': metainfo, 'datainfo': datainfo}
++        return {"metainfo": metainfo, "datainfo": datainfo}
+ 
+     async def handle_is_readonly(self, request):
+-        return {'readonly': self.server.read_only}
++        return {"readonly": self.server.read_only}
+ 
+ class PRServer(bb.asyncrpc.AsyncServer):
+     def __init__(self, dbfile, read_only=False):
+@@ -135,7 +135,7 @@ class PRServSingleton(object):
+         if not self.prserv.address:
+             raise PRServiceConfigError
+         if not self.port:
+-            self.port = int(self.prserv.address.rsplit(':', 1)[1])
++            self.port = int(self.prserv.address.rsplit(":", 1)[1])
+ 
+ def run_as_daemon(func, pidfile, logfile):
+     """
+@@ -171,12 +171,12 @@ def run_as_daemon(func, pidfile, logfile):
+     # stdout/stderr or it could be 'real' unix fd forking where we need
+     # to physically close the fds to prevent the program launching us from
+     # potentially hanging on a pipe. Handle both cases.
+-    si = open('/dev/null', 'r')
++    si = open("/dev/null", "r")
+     try:
+         os.dup2(si.fileno(),sys.stdin.fileno())
+     except (AttributeError, io.UnsupportedOperation):
+         sys.stdin = si
+-    so = open(logfile, 'a+')
++    so = open(logfile, "a+")
+     try:
+         os.dup2(so.fileno(),sys.stdout.fileno())
+     except (AttributeError, io.UnsupportedOperation):
+@@ -200,7 +200,7 @@ def run_as_daemon(func, pidfile, logfile):
+ 
+     # write pidfile
+     pid = str(os.getpid())
+-    with open(pidfile, 'w') as pf:
++    with open(pidfile, "w") as pf:
+         pf.write("%s\n" % pid)
+ 
+     func()
+@@ -245,12 +245,12 @@ def stop_daemon(host, port):
+         # so at least advise the user which ports the corresponding server is listening
+         ports = []
+         portstr = ""
+-        for pf in glob.glob(PIDPREFIX % (ip,'*')):
++        for pf in glob.glob(PIDPREFIX % (ip, "*")):
+             bn = os.path.basename(pf)
+             root, _ = os.path.splitext(bn)
+-            ports.append(root.split('_')[-1])
++            ports.append(root.split("_")[-1])
+         if len(ports):
+-            portstr = "Wrong port? Other ports listening at %s: %s" % (host, ' '.join(ports))
++            portstr = "Wrong port? Other ports listening at %s: %s" % (host, " ".join(ports))
+ 
+         sys.stderr.write("pidfile %s does not exist. Daemon not running? %s\n"
+                          % (pidfile,portstr))
+@@ -284,7 +284,7 @@ def is_running(pid):
+     return True
+ 
+ def is_local_special(host, port):
+-    if (host == 'localhost' or host == '127.0.0.1') and not port:
++    if (host == "localhost" or host == "127.0.0.1") and not port:
+         return True
+     else:
+         return False
+@@ -295,7 +295,7 @@ class PRServiceConfigError(Exception):
+ def auto_start(d):
+     global singleton
+ 
+-    host_params = list(filter(None, (d.getVar('PRSERV_HOST') or '').split(':')))
++    host_params = list(filter(None, (d.getVar("PRSERV_HOST") or "").split(":")))
+     if not host_params:
+         # Shutdown any existing PR Server
+         auto_shutdown()
+@@ -304,7 +304,7 @@ def auto_start(d):
+     if len(host_params) != 2:
+         # Shutdown any existing PR Server
+         auto_shutdown()
+-        logger.critical('\n'.join(['PRSERV_HOST: incorrect format',
++        logger.critical("\n".join(["PRSERV_HOST: incorrect format",
+                 'Usage: PRSERV_HOST = "<hostname>:<port>"']))
+         raise PRServiceConfigError
+ 
+@@ -357,8 +357,8 @@ def connect(host, port):
+ 
+     global singleton
+ 
+-    if host.strip().lower() == 'localhost' and not port:
+-        host = 'localhost'
++    if host.strip().lower() == "localhost" and not port:
++        host = "localhost"
+         port = singleton.port
+ 
+     conn = client.PRClient()
 -- 
 2.34.1
 
