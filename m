@@ -2,127 +2,91 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18C6C04FF6
-	for <webhook@archiver.kernel.org>; Thu, 11 Apr 2024 13:34:26 +0000 (UTC)
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
- by mx.groups.io with SMTP id smtpd.web11.17976.1712842459030137264
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A34C4345F
+	for <webhook@archiver.kernel.org>; Thu, 11 Apr 2024 13:50:16 +0000 (UTC)
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+ by mx.groups.io with SMTP id smtpd.web11.18339.1712843406618771465
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Apr 2024 06:34:19 -0700
+ Thu, 11 Apr 2024 06:50:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=RMd/MYMX;
- spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 72DF21BF212;
-	Thu, 11 Apr 2024 13:34:15 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=iQPAvMEg;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4C29A2000D;
+	Thu, 11 Apr 2024 13:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712842457;
+	t=1712843404;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eEDNY2C5wAa7w6waTOuc7nkgnBO9STKF2iiK74btArI=;
-	b=RMd/MYMX7Y+3+HgXblkjOUEVAiYm7e0YhkIGN0wJ5CciiOW7fFuw76P4kp+XjLFAyFzGOP
-	Zb9rQK1aXfJWZYroMs873X0LvY752LQhsSGTkEQMIMwTd4giXEmmNHSZFD22xKTay+b03s
-	vy5I5uL2FaINodsD3yiCbB+dkzkdHDLY/vxHFkdIKHjSYAqMOvyQs8NlTLopmYQO9taBKD
-	iinek0Hzi2Z2QzKxSnDTLxvOWgVGqCZ/gKToPiuJJnPktpzB5EGUNdZ99HKB7ymlfoHLJ8
-	ZrQG4Jva4nq98Pc2HsgkJrw7U5Vi1w4T93CixYRwFUTnhVPhc5LI7JVERe3UjA==
-Message-ID: <7ebe5ceb-e3c1-4c66-b080-cbfd3b2cfe80@bootlin.com>
-Date: Thu, 11 Apr 2024 15:34:12 +0200
+	bh=jljlmTaFc7rB4eSgJRrQg8BSZ/77cGONMLFXCmeW40U=;
+	b=iQPAvMEgyhgAEZcIGlEbRYNbUS3yODNemacVSAaEuIOyJK/Q4XcyidLFc/udYlfxAsUSlz
+	2BWimKoYHzTxFj4BnyQJhWXq59R3PnIk8vapb8SDKHa4k2cimXAHYQeRkgDV2o2YOG+Psq
+	OV5c22qe2xzItdcJw3SI5Whyf2JTmuh9Wl0bdRSt0XYfQ62xwelFZX0H21WVNGZ8IQ9u6U
+	cmqtoJxWkwvCE4sG20KB6OBmzqQ+loBIuen2FgMpwVJH1IAE0vIhJldlUevxKVFiw503C7
+	c4dGwEDYTkMFwfJOrD2SzPxQiH2v15lkkx4skI6/Ud+x1K/e2v5IWNuE9/uetw==
+Message-ID: <15a8400a-37b6-4216-96a2-1ba5d48654d6@bootlin.com>
+Date: Thu, 11 Apr 2024 15:50:02 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: docs@lists.yoctoproject.org, bitbake-devel@lists.openembedded.org,
- quentin.schulz@theobroma-systems.com, =?UTF-8?Q?Simone_Wei=C3=9F?=
- <simone.p.weiss@posteo.com>
-Subject: Re: [docs] [bitbake-devel] [PATCH v3] bitbake: doc: Add section for
- variable context
+Cc: bitbake-devel@lists.openembedded.org,
+ YP docs mailing list <docs@lists.yoctoproject.org>
+Subject: Re: [bitbake-devel] [PATCH] doc/user-manual: Add BB_LOADFACTOR_MAX
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <20240223192047.7431-1-simone.p.weiss@posteo.com>
- <0a3f67b7-06ea-4dc0-bdf6-506098cf46b2@bootlin.com>
- <ce7e0116-69e9-4103-874b-c1f16d0a64e6@theobroma-systems.com>
+References: <20240411122508.2149106-1-richard.purdie@linuxfoundation.org>
 Content-Language: en-US
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 Organization: Bootlin
-In-Reply-To: <ce7e0116-69e9-4103-874b-c1f16d0a64e6@theobroma-systems.com>
+In-Reply-To: <20240411122508.2149106-1-richard.purdie@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-GND-Sasl: michael.opdenacker@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Apr 2024 13:34:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16071
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Apr 2024 13:50:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16072
 
-Hi Richard
+Hi Richard,
 
-On 2/27/24 at 17:38, Quentin Schulz via lists.openembedded.org wrote:
-> Hi all,
+On 4/11/24 at 14:25, Richard Purdie wrote:
+> Document BB_LOADFACTOR_MAX which was recently added.
 >
-> On 2/26/24 15:16, Michael Opdenacker via lists.yoctoproject.org wrote:
->> Hi Simone,
->>
->> On 2/23/24 at 20:20, Simone Weiß wrote:
->>> From: Simone Weiß <simone.p.weiss@posteo.com>
->>>
->>> This is inspired by the same section in the yocto-docs. It aims to 
->>> provide
->>> information in what contexts(recipes, .conf, bbclass,...) a variable 
->>> is usually
->>> used. For that I tried to group similar variables, so that a short 
->>> overview is
->>> given. This was inspired by [YOCTO #14072], but of course does not 
->>> implement a
->>> warning if a variable is used in an unintended context.
->>>
->>> Signed-off-by: Simone Weiß <simone.p.weiss@posteo.com>
->>> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
->>> ---
->>>
->>> Notes to v3:
->>> - Applied the fixes suggested in review (thanks for the patch! I 
->>> hope adding the
->>>    Signed-off like this during squashing is fine)
->>> - For the ref label, I plan to come up with an svg that illustrates 
->>> tasks,
->>>    recipes, classes, conf (thanks Quentin for the suggestion), but 
->>> in a generic
->>>    way and add it to the Concepts section, I want to add a ref from 
->>> there.
->>>   ...bake-user-manual-ref-variables-context.rst | 91 
->>> +++++++++++++++++++
->>>   doc/index.rst                                 |  1 +
->>>   2 files changed, 92 insertions(+)
->>>   create mode 100644 
->>> doc/bitbake-user-manual/bitbake-user-manual-ref-variables-context.rst
->>
->>
->> Thanks for this new update of this worthy addition to the BitBake 
->> documentation! Everything looks good now.
->> Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>   .../bitbake-user-manual-ref-variables.rst                | 9 +++++++++
+>   1 file changed, 9 insertions(+)
 >
-> Reviewed-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
->
-> A section on task context would be nice but it can come up in a later 
-> patch I guess.
->
-> Thanks!
->
-> By the way, I had an old doc build lying around and just git pull my 
-> local branch + applying this patch and somehow the navbar was not 
-> updated to contain this new section, I had to remove the build dir and 
-> compile it from scratch. I'm wondering if we aren't missing something 
-> somewhere so that this navbar is updated whenever it needs to?
->
-> Cheers,
-> Quentin
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> index d3936935cd..00faeea686 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> @@ -432,6 +432,15 @@ overview of their function and contents.
+>         ``ConfigParsed`` event can set the variable to trigger the re-parse.
+>         You must be careful to avoid recursive loops with this functionality.
+>   
+> +   :term:`BB_LOADFACTOR_MAX`
+> +      Setting this to a value will cause bitbake to check the system load
+s/bitbake/BitBake/
 
+That's the convention we follow everywhere, when talking about the 
+total, not the command to type of course.
+> +      average before executing new tasks. If the load average is above the
+> +      the number of CPUs multipled by this factor, no new task will be started
+> +      unless there is no task executing. A value of "1.5" has been found to
+> +      work reasonably. This is helpful for systems which don't have pressure
+> +      regulation enabled, which is more granular. Pressure values take
+> +      precedence over loadfactor.
+> +
 
-Ping for this nice patch from Simone.
-Both of us have given it our "Reviewed-by".
-
-Thanks in advance
-Cheers
-Michael.
+Reviewed-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Once this is merged, I'll make the YP docs directly point to this in the 
+BitBake manual. At the moment, we have a shorter description.
+Thanks!
+Michael
 
 -- 
+
 Michael Opdenacker, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
