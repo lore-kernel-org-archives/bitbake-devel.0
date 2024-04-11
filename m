@@ -2,62 +2,60 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC67C4345F
-	for <webhook@archiver.kernel.org>; Thu, 11 Apr 2024 13:56:36 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.18712.1712843786249640404
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E096C4345F
+	for <webhook@archiver.kernel.org>; Thu, 11 Apr 2024 16:11:37 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web10.22415.1712851895680444178
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Apr 2024 06:56:27 -0700
+ Thu, 11 Apr 2024 09:11:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=a18pE/v+;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-343cfe8cae1so4936397f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Apr 2024 06:56:26 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=H/ZNs5Mw;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-416b5f6813cso470295e9.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Apr 2024 09:11:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1712843785; x=1713448585; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1712851894; x=1713456694; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=36F1WkfFxVw2YgGndrNBmQ5j1FnXMlVTswfxDzE2DvQ=;
-        b=a18pE/v+yRP6MmnBn/u/mNWxczsapi8PbrcOj5nO/kM93zSTK6BqKtZjhuTtb8/Kmk
-         otC/lCOjxuICn5fNdnC94bF6sLkMwS8B9idxLr6HV8LmseTQg/Hh3K2VluqhRNt6jVBA
-         VsoJ6bZPVd2AzEQuuRjVAuWl3I0bSrY6hHQYE=
+         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3hFRKBund/IpMibTIEnAR9lIMWoUQzMOByYcQz6kwLo=;
+        b=H/ZNs5MwF1RL6p9XHbj100xCXaYvxnyR8Sm6IePckhKaGZJF17sWqYunupEldo4PRd
+         B27kGzkYHi3c/Kmak9LOxYkmYzpwkwk3iHn5aBwVOhjFd4w4ERjgLHjbk0xrjnCNOW4i
+         8QyS/OMk/TSuYPqQtBzvjWLRzHG6AaDm858mI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712843785; x=1713448585;
+        d=1e100.net; s=20230601; t=1712851894; x=1713456694;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :references:in-reply-to:date:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=36F1WkfFxVw2YgGndrNBmQ5j1FnXMlVTswfxDzE2DvQ=;
-        b=jKY/7zye8+gSxaWYgFup6uFbkEw9v/iK5+KKE4mozaYP72Zgc+FZI/51uUVVXy7adJ
-         MBP3kcrcAL29XVvNB1z45qU8rUy4ZWbO9IjflbcGUq631fXW+eLJRBIGNaLgTGyT9gHU
-         +uHbWzdGP3kWMJoRmDURDyJY0Jd5foaR4gdotAb8y3WEi/SXRJ+V5cqrHILx2lX0DDao
-         s+8pr7iV+UlY9jTkpeUmsLuWoGez+36KT62hpIpGMbiIgTHxLt1gODyEdjBXbW6seixn
-         iZQIz1aVPa+F9RgWERvJLF4Ivr7/LZoHh+fGycHv1x3ZjP8Khpnb/aCH9sZfV34jwE4+
-         tyVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWG/H6Ym6PEq8mK6sEdLvyY8FOK22+8PuSWDSPPUP48NON2vm2S03gSW+UlF4TlMlBoP+2YjPd+dI7QjfBzZd74w+wen7U4al46s43eIyNrEnSJ2DQ=
-X-Gm-Message-State: AOJu0Yw2aSr3qzrXXizflqeOdXpJbkSGgwXACFgsSZD6Lmpm6DfAJXrf
-	pjzRZkq6F6ww/grNOIo+rOn3pFruDPcpKAITK/r8WbFXtLvZBH/mXZ4M5Hz67lo=
-X-Google-Smtp-Source: AGHT+IHuqPykg0ssnuQFxXE3t3aQvT+jy9kvRQV4BPMufskmFyZZq4UWq/BWOc2REYB9d1/CyNYXOQ==
-X-Received: by 2002:a5d:5290:0:b0:345:b238:5350 with SMTP id c16-20020a5d5290000000b00345b2385350mr4102586wrv.5.1712843784672;
-        Thu, 11 Apr 2024 06:56:24 -0700 (PDT)
+        bh=3hFRKBund/IpMibTIEnAR9lIMWoUQzMOByYcQz6kwLo=;
+        b=pIbjZpX0XH4XoIfhw01/TjPiN0Y0TLfArkfUGS21VjUCMmEMkJXMG+r/cSaPG33xZb
+         g7O1bQOa8lJWgSQ4PjcVb2c5ppTpgKTgcrdx+Rv5a2lwgU8xgeZwnouIoRAlRo1+dRyQ
+         to9vdQA3pyJtpMxmqJn7eD40I4TL7VhbK5QMpHKYzSDES6t8eck9040BMbgPoLfxJQX8
+         V3y2xVEoYyxKXxaKPAg01/i5VclsXWkAZ8iwXdL/FgE1WArbEXpyPtYRdx3z1ExTtyXX
+         UIIJiDgXgFLvqFO/SXg8UXo5V7/bb3SHsdWr4Tf5q8rNTKmioKfxzLxeFPH9b1ZNRcAN
+         eg1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWxbjzIKwsAQ6T0GASQ8ptu+jzb3QWAW9+ce3EJdcMUJv32RzXqDAXLe7lIrtVKSCcX6orrHRqEqNZlBs+FMC2UyqbrKfOpNH/ZNp8cFd8sWZNF0yc=
+X-Gm-Message-State: AOJu0YwSZ8Da2PyBxLgdUlEyNtgLhEUoH2WLCvTeRGVq4jObqZgnAIu6
+	GCRMojV431dgAaVpuxzSsED+b3r3GgCEQhFSdbqsP8jqB02W3qonrAvoMfXTK+0=
+X-Google-Smtp-Source: AGHT+IGuTciCNo6RN4q5GY/ZuXD7OmFE489PFcoynEE+7+BIcBAVm4V98VMKFuPnbgVTwySkLTjy2w==
+X-Received: by 2002:a05:600c:4fd4:b0:417:de97:f2a0 with SMTP id o20-20020a05600c4fd400b00417de97f2a0mr239082wmq.2.1712851893613;
+        Thu, 11 Apr 2024 09:11:33 -0700 (PDT)
 Received: from ?IPv6:2001:8b0:aba:5f3c:1824:5b7d:2973:625e? ([2001:8b0:aba:5f3c:1824:5b7d:2973:625e])
-        by smtp.gmail.com with ESMTPSA id fm6-20020a05600c0c0600b004156afd6843sm5616133wmb.18.2024.04.11.06.56.24
+        by smtp.gmail.com with ESMTPSA id p5-20020a05600c1d8500b00417e227f40bsm1632007wms.3.2024.04.11.09.11.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 06:56:24 -0700 (PDT)
-Message-ID: <d382922b9ddb829c370c09bb5ece65eacbb8cb4f.camel@linuxfoundation.org>
-Subject: Re: [docs] [bitbake-devel] [PATCH v3] bitbake: doc: Add section for
- variable context
+        Thu, 11 Apr 2024 09:11:33 -0700 (PDT)
+Message-ID: <d73481dcd86bd7863493085e14108179313f3deb.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] bitbake-layers: add/remove option to
+ not use tinfoil
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Cc: docs@lists.yoctoproject.org, bitbake-devel@lists.openembedded.org, 
-	quentin.schulz@theobroma-systems.com, Simone =?ISO-8859-1?Q?Wei=DF?=
-	 <simone.p.weiss@posteo.com>
-Date: Thu, 11 Apr 2024 14:56:23 +0100
-In-Reply-To: <7ebe5ceb-e3c1-4c66-b080-cbfd3b2cfe80@bootlin.com>
-References: <20240223192047.7431-1-simone.p.weiss@posteo.com>
-	 <0a3f67b7-06ea-4dc0-bdf6-506098cf46b2@bootlin.com>
-	 <ce7e0116-69e9-4103-874b-c1f16d0a64e6@theobroma-systems.com>
-	 <7ebe5ceb-e3c1-4c66-b080-cbfd3b2cfe80@bootlin.com>
+To: Simone =?ISO-8859-1?Q?Wei=DF?= <simone.p.weiss@posteo.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Thu, 11 Apr 2024 17:11:32 +0100
+In-Reply-To: <84ce665a8d36f4b74ae2fd1f99fc265765549b5e.camel@posteo.net>
+References: <20240330164640.7270-1-simone.p.weiss@posteo.com>
+	 <9fa62770febe3e4cb8f8099d3cf9c65ca3c96886.camel@linuxfoundation.org>
+	 <402bbf30a0b90189286bb157271ab675d6e2e2d2.camel@posteo.net>
+	 <84ce665a8d36f4b74ae2fd1f99fc265765549b5e.camel@posteo.net>
 Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
@@ -73,38 +71,65 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Apr 2024 13:56:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16073
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Apr 2024 16:11:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16074
 
-On Thu, 2024-04-11 at 15:34 +0200, Michael Opdenacker wrote:
-> Hi Richard
-> > Reviewed-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+On Wed, 2024-04-10 at 20:13 +0000, Simone Wei=C3=9F wrote:
+> On Tue, 2024-04-02 at 20:51 +0000, Simone Wei=C3=9F wrote:
+> > On Tue, 2024-04-02 at 14:29 +0100, Richard Purdie wrote:
+> > > On Sat, 2024-03-30 at 16:46 +0000, Simone Wei=C3=9F wrote:
+> > > > From: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
+> > > >=20
+> > > > Fixes [YOCTO #15417]
+> > > >=20
+> > > > When a layer adds a new dependency after it was added to a conf, it
+> > > > can not be
+> > > > removed w/o this dependency in the setup. Even the dependent layer
+> > > > can
+> > > > not be
+> > > > added, as the tinfoil setup will fail.
+> > > > Add an option to not perform the tinfoil at all, the use will be at
+> > > > own risk,
+> > > > i.e. the added layers might not parse properly afterwards.
+> > > > This is not merged into the force options as it even changes the
+> > > > loading of
+> > > > plugins from other layers and is hence even more invasive as force.
+> > >=20
+> > > Could you expand a bit more about this difference to the force option
+> > > please?
+> > >=20
+> > The force option skips the recipe parse verification, this means after
+> > all
+> > other setup is done the recipes are not parsed before whatever
+> > subcommand
+> > is executed.
 > >=20
-> > A section on task context would be nice but it can come up in a
-> > later=20
-> > patch I guess.
+> > When a layer dependency is causing problems, this will not work.=C2=A0
+> > bitbake-
+> > layers first sets up tinfoil to find further plugins
+> > for itself via getVar(BBPATH). This would already be causing issues whe=
+n
+> > -
+> > for example - a layer with dependency issues should be removed via
+> > bitbake-layers. As this restricts also which plugins can be found for
+> > bitbake-layers to those under the the topdir, I separated it from force=
+.
 > >=20
-> > Thanks!
+> > Best,
+> > Simone
 > >=20
-> > By the way, I had an old doc build lying around and just git pull
-> > my=20
-> > local branch + applying this patch and somehow the navbar was not=20
-> > updated to contain this new section, I had to remove the build dir
-> > and=20
-> > compile it from scratch. I'm wondering if we aren't missing
-> > something=20
-> > somewhere so that this navbar is updated whenever it needs to?
 > >=20
-> > Cheers,
-> > Quentin
->=20
->=20
-> Ping for this nice patch from Simone.
-> Both of us have given it our "Reviewed-by".
+> Any further thoughts/opinions?
 
-I think I misread Quentin's comment, sorry. I've merged it now.
+I'm not happy about having two very similar options but I wasn't able
+to look into this in any detail and hence I've not been able to make
+any sensible suggestion on how to move forward, sorry.
 
 Cheers,
 
 Richard
+
+
+
+
 
