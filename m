@@ -1,94 +1,90 @@
-Return-Path: <simone.p.weiss@posteo.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAADCD128A
-	for <webhook@archiver.kernel.org>; Wed, 10 Apr 2024 20:13:22 +0000 (UTC)
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
- by mx.groups.io with SMTP id smtpd.web11.319.1712779995547566398
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5C1CD128A
+	for <webhook@archiver.kernel.org>; Thu, 11 Apr 2024 12:25:16 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.16497.1712838311905826692
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Apr 2024 13:13:15 -0700
+ Thu, 11 Apr 2024 05:25:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@posteo.com header.s=2017 header.b=TX2BccYP;
- spf=pass (domain: posteo.com, ip: 185.67.36.65, mailfrom: simone.p.weiss@posteo.com)
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 4767024002A
-	for <bitbake-devel@lists.openembedded.org>; Wed, 10 Apr 2024 22:13:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.com; s=2017;
-	t=1712779993; bh=SAjVHYOc/RT28yCGudv8FfxhNZHwZQh3Coowf01aBrU=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:From;
-	b=TX2BccYPpeW0SHXuz8EUWuymJd/nv9snX5059+v1106nEbHZTRa4eVFrEi7qrmNMh
-	 VR43zz7QeLIQlM8JuTzH7zaoOd9OH5Lm6uYyrg/wZIdZiJWbPTN+g1gGozigF1cMf2
-	 +/lh7pTCkonjueH1IfK2/SrPgP7V4bya++ToDiBohD9vA87yixxWA5VNmy1os0Xouk
-	 EM2yBySHlN/tX5mZkcRwWUwBK+m3uW6aNZ1ZJjphNBVI2GuWV+ph0Waw+0m1Gy9E5x
-	 3dw0sb4cwaD6JG+fw3jZtSR60Bb2my2sACMSCr95tA9ZdfFunYoQGta1J1ElcIN+Hf
-	 iboiaKKiC4mnw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4VFDXl643mz6twF;
-	Wed, 10 Apr 2024 22:13:11 +0200 (CEST)
-Message-ID: <84ce665a8d36f4b74ae2fd1f99fc265765549b5e.camel@posteo.net>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-layers: add/remove option to
- not use tinfoil
-From: Simone =?ISO-8859-1?Q?Wei=DF?= <simone.p.weiss@posteo.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>, Simone
- =?ISO-8859-1?Q?Wei=DF?= <simone.p.weiss@posteo.com>,
- bitbake-devel@lists.openembedded.org
-Date: Wed, 10 Apr 2024 20:13:11 +0000
-In-Reply-To: <402bbf30a0b90189286bb157271ab675d6e2e2d2.camel@posteo.net>
-References: <20240330164640.7270-1-simone.p.weiss@posteo.com>
-	 <9fa62770febe3e4cb8f8099d3cf9c65ca3c96886.camel@linuxfoundation.org>
-	 <402bbf30a0b90189286bb157271ab675d6e2e2d2.camel@posteo.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bMm57cR+;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4155819f710so60867165e9.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Apr 2024 05:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1712838310; x=1713443110; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=y82SJUptf/2pWzk5rStmtqRArFqWlGi/ALSX18ASurw=;
+        b=bMm57cR+OO10Hu0PjM7U05ZrRBQo0MCX7AFwyCwrKPSO8GoaLeCSdFI7ap8pKaj8HD
+         2Z74c7nMvKUyTvvZqCF52iqmm395A6CBXtTLI/nZuybEIUbq+CzD4PQqD7rQ/uULB8Eq
+         K+HDFcECGWjLL1IiNL6XoTNCD2/YjsqTluKiw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712838310; x=1713443110;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y82SJUptf/2pWzk5rStmtqRArFqWlGi/ALSX18ASurw=;
+        b=aZZTwrXygZ80xs8J2vUNMzn+2yMKQ2OKWuyfol2uqVymTIMLjOFcwn/1o4QHq67AFi
+         7jCmGmfIcR0jXsYviWP2D0QU1LwvwMtcH0paeXvNi+S4vULDw2EDKkMb5ntmbw7qSDt0
+         hGl/38klV/+7jlq9JGTOYvXTuEmoC8c+TA6x6jaSyiSYh0EDSHdDFR1rglld8CHpmWKD
+         cPpG9FGIx9Yiklb0Ofqr3TmBDabCtkb2Np6CXCJ7gFDspReZAi81DePIRi4aGIBNE44w
+         VMO6+YPcXYEU0YyWw8xLOCoXD62OjKsMRABduU6abNnaKYUyvlTok+Ach5byqDVuGGge
+         iNIg==
+X-Gm-Message-State: AOJu0YwKj1YsMcXq9nPvPJmBXynOp03vGT5m/th/+Vp/Wkne4YIZ4SGj
+	gz1t7H4sULZf3aOVljKolEtV6gaTx/LOHM4EwGUwP9WhNBQqy8VhfQFMbz9d8ILyTssEqWoYju7
+	Upiw=
+X-Google-Smtp-Source: AGHT+IEAqKjdPzYefKauMl056IxrIGSqvsUJ2Yr1QTtAy6o7RslyIh5ELUdL0EYMVtC9M3jHdodt5w==
+X-Received: by 2002:a05:600c:a4b:b0:414:726:87d9 with SMTP id c11-20020a05600c0a4b00b00414072687d9mr5209542wmq.12.1712838309999;
+        Thu, 11 Apr 2024 05:25:09 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:1824:5b7d:2973:625e])
+        by smtp.gmail.com with ESMTPSA id d4-20020adfc084000000b00343c1cd5aedsm1665889wrf.52.2024.04.11.05.25.09
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 05:25:09 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] doc/user-manual: Add BB_LOADFACTOR_MAX
+Date: Thu, 11 Apr 2024 13:25:08 +0100
+Message-Id: <20240411122508.2149106-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Apr 2024 20:13:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16069
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Apr 2024 12:25:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16070
 
-On Tue, 2024-04-02 at 20:51 +0000, Simone Wei=C3=9F wrote:
-> On Tue, 2024-04-02 at 14:29 +0100, Richard Purdie wrote:
-> > On Sat, 2024-03-30 at 16:46 +0000, Simone Wei=C3=9F wrote:
-> > > From: Simone Wei=C3=9F <simone.p.weiss@posteo.com>
-> > >=20
-> > > Fixes [YOCTO #15417]
-> > >=20
-> > > When a layer adds a new dependency after it was added to a conf, it
-> > > can not be
-> > > removed w/o this dependency in the setup. Even the dependent layer
-> > > can
-> > > not be
-> > > added, as the tinfoil setup will fail.
-> > > Add an option to not perform the tinfoil at all, the use will be at
-> > > own risk,
-> > > i.e. the added layers might not parse properly afterwards.
-> > > This is not merged into the force options as it even changes the
-> > > loading of
-> > > plugins from other layers and is hence even more invasive as force.
-> >=20
-> > Could you expand a bit more about this difference to the force option
-> > please?
-> >=20
-> The force option skips the recipe parse verification, this means after
-> all
-> other setup is done the recipes are not parsed before whatever
-> subcommand
-> is executed.
->=20
-> When a layer dependency is causing problems, this will not work.=C2=A0
-> bitbake-
-> layers first sets up tinfoil to find further plugins
-> for itself via getVar(BBPATH). This would already be causing issues when
-> -
-> for example - a layer with dependency issues should be removed via
-> bitbake-layers. As this restricts also which plugins can be found for
-> bitbake-layers to those under the the topdir, I separated it from force.
->=20
-> Best,
-> Simone
->=20
->=20
-Any further thoughts/opinions?
+Document BB_LOADFACTOR_MAX which was recently added.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ .../bitbake-user-manual-ref-variables.rst                | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index d3936935cd..00faeea686 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -432,6 +432,15 @@ overview of their function and contents.
+       ``ConfigParsed`` event can set the variable to trigger the re-parse.
+       You must be careful to avoid recursive loops with this functionality.
+ 
++   :term:`BB_LOADFACTOR_MAX`
++      Setting this to a value will cause bitbake to check the system load
++      average before executing new tasks. If the load average is above the
++      the number of CPUs multipled by this factor, no new task will be started
++      unless there is no task executing. A value of "1.5" has been found to
++      work reasonably. This is helpful for systems which don't have pressure
++      regulation enabled, which is more granular. Pressure values take
++      precedence over loadfactor.
++
+    :term:`BB_LOGCONFIG`
+       Specifies the name of a config file that contains the user logging
+       configuration. See
+-- 
+2.40.1
+
 
