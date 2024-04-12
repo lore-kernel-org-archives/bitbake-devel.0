@@ -1,112 +1,266 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80296C4345F
-	for <webhook@archiver.kernel.org>; Fri, 12 Apr 2024 17:03:45 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web10.52662.1712941418112971057
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C17C4345F
+	for <webhook@archiver.kernel.org>; Fri, 12 Apr 2024 20:28:34 +0000 (UTC)
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+ by mx.groups.io with SMTP id smtpd.web11.1472.1712953706029906382
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Apr 2024 10:03:39 -0700
+ Fri, 12 Apr 2024 13:28:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aI0lwkw2;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-417d14c3411so11469365e9.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Apr 2024 10:03:37 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=VIC39HQx;
+ spf=pass (domain: gmail.com, ip: 209.85.166.47, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7d5e4097a9aso47345639f.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Apr 2024 13:28:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1712941416; x=1713546216; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=D5wD4mGDS9QrcFza+GqsKZ48foaV/gBWv+FVUTGKyho=;
-        b=aI0lwkw2PeEjuSVnnt29DTbKVITSnp+d7KobFKUZTYlT6C8WFEcOtUtgIfs2kzNdLW
-         PZiBk/l8MmCpb2oKJTLwmwcYcQ1oO4aH2R/ZeeKpPi5FEDOtuH45xLbRFIZLZMvR9eBd
-         S9I38bl7CbSvN85xGUSc4udDHOJtw80A2ciaM=
+        d=gmail.com; s=20230601; t=1712953704; x=1713558504; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=flmU+xlGT7VQ4A7IUdzQ8jpgwsUhXUxm4iaFHRQmlco=;
+        b=VIC39HQxKs64gczlPER4xT2mFohvKPCz8oWt92JLW0aSRFAUTxZWp+LiD/lITDjXRo
+         gzb668+OwC9fdTRpo4hIT4ApIF4m9xiozHu/VTz34+aopGkzS74sJaeag+nje9g0YoCq
+         9yxvUIIn2e9u/WnDDCf8wF+UwjnIfxakcpUPXVoqmj7d/sTjVU1LOTvNUS+PIQdyzARU
+         fDiJrMKkbaNqS8nLUuhJXIv9gEXo56Sb5vbiibtu5/h6USjdPPNe5e9X0SEAjkCEEr3H
+         vbhIpTI/lMScijC0WM/38v5nE85oZYnBICHvmTXhgG50SirLWl0fMiWQ1ZFc/MGnDhjI
+         7x5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712941416; x=1713546216;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D5wD4mGDS9QrcFza+GqsKZ48foaV/gBWv+FVUTGKyho=;
-        b=SKlzWDjE9TwKPd6jkDUy+sezQJN2mIOA9qJi7QeD2sNFwTmWrCiAinTR5WT8F/cxXw
-         sa7/KMS9J204DPj96FKv1KwyFUCqZW7ZYhRmbLuJds+BGZWH9+Gl74z52YMk7ofgW1V1
-         SG7VE3m7noKXCjk6CWkUU1hIcm2zDEDBP1o8fhAA2kxttPdA5qa5G5bcjLy505GFsdvz
-         BHezvvGCxzhW0znK3NWFkN/1C+ZwuqiWPi2/x9d7uOviU0XJ+BpQllyyMvtQRzmt7Ty/
-         eEIN9fhjYsNGUq7PmjL7J2uOFF6Bf35CZmnmgveGvwxxHJRtJjGxr0r/4GZa4BxM+92h
-         zLLQ==
-X-Gm-Message-State: AOJu0YwgcNKv45Gyk4Z1S8YBUSC7fsOP4nLmOUWWotg/Re4lajm7hv+e
-	Qt3dZFjPthdbe9LLsumaRjR7eMZXOCShrKvidBtL1MH5kqtUqrcS5pttUyY+2iNUf+MePHzpeqD
-	XEj8=
-X-Google-Smtp-Source: AGHT+IEieGfgOpzjoWbndaUeOIfJyTqLl9nSIlk4MLdOOIdDwe+BFufjdXngGOzQypSvrymunVNJyQ==
-X-Received: by 2002:a05:600c:1c82:b0:418:19d4:f9eb with SMTP id k2-20020a05600c1c8200b0041819d4f9ebmr208950wms.12.1712941416050;
-        Fri, 12 Apr 2024 10:03:36 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:555f:bec2:a7d5:9e31])
-        by smtp.gmail.com with ESMTPSA id n21-20020a05600c3b9500b00416928e239csm6250787wms.35.2024.04.12.10.03.35
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1712953704; x=1713558504;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=flmU+xlGT7VQ4A7IUdzQ8jpgwsUhXUxm4iaFHRQmlco=;
+        b=gGFzU+6KgI3nXso6ItJMPl9AYrnvD72Lx2IVMJiWJwTVEru9v97eUyDcpJRPVxifKY
+         S/z6ZJoS5IPqQTvIY6/4b4wNUbk5KPcs1vvS08ehWeyrXfFHc3uXoDyqgfWN7EVn95AA
+         Y99dtEvxHKM/QXxODSnDnzbW+DzXFLebgm2MVnCkGrwf+6txGCUH7dtqU4J5J6tDB13n
+         N09e2o81hIcn6P9bksBHhk3L8YIN14jJ5rhrSqrVCAXghYTKI6JADV86n3o4ZENHzkkx
+         ZLffkV6nhev+TbpH5ammfaafkPu3CzmtwCP9t1tCJL1ZgEIitJETgs6v/wlryMCp2KNx
+         k5YA==
+X-Gm-Message-State: AOJu0YzBGsZ9akPEZXe/KkhwIsyXYI24uz/CR1MlOfpZjrkCFqj2Kp+p
+	NCXbyQ34HdV8qKHr7jmQhDQgR98JyCo0yA6PR4gjxwaHtd5Rv/OyfncfLg==
+X-Google-Smtp-Source: AGHT+IFAFWA27cRCSuJjgy98tvwruNBopUYb/Rz8Mdi/6VE2JWjlscOCSIbfXlWEOKvg9ApzgboG3A==
+X-Received: by 2002:a05:6602:3808:b0:7d5:e8ed:21d1 with SMTP id bb8-20020a056602380800b007d5e8ed21d1mr4371599iob.17.1712953704194;
+        Fri, 12 Apr 2024 13:28:24 -0700 (PDT)
+Received: from localhost.localdomain ([2601:282:4300:19e0::78ab])
+        by smtp.gmail.com with ESMTPSA id io13-20020a056638830d00b0048295e0b1d0sm1251980jab.39.2024.04.12.13.28.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 10:03:35 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Fri, 12 Apr 2024 13:28:23 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] BBHandler: Handle unclosed functions correctly
-Date: Fri, 12 Apr 2024 18:03:35 +0100
-Message-Id: <20240412170335.2321226-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.40.1
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] hashserv: client: Fix mode state errors
+Date: Fri, 12 Apr 2024 14:28:16 -0600
+Message-Id: <20240412202816.1965036-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Apr 2024 17:03:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16090
+ <bitbake-devel@lists.openembedded.org>; Fri, 12 Apr 2024 20:28:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16091
 
-A function accidentally defined as:
+Careful reading of the code can contrive cases where poorly timed
+ConnectionError's will result in the client mode being incorrectly reset
+to MODE_NORMAL when it should actual be a stream mode for the current
+command. Fix this by no longer attempting to restore the mode when the
+connection is setup. Instead, attempt to set the stream mode inside the
+send wrapper for the stream data, which means that it should always end
+up in the correct mode before continuing.
 
-somefunction() {
-	:
- }
+Also, factor out the transition to normal mode into a invoke() override
+so it doesn't need to be specified over and over again.
 
-which is unclosed due to the space at the end, would currently silently
-cause breakage. Have the parser throw and error for this.
-
-[YOCTO #15470]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/parse/parse_py/BBHandler.py | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ bitbake/lib/hashserv/client.py | 39 +++++++++-------------------------
+ 1 file changed, 10 insertions(+), 29 deletions(-)
 
-diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
-index cd1c998f8f..c13e4b9755 100644
---- a/lib/bb/parse/parse_py/BBHandler.py
-+++ b/lib/bb/parse/parse_py/BBHandler.py
-@@ -34,6 +34,7 @@ __infunc__ = []
- __inpython__ = False
- __body__   = []
- __classname__ = ""
-+__residue__ = []
+diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
+index b269879ecfd..0b254beddd7 100644
+--- a/bitbake/lib/hashserv/client.py
++++ b/bitbake/lib/hashserv/client.py
+@@ -27,9 +27,7 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
  
- cached_statements = {}
+     async def setup_connection(self):
+         await super().setup_connection()
+-        cur_mode = self.mode
+         self.mode = self.MODE_NORMAL
+-        await self._set_mode(cur_mode)
+         if self.username:
+             # Save off become user temporarily because auth() resets it
+             become = self.saved_become_user
+@@ -38,13 +36,20 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+             if become:
+                 await self.become_user(become)
  
-@@ -80,7 +81,7 @@ def inherit(files, fn, lineno, d, deferred=False):
-             __inherit_cache = d.getVar('__inherit_cache', False) or []
+-    async def send_stream(self, msg):
++    async def send_stream(self, mode, msg):
+         async def proc():
++            await self._set_mode(mode)
+             await self.socket.send(msg)
+             return await self.socket.recv()
  
- def get_statements(filename, absolute_filename, base_name):
--    global cached_statements
-+    global cached_statements, __residue__, __body__
+         return await self._send_wrapper(proc)
  
-     try:
-         return cached_statements[absolute_filename]
-@@ -100,6 +101,11 @@ def get_statements(filename, absolute_filename, base_name):
-             # add a blank line to close out any python definition
-             feeder(lineno, "", filename, base_name, statements, eof=True)
- 
-+        if __residue__:
-+            raise ParseError("Unparsed lines %s: %s" % (filename, str(__residue__)), filename, lineno)
-+        if __body__:
-+            raise ParseError("Unparsed lines from unclosed function %s: %s" % (filename, str(__body__)), filename, lineno)
++    async def invoke(self, *args, **kwargs):
++        # It's OK if connection errors cause a failure here, because the mode
++        # is also reset to normal on a new connection
++        await self._set_mode(self.MODE_NORMAL)
++        return await super().invoke(*args, **kwargs)
 +
-         if filename.endswith(".bbclass") or filename.endswith(".inc"):
-             cached_statements[absolute_filename] = statements
-         return statements
+     async def _set_mode(self, new_mode):
+         async def stream_to_normal():
+             await self.socket.send("END")
+@@ -84,14 +89,12 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         self.mode = new_mode
+ 
+     async def get_unihash(self, method, taskhash):
+-        await self._set_mode(self.MODE_GET_STREAM)
+-        r = await self.send_stream("%s %s" % (method, taskhash))
++        r = await self.send_stream(self.MODE_GET_STREAM, "%s %s" % (method, taskhash))
+         if not r:
+             return None
+         return r
+ 
+     async def report_unihash(self, taskhash, method, outhash, unihash, extra={}):
+-        await self._set_mode(self.MODE_NORMAL)
+         m = extra.copy()
+         m["taskhash"] = taskhash
+         m["method"] = method
+@@ -100,7 +103,6 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         return await self.invoke({"report": m})
+ 
+     async def report_unihash_equiv(self, taskhash, method, unihash, extra={}):
+-        await self._set_mode(self.MODE_NORMAL)
+         m = extra.copy()
+         m["taskhash"] = taskhash
+         m["method"] = method
+@@ -108,18 +110,15 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         return await self.invoke({"report-equiv": m})
+ 
+     async def get_taskhash(self, method, taskhash, all_properties=False):
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke(
+             {"get": {"taskhash": taskhash, "method": method, "all": all_properties}}
+         )
+ 
+     async def unihash_exists(self, unihash):
+-        await self._set_mode(self.MODE_EXIST_STREAM)
+-        r = await self.send_stream(unihash)
++        r = await self.send_stream(self.MODE_EXIST_STREAM, unihash)
+         return r == "true"
+ 
+     async def get_outhash(self, method, outhash, taskhash, with_unihash=True):
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke(
+             {
+                 "get-outhash": {
+@@ -132,27 +131,21 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         )
+ 
+     async def get_stats(self):
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke({"get-stats": None})
+ 
+     async def reset_stats(self):
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke({"reset-stats": None})
+ 
+     async def backfill_wait(self):
+-        await self._set_mode(self.MODE_NORMAL)
+         return (await self.invoke({"backfill-wait": None}))["tasks"]
+ 
+     async def remove(self, where):
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke({"remove": {"where": where}})
+ 
+     async def clean_unused(self, max_age):
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke({"clean-unused": {"max_age_seconds": max_age}})
+ 
+     async def auth(self, username, token):
+-        await self._set_mode(self.MODE_NORMAL)
+         result = await self.invoke({"auth": {"username": username, "token": token}})
+         self.username = username
+         self.password = token
+@@ -160,7 +153,6 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         return result
+ 
+     async def refresh_token(self, username=None):
+-        await self._set_mode(self.MODE_NORMAL)
+         m = {}
+         if username:
+             m["username"] = username
+@@ -174,34 +166,28 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         return result
+ 
+     async def set_user_perms(self, username, permissions):
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke(
+             {"set-user-perms": {"username": username, "permissions": permissions}}
+         )
+ 
+     async def get_user(self, username=None):
+-        await self._set_mode(self.MODE_NORMAL)
+         m = {}
+         if username:
+             m["username"] = username
+         return await self.invoke({"get-user": m})
+ 
+     async def get_all_users(self):
+-        await self._set_mode(self.MODE_NORMAL)
+         return (await self.invoke({"get-all-users": {}}))["users"]
+ 
+     async def new_user(self, username, permissions):
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke(
+             {"new-user": {"username": username, "permissions": permissions}}
+         )
+ 
+     async def delete_user(self, username):
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke({"delete-user": {"username": username}})
+ 
+     async def become_user(self, username):
+-        await self._set_mode(self.MODE_NORMAL)
+         result = await self.invoke({"become-user": {"username": username}})
+         if username == self.username:
+             self.saved_become_user = None
+@@ -210,15 +196,12 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         return result
+ 
+     async def get_db_usage(self):
+-        await self._set_mode(self.MODE_NORMAL)
+         return (await self.invoke({"get-db-usage": {}}))["usage"]
+ 
+     async def get_db_query_columns(self):
+-        await self._set_mode(self.MODE_NORMAL)
+         return (await self.invoke({"get-db-query-columns": {}}))["columns"]
+ 
+     async def gc_status(self):
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke({"gc-status": {}})
+ 
+     async def gc_mark(self, mark, where):
+@@ -231,7 +214,6 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         kept. In addition, any new entries added to the database after this
+         command will be automatically marked with "mark"
+         """
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke({"gc-mark": {"mark": mark, "where": where}})
+ 
+     async def gc_sweep(self, mark):
+@@ -242,7 +224,6 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         It is recommended to clean unused outhash entries after running this to
+         cleanup any dangling outhashes
+         """
+-        await self._set_mode(self.MODE_NORMAL)
+         return await self.invoke({"gc-sweep": {"mark": mark}})
+ 
+ 
 -- 
-2.40.1
+2.34.1
 
 
