@@ -2,38 +2,38 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E56C04FF6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E18C4345F
 	for <webhook@archiver.kernel.org>; Fri, 12 Apr 2024 09:03:02 +0000 (UTC)
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
- by mx.groups.io with SMTP id smtpd.web11.42178.1712912572056527402
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+ by mx.groups.io with SMTP id smtpd.web10.42610.1712912577471693501
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Apr 2024 02:02:52 -0700
+ Fri, 12 Apr 2024 02:02:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=YknsdrKM;
- spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8A9C2C000E;
-	Fri, 12 Apr 2024 09:02:50 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=XVpn6Ytl;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E87561BF20F;
+	Fri, 12 Apr 2024 09:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712912570;
+	t=1712912576;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sSWqVC9eYVk500ijX1Trr47OAQDUG1I8fUSpoqvkE5k=;
-	b=YknsdrKMOc/stOzzT5EWfOdajcEkLgQ+PgCAKZRd8AbS2Bga53BqorBZeeAaMe1mqsj04Z
-	63A76GORoQnyTTAx8U0LQ8cAp081DX7iPciCLTiu7qEfHsjls/MVpTGAOQr2UiNhD6ZTpg
-	rt6G3Up5+BsbYCmTS83wqMHHMsD7dXh/y560OBnqsmYy1T8kgtsfWdGXoDSAmj0vp1q9TG
-	lpbhYBJvQ9mDvxaxtN+dJZyvw+r4yXOVqPShutawJ7fTXWSmFtl1dLrkyto8A3hif0w3MC
-	iJwA1pov58cDJ9FFz1n+h+AOO2Sq9vAWj/50zKcWtS7jCE78blIQ1b4Ya6KiCQ==
+	bh=CAVCR34fY9T4tS0P9OHNq1KAyZM7hWfTARMo3Jggx1o=;
+	b=XVpn6YtlarXeTz6eovqiPWmo2uXgz/61OsMgFrP9tb29cPzXtRGSlhEsWRJKKEQ1kp0aAc
+	jD0c71E0Gux2A3bi4OonQWpEv60VSH++GF3fjYowbf3TmTZocwOCE0Xc6cVPzFcL7CDL7A
+	Gdld80dnK+AQhUe31CBchzPiXV9RSlFK4pxGSKr7q6Y1WFYYu+TMK7ObJd8M4t6LyNw73a
+	Z2jcUnncO+J5aViFHMx/sJj8vZHtD+EdAVPbSIKHzfIaNu2wpdC4vJnnhvRCeLo1N56ucT
+	S7dNrWkeniUdX6pqAKDFefcS0uiHccUkGwNm+Aot9JcbFlbqgQFzRwGfx1z+dg==
 From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
 Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Joshua Watt <JPEWhacker@gmail.com>,
-	Tim Orling <ticotimo@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 05/12] asyncrpc: include parse_address from hashserv
-Date: Fri, 12 Apr 2024 11:02:27 +0200
-Message-Id: <20240412090234.4110915-6-michael.opdenacker@bootlin.com>
+	Tim Orling <ticotimo@gmail.com>
+Subject: [PATCH 12/12] prserv: add "history" argument to "get-pr" request
+Date: Fri, 12 Apr 2024 11:02:34 +0200
+Message-Id: <20240412090234.4110915-13-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240412090234.4110915-1-michael.opdenacker@bootlin.com>
 References: <20240412090234.4110915-1-michael.opdenacker@bootlin.com>
@@ -44,107 +44,107 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 12 Apr 2024 09:03:02 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16080
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16087
 
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-Moving the code and related definitions from
-hashserv/__init__.py to asyncrpc/client.py,
-allowing this function to be used in other asyncrpc clients.
+This makes it possible to test the "history" mode in the
+future bitbake selftests, to make sure that both "history"
+and "no history" modes work as expected.
 
 Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Suggested-by: Joshua Watt <JPEWhacker@gmail.com>
-Cc: Tim Orling <ticotimo@gmail.com>
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Cc: Tim Orling <ticotimo@gmail.com>
 ---
- lib/bb/asyncrpc/client.py | 23 +++++++++++++++++++++++
- lib/hashserv/__init__.py  | 27 +--------------------------
- 2 files changed, 24 insertions(+), 26 deletions(-)
+ lib/prserv/client.py |  4 ++--
+ lib/prserv/db.py     | 16 ++++++++--------
+ lib/prserv/serv.py   |  5 +++--
+ 3 files changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-index 29a5ab76aa..a350b4fb12 100644
---- a/lib/bb/asyncrpc/client.py
-+++ b/lib/bb/asyncrpc/client.py
-@@ -10,11 +10,34 @@ import json
- import os
- import socket
- import sys
-+import re
- import contextlib
- from threading import Thread
- from .connection import StreamConnection, WebsocketConnection, DEFAULT_MAX_CHUNK
- from .exceptions import ConnectionClosedError, InvokeError
+diff --git a/lib/prserv/client.py b/lib/prserv/client.py
+index 89760b6f74..389172f055 100644
+--- a/lib/prserv/client.py
++++ b/lib/prserv/client.py
+@@ -14,9 +14,9 @@ class PRAsyncClient(bb.asyncrpc.AsyncClient):
+     def __init__(self):
+         super().__init__("PRSERVICE", "1.0", logger)
  
-+UNIX_PREFIX = "unix://"
-+WS_PREFIX = "ws://"
-+WSS_PREFIX = "wss://"
-+
-+ADDR_TYPE_UNIX = 0
-+ADDR_TYPE_TCP = 1
-+ADDR_TYPE_WS = 2
-+
-+def parse_address(addr):
-+    if addr.startswith(UNIX_PREFIX):
-+        return (ADDR_TYPE_UNIX, (addr[len(UNIX_PREFIX) :],))
-+    elif addr.startswith(WS_PREFIX) or addr.startswith(WSS_PREFIX):
-+        return (ADDR_TYPE_WS, (addr,))
-+    else:
-+        m = re.match(r"\[(?P<host>[^\]]*)\]:(?P<port>\d+)$", addr)
-+        if m is not None:
-+            host = m.group("host")
-+            port = m.group("port")
+-    async def getPR(self, version, pkgarch, checksum):
++    async def getPR(self, version, pkgarch, checksum, history=False):
+         response = await self.invoke(
+-            {"get-pr": {"version": version, "pkgarch": pkgarch, "checksum": checksum}}
++            {"get-pr": {"version": version, "pkgarch": pkgarch, "checksum": checksum, "history": history}}
+         )
+         if response:
+             return response["value"]
+diff --git a/lib/prserv/db.py b/lib/prserv/db.py
+index 8305238f7a..d41b781622 100644
+--- a/lib/prserv/db.py
++++ b/lib/prserv/db.py
+@@ -163,7 +163,7 @@ class PRTable(object):
+ 
+         self.dirty = True
+ 
+-    def _get_value(self, version, pkgarch, checksum):
++    def _get_value(self, version, pkgarch, checksum, history):
+ 
+         max_value = self.find_max_value(version, pkgarch)
+ 
+@@ -177,7 +177,11 @@ class PRTable(object):
+             # version, pkgarch found but not checksum. Create a new value from the maximum one
+             return increase_revision(max_value)
+ 
+-        if self.nohist:
++        if history:
++            # "history" mode: we found an existing value. We can return it
++            # whether it's the maximum one or not.
++            return value
 +        else:
-+            host, port = addr.split(":")
-+
-+        return (ADDR_TYPE_TCP, (host, int(port)))
- 
- class AsyncClient(object):
-     def __init__(
-diff --git a/lib/hashserv/__init__.py b/lib/hashserv/__init__.py
-index 552a33278f..74367eb6b4 100644
---- a/lib/hashserv/__init__.py
-+++ b/lib/hashserv/__init__.py
-@@ -5,39 +5,14 @@
- 
- import asyncio
- from contextlib import closing
--import re
- import itertools
- import json
- from collections import namedtuple
- from urllib.parse import urlparse
--
--UNIX_PREFIX = "unix://"
--WS_PREFIX = "ws://"
--WSS_PREFIX = "wss://"
--
--ADDR_TYPE_UNIX = 0
--ADDR_TYPE_TCP = 1
--ADDR_TYPE_WS = 2
-+from bb.asyncrpc.client import parse_address, ADDR_TYPE_UNIX, ADDR_TYPE_WS
- 
- User = namedtuple("User", ("username", "permissions"))
- 
--
--def parse_address(addr):
--    if addr.startswith(UNIX_PREFIX):
--        return (ADDR_TYPE_UNIX, (addr[len(UNIX_PREFIX) :],))
--    elif addr.startswith(WS_PREFIX) or addr.startswith(WSS_PREFIX):
--        return (ADDR_TYPE_WS, (addr,))
--    else:
--        m = re.match(r"\[(?P<host>[^\]]*)\]:(?P<port>\d+)$", addr)
--        if m is not None:
--            host = m.group("host")
--            port = m.group("port")
+             # "no-history" mode: only return a value if that's the maximum one for
+             # the version and architecture, otherwise create a new one.
+             # This means that the value cannot decrement.
+@@ -185,13 +189,9 @@ class PRTable(object):
+                 return value
+             else:
+                 return increase_revision(max_value)
 -        else:
--            host, port = addr.split(":")
--
--        return (ADDR_TYPE_TCP, (host, int(port)))
--
--
- def create_server(
-     addr,
-     dbname,
+-            # "hist" mode: we found an existing value. We can return it
+-            # whether it's the maximum one or not.
+-            return value
+ 
+-    def get_value(self, version, pkgarch, checksum):
+-        value = self._get_value(version, pkgarch, checksum)
++    def get_value(self, version, pkgarch, checksum, history):
++        value = self._get_value(version, pkgarch, checksum, history)
+         self.store_value(version, pkgarch, checksum, value)
+         return value
+ 
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index 9e07a34445..f692d050b8 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -76,9 +76,10 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+         version = request["version"]
+         pkgarch = request["pkgarch"]
+         checksum = request["checksum"]
++        history = request["history"]
+ 
+         if self.upstream_client is None:
+-            value = self.server.table.get_value(version, pkgarch, checksum)
++            value = self.server.table.get_value(version, pkgarch, checksum, history)
+             return {"value": value}
+ 
+         # We have an upstream server.
+@@ -105,7 +106,7 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+             # The package is not known upstream, must be a local-only package
+             # Let's compute the PR number using the local-only method
+ 
+-            value = self.server.table.get_value(version, pkgarch, checksum)
++            value = self.server.table.get_value(version, pkgarch, checksum, history)
+             return {"value": value}
+ 
+         # The package is known upstream, let's ask the upstream server
 -- 
 2.34.1
 
