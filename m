@@ -2,38 +2,38 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A65C04FFE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79910C04FFF
 	for <webhook@archiver.kernel.org>; Fri, 12 Apr 2024 09:03:02 +0000 (UTC)
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
- by mx.groups.io with SMTP id smtpd.web10.42604.1712912573430602650
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+ by mx.groups.io with SMTP id smtpd.web10.42609.1712912577043262353
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Apr 2024 02:02:53 -0700
+ Fri, 12 Apr 2024 02:02:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=BW+k1mj4;
- spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DFD0EFF806;
-	Fri, 12 Apr 2024 09:02:51 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=c8lKqdxi;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E259C0010;
+	Fri, 12 Apr 2024 09:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712912572;
+	t=1712912575;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=m5k/BEDMv9ApMbsVgOA4DZUlF+i54NuQkfvdm/XCpGI=;
-	b=BW+k1mj4uvqXPOr3fvVv4XZmzcHM95n4M0q8yhbYMmwnvxjc9zTfXc1Y0ISQbdD2oU1Z6A
-	Ju4xt3T2Gz2tF4rwOunduwybc4VEn5jT3Kbwv61WuGaUpbsbu/mBWpluSP3efuT3aRETgu
-	5z45RsmKxeqPZQiReH6g3xb/JL8IQRaW5fzorhdo53YjpaK0l6FQlMsOZYh2cdUpk3kJI5
-	6e1x9bcPpQt///go0wdbq/Mu19UiRZv8CBuSekWtCJCl9CuahvIvqOJiOTOPqzRlxK9rIZ
-	MyI6f/6vTbufykCfpFh3203TWfuTl570qMuVrnGKEWcpJ1iqf6j/EwfKWK2Ojg==
+	bh=cMYfI3x5l/gpOE9SBMFMiDZvHzxxSZsy1c9Q4p7H7ZQ=;
+	b=c8lKqdxi51dBx4RVjNjNzkmghsOokdbRPk29dE3E757Low7S4Y6SUtpueKYDMDtn1sfdnG
+	fDK1dSUmrfdr/JtM4lenLg5tcoAwSn2BXdJMlAojdid4/+e+e1K5uCfYYhGe3FbvIQpDmw
+	ADw9xBqcMb9aZxnYQUCyjTVmzMMwraHzZ3rjz8OE+svkDKu30ncsu9Nq2xZZ7CAOc3gWIG
+	4Te6wrBCEvDrfjUkEdQcHMfzE8JjxctIl3na5kUGhggFIi7OX8WKxHSGwJo4zoaigmP/53
+	WFjDwuzVbg+DeFq096xAhZ8IJ7ARotfV5v6JVQNUVSsjbTSG1lL/lMS7kRis/A==
 From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
 Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
 	Joshua Watt <JPEWhacker@gmail.com>,
 	Tim Orling <ticotimo@gmail.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 07/12] prserv: add extra requests
-Date: Fri, 12 Apr 2024 11:02:29 +0200
-Message-Id: <20240412090234.4110915-8-michael.opdenacker@bootlin.com>
+Subject: [PATCH 11/12] prserv: add "upstream" server support
+Date: Fri, 12 Apr 2024 11:02:33 +0200
+Message-Id: <20240412090234.4110915-12-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240412090234.4110915-1-michael.opdenacker@bootlin.com>
 References: <20240412090234.4110915-1-michael.opdenacker@bootlin.com>
@@ -44,179 +44,454 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 12 Apr 2024 09:03:02 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16081
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16086
 
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-Useful for connecting a PR server to an upstream one
+Introduce a PRSERVER_UPSTREAM variable that makes the
+local PR server connect to an "upstream" one.
 
-- "test-package" checks whether the specified package
-  version and arch is known in the database.
+This makes it possible to implement local fixes to an
+upstream package (revision "x", in a way that gives the local
+update priority (revision "x.y").
 
-- "test-pr" checks a specified output hash is found in the database.
-  Otherwise it returns 'None' instead of a new value.
+Update the calculation of the new revisions to support the
+case when prior revisions are not integers, but have
+an "x.y..." format."
 
-- "max-package-pr" returns the highest PR number for
-  (version, arch) entries in the database, and None if not found
+Set the comments in the handle_get_pr() function in serv.py
+for details about the calculation of the local revision.
 
-Add new DB functions supporting the above, plus test_value()
-which tells whether a given value is available for the specified
-package and architecture.
+Use the newly developed functions to simplify the implementation
+of the get_value() function by merging the code of the earlier
+_get_value_hist() and _get_value_nohist() functions, removing
+redundancy between both functions. This also makes the code easier
+to understand.
 
 Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 Cc: Joshua Watt <JPEWhacker@gmail.com>
 Cc: Tim Orling <ticotimo@gmail.com>
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
- lib/prserv/client.py | 23 +++++++++++++++++++++-
- lib/prserv/db.py     | 46 ++++++++++++++++++++++++++++++++++++++++++++
- lib/prserv/serv.py   | 28 +++++++++++++++++++++++++++
- 3 files changed, 96 insertions(+), 1 deletion(-)
+ bin/bitbake-prserv     |  15 ++++-
+ lib/prserv/__init__.py |  15 +++++
+ lib/prserv/client.py   |   1 +
+ lib/prserv/db.py       | 125 ++++++++++++++++++++---------------------
+ lib/prserv/serv.py     |  95 +++++++++++++++++++++++++++----
+ 5 files changed, 174 insertions(+), 77 deletions(-)
 
+diff --git a/bin/bitbake-prserv b/bin/bitbake-prserv
+index ad0a069401..e39d0fba87 100755
+--- a/bin/bitbake-prserv
++++ b/bin/bitbake-prserv
+@@ -70,12 +70,25 @@ def main():
+         action="store_true",
+         help="open database in read-only mode",
+     )
++    parser.add_argument(
++        "-u",
++        "--upstream",
++        default=os.environ.get("PRSERVER_UPSTREAM", None),
++        help="Upstream PR service (host:port)",
++    )
+ 
+     args = parser.parse_args()
+     prserv.init_logger(os.path.abspath(args.log), args.loglevel)
+ 
+     if args.start:
+-        ret=prserv.serv.start_daemon(args.file, args.host, args.port, os.path.abspath(args.log), args.read_only)
++        ret=prserv.serv.start_daemon(
++            args.file,
++            args.host,
++            args.port,
++            os.path.abspath(args.log),
++            args.read_only,
++            args.upstream
++        )
+     elif args.stop:
+         ret=prserv.serv.stop_daemon(args.host, args.port)
+     else:
+diff --git a/lib/prserv/__init__.py b/lib/prserv/__init__.py
+index 0e0aa34d0e..2ee6a28c04 100644
+--- a/lib/prserv/__init__.py
++++ b/lib/prserv/__init__.py
+@@ -8,6 +8,7 @@ __version__ = "1.0.0"
+ 
+ import os, time
+ import sys, logging
++from bb.asyncrpc.client import parse_address, ADDR_TYPE_UNIX, ADDR_TYPE_WS
+ 
+ def init_logger(logfile, loglevel):
+     numeric_level = getattr(logging, loglevel.upper(), None)
+@@ -18,3 +19,17 @@ def init_logger(logfile, loglevel):
+ 
+ class NotFoundError(Exception):
+     pass
++
++async def create_async_client(addr):
++    from . import client
++
++    c = client.PRAsyncClient()
++
++    try:
++        (typ, a) = parse_address(addr)
++        await c.connect_tcp(*a)
++        return c
++
++    except Exception as e:
++        await c.close()
++        raise e
 diff --git a/lib/prserv/client.py b/lib/prserv/client.py
-index 7bc5188c53..8471ee3046 100644
+index 8471ee3046..89760b6f74 100644
 --- a/lib/prserv/client.py
 +++ b/lib/prserv/client.py
-@@ -20,6 +20,27 @@ class PRAsyncClient(bb.asyncrpc.AsyncClient):
-         if response:
-             return response["value"]
+@@ -6,6 +6,7 @@
  
-+    async def test_pr(self, version, pkgarch, checksum):
-+        response = await self.invoke(
-+            {"test-pr": {"version": version, "pkgarch": pkgarch, "checksum": checksum}}
-+        )
-+        if response:
-+            return response["value"]
-+
-+    async def test_package(self, version, pkgarch):
-+        response = await self.invoke(
-+            {"test-package": {"version": version, "pkgarch": pkgarch}}
-+        )
-+        if response:
-+            return response["value"]
-+
-+    async def max_package_pr(self, version, pkgarch):
-+        response = await self.invoke(
-+            {"max-package-pr": {"version": version, "pkgarch": pkgarch}}
-+        )
-+        if response:
-+            return response["value"]
-+
-     async def importone(self, version, pkgarch, checksum, value):
-         response = await self.invoke(
-             {"import-one": {"version": version, "pkgarch": pkgarch, "checksum": checksum, "value": value}}
-@@ -44,7 +65,7 @@ class PRAsyncClient(bb.asyncrpc.AsyncClient):
- class PRClient(bb.asyncrpc.Client):
-     def __init__(self):
-         super().__init__()
--        self._add_methods("getPR", "importone", "export", "is_readonly")
-+        self._add_methods("getPR", "test_pr", "test_package", "importone", "export", "is_readonly")
+ import logging
+ import bb.asyncrpc
++from . import create_async_client
  
-     def _get_async_client(self):
-         return PRAsyncClient()
+ logger = logging.getLogger("BitBake.PRserv")
+ 
 diff --git a/lib/prserv/db.py b/lib/prserv/db.py
-index 7bc2b2dc2d..7c200602ed 100644
+index eb41508198..8305238f7a 100644
 --- a/lib/prserv/db.py
 +++ b/lib/prserv/db.py
-@@ -78,6 +78,52 @@ class PRTable(object):
-             self.sync()
-             self.dirty = False
+@@ -21,6 +21,20 @@ sqlversion = sqlite3.sqlite_version_info
+ if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
+     raise Exception("sqlite3 version 3.3.0 or later is required.")
  
-+    def test_package(self, version, pkgarch):
-+        """Returns whether the specified package version is found in the database for the specified architecture"""
++def increase_revision(ver):
++    """Take a revision string such as "1" or "1.2.3" or even a number and increase its last number
++    This fails if the last number is not an integer"""
 +
-+        # Just returns the value if found or None otherwise
-+        data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=?;" % self.table,
-+                           (version, pkgarch))
-+        row=data.fetchone()
-+        if row is not None:
-+            return True
-+        else:
-+            return False
++    fields=str(ver).split('.')
++    last = fields[-1]
 +
-+    def test_value(self, version, pkgarch, value):
-+        """Returns whether the specified value is found in the database for the specified package and architecture"""
++    try:
++         val = int(last)
++    except Exception as e:
++         logger.critical("Unable to increase revision value %s: %s" % (ver, e))
 +
-+        # Just returns the value if found or None otherwise
-+        data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? and value=?;" % self.table,
-+                           (version, pkgarch, value))
-+        row=data.fetchone()
-+        if row is not None:
-+            return True
-+        else:
-+            return False
++    return ".".join(fields[0:-1] + list(str(val + 1)))
 +
-+    def find_value(self, version, pkgarch, checksum):
-+        """Returns the value for the specified checksum if found or None otherwise."""
+ #
+ # "No History" mode - for a given query tuple (version, pkgarch, checksum),
+ # the returned value will be the largest among all the values of the same
+@@ -53,7 +67,7 @@ class PRTable(object):
+                         (version TEXT NOT NULL, \
+                         pkgarch TEXT NOT NULL,  \
+                         checksum TEXT NOT NULL, \
+-                        value INTEGER, \
++                        value TEXT, \
+                         PRIMARY KEY (version, pkgarch, checksum));" % self.table)
+ 
+     def _execute(self, *query):
+@@ -119,84 +133,67 @@ class PRTable(object):
+         data = self._execute("SELECT max(value) FROM %s where version=? AND pkgarch=?;" % (self.table),
+                              (version, pkgarch))
+         row = data.fetchone()
+-        if row is not None:
++        # With SELECT max() requests, you have an empty row when there are no values, therefore the test on row[0]
++        if row is not None and row[0] is not None:
+             return row[0]
+         else:
+             return None
+ 
+-    def _get_value_hist(self, version, pkgarch, checksum):
+-        data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
+-                           (version, pkgarch, checksum))
+-        row=data.fetchone()
+-        if row is not None:
+-            return row[0]
++    def find_new_subvalue(self, version, pkgarch, base):
++        """Take and increase the greatest "<base>.y" value for (version, pkgarch), or return "<base>.1" if not found.
++        This doesn't store a new value."""
 +
-+        data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
-+                           (version, pkgarch, checksum))
-+        row=data.fetchone()
-+        if row is not None:
-+            return row[0]
-+        else:
-+            return None
-+
-+    def find_max_value(self, version, pkgarch):
-+        """Returns the greatest value for (version, pkgarch), or None if not found. Doesn't create a new value"""
-+
-+        data = self._execute("SELECT max(value) FROM %s where version=? AND pkgarch=?;" % (self.table),
++        data = self._execute("SELECT max(value) FROM %s where version=? AND pkgarch=? AND value LIKE '%s.%%';" % (self.table, base),
 +                             (version, pkgarch))
 +        row = data.fetchone()
-+        if row is not None:
-+            return row[0]
-+        else:
-+            return None
++        # With SELECT max() requests, you have an empty row when there are no values, therefore the test on row[0]
++        if row is not None and row[0] is not None:
++            return increase_revision(row[0])
+         else:
+-            #no value found, try to insert
+-            if self.read_only:
+-                data = self._execute("SELECT ifnull(max(value)+1, 0) FROM %s where version=? AND pkgarch=?;" % (self.table),
+-                                   (version, pkgarch))
+-                row = data.fetchone()
+-                if row is not None:
+-                    return row[0]
+-                else:
+-                    return 0
++            return base + ".0"
+ 
+-            try:
+-                self._execute("INSERT INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1, 0) from %s where version=? AND pkgarch=?));"
+-                           % (self.table, self.table),
+-                           (version, pkgarch, checksum, version, pkgarch))
+-            except sqlite3.IntegrityError as exc:
+-                logger.error(str(exc))
++    def store_value(self, version, pkgarch, checksum, value):
++        """Store new value in the database"""
+ 
+-            self.dirty = True
++        try:
++            self._execute("INSERT INTO %s VALUES (?, ?, ?, ?);"  % (self.table),
++                       (version, pkgarch, checksum, value))
++        except sqlite3.IntegrityError as exc:
++            logger.error(str(exc))
+ 
+-            data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
+-                               (version, pkgarch, checksum))
+-            row=data.fetchone()
+-            if row is not None:
+-                return row[0]
+-            else:
+-                raise prserv.NotFoundError
++        self.dirty = True
+ 
+-    def _get_value_no_hist(self, version, pkgarch, checksum):
+-        data=self._execute("SELECT value FROM %s \
+-                            WHERE version=? AND pkgarch=? AND checksum=? AND \
+-                            value >= (select max(value) from %s where version=? AND pkgarch=?);"
+-                            % (self.table, self.table),
+-                            (version, pkgarch, checksum, version, pkgarch))
+-        row=data.fetchone()
+-        if row is not None:
+-            return row[0]
+-        else:
+-            #no value found, try to insert
+-            if self.read_only:
+-                data = self._execute("SELECT ifnull(max(value)+1, 0) FROM %s where version=? AND pkgarch=?;" % (self.table),
+-                                   (version, pkgarch))
+-                return data.fetchone()[0]
++    def _get_value(self, version, pkgarch, checksum):
+ 
+-            try:
+-                self._execute("INSERT OR REPLACE INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1, 0) from %s where version=? AND pkgarch=?));"
+-                               % (self.table, self.table),
+-                               (version, pkgarch, checksum, version, pkgarch))
+-            except sqlite3.IntegrityError as exc:
+-                logger.error(str(exc))
+-                self.conn.rollback()
++        max_value = self.find_max_value(version, pkgarch)
+ 
+-            self.dirty = True
++        if max_value is None:
++            # version, pkgarch completely unknown. Return initial value.
++            return "0"
+ 
+-            data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
+-                               (version, pkgarch, checksum))
+-            row=data.fetchone()
+-            if row is not None:
+-                return row[0]
+-            else:
+-                raise prserv.NotFoundError
++        value = self.find_value(version, pkgarch, checksum)
 +
-     def _get_value_hist(self, version, pkgarch, checksum):
-         data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
-                            (version, pkgarch, checksum))
++        if value is None:
++            # version, pkgarch found but not checksum. Create a new value from the maximum one
++            return increase_revision(max_value)
+ 
+-    def get_value(self, version, pkgarch, checksum):
+         if self.nohist:
+-            return self._get_value_no_hist(version, pkgarch, checksum)
++            # "no-history" mode: only return a value if that's the maximum one for
++            # the version and architecture, otherwise create a new one.
++            # This means that the value cannot decrement.
++            if value == max_value:
++                return value
++            else:
++                return increase_revision(max_value)
+         else:
+-            return self._get_value_hist(version, pkgarch, checksum)
++            # "hist" mode: we found an existing value. We can return it
++            # whether it's the maximum one or not.
++            return value
++
++    def get_value(self, version, pkgarch, checksum):
++        value = self._get_value(version, pkgarch, checksum)
++        self.store_value(version, pkgarch, checksum, value)
++        return value
+ 
+     def _import_hist(self, version, pkgarch, checksum, value):
+         if self.read_only:
 diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index efb2e0cf93..86bd3bb75f 100644
+index dc4be5b620..9e07a34445 100644
 --- a/lib/prserv/serv.py
 +++ b/lib/prserv/serv.py
-@@ -26,6 +26,9 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+@@ -12,6 +12,7 @@ import sqlite3
+ import prserv
+ import prserv.db
+ import errno
++from . import create_async_client
+ import bb.asyncrpc
  
-         self.handlers.update({
-             "get-pr": self.handle_get_pr,
-+            "test-pr": self.handle_test_pr,
-+            "test-package": self.handle_test_package,
-+            "max-package-pr": self.handle_max_package_pr,
-             "import-one": self.handle_import_one,
-             "export": self.handle_export,
-             "is-readonly": self.handle_is_readonly,
-@@ -43,6 +46,31 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
-         else:
-             self.server.table.sync_if_dirty()
+ logger = logging.getLogger("BitBake.PRserv")
+@@ -76,14 +77,76 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+         pkgarch = request["pkgarch"]
+         checksum = request["checksum"]
  
-+    async def handle_test_pr(self, request):
-+        '''Finds the PR value corresponding to the request. If not found, returns None and doesn't insert a new value'''
-+        version = request["version"]
-+        pkgarch = request["pkgarch"]
-+        checksum = request["checksum"]
+-        response = None
+-        try:
++        if self.upstream_client is None:
+             value = self.server.table.get_value(version, pkgarch, checksum)
+-            response = {"value": value}
+-        except prserv.NotFoundError:
+-            self.logger.error("failure storing value in database for (%s, %s)",version, checksum)
++            return {"value": value}
+ 
+-        return response
++        # We have an upstream server.
++        # Check whether the local server already knows the requested configuration
++        # Here we use find_value(), not get_value(), because we don't want
++        # to unconditionally add a new generated value to the database. If the configuration
++        # is a new one, the generated value we will add will depend on what's on the upstream server.
 +
 +        value = self.server.table.find_value(version, pkgarch, checksum)
-+        return {"value": value}
 +
-+    async def handle_test_package(self, request):
-+        '''Tells whether there are entries for (version, pkgarch) in the db. Returns True or False'''
-+        version = request["version"]
-+        pkgarch = request["pkgarch"]
++        if value is not None:
 +
-+        value = self.server.table.test_package(version, pkgarch)
-+        return {"value": value}
++            # The configuration is already known locally. Let's use it.
 +
-+    async def handle_max_package_pr(self, request):
-+        '''Finds the greatest PR value for (version, pkgarch) in the db. Returns None if no entry was found'''
-+        version = request["version"]
-+        pkgarch = request["pkgarch"]
++            return {"value": value}
 +
-+        value = self.server.table.find_max_value(version, pkgarch)
-+        return {"value": value}
++        # The configuration is a new one for the local server
++        # Let's ask the upstream server whether it knows it
 +
-     async def handle_get_pr(self, request):
-         version = request["version"]
-         pkgarch = request["pkgarch"]
++        known_upstream = await self.upstream_client.test_package(version, pkgarch)
++
++        if not known_upstream:
++
++            # The package is not known upstream, must be a local-only package
++            # Let's compute the PR number using the local-only method
++
++            value = self.server.table.get_value(version, pkgarch, checksum)
++            return {"value": value}
++
++        # The package is known upstream, let's ask the upstream server
++        # whether it knows our new output hash
++
++        value = await self.upstream_client.test_pr(version, pkgarch, checksum)
++
++        if value is not None:
++
++            # Upstream knows this output hash, let's store it and use it too.
++
++            if not self.server.read_only:
++                self.server.table.store_value(version, pkgarch, checksum, value)
++            # If the local server is read only, won't be able to store the new
++            # value in the database and will have to keep asking the upstream server
++
++            return {"value": value}
++
++        # The output hash doesn't exist upstream, get the most recent number from upstream (x)
++        # Then, we want to have a new PR value for the local server: x.y
++
++        upstream_max = await self.upstream_client.max_package_pr(version, pkgarch)
++        # Here we know that the package is known upstream, so upstream_max can't be None
++        subvalue = self.server.table.find_new_subvalue(version, pkgarch, upstream_max)
++
++        if not self.server.read_only:
++            self.server.table.store_value(version, pkgarch, checksum, subvalue)
++
++        return {"value": subvalue}
++
++    async def process_requests(self):
++        if self.server.upstream is not None:
++            self.upstream_client = await create_async_client(self.server.upstream)
++        else:
++            self.upstream_client = None
++
++        try:
++            await super().process_requests()
++        finally:
++            if self.upstream_client is not None:
++                await self.upstream_client.close()
+ 
+     async def handle_import_one(self, request):
+         response = None
+@@ -117,11 +180,12 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+         return {"readonly": self.server.read_only}
+ 
+ class PRServer(bb.asyncrpc.AsyncServer):
+-    def __init__(self, dbfile, read_only=False):
++    def __init__(self, dbfile, read_only=False, upstream=None):
+         super().__init__(logger)
+         self.dbfile = dbfile
+         self.table = None
+         self.read_only = read_only
++        self.upstream = upstream
+ 
+     def accept_client(self, socket):
+         return PRServerClient(socket, self)
+@@ -134,6 +198,9 @@ class PRServer(bb.asyncrpc.AsyncServer):
+         self.logger.info("Started PRServer with DBfile: %s, Address: %s, PID: %s" %
+                      (self.dbfile, self.address, str(os.getpid())))
+ 
++        if self.upstream is not None:
++            self.logger.info("And upstream PRServer: %s " % (self.upstream))
++
+         return tasks
+ 
+     async def stop(self):
+@@ -147,14 +214,15 @@ class PRServer(bb.asyncrpc.AsyncServer):
+             self.table.sync()
+ 
+ class PRServSingleton(object):
+-    def __init__(self, dbfile, logfile, host, port):
++    def __init__(self, dbfile, logfile, host, port, upstream):
+         self.dbfile = dbfile
+         self.logfile = logfile
+         self.host = host
+         self.port = port
++        self.upstream = upstream
+ 
+     def start(self):
+-        self.prserv = PRServer(self.dbfile)
++        self.prserv = PRServer(self.dbfile, upstream=self.upstream)
+         self.prserv.start_tcp_server(socket.gethostbyname(self.host), self.port)
+         self.process = self.prserv.serve_as_process(log_level=logging.WARNING)
+ 
+@@ -233,7 +301,7 @@ def run_as_daemon(func, pidfile, logfile):
+     os.remove(pidfile)
+     os._exit(0)
+ 
+-def start_daemon(dbfile, host, port, logfile, read_only=False):
++def start_daemon(dbfile, host, port, logfile, read_only=False, upstream=None):
+     ip = socket.gethostbyname(host)
+     pidfile = PIDPREFIX % (ip, port)
+     try:
+@@ -249,7 +317,7 @@ def start_daemon(dbfile, host, port, logfile, read_only=False):
+ 
+     dbfile = os.path.abspath(dbfile)
+     def daemon_main():
+-        server = PRServer(dbfile, read_only=read_only)
++        server = PRServer(dbfile, read_only=read_only, upstream=upstream)
+         server.start_tcp_server(ip, port)
+         server.serve_forever()
+ 
+@@ -336,6 +404,9 @@ def auto_start(d):
+ 
+     host = host_params[0].strip().lower()
+     port = int(host_params[1])
++
++    upstream = d.getVar("PRSERV_UPSTREAM") or None
++
+     if is_local_special(host, port):
+         import bb.utils
+         cachedir = (d.getVar("PERSISTENT_DIR") or d.getVar("CACHE"))
+@@ -350,7 +421,7 @@ def auto_start(d):
+                auto_shutdown()
+         if not singleton:
+             bb.utils.mkdirhier(cachedir)
+-            singleton = PRServSingleton(os.path.abspath(dbfile), os.path.abspath(logfile), host, port)
++            singleton = PRServSingleton(os.path.abspath(dbfile), os.path.abspath(logfile), host, port, upstream)
+             singleton.start()
+     if singleton:
+         host = singleton.host
 -- 
 2.34.1
 
