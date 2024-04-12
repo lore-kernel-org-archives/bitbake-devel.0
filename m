@@ -2,35 +2,41 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3773FC04FF6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36992C4345F
 	for <webhook@archiver.kernel.org>; Fri, 12 Apr 2024 09:02:52 +0000 (UTC)
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
- by mx.groups.io with SMTP id smtpd.web11.42174.1712912567611373311
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+ by mx.groups.io with SMTP id smtpd.web11.42175.1712912570044782711
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Apr 2024 02:02:48 -0700
+ Fri, 12 Apr 2024 02:02:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=CKTqwwRq;
- spf=pass (domain: bootlin.com, ip: 217.70.183.195, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6A97E60006;
-	Fri, 12 Apr 2024 09:02:45 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=JZTGiuZB;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 054BEFF808;
+	Fri, 12 Apr 2024 09:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712912565;
+	t=1712912568;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hKbgBu8PC+dECwAW9lLh62l+4JZ/vkZIUWrabtnTVSs=;
-	b=CKTqwwRqRaZAj+H6sOTibLw46/f4ev42800JiFpgHRllAwefqaxVEoJAagUiKlPhNr4Ebo
-	g9xdADtcWK+yekf/T1hejg/PMxayZ1XMp+LOrDD4MG/wRU+BoKi+VgR9Va6pCo7yRUMO4q
-	ROvaoLA+LXDKb1Cc+FmuZZ55A1ExMhkqfM1pIOu84zdPcNeHZ3k4Z8+TwmqgjYzQZF5+F5
-	YCs00TjAxlOLTQRGElYZkRNo+Fk921Y/gRE2WnsrsLjrVR+Xcs3ziULftb7ZeW037XAPm5
-	TSkR19yPZDTPCEVK6ePQ+dP/GrAT0C1i7xTc+5YtzG1NGC0ohAgm49q6gdUI5w==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D121oOMAnQx2s3DAmEE2+o9eIQCqENaK5db9wZMf7LU=;
+	b=JZTGiuZBBrO2UG5ONM4BHYNDOVOQW4JZQCbc4bH9MiB/ImaKtyVQRx6XtTMloo6558F/Mu
+	Y6HoHdORvz7NL8keI0pvnXLCwe/2yigdYFf/F3pkM0WE6Sbbtu9IJlf91GEu8yKXxbSwxq
+	TFbmNB64xPdlJTy9jRMlLUu0Ra/TJqORWrTrc2fJb6aigu3fLyhmKvApVS29FrUmKK4Mp3
+	YA8ug4pIt4QhxPNkezmpaqi5dKPGUHQjcGAb69xpeew5eE6831sazNUE05fWDKumPc5Frt
+	dCRu4M1hXGhRpNOWctsqCK3teWdWz/eaZc4sL2Smm2L1LaBOB1Ml1fwCebNf/Q==
 From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
-Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Subject: [PATCH 00/12] prserv: add support for an "upstream" server
-Date: Fri, 12 Apr 2024 11:02:22 +0200
-Message-Id: <20240412090234.4110915-1-michael.opdenacker@bootlin.com>
+Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
+	Joshua Watt <JPEWhacker@gmail.com>,
+	Tim Orling <ticotimo@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH 01/12] prserv: simplify the PRServerClient() interface
+Date: Fri, 12 Apr 2024 11:02:23 +0200
+Message-Id: <20240412090234.4110915-2-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240412090234.4110915-1-michael.opdenacker@bootlin.com>
+References: <20240412090234.4110915-1-michael.opdenacker@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: michael.opdenacker@bootlin.com
@@ -38,103 +44,114 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 12 Apr 2024 09:02:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16075
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16076
 
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-This makes it possible to customize an "upstream" distribution
-by modifying local packages. If the "upstream" package bears
-revision "x", the local one will have revision "x.y", this
-having priority over the upstream one.
+serv.py: simplify the PRServerClient() interface by passing the
+server object instead of multiple arguments, and then retrieving
+the data through this object.
 
-Multiple levels of upstream servers are supported, so "x.y.z" revisions
-are possible too.
+This replicates what is done for ServerClient() in hashserv/server.py
 
-Take advantage of this work to clean-up and update the prserv code too.
-
-Manual "sanity" tests have been run so far but automated tests
-(based on Python unittest, as for the hash server tests)
-are being prepared for the next iteration. They will also to
-test also supported scenarios.
-
-Code reviews are welcome, especially for more Pythonic
-ways of implementing some details.
-
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Cc: Tim Orling <ticotimo@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
+ lib/prserv/serv.py | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Changes in V3:
-
-- Revert the commit removing the so far unused "hist" mode, which
-  we wish to keep for binary reproducibility sake.
-
-- Simplification of get_value() function to take
-  both "hist" and "nohist" modes with the same shared code.
-
-- Add "history" parameter to the "getPR" request,
-  so that the client can ask for the mode of its choice.
-  This will also make it possible to implement tests
-  for both modes.
-
-  Note that more requests ("export", "import"...)
-  will also need a "history" parameter, in a future version,
-  after the first tests are implemented.
-
-- Several fixes to bugs either present in V2 or introduced
-  by the V3 code changes.
-
-- Put all the new features at the tip of the branch,
-  to make the cleanup commits easier to merged.
-
-Changes in V2:
-
-- Add this new commit:
-  prserv: remove unused "hist" mode in the database backend
-
-- Squash commit "prserv: fix read_only test" into
-  commit "prserv: simplify the PRServerClient() interface"
-  (Reported by Richard Purdie)
-
-- Fix the code to support increasing "x.y.z" values, thus
-  supporting several levels of upstream servers.
-
-- db.py: remove duplicate definition of find_max_value() function in db.py
-
-- prserv.py: remove tabs before comments (Python didn't complain)
-
-- db.py: now stores the revision ("value") as TEXT.
-  This way we can store "1.0" without having it transformed to "1"
-  when the default type was INTEGER.
-
-- This allows to fix a regression when the first packages were created
-  with 'r0.1' instead of 'r0.0' initially.
-
-- find_max_value: now returns None instead of '0' when no value is found
-  Before we couldn't tell the difference between a '0'
-  max value and the absence of such a value.
-
-Michael Opdenacker (12):
-  prserv: simplify the PRServerClient() interface
-  prserv: use double quotes by default
-  bitbake-prserv: replace deprecated optparse by argparse
-  prserv: use self.logger instead of logger directly
-  asyncrpc: include parse_address from hashserv
-  prserv: capitalization and spacing improvements
-  prserv: add extra requests
-  prserv: remove redundant exception handler
-  prserv: correct error message
-  prserv: remove unnecessary code
-  prserv: add "upstream" server support
-  prserv: add "history" argument to "get-pr" request
-
- bin/bitbake-prserv        |  99 ++++++++++++-----
- lib/bb/asyncrpc/client.py |  23 ++++
- lib/hashserv/__init__.py  |  27 +----
- lib/prserv/__init__.py    |  21 +++-
- lib/prserv/client.py      |  44 ++++++--
- lib/prserv/db.py          | 225 ++++++++++++++++++++++----------------
- lib/prserv/serv.py        | 220 ++++++++++++++++++++++++++-----------
- 7 files changed, 436 insertions(+), 223 deletions(-)
-
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index 5fc8863f70..28af636966 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -20,16 +20,16 @@ PIDPREFIX = "/tmp/PRServer_%s_%s.pid"
+ singleton = None
+ 
+ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+-    def __init__(self, socket, table, read_only):
+-        super().__init__(socket, 'PRSERVICE', logger)
++    def __init__(self, socket, server):
++        super().__init__(socket, 'PRSERVICE', server.logger)
++        self.server = server
++
+         self.handlers.update({
+             'get-pr': self.handle_get_pr,
+             'import-one': self.handle_import_one,
+             'export': self.handle_export,
+             'is-readonly': self.handle_is_readonly,
+         })
+-        self.table = table
+-        self.read_only = read_only
+ 
+     def validate_proto_version(self):
+         return (self.proto_version == (1, 0))
+@@ -38,10 +38,10 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+         try:
+             return await super().dispatch_message(msg)
+         except:
+-            self.table.sync()
++            self.server.table.sync()
+             raise
+         else:
+-            self.table.sync_if_dirty()
++            self.server.table.sync_if_dirty()
+ 
+     async def handle_get_pr(self, request):
+         version = request['version']
+@@ -50,7 +50,7 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+ 
+         response = None
+         try:
+-            value = self.table.getValue(version, pkgarch, checksum)
++            value = self.server.table.getValue(version, pkgarch, checksum)
+             response = {'value': value}
+         except prserv.NotFoundError:
+             logger.error("can not find value for (%s, %s)",version, checksum)
+@@ -61,13 +61,13 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+ 
+     async def handle_import_one(self, request):
+         response = None
+-        if not self.read_only:
++        if not self.server.read_only:
+             version = request['version']
+             pkgarch = request['pkgarch']
+             checksum = request['checksum']
+             value = request['value']
+ 
+-            value = self.table.importone(version, pkgarch, checksum, value)
++            value = self.server.table.importone(version, pkgarch, checksum, value)
+             if value is not None:
+                 response = {'value': value}
+ 
+@@ -80,7 +80,7 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+         colinfo = request['colinfo']
+ 
+         try:
+-            (metainfo, datainfo) = self.table.export(version, pkgarch, checksum, colinfo)
++            (metainfo, datainfo) = self.server.table.export(version, pkgarch, checksum, colinfo)
+         except sqlite3.Error as exc:
+             logger.error(str(exc))
+             metainfo = datainfo = None
+@@ -88,7 +88,7 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
+         return {'metainfo': metainfo, 'datainfo': datainfo}
+ 
+     async def handle_is_readonly(self, request):
+-        return {'readonly': self.read_only}
++        return {'readonly': self.server.read_only}
+ 
+ class PRServer(bb.asyncrpc.AsyncServer):
+     def __init__(self, dbfile, read_only=False):
+@@ -98,7 +98,7 @@ class PRServer(bb.asyncrpc.AsyncServer):
+         self.read_only = read_only
+ 
+     def accept_client(self, socket):
+-        return PRServerClient(socket, self.table, self.read_only)
++        return PRServerClient(socket, self)
+ 
+     def start(self):
+         tasks = super().start()
 -- 
 2.34.1
 
