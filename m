@@ -1,266 +1,152 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <paulo@myneves.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C17C4345F
-	for <webhook@archiver.kernel.org>; Fri, 12 Apr 2024 20:28:34 +0000 (UTC)
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
- by mx.groups.io with SMTP id smtpd.web11.1472.1712953706029906382
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2030C4345F
+	for <webhook@archiver.kernel.org>; Sat, 13 Apr 2024 10:20:37 +0000 (UTC)
+Received: from mail-4018.proton.ch (mail-4018.proton.ch [185.70.40.18])
+ by mx.groups.io with SMTP id smtpd.web10.8125.1713003632838828838
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Apr 2024 13:28:26 -0700
+ Sat, 13 Apr 2024 03:20:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=VIC39HQx;
- spf=pass (domain: gmail.com, ip: 209.85.166.47, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7d5e4097a9aso47345639f.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Apr 2024 13:28:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712953704; x=1713558504; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=flmU+xlGT7VQ4A7IUdzQ8jpgwsUhXUxm4iaFHRQmlco=;
-        b=VIC39HQxKs64gczlPER4xT2mFohvKPCz8oWt92JLW0aSRFAUTxZWp+LiD/lITDjXRo
-         gzb668+OwC9fdTRpo4hIT4ApIF4m9xiozHu/VTz34+aopGkzS74sJaeag+nje9g0YoCq
-         9yxvUIIn2e9u/WnDDCf8wF+UwjnIfxakcpUPXVoqmj7d/sTjVU1LOTvNUS+PIQdyzARU
-         fDiJrMKkbaNqS8nLUuhJXIv9gEXo56Sb5vbiibtu5/h6USjdPPNe5e9X0SEAjkCEEr3H
-         vbhIpTI/lMScijC0WM/38v5nE85oZYnBICHvmTXhgG50SirLWl0fMiWQ1ZFc/MGnDhjI
-         7x5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712953704; x=1713558504;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=flmU+xlGT7VQ4A7IUdzQ8jpgwsUhXUxm4iaFHRQmlco=;
-        b=gGFzU+6KgI3nXso6ItJMPl9AYrnvD72Lx2IVMJiWJwTVEru9v97eUyDcpJRPVxifKY
-         S/z6ZJoS5IPqQTvIY6/4b4wNUbk5KPcs1vvS08ehWeyrXfFHc3uXoDyqgfWN7EVn95AA
-         Y99dtEvxHKM/QXxODSnDnzbW+DzXFLebgm2MVnCkGrwf+6txGCUH7dtqU4J5J6tDB13n
-         N09e2o81hIcn6P9bksBHhk3L8YIN14jJ5rhrSqrVCAXghYTKI6JADV86n3o4ZENHzkkx
-         ZLffkV6nhev+TbpH5ammfaafkPu3CzmtwCP9t1tCJL1ZgEIitJETgs6v/wlryMCp2KNx
-         k5YA==
-X-Gm-Message-State: AOJu0YzBGsZ9akPEZXe/KkhwIsyXYI24uz/CR1MlOfpZjrkCFqj2Kp+p
-	NCXbyQ34HdV8qKHr7jmQhDQgR98JyCo0yA6PR4gjxwaHtd5Rv/OyfncfLg==
-X-Google-Smtp-Source: AGHT+IFAFWA27cRCSuJjgy98tvwruNBopUYb/Rz8Mdi/6VE2JWjlscOCSIbfXlWEOKvg9ApzgboG3A==
-X-Received: by 2002:a05:6602:3808:b0:7d5:e8ed:21d1 with SMTP id bb8-20020a056602380800b007d5e8ed21d1mr4371599iob.17.1712953704194;
-        Fri, 12 Apr 2024 13:28:24 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::78ab])
-        by smtp.gmail.com with ESMTPSA id io13-20020a056638830d00b0048295e0b1d0sm1251980jab.39.2024.04.12.13.28.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 13:28:23 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] hashserv: client: Fix mode state errors
-Date: Fri, 12 Apr 2024 14:28:16 -0600
-Message-Id: <20240412202816.1965036-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@myneves.com header.s=protonmail3 header.b=eTsuJmhT;
+ spf=pass (domain: myneves.com, ip: 185.70.40.18, mailfrom: paulo@myneves.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myneves.com;
+	s=protonmail3; t=1713003629; x=1713262829;
+	bh=UfrVp3mQ2RB74Zl5OA3Qw4k+fY77SgQUn8vhWwBW0Ck=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=eTsuJmhT3UgcDhPYtCbum1Ib3bIiH3vhywH1OfqEx1uYS4F0hUCu+AV/DpTTTJuok
+	 KOgIfASeEfhXrZhhnX6Ow9CJYq2BMUH2WJJEAUxCvVUILtsqncCCNy6a0J1cLtBGaj
+	 /ZxAkw8tL4R8YNCcAGEXTTcXFX3zO9Hn5UoQyfGR2ExCJJc2ycJkT1pgr/J1+CQBkx
+	 4gL7dTrpuu45Y0zRo/MnhMkt/YBsrXXF4IITD3dxMiSpwjSwhDkqRyaSNBg8QsEhp2
+	 VEKeDRXMdIzjh+ApTtlwo5tWR8EimAwelmQ1VpArkhDMjaNFEkVTuexR9asb6oMCp8
+	 BBnUzXoNF+vJw==
+Date: Sat, 13 Apr 2024 10:20:24 +0000
+To: Philippe Rivest <technophil98@gmail.com>, bitbake-devel@lists.openembedded.org
+From: Paulo Neves <paulo@myneves.com>
+Cc: Philippe Rivest <privest@genetec.com>
+Subject: Re: [bitbake-devel] [PATCH] bitbake: fetch2/git: Escape parentheses in git src name
+Message-ID: <638cc02f-c0b8-42e5-9ee6-81114812427e@myneves.com>
+In-Reply-To: <20240310033314.110796-1-privest@genetec.com>
+References: <20240310033314.110796-1-privest@genetec.com>
+Feedback-ID: 59941854:user:proton
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/alternative;
+ boundary="b1_YzhEdyhuUzJxVt5ozQLUvneW9RaWJLpxUYtseVDXhs"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Apr 2024 20:28:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16091
+ <bitbake-devel@lists.openembedded.org>; Sat, 13 Apr 2024 10:20:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16092
 
-Careful reading of the code can contrive cases where poorly timed
-ConnectionError's will result in the client mode being incorrectly reset
-to MODE_NORMAL when it should actual be a stream mode for the current
-command. Fix this by no longer attempting to restore the mode when the
-connection is setup. Instead, attempt to set the stream mode inside the
-send wrapper for the stream data, which means that it should always end
-up in the correct mode before continuing.
+This is a multi-part message in MIME format.
 
-Also, factor out the transition to normal mode into a invoke() override
-so it doesn't need to be specified over and over again.
+--b1_YzhEdyhuUzJxVt5ozQLUvneW9RaWJLpxUYtseVDXhs
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bitbake/lib/hashserv/client.py | 39 +++++++++-------------------------
- 1 file changed, 10 insertions(+), 29 deletions(-)
+SGF2ZSB5b3UgY29uc2lkZXJlZCBxdW90aW5nIHRoZSBnaXQgY2xvbmUgcGF0aHMgaW4gdGhlIGNv
+bW1hbmQ/CgpXb3VsZCB0aGVyZSBiZSBzaWRlIGVmZmVjdHM/IEFsc28gcGVyaGFwcyBhIG1vcmUg
+cm9idXN0IHNldCBvZgphbGxvd2VkIGNoYXJhY3RlcnMgd291bGQgYmUgYmV0dGVyIHRoYW4gaW5j
+cmVhc2luZyB0aGUgbGlzdCBvZiByZXBsYWNlIGNhbGxzPwoKUGF1bG8gTmV2ZXMKCk9uIDMvMTAv
+MjQgMDQ6MzMsIFBoaWxpcHBlIFJpdmVzdCB3cm90ZToKCj4gRnJvbTogUGhpbGlwcGUgUml2ZXN0
+Cj4gWzx0ZWNobm9waGlsOThAZ21haWwuY29tPl0obWFpbHRvOnRlY2hub3BoaWw5OEBnbWFpbC5j
+b20pCj4gRklYRVMgW1lPQ1RPICMxNTQwNF0KPgo+IFdoZW4gdXNpbmcgZ2l0IGZldGNoZXIgb24g
+YSByZXBvIHdpdGggcGFyZW50aGVzZXMgaW4gaXRzIFVSTCwgdGhlCj4gaW52b2NhdGlvbiBvZiB0
+aGUgZ2l0IGNsb25lIGNvbW1hbmQgd2lsbCBmYWlsLiBUaGUgY2xvbmUgZGlyZWN0b3J5Cj4gaXMg
+bm90IHF1b3RlZCB0aHVzIHRoZSBzaGVsbCB3aWxsIHJldHVybiBhbiBlcnJvciBhbmQgd29uJ3Qg
+ZXhlY3V0ZQo+IHRoZSBjb21tYW5kLgo+Cj4gKEJpdGJha2UgcmV2OiBiNTYyNGVlNTY0M2Q4ODFh
+ZmEwMDQ1NzFhMDk2YTE4OWFiNTM4OWI1KQo+Cj4gQ2M6IFBoaWxpcHBlIFJpdmVzdAo+IFs8cHJp
+dmVzdEBnZW5ldGVjLmNvbT5dKG1haWx0bzpwcml2ZXN0QGdlbmV0ZWMuY29tKQo+IFNpZ25lZC1v
+ZmYtYnk6IFBoaWxpcHBlIFJpdmVzdAo+IFs8dGVjaG5vcGhpbDk4QGdtYWlsLmNvbT5dKG1haWx0
+bzp0ZWNobm9waGlsOThAZ21haWwuY29tKQo+IC0tLQo+ICBiaXRiYWtlL2xpYi9iYi9mZXRjaDIv
+Z2l0LnB5IHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
+b24oLSkKPgo+IGRpZmYgLS1naXQgYS9iaXRiYWtlL2xpYi9iYi9mZXRjaDIvZ2l0LnB5IGIvYml0
+YmFrZS9saWIvYmIvZmV0Y2gyL2dpdC5weQo+IGluZGV4IGI5ZGM1NzZkNDcuLjYxNzBkYTdmYTYg
+MTAwNjQ0Cj4gLS0tIGEvYml0YmFrZS9saWIvYmIvZmV0Y2gyL2dpdC5weQo+ICsrKyBiL2JpdGJh
+a2UvbGliL2JiL2ZldGNoMi9naXQucHkKPiBAQCAtMjc3LDcgKzI3Nyw3IEBAIGNsYXNzIEdpdChG
+ZXRjaE1ldGhvZCk6Cj4gICAgICAgICAgICAgICAgICAgICAgdWQudW5yZXNvbHZlZHJldltuYW1l
+XSA9IHVkLnJldmlzaW9uc1tuYW1lXQo+ICAgICAgICAgICAgICAgICAgdWQucmV2aXNpb25zW25h
+bWVdID0gc2VsZi5sYXRlc3RfcmV2aXNpb24odWQsIGQsIG5hbWUpCj4KPiAtICAgICAgICBnaXRz
+cmNuYW1lID0gJyVzJXMnICUgKHVkLmhvc3QucmVwbGFjZSgnOicsICcuJyksIHVkLnBhdGgucmVw
+bGFjZSgnLycsICcuJykucmVwbGFjZSgnKicsICcuJykucmVwbGFjZSgnICcsJ18nKSkKPiArICAg
+ICAgICBnaXRzcmNuYW1lID0gJyVzJXMnICUgKHVkLmhvc3QucmVwbGFjZSgnOicsICcuJyksIHVk
+LnBhdGgucmVwbGFjZSgnLycsICcuJykucmVwbGFjZSgnKicsICcuJykucmVwbGFjZSgnICcsJ18n
+KS5yZXBsYWNlKCcoJywgJ18nKS5yZXBsYWNlKCcpJywgJ18nKSkKPiAgICAgICAgICBpZiBnaXRz
+cmNuYW1lLnN0YXJ0c3dpdGgoJy4nKToKPiAgICAgICAgICAgICAgZ2l0c3JjbmFtZSA9IGdpdHNy
+Y25hbWVbMTpdCj4KPiAtLQo+IDIuNDAuMAo+Cj4gLT0tPS09LT0tPS09LT0tPS09LT0tPS0KPiBM
+aW5rczogWW91IHJlY2VpdmUgYWxsIG1lc3NhZ2VzIHNlbnQgdG8gdGhpcyBncm91cC4KPiBWaWV3
+L1JlcGx5IE9ubGluZSAoIzE1OTk2KToKPiBodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcv
+Zy9iaXRiYWtlLWRldmVsL21lc3NhZ2UvMTU5OTYKPiBNdXRlIFRoaXMgVG9waWM6Cj4gaHR0cHM6
+Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL210LzEwNDgzOTMxMy80NDU0NzgyCj4gR3JvdXAgT3du
+ZXI6Cj4gYml0YmFrZS1kZXZlbCtvd25lckBsaXN0cy5vcGVuZW1iZWRkZWQub3JnCj4gVW5zdWJz
+Y3JpYmU6Cj4gaHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC91
+bnN1Ygo+IFsKPiBwYXVsb0BteW5ldmVzLmNvbQo+IF0KPiAtPS09LT0tPS09LT0tPS09LT0tPS09
+LQ==
 
-diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
-index b269879ecfd..0b254beddd7 100644
---- a/bitbake/lib/hashserv/client.py
-+++ b/bitbake/lib/hashserv/client.py
-@@ -27,9 +27,7 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
- 
-     async def setup_connection(self):
-         await super().setup_connection()
--        cur_mode = self.mode
-         self.mode = self.MODE_NORMAL
--        await self._set_mode(cur_mode)
-         if self.username:
-             # Save off become user temporarily because auth() resets it
-             become = self.saved_become_user
-@@ -38,13 +36,20 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-             if become:
-                 await self.become_user(become)
- 
--    async def send_stream(self, msg):
-+    async def send_stream(self, mode, msg):
-         async def proc():
-+            await self._set_mode(mode)
-             await self.socket.send(msg)
-             return await self.socket.recv()
- 
-         return await self._send_wrapper(proc)
- 
-+    async def invoke(self, *args, **kwargs):
-+        # It's OK if connection errors cause a failure here, because the mode
-+        # is also reset to normal on a new connection
-+        await self._set_mode(self.MODE_NORMAL)
-+        return await super().invoke(*args, **kwargs)
-+
-     async def _set_mode(self, new_mode):
-         async def stream_to_normal():
-             await self.socket.send("END")
-@@ -84,14 +89,12 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-         self.mode = new_mode
- 
-     async def get_unihash(self, method, taskhash):
--        await self._set_mode(self.MODE_GET_STREAM)
--        r = await self.send_stream("%s %s" % (method, taskhash))
-+        r = await self.send_stream(self.MODE_GET_STREAM, "%s %s" % (method, taskhash))
-         if not r:
-             return None
-         return r
- 
-     async def report_unihash(self, taskhash, method, outhash, unihash, extra={}):
--        await self._set_mode(self.MODE_NORMAL)
-         m = extra.copy()
-         m["taskhash"] = taskhash
-         m["method"] = method
-@@ -100,7 +103,6 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-         return await self.invoke({"report": m})
- 
-     async def report_unihash_equiv(self, taskhash, method, unihash, extra={}):
--        await self._set_mode(self.MODE_NORMAL)
-         m = extra.copy()
-         m["taskhash"] = taskhash
-         m["method"] = method
-@@ -108,18 +110,15 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-         return await self.invoke({"report-equiv": m})
- 
-     async def get_taskhash(self, method, taskhash, all_properties=False):
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke(
-             {"get": {"taskhash": taskhash, "method": method, "all": all_properties}}
-         )
- 
-     async def unihash_exists(self, unihash):
--        await self._set_mode(self.MODE_EXIST_STREAM)
--        r = await self.send_stream(unihash)
-+        r = await self.send_stream(self.MODE_EXIST_STREAM, unihash)
-         return r == "true"
- 
-     async def get_outhash(self, method, outhash, taskhash, with_unihash=True):
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke(
-             {
-                 "get-outhash": {
-@@ -132,27 +131,21 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-         )
- 
-     async def get_stats(self):
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke({"get-stats": None})
- 
-     async def reset_stats(self):
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke({"reset-stats": None})
- 
-     async def backfill_wait(self):
--        await self._set_mode(self.MODE_NORMAL)
-         return (await self.invoke({"backfill-wait": None}))["tasks"]
- 
-     async def remove(self, where):
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke({"remove": {"where": where}})
- 
-     async def clean_unused(self, max_age):
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke({"clean-unused": {"max_age_seconds": max_age}})
- 
-     async def auth(self, username, token):
--        await self._set_mode(self.MODE_NORMAL)
-         result = await self.invoke({"auth": {"username": username, "token": token}})
-         self.username = username
-         self.password = token
-@@ -160,7 +153,6 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-         return result
- 
-     async def refresh_token(self, username=None):
--        await self._set_mode(self.MODE_NORMAL)
-         m = {}
-         if username:
-             m["username"] = username
-@@ -174,34 +166,28 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-         return result
- 
-     async def set_user_perms(self, username, permissions):
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke(
-             {"set-user-perms": {"username": username, "permissions": permissions}}
-         )
- 
-     async def get_user(self, username=None):
--        await self._set_mode(self.MODE_NORMAL)
-         m = {}
-         if username:
-             m["username"] = username
-         return await self.invoke({"get-user": m})
- 
-     async def get_all_users(self):
--        await self._set_mode(self.MODE_NORMAL)
-         return (await self.invoke({"get-all-users": {}}))["users"]
- 
-     async def new_user(self, username, permissions):
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke(
-             {"new-user": {"username": username, "permissions": permissions}}
-         )
- 
-     async def delete_user(self, username):
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke({"delete-user": {"username": username}})
- 
-     async def become_user(self, username):
--        await self._set_mode(self.MODE_NORMAL)
-         result = await self.invoke({"become-user": {"username": username}})
-         if username == self.username:
-             self.saved_become_user = None
-@@ -210,15 +196,12 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-         return result
- 
-     async def get_db_usage(self):
--        await self._set_mode(self.MODE_NORMAL)
-         return (await self.invoke({"get-db-usage": {}}))["usage"]
- 
-     async def get_db_query_columns(self):
--        await self._set_mode(self.MODE_NORMAL)
-         return (await self.invoke({"get-db-query-columns": {}}))["columns"]
- 
-     async def gc_status(self):
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke({"gc-status": {}})
- 
-     async def gc_mark(self, mark, where):
-@@ -231,7 +214,6 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-         kept. In addition, any new entries added to the database after this
-         command will be automatically marked with "mark"
-         """
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke({"gc-mark": {"mark": mark, "where": where}})
- 
-     async def gc_sweep(self, mark):
-@@ -242,7 +224,6 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
-         It is recommended to clean unused outhash entries after running this to
-         cleanup any dangling outhashes
-         """
--        await self._set_mode(self.MODE_NORMAL)
-         return await self.invoke({"gc-sweep": {"mark": mark}})
- 
- 
--- 
-2.34.1
+--b1_YzhEdyhuUzJxVt5ozQLUvneW9RaWJLpxUYtseVDXhs
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
+
+PCFET0NUWVBFIGh0bWw+DQo8aHRtbD4NCiAgPGhlYWQ+DQogICAgPG1ldGEgaHR0cC1lcXVpdj0i
+Q29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgiPg0KICA8L2hl
+YWQ+DQogIDxib2R5Pg0KICAgIDxwcmU+SGF2ZSB5b3UgY29uc2lkZXJlZCBxdW90aW5nIHRoZSBn
+aXQgY2xvbmUgcGF0aHMgaW4gdGhlIGNvbW1hbmQ/DQoNCldvdWxkIHRoZXJlIGJlIHNpZGUgZWZm
+ZWN0cz8gQWxzbyBwZXJoYXBzIGEgbW9yZSByb2J1c3Qgc2V0IG9mIA0KYWxsb3dlZCBjaGFyYWN0
+ZXJzIHdvdWxkIGJlIGJldHRlciB0aGFuIGluY3JlYXNpbmcgdGhlIGxpc3Qgb2YgcmVwbGFjZSBj
+YWxscz8NCg0KUGF1bG8gTmV2ZXMNCjwvcHJlPg0KICAgIDxicj4NCiAgICA8ZGl2IGNsYXNzPSJt
+b3otY2l0ZS1wcmVmaXgiPk9uIDMvMTAvMjQgMDQ6MzMsIFBoaWxpcHBlIFJpdmVzdA0KICAgICAg
+d3JvdGU6PGJyPg0KICAgIDwvZGl2Pg0KICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUiDQogICAg
+ICBjaXRlPSJtaWQ6MjAyNDAzMTAwMzMzMTQuMTEwNzk2LTEtcHJpdmVzdEBnZW5ldGVjLmNvbSI+
+DQogICAgICA8cHJlIGNsYXNzPSJtb3otcXVvdGUtcHJlIiB3cmFwPSIiPkZyb206IFBoaWxpcHBl
+IFJpdmVzdCA8YSBjbGFzcz0ibW96LXR4dC1saW5rLXJmYzIzOTZFIiBocmVmPSJtYWlsdG86dGVj
+aG5vcGhpbDk4QGdtYWlsLmNvbSI+Jmx0O3RlY2hub3BoaWw5OEBnbWFpbC5jb20mZ3Q7PC9hPg0K
+DQpGSVhFUyBbWU9DVE8gIzE1NDA0XQ0KDQpXaGVuIHVzaW5nIGdpdCBmZXRjaGVyIG9uIGEgcmVw
+byB3aXRoIHBhcmVudGhlc2VzIGluIGl0cyBVUkwsIHRoZQ0KaW52b2NhdGlvbiBvZiB0aGUgZ2l0
+IGNsb25lIGNvbW1hbmQgd2lsbCBmYWlsLiBUaGUgY2xvbmUgZGlyZWN0b3J5DQppcyBub3QgcXVv
+dGVkIHRodXMgdGhlIHNoZWxsIHdpbGwgcmV0dXJuIGFuIGVycm9yIGFuZCB3b24ndCBleGVjdXRl
+DQp0aGUgY29tbWFuZC4NCg0KKEJpdGJha2UgcmV2OiBiNTYyNGVlNTY0M2Q4ODFhZmEwMDQ1NzFh
+MDk2YTE4OWFiNTM4OWI1KQ0KDQpDYzogUGhpbGlwcGUgUml2ZXN0IDxhIGNsYXNzPSJtb3otdHh0
+LWxpbmstcmZjMjM5NkUiIGhyZWY9Im1haWx0bzpwcml2ZXN0QGdlbmV0ZWMuY29tIj4mbHQ7cHJp
+dmVzdEBnZW5ldGVjLmNvbSZndDs8L2E+DQoNClNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFJpdmVz
+dCA8YSBjbGFzcz0ibW96LXR4dC1saW5rLXJmYzIzOTZFIiBocmVmPSJtYWlsdG86dGVjaG5vcGhp
+bDk4QGdtYWlsLmNvbSI+Jmx0O3RlY2hub3BoaWw5OEBnbWFpbC5jb20mZ3Q7PC9hPg0KLS0tDQog
+Yml0YmFrZS9saWIvYmIvZmV0Y2gyL2dpdC5weSB8IDIgKy0NCiAxIGZpbGUgY2hhbmdlZCwgMSBp
+bnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2JpdGJha2UvbGliL2Ji
+L2ZldGNoMi9naXQucHkgYi9iaXRiYWtlL2xpYi9iYi9mZXRjaDIvZ2l0LnB5DQppbmRleCBiOWRj
+NTc2ZDQ3Li42MTcwZGE3ZmE2IDEwMDY0NA0KLS0tIGEvYml0YmFrZS9saWIvYmIvZmV0Y2gyL2dp
+dC5weQ0KKysrIGIvYml0YmFrZS9saWIvYmIvZmV0Y2gyL2dpdC5weQ0KQEAgLTI3Nyw3ICsyNzcs
+NyBAQCBjbGFzcyBHaXQoRmV0Y2hNZXRob2QpOg0KICAgICAgICAgICAgICAgICAgICAgdWQudW5y
+ZXNvbHZlZHJldltuYW1lXSA9IHVkLnJldmlzaW9uc1tuYW1lXQ0KICAgICAgICAgICAgICAgICB1
+ZC5yZXZpc2lvbnNbbmFtZV0gPSBzZWxmLmxhdGVzdF9yZXZpc2lvbih1ZCwgZCwgbmFtZSkNCg0K
+LSAgICAgICAgZ2l0c3JjbmFtZSA9ICclcyVzJyAlICh1ZC5ob3N0LnJlcGxhY2UoJzonLCAnLicp
+LCB1ZC5wYXRoLnJlcGxhY2UoJy8nLCAnLicpLnJlcGxhY2UoJyonLCAnLicpLnJlcGxhY2UoJyAn
+LCdfJykpDQorICAgICAgICBnaXRzcmNuYW1lID0gJyVzJXMnICUgKHVkLmhvc3QucmVwbGFjZSgn
+OicsICcuJyksIHVkLnBhdGgucmVwbGFjZSgnLycsICcuJykucmVwbGFjZSgnKicsICcuJykucmVw
+bGFjZSgnICcsJ18nKS5yZXBsYWNlKCcoJywgJ18nKS5yZXBsYWNlKCcpJywgJ18nKSkNCiAgICAg
+ICAgIGlmIGdpdHNyY25hbWUuc3RhcnRzd2l0aCgnLicpOg0KICAgICAgICAgICAgIGdpdHNyY25h
+bWUgPSBnaXRzcmNuYW1lWzE6XQ0KDQotLQ0KMi40MC4wDQoNCg0KLT0tPS09LT0tPS09LT0tPS09
+LT0tPS0NCkxpbmtzOiBZb3UgcmVjZWl2ZSBhbGwgbWVzc2FnZXMgc2VudCB0byB0aGlzIGdyb3Vw
+Lg0KVmlldy9SZXBseSBPbmxpbmUgKCMxNTk5Nik6IDxhIGNsYXNzPSJtb3otdHh0LWxpbmstZnJl
+ZXRleHQiIGhyZWY9Imh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2
+ZWwvbWVzc2FnZS8xNTk5NiI+aHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0YmFr
+ZS1kZXZlbC9tZXNzYWdlLzE1OTk2PC9hPg0KTXV0ZSBUaGlzIFRvcGljOiA8YSBjbGFzcz0ibW96
+LXR4dC1saW5rLWZyZWV0ZXh0IiBocmVmPSJodHRwczovL2xpc3RzLm9wZW5lbWJlZGRlZC5vcmcv
+bXQvMTA0ODM5MzEzLzQ0NTQ3ODIiPmh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9tdC8x
+MDQ4MzkzMTMvNDQ1NDc4MjwvYT4NCkdyb3VwIE93bmVyOiA8YSBjbGFzcz0ibW96LXR4dC1saW5r
+LWFiYnJldmlhdGVkIiBocmVmPSJtYWlsdG86Yml0YmFrZS1kZXZlbCtvd25lckBsaXN0cy5vcGVu
+ZW1iZWRkZWQub3JnIj5iaXRiYWtlLWRldmVsK293bmVyQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc8
+L2E+DQpVbnN1YnNjcmliZTogPGEgY2xhc3M9Im1vei10eHQtbGluay1mcmVldGV4dCIgaHJlZj0i
+aHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC91bnN1YiI+aHR0
+cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cvYml0YmFrZS1kZXZlbC91bnN1YjwvYT4gWzxh
+IGNsYXNzPSJtb3otdHh0LWxpbmstYWJicmV2aWF0ZWQiIGhyZWY9Im1haWx0bzpwYXVsb0BteW5l
+dmVzLmNvbSI+cGF1bG9AbXluZXZlcy5jb208L2E+XQ0KLT0tPS09LT0tPS09LT0tPS09LT0tPS0N
+Cg0KPC9wcmU+DQogICAgPC9ibG9ja3F1b3RlPg0KICAgIDxicj4NCiAgPC9ib2R5Pg0KPC9odG1s
+Pg0K
+
+
+--b1_YzhEdyhuUzJxVt5ozQLUvneW9RaWJLpxUYtseVDXhs--
 
 
