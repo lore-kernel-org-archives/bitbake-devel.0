@@ -2,38 +2,37 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2388FC04FF6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EA6C04FFF
 	for <webhook@archiver.kernel.org>; Tue, 16 Apr 2024 17:20:35 +0000 (UTC)
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
- by mx.groups.io with SMTP id smtpd.web10.27168.1713288028734168722
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+ by mx.groups.io with SMTP id smtpd.web11.26822.1713288031509713527
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 16 Apr 2024 10:20:29 -0700
+ Tue, 16 Apr 2024 10:20:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=JOx/OJlw;
- spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E9121BF209;
-	Tue, 16 Apr 2024 17:20:26 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=MYy7B3gc;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 02111C0003;
+	Tue, 16 Apr 2024 17:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713288026;
+	t=1713288029;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cMYfI3x5l/gpOE9SBMFMiDZvHzxxSZsy1c9Q4p7H7ZQ=;
-	b=JOx/OJlw6aM8HSBrb7QBZNCNpTzhYlc745jEKT+/o/oUQQ/EVG7NCnVIAh04hdt6V+1ETR
-	s3vPxssKSOFAcQQ/92th2h9l3ol5XMg9sdQLJSm3yBO/tqUxyz/E+67q2kymNAdYvxrq5C
-	icK23wv11PwuVB6d9YJ53rg70+zVsMLUHpy+nTwkwbaHys8yKoWVdysA4CM7GoBbztgy7a
-	d8OlcQeAWUugVxKRMx9BZVuqBAmV58BbTAV/mc5UQPgSfFUmGdZ+KB3+2w+bGBJF+6gqCM
-	S6B3ZMFIOc0YYNEoPXxkRBQ+YUAEGJ65rA7TCGd0mF/I1Xqs9KcKQ+qIesIwPQ==
+	bh=0yQJvOfQ/6vrQQVd7/KDMS1SG+Q6EOYOjHhCb6ZK0mE=;
+	b=MYy7B3gcfdqGEc5icfN5pFSf6iWLXz+qEoKC4V3zVQchZo2FT4jmVe+naMgKnmNhHxyNOj
+	gHZPZJQUjuTNnUG28ahaVFObv/jeysOtvLkL2yyULz5aO+hVPPJB3sh1w3Mg8xsd8/s7uV
+	exVV3kQ1EPdEERs9TBpQdwGLitoklyle6uRI5DeR26LRrI794+wMRYdlORJyP3Bc7zX3Sb
+	sZEX9A8uyUiQWxsHGB6juBOnwQ5IM074iwX+nuubpc8OalmnkB8y/45ONDYdZXBNIjCB0v
+	2LfK+CnkeDn3HRMSS9ES5oudAb9eeJm/GFQPecjqhByKfo/EgUYJ/hxRSlFJ/w==
 From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
 Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
 	Joshua Watt <JPEWhacker@gmail.com>,
-	Tim Orling <ticotimo@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [RFC][PATCH 1/3] prserv: add "upstream" server support
-Date: Tue, 16 Apr 2024 19:19:43 +0200
-Message-Id: <20240416171945.3799445-2-michael.opdenacker@bootlin.com>
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [RFC][PATCH 3/3] prserv: start bitbake selftests
+Date: Tue, 16 Apr 2024 19:19:45 +0200
+Message-Id: <20240416171945.3799445-4-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240416171945.3799445-1-michael.opdenacker@bootlin.com>
 References: <20240416171945.3799445-1-michael.opdenacker@bootlin.com>
@@ -44,454 +43,165 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 16 Apr 2024 17:20:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16099
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16101
 
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-Introduce a PRSERVER_UPSTREAM variable that makes the
-local PR server connect to an "upstream" one.
-
-This makes it possible to implement local fixes to an
-upstream package (revision "x", in a way that gives the local
-update priority (revision "x.y").
-
-Update the calculation of the new revisions to support the
-case when prior revisions are not integers, but have
-an "x.y..." format."
-
-Set the comments in the handle_get_pr() function in serv.py
-for details about the calculation of the local revision.
-
-Use the newly developed functions to simplify the implementation
-of the get_value() function by merging the code of the earlier
-_get_value_hist() and _get_value_nohist() functions, removing
-redundancy between both functions. This also makes the code easier
-to understand.
-
 Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Cc: Tim Orling <ticotimo@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+CC: Joshua Watt <JPEWhacker@gmail.com>
+CC: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bin/bitbake-prserv     |  15 ++++-
- lib/prserv/__init__.py |  15 +++++
- lib/prserv/client.py   |   1 +
- lib/prserv/db.py       | 125 ++++++++++++++++++++---------------------
- lib/prserv/serv.py     |  95 +++++++++++++++++++++++++++----
- 5 files changed, 174 insertions(+), 77 deletions(-)
+ bin/bitbake-selftest   |  2 +
+ lib/prserv/__init__.py | 24 ++++++++++++
+ lib/prserv/tests.py    | 84 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 110 insertions(+)
+ create mode 100644 bitbake/lib/prserv/tests.py
 
-diff --git a/bin/bitbake-prserv b/bin/bitbake-prserv
-index ad0a069401..e39d0fba87 100755
---- a/bin/bitbake-prserv
-+++ b/bin/bitbake-prserv
-@@ -70,12 +70,25 @@ def main():
-         action="store_true",
-         help="open database in read-only mode",
-     )
-+    parser.add_argument(
-+        "-u",
-+        "--upstream",
-+        default=os.environ.get("PRSERVER_UPSTREAM", None),
-+        help="Upstream PR service (host:port)",
-+    )
- 
-     args = parser.parse_args()
-     prserv.init_logger(os.path.abspath(args.log), args.loglevel)
- 
-     if args.start:
--        ret=prserv.serv.start_daemon(args.file, args.host, args.port, os.path.abspath(args.log), args.read_only)
-+        ret=prserv.serv.start_daemon(
-+            args.file,
-+            args.host,
-+            args.port,
-+            os.path.abspath(args.log),
-+            args.read_only,
-+            args.upstream
-+        )
-     elif args.stop:
-         ret=prserv.serv.stop_daemon(args.host, args.port)
-     else:
+diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
+index f25f23b1ae..ce901232fe 100755
+--- a/bin/bitbake-selftest
++++ b/bin/bitbake-selftest
+@@ -15,6 +15,7 @@ import unittest
+ try:
+     import bb
+     import hashserv
++    import prserv
+     import layerindexlib
+ except RuntimeError as exc:
+     sys.exit(str(exc))
+@@ -33,6 +34,7 @@ tests = ["bb.tests.codeparser",
+          "bb.tests.utils",
+          "bb.tests.compression",
+          "hashserv.tests",
++         "prserv.tests",
+          "layerindexlib.tests.layerindexobj",
+          "layerindexlib.tests.restapi",
+          "layerindexlib.tests.cooker"]
 diff --git a/lib/prserv/__init__.py b/lib/prserv/__init__.py
-index 0e0aa34d0e..2ee6a28c04 100644
+index 2ee6a28c04..76041f9001 100644
 --- a/lib/prserv/__init__.py
 +++ b/lib/prserv/__init__.py
-@@ -8,6 +8,7 @@ __version__ = "1.0.0"
- 
- import os, time
- import sys, logging
-+from bb.asyncrpc.client import parse_address, ADDR_TYPE_UNIX, ADDR_TYPE_WS
- 
- def init_logger(logfile, loglevel):
-     numeric_level = getattr(logging, loglevel.upper(), None)
-@@ -18,3 +19,17 @@ def init_logger(logfile, loglevel):
- 
+@@ -20,6 +20,30 @@ def init_logger(logfile, loglevel):
  class NotFoundError(Exception):
      pass
+ 
++def create_server(addr, dbpath, upstream=None, read_only=False):
++    from . import serv
 +
-+async def create_async_client(addr):
++    s = serv.PRServer(dbpath, upstream=upstream, read_only=read_only)
++
++    (typ, a) = parse_address(addr)
++    s.start_tcp_server(*a)
++
++    return s
++
++def create_client(addr):
 +    from . import client
 +
-+    c = client.PRAsyncClient()
++    c = client.PRClient()
 +
 +    try:
 +        (typ, a) = parse_address(addr)
-+        await c.connect_tcp(*a)
++        c.connect_tcp(*a)
++        print("CLIENT CONNECTED TO: %s" %(addr))
 +        return c
-+
 +    except Exception as e:
-+        await c.close()
++        c.close()
 +        raise e
-diff --git a/lib/prserv/client.py b/lib/prserv/client.py
-index 8471ee3046..89760b6f74 100644
---- a/lib/prserv/client.py
-+++ b/lib/prserv/client.py
-@@ -6,6 +6,7 @@
++
+ async def create_async_client(addr):
+     from . import client
  
- import logging
- import bb.asyncrpc
-+from . import create_async_client
- 
- logger = logging.getLogger("BitBake.PRserv")
- 
-diff --git a/lib/prserv/db.py b/lib/prserv/db.py
-index eb41508198..8305238f7a 100644
---- a/lib/prserv/db.py
-+++ b/lib/prserv/db.py
-@@ -21,6 +21,20 @@ sqlversion = sqlite3.sqlite_version_info
- if sqlversion[0] < 3 or (sqlversion[0] == 3 and sqlversion[1] < 3):
-     raise Exception("sqlite3 version 3.3.0 or later is required.")
- 
-+def increase_revision(ver):
-+    """Take a revision string such as "1" or "1.2.3" or even a number and increase its last number
-+    This fails if the last number is not an integer"""
+diff --git a/lib/prserv/tests.py b/lib/prserv/tests.py
+new file mode 100644
+index 0000000000..1e3b63913b
+--- /dev/null
++++ b/lib/prserv/tests.py
+@@ -0,0 +1,84 @@
++#! /usr/bin/env python3
++#
++# Copyright (C) 2024 BitBake Contributors
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
 +
-+    fields=str(ver).split('.')
-+    last = fields[-1]
++from . import create_server, create_client
++import sys
++import tempfile
++import unittest
++import socket
++from pathlib import Path
 +
-+    try:
-+         val = int(last)
-+    except Exception as e:
-+         logger.critical("Unable to increase revision value %s: %s" % (ver, e))
++THIS_DIR = Path(__file__).parent
++BIN_DIR = THIS_DIR.parent.parent / "bin"
 +
-+    return ".".join(fields[0:-1] + list(str(val + 1)))
++def server_prefunc(server, idx):
++    logging.basicConfig(level=logging.DEBUG, filename='bbprserv-%d.log' % idx, filemode='w',
++                        format='%(levelname)s %(filename)s:%(lineno)d %(message)s')
++    server.logger.debug("Running server %d" % idx)
++    sys.stdout = open('bbprserv-stdout-%d.log' % idx, 'w')
++    sys.stderr = sys.stdout
 +
- #
- # "No History" mode - for a given query tuple (version, pkgarch, checksum),
- # the returned value will be the largest among all the values of the same
-@@ -53,7 +67,7 @@ class PRTable(object):
-                         (version TEXT NOT NULL, \
-                         pkgarch TEXT NOT NULL,  \
-                         checksum TEXT NOT NULL, \
--                        value INTEGER, \
-+                        value TEXT, \
-                         PRIMARY KEY (version, pkgarch, checksum));" % self.table)
- 
-     def _execute(self, *query):
-@@ -119,84 +133,67 @@ class PRTable(object):
-         data = self._execute("SELECT max(value) FROM %s where version=? AND pkgarch=?;" % (self.table),
-                              (version, pkgarch))
-         row = data.fetchone()
--        if row is not None:
-+        # With SELECT max() requests, you have an empty row when there are no values, therefore the test on row[0]
-+        if row is not None and row[0] is not None:
-             return row[0]
-         else:
-             return None
- 
--    def _get_value_hist(self, version, pkgarch, checksum):
--        data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
--                           (version, pkgarch, checksum))
--        row=data.fetchone()
--        if row is not None:
--            return row[0]
-+    def find_new_subvalue(self, version, pkgarch, base):
-+        """Take and increase the greatest "<base>.y" value for (version, pkgarch), or return "<base>.1" if not found.
-+        This doesn't store a new value."""
++class PRTestSetup(object):
 +
-+        data = self._execute("SELECT max(value) FROM %s where version=? AND pkgarch=? AND value LIKE '%s.%%';" % (self.table, base),
-+                             (version, pkgarch))
-+        row = data.fetchone()
-+        # With SELECT max() requests, you have an empty row when there are no values, therefore the test on row[0]
-+        if row is not None and row[0] is not None:
-+            return increase_revision(row[0])
-         else:
--            #no value found, try to insert
--            if self.read_only:
--                data = self._execute("SELECT ifnull(max(value)+1, 0) FROM %s where version=? AND pkgarch=?;" % (self.table),
--                                   (version, pkgarch))
--                row = data.fetchone()
--                if row is not None:
--                    return row[0]
--                else:
--                    return 0
-+            return base + ".0"
- 
--            try:
--                self._execute("INSERT INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1, 0) from %s where version=? AND pkgarch=?));"
--                           % (self.table, self.table),
--                           (version, pkgarch, checksum, version, pkgarch))
--            except sqlite3.IntegrityError as exc:
--                logger.error(str(exc))
-+    def store_value(self, version, pkgarch, checksum, value):
-+        """Store new value in the database"""
- 
--            self.dirty = True
-+        try:
-+            self._execute("INSERT INTO %s VALUES (?, ?, ?, ?);"  % (self.table),
-+                       (version, pkgarch, checksum, value))
-+        except sqlite3.IntegrityError as exc:
-+            logger.error(str(exc))
- 
--            data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
--                               (version, pkgarch, checksum))
--            row=data.fetchone()
--            if row is not None:
--                return row[0]
--            else:
--                raise prserv.NotFoundError
-+        self.dirty = True
- 
--    def _get_value_no_hist(self, version, pkgarch, checksum):
--        data=self._execute("SELECT value FROM %s \
--                            WHERE version=? AND pkgarch=? AND checksum=? AND \
--                            value >= (select max(value) from %s where version=? AND pkgarch=?);"
--                            % (self.table, self.table),
--                            (version, pkgarch, checksum, version, pkgarch))
--        row=data.fetchone()
--        if row is not None:
--            return row[0]
--        else:
--            #no value found, try to insert
--            if self.read_only:
--                data = self._execute("SELECT ifnull(max(value)+1, 0) FROM %s where version=? AND pkgarch=?;" % (self.table),
--                                   (version, pkgarch))
--                return data.fetchone()[0]
-+    def _get_value(self, version, pkgarch, checksum):
- 
--            try:
--                self._execute("INSERT OR REPLACE INTO %s VALUES (?, ?, ?, (select ifnull(max(value)+1, 0) from %s where version=? AND pkgarch=?));"
--                               % (self.table, self.table),
--                               (version, pkgarch, checksum, version, pkgarch))
--            except sqlite3.IntegrityError as exc:
--                logger.error(str(exc))
--                self.conn.rollback()
-+        max_value = self.find_max_value(version, pkgarch)
- 
--            self.dirty = True
-+        if max_value is None:
-+            # version, pkgarch completely unknown. Return initial value.
-+            return "0"
- 
--            data=self._execute("SELECT value FROM %s WHERE version=? AND pkgarch=? AND checksum=?;" % self.table,
--                               (version, pkgarch, checksum))
--            row=data.fetchone()
--            if row is not None:
--                return row[0]
--            else:
--                raise prserv.NotFoundError
-+        value = self.find_value(version, pkgarch, checksum)
++    server_index = 0
++    client_index = 0
 +
-+        if value is None:
-+            # version, pkgarch found but not checksum. Create a new value from the maximum one
-+            return increase_revision(max_value)
- 
--    def get_value(self, version, pkgarch, checksum):
-         if self.nohist:
--            return self._get_value_no_hist(version, pkgarch, checksum)
-+            # "no-history" mode: only return a value if that's the maximum one for
-+            # the version and architecture, otherwise create a new one.
-+            # This means that the value cannot decrement.
-+            if value == max_value:
-+                return value
-+            else:
-+                return increase_revision(max_value)
-         else:
--            return self._get_value_hist(version, pkgarch, checksum)
-+            # "hist" mode: we found an existing value. We can return it
-+            # whether it's the maximum one or not.
-+            return value
++    def start_server(self, dbpath=None, upstream=None, read_only=False, prefunc=server_prefunc):
 +
-+    def get_value(self, version, pkgarch, checksum):
-+        value = self._get_value(version, pkgarch, checksum)
-+        self.store_value(version, pkgarch, checksum, value)
-+        return value
- 
-     def _import_hist(self, version, pkgarch, checksum, value):
-         if self.read_only:
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index dc4be5b620..9e07a34445 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -12,6 +12,7 @@ import sqlite3
- import prserv
- import prserv.db
- import errno
-+from . import create_async_client
- import bb.asyncrpc
- 
- logger = logging.getLogger("BitBake.PRserv")
-@@ -76,14 +77,76 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
-         pkgarch = request["pkgarch"]
-         checksum = request["checksum"]
- 
--        response = None
--        try:
-+        if self.upstream_client is None:
-             value = self.server.table.get_value(version, pkgarch, checksum)
--            response = {"value": value}
--        except prserv.NotFoundError:
--            self.logger.error("failure storing value in database for (%s, %s)",version, checksum)
-+            return {"value": value}
- 
--        return response
-+        # We have an upstream server.
-+        # Check whether the local server already knows the requested configuration
-+        # Here we use find_value(), not get_value(), because we don't want
-+        # to unconditionally add a new generated value to the database. If the configuration
-+        # is a new one, the generated value we will add will depend on what's on the upstream server.
++        self.server_index += 1
 +
-+        value = self.server.table.find_value(version, pkgarch, checksum)
++        if dbpath is None:
++            dbpath = self.make_dbpath()
 +
-+        if value is not None:
++        def cleanup_server(server):
++            if server.process.exitcode is not None:
++                return
 +
-+            # The configuration is already known locally. Let's use it.
++            server.process.terminate()
++            server.process.join()
 +
-+            return {"value": value}
++        server = create_server(socket.gethostbyname("localhost") + ":0",
++                               dbpath,
++                               upstream=upstream,
++                               read_only=read_only)
 +
-+        # The configuration is a new one for the local server
-+        # Let's ask the upstream server whether it knows it
++        server.serve_as_process(prefunc=prefunc, args=(self.server_index))
++        self.addCleanup(cleanup_server, server)
 +
-+        known_upstream = await self.upstream_client.test_package(version, pkgarch)
++        return server
 +
-+        if not known_upstream:
++    def make_dbpath(self):
++        return os.path.join(self.temp_dir.name, "prserv-test%d.sqlite3" % self.server_index)
 +
-+            # The package is not known upstream, must be a local-only package
-+            # Let's compute the PR number using the local-only method
++    def start_client(self, server_address):
++        def cleanup_client(client):
++            client.close()
 +
-+            value = self.server.table.get_value(version, pkgarch, checksum)
-+            return {"value": value}
++        client = create_client(server_address)
++        self.addCleanup(cleanup_client, client)
 +
-+        # The package is known upstream, let's ask the upstream server
-+        # whether it knows our new output hash
++        return client
 +
-+        value = await self.upstream_client.test_pr(version, pkgarch, checksum)
++    def start_test_server(self):
++        self.server = self.start_server()
++        print("SERVER STARTED WITH ADDRESS: %s" % (self.server.address))
++        return self.server.address
 +
-+        if value is not None:
++    def setUp(self):
++        self.temp_dir = tempfile.TemporaryDirectory(prefix='bb-prserv-test')
++        self.addCleanup(self.temp_dir.cleanup)
 +
-+            # Upstream knows this output hash, let's store it and use it too.
++        self.server_address = self.start_test_server()
++        self.client = self.start_client(self.server_address)
 +
-+            if not self.server.read_only:
-+                self.server.table.store_value(version, pkgarch, checksum, value)
-+            # If the local server is read only, won't be able to store the new
-+            # value in the database and will have to keep asking the upstream server
++class PRCommonTests(PRTestSetup, unittest.TestCase):
 +
-+            return {"value": value}
++    def test_create_pr(self):
++        result = self.client.test_pr("dummy-1.0-r0", "core2-64", "51bf8189dbe9ea81fa6dd89608bf19380c437a9cf12f6c6239887801ba4ab4a5")
++        return self.assertEqual(result, None)
 +
-+        # The output hash doesn't exist upstream, get the most recent number from upstream (x)
-+        # Then, we want to have a new PR value for the local server: x.y
 +
-+        upstream_max = await self.upstream_client.max_package_pr(version, pkgarch)
-+        # Here we know that the package is known upstream, so upstream_max can't be None
-+        subvalue = self.server.table.find_new_subvalue(version, pkgarch, upstream_max)
-+
-+        if not self.server.read_only:
-+            self.server.table.store_value(version, pkgarch, checksum, subvalue)
-+
-+        return {"value": subvalue}
-+
-+    async def process_requests(self):
-+        if self.server.upstream is not None:
-+            self.upstream_client = await create_async_client(self.server.upstream)
-+        else:
-+            self.upstream_client = None
-+
-+        try:
-+            await super().process_requests()
-+        finally:
-+            if self.upstream_client is not None:
-+                await self.upstream_client.close()
- 
-     async def handle_import_one(self, request):
-         response = None
-@@ -117,11 +180,12 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
-         return {"readonly": self.server.read_only}
- 
- class PRServer(bb.asyncrpc.AsyncServer):
--    def __init__(self, dbfile, read_only=False):
-+    def __init__(self, dbfile, read_only=False, upstream=None):
-         super().__init__(logger)
-         self.dbfile = dbfile
-         self.table = None
-         self.read_only = read_only
-+        self.upstream = upstream
- 
-     def accept_client(self, socket):
-         return PRServerClient(socket, self)
-@@ -134,6 +198,9 @@ class PRServer(bb.asyncrpc.AsyncServer):
-         self.logger.info("Started PRServer with DBfile: %s, Address: %s, PID: %s" %
-                      (self.dbfile, self.address, str(os.getpid())))
- 
-+        if self.upstream is not None:
-+            self.logger.info("And upstream PRServer: %s " % (self.upstream))
-+
-         return tasks
- 
-     async def stop(self):
-@@ -147,14 +214,15 @@ class PRServer(bb.asyncrpc.AsyncServer):
-             self.table.sync()
- 
- class PRServSingleton(object):
--    def __init__(self, dbfile, logfile, host, port):
-+    def __init__(self, dbfile, logfile, host, port, upstream):
-         self.dbfile = dbfile
-         self.logfile = logfile
-         self.host = host
-         self.port = port
-+        self.upstream = upstream
- 
-     def start(self):
--        self.prserv = PRServer(self.dbfile)
-+        self.prserv = PRServer(self.dbfile, upstream=self.upstream)
-         self.prserv.start_tcp_server(socket.gethostbyname(self.host), self.port)
-         self.process = self.prserv.serve_as_process(log_level=logging.WARNING)
- 
-@@ -233,7 +301,7 @@ def run_as_daemon(func, pidfile, logfile):
-     os.remove(pidfile)
-     os._exit(0)
- 
--def start_daemon(dbfile, host, port, logfile, read_only=False):
-+def start_daemon(dbfile, host, port, logfile, read_only=False, upstream=None):
-     ip = socket.gethostbyname(host)
-     pidfile = PIDPREFIX % (ip, port)
-     try:
-@@ -249,7 +317,7 @@ def start_daemon(dbfile, host, port, logfile, read_only=False):
- 
-     dbfile = os.path.abspath(dbfile)
-     def daemon_main():
--        server = PRServer(dbfile, read_only=read_only)
-+        server = PRServer(dbfile, read_only=read_only, upstream=upstream)
-         server.start_tcp_server(ip, port)
-         server.serve_forever()
- 
-@@ -336,6 +404,9 @@ def auto_start(d):
- 
-     host = host_params[0].strip().lower()
-     port = int(host_params[1])
-+
-+    upstream = d.getVar("PRSERV_UPSTREAM") or None
-+
-     if is_local_special(host, port):
-         import bb.utils
-         cachedir = (d.getVar("PERSISTENT_DIR") or d.getVar("CACHE"))
-@@ -350,7 +421,7 @@ def auto_start(d):
-                auto_shutdown()
-         if not singleton:
-             bb.utils.mkdirhier(cachedir)
--            singleton = PRServSingleton(os.path.abspath(dbfile), os.path.abspath(logfile), host, port)
-+            singleton = PRServSingleton(os.path.abspath(dbfile), os.path.abspath(logfile), host, port, upstream)
-             singleton.start()
-     if singleton:
-         host = singleton.host
 -- 
 2.34.1
 
