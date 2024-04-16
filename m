@@ -1,208 +1,135 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EA6C04FFF
-	for <webhook@archiver.kernel.org>; Tue, 16 Apr 2024 17:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7838DC4345F
+	for <webhook@archiver.kernel.org>; Tue, 16 Apr 2024 21:54:16 +0000 (UTC)
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
- by mx.groups.io with SMTP id smtpd.web11.26822.1713288031509713527
+ by mx.groups.io with SMTP id smtpd.web10.34191.1713304446978755558
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 16 Apr 2024 10:20:31 -0700
+ Tue, 16 Apr 2024 14:54:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=MYy7B3gc;
- spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 02111C0003;
-	Tue, 16 Apr 2024 17:20:28 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=P5tFBCd8;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: alexandre.belloni@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 816FBC0002;
+	Tue, 16 Apr 2024 21:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713288029;
+	t=1713304445;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0yQJvOfQ/6vrQQVd7/KDMS1SG+Q6EOYOjHhCb6ZK0mE=;
-	b=MYy7B3gcfdqGEc5icfN5pFSf6iWLXz+qEoKC4V3zVQchZo2FT4jmVe+naMgKnmNhHxyNOj
-	gHZPZJQUjuTNnUG28ahaVFObv/jeysOtvLkL2yyULz5aO+hVPPJB3sh1w3Mg8xsd8/s7uV
-	exVV3kQ1EPdEERs9TBpQdwGLitoklyle6uRI5DeR26LRrI794+wMRYdlORJyP3Bc7zX3Sb
-	sZEX9A8uyUiQWxsHGB6juBOnwQ5IM074iwX+nuubpc8OalmnkB8y/45ONDYdZXBNIjCB0v
-	2LfK+CnkeDn3HRMSS9ES5oudAb9eeJm/GFQPecjqhByKfo/EgUYJ/hxRSlFJ/w==
-From: michael.opdenacker@bootlin.com
-To: bitbake-devel@lists.openembedded.org
-Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
-	Joshua Watt <JPEWhacker@gmail.com>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [RFC][PATCH 3/3] prserv: start bitbake selftests
-Date: Tue, 16 Apr 2024 19:19:45 +0200
-Message-Id: <20240416171945.3799445-4-michael.opdenacker@bootlin.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240416171945.3799445-1-michael.opdenacker@bootlin.com>
-References: <20240416171945.3799445-1-michael.opdenacker@bootlin.com>
+	bh=mEYlYhPEydiX1uEaqAz7U1fr2P6TVyzEzgqsm1WB6ig=;
+	b=P5tFBCd8b/ORx55zHxSuZ702wOoEUQcLqhbXP6zNVLbNg7iodwurtfbW96W3CwPt/PyS1j
+	pF2Uqp//i0CB4BKo20qdrh73D3h0OaZZ8U4mM3hPbUBx4BkcTrk732OYYsNBSW6pD/6g0D
+	N8mWXHCkITutQJmHN0duX7uaijAFnFPhwAxQK+/E/ETXOKuplvYerFYsPRWNXok1gei6qZ
+	qd+vR46HFAGnawbZIBpfPvm2nnfGmYBxoEB42G+HzkbfJqYB6axUhcogMPNa9UZlnTLVvD
+	hsa9jnI0X8cxb8cUOhlP8KyD2IuhEHoJfwfM+JyO7Oo5LL12QqRPsZwsV11JaA==
+Date: Tue, 16 Apr 2024 23:54:01 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Rusty Howell <rustyhowell@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [PATCH] bitbake: bitbake-prserv: add nodaemon
+ option
+Message-ID: <202404162154017d2d756b@mail.local>
+References: <20240327064332.3381069-1-rustyhowell@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: michael.opdenacker@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327064332.3381069-1-rustyhowell@gmail.com>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 16 Apr 2024 17:20:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16101
+ <bitbake-devel@lists.openembedded.org>; Tue, 16 Apr 2024 21:54:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16102
 
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Hello,
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-CC: Joshua Watt <JPEWhacker@gmail.com>
-CC: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- bin/bitbake-selftest   |  2 +
- lib/prserv/__init__.py | 24 ++++++++++++
- lib/prserv/tests.py    | 84 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 110 insertions(+)
- create mode 100644 bitbake/lib/prserv/tests.py
+It doesn't apply on master anymore, can you rebase?
 
-diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
-index f25f23b1ae..ce901232fe 100755
---- a/bin/bitbake-selftest
-+++ b/bin/bitbake-selftest
-@@ -15,6 +15,7 @@ import unittest
- try:
-     import bb
-     import hashserv
-+    import prserv
-     import layerindexlib
- except RuntimeError as exc:
-     sys.exit(str(exc))
-@@ -33,6 +34,7 @@ tests = ["bb.tests.codeparser",
-          "bb.tests.utils",
-          "bb.tests.compression",
-          "hashserv.tests",
-+         "prserv.tests",
-          "layerindexlib.tests.layerindexobj",
-          "layerindexlib.tests.restapi",
-          "layerindexlib.tests.cooker"]
-diff --git a/lib/prserv/__init__.py b/lib/prserv/__init__.py
-index 2ee6a28c04..76041f9001 100644
---- a/lib/prserv/__init__.py
-+++ b/lib/prserv/__init__.py
-@@ -20,6 +20,30 @@ def init_logger(logfile, loglevel):
- class NotFoundError(Exception):
-     pass
- 
-+def create_server(addr, dbpath, upstream=None, read_only=False):
-+    from . import serv
-+
-+    s = serv.PRServer(dbpath, upstream=upstream, read_only=read_only)
-+
-+    (typ, a) = parse_address(addr)
-+    s.start_tcp_server(*a)
-+
-+    return s
-+
-+def create_client(addr):
-+    from . import client
-+
-+    c = client.PRClient()
-+
-+    try:
-+        (typ, a) = parse_address(addr)
-+        c.connect_tcp(*a)
-+        print("CLIENT CONNECTED TO: %s" %(addr))
-+        return c
-+    except Exception as e:
-+        c.close()
-+        raise e
-+
- async def create_async_client(addr):
-     from . import client
- 
-diff --git a/lib/prserv/tests.py b/lib/prserv/tests.py
-new file mode 100644
-index 0000000000..1e3b63913b
---- /dev/null
-+++ b/lib/prserv/tests.py
-@@ -0,0 +1,84 @@
-+#! /usr/bin/env python3
-+#
-+# Copyright (C) 2024 BitBake Contributors
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+
-+from . import create_server, create_client
-+import sys
-+import tempfile
-+import unittest
-+import socket
-+from pathlib import Path
-+
-+THIS_DIR = Path(__file__).parent
-+BIN_DIR = THIS_DIR.parent.parent / "bin"
-+
-+def server_prefunc(server, idx):
-+    logging.basicConfig(level=logging.DEBUG, filename='bbprserv-%d.log' % idx, filemode='w',
-+                        format='%(levelname)s %(filename)s:%(lineno)d %(message)s')
-+    server.logger.debug("Running server %d" % idx)
-+    sys.stdout = open('bbprserv-stdout-%d.log' % idx, 'w')
-+    sys.stderr = sys.stdout
-+
-+class PRTestSetup(object):
-+
-+    server_index = 0
-+    client_index = 0
-+
-+    def start_server(self, dbpath=None, upstream=None, read_only=False, prefunc=server_prefunc):
-+
-+        self.server_index += 1
-+
-+        if dbpath is None:
-+            dbpath = self.make_dbpath()
-+
-+        def cleanup_server(server):
-+            if server.process.exitcode is not None:
-+                return
-+
-+            server.process.terminate()
-+            server.process.join()
-+
-+        server = create_server(socket.gethostbyname("localhost") + ":0",
-+                               dbpath,
-+                               upstream=upstream,
-+                               read_only=read_only)
-+
-+        server.serve_as_process(prefunc=prefunc, args=(self.server_index))
-+        self.addCleanup(cleanup_server, server)
-+
-+        return server
-+
-+    def make_dbpath(self):
-+        return os.path.join(self.temp_dir.name, "prserv-test%d.sqlite3" % self.server_index)
-+
-+    def start_client(self, server_address):
-+        def cleanup_client(client):
-+            client.close()
-+
-+        client = create_client(server_address)
-+        self.addCleanup(cleanup_client, client)
-+
-+        return client
-+
-+    def start_test_server(self):
-+        self.server = self.start_server()
-+        print("SERVER STARTED WITH ADDRESS: %s" % (self.server.address))
-+        return self.server.address
-+
-+    def setUp(self):
-+        self.temp_dir = tempfile.TemporaryDirectory(prefix='bb-prserv-test')
-+        self.addCleanup(self.temp_dir.cleanup)
-+
-+        self.server_address = self.start_test_server()
-+        self.client = self.start_client(self.server_address)
-+
-+class PRCommonTests(PRTestSetup, unittest.TestCase):
-+
-+    def test_create_pr(self):
-+        result = self.client.test_pr("dummy-1.0-r0", "core2-64", "51bf8189dbe9ea81fa6dd89608bf19380c437a9cf12f6c6239887801ba4ab4a5")
-+        return self.assertEqual(result, None)
-+
-+
+Thanks!
+
+On 27/03/2024 00:43:32-0600, Rusty Howell wrote:
+> Add a --nodaemon option to the prserver so it stays in the foreground
+> and does not fork and exit.
+> 
+> There are several reasons why one would prefer to run the prserver in the
+> foreground and not as a daemon.  Systemd documentation indicates that non-forking
+> processes are preferred over forking/daemonized ones. Other use cases include
+> running the prserver in a docker container and put in a k8s cluster.
+> 
+> Signed-off-by: Rusty Howell <rustyhowell@gmail.com>
+> ---
+>  bin/bitbake-prserv |  4 ++++
+>  lib/prserv/serv.py | 16 ++++++++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/bin/bitbake-prserv b/bin/bitbake-prserv
+> index 5be42f3c..0d755fcb 100755
+> --- a/bin/bitbake-prserv
+> +++ b/bin/bitbake-prserv
+> @@ -32,6 +32,8 @@ def main():
+>                        dest="logfile", type="string", default="prserv.log")
+>      parser.add_option("--loglevel", help="logging level, i.e. CRITICAL, ERROR, WARNING, INFO, DEBUG",
+>                        action = "store", type="string", dest="loglevel", default = "INFO")
+> +    parser.add_option("--nodaemon", help="Run prserver in foreground",
+> +                      action="store_true", dest="nodaemon")
+>      parser.add_option("--start", help="start daemon",
+>                        action="store_true", dest="start")
+>      parser.add_option("--stop", help="stop daemon",
+> @@ -50,6 +52,8 @@ def main():
+>          ret=prserv.serv.start_daemon(options.dbfile, options.host, options.port,os.path.abspath(options.logfile), options.read_only)
+>      elif options.stop:
+>          ret=prserv.serv.stop_daemon(options.host, options.port)
+> +    elif options.nodaemon:
+> +        ret=prserv.serv.start_nodaemon(options.dbfile, options.host, options.port, options.read_only)
+>      else:
+>          ret=parser.print_help()
+>      return ret
+> diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+> index 5fc8863f..111e6e9f 100644
+> --- a/lib/prserv/serv.py
+> +++ b/lib/prserv/serv.py
+> @@ -207,6 +207,22 @@ def run_as_daemon(func, pidfile, logfile):
+>      os.remove(pidfile)
+>      os._exit(0)
+>  
+> +
+> +def start_nodaemon(dbfile, host, port, read_only=False):
+> +    ip = socket.gethostbyname(host)
+> +    dbfile = os.path.abspath(dbfile)
+> +    # Ensure logging makes it to the logfile
+> +    streamhandler = logging.StreamHandler()
+> +    streamhandler.setLevel(logging.DEBUG)
+> +    formatter = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
+> +    streamhandler.setFormatter(formatter)
+> +    logger.addHandler(streamhandler)
+> +
+> +    server = PRServer(dbfile, read_only=read_only)
+> +    server.start_tcp_server(ip, port)
+> +    server.serve_forever()
+> +
+> +
+>  def start_daemon(dbfile, host, port, logfile, read_only=False):
+>      ip = socket.gethostbyname(host)
+>      pidfile = PIDPREFIX % (ip, port)
+> -- 
+> 2.25.1
+> 
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#16016): https://lists.openembedded.org/g/bitbake-devel/message/16016
+> Mute This Topic: https://lists.openembedded.org/mt/105172873/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+
+
 -- 
-2.34.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
