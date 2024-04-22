@@ -1,190 +1,174 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <dl9pf@gmx.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77A7C4345F
-	for <webhook@archiver.kernel.org>; Mon, 22 Apr 2024 14:48:13 +0000 (UTC)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
- by mx.groups.io with SMTP id smtpd.web11.20487.1713797283228279410
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52B7C4345F
+	for <webhook@archiver.kernel.org>; Mon, 22 Apr 2024 17:17:10 +0000 (UTC)
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+ by mx.groups.io with SMTP id smtpd.web10.1806.1713806226754829077
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 22 Apr 2024 07:48:03 -0700
+ Mon, 22 Apr 2024 10:17:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=e97DbZCN;
- spf=pass (domain: gmail.com, ip: 209.85.167.45, mailfrom: jpewhacker@gmail.com)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51ae2e37a87so2834456e87.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 22 Apr 2024 07:48:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713797281; x=1714402081; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RtZb/cdLFVBhkQlCWnPHBmJtrViJm3HsZlQtAcMoyQs=;
-        b=e97DbZCNKtzx31fpqO9DcFnhH4Q4Wm0EYtYQHcbCNEzCw4EDrJvgIjrhMDMFjJzE4M
-         7uaMSOr3cd/2wphL8h14F/S4RGkhL3OyMw4MKsP2Q/aunFHB6FwASxjtUavIlL2HwqYg
-         MZDdFjSFTD8OghLWD48pcobyF3tKdY8UEeqIobzSFryZ9Q8Wtw4tkHGjlte71TYO54gq
-         56b2iF8fPDZstD24YudbGj6sr2hOTVD9PJLxDO1opeobNYLXvLqRkWkJYKDc9QAcVdfZ
-         SIuJF0FEzirkNDtdbREcQJqKP1OhHMaSCxkZEHOvtbZLW6Q34khDvKdy/npxvyPwz7BQ
-         cblQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713797281; x=1714402081;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RtZb/cdLFVBhkQlCWnPHBmJtrViJm3HsZlQtAcMoyQs=;
-        b=mm6I4Ft/VlnGpRanLU80gpOiJhO5Ve/m4o2Ox/oOGthmqFVrM2Mg4CKyvriIyB126n
-         6C3OHteOCaEit7y1aa6rHqBqqyTdZnuAS3A8A5Bb0utpTT7n6zEM3Er8zQRGlM3CLhQV
-         Y7w1ub8pvltpDgcp1eBH/ixw2Qtoxc9QvY49szAN4egHP3nbpXo6bYvSwv5Ha2VJm1QL
-         mRYHHEkB3nurKINfHeDo7yJ3fMekavCpI5fhbmYjx58R5W18zTZVplAUI0rgbjkR322+
-         BLjU0DhDMeAslQW2TM1wlQ134wuq5w6ld7dqZ95PDYYY2CL+k2BL4OLIZT+zgqRoH+xf
-         gywA==
-X-Forwarded-Encrypted: i=1; AJvYcCWziFhlv6aitEHeoKVQyxkMTLDGp3rNeLU9BNsRNr0BwoQGYd/X6dyJn8RhM3PFajxpZjTs2br/7mDD/ZFLMzkhNQHd4XkS1O3tuCwQYo8Gc9Qh+Bs=
-X-Gm-Message-State: AOJu0YzzVcAdW019/qtS5fbu+WkzdukRVUxhBu9Px//89N+TZRVwVrVq
-	9H5421DImiotaybiWOCEH1X/tl1WpNAFoVvsdseJO9P6XksZ/nB1Oio8E730zPKX7eoRY4hjt6z
-	uTZLKg3b4bOBZ4lvrlJAi7NzrNCg=
-X-Google-Smtp-Source: AGHT+IGG9PqS/f+gmUmoKy+6lYnj6SrAm8m93PxEdiRHUo33ts+JbQ0JXh5Nb5tmxbcmJ5PUR3U7AQ6ekQkDOsDZIMw=
-X-Received: by 2002:a05:6512:4026:b0:51a:ebf8:c89a with SMTP id
- br38-20020a056512402600b0051aebf8c89amr5693378lfb.57.1713797281019; Mon, 22
- Apr 2024 07:48:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <d85e68b3-18ec-428e-b17a-b012bc9e2c75@bootlin.com>
- <7ca8f12c-fd13-4e60-ab4e-7016e2f9a683@bootlin.com> <CAJdd5GZYDtvvhkKKD4jukbWDatiWPXxQTwsjh+6HcFji+wNCHg@mail.gmail.com>
+ dkim=fail reason="dkim: signature did not verify: crypto/rsa: verification error" header.i=dl9pf@gmx.de header.s=s31663417 header.b=YH3Csbs7;
+ spf=pass (domain: gmx.de, ip: 212.227.15.18, mailfrom: dl9pf@gmx.de)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1713806223; x=1714411023; i=dl9pf@gmx.de;
+	bh=rupiAsoawPXATmHVE5iPOKVaDP2dReak9SBmArVv5r4=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:Content-Type:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=YH3Csbs7JCtNaqeqHm5YMSZXuxEfGwcytFVlnm6ua4IddiPG0a5KxpVSDEbrWw6Q
+	 Szv9bUtc5fPi16zxt9brBJ6jFolJquzVqPrLBIM4LHOAk5OEfY+S6Xe4Pa4KKMuKW
+	 0oS5PlyGpaOe22AeIutb6/uNhIWTyMFog/y7X3dp5H4blaxAZQL3qtTVbmOhWEnhW
+	 opqzSmjNoMTiR9Ii/3YalhhtQmNKFe8bGNO2eCo6D+evBb07QXeD5Glc5n0239513
+	 dTguBRazm7JRS65uodg+Mk8nt5UcXrErWezojP2t9DD67QN0PVssU6B9QnjUHQzdn
+	 OKR3BOSpEQe7k+PYsw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from monster.localnet ([77.23.168.18]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mj8qd-1sbZlK19IT-00f8uB; Mon, 22
+ Apr 2024 19:17:03 +0200
+From: Jan-Simon Moeller <dl9pf@gmx.de>
+To: Joshua Watt <jpewhacker@gmail.com>
+Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
+ bitbake-devel@lists.openembedded.org,
+ Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: 
+ Re: [bitbake-devel] bitbake-selftest losing sqlite3 database contents!
+Date: Mon, 22 Apr 2024 19:17:02 +0200
+Message-ID: <7682889.EvYhyI6sBW@monster>
+In-Reply-To: 
+ <CAJdd5GahxnL8ab7rh5bggOhh7CnT6ry8WzfT-aZEpvmMTmDE4Q@mail.gmail.com>
+References: 
+ <d85e68b3-18ec-428e-b17a-b012bc9e2c75@bootlin.com>
  <10108676.tdPhlSkOF2@arbeit>
-In-Reply-To: <10108676.tdPhlSkOF2@arbeit>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Mon, 22 Apr 2024 08:47:48 -0600
-Message-ID: <CAJdd5GahxnL8ab7rh5bggOhh7CnT6ry8WzfT-aZEpvmMTmDE4Q@mail.gmail.com>
-Subject: Re: [bitbake-devel] bitbake-selftest losing sqlite3 database contents!
-To: =?UTF-8?Q?Jan=2DSimon_M=C3=B6ller?= <dl9pf@gmx.de>
-Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>, bitbake-devel@lists.openembedded.org, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>, jsmoeller@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+ <CAJdd5GahxnL8ab7rh5bggOhh7CnT6ry8WzfT-aZEpvmMTmDE4Q@mail.gmail.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:fp6/3/O+OVQYMnOQC/fCun+uPGFYlnWnkHg5E14YdmhGDdAoQIa
+ BXRMFqpRZLYKxNL9hIUwR5vAsLRCTlGkS/lhZutsbqkxrbfRNlNfOwOfHBE8PfQy11/YLbh
+ kzQsYU0ou356/CbbjhrpjuGveNXrKxiGe4fgOTI/xMh6sPUVjEvsDC3Aoclgy+UF1wevOAb
+ k01L+4N9JWBWxen9dQ95Q==
+UI-OutboundReport: notjunk:1;M01:P0:M+PnmUvVNds=;iZwEmOjXspNJgrlVLN3O3Idq7VR
+ hEbQ8EYVr9C5oUpFUd08r65JWglxQqfadT1WdknZxH11PxvR76k7qI5/8RWqr3tpYYFBlAQbs
+ 6u86ioqFqTd8Z+PZztJkykjn4vqmafA8vlJrPmraRuy3LM4wzy1gcKp4ElKd6ZUKtpIvqc67N
+ +3l5jKHVyBaEOl28QEEm1vBQ4D8pAG0EXZ0mY9d81IlT1RegL4X7Ma4hzt536joA4GwzVX8u9
+ F/hSK+p4aKmQBjeP9Ai2BqaqaS72gQCwAbh8mhzG+9jsWkjDBWF1X4f+zYPm29gV6AcuuV9y4
+ lnCf/Qbri3bmonLkIPqNneSTHigPvrxvNEYHCVJKDaD4s2c2n+4NKz5uSOMcpq8QBpuzZLVW2
+ tytGTAhtdteQ8Tc2Aayn5GDcHdO9OBkL6XGRMn6W/bNs+83fI4FIfM204261y01b/GqdX2O+W
+ ihVJJZSfUhun5/mxjhaqY3caEK4pOYSv2MzMk1mJbcsM5AIgNJYmXy64xRKIXT7LzOlhW+/LO
+ S8Z4ZnZR9AEg7EnI7aWkxOcsDM/fOqgXwBt85a8lVILseMdSOglxpc62ZnCSDS3h33L//jtzp
+ oya7R8TUtIbYgWAvH3wlH+zw0WdlphVYHPFc4lSFAymtkkLpKLIzI2mBYnbUSl1ctOTqdPpWb
+ NOlkf0qgMubSvKX88bAwMRFqGQSM41+C93BnlK1yW6j3cshKoznp3BI+Mw0eokGuYhyBV34sg
+ Dopi71kJntYyc6S3Q+BODro30xilPU1bP7tiFItPJOkQG/EXNsBfcWY6d1PfWsQMKRW2BEEeV
+ bp3EAxZ9SKM/p94yYlOkUvFoIqDKczrjVpq6oy/1HVzIg=
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 22 Apr 2024 14:48:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16121
+ <bitbake-devel@lists.openembedded.org>; Mon, 22 Apr 2024 17:17:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16122
 
-On Mon, Apr 22, 2024 at 4:00=E2=80=AFAM Jan-Simon M=C3=B6ller <dl9pf@gmx.de=
-> wrote:
->
-> Am Samstag, 20. April 2024, 22:35:33 CEST schrieb Joshua Watt via lists.o=
-penembedded.org:
->
-> > I'm not exactly sure what the purpose of the read-only prserv is in
-> > the first place; based on these requirements, it sort of sounds like
-> > there isn't anyway to make a read-only server that has actual data in
-> > it :)
->
-> Well what about this use-case:
-> An CI loop would populate using a rw PR-server , those artifacts (sources=
-, sstate, hashserv(!), deploy dir)
-> are then pushed to a download server. We do not want to expose that r/w P=
-R-serv publically.
-> Now for a binary feed-like setup, we'd need a matching PR and Hashserv fo=
-r the downstream. No ?
-> Thus extra r/o instances sharing the same sqlite in the back.
-> Isn't this then required for a downstream user to create their own 'match=
-ing' binaries for the feed ?
->
-> Correct me, but e.g. this is what we assume is the way to expose the data=
-:
->
-> # rw prserv on port 8181
-> bitbake-prserv --start --file /home/yocto/pr_hash_serv-volume/prserv.db -=
--loglevel=3DDEBUG --log /home/yocto/pr_hash_serv-volume/prserv-rw.log --por=
-t 8181
-> # ro prserv on port 8282
-> bitbake-prserv --start -r --file /home/yocto/pr_hash_serv-volume/prserv.d=
-b --loglevel=3DDEBUG --log /home/yocto/pr_hash_serv-volume/prserv-ro.log --=
-port 8282
->
-> # rw hashserv on port 8383
-> bitbake-hashserv --bind :8383 --log DEBUG --database /home/yocto/pr_hash_=
-serv-volume/hashserv.db > /home/yocto/pr_hash_serv-volume/hashserv-rw.log 2=
->&1 &
-> # ro hashserv on port 8484
-> bitbake-hashserv -r --bind :8484 --log DEBUG --database /home/yocto/pr_ha=
-sh_serv-volume/hashserv.db > /home/yocto/pr_hash_serv-volume/hashserv-ro.lo=
-g 2>&1 &
->
->
-> @Richard/Josh:
-> Let me add (yes, grumble a bit ;) ) : for me as *end user* of this, this =
-is all the same and would be best kept in one single server that I can scal=
-e.
-> Having it split into two just complicates things ... and now for scarthga=
-p, we need another instance of the hashserv due to the API change.
-> Please consider this from a user perspective working on multiple branches=
- and not just one master branch!
-> The data might not be 'the same' or not 'connected', but they are still l=
-inked in a way and moreover we are exposing this to users
-> to use and usage gets mandatory if we think of speeding up builds and bin=
-ary feeds. Don't get me wrong, this is good stuff, but we make it hard for =
-general use.
-> Wrt scaling: - essentially we're setting us up with scaling problems wrt =
-prserv down the road when it gets needed for binary feed.
-> Heck, we're just solving this for hashserv, so why not do this likewise r=
-ight away - at best put both in one server?
+Sorry for highjacking the thread ... reply inline.
 
-Can you clarify what you mean by "both in one server"? There are a lot
-of different levels of varying complexity that could be done for that.
-For example, you could:
-1) Run both servers as separate processes in e.g. a shared container
-2) Run both servers in a shared script
-3) Combine the API into a single server API
+<snip>
+Am Montag, 22. April 2024, 16:47:48 CEST schrieb Joshua Watt:
+> On Mon, Apr 22, 2024 at 4:00=E2=80=AFAM Jan-Simon M=C3=B6ller <dl9pf@gmx.=
+de> wrote:
+> > Am Samstag, 20. April 2024, 22:35:33 CEST schrieb Joshua Watt via=20
+lists.openembedded.org:
+> > @Richard/Josh:
+> > Let me add (yes, grumble a bit ;) ) : for me as *end user* of this, this
+> > is all the same and would be best kept in one single server that I can
+> > scale. Having it split into two just complicates things ... and now for
+> > scarthgap, we need another instance of the hashserv due to the API
+> > change. Please consider this from a user perspective working on multiple
+> > branches and not just one master branch! The data might not be 'the sam=
+e'
+> > or not 'connected', but they are still linked in a way and moreover we
+> > are exposing this to users to use and usage gets mandatory if we think =
+of
+> > speeding up builds and binary feeds. Don't get me wrong, this is good
+> > stuff, but we make it hard for general use. Wrt scaling: - essentially
+> > we're setting us up with scaling problems wrt prserv down the road when
+> > it gets needed for binary feed. Heck, we're just solving this for
+> > hashserv, so why not do this likewise right away - at best put both in
+> > one server?
+> Can you clarify what you mean by "both in one server"? There are a lot
+> of different levels of varying complexity that could be done for that.
+> For example, you could:
+> 1) Run both servers as separate processes in e.g. a shared container
+> 2) Run both servers in a shared script
+> 3) Combine the API into a single server API
+>=20
+> These are generally more complex with more caveats as you go; #1 is
+> the "easiest", #2 isn't possible until the PR server is completely
+> asynchronous like the hashserver (otherwise it won't scale at all),
+> and #3 is basically a completely new (breaking) API.
 
-These are generally more complex with more caveats as you go; #1 is
-the "easiest", #2 isn't possible until the PR server is completely
-asynchronous like the hashserver (otherwise it won't scale at all),
-and #3 is basically a completely new (breaking) API.
+To be really honest, only #3 makes sense from my perspective  aka 'end user=
+=20
+perspective' .
 
-My preference is #1 or #2, but #2 makes no sense until the PR server
-has all of the features of the hash server; this patch series adds
-websockets which is a good step, but it would also need the database
-backend re-written to be nonblocking like the hash server, otherwise
-it's just asking for scaling problems if you run them in the same
-process :)
 
-Also keep in mind that one of the goals of the websockets server is to
-reduce the need for the "read-only" server, since you can have your CI
-authenticate with the hash server and get rw access, but anonymous
-users can be given read-only access.
+#1 is what we do already for the existing pr+hashserv ...=20
+excuse my language, but it s**ks. You need to care for multiple API revisio=
+ns=20
+aka double (pr+hash) the port numbers to punch through. Each breaking API=20
+update needs us to start more server processes and punch through more ports=
+=2E=20
+This is such a maintenance pita.
 
-In short, there is space to make it a little easier to stand up the
-servers in some common ways, but I'm hesitant to force everyone to run
-the servers a specific way as I don't think there is a "one size fits
-all".
+#2 is no difference to #1 if you think of different branches being in use.
 
->
-> @Michael: the 'empty file' issue rings a bell and I've seen this back whe=
-n we tried this for the first time.
-> Export did not work either. But I have a hard time remembering the detail=
-s. Might even depend on sqlite versions back then.
-> I found this in my local git:
-> sed -i -e "s#EXCLUSIVE#IMMEDIATE#g" /home/yocto/poky/bitbake/lib/prserv/d=
-b.py
-> It probably helped some but might cause other issues. Let's see what the =
-experts say.
->
->
-> > Ostensibly, you should be able to write a test fixture that does
-> > whatever a real-life PR server installation would do to populate a
-> > database and then make it read-only. You would then do this process on
-> > the test database before each test where you needed to test the read
-> > only functionality. You have to do it for each test because as you
-> > noticed, you should not ever have "carry-over" in state from one test
-> > to another. Having carry-over between tests is not a good idea for a
-> > lot of reasons, which is why the hash server tests are setup the way
-> > that they are with an empty database for each test.
->
-> I second Josh here.
->
->
-> Best,
-> JS
->
->
->
->
+> My preference is #1 or #2, but #2 makes no sense until the PR server
+> has all of the features of the hash server; this patch series adds
+> websockets which is a good step, but it would also need the database
+> backend re-written to be nonblocking like the hash server, otherwise
+> it's just asking for scaling problems if you run them in the same
+> process :)
+
+Nack.
+Just teach Hashserv to store/serv the additional values and be done ?
+Thanks to your great work on scaling the hashserv, we're almost there wrt=20
+deployments at scale. Why do that whole setup again for prserv ?
+We'd have to duplicate also all the assets we use during scale-out ?
+
+> Also keep in mind that one of the goals of the websockets server is to
+> reduce the need for the "read-only" server, since you can have your CI
+> authenticate with the hash server and get rw access, but anonymous
+> users can be given read-only access.
+
+Even better, then put it in one combined pr+hashserv, on one port, so we ca=
+n=20
+manage the whole thing easily.=20
+Think of it ...  why would you want to deal with auth for 2 servers (pr+has=
+h)?
+This just leads to mismatches in auth (we all make mistakes during setup) a=
+nd=20
+having to deal with twice as much credentials ... why?
+I can't think of a case where I'd r/w on one but r/o on the other. It makes=
+ no=20
+sense.
+=20
+> In short, there is space to make it a little easier to stand up the
+> servers in some common ways, but I'm hesitant to force everyone to run
+> the servers a specific way as I don't think there is a "one size fits
+> all".
+In the end: This is both 'metadata' that we want to store / reuse with=20
+bitbake. And more so going forward. So keep it simple also for the users.
+This is not PR data vs hashserv data. Both is metadata we want to keep.
+
+One size - actually I think exactly that. This makes it easier to run a loc=
+al=20
+instance (just one - no mismatches possible). But also scale out if require=
+d=20
+and not doubling the infra (and cost!)  when doing so.
+
+
+Best,
+Jan-Simon
+
+
+
 
