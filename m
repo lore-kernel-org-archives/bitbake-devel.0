@@ -2,112 +2,111 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EE3C10F1A
-	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 15:03:03 +0000 (UTC)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
- by mx.groups.io with SMTP id smtpd.web11.20941.1713884580383449903
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AFFC4345F
+	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 18:26:35 +0000 (UTC)
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+ by mx.groups.io with SMTP id smtpd.web11.2698.1713896794177568037
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 23 Apr 2024 08:03:00 -0700
+ Tue, 23 Apr 2024 11:26:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=M10nWUX4;
- spf=pass (domain: gmail.com, ip: 209.85.167.48, mailfrom: jpewhacker@gmail.com)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5196c755e82so8135945e87.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Apr 2024 08:03:00 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=PrfPiJFs;
+ spf=pass (domain: gmail.com, ip: 209.85.166.45, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7dbc33bdf08so86472739f.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Apr 2024 11:26:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713884578; x=1714489378; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7fbqyLN3FC4B47BlRt4LTu4MAmUt1glWIPUAqipDmIw=;
-        b=M10nWUX4PMy/9Oi/NB/uSI1Z/VtArRDCGK248BqWUHSQqmWXlY8tG3AvTe8yodiK3Q
-         oI8qNcwyFl3dlrGN3Rw9rWOIWogNuonEIDxAxkwvqZHTLxGx9nsTo2bnLOn8YJ98TklP
-         d/P60ibg+PPzlD52lMq90T3974P4vcWSAg6xsWu9z3efpLvaNNuqPsYE1VyYDb4nLCQq
-         8JZpzIiysh6xSva7iMOuWxootFK+l8ROU5zUzXOEHEeGnJdlbTN/MMCFEg60pkxos00j
-         5Acuc0YJr1Ih9NpyTGCJGX1RGJp6qF4OMlFRGenhCQ6uH0d7zFs5QLQrSotS6EeX+87m
-         oFjQ==
+        d=gmail.com; s=20230601; t=1713896792; x=1714501592; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8mYT6QWGf2kT8s4qmQlgbMX1tI2xSVATc9VFNZU8PFA=;
+        b=PrfPiJFsXYnhpyexQzhVOFFUvn+l1VOvKLpEWzp7QPvLl5YHx4gW4BZgq110VNC3Hy
+         i5zQBVncEhHQ7dn/YmcRRmdOfPjQeaBbMwsVQDzXPeAYFBLBX56u/l8vq4ovQDkO9m39
+         NwM9/GkXmXKjUKcDTplz1+dysKItl0oQW3xtQzzPqgOty0UiFU+OwCTundqviHSoCwMi
+         8sR2f05NXAOEwiHSd5b14DM4JlJIk0ETDCkPS8/wp8is9v6JFelcfWOcYtmLQd2Shezz
+         LNSr5fr4xk51XCZaovqmxrL4oX+LWipqVUKsgEzoMAO0JwdOQZhr7CAtNgwE9uICheOO
+         wCTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713884578; x=1714489378;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7fbqyLN3FC4B47BlRt4LTu4MAmUt1glWIPUAqipDmIw=;
-        b=JHmEkVp79Y8cbRzOM9Mf6nLEjhwmtTNZbe9q5pcvm1nd37I6XLNDhGHhtuIXaoPzGh
-         azI1cg1DwCZ/+/25a0M8FnDnicVfzgukQZmB9vHz7ypGPWXiZrvdl+OSvBEzNartKF/R
-         dWSObWxQhzxHClmNh/9oy5bGaO8YS235PHF1qck10UoV77a6DBgzgg9VQjeNnh1AQK/n
-         HbO64YsofPmiV4I//1xCc1EvTKicLpHjK4z4PZQy1FebAzlBzGlPzeIwlKhhkvdj9ff8
-         pgsApgpytw6kAgF2BVHnhTpgSuL6LcmRGyYW+7Um9s3ErrNDxGZcFLGkvUZQcvdJPw+X
-         KGNw==
-X-Gm-Message-State: AOJu0YwtzWt+2908cM5tw8VDjuSA7w7l/teV686EFY8kHt8IxDw/0xLe
-	bXidHvSo2GGfjiMgGRLoa/NF+Dqrv7NEIsiFI4jkNEDimMB/LUd1YZI9dvDIXBLYANQ4kgXnZYv
-	MKUVjWEFXy6CeHIV7rnwcDwj7Dqs=
-X-Google-Smtp-Source: AGHT+IE8Mt1HTNgKkzFR2rqu8ki6F1aYXZYa1xeRwneHGbi9lroKY5RAHP1cDTkUo42/MlF7Al0t7yTezHR1d6tUqE8=
-X-Received: by 2002:a05:6512:4d0:b0:516:c7c2:23b6 with SMTP id
- w16-20020a05651204d000b00516c7c223b6mr7722432lfq.9.1713884578220; Tue, 23 Apr
- 2024 08:02:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20240416171945.3799445-1-michael.opdenacker@bootlin.com>
- <20240416171945.3799445-3-michael.opdenacker@bootlin.com> <CAJdd5GaYY4+jp34H+_BJ2gACA0eg5nog34JdDfy9nnhKVJRkGg@mail.gmail.com>
- <9bf63d8d-2750-4ee2-ad3d-67fbb029d61c@bootlin.com>
-In-Reply-To: <9bf63d8d-2750-4ee2-ad3d-67fbb029d61c@bootlin.com>
+        d=1e100.net; s=20230601; t=1713896792; x=1714501592;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8mYT6QWGf2kT8s4qmQlgbMX1tI2xSVATc9VFNZU8PFA=;
+        b=h7k3JAioPFnteMKBNBkJZxquiZg4IxVWzFZ5OIFM61xK3KWVx6mPqLJ4ORqvwq1GOk
+         1U30LW5oHbs7Ag/ZJVCuUV06y8naBQHIUUzvWkWgWDI6PSuByrKYJ+ZdmnaPaJnKpp3z
+         56ib5ddSeifP33P1KpPrFuj4RpD0pO2/mPgCct4sG2W4kp5UdTM9jRgMfZWoIrbFqQSK
+         CDV5aMgagBYat6QhcGs4o5SwEQvvsc/V5RkdRyEru2Ea2KMbxZ3oh4hcLvoAa9wK8kKh
+         I+eaD87UvHDzeiTT0YNMn2QSMLANZKprFjz3ycbmQ4d+/yOGGT1BoFObUaaRoZjkdQSJ
+         cX0w==
+X-Gm-Message-State: AOJu0YwAYdOF1y6vhfm8I/VEICQal2edA5mUf4QAmK7vaXf7P5NkfC7M
+	tTBTATfyqgEPQdeMFhYAopRESdZuW0BsK+unD43FUnGTqbyQYFL+w+DkIQ==
+X-Google-Smtp-Source: AGHT+IEgWybTZvnTF0IFfpZ3FFaSbDa4T9QbwRZgzoagazUInJ9ZSc7gtuq9R/bC9CY+ys6qYWwNLA==
+X-Received: by 2002:a05:6602:450:b0:7d9:6351:4ef3 with SMTP id e16-20020a056602045000b007d963514ef3mr293683iov.5.1713896792341;
+        Tue, 23 Apr 2024 11:26:32 -0700 (PDT)
+Received: from localhost.localdomain ([2601:282:4300:19e0::d802])
+        by smtp.gmail.com with ESMTPSA id ja12-20020a056638888c00b0048569383229sm866097jab.121.2024.04.23.11.26.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 11:26:31 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
-Date: Tue, 23 Apr 2024 09:02:44 -0600
-Message-ID: <CAJdd5GYAu=Vsx=o0kncNZLnuQu4cxhe8uN4BTmk_iiToQGKBDQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 2/3] prserv: add "history" argument to "get-pr" request
-To: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Cc: bitbake-devel@lists.openembedded.org, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tim Orling <ticotimo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: michael.opdenacker@bootlin.com,
+	Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][RFC] prserv: Enable database sharing
+Date: Tue, 23 Apr 2024 12:25:43 -0600
+Message-Id: <20240423182543.226113-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 23 Apr 2024 15:03:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16134
+ <bitbake-devel@lists.openembedded.org>; Tue, 23 Apr 2024 18:26:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16135
 
-On Tue, Apr 23, 2024 at 6:26=E2=80=AFAM Michael Opdenacker
-<michael.opdenacker@bootlin.com> wrote:
->
-> Hi Joshua
->
-> On 4/20/24 at 22:45, Joshua Watt wrote:
-> > On Tue, Apr 16, 2024 at 12:20=E2=80=AFPM <michael.opdenacker@bootlin.co=
-m> wrote:
-> >> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-> >>
-> >> This makes it possible to test the "history" mode in the
-> >> future bitbake selftests, to make sure that both "history"
-> >> and "no history" modes work as expected.
-> > Is this useful in normal day-to-day usage? I don't generally like to
-> > add functionality just for testing if it can be helped, as the closer
-> > you can get to actual end user API calls, the better it covers the end
-> > user experience.
-> >
-> > It looks like PRData has an (unused) argument to enable history mode?
-> > If this is unused do we even actually care about it at all? Maybe it
-> > would be better to remove an unused feature than try to test it?
->
-> One version of my series actually removed that feature, but then Richard
-> asked me to keep the code, because of the usefulness of the "history"
-> mode for binary reproducibility. This way, we always generate the same
-> package and revision if we have the same output hash as in a prior
-> build. That's different from the default behavior that increases the
-> revision every time we have a new output hash.
+sqlite3 can allow multiple processes to access the database
+simultaneously, but it must be opened correctly. The key change is that
+the database is no longer opened in "exclusive" mode (defaulting to
+shared mode). In addition, the journal is set to "WAL" mode, as this is
+the most efficient for dealing with simultaneous access between
+different processes. In order to keep the database performance,
+synchronous mode is set to "off". The WAL journal will protect against
+incomplete transactions in any given client, however the database will
+not be protected against unexpected power loss from the OS (which is a
+fine trade off for performance, and also the same as the previous
+implementation).
 
-Ah, that's a different story. API used by end users (but not by
-bitbake during normal execution) is fine, and a different story than
-API added just for testing :)
+Finally, the _execute() API now uses a database cursor. The cursor
+automatically makes sure that the query happens in an atomic transaction
+and commits when finished.
 
->
-> This being said, supporting both modes added substantial complexity to
-> the code, and I wish I had more time to consolidate all this and reduce
-> as much redundancy as possible between modes.
->
-> Cheers
-> Michael.
->
-> --
-> Michael Opdenacker, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
+NOTE: THIS MAY BE INCOMPLETE; All APIs need to be evaluated to see if
+the transaction (cursor) needs to cover mode than one "execute"
+statement.
+
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/prserv/db.py | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/bitbake/lib/prserv/db.py b/bitbake/lib/prserv/db.py
+index b4bda7078cd..e7a2d27e950 100644
+--- a/bitbake/lib/prserv/db.py
++++ b/bitbake/lib/prserv/db.py
+@@ -292,11 +292,10 @@ class PRData(object):
+                 raise e
+         uri = "file:%s%s" % (self.filename, "?mode=ro" if self.read_only else "")
+         logger.debug("Opening PRServ database '%s'" % (uri))
+-        self.connection=sqlite3.connect(uri, uri=True, isolation_level="EXCLUSIVE", check_same_thread = False)
++        self.connection=sqlite3.connect(uri, uri=True)
+         self.connection.row_factory=sqlite3.Row
+-        if not self.read_only:
+-            self.connection.execute("pragma synchronous = off;")
+-            self.connection.execute("PRAGMA journal_mode = MEMORY;")
++        self.connection.execute("pragma synchronous = off;")
++        self.connection.execute("PRAGMA journal_mode = WAL;")
+         self._tables={}
+ 
+     def disconnect(self):
+-- 
+2.34.1
+
 
