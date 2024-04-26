@@ -1,85 +1,137 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FC5C4345F
-	for <webhook@archiver.kernel.org>; Fri, 26 Apr 2024 11:34:25 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.11572.1714131257374969140
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A19FC4345F
+	for <webhook@archiver.kernel.org>; Fri, 26 Apr 2024 12:53:35 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+ by mx.groups.io with SMTP id smtpd.web10.13019.1714136008022155181
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 26 Apr 2024 04:34:17 -0700
+ Fri, 26 Apr 2024 05:53:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gCJWbyw8;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41a1d2a7b81so17622935e9.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 26 Apr 2024 04:34:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1714131255; x=1714736055; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fKs21glEq+/Oal+wxxcKJ+8I7uIu99RhHPfFrjsP4K8=;
-        b=gCJWbyw8CujOBkyfYQr7F11eI8FiHY+MxxbrvR8lVB2B4T6nU/UyI4SnKxx38zvKUn
-         ffGE/DALGiRkdukWGBHIYxG0P+cVSLnVqhJ4lSt+UCpFZR7brU+2DHH4pSJ68veTaPFL
-         F8Bvla8yZtLWbiHJhOe2dEzGtkonLQbSX7vnE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714131255; x=1714736055;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fKs21glEq+/Oal+wxxcKJ+8I7uIu99RhHPfFrjsP4K8=;
-        b=eSsCecFCTRJSWDhm6ru8vzhbAxlWSFDvsz+UQjo9rKIzpwaITLCdSnDIV0ncs8KG71
-         F2jdG+rykBhrlCiW2AD8aMm4EQtoCd3vcRFt2yKArHDNEzvMFV1FNONdc9D1twYCgVo3
-         9NVr1q7tmm4A20yXhLnd9wEG9C4aFQqMEfJpXN1qnxC3trA0mxpNIF51cuDueYLLnI+w
-         NchPhe3xkwh0TB3KRQJ57IL9MBQ0WpL/p39HDGzXjcTEINb8R/dX3w0wAShgYnkV2mgS
-         /Z8Am4VNEKjanIcqEZT5p3ZZJDxba6gDucRgnZ125i3rgxby++Kgrn8cf4tJ+wBTpDo+
-         P8zw==
-X-Gm-Message-State: AOJu0YwYiBRVDQx2ggzcWcdTnFX0kVDvSYS21uLBUiUrWc1I7YzhL8qK
-	BpyLQri4rHvNgvGOev3eebXaThU56uaS2GHT++jmyGoYLkqWKNPIXpT3Gue98gi8J/hgLtmv4BE
-	5bGs=
-X-Google-Smtp-Source: AGHT+IGMTsi2WVXZl8SCOAKL3qJHFjk1/Ft12zByzvXg64clH5jhOCViabcQ6sHSzxbezG7xLxVQmQ==
-X-Received: by 2002:a5d:6b87:0:b0:34a:4b4b:7f4b with SMTP id n7-20020a5d6b87000000b0034a4b4b7f4bmr4900631wrx.19.1714131255207;
-        Fri, 26 Apr 2024 04:34:15 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:c2c3:166d:66c4:a177])
-        by smtp.gmail.com with ESMTPSA id h16-20020adffd50000000b00346d3a626b8sm22399027wrs.3.2024.04.26.04.34.14
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 04:34:14 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] build: Handle conflict between cwd and cleandirs
-Date: Fri, 26 Apr 2024 12:34:14 +0100
-Message-Id: <20240426113414.952926-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.40.1
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=mfu9RENx;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EC1D44000B;
+	Fri, 26 Apr 2024 12:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1714136006;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NaZjlItwH8e13DzoV6E1GSav8/o1mRQVI++1+fKrPiA=;
+	b=mfu9RENx25xjutWDQOhNKTv0UEFoyYw933ujJnxf66NgfJsHnrJc1vyx+KdIIsHGGziZYd
+	YxyPNGDyG/AH8e2o3NFx+MKHBFaeMmmZQdwb7tB00gLy95mqx1QC2aZ68/yzMapPn96VPO
+	xCAs/veWb2iEESObhQUpv0LVxfvrRUo1od5iyNRJIzYM6AKq+u0njK/uX4IeBm/zK9oDcS
+	QqOTlangSOHWA7GIVPTfrqvCR5XS5iekWpP8byjX5hhNlXw4sDs4Kr48LxBK/7rchAwAz1
+	MDcKKL98fEdX7ZgZIq6VDZquXYsGqJD2HSScMSDM2bSav7vAZdecK6QmKrfmbQ==
+Message-ID: <95b0d470-02b7-437d-b9bf-210d3b988f94@bootlin.com>
+Date: Fri, 26 Apr 2024 14:53:25 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel][RFC v2] prserv: Enable database sharing
+To: Joshua Watt <jpewhacker@gmail.com>
+References: <20240423182543.226113-1-JPEWhacker@gmail.com>
+ <20240423182729.226345-1-JPEWhacker@gmail.com>
+ <17C929449F85DB18.1247@lists.openembedded.org>
+ <5361dfb8-3d88-4099-a81c-67e7c64525f1@bootlin.com>
+ <CAJdd5GbB5xFBq6sC7kEP0YferegyXQYai9Mo-1jAkxe9wxSG7A@mail.gmail.com>
+Content-Language: en-US
+From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Organization: Bootlin
+In-Reply-To: <CAJdd5GbB5xFBq6sC7kEP0YferegyXQYai9Mo-1jAkxe9wxSG7A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: michael.opdenacker@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 26 Apr 2024 11:34:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16141
+ <bitbake-devel@lists.openembedded.org>; Fri, 26 Apr 2024 12:53:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16142
 
-If the cwd of the task is also a cleandirs, you would see warnings from bitbake
-about being unable to obtain cwd during the task execution. Tweak the code
-to detect this and avoid the warnings.
+Hi Joshua
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/build.py | 2 ++
- 1 file changed, 2 insertions(+)
+Many thanks for the tips!
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 44d08f5c55..ab8bce3d57 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -197,6 +197,8 @@ def exec_func(func, d, dirs = None):
-         for cdir in d.expand(cleandirs).split():
-             bb.utils.remove(cdir, True)
-             bb.utils.mkdirhier(cdir)
-+            if cdir == oldcwd:
-+                os.chdir(cdir)
- 
-     if flags and dirs is None:
-         dirs = flags.get('dirs')
+On 4/24/24 at 16:23, Joshua Watt wrote:
+> On Wed, Apr 24, 2024 at 3:20 AM Michael Opdenacker
+> <michael.opdenacker@bootlin.com> wrote:
+>> Hi Joshua
+>>
+>> On 4/24/24 at 10:15, Michael Opdenacker via lists.openembedded.org wrote:
+>>> Which branch did you use to generate your patch? I can't manage to
+>>> apply it to either "master", "master-next" or the branch I shared
+>>> recently...
+>>>
+>>> Ah, just found it. You used "nanbield".
+>>>
+>>> I'll test it in my branch and "torture" it with regular tests and my
+>>> new bitbake selftests.
+>> Oops, the tests are failing:
+>>
+>> ======================================================================
+>> ERROR: test_0b_db (prserv.tests.FunctionTests)
+>> ----------------------------------------------------------------------
+>> Traceback (most recent call last):
+>>     File "/home/mike/work/yocto/poky/bitbake/lib/prserv/tests.py", line
+>> 114, in test_0b_db
+>>       self.assertTrue(self.table.test_package(version, pkgarch))
+>>     File "/home/mike/work/yocto/poky/bitbake/lib/prserv/db.py", line 76,
+>> in test_package
+>>       row=data.fetchone()
+>> sqlite3.ProgrammingError: Cannot operate on a closed cursor.
+> Ah right. Ok so instead of doing the cursor operation in the
+> _exectue(), you'll need to do it in each API call. The general
+> strategy is to do:
+>
+>   def _importHist():
+>       if self.read_only:
+>           return None
+>       with closing(self.conn.cursor()) as cursor:
+>           # Use cursor.execute() for all statements, e.g.
+>           row = cursor.execute("SELECT value ....")
+>           data = row.fetchone()
+>
+> You can use the same cursor for multiple queries, so you only need the
+> one for each API call (e.g. you don't need to make a new one for each
+> execute statement).
+>
+> With this strategy I don't think you'll ever get DB locking errors, so
+> you should be able to eliminate the _execute() wrapper
+>
+> Just make sure you _always_ use a cursor to execute any database
+> queries. It will ruin your day if you combine self.conn.execute() with
+> cursor queries :)
+>
+> The cursor makes your database modifications atomic, that is any
+> changes you make to the database aren't applied until the cursor is
+> closed, and then they are applied atomically so either all the changes
+> you made are commited, or none of them. Keep in mind that this does
+> _not_ mean that your database reads are also atomic with your writes;
+> if another process commits to the database between your read and write
+> (or even between two reads) it's possible you will be dealing with a
+> stale understanding of the database when you commit.
+>
+> Sorry about the nanbield branch, I wasn't paying attention
+
+What you suggest seems to work fine.
+
+By the way, I still had empty databases after leaving the tests, but adding:
+self.conn.commit()
+after a group or INSERT or UPDATE commands did the trick.
+
+What's strange is that the hashserver code does without doing this.
+
+Anyway, let me test that two servers can access the same database now. 
+If everything works, I'll be able to send a V5 soon!
+
+Cheers
+Michael.
+
 -- 
-2.40.1
+Michael Opdenacker, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
