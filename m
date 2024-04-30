@@ -2,104 +2,117 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0893C4345F
-	for <webhook@archiver.kernel.org>; Tue, 30 Apr 2024 08:57:27 +0000 (UTC)
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
- by mx.groups.io with SMTP id smtpd.web11.10636.1714467440998262578
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00716C4345F
+	for <webhook@archiver.kernel.org>; Tue, 30 Apr 2024 12:58:49 +0000 (UTC)
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+ by mx.groups.io with SMTP id smtpd.web11.14591.1714481924733417360
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 30 Apr 2024 01:57:21 -0700
+ Tue, 30 Apr 2024 05:58:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=FcS8VxK4;
- spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id ECC93C0009;
-	Tue, 30 Apr 2024 08:57:18 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=EqJr5gmk;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.196, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 770EDE000B;
+	Tue, 30 Apr 2024 12:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714467439;
+	t=1714481923;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EoGuB69WrLDv0OLFanQhmY1lGKd25P5gYkD6DGl+N7s=;
-	b=FcS8VxK4NWvy4rIJJ+P+RGfbP/7Ndlkb3aE6yTkqmwjHmLEiiYkhTZxhFKBFS9qhtDXpV1
-	Tbh/rFpJCz9SnIzpT4ukYPySNpC3NDZZ0oOvaAet7/bJARnAtW9vuUXjKn1YXx+XNQU8Ek
-	jnRN7PCFCvBKCCAR0PHmEcmAixp5cG3/TuiJZWi+FrEif+DbNIEXqt8B7i7SUU4PCR5ddR
-	raNvO4k9CIJsyRCyJ6YQKaxXK9vtTE1aIZH/sgmD8a/z1RfhfcfcOB2SvJpfWrxoUnTWo7
-	wQg5nj8Oj5ZuHGzURsLGHLd7dYVhRehv732B+iJmqz1CkuMGmAGyIE7YEQKLhQ==
-Message-ID: <2245b58e-41b3-49d9-8eb2-d20a95d942a7@bootlin.com>
-Date: Tue, 30 Apr 2024 10:57:18 +0200
+	bh=uwZBew48pyfXPISn4GI+NcVAZ1XB1+ZdePVh1VwUcvg=;
+	b=EqJr5gmk5zguyGJ8ScEj3/Uwns7vkYGgPHz3PJIKuzRGdKYv5dygaS2BWB4+/GJbJGXnWw
+	15VrzO56J7llKNFdhaY42N0RYa53W+W46vDCmfdERJaZJe90ur/WFejfzFfyndyj40CfHW
+	TyfEbimZOiYHgMsSI802Iai1D0N9nB78l6O6ZhivjcnZm3FcMm+sjUq7SSGvJAa3maQmpS
+	nYdWD4fG1j9R0+JWMNgBctfu+N3YVgedARdBHhOvGe6PHldii6S0PpYiw1D9jMOHda8Xr4
+	MtUFAY98EZWQFZkl3UPTFOzIV+Ny5Vgbb1QeqBYm3vuTexaWY/VmksU7JBL4dg==
+Message-ID: <56222882-76c9-44ab-9a20-237a1293489b@bootlin.com>
+Date: Tue, 30 Apr 2024 14:58:41 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel][RFC v2] prserv: Enable database sharing
+Cc: bitbake-devel@lists.openembedded.org, Tim Orling <ticotimo@gmail.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 4/5] prserv: enable database sharing
 To: Joshua Watt <jpewhacker@gmail.com>
-References: <20240423182543.226113-1-JPEWhacker@gmail.com>
- <20240423182729.226345-1-JPEWhacker@gmail.com>
- <17C929449F85DB18.1247@lists.openembedded.org>
- <5361dfb8-3d88-4099-a81c-67e7c64525f1@bootlin.com>
- <CAJdd5GbB5xFBq6sC7kEP0YferegyXQYai9Mo-1jAkxe9wxSG7A@mail.gmail.com>
- <95b0d470-02b7-437d-b9bf-210d3b988f94@bootlin.com>
- <CAJdd5GZRt8NXpVhh14-Fnpp4ixfj0XcEZUFjoeg0nqheOpkGYg@mail.gmail.com>
- <6e4bf9bc-c5f9-4d85-9100-3cd1c4f000c2@bootlin.com>
- <CAJdd5GaEuVw+p=aw5D5cw6i1jAwS+eDDRqSF-s_5p4324GEWKA@mail.gmail.com>
+References: <20240429201418.657042-1-michael.opdenacker@bootlin.com>
+ <20240429201418.657042-5-michael.opdenacker@bootlin.com>
+ <CAJdd5GbeJL=Z4-YHYm8eab0x3JD3yynoBE+S0LsuP_E3cCYQPA@mail.gmail.com>
 Content-Language: en-US
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 Organization: Bootlin
-In-Reply-To: <CAJdd5GaEuVw+p=aw5D5cw6i1jAwS+eDDRqSF-s_5p4324GEWKA@mail.gmail.com>
+In-Reply-To: <CAJdd5GbeJL=Z4-YHYm8eab0x3JD3yynoBE+S0LsuP_E3cCYQPA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-GND-Sasl: michael.opdenacker@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 30 Apr 2024 08:57:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16160
+ <bitbake-devel@lists.openembedded.org>; Tue, 30 Apr 2024 12:58:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16161
 
-Hi Joshua,
+Hi Joshua
 
-On 4/29/24 at 23:03, Joshua Watt wrote:
-> On Mon, Apr 29, 2024 at 2:27 PM Michael Opdenacker
-> <michael.opdenacker@bootlin.com> wrote:
->> Hi Joshua,
->>
->> On 4/26/24 at 19:55, Joshua Watt wrote:
->>> It has commit() calls also, look in sqlite.py. I frequently forget
->>> that the cursor doesn't implicitly commit when closed (unlike SQL
->>> Alchemy, which _does_ do that) :)
->> Correct, I must have checked the wrong file.
->>
->> Actually, my code should have all the commit() calls it needs. I put one
->> every time a change is made to the database.
->>
->> However, I still have this very weird issue:
->>
->>    * NOK: in bitbake-selftests, the tests that use the PR server run
->>      successfully (except test_3b_readonly, because of the issue), but
->>      the PR table is empty in the database file (if opened through the
->>      sqlite3 command line). It seems that the table is only updated in
->>      memory. It must be so, otherwise the tests wouldn't pass.
->>    * OK: the only bitbake-selftests that use the DB functions directly
->>      don't have this issue
->>    * OK: creating an image with BitBake does create a non empty table in
->>      the PR database file (cache/prserv.sqlite3)
->>
->> Would anyone have any clue why?
-> I think it might actually be returning the correct value ("0").
-> Remember that each test case starts with a blank database, and I don't
-> see any code in that populates anything into the database in that
-> test.... so "0" seems like it would be the correct PR value?
+Many thanks for the review and guidance. See my comments and questions 
+below.
+
+On 4/29/24 at 22:34, Joshua Watt wrote:
+>> +        with closing(self.conn.cursor()) as cursor:
+>> +            if self.read_only:
+>> +                table_exists = cursor.execute(
+>> +                            "SELECT count(*) FROM sqlite_master \
+>> +                            WHERE type='table' AND name='%s'" % (self.table))
+>> +                if not table_exists:
+>> +                    raise prserv.NotFoundError
+> This is a race if you run the read-only server first, which seems like
+> a bad user experience. I'd probably create the table even if the
+> server is read-only (I'm pretty sure hash server works this way also)
 
 
-Wow, your remark made me understand that the setUp() function is run 
-before *every test*, and not only once for each class of tests!
-If I merge my read-only tests with the previous ones, making only one 
-test, they now work as expected (except for the very last one, maybe a 
-bug in my code).
+Fixed. Thanks.
 
-Many thanks! You saved my day :)
-Cheers
+>
+>> +            row = data.fetchone()
+>> +            if row is not None:
+>> +                val=row[0]
+>> +            else:
+>> +                #no value found, try to insert
+>> +                try:
+>> +                    cursor.execute("INSERT INTO %s VALUES (?, ?, ?, ?);"  % (self.table),
+>> +                               (version, pkgarch, checksum, value))
+>> +                except sqlite3.IntegrityError as exc:
+>> +                    logger.error(str(exc))
+> You probably want to make this whole SELECT / INSERT block a loop, and
+> instead of repeating the SELECT below, retry the loop on an integrity
+> error. The only reason you should be getting an integrity error is if
+> you have a race between multiple servers accessing the database at
+> once. In that case, looping back and trying to fall out in the
+> previous SELECT is better.
+>
+> This is especially important if you delete entries in the database, as
+> in pathological cases you might have to loop several times before you
+> fall out of the loop (although typically, you would only need to retry
+> once).
+>
+> I'd recommend this paradigm any other places you do SELECT / INSERT
+> where the INSERT depends on the SELECT.
+
+This is actually coming from the prserv legacy code, which I haven't 
+really touched yet.
+
+Is this kind of event really expected to happen with sqlite3? I see that 
+hashserve only checks for "sqlite3.IntegrityError" once, so maybe it's 
+too pessimistic to anticipate errors here... Do we also want to support 
+multiple builders accessing the same PR database?
+
+Anyway, if I really have to do it, I guess I'd also have to do it in the 
+store_value() function which currently just logs an error without 
+retrying. But if we loop, doesn't it add the risk to create an endless 
+loop?
+
+Cheers,
 Michael.
 
 -- 
+
 Michael Opdenacker, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
