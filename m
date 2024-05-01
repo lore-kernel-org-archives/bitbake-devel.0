@@ -1,257 +1,125 @@
-Return-Path: <dl9pf@gmx.de>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AB9C4345F
-	for <webhook@archiver.kernel.org>; Tue, 30 Apr 2024 20:31:52 +0000 (UTC)
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
- by mx.groups.io with SMTP id smtpd.web11.26341.1714509109748975742
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A35DC4345F
+	for <webhook@archiver.kernel.org>; Wed,  1 May 2024 16:17:05 +0000 (UTC)
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+ by mx.groups.io with SMTP id smtpd.web11.462.1714580221982646403
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 30 Apr 2024 13:31:50 -0700
+ Wed, 01 May 2024 09:17:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: signature did not verify: crypto/rsa: verification error" header.i=dl9pf@gmx.de header.s=s31663417 header.b=fUp2Ill7;
- spf=pass (domain: gmx.de, ip: 212.227.17.22, mailfrom: dl9pf@gmx.de)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1714509108; x=1715113908; i=dl9pf@gmx.de;
-	bh=fznD6ZawxtlqLbQLMFbE5tl4wjCHppU/QF9xup85eJg=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:Content-Type:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=fUp2Ill73e4rkAO0EC+HklxK4mEggYfandd5SztY/VJ0+jIZQTykoTg2s6DKfGw/
-	 xBrbe5oGYHStUjt73IqwPq7ZtbefBdi4Se24rhWcRv4Ed+UMxxp5d07NLux6Nw+uI
-	 rdkBT9gHLncSTrkyT3KrtwflmdEorq5S5uakzgXIYy3+Y1h7dFXSDMMoVit5yiadM
-	 MIGTte6VCwubz+mi7YBLyoOpM8k24MSMlnncn6cboao4RNFQcsqUD++AZMRYm7ix0
-	 irwsRIlnsm+N2ai+PpLucVmkPMJAqZ3XcPUxinZ4pRbuCTgb4apHINLzQoHRqqk2m
-	 uTallQV7yuBSF+1Svg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from monster.localnet ([77.23.168.18]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M6lpG-1s1LNC0URS-008Fl9; Tue, 30
- Apr 2024 22:31:48 +0200
-From: Jan-Simon Moeller <dl9pf@gmx.de>
-To: michael.opdenacker@bootlin.com
-Cc: bitbake-devel@lists.openembedded.org
-Subject: 
- Re: [bitbake-devel] [PATCH v6 0/8] prserv: add support for an "upstream"
- server
-Date: Tue, 30 Apr 2024 22:31:47 +0200
-Message-ID: <5793552.DvuYhMxLoT@monster>
-In-Reply-To: <20240430171512.936371-1-michael.opdenacker@bootlin.com>
-References: <20240430171512.936371-1-michael.opdenacker@bootlin.com>
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=TUHkzkKy;
+ spf=pass (domain: gmail.com, ip: 209.85.166.181, mailfrom: jpewhacker@gmail.com)
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-36c546b7d04so11791165ab.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 01 May 2024 09:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714580220; x=1715185020; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J6RMBHDkJ+Mw/NN6uKb7x0OsdiK3c72/ilLyf61CwdU=;
+        b=TUHkzkKy3l+sTjRj8gHJY6MHYM4NiLr6JtwSPqPKzmknYrBZ7oZzJuJ5ySJwc/FTPO
+         fiMAeLY0vFkbmIrZlfcTn4maL1rWG+VbrT6x7kKbhco4VLUZHIKQ5Hb2M5LhrqYFXcMF
+         v28JsSHI4SDXXHzCcxsKQRQlm+OwcJHjHUv073b04vLd2W9EQRhjgEEwe5H1Uo0VqqAr
+         NJ3ujz8YveodC5O8rp0pr88+CdKUXqO9Qr38f7mERN1sjIOdDWFJZuJ+9eYsO7faEsPj
+         apGomoypu6em6hmgNalN3xxyKdvTzSNjBKbtgeSfrvLCa+XIBu9ENADo2+nZYHRG5yJZ
+         3Puw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714580220; x=1715185020;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J6RMBHDkJ+Mw/NN6uKb7x0OsdiK3c72/ilLyf61CwdU=;
+        b=r23cvyBwM3IFzCj0ISiiiYq+q3kDHBaOT0U0JjY9FXQLN/k7kKvRQtnq0Ykd8IAjgJ
+         LwxEH0183rninFhh7pgfPwYjfS2TG0rauv3MqBVXEKFZ2Ms7GOcxGihP72V1glOQI/O5
+         n0+SMOyoYkyE/JKaCtbtZbAiH9OBz33KyBzT8Lpt9KNOOFbRS05QcawISV+iMwMykzsx
+         jmwt8k1mCdeZnbGEu9C6m7kVQSO16IMO5mPPDIPosPF9+SLJ/nC/s8Adf7FfTKA6wRD/
+         ExJEcXLrSfJDztsF/lUmS9upbJwwZuOXKyHNurcJWU2VvQ8i2KUwoi92E9/PRVdSNS0r
+         1skA==
+X-Gm-Message-State: AOJu0YwFUHkf+uPu+r/tdIZ49tWGduKaQXH6H/ieBFrI7Hr4AmAoQtEC
+	nDea93r+KUF1PHMQ2zacvY6ebgraF5103g8hlVqsJpG5NnqqBPQcSLS7Ug==
+X-Google-Smtp-Source: AGHT+IE9C9dFUA0EhhIgFaCc9c9jZfxLMnK7N4JiqEOuXIn6wrXJU7qDFsGU9q87NA+neM+/P12rNg==
+X-Received: by 2002:a05:6e02:168f:b0:36b:80d:b930 with SMTP id f15-20020a056e02168f00b0036b080db930mr3837080ila.26.1714580220515;
+        Wed, 01 May 2024 09:17:00 -0700 (PDT)
+Received: from localhost.localdomain ([2601:282:4300:19e0::d802])
+        by smtp.gmail.com with ESMTPSA id hc16-20020a0566386c9000b00486e8dcc992sm4869109jab.153.2024.05.01.09.16.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 09:16:59 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][RFC] bitbake: Report which dependencies affect the taskhash
+Date: Wed,  1 May 2024 10:16:57 -0600
+Message-Id: <20240501161657.1945880-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Provags-ID: V03:K1:QTjQyIppUO0FGkBUKGmlOnrIaw7mpQMWXuSEg7XgiU00HivYgcN
- Kp1SiXhMhrkck3nRypA9E8XW60T6B9pWSfZKWUC+u35w5nSHKi5qLDTc+pLeL4vrKVjnLpe
- GaosJOwHvFBAcE2j1hsao3zPq4N5DS9xA5qVrWCtsfu9CHRmY+2wu7QEWiXtkjlFBSpfSuB
- ixKmx0rWeqKtJGtvkh7Tw==
-UI-OutboundReport: notjunk:1;M01:P0:hdbxjIUxKYI=;NX4czcR5L1aB18EEX43eQqA+LQs
- QEC9lnwEBdlz73v8sZk8QfwR0/sd75U4PLqlKDNqbt9sw9O7TTNYMrdwxrZ3NK+k0XDYUjxBM
- Qg3rUWb+fR7J0WVSWY14gD5TjAtrG0tCCHSs/0j30rnvTng+xTo61rrwOdZVma+2V70RLvXr0
- l3jg4qt0FaFyjmK9ffZ2ClHPiHjwOVX3jWDauR3UxE2bOKxweg38+IkE7Ztj5jgUB1l6cfLTP
- bJUW+824BfnGz5Hb2NLEyNIHM7EmEXaazJnYeAhxhUG5HuxCkdqX0qY4qNwXfbDsgtS4NMDSE
- RYftE0STRWb0l+kuN3rAvPdv6IkRexy4pi0sXWLOgXNN1ZlhUyR/ck403qrLv+jDhht4wn0il
- 9KD0RCiBl0zWiptBh6V6QIC8f/lOGvM+tTWURFoq+X+diK80AwXODFscEnZBsVFDLAJMW1Iy/
- iARzfQwFVEUEelXsqdkybNO244JCJ9L5JSk24jHR/B2fRHOqYSm6H1eeIw7MDAsOJS87YO0kf
- VlGM4IHDLJy63BnuQaSOhE05bHC9oTAwKSNslJ9WxSfQX5WMUrdMO2gtLVuoZfXvwrowuTnQ6
- 0L7SldjK0pBQjM1fwuzYMuoSdWXs5Bryt+UpV4CMvQmtMonGKIOXZSz4JUF8BZ/Ap34bnt6VX
- +SBdQeTwAC36I73XCQrOt0dSL2KjaBbdbIakyyPAHkI4Q9J7iG0TCR9M1FjZ4SFSFzaCmuHZl
- 1MfznHEsR9xnkrDqsTzaS5AfqPJRkqliyIrRJcZlGUm//O3bqSpVM05Wz8FR6Q/jcpCvr2kiy
- vSmtRwDHcoRlC/Gz/ckNQHUm7rqUOdu2EVpKtNHrwl9Jk=
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 30 Apr 2024 20:31:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16175
+ <bitbake-devel@lists.openembedded.org>; Wed, 01 May 2024 16:17:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16176
 
-Reviewed-by: Jan-Simon M=F6ller <dl9pf@gmx.de>
+Report which task dependencies in BB_TASKDEPDATA are included in the
+taskhash. This allows tasks to identify which tasks dependencies may
+change without the task re-running. Knowing this information is
+important for tasks that want to transfer information from dependencies
+(such as SPDX)
 
-Am Dienstag, 30. April 2024, 19:15:04 CEST schrieb Michael Opdenacker via=20
-lists.openembedded.org:
-> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
->=20
-> This makes it possible to customize an "upstream" distribution
-> by modifying local packages. If the "upstream" package bears
-> revision "x", the local one will have revision "x.y", this
-> having priority over the upstream one.
->=20
-> Multiple levels of upstream servers are supported, so "x.y.z" revisions
-> are possible too.
->=20
-> This version also supports multiple servers sharing the same database.
->=20
-> This also includes BitBake selftests to check the expected
-> functionality and detect future regressions.
->=20
-> Note that database import and export functions aren't tested yet.
->=20
-> ---
->=20
-> Changes in V6:
->=20
-> - Harden the store_value() code to protect
->   it against storing the same value twice.
->=20
-> - Simplify the importone() hook, removing
->   its unnecessary "history" parameter.
->=20
-> - This fixes all errors in "oe-selftest -r prservice",
->   once this OE-core patch is merged:
-> =20
-> https://lore.kernel.org/openembedded-core/20240429194656.655509-1-michael=
-=2Eo
-> pdenacker@bootlin.com/T/#u
->=20
-> - Make tests work in temporary directories.
->   Suggested by Joshua Watt
->=20
-> - Remove first version of readonly server tests
->   which depended on the output of a previous test.
->   One implementation of readonly server tests remains.
->=20
-> - Merge the upstream and read-only tests so that
->   the read-only test part can reuse the databases
->   and servers from the upstream one. Initially thought
->   that the setUp (and tearDown) hooks were called only
->   once for each test class, instead of for each test.
->   Thanks to Joshua Watt for making me understand this.
->=20
-> - Merged two more tests and simplified their naming
->   as, with one exception, the order of tests doesn't
->   matter any more.
->=20
-> - Avoid a possible race condition at database
->   creation time. Suggested by Joshua Watt.
->=20
-> Changes in V5:
->=20
-> - Change the way the database is accessed and modified.
->   As done in the Hash Server code, the database is not
->   accessed through the cursor API.
->=20
->   This makes it possible to have multiple servers accessing
->   the same database, typically one read-write server that
->   is fed by the build machine, and one read-only server that
->   is used to publish PR data to downstream users.
->=20
->   This switched sqlite3 to "WAL" journaling mode, and to
->   "OFF" synchronous mode.
->=20
-> - Fix revision ordering issues, now computing the min and max
->   values through dedicated Python functions, instead of letting
->   the database do this with just string comparison, which
->   was wrong in our case. Typically, "1.20" is greater for us
->   than "1.3".
->=20
-> - Add BitBake selftests, in particular to make sure revision
->   ordering is correct and the maximum and minimum values are
->   correctly computed.
->=20
-> - An issue remains: the BitBake selftests that test database
->   access through a read-only server while a read-write server
->   is still running, still fail, because the database changes
->   are apparently not stored to disk.
->=20
->   FAIL: test_3b_readonly (prserv.tests.PRUpstreamTests)
->=20
-> Changes in V4:
->=20
-> - Add BitBake selftests for the legacy and new PR server features
->   (database, client, server, support for upstream server, read-only mode,
-> "history" and "no history" modes) To run only these tests:
->   bitbake-selftest prserv.tests
->=20
-> - Pass the "history" mode through the client requests, instead
->   of storing it (globally) in the database name.
->=20
->   The PR database is now called "PRMAIN" instead of "PRMAIN_nohist".
->   This should cause a regression for builds which already
->   have a PR database.
->=20
-> - Fixes for "history" modes:
->   - Allow to store multiple PR values for the same checksum,
->     needed for the "no history" mode.
->   - Make the "history" mode return the minimum stored
->     PR value.
->=20
-> - Fixes and code reorganization for issues uncovered by the tests.
->=20
-> - Update the server version to "2.0.0"
->=20
-> Changes in V3:
->=20
-> - Revert the commit removing the so far unused "hist" mode, which
->   we wish to keep for binary reproducibility sake.
->=20
-> - Simplification of get_value() function to take
->   both "hist" and "nohist" modes with the same shared code.
->=20
-> - Add "history" parameter to the "getPR" request,
->   so that the client can ask for the mode of its choice.
->   This will also make it possible to implement tests
->   for both modes.
->=20
->   Note that more requests ("export", "import"...)
->   will also need a "history" parameter, in a future version,
->   after the first tests are implemented.
->=20
-> - Several bug fixes.
->=20
-> - Put all the new features at the tip of the branch,
->   to make the cleanup commits easier to merged.
->=20
-> Changes in V2:
->=20
-> - Add this new commit:
->   prserv: remove unused "hist" mode in the database backend
->=20
-> - Squash commit "prserv: fix read_only test" into
->   commit "prserv: simplify the PRServerClient() interface"
->   (Reported by Richard Purdie)
->=20
-> - Fix the code to support increasing "x.y.z" values, thus
->   supporting several levels of upstream servers.
->=20
-> - db.py: remove duplicate definition of find_max_value() function in db.py
->=20
-> - prserv.py: remove tabs before comments (Python didn't complain)
->=20
-> - db.py: now stores the revision ("value") as TEXT.
->   This way we can store "1.0" without having it transformed to "1"
->   when the default type was INTEGER.
->=20
-> - This allows to fix a regression when the first packages were created
->   with 'r0.1' instead of 'r0.0' initially.
->=20
-> - find_max_value: now returns None instead of '0' when no value is found
->   Before we couldn't tell the difference between a '0'
->   max value and the absence of such a value.
->=20
-> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> Cc: Joshua Watt <JPEWhacker@gmail.com>
-> Cc: Tim Orling <ticotimo@gmail.com>
->=20
-> Michael Opdenacker (8):
->   prserv: declare "max_package_pr" client hook
->   prserv: move code from __init__ to bitbake-prserv
->   prserv: add "upstream" server support
->   prserv: enable database sharing
->   prserv: avoid possible race condition in database code
->   prserv: store_value() improvements
->   prserv: import simplification
->   prserv: add bitbake selftests
->=20
->  bin/bitbake-prserv     |  26 ++-
->  bin/bitbake-selftest   |   2 +
->  lib/prserv/__init__.py |  97 ++++++++-
->  lib/prserv/client.py   |  15 +-
->  lib/prserv/db.py       | 452 ++++++++++++++++++-----------------------
->  lib/prserv/serv.py     | 139 ++++++++++---
->  lib/prserv/tests.py    | 386 +++++++++++++++++++++++++++++++++++
->  7 files changed, 816 insertions(+), 301 deletions(-)
->  create mode 100644 bitbake/lib/prserv/tests.py
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bitbake/lib/bb/runqueue.py | 8 +++++---
+ bitbake/lib/bb/siggen.py   | 2 +-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-
-
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index bc7e18175dd..6b43f303d5a 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1290,7 +1290,7 @@ class RunQueueData:
+         return len(self.runtaskentries)
+ 
+     def prepare_task_hash(self, tid):
+-        bb.parse.siggen.prep_taskhash(tid, self.runtaskentries[tid].depends, self.dataCaches)
++        self.runtaskentries[tid].taskhash_deps = bb.parse.siggen.prep_taskhash(tid, self.runtaskentries[tid].depends, self.dataCaches)
+         self.runtaskentries[tid].hash = bb.parse.siggen.get_taskhash(tid, self.runtaskentries[tid].depends, self.dataCaches)
+         self.runtaskentries[tid].unihash = bb.parse.siggen.get_unihash(tid)
+ 
+@@ -2445,7 +2445,8 @@ class RunQueueExecute:
+             unihash = self.rqdata.runtaskentries[task].unihash
+             deps = self.filtermcdeps(task, mc, deps)
+             hashfn = self.rqdata.dataCaches[mc].hashfn[taskfn]
+-            taskdepdata_cache[task] = [pn, taskname, fn, deps, provides, taskhash, unihash, hashfn]
++            taskhash_deps = self.rqdata.runtaskentries[task].taskhash_deps
++            taskdepdata_cache[task] = [pn, taskname, fn, deps, provides, taskhash, unihash, hashfn, taskhash_deps]
+ 
+         self.taskdepdata_cache = taskdepdata_cache
+ 
+@@ -2812,7 +2813,8 @@ class RunQueueExecute:
+                 taskhash = self.rqdata.runtaskentries[revdep].hash
+                 unihash = self.rqdata.runtaskentries[revdep].unihash
+                 hashfn = self.rqdata.dataCaches[mc].hashfn[taskfn]
+-                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash, unihash, hashfn]
++                taskhash_deps = self.rqdata.runtaskentries[revdep].taskhash_deps
++                taskdepdata[revdep] = [pn, taskname, fn, deps, provides, taskhash, unihash, hashfn, taskhash_deps]
+                 for revdep2 in deps:
+                     if revdep2 not in taskdepdata:
+                         additional.append(revdep2)
+diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+index 8ab08ec961b..03dfda6f3c4 100644
+--- a/bitbake/lib/bb/siggen.py
++++ b/bitbake/lib/bb/siggen.py
+@@ -381,7 +381,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+             self.taints[tid] = taint
+             logger.warning("%s is tainted from a forced run" % tid)
+ 
+-        return
++        return set(dep for _, dep in self.runtaskdeps[tid])
+ 
+     def get_taskhash(self, tid, deps, dataCaches):
+ 
+-- 
+2.34.1
 
 
