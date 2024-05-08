@@ -2,55 +2,63 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0326FC04FFE
-	for <webhook@archiver.kernel.org>; Wed,  8 May 2024 13:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20041C04FFE
+	for <webhook@archiver.kernel.org>; Wed,  8 May 2024 13:35:43 +0000 (UTC)
 Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web10.12512.1715175183688274184
+ by mx.groups.io with SMTP id smtpd.web10.12579.1715175334131871653
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 May 2024 06:33:04 -0700
+ Wed, 08 May 2024 06:35:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JJxCtYj/;
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Qwj4KLr7;
  spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41ecffed96cso26102735e9.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 08 May 2024 06:33:03 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41c1b75ca31so31450195e9.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 08 May 2024 06:35:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1715175182; x=1715779982; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1715175332; x=1715780132; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FOHmxh2lsM2rF/+hQJyLVn96mnlbgE+65iyBO2NwoTg=;
-        b=JJxCtYj/s/LY0u5hcauMQo6F1R5Xy3sGURNnRoHvsqQN1Go3E/SqGRfNCm2njjgMih
-         A5QuRxU+SPKeDnNfgoagBM0IgoiNOrEfET1vu/m0qHsOHiYNiwBgeg0KmuQNiZHvLGwI
-         b4ylCAHhpD0v3+wOFAf0QWUPHsAaUDDaGw1ug=
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1XvTktKtlLPCd47GXKBRCn6cbh3gTuvdOT6g1o4OXOk=;
+        b=Qwj4KLr7837TfiXv1h0qFPlsL3oel3iVMsi4rzGkket4QZBfAoc3UgVWdiU6zYgCHX
+         TfZqZ027Jn2OhT+178e8XwjrMbkZF9nx2NkrLrH/W54hPO4xCafcI3Gvl1AByW/8jXPP
+         AHGoILLtzQ/1w8HBE9vDZI8rLVUMgs6Bh4RxI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715175182; x=1715779982;
+        d=1e100.net; s=20230601; t=1715175332; x=1715780132;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:to:from:subject:message-id
+         :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FOHmxh2lsM2rF/+hQJyLVn96mnlbgE+65iyBO2NwoTg=;
-        b=Szj3fCuthUlsVfYCzDNi0owpIObtM4Rzdnsf0S6dRvRReKTuPyjp4OtB9fqEA4xE7h
-         PDEFtfmW0WNJrt5nUzJNcEEzQh3SJtT0WSRfEyXBWCOMZKsBq8Odc4nNkmXnwI+XCYv+
-         g3+mokHxpd+lNdIvqhFIsl2hk3sV5pN1tCZG9LlmuBWiyIE8Uh+OTYYPWYVka1EmuNjB
-         ko8m5CyGDPXVC8Y4Wh1adHgoFegr0TOttz8PevQ13+oZjRslnX7YQOdZsGw1f4CaI3SN
-         6rc3lSeOO6Yt3PY4ShyvB9v7tbVMvLSrdj18oOz791v2T+2kRV5hK2ulNyNv04J2BjZN
-         /ObQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXF/0wCmc00IW7xhNZMVBudedA2aUyfXM15oWou/wxwCpV4Dp+VmYUb02MAR3tnJtn2jCWCOsPln3eKUocK8ndSEtjZfdqYjbxi7M6TsOmK8ii2NSY=
-X-Gm-Message-State: AOJu0YxlVS/fEKGESQ2RVfAn3K2vijVWclYbVcWrNDgrL58oeDUsecWP
-	Y299vWKTtlfaTLYwUxvbOgjQn7tSa1qUicbT5N+TGqv7rvCfZnJoW0Af6wolrE8=
-X-Google-Smtp-Source: AGHT+IEpT5hI9cdus28TuFedH1oWDoppBs5ogVaBXoTII7tTCCDGCLSMCBIMJH6911ajyQm5PXCiBw==
-X-Received: by 2002:a05:600c:1f8c:b0:41a:a4d1:a896 with SMTP id 5b1f17b1804b1-41f71309f08mr22406145e9.16.1715175182068;
-        Wed, 08 May 2024 06:33:02 -0700 (PDT)
+        bh=1XvTktKtlLPCd47GXKBRCn6cbh3gTuvdOT6g1o4OXOk=;
+        b=Fzs1PFFNbqA0GoB3hPfQurXcC3k7NfmZYdKftXxsZ2RBVXTlnJ3N+DHoSsrAR310x8
+         dZB3raf3FFeVNczGD4gm++krGWxFhkQFf/O9Vfdwq92kA9iM2k/Uf7H9Xx3EJc1V+FrD
+         vQyTucmqtQA/jehTiZvSWuzcgnPSN0QCyR3Dt1GZeJUsgUBpQavz6dc2anBneHIEdp6A
+         jrYuEFbUYmNyd92uduxkzXfg71qYYfdyhyo5svI8kEHhU8D2DfDyxH59pJAMK4LMbJD9
+         1H/6PWl3XxY2hi4v3fI/k03mhgsFMM19PWMqVM/y9zCzFJb4py04+tag5PhVA7DCUmC/
+         6NYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPnDVGi2O4yvJpSpdWTLfMnyQXQ7zvDgjCIG4R+tGWHyQJrFvJUDzY9k8T31/oljTnK34w8kHyUt6ruohVNdvADWWcY9hyjM59S96JhZmrRwBD3E4=
+X-Gm-Message-State: AOJu0Yw5iqHoyhy0p0oenMwzB4iprfQZ24Tx77zcdDKA0VGDMU1+/iPh
+	gq0VzaI9TFFNvJF9yIDdIXIxyWnevrptKuiaILcLGIddQHHTpGqEUyLoto1V+C8=
+X-Google-Smtp-Source: AGHT+IHwbHao7/HvLdDAw5GAV32eQmw+qo1gYlLrGbAN8E2JbbMnLD49k5Ck1RlIRwormO4LCT0qow==
+X-Received: by 2002:a05:600c:3490:b0:41b:6b65:4b7e with SMTP id 5b1f17b1804b1-41f71cd470fmr23260375e9.16.1715175331997;
+        Wed, 08 May 2024 06:35:31 -0700 (PDT)
 Received: from ?IPv6:2001:8b0:aba:5f3c:5b88:fab8:c8fc:9dd2? ([2001:8b0:aba:5f3c:5b88:fab8:c8fc:9dd2])
-        by smtp.gmail.com with ESMTPSA id iv19-20020a05600c549300b0041bbec72670sm2354197wmb.39.2024.05.08.06.33.01
+        by smtp.gmail.com with ESMTPSA id j5-20020a05600c1c0500b0041906397ab7sm2384244wms.3.2024.05.08.06.35.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 06:33:01 -0700 (PDT)
-Message-ID: <9945e07b120de0b8a33b12e73aa46b0f2b425023.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel][PATCH] asyncrpc: Check websockets version
+        Wed, 08 May 2024 06:35:31 -0700 (PDT)
+Message-ID: <bb6d8641bbc41c7ac1e32447e6b2f691127dfdca.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v5 2/5] prserv: move code from __init__
+ to bitbake-prserv
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: JPEWhacker@gmail.com, bitbake-devel@lists.openembedded.org
-Date: Wed, 08 May 2024 14:33:00 +0100
-In-Reply-To: <20240502183516.1216885-1-JPEWhacker@gmail.com>
-References: <20240502183516.1216885-1-JPEWhacker@gmail.com>
+To: raj.khem@gmail.com, Michael Opdenacker <michael.opdenacker@bootlin.com>
+Cc: Joshua Watt <JPEWhacker@gmail.com>, Thomas Petazzoni
+	 <thomas.petazzoni@bootlin.com>, Tim Orling <ticotimo@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Wed, 08 May 2024 14:35:30 +0100
+In-Reply-To: <CAMKF1soksEYiF37G=1bhDSX83iecpfVcxjiS+QLW4DciVu7LCA@mail.gmail.com>
+References: <20240429201418.657042-1-michael.opdenacker@bootlin.com>
+	 <20240429201418.657042-3-michael.opdenacker@bootlin.com>
+	 <CAMKF1soyTt3He84XOgAv01ZdwGPZ2gxVwZaRxsL2Dufj3W_=rg@mail.gmail.com>
+	 <2a2f731e-7ca0-4442-a0e2-5e2b3bfde80c@bootlin.com>
+	 <CAMKF1soksEYiF37G=1bhDSX83iecpfVcxjiS+QLW4DciVu7LCA@mail.gmail.com>
 Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
@@ -66,36 +74,56 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 08 May 2024 13:33:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16189
+ <bitbake-devel@lists.openembedded.org>; Wed, 08 May 2024 13:35:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16190
 
-On Thu, 2024-05-02 at 12:35 -0600, Joshua Watt via lists.openembedded.org w=
-rote:
-> Checks that the minimum version of the websockets module is present, and
-> if not raises an ImportError. This allows the user to get earlier
-> feedback if using websockets is going to succeed
+On Fri, 2024-05-03 at 07:14 -0700, Khem Raj via lists.openembedded.org
+wrote:
 >=20
-> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> ---
-> =C2=A0bitbake/lib/bb/asyncrpc/client.py | 22 ++++++++++++++++++++++
-> =C2=A01 file changed, 22 insertions(+)
 >=20
-> diff --git a/bitbake/lib/bb/asyncrpc/client.py b/bitbake/lib/bb/asyncrpc/=
-client.py
-> index a350b4fb126..65f3f8964da 100644
-> --- a/bitbake/lib/bb/asyncrpc/client.py
-> +++ b/bitbake/lib/bb/asyncrpc/client.py
-> @@ -24,6 +24,9 @@ ADDR_TYPE_UNIX =3D 0
-> =C2=A0ADDR_TYPE_TCP =3D 1
-> =C2=A0ADDR_TYPE_WS =3D 2
-> =C2=A0
-> +WEBSOCKETS_MIN_VERSION =3D (9, 1)
-> +
-> +
-> =C2=A0
+> On Fri, May 3, 2024 at 1:04=E2=80=AFAM Michael Opdenacker
+> <michael.opdenacker@bootlin.com> wrote:
+> > Hi Khem
+> >=20
+> > On 5/2/24 at 18:57, Khem Raj wrote:
+> > > Hi Michael
+> > >=20
+> > > I am seeing a problem with this series, specifically following
+> > > patchset is causing a regression
+> > >=20
+> > > * ea1d7b8a36e bitbake: prserv: add bitbake selftests
+> > > * 5c66d345300 bitbake: prserv: import simplification
+> > > * c23f2c1680f bitbake: prserv: store_value() improvements
+> > > * 395b321af29 bitbake: prserv: avoid possible race condition in
+> > > database code
+> > > * 8022dc1029d bitbake: prserv: enable database sharing
+> > > * b81bfdfbed8 bitbake: prserv: add "upstream" server support
+> > > * 9539ce3b14a bitbake: prserv: move code from __init__ to
+> > > bitbake-prserv
+> > > * 4ec1553710b bitbake: prserv: declare "max_package_pr" client
+> > > hook
+> > >=20
+> > >=20
+> > > error seen during packagedata task of base-files
+> > >=20
+> > > WARNING: base-files-3.0.14-r0 do_packagedata: Error talking to
+> > > server:
+> > > Connection closed
+> > > ERROR: Error from client ('127.0.0.1', 59846): 'PRTable' object
+> > > has no
+> > > attribute 'sync'
+> > > Traceback (most recent call last):
+> >=20
+> >=20
+> > Thanks for the review. Actually, did you test with the V6 update I
+> > sent?
+> >=20
+>=20
+>=20
+> I think it was version in master-next that Richard has staged
+>=20
 
-I think 9.1 breaks with some versions of python so we need something
-later in some cases (like ubuntu 22.04).
+It was against v6 so I'm not able to merge these until that is fixed.
 
 Cheers,
 
