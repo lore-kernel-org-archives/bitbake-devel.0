@@ -1,232 +1,103 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2437CC04FFE
-	for <webhook@archiver.kernel.org>; Wed,  8 May 2024 10:24:52 +0000 (UTC)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
- by mx.groups.io with SMTP id smtpd.web10.8824.1715163887282058121
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0326FC04FFE
+	for <webhook@archiver.kernel.org>; Wed,  8 May 2024 13:33:13 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web10.12512.1715175183688274184
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 May 2024 03:24:47 -0700
+ Wed, 08 May 2024 06:33:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=KYOYj6I6;
- spf=pass (domain: gmail.com, ip: 209.85.167.45, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51f0602bc58so671698e87.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 08 May 2024 03:24:47 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JJxCtYj/;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41ecffed96cso26102735e9.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 08 May 2024 06:33:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715163885; x=1715768685; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mx9+M/WvOnZhAu1Z2mBHu17wqeusS1E+obAnmkg62UA=;
-        b=KYOYj6I6uwcoY1VJFZN8PmdHKQ6ptDntx6sKpNwo3/BvWXwFTvG6F4o77XdSjTc4rR
-         lkLMYSuZrzHaXC3zqSEyXXyS3O9ef4Vv4qYUvjQdEcwvzub3FvX69D4Ljb8a8v5WQVEL
-         C6eK4B/3pAZMuNbWUnpDjcN4kFL41WuLPFiv+gdsd6MeU0+jrPeDrKtFnWAalM9URywb
-         tGKectUtHNrclD1U6HDTH4giT4rTapvdnSVkY+ym8Q6yEJdXpWWnLyMqJapk2XBrjyRp
-         C2d/dUPkctZ+KNoMLXoT5Iwo+osFvZYxh8FKjUgukhGYIy0+0Q/HdWwqyqUlAGnPAL4U
-         IY7A==
+        d=linuxfoundation.org; s=google; t=1715175182; x=1715779982; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FOHmxh2lsM2rF/+hQJyLVn96mnlbgE+65iyBO2NwoTg=;
+        b=JJxCtYj/s/LY0u5hcauMQo6F1R5Xy3sGURNnRoHvsqQN1Go3E/SqGRfNCm2njjgMih
+         A5QuRxU+SPKeDnNfgoagBM0IgoiNOrEfET1vu/m0qHsOHiYNiwBgeg0KmuQNiZHvLGwI
+         b4ylCAHhpD0v3+wOFAf0QWUPHsAaUDDaGw1ug=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715163885; x=1715768685;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Mx9+M/WvOnZhAu1Z2mBHu17wqeusS1E+obAnmkg62UA=;
-        b=fUTPSswIw3UsNML7M9TNtYi/GDhdLUBYiaBCXGn7y9+tYQvq/qRd7lwuvAudKOfzzX
-         OuhqzN4AXv8hD1Rg+JYNH1+irmEJ6i/uoPEvanpM1a66q0Fexl17xGbUkyL8T/4G+RqP
-         PkTmWgxGs5b3P/UwAouvI5RpTBhUgp1X5b561kO7nIFezKK5NVs6ktQCG4zyr6xPFq12
-         0wCneqLJ0YlDnfwh/kYeP2n+8ATlWfc4P8OrMVTRHwcqo39gObPuv0NHCu1p6/UYJRTZ
-         1kLDt6AzzIgHDRWkX8kQksom978vs4bduwVtu9x35SBcFmFDzudUgq8v1XFs+ok4wocP
-         cfrA==
-X-Gm-Message-State: AOJu0Yy9CmKUNma7exJoeEoOKYLRLiJrhYmeh93xBga2haWz+5xYF9zZ
-	Lpv8ja1rIhH6SmNqcOalhlSNHxEvBVqo6V+OXmz3gYSQFrkpur8dX+uVcCbeAuMvnPjxFZQPBCn
-	PNI0LCQLyjdR8YVhwvjkbEKMXIbw=
-X-Google-Smtp-Source: AGHT+IE+OJdgDYX3Ct+epZm47E0YxB1e44p8CQarXGJkkHGYDs5JaK1Ba2wWdMOU6N1fdpCOywrdHpBJVqRh4MLSWxg=
-X-Received: by 2002:ac2:54bb:0:b0:518:f4e9:201c with SMTP id
- 2adb3069b0e04-52110289c19mr1528396e87.16.1715163885127; Wed, 08 May 2024
- 03:24:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715175182; x=1715779982;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FOHmxh2lsM2rF/+hQJyLVn96mnlbgE+65iyBO2NwoTg=;
+        b=Szj3fCuthUlsVfYCzDNi0owpIObtM4Rzdnsf0S6dRvRReKTuPyjp4OtB9fqEA4xE7h
+         PDEFtfmW0WNJrt5nUzJNcEEzQh3SJtT0WSRfEyXBWCOMZKsBq8Odc4nNkmXnwI+XCYv+
+         g3+mokHxpd+lNdIvqhFIsl2hk3sV5pN1tCZG9LlmuBWiyIE8Uh+OTYYPWYVka1EmuNjB
+         ko8m5CyGDPXVC8Y4Wh1adHgoFegr0TOttz8PevQ13+oZjRslnX7YQOdZsGw1f4CaI3SN
+         6rc3lSeOO6Yt3PY4ShyvB9v7tbVMvLSrdj18oOz791v2T+2kRV5hK2ulNyNv04J2BjZN
+         /ObQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXF/0wCmc00IW7xhNZMVBudedA2aUyfXM15oWou/wxwCpV4Dp+VmYUb02MAR3tnJtn2jCWCOsPln3eKUocK8ndSEtjZfdqYjbxi7M6TsOmK8ii2NSY=
+X-Gm-Message-State: AOJu0YxlVS/fEKGESQ2RVfAn3K2vijVWclYbVcWrNDgrL58oeDUsecWP
+	Y299vWKTtlfaTLYwUxvbOgjQn7tSa1qUicbT5N+TGqv7rvCfZnJoW0Af6wolrE8=
+X-Google-Smtp-Source: AGHT+IEpT5hI9cdus28TuFedH1oWDoppBs5ogVaBXoTII7tTCCDGCLSMCBIMJH6911ajyQm5PXCiBw==
+X-Received: by 2002:a05:600c:1f8c:b0:41a:a4d1:a896 with SMTP id 5b1f17b1804b1-41f71309f08mr22406145e9.16.1715175182068;
+        Wed, 08 May 2024 06:33:02 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:5b88:fab8:c8fc:9dd2? ([2001:8b0:aba:5f3c:5b88:fab8:c8fc:9dd2])
+        by smtp.gmail.com with ESMTPSA id iv19-20020a05600c549300b0041bbec72670sm2354197wmb.39.2024.05.08.06.33.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 06:33:01 -0700 (PDT)
+Message-ID: <9945e07b120de0b8a33b12e73aa46b0f2b425023.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel][PATCH] asyncrpc: Check websockets version
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: JPEWhacker@gmail.com, bitbake-devel@lists.openembedded.org
+Date: Wed, 08 May 2024 14:33:00 +0100
+In-Reply-To: <20240502183516.1216885-1-JPEWhacker@gmail.com>
+References: <20240502183516.1216885-1-JPEWhacker@gmail.com>
+Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
+ YNvg==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0-1 
 MIME-Version: 1.0
-References: <CAHGBnuOn-i=R0cxfWqGgQUsDnKjcrP3ERhX1jnZhgVRsWz=fhg@mail.gmail.com>
- <CAHGBnuO27AaCCfxGyk9wzi0A1F9DKQQTgg7YQUJDnBVkuOSDDg@mail.gmail.com>
-In-Reply-To: <CAHGBnuO27AaCCfxGyk9wzi0A1F9DKQQTgg7YQUJDnBVkuOSDDg@mail.gmail.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 8 May 2024 12:24:33 +0200
-Message-ID: <CANNYZj_bodmBROAZdwRsW6htamiDVx3M=gWjS6rP9W=rX4h9JQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] Generating SPDX documents without actually building
-To: sschuberth@gmail.com
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="0000000000001acf550617eeb6b9"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 08 May 2024 10:24:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16188
+ <bitbake-devel@lists.openembedded.org>; Wed, 08 May 2024 13:33:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16189
 
---0000000000001acf550617eeb6b9
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2024-05-02 at 12:35 -0600, Joshua Watt via lists.openembedded.org w=
+rote:
+> Checks that the minimum version of the websockets module is present, and
+> if not raises an ImportError. This allows the user to get earlier
+> feedback if using websockets is going to succeed
+>=20
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+> =C2=A0bitbake/lib/bb/asyncrpc/client.py | 22 ++++++++++++++++++++++
+> =C2=A01 file changed, 22 insertions(+)
+>=20
+> diff --git a/bitbake/lib/bb/asyncrpc/client.py b/bitbake/lib/bb/asyncrpc/=
+client.py
+> index a350b4fb126..65f3f8964da 100644
+> --- a/bitbake/lib/bb/asyncrpc/client.py
+> +++ b/bitbake/lib/bb/asyncrpc/client.py
+> @@ -24,6 +24,9 @@ ADDR_TYPE_UNIX =3D 0
+> =C2=A0ADDR_TYPE_TCP =3D 1
+> =C2=A0ADDR_TYPE_WS =3D 2
+> =C2=A0
+> +WEBSOCKETS_MIN_VERSION =3D (9, 1)
+> +
+> +
+> =C2=A0
 
-The correct forum is the yocto list.
+I think 9.1 breaks with some versions of python so we need something
+later in some cases (like ubuntu 22.04).
 
-Alex
+Cheers,
 
-On Wed 8. May 2024 at 12.19, Sebastian Schuberth via lists.openembedded.org
-<sschuberth=3Dgmail.com@lists.openembedded.org> wrote:
-
-> Apologies for bumping this thread, but just to double-check: Is this the
-> right place to ask this kind of question? I realize it's a "devel" mailin=
-g
-> list, but I couldn't find "bitbake-user" mailing list or so...
->
-> --
-> Sebastian Schuberth
->
->
-> On Thu, May 2, 2024 at 6:01=E2=80=AFPM Sebastian Schuberth <sschuberth@gm=
-ail.com>
-> wrote:
->
->> Hi all,
->>
->> to start with a disclaimer, I'm a total noob when it comes to Open
->> Embedded / Embedded Linux / Yocto / BitBake stuff. That said, I'm in nee=
-d
->> of creating SPDX documents for Yocto projects in the context of [1]. I'm
->> already quite far in that I work with Poky and programmatically run
->> something like
->>
->> bitbake -r
->> /home/sebastian/Development/GitHub/doubleopen-project/ort/plugins/packag=
-e-managers/bitbake/src/main/resources/spdx.conf
->> -c create_spdx xmlto
->>
->> However, I continuously run into various build problems on my Fedora 40
->> machine (one of which has been recently addressed by [2]), let alone the
->> time it takes to build something from scratch, even something as small a=
-s
->> e.g. the "xmlto" target. So, ideally, I would be able to create SPDX
->> documents without really building any binaries at all. I probably want a=
-ll
->> the source download and patching to happen, in order to archive the patc=
-hed
->> code that goes into the binaries, but skip the actual compiler / linker
->> invocations to save time, and just create the SPDX documents.
->>
->> Is something like this already possible somehow, maybe by setting from
->> compiler / linker variables to fake scripts that just do nothing?
->>
->> Thanks for any insights!
->>
->> [1]: https://github.com/oss-review-toolkit/ort/issues/722
->> [2]:
->> https://github.com/openembedded/bitbake/commit/f10e630fd7561746d835a4378=
-e8777e78f56e44a
->>
->> --
->> Sebastian Schuberth
->>
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#16187):
-> https://lists.openembedded.org/g/bitbake-devel/message/16187
-> Mute This Topic: https://lists.openembedded.org/mt/105865802/1686489
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> alex.kanavin@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
-
---0000000000001acf550617eeb6b9
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto">The correct forum is the yocto list.</div><div dir=3D"aut=
-o"><br></div><div dir=3D"auto">Alex</div><div><br><div class=3D"gmail_quote=
-"><div dir=3D"ltr" class=3D"gmail_attr">On Wed 8. May 2024 at 12.19, Sebast=
-ian Schuberth via <a href=3D"http://lists.openembedded.org">lists.openembed=
-ded.org</a> &lt;sschuberth=3D<a href=3D"mailto:gmail.com@lists.openembedded=
-.org">gmail.com@lists.openembedded.org</a>&gt; wrote:<br></div><blockquote =
-class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1=
-px;border-left-style:solid;padding-left:1ex;border-left-color:rgb(204,204,2=
-04)"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:mon=
-ospace,monospace">Apologies for bumping this thread, but just to double-che=
-ck: Is this the right place to ask this kind of question? I realize it&#39;=
-s a &quot;devel&quot; mailing list, but I couldn&#39;t find &quot;bitbake-u=
-ser&quot; mailing list or so...</div><div class=3D"gmail_default" style=3D"=
-font-family:monospace,monospace"><br clear=3D"all"></div><div><div dir=3D"l=
-tr" class=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div dir=
-=3D"ltr"><div>-- <br></div><div>Sebastian Schuberth</div></div></div></div>=
-<br></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_at=
-tr">On Thu, May 2, 2024 at 6:01=E2=80=AFPM Sebastian Schuberth &lt;<a href=
-=3D"mailto:sschuberth@gmail.com" target=3D"_blank">sschuberth@gmail.com</a>=
-&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px =
-0px 0px 0.8ex;border-left-width:1px;border-left-style:solid;padding-left:1e=
-x;border-left-color:rgb(204,204,204)"><div dir=3D"ltr"><div class=3D"gmail_=
-default" style=3D"font-family:monospace,monospace">Hi all,</div><div class=
-=3D"gmail_default" style=3D"font-family:monospace,monospace"><br></div><div=
- class=3D"gmail_default" style=3D"font-family:monospace,monospace">to start=
- with a disclaimer, I&#39;m a total noob when it comes to Open Embedded / E=
-mbedded Linux / Yocto / BitBake stuff. That said, I&#39;m in need of creati=
-ng SPDX documents for Yocto projects in the context of [1]. I&#39;m already=
- quite far in that I work with Poky and programmatically run something like=
-</div><div class=3D"gmail_default" style=3D"font-family:monospace,monospace=
-"><br></div><div class=3D"gmail_default" style=3D"font-family:monospace,mon=
-ospace"><span style=3D"font-family:monospace"><span style=3D"font-family:mo=
-nospace;background-color:rgb(255,255,255);color:rgb(0,0,0)">bitbake -r /hom=
-e/sebastian/Development/GitHub/doubleopen-project/ort/plugins/package-manag=
-er</span>s/bitbake/src/main/resources/spdx.conf -c create_spdx xmlto<br></s=
-pan></div><div class=3D"gmail_default" style=3D"font-family:monospace,monos=
-pace"><span style=3D"font-family:monospace"><br></span></div><div class=3D"=
-gmail_default" style=3D"font-family:monospace,monospace"><span style=3D"fon=
-t-family:monospace,monospace">However, I continuously run into various buil=
-d problems on my Fedora 40 machine (one of which has been recently addresse=
-d by [2]), let alone the time it takes to build something from scratch, eve=
-n something as small as e.g. the &quot;xmlto&quot; target. So, ideally, I w=
-ould be able to create SPDX documents without really building any binaries =
-at all. I probably want all the source download and patching to happen, in =
-order to archive the patched code that goes into the binaries, but skip the=
- actual compiler / linker invocations to save time, and just create the SPD=
-X documents.</span></div><div class=3D"gmail_default" style=3D"font-family:=
-monospace,monospace"><span style=3D"font-family:monospace,monospace"><br></=
-span></div><div class=3D"gmail_default" style=3D"font-family:monospace,mono=
-space"><span style=3D"font-family:monospace,monospace">Is something like th=
-is already possible somehow, maybe by setting from compiler / linker variab=
-les to fake scripts that just do nothing?</span></div><div class=3D"gmail_d=
-efault" style=3D"font-family:monospace,monospace"><span style=3D"font-famil=
-y:monospace,monospace"><br></span></div><div class=3D"gmail_default" style=
-=3D"font-family:monospace,monospace"><span style=3D"font-family:monospace,m=
-onospace">Thanks for any insights!<br></span></div><div class=3D"gmail_defa=
-ult" style=3D"font-family:monospace,monospace"><br></div><div class=3D"gmai=
-l_default" style=3D"font-family:monospace,monospace">[1]: <a href=3D"https:=
-//github.com/oss-review-toolkit/ort/issues/722" target=3D"_blank" style=3D"=
-font-family:monospace,monospace">https://github.com/oss-review-toolkit/ort/=
-issues/722</a></div><div class=3D"gmail_default" style=3D"font-family:monos=
-pace,monospace">[2]: <a href=3D"https://github.com/openembedded/bitbake/com=
-mit/f10e630fd7561746d835a4378e8777e78f56e44a" target=3D"_blank" style=3D"fo=
-nt-family:monospace,monospace">https://github.com/openembedded/bitbake/comm=
-it/f10e630fd7561746d835a4378e8777e78f56e44a</a></div><div class=3D"gmail_de=
-fault" style=3D"font-family:monospace,monospace"><br clear=3D"all"></div><d=
-iv><div dir=3D"ltr" class=3D"gmail_signature"><div dir=3D"ltr"><div>-- <br>=
-</div><div>Sebastian Schuberth</div></div></div></div></div>
-</blockquote></div>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#16187): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/16187" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/16187</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/105865802/168=
-6489" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
-t/105865802/1686489</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:alex.kanavin@gmail.com" target=3D"=
-_blank">alex.kanavin@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div></div>
-
---0000000000001acf550617eeb6b9--
+Richard
 
