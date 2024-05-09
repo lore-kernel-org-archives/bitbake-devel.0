@@ -1,125 +1,108 @@
-Return-Path: <michael.opdenacker@bootlin.com>
+Return-Path: <hieu2.nguyen@lge.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFA7C04FFE
-	for <webhook@archiver.kernel.org>; Wed,  8 May 2024 17:41:08 +0000 (UTC)
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
- by mx.groups.io with SMTP id smtpd.web11.3517.1715190063812711703
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E30C10F1A
+	for <webhook@archiver.kernel.org>; Thu,  9 May 2024 10:24:29 +0000 (UTC)
+Received: from lgeamrelo11.lge.com (lgeamrelo11.lge.com [156.147.23.52])
+ by mx.groups.io with SMTP id smtpd.web11.6821.1715250266872652175
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 May 2024 10:41:04 -0700
+ Thu, 09 May 2024 03:24:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=kTbThgKq;
- spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 082FB20002;
-	Wed,  8 May 2024 17:40:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715190062;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GmdFN4lMS76zj3TS5zzbz+K3osgrbsxNCXWJnmZ/vyk=;
-	b=kTbThgKqrfUVHL+r3QPe8JQZOdFnrtiYdJ96X6E+o/kHwzSbYqeEAS/IoceQMaVE1ERU4E
-	4yfhc0BhoTFC68clt4Czd+N+cZOvgnDGrQCKpMiVt0nEnmOZ2jkJRBv6bCs8E22F2UDil6
-	Mf9NxqhhFBIx5Mq6eE0VB8u/PO6HnT8++7rHDkk8LjardIDG57gEiYMwI0eBa6O/3uhpF0
-	znk6HX5mlyKIsYa3yH27Cs1LuDZxHPo+fS3a8NJ6JzqA//ogE/prLlEuO5OJDDcAvBRvIn
-	vpW1ncKbzJhTjuiuY4wJd3GB7Pk0YjPt9gCngM0H1h5cGeGxhBED8qhTDQ7tpw==
-Message-ID: <f4e7af33-b0ac-4620-9f96-f1c83460cd01@bootlin.com>
-Date: Wed, 8 May 2024 23:10:57 +0530
+ dkim=none (message not signed); spf=pass (domain: lge.com, ip: 156.147.23.52, mailfrom: hieu2.nguyen@lge.com)
+Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
+	by 156.147.23.52 with ESMTP; 9 May 2024 19:24:26 +0900
+X-Original-SENDERIP: 156.147.1.121
+X-Original-MAILFROM: hieu2.nguyen@lge.com
+Received: from unknown (HELO hieu2-nguyen-worker-2204.bee-live.svc.cluster.local) (10.185.60.36)
+	by 156.147.1.121 with ESMTP; 9 May 2024 19:24:25 +0900
+X-Original-SENDERIP: 10.185.60.36
+X-Original-MAILFROM: hieu2.nguyen@lge.com
+From: Hieu Van Nguyen <hieu2.nguyen@lge.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: alexandre.belloni@bootlin.com,
+	richard.purdie@linuxfoundation.org,
+	pkj@axis.com,
+	nvhieudt11@gmail.com,
+	Hieu Van Nguyen <hieu2.nguyen@lge.com>
+Subject: [PATCH v2] bitbake-layers: Support add-layer to prepend
+Date: Thu,  9 May 2024 19:24:24 +0900
+Message-Id: <20240509102424.1073669-1-hieu2.nguyen@lge.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: michael.opdenacker@bootlin.com, Joshua Watt <JPEWhacker@gmail.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Tim Orling <ticotimo@gmail.com>, bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH v5 2/5] prserv: move code from __init__ to
- bitbake-prserv
-To: Khem Raj <raj.khem@gmail.com>,
- Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <20240429201418.657042-1-michael.opdenacker@bootlin.com>
- <20240429201418.657042-3-michael.opdenacker@bootlin.com>
- <CAMKF1soyTt3He84XOgAv01ZdwGPZ2gxVwZaRxsL2Dufj3W_=rg@mail.gmail.com>
- <2a2f731e-7ca0-4442-a0e2-5e2b3bfde80c@bootlin.com>
- <CAMKF1soksEYiF37G=1bhDSX83iecpfVcxjiS+QLW4DciVu7LCA@mail.gmail.com>
- <bb6d8641bbc41c7ac1e32447e6b2f691127dfdca.camel@linuxfoundation.org>
- <CAMKF1srwkF=UOLvd3Een+uVLSjH6yo0XjKwG+=kDzF4g3vbjvQ@mail.gmail.com>
-Content-Language: en-US
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-Organization: Bootlin
-In-Reply-To: <CAMKF1srwkF=UOLvd3Een+uVLSjH6yo0XjKwG+=kDzF4g3vbjvQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: michael.opdenacker@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 08 May 2024 17:41:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16193
+ <bitbake-devel@lists.openembedded.org>; Thu, 09 May 2024 10:24:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16194
 
-Richard, Khem,
+As you know, layer order in BBLAYERS can affect in parsing recipes process,
+in some cases, users want to add a layer on the top of BBLAYERS variable
 
-On 5/8/24 at 20:43, Khem Raj wrote:
-> On Wed, May 8, 2024 at 6:35 AM Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
->> On Fri, 2024-05-03 at 07:14 -0700, Khem Raj via lists.openembedded.org
->> wrote:
->>>
->>> On Fri, May 3, 2024 at 1:04 AM Michael Opdenacker
->>> <michael.opdenacker@bootlin.com> wrote:
->>>> Hi Khem
->>>>
->>>> On 5/2/24 at 18:57, Khem Raj wrote:
->>>>> Hi Michael
->>>>>
->>>>> I am seeing a problem with this series, specifically following
->>>>> patchset is causing a regression
->>>>>
->>>>> * ea1d7b8a36e bitbake: prserv: add bitbake selftests
->>>>> * 5c66d345300 bitbake: prserv: import simplification
->>>>> * c23f2c1680f bitbake: prserv: store_value() improvements
->>>>> * 395b321af29 bitbake: prserv: avoid possible race condition in
->>>>> database code
->>>>> * 8022dc1029d bitbake: prserv: enable database sharing
->>>>> * b81bfdfbed8 bitbake: prserv: add "upstream" server support
->>>>> * 9539ce3b14a bitbake: prserv: move code from __init__ to
->>>>> bitbake-prserv
->>>>> * 4ec1553710b bitbake: prserv: declare "max_package_pr" client
->>>>> hook
->>>>>
->>>>>
->>>>> error seen during packagedata task of base-files
->>>>>
->>>>> WARNING: base-files-3.0.14-r0 do_packagedata: Error talking to
->>>>> server:
->>>>> Connection closed
->>>>> ERROR: Error from client ('127.0.0.1', 59846): 'PRTable' object
->>>>> has no
->>>>> attribute 'sync'
->>>>> Traceback (most recent call last):
->>>>
->>>> Thanks for the review. Actually, did you test with the V6 update I
->>>> sent?
->>>>
->>>
->>> I think it was version in master-next that Richard has staged
->>>
->> It was against v6 so I'm not able to merge these until that is fixed.
->>
-> Right, I will try a  clean from scratch build and see if it was something
-> intermediate to be sure.
+So, add "--prepend" option for bitbake-layers to support add-layer to prepend
 
+Signed-off-by: Hieu Van Nguyen <hieu2.nguyen@lge.com>
+---
+ lib/bb/utils.py        | 8 ++++++--
+ lib/bblayers/action.py | 3 ++-
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-Thanks for testing.
-I confirm the issue is still there. My apologies for this overlook!
-This is a busy week for me, but I will submit a fix as soon as I get the 
-time, and before the end of the week anyway.
-
-Kind regards
-Michael.
-
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index ebee65d3d..f1634da0a 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -1414,7 +1414,7 @@ def edit_metadata_file(meta_file, variables, varfunc):
+     return updated
+ 
+ 
+-def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=None):
++def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=None, prepend=None):
+     """Edit bblayers.conf, adding and/or removing layers
+     Parameters:
+         bblayers_conf: path to bblayers.conf file to edit
+@@ -1424,6 +1424,7 @@ def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=None):
+             empty list to remove nothing
+         edit_cb: optional callback function that will be called after
+             processing adds/removes once per existing entry.
++        prepend: optional support add-layer to prepend
+     Returns a tuple:
+         notadded: list of layers specified to be added but weren't
+             (because they were already in the list)
+@@ -1484,7 +1485,10 @@ def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=None):
+             for addlayer in addlayers:
+                 if addlayer not in bblayers:
+                     updated = True
+-                    bblayers.append(addlayer)
++                    if prepend:
++                        bblayers.insert(0,addlayer)
++                    else:
++                        bblayers.append(addlayer)
+             del addlayers[:]
+ 
+         if edit_cb:
+diff --git a/lib/bblayers/action.py b/lib/bblayers/action.py
+index a14f19948..8ef89fc09 100644
+--- a/lib/bblayers/action.py
++++ b/lib/bblayers/action.py
+@@ -49,7 +49,7 @@ class ActionPlugin(LayerPlugin):
+         shutil.copy2(bblayers_conf, backup)
+ 
+         try:
+-            notadded, _ = bb.utils.edit_bblayers_conf(bblayers_conf, layerdirs, None)
++            notadded, _ = bb.utils.edit_bblayers_conf(bblayers_conf, layerdirs, None, None, args.prepend)
+             if not (args.force or notadded):
+                 self.tinfoil.modified_files()
+                 try:
+@@ -269,6 +269,7 @@ build results (as the layer priority order has effectively changed).
+     def register_commands(self, sp):
+         parser_add_layer = self.add_command(sp, 'add-layer', self.do_add_layer, parserecipes=False)
+         parser_add_layer.add_argument('layerdir', nargs='+', help='Layer directory/directories to add')
++        parser_add_layer.add_argument('--prepend', action='store_true', help='Prepend layer directory/directories')
+ 
+         parser_remove_layer = self.add_command(sp, 'remove-layer', self.do_remove_layer, parserecipes=False)
+         parser_remove_layer.add_argument('layerdir', nargs='+', help='Layer directory/directories to remove (wildcards allowed, enclose in quotes to avoid shell expansion)')
 -- 
-Michael Opdenacker, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
 
 
