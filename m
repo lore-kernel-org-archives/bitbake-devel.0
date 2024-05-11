@@ -2,236 +2,75 @@ Return-Path: <michael.opdenacker@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49772C04FFE
-	for <webhook@archiver.kernel.org>; Sat, 11 May 2024 11:02:06 +0000 (UTC)
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
- by mx.groups.io with SMTP id smtpd.web11.12385.1715425318183846301
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18BAC04FFE
+	for <webhook@archiver.kernel.org>; Sat, 11 May 2024 11:03:05 +0000 (UTC)
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+ by mx.groups.io with SMTP id smtpd.web11.12400.1715425385439540837
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 11 May 2024 04:01:58 -0700
+ Sat, 11 May 2024 04:03:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=QvKRcamL;
- spf=pass (domain: bootlin.com, ip: 217.70.183.201, mailfrom: michael.opdenacker@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9004A1BF203;
-	Sat, 11 May 2024 11:01:55 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=U6hvM+tB;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: michael.opdenacker@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D6DE120004;
+	Sat, 11 May 2024 11:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715425316;
+	t=1715425383;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zAk3UaMf82USclHEnpzNDu+I56ylrzb889kVG5TbHJg=;
-	b=QvKRcamLIuklMtoIJ34fuOtXXYR4uUl1YuvAzZKaW9xLMxbFAriq0dzcihV/avcmkBw81q
-	oaQTs1oPVclWXJPfDwgtr/TrI85HVrCWN7wig98F1Exe2Zi4F75DzglGAw//DajmG3BPcV
-	FoeXAykv8K+KnGtQLfNNCkSbTxTlieKTAFXeaKQa5xyIdZotrHtzuWZGWKPfLZ2/HhyZGg
-	d92tjXkYXL1fap5R5QUOANCb69OhxDwy4faO86vQbPAQceDyNUkWIgRbYpa83mtPykFIlF
-	YPz4mk1xQQhluLpbxIVR6O37VFgUwu84miWHUnkajgFDMpGUidR4ml2HLwdF3A==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8BiNHWZedTQUDworzQJJA7RM4WypooYTjRHh0Fw20Nw=;
+	b=U6hvM+tBzqkwkOpSLS8/goYyFID63dOaeMWOvLIsP1zC7XIX/BTlYJzmgskpNfQrgdbLAl
+	hWddYLV0/oIUnpXsIA3hFo3EFjwuCqeEsUM5rKlbkj9rj9Hb5wWAvjfVZp462Ocy6BxISi
+	K1HOEWrV0penujAjiOYuI8FM/vAC4hw3uKMb2Cbu2l0xsbHakVahhtBItfvoMw3mQI8moY
+	4ltKfKVkwnN9wXhH0Jf1Iqug2KIwX2PLh4iMQH5CxDeERT6btPYwpOam7oP1a8mKvSqhR4
+	xYddJ+nS8KpASXZPB4+ZqK0WAib1KVas8P/+ZW9Rj7eMfu5vHNOVL7FClZosoA==
 From: michael.opdenacker@bootlin.com
 To: bitbake-devel@lists.openembedded.org
 Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Joshua Watt <JPEWhacker@gmail.com>,
-	Tim Orling <ticotimo@gmail.com>
-Subject: [PATCH v7 0/8] prserv: add support for an "upstream" server
-Date: Sat, 11 May 2024 16:31:27 +0530
-Message-Id: <20240511110135.1887578-1-michael.opdenacker@bootlin.com>
+	Tim Orling <ticotimo@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v7 1/8] prserv: declare "max_package_pr" client hook
+Date: Sat, 11 May 2024 16:31:28 +0530
+Message-Id: <20240511110135.1887578-2-michael.opdenacker@bootlin.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240511110135.1887578-1-michael.opdenacker@bootlin.com>
+References: <20240511110135.1887578-1-michael.opdenacker@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: michael.opdenacker@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 11 May 2024 11:02:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16199
+ <bitbake-devel@lists.openembedded.org>; Sat, 11 May 2024 11:03:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16200
 
 From: Michael Opdenacker <michael.opdenacker@bootlin.com>
 
-This makes it possible to customize an "upstream" distribution
-by modifying local packages. If the "upstream" package bears
-revision "x", the local one will have revision "x.y", this
-having priority over the upstream one.
+Add missing declaration for the max_package_pr client hook
 
-Multiple levels of upstream servers are supported, so "x.y.z" revisions
-are possible too.
-
-This version also supports multiple servers sharing the same database.
-
-This also includes BitBake selftests to check the expected
-functionality and detect future regressions.
-
-bitbake-selftest prserv.tests
-
-The "oe-selftest --run-tests prservice" tests pass
-on the condition that this patch is applied to OE-core:
-https://lore.kernel.org/openembedded-core/20240429194656.655509-1-michael.opdenacker@bootlin.com/T/#u
-
----
-
-Changes in V7:
-
-- Remove no longer defined "self.server.table.sync()" call in prserv.py
-  exception path.
-
-Changes in V6:
-
-- Harden the store_value() code to protect
-  it against storing the same value twice.
-
-- Simplify the importone() hook, removing
-  its unnecessary "history" parameter.
-
-- This fixes all errors in "oe-selftest -r prservice",
-  once this OE-core patch is merged:
-  https://lore.kernel.org/openembedded-core/20240429194656.655509-1-michael.opdenacker@bootlin.com/T/#u
-
-- Make tests work in temporary directories.
-  Suggested by Joshua Watt
-
-- Remove first version of readonly server tests
-  which depended on the output of a previous test.
-  One implementation of readonly server tests remains.
-
-- Merge the upstream and read-only tests so that
-  the read-only test part can reuse the databases
-  and servers from the upstream one. Initially thought
-  that the setUp (and tearDown) hooks were called only
-  once for each test class, instead of for each test.
-  Thanks to Joshua Watt for making me understand this.
-
-- Merged two more tests and simplified their naming
-  as, with one exception, the order of tests doesn't
-  matter any more.
-
-- Avoid a possible race condition at database
-  creation time. Suggested by Joshua Watt.
-
-Changes in V5:
-
-- Change the way the database is accessed and modified.
-  As done in the Hash Server code, the database is not
-  accessed through the cursor API.
-
-  This makes it possible to have multiple servers accessing
-  the same database, typically one read-write server that
-  is fed by the build machine, and one read-only server that
-  is used to publish PR data to downstream users.
-
-  This switched sqlite3 to "WAL" journaling mode, and to
-  "OFF" synchronous mode.
-
-- Fix revision ordering issues, now computing the min and max
-  values through dedicated Python functions, instead of letting
-  the database do this with just string comparison, which
-  was wrong in our case. Typically, "1.20" is greater for us
-  than "1.3".
-
-- Add BitBake selftests, in particular to make sure revision
-  ordering is correct and the maximum and minimum values are
-  correctly computed.
-
-- An issue remains: the BitBake selftests that test database
-  access through a read-only server while a read-write server
-  is still running, still fail, because the database changes
-  are apparently not stored to disk.
-
-  FAIL: test_3b_readonly (prserv.tests.PRUpstreamTests)
-
-Changes in V4:
-
-- Add BitBake selftests for the legacy and new PR server features
-  (database, client, server, support for upstream server, read-only mode, "history" and "no history" modes)
-  To run only these tests:
-  bitbake-selftest prserv.tests
-
-- Pass the "history" mode through the client requests, instead
-  of storing it (globally) in the database name.
-
-  The PR database is now called "PRMAIN" instead of "PRMAIN_nohist".
-  This should cause a regression for builds which already
-  have a PR database.
-
-- Fixes for "history" modes:
-  - Allow to store multiple PR values for the same checksum,
-    needed for the "no history" mode.
-  - Make the "history" mode return the minimum stored
-    PR value.
-
-- Fixes and code reorganization for issues uncovered by the tests.
-
-- Update the server version to "2.0.0"
-
-Changes in V3:
-
-- Revert the commit removing the so far unused "hist" mode, which
-  we wish to keep for binary reproducibility sake.
-
-- Simplification of get_value() function to take
-  both "hist" and "nohist" modes with the same shared code.
-
-- Add "history" parameter to the "getPR" request,
-  so that the client can ask for the mode of its choice.
-  This will also make it possible to implement tests
-  for both modes.
-
-  Note that more requests ("export", "import"...)
-  will also need a "history" parameter, in a future version,
-  after the first tests are implemented.
-
-- Several bug fixes.
-
-- Put all the new features at the tip of the branch,
-  to make the cleanup commits easier to merged.
-
-Changes in V2:
-
-- Add this new commit:
-  prserv: remove unused "hist" mode in the database backend
-
-- Squash commit "prserv: fix read_only test" into
-  commit "prserv: simplify the PRServerClient() interface"
-  (Reported by Richard Purdie)
-
-- Fix the code to support increasing "x.y.z" values, thus
-  supporting several levels of upstream servers.
-
-- db.py: remove duplicate definition of find_max_value() function in db.py
-
-- prserv.py: remove tabs before comments (Python didn't complain)
-
-- db.py: now stores the revision ("value") as TEXT.
-  This way we can store "1.0" without having it transformed to "1"
-  when the default type was INTEGER.
-
-- This allows to fix a regression when the first packages were created
-  with 'r0.1' instead of 'r0.0' initially.
-
-- find_max_value: now returns None instead of '0' when no value is found
-  Before we couldn't tell the difference between a '0'
-  max value and the absence of such a value.
-
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 Cc: Joshua Watt <JPEWhacker@gmail.com>
 Cc: Tim Orling <ticotimo@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+---
+ lib/prserv/client.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Michael Opdenacker (8):
-  prserv: declare "max_package_pr" client hook
-  prserv: move code from __init__ to bitbake-prserv
-  prserv: add "upstream" server support
-  prserv: enable database sharing
-  prserv: avoid possible race condition in database code
-  prserv: store_value() improvements
-  prserv: import simplification
-  prserv: add bitbake selftests
-
- bin/bitbake-prserv     |  26 ++-
- bin/bitbake-selftest   |   2 +
- lib/prserv/__init__.py |  97 ++++++++-
- lib/prserv/client.py   |  15 +-
- lib/prserv/db.py       | 452 ++++++++++++++++++-----------------------
- lib/prserv/serv.py     | 140 ++++++++++---
- lib/prserv/tests.py    | 386 +++++++++++++++++++++++++++++++++++
- 7 files changed, 816 insertions(+), 302 deletions(-)
- create mode 100644 bitbake/lib/prserv/tests.py
-
+diff --git a/lib/prserv/client.py b/lib/prserv/client.py
+index 8471ee3046..99fc4e0f7f 100644
+--- a/lib/prserv/client.py
++++ b/lib/prserv/client.py
+@@ -65,7 +65,7 @@ class PRAsyncClient(bb.asyncrpc.AsyncClient):
+ class PRClient(bb.asyncrpc.Client):
+     def __init__(self):
+         super().__init__()
+-        self._add_methods("getPR", "test_pr", "test_package", "importone", "export", "is_readonly")
++        self._add_methods("getPR", "test_pr", "test_package", "max_package_pr", "importone", "export", "is_readonly")
+ 
+     def _get_async_client(self):
+         return PRAsyncClient()
 -- 
 2.34.1
 
