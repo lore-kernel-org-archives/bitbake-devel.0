@@ -1,204 +1,220 @@
-Return-Path: <liezhi.yang@windriver.com>
+Return-Path: <quentin.schulz@cherry.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FE2C25B75
-	for <webhook@archiver.kernel.org>; Wed, 15 May 2024 09:58:11 +0000 (UTC)
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.web10.10867.1715767086971554878
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA66C25B75
+	for <webhook@archiver.kernel.org>; Wed, 15 May 2024 10:15:41 +0000 (UTC)
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.102])
+ by mx.groups.io with SMTP id smtpd.web10.11274.1715768129074947991
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 15 May 2024 02:58:06 -0700
+ Wed, 15 May 2024 03:15:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=5865462aad=liezhi.yang@windriver.com)
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44F6oInn032610
-	for <bitbake-devel@lists.openembedded.org>; Wed, 15 May 2024 02:58:06 -0700
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3y286fu0xa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Wed, 15 May 2024 02:58:06 -0700 (PDT)
-Received: from m0250809.ppops.net (m0250809.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 44F9vZg2026975
-	for <bitbake-devel@lists.openembedded.org>; Wed, 15 May 2024 02:58:06 -0700
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3y286fu0x9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 May 2024 02:58:06 -0700 (PDT)
+ dkim=pass header.i=@cherry.de header.s=selector1 header.b=EuIBCqfF;
+ spf=pass (domain: cherry.de, ip: 40.107.8.102, mailfrom: quentin.schulz@cherry.de)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S26jt1AliGEmJ9Kk53ar4RtUJZzH37An0Hfh/zSnFH7nA4lUpEf9vDJiforKw4YjEQz+jUOJR9heaaiqvEKT6eGeyXwfITux/WqHzPajU/YViiuKb1Z3g2UNwmSkNYyh7agOwPdlVcZNKU1VKgibhMkbxLVWzGR9Kf5j8nl5yOtO3QGJjsDaCnKdwP0ukug6Zp2jhiYwOTT6sZEH6BF1jFfz9krRlD7j1wTPGklwgqz254ea5ZVIO+tGFenwflPFOQ+7X45y3Us45QcaFBxpniQ5Ev+y/BjSSgHrphSjnDRW2FoBF7XFbhN+BSXUtqPl42Vq2Cc2jUqL50BCTqZO+Q==
+ b=WV0vCgYE3eSY2Mh9O87Cc35mS1PUQntR9qOfA6iaP9qzwB6czSoUQD1rwWzo9cD+RJpy72rYojeT7ib7MXdXMT47RKx3AGIw531DAjMrLcHO4bIrsFVenFe0//fizzJKEX+Wv/RUk/uzJ/g0BW9FhgupUeB6XDDhTYM6Gf2DZ2VBW3XIConWrclcUmKJl1KAQkmaMIjGOCvDDeO2/RcumOmmnjxM+5cwNgI7jTJHrkhMMwELcINu3cjColLnWzard+lgA08BQ0OnR+WlEkTeOLaqrSB4PYgB5goHqVrGCwm4LTXcIuPCA1AWm3r2a0mo8Eykea8SJZPrnNDP1bX+hg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=36LF+ZYYyj46tiBU5A3ycoC6X/wwbKanMj1FO1K/tk8=;
- b=hQPheD9CKJ3hFtf53d3wGWyeNAvoTHWa8wUTnaFDiVHa+YBsrF5G9ltqQv5wiy2S+IPWzFIe1gPSH9FmUg0sELN5fpH55P9afTb1zdVD3ony3O/S3R6VwLeX1v1S9F1dlDpWs5SxBKvRJBD/ulIKf0OYj7/148B1asqZ/acSeQQnE2TFzkhRLcErff2swsTnmqL4yBskJQHCJAsOnc2Mw3Zmu/94IGEsLPQeyHgfchGyJDdHWZs35bUaavD+lUsKht1F0tiwXklDA5UFBQ5rzBSeIUZ5UnCu0h50sk1Jq7Rn3gBv6X9xP/55d64d5xY57lz/zvUVZme88B3yrg3ELA==
+ bh=qFYIBx+uD7arjfOR0OT51OYXWX9AwlIRRbQzwTEXdGg=;
+ b=eSyN9B3NxDW3o6GB1GCfKz3Wh0WFf6ihWPrfJ9e5OFAeEuvFHPc4KblGZ0019JBqTg9AXDbfdnDd4EKgNmXRrB6FVq6bEgE7uhp25zqIYjtZxNV1Zasm6VJmow4c7uQ4pWk/rVD4xxAU5XZ6EE6de7NJ8v827WB613Yd3LQ2hKD0Fj/p2PNZXvWQ6cs0zSRhKiDlVJNwGW6vjglpIeSUahwT1QofG6LXfsU3qXn9iJZMziQx13z+Udq8vQSCTzRJyFfdUajWejDIAqCHe2pv8Q+cgmSBkVmM9ktN8pJAtbtqxrU6ggRVMX7/d7yozDVFiQdSpm8dtHv8JWW8aANQPQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from LV3PR11MB8531.namprd11.prod.outlook.com (2603:10b6:408:1b6::15)
- by CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16) with
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qFYIBx+uD7arjfOR0OT51OYXWX9AwlIRRbQzwTEXdGg=;
+ b=EuIBCqfFQophu7hJ+AxmSRbZGii9/1qAF0lXH6oO19BPCSnUlbUYHnREUBrlDu1pu5Rkdpo0tb6qQM4UO+gEYS+XiRl9YP1GOEOufW+eaPgnNg6avsv/Jj+1YQ6WUD1RSToGj/NN9wsb/xo1tL4UKn9RDkW+M6lI/UP9NuJGEQY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from VE1PR04MB6589.eurprd04.prod.outlook.com (2603:10a6:803:128::25)
+ by AS4PR04MB9622.eurprd04.prod.outlook.com (2603:10a6:20b:4cc::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Wed, 15 May
- 2024 09:58:03 +0000
-Received: from LV3PR11MB8531.namprd11.prod.outlook.com
- ([fe80::d341:6ff5:fce1:c6d]) by LV3PR11MB8531.namprd11.prod.outlook.com
- ([fe80::d341:6ff5:fce1:c6d%4]) with mapi id 15.20.7544.052; Wed, 15 May 2024
- 09:58:02 +0000
-Message-ID: <b1399680-6f22-4477-ada4-8a718f807237@windriver.com>
-Date: Wed, 15 May 2024 17:57:56 +0800
+ 2024 10:15:24 +0000
+Received: from VE1PR04MB6589.eurprd04.prod.outlook.com
+ ([fe80::8476:1b2f:f236:db31]) by VE1PR04MB6589.eurprd04.prod.outlook.com
+ ([fe80::8476:1b2f:f236:db31%6]) with mapi id 15.20.7544.052; Wed, 15 May 2024
+ 10:15:24 +0000
+Message-ID: <811a8c5a-747f-4331-8d8d-ccf6324961e9@cherry.de>
+Date: Wed, 15 May 2024 12:15:21 +0200
 User-Agent: Mozilla Thunderbird
 Subject: Re: [bitbake-devel] [PATCH 1/1] fetch2/git.py: Try without '.git'
  suffix firstly
-To: Quentin Schulz <quentin.schulz@cherry.de>,
-        bitbake-devel@lists.openembedded.org
+To: liezhi.yang@windriver.com, bitbake-devel@lists.openembedded.org
 References: <cover.1715765153.git.liezhi.yang@windriver.com>
  <4a7647c4169ffc0c70858a4a1f1b2eb18ffcfb70.1715765153.git.liezhi.yang@windriver.com>
  <367b25fc-4d5a-4a1f-a259-55e2325e1a34@cherry.de>
+ <b1399680-6f22-4477-ada4-8a718f807237@windriver.com>
 Content-Language: en-US
-From: Robert Yang <liezhi.yang@windriver.com>
-In-Reply-To: <367b25fc-4d5a-4a1f-a259-55e2325e1a34@cherry.de>
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <b1399680-6f22-4477-ada4-8a718f807237@windriver.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG3P274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::22)
- To LV3PR11MB8531.namprd11.prod.outlook.com (2603:10b6:408:1b6::15)
+X-ClientProxiedBy: WA2P291CA0043.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:1f::28) To VE1PR04MB6589.eurprd04.prod.outlook.com
+ (2603:10a6:803:128::25)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8531:EE_|CO1PR11MB5089:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c31ec53-78c1-4c85-a5e7-08dc74c58269
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6589:EE_|AS4PR04MB9622:EE_
+X-MS-Office365-Filtering-Correlation-Id: abd7757d-6253-43f7-7d13-08dc74c7ef18
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007;
 X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?SCtWeEJZSldBU2MvR1RyTTE2RGVScndINGpuMS9yai9XanBnU1E1MGJzRkw2?=
- =?utf-8?B?L2pydUhpVHhGMUdpTTVqaTlDSEc5UDF3bExZZDhyRFV0VFRMNHNYRFlXdVpB?=
- =?utf-8?B?ZmUrUTZETHE2QnZGK1pJUDdkZ3R1a0ZyMXlrak9ONi9vcTgwZ3d1YkRRODlz?=
- =?utf-8?B?c2tyL2VGaGpMcG55THo4eG9TcEtheWs2MWx0VjJqSml0T3UyK0F0VWFxd0Vm?=
- =?utf-8?B?ZTl4cGszSjY3blZ5dW5CN0dpeFE4c3A4VjVicWZjdm96TU5RVFNxRFliNFAz?=
- =?utf-8?B?bHZUckNONm1RYml1TWQ0OUp3eVgyOXdoRkhTQ2xRejlLcmtLdTlDN2Y3ZEs0?=
- =?utf-8?B?WDR6akdSQjBISHpqekFLT2lTcU9zdXBZU29tWTROdDZnZnlSVm1EblVlWHdZ?=
- =?utf-8?B?RlpBcVM0cFJuUjdXa3ZMT2lxZHRMZWlZS1FHeHpWZGJ0VlQ4dVBSR3JGenZo?=
- =?utf-8?B?b0N2Sk5WcUhWOG03ZnA1VEhSTzFieGxVTzNmTG9DYng2eGJrV0hZWk5DS2ho?=
- =?utf-8?B?OXZXbWtlVlB1aVc3czBBWWtMRHJkMFNDVUZLeWsyVlI1bVhpdnRDVzVzMEpi?=
- =?utf-8?B?WlBFbzN3RmZ0Wkw4dHI5aFZoQTYzOG4rNm1VV0YxbFJqcE02VWlRUWRsZlV4?=
- =?utf-8?B?WE1ndTJyMEd1N3hXRGdjeDlaN1dab3AvMythd0YvTndQNU1iNXVWQTlLVkFT?=
- =?utf-8?B?cDFGdU5wSzdCc3pDdUpDNDg5RFRGM2kvemhZL2kxY3hRVU5jZWVKMm11LzU0?=
- =?utf-8?B?blZDeUZEMldBM3FNejdzTlp0dTRXZWh2VllKV0hLZTM0czdTRkxuN1BjTnNC?=
- =?utf-8?B?Y1NDQ3V2USsxVzJaaVg5dzNWMEpjeXBFRmU4dW44bWlRNnRjVzY4aTZHTnpa?=
- =?utf-8?B?WGRzeWJMUm1HRWdPYkMrVHUyTTZyUWNKYVVlL3hXVzVJQVRJdjBEZzJiN1Yx?=
- =?utf-8?B?czZaYm9EZktDWFNQelU5eUp5TmlGMTNDOHpNa05Ialp0M1dxWDJuUFczeDBE?=
- =?utf-8?B?S3lySFJ1ci80ZUtjc0d5amw2RmpDdzdIUS9xNEswWUpxaU1DTmVJRFpwSXVM?=
- =?utf-8?B?YVFyVHhUdU9vS1hKYjFXVzdCNGxQUVkzc2ZXSXUxa09CWndJRThyUkoxb2da?=
- =?utf-8?B?S3pXNEtDbGxDTGFkcGJLbXE3QytZS0h5SDJhOEZ5U2JWdFR3Wm5uVGVlZWVR?=
- =?utf-8?B?blo4U0xYTGx0ZnFHOTZIUnhCTVI4NU1TN1JiTEtLTzZUbzdsV0lZSDZOSmd2?=
- =?utf-8?B?bCtUSWgyQTRxblowNDF5Sk4rU3ppODZwbnphcFFQcG1SVXpNOVFjV3FDZUtI?=
- =?utf-8?B?TEpySmdlUVVuSkVuQVhQbUlKcXZPemlMY2NyY04vbEFpWmNMVmUxRDZiejhN?=
- =?utf-8?B?WjVXc3dwVVlRTms3dGQ0Y1pTSU9lSTAwcVQ4eGczbVM5ZFdabU5HR1NwZSt1?=
- =?utf-8?B?azdnekc2ODloM0szNmxwMmQzTzFpZlpIeDh3Y2duaTZqV25GZytHMEd6a2NW?=
- =?utf-8?B?S25XZWRieHlxemdyTzY2ZHdnZENoL1JlT3cva1k3cjErRCtKS0xjT1hBbWJL?=
- =?utf-8?B?NGc4bWxsSEd0TWk1cEwwREZEdU9pcjJxZUZlclhnMXdYcnJSSWN0TmRkb3h2?=
- =?utf-8?B?dHplb2IzaFpZaFpCWEpDU2tPZGt0R05mZTNnYjFEQmcyN0E4cHMvUjVYQVR1?=
- =?utf-8?B?MUhDeVE4QjR0ODRheTJkUXlSS2RKR2NqQlNtdi9MNW9ZK3FDTnZtRTdnPT0=?=
+	=?utf-8?B?blJQWXkwZDJtRldaOWF6RG1zVWsvc2tYOE4rMTdZMDNXNTI5VGgwaWMyaEJa?=
+ =?utf-8?B?bElkSXByUytTM1EwSmhsUDJNR2ZTck1SUm85M0QyVXo5S0VyM2xIS2JQMkQx?=
+ =?utf-8?B?MmhRS2g3RWtVNG04NFNlUFBjVEl5N3pkeFlEaWNKeWJzYUpyRUVjRmpFQjR2?=
+ =?utf-8?B?dGx0bXJyZ0FQYUNRVGJ0VEVDZGt0dklKdDZmTmlmMi9LLzZhL1MwTVRMMmFX?=
+ =?utf-8?B?cXhxUnVRanZ5NjFhUVNJRVZXeExDUWZWeXRFTnkrMTNIU25remZmL2NKcHA1?=
+ =?utf-8?B?K0lqUXVLbnNwVGdWNXlDdyt4VXhEblpUWUsvYTBodzY2b3BmK3JiTmt5THVI?=
+ =?utf-8?B?SU9kWXQ4L2lVdStuTXlUbWU5NlZmSWtSLzBzWUZnT0ViTHgyVDczVVQyVjJu?=
+ =?utf-8?B?WGdFKzZ0U0xjUTgxUHd6U0t0VUc5ZUdnT0puaFdVaVJ6UElDR25xZTFCY3FW?=
+ =?utf-8?B?WFZtQnBaZnBhQms4aWFMVFpKQW94RnpDUWdVZlFMcDNURWgxRC83eGE1V05l?=
+ =?utf-8?B?Kyt3WUE4cVVNUndRVit5Z1A1THVSRzBMazdkMmdIUm5HRmQ2dkV1dk1zQ09w?=
+ =?utf-8?B?SE52Y3dOYS91R2ZJN2lYZWJuY2ZlNHhyZjhkSWRsb3EzZm9lM2pzSWlVQlJF?=
+ =?utf-8?B?WXlKVHhjZnVtQzlvckNLNlVpNnVqWkxlZ1gvNDNmaWFqeFhGNVcxbE9QTmdm?=
+ =?utf-8?B?VWdkWnFJUzBpWWFOTFZncWtNVll2bmNWbnZOT3VuR2p4RWJFZHUrWm9CUWpj?=
+ =?utf-8?B?ZVRGY25kOWR5SUUzdytacjg5NXp4dTlHSkx2OTNHbnhqZTJXS1Nrbkt4ZmJG?=
+ =?utf-8?B?b1plY1U4b01OQ2NGNEtoUlhPQ2MrcEpwQ3daSVdjbW5rcFhwVmJScm94WjZs?=
+ =?utf-8?B?eWliTW9PVVZBNmw4bUgzMVFmZkxJMVllMDBHRStrNG5NQlNoNVFLRU5hcGxK?=
+ =?utf-8?B?MW9JNFkzemp1NUFxcFpJdEFlYzZzcVYzSXNONmEzKzlTVk1QMmZnS3lLZ3Ay?=
+ =?utf-8?B?ZnRsbkNxNW9BWEg1MHd3b3BwYkxwc1FQR1U1b2RkdmNRY2hXejZyUFVPejg3?=
+ =?utf-8?B?aVRBUFpaTWRoeGphU0crSTJ6NDRvRUJxY0NOQnd0eVo1SmREQmozdGJHM2ww?=
+ =?utf-8?B?dWcvdjltMkVzQVNEak1Edlh4SE04WHlnWkxiZnEyK1RQQlFTR2NOdS9COXNV?=
+ =?utf-8?B?RWR4bjJMMjhKekMxSi9xa01GZTZMbXNOYlNBQWhRWVplR1hLTEI1cVdUSnB3?=
+ =?utf-8?B?WlhPS2dNZnY4VXhLZEQ0MGNUdmZITnFqNCtZLy9JU21TblpwU3BGM2hmeWlX?=
+ =?utf-8?B?NnhMVlRkQUtaaS9US3pzM213aU1QL1NGK3hFbVpycUVjMTcyRTJXUUd0K3E2?=
+ =?utf-8?B?S0J3WU91cGlYcnpobDBUTmtKMHdheVczMWhLNGZWU1JDVHpOMmowYzN5eEc1?=
+ =?utf-8?B?STVGdmpIZHgzbmxBdFBjdTk0Y3FUTzZWMDRPdFBaYk1qaFdQd3F0Zm9BeTB0?=
+ =?utf-8?B?d2UxbVpId0xCV2ZXZEdhQzNMTzZaeE9tNEFza0ZmVDVVVjgxSktsMEVBMjJB?=
+ =?utf-8?B?aXJ6Q0JDOXdsS3p0RkM0aStkclY3YzdPOXBTbGZITEVyTms2VEdZNVpSdDE5?=
+ =?utf-8?Q?jn7MFwkpGgomGewPd4YhPk8bL3Dh+rpvZlnzScXHTA+0=3D?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8531.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6589.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?TnQrVjdWWFRvQlVSVUFNSW9jYTZGRnNyN0dXNTlZcHBEUDFxM2hmdVQwZkZS?=
- =?utf-8?B?M3ErSnoxeXVCSjJHTkcxemY5ZWIyMXJLMGtkcmJvczNxMDUzOEFPai92QURQ?=
- =?utf-8?B?b0l3eHlnNDBadlQ1eXBUVmdiL3BuNjBPZklxTFdkaUlaMzQ3KzY1dER1ZU9X?=
- =?utf-8?B?QlFWOEkvdDZrR0JuazNlNnR3K1kvU1p1bkE0R1NqV05SQTY1K3UrRk9VRVJM?=
- =?utf-8?B?U01EaGJqRXBsdGl0YWd4RXdyRE1jaGNScFpPeUpyZE14aEZkQkxIM3ZPMlBG?=
- =?utf-8?B?QWREVXd1RlpyU1V2Sjd6ZGt5WW1NZHkvK3NyQ2NNZ2ludnluM0h6RSttTDRF?=
- =?utf-8?B?aW90WngzYTNVRHQzazkwemZEMUtXdjE3MmduSzRKTXI3RnZnRHo4bDdxaTVs?=
- =?utf-8?B?OFkrUDdlZW0zcy8zc3RoaGcyeWhvWGNNR0JLSldaTnZOT2RHRzcrbExLMkt5?=
- =?utf-8?B?SW1WYlhpMTJjQzZ1eGRJZUtPckppN0JtTDFSVVpZTTd6elFEVkszL3U2d2NO?=
- =?utf-8?B?ODhjY0FJVWVkRklQc2NsK29uNy83c09Cak9JOS9icHc2UzhDS2t4LysrTGZp?=
- =?utf-8?B?R1VuMm9vKy9MWkV4b1lCWksxRnJSak0yd1J6RW80ajZBcld1N012VEk1NG1P?=
- =?utf-8?B?QzdsYks1VHgrbWFVUjJWWUQxbE9wUVlQYVZ6QmxIckVZUFF0Y0NmTThaVTJp?=
- =?utf-8?B?Vk1SOEJpQmovWGRjVVUyaS9GRXUzQk5nNUx3TFNrck9LMUJGc2RhbXlMdTdx?=
- =?utf-8?B?MzVpVmlMV1RpcmlWdi83M29semFCQitwbTJ6dHZKWWZLbzdaS1lYdHRnNE9E?=
- =?utf-8?B?a2JWeHpsN1Q2dkY5bVRxbGZQSzM1TUZGd1MyWnlsR0Z6V0pLaDdxRGJwaE1u?=
- =?utf-8?B?bWNRZk1NbHQyZ1NzdzFNK3ZzbGpjQ1VqZTE2SFo5ZVhua3pUWFJ0Y2ozU1Nl?=
- =?utf-8?B?Q2VsT294R21FZnF0b1c5UktZMHc4Y05jTTBMWWdXWXBIVnAxYTI2dDFzYWEw?=
- =?utf-8?B?ZWg2RTdGQTBqd2JxYWh1T2VoRVg3VTE5K1pkYm9GV3ZMRkNmS01DR3RDZHNv?=
- =?utf-8?B?MWlQUmNzeHkrN1FDMkNQdkEvaDhqSHV0emxCLy9QUGdJdzlaMHdoWjg3Nkp1?=
- =?utf-8?B?aXRYa0NpZlg1QVdNUUxpdjZhd0tKbHBtZnRQcEYrUGtPTXEwdUFrUnBoNjVM?=
- =?utf-8?B?QnJCd29DOUpQVVBlc2pWR0lGNFVaUk9obUxXTVNKbzEyYmQ2NHBha3AxTVpL?=
- =?utf-8?B?WmpDMXpjWGZKaEZYTnBTd2hNTFJ3UmlBNTQycC9nT0ltanBnanZKZ1ZLN1NY?=
- =?utf-8?B?Q29raDJrbGtudjdLajc0cSt4dVZkN0V3aWRsQ2xWUXJUNFdEWGxVMFhhUkF1?=
- =?utf-8?B?VlFUQVBEV2dreG9aaHQ5K1FBeFo5ZGNZdjg3MC81cTNISkg5Rm5LdnZ6Rkly?=
- =?utf-8?B?WW5YZEp5ZGpvS3BqNGxkUUFGeWwyVE9pWWlHV2UvbWsvNHY0NjRZTWlvN1ZX?=
- =?utf-8?B?UzRQOVBPMURIbkxjSmR4bFprenZuZUd1VEZWYWc5UFRlNXlBL1ZrVS9VZFox?=
- =?utf-8?B?THlEV0Vta2RzMlVtcGhVbGlrM3NJbGJQUXZxQm12RXRzMURoRHc1YnhhTklI?=
- =?utf-8?B?VjVTdTFIT1NwMUpMYjFYakloN09tTU9VcllTMi9nZE5oYmF4dngrTDd3bVRr?=
- =?utf-8?B?NUd2VDlLVlhFWG5KV0psTnpXSkJ6L1Z5UGR3U05jSG5oZ3N5Ukh4aEt6WVVm?=
- =?utf-8?B?NW12TXVnVHZpN1Rsbjh6TkJGTFpGbys0T2FWbWowOVMzcXNxcStVanUyck03?=
- =?utf-8?B?SituUjY1SExnRi9odmo5emF6cElQK3pQWTJyc0dTM1RKVy9yWVJ3cS9sM09F?=
- =?utf-8?B?N0YyWVF2N0lSenp2cU56SXR4NkZxdmZmbWt1a3V6WTBRUmZvOWRRUWNDSmg3?=
- =?utf-8?B?N2hySEQ4WUw4VDJsNFZHeEd2UmI1anBoZWx3bXNtelRJRlQ5cy9kemljR2dO?=
- =?utf-8?B?VzlwVGlPQStzczBacEtqNVpQUlR2cjhCeldkZGFiWkZZSUk5Tm5aUTNpNHpT?=
- =?utf-8?B?Lzd2L05DN1B5bmJKZGttQkhjeUI3Rm5rWE5LU0FiRDJmZ0pxeVEzTjJYakF3?=
- =?utf-8?B?NHd3dE9vRGZMOW0vcnpPb3BBMTFGL2dCNU1kWS9hQXMrSUhyOGI2VG9aQkd2?=
- =?utf-8?B?Z0E9PQ==?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c31ec53-78c1-4c85-a5e7-08dc74c58269
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8531.namprd11.prod.outlook.com
+	=?utf-8?B?YlpoTytERXRaeUFzS1U3cDNaNHE0dW54dU4xZVk2NXNOUTB0OEc2bDBwVEh3?=
+ =?utf-8?B?YVpkU0pscmZBQi9BZzA1aU9GOFg2QXlMRkNBMEpCS1ZBYU5OaXlaa0NqSENS?=
+ =?utf-8?B?d3F3cVVzdUloVWRNOVJVbGlaWkFZYmZBL1ZXbS9mZkRZNlkwTFZJamFTRVNJ?=
+ =?utf-8?B?b1czNm84b21pVjRFVXgrRHJzZ2RBN1JGNTEwWTRtWlZGQzBmSUdscEdxYjlr?=
+ =?utf-8?B?L0pOOERnd1lUMFFHOVlYT1YvRjhhUXd1NlBDYTBFV2F3d1hxL2E1dXU3dGpp?=
+ =?utf-8?B?VE1zNjhreGRsMFprTDhuTHJiK0VwQWw4cXdENXBYOWJ5RkJUWGhVTVdNUEEw?=
+ =?utf-8?B?R2lLd3FCc2hoMTB0T2ZsZjdUUmFSWkZDUkg1bWNjeVZwL3FzM3BlbnU0d2dK?=
+ =?utf-8?B?bUNndkRHeGFMdm9yZ1lXcTBTT2gyYlpJZUtxSU9CMUxPQU04YlU1a2I0MFor?=
+ =?utf-8?B?QThaT1RJcE0xQVNRbTR0T0lVaDQ5RWZ1dU1HNTU4amVLQjNxQWlMQTlGeGpN?=
+ =?utf-8?B?N1BnN0MrcFJHVzQ0UWQyUCs5MFVRY3Q0T295Y0ZDNTZGWjl4VXdDVk1BZGRv?=
+ =?utf-8?B?TzhYQjdPdzlJdlVwWlpla29nTmw0OWpGZllPZWhtVGJTYUdzZGQvNGczVDgz?=
+ =?utf-8?B?eUZENlE1MmZpSkhXU2xsaE5NM3BJWDQ5L1JhNWs1ZitOL0tCc0QxcDBxYS83?=
+ =?utf-8?B?U29nMFp6T3JFa2JRTVNIdFJFT0szZWg4QklwNHpTQlhTV2RENm1VT2lhRDRX?=
+ =?utf-8?B?SitidGxRQ3huc2UxZTJCT05rRjUyVTVWQlJxZjJ4aE9WUEpyc05iYUxsTHFi?=
+ =?utf-8?B?WWpqK0Npd3dXZjJEQTg1WmUzd01JRlAzbTZ2NE1VRXdmWGU4VUh6RFJaWFVS?=
+ =?utf-8?B?RmF6NklkcjAzdE00VUhCMVd0ZUJybWxIdldLS25BN3dxNkdQMnVycVZLb1hl?=
+ =?utf-8?B?QnQ2eURWUTFvZVE5UmxhK1JSdS9PLzlEN0Y3K3ZzSlhoSE1ESHBlNlo5Zkpj?=
+ =?utf-8?B?Q2IzNkQ0Y0pYNkpPODd4eXpmN3VMVjhhQTVSZ3A0ZUR4d1U0dnlrZnlPNkpy?=
+ =?utf-8?B?elFiZEpmcjhRSFYvQ2wyU3A4SFVOSFdBb0UwV3J3Q0FpN3Q5UENybC83VkdG?=
+ =?utf-8?B?MitqOHVBRGNIbGZrQ1VjKzAyWWNvVXNwRFZaeE1mdk83VDlPZTArckVsZFFB?=
+ =?utf-8?B?NmpPbWtwU2ZjVnN2SXhyNDRnSkVZNW5mYWozZ2xyQVdrZDNuZHkwR1g5Tzcz?=
+ =?utf-8?B?TmpyR2RzVkhua1k4R0xEaDBVSE03dTVHL2pYaldoak9ubHQxWmR3L3NTVFNF?=
+ =?utf-8?B?TUNKY0FWMmNZTmZsTXVRRXVGOWt5ZTJZNGdaSlZUbkMrbXF0VEZSK2VwNWs0?=
+ =?utf-8?B?Tm9MSUZrMmhscXY0ZjY5L3RNczFxTHVBOW1WanB0cDVubzU4RzE4ZVN4MnBk?=
+ =?utf-8?B?Q3hoS3BsZThBOW5BQzJPMGtJczJkbDdsem9FZGUyV3J4TlE3MWRaQVNoRDZK?=
+ =?utf-8?B?MThhQWFOWGxyMU1IQUpBbWVCcWRYVTRJNFo0ajFGRXg5MHRkZjc4eXFFa1hu?=
+ =?utf-8?B?bndZcFd3em96RHBoRmljMmtlckpBMm5ySVliK0RtZWhzSlRhd0YvV2oySEhU?=
+ =?utf-8?B?aTlDYjRhK0F1alJ5c0VVUy9kYnoxSW1QcXFPSDVnV2RtUnBLMEF2azR6TFY2?=
+ =?utf-8?B?ZUxQM0hJQzRNWGlnMm5tK1RtdHpZdEh5TWdMcmo3dlpycDhKRFdIa3BseWs4?=
+ =?utf-8?B?Mk1JM2xrRjkxbEE2SmtwRnZiK25EdlgrZGkwMDI5Zk0rbkl0clI0d2Rvamdq?=
+ =?utf-8?B?QWxXK0Q0UE9wUk1uc09wYzJPYTQxckt6OENVT0s3by96VGxOQ0dRYmZVTjV0?=
+ =?utf-8?B?QllTUkhFNFowTUFzTmM3NC8yc1Niem8xOFNTWEhEdW5ZUjIxMVQzazlTS3Jq?=
+ =?utf-8?B?L3U4dWMxNXlmZEdJSkM4dlhJYXNDTnhzNVlWaTBMMU5GY0lHaG95YVdUNElL?=
+ =?utf-8?B?Rm1lNTZKNlpOSUNISnBkbjRCdWhGR2NoOU9YQ1huaU1sWVRyb21PMTBUbSto?=
+ =?utf-8?B?ekJFM296VUt2RFNUZVlLQWJYaG5wL1pZR3RKUVQzN0pURzg0N2RVUktsSGhi?=
+ =?utf-8?B?a0NKRFIySU16LzdUakZ5K21xcHFDNS9uUjc5bkJuVjFOeWRLVFRUSnFrS2VB?=
+ =?utf-8?Q?rZc5moCUFCdyzr6SBZaPX1M=3D?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: abd7757d-6253-43f7-7d13-08dc74c7ef18
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6589.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2024 09:58:02.8132
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2024 10:15:23.9536
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TdIbX8OlPub8tIwHo0hsSbJY1x5lyMwaukf+6WoYJ3QEmTeQ/+EqD7vi7HSOjvQLU+I0SyYDe/D+pmYffY3iA0soDnPtVdqz76wRI0tfdNc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5089
-X-Proofpoint-ORIG-GUID: vSyO7mFeK2qpNsROj2nfMS1YtcOVpJbq
-X-Proofpoint-GUID: g2xj4fUWl-N0en45yQv0_7rL1rFFS9UI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-15_04,2024-05-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- spamscore=0 suspectscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
- phishscore=0 mlxlogscore=688 mlxscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405010000
- definitions=main-2405150066
+X-MS-Exchange-CrossTenant-UserPrincipalName: I7yrIjlCMW6ZKnyMRbRoZTfZ3f9lDncjbsCNB4TPQ+3WNNBBuHlMNomjO9Q/5FGj1cGn2Nb91XoYTW9xzZKrD+3bq/g+Ka2byYeiMLaP+EU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9622
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 15 May 2024 09:58:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16222
+ <bitbake-devel@lists.openembedded.org>; Wed, 15 May 2024 10:15:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16223
 
-Hi Quentin,
+Hi Robert,
 
-On 5/15/24 17:35, Quentin Schulz wrote:
-> Hi Robert,
+On 5/15/24 11:57 AM, Robert Yang via lists.openembedded.org wrote:
+> Hi Quentin,
 > 
-> On 5/15/24 11:26 AM, Robert Yang via lists.openembedded.org wrote:
->> From: Robert Yang <liezhi.yang@windriver.com>
+> On 5/15/24 17:35, Quentin Schulz wrote:
+>> Hi Robert,
 >>
->> If the repo on server is foo.git, both of the following commands
->> will work:
->> 1) $ git clone <url>/foo.git
->> 2) $ git clone <url>/foo
->> But only the second command works if the repo server is foo
->> (without .git suffix), so try without '.git' suffix firstly.
+>> On 5/15/24 11:26 AM, Robert Yang via lists.openembedded.org wrote:
+>>> From: Robert Yang <liezhi.yang@windriver.com>
+>>>
+>>> If the repo on server is foo.git, both of the following commands
+>>> will work:
+>>> 1) $ git clone <url>/foo.git
+>>> 2) $ git clone <url>/foo
+>>> But only the second command works if the repo server is foo
+>>> (without .git suffix), so try without '.git' suffix firstly.
+>>>
 >>
+>> Shouldn't the SRC_URI in the recipe be fixed instead of the git 
+>> fetcher? Which use case do we need to support here? Something to do 
+>> with mirroring maybe
+> The usage is related to repo command + http/https mirror:
 > 
-> Shouldn't the SRC_URI in the recipe be fixed instead of the git fetcher? Which 
-> use case do we need to support here? Something to do with mirroring maybe
-The usage is related to repo command + http/https mirror:
-
-* The foo.git on http/https MIRROR works with do_fetch
-* But 'repo' command always add a '.git' suffix to the reponame, the foo.git
-will be saved as foo.git.git on local disk, and do_fetch would not work with
-the local mirror.
-
-Our solution is rename foo.git to foo on http/https mirror, and apply this patch
-to make both http(s) and local mirror work with repo command.
-
-It's a little special to our Wind River Linux, and we need send the patch to
-mailing list for Yocto compliance.
-
-// Robert
-
+> * The foo.git on http/https MIRROR works with do_fetch
+> * But 'repo' command always add a '.git' suffix to the reponame, the 
+> foo.git
+> will be saved as foo.git.git on local disk, and do_fetch would not work 
+> with
+> the local mirror.
 > 
-> Cheers,
-> Quentin
+> Our solution is rename foo.git to foo on http/https mirror, and apply 
+> this patch
+> to make both http(s) and local mirror work with repo command.
+> 
+> It's a little special to our Wind River Linux, and we need send the 
+> patch to
+> mailing list for Yocto compliance.
+> 
+
+I'm not sure this is something we should fix in BitBake since it's 
+related to the use of some external setup tool? I'll let more 
+knowledgeable people discuss this :)
+
+In any case, I would suggest to really provide more info (the one as 
+above for example) at the very least in the commit log, and even better 
+in-code comment so that we don't remove it the day we want to de-clutter 
+code. The issue is that this looks very much like code we don't need, 
+without proper explanation of the use case (which you now provided).
+
+Cheers,
+Quentin
+
+> // Robert
+> 
+>>
+>> Cheers,
+>> Quentin
+> 
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#16222): https://lists.openembedded.org/g/bitbake-devel/message/16222
+> Mute This Topic: https://lists.openembedded.org/mt/106110992/6293953
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [quentin.schulz@cherry.de]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
