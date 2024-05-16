@@ -2,97 +2,119 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4067C25B74
-	for <webhook@archiver.kernel.org>; Thu, 16 May 2024 07:00:45 +0000 (UTC)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
- by mx.groups.io with SMTP id smtpd.web10.7130.1715842835190160930
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47336C25B74
+	for <webhook@archiver.kernel.org>; Thu, 16 May 2024 16:05:29 +0000 (UTC)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web11.18182.1715875519100811498
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 16 May 2024 00:00:35 -0700
+ Thu, 16 May 2024 09:05:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ARtagfYF;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-351da5838fcso171039f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 16 May 2024 00:00:34 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Z+9EGMVd;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-34d9c9f2cf0so6915765f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 16 May 2024 09:05:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1715842833; x=1716447633; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1715875517; x=1716480317; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l8cBAKlEBVqDIegf/g1+sqrNXXC/vJlDDN3IuVGn0/s=;
-        b=ARtagfYF2fa1ZK88nHgqdFqWEvscv3gPvN9Dqz4E3LRmQVvKJvU11hcJvo15jsA5vw
-         F/3ni+0zJWT+IDf3y+7sYqXULGbsPkygXR7Ef5xmu/kaLk/N1yrz3CY1a7i0PJg3Rd9k
-         fsnuzGDKjZXxyuXOTizwEyrpGVG333HY47+9E=
+        bh=EAgbg/FwkkUyKQ1fyLm9vzx4apaMrqbdcwfSX/uQfHQ=;
+        b=Z+9EGMVdHcTfNq8SjCCBGZoIVsuyJ5fMimWhowmQLK0M5XWeprGmBEuDvUdC+1e46l
+         N2mw18S5TvQIoIWq8tkKoxOdnROfo/MbXEffXwVyCkBkwtOXU/Lj5B2FgSQaDHO+B1H2
+         9hVOT+vttYyIsMg01crrWCbtdyc7ubFwcuW/A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715842833; x=1716447633;
+        d=1e100.net; s=20230601; t=1715875517; x=1716480317;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l8cBAKlEBVqDIegf/g1+sqrNXXC/vJlDDN3IuVGn0/s=;
-        b=YAKaDNOnPXwtKEiwvLfZnWr7/5iDsQCjEAHlZX/BEDsJnhLlqU6OTr7FZP7esGlZ4W
-         9P73yR1OR9rGFvlrlF1ifPwBz7TulYjZZAGp5vyKAUm++OuVCAPtu0YqLYQXNy0HgyBb
-         +gElkkfXW3cJRMsZOIL0W+eI7LUVP2T4KXnnPz4iwu5Zk4ZMlLOg6AOBANQoggU6ZQq4
-         bi/I02PnCJ60YrIB/mp2cflt70lyrNl3aAGT9UhYONaoCxSX6qfqzSo6/+hQKGSTJh8t
-         itMdtCzXRvuouCFCtRX0mtrlwaXk0Np5nMKEGOlyzppsfYXgL08WfMZG2albViCtkPir
-         O28w==
-X-Gm-Message-State: AOJu0YxmxKLMaySMOoMhMHTzQCWBxN0fOCfsCgk02FrsDT41VPrO3KoS
-	fO6D8JM/sWkYWr6cWdMk0Ldh2US0IjRgm9kyX8214QFoXxKUhGjoI57w912OmxnYZ5QSTT1R8Gh
-	y3uQ=
-X-Google-Smtp-Source: AGHT+IFBnhu1UbuDKrdcOuXUUoVJc9LIGHZvQ3Rj/63otno1Jf7HyH534CLYThgHj/1h7iwGeCLpvg==
-X-Received: by 2002:adf:f8c4:0:b0:34a:80ed:9930 with SMTP id ffacd0b85a97d-3504a633241mr11507691f8f.8.1715842833213;
-        Thu, 16 May 2024 00:00:33 -0700 (PDT)
+        bh=EAgbg/FwkkUyKQ1fyLm9vzx4apaMrqbdcwfSX/uQfHQ=;
+        b=TFbhVauSs7+6pq9PDCajHTiC8yf7BrkX7r9dlttnzBckwHvcC0L8Q8EHd5D2CQlycN
+         YDe6FddpcGPOyL0KS+bSQ5aEiyQcbNiS/oWRCetphSuE6sq+cyjwanvVlVhlCnefnEhw
+         NmaYe6jmTZpRhqBIn07l0q7eTKbahjV7MbPEgJUxIZzA/S/QHOOMJ2JNeFKmmTcjWNPn
+         tNL3xdy0BRtKAlulVXVKw4YmIBvEUuzYy4xfnakrR+9GycCGe6nKKn76lM1UQi8Ku1wZ
+         3HfPczjAUkCL+vnJFWsw1tVNIq8mMmVkeAC1vLsyb2tWX1TYO+2/Whykv78M/+JB8jD+
+         XFYg==
+X-Gm-Message-State: AOJu0YzGdhJQsrj3IWGczB6MLr9I3dbZ2KM7pU0mm9JR/3MVc+l4wo40
+	peoa9WTVjI9zeLeQxsIqiRx/gbIq/XOPPRda9Ho8I9bYM07kgmJatKa4+vw4CftNn9RnjndcWGI
+	WKgo=
+X-Google-Smtp-Source: AGHT+IGGq9hbBsVM+ANWg8U6w58lgtyxgHTKnNif1HsFMpJWkwAP8WuTJIAsEvu1uJl5S7/Al8maWA==
+X-Received: by 2002:adf:f7c2:0:b0:345:663f:cd79 with SMTP id ffacd0b85a97d-3504a630fafmr14639094f8f.14.1715875517224;
+        Thu, 16 May 2024 09:05:17 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:27f7:a21e:9b36:73bf])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-351d7861323sm1051163f8f.74.2024.05.16.00.00.32
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b8a78e8sm19531288f8f.61.2024.05.16.09.05.16
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 00:00:32 -0700 (PDT)
+        Thu, 16 May 2024 09:05:16 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] cooker: Add an os.sync() call to revalidateCaches()
-Date: Thu, 16 May 2024 08:00:31 +0100
-Message-Id: <20240516070031.590112-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] parse: Improve/fix cache invalidation via mtime
+Date: Thu, 16 May 2024 17:05:15 +0100
+Message-Id: <20240516160515.688850-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 16 May 2024 07:00:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16225
+ <bitbake-devel@lists.openembedded.org>; Thu, 16 May 2024 16:05:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16226
 
-Unfortunately we've seen issues where changes are made by the UI side and are
-in the disk cache but these tests don't pick up the file changes as they're
-still proceeding through the VFS.
+We have been seeing obscure failures in devtool, particularly on newer
+autobuilder workers where it appears the cache is assumed to be valid
+when it shouldn't be.
 
-Any example is [YOCTO #15318] where logs showed a workspace and bbappend
-being setup with devtool-source intercept but the server did not fully
-pick up those changes leading to initial_rev (from devtool-source.bbclass)
-being missing.
+We're using the 'seconds' granulation mtime field which is not really
+a good way of telling if a file has changed. We can switch to the "ns"
+version which is better however also add in inode number and size as
+precautions. We already have all this data and tuples are fast so there
+isn't really any cost to do so.
 
-Add a sync call to try and avoid this despite the speed implications.
-
-This was probably the kind of issue which led us to removing the inotify
-code since that was also unsafe with concurrency since there was no way
-to flush it.
+This hopefully fixes [YOCTO #15318].
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py | 5 +++++
- 1 file changed, 5 insertions(+)
+ lib/bb/parse/__init__.py | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 939a999974..d4595c1ec2 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -350,6 +350,11 @@ class BBCooker:
-     def revalidateCaches(self):
-         bb.parse.clear_cache()
+diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
+index a4358f1374..7ffdaa6fd7 100644
+--- a/lib/bb/parse/__init__.py
++++ b/lib/bb/parse/__init__.py
+@@ -49,20 +49,23 @@ class SkipPackage(SkipRecipe):
+ __mtime_cache = {}
+ def cached_mtime(f):
+     if f not in __mtime_cache:
+-        __mtime_cache[f] = os.stat(f)[stat.ST_MTIME]
++        res = os.stat(f)
++        __mtime_cache[f] = (res.st_mtime_ns, res.st_size, res.st_ino)
+     return __mtime_cache[f]
  
-+        # Unfortunately we've seen issues where changes are made by the UI side and are
-+        # in the disk cache but these tests don't pick up the file changes as they're
-+        # still proceeding through the VFS. Use the sync to avoid this.
-+        os.sync()
-+
-         clean = True
-         for f in self.configwatched:
-             if not bb.parse.check_mtime(f, self.configwatched[f]):
+ def cached_mtime_noerror(f):
+     if f not in __mtime_cache:
+         try:
+-            __mtime_cache[f] = os.stat(f)[stat.ST_MTIME]
++            res = os.stat(f)
++            __mtime_cache[f] = (res.st_mtime_ns, res.st_size, res.st_ino)
+         except OSError:
+             return 0
+     return __mtime_cache[f]
+ 
+ def check_mtime(f, mtime):
+     try:
+-        current_mtime = os.stat(f)[stat.ST_MTIME]
++        res = os.stat(f)
++        current_mtime = (res.st_mtime_ns, res.st_size, res.st_ino)
+         __mtime_cache[f] = current_mtime
+     except OSError:
+         current_mtime = 0
+@@ -70,7 +73,8 @@ def check_mtime(f, mtime):
+ 
+ def update_mtime(f):
+     try:
+-        __mtime_cache[f] = os.stat(f)[stat.ST_MTIME]
++        res = os.stat(f)
++        __mtime_cache[f] = (res.st_mtime_ns, res.st_size, res.st_ino)
+     except OSError:
+         if f in __mtime_cache:
+             del __mtime_cache[f]
 -- 
 2.40.1
 
