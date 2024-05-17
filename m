@@ -1,102 +1,83 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <eric.sun@meraki.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D41C04FFE
-	for <webhook@archiver.kernel.org>; Fri, 17 May 2024 10:56:44 +0000 (UTC)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
- by mx.groups.io with SMTP id smtpd.web11.37750.1715943394580480432
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C841C41513
+	for <webhook@archiver.kernel.org>; Fri, 17 May 2024 16:33:05 +0000 (UTC)
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+ by mx.groups.io with SMTP id smtpd.web11.518.1715963580400228391
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 May 2024 03:56:34 -0700
+ Fri, 17 May 2024 09:33:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Fp/2IawZ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.208.180, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2df83058d48so22323361fa.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 17 May 2024 03:56:34 -0700 (PDT)
+ dkim=pass header.i=@meraki.net header.s=google header.b=axUETx1s;
+ spf=pass (domain: meraki.net, ip: 209.85.219.174, mailfrom: eric.sun@meraki.net)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-df1cfa7f124so357223276.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 17 May 2024 09:33:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1715943392; x=1716548192; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mMOBy92VO6JZ89qv0TPbQkEUbACZ31OeJ7CYPz5RIZ8=;
-        b=Fp/2IawZVNk8gc7x9ryGjamHF6t556KoJdYwq0UVsVtazJuJjgx3yoBh7h9gvmRkh1
-         iCm6YeWOzpmEtVKa7EgOSV30nlLVT8XoS1krbVd80MoIa+cmBkm35aGPHTktZ3HO/I05
-         uYRKcR7qBQ4CU5UpCDz91SYm8n1wyJrei6DFo=
+        d=meraki.net; s=google; t=1715963579; x=1716568379; darn=lists.openembedded.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=asfUlsykViYLOWma1KjM2pSJWbpETRBksbhvVQeWbBs=;
+        b=axUETx1s+QHQQhjj88jbCKLP4jT2b1f8vIuQZnYzAh2R6TGQPnuWPoZ9Sx8addL0Al
+         PlwtiMxiBsQDSnxO6qoM5EOTOv3Ut/Vz0dNg50O5n5qV3TjRNrXSU14IJMJREluGm9j4
+         Y8CeDp/T54aAScYl8YctLIUG5scdS93BpyPFs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715943392; x=1716548192;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mMOBy92VO6JZ89qv0TPbQkEUbACZ31OeJ7CYPz5RIZ8=;
-        b=UuBGCYKKNjHsAN3+zsammoTAkdjkL6KVWd0CwjnRFcmnqh4t3SFpJjmdIPmLbD9QU2
-         orUO+RGFNPqsRw4appE2QwFbBaqwKFzGko0+qV0TZdH/tTlxrKHc+8C11I5+46fuAtSh
-         TnV6KJ5jHSTtpGpe2AWQVIGBYevRj4HPufT1VpPishBHh5spakPOIK2X9yFxtRF+ctB2
-         GRvuWBEtjY8cdZkRvKR9v1zuIKoKJaNxQ1vM6Mwt4sTD8YnUlLp3BzTwQ7IlxNUPUquh
-         NGeNYEmlN8K2TefN7I/Su5t69QoVPy5U3qjF6ngQWjUC05UNYia+j1TdYSvyWlCK6ewK
-         ouBw==
-X-Gm-Message-State: AOJu0YwBr52nI98CbBwebtKSKdSXUop+d3AFj84bXXcre4VbmZs2yF5D
-	jEtEMYYJO6JHk5Dq3tZz5nAVaNWQH3zlj2DSMbbJ6ubK9br/DPRoO2sbFH4nMgsqeUXf7QbtMNz
-	Tx7Q=
-X-Google-Smtp-Source: AGHT+IGw16/LwqH0SiIRsRXi0GwpYYczrIvuN66ZOVKVFuMlCuxusXZ301VjAvNAGp+BuoKLjC+SAg==
-X-Received: by 2002:a2e:9584:0:b0:2e4:9606:6b88 with SMTP id 38308e7fff4ca-2e51fc36498mr150915161fa.3.1715943392234;
-        Fri, 17 May 2024 03:56:32 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:ec9d:c0cc:86e8:686a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fa9dbab53sm315571775e9.13.2024.05.17.03.56.31
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 03:56:31 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] cooker: Ensure generateTaskDepTreeData fails for NoProvider
-Date: Fri, 17 May 2024 11:56:30 +0100
-Message-Id: <20240517105630.832343-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1715963579; x=1716568379;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=asfUlsykViYLOWma1KjM2pSJWbpETRBksbhvVQeWbBs=;
+        b=v+qeBIEhuVbC+L181/2bJCE96YLsUqvBuQD0Qh4NU2az7ql6MvFmKURrBFrCnR37UA
+         91iRSS77D0stsv05sYn7aPreOOSI4UU4EHKT53IGMjuH5kFx1IDosnzBdc3wN2LOK17N
+         tatNLVBv1w82L4Tp0iHgg4bVH9lIT2yh5EMdWWdmug5KcnywgZ7SETRXwUrsoVlm1DhJ
+         QrKpIamgyi9otL3vh3q/HeTU70blPta56ghBz2PLAF9fgY1+KnIentAM62ndo2opIF+l
+         i02Vahl2EWHfUkDa4LJSj0IPMf6DYRxfSBhCt1TkxeyPyDFLxM93O7Qy86ZGejPa7Ruh
+         GwGA==
+X-Gm-Message-State: AOJu0YyJEvVs6r65bxme/v7is7baRz+m66hDVxqKORQp+evDfDjO8GzB
+	oJzK+c+abndSWySrr9ax9y6Eb4lGEfKPQ409PYL33jRQjp/dmO9hvA0QA7rfNeSPVM/N3Rv0ejy
+	wLdD3zchB7/nMzjavDZjYLngyesrSbwLzOU2JCXhZ2TCpTpE5yw==
+X-Google-Smtp-Source: AGHT+IFx2P4UYn1U6PWV0xJS7XXeI7+t8jpvlan4C4dwV4qsb+0LaP+oCdEABJUIByzKs+m/RP2PsgxLIxL9NKFw+I0=
+X-Received: by 2002:a25:ad95:0:b0:de6:107b:6557 with SMTP id
+ 3f1490d57ef6-dee4f2e424bmr20701031276.27.1715963579142; Fri, 17 May 2024
+ 09:32:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Eric Sun <eric.sun@meraki.net>
+Date: Fri, 17 May 2024 09:32:48 -0700
+Message-ID: <CAFSkHJ9opKaxq01b62+TztjqXWipHrayAwU=vCN3ZRAbO+G1-A@mail.gmail.com>
+Subject: Possible kirkstone 4.0.17 variable dependency bug
+To: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 17 May 2024 10:56:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16227
+ <bitbake-devel@lists.openembedded.org>; Fri, 17 May 2024 16:33:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16228
 
-If an invalid provider is requested, error out early rather than trying
-to build partial runqueue data structures as the taskdep UI will have
-exited after seeing the bad provider.
+Hello,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/cooker.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I believe commit 8ec4f29e432feec9d8deedc06bfb90d57e7436cf to the
+kirkstone branch broke some variable dependency calculations in python
+3.6 (and likely 3.7).
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 939a999974..076ddaa58d 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -680,14 +680,14 @@ class BBCooker:
-         bb.event.fire(bb.event.TreeDataPreparationCompleted(len(fulltargetlist)), self.data)
-         return taskdata, runlist
- 
--    def prepareTreeData(self, pkgs_to_build, task):
-+    def prepareTreeData(self, pkgs_to_build, task, halt=False):
-         """
-         Prepare a runqueue and taskdata object for iteration over pkgs_to_build
-         """
- 
-         # We set halt to False here to prevent unbuildable targets raising
-         # an exception when we're just generating data
--        taskdata, runlist = self.buildTaskData(pkgs_to_build, task, False, allowincomplete=True)
-+        taskdata, runlist = self.buildTaskData(pkgs_to_build, task, halt, allowincomplete=True)
- 
-         return runlist, taskdata
- 
-@@ -701,7 +701,7 @@ class BBCooker:
-         if not task.startswith("do_"):
-             task = "do_%s" % task
- 
--        runlist, taskdata = self.prepareTreeData(pkgs_to_build, task)
-+        runlist, taskdata = self.prepareTreeData(pkgs_to_build, task, halt=True)
-         rq = bb.runqueue.RunQueue(self, self.data, self.recipecaches, taskdata, runlist)
-         rq.rqdata.prepare()
-         return self.buildDependTree(rq, taskdata)
--- 
-2.40.1
+Specifically, those python versions still parse string arguments to
+functions in python expressions into ast.Str, rather than
+ast.Constant. And so the code in question is no longer able to
+determine dependencies involving e.g. bb.utils.contains.
 
+As an illustrative example, consider the results of the following:
+import ast; print(ast.dump(ast.parse('f("a", "b", "c")')))
+
+Python 3.6:
+Module(body=[Expr(value=Call(func=Name(id='f', ctx=Load()),
+args=[Str(s='a'), Str(s='b'), Str(s='c')], keywords=[]))])
+
+Python 3.8:
+Module(body=[Expr(value=Call(func=Name(id='f', ctx=Load()),
+args=[Constant(value='a', kind=None), Constant(value='b', kind=None),
+Constant(value='c', kind=None)], keywords=[]))], type_ignores=[])
+
+Happy to try to submit a patch if that'd be helpful. This is only an
+issue on kirkstone where the minimum required python version is 3.6.
+
+Thanks,
+Eric Sun
 
