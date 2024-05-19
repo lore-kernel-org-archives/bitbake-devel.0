@@ -1,190 +1,251 @@
-Return-Path: <frederic.martinsons@gmail.com>
+Return-Path: <adrian.freihofer@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F78EC25B74
-	for <webhook@archiver.kernel.org>; Sat, 18 May 2024 16:00:42 +0000 (UTC)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
- by mx.groups.io with SMTP id smtpd.web11.21565.1716048040556396475
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D08DC25B75
+	for <webhook@archiver.kernel.org>; Sun, 19 May 2024 14:30:39 +0000 (UTC)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+ by mx.groups.io with SMTP id smtpd.web11.40063.1716129032154845974
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 18 May 2024 09:00:40 -0700
+ Sun, 19 May 2024 07:30:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=J2q/hoQn;
- spf=pass (domain: gmail.com, ip: 209.85.217.52, mailfrom: frederic.martinsons@gmail.com)
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-47efcb120feso459389137.2
-        for <bitbake-devel@lists.openembedded.org>; Sat, 18 May 2024 09:00:40 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=eLAngLex;
+ spf=pass (domain: gmail.com, ip: 209.85.208.46, mailfrom: adrian.freihofer@gmail.com)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-574b3d6c0f3so6843120a12.0
+        for <bitbake-devel@lists.openembedded.org>; Sun, 19 May 2024 07:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716048039; x=1716652839; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=g6Uj+YLdMHJrMbmoJ3pe/XXpRG4Ws6BDK5p1MJ4DK5k=;
-        b=J2q/hoQnzhWQUSjVn7IaB99y4HLTzoQZ11UiDpTo4Gf+LXZItuNLgZk31fSTDcC1Wp
-         m4WXlIToLD8b2DSaFSzr/lA/VuPGUgDd8e+fLeQRMqMUJeJb0QCl+LQD2yzxOWXqt4Hm
-         UYoT0LDXYRdEIqDwLT3enRzi9y4Jj/MwoQd61L5uzy/4hByM6FMtnd8Qe3GA+Fd/OGXu
-         79YvVJIbc4OjxEsOlJxclQ8NiaZd4SjjTnCPaERUcHkGc4fy1FnFwdrDjpRoG2xqNRXw
-         lFDlxnBgJfOKYtVvpE3wgqU/xXrQRQ6cTJx7fgl9BYybunlC5xmpj/tT9I0uzknfIWUl
-         H7mA==
+        d=gmail.com; s=20230601; t=1716129030; x=1716733830; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jXa3oMb3pxFucs2xNJrpiBkoOgP00JXDahnE7bipgMI=;
+        b=eLAngLexBttSCYXqHRQ8vvtJhAtWDWpTvv0HPnqCqcE+Vo6g5zzCVdnPrcuNLiN+78
+         wQGW64Slk1zAO+Gicd0/T6XgGYxNKdQ0wzm0JCpCEKybHZTnLDYkPTszxGDO0Lrfl+Cg
+         Zhg92bAqgR7J6KYe3pgSAfyi4PeVpSPA7WQhbArx4A5kYskdCtzVEIbv8m+leJdUSM0G
+         lQRdkjeXPBA7W6mkYdMCFQSxCvxMWOHnYrF5pWRiyhewX0MjxxVxQJktOorpDuXalA/u
+         dT1fuSInnOloPuyNAGJpG+DgEHyxnuoCCtPdTgIYsGWU74f+GSi5Sr0CId7pmzYHUxsx
+         Z5xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716048039; x=1716652839;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1716129030; x=1716733830;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=g6Uj+YLdMHJrMbmoJ3pe/XXpRG4Ws6BDK5p1MJ4DK5k=;
-        b=N9CnzzWOitTWige/joj20rb8l7SxxT8CKx8ewn/5VyZSy2pPsXQqGWqQi67Q7znr7s
-         mqVcAsqsKeVrUK3CyNHUKc9rfx8wmC2syQkyxIO9QVnCejUQ3KoTG+zTJ1548Y0Em5/k
-         kFzeTQYHq64FP8y9zC16zKL0pv8kKTcEnOXyw+gnCxicnj1leDYmqZzqQoCBKdmFNiEs
-         lTTvl4cubUbNS0KhFsYcsRFQRtPldaVvcF0r64ZwWU032A7z9kLEyZ4hPLb348x/gEzX
-         4j2iZCdSPgXyRbegnZSSM2DqUjyJuU7cXkNKoSevag0BkMxNOhZJfBDhcZ7Ezqw+8/J3
-         Cshg==
-X-Gm-Message-State: AOJu0Yy0sG+itT9tqiN983qe6HWZRVdFk5D5FnsSp5wacawnHtx7s+3K
-	QhLY8OaJN/sCIeVDY1bsBDIDg9cxgVkrkno9JUhdlM2kyfUA2Zm8fVtKJVl/IK+UmDrlpGWeoRI
-	/9dmaM0Q8d5xEqmVYQDNUO+rJOv4=
-X-Google-Smtp-Source: AGHT+IE4S9rz67elRduRAaTliGY/Tr9skCrhTyO069auQV3gqrxLp0tvo+8ASyPmpfKe0LO7Ty0AMNRcrlgGc3I+txA=
-X-Received: by 2002:a05:6102:511e:b0:485:9ea8:d777 with SMTP id
- ada2fe7eead31-4859ea8d835mr8739361137.27.1716048038069; Sat, 18 May 2024
- 09:00:38 -0700 (PDT)
+        bh=jXa3oMb3pxFucs2xNJrpiBkoOgP00JXDahnE7bipgMI=;
+        b=Z6C8FuprYVh8NcnXO0hqNxpKpVZveiu4eCNG1l5T/3j94Epx2zPoVr3Md307f+mKZZ
+         cC/y4GsQBMABAY5UMSK5gd48BUlNAGc3aEbNSURKjXYZG1kiejF6FUFmrH2EwbH29tO0
+         Vv2ZNUN2v3Ys/l9jKWj8kCMG/OFfLELrlfjfF/oKOYrPzMzG2zhBQzjEJqERvnyqL44x
+         YVaI+C3ZgUTDigLknn0IZ0M0aQe/gBMIwNWsLmdLTLvSzGrCAXN1OlOFy/rHx98ihdXI
+         mLjL4YwPFfrDS9eZIcirUrFVRmIl79arIug7VMxl5mnA8yHV8aMt4uFkoYcJl8HmL2Qv
+         d0Yg==
+X-Gm-Message-State: AOJu0Yzd9B+jadxtGUPFjIiXq8nKf/EIhykOELDaJtTPLISo24N3nkI8
+	WctOh+cTZaM7/x28GSQakEOBaHRBAMgIyg7R/B8Ki28AZvZ9DjOIRJNlDg==
+X-Google-Smtp-Source: AGHT+IF8IpYJGrwVbgMFgc67vjb/gnrTfv4nBedvguV/o0EgzVTEcx5cfXvNDgK9wfAivYqRDhPFLg==
+X-Received: by 2002:a17:906:40d2:b0:a5a:1f4f:cb4c with SMTP id a640c23a62f3a-a5a2d54c80amr1649211666b.7.1716129029580;
+        Sun, 19 May 2024 07:30:29 -0700 (PDT)
+Received: from wsadrian16.fritz.box ([2a02:169:59a6:0:55c4:f628:91f3:4287])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781e97bsm1335989766b.32.2024.05.19.07.30.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 May 2024 07:30:29 -0700 (PDT)
+From: Adrian Freihofer <adrian.freihofer@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: eric.sun@meraki.net,
+	Adrian Freihofer <adrian.freihofer@siemens.com>
+Subject: [kirkstone][PATCH] bitbake: bitbake/codeparser.py fix python 3.6 compatibilty
+Date: Sun, 19 May 2024 16:30:25 +0200
+Message-ID: <20240519143025.72402-1-adrian.freihofer@gmail.com>
+X-Mailer: git-send-email 2.44.0
 MIME-Version: 1.0
-References: <CAFSkHJ9opKaxq01b62+TztjqXWipHrayAwU=vCN3ZRAbO+G1-A@mail.gmail.com>
-In-Reply-To: <CAFSkHJ9opKaxq01b62+TztjqXWipHrayAwU=vCN3ZRAbO+G1-A@mail.gmail.com>
-From: =?UTF-8?B?RnLDqWTDqXJpYyBNYXJ0aW5zb25z?= <frederic.martinsons@gmail.com>
-Date: Sat, 18 May 2024 18:00:26 +0200
-Message-ID: <CA+cAkepZ=ho2QzO6sCsSPKP_uOhoFPU0TgEd1+izE5y_HX6ONw@mail.gmail.com>
-Subject: Re: [bitbake-devel] Possible kirkstone 4.0.17 variable dependency bug
-To: eric.sun@meraki.net
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000ba0f710618bc91b0"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 18 May 2024 16:00:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16229
+ <bitbake-devel@lists.openembedded.org>; Sun, 19 May 2024 14:30:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16230
 
---000000000000ba0f710618bc91b0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Adrian Freihofer <adrian.freihofer@siemens.com>
 
-Hello,
+Commits
+- d4ad54a401031346727ec6c1337f4b0211b5cc47
+- 8ec4f29e432feec9d8deedc06bfb90d57e7436cf
+break compatibility with Python 3.6. However, kirkstone is supposed to
+be backward compatible which this old version.
 
-Do you mind elaborate a little about the issue? How it broke bitbake
-variable dependencies? Do you have a minimal example that show the problem?
+Restore the old code if the Python version is less than 3.8. This adds
+some not so nice code dublication. But the implementation like:
+  if sys.version_info[:3] < (3,8,0):
+      old code
+  else:
+      new code
+makes it possible to fix the problem without much thought and without
+the risk of new problems.
 
-Thanks.
+The issue can be reproduced e.g. in an old Ubuntu container by running:
+  bitbake-selftest bb.tests.codeparser.PythonReferenceTest
 
+It works with an older version of bibake:
 
-Le ven. 17 mai 2024, 18:33, Eric Sun via lists.openembedded.org <eric.sun=
-=3D
-meraki.net@lists.openembedded.org> a =C3=A9crit :
+$ git checkout kirkstone-4.0.16
+$ podman run --rm -it --security-opt label=disable --userns=keep-id \
+  -v /home/adrian/projets/oss/poky-wt-1:/home/yoctouser/workdir \
+  crops/yocto:ubuntu-18.04-base
 
-> Hello,
->
-> I believe commit 8ec4f29e432feec9d8deedc06bfb90d57e7436cf to the
-> kirkstone branch broke some variable dependency calculations in python
-> 3.6 (and likely 3.7).
->
-> Specifically, those python versions still parse string arguments to
-> functions in python expressions into ast.Str, rather than
-> ast.Constant. And so the code in question is no longer able to
-> determine dependencies involving e.g. bb.utils.contains.
->
-> As an illustrative example, consider the results of the following:
-> import ast; print(ast.dump(ast.parse('f("a", "b", "c")')))
->
-> Python 3.6:
-> Module(body=3D[Expr(value=3DCall(func=3DName(id=3D'f', ctx=3DLoad()),
-> args=3D[Str(s=3D'a'), Str(s=3D'b'), Str(s=3D'c')], keywords=3D[]))])
->
-> Python 3.8:
-> Module(body=3D[Expr(value=3DCall(func=3DName(id=3D'f', ctx=3DLoad()),
-> args=3D[Constant(value=3D'a', kind=3DNone), Constant(value=3D'b', kind=3D=
-None),
-> Constant(value=3D'c', kind=3DNone)], keywords=3D[]))], type_ignores=3D[])
->
-> Happy to try to submit a patch if that'd be helpful. This is only an
-> issue on kirkstone where the minimum required python version is 3.6.
->
-> Thanks,
-> Eric Sun
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#16228):
-> https://lists.openembedded.org/g/bitbake-devel/message/16228
-> Mute This Topic: https://lists.openembedded.org/mt/106157110/6213388
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> frederic.martinsons@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
+$ python3 --version
+Python 3.6.9
 
---000000000000ba0f710618bc91b0
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+$ cd workdir/
+$ . oe-init-build-env
+$ bitbake-selftest bb.tests.codeparser.PythonReferenceTest
+...............
+----------------------------------------------------------------------
+Ran 15 tests in 0.001s
+OK
 
-<div dir=3D"auto"><div>Hello,<div dir=3D"auto"><br></div><div dir=3D"auto">=
-Do you mind elaborate a little about the issue? How it broke bitbake variab=
-le dependencies? Do you have a minimal example that show the problem?=C2=A0=
-</div><div dir=3D"auto"><br></div><div dir=3D"auto">Thanks.=C2=A0</div><br>=
-<br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">Le ven=
-. 17 mai 2024, 18:33, Eric Sun via <a href=3D"http://lists.openembedded.org=
-">lists.openembedded.org</a> &lt;eric.sun=3D<a href=3D"mailto:meraki.net@li=
-sts.openembedded.org">meraki.net@lists.openembedded.org</a>&gt; a =C3=A9cri=
-t=C2=A0:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
-8ex;border-left:1px #ccc solid;padding-left:1ex">Hello,<br>
-<br>
-I believe commit 8ec4f29e432feec9d8deedc06bfb90d57e7436cf to the<br>
-kirkstone branch broke some variable dependency calculations in python<br>
-3.6 (and likely 3.7).<br>
-<br>
-Specifically, those python versions still parse string arguments to<br>
-functions in python expressions into ast.Str, rather than<br>
-ast.Constant. And so the code in question is no longer able to<br>
-determine dependencies involving e.g. bb.utils.contains.<br>
-<br>
-As an illustrative example, consider the results of the following:<br>
-import ast; print(ast.dump(ast.parse(&#39;f(&quot;a&quot;, &quot;b&quot;, &=
-quot;c&quot;)&#39;)))<br>
-<br>
-Python 3.6:<br>
-Module(body=3D[Expr(value=3DCall(func=3DName(id=3D&#39;f&#39;, ctx=3DLoad()=
-),<br>
-args=3D[Str(s=3D&#39;a&#39;), Str(s=3D&#39;b&#39;), Str(s=3D&#39;c&#39;)], =
-keywords=3D[]))])<br>
-<br>
-Python 3.8:<br>
-Module(body=3D[Expr(value=3DCall(func=3DName(id=3D&#39;f&#39;, ctx=3DLoad()=
-),<br>
-args=3D[Constant(value=3D&#39;a&#39;, kind=3DNone), Constant(value=3D&#39;b=
-&#39;, kind=3DNone),<br>
-Constant(value=3D&#39;c&#39;, kind=3DNone)], keywords=3D[]))], type_ignores=
-=3D[])<br>
-<br>
-Happy to try to submit a patch if that&#39;d be helpful. This is only an<br=
->
-issue on kirkstone where the minimum required python version is 3.6.<br>
-<br>
-Thanks,<br>
-Eric Sun<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#16228): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/16228" rel=3D"noreferrer noreferrer" target=3D"_blank">h=
-ttps://lists.openembedded.org/g/bitbake-devel/message/16228</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/106157110/621=
-3388" rel=3D"noreferrer noreferrer" target=3D"_blank">https://lists.openemb=
-edded.org/mt/106157110/6213388</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank" rel=3D"noreferrer">bitbake-devel+owner@lists.openembedd=
-ed.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer noreferrer" target=3D"_blank">https://lists.openembedd=
-ed.org/g/bitbake-devel/unsub</a> [<a href=3D"mailto:frederic.martinsons@gma=
-il.com" target=3D"_blank" rel=3D"noreferrer">frederic.martinsons@gmail.com<=
-/a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div></div></div>
+The same with latest commit from kirkstone fails 7 errors like:
 
---000000000000ba0f710618bc91b0--
+FAIL: test_contains (bb.tests.codeparser.PythonReferenceTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/yoctouser/workdir/bitbake/lib/bb/tests/codeparser.py",
+    line 268, in test_contains
+    self.assertContains({'TESTVAR': {'one'}})
+  File "/home/yoctouser/workdir/bitbake/lib/bb/tests/codeparser.py",
+    line 40, in assertContains
+    self.assertEqual(self.contains, contains)
+AssertionError: {} != {'TESTVAR': {'one'}}
+- {}
++ {'TESTVAR': {'one'}}
+
+Reported-by: Eric Sun <eric.sun@meraki.net>
+Signed-off-by: Adrian Freihofer <adrian.freihofer@siemens.com>
+---
+ lib/bb/codeparser.py | 112 +++++++++++++++++++++++++++++--------------
+ 1 file changed, 76 insertions(+), 36 deletions(-)
+
+diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
+index 6ce0c5182..afde88f44 100644
+--- a/lib/bb/codeparser.py
++++ b/lib/bb/codeparser.py
+@@ -224,44 +224,84 @@ class PythonParser():
+ 
+     def visit_Call(self, node):
+         name = self.called_node_name(node.func)
+-        if name and (name.endswith(self.getvars) or name.endswith(self.getvarflags) or name in self.containsfuncs or name in self.containsanyfuncs):
+-            if isinstance(node.args[0], ast.Constant) and isinstance(node.args[0].value, str):
+-                varname = node.args[0].value
+-                if name in self.containsfuncs and isinstance(node.args[1], ast.Constant):
+-                    if varname not in self.contains:
+-                        self.contains[varname] = set()
+-                    self.contains[varname].add(node.args[1].value)
+-                elif name in self.containsanyfuncs and isinstance(node.args[1], ast.Constant):
+-                    if varname not in self.contains:
+-                        self.contains[varname] = set()
+-                    self.contains[varname].update(node.args[1].value.split())
+-                elif name.endswith(self.getvarflags):
+-                    if isinstance(node.args[1], ast.Constant):
+-                        self.references.add('%s[%s]' % (varname, node.args[1].value))
++        if sys.version_info[:3] < (3,8,0):
++            if name and (name.endswith(self.getvars) or name.endswith(self.getvarflags) or name in self.containsfuncs or name in self.containsanyfuncs):
++                if isinstance(node.args[0], ast.Str):
++                    varname = node.args[0].s
++                    if name in self.containsfuncs and isinstance(node.args[1], ast.Str):
++                        if varname not in self.contains:
++                            self.contains[varname] = set()
++                        self.contains[varname].add(node.args[1].s)
++                    elif name in self.containsanyfuncs and isinstance(node.args[1], ast.Str):
++                        if varname not in self.contains:
++                            self.contains[varname] = set()
++                        self.contains[varname].update(node.args[1].s.split())
++                    elif name.endswith(self.getvarflags):
++                        if isinstance(node.args[1], ast.Str):
++                            self.references.add('%s[%s]' % (varname, node.args[1].s))
++                        else:
++                            self.warn(node.func, node.args[1])
+                     else:
+-                        self.warn(node.func, node.args[1])
++                        self.references.add(varname)
+                 else:
+-                    self.references.add(varname)
+-            else:
+-                self.warn(node.func, node.args[0])
+-        elif name and name.endswith(".expand"):
+-            if isinstance(node.args[0], ast.Constant):
+-                value = node.args[0].value
+-                d = bb.data.init()
+-                parser = d.expandWithRefs(value, self.name)
+-                self.references |= parser.references
+-                self.execs |= parser.execs
+-                for varname in parser.contains:
+-                    if varname not in self.contains:
+-                        self.contains[varname] = set()
+-                    self.contains[varname] |= parser.contains[varname]
+-        elif name in self.execfuncs:
+-            if isinstance(node.args[0], ast.Constant):
+-                self.var_execs.add(node.args[0].value)
+-            else:
+-                self.warn(node.func, node.args[0])
+-        elif name and isinstance(node.func, (ast.Name, ast.Attribute)):
+-            self.execs.add(name)
++                    self.warn(node.func, node.args[0])
++            elif name and name.endswith(".expand"):
++                if isinstance(node.args[0], ast.Str):
++                    value = node.args[0].s
++                    d = bb.data.init()
++                    parser = d.expandWithRefs(value, self.name)
++                    self.references |= parser.references
++                    self.execs |= parser.execs
++                    for varname in parser.contains:
++                        if varname not in self.contains:
++                            self.contains[varname] = set()
++                        self.contains[varname] |= parser.contains[varname]
++            elif name in self.execfuncs:
++                if isinstance(node.args[0], ast.Str):
++                    self.var_execs.add(node.args[0].s)
++                else:
++                    self.warn(node.func, node.args[0])
++            elif name and isinstance(node.func, (ast.Name, ast.Attribute)):
++                self.execs.add(name)
++        else:
++            if name and (name.endswith(self.getvars) or name.endswith(self.getvarflags) or name in self.containsfuncs or name in self.containsanyfuncs):
++                if isinstance(node.args[0], ast.Constant) and isinstance(node.args[0].value, str):
++                    varname = node.args[0].value
++                    if name in self.containsfuncs and isinstance(node.args[1], ast.Constant):
++                        if varname not in self.contains:
++                            self.contains[varname] = set()
++                        self.contains[varname].add(node.args[1].value)
++                    elif name in self.containsanyfuncs and isinstance(node.args[1], ast.Constant):
++                        if varname not in self.contains:
++                            self.contains[varname] = set()
++                        self.contains[varname].update(node.args[1].value.split())
++                    elif name.endswith(self.getvarflags):
++                        if isinstance(node.args[1], ast.Constant):
++                            self.references.add('%s[%s]' % (varname, node.args[1].value))
++                        else:
++                            self.warn(node.func, node.args[1])
++                    else:
++                        self.references.add(varname)
++                else:
++                    self.warn(node.func, node.args[0])
++            elif name and name.endswith(".expand"):
++                if isinstance(node.args[0], ast.Constant):
++                    value = node.args[0].value
++                    d = bb.data.init()
++                    parser = d.expandWithRefs(value, self.name)
++                    self.references |= parser.references
++                    self.execs |= parser.execs
++                    for varname in parser.contains:
++                        if varname not in self.contains:
++                            self.contains[varname] = set()
++                        self.contains[varname] |= parser.contains[varname]
++            elif name in self.execfuncs:
++                if isinstance(node.args[0], ast.Constant):
++                    self.var_execs.add(node.args[0].value)
++                else:
++                    self.warn(node.func, node.args[0])
++            elif name and isinstance(node.func, (ast.Name, ast.Attribute)):
++                self.execs.add(name)
+ 
+     def called_node_name(self, node):
+         """Given a called node, return its original string form"""
+-- 
+2.44.0
+
 
