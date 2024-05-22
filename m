@@ -1,88 +1,125 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3AFC25B78
-	for <webhook@archiver.kernel.org>; Wed, 22 May 2024 15:46:35 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web10.785.1716392794558437679
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35542C25B78
+	for <webhook@archiver.kernel.org>; Wed, 22 May 2024 16:30:00 +0000 (UTC)
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+ by mx.groups.io with SMTP id smtpd.web11.60.1716395392688215800
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 May 2024 08:46:34 -0700
+ Wed, 22 May 2024 09:29:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=UzTbpdRv;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4200ee78e56so9179455e9.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 22 May 2024 08:46:34 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=DhTUpTyc;
+ spf=pass (domain: gmail.com, ip: 209.85.210.42, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6f12d22331fso498460a34.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 22 May 2024 09:29:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1716392793; x=1716997593; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0fDASkxzmByHBq+TmRTQm+sCzjsoKYxKi84Gs2r0GFo=;
-        b=UzTbpdRvm1snSQHzdYnN+9ooigwkr+3fBvSqrfyvBvVHzd8bdxeYs7skLztP5jlcCv
-         NPYiQsuU49IoPDzcMsC04X5fnc+gR4YkRJvbhLTITkQuqzn1K/IqgQ+sJ+BAkJFBrzwO
-         hi01+eo0sOy5N3y5qveUKLE0r0Gbg+wY4isNQ=
+        d=gmail.com; s=20230601; t=1716395391; x=1717000191; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TQYdgn2fljXPG/QseT6zF5ymy03i/7hH1xHqLcSIymc=;
+        b=DhTUpTycL7YzePhOgkbcarZ2j5z9oPAk7kT1OA0+Fz0qjApg6QiLacoFg/nZhuHP75
+         YpsVsYhBhMYw/6ZOpxTOdV/cLob4xG2OQ58XFagk2LZXcbXAezIkc4XjkYpVZA6h3HIY
+         1Bv7DtK5B7fdiORHIlmakdLrH1mlIRvhQLJfQ9/JZiAB6KDabG4ZRvCwMxqKBP1agZ84
+         plQDTTkxCE+sGZsAHTBOrpevkVJu2O6/q3/TLJhnmudKgpAa+zexN67iB8G81g5q2cvD
+         GnUfFBu8SP7ftLEKyR+KAZAuXJxJq3p4ts2vUpttfb6JZvbtYvT2P+u/E89FxJBrML3s
+         iDPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716392793; x=1716997593;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0fDASkxzmByHBq+TmRTQm+sCzjsoKYxKi84Gs2r0GFo=;
-        b=nmQw43jY1pD3e7OYYrYpv6nlKqUyLsSIanCr/ENKWv8aPpRMDlWHzV7K2p2NZ2CTrW
-         MPYvkuDkqr/ZHDbnC7e9ytM7XPYhfl+DWNVKdnqMZRvpcyazc66/0YJreoH3JhHfYiP1
-         S5yoRH5ySZmRLYcpiDaoWCFxiihRO+PomoFwqNTU2DhBC8bqN0rNEhfxJJzDGRHJaPvj
-         rFWarA6x95YFb3sVgAcFAknFN9v89WBpMSljUFSfsegkY4azUHD5DCWg/H2TPxKRecQk
-         txi3pTvdiJEA6GEdXPqEKf9g9Ia5cxSg/gFh8UF2k5CsvPiQQFnJEfb8XtwvFCPdMBbv
-         oeMg==
-X-Gm-Message-State: AOJu0YwVw+E5XN4g1aUkTTouC1+mMwwqYaHanOP8zYN/gqpWuJasV9ZV
-	Z07NXq60jBFXGmkNoA7mSD7DE4bmsQDXQvyGwUJKz9wESIyvO23bPZEL8idHMXb3Gh2PHdTAN3t
-	xjxA=
-X-Google-Smtp-Source: AGHT+IHvuEfJn6p+ktP2pA0n3ROZkiZg5pQN3avkeh/P86oDdRdgHWqzDBkjxef4yPHbTXnc3pGSig==
-X-Received: by 2002:a05:600c:3b16:b0:41f:e959:9053 with SMTP id 5b1f17b1804b1-4210032278cmr2918645e9.38.1716392792665;
-        Wed, 22 May 2024 08:46:32 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:ef1c:155d:9d8e:11ce])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccbe8fa6sm503913825e9.2.2024.05.22.08.46.32
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1716395391; x=1717000191;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TQYdgn2fljXPG/QseT6zF5ymy03i/7hH1xHqLcSIymc=;
+        b=RSFHZVAue0VvFXeqFa0qweLUulprV/qZOTjG7nIYq9qiZ9dAnY+MrQwPyCd8qw2Lb1
+         ieKjdG5+YjY1+ipP90fUl7j58lf1xJvJvrfp4REcuIUf8l52abEUlCKXMLSpLLjp5R/a
+         /8++jWlNItx6aFrNNbrbyT2jagWlZmwp57Dr86v0T/OavnN5BDAnw/o1cCnDRRXMbVcY
+         RocpM/UIxgBD0QX7DWjvWLP2V+9WZO6ax8j4E6wnGZBphkkxF53P861D6KfGtiBPUrSw
+         WhD8aofNj3T3jfIV5ODUqOdd8wAAjjYltbOxJvtnlRF2sS1c56i4Fnykib9gUGOcp4uG
+         5vTQ==
+X-Gm-Message-State: AOJu0YyxC76qXibtJ4IcEyoZKdYLEPSJ+uMMEsRjRQfInmX5l6Nm+sJC
+	EHFOedDpRhvNUHR3QhkV5s4WlljYcv8dLwSAvb8HCJoJgamH5ZNWH/y9VQ==
+X-Google-Smtp-Source: AGHT+IF8/YHXEOz5OEQ3NNBwOwwrimPSK34qjhVMRyO9GTZCtn8xN2MlmVczgfCKm72WhJ+aikqx9g==
+X-Received: by 2002:a05:6830:18d4:b0:6f0:e1b8:496a with SMTP id 46e09a7af769-6f656c47ee8mr1320548a34.3.1716395391334;
+        Wed, 22 May 2024 09:29:51 -0700 (PDT)
+Received: from localhost.localdomain ([204.77.163.55])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f11ad51199sm3282409a34.70.2024.05.22.09.29.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 08:46:32 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Wed, 22 May 2024 09:29:50 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch/npmsw: The fetcher shouldn't have any knowledge of S
-Date: Wed, 22 May 2024 16:46:31 +0100
-Message-Id: <20240522154631.2212924-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.40.1
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] bitbake-hashclient: Add ping command
+Date: Wed, 22 May 2024 10:29:43 -0600
+Message-ID: <20240522162943.2956896-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.43.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 22 May 2024 15:46:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16240
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 May 2024 16:30:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16241
 
-I don't know why there is hardcoded knowledge of S in the fetcher but there
-shouldn't be and the OE unpack changes highlight this doing things it
-shouldn't.
+Adds a ping subcommand to bitbake-hashclient which can be useful to
+measure connection latency
 
-Drop the S reference and use rootdir which is the only place it should
-be touching.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/fetch2/npmsw.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/bin/bitbake-hashclient | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
-index ff5f8dc755..b55e885d7b 100644
---- a/lib/bb/fetch2/npmsw.py
-+++ b/lib/bb/fetch2/npmsw.py
-@@ -268,7 +268,7 @@ class NpmShrinkWrap(FetchMethod):
+diff --git a/bitbake/bin/bitbake-hashclient b/bitbake/bin/bitbake-hashclient
+index 610787ed2b0..e1e11446448 100755
+--- a/bitbake/bin/bitbake-hashclient
++++ b/bitbake/bin/bitbake-hashclient
+@@ -16,6 +16,7 @@ import time
+ import warnings
+ import netrc
+ import json
++import statistics
+ warnings.simplefilter("default")
  
-     def unpack(self, ud, rootdir, d):
-         """Unpack the downloaded dependencies"""
--        destdir = d.getVar("S")
-+        destdir = rootdir
-         destsuffix = ud.parm.get("destsuffix")
-         if destsuffix:
-             destdir = os.path.join(rootdir, destsuffix)
+ try:
+@@ -225,6 +226,26 @@ def main():
+         print("true" if result else "false")
+         return 0
+ 
++    def handle_ping(args, client):
++        times = []
++        for i in range(1, args.count + 1):
++            print(f"Ping {i} of {args.count}... ", end="")
++            start_time = time.perf_counter()
++            client.ping()
++            elapsed = time.perf_counter() - start_time
++            times.append(elapsed)
++            print(f"{elapsed:.3f}s")
++
++        mean = statistics.mean(times)
++        std_dev = statistics.pstdev(times)
++
++        print("------------------------")
++        print(f"Average round trip time: {mean:.3f}s")
++        print(f"Round trip time std dev: {std_dev:.3f}s")
++        print(f"Min time is:             {min(times):.3f}s")
++        print(f"Max time is:             {max(times):.3f}s")
++        return 0
++
+     parser = argparse.ArgumentParser(description='Hash Equivalence Client')
+     parser.add_argument('--address', default=DEFAULT_ADDRESS, help='Server address (default "%(default)s")')
+     parser.add_argument('--log', default='WARNING', help='Set logging level')
+@@ -322,6 +343,10 @@ def main():
+     unihash_exists_parser.add_argument("unihash", help="Unihash to check")
+     unihash_exists_parser.set_defaults(func=handle_unihash_exists)
+ 
++    ping_parser = subparsers.add_parser('ping', help="Ping server")
++    ping_parser.add_argument("-n", "--count", type=int, help="Number of pings. Default is %(default)s", default=10)
++    ping_parser.set_defaults(func=handle_ping)
++
+     args = parser.parse_args()
+ 
+     logger = logging.getLogger('hashserv')
 -- 
-2.40.1
+2.43.2
 
 
