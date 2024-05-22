@@ -2,57 +2,53 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF20DC25B74
-	for <webhook@archiver.kernel.org>; Tue, 21 May 2024 09:29:03 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.15505.1716283741956851063
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B959C25B7A
+	for <webhook@archiver.kernel.org>; Wed, 22 May 2024 13:07:03 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web11.9508.1716383213591160846
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 21 May 2024 02:29:02 -0700
+ Wed, 22 May 2024 06:06:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EMl7RuAP;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-351cda41b53so2805011f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 21 May 2024 02:29:01 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hNWFXiIq;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41dc9c83e57so4625775e9.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 22 May 2024 06:06:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1716283740; x=1716888540; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tY+YxxW/C35tEcXw6l/Iauh2vkWKybRQwHMAV5zOcjQ=;
-        b=EMl7RuAP0oNmheKYZTqHeev+THwC3D7S/m1A5Tkv+v16qhw8wCS/hoOhwsNQaWmshz
-         fXvLFxKioazBQ+kA6YXHkrcAtv+0HsxtgXtNvDZZMrpwhnyO4Qmlrsjng8DpqXZerNdL
-         7725llRN8kg4hYNyxE72Hjm2OBXOyKfs4jv9s=
+        d=linuxfoundation.org; s=google; t=1716383212; x=1716988012; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt:date:to
+         :from:subject:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pz2nI2X1Wz0vi0DeQ8OZ7G18ss3OzXCNWzDDhQZ4MQ4=;
+        b=hNWFXiIq0o5MDe2wPVk2yZrOltIkHsn+TXAJsCYI4OkMGm0sykQyZL6MK5vHCsiGoP
+         /BjsQXVH+wY/zqen19XJRjVQlbHEA5i4K3+B4Z+JL0FXICxyhVsk0UUSEik0OGsHhCHp
+         z14mqV/hhpE1qTZKQq549lFTmDqxt7Ly+4A1g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716283740; x=1716888540;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tY+YxxW/C35tEcXw6l/Iauh2vkWKybRQwHMAV5zOcjQ=;
-        b=hR6V+aR/oe5809LFvBip0CvPFpQXIGv2+6yYTTisSX3BYrVD0U14LWekbQLMm2GW2Y
-         0PsVICumTUC+/pNglH7HjR5zzkIuhsozc4lKm+4pioYstYRhuHx5Z0IO29sS0f83js4N
-         fo3fS4ZKgF+BeFIS4cNkAc9G/b86l1u5R9rhoPg7O33D6C63B/XV9ICreJDvWemqiq4x
-         X1ZqAJoNwXCpAOHrEp64wSzLi/HkZ1a7kWNPRMXx3x0uFGXwLXhTQmhNW76Yzcmq6zhV
-         6r7GQhpm6/Hmpi7g17BzYP05DHVl3VhVtikAKlsGHhy733h/fCJqXvr8Blw0FUjhhgqC
-         aUdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXDR1LwDPjLFCh8xdHruLo6wAH6AbPd8yT3Y33VLI+r3PehWYweXXbBaAgMlG/BsAXiM2oyN5dhDZjFKqhuhL0Jyt/Oql42yqmv4woqT8xzQn8eJc=
-X-Gm-Message-State: AOJu0Yxh3bXo3ZgSc/d4ukLBqHan35T7POuw32wijOhZ1L81iPri5Vo5
-	RdSaN0B644U4bUVy9PQGil5BpLSLfXjhrfQ9dalSVxhv2E9B3w29QDoMJW7ts+Q=
-X-Google-Smtp-Source: AGHT+IGGmJiUKY6tZLf1Zykp4PLRH0222s3GVysbTJSFuIGsjw4p3xLupOoTjc6+254SBqM0eo6wvQ==
-X-Received: by 2002:adf:f682:0:b0:351:df62:a52 with SMTP id ffacd0b85a97d-351df620ad9mr9013025f8f.19.1716283739963;
-        Tue, 21 May 2024 02:28:59 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:1738:232d:aeeb:3bb7? ([2001:8b0:aba:5f3c:1738:232d:aeeb:3bb7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502baad058sm31300099f8f.66.2024.05.21.02.28.59
+        d=1e100.net; s=20230601; t=1716383212; x=1716988012;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt:date:to
+         :from:subject:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pz2nI2X1Wz0vi0DeQ8OZ7G18ss3OzXCNWzDDhQZ4MQ4=;
+        b=SkStOUrAHH1thEw12F1WHKugAATy+DEZA0RC7J33E2/678etiXilOYcCLvukAhIRJU
+         2xaPE7e/fhSZ59Zfi12o41iTuWjYNvl8DyOh/pjX33eTCm9C+kYkgfF9QqyC0yVBuMG9
+         /xUbjPmAUM8PcuI7WKlVBXqaBTG22x8WY46yBJA9eZlwdxhGa1cLVQlPhXX/15aZAwoY
+         6BZa+rEbEHvWy5HYeT9cj3PZcNIg4kSuBUOJoPm5NXZ1BW6lArGEUa7pIGAk7sMamRzp
+         QKCZHVthCT+K/6ANgwuUeYuw1doVssxfb4GNBY/NriSn/JtorD0BjpxzWsiEvD2/NZ0j
+         hnYg==
+X-Gm-Message-State: AOJu0YwCHJYQ1hc1nafA3bGfp+EwpnSUncxgSBpwzJgkjMqvh5pD45fc
+	Culn1+tQafNqQS71soeEZbIOlfFxsy3q4pk6DPvLfjhLLwgzMOLtCdwiwVNeGuq/PjO+lZbv5zp
+	R0L4=
+X-Google-Smtp-Source: AGHT+IFb6i9y/Iemx6uiLelJM/pANRq5W1aS4kjLVF/WQ6Io2otfEzAmlgMhN7meeSs8FHl48E0o5w==
+X-Received: by 2002:adf:e983:0:b0:354:df9a:f99a with SMTP id ffacd0b85a97d-354df9afa80mr1418724f8f.11.1716383211676;
+        Wed, 22 May 2024 06:06:51 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:ef1c:155d:9d8e:11ce? ([2001:8b0:aba:5f3c:ef1c:155d:9d8e:11ce])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-354bf20a20esm10576724f8f.39.2024.05.22.06.06.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 02:28:59 -0700 (PDT)
-Message-ID: <3ba09bcb4470474afe149153ad7b2571f2451e38.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch2/svn: Fix mirroring issue with svn
+        Wed, 22 May 2024 06:06:51 -0700 (PDT)
+Message-ID: <0acc887d10a8eefc5fb9a7ef8c6bf4f00c36e03d.camel@linuxfoundation.org>
+Subject: hashserv performance issues
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: kari.sivonen@live.com, "bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Tue, 21 May 2024 10:28:53 +0100
-In-Reply-To: <SJ0PR22MB2795A6612E85C6D7B2D5CAB7FAEA2@SJ0PR22MB2795.namprd22.prod.outlook.com>
-References: 
-	<SJ0PR22MB2795A6612E85C6D7B2D5CAB7FAEA2@SJ0PR22MB2795.namprd22.prod.outlook.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>, Joshua Watt
+	 <JPEWhacker@gmail.com>, Michael Halstead <mhalstead@linuxfoundation.org>
+Date: Wed, 22 May 2024 14:06:50 +0100
 Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
@@ -68,118 +64,228 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 21 May 2024 09:29:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16236
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 May 2024 13:07:03 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16237
 
-On Tue, 2024-05-21 at 07:51 +0000, Kari Sivonen via lists.openembedded.org =
-wrote:
->=20
-> There was bug in first fix of svn mirror fix for [YOCTO #15473]
->=20
->=20
-> svn to svn mirror fixed in first commit but it broke svn to other mirrors
-> This commit fix those other mirrors back to original way of working
-> ---
-> =C2=A0lib/bb/fetch2/__init__.py | 10 ++++++++++
-> =C2=A0lib/bb/tests/fetch.py =C2=A0 =C2=A0 | =C2=A05 +++--
-> =C2=A02 files changed, 13 insertions(+), 2 deletions(-)
->=20
->=20
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> index 5bf2c4b8c..cfe6d5025 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -472,6 +472,16 @@ def uri_replace(ud, uri_find, uri_replace, replaceme=
-nts, d, mirrortarball=3DNone):
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0uri_find_decoded[5] =3D {}
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0elif ud.loc=
-alpath and ud.method.supports_checksum(ud):
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0basename =3D os.path.basename(ud.localpath)
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0elif ud.localpat=
-h and uri_decoded[0] =3D=3D "svn" and uri_replace_decoded[0] !=3D "svn":
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#W=
-hen added svn fetcher that supports_checksum return false
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#a=
-ll mirrors for svn skip all basename sets. That is ok for svn -> svn =C2=A0=
-mirrors
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#b=
-ut other mirrors not work anymore. Example you want use tar balls for svn f=
-rom https server
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#T=
-his elif will catch cases where svn mirros gone before svn mirror fix
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#T=
-his is basically same than first if branch except no mirrortarball set. Can=
- it some how set for svn uris?
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ba=
-sename =3D os.path.basename(ud.localpath)
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# =
-Kill parameters, they make no sense for mirror tarballs
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ur=
-i_decoded[5] =3D {}
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ur=
-i_find_decoded[5] =3D {}
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if basename=
+I noticed that qemux86-world-alt builds are slow. At times it seems to
+sit doing nothing and I've been wondering why. Today I think I tracked
+down the area of the problem. Taking this one for example:
+
+https://valkyrie.yoctoproject.org/#/builders/17/builds/10/steps/11/logs/std=
+io
+
+We see sections like:
+
+NOTE: recipe lib32-ncurses-6.5-r0: task do_install: Succeeded
+NOTE: Task virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-core/util-linux/util-linux-libuuid_2.39.3.bb:do_po=
+pulate_sysroot unihash changed to 425a027df360cff6d5f90787acb5f35012def9e31=
+092b703e5ee8cfddd017217
+NOTE: Task virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-extended/cracklib/cracklib_2.9.11.bb:do_populate_s=
+ysroot unihash changed to 16d675f49fadb32389099ef4c4ecd2e6ce299ae775e329dae=
+d38cc3b67fc963f
+NOTE: Task virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-support/bash-completion/bash-completion_2.13.0.bb:=
+do_populate_sysroot unihash changed to d2551c1c6abb19087cefa06275d0610f5eb1=
+3b83aa2dd09e8c1f1a2cc9d95483
+Bitbake still alive (no events for 600s). Active tasks:
+Bitbake still alive (no events for 1200s). Active tasks:
+NOTE: Setscene tasks completed
+NOTE: Running task 2801 of 37383 (/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-core/ncurses/ncurses_6.5.bb:do_populate_sysroot)
+NOTE: Pressure status changed to CPU: False, IO: True, Mem: None (CPU: 1317=
+.8/20000.0, IO: 23192.6/20000.0, Mem: 0.0/None) - using 1/16 bitbake thread=
+s
+NOTE: Pressure status changed to CPU: False, IO: False, Mem: None (CPU: 105=
+4.9/20000.0, IO: 18565.4/20000.0, Mem: 0.0/None) - using 1/16 bitbake threa=
+ds
+NOTE: Running task 2802 of 37383 (virtual:multilib:lib32:/home/pokybuild/yo=
+cto-worker/qemux86-world-alt/build/meta/recipes-core/ncurses/ncurses_6.5.bb=
+:do_populate_sysroot)
+NOTE: Running task 2803 of 37383 (/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-support/sqlite/sqlite3_3.45.3.bb:do_install)
+NOTE: Running task 2804 of 37383 (virtual:multilib:lib32:/home/pokybuild/yo=
+cto-worker/qemux86-world-alt/build/meta/recipes-support/sqlite/sqlite3_3.45=
+.3.bb:do_install)
+NOTE: Running task 2805 of 37383 (/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-extended/pam/libpam_1.6.1.bb:do_prepare_recipe_sys=
+root)
+NOTE: Running task 2806 of 37383 (virtual:multilib:lib32:/home/pokybuild/yo=
+cto-worker/qemux86-world-alt/build/meta/recipes-extended/pam/libpam_1.6.1.b=
+b:do_prepare_recipe_sysroot)
+NOTE: Running task 2807 of 37383 (/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-support/libpcre/libpcre2_10.43.bb:do_install)
+NOTE: Running task 2808 of 37383 (virtual:multilib:lib32:/home/pokybuild/yo=
+cto-worker/qemux86-world-alt/build/meta/recipes-support/libpcre/libpcre2_10=
+.43.bb:do_install)
+NOTE: Running task 2809 of 37383 (/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-support/libcap-ng/libcap-ng_0.8.4.bb:do_compile)
+NOTE: Running task 2810 of 37383 (virtual:multilib:lib32:/home/pokybuild/yo=
+cto-worker/qemux86-world-alt/build/meta/recipes-support/libcap-ng/libcap-ng=
+_0.8.4.bb:do_compile)
+NOTE: Running task 2811 of 37383 (/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-support/attr/attr_2.5.2.bb:do_prepare_recipe_sysro=
+ot)
+NOTE: Running task 2812 of 37383 (virtual:multilib:lib32:/home/pokybuild/yo=
+cto-worker/qemux86-world-alt/build/meta/recipes-support/attr/attr_2.5.2.bb:=
+do_prepare_recipe_sysroot)
+NOTE: Running task 2813 of 37383 (/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-devtools/gcc/gcc-runtime_14.1.bb:do_package)
+NOTE: Running task 2814 of 37383 (/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-graphics/xorg-util/util-macros_1.20.1.bb:do_prepar=
+e_recipe_sysroot)
+NOTE: recipe ncurses-6.5-r0: task do_populate_sysroot: Started
+NOTE: recipe sqlite3-3_3.45.3-r0: task do_install: Started
+
+i.e. it is "rehashing" (a unihash changes) and then it stalls for
+1200s. In this case there are no active tasks running. This isn't
+isolated, another example:
+
+NOTE: Task virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-worl=
+d-alt/build/meta/recipes-support/sqlite/sqlite3_3.45.3.bb:do_populate_sysro=
+ot unihash changed to ea94eb54580e74d73415cb75391bf7adc26c10b216c9730d3c5b2=
+4d2cd164d8d
+Bitbake still alive (no events for 600s). Active tasks:
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-core/ncur=
+ses/ncurses_6.5.bb:do_populate_sysroot
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-core/ncurses/ncurses_6.5.bb:do_populate_sysroot
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-devtools/=
+gcc/gcc-runtime_14.1.bb:do_package
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-extended/=
+pam/libpam_1.6.1.bb:do_configure
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-support/l=
+ibpcre/libpcre2_10.43.bb:do_populate_sysroot
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-extended/pam/libpam_1.6.1.bb:do_configure
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-support/libpcre/libpcre2_10.43.bb:do_populate_sysroot
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-support/l=
+ibcap-ng/libcap-ng_0.8.4.bb:do_populate_sysroot
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-support/libcap-ng/libcap-ng_0.8.4.bb:do_populate_sysroot
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-graphics/=
+xorg-proto/xorgproto_2024.1.bb:do_populate_sysroot
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-graphics/=
+xorg-util/util-macros_1.20.1.bb:do_populate_sysroot
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-support/a=
+ttr/attr_2.5.2.bb:do_compile
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-support/attr/attr_2.5.2.bb:do_compile
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-devtools/gcc/gcc-runtime_14.1.bb:do_package
+Bitbake still alive (no events for 1200s). Active tasks:
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-core/ncur=
+ses/ncurses_6.5.bb:do_populate_sysroot
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-core/ncurses/ncurses_6.5.bb:do_populate_sysroot
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-devtools/=
+gcc/gcc-runtime_14.1.bb:do_package
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-extended/=
+pam/libpam_1.6.1.bb:do_configure
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-support/l=
+ibpcre/libpcre2_10.43.bb:do_populate_sysroot
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-extended/pam/libpam_1.6.1.bb:do_configure
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-support/libpcre/libpcre2_10.43.bb:do_populate_sysroot
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-support/l=
+ibcap-ng/libcap-ng_0.8.4.bb:do_populate_sysroot
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-support/libcap-ng/libcap-ng_0.8.4.bb:do_populate_sysroot
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-graphics/=
+xorg-proto/xorgproto_2024.1.bb:do_populate_sysroot
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-graphics/=
+xorg-util/util-macros_1.20.1.bb:do_populate_sysroot
+/home/pokybuild/yocto-worker/qemux86-world-alt/build/meta/recipes-support/a=
+ttr/attr_2.5.2.bb:do_compile
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-support/attr/attr_2.5.2.bb:do_compile
+virtual:multilib:lib32:/home/pokybuild/yocto-worker/qemux86-world-alt/build=
+/meta/recipes-devtools/gcc/gcc-runtime_14.1.bb:do_package
+
+in this case, again there is a rehash and this time there are active
+tasks running but it stalls for over 1200s.
+
+I was able to login and connect gdb to get a python backtrace, the
+useful piece of which was:
+
+Traceback (most recent call first):
+  File "/usr/lib/python3.10/selectors.py", line 469, in select
+    fd_event_list =3D self._selector.poll(timeout, max_ev)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1871, in _run_onc=
+e
+    event_list =3D self._selector.select(timeout)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forev=
+er
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until=
+_complete
+    self.run_forever()
+  File "/home/pokybuild/yocto-worker/qemux86-world-alt/build/bitbake/lib/bb=
+/asyncrpc/client.py", line 225, in wrapper
+    return self.loop.run_until_complete(downcall(*args, **kwargs))
+  File "/home/pokybuild/yocto-worker/qemux86-world-alt/build/bitbake/lib/bb=
+/siggen.py", line 732, in get_unihashes
+    query_result[tid] =3D client.get_unihash(*args)
+  File "/home/pokybuild/yocto-worker/qemux86-world-alt/build/bitbake/lib/bb=
+/siggen.py", line 707, in get_unihash
+    return self.get_unihashes([tid])[tid]
+  File "/home/pokybuild/yocto-worker/qemux86-world-alt/build/bitbake/lib/bb=
+/runqueue.py", line 2570, in process_possible_migrations
+    newuni =3D bb.parse.siggen.get_unihash(tid)
+  File "/home/pokybuild/yocto-worker/qemux86-world-alt/build/bitbake/lib/bb=
+/runqueue.py", line 2173, in execute
+    self.process_possible_migrations()
+  File "/home/pokybuild/yocto-worker/qemux86-world-alt/build/bitbake/lib/bb=
+/runqueue.py", line 1603, in _execute_runqueue
+    retval =3D self.rqexe.execute()
+  File "/home/pokybuild/yocto-worker/qemux86-world-alt/build/bitbake/lib/bb=
+/runqueue.py", line 1637, in execute_runqueue
+    return self._execute_runqueue()
+  File "/home/pokybuild/yocto-worker/qemux86-world-alt/build/bitbake/lib/bb=
+/cooker.py", line 1488, in buildTargetsIdle
+    retval =3D rq.execute_runqueue()
+  File "/home/pokybuild/yocto-worker/qemux86-world-alt/build/bitbake/lib/bb=
+/server/process.py", line 435, in idle_thread_internal
+    retval =3D function(self, data, False)
+  File "/home/pokybuild/yocto-worker/qemux86-world-alt/build/bitbake/lib/bb=
+/server/process.py", line 418, in idle_thread
+    self.idle_thread_internal()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+
+i.e. it is looping in process_possible_migrations() in runqueue.py and
+stalling on the get_unihash() calls.
+
+I put a patch on master-next which batches those up into a block
+get_unihashes() call but when trying to test that, I noticed this:
+
+https://valkyrie.yoctoproject.org/#/builders/17/builds/13
+
+Initialising tasks...Bitbake still alive (no events for 600s). Active tasks=
 :
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0uri_basename =3D os.path.basename(uri_decoded[loc])
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0# Prefix with a slash as a sentinel in case
-> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-> index ed7a39a72..934c19e0e 100644
-> --- a/lib/bb/tests/fetch.py
-> +++ b/lib/bb/tests/fetch.py
-> @@ -512,7 +512,8 @@ class MirrorUriTest(FetcherTest):
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0"git://some=
-server.org/bitbake git://git.openembedded.org/bitbake " \
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0"https://.*=
-/.* file:///someotherpath/downloads/ " \
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0"http://.*/=
-.* file:///someotherpath/downloads/ " \
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0"svn://svn.serve=
-r1.com/ svn://svn.server2.com/"
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0"svn://svn.serve=
-r1.com/ svn://svn.server2.com/ " \
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0"svn://svn.serve=
-r1.com/ file:///someotherpath/downloads/ "
-> =C2=A0
-> =C2=A0 =C2=A0 =C2=A0def test_urireplace(self):
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar("FILESPATH", ".")
-> @@ -541,7 +542,7 @@ class MirrorUriTest(FetcherTest):
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fetcher =3D bb.fetch.FetchData("svn://s=
-vn.server1.com/isource/svnroot/reponame/tags/tagname;module=3Dpath_in_tagna=
-mefolder;protocol=3Dhttps;rev=3D2", self.d)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0mirrors =3D bb.fetch2.mirror_from_strin=
-g(self.mirrorvar)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0uris, uds =3D bb.fetch2.build_mirroruri=
-s(fetcher, mirrors, self.d)
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0self.assertEqual(uris, ['svn://svn.server2.c=
-om/isource/svnroot/reponame/tags/tagname;module=3Dpath_in_tagnamefolder;pro=
-tocol=3Dhttps;rev=3D2'])
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0self.assertEqual(uris, ['svn://svn.server2.c=
-om/isource/svnroot/reponame/tags/tagname;module=3Dpath_in_tagnamefolder;pro=
-tocol=3Dhttps;rev=3D2', 'file:///someotherpath/downloads/isource/svnroot/re=
-poname/tags/path_in_tagnamefolder_svn.server1.com_.isource.svnroot.reponame=
-.tags.tagname_2_1.tar.gz'])
-> =C2=A0
-> =C2=A0 =C2=A0 =C2=A0def test_mirror_of_mirror(self):
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# Test if mirror of a mirror works
+Bitbake still alive (no events for 1200s). Active tasks:
 
+i.e. we have the same issue at runqueue init time, it shouldn't take
+over 1200s there.
 
-I took the original patch since it seemed to make sense and was simple
-with a test case.
+This suggests that there could be something wrong with the hash server
+making it very slow, or the geo round trip time to the server is poor,
+or something else is going wrong with the hash server performance.
 
-This patch is adding fetcher specific conditionals into the core code
-and this always worries me. You'll note we don't have many, if any of
-these cases currently.
-
-That makes me wonder if there isn't a better way to solve this somehow.
-It also makes me wonder if the original change was correct :/. I
-certainly don't like the if block above being added.
+I thought I'd share the findings so far in case someone can make sense
+of what is going on.
 
 Cheers,
 
 Richard
+
+
 
 
