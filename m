@@ -1,110 +1,398 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <kari.sivonen@live.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67602C25B7C
-	for <webhook@archiver.kernel.org>; Wed, 22 May 2024 13:17:13 +0000 (UTC)
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
- by mx.groups.io with SMTP id smtpd.web10.9846.1716383825936324550
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5659FC25B78
+	for <webhook@archiver.kernel.org>; Wed, 22 May 2024 15:42:15 +0000 (UTC)
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (NAM12-BN8-obe.outbound.protection.outlook.com [40.92.21.37])
+ by mx.groups.io with SMTP id smtpd.web10.693.1716392528040616233
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 May 2024 06:17:06 -0700
+ Wed, 22 May 2024 08:42:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TZUzVhmS;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.219.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6a0406438b5so14441056d6.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 22 May 2024 06:17:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1716383825; x=1716988625; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n2/S6EtGn/xfjiY1l9+P1tc7D15j8dLRB6nNVSUkcBY=;
-        b=TZUzVhmSsCOcH/OcoCJafL8u53hh3VmCmdpKZxnqz8R2Oo6Xw2eL78oGSRxVNAX8Y0
-         x/bk9i8yaHs8SrZf1r+R6j2g0rLIsYyKBQLdP6sfSXqiZi9BaM6Ucc5+MzYB3ntoOlFK
-         pLpn7ZSzCSADnZph4VYkZpaKmieEL5UP0aFSA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716383825; x=1716988625;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n2/S6EtGn/xfjiY1l9+P1tc7D15j8dLRB6nNVSUkcBY=;
-        b=PGCxKGJhJeU4rXJLcpzXxrqATQ1daIsPrASpjyc8WrC77dCfklB51jJnGznYf26ysG
-         c+KV5DSf7FhHJvykenEgAJv6VOEW5XQNFwiqd6zckl9+SbBRMGboNS21nN/PYMdNNGHM
-         8VAodga9L5ubUGSdoTxRjSLRtY2gzfpgqlqy8ZdyIo+vOAdQSMKsecdszWOj5BAJ9VZn
-         Rvjufg7v0j46YFqwDrGcH2+TBnF83wCgrhRuDwS8o7kE+hwQyPKcoDvqggBTHrbm3i3U
-         RduDE0cgIt7ucb84LeJXGLE/zQC1MqZZuRAH6cXyaPitumGVwx7/jQGiRqC5a81QLEBi
-         H3nw==
-X-Gm-Message-State: AOJu0YyTognAqx1yaqXGDjOi//PLDvXT8KVifmqwsUSqtlNOaLxM6Zr7
-	w+Cy3R7Y1ek7EokVKyEDwLxGw9/96hVpB+IFRYbZfcf3x/3cyJrMKuohKli/RIMSkhaTSk0RQpi
-	V
-X-Google-Smtp-Source: AGHT+IEA60bnmmxfr4EDyBYvlgoPgiI5daGFVkLFNeSlWPtzadKOC6L7TungrQa9Sy4IzkCfrLOmgw==
-X-Received: by 2002:a05:6214:490a:b0:6a0:9493:a053 with SMTP id 6a1803df08f44-6ab80918172mr20801236d6.59.1716383824806;
-        Wed, 22 May 2024 06:17:04 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:ef1c:155d:9d8e:11ce? ([2001:8b0:aba:5f3c:ef1c:155d:9d8e:11ce])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a35ba07275sm71132766d6.27.2024.05.22.06.17.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 06:17:04 -0700 (PDT)
-Message-ID: <f13fdebcfa74757dbc51a79da995f47238873be7.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] hashserv performance issues
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>, Joshua Watt
-	 <JPEWhacker@gmail.com>, Michael Halstead <mhalstead@linuxfoundation.org>
-Date: Wed, 22 May 2024 14:17:02 +0100
-In-Reply-To: <17D1D17091A0A935.11581@lists.openembedded.org>
-References: <17D1D17091A0A935.11581@lists.openembedded.org>
-Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
- YNvg==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0-1 
+ dkim=pass header.i=@live.com header.s=selector1 header.b=N9k+bkzE;
+ spf=pass (domain: live.com, ip: 40.92.21.37, mailfrom: kari.sivonen@live.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ntxfpo+3ask4E/iwAdcPEuBoBmL5STzYTuX8dTqjjOqQw/mnRyLGYMCeai8wrgJjGYkCGJCT2hg7weUq78J0eY2hidlvVfUD8w+AgCvOwF9EMzDc/SmIS1frV0B8BBHL6Jc6OBgYlPQ4SSobCX2aJQQ/faEoH4kp9a4L5eE/Mtngw2Z9LEEqIvWuElCt1YvdjsUyjPQZI2C6QfRbXkVjeQdLGxeDaWsAaOUtWVGhTS/oRgL0p43fURyQ6mY9obhSS7Cr2oIWHp4EDmmq8OKN00w24kA1IxL5r/affxLFLPdj3J6r3MSNmp7wl/yijd642QVQ4GsqCpgRTWYkpofq1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FUGnVAl5N3hP8TnvpxoxZ9lACbOyunVA5qI8ACa66Ic=;
+ b=TgnHLs1mlNooxy7f5LvytDFesXgAs/7rEf584ykE6U5LIKH0jMRVcOWlvcaZ/kG4miQjR+ynnBNUfP6TAWRcMFoGrkfO4IIRdrBSjQvvJJLDUbd4Os7TljGpWy5s5ZLSsUxgaYq91pE5TEDoWUGl88hBaVv4lWqtkqLXk7fMRRSsR6NSmxmIz5SsuBnbVslhCGklTdqrCNdMcn2F5smfoh01aIwLpaeTTWr9AnicTYgt7YbGbwC13KQlFc8nZN+wgXP9pJ6y7xMm7Z0wY3d/mCSzloHgrZHbc/0WklH5RmWTRE36FlRa+PFA+Ayp+4sPntSmNW0xlCG+VYlrKyw8NA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FUGnVAl5N3hP8TnvpxoxZ9lACbOyunVA5qI8ACa66Ic=;
+ b=N9k+bkzEUbiMMBfDmn7j6tgxD+MgbZlRId1YwPRWtKEX8jfSfc0VLTmUGdg/lwAPXTvKwR9qQiuIW8W+iCCEFwOjjC+n/kYXfKTxQ5IHomo/E83DeeFYpgMCv5ZlrPMZ59VH0P+c3WTPciuetR7B7lNa8j5a7tNsgXJ3T0IPq76nfms/aOa/yUPqDdXXfJvwnZRNuFssmoD1q+YOMQMElckqOXgGKVHH2gPPHNt+NeRkKQdRM+mvSPJhzQoruw/Gp1SO+bk3x9r7spAWCdt0hX6lGZbKdx2xbOLcC7b5vdJLsR//gOZAEgZJukOY1V29oIPWFKd+q31D9NveIkW9aw==
+Received: from SJ0PR22MB2795.namprd22.prod.outlook.com (2603:10b6:a03:3e7::10)
+ by PH0PR22MB3810.namprd22.prod.outlook.com (2603:10b6:510:293::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Wed, 22 May
+ 2024 15:42:04 +0000
+Received: from SJ0PR22MB2795.namprd22.prod.outlook.com
+ ([fe80::2ffe:8aca:ae2e:3a85]) by SJ0PR22MB2795.namprd22.prod.outlook.com
+ ([fe80::2ffe:8aca:ae2e:3a85%7]) with mapi id 15.20.7611.016; Wed, 22 May 2024
+ 15:42:04 +0000
+From: Kari Sivonen <kari.sivonen@live.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] fetch2/svn: Fix mirroring issue with svn
+Thread-Topic: [bitbake-devel] [PATCH] fetch2/svn: Fix mirroring issue with svn
+Thread-Index: AQHaq1N0kHy18PghjEysR+P2RdMWRLGha/CAgAH4r1Q=
+Date: Wed, 22 May 2024 15:42:03 +0000
+Message-ID: 
+ <SJ0PR22MB2795FD04B582271532772B29FAEB2@SJ0PR22MB2795.namprd22.prod.outlook.com>
+References: 
+ <SJ0PR22MB2795A6612E85C6D7B2D5CAB7FAEA2@SJ0PR22MB2795.namprd22.prod.outlook.com>
+ <3ba09bcb4470474afe149153ad7b2571f2451e38.camel@linuxfoundation.org>
+In-Reply-To: 
+ <3ba09bcb4470474afe149153ad7b2571f2451e38.camel@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+x-tmn: [9j3wuTSLesRTuK0a+kTJABwFhzTG1Y75]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR22MB2795:EE_|PH0PR22MB3810:EE_
+x-ms-office365-filtering-correlation-id: 332dad9c-4dca-4584-e9a8-08dc7a75ba8d
+x-microsoft-antispam: 
+ BCL:0;ARA:14566002|461199019|440099019|3412199016|3430499023|102099023;
+x-microsoft-antispam-message-info: 
+ +9qJvvIS+JwkByRqET+Sr7b0Zi3O1MtdwjVWhLeLduHVaTx3xuOhXtHnl172BNejXe8dENtmHgXB8In0Tu0FS6UmIhleGa1hXfDY2a5FibuZ97P2wtTUpwlzoYsTynz89gqMUWx7n4tNqGdMKcaBb92Dmn6A0ek7L0AAfuY10GrBoVRDXYoDSY/gIzDcwqDAFXX6FJEjCfP3FmsUTcL8LbTHzFDFdfEhGJP33A9Sg5hnPtLCyllNEUBWFrCAHCgy1QVOjrV7BoEqcfna8EaGnwCfJZiBq16yn/JTrbdT6AODedxveyKYHqppYi1NeSlojIl5+uq2AzxDhR+YfZSyFqRulzat5SimvHVDQbVghMCTPGtSGFw3ndYu65rbtoLIpEcbjqFEmxDkPapehKMCzg3d60Exzm6za8f/CDb7r0Xvrk0en/P3oQFUVpzLZTqgF/eZF+xfeE+/WAhjyxNT8fOltIXlMEgcW4vwtoyIHeFGSFeAvvEJVf0Mb402DhSY8ZY2Ns2W3ZGqfG8k9OhWLbt+SCnbzLE/cfpUULVf2gCw9cUuDd6bnmiqx5yunzpg
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?0G/Zoj/+pSwziF8ExxIuleXWntoymG1Yzk13QpFRdsLsWiWa1daj5WplOa/Y?=
+ =?us-ascii?Q?yQPRo3JVNJmzwQsY+I60nqJRHkTKGuMY2dmJ20+kfO94cSEYF4fPiu9A5tD7?=
+ =?us-ascii?Q?CUeNYiZzspmLnBHQR51/nJoX9FOoobH//UxhbIpPnT1z0UkY47xC8tPVmP3n?=
+ =?us-ascii?Q?tcO1xbdyEgN+oc2BlEHVCSTLfkojUkyeDFzrVXV0oVRaz+/diqsz67c4fzDq?=
+ =?us-ascii?Q?IW0VRtCiGfupFZoLlwrcN5CdrL4XBMxjIVua20o/zHdYg1GuFAuV7mcOrVqS?=
+ =?us-ascii?Q?5UxHAcDQdj2sVek9mpRctnZaRBrtWle2ok3DhZi8weCZss6pl9fGuJpYKK5n?=
+ =?us-ascii?Q?Ysm8VZf1VpOWLFQMMlHNeW0zIbQx1f8ZtEEFD0l5GDMca7bEu8qQC7kc6KEn?=
+ =?us-ascii?Q?brpwUlH98mqiimFCzhuPFIHDNFWkL2WJ/+5Nt3D7BU1JD6dH98wGISLIEe4f?=
+ =?us-ascii?Q?ocOOLdHsz9q72NfMM9VBPf/chDnRogRVnKr/BCLc54aUAF92irMWEOfm2qQI?=
+ =?us-ascii?Q?VUqPZr1o+8nyVLNHC5zXepBSVTogM2U60U3Bwq2K13P6vP1tnQuaSyM9jEEf?=
+ =?us-ascii?Q?f2YD/Z8cz9rJ9MijwWBBp61663OiIrwNDRM9jxn+SIeVBg8xVOyg30769yJn?=
+ =?us-ascii?Q?0zoSRFkNTOW8D8f6zU8l6LwoEdbrkh4vIw0828nvdw2nc6UBd5v4yMX2E8Xq?=
+ =?us-ascii?Q?TRBrmsbddCn0WeASDCowZlWLEPVzwv+gxd2AzlBi9ASkqIwCnXkwX5QwhIlw?=
+ =?us-ascii?Q?YV85huC6A5KWXuK5Gswc5biEIgJtIWust/mbEcmPNJTtEyLM2HWfz3zTKYGd?=
+ =?us-ascii?Q?3NGttVSsle4cwYOrGBa5sLRbz0dlCGEWkiXA4A/gTTH/DoWmfC69VdBEjQNP?=
+ =?us-ascii?Q?z+YQDHIU/LdqrW6l0WOiE7LZQLlzOsOcaSwPh8QClw8Z0u4KBfRsuVwLmCQS?=
+ =?us-ascii?Q?6YkVNnXh8or4sQASYWT0FnkXzLeqCW8JI3dRp6xoJA6liSE/3L8Wc5rqVFzf?=
+ =?us-ascii?Q?ZAbf1AwLCIkRpsp99sHpqcOG8SDYqi7Xzfg5jBPwurY0lSzZ/XhQPgyGb/WW?=
+ =?us-ascii?Q?Yjg4cxshfnicaOqMc2I3npU8oomkf5addHH7sCqaDWKIO45LjPKYyW7EVp12?=
+ =?us-ascii?Q?zeN0dpBeq/2aGUHKnVYFk6bHbXg8TI4SYQ+X4oWq/i7W/qxp5v8urIq+2V2T?=
+ =?us-ascii?Q?1JCUnV3ox9MXsl5yw5RZcjLUIMeczPDPDiH0Dg=3D=3D?=
+Content-Type: multipart/alternative;
+	boundary="_000_SJ0PR22MB2795FD04B582271532772B29FAEB2SJ0PR22MB2795namp_"
 MIME-Version: 1.0
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-c3c87.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR22MB2795.namprd22.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 332dad9c-4dca-4584-e9a8-08dc7a75ba8d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2024 15:42:03.9106
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR22MB3810
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 22 May 2024 13:17:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16238
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 May 2024 15:42:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16239
 
-Joshua reminded me of how to get the server stats (thanks).
+--_000_SJ0PR22MB2795FD04B582271532772B29FAEB2SJ0PR22MB2795namp_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-For our public server:
+I think original change was correct in way that it fix svn to svn mirroring=
+. Now I also added handling of svn to other mirroring. I saw there is alrea=
+dy if clause which would do the correct thing if mirrortarball is set. But =
+I am not sure where it can set and what all and where it will affect if is =
+set. That why I set svn specific if else there that no any other place need=
+ to change. I also added test case for svn to file mirroring. Maybe it can =
+be tested with this new test without any svn changes if svn to file mirrori=
+ng works like with this change.
 
-$ bitbake-hashclient --address wss://hashserv.yoctoproject.org/ws stats
-{
-    "requests": {
-        "average": 0.06250257539454776,
-        "max_time": 16.712204183917493,
-        "num": 381569673,
-        "stdev": 0.18345958610620752,
-        "total_time": 23849087.254955433
-    }
-}
+-Kari
+________________________________
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Sent: Tuesday, May 21, 2024 12:28 PM
+To: kari.sivonen@live.com <kari.sivonen@live.com>; bitbake-devel@lists.open=
+embedded.org <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] fetch2/svn: Fix mirroring issue with s=
+vn
 
-Compared to my local system:
+On Tue, 2024-05-21 at 07:51 +0000, Kari Sivonen via lists.openembedded.org =
+wrote:
+>
+> There was bug in first fix of svn mirror fix for [YOCTO #15473]
+>
+>
+> svn to svn mirror fixed in first commit but it broke svn to other mirrors
+> This commit fix those other mirrors back to original way of working
+> ---
+>  lib/bb/fetch2/__init__.py | 10 ++++++++++
+>  lib/bb/tests/fetch.py     |  5 +++--
+>  2 files changed, 13 insertions(+), 2 deletions(-)
+>
+>
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index 5bf2c4b8c..cfe6d5025 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -472,6 +472,16 @@ def uri_replace(ud, uri_find, uri_replace, replaceme=
+nts, d, mirrortarball=3DNone):
+>                      uri_find_decoded[5] =3D {}
+>                  elif ud.localpath and ud.method.supports_checksum(ud):
+>                      basename =3D os.path.basename(ud.localpath)
+> +                elif ud.localpath and uri_decoded[0] =3D=3D "svn" and ur=
+i_replace_decoded[0] !=3D "svn":
+> +                    #When added svn fetcher that supports_checksum retur=
+n false
+> +                    #all mirrors for svn skip all basename sets. That is=
+ ok for svn -> svn  mirrors
+> +                    #but other mirrors not work anymore. Example you wan=
+t use tar balls for svn from https server
+> +                    #This elif will catch cases where svn mirros gone be=
+fore svn mirror fix
+> +                    #This is basically same than first if branch except =
+no mirrortarball set. Can it some how set for svn uris?
+> +                    basename =3D os.path.basename(ud.localpath)
+> +                    # Kill parameters, they make no sense for mirror tar=
+balls
+> +                    uri_decoded[5] =3D {}
+> +                    uri_find_decoded[5] =3D {}
+>                  if basename:
+>                      uri_basename =3D os.path.basename(uri_decoded[loc])
+>                      # Prefix with a slash as a sentinel in case
+> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+> index ed7a39a72..934c19e0e 100644
+> --- a/lib/bb/tests/fetch.py
+> +++ b/lib/bb/tests/fetch.py
+> @@ -512,7 +512,8 @@ class MirrorUriTest(FetcherTest):
+>                  "git://someserver.org/bitbake git://git.openembedded.org=
+/bitbake " \
+>                  "https://.*/.* file:///someotherpath/downloads/ " \
+>                  "http://.*/.* file:///someotherpath/downloads/ " \
+> -                "svn://svn.server1.com/ svn://svn.server2.com/"
+> +                "svn://svn.server1.com/ svn://svn.server2.com/ " \
+> +                "svn://svn.server1.com/ file:///someotherpath/downloads/=
+ "
+>
+>      def test_urireplace(self):
+>          self.d.setVar("FILESPATH", ".")
+> @@ -541,7 +542,7 @@ class MirrorUriTest(FetcherTest):
+>          fetcher =3D bb.fetch.FetchData("svn://svn.server1.com/isource/sv=
+nroot/reponame/tags/tagname;module=3Dpath_in_tagnamefolder;protocol=3Dhttps=
+;rev=3D2", self.d)
+>          mirrors =3D bb.fetch2.mirror_from_string(self.mirrorvar)
+>          uris, uds =3D bb.fetch2.build_mirroruris(fetcher, mirrors, self.=
+d)
+> -        self.assertEqual(uris, ['svn://svn.server2.com/isource/svnroot/r=
+eponame/tags/tagname;module=3Dpath_in_tagnamefolder;protocol=3Dhttps;rev=3D=
+2'])
+> +        self.assertEqual(uris, ['svn://svn.server2.com/isource/svnroot/r=
+eponame/tags/tagname;module=3Dpath_in_tagnamefolder;protocol=3Dhttps;rev=3D=
+2', 'file:///someotherpath/downloads/isource/svnroot/reponame/tags/path_in_=
+tagnamefolder_svn.server1.com_.isource.svnroot.reponame.tags.tagname_2_1.ta=
+r.gz'])
+>
+>      def test_mirror_of_mirror(self):
+>          # Test if mirror of a mirror works
 
-$ bitbake-hashclient --address ws://localhost:8686 stats
-{
-    "requests": {
-        "average": 0.0004462178160857849,
-        "max_time": 0.04537125899992134,
-        "num": 3121,
-        "stdev": 0.00163338261679226,
-        "total_time": 1.3926458040037346
-    }
-}
 
-For a world build with 38000 tasks, 38000 * 0.0625 =3D 2375 seconds or 39
-minutes, so I suspect the hash server performance is a real issue here
-:(
+I took the original patch since it seemed to make sense and was simple
+with a test case.
 
-Michael: Is there anything we can do?
+This patch is adding fetcher specific conditionals into the core code
+and this always worries me. You'll note we don't have many, if any of
+these cases currently.
+
+That makes me wonder if there isn't a better way to solve this somehow.
+It also makes me wonder if the original change was correct :/. I
+certainly don't like the if block above being added.
 
 Cheers,
 
 Richard
+
+
+--_000_SJ0PR22MB2795FD04B582271532772B29FAEB2SJ0PR22MB2795namp_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
+ttom:0;} </style>
+</head>
+<body dir=3D"ltr">
+<div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_EmbeddedFo=
+nt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=
+olor: rgb(0, 0, 0);">
+I think original change was correct in way that it fix svn to svn mirroring=
+. Now I also added handling of svn to other mirroring. I saw there is alrea=
+dy if clause which would do the correct thing if mirrortarball is set. But =
+I am not sure where it can set and
+ what all and where it will affect if is set. That why I set svn specific i=
+f else there that no any other place need to change. I also added test case=
+ for svn to file mirroring. Maybe it can be tested with this new test witho=
+ut any svn changes if svn to file
+ mirroring works like with this change.</div>
+<div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_EmbeddedFo=
+nt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=
+olor: rgb(0, 0, 0);">
+<br>
+</div>
+<div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_EmbeddedFo=
+nt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=
+olor: rgb(0, 0, 0);">
+-Kari</div>
+<div id=3D"appendonsend"></div>
+<hr style=3D"display:inline-block;width:98%" tabindex=3D"-1">
+<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" st=
+yle=3D"font-size:11pt" color=3D"#000000"><b>From:</b> Richard Purdie &lt;ri=
+chard.purdie@linuxfoundation.org&gt;<br>
+<b>Sent:</b> Tuesday, May 21, 2024 12:28 PM<br>
+<b>To:</b> kari.sivonen@live.com &lt;kari.sivonen@live.com&gt;; bitbake-dev=
+el@lists.openembedded.org &lt;bitbake-devel@lists.openembedded.org&gt;<br>
+<b>Subject:</b> Re: [bitbake-devel] [PATCH] fetch2/svn: Fix mirroring issue=
+ with svn</font>
+<div>&nbsp;</div>
+</div>
+<div class=3D"BodyFragment"><font size=3D"2"><span style=3D"font-size:11pt;=
+">
+<div class=3D"PlainText">On Tue, 2024-05-21 at 07:51 +0000, Kari Sivonen vi=
+a lists.openembedded.org wrote:<br>
+&gt; <br>
+&gt; There was bug in first fix of svn mirror fix for [YOCTO #15473]<br>
+&gt; <br>
+&gt; <br>
+&gt; svn to svn mirror fixed in first commit but it broke svn to other mirr=
+ors<br>
+&gt; This commit fix those other mirrors back to original way of working<br=
+>
+&gt; ---<br>
+&gt; &nbsp;lib/bb/fetch2/__init__.py | 10 ++++++++++<br>
+&gt; &nbsp;lib/bb/tests/fetch.py &nbsp; &nbsp; | &nbsp;5 +++--<br>
+&gt; &nbsp;2 files changed, 13 insertions(+), 2 deletions(-)<br>
+&gt; <br>
+&gt; <br>
+&gt; diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py<br>
+&gt; index 5bf2c4b8c..cfe6d5025 100644<br>
+&gt; --- a/lib/bb/fetch2/__init__.py<br>
+&gt; +++ b/lib/bb/fetch2/__init__.py<br>
+&gt; @@ -472,6 +472,16 @@ def uri_replace(ud, uri_find, uri_replace, replac=
+ements, d, mirrortarball=3DNone):<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp;uri_find_decoded[5] =3D {}<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;elif ud.=
+localpath and ud.method.supports_checksum(ud):<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp;basename =3D os.path.basename(ud.localpath)<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;elif ud.local=
+path and uri_decoded[0] =3D=3D &quot;svn&quot; and uri_replace_decoded[0] !=
+=3D &quot;svn&quot;:<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+;#When added svn fetcher that supports_checksum return false<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+;#all mirrors for svn skip all basename sets. That is ok for svn -&gt; svn =
+&nbsp;mirrors<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+;#but other mirrors not work anymore. Example you want use tar balls for sv=
+n from https server<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+;#This elif will catch cases where svn mirros gone before svn mirror fix<br=
+>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+;#This is basically same than first if branch except no mirrortarball set. =
+Can it some how set for svn uris?<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+;basename =3D os.path.basename(ud.localpath)<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+;# Kill parameters, they make no sense for mirror tarballs<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+;uri_decoded[5] =3D {}<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+;uri_find_decoded[5] =3D {}<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if basen=
+ame:<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp;uri_basename =3D os.path.basename(uri_decoded[loc])<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp;# Prefix with a slash as a sentinel in case<br>
+&gt; diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py<br>
+&gt; index ed7a39a72..934c19e0e 100644<br>
+&gt; --- a/lib/bb/tests/fetch.py<br>
+&gt; +++ b/lib/bb/tests/fetch.py<br>
+&gt; @@ -512,7 +512,8 @@ class MirrorUriTest(FetcherTest):<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&quot;gi=
+t://someserver.org/bitbake git://git.openembedded.org/bitbake &quot; \<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&quot;<a=
+ href=3D""></a>https://.*/.* <a href=3D"file:///someotherpath/downloads/">
+file:///someotherpath/downloads/</a> &quot; \<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&quot;<a=
+ href=3D""></a>http://.*/.* <a href=3D"file:///someotherpath/downloads/">
+file:///someotherpath/downloads/</a> &quot; \<br>
+&gt; - &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&quot;svn://s=
+vn.server1.com/ svn://svn.server2.com/&quot;<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&quot;svn://s=
+vn.server1.com/ svn://svn.server2.com/ &quot; \<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&quot;svn://s=
+vn.server1.com/ <a href=3D"file:///someotherpath/downloads/">
+file:///someotherpath/downloads/</a> &quot;<br>
+&gt; &nbsp;<br>
+&gt; &nbsp; &nbsp; &nbsp;def test_urireplace(self):<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar(&quot;FILESPATH&quot;,=
+ &quot;.&quot;)<br>
+&gt; @@ -541,7 +542,7 @@ class MirrorUriTest(FetcherTest):<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;fetcher =3D bb.fetch.FetchData(&quot=
+;svn://svn.server1.com/isource/svnroot/reponame/tags/tagname;module=3Dpath_=
+in_tagnamefolder;protocol=3Dhttps;rev=3D2&quot;, self.d)<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mirrors =3D bb.fetch2.mirror_from_st=
+ring(self.mirrorvar)<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;uris, uds =3D bb.fetch2.build_mirror=
+uris(fetcher, mirrors, self.d)<br>
+&gt; - &nbsp; &nbsp; &nbsp; &nbsp;self.assertEqual(uris, ['svn://svn.server=
+2.com/isource/svnroot/reponame/tags/tagname;module=3Dpath_in_tagnamefolder;=
+protocol=3Dhttps;rev=3D2'])<br>
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp;self.assertEqual(uris, ['svn://svn.server=
+2.com/isource/svnroot/reponame/tags/tagname;module=3Dpath_in_tagnamefolder;=
+protocol=3Dhttps;rev=3D2', '<a href=3D"file:///someotherpath/downloads/isou=
+rce/svnroot/reponame/tags/path_in_tagnamefolder_svn.server1.com_.isource.sv=
+nroot.reponame.tags.tagname_2_1.tar.gz">file:///someotherpath/downloads/iso=
+urce/svnroot/reponame/tags/path_in_tagnamefolder_svn.server1.com_.isource.s=
+vnroot.reponame.tags.tagname_2_1.tar.gz</a>'])<br>
+&gt; &nbsp;<br>
+&gt; &nbsp; &nbsp; &nbsp;def test_mirror_of_mirror(self):<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Test if mirror of a mirror works<b=
+r>
+<br>
+<br>
+I took the original patch since it seemed to make sense and was simple<br>
+with a test case.<br>
+<br>
+This patch is adding fetcher specific conditionals into the core code<br>
+and this always worries me. You'll note we don't have many, if any of<br>
+these cases currently.<br>
+<br>
+That makes me wonder if there isn't a better way to solve this somehow.<br>
+It also makes me wonder if the original change was correct :/. I<br>
+certainly don't like the if block above being added.<br>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+<br>
+</div>
+</span></font></div>
+</body>
+</html>
+
+--_000_SJ0PR22MB2795FD04B582271532772B29FAEB2SJ0PR22MB2795namp_--
 
