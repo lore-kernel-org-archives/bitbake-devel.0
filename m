@@ -1,114 +1,145 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B06C25B7F
-	for <webhook@archiver.kernel.org>; Fri, 24 May 2024 15:12:12 +0000 (UTC)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
- by mx.groups.io with SMTP id smtpd.web10.18339.1716563525636364023
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51309C25B74
+	for <webhook@archiver.kernel.org>; Fri, 24 May 2024 15:19:22 +0000 (UTC)
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+ by mx.groups.io with SMTP id smtpd.web10.18532.1716563955741224746
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 May 2024 08:12:05 -0700
+ Fri, 24 May 2024 08:19:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CsjBM4X6;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-351b683f2d8so2754258f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 May 2024 08:12:05 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=nKVWEkIl;
+ spf=pass (domain: gmail.com, ip: 209.85.210.52, mailfrom: raj.khem@gmail.com)
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6f8d0a1e500so804484a34.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 May 2024 08:19:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1716563524; x=1717168324; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NMW549WOIBzOaANNltcjbXiOT7u1/Hm53BVpCCp1Al4=;
-        b=CsjBM4X65Ehg+Eq0CawcdfnurUgep0EvRRzyau37Fe3j+uXS3+80CznWAGvsqcjajZ
-         ouajk2kNMLsTxx3Ckv2wfmB9OaumpRIibCjpWgTyxitFlOM/WiZl56MPQ8FkDj+oeS7b
-         mCVDgbaiIfeCWWLTVBsp7rOz6J4mYLKE28gEs=
+        d=gmail.com; s=20230601; t=1716563955; x=1717168755; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zwy+eG8l0V4DBtdNzNlqRP6mj+mwNmCtSUHffT6LIfw=;
+        b=nKVWEkIlf/f48+W57HKjTKUUnQLTCriJLQBfHC+fP9TIZqNALfWWBFTC6T2LllYWuo
+         ZNPDqSND8u5xji0Mev/wfNmD52pLXnziM9FeO06woXBwvjsW7LQo/BxJiT8NlFGwxj3+
+         BPR4AMxereTaPudpal4gq95zRBOyySS/6y0uT5HL1zdJf6yoLg42KxEHtUcf2is3nGmy
+         q4HOC3/zF2zws9iy5hOnSjuX2XO3Cd7O2sUc9II03VS7AXGUdmBIdyUb0viTbyn2DTOo
+         PYF5PqMiy1A48y5/BlxzdNjqJLK9EG6S5jEpz/ZXoSoqCiXqoJCVctcrIiVEpmkQFNsE
+         wWDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716563524; x=1717168324;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1716563955; x=1717168755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NMW549WOIBzOaANNltcjbXiOT7u1/Hm53BVpCCp1Al4=;
-        b=Sh8mjK2T98RvqpPAjgTqQYN1I1i55h9GjMNBtHaAAoYTKGogaH+hDcVc543PU2DxVo
-         aSxDT1kJT2xH9dNQqUGbxX9UhSEFeakvyjCTl4w7FMK7353QHRiX+sAbknVJGML3/80w
-         SbhCG1SuUwIwfuahRGUGTIBOJxs1xtSIAulmuyMvO2b/oekB34SfAEzN533s3CGCx+dS
-         +WyrDf7vthRhb9k6jjAKMJVpoc35APUsjfE4kX6Ld6jHqk/aNRePEy8FY1ziz3FsAm4i
-         KQMKV7mnLF/iKWnv8qIbSEpaPsGBuD/N8Qp4cmnVesENMBBqVw0s5WAI4cXvcTSMbcl7
-         ykRA==
-X-Gm-Message-State: AOJu0Yxhp/9vtjAHpX5nZsOGAmVeZIKkGO1pTJseWt8I5XGDGYI0CG4H
-	3krKtIaLsKOJqqMPJ+nB8vvFOkssjlN3oBxSEef7GqC/ZfJH0Owc7MazmnU4zinEnKmM94jrUvl
-	V
-X-Google-Smtp-Source: AGHT+IEJLZNl3ikiBpGgP+F2mPeA6aiHEXlCpJzj4JbIHfihoKPRT7itf0hzajYmLX/uB4+xBarFsA==
-X-Received: by 2002:adf:a44a:0:b0:355:41b:d38e with SMTP id ffacd0b85a97d-35527047b2dmr1610454f8f.36.1716563523929;
-        Fri, 24 May 2024 08:12:03 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:9ca4:3686:8521:57da])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35579d7db23sm1841759f8f.23.2024.05.24.08.12.03
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 May 2024 08:12:03 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 4/6] runqueue: Process unihashes in parallel at init
-Date: Fri, 24 May 2024 16:11:58 +0100
-Message-Id: <20240524151200.2449512-4-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240524151200.2449512-1-richard.purdie@linuxfoundation.org>
-References: <20240524151200.2449512-1-richard.purdie@linuxfoundation.org>
+        bh=Zwy+eG8l0V4DBtdNzNlqRP6mj+mwNmCtSUHffT6LIfw=;
+        b=MOgXEGs1r2Gd8ysZvR12fSvfI5mPDzkcQeu450Lw7C7HlgjyKJygq0l7lstGxbqKjI
+         RCvYj6HELpZH02/UIwq8r25l9dRV43kp7ruq8j7LF7gpn2dyab5okfQG/T8+MbRijPl7
+         VUQ3SmiQXCPV/VJvHfF1SYNz2mQ3of1jj6fa9U2UlBio1TX5POSak5tqS4h3UGybwcFG
+         /sc/jTMpks5w/B8qfskVvpnz4uLcGu1aZgZRIqk23H+JgvGE1pPinN+We9XBF+yqNHu3
+         aTNcaMiEh+3Fx37eDZI+Nq5GYKRpCOgvxRdfx+lqkFbJJlFnuA3DtxjspsFfLM17ZicN
+         pV2w==
+X-Gm-Message-State: AOJu0YyjziNTrMCxA89iiwRsgJhd7kIgCHZZV+0Zy9EDWdzO61q4RMpB
+	p+iYnS4rwyrNlwKWwL+5EggyhQbHCPPrM4VU3kVvAQNyvCCQStWfLq+qi+SnI6YAg2m3I+ayR+B
+	8UgibyXijUretN8i7Yvk7JDX5Bm8=
+X-Google-Smtp-Source: AGHT+IEg6Zk3fTLevNBdQBh/U+YuqVHqdz4lcjvSQHM04PpFwBbT/e1pNk28h6wdB8GFw6HA9ze+e8Xpfn7s5nf+NOM=
+X-Received: by 2002:a05:6870:93c3:b0:24c:6184:1152 with SMTP id
+ 586e51a60fabf-24ca1550f3cmr2522653fac.56.1716563954735; Fri, 24 May 2024
+ 08:19:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240524-b4-support-v1-1-0c4334c36cc7@cherry.de>
+In-Reply-To: <20240524-b4-support-v1-1-0c4334c36cc7@cherry.de>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 24 May 2024 08:18:48 -0700
+Message-ID: <CAMKF1sq9U9VpPPbkmpot7TejVOemWjGqydyWiBn68Dz2vyhEEA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] add basic b4 config file
+To: foss@0leil.net
+Cc: bitbake-devel@lists.openembedded.org, 
+	Quentin Schulz <quentin.schulz@cherry.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 24 May 2024 15:12:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16258
+ <bitbake-devel@lists.openembedded.org>; Fri, 24 May 2024 15:19:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16261
 
-Improve the runqueue init code to call unihash queries in parallel since
-this is faster and more efficient, particularly on slower links with longer
-round trip times.
+On Fri, May 24, 2024 at 6:49=E2=80=AFAM Quentin Schulz via
+lists.openembedded.org <foss=3D0leil.net@lists.openembedded.org> wrote:
+>
+> From: Quentin Schulz <quentin.schulz@cherry.de>
+>
+> b4[1] is a very nice tool for mail-based contribution. A config[2] file
+> exists to set up a few defaults. We can use it to set the Cc recipients
+> to always add, in our case the mailing list.
+>
+> This shouldn't be necessary if we had a script that b4 prep --auto-to-cc
+> could call to find the mail address(es) to send to. While we could do
+> that, this opens the door to people trying to add a way to notify some
+> people (e.g. a MAINTAINERS file) which is not somewhere the project
+> wants to go right now, and this also makes sure the address is always
+> added even if one forgets to run b4 prep --auto-to-cc (which is part of
+> the typical workflow for U-Boot and Linux kernel, but is not necessary
+> thanks to this patch).
+>
+> [1] https://pypi.org/project/b4/
+> [2] https://b4.docs.kernel.org/en/latest/config.html
+>
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+> This adds a basic config file for b4 to avoid to have to add the mailing
+> list by hand. For documentation patches, one will still need to run
+> b4 send --cc docs@lists.yoctoproject.org
+> manually for sending it to the docs ML as well.
+>
+> Note that b4 supports patchwork, c.f.
+> https://b4.docs.kernel.org/en/latest/config.html#patchwork-integration-se=
+ttings
+> though I have no clue what it does with it as I am no maintainer, but
+> maybe something worth having a look at if some maintainer of this repo
+> wants to use b4 to merge stuff?
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/runqueue.py | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+I use b4 regularly for meta-openembedded maintenance and it also updates
+patchwork when patch is accepted, I have this config.
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 586b11da2d..411c47eff9 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1280,11 +1280,18 @@ class RunQueueData:
-         dealtwith = set()
-         todeal = set(self.runtaskentries)
-         while todeal:
-+            ready = set()
-             for tid in todeal.copy():
-                 if not (self.runtaskentries[tid].depends - dealtwith):
--                    dealtwith.add(tid)
--                    todeal.remove(tid)
--                    self.prepare_task_hash(tid)
-+                    self.runtaskentries[tid].taskhash_deps = bb.parse.siggen.prep_taskhash(tid, self.runtaskentries[tid].depends, self.dataCaches)
-+                    # get_taskhash for a given tid *must* be called before get_unihash* below
-+                    self.runtaskentries[tid].hash = bb.parse.siggen.get_taskhash(tid, self.runtaskentries[tid].depends, self.dataCaches)
-+                    ready.add(tid)
-+            unihashes = bb.parse.siggen.get_unihashes(ready)
-+            for tid in ready:
-+                dealtwith.add(tid)
-+                todeal.remove(tid)
-+                self.runtaskentries[tid].unihash = unihashes[tid]
- 
-             bb.event.check_for_interrupts(self.cooker.data)
- 
-@@ -1301,11 +1308,6 @@ class RunQueueData:
-         #self.dump_data()
-         return len(self.runtaskentries)
- 
--    def prepare_task_hash(self, tid):
--        self.runtaskentries[tid].taskhash_deps = bb.parse.siggen.prep_taskhash(tid, self.runtaskentries[tid].depends, self.dataCaches)
--        self.runtaskentries[tid].hash = bb.parse.siggen.get_taskhash(tid, self.runtaskentries[tid].depends, self.dataCaches)
--        self.runtaskentries[tid].unihash = bb.parse.siggen.get_unihash(tid)
--
-     def dump_data(self):
-         """
-         Dump some debug information on the internal data structures
--- 
-2.40.1
+   [b4]
+    pw-url =3D "https://patchwork.yoctoproject.org/"
+    pw-key =3D "<mykey>"
+    pw-project =3D "oe"
+    pw-review-state =3D "under-review"
+    pw-accept-state =3D  "accepted"
+    pw-discard-state =3D "rejected"
+    send-series-to =3D "openembedded-devel@lists.openembedded.org"
 
+
+> ---
+>  .b4-config | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/.b4-config b/.b4-config
+> new file mode 100644
+> index 000000000..632e39db4
+> --- /dev/null
+> +++ b/.b4-config
+> @@ -0,0 +1,2 @@
+> +[b4]
+> +  send-series-cc =3D bitbake-devel@lists.openembedded.org
+>
+> ---
+> base-commit: ce166ae25793c11b0a190c531bef0c296fd74497
+> change-id: 20240524-b4-support-e9855fc54d40
+>
+> Best regards,
+> --
+> Quentin Schulz <quentin.schulz@cherry.de>
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#16251): https://lists.openembedded.org/g/bitbake-deve=
+l/message/16251
+> Mute This Topic: https://lists.openembedded.org/mt/106281674/1997914
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [raj.kh=
+em@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
