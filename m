@@ -1,454 +1,209 @@
-Return-Path: <ticotimo@gmail.com>
+Return-Path: <anuj.mittal@intel.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EF2C25B74
-	for <webhook@archiver.kernel.org>; Fri, 24 May 2024 18:37:01 +0000 (UTC)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
- by mx.groups.io with SMTP id smtpd.web11.2825.1716575819392091263
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AE8C25B74
+	for <webhook@archiver.kernel.org>; Mon, 27 May 2024 03:50:10 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+ by mx.groups.io with SMTP id smtpd.web11.20043.1716781809989338165
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 May 2024 11:36:59 -0700
+ Sun, 26 May 2024 20:50:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=i3Jgg+nW;
- spf=pass (domain: gmail.com, ip: 209.85.128.182, mailfrom: ticotimo@gmail.com)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-628c1f09f5cso23078997b3.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 May 2024 11:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716575818; x=1717180618; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XJ9gf1FeCTMdvWbkDVhQOg6gYpGFtXrt/ATLonsYoCU=;
-        b=i3Jgg+nWQ6pSlFuj+8CwsbJCmXw9N7Q0Tm2uAkcKEugbQBsr8dVmI4EcAYFozBT4kf
-         Fs54d34a1q/mifbS0tyHtzVmWOb5B3TUnPmC+uEMhVH2qWepbCdrU4euw/hlpTwRTzpB
-         d8hAxThLNHxCrMRVcWXZ/zuYIlg+IOVc18U3ULqkIquLQFsGnNYFN2bXTJCggv8x1ZeJ
-         lzALPz3kbj0uMx8x/iIIr0Y9aLLp+UHEmFFWqW9dabXZSzCyuUrj9DraU4RRa4ygquQU
-         IhGXw5MpkaNELENE1d309d3lnF62xl+i4IBcsKA8uZSSY258uQnws+AYPch3t0hypLTB
-         xZSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716575818; x=1717180618;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XJ9gf1FeCTMdvWbkDVhQOg6gYpGFtXrt/ATLonsYoCU=;
-        b=mr8HBQkGfyLoI+JcZUQKxoRfGhIo1n6s9wr4af6sPJn74fXPBVGd13iLpGfsagG16C
-         NfOwVX2CH7OcGhbGU5+UPbRo1gzJu9yrfbf4zLYMhObYlv54cI5SbsrQi7tYP09jg6cq
-         +1btfUa/FqXVeO+xkbr+FnR2NZHxsojEU635lFaPPF2GmW/KB4nkUUirKlROPp4TnFEV
-         69JZcONqmxwySCqyYan26cN+mxZ33tij/3SmCGCbTWcSqpXuITf/3304E3o9PLkeR3W4
-         Ft2QV1UFgzYxVl4sxvftmoCVbnjsecSounRAFuphXlrfqi/zUZO1DrTO1LiM/pFvPvuN
-         0U0A==
-X-Forwarded-Encrypted: i=1; AJvYcCW+PDjiPqsNCB0VJWCmPYuH3LCSt0gPyhoID5ApiQnNERCn91y7xox528yI0pAcmluDRBqtLRy2yzGvjdgyDhwiWoyixOV+CPgLnd9tamPvPGGx9Ow=
-X-Gm-Message-State: AOJu0Ywlb/BOfiyw2C3WfrVWYebchrEZm9SJ+Nr+oNXi/cHE+W5ToB8z
-	VDuVF5aHJxKHg/df6pmcJ1+RDjD1xKLv5UMwk6CgpfkNds8h+iG9QEOJOx9hWOHbIfUgKo3cHC6
-	G43TVu41Sp3a/wbbLGO2HQsWG/y4=
-X-Google-Smtp-Source: AGHT+IGaHH8qly91K6uIN9A25K5478ma5OXfieipbZeTeNigdrIvmRDEl2FNtXNKkYxrbL6YptAp5efenyo84Sy2XQ8=
-X-Received: by 2002:a05:690c:82c:b0:622:f785:5499 with SMTP id
- 00721157ae682-62a08f923d3mr36657037b3.37.1716575816939; Fri, 24 May 2024
- 11:36:56 -0700 (PDT)
+ dkim=pass header.i=@intel.com header.s=Intel header.b=Nhldi9c0;
+ spf=pass (domain: intel.com, ip: 198.175.65.15, mailfrom: anuj.mittal@intel.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716781810; x=1748317810;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=iLl/4v1pm8qxRjSimlW4tm2eHO0+x0wrHkEvsTsIkSY=;
+  b=Nhldi9c0/iZYpelsJL13cn27cyBF2kl4acw+qDzCrZ+hYyCRj6BV+2aX
+   ZSp6CZzKjYp/qoQ1tKLbFe5m3v94NnDy8/1UiRW0P3W7H+3YW5T18X5v9
+   W43xWUFGYmcHV/hOr3llxezZbu/2zobYg9AJ9RtND/h78dON7n0yoEk7/
+   zhbr0HovJjRk9GXpC/CPDUKLffEJTNs597oYjYHLJuNg1jEUvkcNU9N4y
+   GDc2SZStFuMQUOJHSNROgbGNExigF4D/FLECnWuDk5fraYUl+jZnX0tz8
+   b6Zu1mvlE+/6hRauuxjSHBLPuUWx1O69w+L+tuK5oGk2kVyI7QGHPo+SR
+   w==;
+X-CSE-ConnectionGUID: 5SHHA4biQIanXOvPp+5hjw==
+X-CSE-MsgGUID: wdDUwjaLQR6rRsdLGeo3YQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="16871603"
+X-IronPort-AV: E=Sophos;i="6.08,191,1712646000"; 
+   d="scan'208";a="16871603"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2024 20:50:10 -0700
+X-CSE-ConnectionGUID: 97gTEkW4S+SkTgXmFyWBJQ==
+X-CSE-MsgGUID: /qUO0A8yRd605CFyQUNC8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,191,1712646000"; 
+   d="scan'208";a="34704932"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 May 2024 20:50:09 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Sun, 26 May 2024 20:50:09 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Sun, 26 May 2024 20:50:09 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Sun, 26 May 2024 20:50:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UWFPPpgbEpKSP1jvZ5iEyaUkcojs2SH2cBxEbFpn+wPRrd2GTXnBHPRh/Q6hk81jq3NLaeWAnBIwDKlLcy3Ufss0/lBK4wmKOvYUcxaukW/3+rt2+ZpnnX8BCpIuKHzqwU1bWrfuUaH3awC7jHzQQkICHP0seK5A3wPKpxl96IK7Pm1n7AlQfCXyu0wcfxhqB95uKJuCZXWCAjCB6SfB6Pvw3fDGDOgb+XNJoHsoVCHinWIXICw+tAeCa/f7y9kYucom5g+WCQz5tOaf/oGyggQ2jVVK7mcXNuDPfGYS0ykk4O2OoUK9c+5ZTM4SwSBpGanLGN5px1olAM3hbSJ8kw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iLl/4v1pm8qxRjSimlW4tm2eHO0+x0wrHkEvsTsIkSY=;
+ b=Xot1Oqy9c/NqqnMTLlc74mgOhO9vjkr5DT0FQGRDSkjcjU7ftVjeNo9R5ssGB1U0Yr3AaEETQVo78V9bVaYyh3oci2Qw3KB/SiWHWMAsYRJrGoI/ygla27IMwRGkvp+mIqHbFn0N/hsOqRuHduptVfZabBpsgX0yvHQ3K6Wcz5WPM8tkFv0JP6lROE/ZpPa4AG8wUtumoRdfdQ0L1aO8fG3unWw36p0KQ1D7nqKJPW2u6GOf57YH4FLOQzhwhRe+5RxUwChC3FaBsxV1/zJjMPtOkKGoQPpKokfCdtwnBohguitCi4ZQ1Q09s+dC/47Ev/kyStOQfvyTDqeztk5qBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM4PR11MB6430.namprd11.prod.outlook.com (2603:10b6:8:b6::15) by
+ DS7PR11MB7931.namprd11.prod.outlook.com (2603:10b6:8:e5::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7611.22; Mon, 27 May 2024 03:50:07 +0000
+Received: from DM4PR11MB6430.namprd11.prod.outlook.com
+ ([fe80::9378:e70c:77ca:d46f]) by DM4PR11MB6430.namprd11.prod.outlook.com
+ ([fe80::9378:e70c:77ca:d46f%7]) with mapi id 15.20.7587.035; Mon, 27 May 2024
+ 03:50:06 +0000
+From: "Mittal, Anuj" <anuj.mittal@intel.com>
+To: "quentin.schulz@cherry.de" <quentin.schulz@cherry.de>,
+	"alex.kanavin@gmail.com" <alex.kanavin@gmail.com>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>, "mlynch@hi-techniques.com"
+	<mlynch@hi-techniques.com>
+Subject: Re: [bitbake-devel] Dependencies ?
+Thread-Topic: [bitbake-devel] Dependencies ?
+Thread-Index: AQHareJpmEPn+DIu7k2rdMND7kZnzrGmbbMAgAAMiQCAA/vqgA==
+Date: Mon, 27 May 2024 03:50:06 +0000
+Message-ID: <3a15c1e4247e35bf8578f0ff55418a414409fbab.camel@intel.com>
+References: <lfcT.1716559062178660500.wc5p@lists.openembedded.org>
+	 <afdd4a7a-8e55-4519-9ce6-7d09e50c0d44@cherry.de>
+	 <CANNYZj_XF0cXbK-nVeK=xpd8_XC07j-FC8rovvips085M1OMHQ@mail.gmail.com>
+In-Reply-To: <CANNYZj_XF0cXbK-nVeK=xpd8_XC07j-FC8rovvips085M1OMHQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR11MB6430:EE_|DS7PR11MB7931:EE_
+x-ms-office365-filtering-correlation-id: c1dad83e-1506-46ef-ed48-08dc7e001936
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|376005|366007|38070700009;
+x-microsoft-antispam-message-info: =?utf-8?B?U0txUDY2M1RjOVZHUVJzcWcya0ZRdHFaOFRCSmdKdmF3dVlYdW4yb3VLWDdR?=
+ =?utf-8?B?Q1Jza1BBTy9XamJJVUZMc2Evd2E4TEMrSUxra043Vmd4UEd6ZzF5QklGVTVO?=
+ =?utf-8?B?L0ErWFlKd3RRYkhvRUdpNEMvRHRxRm1ja253ZGQ1eElwS0xRZUQ5WTFTSTNY?=
+ =?utf-8?B?b1diOWtYZVo5OUdMTEZacVNGY0JNejcxa0d6T0g0emNUcVlURk55aFFxMzdY?=
+ =?utf-8?B?OTNrZXJ5b3Z6N1hGQUdFbFVEbGlGMzJhUml4dmo2bDFVRnJzQmxGSVl3Y0hW?=
+ =?utf-8?B?dEd0b3hPcVJuSkxMMTlic1VaaDIrZTVtc21pUEpPMDRNVGsyTzFoWlBmOENP?=
+ =?utf-8?B?TmJ6YkhhK1ZiUlE4eW9tK2IrcURPWGhmd29xZlVSOVZHWUY0Y0VpeDVWbWti?=
+ =?utf-8?B?UTJabWFMMzNYQ2xneUJYMVlmL1N2b1NUWnJFQzErWjEwOENlMkN6Sk9HM3ZL?=
+ =?utf-8?B?by9hMXJDR292Lys5ajhNNlNiOTNKSEluYUJZWHdoTXRGTkxieU16SHRhQmds?=
+ =?utf-8?B?aTMzWGZDTS84ZlM1QkxIL29aNEZrRzNjOWZrdHVYT0s2M05LcUQyNU5rK0Fl?=
+ =?utf-8?B?ckxvazNBenhYRnM2bmhzcXBEY3d0U2hmU0FOYkFlTUkxK3picVpuSjluMnBK?=
+ =?utf-8?B?OXVDeWhEU24wTEdkeS9DN2h1b0JlbWNpbVdrNzQ0OFVyaFEzRVVUbzJNTG1l?=
+ =?utf-8?B?dlFYNlJQWlpac2xxbmhZMDJWVFJnSlNsR3RLaEFQQytsWHprZTZnQUFoTFBp?=
+ =?utf-8?B?SjRCSGYxR2l6cko3RnhqYklodDJjV1ptdEx2cVRUMFFhR2NVdDNabXBXUjdO?=
+ =?utf-8?B?NU5WaDd3dlNVdWUxa09LWDFRSDA1S1gwZGJkYlRIbW1DcUVHdnpSdlEwZVBV?=
+ =?utf-8?B?ZFlVNmRacHNScXRteGZGeFRHOC9EMFhKcS9FVS83VnBINjF2Y3RBcC9TcDcw?=
+ =?utf-8?B?YjZublZtV1dCTzBnMVVxbXNKK053eXhIdHAwSDBOZXpiM1RlSkxleDlSclRE?=
+ =?utf-8?B?RWxHaEtiSjlQTzczYmx2OWl1bTF4aThhOGRRWnJSZFpyZVlhRHFKeE1FZDh4?=
+ =?utf-8?B?RGd5ZGE3V2tDcFd4WndTNXNYa0Z6K2xNVEUrSzhGV2RjVnAzbVNCZ2lnK1RK?=
+ =?utf-8?B?RVZnN2ZsR01QckpqZVhVREJKalJTVmtFZ0diamNKeHRMRjZ1WGIrbnN3Vmtp?=
+ =?utf-8?B?Q1ZLcXkxLzAybUV4bFkwN2JKSHptZXFrMWFRdlFEQmpHRlgzZEF3WTdIZ3JE?=
+ =?utf-8?B?ODdzaTlQQ2UzSWM1clEydkRtMEJCSndTbTgwWTZWdlRIMEpxQUgvc2NXSC9B?=
+ =?utf-8?B?R3drQ1BKQWx3N1dteGlZVEt4ZkQ5TXBkc2JHeEUwZ0xXMEsrc29pKzh5MU0v?=
+ =?utf-8?B?UCt1d0tYWlVidGlnWGVKQWxKbGs4amZUOERNckoxcVFXcXJCcisrb05SaEd5?=
+ =?utf-8?B?cmQxOENuZDhGNVVFaFR6MDlRbEpXaUpWNEtweGRQTGRXcjhJcEhhejQ0VUJl?=
+ =?utf-8?B?OGlLVHNtNmxGUkpZN1dleXl4OWdsR0ZDcDViNDFzMk5TMzdyblMrdkN4QklO?=
+ =?utf-8?B?cDdWN1B4M00ybStmeW1wQUdrMG01c24xMVlsUDI0YXBTSFhnMlRISG95cWdm?=
+ =?utf-8?B?UHVrS080R2I0bUZuZHFFZ0JnRnZ1R3NPc0wwT1o4Zm9zeEtsaFlvTjBCNllj?=
+ =?utf-8?B?bVAxV0UrS01rS0Qvd09TU1RCVDlHd293Z1RxdzVTcm1PZGpRNStHV1Z3PT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?V08vdXZ4OStKTmpyeW4zZTVmMi94bE44eDVVdkdEQWNYVTZiWStYVC9mQ01J?=
+ =?utf-8?B?U0NVOGVLeVpsYkhnRTY1ZzZQdzRuQ2phc3JxMThuSnk3akNJaXo5blZvSGNs?=
+ =?utf-8?B?LzNYLzdFVFRDaEhtTm1Yc01hRmlLdzZ3dXhEdTlYTHNyN0hnUE1qRnBvSjRy?=
+ =?utf-8?B?VHNqdWZzbjIyOUx5cU53elhiMS9WWjFCTjRxNzFYNkJacjFzR05sSGlIYlJJ?=
+ =?utf-8?B?M2dZYXBVYzU1VWZYK29NSW55NFFTeUFIMmVqRWk2M2dDaW1Mb0QxZEVjMnVx?=
+ =?utf-8?B?N01IU1J0SldoVmRkL1lKN2hDRVBOWGliQ0FmUjVEdmRMK3RlL2NaRU14ckZk?=
+ =?utf-8?B?Zm51Wm1vekVQLzVsbTFlc3R2SVZxV0xkdWtST3lQVEJodEdrSitWdm4rVlRM?=
+ =?utf-8?B?ajVlSzNCdFVVdEgzanhuNVpBSWlWZ3FMdzA0eVRwTkdZdmdLbTBpcE81VUVw?=
+ =?utf-8?B?eXZKd1JBRHpGL3RpUkEwTDZ0T3NLaGVCZVNIS3B6OFJFaFV5c2QzK0VaUjRI?=
+ =?utf-8?B?aVlFSTU1T1ZpdzZSalB4S1BNTkhneElOUEhyOGtFTU80T3dId2grV0Y2M2dx?=
+ =?utf-8?B?c3pQT1FvVldNR044alhGYlBodE1wc3pjdnhITmJ5VkhReWVpWFpLOThWZlBx?=
+ =?utf-8?B?NVV3SHNycytRL2NuUW5FMVFlYml3Sm16MmJhNGt4WmRYZG83SVIveERWK0lD?=
+ =?utf-8?B?eXA5d2VrYk12Ykc4cjN0bExaLzBHOW5ybk8rd0U0K0llWjlYd3pNMnNsUk14?=
+ =?utf-8?B?NHBQZjU3N2NZQS9KaGZicG9iNVpjMnNmV0FzSkJSZUlnWU9XSVAzWGZiTmlD?=
+ =?utf-8?B?N0IvejBTNFVVM0JocEVSZ1JIaTRLbnE2VHNMVmdvSXpxaTZteDBZL1pyakFk?=
+ =?utf-8?B?MVh5NmdNTjhMcTlMM3B5R20wdmVoRk9OKzZhM25UN0xZOEJIdE12cWhkWmtv?=
+ =?utf-8?B?VURYUHNsTFRxcFJFei9kNkpRMXRRYlhYZkROV2FqMDBhdmlkTGFLM3lXaEZT?=
+ =?utf-8?B?WHIwZktVM0IyYWEvMDBOVFlHS3VIbTVGSkd1L29ENWRhdXN5K1VnSm9LOGpB?=
+ =?utf-8?B?bWF5bWlEZ0lyNDRNVE45eXhWaGxjM3BzMWdtZkE1MkZtcGpya05Md3RuQnAz?=
+ =?utf-8?B?TTF4R2xlWVVUY2NMMWp1Q2V2Y3NzRi9QS0E3TjZDWVZyRUI1c1BaVGNDclI5?=
+ =?utf-8?B?V0hBd0pVRUo5M1MvTWJjQ3BMRTByc1NuaDNYTVVhOXNObEFlMWJxOThiRWRi?=
+ =?utf-8?B?NmFTVGdseHRsK1FCMFNONjVqRHpwcW9VMGN1Sk1zQ1kydUprL1k1RVhmL25X?=
+ =?utf-8?B?MEd0MXFhQkVtV21xc3IwbldDb0x4UlNjQ0dDeDJCZlZNQ0Q0czF1SUxYUHJ0?=
+ =?utf-8?B?UjdkZGZXNTE0LzZ4cm1vbnVuMGNhTkEzdGJSOGxzQmpQVVNrREEvTEdDUTl2?=
+ =?utf-8?B?Zk5GN1FBeTA3NUxDaG55bGdyUmNCMjQxVEVxMTFjUlRjOVV6S25WcmNNSkdk?=
+ =?utf-8?B?SEhxWVltbWRJcHlGUUY5eEVzTUZJUU1YbkpZY1dFUSs3K1o1TUVvWE1UdG9s?=
+ =?utf-8?B?dGxJNVltODRYUGpVUU9DYnlvKzZuV2ZveEVmajYxc05Wd0tpQSs2TUZocnhN?=
+ =?utf-8?B?eERCVDBqUHRUNUJYSXQrallMbHlEMEZpMUY1RHJTT3FUcE8vVEpTYVl3YmVO?=
+ =?utf-8?B?TWdZUXRQZGpXMWFzdzlIRkM5TWhPRyt6OENkL2tkR3gvaWJqa0NrakQxNDgy?=
+ =?utf-8?B?MTYxYnh3dnJvR05xRkM3b1ZIL093V2xFVCtOMEVTNHVicW5CL0RpbTlSYU9t?=
+ =?utf-8?B?amVmU2piVEFjcTlRL2h3WWkvakluNTFkR2RuWFdoNnMyUWhUZDRmTVp4Umxz?=
+ =?utf-8?B?OTA1SGp6cUM4b2R2NE5BdjlpbWErVnkyRzF1SUVKUmR0cys1dlFQeEQ3Qnpj?=
+ =?utf-8?B?cmNyeEsyQlpQazVwYUVRUmNjQjFHZ09QZ1V2RFAwUFZzRjNmUlN4SzJxT3Bh?=
+ =?utf-8?B?cnBHdVRGZ1dsSzRhczd2dU5KOGU3T1Y4WHJhUVVOcFRNNGdXT2F1WmZKN0or?=
+ =?utf-8?B?SWVRMFE4OEVZVHRHWEswaUVRd0lLUlI4ZFM4MXZldGpHWTJoOEJrZnBYcHU5?=
+ =?utf-8?B?TGFGT3JBS2oydGdjTHlGSG5PN3puS01DcHFLeUdvUjR6U1UrUzJxZEZML3NU?=
+ =?utf-8?B?VWx1clgrMmpJUTh1RTBoR1dHK0F1QWJGNjhqMVdBRzBGYS9CeUwvMlc2NDls?=
+ =?utf-8?B?WDRaMWU3SUI2NUFtb3pJaDBoVnNBPT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1DE58DE3428A20429032ED27C1A27921@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20240524-b4-support-v1-1-0c4334c36cc7@cherry.de>
- <CAMKF1sq9U9VpPPbkmpot7TejVOemWjGqydyWiBn68Dz2vyhEEA@mail.gmail.com>
- <de18f958-d6db-4f90-a49b-a181d046f77e@cherry.de> <CAMKF1spNvMbuy+a-HS7wEbx5D817t6oxb_R12=gBgKgG8Eja1Q@mail.gmail.com>
- <CANx9H-CC9YHqTv6LgZE8jP0KVJC5Wsvyc8wmzhnf9crRG7ej4A@mail.gmail.com>
-In-Reply-To: <CANx9H-CC9YHqTv6LgZE8jP0KVJC5Wsvyc8wmzhnf9crRG7ej4A@mail.gmail.com>
-From: Tim Orling <ticotimo@gmail.com>
-Date: Fri, 24 May 2024 11:36:45 -0700
-Message-ID: <CANx9H-BbTqYwGhd=JqBiFCtnfrf94Hj261SiLZAgJEfUAuw2_g@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] add basic b4 config file
-To: raj.khem@gmail.com
-Cc: Quentin Schulz <quentin.schulz@cherry.de>, foss@0leil.net, 
-	bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000cc867c06193773b1"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6430.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1dad83e-1506-46ef-ed48-08dc7e001936
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2024 03:50:06.7748
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RakyPesIU/eYDSuaSxq02Fr5pY2OoatUM/kVkafmgv6XBBoW5RMkaheQfw9Triyn6xJBasSMyOXUMLWtd219zQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7931
+X-OriginatorOrg: intel.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 24 May 2024 18:37:01 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16266
+ <bitbake-devel@lists.openembedded.org>; Mon, 27 May 2024 03:50:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16267
 
---000000000000cc867c06193773b1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 24, 2024 at 11:24=E2=80=AFAM Tim Orling <ticotimo@gmail.com> wr=
-ote:
-
->
->
-> On Fri, May 24, 2024 at 9:28=E2=80=AFAM Khem Raj via lists.openembedded.o=
-rg
-> <raj.khem=3Dgmail.com@lists.openembedded.org> wrote:
->
->> On Fri, May 24, 2024 at 8:33=E2=80=AFAM Quentin Schulz <quentin.schulz@c=
-herry.de>
->> wrote:
->> >
->> > Hi Khem,
->> >
->> > On 5/24/24 5:18 PM, Khem Raj via lists.openembedded.org wrote:
->> > > On Fri, May 24, 2024 at 6:49=E2=80=AFAM Quentin Schulz via
->> > > lists.openembedded.org <foss=3D0leil.net@lists.openembedded.org> wro=
-te:
->> > >>
->> > >> From: Quentin Schulz <quentin.schulz@cherry.de>
->> > >>
->> > >> b4[1] is a very nice tool for mail-based contribution. A config[2]
->> file
->> > >> exists to set up a few defaults. We can use it to set the Cc
->> recipients
->> > >> to always add, in our case the mailing list.
->> > >>
->> > >> This shouldn't be necessary if we had a script that b4 prep
->> --auto-to-cc
->> > >> could call to find the mail address(es) to send to. While we could =
-do
->> > >> that, this opens the door to people trying to add a way to notify
->> some
->> > >> people (e.g. a MAINTAINERS file) which is not somewhere the project
->> > >> wants to go right now, and this also makes sure the address is alwa=
-ys
->> > >> added even if one forgets to run b4 prep --auto-to-cc (which is par=
-t
->> of
->> > >> the typical workflow for U-Boot and Linux kernel, but is not
->> necessary
->> > >> thanks to this patch).
->> > >>
->> > >> [1] https://pypi.org/project/b4/
->> > >> [2] https://b4.docs.kernel.org/en/latest/config.html
->> > >>
->> > >> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
->> > >> ---
->> > >> This adds a basic config file for b4 to avoid to have to add the
->> mailing
->> > >> list by hand. For documentation patches, one will still need to run
->> > >> b4 send --cc docs@lists.yoctoproject.org
->> > >> manually for sending it to the docs ML as well.
->> > >>
->> > >> Note that b4 supports patchwork, c.f.
->> > >>
->> https://b4.docs.kernel.org/en/latest/config.html#patchwork-integration-s=
-ettings
->> > >> though I have no clue what it does with it as I am no maintainer, b=
-ut
->> > >> maybe something worth having a look at if some maintainer of this
->> repo
->> > >> wants to use b4 to merge stuff?
->> > >
->> > > I use b4 regularly for meta-openembedded maintenance and it also
->> updates
->> > > patchwork when patch is accepted, I have this config.
->> > >
->> > >     [b4]
->> > >      pw-url =3D "https://patchwork.yoctoproject.org/"
->> > >      pw-key =3D "<mykey>"
->> > >      pw-project =3D "oe"
->> > >      pw-review-state =3D "under-review"
->> > >      pw-accept-state =3D  "accepted"
->> > >      pw-discard-state =3D "rejected"
->> > >      send-series-to =3D "openembedded-devel@lists.openembedded.org"
->>
->
-> This inspired me to revisit the issue I was having with "b4 shazam <
-> message.id for an AUH upgrade>", where
-> shazam would stumble because of the "scissors line" (--- >8 ---)
->
-> Turns out the solution appears to be
-> [b4]
->     stdin-pipe-sep =3D "--- >8 ---"
->
-
-Correction, where I was having trouble was with "git pw patch apply"
-
-$ git pw patch apply 43726
-Failed to apply patch:
-hint: When you have resolved this problem, run "git am --continue".
-hint: If you prefer to skip this patch, run "git am --skip" instead.
-hint: To record the empty patch as an empty commit, run "git am
---allow-empty".
-hint: To restore the original branch and stop patching, run "git am
---abort".
-hint: Disable this message with "git config advice.mergeConflict false"
-Patch is empty.
-
-Whereas "b4 shazam
-0101018f7d589796-87eb5d6d-06ed-4275-b5bc-6bad87216833-000000@us-west-2.amaz=
-onses.com"
-works:
-
-$ b4 shazam
-0101018f7d589796-87eb5d6d-06ed-4275-b5bc-6bad87216833-000000@us-west-2.amaz=
-onses.com
-Grabbing thread from
-lore.kernel.org/all/0101018f7d589796-87eb5d6d-06ed-4275-b5bc-6bad87216833-0=
-00000@us-west-2.amazonses.com/t.mbox.gz
-Checking for newer revisions
-Grabbing search results from lore.kernel.org
-Analyzing 1 messages in the thread
-Checking attestation on all messages, may take a moment...
-Retrieving CI status, may take a moment...
----
-  =E2=9C=93 [PATCH] nghttp2: upgrading to 1.62.0 SUCCEEDED
-  ---
-  =E2=9C=93 Signed: DKIM/yoctoproject.org
----
-Total patches: 1
----
-Applying: nghttp2: upgrade 1.61.0 -> 1.62.0
-
-
-Any tricks to getting the Message-Id from patchwork?
-
-
->
->> > >
->> >
->> > Thanks for the example! Would it make sense for me to add the pw parts
->> > to this patch as well (in a v2 for example)?
->>
->> Maybe, it can be documented like this but I would leave it to the
->> maintainers
->> to promote using b4 not.
->>
->> >
->> > I'm perplexed about the pw-key though. This is very much something we
->> > don't want to version nor potentially leak by mistake. I assume it is
->> > not possible to add to the global ~/.config/git/config or ~/.gitconfig
->> > because the URL would change for example between projects (I assume we
->> > may have a different patchwork for OE and YP, but for sure if people
->> > maintain kernel stuff as well, then they would have one for kernel.org
->> > for example). Mmmm but maybe a simple
->> >
->> > git config b4.pw-key "<mykey>"
->> >
->> > from within the local git repo would be enough :)
->>
->> right, it must be documented clearly. setting up b4 is not simple like a
->> pull
->> request merge.
->>
->> >
->> > BTW, I see you have -to instead of what I sent (-cc), is there a
->> > preference here? (I took Cc since this is what we document in the
->> README).
->>
->> I used --to because at times to field was being left empty.
->> >
->> > Cheers,
->> > Quentin
->>
->> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->> Links: You receive all messages sent to this group.
->> View/Reply Online (#16264):
->> https://lists.openembedded.org/g/bitbake-devel/message/16264
->> Mute This Topic: https://lists.openembedded.org/mt/106281674/924729
->> Group Owner: bitbake-devel+owner@lists.openembedded.org
->> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
->> ticotimo@gmail.com]
->> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->>
->>
-
---000000000000cc867c06193773b1
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">On Fri, May 24, 2024 at 11:24=E2=80=
-=AFAM Tim Orling &lt;<a href=3D"mailto:ticotimo@gmail.com">ticotimo@gmail.c=
-om</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margi=
-n:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex=
-"><div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote=
-"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, May 24, 2024 at 9:28=E2=80=
-=AFAM Khem Raj via <a href=3D"http://lists.openembedded.org" target=3D"_bla=
-nk">lists.openembedded.org</a> &lt;raj.khem=3D<a href=3D"mailto:gmail.com@l=
-ists.openembedded.org" target=3D"_blank">gmail.com@lists.openembedded.org</=
-a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0p=
-x 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On=
- Fri, May 24, 2024 at 8:33=E2=80=AFAM Quentin Schulz &lt;<a href=3D"mailto:=
-quentin.schulz@cherry.de" target=3D"_blank">quentin.schulz@cherry.de</a>&gt=
-; wrote:<br>
-&gt;<br>
-&gt; Hi Khem,<br>
-&gt;<br>
-&gt; On 5/24/24 5:18 PM, Khem Raj via <a href=3D"http://lists.openembedded.=
-org" rel=3D"noreferrer" target=3D"_blank">lists.openembedded.org</a> wrote:=
-<br>
-&gt; &gt; On Fri, May 24, 2024 at 6:49=E2=80=AFAM Quentin Schulz via<br>
-&gt; &gt; <a href=3D"http://lists.openembedded.org" rel=3D"noreferrer" targ=
-et=3D"_blank">lists.openembedded.org</a> &lt;foss=3D<a href=3D"mailto:0leil=
-.net@lists.openembedded.org" target=3D"_blank">0leil.net@lists.openembedded=
-.org</a>&gt; wrote:<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; From: Quentin Schulz &lt;<a href=3D"mailto:quentin.schulz@che=
-rry.de" target=3D"_blank">quentin.schulz@cherry.de</a>&gt;<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; b4[1] is a very nice tool for mail-based contribution. A conf=
-ig[2] file<br>
-&gt; &gt;&gt; exists to set up a few defaults. We can use it to set the Cc =
-recipients<br>
-&gt; &gt;&gt; to always add, in our case the mailing list.<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; This shouldn&#39;t be necessary if we had a script that b4 pr=
-ep --auto-to-cc<br>
-&gt; &gt;&gt; could call to find the mail address(es) to send to. While we =
-could do<br>
-&gt; &gt;&gt; that, this opens the door to people trying to add a way to no=
-tify some<br>
-&gt; &gt;&gt; people (e.g. a MAINTAINERS file) which is not somewhere the p=
-roject<br>
-&gt; &gt;&gt; wants to go right now, and this also makes sure the address i=
-s always<br>
-&gt; &gt;&gt; added even if one forgets to run b4 prep --auto-to-cc (which =
-is part of<br>
-&gt; &gt;&gt; the typical workflow for U-Boot and Linux kernel, but is not =
-necessary<br>
-&gt; &gt;&gt; thanks to this patch).<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; [1] <a href=3D"https://pypi.org/project/b4/" rel=3D"noreferre=
-r" target=3D"_blank">https://pypi.org/project/b4/</a><br>
-&gt; &gt;&gt; [2] <a href=3D"https://b4.docs.kernel.org/en/latest/config.ht=
-ml" rel=3D"noreferrer" target=3D"_blank">https://b4.docs.kernel.org/en/late=
-st/config.html</a><br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; Signed-off-by: Quentin Schulz &lt;<a href=3D"mailto:quentin.s=
-chulz@cherry.de" target=3D"_blank">quentin.schulz@cherry.de</a>&gt;<br>
-&gt; &gt;&gt; ---<br>
-&gt; &gt;&gt; This adds a basic config file for b4 to avoid to have to add =
-the mailing<br>
-&gt; &gt;&gt; list by hand. For documentation patches, one will still need =
-to run<br>
-&gt; &gt;&gt; b4 send --cc <a href=3D"mailto:docs@lists.yoctoproject.org" t=
-arget=3D"_blank">docs@lists.yoctoproject.org</a><br>
-&gt; &gt;&gt; manually for sending it to the docs ML as well.<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; Note that b4 supports patchwork, c.f.<br>
-&gt; &gt;&gt; <a href=3D"https://b4.docs.kernel.org/en/latest/config.html#p=
-atchwork-integration-settings" rel=3D"noreferrer" target=3D"_blank">https:/=
-/b4.docs.kernel.org/en/latest/config.html#patchwork-integration-settings</a=
-><br>
-&gt; &gt;&gt; though I have no clue what it does with it as I am no maintai=
-ner, but<br>
-&gt; &gt;&gt; maybe something worth having a look at if some maintainer of =
-this repo<br>
-&gt; &gt;&gt; wants to use b4 to merge stuff?<br>
-&gt; &gt;<br>
-&gt; &gt; I use b4 regularly for meta-openembedded maintenance and it also =
-updates<br>
-&gt; &gt; patchwork when patch is accepted, I have this config.<br>
-&gt; &gt;<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0[b4]<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 pw-url =3D &quot;<a href=3D"https://patchwork=
-.yoctoproject.org/" rel=3D"noreferrer" target=3D"_blank">https://patchwork.=
-yoctoproject.org/</a>&quot;<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 pw-key =3D &quot;&lt;mykey&gt;&quot;<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 pw-project =3D &quot;oe&quot;<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 pw-review-state =3D &quot;under-review&quot;<=
-br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 pw-accept-state =3D=C2=A0 &quot;accepted&quot=
-;<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 pw-discard-state =3D &quot;rejected&quot;<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 send-series-to =3D &quot;<a href=3D"mailto:op=
-enembedded-devel@lists.openembedded.org" target=3D"_blank">openembedded-dev=
-el@lists.openembedded.org</a>&quot;<br></blockquote><div><br></div><div>Thi=
-s inspired me to revisit the issue I was having with &quot;b4 shazam &lt;<a=
- href=3D"http://message.id" target=3D"_blank">message.id</a> for an AUH upg=
-rade&gt;&quot;, where</div><div>shazam would stumble because of the &quot;s=
-cissors line&quot; (--- &gt;8 ---)</div><div><br></div><div>Turns out the s=
-olution appears to be<br>[b4]<br>=C2=A0 =C2=A0 stdin-pipe-sep =3D &quot;---=
- &gt;8 ---&quot;</div></div></div></blockquote><div><br></div><div>Correcti=
-on, where I was having trouble was with &quot;git pw patch apply&quot;<br><=
-br></div><div>$ git pw patch apply 43726<br>Failed to apply patch:<br>hint:=
- When you have resolved this problem, run &quot;git am --continue&quot;.<br=
->hint: If you prefer to skip this patch, run &quot;git am --skip&quot; inst=
-ead.<br>hint: To record the empty patch as an empty commit, run &quot;git a=
-m --allow-empty&quot;.<br>hint: To restore the original branch and stop pat=
-ching, run &quot;git am --abort&quot;.<br>hint: Disable this message with &=
-quot;git config advice.mergeConflict false&quot;<br>Patch is empty.</div><d=
-iv><br></div><div>Whereas &quot;b4 shazam=C2=A0<span style=3D"color:rgb(0,0=
-,51);font-size:13px"><a href=3D"mailto:0101018f7d589796-87eb5d6d-06ed-4275-=
-b5bc-6bad87216833-000000@us-west-2.amazonses.com">0101018f7d589796-87eb5d6d=
--06ed-4275-b5bc-6bad87216833-000000@us-west-2.amazonses.com</a>&quot; works=
-:</span></div><div><span style=3D"color:rgb(0,0,51);font-size:13px"><br></s=
-pan>$ b4 shazam <a href=3D"mailto:0101018f7d589796-87eb5d6d-06ed-4275-b5bc-=
-6bad87216833-000000@us-west-2.amazonses.com">0101018f7d589796-87eb5d6d-06ed=
--4275-b5bc-6bad87216833-000000@us-west-2.amazonses.com</a><br>Grabbing thre=
-ad from <a href=3D"http://lore.kernel.org/all/0101018f7d589796-87eb5d6d-06e=
-d-4275-b5bc-6bad87216833-000000@us-west-2.amazonses.com/t.mbox.gz">lore.ker=
-nel.org/all/0101018f7d589796-87eb5d6d-06ed-4275-b5bc-6bad87216833-000000@us=
--west-2.amazonses.com/t.mbox.gz</a><br>Checking for newer revisions<br>Grab=
-bing search results from <a href=3D"http://lore.kernel.org">lore.kernel.org=
-</a><br>Analyzing 1 messages in the thread<br>Checking attestation on all m=
-essages, may take a moment...<br>Retrieving CI status, may take a moment...=
-<br>---<br>=C2=A0 =E2=9C=93 [PATCH] nghttp2: upgrading to 1.62.0 SUCCEEDED<=
-br>=C2=A0 ---<br>=C2=A0 =E2=9C=93 Signed: DKIM/<a href=3D"http://yoctoproje=
-ct.org">yoctoproject.org</a><br>---<br>Total patches: 1<br>---<br>Applying:=
- nghttp2: upgrade 1.61.0 -&gt; 1.62.0</div><div><br></div><div><br></div><d=
-iv>Any tricks to getting the Message-Id from patchwork?</div><div><br></div=
-><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border=
--left:1px solid rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr"><div cl=
-ass=3D"gmail_quote"><div>=C2=A0</div><blockquote class=3D"gmail_quote" styl=
-e=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddin=
-g-left:1ex">
-&gt; &gt;<br>
-&gt;<br>
-&gt; Thanks for the example! Would it make sense for me to add the pw parts=
-<br>
-&gt; to this patch as well (in a v2 for example)?<br>
-<br>
-Maybe, it can be documented like this but I would leave it to the maintaine=
-rs<br>
-to promote using b4 not.<br>
-<br>
-&gt;<br>
-&gt; I&#39;m perplexed about the pw-key though. This is very much something=
- we<br>
-&gt; don&#39;t want to version nor potentially leak by mistake. I assume it=
- is<br>
-&gt; not possible to add to the global ~/.config/git/config or ~/.gitconfig=
-<br>
-&gt; because the URL would change for example between projects (I assume we=
-<br>
-&gt; may have a different patchwork for OE and YP, but for sure if people<b=
-r>
-&gt; maintain kernel stuff as well, then they would have one for <a href=3D=
-"http://kernel.org" rel=3D"noreferrer" target=3D"_blank">kernel.org</a><br>
-&gt; for example). Mmmm but maybe a simple<br>
-&gt;<br>
-&gt; git config b4.pw-key &quot;&lt;mykey&gt;&quot;<br>
-&gt;<br>
-&gt; from within the local git repo would be enough :)<br>
-<br>
-right, it must be documented clearly. setting up b4 is not simple like a pu=
-ll<br>
-request merge.<br>
-<br>
-&gt;<br>
-&gt; BTW, I see you have -to instead of what I sent (-cc), is there a<br>
-&gt; preference here? (I took Cc since this is what we document in the READ=
-ME).<br>
-<br>
-I used --to because at times to field was being left empty.<br>
-&gt;<br>
-&gt; Cheers,<br>
-&gt; Quentin<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#16264): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/16264" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/16264</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/106281674/924=
-729" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/106281674/924729</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:ticotimo@gmail.com" target=3D"_bla=
-nk">ticotimo@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div></div>
-</blockquote></div></div>
-
---000000000000cc867c06193773b1--
+T24gRnJpLCAyMDI0LTA1LTI0IGF0IDE2OjU5ICswMjAwLCBBbGV4YW5kZXIgS2FuYXZpbiB3cm90
+ZToNCj4gT24gRnJpLCAyNCBNYXkgMjAyNCBhdCAxNjoxNCwgUXVlbnRpbiBTY2h1bHogdmlhDQo+
+IGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4gPHF1ZW50aW4uc2NodWx6PWNoZXJyeS5kZUBsaXN0
+cy5vcGVuZW1iZWRkZWQub3JnPiB3cm90ZToNCj4gDQo+ID4gSSdtIHN1cmUgbWV0YS1pbnRlbCB3
+b3VsZCBiZSBoYXBweSB0byBzZWUgcGF0Y2hlcyB0byBmaXggdGhvc2UNCj4gPiBpc3N1ZXMgYXMN
+Cj4gPiB3ZWxsLCBzbyBmZWVsIGZyZWUgdG8gc2VuZCB0aGVtIHNvbWUgYnVnIGZpeGVzIDopDQo+
+IA0KPiBOb3QgZXZlbiBtZXRhLWludGVsLiBUaGlzIG5lZWRzIHRvIGJlIGZpeGVkIHVwc3RyZWFt
+IGZpcnN0LiBUaGUNCj4gY29ycmVjdCBjb3Vyc2Ugb2YgYWN0aW9uIGlzOg0KPiANCj4gLcKgIGNo
+ZWNrIHVwc3RyZWFtIHJlcG9zaXRvcmllcyBvZiBmYWlsaW5nIGNvbXBvbmVudHMgaWYgdGhleSBj
+b250YWluDQo+IG5lZWRlZCBmaXhlcw0KPiAtIGlmIHRoZXkgZG8sIHRoZW4gdXBkYXRlIHRoZSBy
+ZWNpcGVzIGluIG1ldGEtaW50ZWwgdG8gdGFrZSB0aGUNCj4gdmVyc2lvbnMgdGhhdCBjb250YWlu
+IHRoZSBmaXhlcywgb3IgaWYgbm8gc3VjaCB2ZXJzaW9ucyBhcmUgeWV0DQo+IHJlbGVhc2VkLCBi
+YWNrcG9ydCB0aGVtIGFzIHJlY2lwZSBwYXRjaGVzDQo+IC0gaWYgdGhleSBkb24ndCB0aGVuIG1h
+a2UgdGhlIGZpeGVzLCBhbmQgc3VibWl0IHRoZW0gdXBzdHJlYW0gZmlyc3QsDQo+IGFuZCBvYnRh
+aW4gdXBzdHJlYW0gYWNjZXB0YW5jZSwgdGhlbiBiYWNrcG9ydCB0aGUgZml4ZXMgYXMgaW4gcG9p
+bnQgMg0KDQpVbmZvcnR1bmF0ZWx5IGluIHRoaXMgY2FzZSwgZml4ZXMgYXJlIG5vdCB0cml2aWFs
+IGFuZCB1cHN0cmVhbSBuZWVkcw0KdGltZSB0byBtYWtlIGNoYW5nZXMgdG8gc3VwcG9ydCBMTFZN
+IHZlcnNpb25zID49IDE2Og0KDQpodHRwczovL2dpdGh1Yi5jb20vaW50ZWwvaW50ZWwtZ3JhcGhp
+Y3MtY29tcGlsZXIvaXNzdWVzLzI4OQ0KDQpUaGFua3MsDQoNCkFudWoNCg0K
 
