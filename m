@@ -2,226 +2,328 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEEBC25B7C
-	for <webhook@archiver.kernel.org>; Wed, 29 May 2024 19:39:52 +0000 (UTC)
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
- by mx.groups.io with SMTP id smtpd.web10.25269.1717011587520456362
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4A1C25B75
+	for <webhook@archiver.kernel.org>; Wed, 29 May 2024 20:40:16 +0000 (UTC)
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+ by mx.groups.io with SMTP id smtpd.web11.477.1717015212202336298
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 29 May 2024 12:39:47 -0700
+ Wed, 29 May 2024 13:40:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=MUmoUv6E;
- spf=pass (domain: gmail.com, ip: 209.85.167.176, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3d1d35cdcadso42325b6e.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 29 May 2024 12:39:47 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=JzZsDQUN;
+ spf=pass (domain: gmail.com, ip: 209.85.210.48, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6f8ed204e13so136261a34.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 29 May 2024 13:40:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717011586; x=1717616386; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bgeq8NtLWAHPHfls5167YjDH7FziGumy/Ix3wNLl4ow=;
-        b=MUmoUv6EWzDn82f3U2TaBAVRH3ADXqXMgU3PBBz5VXfMAfDnPVTyaeZQiYYAUDAM+p
-         sDRPRewVpeJZbAZAYSQxSKx+vRRYFlsl8yBalPiOQnucvLp27Ac6ugCE7fOfSxnOU4Fl
-         TCmgleOYghTi/KfST2DZNO16cVjYJPNDbrqfGiZFEfOR2jreLM856gEh/52dxduuymrA
-         Snyi2nE0KmwUbabF9Dvhz4ZoKJ1FmimgWUYbMlIXyb2IpDczXJ0OzVHP851Y/RQJQJNP
-         yp+z5NOizD5MTAulS5pYMvs6kZ5C8c9NU539OtttoptVpA4ciJRZoRe4EDkttQbxcByQ
-         h/Kw==
+        d=gmail.com; s=20230601; t=1717015211; x=1717620011; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L41JuIUYloMYLZus5HBBZG6uJgxEJ7rrLttHE/iEIg0=;
+        b=JzZsDQUNRGunu0fCSCcg+aQM/RzLGf96gXPRFEx64pbtMY4hs/0i1lBW/etmBpX+qh
+         vlB1SUDccodzh0odULa+Qrms2XWW+9Hzny8t/1H7ZysnH+fR+bG/qtIEkiAQTiv2nL9F
+         sM/ruG42TNx1kmavSB/cDPfa0CemI90F7ZNhdsU0c9iRfpOH6nVC1Adi3hM4BloSAgi/
+         tk1PcszgiPyOosJsMoEbCjoz/uhbxnBUsQPrdhAFq8Qg5PmkPC2t3VR+zwrkzUIJuRhe
+         nsRDE81xh+8TfJwXy1nobMoSibOZGVvUk8gvXVCaJY4PF+wKBP7jUdSill7BiOwM8ajw
+         VbLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717011586; x=1717616386;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bgeq8NtLWAHPHfls5167YjDH7FziGumy/Ix3wNLl4ow=;
-        b=IX3PW8d5gppvD99cqxI12NejnNw0ZtNdL0ijP6P54zPGWLxWSpqrk96SfjBi3P5fAZ
-         h4Axn3ZlHFW+dgjNGgOuAwHeikaa8PVzdVmaGOWYFh+R6VjNYTGllevi8lW/jnWC3sUE
-         nQDATWIFn8BB2gcgSyUkcRxGIrKBxHSObbu6rni11vclnxBymk9miMdnXrGz+2OUHrLA
-         ibiciZ8xsLUhYRVjXd34guK0yFYbZBfvj5/TmOKwIcYnns1KYNhxAnBQkQaf63C1tEn3
-         354wEMUt4R2rgrn0lYI3g6R6WB+s5tp13thsi4uZoolqHn9Cq4nKiuGUeMHb0/RLTjPR
-         9Blg==
-X-Gm-Message-State: AOJu0YzyZBUZyNYV01FIKkd/NGGPqeM1AYhrujrsKyWdrEymNOJGYqmd
-	fLt6vozNla8RgwInLCai/56Kk5tEp5QbNaYVY0DMpJ9wUN3db9CZmC2cYw==
-X-Google-Smtp-Source: AGHT+IF1EdYnX3+WCn12FFAvWPf+529/Fw9m89KYGbN5ousGdQMQ9SkffeT9Hdf/u8Xej2eqxthv8Q==
-X-Received: by 2002:a05:6808:2128:b0:3c9:6683:1e0a with SMTP id 5614622812f47-3d1dcb5a421mr30337b6e.17.1717011585652;
-        Wed, 29 May 2024 12:39:45 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::980])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3d1b37200f9sm1771649b6e.36.2024.05.29.12.39.44
+        d=1e100.net; s=20230601; t=1717015211; x=1717620011;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L41JuIUYloMYLZus5HBBZG6uJgxEJ7rrLttHE/iEIg0=;
+        b=cdRetHHBdA6S5lAo/NFyiIr7lQzKoR9Rhjc59vaQ1w6rbJxXOx00N6xwYImmgGlarf
+         JRz0nbGE8lMfPq0ENS76oBEdFotwrK8VMCazDTcXcceu8sE1qj7aFmPBF+Kniv4j3Lr6
+         Mn1cpcy2XoO3UG63LA6Vn9tt5UsJ1/vem38G8P6Nd2fpC6L3xba5SjnbOklbJiAwByfY
+         wNEsHiioSsDtf5uMkNAM5pQ9BxsM+bPCc74WSDNlxsADMxGClMUS8w9ESTYvRoE087lH
+         p9BTD/GqsftXxFI2dn5wAj6w/0RQ+h3NDgRQYtoxalplz2qYN/xxK14mkHC4sMMU7O2J
+         0jmw==
+X-Gm-Message-State: AOJu0YyobfdqyTqKhMgF9d4CLm9ENdfUJXiSBG61W9S/liO4buB6pDun
+	GoDvrwLMCFDQkqKfobPiiZ8MUfwYhVn9LS+KX6OgpBuj0XOufHZDHgT4UA==
+X-Google-Smtp-Source: AGHT+IFjAtmeQhXW7jhrAFs/gUsvZ2fMlZUPlzjCW1/68jdJVa4ygOGyHXbaTFZx+0PPPN0WN6j3KA==
+X-Received: by 2002:a9d:4b10:0:b0:6f0:e64d:727e with SMTP id 46e09a7af769-6f90af223fcmr368058a34.31.1717015210781;
+        Wed, 29 May 2024 13:40:10 -0700 (PDT)
+Received: from localhost.localdomain ([2601:282:4300:19e0::125b])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f8d0bb6693sm2429758a34.1.2024.05.29.13.40.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 12:39:45 -0700 (PDT)
+        Wed, 29 May 2024 13:40:10 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] hashserv: server: Add support for SO_REUSEPORT
-Date: Wed, 29 May 2024 13:39:33 -0600
-Message-ID: <20240529193933.3372776-1-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v3] hashserv: client: Add batch stream API
+Date: Wed, 29 May 2024 14:39:58 -0600
+Message-ID: <20240529203958.3389577-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240529193751.3372652-1-JPEWhacker@gmail.com>
+References: <20240529193751.3372652-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 29 May 2024 19:39:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16283
+ <bitbake-devel@lists.openembedded.org>; Wed, 29 May 2024 20:40:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16284
 
-SO_REUSEPORT is a socket option that allows multiple servers to listen
-on the same TCP port, and the kernel will automatically load balance the
-connections between them. This is particularly helpful for the hash
-server since it runs in a single thread. To take advantage of a
-multi-core server, multiple servers can be started in parallel with this
-option (up to 1 per CPU) and the kernel will load balance between them.
+Changes the stream mode to do "batch" processing. This means that the
+sending and reciving of messages is done simultaneously so that messages
+can be sent as fast as possible without having to wait for each reply.
+This allows multiple messages to be in flight at once, reducing the
+effect of the round trip latency from the server.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/bin/bitbake-hashserv     | 10 +++++++++-
- bitbake/lib/bb/asyncrpc/serv.py  | 34 +++++++++++++++++++++++++-------
- bitbake/lib/hashserv/__init__.py |  6 ++++--
- 3 files changed, 40 insertions(+), 10 deletions(-)
+ bitbake/lib/hashserv/client.py | 103 ++++++++++++++++++++++++++++++---
+ bitbake/lib/hashserv/tests.py  |  75 ++++++++++++++++++++++++
+ 2 files changed, 169 insertions(+), 9 deletions(-)
 
-diff --git a/bitbake/bin/bitbake-hashserv b/bitbake/bin/bitbake-hashserv
-index 4bfb7abfbce..01503736b93 100755
---- a/bitbake/bin/bitbake-hashserv
-+++ b/bitbake/bin/bitbake-hashserv
-@@ -125,6 +125,11 @@ The following permissions are supported by the server:
-         default=os.environ.get("HASHSERVER_ADMIN_PASSWORD", None),
-         help="Create default admin user with password ADMIN_PASSWORD ($HASHSERVER_ADMIN_PASSWORD)",
-     )
-+    parser.add_argument(
-+        "--reuseport",
-+        action="store_true",
-+        help="Enable SO_REUSEPORT, allowing multiple servers to bind to the same port for load balancing",
-+    )
+diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
+index 0b254beddd7..a4e382c1b6e 100644
+--- a/bitbake/lib/hashserv/client.py
++++ b/bitbake/lib/hashserv/client.py
+@@ -5,6 +5,7 @@
  
-     args = parser.parse_args()
- 
-@@ -132,7 +137,9 @@ The following permissions are supported by the server:
- 
-     level = getattr(logging, args.log.upper(), None)
-     if not isinstance(level, int):
--        raise ValueError("Invalid log level: %s (Try ERROR/WARNING/INFO/DEBUG)" % args.log)
-+        raise ValueError(
-+            "Invalid log level: %s (Try ERROR/WARNING/INFO/DEBUG)" % args.log
-+        )
- 
-     logger.setLevel(level)
-     console = logging.StreamHandler()
-@@ -155,6 +162,7 @@ The following permissions are supported by the server:
-         anon_perms=anon_perms,
-         admin_username=args.admin_user,
-         admin_password=args.admin_password,
-+        reuseport=args.reuseport,
-     )
-     server.serve_forever()
-     return 0
-diff --git a/bitbake/lib/bb/asyncrpc/serv.py b/bitbake/lib/bb/asyncrpc/serv.py
-index a66117acad1..46d54fb5112 100644
---- a/bitbake/lib/bb/asyncrpc/serv.py
-+++ b/bitbake/lib/bb/asyncrpc/serv.py
-@@ -138,14 +138,20 @@ class StreamServer(object):
+ import logging
+ import socket
++import asyncio
+ import bb.asyncrpc
+ import json
+ from . import create_async_client
+@@ -13,6 +14,63 @@ from . import create_async_client
+ logger = logging.getLogger("hashserv.client")
  
  
- class TCPStreamServer(StreamServer):
--    def __init__(self, host, port, handler, logger):
-+    def __init__(self, host, port, handler, logger, *, reuseport=False):
-         super().__init__(handler, logger)
-         self.host = host
-         self.port = port
-+        self.reuseport = reuseport
- 
-     def start(self, loop):
-         self.server = loop.run_until_complete(
--            asyncio.start_server(self.handle_stream_client, self.host, self.port)
-+            asyncio.start_server(
-+                self.handle_stream_client,
-+                self.host,
-+                self.port,
-+                reuse_port=self.reuseport,
-+            )
-         )
- 
-         for s in self.server.sockets:
-@@ -209,11 +215,12 @@ class UnixStreamServer(StreamServer):
- 
- 
- class WebsocketsServer(object):
--    def __init__(self, host, port, handler, logger):
-+    def __init__(self, host, port, handler, logger, *, reuseport=False):
-         self.host = host
-         self.port = port
-         self.handler = handler
-         self.logger = logger
-+        self.reuseport = reuseport
- 
-     def start(self, loop):
-         import websockets.server
-@@ -224,6 +231,7 @@ class WebsocketsServer(object):
-                 self.host,
-                 self.port,
-                 ping_interval=None,
-+                reuse_port=self.reuseport,
-             )
-         )
- 
-@@ -262,14 +270,26 @@ class AsyncServer(object):
-         self.loop = None
-         self.run_tasks = []
- 
--    def start_tcp_server(self, host, port):
--        self.server = TCPStreamServer(host, port, self._client_handler, self.logger)
-+    def start_tcp_server(self, host, port, *, reuseport=False):
-+        self.server = TCPStreamServer(
-+            host,
-+            port,
-+            self._client_handler,
-+            self.logger,
-+            reuseport=reuseport,
-+        )
- 
-     def start_unix_server(self, path):
-         self.server = UnixStreamServer(path, self._client_handler, self.logger)
- 
--    def start_websocket_server(self, host, port):
--        self.server = WebsocketsServer(host, port, self._client_handler, self.logger)
-+    def start_websocket_server(self, host, port, reuseport=False):
-+        self.server = WebsocketsServer(
-+            host,
-+            port,
-+            self._client_handler,
-+            self.logger,
-+            reuseport=reuseport,
-+        )
- 
-     async def _client_handler(self, socket):
-         address = socket.address
-diff --git a/bitbake/lib/hashserv/__init__.py b/bitbake/lib/hashserv/__init__.py
-index 74367eb6b48..ac891e0174d 100644
---- a/bitbake/lib/hashserv/__init__.py
-+++ b/bitbake/lib/hashserv/__init__.py
-@@ -13,6 +13,7 @@ from bb.asyncrpc.client import parse_address, ADDR_TYPE_UNIX, ADDR_TYPE_WS
- 
- User = namedtuple("User", ("username", "permissions"))
- 
++class Batch(object):
++    def __init__(self):
++        self.done = False
++        self.cond = asyncio.Condition()
++        self.pending = []
++        self.results = []
++        self.sent_count = 0
 +
- def create_server(
-     addr,
-     dbname,
-@@ -25,6 +26,7 @@ def create_server(
-     anon_perms=None,
-     admin_username=None,
-     admin_password=None,
-+    reuseport=False,
- ):
-     def sqlite_engine():
-         from .sqlite import DatabaseEngine
-@@ -60,9 +62,9 @@ def create_server(
-         s.start_unix_server(*a)
-     elif typ == ADDR_TYPE_WS:
-         url = urlparse(a[0])
--        s.start_websocket_server(url.hostname, url.port)
-+        s.start_websocket_server(url.hostname, url.port, reuseport=reuseport)
-     else:
--        s.start_tcp_server(*a)
-+        s.start_tcp_server(*a, reuseport=reuseport)
++    async def recv(self, socket):
++        while True:
++            async with self.cond:
++                await self.cond.wait_for(lambda: self.pending or self.done)
++
++                if not self.pending:
++                    if self.done:
++                        return
++                    continue
++
++            r = await socket.recv()
++            self.results.append(r)
++
++            async with self.cond:
++                self.pending.pop(0)
++
++    async def send(self, socket, msgs):
++        try:
++            # In the event of a restart due to a reconnect, all in-flight
++            # messages need to be resent first to keep to result count in sync
++            for m in self.pending:
++                await socket.send(m)
++
++            for m in msgs:
++                await socket.send(m)
++
++                async with self.cond:
++                    self.pending.append(m)
++                    self.cond.notify()
++                    self.sent_count += 1
++        finally:
++            async with self.cond:
++                self.done = True
++                self.cond.notify()
++
++    async def process(self, socket, msgs):
++        await asyncio.gather(
++            self.recv(socket),
++            self.send(socket, msgs),
++        )
++
++        if len(self.results) != self.sent_count:
++            raise ValueError(
++                f"Expected result count {len(self.results)}. Expected {self.sent_count}"
++            )
++
++        return self.results
++
++
+ class AsyncClient(bb.asyncrpc.AsyncClient):
+     MODE_NORMAL = 0
+     MODE_GET_STREAM = 1
+@@ -36,11 +94,27 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+             if become:
+                 await self.become_user(become)
  
-     return s
+-    async def send_stream(self, mode, msg):
++    async def send_stream_batch(self, mode, msgs):
++        """
++        Does a "batch" process of stream messages. This sends the query
++        messages as fast as possible, and simultaneously attempts to read the
++        messages back. This helps to mitigate the effects of latency to the
++        hash equivalence server be allowing multiple queries to be "in-flight"
++        at once
++
++        The implementation does more complicated tracking using a count of sent
++        messages so that `msgs` can be a generator function (i.e. its length is
++        unknown)
++
++        """
++
++        b = Batch()
++
+         async def proc():
++            nonlocal b
++
+             await self._set_mode(mode)
+-            await self.socket.send(msg)
+-            return await self.socket.recv()
++            return await b.process(self.socket, msgs)
  
+         return await self._send_wrapper(proc)
+ 
+@@ -89,10 +163,15 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         self.mode = new_mode
+ 
+     async def get_unihash(self, method, taskhash):
+-        r = await self.send_stream(self.MODE_GET_STREAM, "%s %s" % (method, taskhash))
+-        if not r:
+-            return None
+-        return r
++        r = await self.get_unihash_batch([(method, taskhash)])
++        return r[0]
++
++    async def get_unihash_batch(self, args):
++        result = await self.send_stream_batch(
++            self.MODE_GET_STREAM,
++            (f"{method} {taskhash}" for method, taskhash in args),
++        )
++        return [r if r else None for r in result]
+ 
+     async def report_unihash(self, taskhash, method, outhash, unihash, extra={}):
+         m = extra.copy()
+@@ -115,8 +194,12 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+         )
+ 
+     async def unihash_exists(self, unihash):
+-        r = await self.send_stream(self.MODE_EXIST_STREAM, unihash)
+-        return r == "true"
++        r = await self.unihash_exists_batch([unihash])
++        return r[0]
++
++    async def unihash_exists_batch(self, unihashes):
++        result = await self.send_stream_batch(self.MODE_EXIST_STREAM, unihashes)
++        return [r == "true" for r in result]
+ 
+     async def get_outhash(self, method, outhash, taskhash, with_unihash=True):
+         return await self.invoke(
+@@ -237,10 +320,12 @@ class Client(bb.asyncrpc.Client):
+             "connect_tcp",
+             "connect_websocket",
+             "get_unihash",
++            "get_unihash_batch",
+             "report_unihash",
+             "report_unihash_equiv",
+             "get_taskhash",
+             "unihash_exists",
++            "unihash_exists_batch",
+             "get_outhash",
+             "get_stats",
+             "reset_stats",
+diff --git a/bitbake/lib/hashserv/tests.py b/bitbake/lib/hashserv/tests.py
+index 0809453cf87..5349cd58677 100644
+--- a/bitbake/lib/hashserv/tests.py
++++ b/bitbake/lib/hashserv/tests.py
+@@ -594,6 +594,43 @@ class HashEquivalenceCommonTests(object):
+                 7: None,
+             })
+ 
++    def test_get_unihash_batch(self):
++        TEST_INPUT = (
++            # taskhash                                   outhash                                                            unihash
++            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
++            # Duplicated taskhash with multiple output hashes and unihashes.
++            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
++            # Equivalent hash
++            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
++            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
++            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
++            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
++            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
++        )
++        EXTRA_QUERIES = (
++            "6b6be7a84ab179b4240c4302518dc3f6",
++        )
++
++        for taskhash, outhash, unihash in TEST_INPUT:
++            self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
++
++
++        result = self.client.get_unihash_batch(
++            [(self.METHOD, data[0]) for data in TEST_INPUT] +
++            [(self.METHOD, e) for e in EXTRA_QUERIES]
++        )
++
++        self.assertListEqual(result, [
++            "218e57509998197d570e2c98512d0105985dffc9",
++            "218e57509998197d570e2c98512d0105985dffc9",
++            "218e57509998197d570e2c98512d0105985dffc9",
++            "3b5d3d83f07f259e9086fcb422c855286e18a57d",
++            "f46d3fbb439bd9b921095da657a4de906510d2cd",
++            "f46d3fbb439bd9b921095da657a4de906510d2cd",
++            "05d2a63c81e32f0a36542ca677e8ad852365c538",
++            None,
++        ])
++
+     def test_client_pool_unihash_exists(self):
+         TEST_INPUT = (
+             # taskhash                                   outhash                                                            unihash
+@@ -636,6 +673,44 @@ class HashEquivalenceCommonTests(object):
+             result = client_pool.unihashes_exist(query)
+             self.assertDictEqual(result, expected)
+ 
++    def test_unihash_exists_batch(self):
++        TEST_INPUT = (
++            # taskhash                                   outhash                                                            unihash
++            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
++            # Duplicated taskhash with multiple output hashes and unihashes.
++            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
++            # Equivalent hash
++            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
++            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
++            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
++            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
++            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
++        )
++        EXTRA_QUERIES = (
++            "6b6be7a84ab179b4240c4302518dc3f6",
++        )
++
++        result_unihashes = set()
++
++
++        for taskhash, outhash, unihash in TEST_INPUT:
++            result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
++            result_unihashes.add(result["unihash"])
++
++        query = []
++        expected = []
++
++        for _, _, unihash in TEST_INPUT:
++            query.append(unihash)
++            expected.append(unihash in result_unihashes)
++
++
++        for unihash in EXTRA_QUERIES:
++            query.append(unihash)
++            expected.append(False)
++
++        result = self.client.unihash_exists_batch(query)
++        self.assertListEqual(result, expected)
+ 
+     def test_auth_read_perms(self):
+         admin_client = self.start_auth_server()
 -- 
 2.43.2
 
