@@ -2,67 +2,67 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4A1C25B75
-	for <webhook@archiver.kernel.org>; Wed, 29 May 2024 20:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2399BC25B75
+	for <webhook@archiver.kernel.org>; Wed, 29 May 2024 22:47:46 +0000 (UTC)
 Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
- by mx.groups.io with SMTP id smtpd.web11.477.1717015212202336298
+ by mx.groups.io with SMTP id smtpd.web10.2794.1717022864632076208
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 29 May 2024 13:40:12 -0700
+ Wed, 29 May 2024 15:47:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=JzZsDQUN;
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=N03F3Gev;
  spf=pass (domain: gmail.com, ip: 209.85.210.48, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6f8ed204e13so136261a34.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 29 May 2024 13:40:12 -0700 (PDT)
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6f89b16d081so191831a34.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 29 May 2024 15:47:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717015211; x=1717620011; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1717022863; x=1717627663; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L41JuIUYloMYLZus5HBBZG6uJgxEJ7rrLttHE/iEIg0=;
-        b=JzZsDQUNRGunu0fCSCcg+aQM/RzLGf96gXPRFEx64pbtMY4hs/0i1lBW/etmBpX+qh
-         vlB1SUDccodzh0odULa+Qrms2XWW+9Hzny8t/1H7ZysnH+fR+bG/qtIEkiAQTiv2nL9F
-         sM/ruG42TNx1kmavSB/cDPfa0CemI90F7ZNhdsU0c9iRfpOH6nVC1Adi3hM4BloSAgi/
-         tk1PcszgiPyOosJsMoEbCjoz/uhbxnBUsQPrdhAFq8Qg5PmkPC2t3VR+zwrkzUIJuRhe
-         nsRDE81xh+8TfJwXy1nobMoSibOZGVvUk8gvXVCaJY4PF+wKBP7jUdSill7BiOwM8ajw
-         VbLQ==
+        bh=504/9JzXLefbNAddjTmvD4rU9PNXm82o1AXoIP9QZJA=;
+        b=N03F3GevnOC88ktkHdwEIVYMEdA+hKZJLOzxAlsY2LNxaf7YoZMD5Bk3oEN3xN1MXW
+         7TNP6GNcvOeB227qq9iTJuiCTMYPVMdTnImJAVjHVtlUzRVtH0SPGDc51VclcUjf15+5
+         Ukq3A8sTa1OO5Osu5iatl+qhEN13NzqabS7zuAsGMKxGzd+IrBgwzRX9piKGI3UEFz0v
+         O3QrmDG7MrWtqEq8y/FcD86NF4MxL2/Gac3eadUDzE1T0J7h61DerIJfwd9er7IVHs0v
+         uHvSCym/oF0sIzqaJcJQGmWggX0eFLixh6ehRoESNYJN7k1OYnN+b+nqmKJFPeZLJ69t
+         800A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717015211; x=1717620011;
+        d=1e100.net; s=20230601; t=1717022863; x=1717627663;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=L41JuIUYloMYLZus5HBBZG6uJgxEJ7rrLttHE/iEIg0=;
-        b=cdRetHHBdA6S5lAo/NFyiIr7lQzKoR9Rhjc59vaQ1w6rbJxXOx00N6xwYImmgGlarf
-         JRz0nbGE8lMfPq0ENS76oBEdFotwrK8VMCazDTcXcceu8sE1qj7aFmPBF+Kniv4j3Lr6
-         Mn1cpcy2XoO3UG63LA6Vn9tt5UsJ1/vem38G8P6Nd2fpC6L3xba5SjnbOklbJiAwByfY
-         wNEsHiioSsDtf5uMkNAM5pQ9BxsM+bPCc74WSDNlxsADMxGClMUS8w9ESTYvRoE087lH
-         p9BTD/GqsftXxFI2dn5wAj6w/0RQ+h3NDgRQYtoxalplz2qYN/xxK14mkHC4sMMU7O2J
-         0jmw==
-X-Gm-Message-State: AOJu0YyobfdqyTqKhMgF9d4CLm9ENdfUJXiSBG61W9S/liO4buB6pDun
-	GoDvrwLMCFDQkqKfobPiiZ8MUfwYhVn9LS+KX6OgpBuj0XOufHZDHgT4UA==
-X-Google-Smtp-Source: AGHT+IFjAtmeQhXW7jhrAFs/gUsvZ2fMlZUPlzjCW1/68jdJVa4ygOGyHXbaTFZx+0PPPN0WN6j3KA==
-X-Received: by 2002:a9d:4b10:0:b0:6f0:e64d:727e with SMTP id 46e09a7af769-6f90af223fcmr368058a34.31.1717015210781;
-        Wed, 29 May 2024 13:40:10 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::125b])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f8d0bb6693sm2429758a34.1.2024.05.29.13.40.09
+        bh=504/9JzXLefbNAddjTmvD4rU9PNXm82o1AXoIP9QZJA=;
+        b=tcMYeHg+mQzPmALX9pIdmWOlYyNdzm7zrUkPtdqvfhTn7yMMzclYbY55/kqIfN+XIW
+         ahNFvHbtssvk338KSY1MWY3tOom5HOz3WrHgmgk8IuoSU3yuj0kRaO79qcnONDBXfYce
+         4ALLliUtTi9JvqdmFchOfXd2TEP3IX9s+sVjWNNP6MEoA9E1ePgLGtJcQ/79KsPvjXfw
+         3/NE0t2VpqIo7lFRJuZrfor/HeijLLplYMx3IUB+YlB4KDCaZ7zCL2+XZ/R6uaG8gI2h
+         cYnpsEezeSsG6CsuFqMcIcV8Cbndhg4XUL0KMKFb3GeaNZax0EqbhantqK3J2/aJnK2s
+         Gz0w==
+X-Gm-Message-State: AOJu0Yx48pg9/+5gMYWQdTE8z/cNpWq6hbtGNnV07oDpSBWUYAfr1RlT
+	RCIk97k8fwq9FsL2Ss7bTyAleGxLqoCwxv37irvw9K5ubNq68OZR+8Rx/Q==
+X-Google-Smtp-Source: AGHT+IGhZU3u/FbjEffGn5UBVgbQQSanUxuRUBoAh9EzHE2u9ZMT0zRjh3aBQO7iwRGLMMqBrkOFaw==
+X-Received: by 2002:a05:6870:8325:b0:24f:e3ad:72ce with SMTP id 586e51a60fabf-25060b3456fmr742241fac.23.1717022862189;
+        Wed, 29 May 2024 15:47:42 -0700 (PDT)
+Received: from localhost.localdomain ([2601:282:4300:19e0::980])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f8d0bb6693sm2466344a34.1.2024.05.29.15.47.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 13:40:10 -0700 (PDT)
+        Wed, 29 May 2024 15:47:41 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH v3] hashserv: client: Add batch stream API
-Date: Wed, 29 May 2024 14:39:58 -0600
-Message-ID: <20240529203958.3389577-1-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v4] hashserv: client: Add batch stream API
+Date: Wed, 29 May 2024 16:47:34 -0600
+Message-ID: <20240529224734.540363-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240529193751.3372652-1-JPEWhacker@gmail.com>
-References: <20240529193751.3372652-1-JPEWhacker@gmail.com>
+In-Reply-To: <20240529203958.3389577-1-JPEWhacker@gmail.com>
+References: <20240529203958.3389577-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 29 May 2024 20:40:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16284
+ <bitbake-devel@lists.openembedded.org>; Wed, 29 May 2024 22:47:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16285
 
 Changes the stream mode to do "batch" processing. This means that the
 sending and reciving of messages is done simultaneously so that messages
@@ -72,12 +72,12 @@ effect of the round trip latency from the server.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- bitbake/lib/hashserv/client.py | 103 ++++++++++++++++++++++++++++++---
- bitbake/lib/hashserv/tests.py  |  75 ++++++++++++++++++++++++
- 2 files changed, 169 insertions(+), 9 deletions(-)
+ bitbake/lib/hashserv/client.py | 106 ++++++++++++++++++++++++++++++---
+ bitbake/lib/hashserv/tests.py  |  75 +++++++++++++++++++++++
+ 2 files changed, 172 insertions(+), 9 deletions(-)
 
 diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
-index 0b254beddd7..a4e382c1b6e 100644
+index 0b254beddd7..775faf935a8 100644
 --- a/bitbake/lib/hashserv/client.py
 +++ b/bitbake/lib/hashserv/client.py
 @@ -5,6 +5,7 @@
@@ -88,7 +88,7 @@ index 0b254beddd7..a4e382c1b6e 100644
  import bb.asyncrpc
  import json
  from . import create_async_client
-@@ -13,6 +14,63 @@ from . import create_async_client
+@@ -13,6 +14,66 @@ from . import create_async_client
  logger = logging.getLogger("hashserv.client")
  
  
@@ -124,12 +124,15 @@ index 0b254beddd7..a4e382c1b6e 100644
 +                await socket.send(m)
 +
 +            for m in msgs:
-+                await socket.send(m)
-+
++                # Add the message to the pending list before attempting to send
++                # it so that if the send fails it will be retried
 +                async with self.cond:
 +                    self.pending.append(m)
 +                    self.cond.notify()
 +                    self.sent_count += 1
++
++                await socket.send(m)
++
 +        finally:
 +            async with self.cond:
 +                self.done = True
@@ -152,7 +155,7 @@ index 0b254beddd7..a4e382c1b6e 100644
  class AsyncClient(bb.asyncrpc.AsyncClient):
      MODE_NORMAL = 0
      MODE_GET_STREAM = 1
-@@ -36,11 +94,27 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+@@ -36,11 +97,27 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
              if become:
                  await self.become_user(become)
  
@@ -183,7 +186,7 @@ index 0b254beddd7..a4e382c1b6e 100644
  
          return await self._send_wrapper(proc)
  
-@@ -89,10 +163,15 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+@@ -89,10 +166,15 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
          self.mode = new_mode
  
      async def get_unihash(self, method, taskhash):
@@ -203,7 +206,7 @@ index 0b254beddd7..a4e382c1b6e 100644
  
      async def report_unihash(self, taskhash, method, outhash, unihash, extra={}):
          m = extra.copy()
-@@ -115,8 +194,12 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+@@ -115,8 +197,12 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
          )
  
      async def unihash_exists(self, unihash):
@@ -218,7 +221,7 @@ index 0b254beddd7..a4e382c1b6e 100644
  
      async def get_outhash(self, method, outhash, taskhash, with_unihash=True):
          return await self.invoke(
-@@ -237,10 +320,12 @@ class Client(bb.asyncrpc.Client):
+@@ -237,10 +323,12 @@ class Client(bb.asyncrpc.Client):
              "connect_tcp",
              "connect_websocket",
              "get_unihash",
