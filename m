@@ -1,123 +1,103 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4105CC25B74
-	for <webhook@archiver.kernel.org>; Thu, 30 May 2024 15:42:37 +0000 (UTC)
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
- by mx.groups.io with SMTP id smtpd.web10.13123.1717083755435484189
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8A2C25B74
+	for <webhook@archiver.kernel.org>; Thu, 30 May 2024 16:57:26 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web11.1848.1717088242810900847
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 30 May 2024 08:42:35 -0700
+ Thu, 30 May 2024 09:57:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=CiegFcow;
- spf=pass (domain: gmail.com, ip: 209.85.167.170, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c9cc681ee7so417989b6e.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 30 May 2024 08:42:35 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=XspfXBlz;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-35dcd5377c4so368564f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 30 May 2024 09:57:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717083753; x=1717688553; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jcezi2kXC/Gkh1WBjOM2igjWwiAgAtPzKF8Boct/JTE=;
-        b=CiegFcow8/2olvDrkF5TyXp2U8MNPMhICpF0+SSWGYlJqGS5Vu69VAsRcLF3kt7Oju
-         HYbXCjqzrhcId/Mog/7jaMu9i2nJFGQ/yD4+F5r7NAo/XRVDXoYOufVCiiu9rAJRxMFu
-         nV9PAfYDfp5Rp5Eb3MFot9FEiDuWtPTK60F6mq97e/hbTVxCf62IZe30081qPWR7uPcO
-         4ynWUI1b0KRIkMeGgx32Dg6rRZaoSMEy/ucbBwOTB2D187MYYN9Fp0D4mJg8T00GklUO
-         HqivPiwGCvAiVSIjY8Cxxd2X12t9kYyLxVma80bxz4RvvLJzpafeJMFz89Iswpb46+Di
-         sXgg==
+        d=linuxfoundation.org; s=google; t=1717088241; x=1717693041; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J0F4ck0Xvd0Qk/xOnByHmyPr9CpAAPCTi4xfRr/rF+Q=;
+        b=XspfXBlzjWrDbdM+8rIjN3efy6RbmoVnJ5Sl3egRItIoJm0AB+wx1CrCi9W/FRo6p2
+         EeHvl8mYh7oce0WtD2Ng0jAWgQQC6XvnjMY3NPeu5zh9fM8sgxPtqyxmbSaEhsan5XAt
+         XcQ8xkAg3PTJDywzH3sQURjzg5AjLDZYOTkR4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717083753; x=1717688553;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jcezi2kXC/Gkh1WBjOM2igjWwiAgAtPzKF8Boct/JTE=;
-        b=jF85DL6M8sUsI4es4350qdSB20C2bjdDa5w8LNcjw/8Mkvs1mg6S6JQUNWupbbIRjM
-         Ozr3WBwGF24h301NLCGQmtu9wKKxxDcX5L+oeG2BJ5GxiDOoafubgBz3dwmK0neLSSkS
-         H9P1Y2MxJxBRjb4fsHJj477Cx2zqYt8c94c1J782dKtOONl7Yb53JVglQucEg+ywuRVd
-         xij16ZY7pqd4NV3JQe5CjCXbLeQe490C3piCOQKUnAoi8jRwq6ImJ9apzL7/POXmlaJd
-         CM68oa15rIUjgSzrNex91wdITzsFJtw4FRnOROxdaLg19QrSIvJharJPe86y+YOfmon0
-         nyLA==
-X-Gm-Message-State: AOJu0YzwAEVaA84zBEOqOfyt9knSrCJ/bOWupFUYECZvd18ybX0A9Xbt
-	ALOSwMhemhc6XsxaUmUyLlqDKUl8jD9HGwXvML2urm5fPgVVk49phFD7jA==
-X-Google-Smtp-Source: AGHT+IFX7A+oNFfGODuBHl+CxeJh1xMIjeHM8Z69KcSBc9e3NplOyJPcMil95dkdCIHQVI/AMeRbEA==
-X-Received: by 2002:a54:4113:0:b0:3d1:d2e1:6283 with SMTP id 5614622812f47-3d1dd2ece0amr869416b6e.25.1717083753597;
-        Thu, 30 May 2024 08:42:33 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::125b])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3d1b372013bsm1987961b6e.45.2024.05.30.08.42.32
+        d=1e100.net; s=20230601; t=1717088241; x=1717693041;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J0F4ck0Xvd0Qk/xOnByHmyPr9CpAAPCTi4xfRr/rF+Q=;
+        b=nvjoJa1x6g/KecxhZdX08vVzhprB8q/qWIl5nrWXqLm8t+IV09oC3I2MUbtcjHQSZb
+         fQu4h98hKJuc1R4RgFGwdK4JWDHe4S4dBLxQuz5FtQ5XRWobc8WbdMRli+Kw79vnptVb
+         UDUPQumaesCbof+iP+R2VsAo69t2xiGbyoobdl/ZMrayezNxnuxc90EwjXiqjJ1bbTCR
+         UCT0WGksl7zozqs2+P9lrNR40JufIo6eBqqpOc4G4V/jSKWsu4hpU1F4GUKsv2EWvmxc
+         y0bl5VYZ2D7XVeGv6pgPRZbDaYr82Ucx1pe7MCepOyB6SQnHsVbyLVVf1PMMM9Eq08jT
+         WBPw==
+X-Gm-Message-State: AOJu0YzxEDJe9OcavEVRsJyotutzH7ZEnl+wcjwCIn+K65Xb2PlphUQ2
+	u9ZOaklUCSHD3JcyJmNDpA1EAXaMq55mPniljy3zCPe+bMpnjyzpnYMDgiF/s72r/MtHT6SzkT4
+	V
+X-Google-Smtp-Source: AGHT+IGG2SjbMmcHe/k84pvfcoq61QkM7YGygcvNazhBLhI3Ok+2+HAO0T7T+DDt+RYjTv6fvELyIA==
+X-Received: by 2002:adf:f9d1:0:b0:355:841:aeaf with SMTP id ffacd0b85a97d-35dc009a637mr1922310f8f.33.1717088240785;
+        Thu, 30 May 2024 09:57:20 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:e2db:3695:26f3:1f11])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35579d7dd8esm17745316f8f.10.2024.05.30.09.57.20
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 08:42:33 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+        Thu, 30 May 2024 09:57:20 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] hashserv: client: Fix changing stream modes
-Date: Thu, 30 May 2024 09:42:30 -0600
-Message-ID: <20240530154230.792726-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.43.2
+Subject: [PATCH] fetch2/wget: Fix failure path for files that are empty or don't exist
+Date: Thu, 30 May 2024 17:57:19 +0100
+Message-Id: <20240530165719.3115747-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 30 May 2024 15:42:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16292
+ <bitbake-devel@lists.openembedded.org>; Thu, 30 May 2024 16:57:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16293
 
-When switching from normal mode to stream mode, skip calling
-self._set_mode() again because this will cause a recursion into the
-_set_mode() function and causes problems.
+When we intercepted the file download to a temp file, we broke the
+exist/size checks which need to happen before the rename. Correct
+the ordering.
 
-Also cleanup some of the error checking during this process
+For some reason, python 3.12 exposes this problem in the selftests
+differently to previous versions.
 
-This bug affected when a client would attempt to switch from one stream
-mode to another, and meant that the server would get an invalid message
-from the client. This would cause the server to disconnect the client,
-and the client would then reconnect in normal mode which was the mode it
-wanted anyway and thus it would carry on without any errors. This made
-the bug not visible on the client side, but resulting in a lot of
-backtrace JSON decoding exceptions in the server logs.
-
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/hashserv/client.py | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ lib/bb/fetch2/wget.py | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/bitbake/lib/hashserv/client.py b/bitbake/lib/hashserv/client.py
-index d415617b206..a510f3284fc 100644
---- a/bitbake/lib/hashserv/client.py
-+++ b/bitbake/lib/hashserv/client.py
-@@ -121,24 +121,28 @@ class AsyncClient(bb.asyncrpc.AsyncClient):
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index fbfa6938ac..3c213370b5 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -139,19 +139,19 @@ class Wget(FetchMethod):
+         # source, one with an incorrect checksum)
+         bb.fetch2.verify_checksum(ud, d, localpath=localpath, fatal_nochecksum=False)
  
-         return await self._send_wrapper(proc)
- 
--    async def invoke(self, *args, **kwargs):
-+    async def invoke(self, *args, skip_mode=False, **kwargs):
-         # It's OK if connection errors cause a failure here, because the mode
-         # is also reset to normal on a new connection
--        await self._set_mode(self.MODE_NORMAL)
-+        if not skip_mode:
-+            await self._set_mode(self.MODE_NORMAL)
-         return await super().invoke(*args, **kwargs)
- 
-     async def _set_mode(self, new_mode):
-         async def stream_to_normal():
-+            # Check if already in normal mode (e.g. due to a connection reset)
-+            if self.mode == self.MODE_NORMAL:
-+                return "ok"
-             await self.socket.send("END")
-             return await self.socket.recv()
- 
-         async def normal_to_stream(command):
--            r = await self.invoke({command: None})
-+            r = await self.invoke({command: None}, skip_mode=True)
-             if r != "ok":
-+                self.check_invoke_error(r)
-                 raise ConnectionError(
-                     f"Unable to transition to stream mode: Bad response from server {r!r}"
-                 )
+-        # Remove the ".tmp" and move the file into position atomically
+-        # Our lock prevents multiple writers but mirroring code may grab incomplete files
+-        os.rename(localpath, localpath[:-4])
 -
-             self.logger.debug("Mode is now %s", command)
+         # Sanity check since wget can pretend it succeed when it didn't
+         # Also, this used to happen if sourceforge sent us to the mirror page
+-        if not os.path.exists(ud.localpath):
++        if not os.path.exists(localpath):
+             raise FetchError("The fetch command returned success for url %s but %s doesn't exist?!" % (uri, ud.localpath), uri)
  
-         if new_mode == self.mode:
--- 
-2.43.2
-
+-        if os.path.getsize(ud.localpath) == 0:
+-            os.remove(ud.localpath)
++        if os.path.getsize(localpath) == 0:
++            os.remove(localpath)
+             raise FetchError("The fetch of %s resulted in a zero size file?! Deleting and failing since this isn't right." % (uri), uri)
+ 
++        # Remove the ".tmp" and move the file into position atomically
++        # Our lock prevents multiple writers but mirroring code may grab incomplete files
++        os.rename(localpath, localpath[:-4])
++
+         return True
+ 
+     def checkstatus(self, fetch, ud, d, try_again=True):
 
