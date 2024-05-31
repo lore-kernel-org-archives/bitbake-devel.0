@@ -1,97 +1,148 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <sven.schwermer@disruptive-technologies.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A64C25B7C
-	for <webhook@archiver.kernel.org>; Fri, 31 May 2024 11:49:45 +0000 (UTC)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
- by mx.groups.io with SMTP id smtpd.web11.9587.1717156177739459796
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA30C25B75
+	for <webhook@archiver.kernel.org>; Fri, 31 May 2024 12:50:36 +0000 (UTC)
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+ by mx.groups.io with SMTP id smtpd.web10.10983.1717159827944556165
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 31 May 2024 04:49:38 -0700
+ Fri, 31 May 2024 05:50:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Ooru7mZI;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.208.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57a1fe63957so797387a12.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 31 May 2024 04:49:37 -0700 (PDT)
+ dkim=pass header.i=@disruptive-technologies.com header.s=google header.b=mYqevLu4;
+ spf=pass (domain: disruptive-technologies.com, ip: 209.85.221.170, mailfrom: sven.schwermer@disruptive-technologies.com)
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4e4f0600656so1048875e0c.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 31 May 2024 05:50:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1717156176; x=1717760976; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Rx9MUwPhPMxopcbNtODvc4bD+og7E1DT28B6OP3Y/M=;
-        b=Ooru7mZI66wX4nhqvScql+59gjp5RAIhMYoJOL+Khwo6mUa0OThQnxcmWWQwakH6JJ
-         IOxS5VdHmaoC0+QOqbLSfLNOCLOVx788qVdyLQD6sU6lTAn77UBQchysGKhs8fpDhUpm
-         3OoXx6uXiON31dAycfa940G47KC/iXBuYirMc=
+        d=disruptive-technologies.com; s=google; t=1717159827; x=1717764627; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CaFgym7IJevxbnBvdt1i5b3sgrMpkzj4Q4yt7+nDhpE=;
+        b=mYqevLu47NIANY7WQQpAjO9Ky7DUkLy5MmPNB/N89zkYvGxDsfOlD/MnzuW+EF0C9H
+         U9bGjYy3yWaOuPVn5okQloRbLBVmZNBS3WMHk3CpdvnprsQEew8F0YB8Neku4B6bSXHB
+         bJ44Ivh/ECGS4zqcrGIVTXYeiIwdN/eeJAa1bW501TGzq9m7W5bL7qp4izfKpIXR1G4i
+         vk7bO3GUtlorPvLfPHoYbh9M2f26TthkyhFAF3kJJpN+SAkPwlwxXoffrRsIGM5nt8Bn
+         F6Ud/1akRL3zT98h6NEc+uYceUF6ZeqBmZnxMJ0f5UbIex/dmmjmzJXQeBOzOBqtPof0
+         3J/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717156176; x=1717760976;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Rx9MUwPhPMxopcbNtODvc4bD+og7E1DT28B6OP3Y/M=;
-        b=tgxJ+odrGQxouzkX5c7PQCLPcaR2GQ91npGC7ECrS8TiRx521q4Y6M7c43lR4tDbC7
-         xf/5hlmwJOt+6MhE0NTw1LvW2ZtGH797pRPNoKMk2Igy4uF2O2sG2f8m0ZbO57mAgI8B
-         4tgggW2RsLeajGH6WIKaLvjyqPnfOo91cRE9jd+AIDu/wD0pSbhaVuEFC3MqZe2F0Dh9
-         vtDMvcmdtoMYa+PmLlA7/zrzdMDAZETMzK3VLt0JvRrmocEHedy3mdThgT/wl69P/Zcg
-         YvM7Y/t36E0q6kZJx/0vI7kD5sApM2n9ZqIwhdgjaUJBcVC0iPqx2BWQnRgHx1wQELA7
-         Gg2Q==
-X-Gm-Message-State: AOJu0YwjLWd83aiaoJ0B7OspMNI0snKjXAzEbBFnMlqiHifWKyqEv+wf
-	RwNHB6h7T4MGYSTVRg0CMhccQxPJpIlmP6oIX3T1g/RPCgWmfYwyl/fuW5zm2JbgXPpVdpqCQIR
-	Y
-X-Google-Smtp-Source: AGHT+IESq4saoMlIzx0qJCMbriZuerp0rT1xNacjCK4Jzqp+hl8szZ10r4Cra00HJ5LoLQS1RS4hvA==
-X-Received: by 2002:a05:600c:3106:b0:420:28c7:7260 with SMTP id 5b1f17b1804b1-4212e075761mr15597205e9.21.1717155696326;
-        Fri, 31 May 2024 04:41:36 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:9173:4fa2:d1b3:c8be])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421270ad1a7sm51799405e9.40.2024.05.31.04.41.35
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 04:41:35 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] tests/fetch: Tweak to work on Fedora40
-Date: Fri, 31 May 2024 12:41:35 +0100
-Message-Id: <20240531114135.3255085-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1717159827; x=1717764627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CaFgym7IJevxbnBvdt1i5b3sgrMpkzj4Q4yt7+nDhpE=;
+        b=QIa2QJamDn9G04bh8i7O1hHBccqP5DAfim5BAq02V2fpIFdVmCSn3Td10HbmMs0fQB
+         FA5s1ibDz8Fde2dORy06a7MxzcPYQMW8y30aMbLWc6l6GFrLUSFM2i2KvNDpv6mi3IkX
+         NLiwSm2Sa5jpzVBAkNILnhZxPfBroEve+//Ew01t+UqfJzC2lq+IotjnosELWxPdOJ2O
+         PdGB1xdmtn02wBYP4NLTFq/+LGSLJMey8cGTzMD1u8iHhCVI3VcTXJqlSy590o5Z5UXV
+         v/klNOfD6UPa4cGe/4Twv2TeM03ajw3PTEGI0oLdAUblrbTH86RMslwTfK2lWjKmQ3QY
+         pYrA==
+X-Gm-Message-State: AOJu0Yz8fSSvbw+YW2n0EZZkqIjloDKvEhJcxOWbY3Q773APYuEZIYga
+	wGsyYwszC34b+ndee5xzpAHnjze+nsPE4EO6wn+YPEMBCN2pXn1+X29YhXy1QNsmZk5/cxgnFBY
+	YfizeKbarEJJiM+W5sz4xcG6Y+U3Obrb9uBe/pQ==
+X-Google-Smtp-Source: AGHT+IE8DGmzGsvTEhwkxnMde6IqQY9C92rZpUIhuym7rDmt7OvJOZou6TLdKoePR9FQ7UxyBhmEG7x3tF/QW9tAeGM=
+X-Received: by 2002:a05:6122:6010:b0:4d3:34f4:7e99 with SMTP id
+ 71dfb90a1353d-4eb01e64a59mr1112829e0c.0.1717159826848; Fri, 31 May 2024
+ 05:50:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <8fJ7.1716980201481658392.yosx@lists.openembedded.org> <9e01adf4ac8c6621781e46d8b86bc93748cda697.camel@linuxfoundation.org>
+In-Reply-To: <9e01adf4ac8c6621781e46d8b86bc93748cda697.camel@linuxfoundation.org>
+From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+Date: Fri, 31 May 2024 14:50:15 +0200
+Message-ID: <CANcZeZH7_Gc==c4QZcmk0bcSq5PiYapfdx614nY36Q1r7ft5ww@mail.gmail.com>
+Subject: Re: [bitbake-devel] Pseudo errors in lib/bb/__pycache__ #bitbake
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 31 May 2024 11:49:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16298
+ <bitbake-devel@lists.openembedded.org>; Fri, 31 May 2024 12:50:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16299
 
-On Fedora40, "localhost" sometimes resolves to ::1 and sometimes to 127.0.0.1
-and python only binds to one of the addresses, leading to test failures.
+I get these mismatch errors between all sorts of different pairs of
+files, it seems to be unpredictable. Another example:
+path mismatch [2 links]: ino 6330088 db
+'poky/meta/lib/oe/__pycache__/__init__.cpython-312.pyc' req
+'build/tmp/work/MACHINE-poky-linux-gnueabi/IMAGE/1.0/rootfs.image_tar/usr/l=
+ib/systemd/system/user@0.service.d'.
 
-Use 127.0.0.1 explicitly to avoid problems of the name resolution, we're trying
-to test things other that the host networking.
+This is after I added the following lines to my conf/local.conf:
+PSEUDO_IGNORE_PATHS .=3D ",${COREBASE}/bitbake"
+PSEUDO_IGNORE_PATHS .=3D ",${COREBASE}/meta/lib"
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/tests/fetch.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I'm probably doing something wrong in some recipe/class, however, I
+don't know how I can find out where to look. What's the way to
+troubleshoot these errors? Any help is appreciated.
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index ed7a39a723..1e55cdd299 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1525,7 +1525,7 @@ class FetchLatestVersionTest(FetcherTest):
- 
-     def test_wget_latest_versionstring(self):
-         testdata = os.path.dirname(os.path.abspath(__file__)) + "/fetch-testdata"
--        server = HTTPService(testdata)
-+        server = HTTPService(testdata, host="127.0.0.1")
-         server.start()
-         port = server.port
-         try:
-@@ -1533,10 +1533,10 @@ class FetchLatestVersionTest(FetcherTest):
-                 self.d.setVar("PN", k[0])
-                 checkuri = ""
-                 if k[2]:
--                    checkuri = "http://localhost:%s/" % port + k[2]
-+                    checkuri = "http://127.0.0.1:%s/" % port + k[2]
-                 self.d.setVar("UPSTREAM_CHECK_URI", checkuri)
-                 self.d.setVar("UPSTREAM_CHECK_REGEX", k[3])
--                url = "http://localhost:%s/" % port + k[1]
-+                url = "http://127.0.0.1:%s/" % port + k[1]
-                 ud = bb.fetch2.FetchData(url, self.d)
-                 pupver = ud.method.latest_versionstring(ud, self.d)
-                 verstring = pupver[0]
+Thanks!
+
+Best regards,
+Sven
+
+On Thu, May 30, 2024 at 12:49=E2=80=AFAM Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+>
+> On Wed, 2024-05-29 at 03:56 -0700, Sven via lists.openembedded.org
+> wrote:
+> > Hi,
+> >
+> > I'm using Yocto 5.0 (scarthgap) which comes with bitbake 2.8. Since
+> > migrating from kirkstone (bitbake 2.0), I have started seeing pseudo
+> > abort errors like these:
+> >
+> > NOTE: recipe IMAGE-1.0-r0: task do_rootfs: Failed
+> > ERROR: Task (poky/../LAYER/recipes-core/images/IMAGE.bb:do_rootfs)
+> > failed with exit code '1'
+> > Pseudo log:
+> > path mismatch [1 link]: ino 1879965 db
+> > 'poky/bitbake/lib/bb/__pycache__/__init__.cpython-312.pyc' req
+> > 'build/tmp/work/MACHINE-poky-linux-
+> > gnueabi/IMAGE/1.0/rootfs/var/lib/opkg/info/jq.postinst'.
+> > creat for 'build/tmp/work/MACHINE-poky-linux-
+> > gnueabi/IMAGE/1.0/rootfs/var/lib/opkg/info/jq.control' replaces
+> > existing 1879952 ['build/tmp/work/MACHINE-poky-linux-
+> > gnueabi/IMAGE/1.0/data.ext4'].
+> > symlink err : 1879909 ['build/tmp/work/MACHINE-poky-linux-
+> > gnueabi/IMAGE/1.0/rootfs/var/cache/opkg/volatile.211108/aae1283bc6927
+> > 2c07742f9861f12b8d8_jq_1.7.1-r0_cortexa7t2hf-neon-vfpv4.ipk'] (db
+> > 'build/tmp/work/MACHINE-poky-linux-gnueabi/IMAGE/1.0/boot.vfat') db
+> > mode 0100644, header mode 0120777 (unlinking db)
+> >
+> >
+> > ERROR: Task (poky/../LAYER/recipes-core/images/IMAGE.bb:do_rootfs)
+> > failed with exit code '134'
+> > Pseudo log:
+> > path mismatch [1 link]: ino 1081932 db 'poky/bitbake/lib/bb/fetch2/__py=
+cache__/clearcase.cpython-312.pyc' req 'poky/meta/lib/oe/package_manager/ip=
+k/__pycache__/__init__.cpython-311.pyc'.
+> >
+> > This occurs both on Ubuntu 20.04 (former) and Debian Bookworm
+> > (latter). What is this caused by and how can I resolve this issue?
+>
+> That looks like you're running the clearcase fetcher during image
+> construction? There are python cache files being created and pseudo is
+> tracking them when it shouldn't be.
+>
+> Adding the bitbake directory to PSEUDO_IGNORE_PATH (see image.bbclass)
+> should avoid those errors but in your position I'd probably want to
+> know what was calling into clearcase from under pseudo in the first
+> place (or at least calling into the fetcher code)...
+>
+> Cheers,
+>
+> Richard
+
+
+
+--=20
+
+Sven Schwermer
+
+Engineering Manager Connectivity
+
++47 94169642 |
+www.disruptive-technologies.com
+Strandveien 17, 1366 Lysaker, Norway
 
