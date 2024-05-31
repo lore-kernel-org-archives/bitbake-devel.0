@@ -2,8 +2,8 @@ Return-Path: <sven.schwermer@disruptive-technologies.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA30C25B75
-	for <webhook@archiver.kernel.org>; Fri, 31 May 2024 12:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56259C25B75
+	for <webhook@archiver.kernel.org>; Fri, 31 May 2024 12:51:46 +0000 (UTC)
 Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
  by mx.groups.io with SMTP id smtpd.web10.10983.1717159827944556165
  for <bitbake-devel@lists.openembedded.org>;
@@ -47,19 +47,21 @@ X-Received: by 2002:a05:6122:6010:b0:4d3:34f4:7e99 with SMTP id
 MIME-Version: 1.0
 References: <8fJ7.1716980201481658392.yosx@lists.openembedded.org> <9e01adf4ac8c6621781e46d8b86bc93748cda697.camel@linuxfoundation.org>
 In-Reply-To: <9e01adf4ac8c6621781e46d8b86bc93748cda697.camel@linuxfoundation.org>
-From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
-Date: Fri, 31 May 2024 14:50:15 +0200
+From: "Sven" <sven.schwermer@disruptive-technologies.com>
+Date: Fri, 31 May 2024 05:51:39 -0700
 Message-ID: <CANcZeZH7_Gc==c4QZcmk0bcSq5PiYapfdx614nY36Q1r7ft5ww@mail.gmail.com>
 Subject: Re: [bitbake-devel] Pseudo errors in lib/bb/__pycache__ #bitbake
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+X-Old-Date: Fri, 31 May 2024 14:50:15 +0200
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 31 May 2024 12:50:36 -0000
+ <bitbake-devel@lists.openembedded.org>; Fri, 31 May 2024 12:51:46 -0000
 X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16299
+Message-ID: <20240531125139.uY9vyQjCeV9c3H0S0NGGoE0KqXtXhwavhHKY5lVqIyw@z>
 
 I get these mismatch errors between all sorts of different pairs of
 files, it seems to be unpredictable. Another example:
@@ -133,16 +135,4 @@ k/__pycache__/__init__.cpython-311.pyc'.
 > Cheers,
 >
 > Richard
-
-
-
---=20
-
-Sven Schwermer
-
-Engineering Manager Connectivity
-
-+47 94169642 |
-www.disruptive-technologies.com
-Strandveien 17, 1366 Lysaker, Norway
 
