@@ -1,116 +1,171 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C132BC25B75
-	for <webhook@archiver.kernel.org>; Fri, 31 May 2024 13:36:46 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.12303.1717162597690677012
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB09C25B76
+	for <webhook@archiver.kernel.org>; Sat,  1 Jun 2024 05:45:44 +0000 (UTC)
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+ by mx.groups.io with SMTP id smtpd.web10.31976.1717220738978699830
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 31 May 2024 06:36:38 -0700
+ Fri, 31 May 2024 22:45:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=W4ur4Ay1;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-420180b58c5so19326005e9.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 31 May 2024 06:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1717162596; x=1717767396; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SAUN4w9vE4SuvV3kT/THBGLHAoCiJdmjL9Q8zuMRIb0=;
-        b=W4ur4Ay1onYIjDsFduFnknjzlZsbvyeZF1MUOcHpNvsyby70Ot3idtGp0/scY0vXD8
-         OsZ/nJOonLlsCnOrl2hJFMbhfGeQShq1hMFcxxLlAtqCjhKg4lF+bu7lZ2ONT4cJMzZB
-         yAwkq0Agn8iPVGL8sJr4/RNyNR7qUi6e/f3qs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717162596; x=1717767396;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SAUN4w9vE4SuvV3kT/THBGLHAoCiJdmjL9Q8zuMRIb0=;
-        b=ZWDAzyRpD2cTdTGPJaSENx9p/eXZZTYMGt4sVTKoIIvum/6+KW13Q8PqA43nJB1kct
-         w9uVu6IM99Tbvu9bmAC8+9mGRKw2C8UIYjIJvVymYDTFZJCTOy0mU5RKtykV9BlR1/i5
-         dF+cf4GLR9RKMtrjZTTzrL7mBasdNbIGBohXsvsjCY8teP7xBNwI5vN4+Px7+I+3J5Fk
-         481i0I5qEnn1ChMF+NIAwXB6Xudo3t9MhzYUH3eyJrmOFTmmaNEpuGd+6OAZyD1ikXtz
-         T3UMpXGK2y8z7wB2xj4RTIpkxJjH3/Tjotzi/+UGTgB5CVpK3x4uj0lx4eOdk8l0eRtg
-         srug==
-X-Gm-Message-State: AOJu0YyfZLhcDwm/hM3rpgd6NEfCmd8XBpozsCJ6mBfIGHO3NufNQwE+
-	MlbGERyttEDNlcYPlgWG5eVEaxArnf9t0fIVLHakE4Lh4SgjhG8K0qFT6ITqX6I=
-X-Google-Smtp-Source: AGHT+IG8XClpCDJMlSIh+uyjVC7emcAxtIkvEDtEX4Lz0e9YIbLTKsXe/tncry6hrb6R18cB1BGm1w==
-X-Received: by 2002:a05:600c:4454:b0:421:2cb3:143 with SMTP id 5b1f17b1804b1-4212e044873mr16452835e9.3.1717162596073;
-        Fri, 31 May 2024 06:36:36 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:9173:4fa2:d1b3:c8be? ([2001:8b0:aba:5f3c:9173:4fa2:d1b3:c8be])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212e96c634sm17845415e9.21.2024.05.31.06.36.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 06:36:35 -0700 (PDT)
-Message-ID: <42a3baed1928bf8e4d5fd06507928a2b666fc430.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Pseudo errors in lib/bb/__pycache__ #bitbake
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Fri, 31 May 2024 14:36:35 +0100
-In-Reply-To: <CANcZeZH7_Gc==c4QZcmk0bcSq5PiYapfdx614nY36Q1r7ft5ww@mail.gmail.com>
-References: <8fJ7.1716980201481658392.yosx@lists.openembedded.org>
-	 <9e01adf4ac8c6621781e46d8b86bc93748cda697.camel@linuxfoundation.org>
-	 <CANcZeZH7_Gc==c4QZcmk0bcSq5PiYapfdx614nY36Q1r7ft5ww@mail.gmail.com>
-Autocrypt: addr=richard.purdie@linuxfoundation.org; prefer-encrypt=mutual; keydata=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
- YNvg==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0-1 
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=Ya9vg2rX;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.193, mailfrom: alexandre.belloni@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C017E240004;
+	Sat,  1 Jun 2024 05:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717220737;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RjpvrubRB39jlVuC6NtaBmBzw1Yf0LDL1zGJQ5+XsO4=;
+	b=Ya9vg2rXkRQCC178X5or+TkFT8kg1xu10fNxK4j6S4z8bS3MwF5bGCgYBf1eFwmLorApRr
+	/1DepYDmHgs4SW/iXLmzXxMd//hkOaduNQN2eOrn8SJmgkwB81oMsElnwpJp8gIedwaK/7
+	vODdrMWR+5c5IP+9tNl3D70xFfI3W+BOsoL5UX+Yph5Ua44+a9xpZy1c/2uwxU43VzN85N
+	1IzQIrbKv+O0c3wLOfY8htfhd1u+/meZnFgtRxUgK5SmgxO6I9oFUypiDbz3rzP9G5vEZW
+	Kp/Ezp1qlerZ5ScU1eV0QOWtisdJ69m42pcxI6L59r7KNWpoKzuPl3sZVpZvqw==
+Date: Sat, 1 Jun 2024 07:45:35 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Hieu Van Nguyen <hieu2.nguyen@lge.com>
+Cc: bitbake-devel@lists.openembedded.org,
+	richard.purdie@linuxfoundation.org, pkj@axis.com,
+	nvhieudt11@gmail.com
+Subject: Re: [bitbake-devel] [PATCH v3] bitbake-layers: Support add-layer to
+ prepend
+Message-ID: <202406010545352491ca1a@mail.local>
+References: <16194>
+ <20240509110400.1093934-1-hieu2.nguyen@lge.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240509110400.1093934-1-hieu2.nguyen@lge.com>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 31 May 2024 13:36:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16300
+ <bitbake-devel@lists.openembedded.org>; Sat, 01 Jun 2024 05:45:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16301
 
-On Fri, 2024-05-31 at 14:50 +0200, Sven Schwermer wrote:
-> I get these mismatch errors between all sorts of different pairs of
-> files, it seems to be unpredictable. Another example:
-> path mismatch [2 links]: ino 6330088 db
-> 'poky/meta/lib/oe/__pycache__/__init__.cpython-312.pyc' req
-> 'build/tmp/work/MACHINE-poky-linux-gnueabi/IMAGE/1.0/rootfs.image_tar/usr=
-/lib/systemd/system/user@0.service.d'.
->=20
-> This is after I added the following lines to my conf/local.conf:
-> PSEUDO_IGNORE_PATHS .=3D ",${COREBASE}/bitbake"
-> PSEUDO_IGNORE_PATHS .=3D ",${COREBASE}/meta/lib"
->=20
-> I'm probably doing something wrong in some recipe/class, however, I
-> don't know how I can find out where to look. What's the way to
-> troubleshoot these errors? Any help is appreciated.
+This fails on the autbuilders:
 
-There isn't a magic way to debug what is going on. The issue is that
-files are being created under pseudo then deleted outside of it, then
-the inode is being reused. When pseudo sees the same inode against two
-different files, it can get confused so we made it complain about these
-cases.
-
-The question is therefore which processes are creating the files.
-
-Creation of pycache files under pseudo means you're probably importing
-python modules which weren't previously used outside pseudo. Why
-they're being deleted and recreated seems odd though, usually pycache
-files are created and then unchanged.
-
-Adding the PSEUDO_IGNORE_PATHS should help but I'm guessing you're
-reusing a TMPDIR and there are still entries in the pseudo db from
-previous builds?
-
-You could clean the image recipes in question which would delete the
-pseudo db for those recipes (WORKDIR/pseudo) and might help sort out an
-existing builddir...
-
-Cheers,
-
-Richard
+2024-06-01 04:08:35,036 - oe-selftest - INFO - ======================================================================
+2024-06-01 04:08:35,195 - oe-selftest - INFO - FAIL: sstatetests.SStateBundles.test_minimal_bundle (subunit.RemotedTestCase)
+2024-06-01 04:08:35,195 - oe-selftest - INFO - ----------------------------------------------------------------------
+2024-06-01 04:08:35,195 - oe-selftest - INFO - testtools.testresult.real._StringException: Traceback (most recent call last):
+  File "/home/pokybuild/yocto-worker/oe-selftest-centos/build/meta/lib/oeqa/selftest/cases/sstatetests.py", line 1016, in test_minimal_bundle
+    runCmd("oe-replicate-build --targets {}".format(targets))
+  File "/home/pokybuild/yocto-worker/oe-selftest-centos/build/meta/lib/oeqa/utils/commands.py", line 212, in runCmd
+    raise AssertionError("Command '%s' returned non-zero exit status %d:\n%s" % (command, result.status, exc_output))
+AssertionError: Command 'oe-replicate-build --targets core-image-minimal' returned non-zero exit status 1:
+Traceback (most recent call last):
+  File "/home/pokybuild/yocto-worker/oe-selftest-centos/build/bitbake/bin/bitbake-layers", line 101, in <module>
+    ret = main()
+  File "/home/pokybuild/yocto-worker/oe-selftest-centos/build/bitbake/bin/bitbake-layers", line 94, in main
+    return args.func(args)
+  File "/home/pokybuild/yocto-worker/oe-selftest-centos/build/meta/lib/bblayers/create.py", line 76, in do_create_layer
+    ActionPlugin.do_add_layer(self, args)
+  File "/home/pokybuild/yocto-worker/oe-selftest-centos/build/bitbake/lib/bblayers/action.py", line 52, in do_add_layer
+    notadded, _ = bb.utils.edit_bblayers_conf(bblayers_conf, layerdirs, None, None, args.prepend)
+AttributeError: 'Namespace' object has no attribute 'prepend'
+Making a self-extracting bundle archive in build-bundle.sh ...
+Traceback (most recent call last):
+  File "/home/pokybuild/yocto-worker/oe-selftest-centos/build/scripts/oe-replicate-build", line 74, in <module>
+    _do_bundle(args)
+  File "/home/pokybuild/yocto-worker/oe-selftest-centos/build/scripts/oe-replicate-build", line 29, in _do_bundle
+    subprocess.check_output("bitbake-layers create-layer --add-layer {}".format(layerdir), shell=True, cwd=bundledir)
+  File "/usr/lib64/python3.9/subprocess.py", line 424, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/usr/lib64/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command 'bitbake-layers create-layer --add-layer meta-build-config' returned non-zero exit status 1.
 
 
+On 09/05/2024 20:04:00+0900, Hieu Van Nguyen wrote:
+> From: Hieu Van Nguyen <hieu2.nguyen@lge.com>
+> 
+> As you know, layer order in BBLAYERS can affect in parsing recipes process,
+> in some cases, users want to add a layer on the top of BBLAYERS variable
+> 
+> So, add "--prepend" option for bitbake-layers to support add-layer to prepend
+> 
+> Signed-off-by: Hieu Van Nguyen <hieu2.nguyen@lge.com>
+> ---
+> v3: fix From:
+>  lib/bb/utils.py        | 8 ++++++--
+>  lib/bblayers/action.py | 3 ++-
+>  2 files changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+> index ebee65d3d..f1634da0a 100644
+> --- a/lib/bb/utils.py
+> +++ b/lib/bb/utils.py
+> @@ -1414,7 +1414,7 @@ def edit_metadata_file(meta_file, variables, varfunc):
+>      return updated
+>  
+>  
+> -def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=None):
+> +def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=None, prepend=None):
+>      """Edit bblayers.conf, adding and/or removing layers
+>      Parameters:
+>          bblayers_conf: path to bblayers.conf file to edit
+> @@ -1424,6 +1424,7 @@ def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=None):
+>              empty list to remove nothing
+>          edit_cb: optional callback function that will be called after
+>              processing adds/removes once per existing entry.
+> +        prepend: optional support add-layer to prepend
+>      Returns a tuple:
+>          notadded: list of layers specified to be added but weren't
+>              (because they were already in the list)
+> @@ -1484,7 +1485,10 @@ def edit_bblayers_conf(bblayers_conf, add, remove, edit_cb=None):
+>              for addlayer in addlayers:
+>                  if addlayer not in bblayers:
+>                      updated = True
+> -                    bblayers.append(addlayer)
+> +                    if prepend:
+> +                        bblayers.insert(0,addlayer)
+> +                    else:
+> +                        bblayers.append(addlayer)
+>              del addlayers[:]
+>  
+>          if edit_cb:
+> diff --git a/lib/bblayers/action.py b/lib/bblayers/action.py
+> index a14f19948..8ef89fc09 100644
+> --- a/lib/bblayers/action.py
+> +++ b/lib/bblayers/action.py
+> @@ -49,7 +49,7 @@ class ActionPlugin(LayerPlugin):
+>          shutil.copy2(bblayers_conf, backup)
+>  
+>          try:
+> -            notadded, _ = bb.utils.edit_bblayers_conf(bblayers_conf, layerdirs, None)
+> +            notadded, _ = bb.utils.edit_bblayers_conf(bblayers_conf, layerdirs, None, None, args.prepend)
+>              if not (args.force or notadded):
+>                  self.tinfoil.modified_files()
+>                  try:
+> @@ -269,6 +269,7 @@ build results (as the layer priority order has effectively changed).
+>      def register_commands(self, sp):
+>          parser_add_layer = self.add_command(sp, 'add-layer', self.do_add_layer, parserecipes=False)
+>          parser_add_layer.add_argument('layerdir', nargs='+', help='Layer directory/directories to add')
+> +        parser_add_layer.add_argument('--prepend', action='store_true', help='Prepend layer directory/directories')
+>  
+>          parser_remove_layer = self.add_command(sp, 'remove-layer', self.do_remove_layer, parserecipes=False)
+>          parser_remove_layer.add_argument('layerdir', nargs='+', help='Layer directory/directories to remove (wildcards allowed, enclose in quotes to avoid shell expansion)')
+> -- 
+> 2.34.1
+> 
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#16196): https://lists.openembedded.org/g/bitbake-devel/message/16196
+> Mute This Topic: https://lists.openembedded.org/mt/105998764/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
