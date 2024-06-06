@@ -1,156 +1,169 @@
-Return-Path: <rudolf.streif@ibeeto.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC23C27C52
-	for <webhook@archiver.kernel.org>; Thu,  6 Jun 2024 20:18:25 +0000 (UTC)
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
- by mx.groups.io with SMTP id smtpd.web10.25206.1717705098829549752
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A59C27C52
+	for <webhook@archiver.kernel.org>; Thu,  6 Jun 2024 20:34:05 +0000 (UTC)
+Received: from smtp-out.freemail.hu (smtp-out.freemail.hu [46.107.16.239])
+ by mx.groups.io with SMTP id smtpd.web11.25648.1717705885524257655
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 06 Jun 2024 13:18:18 -0700
+ Thu, 06 Jun 2024 13:31:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@ibeeto-com.20230601.gappssmtp.com header.s=20230601 header.b=kKDMJDOm;
- spf=pass (domain: ibeeto.com, ip: 209.85.214.169, mailfrom: rudolf.streif@ibeeto.com)
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f630e35a01so12986595ad.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Jun 2024 13:18:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ibeeto-com.20230601.gappssmtp.com; s=20230601; t=1717705098; x=1718309898; darn=lists.openembedded.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=lqBT8N4XbgG6tbUk3yx7s86TGWNFOgFvOHrgxnFmWOg=;
-        b=kKDMJDOmTs2syHVJB3EjQT8txqP2fIXwlqZ6O6hjPYZXpC2q8lROSHI/Ke5argi4V5
-         6WcT3I8/hPmKm9YtJgICbMzs8ruieEuCHXTPU3URpyTcpZOnWwQ1QFN76o0ipMP4Y+Uk
-         i3tRkYrA35iHXJepN1Q2mon7Ic14dq8z2ZPxpXtcRwxoqXZawkaexDRfxXHWE2Vk+1V6
-         0CRo5p7siI7tE2VgvZexWbHIk1usFhhaDHRWBwcttHXAV+P0Nb5X9xPcrcBI74icl59/
-         M/dgAnm2d3ebIohHSBuKt3Sz98Kds0SK3KzWMnFVB3mfKuBdNcztfve0JE6UrzweJwMM
-         NO7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717705098; x=1718309898;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lqBT8N4XbgG6tbUk3yx7s86TGWNFOgFvOHrgxnFmWOg=;
-        b=Ss+LnNqmv6iQuttz0xjK0xQ4W3kl5GJ9J+O07aAbF0fLA7rxbYZ7tVbfrLeXXOvVDU
-         dpUF4T/J69ncytzbJPtsO35LbsfMRSQ0lZrXpFpZ6wEfmi55TOwhcunQYhKjeJwMQWbj
-         zDgSSDJmYwb79KuoQKpWml6lIGFAXaSqK/y43Y6gIuBIZMC8FX0wdmKpv8fLKIb0WHPO
-         ZY2tkikue0wx3b7l5wNOeppnpU99Njhh+kNPEjrEYsY2/sWybhlBQ/9TlewdHxDnM/ze
-         XhovZ5kweKOOJfinuP+hJxaWJD8v3ajM21yYTwGyyqbU5Wg4+bkolBOyJxmd0ua62n2O
-         +2Og==
-X-Forwarded-Encrypted: i=1; AJvYcCXY/X5QuqV/3sc5M53KHvHdKoK3HRfJ+6AKD8PwgKyol4LpDNAlTAcRcDY0wi0MbhJT1GGIqIGakZn1QGWf7ggkSJtUcX3FyVSVu8n9up9EgalheME=
-X-Gm-Message-State: AOJu0YzvYSdpdqffAQKXBDDm8p9thJcvqNVbnjAuMRmvcE4yDbUdno/t
-	VwGNhl44aTFvfNMXTqxvBofyUD2B/LyS8ylqyb7rLCbR9r31DPG9UuKX20tEGs2JqzD4y5yeI9d
-	o
-X-Google-Smtp-Source: AGHT+IFjWfxi8tibAsp29F2NYODcHKwwCEnhz+b7Qw3c3sa2Su4In9x/Ey8uIRCl8HMCDVFBhoUyEQ==
-X-Received: by 2002:a17:903:98e:b0:1f6:6bf5:5aef with SMTP id d9443c01a7336-1f6d02feed2mr7907135ad.29.1717705098229;
-        Thu, 06 Jun 2024 13:18:18 -0700 (PDT)
-Received: from ?IPV6:2600:8801:8d00:d804:cd39:5769:28bb:21e2? ([2600:8801:8d00:d804:cd39:5769:28bb:21e2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd75efa9sm19436925ad.30.2024.06.06.13.18.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 13:18:17 -0700 (PDT)
-Message-ID: <89068048-ee96-425d-a640-684cd6fded58@ibeeto.com>
-Date: Thu, 6 Jun 2024 13:18:16 -0700
+ dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@freemail.hu header.s=20181004 header.b=ZebVVJVN;
+ spf=pass (domain: freemail.hu, ip: 46.107.16.239, mailfrom: egyszeregy@freemail.hu)
+Received: from localhost.localdomain (catv-80-98-74-198.catv.fixed.vodafone.hu [80.98.74.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.freemail.hu (Postfix) with ESMTPSA id 4VwGFR2Vxnz7kN;
+	Thu,  6 Jun 2024 22:31:23 +0200 (CEST)
+From: "Livius" <egyszeregy@freemail.hu>
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	=?UTF-8?q?Benjamin=20Sz=C5=91ke?= <egyszeregy@freemail.hu>
+Subject: [PATCH] fetch2/wget: Add user_agent parameter so it can be used optionally
+Date: Thu,  6 Jun 2024 22:31:03 +0200
+Message-ID: <20240606203103.910-2-egyszeregy@freemail.hu>
+X-Mailer: git-send-email 2.45.2.windows.1
+In-Reply-To: <20240606203103.910-1-egyszeregy@freemail.hu>
+References: <20240606203103.910-1-egyszeregy@freemail.hu>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] wget2
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
- bitbake-devel@lists.openembedded.org
-References: <234ddf00-756c-4863-a508-6a0ec75558ea@ibeeto.com>
- <e22ec7329d8c18c254b8fa116ffebb32d4d8b86d.camel@linuxfoundation.org>
-Content-Language: en-US
-From: Rudolf J Streif <rudolf.streif@ibeeto.com>
-Autocrypt: addr=rudolf.streif@ibeeto.com; keydata=
- xsBNBFhQFAQBCACa5/X8dcYC25ELsL2exFTaf9QV24fFIn64+rXFqDNKuk7xed5kafscejvD
- Qpe+Co1EPSU4ybklzYlvbMvzxKfwLDADKh+HsqmUYrd/l43hbqrPLxfDUhg87WVEhjm0qyYQ
- /Qymy+7Cbh+pVNNlHULUQttkXPl3D+UOMz9se0Ook/HngDIOCyQF4rTyPnGNvd8NJmAng969
- cQD/S9LNndnK5GGrmDDOuMYwoG4qDqWvWEChncgqHfmWK/Z1AvYKdYWe9uh1N4Qb/P5AZxTM
- 3sPiHrF+Y2HTdK7j7lWgtu8YzluBHdvzhC+4jUnAKjh8P/N/H6JlE3UC3dwHPOaRsnXBABEB
- AAHNKlJ1ZG9sZiBKIFN0cmVpZiA8cnVkb2xmLnN0cmVpZkBpYmVldG8uY29tPsLAdwQTAQgA
- IQUCWFAUBAIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRCNjKgpJzObdabzB/4lFMf0
- 3GsVMG6C5QOLaPx6rOgj5qexCH3rfYeI3xkbGuR0a+YByzvSiCc6Ukh7YNn4UwRs6cY0fYBk
- txioE384/51QTIfCmW8ZG5X0cMC5d38LFvd/dj3KBA74HW4GoLt0cIyzy38CCOFmClTNE8xl
- lpeOfKQD3wn99w5dzXYhvajXCWwAjjpWrR84ww6xromQCDj0AubLA6xyk3t8bzFNsRCCFx+w
- Xl7keSggn6ld3f3ySIQyEK2GgZDdw+zQmgVMq4x5LZhUhGYoqbYwNy9imoBkUAZkbbViNOtX
- zaTHX/RzRHErvq56HOVqceJZIpkDnfvB1aXvfvmBhjVLmLHvzsBNBFhQFAQBCADXoLKCuF48
- 5eCWhnty44o9IZJuOSiX+uVJTgVGNWkZOF61Hs2pieIOmTqk3fb9+Ao6C6IliC9ZRXyAVLD/
- RSGoLiTnWLc1uaK4P/XCM3HZfsi9ueBuNufR8yMy8/8ZqbFwRIFpPBpxHRrZnDdEd5IKsy+z
- w6QChvhpmssZy+UaKfWHILroAoS/7bKGzHo5F/dEJhxVDjgxDUDspJSHWMBh0OMKDeBik5wl
- svtV2yw7ezwWJLRsbaa8TUXd79ZJYYc3FIi0K5aXkMySh+QaQ/bE2Y5A/mCBCZ+IKhBQR36v
- tUAsTCuUAOREwSdPDVwfuoI5gfVxGyz/zrERfnXF4viHABEBAAHCwF8EGAEIAAkFAlhQFAQC
- GwwACgkQjYyoKSczm3W3fgf+NSdojthWWEqfWwym3VHK8955SeOy12xQA4ird2Ca2LYUpLNj
- s4qVFEqXSXZk4rmpGCFlMWwOjcCJOXJLR0ATfmWlvZxp1QL4res/R+SPFEyheu7TTpJ9MbyE
- fxaMSn2xRMA1V2KVJSfDoMacImVRchFclaNU31cEu6tEnNRwVcsWdTlGdA5a1ASGl4CiP8Tz
- Yf9m2KOWGjOmVgGFcIJ2QfIlMglU875YHE3W4u3YOWwUbPEr2Seyb176MvO74CUL/Nlouvce
- P41tsC5daxZnrLBQ3nw4xe4RJSzdPPkY7iF0N5R9NvBJ7WX3dwjMO4EMvdlFuNCQ2ALli/AN
- ROZj4g==
-In-Reply-To: <e22ec7329d8c18c254b8fa116ffebb32d4d8b86d.camel@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1717705883;
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 06 Jun 2024 20:18:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16324
+ <bitbake-devel@lists.openembedded.org>; Thu, 06 Jun 2024 20:34:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16325
 
+	s=20181004; d=freemail.hu;
 
-On 6/6/24 6:50 AM, Richard Purdie wrote:
-> On Wed, 2024-06-05 at 18:54 -0700, Rudolf J Streif via lists.openembedded.org wrote:
->>   I have been using YP/OE for the longest time with Fedora. I most
->> recently upgraded my build system to FC40. FC40 replaces wget with
->> wget2. FTP support was removed from wget2 for good reasons.
->>   
->> even if the protocol used was not ftp. Since wget2 does not support
->> ftp it also does not support (or ignore, for that matter) this
->> option. It fails. From Scarthgap on the --passive-ftp is only added
->> if the protocol is indeed ftp or ftps.
->>   
->> So far so good. However, there is another subtle issue with wget2: it
->> does not like relative path components in paths provided with the -P
->> option. It normalizes paths if there's one and only one relative path
->> component at the beginning of the path:
->>   
->>   * -P ./downloads    works
->>   * -P ../downloads   works
->>   * -P ../../downloads does not work (Internal error: Unexpected
->> relative path: '../..')
->>   * -P ./../downloads does not work (Internal error: Unexpected
->> relative path: './..')
->>   * -P /home/user/downloads/../downloads does not work (Internal
->> error: Unexpected relative path: '/home/user/downloads/..')
->>   
->> I am commonly using DL_DIR = "${TOPDIR}/../../downloads" to set a
->> shared download directory for different projects. Of course I could
->> replace the relative path with an absolute one.
->>   
->> The culprit is the function mkdir_path in utils.c which attempts to
->> create the path components to download the files to. This would make
->> sense when wget2 needs to download a directory structure from a
->> server but technically it should only create the path components
->> relative to -P.
->>   
->> Of course, this is not the right mailing list to complain about
->> wget2. I have submitted a ticket:
->> https://gitlab.com/gnuwget/wget2/-/issues/667. However, it might be
->> of interest to the YP community since other distros might have
->> already or might be in the future moving to wget2.
->>   
->> A Bitbake solution would be to normalize the path in the fetcher.
-> Thanks for sharing, this should stop anyone else trying to track down
-> this problem! It does sound a pain to get to the bottom of.
->
-> I'd accept a patch to bitbake to resolve the path names to work around
-> this problem as I suspect more people are going to start running into
-> this. Did you happen to have such a patch?
->
-> Cheers,
->
-> Richard
->
-Thank you, Richard. I submitted a patch. Please let me know if acceptable.
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
 
-Cheers,
-Rudi
+	l=4439; bh=gFL07AWBpzLHjoHsYCU5FRpc1g7rOLfpDR0elgN2oHU=;
 
->
+	b=ZebVVJVNPmsmIhe/BkOmgRofAUPlcVM6Wga9g08NdLal0vLonZh7jReMw61NJZFn
+
+	TUbIIMhyUzoqXLgfxBc7n7mXnwwfxtCcW/cFXyagcAcZ87+GLRHGDUyprBla+05b0s0
+
+	/dX6spa4pd4TujOssYWmNzRwd7t6y8zbZDJYc2uJ8TNI0qiQ8RCtbPuGM3KcQZmMZuO
+
+	vLfc1ER1EJedDn/9jBIadCeg5j1rzOD+xDUJh6zTpfIBeW3bks0D53QJEjrkR0MJ+Jm
+
+	tuTC/I1SYstFcry03oMewVsK8vEHL0D8KUK4xiXzDkiEvpgrhND6orgIxt3f01V6CuB
+
+	bYKIOcUvjA==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
+
+Add the "user_agent" optional parameter for wget fetcher to able
+to use it if HTTP servers block requests with the default wget
+user agent.
+
+Signed-off-by: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
+---
+ .../bitbake-user-manual-fetching.rst          | 20 ++++++++++++-------
+ .../bitbake-user-manual-ref-variables.rst     |  4 ++++
+ lib/bb/fetch2/wget.py                         | 11 +++++++++-
+ 3 files changed, 27 insertions(+), 8 deletions(-)
+
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/d=
+oc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index fb4f0a23d..899fa2f33 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -221,13 +221,18 @@ HTTP/FTP wget fetcher (``http://``, ``ftp://``, ``h=
+ttps://``)
+ This fetcher obtains files from web and FTP servers. Internally, the
+ fetcher uses the wget utility.
+=20
+-The executable and parameters used are specified by the
+-``FETCHCMD_wget`` variable, which defaults to sensible values. The
+-fetcher supports a parameter "downloadfilename" that allows the name of
+-the downloaded file to be specified. Specifying the name of the
+-downloaded file is useful for avoiding collisions in
+-:term:`DL_DIR` when dealing with multiple files that
+-have the same name.
++The executable and parameters used are specified by the ``FETCHCMD_wget`=
+`
++variable, which defaults to sensible values. The fetcher supports
++parameters, "downloadfilename" that allows the name of the downloaded
++file to be specified and "user_agent" parameter which enable to use
++a default ``Mozilla/5.0`` user-agent or a custom string value
++via usage of :term:`BB_USER_AGENT`.
++
++Specifying the name of the downloaded file is useful for avoiding
++collisions in :term:`DL_DIR` when dealing with multiple files
++that have the same name. A few HTTP servers block requests with
++the default wget user-agent, in this case specifying a valid
++user-agent can solve this issue.
+=20
+ If a username and password are specified in the ``SRC_URI``, a Basic
+ Authorization header will be added to each request, including across red=
+irects.
+@@ -239,6 +244,7 @@ Some example URLs are as follows::
+    SRC_URI =3D "http://oe.handhelds.org/not_there.aac"
+    SRC_URI =3D "ftp://oe.handhelds.org/not_there_as_well.aac"
+    SRC_URI =3D "ftp://you@oe.handhelds.org/home/you/secret.plan"
++   SRC_URI =3D "https://oe.handhelds.org/not_there.aac;user_agent=3D1"
+=20
+ .. note::
+=20
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rs=
+t b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 899e584f9..a6c05a6bf 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -699,6 +699,10 @@ overview of their function and contents.
+       Within an executing task, this variable holds the hash of the task=
+ as
+       returned by the currently enabled signature generator.
+=20
++   :term:`BB_USER_AGENT`
++      Specifies a user-agent string which BitBake uses if "user_agent"
++      parameter is enabled for HTTP/FTP wget fetcher.
++
+    :term:`BB_VERBOSE_LOGS`
+       Controls how verbose BitBake is during builds. If set, shell scrip=
+ts
+       echo commands and shell script output appears on standard out
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index d76b1d0d3..db4327ead 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -56,7 +56,7 @@ class Wget(FetchMethod):
+     # CDNs like CloudFlare may do a 'browser integrity test' which can f=
+ail
+     # with the standard wget/urllib User-Agent, so pretend to be a moder=
+n
+     # browser.
+-    user_agent =3D "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gec=
+ko/20100101 Firefox/84.0"
++    user_agent =3D "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:126.0) Ge=
+cko/20100101 Firefox/126.0"
+=20
+     def check_certs(self, d):
+         """
+@@ -89,6 +89,15 @@ class Wget(FetchMethod):
+=20
+         self.basecmd =3D d.getVar("FETCHCMD_wget") or "/usr/bin/env wget=
+ -t 2 -T 30"
+=20
++        is_user_agent_enabled =3D ud.parm.get("user_agent","0") =3D=3D "=
+1"
++        if is_user_agent_enabled:
++            bb_user_agent =3D d.getVar("BB_USER_AGENT")
++            if bb_user_agent is not None:
++                cmd_user_agent =3D bb_user_agent
++            else:
++                cmd_user_agent =3D self.user_agent
++            self.basecmd +=3D f" --user-agent=3D'{cmd_user_agent}'"
++
+         if ud.type =3D=3D 'ftp' or ud.type =3D=3D 'ftps':
+             self.basecmd +=3D " --passive-ftp"
+=20
+--=20
+2.45.2.windows.1
+
 
