@@ -2,62 +2,60 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A59C27C52
-	for <webhook@archiver.kernel.org>; Thu,  6 Jun 2024 20:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7C4C27C52
+	for <webhook@archiver.kernel.org>; Thu,  6 Jun 2024 20:34:25 +0000 (UTC)
 Received: from smtp-out.freemail.hu (smtp-out.freemail.hu [46.107.16.239])
- by mx.groups.io with SMTP id smtpd.web11.25648.1717705885524257655
+ by mx.groups.io with SMTP id smtpd.web10.25537.1717705879050125553
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 06 Jun 2024 13:31:26 -0700
+ Thu, 06 Jun 2024 13:31:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@freemail.hu header.s=20181004 header.b=ZebVVJVN;
+ dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@freemail.hu header.s=20181004 header.b=a0xaA9ty;
  spf=pass (domain: freemail.hu, ip: 46.107.16.239, mailfrom: egyszeregy@freemail.hu)
 Received: from localhost.localdomain (catv-80-98-74-198.catv.fixed.vodafone.hu [80.98.74.198])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.freemail.hu (Postfix) with ESMTPSA id 4VwGFR2Vxnz7kN;
-	Thu,  6 Jun 2024 22:31:23 +0200 (CEST)
+	by smtp.freemail.hu (Postfix) with ESMTPSA id 4VwGFH6L8lz82Y;
+	Thu,  6 Jun 2024 22:31:15 +0200 (CEST)
 From: "Livius" <egyszeregy@freemail.hu>
 To: bitbake-devel@lists.openembedded.org
 Cc: docs@lists.yoctoproject.org,
 	=?UTF-8?q?Benjamin=20Sz=C5=91ke?= <egyszeregy@freemail.hu>
 Subject: [PATCH] fetch2/wget: Add user_agent parameter so it can be used optionally
-Date: Thu,  6 Jun 2024 22:31:03 +0200
-Message-ID: <20240606203103.910-2-egyszeregy@freemail.hu>
+Date: Thu,  6 Jun 2024 22:31:02 +0200
+Message-ID: <20240606203103.910-1-egyszeregy@freemail.hu>
 X-Mailer: git-send-email 2.45.2.windows.1
-In-Reply-To: <20240606203103.910-1-egyszeregy@freemail.hu>
-References: <20240606203103.910-1-egyszeregy@freemail.hu>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1717705883;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1717705876;
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 06 Jun 2024 20:34:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16325
+ <bitbake-devel@lists.openembedded.org>; Thu, 06 Jun 2024 20:34:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16326
 
 	s=20181004; d=freemail.hu;
 
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
 
-	l=4439; bh=gFL07AWBpzLHjoHsYCU5FRpc1g7rOLfpDR0elgN2oHU=;
+	l=4435; bh=Mu06w9kxAPEAY8SODpXy14jCOZmzgdOZm+/km5JWeR0=;
 
-	b=ZebVVJVNPmsmIhe/BkOmgRofAUPlcVM6Wga9g08NdLal0vLonZh7jReMw61NJZFn
+	b=a0xaA9tyY+IEZXE/3UykqdrKoGzJJHKhn/TPRPmGwWyviw4ZNG+y+P1huJ1vc3IT
 
-	TUbIIMhyUzoqXLgfxBc7n7mXnwwfxtCcW/cFXyagcAcZ87+GLRHGDUyprBla+05b0s0
+	y5buIB1SvhQ6lhwE0nD36bSmJ+K16nkWAX69SFXal3DsSQyTWEcDcm5fYW/i/EBkwx+
 
-	/dX6spa4pd4TujOssYWmNzRwd7t6y8zbZDJYc2uJ8TNI0qiQ8RCtbPuGM3KcQZmMZuO
+	fLVIaxxQswizZVXpMM2qr9/pVWQGMV8GCZzfLt76NHYcTlXS4c9QmGUDtIi2CyrS/QA
 
-	vLfc1ER1EJedDn/9jBIadCeg5j1rzOD+xDUJh6zTpfIBeW3bks0D53QJEjrkR0MJ+Jm
+	Ck8bjo1YcsFUtBptXWdAkmE5mpgQ7GcEYIFqYl21I6Vw3y0pxxE9BUsRI96kgXHJ0pB
 
-	tuTC/I1SYstFcry03oMewVsK8vEHL0D8KUK4xiXzDkiEvpgrhND6orgIxt3f01V6CuB
+	ponoYNEF/XdYC+1Sbz6KXsVCB+gh3nn6MhwbFAXQNTgvhg2AQsMwKmySdul1cWIqbzz
 
-	bYKIOcUvjA==
+	XLHQ0YPhnw==
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
 
-Add the "user_agent" optional parameter for wget fetcher to able
+Add "user_agent" optional parameter for wget fetcher to able
 to use it if HTTP servers block requests with the default wget
 user agent.
 
