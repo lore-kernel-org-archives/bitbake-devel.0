@@ -2,8 +2,8 @@ Return-Path: <egyszeregy@freemail.hu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65212C27C5E
-	for <webhook@archiver.kernel.org>; Mon, 10 Jun 2024 09:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360FCC27C5E
+	for <webhook@archiver.kernel.org>; Mon, 10 Jun 2024 09:06:30 +0000 (UTC)
 Subject: Re: [PATCH v2] fetch2/wget: Add user_agent parameter so it can be used optionally
 To: bitbake-devel@lists.openembedded.org
 From: "Livius" <egyszeregy@freemail.hu>
@@ -11,19 +11,19 @@ X-Originating-Location: =?UTF-8?B?U3R1dHRnYXJ0LCBCYWRlbi1Xw7xydHRlbWJlcmcsIERF?=
 X-Originating-Platform: Windows Chrome 125
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Mon, 10 Jun 2024 02:05:44 -0700
+Date: Mon, 10 Jun 2024 02:06:24 -0700
 References: <CANNYZj-viDOqH+GUsehwYukr0SKJsu8qwKbGyvEgmXW-ob4drQ@mail.gmail.com>
 In-Reply-To: <CANNYZj-viDOqH+GUsehwYukr0SKJsu8qwKbGyvEgmXW-ob4drQ@mail.gmail.com>
 Message-ID: <24273.1718010239225296120@lists.openembedded.org>
-X-Old-Date: Mon, 10 Jun 2024 02:03:59 -0700
+X-Old-Date: Mon, 10 Jun 2024 02:05:44 -0700
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 10 Jun 2024 09:05:50 -0000
+ <bitbake-devel@lists.openembedded.org>; Mon, 10 Jun 2024 09:06:30 -0000
 X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16338
-Message-ID: <20240610090544.MbYElI-soxb-zzwedbfHQMJlzNtTWpAYK6t8-KRt8iw@z>
+Message-ID: <20240610090624.JlewFa7TzInhZ1AF4USukqA-vUk4AYHeKeTDJ261zbM@z>
 
 Yes FETCHCMD_wget can solve it, but it is a workaround and not a nice solut=
 ion. Moreover need many experiences for it to understand where and how need=
@@ -35,7 +35,7 @@ n many recipes in the future in my opinion (more and more HTTP servers are =
 going be crazy in the future).
 
 In a last commits regarding user-agent every info about this situation can =
-be found in your commit message.
+be found in its commit message.
 https://github.com/openembedded/bitbake/commit/d6fa261a9603677f0b3abbd309c1=
 ca6073b63f4c
 This patch was not ready to solve this in a good way, therefore it was reve=
