@@ -2,214 +2,226 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF2C27C6E
-	for <webhook@archiver.kernel.org>; Mon, 10 Jun 2024 04:24:09 +0000 (UTC)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
- by mx.groups.io with SMTP id smtpd.web10.12225.1717993440820208706
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DD2C27C5E
+	for <webhook@archiver.kernel.org>; Mon, 10 Jun 2024 04:34:09 +0000 (UTC)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+ by mx.groups.io with SMTP id smtpd.web10.12352.1717994042866774506
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 09 Jun 2024 21:24:01 -0700
+ Sun, 09 Jun 2024 21:34:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=JBRRhaQW;
- spf=pass (domain: gmail.com, ip: 209.85.208.181, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ead2c6b50bso43024291fa.0
-        for <bitbake-devel@lists.openembedded.org>; Sun, 09 Jun 2024 21:24:00 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=lJ/i1zX9;
+ spf=pass (domain: gmail.com, ip: 209.85.208.176, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ebdfe261f9so12793061fa.1
+        for <bitbake-devel@lists.openembedded.org>; Sun, 09 Jun 2024 21:34:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717993439; x=1718598239; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1717994041; x=1718598841; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xje+mlJfSNRDPw06tGY24LpjehGcW9PwPNT00VvloJU=;
-        b=JBRRhaQWsiQfyeX7tL01H84BMAq/PGjXxsf9vZIsr1apY7mnE2kSg5zsOSZhaCwUUG
-         C29iR3ww1qjh7e1f/f+4T0ogb8ew7rt+6MAEgxzIj5QSWwOv/BMxIgpewTOhp1yVbq7H
-         UwwgHCRpJJfgkOurWwtjAZic7Um0dtektKjavcs9rO7CHJhgsWSkwvxITjLu/CjlQLI9
-         +L3QSd+SAWCuZp1U+1p9w7yDlxazbCBAss4eI4Hup7xKGKbZMHgJi+2d43Q/BICsPasb
-         H8GAW5NrkuvfLfmwpo4v6yL0NUb0FYh6rcdwtd14BvqL75m6xEEdiuEwfljBi02Vxl0Q
-         GQZQ==
+        bh=uY10gAFvn5N6IU9kaMYm6ztM3xy8PMZYTP35XQYzQ9g=;
+        b=lJ/i1zX9kGF7rGaMVfnw8967sPEJhuGenHIrNYcSt132klGG9yIh7eNvClRUgCt0cC
+         Kl4/IvlWnqu+IUl+OHX9vTqy8hvEoKzN0qLUXzGYQJye2fEbcwJ8hpvW+wYddNxX1Z+u
+         8/yC1oXHzNFj63kjMhr1NWhLRkAm/mP/fadeBjw9CkgEIxH+hXLYPEbzVCsKSPIWVSAC
+         BHPa0XoaQyrCPDFLpugiEC02qv00iUyeva6omYPAq9FTwsy3ttY9SLJCzfUeR/JzkMqD
+         Vyhep02i4aeGXG7o9y0wjbdxXm6HEtaBZA5j3T4zNBwCIyVd03kGtEX8ANyyaRQXx3bx
+         pE8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717993439; x=1718598239;
+        d=1e100.net; s=20230601; t=1717994041; x=1718598841;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Xje+mlJfSNRDPw06tGY24LpjehGcW9PwPNT00VvloJU=;
-        b=AnzU2gS9vS4D4hiSAIfxANMneXoaC6alALxeylqIVdNF0Tcq2Vn61btm2CCBPSXmnD
-         ed2625gOE9gO2r4qXW4rT5eD6wHngJ4+AFUeV8Qe9432o4xDM/CdTFigZZCP8o8ADq+o
-         Vnx6H0iV5LJ49ewLQq0ihfTDVrpeKW5XBRMA6FGHrtx6XFTOHaATSCr8M/PaIYdY+E6y
-         i2xX8sWF60mxNoD5lORMV1ESrRafyHsuGenGPi5+0ESrTxX0EjJklRt7Dqmw9PGcqHAp
-         X9bqPk5wIVF2amrqhImKsyYGpMA0MxNtJUxR9WG0lkBKraVrpQavjPMY3y19oPhv6C6v
-         P+wg==
-X-Gm-Message-State: AOJu0YyfiCz/+0zgpKx8OTdVgKXu9Df4htMCVWD5vRcfduTH9ZosVM+r
-	UIQkFYAkQL3bN6HigGRFVXKc/f7zAhKW8X2lnWzRbpIGimCkudSGivQx5oeKfSubEh6GwY3CpPi
-	DOUQbGfkym4ulgKZijv4OPavPtLM=
-X-Google-Smtp-Source: AGHT+IEPMqlA6ZyF7xWRLnNvbP5iEmJXi2BPkO0NHkHqa1k0eE5X4/IL61ruVl0o1KabSR+dOdm9s9ZQcaDFFtBJ+oU=
-X-Received: by 2002:a05:651c:50b:b0:2ea:7954:3777 with SMTP id
- 38308e7fff4ca-2eadce265admr63755001fa.18.1717993438432; Sun, 09 Jun 2024
- 21:23:58 -0700 (PDT)
+        bh=uY10gAFvn5N6IU9kaMYm6ztM3xy8PMZYTP35XQYzQ9g=;
+        b=QXR9I/U9pevMlcLSbfo6BeBDvBCLgOhSqFEUy+90V+mo31TBfTrjhckH5oBhLh1FBM
+         jwsQ2m9qJXHYnt9XfyAdYtLoZFmAQhi339P7tip2AhuMzz7T0Qla+aQ+/01jQ3JBvfkL
+         sEzRUlg6OJqPpHxYiRof+pUxUQvuuo74+aKD2Qyv0zq3F3BaFZhOeTCemZFYbZD8UILb
+         TOpvAkh4jzJ0UNopUncsBbje97zwCO/Kq4VUUiC6AZEdxifIRfIQqhWwiJD5Cjpqk01k
+         fm3yAMwg/Ru2lMS/MNhxUynMGZM11Rm0NhTIa3HfHJZ7ddjx9r8EkCs1XjYr9yaiRMI9
+         /zSg==
+X-Gm-Message-State: AOJu0YyqXqFSG2gepPsFjzGIY9w5bMkT7JR5OZMSgQCh+juwzKpu1+tN
+	uh5DvfaQKGGt7GctQKJcXNBkpg7qkXEllnUE81v/mAbXeCbY0/M3tC/bJOLKeC6AtZZvxmqguGO
+	mcs+s6zWw5wk5bm0Rk/AnnNzMhBWNSw==
+X-Google-Smtp-Source: AGHT+IGc+qD6KACs0zfoI3tWnyIBuHepqY2ONkxV9SjcjXKbDd3DvJk9q8P+88jSMDveEh4ILmqYR8YXF2mqHAozCJQ=
+X-Received: by 2002:a2e:7c16:0:b0:2ea:e9f9:6acc with SMTP id
+ 38308e7fff4ca-2eae9f96bccmr49212161fa.35.1717994040579; Sun, 09 Jun 2024
+ 21:34:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20240609220226.977-1-egyszeregy@freemail.hu>
-In-Reply-To: <20240609220226.977-1-egyszeregy@freemail.hu>
+References: <20240609220226.977-1-egyszeregy@freemail.hu> <17D789EEBA45C61A.15183@lists.openembedded.org>
+In-Reply-To: <17D789EEBA45C61A.15183@lists.openembedded.org>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 10 Jun 2024 06:23:47 +0200
-Message-ID: <CANNYZj9Tr6d9khKBq_qunZ-54DXDj1es=to8aSk9kkecbZqJSw@mail.gmail.com>
+Date: Mon, 10 Jun 2024 06:33:49 +0200
+Message-ID: <CANNYZj-viDOqH+GUsehwYukr0SKJsu8qwKbGyvEgmXW-ob4drQ@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH v2] fetch2/wget: Add user_agent parameter
  so it can be used optionally
-To: egyszeregy@freemail.hu
-Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
-Content-Type: multipart/alternative; boundary="0000000000009fd6d6061a81840a"
+To: bitbake-devel@lists.openembedded.org, egyszeregy@freemail.hu
+Cc: docs@lists.yoctoproject.org
+Content-Type: multipart/alternative; boundary="00000000000083dbbd061a81a82e"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 10 Jun 2024 04:24:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16336
+ <bitbake-devel@lists.openembedded.org>; Mon, 10 Jun 2024 04:34:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16337
 
---0000000000009fd6d6061a81840a
+--00000000000083dbbd061a81a82e
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-No. I really do not like the idea that we should pretend to be Firefox. And
-you didn=E2=80=99t answer Ross questions properly.
+On second thought, you did mention that FETCHCMD_whet can be used to set a
+custom user agent in one of the tickets, so if this can be done per recipe
+there is no need to add a new variable.
 
-Fix the servers please.
+Ale
 
-Alex
+On Mon 10. Jun 2024 at 6.24, Alexander Kanavin via lists.openembedded.org
+<alex.kanavin=3Dgmail.com@lists.openembedded.org> wrote:
 
-
-
-On Mon 10. Jun 2024 at 0.02, Livius via lists.openembedded.org <egyszeregy=
-=3D
-freemail.hu@lists.openembedded.org> wrote:
-
-> From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
+> No. I really do not like the idea that we should pretend to be Firefox.
+> And you didn=E2=80=99t answer Ross questions properly.
 >
-> Add "user_agent" optional parameter for wget fetcher to able
-> to use it if HTTP servers block requests with the default wget
-> user agent.
+> Fix the servers please.
 >
-> Signed-off-by: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
-> ---
->  conf/bitbake.conf                             |  1 +
->  .../bitbake-user-manual-fetching.rst          | 23 +++++++++++++------
->  .../bitbake-user-manual-ref-variables.rst     |  5 ++++
->  lib/bb/fetch2/wget.py                         | 11 +++++----
->  4 files changed, 28 insertions(+), 12 deletions(-)
+> Alex
 >
-> diff --git a/conf/bitbake.conf b/conf/bitbake.conf
-> index f5a5a333a..045cc7dbd 100644
-> --- a/conf/bitbake.conf
-> +++ b/conf/bitbake.conf
-> @@ -44,3 +44,4 @@ TARGET_ARCH =3D "${BUILD_ARCH}"
->  TMPDIR =3D "${TOPDIR}/tmp"
->  WORKDIR =3D "${TMPDIR}/work/${PF}"
->  GITPKGV =3D "${@bb.fetch2.get_srcrev(d, 'gitpkgv_revision')}"
-> +BB_USER_AGENT ??=3D "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:126.0)
-> Gecko/20100101 Firefox/126.0"
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-> b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-> index fb4f0a23d..4da558f0c 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-> @@ -221,13 +221,21 @@ HTTP/FTP wget fetcher (``http://``, ``ftp://``,
-> ``https://``)
->  This fetcher obtains files from web and FTP servers. Internally, the
->  fetcher uses the wget utility.
 >
-> -The executable and parameters used are specified by the
-> -``FETCHCMD_wget`` variable, which defaults to sensible values. The
-> -fetcher supports a parameter "downloadfilename" that allows the name of
-> -the downloaded file to be specified. Specifying the name of the
-> -downloaded file is useful for avoiding collisions in
-> -:term:`DL_DIR` when dealing with multiple files that
-> -have the same name.
-> +The executable and parameters used are specified by the ``FETCHCMD_wget`=
-`
-> +variable, which defaults to sensible values. The fetcher supports
-> +parameters:
-> +
-> +-  *downloadfilename:* That allows the name of the downloaded file
-> +   to be specified.
-> +
-> +-  *user_agent:* Enable to use a default ``Mozilla/5.0`` user-agent
-> +   which is defined in :term:`BB_USER_AGENT`.
-> +
-> +Specifying the name of the downloaded file is useful for avoiding
-> +collisions in :term:`DL_DIR` when dealing with multiple files
-> +that have the same name. A few HTTP servers block requests with
-> +the default wget user-agent, in this case specifying a valid
-> +user-agent can solve this issue.
 >
->  If a username and password are specified in the ``SRC_URI``, a Basic
->  Authorization header will be added to each request, including across
-> redirects.
-> @@ -239,6 +247,7 @@ Some example URLs are as follows::
->     SRC_URI =3D "http://oe.handhelds.org/not_there.aac"
->     SRC_URI =3D "ftp://oe.handhelds.org/not_there_as_well.aac"
->     SRC_URI =3D "ftp://you@oe.handhelds.org/home/you/secret.plan"
-> +   SRC_URI =3D "https://oe.handhelds.org/not_there.aac;user_agent=3D1"
+> On Mon 10. Jun 2024 at 0.02, Livius via lists.openembedded.org
+> <egyszeregy=3Dfreemail.hu@lists.openembedded.org> wrote:
 >
->  .. note::
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rs=
+>> From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
+>>
+>> Add "user_agent" optional parameter for wget fetcher to able
+>> to use it if HTTP servers block requests with the default wget
+>> user agent.
+>>
+>> Signed-off-by: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
+>> ---
+>>  conf/bitbake.conf                             |  1 +
+>>  .../bitbake-user-manual-fetching.rst          | 23 +++++++++++++------
+>>  .../bitbake-user-manual-ref-variables.rst     |  5 ++++
+>>  lib/bb/fetch2/wget.py                         | 11 +++++----
+>>  4 files changed, 28 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/conf/bitbake.conf b/conf/bitbake.conf
+>> index f5a5a333a..045cc7dbd 100644
+>> --- a/conf/bitbake.conf
+>> +++ b/conf/bitbake.conf
+>> @@ -44,3 +44,4 @@ TARGET_ARCH =3D "${BUILD_ARCH}"
+>>  TMPDIR =3D "${TOPDIR}/tmp"
+>>  WORKDIR =3D "${TMPDIR}/work/${PF}"
+>>  GITPKGV =3D "${@bb.fetch2.get_srcrev(d, 'gitpkgv_revision')}"
+>> +BB_USER_AGENT ??=3D "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:126.0)
+>> Gecko/20100101 Firefox/126.0"
+>> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+>> b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+>> index fb4f0a23d..4da558f0c 100644
+>> --- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+>> +++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+>> @@ -221,13 +221,21 @@ HTTP/FTP wget fetcher (``http://``, ``ftp://``,
+>> ``https://``)
+>>  This fetcher obtains files from web and FTP servers. Internally, the
+>>  fetcher uses the wget utility.
+>>
+>> -The executable and parameters used are specified by the
+>> -``FETCHCMD_wget`` variable, which defaults to sensible values. The
+>> -fetcher supports a parameter "downloadfilename" that allows the name of
+>> -the downloaded file to be specified. Specifying the name of the
+>> -downloaded file is useful for avoiding collisions in
+>> -:term:`DL_DIR` when dealing with multiple files that
+>> -have the same name.
+>> +The executable and parameters used are specified by the ``FETCHCMD_wget=
+``
+>> +variable, which defaults to sensible values. The fetcher supports
+>> +parameters:
+>> +
+>> +-  *downloadfilename:* That allows the name of the downloaded file
+>> +   to be specified.
+>> +
+>> +-  *user_agent:* Enable to use a default ``Mozilla/5.0`` user-agent
+>> +   which is defined in :term:`BB_USER_AGENT`.
+>> +
+>> +Specifying the name of the downloaded file is useful for avoiding
+>> +collisions in :term:`DL_DIR` when dealing with multiple files
+>> +that have the same name. A few HTTP servers block requests with
+>> +the default wget user-agent, in this case specifying a valid
+>> +user-agent can solve this issue.
+>>
+>>  If a username and password are specified in the ``SRC_URI``, a Basic
+>>  Authorization header will be added to each request, including across
+>> redirects.
+>> @@ -239,6 +247,7 @@ Some example URLs are as follows::
+>>     SRC_URI =3D "http://oe.handhelds.org/not_there.aac"
+>>     SRC_URI =3D "ftp://oe.handhelds.org/not_there_as_well.aac"
+>>     SRC_URI =3D "ftp://you@oe.handhelds.org/home/you/secret.plan"
+>> +   SRC_URI =3D "https://oe.handhelds.org/not_there.aac;user_agent=3D1"
+>>
+>>  .. note::
+>>
+>> diff --git
+>> a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> index 899e584f9..1132d44b9 100644
+>> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> @@ -699,6 +699,11 @@ overview of their function and contents.
+>>        Within an executing task, this variable holds the hash of the tas=
+k
+>> as
+>>        returned by the currently enabled signature generator.
+>>
+>> +   :term:`BB_USER_AGENT`
+>> +      Specifies a user-agent string which BitBake uses if "user_agent"
+>> +      parameter is enabled for HTTP/FTP wget fetcher. Default value can
+>> +      be found in conf\bitbake.conf.
+>> +
+>>     :term:`BB_VERBOSE_LOGS`
+>>        Controls how verbose BitBake is during builds. If set, shell
+>> scripts
+>>        echo commands and shell script output appears on standard out
+>> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+>> index 2e9211763..098cac52b 100644
+>> --- a/lib/bb/fetch2/wget.py
+>> +++ b/lib/bb/fetch2/wget.py
+>> @@ -52,11 +52,8 @@ class
+>> WgetProgressHandler(bb.progress.LineFilterProgressHandler):
+>>
+>>  class Wget(FetchMethod):
+>>      """Class to fetch urls via 'wget'"""
+>> -
+>> -    # CDNs like CloudFlare may do a 'browser integrity test' which can
+>> fail
+>> -    # with the standard wget/urllib User-Agent, so pretend to be a mode=
+rn
+>> -    # browser.
+>> -    user_agent =3D "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0)
+>> Gecko/20100101 Firefox/84.0"
+>> +    def init(self, d):
+>> +        self.user_agent =3D d.getVar("BB_USER_AGENT")
+>>
+>>      def check_certs(self, d):
+>>          """
+>> @@ -89,6 +86,10 @@ class Wget(FetchMethod):
+>>
+>>          self.basecmd =3D d.getVar("FETCHCMD_wget") or "/usr/bin/env wge=
 t
-> b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> index 899e584f9..1132d44b9 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> @@ -699,6 +699,11 @@ overview of their function and contents.
->        Within an executing task, this variable holds the hash of the task
-> as
->        returned by the currently enabled signature generator.
->
-> +   :term:`BB_USER_AGENT`
-> +      Specifies a user-agent string which BitBake uses if "user_agent"
-> +      parameter is enabled for HTTP/FTP wget fetcher. Default value can
-> +      be found in conf\bitbake.conf.
-> +
->     :term:`BB_VERBOSE_LOGS`
->        Controls how verbose BitBake is during builds. If set, shell scrip=
-ts
->        echo commands and shell script output appears on standard out
-> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-> index 2e9211763..098cac52b 100644
-> --- a/lib/bb/fetch2/wget.py
-> +++ b/lib/bb/fetch2/wget.py
-> @@ -52,11 +52,8 @@ class
-> WgetProgressHandler(bb.progress.LineFilterProgressHandler):
->
->  class Wget(FetchMethod):
->      """Class to fetch urls via 'wget'"""
-> -
-> -    # CDNs like CloudFlare may do a 'browser integrity test' which can
-> fail
-> -    # with the standard wget/urllib User-Agent, so pretend to be a moder=
-n
-> -    # browser.
-> -    user_agent =3D "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0)
-> Gecko/20100101 Firefox/84.0"
-> +    def init(self, d):
-> +        self.user_agent =3D d.getVar("BB_USER_AGENT")
->
->      def check_certs(self, d):
->          """
-> @@ -89,6 +86,10 @@ class Wget(FetchMethod):
->
->          self.basecmd =3D d.getVar("FETCHCMD_wget") or "/usr/bin/env wget=
- -t
-> 2 -T 30"
->
-> +        is_user_agent_enabled =3D ud.parm.get("user_agent","0") =3D=3D "=
-1"
-> +        if is_user_agent_enabled:
-> +            self.basecmd +=3D f" --user-agent=3D'{self.user_agent}'"
-> +
->          if ud.type =3D=3D 'ftp' or ud.type =3D=3D 'ftps':
->              self.basecmd +=3D " --passive-ftp"
->
-> --
-> 2.45.2.windows.1
->
->
+>> -t 2 -T 30"
+>>
+>> +        is_user_agent_enabled =3D ud.parm.get("user_agent","0") =3D=3D =
+"1"
+>> +        if is_user_agent_enabled:
+>> +            self.basecmd +=3D f" --user-agent=3D'{self.user_agent}'"
+>> +
+>>          if ud.type =3D=3D 'ftp' or ud.type =3D=3D 'ftps':
+>>              self.basecmd +=3D " --passive-ftp"
+>>
+>> --
+>> 2.45.2.windows.1
+>>
+>>
+>>
+>>
+>>
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 > Links: You receive all messages sent to this group.
-> View/Reply Online (#16335):
-> https://lists.openembedded.org/g/bitbake-devel/message/16335
+> View/Reply Online (#16336):
+> https://lists.openembedded.org/g/bitbake-devel/message/16336
 > Mute This Topic: https://lists.openembedded.org/mt/106583049/1686489
 > Group Owner: bitbake-devel+owner@lists.openembedded.org
 > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
@@ -218,24 +230,35 @@ n
 >
 >
 
---0000000000009fd6d6061a81840a
+--00000000000083dbbd061a81a82e
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div><div dir=3D"auto">No. I really do not like the idea that we should pre=
-tend to be Firefox. And you didn=E2=80=99t answer Ross questions properly.<=
-/div><div dir=3D"auto"><br></div><div dir=3D"auto">Fix the servers please.<=
-/div><div dir=3D"auto"><br></div><div dir=3D"auto">Alex</div></div><div><di=
-v dir=3D"auto"><br></div><div dir=3D"auto"><br></div><div><br><div class=3D=
-"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Mon 10. Jun 2024 at =
-0.02, Livius via <a href=3D"http://lists.openembedded.org" target=3D"_blank=
-">lists.openembedded.org</a> &lt;egyszeregy=3D<a href=3D"mailto:freemail.hu=
-@lists.openembedded.org" target=3D"_blank">freemail.hu@lists.openembedded.o=
-rg</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margi=
-n:0px 0px 0px 0.8ex;border-left-width:1px;border-left-style:solid;padding-l=
-eft:1ex;border-left-color:rgb(204,204,204)">From: Benjamin Sz=C5=91ke &lt;<=
-a href=3D"mailto:egyszeregy@freemail.hu" target=3D"_blank">egyszeregy@freem=
-ail.hu</a>&gt;<br>
+<div dir=3D"auto">On second thought, you did mention that FETCHCMD_whet can=
+ be used to set a custom user agent in one of the tickets, so if this can b=
+e done per recipe there is no need to add a new variable.</div><div dir=3D"=
+auto"><br></div><div dir=3D"auto">Ale=C2=A0</div><div><br><div class=3D"gma=
+il_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Mon 10. Jun 2024 at 6.24=
+, Alexander Kanavin via <a href=3D"http://lists.openembedded.org">lists.ope=
+nembedded.org</a> &lt;alex.kanavin=3D<a href=3D"mailto:gmail.com@lists.open=
+embedded.org">gmail.com@lists.openembedded.org</a>&gt; wrote:<br></div><blo=
+ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
+-width:1px;border-left-style:solid;padding-left:1ex;border-left-color:rgb(2=
+04,204,204)"><div><div dir=3D"auto">No. I really do not like the idea that =
+we should pretend to be Firefox. And you didn=E2=80=99t answer Ross questio=
+ns properly.</div><div dir=3D"auto"><br></div><div dir=3D"auto">Fix the ser=
+vers please.</div><div dir=3D"auto"><br></div><div dir=3D"auto">Alex</div><=
+/div><div><div dir=3D"auto"><br></div><div dir=3D"auto"><br></div><div><br>=
+<div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Mon 10.=
+ Jun 2024 at 0.02, Livius via <a href=3D"http://lists.openembedded.org" tar=
+get=3D"_blank">lists.openembedded.org</a> &lt;egyszeregy=3D<a href=3D"mailt=
+o:freemail.hu@lists.openembedded.org" target=3D"_blank">freemail.hu@lists.o=
+penembedded.org</a>&gt; wrote:<br></div></div></div></div><div><div><div cl=
+ass=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0=
+px 0px 0.8ex;border-left-width:1px;border-left-style:solid;padding-left:1ex=
+;border-left-color:rgb(204,204,204)">From: Benjamin Sz=C5=91ke &lt;<a href=
+=3D"mailto:egyszeregy@freemail.hu" target=3D"_blank">egyszeregy@freemail.hu=
+</a>&gt;<br>
 <br>
 Add &quot;user_agent&quot; optional parameter for wget fetcher to able<br>
 to use it if HTTP servers block requests with the default wget<br>
@@ -390,11 +413,17 @@ passive-ftp&quot;<br>
 2.45.2.windows.1<br>
 <br>
 <br>
+<br>
+<br>
+</blockquote></div></div></div><div><div><div class=3D"gmail_quote"></div><=
+/div>
+</div>
+<br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 Links: You receive all messages sent to this group.<br>
-View/Reply Online (#16335): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/16335" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/16335</a><br>
+View/Reply Online (#16336): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/16336" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/16336</a><br>
 Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/106583049/168=
 6489" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
 t/106583049/1686489</a><br>
@@ -407,7 +436,6 @@ _blank">alex.kanavin@gmail.com</a>]<br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 <br>
 </blockquote></div></div>
-</div>
 
---0000000000009fd6d6061a81840a--
+--00000000000083dbbd061a81a82e--
 
