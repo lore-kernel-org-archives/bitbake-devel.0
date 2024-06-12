@@ -2,263 +2,146 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7BDC41513
-	for <webhook@archiver.kernel.org>; Wed, 12 Jun 2024 07:45:09 +0000 (UTC)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
- by mx.groups.io with SMTP id smtpd.web10.5840.1718178307919043096
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3DDC27C75
+	for <webhook@archiver.kernel.org>; Wed, 12 Jun 2024 08:46:59 +0000 (UTC)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+ by mx.groups.io with SMTP id smtpd.web10.6508.1718182018870368115
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 Jun 2024 00:45:08 -0700
+ Wed, 12 Jun 2024 01:46:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=mnIFOX4G;
- spf=pass (domain: gmail.com, ip: 209.85.167.48, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52bbf73f334so4880069e87.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Jun 2024 00:45:07 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Orw3pDnX;
+ spf=pass (domain: gmail.com, ip: 209.85.167.54, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52c8973ff29so2179643e87.0;
+        Wed, 12 Jun 2024 01:46:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718178306; x=1718783106; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xNe89HJIM67EHeH5KsYtqFanihTCiP+x0/qEZrMPc3U=;
-        b=mnIFOX4GCuioadHT/R/249Yc7eIbFOIyidYehO79jMlvNrsDSdsTi+ZmXgnvPIGJ99
-         oUUfNmBIqFWWfjUm2e2vR4QRNvJTPPew6b0h9MDmgeI/D7Xz4BB1MAJYW0Ejt0ale7A+
-         2VIUp1FoBKv8KP0g953mY3OQKpOE8293TerqBAXuBjlLksY8SAa0b68Ht2UGxoTgFmKz
-         oIXH/UzjMdjArAe/kyXzPAdLW1QJD4cg4vkbKpAbaPeehUOmnORsWkESY8trtteLTptK
-         e3DRUG0hTCdQkTk5BI7YFb2mphAwKS0EOtLBGAi1G34TftsHmwYcxywlHHCTA2EG/TmE
-         d54A==
+        d=gmail.com; s=20230601; t=1718182017; x=1718786817; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=e+CjCsOpOHgbe5785ZjuYM1+NJSxx81aN+f5C5V8gPU=;
+        b=Orw3pDnXeRxoCSEjmag3LEU7eYUtPxBIlODHDfZRRWNQHAAXCJS7zh5fI9cQAebO5i
+         aX9LeklwL2xDAJ4AEeEMW0w97yS15LwpHzrxKr3xuSO2U6lPP/90h7R0abcuqglQyNVO
+         B0lwLdezOWqhcULb94oMXn/AfbB0FwWIQRJC+To4B4d3HGagrzODufNcHVXvEnCEyg6q
+         bhiNFLwas/c5V+BHNiaUD1lit3vlcJAYCxVHZqjwJ+rI72Lh6WZjvmDQUUwTtMKuogE+
+         CzFleTwYqm8MXtjeD3E7fZm/1215LM0PcDS3DOUnhrXXSMARBxJq5vyHQ+BNSumylvYc
+         1DcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718178306; x=1718783106;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xNe89HJIM67EHeH5KsYtqFanihTCiP+x0/qEZrMPc3U=;
-        b=HSWIATMppicr4Fc52I/vyv7wq4N0mgkKLseu5Zlw7w/Dol+QX85MFKuIDdztArNpyZ
-         qvFQt/fI0xig/MNHDEvOoorFP/zK6vYuJ7jLi1oTHChd7I/EKFk0sDO/24boN7jrgkz4
-         NSyHLmdLG9sjjiNJjtTgpKj8lGEk+oPSglhSe8nhEPudMie8wp3LzNPPeWGpcQN7fYXv
-         jqQvOUx5Ws942FS2LzsCwxcjZcUFklOy7AflKRuaSLpyMsbqYK6YnwPz3Pbjvttl83hN
-         fbY5YkLuww24xI7ZaDozjkOrDw7nzLPGnk5XwaDWIQk2xtazuCZ/PcMTJlc/aNlURqKx
-         g+bA==
-X-Gm-Message-State: AOJu0YxblEXkTRfQ8GYk/TGk53/2GV9Wbf7/DZvqDWo4Nhe22n+JlefI
-	ri/IWh0sWZW84jRt1oJUKEBvzeacfiLPkJc3ePy1qsW25w9ClRsUR19u9L6yjKcL3HIcMh9etD/
-	UMGFNqUK7h7n5FfaJoDHH3x1pFNM=
-X-Google-Smtp-Source: AGHT+IH+/0ksn/klYtfJPTl+cSION/HvnqxxIjEIPLr3O0qBk4KEYRuss3CRH9Df5SRtvM6+hFV650rpVIWpe84MfVg=
-X-Received: by 2002:a05:6512:e8e:b0:52b:c025:859a with SMTP id
- 2adb3069b0e04-52c9a3b8f0emr677182e87.2.1718178305555; Wed, 12 Jun 2024
- 00:45:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718182017; x=1718786817;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e+CjCsOpOHgbe5785ZjuYM1+NJSxx81aN+f5C5V8gPU=;
+        b=NProJLj9O/8BTlKhHQP91IIdL0S8rXkuuR7E7D5La+GVMgVk27BPB2B/lBPHI8Oi+D
+         TSCrQOxSlzwjXF/1lplM2f5SrdsK3sWnMfMhL7jGUUFs3+U7jKT5evxvGCETzL76t3T8
+         zjEVLlOIGe4bP5feCFBIlzMF/hcImJJIj/tPa3KwzXldeY4M8Uq+OpexvhhZjAhzS/f6
+         yix9V0hcLycjmJv1IJhZVdEuT5bG+w+dIggdzibOOsoPWBMLHeL1769zDn0p8M/jOljo
+         6ssiuCYXw1IPgo01IrPTuZ+2yF5+tPgxk2j5qTAlQAzmbBJokIsCH6y7U/3fNSvPNRiG
+         pq3w==
+X-Forwarded-Encrypted: i=1; AJvYcCU6vL+MSCSzjgRWP0igyYp63s2YaojQXiqb9yNXdEDiNTK7D3W4t51YmDKUWTUVtRJWPNGhQyLfjc1/tGtS/A4qacNCnry4LwC7huO5R7uOJ55JJ+Pm8S9zRG50TQms0+c=
+X-Gm-Message-State: AOJu0YxzmYi4lmZGJJVSa7W2d01E1LzetUXyamDxsbz7ApEz9AVNCQwA
+	UYYofRjCoTNaNcIWKCdHeLgT/zIQ8EeJclbC0bA1lKKN8g7yqiZpufXPTDMn82nYAoC4XNE5p/t
+	65hgP4olK+1BV/T6i1M6WoTv6a9c=
+X-Google-Smtp-Source: AGHT+IFjlyqREq1YYldBKxj+FqzQrEoX3NDNp0RUICfSxic4yinjfIzQMu5qTiZwPGaZjJEuk1G5EeBDQqlH6h8yFqk=
+X-Received: by 2002:ac2:4254:0:b0:52b:79d6:5c28 with SMTP id
+ 2adb3069b0e04-52c9a3fd532mr602472e87.52.1718182016581; Wed, 12 Jun 2024
+ 01:46:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20240611230649.1473-1-egyszeregy@freemail.hu>
-In-Reply-To: <20240611230649.1473-1-egyszeregy@freemail.hu>
+References: <20240502105745.3073153-1-alex.kanavin@gmail.com> <17fdbe98636e4e93ba2f7dfd52e294d2fb479ff3.camel@linuxfoundation.org>
+In-Reply-To: <17fdbe98636e4e93ba2f7dfd52e294d2fb479ff3.camel@linuxfoundation.org>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 12 Jun 2024 09:45:05 +0200
-Message-ID: <CANNYZj8wFjFyLTbA7ug501hs=n+UZd=K9Y4YsW=qLTNf6b_K8w@mail.gmail.com>
-Subject: Re: [docs] [PATCH v3] fetch2/wget: Add user_agent parameter so it can
- be used optionally
-To: egyszeregy@freemail.hu
-Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
+Date: Wed, 12 Jun 2024 10:46:56 +0200
+Message-ID: <CANNYZj_iodZF96JEnnUi6_fa5_CqO1UGhZSHYur=iKWjbMA=yQ@mail.gmail.com>
+Subject: Re: [Openembedded-architecture] [RFC PATCH] bitbake-setup: add the
+ proof of concept implementation
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org, yocto@lists.yoctoproject.org, 
+	openembedded-architecture@lists.openembedded.org, 
+	Alexander Kanavin <alex@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 12 Jun 2024 07:45:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16353
+ <bitbake-devel@lists.openembedded.org>; Wed, 12 Jun 2024 08:46:59 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16354
 
-It helps to include all relevant links into the commit message, e.g.
-the issues with xilinx's PMU_ROM that you had:
-https://support.xilinx.com/s/question/0D54U00008RolRMSAZ/yocto-metaxilinxco=
-re-cannot-find-pmuromnative-url?language=3Den_US
+On Mon, 10 Jun 2024 at 13:22, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> From the init command, it isn't clear what build.sh is for. I think it
+> should also mention the traditional build env file too, make it clear
+> where that is.
 
-I just tried to reproduce the locally, and there is no issue with wget:
+The printed note is: "Run path/to/build.sh to build using this configuration."
 
-alex@alex-lx-laptop:~$ wget
-https://www.xilinx.com/bin/public/openDownload?filename=3DPMU_ROM.tar.gz
---2024-06-12 09:29:55--
-https://www.xilinx.com/bin/public/openDownload?filename=3DPMU_ROM.tar.gz
-Resolving www.xilinx.com (www.xilinx.com)... 184.25.239.57, 184.25.239.48
-Connecting to www.xilinx.com (www.xilinx.com)|184.25.239.57|:443... connect=
-ed.
-HTTP request sent, awaiting response... 302 Moved Temporarily
-Location: https://xilinx-ax-dl.entitlenow.com/dl/ul/2021/12/20/R210497260/P=
-MU_ROM.tar.gz?hash=3DoU3pGSFXZ2pq00I2gGZX-g&expires=3D1718209784&filename=
-=3DPMU_ROM.tar.gz
-[following]
---2024-06-12 09:29:56--
-https://xilinx-ax-dl.entitlenow.com/dl/ul/2021/12/20/R210497260/PMU_ROM.tar=
-.gz?hash=3DoU3pGSFXZ2pq00I2gGZX-g&expires=3D1718209784&filename=3DPMU_ROM.t=
-ar.gz
-Resolving xilinx-ax-dl.entitlenow.com (xilinx-ax-dl.entitlenow.com)...
-184.25.239.24, 184.25.239.83
-Connecting to xilinx-ax-dl.entitlenow.com
-(xilinx-ax-dl.entitlenow.com)|184.25.239.24|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 8031 (7.8K) [application/x-gzip]
-Saving to: =E2=80=98openDownload?filename=3DPMU_ROM.tar.gz=E2=80=99
+Can you suggest a better wording (I have ideas, but want to hear how
+you would put it)?
 
-openDownload?filename=3DPMU_ROM.tar.gz
-100%[=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D>]
-  7.84K  --.-KB/s    in 0s
+> I struggled to find the --build-dir option to init, I tried to specify
+> a direction as the next parameter but that has to be named.
 
-2024-06-12 09:29:57 (87.0 MB/s) -
-=E2=80=98openDownload?filename=3DPMU_ROM.tar.gz=E2=80=99 saved [8031/8031]
+I wanted to keep build-dir as an optional argument, so that users
+don't have to specify it and the tool will decide for them.
 
+This can be re-done as an optional positional argument (with
+nargs='?'), but then everything else would have to be done via named
+options (e.g. picking one configuration out of several - note the json
+nests the config in ['bitbake-setup']['default'] to allow for multiple
+entries and alternative tools in the future).
 
-The sha25sum matches what is in the recipe:
+> For the cloning of repos, I wondered if we should have some config file
+> in HOME with a pointer to a central downloads/clone cache? The
+> autobuilder will certainly need something like that. Whether we could
+> use a common cache with DL_DIR remains to be seen too.
 
-alex@alex-lx-laptop:~$ sha256sum openDownload\?filename\=3DPMU_ROM.tar.gz
-f9a450ef960979463ea0a87a35fafb4a5b62d3a741de30cbcef04c8edc22a7cf
-openDownload?filename=3DPMU_ROM.tar.gz
+Having a tool config on disk crossed my mind several times, but I left
+it out from the prototype due to uncertainty about how writing to it
+should be handled by the tool. There is a spectrum of possibilities:
+from a rich 'git config'-like UI to handling it as a strict read-only
+item that needs to be manually created and edited. The config could
+contain other entries which are currently hardcoded in the tool  and
+can be overridden from command line, e.g. the location of the default
+configuration repo.
 
-The report indicated that there was a broken redirect via amd.com
-(which does require browser user-agent), but this seems to be no
-longer happening. Can you check?
+> I'm not sure I like the build config being moved out the way when
+> updating. The tmpdir "ABI" and conf file versioning should protect us
+> from the worst problems?
 
-All of this is to say, I'm still reluctant to support making the code
-more complex when there is no proven need for it.
+Yes. The tool could back up the previous build/conf when that has to
+change, but preserve everything else in build/.
 
+> Also, once you're "in" a build environment, can we can bitbake-setup
+> without parameters, i.e "bitbake-setup status" and "bitbake-setup
+> update"? Effectively that means teaching init-build-env about the
+> environment it is in so that bitbake-setup can then read the right
+> config from the env.
+
+Yes, I'll look into it.
+
+> For demo purposes it might help if we could add a "poky-ng" config,
+> which would be poky, but built using the config from the individual
+> bitbake/core/meta-yocto/docs components. That shouldn't be too hard to
+> add?
+
+I think so :)
+
+> I'll be experimenting a bit more but I wanted to give some feedback now
+> I've taken a look.
+
+Thanks :) I can do a v2 once we settle the above points.
+
+Irrelevant but hopefully amusing implementation note: I've written
+this with 'nano' like pretty much everything else over the past 25
+years. I'm that first person in https://xkcd.com/378/ .
+
+Don't be shocked, I have reasons:
+- too lazy to learn a 'real' editor or install an IDE. Emacs in 1998
+made a *really* bad first impression, sorry.
+- lack of 'modern' features like syntax highlighting, code folding,
+cross-referencing etc. forces me to be concise and get to the point,
+and don't write more code than I can fit into a single brain (or that
+can be read from a github webpage and fully understood that way).
+
+I can fumble my way through vi when I'm forced to, but otherwise nano
+all the way.
+
+Cheers,
 Alex
-
-
-On Wed, 12 Jun 2024 at 01:07, Livius via lists.yoctoproject.org
-<egyszeregy=3Dfreemail.hu@lists.yoctoproject.org> wrote:
->
-> From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
->
-> Add "user_agent" optional parameter for wget fetcher to able
-> to use it if HTTP servers block requests with the default wget
-> user-agent.
->
-> Signed-off-by: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
-> ---
->  conf/bitbake.conf                             |  1 +
->  .../bitbake-user-manual-fetching.rst          | 23 +++++++++++++------
->  .../bitbake-user-manual-ref-variables.rst     |  5 ++++
->  lib/bb/fetch2/wget.py                         | 11 +++++----
->  4 files changed, 28 insertions(+), 12 deletions(-)
->
-> diff --git a/conf/bitbake.conf b/conf/bitbake.conf
-> index f5a5a333a..a16f72d25 100644
-> --- a/conf/bitbake.conf
-> +++ b/conf/bitbake.conf
-> @@ -44,3 +44,4 @@ TARGET_ARCH =3D "${BUILD_ARCH}"
->  TMPDIR =3D "${TOPDIR}/tmp"
->  WORKDIR =3D "${TMPDIR}/work/${PF}"
->  GITPKGV =3D "${@bb.fetch2.get_srcrev(d, 'gitpkgv_revision')}"
-> +BB_FETCH_USER_AGENT ??=3D "bitbake/${BB_VERSION}"
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/d=
-oc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-> index fb4f0a23d..0ee07992f 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-> @@ -221,13 +221,21 @@ HTTP/FTP wget fetcher (``http://``, ``ftp://``, ``h=
-ttps://``)
->  This fetcher obtains files from web and FTP servers. Internally, the
->  fetcher uses the wget utility.
->
-> -The executable and parameters used are specified by the
-> -``FETCHCMD_wget`` variable, which defaults to sensible values. The
-> -fetcher supports a parameter "downloadfilename" that allows the name of
-> -the downloaded file to be specified. Specifying the name of the
-> -downloaded file is useful for avoiding collisions in
-> -:term:`DL_DIR` when dealing with multiple files that
-> -have the same name.
-> +The executable and parameters used are specified by the ``FETCHCMD_wget`=
-`
-> +variable, which defaults to sensible values. The fetcher supports
-> +parameters:
-> +
-> +-  *downloadfilename:* That allows the name of the downloaded file
-> +   to be specified.
-> +
-> +-  *user_agent:* Enable to use a default ``bitbake/${BB_VERSION}`` user-=
-agent
-> +   which is defined in :term:`BB_FETCH_USER_AGENT`.
-> +
-> +Specifying the name of the downloaded file is useful for avoiding
-> +collisions in :term:`DL_DIR` when dealing with multiple files
-> +that have the same name. A few HTTP servers block requests with
-> +the default wget user-agent, in this case specifying a valid
-> +user-agent can solve this issue.
->
->  If a username and password are specified in the ``SRC_URI``, a Basic
->  Authorization header will be added to each request, including across red=
-irects.
-> @@ -239,6 +247,7 @@ Some example URLs are as follows::
->     SRC_URI =3D "http://oe.handhelds.org/not_there.aac"
->     SRC_URI =3D "ftp://oe.handhelds.org/not_there_as_well.aac"
->     SRC_URI =3D "ftp://you@oe.handhelds.org/home/you/secret.plan"
-> +   SRC_URI =3D "https://oe.handhelds.org/not_there.aac;user_agent=3D1"
->
->  .. note::
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rs=
-t b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> index 899e584f9..3f310bd72 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> @@ -699,6 +699,11 @@ overview of their function and contents.
->        Within an executing task, this variable holds the hash of the task=
- as
->        returned by the currently enabled signature generator.
->
-> +   :term:`BB_FETCH_USER_AGENT`
-> +      Specifies a user-agent string which BitBake uses if "user_agent"
-> +      parameter is enabled for HTTP/FTP wget fetcher. Default value can
-> +      be found in ``conf/bitbake.conf``.
-> +
->     :term:`BB_VERBOSE_LOGS`
->        Controls how verbose BitBake is during builds. If set, shell scrip=
-ts
->        echo commands and shell script output appears on standard out
-> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-> index 2e9211763..30a56df71 100644
-> --- a/lib/bb/fetch2/wget.py
-> +++ b/lib/bb/fetch2/wget.py
-> @@ -52,11 +52,8 @@ class WgetProgressHandler(bb.progress.LineFilterProgre=
-ssHandler):
->
->  class Wget(FetchMethod):
->      """Class to fetch urls via 'wget'"""
-> -
-> -    # CDNs like CloudFlare may do a 'browser integrity test' which can f=
-ail
-> -    # with the standard wget/urllib User-Agent, so pretend to be a moder=
-n
-> -    # browser.
-> -    user_agent =3D "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gec=
-ko/20100101 Firefox/84.0"
-> +    def init(self, d):
-> +        self.user_agent =3D d.getVar("BB_FETCH_USER_AGENT")
->
->      def check_certs(self, d):
->          """
-> @@ -89,6 +86,10 @@ class Wget(FetchMethod):
->
->          self.basecmd =3D d.getVar("FETCHCMD_wget") or "/usr/bin/env wget=
- -t 2 -T 30"
->
-> +        is_user_agent_enabled =3D ud.parm.get("user_agent","0") =3D=3D "=
-1"
-> +        if is_user_agent_enabled:
-> +            self.basecmd +=3D f" --user-agent=3D'{self.user_agent}'"
-> +
->          if ud.type =3D=3D 'ftp' or ud.type =3D=3D 'ftps':
->              self.basecmd +=3D " --passive-ftp"
->
-> --
-> 2.45.2.windows.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#5294): https://lists.yoctoproject.org/g/docs/message/=
-5294
-> Mute This Topic: https://lists.yoctoproject.org/mt/106623550/1686489
-> Group Owner: docs+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/docs/unsub [alex.kanavin@gm=
-ail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
 
