@@ -1,147 +1,282 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3DDC27C75
-	for <webhook@archiver.kernel.org>; Wed, 12 Jun 2024 08:46:59 +0000 (UTC)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
- by mx.groups.io with SMTP id smtpd.web10.6508.1718182018870368115
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7641EC27C4F
+	for <webhook@archiver.kernel.org>; Thu, 13 Jun 2024 08:31:31 +0000 (UTC)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+ by mx.groups.io with SMTP id smtpd.web10.3398.1718267489515678676
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 Jun 2024 01:46:59 -0700
+ Thu, 13 Jun 2024 01:31:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Orw3pDnX;
- spf=pass (domain: gmail.com, ip: 209.85.167.54, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52c8973ff29so2179643e87.0;
-        Wed, 12 Jun 2024 01:46:58 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=l9bzCmPz;
+ spf=pass (domain: gmail.com, ip: 209.85.208.47, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57c6011d75dso664222a12.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 13 Jun 2024 01:31:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718182017; x=1718786817; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=e+CjCsOpOHgbe5785ZjuYM1+NJSxx81aN+f5C5V8gPU=;
-        b=Orw3pDnXeRxoCSEjmag3LEU7eYUtPxBIlODHDfZRRWNQHAAXCJS7zh5fI9cQAebO5i
-         aX9LeklwL2xDAJ4AEeEMW0w97yS15LwpHzrxKr3xuSO2U6lPP/90h7R0abcuqglQyNVO
-         B0lwLdezOWqhcULb94oMXn/AfbB0FwWIQRJC+To4B4d3HGagrzODufNcHVXvEnCEyg6q
-         bhiNFLwas/c5V+BHNiaUD1lit3vlcJAYCxVHZqjwJ+rI72Lh6WZjvmDQUUwTtMKuogE+
-         CzFleTwYqm8MXtjeD3E7fZm/1215LM0PcDS3DOUnhrXXSMARBxJq5vyHQ+BNSumylvYc
-         1DcA==
+        d=gmail.com; s=20230601; t=1718267488; x=1718872288; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y8ZZlpJ1jnXZLMq38PCsa91WaVVKDQLo1ZN09SxV70s=;
+        b=l9bzCmPznK5BlA3oCfbWyLOukxgFsTrQHvYYbkLQHNvWKc4pHTDmAyiTwpL2nzA+Yq
+         hg9QFGsUVQ9NIobv+gQ7qhTcU6RphxTWTkkHkcM+Mwn3WZ8s8xAwiHi3gugBRdjLXhKM
+         2xEILPMoJPVqRYMDpiD/wD+d6fhdPmaaekD+VbrtREOv9RPaNB2FQOZA+tWxKpDoxJ5V
+         w7eSIa9Iez5e6XyGHAMu33M4QslnAsui4QBdnJYQs6mZu2pSm5d09hbEORRjYoTl+uRT
+         oNR8StiKJTOn8rnrRazgNqvfD9A3arX9aM6xQyqkS4HWNlTov73qy+++TDomYQHtiNa5
+         InPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718182017; x=1718786817;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1718267488; x=1718872288;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=e+CjCsOpOHgbe5785ZjuYM1+NJSxx81aN+f5C5V8gPU=;
-        b=NProJLj9O/8BTlKhHQP91IIdL0S8rXkuuR7E7D5La+GVMgVk27BPB2B/lBPHI8Oi+D
-         TSCrQOxSlzwjXF/1lplM2f5SrdsK3sWnMfMhL7jGUUFs3+U7jKT5evxvGCETzL76t3T8
-         zjEVLlOIGe4bP5feCFBIlzMF/hcImJJIj/tPa3KwzXldeY4M8Uq+OpexvhhZjAhzS/f6
-         yix9V0hcLycjmJv1IJhZVdEuT5bG+w+dIggdzibOOsoPWBMLHeL1769zDn0p8M/jOljo
-         6ssiuCYXw1IPgo01IrPTuZ+2yF5+tPgxk2j5qTAlQAzmbBJokIsCH6y7U/3fNSvPNRiG
-         pq3w==
-X-Forwarded-Encrypted: i=1; AJvYcCU6vL+MSCSzjgRWP0igyYp63s2YaojQXiqb9yNXdEDiNTK7D3W4t51YmDKUWTUVtRJWPNGhQyLfjc1/tGtS/A4qacNCnry4LwC7huO5R7uOJ55JJ+Pm8S9zRG50TQms0+c=
-X-Gm-Message-State: AOJu0YxzmYi4lmZGJJVSa7W2d01E1LzetUXyamDxsbz7ApEz9AVNCQwA
-	UYYofRjCoTNaNcIWKCdHeLgT/zIQ8EeJclbC0bA1lKKN8g7yqiZpufXPTDMn82nYAoC4XNE5p/t
-	65hgP4olK+1BV/T6i1M6WoTv6a9c=
-X-Google-Smtp-Source: AGHT+IFjlyqREq1YYldBKxj+FqzQrEoX3NDNp0RUICfSxic4yinjfIzQMu5qTiZwPGaZjJEuk1G5EeBDQqlH6h8yFqk=
-X-Received: by 2002:ac2:4254:0:b0:52b:79d6:5c28 with SMTP id
- 2adb3069b0e04-52c9a3fd532mr602472e87.52.1718182016581; Wed, 12 Jun 2024
- 01:46:56 -0700 (PDT)
+        bh=Y8ZZlpJ1jnXZLMq38PCsa91WaVVKDQLo1ZN09SxV70s=;
+        b=GNf0Kzb6Su4sC+Ob/aW02HY1MT8MxwEAbR8XD1D6bbKIziD8PI1OyXcbjzpQwBthfc
+         0N2obl809BJOJ3tFU0Z/nc87mNgM2Fxm4KOZcjvnVMYcID7HYMzGQEHY3n2nN6CrsjSJ
+         a+uTN8jhYfpuU4Ig0PdZnvfnaRR4FKioliXCEdsGCgNoLFo10X39jEw8dvyJoORJlNAg
+         rNGBcucz2HLvEQbWl2+AiGGMl3wgc5TaqDj2Uhgd9xsQ0sRys//XDDamoUUUvOacXnxR
+         12hRK0pQn5A2l3BDusqYL8zOTCkk6lncd+QGHzus3PlRXBQPrzbUmr2RRCb1ja94LrBt
+         jEzg==
+X-Gm-Message-State: AOJu0YwrA2BrKE+bCZlUX8ZsSZFGZoiS0441QQamNfM/i1couUjLOX/+
+	P/piWqGkXXcDLYMh+5Td4yB2CET+R25sqtN2YUlrorVnOhaIH/5AL6Uhtw==
+X-Google-Smtp-Source: AGHT+IGvnjYBEnDiTrp+ULMRPTiPiApEhBxS6AMWbKqjW+ArulFPBf4tLzTv3Bnngo1nkISk8VeMuQ==
+X-Received: by 2002:a17:906:6a02:b0:a5a:1562:518c with SMTP id a640c23a62f3a-a6f47d56e31mr334528166b.48.1718267487275;
+        Thu, 13 Jun 2024 01:31:27 -0700 (PDT)
+Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42801sm46491566b.166.2024.06.13.01.31.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 01:31:26 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Martin Jansa <martin.jansa@gmail.com>
+Subject: [RFC][PATCH] siggen: catch FileNotFoundError everywhere and ConnectionError also in get_unihashes
+Date: Thu, 13 Jun 2024 10:31:16 +0200
+Message-ID: <20240613083116.2554617-1-martin.jansa@gmail.com>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
-References: <20240502105745.3073153-1-alex.kanavin@gmail.com> <17fdbe98636e4e93ba2f7dfd52e294d2fb479ff3.camel@linuxfoundation.org>
-In-Reply-To: <17fdbe98636e4e93ba2f7dfd52e294d2fb479ff3.camel@linuxfoundation.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 12 Jun 2024 10:46:56 +0200
-Message-ID: <CANNYZj_iodZF96JEnnUi6_fa5_CqO1UGhZSHYur=iKWjbMA=yQ@mail.gmail.com>
-Subject: Re: [Openembedded-architecture] [RFC PATCH] bitbake-setup: add the
- proof of concept implementation
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org, yocto@lists.yoctoproject.org, 
-	openembedded-architecture@lists.openembedded.org, 
-	Alexander Kanavin <alex@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 12 Jun 2024 08:46:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16354
+ <bitbake-devel@lists.openembedded.org>; Thu, 13 Jun 2024 08:31:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16355
 
-On Mon, 10 Jun 2024 at 13:22, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> From the init command, it isn't clear what build.sh is for. I think it
-> should also mention the traditional build env file too, make it clear
-> where that is.
+* avoids long trace when BB_HASHSERVE points to non-existent socket
+  file, e.g.:
+  BB_HASHSERVE = "unix:///OE/no-socket.sock"
+  or when running the build before starting the bin/bitbake-hashserv.
 
-The printed note is: "Run path/to/build.sh to build using this configuration."
+* now it shows just warnings like it did in kirkstone
+  many of them, e.g. 6 just for rebuilding zlib-native, but better than long trace
 
-Can you suggest a better wording (I have ideas, but want to hear how
-you would put it)?
+  for nonexistent socket file:
+  WARNING: zlib-native-1.3.1-r0 do_create_spdx: Error contacting Hash Equivalence Server unix:///OE/no-socket.sock: [Errno 2] No such file or directory
+  for existing file, but before starting bin/bitbake-hashserv:
+  WARNING: zlib-native-1.3.1-r0 do_create_spdx: Error contacting Hash Equivalence Server unix:///OE/hashserv.sock: [Errno 111] Connection refused
 
-> I struggled to find the --build-dir option to init, I tried to specify
-> a direction as the next parameter but that has to be named.
+ERROR: An uncaught exception occurred in runqueue###############################################################                                                                                                               | ETA:  0:00:00
+Traceback (most recent call last):
+  File "/OE/build/oe-core/bitbake/lib/hashserv/__init__.py", line 80, in create_client(addr='unix:///OE/no-socket.sock', username=None, password=None):
+             if typ == ADDR_TYPE_UNIX:
+    >            c.connect_unix(*a)
+             elif typ == ADDR_TYPE_WS:
+  File "/OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.py", line 241, in Client.connect_unix(path='/OE/no-socket.sock'):
+             self.loop.run_until_complete(self.client.connect_unix(path))
+    >        self.loop.run_until_complete(self.client.connect())
 
-I wanted to keep build-dir as an optional argument, so that users
-don't have to specify it and the tool will decide for them.
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in _UnixSelectorEventLoop.run_until_complete(future=<Task finished name='Task-6' coro=<AsyncClient.connect() done, defined at /OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.
+py:150> exception=FileNotFoundError(2, 'No such file or directory')>):
 
-This can be re-done as an optional positional argument (with
-nargs='?'), but then everything else would have to be done via named
-options (e.g. picking one configuration out of several - note the json
-nests the config in ['bitbake-setup']['default'] to allow for multiple
-entries and alternative tools in the future).
+    >        return future.result()
 
-> For the cloning of repos, I wondered if we should have some config file
-> in HOME with a pointer to a central downloads/clone cache? The
-> autobuilder will certainly need something like that. Whether we could
-> use a common cache with DL_DIR remains to be seen too.
+  File "/OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.py", line 152, in AsyncClient.connect():
+             if self.socket is None:
+    >            self.socket = await self._connect_sock()
+                 await self.setup_connection()
+  File "/OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.py", line 85, in connect_sock:
+                     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM, 0)
+    >                sock.connect(os.path.basename(path))
+                 finally:
+FileNotFoundError: [Errno 2] No such file or directory
 
-Having a tool config on disk crossed my mind several times, but I left
-it out from the prototype due to uncertainty about how writing to it
-should be handled by the tool. There is a spectrum of possibilities:
-from a rich 'git config'-like UI to handling it as a strict read-only
-item that needs to be manually created and edited. The config could
-contain other entries which are currently hardcoded in the tool  and
-can be overridden from command line, e.g. the location of the default
-configuration repo.
+ERROR: Running idle function
+Traceback (most recent call last):
+  File "/OE/build/oe-core/bitbake/lib/hashserv/__init__.py", line 80, in create_client(addr='unix:///OE/no-socket.sock', username=None, password=None):
+             if typ == ADDR_TYPE_UNIX:
+    >            c.connect_unix(*a)
+             elif typ == ADDR_TYPE_WS:
+  File "/OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.py", line 241, in Client.connect_unix(path='/OE/no-socket.sock'):
+             self.loop.run_until_complete(self.client.connect_unix(path))
+    >        self.loop.run_until_complete(self.client.connect())
 
-> I'm not sure I like the build config being moved out the way when
-> updating. The tmpdir "ABI" and conf file versioning should protect us
-> from the worst problems?
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in _UnixSelectorEventLoop.run_until_complete(future=<Task finished name='Task-6' coro=<AsyncClient.connect() done, defined at /OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.
+py:150> exception=FileNotFoundError(2, 'No such file or directory')>):
 
-Yes. The tool could back up the previous build/conf when that has to
-change, but preserve everything else in build/.
+    >        return future.result()
 
-> Also, once you're "in" a build environment, can we can bitbake-setup
-> without parameters, i.e "bitbake-setup status" and "bitbake-setup
-> update"? Effectively that means teaching init-build-env about the
-> environment it is in so that bitbake-setup can then read the right
-> config from the env.
+  File "/OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.py", line 152, in AsyncClient.connect():
+             if self.socket is None:
+    >            self.socket = await self._connect_sock()
+                 await self.setup_connection()
+  File "/OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.py", line 85, in connect_sock:
+                     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM, 0)
+    >                sock.connect(os.path.basename(path))
+                 finally:
+FileNotFoundError: [Errno 2] No such file or directory
 
-Yes, I'll look into it.
+Summary: There were 2 ERROR messages, returning a non-zero exit code.
 
-> For demo purposes it might help if we could add a "poky-ng" config,
-> which would be poky, but built using the config from the individual
-> bitbake/core/meta-yocto/docs components. That shouldn't be too hard to
-> add?
+1605616 09:29:05.369352 Parse cache valid
+1605616 09:30:14.500863 Registering idle function <function BBCooker.buildTargets.<locals>.buildTargetsIdle at 0x7f43988c09a0>
+1605616 09:30:14.500927 Removing idle function <bound method Command.runAsyncCommand of <bb.command.Command object at 0x7f43a961c350>>
+1605616 09:30:14.573274 Exception Traceback (most recent call last):
+  File "/OE/build/oe-core/bitbake/lib/bb/server/process.py", line 435, in idle_thread_internal
+    retval = function(self, data, False)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/OE/build/oe-core/bitbake/lib/bb/cooker.py", line 1487, in buildTargetsIdle
+    retval = rq.execute_runqueue()
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/OE/build/oe-core/bitbake/lib/bb/runqueue.py", line 1651, in execute_runqueue
+    return self._execute_runqueue()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/OE/build/oe-core/bitbake/lib/bb/runqueue.py", line 1567, in _execute_runqueue
+    if self.rqdata.prepare() == 0:
+       ^^^^^^^^^^^^^^^^^^^^^
+  File "/OE/build/oe-core/bitbake/lib/bb/runqueue.py", line 1290, in prepare
+    unihashes = bb.parse.siggen.get_unihashes(ready)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/OE/build/oe-core/bitbake/lib/bb/siggen.py", line 713, in get_unihashes
+    with self.client() as client:
+  File "/usr/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/OE/build/oe-core/bitbake/lib/bb/siggen.py", line 595, in client
+    self._client = hashserv.create_client(self.server, **self.get_hashserv_creds())
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/OE/build/oe-core/bitbake/lib/hashserv/__init__.py", line 88, in create_client
+    raise e
+  File "/OE/build/oe-core/bitbake/lib/hashserv/__init__.py", line 80, in create_client
+    c.connect_unix(*a)
+  File "/OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.py", line 241, in connect_unix
+    self.loop.run_until_complete(self.client.connect())
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.py", line 152, in connect
+    self.socket = await self._connect_sock()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/OE/build/oe-core/bitbake/lib/bb/asyncrpc/client.py", line 85, in connect_sock
+    sock.connect(os.path.basename(path))
+FileNotFoundError: [Errno 2] No such file or directory
+ broke the idle_thread, exiting
+1605616 09:30:14.673756 Exiting (socket: True)
+1605616 09:30:14.683153 Exiting as we could obtain the lock
+sys:1: ResourceWarning: unclosed file <_io.TextIOWrapper name='/OE/build/oe-core/bitbake-cookerdaemon.log' mode='a+' encoding='UTF-8'>
+sys:1: ResourceWarning: unclosed <socket.socket fd=17, family=1, type=1, proto=0>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
 
-I think so :)
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+---
+Sending as RFC, because I'm using hashserv only with local sockets
+and I might not imagine all the corner cases where this might not
+be acceptable, I also didn't run selftest with this.
 
-> I'll be experimenting a bit more but I wanted to give some feedback now
-> I've taken a look.
+ lib/bb/siggen.py | 69 +++++++++++++++++++++++++-----------------------
+ 1 file changed, 36 insertions(+), 33 deletions(-)
 
-Thanks :) I can do a v2 once we settle the above points.
-
-Irrelevant but hopefully amusing implementation note: I've written
-this with 'nano' like pretty much everything else over the past 25
-years. I'm that first person in https://xkcd.com/378/ .
-
-Don't be shocked, I have reasons:
-- too lazy to learn a 'real' editor or install an IDE. Emacs in 1998
-made a *really* bad first impression, sorry.
-- lack of 'modern' features like syntax highlighting, code folding,
-cross-referencing etc. forces me to be concise and get to the point,
-and don't write more code than I can fit into a single brain (or that
-can be read from a github webpage and fully understood that way).
-
-I can fumble my way through vi when I'm forced to, but otherwise nano
-all the way.
-
-Cheers,
-Alex
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 89b70fb6a..145d7cebc 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -704,39 +704,42 @@ class SignatureGeneratorUniHashMixIn(object):
+                 query_tids.append(tid)
+ 
+         if query_tids:
+-            with self.client() as client:
+-                unihashes = client.get_unihash_batch((self._get_method(tid), self.taskhash[tid]) for tid in query_tids)
+-
+-        for idx, tid in enumerate(query_tids):
+-            # In the absence of being able to discover a unique hash from the
+-            # server, make it be equivalent to the taskhash. The unique "hash" only
+-            # really needs to be a unique string (not even necessarily a hash), but
+-            # making it match the taskhash has a few advantages:
+-            #
+-            # 1) All of the sstate code that assumes hashes can be the same
+-            # 2) It provides maximal compatibility with builders that don't use
+-            #    an equivalency server
+-            # 3) The value is easy for multiple independent builders to derive the
+-            #    same unique hash from the same input. This means that if the
+-            #    independent builders find the same taskhash, but it isn't reported
+-            #    to the server, there is a better chance that they will agree on
+-            #    the unique hash.
+-            taskhash = self.taskhash[tid]
+-            unihash = unihashes[idx]
+-
+-            if unihash:
+-                # A unique hash equal to the taskhash is not very interesting,
+-                # so it is reported it at debug level 2. If they differ, that
+-                # is much more interesting, so it is reported at debug level 1
+-                hashequiv_logger.bbdebug((1, 2)[unihash == taskhash], 'Found unihash %s in place of %s for %s from %s' % (unihash, taskhash, tid, self.server))
+-            else:
+-                hashequiv_logger.debug2('No reported unihash for %s:%s from %s' % (tid, taskhash, self.server))
+-                unihash = taskhash
++            unihashes = []
++            try:
++                with self.client() as client:
++                    unihashes = client.get_unihash_batch((self._get_method(tid), self.taskhash[tid]) for tid in query_tids)
++            except (ConnectionError, FileNotFoundError) as e:
++                bb.warn('Error contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
+ 
++            for idx, tid in enumerate(query_tids):
++                # In the absence of being able to discover a unique hash from the
++                # server, make it be equivalent to the taskhash. The unique "hash" only
++                # really needs to be a unique string (not even necessarily a hash), but
++                # making it match the taskhash has a few advantages:
++                #
++                # 1) All of the sstate code that assumes hashes can be the same
++                # 2) It provides maximal compatibility with builders that don't use
++                #    an equivalency server
++                # 3) The value is easy for multiple independent builders to derive the
++                #    same unique hash from the same input. This means that if the
++                #    independent builders find the same taskhash, but it isn't reported
++                #    to the server, there is a better chance that they will agree on
++                #    the unique hash.
++                taskhash = self.taskhash[tid]
++
++                if unihashes and unihashes[idx]:
++                    unihash = unihashes[idx]
++                    # A unique hash equal to the taskhash is not very interesting,
++                    # so it is reported it at debug level 2. If they differ, that
++                    # is much more interesting, so it is reported at debug level 1
++                    hashequiv_logger.bbdebug((1, 2)[unihash == taskhash], 'Found unihash %s in place of %s for %s from %s' % (unihash, taskhash, tid, self.server))
++                else:
++                    hashequiv_logger.debug2('No reported unihash for %s:%s from %s' % (tid, taskhash, self.server))
++                    unihash = taskhash
+ 
+-            self.set_unihash(tid, unihash)
+-            self.unihash[tid] = unihash
+-            result[tid] = unihash
++                self.set_unihash(tid, unihash)
++                self.unihash[tid] = unihash
++                result[tid] = unihash
+ 
+         return result
+ 
+@@ -814,7 +817,7 @@ class SignatureGeneratorUniHashMixIn(object):
+                     d.setVar('BB_UNIHASH', new_unihash)
+                 else:
+                     hashequiv_logger.debug('Reported task %s as unihash %s to %s' % (taskhash, unihash, self.server))
+-            except ConnectionError as e:
++            except (ConnectionError, FileNotFoundError) as e:
+                 bb.warn('Error contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
+         finally:
+             if sigfile:
+@@ -856,7 +859,7 @@ class SignatureGeneratorUniHashMixIn(object):
+                 # TODO: What to do here?
+                 hashequiv_logger.verbose('Task %s unihash reported as unwanted hash %s' % (tid, finalunihash))
+ 
+-        except ConnectionError as e:
++        except (ConnectionError, FileNotFoundError) as e:
+             bb.warn('Error contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
+ 
+         return False
 
