@@ -1,93 +1,93 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233C3C27C6E
-	for <webhook@archiver.kernel.org>; Mon, 17 Jun 2024 09:37:04 +0000 (UTC)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
- by mx.groups.io with SMTP id smtpd.web10.52764.1718617016358611188
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C0EC27C79
+	for <webhook@archiver.kernel.org>; Mon, 17 Jun 2024 12:24:15 +0000 (UTC)
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+ by mx.groups.io with SMTP id smtpd.web10.55380.1718627047156171078
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 17 Jun 2024 02:36:56 -0700
+ Mon, 17 Jun 2024 05:24:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=WkEmoPRS;
- spf=pass (domain: gmail.com, ip: 209.85.208.178, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ead2c6b50bso45943201fa.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Jun 2024 02:36:56 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=RTEwS0oZ;
+ spf=softfail (domain: sakoman.com, ip: 209.85.216.50, mailfrom: steve@sakoman.com)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2c2dee9d9cfso3687872a91.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Jun 2024 05:24:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718617014; x=1719221814; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=cD3GzBAR9kbC7ZqCSzsrkSyXF6NwcDl+zpmvzUnW2Z8=;
-        b=WkEmoPRSAFU/qtnCI9E/AakE3VVw8E/xrD8zL/6Qnnn3P/wepaiF3LjDEaLvOT4Nz0
-         6QqcmK1YyZMbj5dm0ConDNNW9Tyn0F2djlDShmk7U8atWS3zObLIMo/pNL18qoglX3in
-         Q/frVWj9w9avKa0+EmjIU39LVVCQfY/mO5LQHplr1sN/3YQzqkJzhhpysZTgzdxUzKYb
-         F810nzfk4JBpCA9PYkGoSJrzvntRt66m4+zRvKSAlww55R6+XhvQdFehx/sl6HCSkhHw
-         Y+FOT0hL+gQzRGleHwEzQZUWeFNDHlQSBMG7nJ9naqh6jtBQz9c9RaoWCUnvtnKoQ/1v
-         Z07g==
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1718627046; x=1719231846; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NSb25w6o2ZCorJwNSUyBgz47BK44vJAml5Tmmp8dkXE=;
+        b=RTEwS0oZfR2O3VqetZftMLG5eYgqqlJ5EdP4VHboEzsoe2OdXXN21KRehjb5lgtae3
+         WThhviqmTSONLjbqXC+PqO5QT2MlkkU9KORiyjowe/upYDN7IDkfvXPr8O8WcpWjBdM3
+         PuqXF28kM8t0vcDQOi917DRVT4Xt2Pw438MsGdRtNOhRyfTv0wRhSSUEymtSx93CgIr+
+         dsIoPOyuSWR7jQZSV5RaNn5+lEAmNOC/+L6Tv2RKmJoevm4KnwlZu8BtWzI55TiF6nLp
+         OSM5p9iVaEfNfpMIm/uB34sZ5d8p0sk6THN0jMMwqDt+OLEXWyvv3XHkDUL+bVVbvdUg
+         ElsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718617014; x=1719221814;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cD3GzBAR9kbC7ZqCSzsrkSyXF6NwcDl+zpmvzUnW2Z8=;
-        b=eon9p4IK+ydsoS9BPUqhXcsEalb/Z+IvliZHRo3vQIzpiNI8dqZ3xStItihNprrD+Q
-         SLZ7jF9AXSS55jdyj9piPWBrJD6FM3mb2F4uUFFwNyT/wKvPpN4aE/ohzrYQsbc4m33/
-         TN5YU0s+K/fv7lxtAy5ZkdYiw15wHlWPbjICkAq2JPx6FVpWPiGTj+vk3a40wbTKqFC9
-         +XiXejzQlGqfwlCjk7lAc8mrtcrnBG9X/qKt3LHXRomCYwzkvFEbVRJgXvazszaq7bsR
-         jAMaQce8inittfvd0ZtMJWgFug/nFwPeuRSnOxpp/wRKEIxnZo8SrOxausFzoyrpazN3
-         rguw==
-X-Gm-Message-State: AOJu0YwsdcFPLgQqZ8SKvfYyVdUlYCyJ9AZZr+9mvpdB0hOlNVj9hdi9
-	l9u6hYm+Vp34HGx05L6wEQqdkvm/kZTh8zHZPxRvLnvQfD4JAT8BE8Qze2GcaA7EPWTpX4HXFJ1
-	hODnaZuIjuH3sur0j+9YLpZnyhcI=
-X-Google-Smtp-Source: AGHT+IEgCkqtsm9Ir/fZW92MIvhP7itBpTyRIirpWtWXRN8kss8Zre4FQUWibduowW+5/8LN7FBtmJ25G7o/wJRDsn0=
-X-Received: by 2002:a2e:95c9:0:b0:2ec:2e2c:7cdd with SMTP id
- 38308e7fff4ca-2ec2e2c7d39mr11897781fa.3.1718617013954; Mon, 17 Jun 2024
- 02:36:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718627046; x=1719231846;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NSb25w6o2ZCorJwNSUyBgz47BK44vJAml5Tmmp8dkXE=;
+        b=eRTW0DJZxVboaYKZ7ca/r0dMRKImJW09ddH/c7dCQpPbD5Q9YLXmOba5cyHlG7SgMQ
+         dFdV7czIDpQYj9t/eLXUj0nI+G2f9RTQFm3X66Y4+ch4MimIM5+zMYNvA3UkBThDXOrv
+         xiMdww9NrAt1FNzYaF3eBIqB8lUJj694LIokU+eYrVuFmLBddi+EgHTqlO/8afSaYQIj
+         5Ts6x7e/SZ6q6WySp+2sX6xyErin1sZqdasT/O+MKouw3kIZeYx16SrVZ2pj16gpOkRz
+         T7QLWDtg+3hm1sZSe8FQHYGaLEwxXoAKf52BXYb44/OIOryfmsUn0ddNSki1xgYjD20c
+         sPrg==
+X-Gm-Message-State: AOJu0YwzcL0BLrw+RlrJ2Wp72UeJo0I+B9F8ZQQyM7kjnKJhlOmlVs0a
+	W6/nI02VV8nviCWT4D/wq8+S5T3nTkcLiw8c+NwLgN2oZhV3azVc7fF1XFkcRitE4FnfkCH7Gjx
+	Gnhk=
+X-Google-Smtp-Source: AGHT+IFUMPgGqTCK1o0XdtBZ1MV1v5O6wgFT4whH5awtgbVSCdxF6CQuuoyGzjOFjujYVxDqh3Xy3Q==
+X-Received: by 2002:a17:90a:c086:b0:2c2:cd03:4758 with SMTP id 98e67ed59e1d1-2c4db132120mr8750970a91.1.1718627046319;
+        Mon, 17 Jun 2024 05:24:06 -0700 (PDT)
+Received: from hexa.. ([98.142.47.158])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6fedf39b75csm6608259a12.45.2024.06.17.05.24.05
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 05:24:05 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][scarthgap][2.8][PATCH 0/3] Patch review
+Date: Mon, 17 Jun 2024 05:23:58 -0700
+Message-Id: <cover.1718626914.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20106.1718449089919947051@lists.openembedded.org> <Groupsio.1.20106.1718449089919947051@lists.openembedded.org>
-In-Reply-To: <Groupsio.1.20106.1718449089919947051@lists.openembedded.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 17 Jun 2024 11:36:51 +0200
-Message-ID: <CANNYZj_t75pGbnAUvSvVzwvHgYz38Hg0cXt1E=X4dTxV=8WHVQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [docs] [PATCH v3] fetch2/wget: Add user_agent
- parameter so it can be used optionally
-To: egyszeregy@freemail.hu
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 17 Jun 2024 09:37:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16359
+ <bitbake-devel@lists.openembedded.org>; Mon, 17 Jun 2024 12:24:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16360
 
-On Sat, 15 Jun 2024 at 13:01, Livius via lists.openembedded.org
-<egyszeregy=freemail.hu@lists.openembedded.org> wrote:
-> In openjdk-8 272 recipe all of link are broken if wget downloading doeas not use any custom user-agent.
-> https://layers.openembedded.org/layerindex/recipe/44301/
->
-> does not work -> wget https://hg.openjdk.java.net/jdk8u/jdk8u/langtools/archive/jdk8u272-ga.tar.bz2
-> works -> wget --user-agent='bitbake/2.8.0' https://hg.openjdk.java.net/jdk8u/jdk8u/langtools/archive/jdk8u272-ga.tar.bz2
+Please review this set of changes for scarthgap/2.8 and have comments back by
+end of day Wednesday, June 19
 
-The layer is using an obsolete download location. The correct location
-is in the release announcement:
-https://mail.openjdk.org/pipermail/jdk8u-dev/2020-October/012817.html
+Passed a-full on autobuilder:
 
-and it does work with wget:
-https://openjdk-sources.osci.io/openjdk8/openjdk8u272-ga.tar.xz
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/7047
 
-The complete list of releases is at:
-https://wiki.openjdk.org/display/jdk8u/Main
+The following changes since commit 0791e66a47185d6f202af6be0d39e36a8e41850a:
 
-It's also likely tarball downloads with wget from mercurial VCS were
-explicitly disabled; trying to fake user agent will not go down well
-if that's the case.
+  tests/fetch: Tweak test to match upstream repo url change (2024-06-10 05:57:30 -0700)
 
-Please dig a bit deeper instead of giving up at the 'wget does not work' step.
+are available in the Git repository at:
 
-> So it seems this patch is necessary to provide and it able to solve this kind of issues in the future.
+  https://git.openembedded.org/bitbake-contrib stable/2.8-nut
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-nut
 
-I'm still not convinced it is necessary. Both known incidents can be
-solved without the patch.
+Richard Purdie (2):
+  tests/fetch: Tweak to work on Fedora40
+  fetch2/wget: Fix failure path for files that are empty or don't exist
 
-Alex
+Rudolf J Streif (1):
+  fetch2/wget: Canonicalize DL_DIR paths for wget2 compatibility
+
+ lib/bb/fetch2/wget.py | 25 +++++++++++++------------
+ lib/bb/tests/fetch.py |  6 +++---
+ 2 files changed, 16 insertions(+), 15 deletions(-)
+
+-- 
+2.34.1
+
 
