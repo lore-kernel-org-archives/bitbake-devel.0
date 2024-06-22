@@ -2,87 +2,87 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3E4C27C53
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3F4C41513
 	for <webhook@archiver.kernel.org>; Sat, 22 Jun 2024 12:20:47 +0000 (UTC)
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
- by mx.groups.io with SMTP id smtpd.web11.96228.1719058846881283714
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+ by mx.groups.io with SMTP id smtpd.web10.96126.1719058844630147601
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 22 Jun 2024 05:20:46 -0700
+ Sat, 22 Jun 2024 05:20:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=sUbz5jWu;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.181, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-70633f0812dso2447179b3a.0
-        for <bitbake-devel@lists.openembedded.org>; Sat, 22 Jun 2024 05:20:46 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=XQyD7s2q;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.178, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70436ac8882so2338021b3a.2
+        for <bitbake-devel@lists.openembedded.org>; Sat, 22 Jun 2024 05:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1719058846; x=1719663646; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XDbHHmH6Dniq13YppYEV5O6jLVODV6abyZm8YuOfenc=;
-        b=sUbz5jWuYgxcZvgj6l1hfeXvkeae7LLvK0rSVx1R3TmDKqZDcdkueypVUSwjr08dov
-         PY34XxculQ0lgfoyotI94ZiZM3OB6pJUdmYcr06sVRz7fiA3nGWh7ld9+KuPCZOOLuaG
-         VsiEnTV27VTjWGMfbK/3Ny3MFQM7rgn5gBmNqYppLaoegjGzqjH4Zzcps2zT9hF2dSzv
-         qU0RLtnWrUJ1WS7wJVBurZNhbSpE9rVo4ehAsJKsU5NAOQdwZQrTELV5OrvLnSCFvcdK
-         mEjoVM/xyRtqX4azpnV0fg3Lw3tU1Trlc5LVk6Gg7nYCAG66G4+IAuQhvIcNWk3orIxs
-         /M2g==
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1719058844; x=1719663644; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oNHxwqjkiyGd5QSf+pKsO4948lrGCPbeCwlpm/3qHGU=;
+        b=XQyD7s2qGlaHBv4yocAdmVMexN6KHkYJjhtEIolULmXizlxT7pona3I4lKcw20cWDB
+         WMjGLK2+SEloNh5LeKk31Fc6MJhKgfgTJxZ+kxwDScxkYgsXPls9BWIeOcWMHIunGY1x
+         Ycs91PekA7uXfZg0xEUBetOrhdUq23OM52SY5SsEo7AVcqW7wLCn+EUbzXApNJ0D6sMU
+         QvuO1Kb8DDMzIJhNlW+N8CwWTlOSoNzgpAxNAJWGDr6h3Wobbn3vrarkYif/GM7np7sE
+         svasg14O8hks0tF+5kar6x/djQhp72mCKP+HHB9bmoCdcMQl5vMsUH74KAowETOj+KEg
+         ZWqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719058846; x=1719663646;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XDbHHmH6Dniq13YppYEV5O6jLVODV6abyZm8YuOfenc=;
-        b=v0HVHKSwX9cK8YT7DABgK12QvW1t2x9zDVQsR2VZ4R+fA8Lo6Eqin87Ch73eS8a0hz
-         8sy8nhpjCpBhQamehvue00rjKL95O7wLVV5GKDoX2sk8r13P6JI8rOkraaW/89EOOxo8
-         P6CjdDsVUo5ocpRdRljILNTKcaVx+eqLMM3UqrTEFBTIyWYbobbHTmnKMgPlsJ4RLPrw
-         h2h3B15W2P9wj+CtCfzpZG+fh4/9Dyc1P1/prOyWiVTZW6QyvYddrRgRDCFKiqYPlBDq
-         NZTHJuKmRma+5+KUjaPYdCWlwzspXe3PUa+FGhG+YPFQFzA2ITzinNLx+063JD33SKk2
-         1bSw==
-X-Gm-Message-State: AOJu0Yztv6sRKQKCMu0c4x2OuKdjS+coEidO3ppgZAd/PF6QRzdv/inh
-	fTZUigTLCQuP7668A4ZcQkiiqIK4ON8zqvtJU8Y2OTiDYQCKyx4rBXDa/+aFS/JtS4Ff1wLCERK
-	J
-X-Google-Smtp-Source: AGHT+IFrDSqLOZgmWYSu62sPPRPNiN4Ju9rcPI3dkeycPA7kqELW8/IkHuSnCzzwjfl4IjpiE6QHng==
-X-Received: by 2002:a05:6a20:a723:b0:1b5:fd58:30e8 with SMTP id adf61e73a8af0-1bcbb3f0b1emr10775142637.18.1719058846072;
-        Sat, 22 Jun 2024 05:20:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719058844; x=1719663644;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oNHxwqjkiyGd5QSf+pKsO4948lrGCPbeCwlpm/3qHGU=;
+        b=PQXP9GmdMe00lYnvdUh13tx1jjTmYryNnul1K3kyAn7eiVa2VQBb+FAm6y/DvR3wg6
+         jj1S/ZDCBOmI2BmC9SUJ7yyldyGFBDkADcM5pQgkC/OQWGfrmoRaV5WArl4pDW126rv1
+         506BGro6rEiFVk2NoVXR67Ogk3+zPMPX7CAYtORHJ/kz9/8THfVi8ZBVYGWusG/iHgOW
+         AxThny/bL6nUK+IdSjGcxw8lT3KBHoilJqPMTqM4dimU7SvrFNh4aRmlQJ/OZn1l67B0
+         Iw/jYVcniBScv4XSEv6ndcrnAV3nM7AJmnQXOFiFIsMCF/fwy27BpgfsFaOZ1wAvK+Ie
+         FGdA==
+X-Gm-Message-State: AOJu0YxNrFZ7bqwAJHLbcPK6P139KQHAHkUVMYZTlP/8HUbKrd7NXaBi
+	IPNG2LhnbnIXeUrrU/DomzLoSvsGFajhp4Fw7XYKc+00OWKTJIuSPuaTUqPG1Pgxw4PlLJwfr0F
+	F
+X-Google-Smtp-Source: AGHT+IFqs8sH1u2M7M0/MEX2rwoBP9l8s7QplC4cLGequIZavnW6CiPlbohYYllNqTLIvecE9BENkA==
+X-Received: by 2002:a05:6a00:399f:b0:706:6937:cb9d with SMTP id d2e1a72fcca58-7066937d9f9mr1235854b3a.0.1719058843661;
+        Sat, 22 Jun 2024 05:20:43 -0700 (PDT)
 Received: from hexa.. ([98.142.47.158])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065130573esm2952762b3a.205.2024.06.22.05.20.45
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065130573esm2952762b3a.205.2024.06.22.05.20.43
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jun 2024 05:20:45 -0700 (PDT)
+        Sat, 22 Jun 2024 05:20:43 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 1/1] tests/fetch: Tweak test to match upstream repo url change Upstream changed their urls, update our test to match.
-Date: Sat, 22 Jun 2024 05:20:36 -0700
-Message-Id: <734b0ea3dfe45eb16ee60f0c2c388e22af4040e0.1719058713.git.steve@sakoman.com>
+Subject: [bitbake][kirkstone][2.0][PATCH 0/1] Patch review
+Date: Sat, 22 Jun 2024 05:20:35 -0700
+Message-Id: <cover.1719058713.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1719058713.git.steve@sakoman.com>
-References: <cover.1719058713.git.steve@sakoman.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sat, 22 Jun 2024 12:20:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16375
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16374
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
----
+Please review this change for kirkstone/2.0 and have comments back by
+end of day Tuesday, June 25
+
+Passed a-full on autobuilder:
+
+https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/7065
+
+The following changes since commit 5a90927f31c4f9fccbe5d9d07d08e6e69485baa8:
+
+  parse: Improve/fix cache invalidation via mtime (2024-05-23 08:52:30 -0700)
+
+are available in the Git repository at:
+
+  https://git.openembedded.org/bitbake-contrib stable/2.0-nut
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.0-nut
+
+Steve Sakoman (1):
+  tests/fetch: Tweak test to match upstream repo url change Upstream
+    changed their urls, update our test to match.
+
  lib/bb/tests/fetch.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 5aa3e464d..a7d9d5e88 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1335,7 +1335,7 @@ class FetchLatestVersionTest(FetcherTest):
-         # combination version pattern
-         ("sysprof", "git://gitlab.gnome.org/GNOME/sysprof.git;protocol=https;branch=master", "cd44ee6644c3641507fb53b8a2a69137f2971219", "")
-             : "1.2.0",
--        ("u-boot-mkimage", "git://git.denx.de/u-boot.git;branch=master;protocol=git", "62c175fbb8a0f9a926c88294ea9f7e88eb898f6c", "")
-+        ("u-boot-mkimage", "git://source.denx.de/u-boot/u-boot.git;branch=master;protocol=https", "62c175fbb8a0f9a926c88294ea9f7e88eb898f6c", "")
-             : "2014.01",
-         # version pattern "yyyymmdd"
-         ("mobile-broadband-provider-info", "git://gitlab.gnome.org/GNOME/mobile-broadband-provider-info.git;protocol=https;branch=master", "4ed19e11c2975105b71b956440acdb25d46a347d", "")
 -- 
 2.34.1
 
