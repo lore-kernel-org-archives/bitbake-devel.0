@@ -1,89 +1,83 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <liezhi.yang@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3F4C41513
-	for <webhook@archiver.kernel.org>; Sat, 22 Jun 2024 12:20:47 +0000 (UTC)
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
- by mx.groups.io with SMTP id smtpd.web10.96126.1719058844630147601
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C216C41513
+	for <webhook@archiver.kernel.org>; Mon, 24 Jun 2024 00:03:57 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.web10.129402.1719187432430892776
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 22 Jun 2024 05:20:44 -0700
+ Sun, 23 Jun 2024 17:03:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=XQyD7s2q;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.178, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70436ac8882so2338021b3a.2
-        for <bitbake-devel@lists.openembedded.org>; Sat, 22 Jun 2024 05:20:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1719058844; x=1719663644; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oNHxwqjkiyGd5QSf+pKsO4948lrGCPbeCwlpm/3qHGU=;
-        b=XQyD7s2qGlaHBv4yocAdmVMexN6KHkYJjhtEIolULmXizlxT7pona3I4lKcw20cWDB
-         WMjGLK2+SEloNh5LeKk31Fc6MJhKgfgTJxZ+kxwDScxkYgsXPls9BWIeOcWMHIunGY1x
-         Ycs91PekA7uXfZg0xEUBetOrhdUq23OM52SY5SsEo7AVcqW7wLCn+EUbzXApNJ0D6sMU
-         QvuO1Kb8DDMzIJhNlW+N8CwWTlOSoNzgpAxNAJWGDr6h3Wobbn3vrarkYif/GM7np7sE
-         svasg14O8hks0tF+5kar6x/djQhp72mCKP+HHB9bmoCdcMQl5vMsUH74KAowETOj+KEg
-         ZWqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719058844; x=1719663644;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oNHxwqjkiyGd5QSf+pKsO4948lrGCPbeCwlpm/3qHGU=;
-        b=PQXP9GmdMe00lYnvdUh13tx1jjTmYryNnul1K3kyAn7eiVa2VQBb+FAm6y/DvR3wg6
-         jj1S/ZDCBOmI2BmC9SUJ7yyldyGFBDkADcM5pQgkC/OQWGfrmoRaV5WArl4pDW126rv1
-         506BGro6rEiFVk2NoVXR67Ogk3+zPMPX7CAYtORHJ/kz9/8THfVi8ZBVYGWusG/iHgOW
-         AxThny/bL6nUK+IdSjGcxw8lT3KBHoilJqPMTqM4dimU7SvrFNh4aRmlQJ/OZn1l67B0
-         Iw/jYVcniBScv4XSEv6ndcrnAV3nM7AJmnQXOFiFIsMCF/fwy27BpgfsFaOZ1wAvK+Ie
-         FGdA==
-X-Gm-Message-State: AOJu0YxNrFZ7bqwAJHLbcPK6P139KQHAHkUVMYZTlP/8HUbKrd7NXaBi
-	IPNG2LhnbnIXeUrrU/DomzLoSvsGFajhp4Fw7XYKc+00OWKTJIuSPuaTUqPG1Pgxw4PlLJwfr0F
-	F
-X-Google-Smtp-Source: AGHT+IFqs8sH1u2M7M0/MEX2rwoBP9l8s7QplC4cLGequIZavnW6CiPlbohYYllNqTLIvecE9BENkA==
-X-Received: by 2002:a05:6a00:399f:b0:706:6937:cb9d with SMTP id d2e1a72fcca58-7066937d9f9mr1235854b3a.0.1719058843661;
-        Sat, 22 Jun 2024 05:20:43 -0700 (PDT)
-Received: from hexa.. ([98.142.47.158])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065130573esm2952762b3a.205.2024.06.22.05.20.43
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jun 2024 05:20:43 -0700 (PDT)
-From: Steve Sakoman <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 0/1] Patch review
-Date: Sat, 22 Jun 2024 05:20:35 -0700
-Message-Id: <cover.1719058713.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=690504963a=liezhi.yang@windriver.com)
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45NMq9r7009816
+	for <bitbake-devel@lists.openembedded.org>; Mon, 24 Jun 2024 00:03:51 GMT
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3ywktws6j2-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Mon, 24 Jun 2024 00:03:51 +0000 (GMT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Sun, 23 Jun 2024 17:03:49 -0700
+Received: from ala-lpggp7.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.39 via Frontend Transport; Sun, 23 Jun 2024 17:03:49 -0700
+From: <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH 1/1] cache: Remove invalid symlink for bb_cache.dat
+Date: Sun, 23 Jun 2024 17:03:49 -0700
+Message-ID: <78a640127fd83e682ededc5a21aad253c3412ed4.1719187359.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <cover.1719187359.git.liezhi.yang@windriver.com>
+References: <cover.1719187359.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: s8gjMdSZy8xgQArbGNo9DkcMZSQDJTJ0
+X-Proofpoint-GUID: s8gjMdSZy8xgQArbGNo9DkcMZSQDJTJ0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-23_16,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 mlxlogscore=825 bulkscore=0 mlxscore=0 clxscore=1015
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.21.0-2406140001 definitions=main-2406230198
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 22 Jun 2024 12:20:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16374
+ <bitbake-devel@lists.openembedded.org>; Mon, 24 Jun 2024 00:03:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16377
 
-Please review this change for kirkstone/2.0 and have comments back by
-end of day Tuesday, June 25
+From: Robert Yang <liezhi.yang@windriver.com>
 
-Passed a-full on autobuilder:
+The bb_cache.dat might be an invalid symlink when error happens, then
+os.path.exists(symlink) would return False for it, the invalid symlink
+wouldn't be removed and os.symlink can't update it any more.
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/7065
+Use os.path.islink(symlink) can fix the problem.
 
-The following changes since commit 5a90927f31c4f9fccbe5d9d07d08e6e69485baa8:
-
-  parse: Improve/fix cache invalidation via mtime (2024-05-23 08:52:30 -0700)
-
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.0-nut
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.0-nut
-
-Steve Sakoman (1):
-  tests/fetch: Tweak test to match upstream repo url change Upstream
-    changed their urls, update our test to match.
-
- lib/bb/tests/fetch.py | 2 +-
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ bitbake/lib/bb/cache.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index 18d5574a31..4a96f5b313 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -441,7 +441,7 @@ class Cache(object):
+         else:
+             symlink = os.path.join(self.cachedir, "bb_cache.dat")
+ 
+-        if os.path.exists(symlink):
++        if os.path.exists(symlink) or os.path.islink(symlink):
+             bb.utils.remove(symlink)
+         try:
+             os.symlink(os.path.basename(self.cachefile), symlink)
 -- 
-2.34.1
+2.45.1
 
 
