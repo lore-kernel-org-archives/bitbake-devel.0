@@ -1,72 +1,78 @@
-Return-Path: <liezhi.yang@windriver.com>
+Return-Path: <peter.marko@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADCFC27C4F
-	for <webhook@archiver.kernel.org>; Mon, 24 Jun 2024 00:03:57 +0000 (UTC)
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.web10.129401.1719187432072865631
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B0CC41513
+	for <webhook@archiver.kernel.org>; Tue, 25 Jun 2024 19:40:25 +0000 (UTC)
+Received: from mta-64-227.siemens.flowmailer.net (mta-64-227.siemens.flowmailer.net [185.136.64.227])
+ by mx.groups.io with SMTP id smtpd.web11.6071.1719344416735739846
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 23 Jun 2024 17:03:52 -0700
+ Tue, 25 Jun 2024 12:40:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=690504963a=liezhi.yang@windriver.com)
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45NMq9r6009816
-	for <bitbake-devel@lists.openembedded.org>; Mon, 24 Jun 2024 00:03:51 GMT
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3ywktws6j2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Mon, 24 Jun 2024 00:03:51 +0000 (GMT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Sun, 23 Jun 2024 17:03:49 -0700
-Received: from ala-lpggp7.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.39 via Frontend Transport; Sun, 23 Jun 2024 17:03:49 -0700
-From: <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH 0/1] cache: Remove invalid symlink for bb_cache.dat
-Date: Sun, 23 Jun 2024 17:03:48 -0700
-Message-ID: <cover.1719187359.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.45.1
+ dkim=pass header.i=peter.marko@siemens.com header.s=fm2 header.b=grqn6flD;
+ spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.64.227, mailfrom: fm-256628-202406251940148d2bc6dc13a2704d6e-yrsqox@rts-flowmailer.siemens.com)
+Received: by mta-64-227.siemens.flowmailer.net with ESMTPSA id 202406251940148d2bc6dc13a2704d6e
+        for <bitbake-devel@lists.openembedded.org>;
+        Tue, 25 Jun 2024 21:40:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=peter.marko@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=uFrSeVNprB4u+zE8Ob6OHkesFZQkqLLTwTHgtEkt29g=;
+ b=grqn6flD3qsfkLHdwlb5J/9IbI5XfKTS8Lzkdz6Md15eiY6MhPjqAzD0elYnuGbDFhGfsd
+ jnbZPMtdtdNLhS19oSiTjlyCHlw/rflxgf5hviIT+pY/eVD7U16y6rztQNlN06EIrD5QZROD
+ aslJlThCnRhqDxhAk91x7v7vnm0zE=;
+From: Peter Marko <peter.marko@siemens.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Peter Marko <peter.marko@siemens.com>
+Subject: [master][scarthgap][PATCH] fetch: remove True option to getVar calls in clearcase module
+Date: Tue, 25 Jun 2024 21:36:19 +0200
+Message-Id: <20240625193619.1799635-1-peter.marko@siemens.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: alMobN-CNFsQCQwuP88CbuBppqBq9nA9
-X-Proofpoint-GUID: alMobN-CNFsQCQwuP88CbuBppqBq9nA9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-23_16,2024-06-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 mlxlogscore=855 bulkscore=0 mlxscore=0 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.21.0-2406140001 definitions=main-2406230198
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-256628:519-21489:flowmailer
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 24 Jun 2024 00:03:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16376
+ <bitbake-devel@lists.openembedded.org>; Tue, 25 Jun 2024 19:40:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16378
 
-From: Robert Yang <liezhi.yang@windriver.com>
+From: Peter Marko <peter.marko@siemens.com>
 
-The following changes since commit 5d88faa0f35f0205c1475893d8589d1e6533dcc0:
+Layer cleanup similar to
+https://git.openembedded.org/openembedded-core/commit/?id=26c74fd10614582e177437608908eb43688ab510
 
-  bitbake: siggen: catch FileNotFoundError everywhere and ConnectionError also in get_unihashes (2024-06-18 08:45:22 +0100)
+It was probably not found before beacause of the extra "d" parameter.
+That seem to be a bug as getVar does not support that.
 
-are available in the Git repository at:
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ lib/bb/fetch2/clearcase.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  https://github.com/robertlinux/yocto rbt/bb_cache
-  https://github.com/robertlinux/yocto/tree/rbt/bb_cache
-
-Robert Yang (1):
-  cache: Remove invalid symlink for bb_cache.dat
-
- bitbake/lib/bb/cache.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
+diff --git a/lib/bb/fetch2/clearcase.py b/lib/bb/fetch2/clearcase.py
+index 1a9c86376..2b3bd7069 100644
+--- a/lib/bb/fetch2/clearcase.py
++++ b/lib/bb/fetch2/clearcase.py
+@@ -108,7 +108,7 @@ class ClearCase(FetchMethod):
+                                                 ud.module.replace("/", "."),
+                                                 ud.label.replace("/", "."))
+ 
+-        ud.viewname         = "%s-view%s" % (ud.identifier, d.getVar("DATETIME", d, True))
++        ud.viewname         = "%s-view%s" % (ud.identifier, d.getVar("DATETIME"))
+         ud.csname           = "%s-config-spec" % (ud.identifier)
+         ud.ccasedir         = os.path.join(d.getVar("DL_DIR"), ud.type)
+         ud.viewdir          = os.path.join(ud.ccasedir, ud.viewname)
+@@ -196,7 +196,7 @@ class ClearCase(FetchMethod):
+ 
+     def need_update(self, ud, d):
+         if ("LATEST" in ud.label) or (ud.customspec and "LATEST" in ud.customspec):
+-            ud.identifier += "-%s" % d.getVar("DATETIME",d, True)
++            ud.identifier += "-%s" % d.getVar("DATETIME")
+             return True
+         if os.path.exists(ud.localpath):
+             return False
 -- 
-2.45.1
+2.30.2
 
 
