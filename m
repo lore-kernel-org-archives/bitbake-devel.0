@@ -1,212 +1,299 @@
-Return-Path: <liezhi.yang@windriver.com>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEF2C2BD09
-	for <webhook@archiver.kernel.org>; Thu, 27 Jun 2024 05:46:20 +0000 (UTC)
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.web10.1524.1719467177124011804
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EBEC2BD09
+	for <webhook@archiver.kernel.org>; Thu, 27 Jun 2024 12:55:53 +0000 (UTC)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+ by mx.groups.io with SMTP id smtpd.web11.7199.1719492945577074151
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 26 Jun 2024 22:46:17 -0700
+ Thu, 27 Jun 2024 05:55:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=6908b51466=liezhi.yang@windriver.com)
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45R5j4Qv014130
-	for <bitbake-devel@lists.openembedded.org>; Wed, 26 Jun 2024 22:46:16 -0700
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3ywx4fvdew-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Wed, 26 Jun 2024 22:46:16 -0700 (PDT)
-Received: from m0250809.ppops.net (m0250809.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45R5kF2F015708
-	for <bitbake-devel@lists.openembedded.org>; Wed, 26 Jun 2024 22:46:15 -0700
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3ywx4fvdeu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 22:46:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kv1N1oy5PFqmNGwzBGnCmFsvDe3JJstnoe/YmRvCBgwCecXRLhVWMNVXK3jIHEJFGOWm5mXC7phSkhMDjPAT1+nhi3sbocGidUwVfiZjIrrZYhMhAoTndceYJwiJIuHRaYXFLL/XuzH+s0b68RYexuNmZvpDUvCjLiqAdpBboH3Oak/uP0QZGIB4yxH/ioa1Nhk5CTl9n7Mq0sPYv+D4AsO7hd73PEwKVZNTc9QRuWkdkmXhBRyUTkai/S1aZ+ibk6E1dsqV+u+VPBFruO9oNKeikMlNWjO6InkMwP8Bsfbe7SkW7TaBWZej2PxVRRfYxCeIKuGTyHs58Oc57dZT5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=55caTKHzm2oO6ZIplJal7vCm0NKSO4QDQSHc17gUiaI=;
- b=iQhvWnqzxc6sBgm2JUAstZppukf3j7h0LkNP/Te/GApbvegZzIyU87VlZ6852I9agPY0zrz5W70SMckMYE25ixvhLsMK+cWWsEvoWtfx4N0/0dCkKmQEALY/DmcOddVVJtxeiKZjhi8pJ5CpCOYF+UhSPtPMLTagyT2UyT3f9eLGK/sgD2+kBkI4xkfxNwVqNsQf9Zk68m9UuUAPKyuCsjLCrRsbOEmnS7rzCYQFILdVSI9/LmSQX7/Xh84YsWno5T0tm9Jq4B3yfNlet2uwIJi9Lr7MYHiLdbeVkHvqfsx2ArHKTZT1wgzgcDGRPVzJ9M7CSxJC09CrS2+9TaUStQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from LV3PR11MB8531.namprd11.prod.outlook.com (2603:10b6:408:1b6::15)
- by CH3PR11MB8774.namprd11.prod.outlook.com (2603:10b6:610:1cd::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.36; Thu, 27 Jun
- 2024 05:46:10 +0000
-Received: from LV3PR11MB8531.namprd11.prod.outlook.com
- ([fe80::d341:6ff5:fce1:c6d]) by LV3PR11MB8531.namprd11.prod.outlook.com
- ([fe80::d341:6ff5:fce1:c6d%4]) with mapi id 15.20.7698.025; Thu, 27 Jun 2024
- 05:46:10 +0000
-Message-ID: <179dfa77-f266-40d7-b0d4-5ea86bd0f2e3@windriver.com>
-Date: Thu, 27 Jun 2024 13:46:03 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH 0/2] fetch2/git: Use git shallow fetch to
- implement clone_shallow_local()
-To: bitbake-devel@lists.openembedded.org, kergoth@gmail.com,
-        Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: andre.draszik@linaro.org
-References: <cover.1718886475.git.liezhi.yang@windriver.com>
-Content-Language: en-US
-From: Robert Yang <liezhi.yang@windriver.com>
-In-Reply-To: <cover.1718886475.git.liezhi.yang@windriver.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYCP301CA0067.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:7d::20) To LV3PR11MB8531.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::15)
+ dkim=pass header.i=@snap.com header.s=google header.b=C3LClaYa;
+ spf=pass (domain: snapchat.com, ip: 209.85.218.42, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a725a918edaso429584866b.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 27 Jun 2024 05:55:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=snap.com; s=google; t=1719492944; x=1720097744; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yIF1Xnclr++RxdqIn/ZisqPBtZR05Pg5EvZjUh4SJhk=;
+        b=C3LClaYaOcdwWtPl29ernZzLIZya0pm3DS6+eNPqqgez2chHeag5jSSnWVkC5VQFwR
+         c6qlMqg5+AeEAU8fSvG2BxgXmvouEPDU9tH9cJcrOL5Cvoqefz0N6m27aJ4kBvR+S8P0
+         6dwb6cGQ94RKsfzXY0Vyl4FfYcbvzZMAcLjfQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719492944; x=1720097744;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yIF1Xnclr++RxdqIn/ZisqPBtZR05Pg5EvZjUh4SJhk=;
+        b=aopjUNZXx3nIO9/7bQDSs3+POFaO+M9/c82OPSUgWNjcoiWkxirUOGZO2/0+C9O5ks
+         yMuJFq3oiuoh8f2X/f1F6qHUgipoKmAAB5cndv7bYM2Va/RWojwhg8M7msZ+BqcDgLSo
+         8URXS1PcCo6n5BMYi+RK+Hj4XeO3LHbXrGXVlfEWRDueCZXtFpzdCpvBbn6i/llR10q3
+         0WuLrn1frWw2m3dzhHesSguor0D7mujkRf7U5tazI4a7aQwjZednnlYDuX2y07k8VbL5
+         NGu8Uo5vMsJFjpBcHdx7zinDvvMLNpo6qNyoM7QZen6AvYpdjHD93KH7y6QbT5uJlTw/
+         uvaA==
+X-Forwarded-Encrypted: i=1; AJvYcCXI9G5MZiCuDKtF8EsLtH9NrF10lqrsC2pmW77AvDpH6rzA2yf4wUt1OPnDDQMQWwMUu2cRWE3kyvBsbQjBBpwT0FdwbClOHK4Y+csyzmf4OxPZl8U=
+X-Gm-Message-State: AOJu0Yy6JGBYBbk7McLruZN1mPT7rLrksaGP27kHhz2nsF8RlnAe8MeL
+	eqXhhs47vM/uoSI4yDZhoYPpj/hM6ljk33jiPkW8fPOamS9lQDuGYT1ruYPaF9MHOWnaUoXtAB/
+	SwpCl9LGnNpV4qEvY9SP9tvwPbMpanl2V6YSW3w==
+X-Google-Smtp-Source: AGHT+IEIHHXKBDb/wBfnP2ZjezcZThQlh5B4A//9qPlzmc6LWgtEYKakZ7wyXDXstADjc5jVbPnw/dQBJyFz8uXZh5s=
+X-Received: by 2002:a17:906:d96e:b0:a6f:608e:c0d0 with SMTP id
+ a640c23a62f3a-a7245ba3cc0mr1124986366b.25.1719492943808; Thu, 27 Jun 2024
+ 05:55:43 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8531:EE_|CH3PR11MB8774:EE_
-X-MS-Office365-Filtering-Correlation-Id: 270ced51-826d-4345-17ad-08dc966c728c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|4022899009|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?REdXV2tHeC9zMjhLNHIydDlLMVQ0ZlZUa3ZwRUxOZmo0Um1sK3hzV1hQM0dS?=
- =?utf-8?B?M2tqTnRKMk12aE9kdThUVEVld0hvYXhRcFhDSDgyM3I2NWxIQ0N6dXloT2JT?=
- =?utf-8?B?QktiMG1SQWN0SHBwRmRHM0F1N2ViZHJmQzVNM3g0ZkkxYm9JL2VRbkhGVXdH?=
- =?utf-8?B?L1JUdHd5N2xDTlFVa3EzN29EUFB5UExObFVpUU16Nkgva1VXcit1MHAyOThT?=
- =?utf-8?B?cnBqc0Z2N3JJeHhibE9WMFBOQUQ2MFdlZFJTcUt0SDhLVmxjbFZNVHVSeDNS?=
- =?utf-8?B?VXV4NmFWM1Qxb0c5bk0wSW9OdWlUeE5sTzJBc0ZFR1czbnorTG1VcmZCZlZY?=
- =?utf-8?B?cTlrZHoxOUk1eHBUQ3UrSkNZbHJZR2M4THhKNmRsbnZuZnFJK2x1ODM4WVJy?=
- =?utf-8?B?T1ZLNmlMSmg0Z3N1bGRrVVBtbFBmNm1iTE1HZGpWbkpZR2Z4NllPNzF5Wktj?=
- =?utf-8?B?SDhsTC9mRkhkVkxZcGVEci9DdHNvcFhxdVFCOUhqR2czbnJRYXI3Yk1rZ0h4?=
- =?utf-8?B?Wk9wdkNUME00NCsxM0R6NHd0VkV1S1luL2JNYTdXUmV1M29LaGFiaWRReHVR?=
- =?utf-8?B?OXl1THpXTjZqNysrTGtLUFozanBxeUxGL1VGZ1l2Q3BlZko5a3pONHk2cTFR?=
- =?utf-8?B?cUg5WlpJK1NkanBSK2JXTnNjU21WMmMrYlIxb3RDVHNOeFRKMlFReXJEQWE1?=
- =?utf-8?B?THJxaVA0cVFqNTN1RHVrbWRKb1dGVFZQcHk4QlNRV1dtSmhveFpaQkJISEtv?=
- =?utf-8?B?b3pRTnl1VmswbDRlWXREVlNTUDNjaDVCUWkvS3ZzN09nVVMzK00rcHRBbS9Y?=
- =?utf-8?B?WVdFQTg1Sk41UVJ2aXU5MytPVVR3ZmFmS1ZFTkFEYVUxMkJGS1FBZmhWUE42?=
- =?utf-8?B?cDhQSjdQUkRxSDhGSVBTWVQzMk9pK3N6L29iNDJFVVA0NFMvR2pDQWwwdEJU?=
- =?utf-8?B?UDBtalc3TTNrTlV4NTlLSkpjTndDMWZvVFdGTHo1dTRvZ2pSbFo3TUdNMVRl?=
- =?utf-8?B?S0g2dlFhV3VLYzNIYzZycHYrL3JnZDZ4L25tZE9MOUdEK1VIbVRkQnJnLzZY?=
- =?utf-8?B?MVp4aW5hd3d2UlplRjZ5aldxMENtckwza0pobTNNaG8rUkdyTEEvOWJOVXRH?=
- =?utf-8?B?Q1B3NC90MWk4cjA2ZDIxbzByS0tFZkdHQ2RLQ3RIMWxITm01eklGWWNiTy8x?=
- =?utf-8?B?N3JhTVltalgycUJockFpZXFJQlZGeEMzbzFiQTZlWkZjbjEwMXgrQXlIUStC?=
- =?utf-8?B?RmRLY2pUY0F5WFN6OVNTVXFKc3dQTGdCb2Q5MGVZZytmK2NSaEE2V1lRcWZG?=
- =?utf-8?B?SXJQbis5WllyNk53c003WEs0clU0dlZSSGdZNjFzVjRIMTdURS9SRGxSVUJ1?=
- =?utf-8?B?eHpXYmZscVo1K0NFdkp6L1RPT2FGYWZLMlJ4ZGQ4MTV6NlNnakt4YTNVUlFv?=
- =?utf-8?B?V0Y2cEEvM1I1enFBb2ZvQjNIcnhLcTVMMitlWWtxZEdBZFVONDVCRXNncG1X?=
- =?utf-8?B?Tk5qOTlDdWJRVUU2L0ZlRnc0em03QVE5bXJZdVBCeFhFQkFnajBjWXorTHVD?=
- =?utf-8?B?dEU2T2FiYktZYjZhSEt3WURGM05FaGRwQ1cxcXZQZyt1SGdoOGV3M1F3T1l4?=
- =?utf-8?B?VEhCU0w1azlVTEpNSDk0VFpFcG9vbTlBWXpCV0QvZ05zUEpLSGhXanZtcXNw?=
- =?utf-8?B?ZWd4VWtsY1ZrVExwZFR3ekk1RmxwTjA3N3NQVE1sSGtoMm8xZWkrU0Fkb3E4?=
- =?utf-8?Q?X2X68kG48DIV+LT1Dg=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8531.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(4022899009)(376014)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?MVNIUUlJWjRYbDdyZlhQSjk4YU5wY0RPZ2JEaGxaL1JJZmxYa2JKaWJ1WHRo?=
- =?utf-8?B?clhVbDFVd3k4OWhHbDJ4dGw5Y3NoNnVueWVzWGNUb0E2MDU0NHZiQzhqQ0pM?=
- =?utf-8?B?RWIreUZXUklZQnVKalUrSGdGVDh0ZjNsTFZsRHhUUHYwVmlZakhIMUxJL2U0?=
- =?utf-8?B?ZDgwMWdpaHcwZ2F1ZWRqTlFsUHlHbDRIanZQV3hYR2NMd3lUdk0zMXQ1MXVS?=
- =?utf-8?B?aEp1V0ZLYWtkdDBDVEQ4d295UXJNWVVHd2NIdUJmSCs2TVZkalJSZEJBWlQ0?=
- =?utf-8?B?U3lvdVBrVzhLcTRxQ3FSTzRhNEw5QkxTZVZRS1djQ0RNNGRMWjRxTWhrUnhw?=
- =?utf-8?B?dXNDRHRldEc4blF3RWRsVkFsUmtCWjZwbkdZcHRST2pRQ3ZreFdicGkyM3dI?=
- =?utf-8?B?WGZyZEl3aWd6ZDJaRjFsZWpLMXZpU3lpdUIzc3cyalFCZi9rT2VPRnN6TnZH?=
- =?utf-8?B?VFBhdkdldlV5MUdVUUpycjBPTWQwcVVjTVgyOGxIZ2JERy96dXFFaFRrT2JK?=
- =?utf-8?B?NXRNYlBSbWhrUzBKK3dmUzErRXQrWmJBTmJ1dGR0R0hLSHMyMnRYa1FPN3Bw?=
- =?utf-8?B?b2RnK05KNk1DbHVpT2NXSEF4UE5VbFI1QitDQ2psdGZqNnVsMFpnZnQrdmhh?=
- =?utf-8?B?OEYyVmttZEgrbE9vNGVaWlhGK0hzb0QzU3Z2U0VoNzY4blN5U1JFVkI2RkFu?=
- =?utf-8?B?dFg1aUVUdGJyM1FFSTlJUFdYS2N0VG9QWnVkcXlZaWFQWG1iN3hISGxHb2hl?=
- =?utf-8?B?OHhGVUlNTGNLK09ackVEQ1IvUjRHQ1hkQVo1dENndTdlUWRpSDN0ckh6N2p1?=
- =?utf-8?B?Rm5xYmEvcGJJeURRV2pBZnhOdDVHZktyNEM5RG5VT2JzK1RvcVFJWHFjdVhj?=
- =?utf-8?B?d2tLZ2RMcEFaUWd0KzR4bFpBc242V1ZaTGM0M3RrRjFSUURQMXZuUGVDaklZ?=
- =?utf-8?B?T2JZLy9LZWFDNFdXQnJBejRiVVpLNG4xY3Y4Z1ZrWFh2T1k4YmZUYUUzRXdY?=
- =?utf-8?B?dHh4VjVLVlZMR25YbEZqU2dXZnZYYWt5NmJEUEhqb2ZCSFFvL2cySUFjNGt3?=
- =?utf-8?B?RG9YNUZQRU9na081MWxWdnV5YWF6RjVCVTJFUGlSZml4VzZUNS82WmFoWkl3?=
- =?utf-8?B?RktyMnlHaDdaenRnMmNTcVBzaW53QUJzbi9xV1l4RFExbFlXRkRPSjU5SU1K?=
- =?utf-8?B?aDNMZTRkM1ExcjU5TzJMMXdaREc3THFiWDQwQnlYZGZoYTBWTGZXOGFlbndi?=
- =?utf-8?B?SmxNa1drcUs4T1Era21pUUNpZ1BIVlFxSEdmaWIyWEcwTElUMTViVDRLVVJ2?=
- =?utf-8?B?cEYwelU3RnNpZ3ExdHlIYVY1MzVXakc0L3kzVHlaU3E5dVV4TDRnTThDdUtK?=
- =?utf-8?B?K0VjK085MGNSWlppZDVrYjlRVFpLcWh3TWFZMWp3WHR4dUlCNmFGTitiOGhx?=
- =?utf-8?B?NmpJczlKUHVua29IaGFvQmtoM1FsckdCdkZydXFMajN1TGlPOVVYamd5TkFP?=
- =?utf-8?B?aCthM211VjMxVEY2aTh1Z3RNZ2ZDdEVJSDdDbkdRREsvSXEwbDVKVGZ5WEFK?=
- =?utf-8?B?elIyVERaM0FRL3dSYi9wek1OZUswN0ZiQWdkbG9jNFliMUNDRVVMay9jZHhR?=
- =?utf-8?B?MTFaZU9XWHMzVG8zQU5CVEsvRFU2Q3g1NDI5YSt0QkxJeGQvb0pWa2VNMFdE?=
- =?utf-8?B?YkFJbnJDZFBiT0F1VEJZbmNNMnEwR3RTTlM2R1A4U0UzTGZ5WDhVZzlvVXFz?=
- =?utf-8?B?N2hOR0liazdGdStlTkRYcmpVM3ZxdHFpdWJZOXhzUXBYbVMzQXFXVHh6emxU?=
- =?utf-8?B?NTNCWnJWWmNQS3B0bGsxdStFMlQrS0JFdCtYZ1ozRWZyZ1ZaY04xUU1qZUpr?=
- =?utf-8?B?Lyt1T1pCSllwbktmci90K2I2T3JBYy9QNnhDTDVrSDBDWkFRUHRHOC8wN0Fv?=
- =?utf-8?B?MFdlRU11S0N6RUdoTDJTaTRwTHhVZjBnTW1aWVpteUFuZStuSEVJbnhoOUdL?=
- =?utf-8?B?S3VzSkltZVp6QUkzM1FXSzc0UUhIK0JGUGF0dzc3NitQbDZ1NUxkMDRwanNm?=
- =?utf-8?B?MC9rK0dVV0lKYkI4aGNVeitxNGFVMnRnTDdKRnpBRVZCOXJlM0kwZ2ZYc2ph?=
- =?utf-8?B?YVRCdzFYNjFQeXNCeDJjLzRaK1V4YXVybUlkRXYzMUQwR2Z1SDFGMTIxTzhn?=
- =?utf-8?B?TFE9PQ==?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 270ced51-826d-4345-17ad-08dc966c728c
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8531.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 05:46:10.4742
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hZYlVjHEnpmTiW0nXL4LpN60xJxRwbDwX9BykEdsVfDAdwuqYInm6F2FnX1DBzF9xlMWtReN0mLqIBQcBjsVoyKztakyNijNqyhNn7V+lbQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8774
-X-Proofpoint-GUID: isLDdBXiJJVKelRH5786Z3-JmJElwvww
-X-Proofpoint-ORIG-GUID: hn9vOs22RBJUQ-DnnyB0C5GZv3RCDT6m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-27_02,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- mlxlogscore=842 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1015 phishscore=0 spamscore=0 impostorscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.21.0-2406140001 definitions=main-2406270042
+References: <20240206121528.2581233-1-richard.purdie@linuxfoundation.org>
+ <CAHUKmYbjs=_ijo2Jy5a1JCx5jrSJB5Ucoza99yBL2ya+qvwpRg@mail.gmail.com>
+ <dfe902c9baab3bdc38bb7afae1455565ab8c0117.camel@linuxfoundation.org>
+ <CAHUKmYY1fMCiNq36MzoeuQ5EKQYm_ZAEkkDuRUTeg94a+ZnubQ@mail.gmail.com> <202402072227419c816a19@mail.local>
+In-Reply-To: <202402072227419c816a19@mail.local>
+From: Etienne Cordonnier <ecordonnier@snap.com>
+Date: Thu, 27 Jun 2024 14:55:32 +0200
+Message-ID: <CAHUKmYap7j4GEy1sbhnqC8SmwT5e8AgE-t1d016oY4fL0Usg8Q@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] lib/bb: Drop BBFILE_PRIORITY support
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="0000000000001c2efa061bdea6c4"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Jun 2024 05:46:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16379
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Jun 2024 12:55:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16380
 
-Hi RP and Christopher,
+--0000000000001c2efa061bdea6c4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/20/24 20:44, Robert Yang via lists.openembedded.org wrote:
-> From: Robert Yang <liezhi.yang@windriver.com>
-> 
-> * Test info
->    bitbake-selftest works well
->    bitbake world works well with the shallow tarballs
+> > Is the BBFILE_PRIORITY not controlling the order in which bbappends fro=
+m
+> > different layers gets applied? I thought it was important e.g. when
+> > applying kernel configuration files (the last one to be applied overrid=
+e
+> > the previous ones).
 
-Do you have any comments on the patches, please?
+> I'd rather think this is in BBLAYERS list order
 
-// Robert
 
-> 
-> // Robert
-> 
-> The following changes since commit 5d88faa0f35f0205c1475893d8589d1e6533dcc0:
-> 
->    bitbake: siggen: catch FileNotFoundError everywhere and ConnectionError also in get_unihashes (2024-06-18 08:45:22 +0100)
-> 
-> are available in the Git repository at:
-> 
->    https://github.com/robertlinux/yocto rbt/shallow
->    https://github.com/robertlinux/yocto/tree/rbt/shallow
-> 
-> Robert Yang (2):
->    fetch2/git: Use git shallow fetch to implement clone_shallow_local()
->    bitbake: tests/fetch: Update GitShallowTest for clone_shallow_local()
-> 
->   bitbake/lib/bb/fetch2/git.py  | 71 ++++++++++++++++++++++-------------
->   bitbake/lib/bb/tests/fetch.py | 13 ++++---
->   2 files changed, 53 insertions(+), 31 deletions(-)
-> 
-> 
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#16368): https://lists.openembedded.org/g/bitbake-devel/message/16368
-> Mute This Topic: https://lists.openembedded.org/mt/106779045/7304958
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [liezhi.yang@eng.windriver.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
+Apologies for the late reply. I've finally got time to test this, and the
+BBFILE_PRIORITY value of the layer indeed overrides the BBLAYERS list
+order, so files added to SRC_URI layers with higher BBFILE_PRIORITY are
+last in the SRC_URI order (I can reproduce this playing around with two
+linux-yocto_%.bbappend). I guess in this case reordering the layers is the
+proper solution, rather than relying on BBFILE_PRIORITY.
+I was not aware that the order of inclusion in BBLAYERS mattered when using
+the same priority, thus I guess BBFILE_PRIORITY could be removed (this
+would break my project unless I reorder the layers properly, though, so I
+would definitely include this in the migration guide for the release).
+
+On Wed, Feb 7, 2024 at 11:27=E2=80=AFPM Alexandre Belloni <
+alexandre.belloni@bootlin.com> wrote:
+
+> On 06/02/2024 17:31:03+0100, Etienne Cordonnier via lists.openembedded.or=
+g
+> wrote:
+> > Is the BBFILE_PRIORITY not controlling the order in which bbappends fro=
+m
+> > different layers gets applied? I thought it was important e.g. when
+> > applying kernel configuration files (the last one to be applied overrid=
+e
+> > the previous ones).
+>
+> I'd rather think this is in BBLAYERS list order
+>
+> >
+> > On Tue, Feb 6, 2024 at 4:56=E2=80=AFPM Richard Purdie <
+> > richard.purdie@linuxfoundation.org> wrote:
+> >
+> > > On Tue, 2024-02-06 at 16:26 +0100, Etienne Cordonnier wrote:
+> > > > Hi Richard, there is a word missing in the commit message:
+> > > > " The functionality had a and place" -> "the functionality had a ti=
+me
+> > > and place"
+> > > > Also a typo: "comparibility" -> " compatibility "
+> > >
+> > > Thanks, I'll tweak those on the branch.
+> > >
+> > > > What is the correct way to set layer priorities after this patch (I=
+'m
+> > > > asking because the BSP I'm using makes use of BBFILE_PRIORITY)?
+> > >
+> > > It may set it, but what is it trying to achieve by setting it?
+> > >
+> > > As far as I know, the potential issue is needing to set specific
+> > > PREFERRED_VERSION entries where older recipes need to be used.
+> > >
+> > > Cheers,
+> > >
+> > > Richard
+> > >
+>
+> >
+> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> > Links: You receive all messages sent to this group.
+> > View/Reply Online (#15832):
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_g_bitbake-2Ddevel_message_15832&d=3DDwIDaQ&c=3DncDTmphkJTvjIDPh0hpF_4v=
+CHvabgGkICC2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3DPF=
+dWZklNEsJp5d53FoO0qUONhBkFLS6kTFi3Ri0VIGCdtMAJlG4EMCZ0fk27vcD1&s=3Dnkms8wmk=
+pBFNLoD_tIhMX7gighjb9-vDCGbqx4EUHpY&e=3D
+> > Mute This Topic:
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_mt_104196430_3617179&d=3DDwIDaQ&c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC=
+2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3DPFdWZklNEsJp5=
+d53FoO0qUONhBkFLS6kTFi3Ri0VIGCdtMAJlG4EMCZ0fk27vcD1&s=3DO5kulu9daAQPZCy9pk2=
+wkeWkXPB9ZFJjjyvIIRayD4o&e=3D
+> > Group Owner: bitbake-devel+owner@lists.openembedded.org
+> > Unsubscribe:
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_g_bitbake-2Ddevel_unsub&d=3DDwIDaQ&c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGk=
+ICC2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3DPFdWZklNEs=
+Jp5d53FoO0qUONhBkFLS6kTFi3Ri0VIGCdtMAJlG4EMCZ0fk27vcD1&s=3Dqv5A5DpnymmLJoar=
+by3NF1ZNC75oZXuo87auR8Y2FK8&e=3D
+> [alexandre.belloni@bootlin.com]
+> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> >
+>
+>
+> --
+> Alexandre Belloni, co-owner and COO, Bootlin
+> Embedded Linux and Kernel engineering
+>
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__bootlin.com&d=3DDw=
+IDaQ&c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&r=3DAhkbNonVuMIGRfPx_Q=
+j9TsRih1DULJTKUkSGa66m67E&m=3DPFdWZklNEsJp5d53FoO0qUONhBkFLS6kTFi3Ri0VIGCdt=
+MAJlG4EMCZ0fk27vcD1&s=3D_Eu0UvlfGlLxisJ57yP2XH8J30Q2PhmSO19R0djWdzM&e=3D
+>
+
+--0000000000001c2efa061bdea6c4
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><span class=3D"gmail-im" style=3D"color:rgb(80,0,80)">&gt;=
+ &gt; Is the=C2=A0<span class=3D"gmail-il">BBFILE_PRIORITY</span>=C2=A0not =
+controlling the order in which bbappends from<br>&gt; &gt; different layers=
+ gets applied? I thought it was important e.g. when<br>&gt; &gt; applying k=
+ernel configuration files (the last one to be applied override<br>&gt; &gt;=
+ the previous ones).<br><br></span>&gt; I&#39;d rather think this is in BBL=
+AYERS list order<br><br><br>Apologies for the late reply. I&#39;ve finally =
+got time to test this, and the BBFILE_PRIORITY value of the layer indeed ov=
+errides the BBLAYERS list order,=C2=A0so files added to SRC_URI layers with=
+ higher BBFILE_PRIORITY are last in the SRC_URI order (I can reproduce this=
+ playing around with two linux-yocto_%.bbappend). I guess in this case reor=
+dering the layers is the proper solution, rather than relying on BBFILE_PRI=
+ORITY.<br>I was not aware that the order of inclusion in BBLAYERS mattered =
+when using the same priority, thus I guess BBFILE_PRIORITY could be removed=
+ (this would break my project unless I reorder the layers properly, though,=
+ so I would definitely=C2=A0include this in the migration guide for the rel=
+ease).</div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_=
+attr">On Wed, Feb 7, 2024 at 11:27=E2=80=AFPM Alexandre Belloni &lt;<a href=
+=3D"mailto:alexandre.belloni@bootlin.com">alexandre.belloni@bootlin.com</a>=
+&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px =
+0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On 0=
+6/02/2024 17:31:03+0100, Etienne Cordonnier via <a href=3D"http://lists.ope=
+nembedded.org" rel=3D"noreferrer" target=3D"_blank">lists.openembedded.org<=
+/a> wrote:<br>
+&gt; Is the BBFILE_PRIORITY not controlling the order in which bbappends fr=
+om<br>
+&gt; different layers gets applied? I thought it was important e.g. when<br=
+>
+&gt; applying kernel configuration files (the last one to be applied overri=
+de<br>
+&gt; the previous ones).<br>
+<br>
+I&#39;d rather think this is in BBLAYERS list order<br>
+<br>
+&gt; <br>
+&gt; On Tue, Feb 6, 2024 at 4:56=E2=80=AFPM Richard Purdie &lt;<br>
+&gt; <a href=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank=
+">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br>
+&gt; <br>
+&gt; &gt; On Tue, 2024-02-06 at 16:26 +0100, Etienne Cordonnier wrote:<br>
+&gt; &gt; &gt; Hi Richard, there is a word missing in the commit message:<b=
+r>
+&gt; &gt; &gt; &quot; The functionality had a and place&quot; -&gt; &quot;t=
+he functionality had a time<br>
+&gt; &gt; and place&quot;<br>
+&gt; &gt; &gt; Also a typo: &quot;comparibility&quot; -&gt; &quot; compatib=
+ility &quot;<br>
+&gt; &gt;<br>
+&gt; &gt; Thanks, I&#39;ll tweak those on the branch.<br>
+&gt; &gt;<br>
+&gt; &gt; &gt; What is the correct way to set layer priorities after this p=
+atch (I&#39;m<br>
+&gt; &gt; &gt; asking because the BSP I&#39;m using makes use of BBFILE_PRI=
+ORITY)?<br>
+&gt; &gt;<br>
+&gt; &gt; It may set it, but what is it trying to achieve by setting it?<br=
+>
+&gt; &gt;<br>
+&gt; &gt; As far as I know, the potential issue is needing to set specific<=
+br>
+&gt; &gt; PREFERRED_VERSION entries where older recipes need to be used.<br=
+>
+&gt; &gt;<br>
+&gt; &gt; Cheers,<br>
+&gt; &gt;<br>
+&gt; &gt; Richard<br>
+&gt; &gt;<br>
+<br>
+&gt; <br>
+&gt; -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+&gt; Links: You receive all messages sent to this group.<br>
+&gt; View/Reply Online (#15832): <a href=3D"https://urldefense.proofpoint.c=
+om/v2/url?u=3Dhttps-3A__lists.openembedded.org_g_bitbake-2Ddevel_message_15=
+832&amp;d=3DDwIDaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;=
+r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3DPFdWZklNEsJp5d53FoO=
+0qUONhBkFLS6kTFi3Ri0VIGCdtMAJlG4EMCZ0fk27vcD1&amp;s=3Dnkms8wmkpBFNLoD_tIhMX=
+7gighjb9-vDCGbqx4EUHpY&amp;e=3D" rel=3D"noreferrer" target=3D"_blank">https=
+://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded.org_g_=
+bitbake-2Ddevel_message_15832&amp;d=3DDwIDaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4=
+vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&a=
+mp;m=3DPFdWZklNEsJp5d53FoO0qUONhBkFLS6kTFi3Ri0VIGCdtMAJlG4EMCZ0fk27vcD1&amp=
+;s=3Dnkms8wmkpBFNLoD_tIhMX7gighjb9-vDCGbqx4EUHpY&amp;e=3D</a> <br>
+&gt; Mute This Topic: <a href=3D"https://urldefense.proofpoint.com/v2/url?u=
+=3Dhttps-3A__lists.openembedded.org_mt_104196430_3617179&amp;d=3DDwIDaQ&amp=
+;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Q=
+j9TsRih1DULJTKUkSGa66m67E&amp;m=3DPFdWZklNEsJp5d53FoO0qUONhBkFLS6kTFi3Ri0VI=
+GCdtMAJlG4EMCZ0fk27vcD1&amp;s=3DO5kulu9daAQPZCy9pk2wkeWkXPB9ZFJjjyvIIRayD4o=
+&amp;e=3D" rel=3D"noreferrer" target=3D"_blank">https://urldefense.proofpoi=
+nt.com/v2/url?u=3Dhttps-3A__lists.openembedded.org_mt_104196430_3617179&amp=
+;d=3DDwIDaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhk=
+bNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3DPFdWZklNEsJp5d53FoO0qUONhB=
+kFLS6kTFi3Ri0VIGCdtMAJlG4EMCZ0fk27vcD1&amp;s=3DO5kulu9daAQPZCy9pk2wkeWkXPB9=
+ZFJjjyvIIRayD4o&amp;e=3D</a> <br>
+&gt; Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedde=
+d.org" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+&gt; Unsubscribe: <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dh=
+ttps-3A__lists.openembedded.org_g_bitbake-2Ddevel_unsub&amp;d=3DDwIDaQ&amp;=
+c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Qj=
+9TsRih1DULJTKUkSGa66m67E&amp;m=3DPFdWZklNEsJp5d53FoO0qUONhBkFLS6kTFi3Ri0VIG=
+CdtMAJlG4EMCZ0fk27vcD1&amp;s=3Dqv5A5DpnymmLJoarby3NF1ZNC75oZXuo87auR8Y2FK8&=
+amp;e=3D" rel=3D"noreferrer" target=3D"_blank">https://urldefense.proofpoin=
+t.com/v2/url?u=3Dhttps-3A__lists.openembedded.org_g_bitbake-2Ddevel_unsub&a=
+mp;d=3DDwIDaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DA=
+hkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3DPFdWZklNEsJp5d53FoO0qUON=
+hBkFLS6kTFi3Ri0VIGCdtMAJlG4EMCZ0fk27vcD1&amp;s=3Dqv5A5DpnymmLJoarby3NF1ZNC7=
+5oZXuo87auR8Y2FK8&amp;e=3D</a>=C2=A0 [<a href=3D"mailto:alexandre.belloni@b=
+ootlin.com" target=3D"_blank">alexandre.belloni@bootlin.com</a>]<br>
+&gt; -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+&gt; <br>
+<br>
+<br>
+-- <br>
+Alexandre Belloni, co-owner and COO, Bootlin<br>
+Embedded Linux and Kernel engineering<br>
+<a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__bootlin.c=
+om&amp;d=3DDwIDaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=
+=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3DPFdWZklNEsJp5d53FoO0=
+qUONhBkFLS6kTFi3Ri0VIGCdtMAJlG4EMCZ0fk27vcD1&amp;s=3D_Eu0UvlfGlLxisJ57yP2XH=
+8J30Q2PhmSO19R0djWdzM&amp;e=3D" rel=3D"noreferrer" target=3D"_blank">https:=
+//urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__bootlin.com&amp;d=3DDwIDaQ=
+&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRf=
+Px_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3DPFdWZklNEsJp5d53FoO0qUONhBkFLS6kTFi3R=
+i0VIGCdtMAJlG4EMCZ0fk27vcD1&amp;s=3D_Eu0UvlfGlLxisJ57yP2XH8J30Q2PhmSO19R0dj=
+WdzM&amp;e=3D</a> <br>
+</blockquote></div>
+
+--0000000000001c2efa061bdea6c4--
 
