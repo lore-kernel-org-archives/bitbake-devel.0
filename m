@@ -1,89 +1,99 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB386C2BD09
-	for <webhook@archiver.kernel.org>; Mon,  1 Jul 2024 12:53:05 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web11.19033.1719838381946147745
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA69C2BD09
+	for <webhook@archiver.kernel.org>; Mon,  1 Jul 2024 22:13:35 +0000 (UTC)
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+ by mx.groups.io with SMTP id smtpd.web11.10648.1719872010398811655
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 Jul 2024 05:53:02 -0700
+ Mon, 01 Jul 2024 15:13:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fRYs8p6/;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42562e4b5d1so21560025e9.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jul 2024 05:53:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1719838380; x=1720443180; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4u17GhuiPBXYVluaTgImgNLqsTOHr6oRHgfMtg+ZFvk=;
-        b=fRYs8p6/4TD5Pf7ywBr30Rb1Ws7NGYORAdJEXk+HvL/wDybE3Vtoatn7fSJThrr7jN
-         BAmIbfKukMAkim2mRMJBFyVagSs5+KpppHUM6R8NJ8spGz4XoQi1kdU6sFoY6sjRRaB8
-         TjzoqS9NN/E7+VrWlP2aAug3S4Hrm7Yr8bH48=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719838380; x=1720443180;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4u17GhuiPBXYVluaTgImgNLqsTOHr6oRHgfMtg+ZFvk=;
-        b=YTl/rqUz5DnpCZQMR4lWx3Eytr3OU8YQqZcHickt2t7PbY4EDUPvkE7dijymeKUzCf
-         a+/NYCv95UrkAh6NVQtLo4s5IwEcoeZsroyRIqO7xea/aKQ6shoslYuZUzd31yJ9jxAB
-         zOETFJWTfcKiok2LtDWOi1HkOab/gxWD7hF+wQpA/QA5lmtcOkDbpQg4jrAqo6kW3KZU
-         BtnZB8xjafMjDhOwYAFFS1juAYIFSiQF4Zl11Sf28bqZU4uWWGl56HOWO0Wpb2qvEP9z
-         RKQDM4tahMt2xA2tjd+NCuO8gV6LDGIomY8PitXJXKQYCv3Pv32eT2MFK2ik4MwsZ/mL
-         YeUw==
-X-Gm-Message-State: AOJu0YwE8CyG1s751LjcHer/4w4eS4gEOi5oqzQMMHFiuNzPGt7JjQ8d
-	fZpjzY1E/uVnXV9AWZZVlWbgXBIFRwXLg/gAwpyO5vdhTVDdfw+IDpxRYEYF/uk/pmhiZpuVCdm
-	5
-X-Google-Smtp-Source: AGHT+IH23o2gVYGixnbI6Y2rHdr6+38eZNh+t52/x+tdTSX92FLuzjjSBUdXTYlKa8uzMn95Ijzx+A==
-X-Received: by 2002:a05:600c:3515:b0:425:6f85:6013 with SMTP id 5b1f17b1804b1-4257a00aaaemr34234245e9.8.1719838379624;
-        Mon, 01 Jul 2024 05:52:59 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:476a:5554:3166:a3c1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4258014f8b7sm57146005e9.41.2024.07.01.05.52.59
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 05:52:59 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] codeparser: Skip non-local functions for module dependencies
-Date: Mon,  1 Jul 2024 13:52:58 +0100
-Message-ID: <20240701125258.2605493-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.43.0
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=gUl+0etM;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: alexandre.belloni@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0D40EC0002;
+	Mon,  1 Jul 2024 22:13:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719872008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e5e1Q41cX+/JyDUwF0cZSmBF1TAJwo1l7/YBhWRZUME=;
+	b=gUl+0etMfG3eiLPXGYyOkcM6MvJz4mClgWSeb/qSAY0OAhwuK8y8Esjhcy6OW8eUI+0Ito
+	mGgv1R171i9LBN/zp0QZU7wJAYgWAQekrsFRu1w5b1WlMZd67zuV1B16BSk8It9b7Wxrt+
+	am7WGDj4lfYGPZ0V7zUP9iIPmpreYfInNgIfUkxdlgSOzMVaD8vhcR1xaJfn1gTO8scZT2
+	GKXXVh1DTfNbnwaHxs+ILgzEfAm9RFMATBHQ/0zoulQhGxw4M1mlXPacSQ8WybLsopSoXK
+	CEZdmQor/TKK6Gq22aHnRcocYtABcKSDADbZ2KVJ+DhkwUrs8RSxaS3NKy41kg==
+Date: Tue, 2 Jul 2024 00:13:27 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: liezhi.yang@windriver.com
+Cc: bitbake-devel@lists.openembedded.org, andre.draszik@linaro.org,
+	kergoth@gmail.com
+Subject: Re: [bitbake-devel] [PATCH 0/2] fetch2/git: Use git shallow fetch to
+ implement clone_shallow_local()
+Message-ID: <2024070122132747f143a4@mail.local>
+References: <cover.1718886475.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1718886475.git.liezhi.yang@windriver.com>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 01 Jul 2024 12:53:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16382
+ <bitbake-devel@lists.openembedded.org>; Mon, 01 Jul 2024 22:13:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16383
 
-If modules do something like "from glob import glob" then we end up
-checksumming the glob code. That leads to bugs as the code can change
-between different python versions for example, leading to checksum
-instability.
+Hello,
 
-We should ignore functions not from the current file as implemented
-by this change.
+This fails on our ubuntu 20.04 workers:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/codeparser.py | 5 +++++
- 1 file changed, 5 insertions(+)
+https://autobuilder.yoctoproject.org/typhoon/#/builders/87/builds/6923/steps/11/logs/stdio
+https://autobuilder.yoctoproject.org/typhoon/#/builders/127/builds/3542/steps/11/logs/stdio
 
-diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index 4c4758ecbe..b25a2133d2 100644
---- a/lib/bb/codeparser.py
-+++ b/lib/bb/codeparser.py
-@@ -72,6 +72,11 @@ def add_module_functions(fn, functions, namespace):
-             parser.parse_python(None, filename=fn, lineno=1, fixedhash=fixedhash+f)
-             #bb.warn("Cached %s" % f)
-         except KeyError:
-+            targetfn = inspect.getsourcefile(functions[f])
-+            if fn != targetfn:
-+                # Skip references to other modules outside this file
-+                #bb.warn("Skipping %s" % name)
-+                continue
-             lines, lineno = inspect.getsourcelines(functions[f])
-             src = "".join(lines)
-             parser.parse_python(src, filename=fn, lineno=lineno, fixedhash=fixedhash+f)
+On 20/06/2024 05:44:39-0700, Robert Yang via lists.openembedded.org wrote:
+> From: Robert Yang <liezhi.yang@windriver.com>
+> 
+> * Test info
+>   bitbake-selftest works well
+>   bitbake world works well with the shallow tarballs
+> 
+> // Robert
+> 
+> The following changes since commit 5d88faa0f35f0205c1475893d8589d1e6533dcc0:
+> 
+>   bitbake: siggen: catch FileNotFoundError everywhere and ConnectionError also in get_unihashes (2024-06-18 08:45:22 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   https://github.com/robertlinux/yocto rbt/shallow
+>   https://github.com/robertlinux/yocto/tree/rbt/shallow
+> 
+> Robert Yang (2):
+>   fetch2/git: Use git shallow fetch to implement clone_shallow_local()
+>   bitbake: tests/fetch: Update GitShallowTest for clone_shallow_local()
+> 
+>  bitbake/lib/bb/fetch2/git.py  | 71 ++++++++++++++++++++++-------------
+>  bitbake/lib/bb/tests/fetch.py | 13 ++++---
+>  2 files changed, 53 insertions(+), 31 deletions(-)
+> 
+> -- 
+> 2.45.1
+> 
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#16368): https://lists.openembedded.org/g/bitbake-devel/message/16368
+> Mute This Topic: https://lists.openembedded.org/mt/106779045/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
