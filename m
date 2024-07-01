@@ -1,104 +1,89 @@
-Return-Path: <ejo@pengutronix.de>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357FEC2BBCA
-	for <webhook@archiver.kernel.org>; Fri, 28 Jun 2024 09:27:05 +0000 (UTC)
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
- by mx.groups.io with SMTP id smtpd.web11.13388.1719566816081485402
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB386C2BD09
+	for <webhook@archiver.kernel.org>; Mon,  1 Jul 2024 12:53:05 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web11.19033.1719838381946147745
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 28 Jun 2024 02:26:56 -0700
+ Mon, 01 Jul 2024 05:53:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: pengutronix.de, ip: 185.203.201.7, mailfrom: ejo@pengutronix.de)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ejo@pengutronix.de>)
-	id 1sN7sb-00010q-U7; Fri, 28 Jun 2024 11:26:53 +0200
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ejo@pengutronix.de>)
-	id 1sN7sb-005ZXC-2T; Fri, 28 Jun 2024 11:26:53 +0200
-Received: from ejo by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ejo@pengutronix.de>)
-	id 1sN7sb-008mo0-04;
-	Fri, 28 Jun 2024 11:26:53 +0200
-From: =?UTF-8?q?Enrico=20J=C3=B6rns?= <ejo@pengutronix.de>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fRYs8p6/;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42562e4b5d1so21560025e9.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jul 2024 05:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1719838380; x=1720443180; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4u17GhuiPBXYVluaTgImgNLqsTOHr6oRHgfMtg+ZFvk=;
+        b=fRYs8p6/4TD5Pf7ywBr30Rb1Ws7NGYORAdJEXk+HvL/wDybE3Vtoatn7fSJThrr7jN
+         BAmIbfKukMAkim2mRMJBFyVagSs5+KpppHUM6R8NJ8spGz4XoQi1kdU6sFoY6sjRRaB8
+         TjzoqS9NN/E7+VrWlP2aAug3S4Hrm7Yr8bH48=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719838380; x=1720443180;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4u17GhuiPBXYVluaTgImgNLqsTOHr6oRHgfMtg+ZFvk=;
+        b=YTl/rqUz5DnpCZQMR4lWx3Eytr3OU8YQqZcHickt2t7PbY4EDUPvkE7dijymeKUzCf
+         a+/NYCv95UrkAh6NVQtLo4s5IwEcoeZsroyRIqO7xea/aKQ6shoslYuZUzd31yJ9jxAB
+         zOETFJWTfcKiok2LtDWOi1HkOab/gxWD7hF+wQpA/QA5lmtcOkDbpQg4jrAqo6kW3KZU
+         BtnZB8xjafMjDhOwYAFFS1juAYIFSiQF4Zl11Sf28bqZU4uWWGl56HOWO0Wpb2qvEP9z
+         RKQDM4tahMt2xA2tjd+NCuO8gV6LDGIomY8PitXJXKQYCv3Pv32eT2MFK2ik4MwsZ/mL
+         YeUw==
+X-Gm-Message-State: AOJu0YwE8CyG1s751LjcHer/4w4eS4gEOi5oqzQMMHFiuNzPGt7JjQ8d
+	fZpjzY1E/uVnXV9AWZZVlWbgXBIFRwXLg/gAwpyO5vdhTVDdfw+IDpxRYEYF/uk/pmhiZpuVCdm
+	5
+X-Google-Smtp-Source: AGHT+IH23o2gVYGixnbI6Y2rHdr6+38eZNh+t52/x+tdTSX92FLuzjjSBUdXTYlKa8uzMn95Ijzx+A==
+X-Received: by 2002:a05:600c:3515:b0:425:6f85:6013 with SMTP id 5b1f17b1804b1-4257a00aaaemr34234245e9.8.1719838379624;
+        Mon, 01 Jul 2024 05:52:59 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:476a:5554:3166:a3c1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4258014f8b7sm57146005e9.41.2024.07.01.05.52.59
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 05:52:59 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: yocto@pengutronix.de
-Subject: [PATCH] bitbake-diffsigs: fix handling when finding only a single sigfile
-Date: Fri, 28 Jun 2024 11:25:06 +0200
-Message-Id: <20240628092506.2089467-1-ejo@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+Subject: [PATCH] codeparser: Skip non-local functions for module dependencies
+Date: Mon,  1 Jul 2024 13:52:58 +0100
+Message-ID: <20240701125258.2605493-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ejo@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: bitbake-devel@lists.openembedded.org
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 28 Jun 2024 09:27:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16381
+ <bitbake-devel@lists.openembedded.org>; Mon, 01 Jul 2024 12:53:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16382
 
-This fixes the following error when calling 'bitbake-dumpsig' or
-'bitbake-diffsigs' when having only a single sigfile available:
+If modules do something like "from glob import glob" then we end up
+checksumming the glob code. That leads to bugs as the code can change
+between different python versions for example, leading to checksum
+instability.
 
-| Traceback (most recent call last):
-|   File "[..]/poky/bitbake/bin/bitbake-dumpsig", line 171, in <module>
-|     files = find_siginfo_task(tinfoil, options.taskargs[0], options.taskargs[1])
-|             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-|   File "[..]/poky/bitbake/bin/bitbake-dumpsig", line 83, in find_siginfo_task
-|     sig2 = latestsigs[1]
-|            ~~~~~~~~~~^^^
-| IndexError: list index out of range
+We should ignore functions not from the current file as implemented
+by this change.
 
-Handle this by adding (and returning) the path for the second sigfile
-only if one is found. This way it will work for both diffsigs and
-dumpsig use case.
-
-The calling argparse code already deals with find_siginfo_task()
-returning only a single file.
-For 'bitbake-dumpsig' it will just dump the single sigfile, for
-'bitbake-diffsigs' it will emit a proper error message again:
-
-| ERROR: Only one matching sigdata file found for the specified task (systemd configure)
-
-Signed-off-by: Enrico Jörns <ejo@pengutronix.de>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bin/bitbake-diffsigs | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ lib/bb/codeparser.py | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/bin/bitbake-diffsigs b/bin/bitbake-diffsigs
-index 8202c7862..9d6cb8c94 100755
---- a/bin/bitbake-diffsigs
-+++ b/bin/bitbake-diffsigs
-@@ -72,16 +72,17 @@ def find_siginfo_task(bbhandler, pn, taskname, sig1=None, sig2=None):
-         elif sig2 not in sigfiles:
-             logger.error('No sigdata files found matching %s %s with signature %s' % (pn, taskname, sig2))
-             sys.exit(1)
-+
-+        latestfiles = [sigfiles[sig1]['path'], sigfiles[sig2]['path']]
-     else:
-         sigfiles = find_siginfo(bbhandler, pn, taskname)
-         latestsigs = sorted(sigfiles.keys(), key=lambda h: sigfiles[h]['time'])[-2:]
-         if not latestsigs:
-             logger.error('No sigdata files found matching %s %s' % (pn, taskname))
-             sys.exit(1)
--        sig1 = latestsigs[0]
--        sig2 = latestsigs[1]
--
--    latestfiles = [sigfiles[sig1]['path'], sigfiles[sig2]['path']]
-+        latestfiles = [sigfiles[latestsigs[0]]['path']]
-+        if len(latestsigs) > 1:
-+            latestfiles.append(sigfiles[latestsigs[1]]['path'])
- 
-     return latestfiles
- 
--- 
-2.39.2
-
+diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
+index 4c4758ecbe..b25a2133d2 100644
+--- a/lib/bb/codeparser.py
++++ b/lib/bb/codeparser.py
+@@ -72,6 +72,11 @@ def add_module_functions(fn, functions, namespace):
+             parser.parse_python(None, filename=fn, lineno=1, fixedhash=fixedhash+f)
+             #bb.warn("Cached %s" % f)
+         except KeyError:
++            targetfn = inspect.getsourcefile(functions[f])
++            if fn != targetfn:
++                # Skip references to other modules outside this file
++                #bb.warn("Skipping %s" % name)
++                continue
+             lines, lineno = inspect.getsourcelines(functions[f])
+             src = "".join(lines)
+             parser.parse_python(src, filename=fn, lineno=lineno, fixedhash=fixedhash+f)
 
