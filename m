@@ -2,8 +2,8 @@ Return-Path: <yang-mark.zhang@nokia-sbell.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485BBC30653
-	for <webhook@archiver.kernel.org>; Fri,  5 Jul 2024 01:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E04AC30653
+	for <webhook@archiver.kernel.org>; Fri,  5 Jul 2024 01:43:44 +0000 (UTC)
 Subject: patch to fix wrong http response for sstate cache checkstatus
 To: bitbake-devel@lists.openembedded.org
 From: "Yang-Mark Zhang (NSB)" <yang-mark.zhang@nokia-sbell.com>
@@ -11,16 +11,16 @@ X-Originating-Location: Hangzhou, Zhejiang, CN (124.160.72.160)
 X-Originating-Platform: Windows Chrome 126
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Thu, 04 Jul 2024 18:42:27 -0700
+Date: Thu, 04 Jul 2024 18:43:39 -0700
 Message-ID: <iqRH.1720058591230617209.hhMB@lists.openembedded.org>
-X-Old-Date: Wed, 03 Jul 2024 19:03:11 -0700
+X-Old-Date: Thu, 04 Jul 2024 18:42:27 -0700
 Content-Type: multipart/mixed; boundary="kkfIYPVMqcB89L5FIVWn"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Jul 2024 01:42:34 -0000
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Jul 2024 01:43:44 -0000
 X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16385
-Message-ID: <20240705014227.z0dqjduxiekQ-SnsRHnyaFgw6ehYubYLmy-zStBCF5Y@z>
+Message-ID: <20240705014339.EizRS16FrQniYEmAxUTuKGp45by3122S27RU506pb9g@z>
 
 --kkfIYPVMqcB89L5FIVWn
 Content-Type: multipart/related; boundary="kFQxXGhSxEMW1Jh0O5hY"
@@ -37,34 +37,6 @@ A request expired 30s timeout and released the connection,
 B request took the connection into use and get the wrong response(meant to =
 response A request and late than 30s)
 details can be found here:
-
-* how to reproduce:
-modify /usr/lib64/python3.10/http/client.py like this to fake timeout event
-you will find that some sstate files with 200 response in fact do not exist=
-s in remote http server
-=E2=80=94 a/client.py
-+++ b/client.py
-@@ -68,6 +68,7 @@ Req-started-unread-response =C2=A0 =C2=A0_CS_REQ_STARTED =
-=C2=A0 =C2=A0<response_class>
-Req-sent-unread-response =C2=A0 =C2=A0 =C2=A0 _CS_REQ_SENT =C2=A0 =C2=A0 =
-=C2=A0 <response_class>
-"""
-
-+import random
-import email.parser
-import email.message
-import errno
-@@ -1370,6 +1371,8 @@ class HTTPConnection:
-else:
-response =3D self.response_class(self.sock, method=3Dself._method)
-
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0if random.choice([False, False, False, False, =
-False, False, False, True]):
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0raise TimeoutError('timed out te=
-st')
-try:
-try:
-response.begin()
 
 patch content:
 
@@ -179,30 +151,6 @@ ere:</span></p>
 <p class=3D"DefangedMsoNormal"><span lang=3D"EN-US"><img src=3D"cid:attach_=
 0_17DEE02CEB94289E_15012@groups.io" /></span></p>
 <p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp; &nbsp; * how to reproduce:<br />&nbsp; &nbsp; &nbsp; &nbsp;modify=
- /usr/lib64/python3.10/http/client.py like this to fake timeout event<br />=
-&nbsp; &nbsp; &nbsp; &nbsp;you will find that some sstate files with 200 re=
-sponse in fact do not exists in remote http server<br />&nbsp; &nbsp; &mdas=
-h; a/client.py<br />&nbsp; &nbsp; +++ b/client.py<br />&nbsp; &nbsp; @@ -68=
-,6 +68,7 @@ Req-started-unread-response &nbsp; &nbsp;_CS_REQ_STARTED &nbsp;=
- &nbsp;&lt;response_class&gt;<br />&nbsp; &nbsp; &nbsp;Req-sent-unread-resp=
-onse &nbsp; &nbsp; &nbsp; _CS_REQ_SENT &nbsp; &nbsp; &nbsp; &lt;response_cl=
-ass&gt;<br />&nbsp; &nbsp; &nbsp;"""<br /><br />&nbsp; &nbsp; +import rando=
-m<br />&nbsp; &nbsp; &nbsp;import email.parser<br />&nbsp; &nbsp; &nbsp;imp=
-ort email.message<br />&nbsp; &nbsp; &nbsp;import errno<br />&nbsp; &nbsp; =
-@@ -1370,6 +1371,8 @@ class HTTPConnection:<br />&nbsp; &nbsp; &nbsp; &nbsp=
-; &nbsp; &nbsp; &nbsp;else:<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
-&nbsp; &nbsp; &nbsp;response =3D self.response_class(self.sock, method=3Dse=
-lf._method)<br /><br />&nbsp; &nbsp; + &nbsp; &nbsp; &nbsp; &nbsp;if random=
-.choice([False, False, False, False, False, False, False, True]):<br />&nbs=
-p; &nbsp; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;raise TimeoutError('ti=
-med out test')<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;try:<br=
- />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;try:<br />=
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
-;response.begin()</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 <p>patch content:</p>
 <p>&nbsp;</p>
 <p>From 76bc06e823d67e4eecaf7f2c7be0b67e405b1f76 Mon Sep 17 00:00:00 2001<b=
@@ -271,13 +219,11 @@ id =3D 1<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
 bsp;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;bb.debug(3, "*** %s -&gt; Upstr=
 eamVersion =3D %s (CurrentVersion =3D %s)" %<br />--&nbsp;<span lang=3D"EN-=
 US" style=3D"font-size: 10.0pt; color: #0c64c0;"></span>--</p>
-<p class=3D"DefangedMsoNormal" style=3D"margin: 0px;"><strong><span lang=3D=
-"EN-US" style=3D"font-size: 10.0pt; color: #0c64c0;">Yang zhang</span></str=
-ong><span lang=3D"EN-US" style=3D"font-size: 10.0pt; color: #0c64c0;"></spa=
-n></p>
-<p class=3D"DefangedMsoNormal" style=3D"margin: 0px;"><span lang=3D"EN-US" =
-style=3D"font-size: 10.0pt; color: #0c64c0;">yang-mark.zhang@nokia-sbell.co=
-m</span></p>
+<p class=3D"DefangedMsoNormal"><strong><span lang=3D"EN-US" style=3D"font-s=
+ize: 10.0pt; color: #0c64c0;">Yang zhang</span></strong><span lang=3D"EN-US=
+" style=3D"font-size: 10.0pt; color: #0c64c0;"></span></p>
+<p class=3D"DefangedMsoNormal"><span lang=3D"EN-US" style=3D"font-size: 10.=
+0pt; color: #0c64c0;">yang-mark.zhang@nokia-sbell.com</span></p>
 
 --bQtaNoeT73fmPMoF5ve7--
 
