@@ -1,145 +1,108 @@
-Return-Path: <liezhi.yang@windriver.com>
+Return-Path: <changqing.li@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C043CC41513
-	for <webhook@archiver.kernel.org>; Sun,  7 Jul 2024 07:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB560C3271E
+	for <webhook@archiver.kernel.org>; Mon,  8 Jul 2024 08:10:46 +0000 (UTC)
 Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.web11.54131.1720336842959007072
+ by mx.groups.io with SMTP id smtpd.web10.75006.1720426238223454368
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 07 Jul 2024 00:20:43 -0700
+ Mon, 08 Jul 2024 01:10:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=7918799487=liezhi.yang@windriver.com)
+ dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=7919c2be37=changqing.li@windriver.com)
 Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4677BQK1015672;
-	Sun, 7 Jul 2024 07:20:41 GMT
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468402il004566
+	for <bitbake-devel@lists.openembedded.org>; Mon, 8 Jul 2024 08:10:37 GMT
 Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 406u4x0t31-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sun, 07 Jul 2024 07:20:41 +0000 (GMT)
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 406u4x1gjt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Mon, 08 Jul 2024 08:10:37 +0000 (GMT)
 Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
  ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Sun, 7 Jul 2024 00:20:38 -0700
-Received: from ala-lpggp7.wrs.com (147.11.136.210) by
+ 15.1.2507.39; Mon, 8 Jul 2024 01:10:35 -0700
+Received: from pek-lpg-core2.wrs.com (128.224.153.41) by
  ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.39 via Frontend Transport; Sun, 7 Jul 2024 00:20:38 -0700
-From: <liezhi.yang@windriver.com>
+ 15.1.2507.39 via Frontend Transport; Mon, 8 Jul 2024 01:10:35 -0700
+From: <changqing.li@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-CC: <andre.draszik@linaro.org>, <kergoth@gmail.com>
-Subject: [PATCH v2 2/2] bitbake: tests/fetch: Update GitShallowTest for clone_shallow_local()
-Date: Sun, 7 Jul 2024 00:20:38 -0700
-Message-ID: <17ce72286d39ecf3d25f43e7db9f9c2082ded505.1720336551.git.liezhi.yang@windriver.com>
+CC: <qi.chen@windriver.com>
+Subject: [PATCH] bitbake-worker: skipping disable network when unprivileged userns is restricted
+Date: Mon, 8 Jul 2024 16:10:34 +0800
+Message-ID: <20240708081034.1474312-1-changqing.li@windriver.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1720336551.git.liezhi.yang@windriver.com>
-References: <cover.1720336551.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: 4ML36ACDCv5hxR8943UQcvO39r4p-TEu
-X-Proofpoint-GUID: 4ML36ACDCv5hxR8943UQcvO39r4p-TEu
+X-Proofpoint-ORIG-GUID: H-QLoBwEJ_QH7i8_h_nKdyqTZ-yjSHYd
+X-Proofpoint-GUID: H-QLoBwEJ_QH7i8_h_nKdyqTZ-yjSHYd
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-07_04,2024-07-05_01,2024-05-17_01
+ definitions=2024-07-08_02,2024-07-05_01,2024-05-17_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- malwarescore=0 bulkscore=0 clxscore=1015 spamscore=0 mlxlogscore=939
+ malwarescore=0 bulkscore=0 clxscore=1011 spamscore=0 mlxlogscore=999
  priorityscore=1501 lowpriorityscore=0 suspectscore=0 phishscore=0
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.21.0-2406140001 definitions=main-2407070058
+ engine=8.21.0-2406140001 definitions=main-2407080062
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 07 Jul 2024 07:20:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16396
+ <bitbake-devel@lists.openembedded.org>; Mon, 08 Jul 2024 08:10:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16397
 
-From: Robert Yang <liezhi.yang@windriver.com>
+From: Chen Qi <Qi.Chen@windriver.com>
 
-Update the test cases since the implementation is changed:
+From ubuntu24.04, apparmor is enabled by default, and unprivileged
+userns is restricted, which causes following error when bitbake-worker
+try to disable network:
+Traceback (most recent call last):
+  File "/poky/bitbake/bin/bitbake-worker", line 278, in child
+    bb.utils.disable_network(uid, gid)
+  File "/poky/bitbake/lib/bb/utils.py", line 1696, in disable_network
+    with open("/proc/self/uid_map", "w") as f:
+PermissionError: [Errno 1] Operation not permitted
 
-* test_shallow_multi_one_uri()
-  The a_branch and v0.0 had the same revision, and it required fetch a_branch
-  and remove histories of v0.0 which were conflicted, and bitbake reported:
-  fatal: no commits selected for shallow requests
+Like what we have done for non local uid, skip disable network in above
+condition to avoid have to disable profile unprivileged_userns for the
+host or have to config a profile per project
 
-  Make a_branch and v0.0 have different revs to fix the problem.
+[1] https://lists.yoctoproject.org/g/yocto/topic/workaround_for_uid_map_error/106192359
 
-  And now the 'rev^' is not needed, so update self.assertRevCount() as well.
-
-* test_shallow_multi_one_uri_depths()
-  Update self.assertRevCount(), now git only fetches the required revs.
-
-* test_shallow_fetch_missing_revs()
-  The command is:
-  $ git fetch --shallow-exclude=v0.0 master
-
-  But master and v0.0 uses the same revision, so there is no commit to fetch.
-
-* test_shallow_fetch_missing_revs_fails()
-  Two unneeded committs are not fetched now:
-  - rev^
-  - One not specified or required tag.
-
-  So update self.assertRevCount()
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+Signed-off-by: Changqing Li <changqing.li@windriver.com>
 ---
- bitbake/lib/bb/tests/fetch.py | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ bitbake/bin/bitbake-worker | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index 701129d138..2ef2063436 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -2034,9 +2034,9 @@ class GitShallowTest(FetcherTest):
-         self.add_empty_file('b')
-         self.git('checkout -b a_branch', cwd=self.srcdir)
-         self.add_empty_file('c')
-+        self.git('tag v0.0 HEAD', cwd=self.srcdir)
-         self.add_empty_file('d')
-         self.git('checkout master', cwd=self.srcdir)
--        self.git('tag v0.0 a_branch', cwd=self.srcdir)
-         self.add_empty_file('e')
-         self.git('merge --no-ff --no-edit a_branch', cwd=self.srcdir)
-         self.add_empty_file('f')
-@@ -2052,7 +2052,7 @@ class GitShallowTest(FetcherTest):
+diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
+index e8073f2ac3..0a042fdc7c 100755
+--- a/bitbake/bin/bitbake-worker
++++ b/bitbake/bin/bitbake-worker
+@@ -272,12 +272,21 @@ def fork_off_task(cfg, data, databuilder, workerdata, extraconfigdata, runtask):
  
-         self.fetch_shallow(uri)
+                 bb.utils.set_process_name("%s:%s" % (the_data.getVar("PN"), taskname.replace("do_", "")))
  
--        self.assertRevCount(5)
-+        self.assertRevCount(4)
-         self.assertRefs(['master', 'origin/master', 'origin/a_branch'])
- 
-     def test_shallow_multi_one_uri_depths(self):
-@@ -2199,7 +2199,7 @@ class GitShallowTest(FetcherTest):
- 
-         self.fetch_shallow()
- 
--        self.assertRevCount(5)
-+        self.assertRevCount(2)
- 
-     def test_shallow_invalid_revs(self):
-         self.add_empty_file('a')
-@@ -2218,7 +2218,10 @@ class GitShallowTest(FetcherTest):
-         self.git('tag v0.0 master', cwd=self.srcdir)
-         self.d.setVar('BB_GIT_SHALLOW_DEPTH', '0')
-         self.d.setVar('BB_GIT_SHALLOW_REVS', 'v0.0')
--        self.fetch_shallow()
++                def skip_disable_network(taskname, uid):
++                    if not bb.utils.is_local_uid(uid):
++                        logger.debug("Skipping disable network for %s since %s is not a local uid." % (taskname, uid))
++                        return True
++                    if os.path.exists("/proc/sys/kernel/apparmor_restrict_unprivileged_userns"):
++                        with open("/proc/sys/kernel/apparmor_restrict_unprivileged_userns") as f:
++                            if f.readline().strip() == "1":
++                                logger.debug("Skipping disable network since sys.kernel.apparmor_restrict_unprivileged_userns is 1")
++                                return True
++                    return False
 +
-+        with self.assertRaises(bb.fetch2.FetchError), self.assertLogs("BitBake.Fetcher", level="ERROR") as cm:
-+            self.fetch_shallow()
-+        self.assertIn("fatal: no commits selected for shallow requests", cm.output[0])
+                 if not bb.utils.to_boolean(the_data.getVarFlag(taskname, 'network')):
+-                    if bb.utils.is_local_uid(uid):
++                    if not skip_disable_network(taskname, uid):
+                         logger.debug("Attempting to disable network for %s" % taskname)
+                         bb.utils.disable_network(uid, gid)
+-                    else:
+-                        logger.debug("Skipping disable network for %s since %s is not a local uid." % (taskname, uid))
  
-     def test_shallow_fetch_missing_revs_fails(self):
-         self.add_empty_file('a')
-@@ -2249,7 +2252,7 @@ class GitShallowTest(FetcherTest):
-         revs = len(self.git('rev-list master').splitlines())
-         self.assertNotEqual(orig_revs, revs)
-         self.assertRefs(['master', 'origin/master'])
--        self.assertRevCount(orig_revs - 1758)
-+        self.assertRevCount(orig_revs - 1760)
- 
-     def test_that_unpack_throws_an_error_when_the_git_clone_nor_shallow_tarball_exist(self):
-         self.add_empty_file('a')
+                 # exported_vars() returns a generator which *cannot* be passed to os.environ.update() 
+                 # successfully. We also need to unset anything from the environment which shouldn't be there 
 -- 
 2.25.1
 
