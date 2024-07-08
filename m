@@ -1,82 +1,66 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <enguerrand.de-ribaucourt@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020EAC3271E
-	for <webhook@archiver.kernel.org>; Mon,  8 Jul 2024 09:25:57 +0000 (UTC)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
- by mx.groups.io with SMTP id smtpd.web11.75746.1720430752216282229
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24715C3DA42
+	for <webhook@archiver.kernel.org>; Mon,  8 Jul 2024 13:34:08 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.web10.79891.1720445644363271543
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Jul 2024 02:25:52 -0700
+ Mon, 08 Jul 2024 06:34:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=gT9J8eig;
- spf=pass (domain: gmail.com, ip: 209.85.167.51, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52e9a920e73so4578274e87.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 08 Jul 2024 02:25:51 -0700 (PDT)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=sckghrCH;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: enguerrand.de-ribaucourt@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 902129C5D29;
+	Mon,  8 Jul 2024 09:34:03 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id WscoPhz96ZwE; Mon,  8 Jul 2024 09:34:03 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2559B9C5C84;
+	Mon,  8 Jul 2024 09:34:03 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 2559B9C5C84
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720430750; x=1721035550; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SmrnYNkxrDRrA0HYMCKZ5CbjTSNwqdg+x/l84umVo+k=;
-        b=gT9J8eigatQdRuJMKboeI0nfBCv0o8fgFayd2vBcIle/tscxobOW33o4l1e3ISQrtU
-         cwJcCR9HT6RTn0O0f20ZVpp/5xWO6ZqyjXIMn44k1fKzV5dgo6da0c2Q0J+JBVFuUhSE
-         w7wdhtGbuIdbAd+IgEdi+FpQHo+EG4WV2XHnnvizEu/t1phCIt+o3OGjnRau/Jb4FWdb
-         ouiv81Vzc7nhI6ww9dNpBTqFyBdi4kZPWeOzAY4Xn/TddUZhGjdsqHC9PUtHRvN/+IAx
-         Y3uYaHuPidWf9nhpSamJZjFpfQXjp/Hs9OFJyWkkoQhvXu91yHdwt4hDQ5stSQPIpn+l
-         0LDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720430750; x=1721035550;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SmrnYNkxrDRrA0HYMCKZ5CbjTSNwqdg+x/l84umVo+k=;
-        b=rDQW7eYdMRgJ+GGuFXeUDThNtNfPpjNlTFUAQ3j8Hck9bP9JTGhmJiUt7wr2ql9O76
-         joISi/nMsUS4Y32S0YN8Qd/aDZ70L0kq9/Nv5qL8srBeyenpSMBBEtxygtdfZqyiTtX9
-         IFz0P8iMMRGufNI2cUiCIVpADBTkCmwe8NlE6YrXVUGRIOUQG2zFvdOxhzOPtCpxbZFq
-         VhS77twJFhSiDHLXgocYqZ6BofvazKmM2CpqDQdODD4ezNnqstxfAGAPJx+HDDFdPsW7
-         arpI1Bs9d4s3sruXlpUV7FsdK8BrZoXPHy/QgJQ2dUBcjlZP6VB+1Jsm4AqvKNwn1/Im
-         HdoA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJrmB+hSvdScxOf9iV7WBKrUZgVrX/DH3AR/b2M+QTZxRZgzurtqRGD3gtNKpP/0G1sJD7PVtbQ/T+cVjMVlmtAy90qTr+UbsXYvIdnY6irhYlsOM=
-X-Gm-Message-State: AOJu0YxkrIyqRtP++/4PjNrHyhMO4JQBhVOIuazxH7/vkhYPh1U7B9sF
-	DSCw6qxkK4xOkm9MUzS1ZSGrijHPej9aQWQSfz5s2riCmTEXHATE1924MwDaOVlTfc6ykjxfhTR
-	oP7rTZPv0EvcSl3nSZbZNfG11/tM=
-X-Google-Smtp-Source: AGHT+IHfiQ4ndDsaIqgC33xpNAuDJhioUT8J6FG0T9v7PAIMhcsqXQPHIXjPrbMJ9mFii8myMom1VBCuWVHIVT0r89Y=
-X-Received: by 2002:a19:ee08:0:b0:52c:9383:4c16 with SMTP id
- 2adb3069b0e04-52ea062dacamr7343043e87.22.1720430749732; Mon, 08 Jul 2024
- 02:25:49 -0700 (PDT)
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1720445643; bh=w4VGgYgno1klN5WmUQ5gjjzEg68u0PE7gUYhdSFBCyA=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=sckghrCHYy8uoUc/3t9nnFqSHaJ5pFJ9HrArLGfy5slC2UsdjXnQvvofNCq6JLfIO
+	 1VJ1eo0w87CM65/H046ISvGlLvw2tbrv7HzG5qxoT2WSG9KU60qvYIQVPs5wTFFHq+
+	 Ssmp8eCSb4QipJJLX0iw1rXXdf/JXdY02J7ktOsRoge9UjrIjnkAwM6Cv1lMFN8TqM
+	 fUjO1Y+ystpu7nMGcj+ljQVbe7QLji/qHaVPjsHNcLH7Zp8MIAFCL4o8c3ejaFvl6y
+	 h/fbZn2FQfIPnquEI3zMXD63sS+hYhkQb4sEN4BmAGMHivz/OvREWJz/f77qgBy91o
+	 maX+hWTjMYfSg==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id 8xqYTlEIPDi5; Mon,  8 Jul 2024 09:34:03 -0400 (EDT)
+Received: from sfl-deribaucourt.rennes.sfl (80-15-101-118.ftth.fr.orangecustomers.net [80.15.101.118])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 6AFE29C5C76;
+	Mon,  8 Jul 2024 09:34:02 -0400 (EDT)
+From: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: tanguy.raufflet@savoirfairelinux.com,
+	richard.purdie@linuxfoundation.org
+Subject: [Patch v2] bitbake: fetch2: npmsw: fix fetching git revisions not
+Date: Mon,  8 Jul 2024 15:33:53 +0200
+Message-Id: <20240708133357.306422-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20240708081034.1474312-1-changqing.li@windriver.com>
- <CANNYZj9+c=BQ_zH5vXM35s2Sw=KTRiieprn4TNcWvOXY4xXV4Q@mail.gmail.com> <0032b64c-7e46-dc46-d6e1-143ae3fef03b@windriver.com>
-In-Reply-To: <0032b64c-7e46-dc46-d6e1-143ae3fef03b@windriver.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 8 Jul 2024 11:25:38 +0200
-Message-ID: <CANNYZj-VrBHoqGK3fzTxZLwPB3CiuhQT4azQrt=Wcw=qRsnO-Q@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-worker: skipping disable network
- when unprivileged userns is restricted
-To: ChenQi <Qi.Chen@windriver.com>
-Cc: changqing.li@windriver.com, bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 08 Jul 2024 09:25:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16400
+ <bitbake-devel@lists.openembedded.org>; Mon, 08 Jul 2024 13:34:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16401
 
-On Mon, 8 Jul 2024 at 11:12, ChenQi <Qi.Chen@windriver.com> wrote:
-> This problem has reported to Ubuntu for 4 months. It was discussed on
-> the Yocto mailing list. People seem to be waiting for Ubuntu. I'm not
-> very optimistic about getting a solution from Ubuntu.
+These patches improve the compatibility and accuracy of creating npm reci=
+pes
+through devtool, which is the intended way to create npm recipes.
 
-I do not agree. The last comment  (#10, added two weeks ago) in
-https://bugs.launchpad.net/ubuntu/+source/apparmor/+bug/2056555 shows
-how to create an apparmor profile specifically for bitbake, so once
-this is added to apparmor upstream and makes its way into Ubuntu the
-problem will be solved. At that point the forced network disabling
-will become unnecessary and damaging. Ubuntu release notes imply
-they've done it for things like Chrome and Discord, but they expect
-more to be added:
+v2:
+ - add patch to use licenses from COMMON_LICENSE_DIR
+ - add patch to update licenses.csv
 
-https://discourse.ubuntu.com/t/ubuntu-24-04-lts-noble-numbat-release-notes/39890#security-improvements
 
-Alex
 
