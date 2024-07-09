@@ -1,127 +1,91 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EB6C2BD09
-	for <webhook@archiver.kernel.org>; Tue,  9 Jul 2024 10:58:29 +0000 (UTC)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
- by mx.groups.io with SMTP id smtpd.web11.10195.1720522702900742775
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D44C2BD09
+	for <webhook@archiver.kernel.org>; Tue,  9 Jul 2024 11:02:49 +0000 (UTC)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+ by mx.groups.io with SMTP id smtpd.web10.10389.1720522967791574942
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Jul 2024 03:58:23 -0700
+ Tue, 09 Jul 2024 04:02:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YxWDtrwk;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.208.180, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so50402141fa.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jul 2024 03:58:22 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=YevlgrP3;
+ spf=pass (domain: gmail.com, ip: 209.85.208.172, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eea8ea8bb0so33431461fa.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jul 2024 04:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1720522701; x=1721127501; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Y3lcUW3CU7wpf7AaK7kv9OKfv758b5i0YuOqC/ouEdQ=;
-        b=YxWDtrwkvYO9jWDb7Brc9A3UzhQTK5lNLgqECczAoYHWjRIn9UFU04IEdOwLnJCV4S
-         b1UYPoww50J0+J86MdYcNYi9GS4zeow+OyyACJrMEnjSNGZb+rf3iZk5GMj/RbVZ8T9n
-         LTLvGwd8BIvemKoCdTxeEiMdadUGzaJnNKuCE=
+        d=gmail.com; s=20230601; t=1720522966; x=1721127766; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Un35DYm3/ZxQDzOlGzmbVYrMbLHXFLo9d4i+o0i/GZE=;
+        b=YevlgrP3//hKEuAPBiunHPLITFl5XogYZssLdBU2gzH8sTqYzEgpFaLdBfCv30I5D/
+         ukrKP+7bwQdSqAX11DlSnF7JibxPl0PnIUJNz7SAhldP0o+kea3xn5GWbFDDiRlLpddA
+         NqaKzCdPHtA46XpBl1HgceMDnrbEGQdoe1US9aIv47S2pGvP4j6gpLws2cxKp7vaKE1z
+         GbQmIxvejcsThdTAoPduOcBERm0dtcqi0baznRGYCcSlzd6wYBdzICKGgUsNRAL7F3hv
+         bOwtRuQh9KC34sU1M2oUY6tmuTK4pFFAjgkucMAbnsr3rZ0WLRCbL/QtExbGKgGlsJVN
+         qoJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720522701; x=1721127501;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y3lcUW3CU7wpf7AaK7kv9OKfv758b5i0YuOqC/ouEdQ=;
-        b=QHuS79iB5kAMp5MeDmLnRrQkMFwoMt0TesmT+ckw58rfJT4yiRwwQ4ks09+gOdzcS3
-         ieZYakAeHdeg2co3aKPoxG4q/LloMmBwU+nJsHvioRNYJZ8wVYxhlpvueYEB5lTpreWh
-         GVTN/CwbIosQwRjdZiMIV9I/aI0GjjuNevxDv9dvSUgj1QbJGNNus1F8F4Fs//BZwBfO
-         COO4yn1dkOkDB3x4vNZEAhqWrCyVpDrlILX2IS+4HpE1DxQSo6rTxKe9JGjeFadcZLou
-         KUkdWYdaUbBgMtHYdoLY/qR3dX99z3eb+UZpNgWTpj5itE2rqTOBuQfxaO9AwBZpimwt
-         pnMw==
-X-Gm-Message-State: AOJu0YztBiVXco70IFyozE08iCywxGzxGEkApyktil5uXcG6Uqa1OX4L
-	2QQRCvtKBloGfNnNUMuEdNp35MJgxfoGERvq7Y2kUkNdlRiiwZIpIlzoC8IeLu4=
-X-Google-Smtp-Source: AGHT+IHdscyB6URNp0dK0OR2mvC15otvZUGDNZyVNzvbeFeTSd1WFKYyd7VepLwws5Tn6Z0njfEadw==
-X-Received: by 2002:a2e:b6d4:0:b0:2ee:8d07:3d64 with SMTP id 38308e7fff4ca-2eeb318aab5mr14465821fa.41.1720522700925;
-        Tue, 09 Jul 2024 03:58:20 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:eb12:75be:8387:683a? ([2001:8b0:aba:5f3c:eb12:75be:8387:683a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfab80asm2200991f8f.109.2024.07.09.03.58.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 03:58:20 -0700 (PDT)
-Message-ID: <ef64c37a7fa679d58d34dc3fa31020788bc308f2.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-worker: skipping disable
- network when unprivileged userns is restricted
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: changqing.li@windriver.com, Alexander Kanavin <alex.kanavin@gmail.com>, 
- ChenQi <Qi.Chen@windriver.com>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Tue, 09 Jul 2024 11:58:19 +0100
-In-Reply-To: <5a5820df-602f-4e9c-a0f4-a7982cf76927@windriver.com>
-References: <20240708081034.1474312-1-changqing.li@windriver.com>
-	 <CANNYZj9+c=BQ_zH5vXM35s2Sw=KTRiieprn4TNcWvOXY4xXV4Q@mail.gmail.com>
-	 <0032b64c-7e46-dc46-d6e1-143ae3fef03b@windriver.com>
-	 <CANNYZj-VrBHoqGK3fzTxZLwPB3CiuhQT4azQrt=Wcw=qRsnO-Q@mail.gmail.com>
-	 <5a5820df-602f-4e9c-a0f4-a7982cf76927@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0-1build2 
+        d=1e100.net; s=20230601; t=1720522966; x=1721127766;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Un35DYm3/ZxQDzOlGzmbVYrMbLHXFLo9d4i+o0i/GZE=;
+        b=Cjv01bVBARR3lTtRA12UMmE0J9S2zZABYvkdGs0uRJY97LFhdegMW1yCcjGPBGcR9d
+         Hq/DucScKlamER8fK1o/lBRF8iu3SenUKOkQTVJYXpVzzvig8kcJ3RNMslYh4uMMhbSY
+         pq97TPA/ypIQDLIfxaZZoX3tXF/V3HkL03m9eMyTqJY0ClxmPOz1KBjIdux2nAxk6Mye
+         BThX+kUbA08TmPdXfJe4kSsj4WJhN9kTOCaQC3J6tjIo5+jxbm2450QSr7QuVBULhhXY
+         /b+SsxvtmaGbk1SZkEd+do+gkYzQaDOC9qq5ftVEKJi9Wzpe9oRsfLp619Er1oIcs2Nu
+         8U3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXBzSC6JkzWI5sRxKAMFSFyXYgCtstq1CrnbB7ONON/jYREmoo6UzEQHWqZf6HQgNojWoAPgckS4qLF2TiVRyxkcfLlnFeY8VJmKBQ1S6lWeuU6x3Y=
+X-Gm-Message-State: AOJu0YyKnpFmyVlItAtSSPr9HgC71BWuvDDUtrd/QUZGtdgIXmm3Thzn
+	9yXStSZcxORPa19UcyXZoJPBBy/YWog5fjLKc4vDzo2j3yibNHWNI9h9H3cERv/CGV6i3lrWAwL
+	2qeoVLWw5LjUeJDxffcI5zXFpkdl5ug==
+X-Google-Smtp-Source: AGHT+IExU2KhaaX1/w4hreADyGE6dSGjxywa14r/qpztf+UatnblezNJNUTsnJO3EK1kkawNvEmW2tFrA7ZYuyIdPXw=
+X-Received: by 2002:a2e:7215:0:b0:2ee:4d28:981 with SMTP id
+ 38308e7fff4ca-2eeb30fefb7mr18032201fa.25.1720522965470; Tue, 09 Jul 2024
+ 04:02:45 -0700 (PDT)
 MIME-Version: 1.0
+References: <20240708081034.1474312-1-changqing.li@windriver.com>
+ <CANNYZj9+c=BQ_zH5vXM35s2Sw=KTRiieprn4TNcWvOXY4xXV4Q@mail.gmail.com>
+ <0032b64c-7e46-dc46-d6e1-143ae3fef03b@windriver.com> <CANNYZj-VrBHoqGK3fzTxZLwPB3CiuhQT4azQrt=Wcw=qRsnO-Q@mail.gmail.com>
+ <5a5820df-602f-4e9c-a0f4-a7982cf76927@windriver.com>
+In-Reply-To: <5a5820df-602f-4e9c-a0f4-a7982cf76927@windriver.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 9 Jul 2024 13:02:33 +0200
+Message-ID: <CANNYZj9L_8hu8wsV0Jq6MG9_o144iTdV9KoQ1uAvMWaF7R-GbA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] bitbake-worker: skipping disable network
+ when unprivileged userns is restricted
+To: Changqing Li <changqing.li@windriver.com>
+Cc: ChenQi <Qi.Chen@windriver.com>, bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 09 Jul 2024 10:58:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16407
+ <bitbake-devel@lists.openembedded.org>; Tue, 09 Jul 2024 11:02:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16408
 
-On Tue, 2024-07-09 at 10:41 +0800, Changqing Li via lists.openembedded.org =
-wrote:
-> =C2=A0
-> On 7/8/24 17:25, Alexander Kanavin wrote:
-> > On Mon, 8 Jul 2024 at 11:12, ChenQi <Qi.Chen@windriver.com> wrote:
-> > >=20
-> > > This problem has reported to Ubuntu for 4 months. It was discussed on
-> > > the Yocto mailing list. People seem to be waiting for Ubuntu. I'm not
-> > > very optimistic about getting a solution from Ubuntu.
-> > >=C2=A0I do not agree. The last comment  (#10, added two weeks ago) in
-> > https://bugs.launchpad.net/ubuntu/+source/apparmor/+bug/2056555 shows
-> > how to create an apparmor profile specifically for bitbake, so once
-> > this is added to apparmor upstream and makes its way into Ubuntu the
-> > problem will be solved. At that point the forced network disabling
-> > will become unnecessary and damaging. Ubuntu release notes imply
-> > they've done it for things like Chrome and Discord, but they expect
-> > more to be added:
-> >=20
-> > https://discourse.ubuntu.com/t/ubuntu-24-04-lts-noble-numbat-release-no=
-tes/39890#security-improvements
-> >=20
-> I think applications like Chrome, thunderbird etc are commonly used appli=
-cations by user, so they are might in
-> ubuntu's package repo,=C2=A0 so they will support it and add profile for =
-it by default.=C2=A0 But for bitbake,=C2=A0 it is mostly
-> for developer and and not support by ubuntu.=C2=A0 And considering=C2=A0 =
-there might be many other softwares meet this issue,
-> so I am not optimistic that ubuntu will add default profile for all these=
- softwares.=C2=A0 so maybe we are still on our own.
-> One option is using this patch,=C2=A0 so users don't have to=C2=A0struggl=
-e on this problem, don't need sudo, don't need an apparmor profile etc,=20
-> but have the side effect that skip disable network,=C2=A0 we need to bala=
-nce which to choose.
-> One option is document or=C2=A0 notice message in oe-init-build-env,=C2=
-=A0 suggest user to disable unprivileged_userns or write a profile for bitb=
-ake.
+On Tue, 9 Jul 2024 at 04:42, Changqing Li <changqing.li@windriver.com> wrote:
 
-I do not want to just stop disabling the network silently so the patch
-as written isn't an option.
+> I think applications like Chrome, thunderbird etc are commonly used applications by user, so they are might in
+> ubuntu's package repo,  so they will support it and add profile for it by default.  But for bitbake,  it is mostly
+> for developer and and not support by ubuntu.  And considering  there might be many other softwares meet this issue,
+> so I am not optimistic that ubuntu will add default profile for all these softwares.  so maybe we are still on our own.
+> One option is using this patch,  so users don't have to struggle on this problem, don't need sudo, don't need an apparmor profile etc,
 
-I'm also not keen to make oe-init-build-env too complex, it is meant to
-be just enough to get us into bitbake, nothing more. Adding sanity
-checks there is the wrong place. This could happen in the normal
-sanity.bbclass code but we need to make sure it triggers when a user
-upgrades their existing distro.
+Yes. Things will 'just work' on the surface. But you would also be
+doing those users a disservice by quietly disabling an important check
+behind their back, and not even letting them know that. Some users
+will not be happy to learn that after the fact.
 
-I think we should open a new ticket with ubuntu specifically about
-adding a profile for bitbake and see if we can get a definitive answer
-on whether we can add a profile for it or not. I'd suggest a new ticket
-so we don't get confused with the comments in the one linked above.
+> but have the side effect that skip disable network,  we need to balance which to choose.
+>
+> One option is document or  notice message in oe-init-build-env,  suggest user to disable unprivileged_userns or write a profile for bitbake.
 
-Cheers,
+I wonder if we can wrap the actual /proc/self/... writing calls in
+disable_network() (I think this is where things fail without system
+tweaks?) with an exception handler pointing people to instructions
+about installing an apparmor profile. It wouldn't be optimal (this
+happens in a task execution, not in a build setup), but it would help.
 
-Richard
-
-
-
+Alex
 
