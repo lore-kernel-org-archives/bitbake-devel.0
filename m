@@ -1,130 +1,145 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFD2C3DA49
-	for <webhook@archiver.kernel.org>; Sun, 14 Jul 2024 11:13:28 +0000 (UTC)
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
- by mx.groups.io with SMTP id smtpd.web11.14300.1720955606063340871
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F0EC3DA42
+	for <webhook@archiver.kernel.org>; Sun, 14 Jul 2024 11:17:28 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web11.14341.1720955845683519405
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 14 Jul 2024 04:13:26 -0700
+ Sun, 14 Jul 2024 04:17:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=AVagxkp6;
- spf=pass (domain: bootlin.com, ip: 217.70.183.195, mailfrom: alexandre.belloni@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CEFC260004;
-	Sun, 14 Jul 2024 11:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720955604;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ErPBO6D8I5dPFLpTkUuI2wtTQ794vyCmS1MEVn4y9kM=;
-	b=AVagxkp6JK/naMOavifKkUQ8Q/gdeGtkf/6ok6MJNdotksaDF0M/Z8qcbAW08vc4vBGHyK
-	5NEyb3CQlQ8nv4hML4HvHl+heIotGnFDUMq8w6c9WH0eebfpAtbn+Vb9L/BkIwHbe0yFPD
-	s4E4bfeGFu79V1JRAP7EdcLiv32Cz3zUfGRLg385jnqmi9iJsaYy0t4bfo3lnpryLrP2CE
-	K9MeyPRKNzpwS4Vw37rszywreq9Te6skq9UW4VSOkZ0kZluwq/Dyiu6a+4A2sjmPY2Iup6
-	pK/kjEc9p5IhYBw4uQJJNpfSfBhcX7EnxMA/CLzjqVuTZQhnTcEy6/x5tnhMtA==
-Date: Sun, 14 Jul 2024 13:13:23 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-Cc: bitbake-devel@lists.openembedded.org,
-	tanguy.raufflet@savoirfairelinux.com,
-	richard.purdie@linuxfoundation.org
-Subject: Re: [bitbake-devel] [PATCH v2 2/4] npm: accept unspecified versions
- in package.json
-Message-ID: <2024071411132327e82ea7@mail.local>
-References: <20240708133357.306422-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
- <20240708133357.306422-3-enguerrand.de-ribaucourt@savoirfairelinux.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ey1zk6k3;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4267300145eso26326515e9.3
+        for <bitbake-devel@lists.openembedded.org>; Sun, 14 Jul 2024 04:17:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1720955844; x=1721560644; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b2KJsOwIs7u1f5m0G5P/y/XqN+LKCtqeCJmcRuITH4E=;
+        b=ey1zk6k3yVavDVYQQ080c88uq97RpU9gb8cdrwBfCKl/803Hnertpr4RfIAyQkAi3R
+         iGBA+E+bM5axe4aQ30a3iguVhPKKd+VRbf7r0UtjcpuHJVrVP0xJvDNb3MRskYCL2Tof
+         ADrP/sWgISllV9vUhWCbY9+2x4FvE2dPDvbzU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720955844; x=1721560644;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=b2KJsOwIs7u1f5m0G5P/y/XqN+LKCtqeCJmcRuITH4E=;
+        b=cvasqhvH7PS37PwbJcjCCpM/VIBvV0tfa3fI4xphxkwv5cIWc+OKxoGRyKIshrYMbT
+         4fra9MH5/V2NKwcaewtMBZrabpi8ebyS+hAOeKvdOu9y0ESOtQXTCt3+Kj4e4TFXR4ZD
+         1Px3MWf0xVDBKMc5jk+n68MCjZ6wLaBXbuilPDiS4sCO1E+FE6Kt0tHBCXDOJW2QpOU7
+         hOtHDv28XJQcpltcjsJtZjMQnHAt8Ebje5keiwMYBs9/xwmm8RupXnDirvVGe/seCBuc
+         vZl3ZBrth4aMQTfBo7b/0Nqz5DOVEX3ztBm0wOB9ryNV6wNYqqQxTAwv3+n94FRMTKKc
+         NPUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcAEnPKW6dDvfnmDFbJ7sbwhiEkp45YWoyUv+tALqKakoOhpQ4Uh03OjhdOqnS/9c5Gn6m/9Aq0ik3ZIg47DjSohhSvjnq1Ylmf6ARwX3L5eSntaI=
+X-Gm-Message-State: AOJu0YzRgX47b7e8ulVeqpWuJPxBzVY8FDOvl9Jrm6WBWSQTReLcLGBR
+	7udc8wunksII+DIHHLi6yBGazBSTSmw7hlKnCZ3iRyQoyfq8TECPK3UGIyqmx0o=
+X-Google-Smtp-Source: AGHT+IH+cVRGqj+RoPBIRcU+pYb55mTZB68dCiQ85eWa8T9rCpz6GhsBIPnsn/Fv4N2VgYquGpFzDQ==
+X-Received: by 2002:adf:f30b:0:b0:366:eba0:8d8c with SMTP id ffacd0b85a97d-367cead19b5mr12729419f8f.54.1720955843858;
+        Sun, 14 Jul 2024 04:17:23 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:ac74:33a8:48d1:ad5c? ([2001:8b0:aba:5f3c:ac74:33a8:48d1:ad5c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dacca16sm3597382f8f.58.2024.07.14.04.17.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jul 2024 04:17:23 -0700 (PDT)
+Message-ID: <96618974b45a07b06a312079646c6bf49c1474d8.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 1/1] fetch2/git: Use basename for
+ gitsrcname when ud.proto is file
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: liezhi.yang@windriver.com, bitbake-devel@lists.openembedded.org
+Date: Sun, 14 Jul 2024 12:17:22 +0100
+In-Reply-To: <8121be4437aeae47c5b1d6870e1561b2b088198f.1719033434.git.liezhi.yang@windriver.com>
+References: <cover.1719033434.git.liezhi.yang@windriver.com>
+	 <8121be4437aeae47c5b1d6870e1561b2b088198f.1719033434.git.liezhi.yang@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0-1build2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240708133357.306422-3-enguerrand.de-ribaucourt@savoirfairelinux.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 14 Jul 2024 11:13:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16418
+ <bitbake-devel@lists.openembedded.org>; Sun, 14 Jul 2024 11:17:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16419
 
-Hello,
-
-It is not possible t apply this patch as it touches two different
-repositories: bitbake and oe-core, can you separate it?
-
-On 08/07/2024 15:33:55+0200, Enguerrand de Ribaucourt wrote:
-> Our current emulation mandates that the package.json contains a version
-> field. Some packages may not provide it when they are not published to
-> the registry. The actual `npm pack` would allow such packages, so
-> should we.
-> 
-> This patch adds default values to allow building such packages.
-> For the shrinkwrap, we can actually use the resolved field which
-> contains the exact source, including the revision, to pass integrity
-> tests.
-> 
-> This applies for instance to this package which doesn't declare a
-> version:
->  - https://github.com/cockpit-project/cockpit/blob/23701a555a5af13f998ee4c7526d27fdb5669d63/package.json#L2
-> 
-> Co-authored-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
-> Signed-off-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
-> Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+On Fri, 2024-06-21 at 22:20 -0700, Robert Yang via lists.openembedded.org w=
+rote:
+> From: Robert Yang <liezhi.yang@windriver.com>
+>=20
+> The previous code added local path to generated mirror tarball name which=
+ had
+> two potential issues when fetch from local PREMIRROR, for exapmle:
+>=20
+> Add github.com.lsof-org.lsof to /path/to/local/PREMIRROR/
+> $ bitbake lsof -cfetch
+>=20
+> * There might be "Fix File name too long error" when the local path is lo=
+ng
+> =C2=A0 since the path is translated to filename and added to downloads/gi=
+t2/ as:
+> =C2=A0 path.to.local.PREMIRROR.github.com.lsof-org.lsof
+>=20
+> * When enable BB_GENERATE_MIRROR_TARBALLS:
+> =C2=A0 The tarball name will be:
+> =C2=A0 git2_path.to.local.PREMIRROR.github.com.lsof-org.lsof.tar.gz
+>=20
+> =C2=A0 The above tarball can't be re-used by do_fetch since bitbake looks=
+ for
+> =C2=A0 'git2_github.com.lsof-org.lsof.tar.gz', but the 'path.to.local.PRE=
+MIRROR' in
+> =C2=A0 the file name breaks the match.
+>=20
+> Use os.path.basename(ud.path) as gitsrcname when ud.proto is file can fix=
+ the
+> the above two issues, now the file name in downloads/git2/ is:
+> github.com.lsof-org.lsof
+>=20
+> And the generated tarball is:
+> git2_github.com.lsof-org.lsof.tar.gz
+>=20
+> Or when BB_GIT_SHALLOW is enabled:
+> gitshallow_github.com.lsof-org.lsof_2e4c7a1-1_master.tar.gz
+>=20
+> And the tarballs can be re-used by do_fetch.
+>=20
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 > ---
->  bitbake/lib/bb/fetch2/npmsw.py  | 2 +-
->  meta/classes-recipe/npm.bbclass | 4 +++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/fetch2/npmsw.py b/bitbake/lib/bb/fetch2/npmsw.py
-> index 018e0ad546..044f5b96f8 100644
-> --- a/bitbake/lib/bb/fetch2/npmsw.py
-> +++ b/bitbake/lib/bb/fetch2/npmsw.py
-> @@ -97,7 +97,7 @@ class NpmShrinkWrap(FetchMethod):
->  
->              integrity = params.get("integrity", None)
->              resolved = params.get("resolved", None)
-> -            version = params.get("version", None)
-> +            version = params.get("version", params.get("resolved", None))
->  
->              # Handle registry sources
->              if is_semver(version) and integrity:
-> diff --git a/meta/classes-recipe/npm.bbclass b/meta/classes-recipe/npm.bbclass
-> index 91da3295f2..a73ff29be8 100644
-> --- a/meta/classes-recipe/npm.bbclass
-> +++ b/meta/classes-recipe/npm.bbclass
-> @@ -72,8 +72,10 @@ def npm_pack(env, srcdir, workdir):
->          j = json.load(f)
->  
->      # base does not really matter and is for documentation purposes
-> -    # only.  But the 'version' part must exist because other parts of
-> +    # only. But the 'version' part must exist because other parts of
+> =C2=A0bitbake/lib/bb/fetch2/git.py | 5 ++++-
+> =C2=A01 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+> index c7ff769fdf..89d3268f7f 100644
+> --- a/bitbake/lib/bb/fetch2/git.py
+> +++ b/bitbake/lib/bb/fetch2/git.py
+> @@ -277,7 +277,10 @@ class Git(FetchMethod):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ud.unresolvedrev[name] =3D=
+ ud.revisions[name]
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 ud.revisions[name] =3D self.latest_revision(ud, d,=
+ name)
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gitsrcname =3D '%s%s' % (ud.h=
+ost.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.').replace(=
+' ','_').replace('(', '_').replace(')', '_'))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ud.proto =3D=3D "file":
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gitsr=
+cname =3D '%s' % os.path.basename(ud.path)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gitsr=
+cname =3D '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.').re=
+place('*', '.').replace(' ','_').replace('(', '_').replace(')', '_'))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if gitsrcname.startswith=
+('.'):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+gitsrcname =3D gitsrcname[1:]
+> =C2=A0
 
-This is an unrelated change and two spaces after a period is correct.
-I'd say don't do this unless you go and change the other 154 occurrences
-(You also probably don't want to enter this debate)
+I started to review this, then I started wondering why we have mirror
+tarballs being created for local file:// urls? Does that make sense?
 
->      # the bbclass rely on it.
-> +    if 'version' not in j:
-> +        j['version'] = '0.0.0-unknown'
->      base = j['name'].split('/')[-1]
->      tarball = os.path.join(workdir, "%s-%s.tgz" % (base, j['version']));
->  
-> -- 
-> 2.34.1
-> 
+Cheers,
 
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#16403): https://lists.openembedded.org/g/bitbake-devel/message/16403
-> Mute This Topic: https://lists.openembedded.org/mt/107102416/3617179
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
-
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Richard
 
