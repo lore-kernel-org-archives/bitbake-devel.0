@@ -1,91 +1,66 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <foss@0leil.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8539FC3DA63
-	for <webhook@archiver.kernel.org>; Thu, 18 Jul 2024 13:48:41 +0000 (UTC)
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
- by mx.groups.io with SMTP id smtpd.web10.15448.1721310511772019957
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8119C3DA7E
+	for <webhook@archiver.kernel.org>; Thu, 18 Jul 2024 13:52:21 +0000 (UTC)
+Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
+ by mx.groups.io with SMTP id smtpd.web11.15616.1721310740502494980
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 18 Jul 2024 06:48:31 -0700
+ Thu, 18 Jul 2024 06:52:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=q23nlgtq;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.45, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2cb585375f6so240744a91.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 18 Jul 2024 06:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1721310511; x=1721915311; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9OgMddIjjR9jxuYyWjF1shGGcdkpjY8AbabKwqiBZCw=;
-        b=q23nlgtq0qbk0i3VNBnM5b+cwFl5hIoHVb91txzFTFuoU8u5ICfBqK+n1y07eRpZtq
-         FLBMnD7RqHaOdZOfrqkKVBkbKCYlSbC54Bm/P6iCfpX6iVfH9RKk1HDspLn4aZi4r0vA
-         Uw1wL9RamQAvunbk2RYoiQPHibvPHxvZhNCZswtnvW31zpdDDzUQGetZye8xFlAE/nBm
-         Epp/SPbQ+6MEjtSleEzeHsw79Odb82iqyzYQwsGI8nGwg1WOOhhERkWxyuExbAZ18L2a
-         k16s1h05NNz71IfE7TZEkPQ2rO025Oc5UNscgTzP8DIK7MuEO67U6vNbwPMuUbOKFfjj
-         Yz1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721310511; x=1721915311;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9OgMddIjjR9jxuYyWjF1shGGcdkpjY8AbabKwqiBZCw=;
-        b=SZPrCyopLWC3Zu6kturpIyQooWU147wl6aziokDAa2QZJ0eZL6KdefnF6ldWYn+HFv
-         Az/9/Tdag21fxsadQvtvei6ln6fL0P1Ony3sYtrFJmQS9YsMv0rb/pAcm2TKhirix1WB
-         FN3MgAtzaDwCKk+Clo/bUCxGGhVMUKkf64pvPrN/HxkJGOrFNenxj9ipgslzIwPI3dRI
-         3bIh0fezMwp9h13so98yCB66cRpSNt8en2C660XPQ0JZqf8EKsV9+/Eu43zJkoH1gPzt
-         MHrTTY23SaKjHqaLYRluAT2ZzoCqG8YxLx/pAQ6oRe5WCTZ3QcJW85aEX5EYOriaPgNM
-         NuBA==
-X-Gm-Message-State: AOJu0YygpDehvCJikPm527j1lS/02NpIIsMSyC9PvpAEMFy2h0g0zjbW
-	nW3aurHyiddU3QnxNcPjjMvP0V78Ge9JTHvk3WB65tjpbfmNReIXSk/tBHHvIT4GbwivMB5upUr
-	U
-X-Google-Smtp-Source: AGHT+IHxBri7dCqKdGvRQEOG42OFKZic81QpquVEc42IFJfFRivoZzNx3KSYdHMboGpgAbff5L7aAQ==
-X-Received: by 2002:a17:90a:5302:b0:2c3:40b6:293b with SMTP id 98e67ed59e1d1-2cb7755b722mr781807a91.39.1721310511013;
-        Thu, 18 Jul 2024 06:48:31 -0700 (PDT)
-Received: from hexa.. ([98.142.47.158])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cb77a33ee9sm671269a91.24.2024.07.18.06.48.30
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 06:48:30 -0700 (PDT)
-From: Steve Sakoman <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 0/2] Patch review
-Date: Thu, 18 Jul 2024 06:48:25 -0700
-Message-Id: <cover.1721310419.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=none (message not signed); spf=pass (domain: 0leil.net, ip: 84.16.66.175, mailfrom: foss+yocto@0leil.net)
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4WPvPZ4fbHzChX;
+	Thu, 18 Jul 2024 15:52:18 +0200 (CEST)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4WPvPZ0B46znn;
+	Thu, 18 Jul 2024 15:52:17 +0200 (CEST)
+From: Quentin Schulz <foss+yocto@0leil.net>
+Subject: [PATCH 0/3] doc: releases: fix missing releases and migrate
+ mickledore to EOL section
+Date: Thu, 18 Jul 2024 15:51:58 +0200
+Message-Id: <20240718-yocto-releases-v1-0-204f3e3dade4@cherry.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP4dmWYC/3XMQQqDMBCF4avIrJuSCdFoV96juFAzbQaKKRORB
+ vHuTd13+T943w6JhCnBrdpBaOPEcSmBlwrmMC5PUuxLg9HGaoetynFeoxJ60ZgoKeusR2OnDrG
+ BcnoLPfhzgvehdOC0Rsmnv+Fv/UttqLSa2tohto3uatPPgUTy1RMMx3F8AfuW+7SsAAAA
+To: Quentin Schulz <quentin.schulz@cherry.de>, 
+ bitbake-devel@lists.openembedded.org, foss+yocto@0leil.net, 
+ docs@lists.yoctoproject.org
+X-Mailer: b4 0.14.0
+X-Infomaniak-Routing: alpha
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 18 Jul 2024 13:48:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16423
+ <bitbake-devel@lists.openembedded.org>; Thu, 18 Jul 2024 13:52:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16427
 
-Please review this set of changes for 2.8/scarthgap and have comments back by
-end of day Monday, July 21
+We've missed on a couple of releases and mickeldore also needs to be
+moved to the EOL section.
 
-Passed a-full on autobuilder:
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+Changes in v2:
+- EDITME: describe what is new in this series revision.
+- EDITME: use bulletpoints and terse descriptions.
+- Link to v1: https://lore.kernel.org/r/20240718-yocto-releases-v1-0-b85711860952@cherry.de
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/7150
+---
+Quentin Schulz (3):
+      doc: releases: mark mickledore as outdated
+      doc: releases: add nanbield to the outdated manuals
+      doc: releases: add scarthgap
 
-The following changes since commit 8714a02e13477a9d97858b3642e05f28247454b5:
+ doc/releases.rst | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+---
+base-commit: 1d7360031164f04887c792fb0b2dd86c6ccfcc23
+change-id: 20240718-yocto-releases-474d124b9116
 
-  fetch2/wget: Fix failure path for files that are empty or don't exist (2024-06-14 08:48:23 -0700)
-
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.8-nut
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-nut
-
-Richard Purdie (2):
-  codeparser/data: Ensure module function contents changing is accounted
-    for
-  codeparser: Skip non-local functions for module dependencies
-
- lib/bb/codeparser.py | 33 ++++++++++++++++++++++-----------
- lib/bb/data.py       |  2 +-
- 2 files changed, 23 insertions(+), 12 deletions(-)
-
+Best regards,
 -- 
-2.34.1
+Quentin Schulz <quentin.schulz@cherry.de>
 
 
