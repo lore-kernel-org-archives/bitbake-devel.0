@@ -1,54 +1,56 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <chris.laplante@agilent.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE4BC3DA63
-	for <webhook@archiver.kernel.org>; Tue, 23 Jul 2024 19:27:57 +0000 (UTC)
-Received: from AS8PR04CU009.outbound.protection.outlook.com (AS8PR04CU009.outbound.protection.outlook.com [52.101.70.65])
- by mx.groups.io with SMTP id smtpd.web11.3977.1721762873574337211
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308DEC3DA63
+	for <webhook@archiver.kernel.org>; Wed, 24 Jul 2024 13:50:00 +0000 (UTC)
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (NAM10-BN7-obe.outbound.protection.outlook.com [40.107.92.59])
+ by mx.groups.io with SMTP id smtpd.web10.11084.1721828990082309757
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 23 Jul 2024 12:27:54 -0700
+ Wed, 24 Jul 2024 06:49:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=selector1 header.b=WMph7oUA;
- spf=pass (domain: axis.com, ip: 52.101.70.65, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=U/ynQ1RU;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.92.59, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NDAdiW3oJluo4MPa8HYxs91+IUAdbjILEAiUKPE1RjbHAGHRu0coiL91lsBwTJCia1kM8dXfDILTUzhjMmGpIOFzQbmn4nO4T+fWBznPqJsQ7E2JJTCG8xU0iNqjSm16NyaTDj2QRhabD8Eu+xh+5AGgJ6s8S6qcoh+DSiqI2yx1jiG0WC1tGz0fLi+xZP16PZE+ahkgarl1XJG7TLkCeVMevcenuSST5ysYeuWxLFX0ImRmU6Uedx3tObzCHHL5Dv3wsq1fL+yf99dot3yGZ2reg4Xwg+tm83wRYKEy9ye9ComVWJSJFVKVkD0kq8DIPWs/E9t78kNQHgTcqj94Dw==
+ b=qrOvVJpGeLJiA8SeRXSVc5QC6bnr2/xUtvIrD3eAVRk6B2yqBaua4u2FCiqJ9IszbM2rdzEKkVSwSB/Riolqo/8oXSeLW7NjMQ1Pt0AHVGJ0bxITcp/mg88T0H3tGKikXoWxx1G0qXpIv2YwcxV0W3hXM4Kkgpm+yp6XH8xYau7V7rWLMij4Z3iILW/koiGD5lw7N7VCB5jLZgZNHBvuMs79lShz+MDBTP+D/VfJYO2nF0jOodh44hZa3gu7X/8KKgH6emgJDLfU0DfFU7TcNPjZ3CXKAuD/dr2VpksDnwXKAgsYI+hvlYKdrRhaticXgSS6ynALdvzqYSECvuDupw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GEv03w5hueG/TlI8UwkVyJ3iY9DWhk77RN5RrPAbYtI=;
- b=lpBVm2TRmqC7SIBFCTSjstZLr7FQZbcjzpQN6GMGay4cF/NQQsUYRpCOSwz/dwJJo9Xre6xZiy9X1F/eiRWJ+sBz0WLSHSNHN9XhpzQzUXFO5DNbkzr1NdyURuewH6nO5JwO2zVuryTHWwIKNmEm4dfmdnEd08DhpOUWM1jbKjP+JMaoO4JG+ANuK4tiP3wHTbYyjPK1n/cbSw0WEQkk+GMktgBrmUWKCKMU721vXULa98LAHTHMaUif4Qaz8VepVT/uVfSK3AiHJ7dsXMSKtIGvBwzueXeKGzMJQ0N9c+rIJOPReHp3ere919qCnEY0Zu7nO+iEjwOwHSF3l9ofmg==
+ bh=WW4kHQIKP4QIz7EGq/K/JkxJNl2P/Sg4tGaXYc/mqb4=;
+ b=I8zUKgJPtuZ3pEOUO8fMnnxvdb85PUFQAMEaredAJJoL132/9/aqlT1njD/zaYEx/2Eblxlyv2m/EbWFla/6kKZ6nSSFRYQAS2rp0nlWnJ5jYgFUSxHwHs/q26DT/E+bsiVvzu7f84A3l3LXsp9KtYI4U7yJzcJDow/iOVvbFLtOf8Sf5ycFhU3lqFHgUQU7T0D9oaG6ZCOxZAE/d8y3Ky9L0K6iwiqMwpspth2wXXqmQD3OuJiRdOqUytcsfsLV//H/XhkZmM6La9eeDT+rDtfwbFwpQK8a29JHWOxa+0ZIgF1su+ERLi3mmRjGihP7HYH6KOojVloHga2l/LAicA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
+ dkim=pass header.d=agilent.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GEv03w5hueG/TlI8UwkVyJ3iY9DWhk77RN5RrPAbYtI=;
- b=WMph7oUACBWQgoUzvi4hyMILFjxFjrlQB42BL3R+dIh5oG3HDxGRLF9jVeIkD/B2wEoE0CQ2UYq40gAPQYSZJjUyEjCirEXCPpD0y2F6d6uCON/+ygb0UMt1HJ3OpZpPLtH1Xn+tbDHjGwN2r6r6Q2ad9ITuzgmxybDeGMVQVaM=
-Received: from DB5PR02MB10213.eurprd02.prod.outlook.com (2603:10a6:10:4a8::17)
- by DU0PR02MB8899.eurprd02.prod.outlook.com (2603:10a6:10:409::12) with
+ bh=WW4kHQIKP4QIz7EGq/K/JkxJNl2P/Sg4tGaXYc/mqb4=;
+ b=U/ynQ1RUdwP6crjTTT315cT2L6ezyzjH078Ufyb4U2R2mgy5eotkkDvlDQOFAo0/T+7jwLMUtDhos9mN1Lr4rxPPKM+dldXFigPIFDgVwpCCRYdAYDuO1L9OPmL7f688kqCMiwrSWYG5x4m/xozZzMqCiVwyknAlIUXBRO+GEp9G9/39K4pl+mCZlHxNspX1j8vYWZqaW77nbCXaHxjAWMFHfkixqOEn6bsGx0m1IXT2bb96Uu6J3j0vz70IOj8BTOfJc3814lv8gaNJ4OYOikEy4DqTYp3uq7MIiGqqsv53DUqkC4qGwLJL2f48qBu0gk7yubNtJ796KmeGtN02uA==
+Received: from DM8PR12MB5430.namprd12.prod.outlook.com (2603:10b6:8:28::6) by
+ IA1PR12MB9063.namprd12.prod.outlook.com (2603:10b6:208:3a9::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.19; Tue, 23 Jul
- 2024 19:27:49 +0000
-Received: from DB5PR02MB10213.eurprd02.prod.outlook.com
- ([fe80::1bee:3174:a078:5af9]) by DB5PR02MB10213.eurprd02.prod.outlook.com
- ([fe80::1bee:3174:a078:5af9%2]) with mapi id 15.20.7784.017; Tue, 23 Jul 2024
- 19:27:49 +0000
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.17; Wed, 24 Jul
+ 2024 13:49:44 +0000
+Received: from DM8PR12MB5430.namprd12.prod.outlook.com
+ ([fe80::604e:bc05:9357:c7d7]) by DM8PR12MB5430.namprd12.prod.outlook.com
+ ([fe80::604e:bc05:9357:c7d7%4]) with mapi id 15.20.7784.017; Wed, 24 Jul 2024
+ 13:49:44 +0000
+From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
+To: "peter.kjellerstedt@axis.com" <peter.kjellerstedt@axis.com>,
 	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
 Subject: RE: [bitbake-devel] [RFC PATCH] ui/knotty: print log paths for failed
  tasks in summary
 Thread-Topic: [bitbake-devel] [RFC PATCH] ui/knotty: print log paths for
  failed tasks in summary
-Thread-Index: AQHawPIapS/6pGKeAESDdgOaEDjIOLHNuM1QgDcBcXA=
-Date: Tue, 23 Jul 2024 19:27:49 +0000
+Thread-Index: AQHawPIapS/6pGKeAESDdgOaEDjIOLHNuM1QgDcBcXCAAWQL0A==
+Date: Wed, 24 Jul 2024 13:49:44 +0000
 Message-ID: 
- <DB5PR02MB10213FAD2E238F7AB9390A4D2EFA92@DB5PR02MB10213.eurprd02.prod.outlook.com>
+ <DM8PR12MB54305463A787C28830751D948BAA2@DM8PR12MB5430.namprd12.prod.outlook.com>
 References: <17D9E3841C981E13.27929@lists.openembedded.org>
  <DM8PR12MB5430FE1BDE5343FD142CA3D78BCE2@DM8PR12MB5430.namprd12.prod.outlook.com>
+ <DB5PR02MB10213FAD2E238F7AB9390A4D2EFA92@DB5PR02MB10213.eurprd02.prod.outlook.com>
 In-Reply-To: 
- <DM8PR12MB5430FE1BDE5343FD142CA3D78BCE2@DM8PR12MB5430.namprd12.prod.outlook.com>
+ <DB5PR02MB10213FAD2E238F7AB9390A4D2EFA92@DB5PR02MB10213.eurprd02.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -56,150 +58,125 @@ X-MS-TNEF-Correlator:
 msip_labels: 
  MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ActionId=df634e94-fdaf-4c67-8d26-2b3b695eef37;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ContentBits=0;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Enabled=true;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Method=Standard;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Name=General;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SetDate=2024-06-18T16:34:10Z;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SiteId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
 authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
+ header.d=none;dmarc=none action=none header.from=agilent.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB5PR02MB10213:EE_|DU0PR02MB8899:EE_
-x-ms-office365-filtering-correlation-id: a32c7dfe-4a07-442e-5449-08dcab4d8a14
+x-ms-traffictypediagnostic: DM8PR12MB5430:EE_|IA1PR12MB9063:EE_
+x-ms-office365-filtering-correlation-id: 5450f3d3-f830-44d1-c4d5-08dcabe7799e
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
 x-microsoft-antispam-message-info: 
- =?us-ascii?Q?8h5HvmaJsj+eCkDS19KgtcWwTUKkrAXGRhamW/3cugV8OQTyDv2Ux4JU3wM8?=
- =?us-ascii?Q?Uwt9P/B8UzpTFhTHgWbxJzdgQLJlOsp/rNrXWBuE1g7DRs70j0QIkumntkPm?=
- =?us-ascii?Q?7M7WzFIeTIlGTLxO6qMWiqTN+ZlEaD0NHbqNkCIizlxOfS3nc6h1DTmm0Zam?=
- =?us-ascii?Q?Hb8K/8eZFERNaZnwrDbVB3QsJF44dmOZn9M9krDtYpBVRWzYOwDGJwlW6kcq?=
- =?us-ascii?Q?GgiKL8ITuyx9OI4fFEHLZ2IWaYrxWQyvZWbZBR7k9naWrPHOiI/v2KBWzhEV?=
- =?us-ascii?Q?MUfdTqebUriUrMtDObcuIHx6E+kiYdqKUE/hCc5N2Dv1NgSjhF4G3frtBPYv?=
- =?us-ascii?Q?yo1dbSUHK4mn/tikiQyrB6b85nYo8xr/E4YPgIAV3BAwCKO37EtIa1VEdqhp?=
- =?us-ascii?Q?5XmyBdWnaABh/01KvSvaf9nawICgIpkfQiQbYjljI+QQt4ft2tlQoD8J/TNM?=
- =?us-ascii?Q?loQeuLXifPgtX5oRqZktFKwunAqQcaSNCBcYIlFzZ3Cb8eUZ2V4Y18XBbISb?=
- =?us-ascii?Q?FPMY0+Thtynm+9CsZ25yrO5HBjmE9CYe4HMCOHwFpcvOLFqy2AmaMHDNp9on?=
- =?us-ascii?Q?4m8XgQWxUlOzKaIZywFRK2wCdMMsgGcR9Rv+mZt251MYwH6qsG4wtdoqSL8y?=
- =?us-ascii?Q?JAfQsdGjOptK5ocYlqUG0PAjHGLCh1Vd0Akpf8xFbje6MFBLa4CTF02HPyUF?=
- =?us-ascii?Q?diFbqldAHgfcJLmxGUQsb+VgaM8JS2N5HCfma/DW6yeGIAX5oxx7n/WGoE2Y?=
- =?us-ascii?Q?qmGY815F1JXr8HcjilxbQxtakyTOyH3a6vAdMtjZbTzNdAry/y7rYOCAuBkE?=
- =?us-ascii?Q?Ex9OQj+uW9UzIrWqr1msWOOIJtl6oaFpJGn5IIEqT5upLQYOaIDhDurtsiKP?=
- =?us-ascii?Q?8ZEiN+5afIrXV9dD2kdC75dk3fpCs3SZqDQeYXP69MQZ09gdzr4Ti8rCJH9m?=
- =?us-ascii?Q?IkqvkUiYZm/zTXhfAcpOCzd9OipfZtPWhCzwhrRWOXD6hngOmgC4g76ZuwNB?=
- =?us-ascii?Q?gQ3/hZak4ztiC2mR7WwX/7qv7SrF8CES3h3anvlRV8Zip9/pMdxTXdq9u7qo?=
- =?us-ascii?Q?xHFmfC91+B1jaAJT26aBrMnuRhlPewdQiThuXnqBNci1Ue20640WbeD0Y3AD?=
- =?us-ascii?Q?AaRtEWD4quB6SZVf/WsCJE72+AmSRasmdu5+R+VzR4NB5ud0Dey807MSaVFc?=
- =?us-ascii?Q?IhdbE+D3Jv8gys7+cxc+RB0fwcl6PHNSSE40LwajN4o3OyqxD1do1tHpBmA/?=
- =?us-ascii?Q?DNESIovOrcO7YSyUzurLY7cCLFhizfgrDu8P93fxG4EsGx8p/vujCnuxWVvC?=
- =?us-ascii?Q?qs97dT5AXtz7GgCTDCaXS85+3KDOLdxc7+X1MAxONm8kyppFufl3FFsfoxza?=
- =?us-ascii?Q?t4i4ltM=3D?=
+ =?us-ascii?Q?7C2Bza94WlYK0O6+o4LUQPFBm+Ut1DfBKlMZEqM8Jq0hxGhlpuOuWcHY0NaF?=
+ =?us-ascii?Q?ia9U3WzlclL2NOB+04Acq6EDtdk3PoP1D5xBB23zoFW9O88TQFXm08cavpDZ?=
+ =?us-ascii?Q?vjd6X024/9uAmRm78WkG6Q+aNAQh1BPqK2/wsqQ+dW08VZoHSVaCItKXbq1B?=
+ =?us-ascii?Q?RHdQWnv9ggjk2WEUL2uJNNi4k6VvzCKrG7YlrBLeIbD4VXVDFxTp9uzHLnDg?=
+ =?us-ascii?Q?/rL6Mq5OIfGWMqSL4kisBcVAA+MF4TIEWZ4Q7Up2MO32gt2uRmlTp6Z2wJcm?=
+ =?us-ascii?Q?9oFT4nctb9XlyJxVybD2bm/5mL4X2HwAe2mC4HBt6y50JRVMzWb8zC72oKsY?=
+ =?us-ascii?Q?imO5C/3vC/qFKGV0sCXZmMhGAu6RhAdGZKSnVtm5yD0gklouxJuxRSYhheG/?=
+ =?us-ascii?Q?k4aGTi7xHPpoTl1gMLDGxFgFmo1BdUP30FzHpglCP7pgIvfyN/etyd9HO63T?=
+ =?us-ascii?Q?0sA69fc2SiB8CGbJAHv+4c7q9ISoQKozWBPdm2X/i+jihfQWvroYvUB6HTax?=
+ =?us-ascii?Q?IZ9Cl+8bsAXtnLN19O0t6diACEQqV2cMHKfkyIgtA1+Ki0V7yTP5i306MEED?=
+ =?us-ascii?Q?6Rs4Q1ePNCSrrmKMDsctpENV2JSv9MKvO+vs5sos44VJ5+UgRvgNeTn2nJfo?=
+ =?us-ascii?Q?7R/ipbKSzL9GnNFVZx36xwgKzqSZGiXEM1hHmfURLhbwHQrZAe3G1ICZ9BTt?=
+ =?us-ascii?Q?6tC+V3Ci/VHTMFTaTJ9tRX805TGjtq0LuUanwzpKrAHJd8OlBFkQjh+plvfQ?=
+ =?us-ascii?Q?ASv4jlKBsbf0++cEUj2LoExXCmKd1UYprm5c1pF+ye5+xpQfd75PbAjjQfEc?=
+ =?us-ascii?Q?H2EhVU3egHz2xt45oB694+JdlbRcuN6fGFE+/wWbRsHq00v9Ka0NFvcx0Vt7?=
+ =?us-ascii?Q?moSNQInuVwUVS8yIDLq7l6hej+UJMsjogipsoQCIBGDWYdCg+WWExnv8lFuv?=
+ =?us-ascii?Q?JSZq/R3DRnA0gHi6pJwVlaIDoOGgDFpyEINfygPriPpXh0EB19TW3WKOL3v0?=
+ =?us-ascii?Q?QvDXAqIXu+njzhk2u8qVMgd9QZuVdQnkFkGjDDaiIOlInwkNUzdA4lX3MG1R?=
+ =?us-ascii?Q?7FxEtyJYQpobIwk9L0HKKSKHsAvR+DbZxb+szRefU7NS83WeWY/yrhGFK65U?=
+ =?us-ascii?Q?JQzo8vTj9v8wt8+OSBFJLGmJUVLz/HcxYqzeCAyXdDpqPyyEGRmL0o7pLjwT?=
+ =?us-ascii?Q?7kg9X/lYLyc/QDzDbBVAuOYqR1rp5DSVbrWZXfjN7szTCMDae94vnvCfQ+9e?=
+ =?us-ascii?Q?+Duzo4rlIfgDGdT6PwZGsUpqmh4j/USnxYF3R9/DA57aWnbyXJoXbylaYdO3?=
+ =?us-ascii?Q?K0iBqeQS9KA77DAxCLFB/VQbwQwFDGSICyVVDngcDwsxPycnoIBkt+gRYzEV?=
+ =?us-ascii?Q?YRZdgrRhQxrbvctZKRpbXdfii8lQnCfHFgZQp0VR5ZqmcTgHSQ=3D=3D?=
 x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB5PR02MB10213.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5430.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?rG1KWrlMpxcDlU2QzAi+t37RCqyeyRx8FqDDR964Kn3Wu6MkbkeTbk5iwjwg?=
- =?us-ascii?Q?UuNGyjRfQ7D0eHd/3Wpa/fqbrckeBbCzTd6eYB6wP/KMNxBuShGOj6nLNygA?=
- =?us-ascii?Q?aQYt1YhrzJLKnNFvitovy4A7CMFcSx1LYQULMSqJqT6VM/6hf3dgf0F7CqAr?=
- =?us-ascii?Q?frEF3ncYGVjodqyso+xtUp8plKTU3w331aESgN4IEtGMWbJPhnNuXYuF7vl/?=
- =?us-ascii?Q?+VeCwJ0hp8pQAWwqpH6yS3mM0bguwVJuBz1KxUH71vW/AMExsuGDjzuck764?=
- =?us-ascii?Q?ajax/cXapMwljI2W9o3L8byseJbZy4SJ/dpRHu3U4ryW/au37qtWH9lWwom2?=
- =?us-ascii?Q?sv/+AmQIQcXJw1rK9N0nchF5mR5nqvBPymO6HpDnOfy0QTbTzXBMbgDSvvjv?=
- =?us-ascii?Q?tfmOTmfJV28neLuOT11e/7K9G8favp6p0/LySRLWOTEReAyz57AqH/bfvlFx?=
- =?us-ascii?Q?fiT7Aspx+WlLrgPySj4oDdIipsqlakUP8yr1uRxeZ1I79dgNxFsGVRtB17rV?=
- =?us-ascii?Q?GNKtwJV0NTK26te2TdKQFMl9vr93DU2K6YpsLokjftthdaablBdpr1NzmDPt?=
- =?us-ascii?Q?5kjE2O+89oGMMg91jbyIHA8JkI+y6M9x4oextaIA9O9Hb2ahLLUaKCic9g1e?=
- =?us-ascii?Q?2Q0n9YEH2/H/CYPpCD00WaAI463xRpBBkeFWoajLPRmQgvV+PcXPzQZPp7Va?=
- =?us-ascii?Q?aYbzzd4LMyK5SK/aMa4OLGfKLHsSzICpnmC+60LwFAdSE/S1n08SL1x3rPLr?=
- =?us-ascii?Q?2y/Z8jb1eJmikyaw1lfnNSLNex4utqN+JYskpw70Gb9q6cnLoZw4Ddy89zZL?=
- =?us-ascii?Q?CNxrtnNMrsNvIlYmGXrD2/Ohc+GaFoqxcHCCxLD/4akqrurHvVXC96KPQVdk?=
- =?us-ascii?Q?pMRha3kPCLn6YyjQlKSxLlMEtYp2z/4dBsF/g9cIMyF1jQCUhCgXPk0OOPFa?=
- =?us-ascii?Q?DKxjZiaxul72WhWPcCmsTJK0hBIwiwTjTqwDO4iMqv9/hxQwGz/OT1umsnhz?=
- =?us-ascii?Q?mvadLlOpVzxX56XiJqUB2YigAj4UqgTIyWYixHE7CmE6Cdo1PJ7hOvqgx3/N?=
- =?us-ascii?Q?XwpQ/p1HV7uNBT/IvffM6RUL36XQqYGzUG5IpuYrrbeJ/syiWx7VMboyfMWH?=
- =?us-ascii?Q?4dAXMRz2RmM/ieM4ou08x54zIFW3NudOMaUR6nE668nxkeDUaOUF8h4GZw99?=
- =?us-ascii?Q?MQN1moVSASylepoWmJotkkwLDgu0u5yckkyoqbDAIWLPtDwPSM0IbHRDbgry?=
- =?us-ascii?Q?hsZDMUufHPXbS2P41nvKT/wONNy7je9gY3e0zkfBokLylvhP4mkBUZomOz8K?=
- =?us-ascii?Q?J4NRsSeQkqNYnBBtXhO/mhwe0Zue65FdBtay7PLY3iJPZ25VAJo+Qkcu3/yP?=
- =?us-ascii?Q?HdBFB/o0eKf7c0FZk3t2VHoytmt9ffLjgvxRyFgDl+0PZWzm5GbL4Siyk8r5?=
- =?us-ascii?Q?ZHnq0bDyDu385aLPkjcobX/MfUCRrkB9YFjA92CW897lG0JwMBFRM6D/TEby?=
- =?us-ascii?Q?AO3b3mJ512iHD3TYwaL7WZdk9S5q2xcwvrBDShFMHLoH2kxw8sPFkAOeGx6U?=
- =?us-ascii?Q?jsesjcCtDo08ZvSMP/E=3D?=
+ =?us-ascii?Q?SX9uCizz16pMqiqkSGTDGfIG6I6cCbm5zgqJydXztss1ldvY9vr2BjZ0ax2H?=
+ =?us-ascii?Q?8pGF7XpKgVhD2PUNbF6Fcs2pYC4Z1p0AUb7sm8ITYp29ik50y/sGNqeclWRa?=
+ =?us-ascii?Q?nqEuO8sLw6STWo7m4DIlerd9XrN75Bf6FLId6WKFy7BkiVYFd9QfXzQcGQnt?=
+ =?us-ascii?Q?HHXiAL6SGz9ZylRtcLfdGy1rpXGA/3H05W9KHBRkVdpTF8+h5Hsx1QVnWPuI?=
+ =?us-ascii?Q?7zF4+ZbiS7R8POTlLZIeCNkmuzI/wnksQK+bVqcFJHCzwgdu8Z85Mk3aDyuX?=
+ =?us-ascii?Q?yXA8nGH3KExjKGkFO9FpQXYaCKS2wUWMQ3Twm4Fv0Aeab8glrulq8vJnTR/s?=
+ =?us-ascii?Q?6DXWfE4gx56NbqjJnY5/hqtblEuYR+0pdHJbTc4dCLYv+W2rZR6PXYvsk9Ub?=
+ =?us-ascii?Q?d3bvb4nxdFWrmX5H3DLLJtHPexOblvobY9fMqBYLWoBAyz7AXc9cj9IT3bt3?=
+ =?us-ascii?Q?Jl+ziRrcLd+mKKfyYYoCw1b52NPRAk4VENjWsQx8YPIUW+AYsRWd58/h+Qvm?=
+ =?us-ascii?Q?vOXBLZMutjk1NB48fo1EYoNIFiNk4SfoV/Fqlhn98uOuUnU98iVmNg/fX7Z/?=
+ =?us-ascii?Q?gRpQ5XaatgVhOvs8Cai83HiUVjtWXoXlHqfl9p8IGqcZZyXJUEBGt0fPbMdm?=
+ =?us-ascii?Q?D25B7bEkVe4vta/vk02NgNh128yPcDG6YQ9m8irPnUGJBhj2dgtYsXcceP6v?=
+ =?us-ascii?Q?o0OGxoZuMdQJUhKMEj06QumyT+AiKAtjFzaj5yBtML1Oqy6tAcfmraGqomOx?=
+ =?us-ascii?Q?XzpGwjileBmcAGWxIb/kfw1/CuT5GE1ZB4rzTm20il89cDciUP/p2NrCVpBb?=
+ =?us-ascii?Q?4VBknt5xJ/rXaSJ32Op1bABNYRNAcSPH6nvFuFcvRgpj4tLmYRp0PjjXXy13?=
+ =?us-ascii?Q?mPyE9C0CmgePKgS29UQIaI3O7ddgvK/MLZFpzz+8MXKUKqdDWsmAT78slTuI?=
+ =?us-ascii?Q?/VRQQgAUYvjrIYSpX+hdAYB42iStfeGHBUD/c6e/+eT/u5gRVlVu1rHal082?=
+ =?us-ascii?Q?pnNx2pvsxPenZBhCjUeKe4GXJpwy6VdAnU4twGVtrlsYDWpH8onkDV6OrA89?=
+ =?us-ascii?Q?XPCyZdBj1/zlvNZ0EFk75yDcymxD5nKEl8dhUJ09Id8pQ8dRjzPv5s8W6DA5?=
+ =?us-ascii?Q?My5uVy+PJjNFRP/2ZtUJaJQGKWEIhYpBnhPoiLeb9Gx1SVB2z4wONiW+cfUZ?=
+ =?us-ascii?Q?8KDt+M9crTluXlx5Kq3AezIrJT1k7UoDlZRAIIeNvMb0QYVinC5GyocJC7+n?=
+ =?us-ascii?Q?a3XDxrzrvpifWJE+Xqmu39WkBnkHWey8XDyydxX552RP400IOtLQAbToCk3C?=
+ =?us-ascii?Q?jtQpKVAp7/ln0jSYm6xSoaxrhy3/aaMxpO5hfVwvI/Z4zL+d8DF8yKURqyfq?=
+ =?us-ascii?Q?EWuME8EOCPwLNuIWKDhMRMlwNK6hrt1AGuylXyV5PQ5aDPlVZ7RuYezTcJQh?=
+ =?us-ascii?Q?6OEhzyuVIVzotFZLwxJm3OA58kw6ye/XAhLKxo9NxkBZyb06vWwxYiWXLK3n?=
+ =?us-ascii?Q?xkBSwamhP3EInHVHYkBm6DsOHjpcnpT67rSh5iIoJOE9XCv2AgTdi3ERCsdo?=
+ =?us-ascii?Q?cNHyVRuHrypJ163sAbFhaiTvQX7ByR/x7Hn7pXAN?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: axis.com
+X-OriginatorOrg: agilent.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB5PR02MB10213.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a32c7dfe-4a07-442e-5449-08dcab4d8a14
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2024 19:27:49.6686
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR12MB5430.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5450f3d3-f830-44d1-c4d5-08dcabe7799e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2024 13:49:44.5679
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jbIrVPqO9TEjjnGRi2ftX890hMGAHAJO6eKMFPwPWSqKWzpitgQkCgTslfd1w+/U
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR02MB8899
+X-MS-Exchange-CrossTenant-userprincipalname: lrECyapXrjFmUkEyvH4QRuPrOKd1hT1PbVdD7bBw/QI5I+xzcJxLKlKWOA9CgS/4S4o9tWs/cNOQA3DQWUoBjbDguSqTppX6UDd0rj/b2Vw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9063
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 23 Jul 2024 19:27:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16434
+ <bitbake-devel@lists.openembedded.org>; Wed, 24 Jul 2024 13:50:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16435
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Chris Laplante via lists.opene=
-mbedded.org
-> Sent: den 18 juni 2024 18:37
-> To: bitbake-devel@lists.openembedded.org
-> Subject: Re: [bitbake-devel] [RFC PATCH] ui/knotty: print log paths for f=
-ailed tasks in summary
->=20
-> > From: Chris Laplante <chris.laplante@agilent.com>
-> >
-> > When tasks fail, it's very frustrating to have to scroll up to find the=
- log path(s).
-> > Many of us have the muscle memory to navigate to the 'temp'
-> > directories under tmp/work/, but new users do not.
-> >
-> > This change enhances the final summary to include log paths (reported v=
-ia
-> > bb.build.TaskFailed events). Here's an example:
-> >
-> > NOTE: Tasks Summary: Attempted 856 tasks of which 853 didn't need to be
-> > rerun and 3 failed.
-> >
-> > Summary: 3 tasks failed:
-> >   virtual:native:/home/chris/repos/poky/meta/recipes-
-> > core/ncurses/ncurses_6.5.bb:do_fetch
-> >     log: /home/chris/repos/poky/build/tmp/work/x86_64-linux/ncurses-nat=
-ive/6.5/temp/log.do_fetch.1253462
-> >   /home/chris/repos/poky/meta/recipes-core/ncurses/ncurses_6.5.bb:do_fe=
-tch
-> >     log: /home/chris/repos/poky/build/tmp/work/core2-64-poky-linux/ncur=
-ses/6.5/temp/log.do_fetch.1253466
-> >   virtual:nativesdk:/home/chris/repos/poky/meta/recipes-core/ncurses/nc=
-urses_6.5.bb:do_fetch
-> >     log: /home/chris/repos/poky/build/tmp/work/x86_64-nativesdk-pokysdk=
--linux/nativesdk-ncurses/6.5/temp/log.do_fetch.1253467
-> > Summary: There were 3 WARNING messages.
-> > Summary: There were 6 ERROR messages, returning a non-zero exit code.
-> >
-> > Each log is rendered as a clickable hyperlink in the terminal. See
-> > https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
->=20
-> I probably should have included a cover letter, but FYI the reason this i=
-s
-> RFC is that I'm unsure if we should disable the hyperlinking in response
-> to NO_COLOR being set. I'm leaning towards 'yes, it should disable'.
->=20
-> Unfortunately there is no universal reliable way to detect if hyperlinkin=
-g
-> is supported by the terminal (at least according to
-> https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda).
->=20
-> Thanks,
-> Chris
+Hi Peter,
 
-I don't have anything to say about the link support as the terminal I use=20
-does not support it, but I would very much like to have the support for=20
-listing the log files integrated. I have added this patch to my two main=20
-build trees and it helps a lot to not have to go hunt for the log files=20
-when there is a build error.
+> > I probably should have included a cover letter, but FYI the reason
+> > this is RFC is that I'm unsure if we should disable the hyperlinking
+> > in response to NO_COLOR being set. I'm leaning towards 'yes, it should
+> disable'.
+> >
+> > Unfortunately there is no universal reliable way to detect if
+> > hyperlinking is supported by the terminal (at least according to
+> >
+> https://nam12.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgist.
+> github.com%2Fegmontkob%2Feb114294efbcd5adb1944c9f3cb5feda&data=3D
+> 05%7C02%7Cchris.laplante%40agilent.com%7C3bd654f041734bd60ee508d
+> cab4d8dc1%7Ca9c0bc098b46420693512ba12fb4a5c0%7C0%7C0%7C6385
+> 73596794212235%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD
+> AiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&s
+> data=3DqFMRLWNPjXTL11pB%2Ft97P4CzJ4QRzBXcWS9AUnCXxcQ%3D&reserv
+> ed=3D0).
+> >
+> > Thanks,
+> > Chris
+>=20
+> I don't have anything to say about the link support as the terminal I use=
+ does
+> not support it, but I would very much like to have the support for listin=
+g the
+> log files integrated. I have added this patch to my two main build trees =
+and it
+> helps a lot to not have to go hunt for the log files when there is a buil=
+d error.
 
-//Peter
+Did you have to tweak the code to suppress printing the hyperlink ANSI code=
+s, or did your terminal just gracefully ignore them?
 
+The feedback is much appreciated, thanks!=20
+
+Thanks,
+Chris
 
