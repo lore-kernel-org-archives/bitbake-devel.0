@@ -2,235 +2,132 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59051C3DA49
-	for <webhook@archiver.kernel.org>; Fri,  2 Aug 2024 09:47:22 +0000 (UTC)
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
- by mx.groups.io with SMTP id smtpd.web10.73423.1722530909708711085
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222E5C3DA64
+	for <webhook@archiver.kernel.org>; Sun,  4 Aug 2024 12:05:20 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web10.25373.1722773115134744452
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 01 Aug 2024 09:48:30 -0700
+ Sun, 04 Aug 2024 05:05:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@ideasonboard.com header.s=mail header.b=OWeWGPgp;
- spf=pass (domain: ideasonboard.com, ip: 213.167.242.64, mailfrom: kieran.bingham@ideasonboard.com)
-Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4FCDD842;
-	Thu,  1 Aug 2024 18:47:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1722530858;
-	bh=gnJEnyIWv2uqYi0x3LYYF/Hg5127XgdYUkZy2MvhbjI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=OWeWGPgpre4rRf6z1c6MoPQk97SS2Qt1iqNodRgmXeTFlHsq1Y6qUvW6ZDWqFcicg
-	 KSzuJ0QjhFIL8OvO4IWa9HGWYgCCT0ecHeRtHVEIrhvUm1GvZaSjvBSsoJnQTKA/Od
-	 58CNTasaaXYLQRBxqf7kIE+iVRwfToST5Vl0pmVc=
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hKgknOLB;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4280bca3960so66843815e9.3
+        for <bitbake-devel@lists.openembedded.org>; Sun, 04 Aug 2024 05:05:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1722773113; x=1723377913; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tQg3rg/PxRrijaC0W4Eird99mOpTG0hdd8B36YXya3E=;
+        b=hKgknOLBJIke5B11DRl6nwtGLS3U7iNLuPGM6415RIx44fGrEg3btiNiWj/xi8SyEP
+         CyrbfBysBg/N0yh7gzKc6W68qjWIrRvyBcAyA7Wun6sazKi0PdnhYpKq1c0Yha0KYJdV
+         tno0d/P1FZlXiK8FfamywbYq4d9lU5RvsGXVQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722773113; x=1723377913;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tQg3rg/PxRrijaC0W4Eird99mOpTG0hdd8B36YXya3E=;
+        b=URGKOqOk1myXG0yP+uRlDyCXbhWCHrOprA+HT/IF7P5MqBXgesmFVsvHbbol9SRKFi
+         VG5t6HyRghBhhAoa86hJvqZeaNKysUn6fjAcE+/watldnbbsFHuLF0jSWgil3JLFdQY8
+         oAUZtD1Q4nNgx5wlyJMoNerPQG5IyyLlEMAKfUmlfS+sWYHIwSLdVX509Hip9zTnximk
+         G+ezeDXiVPbgwOGwaTJL5lr4jE69U+oW25M8DsG2ko9ObxAlxCQ8XtJltIPiw/SZezTr
+         hIDApR91ZCwZQOKAxqos9IUizuHrFurfG3uELRa+RNM8aiNPlojc/TiVR4QZIEW0V3yK
+         v6Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFxbhUQVo6E6hGAr7yTkJQW/k1y5fleaGvVL4XPnhCKvLKvThMrortktyblaSSTp8IWrRTAMFhNsryqkkXKgPNuA9cUKHBm+9J6KXsfgjYHYbqFjg=
+X-Gm-Message-State: AOJu0Ywo6DK9hm4Z9H6OBd2knL661BjaOMTeElDqF4fei3hrfNBnm1ub
+	rN/FJ0z0ESU/oGlal+lJjrdnET/7yOmHzwJZCeHh7MftXL++W79BlW6zfl2qEcN1JStmMsQ6PtI
+	vYPI=
+X-Google-Smtp-Source: AGHT+IGNUir7iqHBayyDvAsmaTZlmVitd/VjiUIb7RWV99s5c324Pt2fNUN6tWUjUW9aj/NBx8Z98A==
+X-Received: by 2002:a05:600c:3549:b0:426:59fe:ac2e with SMTP id 5b1f17b1804b1-428e6b789acmr60431725e9.29.1722773112881;
+        Sun, 04 Aug 2024 05:05:12 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:c970:9bdb:c2fc:595d? ([2001:8b0:aba:5f3c:c970:9bdb:c2fc:595d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4282bab9f7esm155292155e9.21.2024.08.04.05.05.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Aug 2024 05:05:12 -0700 (PDT)
+Message-ID: <e7d003c88e234039a454c16cad58393a45b6f0ba.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 1/1] data_smart: Improve performance for
+ VariableHistory
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: liezhi.yang@windriver.com, bitbake-devel@lists.openembedded.org
+Date: Sun, 04 Aug 2024 13:05:11 +0100
+In-Reply-To: <cd06a65773c4be6a51ccba0155cbebe42c2f355e.1722137668.git.liezhi.yang@windriver.com>
+References: <cover.1722137668.git.liezhi.yang@windriver.com>
+	 <cd06a65773c4be6a51ccba0155cbebe42c2f355e.1722137668.git.liezhi.yang@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.52.0-1build2 
 MIME-Version: 1.0
-In-Reply-To: <CANx9H-BbTqYwGhd=JqBiFCtnfrf94Hj261SiLZAgJEfUAuw2_g@mail.gmail.com>
-References: <20240524-b4-support-v1-1-0c4334c36cc7@cherry.de> <CAMKF1sq9U9VpPPbkmpot7TejVOemWjGqydyWiBn68Dz2vyhEEA@mail.gmail.com> <de18f958-d6db-4f90-a49b-a181d046f77e@cherry.de> <CAMKF1spNvMbuy+a-HS7wEbx5D817t6oxb_R12=gBgKgG8Eja1Q@mail.gmail.com> <CANx9H-CC9YHqTv6LgZE8jP0KVJC5Wsvyc8wmzhnf9crRG7ej4A@mail.gmail.com> <CANx9H-BbTqYwGhd=JqBiFCtnfrf94Hj261SiLZAgJEfUAuw2_g@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] add basic b4 config file
-From: "Kieran Bingham" <kieran.bingham@ideasonboard.com>
-Cc: Quentin Schulz <quentin.schulz@cherry.de>, foss@0leil.net, bitbake-devel@lists.openembedded.org
-To: Tim Orling <ticotimo@gmail.com>, raj.khem@gmail.com
-Date: Thu, 01 Aug 2024 17:48:24 +0100
-Message-ID: <172253090400.372468.11616779990785740190@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 02 Aug 2024 09:47:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16442
+ <bitbake-devel@lists.openembedded.org>; Sun, 04 Aug 2024 12:05:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16443
 
-Hi Tim,
+T24gU2F0LCAyMDI0LTA3LTI3IGF0IDIwOjM5IC0wNzAwLCBSb2JlcnQgWWFuZyB2aWEgbGlzdHMu
+b3BlbmVtYmVkZGVkLm9yZyB3cm90ZToKPiBGcm9tOiBSb2JlcnQgWWFuZyA8bGllemhpLnlhbmdA
+d2luZHJpdmVyLmNvbT4KPiAKPiBGaXhlZDoKPiAtIEJCTVVMVElDT05GSUcgPSAicWVtdXg4Ni02
+NCBxZW11YXJtNjQiIGFuZCBtb3JlIHRoYW4gNzAgbGF5ZXJzIGluIEJCTEFZRVJTCj4gJCBiaXRi
+YWtlIC1wIC1QCj4gQ2hlY2sgcHJvZmlsZS5sb2cucHJvY2Vzc2VkLCB0aGUgcmVjb3JkKCkgY29z
+dCBtb3JlIHRoYW4gMjAgc2Vjb25kcywgaXQgaXMgbGVzcwo+IHRoYW4gMSBzZWNvbmQgd2hlbiBt
+dWx0aWNvbmZpZyBpcyBub3QgZW5hYmxlZCwgYW5kIHRoZXJlIHdvdWxkIGJlIHRoZSBmb2xsb3dp
+bmcKPiBlcnJvciB3aGVuIG1vcmUgbXV0aWNvbmZpZ3MgYXJlIGVuYWJsZWQ6Cj4gCj4gVGltZW91
+dCB3aGlsZSB3YWl0aW5nIGZvciBhIHJlcGx5IGZyb20gdGhlIGJpdGJha2Ugc2VydmVyCj4gCj4g
+RG9uJ3QgY2hhbmdlIHRoZSB0eXBlIG9mIGxvZ2luZm9bJ2RldGFpbCddIG9yIHJlLWFzc2lnbiBp
+dCBjYW4gbWFrZSByZWNvcmQoKQo+IGJhY2sgdG8gbGVzcyB0aGFuIDEgc2Vjb25kLCB0aGlzIHdv
+bid0IGFmZmVjdCBDT1cgc2luY2UgbG9naW5mbyBpcyBhIG11dGFibGUKPiB0eXBlLgo+IAo+IFRo
+ZSB0aW1lIG1haW5seSBhZmZlY3RlZCBieSB0d28gZmFjdG9yczoKPiAxKSBUaGUgbnVtYmVyIG9m
+IGVuYWJsZWQgbGF5ZXJzLCBuZWFybHkgMSBzZWNvbmQgYWRkZWQgcGVyIGxheWVyIHdoZW4gdGhl
+Cj4gwqDCoCBudW1iZXIgaXMgbGFyZ2VyIHRoYW4gNTAuCj4gCj4gMikgVGhlIGdsb2JhbCB2YXIg
+c3VjaCBhcyBVU0VSX0NMQVNTRVMsIGFib3V0IDEgfiAyIHNlY29uZHMgYWRkZWQgcGVyIGxheWVy
+Cj4gwqDCoCB3aGVuIHRoZSBsYXllcnMgbnVtYmVyIGlzIGxhcmdlciB0aGFuIDUwLgo+IAo+IFNp
+Z25lZC1vZmYtYnk6IFJvYmVydCBZYW5nIDxsaWV6aGkueWFuZ0B3aW5kcml2ZXIuY29tPgo+IC0t
+LQo+IMKgYml0YmFrZS9saWIvYmIvZGF0YV9zbWFydC5weSB8IDggKysrLS0tLS0KPiDCoDEgZmls
+ZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdp
+dCBhL2JpdGJha2UvbGliL2JiL2RhdGFfc21hcnQucHkgYi9iaXRiYWtlL2xpYi9iYi9kYXRhX3Nt
+YXJ0LnB5Cj4gaW5kZXggMDEyOGE1YmIxNy4uYzYwNDlkNTc4ZSAxMDA2NDQKPiAtLS0gYS9iaXRi
+YWtlL2xpYi9iYi9kYXRhX3NtYXJ0LnB5Cj4gKysrIGIvYml0YmFrZS9saWIvYmIvZGF0YV9zbWFy
+dC5weQo+IEBAIC0yNzIsMTIgKzI3Miw5IEBAIGNsYXNzIFZhcmlhYmxlSGlzdG9yeShvYmplY3Qp
+Ogo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4KPiDCoMKgwqDCoMKgwqDCoMKgIGlm
+ICdvcCcgbm90IGluIGxvZ2luZm8gb3Igbm90IGxvZ2luZm9bJ29wJ106Cj4gwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGxvZ2luZm9bJ29wJ10gPSAnc2V0Jwo+IC3CoMKgwqDCoMKgwqDCoCBpZiAn
+ZGV0YWlsJyBpbiBsb2dpbmZvOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGxvZ2luZm9bJ2Rl
+dGFpbCddID0gc3RyKGxvZ2luZm9bJ2RldGFpbCddKQo+IMKgwqDCoMKgwqDCoMKgwqAgaWYgJ3Zh
+cmlhYmxlJyBub3QgaW4gbG9naW5mbyBvciAnZmlsZScgbm90IGluIGxvZ2luZm86Cj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHJhaXNlIFZhbHVlRXJyb3IoInJlY29yZCgpIG1pc3NpbmcgdmFy
+aWFibGUgb3IgZmlsZS4iKQo+IMKgwqDCoMKgwqDCoMKgwqAgdmFyID0gbG9naW5mb1sndmFyaWFi
+bGUnXQo+IC0KPiDCoMKgwqDCoMKgwqDCoMKgIGlmIHZhciBub3QgaW4gc2VsZi52YXJpYWJsZXM6
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNlbGYudmFyaWFibGVzW3Zhcl0gPSBbXQo+IMKg
+wqDCoMKgwqDCoMKgwqAgaWYgbm90IGlzaW5zdGFuY2Uoc2VsZi52YXJpYWJsZXNbdmFyXSwgbGlz
+dCk6Cj4gQEAgLTMzNiw3ICszMzMsOCBAQCBjbGFzcyBWYXJpYWJsZUhpc3Rvcnkob2JqZWN0KToK
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZsYWcgPSAnWyVzXSAn
+ICUgKGV2ZW50WydmbGFnJ10pCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxz
+ZToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZsYWcgPSAnJwo+
+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgby53cml0ZSgiI8KgwqAgJXMgJXM6JXMl
+c1xuI8KgwqDCoMKgICVzXCIlc1wiXG4iICUgKGV2ZW50WydvcCddLCBldmVudFsnZmlsZSddLCBl
+dmVudFsnbGluZSddLCBkaXNwbGF5X2Z1bmMsIGZsYWcsIHJlLnN1YignXG4nLCAnXG4jwqDCoMKg
+wqAgJywgZXZlbnRbJ2RldGFpbCddKSkpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBvLndyaXRlKCIjwqDCoCAlcyAlczolcyVzXG4jwqDCoMKgwqAgJXNcIiVzXCJcbiIgJSBcCj4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIChldmVudFsnb3AnXSwgZXZl
+bnRbJ2ZpbGUnXSwgZXZlbnRbJ2xpbmUnXSwgZGlzcGxheV9mdW5jLCBmbGFnLCByZS5zdWIoJ1xu
+JywgJ1xuI8KgwqDCoMKgICcsIHN0cihldmVudFsnZGV0YWlsJ10pKSkpCj4gwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGlmIGxlbihoaXN0b3J5KSA+IDE6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgby53cml0ZSgiIyBwcmUtZXhwYW5zaW9uIHZhbHVlOlxuIikKPiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBvLndyaXRlKCcjwqDCoCAiJXMiXG4nICUgKGNvbW1l
+bnRWYWwpKQo+IEBAIC0zOTAsNyArMzg4LDcgQEAgY2xhc3MgVmFyaWFibGVIaXN0b3J5KG9iamVj
+dCk6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIGlzc2V0IGFuZCBldmVudFsnb3AnXSA9
+PSAnc2V0Pyc6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29udGludWUKPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaXNzZXQgPSBUcnVlCj4gLcKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgaXRlbXMgPSBkLmV4cGFuZChldmVudFsnZGV0YWlsJ10pLnNwbGl0KCkKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBpdGVtcyA9IGQuZXhwYW5kKHN0cihldmVudFsnZGV0YWlsJ10pKS5z
+cGxpdCgpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZvciBpdGVtIGluIGl0ZW1zOgo+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICMgVGhpcyBpcyBhIGxpdHRsZSBjcnVkZSBi
+dXQgaXMgYmVsdC1hbmQtYnJhY2VzIHRvIGF2b2lkIHVzCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgIyBoYXZpbmcgdG8gaGFuZGxlIGV2ZXJ5IHBvc3NpYmxlIG9wZXJhdGlvbiB0
+eXBlIHNwZWNpZmljYWxseQo+IAoKVGhpcyBsb29rcyBsaWtlIGEgZ29vZCBmaW5kLCB0aGFua3Mg
+Zm9yIGRpZ2dpbmcgaW50byBpdCEgSSdtIGEgbGl0dGxlCnN1cnByaXNlZCB0aGlzIGNhdXNlcyBh
+cyBtdWNoIG9mIGEgcHJvYmxlbSBhbmQgd2FzIGEgYml0IHdvcnJpZWQgYWJvdXQKdW5pbnRlbmRl
+ZCBzaWRlIGVmZmVjdHMgYnV0IEkgZGlkbid0IGZpbmQgYW55IGluIHRlc3Rpbmcgc28gaXQgaGFz
+Cm1lcmdlZCwgdGhhbmtzIQoKQ2hlZXJzLAoKUmljaGFyZAoKCg==
 
-Quoting Tim Orling (2024-05-24 19:36:45)
-> On Fri, May 24, 2024 at 11:24=E2=80=AFAM Tim Orling <ticotimo@gmail.com> =
-wrote:
->=20
-> >
-> >
-> > On Fri, May 24, 2024 at 9:28=E2=80=AFAM Khem Raj via lists.openembedded=
-.org
-> > <raj.khem=3Dgmail.com@lists.openembedded.org> wrote:
-> >
-> >> On Fri, May 24, 2024 at 8:33=E2=80=AFAM Quentin Schulz <quentin.schulz=
-@cherry.de>
-> >> wrote:
-> >> >
-> >> > Hi Khem,
-> >> >
-> >> > On 5/24/24 5:18 PM, Khem Raj via lists.openembedded.org wrote:
-> >> > > On Fri, May 24, 2024 at 6:49=E2=80=AFAM Quentin Schulz via
-> >> > > lists.openembedded.org <foss=3D0leil.net@lists.openembedded.org> w=
-rote:
-> >> > >>
-> >> > >> From: Quentin Schulz <quentin.schulz@cherry.de>
-> >> > >>
-> >> > >> b4[1] is a very nice tool for mail-based contribution. A config[2]
-> >> file
-> >> > >> exists to set up a few defaults. We can use it to set the Cc
-> >> recipients
-> >> > >> to always add, in our case the mailing list.
-> >> > >>
-> >> > >> This shouldn't be necessary if we had a script that b4 prep
-> >> --auto-to-cc
-> >> > >> could call to find the mail address(es) to send to. While we coul=
-d do
-> >> > >> that, this opens the door to people trying to add a way to notify
-> >> some
-> >> > >> people (e.g. a MAINTAINERS file) which is not somewhere the proje=
-ct
-> >> > >> wants to go right now, and this also makes sure the address is al=
-ways
-> >> > >> added even if one forgets to run b4 prep --auto-to-cc (which is p=
-art
-> >> of
-> >> > >> the typical workflow for U-Boot and Linux kernel, but is not
-> >> necessary
-> >> > >> thanks to this patch).
-> >> > >>
-> >> > >> [1] https://pypi.org/project/b4/
-> >> > >> [2] https://b4.docs.kernel.org/en/latest/config.html
-> >> > >>
-> >> > >> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
-> >> > >> ---
-> >> > >> This adds a basic config file for b4 to avoid to have to add the
-> >> mailing
-> >> > >> list by hand. For documentation patches, one will still need to r=
-un
-> >> > >> b4 send --cc docs@lists.yoctoproject.org
-> >> > >> manually for sending it to the docs ML as well.
-> >> > >>
-> >> > >> Note that b4 supports patchwork, c.f.
-> >> > >>
-> >> https://b4.docs.kernel.org/en/latest/config.html#patchwork-integration=
--settings
-> >> > >> though I have no clue what it does with it as I am no maintainer,=
- but
-> >> > >> maybe something worth having a look at if some maintainer of this
-> >> repo
-> >> > >> wants to use b4 to merge stuff?
-> >> > >
-> >> > > I use b4 regularly for meta-openembedded maintenance and it also
-> >> updates
-> >> > > patchwork when patch is accepted, I have this config.
-> >> > >
-> >> > >     [b4]
-> >> > >      pw-url =3D "https://patchwork.yoctoproject.org/"
-> >> > >      pw-key =3D "<mykey>"
-> >> > >      pw-project =3D "oe"
-> >> > >      pw-review-state =3D "under-review"
-> >> > >      pw-accept-state =3D  "accepted"
-> >> > >      pw-discard-state =3D "rejected"
-> >> > >      send-series-to =3D "openembedded-devel@lists.openembedded.org"
-> >>
-> >
-> > This inspired me to revisit the issue I was having with "b4 shazam <
-> > message.id for an AUH upgrade>", where
-> > shazam would stumble because of the "scissors line" (--- >8 ---)
-> >
-> > Turns out the solution appears to be
-> > [b4]
-> >     stdin-pipe-sep =3D "--- >8 ---"
-> >
->=20
-> Correction, where I was having trouble was with "git pw patch apply"
->=20
-> $ git pw patch apply 43726
-> Failed to apply patch:
-> hint: When you have resolved this problem, run "git am --continue".
-> hint: If you prefer to skip this patch, run "git am --skip" instead.
-> hint: To record the empty patch as an empty commit, run "git am
-> --allow-empty".
-> hint: To restore the original branch and stop patching, run "git am
-> --abort".
-> hint: Disable this message with "git config advice.mergeConflict false"
-> Patch is empty.
->=20
-> Whereas "b4 shazam
-> 0101018f7d589796-87eb5d6d-06ed-4275-b5bc-6bad87216833-000000@us-west-2.am=
-azonses.com"
-> works:
->=20
-> $ b4 shazam
-> 0101018f7d589796-87eb5d6d-06ed-4275-b5bc-6bad87216833-000000@us-west-2.am=
-azonses.com
-> Grabbing thread from
-> lore.kernel.org/all/0101018f7d589796-87eb5d6d-06ed-4275-b5bc-6bad87216833=
--000000@us-west-2.amazonses.com/t.mbox.gz
-> Checking for newer revisions
-> Grabbing search results from lore.kernel.org
-> Analyzing 1 messages in the thread
-> Checking attestation on all messages, may take a moment...
-> Retrieving CI status, may take a moment...
-> ---
->   =E2=9C=93 [PATCH] nghttp2: upgrading to 1.62.0 SUCCEEDED
->   ---
->   =E2=9C=93 Signed: DKIM/yoctoproject.org
-> ---
-> Total patches: 1
-> ---
-> Applying: nghttp2: upgrade 1.61.0 -> 1.62.0
->=20
->=20
-> Any tricks to getting the Message-Id from patchwork?
-
-I've recently been trying to tackle this for the libcamera project as
-well.
-
-Essentially - grab the series as json from:=20
-https://patchwork.libcamera.org/api/1.1/series/$SERIES_ID/
-
-Then extract from
-   data['cover_letter']['msgid']
-
-if there's a cover letter, or=20
-
-   data['patches'][0]['msgid']
-
-otherwise.
-
-
-I'm using this (quick and dirty, please don't judge the) python code to
-script getting the message-id.
-
-```
-#!/usr/bin/env python3
-import requests
-import sys
-
-PATCHWORK_API_URL =3D "https://patchwork.libcamera.org/api/1.1"
-
-def get_first_patch_message_id(series_id):
-    # Get series details
-    series_url =3D f"{PATCHWORK_API_URL}/series/{series_id}/"
-    response =3D requests.get(series_url)
-    response.raise_for_status()
-    series_data =3D response.json()
-
-    # Check for cover letter and get its msgid
-    if series_data.get('cover_letter'):
-        message_id =3D series_data['cover_letter']['msgid']
-    else:
-        # If no cover letter, get the msgid of the first patch
-        if not series_data['patches']:
-            raise ValueError("No patches found in the series")
-        message_id =3D series_data['patches'][0]['msgid']
-
-    return message_id
-
-if __name__ =3D=3D "__main__":
-    if len(sys.argv) !=3D 2:
-        print("Usage: python3 get-message-id.py <series_id>")
-        sys.exit(1)
-
-    series_id =3D sys.argv[1]
-
-    try:
-        message_id =3D get_first_patch_message_id(series_id)
-        print(f"Message ID of the first patch in the series: {message_id}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-```
-
---
-Kieran
 
