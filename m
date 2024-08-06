@@ -2,174 +2,117 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6557C49EA1
-	for <webhook@archiver.kernel.org>; Tue,  6 Aug 2024 14:10:20 +0000 (UTC)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
- by mx.groups.io with SMTP id smtpd.web10.8208.1722953415779668146
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4123C52D70
+	for <webhook@archiver.kernel.org>; Tue,  6 Aug 2024 19:44:43 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web11.16415.1722973477549642857
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 06 Aug 2024 07:10:16 -0700
+ Tue, 06 Aug 2024 12:44:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=UZtY59hn;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.208.179, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2f136e23229so7278551fa.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Aug 2024 07:10:15 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=E+wrx2fB;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4280ee5f1e3so6927135e9.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Aug 2024 12:44:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1722953414; x=1723558214; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2v9f4aJ0syC3Duoro7nCtexBKq+oC9PpSMmb7v1y9fs=;
-        b=UZtY59hna0xnRd3Y5S5IlgxZzpbyqnOmPVudilz/4yqFWbo0Xb14fxxFpHVEGD4C6Z
-         yOMOLxSG0ts0R8N5xotCbWDS0Qt/1pW/j7xP3kONjV05kCIl54r8+T9oPLMobDfdmp9F
-         sDqhrUk58o1eLmna0iL2eSjeEC1UqSrsqqQio=
+        d=linuxfoundation.org; s=google; t=1722973475; x=1723578275; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rtu/5/T6GNJxhoa6mqI2q++kvDONJsD3jtVzudyV6go=;
+        b=E+wrx2fB2rjMQISynEkgT9VDxOn1PTEx6qGtCfbnR17M59Abke799Y2Tv8s8RSvmVA
+         GzBeKthQH6WR8MIal4IFn9sXlqCWOzEir0YJfF4ePgznEJMGCK1nm1XEn5qO03DDm+7A
+         yGewEnbcc3lUrzqU39R04qfDS6Rd0P/XbdgWc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722953414; x=1723558214;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2v9f4aJ0syC3Duoro7nCtexBKq+oC9PpSMmb7v1y9fs=;
-        b=VuWupIWYSrKDkYKDs7HY50OXLnzfggj1eiIh36J9y/CJv/KoH3LsM2Yar1Au/E+i2X
-         m9JaQKNDg3o+bHSUtQsdHX6QmseqTuIeObaOOKQoFmdJ5OoGBZJuxgNvFNKwlxCFe7Lk
-         HFPhcl3GJspaaoyLHEqjUYCYd/BnRilxNoWAviwZfvd83c0wYWfYpGVCgIXsXEoHECqd
-         VaP5Xz7Wv4QaGFwC2oAdiAM95gpvHpd2yBd8NLmUNUBvueYEvPQtTQ0ryGQy5io1uOW3
-         2yeNVgYduhGA8SfxJIXQJ2RZAWpP0qoDYOyjqzf0ZH7MuGEyyhe6Cws+cktC4jYxDOZk
-         CZGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrexzaHSZsujO8KSCr4HYlfljD2HHssyP9pJ7AF2CV9qIBumREzCcLa9P5S3HIcaG4k/09hPq1CCkWNPJZGS0RNBOYCjGd6YVqrulBpT7yiaAaacE=
-X-Gm-Message-State: AOJu0Yw2uJoGar5T6BaouUYTMFIdWshrGhSWW+gis+BYrczZBjTdiXFS
-	81CUJ5OZw2zvTMU1D73VmIPQtpHZPjx7/Y2MuoPbiro2c09XM3NZFD5w2T0MCTE=
-X-Google-Smtp-Source: AGHT+IH90UXdgd/iiyLYfty/epVJjDXkE3RYNPv71/FyfE8IgmpDlalnjbTCOgJtrhYDkDsgRwSJoQ==
-X-Received: by 2002:a2e:9e54:0:b0:2ef:2e0e:c888 with SMTP id 38308e7fff4ca-2f15ab53f7fmr106684171fa.48.1722953413697;
-        Tue, 06 Aug 2024 07:10:13 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:aeae:cd04:92c6:bd93? ([2001:8b0:aba:5f3c:aeae:cd04:92c6:bd93])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4282b89aa86sm245363295e9.3.2024.08.06.07.10.13
+        d=1e100.net; s=20230601; t=1722973475; x=1723578275;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rtu/5/T6GNJxhoa6mqI2q++kvDONJsD3jtVzudyV6go=;
+        b=NIxiKfNv7ip1FMsTcE+qzlqBPvzbwj5ZIh1R/ex204ZXE/D7Qn9ghOtvvHopYYjKP5
+         b8UjnofbGBjqRabACLQOWYBVF6UNSOX7fnhw3OPvxlFBTpLG3Pgx00hxWdvAO98FMnt+
+         31NtmOn61XJIdeWiGNOduaI4cn66wl2MAkbD+i1SerDmHwk0psKfNADYaX+PSui8Is/I
+         MeENqkyDH/QTgT+hSEjATfrBr4fcNCM17Inrm5PeUqrYFjs8SiP9i2FAnIKUQsWZiyPC
+         sCR9FQIc5yRGQmLpf/NiOPnQRJ3Jmi2ncaZIivTup7Bou4+A+HkoP1i1Oq2XVXt5WpGn
+         vu8g==
+X-Gm-Message-State: AOJu0YzL637E/eL6fZRl/Y5PJCtk1IdB9by3bHoZSj2QA9Pb37IFxEf+
+	WIrtxqio6KV7r0PSIHj5KGIMXkeJSXUMnVixtf1fR1QnSm5zxuUYWQRCbQJLxVQieOmO5jMHFy5
+	UNM4=
+X-Google-Smtp-Source: AGHT+IFvXp1c6n1Htz6bXEFiQbAEnqvldVpp7sFqphHxW3RxGKE7aLrg6FQocIHRyzBAbpaCmgxPBg==
+X-Received: by 2002:a05:600c:444e:b0:426:8884:2c58 with SMTP id 5b1f17b1804b1-428e6aeaf22mr112115825e9.4.1722973474921;
+        Tue, 06 Aug 2024 12:44:34 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:aeae:cd04:92c6:bd93])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-428e6e3ef10sm198317655e9.24.2024.08.06.12.44.34
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Aug 2024 07:10:13 -0700 (PDT)
-Message-ID: <0aa2cd5ba0a59dfeb5810beb34130a0b9bd803db.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/1] fetch2/git: Use basename for
- gitsrcname when ud.proto is file
+        Tue, 06 Aug 2024 12:44:34 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>, 
- bitbake-devel@lists.openembedded.org, "Burton, Ross" <ross.burton@intel.com>
-Date: Tue, 06 Aug 2024 15:10:12 +0100
-In-Reply-To: <e089ca2e-5834-42bb-998b-3515b2fccaed@windriver.com>
-References: <cover.1719033434.git.liezhi.yang@windriver.com>
-	 <8121be4437aeae47c5b1d6870e1561b2b088198f.1719033434.git.liezhi.yang@windriver.com>
-	 <24cba6a8909e5b3470ca8e51812dc6f3138538dd.camel@linuxfoundation.org>
-	 <e089ca2e-5834-42bb-998b-3515b2fccaed@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] BBHandler: Handle comments in addtask/deltask
+Date: Tue,  6 Aug 2024 20:44:33 +0100
+Message-ID: <20240806194433.107550-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 06 Aug 2024 14:10:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16449
+ <bitbake-devel@lists.openembedded.org>; Tue, 06 Aug 2024 19:44:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16450
 
-On Tue, 2024-08-06 at 21:42 +0800, Robert Yang wrote:
-> Hi RP and Ross,
->=20
-> On 8/6/24 19:06, Richard Purdie wrote:
-> > On Fri, 2024-06-21 at 22:20 -0700, Robert Yang via lists.openembedded.o=
-rg wrote:
-> > > From: Robert Yang <liezhi.yang@windriver.com>
-> > >=20
-> > > The previous code added local path to generated mirror tarball name w=
-hich had
-> > > two potential issues when fetch from local PREMIRROR, for exapmle:
-> > >=20
-> > > Add github.com.lsof-org.lsof to /path/to/local/PREMIRROR/
-> > > $ bitbake lsof -cfetch
-> > >=20
-> > > * There might be "Fix File name too long error" when the local path i=
-s long
-> > > =C2=A0=C2=A0 since the path is translated to filename and added to do=
-wnloads/git2/ as:
-> > > =C2=A0=C2=A0 path.to.local.PREMIRROR.github.com.lsof-org.lsof
-> > >=20
-> > > * When enable BB_GENERATE_MIRROR_TARBALLS:
-> > > =C2=A0=C2=A0 The tarball name will be:
-> > > =C2=A0=C2=A0 git2_path.to.local.PREMIRROR.github.com.lsof-org.lsof.ta=
-r.gz
-> > >=20
-> > > =C2=A0=C2=A0 The above tarball can't be re-used by do_fetch since bit=
-bake looks for
-> > > =C2=A0=C2=A0 'git2_github.com.lsof-org.lsof.tar.gz', but the 'path.to=
-.local.PREMIRROR' in
-> > > =C2=A0=C2=A0 the file name breaks the match.
-> > >=20
-> > > Use os.path.basename(ud.path) as gitsrcname when ud.proto is file can=
- fix the
-> > > the above two issues, now the file name in downloads/git2/ is:
-> > > github.com.lsof-org.lsof
-> > >=20
-> > > And the generated tarball is:
-> > > git2_github.com.lsof-org.lsof.tar.gz
-> > >=20
-> > > Or when BB_GIT_SHALLOW is enabled:
-> > > gitshallow_github.com.lsof-org.lsof_2e4c7a1-1_master.tar.gz
-> > >=20
-> > > And the tarballs can be re-used by do_fetch.
-> > >=20
-> > > Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> > > ---
-> > > =C2=A0=C2=A0bitbake/lib/bb/fetch2/git.py | 5 ++++-
-> > > =C2=A0=C2=A01 file changed, 4 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git=
-.py
-> > > index c7ff769fdf..89d3268f7f 100644
-> > > --- a/bitbake/lib/bb/fetch2/git.py
-> > > +++ b/bitbake/lib/bb/fetch2/git.py
-> > > @@ -277,7 +277,10 @@ class Git(FetchMethod):
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ud.unresolvedrev[=
-name] =3D ud.revisions[name]
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ud.revisions[name] =3D self.latest_revisi=
-on(ud, d, name)
-> > > =C2=A0=20
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gitsrcname =3D '%s%s' % (=
-ud.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.').repl=
-ace(' ','_').replace('(', '_').replace(')', '_'))
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ud.proto =3D=3D "file"=
-:
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 g=
-itsrcname =3D '%s' % os.path.basename(ud.path)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 g=
-itsrcname =3D '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.'=
-).replace('*', '.').replace(' ','_').replace('(', '_').replace(')', '_'))
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if gitsrcname.=
-startswith('.'):
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 gitsrcname =3D gitsrcname[1:]
-> >=20
-> >=20
-> > I did look at this patch again. I'm still not convinced about the
-> > original use case but ignoring that, the patch itself isn't too safe.
->=20
-> Thanks for looking into this, the main problem is that we need a way to f=
-ix the
-> filename too long error as described in the commit message above.
->=20
-> > If you have two repositories with the same name, this can break since
-> > basename() on the URI is not a unique value.
->=20
-> If the two repos are identical, then it isn't a problem since bitbake
-> can handle them correctly, if the two local repos with the same
-> name but have different contents, I think that the user should fix their =
-repos.
+Technically our syntax would allow for comments after an addtask/deltask.
+Currently these get silently processed in various ways by the code which
+is bad.
 
-The trouble is that this doesn't just affect local repos, the contents
-of DL_DIR can and will be shared as a public mirror so it is any two
-repos with the same name, not just two local repos.
+Tweak the regex to drop any comments and add test cases to ensure this
+continues to work in the future.
 
-This is partly why I still think mirrors of local file repos don't make
-sense.
+[YOCTO #15250]
 
-Cheers,
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/parse/parse_py/BBHandler.py |  4 ++--
+ lib/bb/tests/parse.py              | 10 ++++++++++
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-Richard
-
+diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
+index c13e4b9755..c1653faeee 100644
+--- a/lib/bb/parse/parse_py/BBHandler.py
++++ b/lib/bb/parse/parse_py/BBHandler.py
+@@ -23,8 +23,8 @@ __func_start_regexp__    = re.compile(r"(((?P<py>python(?=(\s|\()))|(?P<fr>faker
+ __inherit_regexp__       = re.compile(r"inherit\s+(.+)" )
+ __inherit_def_regexp__   = re.compile(r"inherit_defer\s+(.+)" )
+ __export_func_regexp__   = re.compile(r"EXPORT_FUNCTIONS\s+(.+)" )
+-__addtask_regexp__       = re.compile(r"addtask\s+(?P<func>\w+)\s*((before\s*(?P<before>((.*(?=after))|(.*))))|(after\s*(?P<after>((.*(?=before))|(.*)))))*")
+-__deltask_regexp__       = re.compile(r"deltask\s+(.+)")
++__addtask_regexp__       = re.compile(r"addtask\s+(?P<func>\w+)\s*((before\s*(?P<before>(([^#\n]*(?=after))|([^#\n]*))))|(after\s*(?P<after>(([^#\n]*(?=before))|([^#\n]*)))))*(?P<comment>#.*|.*?)")
++__deltask_regexp__       = re.compile(r"deltask\s+([^#\n]+)(?P<comment>#.*|.*?)")
+ __addhandler_regexp__    = re.compile(r"addhandler\s+(.+)" )
+ __def_regexp__           = re.compile(r"def\s+(\w+).*:" )
+ __python_func_regexp__   = re.compile(r"(\s+.*)|(^$)|(^#)" )
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index 72d1962e7e..d076fcc208 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -179,6 +179,15 @@ python () {
+ addtask do_patch after do_foo after do_unpack before do_configure before do_compile
+ addtask do_fetch do_patch
+ 
++addtask do_myplaintask
++addtask do_myplaintask2
++deltask do_myplaintask2
++addtask do_mytask# comment
++addtask do_mytask2 # comment2
++addtask do_mytask3
++deltask do_mytask3# comment
++deltask do_mytask4 # comment2
++
+ MYVAR = "do_patch"
+ EMPTYVAR = ""
+ deltask do_fetch ${MYVAR} ${EMPTYVAR}
+@@ -195,6 +204,7 @@ deltask ${EMPTYVAR}
+         self.assertTrue("addtask contained multiple 'before' keywords" in output)
+         self.assertTrue("addtask contained multiple 'after' keywords" in output)
+         self.assertTrue('addtask ignored: " do_patch"' in output)
++        self.assertEqual(['do_myplaintask', 'do_mytask', 'do_mytask2'], d.getVar("__BBTASKS"))
+         #self.assertTrue('dependent task do_foo for do_patch does not exist' in output)
+ 
+     broken_multiline_comment = """
 
