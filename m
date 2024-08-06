@@ -1,201 +1,281 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <liezhi.yang@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD14C49EA1
-	for <webhook@archiver.kernel.org>; Tue,  6 Aug 2024 13:41:40 +0000 (UTC)
-Received: from DUZPR83CU001.outbound.protection.outlook.com (DUZPR83CU001.outbound.protection.outlook.com [52.101.67.30])
- by mx.groups.io with SMTP id smtpd.web11.7568.1722951696557431879
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD95DC49EA1
+	for <webhook@archiver.kernel.org>; Tue,  6 Aug 2024 13:43:10 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.web10.7540.1722951782394515745
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 06 Aug 2024 06:41:37 -0700
+ Tue, 06 Aug 2024 06:43:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=selector1 header.b=XuPODpDp;
- spf=pass (domain: axis.com, ip: 52.101.67.30, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=8948c99a11=liezhi.yang@windriver.com)
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4766t3mv005948
+	for <bitbake-devel@lists.openembedded.org>; Tue, 6 Aug 2024 13:43:01 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 40s9ry2usy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Tue, 06 Aug 2024 13:43:00 +0000 (GMT)
+Received: from m0250811.ppops.net (m0250811.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 476Dh0Lq028471;
+	Tue, 6 Aug 2024 13:43:00 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 40s9ry2usw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Aug 2024 13:43:00 +0000 (GMT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YUDOihEERfP+qfx2Cmkl2UN/hOKm3wxT/KsG1r66HrpOq2nvYoYYf5jlArVfahN+Og+L5jYXTZGH+laboVfSFDpo6MmzKHTygAJIGn5b0LzV3vc4+TTKqwcQbATut9iOAEqf41V5aBNThRnG4VyT18Ktu38E7xfnFnI29e5tBSa9Wp5L+/0xVAO3joBO+V2B1E+hNRHbjyGp/5GphlfQBws1tvJ9+wVmCPpCjD8Ij2Zgq7lleX5kXlDvm/ktFnW6keurtS7WxCUsVwmIpW0B8NxWftPAL0HP11nh+tFRVz2Ri5WIhpgI2bPOoCK/17vBhNuL1EhONzkhT+B0ZyJorQ==
+ b=r8vtGcfU5uNKggOIZ1FC33FWrqz+cjyt8TlNI7qhcAAfBvGdn7paA9l2FtcO7OLUQOUkhdbOAG3/ltJCfXvwuSogcxWP9zgHUYsJL5WJufvhKF9avzZEIC59JitcKPqrUTREsP8MWydeZAKXgQvXC+t8JFduDAqMFdyrD0qUZh2WVwutV5e40cmAEc6OouDvyNqdRFFwl6LqBtUlaYMcUeLPuNxDfrKsCCymU27IEPK4fjJhK8m2Gkkm12KbrBH+ZV6+90qW3ynIkw+WenGciNPB0Q9rhSHez6pm7xUH5AzG4QNbBYyfUTWFxNRgn6sYvo+vn0JtIAjIreccmx03xA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E2ugKW9p3CyD2jkoGwEH477Be0jLVsSRc6yn1x+FTGc=;
- b=PpElZ8hgcirFEqEiqNc5J+s/D7y9+BMBUuqjQpG3HWukd9LWewBiXSZp0AjU99dIoh+L64kr4VLO9ilIUlVQpGxHdUOyRWgZpfXfJXPd0m1Rqd+FP6ppZj94+jrjq6OX4UkG5ijMcj4gl96Q76Zcij/u4vSgojj5sYMqdQ15h5qYT92WZ7VTNJIeVtKOJIkvZuoxe6XhQuqZQ2kfjopLHlhdPZiLENmtV3RDAk6zAOMg00E3ic78mRc8sSgH9/uQX9TvUuGKjrPkj3V4WJaF6UinN2rg8xxPSfVJKb0DGC81NbFIluB6prq4e/aR0PpRCO+ul7UeiO9Hr0QzHZbrng==
+ bh=MP++4utcqVxqAyPTsV1nWIhIlYE3kUMJ2E6QccGcTgs=;
+ b=H8OrUpFAltw0xcm7JoPYVRDDMGw0zMayJ0zVXzJOPCusFZHvR10ZvD7g8ZLxBnRvP6/thk5Ebp2CyZk/PR3QHkZWHoWWpiqf0Ue5HRh5Eawtm0GfIrn9Cr3hjxvgC0EXs8GCqMIe5a8BdSipqjhBDqPwd/qxtF6bZGJYaSKSCN4aFnK0fb+7UbLR/qtAHYttQ3S32H/3t0/zwqbpdX3o3Jyg/o5FriKK/2Dy251x6HsIkBJVI7VZmNYIxm9+qYbS1RLWVYdW3liBsqZQgsRgCtQSmWD75d9y27rIDPR137CR/T1SS5HhPC5Eclf00b5LDhG18k562pfdWbuVzwN/Lg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E2ugKW9p3CyD2jkoGwEH477Be0jLVsSRc6yn1x+FTGc=;
- b=XuPODpDpXHc2LbrDx6mL2OJxg/HnHS0s93BHKxQoGPJ7MB27zHG7SpXBpw1raf7vZqXWAzcvTRSqnifQAUfnQtSO2KCYcqHU6dyrpw47OM6xacvUpb1QW0li/0OAmi6pf01yzAcp7TN+93kU6stWkeCtFG0NfaYUie6+BKOLm/o=
-Received: from DB5PR02MB10213.eurprd02.prod.outlook.com (2603:10a6:10:4a8::17)
- by PA6PR02MB10709.eurprd02.prod.outlook.com (2603:10a6:102:3d4::7) with
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from LV3PR11MB8531.namprd11.prod.outlook.com (2603:10b6:408:1b6::15)
+ by DS0PR11MB6422.namprd11.prod.outlook.com (2603:10b6:8:c6::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.26; Tue, 6 Aug
- 2024 13:41:33 +0000
-Received: from DB5PR02MB10213.eurprd02.prod.outlook.com
- ([fe80::1bee:3174:a078:5af9]) by DB5PR02MB10213.eurprd02.prod.outlook.com
- ([fe80::1bee:3174:a078:5af9%2]) with mapi id 15.20.7828.023; Tue, 6 Aug 2024
- 13:41:33 +0000
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-CC: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Subject: RE: [bitbake-devel] [RFC PATCH] ui/knotty: print log paths for failed
- tasks in summary
-Thread-Topic: [bitbake-devel] [RFC PATCH] ui/knotty: print log paths for
- failed tasks in summary
-Thread-Index: AQHawPIapS/6pGKeAESDdgOaEDjIOLHNuM1QgDcBcXCAAWQL0IAUakEA
-Date: Tue, 6 Aug 2024 13:41:32 +0000
-Message-ID: 
- <DB5PR02MB10213C66CEE84882C7B8D12A5EFBF2@DB5PR02MB10213.eurprd02.prod.outlook.com>
-References: <17D9E3841C981E13.27929@lists.openembedded.org>
- <DM8PR12MB5430FE1BDE5343FD142CA3D78BCE2@DM8PR12MB5430.namprd12.prod.outlook.com>
- <DB5PR02MB10213FAD2E238F7AB9390A4D2EFA92@DB5PR02MB10213.eurprd02.prod.outlook.com>
- <DM8PR12MB54305463A787C28830751D948BAA2@DM8PR12MB5430.namprd12.prod.outlook.com>
-In-Reply-To: 
- <DM8PR12MB54305463A787C28830751D948BAA2@DM8PR12MB5430.namprd12.prod.outlook.com>
-Accept-Language: en-US
+ 2024 13:42:56 +0000
+Received: from LV3PR11MB8531.namprd11.prod.outlook.com
+ ([fe80::d341:6ff5:fce1:c6d]) by LV3PR11MB8531.namprd11.prod.outlook.com
+ ([fe80::d341:6ff5:fce1:c6d%7]) with mapi id 15.20.7828.024; Tue, 6 Aug 2024
+ 13:42:56 +0000
+Message-ID: <e089ca2e-5834-42bb-998b-3515b2fccaed@windriver.com>
+Date: Tue, 6 Aug 2024 21:42:49 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bitbake-devel] [PATCH 1/1] fetch2/git: Use basename for
+ gitsrcname when ud.proto is file
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+        bitbake-devel@lists.openembedded.org,
+        "Burton, Ross" <ross.burton@intel.com>
+References: <cover.1719033434.git.liezhi.yang@windriver.com>
+ <8121be4437aeae47c5b1d6870e1561b2b088198f.1719033434.git.liezhi.yang@windriver.com>
+ <24cba6a8909e5b3470ca8e51812dc6f3138538dd.camel@linuxfoundation.org>
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
- MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ActionId=df634e94-fdaf-4c67-8d26-2b3b695eef37;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ContentBits=0;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Enabled=true;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Method=Standard;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Name=General;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SetDate=2024-06-18T16:34:10Z;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SiteId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB5PR02MB10213:EE_|PA6PR02MB10709:EE_
-x-ms-office365-filtering-correlation-id: 6eb21514-ecf9-47b8-35d2-08dcb61d7c00
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?Y2pAbej3E/taFxHYgvKmdj10JN4w4vgR2XERhjXaBUF58veAX5iL8Cz3gfwV?=
- =?us-ascii?Q?7mZ7f+4oJqQEZYkxeBN79h5iHmOs1a6Jjsl5cpu4bbGFo3YLKxBzQ4SCKtCu?=
- =?us-ascii?Q?VLA26r9wpFW8GB3YLaO+WLuW9v5v/3xESfIv5/Gmmi5nYCptPg93JA/l4Pd/?=
- =?us-ascii?Q?KXXN4+h4zLTpsK3nQ76O2U5/d4duIJzRqFFdy8zgL59MC6scfIY82TctB3ck?=
- =?us-ascii?Q?0qwtI4FeH3DD3WQgALH/2m1V2QbFHVGuI1e81vLJbA4zILbW7BDFgskJGb3t?=
- =?us-ascii?Q?uQPvVOQxMKfd47OxTW8EpC+swYUMjxEl6PoP9JV4SzyzMpRAPjeEcTRp/pLx?=
- =?us-ascii?Q?QTi248bEFGxN1ojmFSeQSMReQVdJx8VDhaYXMK48UDNXk1y6Ed/MHy9TlwEp?=
- =?us-ascii?Q?pHbPeyqrzpwXFypFOFHr1KAbdg+tBJIzlFO+e9oMwtbcDtTRzLgQnpHEf96D?=
- =?us-ascii?Q?DOlETJbH4sNhiUtjmh4W6mh/NExium1NifbpEiXdn63nogfgOYZmo1Bm56fH?=
- =?us-ascii?Q?q8ZDPyjDyae6liQITKaA77gvkKw/g2m4MlbIqL42U0WLPGY3sDp33nHZ9ev4?=
- =?us-ascii?Q?z7GZGMV+2b6+rMTsMMbWWJRFUfxjvrW+EUmZex3qvK5zU+A63EP09z6+um9o?=
- =?us-ascii?Q?COETu2THWoINCf8UgtxyaHHSmnauJvF1PE8IfD1zsjkZ+kxyztvUuADTWrpt?=
- =?us-ascii?Q?j4q3bwmIuZcp+ajsw6vFSWQdPuJcGdJFWuItyQl0WaKVdkObZSuyKSxQO2zf?=
- =?us-ascii?Q?BrQ3nEP7Q7CrPJEWF+c+yMxmj4q2sbY9VPHB4CNk9kjYd1iDLtztRaetaTpf?=
- =?us-ascii?Q?FxRQNm7/VWeQ1ZjZcTO5Kv71OtoUtBdZgBSGZjuPVhXv+UPhHqIsSTv6al4W?=
- =?us-ascii?Q?KNpLFnqXRkhFN0+21VjIMD5sUDp78hN60qtDdgd1SdZTKIVOLlBA7pGiLx6L?=
- =?us-ascii?Q?2e1fFwiFlbsp0ypHG6/sm23JIyWGGCH+8DP2VDjIbhVRseXCjiSfAI66YPwd?=
- =?us-ascii?Q?HLXvM6DJtY2K6ed+F045nRwWjl4u6jeApe++H40yPsRny+q6+r9FXV3UL2I/?=
- =?us-ascii?Q?pzg1+qJELIzhuNCAX/sF+CDUgMVn/Or8iMtumLfqdGqaK/GrMLBSWpY5PQbO?=
- =?us-ascii?Q?VQ5tJvUap/5kinph+Jan7SnBundt1uahs83QyihiGfaIS1eKxNPk7lq1Cp4u?=
- =?us-ascii?Q?qsoeyhpBIRmpklqNY5Q1DBbX3c2YAuJeqbTGkcW+24bcRA5T9fhmCaazIfJu?=
- =?us-ascii?Q?iU6hFMLt0QNvoLSaTuADC0JtbC05BkmUz48yjRjxost2VRtLTVjgbHg1Ld0Z?=
- =?us-ascii?Q?QevWI9UK+Ev/NaQpswzLRVauV4gfW0wH2w5Ki79jPTePxtg1wSGVoROTAxFc?=
- =?us-ascii?Q?2HQOZUDzQJ3MZuhmxvQK0j/jq5R8xlXMp4VaQy75ULp4hb55Tg=3D=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB5PR02MB10213.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?lwjAwDcj4wmhfPYW+Gd7Yr5vIB3zpAjzjW2DkOEnSjoh/xnOvBgL1igomR8c?=
- =?us-ascii?Q?GiT4IJqv2WI7lekVlXUZ6J5AMo09RLAG7RKwA0Eoh2SdetG9aGgnxUP7skKy?=
- =?us-ascii?Q?CUKPFyR6Z5BwJoYt0P13IyJgAuYnfGZezwhBBIF+KqL1lp0IzPrSqFe7SQVZ?=
- =?us-ascii?Q?xQEHsUuEK4ksrqfhEo/RpyqSyKRF5FpUTH3ghPvuERwBV58Nv0BjF0Pp2Ig8?=
- =?us-ascii?Q?b+5w1yL08AXWkv8jwv3FQPO/8BWKsxoPMfBUMG82qNsiPVSKSJyvRqYBQd+g?=
- =?us-ascii?Q?DUkkJQYs1CmI/fZAEH8Z/hgbZ1nkL9DkqRsJ2m4k9/HTFuMPkeGoTISaNkso?=
- =?us-ascii?Q?tgXEg23tCXHD9hl2ak+X49I+94s4EJFAQoC2OdZmYg9s2OGFVhKfm6US6+fh?=
- =?us-ascii?Q?D4SQnuxYBIx7rAiBwBmVKT9qAYSwG4mDFLN+jtDe/AdgjjonTRl5GL1YKXWm?=
- =?us-ascii?Q?8AYYZ45ApIO6v2iA/KWgjKkW9YhbuLB/s9t9slK+W7FPPeqBXbTlXhUrOUzX?=
- =?us-ascii?Q?hmkGa83XcJX9im3Xur6y2/HWC2YmEcPe/quXkxejV4oTVdmU4p7QmbnRHvmo?=
- =?us-ascii?Q?VwY8HBpuisGAe5qCfgL8S77LUbLl/TFrfrg4x+ha3JzKtjL0ROMt6Fx0hqWx?=
- =?us-ascii?Q?Q/y5ulRTvrLLEg6VszPUcOa3xLyFih03CC3Cl0PSgxx4NmiEtp/ArFgQFNCZ?=
- =?us-ascii?Q?tmXScdlT5O6bB/NUdLa7SEhC/FC3840LCh9nqBIrXBG/LQ4kq90nxicTDh3T?=
- =?us-ascii?Q?3phiTOoLbNp2Pwf1T6tiOuAi8kiz5D3Fy7/xZBIzAL15eiBXb3mxj5C4vocV?=
- =?us-ascii?Q?b3ohovlORG0fFZUvhF7cASSLYPIE+TW4jj3NGrSIMaAwAxD5c7NbO0urwOnA?=
- =?us-ascii?Q?NuivhST694dTnll5ZeE5eulKrAK9dqoU6MsbjSPI/Cu+BIO9dTuA3OqeRYrQ?=
- =?us-ascii?Q?AWpwIsTgfNVpq8mp2slXrrk8jdnK4HrpoLD6xFmin4g2G9P2ahI5SUPsQ0OI?=
- =?us-ascii?Q?dMzJRw5MIhCPWcjWJlApk7M8fouXpIWL38UnTnxBBWyhq1Q+bpoba+FNmyFD?=
- =?us-ascii?Q?FYkd0VWSiroAmOl6jgEUg8JBkmgw832YDeCS6H0VagSSGC7Q7GBy7tShwczp?=
- =?us-ascii?Q?ekkRCcfibn0I+5P5zo5/P47TW1Ng27Q9DFNIzh6VWOMFYAM0C9kv1CNw3QJR?=
- =?us-ascii?Q?0z6Q4bZw+Lh9I66a/HDqo3r0jN8zjQ7mzZVZFqDHEadsCe2ru2ykmDBmPh/r?=
- =?us-ascii?Q?gNUjoR7Fe+eMD1GPl9jFKTbQ72S0fNHg3FV+0uvyPSWsVsJxHgsKKt1IkD3H?=
- =?us-ascii?Q?xasq4Arat3qkHOr/P0gVTRSt9RWbaKq8+w9Gh87/TqVZH+KKzk60Z0iZvdjn?=
- =?us-ascii?Q?56sVhQ9rKw6Xid2iIVhujVhYaE2fQefma2ihJ+NwAUn6AxWNgBMRh7/oMcqN?=
- =?us-ascii?Q?eLJeGqMpsL12YtUlUiEuq4ZURy9kfWJkIzeQDEtOJm3yDTFpXaYZfRntkV41?=
- =?us-ascii?Q?qJj1Oc+z3xJTxpC6YwP3PAmI/0SQ1fkWPYYIULosWbrgtDM6Gu1pXj03q0rp?=
- =?us-ascii?Q?CkLcNAn/eqroEeGzBX4=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Robert Yang <liezhi.yang@windriver.com>
+In-Reply-To: <24cba6a8909e5b3470ca8e51812dc6f3138538dd.camel@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ClientProxiedBy: TYCP286CA0103.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:2b4::16) To LV3PR11MB8531.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::15)
 MIME-Version: 1.0
-X-OriginatorOrg: axis.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8531:EE_|DS0PR11MB6422:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78b53713-334d-4c46-311b-08dcb61dad7b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?WkdPQU9DTVRHRGVXdnFBdHA0VVdRaVVlMXplY0ZsWGtXc1g5N0ZvdDVOUmtw?=
+ =?utf-8?B?ampYekdtSDNhS05Ga2xuWUQ0UnRYZGJJRWRFT3IvdXhmeElkQStVR0VzRXBG?=
+ =?utf-8?B?d3ZaQTZIcTVQM0doMmJvWkNQaXdzTHgyMThJMDFNYmxTT2k1VUVoN01RcWh5?=
+ =?utf-8?B?TEUxTjA4K0ZtaHdRejZ6cHlRQVc1NUowdjJQcUtpY01FSzl0U0lkZElyYWJx?=
+ =?utf-8?B?MTkzaEoxS0c1RU5CUVRTOXdBUFBQeGRueGs5ZW9QUHJ5TWk1N1ZzVk1MMHBP?=
+ =?utf-8?B?RVBZQVhUeXZIdVRJYmNyOWgyM2EzMFBsR3JkQ1VJKzhiM2cyMkgvUTZaREZ4?=
+ =?utf-8?B?cFhMb0hvRk1wUjk1UW9DcnFQbkl4NTFYQys2Mlpsa0orYU1nc0R0aW5TOW14?=
+ =?utf-8?B?SFYrVkhoTUlIMGFqMGpHTlZjblpjalZCV25DbHl2enRkSytRbjJZamdVdGsw?=
+ =?utf-8?B?dSsrejRRM1NuT1hBMFV4V1JKQWdib3dZenpCeG16NjBhNkJROUM0bFEzZ1Fn?=
+ =?utf-8?B?b014Nmw5aWVmcUtmeHlob1U2RDJxVnNRakkvZmFDcHEzNlpLR1BuSFVoa3Iw?=
+ =?utf-8?B?ME12ZGFMOTRzQ2hEUG1kT3JOWDBsMWhlV1h2TDc4Wmcwdk5QT3FoQnJacnNG?=
+ =?utf-8?B?eGFhdDhlS1dBSCtPOHBvVmoxT1ZHNzlwaDRiU1ZYMUNNK3NlMGNkSHNFOUxQ?=
+ =?utf-8?B?Ky9xS25rVzRTT1NOeGlaNnBZcTh6aDZOdUhYS2ZkWXlVbEFCT2s0UVE1aXRC?=
+ =?utf-8?B?d3lSeWhaejNPQVdlTnZpUXlBaXg1WFNkWDBEZTJQT3FDdDJpSWRmMU9NWmMv?=
+ =?utf-8?B?bGcxUWRCWlNvU2c4b3dYTENyeXFJUWtqQisxbFlrNE1QQmNYcjFsZ1kxNHRE?=
+ =?utf-8?B?TnM5c1dxU3lzQkhpcjc5MFFlTDgybHg3TUo4VVFGTnd2REVoTG1aRWRCbmZq?=
+ =?utf-8?B?aHM1TDJpYnJFRGZXRGZpYm54OVkyU25uMWFZYVlhWnl5M09tb3pZZjd6bktS?=
+ =?utf-8?B?VnVZYUNBTUNkTUE4eG9SbXpHVE56ZUZIRWgwWUtWdjJMd2cyL0RuNkVIb3F4?=
+ =?utf-8?B?NGlSUFdZOHlQR3dJWENjcm9JNW5iN1ljUURUNDNZV0JycjRnNHUyc0NUZXJN?=
+ =?utf-8?B?MGZ3dmZ2eVdVTDEyaGlXdmN2cXRKZVd4OGFsQVRFN3lxSXdWREIvMkI5SEp0?=
+ =?utf-8?B?MHNCb1VSUHBkZG1jSkxkTGxUS0J3d3l0OWp3bUNKYXE4bjdJVEtic0I3REdF?=
+ =?utf-8?B?ZGxpc0czU3E5WlQyamZoZUVKQXFJYzduNDVMTXhsUVlLVllFd3hXd1dNQUgx?=
+ =?utf-8?B?SEZHSGFHaENEWU1WTFB6b1ZaQWFMSGNaK0o3b003SjdEZndlVHY2QkExQ3BK?=
+ =?utf-8?B?OFRBQlJSU3dFZ011QnB2VVZNcnA5WTRyQ3d4Vkd5UXFQNlh1NDdXelBGWG5S?=
+ =?utf-8?B?bnpRWVE2RUlnTUVNdHEvV3FUZmVtbW5Kbkk4VXR2K25ZTGQwMjljMTdsQVdH?=
+ =?utf-8?B?Qit6cUREUldlWFdNdU1qOTRQRjluZ1kzM050ZnlwVWQ2VGpsRGpaOWg3SVow?=
+ =?utf-8?B?Vi8rVUE3a245ZVJhRjNwMXlKbGxScFYwNEFmMDJKVS9UajBIWWg1NjdBUnFF?=
+ =?utf-8?B?bFhteGdzUzZwZ1J4enk2ZXArN1pDTER6ZlJNOWpzUDRSejRjNlZLY01nSTE1?=
+ =?utf-8?B?ZlRNQXJHRHRrbEJ5VWJndG9tNFRxTGowNnJaTGJnemRQdzJmZHFIZFlPVG5v?=
+ =?utf-8?B?OElIbkFaeVp5eGZnUS91RERSbTlXSkYzMXFQZ1ZJSmpBNzZjYmtzRVlEWlZz?=
+ =?utf-8?B?K05VOUdIbExiSWtXZ1B6Zz09?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8531.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?OXIzS1RSeXhnL2p1Mjd5MXExT0VMTXZJRWszbEJmcVJTTmoyKytZU0dXdHNR?=
+ =?utf-8?B?b1BxZ24yYmg4cUtiRzB1SGdWU2swcVI3dVNacUV5eHZwZlBxM3o4enlTZWVQ?=
+ =?utf-8?B?UWRxWSt5TUd1RHY3OXNNYktabkw0dGwzRmFXZjR5K3lCNTNYTE04M05uN1po?=
+ =?utf-8?B?YUU1KzNFVEJScmtxL1c1ekllWlk4aE8zQlI2ZnEvZEluNDM5UVc3RXVudjUx?=
+ =?utf-8?B?aWF0UHYvVUdWSmZrTnlxWkZWT0J3VjJKR0VJV0RYbndtUmdHVEw2cVNBdWo0?=
+ =?utf-8?B?d1RlbDk0bFVRYlBTU01zRk83MGFoN2k2bWVESnlMbGUxYm94clpVaDR2UUxr?=
+ =?utf-8?B?ajM0dUpLY0E5OThtVUt6cDJiRC8rY0ZheDZ4bTRud1kxVTVveWVCMmJzdkRI?=
+ =?utf-8?B?SThKSFhEeU1RZ0FhUmpoaEVzY3FlV00zVjQzUGVvbzl0SUJBREtZdEZDSlRV?=
+ =?utf-8?B?YzNTN3RySjVVMkd6cXJyQXhUdWJ6Z29KWGE2TWxRRnZOdDJDNWplZ0dXbTVH?=
+ =?utf-8?B?S3NFbVNBQldoeXRQMWQ4L2lucjJTSUNxMUlBalhndm91Ylo2clYvaUFFSE5y?=
+ =?utf-8?B?YjJNdnphM2lKc01TbWtTV3lUc0dMQWlXbkltS0wwZVlVTTdSU2k0V1o1SXgy?=
+ =?utf-8?B?bVg5N3JEaGxmSXh5NURCcS9odUdSWCtCOXNQRW9kTzQ0dCtzelRMUDNKT1NK?=
+ =?utf-8?B?M0xBQ1gyVWtiRUJON3l6SEFWeGN0cUZ0N0p5Mm1VbkpLYll6QkRHNkF1VUNR?=
+ =?utf-8?B?VHhwQi9IdFhneEpoVnRTU0tUNWd0eDMrMmZGZnBpbGFVVVA3NzBXUFBMNFhT?=
+ =?utf-8?B?S2REbENxT3B3UVY1ZjFpdnljdHg5UXZaZVNReVBWSzdGZmJ0c3crVFlEUGVO?=
+ =?utf-8?B?UDZaL01uNVVVUDBnVlJKZ2w0akNxTnJWbktrRVQvY1ZtbjQ1OGhSRlF3TTJC?=
+ =?utf-8?B?Y3hDTW1Kc3NlSmZjY3JmTW92OXlkYkNkRllmQnJrRktZeEFQZFpCcVFXcndy?=
+ =?utf-8?B?THMrWWIrdEROd28ydWtDYUhtemJySmd0NDRrQ29Ed3dIWTBQaEd6cTU3cWpu?=
+ =?utf-8?B?b1IyVS9aUG1mM3lxK0JCUGdtc3E2RWF5WEpjZzZYYUp1QVd5MGFhb2dxZ2do?=
+ =?utf-8?B?QVRnV0svVjgwcWhQTGpFb290VjUwakg1QTN3cFlranh5bjU0QXR1dlgrYnJK?=
+ =?utf-8?B?L1N3Q1dNR0lwZjgzOFB2NEE4VWhmQ2ZDb05RM20yQWlVVDhSSWw2eFlqSm9W?=
+ =?utf-8?B?OWszRy9WekJldHY3Um82MkZjWEc0RC9jVEtvZC93SXFQV0ZlbG9veEV6T09l?=
+ =?utf-8?B?ZEl5NmhCZTR4TzZSUGJtRytqbksrdjd4SFRVNVlMN21Ya1ZaeXl6d0FQVlRX?=
+ =?utf-8?B?N3dhR25zTFFoVmhjODlycEI5RG53SnovTjI3SEx0RnByRHpoRlZJTUY1NmxQ?=
+ =?utf-8?B?dVdkcEVyeFc5WUN2ZEI4VEpZVWFyMFBwQ2tmTUxUN2UrTDdLbTBKOHorcWxG?=
+ =?utf-8?B?V09vaGgwcmx1eGh1YVdnRytIbDdzOGpBWkFOTWVUSUxTUGY0ZGlUNWdGVWJ2?=
+ =?utf-8?B?UW9ScVIvaGJRUzI3OHZEQzhqWWtpUzUvMElzamJUUXJOYTNHUFY5aEJmTTll?=
+ =?utf-8?B?RFhmemp4UnNQYW5ENWwwWHExU3dTWGQvVzBlRUhCaE1QVHFtbTVTbUYvSEVS?=
+ =?utf-8?B?THBvYTRIR1ROUmtwNENHZUVnRnRlUUdSQkZ4ZXpZKzh6cXI5aHkzcWZmNkpY?=
+ =?utf-8?B?QjZacGRZakhXNm1wdUw2M0xxWEpPUXR3blE5dkdNVG5TYTNUeHRDTmQyQ3FF?=
+ =?utf-8?B?VlBkNU5vMGxFV0M5OHdZbEF0Vy9lTDRYRkVpMGthZTkrSHN2ZFBxRHZFTFZR?=
+ =?utf-8?B?eEkvVVZ5YlJxMjdMVHJjdkE5RFkrWktkdm5LaFlLbkVQM3J3eTVkYmRoMG55?=
+ =?utf-8?B?QUtETHN2citHcExqY1hqNHpKVXVXSmswRU1OMnVlUjZCQXpGMHNzVEs2ZVd5?=
+ =?utf-8?B?bjAwcmdDZDNEd2ZIeUR0V2tpVWJwNkovSGpOdmhHb01kM0dERWZrQVU0ekVr?=
+ =?utf-8?B?KzgwV3g4NUxyTHdjQTJwcDZDQkw3cnpLMytncElERXNaVHkrWHlzZk5tdjhu?=
+ =?utf-8?B?dWhtbjdIdytyeGRuQlFFWlNiZWc2QWZJR05wbjI3R3ovOUpsQVd0ZmxDUzhi?=
+ =?utf-8?B?dUE9PQ==?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78b53713-334d-4c46-311b-08dcb61dad7b
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8531.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB5PR02MB10213.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6eb21514-ecf9-47b8-35d2-08dcb61d7c00
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2024 13:41:33.0093
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2024 13:42:56.1244
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xdviY6oJOmv5DaEJQZgAC+84OssF0YIPzqDhiR/vnJrEhYZIBcYnOWu3hm0CzTSF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA6PR02MB10709
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z38/JPmNCQfe14+TKf65FP9EDQU68ZzCxSuUjV76d09whu7/5OG90ecN9eWf6LkB37DQxZAD3CNhmLLlfHTWTcmajOyBr2mhP99jRXK5sx8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6422
+X-Proofpoint-ORIG-GUID: bX6vHyBKPTJ-CSc-drjyEqpCBwDHZZwM
+X-Proofpoint-GUID: bBk6kOtJR1LJfkMmlPPv23qWllNuVb6v
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-06_11,2024-08-06_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 clxscore=1011 bulkscore=0 mlxlogscore=858 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.21.0-2407110000 definitions=main-2408060095
+Content-Transfer-Encoding: quoted-printable
+X-MIME-Autoconverted: from 8bit to quoted-printable by mx0a-0064b401.pphosted.com id 4766t3mv005948
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 06 Aug 2024 13:41:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16446
+ <bitbake-devel@lists.openembedded.org>; Tue, 06 Aug 2024 13:43:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16447
 
-> -----Original Message-----
-> From: chris.laplante@agilent.com <chris.laplante@agilent.com>
-> Sent: den 24 juli 2024 15:50
-> To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>; bitbake-
-> devel@lists.openembedded.org
-> Subject: RE: [bitbake-devel] [RFC PATCH] ui/knotty: print log paths for
-> failed tasks in summary
->=20
-> Hi Peter,
->=20
-> > > I probably should have included a cover letter, but FYI the reason
-> > > this is RFC is that I'm unsure if we should disable the hyperlinking
-> > > in response to NO_COLOR being set. I'm leaning towards 'yes, it shoul=
-d
-> > > disable'.
-> > >
-> > > Unfortunately there is no universal reliable way to detect if
-> > > hyperlinking is supported by the terminal (at least according to
-> > >
-> > https://nam12.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgis=
-t.
-> > github.com%2Fegmontkob%2Feb114294efbcd5adb1944c9f3cb5feda&data=3D
-> > 05%7C02%7Cchris.laplante%40agilent.com%7C3bd654f041734bd60ee508d
-> > cab4d8dc1%7Ca9c0bc098b46420693512ba12fb4a5c0%7C0%7C0%7C6385
-> > 73596794212235%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD
-> > AiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&s
-> > data=3DqFMRLWNPjXTL11pB%2Ft97P4CzJ4QRzBXcWS9AUnCXxcQ%3D&reserv
-> > ed=3D0).
-> > >
-> > > Thanks,
-> > > Chris
-> >
-> > I don't have anything to say about the link support as the terminal I=20
-> > use does not support it, but I would very much like to have the support=
-=20
-> > for listing the log files integrated. I have added this patch to my two=
-=20
-> > main build trees and it helps a lot to not have to go hunt for the log=
-=20
-> > files when there is a build error.
->=20
-> Did you have to tweak the code to suppress printing the hyperlink ANSI
-> codes, or did your terminal just gracefully ignore them?
->=20
-> The feedback is much appreciated, thanks!
->=20
-> Thanks,
-> Chris
+Hi RP and Ross,
 
-I use MobaXterm (on Windows) and connect using SSH. It silently ignores the=
-=20
-hyperlink. Same with Xterm running on my Linux computer.=20
-Gnome Terminal shows the hyperlink properly.
+On 8/6/24 19:06, Richard Purdie wrote:
+> On Fri, 2024-06-21 at 22:20 -0700, Robert Yang via lists.openembedded.o=
+rg wrote:
+>> From: Robert Yang <liezhi.yang@windriver.com>
+>>
+>> The previous code added local path to generated mirror tarball name wh=
+ich had
+>> two potential issues when fetch from local PREMIRROR, for exapmle:
+>>
+>> Add github.com.lsof-org.lsof to /path/to/local/PREMIRROR/
+>> $ bitbake lsof -cfetch
+>>
+>> * There might be "Fix File name too long error" when the local path is=
+ long
+>>  =C2=A0 since the path is translated to filename and added to download=
+s/git2/ as:
+>>  =C2=A0 path.to.local.PREMIRROR.github.com.lsof-org.lsof
+>>
+>> * When enable BB_GENERATE_MIRROR_TARBALLS:
+>>  =C2=A0 The tarball name will be:
+>>  =C2=A0 git2_path.to.local.PREMIRROR.github.com.lsof-org.lsof.tar.gz
+>>
+>>  =C2=A0 The above tarball can't be re-used by do_fetch since bitbake l=
+ooks for
+>>  =C2=A0 'git2_github.com.lsof-org.lsof.tar.gz', but the 'path.to.local=
+.PREMIRROR' in
+>>  =C2=A0 the file name breaks the match.
+>>
+>> Use os.path.basename(ud.path) as gitsrcname when ud.proto is file can =
+fix the
+>> the above two issues, now the file name in downloads/git2/ is:
+>> github.com.lsof-org.lsof
+>>
+>> And the generated tarball is:
+>> git2_github.com.lsof-org.lsof.tar.gz
+>>
+>> Or when BB_GIT_SHALLOW is enabled:
+>> gitshallow_github.com.lsof-org.lsof_2e4c7a1-1_master.tar.gz
+>>
+>> And the tarballs can be re-used by do_fetch.
+>>
+>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+>> ---
+>>  =C2=A0bitbake/lib/bb/fetch2/git.py | 5 ++++-
+>>  =C2=A01 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.=
+py
+>> index c7ff769fdf..89d3268f7f 100644
+>> --- a/bitbake/lib/bb/fetch2/git.py
+>> +++ b/bitbake/lib/bb/fetch2/git.py
+>> @@ -277,7 +277,10 @@ class Git(FetchMethod):
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ud.unresolvedrev[name=
+] =3D ud.revisions[name]
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 ud.revisions[name] =3D self.latest_revision(u=
+d, d, name)
+>>  =20
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gitsrcname =3D '%s%s' % (u=
+d.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.').rep=
+lace(' ','_').replace('(', '_').replace(')', '_'))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ud.proto =3D=3D "file":
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gi=
+tsrcname =3D '%s' % os.path.basename(ud.path)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gi=
+tsrcname =3D '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.=
+').replace('*', '.').replace(' ','_').replace('(', '_').replace(')', '_')=
+)
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if gitsrcname.starts=
+with('.'):
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 gitsrcname =3D gitsrcname[1:]
+>=20
+>=20
+> I did look at this patch again. I'm still not convinced about the
+> original use case but ignoring that, the patch itself isn't too safe.
 
-//Peter
+Thanks for looking into this, the main problem is that we need a way to f=
+ix the
+filename too long error as described in the commit message above.
 
+> If you have two repositories with the same name, this can break since
+> basename() on the URI is not a unique value.
+
+If the two repos are identical, then it isn't a problem since bitbake
+can handle them correctly, if the two local repos with the same
+name but have different contents, I think that the user should fix their =
+repos.
+
+>=20
+> Just as a note, '%s' % x is also poor code as you can just assign the
+> value.
+
+Yes, absolutely, that's my mistake.
+
+// Robert
+
+>=20
+> Cheers,
+>=20
+> Richard
+>=20
+>=20
+>=20
 
