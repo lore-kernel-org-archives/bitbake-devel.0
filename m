@@ -2,73 +2,116 @@ Return-Path: <enguerrand.de-ribaucourt@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60873C52D6F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D953C3DA4A
 	for <webhook@archiver.kernel.org>; Thu,  8 Aug 2024 14:48:38 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.61876.1723128513470336299
+ by mx.groups.io with SMTP id smtpd.web10.61812.1723128514083813674
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 08 Aug 2024 07:48:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=Z6haJ0t3;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=kiAO/qO7;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: enguerrand.de-ribaucourt@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 688619C589A;
-	Thu,  8 Aug 2024 10:48:32 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 615BA9C5F0C;
+	Thu,  8 Aug 2024 10:48:33 -0400 (EDT)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id RRy39JhQX35K; Thu,  8 Aug 2024 10:48:32 -0400 (EDT)
+ with ESMTP id hsoSywOJ7r82; Thu,  8 Aug 2024 10:48:33 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id EEC9E9C58EF;
-	Thu,  8 Aug 2024 10:48:31 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com EEC9E9C58EF
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id F0FA99C5B9D;
+	Thu,  8 Aug 2024 10:48:32 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com F0FA99C5B9D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1723128512; bh=HH/WQYZJQ2YIqFAQQg23EdDwHmlVzBL1uq9Nb7QTUso=;
+	t=1723128512; bh=j/U0qvHgxP65CxULR8l/S9mx7FiuqQQE6DBnWuFIXMU=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=Z6haJ0t3bCOxuP+nqOwe0GtdMF0TdgdMNbcZLc4oHiXI28apbIqVIjq1B6l/qtZ2p
-	 rNgx2tRMRldvb+LgjRzsZqE+ztM2EZnygiPJu0cP0pirsZfV/cWzSN6IvDj876TIGb
-	 xww0+bOHtyGmdWDdnn7rVtk1IFmtBsF1ksfsyJmDk0coTaiHRY2bj+miMO/99lq9ch
-	 FlGhQ3rxLwVTAH0HhSpVtsowcBoq8ssr1dnAWQCo2ZAnSsykV/jheRJ36WgGMJ1Kbf
-	 ODXWJSepXUEXEkQ+IA47MJpC1iX4IuYhlbEx0AFcilUkakuQNS1yHUWMKJabZrIl3H
-	 vOJ7ewOibLvsQ==
+	b=kiAO/qO7CvEQBIpGbxWYfASuet/K+V4QebfYQU3jN/k3CV1UtkSdxEtnN6VygBpbo
+	 qQVWTrOykP8Gl9T/SobOaDuhz70vtCEYK4qAlIXb6JCdh/eM2GZD6MrCtkuQnK7lPt
+	 yBJxwAL0NakpmqnZbMtLLQ6ORef4qEIxLHI27oput6S0vyzD27OMNbg+Vi5RaKk1fH
+	 xQvR7cww1tMFfnNKjZObIEvJP6NzbOf6Vs4le1BrvrTyfpRrahbfdKqk0Y535XyDzn
+	 Uaf9p1dmMeTTXDMM17h/7reAbYnLB0wWWGXkaPUj7T6+3lEwtsICtzmjUt+//D9SrF
+	 Fcpk8EHVy4sSA==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id jIQ9eA1EvHJq; Thu,  8 Aug 2024 10:48:31 -0400 (EDT)
+ with ESMTP id TwANhAuvTwqa; Thu,  8 Aug 2024 10:48:32 -0400 (EDT)
 Received: from sfl-deribaucourt.rennes.sfl (80-15-101-118.ftth.fr.orangecustomers.net [80.15.101.118])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 03E9E9C589A;
-	Thu,  8 Aug 2024 10:48:30 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 0C82C9C5BAF;
+	Thu,  8 Aug 2024 10:48:31 -0400 (EDT)
 From: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: tanguy.raufflet@savoirfairelinux.com,
 	richard.purdie@linuxfoundation.org,
 	alexandre.belloni@bootlin.com,
-	stefan.herbrechtsmeier@weidmueller.com
-Subject: [Patch v3 0/6] npm: improve fetcher and recipetool compatibility
-Date: Thu,  8 Aug 2024 16:48:18 +0200
-Message-Id: <20240808144824.543208-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
+	stefan.herbrechtsmeier@weidmueller.com,
+	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Subject: [PATCH v3 1/6] bitbake: fetch2: npmsw: fix fetching git revisions not on master
+Date: Thu,  8 Aug 2024 16:48:19 +0200
+Message-Id: <20240808144824.543208-2-enguerrand.de-ribaucourt@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240808144824.543208-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
+References: <20240808144824.543208-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 08 Aug 2024 14:48:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16453
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16454
 
-These patches improve the compatibility and accuracy of creating npm reci=
-pes
-through devtool, which is the intended way to create npm recipes.
+The NPM package.json documentation[1] states that git URLs may contain
+a commit-ish suffix to specify a specific revision. When running
+`npm install`, this revision will be looked for on any branch of the
+repository.
 
-v3:
- - split bitbake and oecore commits
- - added refactor commit to remove duplicated code to find and match lice=
-nses
- - removed commit that copied all the COMMON_LICENSE_DIR md5 to licenses.=
-csv
-   (thanks to the new refactor)
-v2: https://lists.openembedded.org/g/bitbake-devel/message/16401?p=3D%2C%=
-2C%2C20%2C0%2C0%2C0%3A%3ACreated%2C%2Cnpm%2C20%2C2%2C0%2C107102413
+The bitbake implementation however translates the URL stored in
+package.json into a git URL to be fetch by the bitbake git fetcher. The
+bitbake fetcher git.py, enforces the branch to be master by default. If
+the revision specified in the package.json is not on the master branch,
+the fetch will fail while the package.json is valid.
 
+To fix this, append the ";nobranch=3D1" suffix to the revision in the git
+URL to be fetched. This will make the bitbake git fetcher ignore the
+branch and respect the behavior of `npm install``.
+
+This can be tested with the following command:
+ $ devtool add --npm-dev https://github.com/seapath/cockpit-cluster-dashb=
+oard.git -B version
+Which points to a project which has a package.json with a git URL:
+```json
+  "devDependencies": {
+    "cockpit-repo": "git+https://github.com/cockpit-project/cockpit.git#d=
+34cabacb8e5e1e028c7eea3d6e3b606d862b8ac"
+  }
+```
+In this repo, the specified revision is on the "main" branch, which
+would fail without this fix.
+
+[1] https://docs.npmjs.com/cli/v10/configuring-npm/package-json#git-urls-=
+as-dependencies
+
+Co-authored-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
+Signed-off-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
+Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirf=
+airelinux.com>
+---
+ bitbake/lib/bb/fetch2/npmsw.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/bitbake/lib/bb/fetch2/npmsw.py b/bitbake/lib/bb/fetch2/npmsw=
+.py
+index ff5f8dc755..018e0ad546 100644
+--- a/bitbake/lib/bb/fetch2/npmsw.py
++++ b/bitbake/lib/bb/fetch2/npmsw.py
+@@ -184,6 +184,7 @@ class NpmShrinkWrap(FetchMethod):
+                 uri =3D URI("git://" + str(groups["url"]))
+                 uri.params["protocol"] =3D str(groups["protocol"])
+                 uri.params["rev"] =3D str(groups["rev"])
++                uri.params["nobranch"] =3D "1"
+                 uri.params["destsuffix"] =3D destsuffix
+=20
+                 url =3D str(uri)
+--=20
+2.34.1
 
 
