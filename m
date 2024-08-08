@@ -2,42 +2,42 @@ Return-Path: <enguerrand.de-ribaucourt@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B2FC52D7B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AF8C52D6F
 	for <webhook@archiver.kernel.org>; Thu,  8 Aug 2024 14:48:48 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web10.61817.1723128519800069122
+ by mx.groups.io with SMTP id smtpd.web11.61881.1723128518651066513
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 08 Aug 2024 07:48:39 -0700
+ Thu, 08 Aug 2024 07:48:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=UEomJflR;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=m7eDGn26;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: enguerrand.de-ribaucourt@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2609F9C5DB9;
-	Thu,  8 Aug 2024 10:48:39 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 082569C5DB6;
+	Thu,  8 Aug 2024 10:48:38 -0400 (EDT)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 2Ucb2OgDFv_U; Thu,  8 Aug 2024 10:48:38 -0400 (EDT)
+ with ESMTP id cerc0kEDEX77; Thu,  8 Aug 2024 10:48:37 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 3EFC19C5D03;
-	Thu,  8 Aug 2024 10:48:38 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 3EFC19C5D03
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 36D5B9C5DD7;
+	Thu,  8 Aug 2024 10:48:37 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 36D5B9C5DD7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1723128518; bh=N7aDcQlfE81PyfzAKMTyiSCKTEpaIQXppJbbEBatViw=;
+	t=1723128517; bh=ufWLz0OXcMQCwUGoYRLevlaFGntrFM6Ok4qKLDCjAw0=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=UEomJflRdDdN3sFNNph+2NG2uNek1wwtwq/PRcMm1fUrvK8IKK14GUGLunqWvq9mB
-	 0hPIRtjj0zYpnWkrSyds6Tz7xuUgqKmjR3q5JIKMJuZlby4cw3btm5MaW6t8LGJdnl
-	 Gmd3RpqjSfU6M/6TH2ptX0GOZR34vAAAm8zOu/kC2CovGxavh2Hczybz1UsWbuBB51
-	 ErG7SDxnmoA0/nCuisJor/bOg+BRwTXZFQpFxOlDwlJZF1w0BI/UGPT74Pypj1SaQq
-	 vNndADdUe6AXVk6KzGCONiBlfTwqNwwR6SxPrFoc8ih1t64nIRRnwT1UoxLMVDPnHE
-	 koW7TiSWbvbpA==
+	b=m7eDGn26fun8aDPb07J60vrk7N7sjN0a9Y79R81bd7w8CsI6r5E7NuvHmdOEvRxIi
+	 ObNeq7H5p6VfJtQ6W0FuNkZ3+DXv7NS4L99kuIKkYoBd0nif4JiobGGv4hzJK75NtQ
+	 2fogrkzKkd8mfB9+JBdKYdK/T2vF5Xp84uZuMBaW1wzC1mEjZLfuxJLhpU3iH3S8Tu
+	 WmY3RZt4lsjpP/Qhf61GyKiqR5gZTTP2SFA9QFz2m1J8/tyiV+yPL6MNNNUS/6AJf6
+	 85d9+F11/rIpB1AYROSwaRGQHWCMZXXP3nmWot2t4Vkhs67R0Qhk1UcZ58dOzJkbgS
+	 aAVNF/kW8VcGQ==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id zGhmDjGvBwj9; Thu,  8 Aug 2024 10:48:38 -0400 (EDT)
+ with ESMTP id dMiAwHqjLlSO; Thu,  8 Aug 2024 10:48:37 -0400 (EDT)
 Received: from sfl-deribaucourt.rennes.sfl (80-15-101-118.ftth.fr.orangecustomers.net [80.15.101.118])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 4A7BA9C589A;
-	Thu,  8 Aug 2024 10:48:37 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 3FFF99C5FA1;
+	Thu,  8 Aug 2024 10:48:36 -0400 (EDT)
 From: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: tanguy.raufflet@savoirfairelinux.com,
@@ -45,9 +45,9 @@ Cc: tanguy.raufflet@savoirfairelinux.com,
 	alexandre.belloni@bootlin.com,
 	stefan.herbrechtsmeier@weidmueller.com,
 	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-Subject: [PATCH v3 6/6] recipetool: create_npm: reuse license utils
-Date: Thu,  8 Aug 2024 16:48:24 +0200
-Message-Id: <20240808144824.543208-7-enguerrand.de-ribaucourt@savoirfairelinux.com>
+Subject: [PATCH v3 5/6] recipetool: create: split guess_license function
+Date: Thu,  8 Aug 2024 16:48:23 +0200
+Message-Id: <20240808144824.543208-6-enguerrand.de-ribaucourt@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240808144824.543208-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
 References: <20240808144824.543208-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
@@ -57,226 +57,203 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 08 Aug 2024 14:48:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16459
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16458
 
-create_npm.py duplicated the logic for matching licenses from files and
-also finding them. This patch refactors the code to reuse the license
-utils. This will make the code more maintainable and also align both
-behaviors. For instance, some licenses weren't matched properly because
-the duplicate logic did not support the difference in format in the md5
-tables for COMMON_LICENSE_DIR and licenses.csv.
+The npm recipetool handler redefines the license code the could be
+unified. In order to do this refactoring, extract the bits we'll
+need into separate functions.
 
-This is also faster since the license files were being read twice.
-The result is slightly more accurate since the utils have better
-implementations, and I was able to reuse the logic for the root PN
-package, as well as the base LICENSE variable.
-
-I chose to extract generate_common_licenses_chksums into create.py
-since it can be considered a general utility function to allow
-other recipetool creators to refer to COMMON_LICENSE_DIR files.
-
-I updated the wording in the code when appropriate.
+guess_license() is renamed to find_licenses() and is split into
+find_license_files() and match_licenses().
 
 v3:
  - added commit
- - this replaces the commit that added all the COMMON_LICENSE_DIR md5
-   to licenses.csv
 
 Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirf=
 airelinux.com>
 ---
- scripts/lib/recipetool/create.py     |  8 +++
- scripts/lib/recipetool/create_npm.py | 92 +++++++++-------------------
- 2 files changed, 36 insertions(+), 64 deletions(-)
+ meta/classes-global/license.bbclass  |  8 +++----
+ scripts/lib/recipetool/create.py     | 34 ++++++++++++++++++----------
+ scripts/lib/recipetool/create_go.py  |  4 ++--
+ scripts/lib/recipetool/create_npm.py |  4 ++--
+ 4 files changed, 30 insertions(+), 20 deletions(-)
 
+diff --git a/meta/classes-global/license.bbclass b/meta/classes-global/li=
+cense.bbclass
+index b2e0d3faba..4e39ec1d44 100644
+--- a/meta/classes-global/license.bbclass
++++ b/meta/classes-global/license.bbclass
+@@ -39,7 +39,7 @@ python do_populate_lic() {
+ }
+=20
+ PSEUDO_IGNORE_PATHS .=3D ",${@','.join(((d.getVar('COMMON_LICENSE_DIR') =
+or '') + ' ' + (d.getVar('LICENSE_PATH') or '') + ' ' + d.getVar('COREBAS=
+E') + '/meta/COPYING').split())}"
+-# it would be better to copy them in do_install:append, but find_license=
+_filesa is python
++# it would be better to copy them in do_install:append, but find_license=
+_files is python
+ python perform_packagecopy:prepend () {
+     enabled =3D oe.data.typed_value('LICENSE_CREATE_PACKAGE', d)
+     if d.getVar('CLASSOVERRIDE') =3D=3D 'class-target' and enabled:
+@@ -149,14 +149,14 @@ def find_license_files(d):
+             # and "with exceptions" being *
+             # we'll just strip out the modifier and put
+             # the base license.
+-            find_license(node.s.replace("+", "").replace("*", ""))
++            find_licenses(node.s.replace("+", "").replace("*", ""))
+             self.generic_visit(node)
+=20
+         def visit_Constant(self, node):
+-            find_license(node.value.replace("+", "").replace("*", ""))
++            find_licenses(node.value.replace("+", "").replace("*", ""))
+             self.generic_visit(node)
+=20
+-    def find_license(license_type):
++    def find_licenses(license_type):
+         try:
+             bb.utils.mkdirhier(gen_lic_dest)
+         except:
 diff --git a/scripts/lib/recipetool/create.py b/scripts/lib/recipetool/cr=
 eate.py
-index cb1566784b..1cd60a137f 100644
+index 8e9ff38db6..cb1566784b 100644
 --- a/scripts/lib/recipetool/create.py
 +++ b/scripts/lib/recipetool/create.py
-@@ -1295,6 +1295,14 @@ def split_pkg_licenses(licvalues, packages, outlin=
-es, fallback_licenses=3DNone, pn
-         outlicenses[pkgname] =3D licenses
-     return outlicenses
+@@ -960,7 +960,7 @@ def handle_license_vars(srctree, lines_before, handle=
+d, extravalues, d):
+         # Someone else has already handled the license vars, just return=
+ their value
+         return lichandled[0][1]
 =20
-+def generate_common_licenses_chksums(common_licenses, d):
-+    lic_files_chksums =3D []
-+    for license in tidy_licenses(common_licenses):
-+        licfile =3D '${COMMON_LICENSE_DIR}/' + license
-+        md5value =3D bb.utils.md5_file(d.expand(licfile))
-+        lic_files_chksums.append('file://%s;md5=3D%s' % (licfile, md5val=
-ue))
-+    return lic_files_chksums
+-    licvalues =3D guess_license(srctree, d)
++    licvalues =3D find_licenses(srctree, d)
+     licenses =3D []
+     lic_files_chksum =3D []
+     lic_unknown =3D []
+@@ -1216,13 +1216,7 @@ def crunch_license(licfile):
+         lictext =3D ''
+     return md5val, lictext
+=20
+-def guess_license(srctree, d):
+-    import bb
+-    md5sums =3D get_license_md5sums(d)
+-
+-    crunched_md5sums =3D crunch_known_licenses(d)
+-
+-    licenses =3D []
++def find_license_files(srctree):
+     licspecs =3D ['*LICEN[CS]E*', 'COPYING*', '*[Ll]icense*', 'LEGAL*', =
+'[Ll]egal*', '*GPL*', 'README.lic*', 'COPYRIGHT*', '[Cc]opyright*', 'e[dp=
+]l-v10']
+     skip_extensions =3D (".html", ".js", ".json", ".svg", ".ts", ".go")
+     licfiles =3D []
+@@ -1235,11 +1229,22 @@ def guess_license(srctree, d):
+                     fullpath =3D os.path.join(root, fn)
+                     if not fullpath in licfiles:
+                         licfiles.append(fullpath)
 +
- def read_pkgconfig_provides(d):
-     pkgdatadir =3D d.getVar('PKGDATA_DIR')
-     pkgmap =3D {}
++    return licfiles
++
++def match_licenses(licfiles, srctree, d):
++    import bb
++    md5sums =3D get_license_md5sums(d)
++
++    crunched_md5sums =3D crunch_known_licenses(d)
++
++    licenses =3D []
+     for licfile in sorted(licfiles):
+-        md5value =3D bb.utils.md5_file(licfile)
++        resolved_licfile =3D d.expand(licfile)
++        md5value =3D bb.utils.md5_file(resolved_licfile)
+         license =3D md5sums.get(md5value, None)
+         if not license:
+-            crunched_md5, lictext =3D crunch_license(licfile)
++            crunched_md5, lictext =3D crunch_license(resolved_licfile)
+             license =3D crunched_md5sums.get(crunched_md5, None)
+             if lictext and not license:
+                 license =3D 'Unknown'
+@@ -1249,13 +1254,19 @@ def guess_license(srctree, d):
+         if license:
+             licenses.append((license, os.path.relpath(licfile, srctree),=
+ md5value))
+=20
++    return licenses
++
++def find_licenses(srctree, d):
++    licfiles =3D find_license_files(srctree)
++    licenses =3D match_licenses(licfiles, srctree, d)
++
+     # FIXME should we grab at least one source file with a license heade=
+r and add that too?
+=20
+     return licenses
+=20
+ def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=3D=
+None, pn=3D'${PN}'):
+     """
+-    Given a list of (license, path, md5sum) as returned by guess_license=
+(),
++    Given a list of (license, path, md5sum) as returned by match_license=
+s(),
+     a dict of package name to path mappings, write out a set of
+     package-specific LICENSE values.
+     """
+@@ -1418,4 +1429,3 @@ def register_commands(subparsers):
+     parser_create.add_argument('--devtool', action=3D"store_true", help=3D=
+argparse.SUPPRESS)
+     parser_create.add_argument('--mirrors', action=3D"store_true", help=3D=
+'Enable PREMIRRORS and MIRRORS for source tree fetching (disabled by defa=
+ult).')
+     parser_create.set_defaults(func=3Dcreate_recipe)
+-
+diff --git a/scripts/lib/recipetool/create_go.py b/scripts/lib/recipetool=
+/create_go.py
+index a85a2f2786..5cc53931f0 100644
+--- a/scripts/lib/recipetool/create_go.py
++++ b/scripts/lib/recipetool/create_go.py
+@@ -14,7 +14,7 @@ from collections import namedtuple
+ from enum import Enum
+ from html.parser import HTMLParser
+ from recipetool.create import RecipeHandler, handle_license_vars
+-from recipetool.create import guess_license, tidy_licenses, fixup_licens=
+e
++from recipetool.create import find_licenses, tidy_licenses, fixup_licens=
+e
+ from recipetool.create import determine_from_url
+ from urllib.error import URLError, HTTPError
+=20
+@@ -624,7 +624,7 @@ class GoRecipeHandler(RecipeHandler):
+=20
+         licenses =3D []
+         lic_files_chksum =3D []
+-        licvalues =3D guess_license(tmp_vendor_dir, d)
++        licvalues =3D find_licenses(tmp_vendor_dir, d)
+         shutil.rmtree(tmp_vendor_dir)
+=20
+         if licvalues:
 diff --git a/scripts/lib/recipetool/create_npm.py b/scripts/lib/recipetoo=
 l/create_npm.py
-index 78dc248f31..3363a0e7ee 100644
+index dd0ac01c3e..78dc248f31 100644
 --- a/scripts/lib/recipetool/create_npm.py
 +++ b/scripts/lib/recipetool/create_npm.py
-@@ -16,8 +16,7 @@ from bb.fetch2.npm import NpmEnvironment
- from bb.fetch2.npm import npm_package
+@@ -17,7 +17,7 @@ from bb.fetch2.npm import npm_package
  from bb.fetch2.npmsw import foreach_dependencies
  from recipetool.create import RecipeHandler
--from recipetool.create import get_license_md5sums
--from recipetool.create import find_licenses
-+from recipetool.create import match_licenses, find_license_files, genera=
-te_common_licenses_chksums
+ from recipetool.create import get_license_md5sums
+-from recipetool.create import guess_license
++from recipetool.create import find_licenses
  from recipetool.create import split_pkg_licenses
  logger =3D logging.getLogger('recipetool')
 =20
-@@ -112,51 +111,53 @@ class NpmRecipeHandler(RecipeHandler):
-         """Return the extra license files and the list of packages"""
-         licfiles =3D []
-         packages =3D {}
--        # Licenses from package.json point to COMMON_LICENSE_DIR so we n=
-eed
--        # to associate them explicitely for split_pkg_licenses()
-+        # Licenses from package.json will point to COMMON_LICENSE_DIR so=
- we need
-+        # to associate them explicitely to packages for split_pkg_licens=
-es()
-         fallback_licenses =3D dict()
+@@ -320,7 +320,7 @@ class NpmRecipeHandler(RecipeHandler):
+             return (licenses, chksums, fallback_licenses)
 =20
--        # Handle the parent package
--        packages["${PN}"] =3D ""
--
--        def _licfiles_append_fallback_package_files(destdir):
--            """Append package.json files as fallback to license files if=
- a license files is missing"""
-+        def _find_package_licenses(destdir):
-+            """Either find license files, or use package.json metadata""=
-"
-             def _get_licenses_from_package_json(package_json):
-                 with open(os.path.join(srctree, package_json), "r") as f=
-:
-                     data =3D json.load(f)
-                     if "license" in data:
-                         licenses =3D data["license"].split(" ")
-                         licenses =3D [license.strip("()") for license in=
- licenses if license !=3D "OR" and license !=3D "AND"]
--                        return ["${COMMON_LICENSE_DIR}/" + license for l=
-icense in licenses], licenses
-+                        return [], licenses
-                     else:
-                         return [package_json], None
-=20
--            fallback =3D True
-             basedir =3D os.path.join(srctree, destdir)
--            for fn in os.listdir(basedir):
--                upper =3D fn.upper()
--                if upper.startswith("COPYING") or "LICENCE" in upper or =
-"LICENSE" in upper:
--                    fallback =3D False
--            if fallback:
-+            licfiles =3D find_license_files(basedir)
-+            if len(licfiles) > 0:
-+                return licfiles, None
-+            else:
-+                # A license wasn't found in the package directory, so we=
-'ll use the package.json metadata
-                 pkg_json =3D os.path.join(basedir, "package.json")
-                 return _get_licenses_from_package_json(pkg_json)
--            return [], None
-+
-+        def _get_package_licenses(destdir, package):
-+            (package_licfiles, package_licenses) =3D _find_package_licen=
-ses(destdir)
-+            if package_licfiles:
-+                licfiles.extend(package_licfiles)
-+            else:
-+                fallback_licenses[package] =3D package_licenses
-=20
-         # Handle the dependencies
-         def _handle_dependency(name, params, destdir):
-             deptree =3D destdir.split('node_modules/')
-             suffix =3D "-".join([npm_package(dep) for dep in deptree])
-             packages["${PN}" + suffix] =3D destdir
--            (fallback_licfiles, common_lics) =3D _licfiles_append_fallba=
-ck_package_files(destdir)
--            licfiles.extend(fallback_licfiles)
--            if common_lics:
--                fallback_licenses["${PN}" + suffix] =3D common_lics
-+            _get_package_licenses(destdir, "${PN}" + suffix)
-=20
-         with open(shrinkwrap_file, "r") as f:
-             shrinkwrap =3D json.load(f)
--
-         foreach_dependencies(shrinkwrap, _handle_dependency, dev)
-=20
-+        # Handle the parent package
-+        packages["${PN}"] =3D ""
-+        _get_package_licenses(srctree, "${PN}")
-+
-         return licfiles, packages, fallback_licenses
-    =20
-     # Handle the peer dependencies  =20
-@@ -279,48 +280,11 @@ class NpmRecipeHandler(RecipeHandler):
-=20
-         bb.note("Handling licences ...")
-         (licfiles, packages, fallback_licenses) =3D self._handle_license=
-s(srctree, shrinkwrap_file, dev)
--
--        def _guess_odd_license(licfiles):
--            import bb
--
--            md5sums =3D get_license_md5sums(d, linenumbers=3DTrue)
--
--            def _resolve_licfile(srctree, licfile):
--                match =3D re.search(r'\$\{COMMON_LICENSE_DIR\}/(.+)$', l=
-icfile)
--                if match:
--                    license =3D match.group(1)
--                    commonlicdir =3D d.getVar('COMMON_LICENSE_DIR')
--                    return os.path.join(commonlicdir, license)
--               =20
--                return os.path.join(srctree, licfile)
--
--            chksums =3D []
--            licenses =3D []
--            md5value =3D None
--            for licfile in licfiles:
--                f =3D _resolve_licfile(srctree, licfile)
--                try:
--                    md5value =3D bb.utils.md5_file(f)
--                except FileNotFoundError:
--                    logger.info("Could not determine license for '%s'" %=
- licfile)
--                (license, beginline, endline, md5) =3D md5sums.get(md5va=
-lue,
--                    (None, "", "", ""))
--                if not license:
--                    license =3D "Unknown"
--                    logger.info("Please add the following line for '%s' =
-to a "
--                        "'lib/recipetool/licenses.csv' and replace `Unkn=
-own`, "
--                        "`X`, `Y` and `MD5` with the license, begin line=
-, "
--                        "end line and partial MD5 checksum:\n" \
--                        "%s,Unknown,X,Y,MD5" % (licfile, md5value))
--                chksums.append("file://%s%s%s;md5=3D%s" % (licfile,
--                    ";beginline=3D%s" % (beginline) if beginline else ""=
-,
--                    ";endline=3D%s" % (endline) if endline else "",
--                    md5 if md5 else md5value))
--                licenses.append((license, licfile, md5value))
--            return (licenses, chksums, fallback_licenses)
--
--        (licenses, extravalues["LIC_FILES_CHKSUM"], fallback_licenses) =3D=
+         (licenses, extravalues["LIC_FILES_CHKSUM"], fallback_licenses) =3D=
  _guess_odd_license(licfiles)
--        split_pkg_licenses([*licenses, *find_licenses(srctree, d)], pack=
+-        split_pkg_licenses([*licenses, *guess_license(srctree, d)], pack=
 ages, lines_after, fallback_licenses)
-+        licvalues =3D match_licenses(licfiles, srctree, d)
-+        split_pkg_licenses(licvalues, packages, lines_after, fallback_li=
-censes)
-+        fallback_licenses_flat =3D [license for sublist in fallback_lice=
-nses.values() for license in sublist]
-+        extravalues["LIC_FILES_CHKSUM"] =3D generate_common_licenses_chk=
-sums(fallback_licenses_flat, d)
-+        extravalues["LICENSE"] =3D fallback_licenses_flat
++        split_pkg_licenses([*licenses, *find_licenses(srctree, d)], pack=
+ages, lines_after, fallback_licenses)
 =20
          classes.append("npm")
          handled.append("buildsystem")
