@@ -1,263 +1,89 @@
-Return-Path: <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Return-Path: <tdah@bang-olufsen.dk>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AF8C52D6F
-	for <webhook@archiver.kernel.org>; Thu,  8 Aug 2024 14:48:48 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.61881.1723128518651066513
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FA0C3DA4A
+	for <webhook@archiver.kernel.org>; Fri,  9 Aug 2024 11:50:25 +0000 (UTC)
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+ by mx.groups.io with SMTP id smtpd.web11.82144.1723204218778181562
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 08 Aug 2024 07:48:38 -0700
+ Fri, 09 Aug 2024 04:50:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=m7eDGn26;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: enguerrand.de-ribaucourt@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 082569C5DB6;
-	Thu,  8 Aug 2024 10:48:38 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id cerc0kEDEX77; Thu,  8 Aug 2024 10:48:37 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 36D5B9C5DD7;
-	Thu,  8 Aug 2024 10:48:37 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 36D5B9C5DD7
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=C7m+lb5a;
+ spf=pass (domain: gmail.com, ip: 209.85.218.49, mailfrom: troels.d.hoffmeyer@gmail.com)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a7a94aa5080so243952566b.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Aug 2024 04:50:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1723128517; bh=ufWLz0OXcMQCwUGoYRLevlaFGntrFM6Ok4qKLDCjAw0=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=m7eDGn26fun8aDPb07J60vrk7N7sjN0a9Y79R81bd7w8CsI6r5E7NuvHmdOEvRxIi
-	 ObNeq7H5p6VfJtQ6W0FuNkZ3+DXv7NS4L99kuIKkYoBd0nif4JiobGGv4hzJK75NtQ
-	 2fogrkzKkd8mfB9+JBdKYdK/T2vF5Xp84uZuMBaW1wzC1mEjZLfuxJLhpU3iH3S8Tu
-	 WmY3RZt4lsjpP/Qhf61GyKiqR5gZTTP2SFA9QFz2m1J8/tyiV+yPL6MNNNUS/6AJf6
-	 85d9+F11/rIpB1AYROSwaRGQHWCMZXXP3nmWot2t4Vkhs67R0Qhk1UcZ58dOzJkbgS
-	 aAVNF/kW8VcGQ==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id dMiAwHqjLlSO; Thu,  8 Aug 2024 10:48:37 -0400 (EDT)
-Received: from sfl-deribaucourt.rennes.sfl (80-15-101-118.ftth.fr.orangecustomers.net [80.15.101.118])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 3FFF99C5FA1;
-	Thu,  8 Aug 2024 10:48:36 -0400 (EDT)
-From: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+        d=gmail.com; s=20230601; t=1723204216; x=1723809016; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aWrRbaqQJDKdM7ZpHlSBzRsBPAHmWqWa6m5AKdJ9c9Q=;
+        b=C7m+lb5ailClN3gcw1755UaQzlFKo5G5sltnaBCLPNxgKy4I1AZTN2OePPp6NKS89K
+         4/DG+plrdd4c6I8youEN/gjRSw48xRkW5QQIIJcDYYZc/68XG2oAqY4JcxW93CjUz06X
+         45TNcMPxJ7wumP1u3hKNj3Hx9o4R1kHt/j72uPGoS3orGT/vqurIO25POZAgjHpXh6qu
+         9IXkOCW99Ik/jZvxY9ryfUeiuRBXmM2/dDuR/2dKrSh4awyMWFc84Vj/wxK3L+PgE4SM
+         fiPDffTyyQ9X7p/UVfMUqHHL0a2ZezOMu1YuYPaL8U2/T9OMOdbfp49K2cjFeqLTTzQr
+         ty6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723204216; x=1723809016;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aWrRbaqQJDKdM7ZpHlSBzRsBPAHmWqWa6m5AKdJ9c9Q=;
+        b=CiLhpq+KsUPou5JSpszq+n0QJ/ELZDT6q3ATjktc1Rbxuc4BzxlR8WD4qpc8DCGyhN
+         dblMo8IBzXgPoN4Bm5Ibn+8WLldxx56qVqK1WIbZzR9nyKoJvlhAFHDmrzMCrGKtd/Q4
+         Z//m8viqB2TnhUI7o2ejmx84upRj95k0aRFatQWRm4Dvtk6nWDtp2j/TlPvE9mhi2fh/
+         C6Vp57GK1geL+h0r/N+7Ymy9P0ma/yL3yHbria2fLEc7Q9M2ANjFrRPL/pEcf7JkO3eG
+         1rfrN7kvjQ8HFffNPph51ZowLij1U6JktK3apUktjpuOd+Ow4A1l1aqYLu9pzAiOPJfH
+         8GsA==
+X-Gm-Message-State: AOJu0YyijyjIADAl5QOgvH/FgYx1szAzQEFXQv60+art/6oP00e7/Mx/
+	Xd3QNYkK1KNNER7wFrO1l4xkqypKtYxqxat79f6lxzFdHSJwT7Tfg5r5tQ==
+X-Google-Smtp-Source: AGHT+IG5wdB4BQ6bqdJVgCi44bUd/QvBTmkjXYXICzjI2uM/sFp0qiBoIF/MXPr23LI1YL1sn77tSQ==
+X-Received: by 2002:a17:907:97d6:b0:a7a:3928:3529 with SMTP id a640c23a62f3a-a80aa55b6b6mr113733966b.13.1723204216163;
+        Fri, 09 Aug 2024 04:50:16 -0700 (PDT)
+Received: from WindowsXP.home58.bang-olufsen.dk ([193.89.194.60])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9c0cc44sm831361166b.76.2024.08.09.04.50.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Aug 2024 04:50:15 -0700 (PDT)
+From: Troels Dalsgaard Hoffmeyer <troels.d.hoffmeyer@gmail.com>
+X-Google-Original-From: Troels Dalsgaard Hoffmeyer <tdah@bang-olufsen.dk>
 To: bitbake-devel@lists.openembedded.org
-Cc: tanguy.raufflet@savoirfairelinux.com,
-	richard.purdie@linuxfoundation.org,
-	alexandre.belloni@bootlin.com,
-	stefan.herbrechtsmeier@weidmueller.com,
-	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-Subject: [PATCH v3 5/6] recipetool: create: split guess_license function
-Date: Thu,  8 Aug 2024 16:48:23 +0200
-Message-Id: <20240808144824.543208-6-enguerrand.de-ribaucourt@savoirfairelinux.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240808144824.543208-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
-References: <20240808144824.543208-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
+Cc: Troels Dalsgaard Hoffmeyer <tdah@bang-olufsen.dk>
+Subject: [PATCH 0/1] Logging str() instead of repr() on exceptions
+Date: Fri,  9 Aug 2024 13:50:12 +0200
+Message-Id: <20240809115013.17469-1-tdah@bang-olufsen.dk>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 08 Aug 2024 14:48:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16458
+ <bitbake-devel@lists.openembedded.org>; Fri, 09 Aug 2024 11:50:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16460
 
-The npm recipetool handler redefines the license code the could be
-unified. In order to do this refactoring, extract the bits we'll
-need into separate functions.
+I was trying to create a recipe for a go binary and was struggling a lot
+in getting it working. One of the reasons for me struggling was some
+poor error messages, i kept getting an error message with just
+"FileNotFoundError(2, "file or directory not found")", with no
+description of which file or directory. After some digging i found that
+bitbake mostly logs repr(exception) instead of str(exception), and
+repr() is usually used when you want a string representation that can be
+interpreted as python again, whereas str() is for more human readable
+strings.
 
-guess_license() is renamed to find_licenses() and is split into
-find_license_files() and match_licenses().
+Talking with RP on IRC, he mentioned that they might have encountered
+situations in the past where repr() was providing more information that
+str(), but wanted to see the specific case i was running into. This
+patch only changes the specific log messages that i needed, but there is
+an overall pattern of logging repr() instead of str()
 
-v3:
- - added commit
+Troels Dalsgaard Hoffmeyer (1):
+  bb: Log str() instead of repr() for exceptions in build
 
-Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirf=
-airelinux.com>
----
- meta/classes-global/license.bbclass  |  8 +++----
- scripts/lib/recipetool/create.py     | 34 ++++++++++++++++++----------
- scripts/lib/recipetool/create_go.py  |  4 ++--
- scripts/lib/recipetool/create_npm.py |  4 ++--
- 4 files changed, 30 insertions(+), 20 deletions(-)
+ lib/bb/build.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/meta/classes-global/license.bbclass b/meta/classes-global/li=
-cense.bbclass
-index b2e0d3faba..4e39ec1d44 100644
---- a/meta/classes-global/license.bbclass
-+++ b/meta/classes-global/license.bbclass
-@@ -39,7 +39,7 @@ python do_populate_lic() {
- }
-=20
- PSEUDO_IGNORE_PATHS .=3D ",${@','.join(((d.getVar('COMMON_LICENSE_DIR') =
-or '') + ' ' + (d.getVar('LICENSE_PATH') or '') + ' ' + d.getVar('COREBAS=
-E') + '/meta/COPYING').split())}"
--# it would be better to copy them in do_install:append, but find_license=
-_filesa is python
-+# it would be better to copy them in do_install:append, but find_license=
-_files is python
- python perform_packagecopy:prepend () {
-     enabled =3D oe.data.typed_value('LICENSE_CREATE_PACKAGE', d)
-     if d.getVar('CLASSOVERRIDE') =3D=3D 'class-target' and enabled:
-@@ -149,14 +149,14 @@ def find_license_files(d):
-             # and "with exceptions" being *
-             # we'll just strip out the modifier and put
-             # the base license.
--            find_license(node.s.replace("+", "").replace("*", ""))
-+            find_licenses(node.s.replace("+", "").replace("*", ""))
-             self.generic_visit(node)
-=20
-         def visit_Constant(self, node):
--            find_license(node.value.replace("+", "").replace("*", ""))
-+            find_licenses(node.value.replace("+", "").replace("*", ""))
-             self.generic_visit(node)
-=20
--    def find_license(license_type):
-+    def find_licenses(license_type):
-         try:
-             bb.utils.mkdirhier(gen_lic_dest)
-         except:
-diff --git a/scripts/lib/recipetool/create.py b/scripts/lib/recipetool/cr=
-eate.py
-index 8e9ff38db6..cb1566784b 100644
---- a/scripts/lib/recipetool/create.py
-+++ b/scripts/lib/recipetool/create.py
-@@ -960,7 +960,7 @@ def handle_license_vars(srctree, lines_before, handle=
-d, extravalues, d):
-         # Someone else has already handled the license vars, just return=
- their value
-         return lichandled[0][1]
-=20
--    licvalues =3D guess_license(srctree, d)
-+    licvalues =3D find_licenses(srctree, d)
-     licenses =3D []
-     lic_files_chksum =3D []
-     lic_unknown =3D []
-@@ -1216,13 +1216,7 @@ def crunch_license(licfile):
-         lictext =3D ''
-     return md5val, lictext
-=20
--def guess_license(srctree, d):
--    import bb
--    md5sums =3D get_license_md5sums(d)
--
--    crunched_md5sums =3D crunch_known_licenses(d)
--
--    licenses =3D []
-+def find_license_files(srctree):
-     licspecs =3D ['*LICEN[CS]E*', 'COPYING*', '*[Ll]icense*', 'LEGAL*', =
-'[Ll]egal*', '*GPL*', 'README.lic*', 'COPYRIGHT*', '[Cc]opyright*', 'e[dp=
-]l-v10']
-     skip_extensions =3D (".html", ".js", ".json", ".svg", ".ts", ".go")
-     licfiles =3D []
-@@ -1235,11 +1229,22 @@ def guess_license(srctree, d):
-                     fullpath =3D os.path.join(root, fn)
-                     if not fullpath in licfiles:
-                         licfiles.append(fullpath)
-+
-+    return licfiles
-+
-+def match_licenses(licfiles, srctree, d):
-+    import bb
-+    md5sums =3D get_license_md5sums(d)
-+
-+    crunched_md5sums =3D crunch_known_licenses(d)
-+
-+    licenses =3D []
-     for licfile in sorted(licfiles):
--        md5value =3D bb.utils.md5_file(licfile)
-+        resolved_licfile =3D d.expand(licfile)
-+        md5value =3D bb.utils.md5_file(resolved_licfile)
-         license =3D md5sums.get(md5value, None)
-         if not license:
--            crunched_md5, lictext =3D crunch_license(licfile)
-+            crunched_md5, lictext =3D crunch_license(resolved_licfile)
-             license =3D crunched_md5sums.get(crunched_md5, None)
-             if lictext and not license:
-                 license =3D 'Unknown'
-@@ -1249,13 +1254,19 @@ def guess_license(srctree, d):
-         if license:
-             licenses.append((license, os.path.relpath(licfile, srctree),=
- md5value))
-=20
-+    return licenses
-+
-+def find_licenses(srctree, d):
-+    licfiles =3D find_license_files(srctree)
-+    licenses =3D match_licenses(licfiles, srctree, d)
-+
-     # FIXME should we grab at least one source file with a license heade=
-r and add that too?
-=20
-     return licenses
-=20
- def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=3D=
-None, pn=3D'${PN}'):
-     """
--    Given a list of (license, path, md5sum) as returned by guess_license=
-(),
-+    Given a list of (license, path, md5sum) as returned by match_license=
-s(),
-     a dict of package name to path mappings, write out a set of
-     package-specific LICENSE values.
-     """
-@@ -1418,4 +1429,3 @@ def register_commands(subparsers):
-     parser_create.add_argument('--devtool', action=3D"store_true", help=3D=
-argparse.SUPPRESS)
-     parser_create.add_argument('--mirrors', action=3D"store_true", help=3D=
-'Enable PREMIRRORS and MIRRORS for source tree fetching (disabled by defa=
-ult).')
-     parser_create.set_defaults(func=3Dcreate_recipe)
--
-diff --git a/scripts/lib/recipetool/create_go.py b/scripts/lib/recipetool=
-/create_go.py
-index a85a2f2786..5cc53931f0 100644
---- a/scripts/lib/recipetool/create_go.py
-+++ b/scripts/lib/recipetool/create_go.py
-@@ -14,7 +14,7 @@ from collections import namedtuple
- from enum import Enum
- from html.parser import HTMLParser
- from recipetool.create import RecipeHandler, handle_license_vars
--from recipetool.create import guess_license, tidy_licenses, fixup_licens=
-e
-+from recipetool.create import find_licenses, tidy_licenses, fixup_licens=
-e
- from recipetool.create import determine_from_url
- from urllib.error import URLError, HTTPError
-=20
-@@ -624,7 +624,7 @@ class GoRecipeHandler(RecipeHandler):
-=20
-         licenses =3D []
-         lic_files_chksum =3D []
--        licvalues =3D guess_license(tmp_vendor_dir, d)
-+        licvalues =3D find_licenses(tmp_vendor_dir, d)
-         shutil.rmtree(tmp_vendor_dir)
-=20
-         if licvalues:
-diff --git a/scripts/lib/recipetool/create_npm.py b/scripts/lib/recipetoo=
-l/create_npm.py
-index dd0ac01c3e..78dc248f31 100644
---- a/scripts/lib/recipetool/create_npm.py
-+++ b/scripts/lib/recipetool/create_npm.py
-@@ -17,7 +17,7 @@ from bb.fetch2.npm import npm_package
- from bb.fetch2.npmsw import foreach_dependencies
- from recipetool.create import RecipeHandler
- from recipetool.create import get_license_md5sums
--from recipetool.create import guess_license
-+from recipetool.create import find_licenses
- from recipetool.create import split_pkg_licenses
- logger =3D logging.getLogger('recipetool')
-=20
-@@ -320,7 +320,7 @@ class NpmRecipeHandler(RecipeHandler):
-             return (licenses, chksums, fallback_licenses)
-=20
-         (licenses, extravalues["LIC_FILES_CHKSUM"], fallback_licenses) =3D=
- _guess_odd_license(licfiles)
--        split_pkg_licenses([*licenses, *guess_license(srctree, d)], pack=
-ages, lines_after, fallback_licenses)
-+        split_pkg_licenses([*licenses, *find_licenses(srctree, d)], pack=
-ages, lines_after, fallback_licenses)
-=20
-         classes.append("npm")
-         handled.append("buildsystem")
---=20
-2.34.1
+-- 
+2.40.1
 
 
