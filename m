@@ -2,87 +2,103 @@ Return-Path: <tdah@bang-olufsen.dk>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FA0C3DA4A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B122C52D7C
 	for <webhook@archiver.kernel.org>; Fri,  9 Aug 2024 11:50:25 +0000 (UTC)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
- by mx.groups.io with SMTP id smtpd.web11.82144.1723204218778181562
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+ by mx.groups.io with SMTP id smtpd.web11.82146.1723204221133648721
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 09 Aug 2024 04:50:19 -0700
+ Fri, 09 Aug 2024 04:50:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=C7m+lb5a;
- spf=pass (domain: gmail.com, ip: 209.85.218.49, mailfrom: troels.d.hoffmeyer@gmail.com)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a7a94aa5080so243952566b.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Aug 2024 04:50:18 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Jyeov5Ry;
+ spf=pass (domain: gmail.com, ip: 209.85.218.51, mailfrom: troels.d.hoffmeyer@gmail.com)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a7a975fb47eso235131466b.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Aug 2024 04:50:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723204216; x=1723809016; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aWrRbaqQJDKdM7ZpHlSBzRsBPAHmWqWa6m5AKdJ9c9Q=;
-        b=C7m+lb5ailClN3gcw1755UaQzlFKo5G5sltnaBCLPNxgKy4I1AZTN2OePPp6NKS89K
-         4/DG+plrdd4c6I8youEN/gjRSw48xRkW5QQIIJcDYYZc/68XG2oAqY4JcxW93CjUz06X
-         45TNcMPxJ7wumP1u3hKNj3Hx9o4R1kHt/j72uPGoS3orGT/vqurIO25POZAgjHpXh6qu
-         9IXkOCW99Ik/jZvxY9ryfUeiuRBXmM2/dDuR/2dKrSh4awyMWFc84Vj/wxK3L+PgE4SM
-         fiPDffTyyQ9X7p/UVfMUqHHL0a2ZezOMu1YuYPaL8U2/T9OMOdbfp49K2cjFeqLTTzQr
-         ty6g==
+        d=gmail.com; s=20230601; t=1723204219; x=1723809019; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TUTNTWmKnEKgchVeg9AnRLZFuGRfGu5QIrrQwH2vjX8=;
+        b=Jyeov5RyvlEkfgpNsKwuDCOIt+b7EiAiILdNXU+1JaKgFNR6CS0Q5ikfVhG7h3j3Zm
+         EywW39Ok1fJ8k20r5B6A5mVrmgLSYL8Em99Tzcs4t7R3tYuMuBAJTf8g+UFIFPVKuDf0
+         KUSTn0IhjFiR3YD8U7OxIAA8rkWgcvPIP3/+F+UV2ngXdbU1DtMVLcnzneUhdRweAECQ
+         8T7wY9SbTo0tPLyUW2Sq/pY3uggpak/gXUcr6DMvFhVl5cjlDOKlMnHdWo10iaj4Oa1M
+         StcH0/SCgVnC+3tnJoOftaakxcX29hkCT858QwJDLKtf3gny0dughDECAEb5y08IAr3d
+         p0QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723204216; x=1723809016;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aWrRbaqQJDKdM7ZpHlSBzRsBPAHmWqWa6m5AKdJ9c9Q=;
-        b=CiLhpq+KsUPou5JSpszq+n0QJ/ELZDT6q3ATjktc1Rbxuc4BzxlR8WD4qpc8DCGyhN
-         dblMo8IBzXgPoN4Bm5Ibn+8WLldxx56qVqK1WIbZzR9nyKoJvlhAFHDmrzMCrGKtd/Q4
-         Z//m8viqB2TnhUI7o2ejmx84upRj95k0aRFatQWRm4Dvtk6nWDtp2j/TlPvE9mhi2fh/
-         C6Vp57GK1geL+h0r/N+7Ymy9P0ma/yL3yHbria2fLEc7Q9M2ANjFrRPL/pEcf7JkO3eG
-         1rfrN7kvjQ8HFffNPph51ZowLij1U6JktK3apUktjpuOd+Ow4A1l1aqYLu9pzAiOPJfH
-         8GsA==
-X-Gm-Message-State: AOJu0YyijyjIADAl5QOgvH/FgYx1szAzQEFXQv60+art/6oP00e7/Mx/
-	Xd3QNYkK1KNNER7wFrO1l4xkqypKtYxqxat79f6lxzFdHSJwT7Tfg5r5tQ==
-X-Google-Smtp-Source: AGHT+IG5wdB4BQ6bqdJVgCi44bUd/QvBTmkjXYXICzjI2uM/sFp0qiBoIF/MXPr23LI1YL1sn77tSQ==
-X-Received: by 2002:a17:907:97d6:b0:a7a:3928:3529 with SMTP id a640c23a62f3a-a80aa55b6b6mr113733966b.13.1723204216163;
-        Fri, 09 Aug 2024 04:50:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723204219; x=1723809019;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TUTNTWmKnEKgchVeg9AnRLZFuGRfGu5QIrrQwH2vjX8=;
+        b=l2pOMaCE/ft8qFHdI/w9Q7bOPuVSoUgVZCp0UPmox/oIjdK02PbLd1wjE1rk3b/XtJ
+         Y8jYlALK1Jje3HD1Db0mW4B9UdQwpp9Fz71wLwXsdSYjG9c+x9FF4X8uocw1tQFZAEsu
+         3csdhznfvTHZ/SJK1Ts2frdLA6+NaT1OQ2Mx3QQN9g7IHN4pz7JQ/k7CBU1ITH9yNKyo
+         SfUgWkwJWrcUx01bCbWc24si2o3go6/nJM6fgrK4/astG/3dnhH0i9SHn15eLFFzftP7
+         HSe3fl/pmBRdHUDZyLHMlhh+LjI/D1hHSwPYG51IUzEZ8gRo01MqRYnNn2DiPIHiUKOM
+         lp8w==
+X-Gm-Message-State: AOJu0YyDLqpYzBmI8wEz7MfFclFQFq6nrD1oXAcNunKF+7bKNjTnyzZw
+	ke/I2M3DJuMCCTH7eZfGc/5rh28/1Mw/67OzynBRBMCHwPRYUqookhLNJA==
+X-Google-Smtp-Source: AGHT+IGsCSEUop68Sz8iH8Is3iHD+t9LjNcgpfuiIqdku0OLzaATMbrCxQe4nTGKTX1So2rlyt3RSA==
+X-Received: by 2002:a17:907:f14a:b0:a77:c9cc:f96f with SMTP id a640c23a62f3a-a80aa556817mr102867866b.7.1723204219118;
+        Fri, 09 Aug 2024 04:50:19 -0700 (PDT)
 Received: from WindowsXP.home58.bang-olufsen.dk ([193.89.194.60])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9c0cc44sm831361166b.76.2024.08.09.04.50.15
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9c0cc44sm831361166b.76.2024.08.09.04.50.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Aug 2024 04:50:15 -0700 (PDT)
+        Fri, 09 Aug 2024 04:50:18 -0700 (PDT)
 From: Troels Dalsgaard Hoffmeyer <troels.d.hoffmeyer@gmail.com>
 X-Google-Original-From: Troels Dalsgaard Hoffmeyer <tdah@bang-olufsen.dk>
 To: bitbake-devel@lists.openembedded.org
 Cc: Troels Dalsgaard Hoffmeyer <tdah@bang-olufsen.dk>
-Subject: [PATCH 0/1] Logging str() instead of repr() on exceptions
-Date: Fri,  9 Aug 2024 13:50:12 +0200
-Message-Id: <20240809115013.17469-1-tdah@bang-olufsen.dk>
+Subject: [PATCH 1/1] bb: Log str() instead of repr() for exceptions in build
+Date: Fri,  9 Aug 2024 13:50:13 +0200
+Message-Id: <20240809115013.17469-2-tdah@bang-olufsen.dk>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240809115013.17469-1-tdah@bang-olufsen.dk>
+References: <20240809115013.17469-1-tdah@bang-olufsen.dk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 09 Aug 2024 11:50:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16460
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16461
 
-I was trying to create a recipe for a go binary and was struggling a lot
-in getting it working. One of the reasons for me struggling was some
-poor error messages, i kept getting an error message with just
-"FileNotFoundError(2, "file or directory not found")", with no
-description of which file or directory. After some digging i found that
-bitbake mostly logs repr(exception) instead of str(exception), and
-repr() is usually used when you want a string representation that can be
-interpreted as python again, whereas str() is for more human readable
-strings.
+When getting errors during build, they would be printed using repr(), which
+doesnt have a lot of context in some cases.
+For example FileNotFoundError(2, "file or directory not found"), would be
+printed, without the path of the file not found.
+This changes the build logging to use str() instead, which according to
+the spec is fore human readable strings, whereas repr() is for string
+representations that can be be used as valid python.
 
-Talking with RP on IRC, he mentioned that they might have encountered
-situations in the past where repr() was providing more information that
-str(), but wanted to see the specific case i was running into. This
-patch only changes the specific log messages that i needed, but there is
-an overall pattern of logging repr() instead of str()
-
-Troels Dalsgaard Hoffmeyer (1):
-  bb: Log str() instead of repr() for exceptions in build
-
+Signed-off-by: Troels Dalsgaard Hoffmeyer <tdah@bang-olufsen.dk>
+---
  lib/bb/build.py | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index ab8bce3d5..097730047 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -743,7 +743,7 @@ def _exec_task(fn, task, d, quieterr):
+ 
+         if quieterr:
+             if not handled:
+-                logger.warning(repr(exc))
++                logger.warning(str(exc))
+             event.fire(TaskFailedSilent(task, fn, logfn, localdata), localdata)
+         else:
+             errprinted = errchk.triggered
+@@ -752,7 +752,7 @@ def _exec_task(fn, task, d, quieterr):
+             if verboseStdoutLogging or handled:
+                 errprinted = True
+             if not handled:
+-                logger.error(repr(exc))
++                logger.error(str(exc))
+             event.fire(TaskFailed(task, fn, logfn, localdata, errprinted), localdata)
+         return 1
+ 
 -- 
 2.40.1
 
