@@ -1,280 +1,144 @@
-Return-Path: <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC82AC531DD
-	for <webhook@archiver.kernel.org>; Mon, 12 Aug 2024 12:28:44 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.44998.1723465721292247190
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5EFC52D7D
+	for <webhook@archiver.kernel.org>; Mon, 12 Aug 2024 15:53:46 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web10.49913.1723478021141851456
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 12 Aug 2024 05:28:41 -0700
+ Mon, 12 Aug 2024 08:53:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=YxjOZmdj;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: enguerrand.de-ribaucourt@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 9B3629C5D24;
-	Mon, 12 Aug 2024 08:28:40 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id MyZfd5lWhrN9; Mon, 12 Aug 2024 08:28:39 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id D991B9C5F35;
-	Mon, 12 Aug 2024 08:28:39 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com D991B9C5F35
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=VjbcUDKn;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4280ee5f1e3so34688815e9.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 12 Aug 2024 08:53:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1723465719; bh=qDLER9r/6v2yuNogmpzJQCTRRxjRP0i1NCl8XefCBvg=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=YxjOZmdjgpCduwVX7woNuYe7wRlCP7X/T90MtpbbL/g96Pf8C2hHzEfanmZIv6kpX
-	 Z2UdbV4JSOyYRS8MXjJLIcVVA2kE6GdoaVwS9kZ3DRbRj+cf6kCvYxyUMxFeNyySxZ
-	 WjvuGzZroFN2hhFW113EJW5LVpfelaw7MiHkYc52DNKT3lnF8Pe5cVRINoYdOVhwrg
-	 gnS3TT0ZUkC1MsNG+TzmyoAtzV7o5qfYEo7iIz7vu9BH0cHGzjhmQwfuk+olibRNum
-	 WU+v9QOvX9XWZsu/GTKmXQniVT+JXfqiE0V172h5DCZDh15Ney4C7TiVVdufDBdqHG
-	 DcXbESun6xN1w==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id XF_Yshg8659Q; Mon, 12 Aug 2024 08:28:39 -0400 (EDT)
-Received: from sfl-deribaucourt.rennes.sfl (80-15-101-118.ftth.fr.orangecustomers.net [80.15.101.118])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id EA0E79C5E53;
-	Mon, 12 Aug 2024 08:28:38 -0400 (EDT)
-From: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+        d=linuxfoundation.org; s=google; t=1723478019; x=1724082819; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y+x2qSsVcwjRJDx93qCaA8G7lFTNpH0tDZHbg6IHE18=;
+        b=VjbcUDKnjXe4rmd4Um6zZfkRHnhmv6SZiSJSGoq/M3rvFzf55Crub2z8p321EE/DZK
+         dFD+F3x7+xOQe+tQEhD3M51CVwOh65CKDrVBt7daqYmAKk3bNFxKytpLn7fw5oRPzC3e
+         AfZ33RqpKCqTfVyLDfWKpMIEKhdDL0kXYnBq0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723478019; x=1724082819;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y+x2qSsVcwjRJDx93qCaA8G7lFTNpH0tDZHbg6IHE18=;
+        b=pqIc/sIcs80J5r7U9pAev2tVCKcWM82ZdH7By1PO7bJ9EvNuzZg0F8noFKHfMAnAV+
+         VC/zepDvZEou9VFnpVEx98PiqwL2DH4Aovc1QpKWEswwlGu4cPfzVLdRaOrx8SulKWo6
+         EdtNRNKosySc12TWms6q3P9ZoSv5K+EFmLx6y4/4GR7jeUgoF6pi0qDW3NJZi1Ncy4Oi
+         G8PXRYZtWSKeDkGYlfFFxwhfGedsXvn2RJQqxJOgNl8x+R07r9WIxqAXOTIusKEJHKpJ
+         sMON9a2s3s/1MUq7bAd0qhyI1I6q0BLp/d2I1sJdyMaj280vboA28SVXBxq4YTTwtg/R
+         CeOw==
+X-Gm-Message-State: AOJu0YymsH7f86792xVXKINnJ/tLRjzBIuV/AvfrZBk9fCyomKndNHey
+	7PCk/7YYW9bAb0jMNZPF3gwwTpAEtmjdJe1uJYOqJRQ8HV26/7O3y/CvWmWbLOSzDnx4FrI4JUN
+	Ty/I=
+X-Google-Smtp-Source: AGHT+IFu7P68bOKIGUAp+Ge+YGW/JBhMKzOPbhe0hOJaTD+9DNdSAqeaYrzPBFRx2T788TExSxTAgg==
+X-Received: by 2002:a05:600c:548b:b0:427:ff3b:7a20 with SMTP id 5b1f17b1804b1-429d486fea7mr6809075e9.27.1723478019215;
+        Mon, 12 Aug 2024 08:53:39 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:450:fb95:e7af:f3ab])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429c77372e8sm109970015e9.33.2024.08.12.08.53.38
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Aug 2024 08:53:38 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: tanguy.raufflet@savoirfairelinux.com,
-	richard.purdie@linuxfoundation.org,
-	alexandre.belloni@bootlin.com,
-	stefan.herbrechtsmeier@weidmueller.com,
-	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-Subject: [OE-core][PATCH v4 3/4] recipetool: create: split guess_license function
-Date: Mon, 12 Aug 2024 14:28:28 +0200
-Message-Id: <20240812122829.577515-4-enguerrand.de-ribaucourt@savoirfairelinux.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240812122829.577515-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
-References: <20240812122829.577515-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
+Subject: [PATCH 4/4] build: Ensure addtask before/after tasknames have prefix applied
+Date: Mon, 12 Aug 2024 16:53:35 +0100
+Message-ID: <20240812155335.904273-4-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240812155335.904273-1-richard.purdie@linuxfoundation.org>
+References: <20240812155335.904273-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 12 Aug 2024 12:28:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16469
+ <bitbake-devel@lists.openembedded.org>; Mon, 12 Aug 2024 15:53:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16474
 
-The npm recipetool handler redefines the license code the could be
-unified. In order to do this refactoring, extract the bits we'll
-need into separate functions.
+"addtask do_XXX before YYY after ZZZ "
 
-guess_license() is renamed to find_licenses() and is split into
-find_license_files() and match_licenses().
+where YYY or ZZZ is missing the "do_" prefix don't work as expected. Ajust the
+code so that it doesn't just silently do the wrong thing but works as expected.
 
-Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirf=
-airelinux.com>
+Expand a test case to cover this.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
-v4:
- - fixed oe-selftest recipetool.RecipetoolTests.test_recipetool_handle_li=
-cense_vars
-v3:
- - added commit
----
- meta/classes-global/license.bbclass        |  8 ++---
- meta/lib/oeqa/selftest/cases/recipetool.py |  1 +
- scripts/lib/recipetool/create.py           | 34 ++++++++++++++--------
- scripts/lib/recipetool/create_go.py        |  4 +--
- scripts/lib/recipetool/create_npm.py       |  4 +--
- 5 files changed, 31 insertions(+), 20 deletions(-)
+ lib/bb/build.py       | 13 +++++++++----
+ lib/bb/tests/parse.py |  6 +++++-
+ 2 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/meta/classes-global/license.bbclass b/meta/classes-global/li=
-cense.bbclass
-index b2e0d3faba..4e39ec1d44 100644
---- a/meta/classes-global/license.bbclass
-+++ b/meta/classes-global/license.bbclass
-@@ -39,7 +39,7 @@ python do_populate_lic() {
- }
-=20
- PSEUDO_IGNORE_PATHS .=3D ",${@','.join(((d.getVar('COMMON_LICENSE_DIR') =
-or '') + ' ' + (d.getVar('LICENSE_PATH') or '') + ' ' + d.getVar('COREBAS=
-E') + '/meta/COPYING').split())}"
--# it would be better to copy them in do_install:append, but find_license=
-_filesa is python
-+# it would be better to copy them in do_install:append, but find_license=
-_files is python
- python perform_packagecopy:prepend () {
-     enabled =3D oe.data.typed_value('LICENSE_CREATE_PACKAGE', d)
-     if d.getVar('CLASSOVERRIDE') =3D=3D 'class-target' and enabled:
-@@ -149,14 +149,14 @@ def find_license_files(d):
-             # and "with exceptions" being *
-             # we'll just strip out the modifier and put
-             # the base license.
--            find_license(node.s.replace("+", "").replace("*", ""))
-+            find_licenses(node.s.replace("+", "").replace("*", ""))
-             self.generic_visit(node)
-=20
-         def visit_Constant(self, node):
--            find_license(node.value.replace("+", "").replace("*", ""))
-+            find_licenses(node.value.replace("+", "").replace("*", ""))
-             self.generic_visit(node)
-=20
--    def find_license(license_type):
-+    def find_licenses(license_type):
-         try:
-             bb.utils.mkdirhier(gen_lic_dest)
-         except:
-diff --git a/meta/lib/oeqa/selftest/cases/recipetool.py b/meta/lib/oeqa/s=
-elftest/cases/recipetool.py
-index 42202b7831..f742dd4d64 100644
---- a/meta/lib/oeqa/selftest/cases/recipetool.py
-+++ b/meta/lib/oeqa/selftest/cases/recipetool.py
-@@ -1068,6 +1068,7 @@ class RecipetoolTests(RecipetoolBase):
-=20
-         d =3D DataConnectorCopy
-         d.getVar =3D Mock(return_value=3Dcommonlicdir)
-+        d.expand =3D Mock(side_effect=3Dlambda x: x)
-=20
-         srctree =3D tempfile.mkdtemp(prefix=3D'recipetoolqa')
-         self.track_for_cleanup(srctree)
-diff --git a/scripts/lib/recipetool/create.py b/scripts/lib/recipetool/cr=
-eate.py
-index 066366e34f..c626844370 100644
---- a/scripts/lib/recipetool/create.py
-+++ b/scripts/lib/recipetool/create.py
-@@ -960,7 +960,7 @@ def handle_license_vars(srctree, lines_before, handle=
-d, extravalues, d):
-         # Someone else has already handled the license vars, just return=
- their value
-         return lichandled[0][1]
-=20
--    licvalues =3D guess_license(srctree, d)
-+    licvalues =3D find_licenses(srctree, d)
-     licenses =3D []
-     lic_files_chksum =3D []
-     lic_unknown =3D []
-@@ -1216,13 +1216,7 @@ def crunch_license(licfile):
-         lictext =3D ''
-     return md5val, lictext
-=20
--def guess_license(srctree, d):
--    import bb
--    md5sums =3D get_license_md5sums(d)
--
--    crunched_md5sums =3D crunch_known_licenses(d)
--
--    licenses =3D []
-+def find_license_files(srctree):
-     licspecs =3D ['*LICEN[CS]E*', 'COPYING*', '*[Ll]icense*', 'LEGAL*', =
-'[Ll]egal*', '*GPL*', 'README.lic*', 'COPYRIGHT*', '[Cc]opyright*', 'e[dp=
-]l-v10']
-     skip_extensions =3D (".html", ".js", ".json", ".svg", ".ts", ".go")
-     licfiles =3D []
-@@ -1235,11 +1229,22 @@ def guess_license(srctree, d):
-                     fullpath =3D os.path.join(root, fn)
-                     if not fullpath in licfiles:
-                         licfiles.append(fullpath)
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index ab8bce3d57..d226aadacb 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -932,9 +932,13 @@ def add_tasks(tasklist, d):
+     # don't assume holding a reference
+     d.setVar('_task_deps', task_deps)
+ 
++def ensure_task_prefix(name):
++    if name[:3] != "do_":
++        name = "do_" + name
++    return name
 +
-+    return licfiles
+ def addtask(task, before, after, d):
+-    if task[:3] != "do_":
+-        task = "do_" + task
++    task = ensure_task_prefix(task)
+ 
+     d.setVarFlag(task, "task", 1)
+     bbtasks = d.getVar('__BBTASKS', False) or []
+@@ -946,19 +950,20 @@ def addtask(task, before, after, d):
+     if after is not None:
+         # set up deps for function
+         for entry in after.split():
++            entry = ensure_task_prefix(entry)
+             if entry not in existing:
+                 existing.append(entry)
+     d.setVarFlag(task, "deps", existing)
+     if before is not None:
+         # set up things that depend on this func
+         for entry in before.split():
++            entry = ensure_task_prefix(entry)
+             existing = d.getVarFlag(entry, "deps", False) or []
+             if task not in existing:
+                 d.setVarFlag(entry, "deps", [task] + existing)
+ 
+ def deltask(task, d):
+-    if task[:3] != "do_":
+-        task = "do_" + task
++    task = ensure_task_prefix(task)
+ 
+     bbtasks = d.getVar('__BBTASKS', False) or []
+     if task in bbtasks:
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index 97df2c4590..410679d5a1 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -188,6 +188,9 @@ addtask do_mytask3
+ deltask do_mytask3# comment
+ deltask do_mytask4 # comment2
+ 
++# Ensure a missing task prefix on after works
++addtask do_mytask5 after mytask
 +
-+def match_licenses(licfiles, srctree, d):
-+    import bb
-+    md5sums =3D get_license_md5sums(d)
-+
-+    crunched_md5sums =3D crunch_known_licenses(d)
-+
-+    licenses =3D []
-     for licfile in sorted(licfiles):
--        md5value =3D bb.utils.md5_file(licfile)
-+        resolved_licfile =3D d.expand(licfile)
-+        md5value =3D bb.utils.md5_file(resolved_licfile)
-         license =3D md5sums.get(md5value, None)
-         if not license:
--            crunched_md5, lictext =3D crunch_license(licfile)
-+            crunched_md5, lictext =3D crunch_license(resolved_licfile)
-             license =3D crunched_md5sums.get(crunched_md5, None)
-             if lictext and not license:
-                 license =3D 'Unknown'
-@@ -1249,13 +1254,19 @@ def guess_license(srctree, d):
-         if license:
-             licenses.append((license, os.path.relpath(licfile, srctree),=
- md5value))
-=20
-+    return licenses
-+
-+def find_licenses(srctree, d):
-+    licfiles =3D find_license_files(srctree)
-+    licenses =3D match_licenses(licfiles, srctree, d)
-+
-     # FIXME should we grab at least one source file with a license heade=
-r and add that too?
-=20
-     return licenses
-=20
- def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=3D=
-None, pn=3D'${PN}'):
-     """
--    Given a list of (license, path, md5sum) as returned by guess_license=
-(),
-+    Given a list of (license, path, md5sum) as returned by match_license=
-s(),
-     a dict of package name to path mappings, write out a set of
-     package-specific LICENSE values.
-     """
-@@ -1418,4 +1429,3 @@ def register_commands(subparsers):
-     parser_create.add_argument('--devtool', action=3D"store_true", help=3D=
-argparse.SUPPRESS)
-     parser_create.add_argument('--mirrors', action=3D"store_true", help=3D=
-'Enable PREMIRRORS and MIRRORS for source tree fetching (disabled by defa=
-ult).')
-     parser_create.set_defaults(func=3Dcreate_recipe)
--
-diff --git a/scripts/lib/recipetool/create_go.py b/scripts/lib/recipetool=
-/create_go.py
-index a85a2f2786..5cc53931f0 100644
---- a/scripts/lib/recipetool/create_go.py
-+++ b/scripts/lib/recipetool/create_go.py
-@@ -14,7 +14,7 @@ from collections import namedtuple
- from enum import Enum
- from html.parser import HTMLParser
- from recipetool.create import RecipeHandler, handle_license_vars
--from recipetool.create import guess_license, tidy_licenses, fixup_licens=
-e
-+from recipetool.create import find_licenses, tidy_licenses, fixup_licens=
-e
- from recipetool.create import determine_from_url
- from urllib.error import URLError, HTTPError
-=20
-@@ -624,7 +624,7 @@ class GoRecipeHandler(RecipeHandler):
-=20
-         licenses =3D []
-         lic_files_chksum =3D []
--        licvalues =3D guess_license(tmp_vendor_dir, d)
-+        licvalues =3D find_licenses(tmp_vendor_dir, d)
-         shutil.rmtree(tmp_vendor_dir)
-=20
-         if licvalues:
-diff --git a/scripts/lib/recipetool/create_npm.py b/scripts/lib/recipetoo=
-l/create_npm.py
-index dd0ac01c3e..78dc248f31 100644
---- a/scripts/lib/recipetool/create_npm.py
-+++ b/scripts/lib/recipetool/create_npm.py
-@@ -17,7 +17,7 @@ from bb.fetch2.npm import npm_package
- from bb.fetch2.npmsw import foreach_dependencies
- from recipetool.create import RecipeHandler
- from recipetool.create import get_license_md5sums
--from recipetool.create import guess_license
-+from recipetool.create import find_licenses
- from recipetool.create import split_pkg_licenses
- logger =3D logging.getLogger('recipetool')
-=20
-@@ -320,7 +320,7 @@ class NpmRecipeHandler(RecipeHandler):
-             return (licenses, chksums, fallback_licenses)
-=20
-         (licenses, extravalues["LIC_FILES_CHKSUM"], fallback_licenses) =3D=
- _guess_odd_license(licfiles)
--        split_pkg_licenses([*licenses, *guess_license(srctree, d)], pack=
-ages, lines_after, fallback_licenses)
-+        split_pkg_licenses([*licenses, *find_licenses(srctree, d)], pack=
-ages, lines_after, fallback_licenses)
-=20
-         classes.append("npm")
-         handled.append("buildsystem")
---=20
-2.34.1
-
+ MYVAR = "do_patch"
+ EMPTYVAR = ""
+ deltask do_fetch ${MYVAR} ${EMPTYVAR}
+@@ -198,7 +201,8 @@ deltask ${EMPTYVAR}
+         f = self.parsehelper(self.addtask_deltask)
+         d = bb.parse.handle(f.name, self.d)['']
+ 
+-        self.assertEqual(['do_fetch2', 'do_patch2', 'do_myplaintask', 'do_mytask', 'do_mytask2'], d.getVar("__BBTASKS"))
++        self.assertEqual(['do_fetch2', 'do_patch2', 'do_myplaintask', 'do_mytask', 'do_mytask2', 'do_mytask5'], d.getVar("__BBTASKS"))
++        self.assertEqual(['do_mytask'], d.getVarFlag("do_mytask5", "deps"))
+ 
+     broken_multiline_comment = """
+ # First line of comment \\
 
