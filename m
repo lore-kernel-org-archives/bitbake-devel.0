@@ -2,42 +2,42 @@ Return-Path: <enguerrand.de-ribaucourt@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB467C531DC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C85C3DA7F
 	for <webhook@archiver.kernel.org>; Mon, 12 Aug 2024 12:28:44 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.44996.1723465719439957078
+ by mx.groups.io with SMTP id smtpd.web11.44997.1723465720175977804
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 12 Aug 2024 05:28:39 -0700
+ Mon, 12 Aug 2024 05:28:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=adLBueth;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=rmvBeRCX;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: enguerrand.de-ribaucourt@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id C1BF29C5F1F;
-	Mon, 12 Aug 2024 08:28:38 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 7FB249C5F5C;
+	Mon, 12 Aug 2024 08:28:39 -0400 (EDT)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id H1AGxTbJbR-t; Mon, 12 Aug 2024 08:28:37 -0400 (EDT)
+ with ESMTP id b9PmrpylIGxw; Mon, 12 Aug 2024 08:28:38 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id C199A9C5DB6;
-	Mon, 12 Aug 2024 08:28:37 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com C199A9C5DB6
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id D35419C5DB6;
+	Mon, 12 Aug 2024 08:28:38 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com D35419C5DB6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1723465717; bh=lbO0pa2Jn02xTo78mAckk0NTSUOre2snBO97BCSOUuQ=;
+	t=1723465718; bh=EhzQ8wNaLqO2ae9g+r4pUxup5brrhibk6lif/pebQBQ=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=adLBuethw3SINeCVcS5p1dh9snUI0NDKVHz9VPv7c9YH/KsvHSGozeadM1aQXl2qK
-	 HS2T6U/i3HBcawjL5aTQWmpSFaRCKzabHWyx3PndpxcaKbmMle6glnfRClnI/e6Y88
-	 tvjruVS6T3DTA6s5zvKz4sqjigX/8ufFTTOIpt0eK/MAXTVWGYoZQBw4tY2fs/yRCu
-	 hlHqIfWnMl6DrfwgrWYyg2T63XytUV9fQAqxOIGiKrRW++3blWTlIr6nnOsiF1Vuah
-	 bEP0LEX2jMIA73vctiyrq8QnjJ3rz0HnS/fUjmETRj+904zHeG+SA71Omx62mzTWM9
-	 kvLBq+U3+f4eg==
+	b=rmvBeRCXNSvju1IoYiyDNMgR16Wduc0kMPmx0WHSDTgh+CnIh9zW6RdZdBNBunvMY
+	 Ezlj1aEkNNyi/F3yYGLRE2xGJlbA88ubETk7CoBlcx9ara16S/fM/vXZCNFib2fppc
+	 lJSLjFbyi6JLHPIHJOSqdtEHS22XvaamdPZsUWvwSgVlJfIR0mDpbFaWnGtBhGvenQ
+	 7mtmlcStXn6U92CC5s4zXEmxbE/R1OlBrpuh2hlAtPfLpyCIIYjEogg2zQtfcne21Y
+	 NYeP1AKFbeSZFzd6Keot4kRjP389It/zfNwhDapDa1aSHRDxwlbg/vfqUUJ0VH766D
+	 jB3bqqGGFEiBA==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id RhOJXfBsdTF8; Mon, 12 Aug 2024 08:28:37 -0400 (EDT)
+ with ESMTP id o7cOodV7aS3P; Mon, 12 Aug 2024 08:28:38 -0400 (EDT)
 Received: from sfl-deribaucourt.rennes.sfl (80-15-101-118.ftth.fr.orangecustomers.net [80.15.101.118])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id D31249C5E53;
-	Mon, 12 Aug 2024 08:28:36 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id E0BB69C5E53;
+	Mon, 12 Aug 2024 08:28:37 -0400 (EDT)
 From: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: tanguy.raufflet@savoirfairelinux.com,
@@ -45,9 +45,9 @@ Cc: tanguy.raufflet@savoirfairelinux.com,
 	alexandre.belloni@bootlin.com,
 	stefan.herbrechtsmeier@weidmueller.com,
 	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-Subject: [OE-core][PATCH v4 1/4] npm: accept unspecified versions in package.json
-Date: Mon, 12 Aug 2024 14:28:26 +0200
-Message-Id: <20240812122829.577515-2-enguerrand.de-ribaucourt@savoirfairelinux.com>
+Subject: [OE-core][PATCH v4 2/4] recipetool: create_npm: resolve licenses defined in package.json
+Date: Mon, 12 Aug 2024 14:28:27 +0200
+Message-Id: <20240812122829.577515-3-enguerrand.de-ribaucourt@savoirfairelinux.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240812122829.577515-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
 References: <20240812122829.577515-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
@@ -57,49 +57,164 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 12 Aug 2024 12:28:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16467
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16468
 
-Our current emulation mandates that the package.json contains a version
-field. Some packages may not provide it when they are not published to
-the registry. The actual `npm pack` would allow such packages, so
-should we.
+Some npm packages do not copy the LICENSE or COPY file into their
+git repository. They'll instead simply use SPDX identifiers in their
+package.json. A fallback for those repositories attempted to match
+the README file to a license file instead, which had a very low
+probability of success.
 
-This patch adds a default value to allow building such packages.
+This commit replaces this fallback with parsing the package.json and
+looking for the license in COMMON_LICENSE_DIR. If the license is not
+found, "Unknown" will still be produced.
 
-This applies for instance to this package which doesn't declare a
-version:
- - https://github.com/cockpit-project/cockpit/blob/23701a555a5af13f998ee4=
-c7526d27fdb5669d63/package.json#L2
-
-v3:
- - Split bitbake npmsw.py modification in another commit
+This also generates "Unknown" for packages which had no README file,
+which could silently not appear in the generated recipe. The user was
+more likely to miss them.
 
 Co-authored-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
 Signed-off-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
 Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirf=
 airelinux.com>
 ---
- meta/classes-recipe/npm.bbclass | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ scripts/lib/recipetool/create_npm.py | 57 ++++++++++++++++++++--------
+ 1 file changed, 41 insertions(+), 16 deletions(-)
 
-diff --git a/meta/classes-recipe/npm.bbclass b/meta/classes-recipe/npm.bb=
-class
-index 91da3295f2..a73ff29be8 100644
---- a/meta/classes-recipe/npm.bbclass
-+++ b/meta/classes-recipe/npm.bbclass
-@@ -72,8 +72,10 @@ def npm_pack(env, srcdir, workdir):
-         j =3D json.load(f)
+diff --git a/scripts/lib/recipetool/create_npm.py b/scripts/lib/recipetoo=
+l/create_npm.py
+index 113a89f6a6..dd0ac01c3e 100644
+--- a/scripts/lib/recipetool/create_npm.py
++++ b/scripts/lib/recipetool/create_npm.py
+@@ -112,40 +112,52 @@ class NpmRecipeHandler(RecipeHandler):
+         """Return the extra license files and the list of packages"""
+         licfiles =3D []
+         packages =3D {}
++        # Licenses from package.json point to COMMON_LICENSE_DIR so we n=
+eed
++        # to associate them explicitely for split_pkg_licenses()
++        fallback_licenses =3D dict()
 =20
-     # base does not really matter and is for documentation purposes
--    # only.  But the 'version' part must exist because other parts of
-+    # only. But the 'version' part must exist because other parts of
-     # the bbclass rely on it.
-+    if 'version' not in j:
-+        j['version'] =3D '0.0.0-unknown'
-     base =3D j['name'].split('/')[-1]
-     tarball =3D os.path.join(workdir, "%s-%s.tgz" % (base, j['version'])=
-);
+         # Handle the parent package
+         packages["${PN}"] =3D ""
 =20
+-        def _licfiles_append_fallback_readme_files(destdir):
+-            """Append README files as fallback to license files if a lic=
+ense files is missing"""
++        def _licfiles_append_fallback_package_files(destdir):
++            """Append package.json files as fallback to license files if=
+ a license files is missing"""
++            def _get_licenses_from_package_json(package_json):
++                with open(os.path.join(srctree, package_json), "r") as f=
+:
++                    data =3D json.load(f)
++                    if "license" in data:
++                        licenses =3D data["license"].split(" ")
++                        licenses =3D [license.strip("()") for license in=
+ licenses if license !=3D "OR" and license !=3D "AND"]
++                        return ["${COMMON_LICENSE_DIR}/" + license for l=
+icense in licenses], licenses
++                    else:
++                        return [package_json], None
+=20
+             fallback =3D True
+-            readmes =3D []
+             basedir =3D os.path.join(srctree, destdir)
+             for fn in os.listdir(basedir):
+                 upper =3D fn.upper()
+-                if upper.startswith("README"):
+-                    fullpath =3D os.path.join(basedir, fn)
+-                    readmes.append(fullpath)
+                 if upper.startswith("COPYING") or "LICENCE" in upper or =
+"LICENSE" in upper:
+                     fallback =3D False
+             if fallback:
+-                for readme in readmes:
+-                    licfiles.append(os.path.relpath(readme, srctree))
++                pkg_json =3D os.path.join(basedir, "package.json")
++                return _get_licenses_from_package_json(pkg_json)
++            return [], None
+=20
+         # Handle the dependencies
+         def _handle_dependency(name, params, destdir):
+             deptree =3D destdir.split('node_modules/')
+             suffix =3D "-".join([npm_package(dep) for dep in deptree])
+             packages["${PN}" + suffix] =3D destdir
+-            _licfiles_append_fallback_readme_files(destdir)
++            (fallback_licfiles, common_lics) =3D _licfiles_append_fallba=
+ck_package_files(destdir)
++            licfiles.extend(fallback_licfiles)
++            if common_lics:
++                fallback_licenses["${PN}" + suffix] =3D common_lics
+=20
+         with open(shrinkwrap_file, "r") as f:
+             shrinkwrap =3D json.load(f)
+=20
+         foreach_dependencies(shrinkwrap, _handle_dependency, dev)
+=20
+-        return licfiles, packages
++        return licfiles, packages, fallback_licenses
+    =20
+     # Handle the peer dependencies  =20
+     def _handle_peer_dependency(self, shrinkwrap_file):
+@@ -266,18 +278,31 @@ class NpmRecipeHandler(RecipeHandler):
+         fetcher.unpack(srctree)
+=20
+         bb.note("Handling licences ...")
+-        (licfiles, packages) =3D self._handle_licenses(srctree, shrinkwr=
+ap_file, dev)
++        (licfiles, packages, fallback_licenses) =3D self._handle_license=
+s(srctree, shrinkwrap_file, dev)
+=20
+         def _guess_odd_license(licfiles):
+             import bb
+=20
+             md5sums =3D get_license_md5sums(d, linenumbers=3DTrue)
+=20
++            def _resolve_licfile(srctree, licfile):
++                match =3D re.search(r'\$\{COMMON_LICENSE_DIR\}/(.+)$', l=
+icfile)
++                if match:
++                    license =3D match.group(1)
++                    commonlicdir =3D d.getVar('COMMON_LICENSE_DIR')
++                    return os.path.join(commonlicdir, license)
++               =20
++                return os.path.join(srctree, licfile)
++
+             chksums =3D []
+             licenses =3D []
++            md5value =3D None
+             for licfile in licfiles:
+-                f =3D os.path.join(srctree, licfile)
+-                md5value =3D bb.utils.md5_file(f)
++                f =3D _resolve_licfile(srctree, licfile)
++                try:
++                    md5value =3D bb.utils.md5_file(f)
++                except FileNotFoundError:
++                    logger.info("Could not determine license for '%s'" %=
+ licfile)
+                 (license, beginline, endline, md5) =3D md5sums.get(md5va=
+lue,
+                     (None, "", "", ""))
+                 if not license:
+@@ -292,10 +317,10 @@ class NpmRecipeHandler(RecipeHandler):
+                     ";endline=3D%s" % (endline) if endline else "",
+                     md5 if md5 else md5value))
+                 licenses.append((license, licfile, md5value))
+-            return (licenses, chksums)
++            return (licenses, chksums, fallback_licenses)
+=20
+-        (licenses, extravalues["LIC_FILES_CHKSUM"]) =3D _guess_odd_licen=
+se(licfiles)
+-        split_pkg_licenses([*licenses, *guess_license(srctree, d)], pack=
+ages, lines_after)
++        (licenses, extravalues["LIC_FILES_CHKSUM"], fallback_licenses) =3D=
+ _guess_odd_license(licfiles)
++        split_pkg_licenses([*licenses, *guess_license(srctree, d)], pack=
+ages, lines_after, fallback_licenses)
+=20
+         classes.append("npm")
+         handled.append("buildsystem")
 --=20
 2.34.1
 
