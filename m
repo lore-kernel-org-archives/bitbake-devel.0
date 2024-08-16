@@ -1,140 +1,81 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDABC3DA7F
-	for <webhook@archiver.kernel.org>; Thu, 15 Aug 2024 14:14:30 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web10.124125.1723731263061121094
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9633DC531DC
+	for <webhook@archiver.kernel.org>; Fri, 16 Aug 2024 15:13:25 +0000 (UTC)
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+ by mx.groups.io with SMTP id smtpd.web11.150341.1723821195956275347
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 15 Aug 2024 07:14:23 -0700
+ Fri, 16 Aug 2024 08:13:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WUaOzR+z;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-428101fa30aso6514255e9.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 15 Aug 2024 07:14:22 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=JTlgcFzT;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.169, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-201f2b7fe0dso14880475ad.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 16 Aug 2024 08:13:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1723731261; x=1724336061; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Fy0wRxHG0n0B74aU0ZQerSVhQ/w9aH6LxnvGm0fqEvE=;
-        b=WUaOzR+z+qCb0n4MM4XnC2aQYAvzeH1wE9DhohsZJZYg8EiBTTKW7S8uqKIAmGRoVB
-         rSG6J7k0wa3vBcoCPCFGaZiAvcr7dvOy2YApPMnIp/M3t4HTs4jSDitwq15kFL1VSjIt
-         Lenhv+hynM/+jSpIxwIfrt7nuE8/QYSWkl87c=
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1723821195; x=1724425995; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lTqnBRB49dP3A8mVc5xxPenmPFYmaojZ2jjQFpS45YY=;
+        b=JTlgcFzT+iWGLPzVhXaFWwcmzcKCLV8Zpw0ajF5lS/fgJRCKpVw2Ac3dOmPVSO93yD
+         eneWqYlCxKrWqSyLRX+8z3FRAN+wQf7C1mM+XWEKUTLD/0NIwcxy32l/WGfArj5YT+Vc
+         7JnmetXiuhEUDfiSDNP3aXmcQJ51mliCQrsmMiYkTI/R7Yn8jOZXmzjW+fxqROaH6oNl
+         VVTF8tqyartjIMDJ8JP1hN94iMNvzvKxtUMQqqRbIfeniYJXkSQs1IZ36vepFvSejZ7C
+         KSrMP5XTiiEhf6h6cy0kBBZcdTPnQfWsthjbV7v2biDCmiteOhHubslZCEoXp74KJJfZ
+         5k6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723731261; x=1724336061;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fy0wRxHG0n0B74aU0ZQerSVhQ/w9aH6LxnvGm0fqEvE=;
-        b=u4EQatHCHkPWFDDXUdR3SvqPPa97MF6T5OKkAbFhAh5I88BhmdnVyg57PKD8ONxKPm
-         /Ag57dbiVXKZSd0NqlA+reESyGVy97M4chKtS6moHR3qkxkUJgUpPVRFKXgHdPyAw5gA
-         H3FdPXxL2VIo9sK6CTvlCMHi7JFksCTgsRgMAMylQ+hOsF+4sCb7zohynimGPFghIvqZ
-         rexrYW95zqalyMMbkO3vhjas0oDnH9MVqKsVGdFLuLPlPWyc5TB7uKuDip9/E+gNv/wA
-         SBY9FnVxPuZ+J9qELvLbbpOUgNM7LrbODMHHwJJohWHOht+cewn+DvBsjbM/x5U0qlXe
-         rjdg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1DgwD/d+LYRoGAxjRAiNU3R+aZYr7G5Y43/de546iwUqjDAKBxC+uxT/mPUxIzO8xCRxJECZLG6t5K3nIwpSRM37iypTr3q6WAJ5aUQCzOny+uu0=
-X-Gm-Message-State: AOJu0YwWXCR015C2lMLFta7ejArK1N19vzpnqaJoYa9YNNLj591gtQF1
-	+AqvnCIUb2V1Sd9MyrKdPBG39cEYjlCdC/IN+p9mbfqIRVy5/Bf/6jPkvFQOf4s=
-X-Google-Smtp-Source: AGHT+IHk1EnpDiHz+AGfh4fxSu9TJv/zdUWXHJceHHfcF2zcjrnMYRtuGDyQwf294TLB07Yy8McDzw==
-X-Received: by 2002:a05:600c:4445:b0:425:7884:6b29 with SMTP id 5b1f17b1804b1-429dd23d181mr43640175e9.19.1723731261325;
-        Thu, 15 Aug 2024 07:14:21 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:2bbd:6430:deb7:a333? ([2001:8b0:aba:5f3c:2bbd:6430:deb7:a333])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429e7c03b71sm20755825e9.14.2024.08.15.07.14.20
+        d=1e100.net; s=20230601; t=1723821195; x=1724425995;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lTqnBRB49dP3A8mVc5xxPenmPFYmaojZ2jjQFpS45YY=;
+        b=h+XGa5/QfLX4seE5DGf9QX999eVpg73BNyWh3bx3CxrvQ9tf43P7PQti9gqOgdVn8a
+         hGxKPuWeq1VPhuj29C3khxrZS7chMIJi+sOOCSG8SSPESI3xGhnuGEY4v3i0vQ8lE3UZ
+         aAQLdWvfdPEN+0+giykQtqC3/C1bO0317g9nBZJm5gODT3rO639+yYEi/7pvirll7Duq
+         cXb0wAdcb2d5MgSHtYS6KCAfdKAshklNQzPaH19t79dDysDge8He6ajlu4Ln063zRJSB
+         ezzWuMT2mKp12jA2Vk2CcNtEfI9z8ARBthK0UO8qhGWy24dI1R76Sc22T5k7bBuBYp/h
+         nJJQ==
+X-Gm-Message-State: AOJu0YxPAK28IEkYBvL7lnJWVrqzdNZPor/4KJl4PCqfGY/r6j8kRsn7
+	WJZ8PcIwdcrR1l4D9YRiwVqHXzYfO0Q3HdpPoG84XuFXBR0CHdkihrR63pNE4HSIUN2mUAjSmFN
+	LRos=
+X-Google-Smtp-Source: AGHT+IHLPQruIhaVjCCc4rF29jEDGSjnH892uMENb1eWZZYZls5R4SP/oq/Bf6e7u8PCEV1uvRQqyA==
+X-Received: by 2002:a17:902:ce81:b0:201:fcd1:e40d with SMTP id d9443c01a7336-20203e4c4bcmr43459245ad.6.1723821194953;
+        Fri, 16 Aug 2024 08:13:14 -0700 (PDT)
+Received: from hexa.. ([98.142.47.158])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f03b15bdsm26728815ad.303.2024.08.16.08.13.13
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2024 07:14:20 -0700 (PDT)
-Message-ID: <20cc37c9d00ac3cca4d6bbc9f45c6aeb6468acfd.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel][PATCH v4 1/2] bitbake: fetch2: npmsw: fix
- fetching git revisions not on master
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Enguerrand de Ribaucourt
- <enguerrand.de-ribaucourt@savoirfairelinux.com>, 
- bitbake-devel@lists.openembedded.org
-Cc: tanguy.raufflet@savoirfairelinux.com, alexandre.belloni@bootlin.com, 
-	stefan.herbrechtsmeier@weidmueller.com
-Date: Thu, 15 Aug 2024 15:14:20 +0100
-In-Reply-To: <20240812122539.573337-2-enguerrand.de-ribaucourt@savoirfairelinux.com>
-References: 
-	<20240812122539.573337-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
-	 <20240812122539.573337-2-enguerrand.de-ribaucourt@savoirfairelinux.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+        Fri, 16 Aug 2024 08:13:14 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][kirkstone][2.0][PATCH 0/1] Pull request (cover letter only)
+Date: Fri, 16 Aug 2024 08:13:09 -0700
+Message-Id: <cover.1723821079.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 15 Aug 2024 14:14:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16490
+ <bitbake-devel@lists.openembedded.org>; Fri, 16 Aug 2024 15:13:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16491
 
-On Mon, 2024-08-12 at 14:25 +0200, Enguerrand de Ribaucourt wrote:
-> The NPM package.json documentation[1] states that git URLs may contain
-> a commit-ish suffix to specify a specific revision. When running
-> `npm install`, this revision will be looked for on any branch of the
-> repository.
->=20
-> The bitbake implementation however translates the URL stored in
-> package.json into a git URL to be fetch by the bitbake git fetcher. The
-> bitbake fetcher git.py, enforces the branch to be master by default. If
-> the revision specified in the package.json is not on the master branch,
-> the fetch will fail while the package.json is valid.
->=20
-> To fix this, append the ";nobranch=3D1" suffix to the revision in the git
-> URL to be fetched. This will make the bitbake git fetcher ignore the
-> branch and respect the behavior of `npm install``.
->=20
-> This can be tested with the following command:
-> =C2=A0$ devtool add --npm-dev https://github.com/seapath/cockpit-cluster-=
-dashboard.git=C2=A0-B version
-> Which points to a project which has a package.json with a git URL:
-> ```json
-> =C2=A0 "devDependencies": {
-> =C2=A0=C2=A0=C2=A0 "cockpit-repo": "git+https://github.com/cockpit-projec=
-t/cockpit.git#d34cabacb8e5e1e028c7eea3d6e3b606d862b8ac"
-> =C2=A0 }
-> ```
-> In this repo, the specified revision is on the "main" branch, which
-> would fail without this fix.
->=20
-> [1] https://docs.npmjs.com/cli/v10/configuring-npm/package-json#git-urls-=
-as-dependencies
->=20
-> Co-authored-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
-> Signed-off-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
-> Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirf=
-airelinux.com>
-> ---
-> =C2=A0bitbake/lib/bb/fetch2/npmsw.py | 1 +
-> =C2=A01 file changed, 1 insertion(+)
->=20
-> diff --git a/bitbake/lib/bb/fetch2/npmsw.py b/bitbake/lib/bb/fetch2/npmsw=
-.py
-> index b55e885d7b..d8ed9df327 100644
-> --- a/bitbake/lib/bb/fetch2/npmsw.py
-> +++ b/bitbake/lib/bb/fetch2/npmsw.py
-> @@ -184,6 +184,7 @@ class NpmShrinkWrap(FetchMethod):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 uri =3D URI("git://" + str(groups["url"]))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 uri.params["protocol"] =3D str(groups["protocol"])
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 uri.params["rev"] =3D str(groups["rev"])
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 uri.params["nobranch"] =3D "1"
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 uri.params["destsuffix"] =3D destsuffix
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 url =3D str(uri)
+The following changes since commit 734b0ea3dfe45eb16ee60f0c2c388e22af4040e0:
 
-Is it possible to determine and add the branch name where needed?=C2=A0
+  tests/fetch: Tweak test to match upstream repo url change Upstream changed their urls, update our test to match. (2024-06-11 11:22:11 -0700)
 
-I'd prefer to try and keep the behaviours similar in more cases if we
-can and avoid disabling checks we added for good reasons...
+are available in the Git repository at:
 
-Cheers,
+  https://git.openembedded.org/bitbake-contrib stable/2.0-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.0-next
 
-Richard
+Robert Yang (1):
+  data_smart: Improve performance for VariableHistory
+
+ lib/bb/data_smart.py | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+-- 
+2.34.1
 
 
