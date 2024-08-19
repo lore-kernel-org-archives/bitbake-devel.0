@@ -2,185 +2,169 @@ Return-Path: <enguerrand.de-ribaucourt@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7261C3DA4A
-	for <webhook@archiver.kernel.org>; Mon, 19 Aug 2024 07:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D2CC3DA4A
+	for <webhook@archiver.kernel.org>; Mon, 19 Aug 2024 08:10:15 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.205791.1724054298473251383
+ by mx.groups.io with SMTP id smtpd.web11.205941.1724055012532909666
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 19 Aug 2024 00:58:19 -0700
+ Mon, 19 Aug 2024 01:10:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=R6i8LQeB;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=vG1dvZ8r;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: enguerrand.de-ribaucourt@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id F3FF69C5E8C;
-	Mon, 19 Aug 2024 03:58:16 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 86B5D9C5D3A;
+	Mon, 19 Aug 2024 04:10:11 -0400 (EDT)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id otfn6KryA2VP; Mon, 19 Aug 2024 03:58:16 -0400 (EDT)
+ with ESMTP id P6qadJgUId2I; Mon, 19 Aug 2024 04:10:10 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 575EE9C5F4D;
-	Mon, 19 Aug 2024 03:58:16 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 575EE9C5F4D
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id D1D829C5FD5;
+	Mon, 19 Aug 2024 04:10:10 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com D1D829C5FD5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1724054296; bh=T3TSjJQP8qB7hy14VqG91zSFVDuc35OB6V7oN5sPbxo=;
+	t=1724055010; bh=qXErPQsh8nbqKOAYOt4CsFs+/pjz2c9msZb+LJba4DM=;
 	h=Message-ID:Date:MIME-Version:To:From;
-	b=R6i8LQeB802ilixqYv6LQgxontAiLAzLfuhgyJTKRXv8q0dNXtm6R+T9jVIl7hd5z
-	 GAzM3zHVQTqe4N4E0bKGQrxSejjy1S+1OxHVSC3BbAfpVH8uvyC74NNFi94zxYpart
-	 tK9VbYw5Gi4HJfhL2GV4NJzV+f6STz68GUBLmrkmFleOz3uv0f1K7Xg2uxW321kB7P
-	 sZgXfzfMct9LshxGs9yBqZHZ2DiEgKDzvqdvanG4VF4wg5AugUxt1Nvi5849iNJ50P
-	 vZF8IdUB6WcunLO5cKGJ/xi1z4oupGGdp/pZpGrfBANmjmgK98ox3M4ZyCJrzVQ+qQ
-	 RDPyWuVLFphrA==
+	b=vG1dvZ8rmtIjENzL+dGPCFEOWjbKo6yILj0WnkXsDwA4OAZkH1NmEf4x42K/ByY1h
+	 Zkg8RVEmMY033qHWG9NGRz1vLPXaycFjVjHq58ChwnSshUtLd7jS0CsQ+iqL8KUioh
+	 D/zI5/jGDw3tCkCk60SLQYH4vOzYuML4pkMtJ+I7+rbSCRDf0g74eWjni2yakGasR3
+	 MgGSo3Y8V87uperVoKrB2cOBFgXkA3ImSUwXUok3VBUdE3SG+/zn1Am90WOS2/rBSi
+	 dkeKTxuXKnvHyGnC7QI6P8f3WYauhlXpJvPybC8j0TH7p5eyTmsdFD2XqE99TyIAnq
+	 oqsLVR0hFRzbg==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id GaORcpuCZeZh; Mon, 19 Aug 2024 03:58:16 -0400 (EDT)
+ with ESMTP id 5z-hM4yOQVxQ; Mon, 19 Aug 2024 04:10:10 -0400 (EDT)
 Received: from [192.168.216.123] (80-15-101-118.ftth.fr.orangecustomers.net [80.15.101.118])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 97E679C5E8C;
-	Mon, 19 Aug 2024 03:58:15 -0400 (EDT)
-Message-ID: <c2136d36-fac4-401d-9220-0f227260ef2d@savoirfairelinux.com>
-Date: Mon, 19 Aug 2024 09:58:14 +0200
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 2703C9C5D3A;
+	Mon, 19 Aug 2024 04:10:10 -0400 (EDT)
+Message-ID: <e18c8c56-9fe4-4feb-9257-3f64a01d307a@savoirfairelinux.com>
+Date: Mon, 19 Aug 2024 10:10:09 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel][PATCH v4 2/2] npmsw: accept unspecified versions
- in package.json
+Subject: Re: [bitbake-devel][PATCH v4 1/2] bitbake: fetch2: npmsw: fix
+ fetching git revisions not on master
 To: Richard Purdie <richard.purdie@linuxfoundation.org>,
  bitbake-devel@lists.openembedded.org
 Cc: tanguy.raufflet@savoirfairelinux.com, alexandre.belloni@bootlin.com,
  stefan.herbrechtsmeier@weidmueller.com
 References: <20240812122539.573337-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
- <20240812122539.573337-3-enguerrand.de-ribaucourt@savoirfairelinux.com>
- <0e0d0b28d207d2bcb20180aa4c187e10ddc694c3.camel@linuxfoundation.org>
+ <20240812122539.573337-2-enguerrand.de-ribaucourt@savoirfairelinux.com>
+ <20cc37c9d00ac3cca4d6bbc9f45c6aeb6468acfd.camel@linuxfoundation.org>
 Content-Language: en-US
 From: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-In-Reply-To: <0e0d0b28d207d2bcb20180aa4c187e10ddc694c3.camel@linuxfoundation.org>
+In-Reply-To: <20cc37c9d00ac3cca4d6bbc9f45c6aeb6468acfd.camel@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 19 Aug 2024 07:58:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16493
+ <bitbake-devel@lists.openembedded.org>; Mon, 19 Aug 2024 08:10:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16494
 
 
 
-On 15/08/2024 16:12, Richard Purdie wrote:
+On 15/08/2024 16:14, Richard Purdie wrote:
 > On Mon, 2024-08-12 at 14:25 +0200, Enguerrand de Ribaucourt wrote:
->> Our current emulation mandates that the package.json contains a versio=
-n
->> field. Some packages may not provide it when they are not published to
->> the registry. The actual `npm pack` would allow such packages, so
->> should we.
+>> The NPM package.json documentation[1] states that git URLs may contain
+>> a commit-ish suffix to specify a specific revision. When running
+>> `npm install`, this revision will be looked for on any branch of the
+>> repository.
 >>
->> A first commit was required in the npm class.
+>> The bitbake implementation however translates the URL stored in
+>> package.json into a git URL to be fetch by the bitbake git fetcher. Th=
+e
+>> bitbake fetcher git.py, enforces the branch to be master by default. I=
+f
+>> the revision specified in the package.json is not on the master branch=
+,
+>> the fetch will fail while the package.json is valid.
 >>
->> For the shrinkwrap part , we can actually use the resolved field which
->> contains the exact source, including the revision, to pass integrity
->> tests.
+>> To fix this, append the ";nobranch=3D1" suffix to the revision in the =
+git
+>> URL to be fetched. This will make the bitbake git fetcher ignore the
+>> branch and respect the behavior of `npm install``.
 >>
->> v3:
->>  =C2=A0- Split bitbake npmsw.py modification in another commit
+>> This can be tested with the following command:
+>>  =C2=A0$ devtool add --npm-dev https://github.com/seapath/cockpit-clus=
+ter-dashboard.git=C2=A0-B version
+>> Which points to a project which has a package.json with a git URL:
+>> ```json
+>>  =C2=A0 "devDependencies": {
+>>  =C2=A0=C2=A0=C2=A0 "cockpit-repo": "git+https://github.com/cockpit-pr=
+oject/cockpit.git#d34cabacb8e5e1e028c7eea3d6e3b606d862b8ac"
+>>  =C2=A0 }
+>> ```
+>> In this repo, the specified revision is on the "main" branch, which
+>> would fail without this fix.
+>>
+>> [1] https://docs.npmjs.com/cli/v10/configuring-npm/package-json#git-ur=
+ls-as-dependencies
 >>
 >> Co-authored-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
 >> Signed-off-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
 >> Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savo=
 irfairelinux.com>
 >> ---
->>  =C2=A0bitbake/lib/bb/fetch2/npmsw.py | 2 +-
->>  =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>>  =C2=A0bitbake/lib/bb/fetch2/npmsw.py | 1 +
+>>  =C2=A01 file changed, 1 insertion(+)
 >>
 >> diff --git a/bitbake/lib/bb/fetch2/npmsw.py b/bitbake/lib/bb/fetch2/np=
 msw.py
->> index d8ed9df327..a5fa598deb 100644
+>> index b55e885d7b..d8ed9df327 100644
 >> --- a/bitbake/lib/bb/fetch2/npmsw.py
 >> +++ b/bitbake/lib/bb/fetch2/npmsw.py
->> @@ -97,7 +97,7 @@ class NpmShrinkWrap(FetchMethod):
+>> @@ -184,6 +184,7 @@ class NpmShrinkWrap(FetchMethod):
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 uri =3D URI("git://" + str(groups["url"]))
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 uri.params["protocol"] =3D str(groups["protoc=
+ol"])
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 uri.params["rev"] =3D str(groups["rev"])
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 uri.params["nobranch"] =3D "1"
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 uri.params["destsuffix"] =3D destsuffix
 >>  =20
 >>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 integrity =3D params.get("integrity", None)
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 resolved =3D params.get("resolved", None)
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ve=
-rsion =3D params.get("version", None)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ve=
-rsion =3D params.get("version", resolved)
->>  =20
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 # Handle registry sources
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if is_semver(version) and integrity:
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 url =3D str(uri)
 >=20
-> I'm not convinced by this reasoning. The whole point of our SRC_URI is
-> to precisely define something that is being built. I think this allows
-> floating versions of dependencies and hence makes this non-
-> reproducible?
-Hi,
-
-The version declared in package.json is purely declarative for the NPM=20
-package registry. The basic Yocto fetchers will still be used for=20
-downloading the SRC_URI (https, git, ...), with the same version=20
-reproducibility mechanisms like git hash or md5sum.
-
-In the npm.bbclass, we have a second fetch stage (actually during=20
-do_configure) to fetch all the dependencies. The npm class here behaves=20
-wildly differently than regular frameworks where each dependency is a=20
-separate recipe. But since there are myriads of dependencies in the NPM=20
-world and it would be rare to share them, the current recipe class is=20
-intended to package an application with all its dependencies using the=20
-NPM registry.
-
-To fetch all those dependencies, we rely on the NPM dependencies=20
-mechanism of package.json which lists packages with their declarative=20
-version. However this is not reproducible. NPM provides two additional=20
-files that NPM developers should include in their repositories to pin=20
-the whole dependency tree: package-lock.json and npm-shrinkwrap.json.=20
-The npm recipetool will fetch the dependencies the first time with=20
-package.json information, and produce an npm-shrinkwrap.json file that=20
-pins all versions.
-
-Back to our commit, we do not change the aforementioned behavior, we=20
-only make it compatible with packages which do not declare a version in=20
-their package.json. The npmsw.py code wants to have a version to=20
-validate what's being downloaded, so we pass a dummy version. But the=20
-npm-shrinkwrap.json file, generated by npm native, still contains the=20
-reproducible metadata. Example here with a package that doesn't declare=20
-a version field: NPM still added integrity and resolved fields which=20
-will ensure reproducibility:
-
-```
-     "node_modules/cockpit-repo": {
-       "name": "CockpitDevelopmentDependencies",
-       "resolved":=20
-"git+ssh://git@github.com/cockpit-project/cockpit.git#d34cabacb8e5e1e028c=
-7eea3d6e3b606d862b8ac",
-       "integrity":=20
-"sha512-4nBWhDtVLwF++ZPY/67QtpsXc9y/Jpa/jj1LW/gScSafDKoHmtg1BwAQ7sqpN/fdy=
-i1xrkysM9hxLq3Q16ofaw=3D=3D",
-```
+> Is it possible to determine and add the branch name where needed?
 >=20
-> We should probably error if a version cannot be found and force the
-> user to add one?
-An NPM project can typically pull hundreds of dependencies with some not=20
-declaring a version, the user would need to submit patches to all of=20
-their upstreams to fix that which is challenging. Meanwhile, the real=20
-NPM tool is perfectly fine with accepting that, as illustrated above. I=20
-believe we should hence behave like the official NPM tool.
->=20
-> I don't really know node well at all so if I'm incorrect about that
-> feel free to explain. I do know our fetcher requirements which default
-> to being fully specified and reproducible.
-Let me know if something is still not clear in my answer,
+> I'd prefer to try and keep the behaviours similar in more cases if we
+> can and avoid disabling checks we added for good reasons...
+The current npm.bbclass implementation is actually trying to reproduce=20
+the behavior of the real `npm install` tool that reads=20
+package.json/npm-shrinkwrap.json and installs all dependencies. The=20
+package.json specification has a specific format which is frequently=20
+used like above to explicit commit hashes to fetch but it doesn't allow=20
+to specify the branch [1]. This form is usually written for dependencies=20
+which do not declare a version like cockpit-repo here (discussed all=20
+throughout this patch list).
 
-Best regards,
->
+So to behave similarly to the `npm install` tool, we should not specify=20
+a branch. We would actually need to edit package.json into a diverging=20
+format when we want to be compatible with as many package.json projects=20
+as possible.
+
+The alternative would be to pre-fetch to see which branch we want, then=20
+pass that in the FetchMethod query here. But we would just displace the=20
+problem? At its base, package.json git references cannot specify a branch=
+.
+
+Thank you very much for your review,
+
+  [1]=20
+https://docs.npmjs.com/cli/v10/configuring-npm/package-json#git-urls-as-d=
+ependencies
+>=20
 > Cheers,
 >=20
 > Richard
->=20
 >=20
 
 --=20
 Enguerrand de Ribaucourt
 Savoir-faire Linux
-
 
