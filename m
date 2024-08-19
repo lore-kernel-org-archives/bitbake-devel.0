@@ -1,170 +1,81 @@
-Return-Path: <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D2CC3DA4A
-	for <webhook@archiver.kernel.org>; Mon, 19 Aug 2024 08:10:15 +0000 (UTC)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.web11.205941.1724055012532909666
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85007C3DA4A
+	for <webhook@archiver.kernel.org>; Mon, 19 Aug 2024 13:14:27 +0000 (UTC)
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+ by mx.groups.io with SMTP id smtpd.web10.210002.1724073261263103138
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 19 Aug 2024 01:10:13 -0700
+ Mon, 19 Aug 2024 06:14:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=vG1dvZ8r;
- spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: enguerrand.de-ribaucourt@savoirfairelinux.com)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 86B5D9C5D3A;
-	Mon, 19 Aug 2024 04:10:11 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id P6qadJgUId2I; Mon, 19 Aug 2024 04:10:10 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id D1D829C5FD5;
-	Mon, 19 Aug 2024 04:10:10 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com D1D829C5FD5
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=xukwRW1L;
+ spf=softfail (domain: sakoman.com, ip: 209.85.210.178, mailfrom: steve@sakoman.com)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70d199fb3dfso3542397b3a.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 19 Aug 2024 06:14:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1724055010; bh=qXErPQsh8nbqKOAYOt4CsFs+/pjz2c9msZb+LJba4DM=;
-	h=Message-ID:Date:MIME-Version:To:From;
-	b=vG1dvZ8rmtIjENzL+dGPCFEOWjbKo6yILj0WnkXsDwA4OAZkH1NmEf4x42K/ByY1h
-	 Zkg8RVEmMY033qHWG9NGRz1vLPXaycFjVjHq58ChwnSshUtLd7jS0CsQ+iqL8KUioh
-	 D/zI5/jGDw3tCkCk60SLQYH4vOzYuML4pkMtJ+I7+rbSCRDf0g74eWjni2yakGasR3
-	 MgGSo3Y8V87uperVoKrB2cOBFgXkA3ImSUwXUok3VBUdE3SG+/zn1Am90WOS2/rBSi
-	 dkeKTxuXKnvHyGnC7QI6P8f3WYauhlXpJvPybC8j0TH7p5eyTmsdFD2XqE99TyIAnq
-	 oqsLVR0hFRzbg==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id 5z-hM4yOQVxQ; Mon, 19 Aug 2024 04:10:10 -0400 (EDT)
-Received: from [192.168.216.123] (80-15-101-118.ftth.fr.orangecustomers.net [80.15.101.118])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 2703C9C5D3A;
-	Mon, 19 Aug 2024 04:10:10 -0400 (EDT)
-Message-ID: <e18c8c56-9fe4-4feb-9257-3f64a01d307a@savoirfairelinux.com>
-Date: Mon, 19 Aug 2024 10:10:09 +0200
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1724073260; x=1724678060; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5MOIVqIbpXh8Oc3zIVqRj4038fY+8EcPFPmcS97/5sg=;
+        b=xukwRW1LmSWFj8SBN4Hqy5suxiGrspu3W0XauEO82JHREqgxVrDAMDoVg7qCR9Wj5X
+         g2FgxHFQagmyQY+c4yapQDiXnZ/TJnbzNcTmeVrFYqfRZRmvm2tLsSrXuRHq0sVeyAph
+         LDqhGF4ilncj64G7XR9lEyppLYP2N2DIf9dyGhZRiER2vcdv/p3ye9pSu7cOyVuUu9Lk
+         4Cs/WDyDz5HWLgiltgntykKZpDx802O5VjOdIL3t7guuK6Jmr7hZQC5aaQSNl3kGOc4w
+         tjxuVq3VmqufMD+dH/TcBLqNO3iDY3iE4GoEYWto3SXkzH9kSNgwCdvFbZ6AOlxcMLbE
+         B1Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724073260; x=1724678060;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5MOIVqIbpXh8Oc3zIVqRj4038fY+8EcPFPmcS97/5sg=;
+        b=bN6w223RSfrVeUFh98HHT7n8NTtKTB/kZnCBBb2Z4XzaUihOc28jBL1/oo4RUotp4N
+         4iTezNrCTT5msaJu0+xHnfnvf7UqhVtQPBVo00jrc2Vpq6UQo+VfsxsyEZkA9URnsLOI
+         kBG3Yp3lajV4h0+DAtP7JYPHmx6JOsl37JMhleDs+EWLtV4Cr1RDjJ/vlvKeEZlP3Uip
+         w1FjtKC+wHlCID+zfFNj/K/d3dnOL391SH2BDQ/zIwaAmecjyh8u1dkA7anGabmHUzo/
+         Qi50YnG6u+Acej5fASNYO63QHtxHH+3vQ2rSwMwRWk6tQrkSQ0U9qdpazJAY6g8a9DQg
+         zxzw==
+X-Gm-Message-State: AOJu0YyU2EtDX8cEk/nXsdxfytzbFkim2SOmAWYGotkmb5WR2wzCcOy+
+	lHJKwjmd/+TM0YUwXyfPO6w8qDsGdoXE6vwGjaNj5KCLGxaPUqXFhS5f/x9LD/bCRKvnA9WQOnl
+	QYgMbUA==
+X-Google-Smtp-Source: AGHT+IGppqeoRSESmuLK0kR5YfAkR6pVYlxyXubpvDExHK+2f0W8ieBsXM/adkC/UDBhCCyP9ckNFA==
+X-Received: by 2002:a05:6a20:6f87:b0:1be:c4bb:6f31 with SMTP id adf61e73a8af0-1c904f88645mr14437982637.18.1724073260139;
+        Mon, 19 Aug 2024 06:14:20 -0700 (PDT)
+Received: from hexa.. ([98.142.47.158])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d3e3d99479sm7117831a91.48.2024.08.19.06.14.19
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2024 06:14:19 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][scarthgap][2.8][PATCH 0/1] Pull request (cover letter only)
+Date: Mon, 19 Aug 2024 06:14:14 -0700
+Message-Id: <cover.1724073160.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel][PATCH v4 1/2] bitbake: fetch2: npmsw: fix
- fetching git revisions not on master
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
- bitbake-devel@lists.openembedded.org
-Cc: tanguy.raufflet@savoirfairelinux.com, alexandre.belloni@bootlin.com,
- stefan.herbrechtsmeier@weidmueller.com
-References: <20240812122539.573337-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
- <20240812122539.573337-2-enguerrand.de-ribaucourt@savoirfairelinux.com>
- <20cc37c9d00ac3cca4d6bbc9f45c6aeb6468acfd.camel@linuxfoundation.org>
-Content-Language: en-US
-From: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-In-Reply-To: <20cc37c9d00ac3cca4d6bbc9f45c6aeb6468acfd.camel@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 19 Aug 2024 08:10:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16494
+ <bitbake-devel@lists.openembedded.org>; Mon, 19 Aug 2024 13:14:27 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16495
 
+The following changes since commit 11d83170922a2c6b9db1f6e8c23e533526984b2c:
 
+  codeparser: Skip non-local functions for module dependencies (2024-07-17 06:24:29 -0700)
 
-On 15/08/2024 16:14, Richard Purdie wrote:
-> On Mon, 2024-08-12 at 14:25 +0200, Enguerrand de Ribaucourt wrote:
->> The NPM package.json documentation[1] states that git URLs may contain
->> a commit-ish suffix to specify a specific revision. When running
->> `npm install`, this revision will be looked for on any branch of the
->> repository.
->>
->> The bitbake implementation however translates the URL stored in
->> package.json into a git URL to be fetch by the bitbake git fetcher. Th=
-e
->> bitbake fetcher git.py, enforces the branch to be master by default. I=
-f
->> the revision specified in the package.json is not on the master branch=
-,
->> the fetch will fail while the package.json is valid.
->>
->> To fix this, append the ";nobranch=3D1" suffix to the revision in the =
-git
->> URL to be fetched. This will make the bitbake git fetcher ignore the
->> branch and respect the behavior of `npm install``.
->>
->> This can be tested with the following command:
->>  =C2=A0$ devtool add --npm-dev https://github.com/seapath/cockpit-clus=
-ter-dashboard.git=C2=A0-B version
->> Which points to a project which has a package.json with a git URL:
->> ```json
->>  =C2=A0 "devDependencies": {
->>  =C2=A0=C2=A0=C2=A0 "cockpit-repo": "git+https://github.com/cockpit-pr=
-oject/cockpit.git#d34cabacb8e5e1e028c7eea3d6e3b606d862b8ac"
->>  =C2=A0 }
->> ```
->> In this repo, the specified revision is on the "main" branch, which
->> would fail without this fix.
->>
->> [1] https://docs.npmjs.com/cli/v10/configuring-npm/package-json#git-ur=
-ls-as-dependencies
->>
->> Co-authored-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
->> Signed-off-by: Tanguy Raufflet <tanguy.raufflet@savoirfairelinux.com>
->> Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savo=
-irfairelinux.com>
->> ---
->>  =C2=A0bitbake/lib/bb/fetch2/npmsw.py | 1 +
->>  =C2=A01 file changed, 1 insertion(+)
->>
->> diff --git a/bitbake/lib/bb/fetch2/npmsw.py b/bitbake/lib/bb/fetch2/np=
-msw.py
->> index b55e885d7b..d8ed9df327 100644
->> --- a/bitbake/lib/bb/fetch2/npmsw.py
->> +++ b/bitbake/lib/bb/fetch2/npmsw.py
->> @@ -184,6 +184,7 @@ class NpmShrinkWrap(FetchMethod):
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 uri =3D URI("git://" + str(groups["url"]))
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 uri.params["protocol"] =3D str(groups["protoc=
-ol"])
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 uri.params["rev"] =3D str(groups["rev"])
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 uri.params["nobranch"] =3D "1"
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 uri.params["destsuffix"] =3D destsuffix
->>  =20
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 url =3D str(uri)
->=20
-> Is it possible to determine and add the branch name where needed?
->=20
-> I'd prefer to try and keep the behaviours similar in more cases if we
-> can and avoid disabling checks we added for good reasons...
-The current npm.bbclass implementation is actually trying to reproduce=20
-the behavior of the real `npm install` tool that reads=20
-package.json/npm-shrinkwrap.json and installs all dependencies. The=20
-package.json specification has a specific format which is frequently=20
-used like above to explicit commit hashes to fetch but it doesn't allow=20
-to specify the branch [1]. This form is usually written for dependencies=20
-which do not declare a version like cockpit-repo here (discussed all=20
-throughout this patch list).
+are available in the Git repository at:
 
-So to behave similarly to the `npm install` tool, we should not specify=20
-a branch. We would actually need to edit package.json into a diverging=20
-format when we want to be compatible with as many package.json projects=20
-as possible.
+  https://git.openembedded.org/bitbake-contrib stable/2.8-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-next
 
-The alternative would be to pre-fetch to see which branch we want, then=20
-pass that in the FetchMethod query here. But we would just displace the=20
-problem? At its base, package.json git references cannot specify a branch=
-.
+Robert Yang (1):
+  data_smart: Improve performance for VariableHistory
 
-Thank you very much for your review,
+ lib/bb/data_smart.py | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-  [1]=20
-https://docs.npmjs.com/cli/v10/configuring-npm/package-json#git-urls-as-d=
-ependencies
->=20
-> Cheers,
->=20
-> Richard
->=20
+-- 
+2.34.1
 
---=20
-Enguerrand de Ribaucourt
-Savoir-faire Linux
 
