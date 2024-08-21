@@ -1,51 +1,48 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53000C52D6F
-	for <webhook@archiver.kernel.org>; Wed, 21 Aug 2024 10:32:23 +0000 (UTC)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
- by mx.groups.io with SMTP id smtpd.web11.16883.1724236339808154038
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2424FC52D7C
+	for <webhook@archiver.kernel.org>; Wed, 21 Aug 2024 10:43:43 +0000 (UTC)
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (EUR03-VI1-obe.outbound.protection.outlook.com [40.107.103.138])
+ by mx.groups.io with SMTP id smtpd.web10.16922.1724237018043353870
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 21 Aug 2024 03:32:20 -0700
+ Wed, 21 Aug 2024 03:43:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=gON+yiWi;
- spf=pass (domain: gmail.com, ip: 209.85.167.41, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52efd8807aaso8327550e87.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 21 Aug 2024 03:32:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724236338; x=1724841138; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0bF2PJLSWUZ4uAKxmRg82bGDJ2w7nwBlpfTko3gYxC8=;
-        b=gON+yiWi2D1VBRTaCSOMz7rXL6vFjRTSOvFK2MTsb5OkunpzKBPh0Pwz13LWYmO3hn
-         RU+0lLuZo8Xm5mJx8gHTjUorvlh8N7ZODXLjDkdOwauvciCy8fPm+c/aEa7SiKsrlfCY
-         MQMHV/7H2eFrVXf4Cxg0QfKwGgTv817Kadjpo0MceoZfP9LCixlWLId+EDh64ZSDDSXN
-         INSnSq5zvC7UoWK44B0Q3BKCf2SdSx2RJn8O0/tFIH6SKM3Mvh70eyf4WydiNXbeU0Jw
-         UNMmyPkTBfCr1YFNCseGTq5OB9nzqwUyY4o3g4ZolYbBPidvA2fgYSq0miN/GuIWJkkS
-         r2AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724236338; x=1724841138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0bF2PJLSWUZ4uAKxmRg82bGDJ2w7nwBlpfTko3gYxC8=;
-        b=n0USVsZ83NPGxsah9yCrthQsiRHf1msyl3o0JG/zj774j+DblMoR7A15rtOcCx0PzN
-         iRtCca7TZMmsovJSD9l1G6jMBFC1Lk+VMKBSvBKMqFMQDItriWD/sqtzIFoTGoLonUTG
-         6iOvFgXSb41Cc4wPsy0mAXAwHZiTF+OsZGljEom7uyUZB+ZIiXS0QnSskvvHayhEGbAn
-         XmJFLHi+88GLSwx+CN1a86JhVlS4/N/G/mhZg1Mgz8ZnQmoHM4b2IdCP+d628gIXnMfQ
-         +S9ySsBxWaJPRStRC4qEIIZ45HaRD7M2Phw5FqpccmvUUjhFxvoUvjIh3gi0wK1OtvW1
-         hecA==
-X-Forwarded-Encrypted: i=1; AJvYcCWNd6jZCB93xOD5JJYw72yI7ZVcR/0RculGktiNLvDEk3yCFpPOK5oD3l3FfoUe8Sp5D1apgp+4tz7SK/hG@lists.openembedded.org
-X-Gm-Message-State: AOJu0YzqjdtCEzYFyH649o4uyiYS4xX3eGBYxG4bhpxWXJ3ZdUxgBi0Q
-	8YFdAWSdQbJoXtggsxQx6Ybi4C6//FWGyyElY0lHeFmMTrDkUwfMRJ5dHOMIz0CMkB7vvnReeMr
-	o1epm7Am6p2DGtnpedKvsm8dmxbE=
-X-Google-Smtp-Source: AGHT+IG+ATJpADWvTn0rRjj0LFfbaOYGOHAXDt7anXItdRcW1aGnMBqYb2Uucc2fHxXbuGCpIzrEd7v7TxcZMfRl4To=
-X-Received: by 2002:a05:6512:2212:b0:533:32b4:ca6f with SMTP id
- 2adb3069b0e04-53348565364mr889946e87.34.1724236337367; Wed, 21 Aug 2024
- 03:32:17 -0700 (PDT)
-MIME-Version: 1.0
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=WYVSYY6U;
+ spf=pass (domain: weidmueller.com, ip: 40.107.103.138, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iAdeebTq7ge0zXCO0GFOhpYUtBZz7YFmeEortrfQysvJ8M+mK6B+PSuiDZvtyQk4bjeIA22J27MGKAup5PZSffbLzRWCCs5B03AGHM9ahLPbQQ0wFX88tnCHLteBFtj3uccYNzOA47enwb/AFN0+kmL3YHAxbl0UXCu8No/+vr9Bv1yU5McyhjfxMaKrQllYmoap0hCc4HT3BVeoAMnPiCnsgVlFemKUz9v8wJH3bDvoXH6tRl8+l5rz1itNIZ25jes7C3MlyHL4sIL4vn2Agh/pbz53lvXTGV2AMxNRU2a2puG2vvPUf8sdBiOklodGZDgIaeDQY2lXV7OUuVraQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WUDDHqyElu3aAw+DSF1f9iVJxwjmElYS5KY41hK/0zU=;
+ b=yUjVNMuN7r/qgCladEQoFByCK7L4xW3JSPiyd/e7KpXGtf65RvpCa1m3UgsuBxuZ83KjnN7M8eaS1uRLFUYpfawTmtbVIqStNoHfKYHurxZlkXfoO7Y3N7AP+gfVXtD69Aa6TzM4Z32n41+WyB9rPgBBgcTx4H8gjbLjUeDHjQCveY/UC/6N3c4/SgEfu4veEcasDrgs+URwCuvZ4W6fzCeACDSRl/nDJm026aKJuOl9lHEyJqykZM3AwSe+g5aF1LDRdWDVTwxU3ZZPLzRAqzkhmN6/6J7uYmEwjOO3zYt4dqWNjeG+mYo+jUQ0M4HbBFIlBYgWTptPTecm08klrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=weidmueller.com; dmarc=pass action=none
+ header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WUDDHqyElu3aAw+DSF1f9iVJxwjmElYS5KY41hK/0zU=;
+ b=WYVSYY6Un+jCwCN0lxdwMig1w68V9CaM1deUB2inKFVk4oyHjWnMjRWffO+wbqcRcLfQ90qe1f8k3vt+74XLf4uo9v+6BJxlxWBjTEEnaXbReiPCPSGPH6HCmyVGfckD4wfPOg6E4CF0tM/Bj/OEgHCF8jjPcvOLsogU7CQ8WttarHJ+88pyGAIdl6VMlBRmVK8sEG93RjuLH8V775HvNQ3JHbsPKJfwq2CBoYETqTCnOMAyl4a0XJBt4PH5kT4Dd5bkVgqeTU4vJRXzj9Ar680J4aFVQA04XaBFZMiJ6DRXYJfqvieB8rtovjSAJ7bEXER0ixLraWJ0zViMs9Qf7A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=weidmueller.com;
+Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
+ by PR3PR08MB5738.eurprd08.prod.outlook.com (2603:10a6:102:81::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.12; Wed, 21 Aug
+ 2024 10:43:34 +0000
+Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
+ ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
+ ([fe80::3b1:b329:1ed9:dad4%5]) with mapi id 15.20.7897.010; Wed, 21 Aug 2024
+ 10:43:34 +0000
+Message-ID: <1520b2a8-f20d-4870-8c04-1579d84b6a1a@weidmueller.com>
+Date: Wed, 21 Aug 2024 12:43:33 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bitbake-devel][PATCH v4 2/2] npmsw: accept unspecified versions
+ in package.json
+To: bitbake-devel@lists.openembedded.org
 References: <20240812122539.573337-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
  <20240812122539.573337-3-enguerrand.de-ribaucourt@savoirfairelinux.com>
  <0e0d0b28d207d2bcb20180aa4c187e10ddc694c3.camel@linuxfoundation.org>
@@ -53,264 +50,150 @@ References: <20240812122539.573337-1-enguerrand.de-ribaucourt@savoirfairelinux.c
  <b89f6243322fc0e72ae6a9773c437ee598d773e4.camel@linuxfoundation.org>
  <AS4PR08MB8046E1B791A39B4751C4D732958E2@AS4PR08MB8046.eurprd08.prod.outlook.com>
  <028bd9ca-a8ca-4d8d-87a9-00d19232855b@savoirfairelinux.com>
+Content-Language: en-US
+From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 In-Reply-To: <028bd9ca-a8ca-4d8d-87a9-00d19232855b@savoirfairelinux.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 21 Aug 2024 12:32:06 +0200
-Message-ID: <CANNYZj_1n5x9K6XWe+T6DNSjwNkucCqz0oNiL9yL6xKgzOs+jQ@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH v4 2/2] npmsw: accept unspecified versions
- in package.json
-To: enguerrand.de-ribaucourt@savoirfairelinux.com
-Cc: "Herbrechtsmeier, Stefan" <Stefan.Herbrechtsmeier@weidmueller.com>, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>, 
-	"tanguy.raufflet@savoirfairelinux.com" <tanguy.raufflet@savoirfairelinux.com>, 
-	"alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: FR0P281CA0107.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a8::20) To PAXPR08MB6969.eurprd08.prod.outlook.com
+ (2603:10a6:102:1d8::23)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|PR3PR08MB5738:EE_
+X-MS-Office365-Filtering-Correlation-Id: af9810ea-bef3-42f4-dbb8-08dcc1ce1b2b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?6MySYMEoyChBRdHFC2AuFRZYjuGvN7Hg6UzFlTdogJgPDDOyUbSWP3YOAt02?=
+ =?us-ascii?Q?JlOLUkMXc62rp2//jvqud2eHFcBTzeoWG35cRFLJG6ZctA3EsKiPECTpgDHu?=
+ =?us-ascii?Q?Kxp0d4+RQv+GM7XidK3W5n/zDxuE9SKOuYkZnX20y8nJen5Byxp5HTY4H1f+?=
+ =?us-ascii?Q?jtMKCcBKSdEsdUju8iGkOPoE6Jps0QpSOfIPAPm3ANCvu2TvZ+fj+BBSK3Em?=
+ =?us-ascii?Q?GnowHv705eDEHGEYqFQP9l/9nlIDLpG9F8KEThqJSieBDrCSIdFh8zgRq0SK?=
+ =?us-ascii?Q?Hrr9yGVTXnGtLkegJ3zW34W47CAfltpPpfx5ThdNMN93RvgyWsrgUBW425uP?=
+ =?us-ascii?Q?BjYutvOkiLU6gQbU0/qIAimUOWF4Uy8Wbjy1cnhYxo1eVV2Nei7LnnHsX57Z?=
+ =?us-ascii?Q?YGU7TU83OL0WthGff/WvtgaDb4qHbUr4giwdb7RgGHS4WZIo18Kd6uSZwa3F?=
+ =?us-ascii?Q?uJ123oOsPtFYJEdzXh8AnJW5524YDLrdVGQ7fAE5f2G1WtvtlkJ8/fKPjC/u?=
+ =?us-ascii?Q?2QmbLMZBGmF3srysEqzgHjaQTupjkUnj4IrSFUFpCfzUWtporggmH0SJwHf9?=
+ =?us-ascii?Q?SmGyD8GB2tD+VEIOGPfoBQ0RaVs5i/v9294wHntRPnz+hBXLB1L8lC+W3aQD?=
+ =?us-ascii?Q?9yOcW/BaWEYJXB14Tyw4zUA1QEVBdO2lAtUHq5ODHozD++Ggv8DJSyTpV4cR?=
+ =?us-ascii?Q?I/8fCN7GP2/A0qkGGd7E/rQ1dqkZzchaabqNmWl4PlfhZjk/eMzGsz1f2n/D?=
+ =?us-ascii?Q?27wqX0HvOtYAzK/MzGc7S/7XVcsiZv7hw2qyhfEWNPAkl6xpS6iTY3FKrzQ3?=
+ =?us-ascii?Q?/Y3BOVdfHjYk4YO5FD2sBhU/SPjTz9pY1L5X05R4sWmfQPXhGv7M9uxaBjb1?=
+ =?us-ascii?Q?14cQxnqyiwX2ginaRVn3vx7T5YYfEXzcX0lAchjcbjwbKKYCmipj+PuNQzwo?=
+ =?us-ascii?Q?0yb1AABvZYKWnlXAB2x8xRvfzFIdwX+3teOvzqPIzLD0T74M3oIM41kvMks6?=
+ =?us-ascii?Q?NZeLKGV9mbusNZyCdITMrCUJhn5rJej9Q2Nlk/UIr3qK2QvEvqxi01BeMVCb?=
+ =?us-ascii?Q?0GNBbSzUoeCRgpahAcdy/CQd1sBGZvEWboKaRj9oqjZXcMemlyf60quRn5lV?=
+ =?us-ascii?Q?hhwgF7WurcXfJzJqgmkmJtRGzf1CkrnUMTObgPMFYBpiiiuciZCF3k7dj+U2?=
+ =?us-ascii?Q?K539yDmGgovL7HAziORel/FOt17eJmGoQtRTjzYaaXkQCciap//6/DnOqx8Y?=
+ =?us-ascii?Q?kd/lmX3QY/u0fhcQqsBn+BTFGjLJqzNTUSL0nfC0kUCchPd6Mrs+NoLUxhCg?=
+ =?us-ascii?Q?Sv8O9uZjIu6olC57XqVY3KReke2SxjT4j4rqY/vKybErZQ=3D=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?MtY/hKq5tOSvjYug/YICa8CyPmCe5ZMQZffW2ob+7HFsYFKMGQhhu8SvuCVz?=
+ =?us-ascii?Q?izzMhHwTlqTyGMGBuCNvFjszBjwpw+1Nf54rDmLXuPCdNn/qjax3EHsXJydP?=
+ =?us-ascii?Q?+C6pDTRdj/lmFc9CSAu+An5z81gQyZSaZA26J20x2lwV6f4hyJDLBVSJ9ZLB?=
+ =?us-ascii?Q?PVm6alQmGEVI8EWVEH9sipAc5GfwdGoI4YxoM/6mGb8rHHqvMJDF0zgjj9uN?=
+ =?us-ascii?Q?+E8fG/ikJEo+5ga336+dC8Qur5eAK/7BVgH/7AJbYT0JCXQNTE0dvpAZPlPO?=
+ =?us-ascii?Q?J/Ghi3WlRBuvwWQ8bEZdPKg0z7TnHjQabxcmBjDDXQzgR+oqXpQqsrFbPzRZ?=
+ =?us-ascii?Q?uzMtTPyO4wYyIF6+nuqKXlTEKbZjgs/VXXUsg1Kw0Ch6CSMgqoy2wh+JMjiT?=
+ =?us-ascii?Q?KB37wbMD1kZcs4mN0npxdDfZ4dxwwSPvzAz1hy5udZYBNMRGH+z+eqiE4Vsg?=
+ =?us-ascii?Q?fQGD/o6gpmRm9mIvhJyckQ1xB+4ZsKR3wQD6AWrXQm3kR1H3KZiHUARJkUTy?=
+ =?us-ascii?Q?P0aSgZfMs8xeWv/iUikZQ45Mr5TDSnjwBSPftXGsaQGnGpHI8aKhH/Y52bBZ?=
+ =?us-ascii?Q?ACVB1B+vUNmj4Re6G/b3Me8jQ2tlZutbzXAOh2APdnoEQZf3mLr4I3eGbtl6?=
+ =?us-ascii?Q?Mbe8J+Wu/bgUWXmVcwvKshy0rzhnNTm/cAi3Go21RsJF6Au4gtCGYrl9QP2d?=
+ =?us-ascii?Q?7kmvw60+4T7YRq0iv+gIcvhZ8R4flpwpCGZsQvk62GBB+AMbHqew4XRZvkom?=
+ =?us-ascii?Q?ouzU0OBtgn8jresPR/vHnMF8vFqA/bJrYLHAeMD1/wMlJJhkBXHGRIBs9z1Y?=
+ =?us-ascii?Q?dS6HNyma30zSWXDPf2NbsyRqLbjzvxhNX6NOwJVGDs78mTWNtanv4o7J+dLH?=
+ =?us-ascii?Q?ZALlOk2WiVRcBAIv8bRoY7HPXt7L4FYQK5WTcT2wk/eqWZ/SNa8QZyqojdLl?=
+ =?us-ascii?Q?G6YBDvGA1de2CLm0FjZHoCk6zWH3RhyA+SSD1G1Bgp69cUvJmWHEXPuBU/u7?=
+ =?us-ascii?Q?KQ3kYiZx5ks+F4rTc0pHIt2auYNPSzmMGM1LbL4u0ElOJ2QJ+YPkWUWaMKOu?=
+ =?us-ascii?Q?4X/MjgawHInpjFarnBRnVJyDHiHm3gvgTNHtjCoIXaqKITUyjCpk1OVOKqIy?=
+ =?us-ascii?Q?K56ieKkx05Z5j8coCOZsPwJnh9T6CGmHut0edcMAopdFPw/iPnlnpdMZuauj?=
+ =?us-ascii?Q?Kpj8DLm/p2OcMk9g3NTHbdVy7YtcXpp+SeSnTq038bp40aHveXh9Rv+If47D?=
+ =?us-ascii?Q?21MXPk75D2dpLAT77Riq0BAoFsxgT4HpRwLf810QgOEX9ugc6zEhaUQNsxfb?=
+ =?us-ascii?Q?rT4v2L5DoNlCwTvpjRaQnPFBF5PYn6rDLB0PETz/fh6+4DN2gkZmNnpaD7lS?=
+ =?us-ascii?Q?3yqKcw40fGmBNB8Gyycx9gjkq29lYeo6SakPJtqTG5ODiAqyy8ECsn1Vvr7c?=
+ =?us-ascii?Q?al0TwRHO0pT712TEaOHvkSQm0l35jU3N4V8akEXRHOoiBSbujcFWEnfy6uY6?=
+ =?us-ascii?Q?1zkAYwR3XusmyzPUFI8vOIlt5+UE8k9sgDZaZ4r3/tYLu5kJKDQLqTD6+HcI?=
+ =?us-ascii?Q?8V0Zu30zYiaSLZRnEzL/N4O+S/81/cr/BCnDs6qcpemKDBshrdV2QxeMW1BF?=
+ =?us-ascii?Q?6g=3D=3D?=
+X-OriginatorOrg: weidmueller.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af9810ea-bef3-42f4-dbb8-08dcc1ce1b2b
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2024 10:43:34.4376
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1nE1QriuGrn97cIcFMABrGzUv+aVNe1bZS3Yf6UCF70CQ+BxkiTm1xXkFwpUAS8l5Qw/hbEWEz+HVUFMsN/euA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR08MB5738
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 21 Aug 2024 10:32:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16506
+ <bitbake-devel@lists.openembedded.org>; Wed, 21 Aug 2024 10:43:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16507
 
-This still doesn't entirely compute. We do have npm fetcher tests in
-bitbake, but they test for existence of 'npm', and are skipped if npm
-is not there. And so they're never run on the autobuilder, and npm
-fetcher regularly regresses.
+[snip]
 
-On the other hand, you seem to be claiming that the fetcher does not
-require npm. But then this skipping is unnecessary and should be
-dropped, and all tests should pass.
+>>>>>
+>>>> Back to our commit, we do not change the aforementioned behavior, we
+>>>> only make it compatible with packages which do not declare a version
+>>>> in their package.json. The npmsw.py code wants to have a version to
+>>>> validate what's being downloaded, so we pass a dummy version. But the
+>>>> npm-shrinkwrap.json file, generated by npm native, still contains the
+>>>> reproducible metadata. Example here with a package that doesn't
+>>>> declare a version field: NPM still added integrity and resolved fields
+>>>> which will ensure reproducibility:
+>>>>
+>>>> ```
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "node_modules/cockpit-repo": {
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "name": "CockpitDevelopment=
+Dependencies",
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "resolved":
+>>>> "git+ssh://git@github.com/cockpit-
+>>> project/cockpit.git#d34cabacb8e5e1e028c7eea3d6e3b606d862b8ac",
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "integrity":
+>>>> "sha512-
+>>> 4nBWhDtVLwF++ZPY/67QtpsXc9y/Jpa/jj1LW/gScSafDKoHmtg1BwAQ7sqpN/
+>>>> fdyi1xrkysM9hxLq3Q16ofaw=3D=3D",
+>>>> ```
+>>>>>
+>>>>> We should probably error if a version cannot be found and force the
+>>>>> user to add one?
+>>>> An NPM project can typically pull hundreds of dependencies with some
+>>>> not declaring a version, the user would need to submit patches to all
+>>>> of their upstreams to fix that which is challenging. Meanwhile, the
+>>>> real NPM tool is perfectly fine with accepting that, as illustrated
+>>>> above. I believe we should hence behave like the official NPM tool.
+>>>
+>>> I'm not asking for the upstream NPM projects to be locked down. I'm=20
+>>> asking
+>>> that our recipes always have versions specified. This is similar to=20
+>>> what we do in
+>>> other places like crates with carg under rust, which probably is the=20
+>>> best
+>>> example of how we can lock down situations like this.
+>>
+>> The rust solution has the advantage, that the lock is parsed during=20
+>> recipe creation and the recipe author can rework the result.
+>>
+>> But the real problem is that the project wasn't published to the=20
+>> registry and has no release. Both cargo and npm support git=20
+>> repositories without a version. Maybe the parser should set the=20
+>> version to `0-git<short git commit sha>` and extract the hash from=20
+>> the `resolved` field.
+> We do declare a dummy version in another patchset somewhere else=20
+> indeed to pass some checks and allow building such packages. However=20
+> in this specific place, the version field is what's used to fetch the=20
+> packages and it needs a URL (git://, ...) which is conveniently=20
+> provided by the `resolved` field!
 
-Once we resolve that point, we should ensure that tests do check both
-possibilities:
+You are right the npm version field isn't always a semantic version.=20
+Maybe the git sources handler should always use the `resolved` field.
 
-- modules that have checksum information result in a successful fetch opeta=
-tion
-- if something does not have such information, the fetch fails, and
-that is interpreted as the test succeeding
-
-This would reassure everyone that the fetcher does fulfil source
-integrity requirements a lot more than a hand-written description of
-how it operates.
-
-Alex
-
-
-On Wed, 21 Aug 2024 at 12:08, Enguerrand de Ribaucourt via
-lists.openembedded.org
-<enguerrand.de-ribaucourt=3Dsavoirfairelinux.com@lists.openembedded.org>
-wrote:
->
->
->
-> On 21/08/2024 10:42, Herbrechtsmeier, Stefan wrote:
-> > Hi,
-> >
-> > I'm not that deep into the topic anymore, but I can hopefully explain s=
-ome implementation details.
-> >
-> >> -----Urspr=C3=BCngliche Nachricht-----
-> >> Von: Richard Purdie <richard.purdie@linuxfoundation.org>
-> >> Gesendet: Dienstag, 20. August 2024 18:00
-> >> An: Enguerrand de Ribaucourt <enguerrand.de-
-> >> ribaucourt@savoirfairelinux.com>; bitbake-devel@lists.openembedded.org
-> >> Cc: tanguy.raufflet@savoirfairelinux.com; alexandre.belloni@bootlin.co=
-m;
-> >> Herbrechtsmeier, Stefan <Stefan.Herbrechtsmeier@weidmueller.com>
-> >> Betreff: [EXTERNAL] Re: [bitbake-devel][PATCH v4 2/2] npmsw: accept
-> >> unspecified versions in package.json
-> >>
-> >> CAUTION: This email originated from outside the organization. Do not c=
-lick
-> >> links or open attachments unless you recognize the sender and know the
-> >> content is safe.
-> >>
-> >>
-> >>
-> >> On Mon, 2024-08-19 at 09:58 +0200, Enguerrand de Ribaucourt wrote:
-> >>> On 15/08/2024 16:12, Richard Purdie wrote:
-> >>>> On Mon, 2024-08-12 at 14:25 +0200, Enguerrand de Ribaucourt wrote:
-> >>>>> Our current emulation mandates that the package.json contains a
-> >>>>> version field. Some packages may not provide it when they are not
-> >>>>> published to the registry. The actual `npm pack` would allow such
-> >>>>> packages, so should we.
-> >>>>>
-> >>>>> A first commit was required in the npm class.
-> >>>>>
-> >>>>> For the shrinkwrap part , we can actually use the resolved field
-> >>>>> which contains the exact source, including the revision, to pass
-> >>>>> integrity tests.
-> >>>>>
-> >>>>> v3:
-> >>>>>    - Split bitbake npmsw.py modification in another commit
-> >>>>>
-> >>>>> Co-authored-by: Tanguy Raufflet
-> >>>>> <tanguy.raufflet@savoirfairelinux.com>
-> >>>>> Signed-off-by: Tanguy Raufflet
-> >>>>> <tanguy.raufflet@savoirfairelinux.com>
-> >>>>> Signed-off-by: Enguerrand de Ribaucourt
-> >>>>> <enguerrand.de-ribaucourt@savoirfairelinux.com>
-> >>>>> ---
-> >>>>>    bitbake/lib/bb/fetch2/npmsw.py | 2 +-
-> >>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/bitbake/lib/bb/fetch2/npmsw.py
-> >>>>> b/bitbake/lib/bb/fetch2/npmsw.py index d8ed9df327..a5fa598deb
-> >>>>> 100644
-> >>>>> --- a/bitbake/lib/bb/fetch2/npmsw.py
-> >>>>> +++ b/bitbake/lib/bb/fetch2/npmsw.py
-> >>>>> @@ -97,7 +97,7 @@ class NpmShrinkWrap(FetchMethod):
-> >>>>>
-> >>>>>                integrity =3D params.get("integrity", None)
-> >>>>>                resolved =3D params.get("resolved", None)
-> >>>>> -            version =3D params.get("version", None)
-> >>>>> +            version =3D params.get("version", resolved)
-> >>>>>
-> >>>>>                # Handle registry sources
-> >>>>>                if is_semver(version) and integrity:
-> >>>>
-> >>>> I'm not convinced by this reasoning. The whole point of our SRC_URI
-> >>>> is to precisely define something that is being built. I think this
-> >>>> allows floating versions of dependencies and hence makes this non-
-> >>>> reproducible?
-> >>>
-> >>> The version declared in package.json is purely declarative for the NP=
-M
-> >>> package registry. The basic Yocto fetchers will still be used for
-> >>> downloading the SRC_URI (https, git, ...), with the same version
-> >>> reproducibility mechanisms like git hash or md5sum.
-> >>>
-> >>> In the npm.bbclass, we have a second fetch stage (actually during
-> >>> do_configure) to fetch all the dependencies. The npm class here
-> >>> behaves wildly differently than regular frameworks where each
-> >>> dependency is a separate recipe. But since there are myriads of
-> >>> dependencies in the NPM world and it would be rare to share them, the
-> >>> current recipe class is intended to package an application with all
-> >>> its dependencies using the NPM registry.
-> >>>
-> >>> To fetch all those dependencies, we rely on the NPM dependencies
-> >>> mechanism of package.json which lists packages with their declarative
-> >>> version. However this is not reproducible. NPM provides two additiona=
-l
-> >>> files that NPM developers should include in their repositories to pin
-> >>> the whole dependency tree: package-lock.json and npm-shrinkwrap.json.
-> >>> The npm recipetool will fetch the dependencies the first time with
-> >>> package.json information, and produce an npm-shrinkwrap.json file tha=
-t
-> >>> pins all versions.
-> >>
-> >> Are you saying that the codepath in question is only used to generate =
-the
-> >> npm-shrinkwrap.json file and that a normal do_fetch and a normal build=
- will
-> >> not fetch any floating version?
-> >
-> > The npm-shrinkwrap.json is generated by npm. In contrast to rust and go=
- the lock file isn't processed during recipe creation but during build. Thi=
-s leads to the problem that the recipe author need to fix the npm-shrinkwra=
-p.json.
-> >
-> > The npm-shrinkwrap.json is a common lock file and locks the download so=
-urces. It contains the download source inside the `resolved` field [1]. In =
-case of git it contains the full git url with commit sha. This means the fe=
-tch use an unspecified release version but not a floating version.
-> >
-> > [1] https://docs.npmjs.com/cli/v10/configuring-npm/package-lock-json#pa=
-ckages
-> >
-> >
-> >> I appreciate the npm build itself might not be deterministic but the p=
-oint of
-> >> our SRC_URI is to make it deterministic.
-> >>
-> >> I'm also worried that you implied fetching is happening during do_conf=
-igure.
-> >> That should not be the case and if that is happening, it needs to be c=
-hanged so
-> >> that all fetching happens during do_fetch.
-> >
-> > The npm command in do_configure fetches the packages from a local tempo=
-rary repository. The local repository is filled by pre fetch packages. The =
-packages are fetched during do_fetch. Therefore bitbake parses the npm-shri=
-nkwrap.json during fetch and creates a list of fetch uris on-the-fly .
-> >
-> >
-> >>> Back to our commit, we do not change the aforementioned behavior, we
-> >>> only make it compatible with packages which do not declare a version
-> >>> in their package.json. The npmsw.py code wants to have a version to
-> >>> validate what's being downloaded, so we pass a dummy version. But the
-> >>> npm-shrinkwrap.json file, generated by npm native, still contains the
-> >>> reproducible metadata. Example here with a package that doesn't
-> >>> declare a version field: NPM still added integrity and resolved field=
-s
-> >>> which will ensure reproducibility:
-> >>>
-> >>> ```
-> >>>       "node_modules/cockpit-repo": {
-> >>>         "name": "CockpitDevelopmentDependencies",
-> >>>         "resolved":
-> >>> "git+ssh://git@github.com/cockpit-
-> >> project/cockpit.git#d34cabacb8e5e1e028c7eea3d6e3b606d862b8ac",
-> >>>         "integrity":
-> >>> "sha512-
-> >> 4nBWhDtVLwF++ZPY/67QtpsXc9y/Jpa/jj1LW/gScSafDKoHmtg1BwAQ7sqpN/
-> >>> fdyi1xrkysM9hxLq3Q16ofaw=3D=3D",
-> >>> ```
-> >>>>
-> >>>> We should probably error if a version cannot be found and force the
-> >>>> user to add one?
-> >>> An NPM project can typically pull hundreds of dependencies with some
-> >>> not declaring a version, the user would need to submit patches to all
-> >>> of their upstreams to fix that which is challenging. Meanwhile, the
-> >>> real NPM tool is perfectly fine with accepting that, as illustrated
-> >>> above. I believe we should hence behave like the official NPM tool.
-> >>
-> >> I'm not asking for the upstream NPM projects to be locked down. I'm as=
-king
-> >> that our recipes always have versions specified. This is similar to wh=
-at we do in
-> >> other places like crates with carg under rust, which probably is the b=
-est
-> >> example of how we can lock down situations like this.
-> >
-> > The rust solution has the advantage, that the lock is parsed during rec=
-ipe creation and the recipe author can rework the result.
-> >
-> > But the real problem is that the project wasn't published to the regist=
-ry and has no release. Both cargo and npm support git repositories without =
-a version. Maybe the parser should set the version to `0-git<short git comm=
-it sha>` and extract the hash from the `resolved` field.
-> We do declare a dummy version in another patchset somewhere else indeed
-> to pass some checks and allow building such packages. However in this
-> specific place, the version field is what's used to fetch the packages
-> and it needs a URL (git://, ...) which is conveniently provided by the
-> `resolved` field!
-> >
-> > Regards
-> >    Stefan
-> >
-> > ________________________________
-> > Kommanditgesellschaft - Sitz: Detmold - Amtsgericht Lemgo HRA 2790 -
-> > Komplement=C3=A4rin: Weidm=C3=BCller Interface F=C3=BChrungsgesellschaf=
-t mbH -
-> > Sitz: Detmold - Amtsgericht Lemgo HRB 3924;
-> > Gesch=C3=A4ftsf=C3=BChrer: Dr. Timo Berger, Volker Bibelhausen, Dr. Seb=
-astian Durst, Andr=C3=A9 Sombecki;
-> > USt-ID-Nr. DE124599660
->
-> --
-> Savoir-faire Linux
-> Enguerrand de Ribaucourt
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#16505): https://lists.openembedded.org/g/bitbake-deve=
-l/message/16505
-> Mute This Topic: https://lists.openembedded.org/mt/107855179/1686489
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.k=
-anavin@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
 
