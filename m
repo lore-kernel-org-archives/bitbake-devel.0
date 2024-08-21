@@ -1,199 +1,310 @@
-Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2424FC52D7C
-	for <webhook@archiver.kernel.org>; Wed, 21 Aug 2024 10:43:43 +0000 (UTC)
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (EUR03-VI1-obe.outbound.protection.outlook.com [40.107.103.138])
- by mx.groups.io with SMTP id smtpd.web10.16922.1724237018043353870
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80275C5320E
+	for <webhook@archiver.kernel.org>; Wed, 21 Aug 2024 11:13:53 +0000 (UTC)
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+ by mx.groups.io with SMTP id smtpd.web11.17408.1724238829678727810
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 21 Aug 2024 03:43:39 -0700
+ Wed, 21 Aug 2024 04:13:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=WYVSYY6U;
- spf=pass (domain: weidmueller.com, ip: 40.107.103.138, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iAdeebTq7ge0zXCO0GFOhpYUtBZz7YFmeEortrfQysvJ8M+mK6B+PSuiDZvtyQk4bjeIA22J27MGKAup5PZSffbLzRWCCs5B03AGHM9ahLPbQQ0wFX88tnCHLteBFtj3uccYNzOA47enwb/AFN0+kmL3YHAxbl0UXCu8No/+vr9Bv1yU5McyhjfxMaKrQllYmoap0hCc4HT3BVeoAMnPiCnsgVlFemKUz9v8wJH3bDvoXH6tRl8+l5rz1itNIZ25jes7C3MlyHL4sIL4vn2Agh/pbz53lvXTGV2AMxNRU2a2puG2vvPUf8sdBiOklodGZDgIaeDQY2lXV7OUuVraQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WUDDHqyElu3aAw+DSF1f9iVJxwjmElYS5KY41hK/0zU=;
- b=yUjVNMuN7r/qgCladEQoFByCK7L4xW3JSPiyd/e7KpXGtf65RvpCa1m3UgsuBxuZ83KjnN7M8eaS1uRLFUYpfawTmtbVIqStNoHfKYHurxZlkXfoO7Y3N7AP+gfVXtD69Aa6TzM4Z32n41+WyB9rPgBBgcTx4H8gjbLjUeDHjQCveY/UC/6N3c4/SgEfu4veEcasDrgs+URwCuvZ4W6fzCeACDSRl/nDJm026aKJuOl9lHEyJqykZM3AwSe+g5aF1LDRdWDVTwxU3ZZPLzRAqzkhmN6/6J7uYmEwjOO3zYt4dqWNjeG+mYo+jUQ0M4HbBFIlBYgWTptPTecm08klrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=weidmueller.com; dmarc=pass action=none
- header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WUDDHqyElu3aAw+DSF1f9iVJxwjmElYS5KY41hK/0zU=;
- b=WYVSYY6Un+jCwCN0lxdwMig1w68V9CaM1deUB2inKFVk4oyHjWnMjRWffO+wbqcRcLfQ90qe1f8k3vt+74XLf4uo9v+6BJxlxWBjTEEnaXbReiPCPSGPH6HCmyVGfckD4wfPOg6E4CF0tM/Bj/OEgHCF8jjPcvOLsogU7CQ8WttarHJ+88pyGAIdl6VMlBRmVK8sEG93RjuLH8V775HvNQ3JHbsPKJfwq2CBoYETqTCnOMAyl4a0XJBt4PH5kT4Dd5bkVgqeTU4vJRXzj9Ar680J4aFVQA04XaBFZMiJ6DRXYJfqvieB8rtovjSAJ7bEXER0ixLraWJ0zViMs9Qf7A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=weidmueller.com;
-Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
- by PR3PR08MB5738.eurprd08.prod.outlook.com (2603:10a6:102:81::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.12; Wed, 21 Aug
- 2024 10:43:34 +0000
-Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
- ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
- ([fe80::3b1:b329:1ed9:dad4%5]) with mapi id 15.20.7897.010; Wed, 21 Aug 2024
- 10:43:34 +0000
-Message-ID: <1520b2a8-f20d-4870-8c04-1579d84b6a1a@weidmueller.com>
-Date: Wed, 21 Aug 2024 12:43:33 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel][PATCH v4 2/2] npmsw: accept unspecified versions
- in package.json
-To: bitbake-devel@lists.openembedded.org
-References: <20240812122539.573337-1-enguerrand.de-ribaucourt@savoirfairelinux.com>
- <20240812122539.573337-3-enguerrand.de-ribaucourt@savoirfairelinux.com>
- <0e0d0b28d207d2bcb20180aa4c187e10ddc694c3.camel@linuxfoundation.org>
- <c2136d36-fac4-401d-9220-0f227260ef2d@savoirfairelinux.com>
- <b89f6243322fc0e72ae6a9773c437ee598d773e4.camel@linuxfoundation.org>
- <AS4PR08MB8046E1B791A39B4751C4D732958E2@AS4PR08MB8046.eurprd08.prod.outlook.com>
- <028bd9ca-a8ca-4d8d-87a9-00d19232855b@savoirfairelinux.com>
-Content-Language: en-US
-From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-In-Reply-To: <028bd9ca-a8ca-4d8d-87a9-00d19232855b@savoirfairelinux.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: FR0P281CA0107.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a8::20) To PAXPR08MB6969.eurprd08.prod.outlook.com
- (2603:10a6:102:1d8::23)
+ dkim=pass header.i=@snap.com header.s=google header.b=dPTXBdvV;
+ spf=pass (domain: snapchat.com, ip: 209.85.218.51, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a8643a6bd55so248798566b.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 21 Aug 2024 04:13:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=snap.com; s=google; t=1724238828; x=1724843628; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=udR+dy8eJz1QV0zxCCzxLnTKkAO33rHkBMw61T01dJk=;
+        b=dPTXBdvVawcF8xa9gXvkhvOuYFY7k27T3U5t5c/mOqcoUJM+b+0hUauL9CAl2s/uIY
+         u1l8udlJlVY2ItrYf4IYjfZMwWtWBPzAGddFLtQL4HxMAMtnQ70RlCAilI/PO9jA/V6l
+         rp0sMsOx7B/+conSxsXSSYoVeUENPZUfs+ZSU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724238828; x=1724843628;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=udR+dy8eJz1QV0zxCCzxLnTKkAO33rHkBMw61T01dJk=;
+        b=KKDQM89nx+gLxzZw0M+3sgB1geuCsHsJ7qptxW2d4BDxQUVnjY58/qxS63C4WVNFb3
+         NIrXcn5/7aOpKzDBna0zsfVm8ZKBAuGv3xWe3/HE0Sap1hC4iJAxWnkQ50CaXhDZpDX8
+         KUxWzsqTTad0HwKO7yb9ajpH4VTPrgP6aueQ/3JKROZqJscpnIAoL5ivf7CDI48q4Ew9
+         rYRMxfk1eCYbwE/A6BuKYs+YcetmaBEQWddRWMxJ+F1laTxBmmPizSnqAw2i1HLf4DKk
+         I6gP4okru/w24tqSzITARsnhA0bZmrxcpm2FdcdbW1TmHz7znDZANvCdI3Z6MOCZXXYt
+         MUMA==
+X-Gm-Message-State: AOJu0YyNwcydxvExQZPPQRX+iAJFemoIg+GHf+K0wIY1fBj4cbZCtf4r
+	K+FngrUlY6q5Nt5+unj1yo5Le7Try4C70sZqO908PeAGEOPvVNyDAvWSWCLWGrQajDbhBi18pl7
+	8IOaXp5b4SRdEB+SceoToQ40EIeZE6I9SzPPSMQ==
+X-Google-Smtp-Source: AGHT+IE2keBUBLBv9OvGtXk0aXiUv8QZ+8FhLx5fqU6r+2KSiBJg9GOwL2rZFpgK1BSVmE8o+kIRXpD5lC9/hVZLBJM=
+X-Received: by 2002:a17:907:1c1d:b0:a86:4649:28e6 with SMTP id
+ a640c23a62f3a-a866f8acf7cmr129766566b.57.1724238827700; Wed, 21 Aug 2024
+ 04:13:47 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|PR3PR08MB5738:EE_
-X-MS-Office365-Filtering-Correlation-Id: af9810ea-bef3-42f4-dbb8-08dcc1ce1b2b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?6MySYMEoyChBRdHFC2AuFRZYjuGvN7Hg6UzFlTdogJgPDDOyUbSWP3YOAt02?=
- =?us-ascii?Q?JlOLUkMXc62rp2//jvqud2eHFcBTzeoWG35cRFLJG6ZctA3EsKiPECTpgDHu?=
- =?us-ascii?Q?Kxp0d4+RQv+GM7XidK3W5n/zDxuE9SKOuYkZnX20y8nJen5Byxp5HTY4H1f+?=
- =?us-ascii?Q?jtMKCcBKSdEsdUju8iGkOPoE6Jps0QpSOfIPAPm3ANCvu2TvZ+fj+BBSK3Em?=
- =?us-ascii?Q?GnowHv705eDEHGEYqFQP9l/9nlIDLpG9F8KEThqJSieBDrCSIdFh8zgRq0SK?=
- =?us-ascii?Q?Hrr9yGVTXnGtLkegJ3zW34W47CAfltpPpfx5ThdNMN93RvgyWsrgUBW425uP?=
- =?us-ascii?Q?BjYutvOkiLU6gQbU0/qIAimUOWF4Uy8Wbjy1cnhYxo1eVV2Nei7LnnHsX57Z?=
- =?us-ascii?Q?YGU7TU83OL0WthGff/WvtgaDb4qHbUr4giwdb7RgGHS4WZIo18Kd6uSZwa3F?=
- =?us-ascii?Q?uJ123oOsPtFYJEdzXh8AnJW5524YDLrdVGQ7fAE5f2G1WtvtlkJ8/fKPjC/u?=
- =?us-ascii?Q?2QmbLMZBGmF3srysEqzgHjaQTupjkUnj4IrSFUFpCfzUWtporggmH0SJwHf9?=
- =?us-ascii?Q?SmGyD8GB2tD+VEIOGPfoBQ0RaVs5i/v9294wHntRPnz+hBXLB1L8lC+W3aQD?=
- =?us-ascii?Q?9yOcW/BaWEYJXB14Tyw4zUA1QEVBdO2lAtUHq5ODHozD++Ggv8DJSyTpV4cR?=
- =?us-ascii?Q?I/8fCN7GP2/A0qkGGd7E/rQ1dqkZzchaabqNmWl4PlfhZjk/eMzGsz1f2n/D?=
- =?us-ascii?Q?27wqX0HvOtYAzK/MzGc7S/7XVcsiZv7hw2qyhfEWNPAkl6xpS6iTY3FKrzQ3?=
- =?us-ascii?Q?/Y3BOVdfHjYk4YO5FD2sBhU/SPjTz9pY1L5X05R4sWmfQPXhGv7M9uxaBjb1?=
- =?us-ascii?Q?14cQxnqyiwX2ginaRVn3vx7T5YYfEXzcX0lAchjcbjwbKKYCmipj+PuNQzwo?=
- =?us-ascii?Q?0yb1AABvZYKWnlXAB2x8xRvfzFIdwX+3teOvzqPIzLD0T74M3oIM41kvMks6?=
- =?us-ascii?Q?NZeLKGV9mbusNZyCdITMrCUJhn5rJej9Q2Nlk/UIr3qK2QvEvqxi01BeMVCb?=
- =?us-ascii?Q?0GNBbSzUoeCRgpahAcdy/CQd1sBGZvEWboKaRj9oqjZXcMemlyf60quRn5lV?=
- =?us-ascii?Q?hhwgF7WurcXfJzJqgmkmJtRGzf1CkrnUMTObgPMFYBpiiiuciZCF3k7dj+U2?=
- =?us-ascii?Q?K539yDmGgovL7HAziORel/FOt17eJmGoQtRTjzYaaXkQCciap//6/DnOqx8Y?=
- =?us-ascii?Q?kd/lmX3QY/u0fhcQqsBn+BTFGjLJqzNTUSL0nfC0kUCchPd6Mrs+NoLUxhCg?=
- =?us-ascii?Q?Sv8O9uZjIu6olC57XqVY3KReke2SxjT4j4rqY/vKybErZQ=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?MtY/hKq5tOSvjYug/YICa8CyPmCe5ZMQZffW2ob+7HFsYFKMGQhhu8SvuCVz?=
- =?us-ascii?Q?izzMhHwTlqTyGMGBuCNvFjszBjwpw+1Nf54rDmLXuPCdNn/qjax3EHsXJydP?=
- =?us-ascii?Q?+C6pDTRdj/lmFc9CSAu+An5z81gQyZSaZA26J20x2lwV6f4hyJDLBVSJ9ZLB?=
- =?us-ascii?Q?PVm6alQmGEVI8EWVEH9sipAc5GfwdGoI4YxoM/6mGb8rHHqvMJDF0zgjj9uN?=
- =?us-ascii?Q?+E8fG/ikJEo+5ga336+dC8Qur5eAK/7BVgH/7AJbYT0JCXQNTE0dvpAZPlPO?=
- =?us-ascii?Q?J/Ghi3WlRBuvwWQ8bEZdPKg0z7TnHjQabxcmBjDDXQzgR+oqXpQqsrFbPzRZ?=
- =?us-ascii?Q?uzMtTPyO4wYyIF6+nuqKXlTEKbZjgs/VXXUsg1Kw0Ch6CSMgqoy2wh+JMjiT?=
- =?us-ascii?Q?KB37wbMD1kZcs4mN0npxdDfZ4dxwwSPvzAz1hy5udZYBNMRGH+z+eqiE4Vsg?=
- =?us-ascii?Q?fQGD/o6gpmRm9mIvhJyckQ1xB+4ZsKR3wQD6AWrXQm3kR1H3KZiHUARJkUTy?=
- =?us-ascii?Q?P0aSgZfMs8xeWv/iUikZQ45Mr5TDSnjwBSPftXGsaQGnGpHI8aKhH/Y52bBZ?=
- =?us-ascii?Q?ACVB1B+vUNmj4Re6G/b3Me8jQ2tlZutbzXAOh2APdnoEQZf3mLr4I3eGbtl6?=
- =?us-ascii?Q?Mbe8J+Wu/bgUWXmVcwvKshy0rzhnNTm/cAi3Go21RsJF6Au4gtCGYrl9QP2d?=
- =?us-ascii?Q?7kmvw60+4T7YRq0iv+gIcvhZ8R4flpwpCGZsQvk62GBB+AMbHqew4XRZvkom?=
- =?us-ascii?Q?ouzU0OBtgn8jresPR/vHnMF8vFqA/bJrYLHAeMD1/wMlJJhkBXHGRIBs9z1Y?=
- =?us-ascii?Q?dS6HNyma30zSWXDPf2NbsyRqLbjzvxhNX6NOwJVGDs78mTWNtanv4o7J+dLH?=
- =?us-ascii?Q?ZALlOk2WiVRcBAIv8bRoY7HPXt7L4FYQK5WTcT2wk/eqWZ/SNa8QZyqojdLl?=
- =?us-ascii?Q?G6YBDvGA1de2CLm0FjZHoCk6zWH3RhyA+SSD1G1Bgp69cUvJmWHEXPuBU/u7?=
- =?us-ascii?Q?KQ3kYiZx5ks+F4rTc0pHIt2auYNPSzmMGM1LbL4u0ElOJ2QJ+YPkWUWaMKOu?=
- =?us-ascii?Q?4X/MjgawHInpjFarnBRnVJyDHiHm3gvgTNHtjCoIXaqKITUyjCpk1OVOKqIy?=
- =?us-ascii?Q?K56ieKkx05Z5j8coCOZsPwJnh9T6CGmHut0edcMAopdFPw/iPnlnpdMZuauj?=
- =?us-ascii?Q?Kpj8DLm/p2OcMk9g3NTHbdVy7YtcXpp+SeSnTq038bp40aHveXh9Rv+If47D?=
- =?us-ascii?Q?21MXPk75D2dpLAT77Riq0BAoFsxgT4HpRwLf810QgOEX9ugc6zEhaUQNsxfb?=
- =?us-ascii?Q?rT4v2L5DoNlCwTvpjRaQnPFBF5PYn6rDLB0PETz/fh6+4DN2gkZmNnpaD7lS?=
- =?us-ascii?Q?3yqKcw40fGmBNB8Gyycx9gjkq29lYeo6SakPJtqTG5ODiAqyy8ECsn1Vvr7c?=
- =?us-ascii?Q?al0TwRHO0pT712TEaOHvkSQm0l35jU3N4V8akEXRHOoiBSbujcFWEnfy6uY6?=
- =?us-ascii?Q?1zkAYwR3XusmyzPUFI8vOIlt5+UE8k9sgDZaZ4r3/tYLu5kJKDQLqTD6+HcI?=
- =?us-ascii?Q?8V0Zu30zYiaSLZRnEzL/N4O+S/81/cr/BCnDs6qcpemKDBshrdV2QxeMW1BF?=
- =?us-ascii?Q?6g=3D=3D?=
-X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af9810ea-bef3-42f4-dbb8-08dcc1ce1b2b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2024 10:43:34.4376
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1nE1QriuGrn97cIcFMABrGzUv+aVNe1bZS3Yf6UCF70CQ+BxkiTm1xXkFwpUAS8l5Qw/hbEWEz+HVUFMsN/euA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR08MB5738
+References: <20231127131147.1128798-1-charlie.johnston@loftorbital.com>
+In-Reply-To: <20231127131147.1128798-1-charlie.johnston@loftorbital.com>
+From: Etienne Cordonnier <ecordonnier@snap.com>
+Date: Wed, 21 Aug 2024 13:13:36 +0200
+Message-ID: <CAHUKmYa560gcxf_0LMEKmAgag7a67ivyB0OQuM39Rwc22ZxGAQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] fetch2: Ensure GCP fetcher checks if file
+ exists before download.
+To: Charlie Johnston <charlie.johnston@loftorbital.com>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000d58ef106202fa226"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 21 Aug 2024 10:43:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16507
+ <bitbake-devel@lists.openembedded.org>; Wed, 21 Aug 2024 11:13:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16508
 
-[snip]
+--000000000000d58ef106202fa226
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->>>>>
->>>> Back to our commit, we do not change the aforementioned behavior, we
->>>> only make it compatible with packages which do not declare a version
->>>> in their package.json. The npmsw.py code wants to have a version to
->>>> validate what's being downloaded, so we pass a dummy version. But the
->>>> npm-shrinkwrap.json file, generated by npm native, still contains the
->>>> reproducible metadata. Example here with a package that doesn't
->>>> declare a version field: NPM still added integrity and resolved fields
->>>> which will ensure reproducibility:
->>>>
->>>> ```
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "node_modules/cockpit-repo": {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "name": "CockpitDevelopment=
-Dependencies",
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "resolved":
->>>> "git+ssh://git@github.com/cockpit-
->>> project/cockpit.git#d34cabacb8e5e1e028c7eea3d6e3b606d862b8ac",
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "integrity":
->>>> "sha512-
->>> 4nBWhDtVLwF++ZPY/67QtpsXc9y/Jpa/jj1LW/gScSafDKoHmtg1BwAQ7sqpN/
->>>> fdyi1xrkysM9hxLq3Q16ofaw=3D=3D",
->>>> ```
->>>>>
->>>>> We should probably error if a version cannot be found and force the
->>>>> user to add one?
->>>> An NPM project can typically pull hundreds of dependencies with some
->>>> not declaring a version, the user would need to submit patches to all
->>>> of their upstreams to fix that which is challenging. Meanwhile, the
->>>> real NPM tool is perfectly fine with accepting that, as illustrated
->>>> above. I believe we should hence behave like the official NPM tool.
->>>
->>> I'm not asking for the upstream NPM projects to be locked down. I'm=20
->>> asking
->>> that our recipes always have versions specified. This is similar to=20
->>> what we do in
->>> other places like crates with carg under rust, which probably is the=20
->>> best
->>> example of how we can lock down situations like this.
->>
->> The rust solution has the advantage, that the lock is parsed during=20
->> recipe creation and the recipe author can rework the result.
->>
->> But the real problem is that the project wasn't published to the=20
->> registry and has no release. Both cargo and npm support git=20
->> repositories without a version. Maybe the parser should set the=20
->> version to `0-git<short git commit sha>` and extract the hash from=20
->> the `resolved` field.
-> We do declare a dummy version in another patchset somewhere else=20
-> indeed to pass some checks and allow building such packages. However=20
-> in this specific place, the version field is what's used to fetch the=20
-> packages and it needs a URL (git://, ...) which is conveniently=20
-> provided by the `resolved` field!
+Hi,
+sorry, I'm testing this only now, long after it has been merged.
+The second addition of runfetchcmd inside the function checkstatus is not
+good in my opinion. It is redundant with the call
+to self.gcp_client.bucket(ud.host).blob(path).exists() which already
+returns True/False and does not throw an exception in case the file does
+not exist. Also the call to gsutil stat is much slower than using the
+python client to call exists() so we should not replace the call to
+exists() with a call to gsutil stat. I think the intent of calling
+check_network_access in checkstatus() was to error-out in case the error is
+disabled. We can rather change the string "gsutil stat" to something else
+to make the code more readable.
 
-You are right the npm version field isn't always a semantic version.=20
-Maybe the git sources handler should always use the `resolved` field.
+In the download function, I also think it would be better to add a
+try/catch block around download_to_filename and throw a FetchError instead
+of adding this extra slow [1] call to gsutil stat.
 
+[1]: 2x to 4x slower according to
+https://blog.gdeltproject.org/simple-experiments-in-gcs-ls-performance-comp=
+aring-gcloud-python-the-gcs-json-api/#:~:text=3DUnsurprisingly%2C%20the%20G=
+CLOUD%20CLI%20is,library%20offering%202%2D4x%20speedup
+
+
+=C3=89tienne
+
+On Mon, Nov 27, 2023 at 7:14=E2=80=AFPM Charlie Johnston <
+charlie.johnston@loftorbital.com> wrote:
+
+> The GCP fetcher was calling bb.fetch2.check_network_access with
+> "gsutil stat" as the command, but then never actually ran that
+> command to check if the file exists. In cases where the file did
+> not exist in a gs:// premirror, this would lead to an unhandled
+> exception from do_fetch when the GCP python API tried to perform
+> the download.
+>
+> This change resolves that issue by adding a runfetchcmd to call
+> gsutil.
+>
+> Signed-off-by: Charlie Johnston <charlie.johnston@loftorbital.com>
+> ---
+>  lib/bb/fetch2/gcp.py | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/bb/fetch2/gcp.py b/lib/bb/fetch2/gcp.py
+> index f42c81fd..f40ce2ea 100644
+> --- a/lib/bb/fetch2/gcp.py
+> +++ b/lib/bb/fetch2/gcp.py
+> @@ -47,6 +47,7 @@ class GCP(FetchMethod):
+>              ud.basename =3D os.path.basename(ud.path)
+>
+>          ud.localfile =3D d.expand(urllib.parse.unquote(ud.basename))
+> +        ud.basecmd =3D "gsutil stat"
+>
+>      def get_gcp_client(self):
+>          from google.cloud import storage
+> @@ -61,7 +62,8 @@ class GCP(FetchMethod):
+>          if self.gcp_client is None:
+>              self.get_gcp_client()
+>
+> -        bb.fetch2.check_network_access(d, "gsutil stat", ud.url)
+> +        bb.fetch2.check_network_access(d, ud.basecmd,
+> f"gs://{ud.host}{ud.path}")
+> +        runfetchcmd("%s %s" % (ud.basecmd, f"gs://{ud.host}{ud.path}"), =
+d)
+>
+>          # Path sometimes has leading slash, so strip it
+>          path =3D ud.path.lstrip("/")
+> @@ -88,7 +90,8 @@ class GCP(FetchMethod):
+>          if self.gcp_client is None:
+>              self.get_gcp_client()
+>
+> -        bb.fetch2.check_network_access(d, "gsutil stat", ud.url)
+> +        bb.fetch2.check_network_access(d, ud.basecmd,
+> f"gs://{ud.host}{ud.path}")
+> +        runfetchcmd("%s %s" % (ud.basecmd, f"gs://{ud.host}{ud.path}"), =
+d)
+>
+>          # Path sometimes has leading slash, so strip it
+>          path =3D ud.path.lstrip("/")
+> --
+> 2.39.2
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#15576):
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_g_bitbake-2Ddevel_message_15576&d=3DDwIFaQ&c=3DncDTmphkJTvjIDPh0hpF_4v=
+CHvabgGkICC2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3D9t=
+4tVhNJHm_a-j81RmtjjjGs-dK8z3mbf1k2KnTXY2QSV7n3ZFg3rZKGKnIzpw7L&s=3DUfc44GrQ=
+XbX_l46qNc5Y5lxJcIMmKJ5bdnDVQW4EFu8&e=3D
+> Mute This Topic:
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_mt_102834834_7048771&d=3DDwIFaQ&c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC=
+2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3D9t4tVhNJHm_a-=
+j81RmtjjjGs-dK8z3mbf1k2KnTXY2QSV7n3ZFg3rZKGKnIzpw7L&s=3D9hBl_2FJgpF4ZQnus1T=
+TZe8pJVWYK-n-Wv8mBBTNYyc&e=3D
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe:
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded=
+.org_g_bitbake-2Ddevel_unsub&d=3DDwIFaQ&c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGk=
+ICC2epckfdiw&r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&m=3D9t4tVhNJHm=
+_a-j81RmtjjjGs-dK8z3mbf1k2KnTXY2QSV7n3ZFg3rZKGKnIzpw7L&s=3DgvGokflWmVxRC7Gw=
+ObSJV_2_JvuDVfe-sh2jVMegqDU&e=3D
+> [ecordonnier@snap.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
+
+--000000000000d58ef106202fa226
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi,<br>sorry, I&#39;m testing this only now, long after it=
+ has been merged.<br>The second addition of runfetchcmd inside the function=
+ checkstatus is not good in my opinion. It is redundant with the call to=C2=
+=A0self.gcp_client.bucket(ud.host).blob(path).exists() which already return=
+s True/False and does not throw an exception in case the file does not exis=
+t. Also the call to gsutil stat is much slower than using the python client=
+ to call exists() so we should not replace the call to exists() with a call=
+ to gsutil stat. I think the intent of calling check_network_access in chec=
+kstatus() was to error-out in case the error is disabled. We can rather cha=
+nge the string &quot;gsutil stat&quot; to something else to make the code m=
+ore readable.<br><br>In the download function, I also think it would be bet=
+ter to add a try/catch block around download_to_filename and throw a FetchE=
+rror instead of adding this extra slow [1] call to gsutil stat.<br><br>[1]:=
+ 2x to 4x slower according to <a href=3D"https://blog.gdeltproject.org/simp=
+le-experiments-in-gcs-ls-performance-comparing-gcloud-python-the-gcs-json-a=
+pi/#:~:text=3DUnsurprisingly%2C%20the%20GCLOUD%20CLI%20is,library%20offerin=
+g%202%2D4x%20speedup">https://blog.gdeltproject.org/simple-experiments-in-g=
+cs-ls-performance-comparing-gcloud-python-the-gcs-json-api/#:~:text=3DUnsur=
+prisingly%2C%20the%20GCLOUD%20CLI%20is,library%20offering%202%2D4x%20speedu=
+p</a>=C2=A0<br><br>=C3=89tienne</div><br><div class=3D"gmail_quote"><div di=
+r=3D"ltr" class=3D"gmail_attr">On Mon, Nov 27, 2023 at 7:14=E2=80=AFPM Char=
+lie Johnston &lt;<a href=3D"mailto:charlie.johnston@loftorbital.com">charli=
+e.johnston@loftorbital.com</a>&gt; wrote:<br></div><blockquote class=3D"gma=
+il_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,2=
+04,204);padding-left:1ex">The GCP fetcher was calling bb.fetch2.check_netwo=
+rk_access with<br>
+&quot;gsutil stat&quot; as the command, but then never actually ran that<br=
+>
+command to check if the file exists. In cases where the file did<br>
+not exist in a gs:// premirror, this would lead to an unhandled<br>
+exception from do_fetch when the GCP python API tried to perform<br>
+the download.<br>
+<br>
+This change resolves that issue by adding a runfetchcmd to call<br>
+gsutil.<br>
+<br>
+Signed-off-by: Charlie Johnston &lt;<a href=3D"mailto:charlie.johnston@loft=
+orbital.com" target=3D"_blank">charlie.johnston@loftorbital.com</a>&gt;<br>
+---<br>
+=C2=A0lib/bb/fetch2/gcp.py | 7 +++++--<br>
+=C2=A01 file changed, 5 insertions(+), 2 deletions(-)<br>
+<br>
+diff --git a/lib/bb/fetch2/gcp.py b/lib/bb/fetch2/gcp.py<br>
+index f42c81fd..f40ce2ea 100644<br>
+--- a/lib/bb/fetch2/gcp.py<br>
++++ b/lib/bb/fetch2/gcp.py<br>
+@@ -47,6 +47,7 @@ class GCP(FetchMethod):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ud.basename =3D os.path.bas=
+ename(ud.path)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ud.localfile =3D d.expand(urllib.parse.un=
+quote(ud.basename))<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.basecmd =3D &quot;gsutil stat&quot;<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0def get_gcp_client(self):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0from google.cloud import storage<br>
+@@ -61,7 +62,8 @@ class GCP(FetchMethod):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if self.gcp_client is None:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.get_gcp_client()<br>
+<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.fetch2.check_network_access(d, &quot;gsutil=
+ stat&quot;, ud.url)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.fetch2.check_network_access(d, ud.basecmd, =
+f&quot;gs://{ud.host}{ud.path}&quot;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 runfetchcmd(&quot;%s %s&quot; % (ud.basecmd, f=
+&quot;gs://{ud.host}{ud.path}&quot;), d)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# Path sometimes has leading slash, so st=
+rip it<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0path =3D ud.path.lstrip(&quot;/&quot;)<br=
+>
+@@ -88,7 +90,8 @@ class GCP(FetchMethod):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if self.gcp_client is None:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.get_gcp_client()<br>
+<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.fetch2.check_network_access(d, &quot;gsutil=
+ stat&quot;, ud.url)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.fetch2.check_network_access(d, ud.basecmd, =
+f&quot;gs://{ud.host}{ud.path}&quot;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 runfetchcmd(&quot;%s %s&quot; % (ud.basecmd, f=
+&quot;gs://{ud.host}{ud.path}&quot;), d)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# Path sometimes has leading slash, so st=
+rip it<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0path =3D ud.path.lstrip(&quot;/&quot;)<br=
+>
+-- <br>
+2.39.2<br>
+<br>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#15576): <a href=3D"https://urldefense.proofpoint.com/v2=
+/url?u=3Dhttps-3A__lists.openembedded.org_g_bitbake-2Ddevel_message_15576&a=
+mp;d=3DDwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DA=
+hkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3D9t4tVhNJHm_a-j81RmtjjjGs=
+-dK8z3mbf1k2KnTXY2QSV7n3ZFg3rZKGKnIzpw7L&amp;s=3DUfc44GrQXbX_l46qNc5Y5lxJcI=
+MmKJ5bdnDVQW4EFu8&amp;e=3D" rel=3D"noreferrer" target=3D"_blank">https://ur=
+ldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.openembedded.org_g_bitba=
+ke-2Ddevel_message_15576&amp;d=3DDwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHva=
+bgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=
+=3D9t4tVhNJHm_a-j81RmtjjjGs-dK8z3mbf1k2KnTXY2QSV7n3ZFg3rZKGKnIzpw7L&amp;s=
+=3DUfc44GrQXbX_l46qNc5Y5lxJcIMmKJ5bdnDVQW4EFu8&amp;e=3D</a> <br>
+Mute This Topic: <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dht=
+tps-3A__lists.openembedded.org_mt_102834834_7048771&amp;d=3DDwIFaQ&amp;c=3D=
+ncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Qj9TsR=
+ih1DULJTKUkSGa66m67E&amp;m=3D9t4tVhNJHm_a-j81RmtjjjGs-dK8z3mbf1k2KnTXY2QSV7=
+n3ZFg3rZKGKnIzpw7L&amp;s=3D9hBl_2FJgpF4ZQnus1TTZe8pJVWYK-n-Wv8mBBTNYyc&amp;=
+e=3D" rel=3D"noreferrer" target=3D"_blank">https://urldefense.proofpoint.co=
+m/v2/url?u=3Dhttps-3A__lists.openembedded.org_mt_102834834_7048771&amp;d=3D=
+DwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonV=
+uMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3D9t4tVhNJHm_a-j81RmtjjjGs-dK8z3m=
+bf1k2KnTXY2QSV7n3ZFg3rZKGKnIzpw7L&amp;s=3D9hBl_2FJgpF4ZQnus1TTZe8pJVWYK-n-W=
+v8mBBTNYyc&amp;e=3D</a> <br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dhttps-=
+3A__lists.openembedded.org_g_bitbake-2Ddevel_unsub&amp;d=3DDwIFaQ&amp;c=3Dn=
+cDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbNonVuMIGRfPx_Qj9TsRi=
+h1DULJTKUkSGa66m67E&amp;m=3D9t4tVhNJHm_a-j81RmtjjjGs-dK8z3mbf1k2KnTXY2QSV7n=
+3ZFg3rZKGKnIzpw7L&amp;s=3DgvGokflWmVxRC7GwObSJV_2_JvuDVfe-sh2jVMegqDU&amp;e=
+=3D" rel=3D"noreferrer" target=3D"_blank">https://urldefense.proofpoint.com=
+/v2/url?u=3Dhttps-3A__lists.openembedded.org_g_bitbake-2Ddevel_unsub&amp;d=
+=3DDwIFaQ&amp;c=3DncDTmphkJTvjIDPh0hpF_4vCHvabgGkICC2epckfdiw&amp;r=3DAhkbN=
+onVuMIGRfPx_Qj9TsRih1DULJTKUkSGa66m67E&amp;m=3D9t4tVhNJHm_a-j81RmtjjjGs-dK8=
+z3mbf1k2KnTXY2QSV7n3ZFg3rZKGKnIzpw7L&amp;s=3DgvGokflWmVxRC7GwObSJV_2_JvuDVf=
+e-sh2jVMegqDU&amp;e=3D</a>=C2=A0 [<a href=3D"mailto:ecordonnier@snap.com" t=
+arget=3D"_blank">ecordonnier@snap.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
+
+--000000000000d58ef106202fa226--
 
