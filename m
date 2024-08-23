@@ -1,132 +1,113 @@
-Return-Path: <ecordonnier@snap.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A3AC52D7C
-	for <webhook@archiver.kernel.org>; Fri, 23 Aug 2024 08:41:41 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.11831.1724402491382633144
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F55C52D7C
+	for <webhook@archiver.kernel.org>; Fri, 23 Aug 2024 09:14:21 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web10.12151.1724404456003595704
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 23 Aug 2024 01:41:31 -0700
+ Fri, 23 Aug 2024 02:14:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=RQrRJosB;
- spf=pass (domain: snapchat.com, ip: 209.85.221.54, mailfrom: ecordonnier@snapchat.com)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-37186c2278bso1494728f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 23 Aug 2024 01:41:31 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=h/1g0y1d;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-429da8b5feaso17372195e9.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 23 Aug 2024 02:14:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google; t=1724402489; x=1725007289; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ESZt3qOkOPOssMLs3ItY7iQgbraOk5Ng7ODcFZZBMUc=;
-        b=RQrRJosBncoCxcq6fPeNEq7JVZCcVNaMd1PZoQ3YV5XDQDkTfMeNpM+nNfADBeOJVc
-         WeB0HJdMoBl5QhIdn/NWqF3P+G1GW9osJ2oYQj+446PNwJK7N2wd8PLZq2Fq7+byrzp7
-         n1mMs6dLrinkuaZ9w03Z3B4uBdhXSXR2iebUY=
+        d=linuxfoundation.org; s=google; t=1724404454; x=1725009254; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VRSXEgZY4lPfyannNLeIFK5uMgMRcSZu/lSdDCTcDZE=;
+        b=h/1g0y1d6xVvBx3jN38ws4QeLlfQD/Yx+Yumfa6rh91XZNIxwAtS9RMS/VbhGoCgsk
+         BltLnEj51WLwbAnmdFZ1SJwWWpIGvzxuJrJ1rnQdj0ZFHZVF1KWWQkq8kUFPu19YOLOz
+         LdP7JNq9aGR/PtV5M1f/g6D1AYtPy+NALDhK0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724402489; x=1725007289;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ESZt3qOkOPOssMLs3ItY7iQgbraOk5Ng7ODcFZZBMUc=;
-        b=oY6+q8nG7L/5iR0Ecf3euBIFll1wEDyAsAs0K7rA4HxQ/UDb6MFzUB100LGo4inUcQ
-         GiXFAdOtIvzGOY7ba0C84dtjFuIG7Z5cwsRAGJfRIqr8+566xsh7Lz1SVrqFZ6iZ7pne
-         creLSJlbzL/Aoid88bxe8FhJVC/fjVWIVVD1+CPIYrgBt5deS3c3q2AlBRpS7PYMgdIX
-         +gFyLGA7iT9OAhjgUhWRz6oz0hp66/oDcpQ/OWfs+fXcPrbT9Ei6lsiPC3OpvL5kaJd6
-         7d5DUGL6tlpOYc3f7HTktqUbPKDHORNqmEf/dH4zD6ewknZe6gjN3gCXYvgBUho2r859
-         jTNg==
-X-Gm-Message-State: AOJu0YyIk5KUJhkeXTNt3269ILoV/PGREEqCJi7DYHHjDHSqwCnmDGqX
-	2iNq1JNawtE4l4OqxWew1BArW5/vn6e24PoTd+ozfZbQnY8GCUn6O2YovKP7u3v8Cp9iCZfpSgb
-	reSo=
-X-Google-Smtp-Source: AGHT+IFdPbZYcJ9JRPyKfuxREIXGaK0ki2Qq0dvPXrTyQpx6rX654ReufmmWF5MAqGlRrMMHUir4kQ==
-X-Received: by 2002:adf:e288:0:b0:371:938c:6f50 with SMTP id ffacd0b85a97d-3730526a598mr3173009f8f.16.1724402489309;
-        Fri, 23 Aug 2024 01:41:29 -0700 (PDT)
-Received: from lj8k2dq3.sc-core.net ([213.249.125.50])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3730810ffb9sm3661415f8f.7.2024.08.23.01.41.28
+        d=1e100.net; s=20230601; t=1724404454; x=1725009254;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VRSXEgZY4lPfyannNLeIFK5uMgMRcSZu/lSdDCTcDZE=;
+        b=q5yN4C8bYQHrNfsp500t0BHH7vzmHt3mUypSJSzLGrvbrK4FD5/2m07f5Z2FYYOA3E
+         /HpR/yxFJQ1f0IsaFf74WrePqrAH0dULfSgXTFj2OjgR7Xeef/em/f7Tb4CkwgOyg743
+         B/2XDws7Ui0BuAhfaTp2lCFiwl/3waY2q8R1l2TKF3XakMJC6wZcCuusnjdBgEa6f4FM
+         6G/74oyqsPtQvpRB+aTv9X3pTF21qx/y0v3e8l14OnMgoRDLtvckAczyQYi285i8xjru
+         npKGc7XOwRhJVuG1114KzkD866NZ2q/S1CvkxhKA4MpkEBeEcMqEp+mMh+KMIBH9ZoMD
+         SYtA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmNGm3YSyVHmUjL7lnpnA0ln/4Fd6vYDYYp9BG5Y+1RYTLmROPUqMJexDTWswxgGFQaadu0C/WNlvigVg1@lists.openembedded.org
+X-Gm-Message-State: AOJu0Yx6uwY2X0YMnkRwCfhoduFlxMJm4ItGfQGc5HtuurvrSHPnLKeO
+	6XUxN9aARQbWxUZZx7/ORqpPlMGeuhC0TJxZ58pmsvvQP9WqmI0R/6bqo3m5ITE=
+X-Google-Smtp-Source: AGHT+IFk8z3mDzIZcT1ZcopQGY8Bmh4IHwQ98z+DrdFUrxEunfM4dG4SeFM1aOcBI7YnKrCvxPDkFA==
+X-Received: by 2002:a5d:58fb:0:b0:371:8685:84e with SMTP id ffacd0b85a97d-37311855f8dmr1121622f8f.22.1724404454240;
+        Fri, 23 Aug 2024 02:14:14 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:f4f5:df28:3cf9:5842? ([2001:8b0:aba:5f3c:f4f5:df28:3cf9:5842])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3730813c5edsm3677405f8f.31.2024.08.23.02.14.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2024 01:41:29 -0700 (PDT)
-From: ecordonnier@snap.com
-To: bitbake-devel@lists.openembedded.org
-Cc: Etienne Cordonnier <ecordonnier@snap.com>
-Subject: [PATCH] gcp.py: remove slow calls to gsutil stat
-Date: Fri, 23 Aug 2024 10:41:08 +0200
-Message-ID: <20240823084108.1106312-1-ecordonnier@snap.com>
-X-Mailer: git-send-email 2.43.0
+        Fri, 23 Aug 2024 02:14:13 -0700 (PDT)
+Message-ID: <7c8eab24043fb9f05c2df8ebe4f55d724595c977.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] gcp.py: remove slow calls to gsutil stat
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: ecordonnier@snap.com, bitbake-devel@lists.openembedded.org
+Date: Fri, 23 Aug 2024 10:14:13 +0100
+In-Reply-To: <20240823084108.1106312-1-ecordonnier@snap.com>
+References: <20240823084108.1106312-1-ecordonnier@snap.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 23 Aug 2024 08:41:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16519
+ <bitbake-devel@lists.openembedded.org>; Fri, 23 Aug 2024 09:14:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16520
 
-From: Etienne Cordonnier <ecordonnier@snap.com>
+On Fri, 2024-08-23 at 10:41 +0200, Etienne Cordonnier via lists.openembedde=
+d.org wrote:
+> From: Etienne Cordonnier <ecordonnier@snap.com>
+>=20
+> The changes of 1ab1d36c0af6fc58a974106b61ff4d37da6cb229 added calls to "g=
+sutil stat" to avoid unhandled exceptions, however:
+> - in the case of checkstatus() this is redundant with the call to self.gc=
+p_client.bucket(ud.host).blob(path).exists() which already returns True/Fal=
+se
+> =C2=A0and does not throw an exception in case the file does not exist.
+> - Also the call to gsutil stat is much slower than using the python clien=
+t to call exists() so we should not replace the call to exists() with a cal=
+l to gsutil stat.
+> - I think the intent of calling check_network_access in checkstatus() was=
+ to error-out in case the error is disabled. We can rather change the strin=
+g "gsutil stat" to something else to make the code more readable.
+> - add a try/except block in download() instead of the extra call to gsuti=
+l
+>=20
+> Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
+> ---
+> =C2=A0lib/bb/fetch2/gcp.py | 14 +++++++-------
+> =C2=A01 file changed, 7 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/lib/bb/fetch2/gcp.py b/lib/bb/fetch2/gcp.py
+> index eb3e0c6a6..9ac2f752f 100644
+> --- a/lib/bb/fetch2/gcp.py
+> +++ b/lib/bb/fetch2/gcp.py
+> @@ -19,11 +19,11 @@ Additionally, gsutil must also be installed.
+> =C2=A0
+> =C2=A0import os
+> =C2=A0import bb
+> +from google.api_core.exceptions import NotFound
+> =C2=A0import urllib.parse, urllib.error
+> =C2=A0from bb.fetch2 import FetchMethod
+> =C2=A0from bb.fetch2 import FetchError
+> =C2=A0from bb.fetch2 import logger
+> -from bb.fetch2 import runfetchcmd
+> =C2=A0
+> =C2=A0class GCP(FetchMethod):
+> =C2=A0=C2=A0=C2=A0=C2=A0 """
 
-The changes of 1ab1d36c0af6fc58a974106b61ff4d37da6cb229 added calls to "gsutil stat" to avoid unhandled exceptions, however:
-- in the case of checkstatus() this is redundant with the call to self.gcp_client.bucket(ud.host).blob(path).exists() which already returns True/False
- and does not throw an exception in case the file does not exist.
-- Also the call to gsutil stat is much slower than using the python client to call exists() so we should not replace the call to exists() with a call to gsutil stat.
-- I think the intent of calling check_network_access in checkstatus() was to error-out in case the error is disabled. We can rather change the string "gsutil stat" to something else to make the code more readable.
-- add a try/except block in download() instead of the extra call to gsutil
+I put this into a testing branch and everything broke since the google
+module isn't present in most places. I've moved the import into the
+download method.
 
-Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
----
- lib/bb/fetch2/gcp.py | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Cheers,
 
-diff --git a/lib/bb/fetch2/gcp.py b/lib/bb/fetch2/gcp.py
-index eb3e0c6a6..9ac2f752f 100644
---- a/lib/bb/fetch2/gcp.py
-+++ b/lib/bb/fetch2/gcp.py
-@@ -19,11 +19,11 @@ Additionally, gsutil must also be installed.
- 
- import os
- import bb
-+from google.api_core.exceptions import NotFound
- import urllib.parse, urllib.error
- from bb.fetch2 import FetchMethod
- from bb.fetch2 import FetchError
- from bb.fetch2 import logger
--from bb.fetch2 import runfetchcmd
- 
- class GCP(FetchMethod):
-     """
-@@ -48,7 +48,6 @@ class GCP(FetchMethod):
-             ud.basename = os.path.basename(ud.path)
- 
-         ud.localfile = d.expand(urllib.parse.unquote(ud.basename))
--        ud.basecmd = "gsutil stat"
- 
-     def get_gcp_client(self):
-         from google.cloud import storage
-@@ -63,13 +62,15 @@ class GCP(FetchMethod):
-         if self.gcp_client is None:
-             self.get_gcp_client()
- 
--        bb.fetch2.check_network_access(d, ud.basecmd, f"gs://{ud.host}{ud.path}")
--        runfetchcmd("%s %s" % (ud.basecmd, f"gs://{ud.host}{ud.path}"), d)
-+        bb.fetch2.check_network_access(d, "blob.download_to_filename", f"gs://{ud.host}{ud.path}")
- 
-         # Path sometimes has leading slash, so strip it
-         path = ud.path.lstrip("/")
-         blob = self.gcp_client.bucket(ud.host).blob(path)
--        blob.download_to_filename(ud.localpath)
-+        try:
-+            blob.download_to_filename(ud.localpath)
-+        except NotFound:
-+            raise FetchError("The GCP API threw a NotFound exception")
- 
-         # Additional sanity checks copied from the wget class (although there
-         # are no known issues which mean these are required, treat the GCP API
-@@ -91,8 +92,7 @@ class GCP(FetchMethod):
-         if self.gcp_client is None:
-             self.get_gcp_client()
- 
--        bb.fetch2.check_network_access(d, ud.basecmd, f"gs://{ud.host}{ud.path}")
--        runfetchcmd("%s %s" % (ud.basecmd, f"gs://{ud.host}{ud.path}"), d)
-+        bb.fetch2.check_network_access(d, "gcp_client.bucket(ud.host).blob(path).exists()", f"gs://{ud.host}{ud.path}")
- 
-         # Path sometimes has leading slash, so strip it
-         path = ud.path.lstrip("/")
--- 
-2.43.0
-
+Richard
 
