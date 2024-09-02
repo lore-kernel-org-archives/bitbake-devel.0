@@ -1,118 +1,157 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <christian.lindeberg@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8411CD13CF
-	for <webhook@archiver.kernel.org>; Mon,  2 Sep 2024 11:58:18 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web11.37025.1725278294218576987
- for <bitbake-devel@lists.openembedded.org>;
- Mon, 02 Sep 2024 04:58:14 -0700
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=XVDkKKB5;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-374c180d123so957037f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 02 Sep 2024 04:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1725278293; x=1725883093; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GiU5GNyq+J2hrALZQIe0MXzKWmv1pmoN89xrS4Q4Hzg=;
-        b=XVDkKKB5zYDHuJkaTSr3oH20FtoUSIEHKfBiX8xAbj/rCHBd5BxyrUgQn6IoSig/0+
-         ZeM5TOuqaUMrLGvnec49nqfJBYnkn7cSAYidkMkUmOXEl6R/HTjOTfrmXBQTCcQIRsPn
-         B967GRc11fOQHSXGVQ+81q+shtMijyUjTKQqY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725278293; x=1725883093;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=GiU5GNyq+J2hrALZQIe0MXzKWmv1pmoN89xrS4Q4Hzg=;
-        b=npOd4CH9lbrALgDCd2L0sZs4X1baQkrqy+p9DJfr3yUU4BLe9qrUPiwMwD0RZRetIV
-         fet7pFSJODc2opr9ijXN9MfFkh0Wu/2k/UjwzF4LkjQaH07yhFEHKshsgxdyrTAbhUOA
-         yh7N2NTWp0+bAz+/rXec5+TVS2OiooHEU3woxuUqZQgkAUPItTNOBN9Oc+n8/ORdxjO9
-         C44LkvY5UZ1S4ez73Ej3xUh/y2EhILDNokcefxwwnN8GGmnAYj5PHCiaE4et38Rpk7eI
-         vYXHh2ZfZdLvIAdO/FSouYXqUuxxpuCAYlP8AImKSsK99i1igqK3nSMZR12Xi4IQ6O7X
-         Ptlw==
-X-Forwarded-Encrypted: i=1; AJvYcCVDTg2G6EeORsH9HSjEUBpc6sZDzh8En/roW+lIMRIfBbZsEbZRCarTvZI3hnM0xwCGtwdVk1ftHBDsZP/g@lists.openembedded.org
-X-Gm-Message-State: AOJu0YwLZx3zeKaZsAv++130ouKhdyOlpAl0bVifeo0X6+vPmOhlxaHq
-	HNivvqzKgtIso26R622vFJje7dFKmGZYYljcqFi1fbpRuXopt9cvFZguDlDw7SE=
-X-Google-Smtp-Source: AGHT+IHSxnGjMLN9M8dddSM2d4YbLa0ainvqMJaR33wNDx8Zifig9sDhSy8IiOx2oR7PT7fnj49LPw==
-X-Received: by 2002:adf:e70f:0:b0:374:c35a:7335 with SMTP id ffacd0b85a97d-374c35a73b3mr3373908f8f.18.1725278292487;
-        Mon, 02 Sep 2024 04:58:12 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:ed45:1ec7:2c83:ff6d? ([2001:8b0:aba:5f3c:ed45:1ec7:2c83:ff6d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb01d300csm146573675e9.15.2024.09.02.04.58.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2024 04:58:11 -0700 (PDT)
-Message-ID: <65ec906f864408329f7435f8123d4a254019cf04.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [bitbake][kirkstone][2.0] Appends discarded by
- expandVarref
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: adam.blank.g@gmail.com, bitbake-devel@lists.openembedded.org
-Date: Mon, 02 Sep 2024 12:58:11 +0100
-In-Reply-To: <17365.1725273736587575150@lists.openembedded.org>
-References: 
-	<083be01b5a70c46bedcdfca1c403c87b18299bf1.camel@linuxfoundation.org>
-	 <17365.1725273736587575150@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0446BCA0ED3
+	for <webhook@archiver.kernel.org>; Mon,  2 Sep 2024 12:36:29 +0000 (UTC)
+Subject: Re: [PATCH 1/2] fetch2: Add gomod fetcher
+To: bitbake-devel@lists.openembedded.org
+From: "Christian Lindeberg" <christian.lindeberg@axis.com>
+X-Originating-Location: =?UTF-8?B?THVuZCwgU2vDpW5lIENvdW50eSwgU0U=?= (195.60.68.152)
+X-Originating-Platform: Linux Chrome 127
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
+Date: Mon, 02 Sep 2024 05:36:20 -0700
+References: <d5b067dffb623ef16fc9bfd410297cc0a92de47d.camel@linuxfoundation.org>
+In-Reply-To: <d5b067dffb623ef16fc9bfd410297cc0a92de47d.camel@linuxfoundation.org>
+Message-ID: <7993.1725280580423503052@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="gwCcUzJNABeVDjzSjWwG"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 02 Sep 2024 11:58:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16535
+ <bitbake-devel@lists.openembedded.org>; Mon, 02 Sep 2024 12:36:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16536
 
-T24gTW9uLCAyMDI0LTA5LTAyIGF0IDAzOjQyIC0wNzAwLCBBZGFtIEJsYW5rIHZpYQpsaXN0cy5v
-cGVuZW1iZWRkZWQub3JnIHdyb3RlOgo+ID4gVG8gZml4IGl0IHdlIHJlYWxseSBuZWVkIHRvIGF2
-b2lkIGV4cGFuZGluZyBhbnkgdmFyaWFibGVzIGF0IGFsbAo+ID4gYW5kCj4gPiBqdXN0IGRvIGEg
-c2VhcmNoL3JlcGxhY2Ugb24gdGhlIHZhcmlhYmxlIGNvbnRlbnRzLgo+IEknZCBsaWtlIHRvIHBy
-b3Bvc2Ugc29tZXRoaW5nIGxpa2UgdGhhdDoKPiDCoAo+IC0tLSBhL2xpYi9iYi9kYXRhX3NtYXJ0
-LnB5Cj4gKysrIGIvbGliL2JiL2RhdGFfc21hcnQucHkKPiBAQCAtMTAwNyw5ICsxMDA3LDM0IEBA
-IGNsYXNzIERhdGFTbWFydChNdXRhYmxlTWFwcGluZyk6Cj4gwqAgwqAgwqAgwqAgwqByZWYgPSAn
-JHslc30nICUgdmFyaWFibGUKPiDCoCDCoCDCoCDCoCDCoHZhbHVlID0gc2VsZi5nZXRWYXIodmFy
-aWFibGUsIEZhbHNlKQo+IMKgIMKgIMKgIMKgIMKgZm9yIGtleSBpbiBrZXlzOgo+IC0gwqAgwqAg
-wqAgwqAgwqAgwqByZWZlcnJlcnZhbHVlID0gc2VsZi5nZXRWYXIoa2V5LCBGYWxzZSkKPiAtIMKg
-IMKgIMKgIMKgIMKgIMKgaWYgcmVmZXJyZXJ2YWx1ZSBhbmQgaXNpbnN0YW5jZShyZWZlcnJlcnZh
-bHVlLCBzdHIpIGFuZAo+IHJlZiBpbiByZWZlcnJlcnZhbHVlOgo+IC0gwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqBzZWxmLnNldFZhcihrZXksIHJlZmVycmVydmFsdWUucmVwbGFjZShyZWYsIHZhbHVl
-KSkKPiArIMKgIMKgIMKgIMKgIMKgIMKgY293ID0gRmFsc2UKPiArIMKgIMKgIMKgIMKgIMKgIMKg
-aWYgbm90IGtleSBpbiBzZWxmLmRpY3Q6Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGxvY2Fs
-X3ZhciwgXyA9IHNlbGYuX2ZpbmRWYXIoa2V5KQo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBj
-b3cgPSBUcnVlCj4gKyDCoCDCoCDCoCDCoCDCoCDCoGVsc2U6Cj4gKyDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoGxvY2FsX3ZhciA9IHNlbGYuZGljdFtrZXldCj4gKwo+ICsgwqAgwqAgwqAgwqAgwqAg
-wqBmb3Igc0tleSBpbiBbIl9jb250ZW50IiwgIl9kZWZhdWx0dmFsIiwgIjphcHBlbmQiLAo+ICI6
-cHJlcGVuZCIsICI6cmVtb3ZlIl06Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHZhbCA9IGxv
-Y2FsX3ZhcltzS2V5XSBpZiBzS2V5IGluIGxvY2FsX3ZhciBlbHNlIE5vbmUKPiArCj4gKyDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoGlmIGlzaW5zdGFuY2UodmFsLCBzdHIpIGFuZCByZWYgaW4gdmFs
-Ogo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB2YWwyID0gdmFsLnJlcGxhY2UocmVm
-LCB2YWx1ZSkKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgaWYgY293Ogo+ICsgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBzZWxmLl9tYWtlU2hhZG93Q29weShrZXkp
-Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNvdyA9IEZhbHNlCj4gKyDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHNlbGYuZGljdFtrZXldW3NLZXldID0gdmFsMgo+
-ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBlbGlmIGlzaW5zdGFuY2UodmFsLCBsaXN0KToKPiAr
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgdmFsMiA9IE5vbmUKPiArIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgZm9yIGksIChyLCBvKSBpbiBlbnVtZXJhdGUodmFsKToKPiArIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgaWYgcmVmIGluIHI6Cj4gKyDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGlmIG5vdCB2YWwyOgo+ICsgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB2YWwyID0gbGlzdCh2YWwp
-Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHZhbDJbaV0gPSBb
-ci5yZXBsYWNlKHJlZiwgdmFsdWUpLCBvXQo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqBpZiB2YWwyOgo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpZiBjb3c6
-Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHNlbGYuX21ha2VT
-aGFkb3dDb3B5KGtleSkKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgY293ID0gRmFsc2UKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgc2Vs
-Zi5kaWN0W2tleV1bc0tleV0gPSB2YWwyCj4gwqAKPiBFZmZpY2llbmN5IHdpc2UgaXQgZG9lcyBu
-b3QgZG8gbW9yZSB0aGF0IHRoZSBvcmlnaW5hbCBjb2RlLCBhbmQgaXQKPiBnZXRzIHN0cmFpZ2h0
-IHRvIHRoZSBwb2ludC4KClRoZSBkb3duc2lkZSBvZiB0aGlzIGlzIHRoYXQgZmlyc3RseSwgaXQg
-aXMgdXNpbmcgYSBsb3Qgb2YgaW50ZXJuYWwKa25vd2xlZGdlIG9mIHRoZSBkYXRhIHN0b3JlIHdo
-aWNoIEkgd29ycnkgbWF5IG1ha2UgY2hhbmdlcyBtb3JlIGZyYWdpbGUKaW4gdGhhdCBjb2RlLsKg
-CgpTZWNvbmRseSwgaXQgZG9lcyBicmVhayBzb21lIHVzYWdlcywgZm9yIGV4YW1wbGU6CgpBQkMg
-PSAiJHtAZC5nZXRWYXIoJ0xBWUVSRElSJyl9IgoKd291bGQgbm8gbG9uZ2VyIHdvcmsgYWZ0ZXIg
-dGhhdCBjaGFuZ2UgKGFzIGEgc2ltcGxlIGV4YW1wbGUpLgoKSSdtIHRvcm4gb24gdGhpcyBidXQg
-SSB3b3VsZCBub3RlIHRoYXQgeW91J3JlIHNlbmRpbmcgdGhlIHBhdGNoIGZvcgpraXJrc3RvbmUg
-YW5kIHdlIGRlZmluaXRlbHkgY2FuJ3QgbWFrZSBhIGJyZWFraW5nIGNoYW5nZSBsaWtlIHRoYXQg
-aW4Ka2lya3N0b25lIGF0IHRoaXMgcG9pbnQuCgpDaGVlcnMsCgpSaWNoYXJkCg==
+--gwCcUzJNABeVDjzSjWwG
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Sep 2, 2024 at 12:18 PM, Richard Purdie wrote:
+
+>=20
+> On Mon, 2024-09-02 at 11:13 +0200, Christian Lindeberg via
+> lists.openembedded.org wrote:
+>=20
+>> From: Christian Lindeberg <christian.lindeberg@axis.com>
+>>=20
+>> Add a go module fetcher for downloading module dependencies to the
+>> module cache from a module proxy. The fetcher can be used with the
+>> go-mod class in OE-Core.
+>>=20
+>> A module dependency can be specified with:
+>>=20
+>> SRC_URI +=3D "gomod://golang.org/x/net;version=3Dv0.9.0;sha256sum=3D..."
+>>=20
+>> Signed-off-by: Christian Lindeberg <christian.lindeberg@axis.com>
+>> ---
+>> lib/bb/fetch2/__init__.py |=C2=A0=C2=A0 4 +-
+>> lib/bb/fetch2/gomod.py=C2=A0=C2=A0=C2=A0 | 116 +++++++++++++++++++++++++=
++++++++++++++
+>> lib/bb/tests/fetch.py=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 73 +++++++++++++++=
++++++++++
+>> 3 files changed, 192 insertions(+), 1 deletion(-)
+>> create mode 100644 lib/bb/fetch2/gomod.py
+>=20
+> These changes look interesting and I'd be interested to hear review
+> from other people more used to dealing with go.
+>=20
+> I see the code using GOMODCACHE in unpack(). In general the fetcher
+> tries to work off url parameters and we try not to have environment
+> variables unless they are truly global config. This looks to be a per
+> recipe local setting.
+>=20
+> I guess this is something which any code using go is going to have to
+> have set into the environment anyway so perhaps it is ok but I'm not
+> sure I like the precedent.
+
+I was trying to avoid having to define the location both in fetcher and
+in go-mod.bbclass/recipe. But would using a directory relative rootdir
+in unpack() and adapting go/mod.bbclass/recipe accordingly be preferred?
+
+>=20
+> I also noticed that there are two fetchers in the code, one which
+> subclasses git and one which subclasses wget, the difference between
+> them is a direct=3Dgit parameter in the url. I did wonder if these should
+> just be two url types (gomod:// and gomodvcs://)?
+
+I started with a separate gomodgit:// scheme. Maybe that was clearer
+after all, avoiding the extra parameter?
+
+>=20
+> It may also be helpful to document in the code exactly what changes to
+> the underlying base fetcher are being made. I'm a bit worried about how
+> changes to the git or wget fetcher might break this code, particularly
+> as it isn't going to be heavily used/tested as far as I can tell.
+
+I was hoping the tests would help avoiding that the unpacking breaks.
+Maybe verification of the resulting git or wget parameters would make
+the assumptions more clear?
+
+>=20
+> Cheers,
+>=20
+> Richard
+
+Thanks,
+
+Christian
+
+--gwCcUzJNABeVDjzSjWwG
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div>On Mon, Sep 2, 2024 at 12:18 PM, Richard Purdie wrote:</div>
+<div>
+<blockquote>On Mon, 2024-09-02 at 11:13 +0200, Christian Lindeberg via list=
+s.openembedded.org wrote:<br />
+<blockquote>From: Christian Lindeberg &lt;christian.lindeberg@axis.com&gt;<=
+br /><br />Add a go module fetcher for downloading module dependencies to t=
+he<br />module cache from a module proxy. The fetcher can be used with the<=
+br />go-mod class in OE-Core.<br /><br />A module dependency can be specifi=
+ed with:<br /><br />&nbsp; SRC_URI +=3D "gomod://golang.org/x/net;version=
+=3Dv0.9.0;sha256sum=3D..."<br /><br />Signed-off-by: Christian Lindeberg &l=
+t;christian.lindeberg@axis.com&gt;<br />---<br />&nbsp;lib/bb/fetch2/__init=
+__.py |&nbsp;&nbsp; 4 +-<br />&nbsp;lib/bb/fetch2/gomod.py&nbsp;&nbsp;&nbsp=
+; | 116 ++++++++++++++++++++++++++++++++++++++<br />&nbsp;lib/bb/tests/fetc=
+h.py&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; 73 ++++++++++++++++++++++++<br />&nbsp=
+;3 files changed, 192 insertions(+), 1 deletion(-)<br />&nbsp;create mode 1=
+00644 lib/bb/fetch2/gomod.py</blockquote>
+These changes look interesting and I'd be interested to hear review<br />fr=
+om other people more used to dealing with go.<br /><br />I see the code usi=
+ng GOMODCACHE in unpack(). In general the fetcher<br />tries to work off ur=
+l parameters and we try not to have environment<br />variables unless they =
+are truly global config. This looks to be a per<br />recipe local setting.<=
+br /><br />I guess this is something which any code using go is going to ha=
+ve to<br />have set into the environment anyway so perhaps it is ok but I'm=
+ not<br />sure I like the precedent.</blockquote>
+I was trying to avoid having to define the location both in fetcher and</di=
+v>
+<div>in go-mod.bbclass/recipe. But would using a directory relative rootdir=
+</div>
+<div>in unpack() and adapting go/mod.bbclass/recipe accordingly be preferre=
+d?</div>
+<div><br />
+<blockquote>I also noticed that there are two fetchers in the code, one whi=
+ch<br />subclasses git and one which subclasses wget, the difference betwee=
+n<br />them is a direct=3Dgit parameter in the url. I did wonder if these s=
+hould<br />just be two url types (gomod:// and gomodvcs://)?</blockquote>
+I started with a separate gomodgit:// scheme. Maybe that was clearer</div>
+<div>after all, avoiding the extra parameter?</div>
+<div><br />
+<blockquote>It may also be helpful to document in the code exactly what cha=
+nges to<br />the underlying base fetcher are being made. I'm a bit worried =
+about how<br />changes to the git or wget fetcher might break this code, pa=
+rticularly<br />as it isn't going to be heavily used/tested as far as I can=
+ tell.</blockquote>
+I was hoping the tests would help avoiding that the unpacking breaks.</div>
+<div>Maybe verification of the resulting git or wget parameters would make<=
+/div>
+<div>the assumptions more clear?</div>
+<div><br />
+<blockquote>Cheers,<br /><br />Richard</blockquote>
+Thanks,</div>
+<div>&nbsp;</div>
+<div>Christian</div>
+
+--gwCcUzJNABeVDjzSjWwG--
 
