@@ -1,157 +1,284 @@
-Return-Path: <christian.lindeberg@axis.com>
+Return-Path: <adam.blank.g@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0446BCA0ED3
-	for <webhook@archiver.kernel.org>; Mon,  2 Sep 2024 12:36:29 +0000 (UTC)
-Subject: Re: [PATCH 1/2] fetch2: Add gomod fetcher
-To: bitbake-devel@lists.openembedded.org
-From: "Christian Lindeberg" <christian.lindeberg@axis.com>
-X-Originating-Location: =?UTF-8?B?THVuZCwgU2vDpW5lIENvdW50eSwgU0U=?= (195.60.68.152)
-X-Originating-Platform: Linux Chrome 127
-User-Agent: GROUPS.IO Web Poster
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB841CA0ED3
+	for <webhook@archiver.kernel.org>; Mon,  2 Sep 2024 13:59:10 +0000 (UTC)
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+ by mx.groups.io with SMTP id smtpd.web11.635.1725285541834583617
+ for <bitbake-devel@lists.openembedded.org>;
+ Mon, 02 Sep 2024 06:59:01 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=L7JVeOaD;
+ spf=pass (domain: gmail.com, ip: 209.85.216.42, mailfrom: adam.blank.g@gmail.com)
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2da4ea973bdso169372a91.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 02 Sep 2024 06:59:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725285541; x=1725890341; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YAvbNzK81E6LBWuEd2qlCXOY78bPlf1tybq4l/3Zl6I=;
+        b=L7JVeOaDxyPXpTNdx+KF2f7voFrXjvMhwyHS9OyDzKhj+IOAtdjoROcB0J405wWj61
+         jJo/hHCyr6AN2fCeRSIZFbp/wX+eSrUH9b6+ZajcemwCIyRvoGzUBxj3nrBf8iMhTEt9
+         u5YRpJzMQ1pVOSc8xXI5HYyd4dfIvlTw64eG1OlO1LRSykogLk27Ld/0dJ6GbA7cOovp
+         66ZGt34brT0l1u3dY3j6bbqv/ICxiR+oYPXIMlAXqiAjLUALqrSgHzHRd1xTGUggI2a0
+         osbHXjbcxMigWNSbZyl/A+GNEK3pGx0JNEMo/TEW3UCxsx+rYGVuxBecXkhv6vC+LRLq
+         FlKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725285541; x=1725890341;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YAvbNzK81E6LBWuEd2qlCXOY78bPlf1tybq4l/3Zl6I=;
+        b=RieOO6obnvSdSarw8i4mpJhiE2j7bp0NvRQ4hQU8SGNSUmJIih4VKwBAEqBvm3qT79
+         WD2u/KutuiQvL5meDWCan5cEzItESN19aTJECN4Mwe6cIBsVMf2VwDrZ5BqRC5Aj3t4X
+         ka/F7NAOpB6w0lDMYU9+d9VAJ6cXGpkv0vhSBlI6K/w3EGLtAaq2wb9am/0XFspSFYea
+         QWkkCEeswBLyaF/kpzzTh2Ypms9h+Q4AY6y1Hz0sw/6RCj3mMXer9zFzamstc1kaBDtB
+         qVXcvY1Vi2wddu9vN8JVW0yH1yrG+RjPTD4AMhOqud7wM7XH28s3a9L1nRdVqAH+Q/3P
+         J76g==
+X-Gm-Message-State: AOJu0YzNNLEoqFkXSMeOHFy9BNneO4MJwPjnOCgGPgtGh7GCbC3LcWmb
+	80xvnGRW8FoITDsynLtRkTGaHW8/XZp0wYpBqnwg0bZUA9NdiHufPhSF3ut+IwWcsUI7CLaJ4Cd
+	RkMVYkstBggB5qk91bQHuGbefJRa/PKm4bIh7GQ==
+X-Google-Smtp-Source: AGHT+IEBrYkHemB6SQNz/AFBbL9hxd6lRMBK1rkluE3LiHPNOmrpJACgz3N20T1/teVKDbZ7XAUCg3qcQ5LlB6PZRyc=
+X-Received: by 2002:a17:90a:ea90:b0:2d8:7970:726 with SMTP id
+ 98e67ed59e1d1-2d879700fcbmr9529401a91.12.1725285541088; Mon, 02 Sep 2024
+ 06:59:01 -0700 (PDT)
 MIME-Version: 1.0
-Date: Mon, 02 Sep 2024 05:36:20 -0700
-References: <d5b067dffb623ef16fc9bfd410297cc0a92de47d.camel@linuxfoundation.org>
-In-Reply-To: <d5b067dffb623ef16fc9bfd410297cc0a92de47d.camel@linuxfoundation.org>
-Message-ID: <7993.1725280580423503052@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="gwCcUzJNABeVDjzSjWwG"
+References: <083be01b5a70c46bedcdfca1c403c87b18299bf1.camel@linuxfoundation.org>
+ <17365.1725273736587575150@lists.openembedded.org> <65ec906f864408329f7435f8123d4a254019cf04.camel@linuxfoundation.org>
+In-Reply-To: <65ec906f864408329f7435f8123d4a254019cf04.camel@linuxfoundation.org>
+From: Adam Blank <adam.blank.g@gmail.com>
+Date: Mon, 2 Sep 2024 15:58:49 +0200
+Message-ID: <CAFAffzzbpNY+fKdHQxWgjMdKCBe3v89nojx7sKtLsKmfkVLdyg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [bitbake][kirkstone][2.0] Appends discarded by expandVarref
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000d01c9e0621235700"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 02 Sep 2024 12:36:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16536
+ <bitbake-devel@lists.openembedded.org>; Mon, 02 Sep 2024 13:59:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16537
 
---gwCcUzJNABeVDjzSjWwG
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+--000000000000d01c9e0621235700
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Sep 2, 2024 at 12:18 PM, Richard Purdie wrote:
+Allright, I get the idea and share the sense of the associated risk.
+For the sake of formality though, I don't think that
 
->=20
-> On Mon, 2024-09-02 at 11:13 +0200, Christian Lindeberg via
+ABC = "${@d.getVar('LAYERDIR')}"
+
+has any point of contact with my proposal :-)
+Both before and after the change, there's this line:
+
+ref = '${%s}' % variable
+
+which by the way renders this d.getVar() expression unusable for LAYERDIR
+(always yields None).
+
+Thanks for the discussion!
+Adam
+
+On Mon, 2 Sept 2024 at 13:58, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> On Mon, 2024-09-02 at 03:42 -0700, Adam Blank via
 > lists.openembedded.org wrote:
->=20
->> From: Christian Lindeberg <christian.lindeberg@axis.com>
->>=20
->> Add a go module fetcher for downloading module dependencies to the
->> module cache from a module proxy. The fetcher can be used with the
->> go-mod class in OE-Core.
->>=20
->> A module dependency can be specified with:
->>=20
->> SRC_URI +=3D "gomod://golang.org/x/net;version=3Dv0.9.0;sha256sum=3D..."
->>=20
->> Signed-off-by: Christian Lindeberg <christian.lindeberg@axis.com>
->> ---
->> lib/bb/fetch2/__init__.py |=C2=A0=C2=A0 4 +-
->> lib/bb/fetch2/gomod.py=C2=A0=C2=A0=C2=A0 | 116 +++++++++++++++++++++++++=
-+++++++++++++
->> lib/bb/tests/fetch.py=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 73 +++++++++++++++=
-+++++++++
->> 3 files changed, 192 insertions(+), 1 deletion(-)
->> create mode 100644 lib/bb/fetch2/gomod.py
->=20
-> These changes look interesting and I'd be interested to hear review
-> from other people more used to dealing with go.
->=20
-> I see the code using GOMODCACHE in unpack(). In general the fetcher
-> tries to work off url parameters and we try not to have environment
-> variables unless they are truly global config. This looks to be a per
-> recipe local setting.
->=20
-> I guess this is something which any code using go is going to have to
-> have set into the environment anyway so perhaps it is ok but I'm not
-> sure I like the precedent.
-
-I was trying to avoid having to define the location both in fetcher and
-in go-mod.bbclass/recipe. But would using a directory relative rootdir
-in unpack() and adapting go/mod.bbclass/recipe accordingly be preferred?
-
->=20
-> I also noticed that there are two fetchers in the code, one which
-> subclasses git and one which subclasses wget, the difference between
-> them is a direct=3Dgit parameter in the url. I did wonder if these should
-> just be two url types (gomod:// and gomodvcs://)?
-
-I started with a separate gomodgit:// scheme. Maybe that was clearer
-after all, avoiding the extra parameter?
-
->=20
-> It may also be helpful to document in the code exactly what changes to
-> the underlying base fetcher are being made. I'm a bit worried about how
-> changes to the git or wget fetcher might break this code, particularly
-> as it isn't going to be heavily used/tested as far as I can tell.
-
-I was hoping the tests would help avoiding that the unpacking breaks.
-Maybe verification of the resulting git or wget parameters would make
-the assumptions more clear?
-
->=20
+> > > To fix it we really need to avoid expanding any variables at all
+> > > and
+> > > just do a search/replace on the variable contents.
+> > I'd like to propose something like that:
+> >
+> > --- a/lib/bb/data_smart.py
+> > +++ b/lib/bb/data_smart.py
+> > @@ -1007,9 +1007,34 @@ class DataSmart(MutableMapping):
+> >          ref = '${%s}' % variable
+> >          value = self.getVar(variable, False)
+> >          for key in keys:
+> > -            referrervalue = self.getVar(key, False)
+> > -            if referrervalue and isinstance(referrervalue, str) and
+> > ref in referrervalue:
+> > -                self.setVar(key, referrervalue.replace(ref, value))
+> > +            cow = False
+> > +            if not key in self.dict:
+> > +                local_var, _ = self._findVar(key)
+> > +                cow = True
+> > +            else:
+> > +                local_var = self.dict[key]
+> > +
+> > +            for sKey in ["_content", "_defaultval", ":append",
+> > ":prepend", ":remove"]:
+> > +                val = local_var[sKey] if sKey in local_var else None
+> > +
+> > +                if isinstance(val, str) and ref in val:
+> > +                    val2 = val.replace(ref, value)
+> > +                    if cow:
+> > +                        self._makeShadowCopy(key)
+> > +                        cow = False
+> > +                    self.dict[key][sKey] = val2
+> > +                elif isinstance(val, list):
+> > +                    val2 = None
+> > +                    for i, (r, o) in enumerate(val):
+> > +                        if ref in r:
+> > +                            if not val2:
+> > +                                val2 = list(val)
+> > +                            val2[i] = [r.replace(ref, value), o]
+> > +                    if val2:
+> > +                        if cow:
+> > +                            self._makeShadowCopy(key)
+> > +                            cow = False
+> > +                        self.dict[key][sKey] = val2
+> >
+> > Efficiency wise it does not do more that the original code, and it
+> > gets straight to the point.
+>
+> The downside of this is that firstly, it is using a lot of internal
+> knowledge of the data store which I worry may make changes more fragile
+> in that code.
+>
+> Secondly, it does break some usages, for example:
+>
+> ABC = "${@d.getVar('LAYERDIR')}"
+>
+> would no longer work after that change (as a simple example).
+>
+> I'm torn on this but I would note that you're sending the patch for
+> kirkstone and we definitely can't make a breaking change like that in
+> kirkstone at this point.
+>
 > Cheers,
->=20
+>
 > Richard
+>
 
-Thanks,
-
-Christian
-
---gwCcUzJNABeVDjzSjWwG
-Content-Type: text/html; charset="utf-8"
+--000000000000d01c9e0621235700
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div>On Mon, Sep 2, 2024 at 12:18 PM, Richard Purdie wrote:</div>
-<div>
-<blockquote>On Mon, 2024-09-02 at 11:13 +0200, Christian Lindeberg via list=
-s.openembedded.org wrote:<br />
-<blockquote>From: Christian Lindeberg &lt;christian.lindeberg@axis.com&gt;<=
-br /><br />Add a go module fetcher for downloading module dependencies to t=
-he<br />module cache from a module proxy. The fetcher can be used with the<=
-br />go-mod class in OE-Core.<br /><br />A module dependency can be specifi=
-ed with:<br /><br />&nbsp; SRC_URI +=3D "gomod://golang.org/x/net;version=
-=3Dv0.9.0;sha256sum=3D..."<br /><br />Signed-off-by: Christian Lindeberg &l=
-t;christian.lindeberg@axis.com&gt;<br />---<br />&nbsp;lib/bb/fetch2/__init=
-__.py |&nbsp;&nbsp; 4 +-<br />&nbsp;lib/bb/fetch2/gomod.py&nbsp;&nbsp;&nbsp=
-; | 116 ++++++++++++++++++++++++++++++++++++++<br />&nbsp;lib/bb/tests/fetc=
-h.py&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; 73 ++++++++++++++++++++++++<br />&nbsp=
-;3 files changed, 192 insertions(+), 1 deletion(-)<br />&nbsp;create mode 1=
-00644 lib/bb/fetch2/gomod.py</blockquote>
-These changes look interesting and I'd be interested to hear review<br />fr=
-om other people more used to dealing with go.<br /><br />I see the code usi=
-ng GOMODCACHE in unpack(). In general the fetcher<br />tries to work off ur=
-l parameters and we try not to have environment<br />variables unless they =
-are truly global config. This looks to be a per<br />recipe local setting.<=
-br /><br />I guess this is something which any code using go is going to ha=
-ve to<br />have set into the environment anyway so perhaps it is ok but I'm=
- not<br />sure I like the precedent.</blockquote>
-I was trying to avoid having to define the location both in fetcher and</di=
-v>
-<div>in go-mod.bbclass/recipe. But would using a directory relative rootdir=
-</div>
-<div>in unpack() and adapting go/mod.bbclass/recipe accordingly be preferre=
-d?</div>
-<div><br />
-<blockquote>I also noticed that there are two fetchers in the code, one whi=
-ch<br />subclasses git and one which subclasses wget, the difference betwee=
-n<br />them is a direct=3Dgit parameter in the url. I did wonder if these s=
-hould<br />just be two url types (gomod:// and gomodvcs://)?</blockquote>
-I started with a separate gomodgit:// scheme. Maybe that was clearer</div>
-<div>after all, avoiding the extra parameter?</div>
-<div><br />
-<blockquote>It may also be helpful to document in the code exactly what cha=
-nges to<br />the underlying base fetcher are being made. I'm a bit worried =
-about how<br />changes to the git or wget fetcher might break this code, pa=
-rticularly<br />as it isn't going to be heavily used/tested as far as I can=
- tell.</blockquote>
-I was hoping the tests would help avoiding that the unpacking breaks.</div>
-<div>Maybe verification of the resulting git or wget parameters would make<=
-/div>
-<div>the assumptions more clear?</div>
-<div><br />
-<blockquote>Cheers,<br /><br />Richard</blockquote>
-Thanks,</div>
-<div>&nbsp;</div>
-<div>Christian</div>
+<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-size:small">All=
+right, I get the idea and share the sense of the associated risk.</div><div=
+ class=3D"gmail_default" style=3D"font-size:small">For the sake of formalit=
+y though, I don&#39;t think that</div><div class=3D"gmail_default" style=3D=
+"font-size:small"><br></div><div class=3D"gmail_default" style=3D"font-size=
+:small">ABC =3D &quot;${@d.getVar(&#39;LAYERDIR&#39;)}&quot;<br></div><div =
+class=3D"gmail_default" style=3D"font-size:small"><br></div><div class=3D"g=
+mail_default" style=3D"font-size:small">has any point of contact with my pr=
+oposal :-)</div><div class=3D"gmail_default" style=3D"font-size:small">Both=
+ before and after the change, there&#39;s this line:</div><div class=3D"gma=
+il_default" style=3D"font-size:small"><br></div><div class=3D"gmail_default=
+" style=3D"font-size:small">ref =3D &#39;${%s}&#39; % variable<br></div><di=
+v class=3D"gmail_default" style=3D"font-size:small"><br></div><div class=3D=
+"gmail_default" style=3D"font-size:small">which by the way renders this d.g=
+etVar() expression unusable for LAYERDIR (always yields None).</div><div cl=
+ass=3D"gmail_default" style=3D"font-size:small"><br></div><div class=3D"gma=
+il_default" style=3D"font-size:small">Thanks for the discussion!</div><div =
+class=3D"gmail_default" style=3D"font-size:small">Adam</div></div><br><div =
+class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Mon, 2 Sept =
+2024 at 13:58, Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
+ndation.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br></div><bl=
+ockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-lef=
+t:1px solid rgb(204,204,204);padding-left:1ex">On Mon, 2024-09-02 at 03:42 =
+-0700, Adam Blank via<br>
+<a href=3D"http://lists.openembedded.org" rel=3D"noreferrer" target=3D"_bla=
+nk">lists.openembedded.org</a> wrote:<br>
+&gt; &gt; To fix it we really need to avoid expanding any variables at all<=
+br>
+&gt; &gt; and<br>
+&gt; &gt; just do a search/replace on the variable contents.<br>
+&gt; I&#39;d like to propose something like that:<br>
+&gt; =C2=A0<br>
+&gt; --- a/lib/bb/data_smart.py<br>
+&gt; +++ b/lib/bb/data_smart.py<br>
+&gt; @@ -1007,9 +1007,34 @@ class DataSmart(MutableMapping):<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ref =3D &#39;${%s}&#39; % variable<b=
+r>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0value =3D self.getVar(variable, Fals=
+e)<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for key in keys:<br>
+&gt; - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0referrervalue =3D self.getV=
+ar(key, False)<br>
+&gt; - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if referrervalue and isinst=
+ance(referrervalue, str) and<br>
+&gt; ref in referrervalue:<br>
+&gt; - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.setVar(k=
+ey, referrervalue.replace(ref, value))<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cow =3D False<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if not key in self.dict:<br=
+>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0local_var, _ =
+=3D self._findVar(key)<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cow =3D True<=
+br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else:<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0local_var =3D=
+ self.dict[key]<br>
+&gt; +<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for sKey in [&quot;_content=
+&quot;, &quot;_defaultval&quot;, &quot;:append&quot;,<br>
+&gt; &quot;:prepend&quot;, &quot;:remove&quot;]:<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0val =3D local=
+_var[sKey] if sKey in local_var else None<br>
+&gt; +<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if isinstance=
+(val, str) and ref in val:<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0val2 =3D val.replace(ref, value)<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0if cow:<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0self._makeShadowCopy(key)<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0cow =3D False<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0self.dict[key][sKey] =3D val2<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0elif isinstan=
+ce(val, list):<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0val2 =3D None<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0for i, (r, o) in enumerate(val):<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0if ref in r:<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if not val2:<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0val2 =3D list(val)<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0val2[i] =3D [r.replace(ref, value), o]<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0if val2:<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0if cow:<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self._makeShadowCopy(key)<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cow =3D False<br>
+&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0self.dict[key][sKey] =3D val2<br>
+&gt; =C2=A0<br>
+&gt; Efficiency wise it does not do more that the original code, and it<br>
+&gt; gets straight to the point.<br>
+<br>
+The downside of this is that firstly, it is using a lot of internal<br>
+knowledge of the data store which I worry may make changes more fragile<br>
+in that code.=C2=A0<br>
+<br>
+Secondly, it does break some usages, for example:<br>
+<br>
+ABC =3D &quot;${@d.getVar(&#39;LAYERDIR&#39;)}&quot;<br>
+<br>
+would no longer work after that change (as a simple example).<br>
+<br>
+I&#39;m torn on this but I would note that you&#39;re sending the patch for=
+<br>
+kirkstone and we definitely can&#39;t make a breaking change like that in<b=
+r>
+kirkstone at this point.<br>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+</blockquote></div>
 
---gwCcUzJNABeVDjzSjWwG--
+--000000000000d01c9e0621235700--
 
