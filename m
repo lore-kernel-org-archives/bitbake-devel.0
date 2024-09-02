@@ -1,241 +1,118 @@
-Return-Path: <adam.blank.g@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7127ECA0ED3
-	for <webhook@archiver.kernel.org>; Mon,  2 Sep 2024 10:42:18 +0000 (UTC)
-Subject: Re: [bitbake][kirkstone][2.0] Appends discarded by expandVarref
-To: bitbake-devel@lists.openembedded.org
-From: "Adam Blank" <adam.blank.g@gmail.com>
-X-Originating-Location: (131.228.32.166)
-X-Originating-Platform: Windows Chrome 127
-User-Agent: GROUPS.IO Web Poster
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8411CD13CF
+	for <webhook@archiver.kernel.org>; Mon,  2 Sep 2024 11:58:18 +0000 (UTC)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web11.37025.1725278294218576987
+ for <bitbake-devel@lists.openembedded.org>;
+ Mon, 02 Sep 2024 04:58:14 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=XVDkKKB5;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-374c180d123so957037f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 02 Sep 2024 04:58:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1725278293; x=1725883093; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GiU5GNyq+J2hrALZQIe0MXzKWmv1pmoN89xrS4Q4Hzg=;
+        b=XVDkKKB5zYDHuJkaTSr3oH20FtoUSIEHKfBiX8xAbj/rCHBd5BxyrUgQn6IoSig/0+
+         ZeM5TOuqaUMrLGvnec49nqfJBYnkn7cSAYidkMkUmOXEl6R/HTjOTfrmXBQTCcQIRsPn
+         B967GRc11fOQHSXGVQ+81q+shtMijyUjTKQqY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725278293; x=1725883093;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=GiU5GNyq+J2hrALZQIe0MXzKWmv1pmoN89xrS4Q4Hzg=;
+        b=npOd4CH9lbrALgDCd2L0sZs4X1baQkrqy+p9DJfr3yUU4BLe9qrUPiwMwD0RZRetIV
+         fet7pFSJODc2opr9ijXN9MfFkh0Wu/2k/UjwzF4LkjQaH07yhFEHKshsgxdyrTAbhUOA
+         yh7N2NTWp0+bAz+/rXec5+TVS2OiooHEU3woxuUqZQgkAUPItTNOBN9Oc+n8/ORdxjO9
+         C44LkvY5UZ1S4ez73Ej3xUh/y2EhILDNokcefxwwnN8GGmnAYj5PHCiaE4et38Rpk7eI
+         vYXHh2ZfZdLvIAdO/FSouYXqUuxxpuCAYlP8AImKSsK99i1igqK3nSMZR12Xi4IQ6O7X
+         Ptlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDTg2G6EeORsH9HSjEUBpc6sZDzh8En/roW+lIMRIfBbZsEbZRCarTvZI3hnM0xwCGtwdVk1ftHBDsZP/g@lists.openembedded.org
+X-Gm-Message-State: AOJu0YwLZx3zeKaZsAv++130ouKhdyOlpAl0bVifeo0X6+vPmOhlxaHq
+	HNivvqzKgtIso26R622vFJje7dFKmGZYYljcqFi1fbpRuXopt9cvFZguDlDw7SE=
+X-Google-Smtp-Source: AGHT+IHSxnGjMLN9M8dddSM2d4YbLa0ainvqMJaR33wNDx8Zifig9sDhSy8IiOx2oR7PT7fnj49LPw==
+X-Received: by 2002:adf:e70f:0:b0:374:c35a:7335 with SMTP id ffacd0b85a97d-374c35a73b3mr3373908f8f.18.1725278292487;
+        Mon, 02 Sep 2024 04:58:12 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:ed45:1ec7:2c83:ff6d? ([2001:8b0:aba:5f3c:ed45:1ec7:2c83:ff6d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb01d300csm146573675e9.15.2024.09.02.04.58.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2024 04:58:11 -0700 (PDT)
+Message-ID: <65ec906f864408329f7435f8123d4a254019cf04.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [bitbake][kirkstone][2.0] Appends discarded by
+ expandVarref
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: adam.blank.g@gmail.com, bitbake-devel@lists.openembedded.org
+Date: Mon, 02 Sep 2024 12:58:11 +0100
+In-Reply-To: <17365.1725273736587575150@lists.openembedded.org>
+References: 
+	<083be01b5a70c46bedcdfca1c403c87b18299bf1.camel@linuxfoundation.org>
+	 <17365.1725273736587575150@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
-Date: Mon, 02 Sep 2024 03:42:16 -0700
-References: <083be01b5a70c46bedcdfca1c403c87b18299bf1.camel@linuxfoundation.org>
-In-Reply-To: <083be01b5a70c46bedcdfca1c403c87b18299bf1.camel@linuxfoundation.org>
-Message-ID: <17365.1725273736587575150@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="u1U5bX6t0JymBrb25Lah"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 02 Sep 2024 10:42:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16534
+ <bitbake-devel@lists.openembedded.org>; Mon, 02 Sep 2024 11:58:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16535
 
---u1U5bX6t0JymBrb25Lah
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+T24gTW9uLCAyMDI0LTA5LTAyIGF0IDAzOjQyIC0wNzAwLCBBZGFtIEJsYW5rIHZpYQpsaXN0cy5v
+cGVuZW1iZWRkZWQub3JnIHdyb3RlOgo+ID4gVG8gZml4IGl0IHdlIHJlYWxseSBuZWVkIHRvIGF2
+b2lkIGV4cGFuZGluZyBhbnkgdmFyaWFibGVzIGF0IGFsbAo+ID4gYW5kCj4gPiBqdXN0IGRvIGEg
+c2VhcmNoL3JlcGxhY2Ugb24gdGhlIHZhcmlhYmxlIGNvbnRlbnRzLgo+IEknZCBsaWtlIHRvIHBy
+b3Bvc2Ugc29tZXRoaW5nIGxpa2UgdGhhdDoKPiDCoAo+IC0tLSBhL2xpYi9iYi9kYXRhX3NtYXJ0
+LnB5Cj4gKysrIGIvbGliL2JiL2RhdGFfc21hcnQucHkKPiBAQCAtMTAwNyw5ICsxMDA3LDM0IEBA
+IGNsYXNzIERhdGFTbWFydChNdXRhYmxlTWFwcGluZyk6Cj4gwqAgwqAgwqAgwqAgwqByZWYgPSAn
+JHslc30nICUgdmFyaWFibGUKPiDCoCDCoCDCoCDCoCDCoHZhbHVlID0gc2VsZi5nZXRWYXIodmFy
+aWFibGUsIEZhbHNlKQo+IMKgIMKgIMKgIMKgIMKgZm9yIGtleSBpbiBrZXlzOgo+IC0gwqAgwqAg
+wqAgwqAgwqAgwqByZWZlcnJlcnZhbHVlID0gc2VsZi5nZXRWYXIoa2V5LCBGYWxzZSkKPiAtIMKg
+IMKgIMKgIMKgIMKgIMKgaWYgcmVmZXJyZXJ2YWx1ZSBhbmQgaXNpbnN0YW5jZShyZWZlcnJlcnZh
+bHVlLCBzdHIpIGFuZAo+IHJlZiBpbiByZWZlcnJlcnZhbHVlOgo+IC0gwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqBzZWxmLnNldFZhcihrZXksIHJlZmVycmVydmFsdWUucmVwbGFjZShyZWYsIHZhbHVl
+KSkKPiArIMKgIMKgIMKgIMKgIMKgIMKgY293ID0gRmFsc2UKPiArIMKgIMKgIMKgIMKgIMKgIMKg
+aWYgbm90IGtleSBpbiBzZWxmLmRpY3Q6Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGxvY2Fs
+X3ZhciwgXyA9IHNlbGYuX2ZpbmRWYXIoa2V5KQo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBj
+b3cgPSBUcnVlCj4gKyDCoCDCoCDCoCDCoCDCoCDCoGVsc2U6Cj4gKyDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoGxvY2FsX3ZhciA9IHNlbGYuZGljdFtrZXldCj4gKwo+ICsgwqAgwqAgwqAgwqAgwqAg
+wqBmb3Igc0tleSBpbiBbIl9jb250ZW50IiwgIl9kZWZhdWx0dmFsIiwgIjphcHBlbmQiLAo+ICI6
+cHJlcGVuZCIsICI6cmVtb3ZlIl06Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHZhbCA9IGxv
+Y2FsX3ZhcltzS2V5XSBpZiBzS2V5IGluIGxvY2FsX3ZhciBlbHNlIE5vbmUKPiArCj4gKyDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoGlmIGlzaW5zdGFuY2UodmFsLCBzdHIpIGFuZCByZWYgaW4gdmFs
+Ogo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB2YWwyID0gdmFsLnJlcGxhY2UocmVm
+LCB2YWx1ZSkKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgaWYgY293Ogo+ICsgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBzZWxmLl9tYWtlU2hhZG93Q29weShrZXkp
+Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNvdyA9IEZhbHNlCj4gKyDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHNlbGYuZGljdFtrZXldW3NLZXldID0gdmFsMgo+
+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBlbGlmIGlzaW5zdGFuY2UodmFsLCBsaXN0KToKPiAr
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgdmFsMiA9IE5vbmUKPiArIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgZm9yIGksIChyLCBvKSBpbiBlbnVtZXJhdGUodmFsKToKPiArIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgaWYgcmVmIGluIHI6Cj4gKyDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGlmIG5vdCB2YWwyOgo+ICsgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB2YWwyID0gbGlzdCh2YWwp
+Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHZhbDJbaV0gPSBb
+ci5yZXBsYWNlKHJlZiwgdmFsdWUpLCBvXQo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqBpZiB2YWwyOgo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpZiBjb3c6
+Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHNlbGYuX21ha2VT
+aGFkb3dDb3B5KGtleSkKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgY293ID0gRmFsc2UKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgc2Vs
+Zi5kaWN0W2tleV1bc0tleV0gPSB2YWwyCj4gwqAKPiBFZmZpY2llbmN5IHdpc2UgaXQgZG9lcyBu
+b3QgZG8gbW9yZSB0aGF0IHRoZSBvcmlnaW5hbCBjb2RlLCBhbmQgaXQKPiBnZXRzIHN0cmFpZ2h0
+IHRvIHRoZSBwb2ludC4KClRoZSBkb3duc2lkZSBvZiB0aGlzIGlzIHRoYXQgZmlyc3RseSwgaXQg
+aXMgdXNpbmcgYSBsb3Qgb2YgaW50ZXJuYWwKa25vd2xlZGdlIG9mIHRoZSBkYXRhIHN0b3JlIHdo
+aWNoIEkgd29ycnkgbWF5IG1ha2UgY2hhbmdlcyBtb3JlIGZyYWdpbGUKaW4gdGhhdCBjb2RlLsKg
+CgpTZWNvbmRseSwgaXQgZG9lcyBicmVhayBzb21lIHVzYWdlcywgZm9yIGV4YW1wbGU6CgpBQkMg
+PSAiJHtAZC5nZXRWYXIoJ0xBWUVSRElSJyl9IgoKd291bGQgbm8gbG9uZ2VyIHdvcmsgYWZ0ZXIg
+dGhhdCBjaGFuZ2UgKGFzIGEgc2ltcGxlIGV4YW1wbGUpLgoKSSdtIHRvcm4gb24gdGhpcyBidXQg
+SSB3b3VsZCBub3RlIHRoYXQgeW91J3JlIHNlbmRpbmcgdGhlIHBhdGNoIGZvcgpraXJrc3RvbmUg
+YW5kIHdlIGRlZmluaXRlbHkgY2FuJ3QgbWFrZSBhIGJyZWFraW5nIGNoYW5nZSBsaWtlIHRoYXQg
+aW4Ka2lya3N0b25lIGF0IHRoaXMgcG9pbnQuCgpDaGVlcnMsCgpSaWNoYXJkCg==
 
->=20
-> To fix it we really need to avoid expanding any variables at all and
-> just do a search/replace on the variable contents.
->=20
-
-I'd like to propose something like that:
-
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -1007,9 +1007,34 @@ class DataSmart(MutableMapping):
-ref =3D '${%s}' % variable
-value =3D self.getVar(variable, False)
-for key in keys:
-- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0referrervalue =3D self.getVar(ke=
-y, False)
-- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if referrervalue and isinstance(=
-referrervalue, str) and ref in referrervalue:
-- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.setVar(key, r=
-eferrervalue.replace(ref, value))
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cow =3D False
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if not key in self.dict:
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0local_var, _ =3D s=
-elf._findVar(key)
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cow =3D True
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else:
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0local_var =3D self=
-.dict[key]
-+
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for sKey in ["_content", "_defau=
-ltval", ":append", ":prepend", ":remove"]:
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0val =3D local_var[=
-sKey] if sKey in local_var else None
-+
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if isinstance(val,=
- str) and ref in val:
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0val2=
- =3D val.replace(ref, value)
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if c=
-ow:
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0self._makeShadowCopy(key)
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0cow =3D False
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self=
-.dict[key][sKey] =3D val2
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0elif isinstance(va=
-l, list):
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0val2=
- =3D None
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for =
-i, (r, o) in enumerate(val):
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0if ref in r:
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0if not val2:
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0val2 =3D list(val)
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0val2[i] =3D [r.replace(ref, value), o]
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if v=
-al2:
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0if cow:
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0self._makeShadowCopy(key)
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0cow =3D False
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0self.dict[key][sKey] =3D val2
-
-Efficiency wise it does not do more that the original code, and it gets str=
-aight to the point.
-
-Thanks,
-Adam
-
---u1U5bX6t0JymBrb25Lah
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<blockquote>
-<div><span style=3D"color: #333333; font-family: system-ui, 'Segoe UI', Rob=
-oto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, '=
-Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'=
-; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font=
--variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2=
-; text-align: start; text-indent: 0px; text-transform: none; widows: 2; wor=
-d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; back=
-ground-color: #ffffff; text-decoration-thickness: initial; text-decoration-=
-style: initial; text-decoration-color: initial; display: inline !important;=
- float: none;">To fix it we really need to avoid expanding any variables at=
- all and</span><br style=3D"box-sizing: border-box; overflow-wrap: break-wo=
-rd !important; color: #333333; font-family: system-ui, 'Segoe UI', Roboto, =
-'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, 'Apple=
- Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; fon=
-t-size: 16px; font-style: normal; font-variant-ligatures: normal; font-vari=
-ant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; tex=
-t-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spa=
-cing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; backgroun=
-d-color: #ffffff; text-decoration-thickness: initial; text-decoration-style=
-: initial; text-decoration-color: initial;" /><span style=3D"color: #333333=
-; font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans'=
-, 'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoj=
-i', 'Segoe UI Symbol', 'Noto Color Emoji'; font-size: 16px; font-style: nor=
-mal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight=
-: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: =
-0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-strok=
-e-width: 0px; white-space: pre-wrap; background-color: #ffffff; text-decora=
-tion-thickness: initial; text-decoration-style: initial; text-decoration-co=
-lor: initial; display: inline !important; float: none;">just do a search/re=
-place on the variable contents.</span></div>
-</blockquote>
-<div><span style=3D"color: #333333; font-family: system-ui, 'Segoe UI', Rob=
-oto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, '=
-Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'=
-; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font=
--variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2=
-; text-align: start; text-indent: 0px; text-transform: none; widows: 2; wor=
-d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; back=
-ground-color: #ffffff; text-decoration-thickness: initial; text-decoration-=
-style: initial; text-decoration-color: initial; display: inline !important;=
- float: none;">I'd like to propose something like that:</span></div>
-<div>&nbsp;</div>
-<div><span style=3D"color: #333333; font-family: system-ui, 'Segoe UI', Rob=
-oto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, '=
-Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'=
-; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font=
--variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2=
-; text-align: start; text-indent: 0px; text-transform: none; widows: 2; wor=
-d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; back=
-ground-color: #ffffff; text-decoration-thickness: initial; text-decoration-=
-style: initial; text-decoration-color: initial; display: inline !important;=
- float: none;">--- a/lib/bb/data_smart.py<br />+++ b/lib/bb/data_smart.py<b=
-r />@@ -1007,9 +1007,34 @@ class DataSmart(MutableMapping):<br />&nbsp; &nb=
-sp; &nbsp; &nbsp; &nbsp;ref =3D '${%s}' % variable<br />&nbsp; &nbsp; &nbsp=
-; &nbsp; &nbsp;value =3D self.getVar(variable, False)<br />&nbsp; &nbsp; &n=
-bsp; &nbsp; &nbsp;for key in keys:<br />- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
-; &nbsp;referrervalue =3D self.getVar(key, False)<br />- &nbsp; &nbsp; &nbs=
-p; &nbsp; &nbsp; &nbsp;if referrervalue and isinstance(referrervalue, str) =
-and ref in referrervalue:<br />- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
-&nbsp; &nbsp;self.setVar(key, referrervalue.replace(ref, value))<br />+ &nb=
-sp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;cow =3D False<br />+ &nbsp; &nbsp; &n=
-bsp; &nbsp; &nbsp; &nbsp;if not key in self.dict:<br />+ &nbsp; &nbsp; &nbs=
-p; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;local_var, _ =3D self._findVar(key)<br=
- />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;cow =3D True<br=
- />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;else:<br />+ &nbsp; &nbsp; &n=
-bsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;local_var =3D self.dict[key]<br />+<=
-br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;for sKey in ["_content", "_=
-defaultval", ":append", ":prepend", ":remove"]:<br />+ &nbsp; &nbsp; &nbsp;=
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;val =3D local_var[sKey] if sKey in local=
-_var else None<br />+<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbs=
-p; &nbsp;if isinstance(val, str) and ref in val:<br />+ &nbsp; &nbsp; &nbsp=
-; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;val2 =3D val.replace(ref,=
- value)<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbs=
-p; &nbsp;if cow:<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &n=
-bsp; &nbsp; &nbsp; &nbsp; &nbsp;self._makeShadowCopy(key)<br />+ &nbsp; &nb=
-sp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;co=
-w =3D False<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
-&nbsp; &nbsp;self.dict[key][sKey] =3D val2<br />+ &nbsp; &nbsp; &nbsp; &nbs=
-p; &nbsp; &nbsp; &nbsp; &nbsp;elif isinstance(val, list):<br />+ &nbsp; &nb=
-sp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;val2 =3D None<br=
- />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;f=
-or i, (r, o) in enumerate(val):<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &=
-nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if ref in r:<br />+ &nbsp; &=
-nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
- &nbsp; &nbsp;if not val2:<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;val2 =
-=3D list(val)<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
-; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;val2[i] =3D [r.replace(ref, valu=
-e), o]<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
-; &nbsp;if val2:<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &n=
-bsp; &nbsp; &nbsp; &nbsp; &nbsp;if cow:<br />+ &nbsp; &nbsp; &nbsp; &nbsp; =
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self._=
-makeShadowCopy(key)<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;cow =3D False<br />+ &nbsp=
-; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nb=
-sp;self.dict[key][sKey] =3D val2</span></div>
-<div>&nbsp;</div>
-<div><span style=3D"color: #333333; font-family: system-ui, 'Segoe UI', Rob=
-oto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, '=
-Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'=
-; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font=
--variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2=
-; text-align: start; text-indent: 0px; text-transform: none; widows: 2; wor=
-d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; back=
-ground-color: #ffffff; text-decoration-thickness: initial; text-decoration-=
-style: initial; text-decoration-color: initial; display: inline !important;=
- float: none;">Efficiency wise it does not do more that the original code, =
-and it gets straight to the point.<br /></span></div>
-<div>&nbsp;</div>
-<div><span style=3D"color: #333333; font-family: system-ui, 'Segoe UI', Rob=
-oto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, '=
-Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'=
-; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font=
--variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2=
-; text-align: start; text-indent: 0px; text-transform: none; widows: 2; wor=
-d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; back=
-ground-color: #ffffff; text-decoration-thickness: initial; text-decoration-=
-style: initial; text-decoration-color: initial; display: inline !important;=
- float: none;">Thanks,</span></div>
-<div><span style=3D"color: #333333; font-family: system-ui, 'Segoe UI', Rob=
-oto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, '=
-Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'=
-; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font=
--variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2=
-; text-align: start; text-indent: 0px; text-transform: none; widows: 2; wor=
-d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; back=
-ground-color: #ffffff; text-decoration-thickness: initial; text-decoration-=
-style: initial; text-decoration-color: initial; display: inline !important;=
- float: none;">Adam</span></div>
-
---u1U5bX6t0JymBrb25Lah--
 
