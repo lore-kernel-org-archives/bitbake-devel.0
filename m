@@ -2,40 +2,40 @@ Return-Path: <christian.lindeberg@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6D1CE7AF8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDE8CE7AF9
 	for <webhook@archiver.kernel.org>; Fri,  6 Sep 2024 09:27:54 +0000 (UTC)
-Received: from AM0PR83CU005.outbound.protection.outlook.com (AM0PR83CU005.outbound.protection.outlook.com [52.101.69.52])
- by mx.groups.io with SMTP id smtpd.web11.30778.1725614868745324130
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.84])
+ by mx.groups.io with SMTP id smtpd.web10.31069.1725614868331835284
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 06 Sep 2024 02:27:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=OYikjzvo;
- spf=pass (domain: axis.com, ip: 52.101.69.52, mailfrom: christian.lindeberg@axis.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=CD1+zOJT;
+ spf=pass (domain: axis.com, ip: 40.107.22.84, mailfrom: christian.lindeberg@axis.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IoK4CBZ0MqXiIEjYEfyWlUPEpKF7nXW2KxPELWc4Ae3818sCiXuSJmzivKoPC4VowRnSZ8zh4c6wNEKK8M/zYJUQdUsfUfYDsXO4VIY3czIC97OVDaUWqgbtr4lNSKHERISezA9RVzU2eEGArAXb8zU+UMET90uqRM1TVHIHrdE6vBxp2I8vNHGo6XXpq/zES551sxaGQJQoVXMW+j5/l1+lI9oQ+m0uUS6LRpqqzDN+fztNMcy357hrUDumyQS+h2wg0smPxi6KgrLHGIMG0eNi9xwfTwA8HCYJ9h+Ou5EiHNMnuO8oGNaiVK6Vr++a6LYFwEV5fve828VvherLMw==
+ b=lld813aV9bMGw7WlWGXlbn6AQOH2YkvOrSFWmxBOxHsmoTw1B7jhkRGsudLRLUJ95w9jJCvhhD1TiHkvzPC9jegXuUeyI63PQ409L6ZIFaTDSCSAW6G9p7uWGvpjfDy00vgqSOLMj0Y9YKhiGsLdBOPUpn01yh4GsWrGebJGr7pz/nZry6XOWxGMkLZ/F64kQdxw7t4g4reA6EkVc2huQ8FnrBqSs3DN7sxTmhM6yCyYUN+xYtyNHL3zFYe7Dn/BLe/ZSDREHQNYWqYv//imqoReigvAsSCws1XLhiC2QtXpMRAUEzN+rOHHZIGozpO0rSgzO0Vmu/0BMxYBCOdftQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qUgbWR0u1UXHJQAszdXZ/ZTGdpXb57jf0sX13f/7EHQ=;
- b=n6NCUBl/RbCQbXwFTdlmyM2/VnuEdg4MLlUR/8YjvtzbZwL948hKf0ToDzqq1QdlBSUFyaL16ImKM5qK0yeR0B3Xaeat7/k9dpvjcWdrmQxcfp4TMVDDijciFKwGgiKSDQbTpU+HETIg6MbtwV/GrldYozHBV7cCpHS7AkJOBojYU0ksJR0fr1+nfN2cVdNUhcW71cWlcH0y7vJPD4aOkv5mVXet7uME68e5fzsc8SuAlXiHHmUKOOnIOSCmp4/5Nag83LLpAI5BKFZCescOl8lM+4LuVzgp+aW+986EiO7ZQaBq4XWNwTIleQvP1PAqkFdZlGJwF+NLgtn42bAyGg==
+ bh=Kfy1qE/o6leAYcn3EQhIWgZPOGGyaRYAZvSpekzUFJY=;
+ b=Wp1wHAyKYrdIl1YbJOdl0Y1TJEIRwQU+i8xCtxxrqAO93tNSyhDYfs0GoT5M1j1ujD3Vc71kmkaad/OXTFJ4gDqRO+TzmzkkEuFYO8LYe8Tjn4RpcO7uxQ8m6TrwC4W/J9FvajJdgEysRFGYpcLFFR+OWNaodKfiVdYOv1YZGry4TavlfOce2uwEFYz4K6y8Y7RCx/p23KfvPX07A4raM1HgjHiIExbGrGYTQtAEEBdCPZVcoQIlsnPP+NJ/xQTKsy/hUtDmRs3GGgM4krPkMaZq2B9+2auL/orvRpApTqkrnfNzG3QCqnMt9O4JW8NkMTIbxT3PLGHvL4YZssrzPw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=axis.com; dmarc=pass (p=none sp=none pct=100) action=none
  header.from=axis.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qUgbWR0u1UXHJQAszdXZ/ZTGdpXb57jf0sX13f/7EHQ=;
- b=OYikjzvo7Tfurj1ZicYqZ2+Ab6MvGanN650mRZ+prY99DS8qgy/AW+GRCDYbPKgqMUMOE8vyildQ+jPHv2EOLL5WFpb/FHg1KIrRIWCKlkSdBdEOEGlfh8xmhGM4dlOzkJXS3LDqqWzAvDWx4fLhGzmifjasnDP+gu1UXvy/B0Q=
-Received: from AS8PR04CA0076.eurprd04.prod.outlook.com (2603:10a6:20b:313::21)
- by DB9PR02MB9828.eurprd02.prod.outlook.com (2603:10a6:10:456::5) with
+ bh=Kfy1qE/o6leAYcn3EQhIWgZPOGGyaRYAZvSpekzUFJY=;
+ b=CD1+zOJTkTV/163JwwifWe74Suh4S8AintwP+3k5XRPbyA/BLCQtWKj/vf2483w8KuteDrvHdhXqp/uQZVZurap3Ev3oY5WB+txdwbTH1PxXqRbOnqTnca136lCKn4FmZPQ2aA4auYEPAKK3CgaLsoU65F9cLJtxfRzboAz2suM=
+Received: from AS4P190CA0051.EURP190.PROD.OUTLOOK.COM (2603:10a6:20b:656::25)
+ by AM0PR02MB5905.eurprd02.prod.outlook.com (2603:10a6:208:188::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.27; Fri, 6 Sep
- 2024 09:27:40 +0000
-Received: from AMS0EPF000001A9.eurprd05.prod.outlook.com
- (2603:10a6:20b:313:cafe::9a) by AS8PR04CA0076.outlook.office365.com
- (2603:10a6:20b:313::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.17; Fri, 6 Sep
+ 2024 09:27:41 +0000
+Received: from AMS1EPF00000042.eurprd04.prod.outlook.com
+ (2603:10a6:20b:656:cafe::6) by AS4P190CA0051.outlook.office365.com
+ (2603:10a6:20b:656::25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.17 via Frontend
- Transport; Fri, 6 Sep 2024 09:27:40 +0000
+ Transport; Fri, 6 Sep 2024 09:27:41 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
  smtp.mailfrom=axis.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=axis.com;
@@ -43,229 +43,216 @@ Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
  195.60.68.100 as permitted sender) receiver=protection.outlook.com;
  client-ip=195.60.68.100; helo=mail.axis.com; pr=C
 Received: from mail.axis.com (195.60.68.100) by
- AMS0EPF000001A9.mail.protection.outlook.com (10.167.16.149) with Microsoft
+ AMS1EPF00000042.mail.protection.outlook.com (10.167.16.39) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7918.13 via Frontend Transport; Fri, 6 Sep 2024 09:27:40 +0000
-Received: from SE-MAILARCH01W.axis.com (10.20.40.15) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 6 Sep
- 2024 11:27:39 +0200
-Received: from se-mail01w.axis.com (10.20.40.7) by SE-MAILARCH01W.axis.com
- (10.20.40.15) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.7918.13 via Frontend Transport; Fri, 6 Sep 2024 09:27:39 +0000
+Received: from se-mail01w.axis.com (10.20.40.7) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 6 Sep
  2024 11:27:39 +0200
 Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail01w.axis.com
  (10.20.40.7) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
  Transport; Fri, 6 Sep 2024 11:27:39 +0200
 Received: from pc50740-2234.se.axis.com (pc50740-2234.se.axis.com [10.94.131.4])
-	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 704801CE
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 712093CD
 	for <bitbake-devel@lists.openembedded.org>; Fri,  6 Sep 2024 11:27:39 +0200 (CEST)
 Received: by pc50740-2234.se.axis.com (Postfix, from userid 21184)
-	id 694BA26B985E; Fri,  6 Sep 2024 11:27:39 +0200 (CEST)
+	id 6AE6B26B985F; Fri,  6 Sep 2024 11:27:39 +0200 (CEST)
 From: Christian Lindeberg <christli@axis.com>
 To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH v2 1/2] fetch2: Add gomod fetcher
-Date: Fri, 6 Sep 2024 11:27:38 +0200
-Message-ID: <20240906092739.930765-1-christli@axis.com>
+Subject: [PATCH v2 2/2] fetch2: Add gomodgit fetcher
+Date: Fri, 6 Sep 2024 11:27:39 +0200
+Message-ID: <20240906092739.930765-2-christli@axis.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240906092739.930765-1-christli@axis.com>
+References: <20240906092739.930765-1-christli@axis.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF000001A9:EE_|DB9PR02MB9828:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8850301-50e9-41fb-b882-08dcce56273b
+X-MS-TrafficTypeDiagnostic: AMS1EPF00000042:EE_|AM0PR02MB5905:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf26b752-21d7-4d65-8f78-08dcce562736
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?fCj8hnrWxCBFZZEAk5HhjIr/JbpKJXXPCeAexeO4TGlE3/tlkSf+rnUqtLGb?=
- =?us-ascii?Q?cNRP+u6M5wVUMQxNT8YgOq/KCIRMCs1WlvyCqv0e9hoGO4qERtRugP3CWGI7?=
- =?us-ascii?Q?yiWQeo5fjwBd1XwyftqNqbDBhuAxiW6WCjNJ8+01hWHGDLuK9n3FbH4xTDvQ?=
- =?us-ascii?Q?FuCLsXkXz8VUX+W6kYh+M3qm3DF2BKUJ30vqo6oOJ79drDIYROieOKRiJu8U?=
- =?us-ascii?Q?HMayk7/LY5Z6a/d3LaV0pBUpTJJi94Hygfo+1+ajooG0KwnDgKCYBQiBHeaO?=
- =?us-ascii?Q?DLrVuWL3EVfpc2AQd4pjWK4LRnXOkM4qAlNBicAVtJyCCIGHLXeBpUUza0/J?=
- =?us-ascii?Q?YtVOF59R2rg8cEel9pUXnQaz6uc5yThPcFPtuebR9cs9+evFHJlHNvO49zb4?=
- =?us-ascii?Q?w/CHLmMPI38jx1ACEH6vI8L/9UFDlPGxBLsVS15S69x01yW1D3z4BR9PM/qd?=
- =?us-ascii?Q?+gUMw8R0UXUutasHyQeAxZ9Qir+C+a5sb5CtfCF/CUO1HBZZCGFK35dCJWiE?=
- =?us-ascii?Q?0K/zH3y7qLKHUNeKe52g8eVF33BYPDQrryyd/dkXALq6EmLbWWrDLNYLBN8W?=
- =?us-ascii?Q?v3QZl7OE5L6PO/vxLxM8GWM5JOVp48qqGphoppL/VieGkGYZjHtHWayPHUNv?=
- =?us-ascii?Q?SO2TdiR58enl0Lu97CMTfU9wp6weS+Untza+EC0oZsD84/oXzCTABkY7OAMj?=
- =?us-ascii?Q?q1i/OJetOS1TX2iEX68PkswGsknXBxTPC0cfy+x95Lfjf0fmew3AL2AV2eGN?=
- =?us-ascii?Q?Up1vAjMd/X/MsE3YZLUXkTWVDofoyAxLv09JgyRjzz2ZISembZaVRM+K8dkq?=
- =?us-ascii?Q?sBD8kuCuPZNYBlYoEam6Z+ID2XtsyM2aJ0A7aJDcAiri4VNZNhW84NvuDk/O?=
- =?us-ascii?Q?dDF6Fse3LL+DzNXIN9fEO0xRJ/ww5JVhQ7WJWmjd0DPryEbsZMwAUP3iwjHQ?=
- =?us-ascii?Q?RdoCa21kcsUsPhC/O5hZw9LYPz1y4plE+hofVEhP+m50jNWJ8QqbhfnC6G/0?=
- =?us-ascii?Q?4SsPKjlJc3hWDjaotD1oN7uMbsyGNo4MVrb/qGfNxvVQgVIcBk9Rc6ohpAwY?=
- =?us-ascii?Q?ebN1HSQ5Rdz18Oq296/QuQvT8VF0DpQBTU84TTyhvoZmzlYI99hJTdwucbXM?=
- =?us-ascii?Q?uKDq9OZwT2MeH7ZsNVDWhrHw1I3qqasSQIZSwbYSaG2/Dy3OGJHHySBDLSM7?=
- =?us-ascii?Q?HEF44ONYUSD2jpCIKBvW6r8KBF39R0Bty90m0AF1nrY9KBEK9n3+TvvJBVBv?=
- =?us-ascii?Q?57OPEWliqXY1FKqsCb59QBGlUEaVv3kHB9orrxnAc11MFqfb7eIF8Bflp0OB?=
- =?us-ascii?Q?RV+Yc2sSMqaDQ8wDxNSHv4X56lvw5dX5gvcDqWxa6DXCiMsHAHXFO2oCeNNC?=
- =?us-ascii?Q?6FEZbh74dyTnde8GgXoG0c6zqG0T?=
+	=?us-ascii?Q?pupOr6iRlszddrgKmIwt+3Wzo0dYWWLchkda4RX+21FJuEY3Bj/aPpwy9VPo?=
+ =?us-ascii?Q?Pe3pCIgJaF8fJ49K1cGMtFrEkRuL/mfHy7Ot1l1pIHExd/qy8GYgY00F/Map?=
+ =?us-ascii?Q?1dgVLJqF4cYDABIOcLZ2WjTeh+DxPzgjCNrMF0yuUZvZKxAn0hwnKOJILWaz?=
+ =?us-ascii?Q?3yDTfipwo1APQVMYFx9qV4pY8kmr7H9V+ICZXV4TXhgUIHCNTAHth9e7jgDg?=
+ =?us-ascii?Q?tVdUw6lXoUN/IhU/q8A2Ds21k/jDu2voaUEi1HQK1A0VC1iqxn8fhHazGr52?=
+ =?us-ascii?Q?O02nJL7rm1p1q5DteUw1z4QlHD5mued0GzBMJBPO8eM4VnQJDRtv7r43BgOa?=
+ =?us-ascii?Q?Q/MNuGnorllV5ByRROX2lVa3bBpbuJdpiK9fGw9BhR61Y9aixf3I6GfvKKG5?=
+ =?us-ascii?Q?a0apzSZIjBXeML4M74ZVyp/LX4ttvnhOfCAOO8Re4IjN2F9dQ3EZ3KrLAeRs?=
+ =?us-ascii?Q?R+3Pi96loxHiaKXJGq1xr0cRXh7qyl6td9UylJK1N+ckH5p3C8E9OisSUuJB?=
+ =?us-ascii?Q?zbVA43KyuMKAlBYUi14rj7k7n4DNAT4yf9M8gajJJKhsgK8/HGey3YrBJZua?=
+ =?us-ascii?Q?26/LXQINuyVmLsCBQNOqRFENOfnUaQcKD1mJgvRRaqh7/LDzktiXM7dlN+BF?=
+ =?us-ascii?Q?WNk3mzc3wk3D3OdSnbd/DfS0z9Odwb9J74PUL94ztdBdGHJz3BgD32YaqV4v?=
+ =?us-ascii?Q?2T6u2oCyGqegJenk8qHztZNQouNMG9jW+iGjaxpzVJRfEXHz+e5jQjU+1aYF?=
+ =?us-ascii?Q?UOqB0Sby6l2pTPZmGiWK/FqMAkBecHdGz8XCizwjnYC2uHMravPBa55bcVSm?=
+ =?us-ascii?Q?GPi+1HPwyABAce7uou0bUfGlxZR7m4V50Alib93BtnSD0eObm6oJCvJrNF5D?=
+ =?us-ascii?Q?g+XBr+a93Nqv/H7YOelF9K7T9Ajroq4esagmcc89p+pDuxU/0Oq2a0RW0hN5?=
+ =?us-ascii?Q?gnZRUybhE1Y3t/fFFuq2E1CdbNenXPafC5n36vZ3Wb0aEHmn2qfBX8mj4QiA?=
+ =?us-ascii?Q?B5Zq7iWLj4htdrwhM0h+a+TYpN9jEMLgPmoHHLHHIj3L8DXh2UQxVwgJsE/8?=
+ =?us-ascii?Q?ECM2x9EOTzhVFZsgGv3xOIPqu6ipJUyrUh0d5xb2/U0OVkh7dVuybBiGUPDZ?=
+ =?us-ascii?Q?NdxctCn2ucHeHJ9rBvokGW+OTd36Up7KI/FuOzKYKTGn/55ZuGmpra0y9XHK?=
+ =?us-ascii?Q?Ig+WRgvrnIh87x8ZtCCjcWEYG2KAFkI/43MqSYzZ75b2sJ2f6ZlxC7UdUBAH?=
+ =?us-ascii?Q?tMjegY8ennLkfdUBal+NTKTtQ/05FgtPrGawcGNUwhBhkN5+n0XLieouL1W3?=
+ =?us-ascii?Q?8swbqu8bkYYtM0jymTSx46DcTDNKTQhXoCc85AYk+QUA77JsyiDylX7mivkR?=
+ =?us-ascii?Q?G7dXZiqhL0YJT8kNQLVaQm8QMluc?=
 X-Forefront-Antispam-Report: 
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2024 09:27:40.0033
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2024 09:27:39.9695
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8850301-50e9-41fb-b882-08dcce56273b
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf26b752-21d7-4d65-8f78-08dcce562736
 X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	AMS0EPF000001A9.eurprd05.prod.outlook.com
+	AMS1EPF00000042.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB9828
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR02MB5905
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 06 Sep 2024 09:27:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16545
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16544
 
 From: Christian Lindeberg <christian.lindeberg@axis.com>
 
 Add a go module fetcher for downloading module dependencies to the
-module cache from a module proxy. The fetcher can be used with the
-go-mod class in OE-Core.
+module cache directly from a git repository. The fetcher can be used
+with the go-mod class in OE-Core.
 
 A module dependency can be specified with:
 
-  SRC_URI +=3D "gomod://golang.org/x/net;version=3Dv0.9.0;sha256sum=3D..."
+  SRC_URI +=3D "gomodgit://golang.org/x/net;version=3Dv0.9.0;srcrev=3D..."
 
 Signed-off-by: Christian Lindeberg <christian.lindeberg@axis.com>
 ---
 
 Changes in V2:
+- Use separate gomodgit:// type instead of the direct=3Dgit parameter.
 - Use GO_MOD_CACHE_DIR variable or default instead of requiring the
   GOMODCACHE environment variable to be set.
 - Add more documentation to make it cleared what is downloaded and what
   is unpacked.
 
- lib/bb/fetch2/__init__.py |   4 +-
- lib/bb/fetch2/gomod.py    | 128 ++++++++++++++++++++++++++++++++++++++
- lib/bb/tests/fetch.py     |  65 +++++++++++++++++++
- 3 files changed, 196 insertions(+), 1 deletion(-)
- create mode 100644 lib/bb/fetch2/gomod.py
+ lib/bb/fetch2/__init__.py |   1 +
+ lib/bb/fetch2/gomod.py    | 140 +++++++++++++++++++++++++++++++++++++-
+ lib/bb/tests/fetch.py     |  89 ++++++++++++++++++++++++
+ 3 files changed, 228 insertions(+), 2 deletions(-)
 
 diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 5bf2c4b8c..f84ce5999 100644
+index f84ce5999..ddee4400b 100644
 --- a/lib/bb/fetch2/__init__.py
 +++ b/lib/bb/fetch2/__init__.py
-@@ -1317,7 +1317,7 @@ class FetchData(object):
-=20
-             if checksum_name in self.parm:
-                 checksum_expected =3D self.parm[checksum_name]
--            elif self.type not in ["http", "https", "ftp", "ftps", "sftp",=
- "s3", "az", "crate", "gs"]:
-+            elif self.type not in ["http", "https", "ftp", "ftps", "sftp",=
- "s3", "az", "crate", "gs", "gomod"]:
-                 checksum_expected =3D None
-             else:
-                 checksum_expected =3D d.getVarFlag("SRC_URI", checksum_nam=
-e)
-@@ -2088,6 +2088,7 @@ from . import npmsw
- from . import az
- from . import crate
- from . import gcp
-+from . import gomod
-=20
- methods.append(local.Local())
- methods.append(wget.Wget())
-@@ -2110,3 +2111,4 @@ methods.append(npmsw.NpmShrinkWrap())
- methods.append(az.Az())
+@@ -2112,3 +2112,4 @@ methods.append(az.Az())
  methods.append(crate.Crate())
  methods.append(gcp.GCP())
-+methods.append(gomod.GoMod())
+ methods.append(gomod.GoMod())
++methods.append(gomod.GoModGit())
 diff --git a/lib/bb/fetch2/gomod.py b/lib/bb/fetch2/gomod.py
-new file mode 100644
-index 000000000..fe025e367
---- /dev/null
+index fe025e367..1b532d03f 100644
+--- a/lib/bb/fetch2/gomod.py
 +++ b/lib/bb/fetch2/gomod.py
-@@ -0,0 +1,128 @@
-+"""
-+BitBake 'Fetch' implementation for Go modules
-+
-+The gomod fetcher is used to download Go modules to the module cache from =
+@@ -1,12 +1,13 @@
+ """
+ BitBake 'Fetch' implementation for Go modules
+=20
+-The gomod fetcher is used to download Go modules to the module cache from =
 a
-+module proxy.
+-module proxy.
++The gomod/gomodgit fetchers are used to download Go modules to the module =
+cache
++from a module proxy or directly from a version control repository.
+=20
+ Example SRC_URI:
+=20
+ SRC_URI +=3D "gomod://golang.org/x/net;version=3Dv0.9.0;sha256sum=3D..."
++SRC_URI +=3D "gomodgit://golang.org/x/net;version=3Dv0.9.0;repo=3Dgo.googl=
+esource.com/net;srcrev=3D..."
+=20
+ Required SRC_URI parameters:
+=20
+@@ -27,6 +28,23 @@ Optional SRC_URI parameters:
+     only the go.mod file. Alternatively, set the SRC_URI varible flag for
+     "module@version.sha256sum".
+=20
++- protocol
++    The method used when fetching directly from a version control reposito=
+ry.
++    The default is "https" for git.
 +
-+Example SRC_URI:
++- repo
++    The URL when fetching directly from a version control repository. Requ=
+ired
++    when the URL is different from the module path.
 +
-+SRC_URI +=3D "gomod://golang.org/x/net;version=3Dv0.9.0;sha256sum=3D..."
++- srcrev
++    The revision identifier used when fetching directly from a version con=
+trol
++    repository. Alternatively, set the SRCREV varible for "module@version"=
+.
 +
-+Required SRC_URI parameters:
++- subdir
++    The module subdirectory when fetching directly from a version control
++    repository. Required when the module is not located in the root of the
++    repository.
 +
-+- version
-+    The version of the module.
-+
-+Optional SRC_URI parameters:
-+
-+- mod
-+    Fetch and unpack the go.mod file only instead of the complete module.
-+    The go command may need to download go.mod files for many different mo=
-dules
-+    when computing the build list, and go.mod files are much smaller than
-+    module zip files.
-+    The default is "0", set mod=3D1 for the go.mod file only.
-+
-+- sha256sum
-+    The checksum of the module zip file, or the go.mod file in case of fet=
-ching
-+    only the go.mod file. Alternatively, set the SRC_URI varible flag for
-+    "module@version.sha256sum".
-+
-+Related variables:
-+
-+- GO_MOD_PROXY
-+    The module proxy used by the fetcher.
-+
-+- GO_MOD_CACHE_DIR
-+    The directory where the module cache is located.
-+    This must match the exported GOMODCACHE variable for the go command to=
- find
-+    the downloaded modules.
-+
-+See the Go modules reference, https://go.dev/ref/mod, for more information
-+about the module cache, module proxies and version control systems.
-+"""
-+
-+import os
-+import re
-+import shutil
-+import zipfile
-+
-+import bb
-+from bb.fetch2 import FetchError
-+from bb.fetch2 import MissingParameterError
-+from bb.fetch2.wget import Wget
+ Related variables:
+=20
+ - GO_MOD_PROXY
+@@ -41,14 +59,19 @@ See the Go modules reference, https://go.dev/ref/mod, f=
+or more information
+ about the module cache, module proxies and version control systems.
+ """
+=20
++import hashlib
+ import os
+ import re
+ import shutil
++import subprocess
+ import zipfile
+=20
+ import bb
+ from bb.fetch2 import FetchError
+ from bb.fetch2 import MissingParameterError
++from bb.fetch2 import runfetchcmd
++from bb.fetch2 import subprocess_setup
++from bb.fetch2.git import Git
+ from bb.fetch2.wget import Wget
+=20
+=20
+@@ -126,3 +149,116 @@ class GoMod(Wget):
+                         # If the module does not have a go.mod file, synth=
+esize
+                         # one containing only a module statement.
+                         mf.write(f'module {module}\n'.encode())
 +
 +
-+def escape(path):
-+    """Escape capital letters using exclamation points."""
-+    return re.sub(r'([A-Z])', lambda m: '!' + m.group(1).lower(), path)
-+
-+
-+class GoMod(Wget):
-+    """Class to fetch Go modules from a Go module proxy via wget"""
++class GoModGit(Git):
++    """Class to fetch Go modules directly from a git repository"""
 +
 +    def supports(self, ud, d):
 +        """Check to see if a given URL is for this fetcher."""
-+        return ud.type =3D=3D 'gomod'
++        return ud.type =3D=3D 'gomodgit'
 +
 +    def urldata_init(self, ud, d):
-+        """Set up to download the module from the module proxy.
++        """Set up to download the module from the git repository.
 +
-+        Set up to download the module zip file to the module cache directo=
-ry
-+        and unpack the go.mod file (unless downloading only the go.mod fil=
-e):
++        Set up to download the git repository to the module cache director=
+y and
++        unpack the module zip file and the go.mod file:
 +
++        cache/vcs/<hash>:                         The bare git repository.
 +        cache/download/<module>/@v/<version>.zip: The module zip file.
 +        cache/download/<module>/@v/<version>.mod: The go.mod file.
 +        """
 +
-+        proxy =3D d.getVar('GO_MOD_PROXY') or 'proxy.golang.org'
 +        moddir =3D d.getVar('GO_MOD_CACHE_DIR') or 'pkg/mod'
 +
 +        if 'version' not in ud.parm:
@@ -274,80 +261,163 @@ e):
 +        module =3D ud.host + ud.path
 +        ud.parm['module'] =3D module
 +
-+        # Set URL and filename for wget download
-+        path =3D escape(module + '/@v/' + ud.parm['version'])
-+        if ud.parm.get('mod', '0') =3D=3D '1':
-+            path +=3D '.mod'
-+        else:
-+            path +=3D '.zip'
-+            ud.parm['unpack'] =3D '0'
-+        ud.url =3D bb.fetch2.encodeurl(
-+            ('https', proxy, '/' + path, None, None, None))
-+        ud.parm['downloadfilename'] =3D path
-+
-+        # Set name parameter if sha256sum is set in recipe
++        # Set host, path and srcrev for git download
++        if 'repo' in ud.parm:
++            repo =3D ud.parm['repo']
++            idx =3D repo.find('/')
++            if idx !=3D -1:
++                ud.host =3D repo[:idx]
++                ud.path =3D repo[idx:]
++            else:
++                ud.host =3D repo
++                ud.path =3D ''
++        if 'protocol' not in ud.parm:
++            ud.parm['protocol'] =3D 'https'
 +        name =3D f"{module}@{ud.parm['version']}"
-+        if d.getVarFlag('SRC_URI', name + '.sha256sum'):
-+            ud.parm['name'] =3D name
++        ud.names =3D [name]
++        srcrev =3D d.getVar('SRCREV_' + name)
++        if srcrev:
++            if 'srcrev' not in ud.parm:
++                ud.parm['srcrev'] =3D srcrev
++        else:
++            if 'srcrev' in ud.parm:
++                d.setVar('SRCREV_' + name, ud.parm['srcrev'])
++        if 'branch' not in ud.parm:
++            ud.parm['nobranch'] =3D '1'
 +
-+        # Set subdir for unpack
-+        ud.parm['subdir'] =3D os.path.join(moddir, 'cache/download',
-+                                         os.path.dirname(path))
++        # Set subpath, subdir and bareclone for git unpack
++        if 'subdir' in ud.parm:
++            ud.parm['subpath'] =3D ud.parm['subdir']
++        key =3D f"git3:{ud.parm['protocol']}://{ud.host}{ud.path}".encode(=
+)
++        ud.parm['key'] =3D key
++        ud.parm['subdir'] =3D os.path.join(moddir, 'cache/vcs',
++                                         hashlib.sha256(key).hexdigest())
++        ud.parm['bareclone'] =3D '1'
 +
 +        super().urldata_init(ud, d)
 +
 +    def unpack(self, ud, rootdir, d):
 +        """Unpack the module in the module cache."""
 +
-+        # Unpack the module zip file or go.mod file
++        # Unpack the bare git repository
 +        super().unpack(ud, rootdir, d)
 +
-+        if ud.localpath.endswith('.zip'):
-+            # Unpack the go.mod file from the zip file
-+            module =3D ud.parm['module']
-+            unpackdir =3D os.path.join(rootdir, ud.parm['subdir'])
-+            name =3D os.path.basename(ud.localpath).rsplit('.', 1)[0] + '.=
-mod'
-+            bb.note(f"Unpacking {name} to {unpackdir}/")
-+            with zipfile.ZipFile(ud.localpath) as zf:
-+                with open(os.path.join(unpackdir, name), mode=3D'wb') as m=
-f:
-+                    try:
-+                        f =3D module + '@' + ud.parm['version'] + '/go.mod=
-'
-+                        shutil.copyfileobj(zf.open(f), mf)
-+                    except KeyError:
-+                        # If the module does not have a go.mod file, synth=
-esize
-+                        # one containing only a module statement.
-+                        mf.write(f'module {module}\n'.encode())
++        moddir =3D d.getVar('GO_MOD_CACHE_DIR') or 'pkg/mod'
++
++        # Create the info file
++        module =3D ud.parm['module']
++        repodir =3D os.path.join(rootdir, ud.parm['subdir'])
++        with open(repodir + '.info', 'wb') as f:
++            f.write(ud.parm['key'])
++
++        # Unpack the go.mod file from the repository
++        unpackdir =3D os.path.join(rootdir, moddir, 'cache/download',
++                                 escape(module), '@v')
++        bb.utils.mkdirhier(unpackdir)
++        srcrev =3D ud.parm['srcrev']
++        version =3D ud.parm['version']
++        escaped_version =3D escape(version)
++        cmd =3D f"git ls-tree -r --name-only '{srcrev}'"
++        if 'subpath' in ud.parm:
++            cmd +=3D f" '{ud.parm['subpath']}'"
++        files =3D runfetchcmd(cmd, d, workdir=3Drepodir).split()
++        name =3D escaped_version + '.mod'
++        bb.note(f"Unpacking {name} to {unpackdir}/")
++        with open(os.path.join(unpackdir, name), mode=3D'wb') as mf:
++            f =3D 'go.mod'
++            if 'subpath' in ud.parm:
++                f =3D os.path.join(ud.parm['subpath'], f)
++            if f in files:
++                cmd =3D ['git', 'cat-file', 'blob', srcrev + ':' + f]
++                subprocess.check_call(cmd, stdout=3Dmf, cwd=3Drepodir,
++                                      preexec_fn=3Dsubprocess_setup)
++            else:
++                # If the module does not have a go.mod file, synthesize on=
+e
++                # containing only a module statement.
++                mf.write(f'module {module}\n'.encode())
++
++        # Synthesize the module zip file from the repository
++        name =3D escaped_version + '.zip'
++        bb.note(f"Unpacking {name} to {unpackdir}/")
++        with zipfile.ZipFile(os.path.join(unpackdir, name), mode=3D'w') as=
+ zf:
++            prefix =3D module + '@' + version + '/'
++            for f in files:
++                cmd =3D ['git', 'cat-file', 'blob', srcrev + ':' + f]
++                data =3D subprocess.check_output(cmd, cwd=3Drepodir,
++                                               preexec_fn=3Dsubprocess_set=
+up)
++                zf.writestr(prefix + f, data)
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 2ef206343..2365a5096 100644
+index 2365a5096..832e0dd6a 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -3390,3 +3390,68 @@ class FetchPremirroronlyBrokenTarball(FetcherTest):
-             fetcher.download()
-         output =3D "".join(logs.output)
-         self.assertFalse(" not a git repository (or any parent up to mount=
- point /)" in output)
+@@ -3455,3 +3455,92 @@ class GoModTest(FetcherTest):
+         downloaddir =3D os.path.join(self.unpackdir, 'pkg/mod/cache/downlo=
+ad')
+         self.assertTrue(os.path.exists(os.path.join(downloaddir, 'gopkg.in=
+/ini.v1/@v/v1.67.0.zip')))
+         self.assertTrue(os.path.exists(os.path.join(downloaddir, 'gopkg.in=
+/ini.v1/@v/v1.67.0.mod')))
 +
-+class GoModTest(FetcherTest):
++class GoModGitTest(FetcherTest):
 +
 +    @skipIfNoNetwork()
-+    def test_gomod_url(self):
-+        urls =3D ['gomod://github.com/Azure/azure-sdk-for-go/sdk/storage/a=
-zblob;version=3Dv1.0.0;'
-+                'sha256sum=3D9bb69aea32f1d59711701f9562d66432c9c0374205e50=
-09d1d1a62f03fb4fdad']
++    def test_gomodgit_url_repo(self):
++        urls =3D ['gomodgit://golang.org/x/net;version=3Dv0.9.0;'
++                'repo=3Dgo.googlesource.com/net;'
++                'srcrev=3D694cff8668bac64e0864b552bffc280cd27f21b1']
 +
 +        fetcher =3D bb.fetch2.Fetch(urls, self.d)
 +        ud =3D fetcher.ud[urls[0]]
-+        self.assertEqual(ud.url, 'https://proxy.golang.org/github.com/%21a=
-zure/azure-sdk-for-go/sdk/storage/azblob/%40v/v1.0.0.zip')
-+        self.assertNotIn('name', ud.parm)
++        self.assertEqual(ud.host, 'go.googlesource.com')
++        self.assertEqual(ud.path, '/net')
++        self.assertEqual(ud.names, ['golang.org/x/net@v0.9.0'])
++        self.assertEqual(self.d.getVar('SRCREV_golang.org/x/net@v0.9.0'), =
+'694cff8668bac64e0864b552bffc280cd27f21b1')
 +
 +        fetcher.download()
++        self.assertTrue(os.path.exists(ud.localpath))
++
 +        fetcher.unpack(self.unpackdir)
++        vcsdir =3D os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
++        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'ed42bd05533fd=
+84ae290a5d33ebd3695a0a2b06131beebd5450825bee8603aca')))
++        downloaddir =3D os.path.join(self.unpackdir, 'pkg/mod/cache/downlo=
+ad')
++        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'golang.o=
+rg/x/net/@v/v0.9.0.zip')))
++        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'golang.o=
+rg/x/net/@v/v0.9.0.mod')))
++
++    @skipIfNoNetwork()
++    def test_gomodgit_url_subdir(self):
++        urls =3D ['gomodgit://github.com/Azure/azure-sdk-for-go/sdk/storag=
+e/azblob;version=3Dv1.0.0;'
++                'repo=3Dgithub.com/Azure/azure-sdk-for-go;subdir=3Dsdk/sto=
+rage/azblob;'
++                'srcrev=3Dec928e0ed34db682b3f783d3739d1c538142e0c3']
++
++        fetcher =3D bb.fetch2.Fetch(urls, self.d)
++        ud =3D fetcher.ud[urls[0]]
++        self.assertEqual(ud.host, 'github.com')
++        self.assertEqual(ud.path, '/Azure/azure-sdk-for-go')
++        self.assertEqual(ud.parm['subpath'], 'sdk/storage/azblob')
++        self.assertEqual(ud.names, ['github.com/Azure/azure-sdk-for-go/sdk=
+/storage/azblob@v1.0.0'])
++        self.assertEqual(self.d.getVar('SRCREV_github.com/Azure/azure-sdk-=
+for-go/sdk/storage/azblob@v1.0.0'), 'ec928e0ed34db682b3f783d3739d1c538142e0=
+c3')
++
++        fetcher.download()
++        self.assertTrue(os.path.exists(ud.localpath))
++
++        fetcher.unpack(self.unpackdir)
++        vcsdir =3D os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
++        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'd31d6145676ed=
+3066ce573a8198f326dea5be45a43b3d8f41ce7787fd71d66b3')))
 +        downloaddir =3D os.path.join(self.unpackdir, 'pkg/mod/cache/downlo=
 ad')
 +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'github.c=
@@ -356,39 +426,24 @@ om/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.zip')))
 om/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.mod')))
 +
 +    @skipIfNoNetwork()
-+    def test_gomod_url_go_mod_only(self):
-+        urls =3D ['gomod://github.com/Azure/azure-sdk-for-go/sdk/storage/a=
-zblob;version=3Dv1.0.0;mod=3D1;'
-+                'sha256sum=3D7873b8544842329b4f385a3aa6cf82cc2bc8defb41a04=
-fa5291c35fd5900e873']
++    def test_gomodgit_url_srcrev_var(self):
++        urls =3D ['gomodgit://gopkg.in/ini.v1;version=3Dv1.67.0']
++        self.d.setVar('SRCREV_gopkg.in/ini.v1@v1.67.0', 'b2f570e5b5b844226=
+bbefe6fb521d891f529a951')
 +
 +        fetcher =3D bb.fetch2.Fetch(urls, self.d)
 +        ud =3D fetcher.ud[urls[0]]
-+        self.assertEqual(ud.url, 'https://proxy.golang.org/github.com/%21a=
-zure/azure-sdk-for-go/sdk/storage/azblob/%40v/v1.0.0.mod')
-+        self.assertNotIn('name', ud.parm)
++        self.assertEqual(ud.host, 'gopkg.in')
++        self.assertEqual(ud.path, '/ini.v1')
++        self.assertEqual(ud.names, ['gopkg.in/ini.v1@v1.67.0'])
++        self.assertEqual(ud.parm['srcrev'], 'b2f570e5b5b844226bbefe6fb521d=
+891f529a951')
 +
 +        fetcher.download()
 +        fetcher.unpack(self.unpackdir)
-+        downloaddir =3D os.path.join(self.unpackdir, 'pkg/mod/cache/downlo=
-ad')
-+        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'github.c=
-om/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.mod')))
-+
-+    @skipIfNoNetwork()
-+    def test_gomod_url_sha256sum_varflag(self):
-+        urls =3D ['gomod://gopkg.in/ini.v1;version=3Dv1.67.0']
-+        self.d.setVarFlag('SRC_URI', 'gopkg.in/ini.v1@v1.67.0.sha256sum', =
-'bd845dfc762a87a56e5a32a07770dc83e86976db7705d7f89c5dbafdc60b06c6')
-+
-+        fetcher =3D bb.fetch2.Fetch(urls, self.d)
-+        ud =3D fetcher.ud[urls[0]]
-+        self.assertEqual(ud.url, 'https://proxy.golang.org/gopkg.in/ini.v1=
-/%40v/v1.67.0.zip')
-+        self.assertEqual(ud.parm['name'], 'gopkg.in/ini.v1@v1.67.0')
-+
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
++        vcsdir =3D os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
++        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'b7879a4be9ba8=
+598851b8278b14c4f71a8316be64913298d1639cce6bde59bc3')))
 +        downloaddir =3D os.path.join(self.unpackdir, 'pkg/mod/cache/downlo=
 ad')
 +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'gopkg.in=
@@ -397,19 +452,23 @@ ad')
 /ini.v1/@v/v1.67.0.mod')))
 +
 +    @skipIfNoNetwork()
-+    def test_gomod_url_no_go_mod_in_module(self):
-+        urls =3D ['gomod://gopkg.in/ini.v1;version=3Dv1.67.0;'
-+                'sha256sum=3Dbd845dfc762a87a56e5a32a07770dc83e86976db7705d=
-7f89c5dbafdc60b06c6']
++    def test_gomodgit_url_no_go_mod_in_module(self):
++        urls =3D ['gomodgit://gopkg.in/ini.v1;version=3Dv1.67.0;'
++                'srcrev=3Db2f570e5b5b844226bbefe6fb521d891f529a951']
 +
 +        fetcher =3D bb.fetch2.Fetch(urls, self.d)
 +        ud =3D fetcher.ud[urls[0]]
-+        self.assertEqual(ud.url, 'https://proxy.golang.org/gopkg.in/ini.v1=
-/%40v/v1.67.0.zip')
-+        self.assertNotIn('name', ud.parm)
++        self.assertEqual(ud.host, 'gopkg.in')
++        self.assertEqual(ud.path, '/ini.v1')
++        self.assertEqual(ud.names, ['gopkg.in/ini.v1@v1.67.0'])
++        self.assertEqual(self.d.getVar('SRCREV_gopkg.in/ini.v1@v1.67.0'), =
+'b2f570e5b5b844226bbefe6fb521d891f529a951')
 +
 +        fetcher.download()
 +        fetcher.unpack(self.unpackdir)
++        vcsdir =3D os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
++        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'b7879a4be9ba8=
+598851b8278b14c4f71a8316be64913298d1639cce6bde59bc3')))
 +        downloaddir =3D os.path.join(self.unpackdir, 'pkg/mod/cache/downlo=
 ad')
 +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'gopkg.in=
