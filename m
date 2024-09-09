@@ -1,751 +1,180 @@
-Return-Path: <uvv.mail@gmail.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64835E6FE50
-	for <webhook@archiver.kernel.org>; Sat,  7 Sep 2024 07:27:26 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web11.3241.1725694044556094437
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 314D4ECE57E
+	for <webhook@archiver.kernel.org>; Mon,  9 Sep 2024 09:34:03 +0000 (UTC)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+ by mx.groups.io with SMTP id smtpd.web11.48901.1725874441763269863
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 07 Sep 2024 00:27:25 -0700
+ Mon, 09 Sep 2024 02:34:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Pqae6o4k;
- spf=pass (domain: gmail.com, ip: 209.85.128.51, mailfrom: uvv.mail@gmail.com)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42cacabd2e0so5015425e9.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 07 Sep 2024 00:27:24 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=lo3L/pY/;
+ spf=pass (domain: gmail.com, ip: 209.85.167.42, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5356ab89665so4782593e87.1;
+        Mon, 09 Sep 2024 02:34:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725694043; x=1726298843; darn=lists.openembedded.org;
-        h=in-reply-to:from:content-language:references:to:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0GVKR5C5Ggk2QrIVSGtsYJluPdxxXG7+dJ4Ighg0GMs=;
-        b=Pqae6o4kN88v7L7Pe472wgO3qEbg1pQAWOV8q2rN+Q+smK7CbahL7RL9YJqNLFAYHC
-         lO67SKWL9EguWKinzJJUYafJIV5s+Q3YRGY+elCi4kpbfDWvBVlPM6Tc5CRV8lWRhEB4
-         ONLqpU+mL2zBdB9x0rpgzYno9ZYkleGd6RAKwoeWk/MEfJoVGe814uiijyRyIw5F+n8P
-         Y2Oi0PzBbwo5kUEApxYSLSAf9hT0Kl/lpSL6Cqh77AT3GemzTV+YV0aQ0kEqdbYYrVUd
-         q5jIdI5aBqGQlZd4223yV4v1vVlgNliowlJtQb01ER47mpNHf22N4eTj4sz//96qWrCe
-         DVuQ==
+        d=gmail.com; s=20230601; t=1725874440; x=1726479240; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=06mxYym6dIk4iU5ManQo455VubPeRXlcj4aF70pxW+Q=;
+        b=lo3L/pY/GlC00dJDPQRQrZmCZo2bd7NbqTNbK4jcxvnksRr/zZ+hVLCPRg+TwB3ujM
+         MahWLSX43B5Ng+uPKvFKy56/1SHJJwK0MuYvPHE0kT7rsD9/aQmLegNwuUg1JXHNpPGg
+         IdK31KsVAQchh/8PahJ7weW+bzOkAR9y7/rCAde2J9498CRTLKZfUDuuBSUwJ2x6FZtI
+         Amq3CzIQJc62m1aHKkRzy7vK2OIh7NH3AiUxL5vuZYNg7o2vr6MgCvyfqG0i7opGfgRF
+         w57kiXAp+a0FzA6cpp3lAvw5rSw7PevMTpsQNPeJNhN8ot0KY01quusPn5ouN58U6vAf
+         JnTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725694043; x=1726298843;
-        h=in-reply-to:from:content-language:references:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0GVKR5C5Ggk2QrIVSGtsYJluPdxxXG7+dJ4Ighg0GMs=;
-        b=aCfm+Jg16jWT9XAW89MX4sku7V1RzlhGiu1JbIzB1UriOOZDKaMKlCnnkRmYTip6P+
-         ptZ6rEoyou8z0ouSfacB+cOiMV3fOPpN3FqAZai9Xk1QOQd9GTNsF9ukQtd3RzsvMOCB
-         iH1AZZ2Bi5b1OBW0t1sZAr4lzBJD3J9SVjJqwwAhS1JvPgeNeExpEOeY7r6pZ5mlEUo5
-         L5TXGvhfuTl88EkZ51b42S2F5UqK9YI0eifrPyaLHDvxh4rY/IiWe1d+pm96nCD+eZlB
-         Ud2fSEEm3bGgTrejx5x9k8taMCJbn+MOPi4wK9qc2xsLNi7Q2vLUgIJjeXQ8Sr90v+nV
-         5S8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW1u7hQsWt/gSEcZrD4jMj1f3thxvQlI9BX0YSZcTOD1ZQ70mIckxzE0d8POEJ8Uu1aj4KUPFePIxOLusLA@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyrD3JTlXi2qesnRD2YCOpVOae0+EhAdTfjukEC108ZQd3h35+U
-	AWq8iQl0o4xF3+UTtb+bYaWTANuk7Mukw/bFr3Hfi4io7KkiA3Xc
-X-Google-Smtp-Source: AGHT+IHfUNz7qMWT1caj84bBS4mxGiC37mcP0A4cR0iv8LfpCfQyNYUp7L+ruMN8VaYLE5IgpITXwQ==
-X-Received: by 2002:a05:600c:310a:b0:42c:8812:82a6 with SMTP id 5b1f17b1804b1-42c9f98a81cmr37148715e9.21.1725694041944;
-        Sat, 07 Sep 2024 00:27:21 -0700 (PDT)
-Received: from [10.8.0.6] (dslb-002-205-236-192.002.205.pools.vodafone-ip.de. [2.205.236.192])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378956d372dsm728461f8f.73.2024.09.07.00.27.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Sep 2024 00:27:21 -0700 (PDT)
-Content-Type: multipart/alternative;
- boundary="------------cJpkkRrCfN10dOg31pt90qdK"
-Message-ID: <79ff6187-aa9e-4dc7-bd79-4f37e1603bb9@gmail.com>
-Date: Sat, 7 Sep 2024 09:27:16 +0200
+        d=1e100.net; s=20230601; t=1725874440; x=1726479240;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=06mxYym6dIk4iU5ManQo455VubPeRXlcj4aF70pxW+Q=;
+        b=i+tDipx6jTBrcqydJVj017xDMRSE50DaoqEnb+x7M6KQu1rk4eRoszJ7fdVv1ILdmb
+         NKvMJFbk/Zh3l/UWELhM/inbT6f1Z9rs6ImE/WlQT1OZFAJfnzW5fWlnSloEwkTFTPZu
+         5pPNwui9hpi9qjeOYypjbRLVS+x86+g04FZGaIwLVwZxMIghp3SND3/WROFp2A+VJuEe
+         bbK7INmaJw5ijCCJN3bUQx0Yn//ZjxxFXtp+sI2CeASi165A9OPfRPAYjEhuZNwy1GSD
+         lMWIuHx3zra9bm3tU3XCh1hXDS8Zv2+OQvgssjYCPCjw+naFmrz8q8cwa7TsI9OqPkkS
+         JOww==
+X-Forwarded-Encrypted: i=1; AJvYcCV2xSLjKXcAgJUK2AlKcIXFCjPZizeiZAAZ73EbnEEUDUuDauh8RgcEQhh/Y2sfYEuADIyFe5B3zr1YnIgqBSTCZJgFEUcyOe8v@lists.openembedded.org
+X-Gm-Message-State: AOJu0Yw2WzKkfkIskVg1vGUIIjxdtHMHuWbweRZpbvXspCz24KnH9gZa
+	7UaTag2ZwwLkCWK+fSyWnqA+KIpu+aYvyXmFAawLxXNCEM2Gn+QDofPDhTYodvewTwVOR3K0oRx
+	kmLn1xOpN8xpthJ4tSKxOpOC3tWw=
+X-Google-Smtp-Source: AGHT+IHxAkHjHeRP6YFUt6P71rOVUbzIQyQw2OvCHrEQRn9FDY9YOlTzbGF1n7iQHR4PNDMN/NOvEdCjTEXyKpbwp8s=
+X-Received: by 2002:a05:6512:b97:b0:535:d4e9:28bb with SMTP id
+ 2adb3069b0e04-536588068aemr5298320e87.46.1725874439490; Mon, 09 Sep 2024
+ 02:33:59 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH v2 2/2] fetch2: Add gomodgit fetcher
-To: christian.lindeberg@axis.com, bitbake-devel@lists.openembedded.org
-References: <20240906092739.930765-1-christli@axis.com>
- <20240906092739.930765-2-christli@axis.com>
-Content-Language: en-US
-From: Vyacheslav Yurkov <uvv.mail@gmail.com>
-In-Reply-To: <20240906092739.930765-2-christli@axis.com>
+References: <20240502105745.3073153-1-alex.kanavin@gmail.com> <8ddf5dac-2cb8-4c6a-b4e9-b8b281058cb1@ti.com>
+In-Reply-To: <8ddf5dac-2cb8-4c6a-b4e9-b8b281058cb1@ti.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 9 Sep 2024 11:33:48 +0200
+Message-ID: <CANNYZj8THxZ6y8sv3Y7A9br3zfh4GMpec4g4Y-+gMzGMJf5CAA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [RFC PATCH] bitbake-setup: add the proof of
+ concept implementation
+To: Ryan Eatmon <reatmon@ti.com>
+Cc: bitbake-devel@lists.openembedded.org, yocto@lists.yoctoproject.org, 
+	openembedded-architecture@lists.openembedded.org, 
+	Alexander Kanavin <alex@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 07 Sep 2024 07:27:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16546
+ <bitbake-devel@lists.openembedded.org>; Mon, 09 Sep 2024 09:34:03 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16547
 
-This is a multi-part message in MIME format.
---------------cJpkkRrCfN10dOg31pt90qdK
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-A few questions on the patchset.
-
-- What if the module doesn't use any proxy? (E.g. hosted in a private 
-repository)
-- The current recipetool approach ( 
-https://git.openembedded.org/openembedded-core/tree/scripts/lib/recipetool/create_go.py 
-) uses vendoring approach and all dependencies go into the SRC_URI. Thus 
-it's required to populate the required license information for the 
-manifest generation. Would that be possible with this fetcher as well?
-
-Slava
-
-On 06.09.2024 11:27, Christian Lindeberg via lists.openembedded.org wrote:
-> From: Christian Lindeberg<christian.lindeberg@axis.com>
+On Thu, 5 Sept 2024 at 23:10, Ryan Eatmon <reatmon@ti.com> wrote:
+> Hello.  I'm attempting to play around with this patch and test out
+> bitbake-setup and how it works.  My testing it with trying to take one
+> our existing setups and try to get it to work.  Here is some initial
+> feedback written as I ran into issues.
 >
-> Add a go module fetcher for downloading module dependencies to the
-> module cache directly from a git repository. The fetcher can be used
-> with the go-mod class in OE-Core.
+> I'm running in an ubuntu-22.04 docker container based on crops.
+
+Thanks for the feedback and the fix. The plan now is to focus on
+getting bitbake fragments setup to the point where it can be merged,
+then go back to bitbake setup, but I wanted to address some points
+right now.
+
+> 1) In order to use list it assumes you are fetching a git repo and that
+> the git repo has a specific layout.  That seems a little problematic.
+> What if the repo we want to point has all kinds of configs for different
+> tools in it and we just want a sub directory under the git repo?  How do
+> we specify that?
+
+The config repo is minimal by design, and isn't meant to store
+anything except a reasonable amount of top level configurations files
+in a directory structure (e.g. you can list them and not be
+overwhelmed by the amount). The idea is that users don't even need to
+know where it is, and what it contains, and it never needs to be
+cloned separately either (which it would be once you start putting
+'other stuff' in it).
+
+> 2) The uri for a sources entry in the json file automatically adds in
+> protocol=git even though I specified protocol=https on the line.  We
+> prefer to always use the https for git repos and not the git protocol.
+> I modified the code to not do this so my testing could continue.
+
+This is not the case. If the entry in the json starts with https://
+then the tool will use protocol=https. Basically it needs to convert
+URI that can be given to git on the command line into an SRC_URI type
+string that can be given to bitbake's git fetcher.
+
+> 3) If we specify a unique key for each of the sources, why do we need to
+> then also specify a path to place the downloaded sources into?  Why not
+> just use the same key value to reduce what all is needed to specify.  We
+> can still support "path" for those that want it, but if it is left out I
+> would default it to the unique key for the repo.
+
+Here I had simply followed the layer configuration schema that makes
+path mandatory. Requiring a parameter has its advantages, you don't
+have to ensure that the default is documented, standardized and all
+tools follow the standard. You also don't lock yourself into the
+default value that must be followed until the end of time.
+
+> 4) The init step cannot be run multiple times.  Initial errors are
+> because the build-dir already exists, but overall it's a good idea to
+> allow for rerunning the setup to allow for fixing issues without needed
+> to nuke the entire build dir.  An example of why you might this is if
+> you want to add a new layer to your config, or change a commit, or
+> whatever...  Rerunning the init should be able to apply the incremental
+> changes since the last run.
+> In this case I was running into an error message from a file in oe-core,
+> which I sent a patch for, and was trying to simply fix that file in the
+> layers dir and rerun, but kept tripping over the fact that I cannot
+> rerun init.
+
+There are two different scenarios described here:
+
+1. 'init' failing halfway through (because of a bug or a config typo)
+and leaving the directory in an incomplete, inconsistent state. I
+don't think the tool can reasonably resume or increment anything here,
+the best it can do is say that the directory already exists, and can
+be forcibly re-initialized with --force (which would erase the content
+and try again). Another option is to try erasing everything on exit in
+an all-catch exception handler.
+
+2. 'init' completing successfully, and the build-dir is then fine, but
+it needs to be brought in sync with changes to the config or layers it
+specifies. This is what the 'status' and 'update' operations are for.
+
+In both cases the hints and error messages can certainly be improved,
+but I'm not sure there's anything that needs to change in the command
+flow itself.
+
+> 5) What is the purpose of creating the top level config git repo?
+
+1. To preserve the history of changes to the top level configuration.
+So that if you run into trouble you can see what changed. And maybe
+roll back to the previous version etc.
+
+2. To make it possible to publish the configuration for others to use.
+You can do it with a 'git push' or we could also add a separate
+'publish' sub-command.
+
+> 6) The code loops through the layers looking for scripts/oe-setup-build.
+>   What would happen if I shipped a rogue layer with that file in it and
+> included it as the last layer in the sources?
+
+I guess it would run that instead? If you include a rogue layer into
+the config, there's lots of other rogue things it can do when bitbake
+starts, but maybe you have a suggestion?
+
+> 7) I'm getting an error when running the setup-build script:
 >
-> A module dependency can be specified with:
+>    File "/scratch/builds/bitbake-setup-test/layers/setup-build", line
+> 107, in setup_build_env
+>      subprocess.run(cmd, shell=True, executable=os.environ['SHELL'])
+>    File "/usr/lib/python3.10/os.py", line 679, in __getitem__
+>      raise KeyError(key) from None
+> KeyError: 'SHELL'
 >
->    SRC_URI += "gomodgit://golang.org/x/net;version=v0.9.0;srcrev=..."
 >
-> Signed-off-by: Christian Lindeberg<christian.lindeberg@axis.com>
-> ---
->
-> Changes in V2:
-> - Use separate gomodgit:// type instead of the direct=git parameter.
-> - Use GO_MOD_CACHE_DIR variable or default instead of requiring the
->    GOMODCACHE environment variable to be set.
-> - Add more documentation to make it cleared what is downloaded and what
->    is unpacked.
->
->   lib/bb/fetch2/__init__.py |   1 +
->   lib/bb/fetch2/gomod.py    | 140 +++++++++++++++++++++++++++++++++++++-
->   lib/bb/tests/fetch.py     |  89 ++++++++++++++++++++++++
->   3 files changed, 228 insertions(+), 2 deletions(-)
->
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> index f84ce5999..ddee4400b 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -2112,3 +2112,4 @@ methods.append(az.Az())
->   methods.append(crate.Crate())
->   methods.append(gcp.GCP())
->   methods.append(gomod.GoMod())
-> +methods.append(gomod.GoModGit())
-> diff --git a/lib/bb/fetch2/gomod.py b/lib/bb/fetch2/gomod.py
-> index fe025e367..1b532d03f 100644
-> --- a/lib/bb/fetch2/gomod.py
-> +++ b/lib/bb/fetch2/gomod.py
-> @@ -1,12 +1,13 @@
->   """
->   BitBake 'Fetch' implementation for Go modules
->   
-> -The gomod fetcher is used to download Go modules to the module cache from a
-> -module proxy.
-> +The gomod/gomodgit fetchers are used to download Go modules to the module cache
-> +from a module proxy or directly from a version control repository.
->   
->   Example SRC_URI:
->   
->   SRC_URI += "gomod://golang.org/x/net;version=v0.9.0;sha256sum=..."
-> +SRC_URI += "gomodgit://golang.org/x/net;version=v0.9.0;repo=go.googlesource.com/net;srcrev=..."
->   
->   Required SRC_URI parameters:
->   
-> @@ -27,6 +28,23 @@ Optional SRC_URI parameters:
->       only the go.mod file. Alternatively, set the SRC_URI varible flag for
->       "module@version.sha256sum".
->   
-> +- protocol
-> +    The method used when fetching directly from a version control repository.
-> +    The default is "https" for git.
-> +
-> +- repo
-> +    The URL when fetching directly from a version control repository. Required
-> +    when the URL is different from the module path.
-> +
-> +- srcrev
-> +    The revision identifier used when fetching directly from a version control
-> +    repository. Alternatively, set the SRCREV varible for "module@version".
-> +
-> +- subdir
-> +    The module subdirectory when fetching directly from a version control
-> +    repository. Required when the module is not located in the root of the
-> +    repository.
-> +
->   Related variables:
->   
->   - GO_MOD_PROXY
-> @@ -41,14 +59,19 @@ See the Go modules reference,https://go.dev/ref/mod, for more information
->   about the module cache, module proxies and version control systems.
->   """
->   
-> +import hashlib
->   import os
->   import re
->   import shutil
-> +import subprocess
->   import zipfile
->   
->   import bb
->   from bb.fetch2 import FetchError
->   from bb.fetch2 import MissingParameterError
-> +from bb.fetch2 import runfetchcmd
-> +from bb.fetch2 import subprocess_setup
-> +from bb.fetch2.git import Git
->   from bb.fetch2.wget import Wget
->   
->   
-> @@ -126,3 +149,116 @@ class GoMod(Wget):
->                           # If the module does not have a go.mod file, synthesize
->                           # one containing only a module statement.
->                           mf.write(f'module {module}\n'.encode())
-> +
-> +
-> +class GoModGit(Git):
-> +    """Class to fetch Go modules directly from a git repository"""
-> +
-> +    def supports(self, ud, d):
-> +        """Check to see if a given URL is for this fetcher."""
-> +        return ud.type == 'gomodgit'
-> +
-> +    def urldata_init(self, ud, d):
-> +        """Set up to download the module from the git repository.
-> +
-> +        Set up to download the git repository to the module cache directory and
-> +        unpack the module zip file and the go.mod file:
-> +
-> +        cache/vcs/<hash>:                         The bare git repository.
-> +        cache/download/<module>/@v/<version>.zip: The module zip file.
-> +        cache/download/<module>/@v/<version>.mod: The go.mod file.
-> +        """
-> +
-> +        moddir = d.getVar('GO_MOD_CACHE_DIR') or 'pkg/mod'
-> +
-> +        if 'version' not in ud.parm:
-> +            raise MissingParameterError('version', ud.url)
-> +
-> +        module = ud.host + ud.path
-> +        ud.parm['module'] = module
-> +
-> +        # Set host, path and srcrev for git download
-> +        if 'repo' in ud.parm:
-> +            repo = ud.parm['repo']
-> +            idx = repo.find('/')
-> +            if idx != -1:
-> +                ud.host = repo[:idx]
-> +                ud.path = repo[idx:]
-> +            else:
-> +                ud.host = repo
-> +                ud.path = ''
-> +        if 'protocol' not in ud.parm:
-> +            ud.parm['protocol'] = 'https'
-> +        name = f"{module}@{ud.parm['version']}"
-> +        ud.names = [name]
-> +        srcrev = d.getVar('SRCREV_' + name)
-> +        if srcrev:
-> +            if 'srcrev' not in ud.parm:
-> +                ud.parm['srcrev'] = srcrev
-> +        else:
-> +            if 'srcrev' in ud.parm:
-> +                d.setVar('SRCREV_' + name, ud.parm['srcrev'])
-> +        if 'branch' not in ud.parm:
-> +            ud.parm['nobranch'] = '1'
-> +
-> +        # Set subpath, subdir and bareclone for git unpack
-> +        if 'subdir' in ud.parm:
-> +            ud.parm['subpath'] = ud.parm['subdir']
-> +        key = f"git3:{ud.parm['protocol']}://{ud.host}{ud.path}".encode()
-> +        ud.parm['key'] = key
-> +        ud.parm['subdir'] = os.path.join(moddir, 'cache/vcs',
-> +                                         hashlib.sha256(key).hexdigest())
-> +        ud.parm['bareclone'] = '1'
-> +
-> +        super().urldata_init(ud, d)
-> +
-> +    def unpack(self, ud, rootdir, d):
-> +        """Unpack the module in the module cache."""
-> +
-> +        # Unpack the bare git repository
-> +        super().unpack(ud, rootdir, d)
-> +
-> +        moddir = d.getVar('GO_MOD_CACHE_DIR') or 'pkg/mod'
-> +
-> +        # Create the info file
-> +        module = ud.parm['module']
-> +        repodir = os.path.join(rootdir, ud.parm['subdir'])
-> +        with open(repodir + '.info', 'wb') as f:
-> +            f.write(ud.parm['key'])
-> +
-> +        # Unpack the go.mod file from the repository
-> +        unpackdir = os.path.join(rootdir, moddir, 'cache/download',
-> +                                 escape(module), '@v')
-> +        bb.utils.mkdirhier(unpackdir)
-> +        srcrev = ud.parm['srcrev']
-> +        version = ud.parm['version']
-> +        escaped_version = escape(version)
-> +        cmd = f"git ls-tree -r --name-only '{srcrev}'"
-> +        if 'subpath' in ud.parm:
-> +            cmd += f" '{ud.parm['subpath']}'"
-> +        files = runfetchcmd(cmd, d, workdir=repodir).split()
-> +        name = escaped_version + '.mod'
-> +        bb.note(f"Unpacking {name} to {unpackdir}/")
-> +        with open(os.path.join(unpackdir, name), mode='wb') as mf:
-> +            f = 'go.mod'
-> +            if 'subpath' in ud.parm:
-> +                f = os.path.join(ud.parm['subpath'], f)
-> +            if f in files:
-> +                cmd = ['git', 'cat-file', 'blob', srcrev + ':' + f]
-> +                subprocess.check_call(cmd, stdout=mf, cwd=repodir,
-> +                                      preexec_fn=subprocess_setup)
-> +            else:
-> +                # If the module does not have a go.mod file, synthesize one
-> +                # containing only a module statement.
-> +                mf.write(f'module {module}\n'.encode())
-> +
-> +        # Synthesize the module zip file from the repository
-> +        name = escaped_version + '.zip'
-> +        bb.note(f"Unpacking {name} to {unpackdir}/")
-> +        with zipfile.ZipFile(os.path.join(unpackdir, name), mode='w') as zf:
-> +            prefix = module + '@' + version + '/'
-> +            for f in files:
-> +                cmd = ['git', 'cat-file', 'blob', srcrev + ':' + f]
-> +                data = subprocess.check_output(cmd, cwd=repodir,
-> +                                               preexec_fn=subprocess_setup)
-> +                zf.writestr(prefix + f, data)
-> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-> index 2365a5096..832e0dd6a 100644
-> --- a/lib/bb/tests/fetch.py
-> +++ b/lib/bb/tests/fetch.py
-> @@ -3455,3 +3455,92 @@ class GoModTest(FetcherTest):
->           downloaddir = os.path.join(self.unpackdir, 'pkg/mod/cache/download')
->           self.assertTrue(os.path.exists(os.path.join(downloaddir, 'gopkg.in/ini.v1/@v/v1.67.0.zip')))
->           self.assertTrue(os.path.exists(os.path.join(downloaddir, 'gopkg.in/ini.v1/@v/v1.67.0.mod')))
-> +
-> +class GoModGitTest(FetcherTest):
-> +
-> +    @skipIfNoNetwork()
-> +    def test_gomodgit_url_repo(self):
-> +        urls = ['gomodgit://golang.org/x/net;version=v0.9.0;'
-> +                'repo=go.googlesource.com/net;'
-> +                'srcrev=694cff8668bac64e0864b552bffc280cd27f21b1']
-> +
-> +        fetcher = bb.fetch2.Fetch(urls, self.d)
-> +        ud = fetcher.ud[urls[0]]
-> +        self.assertEqual(ud.host, 'go.googlesource.com')
-> +        self.assertEqual(ud.path, '/net')
-> +        self.assertEqual(ud.names, ['golang.org/x/net@v0.9.0'])
-> +        self.assertEqual(self.d.getVar('SRCREV_golang.org/x/net@v0.9.0'), '694cff8668bac64e0864b552bffc280cd27f21b1')
-> +
-> +        fetcher.download()
-> +        self.assertTrue(os.path.exists(ud.localpath))
-> +
-> +        fetcher.unpack(self.unpackdir)
-> +        vcsdir = os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
-> +        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'ed42bd05533fd84ae290a5d33ebd3695a0a2b06131beebd5450825bee8603aca')))
-> +        downloaddir = os.path.join(self.unpackdir, 'pkg/mod/cache/download')
-> +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'golang.org/x/net/@v/v0.9.0.zip')))
-> +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'golang.org/x/net/@v/v0.9.0.mod')))
-> +
-> +    @skipIfNoNetwork()
-> +    def test_gomodgit_url_subdir(self):
-> +        urls = ['gomodgit://github.com/Azure/azure-sdk-for-go/sdk/storage/azblob;version=v1.0.0;'
-> +                'repo=github.com/Azure/azure-sdk-for-go;subdir=sdk/storage/azblob;'
-> +                'srcrev=ec928e0ed34db682b3f783d3739d1c538142e0c3']
-> +
-> +        fetcher = bb.fetch2.Fetch(urls, self.d)
-> +        ud = fetcher.ud[urls[0]]
-> +        self.assertEqual(ud.host, 'github.com')
-> +        self.assertEqual(ud.path, '/Azure/azure-sdk-for-go')
-> +        self.assertEqual(ud.parm['subpath'], 'sdk/storage/azblob')
-> +        self.assertEqual(ud.names, ['github.com/Azure/azure-sdk-for-go/sdk/storage/azblob@v1.0.0'])
-> +        self.assertEqual(self.d.getVar('SRCREV_github.com/Azure/azure-sdk-for-go/sdk/storage/azblob@v1.0.0'), 'ec928e0ed34db682b3f783d3739d1c538142e0c3')
-> +
-> +        fetcher.download()
-> +        self.assertTrue(os.path.exists(ud.localpath))
-> +
-> +        fetcher.unpack(self.unpackdir)
-> +        vcsdir = os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
-> +        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'd31d6145676ed3066ce573a8198f326dea5be45a43b3d8f41ce7787fd71d66b3')))
-> +        downloaddir = os.path.join(self.unpackdir, 'pkg/mod/cache/download')
-> +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'github.com/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.zip')))
-> +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'github.com/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.mod')))
-> +
-> +    @skipIfNoNetwork()
-> +    def test_gomodgit_url_srcrev_var(self):
-> +        urls = ['gomodgit://gopkg.in/ini.v1;version=v1.67.0']
-> +        self.d.setVar('SRCREV_gopkg.in/ini.v1@v1.67.0', 'b2f570e5b5b844226bbefe6fb521d891f529a951')
-> +
-> +        fetcher = bb.fetch2.Fetch(urls, self.d)
-> +        ud = fetcher.ud[urls[0]]
-> +        self.assertEqual(ud.host, 'gopkg.in')
-> +        self.assertEqual(ud.path, '/ini.v1')
-> +        self.assertEqual(ud.names, ['gopkg.in/ini.v1@v1.67.0'])
-> +        self.assertEqual(ud.parm['srcrev'], 'b2f570e5b5b844226bbefe6fb521d891f529a951')
-> +
-> +        fetcher.download()
-> +        fetcher.unpack(self.unpackdir)
-> +        vcsdir = os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
-> +        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'b7879a4be9ba8598851b8278b14c4f71a8316be64913298d1639cce6bde59bc3')))
-> +        downloaddir = os.path.join(self.unpackdir, 'pkg/mod/cache/download')
-> +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'gopkg.in/ini.v1/@v/v1.67.0.zip')))
-> +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'gopkg.in/ini.v1/@v/v1.67.0.mod')))
-> +
-> +    @skipIfNoNetwork()
-> +    def test_gomodgit_url_no_go_mod_in_module(self):
-> +        urls = ['gomodgit://gopkg.in/ini.v1;version=v1.67.0;'
-> +                'srcrev=b2f570e5b5b844226bbefe6fb521d891f529a951']
-> +
-> +        fetcher = bb.fetch2.Fetch(urls, self.d)
-> +        ud = fetcher.ud[urls[0]]
-> +        self.assertEqual(ud.host, 'gopkg.in')
-> +        self.assertEqual(ud.path, '/ini.v1')
-> +        self.assertEqual(ud.names, ['gopkg.in/ini.v1@v1.67.0'])
-> +        self.assertEqual(self.d.getVar('SRCREV_gopkg.in/ini.v1@v1.67.0'), 'b2f570e5b5b844226bbefe6fb521d891f529a951')
-> +
-> +        fetcher.download()
-> +        fetcher.unpack(self.unpackdir)
-> +        vcsdir = os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
-> +        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'b7879a4be9ba8598851b8278b14c4f71a8316be64913298d1639cce6bde59bc3')))
-> +        downloaddir = os.path.join(self.unpackdir, 'pkg/mod/cache/download')
-> +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'gopkg.in/ini.v1/@v/v1.67.0.zip')))
-> +        self.assertTrue(os.path.exists(os.path.join(downloaddir, 'gopkg.in/ini.v1/@v/v1.67.0.mod')))
->
+> SHELL is set to /bin/sh so I'm at a loss to see why this would be
+> failing.  But because of this I never get a build.sh script.
 
---------------cJpkkRrCfN10dOg31pt90qdK
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+For this I would really appreciate if you can get to the bottom of.
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    <div class="moz-cite-prefix">A few questions on the patchset.<br>
-      <br>
-      - What if the module doesn't use any proxy? (E.g. hosted in a
-      private repository)<br>
-      - The current recipetool approach (
-<a class="moz-txt-link-freetext" href="https://git.openembedded.org/openembedded-core/tree/scripts/lib/recipetool/create_go.py">https://git.openembedded.org/openembedded-core/tree/scripts/lib/recipetool/create_go.py</a>
-      ) uses vendoring approach and all dependencies go into the
-      SRC_URI. Thus it's required to populate the required license
-      information for the manifest generation. Would that be possible
-      with this fetcher as well?<br>
-      <br>
-      Slava<br>
-      <br>
-      On 06.09.2024 11:27, Christian Lindeberg via
-      lists.openembedded.org wrote:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:20240906092739.930765-2-christli@axis.com">
-      <pre wrap="" class="moz-quote-pre">From: Christian Lindeberg <a class="moz-txt-link-rfc2396E" href="mailto:christian.lindeberg@axis.com">&lt;christian.lindeberg@axis.com&gt;</a>
-
-Add a go module fetcher for downloading module dependencies to the
-module cache directly from a git repository. The fetcher can be used
-with the go-mod class in OE-Core.
-
-A module dependency can be specified with:
-
-  SRC_URI += "gomodgit://golang.org/x/net;version=v0.9.0;srcrev=..."
-
-Signed-off-by: Christian Lindeberg <a class="moz-txt-link-rfc2396E" href="mailto:christian.lindeberg@axis.com">&lt;christian.lindeberg@axis.com&gt;</a>
----
-
-Changes in V2:
-- Use separate gomodgit:// type instead of the direct=git parameter.
-- Use GO_MOD_CACHE_DIR variable or default instead of requiring the
-  GOMODCACHE environment variable to be set.
-- Add more documentation to make it cleared what is downloaded and what
-  is unpacked.
-
- lib/bb/fetch2/__init__.py |   1 +
- lib/bb/fetch2/gomod.py    | 140 +++++++++++++++++++++++++++++++++++++-
- lib/bb/tests/fetch.py     |  89 ++++++++++++++++++++++++
- 3 files changed, 228 insertions(+), 2 deletions(-)
-
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index f84ce5999..ddee4400b 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -2112,3 +2112,4 @@ methods.append(az.Az())
- methods.append(crate.Crate())
- methods.append(gcp.GCP())
- methods.append(gomod.GoMod())
-+methods.append(gomod.GoModGit())
-diff --git a/lib/bb/fetch2/gomod.py b/lib/bb/fetch2/gomod.py
-index fe025e367..1b532d03f 100644
---- a/lib/bb/fetch2/gomod.py
-+++ b/lib/bb/fetch2/gomod.py
-@@ -1,12 +1,13 @@
- """
- BitBake 'Fetch' implementation for Go modules
- 
--The gomod fetcher is used to download Go modules to the module cache from a
--module proxy.
-+The gomod/gomodgit fetchers are used to download Go modules to the module cache
-+from a module proxy or directly from a version control repository.
- 
- Example SRC_URI:
- 
- SRC_URI += "gomod://golang.org/x/net;version=v0.9.0;sha256sum=..."
-+SRC_URI += "gomodgit://golang.org/x/net;version=v0.9.0;repo=go.googlesource.com/net;srcrev=..."
- 
- Required SRC_URI parameters:
- 
-@@ -27,6 +28,23 @@ Optional SRC_URI parameters:
-     only the go.mod file. Alternatively, set the SRC_URI varible flag for
-     <a class="moz-txt-link-rfc2396E" href="mailto:module@version.sha256sum">"module@version.sha256sum"</a>.
- 
-+- protocol
-+    The method used when fetching directly from a version control repository.
-+    The default is "https" for git.
-+
-+- repo
-+    The URL when fetching directly from a version control repository. Required
-+    when the URL is different from the module path.
-+
-+- srcrev
-+    The revision identifier used when fetching directly from a version control
-+    repository. Alternatively, set the SRCREV varible for "module@version".
-+
-+- subdir
-+    The module subdirectory when fetching directly from a version control
-+    repository. Required when the module is not located in the root of the
-+    repository.
-+
- Related variables:
- 
- - GO_MOD_PROXY
-@@ -41,14 +59,19 @@ See the Go modules reference, <a class="moz-txt-link-freetext" href="https://go.dev/ref/mod">https://go.dev/ref/mod</a>, for more information
- about the module cache, module proxies and version control systems.
- """
- 
-+import hashlib
- import os
- import re
- import shutil
-+import subprocess
- import zipfile
- 
- import bb
- from bb.fetch2 import FetchError
- from bb.fetch2 import MissingParameterError
-+from bb.fetch2 import runfetchcmd
-+from bb.fetch2 import subprocess_setup
-+from bb.fetch2.git import Git
- from bb.fetch2.wget import Wget
- 
- 
-@@ -126,3 +149,116 @@ class GoMod(Wget):
-                         # If the module does not have a go.mod file, synthesize
-                         # one containing only a module statement.
-                         mf.write(f'module {module}\n'.encode())
-+
-+
-+class GoModGit(Git):
-+    """Class to fetch Go modules directly from a git repository"""
-+
-+    def supports(self, ud, d):
-+        """Check to see if a given URL is for this fetcher."""
-+        return ud.type == 'gomodgit'
-+
-+    def urldata_init(self, ud, d):
-+        """Set up to download the module from the git repository.
-+
-+        Set up to download the git repository to the module cache directory and
-+        unpack the module zip file and the go.mod file:
-+
-+        cache/vcs/&lt;hash&gt;:                         The bare git repository.
-+        cache/download/&lt;module&gt;/@v/&lt;version&gt;.zip: The module zip file.
-+        cache/download/&lt;module&gt;/@v/&lt;version&gt;.mod: The go.mod file.
-+        """
-+
-+        moddir = d.getVar('GO_MOD_CACHE_DIR') or 'pkg/mod'
-+
-+        if 'version' not in ud.parm:
-+            raise MissingParameterError('version', ud.url)
-+
-+        module = ud.host + ud.path
-+        ud.parm['module'] = module
-+
-+        # Set host, path and srcrev for git download
-+        if 'repo' in ud.parm:
-+            repo = ud.parm['repo']
-+            idx = repo.find('/')
-+            if idx != -1:
-+                ud.host = repo[:idx]
-+                ud.path = repo[idx:]
-+            else:
-+                ud.host = repo
-+                ud.path = ''
-+        if 'protocol' not in ud.parm:
-+            ud.parm['protocol'] = 'https'
-+        name = f<a class="moz-txt-link-rfc2396E" href="mailto:{module}@{ud.parm['version']}">"{module}@{ud.parm['version']}"</a>
-+        ud.names = [name]
-+        srcrev = d.getVar('SRCREV_' + name)
-+        if srcrev:
-+            if 'srcrev' not in ud.parm:
-+                ud.parm['srcrev'] = srcrev
-+        else:
-+            if 'srcrev' in ud.parm:
-+                d.setVar('SRCREV_' + name, ud.parm['srcrev'])
-+        if 'branch' not in ud.parm:
-+            ud.parm['nobranch'] = '1'
-+
-+        # Set subpath, subdir and bareclone for git unpack
-+        if 'subdir' in ud.parm:
-+            ud.parm['subpath'] = ud.parm['subdir']
-+        key = f"git3:{ud.parm['protocol']}://{ud.host}{ud.path}".encode()
-+        ud.parm['key'] = key
-+        ud.parm['subdir'] = os.path.join(moddir, 'cache/vcs',
-+                                         hashlib.sha256(key).hexdigest())
-+        ud.parm['bareclone'] = '1'
-+
-+        super().urldata_init(ud, d)
-+
-+    def unpack(self, ud, rootdir, d):
-+        """Unpack the module in the module cache."""
-+
-+        # Unpack the bare git repository
-+        super().unpack(ud, rootdir, d)
-+
-+        moddir = d.getVar('GO_MOD_CACHE_DIR') or 'pkg/mod'
-+
-+        # Create the info file
-+        module = ud.parm['module']
-+        repodir = os.path.join(rootdir, ud.parm['subdir'])
-+        with open(repodir + '.info', 'wb') as f:
-+            f.write(ud.parm['key'])
-+
-+        # Unpack the go.mod file from the repository
-+        unpackdir = os.path.join(rootdir, moddir, 'cache/download',
-+                                 escape(module), '@v')
-+        bb.utils.mkdirhier(unpackdir)
-+        srcrev = ud.parm['srcrev']
-+        version = ud.parm['version']
-+        escaped_version = escape(version)
-+        cmd = f"git ls-tree -r --name-only '{srcrev}'"
-+        if 'subpath' in ud.parm:
-+            cmd += f" '{ud.parm['subpath']}'"
-+        files = runfetchcmd(cmd, d, workdir=repodir).split()
-+        name = escaped_version + '.mod'
-+        bb.note(f"Unpacking {name} to {unpackdir}/")
-+        with open(os.path.join(unpackdir, name), mode='wb') as mf:
-+            f = 'go.mod'
-+            if 'subpath' in ud.parm:
-+                f = os.path.join(ud.parm['subpath'], f)
-+            if f in files:
-+                cmd = ['git', 'cat-file', 'blob', srcrev + ':' + f]
-+                subprocess.check_call(cmd, stdout=mf, cwd=repodir,
-+                                      preexec_fn=subprocess_setup)
-+            else:
-+                # If the module does not have a go.mod file, synthesize one
-+                # containing only a module statement.
-+                mf.write(f'module {module}\n'.encode())
-+
-+        # Synthesize the module zip file from the repository
-+        name = escaped_version + '.zip'
-+        bb.note(f"Unpacking {name} to {unpackdir}/")
-+        with zipfile.ZipFile(os.path.join(unpackdir, name), mode='w') as zf:
-+            prefix = module + '@' + version + '/'
-+            for f in files:
-+                cmd = ['git', 'cat-file', 'blob', srcrev + ':' + f]
-+                data = subprocess.check_output(cmd, cwd=repodir,
-+                                               preexec_fn=subprocess_setup)
-+                zf.writestr(prefix + f, data)
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 2365a5096..832e0dd6a 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -3455,3 +3455,92 @@ class GoModTest(FetcherTest):
-         downloaddir = os.path.join(self.unpackdir, 'pkg/mod/cache/download')
-         self.assertTrue(os.path.exists(os.path.join(downloaddir, '<a class="moz-txt-link-abbreviated" href="mailto:gopkg.in/ini.v1/@v/v1.67.0.zip">gopkg.in/ini.v1/@v/v1.67.0.zip</a>')))
-         self.assertTrue(os.path.exists(os.path.join(downloaddir, '<a class="moz-txt-link-abbreviated" href="mailto:gopkg.in/ini.v1/@v/v1.67.0.mod">gopkg.in/ini.v1/@v/v1.67.0.mod</a>')))
-+
-+class GoModGitTest(FetcherTest):
-+
-+    @skipIfNoNetwork()
-+    def test_gomodgit_url_repo(self):
-+        urls = ['gomodgit://golang.org/x/net;version=v0.9.0;'
-+                'repo=go.googlesource.com/net;'
-+                'srcrev=694cff8668bac64e0864b552bffc280cd27f21b1']
-+
-+        fetcher = bb.fetch2.Fetch(urls, self.d)
-+        ud = fetcher.ud[urls[0]]
-+        self.assertEqual(ud.host, 'go.googlesource.com')
-+        self.assertEqual(ud.path, '/net')
-+        self.assertEqual(ud.names, ['<a class="moz-txt-link-abbreviated" href="mailto:golang.org/x/net@v0.9.0">golang.org/x/net@v0.9.0</a>'])
-+        self.assertEqual(self.d.getVar('<a class="moz-txt-link-abbreviated" href="mailto:SRCREV_golang.org/x/net@v0.9.0">SRCREV_golang.org/x/net@v0.9.0</a>'), '694cff8668bac64e0864b552bffc280cd27f21b1')
-+
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+
-+        fetcher.unpack(self.unpackdir)
-+        vcsdir = os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
-+        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'ed42bd05533fd84ae290a5d33ebd3695a0a2b06131beebd5450825bee8603aca')))
-+        downloaddir = os.path.join(self.unpackdir, 'pkg/mod/cache/download')
-+        self.assertTrue(os.path.exists(os.path.join(downloaddir, '<a class="moz-txt-link-abbreviated" href="mailto:golang.org/x/net/@v/v0.9.0.zip">golang.org/x/net/@v/v0.9.0.zip</a>')))
-+        self.assertTrue(os.path.exists(os.path.join(downloaddir, '<a class="moz-txt-link-abbreviated" href="mailto:golang.org/x/net/@v/v0.9.0.mod">golang.org/x/net/@v/v0.9.0.mod</a>')))
-+
-+    @skipIfNoNetwork()
-+    def test_gomodgit_url_subdir(self):
-+        urls = ['gomodgit://github.com/Azure/azure-sdk-for-go/sdk/storage/azblob;version=v1.0.0;'
-+                'repo=github.com/Azure/azure-sdk-for-go;subdir=sdk/storage/azblob;'
-+                'srcrev=ec928e0ed34db682b3f783d3739d1c538142e0c3']
-+
-+        fetcher = bb.fetch2.Fetch(urls, self.d)
-+        ud = fetcher.ud[urls[0]]
-+        self.assertEqual(ud.host, 'github.com')
-+        self.assertEqual(ud.path, '/Azure/azure-sdk-for-go')
-+        self.assertEqual(ud.parm['subpath'], 'sdk/storage/azblob')
-+        self.assertEqual(ud.names, ['<a class="moz-txt-link-abbreviated" href="mailto:github.com/Azure/azure-sdk-for-go/sdk/storage/azblob@v1.0.0">github.com/Azure/azure-sdk-for-go/sdk/storage/azblob@v1.0.0</a>'])
-+        self.assertEqual(self.d.getVar('<a class="moz-txt-link-abbreviated" href="mailto:SRCREV_github.com/Azure/azure-sdk-for-go/sdk/storage/azblob@v1.0.0">SRCREV_github.com/Azure/azure-sdk-for-go/sdk/storage/azblob@v1.0.0</a>'), 'ec928e0ed34db682b3f783d3739d1c538142e0c3')
-+
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.localpath))
-+
-+        fetcher.unpack(self.unpackdir)
-+        vcsdir = os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
-+        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'd31d6145676ed3066ce573a8198f326dea5be45a43b3d8f41ce7787fd71d66b3')))
-+        downloaddir = os.path.join(self.unpackdir, 'pkg/mod/cache/download')
-+        self.assertTrue(os.path.exists(os.path.join(downloaddir, '<a class="moz-txt-link-abbreviated" href="mailto:github.com/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.zip">github.com/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.zip</a>')))
-+        self.assertTrue(os.path.exists(os.path.join(downloaddir, '<a class="moz-txt-link-abbreviated" href="mailto:github.com/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.mod">github.com/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.mod</a>')))
-+
-+    @skipIfNoNetwork()
-+    def test_gomodgit_url_srcrev_var(self):
-+        urls = ['gomodgit://gopkg.in/ini.v1;version=v1.67.0']
-+        self.d.setVar('<a class="moz-txt-link-abbreviated" href="mailto:SRCREV_gopkg.in/ini.v1@v1.67.0">SRCREV_gopkg.in/ini.v1@v1.67.0</a>', 'b2f570e5b5b844226bbefe6fb521d891f529a951')
-+
-+        fetcher = bb.fetch2.Fetch(urls, self.d)
-+        ud = fetcher.ud[urls[0]]
-+        self.assertEqual(ud.host, 'gopkg.in')
-+        self.assertEqual(ud.path, '/ini.v1')
-+        self.assertEqual(ud.names, ['<a class="moz-txt-link-abbreviated" href="mailto:gopkg.in/ini.v1@v1.67.0">gopkg.in/ini.v1@v1.67.0</a>'])
-+        self.assertEqual(ud.parm['srcrev'], 'b2f570e5b5b844226bbefe6fb521d891f529a951')
-+
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        vcsdir = os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
-+        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'b7879a4be9ba8598851b8278b14c4f71a8316be64913298d1639cce6bde59bc3')))
-+        downloaddir = os.path.join(self.unpackdir, 'pkg/mod/cache/download')
-+        self.assertTrue(os.path.exists(os.path.join(downloaddir, '<a class="moz-txt-link-abbreviated" href="mailto:gopkg.in/ini.v1/@v/v1.67.0.zip">gopkg.in/ini.v1/@v/v1.67.0.zip</a>')))
-+        self.assertTrue(os.path.exists(os.path.join(downloaddir, '<a class="moz-txt-link-abbreviated" href="mailto:gopkg.in/ini.v1/@v/v1.67.0.mod">gopkg.in/ini.v1/@v/v1.67.0.mod</a>')))
-+
-+    @skipIfNoNetwork()
-+    def test_gomodgit_url_no_go_mod_in_module(self):
-+        urls = ['gomodgit://gopkg.in/ini.v1;version=v1.67.0;'
-+                'srcrev=b2f570e5b5b844226bbefe6fb521d891f529a951']
-+
-+        fetcher = bb.fetch2.Fetch(urls, self.d)
-+        ud = fetcher.ud[urls[0]]
-+        self.assertEqual(ud.host, 'gopkg.in')
-+        self.assertEqual(ud.path, '/ini.v1')
-+        self.assertEqual(ud.names, ['<a class="moz-txt-link-abbreviated" href="mailto:gopkg.in/ini.v1@v1.67.0">gopkg.in/ini.v1@v1.67.0</a>'])
-+        self.assertEqual(self.d.getVar('<a class="moz-txt-link-abbreviated" href="mailto:SRCREV_gopkg.in/ini.v1@v1.67.0">SRCREV_gopkg.in/ini.v1@v1.67.0</a>'), 'b2f570e5b5b844226bbefe6fb521d891f529a951')
-+
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        vcsdir = os.path.join(self.unpackdir, 'pkg/mod/cache/vcs')
-+        self.assertTrue(os.path.exists(os.path.join(vcsdir, 'b7879a4be9ba8598851b8278b14c4f71a8316be64913298d1639cce6bde59bc3')))
-+        downloaddir = os.path.join(self.unpackdir, 'pkg/mod/cache/download')
-+        self.assertTrue(os.path.exists(os.path.join(downloaddir, '<a class="moz-txt-link-abbreviated" href="mailto:gopkg.in/ini.v1/@v/v1.67.0.zip">gopkg.in/ini.v1/@v/v1.67.0.zip</a>')))
-+        self.assertTrue(os.path.exists(os.path.join(downloaddir, '<a class="moz-txt-link-abbreviated" href="mailto:gopkg.in/ini.v1/@v/v1.67.0.mod">gopkg.in/ini.v1/@v/v1.67.0.mod</a>')))
-</pre>
-      <span style="white-space: pre-wrap">
-</span>
-      <fieldset class="moz-mime-attachment-header"></fieldset>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------cJpkkRrCfN10dOg31pt90qdK--
+Thanks,
+Alex
 
