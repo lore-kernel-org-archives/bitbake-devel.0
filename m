@@ -1,298 +1,145 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <jstephan@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF863C36014
-	for <webhook@archiver.kernel.org>; Tue, 17 Sep 2024 11:23:08 +0000 (UTC)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web11.18635.1726572179806688364
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7EBCAC583
+	for <webhook@archiver.kernel.org>; Tue, 17 Sep 2024 15:12:09 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web11.23264.1726585921850971576
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Sep 2024 04:23:00 -0700
+ Tue, 17 Sep 2024 08:12:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=G1ns8cbV;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3787ddbd5a2so3296543f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Sep 2024 04:22:59 -0700 (PDT)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=F4YZ/Vtq;
+ spf=pass (domain: baylibre.com, ip: 209.85.221.48, mailfrom: jstephan@baylibre.com)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-374c1963cb6so3935917f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Sep 2024 08:12:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1726572178; x=1727176978; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M/49zACe0JSOp8q77RGn8K3+X9mAlIREcT2L2T6jors=;
-        b=G1ns8cbV+2MSlyP7K0LcyroGrWmi21mkBwoYuBqoD0800Ub7jf2OvteA1zER6H4bOx
-         l/sNvzaSEFNTYzPANdt4Sm4IkdnYgh2pxPrZQ4wpFf5MIHYW8zVJ7PCjmFcHOjQTwoQM
-         A/ltkDUb0hjwU+Xo2h3aGljl1TMIqQaghRqDQ=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1726585920; x=1727190720; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pv7e0sGC1l0h5Ll+Vi3W74JJBqa0XDkRfIut8LaE9qo=;
+        b=F4YZ/Vtqme/z3oeZRozleKaU611qLXhI6ZbnHXhRTX+fu807tUgyIJJZaJ1/Vd0qg4
+         f6/+iY4yor4mO7ZUeazAdAzAzPIjQI4fU0zVZqCQ2KVYlRiylT+dGB7lrnncW72/GfQg
+         gnpDBSmjDmdy/v3sI/wIJbSKYD/SAUj7lWz/UwthHv+D1vQtiI4qyw8TrAj3D9YQ7IqD
+         1JyUxK/U1EzB2QLGycnVuDb+vOM/g0vpTuxFRRLbg5CMtpFDHsLarjeodf3H7lJIKvxB
+         MSZKr8czamaM7LnOI9RJV8FKT3Poqv/OTY9rxFFCCtSKPscc0q7ssvYCzA5dPamoy0N+
+         WURw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726572178; x=1727176978;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M/49zACe0JSOp8q77RGn8K3+X9mAlIREcT2L2T6jors=;
-        b=pXH7RWxNvSKDsPk/yQ4aq3WNsNN9KU5U/54+GM0L9BbW6gDvXYpEpl5eug7RRwushM
-         owbTYGAnhJRuK72NR48VKEB9+pQAE9KUj5FGnnZ84VVyfH1OSOcbxtbaaNWL2qSX/QpQ
-         zmEslnfeJhgSXfpjqhlb4KZzpHqjjGCo6D3IXjTJ/bh+VLaX81wSpAA2MM+ObnJCGnFk
-         XBDw2KPDEkfJ6QDgV0YcyX7XjXYtWmUE5+bZuBcArZxZ05dRDCy0pc1yrxgwG4pDA2qb
-         1haacOPTIbx9ifFMrcxhWg71e6/MzolACqocY5m2lJOSIGTDb7ayVaHPdrv/QhQNjOp5
-         TUeA==
-X-Gm-Message-State: AOJu0YzjyolfbsDBhk7UeoY9gapceg7qxtxSE2y6yNRPC86BucCbt23t
-	Gew+TzL2oIgnu+nzWqx9Ag5oU+jbPS2uhA9/Ec+i6GI83Fbgyf2BGAR2D/Oz+eRmSYbYoz3W45O
-	Q
-X-Google-Smtp-Source: AGHT+IEIqbViZ/6Up0lTJgK/kEyDOVfXw75oZ88d+6qCuBC0CduAlLCzlvvTJ8rs7c9Za+E88WDHWw==
-X-Received: by 2002:a5d:6189:0:b0:36b:a2bb:b374 with SMTP id ffacd0b85a97d-378c2d61762mr10805796f8f.52.1726572177359;
-        Tue, 17 Sep 2024 04:22:57 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:7c97:abb4:726a:74dd])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e780025asm9336018f8f.72.2024.09.17.04.22.56
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1726585920; x=1727190720;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pv7e0sGC1l0h5Ll+Vi3W74JJBqa0XDkRfIut8LaE9qo=;
+        b=sSogOsgON7uRDZqenXU5EK1drNd2mTdsZ6xSoJIgOGKzC5VBOzM3AcixEEUNMbW5Kq
+         NP0wfs9DTk1zplEQgp0oAN/lZkzFnBaTfE9w2s5dgB32YlZj2nt2bIG/PuKceo1ryxdn
+         GnHM9j+66v12HVmkxc+jnMc2zvN+VfN6BUX5W9AMOGzGsAi8JQd5qHz70Y2dz3+dEwCs
+         fqGGVqOEeLLYV13f9es0lSFTsR9Ddd0HXpRehOBC4MsHy6o/2JfxE+2e1Uz0gdW1puiN
+         4kyla4qfm07ih6wpalD2xqu4XTb+6XQyKesqA1cY4JbvtndeT3KS4c38W4akqKel3MEq
+         IhPQ==
+X-Gm-Message-State: AOJu0YxQFtJbqVGANHjm/KAO5J6q/9oFlvet0K5Wf51ZviCd0wHuNFG7
+	HNt4hfaqxdDG/7fHuEj8oS+PTJ6Rgvy8qNiDofnhejA+MOGrNH0/2HzRPQ9XsuGjTY887PsjIJL
+	r7Cs=
+X-Google-Smtp-Source: AGHT+IGYA+aIW9ZqWjSFgmvpBTeu+Bcs0hU++I1lU83N/rqgT+zT8T5VqW+/Be1kudZ8o9el8+SPhg==
+X-Received: by 2002:adf:ec07:0:b0:374:c61a:69b8 with SMTP id ffacd0b85a97d-378c2d058abmr11371299f8f.15.1726585919658;
+        Tue, 17 Sep 2024 08:11:59 -0700 (PDT)
+Received: from localhost.localdomain (2a02-842a-d52e-6101-6f8f-5617-c4b6-8627.rev.sfr.net. [2a02:842a:d52e:6101:6f8f:5617:c4b6:8627])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e71f068esm9897307f8f.3.2024.09.17.08.11.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2024 04:22:56 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Tue, 17 Sep 2024 08:11:59 -0700 (PDT)
+From: Julien Stephan <jstephan@baylibre.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] toaster: Update fixtures for styhead
-Date: Tue, 17 Sep 2024 12:22:56 +0100
-Message-ID: <20240917112256.3601975-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.43.0
+Cc: Julien Stephan <jstephan@baylibre.com>
+Subject: [PATCH 1/2] bitbake: add documentation for "bitbake -S lockedsigs"
+Date: Tue, 17 Sep 2024 17:11:56 +0200
+Message-ID: <20240917151157.780068-1-jstephan@baylibre.com>
+X-Mailer: git-send-email 2.46.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 17 Sep 2024 11:23:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16564
+ <bitbake-devel@lists.openembedded.org>; Tue, 17 Sep 2024 15:12:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16565
 
-Add styhead. Also fix a typo in the usage instructions.
+The following commit added "lockedsigs" as new signature handler for the
+-S option of bitbake:
+    2cf13f25139 - lib/oe/sstatesig.py: dump locked.sigs.inc only when explicitly asked via -S lockedsigs
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+But it was not documented anywhere, so add some basic documentation for
+it in both the .rst documentation files and the help message of bitbake
+
+Signed-off-by: Julien Stephan <jstephan@baylibre.com>
 ---
- lib/toaster/orm/fixtures/gen_fixtures.py |  5 +-
- lib/toaster/orm/fixtures/oe-core.xml     | 18 ++++++-
- lib/toaster/orm/fixtures/poky.xml        | 64 ++++++++++++++++++++----
- 3 files changed, 75 insertions(+), 12 deletions(-)
+ .../bitbake-user-manual-execution.rst               |  6 ++++++
+ .../bitbake-user-manual-intro.rst                   | 13 +++++++++----
+ bitbake/lib/bb/main.py                              | 12 +++++++-----
+ 3 files changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/lib/toaster/orm/fixtures/gen_fixtures.py b/lib/toaster/orm/fixtures/gen_fixtures.py
-index 5f43400cdc..e33c7f3954 100755
---- a/lib/toaster/orm/fixtures/gen_fixtures.py
-+++ b/lib/toaster/orm/fixtures/gen_fixtures.py
-@@ -9,7 +9,7 @@
- #
- # Edit the 'current_releases' table for each new release cycle
- #
--# Usage: ./get_fixtures all
-+# Usage: ./get_fixtures --all
- #
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
+index d58fbb32ea0..ac1e2a76811 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
+@@ -592,6 +592,12 @@ compare the matched signatures to determine the stamps and delta
+ where these two stamp trees diverge. This can be used to determine why
+ tasks need to be re-run in situations where that is not expected.
  
- import os
-@@ -35,12 +35,13 @@ verbose = False
- # [Codename, Yocto Project Version, Release Date, Current Version, Support Level, Poky Version, BitBake branch]
- current_releases = [
-     # Release slot #1
--	['Scarthgap','5.0','April 2024','5.0.0 (April 2024)','Long Term Support (until April 2028)','','2.8'],
-+    ['Scarthgap','5.0','April 2024','5.0.0 (April 2024)','Long Term Support (until April 2028)','','2.8'],
-     # Release slot #2 'local'
-     ['HEAD','HEAD','','Local Yocto Project','HEAD','','HEAD'],
-     # Release slot #3 'master'
-     ['Master','master','','Yocto Project master','master','','master'],
-     # Release slot #4
-+    ['Styhead','5.1','November 2024','5.1.0 (November 2024)','Support for 7 months (until May 2025)','','2.10'],
- #   ['Nanbield','4.3','November 2023','4.3.0 (November 2023)','Support for 7 months (until May 2024)','','2.6'],
- #   ['Mickledore','4.2','April 2023','4.2.0 (April 2023)','Support for 7 months (until October 2023)','','2.4'],
- #   ['Langdale','4.1','October 2022','4.1.2 (January 2023)','Support for 7 months (until May 2023)','','2.2'],
-diff --git a/lib/toaster/orm/fixtures/oe-core.xml b/lib/toaster/orm/fixtures/oe-core.xml
-index d381027c7b..4a3865099f 100644
---- a/lib/toaster/orm/fixtures/oe-core.xml
-+++ b/lib/toaster/orm/fixtures/oe-core.xml
-@@ -23,6 +23,11 @@
-     <field type="CharField" name="branch">master</field>
-   </object>
-   <object model="orm.bitbakeversion" pk="4">
-+    <field type="CharField" name="name">styhead</field>
-+    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="branch">2.10</field>
-+  </object>
-+  <object model="orm.bitbakeversion" pk="5">
-     <field type="CharField" name="name">kirkstone</field>
-     <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">2.0</field>
-@@ -51,9 +56,16 @@
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/\"&gt;OpenEmbedded master&lt;/a&gt; branch.</field>
-   </object>
-   <object model="orm.release" pk="4">
-+    <field type="CharField" name="name">styhead</field>
-+    <field type="CharField" name="description">Openembedded Styhead</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-+    <field type="CharField" name="branch_name">styhead</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=styhead\"&gt;OpenEmbedded Styhead&lt;/a&gt; branch.</field>
-+  </object>
-+  <object model="orm.release" pk="5">
-     <field type="CharField" name="name">kirkstone</field>
-     <field type="CharField" name="description">Openembedded Kirkstone</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">5</field>
-     <field type="CharField" name="branch_name">kirkstone</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=kirkstone\"&gt;OpenEmbedded Kirkstone&lt;/a&gt; branch.</field>
-   </object>
-@@ -75,6 +87,10 @@
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-     <field type="CharField" name="layer_name">openembedded-core</field>
-   </object>
-+  <object model="orm.releasedefaultlayer" pk="5">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">openembedded-core</field>
-+  </object>
++The third signature handler that can be passed is "lockedsigs" that will
++conveniently write the task signatures in a file called "locked-sigs.inc",
++that can be included in user's configuration to lock recipes or tasks.
++User can include the whole file or extract the signatures needed to lock
++only selected tasks or recipes.
++
+ .. note::
  
+    It is likely that future versions of BitBake will provide other
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+index 35ffb88b026..127c662320b 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+@@ -398,10 +398,15 @@ Following is the usage and syntax for BitBake::
+      -S SIGNATURE_HANDLER, --dump-signatures=SIGNATURE_HANDLER
+                            Dump out the signature construction information, with
+                            no task execution. The SIGNATURE_HANDLER parameter is
+-                           passed to the handler. Two common values are none and
+-                           printdiff but the handler may define more/less. none
+-                           means only dump the signature, printdiff means compare
+-                           the dumped signature with the cached one.
++                           passed to the handler. Allowed values are none,
++                           printdiff and lockedsigs. none means only dump the
++                           signature, printdiff means recursively compare the
++                           dumped signature with the most recent one in a local
++                           build or sstate cache (can be used to find out why
++                           tasks re-run when that is not expected). lockedsigs
++                           means generate a locked-sigs.inc file containing the
++                           locked signature of all tasks needed to build the
++                           target.
+      -p, --parse-only      Quit after parsing the BB recipes.
+      -s, --show-versions   Show current and preferred versions of all recipes.
+      -e, --environment     Show the global or per-recipe environment complete
+diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
+index bca8ebfa090..1f4313fa0dd 100755
+--- a/bitbake/lib/bb/main.py
++++ b/bitbake/lib/bb/main.py
+@@ -215,11 +215,13 @@ def create_bitbake_parser():
+                         default=[], metavar="SIGNATURE_HANDLER",
+                         help="Dump out the signature construction information, with no task "
+                              "execution. The SIGNATURE_HANDLER parameter is passed to the "
+-                             "handler. Two common values are none and printdiff but the handler "
+-                             "may define more/less. none means only dump the signature, printdiff"
+-                             " means recursively compare the dumped signature with the most recent"
+-                             " one in a local build or sstate cache (can be used to find out why tasks re-run"
+-                             " when that is not expected)")
++                             "handler. Allowed values are none, printdiff and lockedsigs. "
++                             "none means only dump the signature, printdiff means recursively "
++                             "compare the dumped signature with the most recent one in a local "
++                             "build or sstate cache (can be used to find out why tasks re-run "
++                             "when that is not expected). lockedsigs means generate a locked-sigs.inc "
++                             "file containing the locked signature of all tasks needed to build "
++                             "the target.")
  
-   <!-- Layer for the Local release -->
-diff --git a/lib/toaster/orm/fixtures/poky.xml b/lib/toaster/orm/fixtures/poky.xml
-index 21355aeb7b..d782a8e62d 100644
---- a/lib/toaster/orm/fixtures/poky.xml
-+++ b/lib/toaster/orm/fixtures/poky.xml
-@@ -26,6 +26,12 @@
-     <field type="CharField" name="dirpath">bitbake</field>
-   </object>
-   <object model="orm.bitbakeversion" pk="4">
-+    <field type="CharField" name="name">styhead</field>
-+    <field type="CharField" name="giturl">git://git.yoctoproject.org/poky</field>
-+    <field type="CharField" name="branch">styhead</field>
-+    <field type="CharField" name="dirpath">bitbake</field>
-+  </object>
-+  <object model="orm.bitbakeversion" pk="5">
-     <field type="CharField" name="name">kirkstone</field>
-     <field type="CharField" name="giturl">git://git.yoctoproject.org/poky</field>
-     <field type="CharField" name="branch">kirkstone</field>
-@@ -56,9 +62,16 @@
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/"&gt;Yocto Project Master branch&lt;/a&gt;.</field>
-   </object>
-   <object model="orm.release" pk="4">
-+    <field type="CharField" name="name">styhead</field>
-+    <field type="CharField" name="description">Yocto Project 5.1 "Styhead"</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-+    <field type="CharField" name="branch_name">styhead</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=styhead"&gt;Yocto Project Styhead branch&lt;/a&gt;.</field>
-+  </object>
-+  <object model="orm.release" pk="5">
-     <field type="CharField" name="name">kirkstone</field>
-     <field type="CharField" name="description">Yocto Project 4.0 "Kirkstone"</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">5</field>
-     <field type="CharField" name="branch_name">kirkstone</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=kirkstone"&gt;Yocto Project Kirkstone branch&lt;/a&gt;.</field>
-   </object>
-@@ -112,6 +125,18 @@
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-     <field type="CharField" name="layer_name">meta-yocto-bsp</field>
-   </object>
-+  <object model="orm.releasedefaultlayer" pk="13">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">openembedded-core</field>
-+  </object>
-+  <object model="orm.releasedefaultlayer" pk="14">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">meta-poky</field>
-+  </object>
-+  <object model="orm.releasedefaultlayer" pk="15">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">meta-yocto-bsp</field>
-+  </object>
- 
-   <!-- Default layers provided by poky
-        openembedded-core
-@@ -152,6 +177,13 @@
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-+    <field type="CharField" name="branch">styhead</field>
-+    <field type="CharField" name="dirpath">meta</field>
-+  </object>
-+  <object model="orm.layer_version" pk="5">
-+    <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-+    <field type="IntegerField" name="layer_source">0</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-     <field type="CharField" name="branch">kirkstone</field>
-     <field type="CharField" name="dirpath">meta</field>
-   </object>
-@@ -164,14 +196,14 @@
-     <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-     <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-   </object>
--  <object model="orm.layer_version" pk="5">
-+  <object model="orm.layer_version" pk="6">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
-     <field type="CharField" name="branch">scarthgap</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
--  <object model="orm.layer_version" pk="6">
-+  <object model="orm.layer_version" pk="7">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
-@@ -179,17 +211,24 @@
-     <field type="CharField" name="commit">HEAD</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
--  <object model="orm.layer_version" pk="7">
-+  <object model="orm.layer_version" pk="8">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
-     <field type="CharField" name="branch">master</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
--  <object model="orm.layer_version" pk="8">
-+  <object model="orm.layer_version" pk="9">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-+    <field type="CharField" name="branch">styhead</field>
-+    <field type="CharField" name="dirpath">meta-poky</field>
-+  </object>
-+  <object model="orm.layer_version" pk="10">
-+    <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-+    <field type="IntegerField" name="layer_source">0</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-     <field type="CharField" name="branch">kirkstone</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
-@@ -202,14 +241,14 @@
-     <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-     <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-   </object>
--  <object model="orm.layer_version" pk="9">
-+  <object model="orm.layer_version" pk="11">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
-     <field type="CharField" name="branch">scarthgap</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
--  <object model="orm.layer_version" pk="10">
-+  <object model="orm.layer_version" pk="12">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
-@@ -217,17 +256,24 @@
-     <field type="CharField" name="commit">HEAD</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
--  <object model="orm.layer_version" pk="11">
-+  <object model="orm.layer_version" pk="13">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
-     <field type="CharField" name="branch">master</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
--  <object model="orm.layer_version" pk="12">
-+  <object model="orm.layer_version" pk="14">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-+    <field type="CharField" name="branch">styhead</field>
-+    <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-+  </object>
-+  <object model="orm.layer_version" pk="15">
-+    <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-+    <field type="IntegerField" name="layer_source">0</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-     <field type="CharField" name="branch">kirkstone</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
+     exec_group.add_argument("--revisions-changed", action="store_true",
+                         help="Set the exit code depending on whether upstream floating "
+-- 
+2.34.1
+
 
