@@ -1,120 +1,112 @@
-Return-Path: <jstephan@baylibre.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BCBCCD18C
-	for <webhook@archiver.kernel.org>; Wed, 18 Sep 2024 07:54:36 +0000 (UTC)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
- by mx.groups.io with SMTP id smtpd.web10.10127.1726646062052290363
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9283ACCD18E
+	for <webhook@archiver.kernel.org>; Wed, 18 Sep 2024 08:08:46 +0000 (UTC)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web10.10257.1726646925259951180
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 18 Sep 2024 00:54:22 -0700
+ Wed, 18 Sep 2024 01:08:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=O4joE09d;
- spf=pass (domain: baylibre.com, ip: 209.85.218.47, mailfrom: jstephan@baylibre.com)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a8d43657255so762575166b.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 18 Sep 2024 00:54:21 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cRedUkoB;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-374b5f27cf2so4160922f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 18 Sep 2024 01:08:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1726646060; x=1727250860; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RtAlMiO1oCVWbbWR1qJ8jfylGANYu30aWP6Vfcf9HGg=;
-        b=O4joE09dudRBwB7qJN3ZW3m02hibhudClLgii4+DtILhwL2a0EylnD8a5vnUj+dCOY
-         +CHGaPaUSHAVLfgZ6eWns1HFPy+98U++1fC910G6in6otMhYP4iV1nGj6smi3olI31dD
-         cYBkHw4KiUEMJZomFxCdpecv6eeE1Z58szW/BVSABKzdFniDT5NAEsFMAXdaRmzXtNKC
-         baHppREHfG/laRcABQ5/d+/d1ZuKBbfq9wmz8CD+0zcrKmfFJyYZs8XlPDn702CibEhN
-         DruSxrnANZWl4zPWq+js7H7IOHqFOJL45xUIiSoXqWgqvIgM1QOGbhwc5WE2Dy30eNMf
-         m0ag==
+        d=linuxfoundation.org; s=google; t=1726646923; x=1727251723; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=V0O8wPhFym+BQ/c6de91sEkdlWIzz/DH93Uzhs0Nstw=;
+        b=cRedUkoB8OM/YhXoV+B/DVB+0W7iNbSYeqCbUtyHRqsvZWjJzENaPrtmZGXuIfuLch
+         EC9Uus6s8m41s6Ln6B/TIIwZQk+kgKBq3TomL+KUi4hlPCAoJ1xUYWw/uzLj6RM3pY1I
+         wgfWS/blML4yHqmRFbOAS+LBsDmSv8HT2bfqE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726646060; x=1727250860;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RtAlMiO1oCVWbbWR1qJ8jfylGANYu30aWP6Vfcf9HGg=;
-        b=TNYW5vpmy9GJzM/4Fs+454QS7CU0K72qTCPp2JZB5BSv+9CeVF7YvsvKeNfoLjtIvQ
-         HpjAykca06juSP25HX9idkFmY+unGkKi2moKKUsbDAnuB6VzrF7TrH+slJ7OJRsI46y2
-         vrFH4W+pittmD0CoN4w+6pr1PJ3EhWreMIJtKmAWRAJRDJBdLcNx7600/YNOGGUN2Co7
-         vBjzf5DgoALb2mp/sSubu2FtQu3+gRcIJjUIb2RrCi4y+NMdm1Vkeo0zP7oRS+m4m4XA
-         bTi5VATOKTHG7mazqmRV3MBvxS5JtQ+XX1mqZYTPGkc0ujm9Eb3SklUX59UexxG7K5kF
-         CKPQ==
-X-Gm-Message-State: AOJu0YzVUPFK7ihUBkxap6FGEVtmQpXSS4dUNY+xn8g5DqMI2/JWNrqs
-	CmfMBpUt5jwIVnbYAOhrYpjIoZK2kb9WSErSFwu4SD/KNK1SgqzkcnWu9xtrcU5Y/SMIq97hhTf
-	bqTlG5Hk6g8+9lmxtakITey7ZBt7fPdUYUFPrng==
-X-Google-Smtp-Source: AGHT+IGUVMXf6ZGI9T1Q0J4qIBtW4KOA3VJXOXfLNcyN8kUPJqOpOPLCodZGibuVY9BuYxsqkqEb/EOMjUPk+4jaAo4=
-X-Received: by 2002:a17:907:f763:b0:a86:81b8:543f with SMTP id
- a640c23a62f3a-a90480cef74mr1613446666b.64.1726646060124; Wed, 18 Sep 2024
- 00:54:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20240917151157.780068-1-jstephan@baylibre.com> <17F610BFBC886D2E.8168@lists.openembedded.org>
-In-Reply-To: <17F610BFBC886D2E.8168@lists.openembedded.org>
-From: Julien Stephan <jstephan@baylibre.com>
-Date: Wed, 18 Sep 2024 09:54:09 +0200
-Message-ID: <CAEHHSvYBQQEdTCMdqTNUnswV+vbcb-i5gNwq_6y7Nufqx2hE4g@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1726646923; x=1727251723;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V0O8wPhFym+BQ/c6de91sEkdlWIzz/DH93Uzhs0Nstw=;
+        b=X0dWjcCXnLJ+SiUYeX+ovaW6NcJ3pWL/aivI9/LzhThVpBXcC4W+GpbHhnxoF0RSmt
+         AMeQnKNIT6N4MHSrRceXoTU92Yrt7nB5cjkFCct1duqKcYTG5YuvxGZf+ymUN8Ldl+Z3
+         HiU0yFloavcpGt3Jx73e8Ohue8ku6FcPoXGtxm+lPfSXpxD9PpJsPv2t17E/0PFz2P5g
+         WLLXZJ+/xMKEmnltFm7fprNYqItbvP77SsDSG1Ih6B9QycHy2Q/Y9DdjW4MTq+WiT0J4
+         uf59d/yfm7GG4zXXTg744BG9xpiEKlWNzvNM6A+BwrzCa7U8VyZzmxqM3HD24aDA+jxg
+         UlXw==
+X-Gm-Message-State: AOJu0Yy2khmIVb+gaDgniqw5Ci14XU62JFca+lYqCVPSPRiFF7gpqwy7
+	gusSmkGZI9Tb0+N2/E+wiZt20XlbU2fKnqdEZ6kpUfdWZNVxFu1xEilRoFfEUfA=
+X-Google-Smtp-Source: AGHT+IFAKu2g+FOQejkRS25fPm3WUBXG/xVz1Sl8FcUm1vTr1n+eF5lH6lrvxrbf9PuMXBOfG9dSsA==
+X-Received: by 2002:a05:6000:1241:b0:36d:2941:d534 with SMTP id ffacd0b85a97d-378c2d4d759mr11346994f8f.36.1726646923375;
+        Wed, 18 Sep 2024 01:08:43 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:84e0:f160:18f9:5089? ([2001:8b0:aba:5f3c:84e0:f160:18f9:5089])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e7805337sm11591985f8f.104.2024.09.18.01.08.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2024 01:08:42 -0700 (PDT)
+Message-ID: <2a431a522b46432ac01a45dec140dd96815497d7.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH 2/2] bitbake: main: add choices to
  restrict -S parameter
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: jstephan@baylibre.com
 Cc: bitbake-devel@lists.openembedded.org
+Date: Wed, 18 Sep 2024 09:08:42 +0100
+In-Reply-To: <CAEHHSvYBQQEdTCMdqTNUnswV+vbcb-i5gNwq_6y7Nufqx2hE4g@mail.gmail.com>
+References: <20240917151157.780068-1-jstephan@baylibre.com>
+	 <17F610BFBC886D2E.8168@lists.openembedded.org>
+	 <CAEHHSvYBQQEdTCMdqTNUnswV+vbcb-i5gNwq_6y7Nufqx2hE4g@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 18 Sep 2024 07:54:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16572
+ <bitbake-devel@lists.openembedded.org>; Wed, 18 Sep 2024 08:08:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16573
 
-Le mar. 17 sept. 2024 =C3=A0 17:12, Julien Stephan via
-lists.openembedded.org <jstephan=3Dbaylibre.com@lists.openembedded.org>
-a =C3=A9crit :
->
-> Currently, available -S parameters are "none", "printdiff" and "lockedsig=
-s",
-> but there is no check on parameter, so user can literally give anything
-> to -S and it will act as if "none" was specified.
->
-> Fix this by adding the allowed values in choices for -S parameter
->
-> Signed-off-by: Julien Stephan <jstephan@baylibre.com>
-> ---
->  bitbake/lib/bb/main.py | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-> index 1f4313fa0dd..24758646eaa 100755
-> --- a/bitbake/lib/bb/main.py
-> +++ b/bitbake/lib/bb/main.py
-> @@ -213,6 +213,7 @@ def create_bitbake_parser():
->
->      exec_group.add_argument("-S", "--dump-signatures", action=3D"append"=
-,
->                          default=3D[], metavar=3D"SIGNATURE_HANDLER",
-> +                        choices=3D["none", "printdiff", "lockedsigs"],
+On Wed, 2024-09-18 at 09:54 +0200, Julien Stephan via lists.openembedded.or=
+g wrote:
+> Le mar. 17 sept. 2024 =C3=A0 17:12, Julien Stephan via
+> lists.openembedded.org <jstephan=3Dbaylibre.com@lists.openembedded.org>
+> a =C3=A9crit :
+> >=20
+> > Currently, available -S parameters are "none", "printdiff" and "lockeds=
+igs",
+> > but there is no check on parameter, so user can literally give anything
+> > to -S and it will act as if "none" was specified.
+> >=20
+> > Fix this by adding the allowed values in choices for -S parameter
+> >=20
+> > Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+> > ---
+> > =C2=A0bitbake/lib/bb/main.py | 1 +
+> > =C2=A01 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
+> > index 1f4313fa0dd..24758646eaa 100755
+> > --- a/bitbake/lib/bb/main.py
+> > +++ b/bitbake/lib/bb/main.py
+> > @@ -213,6 +213,7 @@ def create_bitbake_parser():
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0 exec_group.add_argument("-S", "--dump-signatur=
+es", action=3D"append",
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ default=3D[], metavar=3D"SIGNATURE_HANDLER",
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 choic=
+es=3D["none", "printdiff", "lockedsigs"],
+>=20
+> Richard,
+>=20
+> Should I send a v2, dropping lockedsigs? Or should this patch be dropped =
+also?
 
-Richard,
+The comment applied to the series, I can't merge it as the handlers are
+metadata specific. I think we might need to ultimately move this
+functionality elsewhere and drop -S entirely.
 
-Should I send a v2, dropping lockedsigs? Or should this patch be dropped al=
-so?
+Cheers,
 
-Cheers
-Julien
-
->                          help=3D"Dump out the signature construction info=
-rmation, with no task "
->                               "execution. The SIGNATURE_HANDLER parameter=
- is passed to the "
->                               "handler. Allowed values are none, printdif=
-f and lockedsigs. "
-> --
-> 2.34.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#16566): https://lists.openembedded.org/g/bitbake-deve=
-l/message/16566
-> Mute This Topic: https://lists.openembedded.org/mt/108502729/4356723
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [jsteph=
-an@baylibre.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+Richard
 
