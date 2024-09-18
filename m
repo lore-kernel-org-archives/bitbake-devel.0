@@ -1,99 +1,107 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <jstephan@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F06BCAC5A2
-	for <webhook@archiver.kernel.org>; Tue, 17 Sep 2024 20:56:03 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web10.815.1726606554757073540
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0E2FC619B
+	for <webhook@archiver.kernel.org>; Wed, 18 Sep 2024 07:06:06 +0000 (UTC)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+ by mx.groups.io with SMTP id smtpd.web11.9852.1726643165069504147
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Sep 2024 13:55:55 -0700
+ Wed, 18 Sep 2024 00:06:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gG/0m0zx;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-374b9761eecso4864310f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Sep 2024 13:55:54 -0700 (PDT)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=rpupDYZA;
+ spf=pass (domain: baylibre.com, ip: 209.85.218.46, mailfrom: jstephan@baylibre.com)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a8d4093722bso32092166b.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 18 Sep 2024 00:06:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1726606553; x=1727211353; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1726643163; x=1727247963; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VKP3PZV/1GBpNvTqj0xJAOBCEn42eyWvvLlg1m24Odg=;
-        b=gG/0m0zx00pLaXDCcs0xhA+NVc608nnB9Q9pA3vZYUjIwjaU2P6HtBBWr3zSAE9I5V
-         hMmOk394AldLb3I2Pd/xtfF3bZxnhrrlf+Wehn2YVrhoQdi/D/b+Gg2ubdxY/10vQvVR
-         yOsVTQqGk87Ypx2GJ4REe3RH9qFMVNPsCyNWw=
+        bh=Rq1F7JH5DTJyDAeGUPBgM1ZiLtpxM5zFd9HkYL4YopE=;
+        b=rpupDYZA47vz9yHp6/4E1U51JbTwtnetage2wzQq1L71iRVDpuAt73NhVIu1ay5GP6
+         WG+YjI+r1GZ5qMgiCB/Ylj/d3acXtBXoJBmHXdUCUcgK8U7vt5xByjsBgdiigI1lwq/z
+         hkyU4Jh7T+06VV2uoc7BhTPU9iONucWsU0AP/5zSLyY9uXc/lxWAaIfdXRu9b3ELlH04
+         mmyEmsb9ja+7UPxAh8XeEyCoVa47HnniPX0KA4fkSktzCEIqlojRxpocFs+j2fg/5yXi
+         fMhXIAIqdOKwob0n+piY6mxsstSzDk2AAP3lVXkuCzLvM+FoAQEpNfC0rjmbJID+sGZb
+         524w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726606553; x=1727211353;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VKP3PZV/1GBpNvTqj0xJAOBCEn42eyWvvLlg1m24Odg=;
-        b=FTHBe7AxD4sEtoIOpvqnb3oL49o5Bj9Cx5AWIdRtGs/Cr1mpATdloYZE6Eymj/2DJI
-         ITI001m1OcJwbufr2MuGdrko5RBurprQlzWTkrMFWTYzlvkNSNv9jKV2o0F/vosWNAeW
-         zL622fy7GnLIZzQqDAyMLeJRVg4RkReAVAK5cH8weNe2kyx2VIY5qUOjhcjvz+3jmTpg
-         NrDnLaofiS+zyiB4IoPQKT5BKSxnEgxuwX3cVRH/U7CXdMgnNZsKIvSYdacKkoY1vM00
-         AVDH2ZqhPwMh7voKsEvXjS+bKAxcZwBr3U28cpNjzXtDIJv0yjBXuWIcqdSG6cW8XFXB
-         2AFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVHYrjvA4ci8ZPT0DcApKTu5PGvmVT6mtH8dVO6bFE+JxGG+JFT2IbJSV3FT3IgLhLNbIa38fs6rfidgxW@lists.openembedded.org
-X-Gm-Message-State: AOJu0YwObKmDLfQ3/gGzAJotseANk35tnLI8BMrh70stkf1QVlTJv+mV
-	H+ag0EO9jjF8IAAac4vLMNjsKJTOJiVJDYm1a5Cmrs4AxYhm/dsgJf/Wf6zAL0w=
-X-Google-Smtp-Source: AGHT+IFMQxccMSy98j3xSmKmUcSCZ99xV3iyI6RQSPSLG61IrzqutRcpNIDuv9kMPd7hEDMVLGJoSQ==
-X-Received: by 2002:adf:a18a:0:b0:368:48e6:5056 with SMTP id ffacd0b85a97d-378c2cf540dmr12188947f8f.22.1726606552724;
-        Tue, 17 Sep 2024 13:55:52 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:121c:7879:24c3:1e39? ([2001:8b0:aba:5f3c:121c:7879:24c3:1e39])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e73e81e2sm10473293f8f.37.2024.09.17.13.55.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2024 13:55:52 -0700 (PDT)
-Message-ID: <b911e5bef3e661b976d6a5822e9fa2941d2e90d7.camel@linuxfoundation.org>
+        d=1e100.net; s=20230601; t=1726643163; x=1727247963;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rq1F7JH5DTJyDAeGUPBgM1ZiLtpxM5zFd9HkYL4YopE=;
+        b=urEHCAvKooYVjuCGbNbxxJpW4M433dZmER8xjc6QkmCFKTMdOB2MEBW/aCy+ttvqdO
+         6qY2DzE/APlrWFDZ4ZLyEGe0n8DVs/VvB9Z/B2bISmyHoI0lGUs875gVwHqycEr/BBYS
+         Jt11l+1iB7AbH4i1sw5l+EaqirMGWyrjj1YIYAjEixRE8/o8rR4tnEV40WggqNydcy+6
+         muY0u3U5vLsoj5INoZK9HRM3n4VRf9T4+mZlpn4a3YhO5dq/2ujfhZBanOMavrrWaigT
+         oDKyNfEF3h2nbw5I8J6Ayx9NbKjxqOtGzCzBEsx91ajCFipsxZ+ozlBBp+Wfufl2QczL
+         SF7w==
+X-Gm-Message-State: AOJu0YxQqp46iSDMzm2IBLDj02LQ2N2RMi07/S9lOBIckAW+tDlE261L
+	GaQMNrnnPqVGF0ja5zzBMDqPR3KVEKoWGbrUGlS9oRJ0wK3iI7KB/Zo4rq3vlb9y7kGdhi/Nt27
+	KDRz7I3YLGy9i8A0xDVRaN+d3coaOqyL0kQS8sA==
+X-Google-Smtp-Source: AGHT+IFLwv9OPlN+hU1oVwH3ip3ZDPdRwHL24sNJ9f2Pgeu4DdKyYlKcjLuJEP7Vq9BS5AYy+Hd4bntak0x2M1WQs70=
+X-Received: by 2002:a17:907:e268:b0:a8a:91d1:5262 with SMTP id
+ a640c23a62f3a-a9029490283mr1957225266b.28.1726643162975; Wed, 18 Sep 2024
+ 00:06:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20240917151157.780068-1-jstephan@baylibre.com> <b911e5bef3e661b976d6a5822e9fa2941d2e90d7.camel@linuxfoundation.org>
+In-Reply-To: <b911e5bef3e661b976d6a5822e9fa2941d2e90d7.camel@linuxfoundation.org>
+From: Julien Stephan <jstephan@baylibre.com>
+Date: Wed, 18 Sep 2024 09:05:51 +0200
+Message-ID: <CAEHHSvZigPQTmPwHP-vom2ybOXoXQm3NhCsUyFLW0n9H2t3VxA@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH 1/2] bitbake: add documentation for
  "bitbake -S lockedsigs"
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: jstephan@baylibre.com, bitbake-devel@lists.openembedded.org
-Date: Tue, 17 Sep 2024 21:55:50 +0100
-In-Reply-To: <20240917151157.780068-1-jstephan@baylibre.com>
-References: <20240917151157.780068-1-jstephan@baylibre.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
-MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 17 Sep 2024 20:56:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16567
+ <bitbake-devel@lists.openembedded.org>; Wed, 18 Sep 2024 07:06:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16568
 
-On Tue, 2024-09-17 at 17:11 +0200, Julien Stephan via lists.openembedded.or=
-g wrote:
-> The following commit added "lockedsigs" as new signature handler for the
-> -S option of bitbake:
-> =C2=A0=C2=A0=C2=A0 2cf13f25139 - lib/oe/sstatesig.py: dump locked.sigs.in=
-c only when explicitly asked via -S lockedsigs
->=20
-> But it was not documented anywhere, so add some basic documentation for
-> it in both the .rst documentation files and the help message of bitbake
->=20
-> Signed-off-by: Julien Stephan <jstephan@baylibre.com>
-> ---
-> =C2=A0.../bitbake-user-manual-execution.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 ++++++
-> =C2=A0.../bitbake-user-manual-intro.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- | 13 +++++++++----
-> =C2=A0bitbake/lib/bb/main.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 12 +++++++-----
-> =C2=A03 files changed, 22 insertions(+), 9 deletions(-)
+Le mar. 17 sept. 2024 =C3=A0 22:55, Richard Purdie
+<richard.purdie@linuxfoundation.org> a =C3=A9crit :
+>
+> On Tue, 2024-09-17 at 17:11 +0200, Julien Stephan via lists.openembedded.=
+org wrote:
+> > The following commit added "lockedsigs" as new signature handler for th=
+e
+> > -S option of bitbake:
+> >     2cf13f25139 - lib/oe/sstatesig.py: dump locked.sigs.inc only when e=
+xplicitly asked via -S lockedsigs
+> >
+> > But it was not documented anywhere, so add some basic documentation for
+> > it in both the .rst documentation files and the help message of bitbake
+> >
+> > Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+> > ---
+> >  .../bitbake-user-manual-execution.rst               |  6 ++++++
+> >  .../bitbake-user-manual-intro.rst                   | 13 +++++++++----
+> >  bitbake/lib/bb/main.py                              | 12 +++++++-----
+> >  3 files changed, 22 insertions(+), 9 deletions(-)
+>
+> Unfortunately I don't think this is quite so simple. The lockedsigs
+> support is implemented in OE-Core and BitBake doesn't contain that
+> code. This makes it very hard to accurately document since it is
+> metadata dependent.
+>
+> I do agree we need to improve this somehow, I just don't know how.
 
-Unfortunately I don't think this is quite so simple. The lockedsigs
-support is implemented in OE-Core and BitBake doesn't contain that
-code. This makes it very hard to accurately document since it is
-metadata dependent.
+Hi Richard,
 
-I do agree we need to improve this somehow, I just don't know how.
+Maybe we should remove this from bitbake and implement it using bblock? :)
+Let me know if I can help on this!
 
-Cheers,
+Cheers
 
-Richard
-
-
+Julien
+>
+> Cheers,
+>
+> Richard
+>
+>
 
