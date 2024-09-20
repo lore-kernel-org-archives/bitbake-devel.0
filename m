@@ -1,117 +1,74 @@
-Return-Path: <jstephan@baylibre.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB77ACCD18F
-	for <webhook@archiver.kernel.org>; Wed, 18 Sep 2024 08:27:36 +0000 (UTC)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
- by mx.groups.io with SMTP id smtpd.web11.10600.1726648052866497827
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB75DC78834
+	for <webhook@archiver.kernel.org>; Fri, 20 Sep 2024 12:43:29 +0000 (UTC)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+ by mx.groups.io with SMTP id smtpd.web10.17243.1726836032732375300
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 18 Sep 2024 01:27:33 -0700
+ Fri, 20 Sep 2024 05:40:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=TTdYokCs;
- spf=pass (domain: baylibre.com, ip: 209.85.218.41, mailfrom: jstephan@baylibre.com)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a8d6ac24a3bso103447866b.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 18 Sep 2024 01:27:32 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=hNMW0yFE;
+ spf=pass (domain: gmail.com, ip: 209.85.218.44, mailfrom: simon.eu@gmail.com)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a9018103214so257665766b.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Sep 2024 05:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1726648051; x=1727252851; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cEpiT5ZpDbQh3/3RTDDumCKI0vIY2yvEAv3gSpg93G4=;
-        b=TTdYokCsKirQw41CC97GkHKcIEQLEYqqMMxinm+flNU6OJBKNLWuwoHdSYi3iuEExl
-         P5a2K7qmARkn8PPESTtZoFJr1JwGYYufoUrxP+sWqf6z2+W4CjksKyAqKM5733V3R+tG
-         LbDbBrx7+KTxDPa+HlvTL9gxh6PbAxzNzSf0H7eG3NEzfzfN5UBnf1jYkqd0Ir1ARME2
-         MKKdvKdMv6C+yiq6dR1zbua7rPZpCDNjpZkbFvPKSi/DlizhdPIs33p/Se8UyaJqmYFI
-         6ef1W7FscC9/D5qRrLm808IWJv7QN+UKZdxtSPFaSpg79I7GFmD3g69s9zpDgSDs/Y/0
-         1yBA==
+        d=gmail.com; s=20230601; t=1726836031; x=1727440831; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4qzw2hbuTGeOj7nSGn/XFEg5FMN7Dxv3FCmUYti29Bs=;
+        b=hNMW0yFEn6JlIOa5FSahLJWHwJfoM9HnGr+iW/0JO+H0NPh7gJgy1m9ihVmO1ZmYTa
+         zPp7MZR2Jh/PEUGIl1Z4OmYTc8sDg2a32jCqkxg3cgQio9yr/IP0ALy+W+hlG+fTUwnU
+         tk7FvXYOTdJTh6sPUQsrFNNCeWdogZ6o/1E4Nwh/eqJmzH/UmFpaL2GRqfpREvqMH6QW
+         +TaY/hff1+TqwVP0r7rRXfE57e4h7XTShJg9I5DDxKNtgABB8veYcNeDnQHnPA5peLPE
+         fUouRgX4zBPFczn7N8gOxDJxHP16TvjdNemY2XG/1OSX7aGMVe+XCwW0rNHrG7utWy9a
+         vlfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726648051; x=1727252851;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cEpiT5ZpDbQh3/3RTDDumCKI0vIY2yvEAv3gSpg93G4=;
-        b=hBOOks6xIW3lrEnbqU7ZNWpC+QdU2LWGSKnKi2UufqFhB1PR7F8y+gN2x5RX/hGPZL
-         auGCYn6t0VbGTpt4uRKJaRxgYKpstTjtgiVaccUEFJCV4DOpuwFETDFjuTMTf1SqDD+a
-         nF5AdEbSQf4orXJ71niQmRLQSdgNDYSbvugQRf4/8OrpEw/5PY53g/hhcF82iRxt4qAr
-         +ds3lAFYQdTXKDKIVVTtD8oK5B1VhKjDv38sSIbsYgNSVR9EQCMOAgJTpQlL1nPppMKw
-         +ME3VIdf2tINoWeH+hCQcFcspXQ1TBR5LeRXttX+wsAKh9L83xCGpzPpHlzytd9rinco
-         E1IA==
-X-Gm-Message-State: AOJu0Yzm2xcw9z90y+rac5PGDZ+M9vH+gphUnC9qobg/OC8+qFyIW7Fc
-	kzU7lPnXtD81uUTJFDDtweQWP15AaJg5a3iQGJTRGUab/a0vMgDar8BbrIzA87+eJ9JlqJ+Pdjt
-	7nL/ZphW8GS8OI9NGFRjs//OOgwl4LKNEYYiekw==
-X-Google-Smtp-Source: AGHT+IEWvnMXrZsL/mLrRT02bWTWZH4HtbbE04Qz30BC9WQJJIDsErjFNUF8h/i44mXcB4tsoUm0C90m3y0bcPYeRDY=
-X-Received: by 2002:a17:907:7421:b0:a90:9fb5:2c43 with SMTP id
- a640c23a62f3a-a909fb52dbemr336223066b.34.1726648050842; Wed, 18 Sep 2024
- 01:27:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1726836031; x=1727440831;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4qzw2hbuTGeOj7nSGn/XFEg5FMN7Dxv3FCmUYti29Bs=;
+        b=poFKqRLoTSvdAdVOqoGmQyDc/ehZFyIH0OmQyvSqS2tIZLo15npl854CSTG3DDbaky
+         OLzzpa+PK4uJ2u2ZIi9nyVQH4pG04rLtv09QOe7tRZ0d6glS+LtUzb82f1e0rxqsFQnm
+         +iiPGxTjq8VxNwSJ4Td2mzsfDaaQVXEdN+cNDql9FnEwtWIkkNMiCT8Rtsw5S53ZLnES
+         o6r6wl2UtdCCHZMhWgY6WeXkYsIbPL80s78g84/3LQg1ZnzAFH3Rq6hTjtYxOi8kjEeE
+         7QDJ+XmvWNQpPChPXpCV4WL3mQ0Cq/Hwm+ZhjfKT3VHnyJTgXUPdYQ+B6MDohU44pGMQ
+         8Jpw==
+X-Gm-Message-State: AOJu0YzuUaItGW4v7JSCzusqYQcGux7FdmTdfk75z6yyPxqIYcWex4oX
+	kV1YdgyS7Wl3Ig/qTQGmOJ0povieQ2X8Du5+7vDc/T7KDnRebkaZV06uig==
+X-Google-Smtp-Source: AGHT+IEtNy1GqA3PM/N1DQdrUHyTgo9DZZCd8HEj+3+CwGs04KcaRQyZCmOnAgcf6lBvsT/2EZmKQQ==
+X-Received: by 2002:a17:907:96a7:b0:a77:cbe5:413f with SMTP id a640c23a62f3a-a90d56726bamr227953566b.4.1726836030517;
+        Fri, 20 Sep 2024 05:40:30 -0700 (PDT)
+Received: from simon-T14-4TB.. ([46.140.188.244])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a90613303b4sm839002566b.213.2024.09.20.05.40.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2024 05:40:29 -0700 (PDT)
+From: "Simon A. Eugster" <simon.eu@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	"Simon A. Eugster" <simon.eu@gmail.com>
+Subject: [PATCH 0/1] Clarify that _ and not : is used for suffixing the variable name.
+Date: Fri, 20 Sep 2024 14:40:19 +0200
+Message-ID: <20240920124020.2894006-1-simon.eu@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-References: <20240917151157.780068-1-jstephan@baylibre.com>
- <17F610BFBC886D2E.8168@lists.openembedded.org> <CAEHHSvYBQQEdTCMdqTNUnswV+vbcb-i5gNwq_6y7Nufqx2hE4g@mail.gmail.com>
- <2a431a522b46432ac01a45dec140dd96815497d7.camel@linuxfoundation.org>
-In-Reply-To: <2a431a522b46432ac01a45dec140dd96815497d7.camel@linuxfoundation.org>
-From: Julien Stephan <jstephan@baylibre.com>
-Date: Wed, 18 Sep 2024 10:27:19 +0200
-Message-ID: <CAEHHSvb06ou87GYjZk-ygmjs8xpj-1Lm7VPSe-FcYjGdGgheAg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 2/2] bitbake: main: add choices to
- restrict -S parameter
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 18 Sep 2024 08:27:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16574
+ <bitbake-devel@lists.openembedded.org>; Fri, 20 Sep 2024 12:43:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16575
 
-Le mer. 18 sept. 2024 =C3=A0 10:08, Richard Purdie
-<richard.purdie@linuxfoundation.org> a =C3=A9crit :
->
-> On Wed, 2024-09-18 at 09:54 +0200, Julien Stephan via lists.openembedded.=
-org wrote:
-> > Le mar. 17 sept. 2024 =C3=A0 17:12, Julien Stephan via
-> > lists.openembedded.org <jstephan=3Dbaylibre.com@lists.openembedded.org>
-> > a =C3=A9crit :
-> > >
-> > > Currently, available -S parameters are "none", "printdiff" and "locke=
-dsigs",
-> > > but there is no check on parameter, so user can literally give anythi=
-ng
-> > > to -S and it will act as if "none" was specified.
-> > >
-> > > Fix this by adding the allowed values in choices for -S parameter
-> > >
-> > > Signed-off-by: Julien Stephan <jstephan@baylibre.com>
-> > > ---
-> > >  bitbake/lib/bb/main.py | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-> > > index 1f4313fa0dd..24758646eaa 100755
-> > > --- a/bitbake/lib/bb/main.py
-> > > +++ b/bitbake/lib/bb/main.py
-> > > @@ -213,6 +213,7 @@ def create_bitbake_parser():
-> > >
-> > >      exec_group.add_argument("-S", "--dump-signatures", action=3D"app=
-end",
-> > >                          default=3D[], metavar=3D"SIGNATURE_HANDLER",
-> > > +                        choices=3D["none", "printdiff", "lockedsigs"=
-],
-> >
-> > Richard,
-> >
-> > Should I send a v2, dropping lockedsigs? Or should this patch be droppe=
-d also?
->
-> The comment applied to the series, I can't merge it as the handlers are
-> metadata specific. I think we might need to ultimately move this
-> functionality elsewhere and drop -S entirely.
->
 
-Noted!
-Thank you
+Simon A. Eugster (1):
+  bitbake: doc: suffix for BBFILE_PRIORITY
 
-> Cheers,
->
-> Richard
+ .../bitbake-user-manual-ref-variables.rst                   | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+-- 
+2.43.0
+
 
