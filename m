@@ -1,242 +1,206 @@
-Return-Path: <quentin.schulz@cherry.de>
+Return-Path: <kweihmann@outlook.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253B1CF9C6F
-	for <webhook@archiver.kernel.org>; Mon, 23 Sep 2024 10:57:13 +0000 (UTC)
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.51])
- by mx.groups.io with SMTP id smtpd.web11.33897.1727089024389601827
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5136CF9C69
+	for <webhook@archiver.kernel.org>; Mon, 23 Sep 2024 14:36:04 +0000 (UTC)
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.92.90.36])
+ by mx.groups.io with SMTP id smtpd.web10.38121.1727102157972388387
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 23 Sep 2024 03:57:05 -0700
+ Mon, 23 Sep 2024 07:35:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cherry.de header.s=selector1 header.b=Nn/pa6z1;
- spf=pass (domain: cherry.de, ip: 40.107.20.51, mailfrom: quentin.schulz@cherry.de)
+ dkim=pass header.i=@outlook.com header.s=selector1 header.b=FAZgfVu0;
+ spf=pass (domain: outlook.com, ip: 40.92.90.36, mailfrom: kweihmann@outlook.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a7nF52FKDjtHTUhzTglCcI6JbPUHi9faErlztP1ze5qq2YRqOjLBA3eMUkMtV4YqXjNjSEniwRrrQA87zCqWQh2cqWy4JYGRCoVSuVADipYhi8+0RdA86+wAhsG1AmuL7xiUEf2oNNEwSdK3ffqxMrjZSCiSbR/l1pXMRw2es4oefbZQgl/T+xwrb/FM52Qp1GwEIvtW36r6zX9HQKd1pyIz56MgfTEJ0LYxiHPHmityA3rnNQx4OZIkdtPSnqr41nM29AppkMSZyRx5e+DWKEhDJpWZV684lsn52+HX2Ld7GtLZUFIb3Q0JUZ27GZ24N4sISuWIWaPgcBCsBsG98w==
+ b=sfkZHLhMODiPcT9XEfiYMFCLQPVrjEhbbdp1rlc5wjGUBUQqAkx16PpWZxlq1twPn7SKlbrGv5GP+3AQVFlnbJMrvxzBmnVKo4aroePm8COcNzefZt6YfeTyPX145yg+DpiDm2lRY410SqZV04ojImMsFReNoyv0pAdDWf09vKiIOZmiqLsajWC7jWHf1CIabmNULekz1Wr883DrLfpm51NcvjCsM5C5mOd1PBqCm42yKWfFYBzZkgSadLuNkkbdrsce66j00o4+x767mISjriAiGq4S4atNCFaEFj59YuIYvDlJGMhA/PPeWFgvS8JWDcj3u5hmuzqlez8azkuxhw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XAF+9uShybrL817i+NxofSVyielKmZU3i5t5IAhaS/U=;
- b=PdTU1IUN3SRIPYgNvt9GGxBZl1iSMlkvkdM0KfUWMpbjCueCPoppVNRfo7BCZP+2fxCWFbdohELUqXdXuhlr/M2lqeHZSsoF1IkDm588kW5YLuT/KOr+ccuGJAi8cquTk4NQWxrlzcjC0oYz93pm+apEQTw9dkeotOe/o5QXniBUTsKqs4DfJgph8BiL+5UlWW7ygwIRhAosmrE9ug+HP6hT4Dhi1yP1O18+kE2lr+TtxZi301eHDnuCujKyy3hrLdgr7i3Ov37ZWttXCEcaRRcsfsDJ3q0cVLyTbxjrler2wXpHOCa8AXATVfjdgf+SpqnzSYeXHuf6zaoPakvG0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ bh=LE+XHjTuJP7cPSNiqywbsWfJS9LTvzvLz3CY8YSvelQ=;
+ b=IlLZoVKThVK84wyIlh1i+jrhUYrCyk6b192ghNXFg5BmWc3MFrGGWjasPLZ2ERQOakfLViUfb/zGcuMvE6v+7HdVVEQHT97WiIPvgr2WCf4mHNvdAScda4qd+02JTQ1QAZmTqjvo/SO9sDovtxKKN8zn/TVl/FXxjcwA7HXDHRweP6HgINMJar5PpofYxeUD62A1JDqkHo1MzvHpSdvZGlLlIafcFAHrw4TCHkwi8loa3p5YCWuOsFFTwi40auLURceZZWj1SpeOjhWTgYLSv98WUWRmzT02PuR7T1DFwptRWLr00cnCOVxNDpJ2285jnm0381dlV8G5c9+PEEkCUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XAF+9uShybrL817i+NxofSVyielKmZU3i5t5IAhaS/U=;
- b=Nn/pa6z14CSmSG5+AElFdLudMaTuoofqAXFZX1n6DaLyJTP227/7eFPr4o5qH+xYTCNk+Nzw0fvdaqqmo/qpMDtvyCU2fBy1TD3fZHT/Yq9aWXY1ZApBTzjRaLPUxPbrvBGUqC13Q758nzlvEqGY0gftadSJLEalVYyMwt7+yek=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AM9PR04MB8906.eurprd04.prod.outlook.com (2603:10a6:20b:409::9)
- by PA1PR04MB10986.eurprd04.prod.outlook.com (2603:10a6:102:489::7) with
+ bh=LE+XHjTuJP7cPSNiqywbsWfJS9LTvzvLz3CY8YSvelQ=;
+ b=FAZgfVu0dMn4lMoJOXrfQQgd6qjqCFbENn99CCoafB6mQJJQtxB2cjdAxS2vKOoncp9SW9G4LNxZw7NJv47dADe72JBkMr0XWmgiqvoAfWzO5MUs2phhMlMB3J108gT5lRHVm4aKYiSUKeaG2076uuYOKhfO8SkQibqcYYw5VcCARuY3IOYPMymxCLkOrlSPmmsz+gCd+3L239UpYLFpkIZrgCLQKRbko9WOMzERtMtv5hzGftVVldwFtQLQDBm7WkGgx6lxoCrlpKfv2LIyFRaRbr2woaY6VyVv6Oy7hHv0K8ydIy26CMrSYGewFppDb9qWtjeX2xr6vkjcWS63Lg==
+Received: from GV1PR07MB9120.eurprd07.prod.outlook.com (2603:10a6:150:80::7)
+ by PAXPR07MB7821.eurprd07.prod.outlook.com (2603:10a6:102:13c::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.25; Mon, 23 Sep
- 2024 10:56:56 +0000
-Received: from AM9PR04MB8906.eurprd04.prod.outlook.com
- ([fe80::d379:5378:b1:cea]) by AM9PR04MB8906.eurprd04.prod.outlook.com
- ([fe80::d379:5378:b1:cea%2]) with mapi id 15.20.7918.024; Mon, 23 Sep 2024
- 10:56:56 +0000
-Message-ID: <b69d0035-b4a2-420d-8ab3-d9df94f119d3@cherry.de>
-Date: Mon, 23 Sep 2024 12:56:55 +0200
+ 2024 14:35:54 +0000
+Received: from GV1PR07MB9120.eurprd07.prod.outlook.com
+ ([fe80::a630:7019:63e4:a48a]) by GV1PR07MB9120.eurprd07.prod.outlook.com
+ ([fe80::a630:7019:63e4:a48a%6]) with mapi id 15.20.7982.022; Mon, 23 Sep 2024
+ 14:35:54 +0000
+Message-ID: 
+ <GV1PR07MB912070578293398A70DD8198A86F2@GV1PR07MB9120.eurprd07.prod.outlook.com>
+Date: Mon, 23 Sep 2024 16:35:52 +0200
 User-Agent: Mozilla Thunderbird
 Subject: Re: [bitbake-devel] [PATCH 2/3] bb/data_smart: fix override syntax
  warning
-To: richard.purdie@linuxfoundation.org,
- Konrad Weihmann <kweihmann@outlook.com>,
- Martin Jansa <martin.jansa@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org
 References: <GV1PR07MB91206C44D7FEA544DE6D6374A86D2@GV1PR07MB9120.eurprd07.prod.outlook.com>
  <1497c21f2add634469d205a55a155324f0e0bfab.camel@linuxfoundation.org>
  <DU0PR07MB9116AA51410D7EBC4F8982CAA86E2@DU0PR07MB9116.eurprd07.prod.outlook.com>
  <CA+chaQe3DCAxuvORYFrn4sr+0pUyrPR+oLrXkjor56+7XVaraw@mail.gmail.com>
  <GV1PR07MB91204368C096EDEF0107B58CA86F2@GV1PR07MB9120.eurprd07.prod.outlook.com>
  <06a9081a919ea08fdf0c6a43f82ac695a25f17d7.camel@linuxfoundation.org>
+ <b69d0035-b4a2-420d-8ab3-d9df94f119d3@cherry.de>
 Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <06a9081a919ea08fdf0c6a43f82ac695a25f17d7.camel@linuxfoundation.org>
+From: Konrad Weihmann <kweihmann@outlook.com>
+In-Reply-To: <b69d0035-b4a2-420d-8ab3-d9df94f119d3@cherry.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR3P281CA0020.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:1c::21) To AM9PR04MB8906.eurprd04.prod.outlook.com
- (2603:10a6:20b:409::9)
+X-ClientProxiedBy: BE1P281CA0103.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:79::20) To GV1PR07MB9120.eurprd07.prod.outlook.com
+ (2603:10a6:150:80::7)
+X-Microsoft-Original-Message-ID: 
+ <c43bf344-76fe-4ff8-b7f6-97fd5205ed20@outlook.com>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9PR04MB8906:EE_|PA1PR04MB10986:EE_
-X-MS-Office365-Filtering-Correlation-Id: 01fc7780-f69b-4a89-817b-08dcdbbe70e5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-MS-TrafficTypeDiagnostic: GV1PR07MB9120:EE_|PAXPR07MB7821:EE_
+X-MS-Office365-Filtering-Correlation-Id: a21a1884-c3a1-43c1-0462-08dcdbdd0749
+X-Microsoft-Antispam: 
+	BCL:0;ARA:14566002|5072599009|6090799003|461199028|8060799006|19110799003|7092599003|15080799006|3412199025|440099028;
 X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?UU16VFdUeXJGdmJRN2tXNEpueWlkVE1VUlpuYmNYcVlyZWlnZFlNcFdGS0hJ?=
- =?utf-8?B?SUxyTVRTaS9PQ245bGtITVJwSEl3RDZrK3c5VXdEN2lDMkVQSDZBWitJdkpX?=
- =?utf-8?B?V0wzS3ZFYnROa2J4K1dVYjhWaWFjQlVrOHVTSTFFcTZGRzRUczFDK0pkR1BI?=
- =?utf-8?B?TXRpeGRLWkVDL1M4TjNXaDN5Q0lrVGJTdVFaRk5rTTd4bU13blhQVklmemhj?=
- =?utf-8?B?OXg2Q25mV2JHcVN2alNtNFFlOTRTTWlLZFdHdFNQUkNTR2lGZENUbWRFdk50?=
- =?utf-8?B?LzRnVVF0YXpBajNNdGRzSjRtTFFUdTh1M01PODFkMFdocFZjQUhLTEdiL2dv?=
- =?utf-8?B?WXZqNDQwKzhhTUlZL0RnMlJiQXVObmprSjBCd0pVc09rWm1GckMyWVVoaVNx?=
- =?utf-8?B?b014N2wxSlREblY4VC9uNHdlK1M4SHVqamZscjVUMnd5MDRCSm51SWJhNDZh?=
- =?utf-8?B?VXhSMldLVGVHRVBoQXRvMjlkMzMxR2NRaGZzeVdnV0ovVS9zUWwzYTJoQi9Z?=
- =?utf-8?B?WXRTemZwdm1wWEhJb3oyendOaEFCaXpEMFM5TXovK3FkZGF6cFMyREZocklh?=
- =?utf-8?B?NnNObXE2dzN2ZWovaWVFV2ZFZEwyN010YWFJR3QyRE5XNG9Ec1FJOXhyQ1Iy?=
- =?utf-8?B?ZTA1V3Btd3J3NUpYdDQ3NVZ5U3F3ekd5M0lJQ0FqbzZjTlZqWTdRUlBjNnk4?=
- =?utf-8?B?Qnh1ZkN5TDIwSlVLcnJWTlNjN1hGRCtLbXFXVkdXU2d1ZXhnUEpTT3pzd0Rj?=
- =?utf-8?B?U0dMNzYyY1ZCSmZYQk5xY2FuUXF6MXRCSHc2QVpZTXhwbi9Oc2R6OVBwWldw?=
- =?utf-8?B?ZW1PUC81d0l6ZjJRV3pnQ2xvWmZqN1BTM1M1aUxzWVBXTlowZWJ2dWhYbjhL?=
- =?utf-8?B?eUtYSWVUMWtwNUZxbXZMcFJEc1Q4T2lUS01QbE1QbUJPaXlUREMxUVBwMU1p?=
- =?utf-8?B?ajFuZTU4MHhsRkZ5UjhYbWtFeFRtN1JVeEhKaWpSZThlTU9ueXMya1RBODZE?=
- =?utf-8?B?SlJPc3U3WjBQeWZBdFM1Wlo2ZzZsQTU5T0lBOGJBV3d4b2syTm54c2dWMWlF?=
- =?utf-8?B?VUhYbVNacTk0cmhycU9VSGJ1T1lBTUIvMXNoK2VZM0hrdVBkMGxjb0d2MC90?=
- =?utf-8?B?cUlCY2I5UjNVOWozSmVnUmV5b3NzMFhBWU0xUTVZNlRlc0JXVWQ0VlZpN1g5?=
- =?utf-8?B?dnhmNzZPVHZFMVBCS1l3M0xXMkJnVzE4a0czN3BPSlZ1dlZHckYrdHMybzRF?=
- =?utf-8?B?cGdQQXJCNHY3Umg1azBJQ0d0YWR5empCNEdJa3FteHNDbldzSWNxTHJHdC9x?=
- =?utf-8?B?ckwzdnVRTEFaVWszY0RvcTV0anRIMzhPS1FIQy9BRWZPTmc1VWJRQnlHYk9D?=
- =?utf-8?B?VEhNM3JTVWcvMGQ5cDZhSGZnUXZ0RUpWcWk3emdHdE5Hbi8zS0NmMGFLTmlL?=
- =?utf-8?B?MHpLUk1LWC9UYm4xWVZjZVhMMWJWdUZOTE0reWlGWnFWRW52UWVPcFZoYUsr?=
- =?utf-8?B?RGlISVh6cTl2SDY0SlRPUkdGanJWYWJFQS96a3BmQldxSXErQnNNQTdwRHVO?=
- =?utf-8?B?TXFZWFFpUnNZZkJWV3BCT0FBV1MxQXlkTGN6RXdwVWEwZnZqeW42ei91Zk9E?=
- =?utf-8?B?dE9BRVhjLzYrUHVxQ2haczV1RXkwa2VQa1Z6MUFMUW9NdUxWWFZCdUFBVzM4?=
- =?utf-8?B?ajA5WmNMdzQ2RXc1MTU4SU5BaXF2VEIzN1RRckJDVGZocDRMYmtENU5JR2dW?=
- =?utf-8?B?VWN5ZUMyMm0zcFVVSU1ubzQ0elhUQ2NrOHp0cTdXVlp0VXR2T3dNMTNBMStl?=
- =?utf-8?B?WTVYcUVFbk9UbzFPd2pSdz09?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8906.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+	1dvDW8xmOTdY58V5n6uKMryQ3EITsPGulI+bZAeLSwyPqF4HnDCf5U3lRXQ3X9lvqYXBT4A5b5lUlQUqJSZyDrC83KWbsSGxqf11mm+IMtcjjjy0NQxz/2EmxOzWxbDE0zRWkogUiwEKG/Dtj/usHDvTnifKqGIiVZ4YujlVkl4+kZizo/8KtpFBfs9DoqTAyA4DJWaqB32qvbgWkH8OZTOhMTKokXJIQykyIRmRNjR8gBX+qDdPojj2R8aHP004ZibLaG7/a8qKBg4FluJbWrqvgT1+OVO9NZmqxJ43ZiNkGKtVS272ptcJkY4qMz9y8/AQ8uYUAmyC1zBXieVasKD0TQTNMAzuvW0o+aXNl1CCAC6G7zkN8GyLHR2UyG+q0j+wNjRBrdhJBz/s8Zau1FoGcAZBaRY3eZpj4H2rHGRJv78G8ZCMKL2oIaiI+NMDGNKqS5/Psa7O0KV++1imusQFVv4Daz++uprEFTrZKlbIEP7ew6BcQ+RnFlH5kGCR5ytIX5p0e8KDoXZZhPhnMlB1smuxT/O/UyKdK53if673aE3b+3oqCRQnd8MJcib/d3z9W3vunsV5abMQK3rKlPcTyLYga51gLVOxqRTtrfjk/OJuYFxkzYXL4XAW3XPWspj9/uhEJjcr+bqaC0RHBGVyPt/zyrtXZJQ+el3mt4I/cfjTRh+8ovJ2VLOR+y9fL/gc3ex4kx1uuvG4vM/NCgZ59x3ITW+zcvx4z+oGfTwHh09MjjsEGr4f+u1OzA9+tRlY4Yz/5LDvbAIOhj51Fw==
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?ZVljWmpFS0hadnBGZE1BVldENURPL2N0MzV0OFJoaXlYTklsSXEyZUhDdVB0?=
- =?utf-8?B?by9FQkdsUDlqdnRLbG1PaWJ3RzJRYmZyNTBFOHNiUFR6MjZ6K0FBWWVqT1o5?=
- =?utf-8?B?L2VjWUE4ODIwUlBBMEg2RXJCcGI4Z3paaUVzbzNKVlFCWldEejRUNjQ3UC95?=
- =?utf-8?B?dWsxZEU2V3NVQUYxTHBWUzh3bDRFK2g2UlZnV05CQzl4MXpxWE1uSklEM2dt?=
- =?utf-8?B?bnJwNlpydGlGRFVnM3RQMVpyclIvNFhrQ0hhNXZXUWVpS1ZxUXppODBMSEdO?=
- =?utf-8?B?bFlGdm1GdUwyQzRhOG9LMnhhMS9NUWxIKzNtakpLZnROR1NwTTN0OXNsMDBV?=
- =?utf-8?B?N0Y2YmJIQWFQZGpUc0VCRHh0UW5tRnBVU1lpazdCRm5FcHNRVHJZVkU0Vm4w?=
- =?utf-8?B?TTd4TGxseEllSGVZeWwvSTlrMHl3bzhoeXNZays5MHlRbFU5SDdHampLMFN3?=
- =?utf-8?B?ZEtwZ0RNQnNVK1l0WDhFOFZLM0I2R3FLK25wNkUxcDhMeVI1ZEw2Q2Q2aDZ0?=
- =?utf-8?B?cmZKS1pSMTRuZHpZeWhFUDcwQjdjZnQ3UjdqejdkR1BQSmRYS3V0Ym5OSEVy?=
- =?utf-8?B?bnd3ODlNMXdMKzN4TXZzakRMcFd0UWR5eWkxdTVHVXdvSkFhYUlxVzd0ZnFv?=
- =?utf-8?B?SmxJOVl3YnIzZEpkNXpLa21RVXlBVzNiUHVkekpBdGpMTGhsOFd6aVloWVBj?=
- =?utf-8?B?RjdMRW1rUmNBMHlhK0FEeDdFMUR3bHFJRlVOa3NWdTBLVFh4aGpGUlVkWnJR?=
- =?utf-8?B?ZTlTRGdRUFYwZitWSFo1NHFaMnUwT1pBNHM4aC9CdXJEK3RLbmZVNHdvM2tj?=
- =?utf-8?B?b1BkS1o4ZSsyWTlsZTVwaTRoV1NYTGJiYkI1Ymo5SFFKWmhxN2xWNEx1MzNC?=
- =?utf-8?B?QjlkNkx6RS9hNXM4N3QyN1VhTFB2bVh6NEh3TXBnYmlGY1A1TjRwcW1leUVS?=
- =?utf-8?B?REY2NHdXd2hkSjFmM3ZzeTdmZThLZ3lUb2M0SUZRUjl0VTdsa3h2c24wVUE2?=
- =?utf-8?B?K3p1d0RvVFJtU2VyL3lGK0N1RVBmeXBvVkpsbjlUNkU0ZWhQTXFwWUZUblA5?=
- =?utf-8?B?dWs2dWxPdXJvbG1adWgrdmNlYnVIenNGMUpmRGpTdlNtNmV4QzdTVjhkV2M4?=
- =?utf-8?B?aVRsMHo2SlZha0c2TXFqTFhKNmhFamZWM2FXYVI1blQ0VGVUOFFOdFQyamp2?=
- =?utf-8?B?dFFhTDFKVERsK1JXQUhUNG5IOWlVQmtjMURjMzhLazlXV1JTOTcrKzhoalRr?=
- =?utf-8?B?T0NSaUlhdzcrNk1KN0NZeEdRNitlR011MWlrekNjeWRiYnFtTXI5SU1kV2J1?=
- =?utf-8?B?RjNvaXkwV1ljbFUzVEhVc2MyaEJBcUE3NTg4Y2N1TGNkVTF1MkVKSWpZeXli?=
- =?utf-8?B?NlB5aU9NYjNMT2NqeEFyVjhLWHlmUkFTdnk3bHZBY2RJd2FzcXJIbFNBMW5T?=
- =?utf-8?B?M0p1bk4rd1pQaXRKVlJyZUNTdE5SbUpIOE1LSzlIZWJpc3VhS3dEcU5iRDdz?=
- =?utf-8?B?alBFYVFDRTcvTTdyRlRpaXl4N3lHSTJXMC9tTXI5amkvUjNQeE9JUlVjTTBq?=
- =?utf-8?B?b29razR4Z0I3K0pkc2VkMDJ1WERRRFljdC83TmxObmJ3N1NyWXlBRGgwYlla?=
- =?utf-8?B?dkw4Q085SEU1d215bEh4WjJRUlNYZHFuQjFJSGV0aEhleHREYjVueWxUbkN3?=
- =?utf-8?B?SU5Ra0lrMytHa0UvdWtlK2N6eEJvd0s1SFd3cTM1eHBHWnJxSFF4Vlg2STZX?=
- =?utf-8?B?S1V4cjlDWjBuQWJITjhnUVNiNVM3SGJ0UFJnVUYzaXBOczdDN09TUFVYVFN4?=
- =?utf-8?B?MjRaZitlVFNWV2c4NXlWYUxVbEN5YVp5ck4yM050bzN5aVBpc09CcHJMOXo4?=
- =?utf-8?B?OU9wYm43bGwyUjJFbGdHc3hzT1Jidnh0cC84YWtMNHNXbzBWYnBVTG4xbHh3?=
- =?utf-8?B?dURzRG1nWmt6UlVLMlFqMlVnWjQwekxEQ1ZqbndVdDFLRFBtUlRLSUdWZUNu?=
- =?utf-8?B?dGFhQ2ZXNGNxMmFHU0hrcUE5bzB5eVNSaUZ3UlRhSjMzZTUwNDNqalp1U0or?=
- =?utf-8?B?REJnQi9jcHl0b0VXd05VNVM0YlB6YTc5TXJ2OTg5WkpHQ2hLdlVQSi9hN1Vm?=
- =?utf-8?B?YjZva0RYRkh5bzJOTXRsa0hQVndIMmJQRjIwNHYrVWVDNU41a1NrejlIODBW?=
- =?utf-8?B?TlE9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01fc7780-f69b-4a89-817b-08dcdbbe70e5
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8906.eurprd04.prod.outlook.com
+	=?utf-8?B?ejBIY3NWMm1Yd0VDRlZaMGYrWTdwK1owZFNTcE05TnRPZkk2UmFkdzRhcERj?=
+ =?utf-8?B?NEVOekVVckFsSWdlTVFRS0UrT1RqL2U0dGkzQ1BZSndpWER1L2x3aTJGWUJk?=
+ =?utf-8?B?UGd5YjR1eE5FSEh3UlZOU2RYbWM5R2hXRm8wNGxYcmhoVzdYT2dmNEphQVZk?=
+ =?utf-8?B?NjRnR1JjS2ptZDdiQ0wyYUxNNHJaR2h4dXJwUnBSVmZLaDRLb2N1blNjcDJ6?=
+ =?utf-8?B?WXNhbmxQSGh4UForUGk4VGJydm80dEdrSDJjay9JT2lzWkJXWnJXVHdRSEtl?=
+ =?utf-8?B?QXIrNGU2bzB5VkRQSU0wQmJReFpKUHlHUndDMy9JbXltVVlWTDErUVc1cWhZ?=
+ =?utf-8?B?Zy9nRzBVQk1NaEdCRisranA2QTYwQWRjY1RxZytObXU3d0x6TTFYZHU0bjZr?=
+ =?utf-8?B?LzJOS1g4aktjOE5JckhwWWNQSHdRd1hkaFJwMWkyWHUxYjJsTHZsU2xMdnBx?=
+ =?utf-8?B?YUdOb0tva1g2TUNjRXZ0QVE4aVYrR0dVSzdCZ2V5VGx2aEt0eXZiZEJGWDRh?=
+ =?utf-8?B?SS9Pd0xCUjgvNmcyTTdlS2d5aWM0Wkd5T2lqYW9UMUZtbU94dVJ0OGtSVFM1?=
+ =?utf-8?B?RTM3bktMQ0N5anRualkwNGJoSHpwL2dYamFtNDBSaGxWN3N3QlRCVDNKTDdU?=
+ =?utf-8?B?OXZFQW14U3ZwQ2x0Y2RWR1RIb2ZBU0pHZVVWZmVJSTNJL1ptdWpJWlU3WmIw?=
+ =?utf-8?B?L3BBeTkwc0dWNFRXeHE1ck9ZR1g4Q21taUNMenRCQ3F1aFZtaDFTQk0xbElB?=
+ =?utf-8?B?RGovcm9SeWMzOXcxU25Dakg2MUR2UWZwSC9QeFVqblN1V0M0c2loL2srVEx2?=
+ =?utf-8?B?dVM4N253d050V3RqcmRGcWIvWDRFcktsNzJtOVAzcTVxTy84cWZNU2VyMGVt?=
+ =?utf-8?B?SFg5ZHprUENvc1dXM3dYNUp2MEF0L281Wm1jWXQwOHBIVjJTWEYvaDU1WlhK?=
+ =?utf-8?B?a2x5TzEyR1lzQjhPTi84dklZeE5VMktuY3VpU3dVNkRtL0Y5U1hLa2s4dXJU?=
+ =?utf-8?B?OUZtRjJteCtiRFhUamdhN2tlRTEzZ24rL0gxQlRyK0szNStRWDlPb0RFQmFM?=
+ =?utf-8?B?QUdrcjFXU05jMkZRRFN4NVJ2bjdDQmVGNFFnRTVKN1RLUURaQ2xLVlVYdzkz?=
+ =?utf-8?B?SnFwRmd2TWppaTFnVzZ1dnJmT3UzbkxNMTdCZmIzVXZNa0IwL3FyVWlNRDBa?=
+ =?utf-8?B?NlN3T2sycmVHcHZhekdzQ1dPcitRYlpIUXl2cXRDOHVGYWIwYURySHgzdm9R?=
+ =?utf-8?B?c2VGSjIrdWhUQ2tJR1hKWXEyamF1cDMrZTB5Q2tERlJqcUtScWZEbi8wNkZX?=
+ =?utf-8?B?dEg0NXhKY1hKZ0w2RUJLZlhoSHdCcU1mTWFwa25PTUI5NzFvaE9yZFVFcER4?=
+ =?utf-8?B?aGNIM2VuYlJYVmdpVTNWcERkdm9tR2ZCbndBUDVNYzE4VnUxdktlaEF6cWpW?=
+ =?utf-8?B?dnpKLzdBU3dwZW1hdzQzbExJLzVkMzNsVCtYaFFsMkc2MTB0cHFmbXJOUnZ4?=
+ =?utf-8?B?SXRNeEdaQlQrTXRwc3FIdnE5MitxVzhlbWQxMDYzWDBpeTBNVk1rVkNnVFlv?=
+ =?utf-8?B?ditoaE1EZzBqRFdDWllrd0I3NUtkbFFpU3hzMlhXNzNFNDVhQ1Vvei8yOWMr?=
+ =?utf-8?B?USthZWJ1TzduQ1drbFFqQk9jM1BvdjhoVW9ROWFFVGFmbFVpYnMrZXhhd3RN?=
+ =?utf-8?B?NDZ6dUF1MjBua3MyeW1xYll5OEgydE1lTS95S1lrb0ZON0FjUEU5NHNwOTR3?=
+ =?utf-8?Q?JCDiA2II9KxOtdQbrw=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a21a1884-c3a1-43c1-0462-08dcdbdd0749
+X-MS-Exchange-CrossTenant-AuthSource: GV1PR07MB9120.eurprd07.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2024 10:56:56.5100
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2024 14:35:53.8282
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wCJlYkp0MipRngqVbcSY0x3WU/obo3+EEkqWE+lcnc+JcTMNIx54pXfG5FtAy9qGnzPzOwE5Ge5MJCcjOnnT5U4RzlU7QMN4bDwj5Ffvf50=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10986
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR07MB7821
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 23 Sep 2024 10:57:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16590
+ <bitbake-devel@lists.openembedded.org>; Mon, 23 Sep 2024 14:36:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16591
 
-Hi all,
 
-On 9/23/24 9:49 AM, Richard Purdie via lists.openembedded.org wrote:
-> On Mon, 2024-09-23 at 09:30 +0200, Konrad Weihmann wrote:
->>
->>
->> On 22.09.24 11:27, Martin Jansa wrote:
->>> What about using precompiled re only in cases where the old "in" is
->>> triggered already?
->>
->> Also acceptable for me - anything that makes the check less opaque.
->>
->> @Richard please let me know how we could proceed from here.
->>
->> My personal take, after digging into all the side effects, would be to
->> remove the check and treat all "old syntax" overrides as merely "typos",
->> hence letting them slip into the datasmart store, but adding a
->> (potentially warning level) note that a certain operation is using the
->> old syntax and therefore not being applicable in the current context.
->> (unless ofc there is some code path that does some bad things to the
->> store when using the old syntax, which haven't come across after looking
->> at the code)
+
+On 23.09.24 12:56, Quentin Schulz wrote:
 > 
-> Old syntax won't hurt the store, the challenge is again performance.
-> Iterating the datastore for a search is one of the slowest things we
-> can do. That was why the check was put on entry rather than exit.
-> 
-> My original reply was intending to suggest the patch be tweaked to
-> improve performance along the lines Martin suggested (or otherwise).
-> 
-> In python if you have:
-> 
-> "if A and B and C:"
-> 
-> C isn't evaluated unless A and B are true so there should be some way
-> to keep performance and improve the tests.
-> 
-> I did even wonder about dropping those tests at this point, not sure if
-> we're ready to do that or not yet...
-> 
+> any(x in ("append", "prepend", "remove") for x in var.split("_"))
 
-May I suggest doing a split on _ and then check if one of the reserved 
-keywords make it there?
+I ran a test with timeit (5 repetitions, 100000 runs).
+with various ways to implement that check (not all of them perfect)
 
-e.g.
+here's the code
+----
 
-any(x in ("append", "prepend", "remove") for x in var.split("_"))
 
-instead of using a re string for that?
+import timeit
 
-I tested with:
+pattern = [
+'''
+var = 'do_removesomething'
+if not var.startswith("__anon_") and 
+re.search(r"(_append|_prepend|_remove)(_|$)", var):
+     pass
+''',
+'''
+var = 'do_removesomething'
+if not var.startswith("__anon_") and re.search(pattern, var):
+     pass
+''',
+'''
+var = 'do_removesomething'
+if not var.startswith("__anon_") and (var.endswith("_append") or 
+var.endswith("_prepend") or var.endswith("_remove")):
+     pass
+''',
+'''
+var = 'do_removesomething'
+if not var.startswith("__anon_") and (var.rfind("_append") != -1 or 
+var.rfind("_prepend") != -1 or var.rfind("_remove") != -1):
+     pass
+''',
+'''
+var = 'do_removesomething'
+if not var.startswith("__anon_") and any(x in var for x in ["_append", 
+"_prepend", "_remove"]):
+     pass
+''',
+'''
+var = 'do_removesomething'
+if not var.startswith("__anon_") and ("_append" in var or "_prepend" in 
+var or "_remove" in var):
+     pass
+''',
+'''
+var = 'do_removesomething'
+if not var.startswith("__anon_") and any(x in ("append", "prepend", 
+"remove") for x in var.split("_")) :
+     pass
+''',
+]
+setup = '''
+import re
+pattern = re.compile(r"(_append|_prepend|_remove)(_|$)")
+'''
+res = []
 
- >>> s = [1, 2, 3, 4]
- >>> def test(x):
-...     print(f"{x}")
-...
- >>> any(test(x) or x % 2 for x in s)
-1
-True
- >>> any(test(x) or x // 2 for x in s)
-1
-2
-True
+import statistics
 
-in what I assume is CPython (python3 in fedora40), 3.12.6. It seems it 
-stops at the first found True so we save a few checks.
+for index, pat in enumerate(pattern):
+     print(f'Pattern {index} = {statistics.mean(timeit.repeat(pat, 
+setup=setup, number=1000000))}')
 
-Now I'm wondering if var.split("_") creates the whole list at call time 
-or if it's a lazy iterator, e.g. using yield internally so that it's 
-actually doing what it needs for each iteration of the loop and not more.
+---
 
-No clue if this is consistent for other implementations of the python 
-interpreter such as Jython.
+and here are the results
 
-Additionally, this still wouldn't fix the presence of _remove_ in the 
-task name triggering the check. I could e.g. see a 
-do_remove_unused_files() in an image recipe for example. So I would 
-agree that adding some info in the documentation would make sense to 
-discourage people to name their function this way.
+Pattern 0 = 0.6844888394000008
+Pattern 1 = 0.9764905843883753
+Pattern 2 = 0.32475767740397715
+Pattern 3 = 0.3955688206013292
+Pattern 4 = 0.5456381111929659
+Pattern 5 = 0.17395127240451985
+Pattern 6 = 0.5362491855979897
 
-Cheers,
-Quentin
+"Pattern 5" being the current implementation.
+"Pattern 6" your suggestion.
+
+So I think the penalty of the split will be way too high
 
